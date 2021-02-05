@@ -13366,8 +13366,9 @@ static int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *b
 				int sec = skill->get_time2(sg->skill_id,sg->skill_lv);
 				if (bl->type == BL_MOB && map->list[bl->m].flag.gvg_castle) {
 					struct mob_data *md = BL_UCAST(BL_MOB, bl);
-					if (sg->unit_id == UNT_MANHOLE && (md->class_ == MOBID_EMPELIUM || md->class_ == MOBID_BARRICADE || md->class_ == MOBID_S_EMPEL_1 || md->class_ == MOBID_S_EMPEL_2))
-						;
+					if (sg->unit_id == UNT_MANHOLE && (md->class_ == MOBID_EMPELIUM || md->class_ == MOBID_BARRICADE || md->class_ == MOBID_S_EMPEL_1 || md->class_ == MOBID_S_EMPEL_2)) {
+						// Do nothing...
+					}
 				} else if (status->change_start(ss,bl,type,10000,sg->skill_lv,sg->group_id,0,0,sec, SCFLAG_FIXEDRATE)) {
 					const struct TimerData* td = tsc->data[type]?timer->get(tsc->data[type]->timer):NULL;
 					if (td)
