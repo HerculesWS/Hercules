@@ -6692,8 +6692,8 @@ typedef int (*HPMHOOK_pre_quest_delete) (struct map_session_data **sd, int *ques
 typedef int (*HPMHOOK_post_quest_delete) (int retVal___, struct map_session_data *sd, int quest_id);
 typedef int (*HPMHOOK_pre_quest_update_objective_sub) (struct block_list **bl, va_list ap);
 typedef int (*HPMHOOK_post_quest_update_objective_sub) (int retVal___, struct block_list *bl, va_list ap);
-typedef void (*HPMHOOK_pre_quest_update_objective) (struct map_session_data **sd, int *mob_id);
-typedef void (*HPMHOOK_post_quest_update_objective) (struct map_session_data *sd, int mob_id);
+typedef void (*HPMHOOK_pre_quest_update_objective) (struct map_session_data **sd, const struct mob_data **md);
+typedef void (*HPMHOOK_post_quest_update_objective) (struct map_session_data *sd, const struct mob_data *md);
 typedef int (*HPMHOOK_pre_quest_update_status) (struct map_session_data **sd, int *quest_id, enum quest_state *qs);
 typedef int (*HPMHOOK_post_quest_update_status) (int retVal___, struct map_session_data *sd, int quest_id, enum quest_state qs);
 typedef int (*HPMHOOK_pre_quest_check) (struct map_session_data **sd, int *quest_id, enum quest_check_type *type);
@@ -6728,6 +6728,10 @@ typedef bool (*HPMHOOK_pre_quest_questinfo_validate_quests) (struct map_session_
 typedef bool (*HPMHOOK_post_quest_questinfo_validate_quests) (bool retVal___, struct map_session_data *sd, struct questinfo *qi);
 typedef bool (*HPMHOOK_pre_quest_questinfo_validate_mercenary_class) (struct map_session_data **sd, struct questinfo **qi);
 typedef bool (*HPMHOOK_post_quest_questinfo_validate_mercenary_class) (bool retVal___, struct map_session_data *sd, struct questinfo *qi);
+typedef enum quest_mobtype (*HPMHOOK_pre_quest_mobele2client) (uint8 *type);
+typedef enum quest_mobtype (*HPMHOOK_post_quest_mobele2client) (enum quest_mobtype retVal___, uint8 type);
+typedef enum quest_mobtype (*HPMHOOK_pre_quest_mobrace2client) (uint8 *type);
+typedef enum quest_mobtype (*HPMHOOK_post_quest_mobrace2client) (enum quest_mobtype retVal___, uint8 type);
 #endif // MAP_QUEST_H
 #ifdef MAP_REFINE_H /* refine */
 typedef int (*HPMHOOK_pre_refine_init) (bool *minimal);

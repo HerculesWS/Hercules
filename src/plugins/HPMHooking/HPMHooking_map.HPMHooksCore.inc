@@ -5268,6 +5268,10 @@ struct {
 	struct HPMHookPoint *HP_quest_questinfo_validate_quests_post;
 	struct HPMHookPoint *HP_quest_questinfo_validate_mercenary_class_pre;
 	struct HPMHookPoint *HP_quest_questinfo_validate_mercenary_class_post;
+	struct HPMHookPoint *HP_quest_mobele2client_pre;
+	struct HPMHookPoint *HP_quest_mobele2client_post;
+	struct HPMHookPoint *HP_quest_mobrace2client_pre;
+	struct HPMHookPoint *HP_quest_mobrace2client_post;
 	struct HPMHookPoint *HP_refine_init_pre;
 	struct HPMHookPoint *HP_refine_init_post;
 	struct HPMHookPoint *HP_refine_final_pre;
@@ -12337,6 +12341,10 @@ struct {
 	int HP_quest_questinfo_validate_quests_post;
 	int HP_quest_questinfo_validate_mercenary_class_pre;
 	int HP_quest_questinfo_validate_mercenary_class_post;
+	int HP_quest_mobele2client_pre;
+	int HP_quest_mobele2client_post;
+	int HP_quest_mobrace2client_pre;
+	int HP_quest_mobrace2client_post;
 	int HP_refine_init_pre;
 	int HP_refine_init_post;
 	int HP_refine_final_pre;

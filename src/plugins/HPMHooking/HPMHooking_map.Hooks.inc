@@ -69674,14 +69674,14 @@ int HP_quest_update_objective_sub(struct block_list *bl, va_list ap) {
 	}
 	return retVal___;
 }
-void HP_quest_update_objective(struct map_session_data *sd, int mob_id) {
+void HP_quest_update_objective(struct map_session_data *sd, const struct mob_data *md) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_quest_update_objective_pre > 0) {
-		void (*preHookFunc) (struct map_session_data **sd, int *mob_id);
+		void (*preHookFunc) (struct map_session_data **sd, const struct mob_data **md);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_quest_update_objective_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_quest_update_objective_pre[hIndex].func;
-			preHookFunc(&sd, &mob_id);
+			preHookFunc(&sd, &md);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -69689,13 +69689,13 @@ void HP_quest_update_objective(struct map_session_data *sd, int mob_id) {
 		}
 	}
 	{
-		HPMHooks.source.quest.update_objective(sd, mob_id);
+		HPMHooks.source.quest.update_objective(sd, md);
 	}
 	if (HPMHooks.count.HP_quest_update_objective_post > 0) {
-		void (*postHookFunc) (struct map_session_data *sd, int mob_id);
+		void (*postHookFunc) (struct map_session_data *sd, const struct mob_data *md);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_quest_update_objective_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_quest_update_objective_post[hIndex].func;
-			postHookFunc(sd, mob_id);
+			postHookFunc(sd, md);
 		}
 	}
 	return;
@@ -70153,6 +70153,60 @@ bool HP_quest_questinfo_validate_mercenary_class(struct map_session_data *sd, st
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_quest_questinfo_validate_mercenary_class_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_quest_questinfo_validate_mercenary_class_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, sd, qi);
+		}
+	}
+	return retVal___;
+}
+enum quest_mobtype HP_quest_mobele2client(uint8 type) {
+	int hIndex = 0;
+	enum quest_mobtype retVal___ = QMT_RC_DEMIHUMAN;
+	if (HPMHooks.count.HP_quest_mobele2client_pre > 0) {
+		enum quest_mobtype (*preHookFunc) (uint8 *type);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_quest_mobele2client_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_quest_mobele2client_pre[hIndex].func;
+			retVal___ = preHookFunc(&type);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.quest.mobele2client(type);
+	}
+	if (HPMHooks.count.HP_quest_mobele2client_post > 0) {
+		enum quest_mobtype (*postHookFunc) (enum quest_mobtype retVal___, uint8 type);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_quest_mobele2client_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_quest_mobele2client_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, type);
+		}
+	}
+	return retVal___;
+}
+enum quest_mobtype HP_quest_mobrace2client(uint8 type) {
+	int hIndex = 0;
+	enum quest_mobtype retVal___ = QMT_RC_DEMIHUMAN;
+	if (HPMHooks.count.HP_quest_mobrace2client_pre > 0) {
+		enum quest_mobtype (*preHookFunc) (uint8 *type);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_quest_mobrace2client_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_quest_mobrace2client_pre[hIndex].func;
+			retVal___ = preHookFunc(&type);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.quest.mobrace2client(type);
+	}
+	if (HPMHooks.count.HP_quest_mobrace2client_post > 0) {
+		enum quest_mobtype (*postHookFunc) (enum quest_mobtype retVal___, uint8 type);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_quest_mobrace2client_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_quest_mobrace2client_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, type);
 		}
 	}
 	return retVal___;

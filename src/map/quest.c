@@ -277,9 +277,10 @@ static int quest_update_objective_sub(struct block_list *bl, va_list ap)
 {
 	struct map_session_data *sd = NULL;
 	int party_id = va_arg(ap, int);
-	int mob_id = va_arg(ap, int);
+	const struct mob_data *md = va_arg(ap, const struct mob_data *);
 
 	nullpo_ret(bl);
+	nullpo_ret(md);
 	Assert_ret(bl->type == BL_PC);
 	sd = BL_UCAST(BL_PC, bl);
 
@@ -288,7 +289,7 @@ static int quest_update_objective_sub(struct block_list *bl, va_list ap)
 	if( sd->status.party_id != party_id )
 		return 0;
 
-	quest->update_objective(sd, mob_id);
+	quest->update_objective(sd, md);
 
 	return 1;
 }
@@ -300,11 +301,13 @@ static int quest_update_objective_sub(struct block_list *bl, va_list ap)
  * @param sd     Character's data
  * @param mob_id Monster ID
  */
-static void quest_update_objective(struct map_session_data *sd, int mob_id)
+static void quest_update_objective(struct map_session_data *sd, const struct mob_data *md)
 {
 	int i,j;
 
 	nullpo_retv(sd);
+	nullpo_retv(md);
+
 	for (i = 0; i < sd->avail_quests; i++) {
 		struct quest_db *qi = NULL;
 
@@ -314,10 +317,17 @@ static void quest_update_objective(struct map_session_data *sd, int mob_id)
 		qi = quest->db(sd->quest_log[i].quest_id);
 
 		for (j = 0; j < qi->objectives_count; j++) {
-			if (qi->objectives[j].mob == mob_id && sd->quest_log[i].count[j] < qi->objectives[j].count) {
-				sd->quest_log[i].count[j]++;
-				sd->save_quest = true;
-				clif->quest_update_objective(sd, &sd->quest_log[i]);
+			if ((qi->objectives[j].mob == 0 || qi->objectives[j].mob == md->class_) &&
+				sd->quest_log[i].count[j] < qi->objectives[j].count &&
+				(qi->objectives[j].level.min == 0 || qi->objectives[j].level.min <= md->level) &&
+				(qi->objectives[j].level.max == 0 || qi->objectives[j].level.max >= md->level) &&
+				(qi->objectives[j].mapid < 0 || qi->objectives[j].mapid == md->bl.m) &&
+				(qi->objectives[j].mobtype.size_enabled == false  || qi->objectives[j].mobtype.size == md->status.size) &&
+				(qi->objectives[j].mobtype.race_enabled == false || qi->objectives[j].mobtype.race == md->status.race) &&
+				(qi->objectives[j].mobtype.ele_enabled == false || qi->objectives[j].mobtype.ele == md->status.def_ele)) {
+					sd->quest_log[i].count[j]++;
+					sd->save_quest = true;
+					clif->quest_update_objective(sd, &sd->quest_log[i]);
 			}
 		}
 
@@ -327,7 +337,7 @@ static void quest_update_objective(struct map_session_data *sd, int mob_id)
 			struct item item;
 			struct item_data *data = NULL;
 			int temp;
-			if (dropitem->mob_id != 0 && dropitem->mob_id != mob_id)
+			if (dropitem->mob_id != 0 && dropitem->mob_id != md->class_)
 				continue;
 			// TODO: Should this be affected by server rates?
 			if (rnd()%10000 >= dropitem->rate)
@@ -509,13 +519,72 @@ static struct quest_db *quest_read_db_sub(struct config_setting_t *cs, int n, co
 				break;
 			if (!config_setting_is_group(tt))
 				continue;
-			if (!libconfig->setting_lookup_int(tt, "MobId", &mob_id) || mob_id <= 0)
+			if (libconfig->setting_lookup_int(tt, "MobId", &mob_id) != CONFIG_FALSE && mob_id < 0) {
+				ShowWarning("quest_read_db_sub: Invalid monster (%d) in \"%s\", for quest (%d).\n", mob_id, source, entry->id);
 				continue;
+			}
 			if (!libconfig->setting_lookup_int(tt, "Count", &count) || count <= 0)
 				continue;
 			RECREATE(entry->objectives, struct quest_objective, ++entry->objectives_count);
 			entry->objectives[entry->objectives_count-1].mob = mob_id;
 			entry->objectives[entry->objectives_count-1].count = count;
+
+			const struct config_setting_t *lvt = libconfig->setting_get_member(tt, "Level");
+			if (lvt != NULL) {
+				if (mob_id != 0) {
+					ShowWarning("quest_read_db_sub: Level can't be used when a MobId is defined in \"%s\", for quest (%d), ignoring.\n", source, entry->id);
+					continue;
+				}
+
+				if (config_setting_is_aggregate(lvt)) {
+					int min = libconfig->setting_get_int_elem(lvt, 0);
+					int max = libconfig->setting_get_int_elem(lvt, 1);
+					if (min < 0 || max < 0) {
+						ShowWarning("quest_read_db_sub: level can't be a negative value in \"%s\", for quest (%d), ignoring.\n", source, entry->id);
+						continue;
+					}
+					if (min > max && max != 0) {
+						ShowWarning("quest_read_db_sub: minimal level (%d) is bigger than the maximal level (%d) in \"%s\", for quest (%d), ignoring.\n", min, max, source, entry->id);
+						continue;
+					}
+					entry->objectives[entry->objectives_count - 1].level.min = min;
+					entry->objectives[entry->objectives_count - 1].level.max = max;
+				} else {
+					ShowWarning("quest_read_db_sub: Invalid format for Level in \"%s\", for quest (%d).\n", source, entry->id);
+				}
+			}
+			const char *map_name = NULL;
+			int16 mapid = -1;
+
+			if (libconfig->setting_lookup_string(tt, "MapName", &map_name) != CONFIG_FALSE) {
+				if ((mapid = map->mapname2mapid(map_name)) < 0) {
+					ShowWarning("quest_read_db_sub: Invalid MapName \"%s\" in \"%s\", for quest (%d), ignoring.\n", map_name, source, entry->id);
+					continue;
+				}
+			}
+			entry->objectives[entry->objectives_count - 1].mapid = mapid;
+
+			const struct config_setting_t *mobt = libconfig->setting_get_member(tt, "MobType");
+			if (mobt != NULL) {
+				if (mob_id != 0) {
+					ShowWarning("quest_read_db_sub: MobType can't be used when a MobId is defined in \"%s\", for quest (%d), ignoring.\n", source, entry->id);
+					continue;
+				}
+
+				if (mob->lookup_const(mobt, "Size", &i32)) {
+					entry->objectives[entry->objectives_count - 1].mobtype.size = (uint8)i32;
+					entry->objectives[entry->objectives_count - 1].mobtype.size_enabled = true;
+				}
+				if (mob->lookup_const(mobt, "Race", &i32)) {
+					entry->objectives[entry->objectives_count - 1].mobtype.race = (uint8)i32;
+					entry->objectives[entry->objectives_count - 1].mobtype.race_enabled = true;
+				}
+				if (mob->lookup_const(mobt, "Element", &i32)) {
+					entry->objectives[entry->objectives_count - 1].mobtype.ele = (uint8)i32;
+					entry->objectives[entry->objectives_count - 1].mobtype.ele_enabled = true;
+				}
+			}
+
 		}
 	}
 
@@ -927,6 +996,62 @@ static bool quest_questinfo_validate_mercenary_class(struct map_session_data *sd
 	return true;
 }
 
+static enum quest_mobtype quest_mobele2client(uint8 type)
+{
+	switch (type) {
+	case ELE_WATER:
+		return QMT_ELE_WATER;
+	case ELE_WIND:
+		return QMT_ELE_WIND;
+	case ELE_EARTH:
+		return QMT_ELE_EARTH;
+	case ELE_FIRE:
+		return QMT_ELE_FIRE;
+	case ELE_DARK:
+		return QMT_ELE_DARK;
+	case ELE_HOLY:
+		return QMT_ELE_HOLY;
+	case ELE_POISON:
+		return QMT_ELE_POISON;
+	case ELE_GHOST:
+		return QMT_ELE_GHOST;
+	case ELE_NEUTRAL:
+		return QMT_ELE_NEUTRAL;
+	case ELE_UNDEAD:
+		return QMT_ELE_UNDEAD;
+	default:
+		return 0;
+	}
+}
+
+static enum quest_mobtype quest_mobrace2client(uint8 type)
+{
+	switch (type) {
+	case RC_DEMIHUMAN:
+		return QMT_RC_DEMIHUMAN;
+	case RC_BRUTE:
+		return QMT_RC_BRUTE;
+	case RC_INSECT:
+		return QMT_RC_INSECT;
+	case RC_FISH:
+		return QMT_RC_FISH;
+	case RC_PLANT:
+		return QMT_RC_PLANT;
+	case RC_DEMON:
+		return QMT_RC_DEMON;
+	case RC_ANGEL:
+		return QMT_RC_ANGEL;
+	case RC_UNDEAD:
+		return QMT_RC_UNDEAD;
+	case RC_FORMLESS:
+		return QMT_RC_FORMLESS;
+	case RC_DRAGON:
+		return QMT_RC_DRAGON;
+	default:
+		return 0;
+	}
+}
+
 /**
  * Initializes the quest interface.
  *
@@ -1001,4 +1126,6 @@ void quest_defaults(void)
 	quest->questinfo_validate_homunculus_type = quest_questinfo_validate_homunculus_type;
 	quest->questinfo_validate_quests = quest_questinfo_validate_quests;
 	quest->questinfo_validate_mercenary_class = quest_questinfo_validate_mercenary_class;
+	quest->mobele2client = quest_mobele2client;
+	quest->mobrace2client = quest_mobrace2client;
 }

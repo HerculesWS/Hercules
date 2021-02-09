@@ -29,8 +29,45 @@ struct block_list;
 struct config_setting_t;
 struct map_session_data;
 struct questinfo;
+struct mob_data;
 
 #define MAX_QUEST_DB (60355+1) // Highest quest ID + 1
+#define QUEST_MAPWIDE_ID 10363 // MobId handled by the client to display MapName
+#define QUEST_MOBTYPE_ID 31999 // MobId handled by the client to display Mob properties
+
+#define quest_mobtype2client(type) ((1 << (type).size) | quest->mobele2client((type).ele) | quest->mobrace2client((type).race))
+#define quest_mobtypeisenabled(type) ((type).size_enabled || (type).ele_enabled || (type).race_enabled)
+
+enum quest_mobtype {
+	// Monster Sizes
+	QMT_SZ_SMALL         = 0x01,
+	QMT_SZ_MEDIUM        = 0x02,
+	QMT_SZ_LARGE         = 0x04,
+
+	// Monster Races
+	QMT_RC_DEMIHUMAN     = 0x80,
+	QMT_RC_BRUTE         = 0x100,
+	QMT_RC_INSECT        = 0x200,
+	QMT_RC_FISH          = 0x400,
+	QMT_RC_PLANT         = 0x800,
+	QMT_RC_DEMON         = 0x1000,
+	QMT_RC_ANGEL         = 0x2000,
+	QMT_RC_UNDEAD        = 0x4000,
+	QMT_RC_FORMLESS      = 0x8000,
+	QMT_RC_DRAGON        = 0x10000,
+
+	// Monster Elements
+	QMT_ELE_WATER        = 0x20000,
+	QMT_ELE_WIND         = 0x40000,
+	QMT_ELE_EARTH        = 0x80000,
+	QMT_ELE_FIRE         = 0x100000,
+	QMT_ELE_DARK         = 0x200000,
+	QMT_ELE_HOLY         = 0x400000,
+	QMT_ELE_POISON       = 0x800000,
+	QMT_ELE_GHOST        = 0x1000000,
+	QMT_ELE_NEUTRAL      = 0x2000000,
+	QMT_ELE_UNDEAD       = 0x4000000
+};
 
 struct quest_dropitem {
 	int mob_id;
@@ -41,6 +78,20 @@ struct quest_dropitem {
 struct quest_objective {
 	int mob;
 	int count;
+	struct {
+		int min;
+		int max;
+	} level;
+	struct {
+		uint8 size;
+		uint8 race;
+		uint8 ele;
+
+		bool size_enabled;
+		bool race_enabled;
+		bool ele_enabled;
+	} mobtype;
+	int16 mapid;
 };
 
 struct quest_db {
@@ -107,7 +158,7 @@ struct quest_interface {
 	int (*change) (struct map_session_data *sd, int qid1, int qid2);
 	int (*delete) (struct map_session_data *sd, int quest_id);
 	int (*update_objective_sub) (struct block_list *bl, va_list ap);
-	void (*update_objective) (struct map_session_data *sd, int mob_id);
+	void (*update_objective) (struct map_session_data *sd, const struct mob_data *md);
 	int (*update_status) (struct map_session_data *sd, int quest_id, enum quest_state qs);
 	int (*check) (struct map_session_data *sd, int quest_id, enum quest_check_type type);
 	void (*clear) (void);
@@ -126,6 +177,8 @@ struct quest_interface {
 	bool (*questinfo_validate_homunculus_type) (struct map_session_data *sd, struct questinfo *qi);
 	bool (*questinfo_validate_quests) (struct map_session_data *sd, struct questinfo *qi);
 	bool (*questinfo_validate_mercenary_class) (struct map_session_data *sd, struct questinfo *qi);
+	enum quest_mobtype (*mobele2client) (uint8 type);
+	enum quest_mobtype (*mobrace2client) (uint8 type);
 };
 
 #ifdef HERCULES_CORE
