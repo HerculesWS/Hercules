@@ -2708,6 +2708,7 @@ static int unit_remove_map(struct block_list *bl, enum clr_type clrtype, const c
 					sd->state.active, sd->state.connect_new, sd->state.rewarp, sd->state.changemap, sd->state.debug_remove_map,
 					map->list[bl->m].name, map->list[bl->m].users,
 					sd->debug_file, sd->debug_line, sd->debug_func, file, line, func);
+					Assert_report(0);
 			} else if (--map->list[bl->m].users == 0 && battle_config.dynamic_mobs) //[Skotlex]
 				map->removemobs(bl->m);
 			if (!(pc_isinvisible(sd))) {
