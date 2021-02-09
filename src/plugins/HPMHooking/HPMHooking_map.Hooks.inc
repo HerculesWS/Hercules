@@ -68501,15 +68501,15 @@ int HP_pet_hungry(int tid, int64 tick, int id, intptr_t data) {
 	}
 	return retVal___;
 }
-int HP_pet_search_petDB_index(int key, int type) {
+int HP_pet_search_petDB_index(int key, enum petdb_key_type p1) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_pet_search_petDB_index_pre > 0) {
-		int (*preHookFunc) (int *key, int *type);
+		int (*preHookFunc) (int *key, enum petdb_key_type *p1);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pet_search_petDB_index_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_pet_search_petDB_index_pre[hIndex].func;
-			retVal___ = preHookFunc(&key, &type);
+			retVal___ = preHookFunc(&key, &p1);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -68517,13 +68517,13 @@ int HP_pet_search_petDB_index(int key, int type) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.pet.search_petDB_index(key, type);
+		retVal___ = HPMHooks.source.pet.search_petDB_index(key, p1);
 	}
 	if (HPMHooks.count.HP_pet_search_petDB_index_post > 0) {
-		int (*postHookFunc) (int retVal___, int key, int type);
+		int (*postHookFunc) (int retVal___, int key, enum petdb_key_type p1);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pet_search_petDB_index_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_pet_search_petDB_index_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, key, type);
+			retVal___ = postHookFunc(retVal___, key, p1);
 		}
 	}
 	return retVal___;
@@ -69295,15 +69295,15 @@ void HP_pet_read_db(void) {
 	}
 	return;
 }
-int HP_pet_read_db_libconfig(const char *filename, bool ignore_missing, int count) {
+int HP_pet_read_db_libconfig(const char *filename, bool ignore_missing) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_pet_read_db_libconfig_pre > 0) {
-		int (*preHookFunc) (const char **filename, bool *ignore_missing, int *count);
+		int (*preHookFunc) (const char **filename, bool *ignore_missing);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pet_read_db_libconfig_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_pet_read_db_libconfig_pre[hIndex].func;
-			retVal___ = preHookFunc(&filename, &ignore_missing, &count);
+			retVal___ = preHookFunc(&filename, &ignore_missing);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -69311,13 +69311,13 @@ int HP_pet_read_db_libconfig(const char *filename, bool ignore_missing, int coun
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.pet.read_db_libconfig(filename, ignore_missing, count);
+		retVal___ = HPMHooks.source.pet.read_db_libconfig(filename, ignore_missing);
 	}
 	if (HPMHooks.count.HP_pet_read_db_libconfig_post > 0) {
-		int (*postHookFunc) (int retVal___, const char *filename, bool ignore_missing, int count);
+		int (*postHookFunc) (int retVal___, const char *filename, bool ignore_missing);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pet_read_db_libconfig_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_pet_read_db_libconfig_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, filename, ignore_missing, count);
+			retVal___ = postHookFunc(retVal___, filename, ignore_missing);
 		}
 	}
 	return retVal___;
@@ -69349,15 +69349,15 @@ int HP_pet_read_db_sub(struct config_setting_t *it, int n, const char *source) {
 	}
 	return retVal___;
 }
-bool HP_pet_read_db_sub_intimacy(int idx, struct config_setting_t *t) {
+bool HP_pet_read_db_sub_intimacy(struct s_pet_db *entry, struct config_setting_t *t) {
 	int hIndex = 0;
 	bool retVal___ = false;
 	if (HPMHooks.count.HP_pet_read_db_sub_intimacy_pre > 0) {
-		bool (*preHookFunc) (int *idx, struct config_setting_t **t);
+		bool (*preHookFunc) (struct s_pet_db **entry, struct config_setting_t **t);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pet_read_db_sub_intimacy_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_pet_read_db_sub_intimacy_pre[hIndex].func;
-			retVal___ = preHookFunc(&idx, &t);
+			retVal___ = preHookFunc(&entry, &t);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -69365,13 +69365,13 @@ bool HP_pet_read_db_sub_intimacy(int idx, struct config_setting_t *t) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.pet.read_db_sub_intimacy(idx, t);
+		retVal___ = HPMHooks.source.pet.read_db_sub_intimacy(entry, t);
 	}
 	if (HPMHooks.count.HP_pet_read_db_sub_intimacy_post > 0) {
-		bool (*postHookFunc) (bool retVal___, int idx, struct config_setting_t *t);
+		bool (*postHookFunc) (bool retVal___, struct s_pet_db *entry, struct config_setting_t *t);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pet_read_db_sub_intimacy_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_pet_read_db_sub_intimacy_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, idx, t);
+			retVal___ = postHookFunc(retVal___, entry, t);
 		}
 	}
 	return retVal___;
@@ -69402,31 +69402,32 @@ void HP_pet_read_db_clear(void) {
 	}
 	return;
 }
-void HP_pet_read_db_sub_evolution(struct config_setting_t *t, int n) {
+bool HP_pet_read_db_sub_evolution(struct s_pet_db *entry, struct config_setting_t *t) {
 	int hIndex = 0;
+	bool retVal___ = false;
 	if (HPMHooks.count.HP_pet_read_db_sub_evolution_pre > 0) {
-		void (*preHookFunc) (struct config_setting_t **t, int *n);
+		bool (*preHookFunc) (struct s_pet_db **entry, struct config_setting_t **t);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pet_read_db_sub_evolution_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_pet_read_db_sub_evolution_pre[hIndex].func;
-			preHookFunc(&t, &n);
+			retVal___ = preHookFunc(&entry, &t);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
-			return;
+			return retVal___;
 		}
 	}
 	{
-		HPMHooks.source.pet.read_db_sub_evolution(t, n);
+		retVal___ = HPMHooks.source.pet.read_db_sub_evolution(entry, t);
 	}
 	if (HPMHooks.count.HP_pet_read_db_sub_evolution_post > 0) {
-		void (*postHookFunc) (struct config_setting_t *t, int n);
+		bool (*postHookFunc) (bool retVal___, struct s_pet_db *entry, struct config_setting_t *t);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pet_read_db_sub_evolution_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_pet_read_db_sub_evolution_post[hIndex].func;
-			postHookFunc(t, n);
+			retVal___ = postHookFunc(retVal___, entry, t);
 		}
 	}
-	return;
+	return retVal___;
 }
 /* quest_interface */
 void HP_quest_init(bool minimal) {
