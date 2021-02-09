@@ -22,7 +22,37 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
-## [v2021.01.11] `January 11 2020`
+
+## [v2021.02.08] `February 08 2021`
+
+### Added
+
+- Extended the quest database with new options. (#2874)
+  - Mob ID can be set to 0 to allow any monster ID.
+  - A monster level range can now be specified.
+  - A target monster's map can now be specified.
+  - A target monster's type (size, race and/or element) can now be specified.
+- Added new quest database entries using the new options. (part of #2874)
+- Added a failed assertion backtrace report in the removing player error in `unit->remove_map()`. (part of #2938)
+- Added support for constants and improved error messages in the quest DB. This affects the `Mob_ID`, `Drops/ItemId` and `Drops/MobId` fields. (#2886)
+- Added inheritance mechanism for the pet DB. Inheritance works in the same way as the mob and item databases, allowing to specify the `Inherit: true` flag in order to inherit (rather than overriding) an existing entry with the same Id. (#2206, issue #2181)
+- Updated the map database, NPC and Hateffect constants with new data. (#2936)
+
+### Changed
+
+- Changed the free cell search (as used by random mob spawns or teleport) to ignore the map margins, as in official servers. The margin size defaults to the official value of 15 and can be changed by editing the `search_freecell_map_margin` setting in `misc.conf`. (#2911)
+- Refactored and sanitized `map->search_freecell()`. The function has been renamed to `map->search_free_cell()` since the meaning of its return values has changed. (part of #2911)
+- Refactored and documented some pet database functions and added validation of the pet DB entries before they're inserted into the database. The new constant `ITEID_PET_FOOD` has been added. (part of #2206)
+
+### Fixed
+
+- Fixed a signed left shift overflow in socket.c. (part of #2938)
+- Fixed failing github workflows builds, switching from clang-10 to clang-11 since the former is no longer available in the Debian repositories. (part of #2938)
+- Forcefully disabled the compiler flag `-fcf-protection` to avoid issues in the `setjmp()` calls. (#2938)
+- Fixed some missing item IDs referenced by the quest DB in pre-re mode. (part of #2886)
+- Fixed grfio issues with large grf files. (#2937)
+
+## [v2021.01.11] `January 11 2021`
 
 ### Added
 
