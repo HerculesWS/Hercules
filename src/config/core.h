@@ -94,6 +94,9 @@
 /// Comment to disable autotrade persistency (where autotrading merchants survive server restarts)
 #define AUTOTRADE_PERSISTENCY
 
+/// Uncomment for use with Nemo patch ExtendCashShopPreview
+//#define ENABLE_CASHSHOP_PREVIEW_PATCH
+
 /**
  * No settings past this point
  **/

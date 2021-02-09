@@ -20536,8 +20536,24 @@ void clif_cashShopSchedule(int fd, struct map_session_data *sd)
 		p->tabNum = i;
 
 		for (j = 0; j < clif->cs.item_count[i]; j++) {
-			p->items[j].itemId = clif->cs.data[i][j]->id;
+			const int itemId = clif->cs.data[i][j]->id;
+			p->items[j].itemId = itemId;
 			p->items[j].price = clif->cs.data[i][j]->price;
+#ifdef ENABLE_CASHSHOP_PREVIEW_PATCH
+			if (itemId == 0) {
+				p->items[j].location = 0;
+				p->items[j].viewSprite = 0;
+				continue;
+			}
+			struct item_data *data = itemdb->search(itemId);
+			if (data == NULL) {
+				p->items[j].location = 0;
+				p->items[j].viewSprite = 0;
+				continue;
+			}
+			p->items[j].location = pc->item_equippoint(sd, data);
+			p->items[j].viewSprite = data->view_sprite;
+#endif  // ENABLE_CASHSHOP_PREVIEW_PATCH
 		}
 
 		WFIFOSET(fd, len);

@@ -2461,6 +2461,10 @@ struct PACKET_ZC_ACK_SCHEDULER_CASHITEM_sub {
 	uint16 itemId;
 #endif
 	uint32 price;
+#ifdef ENABLE_CASHSHOP_PREVIEW_PATCH
+	uint16 viewSprite;
+	uint32 location;
+#endif  // ENABLE_CASHSHOP_PREVIEW_PATCH
 } __attribute__((packed));
 
 struct PACKET_ZC_ACK_SCHEDULER_CASHITEM {
