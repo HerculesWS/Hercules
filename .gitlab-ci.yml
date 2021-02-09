@@ -283,14 +283,22 @@ zero-2018:clang-7:
 
 pre_re:clang-8:
   <<: *branch_exceptions
-  <<: *prerequisites
+  before_script:
+    - echo "Building $CI_BUILD_NAME"
+    - uname -a
+    - echo 'deb http://ftp.debian.org/debian buster-backports main' >> /etc/apt/sources.list
+    - ./tools/ci/retry.sh apt-get update
+    - ./tools/ci/retry.sh apt-get install -t buster-backports -y -qq clang-8
+    - ./tools/ci/retry.sh apt-get install -y -qq $INSTALL_PACKAGES $DEBIAN_COMMON_PACKAGES
+    - ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok $SQLHOST
+    - ./tools/ci/travis.sh getplugins || true
   stage: secondary
-  image: debian:unstable
+  image: debian:buster
   services:
     - mariadb:10
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: clang-8 mariadb-client libmariadbclient-dev-compat python2
+    INSTALL_PACKAGES: mariadb-client libmariadbclient-dev-compat python2
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build CC=clang-8 --enable-debug --enable-Werror --enable-buildbot --disable-renewal
@@ -298,14 +306,22 @@ pre_re:clang-8:
 
 re:clang-8:
   <<: *branch_exceptions
-  <<: *prerequisites
+  before_script:
+    - echo "Building $CI_BUILD_NAME"
+    - uname -a
+    - echo 'deb http://ftp.debian.org/debian buster-backports main' >> /etc/apt/sources.list
+    - ./tools/ci/retry.sh apt-get update
+    - ./tools/ci/retry.sh apt-get install -t buster-backports -y -qq clang-8
+    - ./tools/ci/retry.sh apt-get install -y -qq $INSTALL_PACKAGES $DEBIAN_COMMON_PACKAGES
+    - ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok $SQLHOST
+    - ./tools/ci/travis.sh getplugins || true
   stage: secondary
-  image: debian:unstable
+  image: debian:buster
   services:
     - mariadb:10
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: clang-8 mariadb-client libmariadbclient-dev-compat python2
+    INSTALL_PACKAGES: mariadb-client libmariadbclient-dev-compat python2
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build CC=clang-8 --enable-debug --enable-Werror --enable-buildbot
@@ -313,14 +329,22 @@ re:clang-8:
 
 zero-2018:clang-8:
   <<: *branch_exceptions
-  <<: *prerequisites
+  before_script:
+    - echo "Building $CI_BUILD_NAME"
+    - uname -a
+    - echo 'deb http://ftp.debian.org/debian buster-backports main' >> /etc/apt/sources.list
+    - ./tools/ci/retry.sh apt-get update
+    - ./tools/ci/retry.sh apt-get install -t buster-backports -y -qq clang-8
+    - ./tools/ci/retry.sh apt-get install -y -qq $INSTALL_PACKAGES $DEBIAN_COMMON_PACKAGES
+    - ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok $SQLHOST
+    - ./tools/ci/travis.sh getplugins || true
   stage: clients
-  image: debian:unstable
+  image: debian:buster
   services:
     - mariadb:10
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: clang-8 mariadb-client libmariadbclient-dev-compat python2
+    INSTALL_PACKAGES: mariadb-client libmariadbclient-dev-compat python2
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build CC=clang-8 --enable-debug --enable-Werror --enable-buildbot --enable-packetver-zero --enable-packetver=20180511
