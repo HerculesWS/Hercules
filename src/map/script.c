@@ -11501,9 +11501,9 @@ static BUILDIN(makepet)
 
 	pet_id = pet->search_petDB_index(id, PET_CLASS);
 
-	if (pet_id < 0)
+	if (pet_id == INDEX_NOT_FOUND)
 		pet_id = pet->search_petDB_index(id, PET_EGG);
-	if (pet_id >= 0 && sd) {
+	if (pet_id != INDEX_NOT_FOUND && sd != NULL) {
 		sd->catch_target_class = pet->db[pet_id].class_;
 		intif->create_pet(sd->status.account_id, sd->status.char_id,
 		                  pet->db[pet_id].class_, mob->db(pet->db[pet_id].class_)->lv,

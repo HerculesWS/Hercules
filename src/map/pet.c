@@ -366,25 +366,47 @@ static int pet_hungry(int tid, int64 tick, int id, intptr_t data)
 	return 0;
 }
 
-static int search_petDB_index(int key, int type)
+/**
+ * Retrieves a pet db entry's index.
+ *
+ * @remark only PET_CLASS is guaranteed to be an unique key. The other search
+ *         types will return the first of many entries that match the condition.
+ *
+ * @param key  The key to look up.
+ * @param type The key type (@see enum petdb_key_type)
+ * @return the index of the first matching entry or INDEX_NOT_FOUND if no such entry was found.
+ */
+static int search_petDB_index(int key, enum petdb_key_type type)
 {
-	int i;
-
-	for( i = 0; i < MAX_PET_DB; i++ )
-	{
-		if(pet->db[i].class_ <= 0)
+	for (int i = 0; i < MAX_PET_DB; i++) {
+		if (pet->db[i].class_ <= 0)
 			continue;
-		switch(type) {
-			case PET_CLASS: if(pet->db[i].class_ == key) return i; break;
-			case PET_CATCH: if(pet->db[i].itemID == key) return i; break;
-			case PET_EGG:   if(pet->db[i].EggID  == key) return i; break;
-			case PET_EQUIP: if(pet->db[i].AcceID == key) return i; break;
-			case PET_FOOD:  if(pet->db[i].FoodID == key) return i; break;
-			default:
-				return -1;
+		switch (type) {
+		case PET_CLASS:
+			if (pet->db[i].class_ == key)
+				return i;
+			break;
+		case PET_CATCH:
+			if (pet->db[i].itemID == key)
+				return i;
+			break;
+		case PET_EGG:
+			if (pet->db[i].EggID == key)
+				return i;
+			break;
+		case PET_EQUIP:
+			if (pet->db[i].AcceID == key)
+				return i;
+			break;
+		case PET_FOOD:
+			if (pet->db[i].FoodID == key)
+				return i;
+			break;
+		default:
+			return INDEX_NOT_FOUND;
 		}
 	}
-	return -1;
+	return INDEX_NOT_FOUND;
 }
 
 static int pet_hungry_timer_delete(struct pet_data *pd)
@@ -1434,15 +1456,23 @@ static void pet_read_db(void)
 		DBPATH"pet_db.conf",
 		"pet_db2.conf"
 	};
-	int i;
 
 	pet->read_db_clear();
 
-	for (i = 0; i < ARRAYLENGTH(filename); ++i) {
+	for (int i = 0; i < ARRAYLENGTH(filename); ++i) {
 		pet->read_db_libconfig(filename[i], i > 0 ? true : false);
 	}
 }
 
+/**
+ * Reads from a libconfig-formatted petdb file and inserts the found entries
+ * into the pet database, overwriting duplicate ones (i.e. pet_db2 overriding
+ * pet_db.)
+ *
+ * @param filename       File name, relative to the database path.
+ * @param ignore_missing Whether to ignore errors caused by a missing db file.
+ * @return the number of found entries.
+ */
 static int pet_read_db_libconfig(const char *filename, bool ignore_missing)
 {
 	struct config_t pet_db_conf;
@@ -1450,7 +1480,8 @@ static int pet_read_db_libconfig(const char *filename, bool ignore_missing)
 	struct config_setting_t *t;
 	char filepath[256];
 	bool duplicate[MAX_MOB_DB] = { 0 };
-	int i = 0, count = 0;
+	int i = 0;
+	int count = 0;
 
 	nullpo_ret(filename);
 
@@ -1492,20 +1523,24 @@ static int pet_read_db_libconfig(const char *filename, bool ignore_missing)
 }
 
 /**
- * Reads a single pet from DB.
+ * Processes one petdb entry from the libconfig file, loading and inserting it
+ * into the pet database.
  *
- * @param it The libconfig settings block, which contains the pet's data.
- * @param n The pet's index in pet->db[].
- * @param source The pet DB's file name.
- * @return 0 on failure, the pet's ID on success.
- *
- **/
+ * @param it     Libconfig setting entry. It is expected to be valid and it
+ *               won't be freed (it is care of the caller to do so if
+ *               necessary).
+ * @param n      Ordinal number of the entry, to be displayed in case of
+ *               validation errors.
+ * @param source Source of the entry (file name), to be displayed in case of
+ *               validation errors.
+ * @return Pet/Mob ID of the validated entry, or 0 in case of failure.
+ */
 static int pet_read_db_sub(struct config_setting_t *it, int n, const char *source)
 {
 	nullpo_ret(it);
 	nullpo_ret(source);
-	Assert_ret(n >= 0 && n < MAX_PET_DB);
 
+	struct s_pet_db entry = { 0 };
 	int i32 = 0;
 
 	if (libconfig->setting_lookup_int(it, "Id", &i32) == CONFIG_FALSE) {
@@ -1518,147 +1553,211 @@ static int pet_read_db_sub(struct config_setting_t *it, int n, const char *sourc
 		return 0;
 	}
 
-	pet->db[n].class_ = i32;
-	safestrncpy(pet->db[n].name, mob->db(i32)->sprite, sizeof(pet->db[n].name));
+	entry.class_ = i32;
+
+	struct config_setting_t *t = NULL;
+	bool inherit = false;
+	int index = INDEX_NOT_FOUND;
+
+	if ((t = libconfig->setting_get_member(it, "Inherit")) != NULL && (inherit = libconfig->setting_get_bool(t))) {
+		index = pet->search_petDB_index(entry.class_, PET_CLASS);
+		if (index == INDEX_NOT_FOUND) {
+			ShowWarning("pet_read_db_sub: Trying to inherit nonexistent pet %d, defailt values will be used instead.\n", entry.class_);
+			inherit = false;
+		} else {
+			// Use old entry as default
+			entry = pet->db[index];
+		}
+	}
+	if (!inherit) {
+		ARR_FIND(0, MAX_PET_DB, index, pet->db[index].class_ == 0);
+		if (index == MAX_PET_DB) {
+			ShowError("pet_read_db_sub: Pet DB exceeds the maximum size of %d. MAX_PET_DB needs to be increased.\n", MAX_PET_DB);
+			return 0;
+		}
+	}
+
+	safestrncpy(entry.name, mob->db(entry.class_)->sprite, sizeof(entry.name));
 
 	const char *str;
 
 	if (libconfig->setting_lookup_string(it, "Name", &str) == CONFIG_FALSE || *str == '\0') {
-		ShowWarning("pet_read_db_sub: Missing Name in pet %d of \"%s\", skipping.\n",
-			    pet->db[n].class_, source);
-		return 0;
+		if (!inherit) {
+			ShowWarning("pet_read_db_sub: Missing Name in pet %d of \"%s\", skipping.\n", entry.class_, source);
+			return 0;
+		}
+	} else {
+		safestrncpy(entry.jname, str, sizeof(entry.jname));
 	}
-
-	safestrncpy(pet->db[n].jname, str, sizeof(pet->db[n].jname));
 
 	if (libconfig->setting_lookup_string(it, "EggItem", &str) == CONFIG_FALSE || *str == '\0') {
-		ShowWarning("pet_read_db_sub: Missing EggItem in pet %d of \"%s\", skipping.\n",
-			    pet->db[n].class_, source);
-		return 0;
+		if (!inherit) {
+			ShowWarning("pet_read_db_sub: Missing EggItem in pet %d of \"%s\", skipping.\n", entry.class_, source);
+			return 0;
+		}
+	} else {
+		struct item_data *data;
+		if ((data = itemdb->name2id(str)) == NULL) {
+			if (!inherit) {
+				ShowWarning("pet_read_db_sub: Invalid EggItem '%s' in pet %d of \"%s\", skipping.\n", str, entry.class_, source);
+				return 0;
+			}
+		} else {
+			entry.EggID = data->nameid;
+		}
 	}
-
-	struct item_data *data;
-
-	if ((data = itemdb->name2id(str)) == NULL) {
-		ShowWarning("pet_read_db_sub: Invalid EggItem '%s' in pet %d of \"%s\", skipping.\n",
-			    str, pet->db[n].class_, source);
-		return 0;
-	}
-
-	pet->db[n].EggID = data->nameid;
 
 	if (libconfig->setting_lookup_string(it, "TamingItem", &str) == CONFIG_TRUE) {
-		if ((data = itemdb->name2id(str)) == NULL)
-			ShowWarning("pet_read_db_sub: Invalid TamingItem '%s' in pet %d of \"%s\", defaulting to 0.\n",
-				    str, pet->db[n].class_, source);
-		else
-			pet->db[n].itemID = data->nameid;
+		struct item_data *data;
+		if ((data = itemdb->name2id(str)) == NULL) {
+			ShowWarning("pet_read_db_sub: Invalid TamingItem '%s' in pet %d of \"%s\", defaulting to 0.\n", str, entry.class_, source);
+			entry.itemID = 0;
+		} else {
+			entry.itemID = data->nameid;
+		}
 	}
 
-	pet->db[n].FoodID = 537;
-
 	if (libconfig->setting_lookup_string(it, "FoodItem", &str) == CONFIG_TRUE) {
-		if ((data = itemdb->name2id(str)) == NULL)
-			ShowWarning("pet_read_db_sub: Invalid FoodItem '%s' in pet %d of \"%s\", defaulting to Pet_Food (ID=537).\n",
-				    str, pet->db[n].class_, source);
-		else
-			pet->db[n].FoodID = data->nameid;
+		struct item_data *data;
+		if ((data = itemdb->name2id(str)) == NULL) {
+			ShowWarning("pet_read_db_sub: Invalid FoodItem '%s' in pet %d of \"%s\", defaulting to Pet_Food (ID=%d).\n",
+				    str, entry.class_, source, ITEMID_PET_FOOD);
+			entry.FoodID = ITEMID_PET_FOOD;
+		} else {
+			entry.FoodID = data->nameid;
+		}
+	} else if (!inherit) {
+		entry.FoodID = ITEMID_PET_FOOD;
 	}
 
 	if (libconfig->setting_lookup_string(it, "AccessoryItem", &str) == CONFIG_TRUE) {
-		if ((data = itemdb->name2id(str)) == NULL)
+		struct item_data *data;
+		if ((data = itemdb->name2id(str)) == NULL) {
 			ShowWarning("pet_read_db_sub: Invalid AccessoryItem '%s' in pet %d of \"%s\", defaulting to 0.\n",
-				    str, pet->db[n].class_, source);
-		else
-			pet->db[n].AcceID = data->nameid;
+				    str, entry.class_, source);
+			entry.AcceID = 0;
+		} else {
+			entry.AcceID = data->nameid;
+		}
 	}
 
-	int ret = libconfig->setting_lookup_int(it, "FoodEffectiveness", &i32);
-	pet->db[n].fullness = (ret == CONFIG_FALSE) ? 80 : cap_value(i32, 1, PET_HUNGER_STUFFED);
+	if (libconfig->setting_lookup_int(it, "FoodEffectiveness", &i32) == CONFIG_TRUE)
+		entry.fullness = cap_value(i32, 1, PET_HUNGER_STUFFED);
+	else if (!inherit)
+		entry.fullness = 80;
 
-	ret = libconfig->setting_lookup_int(it, "HungerDelay", &i32);
-	pet->db[n].hungry_delay = (ret == CONFIG_FALSE) ? 60000 : cap_value(1000 * i32, 0, INT_MAX);
+	if (libconfig->setting_lookup_int(it, "HungerDelay", &i32) == CONFIG_TRUE)
+		entry.hungry_delay = cap_value(1000 * i32, 0, INT_MAX);
+	else if (!inherit)
+		entry.hungry_delay = 60000;
 
-	ret = libconfig->setting_lookup_int(it, "HungerDecrement", &i32);
-	pet->db[n].hunger_decrement = (ret == CONFIG_FALSE) ? 1 : cap_value(i32, PET_HUNGER_STARVING, PET_HUNGER_STUFFED - 1);
+	if (libconfig->setting_lookup_int(it, "HungerDecrement", &i32) == CONFIG_TRUE)
+		entry.hunger_decrement = cap_value(i32, PET_HUNGER_STARVING, PET_HUNGER_STUFFED - 1);
+	else if (!inherit)
+		entry.hunger_decrement = 1;
 
-	if (pet->db[n].hunger_decrement == PET_HUNGER_STARVING)
-		pet->db[n].hungry_delay = 0;
+	if (entry.hunger_decrement == PET_HUNGER_STARVING)
+		entry.hungry_delay = 0;
 
-	/**
-	 * Preventively set default intimacy values here, just in case that 'Intimacy' block is not defined,
-	 * or pet_read_db_sub_intimacy() fails execution.
-	 *
-	 **/
-	pet->db[n].intimate = PET_INTIMACY_NEUTRAL;
-	pet->db[n].r_hungry = 10;
-	pet->db[n].r_full = 100;
-	pet->db[n].die = 20;
-	pet->db[n].starving_delay = min(20000, pet->db[n].hungry_delay);
-	pet->db[n].starving_decrement = 20;
-
-	struct config_setting_t *t;
+	if (!inherit) {
+		/*
+		 * Preventively set default intimacy values here, just in case that 'Intimacy' block is not defined,
+		 * or pet_read_db_sub_intimacy() fails execution.
+		 */
+		entry.intimate = PET_INTIMACY_NEUTRAL;
+		entry.r_hungry = 10;
+		entry.r_full = 100;
+		entry.die = 20;
+		entry.starving_delay = min(20000, entry.hungry_delay);
+		entry.starving_decrement = 20;
+	}
 
 	if ((t = libconfig->setting_get_member(it, "Intimacy")) != NULL && config_setting_is_group(t))
-		pet->read_db_sub_intimacy(n, t);
+		pet->read_db_sub_intimacy(&entry, t);
 
-	ret = libconfig->setting_lookup_int(it, "CaptureRate", &i32);
-	pet->db[n].capture = (ret == CONFIG_FALSE) ? 1000 : cap_value(i32, 1, 10000);
+	if (libconfig->setting_lookup_int(it, "CaptureRate", &i32) == CONFIG_TRUE)
+		entry.capture = cap_value(i32, 1, 10000);
+	else if (!inherit)
+		entry.capture = 1000;
 
-	ret = libconfig->setting_lookup_int(it, "Speed", &i32);
-	pet->db[n].speed = (ret == CONFIG_FALSE) ? DEFAULT_WALK_SPEED : cap_value(i32, MIN_WALK_SPEED, MAX_WALK_SPEED);
+	if (libconfig->setting_lookup_int(it, "Speed", &i32) == CONFIG_TRUE)
+		entry.speed = cap_value(i32, MIN_WALK_SPEED, MAX_WALK_SPEED);
+	else if (!inherit)
+		entry.speed = DEFAULT_WALK_SPEED;
 
 	if ((t = libconfig->setting_get_member(it, "SpecialPerformance")) != NULL
 	    && (i32 = libconfig->setting_get_bool(t)) != 0) {
-		pet->db[n].s_perfor = (char)i32;
+		entry.s_perfor = (char)i32;
 	}
 
 	if ((t = libconfig->setting_get_member(it, "TalkWithEmotes")) != NULL
 	    && (i32 = libconfig->setting_get_bool(t)) != 0) {
-		pet->db[n].talk_convert_class = i32;
+		entry.talk_convert_class = i32;
 	}
 
-	ret = libconfig->setting_lookup_int(it, "AttackRate", &i32);
-	pet->db[n].attack_rate = (ret == CONFIG_FALSE) ? 300 : cap_value(i32, 0, 10000);
+	if (libconfig->setting_lookup_int(it, "AttackRate", &i32) == CONFIG_TRUE)
+		entry.attack_rate = cap_value(i32, 0, 10000);
+	else if (!inherit)
+		entry.attack_rate = 300;
 
-	ret = libconfig->setting_lookup_int(it, "DefendRate", &i32);
-	pet->db[n].defence_attack_rate = (ret == CONFIG_FALSE) ? 300 : cap_value(i32, 0, 10000);
+	if (libconfig->setting_lookup_int(it, "DefendRate", &i32) == CONFIG_TRUE)
+		entry.defence_attack_rate = cap_value(i32, 0, 10000);
+	else if (!inherit)
+		entry.defence_attack_rate = 300;
 
-	ret = libconfig->setting_lookup_int(it, "ChangeTargetRate", &i32);
-	pet->db[n].change_target_rate = (ret == CONFIG_FALSE) ? 800 : cap_value(i32, 0, 10000);
+	if (libconfig->setting_lookup_int(it, "ChangeTargetRate", &i32) == CONFIG_TRUE)
+		entry.change_target_rate = cap_value(i32, 0, 10000);
+	else if (!inherit)
+		entry.change_target_rate = 800;
 
 	if ((t = libconfig->setting_get_member(it, "AutoFeed")) != NULL && (i32 = libconfig->setting_get_bool(t)) != 0)
-		pet->db[n].autofeed = i32;
+		entry.autofeed = i32;
 
-	pet->db[n].pet_script = NULL;
-	if (libconfig->setting_lookup_string(it, "PetScript", &str) == CONFIG_TRUE && *str != '\0')
-		pet->db[n].pet_script = script->parse(str, source, -pet->db[n].class_, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL);
+	if (libconfig->setting_lookup_string(it, "PetScript", &str) == CONFIG_TRUE && *str != '\0') {
+		entry.pet_script = script->parse(str, source, -entry.class_, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL);
+	} else if (!inherit) {
+		entry.pet_script = NULL;
+	}
 
-	pet->db[n].equip_script = NULL;
-	if (libconfig->setting_lookup_string(it, "EquipScript", &str) == CONFIG_TRUE && *str != '\0')
-		pet->db[n].equip_script = script->parse(str, source, -pet->db[n].class_, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL);
+	if (libconfig->setting_lookup_string(it, "EquipScript", &str) == CONFIG_TRUE && *str != '\0') {
+		entry.equip_script = script->parse(str, source, -entry.class_, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL);
+	} else if (!inherit) {
+		entry.equip_script = NULL;
+	}
 
 	if ((t = libconfig->setting_get_member(it, "Evolve")) != NULL && config_setting_is_group(t))
-		pet->read_db_sub_evolution(t, n);
+		pet->read_db_sub_evolution(&entry, t);
 
-	return pet->db[n].class_;
+	// Ready to insert - free existing data if overriding
+	if (pet->db[index].pet_script != NULL && pet->db[index].pet_script != entry.pet_script) {
+		script->free_code(pet->db[index].pet_script);
+		pet->db[index].pet_script = NULL;
+	}
+	if (pet->db[index].equip_script != NULL && pet->db[index].equip_script != entry.equip_script) {
+		script->free_code(pet->db[index].equip_script);
+		pet->db[index].equip_script = NULL;
+	}
+
+	pet->db[index] = entry;
+	return pet->db[index].class_;
 }
 
 /**
  * Read Pet Evolution Database [Dastgir/Hercules]
- * @param  t         libconfig setting
- * @param  n         Pet DB Index
+ * @param  entry The pet db entry.
+ * @param  t     The libconfig evolution block, to read information from.
+ * @return false on failure, true on success.
  */
-static void pet_read_db_sub_evolution(struct config_setting_t *t, int n)
+static bool pet_read_db_sub_evolution(struct s_pet_db *entry, struct config_setting_t *t)
 {
 	struct config_setting_t *pett;
 	int i = 0;
 	const char *str = NULL;
 
-	nullpo_retv(t);
-	Assert_retv(n >= 0 && n < MAX_PET_DB);
+	nullpo_retr(false, entry);
+	nullpo_retr(false, t);
 
-	VECTOR_INIT(pet->db[n].evolve_data);
+	VECTOR_INIT(entry->evolve_data);
 
 	while ((pett = libconfig->setting_get_elem(t, i))) {
 		if (config_setting_is_group(pett)) {
@@ -1670,8 +1769,8 @@ static void pet_read_db_sub_evolution(struct config_setting_t *t, int n)
 			str = config_setting_name(pett);
 
 			if (!(data = itemdb->name2id(str))) {
-				ShowWarning("pet_read_evolve_db_sub: Invalid Egg '%s' in Pet #%d, skipping.\n", str, pet->db[n].class_);
-				return;
+				ShowWarning("pet_read_evolve_db_sub: Invalid Egg '%s' in Pet #%d, skipping.\n", str, entry->class_);
+				return false;
 			} else {
 				ped.petEggId = data->nameid;
 			}
@@ -1712,48 +1811,48 @@ static void pet_read_db_sub_evolution(struct config_setting_t *t, int n)
 
 			}
 
-			VECTOR_ENSURE(pet->db[n].evolve_data, 1, 1);
-			VECTOR_PUSH(pet->db[n].evolve_data, ped);
+			VECTOR_ENSURE(entry->evolve_data, 1, 1);
+			VECTOR_PUSH(entry->evolve_data, ped);
 		}
 		i++;
 	}
+	return true;
 }
 
 /**
  * Reads a pet's intimacy data from DB.
  *
- * @param idx The pet's index in pet->db[].
- * @param t The libconfig settings block, which contains the pet's intimacy data.
+ * @param entry The pet db entry.
+ * @param t     The libconfig settings block, which contains the pet's intimacy data.
  * @return false on failure, true on success.
- *
- **/
-static bool pet_read_db_sub_intimacy(int idx, struct config_setting_t *t)
+ */
+static bool pet_read_db_sub_intimacy(struct s_pet_db *entry, struct config_setting_t *t)
 {
+	nullpo_retr(false, entry);
 	nullpo_retr(false, t);
-	Assert_retr(false, idx >= 0 && idx < MAX_PET_DB);
 
 	int i32 = 0;
 
 	if (libconfig->setting_lookup_int(t, "Initial", &i32) == CONFIG_TRUE)
-		pet->db[idx].intimate = cap_value(i32, PET_INTIMACY_AWKWARD, PET_INTIMACY_MAX);
+		entry->intimate = cap_value(i32, PET_INTIMACY_AWKWARD, PET_INTIMACY_MAX);
 
 	if (libconfig->setting_lookup_int(t, "FeedIncrement", &i32) == CONFIG_TRUE)
-		pet->db[idx].r_hungry = cap_value(i32, PET_INTIMACY_AWKWARD, PET_INTIMACY_MAX);
+		entry->r_hungry = cap_value(i32, PET_INTIMACY_AWKWARD, PET_INTIMACY_MAX);
 
 	if (libconfig->setting_lookup_int(t, "OverFeedDecrement", &i32) == CONFIG_TRUE)
-		pet->db[idx].r_full = cap_value(i32, PET_INTIMACY_NONE, PET_INTIMACY_MAX);
+		entry->r_full = cap_value(i32, PET_INTIMACY_NONE, PET_INTIMACY_MAX);
 
 	if (libconfig->setting_lookup_int(t, "OwnerDeathDecrement", &i32) == CONFIG_TRUE)
-		pet->db[idx].die = cap_value(i32, PET_INTIMACY_NONE, PET_INTIMACY_MAX);
+		entry->die = cap_value(i32, PET_INTIMACY_NONE, PET_INTIMACY_MAX);
 
 	if (libconfig->setting_lookup_int(t, "StarvingDelay", &i32) == CONFIG_TRUE)
-		pet->db[idx].starving_delay = cap_value(1000 * i32, 0, pet->db[idx].hungry_delay);
+		entry->starving_delay = cap_value(1000 * i32, 0, entry->hungry_delay);
 
 	if (libconfig->setting_lookup_int(t, "StarvingDecrement", &i32) == CONFIG_TRUE)
-		pet->db[idx].starving_decrement = cap_value(i32, PET_INTIMACY_NONE, PET_INTIMACY_MAX);
+		entry->starving_decrement = cap_value(i32, PET_INTIMACY_NONE, PET_INTIMACY_MAX);
 
-	if (pet->db[idx].starving_decrement == PET_INTIMACY_NONE)
-		pet->db[idx].starving_delay = 0;
+	if (entry->starving_decrement == PET_INTIMACY_NONE)
+		entry->starving_delay = 0;
 
 	return true;
 }

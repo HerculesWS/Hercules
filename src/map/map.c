@@ -1536,7 +1536,7 @@ static int map_clearflooritem_timer(int tid, int64 tick, int id, intptr_t data)
 		return 1;
 	}
 
-	if (pet->search_petDB_index(fitem->item_data.nameid, PET_EGG) >= 0)
+	if (pet->search_petDB_index(fitem->item_data.nameid, PET_EGG) != INDEX_NOT_FOUND)
 		intif->delete_petdata(MakeDWord(fitem->item_data.card[1], fitem->item_data.card[2]));
 
 	clif->clearflooritem(fitem, 0);
