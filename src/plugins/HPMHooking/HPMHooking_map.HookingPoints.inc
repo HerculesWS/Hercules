@@ -2683,6 +2683,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(quest->clear, HP_quest_clear) },
 	{ HP_POP(quest->read_db, HP_quest_read_db) },
 	{ HP_POP(quest->read_db_sub, HP_quest_read_db_sub) },
+	{ HP_POP(quest->setting_lookup_const, HP_quest_setting_lookup_const) },
 	{ HP_POP(quest->questinfo_validate_icon, HP_quest_questinfo_validate_icon) },
 	{ HP_POP(quest->questinfo_refresh, HP_quest_questinfo_refresh) },
 	{ HP_POP(quest->questinfo_validate, HP_quest_questinfo_validate) },

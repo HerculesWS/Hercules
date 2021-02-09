@@ -452,6 +452,43 @@ static int quest_check(struct map_session_data *sd, int quest_id, enum quest_che
 }
 
 /**
+ * Reads a field in tt and resolves it if it is a constant.
+ *
+ * @param tt        The config setting containing the field.
+ * @param name      Field to be read
+ * @param value     Where the read value will be returned
+ * @param quest_id  Entry quest ID (for error messages)
+ * @param idx       Entry index in the list (for error messages)
+ * @param kind      Entry kind (for error messages)
+ * @param source    Source file (for error messages)
+ * @return CONFIG_FALSE if something goes wrong, CONFIG_TRUE otherwise. value will be set to the value value.
+ */
+static int quest_setting_lookup_const(struct config_setting_t *tt, const char *name, int *value, int quest_id, int idx, const char *kind, const char *source)
+{
+	nullpo_retr(CONFIG_FALSE, tt);
+
+	if (libconfig->setting_lookup_int(tt, name, value) == CONFIG_TRUE)
+		return CONFIG_TRUE;
+
+	const char *str = NULL;
+	if (libconfig->setting_lookup_string(tt, name, &str) == CONFIG_TRUE) {
+		if (str[0] == '\0' || !script->get_constant(str, value)) {
+			ShowError("%s: Invalid %s constant \"%s\" at index (%d) in \"%s\" for quest id (%d), skipping.\n", __func__, kind, str, idx, source, quest_id);
+			return CONFIG_FALSE;
+		}
+
+		return CONFIG_TRUE;
+	}
+
+	if (libconfig->setting_lookup(tt, name) != NULL) {
+		ShowError("%s: Invalid '%s' for %s at index (%d) of quest (%d) in \"%s\". Skipping.\n", __func__, name, kind, idx, quest_id, source);
+		return CONFIG_FALSE;
+	}
+
+	return CONFIG_TRUE; // Simply not set
+}
+
+/**
  * Reads and parses an entry from the quest_db.
  *
  * @param cs     The config setting containing the entry.
@@ -473,16 +510,16 @@ static struct quest_db *quest_read_db_sub(struct config_setting_t *cs, int n, co
 	 * TimeLimit: Time Limit (seconds) [int, optional]
 	 * Targets: (                      [array, optional]
 	 *     {
-	 *         MobId: Mob ID           [int]
+	 *         MobId: Mob ID           [int/constant]
 	 *         Count:                  [int]
 	 *     },
 	 *     ... (can repeated up to MAX_QUEST_OBJECTIVES times)
 	 * )
 	 * Drops: (
 	 *     {
-	 *         ItemId: Item ID to drop [int]
+	 *         ItemId: Item ID to drop [int/constant]
 	 *         Rate: Drop rate         [int]
-	 *         MobId: Mob ID to match  [int, optional]
+	 *         MobId: Mob ID to match  [int/constant, optional]
 	 *     },
 	 *     ... (can be repeated)
 	 * )
@@ -519,12 +556,16 @@ static struct quest_db *quest_read_db_sub(struct config_setting_t *cs, int n, co
 				break;
 			if (!config_setting_is_group(tt))
 				continue;
-			if (libconfig->setting_lookup_int(tt, "MobId", &mob_id) != CONFIG_FALSE && mob_id < 0) {
-				ShowWarning("quest_read_db_sub: Invalid monster (%d) in \"%s\", for quest (%d).\n", mob_id, source, entry->id);
+			if (quest->setting_lookup_const(tt, "MobId", &mob_id, entry->id, i, "'Target' monster", source) != CONFIG_TRUE)
+				continue;
+			if (mob_id < 0) {
+				ShowWarning("quest_read_db_sub: Invalid monster (%d, index: %d) in \"%s\", for quest (%d).\n", mob_id, i, source, entry->id);
 				continue;
 			}
-			if (!libconfig->setting_lookup_int(tt, "Count", &count) || count <= 0)
+			if (!libconfig->setting_lookup_int(tt, "Count", &count) || count <= 0) {
+				ShowWarning("quest_read_db_sub: Invalid 'Count' for 'Target' (%d, index: %d) in \"%s\", for quest (%d).\n", mob_id, i, source, entry->id);
 				continue;
+			}
 			RECREATE(entry->objectives, struct quest_objective, ++entry->objectives_count);
 			entry->objectives[entry->objectives_count-1].mob = mob_id;
 			entry->objectives[entry->objectives_count-1].count = count;
@@ -597,14 +638,22 @@ static struct quest_db *quest_read_db_sub(struct config_setting_t *cs, int n, co
 				break;
 			if (!config_setting_is_group(tt))
 				continue;
-			if (!libconfig->setting_lookup_int(tt, "MobId", &mob_id))
-				mob_id = 0; // Zero = any monster
-			if (mob_id < 0)
+			if (quest->setting_lookup_const(tt, "MobId", &mob_id, entry->id, i, "'Drops' monster", source) != CONFIG_TRUE)
 				continue;
-			if (!libconfig->setting_lookup_int(tt, "ItemId", &nameid) || !itemdb->exists(nameid))
+			if (mob_id < 0) {
+				ShowError("%s: Invalid MobId (%d, index: %d) for 'Drop' monster in \"%s\", for quest id (%d), ignoring.\n", __func__, mob_id, i, source, entry->id);
 				continue;
-			if (!libconfig->setting_lookup_int(tt, "Rate", &rate) || rate <= 0)
+			}
+			if (quest->setting_lookup_const(tt, "ItemId", &nameid, entry->id, i, "'Drops' item", source) != CONFIG_TRUE)
 				continue;
+			if (!itemdb->exists(nameid)) {
+				ShowError("%s: Invalid ItemId (%d, index: %d) for 'Drops' in \"%s\", for quest (%d), ignoring.\n", __func__, nameid, i, source, entry->id);
+				continue;
+			}
+			if (!libconfig->setting_lookup_int(tt, "Rate", &rate) || rate <= 0) {
+				ShowError("%s: Invalid 'Drops' Rate for item (%d, index: %d) in \"%s\", for quest (%d), ignoring.\n", __func__, nameid, i, source, entry->id);
+				continue;
+			}
 			RECREATE(entry->dropitem, struct quest_dropitem, ++entry->dropitem_count);
 			entry->dropitem[entry->dropitem_count-1].mob_id = mob_id;
 			entry->dropitem[entry->dropitem_count-1].nameid = nameid;
@@ -1113,6 +1162,7 @@ void quest_defaults(void)
 	quest->clear = quest_clear_db;
 	quest->read_db = quest_read_db;
 	quest->read_db_sub = quest_read_db_sub;
+	quest->setting_lookup_const = quest_setting_lookup_const;
 
 	quest->questinfo_validate_icon = quest_questinfo_validate_icon;
 	quest->questinfo_refresh = quest_questinfo_refresh;

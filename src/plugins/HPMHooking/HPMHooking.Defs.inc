@@ -6704,6 +6704,8 @@ typedef int (*HPMHOOK_pre_quest_read_db) (void);
 typedef int (*HPMHOOK_post_quest_read_db) (int retVal___);
 typedef struct quest_db* (*HPMHOOK_pre_quest_read_db_sub) (struct config_setting_t **cs, int *n, const char **source);
 typedef struct quest_db* (*HPMHOOK_post_quest_read_db_sub) (struct quest_db* retVal___, struct config_setting_t *cs, int n, const char *source);
+typedef int (*HPMHOOK_pre_quest_setting_lookup_const) (struct config_setting_t **tt, const char **name, int **value, int *quest_id, int *idx, const char **kind, const char **source);
+typedef int (*HPMHOOK_post_quest_setting_lookup_const) (int retVal___, struct config_setting_t *tt, const char *name, int *value, int quest_id, int idx, const char *kind, const char *source);
 typedef int (*HPMHOOK_pre_quest_questinfo_validate_icon) (int *icon);
 typedef int (*HPMHOOK_post_quest_questinfo_validate_icon) (int retVal___, int icon);
 typedef void (*HPMHOOK_pre_quest_questinfo_refresh) (struct map_session_data **sd);

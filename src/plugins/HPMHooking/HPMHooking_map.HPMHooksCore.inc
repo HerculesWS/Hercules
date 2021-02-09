@@ -5244,6 +5244,8 @@ struct {
 	struct HPMHookPoint *HP_quest_read_db_post;
 	struct HPMHookPoint *HP_quest_read_db_sub_pre;
 	struct HPMHookPoint *HP_quest_read_db_sub_post;
+	struct HPMHookPoint *HP_quest_setting_lookup_const_pre;
+	struct HPMHookPoint *HP_quest_setting_lookup_const_post;
 	struct HPMHookPoint *HP_quest_questinfo_validate_icon_pre;
 	struct HPMHookPoint *HP_quest_questinfo_validate_icon_post;
 	struct HPMHookPoint *HP_quest_questinfo_refresh_pre;
@@ -12317,6 +12319,8 @@ struct {
 	int HP_quest_read_db_post;
 	int HP_quest_read_db_sub_pre;
 	int HP_quest_read_db_sub_post;
+	int HP_quest_setting_lookup_const_pre;
+	int HP_quest_setting_lookup_const_post;
 	int HP_quest_questinfo_validate_icon_pre;
 	int HP_quest_questinfo_validate_icon_post;
 	int HP_quest_questinfo_refresh_pre;
