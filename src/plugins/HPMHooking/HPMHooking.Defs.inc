@@ -8370,8 +8370,8 @@ typedef bool (*HPMHOOK_pre_sv_readdb) (const char **directory, const char **file
 typedef bool (*HPMHOOK_post_sv_readdb) (bool retVal___, const char *directory, const char *filename, char delim, int mincols, int maxcols, int maxrows, bool ( *parseproc ) (char *fields[], int columns, int current));
 #endif // COMMON_STRLIB_H
 #ifdef COMMON_SYSINFO_H /* sysinfo */
-typedef int (*HPMHOOK_pre_sysinfo_getpagesize) (void);
-typedef int (*HPMHOOK_post_sysinfo_getpagesize) (int retVal___);
+typedef long (*HPMHOOK_pre_sysinfo_getpagesize) (void);
+typedef long (*HPMHOOK_post_sysinfo_getpagesize) (long retVal___);
 typedef const char* (*HPMHOOK_pre_sysinfo_platform) (void);
 typedef const char* (*HPMHOOK_post_sysinfo_platform) (const char* retVal___);
 typedef const char* (*HPMHOOK_pre_sysinfo_osversion) (void);
