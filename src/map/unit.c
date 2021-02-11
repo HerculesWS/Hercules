@@ -1734,6 +1734,8 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 	if (sd != NULL && sd->auto_cast_current.itemskill_instant_cast && sd->auto_cast_current.type == AUTOCAST_ITEM)
 		casttime = 0;
 
+	map->freeblock_lock();
+
 	// in official this is triggered even if no cast time.
 	clif->useskill(src, src->id, target_id, 0,0, skill_id, skill_lv, casttime);
 	if( casttime > 0 || temp )
@@ -1797,6 +1799,8 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 
 	if (sd != NULL && battle_config.prevent_logout_trigger & PLT_SKILL)
 		sd->canlog_tick = timer->gettick();
+
+	map->freeblock_unlock();
 
 	return 1;
 }
