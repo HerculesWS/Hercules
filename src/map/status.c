@@ -7341,6 +7341,9 @@ static int status_get_sc_def(struct block_list *src, struct block_list *bl, enum
 	case SC_NETHERWORLD:
 		tick_def2 = 1000 * ((bl->type == BL_PC ? BL_UCCAST(BL_PC, bl)->status.job_level : 0) / 10 + status->get_lv(bl) / 50);
 		break;
+	case SC_NO_RECOVER_STATE:
+		tick_def2 = st->luk * 100;
+		break;
 	default:
 		//Effect that cannot be reduced? Likely a buff.
 		if (!(rnd()%10000 < rate))
@@ -7921,6 +7924,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			case SC__WEAKNESS:
 			case SC__UNLUCKY:
 			case SC__CHAOS:
+			case SC_NO_RECOVER_STATE:
 				return 0;
 			case SC_COMBOATTACK:
 			case SC_DANCING:

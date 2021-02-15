@@ -379,6 +379,7 @@ bonus bMagicSPGainValue,`n`;           | Gains +`n` SP when killing an enemy wit
 bonus2 bHPGainRaceAttack,`r`,`n`;      | Heals `n` HP when attacking race `r` on every hit
 bonus2 bSPGainRaceAttack,`r`,`n`;      | Heals `n` SP when attacking race `r` on every hit
 bonus2 bSPGainRace,`r`,`n`;            | When killing a monster of race `r` by physical attack gain `n` SP
+bonus3 bStateNoRecoverRace,`r`,`x`,`t`;| Set target to a no recovery state based on race `r` at `x`% for `t` milliseconds with normal attack.
 
 Damage return                          | Description
 :------------------------------------- | :-------------------------

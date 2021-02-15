@@ -861,6 +861,7 @@ typedef enum sc_type {
 	SC_SKF_ASPD,
 	SC_SKF_CAST,
 	SC_ALMIGHTY,
+	SC_NO_RECOVER_STATE,
 #ifndef SC_MAX
 	SC_MAX, //Automatically updated max, used in for's to check we are within bounds.
 #endif

@@ -7387,6 +7387,10 @@ static BUILDIN(percentheal)
 	if (sd->sc.data[SC_BITESCAR]) {
 		hp = 0;
 	}
+	if (sd->sc.data[SC_NO_RECOVER_STATE]) {
+		hp = 0;
+		sp = 0;
+	}
 	pc->percentheal(sd, hp, sp);
 	return true;
 }
