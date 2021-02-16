@@ -5623,98 +5623,60 @@ static void clif_skill_cooldown(struct map_session_data *sd, uint16 skill_id, un
 /// 01de <skill id>.W <src id>.L <dst id>.L <tick>.L <src delay>.L <dst delay>.L <damage>.L <level>.W <div>.W <type>.B (ZC_NOTIFY_SKILL2)
 static int clif_skill_damage(struct block_list *src, struct block_list *dst, int64 tick, int sdelay, int ddelay, int64 in_damage, int div, uint16 skill_id, uint16 skill_lv, enum battle_dmg_type type)
 {
-	unsigned char buf[64];
-	struct status_change *sc;
-	int damage;
-
 	nullpo_ret(src);
 	nullpo_ret(dst);
 
-	damage = (int)cap_value(in_damage, INT_MIN, INT_MAX);
+	int damage = (int)cap_value(in_damage, INT_MIN, INT_MAX);
 	type = clif_calc_delay(type, div, damage, ddelay);
 
 #if PACKETVER >= 20131223
-	if (type == BDT_SKILL) type = BDT_MULTIHIT; //bugreport:8263
-#endif
-
-	if ((sc = status->get_sc(dst)) && sc->count) {
-		if (sc->data[SC_ILLUSION] && damage)
-			damage = damage * (sc->data[SC_ILLUSION]->val2) + rnd() % 100;
-	}
-
-#if PACKETVER < 3
-	WBUFW(buf, 0) = 0x114;
-	WBUFW(buf, 2) = skill_id;
-	WBUFL(buf, 4) = src->id;
-	WBUFL(buf, 8) = dst->id;
-	WBUFL(buf, 12) = (uint32)tick;
-	WBUFL(buf, 16) = sdelay;
-	WBUFL(buf, 20) = ddelay;
-	if (battle_config.hide_woe_damage && map_flag_gvg2(src->m)) {
-		WBUFW(buf, 24) = damage ? div : 0;
-	} else {
-		WBUFW(buf, 24) = damage;
-	}
-	WBUFW(buf, 26) = skill_lv;
-	WBUFW(buf, 28) = div;
-	WBUFB(buf, 30) = type;
-	if (clif->isdisguised(dst)) {
-		clif->send(buf, packet_len(0x114), dst, AREA_WOS);
-		WBUFL(buf, 8) = -dst->id;
-		clif->send(buf, packet_len(0x114), dst, SELF);
-	} else {
-		clif->send(buf, packet_len(0x114), dst, AREA);
-	}
-
-	if (clif->isdisguised(src)) {
-		WBUFL(buf, 4) = -src->id;
-		if (clif->isdisguised(dst))
-			WBUFL(buf, 8) = dst->id;
-		if (damage > 0)
-			WBUFW(buf, 24) = -1;
-		clif->send(buf, packet_len(0x114), src, SELF);
-	}
-#else
-	WBUFW(buf, 0) = 0x1de;
-	WBUFW(buf, 2) = skill_id;
-	WBUFL(buf, 4) = src->id;
-	WBUFL(buf, 8) = dst->id;
-	WBUFL(buf, 12) = (uint32)tick;
-	WBUFL(buf, 16) = sdelay;
-	WBUFL(buf, 20) = ddelay;
-	if (battle_config.hide_woe_damage && map_flag_gvg2(src->m)) {
-		WBUFL(buf, 24) = damage ? div : 0;
-	} else {
-		WBUFL(buf, 24) = damage;
-	}
-	WBUFW(buf, 28) = skill_lv;
-	WBUFW(buf, 30) = div;
 	// For some reason, late 2013 and newer clients have
 	// a issue that causes players and monsters to endure
 	// type 6 (ACTION_SKILL) skills. So we have to do a small
 	// hack to set all type 6 to be sent as type 8 ACTION_ATTACK_MULTIPLE
-#if PACKETVER < 20131223
-	WBUFB(buf, 32) = type;
-#else
-	WBUFB(buf, 32) = (type == BDT_SKILL) ? BDT_MULTIHIT : type;
+	if (type == BDT_SKILL)
+		type = BDT_MULTIHIT; //bugreport:8263
 #endif
-	if (clif->isdisguised(dst)) {
-		clif->send(buf, packet_len(0x1de), dst, AREA_WOS);
-		WBUFL(buf,8)=-dst->id;
-		clif->send(buf, packet_len(0x1de), dst, SELF);
+
+	const struct status_change *sc = status->get_sc(dst);
+	if (sc != NULL && sc->count) {
+		if (sc->data[SC_ILLUSION] != NULL && damage != 0)
+			damage = damage * (sc->data[SC_ILLUSION]->val2) + rnd() % 100;
+	}
+
+	struct PACKET_ZC_NOTIFY_SKILL p = { 0 };
+	p.PacketType = HEADER_ZC_NOTIFY_SKILL;
+	p.SKID = skill_id;
+	p.AID = src->id;
+	p.targetID = dst->id;
+	p.startTime = (uint32)tick;
+	p.attackMT = sdelay;
+	p.attackedMT = ddelay;
+	if (battle_config.hide_woe_damage && map_flag_gvg2(src->m)) {
+		p.damage = damage ? div : 0;
 	} else {
-		clif->send(buf, packet_len(0x1de), dst, AREA);
+		p.damage = damage;
+	}
+	p.level = skill_lv;
+	p.count = div;
+	p.action = type;
+
+	if (clif->isdisguised(dst)) {
+		clif->send(&p, sizeof(p), dst, AREA_WOS);
+		p.targetID = -dst->id;
+		clif->send(&p, sizeof(p), dst, SELF);
+	} else {
+		clif->send(&p, sizeof(p), dst, AREA);
 	}
 
 	if (clif->isdisguised(src)) {
-		WBUFL(buf, 4) = -src->id;
+		p.AID = -src->id;
 		if (clif->isdisguised(dst))
-			WBUFL(buf, 8) = dst->id;
+			p.targetID = dst->id;
 		if (damage > 0)
-			WBUFL(buf, 24) = -1;
-		clif->send(buf, packet_len(0x1de), src, SELF);
+			p.damage = -1;
+		clif->send(&p, sizeof(p), src, SELF);
 	}
-#endif
 
 	//Because the damage delay must be synced with the client, here is where the can-walk tick must be updated. [Skotlex]
 	return clif->calc_walkdelay(dst, ddelay, type, damage, div);

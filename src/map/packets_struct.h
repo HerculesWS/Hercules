@@ -3952,6 +3952,39 @@ struct PACKET_CZ_REQUEST_ACTNPC {
 	int8 action;
 } __attribute__((packed));
 
+#if PACKETVER < 3
+struct PACKET_ZC_NOTIFY_SKILL {
+	int16 PacketType;
+	uint16 SKID;
+	uint32 AID;
+	uint32 targetID;
+	uint32 startTime;
+	int32 attackMT;
+	int32 attackedMT;
+	int16 damage;
+	int16 level;
+	int16 count;
+	int8 action;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_NOTIFY_SKILL, 0x0114);
+#else
+struct PACKET_ZC_NOTIFY_SKILL {
+	int16 PacketType;
+	uint16 SKID;
+	uint32 AID;
+	uint32 targetID;
+	uint32 startTime;
+	int32 attackMT;
+	int32 attackedMT;
+	int32 damage;
+	int16 level;
+	int16 count;
+	int8 action;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_NOTIFY_SKILL, 0x01de);
+#endif 
+
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
