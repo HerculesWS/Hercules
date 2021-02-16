@@ -5780,23 +5780,22 @@ static int clif_skill_nodamage(struct block_list *src, struct block_list *dst, u
 /// 0117 <skill id>.W <src id>.L <level>.W <x>.W <y>.W <tick>.L
 static void clif_skill_poseffect(struct block_list *src, uint16 skill_id, int val, int x, int y, int64 tick)
 {
-	unsigned char buf[32];
-
 	nullpo_retv(src);
 
-	WBUFW(buf,0)=0x117;
-	WBUFW(buf,2)=skill_id;
-	WBUFL(buf,4)=src->id;
-	WBUFW(buf,8)=val;
-	WBUFW(buf,10)=x;
-	WBUFW(buf,12)=y;
-	WBUFL(buf,14)=(uint32)tick;
+	struct PACKET_ZC_NOTIFY_GROUNDSKILL p = { 0 };
+	p.PacketType = HEADER_ZC_NOTIFY_GROUNDSKILL;
+	p.SKID = skill_id;
+	p.AID = src->id;
+	p.level = val;
+	p.xPos = x;
+	p.yPos = y;
+	p.startTime = (uint32)tick;
 	if (clif->isdisguised(src)) {
-		clif->send(buf,packet_len(0x117),src,AREA_WOS);
-		WBUFL(buf,4)=-src->id;
-		clif->send(buf,packet_len(0x117),src,SELF);
+		clif->send(&p, sizeof(p), src, AREA_WOS);
+		p.AID = -src->id;
+		clif->send(&p, sizeof(p), src, SELF);
 	} else {
-		clif->send(buf,packet_len(0x117),src,AREA);
+		clif->send(&p, sizeof(p), src, AREA);
 	}
 }
 
