@@ -3421,17 +3421,17 @@ static void status_calc_regen(struct block_list *bl, struct status_data *st, str
 		break;
 	}
 
-	regen->hp = cap_value(regen->hp, 1, INT16_MAX);
-	regen->sp = cap_value(regen->sp, 1, INT16_MAX);
+	regen->hp = cap_value(regen->hp, 0, INT16_MAX);
+	regen->sp = cap_value(regen->sp, 0, INT16_MAX);
 
 	if (regen->skill != NULL) {
-		regen->skill->hp = cap_value(regen->skill->hp, 1, INT16_MAX);
-		regen->skill->sp = cap_value(regen->skill->sp, 1, INT16_MAX);
+		regen->skill->hp = cap_value(regen->skill->hp, 0, INT16_MAX);
+		regen->skill->sp = cap_value(regen->skill->sp, 0, INT16_MAX);
 	}
 
 	if (regen->sitting != NULL) {
-		regen->sitting->hp = cap_value(regen->sitting->hp, 1, INT16_MAX);
-		regen->sitting->sp = cap_value(regen->sitting->sp, 1, INT16_MAX);
+		regen->sitting->hp = cap_value(regen->sitting->hp, 0, INT16_MAX);
+		regen->sitting->sp = cap_value(regen->sitting->sp, 0, INT16_MAX);
 	}
 }
 
