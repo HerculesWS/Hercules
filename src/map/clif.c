@@ -5689,52 +5689,50 @@ static int clif_skill_damage(struct block_list *src, struct block_list *dst, int
 #if 0
 static int clif_skill_damage2(struct block_list *src, struct block_list *dst, int64 tick, int sdelay, int ddelay, int damage, int div, uint16 skill_id, uint16 skill_lv, enum battle_dmg_type type)
 {
-	unsigned char buf[64];
-	struct status_change *sc;
-
 	nullpo_ret(src);
 	nullpo_ret(dst);
 
-	type = (type>0)?type:skill->get_hit(skill_id);
-	type = clif_calc_delay(type,div,damage,ddelay);
-	sc = status->get_sc(dst);
+	type = (type > 0) ? type : skill->get_hit(skill_id, skill_lv);
+	type = clif_calc_delay(type, div, damage, ddelay);
 
-	if(sc && sc->count) {
-		if(sc->data[SC_ILLUSION] && damage)
-			damage = damage*(sc->data[SC_ILLUSION]->val2) + rnd()%100;
+	const struct status_change *sc = status->get_sc(dst);
+	if (sc != NULL && sc->count) {
+		if (sc->data[SC_ILLUSION] != NULL && damage != 0)
+			damage = damage * (sc->data[SC_ILLUSION]->val2) + rnd() % 100;
 	}
 
-	WBUFW(buf,0)=0x115;
-	WBUFW(buf,2)=skill_id;
-	WBUFL(buf,4)=src->id;
-	WBUFL(buf,8)=dst->id;
-	WBUFL(buf,12)=(uint32)tick;
-	WBUFL(buf,16)=sdelay;
-	WBUFL(buf,20)=ddelay;
-	WBUFW(buf,24)=dst->x;
-	WBUFW(buf,26)=dst->y;
+	struct PACKET_ZC_NOTIFY_SKILL_POSITION p = { 0 };
+	p.PacketType = HEADER_ZC_NOTIFY_SKILL_POSITION;
+	p.SKID = skill_id;
+	p.AID = src->id;
+	p.targetID = dst->id;
+	p.startTime = (uint32)tick;
+	p.attackMT = sdelay;
+	p.attackedMT = ddelay;
+	p.xPos = dst->x;
+	p.yPos = dst->y;
 	if (battle_config.hide_woe_damage && map_flag_gvg(src->m)) {
-		WBUFW(buf,28)=damage?div:0;
+		p.damage = damage ? div : 0;
 	} else {
-		WBUFW(buf,28)=damage;
+		p.damage = damage;
 	}
-	WBUFW(buf,30)=skill_lv;
-	WBUFW(buf,32)=div;
-	WBUFB(buf,34)=type;
-	clif->send(buf,packet_len(0x115),src,AREA);
+	p.level = skill_lv;
+	p.count = div;
+	p.action = type;
+	clif->send(&p, sizeof(p), src, AREA);
 	if (clif->isdisguised(src)) {
-		WBUFL(buf,4)=-src->id;
-		if(damage > 0)
-			WBUFW(buf,28)=-1;
-		clif->send(buf,packet_len(0x115),src,SELF);
+		p.AID = -src->id;
+		if (damage > 0)
+			p.damage = -1;
+		clif->send(&p, sizeof(p), src, SELF);
 	}
 	if (clif->isdisguised(dst)) {
-		WBUFL(buf,8)=-dst->id;
+		p.targetID = -dst->id;
 		if (clif->isdisguised(src))
-			WBUFL(buf,4)=src->id;
-		else if(damage > 0)
-			WBUFW(buf,28)=-1;
-		clif->send(buf,packet_len(0x115),dst,SELF);
+			p.AID = src->id;
+		else if (damage > 0)
+			p.damage = -1;
+		clif->send(&p, sizeof(p), dst, SELF);
 	}
 
 	//Because the damage delay must be synced with the client, here is where the can-walk tick must be updated. [Skotlex]

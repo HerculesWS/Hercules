@@ -4026,6 +4026,23 @@ struct PACKET_ZC_SKILL_POSTDELAY {
 DEFINE_PACKET_HEADER(ZC_SKILL_POSTDELAY, 0x043d);
 #endif
 
+struct PACKET_ZC_NOTIFY_SKILL_POSITION {
+	int16 PacketType;
+	uint16 SKID;
+	uint32 AID;
+	uint32 targetID;
+	uint32 startTime;
+	int32 attackMT;
+	int32 attackedMT;
+	int16 xPos;
+	int16 yPos;
+	int16 damage;
+	int16 level;
+	int16 count;
+	int8 action;
+};
+DEFINE_PACKET_HEADER(ZC_NOTIFY_SKILL_POSITION, 0x0115);
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
