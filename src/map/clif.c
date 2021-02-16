@@ -5604,17 +5604,19 @@ static void clif_skill_fail(struct map_session_data *sd, uint16 skill_id, enum u
 /// 043d <skill ID>.W <tick>.L
 static void clif_skill_cooldown(struct map_session_data *sd, uint16 skill_id, unsigned int duration)
 {
-#if PACKETVER>=20081112
-	int fd;
-
+#if PACKETVER_MAIN_NUM >= 20081112 || PACKETVER_RE_NUM >= 20081111 || defined(PACKETVER_ZERO)
 	nullpo_retv(sd);
 
-	fd=sd->fd;
-	WFIFOHEAD(fd,packet_len(0x43d));
-	WFIFOW(fd,0) = 0x43d;
-	WFIFOW(fd,2) = skill_id;
-	WFIFOL(fd,4) = duration;
-	WFIFOSET(fd,packet_len(0x43d));
+	int fd = sd->fd;
+	struct PACKET_ZC_SKILL_POSTDELAY p = { 0 };
+
+	WFIFOHEAD(fd, sizeof(p));
+	p.PacketType = HEADER_ZC_SKILL_POSTDELAY;
+	p.SKID = skill_id;
+	p.DelayTM = duration;
+
+	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
+	WFIFOSET(fd, sizeof(p));
 #endif
 }
 

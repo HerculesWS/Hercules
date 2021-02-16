@@ -4017,6 +4017,15 @@ struct PACKET_ZC_NOTIFY_GROUNDSKILL {
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(ZC_NOTIFY_GROUNDSKILL, 0x0117);
 
+#if PACKETVER_MAIN_NUM >= 20081112 || PACKETVER_RE_NUM >= 20081111 || defined(PACKETVER_ZERO)
+struct PACKET_ZC_SKILL_POSTDELAY {
+	int16 PacketType;
+	uint16 SKID;
+	uint32 DelayTM;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_SKILL_POSTDELAY, 0x043d);
+#endif
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
