@@ -5745,41 +5745,32 @@ static int clif_skill_damage2(struct block_list *src, struct block_list *dst, in
 /// 09cb <skill id>.W <skill lv>.L <dst id>.L <src id>.L <result>.B (ZC_USE_SKILL2)
 static int clif_skill_nodamage(struct block_list *src, struct block_list *dst, uint16 skill_id, int heal, int fail)
 {
-	unsigned char buf[32];
-	short offset = 0;
-#if PACKETVER < 20131223
-	short cmd = 0x11a;
-#else
-	short cmd = 0x9cb;
-#endif
-	int len = packet_len(cmd);
-
 	nullpo_ret(dst);
 
-	WBUFW(buf, 0) = cmd;
-	WBUFW(buf, 2) = skill_id;
-#if PACKETVER < 20131223
-	WBUFW(buf, 4) = min(heal, INT16_MAX);
+	struct PACKET_ZC_USE_SKILL p = { 0 };
+	p.PacketType = HEADER_ZC_USE_SKILL;
+	p.SKID = skill_id;
+#if PACKETVER_MAIN_NUM >= 20130731 || PACKETVER_RE_NUM >= 20130724 || defined(PACKETVER_ZERO)
+	p.level = min(heal, INT_MAX);
 #else
-	WBUFL(buf, 4) = min(heal, INT_MAX);
-	offset += 2;
+	p.level = min(heal, INT16_MAX);
 #endif
-	WBUFL(buf, 6 + offset) = dst->id;
-	WBUFL(buf, 10 + offset) = src ? src->id : 0;
-	WBUFB(buf, 14 + offset) = fail;
+	p.targetAID = dst->id;
+	p.srcAID = src ? src->id : 0;
+	p.result = fail;
 
 	if (clif->isdisguised(dst)) {
-		clif->send(buf, len, dst, AREA_WOS);
-		WBUFL(buf, 6 + offset) = -dst->id;
-		clif->send(buf, len, dst, SELF);
+		clif->send(&p, sizeof(p), dst, AREA_WOS);
+		p.targetAID = -dst->id;
+		clif->send(&p, sizeof(p), dst, SELF);
 	} else
-		clif->send(buf, len, dst, AREA);
+		clif->send(&p, sizeof(p), dst, AREA);
 
 	if (src && clif->isdisguised(src)) {
-		WBUFL(buf, 10 + offset) = -src->id;
+		p.srcAID = -src->id;
 		if (clif->isdisguised(dst))
-			WBUFL(buf, 6 + offset) = dst->id;
-		clif->send(buf, len, src, SELF);
+			p.targetAID = dst->id;
+		clif->send(&p, sizeof(p), src, SELF);
 	}
 
 	return fail;

@@ -3984,6 +3984,27 @@ struct PACKET_ZC_NOTIFY_SKILL {
 DEFINE_PACKET_HEADER(ZC_NOTIFY_SKILL, 0x01de);
 #endif 
 
+#if PACKETVER_MAIN_NUM >= 20130731 || PACKETVER_RE_NUM >= 20130724 || defined(PACKETVER_ZERO)
+struct PACKET_ZC_USE_SKILL {
+	int16 PacketType;
+	uint16 SKID;
+	int32 level;
+	uint32 targetAID;
+	uint32 srcAID;
+	int8 result;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_USE_SKILL, 0x09cb);
+#else
+struct PACKET_ZC_USE_SKILL {
+	int16 PacketType;
+	uint16 SKID;
+	int16 level;
+	uint32 targetAID;
+	uint32 srcAID;
+	int8 result;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_USE_SKILL, 0x011a);
+#endif
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
