@@ -3263,7 +3263,7 @@ static void status_calc_regen_pc(struct map_session_data *sd, struct status_data
 		regen->hp = regen->hp * sd->hprecov_rate / 100;
 
 	if (sd->sprecov_rate != 100)
-		regen->hp = regen->hp * sd->sprecov_rate / 100;
+		regen->sp = regen->sp * sd->sprecov_rate / 100;
 
 	// Base natural HP/SP restore bonuses
 	int skill_lv;
