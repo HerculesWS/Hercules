@@ -3450,6 +3450,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(status->read_scdb_libconfig_sub, HP_status_read_scdb_libconfig_sub) },
 	{ HP_POP(status->read_scdb_libconfig_sub_flag, HP_status_read_scdb_libconfig_sub_flag) },
 	{ HP_POP(status->read_scdb_libconfig_sub_flag_additional, HP_status_read_scdb_libconfig_sub_flag_additional) },
+	{ HP_POP(status->read_scdb_libconfig_sub_skill, HP_status_read_scdb_libconfig_sub_skill) },
 	{ HP_POP(status->read_job_db, HP_status_read_job_db) },
 	{ HP_POP(status->read_job_db_sub, HP_status_read_job_db_sub) },
 	{ HP_POP(status->set_sc, HP_status_set_sc) },

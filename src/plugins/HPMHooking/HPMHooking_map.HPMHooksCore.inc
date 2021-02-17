@@ -6756,6 +6756,8 @@ struct {
 	struct HPMHookPoint *HP_status_read_scdb_libconfig_sub_flag_post;
 	struct HPMHookPoint *HP_status_read_scdb_libconfig_sub_flag_additional_pre;
 	struct HPMHookPoint *HP_status_read_scdb_libconfig_sub_flag_additional_post;
+	struct HPMHookPoint *HP_status_read_scdb_libconfig_sub_skill_pre;
+	struct HPMHookPoint *HP_status_read_scdb_libconfig_sub_skill_post;
 	struct HPMHookPoint *HP_status_read_job_db_pre;
 	struct HPMHookPoint *HP_status_read_job_db_post;
 	struct HPMHookPoint *HP_status_read_job_db_sub_pre;
@@ -13831,6 +13833,8 @@ struct {
 	int HP_status_read_scdb_libconfig_sub_flag_post;
 	int HP_status_read_scdb_libconfig_sub_flag_additional_pre;
 	int HP_status_read_scdb_libconfig_sub_flag_additional_post;
+	int HP_status_read_scdb_libconfig_sub_skill_pre;
+	int HP_status_read_scdb_libconfig_sub_skill_post;
 	int HP_status_read_job_db_pre;
 	int HP_status_read_job_db_post;
 	int HP_status_read_job_db_sub_pre;
