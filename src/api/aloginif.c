@@ -320,7 +320,7 @@ static void aloginif_send_to_char(int fd, struct api_session_data *sd, int msg_i
 	p->packet_len = len;
 	INIT_PACKET_PROXY_FIELDS(p, sd);
 	if (data && data_len > 0)
-		memcpy(p->data, data, data_len);
+		memcpy(((struct PACKET_API_PROXY0*)p)->data, data, data_len);
 
 	WFIFOSET(aloginif->fd, len);
 }

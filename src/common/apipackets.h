@@ -50,8 +50,23 @@ struct PACKET_API_PROXY {
 	int32 account_id;
 	int32 char_id;
 	int32 client_random_id;
+} __attribute__((packed));
+
+// [4144] duplicate of PACKET_API_PROXY with data field.
+// for avoid visual studio bug with emply arrays
+struct PACKET_API_PROXY0 {
+	int16 packet_id;
+	int16 packet_len;
+	int16 msg_id;
+	int32 server_id;
+	int32 client_fd;
+	int32 account_id;
+	int32 char_id;
+	int32 client_random_id;
 	char data[];
 } __attribute__((packed));
+
+STATIC_ASSERT(sizeof(struct PACKET_API_PROXY) == sizeof(struct PACKET_API_PROXY0), "Structs PACKET_API_PROXY and PACKET_API_PROXY0 must be same");
 
 struct PACKET_API_PROXY_CHUNKED {
 	struct PACKET_API_PROXY base;
