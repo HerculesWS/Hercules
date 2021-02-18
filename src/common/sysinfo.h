@@ -39,11 +39,7 @@ struct sysinfo_private;
 struct sysinfo_interface {
 	struct sysinfo_private *p;
 
-#if defined(WIN32) && !defined(__CYGWIN__)
 	long (*getpagesize) (void);
-#else
-	int (*getpagesize) (void);
-#endif
 	const char *(*platform) (void);
 	const char *(*osversion) (void);
 	const char *(*cpu) (void);

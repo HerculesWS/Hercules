@@ -91979,11 +91979,11 @@ bool HP_sv_readdb(const char *directory, const char *filename, char delim, int m
 	return retVal___;
 }
 /* sysinfo_interface */
-int HP_sysinfo_getpagesize(void) {
+long HP_sysinfo_getpagesize(void) {
 	int hIndex = 0;
-	int retVal___ = 0;
+	long retVal___ = 0;
 	if (HPMHooks.count.HP_sysinfo_getpagesize_pre > 0) {
-		int (*preHookFunc) (void);
+		long (*preHookFunc) (void);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_sysinfo_getpagesize_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_sysinfo_getpagesize_pre[hIndex].func;
@@ -91998,7 +91998,7 @@ int HP_sysinfo_getpagesize(void) {
 		retVal___ = HPMHooks.source.sysinfo.getpagesize();
 	}
 	if (HPMHooks.count.HP_sysinfo_getpagesize_post > 0) {
-		int (*postHookFunc) (int retVal___);
+		long (*postHookFunc) (long retVal___);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_sysinfo_getpagesize_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_sysinfo_getpagesize_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___);
