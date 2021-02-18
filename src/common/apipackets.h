@@ -55,18 +55,12 @@ struct PACKET_API_PROXY {
 // [4144] duplicate of PACKET_API_PROXY with data field.
 // for avoid visual studio bug with emply arrays
 struct PACKET_API_PROXY0 {
-	int16 packet_id;
-	int16 packet_len;
-	int16 msg_id;
-	int32 server_id;
-	int32 client_fd;
-	int32 account_id;
-	int32 char_id;
-	int32 client_random_id;
+	struct PACKET_API_PROXY base;
 	char data[];
 } __attribute__((packed));
 
-STATIC_ASSERT(sizeof(struct PACKET_API_PROXY) == sizeof(struct PACKET_API_PROXY0), "Structs PACKET_API_PROXY and PACKET_API_PROXY0 must be same");
+STATIC_ASSERT(sizeof(struct PACKET_API_PROXY) == sizeof(struct PACKET_API_PROXY0),
+		"Structs PACKET_API_PROXY and PACKET_API_PROXY0 must be same");
 
 struct PACKET_API_PROXY_CHUNKED {
 	struct PACKET_API_PROXY base;
@@ -74,16 +68,11 @@ struct PACKET_API_PROXY_CHUNKED {
 	char data[];
 } __attribute__((packed));
 
-struct PACKET_API_EMPTY {
-} __attribute__((packed));
-
 struct userconfig_emotes {
 	char emote[MAX_EMOTES][EMOTE_SIZE];
 } __attribute__((packed));
 
 // api to char
-struct PACKET_API_userconfig_load {
-} __attribute__((packed));
 
 struct PACKET_API_userconfig_save_emotes_data {
 	struct userconfig_emotes emotes;
@@ -93,11 +82,18 @@ struct PACKET_API_userconfig_save_emotes {
 	struct PACKET_API_userconfig_save_emotes_data data;
 } __attribute__((packed));
 
+/*
+empty structs not supported by visual studio. left for future usage
+
+struct PACKET_API_userconfig_load {
+} __attribute__((packed));
+
 struct PACKET_API_charconfig_load {
 } __attribute__((packed));
 
 struct PACKET_API_emblem_upload {
 } __attribute__((packed));
+*/
 
 struct PACKET_API_emblem_upload_guild_id_data {
 	int guild_id;
@@ -121,6 +117,9 @@ struct PACKET_API_REPLY_userconfig_load {
 	struct userconfig_emotes emotes;
 } __attribute__((packed));
 
+/*
+empty structs not supported by visual studio. left for future usage
+
 struct PACKET_API_REPLY_userconfig_save {
 } __attribute__((packed));
 
@@ -129,6 +128,7 @@ struct PACKET_API_REPLY_charconfig_load {
 
 struct PACKET_API_REPLY_emblem_upload {
 } __attribute__((packed));
+*/
 
 struct PACKET_API_REPLY_emblem_download {
 	uint8 flag;

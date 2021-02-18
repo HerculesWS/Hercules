@@ -62,6 +62,8 @@
 #define GET_DATA(var, type) const struct PACKET_API_REPLY_ ## type *var = (const struct PACKET_API_REPLY_ ## type*)data;
 #define CREATE_DATA(var, type) struct PACKET_API_ ## type ## _data var = { 0 };
 #define SEND_ASYNC_DATA(name, data) aloginif->send_to_char(fd, sd, API_MSG_ ## name, data, sizeof(struct PACKET_API_ ## name));
+// SEND_ASYNC_DATA_EMPTY is workaround for visual studio bugs
+#define SEND_ASYNC_DATA_EMPTY(name, data) aloginif->send_to_char(fd, sd, API_MSG_ ## name, data, 0);
 #define SEND_ASYNC_DATA_SPLIT(name, data, size) aloginif->send_split_to_char(fd, sd, API_MSG_ ## name, data, size);
 
 static struct handlers_interface handlers_s;
@@ -98,7 +100,7 @@ HTTPURL(userconfig_load)
 #endif
 	aclif->show_request(fd, sd, false);
 
-	SEND_ASYNC_DATA(userconfig_load, NULL);
+	SEND_ASYNC_DATA_EMPTY(userconfig_load, NULL);
 
 	return true;
 }
@@ -177,7 +179,7 @@ HTTPURL(charconfig_load)
 #endif
 	aclif->show_request(fd, sd, false);
 
-	SEND_ASYNC_DATA(charconfig_load, NULL);
+	SEND_ASYNC_DATA_EMPTY(charconfig_load, NULL);
 
 	return true;
 }
