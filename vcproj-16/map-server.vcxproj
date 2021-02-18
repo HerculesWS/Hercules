@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -54,7 +54,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>..\src;..\3rdparty;..\3rdparty\mariadb\include;..\3rdparty\zlib\include;..\3rdparty\pcre\include;..\3rdparty\msinttypes\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_WIN32;__WIN32;_DEBUG;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;FD_SETSIZE=4096;LIBCONFIG_STATIC;YY_USE_CONST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WIN32;__WIN32;_DEBUG;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;FD_SETSIZE=4096;LIBCONFIG_STATIC;YY_USE_CONST;USE_HTTP_PARSER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessToFile>false</PreprocessToFile>
       <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
       <ExceptionHandling>
@@ -97,7 +97,7 @@
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <AdditionalIncludeDirectories>..\src;..\3rdparty;..\3rdparty\mariadb\include;..\3rdparty\zlib\include;..\3rdparty\pcre\include;..\3rdparty\msinttypes\include;..\3rdparty\mt19937ar;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_WIN32;__WIN32;NDEBUG;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;FD_SETSIZE=4096;LIBCONFIG_STATIC;YY_USE_CONST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WIN32;__WIN32;NDEBUG;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;FD_SETSIZE=4096;LIBCONFIG_STATIC;YY_USE_CONST;USE_HTTP_PARSER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <AdditionalOptions>
@@ -191,17 +191,25 @@
     <ClInclude Include="..\src\map\macro.h" />
     <ClInclude Include="..\src\map\mail.h" />
     <ClInclude Include="..\src\map\map.h" />
+    <ClInclude Include="..\src\map\mapdefines.h" />
     <ClInclude Include="..\src\map\mapreg.h" />
     <ClInclude Include="..\src\map\homunculus.h" />
     <ClInclude Include="..\src\map\HPMmap.h" />
     <ClInclude Include="..\src\map\instance.h" />
     <ClInclude Include="..\src\map\mercenary.h" />
+    <ClInclude Include="..\src\map\messages.h" />
+    <ClInclude Include="..\src\map\messages_ad.h" />
+    <ClInclude Include="..\src\map\messages_main.h" />
+    <ClInclude Include="..\src\map\messages_re.h" />
+    <ClInclude Include="..\src\map\messages_sak.h" />
+    <ClInclude Include="..\src\map\messages_zero.h" />
     <ClInclude Include="..\src\map\mob.h" />
     <ClInclude Include="..\src\map\npc.h" />
     <ClInclude Include="..\src\map\packets.h" />
     <ClInclude Include="..\src\map\packets_keys_main.h" />
     <ClInclude Include="..\src\map\packets_keys_zero.h" />
     <ClInclude Include="..\src\map\packets_shuffle_main.h" />
+    <ClInclude Include="..\src\map\packets_shuffle_re.h" />
     <ClInclude Include="..\src\map\packets_shuffle_zero.h" />
     <ClInclude Include="..\src\map\packets_struct.h" />
     <ClInclude Include="..\src\map\party.h" />
@@ -226,6 +234,7 @@
     <ClInclude Include="..\src\map\stylist.h" />
     <ClInclude Include="..\src\map\trade.h" />
     <ClInclude Include="..\src\map\unit.h" />
+    <ClInclude Include="..\src\map\unitdefines.h" />
     <ClInclude Include="..\src\map\vending.h" />
     <ClInclude Include="..\src\map\enchantui.h" />
     <ClInclude Include="..\src\map\goldpc.h" />
