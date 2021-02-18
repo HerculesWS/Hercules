@@ -79,7 +79,7 @@ struct capiif_interface *capiif;
 
 static int capiif_parse_fromlogin_api_proxy(int fd)
 {
-	const uint command = RFIFOW(fd, 4);
+	const uint32 command = RFIFOW(fd, 4);
 
 	switch (command) {
 		case API_MSG_userconfig_load:

@@ -367,7 +367,7 @@ static void aloginif_parse_from_char(int fd, Handler_func func)
 
 static int aloginif_parse_proxy_from_char_server(int fd)
 {
-	const uint command = RFIFOW(fd, 4);
+	const uint32 command = RFIFOW(fd, 4);
 	Assert_ret(command > 0 && command < API_MSG_MAX);
 	aloginif->parse_from_char(fd, aloginif->msg_map[command]);
 	return 0;
