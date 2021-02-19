@@ -95,6 +95,49 @@ char *jsonparser_get_string_value(const JsonP *parent)
 	return parent->valuestring;
 }
 
+double jsonparser_get_number_value(const JsonP *parent)
+{
+	nullpo_retr(0., parent);
+	Assert_retr(0., cJSON_IsNumber(parent));
+
+	return parent->valuedouble;
+}
+
+int jsonparser_get_int_value(const JsonP *parent)
+{
+	nullpo_ret(parent);
+	Assert_ret(cJSON_IsNumber(parent));
+
+	return (int)parent->valuedouble;
+}
+
+char *jsonparser_get_child_string_value(const JsonP *parent, const char *name)
+{
+	nullpo_retr(false, parent);
+	nullpo_retr(false, name);
+
+	JsonP *value = jsonparser->get(parent, name);
+	return jsonparser->get_string_value(value);
+}
+
+double jsonparser_get_child_number_value(const JsonP *parent, const char *name)
+{
+	nullpo_retr(0., parent);
+	nullpo_retr(0., name);
+
+	JsonP *value = jsonparser->get(parent, name);
+	return jsonparser->get_number_value(value);
+}
+
+int jsonparser_get_child_int_value(const JsonP *parent, const char *name)
+{
+	nullpo_ret(parent);
+	nullpo_ret(name);
+
+	JsonP *value = jsonparser->get(parent, name);
+	return jsonparser->get_int_value(value);
+}
+
 bool jsonparser_is_null(const JsonP *parent)
 {
 	nullpo_retr(false, parent);
@@ -131,6 +174,11 @@ void jsonparser_defaults(void)
 	jsonparser->get = jsonparser_get;
 	jsonparser->get_array_size = jsonparser_get_array_size;
 	jsonparser->get_string_value = jsonparser_get_string_value;
+	jsonparser->get_number_value = jsonparser_get_number_value;
+	jsonparser->get_int_value = jsonparser_get_int_value;
+	jsonparser->get_child_string_value = jsonparser_get_child_string_value;
+	jsonparser->get_child_number_value = jsonparser_get_child_number_value;
+	jsonparser->get_child_int_value = jsonparser_get_child_int_value;
 	jsonparser->is_null = jsonparser_is_null;
 	jsonparser->is_null_or_missing = jsonparser_is_null_or_missing;
 	jsonparser->print = jsonparser_print;

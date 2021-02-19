@@ -47,6 +47,11 @@ struct jsonparser_interface {
 	JsonP *(*get) (const JsonP *parent, const char *name);
 	int (*get_array_size) (const JsonP *parent);
 	char *(*get_string_value) (const JsonP *parent);
+	double (*get_number_value) (const JsonP *parent);
+	int (*get_int_value) (const JsonP *parent);
+	char* (*get_child_string_value) (const JsonP *parent, const char *name);
+	double (*get_child_number_value) (const JsonP *parent, const char *name);
+	int (*get_child_int_value) (const JsonP *parent, const char *name);
 	void (*free) (char *ptr);
 	void (*delete) (JsonP *ptr);
 };
