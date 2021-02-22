@@ -964,6 +964,7 @@ INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1634838524); -- 2021-10-2
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1641405640); -- 2022-01-05--19-00.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1665257750); -- 2022-10-08--08-35.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1599908598); -- 2020-09-12--14-02.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1613840320); -- 2021-02-20--19-57.sql
 
 --
 -- Table structure for table `storage`
@@ -1122,4 +1123,16 @@ CREATE TABLE IF NOT EXISTS `emotes` (
   `emote9` VARCHAR(50) NOT NULL DEFAULT '',
   PRIMARY KEY (`account_id`),
   KEY `account_id` (`account_id`)
+) CHARACTER SET utf8mb4 ENGINE=MyISAM;
+
+-- char server db, but with account_id only
+CREATE TABLE IF NOT EXISTS `hotkeys` (
+  `account_id` INT UNSIGNED NOT NULL DEFAULT '0',
+  `tab` INT UNSIGNED NOT NULL DEFAULT 0,
+  `desc` VARCHAR(116) NOT NULL DEFAULT '',
+  `index` INT UNSIGNED NOT NULL DEFAULT 0,
+  `key1` INT UNSIGNED NOT NULL DEFAULT 0,
+  `key2` INT UNSIGNED NOT NULL DEFAULT 0,
+  PRIMARY KEY (`account_id`, `tab`, `index`, `key1`, `key2`),
+  KEY `key` (`account_id`, `tab`)
 ) CHARACTER SET utf8mb4 ENGINE=MyISAM;
