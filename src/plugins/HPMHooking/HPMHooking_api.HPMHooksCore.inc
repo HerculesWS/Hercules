@@ -436,8 +436,10 @@ struct {
 	struct HPMHookPoint *HP_jsonwriter_add_new_number_post;
 	struct HPMHookPoint *HP_jsonwriter_add_new_string_pre;
 	struct HPMHookPoint *HP_jsonwriter_add_new_string_post;
-	struct HPMHookPoint *HP_jsonwriter_add_string_to_array_pre;
-	struct HPMHookPoint *HP_jsonwriter_add_string_to_array_post;
+	struct HPMHookPoint *HP_jsonwriter_add_new_string_to_array_pre;
+	struct HPMHookPoint *HP_jsonwriter_add_new_string_to_array_post;
+	struct HPMHookPoint *HP_jsonwriter_add_new_object_to_array_pre;
+	struct HPMHookPoint *HP_jsonwriter_add_new_object_to_array_post;
 	struct HPMHookPoint *HP_jsonwriter_print_pre;
 	struct HPMHookPoint *HP_jsonwriter_print_post;
 	struct HPMHookPoint *HP_jsonwriter_get_pre;
@@ -1353,8 +1355,10 @@ struct {
 	int HP_jsonwriter_add_new_number_post;
 	int HP_jsonwriter_add_new_string_pre;
 	int HP_jsonwriter_add_new_string_post;
-	int HP_jsonwriter_add_string_to_array_pre;
-	int HP_jsonwriter_add_string_to_array_post;
+	int HP_jsonwriter_add_new_string_to_array_pre;
+	int HP_jsonwriter_add_new_string_to_array_post;
+	int HP_jsonwriter_add_new_object_to_array_pre;
+	int HP_jsonwriter_add_new_object_to_array_post;
 	int HP_jsonwriter_print_pre;
 	int HP_jsonwriter_print_post;
 	int HP_jsonwriter_get_pre;

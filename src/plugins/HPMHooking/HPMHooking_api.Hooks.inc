@@ -5521,14 +5521,14 @@ JsonW* HP_jsonwriter_add_new_string(JsonW *parent, const char *name, const char 
 	}
 	return retVal___;
 }
-JsonW* HP_jsonwriter_add_string_to_array(JsonW *parent, const char *str) {
+JsonW* HP_jsonwriter_add_new_string_to_array(JsonW *parent, const char *str) {
 	int hIndex = 0;
 	JsonW* retVal___ = NULL;
-	if (HPMHooks.count.HP_jsonwriter_add_string_to_array_pre > 0) {
+	if (HPMHooks.count.HP_jsonwriter_add_new_string_to_array_pre > 0) {
 		JsonW* (*preHookFunc) (JsonW **parent, const char **str);
 		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_jsonwriter_add_string_to_array_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_jsonwriter_add_string_to_array_pre[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_jsonwriter_add_new_string_to_array_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_jsonwriter_add_new_string_to_array_pre[hIndex].func;
 			retVal___ = preHookFunc(&parent, &str);
 		}
 		if (*HPMforce_return) {
@@ -5537,13 +5537,40 @@ JsonW* HP_jsonwriter_add_string_to_array(JsonW *parent, const char *str) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.jsonwriter.add_string_to_array(parent, str);
+		retVal___ = HPMHooks.source.jsonwriter.add_new_string_to_array(parent, str);
 	}
-	if (HPMHooks.count.HP_jsonwriter_add_string_to_array_post > 0) {
+	if (HPMHooks.count.HP_jsonwriter_add_new_string_to_array_post > 0) {
 		JsonW* (*postHookFunc) (JsonW* retVal___, JsonW *parent, const char *str);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_jsonwriter_add_string_to_array_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_jsonwriter_add_string_to_array_post[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_jsonwriter_add_new_string_to_array_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_jsonwriter_add_new_string_to_array_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, parent, str);
+		}
+	}
+	return retVal___;
+}
+JsonW* HP_jsonwriter_add_new_object_to_array(JsonW *parent) {
+	int hIndex = 0;
+	JsonW* retVal___ = NULL;
+	if (HPMHooks.count.HP_jsonwriter_add_new_object_to_array_pre > 0) {
+		JsonW* (*preHookFunc) (JsonW **parent);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_jsonwriter_add_new_object_to_array_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_jsonwriter_add_new_object_to_array_pre[hIndex].func;
+			retVal___ = preHookFunc(&parent);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.jsonwriter.add_new_object_to_array(parent);
+	}
+	if (HPMHooks.count.HP_jsonwriter_add_new_object_to_array_post > 0) {
+		JsonW* (*postHookFunc) (JsonW* retVal___, JsonW *parent);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_jsonwriter_add_new_object_to_array_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_jsonwriter_add_new_object_to_array_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, parent);
 		}
 	}
 	return retVal___;

@@ -4836,8 +4836,10 @@ typedef JsonW* (*HPMHOOK_pre_jsonwriter_add_new_number) (JsonW **parent, const c
 typedef JsonW* (*HPMHOOK_post_jsonwriter_add_new_number) (JsonW* retVal___, JsonW *parent, const char *name, int number);
 typedef JsonW* (*HPMHOOK_pre_jsonwriter_add_new_string) (JsonW **parent, const char **name, const char **str);
 typedef JsonW* (*HPMHOOK_post_jsonwriter_add_new_string) (JsonW* retVal___, JsonW *parent, const char *name, const char *str);
-typedef JsonW* (*HPMHOOK_pre_jsonwriter_add_string_to_array) (JsonW **parent, const char **str);
-typedef JsonW* (*HPMHOOK_post_jsonwriter_add_string_to_array) (JsonW* retVal___, JsonW *parent, const char *str);
+typedef JsonW* (*HPMHOOK_pre_jsonwriter_add_new_string_to_array) (JsonW **parent, const char **str);
+typedef JsonW* (*HPMHOOK_post_jsonwriter_add_new_string_to_array) (JsonW* retVal___, JsonW *parent, const char *str);
+typedef JsonW* (*HPMHOOK_pre_jsonwriter_add_new_object_to_array) (JsonW **parent);
+typedef JsonW* (*HPMHOOK_post_jsonwriter_add_new_object_to_array) (JsonW* retVal___, JsonW *parent);
 typedef void (*HPMHOOK_pre_jsonwriter_print) (const JsonW **parent);
 typedef void (*HPMHOOK_post_jsonwriter_print) (const JsonW *parent);
 typedef JsonW* (*HPMHOOK_pre_jsonwriter_get) (const JsonW **parent, const char **name);
