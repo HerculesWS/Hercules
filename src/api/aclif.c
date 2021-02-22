@@ -224,11 +224,16 @@ static int aclif_session_delete(int fd)
 	sd->multi_parser = NULL;
 	aFree(sd->temp_mime_header);
 	sd->temp_mime_header = NULL;
-	sd->data = NULL;
 	aFree(sd->data);
+	sd->data = NULL;
 	sd->data_size = 0;
 	aFree(sd->request_temp);
 	sd->request_temp = NULL;
+	if (sd->json != NULL)
+	{
+		jsonwriter->delete(sd->json);
+		sd->json = NULL;
+	}
 
 	httpparser->delete_parser(fd);
 	return 0;

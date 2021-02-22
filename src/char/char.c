@@ -111,6 +111,7 @@ char char_reg_str_db[32] = "char_reg_str_db";
 char char_reg_num_db[32] = "char_reg_num_db";
 char char_achievement_db[256] = "char_achievements";
 char emotes_db[256] = "emotes";
+char hotkeys_db[256] = "hotkeys";
 
 static struct char_interface char_s;
 struct char_interface *chr;
@@ -5506,6 +5507,8 @@ static bool char_sql_config_read_pc(const char *filename, const struct config_t 
 	libconfig->setting_lookup_mutable_string(setting, "mercenary_owner_db", mercenary_owner_db, sizeof(mercenary_owner_db));
 	libconfig->setting_lookup_mutable_string(setting, "elemental_db", elemental_db, sizeof(elemental_db));
 	libconfig->setting_lookup_mutable_string(setting, "account_data_db", account_data_db, sizeof(account_data_db));
+	libconfig->setting_lookup_mutable_string(setting, "emotes_db", emotes_db, sizeof(emotes_db));
+	libconfig->setting_lookup_mutable_string(setting, "hotkeys_db", hotkeys_db, sizeof(hotkeys_db));
 
 	return true;
 }

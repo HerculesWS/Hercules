@@ -149,6 +149,67 @@ static bool inter_userconfig_emotes_to_sql(int account_id, const struct userconf
 	return true;
 }
 
+void inter_userconfig_hotkey_tab_tosql(int account_id, const struct userconfig_userhotkeys_v2 *hotkeys)
+{
+	nullpo_retv(hotkeys);
+
+	inter_userconfig->hotkey_tab_clear(account_id, hotkeys->tab);
+
+	char desc_esc[HOTKEY_DESCRIPTION_SIZE * 2 + 1];
+	ShowError("tab: %d\n", hotkeys->tab);
+	for (int i = 0; i < hotkeys->count; i ++) {
+		ShowError("desc: %s\n", hotkeys->keys[i].desc);
+		ShowError("index: %d\n", hotkeys->keys[i].index);
+		ShowError("key1: %d\n", hotkeys->keys[i].key1);
+		ShowError("key2: %d\n", hotkeys->keys[i].key2);
+
+		SQL->EscapeString(inter->sql_handle, desc_esc, hotkeys->keys[i].desc);
+		if (SQL_ERROR == SQL->Query(inter->sql_handle,
+		    "INSERT INTO `%s` (`account_id`,`tab`,`desc`,`index`,`key1`,`key2`) VALUES ('%d','%d','%s','%d','%d','%d')",
+		    hotkeys_db, account_id, hotkeys->tab, desc_esc, hotkeys->keys[i].index, hotkeys->keys[i].key1, hotkeys->keys[i].key2)) {
+			Sql_ShowDebug(inter->sql_handle);
+			return;
+		}
+	}
+}
+
+void inter_userconfig_hotkey_tab_clear(int account_id, int tab_id)
+{
+	if (SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `account_id` = '%d' and `tab` = '%d'",
+	    hotkeys_db, account_id, tab_id)) {
+		Sql_ShowDebug(inter->sql_handle);
+	}
+}
+
+void inter_userconfig_hotkey_tab_fromsql(int account_id, struct userconfig_userhotkeys_v2 *hotkeys, int tab_id)
+{
+	hotkeys->tab = tab_id;
+
+	if (SQL_SUCCESS != SQL->Query(inter->sql_handle,
+	    "SELECT `desc`, `index`, `key1`, `key2` FROM `%s` WHERE `account_id` = '%d' AND `tab` = '%d'",
+	    hotkeys_db, account_id, tab_id)) {
+		Sql_ShowDebug(inter->sql_handle);
+		return;
+	}
+
+	char *data = NULL;
+	int index = 0;
+	for (index = 0; index < MAX_USERHOTKEYS && SQL_SUCCESS == SQL->NextRow(inter->sql_handle); index ++) {
+		SQL->GetData(inter->sql_handle, 0, &data, NULL);
+		safestrncpy(hotkeys->keys[index].desc, data, HOTKEY_DESCRIPTION_SIZE);
+		SQL->GetData(inter->sql_handle, 1, &data, NULL);
+		hotkeys->keys[index].index = atoi(data);
+		SQL->GetData(inter->sql_handle, 2, &data, NULL);
+		hotkeys->keys[index].key1 = atoi(data);
+		SQL->GetData(inter->sql_handle, 3, &data, NULL);
+		hotkeys->keys[index].key2 = atoi(data);
+	}
+
+	SQL->FreeResult(inter->sql_handle);
+
+	hotkeys->count = index;
+}
+
 void inter_userconfig_defaults(void)
 {
 	inter_userconfig = &inter_userconfig_s;
@@ -158,4 +219,7 @@ void inter_userconfig_defaults(void)
 	inter_userconfig->use_default_emotes = inter_userconfig_use_default_emotes;
 	inter_userconfig->emotes_from_sql = inter_userconfig_emotes_from_sql;
 	inter_userconfig->emotes_to_sql = inter_userconfig_emotes_to_sql;
+	inter_userconfig->hotkey_tab_tosql = inter_userconfig_hotkey_tab_tosql;
+	inter_userconfig->hotkey_tab_clear = inter_userconfig_hotkey_tab_clear;
+	inter_userconfig->hotkey_tab_fromsql = inter_userconfig_hotkey_tab_fromsql;
 }

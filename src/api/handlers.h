@@ -25,8 +25,11 @@
 #include "common/hercules.h"
 #include "common/db.h"
 #include "api/httphandler.h"
+#include "api/jsonparser.h"
 
 #include <stdarg.h>
+
+struct userconfig_userhotkeys_v2;
 
 /**
  * handlers.c Interface
@@ -34,6 +37,8 @@
 struct handlers_interface {
 	int (*init) (bool minimal);
 	void (*final) (void);
+	void (*sendHotkeyV2Tab) (JsonP *json, struct userconfig_userhotkeys_v2 *hotkeys);
+	const char *(*hotkeyTabIdToName) (int tab_id);
 
 #define handler(method, url, func, flags) bool (*parse_ ## func) (int fd, struct api_session_data *sd)
 #define handler2(method, url, func, flags) bool (*parse_ ## func) (int fd, struct api_session_data *sd); \

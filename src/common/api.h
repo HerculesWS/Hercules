@@ -33,6 +33,9 @@ enum API_MSG {
 	API_MSG_emblem_upload = 9,
 	API_MSG_emblem_upload_guild_id = 10,
 	API_MSG_emblem_download = 11,
+	API_MSG_userconfig_save_userhotkey_v2 = 12,
+	API_MSG_userconfig_load_emotes = 13,
+	API_MSG_userconfig_load_hotkeys = 14,
 	API_MSG_MAX,
 };
 

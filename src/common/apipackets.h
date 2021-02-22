@@ -37,8 +37,26 @@
 #define MAX_EMOTES 10
 #endif
 
+#ifndef HOTKEY_DESCRIPTION_SIZE
+#define HOTKEY_DESCRIPTION_SIZE 116
+#endif
+
+// [4144] for now using number of hotkeys bit bigger than actual amount
+#ifndef MAX_USERHOTKEYS
+#define MAX_USERHOTKEYS 50
+#endif
+
 #define HEADER_API_PROXY_REQUEST 0x2842
 #define HEADER_API_PROXY_REPLY 0x2818
+
+enum UserHotKey_v2
+{
+	UserHotKey_v2_SkillBar_1Tab = 0,
+	UserHotKey_v2_SkillBar_2Tab = 1,
+	UserHotKey_v2_InterfaceTab = 2,
+	UserHotKey_v2_EmotionTab = 3,
+	UserHotKey_v2_max
+};
 
 // base
 struct PACKET_API_PROXY {
@@ -82,6 +100,27 @@ struct PACKET_API_userconfig_save_emotes {
 	struct PACKET_API_userconfig_save_emotes_data data;
 } __attribute__((packed));
 
+struct userconfig_save_userhotkey_key {
+	char desc[HOTKEY_DESCRIPTION_SIZE];
+	int index;
+	int key1;
+	int key2;
+} __attribute__((packed));
+
+struct userconfig_userhotkeys_v2 {
+	int tab;
+	int count;
+	struct userconfig_save_userhotkey_key keys[MAX_USERHOTKEYS];
+} __attribute__((packed));
+
+struct PACKET_API_userconfig_save_userhotkey_v2_data {
+	struct userconfig_userhotkeys_v2 hotkeys;
+} __attribute__((packed));
+
+struct PACKET_API_userconfig_save_userhotkey_v2 {
+	struct PACKET_API_userconfig_save_userhotkey_v2_data data;
+}  __attribute__((packed));
+
 /*
 empty structs not supported by visual studio. left for future usage
 
@@ -113,12 +152,19 @@ struct PACKET_API_emblem_download {
 } __attribute__((packed));
 
 // char to api
-struct PACKET_API_REPLY_userconfig_load {
+struct PACKET_API_REPLY_userconfig_load_emotes {
 	struct userconfig_emotes emotes;
+} __attribute__((packed));
+
+struct PACKET_API_REPLY_userconfig_load_hotkeys_tab {
+	struct userconfig_userhotkeys_v2 hotkeys;
 } __attribute__((packed));
 
 /*
 empty structs not supported by visual studio. left for future usage
+
+struct PACKET_API_REPLY_userconfig_load {
+} __attribute__((packed));
 
 struct PACKET_API_REPLY_userconfig_save {
 } __attribute__((packed));

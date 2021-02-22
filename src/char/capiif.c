@@ -82,8 +82,8 @@ static int capiif_parse_fromlogin_api_proxy(int fd)
 	const uint32 command = RFIFOW(fd, 4);
 
 	switch (command) {
-		case API_MSG_userconfig_load:
-			capiif->parse_userconfig_load(fd);
+		case API_MSG_userconfig_load_emotes:
+			capiif->parse_userconfig_load_emotes(fd);
 			break;
 		case API_MSG_userconfig_save_emotes:
 			capiif->parse_userconfig_save_emotes(fd);
@@ -100,6 +100,12 @@ static int capiif_parse_fromlogin_api_proxy(int fd)
 		case API_MSG_emblem_download:
 			capiif->parse_emblem_download(fd);
 			break;
+		case API_MSG_userconfig_save_userhotkey_v2:
+			capiif->parse_userconfig_save_userhotkey_v2(fd);
+			break;
+		case API_MSG_userconfig_load_hotkeys:
+			capiif->parse_userconfig_load_hotkeys(fd);
+			break;
 		default:
 			ShowError("Unknown proxy packet 0x%04x received from login-server, disconnecting.\n", command);
 			sockt->eof(fd);
@@ -111,9 +117,9 @@ static int capiif_parse_fromlogin_api_proxy(int fd)
 }
 
 
-void capiif_parse_userconfig_load(int fd)
+void capiif_parse_userconfig_load_emotes(int fd)
 {
-	WFIFO_APICHAR_PACKET_REPLY(userconfig_load);
+	WFIFO_APICHAR_PACKET_REPLY(userconfig_load_emotes);
 	RFIFO_API_PROXY_PACKET(p);
 
 	inter_userconfig->load_emotes(p->account_id, &data->emotes);
@@ -209,6 +215,14 @@ void capiif_parse_emblem_download(int fd)
 	capiif->emblem_download(fd, data->guild_id, data->version);
 }
 
+void capiif_parse_userconfig_save_userhotkey_v2(int fd)
+{
+	RFIFO_API_DATA(data, userconfig_save_userhotkey_v2_data);
+	RFIFO_API_PROXY_PACKET(p);
+
+	inter_userconfig->hotkey_tab_tosql(p->account_id, &data->hotkeys);
+}
+
 void capiif_emblem_download(int fd, int guild_id, int emblem_id)
 {
 	struct guild *g = inter_guild->fromsql(guild_id);
@@ -243,6 +257,20 @@ static struct online_char_data* capiif_get_online_character(const struct PACKET_
 	return character;
 }
 
+void capiif_parse_userconfig_load_hotkeys(int fd)
+{
+	RFIFO_API_PROXY_PACKET(p);
+
+	for (int tab = 0; tab < UserHotKey_v2_max; tab ++) {
+		WFIFO_APICHAR_PACKET_REPLY(userconfig_load_hotkeys_tab);
+		inter_userconfig->hotkey_tab_fromsql(p->account_id, &data->hotkeys, tab);
+		WFIFOSET(chr->login_fd, packet->packet_len);
+	}
+	WFIFO_APICHAR_PACKET_REPLY_EMPTY()
+	packet->msg_id = API_MSG_userconfig_load;
+	WFIFOSET(chr->login_fd, packet->packet_len);
+}
+
 static void do_init_capiif(void)
 {
 }
@@ -259,10 +287,12 @@ void capiif_defaults(void) {
 	capiif->get_online_character = capiif_get_online_character;
 	capiif->emblem_download = capiif_emblem_download;
 	capiif->parse_fromlogin_api_proxy = capiif_parse_fromlogin_api_proxy;
-	capiif->parse_userconfig_load = capiif_parse_userconfig_load;
+	capiif->parse_userconfig_load_emotes = capiif_parse_userconfig_load_emotes;
 	capiif->parse_userconfig_save_emotes = capiif_parse_userconfig_save_emotes;
 	capiif->parse_charconfig_load = capiif_parse_charconfig_load;
 	capiif->parse_emblem_upload = capiif_parse_emblem_upload;
 	capiif->parse_emblem_upload_guild_id = capiif_parse_emblem_upload_guild_id;
 	capiif->parse_emblem_download = capiif_parse_emblem_download;
+	capiif->parse_userconfig_save_userhotkey_v2 = capiif_parse_userconfig_save_userhotkey_v2;
+	capiif->parse_userconfig_load_hotkeys = capiif_parse_userconfig_load_hotkeys;
 }

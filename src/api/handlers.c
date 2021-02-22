@@ -38,7 +38,6 @@
 #include "api/apisessiondata.h"
 #include "api/httpparser.h"
 #include "api/httpsender.h"
-#include "api/jsonwriter.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -66,31 +65,95 @@
 #define SEND_ASYNC_DATA_EMPTY(name, data) aloginif->send_to_char(fd, sd, API_MSG_ ## name, data, 0);
 #define SEND_ASYNC_DATA_SPLIT(name, data, size) aloginif->send_split_to_char(fd, sd, API_MSG_ ## name, data, size);
 
+#define SEND_ASYNC_USERHOKEY_V2_TAB(name) \
+	JsonP *name = jsonparser->get(userHotkeyV2, #name); \
+	if (!jsonparser->is_null_or_missing(name)) { \
+		ShowInfo("send tab " # name "\n"); \
+		CREATE_DATA(data, userconfig_save_userhotkey_v2); \
+		data.hotkeys.tab = UserHotKey_v2_ ## name; \
+		handlers->sendHotkeyV2Tab(name, &data.hotkeys); \
+		SEND_ASYNC_DATA(userconfig_save_userhotkey_v2, &data); \
+	}
+
+
 static struct handlers_interface handlers_s;
 struct handlers_interface *handlers;
 
 #define DEBUG_LOG
 
+const char *handlers_hotkeyTabIdToName(int tab_id)
+{
+	Assert_retr(NULL, tab_id >= 0 && tab_id < UserHotKey_v2_max);
+
+	static char *name[4] = {
+		"SkillBar_1Tab",
+		"SkillBar_2Tab",
+		"InterfaceTab",
+		"EmotionTab",
+	};
+	return name[tab_id];
+}
+
 DATA(userconfig_load)
 {
-	JsonW *json = jsonwriter->create("{\"Type\":1}");
-	JsonW *dataNode = jsonwriter->add_new_object(json, "data");
-	JsonW *emotionHotkey = jsonwriter->add_new_array(dataNode, "EmotionHotkey");
-	jsonwriter->add_new_null(dataNode, "WhisperBlockList");
+	JsonW *json = sd->json;
+	nullpo_retv(json);
 
-	GET_DATA(p, userconfig_load);
-
-	jsonwriter->add_strings_to_array(emotionHotkey,
-		p->emotes.emote[0], p->emotes.emote[1], p->emotes.emote[2], p->emotes.emote[3], p->emotes.emote[4],
-		p->emotes.emote[5], p->emotes.emote[6], p->emotes.emote[7], p->emotes.emote[8], p->emotes.emote[9],
-		NULL);
+	// finally send json
 #ifdef DEBUG_LOG
 	jsonwriter->print(json);
 #endif
 	httpsender->send_json(fd, json);
 	jsonwriter->delete(json);
+	sd->json = NULL;
 
 	aclif->terminate_connection(fd);
+}
+
+DATA(userconfig_load_emotes)
+{
+	// create initial json node and add emotionHotkey
+	JsonW *json = jsonwriter->create("{\"Type\":1}");
+	sd->json = json;
+	JsonW *dataNode = jsonwriter->add_new_object(json, "data");
+	JsonW *emotionHotkey = jsonwriter->add_new_array(dataNode, "EmotionHotkey");
+
+	// WhisperBlockList not implimented yet
+	jsonwriter->add_new_null(dataNode, "WhisperBlockList");
+
+	// add empty UserHotkey_V2 for future usage
+	jsonwriter->add_new_object(dataNode, "UserHotkey_V2");
+
+	GET_DATA(p, userconfig_load_emotes);
+
+	jsonwriter->add_strings_to_array(emotionHotkey,
+		p->emotes.emote[0], p->emotes.emote[1], p->emotes.emote[2], p->emotes.emote[3], p->emotes.emote[4],
+		p->emotes.emote[5], p->emotes.emote[6], p->emotes.emote[7], p->emotes.emote[8], p->emotes.emote[9],
+		NULL);
+}
+
+DATA(userconfig_load_hotkeys)
+{
+	JsonW *json = sd->json;
+	nullpo_retv(json);
+
+	GET_DATA(p, userconfig_load_hotkeys_tab);
+
+	JsonW *dataNode = jsonwriter->get(json, "data");
+	JsonW *userHotkeyV2Node = jsonwriter->get(dataNode, "UserHotkey_V2");
+	const char *tab_name = handlers->hotkeyTabIdToName(p->hotkeys.tab);
+	if (p->hotkeys.count != 0) {
+		JsonW *tabNode = jsonwriter->add_new_array(userHotkeyV2Node, tab_name);
+		for (int i = 0; i < p->hotkeys.count; i ++) {
+			JsonW *hotkey = jsonwriter->add_new_object_to_array(tabNode);
+			jsonwriter->add_new_string(hotkey, "desc", p->hotkeys.keys[i].desc);
+			jsonwriter->add_new_number(hotkey, "index", p->hotkeys.keys[i].index);
+			jsonwriter->add_new_number(hotkey, "key1", p->hotkeys.keys[i].key1);
+			jsonwriter->add_new_number(hotkey, "key2", p->hotkeys.keys[i].key2);
+		}
+	} else {
+		jsonwriter->add_new_null(userHotkeyV2Node, tab_name);
+	}
 }
 
 HTTPURL(userconfig_load)
@@ -100,9 +163,29 @@ HTTPURL(userconfig_load)
 #endif
 	aclif->show_request(fd, sd, false);
 
-	SEND_ASYNC_DATA_EMPTY(userconfig_load, NULL);
+	SEND_ASYNC_DATA_EMPTY(userconfig_load_emotes, NULL);
+	SEND_ASYNC_DATA_EMPTY(userconfig_load_hotkeys, NULL);
+//	SEND_ASYNC_DATA_EMPTY(userconfig_load, NULL);
 
 	return true;
+}
+
+void handlers_sendHotkeyV2Tab(JsonP *json, struct userconfig_userhotkeys_v2 *hotkeys)
+{
+	int i = 0;
+	JSONPARSER_FOR_EACH(value, json) {
+		if (i >= MAX_USERHOTKEYS)
+			break;
+		const char *desc = jsonparser->get_child_string_value(value, "desc");
+		if (desc == NULL)
+			continue;
+		hotkeys->keys[i].index = jsonparser->get_child_int_value(value, "index");
+		hotkeys->keys[i].key1 = jsonparser->get_child_int_value(value, "key1");
+		hotkeys->keys[i].key2 = jsonparser->get_child_int_value(value, "key2");
+		safestrncpy(hotkeys->keys[i].desc, desc, HOTKEY_DESCRIPTION_SIZE);
+		i ++;
+	}
+	hotkeys->count = i;
 }
 
 IGNORE_DATA(userconfig_save)
@@ -136,11 +219,13 @@ HTTPURL(userconfig_save)
 		return false;
 	}
 
-	CREATE_DATA(data, userconfig_save_emotes);
 
-	JsonP *userHotkeyV2 = jsonparser->get(json, "UserHotkey_V2");
+	JsonP *userHotkeyV2 = jsonparser->get(dataNode, "UserHotkey_V2");
 	if (userHotkeyV2 != NULL) {
-		// send hotkey data to char server
+		SEND_ASYNC_USERHOKEY_V2_TAB(SkillBar_1Tab)
+		SEND_ASYNC_USERHOKEY_V2_TAB(SkillBar_2Tab)
+		SEND_ASYNC_USERHOKEY_V2_TAB(InterfaceTab)
+		SEND_ASYNC_USERHOKEY_V2_TAB(EmotionTab)
 	}
 	JsonP *emotionHotkey = jsonparser->get(dataNode, "EmotionHotkey");
 
@@ -148,6 +233,7 @@ HTTPURL(userconfig_save)
 	if (!jsonparser->is_null_or_missing(emotionHotkey)) {
 		const int sz = jsonparser->get_array_size(emotionHotkey);
 		Assert_retr(false, sz == MAX_EMOTES);
+		CREATE_DATA(data, userconfig_save_emotes);
 		int i = 0;
 		JSONPARSER_FOR_EACH(emotion, emotionHotkey) {
 			// should be used strncpy [4144]
@@ -307,6 +393,8 @@ void handlers_defaults(void)
 	handlers = &handlers_s;
 	handlers->init = do_init_handlers;
 	handlers->final = do_final_handlers;
+	handlers->sendHotkeyV2Tab = handlers_sendHotkeyV2Tab;
+	handlers->hotkeyTabIdToName = handlers_hotkeyTabIdToName;
 
 #define handler(method, url, func, flags) handlers->parse_ ## func = handlers_parse_ ## func
 #define handler2(method, url, func, flags) handlers->parse_ ## func = handlers_parse_ ## func; \

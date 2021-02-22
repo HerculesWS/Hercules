@@ -24,6 +24,7 @@
 #include "common/hercules.h"
 
 struct userconfig_emotes;
+struct userconfig_userhotkeys_v2;
 
 /**
  * inter_userconfig_interface interface
@@ -34,6 +35,9 @@ struct inter_userconfig_interface {
 	void (*use_default_emotes) (int account_id, struct userconfig_emotes *emotes);
 	bool (*emotes_from_sql) (int account_id, struct userconfig_emotes *emotes);
 	bool (*emotes_to_sql) (int account_id, const struct userconfig_emotes *emotes);
+	void (*hotkey_tab_tosql) (int account_id, const struct userconfig_userhotkeys_v2 *hotkeys);
+	void (*hotkey_tab_clear) (int account_id, int tab_id);
+	void (*hotkey_tab_fromsql) (int account_id, struct userconfig_userhotkeys_v2 *hotkeys, int tab_id);
 };
 
 #ifdef HERCULES_CORE
