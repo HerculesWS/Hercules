@@ -64,6 +64,11 @@ JsonW *jsonwriter_new_string(const char *str)
 	return cJSON_CreateString(str);
 }
 
+JsonW *jsonwriter_new_number(int number)
+{
+	return cJSON_CreateNumber(number);
+}
+
 JsonW *jsonwriter_new_null(void)
 {
 	return cJSON_CreateNull();
@@ -127,6 +132,30 @@ JsonW *jsonwriter_add_new_null(JsonW *parent, const char *name)
 	return obj;
 }
 
+JsonW *jsonwriter_add_new_number(JsonW *parent, const char *name, int number)
+{
+	nullpo_retr(NULL, parent);
+	nullpo_retr(NULL, name);
+
+	JsonW *obj = jsonwriter->new_number(number);
+	if (!jsonwriter->add_node(parent, name, obj)) {
+		Assert_retr(NULL, 0);
+	}
+	return obj;
+}
+
+JsonW *jsonwriter_add_new_string(JsonW *parent, const char *name, const char *str)
+{
+	nullpo_retr(NULL, parent);
+	nullpo_retr(NULL, name);
+
+	JsonW *obj = jsonwriter->new_string(str);
+	if (!jsonwriter->add_node(parent, name, obj)) {
+		Assert_retr(NULL, 0);
+	}
+	return obj;
+}
+
 JsonW *jsonwriter_add_string_to_array(JsonW *parent, const char *str)
 {
 	nullpo_retr(NULL, parent);
@@ -134,6 +163,19 @@ JsonW *jsonwriter_add_string_to_array(JsonW *parent, const char *str)
 	Assert_retr(NULL, cJSON_IsArray(parent));
 	JsonW *obj = jsonwriter->new_string(str);
 	Assert_retr(NULL, cJSON_IsString(obj));
+	if (!jsonwriter->add_node_to_array(parent, obj)) {
+		jsonwriter->delete(obj);
+		Assert_retr(NULL, 0);
+	}
+	return obj;
+}
+
+JsonW *jsonwriter_add_new_object_to_array(JsonW *parent)
+{
+	nullpo_retr(NULL, parent);
+	Assert_retr(NULL, cJSON_IsArray(parent));
+	JsonW *obj = jsonwriter->new_object();
+	Assert_retr(NULL, cJSON_IsObject(obj));
 	if (!jsonwriter->add_node_to_array(parent, obj)) {
 		jsonwriter->delete(obj);
 		Assert_retr(NULL, 0);
@@ -181,6 +223,15 @@ char* jsonwriter_get_string(const JsonW *parent)
 	return cJSON_PrintUnformatted(parent);
 }
 
+JsonW *jsonwriter_get(const JsonW *parent, const char *name)
+{
+	nullpo_retr(NULL, parent);
+	nullpo_retr(NULL, name);
+
+	return cJSON_GetObjectItemCaseSensitive(parent, name);
+}
+
+
 void jsonwriter_print(const JsonW *parent)
 {
 	char *str = jsonwriter->get_formatted_string(parent);
@@ -209,16 +260,21 @@ void jsonwriter_defaults(void)
 	jsonwriter->new_array = jsonwriter_new_array;
 	jsonwriter->new_object = jsonwriter_new_object;
 	jsonwriter->new_string = jsonwriter_new_string;
+	jsonwriter->new_number = jsonwriter_new_number;
 	jsonwriter->new_null = jsonwriter_new_null;
 	jsonwriter->add_node = jsonwriter_add_node;
 	jsonwriter->add_node_to_array = jsonwriter_add_node_to_array;
 	jsonwriter->add_new_array = jsonwriter_add_new_array;
 	jsonwriter->add_new_object = jsonwriter_add_new_object;
 	jsonwriter->add_new_null = jsonwriter_add_new_null;
+	jsonwriter->add_new_number = jsonwriter_add_new_number;
+	jsonwriter->add_new_string = jsonwriter_add_new_string;
 	jsonwriter->add_string_to_array = jsonwriter_add_string_to_array;
 	jsonwriter->add_strings_to_array = jsonwriter_add_strings_to_array;
+	jsonwriter->add_new_object_to_array = jsonwriter_add_new_object_to_array;
 	jsonwriter->get_string = jsonwriter_get_string;
 	jsonwriter->get_formatted_string = jsonwriter_get_formatted_string;
+	jsonwriter->get = jsonwriter_get;
 	jsonwriter->print = jsonwriter_print;
 	jsonwriter->free = jsonwriter_free;
 	jsonwriter->delete = jsonwriter_delete;
