@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2013-2020 Hercules Dev Team
+ * Copyright (C) 2013-2021 Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -3190,6 +3190,59 @@ void HP_handlers_final(void) {
 	}
 	return;
 }
+void HP_handlers_sendHotkeyV2Tab(JsonP *json, struct userconfig_userhotkeys_v2 *hotkeys) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_handlers_sendHotkeyV2Tab_pre > 0) {
+		void (*preHookFunc) (JsonP **json, struct userconfig_userhotkeys_v2 **hotkeys);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_handlers_sendHotkeyV2Tab_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_handlers_sendHotkeyV2Tab_pre[hIndex].func;
+			preHookFunc(&json, &hotkeys);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.handlers.sendHotkeyV2Tab(json, hotkeys);
+	}
+	if (HPMHooks.count.HP_handlers_sendHotkeyV2Tab_post > 0) {
+		void (*postHookFunc) (JsonP *json, struct userconfig_userhotkeys_v2 *hotkeys);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_handlers_sendHotkeyV2Tab_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_handlers_sendHotkeyV2Tab_post[hIndex].func;
+			postHookFunc(json, hotkeys);
+		}
+	}
+	return;
+}
+const char* HP_handlers_hotkeyTabIdToName(int tab_id) {
+	int hIndex = 0;
+	const char* retVal___ = NULL;
+	if (HPMHooks.count.HP_handlers_hotkeyTabIdToName_pre > 0) {
+		const char* (*preHookFunc) (int *tab_id);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_handlers_hotkeyTabIdToName_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_handlers_hotkeyTabIdToName_pre[hIndex].func;
+			retVal___ = preHookFunc(&tab_id);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.handlers.hotkeyTabIdToName(tab_id);
+	}
+	if (HPMHooks.count.HP_handlers_hotkeyTabIdToName_post > 0) {
+		const char* (*postHookFunc) (const char* retVal___, int tab_id);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_handlers_hotkeyTabIdToName_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_handlers_hotkeyTabIdToName_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, tab_id);
+		}
+	}
+	return retVal___;
+}
 bool HP_handlers_parse_userconfig_load(int fd, struct api_session_data *sd) {
 	int hIndex = 0;
 	bool retVal___ = false;
@@ -3481,6 +3534,58 @@ bool HP_handlers_parse_test_url(int fd, struct api_session_data *sd) {
 		}
 	}
 	return retVal___;
+}
+void HP_handlers_userconfig_load_emotes(int fd, struct api_session_data *sd, const void *data, size_t data_size) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_handlers_userconfig_load_emotes_pre > 0) {
+		void (*preHookFunc) (int *fd, struct api_session_data **sd, const void **data, size_t *data_size);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_handlers_userconfig_load_emotes_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_handlers_userconfig_load_emotes_pre[hIndex].func;
+			preHookFunc(&fd, &sd, &data, &data_size);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.handlers.userconfig_load_emotes(fd, sd, data, data_size);
+	}
+	if (HPMHooks.count.HP_handlers_userconfig_load_emotes_post > 0) {
+		void (*postHookFunc) (int fd, struct api_session_data *sd, const void *data, size_t data_size);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_handlers_userconfig_load_emotes_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_handlers_userconfig_load_emotes_post[hIndex].func;
+			postHookFunc(fd, sd, data, data_size);
+		}
+	}
+	return;
+}
+void HP_handlers_userconfig_load_hotkeys(int fd, struct api_session_data *sd, const void *data, size_t data_size) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_handlers_userconfig_load_hotkeys_pre > 0) {
+		void (*preHookFunc) (int *fd, struct api_session_data **sd, const void **data, size_t *data_size);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_handlers_userconfig_load_hotkeys_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_handlers_userconfig_load_hotkeys_pre[hIndex].func;
+			preHookFunc(&fd, &sd, &data, &data_size);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.handlers.userconfig_load_hotkeys(fd, sd, data, data_size);
+	}
+	if (HPMHooks.count.HP_handlers_userconfig_load_hotkeys_post > 0) {
+		void (*postHookFunc) (int fd, struct api_session_data *sd, const void *data, size_t data_size);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_handlers_userconfig_load_hotkeys_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_handlers_userconfig_load_hotkeys_post[hIndex].func;
+			postHookFunc(fd, sd, data, data_size);
+		}
+	}
+	return;
 }
 /* httpparser_interface */
 int HP_httpparser_init(bool minimal) {
@@ -4824,6 +4929,141 @@ char* HP_jsonparser_get_string_value(const JsonP *parent) {
 	}
 	return retVal___;
 }
+double HP_jsonparser_get_number_value(const JsonP *parent) {
+	int hIndex = 0;
+	double retVal___ = 0.;
+	if (HPMHooks.count.HP_jsonparser_get_number_value_pre > 0) {
+		double (*preHookFunc) (const JsonP **parent);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_jsonparser_get_number_value_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_jsonparser_get_number_value_pre[hIndex].func;
+			retVal___ = preHookFunc(&parent);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.jsonparser.get_number_value(parent);
+	}
+	if (HPMHooks.count.HP_jsonparser_get_number_value_post > 0) {
+		double (*postHookFunc) (double retVal___, const JsonP *parent);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_jsonparser_get_number_value_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_jsonparser_get_number_value_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, parent);
+		}
+	}
+	return retVal___;
+}
+int HP_jsonparser_get_int_value(const JsonP *parent) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_jsonparser_get_int_value_pre > 0) {
+		int (*preHookFunc) (const JsonP **parent);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_jsonparser_get_int_value_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_jsonparser_get_int_value_pre[hIndex].func;
+			retVal___ = preHookFunc(&parent);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.jsonparser.get_int_value(parent);
+	}
+	if (HPMHooks.count.HP_jsonparser_get_int_value_post > 0) {
+		int (*postHookFunc) (int retVal___, const JsonP *parent);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_jsonparser_get_int_value_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_jsonparser_get_int_value_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, parent);
+		}
+	}
+	return retVal___;
+}
+char* HP_jsonparser_get_child_string_value(const JsonP *parent, const char *name) {
+	int hIndex = 0;
+	char* retVal___ = NULL;
+	if (HPMHooks.count.HP_jsonparser_get_child_string_value_pre > 0) {
+		char* (*preHookFunc) (const JsonP **parent, const char **name);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_jsonparser_get_child_string_value_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_jsonparser_get_child_string_value_pre[hIndex].func;
+			retVal___ = preHookFunc(&parent, &name);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.jsonparser.get_child_string_value(parent, name);
+	}
+	if (HPMHooks.count.HP_jsonparser_get_child_string_value_post > 0) {
+		char* (*postHookFunc) (char* retVal___, const JsonP *parent, const char *name);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_jsonparser_get_child_string_value_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_jsonparser_get_child_string_value_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, parent, name);
+		}
+	}
+	return retVal___;
+}
+double HP_jsonparser_get_child_number_value(const JsonP *parent, const char *name) {
+	int hIndex = 0;
+	double retVal___ = 0.;
+	if (HPMHooks.count.HP_jsonparser_get_child_number_value_pre > 0) {
+		double (*preHookFunc) (const JsonP **parent, const char **name);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_jsonparser_get_child_number_value_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_jsonparser_get_child_number_value_pre[hIndex].func;
+			retVal___ = preHookFunc(&parent, &name);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.jsonparser.get_child_number_value(parent, name);
+	}
+	if (HPMHooks.count.HP_jsonparser_get_child_number_value_post > 0) {
+		double (*postHookFunc) (double retVal___, const JsonP *parent, const char *name);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_jsonparser_get_child_number_value_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_jsonparser_get_child_number_value_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, parent, name);
+		}
+	}
+	return retVal___;
+}
+int HP_jsonparser_get_child_int_value(const JsonP *parent, const char *name) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_jsonparser_get_child_int_value_pre > 0) {
+		int (*preHookFunc) (const JsonP **parent, const char **name);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_jsonparser_get_child_int_value_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_jsonparser_get_child_int_value_pre[hIndex].func;
+			retVal___ = preHookFunc(&parent, &name);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.jsonparser.get_child_int_value(parent, name);
+	}
+	if (HPMHooks.count.HP_jsonparser_get_child_int_value_post > 0) {
+		int (*postHookFunc) (int retVal___, const JsonP *parent, const char *name);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_jsonparser_get_child_int_value_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_jsonparser_get_child_int_value_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, parent, name);
+		}
+	}
+	return retVal___;
+}
 void HP_jsonparser_free(char *ptr) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_jsonparser_free_pre > 0) {
@@ -5038,6 +5278,33 @@ JsonW* HP_jsonwriter_new_string(const char *str) {
 	}
 	return retVal___;
 }
+JsonW* HP_jsonwriter_new_number(int number) {
+	int hIndex = 0;
+	JsonW* retVal___ = NULL;
+	if (HPMHooks.count.HP_jsonwriter_new_number_pre > 0) {
+		JsonW* (*preHookFunc) (int *number);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_jsonwriter_new_number_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_jsonwriter_new_number_pre[hIndex].func;
+			retVal___ = preHookFunc(&number);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.jsonwriter.new_number(number);
+	}
+	if (HPMHooks.count.HP_jsonwriter_new_number_post > 0) {
+		JsonW* (*postHookFunc) (JsonW* retVal___, int number);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_jsonwriter_new_number_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_jsonwriter_new_number_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, number);
+		}
+	}
+	return retVal___;
+}
 JsonW* HP_jsonwriter_new_null(void) {
 	int hIndex = 0;
 	JsonW* retVal___ = NULL;
@@ -5200,6 +5467,60 @@ JsonW* HP_jsonwriter_add_new_null(JsonW *parent, const char *name) {
 	}
 	return retVal___;
 }
+JsonW* HP_jsonwriter_add_new_number(JsonW *parent, const char *name, int number) {
+	int hIndex = 0;
+	JsonW* retVal___ = NULL;
+	if (HPMHooks.count.HP_jsonwriter_add_new_number_pre > 0) {
+		JsonW* (*preHookFunc) (JsonW **parent, const char **name, int *number);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_jsonwriter_add_new_number_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_jsonwriter_add_new_number_pre[hIndex].func;
+			retVal___ = preHookFunc(&parent, &name, &number);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.jsonwriter.add_new_number(parent, name, number);
+	}
+	if (HPMHooks.count.HP_jsonwriter_add_new_number_post > 0) {
+		JsonW* (*postHookFunc) (JsonW* retVal___, JsonW *parent, const char *name, int number);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_jsonwriter_add_new_number_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_jsonwriter_add_new_number_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, parent, name, number);
+		}
+	}
+	return retVal___;
+}
+JsonW* HP_jsonwriter_add_new_string(JsonW *parent, const char *name, const char *str) {
+	int hIndex = 0;
+	JsonW* retVal___ = NULL;
+	if (HPMHooks.count.HP_jsonwriter_add_new_string_pre > 0) {
+		JsonW* (*preHookFunc) (JsonW **parent, const char **name, const char **str);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_jsonwriter_add_new_string_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_jsonwriter_add_new_string_pre[hIndex].func;
+			retVal___ = preHookFunc(&parent, &name, &str);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.jsonwriter.add_new_string(parent, name, str);
+	}
+	if (HPMHooks.count.HP_jsonwriter_add_new_string_post > 0) {
+		JsonW* (*postHookFunc) (JsonW* retVal___, JsonW *parent, const char *name, const char *str);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_jsonwriter_add_new_string_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_jsonwriter_add_new_string_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, parent, name, str);
+		}
+	}
+	return retVal___;
+}
 JsonW* HP_jsonwriter_add_string_to_array(JsonW *parent, const char *str) {
 	int hIndex = 0;
 	JsonW* retVal___ = NULL;
@@ -5252,6 +5573,33 @@ void HP_jsonwriter_print(const JsonW *parent) {
 		}
 	}
 	return;
+}
+JsonW* HP_jsonwriter_get(const JsonW *parent, const char *name) {
+	int hIndex = 0;
+	JsonW* retVal___ = NULL;
+	if (HPMHooks.count.HP_jsonwriter_get_pre > 0) {
+		JsonW* (*preHookFunc) (const JsonW **parent, const char **name);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_jsonwriter_get_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_jsonwriter_get_pre[hIndex].func;
+			retVal___ = preHookFunc(&parent, &name);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.jsonwriter.get(parent, name);
+	}
+	if (HPMHooks.count.HP_jsonwriter_get_post > 0) {
+		JsonW* (*postHookFunc) (JsonW* retVal___, const JsonW *parent, const char *name);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_jsonwriter_get_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_jsonwriter_get_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, parent, name);
+		}
+	}
+	return retVal___;
 }
 char* HP_jsonwriter_get_string(const JsonW *parent) {
 	int hIndex = 0;
@@ -10790,11 +11138,11 @@ bool HP_sv_readdb(const char *directory, const char *filename, char delim, int m
 	return retVal___;
 }
 /* sysinfo_interface */
-int HP_sysinfo_getpagesize(void) {
+long HP_sysinfo_getpagesize(void) {
 	int hIndex = 0;
-	int retVal___ = 0;
+	long retVal___ = 0;
 	if (HPMHooks.count.HP_sysinfo_getpagesize_pre > 0) {
-		int (*preHookFunc) (void);
+		long (*preHookFunc) (void);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_sysinfo_getpagesize_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_sysinfo_getpagesize_pre[hIndex].func;
@@ -10809,7 +11157,7 @@ int HP_sysinfo_getpagesize(void) {
 		retVal___ = HPMHooks.source.sysinfo.getpagesize();
 	}
 	if (HPMHooks.count.HP_sysinfo_getpagesize_post > 0) {
-		int (*postHookFunc) (int retVal___);
+		long (*postHookFunc) (long retVal___);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_sysinfo_getpagesize_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_sysinfo_getpagesize_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___);

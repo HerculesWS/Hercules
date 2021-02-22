@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2013-2020 Hercules Dev Team
+ * Copyright (C) 2013-2021 Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -154,6 +154,8 @@ struct HookingPointData HookingPoints[] = {
 /* handlers_interface */
 	{ HP_POP(handlers->init, HP_handlers_init) },
 	{ HP_POP(handlers->final, HP_handlers_final) },
+	{ HP_POP(handlers->sendHotkeyV2Tab, HP_handlers_sendHotkeyV2Tab) },
+	{ HP_POP(handlers->hotkeyTabIdToName, HP_handlers_hotkeyTabIdToName) },
 	{ HP_POP(handlers->parse_userconfig_load, HP_handlers_parse_userconfig_load) },
 	{ HP_POP(handlers->userconfig_load, HP_handlers_userconfig_load) },
 	{ HP_POP(handlers->parse_userconfig_save, HP_handlers_parse_userconfig_save) },
@@ -165,6 +167,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(handlers->parse_emblem_download, HP_handlers_parse_emblem_download) },
 	{ HP_POP(handlers->emblem_download, HP_handlers_emblem_download) },
 	{ HP_POP(handlers->parse_test_url, HP_handlers_parse_test_url) },
+	{ HP_POP(handlers->userconfig_load_emotes, HP_handlers_userconfig_load_emotes) },
+	{ HP_POP(handlers->userconfig_load_hotkeys, HP_handlers_userconfig_load_hotkeys) },
 /* httpparser_interface */
 	{ HP_POP(httpparser->init, HP_httpparser_init) },
 	{ HP_POP(httpparser->final, HP_httpparser_final) },
@@ -218,6 +222,11 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(jsonparser->get, HP_jsonparser_get) },
 	{ HP_POP(jsonparser->get_array_size, HP_jsonparser_get_array_size) },
 	{ HP_POP(jsonparser->get_string_value, HP_jsonparser_get_string_value) },
+	{ HP_POP(jsonparser->get_number_value, HP_jsonparser_get_number_value) },
+	{ HP_POP(jsonparser->get_int_value, HP_jsonparser_get_int_value) },
+	{ HP_POP(jsonparser->get_child_string_value, HP_jsonparser_get_child_string_value) },
+	{ HP_POP(jsonparser->get_child_number_value, HP_jsonparser_get_child_number_value) },
+	{ HP_POP(jsonparser->get_child_int_value, HP_jsonparser_get_child_int_value) },
 	{ HP_POP(jsonparser->free, HP_jsonparser_free) },
 	{ HP_POP(jsonparser->delete, HP_jsonparser_delete) },
 /* jsonwriter_interface */
@@ -227,14 +236,18 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(jsonwriter->new_array, HP_jsonwriter_new_array) },
 	{ HP_POP(jsonwriter->new_object, HP_jsonwriter_new_object) },
 	{ HP_POP(jsonwriter->new_string, HP_jsonwriter_new_string) },
+	{ HP_POP(jsonwriter->new_number, HP_jsonwriter_new_number) },
 	{ HP_POP(jsonwriter->new_null, HP_jsonwriter_new_null) },
 	{ HP_POP(jsonwriter->add_node, HP_jsonwriter_add_node) },
 	{ HP_POP(jsonwriter->add_node_to_array, HP_jsonwriter_add_node_to_array) },
 	{ HP_POP(jsonwriter->add_new_array, HP_jsonwriter_add_new_array) },
 	{ HP_POP(jsonwriter->add_new_object, HP_jsonwriter_add_new_object) },
 	{ HP_POP(jsonwriter->add_new_null, HP_jsonwriter_add_new_null) },
+	{ HP_POP(jsonwriter->add_new_number, HP_jsonwriter_add_new_number) },
+	{ HP_POP(jsonwriter->add_new_string, HP_jsonwriter_add_new_string) },
 	{ HP_POP(jsonwriter->add_string_to_array, HP_jsonwriter_add_string_to_array) },
 	{ HP_POP(jsonwriter->print, HP_jsonwriter_print) },
+	{ HP_POP(jsonwriter->get, HP_jsonwriter_get) },
 	{ HP_POP(jsonwriter->get_string, HP_jsonwriter_get_string) },
 	{ HP_POP(jsonwriter->get_formatted_string, HP_jsonwriter_get_formatted_string) },
 	{ HP_POP(jsonwriter->free, HP_jsonwriter_free) },

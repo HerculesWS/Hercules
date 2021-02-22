@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2013-2020 Hercules Dev Team
+ * Copyright (C) 2013-2021 Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -262,6 +262,10 @@ struct {
 	struct HPMHookPoint *HP_handlers_init_post;
 	struct HPMHookPoint *HP_handlers_final_pre;
 	struct HPMHookPoint *HP_handlers_final_post;
+	struct HPMHookPoint *HP_handlers_sendHotkeyV2Tab_pre;
+	struct HPMHookPoint *HP_handlers_sendHotkeyV2Tab_post;
+	struct HPMHookPoint *HP_handlers_hotkeyTabIdToName_pre;
+	struct HPMHookPoint *HP_handlers_hotkeyTabIdToName_post;
 	struct HPMHookPoint *HP_handlers_parse_userconfig_load_pre;
 	struct HPMHookPoint *HP_handlers_parse_userconfig_load_post;
 	struct HPMHookPoint *HP_handlers_userconfig_load_pre;
@@ -284,6 +288,10 @@ struct {
 	struct HPMHookPoint *HP_handlers_emblem_download_post;
 	struct HPMHookPoint *HP_handlers_parse_test_url_pre;
 	struct HPMHookPoint *HP_handlers_parse_test_url_post;
+	struct HPMHookPoint *HP_handlers_userconfig_load_emotes_pre;
+	struct HPMHookPoint *HP_handlers_userconfig_load_emotes_post;
+	struct HPMHookPoint *HP_handlers_userconfig_load_hotkeys_pre;
+	struct HPMHookPoint *HP_handlers_userconfig_load_hotkeys_post;
 	struct HPMHookPoint *HP_httpparser_init_pre;
 	struct HPMHookPoint *HP_httpparser_init_post;
 	struct HPMHookPoint *HP_httpparser_final_pre;
@@ -384,6 +392,16 @@ struct {
 	struct HPMHookPoint *HP_jsonparser_get_array_size_post;
 	struct HPMHookPoint *HP_jsonparser_get_string_value_pre;
 	struct HPMHookPoint *HP_jsonparser_get_string_value_post;
+	struct HPMHookPoint *HP_jsonparser_get_number_value_pre;
+	struct HPMHookPoint *HP_jsonparser_get_number_value_post;
+	struct HPMHookPoint *HP_jsonparser_get_int_value_pre;
+	struct HPMHookPoint *HP_jsonparser_get_int_value_post;
+	struct HPMHookPoint *HP_jsonparser_get_child_string_value_pre;
+	struct HPMHookPoint *HP_jsonparser_get_child_string_value_post;
+	struct HPMHookPoint *HP_jsonparser_get_child_number_value_pre;
+	struct HPMHookPoint *HP_jsonparser_get_child_number_value_post;
+	struct HPMHookPoint *HP_jsonparser_get_child_int_value_pre;
+	struct HPMHookPoint *HP_jsonparser_get_child_int_value_post;
 	struct HPMHookPoint *HP_jsonparser_free_pre;
 	struct HPMHookPoint *HP_jsonparser_free_post;
 	struct HPMHookPoint *HP_jsonparser_delete_pre;
@@ -400,6 +418,8 @@ struct {
 	struct HPMHookPoint *HP_jsonwriter_new_object_post;
 	struct HPMHookPoint *HP_jsonwriter_new_string_pre;
 	struct HPMHookPoint *HP_jsonwriter_new_string_post;
+	struct HPMHookPoint *HP_jsonwriter_new_number_pre;
+	struct HPMHookPoint *HP_jsonwriter_new_number_post;
 	struct HPMHookPoint *HP_jsonwriter_new_null_pre;
 	struct HPMHookPoint *HP_jsonwriter_new_null_post;
 	struct HPMHookPoint *HP_jsonwriter_add_node_pre;
@@ -412,10 +432,16 @@ struct {
 	struct HPMHookPoint *HP_jsonwriter_add_new_object_post;
 	struct HPMHookPoint *HP_jsonwriter_add_new_null_pre;
 	struct HPMHookPoint *HP_jsonwriter_add_new_null_post;
+	struct HPMHookPoint *HP_jsonwriter_add_new_number_pre;
+	struct HPMHookPoint *HP_jsonwriter_add_new_number_post;
+	struct HPMHookPoint *HP_jsonwriter_add_new_string_pre;
+	struct HPMHookPoint *HP_jsonwriter_add_new_string_post;
 	struct HPMHookPoint *HP_jsonwriter_add_string_to_array_pre;
 	struct HPMHookPoint *HP_jsonwriter_add_string_to_array_post;
 	struct HPMHookPoint *HP_jsonwriter_print_pre;
 	struct HPMHookPoint *HP_jsonwriter_print_post;
+	struct HPMHookPoint *HP_jsonwriter_get_pre;
+	struct HPMHookPoint *HP_jsonwriter_get_post;
 	struct HPMHookPoint *HP_jsonwriter_get_string_pre;
 	struct HPMHookPoint *HP_jsonwriter_get_string_post;
 	struct HPMHookPoint *HP_jsonwriter_get_formatted_string_pre;
@@ -1153,6 +1179,10 @@ struct {
 	int HP_handlers_init_post;
 	int HP_handlers_final_pre;
 	int HP_handlers_final_post;
+	int HP_handlers_sendHotkeyV2Tab_pre;
+	int HP_handlers_sendHotkeyV2Tab_post;
+	int HP_handlers_hotkeyTabIdToName_pre;
+	int HP_handlers_hotkeyTabIdToName_post;
 	int HP_handlers_parse_userconfig_load_pre;
 	int HP_handlers_parse_userconfig_load_post;
 	int HP_handlers_userconfig_load_pre;
@@ -1175,6 +1205,10 @@ struct {
 	int HP_handlers_emblem_download_post;
 	int HP_handlers_parse_test_url_pre;
 	int HP_handlers_parse_test_url_post;
+	int HP_handlers_userconfig_load_emotes_pre;
+	int HP_handlers_userconfig_load_emotes_post;
+	int HP_handlers_userconfig_load_hotkeys_pre;
+	int HP_handlers_userconfig_load_hotkeys_post;
 	int HP_httpparser_init_pre;
 	int HP_httpparser_init_post;
 	int HP_httpparser_final_pre;
@@ -1275,6 +1309,16 @@ struct {
 	int HP_jsonparser_get_array_size_post;
 	int HP_jsonparser_get_string_value_pre;
 	int HP_jsonparser_get_string_value_post;
+	int HP_jsonparser_get_number_value_pre;
+	int HP_jsonparser_get_number_value_post;
+	int HP_jsonparser_get_int_value_pre;
+	int HP_jsonparser_get_int_value_post;
+	int HP_jsonparser_get_child_string_value_pre;
+	int HP_jsonparser_get_child_string_value_post;
+	int HP_jsonparser_get_child_number_value_pre;
+	int HP_jsonparser_get_child_number_value_post;
+	int HP_jsonparser_get_child_int_value_pre;
+	int HP_jsonparser_get_child_int_value_post;
 	int HP_jsonparser_free_pre;
 	int HP_jsonparser_free_post;
 	int HP_jsonparser_delete_pre;
@@ -1291,6 +1335,8 @@ struct {
 	int HP_jsonwriter_new_object_post;
 	int HP_jsonwriter_new_string_pre;
 	int HP_jsonwriter_new_string_post;
+	int HP_jsonwriter_new_number_pre;
+	int HP_jsonwriter_new_number_post;
 	int HP_jsonwriter_new_null_pre;
 	int HP_jsonwriter_new_null_post;
 	int HP_jsonwriter_add_node_pre;
@@ -1303,10 +1349,16 @@ struct {
 	int HP_jsonwriter_add_new_object_post;
 	int HP_jsonwriter_add_new_null_pre;
 	int HP_jsonwriter_add_new_null_post;
+	int HP_jsonwriter_add_new_number_pre;
+	int HP_jsonwriter_add_new_number_post;
+	int HP_jsonwriter_add_new_string_pre;
+	int HP_jsonwriter_add_new_string_post;
 	int HP_jsonwriter_add_string_to_array_pre;
 	int HP_jsonwriter_add_string_to_array_post;
 	int HP_jsonwriter_print_pre;
 	int HP_jsonwriter_print_post;
+	int HP_jsonwriter_get_pre;
+	int HP_jsonwriter_get_post;
 	int HP_jsonwriter_get_string_pre;
 	int HP_jsonwriter_get_string_post;
 	int HP_jsonwriter_get_formatted_string_pre;

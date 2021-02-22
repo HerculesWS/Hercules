@@ -193,6 +193,28 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#else
 		#define CHAR_PINCODE_H
 	#endif // CHAR_PINCODE_H
+	#ifdef COMMON_APIPACKETS_H
+		{ "PACKET_API_PROXY", sizeof(struct PACKET_API_PROXY), SERVER_TYPE_ALL },
+		{ "PACKET_API_PROXY0", sizeof(struct PACKET_API_PROXY0), SERVER_TYPE_ALL },
+		{ "PACKET_API_PROXY_CHUNKED", sizeof(struct PACKET_API_PROXY_CHUNKED), SERVER_TYPE_ALL },
+		{ "PACKET_API_REPLY_emblem_download", sizeof(struct PACKET_API_REPLY_emblem_download), SERVER_TYPE_ALL },
+		{ "PACKET_API_REPLY_userconfig_load_emotes", sizeof(struct PACKET_API_REPLY_userconfig_load_emotes), SERVER_TYPE_ALL },
+		{ "PACKET_API_REPLY_userconfig_load_hotkeys_tab", sizeof(struct PACKET_API_REPLY_userconfig_load_hotkeys_tab), SERVER_TYPE_ALL },
+		{ "PACKET_API_REPLY_userconfig_load_userhotkey_tab", sizeof(struct PACKET_API_REPLY_userconfig_load_userhotkey_tab), SERVER_TYPE_ALL },
+		{ "PACKET_API_emblem_download", sizeof(struct PACKET_API_emblem_download), SERVER_TYPE_ALL },
+		{ "PACKET_API_emblem_download_data", sizeof(struct PACKET_API_emblem_download_data), SERVER_TYPE_ALL },
+		{ "PACKET_API_emblem_upload_guild_id", sizeof(struct PACKET_API_emblem_upload_guild_id), SERVER_TYPE_ALL },
+		{ "PACKET_API_emblem_upload_guild_id_data", sizeof(struct PACKET_API_emblem_upload_guild_id_data), SERVER_TYPE_ALL },
+		{ "PACKET_API_userconfig_save_emotes", sizeof(struct PACKET_API_userconfig_save_emotes), SERVER_TYPE_ALL },
+		{ "PACKET_API_userconfig_save_emotes_data", sizeof(struct PACKET_API_userconfig_save_emotes_data), SERVER_TYPE_ALL },
+		{ "PACKET_API_userconfig_save_userhotkey_v2", sizeof(struct PACKET_API_userconfig_save_userhotkey_v2), SERVER_TYPE_ALL },
+		{ "PACKET_API_userconfig_save_userhotkey_v2_data", sizeof(struct PACKET_API_userconfig_save_userhotkey_v2_data), SERVER_TYPE_ALL },
+		{ "userconfig_emotes", sizeof(struct userconfig_emotes), SERVER_TYPE_ALL },
+		{ "userconfig_save_userhotkey_key", sizeof(struct userconfig_save_userhotkey_key), SERVER_TYPE_ALL },
+		{ "userconfig_userhotkeys_v2", sizeof(struct userconfig_userhotkeys_v2), SERVER_TYPE_ALL },
+	#else
+		#define COMMON_APIPACKETS_H
+	#endif // COMMON_APIPACKETS_H
 	#ifdef COMMON_CONF_H
 		{ "libconfig_interface", sizeof(struct libconfig_interface), SERVER_TYPE_ALL },
 	#else

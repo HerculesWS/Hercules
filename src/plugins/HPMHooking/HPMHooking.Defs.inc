@@ -627,6 +627,34 @@ typedef bool (*HPMHOOK_post_buyingstore_searchall) (bool retVal___, struct map_s
 typedef unsigned int (*HPMHOOK_pre_buyingstore_getuid) (void);
 typedef unsigned int (*HPMHOOK_post_buyingstore_getuid) (unsigned int retVal___);
 #endif // MAP_BUYINGSTORE_H
+#ifdef CHAR_CAPIIF_H /* capiif */
+typedef void (*HPMHOOK_pre_capiif_init) (void);
+typedef void (*HPMHOOK_post_capiif_init) (void);
+typedef void (*HPMHOOK_pre_capiif_final) (void);
+typedef void (*HPMHOOK_post_capiif_final) (void);
+typedef struct online_char_data* (*HPMHOOK_pre_capiif_get_online_character) (const struct PACKET_API_PROXY **p);
+typedef struct online_char_data* (*HPMHOOK_post_capiif_get_online_character) (struct online_char_data* retVal___, const struct PACKET_API_PROXY *p);
+typedef void (*HPMHOOK_pre_capiif_emblem_download) (int *fd, int *guild_id, int *emblem_id);
+typedef void (*HPMHOOK_post_capiif_emblem_download) (int fd, int guild_id, int emblem_id);
+typedef void (*HPMHOOK_pre_capiif_parse_userconfig_load_emotes) (int *fd);
+typedef void (*HPMHOOK_post_capiif_parse_userconfig_load_emotes) (int fd);
+typedef void (*HPMHOOK_pre_capiif_parse_userconfig_save_emotes) (int *fd);
+typedef void (*HPMHOOK_post_capiif_parse_userconfig_save_emotes) (int fd);
+typedef void (*HPMHOOK_pre_capiif_parse_charconfig_load) (int *fd);
+typedef void (*HPMHOOK_post_capiif_parse_charconfig_load) (int fd);
+typedef void (*HPMHOOK_pre_capiif_parse_emblem_upload) (int *fd);
+typedef void (*HPMHOOK_post_capiif_parse_emblem_upload) (int fd);
+typedef void (*HPMHOOK_pre_capiif_parse_emblem_upload_guild_id) (int *fd);
+typedef void (*HPMHOOK_post_capiif_parse_emblem_upload_guild_id) (int fd);
+typedef void (*HPMHOOK_pre_capiif_parse_emblem_download) (int *fd);
+typedef void (*HPMHOOK_post_capiif_parse_emblem_download) (int fd);
+typedef void (*HPMHOOK_pre_capiif_parse_userconfig_save_userhotkey_v2) (int *fd);
+typedef void (*HPMHOOK_post_capiif_parse_userconfig_save_userhotkey_v2) (int fd);
+typedef void (*HPMHOOK_pre_capiif_parse_userconfig_load_hotkeys) (int *fd);
+typedef void (*HPMHOOK_post_capiif_parse_userconfig_load_hotkeys) (int fd);
+typedef int (*HPMHOOK_pre_capiif_parse_fromlogin_api_proxy) (int *fd);
+typedef int (*HPMHOOK_post_capiif_parse_fromlogin_api_proxy) (int retVal___, int fd);
+#endif // CHAR_CAPIIF_H
 #ifdef MAP_CHANNEL_H /* channel */
 typedef int (*HPMHOOK_pre_channel_init) (bool *minimal);
 typedef int (*HPMHOOK_post_channel_init) (int retVal___, bool minimal);
@@ -3596,6 +3624,10 @@ typedef int (*HPMHOOK_pre_handlers_init) (bool *minimal);
 typedef int (*HPMHOOK_post_handlers_init) (int retVal___, bool minimal);
 typedef void (*HPMHOOK_pre_handlers_final) (void);
 typedef void (*HPMHOOK_post_handlers_final) (void);
+typedef void (*HPMHOOK_pre_handlers_sendHotkeyV2Tab) (JsonP **json, struct userconfig_userhotkeys_v2 **hotkeys);
+typedef void (*HPMHOOK_post_handlers_sendHotkeyV2Tab) (JsonP *json, struct userconfig_userhotkeys_v2 *hotkeys);
+typedef const char* (*HPMHOOK_pre_handlers_hotkeyTabIdToName) (int *tab_id);
+typedef const char* (*HPMHOOK_post_handlers_hotkeyTabIdToName) (const char* retVal___, int tab_id);
 typedef bool (*HPMHOOK_pre_handlers_parse_userconfig_load) (int *fd, struct api_session_data **sd);
 typedef bool (*HPMHOOK_post_handlers_parse_userconfig_load) (bool retVal___, int fd, struct api_session_data *sd);
 typedef void (*HPMHOOK_pre_handlers_userconfig_load) (int *fd, struct api_session_data **sd, const void **data, size_t *data_size);
@@ -3618,6 +3650,10 @@ typedef void (*HPMHOOK_pre_handlers_emblem_download) (int *fd, struct api_sessio
 typedef void (*HPMHOOK_post_handlers_emblem_download) (int fd, struct api_session_data *sd, const void *data, size_t data_size);
 typedef bool (*HPMHOOK_pre_handlers_parse_test_url) (int *fd, struct api_session_data **sd);
 typedef bool (*HPMHOOK_post_handlers_parse_test_url) (bool retVal___, int fd, struct api_session_data *sd);
+typedef void (*HPMHOOK_pre_handlers_userconfig_load_emotes) (int *fd, struct api_session_data **sd, const void **data, size_t *data_size);
+typedef void (*HPMHOOK_post_handlers_userconfig_load_emotes) (int fd, struct api_session_data *sd, const void *data, size_t data_size);
+typedef void (*HPMHOOK_pre_handlers_userconfig_load_hotkeys) (int *fd, struct api_session_data **sd, const void **data, size_t *data_size);
+typedef void (*HPMHOOK_post_handlers_userconfig_load_hotkeys) (int fd, struct api_session_data *sd, const void *data, size_t data_size);
 #endif // API_HANDLERS_H
 #ifdef MAP_HOMUNCULUS_H /* homun */
 typedef void (*HPMHOOK_pre_homun_init) (bool *minimal);
@@ -4211,6 +4247,24 @@ typedef int (*HPMHOOK_post_inter_storage_parse_frommap) (int retVal___, int fd);
 typedef bool (*HPMHOOK_pre_inter_storage_retrieve_bound_items) (int *char_id, int *account_id, int *guild_id);
 typedef bool (*HPMHOOK_post_inter_storage_retrieve_bound_items) (bool retVal___, int char_id, int account_id, int guild_id);
 #endif // CHAR_INT_STORAGE_H
+#ifdef CHAR_INT_USERCONFIG_H /* inter_userconfig */
+typedef int (*HPMHOOK_pre_inter_userconfig_load_emotes) (int *account_id, struct userconfig_emotes **emotes);
+typedef int (*HPMHOOK_post_inter_userconfig_load_emotes) (int retVal___, int account_id, struct userconfig_emotes *emotes);
+typedef int (*HPMHOOK_pre_inter_userconfig_save_emotes) (int *account_id, const struct userconfig_emotes **emotes);
+typedef int (*HPMHOOK_post_inter_userconfig_save_emotes) (int retVal___, int account_id, const struct userconfig_emotes *emotes);
+typedef void (*HPMHOOK_pre_inter_userconfig_use_default_emotes) (int *account_id, struct userconfig_emotes **emotes);
+typedef void (*HPMHOOK_post_inter_userconfig_use_default_emotes) (int account_id, struct userconfig_emotes *emotes);
+typedef bool (*HPMHOOK_pre_inter_userconfig_emotes_from_sql) (int *account_id, struct userconfig_emotes **emotes);
+typedef bool (*HPMHOOK_post_inter_userconfig_emotes_from_sql) (bool retVal___, int account_id, struct userconfig_emotes *emotes);
+typedef bool (*HPMHOOK_pre_inter_userconfig_emotes_to_sql) (int *account_id, const struct userconfig_emotes **emotes);
+typedef bool (*HPMHOOK_post_inter_userconfig_emotes_to_sql) (bool retVal___, int account_id, const struct userconfig_emotes *emotes);
+typedef void (*HPMHOOK_pre_inter_userconfig_hotkey_tab_tosql) (int *account_id, const struct userconfig_userhotkeys_v2 **hotkeys);
+typedef void (*HPMHOOK_post_inter_userconfig_hotkey_tab_tosql) (int account_id, const struct userconfig_userhotkeys_v2 *hotkeys);
+typedef void (*HPMHOOK_pre_inter_userconfig_hotkey_tab_clear) (int *account_id, int *tab_id);
+typedef void (*HPMHOOK_post_inter_userconfig_hotkey_tab_clear) (int account_id, int tab_id);
+typedef void (*HPMHOOK_pre_inter_userconfig_hotkey_tab_fromsql) (int *account_id, struct userconfig_userhotkeys_v2 **hotkeys, int *tab_id);
+typedef void (*HPMHOOK_post_inter_userconfig_hotkey_tab_fromsql) (int account_id, struct userconfig_userhotkeys_v2 *hotkeys, int tab_id);
+#endif // CHAR_INT_USERCONFIG_H
 #ifdef MAP_INTIF_H /* intif */
 typedef int (*HPMHOOK_pre_intif_parse) (int *fd);
 typedef int (*HPMHOOK_post_intif_parse) (int retVal___, int fd);
@@ -4736,6 +4790,16 @@ typedef int (*HPMHOOK_pre_jsonparser_get_array_size) (const JsonP **parent);
 typedef int (*HPMHOOK_post_jsonparser_get_array_size) (int retVal___, const JsonP *parent);
 typedef char* (*HPMHOOK_pre_jsonparser_get_string_value) (const JsonP **parent);
 typedef char* (*HPMHOOK_post_jsonparser_get_string_value) (char* retVal___, const JsonP *parent);
+typedef double (*HPMHOOK_pre_jsonparser_get_number_value) (const JsonP **parent);
+typedef double (*HPMHOOK_post_jsonparser_get_number_value) (double retVal___, const JsonP *parent);
+typedef int (*HPMHOOK_pre_jsonparser_get_int_value) (const JsonP **parent);
+typedef int (*HPMHOOK_post_jsonparser_get_int_value) (int retVal___, const JsonP *parent);
+typedef char* (*HPMHOOK_pre_jsonparser_get_child_string_value) (const JsonP **parent, const char **name);
+typedef char* (*HPMHOOK_post_jsonparser_get_child_string_value) (char* retVal___, const JsonP *parent, const char *name);
+typedef double (*HPMHOOK_pre_jsonparser_get_child_number_value) (const JsonP **parent, const char **name);
+typedef double (*HPMHOOK_post_jsonparser_get_child_number_value) (double retVal___, const JsonP *parent, const char *name);
+typedef int (*HPMHOOK_pre_jsonparser_get_child_int_value) (const JsonP **parent, const char **name);
+typedef int (*HPMHOOK_post_jsonparser_get_child_int_value) (int retVal___, const JsonP *parent, const char *name);
 typedef void (*HPMHOOK_pre_jsonparser_free) (char **ptr);
 typedef void (*HPMHOOK_post_jsonparser_free) (char *ptr);
 typedef void (*HPMHOOK_pre_jsonparser_delete) (JsonP **ptr);
@@ -4754,6 +4818,8 @@ typedef JsonW* (*HPMHOOK_pre_jsonwriter_new_object) (void);
 typedef JsonW* (*HPMHOOK_post_jsonwriter_new_object) (JsonW* retVal___);
 typedef JsonW* (*HPMHOOK_pre_jsonwriter_new_string) (const char **str);
 typedef JsonW* (*HPMHOOK_post_jsonwriter_new_string) (JsonW* retVal___, const char *str);
+typedef JsonW* (*HPMHOOK_pre_jsonwriter_new_number) (int *number);
+typedef JsonW* (*HPMHOOK_post_jsonwriter_new_number) (JsonW* retVal___, int number);
 typedef JsonW* (*HPMHOOK_pre_jsonwriter_new_null) (void);
 typedef JsonW* (*HPMHOOK_post_jsonwriter_new_null) (JsonW* retVal___);
 typedef JsonWBool (*HPMHOOK_pre_jsonwriter_add_node) (JsonW **parent, const char **name, JsonW **child);
@@ -4766,10 +4832,16 @@ typedef JsonW* (*HPMHOOK_pre_jsonwriter_add_new_object) (JsonW **parent, const c
 typedef JsonW* (*HPMHOOK_post_jsonwriter_add_new_object) (JsonW* retVal___, JsonW *parent, const char *name);
 typedef JsonW* (*HPMHOOK_pre_jsonwriter_add_new_null) (JsonW **parent, const char **name);
 typedef JsonW* (*HPMHOOK_post_jsonwriter_add_new_null) (JsonW* retVal___, JsonW *parent, const char *name);
+typedef JsonW* (*HPMHOOK_pre_jsonwriter_add_new_number) (JsonW **parent, const char **name, int *number);
+typedef JsonW* (*HPMHOOK_post_jsonwriter_add_new_number) (JsonW* retVal___, JsonW *parent, const char *name, int number);
+typedef JsonW* (*HPMHOOK_pre_jsonwriter_add_new_string) (JsonW **parent, const char **name, const char **str);
+typedef JsonW* (*HPMHOOK_post_jsonwriter_add_new_string) (JsonW* retVal___, JsonW *parent, const char *name, const char *str);
 typedef JsonW* (*HPMHOOK_pre_jsonwriter_add_string_to_array) (JsonW **parent, const char **str);
 typedef JsonW* (*HPMHOOK_post_jsonwriter_add_string_to_array) (JsonW* retVal___, JsonW *parent, const char *str);
 typedef void (*HPMHOOK_pre_jsonwriter_print) (const JsonW **parent);
 typedef void (*HPMHOOK_post_jsonwriter_print) (const JsonW *parent);
+typedef JsonW* (*HPMHOOK_pre_jsonwriter_get) (const JsonW **parent, const char **name);
+typedef JsonW* (*HPMHOOK_post_jsonwriter_get) (JsonW* retVal___, const JsonW *parent, const char *name);
 typedef char* (*HPMHOOK_pre_jsonwriter_get_string) (const JsonW **parent);
 typedef char* (*HPMHOOK_post_jsonwriter_get_string) (char* retVal___, const JsonW *parent);
 typedef char* (*HPMHOOK_pre_jsonwriter_get_formatted_string) (const JsonW **parent);
