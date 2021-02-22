@@ -126,7 +126,7 @@ DATA(userconfig_load_emotes)
 
 	GET_DATA(p, userconfig_load_emotes);
 
-	jsonwriter->add_strings_to_array(emotionHotkey,
+	jsonwriter->add_new_strings_to_array(emotionHotkey,
 		p->emotes.emote[0], p->emotes.emote[1], p->emotes.emote[2], p->emotes.emote[3], p->emotes.emote[4],
 		p->emotes.emote[5], p->emotes.emote[6], p->emotes.emote[7], p->emotes.emote[8], p->emotes.emote[9],
 		NULL);

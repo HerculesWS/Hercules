@@ -50,8 +50,8 @@ struct jsonwriter_interface {
 	JsonW *(*add_new_null) (JsonW *parent, const char *name);
 	JsonW *(*add_new_number) (JsonW *parent, const char *name, int number);
 	JsonW *(*add_new_string) (JsonW *parent, const char *name, const char *str);
-	JsonW *(*add_string_to_array) (JsonW *parent, const char *str);
-	JsonW *(*add_strings_to_array) (JsonW *parent, ...);
+	JsonW *(*add_new_string_to_array) (JsonW *parent, const char *str);
+	JsonW *(*add_new_strings_to_array) (JsonW *parent, ...);
 	JsonW *(*add_new_object_to_array) (JsonW *parent);
 
 	void (*print) (const JsonW *parent);

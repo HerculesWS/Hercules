@@ -156,7 +156,7 @@ JsonW *jsonwriter_add_new_string(JsonW *parent, const char *name, const char *st
 	return obj;
 }
 
-JsonW *jsonwriter_add_string_to_array(JsonW *parent, const char *str)
+JsonW *jsonwriter_add_new_string_to_array(JsonW *parent, const char *str)
 {
 	nullpo_retr(NULL, parent);
 	nullpo_retr(NULL, str);
@@ -183,7 +183,7 @@ JsonW *jsonwriter_add_new_object_to_array(JsonW *parent)
 	return obj;
 }
 
-JsonW *jsonwriter_add_strings_to_array(JsonW *parent, ...)
+JsonW *jsonwriter_add_new_strings_to_array(JsonW *parent, ...)
 {
 	nullpo_retr(NULL, parent);
 	Assert_retr(NULL, cJSON_IsArray(parent));
@@ -269,8 +269,8 @@ void jsonwriter_defaults(void)
 	jsonwriter->add_new_null = jsonwriter_add_new_null;
 	jsonwriter->add_new_number = jsonwriter_add_new_number;
 	jsonwriter->add_new_string = jsonwriter_add_new_string;
-	jsonwriter->add_string_to_array = jsonwriter_add_string_to_array;
-	jsonwriter->add_strings_to_array = jsonwriter_add_strings_to_array;
+	jsonwriter->add_new_string_to_array = jsonwriter_add_new_string_to_array;
+	jsonwriter->add_new_strings_to_array = jsonwriter_add_new_strings_to_array;
 	jsonwriter->add_new_object_to_array = jsonwriter_add_new_object_to_array;
 	jsonwriter->get_string = jsonwriter_get_string;
 	jsonwriter->get_formatted_string = jsonwriter_get_formatted_string;
