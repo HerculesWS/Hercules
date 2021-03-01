@@ -126,6 +126,8 @@ static const char *atcommand_msg(int msg_number)
 	if(atcommand->msg_table[0][msg_number] != NULL && atcommand->msg_table[0][msg_number][0] != '\0')
 		return atcommand->msg_table[0][msg_number];
 
+	ShowWarning("atcommand_msg: Invalid message number was specified: %d", msg_number);
+	Assert_report(0);
 	return "??";
 }
 
