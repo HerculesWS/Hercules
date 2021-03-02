@@ -20191,11 +20191,11 @@ static int skill_block_check(struct block_list *bl, sc_type type, uint16 skill_i
 
 	switch(type) {
 	case SC_STASIS:
-		if (inf&(INF2_SONG_DANCE) || inf&(INF2_CHORUS_SKILL) || inf&(INF2_SPIRIT_SKILL) || inf&(INF2_NO_STASIS))
+		if (inf & INF2_NO_STASIS)
 			return 1; // Can't do it.
 		break;
 	case SC_KG_KAGEHUMI:
-		if (inf&(INF2_NO_KAGEHUMI))
+		if (inf & INF2_NO_KAGEHUMI)
 			return 1;
 		break;
 	}

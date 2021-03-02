@@ -138,7 +138,7 @@ enum e_skill_inf2 {
 	INF2_HIDDEN_TRAP       = 0x80000, // Traps that are hidden (based on trap_visiblity battle conf)
 	INF2_IS_COMBO_SKILL    = 0x100000, // Sets whether a skill can be used in combos or not
 	INF2_NO_STASIS         = 0x200000,
-	INF2_NO_KAGEHUMI    = 0x400000,
+	INF2_NO_KAGEHUMI       = 0x400000,
 };
 
 
