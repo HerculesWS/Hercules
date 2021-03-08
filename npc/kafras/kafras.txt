@@ -680,5 +680,5 @@ alb2trea,59,69,5	script	Kafra Employee::kaf_alb2trea	4_F_KAFRA1,{
 	mes "How may I assist you?";
 	callfunc "F_Kafra",5,2,1,50,0;
 	savepoint "alb2trea",92,64;
-	callfunc "F_KafEnd",0,1,0,"at Sunken Ship";
+	callfunc "F_KafEnd",0,1,"at Sunken Ship";
 }
