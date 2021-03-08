@@ -3263,7 +3263,7 @@ static void status_calc_regen_pc(struct map_session_data *sd, struct status_data
 		regen->hp = regen->hp * sd->hprecov_rate / 100;
 
 	if (sd->sprecov_rate != 100)
-		regen->hp = regen->hp * sd->sprecov_rate / 100;
+		regen->sp = regen->sp * sd->sprecov_rate / 100;
 
 	// Base natural HP/SP restore bonuses
 	int skill_lv;
@@ -3421,17 +3421,17 @@ static void status_calc_regen(struct block_list *bl, struct status_data *st, str
 		break;
 	}
 
-	regen->hp = cap_value(regen->hp, 1, INT16_MAX);
-	regen->sp = cap_value(regen->sp, 1, INT16_MAX);
+	regen->hp = cap_value(regen->hp, 0, INT16_MAX);
+	regen->sp = cap_value(regen->sp, 0, INT16_MAX);
 
 	if (regen->skill != NULL) {
-		regen->skill->hp = cap_value(regen->skill->hp, 1, INT16_MAX);
-		regen->skill->sp = cap_value(regen->skill->sp, 1, INT16_MAX);
+		regen->skill->hp = cap_value(regen->skill->hp, 0, INT16_MAX);
+		regen->skill->sp = cap_value(regen->skill->sp, 0, INT16_MAX);
 	}
 
 	if (regen->sitting != NULL) {
-		regen->sitting->hp = cap_value(regen->sitting->hp, 1, INT16_MAX);
-		regen->sitting->sp = cap_value(regen->sitting->sp, 1, INT16_MAX);
+		regen->sitting->hp = cap_value(regen->sitting->hp, 0, INT16_MAX);
+		regen->sitting->sp = cap_value(regen->sitting->sp, 0, INT16_MAX);
 	}
 }
 
@@ -13233,6 +13233,22 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 
 			while (sregen->tick.sp >= tick) {
 				sregen->tick.sp -= tick;
+
+				if (sd != NULL && sd->state.doridori != 0) {
+					sd->state.doridori = 0;
+
+					int rate;
+					if ((rate = pc->checkskill(sd, TK_SPTIME)) != 0)
+						sc_start(bl, bl, status->skill2sc(TK_SPTIME), 100, rate, skill->get_time(TK_SPTIME, rate));
+
+					if ((sd->job & MAPID_UPPERMASK) == MAPID_STAR_GLADIATOR
+						&& rnd() % 10000 < battle_config.sg_angel_skill_ratio) { //Angel of the Sun/Moon/Star
+						clif->feel_hate_reset(sd);
+						pc->resethate(sd);
+						pc->resetfeel(sd);
+					}
+				}
+
 				if (status->heal(bl, 0, sregen->sp, STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT) < sregen->sp) { // Full
 					flag &= ~(RGN_SP | RGN_SSP);
 					break;
@@ -13357,21 +13373,10 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 
 		while (sregen->tick.sp >= tick) {
 			int heal_val = sregen->sp;
-
-			if (sd != NULL && sd->state.doridori != 0) {
-				heal_val *= 2;
+			if (sd != NULL && sd->state.doridori != 0) { //Angel of the Sun/Moon/Star
+				if ((sd->job & MAPID_UPPERMASK) == MAPID_SUPER_NOVICE)
+					heal_val *= 2;
 				sd->state.doridori = 0;
-
-				int rate;
-				if ((rate = pc->checkskill(sd,TK_SPTIME)) != 0)
-					sc_start(bl, bl, status->skill2sc(TK_SPTIME), 100, rate, skill->get_time(TK_SPTIME, rate));
-
-				if ((sd->job & MAPID_UPPERMASK) == MAPID_STAR_GLADIATOR
-					&& rnd() % 10000 < battle_config.sg_angel_skill_ratio) { //Angel of the Sun/Moon/Star
-					clif->feel_hate_reset(sd);
-					pc->resethate(sd);
-					pc->resetfeel(sd);
-				}
 			}
 
 			sregen->tick.sp -= tick;
