@@ -229,7 +229,7 @@ enum {
 	MAPID_SURA             = JOBL_THIRD | JOBL_2_2 | MAPID_ACOLYTE,
 	MAPID_GENETIC          = JOBL_THIRD | JOBL_2_2 | MAPID_MERCHANT,
 	MAPID_SHADOW_CHASER    = JOBL_THIRD | JOBL_2_2 | MAPID_THIEF,
-	//                     = JOBL_THIRD | JOBL_2_2 | MAPID_TAEKWON,
+	MAPID_SOUL_REAPER      = JOBL_THIRD | JOBL_2_2 | MAPID_TAEKWON,
 	//                     = JOBL_THIRD | JOBL_2_2 | MAPID_WEDDING,
 	//                     = JOBL_THIRD | JOBL_2_2 | MAPID_GUNSLINGER,
 	//                     = JOBL_THIRD | JOBL_2_2 | MAPID_NINJA,

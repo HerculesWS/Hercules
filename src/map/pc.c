@@ -6420,6 +6420,7 @@ static int pc_jobid2mapid(int class)
 		case JOB_SURA:                  return MAPID_SURA;
 		case JOB_GENETIC:               return MAPID_GENETIC;
 		case JOB_SHADOW_CHASER:         return MAPID_SHADOW_CHASER;
+		case JOB_SOUL_REAPER:           return MAPID_SOUL_REAPER;
 	//Trans 3-1 Jobs
 		case JOB_RUNE_KNIGHT_T:         return MAPID_RUNE_KNIGHT_T;
 		case JOB_WARLOCK_T:             return MAPID_WARLOCK_T;
@@ -6567,6 +6568,7 @@ static int pc_mapid2jobid(unsigned int class, int sex)
 		case MAPID_SURA:                  return JOB_SURA;
 		case MAPID_GENETIC:               return JOB_GENETIC;
 		case MAPID_SHADOW_CHASER:         return JOB_SHADOW_CHASER;
+		case MAPID_SOUL_REAPER:           return JOB_SOUL_REAPER;
 	//Trans 3-1 Jobs
 		case MAPID_RUNE_KNIGHT_T:         return JOB_RUNE_KNIGHT_T;
 		case MAPID_WARLOCK_T:             return JOB_WARLOCK_T;
@@ -6861,6 +6863,9 @@ static const char *pc_job_name(int class)
 	case JOB_BABY_STAR_EMPEROR:
 		return msg_txt(680);
 
+	case JOB_SOUL_REAPER:
+		return msg_txt(681);
+
 	default:
 		return msg_txt(620); // "Unknown Job"
 	}
@@ -6959,6 +6964,7 @@ static int pc_check_job_name(const char *name)
 		{ "Mechanic", JOB_MECHANIC },
 		{ "Guillotine_Cross", JOB_GUILLOTINE_CROSS },
 		{ "Star_Emperor", JOB_STAR_EMPEROR },
+		{ "Soul_Reaper", JOB_SOUL_REAPER },
 		{ "Rune_Knight_Trans", JOB_RUNE_KNIGHT_T },
 		{ "Warlock_Trans", JOB_WARLOCK_T },
 		{ "Ranger_Trans", JOB_RANGER_T },

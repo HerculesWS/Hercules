@@ -28963,6 +28963,7 @@ static void script_hardcoded_constants(void)
 	script->set_constant("EAJ_SURA", MAPID_SURA, false, false);
 	script->set_constant("EAJ_GENETIC", MAPID_GENETIC, false, false);
 	script->set_constant("EAJ_SHADOW_CHASER", MAPID_SHADOW_CHASER, false, false);
+	script->set_constant("EAJ_SOUL_REAPER", MAPID_SOUL_REAPER, false, false);
 
 	script->set_constant("EAJ_RUNE_KNIGHT_T", MAPID_RUNE_KNIGHT_T, false, false);
 	script->set_constant("EAJ_WARLOCK_T", MAPID_WARLOCK_T, false, false);
