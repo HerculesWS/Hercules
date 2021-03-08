@@ -8238,12 +8238,14 @@ typedef bool (*HPMHOOK_pre_status_read_scdb_libconfig_sub_flag) (struct config_s
 typedef bool (*HPMHOOK_post_status_read_scdb_libconfig_sub_flag) (bool retVal___, struct config_setting_t *it, int type, const char *source);
 typedef bool (*HPMHOOK_pre_status_read_scdb_libconfig_sub_flag_additional) (struct config_setting_t **it, int *type, const char **source);
 typedef bool (*HPMHOOK_post_status_read_scdb_libconfig_sub_flag_additional) (bool retVal___, struct config_setting_t *it, int type, const char *source);
+typedef bool (*HPMHOOK_pre_status_read_scdb_libconfig_sub_skill) (struct config_setting_t **it, int *type, const char **source);
+typedef bool (*HPMHOOK_post_status_read_scdb_libconfig_sub_skill) (bool retVal___, struct config_setting_t *it, int type, const char *source);
 typedef void (*HPMHOOK_pre_status_read_job_db) (void);
 typedef void (*HPMHOOK_post_status_read_job_db) (void);
 typedef void (*HPMHOOK_pre_status_read_job_db_sub) (int *idx, const char **name, struct config_setting_t **jdb);
 typedef void (*HPMHOOK_post_status_read_job_db_sub) (int idx, const char *name, struct config_setting_t *jdb);
-typedef void (*HPMHOOK_pre_status_set_sc) (uint16 *skill_id, sc_type *sc, unsigned int *flag);
-typedef void (*HPMHOOK_post_status_set_sc) (uint16 skill_id, sc_type sc, unsigned int flag);
+typedef void (*HPMHOOK_pre_status_set_sc) (sc_type *sc, unsigned int *flag);
+typedef void (*HPMHOOK_post_status_set_sc) (sc_type sc, unsigned int flag);
 typedef void (*HPMHOOK_pre_status_copy) (struct status_data **a, const struct status_data **b);
 typedef void (*HPMHOOK_post_status_copy) (struct status_data *a, const struct status_data *b);
 typedef int (*HPMHOOK_pre_status_base_matk_min) (const struct status_data **st);
