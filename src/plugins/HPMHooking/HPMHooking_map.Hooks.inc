@@ -36980,33 +36980,6 @@ bool HP_homun_shuffle(struct homun_data *hd) {
 	}
 	return retVal___;
 }
-bool HP_homun_read_db_sub(char *str[], int columns, int current) {
-	int hIndex = 0;
-	bool retVal___ = false;
-	if (HPMHooks.count.HP_homun_read_db_sub_pre > 0) {
-		bool (*preHookFunc) (char **str[], int *columns, int *current);
-		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_homun_read_db_sub_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_homun_read_db_sub_pre[hIndex].func;
-			retVal___ = preHookFunc(&str, &columns, &current);
-		}
-		if (*HPMforce_return) {
-			*HPMforce_return = false;
-			return retVal___;
-		}
-	}
-	{
-		retVal___ = HPMHooks.source.homun.read_db_sub(str, columns, current);
-	}
-	if (HPMHooks.count.HP_homun_read_db_sub_post > 0) {
-		bool (*postHookFunc) (bool retVal___, char *str[], int columns, int current);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_homun_read_db_sub_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_homun_read_db_sub_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, str, columns, current);
-		}
-	}
-	return retVal___;
-}
 void HP_homun_read_db(void) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_homun_read_db_pre > 0) {
@@ -37032,6 +37005,114 @@ void HP_homun_read_db(void) {
 		}
 	}
 	return;
+}
+bool HP_homun_read_db_libconfig(const char *filename) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_homun_read_db_libconfig_pre > 0) {
+		bool (*preHookFunc) (const char **filename);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_homun_read_db_libconfig_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_homun_read_db_libconfig_pre[hIndex].func;
+			retVal___ = preHookFunc(&filename);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.homun.read_db_libconfig(filename);
+	}
+	if (HPMHooks.count.HP_homun_read_db_libconfig_post > 0) {
+		bool (*postHookFunc) (bool retVal___, const char *filename);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_homun_read_db_libconfig_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_homun_read_db_libconfig_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, filename);
+		}
+	}
+	return retVal___;
+}
+bool HP_homun_read_db_libconfig_sub(struct config_setting_t *it, int idx, const char *source) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_homun_read_db_libconfig_sub_pre > 0) {
+		bool (*preHookFunc) (struct config_setting_t **it, int *idx, const char **source);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_homun_read_db_libconfig_sub_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_homun_read_db_libconfig_sub_pre[hIndex].func;
+			retVal___ = preHookFunc(&it, &idx, &source);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.homun.read_db_libconfig_sub(it, idx, source);
+	}
+	if (HPMHooks.count.HP_homun_read_db_libconfig_sub_post > 0) {
+		bool (*postHookFunc) (bool retVal___, struct config_setting_t *it, int idx, const char *source);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_homun_read_db_libconfig_sub_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_homun_read_db_libconfig_sub_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, it, idx, source);
+		}
+	}
+	return retVal___;
+}
+bool HP_homun_read_db_libconfig_sub_stats(struct config_setting_t *it, int idx) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_homun_read_db_libconfig_sub_stats_pre > 0) {
+		bool (*preHookFunc) (struct config_setting_t **it, int *idx);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_homun_read_db_libconfig_sub_stats_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_homun_read_db_libconfig_sub_stats_pre[hIndex].func;
+			retVal___ = preHookFunc(&it, &idx);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.homun.read_db_libconfig_sub_stats(it, idx);
+	}
+	if (HPMHooks.count.HP_homun_read_db_libconfig_sub_stats_post > 0) {
+		bool (*postHookFunc) (bool retVal___, struct config_setting_t *it, int idx);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_homun_read_db_libconfig_sub_stats_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_homun_read_db_libconfig_sub_stats_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, it, idx);
+		}
+	}
+	return retVal___;
+}
+bool HP_homun_read_db_libconfig_sub_stats_group(struct config_setting_t *it, struct h_stats *smin, struct h_stats *smax) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_homun_read_db_libconfig_sub_stats_group_pre > 0) {
+		bool (*preHookFunc) (struct config_setting_t **it, struct h_stats **smin, struct h_stats **smax);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_homun_read_db_libconfig_sub_stats_group_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_homun_read_db_libconfig_sub_stats_group_pre[hIndex].func;
+			retVal___ = preHookFunc(&it, &smin, &smax);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.homun.read_db_libconfig_sub_stats_group(it, smin, smax);
+	}
+	if (HPMHooks.count.HP_homun_read_db_libconfig_sub_stats_group_post > 0) {
+		bool (*postHookFunc) (bool retVal___, struct config_setting_t *it, struct h_stats *smin, struct h_stats *smax);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_homun_read_db_libconfig_sub_stats_group_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_homun_read_db_libconfig_sub_stats_group_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, it, smin, smax);
+		}
+	}
+	return retVal___;
 }
 bool HP_homun_read_skill_db_sub(char *split[], int columns, int current) {
 	int hIndex = 0;

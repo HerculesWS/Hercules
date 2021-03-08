@@ -26,6 +26,7 @@
 #include "common/hercules.h"
 #include "common/mmo.h"
 
+struct config_setting_t;
 struct map_session_data;
 
 /// Homunuculus IDs
@@ -199,8 +200,11 @@ struct homunculus_interface {
 	void (*revive) (struct homun_data *hd, unsigned int hp, unsigned int sp);
 	void (*stat_reset) (struct homun_data *hd);
 	bool (*shuffle) (struct homun_data *hd);
-	bool (*read_db_sub) (char* str[], int columns, int current);
 	void (*read_db) (void);
+	bool (*read_db_libconfig) (const char *filename);
+	bool (*read_db_libconfig_sub) (struct config_setting_t *it, int idx, const char *source);
+	bool (*read_db_libconfig_sub_stats) (struct config_setting_t *it, int idx);
+	bool (*read_db_libconfig_sub_stats_group) (struct config_setting_t *it, struct h_stats *smin, struct h_stats *smax);
 	bool (*read_skill_db_sub) (char* split[], int columns, int current);
 	void (*skill_db_read) (void);
 	void (*exp_db_read) (void);
