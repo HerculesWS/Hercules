@@ -13362,13 +13362,18 @@ static int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *b
 
 		case UNT_ANKLESNARE:
 		case UNT_MANHOLE:
-			if( sg->val2 == 0 && tsc && (sg->unit_id == UNT_ANKLESNARE || bl->id != sg->src_id) ) {
-				int sec = skill->get_time2(sg->skill_id,sg->skill_lv);
-				if( status->change_start(ss,bl,type,10000,sg->skill_lv,sg->group_id,0,0,sec, SCFLAG_FIXEDRATE) ) {
-					const struct TimerData* td = tsc->data[type]?timer->get(tsc->data[type]->timer):NULL;
-					if( td )
+			if (sg->val2 == 0 && tsc && (sg->unit_id == UNT_ANKLESNARE || bl->id != sg->src_id)) {
+				int sec = skill->get_time2(sg->skill_id, sg->skill_lv);
+				if (bl->type == BL_MOB && map->list[bl->m].flag.gvg_castle == 0) {
+					struct mob_data *md = BL_UCAST(BL_MOB, bl);
+					if (sg->unit_id == UNT_MANHOLE && (md->class_ == MOBID_EMPELIUM || md->class_ == MOBID_BARRICADE || md->class_ == MOBID_S_EMPEL_1 || md->class_ == MOBID_S_EMPEL_2)) {
+						// Do nothing...
+					}
+				} else if (status->change_start(ss, bl, type, 10000, sg->skill_lv, sg->group_id, 0, 0, sec, SCFLAG_FIXEDRATE)) {
+					const struct TimerData* td = tsc->data[type] ? timer->get(tsc->data[type]->timer) : NULL;
+					if (td)
 						sec = DIFF_TICK32(td->tick, tick);
-					if( sg->unit_id == UNT_MANHOLE || battle_config.skill_trap_type || !map_flag_gvg2(src->bl.m) ) {
+					if (sg->unit_id == UNT_MANHOLE || battle_config.skill_trap_type || map_flag_gvg2(src->bl.m) != 0) {
 						unit->move_pos(bl, src->bl.x, src->bl.y, 0, false);
 						clif->fixpos(bl);
 					}
@@ -13376,8 +13381,7 @@ static int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *b
 				} else {
 					sec = 3000; //Couldn't trap it?
 				}
-
-				if( sg->unit_id == UNT_ANKLESNARE ) {
+				if (sg->unit_id == UNT_ANKLESNARE) {
 					/**
 					 * If you're snared from a trap that was invisible this makes the trap be
 					 * visible again -- being you stepped on it (w/o this the trap remains invisible and you go "WTF WHY I CANT MOVE")
@@ -13385,7 +13389,7 @@ static int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *b
 					 **/
 					clif->changetraplook(&src->bl, UNT_ANKLESNARE);
 				}
-				sg->limit = DIFF_TICK32(tick,sg->tick)+sec;
+				sg->limit = DIFF_TICK32(tick, sg->tick) + sec;
 				sg->interval = -1;
 				src->range = 0;
 			}
