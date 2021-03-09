@@ -22,6 +22,38 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
+## [v2021.03.08] `March 08 2021`
+
+### Added
+
+- Added support for preview in the cash shop. This is disabled by default and can be enabled by defining `ENABLE_CASHSHOP_PREVIEW_PATCH` or through the configure flag `--enable-cashshop-preview-patch`. A client patch is necessary, available at http://nemo.herc.ws/patches/ExtendCashShopPreview (#2944)
+- Added a console warning if a message that is not present in `messages.conf` is requested. (#2958)
+- Added the missing icons for `SC_DEFSET` and `SC_MDEFSET`. (#2953)
+- Added the `SC_NO_RECOVER_STATE` status preventing HP/SP recovery and the related item bonus `bStateNoRecoverRace`. (#2956)
+
+### Changed
+
+- De-hardcoded the association between status changes and skills from the source code. A new field `Skills` is added to the `sc_config`, allowing to specify a list of skills for each status change entry. The macro `add_sc` has been removed from `status.c`, use `status->set_sc()` instead. (#2954)
+- Converted packets `ZC_NOTIFY_SKILL`, `ZC_USE_SKILL`, `ZC_NOTIFY_GROUNDSKILL`, `ZC_SKILL_POSTDELAY` and `ZC_NOTIFY_SKILL_POSITION` to the structure format. (#2951)
+- Converted the Homunculus database to libconfig. A tool to help converting custom databases has been provided in `tools/homundbconverter.py`. (#2941)
+- De-hardcoded the list of skills that are blocked under `SC_STASIS` and `SC_KG_KAGEHUMI`. A new pair of `SkillInfo` flags `BlockedByStasis` and `BlockedByKagehumi` has been added to the skill database. (#2959)
+- Updated the item script of `Velum_Flail` to its official effects. (part of #2956)
+
+### Fixed
+
+- Fixed compilation with mingw. (#2945)
+- Fixed the CodeQL analysis builds in the CI. (#2946)
+- Fixed a possible use after free in `unit_skilluse_id2()`. (#2947)
+- Fixed the save point message of the Kafra in `alb2trea`. (#2950)
+- Fixed some issues/regressions in the regeneration code: (#2952)
+  - Fixed an issue that caused the SP regeneration rate bonus to be applied to the HP regeneration.
+  - Fixed the HP/SP regeneration always capping to a minimum of 1, causing unintended behavior. (issue #2910)
+  - Fixed a issue that caused the homunculus regeneration configuration to apply to elementals instead.
+  - Fixed the Happy Break bonus not triggering.
+  - Fixed the doridori doubled SP regeneration applying to jobs other than Super Novice.
+- Fixed Emergency Call ignoring `unit_skilluse_id2()` in Renewal. (#2949)
+- Fixed Manhole working on Guardians/Emperium while it shouldn't. (#2942)
+- Fixed `successremovecard()` not running the cards' unequip scripts. (#2933, issue #2922)
 
 ## [v2021.02.08] `February 08 2021`
 
@@ -1799,6 +1831,9 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2021.03.08]: https://github.com/HerculesWS/Hercules/compare/v2021.02.08...v2021.03.08
+[v2021.02.08]: https://github.com/HerculesWS/Hercules/compare/v2021.01.11...v2021.02.08
+[v2021.01.11]: https://github.com/HerculesWS/Hercules/compare/v2020.12.14+1...v2021.01.11
 [v2020.12.14+1]: https://github.com/HerculesWS/Hercules/compare/v2020.12.14...v2020.12.14+1
 [v2020.12.14]: https://github.com/HerculesWS/Hercules/compare/v2020.11.16...v2020.12.14
 [v2020.11.16]: https://github.com/HerculesWS/Hercules/compare/v2020.10.19...v2020.11.16
