@@ -518,6 +518,7 @@
 - `bAddMaxWeight`: 2062
 - `bSubDefEle`: 2063
 - `bMagicSubDefEle`: 2064
+- `bStateNoRecoverRace`: 2065
 
 ### Equip index
 
@@ -1295,6 +1296,7 @@
 - `SC_SKF_ASPD`: 674
 - `SC_SKF_CAST`: 675
 - `SC_ALMIGHTY`: 676
+- `SC_NO_RECOVER_STATE`: 677
 
 ### Emotes
 
