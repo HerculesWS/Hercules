@@ -4052,7 +4052,23 @@ static int pc_bonus3(struct map_session_data *sd, int type, int type2, int type3
 			}
 
 			break;
+		case SP_STATE_NO_RECOVER_RACE:
+		{
+			uint32 race_mask = map->race_id2mask(type2);
+			if (race_mask == RCMASK_NONE) {
+				ShowWarning("pc_bonus3: SP_STATE_NO_RECOVER_RACE: Invalid Race (%d)\n", type2);
+				break;
+			}
 
+			if (sd->state.lr_flag == 2)
+				break;
+
+			BONUS_FOREACH_RCARRAY_FROMMASK(i, race_mask) {
+				sd->no_recover_state_race[i].rate = type3;
+				sd->no_recover_state_race[i].tick = val;
+			}
+		}
+			break;
 		default:
 			ShowWarning("pc_bonus3: unknown type %d %d %d %d!\n",type,type2,type3,val);
 			Assert_report(0);
@@ -9013,6 +9029,11 @@ static int pc_itemheal(struct map_session_data *sd, int itemid, int hp, int sp)
 #endif
 		if (sd->sc.data[SC_BITESCAR]) {
 			hp = 0;
+		}
+		
+		if (sd->sc.data[SC_NO_RECOVER_STATE]) {
+			hp = 0;
+			sp = 0;
 		}
 	}
 

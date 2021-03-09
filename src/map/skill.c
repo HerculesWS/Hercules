@@ -1236,6 +1236,8 @@ static int skill_calc_heal(struct block_list *src, struct block_list *target, ui
 			hp += hp / 10;
 		if (sc->data[SC_VITALITYACTIVATION])
 			hp = hp * 150 / 100;
+		if (sc->data[SC_NO_RECOVER_STATE])
+			hp = 0;
 	}
 
 #ifdef RENEWAL
@@ -2350,6 +2352,9 @@ static int skill_additional_effect(struct block_list *src, struct block_list *bl
 			if (sd->mdef_set_race[tstatus->race].rate)
 					status->change_start(src,bl, SC_MDEFSET, sd->mdef_set_race[tstatus->race].rate, sd->mdef_set_race[tstatus->race].value,
 					0, 0, 0, sd->mdef_set_race[tstatus->race].tick, SCFLAG_FIXEDTICK);
+			if (sd->no_recover_state_race[tstatus->race].rate)
+				status->change_start(src, bl, SC_NO_RECOVER_STATE, sd->no_recover_state_race[tstatus->race].rate,
+					0, 0, 0, 0, sd->no_recover_state_race[tstatus->race].tick, SCFLAG_FIXEDTICK);
 		}
 	}
 
@@ -8067,16 +8072,26 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 						hp += hp / 10;
 						sp += sp / 10;
 					}
+					if (tsc->data[SC_NO_RECOVER_STATE]) {
+						hp = 0;
+						sp = 0;
+					}
 				}
 				clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
 				if( hp > 0 || (skill_id == AM_POTIONPITCHER && sp <= 0) )
 					clif->skill_nodamage(NULL,bl,AL_HEAL,(int)hp,1);
 				if( sp > 0 )
 					clif->skill_nodamage(NULL,bl,MG_SRECOVERY,sp,1);
-		#ifdef RENEWAL
-				if( tsc && tsc->data[SC_EXTREMITYFIST2] )
-					sp = 0;
-		#endif
+				if (tsc) {
+#ifdef RENEWAL
+					if (tsc->data[SC_EXTREMITYFIST2])
+						sp = 0;
+#endif
+					if (tsc->data[SC_NO_RECOVER_STATE]) {
+						hp = 0;
+						sp = 0;
+					}
+				}
 				status->heal(bl, (int)hp, sp, STATUS_HEAL_DEFAULT);
 			}
 			break;
@@ -8750,9 +8765,11 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 #ifdef RENEWAL
 				sp1 = sp1 / 2;
 				sp2 = sp2 / 2;
-				if( tsc && tsc->data[SC_EXTREMITYFIST2] )
+				if (tsc && tsc->data[SC_EXTREMITYFIST2])
 					sp1 = tstatus->sp;
 #endif // RENEWAL
+				if (tsc && tsc->data[SC_NO_RECOVER_STATE])
+					sp1 = tstatus->sp;
 				status->set_sp(src, sp2, STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT);
 				status->set_sp(bl, sp1, STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT);
 				clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
@@ -8786,6 +8803,10 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 					if( tsc->data[SC_WATER_INSIGNIA] && tsc->data[SC_WATER_INSIGNIA]->val1 == 2) {
 						hp += hp / 10;
 						sp += sp / 10;
+					}
+					if (tsc->data[SC_NO_RECOVER_STATE]) {
+						hp = 0;
+						sp = 0;
 					}
 				}
 				if(hp > 0)

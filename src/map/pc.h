@@ -395,7 +395,7 @@ BEGIN_ZEROED_BLOCK; // this block will be globally zeroed at the beginning of st
 	struct {
 		int value;
 		int rate, tick;
-	} def_set_race[RC_MAX], mdef_set_race[RC_MAX];
+	} def_set_race[RC_MAX], mdef_set_race[RC_MAX], no_recover_state_race[RC_MAX];
 	struct {
 		int rate_mob; //!< Damage reduction rate against monster's defense element.
 		int rate_pc;  //!< Damage reduction rate against player's defense element.
