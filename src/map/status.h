@@ -1401,11 +1401,12 @@ struct status_interface {
 	bool (*read_scdb_libconfig) (void);
 	bool (*read_scdb_libconfig_sub) (struct config_setting_t *it, int idx, const char *source);
 	bool (*read_scdb_libconfig_sub_flag) (struct config_setting_t *it, int type, const char *source);
+	bool (*read_scdb_libconfig_sub_calcflag) (struct config_setting_t *it, int type, const char *source);
 	bool (*read_scdb_libconfig_sub_flag_additional) (struct config_setting_t *it, int type, const char *source);
+	bool (*read_scdb_libconfig_sub_calcflag_additional) (struct config_setting_t *it, int type, const char *source);
 	bool (*read_scdb_libconfig_sub_skill) (struct config_setting_t *it, int type, const char *source);
 	void (*read_job_db) (void);
 	void (*read_job_db_sub) (int idx, const char *name, struct config_setting_t *jdb);
-	void (*set_sc) (sc_type sc, unsigned int flag);
 	void (*copy) (struct status_data *a, const struct status_data *b);
 	int (*base_matk_min) (const struct status_data *st);
 	int (*base_matk_max) (const struct status_data *st);
