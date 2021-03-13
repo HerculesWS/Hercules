@@ -1147,8 +1147,9 @@ enum {
 #define ENUM_VALUE(name, id) JOB_ ## name = id,
 //These mark the ID of the jobs, as expected by the client. [Skotlex]
 enum e_class {
-#include "common/class.h"
 #include "common/class_hidden.h"
+#include "common/class_special.h"
+#include "common/class.h"
 #ifndef JOB_MAX
 	JOB_MAX,
 #endif
