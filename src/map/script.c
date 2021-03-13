@@ -28947,6 +28947,7 @@ static void script_hardcoded_constants(void)
 	script->set_constant("EAJ_BABY_ROGUE", MAPID_BABY_ROGUE, false, false);
 	script->set_constant("EAJ_BABY_SOUL_LINKER", MAPID_BABY_SOUL_LINKER, false, false);
 	script->set_constant("EAJ_BABY_STAR_EMPEROR", MAPID_BABY_STAR_EMPEROR, false, false);
+	script->set_constant("EAJ_BABY_SOUL_REAPER", MAPID_BABY_SOUL_REAPER, false, false);
 
 	script->set_constant("EAJ_SUPER_NOVICE_E", MAPID_SUPER_NOVICE_E, false, false);
 	script->set_constant("EAJ_RUNE_KNIGHT", MAPID_RUNE_KNIGHT, false, false);
