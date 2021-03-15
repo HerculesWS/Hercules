@@ -1215,6 +1215,8 @@ ACMD(item)
 				return false;
 			}
 			break;
+		case IBT_NONE:
+			break;
 		}
 	}
 
@@ -4162,9 +4164,11 @@ ACMD(mapinfo)
 			case UNIT_DIR_NORTHEAST:
 				strcpy(direction, msg_fd(fd, 1108)); // North East
 				break;
-			case 9: // is this actually used? [skyleo]
+			case UNIT_DIR_9: // is this actually used? [skyleo]
 				strcpy(direction, msg_fd(fd, 1109)); // North
 				break;
+			case UNIT_DIR_UNDEFINED:
+			case UNIT_DIR_MAX:
 			default:
 				strcpy(direction, msg_fd(fd, 1110)); // Unknown
 				break;
@@ -7229,6 +7233,7 @@ ACMD(homlevel)
 				return true;
 			}
 			break;
+		case HT_INVALID:
 		default:
 			ShowError("atcommand_homlevel: unknown htype '%d'\n",htype);
 			return false;
@@ -9130,7 +9135,9 @@ ACMD(set)
 		}
 	}
 
-	switch( data->type ) {
+	PRAGMA_GCC46(GCC diagnostic push)
+	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+	switch (data->type) {
 		case C_INT:
 			safesnprintf(atcmd_output, sizeof(atcmd_output),msg_fd(fd,1373),reg,data->u.num); // %s value is now :%d
 			break;
@@ -9144,6 +9151,7 @@ ACMD(set)
 			safesnprintf(atcmd_output, sizeof(atcmd_output),msg_fd(fd,1376),reg,data->type); // %s data type is not supported :%u
 			break;
 	}
+	PRAGMA_GCC46(GCC diagnostic pop)
 	clif->message(fd, atcmd_output);
 
 	aFree(data);

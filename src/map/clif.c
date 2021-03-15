@@ -329,6 +329,8 @@ static unsigned char clif_bl_type(struct block_list *bl)
 		return CLUT_MERCNARY;
 	case BL_ELEM:
 		return CLUT_ELEMENTAL;
+	case BL_NUL:
+	case BL_ALL:
 	default:
 		return CLUT_NPC;
 	}
@@ -1017,11 +1019,22 @@ static int clif_setlevel(struct block_list *bl)
 	nullpo_retr(0, bl);
 	if( battle_config.client_limit_unit_lv&bl->type )
 		return clif_setlevel_sub(lv);
-	switch( bl->type ) {
+	switch (bl->type) {
 		case BL_NPC:
 		case BL_PET:
 			// npcs and pets do not have level
 			return 0;
+		case BL_NUL:
+		case BL_CHAT:
+		case BL_PC:
+		case BL_MOB:
+		case BL_HOM:
+		case BL_MER:
+		case BL_ITEM:
+		case BL_SKILL:
+		case BL_ELEM:
+		case BL_ALL:
+			break;
 	}
 	return lv;
 }
@@ -1654,6 +1667,15 @@ static bool clif_spawn(struct block_list *bl)
 			if (vd->head_bottom)
 				clif->send_petdata(NULL, BL_UCAST(BL_PET, bl), 3, vd->head_bottom); // needed to display pet equip properly
 			break;
+		case BL_NUL:
+		case BL_ITEM:
+		case BL_ELEM:
+		case BL_HOM:
+		case BL_MER:
+		case BL_SKILL:
+		case BL_CHAT:
+		case BL_ALL:
+			break;
 	}
 	return true;
 }
@@ -1737,6 +1759,8 @@ static void clif_hominfo(struct map_session_data *sd, struct homun_data *hd, int
 		case HT_S:
 			if (hd->homunculus.level >= battle_config.hom_S_max_level)
 				p.expNext = 0;
+			break;
+		case HT_INVALID:
 			break;
 	}
 	p.skillPoints = hd->homunculus.skillpts;
@@ -1921,6 +1945,16 @@ static void clif_move2(struct block_list *bl, struct view_data *vd, struct unit_
 		case BL_PET:
 			if( vd->head_bottom ) // needed to display pet equip properly
 				clif->send_petdata(NULL, BL_UCAST(BL_PET, bl), 3, vd->head_bottom);
+			break;
+		case BL_NUL:
+		case BL_ITEM:
+		case BL_NPC:
+		case BL_ELEM:
+		case BL_HOM:
+		case BL_MER:
+		case BL_SKILL:
+		case BL_CHAT:
+		case BL_ALL:
 			break;
 	}
 #ifdef ANTI_MAYAP_CHEAT
@@ -4832,6 +4866,14 @@ static void clif_getareachar_unit(struct map_session_data *sd, struct block_list
 			if (vd->head_bottom)
 				clif->send_petdata(NULL, BL_UCAST(BL_PET, bl), 3, vd->head_bottom); // needed to display pet equip properly
 			break;
+		case BL_NUL:
+		case BL_ITEM:
+		case BL_ELEM:
+		case BL_HOM:
+		case BL_SKILL:
+		case BL_CHAT:
+		case BL_ALL:
+			break;
 	}
 }
 
@@ -5199,6 +5241,16 @@ static int clif_getareachar(struct block_list *bl, va_list ap)
 		case BL_SKILL:
 			clif->getareachar_skillunit(&sd->bl, BL_UCAST(BL_SKILL, bl), SELF);
 			break;
+		case BL_NUL:
+		case BL_NPC:
+		case BL_ELEM:
+		case BL_HOM:
+		case BL_CHAT:
+		case BL_PC:
+		case BL_MOB:
+		case BL_PET:
+		case BL_MER:
+		case BL_ALL:
 		default:
 			if(&sd->bl == bl)
 				break;
@@ -5248,6 +5300,14 @@ static int clif_outsight(struct block_list *bl, va_list ap)
 				if (!(BL_UCAST(BL_NPC, bl)->option&OPTION_INVISIBLE))
 					clif->clearunit_single(bl->id,CLR_OUTSIGHT,tsd->fd);
 				break;
+			case BL_NUL:
+			case BL_ELEM:
+			case BL_MOB:
+			case BL_PET:
+			case BL_MER:
+			case BL_CHAT:
+			case BL_HOM:
+			case BL_ALL:
 			default:
 				if ((vd=status->get_viewdata(bl)) && vd->class != INVISIBLE_CLASS)
 					clif->clearunit_single(bl->id,CLR_OUTSIGHT,tsd->fd);
@@ -5288,6 +5348,16 @@ static int clif_insight(struct block_list *bl, va_list ap)
 			case BL_SKILL:
 				clif->getareachar_skillunit(&tsd->bl, BL_UCAST(BL_SKILL, bl), SELF);
 				break;
+			case BL_NUL:
+			case BL_NPC:
+			case BL_ELEM:
+			case BL_MOB:
+			case BL_PET:
+			case BL_MER:
+			case BL_CHAT:
+			case BL_HOM:
+			case BL_PC:
+			case BL_ALL:
 			default:
 				clif->getareachar_unit(tsd,bl);
 				break;
@@ -7862,6 +7932,17 @@ static void clif_spiritball(struct block_list *bl)
 			WBUFW(buf, 6) = hd->homunculus.spiritball;
 			break;
 		}
+		case BL_NUL:
+		case BL_ITEM:
+		case BL_NPC:
+		case BL_ELEM:
+		case BL_SKILL:
+		case BL_CHAT:
+		case BL_MOB:
+		case BL_PET:
+		case BL_MER:
+		case BL_ALL:
+			break;
 	}
 	clif->send(buf, packet_len(0x1d0), bl, AREA);
 }
@@ -9820,6 +9901,8 @@ static void clif_blname_ack(int fd, struct block_list *bl)
 		case BL_SKILL:
 			clif->skillname_ack(fd, bl);
 			break;
+		case BL_NUL:
+		case BL_ALL:
 		default:
 			clif->unknownname_ack(fd, bl);
 			break;
@@ -11855,6 +11938,16 @@ static void clif_parse_ActionRequest_sub(struct map_session_data *sd, enum actio
 			skill->sit(sd,0);
 			clif->standing(&sd->bl);
 		break;
+		case ACT_ITEMPICKUP:
+		case ACT_SPLASH:
+		case ACT_SKILL:
+		case ACT_ATTACK_MULTIPLE:
+		case ACT_ATTACK_MULTIPLE_NOMOTION:
+		case ACT_ATTACK_CRITICAL:
+		case ACT_ATTACK_LUCKY:
+		case ACT_TOUCHSKILL:
+		case ACT_ATTACK_NOMOTION:
+			break;
 	}
 }
 
@@ -12282,6 +12375,16 @@ static void clif_parse_NpcClicked(int fd, struct map_session_data *sd)
 			}
 			if( bl->m != -1 )// the user can't click floating npcs directly (hack attempt)
 				npc->click(sd, BL_UCAST(BL_NPC, bl));
+			break;
+		case BL_NUL:
+		case BL_ITEM:
+		case BL_ELEM:
+		case BL_HOM:
+		case BL_SKILL:
+		case BL_CHAT:
+		case BL_PET:
+		case BL_MER:
+		case BL_ALL:
 			break;
 	}
 }
@@ -15643,6 +15746,15 @@ static void clif_parse_GMKick(int fd, struct map_session_data *sd)
 		}
 		break;
 
+		case BL_NUL:
+		case BL_ITEM:
+		case BL_ELEM:
+		case BL_CHAT:
+		case BL_HOM:
+		case BL_MER:
+		case BL_SKILL:
+		case BL_PET:
+		case BL_ALL:
 		default:
 			clif->GM_kickack(sd, 0);
 	}
@@ -16459,6 +16571,8 @@ static void clif_ranklist_sub(struct PACKET_ZC_ACK_RANKING_sub *ranks, enum fame
 		case RANKTYPE_BLACKSMITH: list = pc->smith_fame_list; break;
 		case RANKTYPE_ALCHEMIST:  list = pc->chemist_fame_list; break;
 		case RANKTYPE_TAEKWON:    list = pc->taekwon_fame_list; break;
+		case RANKTYPE_UNKNOWN:
+		case RANKTYPE_PK:
 		default: return; // Unsupported
 	}
 
@@ -16495,6 +16609,8 @@ static void clif_ranklist_sub2(uint32 *chars, uint32 *points, enum fame_list_typ
 		case RANKTYPE_BLACKSMITH: list = pc->smith_fame_list; break;
 		case RANKTYPE_ALCHEMIST:  list = pc->chemist_fame_list; break;
 		case RANKTYPE_TAEKWON:    list = pc->taekwon_fame_list; break;
+		case RANKTYPE_PK:
+		case RANKTYPE_UNKNOWN:
 		default: return; // Unsupported
 	}
 
@@ -16558,6 +16674,9 @@ static void clif_parse_ranklist(int fd, struct map_session_data *sd)
 		case RANKTYPE_TAEKWON:
 			clif->ranklist(sd, type); // pk_list unsupported atm
 			break;
+		case RANKTYPE_UNKNOWN:
+		case RANKTYPE_PK:
+			break;
 	}
 }
 
@@ -16569,6 +16688,9 @@ static void clif_update_rankingpoint(struct map_session_data *sd, enum fame_list
 		case RANKTYPE_BLACKSMITH: clif->fame_blacksmith(sd,points); break;
 		case RANKTYPE_ALCHEMIST:  clif->fame_alchemist(sd,points);  break;
 		case RANKTYPE_TAEKWON:    clif->fame_taekwon(sd,points);    break;
+		case RANKTYPE_UNKNOWN:
+		case RANKTYPE_PK:
+			break;
 	}
 #else
 
@@ -19029,6 +19151,8 @@ static int clif_instance(int instance_id, int type, int flag)
 			target = SELF;
 			sd = map->id2sd(instance->list[instance_id].owner_id);
 			break;
+		case IOT_MAX:
+			break;
 	}
 
 	if( !sd )
@@ -20768,6 +20892,17 @@ static void clif_bgqueue_ack(struct map_session_data *sd, enum BATTLEGROUNDS_QUE
 		case BGQA_FAIL_DESERTER:
 		case BGQA_FAIL_TEAM_COUNT:
 			break;
+		case BGQA_SUCCESS:
+		case BGQA_FAIL_QUEUING_FINISHED:
+		case BGQA_FAIL_BGNAME_INVALID:
+		case BGQA_FAIL_TYPE_INVALID:
+		case BGQA_FAIL_PPL_OVERAMOUNT:
+		case BGQA_FAIL_LEVEL_INCORRECT:
+		case BGQA_DUPLICATE_REQUEST:
+		case BGQA_PLEASE_RELOGIN:
+		case BGQA_NOT_PARTY_GUILD_LEADER:
+		case BGQA_FAIL_CLASS_INVALID:
+		case BGQA_FAIL_TEAM_IN_BG_ALREADY:
 		default: {
 			struct packet_bgqueue_ack p;
 
@@ -20814,6 +20949,7 @@ static void clif_parse_bgqueue_register(int fd, struct map_session_data *sd)
 		case BGQT_PARTY:
 		case BGQT_GUILD:
 			break;
+		case BGQT_INVALID:
 		default:
 			clif->bgqueue_ack(sd,BGQA_FAIL_TYPE_INVALID, arena->id);
 			return;
@@ -23264,6 +23400,7 @@ static void clif_open_ui_send(struct map_session_data *sd, enum zc_ui_types ui_t
 #endif
 		break;
 #endif
+	case zc_ui_unused:
 	default:
 		ShowWarning("clif_open_ui_send: Requested UI (%u) is not implemented yet.\n", ui_type);
 		return;
@@ -23296,6 +23433,7 @@ static void clif_open_ui(struct map_session_data *sd, enum cz_ui_types uiType)
 		send_ui_type = ZC_ATTENDANCE_UI;
 		break;
 #endif
+	case cz_ui_unused:
 	default:
 		ShowWarning("clif_open_ui: Requested UI (%u) is not implemented yet.\n", uiType);
 		return;

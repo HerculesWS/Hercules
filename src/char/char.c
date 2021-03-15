@@ -767,6 +767,7 @@ static int char_getitemdata_from_sql(struct item *items, int max, int guid, enum
 		tablename = guild_storage_db;
 		selectoption = "guild_id";
 		break;
+	case TABLE_STORAGE:
 	default:
 		ShowError("char_getitemdata_from_sql: Invalid table type %d!\n", (int) table);
 		Assert_retr(-1, table);
@@ -874,6 +875,7 @@ static int char_memitemdata_to_sql(const struct item *p_items, int guid, enum in
 		selectoption = "guild_id";
 		item_count = MAX_GUILD_STORAGE;
 		break;
+	case TABLE_STORAGE:
 	default:
 		ShowError("Invalid table type %d!\n", (int) table);
 		Assert_retr(-1, table);

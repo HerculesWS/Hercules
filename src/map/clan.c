@@ -507,6 +507,12 @@ static int clan_get_id(const struct block_list *bl)
 			return su->group->clan_id;
 	}
 		break;
+	case BL_NUL:
+	case BL_ITEM:
+	case BL_ELEM:
+	case BL_CHAT:
+	case BL_ALL:
+		break;
 	}
 
 	return 0;

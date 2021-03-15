@@ -338,7 +338,9 @@ static int elemental_clean_single_effect(struct elemental_data *ed, uint16 skill
 	bl = battle->get_master(&ed->bl);
 
 	if( type ) {
-		switch( type ) {
+		PRAGMA_GCC46(GCC diagnostic push)
+		PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+		switch (type) {
 				// Just remove status change.
 			case SC_PYROTECHNIC_OPTION:
 			case SC_HEATER_OPTION:
@@ -371,6 +373,7 @@ static int elemental_clean_single_effect(struct elemental_data *ed, uint16 skill
 				ShowWarning("Invalid SC=%d in elemental_clean_single_effect\n",type);
 				break;
 		}
+		PRAGMA_GCC46(GCC diagnostic pop)
 	}
 
 	return 1;
@@ -695,6 +698,17 @@ static int elemental_ai_sub_timer_activesearch(struct block_list *bl, va_list ap
 			if( !map_flag_vs(ed->bl.m) )
 				return 0;
 			/* Fall through */
+		case BL_NUL:
+		case BL_ITEM:
+		case BL_NPC:
+		case BL_ELEM:
+		case BL_PET:
+		case BL_HOM:
+		case BL_MER:
+		case BL_SKILL:
+		case BL_MOB:
+		case BL_CHAT:
+		case BL_ALL:
 		default:
 			dist = distance_bl(&ed->bl, bl);
 			if( ((*target) == NULL || !check_distance_bl(&ed->bl, *target, dist)) && battle->check_range(&ed->bl,bl,ed->db->range2) ) { //Pick closest target?

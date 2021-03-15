@@ -3027,6 +3027,16 @@ static int skill_blown(struct block_list *src, struct block_list *target, int co
 				return 0; // ankle snare cannot be knocked back
 		}
 			break;
+		case BL_NUL:
+		case BL_CHAT:
+		case BL_HOM:
+		case BL_MER:
+		case BL_ELEM:
+		case BL_PET:
+		case BL_ITEM:
+		case BL_NPC:
+		case BL_ALL:
+			break;
 	}
 
 	if (dir == UNIT_DIR_UNDEFINED) // <optimized>: do the computation here instead of outside
@@ -4078,6 +4088,17 @@ static int skill_check_condition_mercenary(struct block_list *bl, int skill_id, 
 	switch( bl->type ) {
 		case BL_HOM: sd = BL_UCAST(BL_HOM, bl)->master; break;
 		case BL_MER: sd = BL_UCAST(BL_MER, bl)->master; break;
+		case BL_NUL:
+		case BL_CHAT:
+		case BL_ELEM:
+		case BL_MOB:
+		case BL_PET:
+		case BL_ITEM:
+		case BL_SKILL:
+		case BL_NPC:
+		case BL_PC:
+		case BL_ALL:
+			break;
 	}
 
 	st = status->get_status_data(bl);
@@ -6375,6 +6396,8 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 	sstatus = status->get_status_data(src);
 
 	//Check for undead skills that convert a no-damage skill into a damage one. [Skotlex]
+	PRAGMA_GCC46(GCC diagnostic push)
+	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 	switch (skill_id) {
 		case HLIF_HEAL: // [orn]
 			if (bl->type != BL_HOM) {
@@ -6478,6 +6501,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 			}
 			break;
 	}
+	PRAGMA_GCC46(GCC diagnostic pop)
 
 	type = skill->get_sc_type(skill_id);
 	tsc = status->get_sc(bl);
@@ -6490,6 +6514,8 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 		return 1; //Skills that cause an status should be blocked if the target element blocks its element.
 
 	map->freeblock_lock();
+	PRAGMA_GCC46(GCC diagnostic push)
+	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 	switch(skill_id) {
 		case HLIF_HEAL: // [orn]
 		case AL_HEAL:
@@ -6694,9 +6720,18 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 						int target_id = 0;
 						if (ud->target)
 							target_id = ud->target;
-						else switch (src->type) {
+						else {
+							switch (src->type) {
 							case BL_MOB: target_id = BL_UCAST(BL_MOB, src)->target_id; break;
 							case BL_PET: target_id = BL_UCAST(BL_PET, src)->target_id; break;
+							case BL_NUL:
+							case BL_CHAT:
+							case BL_HOM:
+							case BL_MER:
+							case BL_ELEM:
+							case BL_ALL:
+								break;
+							}
 						}
 						if (!target_id)
 							break;
@@ -9260,6 +9295,8 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 		case NPC_WIDE_DEEP_SLEEP:
 		case NPC_WIDESIREN:
 			if (flag&1){
+				PRAGMA_GCC46(GCC diagnostic push)
+				PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 				switch( type ){
 					case SC_BURNING:
 						sc_start4(src,bl,type,100,skill_lv,0,src->id,0,skill->get_time2(skill_id,skill_lv));
@@ -9270,6 +9307,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 					default:
 						sc_start2(src,bl,type,100,skill_lv,src->id,skill->get_time2(skill_id,skill_lv));
 				}
+				PRAGMA_GCC46(GCC diagnostic pop)
 			} else {
 				skill->area_temp[2] = 0; //For SD_PREAMBLE
 				clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
@@ -9676,6 +9714,8 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 						continue;
 					if (status->get_sc_type(i)&SC_NO_CLEARANCE)
 						continue;
+					PRAGMA_GCC46(GCC diagnostic push)
+					PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 					switch (i) {
 						case SC_ASSUMPTIO:
 							if( bl->type == BL_MOB )
@@ -9686,6 +9726,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 							tsc->data[i]->val2=0;  //Mark a dispelled berserk to avoid setting hp to 100 by setting hp penalty to 0.
 							break;
 					}
+					PRAGMA_GCC46(GCC diagnostic pop)
 					status_change_end(bl,(sc_type)i,INVALID_TIMER);
 				}
 				break;
@@ -10465,6 +10506,13 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 							switch (src->type) {
 							case BL_MOB: target_id = BL_UCAST(BL_MOB, src)->target_id; break;
 							case BL_PET: target_id = BL_UCAST(BL_PET, src)->target_id; break;
+							case BL_NUL:
+							case BL_CHAT:
+							case BL_HOM:
+							case BL_MER:
+							case BL_ELEM:
+							case BL_ALL:
+								break;
 							}
 						}
 						if (!target_id)
@@ -11051,6 +11099,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 				return 1;
 			break;
 	}
+	PRAGMA_GCC46(GCC diagnostic pop)
 
 	if(skill_id != SR_CURSEDCIRCLE) {
 		struct status_change *sc = status->get_sc(src);
@@ -11471,6 +11520,8 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 	type = skill->get_sc_type(skill_id);
 	sce = (sc != NULL && type != SC_NONE) ? sc->data[type] : NULL;
 
+	PRAGMA_GCC46(GCC diagnostic push)
+	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 	switch (skill_id) { //Skill effect.
 		case WZ_METEOR:
 		case MO_BODYRELOCATION:
@@ -11484,10 +11535,13 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 			skill->castend_pos2_effect_unknown(src, &x, &y, &skill_id, &skill_lv, &tick, &flag);
 			break;
 	}
+	PRAGMA_GCC46(GCC diagnostic pop)
 
 	// SC_MAGICPOWER needs to switch states before any damage is actually dealt
 	skill->toggle_magicpower(src, skill_id, skill_lv);
 
+	PRAGMA_GCC46(GCC diagnostic push)
+	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 	switch(skill_id) {
 		case PR_BENEDICTIO:
 			r = skill->get_splash(skill_id, skill_lv);
@@ -12224,6 +12278,7 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 				return 1;
 			break;
 	}
+	PRAGMA_GCC46(GCC diagnostic pop)
 
 	if( sc && sc->data[SC_CURSEDCIRCLE_ATKER] ) //Should only remove after the skill has been casted.
 		status_change_end(src,SC_CURSEDCIRCLE_ATKER,INVALID_TIMER);
@@ -13200,6 +13255,8 @@ static int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *b
 	type = skill->get_sc_type(sg->skill_id);
 	skill_id = sg->skill_id;
 
+	PRAGMA_GCC46(GCC diagnostic push)
+	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 	if ( tsc && tsc->data[SC_HOVERING] ) {
 		switch ( skill_id ) {
 		case HT_SKIDTRAP:
@@ -13219,6 +13276,7 @@ static int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *b
 			return 0;
 		}
 	}
+	PRAGMA_GCC46(GCC diagnostic pop)
 
 	if (sg->interval == -1) {
 		switch (sg->unit_id) {
@@ -14084,6 +14142,8 @@ static int skill_unit_onleft(uint16 skill_id, struct block_list *bl, int64 tick)
 	type = skill->get_sc_type(skill_id);
 	sce = (sc != NULL && type != SC_NONE) ? sc->data[type] : NULL;
 
+	PRAGMA_GCC46(GCC diagnostic push)
+	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 	switch (skill_id) {
 		case WZ_QUAGMIRE:
 			if (bl->type==BL_MOB)
@@ -14176,6 +14236,7 @@ static int skill_unit_onleft(uint16 skill_id, struct block_list *bl, int64 tick)
 				status_change_end(bl, type, INVALID_TIMER);
 			break;
 	}
+	PRAGMA_GCC46(GCC diagnostic pop)
 
 	return skill_id;
 }
@@ -14571,6 +14632,8 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 		return 1;
 	}
 
+	PRAGMA_GCC46(GCC diagnostic push)
+	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 	switch( sd->menuskill_id ) {
 		case AM_PHARMACY:
 			switch( skill_id ) {
@@ -14591,6 +14654,7 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 				return 0;
 			break;
 	}
+	PRAGMA_GCC46(GCC diagnostic pop)
 	st = &sd->battle_status;
 	sc = &sd->sc;
 	if( !sc->count )
@@ -14604,6 +14668,8 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 	if( sc && ( sc->data[SC__SHADOWFORM] || sc->data[SC__IGNORANCE] ) )
 		return 0;
 
+	PRAGMA_GCC46(GCC diagnostic push)
+	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 	switch( skill_id ) { // Turn off check.
 		case BS_MAXIMIZE:
 		case NV_TRICKDEAD:
@@ -14636,9 +14702,12 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 				return ret;
 		}
 	}
+	PRAGMA_GCC46(GCC diagnostic pop)
 
 	// Check the skills that can be used while mounted on a warg
 	if( pc_isridingwug(sd) ) {
+		PRAGMA_GCC46(GCC diagnostic push)
+		PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 		switch( skill_id ) {
 			// Hunter skills
 			case HT_SKIDTRAP:
@@ -14675,11 +14744,13 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 					return ret;
 			}
 		}
-
+		PRAGMA_GCC46(GCC diagnostic pop)
 	}
 
 	// Check the skills that can be used whiled using mado
 	if( pc_ismadogear(sd) ) {
+		PRAGMA_GCC46(GCC diagnostic push)
+		PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 		switch ( skill_id ) {
 				case BS_GREED:
 				case NC_BOOSTKNUCKLE:
@@ -14718,6 +14789,7 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 						return ret;
 				}
 			}
+		PRAGMA_GCC46(GCC diagnostic pop)
 	}
 
 	require = skill->get_requirement(sd,skill_id,skill_lv);
@@ -14726,6 +14798,8 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 	sd->state.arrow_atk = require.ammo?1:0;
 
 	// perform skill-specific checks (and actions)
+	PRAGMA_GCC46(GCC diagnostic push)
+	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 	switch( skill_id ) {
 		case MC_VENDING:
 		case ALL_BUYING_STORE:
@@ -15293,7 +15367,10 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 				return ret;
 		}
 	}
+	PRAGMA_GCC46(GCC diagnostic pop)
 
+	PRAGMA_GCC46(GCC diagnostic push)
+	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 	switch(require.state) {
 		case ST_HIDING:
 			if(!(sc && sc->option&OPTION_HIDE)) {
@@ -15438,6 +15515,7 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 			}
 			break;
 	}
+	PRAGMA_GCC46(GCC diagnostic pop)
 
 	if(require.mhp > 0 && get_percentage(st->hp, st->max_hp) > require.mhp) {
 		//mhp is the max-hp-requirement, that is,
@@ -17759,6 +17837,8 @@ static int skill_delunit(struct skill_unit *su)
 		map->foreachincell(skill->unit_effect,su->bl.m,su->bl.x,su->bl.y,group->bl_flag,&su->bl,timer->gettick(),4);
 
 	// perform ondelete actions
+	PRAGMA_GCC46(GCC diagnostic push)
+	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 	switch (group->skill_id) {
 		case HT_ANKLESNARE:
 		{
@@ -17800,6 +17880,7 @@ static int skill_delunit(struct skill_unit *su)
 			}
 			break;
 	}
+	PRAGMA_GCC46(GCC diagnostic pop)
 
 	clif->skill_delunit(su);
 
@@ -20223,6 +20304,8 @@ static int skill_block_check(struct block_list *bl, sc_type type, uint16 skill_i
 
 	inf = skill->get_inf2(skill_id);
 
+	PRAGMA_GCC46(GCC diagnostic push)
+	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 	switch(type) {
 	case SC_STASIS:
 		if (inf & INF2_NO_STASIS)
@@ -20233,6 +20316,7 @@ static int skill_block_check(struct block_list *bl, sc_type type, uint16 skill_i
 			return 1;
 		break;
 	}
+	PRAGMA_GCC46(GCC diagnostic pop)
 
 	return 0;
 }

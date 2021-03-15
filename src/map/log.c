@@ -76,6 +76,8 @@ static char log_picktype2char(e_log_pick_type type)
 		case LOG_TYPE_REFINE:           return '2';  // Refine
 		case LOG_TYPE_OTHER:            return 'X';  // Other
 		case LOG_TYPE_ACHIEVEMENT:      return '3';  // Achievement
+		case LOG_TYPE_NONE:             break;
+		case LOG_TYPE_ALL:              break;
 	}
 
 	// should not get here, fallback
@@ -99,6 +101,8 @@ static char log_chattype2char(e_log_chat_type type)
 		return 'M';  // (M)ain chat
 	case LOG_CHAT_CLAN:
 		return 'C';  // (C)lan
+	case LOG_CHAT_ALL:
+		break;
 	}
 
 	// should not get here, fallback

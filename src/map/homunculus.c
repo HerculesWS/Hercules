@@ -378,6 +378,8 @@ static bool homunculus_levelup(struct homun_data *hd)
 			if( hd->homunculus.level >= battle_config.hom_S_max_level )
 				return false;
 			break;
+		case HT_INVALID:
+			break;
 	}
 
 	hom = &hd->homunculus;
@@ -583,6 +585,8 @@ static int homunculus_gainexp(struct homun_data *hd, unsigned int exp)
 		case HT_S:
 			if( hd->homunculus.level >= battle_config.hom_S_max_level )
 				return 0;
+			break;
+		case HT_INVALID:
 			break;
 	}
 
@@ -1009,6 +1013,8 @@ static bool homunculus_recv_data(int account_id, const struct s_homunculus *sh, 
 			case HT_S:
 				if( hd->homunculus.level > battle_config.hom_S_max_level )
 					homun->shuffle(hd);
+				break;
+			case HT_INVALID:
 				break;
 		}
 

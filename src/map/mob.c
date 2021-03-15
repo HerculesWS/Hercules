@@ -1200,6 +1200,9 @@ static int mob_can_changetarget(const struct mob_data *md, const struct block_li
 		case MSS_WALK:
 		case MSS_LOOT:
 			return 1;
+		case MSS_ANY:
+		case MSS_ANYTARGET:
+		case MSS_DEAD:
 		default:
 			return 0;
 	}
@@ -1261,6 +1264,17 @@ static int mob_ai_sub_hard_activesearch(struct block_list *bl, va_list ap)
 			if (BL_UCCAST(BL_PC, bl)->state.gangsterparadise && !(status_get_mode(&md->bl)&MD_BOSS))
 				return 0; //Gangster paradise protection.
 			FALLTHROUGH
+		case BL_NUL:
+		case BL_MOB:
+		case BL_PET:
+		case BL_HOM:
+		case BL_MER:
+		case BL_ITEM:
+		case BL_SKILL:
+		case BL_NPC:
+		case BL_CHAT:
+		case BL_ELEM:
+		case BL_ALL:
 		default:
 			if (battle_config.hom_setting&0x4 &&
 				(*target) && (*target)->type == BL_HOM && bl->type != BL_HOM)
@@ -1414,6 +1428,12 @@ static bool mob_is_in_battle_state(const struct mob_data *md)
 	case MSS_RUSH:
 	case MSS_FOLLOW:
 		return true;
+	case MSS_ANY:
+	case MSS_IDLE:
+	case MSS_WALK:
+	case MSS_LOOT:
+	case MSS_DEAD:
+	case MSS_ANYTARGET:
 	default:
 		return false;
 	}
@@ -1533,6 +1553,14 @@ static int mob_unlocktarget(struct mob_data *md, int64 tick)
 			//Delay next random walk when this one failed.
 			md->next_walktime = tick+rnd()%1000;
 		break;
+	case MSS_ANY:
+	case MSS_LOOT:
+	case MSS_DEAD:
+	case MSS_ANYTARGET:
+	case MSS_BERSERK:
+	case MSS_ANGRY:
+	case MSS_RUSH:
+	case MSS_FOLLOW:
 	default:
 		mob_stop_attack(md);
 		mob_stop_walking(md, STOPWALKING_FLAG_FIXPOS); //Stop chasing.
@@ -2303,6 +2331,12 @@ static void mob_log_damage(struct mob_data *md, struct block_list *src, int dama
 				md->attacked_id = src->id;
 			break;
 		}
+		case BL_NUL:
+		case BL_ITEM:
+		case BL_SKILL:
+		case BL_NPC:
+		case BL_CHAT:
+		case BL_ALL:
 		default: //For all unhandled types.
 			md->attacked_id = src->id;
 	}
@@ -2876,6 +2910,16 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 				case BL_HOM: sd = BL_UCAST(BL_HOM, src)->master; break;
 				case BL_MER: sd = BL_UCAST(BL_MER, src)->master; break;
 				case BL_ELEM: sd = BL_UCAST(BL_ELEM, src)->master; break;
+
+				case BL_NUL:
+				case BL_ITEM:
+				case BL_SKILL:
+				case BL_NPC:
+				case BL_CHAT:
+				case BL_PC:
+				case BL_MOB:
+				case BL_ALL:
+					break;
 			}
 		}
 

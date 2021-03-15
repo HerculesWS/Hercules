@@ -230,6 +230,17 @@ static void script_reportsrc(struct script_state *st)
 				ShowDebug("Source (NPC): %s (invisible/not on a map)\n", nd->name);
 		}
 			break;
+		case BL_NUL:
+		case BL_ITEM:
+		case BL_ELEM:
+		case BL_HOM:
+		case BL_MER:
+		case BL_SKILL:
+		case BL_CHAT:
+		case BL_PC:
+		case BL_MOB:
+		case BL_PET:
+		case BL_ALL:
 		default:
 			if( bl->m >= 0 )
 				ShowDebug("Source (Non-NPC type %u): name %s at %s (%d,%d)\n", bl->type, clif->get_bl_name(bl), map->list[bl->m].name, bl->x, bl->y);
@@ -244,6 +255,8 @@ static void script_reportdata(struct script_data *data)
 {
 	if( data == NULL )
 		return;
+	PRAGMA_GCC46(GCC diagnostic push)
+	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 	switch( data->type ) {
 		case C_NOP:// no value
 			ShowDebug("Data: nothing (nil)\n");
@@ -279,6 +292,7 @@ static void script_reportdata(struct script_data *data)
 			ShowDebug("Data: %s\n", script->op2name(data->type));
 			break;
 	}
+	PRAGMA_GCC46(GCC diagnostic pop)
 }
 
 /// Reports on the console information about the current built-in function.
@@ -685,6 +699,8 @@ static void add_scriptl(int l)
 {
 	int backpatch = script->str_data[l].backpatch;
 
+	PRAGMA_GCC46(GCC diagnostic push)
+	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 	switch(script->str_data[l].type) {
 		case C_POS:
 		case C_USERFUNC_POS:
@@ -714,6 +730,7 @@ static void add_scriptl(int l)
 			script->addb(l>>16);
 			break;
 	}
+	PRAGMA_GCC46(GCC diagnostic pop)
 }
 
 /*==========================================
@@ -1154,6 +1171,8 @@ static const char *parse_variable(const char *p)
 		return NULL;
 	}
 
+	PRAGMA_GCC46(GCC diagnostic push)
+	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 	switch( type ) {
 		case C_ADD_PRE: // pre ++
 		case C_SUB_PRE: // pre --
@@ -1173,6 +1192,7 @@ static const char *parse_variable(const char *p)
 		default: // everything else
 			p = script->skip_space( &p[2] );
 	}
+	PRAGMA_GCC46(GCC diagnostic pop)
 
 	if( p == NULL ) {
 		// end of line or invalid buffer
@@ -2967,6 +2987,8 @@ static struct script_code *parse_script(const char *src, const char *file, int l
 
 		ShowMessage("%06x %s", i, script->op2name(op));
 
+		PRAGMA_GCC46(GCC diagnostic push)
+		PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 		switch (op) {
 		case C_INT:
 			ShowMessage(" %d", script->get_num(&script->buf, &i));
@@ -2986,6 +3008,7 @@ static struct script_code *parse_script(const char *src, const char *file, int l
 			i += j+1;
 			break;
 		}
+		PRAGMA_GCC46(GCC diagnostic pop)
 		ShowMessage(CL_CLL"\n");
 	}
 #endif
@@ -3997,6 +4020,8 @@ static struct script_data *push_retinfo(struct script_stack *stack, struct scrip
 static struct script_data *push_copy(struct script_stack *stack, int pos)
 {
 	nullpo_retr(NULL, stack);
+	PRAGMA_GCC46(GCC diagnostic push)
+	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 	switch( stack->stack_data[pos].type ) {
 		case C_CONSTSTR:
 			return script->push_conststr(stack, stack->stack_data[pos].u.str);
@@ -4016,6 +4041,7 @@ static struct script_data *push_copy(struct script_stack *stack, int pos)
 			);
 			break;
 		}
+	PRAGMA_GCC46(GCC diagnostic pop)
 }
 
 /// Removes the values in indexes [start,end[ from the stack.
@@ -4311,6 +4337,8 @@ static void op_2str(struct script_state *st, int op, const char *s1, const char 
 {
 	int a = 0;
 
+	PRAGMA_GCC46(GCC diagnostic push)
+	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 	switch(op) {
 	case C_EQ: a = (strcmp(s1,s2) == 0); break;
 	case C_NE: a = (strcmp(s1,s2) != 0); break;
@@ -4398,6 +4426,7 @@ static void op_2str(struct script_state *st, int op, const char *s1, const char 
 		st->state = END;
 		return;
 	}
+	PRAGMA_GCC46(GCC diagnostic pop)
 
 	script_pushint(st,a);
 }
@@ -4409,6 +4438,8 @@ static void op_2num(struct script_state *st, int op, int i1, int i2)
 	int ret;
 	int64 ret64;
 
+	PRAGMA_GCC46(GCC diagnostic push)
+	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 	switch( op ) {
 	case C_AND:     ret = i1 & i2;    break;
 	case C_OR:      ret = i1 | i2;    break;
@@ -4460,6 +4491,8 @@ static void op_2num(struct script_state *st, int op, int i1, int i2)
 			ret = INT_MAX;
 		}
 	}
+	PRAGMA_GCC46(GCC diagnostic pop)
+
 	script_pushint(st, ret);
 }
 
@@ -4485,6 +4518,8 @@ static void op_2(struct script_state *st, int op)
 	script->get_val(st, left);
 	script->get_val(st, right);
 
+	PRAGMA_GCC46(GCC diagnostic push)
+	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 	// automatic conversions
 	switch( op )
 	{
@@ -4499,6 +4534,7 @@ static void op_2(struct script_state *st, int op)
 		}
 		break;
 	}
+	PRAGMA_GCC46(GCC diagnostic pop)
 
 	if( data_isstring(left) && data_isstring(right) )
 	{// ss => op_2str
@@ -4558,6 +4594,9 @@ static void op_1(struct script_state *st, int op)
 
 	i1 = (int)data->u.num;
 	script_removetop(st, -1, 0);
+
+	PRAGMA_GCC46(GCC diagnostic push)
+	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 	switch( op ) {
 		case C_NEG: i1 = -i1; break;
 		case C_NOT: i1 = ~i1; break;
@@ -4569,6 +4608,8 @@ static void op_1(struct script_state *st, int op)
 			st->state = END;
 			return;
 	}
+	PRAGMA_GCC46(GCC diagnostic pop)
+
 	script_pushint(st, i1);
 }
 
@@ -4911,6 +4952,8 @@ static void run_script_main(struct script_state *st)
 
 	while( st->state == RUN ) {
 		enum c_op c = script->get_com(&st->script->script_buf, &st->pos);
+		PRAGMA_GCC46(GCC diagnostic push)
+		PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 		switch(c) {
 			case C_EOL:
 				if( stack->defsp > stack->sp )
@@ -5023,6 +5066,7 @@ static void run_script_main(struct script_state *st)
 				st->state=END;
 				break;
 		}
+		PRAGMA_GCC46(GCC diagnostic pop)
 		if( !st->freeloop && cmdcount>0 && (--cmdcount)<=0 ) {
 			ShowError("run_script: too many opeartions being processed non-stop !\n");
 			script->reportsrc(st);
@@ -9504,6 +9548,15 @@ static BUILDIN(getguildinfo)
 		case GUILDINFO_MASTER_NAME:
 			script_pushconststr(st, "");
 			break;
+		case GUILDINFO_LEVEL:
+		case GUILDINFO_ONLINE:
+		case GUILDINFO_AV_LEVEL:
+		case GUILDINFO_MAX_MEMBERS:
+		case GUILDINFO_EXP:
+		case GUILDINFO_NEXT_EXP:
+		case GUILDINFO_SKILL_POINTS:
+		case GUILDINFO_MASTER_CID:
+		case GUILDINFO_ID:
 		default:
 			script_pushint(st, -1);
 		}
@@ -12274,6 +12327,15 @@ static BUILDIN(getunits)
 			map->foreachnpc(buildin_getunits_sub_npc,
 				st, sd, id, start, &count, limit, name, ref, type);
 			break;
+		case BL_NUL:
+		case BL_ITEM:
+		case BL_ELEM:
+		case BL_HOM:
+		case BL_MER:
+		case BL_SKILL:
+		case BL_CHAT:
+		case BL_PET:
+		case BL_ALL:
 		default:
 			// fallback to global lookup (slowest option)
 			map->foreachiddb(buildin_getunits_sub,
@@ -19871,6 +19933,12 @@ static BUILDIN(rid2name)
 			case BL_PET: script_pushstrcopy(st, BL_UCCAST(BL_PET, bl)->pet.name); break;
 			case BL_HOM: script_pushstrcopy(st, BL_UCCAST(BL_HOM, bl)->homunculus.name); break;
 			case BL_MER: script_pushstrcopy(st, BL_UCCAST(BL_MER, bl)->db->name); break;
+			case BL_NUL:
+			case BL_ITEM:
+			case BL_ELEM:
+			case BL_SKILL:
+			case BL_CHAT:
+			case BL_ALL:
 			default:
 				ShowError("buildin_rid2name: BL type unknown.\n");
 				script_pushconststr(st,"");
@@ -20051,6 +20119,11 @@ static BUILDIN(getunittype)
 		case BL_HOM:  value = 4; break;
 		case BL_MER:  value = 5; break;
 		case BL_ELEM: value = 6; break;
+		case BL_NUL:
+		case BL_ITEM:
+		case BL_SKILL:
+		case BL_CHAT:
+		case BL_ALL:
 		default:      value = -1; break;
 	}
 
@@ -21257,6 +21330,12 @@ static BUILDIN(setunitdata)
 
 		break;
 	}
+	case BL_NUL:
+	case BL_ITEM:
+	case BL_SKILL:
+	case BL_CHAT:
+	case BL_PC:
+	case BL_ALL:
 	default:
 		ShowError("buildin_setunitdata: Unknown object!\n");
 		script_pushint(st, 0);
@@ -21694,6 +21773,12 @@ static BUILDIN(getunitdata)
 		}
 	}
 		break;
+	case BL_NUL:
+	case BL_ITEM:
+	case BL_SKILL:
+	case BL_CHAT:
+	case BL_PC:
+	case BL_ALL:
 	default:
 		ShowError("buildin_getunitdata: Unknown object!\n");
 		script_pushint(st, -1);
@@ -21785,6 +21870,15 @@ static BUILDIN(setunitname)
 			safestrncpy(pd->pet.name, script_getstr(st, 3), NAME_LENGTH);
 		}
 			break;
+		case BL_NUL:
+		case BL_ITEM:
+		case BL_SKILL:
+		case BL_CHAT:
+		case BL_MER:
+		case BL_ELEM:
+		case BL_PC:
+		case BL_NPC:
+		case BL_ALL:
 		default:
 			script_pushint(st, 0);
 			ShowWarning("buildin_setunitname: Unknown object type!\n");
@@ -22011,6 +22105,15 @@ static BUILDIN(unitattack)
 		case BL_PET:
 			BL_UCAST(BL_PET, unit_bl)->target_id = target_bl->id;
 			break;
+		case BL_NUL:
+		case BL_ITEM:
+		case BL_SKILL:
+		case BL_CHAT:
+		case BL_MER:
+		case BL_ELEM:
+		case BL_HOM:
+		case BL_NPC:
+		case BL_ALL:
 		default:
 			ShowError("script:unitattack: unsupported source unit type %u\n", unit_bl->type);
 			script_pushint(st, 0);
@@ -24322,6 +24425,8 @@ static BUILDIN(is_function)
 		int n = script->search_str(str);
 
 		if (n >= 0) {
+			PRAGMA_GCC46(GCC diagnostic push)
+			PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 			switch (script->str_data[n].type) {
 			case C_FUNC:
 				type = FUNCTION_IS_COMMAND;
@@ -24340,6 +24445,7 @@ static BUILDIN(is_function)
 					type = FUNCTION_IS_LOCAL;
 				}
 			}
+			PRAGMA_GCC46(GCC diagnostic pop)
 		}
 	}
 

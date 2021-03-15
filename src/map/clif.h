@@ -596,10 +596,15 @@ enum zc_ui_types {
 * Client to server open ui request types (packet 0x0a68)
 **/
 enum cz_ui_types {
+#if PACKETVER >= 20150128
 	CZ_STYLIST_UI = 1,
 	CZ_MACRO_REGISTER_UI = 2,
 	CZ_MACRO_DETECTOR_UI = 3,
-	CZ_ATTENDANCE_UI = 5
+#endif
+#if PACKETVER >= 20171122
+	CZ_ATTENDANCE_UI = 5,
+#endif
+	cz_ui_unused  // for avoid compilation errors
 };
 
 /**

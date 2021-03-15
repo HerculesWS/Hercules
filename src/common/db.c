@@ -661,6 +661,10 @@ static int db_is_key_null(enum DBType type, union DBKey key)
 		case DB_ISTRING:
 			return (key.str == NULL);
 
+		case DB_INT:
+		case DB_UINT:
+		case DB_INT64:
+		case DB_UINT64:
 		default: // Not a pointer
 			return 0;
 	}
@@ -693,6 +697,10 @@ static union DBKey db_dup_key(struct DBMap_impl *db, union DBKey key)
 			return key;
 		}
 
+		case DB_INT:
+		case DB_UINT:
+		case DB_INT64:
+		case DB_UINT64:
 		default:
 			return key;
 	}
@@ -714,6 +722,10 @@ static void db_dup_key_free(struct DBMap_impl *db, union DBKey key)
 			aFree(key.mutstr);
 			return;
 
+		case DB_INT:
+		case DB_UINT:
+		case DB_INT64:
+		case DB_UINT64:
 		default:
 			return;
 	}

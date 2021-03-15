@@ -581,6 +581,8 @@ static int sv_parse_next(struct s_svstate *svstate)
 			svstate->done = true;
 			state = END;
 			break;
+		case END:
+			break;
 		}
 	}
 	if( IS_END() )

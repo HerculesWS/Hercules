@@ -419,6 +419,7 @@ static int lclif_parse(int fd)
 		result = lclif->p->parse_sub(fd, sd);
 
 		switch (result) {
+		case PACKET_VALID:
 		case PACKET_SKIP:
 			continue;
 		case PACKET_INCOMPLETE:

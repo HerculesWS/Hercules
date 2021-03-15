@@ -4721,6 +4721,8 @@ static int pc_additem(struct map_session_data *sd, const struct item *item_data,
 					return 7;/* need proper code? */
 				}
 				break;
+			case IBT_NONE:
+				break;
 		}
 	}
 
@@ -5669,6 +5671,8 @@ static void pc_bound_clear(struct map_session_data *sd, enum e_item_bound_type t
 				if( gstor )
 					gstorage->close(sd);
 			}
+			break;
+		case IBT_NONE:
 			break;
 	}
 }
@@ -8155,6 +8159,15 @@ static int pc_dead(struct map_session_data *sd, struct block_list *src)
 			break;
 		case BL_MER:
 			src = &BL_UCAST(BL_MER, src)->master->bl; // Pass on to master.
+			break;
+		case BL_NUL:
+		case BL_PC:
+		case BL_ITEM:
+		case BL_SKILL:
+		case BL_NPC:
+		case BL_CHAT:
+		case BL_ELEM:
+		case BL_ALL:
 			break;
 		}
 	}
