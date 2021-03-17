@@ -9,7 +9,7 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) 2012-2021 Hercules Dev Team
 //= Copyright (C) AnnieRuru
 //= Copyright (C) Emistry
 //= Copyright (C) Euphy
@@ -44,23 +44,17 @@
 // separator.
 // callfunc "F_InsertComma",<number>{,<precision>,<separator>}
 // Examples:
-//    callfunc("F_InsertComma",7777777)           // returns "7,777,777"
-//    callfunc("F_InsertComma",1000000000,3,",") // returns "1,000,000,000"
-//    callfunc("F_InsertComma",1000000000,3,"_") // returns "1_000_000_000"
-//    callfunc("F_InsertComma",1000000000,4)      // returns "10,0000,0000"
+//    callfunc("F_InsertComma", 7777777)            // returns "7,777,777"
+//    callfunc("F_InsertComma", 1000000000, 3, ",") // returns "1,000,000,000"
+//    callfunc("F_InsertComma", 1000000000, 3, "_") // returns "1_000_000_000"
+//    callfunc("F_InsertComma", 1000000000, 4)      // returns "10,0000,0000"
 function	script	F_InsertComma	{
-	.@value = getarg(0);
-	.@precision = getarg(1,3);
-	.@separator$ = getarg( 2,"," );
-
-	.@str$ = ""+.@value;
-	.@is_negative = ( .@value < 0 );
-
-	.@length = getstrlen( .@str$ ) - .@precision - .@is_negative;
-	while ( .@length > 0 ) {
-		.@str$ = insertchar( .@str$, .@separator$ , ( .@length + .@is_negative ) );
-		.@length -= .@precision;
-	}
+	.@str$ = getarg(0);
+	.@precision = getarg(1, 3);
+	.@separator$ = getarg(2, ",");
+	.@is_negative = (charat(.@str$, 0) == "-");
+	for (.@i = getstrlen(.@str$) - .@precision; .@i > .@is_negative; .@i -= .@precision)
+		.@str$ = insertchar(.@str$, .@separator$, .@i);
 	return .@str$;
 }
 

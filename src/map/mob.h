@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) 2012-2021 Hercules Dev Team
  * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -575,8 +575,8 @@ struct mob_interface {
 	struct block_list* (*getmasterhpltmaxrate) (struct mob_data *md, int rate);
 	int (*getfriendstatus_sub) (struct block_list *bl, va_list ap);
 	struct block_list *(*getfriendstatus) (struct mob_data *md, int cond1, int cond2);
-	int (*skill_use) (struct mob_data *md, int64 tick, int event);
-	int (*skill_event) (struct mob_data *md, struct block_list *src, int64 tick, int flag);
+	int (*use_skill) (struct mob_data *md, int64 tick, int event);
+	int (*use_skill_event) (struct mob_data *md, struct block_list *src, int64 tick, int flag);
 	int (*is_clone) (int class_);
 	int (*clone_spawn) (struct map_session_data *sd, int16 m, int16 x, int16 y, const char *event, int master_id, uint32 mode, int flag, unsigned int duration);
 	int (*clone_delete) (struct mob_data *md);

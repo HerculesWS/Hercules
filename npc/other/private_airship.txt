@@ -9,7 +9,7 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2018-2020 Hercules Dev Team
+//= Copyright (C) 2018-2021 Hercules Dev Team
 //= Copyright (C) Asheraf
 //=
 //= Hercules is free software: you can redistribute it and/or modify
@@ -47,11 +47,11 @@ OnAirShipRequest:
 		airship_respond(P_AIRSHIP_ITEM_NOT_ENOUGH);
 		end;
 	}
-	if (getmapflag(strcharinfo(PC_MAP), mf_pairship_startable) != true) {
+	if (getmapflag(strcharinfo(PC_MAP), MF_PAIRSHIP_STARTABLE) != true) {
 		airship_respond(P_AIRSHIP_INVALID_START_MAP);
 		end;
 	}
-	if (getmapflag(@mapname$, mf_pairship_endable) != true) {
+	if (getmapflag(@mapname$, MF_PAIRSHIP_ENDABLE) != true) {
 		airship_respond(P_AIRSHIP_INVALID_END_MAP);
 		end;
 	}

@@ -3,7 +3,7 @@
 -- This file is part of Hercules.
 -- http://herc.ws - http://github.com/HerculesWS/Hercules
 --
--- Copyright (C) 2013-2020 Hercules Dev Team
+-- Copyright (C) 2013-2021 Hercules Dev Team
 --
 -- Hercules is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -19,5 +19,5 @@
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ALTER TABLE `login` ADD COLUMN `pincode` VARCHAR(4) NOT NULL DEFAULT '';
-ALTER TABLE `login` ADD COLUMN `pincode_change` INT(11) unsigned NOT NULL DEFAULT '0';
+ALTER TABLE `login` ADD COLUMN `pincode_change` INT unsigned NOT NULL DEFAULT '0';
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1362794218);

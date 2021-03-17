@@ -9,7 +9,7 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) 2012-2021 Hercules Dev Team
 //= Copyright (C) Joseph
 //= Copyright (C) Euphy
 //= Copyright (C) tr0n
@@ -9675,6 +9675,9 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 			mes "Okay~";
 			mes "Let's go...";
 			close2;
+			if ($@sign_w2 == 1) // prevent others joining.
+				end;
+			donpcevent("Timer#serin::OnStart");
 			$@sign_w2 = 1;
 			warp "que_sign01",199,36;
 			end;
@@ -9699,7 +9702,10 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 		switch(select("Follow the trace.", "Ignore it.")) {
 		case 1:
 			close2;
+			if ($@sign_w2 == 1) // prevent others joining.
+				end;
 			sign_q = 199;
+			donpcevent("Timer#serin::OnStart");
 			$@sign_w2 = 1;
 			warp "que_sign01",199,36;
 			end;
@@ -10257,6 +10263,9 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 			switch(select("Yes", "No")) {
 			case 1:
 				close2;
+				if ($@sign_w1 == 1)
+					end;
+				donpcevent("Timer#witch::OnStart");
 				$@sign_w1 = 1;
 				warp "que_sign01",195,189;
 				end;
@@ -12306,17 +12315,6 @@ geffen,119,48,0	script	Fountain#s	HIDDEN_NPC,{
 	}
 }
 
-que_sign01,196,44,0	script	Starter#serin	FAKE_NPC,32,32,{
-OnTouch:
-	donpcevent "Timer#serin::OnStart";
-	disablenpc "Starter#serin";
-	end;
-
-OnEnable:
-	enablenpc "Starter#serin";
-	end;
-}
-
 que_sign01,1,0,0	script	Timer#serin	FAKE_NPC,{
 OnStart:
 	initnpctimer;
@@ -12328,7 +12326,6 @@ OnTimer600000:
 
 OnTimer620000:
 	$@sign_w2 = 0;
-	donpcevent "Starter#serin::OnEnable";
 	donpcevent "Serin#serin::OnEnable";
 	donpcevent "Dark Lord#serin::OnDisable";
 	donpcevent "Serin#dummy::OnDisable";
@@ -12351,17 +12348,6 @@ OnReset:
 	killmonster "que_sign01","CallMonster#serin::OnMyMobDead";
 }
 
-que_sign01,197,195,0	script	Starter#witch	FAKE_NPC,32,32,{
-OnTouch:
-	donpcevent "Timer#witch::OnStart";
-	disablenpc "Starter#witch";
-	end;
-
-OnEnable:
-	enablenpc "Starter#witch";
-	end;
-}
-
 que_sign01,1,1,0	script	Timer#witch	FAKE_NPC,{
 OnStart:
 	initnpctimer;
@@ -12372,7 +12358,6 @@ OnTimer600000:
 	end;
 
 OnTimer620000:
-	donpcevent "Starter#witch::OnEnable";
 	donpcevent "Warp#witch::OnDisable";
 	donpcevent "CallMonster#witch::OnReset";
 	donpcevent "Serin#witch::OnEnable";
@@ -12446,6 +12431,7 @@ OnTouch:
 		close;
 	}
 	else {
+		donpcevent("Timer#witch::OnStart");
 		$@sign_w1 = 1;
 		warp "que_sign01",197,190;
 		end;

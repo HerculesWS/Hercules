@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) 2012-2021 Hercules Dev Team
  * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -135,31 +135,20 @@ static int status_get_sc_icon(enum sc_type type)
 	return status->dbs->IconChangeTable[type].id;
 }
 
-static void status_set_sc(uint16 skill_id, sc_type sc, unsigned int flag)
+static void status_set_sc(sc_type sc, unsigned int flag)
 {
-	uint16 idx;
-	if( (idx = skill->get_index(skill_id)) == 0 ) {
-		ShowError("set_sc: Unsupported skill id %d\n", skill_id);
-		return;
-	}
 	if( sc < 0 || sc >= SC_MAX ) {
 		ShowError("set_sc: Unsupported status change id %d\n", sc);
 		return;
 	}
 
-	if( status->dbs->SkillChangeTable[sc] == 0 )
-		status->dbs->SkillChangeTable[sc] = skill_id;
 	status->dbs->ChangeFlagTable[sc] |= flag;
-
-	if( status->dbs->Skill2SCTable[idx] == SC_NONE )
-		status->dbs->Skill2SCTable[idx] = sc;
 }
 
 static void initChangeTables(void)
 {
-#define add_sc(skill,sc) status->set_sc((skill),(sc),SCB_NONE)
 // indicates that the status displays a visual effect for the affected unit, and should be sent to the client for all supported units
-#define set_sc_with_vfx(skill, sc, flag) do { status->set_sc((skill), (sc), (flag)); status->dbs->IconChangeTable[sc].relevant_bl_types |= BL_SCEFFECT; } while(0)
+#define set_sc_with_vfx(sc, flag) do { status->set_sc( (sc), (flag)); status->dbs->IconChangeTable[sc].relevant_bl_types |= BL_SCEFFECT; } while(0)
 
 	int i;
 
@@ -176,630 +165,465 @@ static void initChangeTables(void)
 	memset(status->dbs->DisplayType, 0, sizeof(status->dbs->DisplayType));
 
 	//First we define the skill for common ailments. These are used in skill_additional_effect through sc cards. [Skotlex]
-	status->set_sc( NPC_PETRIFYATTACK , SC_STONE     , SCB_DEF_ELE|SCB_DEF|SCB_MDEF );
-	status->set_sc( NPC_WIDEFREEZE    , SC_FREEZE    , SCB_DEF_ELE|SCB_DEF|SCB_MDEF );
-	status->set_sc( NPC_STUNATTACK    , SC_STUN      , SCB_NONE );
-	status->set_sc( NPC_SLEEPATTACK   , SC_SLEEP     , SCB_NONE );
-	status->set_sc( NPC_POISON        , SC_POISON    , SCB_DEF2|SCB_REGEN );
-	status->set_sc( NPC_CURSEATTACK   , SC_CURSE     , SCB_LUK|SCB_BATK|SCB_WATK|SCB_SPEED );
-	status->set_sc( NPC_SILENCEATTACK , SC_SILENCE   , SCB_NONE );
-	status->set_sc( NPC_WIDECONFUSE   , SC_CONFUSION , SCB_NONE );
-	status->set_sc( NPC_BLINDATTACK   , SC_BLIND     , SCB_HIT|SCB_FLEE );
-	status->set_sc( NPC_BLEEDING      , SC_BLOODING  , SCB_REGEN );
-	status->set_sc( NPC_POISON        , SC_DPOISON   , SCB_DEF2|SCB_REGEN );
+	status->set_sc(SC_STONE, SCB_DEF_ELE | SCB_DEF | SCB_MDEF);
+	status->set_sc(SC_FREEZE, SCB_DEF_ELE | SCB_DEF | SCB_MDEF);
+	status->set_sc(SC_STUN, SCB_NONE);
+	status->set_sc(SC_SLEEP, SCB_NONE);
+	status->set_sc(SC_POISON, SCB_DEF2 | SCB_REGEN);
+	status->set_sc(SC_CURSE, SCB_LUK | SCB_BATK | SCB_WATK | SCB_SPEED);
+	status->set_sc(SC_SILENCE, SCB_NONE);
+	status->set_sc(SC_CONFUSION, SCB_NONE);
+	status->set_sc(SC_BLIND, SCB_HIT | SCB_FLEE);
+	status->set_sc(SC_BLOODING, SCB_REGEN);
+	status->set_sc(SC_DPOISON, SCB_DEF2 | SCB_REGEN);
 
 	//The main status definitions
-	add_sc( SM_BASH              , SC_STUN            );
-	status->set_sc( SM_PROVOKE           , SC_PROVOKE         , SCB_DEF|SCB_DEF2|SCB_BATK|SCB_WATK );
-	add_sc( SM_MAGNUM            , SC_SUB_WEAPONPROPERTY    );
-	status->set_sc( SM_ENDURE            , SC_ENDURE          , SCB_MDEF|SCB_DSPD );
-	add_sc( MG_SIGHT             , SC_SIGHT           );
-	add_sc( MG_SAFETYWALL        , SC_SAFETYWALL      );
-	add_sc( MG_FROSTDIVER        , SC_FREEZE          );
-	add_sc( MG_STONECURSE        , SC_STONE           );
-	add_sc( AL_RUWACH            , SC_RUWACH          );
-	add_sc( AL_PNEUMA            , SC_PNEUMA          );
-	status->set_sc( AL_INCAGI            , SC_INC_AGI         , SCB_AGI|SCB_SPEED );
-	status->set_sc( AL_DECAGI            , SC_DEC_AGI         , SCB_AGI|SCB_SPEED );
-	status->set_sc( AL_CRUCIS            , SC_CRUCIS          , SCB_DEF );
-	status->set_sc( AL_ANGELUS           , SC_ANGELUS         , SCB_DEF2 );
-	status->set_sc( AL_BLESSING          , SC_BLESSING        , SCB_STR|SCB_INT|SCB_DEX );
-	status->set_sc( AC_CONCENTRATION     , SC_CONCENTRATION   , SCB_AGI|SCB_DEX );
-	status->set_sc( TF_HIDING            , SC_HIDING          , SCB_SPEED );
-	add_sc( TF_POISON            , SC_POISON          );
-	status->set_sc( KN_TWOHANDQUICKEN    , SC_TWOHANDQUICKEN  , SCB_ASPD );
-	add_sc( KN_AUTOCOUNTER       , SC_AUTOCOUNTER     );
-	status->set_sc( PR_IMPOSITIO         , SC_IMPOSITIO       ,
+	status->set_sc(SC_PROVOKE, SCB_DEF | SCB_DEF2 | SCB_BATK | SCB_WATK);
+	status->set_sc(SC_ENDURE, SCB_MDEF | SCB_DSPD);
+	status->set_sc(SC_INC_AGI, SCB_AGI | SCB_SPEED);
+	status->set_sc(SC_DEC_AGI, SCB_AGI | SCB_SPEED);
+	status->set_sc(SC_CRUCIS, SCB_DEF);
+	status->set_sc(SC_ANGELUS, SCB_DEF2);
+	status->set_sc(SC_BLESSING, SCB_STR | SCB_INT | SCB_DEX);
+	status->set_sc(SC_CONCENTRATION, SCB_AGI | SCB_DEX);
+	status->set_sc(SC_HIDING, SCB_SPEED);
+	status->set_sc(SC_TWOHANDQUICKEN, SCB_ASPD);
+	status->set_sc(SC_IMPOSITIO,
 #ifdef RENEWAL
-		SCB_NONE );
+		SCB_NONE);
 #else
 		SCB_WATK );
 #endif
-	status->set_sc( PR_SUFFRAGIUM        , SC_SUFFRAGIUM      , SCB_NONE );
-	status->set_sc( PR_ASPERSIO          , SC_ASPERSIO        , SCB_ATK_ELE );
-	status->set_sc( PR_BENEDICTIO        , SC_BENEDICTIO      , SCB_DEF_ELE );
-	status->set_sc( PR_SLOWPOISON        , SC_SLOWPOISON      , SCB_REGEN );
-	status->set_sc( PR_KYRIE             , SC_KYRIE           , SCB_NONE );
-	status->set_sc( PR_MAGNIFICAT        , SC_MAGNIFICAT      , SCB_REGEN );
-	status->set_sc( PR_GLORIA            , SC_GLORIA          , SCB_LUK );
-	add_sc( PR_LEXDIVINA         , SC_SILENCE         );
-	status->set_sc( PR_LEXAETERNA        , SC_LEXAETERNA      , SCB_NONE );
-	add_sc( WZ_METEOR            , SC_STUN            );
-	add_sc( WZ_VERMILION         , SC_BLIND           );
-	add_sc( WZ_FROSTNOVA         , SC_FREEZE          );
-	add_sc( WZ_STORMGUST         , SC_FREEZE          );
-	status->set_sc( WZ_QUAGMIRE          , SC_QUAGMIRE        , SCB_AGI|SCB_DEX|SCB_ASPD|SCB_SPEED );
-	status->set_sc( BS_ADRENALINE        , SC_ADRENALINE      , SCB_ASPD );
-	status->set_sc( BS_WEAPONPERFECT     , SC_WEAPONPERFECT   , SCB_NONE );
-	status->set_sc( BS_OVERTHRUST        , SC_OVERTHRUST      , SCB_NONE );
-	status->set_sc( BS_MAXIMIZE          , SC_MAXIMIZEPOWER   , SCB_REGEN );
-	add_sc( HT_LANDMINE          , SC_STUN            );
-	status->set_sc( HT_ANKLESNARE        , SC_ANKLESNARE      , SCB_NONE );
-	add_sc( HT_SANDMAN           , SC_SLEEP           );
-	add_sc( HT_FLASHER           , SC_BLIND           );
-	add_sc( HT_FREEZINGTRAP      , SC_FREEZE          );
-	status->set_sc( AS_CLOAKING          , SC_CLOAKING        , SCB_CRI|SCB_SPEED );
-	add_sc( AS_SONICBLOW         , SC_STUN            );
-	status->set_sc( AS_ENCHANTPOISON     , SC_ENCHANTPOISON   , SCB_ATK_ELE );
-	status->set_sc( AS_POISONREACT       , SC_POISONREACT     , SCB_NONE );
-	add_sc( AS_VENOMDUST         , SC_POISON          );
-	add_sc( AS_SPLASHER          , SC_SPLASHER        );
-	status->set_sc( NV_TRICKDEAD         , SC_TRICKDEAD    , SCB_REGEN );
-	status->set_sc( SM_AUTOBERSERK       , SC_AUTOBERSERK  , SCB_NONE );
-	add_sc( TF_SPRINKLESAND      , SC_BLIND           );
-	add_sc( TF_THROWSTONE        , SC_STUN            );
-	status->set_sc( MC_LOUD              , SC_SHOUT        , SCB_STR );
-	status->set_sc( MG_ENERGYCOAT        , SC_ENERGYCOAT   , SCB_NONE );
-	status->set_sc( NPC_EMOTION          , SC_MODECHANGE   , SCB_MODE );
-	add_sc( NPC_EMOTION_ON       , SC_MODECHANGE   );
-	status->set_sc( NPC_ATTRICHANGE      , SC_ARMOR_PROPERTY , SCB_DEF_ELE );
-	add_sc( NPC_CHANGEWATER      , SC_ARMOR_PROPERTY );
-	add_sc( NPC_CHANGEGROUND     , SC_ARMOR_PROPERTY );
-	add_sc( NPC_CHANGEFIRE       , SC_ARMOR_PROPERTY );
-	add_sc( NPC_CHANGEWIND       , SC_ARMOR_PROPERTY );
-	add_sc( NPC_CHANGEPOISON     , SC_ARMOR_PROPERTY );
-	add_sc( NPC_CHANGEHOLY       , SC_ARMOR_PROPERTY );
-	add_sc( NPC_CHANGEDARKNESS   , SC_ARMOR_PROPERTY );
-	add_sc( NPC_CHANGETELEKINESIS, SC_ARMOR_PROPERTY );
-	add_sc( NPC_POISON           , SC_POISON          );
-	add_sc( NPC_BLINDATTACK      , SC_BLIND           );
-	add_sc( NPC_SILENCEATTACK    , SC_SILENCE         );
-	add_sc( NPC_STUNATTACK       , SC_STUN            );
-	add_sc( NPC_PETRIFYATTACK    , SC_STONE           );
-	add_sc( NPC_CURSEATTACK      , SC_CURSE           );
-	add_sc( NPC_SLEEPATTACK      , SC_SLEEP           );
-	add_sc( NPC_MAGICALATTACK    , SC_MAGICALATTACK   );
-	status->set_sc( NPC_KEEPING          , SC_KEEPING         , SCB_DEF );
-	add_sc( NPC_DARKBLESSING     , SC_COMA            );
-	status->set_sc( NPC_BARRIER          , SC_BARRIER         , SCB_MDEF|SCB_DEF );
-	add_sc( NPC_DEFENDER         , SC_ARMOR           );
-	add_sc( NPC_LICK             , SC_STUN            );
-	status->set_sc( NPC_HALLUCINATION    , SC_ILLUSION        , SCB_NONE );
-	add_sc( NPC_REBIRTH          , SC_REBIRTH         );
-	add_sc( RG_RAID              , SC_STUN            );
+	status->set_sc(SC_SUFFRAGIUM, SCB_NONE);
+	status->set_sc(SC_ASPERSIO, SCB_ATK_ELE);
+	status->set_sc(SC_BENEDICTIO, SCB_DEF_ELE);
+	status->set_sc(SC_SLOWPOISON, SCB_REGEN);
+	status->set_sc(SC_KYRIE, SCB_NONE);
+	status->set_sc(SC_MAGNIFICAT, SCB_REGEN);
+	status->set_sc(SC_GLORIA, SCB_LUK);
+	status->set_sc(SC_LEXAETERNA, SCB_NONE);
+	status->set_sc(SC_QUAGMIRE, SCB_AGI | SCB_DEX | SCB_ASPD | SCB_SPEED);
+	status->set_sc(SC_ADRENALINE, SCB_ASPD);
+	status->set_sc(SC_WEAPONPERFECT, SCB_NONE);
+	status->set_sc(SC_OVERTHRUST, SCB_NONE);
+	status->set_sc(SC_MAXIMIZEPOWER, SCB_REGEN);
+	status->set_sc(SC_ANKLESNARE, SCB_NONE);
+	status->set_sc(SC_CLOAKING, SCB_CRI | SCB_SPEED);
+	status->set_sc(SC_ENCHANTPOISON, SCB_ATK_ELE);
+	status->set_sc(SC_POISONREACT, SCB_NONE);
+	status->set_sc(SC_TRICKDEAD, SCB_REGEN);
+	status->set_sc(SC_AUTOBERSERK, SCB_NONE);
+	status->set_sc(SC_SHOUT, SCB_STR);
+	status->set_sc(SC_ENERGYCOAT, SCB_NONE);
+	status->set_sc(SC_MODECHANGE, SCB_MODE);
+	status->set_sc(SC_ARMOR_PROPERTY, SCB_DEF_ELE);
+	status->set_sc(SC_KEEPING, SCB_DEF);
+	status->set_sc(SC_BARRIER, SCB_MDEF | SCB_DEF);
+	status->set_sc(SC_ILLUSION, SCB_NONE);
+	status->set_sc(SC_NOEQUIPWEAPON, SCB_WATK);
+	status->set_sc(SC_NOEQUIPSHIELD, SCB_DEF);
+	status->set_sc(SC_NOEQUIPARMOR, SCB_VIT);
+	status->set_sc(SC_NOEQUIPHELM, SCB_INT);
+	status->set_sc(SC_PROTECTWEAPON, SCB_NONE);
+	status->set_sc(SC_PROTECTSHIELD, SCB_NONE);
+	status->set_sc(SC_PROTECTARMOR, SCB_NONE);
+	status->set_sc(SC_PROTECTHELM, SCB_NONE);
+	status->set_sc(SC_AUTOGUARD, SCB_NONE);
+	status->set_sc(SC_REFLECTSHIELD, SCB_NONE);
+	status->set_sc(SC_PROVIDENCE, SCB_ALL);
+	status->set_sc(SC_DEFENDER, SCB_SPEED | SCB_ASPD);
+	status->set_sc(SC_SPEARQUICKEN, SCB_ASPD | SCB_CRI | SCB_FLEE);
+	status->set_sc(SC_STEELBODY, SCB_DEF | SCB_MDEF | SCB_ASPD | SCB_SPEED);
+	status->set_sc(SC_EXPLOSIONSPIRITS, SCB_CRI | SCB_REGEN);
+	status->set_sc(SC_EXTREMITYFIST, SCB_REGEN);
 #ifdef RENEWAL
-	add_sc( RG_RAID              , SC_RAID            );
-	add_sc( RG_BACKSTAP          , SC_STUN            );
+	status->set_sc(SC_EXTREMITYFIST2, SCB_NONE);
 #endif
-	status->set_sc( RG_STRIPWEAPON       , SC_NOEQUIPWEAPON   , SCB_WATK );
-	status->set_sc( RG_STRIPSHIELD       , SC_NOEQUIPSHIELD   , SCB_DEF );
-	status->set_sc( RG_STRIPARMOR        , SC_NOEQUIPARMOR    , SCB_VIT );
-	status->set_sc( RG_STRIPHELM         , SC_NOEQUIPHELM     , SCB_INT );
-	add_sc( AM_ACIDTERROR        , SC_BLOODING        );
-	status->set_sc( AM_CP_WEAPON         , SC_PROTECTWEAPON   , SCB_NONE );
-	status->set_sc( AM_CP_SHIELD         , SC_PROTECTSHIELD   , SCB_NONE );
-	status->set_sc( AM_CP_ARMOR          , SC_PROTECTARMOR    , SCB_NONE );
-	status->set_sc( AM_CP_HELM           , SC_PROTECTHELM     , SCB_NONE );
-	status->set_sc( CR_AUTOGUARD         , SC_AUTOGUARD       , SCB_NONE );
-	add_sc( CR_SHIELDCHARGE      , SC_STUN            );
-	status->set_sc( CR_REFLECTSHIELD     , SC_REFLECTSHIELD   , SCB_NONE );
-	add_sc( CR_HOLYCROSS         , SC_BLIND           );
-	add_sc( CR_GRANDCROSS        , SC_BLIND           );
-	add_sc( CR_DEVOTION          , SC_DEVOTION        );
-	status->set_sc( CR_PROVIDENCE        , SC_PROVIDENCE      , SCB_ALL );
-	status->set_sc( CR_DEFENDER          , SC_DEFENDER        , SCB_SPEED|SCB_ASPD );
-	status->set_sc( CR_SPEARQUICKEN      , SC_SPEARQUICKEN    , SCB_ASPD|SCB_CRI|SCB_FLEE );
-	status->set_sc( MO_STEELBODY         , SC_STEELBODY       , SCB_DEF|SCB_MDEF|SCB_ASPD|SCB_SPEED );
-	add_sc( MO_BLADESTOP         , SC_BLADESTOP_WAIT  );
-	add_sc( MO_BLADESTOP         , SC_BLADESTOP       );
-	status->set_sc( MO_EXPLOSIONSPIRITS  , SC_EXPLOSIONSPIRITS, SCB_CRI|SCB_REGEN );
-	status->set_sc( MO_EXTREMITYFIST     , SC_EXTREMITYFIST   , SCB_REGEN );
-#ifdef RENEWAL
-	status->set_sc( MO_EXTREMITYFIST     , SC_EXTREMITYFIST2  , SCB_NONE );
-#endif
-	add_sc( SA_MAGICROD          , SC_MAGICROD        );
-	status->set_sc( SA_AUTOSPELL         , SC_AUTOSPELL       , SCB_NONE );
-	status->set_sc( SA_FLAMELAUNCHER     , SC_PROPERTYFIRE    , SCB_ATK_ELE );
-	status->set_sc( SA_FROSTWEAPON       , SC_PROPERTYWATER   , SCB_ATK_ELE );
-	status->set_sc( SA_LIGHTNINGLOADER   , SC_PROPERTYWIND    , SCB_ATK_ELE );
-	status->set_sc( SA_SEISMICWEAPON     , SC_PROPERTYGROUND  , SCB_ATK_ELE );
-	status->set_sc( SA_VOLCANO           , SC_VOLCANO         , SCB_WATK );
-	status->set_sc( SA_DELUGE            , SC_DELUGE          , SCB_MAXHP );
-	status->set_sc( SA_VIOLENTGALE       , SC_VIOLENTGALE     , SCB_FLEE );
-	add_sc( SA_REVERSEORCISH     , SC_ORCISH          );
-	add_sc( SA_COMA              , SC_COMA            );
-	status->set_sc( BD_ENCORE            , SC_DANCING         , SCB_SPEED|SCB_REGEN );
-	add_sc( BD_RICHMANKIM        , SC_RICHMANKIM      );
-	status->set_sc( BD_ETERNALCHAOS      , SC_ETERNALCHAOS    , SCB_DEF2 );
-	status->set_sc( BD_DRUMBATTLEFIELD   , SC_DRUMBATTLE      , SCB_WATK|SCB_DEF );
-	status->set_sc( BD_RINGNIBELUNGEN    , SC_NIBELUNGEN      , SCB_WATK );
-	add_sc( BD_ROKISWEIL         , SC_ROKISWEIL       );
-	add_sc( BD_INTOABYSS         , SC_INTOABYSS       );
-	status->set_sc( BD_SIEGFRIED         , SC_SIEGFRIED       , SCB_ALL );
-	add_sc( BA_FROSTJOKER        , SC_FREEZE          );
-	status->set_sc( BA_WHISTLE           , SC_WHISTLE         , SCB_FLEE|SCB_FLEE2 );
-	status->set_sc( BA_ASSASSINCROSS     , SC_ASSNCROS        , SCB_ASPD );
-	add_sc( BA_POEMBRAGI         , SC_POEMBRAGI       );
-	status->set_sc( BA_APPLEIDUN         , SC_APPLEIDUN       , SCB_MAXHP );
-	add_sc( DC_SCREAM            , SC_STUN            );
-	status->set_sc( DC_HUMMING           , SC_HUMMING         , SCB_HIT );
-	status->set_sc( DC_DONTFORGETME      , SC_DONTFORGETME    , SCB_SPEED|SCB_ASPD );
-	status->set_sc( DC_FORTUNEKISS       , SC_FORTUNE         , SCB_CRI );
-	status->set_sc( DC_SERVICEFORYOU     , SC_SERVICEFORYOU   , SCB_ALL );
-	add_sc( NPC_DARKCROSS        , SC_BLIND           );
-	add_sc( NPC_GRANDDARKNESS    , SC_BLIND           );
-	status->set_sc( NPC_STOP             , SC_STOP            , SCB_NONE );
-	status->set_sc( NPC_WEAPONBRAKER     , SC_BROKENWEAPON    , SCB_NONE );
-	status->set_sc( NPC_ARMORBRAKE       , SC_BROKENARMOR     , SCB_NONE );
-	status->set_sc( NPC_CHANGEUNDEAD     , SC_PROPERTYUNDEAD  , SCB_DEF_ELE );
-	status->set_sc( NPC_POWERUP          , SC_INCHITRATE      , SCB_HIT );
-	status->set_sc( NPC_AGIUP            , SC_INCFLEERATE     , SCB_FLEE );
-	add_sc( NPC_INVISIBLE        , SC_CLOAKING        );
-	status->set_sc( LK_AURABLADE         , SC_AURABLADE       , SCB_NONE );
-	status->set_sc( LK_PARRYING          , SC_PARRYING        , SCB_NONE );
+	status->set_sc(SC_AUTOSPELL, SCB_NONE);
+	status->set_sc(SC_PROPERTYFIRE, SCB_ATK_ELE);
+	status->set_sc(SC_PROPERTYWATER, SCB_ATK_ELE);
+	status->set_sc(SC_PROPERTYWIND, SCB_ATK_ELE);
+	status->set_sc(SC_PROPERTYGROUND, SCB_ATK_ELE);
+	status->set_sc(SC_VOLCANO, SCB_WATK);
+	status->set_sc(SC_DELUGE, SCB_MAXHP);
+	status->set_sc(SC_VIOLENTGALE, SCB_FLEE);
+	status->set_sc(SC_DANCING, SCB_SPEED | SCB_REGEN);
+	status->set_sc(SC_ETERNALCHAOS, SCB_DEF2);
+	status->set_sc(SC_DRUMBATTLE, SCB_WATK | SCB_DEF);
+	status->set_sc(SC_NIBELUNGEN, SCB_WATK);
+	status->set_sc(SC_SIEGFRIED, SCB_ALL);
+	status->set_sc(SC_WHISTLE, SCB_FLEE | SCB_FLEE2);
+	status->set_sc(SC_ASSNCROS, SCB_ASPD);
+	status->set_sc(SC_APPLEIDUN, SCB_MAXHP);
+	status->set_sc(SC_HUMMING, SCB_HIT);
+	status->set_sc(SC_DONTFORGETME, SCB_SPEED | SCB_ASPD);
+	status->set_sc(SC_FORTUNE, SCB_CRI);
+	status->set_sc(SC_SERVICEFORYOU, SCB_ALL);
+	status->set_sc(SC_STOP, SCB_NONE);
+	status->set_sc(SC_BROKENWEAPON, SCB_NONE);
+	status->set_sc(SC_BROKENARMOR, SCB_NONE);
+	status->set_sc(SC_PROPERTYUNDEAD, SCB_DEF_ELE);
+	status->set_sc(SC_INCHITRATE, SCB_HIT);
+	status->set_sc(SC_INCFLEERATE, SCB_FLEE);
+	status->set_sc(SC_AURABLADE, SCB_NONE);
+	status->set_sc(SC_PARRYING, SCB_NONE);
 #ifndef RENEWAL
-	status->set_sc( LK_CONCENTRATION     , SC_LKCONCENTRATION , SCB_BATK|SCB_WATK|SCB_HIT|SCB_DEF|SCB_DEF2);
+	status->set_sc(SC_LKCONCENTRATION, SCB_BATK | SCB_WATK | SCB_HIT | SCB_DEF | SCB_DEF2);
 #else
-	status->set_sc( LK_CONCENTRATION     , SC_LKCONCENTRATION , SCB_HIT|SCB_DEF);
+	status->set_sc(SC_LKCONCENTRATION, SCB_HIT | SCB_DEF);
 #endif
-	status->set_sc( LK_TENSIONRELAX      , SC_TENSIONRELAX    , SCB_REGEN );
-	status->set_sc( LK_BERSERK           , SC_BERSERK         , SCB_DEF|SCB_DEF2|SCB_MDEF|SCB_MDEF2|SCB_FLEE|SCB_SPEED|SCB_ASPD|SCB_MAXHP|SCB_REGEN );
-	status->set_sc( HP_ASSUMPTIO         , SC_ASSUMPTIO       , SCB_NONE );
-	add_sc( HP_BASILICA          , SC_BASILICA        );
-	status->set_sc( HW_MAGICPOWER        , SC_MAGICPOWER      , SCB_MATK );
-	add_sc( PA_SACRIFICE         , SC_SACRIFICE       );
-	status->set_sc( PA_GOSPEL            , SC_GOSPEL          , SCB_SPEED|SCB_ASPD );
-	add_sc( PA_GOSPEL            , SC_SCRESIST        );
-	add_sc( CH_TIGERFIST         , SC_STOP            );
-	status->set_sc( ASC_EDP              , SC_EDP             , SCB_NONE );
-	status->set_sc( SN_SIGHT             , SC_TRUESIGHT       , SCB_STR|SCB_AGI|SCB_VIT|SCB_INT|SCB_DEX|SCB_LUK|SCB_CRI|SCB_HIT );
-	status->set_sc( SN_WINDWALK          , SC_WINDWALK        , SCB_FLEE|SCB_SPEED );
-	status->set_sc( WS_MELTDOWN          , SC_MELTDOWN        , SCB_NONE );
-	status->set_sc( WS_CARTBOOST         , SC_CARTBOOST       , SCB_SPEED );
-	status->set_sc( ST_CHASEWALK         , SC_CHASEWALK       , SCB_SPEED );
-	status->set_sc( ST_REJECTSWORD       , SC_SWORDREJECT     , SCB_NONE );
-	add_sc( ST_REJECTSWORD       , SC_AUTOCOUNTER     );
-	status->set_sc( CG_MARIONETTE        , SC_MARIONETTE_MASTER      , SCB_STR|SCB_AGI|SCB_VIT|SCB_INT|SCB_DEX|SCB_LUK );
-	status->set_sc( CG_MARIONETTE        , SC_MARIONETTE     , SCB_STR|SCB_AGI|SCB_VIT|SCB_INT|SCB_DEX|SCB_LUK );
-	add_sc( LK_SPIRALPIERCE      , SC_STOP            );
-	add_sc( LK_HEADCRUSH         , SC_BLOODING        );
-	status->set_sc( LK_JOINTBEAT         , SC_JOINTBEAT       , SCB_BATK|SCB_DEF2|SCB_SPEED|SCB_ASPD );
-	add_sc( HW_NAPALMVULCAN      , SC_CURSE           );
-	status->set_sc( PF_MINDBREAKER       , SC_MINDBREAKER     , SCB_MATK|SCB_MDEF2 );
-	add_sc( PF_MEMORIZE          , SC_MEMORIZE        );
-	add_sc( PF_FOGWALL           , SC_FOGWALL         );
-	status->set_sc( PF_SPIDERWEB         , SC_SPIDERWEB       , SCB_FLEE );
-	status->set_sc( WE_BABY              , SC_BABY            , SCB_NONE );
-	status->set_sc( TK_RUN               , SC_RUN             , SCB_SPEED|SCB_DSPD );
-	status->set_sc( TK_RUN               , SC_STRUP           , SCB_STR );
-	status->set_sc( TK_READYSTORM        , SC_STORMKICK_READY      , SCB_NONE );
-	status->set_sc( TK_READYDOWN         , SC_DOWNKICK_READY       , SCB_NONE );
-	add_sc( TK_DOWNKICK          , SC_STUN            );
-	status->set_sc( TK_READYTURN         , SC_TURNKICK_READY       , SCB_NONE );
-	status->set_sc( TK_READYCOUNTER      , SC_COUNTERKICK_READY    , SCB_NONE );
-	status->set_sc( TK_DODGE             , SC_DODGE_READY          , SCB_NONE );
-	status->set_sc( TK_SPTIME            , SC_EARTHSCROLL     , SCB_NONE );
-	add_sc( TK_SEVENWIND         , SC_TK_SEVENWIND );
-	status->set_sc( TK_SEVENWIND         , SC_PROPERTYTELEKINESIS     , SCB_ATK_ELE );
-	status->set_sc( TK_SEVENWIND         , SC_PROPERTYDARK    , SCB_ATK_ELE );
-	status->set_sc( SG_SUN_WARM          , SC_WARM            , SCB_NONE );
-	add_sc( SG_MOON_WARM         , SC_WARM            );
-	add_sc( SG_STAR_WARM         , SC_WARM            );
-	status->set_sc( SG_SUN_COMFORT       , SC_SUN_COMFORT     , SCB_DEF2 );
-	status->set_sc( SG_MOON_COMFORT      , SC_MOON_COMFORT    , SCB_FLEE );
-	status->set_sc( SG_STAR_COMFORT      , SC_STAR_COMFORT    , SCB_ASPD );
-	add_sc( SG_FRIEND            , SC_SKILLRATE_UP    );
-	status->set_sc( SG_KNOWLEDGE         , SC_KNOWLEDGE       , SCB_ALL );
-	status->set_sc( SG_FUSION            , SC_FUSION          , SCB_SPEED );
-	status->set_sc( BS_ADRENALINE2       , SC_ADRENALINE2     , SCB_ASPD );
-	status->set_sc( SL_KAIZEL            , SC_KAIZEL          , SCB_NONE );
-	status->set_sc( SL_KAAHI             , SC_KAAHI           , SCB_NONE );
-	status->set_sc( SL_KAUPE             , SC_KAUPE           , SCB_NONE );
-	status->set_sc( SL_KAITE             , SC_KAITE           , SCB_NONE );
-	add_sc( SL_STUN              , SC_STUN            );
-	status->set_sc( SL_SWOO              , SC_SWOO            , SCB_SPEED );
-	status->set_sc( SL_SKE               , SC_SKE             , SCB_BATK|SCB_WATK|SCB_DEF|SCB_DEF2 );
-	status->set_sc( SL_SKA               , SC_SKA             , SCB_DEF|SCB_MDEF|SCB_ASPD );
-	status->set_sc( SL_SMA               , SC_SMA_READY       , SCB_NONE );
-	status->set_sc( SM_SELFPROVOKE       , SC_PROVOKE         , SCB_DEF|SCB_DEF2|SCB_BATK|SCB_WATK );
-	status->set_sc( ST_PRESERVE          , SC_PRESERVE        , SCB_NONE );
-	status->set_sc( PF_DOUBLECASTING     , SC_DOUBLECASTING   , SCB_NONE );
-	status->set_sc( HW_GRAVITATION       , SC_GRAVITATION     , SCB_ASPD );
-	add_sc( WS_CARTTERMINATION   , SC_STUN            );
-	status->set_sc( WS_OVERTHRUSTMAX     , SC_OVERTHRUSTMAX   , SCB_NONE );
-	status->set_sc( CG_LONGINGFREEDOM    , SC_LONGING         , SCB_SPEED|SCB_ASPD );
-	add_sc( CG_HERMODE           , SC_HERMODE         );
-	status->set_sc( CG_TAROTCARD         , SC_TAROTCARD       , SCB_NONE );
-	status->set_sc( ITEM_ENCHANTARMS     , SC_ENCHANTARMS     , SCB_ATK_ELE );
-	status->set_sc( SL_HIGH              , SC_SOULLINK        , SCB_ALL );
-	status->set_sc( KN_ONEHAND           , SC_ONEHANDQUICKEN  , SCB_ASPD );
-	status->set_sc( GS_FLING             , SC_FLING           , SCB_DEF|SCB_DEF2 );
-	add_sc( GS_CRACKER           , SC_STUN            );
-	add_sc( GS_DISARM            , SC_NOEQUIPWEAPON     );
-	add_sc( GS_PIERCINGSHOT      , SC_BLOODING        );
-	status->set_sc( GS_MADNESSCANCEL     , SC_GS_MADNESSCANCEL   , SCB_ASPD
+	status->set_sc(SC_TENSIONRELAX, SCB_REGEN);
+	status->set_sc(SC_BERSERK, SCB_DEF | SCB_DEF2 | SCB_MDEF | SCB_MDEF2 | SCB_FLEE | SCB_SPEED | SCB_ASPD | SCB_MAXHP | SCB_REGEN);
+	status->set_sc(SC_ASSUMPTIO, SCB_NONE);
+	status->set_sc(SC_MAGICPOWER, SCB_MATK);
+	status->set_sc(SC_GOSPEL, SCB_SPEED | SCB_ASPD);
+	status->set_sc(SC_EDP, SCB_NONE);
+	status->set_sc(SC_TRUESIGHT, SCB_STR | SCB_AGI | SCB_VIT | SCB_INT | SCB_DEX | SCB_LUK | SCB_CRI | SCB_HIT);
+	status->set_sc(SC_WINDWALK, SCB_FLEE | SCB_SPEED);
+	status->set_sc(SC_MELTDOWN, SCB_NONE);
+	status->set_sc(SC_CARTBOOST, SCB_SPEED);
+	status->set_sc(SC_CHASEWALK, SCB_SPEED);
+	status->set_sc(SC_SWORDREJECT, SCB_NONE);
+	status->set_sc(SC_MARIONETTE_MASTER, SCB_STR | SCB_AGI | SCB_VIT | SCB_INT | SCB_DEX | SCB_LUK);
+	status->set_sc(SC_MARIONETTE, SCB_STR | SCB_AGI | SCB_VIT | SCB_INT | SCB_DEX | SCB_LUK);
+	status->set_sc(SC_JOINTBEAT, SCB_BATK | SCB_DEF2 | SCB_SPEED | SCB_ASPD);
+	status->set_sc(SC_MINDBREAKER, SCB_MATK | SCB_MDEF2);
+	status->set_sc(SC_SPIDERWEB, SCB_FLEE);
+	status->set_sc(SC_BABY, SCB_NONE);
+	status->set_sc(SC_RUN, SCB_SPEED | SCB_DSPD);
+	status->set_sc(SC_STRUP, SCB_STR);
+	status->set_sc(SC_STORMKICK_READY, SCB_NONE);
+	status->set_sc(SC_DOWNKICK_READY, SCB_NONE);
+	status->set_sc(SC_TURNKICK_READY, SCB_NONE);
+	status->set_sc(SC_COUNTERKICK_READY, SCB_NONE);
+	status->set_sc(SC_DODGE_READY, SCB_NONE);
+	status->set_sc(SC_EARTHSCROLL, SCB_NONE);
+	status->set_sc(SC_PROPERTYTELEKINESIS, SCB_ATK_ELE);
+	status->set_sc(SC_PROPERTYDARK, SCB_ATK_ELE);
+	status->set_sc(SC_WARM, SCB_NONE);
+	status->set_sc(SC_SUN_COMFORT, SCB_DEF2);
+	status->set_sc(SC_MOON_COMFORT, SCB_FLEE);
+	status->set_sc(SC_STAR_COMFORT, SCB_ASPD);
+	status->set_sc(SC_KNOWLEDGE, SCB_ALL);
+	status->set_sc(SC_FUSION, SCB_SPEED);
+	status->set_sc(SC_ADRENALINE2, SCB_ASPD);
+	status->set_sc(SC_KAIZEL, SCB_NONE);
+	status->set_sc(SC_KAAHI, SCB_NONE);
+	status->set_sc(SC_KAUPE, SCB_NONE);
+	status->set_sc(SC_KAITE, SCB_NONE);
+	status->set_sc(SC_SWOO, SCB_SPEED);
+	status->set_sc(SC_SKE, SCB_BATK | SCB_WATK | SCB_DEF | SCB_DEF2);
+	status->set_sc(SC_SKA, SCB_DEF | SCB_MDEF | SCB_ASPD);
+	status->set_sc(SC_SMA_READY, SCB_NONE);
+	status->set_sc(SC_PROVOKE, SCB_DEF | SCB_DEF2 | SCB_BATK | SCB_WATK);
+	status->set_sc(SC_PRESERVE, SCB_NONE);
+	status->set_sc(SC_DOUBLECASTING, SCB_NONE);
+	status->set_sc(SC_GRAVITATION, SCB_ASPD);
+	status->set_sc(SC_OVERTHRUSTMAX, SCB_NONE);
+	status->set_sc(SC_LONGING, SCB_SPEED | SCB_ASPD);
+	status->set_sc(SC_TAROTCARD, SCB_NONE);
+	status->set_sc(SC_ENCHANTARMS, SCB_ATK_ELE);
+	status->set_sc(SC_SOULLINK, SCB_ALL);
+	status->set_sc(SC_ONEHANDQUICKEN, SCB_ASPD);
+	status->set_sc(SC_FLING, SCB_DEF | SCB_DEF2);
+	status->set_sc(SC_GS_MADNESSCANCEL, SCB_ASPD
 #ifndef RENEWAL
-		|SCB_BATK );
+		| SCB_BATK);
 #else
 		);
 #endif
-	status->set_sc( GS_ADJUSTMENT        , SC_GS_ADJUSTMENT      , SCB_HIT|SCB_FLEE );
-	status->set_sc( GS_INCREASING        , SC_GS_ACCURACY        , SCB_AGI|SCB_DEX|SCB_HIT );
-	status->set_sc( GS_GATLINGFEVER      , SC_GS_GATLINGFEVER    , SCB_FLEE|SCB_SPEED|SCB_ASPD
+	status->set_sc(SC_GS_ADJUSTMENT, SCB_HIT | SCB_FLEE);
+	status->set_sc(SC_GS_ACCURACY, SCB_AGI | SCB_DEX | SCB_HIT);
+	status->set_sc(SC_GS_GATLINGFEVER, SCB_FLEE | SCB_SPEED | SCB_ASPD
 #ifndef RENEWAL
-		|SCB_BATK );
+		| SCB_BATK);
 #else
 		);
 #endif
-	status->set_sc( NJ_TATAMIGAESHI      , SC_NJ_TATAMIGAESHI    , SCB_NONE );
-	status->set_sc( NJ_SUITON            , SC_NJ_SUITON          , SCB_AGI|SCB_SPEED );
-	add_sc( NJ_HYOUSYOURAKU      , SC_FREEZE          );
-	status->set_sc( NJ_NEN               , SC_NJ_NEN             , SCB_STR|SCB_INT );
-	status->set_sc( NJ_UTSUSEMI          , SC_NJ_UTSUSEMI        , SCB_NONE );
-	status->set_sc( NJ_BUNSINJYUTSU      , SC_NJ_BUNSINJYUTSU    , SCB_DYE );
+	status->set_sc(SC_NJ_TATAMIGAESHI, SCB_NONE);
+	status->set_sc(SC_NJ_SUITON, SCB_AGI | SCB_SPEED);
+	status->set_sc(SC_NJ_NEN, SCB_STR | SCB_INT);
+	status->set_sc(SC_NJ_UTSUSEMI, SCB_NONE);
+	status->set_sc(SC_NJ_BUNSINJYUTSU, SCB_DYE);
+	status->set_sc(SC_SLOWCAST, SCB_NONE);
+	status->set_sc(SC_CRITICALWOUND, SCB_NONE);
+	status->set_sc(SC_STONESKIN, SCB_DEF | SCB_MDEF);
 
-	add_sc( NPC_ICEBREATH        , SC_FREEZE          );
-	add_sc( NPC_ACIDBREATH       , SC_POISON          );
-	add_sc( NPC_HELLJUDGEMENT    , SC_CURSE           );
-	add_sc( NPC_WIDESILENCE      , SC_SILENCE         );
-	add_sc( NPC_WIDEFREEZE       , SC_FREEZE          );
-	add_sc( NPC_WIDEBLEEDING     , SC_BLOODING        );
-	add_sc( NPC_WIDESTONE        , SC_STONE           );
-	add_sc( NPC_WIDECONFUSE      , SC_CONFUSION       );
-	add_sc( NPC_WIDESLEEP        , SC_SLEEP           );
-	add_sc( NPC_WIDESIGHT        , SC_SIGHT           );
-	add_sc( NPC_EVILLAND         , SC_BLIND           );
-	add_sc( NPC_MAGICMIRROR      , SC_MAGICMIRROR     );
-	status->set_sc( NPC_SLOWCAST         , SC_SLOWCAST        , SCB_NONE );
-	status->set_sc( NPC_CRITICALWOUND    , SC_CRITICALWOUND   , SCB_NONE );
-	status->set_sc( NPC_STONESKIN        , SC_STONESKIN     , SCB_DEF|SCB_MDEF );
-	add_sc( NPC_ANTIMAGIC        , SC_STONESKIN     );
-	add_sc( NPC_WIDECURSE        , SC_CURSE           );
-	add_sc( NPC_WIDESTUN         , SC_STUN            );
+	status->set_sc(SC_HELLPOWER, SCB_NONE);
+	status->set_sc(SC_HELLPOWER, SCB_NONE);
+	status->set_sc(SC_INVINCIBLE, SCB_SPEED);
+	status->set_sc(SC_INVINCIBLEOFF, SCB_SPEED);
 
-	status->set_sc( NPC_HELLPOWER        , SC_HELLPOWER       , SCB_NONE );
-	status->set_sc( NPC_WIDEHELLDIGNITY  , SC_HELLPOWER       , SCB_NONE );
-	status->set_sc( NPC_INVINCIBLE       , SC_INVINCIBLE      , SCB_SPEED );
-	status->set_sc( NPC_INVINCIBLEOFF    , SC_INVINCIBLEOFF   , SCB_SPEED );
+	status->set_sc(SC_BLESSING, SCB_STR | SCB_INT | SCB_DEX);
+	status->set_sc(SC_INC_AGI, SCB_AGI | SCB_SPEED);
+	status->set_sc(SC_ASSUMPTIO, SCB_NONE);
 
-	status->set_sc( CASH_BLESSING        , SC_BLESSING        , SCB_STR|SCB_INT|SCB_DEX );
-	status->set_sc( CASH_INCAGI          , SC_INC_AGI         , SCB_AGI|SCB_SPEED );
-	status->set_sc( CASH_ASSUMPTIO       , SC_ASSUMPTIO       , SCB_NONE );
+	status->set_sc(SC_PARTYFLEE, SCB_NONE);
+	status->set_sc(SC_ODINS_POWER, SCB_WATK | SCB_MATK | SCB_MDEF | SCB_DEF);
 
-	status->set_sc( ALL_PARTYFLEE        , SC_PARTYFLEE       , SCB_NONE );
-	status->set_sc( ALL_ODINS_POWER      , SC_ODINS_POWER     , SCB_WATK | SCB_MATK | SCB_MDEF | SCB_DEF);
+	status->set_sc(SC_CR_SHRINK, SCB_NONE);
+	status->set_sc(SC_RG_CCONFINE_S, SCB_NONE);
+	status->set_sc(SC_RG_CCONFINE_M, SCB_FLEE);
+	status->set_sc(SC_WZ_SIGHTBLASTER, SCB_NONE);
+	status->set_sc(SC_DC_WINKCHARM, SCB_NONE);
 
-	status->set_sc( CR_SHRINK            , SC_CR_SHRINK       , SCB_NONE );
-	status->set_sc( RG_CLOSECONFINE      , SC_RG_CCONFINE_S   , SCB_NONE );
-	status->set_sc( RG_CLOSECONFINE      , SC_RG_CCONFINE_M   , SCB_FLEE );
-	status->set_sc( WZ_SIGHTBLASTER      , SC_WZ_SIGHTBLASTER , SCB_NONE );
-	status->set_sc( DC_WINKCHARM         , SC_DC_WINKCHARM    , SCB_NONE );
-	add_sc( MO_BALKYOUNG         , SC_STUN            );
-	add_sc( SA_ELEMENTWATER      , SC_ARMOR_PROPERTY );
-	add_sc( SA_ELEMENTFIRE       , SC_ARMOR_PROPERTY );
-	add_sc( SA_ELEMENTGROUND     , SC_ARMOR_PROPERTY );
-	add_sc( SA_ELEMENTWIND       , SC_ARMOR_PROPERTY );
-
-	status->set_sc( HLIF_AVOID           , SC_HLIF_AVOID           , SCB_SPEED );
-	status->set_sc( HLIF_CHANGE          , SC_HLIF_CHANGE          , SCB_VIT|SCB_INT );
-	status->set_sc( HFLI_FLEET           , SC_HLIF_FLEET           , SCB_ASPD|SCB_BATK|SCB_WATK );
-	status->set_sc( HFLI_SPEED           , SC_HLIF_SPEED           , SCB_FLEE );
-	status->set_sc( HAMI_DEFENCE         , SC_HAMI_DEFENCE         , SCB_DEF );
-	status->set_sc( HAMI_BLOODLUST       , SC_HAMI_BLOODLUST       , SCB_BATK|SCB_WATK );
+	status->set_sc(SC_HLIF_AVOID, SCB_SPEED);
+	status->set_sc(SC_HLIF_CHANGE, SCB_VIT | SCB_INT);
+	status->set_sc(SC_HLIF_FLEET, SCB_ASPD | SCB_BATK | SCB_WATK);
+	status->set_sc(SC_HLIF_SPEED, SCB_FLEE);
+	status->set_sc(SC_HAMI_DEFENCE, SCB_DEF);
+	status->set_sc(SC_HAMI_BLOODLUST, SCB_BATK | SCB_WATK);
 
 	// Homunculus S
-	status->set_sc( MH_LIGHT_OF_REGENE   , SC_LIGHT_OF_REGENE      , SCB_NONE );
-	status->set_sc( MH_OVERED_BOOST      , SC_OVERED_BOOST         , SCB_FLEE|SCB_ASPD|SCB_DEF );
+	status->set_sc(SC_LIGHT_OF_REGENE, SCB_NONE);
+	status->set_sc(SC_OVERED_BOOST, SCB_FLEE | SCB_ASPD | SCB_DEF);
+	status->set_sc(SC_ANGRIFFS_MODUS, SCB_BATK | SCB_DEF | SCB_FLEE | SCB_MAXHP);
+	status->set_sc(SC_GOLDENE_FERSE, SCB_ASPD | SCB_MAXHP);
+	status->set_sc(SC_VOLCANIC_ASH, SCB_DEF | SCB_DEF2 | SCB_HIT | SCB_BATK | SCB_FLEE);
+	status->set_sc(SC_GRANITIC_ARMOR, SCB_NONE);
+	status->set_sc(SC_MAGMA_FLOW, SCB_NONE);
+	status->set_sc(SC_PYROCLASTIC, SCB_BATK | SCB_ATK_ELE);
+	status->set_sc(SC_NEEDLE_OF_PARALYZE, SCB_DEF2);
+	status->set_sc(SC_PAIN_KILLER, SCB_ASPD);
 
-	add_sc(MH_STAHL_HORN, SC_STUN);
-	status->set_sc(MH_ANGRIFFS_MODUS, SC_ANGRIFFS_MODUS, SCB_BATK | SCB_DEF | SCB_FLEE | SCB_MAXHP);
-	status->set_sc(MH_GOLDENE_FERSE, SC_GOLDENE_FERSE,  SCB_ASPD|SCB_MAXHP);
-	add_sc( MH_STEINWAND, SC_SAFETYWALL );
-	status->set_sc(MH_VOLCANIC_ASH, SC_VOLCANIC_ASH, SCB_DEF|SCB_DEF2|SCB_HIT|SCB_BATK|SCB_FLEE);
-	status->set_sc(MH_GRANITIC_ARMOR, SC_GRANITIC_ARMOR, SCB_NONE);
-	status->set_sc(MH_MAGMA_FLOW, SC_MAGMA_FLOW, SCB_NONE);
-	status->set_sc(MH_PYROCLASTIC, SC_PYROCLASTIC, SCB_BATK|SCB_ATK_ELE);
-	add_sc(MH_LAVA_SLIDE, SC_BURNING);
-	status->set_sc(MH_NEEDLE_OF_PARALYZE, SC_NEEDLE_OF_PARALYZE, SCB_DEF2);
-	add_sc(MH_POISON_MIST, SC_BLIND);
-	status->set_sc(MH_PAIN_KILLER, SC_PAIN_KILLER, SCB_ASPD);
+	status->set_sc(SC_SILENCE, SCB_NONE);
+	status->set_sc(SC_RG_CCONFINE_S, SCB_NONE);
+	status->set_sc(SC_RG_CCONFINE_M, SCB_FLEE);
+	status->set_sc(SC_PROVOKE, SCB_DEF | SCB_DEF2 | SCB_BATK | SCB_WATK);
+	status->set_sc(SC_DEC_AGI, SCB_AGI | SCB_SPEED);
+	status->set_sc(SC_MAGNIFICAT, SCB_REGEN);
+	status->set_sc(SC_AUTOBERSERK, SCB_NONE);
+	status->set_sc(SC_AUTOGUARD, SCB_NONE);
+	status->set_sc(SC_REFLECTSHIELD, SCB_NONE);
+	status->set_sc(SC_DEFENDER, SCB_SPEED | SCB_ASPD);
+	status->set_sc(SC_PARRYING, SCB_NONE);
+	status->set_sc(SC_BERSERK, SCB_DEF | SCB_DEF2 | SCB_MDEF | SCB_MDEF2 | SCB_FLEE | SCB_SPEED | SCB_ASPD | SCB_MAXHP | SCB_REGEN);
+	status->set_sc(SC_MER_QUICKEN, SCB_ASPD);
+	status->set_sc(SC_KYRIE, SCB_NONE);
+	status->set_sc(SC_BLESSING, SCB_STR | SCB_INT | SCB_DEX);
+	status->set_sc(SC_INC_AGI, SCB_AGI | SCB_SPEED);
 
-	status->set_sc( MH_SILENT_BREEZE       , SC_SILENCE         , SCB_NONE );
-	add_sc( MH_STYLE_CHANGE        , SC_STYLE_CHANGE);
-	status->set_sc( MH_TINDER_BREAKER      , SC_RG_CCONFINE_S    , SCB_NONE );
-	status->set_sc( MH_TINDER_BREAKER      , SC_RG_CCONFINE_M    , SCB_FLEE );
+	status->set_sc(SC_LEADERSHIP, SCB_STR);
+	status->set_sc(SC_GLORYWOUNDS, SCB_VIT);
+	status->set_sc(SC_SOULCOLD, SCB_AGI);
+	status->set_sc(SC_HAWKEYES, SCB_DEX);
 
-	add_sc( MER_CRASH            , SC_STUN            );
-	status->set_sc( MER_PROVOKE          , SC_PROVOKE         , SCB_DEF|SCB_DEF2|SCB_BATK|SCB_WATK );
-	add_sc( MS_MAGNUM            , SC_SUB_WEAPONPROPERTY    );
-	add_sc( MER_SIGHT            , SC_SIGHT           );
-	status->set_sc( MER_DECAGI           , SC_DEC_AGI         , SCB_AGI|SCB_SPEED );
-	status->set_sc( MER_MAGNIFICAT       , SC_MAGNIFICAT      , SCB_REGEN );
-	add_sc( MER_LEXDIVINA        , SC_SILENCE         );
-	add_sc( MA_LANDMINE          , SC_STUN            );
-	add_sc( MA_SANDMAN           , SC_SLEEP           );
-	add_sc( MA_FREEZINGTRAP      , SC_FREEZE          );
-	status->set_sc( MER_AUTOBERSERK      , SC_AUTOBERSERK     , SCB_NONE );
-	status->set_sc( ML_AUTOGUARD         , SC_AUTOGUARD       , SCB_NONE );
-	status->set_sc( MS_REFLECTSHIELD     , SC_REFLECTSHIELD   , SCB_NONE );
-	status->set_sc( ML_DEFENDER          , SC_DEFENDER        , SCB_SPEED|SCB_ASPD );
-	status->set_sc( MS_PARRYING          , SC_PARRYING        , SCB_NONE );
-	status->set_sc( MS_BERSERK           , SC_BERSERK         , SCB_DEF|SCB_DEF2|SCB_MDEF|SCB_MDEF2|SCB_FLEE|SCB_SPEED|SCB_ASPD|SCB_MAXHP|SCB_REGEN );
-	add_sc( ML_SPIRALPIERCE      , SC_STOP            );
-	status->set_sc( MER_QUICKEN          , SC_MER_QUICKEN    , SCB_ASPD );
-	add_sc( ML_DEVOTION          , SC_DEVOTION        );
-	status->set_sc( MER_KYRIE            , SC_KYRIE           , SCB_NONE );
-	status->set_sc( MER_BLESSING         , SC_BLESSING        , SCB_STR|SCB_INT|SCB_DEX );
-	status->set_sc( MER_INCAGI           , SC_INC_AGI         , SCB_AGI|SCB_SPEED );
-
-	status->set_sc( GD_LEADERSHIP        , SC_LEADERSHIP      , SCB_STR );
-	status->set_sc( GD_GLORYWOUNDS       , SC_GLORYWOUNDS     , SCB_VIT );
-	status->set_sc( GD_SOULCOLD          , SC_SOULCOLD        , SCB_AGI );
-	status->set_sc( GD_HAWKEYES          , SC_HAWKEYES        , SCB_DEX );
-
-	status->set_sc( GD_BATTLEORDER       , SC_GDSKILL_BATTLEORDER    , SCB_STR|SCB_INT|SCB_DEX );
-	status->set_sc( GD_REGENERATION      , SC_GDSKILL_REGENERATION    , SCB_REGEN );
+	status->set_sc(SC_GDSKILL_BATTLEORDER, SCB_STR | SCB_INT | SCB_DEX);
+	status->set_sc(SC_GDSKILL_REGENERATION, SCB_REGEN);
 
 	/**
 	* Rune Knight
 	**/
-	status->set_sc( RK_ENCHANTBLADE      , SC_ENCHANTBLADE      , SCB_NONE );
-	status->set_sc( RK_DRAGONHOWLING     , SC_FEAR              , SCB_FLEE|SCB_HIT );
-	status->set_sc( RK_DEATHBOUND        , SC_DEATHBOUND        , SCB_NONE );
-	status->set_sc( RK_WINDCUTTER        , SC_FEAR              , SCB_FLEE|SCB_HIT );
-	add_sc( RK_DRAGONBREATH      , SC_BURNING );
-	status->set_sc( RK_MILLENNIUMSHIELD  , SC_MILLENNIUMSHIELD  , SCB_NONE );
-	status->set_sc( RK_REFRESH           , SC_REFRESH           , SCB_NONE );
-	status->set_sc( RK_GIANTGROWTH       , SC_GIANTGROWTH       , SCB_STR );
-	status->set_sc( RK_STONEHARDSKIN     , SC_STONEHARDSKIN     , SCB_NONE );
-	status->set_sc( RK_VITALITYACTIVATION, SC_VITALITYACTIVATION, SCB_REGEN );
-	status->set_sc( RK_FIGHTINGSPIRIT    , SC_FIGHTINGSPIRIT    , SCB_WATK|SCB_ASPD );
-	status->set_sc( RK_ABUNDANCE         , SC_ABUNDANCE         , SCB_NONE );
-	status->set_sc( RK_CRUSHSTRIKE       , SC_CRUSHSTRIKE       , SCB_NONE );
-	add_sc( RK_DRAGONBREATH_WATER, SC_FROSTMISTY );
+	status->set_sc(SC_ENCHANTBLADE, SCB_NONE);
+	status->set_sc(SC_FEAR, SCB_FLEE | SCB_HIT);
+	status->set_sc(SC_DEATHBOUND, SCB_NONE);
+	status->set_sc(SC_FEAR, SCB_FLEE | SCB_HIT);
+	status->set_sc(SC_MILLENNIUMSHIELD, SCB_NONE);
+	status->set_sc(SC_REFRESH, SCB_NONE);
+	status->set_sc(SC_GIANTGROWTH, SCB_STR);
+	status->set_sc(SC_STONEHARDSKIN, SCB_NONE);
+	status->set_sc(SC_VITALITYACTIVATION, SCB_REGEN);
+	status->set_sc(SC_FIGHTINGSPIRIT, SCB_WATK | SCB_ASPD);
+	status->set_sc(SC_ABUNDANCE, SCB_NONE);
+	status->set_sc(SC_CRUSHSTRIKE, SCB_NONE);
 	/**
 	* GC Guillotine Cross
 	**/
-	set_sc_with_vfx( GC_VENOMIMPRESS      , SC_VENOMIMPRESS     , SCB_NONE );
-	status->set_sc( GC_POISONINGWEAPON   , SC_POISONINGWEAPON  , SCB_NONE );
-	status->set_sc( GC_WEAPONBLOCKING    , SC_WEAPONBLOCKING   , SCB_NONE );
-	status->set_sc( GC_CLOAKINGEXCEED    , SC_CLOAKINGEXCEED   , SCB_SPEED );
-	status->set_sc( GC_HALLUCINATIONWALK , SC_HALLUCINATIONWALK, SCB_FLEE );
-	status->set_sc( GC_ROLLINGCUTTER     , SC_ROLLINGCUTTER    , SCB_NONE );
-	set_sc_with_vfx( GC_DARKCROW          , SC_DARKCROW         , SCB_NONE );
+	set_sc_with_vfx(SC_VENOMIMPRESS, SCB_NONE);
+	status->set_sc(SC_POISONINGWEAPON, SCB_NONE);
+	status->set_sc(SC_WEAPONBLOCKING, SCB_NONE);
+	status->set_sc(SC_CLOAKINGEXCEED, SCB_SPEED);
+	status->set_sc(SC_HALLUCINATIONWALK, SCB_FLEE);
+	status->set_sc(SC_ROLLINGCUTTER, SCB_NONE);
+	set_sc_with_vfx(SC_DARKCROW, SCB_NONE);
 	/**
 	* Arch Bishop
 	**/
-	status->set_sc( AB_ADORAMUS          , SC_ADORAMUS        , SCB_AGI|SCB_SPEED );
-	add_sc( AB_CLEMENTIA         , SC_BLESSING );
-	add_sc( AB_CANTO             , SC_INC_AGI );
-	status->set_sc( AB_EPICLESIS         , SC_EPICLESIS       , SCB_MAXHP );
-	add_sc( AB_PRAEFATIO         , SC_KYRIE );
-	set_sc_with_vfx( AB_ORATIO            , SC_ORATIO          , SCB_NONE );
-	status->set_sc( AB_LAUDAAGNUS        , SC_LAUDAAGNUS      , SCB_VIT );
-	status->set_sc( AB_LAUDARAMUS        , SC_LAUDARAMUS      , SCB_LUK );
-	status->set_sc( AB_RENOVATIO         , SC_RENOVATIO       , SCB_REGEN );
-	status->set_sc( AB_EXPIATIO          , SC_EXPIATIO        , SCB_ATK_ELE );
-	status->set_sc( AB_DUPLELIGHT        , SC_DUPLELIGHT      , SCB_NONE );
-	status->set_sc( AB_SECRAMENT         , SC_SECRAMENT       , SCB_NONE );
-	status->set_sc( AB_OFFERTORIUM       , SC_OFFERTORIUM     , SCB_NONE );
+	status->set_sc(SC_ADORAMUS, SCB_AGI | SCB_SPEED);
+	status->set_sc(SC_EPICLESIS, SCB_MAXHP);
+	set_sc_with_vfx(SC_ORATIO, SCB_NONE);
+	status->set_sc(SC_LAUDAAGNUS, SCB_VIT);
+	status->set_sc(SC_LAUDARAMUS, SCB_LUK);
+	status->set_sc(SC_RENOVATIO, SCB_REGEN);
+	status->set_sc(SC_EXPIATIO, SCB_ATK_ELE);
+	status->set_sc(SC_DUPLELIGHT, SCB_NONE);
+	status->set_sc(SC_SECRAMENT, SCB_NONE);
+	status->set_sc(SC_OFFERTORIUM, SCB_NONE);
 	/**
 	* Warlock
 	**/
-	add_sc( WL_WHITEIMPRISON     , SC_WHITEIMPRISON );
-	set_sc_with_vfx( WL_FROSTMISTY        , SC_FROSTMISTY        , SCB_ASPD|SCB_SPEED|SCB_DEF );
-	status->set_sc( WL_MARSHOFABYSS      , SC_MARSHOFABYSS    , SCB_SPEED|SCB_FLEE|SCB_AGI|SCB_DEX );
-	status->set_sc(WL_RECOGNIZEDSPELL   , SC_RECOGNIZEDSPELL , SCB_MATK);
-	status->set_sc( WL_STASIS            , SC_STASIS          , SCB_NONE );
-	status->set_sc( WL_TELEKINESIS_INTENSE, SC_TELEKINESIS_INTENSE     , SCB_MATK );
+	set_sc_with_vfx(SC_FROSTMISTY, SCB_ASPD | SCB_SPEED | SCB_DEF);
+	status->set_sc(SC_MARSHOFABYSS, SCB_SPEED | SCB_FLEE | SCB_AGI | SCB_DEX);
+	status->set_sc(SC_RECOGNIZEDSPELL, SCB_MATK);
+	status->set_sc(SC_STASIS, SCB_NONE);
+	status->set_sc(SC_TELEKINESIS_INTENSE, SCB_MATK);
 	/**
 	* Ranger
 	**/
-	status->set_sc( RA_FEARBREEZE        , SC_FEARBREEZE      , SCB_NONE );
-	status->set_sc( RA_ELECTRICSHOCKER   , SC_ELECTRICSHOCKER , SCB_NONE );
-	status->set_sc( RA_WUGDASH           , SC_WUGDASH         , SCB_SPEED );
-	status->set_sc( RA_CAMOUFLAGE        , SC_CAMOUFLAGE      , SCB_SPEED );
-	add_sc( RA_MAGENTATRAP       , SC_ARMOR_PROPERTY );
-	add_sc( RA_COBALTTRAP        , SC_ARMOR_PROPERTY );
-	add_sc( RA_MAIZETRAP         , SC_ARMOR_PROPERTY );
-	add_sc( RA_VERDURETRAP       , SC_ARMOR_PROPERTY );
-	add_sc( RA_FIRINGTRAP        , SC_BURNING );
-	add_sc( RA_ICEBOUNDTRAP      , SC_FROSTMISTY );
-	status->set_sc( RA_UNLIMIT           , SC_UNLIMIT         , SCB_DEF|SCB_DEF2|SCB_MDEF|SCB_MDEF2 );
+	status->set_sc(SC_FEARBREEZE, SCB_NONE);
+	status->set_sc(SC_ELECTRICSHOCKER, SCB_NONE);
+	status->set_sc(SC_WUGDASH, SCB_SPEED);
+	status->set_sc(SC_CAMOUFLAGE, SCB_SPEED);
+	status->set_sc(SC_UNLIMIT, SCB_DEF | SCB_DEF2 | SCB_MDEF | SCB_MDEF2);
 	/**
 	* Mechanic
 	**/
-	status->set_sc( NC_ACCELERATION      , SC_ACCELERATION    , SCB_SPEED );
-	status->set_sc( NC_HOVERING          , SC_HOVERING        , SCB_SPEED );
-	status->set_sc( NC_SHAPESHIFT        , SC_SHAPESHIFT      , SCB_DEF_ELE );
-	status->set_sc( NC_INFRAREDSCAN      , SC_INFRAREDSCAN    , SCB_FLEE );
-	status->set_sc( NC_ANALYZE           , SC_ANALYZE         , SCB_DEF|SCB_DEF2|SCB_MDEF|SCB_MDEF2 );
-	status->set_sc( NC_MAGNETICFIELD     , SC_MAGNETICFIELD   , SCB_NONE );
-	status->set_sc( NC_NEUTRALBARRIER    , SC_NEUTRALBARRIER  , SCB_DEF|SCB_MDEF );
-	status->set_sc( NC_STEALTHFIELD      , SC_STEALTHFIELD    , SCB_NONE );
+	status->set_sc(SC_ACCELERATION, SCB_SPEED);
+	status->set_sc(SC_HOVERING, SCB_SPEED);
+	status->set_sc(SC_SHAPESHIFT, SCB_DEF_ELE);
+	status->set_sc(SC_INFRAREDSCAN, SCB_FLEE);
+	status->set_sc(SC_ANALYZE, SCB_DEF | SCB_DEF2 | SCB_MDEF | SCB_MDEF2);
+	status->set_sc(SC_MAGNETICFIELD, SCB_NONE);
+	status->set_sc(SC_NEUTRALBARRIER, SCB_DEF | SCB_MDEF);
+	status->set_sc(SC_STEALTHFIELD, SCB_NONE);
 	/**
 	* Royal Guard
 	**/
-	status->set_sc( LG_REFLECTDAMAGE     , SC_LG_REFLECTDAMAGE   , SCB_NONE );
-	status->set_sc( LG_FORCEOFVANGUARD   , SC_FORCEOFVANGUARD , SCB_MAXHP );
-	status->set_sc( LG_EXEEDBREAK        , SC_EXEEDBREAK      , SCB_NONE );
-	status->set_sc( LG_PRESTIGE          , SC_PRESTIGE        , SCB_DEF );
-	status->set_sc( LG_BANDING           , SC_BANDING         , SCB_DEF2|SCB_WATK );// Renewal: atk2 & def2
-	status->set_sc( LG_PIETY             , SC_BENEDICTIO      , SCB_DEF_ELE );
-	status->set_sc( LG_EARTHDRIVE        , SC_EARTHDRIVE      , SCB_DEF|SCB_ASPD );
-	status->set_sc( LG_INSPIRATION       , SC_INSPIRATION     , SCB_MAXHP|SCB_WATK|SCB_HIT|SCB_VIT|SCB_AGI|SCB_STR|SCB_DEX|SCB_INT|SCB_LUK);
-	status->set_sc( LG_KINGS_GRACE       , SC_KINGS_GRACE     , SCB_NONE );
+	status->set_sc(SC_LG_REFLECTDAMAGE, SCB_NONE);
+	status->set_sc(SC_FORCEOFVANGUARD, SCB_MAXHP);
+	status->set_sc(SC_EXEEDBREAK, SCB_NONE);
+	status->set_sc(SC_PRESTIGE, SCB_DEF);
+	status->set_sc(SC_BANDING, SCB_DEF2 | SCB_WATK);// Renewal: atk2 & def2
+	status->set_sc(SC_BENEDICTIO, SCB_DEF_ELE);
+	status->set_sc(SC_EARTHDRIVE, SCB_DEF | SCB_ASPD);
+	status->set_sc(SC_INSPIRATION, SCB_MAXHP | SCB_WATK | SCB_HIT | SCB_VIT | SCB_AGI | SCB_STR | SCB_DEX | SCB_INT | SCB_LUK);
+	status->set_sc(SC_KINGS_GRACE, SCB_NONE);
 	/**
 	* Shadow Chaser
 	**/
-	status->set_sc( SC_REPRODUCE         , SC__REPRODUCE      , SCB_NONE );
-	status->set_sc( SC_AUTOSHADOWSPELL   , SC__AUTOSHADOWSPELL, SCB_NONE );
-	status->set_sc( SC_SHADOWFORM        , SC__SHADOWFORM     , SCB_NONE );
-	status->set_sc( SC_BODYPAINT         , SC__BODYPAINT      , SCB_ASPD );
-	status->set_sc( SC_INVISIBILITY      , SC__INVISIBILITY   , SCB_ASPD|SCB_CRI|SCB_ATK_ELE );
-	status->set_sc( SC_DEADLYINFECT      , SC__DEADLYINFECT   , SCB_NONE );
-	status->set_sc( SC_ENERVATION        , SC__ENERVATION     , SCB_BATK  );
-	status->set_sc( SC_GROOMY            , SC__GROOMY         , SCB_ASPD|SCB_HIT|SCB_SPEED );
-	status->set_sc( SC_IGNORANCE         , SC__IGNORANCE      , SCB_NONE );
-	status->set_sc( SC_LAZINESS          , SC__LAZINESS       , SCB_FLEE );
-	status->set_sc( SC_UNLUCKY           , SC__UNLUCKY        , SCB_CRI|SCB_FLEE2 );
-	status->set_sc( SC_WEAKNESS          , SC__WEAKNESS       , SCB_FLEE2|SCB_MAXHP );
-	status->set_sc( SC_STRIPACCESSARY    , SC__STRIPACCESSARY , SCB_DEX|SCB_INT|SCB_LUK );
-	set_sc_with_vfx( SC_MANHOLE           , SC__MANHOLE        , SCB_NONE );
-	add_sc( SC_CHAOSPANIC        , SC__CHAOS );
-	add_sc( SC_MAELSTROM         , SC__MAELSTROM );
-	add_sc( SC_BLOODYLUST        , SC_BERSERK );
+	status->set_sc(SC__REPRODUCE, SCB_NONE);
+	status->set_sc(SC__AUTOSHADOWSPELL, SCB_NONE);
+	status->set_sc(SC__SHADOWFORM, SCB_NONE);
+	status->set_sc(SC__BODYPAINT, SCB_ASPD);
+	status->set_sc(SC__INVISIBILITY, SCB_ASPD | SCB_CRI | SCB_ATK_ELE);
+	status->set_sc(SC__DEADLYINFECT, SCB_NONE);
+	status->set_sc(SC__ENERVATION, SCB_BATK);
+	status->set_sc(SC__GROOMY, SCB_ASPD | SCB_HIT | SCB_SPEED);
+	status->set_sc(SC__IGNORANCE, SCB_NONE);
+	status->set_sc(SC__LAZINESS, SCB_FLEE);
+	status->set_sc(SC__UNLUCKY, SCB_CRI | SCB_FLEE2);
+	status->set_sc(SC__WEAKNESS, SCB_FLEE2 | SCB_MAXHP);
+	status->set_sc(SC__STRIPACCESSARY, SCB_DEX | SCB_INT | SCB_LUK);
+	set_sc_with_vfx(SC__MANHOLE, SCB_NONE);
 
 	/**
 	* Sura
 	**/
-	add_sc( SR_DRAGONCOMBO           , SC_STUN            );
-	add_sc( SR_EARTHSHAKER           , SC_STUN            );
-	status->set_sc( SR_FALLENEMPIRE          , SC_FALLENEMPIRE       , SCB_NONE );
-	status->set_sc( SR_CRESCENTELBOW         , SC_CRESCENTELBOW      , SCB_NONE );
-	set_sc_with_vfx( SR_CURSEDCIRCLE          , SC_CURSEDCIRCLE_TARGET, SCB_NONE );
-	status->set_sc( SR_LIGHTNINGWALK         , SC_LIGHTNINGWALK      , SCB_NONE );
-	status->set_sc( SR_RAISINGDRAGON         , SC_RAISINGDRAGON      , SCB_REGEN|SCB_MAXHP|SCB_MAXSP );
-	status->set_sc( SR_GENTLETOUCH_ENERGYGAIN, SC_GENTLETOUCH_ENERGYGAIN      , SCB_NONE );
-	status->set_sc( SR_GENTLETOUCH_CHANGE    , SC_GENTLETOUCH_CHANGE          , SCB_ASPD|SCB_MDEF|SCB_MAXHP );
-	status->set_sc( SR_GENTLETOUCH_REVITALIZE, SC_GENTLETOUCH_REVITALIZE      , SCB_MAXHP|SCB_DEF2|SCB_REGEN );
-	status->set_sc( SR_FLASHCOMBO            , SC_FLASHCOMBO                  , SCB_WATK );
+	status->set_sc(SC_FALLENEMPIRE, SCB_NONE);
+	status->set_sc(SC_CRESCENTELBOW, SCB_NONE);
+	set_sc_with_vfx(SC_CURSEDCIRCLE_TARGET, SCB_NONE);
+	status->set_sc(SC_LIGHTNINGWALK, SCB_NONE);
+	status->set_sc(SC_RAISINGDRAGON, SCB_REGEN | SCB_MAXHP | SCB_MAXSP);
+	status->set_sc(SC_GENTLETOUCH_ENERGYGAIN, SCB_NONE);
+	status->set_sc(SC_GENTLETOUCH_CHANGE, SCB_ASPD | SCB_MDEF | SCB_MAXHP);
+	status->set_sc(SC_GENTLETOUCH_REVITALIZE, SCB_MAXHP | SCB_DEF2 | SCB_REGEN);
+	status->set_sc(SC_FLASHCOMBO, SCB_WATK);
 	/**
 	* Wanderer / Minstrel
 	**/
-	status->set_sc( WA_SWING_DANCE            , SC_SWING                  , SCB_SPEED|SCB_ASPD );
-	status->set_sc( WA_SYMPHONY_OF_LOVER      , SC_SYMPHONY_LOVE          , SCB_MDEF );
-	status->set_sc( WA_MOONLIT_SERENADE       , SC_MOONLIT_SERENADE       , SCB_MATK );
-	status->set_sc( MI_RUSH_WINDMILL          , SC_RUSH_WINDMILL          , SCB_WATK  );
-	status->set_sc( MI_ECHOSONG               , SC_ECHOSONG               , SCB_DEF2  );
-	status->set_sc( MI_HARMONIZE              , SC_HARMONIZE              , SCB_STR|SCB_AGI|SCB_VIT|SCB_INT|SCB_DEX|SCB_LUK );
-	set_sc_with_vfx(WM_POEMOFNETHERWORLD, SC_NETHERWORLD          , SCB_NONE);
-	set_sc_with_vfx( WM_VOICEOFSIREN        , SC_SIREN            , SCB_NONE );
-	set_sc_with_vfx( WM_LULLABY_DEEPSLEEP   , SC_DEEP_SLEEP       , SCB_NONE );
-	status->set_sc( WM_SIRCLEOFNATURE         , SC_SIRCLEOFNATURE         , SCB_NONE );
-	status->set_sc( WM_GLOOMYDAY              , SC_GLOOMYDAY              , SCB_FLEE|SCB_ASPD );
-	status->set_sc( WM_SONG_OF_MANA           , SC_SONG_OF_MANA           , SCB_NONE );
-	status->set_sc( WM_DANCE_WITH_WUG         , SC_DANCE_WITH_WUG         , SCB_ASPD );
-	status->set_sc( WM_SATURDAY_NIGHT_FEVER   , SC_SATURDAY_NIGHT_FEVER   , SCB_BATK|SCB_DEF|SCB_FLEE|SCB_REGEN );
-	status->set_sc( WM_LERADS_DEW             , SC_LERADS_DEW             , SCB_MAXHP );
-	status->set_sc( WM_MELODYOFSINK           , SC_MELODYOFSINK           , SCB_INT );
-	status->set_sc( WM_BEYOND_OF_WARCRY       , SC_BEYOND_OF_WARCRY       , SCB_STR|SCB_CRI|SCB_MAXHP );
-	status->set_sc( WM_UNLIMITED_HUMMING_VOICE, SC_UNLIMITED_HUMMING_VOICE, SCB_NONE );
-	status->set_sc( WM_FRIGG_SONG             , SC_FRIGG_SONG             , SCB_MAXHP );
-	status->set_sc( WM_SEVERE_RAINSTORM       , SC_NO_SWITCH_EQUIP        , SCB_NONE );
+	status->set_sc(SC_SWING, SCB_SPEED | SCB_ASPD);
+	status->set_sc(SC_SYMPHONY_LOVE, SCB_MDEF);
+	status->set_sc(SC_MOONLIT_SERENADE, SCB_MATK);
+	status->set_sc(SC_RUSH_WINDMILL, SCB_WATK);
+	status->set_sc(SC_ECHOSONG, SCB_DEF2);
+	status->set_sc(SC_HARMONIZE, SCB_STR | SCB_AGI | SCB_VIT | SCB_INT | SCB_DEX | SCB_LUK);
+	set_sc_with_vfx(SC_NETHERWORLD, SCB_NONE);
+	set_sc_with_vfx(SC_SIREN, SCB_NONE);
+	set_sc_with_vfx(SC_DEEP_SLEEP, SCB_NONE);
+	status->set_sc(SC_SIRCLEOFNATURE, SCB_NONE);
+	status->set_sc(SC_GLOOMYDAY, SCB_FLEE | SCB_ASPD);
+	status->set_sc(SC_SONG_OF_MANA, SCB_NONE);
+	status->set_sc(SC_DANCE_WITH_WUG, SCB_ASPD);
+	status->set_sc(SC_SATURDAY_NIGHT_FEVER, SCB_BATK | SCB_DEF | SCB_FLEE | SCB_REGEN);
+	status->set_sc(SC_LERADS_DEW, SCB_MAXHP);
+	status->set_sc(SC_MELODYOFSINK, SCB_INT);
+	status->set_sc(SC_BEYOND_OF_WARCRY, SCB_STR | SCB_CRI | SCB_MAXHP);
+	status->set_sc(SC_UNLIMITED_HUMMING_VOICE, SCB_NONE);
+	status->set_sc(SC_FRIGG_SONG, SCB_MAXHP);
+	status->set_sc(SC_NO_SWITCH_EQUIP, SCB_NONE);
 
 	/**
 	* Sorcerer
 	**/
-	status->set_sc( SO_FIREWALK          , SC_PROPERTYWALK    , SCB_NONE );
-	status->set_sc( SO_ELECTRICWALK      , SC_PROPERTYWALK    , SCB_NONE );
-	status->set_sc( SO_SPELLFIST         , SC_SPELLFIST       , SCB_NONE );
-	set_sc_with_vfx( SO_DIAMONDDUST       , SC_COLD      , SCB_NONE ); // it does show the snow icon on mobs but doesn't affect it.
-	status->set_sc( SO_CLOUD_KILL        , SC_POISON          , SCB_NONE );
-	status->set_sc( SO_STRIKING          , SC_STRIKING        , SCB_WATK|SCB_CRI );
-	add_sc( SO_WARMER            , SC_WARMER          ); // At the moment, no icon on officials
-	status->set_sc( SO_VACUUM_EXTREME    , SC_VACUUM_EXTREME  , SCB_NONE );
-	status->set_sc( SO_ARRULLO           , SC_DEEP_SLEEP       , SCB_NONE );
-	status->set_sc( SO_FIRE_INSIGNIA     , SC_FIRE_INSIGNIA   , SCB_MATK | SCB_BATK | SCB_WATK | SCB_ATK_ELE | SCB_REGEN );
-	status->set_sc( SO_WATER_INSIGNIA    , SC_WATER_INSIGNIA  , SCB_WATK | SCB_ATK_ELE | SCB_REGEN );
-	status->set_sc( SO_WIND_INSIGNIA     , SC_WIND_INSIGNIA   , SCB_WATK | SCB_ATK_ELE | SCB_REGEN );
-	status->set_sc( SO_EARTH_INSIGNIA    , SC_EARTH_INSIGNIA  , SCB_MDEF|SCB_DEF|SCB_MAXHP|SCB_MAXSP|SCB_WATK | SCB_ATK_ELE | SCB_REGEN );
-	add_sc( SO_ELEMENTAL_SHIELD  , SC_SAFETYWALL );
+	status->set_sc(SC_PROPERTYWALK, SCB_NONE);
+	status->set_sc(SC_PROPERTYWALK, SCB_NONE);
+	status->set_sc(SC_SPELLFIST, SCB_NONE);
+	set_sc_with_vfx(SC_COLD, SCB_NONE); // it does show the snow icon on mobs but doesn't affect it.
+	status->set_sc(SC_POISON, SCB_NONE);
+	status->set_sc(SC_STRIKING, SCB_WATK | SCB_CRI);
+	status->set_sc(SC_VACUUM_EXTREME, SCB_NONE);
+	status->set_sc(SC_DEEP_SLEEP, SCB_NONE);
+	status->set_sc(SC_FIRE_INSIGNIA, SCB_MATK | SCB_BATK | SCB_WATK | SCB_ATK_ELE | SCB_REGEN);
+	status->set_sc(SC_WATER_INSIGNIA, SCB_WATK | SCB_ATK_ELE | SCB_REGEN);
+	status->set_sc(SC_WIND_INSIGNIA, SCB_WATK | SCB_ATK_ELE | SCB_REGEN);
+	status->set_sc(SC_EARTH_INSIGNIA, SCB_MDEF | SCB_DEF | SCB_MAXHP | SCB_MAXSP | SCB_WATK | SCB_ATK_ELE | SCB_REGEN);
 	/**
 	* Genetic
 	**/
-	status->set_sc( GN_CARTBOOST                  , SC_GN_CARTBOOST, SCB_SPEED );
-	status->set_sc( GN_THORNS_TRAP                , SC_THORNS_TRAP  , SCB_NONE );
-	set_sc_with_vfx( GN_BLOOD_SUCKER      , SC_BLOOD_SUCKER , SCB_NONE );
-	status->set_sc( GN_WALLOFTHORN                , SC_STOP        , SCB_NONE );
-	status->set_sc( GN_FIRE_EXPANSION_SMOKE_POWDER, SC_FIRE_EXPANSION_SMOKE_POWDER , SCB_NONE );
-	status->set_sc( GN_FIRE_EXPANSION_TEAR_GAS    , SC_FIRE_EXPANSION_TEAR_GAS     , SCB_NONE );
-	status->set_sc( GN_MANDRAGORA                 , SC_MANDRAGORA  , SCB_INT );
+	status->set_sc(SC_GN_CARTBOOST, SCB_SPEED);
+	status->set_sc(SC_THORNS_TRAP, SCB_NONE);
+	set_sc_with_vfx(SC_BLOOD_SUCKER, SCB_NONE);
+	status->set_sc(SC_STOP, SCB_NONE);
+	status->set_sc(SC_FIRE_EXPANSION_SMOKE_POWDER, SCB_NONE);
+	status->set_sc(SC_FIRE_EXPANSION_TEAR_GAS, SCB_NONE);
+	status->set_sc(SC_MANDRAGORA, SCB_INT);
 
 	/**
 	 * Summoner
 	 */
-	status->set_sc(SU_HIDE, SC_SUHIDE, SCB_SPEED);
-	add_sc(SU_SCRATCH, SC_BLOODING);
-	status->set_sc(SU_STOOP, SC_SU_STOOP, SCB_NONE);
-	status->set_sc(SU_FRESHSHRIMP, SC_FRESHSHRIMP, SCB_NONE);
-	add_sc(SU_SV_STEMSPEAR, SC_BLOODING);
-	status->set_sc(SU_CN_POWDERING, SC_CATNIPPOWDER, SCB_WATK | SCB_SPEED | SCB_REGEN);
-	add_sc(SU_CN_METEOR, SC_CURSE);
-	set_sc_with_vfx(SU_SV_ROOTTWIST, SC_SV_ROOTTWIST, SCB_NONE);
-	add_sc(SU_SCAROFTAROU, SC_STUN );
-	status->set_sc(SU_SCAROFTAROU, SC_BITESCAR, SCB_NONE);
-	status->set_sc(SU_ARCLOUSEDASH, SC_ARCLOUSEDASH, SCB_AGI | SCB_SPEED);
-	add_sc(SU_LUNATICCARROTBEAT, SC_STUN);
-	status->set_sc(SU_TUNAPARTY, SC_TUNAPARTY, SCB_NONE);
-	status->set_sc(SU_BUNCHOFSHRIMP, SC_SHRIMP, SCB_BATK | SCB_MATK);
+	status->set_sc(SC_SUHIDE, SCB_SPEED);
+	status->set_sc(SC_SU_STOOP, SCB_NONE);
+	status->set_sc(SC_FRESHSHRIMP, SCB_NONE);
+	status->set_sc(SC_CATNIPPOWDER, SCB_WATK | SCB_SPEED | SCB_REGEN);
+	set_sc_with_vfx(SC_SV_ROOTTWIST, SCB_NONE);
+	status->set_sc(SC_BITESCAR, SCB_NONE);
+	status->set_sc(SC_ARCLOUSEDASH, SCB_AGI | SCB_SPEED);
+	status->set_sc(SC_TUNAPARTY, SCB_NONE);
+	status->set_sc(SC_SHRIMP, SCB_BATK | SCB_MATK);
 
 	// Elemental Spirit summoner's 'side' status changes.
-	status->set_sc( EL_CIRCLE_OF_FIRE  , SC_CIRCLE_OF_FIRE_OPTION, SCB_NONE );
-	status->set_sc( EL_FIRE_CLOAK      , SC_FIRE_CLOAK_OPTION    , SCB_ALL );
-	status->set_sc( EL_WATER_SCREEN    , SC_WATER_SCREEN_OPTION  , SCB_NONE );
-	status->set_sc( EL_WATER_DROP      , SC_WATER_DROP_OPTION    , SCB_ALL );
-	status->set_sc( EL_WATER_BARRIER   , SC_WATER_BARRIER        , SCB_WATK|SCB_FLEE );
-	status->set_sc( EL_WIND_STEP       , SC_WIND_STEP_OPTION     , SCB_SPEED|SCB_FLEE );
-	status->set_sc( EL_WIND_CURTAIN    , SC_WIND_CURTAIN_OPTION  , SCB_ALL );
-	status->set_sc( EL_ZEPHYR          , SC_ZEPHYR               , SCB_FLEE );
-	status->set_sc( EL_SOLID_SKIN      , SC_SOLID_SKIN_OPTION    , SCB_DEF|SCB_MAXHP );
-	status->set_sc( EL_STONE_SHIELD    , SC_STONE_SHIELD_OPTION  , SCB_ALL );
-	status->set_sc( EL_POWER_OF_GAIA   , SC_POWER_OF_GAIA        , SCB_MAXHP|SCB_DEF|SCB_SPEED );
-	status->set_sc( EL_PYROTECHNIC     , SC_PYROTECHNIC_OPTION   , SCB_WATK );
-	status->set_sc( EL_HEATER          , SC_HEATER_OPTION        , SCB_WATK );
-	status->set_sc( EL_TROPIC          , SC_TROPIC_OPTION        , SCB_WATK );
-	status->set_sc( EL_AQUAPLAY        , SC_AQUAPLAY_OPTION      , SCB_MATK );
-	status->set_sc( EL_COOLER          , SC_COOLER_OPTION        , SCB_MATK );
-	status->set_sc( EL_CHILLY_AIR      , SC_CHILLY_AIR_OPTION    , SCB_MATK );
-	status->set_sc( EL_GUST            , SC_GUST_OPTION          , SCB_ASPD );
-	status->set_sc( EL_BLAST           , SC_BLAST_OPTION         , SCB_ASPD );
-	status->set_sc( EL_WILD_STORM      , SC_WILD_STORM_OPTION    , SCB_ASPD );
-	status->set_sc( EL_PETROLOGY       , SC_PETROLOGY_OPTION     , SCB_MAXHP );
-	status->set_sc( EL_CURSED_SOIL     , SC_CURSED_SOIL_OPTION   , SCB_MAXHP );
-	status->set_sc( EL_UPHEAVAL        , SC_UPHEAVAL_OPTION      , SCB_MAXHP );
-	status->set_sc( EL_TIDAL_WEAPON    , SC_TIDAL_WEAPON_OPTION  , SCB_ALL );
-	status->set_sc( EL_ROCK_CRUSHER    , SC_ROCK_CRUSHER         , SCB_DEF );
-	status->set_sc( EL_ROCK_CRUSHER_ATK, SC_ROCK_CRUSHER_ATK     , SCB_SPEED );
+	status->set_sc(SC_CIRCLE_OF_FIRE_OPTION, SCB_NONE);
+	status->set_sc(SC_FIRE_CLOAK_OPTION, SCB_ALL);
+	status->set_sc(SC_WATER_SCREEN_OPTION, SCB_NONE);
+	status->set_sc(SC_WATER_DROP_OPTION, SCB_ALL);
+	status->set_sc(SC_WATER_BARRIER, SCB_WATK | SCB_FLEE);
+	status->set_sc(SC_WIND_STEP_OPTION, SCB_SPEED | SCB_FLEE);
+	status->set_sc(SC_WIND_CURTAIN_OPTION, SCB_ALL);
+	status->set_sc(SC_ZEPHYR, SCB_FLEE);
+	status->set_sc(SC_SOLID_SKIN_OPTION, SCB_DEF | SCB_MAXHP);
+	status->set_sc(SC_STONE_SHIELD_OPTION, SCB_ALL);
+	status->set_sc(SC_POWER_OF_GAIA, SCB_MAXHP | SCB_DEF | SCB_SPEED);
+	status->set_sc(SC_PYROTECHNIC_OPTION, SCB_WATK);
+	status->set_sc(SC_HEATER_OPTION, SCB_WATK);
+	status->set_sc(SC_TROPIC_OPTION, SCB_WATK);
+	status->set_sc(SC_AQUAPLAY_OPTION, SCB_MATK);
+	status->set_sc(SC_COOLER_OPTION, SCB_MATK);
+	status->set_sc(SC_CHILLY_AIR_OPTION, SCB_MATK);
+	status->set_sc(SC_GUST_OPTION, SCB_ASPD);
+	status->set_sc(SC_BLAST_OPTION, SCB_ASPD);
+	status->set_sc(SC_WILD_STORM_OPTION, SCB_ASPD);
+	status->set_sc(SC_PETROLOGY_OPTION, SCB_MAXHP);
+	status->set_sc(SC_CURSED_SOIL_OPTION, SCB_MAXHP);
+	status->set_sc(SC_UPHEAVAL_OPTION, SCB_MAXHP);
+	status->set_sc(SC_TIDAL_WEAPON_OPTION, SCB_ALL);
+	status->set_sc(SC_ROCK_CRUSHER, SCB_DEF);
+	status->set_sc(SC_ROCK_CRUSHER_ATK, SCB_SPEED);
+	set_sc_with_vfx(SC_KO_JYUMONJIKIRI, SCB_NONE);
+	status->set_sc(SC_MEIKYOUSISUI, SCB_NONE);
+	status->set_sc(SC_KYOUGAKU, SCB_STR | SCB_AGI | SCB_VIT | SCB_INT | SCB_DEX | SCB_LUK);
+	status->set_sc(SC_ZENKAI, SCB_NONE);
+	status->set_sc(SC_IZAYOI, SCB_MATK);
+	status->set_sc(SC_KYOMU, SCB_NONE);
+	status->set_sc(SC_KAGEMUSYA, SCB_NONE);
+	status->set_sc(SC_KG_KAGEHUMI, SCB_NONE);
+	status->set_sc(SC_ZANGETSU, SCB_MATK | SCB_BATK);
+	set_sc_with_vfx(SC_AKAITSUKI, SCB_NONE);
+	status->set_sc(SC_GENSOU, SCB_NONE);
 
-	add_sc( KO_YAMIKUMO          , SC_HIDING         );
-	set_sc_with_vfx( KO_JYUMONJIKIRI                 , SC_KO_JYUMONJIKIRI      , SCB_NONE );
-	add_sc( KO_MAKIBISHI         , SC_STUN           );
-	status->set_sc( KO_MEIKYOUSISUI      , SC_MEIKYOUSISUI   , SCB_NONE );
-	status->set_sc( KO_KYOUGAKU          , SC_KYOUGAKU       , SCB_STR|SCB_AGI|SCB_VIT|SCB_INT|SCB_DEX|SCB_LUK );
-	add_sc( KO_JYUSATSU          , SC_CURSE          );
-	status->set_sc( KO_ZENKAI            , SC_ZENKAI         , SCB_NONE );
-	status->set_sc( KO_IZAYOI            , SC_IZAYOI         , SCB_MATK );
-	status->set_sc( KG_KYOMU             , SC_KYOMU          , SCB_NONE );
-	status->set_sc( KG_KAGEMUSYA         , SC_KAGEMUSYA      , SCB_NONE );
-	status->set_sc( KG_KAGEHUMI          , SC_KG_KAGEHUMI    , SCB_NONE );
-	status->set_sc( OB_ZANGETSU          , SC_ZANGETSU       , SCB_MATK|SCB_BATK );
-	set_sc_with_vfx( OB_AKAITSUKI, SC_AKAITSUKI      , SCB_NONE );
-	status->set_sc( OB_OBOROGENSOU       , SC_GENSOU         , SCB_NONE );
+	status->set_sc(SC_FULL_THROTTLE, SCB_SPEED | SCB_STR | SCB_AGI | SCB_VIT | SCB_INT | SCB_DEX | SCB_LUK);
+	status->set_sc(SC_ANGEL_PROTECT, SCB_REGEN);
 
-	status->set_sc( ALL_FULL_THROTTLE    , SC_FULL_THROTTLE  , SCB_SPEED|SCB_STR|SCB_AGI|SCB_VIT|SCB_INT|SCB_DEX|SCB_LUK );
-
-	add_sc( ALL_REVERSEORCISH    , SC_ORCISH         );
-	status->set_sc( ALL_ANGEL_PROTECT    , SC_ANGEL_PROTECT  , SCB_REGEN );
-
-	add_sc( NPC_WIDEHEALTHFEAR   , SC_FEAR           );
-	add_sc( NPC_WIDEBODYBURNNING , SC_BURNING        );
-	add_sc( NPC_WIDEFROSTMISTY   , SC_FROSTMISTY     );
-	add_sc( NPC_WIDECOLD         , SC_COLD           );
-	add_sc( NPC_WIDE_DEEP_SLEEP  , SC_DEEP_SLEEP     );
-	add_sc( NPC_WIDESIREN        , SC_SIREN          );
-
-	set_sc_with_vfx( GN_ILLUSIONDOPING   , SC_ILLUSIONDOPING    , SCB_HIT );
+	set_sc_with_vfx(SC_ILLUSIONDOPING, SCB_HIT);
 
 	// Storing the target job rather than simply SC_SOULLINK simplifies code later on.
 	status->dbs->Skill2SCTable[skill->get_index(SL_ALCHEMIST)]   = (sc_type)MAPID_ALCHEMIST,
@@ -896,6 +720,8 @@ static void initChangeTables(void)
 	status->dbs->ChangeFlagTable[SC_SKF_ASPD] |= SCB_ASPD;
 	status->dbs->ChangeFlagTable[SC_SKF_CAST] |= SCB_NONE;
 	status->dbs->ChangeFlagTable[SC_ALMIGHTY] |= SCB_BATK | SCB_MATK;
+	status->dbs->ChangeFlagTable[SC_WEIGHTOVER50] |= SCB_REGEN;
+	status->dbs->ChangeFlagTable[SC_WEIGHTOVER90] |= SCB_REGEN;
 
 	// Cash Items
 	status->dbs->ChangeFlagTable[SC_FOOD_STR_CASH] |= SCB_STR;
@@ -1008,7 +834,6 @@ static void initChangeTables(void)
 	status->dbs->ChangeFlagTable[SC_MAGICAL_FEATHER] |= SCB_NONE;
 	status->dbs->ChangeFlagTable[SC_BLOSSOM_FLUTTERING] |= SCB_NONE;
 
-#undef add_sc
 #undef set_sc_with_vfx
 }
 
@@ -1281,12 +1106,12 @@ static int status_damage(struct block_list *src, struct block_list *target, int6
 	if(target->type&BL_REGEN) {
 		//Reset regen ticks.
 		struct regen_data *regen = status->get_regen_data(target);
-		if (regen) {
+		if (regen != NULL) {
 			memset(&regen->tick, 0, sizeof(regen->tick));
-			if (regen->sregen)
-				memset(&regen->sregen->tick, 0, sizeof(regen->sregen->tick));
-			if (regen->ssregen)
-				memset(&regen->ssregen->tick, 0, sizeof(regen->ssregen->tick));
+			if (regen->skill != NULL)
+				memset(&regen->skill->tick, 0, sizeof(regen->skill->tick));
+			if (regen->sitting != NULL)
+				memset(&regen->sitting->tick, 0, sizeof(regen->sitting->tick));
 		}
 	}
 
@@ -1558,6 +1383,47 @@ static int status_fixed_revive(struct block_list *bl, unsigned int per_hp, unsig
 	return 1;
 }
 
+/**
+ * a sub-function from 'status_check_skilluse' function, which can be use for plugin manipulation
+ * check 'disabled_skills' flag settings from `db\(pre-)re\map_zone_db.conf`
+ *
+ * @param src        The source object can be BL_PC, BL_MOB, BL_PET, BL_HOM, BL_MER, BL_ELEM type
+ * @param st         The status_data of the source object, use to check MD_BOSS of BL_MOB type
+ * @param skill_id   The skill ID use by src
+ *
+ * @return false if the skill ID use is denied, true otherwise
+ **/
+static bool status_check_skilluse_mapzone(struct block_list *src, struct status_data *st, uint16 skill_id)
+{
+	nullpo_retr(false, src);
+	nullpo_retr(false, st);
+	for (int i = 0; i < map->list[src->m].zone->disabled_skills_count; i++) {
+		int zone_nameid = map->list[src->m].zone->disabled_skills[i]->nameid;
+		enum bl_type zone_type = map->list[src->m].zone->disabled_skills[i]->type;
+		enum map_zone_skill_subtype zone_subtype = map->list[src->m].zone->disabled_skills[i]->subtype;
+		if (skill_id == zone_nameid && (zone_type & src->type) != 0) {
+			if (src->type == BL_PC) {
+				struct map_session_data *sd = BL_UCAST(BL_PC, src);
+#if PACKETVER >= 20080311
+				clif->skill_mapinfomessage(sd, 2);
+#else
+				clif->messagecolor_self(sd->fd, COLOR_CYAN, msg_sd(sd, 50));
+#endif
+			} else if (src->type == BL_MOB && zone_subtype != MZS_NONE) {
+				if ((st->mode & MD_BOSS) != 0) { /* is boss */
+					if ((zone_subtype & MZS_BOSS) == 0)
+						break;
+				} else { /* is not boss */
+					if ((zone_subtype & MZS_BOSS) != 0)
+						break;
+				}
+			}
+			return false;
+		}
+	}
+	return true;
+}
+
 /*==========================================
  * Checks whether the src can use the skill on the target,
  * taking into account status/option of both source/target. [Skotlex]
@@ -1598,28 +1464,8 @@ static int status_check_skilluse(struct block_list *src, struct block_list *targ
 	if( skill_id ) {
 		if (src != NULL && (sd == NULL || sd->auto_cast_current.type != AUTOCAST_ITEM)) {
 			// Items that cast skills using 'itemskill' will not be handled by map_zone_db.
-			int i;
-
-			for(i = 0; i < map->list[src->m].zone->disabled_skills_count; i++) {
-				if( skill_id == map->list[src->m].zone->disabled_skills[i]->nameid && (map->list[src->m].zone->disabled_skills[i]->type&src->type) ) {
-					if (src->type == BL_PC) {
-#if PACKETVER >= 20080311
-						clif->skill_mapinfomessage(sd, 2);
-#else
-						clif->messagecolor_self(sd->fd, COLOR_CYAN, msg_sd(sd, 50));
-#endif
-					} else if (src->type == BL_MOB && map->list[src->m].zone->disabled_skills[i]->subtype != MZS_NONE) {
-						if( st->mode&MD_BOSS ) { /* is boss */
-							if( !( map->list[src->m].zone->disabled_skills[i]->subtype&MZS_BOSS ) )
-								break;
-						} else { /* is not boss */
-							if( map->list[src->m].zone->disabled_skills[i]->subtype&MZS_BOSS )
-								break;
-						}
-					}
-					return 0;
-				}
-			}
+			if (!status->check_skilluse_mapzone(src, st, skill_id))
+				return 0;
 		}
 
 		switch( skill_id ) {
@@ -1671,7 +1517,7 @@ static int status_check_skilluse(struct block_list *src, struct block_list *targ
 			struct block_list *winkcharm_target = map->id2bl(sc->data[SC_DC_WINKCHARM]->val2);
 			if (winkcharm_target != NULL) {
 				if (unit->bl2ud(src) && (unit->bl2ud(src))->walktimer == INVALID_TIMER)
-					unit->walktobl(src, winkcharm_target, 3, 1);
+					unit->walk_tobl(src, winkcharm_target, 3, 1);
 				clif->emotion(src, E_LV);
 				return 0;
 			} else {
@@ -2243,8 +2089,8 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 		//Load Hp/SP from char-received data.
 		sd->battle_status.hp = sd->status.hp;
 		sd->battle_status.sp = sd->status.sp;
-		sd->regen.sregen = &sd->sregen;
-		sd->regen.ssregen = &sd->ssregen;
+		sd->regen.skill = &sd->skill_regen;
+		sd->regen.sitting = &sd->sitting_regen;
 		sd->weight=0;
 		for (i = 0; i < sd->status.inventorySize; i++) {
 			if(sd->status.inventory[i].nameid==0 || sd->inventory_data[i] == NULL)
@@ -3363,220 +3209,347 @@ static int status_calc_homunculus_(struct homun_data *hd, enum e_status_calc_opt
 	return 1;
 }
 
+static void status_calc_regen_pc(struct map_session_data *sd, struct status_data *st, struct regen_data *regen)
+{
+	nullpo_retv(sd);
+	nullpo_retv(st);
+	nullpo_retv(regen);
+	nullpo_retv(regen->sitting);
+	nullpo_retv(regen->skill);
+
+	struct status_change *sc = &sd->sc;
+
+	if ((sc->data[SC_POISON] != NULL && sc->data[SC_SLOWPOISON] == NULL)
+		|| (sc->data[SC_DPOISON] != NULL && sc->data[SC_SLOWPOISON] == NULL)
+		|| sc->data[SC_BERSERK] != NULL
+		|| sc->data[SC_TRICKDEAD] != NULL
+		|| sc->data[SC_BLOODING] != NULL
+		|| sc->data[SC_MAGICMUSHROOM] != NULL
+		|| sc->data[SC_RAISINGDRAGON] != NULL
+		|| sc->data[SC_SATURDAY_NIGHT_FEVER] != NULL
+		) {
+		regen->flag = 0;
+		return; // Don't bother going on as no regen under those status.
+	}
+
+	if (sc->data[SC_DANCING] != NULL
+		|| sc->data[SC_OBLIVIONCURSE] != NULL
+		|| sc->data[SC_MAXIMIZEPOWER] != NULL
+		|| sc->data[SC_REBOUND] != NULL
+		|| sc->data[SC_VITALITYACTIVATION] != NULL
+		|| ((sd->job & MAPID_UPPERMASK) == MAPID_MONK
+			&& (sc->data[SC_EXTREMITYFIST] != NULL
+				|| (sc->data[SC_EXPLOSIONSPIRITS] != NULL
+					&& (sc->data[SC_SOULLINK] == NULL || sc->data[SC_SOULLINK]->val2 != SL_MONK)
+					)
+				)
+			)
+		) {
+		regen->flag &= ~RGN_SP; //No natural SP regen
+	}
+
+	if (sc->data[SC_GDSKILL_REGENERATION] != NULL && sc->data[SC_GDSKILL_REGENERATION]->val4 != 0) {
+			regen->flag &= ~sc->data[SC_GDSKILL_REGENERATION]->val4; //Remove regen as specified by val4
+	}
+
+	// Base HP/SP restore values formual
+	regen->hp = 1 + (st->vit / 5) + (st->max_hp / 200);
+	regen->sp = 1 + (st->int_ / 6) + (st->max_sp / 100);
+	if (st->int_ >= 120)
+		regen->sp += ((st->int_ - 120) / 2) + 4;
+
+	// Modifiers applied to base SP/HP restore values
+	if (sd->hprecov_rate != 100)
+		regen->hp = regen->hp * sd->hprecov_rate / 100;
+
+	if (sd->sprecov_rate != 100)
+		regen->sp = regen->sp * sd->sprecov_rate / 100;
+
+	// Base natural HP/SP restore bonuses
+	int skill_lv;
+
+	if ((skill_lv = pc->checkskill(sd, HP_MEDITATIO)) > 0)
+		regen->sp = regen->sp * (100 + 3 * skill_lv) / 100;
+
+	if (sc->data[SC_GENTLETOUCH_REVITALIZE] != NULL)
+		regen->hp += regen->hp * (30 * sc->data[SC_GENTLETOUCH_REVITALIZE]->val1 + 50) / 100;
+
+	// Recovery Items
+	if (sc->data[SC_EXTRACT_WHITE_POTION_Z] != NULL)
+		regen->hp += regen->hp * sc->data[SC_EXTRACT_WHITE_POTION_Z]->val1 / 100;
+	if (sc->data[SC_VITATA_500] != NULL)
+		regen->sp += regen->sp * sc->data[SC_VITATA_500]->val1 / 100;
+	if (sc->data[SC_ATKER_ASPD] != NULL)
+		regen->hp += regen->hp * sc->data[SC_ATKER_ASPD]->val2 / 100;
+	if (sc->data[SC_ATKER_MOVESPEED] != NULL)
+		regen->sp += regen->sp * sc->data[SC_ATKER_MOVESPEED]->val2 / 100;
+	if (sc->data[SC_BUCHEDENOEL] != NULL) {
+		regen->hp += regen->hp * sc->data[SC_BUCHEDENOEL]->val1 / 100;
+		regen->sp += regen->sp * sc->data[SC_BUCHEDENOEL]->val2 / 100;
+	}
+
+	// Skill HP/SP restore bonuses
+	struct regen_data_sub *skill_regen = regen->skill;
+	skill_regen->hp = 0;
+	skill_regen->sp = 0;
+
+	if ((skill_lv = pc->checkskill(sd, SM_RECOVERY)) > 0)
+		skill_regen->hp += skill_lv * 5 + skill_lv * st->max_hp / 500;
+
+	if ((skill_lv = pc->checkskill(sd, MG_SRECOVERY)) > 0)
+		skill_regen->sp += skill_lv * 3 + skill_lv * st->max_sp / 500;
+	if ((skill_lv = pc->checkskill(sd, NJ_NINPOU)) > 0)
+		skill_regen->sp += skill_lv * 3 + skill_lv * st->max_sp / 500;
+	if ((skill_lv = pc->checkskill(sd, WM_LESSON)) > 0)
+		skill_regen->sp += skill_lv * 3 + skill_lv * st->max_sp / 500;
+
+	// Skill HP/SP during sitting bonuses
+	struct regen_data_sub *sitting_regen = regen->sitting;
+	sitting_regen->hp = 0;
+	sitting_regen->sp = 0;
+
+	if ((skill_lv = pc->checkskill(sd, MO_SPIRITSRECOVERY)) > 0)
+		sitting_regen->hp += skill_lv * 4 + skill_lv * st->max_hp / 500;
+
+	if ((skill_lv = pc->checkskill(sd, TK_HPTIME)) > 0 && sd->state.rest != 0)
+		sitting_regen->hp += skill_lv * 30 + skill_lv * st->max_hp / 500;
+
+	if ((skill_lv = pc->checkskill(sd, TK_SPTIME)) > 0 && sd->state.rest != 0) {
+		sitting_regen->sp += skill_lv * 3 + skill_lv * st->max_sp / 500;
+		if ((skill_lv = pc->checkskill(sd, SL_KAINA)) > 0) //Power up Enjoyable Rest
+			sitting_regen->sp += sitting_regen->sp * (30 + 10 * skill_lv) / 100;
+	}
+	if ((skill_lv = pc->checkskill(sd, MO_SPIRITSRECOVERY)) > 0)
+		sitting_regen->sp += skill_lv * 2 + skill_lv * st->max_sp / 500;
+}
+
+static void status_calc_regen_homunculus(struct homun_data *hd, struct status_data *st, struct regen_data *regen)
+{
+	nullpo_retv(hd);
+	nullpo_retv(st);
+	nullpo_retv(regen);
+
+	struct status_change *sc = &hd->sc;
+
+	if ((sc->data[SC_POISON] != NULL && sc->data[SC_SLOWPOISON] == NULL)
+		|| (sc->data[SC_DPOISON] != NULL && sc->data[SC_SLOWPOISON] == NULL)
+		|| sc->data[SC_BLOODING] != NULL
+		) {
+		regen->flag = 0;
+		return; // Don't bother going on as no regen under those status.
+	}
+
+	// Base HP/SP restore values formual
+	regen->hp = 1 + (st->vit / 5) + (st->max_hp / 200);
+	regen->sp = 1 + (st->int_ / 6) + (st->max_sp / 100);
+	if (st->int_ >= 120)
+		regen->sp += ((st->int_ - 120) / 2) + 4;
+}
+
+static void status_calc_regen_mercenary(struct mercenary_data *md, struct status_data *st, struct regen_data *regen)
+{
+	nullpo_retv(md);
+	nullpo_retv(st);
+	nullpo_retv(regen);
+
+	struct status_change *sc = &md->sc;
+
+	if ((sc->data[SC_POISON] != NULL && sc->data[SC_SLOWPOISON] == NULL)
+		|| (sc->data[SC_DPOISON] != NULL && sc->data[SC_SLOWPOISON] == NULL)
+		|| sc->data[SC_BLOODING] != NULL
+		) {
+		regen->flag = 0;
+		return; // Don't bother going on as no regen under those status.
+	}
+
+	// Base HP/SP restore values formual
+	regen->hp = (st->max_hp * st->vit / 10000 + 1) * 6;
+	regen->sp = (st->max_sp * (st->int_ + 10) / 750) + 1;
+}
+
+static void status_calc_regen_elemental(struct elemental_data *md, struct status_data *st, struct regen_data *regen)
+{
+	nullpo_retv(md);
+	nullpo_retv(st);
+	nullpo_retv(regen);
+
+	struct status_change *sc = &md->sc;
+
+	if ((sc->data[SC_POISON] != NULL && sc->data[SC_SLOWPOISON] == NULL)
+		|| (sc->data[SC_DPOISON] != NULL && sc->data[SC_SLOWPOISON] == NULL)
+		|| sc->data[SC_BLOODING] != NULL
+		) {
+		regen->flag = 0;
+		return; // Don't bother going on as no regen under those status.
+	}
+
+	// Base HP/SP restore values formual
+	regen->hp = (st->max_hp * st->vit / 10000 + 1) * 6;
+	regen->sp = (st->max_sp * (st->int_ + 10) / 750) + 1;
+}
+
 //Calculates base regen values.
 static void status_calc_regen(struct block_list *bl, struct status_data *st, struct regen_data *regen)
 {
-	struct map_session_data *sd;
-	int val, skill_lv, reg_flag;
 	nullpo_retv(bl);
-	nullpo_retv(st);
 
-	if( !(bl->type&BL_REGEN) || !regen )
+	if ((bl->type & BL_REGEN) == 0)
 		return;
 
-	sd = BL_CAST(BL_PC,bl);
-	val = 1 + (st->vit/5) + (st->max_hp/200);
+	nullpo_retv(st);
+	nullpo_retv(regen);
 
-	if( sd && sd->hprecov_rate != 100 )
-		val = val*sd->hprecov_rate/100;
+	regen->flag = RGN_HP | RGN_SP;
+	if (regen->skill != NULL || regen->sitting != NULL)
+		regen->flag |= RGN_SHP | RGN_SSP;
 
-	reg_flag = bl->type == BL_PC ? 0 : 1;
-
-	regen->hp = cap_value(val, reg_flag, SHRT_MAX);
-
-	val = 1 + (st->int_/6) + (st->max_sp/100);
-	if( st->int_ >= 120 )
-		val += ((st->int_-120)>>1) + 4;
-
-	if( sd && sd->sprecov_rate != 100 )
-		val = val*sd->sprecov_rate/100;
-
-	regen->sp = cap_value(val, reg_flag, SHRT_MAX);
-
-	if( sd ) {
-		struct regen_data_sub *sregen;
-		if( (skill_lv=pc->checkskill(sd,HP_MEDITATIO)) > 0 ) {
-			val = regen->sp*(100+3*skill_lv)/100;
-			regen->sp = cap_value(val, 1, SHRT_MAX);
-		}
-		//Only players have skill/sitting skill regen for now.
-		sregen = regen->sregen;
-
-		val = 0;
-		if( (skill_lv=pc->checkskill(sd,SM_RECOVERY)) > 0 )
-			val += skill_lv*5 + skill_lv*st->max_hp/500;
-		sregen->hp = cap_value(val, 0, SHRT_MAX);
-
-		val = 0;
-		if( (skill_lv=pc->checkskill(sd,MG_SRECOVERY)) > 0 )
-			val += skill_lv*3 + skill_lv*st->max_sp/500;
-		if( (skill_lv=pc->checkskill(sd,NJ_NINPOU)) > 0 )
-			val += skill_lv*3 + skill_lv*st->max_sp/500;
-		if( (skill_lv=pc->checkskill(sd,WM_LESSON)) > 0 )
-			val += skill_lv*3 + skill_lv*st->max_sp/500;
-
-		sregen->sp = cap_value(val, 0, SHRT_MAX);
-
-		// Skill-related recovery (only when sit)
-		sregen = regen->ssregen;
-
-		val = 0;
-		if( (skill_lv=pc->checkskill(sd,MO_SPIRITSRECOVERY)) > 0 )
-			val += skill_lv*4 + skill_lv*st->max_hp/500;
-
-		if( (skill_lv=pc->checkskill(sd,TK_HPTIME)) > 0 && sd->state.rest )
-			val += skill_lv*30 + skill_lv*st->max_hp/500;
-		sregen->hp = cap_value(val, 0, SHRT_MAX);
-
-		val = 0;
-		if( (skill_lv=pc->checkskill(sd,TK_SPTIME)) > 0 && sd->state.rest ) {
-			val += skill_lv*3 + skill_lv*st->max_sp/500;
-			if ((skill_lv=pc->checkskill(sd,SL_KAINA)) > 0) //Power up Enjoyable Rest
-				val += (30+10*skill_lv)*val/100;
-		}
-		if( (skill_lv=pc->checkskill(sd,MO_SPIRITSRECOVERY)) > 0 )
-			val += skill_lv*2 + skill_lv*st->max_sp/500;
-		sregen->sp = cap_value(val, 0, SHRT_MAX);
+	switch (bl->type) {
+	case BL_PC:
+		status->calc_regen_pc(BL_UCAST(BL_PC, bl), st, regen);
+		break;
+	case BL_HOM:
+		status->calc_regen_homunculus(BL_UCAST(BL_HOM, bl), st, regen);
+		break;
+	case BL_MER:
+		status->calc_regen_mercenary(BL_UCAST(BL_MER, bl), st, regen);
+		break;
+	case BL_ELEM:
+		status->calc_regen_elemental(BL_UCAST(BL_ELEM, bl), st, regen);
+		break;
+	default:
+		Assert(0);
+		break;
 	}
 
-	if (bl->type == BL_HOM) {
-		struct homun_data *hd = BL_UCAST(BL_HOM, bl);
-		if( (skill_lv = homun->checkskill(hd,HAMI_SKIN)) > 0 ) {
-			val = regen->hp*(100+5*skill_lv)/100;
-			regen->hp = cap_value(val, 1, SHRT_MAX);
-		}
-		if( (skill_lv = homun->checkskill(hd,HLIF_BRAIN)) > 0 ) {
-			val = regen->sp*(100+3*skill_lv)/100;
-			regen->sp = cap_value(val, 1, SHRT_MAX);
-		}
-	} else if( bl->type == BL_MER ) {
-		val = (st->max_hp * st->vit / 10000 + 1) * 6;
-		regen->hp = cap_value(val, 1, SHRT_MAX);
+	regen->hp = cap_value(regen->hp, 0, INT16_MAX);
+	regen->sp = cap_value(regen->sp, 0, INT16_MAX);
 
-		val = (st->max_sp * (st->int_ + 10) / 750) + 1;
-		regen->sp = cap_value(val, 1, SHRT_MAX);
-	} else if( bl->type == BL_ELEM ) {
-		val = (st->max_hp * st->vit / 10000 + 1) * 6;
-		regen->hp = cap_value(val, 1, SHRT_MAX);
+	if (regen->skill != NULL) {
+		regen->skill->hp = cap_value(regen->skill->hp, 0, INT16_MAX);
+		regen->skill->sp = cap_value(regen->skill->sp, 0, INT16_MAX);
+	}
 
-		val = (st->max_sp * (st->int_ + 10) / 750) + 1;
-		regen->sp = cap_value(val, 1, SHRT_MAX);
+	if (regen->sitting != NULL) {
+		regen->sitting->hp = cap_value(regen->sitting->hp, 0, INT16_MAX);
+		regen->sitting->sp = cap_value(regen->sitting->sp, 0, INT16_MAX);
 	}
 }
 
-//Calculates SC related regen rates.
-static void status_calc_regen_rate(struct block_list *bl, struct regen_data *regen, struct status_change *sc)
+static void status_calc_regen_rate_pc(struct map_session_data *sd, struct regen_data *regen)
 {
-	nullpo_retv(bl);
-	if (!(bl->type&BL_REGEN) || !regen)
-		return;
+	nullpo_retv(sd);
+	nullpo_retv(regen);
+	nullpo_retv(regen->skill);
+	nullpo_retv(regen->sitting);
 
-	regen->flag = RGN_HP|RGN_SP;
-	if(regen->sregen)
-	{
-		if (regen->sregen->hp)
-			regen->flag|=RGN_SHP;
-
-		if (regen->sregen->sp)
-			regen->flag|=RGN_SSP;
-		regen->sregen->rate.hp = regen->sregen->rate.sp = 1;
-	}
-	if (regen->ssregen)
-	{
-		if (regen->ssregen->hp)
-			regen->flag|=RGN_SHP;
-
-		if (regen->ssregen->sp)
-			regen->flag|=RGN_SSP;
-		regen->ssregen->rate.hp = regen->ssregen->rate.sp = 1;
-	}
-	regen->rate.hp = regen->rate.sp = 1;
-
-	if (!sc || !sc->count)
-		return;
-
-	if ((sc->data[SC_POISON] && !sc->data[SC_SLOWPOISON])
-	 || (sc->data[SC_DPOISON] && !sc->data[SC_SLOWPOISON])
-	 || sc->data[SC_BERSERK]
-	 || sc->data[SC_TRICKDEAD]
-	 || sc->data[SC_BLOODING]
-	 || sc->data[SC_MAGICMUSHROOM]
-	 || sc->data[SC_RAISINGDRAGON]
-	 || sc->data[SC_SATURDAY_NIGHT_FEVER]
-	)
-		regen->flag = 0; //No regen
-
-	if (sc->data[SC_DANCING] != NULL
-	 || sc->data[SC_OBLIVIONCURSE] != NULL
-	 || sc->data[SC_MAXIMIZEPOWER] != NULL
-	 || sc->data[SC_REBOUND] != NULL
-	 || (bl->type == BL_PC && (BL_UCAST(BL_PC, bl)->job & MAPID_UPPERMASK) == MAPID_MONK
-	  && (sc->data[SC_EXTREMITYFIST] != NULL
-	   || (sc->data[SC_EXPLOSIONSPIRITS] != NULL
-	    && (sc->data[SC_SOULLINK] == NULL || sc->data[SC_SOULLINK]->val2 != SL_MONK)
-	      )
-	     )
-	    )
-	) {
-		regen->flag &=~RGN_SP; //No natural SP regen
+	struct guild_castle *gc = guild->mapindex2gc(sd->bl.m);
+	if (gc != NULL && gc->guild_id == sd->status.guild_id) {
+		regen->rate.hp *= 2;
+		regen->rate.sp *= 2;
 	}
 
+	struct status_change *sc = &sd->sc;
+	if (sc->data[SC_MAGNIFICAT] != NULL) {
+		regen->rate.sp *= 2;
+	}
 
-	// Tension relax allows the user to recover HP while overweight
-	// at 1x speed. Other SC ignored? [csnv]
-	if (sc->data[SC_TENSIONRELAX]) {
-		if (sc->data[SC_WEIGHTOVER50] || sc->data[SC_WEIGHTOVER90]) {
-			regen->flag &= ~RGN_SP;
-			regen->rate.hp = 1;
-		} else {
-			regen->rate.hp += 2;
-			if (regen->sregen)
-				regen->sregen->rate.hp += 3;
+	if (sc->data[SC_GDSKILL_REGENERATION] != NULL) {
+		const struct status_change_entry *sce = sc->data[SC_GDSKILL_REGENERATION];
+		if (sce->val4 == 0) {
+			regen->rate.hp += regen->rate.hp * sce->val2 / 100;
+			regen->rate.sp += regen->rate.sp * sce->val3 / 100;
 		}
 	}
 
-	if (sc->data[SC_MAGNIFICAT]) {
-#ifndef RENEWAL // HP Regen applies only in Pre-renewal
-		regen->rate.hp += 1;
-#endif
-		regen->rate.sp += 1;
-	}
-
-	if (sc->data[SC_GDSKILL_REGENERATION]) {
-		const struct status_change_entry *sce = sc->data[SC_GDSKILL_REGENERATION];
-		if (!sce->val4) {
-			regen->rate.hp += sce->val2;
-			regen->rate.sp += sce->val3;
-		} else
-			regen->flag&=~sce->val4; //Remove regen as specified by val4
-	}
-	if (sc->data[SC_GENTLETOUCH_REVITALIZE]) {
-		regen->hp += regen->hp * ( 30 * sc->data[SC_GENTLETOUCH_REVITALIZE]->val1 + 50 ) / 100;
-	}
-	if ((sc->data[SC_FIRE_INSIGNIA] && sc->data[SC_FIRE_INSIGNIA]->val1 == 1) //if insignia lvl 1
-		|| (sc->data[SC_WATER_INSIGNIA] && sc->data[SC_WATER_INSIGNIA]->val1 == 1)
-		|| (sc->data[SC_EARTH_INSIGNIA] && sc->data[SC_EARTH_INSIGNIA]->val1 == 1)
-		|| (sc->data[SC_WIND_INSIGNIA] && sc->data[SC_WIND_INSIGNIA]->val1 == 1))
-		regen->rate.hp *= 2;
-	if (sc->data[SC_VITALITYACTIVATION])
-		regen->flag &=~RGN_SP;
-
-	// Recovery Items
-	if (sc->data[SC_EXTRACT_WHITE_POTION_Z])
-		regen->rate.hp += regen->rate.hp * sc->data[SC_EXTRACT_WHITE_POTION_Z]->val1 / 100;
-	if (sc->data[SC_VITATA_500])
-		regen->rate.sp += regen->rate.sp * sc->data[SC_VITATA_500]->val1 / 100;
-	if (sc->data[SC_ATKER_ASPD])
-		regen->rate.hp += regen->rate.hp * sc->data[SC_ATKER_ASPD]->val2 / 100;
-	if (sc->data[SC_ATKER_MOVESPEED])
-		regen->rate.sp += regen->rate.sp * sc->data[SC_ATKER_MOVESPEED]->val2 / 100;
-	if (sc->data[SC_BUCHEDENOEL]) {
-		regen->rate.hp += regen->rate.hp * sc->data[SC_BUCHEDENOEL]->val1 / 100;
-		regen->rate.sp += regen->rate.sp * sc->data[SC_BUCHEDENOEL]->val2 / 100;
-	}
-	if (sc->data[SC_CATNIPPOWDER]) {
+	if (sc->data[SC_CATNIPPOWDER] != NULL) {
 		regen->rate.hp *= 2;
 		regen->rate.sp *= 2;
+	}
+
+	// According to Aegis Tension relax increases recovery by 3 times
+	// in normal HP regeneration and Skill HP regeneration and only if
+	// player is non-overweight otherwise it has no affect to formula
+	// it's also applied last right before the actual heal function call [hemagx]
+	if (regen->state.overweight == 0 && sc->data[SC_TENSIONRELAX] != NULL) {
+		regen->rate.hp *= 3;
+		regen->skill->rate.hp *= 3;
+	}
+}
+
+static void status_calc_regen_rate_elemental(struct elemental_data *md, struct regen_data *regen)
+{
+	nullpo_retv(md);
+	nullpo_retv(regen);
+
+	struct status_change *sc = &md->sc;
+
+	if ((sc->data[SC_FIRE_INSIGNIA] != NULL && sc->data[SC_FIRE_INSIGNIA]->val1 == 1)
+		|| (sc->data[SC_WATER_INSIGNIA] != NULL && sc->data[SC_WATER_INSIGNIA]->val1 == 1)
+		|| (sc->data[SC_EARTH_INSIGNIA] != NULL && sc->data[SC_EARTH_INSIGNIA]->val1 == 1)
+		|| (sc->data[SC_WIND_INSIGNIA] != NULL && sc->data[SC_WIND_INSIGNIA]->val1 == 1))
+		regen->rate.hp *= 2;
+}
+
+static void status_calc_regen_rate_homunculus(struct homun_data *hd, struct regen_data *regen)
+{
+	nullpo_retv(hd);
+	nullpo_retv(regen);
+
+	int skill_lv;
+
+	if ((skill_lv = homun->checkskill(hd, HLIF_BRAIN)) > 0)
+		regen->rate.sp = regen->rate.sp * (100 + 3 * skill_lv) / 100;
+
+	if ((skill_lv = homun->checkskill(hd, HAMI_SKIN)) > 0)
+		regen->rate.hp = regen->rate.hp * (100 + 5 * skill_lv) / 100;
+}
+
+//Calculates SC related regen rates.
+static void status_calc_regen_rate(struct block_list *bl, struct regen_data *regen)
+{
+	nullpo_retv(bl);
+
+	if ((bl->type & BL_REGEN) == 0)
+		return;
+
+	nullpo_retv(regen);
+
+	regen->rate.hp = 100;
+	regen->rate.sp = 100;
+
+	if (regen->skill != NULL) {
+		regen->skill->rate.hp = 100;
+		regen->skill->rate.sp = 100;
+	}
+
+	if (regen->sitting != NULL) {
+		regen->sitting->rate.hp = 100;
+		regen->sitting->rate.sp = 100;
+	}
+
+	switch (bl->type) {
+	case BL_PC:
+		status->calc_regen_rate_pc(BL_UCAST(BL_PC, bl), regen);
+		break;
+	case BL_ELEM:
+		status->calc_regen_rate_elemental(BL_UCAST(BL_ELEM, bl), regen);
+		break;
+	case BL_HOM:
+		status->calc_regen_rate_homunculus(BL_UCAST(BL_HOM, bl), regen);
+		break;
+	}
+
+	regen->rate.hp = cap_value(regen->rate.hp, 0, INT16_MAX);
+	regen->rate.sp = cap_value(regen->rate.sp, 0, INT16_MAX);
+
+	if (regen->sitting != NULL) {
+		regen->sitting->rate.hp = cap_value(regen->sitting->rate.hp, 0, INT16_MAX);
+		regen->sitting->rate.sp = cap_value(regen->sitting->rate.sp, 0, INT16_MAX);
+	}
+
+	if (regen->skill != NULL) {
+		regen->skill->rate.hp = cap_value(regen->skill->rate.hp, 0, INT16_MAX);
+		regen->skill->rate.sp = cap_value(regen->skill->rate.sp, 0, INT16_MAX);
 	}
 }
 
@@ -3977,11 +3950,11 @@ static void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag
 		}
 	}
 
-	if(flag&(SCB_VIT|SCB_MAXHP|SCB_INT|SCB_MAXSP) && bl->type&BL_REGEN)
+	if(flag&(SCB_VIT|SCB_MAXHP|SCB_INT|SCB_MAXSP|SCB_REGEN) && bl->type&BL_REGEN)
 		status->calc_regen(bl, st, status->get_regen_data(bl));
 
 	if(flag&SCB_REGEN && bl->type&BL_REGEN)
-		status->calc_regen_rate(bl, status->get_regen_data(bl), sc);
+		status->calc_regen_rate(bl, status->get_regen_data(bl));
 }
 
 /// Recalculates parts of an object's base status and battle status according to the specified flags.
@@ -5403,7 +5376,7 @@ static defType status_calc_def(struct block_list *bl, struct status_change *sc, 
 	if (sc->data[SC_EARTH_INSIGNIA] && sc->data[SC_EARTH_INSIGNIA]->val1 == 2)
 		def += 50;
 	if (sc->data[SC_ODINS_POWER])
-		def -= 20;
+		def -= 20 * sc->data[SC_ODINS_POWER]->val1;
 
 #ifndef RENEWAL
 	if (sc->data[SC_STONE] && sc->opt1 == OPT1_STONE)
@@ -5581,7 +5554,7 @@ static defType status_calc_mdef(struct block_list *bl, struct status_change *sc,
 	if(sc->data[SC_GENTLETOUCH_CHANGE] && sc->data[SC_GENTLETOUCH_CHANGE]->val4)
 		mdef -= mdef * sc->data[SC_GENTLETOUCH_CHANGE]->val4 / 100;
 	if (sc->data[SC_ODINS_POWER])
-		mdef -= 20;
+		mdef -= 20 * sc->data[SC_ODINS_POWER]->val1;
 	if(sc->data[SC_BURNING])
 		mdef -= mdef *25 / 100;
 	if (sc->data[SC_UNLIMIT])
@@ -7191,6 +7164,9 @@ static int status_get_sc_def(struct block_list *src, struct block_list *bl, enum
 	case SC_NETHERWORLD:
 		tick_def2 = 1000 * ((bl->type == BL_PC ? BL_UCCAST(BL_PC, bl)->status.job_level : 0) / 10 + status->get_lv(bl) / 50);
 		break;
+	case SC_NO_RECOVER_STATE:
+		tick_def2 = st->luk * 100;
+		break;
 	default:
 		//Effect that cannot be reduced? Likely a buff.
 		if (!(rnd()%10000 < rate))
@@ -7771,6 +7747,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			case SC__WEAKNESS:
 			case SC__UNLUCKY:
 			case SC__CHAOS:
+			case SC_NO_RECOVER_STATE:
 				return 0;
 			case SC_COMBOATTACK:
 			case SC_DANCING:
@@ -8153,12 +8130,11 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				tick_time = val2 * 1000; // [GodLesZ] tick time
 				break;
 			case SC_CASH_BOSS_ALARM:
-				if( sd != NULL ) {
+				if (sd != NULL) {
 					struct mob_data *boss_md = map->getmob_boss(bl->m); // Search for Boss on this Map
-					if( boss_md == NULL || boss_md->bl.prev == NULL ) {
-						// No MVP on this map - MVP is dead
-						clif->bossmapinfo(sd->fd, boss_md, 1);
-						return 0; // No need to start SC
+					if (boss_md == NULL) {
+						clif->bossmapinfo(sd->fd, NULL, BOSS_INFO_NONE); // No MVP in the Map
+						return 0;
 					}
 					val1 = boss_md->bl.id;
 					if( (val4 = total_tick/1000) < 1 )
@@ -8380,10 +8356,10 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 
 			case SC_GDSKILL_REGENERATION:
 				if (val1 == 1)
-					val2 = 2;
+					val2 = 200;
 				else
-					val2 = val1; //HP Regerenation rate: 200% 200% 300%
-				val3 = val1; //SP Regeneration Rate: 100% 200% 300%
+					val2 = val1 * 100; //HP Regerenation rate: 200% 200% 300%
+				val3 = val1 * 100; //SP Regeneration Rate: 100% 200% 300%
 				//if val4 comes set, this blocks regen rather than increase it.
 				break;
 
@@ -9154,8 +9130,8 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 						pet->menu(sd, 3);
 					if (homun_alive(sd->hd))
 						homun->vaporize(sd, HOM_ST_REST, true);
-					if (sd->md)
-						mercenary->delete(sd->md,3);
+					if (sd->md != NULL)
+						mercenary->delete(sd->md, MERC_DELETE_RANAWAY);
 				}
 				break;
 			case SC__LAZINESS:
@@ -9812,8 +9788,8 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			}
 			break;
 		case SC_CASH_BOSS_ALARM:
-			if( sd )
-				clif->bossmapinfo(sd->fd, map->id2boss(sce->val1), 0); // First Message
+			if (sd != NULL)
+				clif->bossmapinfo(sd->fd, map->id2boss(sce->val1), BOSS_INFO_ALIVE_WITHMSG); // First Message
 			break;
 		case SC_MER_HP:
 			status_percent_heal(bl, 100, 0); // Recover Full HP
@@ -10379,274 +10355,319 @@ static void status_change_start_stop_action(struct block_list *bl, enum sc_type 
  * @retval false if no status change happened, or the other sc can be started regardless.
  * @retval true  if the status change was successfully applied and the other sc shouldn't be started.
  */
-static bool status_end_sc_before_start(struct block_list *bl, struct status_data *st, struct status_change *sc, enum sc_type type, int undead_flag, int val1, int val2, int val3, int val4)
+static bool status_end_sc_before_start(struct block_list *bl, struct status_data *st, struct status_change *sc,
+				       enum sc_type type, int undead_flag, int val1, int val2, int val3, int val4)
 {
 	nullpo_retr(true, bl);
 	nullpo_retr(true, st);
 	nullpo_retr(true, sc);
 
 	switch (type) {
-		case SC_BLESSING:
-			// TODO: Blessing and Agi up should do 1 damage against players on Undead Status, even on PvM
-			// but cannot be plagiarized (this requires aegis investigation on packets and official behavior) [Brainstorm]
-			if ((undead_flag == 0 && st->race != RC_DEMON) || bl->type == BL_PC) {
-				bool prevent_start = false;
-				if (sc->data[SC_CURSE] != NULL) {
-					prevent_start = true;
-					status_change_end(bl, SC_CURSE, INVALID_TIMER);
-				}
-				if (sc->data[SC_STONE] != NULL && sc->opt1 == OPT1_STONE) {
-					prevent_start = true;
-					status_change_end(bl, SC_STONE, INVALID_TIMER);
-				}
-				if (prevent_start)
-					return true;
+	case SC_BLESSING:
+		// TODO: Blessing and Agi up should do 1 damage against players on Undead Status, even on PvM
+		// but cannot be plagiarized (this requires aegis investigation on packets and official behavior) [Brainstorm]
+		if ((undead_flag == 0 && st->race != RC_DEMON) || bl->type == BL_PC) {
+			bool prevent_start = false;
+
+			if (sc->data[SC_CURSE] != NULL) {
+				prevent_start = true;
+				status_change_end(bl, SC_CURSE, INVALID_TIMER);
 			}
-			if (sc->data[SC_SOULLINK] != NULL && sc->data[SC_SOULLINK]->val2 == SL_HIGH)
-				status_change_end(bl, SC_SOULLINK, INVALID_TIMER);
-			break;
-		case SC_INC_AGI:
-			status_change_end(bl, SC_DEC_AGI, INVALID_TIMER);
-			if (sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_HIGH)
-				status_change_end(bl, SC_SOULLINK, INVALID_TIMER);
-			break;
-		case SC_QUAGMIRE:
-			status_change_end(bl, SC_CONCENTRATION, INVALID_TIMER);
-			status_change_end(bl, SC_TRUESIGHT, INVALID_TIMER);
-			status_change_end(bl, SC_WINDWALK, INVALID_TIMER);
-			FALLTHROUGH
-			//Also blocks the ones below...
-		case SC_DEC_AGI:
-		case SC_ADORAMUS:
-			status_change_end(bl, SC_CARTBOOST, INVALID_TIMER);
-			//Also blocks the ones below...
-			FALLTHROUGH
-		case SC_DONTFORGETME:
-			status_change_end(bl, SC_INC_AGI, INVALID_TIMER);
-			status_change_end(bl, SC_ADRENALINE, INVALID_TIMER);
-			status_change_end(bl, SC_ADRENALINE2, INVALID_TIMER);
-			status_change_end(bl, SC_SPEARQUICKEN, INVALID_TIMER);
-			status_change_end(bl, SC_TWOHANDQUICKEN, INVALID_TIMER);
-			status_change_end(bl, SC_ONEHANDQUICKEN, INVALID_TIMER);
-			status_change_end(bl, SC_MER_QUICKEN, INVALID_TIMER);
-			status_change_end(bl, SC_ACCELERATION, INVALID_TIMER);
-			break;
-		case SC_ONEHANDQUICKEN:
-			//Removes the Aspd potion effect, as reported by Vicious. [Skotlex]
-			status_change_end(bl, SC_ATTHASTE_POTION1, INVALID_TIMER);
-			status_change_end(bl, SC_ATTHASTE_POTION2, INVALID_TIMER);
-			status_change_end(bl, SC_ATTHASTE_POTION3, INVALID_TIMER);
-			status_change_end(bl, SC_ATTHASTE_INFINITY, INVALID_TIMER);
-			break;
-		case SC_OVERTHRUSTMAX:
-			//Cancels Normal Overthrust. [Skotlex]
-			status_change_end(bl, SC_OVERTHRUST, INVALID_TIMER);
-			break;
-		case SC_KYRIE:
-			//Cancels Assumptio
-			status_change_end(bl, SC_ASSUMPTIO, INVALID_TIMER);
-			break;
-		case SC_MAGNIFICAT:
-			//Cancels Offertorium
-			status_change_end(bl, SC_OFFERTORIUM, INVALID_TIMER);
-			break;
-		case SC_OFFERTORIUM:
-			//Cancels Magnificat
-			status_change_end(bl, SC_MAGNIFICAT, INVALID_TIMER);
-			break;
-		case SC_DELUGE:
-			if (sc->data[SC_FOGWALL] && sc->data[SC_BLIND])
-				status_change_end(bl, SC_BLIND, INVALID_TIMER);
-			break;
-		case SC_SILENCE:
-			if (sc->data[SC_GOSPEL] && sc->data[SC_GOSPEL]->val4 == BCT_SELF)
-				status_change_end(bl, SC_GOSPEL, INVALID_TIMER);
-			break;
-		case SC_HIDING:
-			status_change_end(bl, SC_RG_CCONFINE_M, INVALID_TIMER);
-			status_change_end(bl, SC_RG_CCONFINE_S, INVALID_TIMER);
-			break;
-		case SC_BERSERK:
-			if (val3 == SC__BLOODYLUST)
-				break;
-			if (battle_config.berserk_cancels_buffs) {
-				status_change_end(bl, SC_ONEHANDQUICKEN, INVALID_TIMER);
-				status_change_end(bl, SC_TWOHANDQUICKEN, INVALID_TIMER);
-				status_change_end(bl, SC_LKCONCENTRATION, INVALID_TIMER);
-				status_change_end(bl, SC_PARRYING, INVALID_TIMER);
-				status_change_end(bl, SC_AURABLADE, INVALID_TIMER);
-				status_change_end(bl, SC_MER_QUICKEN, INVALID_TIMER);
+
+			if (sc->data[SC_STONE] != NULL && sc->opt1 == OPT1_STONE) {
+				prevent_start = true;
+				status_change_end(bl, SC_STONE, INVALID_TIMER);
 			}
-	#ifdef RENEWAL
-			else {
-				status_change_end(bl, SC_TWOHANDQUICKEN, INVALID_TIMER);
-			}
-	#endif
-			break;
-		case SC_ASSUMPTIO:
-			status_change_end(bl, SC_KYRIE, INVALID_TIMER);
-			status_change_end(bl, SC_KAITE, INVALID_TIMER);
-			break;
-		case SC_KAITE:
-			status_change_end(bl, SC_ASSUMPTIO, INVALID_TIMER);
-			break;
-		case SC_CARTBOOST:
-			if (sc->data[SC_DEC_AGI] || sc->data[SC_ADORAMUS]) {
-				//Cancel Decrease Agi, but take no further effect [Skotlex]
-				status_change_end(bl, SC_DEC_AGI, INVALID_TIMER);
-				status_change_end(bl, SC_ADORAMUS, INVALID_TIMER);
+
+			if (prevent_start)
 				return true;
-			}
-			break;
-		case SC_FUSION:
+		}
+
+		if (sc->data[SC_SOULLINK] != NULL && sc->data[SC_SOULLINK]->val2 == SL_HIGH)
 			status_change_end(bl, SC_SOULLINK, INVALID_TIMER);
+
+		break;
+	case SC_INC_AGI:
+		status_change_end(bl, SC_DEC_AGI, INVALID_TIMER);
+
+		if (sc->data[SC_SOULLINK] != NULL && sc->data[SC_SOULLINK]->val2 == SL_HIGH)
+			status_change_end(bl, SC_SOULLINK, INVALID_TIMER);
+
+		break;
+	case SC_QUAGMIRE:
+		status_change_end(bl, SC_CONCENTRATION, INVALID_TIMER);
+		status_change_end(bl, SC_TRUESIGHT, INVALID_TIMER);
+		status_change_end(bl, SC_WINDWALK, INVALID_TIMER);
+		FALLTHROUGH // Also blocks the ones below...
+	case SC_DEC_AGI:
+	case SC_ADORAMUS:
+		status_change_end(bl, SC_CARTBOOST, INVALID_TIMER);
+		FALLTHROUGH // Also blocks the ones below...
+	case SC_DONTFORGETME:
+		status_change_end(bl, SC_INC_AGI, INVALID_TIMER);
+		status_change_end(bl, SC_ADRENALINE, INVALID_TIMER);
+		status_change_end(bl, SC_ADRENALINE2, INVALID_TIMER);
+		status_change_end(bl, SC_SPEARQUICKEN, INVALID_TIMER);
+		status_change_end(bl, SC_TWOHANDQUICKEN, INVALID_TIMER);
+		status_change_end(bl, SC_ONEHANDQUICKEN, INVALID_TIMER);
+		status_change_end(bl, SC_MER_QUICKEN, INVALID_TIMER);
+		status_change_end(bl, SC_ACCELERATION, INVALID_TIMER);
+		break;
+	case SC_ONEHANDQUICKEN:
+		// Removes the Aspd potion effect, as reported by Vicious. [Skotlex]
+		status_change_end(bl, SC_ATTHASTE_POTION1, INVALID_TIMER);
+		status_change_end(bl, SC_ATTHASTE_POTION2, INVALID_TIMER);
+		status_change_end(bl, SC_ATTHASTE_POTION3, INVALID_TIMER);
+		status_change_end(bl, SC_ATTHASTE_INFINITY, INVALID_TIMER);
+		break;
+	case SC_OVERTHRUSTMAX:
+		// Cancels Normal Overthrust. [Skotlex]
+		status_change_end(bl, SC_OVERTHRUST, INVALID_TIMER);
+		break;
+	case SC_KYRIE:
+		// Cancels Assumptio
+		status_change_end(bl, SC_ASSUMPTIO, INVALID_TIMER);
+		break;
+	case SC_MAGNIFICAT:
+		// Cancels Offertorium
+		status_change_end(bl, SC_OFFERTORIUM, INVALID_TIMER);
+		break;
+	case SC_OFFERTORIUM:
+		// Cancels Magnificat
+		status_change_end(bl, SC_MAGNIFICAT, INVALID_TIMER);
+		break;
+	case SC_DELUGE:
+		if (sc->data[SC_FOGWALL] != NULL && sc->data[SC_BLIND] != NULL)
+			status_change_end(bl, SC_BLIND, INVALID_TIMER);
+
+		break;
+	case SC_SILENCE:
+		if (sc->data[SC_GOSPEL] != NULL && sc->data[SC_GOSPEL]->val4 == BCT_SELF)
+			status_change_end(bl, SC_GOSPEL, INVALID_TIMER);
+
+		break;
+	case SC_HIDING:
+		status_change_end(bl, SC_RG_CCONFINE_M, INVALID_TIMER);
+		status_change_end(bl, SC_RG_CCONFINE_S, INVALID_TIMER);
+		break;
+	case SC_BERSERK:
+		if (val3 == SC__BLOODYLUST)
 			break;
-		case SC_GS_ADJUSTMENT:
-			status_change_end(bl, SC_GS_MADNESSCANCEL, INVALID_TIMER);
-			break;
-		case SC_GS_MADNESSCANCEL:
-			status_change_end(bl, SC_GS_ADJUSTMENT, INVALID_TIMER);
-			break;
-			//NPC_CHANGEUNDEAD will debuff Blessing and Agi Up
-		case SC_PROPERTYUNDEAD:
-			status_change_end(bl, SC_BLESSING, INVALID_TIMER);
-			status_change_end(bl, SC_INC_AGI, INVALID_TIMER);
-			break;
-		case SC_FOOD_STR:
-			status_change_end(bl, SC_FOOD_STR, INVALID_TIMER);
-			break;
-		case SC_FOOD_AGI:
-			status_change_end(bl, SC_FOOD_AGI, INVALID_TIMER);
-			break;
-		case SC_FOOD_VIT:
-			status_change_end(bl, SC_FOOD_VIT, INVALID_TIMER);
-			break;
-		case SC_FOOD_INT:
-			status_change_end(bl, SC_FOOD_INT, INVALID_TIMER);
-			break;
-		case SC_FOOD_DEX:
-			status_change_end(bl, SC_FOOD_DEX, INVALID_TIMER);
-			break;
-		case SC_FOOD_LUK:
-			status_change_end(bl, SC_FOOD_LUK, INVALID_TIMER);
-			break;
-		case SC_FOOD_STR_CASH:
-			status_change_end(bl, SC_FOOD_STR, INVALID_TIMER);
-			status_change_end(bl, SC_FOOD_STR_CASH, INVALID_TIMER);
-			break;
-		case SC_FOOD_AGI_CASH:
-			status_change_end(bl, SC_FOOD_AGI, INVALID_TIMER);
-			status_change_end(bl, SC_FOOD_AGI_CASH, INVALID_TIMER);
-			break;
-		case SC_FOOD_VIT_CASH:
-			status_change_end(bl, SC_FOOD_VIT, INVALID_TIMER);
-			status_change_end(bl, SC_FOOD_VIT_CASH, INVALID_TIMER);
-			break;
-		case SC_FOOD_INT_CASH:
-			status_change_end(bl, SC_FOOD_INT, INVALID_TIMER);
-			status_change_end(bl, SC_FOOD_INT_CASH, INVALID_TIMER);
-			break;
-		case SC_FOOD_DEX_CASH:
-			status_change_end(bl, SC_FOOD_DEX, INVALID_TIMER);
-			status_change_end(bl, SC_FOOD_DEX_CASH, INVALID_TIMER);
-			break;
-		case SC_FOOD_LUK_CASH:
-			status_change_end(bl, SC_FOOD_LUK, INVALID_TIMER);
-			status_change_end(bl, SC_FOOD_LUK_CASH, INVALID_TIMER);
-			break;
-		case SC_GM_BATTLE:
-			status_change_end(bl, SC_GM_BATTLE2, INVALID_TIMER);
-			break;
-		case SC_GM_BATTLE2:
-			status_change_end(bl, SC_GM_BATTLE, INVALID_TIMER);
-			break;
-		case SC_ENDURE:
-			if (val4 == 1)
-				status_change_end(bl, SC_LKCONCENTRATION, INVALID_TIMER);
-			break;
-		case SC_FIGHTINGSPIRIT:
-		case SC_OVERED_BOOST:
-			status_change_end(bl, type, INVALID_TIMER); // Remove previous one.
-			break;
-		case SC_MARSHOFABYSS:
-			status_change_end(bl, SC_INCAGI, INVALID_TIMER);
-			status_change_end(bl, SC_WINDWALK, INVALID_TIMER);
-			status_change_end(bl, SC_ATTHASTE_POTION1, INVALID_TIMER);
-			status_change_end(bl, SC_ATTHASTE_POTION2, INVALID_TIMER);
-			status_change_end(bl, SC_ATTHASTE_POTION3, INVALID_TIMER);
-			status_change_end(bl, SC_ATTHASTE_INFINITY, INVALID_TIMER);
-			break;
-		//Group A Status (doesn't overlap)
-		case SC_SWING:
-		case SC_SYMPHONY_LOVE:
-		case SC_MOONLIT_SERENADE:
-		case SC_RUSH_WINDMILL:
-		case SC_ECHOSONG:
-		case SC_HARMONIZE:
-		case SC_FRIGG_SONG:
-			if (type != SC_SWING) status_change_end(bl, SC_SWING, INVALID_TIMER);
-			if (type != SC_SYMPHONY_LOVE) status_change_end(bl, SC_SYMPHONY_LOVE, INVALID_TIMER);
-			if (type != SC_MOONLIT_SERENADE) status_change_end(bl, SC_MOONLIT_SERENADE, INVALID_TIMER);
-			if (type != SC_RUSH_WINDMILL) status_change_end(bl, SC_RUSH_WINDMILL, INVALID_TIMER);
-			if (type != SC_ECHOSONG) status_change_end(bl, SC_ECHOSONG, INVALID_TIMER);
-			if (type != SC_HARMONIZE) status_change_end(bl, SC_HARMONIZE, INVALID_TIMER);
-			if (type != SC_FRIGG_SONG) status_change_end(bl, SC_FRIGG_SONG, INVALID_TIMER);
-			break;
-		//Group B Status
-		case SC_SIREN:
-		case SC_DEEP_SLEEP:
-		case SC_SIRCLEOFNATURE:
-		case SC_LERADS_DEW:
-		case SC_MELODYOFSINK:
-		case SC_BEYOND_OF_WARCRY:
-		case SC_UNLIMITED_HUMMING_VOICE:
-		case SC_GLOOMYDAY:
-		case SC_SONG_OF_MANA:
-		case SC_DANCE_WITH_WUG:
-			if (type != SC_SIREN) status_change_end(bl, SC_SIREN, INVALID_TIMER);
-			if (type != SC_DEEP_SLEEP) status_change_end(bl, SC_DEEP_SLEEP, INVALID_TIMER);
-			if (type != SC_SIRCLEOFNATURE) status_change_end(bl, SC_SIRCLEOFNATURE, INVALID_TIMER);
-			if (type != SC_LERADS_DEW) status_change_end(bl, SC_LERADS_DEW, INVALID_TIMER);
-			if (type != SC_MELODYOFSINK) status_change_end(bl, SC_MELODYOFSINK, INVALID_TIMER);
-			if (type != SC_BEYOND_OF_WARCRY) status_change_end(bl, SC_BEYOND_OF_WARCRY, INVALID_TIMER);
-			if (type != SC_UNLIMITED_HUMMING_VOICE) status_change_end(bl, SC_UNLIMITED_HUMMING_VOICE, INVALID_TIMER);
-			if (type != SC_GLOOMYDAY) status_change_end(bl, SC_GLOOMYDAY, INVALID_TIMER);
-			if (type != SC_SONG_OF_MANA) status_change_end(bl, SC_SONG_OF_MANA, INVALID_TIMER);
-			if (type != SC_DANCE_WITH_WUG) status_change_end(bl, SC_DANCE_WITH_WUG, INVALID_TIMER);
-			break;
-		case SC_REFLECTSHIELD:
-			status_change_end(bl, SC_LG_REFLECTDAMAGE, INVALID_TIMER);
-			break;
-		case SC_LG_REFLECTDAMAGE:
-			status_change_end(bl, SC_REFLECTSHIELD, INVALID_TIMER);
-			break;
-		case SC_SHIELDSPELL_DEF:
-		case SC_SHIELDSPELL_MDEF:
-		case SC_SHIELDSPELL_REF:
-			status_change_end(bl, SC_MAGNIFICAT, INVALID_TIMER);
-			status_change_end(bl, SC_SHIELDSPELL_DEF, INVALID_TIMER);
-			status_change_end(bl, SC_SHIELDSPELL_MDEF, INVALID_TIMER);
-			status_change_end(bl, SC_SHIELDSPELL_REF, INVALID_TIMER);
-			break;
-		case SC_GENTLETOUCH_ENERGYGAIN:
-		case SC_GENTLETOUCH_CHANGE:
-		case SC_GENTLETOUCH_REVITALIZE:
-			if (type != SC_GENTLETOUCH_REVITALIZE)
-				status_change_end(bl, SC_GENTLETOUCH_REVITALIZE, INVALID_TIMER);
-			if (type != SC_GENTLETOUCH_ENERGYGAIN)
-				status_change_end(bl, SC_GENTLETOUCH_ENERGYGAIN, INVALID_TIMER);
-			if (type != SC_GENTLETOUCH_CHANGE)
-				status_change_end(bl, SC_GENTLETOUCH_CHANGE, INVALID_TIMER);
-			break;
-		case SC_INVINCIBLE:
-			status_change_end(bl, SC_INVINCIBLEOFF, INVALID_TIMER);
-			break;
-		case SC_INVINCIBLEOFF:
-			status_change_end(bl, SC_INVINCIBLE, INVALID_TIMER);
-			break;
-		case SC_MAGICPOWER:
-			status_change_end(bl, type, INVALID_TIMER);
-			break;
+
+		if (battle_config.berserk_cancels_buffs != 0) {
+			status_change_end(bl, SC_ONEHANDQUICKEN, INVALID_TIMER);
+			status_change_end(bl, SC_TWOHANDQUICKEN, INVALID_TIMER);
+			status_change_end(bl, SC_LKCONCENTRATION, INVALID_TIMER);
+			status_change_end(bl, SC_PARRYING, INVALID_TIMER);
+			status_change_end(bl, SC_AURABLADE, INVALID_TIMER);
+			status_change_end(bl, SC_MER_QUICKEN, INVALID_TIMER);
+		} else {
+#ifdef RENEWAL
+			status_change_end(bl, SC_TWOHANDQUICKEN, INVALID_TIMER);
+#endif
+		}
+
+		break;
+	case SC_ASSUMPTIO:
+		status_change_end(bl, SC_KYRIE, INVALID_TIMER);
+		status_change_end(bl, SC_KAITE, INVALID_TIMER);
+		break;
+	case SC_KAITE:
+		status_change_end(bl, SC_ASSUMPTIO, INVALID_TIMER);
+		break;
+	case SC_CARTBOOST:
+		if (sc->data[SC_DEC_AGI] != NULL || sc->data[SC_ADORAMUS] != NULL) {
+			// Cancel Decrease Agi, but take no further effect [Skotlex]
+			status_change_end(bl, SC_DEC_AGI, INVALID_TIMER);
+			status_change_end(bl, SC_ADORAMUS, INVALID_TIMER);
+			return true;
+		}
+
+		break;
+	case SC_FUSION:
+		status_change_end(bl, SC_SOULLINK, INVALID_TIMER);
+		break;
+	case SC_GS_ADJUSTMENT:
+		status_change_end(bl, SC_GS_MADNESSCANCEL, INVALID_TIMER);
+		break;
+	case SC_GS_MADNESSCANCEL:
+		status_change_end(bl, SC_GS_ADJUSTMENT, INVALID_TIMER);
+		break;
+	case SC_PROPERTYUNDEAD:
+		// NPC_CHANGEUNDEAD will debuff Blessing and Agi Up
+		status_change_end(bl, SC_BLESSING, INVALID_TIMER);
+		status_change_end(bl, SC_INC_AGI, INVALID_TIMER);
+		break;
+	case SC_FOOD_STR:
+		status_change_end(bl, SC_FOOD_STR, INVALID_TIMER);
+		break;
+	case SC_FOOD_AGI:
+		status_change_end(bl, SC_FOOD_AGI, INVALID_TIMER);
+		break;
+	case SC_FOOD_VIT:
+		status_change_end(bl, SC_FOOD_VIT, INVALID_TIMER);
+		break;
+	case SC_FOOD_INT:
+		status_change_end(bl, SC_FOOD_INT, INVALID_TIMER);
+		break;
+	case SC_FOOD_DEX:
+		status_change_end(bl, SC_FOOD_DEX, INVALID_TIMER);
+		break;
+	case SC_FOOD_LUK:
+		status_change_end(bl, SC_FOOD_LUK, INVALID_TIMER);
+		break;
+	case SC_FOOD_STR_CASH:
+		status_change_end(bl, SC_FOOD_STR, INVALID_TIMER);
+		status_change_end(bl, SC_FOOD_STR_CASH, INVALID_TIMER);
+		break;
+	case SC_FOOD_AGI_CASH:
+		status_change_end(bl, SC_FOOD_AGI, INVALID_TIMER);
+		status_change_end(bl, SC_FOOD_AGI_CASH, INVALID_TIMER);
+		break;
+	case SC_FOOD_VIT_CASH:
+		status_change_end(bl, SC_FOOD_VIT, INVALID_TIMER);
+		status_change_end(bl, SC_FOOD_VIT_CASH, INVALID_TIMER);
+		break;
+	case SC_FOOD_INT_CASH:
+		status_change_end(bl, SC_FOOD_INT, INVALID_TIMER);
+		status_change_end(bl, SC_FOOD_INT_CASH, INVALID_TIMER);
+		break;
+	case SC_FOOD_DEX_CASH:
+		status_change_end(bl, SC_FOOD_DEX, INVALID_TIMER);
+		status_change_end(bl, SC_FOOD_DEX_CASH, INVALID_TIMER);
+		break;
+	case SC_FOOD_LUK_CASH:
+		status_change_end(bl, SC_FOOD_LUK, INVALID_TIMER);
+		status_change_end(bl, SC_FOOD_LUK_CASH, INVALID_TIMER);
+		break;
+	case SC_GM_BATTLE:
+		status_change_end(bl, SC_GM_BATTLE2, INVALID_TIMER);
+		break;
+	case SC_GM_BATTLE2:
+		status_change_end(bl, SC_GM_BATTLE, INVALID_TIMER);
+		break;
+	case SC_ENDURE:
+		if (val4 == 1)
+			status_change_end(bl, SC_LKCONCENTRATION, INVALID_TIMER);
+
+		break;
+	case SC_FIGHTINGSPIRIT:
+	case SC_OVERED_BOOST:
+		status_change_end(bl, type, INVALID_TIMER); // Remove previous one.
+		break;
+	case SC_MARSHOFABYSS:
+		status_change_end(bl, SC_INCAGI, INVALID_TIMER);
+		status_change_end(bl, SC_WINDWALK, INVALID_TIMER);
+		status_change_end(bl, SC_ATTHASTE_POTION1, INVALID_TIMER);
+		status_change_end(bl, SC_ATTHASTE_POTION2, INVALID_TIMER);
+		status_change_end(bl, SC_ATTHASTE_POTION3, INVALID_TIMER);
+		status_change_end(bl, SC_ATTHASTE_INFINITY, INVALID_TIMER);
+		break;
+	// Group A Status (doesn't overlap)
+	case SC_SWING:
+	case SC_SYMPHONY_LOVE:
+	case SC_MOONLIT_SERENADE:
+	case SC_RUSH_WINDMILL:
+	case SC_ECHOSONG:
+	case SC_HARMONIZE:
+		if (type != SC_SWING)
+			status_change_end(bl, SC_SWING, INVALID_TIMER);
+
+		if (type != SC_SYMPHONY_LOVE)
+			status_change_end(bl, SC_SYMPHONY_LOVE, INVALID_TIMER);
+
+		if (type != SC_MOONLIT_SERENADE)
+			status_change_end(bl, SC_MOONLIT_SERENADE, INVALID_TIMER);
+
+		if (type != SC_RUSH_WINDMILL)
+			status_change_end(bl, SC_RUSH_WINDMILL, INVALID_TIMER);
+
+		if (type != SC_ECHOSONG)
+			status_change_end(bl, SC_ECHOSONG, INVALID_TIMER);
+
+		if (type != SC_HARMONIZE)
+			status_change_end(bl, SC_HARMONIZE, INVALID_TIMER);
+
+		break;
+	// Group B Status
+	case SC_SIREN:
+	case SC_DEEP_SLEEP:
+	case SC_SIRCLEOFNATURE:
+	case SC_LERADS_DEW:
+	case SC_MELODYOFSINK:
+	case SC_BEYOND_OF_WARCRY:
+	case SC_UNLIMITED_HUMMING_VOICE:
+	case SC_GLOOMYDAY:
+	case SC_SONG_OF_MANA:
+	case SC_DANCE_WITH_WUG:
+		if (type != SC_SIREN)
+			status_change_end(bl, SC_SIREN, INVALID_TIMER);
+
+		if (type != SC_DEEP_SLEEP)
+			status_change_end(bl, SC_DEEP_SLEEP, INVALID_TIMER);
+
+		if (type != SC_SIRCLEOFNATURE)
+			status_change_end(bl, SC_SIRCLEOFNATURE, INVALID_TIMER);
+
+		if (type != SC_LERADS_DEW)
+			status_change_end(bl, SC_LERADS_DEW, INVALID_TIMER);
+
+		if (type != SC_MELODYOFSINK)
+			status_change_end(bl, SC_MELODYOFSINK, INVALID_TIMER);
+
+		if (type != SC_BEYOND_OF_WARCRY)
+			status_change_end(bl, SC_BEYOND_OF_WARCRY, INVALID_TIMER);
+
+		if (type != SC_UNLIMITED_HUMMING_VOICE)
+			status_change_end(bl, SC_UNLIMITED_HUMMING_VOICE, INVALID_TIMER);
+
+		if (type != SC_GLOOMYDAY)
+			status_change_end(bl, SC_GLOOMYDAY, INVALID_TIMER);
+
+		if (type != SC_SONG_OF_MANA)
+			status_change_end(bl, SC_SONG_OF_MANA, INVALID_TIMER);
+
+		if (type != SC_DANCE_WITH_WUG)
+			status_change_end(bl, SC_DANCE_WITH_WUG, INVALID_TIMER);
+
+		break;
+	case SC_REFLECTSHIELD:
+		status_change_end(bl, SC_LG_REFLECTDAMAGE, INVALID_TIMER);
+		break;
+	case SC_LG_REFLECTDAMAGE:
+		status_change_end(bl, SC_REFLECTSHIELD, INVALID_TIMER);
+		break;
+	case SC_SHIELDSPELL_DEF:
+	case SC_SHIELDSPELL_MDEF:
+	case SC_SHIELDSPELL_REF:
+		status_change_end(bl, SC_MAGNIFICAT, INVALID_TIMER);
+		status_change_end(bl, SC_SHIELDSPELL_DEF, INVALID_TIMER);
+		status_change_end(bl, SC_SHIELDSPELL_MDEF, INVALID_TIMER);
+		status_change_end(bl, SC_SHIELDSPELL_REF, INVALID_TIMER);
+		break;
+	case SC_GENTLETOUCH_ENERGYGAIN:
+	case SC_GENTLETOUCH_CHANGE:
+	case SC_GENTLETOUCH_REVITALIZE:
+		if (type != SC_GENTLETOUCH_REVITALIZE)
+			status_change_end(bl, SC_GENTLETOUCH_REVITALIZE, INVALID_TIMER);
+
+		if (type != SC_GENTLETOUCH_ENERGYGAIN)
+			status_change_end(bl, SC_GENTLETOUCH_ENERGYGAIN, INVALID_TIMER);
+
+		if (type != SC_GENTLETOUCH_CHANGE)
+			status_change_end(bl, SC_GENTLETOUCH_CHANGE, INVALID_TIMER);
+
+		break;
+	case SC_INVINCIBLE:
+		status_change_end(bl, SC_INVINCIBLEOFF, INVALID_TIMER);
+		break;
+	case SC_INVINCIBLEOFF:
+		status_change_end(bl, SC_INVINCIBLE, INVALID_TIMER);
+		break;
+	case SC_MAGICPOWER:
+	case SC_IMPOSITIO:
+		status_change_end(bl, type, INVALID_TIMER);
+		break;
 	}
 
 	return false;
@@ -11960,15 +11981,22 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 			break;
 
 		case SC_CASH_BOSS_ALARM:
-			if( sd && --(sce->val4) >= 0 ) {
+			if (sd != NULL && --(sce->val4) >= 0) {
 				struct mob_data *boss_md = map->id2boss(sce->val1);
-				if( boss_md && sd->bl.m == boss_md->bl.m ) {
-					clif->bossmapinfo(sd->fd, boss_md, 1); // Update X - Y on minimap
-					if (boss_md->bl.prev != NULL) {
-						sc_timer_next(5000 + tick, status->change_timer, bl->id, data);
+				if (boss_md != NULL) {
+					if (sd->bl.m != boss_md->bl.m) { // Changed map
+ 						return 0;
+					} else if (boss_md->bl.prev != NULL) { // Boss monster still alive, update x and y position on map
+						sce->val2 = 0;
+						clif->bossmapinfo(sd->fd, boss_md, BOSS_INFO_ALIVE);
+					} else if (boss_md->spawn_timer != INVALID_TIMER && sce->val2 == 0) { // Boss monster is dead
+						sce->val2 = 1;
+						clif->bossmapinfo(sd->fd, boss_md, BOSS_INFO_DEAD);
 						return 0;
 					}
 				}
+				sc_timer_next(5000 + tick, status->change_timer, bl->id, data);
+				return 0;
 			}
 			break;
 
@@ -13142,7 +13170,7 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 	struct view_data *vd = NULL;
 	struct regen_data_sub *sregen;
 	struct map_session_data *sd;
-	int val,rate,bonus = 0,flag;
+	int flag;
 
 	nullpo_ret(bl);
 	regen = status->get_regen_data(bl);
@@ -13173,48 +13201,72 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 			pc->regen(sd, status->natural_heal_diff_tick);
 	}
 
-	if (flag&(RGN_SHP|RGN_SSP)
-	 && regen->ssregen
+	if ((flag & (RGN_SHP | RGN_SSP)) != 0
+	 && regen->sitting != NULL
 	 && (vd = status->get_viewdata(bl)) != NULL
 	 && vd->dead_sit == 2
 	) {
 		//Apply sitting regen bonus.
-		sregen = regen->ssregen;
-		if(flag&(RGN_SHP)) {
+		sregen = regen->sitting;
+
+		if ((flag & RGN_SHP) != 0 && sregen->hp != 0 && sregen->rate.hp > 0) {
 			//Sitting HP regen
-			val = status->natural_heal_diff_tick * sregen->rate.hp;
-			if (regen->state.overweight)
-				val>>=1; //Half as fast when overweight.
-			sregen->tick.hp += val;
-			while(sregen->tick.hp >= (unsigned int)battle_config.natural_heal_skill_interval) {
-				sregen->tick.hp -= battle_config.natural_heal_skill_interval;
-				if (status->heal(bl, sregen->hp, 0, STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT) < sregen->hp) {
-					//Full
-					flag&=~(RGN_HP|RGN_SHP);
+			int tick = max(battle_config.natural_heal_cap, battle_config.natural_heal_skill_interval * 100 / sregen->rate.hp);
+
+			sregen->tick.hp += status->natural_heal_diff_tick;
+
+			if (regen->state.overweight != 0)
+				tick *= 2; //Half as fast when overweight.
+
+			while (sregen->tick.hp >= tick) {
+				sregen->tick.hp -= tick;
+				if (status->heal(bl, sregen->hp, 0, STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT) < sregen->hp) { // Full
+					flag &= ~(RGN_HP | RGN_SHP);
 					break;
 				}
 			}
 		}
-		if(flag&(RGN_SSP)) {
+
+		if ((flag & RGN_SSP) != 0 && sregen->sp != 0 && sregen->sp > 0) {
 			//Sitting SP regen
-			val = status->natural_heal_diff_tick * sregen->rate.sp;
-			if (regen->state.overweight)
-				val>>=1; //Half as fast when overweight.
-			sregen->tick.sp += val;
-			while(sregen->tick.sp >= (unsigned int)battle_config.natural_heal_skill_interval) {
-				sregen->tick.sp -= battle_config.natural_heal_skill_interval;
-				if (status->heal(bl, 0, sregen->sp, STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT) < sregen->sp) {
-					//Full
-					flag&=~(RGN_SP|RGN_SSP);
+			int tick = max(battle_config.natural_heal_cap, battle_config.natural_heal_skill_interval * 100 / sregen->rate.sp);
+			sregen->tick.sp += status->natural_heal_diff_tick;
+
+			if (regen->state.overweight != 0)
+				tick *= 2; //Half as fast when overweight.
+
+			while (sregen->tick.sp >= tick) {
+				sregen->tick.sp -= tick;
+
+				if (sd != NULL && sd->state.doridori != 0) {
+					sd->state.doridori = 0;
+
+					int rate;
+					if ((rate = pc->checkskill(sd, TK_SPTIME)) != 0)
+						sc_start(bl, bl, status->skill2sc(TK_SPTIME), 100, rate, skill->get_time(TK_SPTIME, rate));
+
+					if ((sd->job & MAPID_UPPERMASK) == MAPID_STAR_GLADIATOR
+						&& rnd() % 10000 < battle_config.sg_angel_skill_ratio) { //Angel of the Sun/Moon/Star
+						clif->feel_hate_reset(sd);
+						pc->resethate(sd);
+						pc->resetfeel(sd);
+					}
+				}
+
+				if (status->heal(bl, 0, sregen->sp, STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT) < sregen->sp) { // Full
+					flag &= ~(RGN_SP | RGN_SSP);
 					break;
 				}
 			}
 		}
 	}
 
-	// SC_TENSIONRELAX allows HP to be recovered even when overweight. [csnv]
-	if (flag && regen->state.overweight && (sc == NULL || sc->data[SC_TENSIONRELAX] == NULL)) {
+	if (flag != 0 && regen->state.overweight != 0) {
 		flag = 0;
+
+		// SC_TENSIONRELAX allows HP to be recovered even when overweight. [csnv]
+		if (sc != NULL && sc->data[SC_TENSIONRELAX] != NULL)
+			flag |= RGN_HP | RGN_SHP;
 	}
 
 	ud = unit->bl2ud(bl);
@@ -13228,93 +13280,112 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 	if (!flag)
 		return 0;
 
-	if (flag&(RGN_HP|RGN_SP)) {
-		if(!vd) vd = status->get_viewdata(bl);
-		if(vd && vd->dead_sit == 2)
-			bonus++;
-		if(regen->state.gc)
-			bonus++;
+	int hp_bonus = regen->rate.hp,
+		sp_bonus = regen->rate.sp;
+	if ((flag & (RGN_HP | RGN_SP)) != 0) {
+		if(vd == NULL)
+			vd = status->get_viewdata(bl);
+		if (vd != NULL && vd->dead_sit == 2) {
+			// In Aegis sit bonus is calculated beofre any other bonuses
+			// Which is also an cumulative additions [Hemagx]
+			hp_bonus *= 2;
+			sp_bonus *= 2;
+		}
+	}
+
+	int hp_interval = battle_config.natural_healhp_interval;
+	int sp_interval = battle_config.natural_healsp_interval;
+	int interval_cap = battle_config.natural_heal_cap;
+	switch (bl->type) { //PC objects uses the default heal intervals provided above
+	case BL_HOM:
+		hp_interval = battle_config.hom_natural_heal_hp;
+		sp_interval = battle_config.hom_natural_heal_sp;
+		interval_cap = battle_config.hom_natural_heal_cap;
+		break;
+	case BL_MER:
+		hp_interval = battle_config.merc_natural_heal_hp;
+		sp_interval = battle_config.merc_natural_heal_sp;
+		interval_cap = battle_config.merc_natural_heal_cap;
+		break;
+	case BL_ELEM:
+		hp_interval = battle_config.elem_natural_heal_hp;
+		sp_interval = battle_config.elem_natural_heal_sp;
+		interval_cap = battle_config.elem_natural_heal_cap;
+		break;
 	}
 
 	//Natural Hp regen
-	if (flag&RGN_HP) {
-		rate = status->natural_heal_diff_tick*(regen->rate.hp+bonus);
-		if (ud && ud->walktimer != INVALID_TIMER)
-			rate/=2;
-		// Homun HP regen fix (they should regen as if they were sitting (twice as fast)
-		if(bl->type==BL_HOM) rate *=2;
+	if ((flag & RGN_HP) != 0 && hp_bonus > 0) {
+		int tick = max(interval_cap, hp_interval * 100 / hp_bonus);
+		regen->tick.hp += status->natural_heal_diff_tick;
 
-		regen->tick.hp += rate;
+		if (ud != NULL && ud->walktimer != INVALID_TIMER)
+			tick *= 2;
 
-		if(regen->tick.hp >= (unsigned int)battle_config.natural_healhp_interval) {
-			val = 0;
+		if (regen->tick.hp >= tick) {
+			int heal_val = 0;
 			do {
-				val += regen->hp;
-				regen->tick.hp -= battle_config.natural_healhp_interval;
-			} while(regen->tick.hp >= (unsigned int)battle_config.natural_healhp_interval);
-			if (status->heal(bl, val, 0, STATUS_HEAL_FORCED) < val)
-				flag&=~RGN_SHP; //full.
+				heal_val += regen->hp;
+				regen->tick.hp -= tick;
+			} while (regen->tick.hp >= tick);
+
+			if (status->heal(bl, heal_val, 0, STATUS_HEAL_FORCED) < heal_val) // Full
+				flag &= ~RGN_SHP;
 		}
 	}
 
 	//Natural SP regen
-	if(flag&RGN_SP) {
-		rate = status->natural_heal_diff_tick*(regen->rate.sp+bonus);
-		// Homun SP regen fix (they should regen as if they were sitting (twice as fast)
-		if(bl->type==BL_HOM) rate *=2;
+	if ((flag & RGN_SP) != 0 && sp_bonus > 0) {
+		int tick = max(interval_cap, sp_interval * 100 / sp_bonus);
+		regen->tick.sp += status->natural_heal_diff_tick;
 
-		regen->tick.sp += rate;
+		if (regen->tick.sp >= tick) {
+			int heal_val = 0;
 
-		if(regen->tick.sp >= (unsigned int)battle_config.natural_healsp_interval) {
-			val = 0;
 			do {
-				val += regen->sp;
-				regen->tick.sp -= battle_config.natural_healsp_interval;
-			} while(regen->tick.sp >= (unsigned int)battle_config.natural_healsp_interval);
-			if (status->heal(bl, 0, val, STATUS_HEAL_FORCED) < val)
-				flag&=~RGN_SSP; //full.
+				heal_val += regen->sp;
+				regen->tick.sp -= tick;
+			} while (regen->tick.sp >= tick);
+
+			if (status->heal(bl, 0, heal_val, STATUS_HEAL_FORCED) < heal_val) // Full
+				flag &= ~RGN_SSP;
 		}
 	}
 
-	if (!regen->sregen)
+	if (regen->skill == NULL)
 		return flag;
 
 	//Skill regen
-	sregen = regen->sregen;
+	sregen = regen->skill;
 
-	if(flag&RGN_SHP) {
+	if ((flag & RGN_SHP) != 0 && sregen->hp != 0 && sregen->rate.hp > 0) {
 		//Skill HP regen
-		sregen->tick.hp += status->natural_heal_diff_tick * sregen->rate.hp;
+		int tick = max(battle_config.natural_heal_cap, battle_config.natural_heal_skill_interval * 100 / sregen->rate.hp);
+		sregen->tick.hp += status->natural_heal_diff_tick;
 
-		while(sregen->tick.hp >= (unsigned int)battle_config.natural_heal_skill_interval) {
-			sregen->tick.hp -= battle_config.natural_heal_skill_interval;
-			if (status->heal(bl, sregen->hp, 0, STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT) < sregen->hp)
-				break; //Full
+		while (sregen->tick.hp >= tick) {
+			sregen->tick.hp -= tick;
+			if (status->heal(bl, sregen->hp, 0, STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT) < sregen->hp) // Full
+				break;
 		}
 	}
-	if(flag&RGN_SSP) {
+
+	if ((flag & RGN_SSP) != 0 && sregen->sp != 0 && sregen->rate.sp > 0) {
 		//Skill SP regen
-		sregen->tick.sp += status->natural_heal_diff_tick * sregen->rate.sp;
-		while(sregen->tick.sp >= (unsigned int)battle_config.natural_heal_skill_interval) {
-			val = sregen->sp;
-			if (sd && sd->state.doridori) {
-				val*=2;
+		int tick = max(battle_config.natural_heal_cap, battle_config.natural_heal_skill_interval * 100 / sregen->rate.sp);
+		sregen->tick.sp += status->natural_heal_diff_tick;
+
+		while (sregen->tick.sp >= tick) {
+			int heal_val = sregen->sp;
+			if (sd != NULL && sd->state.doridori != 0) { //Angel of the Sun/Moon/Star
+				if ((sd->job & MAPID_UPPERMASK) == MAPID_SUPER_NOVICE)
+					heal_val *= 2;
 				sd->state.doridori = 0;
-				if ((rate = pc->checkskill(sd,TK_SPTIME)))
-					sc_start(bl,bl,status->skill2sc(TK_SPTIME),
-					         100,rate,skill->get_time(TK_SPTIME, rate));
-				if ((sd->job & MAPID_UPPERMASK) == MAPID_STAR_GLADIATOR
-				 &&rnd()%10000 < battle_config.sg_angel_skill_ratio
-				) {
-					//Angel of the Sun/Moon/Star
-					clif->feel_hate_reset(sd);
-					pc->resethate(sd);
-					pc->resetfeel(sd);
-				}
 			}
-			sregen->tick.sp -= battle_config.natural_heal_skill_interval;
-			if (status->heal(bl, 0, val, STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT) < val)
-				break; //Full
+
+			sregen->tick.sp -= tick;
+			if (status->heal(bl, 0, heal_val, STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT) < heal_val)  //Full
+				break;
 		}
 	}
 	return flag;
@@ -13583,7 +13654,7 @@ static void status_read_job_db(void)
 	struct config_t job_db_conf;
 	struct config_setting_t *jdb = NULL;
 	char config_filename[256];
-	
+
 #ifdef RENEWAL_ASPD
 	libconfig->format_db_path(DBPATH_RE"job_db.conf", config_filename, sizeof(config_filename));
 #else
@@ -13695,6 +13766,12 @@ static bool status_read_scdb_libconfig_sub(struct config_setting_t *it, int idx,
 		status->dbs->IconChangeTable[status_id].id = i32;
 	else
 		status->dbs->IconChangeTable[status_id].id = SI_BLANK;
+
+
+	struct config_setting_t *sk = libconfig->setting_get_member(it, "Skills");
+	if (sk != NULL)
+		status->read_scdb_libconfig_sub_skill(sk, status_id, source);
+
 	return true;
 }
 
@@ -13748,6 +13825,41 @@ static bool status_read_scdb_libconfig_sub_flag_additional(struct config_setting
 {
 	// to be used by plugins
 	return false;
+}
+
+static bool status_read_scdb_libconfig_sub_skill(struct config_setting_t *it, int type, const char *source)
+{
+	nullpo_retr(false, it);
+	nullpo_retr(false, source);
+	Assert_retr(false, type > SC_NONE && type < SC_MAX);
+
+	if (!config_setting_is_aggregate(it)) {
+		ShowWarning("status_read_scdb_libconfig_sub_skill: skills for status (%d) must be a list, in (%s), ignoring..\n", type, source);
+		return false;
+	}
+
+	const int len = libconfig->setting_length(it);
+	for (int i = 0; i < len; i++) {
+		int skill_id = 0;
+		const char *skill_name = libconfig->setting_get_string_elem(it, i);
+		if ((skill_id = skill->name2id(skill_name)) == 0) {
+			ShowWarning("status_read_scdb_libconfig_sub_skill: Unknown skill name (%s) found for status (%d), in (%s), ignoring..\n", skill_name, type, source);
+			continue;
+		}
+
+		if (status->dbs->SkillChangeTable[type] == 0)
+			status->dbs->SkillChangeTable[type] = skill_id;
+
+		int skill_idx = 0;
+		if ((skill_idx = skill->get_index(skill_id)) == 0) {
+			ShowWarning("status_read_scdb_libconfig_sub_skill: Invalid skill index (%d) found for status (%d), in (%s), ignoring..\n", skill_id, type, source);
+			continue;
+		}
+
+		if (status->dbs->Skill2SCTable[skill_idx] == SC_NONE)
+			status->dbs->Skill2SCTable[skill_idx] = type;
+	}
+	return true;
 }
 
 /**
@@ -13914,9 +14026,17 @@ void status_defaults(void)
 	status->calc_elemental_ = status_calc_elemental_;
 
 	status->calc_misc = status_calc_misc;
+	status->calc_regen_pc = status_calc_regen_pc;
+	status->calc_regen_homunculus = status_calc_regen_homunculus;
+	status->calc_regen_mercenary = status_calc_regen_mercenary;
+	status->calc_regen_elemental = status_calc_regen_elemental;
 	status->calc_regen = status_calc_regen;
+	status->calc_regen_rate_pc = status_calc_regen_rate_pc;
+	status->calc_regen_rate_elemental = status_calc_regen_rate_elemental;
+	status->calc_regen_rate_homunculus = status_calc_regen_rate_homunculus;
 	status->calc_regen_rate = status_calc_regen_rate;
 
+	status->check_skilluse_mapzone = status_check_skilluse_mapzone;
 	status->check_skilluse = status_check_skilluse; // [Skotlex]
 	status->check_visibility = status_check_visibility; //[Skotlex]
 
@@ -13984,6 +14104,7 @@ void status_defaults(void)
 	status->read_scdb_libconfig_sub = status_read_scdb_libconfig_sub;
 	status->read_scdb_libconfig_sub_flag = status_read_scdb_libconfig_sub_flag;
 	status->read_scdb_libconfig_sub_flag_additional = status_read_scdb_libconfig_sub_flag_additional;
+	status->read_scdb_libconfig_sub_skill = status_read_scdb_libconfig_sub_skill;
 	status->read_job_db = status_read_job_db;
 	status->read_job_db_sub = status_read_job_db_sub;
 	status->set_sc = status_set_sc;

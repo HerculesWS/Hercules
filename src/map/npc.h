@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) 2012-2021 Hercules Dev Team
  * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -166,7 +166,7 @@ enum actor_classes {
 #define MAX_NPC_CLASS 1000
 // New NPC range
 #define MAX_NPC_CLASS2_START 10001
-#define MAX_NPC_CLASS2_END 10344
+#define MAX_NPC_CLASS2_END 10376
 
 //Script NPC events.
 enum npce_event {
@@ -254,6 +254,7 @@ struct npc_interface {
 	int64 (*gettimerevent_tick) (struct npc_data *nd);
 	int (*settimerevent_tick) (struct npc_data *nd, int newtimer);
 	int (*event) (struct map_session_data *sd, const char *eventname, int ontouch);
+	int (*handle_touch_events) (struct map_session_data *sd, int x, int y, bool check_if_warped);
 	int (*touch_areanpc_sub) (struct block_list *bl, va_list ap);
 	int (*touchnext_areanpc) (struct map_session_data *sd, bool leavemap);
 	int (*touch_areanpc) (struct map_session_data *sd, int16 m, int16 x, int16 y);

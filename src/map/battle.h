@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) 2012-2021 Hercules Dev Team
  * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -46,7 +46,7 @@ struct status_data;
 #define MIN_BODY_STYLE (battle->bc->min_body_style)
 #define MAX_BODY_STYLE (battle->bc->max_body_style)
 
-#define is_boss(bl)     (status_get_mode(bl)&MD_BOSS) // Can refine later [Aru]
+#define is_boss(bl)     ((status_get_mode(bl) & MD_BOSS) != 0x0) // Can refine later [Aru]
 
 /**
  * Enumerations
@@ -250,6 +250,7 @@ struct Battle_Config {
 	int summer2_ignorepalette;
 	int natural_healhp_interval;
 	int natural_healsp_interval;
+	int natural_heal_cap;
 	int natural_heal_skill_interval;
 	int natural_heal_weight_rate;
 	int arrow_decrement;
@@ -527,6 +528,7 @@ struct Battle_Config {
 	int mon_trans_disable_in_gvg;
 
 	int case_sensitive_aegisnames;
+	int search_freecell_map_margin;
 	int guild_castle_invite;
 	int guild_castle_expulsion;
 
@@ -616,6 +618,18 @@ struct Battle_Config {
 	int autoloot_adjust;
 	int allowed_actions_when_dead;
 	int teleport_close_storage;
+
+	int show_attendance_window;
+
+	int elem_natural_heal_hp;
+	int elem_natural_heal_sp;
+	int elem_natural_heal_cap;
+	int hom_natural_heal_hp;
+	int hom_natural_heal_sp;
+	int hom_natural_heal_cap;
+	int merc_natural_heal_hp;
+	int merc_natural_heal_sp;
+	int merc_natural_heal_cap;
 };
 
 /* criteria for battle_config.idletime_critera */

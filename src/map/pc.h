@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) 2012-2021 Hercules Dev Team
  * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -198,7 +198,8 @@ struct map_session_data {
 	struct status_data base_status, battle_status;
 	struct status_change sc;
 	struct regen_data regen;
-	struct regen_data_sub sregen, ssregen;
+	struct regen_data_sub skill_regen;
+	struct regen_data_sub sitting_regen;
 	struct autocast_data auto_cast_current; // Currently processed auto-cast skill.
 	VECTOR_DECL(struct autocast_data) auto_cast; // Auto-cast vector.
 	//NOTE: When deciding to add a flag to state or special_state, take into consideration that state is preserved in
@@ -394,7 +395,7 @@ BEGIN_ZEROED_BLOCK; // this block will be globally zeroed at the beginning of st
 	struct {
 		int value;
 		int rate, tick;
-	} def_set_race[RC_MAX], mdef_set_race[RC_MAX];
+	} def_set_race[RC_MAX], mdef_set_race[RC_MAX], no_recover_state_race[RC_MAX];
 	struct {
 		int rate_mob; //!< Damage reduction rate against monster's defense element.
 		int rate_pc;  //!< Damage reduction rate against player's defense element.
@@ -1097,6 +1098,7 @@ END_ZEROED_BLOCK; /* End */
 	int (*cleareventtimer) (struct map_session_data *sd);
 	int (*addeventtimercount) (struct map_session_data *sd,const char *name,int tick);
 
+	int (*calc_pvprank_sub) (struct block_list *bl, va_list ap);
 	int (*calc_pvprank) (struct map_session_data *sd);
 	int (*calc_pvprank_timer) (int tid, int64 tick, int id, intptr_t data);
 

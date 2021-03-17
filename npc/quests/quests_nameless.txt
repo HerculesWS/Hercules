@@ -9,7 +9,7 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) 2012-2021 Hercules Dev Team
 //= Copyright (C) Euphy
 //= Copyright (C) brianluau
 //= Copyright (C) Yommy
@@ -4774,7 +4774,7 @@ moc_ruins,152,147,5	script	Ibrahim	4_M_JOB_HUNTER,3,3,{
 					mes "out with their problems.";
 					close;
 				}
-				else if (BaseClass == Job_Swordman) {
+				else if (BaseJob == Job_Swordman) {
 					mes "[Ibrahim]";
 					mes "I've got a few buddies";
 					mes "in the Swordman Association.";
@@ -4783,7 +4783,7 @@ moc_ruins,152,147,5	script	Ibrahim	4_M_JOB_HUNTER,3,3,{
 					mes "for someone smart and strong.";
 					close;
 				}
-				else if (BaseClass == Job_Crusader) {
+				else if (BaseJob == Job_Crusader) {
 					mes "[Ibrahim]";
 					mes "Heh, so you really";
 					mes "are one of those holy";
@@ -4799,7 +4799,7 @@ moc_ruins,152,147,5	script	Ibrahim	4_M_JOB_HUNTER,3,3,{
 					mes "reputation precedes you.";
 					close;
 				}
-				else if (BaseClass == Job_Merchant) {
+				else if (BaseJob == Job_Merchant) {
 					mes "[Ibrahim]";
 					mes "Hey, if I didn't know";
 					mes "your name, how could I call";
@@ -4807,14 +4807,14 @@ moc_ruins,152,147,5	script	Ibrahim	4_M_JOB_HUNTER,3,3,{
 					mes "an example for us all~";
 					close;
 				}
-				else if (BaseClass == Job_Blacksmith) {
+				else if (BaseJob == Job_Blacksmith) {
 					mes "[Ibrahim]";
 					mes "We have a mutual friend,";
 					mes "you know that? Aragham";
 					mes "really spoke highly of you.";
 					close;
 				}
-				else if (BaseClass == Job_Alchemist) {
+				else if (BaseJob == Job_Alchemist) {
 					mes "[Ibrahim]";
 					mes "I know a guy who knows";
 					mes "a guy in the Alchemist Guild.";
@@ -4841,7 +4841,7 @@ moc_ruins,152,147,5	script	Ibrahim	4_M_JOB_HUNTER,3,3,{
 					mes "acquaintance~";
 					close;
 				}
-				else if (BaseClass == Job_Archer) {
+				else if (BaseJob == Job_Archer || BaseJob == Job_Hunter) {
 					mes "[Ibrahim]";
 					mes "Anyone who's used";
 					mes "a bow seems to drop";
@@ -4851,14 +4851,14 @@ moc_ruins,152,147,5	script	Ibrahim	4_M_JOB_HUNTER,3,3,{
 					mes "actually talking to you~";
 					close;
 				}
-				else if (BaseClass == Job_Bard) {
+				else if (BaseJob == Job_Bard) {
 					mes "[Ibrahim]";
 					mes "Is it really true?";
 					mes "I hear you sing";
 					mes "like an angel...";
 					close;
 				}
-				else if (BaseClass == Job_Dancer) {
+				else if (BaseJob == Job_Dancer) {
 					mes "[Ibrahim]";
 					mes "Is it really true?";
 					mes "I hear you dance";

@@ -9,7 +9,7 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) 2012-2021 Hercules Dev Team
 //= Copyright (C) Kisuka
 //=
 //= Hercules is free software: you can redistribute it and/or modify
@@ -47,7 +47,6 @@ itemmall,19,74,5	script	Stylist#cash	4_F_02,{
 		mes "hairstyles for men, the";
 		mes "Emergency Heal Perm";
 		mes "and the Aura Blade Cut.";
-		mes "and aura blade cut.";
 		next;
 		cutin "hair_m_24.bmp",4;
 		mes "[Kaniki]";

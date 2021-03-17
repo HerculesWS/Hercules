@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2016-2020 Hercules Dev Team
+ * Copyright (C) 2016-2021 Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -221,7 +221,11 @@ bool translations_enter_file(const char *filepath)
 		}
 		if (*p == '.') {
 			lang_export_filepath[i] = '_';
+#ifdef WIN32
+		} else if (*p == PATHSEP || *p == PATHSEP2) {  // quick hack for avoid windows issues
+#else  // WIN32
 		} else if (*p == PATHSEP) {
+#endif  // WIN32
 			if (!createdirectory(lang_export_filepath)) {
 				ShowError("generatetranslations: Unable to create output directory '%s'.\n", lang_export_filepath);
 				aFree(lang_export_filepath);

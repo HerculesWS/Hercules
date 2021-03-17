@@ -3,7 +3,7 @@
 -- This file is part of Hercules.
 -- http://herc.ws - http://github.com/HerculesWS/Hercules
 --
--- Copyright (C) 2018-2020 Hercules Dev Team
+-- Copyright (C) 2018-2021 Hercules Dev Team
 --
 -- Hercules is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -19,45 +19,45 @@
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ALTER TABLE `auction`
-	MODIFY `card0` INT(11) NOT NULL DEFAULT '0',
-	MODIFY `card1` INT(11) NOT NULL DEFAULT '0',
-	MODIFY `card2` INT(11) NOT NULL DEFAULT '0',
-	MODIFY `card3` INT(11) NOT NULL DEFAULT '0';
+	MODIFY `card0` INT NOT NULL DEFAULT '0',
+	MODIFY `card1` INT NOT NULL DEFAULT '0',
+	MODIFY `card2` INT NOT NULL DEFAULT '0',
+	MODIFY `card3` INT NOT NULL DEFAULT '0';
 
 ALTER TABLE `cart_inventory`
-	MODIFY `card0` INT(11) NOT NULL DEFAULT '0',
-	MODIFY `card1` INT(11) NOT NULL DEFAULT '0',
-	MODIFY `card2` INT(11) NOT NULL DEFAULT '0',
-	MODIFY `card3` INT(11) NOT NULL DEFAULT '0';
+	MODIFY `card0` INT NOT NULL DEFAULT '0',
+	MODIFY `card1` INT NOT NULL DEFAULT '0',
+	MODIFY `card2` INT NOT NULL DEFAULT '0',
+	MODIFY `card3` INT NOT NULL DEFAULT '0';
 
 ALTER TABLE `guild_storage`
-	MODIFY `card0` INT(11) NOT NULL DEFAULT '0',
-	MODIFY `card1` INT(11) NOT NULL DEFAULT '0',
-	MODIFY `card2` INT(11) NOT NULL DEFAULT '0',
-	MODIFY `card3` INT(11) NOT NULL DEFAULT '0';
+	MODIFY `card0` INT NOT NULL DEFAULT '0',
+	MODIFY `card1` INT NOT NULL DEFAULT '0',
+	MODIFY `card2` INT NOT NULL DEFAULT '0',
+	MODIFY `card3` INT NOT NULL DEFAULT '0';
 	
 ALTER TABLE `inventory`
-	MODIFY `card0` INT(11) NOT NULL DEFAULT '0',
-	MODIFY `card1` INT(11) NOT NULL DEFAULT '0',
-	MODIFY `card2` INT(11) NOT NULL DEFAULT '0',
-	MODIFY `card3` INT(11) NOT NULL DEFAULT '0';
+	MODIFY `card0` INT NOT NULL DEFAULT '0',
+	MODIFY `card1` INT NOT NULL DEFAULT '0',
+	MODIFY `card2` INT NOT NULL DEFAULT '0',
+	MODIFY `card3` INT NOT NULL DEFAULT '0';
 	
 ALTER TABLE `mail`
-	MODIFY `card0` INT(11) NOT NULL DEFAULT '0',
-	MODIFY `card1` INT(11) NOT NULL DEFAULT '0',
-	MODIFY `card2` INT(11) NOT NULL DEFAULT '0',
-	MODIFY `card3` INT(11) NOT NULL DEFAULT '0';
+	MODIFY `card0` INT NOT NULL DEFAULT '0',
+	MODIFY `card1` INT NOT NULL DEFAULT '0',
+	MODIFY `card2` INT NOT NULL DEFAULT '0',
+	MODIFY `card3` INT NOT NULL DEFAULT '0';
 
 ALTER TABLE `rodex_items`
-	MODIFY `card0` INT(11) NOT NULL DEFAULT '0',
-	MODIFY `card1` INT(11) NOT NULL DEFAULT '0',
-	MODIFY `card2` INT(11) NOT NULL DEFAULT '0',
-	MODIFY `card3` INT(11) NOT NULL DEFAULT '0';
+	MODIFY `card0` INT NOT NULL DEFAULT '0',
+	MODIFY `card1` INT NOT NULL DEFAULT '0',
+	MODIFY `card2` INT NOT NULL DEFAULT '0',
+	MODIFY `card3` INT NOT NULL DEFAULT '0';
 	
 ALTER TABLE `storage`
-	MODIFY `card0` INT(11) NOT NULL DEFAULT '0',
-	MODIFY `card1` INT(11) NOT NULL DEFAULT '0',
-	MODIFY `card2` INT(11) NOT NULL DEFAULT '0',
-	MODIFY `card3` INT(11) NOT NULL DEFAULT '0';
+	MODIFY `card0` INT NOT NULL DEFAULT '0',
+	MODIFY `card1` INT NOT NULL DEFAULT '0',
+	MODIFY `card2` INT NOT NULL DEFAULT '0',
+	MODIFY `card3` INT NOT NULL DEFAULT '0';
  
 INSERT INTO `sql_updates` (`timestamp`, `ignored`) VALUES (1535865732, 'No');

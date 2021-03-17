@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) 2012-2021 Hercules Dev Team
  * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -47,9 +47,9 @@
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 
 #include <io.h>
-#include <Windows.h>
-#include <WinSock2.h>
-#include <In6addr.h>
-#include <Ws2tcpip.h>
-#include <Mswsock.h>
-#include <MMSystem.h>
+#include <windows.h>
+#include <winsock2.h>
+#include <in6addr.h>
+#include <ws2tcpip.h>
+#include <mswsock.h>
+#include <mmsystem.h>

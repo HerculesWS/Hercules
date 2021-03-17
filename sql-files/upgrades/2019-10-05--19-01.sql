@@ -3,7 +3,7 @@
 -- This file is part of Hercules.
 -- http://herc.ws - http://github.com/HerculesWS/Hercules
 --
--- Copyright (C) 2019-2020 Hercules Dev Team
+-- Copyright (C) 2019-2021 Hercules Dev Team
 --
 -- Hercules is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -- Adds new total_tick column
-ALTER TABLE `sc_data` ADD COLUMN `total_tick` INT(11) NOT NULL AFTER `tick`;
+ALTER TABLE `sc_data` ADD COLUMN `total_tick` INT NOT NULL AFTER `tick`;
 
 -- Copy current tick to total_tick so players doesn't lose their current
 -- status_changes, although those will still appear wrong until they end

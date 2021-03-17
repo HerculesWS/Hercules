@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) 2012-2021 Hercules Dev Team
  * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -38,6 +38,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
+
+#ifndef MAXCONN
+#ifdef SOCKET_EPOLL
+#define MAXCONN 3072
+#else  // SOCKET_EPOLL
+#define MAXCONN FD_SETSIZE
+#endif  // SOCKET_EPOLL
+#endif  // MAXCONN
 
 #ifdef SOCKET_EPOLL
 #include <sys/epoll.h>
@@ -106,7 +114,7 @@ typedef int socklen_t;
 
 // global array of sockets (emulating linux)
 // fd is the position in the array
-static SOCKET sock_arr[FD_SETSIZE];
+static SOCKET sock_arr[MAXCONN];
 static int sock_arr_len = 0;
 
 /// Returns the socket associated with the target fd.
@@ -137,7 +145,7 @@ static int sock2fd(SOCKET s)
 /// Returns a new fd associated with the socket.
 /// If there are too many sockets it closes the socket, sets an error and
 //  returns -1 instead.
-/// Since fd 0 is reserved, it returns values in the range [1,FD_SETSIZE[.
+/// Since fd 0 is reserved, it returns values in the range [1,MAXCONN[.
 ///
 /// @param s Socket
 /// @return New fd or -1
@@ -260,7 +268,7 @@ static fd_set readfds;
 
 #else  // SOCKET_EPOLL
 // Epoll based Event Dispatcher:
-static int epoll_maxevents = (FD_SETSIZE / 2);
+static int epoll_maxevents = (MAXCONN / 2);
 static int epfd = SOCKET_ERROR;
 static struct epoll_event epevent;
 static struct epoll_event *epevents = NULL;
@@ -293,9 +301,9 @@ static time_t socket_data_last_tick = 0;
 #define WFIFO_MAX (1*1024*1024)
 
 #ifdef SEND_SHORTLIST
-static int send_shortlist_array[FD_SETSIZE];// we only support FD_SETSIZE sockets, limit the array to that
+static int send_shortlist_array[MAXCONN]; // we only support MAXCONN sockets, limit the array to that
 static int send_shortlist_count = 0;// how many fd's are in the shortlist
-static uint32 send_shortlist_set[(FD_SETSIZE+31)/32];// to know if specific fd's are already in the shortlist
+static uint32 send_shortlist_set[(MAXCONN + 31) / 32]; // to know if specific fd's are already in the shortlist
 #endif  // SEND_SHORTLIST
 
 static int create_session(int fd, RecvFunc func_recv, SendFunc func_send, ParseFunc func_parse);
@@ -545,8 +553,8 @@ static int connect_client(int listen_fd)
 		sClose(fd);
 		return -1;
 	}
-	if( fd >= FD_SETSIZE ) { // socket number too big
-		ShowError("connect_client: New socket #%d is greater than can we handle! Increase the value of FD_SETSIZE (currently %d) for your OS to fix this!\n", fd, FD_SETSIZE);
+	if (fd >= MAXCONN) { // socket number too big
+		ShowError("connect_client: New socket #%d is greater than can we handle! Increase the value of MAXCONN (currently %d) for your OS to fix this!\n", fd, MAXCONN);
 		sClose(fd);
 		return -1;
 	}
@@ -602,8 +610,8 @@ static int make_listen_bind(uint32 ip, uint16 port)
 		sClose(fd);
 		return -1;
 	}
-	if( fd >= FD_SETSIZE ) { // socket number too big
-		ShowError("make_listen_bind: New socket #%d is greater than can we handle! Increase the value of FD_SETSIZE (currently %d) for your OS to fix this!\n", fd, FD_SETSIZE);
+	if (fd >= MAXCONN) { // socket number too big
+		ShowError("make_listen_bind: New socket #%d is greater than can we handle! Increase the value of MAXCONN (currently %d) for your OS to fix this!\n", fd, MAXCONN);
 		sClose(fd);
 		return -1;
 	}
@@ -671,8 +679,8 @@ static int make_connection(uint32 ip, uint16 port, struct hSockOpt *opt)
 		sClose(fd);
 		return -1;
 	}
-	if( fd >= FD_SETSIZE ) {// socket number too big
-		ShowError("make_connection: New socket #%d is greater than can we handle! Increase the value of FD_SETSIZE (currently %d) for your OS to fix this!\n", fd, FD_SETSIZE);
+	if (fd >= MAXCONN) {// socket number too big
+		ShowError("make_connection: New socket #%d is greater than can we handle! Increase the value of MAXCONN (currently %d) for your OS to fix this!\n", fd, MAXCONN);
 		sClose(fd);
 		return -1;
 	}
@@ -1557,7 +1565,7 @@ static void socket_final(void)
 /// Closes a socket.
 static void socket_close(int fd)
 {
-	if( fd <= 0 ||fd >= FD_SETSIZE )
+	if (fd <= 0 ||fd >= MAXCONN)
 		return;// invalid
 
 	sockt->flush(fd); // Try to send what's left (although it might not succeed since it's a nonblocking socket)
@@ -1662,7 +1670,7 @@ static int socket_getips(uint32 *ips, int max)
 
 static void socket_init(void)
 {
-	uint64 rlim_cur = FD_SETSIZE;
+	uint64 rlim_cur = MAXCONN;
 
 #ifdef WIN32
 	{// Start up windows networking
@@ -1682,14 +1690,14 @@ static void socket_init(void)
 #elif defined(HAVE_SETRLIMIT) && !defined(CYGWIN)
 	// NOTE: getrlimit and setrlimit have bogus behavior in cygwin.
 	//       "Number of fds is virtually unlimited in cygwin" (sys/param.h)
-	{// set socket limit to FD_SETSIZE
+	{// set socket limit to MAXCONN
 		struct rlimit rlp;
 		if( 0 == getrlimit(RLIMIT_NOFILE, &rlp) )
 		{
-			rlp.rlim_cur = FD_SETSIZE;
+			rlp.rlim_cur = MAXCONN;
 			if( 0 != setrlimit(RLIMIT_NOFILE, &rlp) )
 			{// failed, try setting the maximum too (permission to change system limits is required)
-				rlp.rlim_max = FD_SETSIZE;
+				rlp.rlim_max = MAXCONN;
 				if( 0 != setrlimit(RLIMIT_NOFILE, &rlp) )
 				{// failed
 					const char *errmsg = error_msg();
@@ -1702,7 +1710,7 @@ static void socket_init(void)
 					// report limit
 					getrlimit(RLIMIT_NOFILE, &rlp);
 					rlim_cur = rlp.rlim_cur;
-					ShowWarning("socket_init: failed to set socket limit to %d, setting to maximum allowed (original limit=%d, current limit=%d, maximum allowed=%d, %s).\n", FD_SETSIZE, rlim_ori, (int)rlp.rlim_cur, (int)rlp.rlim_max, errmsg);
+					ShowWarning("socket_init: failed to set socket limit to %d, setting to maximum allowed (original limit=%d, current limit=%d, maximum allowed=%d, %s).\n", MAXCONN, rlim_ori, (int)rlp.rlim_cur, (int)rlp.rlim_max, errmsg);
 				}
 			}
 		}
@@ -1724,7 +1732,7 @@ static void socket_init(void)
 
 #else  // SOCKET_EPOLL
 	// Epoll based Event Dispatcher:
-	epfd = epoll_create(FD_SETSIZE); // 2.6.8 or newer ignores the expected socket amount argument
+	epfd = epoll_create(MAXCONN); // 2.6.8 or newer ignores the expected socket amount argument
 	if(epfd == SOCKET_ERROR){
 		ShowError("Failed to Create Epoll Event Dispatcher: %s\n", error_msg());
 		exit(EXIT_FAILURE);
@@ -1741,7 +1749,7 @@ static void socket_init(void)
 	memset(send_shortlist_set, 0, sizeof(send_shortlist_set));
 #endif  // defined(SEND_SHORTLIST)
 
-	CREATE(sockt->session, struct socket_data *, FD_SETSIZE);
+	CREATE(sockt->session, struct socket_data *, MAXCONN);
 
 	// initialize last send-receive tick
 	sockt->last_tick = time(NULL);
@@ -1760,7 +1768,7 @@ static void socket_init(void)
 
 static bool session_is_valid(int fd)
 {
-	return ( fd > 0 && fd < FD_SETSIZE && sockt->session[fd] != NULL );
+	return ( fd > 0 && fd < MAXCONN && sockt->session[fd] != NULL );
 }
 
 static bool session_is_active(int fd)
@@ -1899,7 +1907,7 @@ static void send_shortlist_add_fd(int fd)
 	}
 
 	// set the bit
-	send_shortlist_set[i] |= 1<<bit;
+	send_shortlist_set[i] |= 1U << bit;
 	// Add to the end of the shortlist array.
 	send_shortlist_array[send_shortlist_count++] = fd;
 }
@@ -1920,7 +1928,7 @@ static void send_shortlist_do_sends(void)
 		send_shortlist_array[i] = send_shortlist_array[send_shortlist_count];
 		send_shortlist_array[send_shortlist_count] = 0;
 
-		if( fd <= 0 || fd >= FD_SETSIZE )
+		if (fd <= 0 || fd >= MAXCONN)
 		{
 			ShowDebug("send_shortlist_do_sends: fd is out of range, corrupted memory? (fd=%d)\n", fd);
 			continue;
@@ -1930,7 +1938,7 @@ static void send_shortlist_do_sends(void)
 			ShowDebug("send_shortlist_do_sends: fd is not set, why is it in the shortlist? (fd=%d)\n", fd);
 			continue;
 		}
-		send_shortlist_set[idx]&=~(1<<bit);// unset fd
+		send_shortlist_set[idx] &=~ (1U << bit);// unset fd
 		// If this session still exists, perform send operations on it and
 		// check for the eof state.
 		if( sockt->session[fd] )

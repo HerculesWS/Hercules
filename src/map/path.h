@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) 2012-2021 Hercules Dev Team
  * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -58,7 +58,7 @@ struct shootpath_data {
 
 struct path_interface {
 	// calculates destination cell for knockback
-	int (*blownpos) (struct block_list *bl, int16 m, int16 x0, int16 y0, int16 dx, int16 dy, int count);
+	int (*blownpos) (struct block_list *bl, int16 m, int16 x0, int16 y0, enum unit_dir dir, int count);
 	// tries to find a walkable path
 	bool (*search) (struct walkpath_data *wpd, struct block_list *bl, int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int flag, cell_chk cell);
 	// tries to find a shootable path

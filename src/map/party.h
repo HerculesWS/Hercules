@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) 2012-2021 Hercules Dev Team
  * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -27,8 +27,12 @@
 
 #include <stdarg.h>
 
-#define PARTY_BOOKING_JOBS 6
-#define PARTY_BOOKING_RESULTS 10
+#ifndef MAX_PARTY_BOOKING_JOBS
+#define MAX_PARTY_BOOKING_JOBS 6
+#endif
+#ifndef MAX_PARTY_BOOKING_RESULTS
+#define MAX_PARTY_BOOKING_RESULTS 10
+#endif
 
 struct block_list;
 struct hplugin_data_store;
@@ -65,7 +69,7 @@ struct party_booking_detail {
 	char notice[PB_NOTICE_LENGTH];
 #else // not PARTY_RECRUIT
 	short mapid;
-	short job[PARTY_BOOKING_JOBS];
+	short job[MAX_PARTY_BOOKING_JOBS];
 #endif // PARTY_RECRUIT
 };
 

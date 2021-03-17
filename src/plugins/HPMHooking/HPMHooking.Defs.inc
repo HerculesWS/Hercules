@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2013-2020 Hercules Dev Team
+ * Copyright (C) 2013-2021 Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1232,8 +1232,8 @@ typedef void (*HPMHOOK_pre_clif_pvpset) (struct map_session_data **sd, int *pvpr
 typedef void (*HPMHOOK_post_clif_pvpset) (struct map_session_data *sd, int pvprank, int pvpnum, int type);
 typedef void (*HPMHOOK_pre_clif_map_property_mapall) (int *mapid, enum map_property *property);
 typedef void (*HPMHOOK_post_clif_map_property_mapall) (int mapid, enum map_property property);
-typedef void (*HPMHOOK_pre_clif_bossmapinfo) (int *fd, struct mob_data **md, short *flag);
-typedef void (*HPMHOOK_post_clif_bossmapinfo) (int fd, struct mob_data *md, short flag);
+typedef void (*HPMHOOK_pre_clif_bossmapinfo) (int *fd, struct mob_data **md, enum bossmap_info_type *flag);
+typedef void (*HPMHOOK_post_clif_bossmapinfo) (int fd, struct mob_data *md, enum bossmap_info_type flag);
 typedef void (*HPMHOOK_pre_clif_map_type) (struct map_session_data **sd, enum map_type *type);
 typedef void (*HPMHOOK_post_clif_map_type) (struct map_session_data *sd, enum map_type type);
 typedef void (*HPMHOOK_pre_clif_maptypeproperty2) (struct block_list **bl, enum send_target *t);
@@ -1418,6 +1418,8 @@ typedef void (*HPMHOOK_pre_clif_unknownname_ack) (int *fd, struct block_list **b
 typedef void (*HPMHOOK_post_clif_unknownname_ack) (int fd, struct block_list *bl);
 typedef void (*HPMHOOK_pre_clif_monster_hp_bar) (struct mob_data **md, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_monster_hp_bar) (struct mob_data *md, struct map_session_data *sd);
+typedef bool (*HPMHOOK_pre_clif_show_monster_hp_bar) (struct block_list **bl);
+typedef bool (*HPMHOOK_post_clif_show_monster_hp_bar) (bool retVal___, struct block_list *bl);
 typedef int (*HPMHOOK_pre_clif_hpmeter) (struct map_session_data **sd);
 typedef int (*HPMHOOK_post_clif_hpmeter) (int retVal___, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_hpmeter_single) (int *fd, int *id, unsigned int *hp, unsigned int *maxhp);
@@ -2132,8 +2134,8 @@ typedef void (*HPMHOOK_pre_clif_pHowManyConnections) (int *fd, struct map_sessio
 typedef void (*HPMHOOK_post_clif_pHowManyConnections) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_pActionRequest) (int *fd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_pActionRequest) (int fd, struct map_session_data *sd);
-typedef void (*HPMHOOK_pre_clif_pActionRequest_sub) (struct map_session_data **sd, int *action_type, int *target_id, int64 *tick);
-typedef void (*HPMHOOK_post_clif_pActionRequest_sub) (struct map_session_data *sd, int action_type, int target_id, int64 tick);
+typedef void (*HPMHOOK_pre_clif_pActionRequest_sub) (struct map_session_data **sd, enum action_type *action_type, int *target_id, int64 *tick);
+typedef void (*HPMHOOK_post_clif_pActionRequest_sub) (struct map_session_data *sd, enum action_type action_type, int target_id, int64 tick);
 typedef void (*HPMHOOK_pre_clif_pRestart) (int *fd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_pRestart) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_pWisMessage) (int *fd, struct map_session_data **sd);
@@ -3138,6 +3140,8 @@ typedef int (*HPMHOOK_pre_guild_get_alliance_count) (struct guild **g, int *flag
 typedef int (*HPMHOOK_post_guild_get_alliance_count) (int retVal___, struct guild *g, int flag);
 typedef void (*HPMHOOK_pre_guild_castle_reconnect_sub) (void **key, void **data, va_list ap);
 typedef void (*HPMHOOK_post_guild_castle_reconnect_sub) (void *key, void *data, va_list ap);
+typedef int (*HPMHOOK_pre_guild_castle_owner_change_foreach) (struct map_session_data **sd, va_list ap);
+typedef int (*HPMHOOK_post_guild_castle_owner_change_foreach) (int retVal___, struct map_session_data *sd, va_list ap);
 #endif // MAP_GUILD_H
 #ifdef MAP_STORAGE_H /* gstorage */
 typedef struct guild_storage* (*HPMHOOK_pre_gstorage_ensure) (int *guild_id);
@@ -3254,10 +3258,16 @@ typedef void (*HPMHOOK_pre_homun_stat_reset) (struct homun_data **hd);
 typedef void (*HPMHOOK_post_homun_stat_reset) (struct homun_data *hd);
 typedef bool (*HPMHOOK_pre_homun_shuffle) (struct homun_data **hd);
 typedef bool (*HPMHOOK_post_homun_shuffle) (bool retVal___, struct homun_data *hd);
-typedef bool (*HPMHOOK_pre_homun_read_db_sub) (char **str[], int *columns, int *current);
-typedef bool (*HPMHOOK_post_homun_read_db_sub) (bool retVal___, char *str[], int columns, int current);
 typedef void (*HPMHOOK_pre_homun_read_db) (void);
 typedef void (*HPMHOOK_post_homun_read_db) (void);
+typedef bool (*HPMHOOK_pre_homun_read_db_libconfig) (const char **filename);
+typedef bool (*HPMHOOK_post_homun_read_db_libconfig) (bool retVal___, const char *filename);
+typedef bool (*HPMHOOK_pre_homun_read_db_libconfig_sub) (struct config_setting_t **it, int *idx, const char **source);
+typedef bool (*HPMHOOK_post_homun_read_db_libconfig_sub) (bool retVal___, struct config_setting_t *it, int idx, const char *source);
+typedef bool (*HPMHOOK_pre_homun_read_db_libconfig_sub_stats) (struct config_setting_t **it, int *idx);
+typedef bool (*HPMHOOK_post_homun_read_db_libconfig_sub_stats) (bool retVal___, struct config_setting_t *it, int idx);
+typedef bool (*HPMHOOK_pre_homun_read_db_libconfig_sub_stats_group) (struct config_setting_t **it, struct h_stats **smin, struct h_stats **smax);
+typedef bool (*HPMHOOK_post_homun_read_db_libconfig_sub_stats_group) (bool retVal___, struct config_setting_t *it, struct h_stats *smin, struct h_stats *smax);
 typedef bool (*HPMHOOK_pre_homun_read_skill_db_sub) (char **split[], int *columns, int *current);
 typedef bool (*HPMHOOK_post_homun_read_skill_db_sub) (bool retVal___, char *split[], int columns, int current);
 typedef void (*HPMHOOK_pre_homun_skill_db_read) (void);
@@ -4642,8 +4652,8 @@ typedef struct skill_unit* (*HPMHOOK_pre_map_find_skill_unit_oncell) (struct blo
 typedef struct skill_unit* (*HPMHOOK_post_map_find_skill_unit_oncell) (struct skill_unit* retVal___, struct block_list *target, int16 x, int16 y, uint16 skill_id, struct skill_unit *out_unit, int flag);
 typedef int (*HPMHOOK_pre_map_get_new_object_id) (void);
 typedef int (*HPMHOOK_post_map_get_new_object_id) (int retVal___);
-typedef int (*HPMHOOK_pre_map_search_freecell) (struct block_list **src, int16 *m, int16 **x, int16 **y, int16 *rx, int16 *ry, int *flag);
-typedef int (*HPMHOOK_post_map_search_freecell) (int retVal___, struct block_list *src, int16 m, int16 *x, int16 *y, int16 rx, int16 ry, int flag);
+typedef int (*HPMHOOK_pre_map_search_free_cell) (struct block_list **src, int16 *m, int16 **x, int16 **y, int16 *range_x, int16 *range_y, int *flag);
+typedef int (*HPMHOOK_post_map_search_free_cell) (int retVal___, struct block_list *src, int16 m, int16 *x, int16 *y, int16 range_x, int16 range_y, int flag);
 typedef bool (*HPMHOOK_pre_map_closest_freecell) (int16 *m, const struct block_list **bl, int16 **x, int16 **y, int *type, int *flag);
 typedef bool (*HPMHOOK_post_map_closest_freecell) (bool retVal___, int16 m, const struct block_list *bl, int16 *x, int16 *y, int type, int flag);
 typedef int (*HPMHOOK_pre_map_quit) (struct map_session_data **sd);
@@ -4752,6 +4762,10 @@ typedef int (*HPMHOOK_pre_map_check_dir) (enum unit_dir *s_dir, enum unit_dir *t
 typedef int (*HPMHOOK_post_map_check_dir) (int retVal___, enum unit_dir s_dir, enum unit_dir t_dir);
 typedef enum unit_dir (*HPMHOOK_pre_map_calc_dir) (const struct block_list **src, int16 *x, int16 *y);
 typedef enum unit_dir (*HPMHOOK_post_map_calc_dir) (enum unit_dir retVal___, const struct block_list *src, int16 x, int16 y);
+typedef int (*HPMHOOK_pre_map_get_random_cell) (struct block_list **bl, int16 *m, int16 **x, int16 **y, int16 *min_dist, int16 *max_dist);
+typedef int (*HPMHOOK_post_map_get_random_cell) (int retVal___, struct block_list *bl, int16 m, int16 *x, int16 *y, int16 min_dist, int16 max_dist);
+typedef int (*HPMHOOK_pre_map_get_random_cell_in_range) (struct block_list **bl, int16 *m, int16 **x, int16 **y, int16 *x_range, int16 *y_range);
+typedef int (*HPMHOOK_post_map_get_random_cell_in_range) (int retVal___, struct block_list *bl, int16 m, int16 *x, int16 *y, int16 x_range, int16 y_range);
 typedef int (*HPMHOOK_pre_map_random_dir) (struct block_list **bl, short **x, short **y);
 typedef int (*HPMHOOK_post_map_random_dir) (int retVal___, struct block_list *bl, short *x, short *y);
 typedef int (*HPMHOOK_pre_map_cleanup_sub) (struct block_list **bl, va_list ap);
@@ -5292,8 +5306,8 @@ typedef void (*HPMHOOK_pre_mercenary_heal) (struct mercenary_data **md, int *hp,
 typedef void (*HPMHOOK_post_mercenary_heal) (struct mercenary_data *md, int hp, int sp);
 typedef int (*HPMHOOK_pre_mercenary_dead) (struct mercenary_data **md);
 typedef int (*HPMHOOK_post_mercenary_dead) (int retVal___, struct mercenary_data *md);
-typedef int (*HPMHOOK_pre_mercenary_delete) (struct mercenary_data **md, int *reply);
-typedef int (*HPMHOOK_post_mercenary_delete) (int retVal___, struct mercenary_data *md, int reply);
+typedef void (*HPMHOOK_pre_mercenary_delete) (struct mercenary_data **md, int *reply);
+typedef void (*HPMHOOK_post_mercenary_delete) (struct mercenary_data *md, int reply);
 typedef void (*HPMHOOK_pre_mercenary_contract_stop) (struct mercenary_data **md);
 typedef void (*HPMHOOK_post_mercenary_contract_stop) (struct mercenary_data *md);
 typedef int (*HPMHOOK_pre_mercenary_get_lifetime) (struct mercenary_data **md);
@@ -5484,10 +5498,10 @@ typedef int (*HPMHOOK_pre_mob_getfriendstatus_sub) (struct block_list **bl, va_l
 typedef int (*HPMHOOK_post_mob_getfriendstatus_sub) (int retVal___, struct block_list *bl, va_list ap);
 typedef struct block_list* (*HPMHOOK_pre_mob_getfriendstatus) (struct mob_data **md, int *cond1, int *cond2);
 typedef struct block_list* (*HPMHOOK_post_mob_getfriendstatus) (struct block_list* retVal___, struct mob_data *md, int cond1, int cond2);
-typedef int (*HPMHOOK_pre_mob_skill_use) (struct mob_data **md, int64 *tick, int *event);
-typedef int (*HPMHOOK_post_mob_skill_use) (int retVal___, struct mob_data *md, int64 tick, int event);
-typedef int (*HPMHOOK_pre_mob_skill_event) (struct mob_data **md, struct block_list **src, int64 *tick, int *flag);
-typedef int (*HPMHOOK_post_mob_skill_event) (int retVal___, struct mob_data *md, struct block_list *src, int64 tick, int flag);
+typedef int (*HPMHOOK_pre_mob_use_skill) (struct mob_data **md, int64 *tick, int *event);
+typedef int (*HPMHOOK_post_mob_use_skill) (int retVal___, struct mob_data *md, int64 tick, int event);
+typedef int (*HPMHOOK_pre_mob_use_skill_event) (struct mob_data **md, struct block_list **src, int64 *tick, int *flag);
+typedef int (*HPMHOOK_post_mob_use_skill_event) (int retVal___, struct mob_data *md, struct block_list *src, int64 tick, int flag);
 typedef int (*HPMHOOK_pre_mob_is_clone) (int *class_);
 typedef int (*HPMHOOK_post_mob_is_clone) (int retVal___, int class_);
 typedef int (*HPMHOOK_pre_mob_clone_spawn) (struct map_session_data **sd, int16 *m, int16 *x, int16 *y, const char **event, int *master_id, uint32 *mode, int *flag, unsigned int *duration);
@@ -5672,6 +5686,8 @@ typedef int (*HPMHOOK_pre_npc_settimerevent_tick) (struct npc_data **nd, int *ne
 typedef int (*HPMHOOK_post_npc_settimerevent_tick) (int retVal___, struct npc_data *nd, int newtimer);
 typedef int (*HPMHOOK_pre_npc_event) (struct map_session_data **sd, const char **eventname, int *ontouch);
 typedef int (*HPMHOOK_post_npc_event) (int retVal___, struct map_session_data *sd, const char *eventname, int ontouch);
+typedef int (*HPMHOOK_pre_npc_handle_touch_events) (struct map_session_data **sd, int *x, int *y, bool *check_if_warped);
+typedef int (*HPMHOOK_post_npc_handle_touch_events) (int retVal___, struct map_session_data *sd, int x, int y, bool check_if_warped);
 typedef int (*HPMHOOK_pre_npc_touch_areanpc_sub) (struct block_list **bl, va_list ap);
 typedef int (*HPMHOOK_post_npc_touch_areanpc_sub) (int retVal___, struct block_list *bl, va_list ap);
 typedef int (*HPMHOOK_pre_npc_touchnext_areanpc) (struct map_session_data **sd, bool *leavemap);
@@ -5976,8 +5992,8 @@ typedef int (*HPMHOOK_pre_party_db_final) (union DBKey *key, struct DBData **dat
 typedef int (*HPMHOOK_post_party_db_final) (int retVal___, union DBKey key, struct DBData *data, va_list ap);
 #endif // MAP_PARTY_H
 #ifdef MAP_PATH_H /* path */
-typedef int (*HPMHOOK_pre_path_blownpos) (struct block_list **bl, int16 *m, int16 *x0, int16 *y0, int16 *dx, int16 *dy, int *count);
-typedef int (*HPMHOOK_post_path_blownpos) (int retVal___, struct block_list *bl, int16 m, int16 x0, int16 y0, int16 dx, int16 dy, int count);
+typedef int (*HPMHOOK_pre_path_blownpos) (struct block_list **bl, int16 *m, int16 *x0, int16 *y0, enum unit_dir *dir, int *count);
+typedef int (*HPMHOOK_post_path_blownpos) (int retVal___, struct block_list *bl, int16 m, int16 x0, int16 y0, enum unit_dir dir, int count);
 typedef bool (*HPMHOOK_pre_path_search) (struct walkpath_data **wpd, struct block_list **bl, int16 *m, int16 *x0, int16 *y0, int16 *x1, int16 *y1, int *flag, cell_chk *cell);
 typedef bool (*HPMHOOK_post_path_search) (bool retVal___, struct walkpath_data *wpd, struct block_list *bl, int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int flag, cell_chk cell);
 typedef bool (*HPMHOOK_pre_path_search_long) (struct shootpath_data **spd, struct block_list **bl, int16 *m, int16 *x0, int16 *y0, int16 *x1, int16 *y1, cell_chk *cell);
@@ -6296,6 +6312,8 @@ typedef int (*HPMHOOK_pre_pc_cleareventtimer) (struct map_session_data **sd);
 typedef int (*HPMHOOK_post_pc_cleareventtimer) (int retVal___, struct map_session_data *sd);
 typedef int (*HPMHOOK_pre_pc_addeventtimercount) (struct map_session_data **sd, const char **name, int *tick);
 typedef int (*HPMHOOK_post_pc_addeventtimercount) (int retVal___, struct map_session_data *sd, const char *name, int tick);
+typedef int (*HPMHOOK_pre_pc_calc_pvprank_sub) (struct block_list **bl, va_list ap);
+typedef int (*HPMHOOK_post_pc_calc_pvprank_sub) (int retVal___, struct block_list *bl, va_list ap);
 typedef int (*HPMHOOK_pre_pc_calc_pvprank) (struct map_session_data **sd);
 typedef int (*HPMHOOK_post_pc_calc_pvprank) (int retVal___, struct map_session_data *sd);
 typedef int (*HPMHOOK_pre_pc_calc_pvprank_timer) (int *tid, int64 *tick, int *id, intptr_t *data);
@@ -6558,8 +6576,8 @@ typedef int (*HPMHOOK_pre_pet_sc_check) (struct map_session_data **sd, int *type
 typedef int (*HPMHOOK_post_pet_sc_check) (int retVal___, struct map_session_data *sd, int type);
 typedef int (*HPMHOOK_pre_pet_hungry) (int *tid, int64 *tick, int *id, intptr_t *data);
 typedef int (*HPMHOOK_post_pet_hungry) (int retVal___, int tid, int64 tick, int id, intptr_t data);
-typedef int (*HPMHOOK_pre_pet_search_petDB_index) (int *key, int *type);
-typedef int (*HPMHOOK_post_pet_search_petDB_index) (int retVal___, int key, int type);
+typedef int (*HPMHOOK_pre_pet_search_petDB_index) (int *key, enum petdb_key_type *p1);
+typedef int (*HPMHOOK_post_pet_search_petDB_index) (int retVal___, int key, enum petdb_key_type p1);
 typedef int (*HPMHOOK_pre_pet_hungry_timer_delete) (struct pet_data **pd);
 typedef int (*HPMHOOK_post_pet_hungry_timer_delete) (int retVal___, struct pet_data *pd);
 typedef int (*HPMHOOK_pre_pet_performance) (struct map_session_data **sd, struct pet_data **pd);
@@ -6620,12 +6638,12 @@ typedef int (*HPMHOOK_pre_pet_read_db_libconfig) (const char **filename, bool *i
 typedef int (*HPMHOOK_post_pet_read_db_libconfig) (int retVal___, const char *filename, bool ignore_missing);
 typedef int (*HPMHOOK_pre_pet_read_db_sub) (struct config_setting_t **it, int *n, const char **source);
 typedef int (*HPMHOOK_post_pet_read_db_sub) (int retVal___, struct config_setting_t *it, int n, const char *source);
-typedef bool (*HPMHOOK_pre_pet_read_db_sub_intimacy) (int *idx, struct config_setting_t **t);
-typedef bool (*HPMHOOK_post_pet_read_db_sub_intimacy) (bool retVal___, int idx, struct config_setting_t *t);
+typedef bool (*HPMHOOK_pre_pet_read_db_sub_intimacy) (struct s_pet_db **entry, struct config_setting_t **t);
+typedef bool (*HPMHOOK_post_pet_read_db_sub_intimacy) (bool retVal___, struct s_pet_db *entry, struct config_setting_t *t);
 typedef void (*HPMHOOK_pre_pet_read_db_clear) (void);
 typedef void (*HPMHOOK_post_pet_read_db_clear) (void);
-typedef void (*HPMHOOK_pre_pet_read_db_sub_evolution) (struct config_setting_t **t, int *n);
-typedef void (*HPMHOOK_post_pet_read_db_sub_evolution) (struct config_setting_t *t, int n);
+typedef bool (*HPMHOOK_pre_pet_read_db_sub_evolution) (struct s_pet_db **entry, struct config_setting_t **t);
+typedef bool (*HPMHOOK_post_pet_read_db_sub_evolution) (bool retVal___, struct s_pet_db *entry, struct config_setting_t *t);
 #endif // MAP_PET_H
 #ifdef CHAR_PINCODE_H /* pincode */
 typedef void (*HPMHOOK_pre_pincode_handle) (int *fd, struct char_session_data **sd);
@@ -6680,8 +6698,8 @@ typedef int (*HPMHOOK_pre_quest_delete) (struct map_session_data **sd, int *ques
 typedef int (*HPMHOOK_post_quest_delete) (int retVal___, struct map_session_data *sd, int quest_id);
 typedef int (*HPMHOOK_pre_quest_update_objective_sub) (struct block_list **bl, va_list ap);
 typedef int (*HPMHOOK_post_quest_update_objective_sub) (int retVal___, struct block_list *bl, va_list ap);
-typedef void (*HPMHOOK_pre_quest_update_objective) (struct map_session_data **sd, int *mob_id);
-typedef void (*HPMHOOK_post_quest_update_objective) (struct map_session_data *sd, int mob_id);
+typedef void (*HPMHOOK_pre_quest_update_objective) (struct map_session_data **sd, const struct mob_data **md);
+typedef void (*HPMHOOK_post_quest_update_objective) (struct map_session_data *sd, const struct mob_data *md);
 typedef int (*HPMHOOK_pre_quest_update_status) (struct map_session_data **sd, int *quest_id, enum quest_state *qs);
 typedef int (*HPMHOOK_post_quest_update_status) (int retVal___, struct map_session_data *sd, int quest_id, enum quest_state qs);
 typedef int (*HPMHOOK_pre_quest_check) (struct map_session_data **sd, int *quest_id, enum quest_check_type *type);
@@ -6692,6 +6710,8 @@ typedef int (*HPMHOOK_pre_quest_read_db) (void);
 typedef int (*HPMHOOK_post_quest_read_db) (int retVal___);
 typedef struct quest_db* (*HPMHOOK_pre_quest_read_db_sub) (struct config_setting_t **cs, int *n, const char **source);
 typedef struct quest_db* (*HPMHOOK_post_quest_read_db_sub) (struct quest_db* retVal___, struct config_setting_t *cs, int n, const char *source);
+typedef int (*HPMHOOK_pre_quest_setting_lookup_const) (struct config_setting_t **tt, const char **name, int **value, int *quest_id, int *idx, const char **kind, const char **source);
+typedef int (*HPMHOOK_post_quest_setting_lookup_const) (int retVal___, struct config_setting_t *tt, const char *name, int *value, int quest_id, int idx, const char *kind, const char *source);
 typedef int (*HPMHOOK_pre_quest_questinfo_validate_icon) (int *icon);
 typedef int (*HPMHOOK_post_quest_questinfo_validate_icon) (int retVal___, int icon);
 typedef void (*HPMHOOK_pre_quest_questinfo_refresh) (struct map_session_data **sd);
@@ -6716,6 +6736,10 @@ typedef bool (*HPMHOOK_pre_quest_questinfo_validate_quests) (struct map_session_
 typedef bool (*HPMHOOK_post_quest_questinfo_validate_quests) (bool retVal___, struct map_session_data *sd, struct questinfo *qi);
 typedef bool (*HPMHOOK_pre_quest_questinfo_validate_mercenary_class) (struct map_session_data **sd, struct questinfo **qi);
 typedef bool (*HPMHOOK_post_quest_questinfo_validate_mercenary_class) (bool retVal___, struct map_session_data *sd, struct questinfo *qi);
+typedef enum quest_mobtype (*HPMHOOK_pre_quest_mobele2client) (uint8 *type);
+typedef enum quest_mobtype (*HPMHOOK_post_quest_mobele2client) (enum quest_mobtype retVal___, uint8 type);
+typedef enum quest_mobtype (*HPMHOOK_pre_quest_mobrace2client) (uint8 *type);
+typedef enum quest_mobtype (*HPMHOOK_post_quest_mobrace2client) (enum quest_mobtype retVal___, uint8 type);
 #endif // MAP_QUEST_H
 #ifdef MAP_REFINE_H /* refine */
 typedef int (*HPMHOOK_pre_refine_init) (bool *minimal);
@@ -7824,8 +7848,8 @@ typedef int (*HPMHOOK_pre_skill_check_npc_chaospanic) (struct block_list **bl, v
 typedef int (*HPMHOOK_post_skill_check_npc_chaospanic) (int retVal___, struct block_list *bl, va_list args);
 typedef int (*HPMHOOK_pre_skill_count_wos) (struct block_list **bl, va_list ap);
 typedef int (*HPMHOOK_post_skill_count_wos) (int retVal___, struct block_list *bl, va_list ap);
-typedef int (*HPMHOOK_pre_skill_get_linked_song_dance_id) (int *skill_id);
-typedef int (*HPMHOOK_post_skill_get_linked_song_dance_id) (int retVal___, int skill_id);
+typedef void (*HPMHOOK_pre_skill_add_bard_dancer_soullink_songs) (struct map_session_data **sd);
+typedef void (*HPMHOOK_post_skill_add_bard_dancer_soullink_songs) (struct map_session_data *sd);
 #endif // MAP_SKILL_H
 #ifdef COMMON_SOCKET_H /* sockt */
 typedef void (*HPMHOOK_pre_sockt_init) (void);
@@ -8084,10 +8108,26 @@ typedef int (*HPMHOOK_pre_status_calc_elemental_) (struct elemental_data **ed, e
 typedef int (*HPMHOOK_post_status_calc_elemental_) (int retVal___, struct elemental_data *ed, enum e_status_calc_opt opt);
 typedef void (*HPMHOOK_pre_status_calc_misc) (struct block_list **bl, struct status_data **st, int *level);
 typedef void (*HPMHOOK_post_status_calc_misc) (struct block_list *bl, struct status_data *st, int level);
+typedef void (*HPMHOOK_pre_status_calc_regen_pc) (struct map_session_data **sd, struct status_data **st, struct regen_data **regen);
+typedef void (*HPMHOOK_post_status_calc_regen_pc) (struct map_session_data *sd, struct status_data *st, struct regen_data *regen);
+typedef void (*HPMHOOK_pre_status_calc_regen_homunculus) (struct homun_data **hd, struct status_data **st, struct regen_data **regen);
+typedef void (*HPMHOOK_post_status_calc_regen_homunculus) (struct homun_data *hd, struct status_data *st, struct regen_data *regen);
+typedef void (*HPMHOOK_pre_status_calc_regen_mercenary) (struct mercenary_data **md, struct status_data **st, struct regen_data **regen);
+typedef void (*HPMHOOK_post_status_calc_regen_mercenary) (struct mercenary_data *md, struct status_data *st, struct regen_data *regen);
+typedef void (*HPMHOOK_pre_status_calc_regen_elemental) (struct elemental_data **md, struct status_data **st, struct regen_data **regen);
+typedef void (*HPMHOOK_post_status_calc_regen_elemental) (struct elemental_data *md, struct status_data *st, struct regen_data *regen);
 typedef void (*HPMHOOK_pre_status_calc_regen) (struct block_list **bl, struct status_data **st, struct regen_data **regen);
 typedef void (*HPMHOOK_post_status_calc_regen) (struct block_list *bl, struct status_data *st, struct regen_data *regen);
-typedef void (*HPMHOOK_pre_status_calc_regen_rate) (struct block_list **bl, struct regen_data **regen, struct status_change **sc);
-typedef void (*HPMHOOK_post_status_calc_regen_rate) (struct block_list *bl, struct regen_data *regen, struct status_change *sc);
+typedef void (*HPMHOOK_pre_status_calc_regen_rate_pc) (struct map_session_data **sd, struct regen_data **regen);
+typedef void (*HPMHOOK_post_status_calc_regen_rate_pc) (struct map_session_data *sd, struct regen_data *regen);
+typedef void (*HPMHOOK_pre_status_calc_regen_rate_elemental) (struct elemental_data **md, struct regen_data **regen);
+typedef void (*HPMHOOK_post_status_calc_regen_rate_elemental) (struct elemental_data *md, struct regen_data *regen);
+typedef void (*HPMHOOK_pre_status_calc_regen_rate_homunculus) (struct homun_data **hd, struct regen_data **regen);
+typedef void (*HPMHOOK_post_status_calc_regen_rate_homunculus) (struct homun_data *hd, struct regen_data *regen);
+typedef void (*HPMHOOK_pre_status_calc_regen_rate) (struct block_list **bl, struct regen_data **regen);
+typedef void (*HPMHOOK_post_status_calc_regen_rate) (struct block_list *bl, struct regen_data *regen);
+typedef bool (*HPMHOOK_pre_status_check_skilluse_mapzone) (struct block_list **src, struct status_data **st, uint16 *skill_id);
+typedef bool (*HPMHOOK_post_status_check_skilluse_mapzone) (bool retVal___, struct block_list *src, struct status_data *st, uint16 skill_id);
 typedef int (*HPMHOOK_pre_status_check_skilluse) (struct block_list **src, struct block_list **target, uint16 *skill_id, int *flag);
 typedef int (*HPMHOOK_post_status_check_skilluse) (int retVal___, struct block_list *src, struct block_list *target, uint16 skill_id, int flag);
 typedef int (*HPMHOOK_pre_status_check_visibility) (struct block_list **src, struct block_list **target);
@@ -8204,12 +8244,14 @@ typedef bool (*HPMHOOK_pre_status_read_scdb_libconfig_sub_flag) (struct config_s
 typedef bool (*HPMHOOK_post_status_read_scdb_libconfig_sub_flag) (bool retVal___, struct config_setting_t *it, int type, const char *source);
 typedef bool (*HPMHOOK_pre_status_read_scdb_libconfig_sub_flag_additional) (struct config_setting_t **it, int *type, const char **source);
 typedef bool (*HPMHOOK_post_status_read_scdb_libconfig_sub_flag_additional) (bool retVal___, struct config_setting_t *it, int type, const char *source);
+typedef bool (*HPMHOOK_pre_status_read_scdb_libconfig_sub_skill) (struct config_setting_t **it, int *type, const char **source);
+typedef bool (*HPMHOOK_post_status_read_scdb_libconfig_sub_skill) (bool retVal___, struct config_setting_t *it, int type, const char *source);
 typedef void (*HPMHOOK_pre_status_read_job_db) (void);
 typedef void (*HPMHOOK_post_status_read_job_db) (void);
 typedef void (*HPMHOOK_pre_status_read_job_db_sub) (int *idx, const char **name, struct config_setting_t **jdb);
 typedef void (*HPMHOOK_post_status_read_job_db_sub) (int idx, const char *name, struct config_setting_t *jdb);
-typedef void (*HPMHOOK_pre_status_set_sc) (uint16 *skill_id, sc_type *sc, unsigned int *flag);
-typedef void (*HPMHOOK_post_status_set_sc) (uint16 skill_id, sc_type sc, unsigned int flag);
+typedef void (*HPMHOOK_pre_status_set_sc) (sc_type *sc, unsigned int *flag);
+typedef void (*HPMHOOK_post_status_set_sc) (sc_type sc, unsigned int flag);
 typedef void (*HPMHOOK_pre_status_copy) (struct status_data **a, const struct status_data **b);
 typedef void (*HPMHOOK_post_status_copy) (struct status_data *a, const struct status_data *b);
 typedef int (*HPMHOOK_pre_status_base_matk_min) (const struct status_data **st);
@@ -8336,8 +8378,8 @@ typedef bool (*HPMHOOK_pre_sv_readdb) (const char **directory, const char **file
 typedef bool (*HPMHOOK_post_sv_readdb) (bool retVal___, const char *directory, const char *filename, char delim, int mincols, int maxcols, int maxrows, bool ( *parseproc ) (char *fields[], int columns, int current));
 #endif // COMMON_STRLIB_H
 #ifdef COMMON_SYSINFO_H /* sysinfo */
-typedef int (*HPMHOOK_pre_sysinfo_getpagesize) (void);
-typedef int (*HPMHOOK_post_sysinfo_getpagesize) (int retVal___);
+typedef long (*HPMHOOK_pre_sysinfo_getpagesize) (void);
+typedef long (*HPMHOOK_post_sysinfo_getpagesize) (long retVal___);
 typedef const char* (*HPMHOOK_pre_sysinfo_platform) (void);
 typedef const char* (*HPMHOOK_post_sysinfo_platform) (const char* retVal___);
 typedef const char* (*HPMHOOK_pre_sysinfo_osversion) (void);
@@ -8364,6 +8406,8 @@ typedef const char* (*HPMHOOK_pre_sysinfo_vcsrevision_src) (void);
 typedef const char* (*HPMHOOK_post_sysinfo_vcsrevision_src) (const char* retVal___);
 typedef const char* (*HPMHOOK_pre_sysinfo_vcsrevision_scripts) (void);
 typedef const char* (*HPMHOOK_post_sysinfo_vcsrevision_scripts) (const char* retVal___);
+typedef int (*HPMHOOK_pre_sysinfo_build_revision) (void);
+typedef int (*HPMHOOK_post_sysinfo_build_revision) (int retVal___);
 typedef void (*HPMHOOK_pre_sysinfo_vcsrevision_reload) (void);
 typedef void (*HPMHOOK_post_sysinfo_vcsrevision_reload) (void);
 typedef bool (*HPMHOOK_pre_sysinfo_is_superuser) (void);
@@ -8470,22 +8514,22 @@ typedef int (*HPMHOOK_pre_unit_walk_toxy) (struct block_list **bl, short *x, sho
 typedef int (*HPMHOOK_post_unit_walk_toxy) (int retVal___, struct block_list *bl, short x, short y, int flag);
 typedef int (*HPMHOOK_pre_unit_walktobl_timer) (int *tid, int64 *tick, int *id, intptr_t *data);
 typedef int (*HPMHOOK_post_unit_walktobl_timer) (int retVal___, int tid, int64 tick, int id, intptr_t data);
-typedef int (*HPMHOOK_pre_unit_walktobl) (struct block_list **bl, struct block_list **tbl, int *range, int *flag);
-typedef int (*HPMHOOK_post_unit_walktobl) (int retVal___, struct block_list *bl, struct block_list *tbl, int range, int flag);
+typedef int (*HPMHOOK_pre_unit_walk_tobl) (struct block_list **bl, struct block_list **tbl, int *range, int *flag);
+typedef int (*HPMHOOK_post_unit_walk_tobl) (int retVal___, struct block_list *bl, struct block_list *tbl, int range, int flag);
 typedef bool (*HPMHOOK_pre_unit_run) (struct block_list **bl, struct map_session_data **sd, enum sc_type *type);
 typedef bool (*HPMHOOK_post_unit_run) (bool retVal___, struct block_list *bl, struct map_session_data *sd, enum sc_type type);
 typedef void (*HPMHOOK_pre_unit_run_hit) (struct block_list **bl, struct status_change **sc, struct map_session_data **sd, enum sc_type *type);
 typedef void (*HPMHOOK_post_unit_run_hit) (struct block_list *bl, struct status_change *sc, struct map_session_data *sd, enum sc_type type);
-typedef int (*HPMHOOK_pre_unit_escape) (struct block_list **bl, struct block_list **target, short *dist);
-typedef int (*HPMHOOK_post_unit_escape) (int retVal___, struct block_list *bl, struct block_list *target, short dist);
-typedef int (*HPMHOOK_pre_unit_movepos) (struct block_list **bl, short *dst_x, short *dst_y, int *easy, bool *checkpath);
-typedef int (*HPMHOOK_post_unit_movepos) (int retVal___, struct block_list *bl, short dst_x, short dst_y, int easy, bool checkpath);
+typedef int (*HPMHOOK_pre_unit_attempt_escape) (struct block_list **bl, struct block_list **target, short *dist);
+typedef int (*HPMHOOK_post_unit_attempt_escape) (int retVal___, struct block_list *bl, struct block_list *target, short dist);
+typedef int (*HPMHOOK_pre_unit_move_pos) (struct block_list **bl, short *dst_x, short *dst_y, int *easy, bool *checkpath);
+typedef int (*HPMHOOK_post_unit_move_pos) (int retVal___, struct block_list *bl, short dst_x, short dst_y, int easy, bool checkpath);
 typedef int (*HPMHOOK_pre_unit_set_dir) (struct block_list **bl, enum unit_dir *dir);
 typedef int (*HPMHOOK_post_unit_set_dir) (int retVal___, struct block_list *bl, enum unit_dir dir);
 typedef enum unit_dir (*HPMHOOK_pre_unit_getdir) (const struct block_list **bl);
 typedef enum unit_dir (*HPMHOOK_post_unit_getdir) (enum unit_dir retVal___, const struct block_list *bl);
-typedef int (*HPMHOOK_pre_unit_blown) (struct block_list **bl, int *dx, int *dy, int *count, int *flag);
-typedef int (*HPMHOOK_post_unit_blown) (int retVal___, struct block_list *bl, int dx, int dy, int count, int flag);
+typedef int (*HPMHOOK_pre_unit_push) (struct block_list **bl, enum unit_dir *dir, int *count, bool *update);
+typedef int (*HPMHOOK_post_unit_push) (int retVal___, struct block_list *bl, enum unit_dir dir, int count, bool update);
 typedef int (*HPMHOOK_pre_unit_warp) (struct block_list **bl, short *m, short *x, short *y, enum clr_type *type);
 typedef int (*HPMHOOK_post_unit_warp) (int retVal___, struct block_list *bl, short m, short x, short y, enum clr_type type);
 typedef int (*HPMHOOK_pre_unit_warpto_master) (struct block_list **master_bl, struct block_list **slave_bl);

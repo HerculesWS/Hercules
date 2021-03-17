@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) 2012-2021 Hercules Dev Team
  * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -180,6 +180,7 @@ struct guild_interface {
 	int (*check_member) (const struct guild *g);
 	int (*get_alliance_count) (struct guild *g,int flag);
 	void (*castle_reconnect_sub) (void *key, void *data, va_list ap);
+	int (*castle_owner_change_foreach) (struct map_session_data *sd, va_list ap);
 };
 
 #ifdef HERCULES_CORE

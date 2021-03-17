@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) 2012-2021 Hercules Dev Team
  * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -71,6 +71,16 @@ enum merc_id {
 	MERID_MER_SWORDMAN10 = 6046, ///< MER_SWORDMAN10 / Wayne
 };
 
+enum merc_delete_type {
+	MERC_DELETE_EXPIRED = 0, ///< Mercenary soldier's duty fulfilled until contract expiration. Loyalty +1.
+	MERC_DELETE_KILLED,      ///< Mercenary died before fulfilling its contract. Loyalty -1.
+	MERC_DELETE_REMOVED,     ///< Mercenary removed by the user. Loyalty +0.
+	MERC_DELETE_RANAWAY,     ///< Mercenary left because the player died or was hit by the SC__GROOMY status. Loyalty +0.
+#ifndef MERC_DELETE_MAX
+	MERC_DELETE_MAX
+#endif
+};
+
 struct s_mercenary_db {
 	int class_;
 	char sprite[NAME_LENGTH], name[NAME_LENGTH];
@@ -126,7 +136,7 @@ struct mercenary_interface {
 	void (*heal) (struct mercenary_data *md, int hp, int sp);
 	int (*dead) (struct mercenary_data *md);
 
-	int (*delete) (struct mercenary_data *md, int reply);
+	void (*delete) (struct mercenary_data *md, int reply);
 	void (*contract_stop) (struct mercenary_data *md);
 
 	int (*get_lifetime) (struct mercenary_data *md);
