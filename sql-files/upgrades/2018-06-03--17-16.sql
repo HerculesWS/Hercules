@@ -3,7 +3,7 @@
 -- This file is part of Hercules.
 -- http://herc.ws - http://github.com/HerculesWS/Hercules
 --
--- Copyright (C) 2018-2020 Hercules Dev Team
+-- Copyright (C) 2018-2021 Hercules Dev Team
 -- Copyright (C) Dastgir
 --
 -- Hercules is free software: you can redistribute it and/or modify
@@ -19,6 +19,6 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-ALTER TABLE `char` ADD `title_id` INT(11) UNSIGNED NOT NULL DEFAULT '0';
+ALTER TABLE `char` ADD `title_id` INT UNSIGNED NOT NULL DEFAULT '0';
 
 INSERT INTO `sql_updates` (`timestamp`, `ignored`) VALUES (1528026381, 'No');

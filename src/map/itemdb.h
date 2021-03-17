@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) 2012-2021 Hercules Dev Team
  * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -85,6 +85,7 @@ enum item_itemid {
 	ITEMID_CARROT                = 515,
 	ITEMID_HOLY_WATER            = 523,
 	ITEMID_PUMPKIN               = 535,
+	ITEMID_PET_FOOD              = 537,
 	ITEMID_RED_SLIM_POTION       = 545,
 	ITEMID_YELLOW_SLIM_POTION    = 546,
 	ITEMID_WHITE_SLIM_POTION     = 547,

@@ -1,7 +1,7 @@
 -- This file is part of Hercules.
 -- http://herc.ws - http://github.com/HerculesWS/Hercules
 --
--- Copyright (C) 2013-2020 Hercules Dev Team
+-- Copyright (C) 2013-2021 Hercules Dev Team
 --
 -- Hercules is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -29,23 +29,23 @@
 
 DROP TABLE IF EXISTS `mob_skill_db`;
 CREATE TABLE `mob_skill_db` (
-  `MOB_ID` SMALLINT(6) NOT NULL,
-  `INFO` TEXT NOT NULL,
-  `STATE` TEXT NOT NULL,
-  `SKILL_ID` SMALLINT(6) NOT NULL,
-  `SKILL_LV` TINYINT(4) NOT NULL,
-  `RATE` SMALLINT(4) NOT NULL,
-  `CASTTIME` MEDIUMINT(9) NOT NULL,
-  `DELAY` INT(9) NOT NULL,
-  `CANCELABLE` TEXT NOT NULL,
-  `TARGET` TEXT NOT NULL,
-  `CONDITION` TEXT NOT NULL,
-  `CONDITION_VALUE` TEXT,
-  `VAL1` INT(11) DEFAULT NULL,
-  `VAL2` INT(11) DEFAULT NULL,
-  `VAL3` INT(11) DEFAULT NULL,
-  `VAL4` INT(11) DEFAULT NULL,
-  `VAL5` INT(11) DEFAULT NULL,
+  `MOB_ID` smallint NOT NULL,
+  `INFO` text NOT NULL,
+  `STATE` text NOT NULL,
+  `SKILL_ID` smallint NOT NULL,
+  `SKILL_LV` tinyint NOT NULL,
+  `RATE` smallint NOT NULL,
+  `CASTTIME` mediumint NOT NULL,
+  `DELAY` int NOT NULL,
+  `CANCELABLE` text NOT NULL,
+  `TARGET` text NOT NULL,
+  `CONDITION` text NOT NULL,
+  `CONDITION_VALUE` text,
+  `VAL1` int DEFAULT NULL,
+  `VAL2` int DEFAULT NULL,
+  `VAL3` int DEFAULT NULL,
+  `VAL4` int DEFAULT NULL,
+  `VAL5` int DEFAULT NULL,
   `EMOTION` TEXT,
   `CHAT` TEXT
 ) ENGINE=MyISAM;

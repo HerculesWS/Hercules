@@ -9,7 +9,7 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) 2012-2021 Hercules Dev Team
 //= Copyright (C) Euphy
 //= Copyright (C) Slim
 //= Copyright (C) CalciumKid
@@ -356,10 +356,10 @@ OnPCKillEvent:
 	end;
 
 OnInit:
-	removemapflag "poring_w02",mf_partylock;
-	removemapflag "poring_w02",mf_pvp;
-	removemapflag "poring_w02",mf_pvp_noguild;
-	removemapflag "poring_w02",mf_pvp_nocalcrank;
+	removemapflag("poring_w02", MF_PARTYLOCK);
+	removemapflag("poring_w02", MF_PVP);
+	removemapflag("poring_w02", MF_PVP_NOGUILD);
+	removemapflag("poring_w02", MF_PVP_NOCALCRANK);
 	$@wop_teamcount = 0;
 	$@wop_deadcount_a = 0;
 	$@wop_deadcount_d = 0;
@@ -896,10 +896,10 @@ poring_w02,1,1,0	script	#wop_master	FAKE_NPC,{
 	end;
 
 OnReset:
-	removemapflag "poring_w02",mf_partylock;
-	removemapflag "poring_w02",mf_pvp;
-	removemapflag "poring_w02",mf_pvp_noguild;
-	removemapflag "poring_w02",mf_pvp_nocalcrank;
+	removemapflag("poring_w02", MF_PARTYLOCK);
+	removemapflag("poring_w02", MF_PVP);
+	removemapflag("poring_w02", MF_PVP_NOGUILD);
+	removemapflag("poring_w02", MF_PVP_NOCALCRANK);
 	mapwarp "poring_w02","poring_w01",112,138;
 	donpcevent "#wop_angellium1::OnReset";
 	donpcevent "#wop_angellium2::OnReset";
@@ -948,10 +948,10 @@ OnStop:
 OnAngelingWin:
 	.@i = 1;
 OnDevilingWin:
-	removemapflag "poring_w02",mf_partylock;
-	removemapflag "poring_w02",mf_pvp;
-	removemapflag "poring_w02",mf_pvp_noguild;
-	removemapflag "poring_w02",mf_pvp_nocalcrank;
+	removemapflag("poring_w02", MF_PARTYLOCK);
+	removemapflag("poring_w02", MF_PVP);
+	removemapflag("poring_w02", MF_PVP_NOGUILD);
+	removemapflag("poring_w02", MF_PVP_NOCALCRANK);
 	if (.@i)
 		mapannounce "poring_w02","Mr. Doppel: Angeling Team of party " + getpartyname($@wop_team_a) + " won the battle!",0,0xf08080;
 	else
@@ -1013,10 +1013,10 @@ OnTimer95000:
 
 OnTimer100000:
 	mapannounce "poring_w02","Mr. Doppel: In certain areas, you will need War Badges that are obtained by eliminating members of the other team. Alright, lets begin!",0,0xf08080;
-	setmapflag "poring_w02",mf_partylock;
-	setmapflag "poring_w02",mf_pvp;
-	setmapflag "poring_w02",mf_pvp_noguild;
-	setmapflag "poring_w02",mf_pvp_nocalcrank;
+	setmapflag("poring_w02", MF_PARTYLOCK);
+	setmapflag("poring_w02", MF_PVP);
+	setmapflag("poring_w02", MF_PVP_NOGUILD);
+	setmapflag("poring_w02", MF_PVP_NOCALCRANK);
 	donpcevent "#wop_warp_a::OnEnable";
 	donpcevent "#wop_warp_d::OnEnable";
 	donpcevent "#wop_angellium1::OnAngelingSpawn";
@@ -1027,10 +1027,10 @@ OnTimer100000:
 
 OnTimer700000:
 	mapannounce "poring_w02","Mr. Doppel: Time is up. Soon, you will be teleported to the Winners Stage.",0,0xf08080;
-	removemapflag "poring_w02",mf_partylock;
-	removemapflag "poring_w02",mf_pvp;
-	removemapflag "poring_w02",mf_pvp_noguild;
-	removemapflag "poring_w02",mf_pvp_nocalcrank;
+	removemapflag("poring_w02", MF_PARTYLOCK);
+	removemapflag("poring_w02", MF_PVP);
+	removemapflag("poring_w02", MF_PVP_NOGUILD);
+	removemapflag("poring_w02", MF_PVP_NOCALCRANK);
 	donpcevent "#wop_angellium1::OnReset";
 	donpcevent "#wop_angellium2::OnReset";
 	donpcevent "#wop_devillium1::OnReset";

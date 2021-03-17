@@ -5,7 +5,7 @@
 > This file is part of Hercules.
 > http://herc.ws - http://github.com/HerculesWS/Hercules
 > 
-> Copyright (C) 2012-2020 Hercules Dev Team
+> Copyright (C) 2012-2021 Hercules Dev Team
 > Copyright (C) Athena Dev Teams
 > 
 > Hercules is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -379,6 +379,7 @@ bonus bMagicSPGainValue,`n`;           | Gains +`n` SP when killing an enemy wit
 bonus2 bHPGainRaceAttack,`r`,`n`;      | Heals `n` HP when attacking race `r` on every hit
 bonus2 bSPGainRaceAttack,`r`,`n`;      | Heals `n` SP when attacking race `r` on every hit
 bonus2 bSPGainRace,`r`,`n`;            | When killing a monster of race `r` by physical attack gain `n` SP
+bonus3 bStateNoRecoverRace,`r`,`x`,`t`;| Set target to a no recovery state based on race `r` at `x`% for `t` milliseconds with normal attack.
 
 Damage return                          | Description
 :------------------------------------- | :-------------------------

@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) 2012-2021 Hercules Dev Team
  * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -613,7 +613,7 @@ static void bg_match_over(struct bg_arena *arena, bool canceled)
 			bg->queue_pc_cleanup(sd);
 		}
 		if (canceled)
-			clif->messagecolor_self(sd->fd, COLOR_RED, "BG Match Canceled: not enough players");
+			clif->messagecolor_self(sd->fd, COLOR_RED, msg_sd(sd, 83)); // "BG Match Canceled: not enough players."
 		else
 			pc_setglobalreg(sd, script->add_variable(arena->delay_var), (unsigned int)time(NULL));
 	}

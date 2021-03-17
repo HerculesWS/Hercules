@@ -3,7 +3,7 @@
 -- This file is part of Hercules.
 -- http://herc.ws - http://github.com/HerculesWS/Hercules
 --
--- Copyright (C) 2013-2020 Hercules Dev Team
+-- Copyright (C) 2013-2021 Hercules Dev Team
 --
 -- Hercules is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -19,6 +19,6 @@
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 TRUNCATE TABLE `guild_expulsion`;
-ALTER TABLE `guild_expulsion` ADD `char_id` INT(11) UNSIGNED NOT NULL DEFAULT '0' AFTER `account_id`;
+ALTER TABLE `guild_expulsion` ADD `char_id` INT UNSIGNED NOT NULL DEFAULT '0' AFTER `account_id`;
 
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1556147483);

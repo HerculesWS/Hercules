@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) 2012-2021 Hercules Dev Team
  * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -44,10 +44,10 @@ struct grf_filelist {
 	int srclen;         ///< compressed size
 	int srclen_aligned;
 	int declen;         ///< original size
-	int srcpos;         ///< position of entry in grf
+	int64 srcpos;         ///< position of entry in grf
 	int next;           ///< index of next filelist entry with same hash (-1: end of entry chain)
 	char type;
-	char fn[128-4*5];   ///< file name
+	char fn[256-4*5];   ///< file name
 	char *fnd;          ///< if the file was cloned, contains name of original file
 	int8 gentry;        ///< read grf file select
 };

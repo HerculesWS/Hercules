@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) 2012-2021 Hercules Dev Team
  * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -20,6 +20,9 @@
  */
 #ifndef CONFIG_CORE_H
 #define CONFIG_CORE_H
+
+// from tag vXXXXXXXX.Y -> XXXXXXXXY
+#define HERCULES_VERSION 202103080
 
 /// Max number of items on @autolootid list
 #define AUTOLOOTITEM_SIZE 10
@@ -90,6 +93,9 @@
 
 /// Comment to disable autotrade persistency (where autotrading merchants survive server restarts)
 #define AUTOTRADE_PERSISTENCY
+
+/// Uncomment for use with Nemo patch ExtendCashShopPreview
+//#define ENABLE_CASHSHOP_PREVIEW_PATCH
 
 /**
  * No settings past this point

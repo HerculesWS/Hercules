@@ -92,7 +92,7 @@ OnInit:
 	set .Size, getarraysize($WOE_CONTROL);
 	if (.AutoKick || .NoOwner)
 		for(set .@i,0; .@i<30; set .@i,.@i+1) {
-			setmapflag .Castles$[.@i], mf_loadevent;
+			setmapflag(.Castles$[.@i], MF_LOADEVENT);
 			setd "."+.Castles$[.@i], .@i;
 		}
 	if (!agitcheck() && !agitcheck2()) sleep 4000;

@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) 2012-2021 Hercules Dev Team
  * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -83,7 +83,7 @@ static const char *geoip_getcountry(uint32 ipnum)
 
 	for (depth = 31; depth >= 0; depth--) {
 		const unsigned char *buf = geoip->data->cache + (long)6 *offset;
-		if (ipnum & (1 << depth)) {
+		if (ipnum & (1U << (uint32)depth)) {
 			/* Take the right-hand branch */
 			x =   (buf[3*1 + 0] << (0*8))
 				+ (buf[3*1 + 1] << (1*8))

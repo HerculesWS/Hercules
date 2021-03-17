@@ -1,7 +1,7 @@
 -- This file is part of Hercules.
 -- http://herc.ws - http://github.com/HerculesWS/Hercules
 --
--- Copyright (C) 2013-2020 Hercules Dev Team
+-- Copyright (C) 2013-2021 Hercules Dev Team
 --
 -- Hercules is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -31,15 +31,15 @@
 DROP TABLE IF EXISTS `cashlog`;
 
 -- Upgrades to table `mvplog`
-ALTER TABLE `mvplog` MODIFY `prize` INT(11) NOT NULL DEFAULT '0';
+ALTER TABLE `mvplog` MODIFY `prize` INT NOT NULL DEFAULT '0';
 
 -- Upgrades to table `picklog`
 ALTER TABLE `picklog` MODIFY `type` enum('M','P','L','T','V','S','N','C','A','R','G','E','B','O','I','X','D','U','K','Y','Z','W','Q','J','H','@','0','1','2') NOT NULL default 'P';
-ALTER TABLE `picklog` MODIFY `nameid` INT(11) NOT NULL DEFAULT '0';
-ALTER TABLE `picklog` MODIFY `card0` INT(11) NOT NULL DEFAULT '0';
-ALTER TABLE `picklog` MODIFY `card1` INT(11) NOT NULL DEFAULT '0';
-ALTER TABLE `picklog` MODIFY `card2` INT(11) NOT NULL DEFAULT '0';
-ALTER TABLE `picklog` MODIFY `card3` INT(11) NOT NULL DEFAULT '0';
+ALTER TABLE `picklog` MODIFY `nameid` INT NOT NULL DEFAULT '0';
+ALTER TABLE `picklog` MODIFY `card0` INT NOT NULL DEFAULT '0';
+ALTER TABLE `picklog` MODIFY `card1` INT NOT NULL DEFAULT '0';
+ALTER TABLE `picklog` MODIFY `card2` INT NOT NULL DEFAULT '0';
+ALTER TABLE `picklog` MODIFY `card3` INT NOT NULL DEFAULT '0';
 ALTER TABLE `atcommandlog` MODIFY `atcommand_date` DATETIME NULL;
 ALTER TABLE `branchlog` MODIFY `branch_date` DATETIME NULL;
 ALTER TABLE `chatlog` MODIFY `time` DATETIME NULL;

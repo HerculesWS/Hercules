@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) 2012-2021 Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -336,6 +336,7 @@ typedef uintptr_t uintptr;
 #endif // ! defined(__GNUC__) && (GCC_VERSION >= 70000)
 
 // boolean types for C
+#if !defined(__MINGW32__) && !defined(MINGW)
 #if !defined(_MSC_VER) || _MSC_VER >= 1800
 // MSVC doesn't have stdbool.h yet as of Visual Studio 2012 (MSVC version 17.00)
 // but it will support it in Visual Studio 2013 (MSVC version 18.00)
@@ -343,6 +344,7 @@ typedef uintptr_t uintptr;
 // GCC and Clang are assumed to be C99 compliant
 #include <stdbool.h> // bool, true, false, __bool_true_false_are_defined
 #endif // ! defined(_MSC_VER) || _MSC_VER >= 1800
+#endif  // !defined(__MINGW32__) && !defined(MINGW)
 
 #ifndef __bool_true_false_are_defined
 // If stdbool.h is not available or does not define this
@@ -401,13 +403,19 @@ typedef char bool;
 #if defined(WIN32)
 #define PATHSEP '\\'
 #define PATHSEP_STR "\\"
+#define PATHSEP2 '/'
+#define PATHSEP_STR2 "/"
 #elif defined(__APPLE__) && !defined(__MACH__)
 // __MACH__ indicates OS X ( http://sourceforge.net/p/predef/wiki/OperatingSystems/ )
 #define PATHSEP ':'
 #define PATHSEP_STR ":"
+#define PATHSEP2 ':'
+#define PATHSEP_STR2 ":"
 #else
 #define PATHSEP '/'
 #define PATHSEP_STR "/"
+#define PATHSEP2 '/'
+#define PATHSEP_STR2 "/"
 #endif
 
 //////////////////////////////////////////////////////////////////////////

@@ -3,7 +3,7 @@
 -- This file is part of Hercules.
 -- http://herc.ws - http://github.com/HerculesWS/Hercules
 --
--- Copyright (C) 2018-2020 Hercules Dev Team
+-- Copyright (C) 2018-2021 Hercules Dev Team
 -- Copyright (C) 4144
 --
 -- Hercules is free software: you can redistribute it and/or modify
@@ -19,6 +19,6 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-ALTER TABLE `char` ADD `inventory_size` INT(11) UNSIGNED NOT NULL DEFAULT '100';
+ALTER TABLE `char` ADD `inventory_size` INT UNSIGNED NOT NULL DEFAULT '100';
 
 INSERT INTO `sql_updates` (`timestamp`, `ignored`) VALUES (1544738447, 'No');

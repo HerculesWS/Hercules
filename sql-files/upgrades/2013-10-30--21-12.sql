@@ -3,7 +3,7 @@
 -- This file is part of Hercules.
 -- http://herc.ws - http://github.com/HerculesWS/Hercules
 --
--- Copyright (C) 2013-2020 Hercules Dev Team
+-- Copyright (C) 2013-2021 Hercules Dev Team
 --
 -- Hercules is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -18,5 +18,5 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-ALTER TABLE `char` ADD `font` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0';
+ALTER TABLE `char` ADD `font` TINYINT UNSIGNED NOT NULL DEFAULT '0';
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1383167577);

@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2013-2020 Hercules Dev Team
+ * Copyright (C) 2013-2021 Hercules Dev Team
  * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -630,19 +630,6 @@ static void sysinfo_systeminfo_retrieve(LPSYSTEM_INFO info)
 }
 
 /**
- * Returns number of bytes in a memory page
- * Only needed when compiling with MSVC
- **/
-static long sysinfo_getpagesize(void)
-{
-	SYSTEM_INFO si;
-	ZeroMemory(&si, sizeof(SYSTEM_INFO));
-
-	sysinfo_systeminfo_retrieve(&si);
-	return si.dwPageSize;
-}
-
-/**
  * Retrieves the CPU type (Windows only).
  *
  * Once retrieved, the name is stored into sysinfo->p->cpu and the
@@ -733,6 +720,23 @@ static void sysinfo_vcsrevision_src_retrieve(void)
 	sysinfo->p->vcsrevision_src = aStrdup("Unknown");
 }
 #endif // WIN32
+
+/**
+ * Returns number of bytes in a memory page
+ * Only needed when compiling with MSVC
+ **/
+static long sysinfo_getpagesize(void)
+{
+#if defined(WIN32) && !defined(__CYGWIN__)
+	SYSTEM_INFO si;
+	ZeroMemory(&si, sizeof(SYSTEM_INFO));
+
+	sysinfo_systeminfo_retrieve(&si);
+	return si.dwPageSize;
+#else
+	return (long)getpagesize();
+#endif
+}
 
 /**
  * Retrieves the VCS type name.
@@ -1067,6 +1071,11 @@ static const char *sysinfo_time(void)
 #endif
 }
 
+static int sysinfo_build_revision(void)
+{
+	return HERCULES_VERSION;
+}
+
 /**
  * Interface default values initialization.
  */
@@ -1075,11 +1084,7 @@ void sysinfo_defaults(void)
 	sysinfo = &sysinfo_s;
 	memset(&sysinfo_p, '\0', sizeof(sysinfo_p));
 	sysinfo->p = &sysinfo_p;
-#if defined(WIN32) && !defined(__CYGWIN__)
 	sysinfo->getpagesize = sysinfo_getpagesize;
-#else
-	sysinfo->getpagesize = getpagesize;
-#endif
 	sysinfo->platform = sysinfo_platform;
 	sysinfo->osversion = sysinfo_osversion;
 	sysinfo->cpu = sysinfo_cpu;
@@ -1094,6 +1099,7 @@ void sysinfo_defaults(void)
 	sysinfo->vcsrevision_src = sysinfo_vcsrevision_src;
 	sysinfo->vcsrevision_scripts = sysinfo_vcsrevision_scripts;
 	sysinfo->vcsrevision_reload = sysinfo_vcsrevision_reload;
+	sysinfo->build_revision = sysinfo_build_revision;
 	sysinfo->is_superuser = sysinfo_is_superuser;
 	sysinfo->init = sysinfo_init;
 	sysinfo->final = sysinfo_final;

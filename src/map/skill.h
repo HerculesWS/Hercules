@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) 2012-2021 Hercules Dev Team
  * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -137,6 +137,8 @@ enum e_skill_inf2 {
 	INF2_ALLOW_REPRODUCE   = 0x40000,
 	INF2_HIDDEN_TRAP       = 0x80000, // Traps that are hidden (based on trap_visiblity battle conf)
 	INF2_IS_COMBO_SKILL    = 0x100000, // Sets whether a skill can be used in combos or not
+	INF2_NO_STASIS         = 0x200000,
+	INF2_NO_KAGEHUMI       = 0x400000,
 };
 
 
@@ -2291,7 +2293,7 @@ struct skill_interface {
 	int (*splash_target) (struct block_list* bl);
 	int (*check_npc_chaospanic) (struct block_list *bl, va_list args);
 	int (*count_wos) (struct block_list *bl, va_list ap);
-	int (*get_linked_song_dance_id) (int skill_id);
+	void (*add_bard_dancer_soullink_songs) (struct map_session_data *sd);
 };
 
 #ifdef HERCULES_CORE

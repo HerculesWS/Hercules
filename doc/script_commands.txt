@@ -2632,18 +2632,19 @@ bStr, bInt, bLuk
 ---------------------------------------
 
 *getcharid(<type>{, "<character name>"})
+*getcharid(<type>{, <account id>})
 
 This function will return a unique ID number of the invoking character,
 or, if a character name is specified, of that player.
 
 Type is the kind of associated ID number required:
 
-(0) CHAR_ID_CHAR - Character ID number.
-(1) CHAR_ID_PARTY - Party ID number.
-(2) CHAR_ID_GUILD - Guild ID number.
+(0) CHAR_ID_CHAR    - Character ID number.
+(1) CHAR_ID_PARTY   - Party ID number.
+(2) CHAR_ID_GUILD   - Guild ID number.
 (3) CHAR_ID_ACCOUNT - Account ID number.
-(4) CHAR_ID_BG - Battle ground ID
-(5) CHAR_ID_CLAN - Clan ID number.
+(4) CHAR_ID_BG      - Battle ground ID
+(5) CHAR_ID_CLAN    - Clan ID number.
 
 For most purposes other than printing it, a number is better to have than
 a name (people do horrifying things to their character names).
@@ -3235,21 +3236,21 @@ This command sets a bunch of arrays with a complete list of whatever the
 invoking character has in its cart_inventory, including all the data needed to
 recreate these items perfectly if they are destroyed. Here's what you get:
 
-@cartinventorylist_id[]        - array of item ids.
-@cartinventorylist_amount[]    - their corresponding item amounts.
-@cartinventorylist_refine[]    - for how much it is refined.
-@cartinventorylist_identify[]  - whether it is identified.
-@cartinventorylist_attribute[] - whether it is broken.
-@cartinventorylist_card1[]     - These four arrays contain card data for the items.
-@cartinventorylist_card2[]       These data slots are also used to store names inscribed on the items,
-@cartinventorylist_card3[]       so you can explicitly check if the character owns an item
-@cartinventorylist_card4[]       made by a specific craftsman.
-@cartinventorylist_expire[]    - expire time (Unix time stamp). 0 means never expires.
-@cartinventorylist_bound       - whether it is an account bound item or not.
-@inventorylist_opt_id1~5[]     - array of random option id.
-@inventorylist_opt_val1~5[]    - array of random option val.
-@inventorylist_opt_param1~5[]  - array of random option param.
-@cartinventorylist_count       - the number of items in these lists.
+@cartinventorylist_id[]            - array of item ids.
+@cartinventorylist_amount[]        - their corresponding item amounts.
+@cartinventorylist_refine[]        - for how much it is refined.
+@cartinventorylist_identify[]      - whether it is identified.
+@cartinventorylist_attribute[]     - whether it is broken.
+@cartinventorylist_card1[]         - These four arrays contain card data for the items.
+@cartinventorylist_card2[]           These data slots are also used to store names inscribed on the items,
+@cartinventorylist_card3[]           so you can explicitly check if the character owns an item
+@cartinventorylist_card4[]           made by a specific craftsman.
+@cartinventorylist_expire[]        - expire time (Unix time stamp). 0 means never expires.
+@cartinventorylist_bound           - whether it is an account bound item or not.
+@cartinventorylist_opt_id1~5[]     - array of random option id.
+@cartinventorylist_opt_val1~5[]    - array of random option val.
+@cartinventorylist_opt_param1~5[]  - array of random option param.
+@cartinventorylist_count           - the number of items in these lists.
 
 This could be handy to save/restore a character's cart_inventory, since no
 other command returns such a complete set of data, and could also be the
@@ -3693,7 +3694,7 @@ the format string.
 
 This uses the C function 'strftime', which obeys special format
 characters. For a full description see, for example, the description of
-'strftime' at http://www.delorie.com/gnu/docs/glibc/libc_437.html
+'strftime' at <https://man7.org/linux/man-pages/man3/strftime.3.html>
 All the format characters given in there should properly work.
 Max length is the maximum length of a time string to generate.
 
@@ -7280,7 +7281,7 @@ the message, otherwise the npc name will not be shown.
 *setnpcdisplay("<npc name>", <class id>)
 
 Changes the display name and/or display class of the target NPC.
-Returns 0 is successful, 1 if the NPC does not exist.
+Returns 0 is successful, 1 if the NPC does not exist or is a floating npc.
 Size is 0 = normal 1 = small 2 = big.
 
 ---------------------------------------
@@ -7726,7 +7727,7 @@ The function returns false if the shop was not found, true otherwise.
 
 ---------------------------------------
 
-*waitingroom("<chatroom name>", <limit>{, <event label>, <trigger>, <required zeny>, <min lvl>, <max lvl>})
+*waitingroom("<chatroom name>", <limit>{, <event label>, <trigger>, <required zeny>, <min lvl>, <max lvl>, "<NPC Object Name>"})
 
 This command will create a chat room, owned by the NPC object running this
 script and displayed above the NPC sprite.
@@ -7825,7 +7826,7 @@ The valid information types are:
 
 ---------------------------------------
 
-*warpwaitingpc("<map name>", <x>, <y>{, <number of people>})
+*warpwaitingpc("<map name>", <x>, <y>{, <number of people>{, "<NPC object name>"}})
 
 This command will warp the amount of characters equal to the trigger
 number of the waiting room chat attached to the NPC object running this
@@ -7856,8 +7857,27 @@ one-on-one duel, for example.
 
 *kickwaitingroomall({"<NPC object name>"})
 
+	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+	@ /!\ This command is deprecated @
+	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 This command kicks everybody out of a specified waiting room chat.
 
+---------------------------------------
+
+*waitingroomkick({"<NPC object name>"{,"<player name>"|<account_id>}})
+
+This command kicks target player(s) out of a waiting room chat of specific NPC if any.
+
+Example 1:
+	// This will kick all players in the waitingroom
+	waitingroomkick();
+
+Example 2:
+	// Kick the last player enter the waitingroom
+	.@num = getwaitingroomstate(0);
+	waitingroomkick(strnpcinfo(NPC_NAME), $@chatmembers[.@num - 1]);
+	
 ---------------------------------------
 
 *setmapflagnosave("<map name>", "<alternate map name>", <x>, <y>)
@@ -10253,6 +10273,18 @@ This command summons a mercenary of given class, for given amount of time
 in milliseconds. Typically used in item scripts of mercenary scrolls.
 
 ----------------------------------------
+
+*mercenary_delete({<char_id>, <type>})
+
+Remove mercenary from the attached character. Default value of <type> is MERC_DELETE_REMOVED.
+
+Valid types are:
+    MERC_DELETE_EXPIRED - Mercenary soldier's duty fulfilled until contract expiration. Loyalty +1.
+    MERC_DELETE_KILLED  - Mercenary died before fulfilling its contract. Loyalty -1.
+    MERC_DELETE_REMOVED - Mercenary removed by the user. Loyalty +0.
+    MERC_DELETE_RANAWAY - Mercenary left because the player died or was hit by the SC__GROOMY status. Loyalty +0.
+
+---------------------------------------
 
 *mercenary_heal(<hp>, <sp>)
 

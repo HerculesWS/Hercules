@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) 2012-2021 Hercules Dev Team
  * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -1659,6 +1659,8 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 #ifdef RENEWAL
 				case NJ_HYOUSENSOU:
 					skillratio -= 30;
+					if (sc != NULL && sc->data[SC_NJ_SUITON] != NULL)
+						skillratio += 2 * skill_lv;
 					if (sd && sd->charm_type == CHARM_TYPE_WATER && sd->charm_count > 0)
 						skillratio += 5 * sd->charm_count;
 					break;
@@ -3272,7 +3274,7 @@ static int64 battle_calc_damage(struct block_list *src, struct block_list *bl, s
 		if( (sce = sc->data[SC_LIGHTNINGWALK]) && flag&BF_LONG && rnd()%100 < sce->val1 ) {
 			enum unit_dir dir = map->calc_dir(bl, src->x, src->y);
 			Assert_ret(dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX);
-			if (unit->movepos(bl, src->x - dirx[dir], src->y - diry[dir], 1, 1)) {
+			if (unit->move_pos(bl, src->x - dirx[dir], src->y - diry[dir], 1, true) == 0) {
 				clif->slide(bl, src->x - dirx[dir], src->y - diry[dir]);
 				unit->set_dir(bl, dir);
 			}
@@ -3370,9 +3372,9 @@ static int64 battle_calc_damage(struct block_list *src, struct block_list *bl, s
 	if( bl->type == BL_MOB && !status->isdead(bl) && src != bl) {
 		struct mob_data *md = BL_UCAST(BL_MOB, bl);
 		if (damage > 0)
-			mob->skill_event(md, src, timer->gettick(), flag);
+			mob->use_skill_event(md, src, timer->gettick(), flag);
 		if (skill_id)
-			mob->skill_event(md, src, timer->gettick(), MSC_SKILLUSED|(skill_id<<16));
+			mob->use_skill_event(md, src, timer->gettick(), MSC_SKILLUSED | (skill_id << 16));
 	}
 	if (t_sd && pc_ismadogear(t_sd) && rnd()%100 < 50) {
 		int element = -1;
@@ -7159,6 +7161,7 @@ static const struct battle_data {
 	{ "summer2_ignorepalette",              &battle_config.summer2_ignorepalette,           0,      0,      1,              },
 	{ "natural_healhp_interval",            &battle_config.natural_healhp_interval,         6000,   NATURAL_HEAL_INTERVAL, INT_MAX, },
 	{ "natural_healsp_interval",            &battle_config.natural_healsp_interval,         8000,   NATURAL_HEAL_INTERVAL, INT_MAX, },
+	{ "natural_heal_cap",                   &battle_config.natural_heal_cap,                1000,   1,      INT_MAX,        },
 	{ "natural_heal_skill_interval",        &battle_config.natural_heal_skill_interval,     10000,  NATURAL_HEAL_INTERVAL, INT_MAX, },
 	{ "natural_heal_weight_rate",           &battle_config.natural_heal_weight_rate,        50,     50,     101             },
 	{ "arrow_decrement",                    &battle_config.arrow_decrement,                 1,      0,      2,              },
@@ -7429,6 +7432,7 @@ static const struct battle_data {
 	{ "idletime_criteria",                  &battle_config.idletime_criteria,            0x25,      1,      INT_MAX,        },
 	{ "mon_trans_disable_in_gvg",           &battle_config.mon_trans_disable_in_gvg,        0,      0,      1,              },
 	{ "case_sensitive_aegisnames",          &battle_config.case_sensitive_aegisnames,       1,      0,      1,              },
+	{ "search_freecell_map_margin",         &battle_config.search_freecell_map_margin,     15,      0,      INT_MAX,        },
 	{ "guild_castle_invite",                &battle_config.guild_castle_invite,             0,      0,      1,              },
 	{ "guild_castle_expulsion",             &battle_config.guild_castle_expulsion,          0,      0,      1,              },
 	{ "song_timer_reset",                   &battle_config.song_timer_reset,                0,      0,      1,              },
@@ -7438,7 +7442,7 @@ static const struct battle_data {
 	{ "mob_icewall_walk_block",             &battle_config.mob_icewall_walk_block,          75,     0,      255,            },
 	{ "boss_icewall_walk_block",            &battle_config.boss_icewall_walk_block,         0,      0,      255,            },
 	{ "features/roulette",                  &battle_config.feature_roulette,                1,      0,      1,              },
-	{ "show_monster_hp_bar",                &battle_config.show_monster_hp_bar,             1,      0,      1,              },
+	{ "show_monster_hp_bar",                &battle_config.show_monster_hp_bar,             1,      0,      1|2|4,          },
 	{ "fix_warp_hit_delay_abuse",           &battle_config.fix_warp_hit_delay_abuse,        0,      0,      1,              },
 	{ "costume_refine_def",                 &battle_config.costume_refine_def,              1,      0,      1,              },
 	{ "shadow_refine_def",                  &battle_config.shadow_refine_def,               1,      0,      1,              },
@@ -7495,6 +7499,16 @@ static const struct battle_data {
 	{ "hom_bonus_exp_from_master",          &battle_config.hom_bonus_exp_from_master,      10,      0,      100,            },
 	{ "allowed_actions_when_dead",          &battle_config.allowed_actions_when_dead,       0,      0,      3,              },
 	{ "teleport_close_storage",             &battle_config.teleport_close_storage,          1,      0,      1,              },
+	{ "features/show_attendance_window",    &battle_config.show_attendance_window,          1,      0,      1,              },
+	{ "elem_natural_heal_hp",               &battle_config.elem_natural_heal_hp,           6000, NATURAL_HEAL_INTERVAL, INT_MAX,},
+	{ "elem_natural_heal_sp",               &battle_config.elem_natural_heal_sp,           8000, NATURAL_HEAL_INTERVAL, INT_MAX,},
+	{ "elem_natural_heal_cap",              &battle_config.elem_natural_heal_cap,          1000,    1,      INT_MAX,        },
+	{ "hom_natural_heal_hp",                &battle_config.hom_natural_heal_hp,            2000, NATURAL_HEAL_INTERVAL, INT_MAX,},
+	{ "hom_natural_heal_sp",                &battle_config.hom_natural_heal_sp,            4000, NATURAL_HEAL_INTERVAL, INT_MAX,},
+	{ "hom_natural_heal_cap",               &battle_config.hom_natural_heal_cap,           1000,    1,      INT_MAX,        },
+	{ "merc_natural_heal_hp",               &battle_config.merc_natural_heal_hp,           6000, NATURAL_HEAL_INTERVAL, INT_MAX,},
+	{ "merc_natural_heal_sp",               &battle_config.merc_natural_heal_sp,           8000, NATURAL_HEAL_INTERVAL, INT_MAX,},
+	{ "merc_natural_heal_cap",              &battle_config.merc_natural_heal_cap,          1000,    1,      INT_MAX,        },
 };
 
 static bool battle_set_value_sub(int index, int value)
