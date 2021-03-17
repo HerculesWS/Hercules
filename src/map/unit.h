@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) 2012-2021 Hercules Dev Team
  * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -112,14 +112,14 @@ struct unit_interface {
 	int (*delay_walk_toxy_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*walk_toxy) (struct block_list *bl, short x, short y, int flag);
 	int (*walktobl_timer) (int tid, int64 tick, int id, intptr_t data);
-	int (*walktobl) (struct block_list *bl, struct block_list *tbl, int range, int flag);
+	int (*walk_tobl) (struct block_list *bl, struct block_list *tbl, int range, int flag);
 	bool (*run) (struct block_list *bl, struct map_session_data *sd, enum sc_type type);
 	void (*run_hit) (struct block_list *bl, struct status_change *sc, struct map_session_data *sd, enum sc_type type);
-	int (*escape) (struct block_list *bl, struct block_list *target, short dist);
-	int (*movepos) (struct block_list *bl, short dst_x, short dst_y, int easy, bool checkpath);
+	int (*attempt_escape) (struct block_list *bl, struct block_list *target, short dist);
+	int (*move_pos) (struct block_list *bl, short dst_x, short dst_y, int easy, bool checkpath);
 	int (*set_dir) (struct block_list *bl, enum unit_dir dir);
 	enum unit_dir (*getdir) (const struct block_list *bl);
-	int (*blown) (struct block_list *bl, int dx, int dy, int count, int flag);
+	int (*push) (struct block_list *bl, enum unit_dir dir, int count, bool update);
 	int (*warp) (struct block_list *bl, short m, short x, short y, enum clr_type type);
 	int (*warpto_master) (struct block_list *master_bl, struct block_list *slave_bl);
 	int (*stop_walking) (struct block_list *bl, int type);

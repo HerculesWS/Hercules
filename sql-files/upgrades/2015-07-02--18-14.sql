@@ -3,7 +3,7 @@
 -- This file is part of Hercules.
 -- http://herc.ws - http://github.com/HerculesWS/Hercules
 --
--- Copyright (C) 2015-2020 Hercules Dev Team
+-- Copyright (C) 2015-2021 Hercules Dev Team
 --
 -- Hercules is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -63,8 +63,8 @@ BEGIN
 
 END $$
 
-CALL alter_if_not_exists('item_db', 'forceserial', 'ADD COLUMN', 'TINYINT(1) UNSIGNED DEFAULT NULL AFTER `bindonequip`') $$
-CALL alter_if_not_exists('item_db2', 'forceserial', 'ADD COLUMN', 'TINYINT(1) UNSIGNED DEFAULT NULL AFTER `bindonequip`') $$
+CALL alter_if_not_exists('item_db', 'forceserial', 'ADD COLUMN', 'TINYINT UNSIGNED DEFAULT NULL AFTER `bindonequip`') $$
+CALL alter_if_not_exists('item_db2', 'forceserial', 'ADD COLUMN', 'TINYINT UNSIGNED DEFAULT NULL AFTER `bindonequip`') $$
 
 DROP PROCEDURE IF EXISTS alter_if_not_exists $$
 DROP PROCEDURE IF EXISTS alter_if_exists $$

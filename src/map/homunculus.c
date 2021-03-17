@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) 2012-2021 Hercules Dev Team
  * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -44,6 +44,7 @@
 #include "map/trade.h"
 #include "map/unit.h"
 #include "common/cbasetypes.h"
+#include "common/conf.h"
 #include "common/memmgr.h"
 #include "common/mmo.h"
 #include "common/nullpo.h"
@@ -305,27 +306,47 @@ static int homunculus_skill_tree_get_max(int id, int b_class)
 
 static void homunculus_skillup(struct homun_data *hd, uint16 skill_id)
 {
-	int i = 0 ;
+	int i = 0;
 	nullpo_retv(hd);
 
-	if(hd->homunculus.vaporize != HOM_ST_ACTIVE)
+	if (hd->homunculus.vaporize != HOM_ST_ACTIVE)
 		return;
 
 	i = skill_id - HM_SKILLBASE;
-	Assert_retv(i >= 0 && i < MAX_HOMUNSKILL);
-	if(hd->homunculus.skillpts > 0 &&
+	Assert_retv(i >= 0 && i < MAX_HOMUNSKILL && i < MAX_SKILL_TREE);
+	if (hd->homunculus.skillpts > 0 &&
 		hd->homunculus.hskill[i].id &&
 		hd->homunculus.hskill[i].flag == SKILL_FLAG_PERMANENT && //Don't allow raising while you have granted skills. [Skotlex]
 		hd->homunculus.hskill[i].lv < homun->skill_tree_get_max(skill_id, hd->homunculus.class_)
 		)
 	{
-		hd->homunculus.hskill[i].lv++;
-		hd->homunculus.skillpts-- ;
-		status_calc_homunculus(hd,SCO_NONE);
-		if (hd->master) {
-			clif->homskillup(hd->master, skill_id);
-			clif->hominfo(hd->master,hd,0);
-			clif->homskillinfoblock(hd->master);
+		bool stop = false;
+		// Check if pre-requisites were met
+		if (battle_config.skillfree == 0) {
+			int c = hd->homunculus.class_ - HM_CLASS_BASE;
+			Assert_retv(c >= 0 && c < MAX_HOMUNCULUS_CLASS);
+			if ((int)hd->homunculus.intimacy < homun->dbs->skill_tree[c][i].intimacylv)
+				stop = true;
+			if (!stop) {
+				for (int j = 0; j < MAX_HOM_SKILL_REQUIRE; j++) {
+					if (homun->dbs->skill_tree[c][i].need[j].id != 0 &&
+					   homun->checkskill(hd, homun->dbs->skill_tree[c][i].need[j].id) < homun->dbs->skill_tree[c][i].need[j].lv) {
+						stop = true;
+						break;
+					}
+				}
+			}
+		}
+		// Level up skill if requisites were met
+		if (!stop) {
+			hd->homunculus.hskill[i].lv++;
+			hd->homunculus.skillpts--;
+			status_calc_homunculus(hd, SCO_NONE);
+			if (hd->master != NULL) {
+				clif->homskillup(hd->master, skill_id);
+				clif->hominfo(hd->master, hd, 0);
+				clif->homskillinfoblock(hd->master);
+			}
 		}
 	}
 }
@@ -1157,138 +1178,172 @@ static bool homunculus_shuffle(struct homun_data *hd)
 	return true;
 }
 
-static bool homunculus_read_db_sub(char *str[], int columns, int current)
+static void homunculus_read_db(void)
 {
-	int classid;
-	struct s_homunculus_db *db;
+	const char *filename[] = {
+		DBPATH"homunculus_db.conf",
+		"homunculus_db2.conf"
+	};
+	memset(homun->dbs->db, 0, sizeof(homun->dbs->db));
 
-	nullpo_retr(false, str);
-	//Base Class,Evo Class
-	classid = atoi(str[0]);
-	if (classid < HM_CLASS_BASE || classid > HM_CLASS_MAX) {
-		ShowError("homunculus_read_db_sub : Invalid class %d\n", classid);
+	for (int i = 0; i < ARRAYLENGTH(filename); i++)
+		homun->read_db_libconfig(filename[i]);
+}
+
+static bool homunculus_read_db_libconfig(const char *filename)
+{
+	struct config_t homun_conf;
+	char filepath[256];
+	safesnprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, filename);
+
+	if (libconfig->load_file(&homun_conf, filepath) == CONFIG_FALSE) {
+		ShowError("homunculus_read_db_libconfig: can't read %s\n", filepath);
 		return false;
 	}
-	db = &homun->dbs->db[current];
-	db->base_class = classid;
-	classid = atoi(str[1]);
-	if (classid < HM_CLASS_BASE || classid > HM_CLASS_MAX) {
-		db->base_class = 0;
-		ShowError("homunculus_read_db_sub : Invalid class %d\n", classid);
+
+	struct config_setting_t *homun_db = NULL;
+	if ((homun_db = libconfig->setting_get_member(homun_conf.root, "homunculus_db")) == NULL) {
+		ShowError("homunculus_read_db_libconfig: can't read %s\n", filepath);
 		return false;
 	}
-	db->evo_class = classid;
-	//Name, Food, Hungry Delay, Base Size, Evo Size, Race, Element, ASPD
-	safestrncpy(db->name,str[2],NAME_LENGTH-1);
-	db->foodID = atoi(str[3]);
-	db->hungryDelay = atoi(str[4]);
-	db->base_size = atoi(str[5]);
-	db->evo_size = atoi(str[6]);
-	db->race = atoi(str[7]);
-	db->element = atoi(str[8]);
-	db->baseASPD = atoi(str[9]);
-	//base HP, SP, str, agi, vit, int, dex, luk
-	db->base.HP = atoi(str[10]);
-	db->base.SP = atoi(str[11]);
-	db->base.str = atoi(str[12]);
-	db->base.agi = atoi(str[13]);
-	db->base.vit = atoi(str[14]);
-	db->base.int_= atoi(str[15]);
-	db->base.dex = atoi(str[16]);
-	db->base.luk = atoi(str[17]);
-	//Growth Min/Max HP, SP, str, agi, vit, int, dex, luk
-	db->gmin.HP = atoi(str[18]);
-	db->gmax.HP = atoi(str[19]);
-	db->gmin.SP = atoi(str[20]);
-	db->gmax.SP = atoi(str[21]);
-	db->gmin.str = atoi(str[22]);
-	db->gmax.str = atoi(str[23]);
-	db->gmin.agi = atoi(str[24]);
-	db->gmax.agi = atoi(str[25]);
-	db->gmin.vit = atoi(str[26]);
-	db->gmax.vit = atoi(str[27]);
-	db->gmin.int_= atoi(str[28]);
-	db->gmax.int_= atoi(str[29]);
-	db->gmin.dex = atoi(str[30]);
-	db->gmax.dex = atoi(str[31]);
-	db->gmin.luk = atoi(str[32]);
-	db->gmax.luk = atoi(str[33]);
-	//Evolution Min/Max HP, SP, str, agi, vit, int, dex, luk
-	db->emin.HP = atoi(str[34]);
-	db->emax.HP = atoi(str[35]);
-	db->emin.SP = atoi(str[36]);
-	db->emax.SP = atoi(str[37]);
-	db->emin.str = atoi(str[38]);
-	db->emax.str = atoi(str[39]);
-	db->emin.agi = atoi(str[40]);
-	db->emax.agi = atoi(str[41]);
-	db->emin.vit = atoi(str[42]);
-	db->emax.vit = atoi(str[43]);
-	db->emin.int_= atoi(str[44]);
-	db->emax.int_= atoi(str[45]);
-	db->emin.dex = atoi(str[46]);
-	db->emax.dex = atoi(str[47]);
-	db->emin.luk = atoi(str[48]);
-	db->emax.luk = atoi(str[49]);
 
-	//Check that the min/max values really are below the other one.
-	if(db->gmin.HP > db->gmax.HP)
-		db->gmin.HP = db->gmax.HP;
-	if(db->gmin.SP > db->gmax.SP)
-		db->gmin.SP = db->gmax.SP;
-	if(db->gmin.str > db->gmax.str)
-		db->gmin.str = db->gmax.str;
-	if(db->gmin.agi > db->gmax.agi)
-		db->gmin.agi = db->gmax.agi;
-	if(db->gmin.vit > db->gmax.vit)
-		db->gmin.vit = db->gmax.vit;
-	if(db->gmin.int_> db->gmax.int_)
-		db->gmin.int_= db->gmax.int_;
-	if(db->gmin.dex > db->gmax.dex)
-		db->gmin.dex = db->gmax.dex;
-	if(db->gmin.luk > db->gmax.luk)
-		db->gmin.luk = db->gmax.luk;
+	int i = 0;
+	int count = 0;
+	struct config_setting_t *it = NULL;
 
-	if(db->emin.HP > db->emax.HP)
-		db->emin.HP = db->emax.HP;
-	if(db->emin.SP > db->emax.SP)
-		db->emin.SP = db->emax.SP;
-	if(db->emin.str > db->emax.str)
-		db->emin.str = db->emax.str;
-	if(db->emin.agi > db->emax.agi)
-		db->emin.agi = db->emax.agi;
-	if(db->emin.vit > db->emax.vit)
-		db->emin.vit = db->emax.vit;
-	if(db->emin.int_> db->emax.int_)
-		db->emin.int_= db->emax.int_;
-	if(db->emin.dex > db->emax.dex)
-		db->emin.dex = db->emax.dex;
-	if(db->emin.luk > db->emax.luk)
-		db->emin.luk = db->emax.luk;
+	while ((it = libconfig->setting_get_elem(homun_db, i++)) != NULL) {
+		if (homun->read_db_libconfig_sub(it, i - 1, filepath))
+			++count;
+	}
+
+	libconfig->destroy(&homun_conf);
+	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	return true;
+}
+
+static bool homunculus_read_db_libconfig_sub(struct config_setting_t *it, int idx, const char *source)
+{
+	nullpo_retr(false, it);
+	nullpo_retr(false, source);
+	Assert_retr(false, idx >= 0 && idx < MAX_HOMUNCULUS_CLASS);
+
+	struct s_homunculus_db *db = &homun->dbs->db[idx];
+	const char *str = NULL;
+	int i32 = 0;
+
+	if (libconfig->setting_lookup_int(it, "Id", &i32) != CONFIG_TRUE || !homdb_checkid(i32)) {
+		ShowError("homunculus_read_db_libconfig_sub: Invalid homunculus Id (%d) provided for entry %d in '%s', skipping...\n", i32, idx, source);
+		return false;
+	}
+	db->base_class = i32;
+
+	if (libconfig->setting_lookup_int(it, "EvoId", &i32) != CONFIG_TRUE || !homdb_checkid(i32)) {
+		ShowError("homunculus_read_db_libconfig_sub: Invalid homunculus EvoId (%d) provided for entry %d in '%s', skipping...\n", i32, idx, source);
+		return false;
+	}
+	db->evo_class = i32;
+
+	if (libconfig->setting_lookup_string(it, "Name", &str) != CONFIG_TRUE) {
+		ShowError("homunculus_read_db_libconfig_sub: Invalid homunculus Name '%s' provided for entry %d in '%s', skipping...\n", str, idx, source);
+		return false;
+	}
+	safestrncpy(db->name, str, NAME_LENGTH - 1);
+
+	if (!itemdb->lookup_const(it, "FoodItem", &i32)) {
+		ShowError("homunculus_read_db_libconfig_sub: Invalid homunculus FoodItem '%d' provided for entry %d in '%s', skipping...\n", i32, idx, source);
+		return false;
+	}
+	db->foodID = i32;
+
+	if (libconfig->setting_lookup_int(it, "HungryDelay", &i32) == CONFIG_TRUE && i32 >= 0)
+		db->hungryDelay = i32;
+	if (mob->lookup_const(it, "Size", &i32) && i32 >= 0)
+		db->base_size = i32;
+	if (mob->lookup_const(it, "EvoSize", &i32) && i32 >= 0)
+		db->evo_size = i32;
+	if (mob->lookup_const(it, "Race", &i32) && i32 >= 0)
+		db->race = i32;
+	if (mob->lookup_const(it, "Element", &i32) && i32 >= 0)
+		db->element = i32;
+	if (libconfig->setting_lookup_int(it, "Aspd", &i32) == CONFIG_TRUE && i32 >= 0)
+		db->baseASPD = i32;
+
+	if (!homun->read_db_libconfig_sub_stats(it, idx)) {
+		ShowError("homunculus_read_db_libconfig_sub: Failed to read homunculus stats for entry %d in '%s', skipping...\n", idx, source);
+		return false;
+	}
 
 	return true;
 }
 
-static void homunculus_read_db(void)
+static bool homunculus_read_db_libconfig_sub_stats(struct config_setting_t *it, int idx)
 {
-	int i;
-	const char *filename[]={DBPATH"homunculus_db.txt","homunculus_db2.txt"};
-	memset(homun->dbs->db, 0, sizeof(homun->dbs->db));
-	for(i = 0; i<ARRAYLENGTH(filename); i++) {
-		if( i > 0 ) {
-			char filepath[256];
+	nullpo_retr(false, it);
+	Assert_retr(false, idx >= 0 && idx < MAX_HOMUNCULUS_CLASS);
 
-			safesnprintf(filepath, 256, "%s/%s", map->db_path, filename[i]);
+	struct s_homunculus_db *db = &homun->dbs->db[idx];
+	struct config_setting_t *t = NULL;
 
-			if( !exists(filepath) ) {
-				continue;
-			}
-		}
+	if ((t = libconfig->setting_get_member(it, "BaseStats")) != NULL && config_setting_is_group(t))
+		homun->read_db_libconfig_sub_stats_group(t, &db->base, NULL);
+	if ((t = libconfig->setting_get_member(it, "GrowthStats")) != NULL && config_setting_is_group(t))
+		homun->read_db_libconfig_sub_stats_group(t, &db->gmin, &db->gmax);
+	if ((t = libconfig->setting_get_member(it, "EvolutionStats")) != NULL && config_setting_is_group(t))
+		homun->read_db_libconfig_sub_stats_group(t, &db->emin, &db->emax);
 
-		sv->readdb(map->db_path, filename[i], ',', 50, 50, MAX_HOMUNCULUS_CLASS, homun->read_db_sub);
+	return true;
+}
+
+static bool homunculus_read_db_libconfig_sub_stats_group(struct config_setting_t *it, struct h_stats *smin, struct h_stats *smax)
+{
+	nullpo_retr(false, it);
+	nullpo_retr(false, smin);
+
+
+	if (smax != NULL) {
+#define homunculus_read_stats_minmax(name, min, max) \
+	do { \
+		struct config_setting_t *t = NULL; \
+		if ((t = libconfig->setting_get_member(it, (name))) != NULL && config_setting_is_list(t)) { \
+			(min) = libconfig->setting_get_int_elem(t, 0); \
+			(max) = libconfig->setting_get_int_elem(t, 1); \
+			if ((min) > (max)) \
+				(min) = (max); \
+		} \
+	} while(0)
+		homunculus_read_stats_minmax("Hp", smin->HP, smax->HP);
+		homunculus_read_stats_minmax("Sp", smin->SP, smax->SP);
+		homunculus_read_stats_minmax("Str", smin->str, smax->str);
+		homunculus_read_stats_minmax("Agi", smin->agi, smax->agi);
+		homunculus_read_stats_minmax("Vit", smin->vit, smax->vit);
+		homunculus_read_stats_minmax("Int", smin->int_, smax->int_);
+		homunculus_read_stats_minmax("Dex", smin->dex, smax->dex);
+		homunculus_read_stats_minmax("Luk", smin->luk, smax->luk);
+#undef homunculus_read_stats_minmax
+	} else {
+		int i32 = 0;
+
+		if (libconfig->setting_lookup_int(it, "Hp", &i32) == CONFIG_TRUE && i32 >= 0)
+			smin->HP = i32;
+		if (libconfig->setting_lookup_int(it, "Sp", &i32) == CONFIG_TRUE && i32 >= 0)
+			smin->SP = i32;
+		if (libconfig->setting_lookup_int(it, "Str", &i32) == CONFIG_TRUE && i32 >= 0)
+			smin->str = i32;
+		if (libconfig->setting_lookup_int(it, "Agi", &i32) == CONFIG_TRUE && i32 >= 0)
+			smin->agi = i32;
+		if (libconfig->setting_lookup_int(it, "Vit", &i32) == CONFIG_TRUE && i32 >= 0)
+			smin->vit = i32;
+		if (libconfig->setting_lookup_int(it, "Int", &i32) == CONFIG_TRUE && i32 >= 0)
+			smin->int_ = i32;
+		if (libconfig->setting_lookup_int(it, "Dex", &i32) == CONFIG_TRUE && i32 >= 0)
+			smin->dex = i32;
+		if (libconfig->setting_lookup_int(it, "Luk", &i32) == CONFIG_TRUE && i32 >= 0)
+			smin->luk = i32;
 	}
 
+	return true;
 }
+
 // <hom class>,<skill id>,<max level>[,<job level>],<req id1>,<req lv1>,<req id2>,<req lv2>,<req id3>,<req lv3>,<req id4>,<req lv4>,<req id5>,<req lv5>,<intimacy lv req>
 static bool homunculus_read_skill_db_sub(char *split[], int columns, int current)
 {
@@ -1474,8 +1529,11 @@ void homunculus_defaults(void)
 	homun->revive = homunculus_revive;
 	homun->stat_reset = homunculus_stat_reset;
 	homun->shuffle = homunculus_shuffle;
-	homun->read_db_sub = homunculus_read_db_sub;
 	homun->read_db = homunculus_read_db;
+	homun->read_db_libconfig = homunculus_read_db_libconfig;
+	homun->read_db_libconfig_sub = homunculus_read_db_libconfig_sub;
+	homun->read_db_libconfig_sub_stats = homunculus_read_db_libconfig_sub_stats;
+	homun->read_db_libconfig_sub_stats_group = homunculus_read_db_libconfig_sub_stats_group;
 	homun->read_skill_db_sub = homunculus_read_skill_db_sub;
 	homun->skill_db_read = homunculus_skill_db_read;
 	homun->exp_db_read = homunculus_exp_db_read;

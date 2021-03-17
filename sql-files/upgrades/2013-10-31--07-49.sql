@@ -3,7 +3,7 @@
 -- This file is part of Hercules.
 -- http://herc.ws - http://github.com/HerculesWS/Hercules
 --
--- Copyright (C) 2013-2020 Hercules Dev Team
+-- Copyright (C) 2013-2021 Hercules Dev Team
 --
 -- Hercules is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -18,8 +18,8 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-ALTER TABLE `inventory` ADD COLUMN `bound` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER `favorite`;
-ALTER TABLE `cart_inventory` ADD COLUMN `bound` TINYINT(1) UNSIGNED NOT NULL default '0' AFTER `expire_time`;
-ALTER TABLE `storage` ADD COLUMN `bound` TINYINT(1) UNSIGNED NOT NULL default '0' AFTER `expire_time`;
-ALTER TABLE `guild_storage` ADD COLUMN `bound` TINYINT(1) UNSIGNED NOT NULL default '0' AFTER `expire_time`;
+ALTER TABLE `inventory` ADD COLUMN `bound` TINYINT UNSIGNED NOT NULL DEFAULT '0' AFTER `favorite`;
+ALTER TABLE `cart_inventory` ADD COLUMN `bound` TINYINT UNSIGNED NOT NULL default '0' AFTER `expire_time`;
+ALTER TABLE `storage` ADD COLUMN `bound` TINYINT UNSIGNED NOT NULL default '0' AFTER `expire_time`;
+ALTER TABLE `guild_storage` ADD COLUMN `bound` TINYINT UNSIGNED NOT NULL default '0' AFTER `expire_time`;
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1383205740);

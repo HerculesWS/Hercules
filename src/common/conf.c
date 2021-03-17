@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) 2012-2021 Hercules Dev Team
  * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -22,6 +22,7 @@
 
 #include "conf.h"
 
+#include "common/core.h"
 #include "common/nullpo.h" // nullpo_retv
 #include "common/showmsg.h" // ShowError
 #include "common/strlib.h" // safestrncpy
@@ -73,6 +74,14 @@ static void config_format_db_path(const char *filename, char *path_buf, int buff
 static int config_load_file(struct config_t *config, const char *config_filename)
 {
 	libconfig->init(config);
+
+	if (config_filename != NULL && strlen(config_filename) < 300) {
+		char include_path[350];
+		strcpy(include_path, "conf/import/include/");
+		strcat(include_path, SERVER_NAME);
+		libconfig->set_include_dir(config, include_path);
+	}
+
 	if (!exists(config_filename)) {
 		ShowError("Unable to load '%s' - File not found\n", config_filename);
 		return CONFIG_FALSE;

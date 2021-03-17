@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) 2012-2021 Hercules Dev Team
  * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -642,6 +642,23 @@ enum siege_teleport_result {
 	SIEGE_TP_INVALID_MODE = 0x2
 };
 
+/** Client action types */
+enum action_type {
+	ACT_ATTACK,
+	ACT_ITEMPICKUP,
+	ACT_SIT,
+	ACT_STAND,
+	ACT_ATTACK_NOMOTION,
+	ACT_SPLASH,
+	ACT_SKILL,
+	ACT_ATTACK_REPEAT,
+	ACT_ATTACK_MULTIPLE,
+	ACT_ATTACK_MULTIPLE_NOMOTION,
+	ACT_ATTACK_CRITICAL,
+	ACT_ATTACK_LUCKY,
+	ACT_TOUCHSKILL
+};
+
 /**
  * Structures
  **/
@@ -753,9 +770,19 @@ enum removeGear_flag {
 /** Info types for PACKET_ZC_PERSONAL_INFOMATION (0x097b). **/
 enum detail_exp_info_type {
 	PC_EXP_INFO = 0x0,	//!< PCBang internet cafe modifiers. (http://pcbang.gnjoy.com/) (Unused.)
-	PREMIUM_EXP_INFO = 0x1,	//!< Premium user modifiers. Values aren't displayed in 20161207+ clients.
+	PREMIUM_EXP_INFO = 0x1, //!< Premium user modifiers. Values aren't displayed in 20161207+ clients.
 	SERVER_EXP_INFO = 0x2,	//!< Server rates.
 	TPLUS_EXP_INFO = 0x3,	//!< Unknown. Values are displayed as "TPLUS" in kRO. (Unused.)
+};
+
+/**
+ * Convex Mirror (ZC_BOSS_INFO)
+ **/
+enum bossmap_info_type {
+	BOSS_INFO_NONE = 0,      // No Boss within the map
+	BOSS_INFO_ALIVE,         // Boss is still alive
+	BOSS_INFO_ALIVE_WITHMSG, // Boss is alive (on item use)
+	BOSS_INFO_DEAD,          // Boss is dead
 };
 
 /**
@@ -874,7 +901,7 @@ struct clif_interface {
 	void (*map_property) (struct map_session_data* sd, enum map_property property);
 	void (*pvpset) (struct map_session_data *sd, int pvprank, int pvpnum,int type);
 	void (*map_property_mapall) (int mapid, enum map_property property);
-	void (*bossmapinfo) (int fd, struct mob_data *md, short flag);
+	void (*bossmapinfo) (int fd, struct mob_data *md, enum bossmap_info_type flag);
 	void (*map_type) (struct map_session_data* sd, enum map_type type);
 	void (*maptypeproperty2) (struct block_list *bl,enum send_target t);
 	/* multi-map-server */
@@ -970,7 +997,8 @@ struct clif_interface {
 	void (*skillname_ack) (int fd, struct block_list *bl);
 	void (*itemname_ack) (int fd, struct block_list *bl);
 	void (*unknownname_ack) (int fd, struct block_list *bl);
-	void (*monster_hp_bar) ( struct mob_data* md, struct map_session_data *sd );
+	void (*monster_hp_bar) (struct mob_data *md, struct map_session_data *sd);
+	bool (*show_monster_hp_bar) (struct block_list *bl);
 	int (*hpmeter) (struct map_session_data *sd);
 	void (*hpmeter_single) (int fd, int id, unsigned int hp, unsigned int maxhp);
 	int (*hpmeter_sub) (struct block_list *bl, va_list ap);
@@ -1372,7 +1400,7 @@ struct clif_interface {
 	void (*pEmotion) (int fd, struct map_session_data *sd);
 	void (*pHowManyConnections) (int fd, struct map_session_data *sd);
 	void (*pActionRequest) (int fd, struct map_session_data *sd);
-	void (*pActionRequest_sub) (struct map_session_data *sd, int action_type, int target_id, int64 tick);
+	void (*pActionRequest_sub) (struct map_session_data *sd, enum action_type action_type, int target_id, int64 tick);
 	void (*pRestart) (int fd, struct map_session_data *sd);
 	void (*pWisMessage) (int fd, struct map_session_data* sd);
 	void (*pBroadcast) (int fd, struct map_session_data* sd);

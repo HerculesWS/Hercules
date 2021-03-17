@@ -3,7 +3,7 @@
 -- This file is part of Hercules.
 -- http://herc.ws - http://github.com/HerculesWS/Hercules
 --
--- Copyright (C) 2013-2020 Hercules Dev Team
+-- Copyright (C) 2013-2021 Hercules Dev Team
 --
 -- Hercules is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-ALTER TABLE `account_data` ADD `base_exp` TINYINT(4) UNSIGNED NOT NULL DEFAULT '100';
-ALTER TABLE `account_data` ADD `base_drop` TINYINT(4) UNSIGNED NOT NULL DEFAULT '100';
-ALTER TABLE `account_data` ADD `base_death` TINYINT(4) UNSIGNED NOT NULL DEFAULT '100';
+ALTER TABLE `account_data` ADD `base_exp` TINYINT UNSIGNED NOT NULL DEFAULT '100';
+ALTER TABLE `account_data` ADD `base_drop` TINYINT UNSIGNED NOT NULL DEFAULT '100';
+ALTER TABLE `account_data` ADD `base_death` TINYINT UNSIGNED NOT NULL DEFAULT '100';
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1383162785);

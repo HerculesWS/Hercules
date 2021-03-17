@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) 2012-2021 Hercules Dev Team
  * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -472,7 +472,7 @@ static int guild_create(struct map_session_data *sd, const char *name)
 	nullpo_ret(name);
 
 	if (sd->clan != NULL) {
-		clif->messagecolor_self(sd->fd, COLOR_RED, "You cannot create a guild because you are in a clan.");
+		clif->messagecolor_self(sd->fd, COLOR_RED, msg_sd(sd, 477)); // "You cannot create a guild because you are in a clan."
 		return 0;
 	}
 
@@ -2120,6 +2120,18 @@ static void guild_castle_map_init(void)
 	}
 }
 
+static int guild_castle_owner_change_foreach(struct map_session_data *sd, va_list ap)
+{
+	int map_index = va_arg(ap, int);
+
+	if (sd == NULL || sd->bl.m != map_index)
+		return 0;
+
+	status->calc_regen(&sd->bl, &sd->battle_status, &sd->regen);
+	status->calc_regen_rate(&sd->bl, &sd->regen);
+	return 1;
+}
+
 /**
  * Setter function for members of guild_castle struct.
  * Handles all side-effects, like updating guardians.
@@ -2147,6 +2159,9 @@ static int guild_castledatasave(int castle_id, int index, int value)
 			if (gc->guardian[i].visible && (gd = map->id2md(gc->guardian[i].id)) != NULL)
 				mob->guardian_guildchange(gd);
 		}
+
+		if (gc->guild_id > 0)
+			map->foreachpc(guild->castle_owner_change_foreach, gc->mapindex);
 		break;
 	}
 	case 2:
@@ -2365,6 +2380,7 @@ static void guild_flag_remove(struct npc_data *nd)
 
 		if( cursor != i ) {
 			memmove(&guild->flags[cursor], &guild->flags[i], sizeof(guild->flags[0]));
+			guild->flags[i] = NULL;
 		}
 		cursor++;
 	}
@@ -2580,6 +2596,7 @@ void guild_defaults(void)
 	guild->check_member = guild_check_member;
 	guild->get_alliance_count = guild_get_alliance_count;
 	guild->castle_reconnect_sub = guild_castle_reconnect_sub;
+	guild->castle_owner_change_foreach = guild_castle_owner_change_foreach;
 	/* */
 	guild->retrieveitembound = guild_retrieveitembound;
 }

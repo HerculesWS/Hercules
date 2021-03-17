@@ -21,10 +21,8 @@
 //   It can be changed in src/map/mob.c by adjusting MAX_ITEMRATIO_MOBS.
 // - Only ItemIDs up to MAX_ITEMDB are supported (default: 32768).
 // - Does not override item_drop_*_min/max settings.
-// - Does not affect card/item-granted drops. To adjust card/item-granted
-//   drops, edit them in item_db.
+// - Does not affect card/item-granted drops. To adjust card/item-granted drops, edit them in item_db.
 // - Does affect MVP prizes and Treasure Boxes.
-// - You can add only ONE line per ItemID. If you need various ratios
-//   for different monsters, override drop rate with Ratio=100 and edit
-//   base drop rates in mob_db.
+// - You can add only ONE line per ItemID. If you need various ratios for different monsters,
+//   override drop rate with Ratio=100 and edit base drop rates in mob_db.
 // - This file is reloaded by @reloadmobdb.

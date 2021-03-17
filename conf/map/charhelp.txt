@@ -14,7 +14,7 @@
  60:#cash <char name> <amount> - Give/take a player cash points
  60:#points <char name> <amount> - Give/take a player Kafra points
  60:#stpoint <char name> <amount> - Give/take a players stat points
- 60:#skpoint <char name> <amount> - give/take a players skill points
+ 60:#skpoint <char name> <amount> - Give/take a players skill points
  60:#skreset <char name> - Reset skills of a character.
  60:#streset <char name> - Reset stats of a character.
  60:#reset <char name> - Reset stats AND skills of a character.
@@ -24,5 +24,5 @@
  50:#model <char name> <hair type> <hair color> <clothes color> - Changes a player's model
  60:#disguise <char name> <monster_name_or_monster_ID> - Changes disguise of a player
  60:#undisguise <char name> - Cancels disguise of a player
- 60:#changesex <char name> - Changes sex of a player (all characters of the account)
+ 60:#changesex <char name> - Changes sex of a player
  60:#warp/#rura+ <char name> <mapname> <x> <y> - Warps character to location of choice

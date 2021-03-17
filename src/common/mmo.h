@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) 2012-2021 Hercules Dev Team
  * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -469,6 +469,19 @@ struct item {
 	struct item_option option[MAX_ITEM_OPTIONS];
 };
 
+/**
+ * Prevents @ref MAX_STORAGE from causing oversized 0x3011 inter-server packets.
+ *
+ * @attention If the size of packet 0x3011 changes, this assertion check needs to be adjusted, too.
+ *
+ * @see intif_send_account_storage() @n
+ *      mapif_parse_AccountStorageSave()
+ *
+ * @anchor MAX_STORAGE_ASSERT
+ *
+ **/
+STATIC_ASSERT(MAX_STORAGE * sizeof(struct item) + 8 <= 0xFFFF, "The maximum amount of item slots per account storage is limited by the inter-server communication layout. Use a smaller value!");
+
 //Equip position constants
 enum equip_pos {
 	EQP_NONE               = 0x000000,
@@ -617,6 +630,19 @@ struct guild_storage {
 	struct item items[MAX_GUILD_STORAGE];
 	unsigned short lock;
 };
+
+/**
+ * Prevents @ref MAX_GUILD_STORAGE from causing oversized 0x3019 inter-server packets.
+ *
+ * @attention If the size of packet 0x3019 changes, this assertion check needs to be adjusted, too.
+ *
+ * @see intif_send_guild_storage() @n
+ *      mapif_parse_SaveGuildStorage()
+ *
+ * @anchor MAX_GUILD_STORAGE_ASSERT
+ *
+ **/
+STATIC_ASSERT(sizeof(struct guild_storage) + 12 <= 0xFFFF, "The maximum amount of item slots per guild storage is limited by the inter-server communication layout. Use a smaller value!");
 
 struct s_pet {
 	int account_id;

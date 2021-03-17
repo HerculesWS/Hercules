@@ -9,7 +9,7 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) 2012-2021 Hercules Dev Team
 //= Copyright (C) L0ne_W0lf
 //= Copyright (C) Evera
 //= Copyright (C) Silent
@@ -179,7 +179,6 @@ nif_in,156,93,5	script	Child#niflheim	4_F_NFLOSTGIRL,{
 }
 
 niflheim,350,258,1	script	Cursed Spirit#nif	4_NFWISP,{
-	killmonster "niflheim","Cursed Spirit#nif::OnMyMobDead";
 	mes "[Ashe Bruce]";
 	mes "I sense you're cursed";
 	mes "by a powerful spell...";
@@ -208,7 +207,12 @@ niflheim,350,258,1	script	Cursed Spirit#nif	4_NFWISP,{
 	next;
 	switch(select("Touch the first book.", "Touch the second book.", "Touch the third book.", "Okay, I am leaving.")) {
 	case 1:
-		monster "niflheim",349,259,"Rideword",1478,1,"Cursed Spirit#nif::OnMyMobDead";
+		if (.last_mob_summon + 60 < gettimetick(2)) { // only spawn every 60 seconds, to prevent farming exploits
+			.@label$ = sprintf("%s::OnMyMobDead", strnpcinfo(NPC_NAME_UNIQUE));
+			killmonster("niflheim", .@label$);
+			.last_mob_summon = gettimetick(2);
+			monster("niflheim", 349, 259, "--ja--", G_RIDEWORD, 1, .@label$);
+		}
 		mes "[Ashe Bruce]";
 		mes "...!...";
 		mes "How dare you touch my books";
@@ -339,13 +343,18 @@ niflheim,350,258,1	script	Cursed Spirit#nif	4_NFWISP,{
 				close;
 			}
 		}
-		monster "niflheim",345,259,"Orc Skeleton",1462,1,"Cursed Spirit#nif::OnMyMobDead";
-		monster "niflheim",347,261,"Orc Skeleton",1462,1,"Cursed Spirit#nif::OnMyMobDead";
-		monster "niflheim",344,253,"Orc Skeleton",1462,1,"Cursed Spirit#nif::OnMyMobDead";
-		monster "niflheim",346,251,"Orc Skeleton",1462,1,"Cursed Spirit#nif::OnMyMobDead";
-		monster "niflheim",349,249,"Orc Skeleton",1462,1,"Cursed Spirit#nif::OnMyMobDead";
-		monster "niflheim",350,260,"Orc Skeleton",1462,1,"Cursed Spirit#nif::OnMyMobDead";
-		monster "niflheim",353,256,"Orc Skeleton",1462,1,"Cursed Spirit#nif::OnMyMobDead";
+		if (.last_mob_summon + 60 < gettimetick(2)) { // only spawn every 60 seconds, to prevent farming exploits
+			.@label$ = sprintf("%s::OnMyMobDead", strnpcinfo(NPC_NAME_UNIQUE));
+			killmonster("niflheim", .@label$);
+			.last_mob_summon = gettimetick(2);
+			monster("niflheim", 345, 259, "--ja--", G_ORC_SKELETON, 1, .@label$);
+			monster("niflheim", 347, 261, "--ja--", G_ORC_SKELETON, 1, .@label$);
+			monster("niflheim", 344, 253, "--ja--", G_ORC_SKELETON, 1, .@label$);
+			monster("niflheim", 346, 251, "--ja--", G_ORC_SKELETON, 1, .@label$);
+			monster("niflheim", 349, 249, "--ja--", G_ORC_SKELETON, 1, .@label$);
+			monster("niflheim", 350, 260, "--ja--", G_ORC_SKELETON, 1, .@label$);
+			monster("niflheim", 353, 256, "--ja--", G_ORC_SKELETON, 1, .@label$);
+		}
 		mes "[Ashe Bruce]";
 		mes "Muhahahahahaha!";
 		mes "That's not the right spell!";

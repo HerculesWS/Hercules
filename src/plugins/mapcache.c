@@ -2,7 +2,7 @@
 * This file is part of Hercules.
 * http://herc.ws - http://github.com/HerculesWS/Hercules
 *
-* Copyright (C) 2013-2020 Hercules Dev Team
+* Copyright (C) 2013-2021 Hercules Dev Team
 *
 * Hercules is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -288,7 +288,7 @@ bool mapcache_cache_map(const char *mapname)
 		}
 		int major_version = rsw[4];
 		int minor_version = rsw[5];
-		if (major_version > 2 || (major_version == 2 && minor_version > 2)) {
+		if (major_version > 2 || (major_version == 2 && minor_version > 5)) {
 			ShowError("mapcache_cache_map: Unsupported version %d.%d for rsw file %s\n", major_version, minor_version, filepath);
 			aFree(rsw);
 			return false;
@@ -299,8 +299,11 @@ bool mapcache_cache_map(const char *mapname)
 			return false;
 		}
 		int offset = 166;
+		if (major_version == 2 && minor_version >= 5) {
+			offset += 4;
+		}
 		if (major_version == 2 && minor_version >= 2) {
-			offset = 167;
+			offset += 1;
 		}
 		water_height = (int)GetFloat(rsw + offset);
 		aFree(rsw);

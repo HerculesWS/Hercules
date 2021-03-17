@@ -3,7 +3,7 @@
 -- This file is part of Hercules.
 -- http://herc.ws - http://github.com/HerculesWS/Hercules
 --
--- Copyright (C) 2015-2020 Hercules Dev Team
+-- Copyright (C) 2015-2021 Hercules Dev Team
 --
 -- Hercules is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -18,9 +18,9 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-ALTER TABLE `char` MODIFY COLUMN `max_hp` INT(9) NOT NULL DEFAULT '0';
-ALTER TABLE `char` MODIFY COLUMN `max_sp` INT(9) NOT NULL DEFAULT '0';
-ALTER TABLE `char` MODIFY COLUMN `hp` INT(9) NOT NULL DEFAULT '0';
-ALTER TABLE `char` MODIFY COLUMN `sp` INT(9) NOT NULL DEFAULT '0';
+ALTER TABLE `char` MODIFY COLUMN `max_hp` INT NOT NULL DEFAULT '0';
+ALTER TABLE `char` MODIFY COLUMN `max_sp` INT NOT NULL DEFAULT '0';
+ALTER TABLE `char` MODIFY COLUMN `hp` INT NOT NULL DEFAULT '0';
+ALTER TABLE `char` MODIFY COLUMN `sp` INT NOT NULL DEFAULT '0';
 
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1450241859);

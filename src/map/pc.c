@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) 2012-2021 Hercules Dev Team
  * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -1624,35 +1624,10 @@ static int pc_calc_skilltree(struct map_session_data *sd)
 			sd->status.skill[i].lv = (sd->status.skill[i].flag == SKILL_FLAG_TEMPORARY) ? 0 : sd->status.skill[i].flag - SKILL_FLAG_REPLACED_LV_0;
 			sd->status.skill[i].flag = SKILL_FLAG_PERMANENT;
 		}
-
-		if (sd->sc.count && sd->sc.data[SC_SOULLINK] && sd->sc.data[SC_SOULLINK]->val2 == SL_BARDDANCER
-		 && ((skill->dbs->db[i].nameid >= BA_WHISTLE && skill->dbs->db[i].nameid <= BA_APPLEIDUN)
-		  || (skill->dbs->db[i].nameid >= DC_HUMMING && skill->dbs->db[i].nameid <= DC_SERVICEFORYOU))
-		) {
-			//Enable Bard/Dancer spirit linked skills.
-			int linked_nameid = skill->get_linked_song_dance_id(skill->dbs->db[i].nameid);
-			if (linked_nameid == 0) {
-				Assert_report("Linked bard/dance skill not found");
-				continue;
-			}
-			int copy_from_index;
-			int copy_to_index;
-			if (sd->status.sex == SEX_MALE && skill->dbs->db[i].nameid >= BA_WHISTLE && skill->dbs->db[i].nameid <= BA_APPLEIDUN) {
-				copy_from_index = i;
-				copy_to_index = skill->get_index(linked_nameid);
-			} else {
-				copy_from_index = skill->get_index(linked_nameid);
-				copy_to_index = i;
-			}
-			if (copy_from_index < copy_to_index)
-				continue; // Copy only after the source skill has been filled into the tree
-			if (sd->status.skill[copy_from_index].lv < 10)
-				continue; // Copy only if the linked skill has been mastered
-			sd->status.skill[copy_to_index].id = skill->dbs->db[copy_to_index].nameid;
-			sd->status.skill[copy_to_index].lv = sd->status.skill[copy_from_index].lv; // Set the level to the same as the linking skill
-			sd->status.skill[copy_to_index].flag = SKILL_FLAG_TEMPORARY; // Tag it as a non-savable, non-uppable, bonus skill
-		}
 	}
+
+	//Enable Bard/Dancer spirit linked skills.
+	skill->add_bard_dancer_soullink_songs(sd);
 
 	if( pc_has_permission(sd, PC_PERM_ALL_SKILL) ) {
 		for (int i = 0; i < MAX_SKILL_DB; i++) {
@@ -4077,7 +4052,23 @@ static int pc_bonus3(struct map_session_data *sd, int type, int type2, int type3
 			}
 
 			break;
+		case SP_STATE_NO_RECOVER_RACE:
+		{
+			uint32 race_mask = map->race_id2mask(type2);
+			if (race_mask == RCMASK_NONE) {
+				ShowWarning("pc_bonus3: SP_STATE_NO_RECOVER_RACE: Invalid Race (%d)\n", type2);
+				break;
+			}
 
+			if (sd->state.lr_flag == 2)
+				break;
+
+			BONUS_FOREACH_RCARRAY_FROMMASK(i, race_mask) {
+				sd->no_recover_state_race[i].rate = type3;
+				sd->no_recover_state_race[i].tick = val;
+			}
+		}
+			break;
 		default:
 			ShowWarning("pc_bonus3: unknown type %d %d %d %d!\n",type,type2,type3,val);
 			Assert_report(0);
@@ -5981,9 +5972,6 @@ static int pc_setpos(struct map_session_data *sd, unsigned short map_index, int 
 		guild->send_dot_remove(sd);
 		bg->send_dot_remove(sd);
 
-		if (sd->regen.state.gc != 0)
-			sd->regen.state.gc = 0;
-
 		// Make sure that vending is allowed here.
 		if (sd->state.vending != 0 && map->list[map_id].flag.novending != 0) {
 			clif->message(sd->fd, msg_sd(sd, 276)); // "You can't open a shop on this map"
@@ -6056,19 +6044,19 @@ static int pc_setpos(struct map_session_data *sd, unsigned short map_index, int 
 		sd->state.rewarp = 1; // Tag character for re-warping after map-loading is done. [Skotlex]
 	}
 
+	if (sd->status.guild_id > 0
+		&& (map->list[map_id].flag.gvg_castle == 1 || map->list[sd->bl.m].flag.gvg_castle == 1)) {
+		// If coming from or going to a guild castle, recalculate HP/SP regen [Hemagx]
+		status->calc_regen(&sd->bl, &sd->battle_status, &sd->regen);
+		status->calc_regen_rate(&sd->bl, &sd->regen);
+	}
+
 	sd->mapindex = map_index;
 	sd->bl.m = map_id;
 	sd->bl.x = x;
 	sd->bl.y = y;
 	sd->ud.to_x = x;
 	sd->ud.to_y = y;
-
-	if (sd->status.guild_id > 0 && map->list[map_id].flag.gvg_castle != 0) { // Double regeneration in guild castle. [Valaris]
-		struct guild_castle *gc = guild->mapindex2gc(sd->mapindex);
-
-		if (gc != NULL && gc->guild_id == sd->status.guild_id)
-			sd->regen.state.gc = 1;
-	}
 
 	if (sd->status.pet_id > 0 && sd->pd != NULL && sd->pd->pet.intimate > PET_INTIMACY_NONE) {
 		sd->pd->bl.m = map_id;
@@ -6984,7 +6972,7 @@ static int pc_follow_timer(int tid, int64 tick, int id, intptr_t data)
 	) {
 		if((sd->bl.m == tbl->m) && unit->can_reach_bl(&sd->bl,tbl, AREA_SIZE, 0, NULL, NULL)) {
 			if (!check_distance_bl(&sd->bl, tbl, 5))
-				unit->walktobl(&sd->bl, tbl, 5, 0);
+				unit->walk_tobl(&sd->bl, tbl, 5, 0);
 		} else
 			pc->setpos(sd, map_id2index(tbl->m), tbl->x, tbl->y, CLR_TELEPORT);
 	}
@@ -7663,7 +7651,7 @@ static int pc_skillup(struct map_session_data *sd, uint16 skill_id)
 			clif->msgtable_num(sd, MSG_UPGRADESKILLERROR_MORE_SECONDJOBSKILL, sd->sktree.third);
 #endif
 		} else if (pc->calc_skillpoint(sd) < 9) {  /* TODO: official response? */
-			clif->messagecolor_self(sd->fd, COLOR_RED, "You need the basic skills");
+			clif->messagecolor_self(sd->fd, COLOR_RED, msg_sd(sd, 164)); // "You need to learn the basic skills first."
 		}
 	}
 	return 0;
@@ -8218,7 +8206,7 @@ static int pc_dead(struct map_session_data *sd, struct block_list *src)
 		homun->vaporize(sd, HOM_ST_REST, true);
 
 	if (sd->md != NULL)
-		mercenary->delete(sd->md, 3); // Your mercenary soldier ran away.
+		mercenary->delete(sd->md, MERC_DELETE_RANAWAY); // Your mercenary soldier ran away.
 
 	if (sd->ed != NULL)
 		elemental->delete(sd->ed, 0);
@@ -9041,6 +9029,11 @@ static int pc_itemheal(struct map_session_data *sd, int itemid, int hp, int sp)
 #endif
 		if (sd->sc.data[SC_BITESCAR]) {
 			hp = 0;
+		}
+		
+		if (sd->sc.data[SC_NO_RECOVER_STATE]) {
+			hp = 0;
+			sp = 0;
 		}
 	}
 
@@ -10472,7 +10465,7 @@ static int pc_equipitem(struct map_session_data *sd, int n, int req_pos)
 	    || (sd->status.inventory[n].attribute & ATTR_BROKEN) != 0) {
 		clif->equipitemack(sd, n, 0, EIA_FAIL);
 		return 0;
-	}	
+	}
 
 	if (sd->inventory_data[n]->flag.bindonequip != 0 && sd->status.inventory[n].bound == 0) {
 		sd->status.inventory[n].bound = IBT_CHARACTER;
@@ -10555,7 +10548,7 @@ static int pc_equipitem(struct map_session_data *sd, int n, int req_pos)
 
 	if (flag != 0) // Update skill data.
 		clif->skillinfoblock(sd);
-	
+
 	// Execute equip script. [Skotlex]
 	struct item_data *equip_data = sd->inventory_data[n];
 	struct map_zone_data *zone = map->list[sd->bl.m].zone;
@@ -10983,15 +10976,15 @@ static int pc_calc_pvprank_sub(struct block_list *bl, va_list ap)
  *------------------------------------------*/
 static int pc_calc_pvprank(struct map_session_data *sd)
 {
-	int old;
-	struct map_data *m;
 	nullpo_ret(sd);
-	m=&map->list[sd->bl.m];
-	old=sd->pvp_rank;
-	sd->pvp_rank=1;
-	map->foreachinmap(pc_calc_pvprank_sub,sd->bl.m,BL_PC,sd);
-	if(old!=sd->pvp_rank || sd->pvp_lastusers!=m->users_pvp)
-		clif->pvpset(sd,sd->pvp_rank,sd->pvp_lastusers=m->users_pvp,0);
+	struct map_data *m = &map->list[sd->bl.m];
+	int old = sd->pvp_rank;
+	sd->pvp_rank = 1;
+	map->foreachinmap(pc->calc_pvprank_sub, sd->bl.m, BL_PC, sd);
+	if (old != sd->pvp_rank || sd->pvp_lastusers != m->users_pvp) {
+		sd->pvp_lastusers = m->users_pvp;
+		clif->pvpset(sd, sd->pvp_rank, sd->pvp_lastusers, 0);
+	}
 	return sd->pvp_rank;
 }
 /*==========================================
@@ -11326,7 +11319,8 @@ static void pc_setstand(struct map_session_data *sd)
 	status_change_end(&sd->bl, SC_TENSIONRELAX, INVALID_TIMER);
 	clif->sc_end(&sd->bl, sd->bl.id, SELF, status->get_sc_icon(SC_SIT));
 	//Reset sitting tick.
-	sd->ssregen.tick.hp = sd->ssregen.tick.sp = 0;
+	sd->sitting_regen.tick.hp = 0;
+	sd->sitting_regen.tick.sp = 0;
 	if (pc_isdead(sd)) {
 		sd->state.dead_sit = sd->vd.dead_sit = 0;
 		clif->party_dead_notification(sd);
@@ -11892,7 +11886,7 @@ static bool pc_read_exp_db(void)
 	struct config_setting_t *edb = NULL;
 	int entry_count = 0;
 	char config_filename[256];
-	
+
 	libconfig->format_db_path(DBPATH"exp_group_db.conf", config_filename, sizeof(config_filename));
 
 	if (!libconfig->load_file(&exp_db_conf, config_filename))
@@ -13035,6 +13029,7 @@ void pc_defaults(void)
 	pc->cleareventtimer = pc_cleareventtimer;
 	pc->addeventtimercount = pc_addeventtimercount;
 
+	pc->calc_pvprank_sub = pc_calc_pvprank_sub;
 	pc->calc_pvprank = pc_calc_pvprank;
 	pc->calc_pvprank_timer = pc_calc_pvprank_timer;
 

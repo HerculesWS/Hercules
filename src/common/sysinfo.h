@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2013-2020 Hercules Dev Team
+ * Copyright (C) 2013-2021 Hercules Dev Team
  * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -39,11 +39,7 @@ struct sysinfo_private;
 struct sysinfo_interface {
 	struct sysinfo_private *p;
 
-#if defined(WIN32) && !defined(__CYGWIN__)
 	long (*getpagesize) (void);
-#else
-	int (*getpagesize) (void);
-#endif
 	const char *(*platform) (void);
 	const char *(*osversion) (void);
 	const char *(*cpu) (void);
@@ -57,6 +53,7 @@ struct sysinfo_interface {
 	int (*vcstypeid) (void);
 	const char *(*vcsrevision_src) (void);
 	const char *(*vcsrevision_scripts) (void);
+	int (*build_revision) (void);
 	void (*vcsrevision_reload) (void);
 	bool (*is_superuser) (void);
 	void (*init) (void);

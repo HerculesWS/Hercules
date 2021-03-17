@@ -1,7 +1,7 @@
 -- This file is part of Hercules.
 -- http://herc.ws - http://github.com/HerculesWS/Hercules
 --
--- Copyright (C) 2013-2020 Hercules Dev Team
+-- Copyright (C) 2013-2021 Hercules Dev Team
 --
 -- Hercules is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -22,61 +22,61 @@
 -- Note: After runing this file run Hercules upgrade files.
 --
 
-ALTER TABLE `global_reg_value` MODIFY `type` TINYINT(1) UNSIGNED NOT NULL DEFAULT '3';
+ALTER TABLE `global_reg_value` MODIFY `type` TINYINT UNSIGNED NOT NULL DEFAULT '3';
 
 -- `ExpPer` column removed from `mob_db` and `mob_db2` tables
 ALTER TABLE `mob_db` DROP COLUMN `ExpPer`;
 ALTER TABLE `mob_db2` DROP COLUMN `ExpPer`;
 
 -- Rename `level` column to `group_id` in `login` table
-ALTER TABLE `login` CHANGE COLUMN `level` `group_id` TINYINT(3) NOT NULL DEFAULT '0';
+ALTER TABLE `login` CHANGE COLUMN `level` `group_id` TINYINT NOT NULL DEFAULT '0';
 
-ALTER TABLE `char` ADD COLUMN `elemental_id` INT(11) UNSIGNED NOT NULL DEFAULT '0';
+ALTER TABLE `char` ADD COLUMN `elemental_id` INT UNSIGNED NOT NULL DEFAULT '0';
 
 CREATE TABLE IF NOT EXISTS `elemental` (
-  `ele_id` INT(11) UNSIGNED NOT NULL auto_increment,
-  `char_id` INT(11) NOT NULL,
-  `class` MEDIUMINT(9) UNSIGNED NOT NULL DEFAULT '0',
-  `mode` INT(11) UNSIGNED NOT NULL DEFAULT '1',
-  `hp` INT(12) NOT NULL DEFAULT '1',
-  `sp` INT(12) NOT NULL DEFAULT '1',
-  `max_hp` MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-  `max_sp` MEDIUMINT(6) UNSIGNED NOT NULL DEFAULT '0',
-  `str` SMALLINT(4) UNSIGNED NOT NULL DEFAULT '0',
-  `agi` SMALLINT(4) UNSIGNED NOT NULL DEFAULT '0',
-  `vit` SMALLINT(4) UNSIGNED NOT NULL DEFAULT '0',
-  `INT` SMALLINT(4) UNSIGNED NOT NULL DEFAULT '0',
-  `dex` SMALLINT(4) UNSIGNED NOT NULL DEFAULT '0',
-  `luk` SMALLINT(4) UNSIGNED NOT NULL DEFAULT '0',
-  `life_time` INT(11) NOT NULL DEFAULT '0',
+  `ele_id` INT UNSIGNED NOT NULL auto_increment,
+  `char_id` INT NOT NULL,
+  `class` MEDIUMINT UNSIGNED NOT NULL DEFAULT '0',
+  `mode` INT UNSIGNED NOT NULL DEFAULT '1',
+  `hp` INT NOT NULL DEFAULT '1',
+  `sp` INT NOT NULL DEFAULT '1',
+  `max_hp` MEDIUMINT UNSIGNED NOT NULL DEFAULT '0',
+  `max_sp` MEDIUMINT UNSIGNED NOT NULL DEFAULT '0',
+  `str` SMALLINT UNSIGNED NOT NULL DEFAULT '0',
+  `agi` SMALLINT UNSIGNED NOT NULL DEFAULT '0',
+  `vit` SMALLINT UNSIGNED NOT NULL DEFAULT '0',
+  `INT` SMALLINT UNSIGNED NOT NULL DEFAULT '0',
+  `dex` SMALLINT UNSIGNED NOT NULL DEFAULT '0',
+  `luk` SMALLINT UNSIGNED NOT NULL DEFAULT '0',
+  `life_time` INT NOT NULL DEFAULT '0',
   PRIMARY KEY (`ele_id`)
 ) ENGINE=MyISAM;
 
 ALTER TABLE `char` ADD CONSTRAINT `name_key` UNIQUE (`name`);
 
-ALTER TABLE `inventory`  ADD COLUMN `favorite` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0' AFTER `expire_time`;
+ALTER TABLE `inventory`  ADD COLUMN `favorite` TINYINT UNSIGNED NOT NULL DEFAULT '0' AFTER `expire_time`;
 
 ALTER TABLE `item_db_re` CHANGE `equip_level` `equip_level` VARCHAR(10) DEFAULT '';
 
 ALTER TABLE `item_db_re` MODIFY COLUMN `atk:matk` VARCHAR(11) DEFAULT '';
 
-ALTER TABLE `item_db_re` MODIFY COLUMN `defence` SMALLINT(5) UNSIGNED DEFAULT NULL;
+ALTER TABLE `item_db_re` MODIFY COLUMN `defence` SMALLINT UNSIGNED DEFAULT NULL;
 
-ALTER TABLE  `homunculus` ADD  `prev_class` MEDIUMINT( 9 ) NOT NULL AFTER  `class`;
+ALTER TABLE  `homunculus` ADD `prev_class` MEDIUMINT NOT NULL AFTER  `class`;
 
-ALTER TABLE `item_db_re` MODIFY `defence` SMALLINT(5) DEFAULT NULL;
+ALTER TABLE `item_db_re` MODIFY `defence` SMALLINT DEFAULT NULL;
 
-ALTER TABLE `item_db` MODIFY `defence` SMALLINT(5) DEFAULT NULL;
+ALTER TABLE `item_db` MODIFY `defence` SMALLINT DEFAULT NULL;
 
-ALTER TABLE `elemental` CHANGE COLUMN `str` `atk1` MEDIUMINT(6) UNSIGNED NOT NULL DEFAULT 0,
-  CHANGE COLUMN `agi` `atk2` MEDIUMINT(6) UNSIGNED NOT NULL DEFAULT 0,
-  CHANGE COLUMN `vit` `matk` MEDIUMINT(6) UNSIGNED NOT NULL DEFAULT 0,
-  CHANGE COLUMN `INT` `aspd` SMALLINT(4) UNSIGNED NOT NULL DEFAULT 0,
-  CHANGE COLUMN `dex` `def` SMALLINT(4) UNSIGNED NOT NULL DEFAULT 0,
-  CHANGE COLUMN `luk` `mdef` SMALLINT(4) UNSIGNED NOT NULL DEFAULT 0,
-  CHANGE COLUMN `life_time` `flee` SMALLINT(4) UNSIGNED NOT NULL DEFAULT 0,
-  ADD COLUMN `hit` SMALLINT(4) UNSIGNED NOT NULL DEFAULT 0 AFTER `flee`,
-  ADD COLUMN `life_time` INT(11) NOT NULL DEFAULT 0 AFTER `hit`;
+ALTER TABLE `elemental` CHANGE COLUMN `str` `atk1` MEDIUMINT UNSIGNED NOT NULL DEFAULT 0,
+  CHANGE COLUMN `agi` `atk2` MEDIUMINT UNSIGNED NOT NULL DEFAULT 0,
+  CHANGE COLUMN `vit` `matk` MEDIUMINT UNSIGNED NOT NULL DEFAULT 0,
+  CHANGE COLUMN `INT` `aspd` SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+  CHANGE COLUMN `dex` `def` SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+  CHANGE COLUMN `luk` `mdef` SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+  CHANGE COLUMN `life_time` `flee` SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+  ADD COLUMN `hit` SMALLINT UNSIGNED NOT NULL DEFAULT 0 AFTER `flee`,
+  ADD COLUMN `life_time` INT NOT NULL DEFAULT 0 AFTER `hit`;
 
 CREATE TABLE IF NOT EXISTS `interreg` (
   `varname` VARCHAR(11) NOT NULL,
@@ -100,17 +100,17 @@ ALTER TABLE `storage` ADD `nsiuid` BIGINT NOT NULL DEFAULT '0';
 
 UPDATE `interreg` SET `varname` = 'unique_id' WHERE `interreg`.`varname` = 'nsiuid';
 
-ALTER TABLE `auction` CHANGE `nsiuid` `unique_id` BIGINT( 20 ) NOT NULL DEFAULT '0';
+ALTER TABLE `auction` CHANGE `nsiuid` `unique_id` BIGINT NOT NULL DEFAULT '0';
 
-ALTER TABLE `cart_inventory` CHANGE `nsiuid` `unique_id` BIGINT( 20 ) NOT NULL DEFAULT '0';
+ALTER TABLE `cart_inventory` CHANGE `nsiuid` `unique_id` BIGINT NOT NULL DEFAULT '0';
 
-ALTER TABLE `guild_storage` CHANGE `nsiuid` `unique_id` BIGINT( 20 ) NOT NULL DEFAULT '0';
+ALTER TABLE `guild_storage` CHANGE `nsiuid` `unique_id` BIGINT NOT NULL DEFAULT '0';
 
-ALTER TABLE `inventory` CHANGE `nsiuid` `unique_id` BIGINT( 20 ) NOT NULL DEFAULT '0';
+ALTER TABLE `inventory` CHANGE `nsiuid` `unique_id` BIGINT NOT NULL DEFAULT '0';
 
-ALTER TABLE `mail` CHANGE `nsiuid` `unique_id` BIGINT( 20 ) NOT NULL DEFAULT '0';
+ALTER TABLE `mail` CHANGE `nsiuid` `unique_id` BIGINT NOT NULL DEFAULT '0';
 
-ALTER TABLE `storage` CHANGE `nsiuid` `unique_id` BIGINT( 20 ) NOT NULL DEFAULT '0';
+ALTER TABLE `storage` CHANGE `nsiuid` `unique_id` BIGINT NOT NULL DEFAULT '0';
 
 ALTER TABLE `charlog` MODIFY `time` DATETIME NULL;
 ALTER TABLE `interlog` MODIFY `time` DATETIME NULL;
