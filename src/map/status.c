@@ -13938,10 +13938,29 @@ static void status_read_job_db(void)
 
 		idx = pc->class2idx(class);
 		status->read_job_db_sub(idx, name, jdb);
+		status->check_job_bonus(idx, name, class);
 	}
 
 	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", i, config_filename);
 	libconfig->destroy(&job_db_conf);
+}
+
+static void status_check_job_bonus(int idx, const char *name, int class)
+{
+	if (class == JOB_NOVICE)
+		return;
+
+	Assert_retv(idx >= 0 && idx < CLASS_COUNT);
+	bool isEmpty = true;
+	for(int i2 = 0; i2 < MAX_LEVEL; i2++) {
+		if (status->dbs->job_bonus[idx][i2] != 0) {
+			isEmpty = false;
+			break;
+		}
+	}
+	if (isEmpty) {
+		ShowWarning("Missing job %s (%d) in job_db2.txt\n", name, class);
+	}
 }
 
 static bool status_readdb_job2(char *fields[], int columns, int current)
@@ -14355,4 +14374,5 @@ void status_defaults(void)
 	status->copy = status_copy;
 	status->base_matk_min = status_base_matk_min;
 	status->base_matk_max = status_base_matk_max;
+	status->check_job_bonus = status_check_job_bonus;
 }
