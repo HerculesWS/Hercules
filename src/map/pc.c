@@ -11905,7 +11905,9 @@ static bool pc_job_is_dummy(int job)
 	 || job == JOB_BABY_KNIGHT2 || job == JOB_BABY_CRUSADER2
 	 || job == JOB_STAR_GLADIATOR2 || job == JOB_BABY_STAR_GLADIATOR2
 	 || (job >= JOB_RUNE_KNIGHT2 && job <= JOB_MECHANIC_T2)
-	 || (job >= JOB_BABY_RUNE2 && job <= JOB_BABY_MECHANIC2))
+	 || (job >= JOB_BABY_RUNE2 && job <= JOB_BABY_MECHANIC2)
+	 || job == JOB_DUMMY4219    || job == JOB_DUMMY4221
+	 || (job >= JOB_DUMMY4230 && job <= JOB_DUMMY4237))
 		return true;
 	return false;
 }
