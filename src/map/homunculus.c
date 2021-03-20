@@ -73,7 +73,7 @@ static struct view_data *homunculus_get_viewdata(int class_)
 	return &homun->dbs->viewdb[class_-HM_CLASS_BASE];
 }
 
-static enum homun_type homunculus_class2type(int class_)
+static enum homun_type homunculus_class2type(enum homun_id class_)
 {
 	switch(class_) {
 		// Normal Homunculus
@@ -825,7 +825,7 @@ static bool homunculus_change_name_ack(struct map_session_data *sd, const char *
 	return true;
 }
 
-static int homunculus_db_search(int key, int type)
+static int homunculus_db_search(int key, enum HOMUN_TYPE type)
 {
 	int i;
 

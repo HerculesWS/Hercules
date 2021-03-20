@@ -3618,7 +3618,7 @@ static void char_parse_frommap_change_account(int fd)
 
 	int acc = RFIFOL(fd,2); // account_id of who ask (-1 if server itself made this request)
 	const char *name = RFIFOP(fd,6); // name of the target character
-	int type = RFIFOW(fd,30); // type of operation: 1-block, 2-ban, 3-unblock, 4-unban, 5 changesex, 6 charban, 7 charunban
+	enum zh_char_ask_name_type type = RFIFOW(fd,30); // type of operation: 1-block, 2-ban, 3-unblock, 4-unban, 5 changesex, 6 charban, 7 charunban
 	short year = 0, month = 0, day = 0, hour = 0, minute = 0, second = 0;
 	int sex = SEX_MALE;
 	if (type == 2 || type == 6) {

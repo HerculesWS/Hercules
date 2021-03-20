@@ -98,7 +98,7 @@ char packet_buf[0xffff];
 //#define DUMP_INVALID_PACKET
 
 //Converts item type in case of pet eggs.
-static inline int itemtype(int type)
+static inline int itemtype(enum item_types type)
 {
 	switch( type ) {
 #if PACKETVER >= 20080827
@@ -109,6 +109,16 @@ static inline int itemtype(int type)
 #endif
 		case IT_PETEGG:
 			return IT_WEAPON;
+		case IT_HEALING:
+		case IT_UNKNOWN:
+		case IT_USABLE:
+		case IT_ETC:
+		case IT_CARD:
+		case IT_UNKNOWN2:
+		case IT_AMMO:
+		case IT_DELAYCONSUME:
+		case IT_CASH:
+		case IT_MAX:
 		default:
 			return type;
 	}
@@ -3410,7 +3420,7 @@ static int clif_hpmeter(struct map_session_data *sd)
 /// 013a <atk range>.W (ZC_ATTACK_RANGE)
 /// 0141 <status id>.L <base status>.L <plus status>.L (ZC_COUPLESTATUS)
 /// TODO: Extract individual packets.
-static void clif_updatestatus(struct map_session_data *sd, int type)
+static void clif_updatestatus(struct map_session_data *sd, enum status_point_types type)
 {
 	int fd,len;
 
@@ -3425,7 +3435,10 @@ static void clif_updatestatus(struct map_session_data *sd, int type)
 	WFIFOW(fd,0)=0xb0;
 	WFIFOW(fd,2)=type;
 	len = packet_len(0xb0);
-	switch(type){
+
+	PRAGMA_GCC46(GCC diagnostic push)
+	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+	switch (type) {
 			// 00b0
 		case SP_WEIGHT:
 			pc->updateweightstatus(sd);
@@ -3652,9 +3665,12 @@ static void clif_updatestatus(struct map_session_data *sd, int type)
 			ShowError("clif->updatestatus : unrecognized type %d\n",type);
 			return;
 	}
+	PRAGMA_GCC46(GCC diagnostic pop)
 	WFIFOSET(fd,len);
 
 	// Additional update packets that should be sent right after
+	PRAGMA_GCC46(GCC diagnostic push)
+	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 	switch (type) {
 		case SP_BASELEVEL:
 			pc->update_job_and_level(sd);
@@ -3668,11 +3684,12 @@ static void clif_updatestatus(struct map_session_data *sd, int type)
 				clif->bg_hp(sd);
 			break;
 	}
+	PRAGMA_GCC46(GCC diagnostic pop)
 }
 
 /// Notifies client of a parameter change of an another player (ZC_PAR_CHANGE_USER).
 /// 01ab <account id>.L <var id>.W <value>.L
-static void clif_changestatus(struct map_session_data *sd, int type, int val)
+static void clif_changestatus(struct map_session_data *sd, enum status_point_types type, int val)
 {
 	unsigned char buf[12];
 
@@ -3682,6 +3699,8 @@ static void clif_changestatus(struct map_session_data *sd, int type, int val)
 	WBUFL(buf,2)=sd->bl.id;
 	WBUFW(buf,6)=type;
 
+	PRAGMA_GCC46(GCC diagnostic push)
+	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 	switch(type)
 	{
 		case SP_MANNER:
@@ -3691,12 +3710,13 @@ static void clif_changestatus(struct map_session_data *sd, int type, int val)
 			ShowError("clif_changestatus : unrecognized type %d.\n",type);
 			return;
 	}
+	PRAGMA_GCC46(GCC diagnostic pop)
 
 	clif->send(buf,packet_len(0x1ab),&sd->bl,AREA_WOS);
 }
 
 /// Updates sprite/style properties of an object.
-static void clif_changelook(struct block_list *bl, int type, int val)
+static void clif_changelook(struct block_list *bl, enum look type, int val)
 {
 	struct map_session_data* sd;
 	struct status_change* sc;
@@ -3819,6 +3839,8 @@ static void clif_changelook(struct block_list *bl, int type, int val)
 				if (sd != NULL && (sd->sc.option&OPTION_COSTUME) != OPTION_NOTHING)
 					val = 0;
 				vd->body_style = val;
+			break;
+			case LOOK_MAX:
 			break;
 	}
 
@@ -18701,7 +18723,7 @@ static void clif_quest_show_event(struct map_session_data *sd, struct block_list
 
 /// Notification about a mercenary status parameter change (ZC_MER_PAR_CHANGE).
 /// 02a2 <var id>.W <value>.L
-static void clif_mercenary_updatestatus(struct map_session_data *sd, int type)
+static void clif_mercenary_updatestatus(struct map_session_data *sd, enum status_point_types type)
 {
 	struct mercenary_data *md;
 	struct status_data *mstatus;
@@ -18714,7 +18736,10 @@ static void clif_mercenary_updatestatus(struct map_session_data *sd, int type)
 	WFIFOHEAD(fd,packet_len(0x2a2));
 	WFIFOW(fd,0) = 0x2a2;
 	WFIFOW(fd,2) = type;
-	switch( type ) {
+
+	PRAGMA_GCC46(GCC diagnostic push)
+	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+	switch (type) {
 		case SP_ATK1:
 		{
 			int atk = rnd()%(mstatus->rhw.atk2 - mstatus->rhw.atk + 1) + mstatus->rhw.atk;
@@ -18761,6 +18786,8 @@ static void clif_mercenary_updatestatus(struct map_session_data *sd, int type)
 			WFIFOL(fd,4) = mercenary->get_faith(md);
 			break;
 	}
+	PRAGMA_GCC46(GCC diagnostic pop)
+
 	WFIFOSET(fd,packet_len(0x2a2));
 }
 
@@ -19392,7 +19419,7 @@ static void clif_parse_ItemListWindowSelected(int fd, struct map_session_data *s
 /*==========================================
  * Elemental System
  *==========================================*/
-static void clif_elemental_updatestatus(struct map_session_data *sd, int type)
+static void clif_elemental_updatestatus(struct map_session_data *sd, enum status_point_types type)
 {
 	struct elemental_data *ed;
 	struct status_data *estatus;
@@ -19406,7 +19433,10 @@ static void clif_elemental_updatestatus(struct map_session_data *sd, int type)
 	WFIFOHEAD(fd,8);
 	WFIFOW(fd,0) = 0x81e;
 	WFIFOW(fd,2) = type;
-	switch( type ) {
+
+	PRAGMA_GCC46(GCC diagnostic push)
+	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+	switch (type) {
 		case SP_HP:
 			WFIFOL(fd,4) = estatus->hp;
 			break;
@@ -19420,6 +19450,8 @@ static void clif_elemental_updatestatus(struct map_session_data *sd, int type)
 			WFIFOL(fd,4) = estatus->max_sp;
 			break;
 	}
+	PRAGMA_GCC46(GCC diagnostic pop)
+
 	WFIFOSET(fd,8);
 }
 

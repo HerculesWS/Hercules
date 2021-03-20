@@ -4578,7 +4578,7 @@ static int skill_reveal_trap(struct block_list *bl, va_list ap)
 	return 0;
 }
 
-static void skill_castend_type(int type, struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag)
+static void skill_castend_type(enum cast_enum type, struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag)
 {
 	switch (type) {
 		case CAST_GROUND:

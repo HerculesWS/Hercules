@@ -1105,7 +1105,7 @@ enum guild_basic_info {
 	GBI_SKILLLV,    ///< Guild skill_lv
 };
 
-enum { //Change Member Infos
+enum guild_member_info { //Change Member Infos
 	GMI_POSITION = 0,
 	GMI_EXP,
 	GMI_HAIR,

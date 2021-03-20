@@ -90,7 +90,7 @@ struct s_homunculus_db {
 	unsigned char element, race, base_size, evo_size;
 };
 
-enum {
+enum HOMUN_TYPE {
 	HOMUNCULUS_CLASS,
 	HOMUNCULUS_FOOD
 };
@@ -165,7 +165,7 @@ struct homunculus_interface {
 	void (*reload_skill) (void);
 	/* */
 	struct view_data* (*get_viewdata) (int class_);
-	enum homun_type (*class2type) (int class_);
+	enum homun_type (*class2type) (enum homun_id class_);
 	void (*damaged) (struct homun_data *hd);
 	int (*dead) (struct homun_data *hd);
 	int (*vaporize) (struct map_session_data *sd, enum homun_state state, bool force);
@@ -190,7 +190,7 @@ struct homunculus_interface {
 	void (*hunger_timer_delete) (struct homun_data *hd);
 	int (*change_name) (struct map_session_data *sd, const char *name);
 	bool (*change_name_ack) (struct map_session_data *sd, const char *name, int flag);
-	int (*db_search) (int key,int type);
+	int (*db_search) (int key, enum HOMUN_TYPE type);
 	bool (*create) (struct map_session_data *sd, const struct s_homunculus *hom, bool is_new);
 	void (*init_timers) (struct homun_data * hd);
 	bool (*call) (struct map_session_data *sd);

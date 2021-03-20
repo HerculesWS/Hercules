@@ -168,7 +168,11 @@ enum {
 };
 
 //Returns the cast type of the skill: ground cast, castend damage, castend no damage
-enum { CAST_GROUND, CAST_DAMAGE, CAST_NODAMAGE };
+enum cast_enum {
+	CAST_GROUND,
+	CAST_DAMAGE,
+	CAST_NODAMAGE
+};
 
 enum wl_spheres {
 	WLS_FIRE = 0x44,
@@ -2151,7 +2155,7 @@ struct skill_interface {
 	int (*can_produce_mix) ( struct map_session_data *sd, int nameid, int trigger, int qty);
 	int (*produce_mix) ( struct map_session_data *sd, uint16 skill_id, int nameid, int slot1, int slot2, int slot3, int qty );
 	int (*arrow_create) ( struct map_session_data *sd,int nameid);
-	void (*castend_type) (int type, struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag);
+	void (*castend_type) (enum cast_enum type, struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag);
 	int (*castend_nodamage_id) (struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag);
 	int (*castend_damage_id) (struct block_list* src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick,int flag);
 	int (*castend_pos2) (struct block_list *src, int x, int y, uint16 skill_id, uint16 skill_lv, int64 tick, int flag);
