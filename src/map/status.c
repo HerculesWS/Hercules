@@ -13947,7 +13947,7 @@ static void status_read_job_db(void)
 
 static void status_check_job_bonus(int idx, const char *name, int class)
 {
-	if (class == JOB_NOVICE)
+	if (class == JOB_NOVICE || class == JOB_BABY)
 		return;
 
 	Assert_retv(idx >= 0 && idx < CLASS_COUNT);
