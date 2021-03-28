@@ -225,6 +225,7 @@ bonus bCritAtkRate,`n`;           | Increase critical damage by +`n`%
 bonus bNoWeaponDamage,`n`;        | Prevents from receiving `n`% physical damage
 bonus bNoMagicDamage,`n`;         | Prevents from receiving `n`% magical effect (Attack, Healing, Support spells are all blocked)
 bonus bNoMiscDamage,`n`;          | Adds `n`% reduction to received misc damage
+bonus2 bSubSkill,`sk`,`n`;        | Reduce damage received from `sk` skill by `n`%
 
 Heal                              | Description
 :-------------------------------- | :-------------------------

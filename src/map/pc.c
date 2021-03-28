@@ -3839,6 +3839,22 @@ static int pc_bonus2(struct map_session_data *sd, int type, int type2, int val)
 			}
 			break;
 #endif
+		case SP_SUB_SKILL:
+			if (sd->state.lr_flag == 2)
+				break;
+			ARR_FIND(0, ARRAYLENGTH(sd->subskill), i, sd->subskill[i].id == 0 || sd->subskill[i].id == type2);
+			if (i == ARRAYLENGTH(sd->subskill)) {
+				ShowDebug("script->run: bonus2 bSubSkill reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n",
+				          ARRAYLENGTH(sd->subskill), type2, val);
+				break;
+			}
+			if (sd->subskill[i].id == type2) {
+				sd->subskill[i].val += val;
+			} else {
+				sd->subskill[i].id = type2;
+				sd->subskill[i].val = val;
+			}
+			break;
 		default:
 			ShowWarning("pc_bonus2: unknown type %d %d %d!\n",type,type2,val);
 			Assert_report(0);
@@ -7886,6 +7902,19 @@ static int pc_skillatk_bonus(struct map_session_data *sd, uint16 skill_id)
 
 	if(sd->sc.data[SC_PYROTECHNIC_OPTION] || sd->sc.data[SC_AQUAPLAY_OPTION])
 		bonus += 10;
+
+	return bonus;
+}
+
+static int pc_sub_skillatk_bonus(struct map_session_data *sd, uint16 skill_id)
+{
+	int i, bonus = 0;
+	nullpo_ret(sd);
+
+	ARR_FIND(0, ARRAYLENGTH(sd->subskill), i, sd->subskill[i].id == skill_id);
+	
+	if (i < ARRAYLENGTH(sd->subskill))
+		bonus = sd->subskill[i].val;
 
 	return bonus;
 }
@@ -12867,6 +12896,7 @@ void pc_defaults(void)
 	pc->autocast_remove = pc_autocast_remove;
 
 	pc->skillatk_bonus = pc_skillatk_bonus;
+	pc->sub_skillatk_bonus = pc_sub_skillatk_bonus;
 	pc->skillheal_bonus = pc_skillheal_bonus;
 	pc->skillheal2_bonus = pc_skillheal2_bonus;
 

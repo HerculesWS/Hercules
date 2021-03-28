@@ -374,7 +374,7 @@ BEGIN_ZEROED_BLOCK; // this block will be globally zeroed at the beginning of st
 	struct { //skillatk raises bonus dmg% of skills, skillheal increases heal%, skillblown increases bonus blewcount for some skills.
 		unsigned int id;
 		int val;
-	} skillatk[MAX_PC_BONUS], skillusesprate[MAX_PC_BONUS], skillusesp[MAX_PC_BONUS], skillheal[5], skillheal2[5], skillblown[MAX_PC_BONUS], skillcast[MAX_PC_BONUS], skillcooldown[MAX_PC_BONUS], skillfixcast[MAX_PC_BONUS], skillvarcast[MAX_PC_BONUS], skillfixcastrate[MAX_PC_BONUS];
+	} skillatk[MAX_PC_BONUS], skillusesprate[MAX_PC_BONUS], skillusesp[MAX_PC_BONUS], skillheal[5], skillheal2[5], skillblown[MAX_PC_BONUS], skillcast[MAX_PC_BONUS], skillcooldown[MAX_PC_BONUS], skillfixcast[MAX_PC_BONUS], skillvarcast[MAX_PC_BONUS], skillfixcastrate[MAX_PC_BONUS], subskill[MAX_PC_BONUS];
 	struct {
 		int value;
 		int rate;
@@ -1063,6 +1063,7 @@ END_ZEROED_BLOCK; /* End */
 	void (*autocast_remove) (struct map_session_data *sd, enum autocast_type type, int skill_id, int skill_lv);
 
 	int (*skillatk_bonus) (struct map_session_data *sd, uint16 skill_id);
+	int (*sub_skillatk_bonus) (struct map_session_data *sd, uint16 skill_id);
 	int (*skillheal_bonus) (struct map_session_data *sd, uint16 skill_id);
 	int (*skillheal2_bonus) (struct map_session_data *sd, uint16 skill_id);
 

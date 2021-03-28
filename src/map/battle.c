@@ -3757,6 +3757,7 @@ static struct Damage battle_calc_magic_attack(struct block_list *src, struct blo
 	flag.imdef = (nk&NK_IGNORE_DEF)? 1 : 0;
 
 	sd = BL_CAST(BL_PC, src);
+	struct map_session_data *tsd = BL_CAST(BL_PC, target);
 
 	sc = status->get_sc(src);
 
@@ -3989,6 +3990,8 @@ static struct Damage battle_calc_magic_attack(struct block_list *src, struct blo
 			))
 				flag.imdef = 1;
 		}
+		if (tsd && (i = pc->sub_skillatk_bonus(tsd, skill_id)))
+			ad.damage -= ad.damage * i / 100;
 
 		ad.damage = battle->calc_defense(BF_MAGIC, src, target, skill_id, skill_lv, ad.damage, flag.imdef, 0);
 
@@ -4436,6 +4439,8 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 		}
 		if (sd && (i = pc->skillatk_bonus(sd, rskill)) != 0)
 			md.damage += md.damage*i/100;
+		if (tsd && (i = pc->sub_skillatk_bonus(tsd, rskill)) != 0)
+			md.damage -= md.damage * i / 100;
 	}
 	if( (i = battle->adjust_skill_damage(src->m,skill_id)) )
 		md.damage = md.damage * i / 100;
@@ -5576,6 +5581,9 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 				}
 			}
 		}
+
+		if (tsd && skill_id && (i = pc->sub_skillatk_bonus(tsd, skill_id)))
+			ATK_ADDRATE(-i);
 
 		if((!flag.idef || !flag.idef2)
 #ifdef RENEWAL
