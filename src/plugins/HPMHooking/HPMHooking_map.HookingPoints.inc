@@ -2481,6 +2481,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(pc->autocast_set_current, HP_pc_autocast_set_current) },
 	{ HP_POP(pc->autocast_remove, HP_pc_autocast_remove) },
 	{ HP_POP(pc->skillatk_bonus, HP_pc_skillatk_bonus) },
+	{ HP_POP(pc->sub_skillatk_bonus, HP_pc_sub_skillatk_bonus) },
 	{ HP_POP(pc->skillheal_bonus, HP_pc_skillheal_bonus) },
 	{ HP_POP(pc->skillheal2_bonus, HP_pc_skillheal2_bonus) },
 	{ HP_POP(pc->damage, HP_pc_damage) },

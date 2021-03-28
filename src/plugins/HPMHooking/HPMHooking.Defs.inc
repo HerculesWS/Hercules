@@ -6268,6 +6268,8 @@ typedef void (*HPMHOOK_pre_pc_autocast_remove) (struct map_session_data **sd, en
 typedef void (*HPMHOOK_post_pc_autocast_remove) (struct map_session_data *sd, enum autocast_type type, int skill_id, int skill_lv);
 typedef int (*HPMHOOK_pre_pc_skillatk_bonus) (struct map_session_data **sd, uint16 *skill_id);
 typedef int (*HPMHOOK_post_pc_skillatk_bonus) (int retVal___, struct map_session_data *sd, uint16 skill_id);
+typedef int (*HPMHOOK_pre_pc_sub_skillatk_bonus) (struct map_session_data **sd, uint16 *skill_id);
+typedef int (*HPMHOOK_post_pc_sub_skillatk_bonus) (int retVal___, struct map_session_data *sd, uint16 skill_id);
 typedef int (*HPMHOOK_pre_pc_skillheal_bonus) (struct map_session_data **sd, uint16 *skill_id);
 typedef int (*HPMHOOK_post_pc_skillheal_bonus) (int retVal___, struct map_session_data *sd, uint16 skill_id);
 typedef int (*HPMHOOK_pre_pc_skillheal2_bonus) (struct map_session_data **sd, uint16 *skill_id);
