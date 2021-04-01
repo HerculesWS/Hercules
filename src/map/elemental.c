@@ -331,7 +331,7 @@ static int elemental_data_received(const struct s_elemental *ele, bool flag)
 static int elemental_clean_single_effect(struct elemental_data *ed, uint16 skill_id)
 {
 	struct block_list *bl;
-	sc_type type = status->skill2sc(skill_id);
+	sc_type type = skill->get_sc_type(skill_id);
 
 	nullpo_ret(ed);
 

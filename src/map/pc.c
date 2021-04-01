@@ -7065,16 +7065,16 @@ static void pc_checkbaselevelup_sc(struct map_session_data *sd)
 	nullpo_retv(sd);
 
 	if ((sd->job & MAPID_UPPERMASK) == MAPID_SUPER_NOVICE) {
-		sc_start(NULL, &sd->bl, status->skill2sc(PR_KYRIE), 100, 1, skill->get_time(PR_KYRIE, 1));
-		sc_start(NULL, &sd->bl, status->skill2sc(PR_IMPOSITIO), 100, 1, skill->get_time(PR_IMPOSITIO, 1));
-		sc_start(NULL, &sd->bl, status->skill2sc(PR_MAGNIFICAT), 100, 1, skill->get_time(PR_MAGNIFICAT, 1));
-		sc_start(NULL, &sd->bl, status->skill2sc(PR_GLORIA), 100, 1, skill->get_time(PR_GLORIA, 1));
-		sc_start(NULL, &sd->bl, status->skill2sc(PR_SUFFRAGIUM), 100, 1, skill->get_time(PR_SUFFRAGIUM, 1));
+		sc_start(NULL, &sd->bl, skill->get_sc_type(PR_KYRIE), 100, 1, skill->get_time(PR_KYRIE, 1));
+		sc_start(NULL, &sd->bl, skill->get_sc_type(PR_IMPOSITIO), 100, 1, skill->get_time(PR_IMPOSITIO, 1));
+		sc_start(NULL, &sd->bl, skill->get_sc_type(PR_MAGNIFICAT), 100, 1, skill->get_time(PR_MAGNIFICAT, 1));
+		sc_start(NULL, &sd->bl, skill->get_sc_type(PR_GLORIA), 100, 1, skill->get_time(PR_GLORIA, 1));
+		sc_start(NULL, &sd->bl, skill->get_sc_type(PR_SUFFRAGIUM), 100, 1, skill->get_time(PR_SUFFRAGIUM, 1));
 		if (sd->state.snovice_dead_flag)
 			sd->state.snovice_dead_flag = 0; //Reenable steelbody resurrection on dead.
 	} else if ((sd->job & MAPID_BASEMASK) == MAPID_TAEKWON) {
-		sc_start(NULL, &sd->bl, status->skill2sc(AL_INCAGI), 100, 10, 600000);
-		sc_start(NULL, &sd->bl, status->skill2sc(AL_BLESSING), 100, 10, 600000);
+		sc_start(NULL, &sd->bl, skill->get_sc_type(AL_INCAGI), 100, 10, 600000);
+		sc_start(NULL, &sd->bl, skill->get_sc_type(AL_BLESSING), 100, 10, 600000);
 	}
 }
 
@@ -8392,7 +8392,7 @@ static int pc_dead(struct map_session_data *sd, struct block_list *src)
 			if (battle_config.pc_invincible_time != 0)
 				pc->setinvincibletimer(sd, battle_config.pc_invincible_time);
 
-			sc_start(NULL, &sd->bl, status->skill2sc(MO_STEELBODY), 100, 1, skill->get_time(MO_STEELBODY, 1));
+			sc_start(NULL, &sd->bl, skill->get_sc_type(MO_STEELBODY), 100, 1, skill->get_time(MO_STEELBODY, 1));
 
 			if (map_flag_gvg2(sd->bl.m))
 				pc->respawn_timer(INVALID_TIMER, timer->gettick(), sd->bl.id, 0);
@@ -9169,7 +9169,7 @@ static int pc_jobchange(struct map_session_data *sd, int class, int upper)
 		short id;
 		for (i = 0; i < MAX_SKILL_TREE && (id = pc->skill_tree[class_idx][i].id) > 0; i++) {
 			//Remove status specific to your current tree skills.
-			enum sc_type sc = status->skill2sc(id);
+			enum sc_type sc = skill->get_sc_type(id);
 			if (sc > SC_COMMON_MAX && sd->sc.data[sc])
 				status_change_end(&sd->bl, sc, INVALID_TIMER);
 		}
@@ -12620,7 +12620,7 @@ static void pc_check_supernovice_call(struct map_session_data *sd, const char *m
 				sd->state.snovice_call_flag = 3;
 			break;
 		case 3:
-			sc_start(NULL, &sd->bl, status->skill2sc(MO_EXPLOSIONSPIRITS), 100, 17, skill->get_time(MO_EXPLOSIONSPIRITS, 5)); //Lv17-> +50 critical (noted by Poki) [Skotlex]
+			sc_start(NULL, &sd->bl, skill->get_sc_type(MO_EXPLOSIONSPIRITS), 100, 17, skill->get_time(MO_EXPLOSIONSPIRITS, 5)); //Lv17-> +50 critical (noted by Poki) [Skotlex]
 			clif->skill_nodamage(&sd->bl, &sd->bl, MO_EXPLOSIONSPIRITS, 5, 1);  // prayer always shows successful Lv5 cast and disregards noskill restrictions
 			sd->state.snovice_call_flag = 0;
 			break;
