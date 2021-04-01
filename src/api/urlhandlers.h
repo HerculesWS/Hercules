@@ -29,6 +29,9 @@ handler2(HTTP_POST, "/userconfig/save", userconfig_save, REQ_API_AUTH | REQ_DATA
 handler2(HTTP_POST, "/charconfig/load", charconfig_load, REQ_API_AUTH | REQ_CHAR_ID);
 handler2(HTTP_POST, "/emblem/upload", emblem_upload, REQ_EMBLEM_UPLOAD);
 handler2(HTTP_POST, "/emblem/download", emblem_download, REQ_API_AUTH | REQ_GUILD_ID | REQ_VERSION);
+handler2(HTTP_POST, "/party/list", party_list, REQ_API_AUTH | REQ_CHAR_ID | REQ_PAGE | REQ_AUTO_CLOSE);
+handler2(HTTP_POST, "/party/get", party_get, REQ_API_AUTH | REQ_CHAR_ID | REQ_AUTO_CLOSE);
+handler2(HTTP_POST, "/party/add", party_add, REQ_API_AUTH | REQ_WORLD_NAME | REQ_CHAR_ID | REQ_PARTY_ADD | REQ_AUTO_CLOSE);
 handler(HTTP_GET, "/test/url", test_url, REQ_DEFAULT);
 packet_handler(userconfig_load_emotes);
 packet_handler(userconfig_load_hotkeys);

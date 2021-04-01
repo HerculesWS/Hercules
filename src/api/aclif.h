@@ -83,22 +83,33 @@ union DBKey;
 struct DBData;
 
 enum req_flags {
-	REQ_DEFAULT        = 0x0000,
-	REQ_AUTO_CLOSE     = 0x0001,
-	REQ_ACCOUNT_ID     = 0x0002,
-	REQ_WORLD_NAME     = 0x0004,
-	REQ_AUTH_TOKEN     = 0x0008,
-	REQ_CHAR_ID        = 0x0010,
-	REQ_GUILD_ID       = 0x0020,
-	REQ_IMG_TYPE       = 0x0040,
-	REQ_IMG            = 0x0080,
-	REQ_CHAR_LOGGED_IN = 0x0100,
-	REQ_VERSION        = 0x0200,
-	REQ_DATA           = 0x0400,
+	REQ_DEFAULT        = 0x000000,
+	REQ_AUTO_CLOSE     = 0x000001,
+	REQ_ACCOUNT_ID     = 0x000002,
+	REQ_WORLD_NAME     = 0x000004,
+	REQ_AUTH_TOKEN     = 0x000008,
+	REQ_CHAR_ID        = 0x000010,
+	REQ_GUILD_ID       = 0x000020,
+	REQ_IMG_TYPE       = 0x000040,
+	REQ_IMG            = 0x000080,
+	REQ_CHAR_LOGGED_IN = 0x000100,
+	REQ_VERSION        = 0x000200,
+	REQ_DATA           = 0x000400,
+	REQ_PAGE           = 0x000800,
+	REQ_MINLV          = 0x001000,
+	REQ_MAXLV          = 0x002000,
+	REQ_HEALER         = 0x004000,
+	REQ_ASSIST         = 0x008000,
+	REQ_TANKER         = 0x010000,
+	REQ_DEALER         = 0x020000,
+	REQ_MEMO           = 0x040000,
+	REQ_TYPE           = 0x080000,
+	REQ_CHAR_NAME      = 0x100000,
 
 	REQ_API = REQ_ACCOUNT_ID | REQ_WORLD_NAME,
 	REQ_API_AUTH = REQ_ACCOUNT_ID | REQ_WORLD_NAME | REQ_AUTH_TOKEN,
-	REQ_EMBLEM_UPLOAD = REQ_ACCOUNT_ID | REQ_WORLD_NAME | REQ_AUTH_TOKEN | REQ_API_AUTH | REQ_GUILD_ID | REQ_IMG_TYPE | REQ_IMG | REQ_CHAR_LOGGED_IN
+	REQ_EMBLEM_UPLOAD = REQ_ACCOUNT_ID | REQ_WORLD_NAME | REQ_AUTH_TOKEN | REQ_API_AUTH | REQ_GUILD_ID | REQ_IMG_TYPE | REQ_IMG | REQ_CHAR_LOGGED_IN,
+	REQ_PARTY_ADD = REQ_MINLV | REQ_MAXLV | REQ_HEALER | REQ_ASSIST | REQ_TANKER | REQ_DEALER | REQ_MEMO | REQ_TYPE | REQ_CHAR_NAME
 };
 
 struct online_api_login_data {
@@ -163,6 +174,7 @@ struct aclif_interface {
 	bool (*decode_post_headers) (int fd, struct api_session_data *sd);
 	int (*print_header) (union DBKey key, struct DBData *data, va_list ap);
 	bool (*is_post_header_present) (struct api_session_data *sd, const char *name);
+	bool (*is_post_header_present_or_empty) (struct api_session_data *sd, const char *name);
 	bool (*get_post_header_data_int) (struct api_session_data *sd, const char *name, int *account_id);
 	bool (*get_post_header_data_str) (struct api_session_data *sd, const char *name, char **data, uint32_t *data_size);
 	bool (*get_post_header_data_json) (struct api_session_data *sd, const char *name, JsonP **json);

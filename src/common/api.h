@@ -36,6 +36,9 @@ enum API_MSG {
 	API_MSG_userconfig_save_userhotkey_v2 = 12,
 	API_MSG_userconfig_load_emotes = 13,
 	API_MSG_userconfig_load_hotkeys = 14,
+	API_MSG_party_list = 15,
+	API_MSG_party_get = 16,
+	API_MSG_party_add = 17,
 	API_MSG_MAX,
 };
 

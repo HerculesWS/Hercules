@@ -361,6 +361,48 @@ HTTPURL(emblem_download)
 	return true;
 }
 
+IGNORE_DATA(party_list)
+
+HTTPURL(party_list)
+{
+#ifdef DEBUG_LOG
+	ShowInfo("party_list called %d: %s\n", fd, httpparser->get_method_str(sd));
+#endif
+	aclif->show_request(fd, sd, false);
+
+	JsonW *json = jsonwriter->create("{\"totalPage\":0,\"data\":[],\"Type\":1}");
+	httpsender->send_json(fd, json);
+
+	return true;
+}
+
+IGNORE_DATA(party_get)
+
+HTTPURL(party_get)
+{
+#ifdef DEBUG_LOG
+	ShowInfo("party_get called %d: %s\n", fd, httpparser->get_method_str(sd));
+#endif
+	aclif->show_request(fd, sd, false);
+
+	JsonW *json = jsonwriter->create("{\"Type\":1}");
+	httpsender->send_json(fd, json);
+
+	return true;
+}
+
+IGNORE_DATA(party_add)
+
+HTTPURL(party_add)
+{
+#ifdef DEBUG_LOG
+	ShowInfo("party_add called %d: %s\n", fd, httpparser->get_method_str(sd));
+#endif
+	aclif->show_request(fd, sd, false);
+
+	return true;
+}
+
 HTTPURL(test_url)
 {
 #ifdef DEBUG_LOG
