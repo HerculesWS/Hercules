@@ -5892,6 +5892,8 @@ struct {
 	struct HPMHookPoint *HP_skill_get_casttype_post;
 	struct HPMHookPoint *HP_skill_get_casttype2_pre;
 	struct HPMHookPoint *HP_skill_get_casttype2_post;
+	struct HPMHookPoint *HP_skill_get_sc_type_pre;
+	struct HPMHookPoint *HP_skill_get_sc_type_post;
 	struct HPMHookPoint *HP_skill_is_combo_pre;
 	struct HPMHookPoint *HP_skill_is_combo_post;
 	struct HPMHookPoint *HP_skill_name2id_pre;
@@ -6248,6 +6250,8 @@ struct {
 	struct HPMHookPoint *HP_skill_validate_unit_target_post;
 	struct HPMHookPoint *HP_skill_validate_unit_pre;
 	struct HPMHookPoint *HP_skill_validate_unit_post;
+	struct HPMHookPoint *HP_skill_validate_status_change_pre;
+	struct HPMHookPoint *HP_skill_validate_status_change_post;
 	struct HPMHookPoint *HP_skill_validate_additional_fields_pre;
 	struct HPMHookPoint *HP_skill_validate_additional_fields_post;
 	struct HPMHookPoint *HP_skill_read_skilldb_pre;
@@ -6504,8 +6508,6 @@ struct {
 	struct HPMHookPoint *HP_status_init_post;
 	struct HPMHookPoint *HP_status_final_pre;
 	struct HPMHookPoint *HP_status_final_post;
-	struct HPMHookPoint *HP_status_skill2sc_pre;
-	struct HPMHookPoint *HP_status_skill2sc_post;
 	struct HPMHookPoint *HP_status_sc2skill_pre;
 	struct HPMHookPoint *HP_status_sc2skill_post;
 	struct HPMHookPoint *HP_status_sc2scb_flag_pre;
@@ -12975,6 +12977,8 @@ struct {
 	int HP_skill_get_casttype_post;
 	int HP_skill_get_casttype2_pre;
 	int HP_skill_get_casttype2_post;
+	int HP_skill_get_sc_type_pre;
+	int HP_skill_get_sc_type_post;
 	int HP_skill_is_combo_pre;
 	int HP_skill_is_combo_post;
 	int HP_skill_name2id_pre;
@@ -13331,6 +13335,8 @@ struct {
 	int HP_skill_validate_unit_target_post;
 	int HP_skill_validate_unit_pre;
 	int HP_skill_validate_unit_post;
+	int HP_skill_validate_status_change_pre;
+	int HP_skill_validate_status_change_post;
 	int HP_skill_validate_additional_fields_pre;
 	int HP_skill_validate_additional_fields_post;
 	int HP_skill_read_skilldb_pre;
@@ -13587,8 +13593,6 @@ struct {
 	int HP_status_init_post;
 	int HP_status_final_pre;
 	int HP_status_final_post;
-	int HP_status_skill2sc_pre;
-	int HP_status_skill2sc_post;
 	int HP_status_sc2skill_pre;
 	int HP_status_sc2skill_post;
 	int HP_status_sc2scb_flag_pre;

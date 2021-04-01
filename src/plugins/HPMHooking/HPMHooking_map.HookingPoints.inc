@@ -3015,6 +3015,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(skill->get_desc, HP_skill_get_desc) },
 	{ HP_POP(skill->get_casttype, HP_skill_get_casttype) },
 	{ HP_POP(skill->get_casttype2, HP_skill_get_casttype2) },
+	{ HP_POP(skill->get_sc_type, HP_skill_get_sc_type) },
 	{ HP_POP(skill->is_combo, HP_skill_is_combo) },
 	{ HP_POP(skill->name2id, HP_skill_name2id) },
 	{ HP_POP(skill->isammotype, HP_skill_isammotype) },
@@ -3193,6 +3194,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(skill->validate_unit_target_sub, HP_skill_validate_unit_target_sub) },
 	{ HP_POP(skill->validate_unit_target, HP_skill_validate_unit_target) },
 	{ HP_POP(skill->validate_unit, HP_skill_validate_unit) },
+	{ HP_POP(skill->validate_status_change, HP_skill_validate_status_change) },
 	{ HP_POP(skill->validate_additional_fields, HP_skill_validate_additional_fields) },
 	{ HP_POP(skill->read_skilldb, HP_skill_read_skilldb) },
 	{ HP_POP(skill->config_set_level, HP_skill_config_set_level) },
@@ -3324,7 +3326,6 @@ struct HookingPointData HookingPoints[] = {
 /* status_interface */
 	{ HP_POP(status->init, HP_status_init) },
 	{ HP_POP(status->final, HP_status_final) },
-	{ HP_POP(status->skill2sc, HP_status_skill2sc) },
 	{ HP_POP(status->sc2skill, HP_status_sc2skill) },
 	{ HP_POP(status->sc2scb_flag, HP_status_sc2scb_flag) },
 	{ HP_POP(status->get_sc_relevant_bl_types, HP_status_get_sc_relevant_bl_types) },
