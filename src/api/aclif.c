@@ -933,10 +933,10 @@ static bool aclif_is_post_header_present_or_empty(struct api_session_data *sd, c
 	return strdb_get(sd->post_headers_db, name) != NULL;
 }
 
-static bool aclif_get_post_header_data_int(struct api_session_data *sd, const char *name, int *account_id)
+static bool aclif_get_post_header_data_int(struct api_session_data *sd, const char *name, int *value)
 {
-	nullpo_retr(false, account_id);
-	*account_id = 0;
+	nullpo_retr(false, value);
+	*value = 0;
 	nullpo_retr(false, sd);
 	nullpo_retr(false, name);
 
@@ -946,8 +946,18 @@ static bool aclif_get_post_header_data_int(struct api_session_data *sd, const ch
 	char *data = header->data;
 	if (data == NULL)
 		return false;
-	*account_id = atoi(data);
+	*value = atoi(data);
 	return true;
+}
+
+static int aclif_ret_post_header_data_int(struct api_session_data *sd, const char *name, int def)
+{
+	int value = 0;
+	if (aclif->get_post_header_data_int(sd, name, &value)) {
+		return value;
+	} else {
+		return def;
+	}
 }
 
 static bool aclif_get_post_header_data_str(struct api_session_data *sd, const char *name, char **data, uint32 *data_size)
@@ -1123,6 +1133,7 @@ void aclif_defaults(void)
 	aclif->get_post_header_data_json = aclif_get_post_header_data_json;
 	aclif->get_post_header_content_type = aclif_get_post_header_content_type;
 	aclif->get_post_headers_count = aclif_get_post_headers_count;
+	aclif->ret_post_header_data_int = aclif_ret_post_header_data_int;
 
 	aclif->delete_online_player = aclif_delete_online_player;
 	aclif->real_delete_online_player = aclif_real_delete_online_player;
