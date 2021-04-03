@@ -151,6 +151,22 @@ struct PACKET_API_emblem_download {
 	struct PACKET_API_emblem_download_data data;
 } __attribute__((packed));
 
+struct PACKET_API_party_add_data {
+	char char_name[NAME_LENGTH];
+	char message[NAME_LENGTH];
+	int type;
+	uint32 min_level;
+	uint32 max_level;
+	char healer;
+	char assist;
+	char tanker;
+	char dealer;
+} __attribute__((packed));
+
+struct PACKET_API_party_add {
+	struct PACKET_API_party_add_data data;
+} __attribute__((packed));
+
 // char to api
 struct PACKET_API_REPLY_userconfig_load_emotes {
 	struct userconfig_emotes emotes;

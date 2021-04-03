@@ -79,7 +79,7 @@
 static struct handlers_interface handlers_s;
 struct handlers_interface *handlers;
 
-#define DEBUG_LOG
+//#define DEBUG_LOG
 
 const char *handlers_hotkeyTabIdToName(int tab_id)
 {
@@ -399,6 +399,23 @@ HTTPURL(party_add)
 	ShowInfo("party_add called %d: %s\n", fd, httpparser->get_method_str(sd));
 #endif
 	aclif->show_request(fd, sd, false);
+
+	char *text = NULL;
+	CREATE_DATA(data, party_add);
+
+	aclif->get_post_header_data_str(sd, "CharName", &text, NULL);
+	safestrncpy(data.char_name, text, NAME_LENGTH);
+	aclif->get_post_header_data_str(sd, "Memo", &text, NULL);
+	safestrncpy(data.message, text, NAME_LENGTH);
+	data.type = aclif->ret_post_header_data_int(sd, "Type", 0);
+	data.min_level = aclif->ret_post_header_data_int(sd, "MinLV", 0);
+	data.max_level = aclif->ret_post_header_data_int(sd, "MaxLV", 0);
+	data.healer = aclif->ret_post_header_data_int(sd, "Healer", 0);
+	data.assist = aclif->ret_post_header_data_int(sd, "Assist", 0);
+	data.tanker = aclif->ret_post_header_data_int(sd, "Tanker", 0);
+	data.dealer = aclif->ret_post_header_data_int(sd, "Dealer", 0);
+
+	SEND_ASYNC_DATA(party_add, &data);
 
 	return true;
 }
