@@ -26,6 +26,7 @@
 #include "common/cbasetypes.h"
 #include "api/httpparsehandler.h"
 #include "api/jsonwriter.h"
+#include "api/postheader.h"
 
 #include "common/hercules.h"
 
@@ -78,6 +79,7 @@ struct api_session_data {
 	char *data;
 	int data_size;
 	JsonW *json;
+	char valid_post_headers[CONST_POST_MAX];
 };
 
 #endif /* API_APISESSIONDATA_H */

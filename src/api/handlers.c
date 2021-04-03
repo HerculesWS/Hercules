@@ -75,11 +75,28 @@
 		SEND_ASYNC_DATA(userconfig_save_userhotkey_v2, &data); \
 	}
 
+#define GET_JSON_HEADER(name, json) \
+	if (!aclif->get_valid_header_data_json(sd, CONST_POST_ ## name, POST_ ## name, json)) { \
+		ShowError("Valid post header %s not found. Can be memory leaks.", POST_ ## name); \
+		Assert_report(0); \
+		aclif->terminate_connection(fd); \
+		return false; \
+	}
+
+#define GET_STR_HEADER(name, var, varSize) \
+	if (!aclif->get_valid_header_data_str(sd, CONST_POST_ ## name, POST_ ## name, var, varSize)) { \
+		ShowError("Valid post header %s not found. Can be memory leaks.", POST_ ## name); \
+		Assert_report(0); \
+		aclif->terminate_connection(fd); \
+		return false; \
+	}
+#define RET_INT_HEADER(name, def) aclif->ret_valid_header_data_int(sd, CONST_POST_ ## name, POST_ ## name, def);
+#define GET_INT_HEADER(name, var) aclif->get_valid_header_data_int(sd, CONST_POST_ ## name, POST_ ## name, var);
 
 static struct handlers_interface handlers_s;
 struct handlers_interface *handlers;
 
-//#define DEBUG_LOG
+#define DEBUG_LOG
 
 const char *handlers_hotkeyTabIdToName(int tab_id)
 {
@@ -199,7 +216,7 @@ HTTPURL(userconfig_save)
 	aclif->show_request(fd, sd, false);
 
 	JsonP *json = NULL;
-	aclif->get_post_header_data_json(sd, "data", &json);
+	GET_JSON_HEADER(DATA, &json);
 	if (json == NULL) {
 		ShowError("Error parsing json %d: %s\n", fd, sd->url);
 		return false;
@@ -283,10 +300,10 @@ HTTPURL(emblem_upload)
 	aclif->show_request(fd, sd, false);
 
 	char *imgType = NULL;
-	aclif->get_post_header_data_str(sd, "ImgType", &imgType, NULL);
+	GET_STR_HEADER(IMG_TYPE, &imgType, NULL);
 	char *img = NULL;
 	uint32 img_size = 0;
-	aclif->get_post_header_data_str(sd, "Img", &img, &img_size);
+	GET_STR_HEADER(IMG, &img, &img_size);
 	if (strcmp(imgType, "BMP") == 0) {
 		if (img_size < 10 || strncmp(img, "BM", 2) != 0) {
 			ShowError("wrong bmp image %d: %s\n", fd, sd->url);
@@ -304,9 +321,7 @@ HTTPURL(emblem_upload)
 	}
 
 	CREATE_DATA(data, emblem_upload_guild_id);
-	int guild_id = 0;
-	aclif->get_post_header_data_int(sd, "GDID", &guild_id);
-	data.guild_id = guild_id;
+	data.guild_id = RET_INT_HEADER(GUILD_ID, 0);
 	SEND_ASYNC_DATA(emblem_upload_guild_id, &data);
 	SEND_ASYNC_DATA_SPLIT(emblem_upload, img, img_size);
 
@@ -350,11 +365,8 @@ HTTPURL(emblem_download)
 
 	CREATE_DATA(data, emblem_download);
 
-	int value = 0;
-	aclif->get_post_header_data_int(sd, "GDID", &value);
-	data.guild_id = value;
-	aclif->get_post_header_data_int(sd, "Version", &value);
-	data.version = value;
+	data.guild_id = RET_INT_HEADER(GUILD_ID, 0);
+	data.version = RET_INT_HEADER(VERSION, 0);
 
 	SEND_ASYNC_DATA(emblem_download, &data);
 
@@ -403,17 +415,17 @@ HTTPURL(party_add)
 	char *text = NULL;
 	CREATE_DATA(data, party_add);
 
-	aclif->get_post_header_data_str(sd, "CharName", &text, NULL);
+	GET_STR_HEADER(CHAR_NAME, &text, NULL);
 	safestrncpy(data.char_name, text, NAME_LENGTH);
-	aclif->get_post_header_data_str(sd, "Memo", &text, NULL);
+	GET_STR_HEADER(MEMO, &text, NULL);
 	safestrncpy(data.message, text, NAME_LENGTH);
-	data.type = aclif->ret_post_header_data_int(sd, "Type", 0);
-	data.min_level = aclif->ret_post_header_data_int(sd, "MinLV", 0);
-	data.max_level = aclif->ret_post_header_data_int(sd, "MaxLV", 0);
-	data.healer = aclif->ret_post_header_data_int(sd, "Healer", 0);
-	data.assist = aclif->ret_post_header_data_int(sd, "Assist", 0);
-	data.tanker = aclif->ret_post_header_data_int(sd, "Tanker", 0);
-	data.dealer = aclif->ret_post_header_data_int(sd, "Dealer", 0);
+	data.type = RET_INT_HEADER(TYPE, 0);
+	data.min_level = RET_INT_HEADER(MINLV, 0);
+	data.max_level = RET_INT_HEADER(MAXLV, 0);
+	data.healer = RET_INT_HEADER(HEALER, 0);
+	data.assist = RET_INT_HEADER(ASSIST, 0);
+	data.tanker = RET_INT_HEADER(TANKER, 0);
+	data.dealer = RET_INT_HEADER(DEALER, 0);
 
 	SEND_ASYNC_DATA(party_add, &data);
 

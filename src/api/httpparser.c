@@ -51,7 +51,7 @@
 
 static struct httpparser_interface httpparser_s;
 struct httpparser_interface *httpparser;
-#define DEBUG_LOG
+//#define DEBUG_LOG
 
 // parser handlers
 

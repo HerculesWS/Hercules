@@ -56,32 +56,35 @@
 static struct aclif_interface aclif_s;
 struct aclif_interface *aclif;
 
-#define DEBUG_LOG
+//#define DEBUG_LOG
 
 #ifdef DEBUG_LOG
 #define LOG_HANDLED_HEADER(name) ShowInfo("Handled header: " name "\n");
-#else
+#define HANDLE_HEADER(name) handled_count ++; \
+	sd->valid_post_headers[CONST_POST_ ## name] = 1; \
+	ShowInfo("Handled header: %s\n", POST_ ## name);
+#else  // DEBUG_LOG
 #define LOG_HANDLED_HEADER(name)
-#endif
+#define HANDLE_HEADER(name) handled_count ++; \
+	sd->valid_post_headers[CONST_POST_ ## name] = 1;
+#endif  // DEBUG_LOG
 
-#define CHECK_POST_HEADER_PRESENT(req, name) \
-	if ((sd->handler->flags & req) != 0) { \
-		if (!aclif->is_post_header_present(sd, name)) { \
-			ShowError("Http request without " name " %d\n", fd); \
+#define CHECK_POST_HEADER_PRESENT(name) \
+	if ((sd->handler->flags & REQ_ ## name) != 0) { \
+		if (!aclif->is_post_header_present(sd, POST_ ## name)) { \
+			ShowError("Http request without %s %d\n", POST_ ## name, fd); \
 			return false; \
 		} \
-		handled_count ++; \
-		LOG_HANDLED_HEADER(name) \
+		HANDLE_HEADER(name); \
 	}
 
-#define CHECK_POST_HEADER_PRESENT_OR_EMPTY(req, name) \
-	if ((sd->handler->flags & req) != 0) { \
-		if (!aclif->is_post_header_present_or_empty(sd, name)) { \
-			ShowError("Http request without " name " %d\n", fd); \
+#define CHECK_POST_HEADER_PRESENT_OR_EMPTY(name) \
+	if ((sd->handler->flags & REQ_ ## name) != 0) { \
+		if (!aclif->is_post_header_present_or_empty(sd, POST_ ## name)) { \
+			ShowError("Http request without %s %d\n", POST_ ## name, fd); \
 			return false; \
 		} \
-		handled_count ++; \
-		LOG_HANDLED_HEADER(name) \
+		HANDLE_HEADER(name); \
 	}
 
 
@@ -642,7 +645,7 @@ static bool aclif_decode_post_headers(int fd, struct api_session_data *sd)
 	if ((sd->handler->flags & REQ_ACCOUNT_ID) != 0) {
 		// check is account_id logged in
 		int account_id = 0;
-		if (!aclif->get_post_header_data_int(sd, "AID", &account_id)) {
+		if (!aclif->get_post_header_data_int(sd, POST_ACCOUNT_ID, &account_id)) {
 			ShowError("Http request without account id %d\n", fd);
 			return false;
 		}
@@ -653,10 +656,8 @@ static bool aclif_decode_post_headers(int fd, struct api_session_data *sd)
 			return false;
 		}
 		sd->account_id = account_id;
-		handled_count ++;
-#ifdef DEBUG_LOG
-		ShowInfo("Handled header: AID\n");
-#endif
+
+		HANDLE_HEADER(ACCOUNT_ID);
 
 		if (login_data->char_id != 0)
 			sd->char_id = login_data->char_id;
@@ -672,7 +673,7 @@ static bool aclif_decode_post_headers(int fd, struct api_session_data *sd)
 	if ((sd->handler->flags & REQ_CHAR_ID) != 0) {
 		// check is char_id logged in
 		int char_id = 0;
-		if (!aclif->get_post_header_data_int(sd, "GID", &char_id)) {
+		if (!aclif->get_post_header_data_int(sd, POST_CHAR_ID, &char_id)) {
 			ShowError("Http request without char id %d\n", fd);
 			return false;
 		}
@@ -682,16 +683,14 @@ static bool aclif_decode_post_headers(int fd, struct api_session_data *sd)
 			return false;
 		}
 		sd->char_id = char_id;
-		handled_count ++;
-#ifdef DEBUG_LOG
-		ShowInfo("Handled header: GID\n");
-#endif
+
+		HANDLE_HEADER(CHAR_ID);
 	}
 
 	if ((sd->handler->flags & REQ_WORLD_NAME) != 0) {
 		// check is world name present and correct
 		char *name = NULL;
-		if (!aclif->get_post_header_data_str(sd, "WorldName", &name, NULL)) {
+		if (!aclif->get_post_header_data_str(sd, POST_WORLD_NAME, &name, NULL)) {
 			ShowError("Http request without WorldName %d\n", fd);
 			return false;
 		}
@@ -703,10 +702,8 @@ static bool aclif_decode_post_headers(int fd, struct api_session_data *sd)
 		}
 
 		sd->world_name = name;
-		handled_count ++;
-#ifdef DEBUG_LOG
-		ShowInfo("Handled header: WorldName\n");
-#endif
+
+		HANDLE_HEADER(WORLD_NAME);
 	}
 
 	if ((sd->handler->flags & REQ_AUTH_TOKEN) != 0) {
@@ -716,7 +713,7 @@ static bool aclif_decode_post_headers(int fd, struct api_session_data *sd)
 			return false;
 		}
 		char *token = NULL;
-		if (!aclif->get_post_header_data_str(sd, "AuthToken", &token, NULL)) {
+		if (!aclif->get_post_header_data_str(sd, POST_AUTH_TOKEN, &token, NULL)) {
 			ShowError("Http request without AuthToken %d\n", fd);
 			return false;
 		}
@@ -725,42 +722,36 @@ static bool aclif_decode_post_headers(int fd, struct api_session_data *sd)
 			ShowError("Wrong auth token %d: '%s'\n", fd, token);
 			return false;
 		}
-		handled_count ++;
-#ifdef DEBUG_LOG
-		ShowInfo("Handled header: AuthToken\n");
-#endif
+
+		HANDLE_HEADER(AUTH_TOKEN);
 	}
 
 	if ((sd->handler->flags & REQ_GUILD_ID) != 0) {
 		// check is guild id present in request
 		int guild_id = 0;
-		if (!aclif->get_post_header_data_int(sd, "GDID", &guild_id)) {
+		if (!aclif->get_post_header_data_int(sd, POST_GUILD_ID, &guild_id)) {
 			ShowError("Http request without guild id %d\n", fd);
 			return false;
 		}
-		handled_count ++;
-#ifdef DEBUG_LOG
-		ShowInfo("Handled header: GDID\n");
-#endif
+
+		HANDLE_HEADER(GUILD_ID);
 	}
 
 	if ((sd->handler->flags & REQ_IMG_TYPE) != 0) {
 		// check is ImgType present in request
 		char *name = NULL;
-		if (!aclif->get_post_header_data_str(sd, "ImgType", &name, NULL)) {
+		if (!aclif->get_post_header_data_str(sd, POST_IMG_TYPE, &name, NULL)) {
 			ShowError("Http request without ImgType %d\n", fd);
 			return false;
 		}
-		handled_count ++;
-#ifdef DEBUG_LOG
-		ShowInfo("Handled header: ImgType\n");
-#endif
+
+		HANDLE_HEADER(IMG_TYPE);
 	}
 
 	if ((sd->handler->flags & REQ_IMG) != 0) {
 		// check is Img present in request
 		char *content_type = NULL;
-		if (!aclif->get_post_header_content_type(sd, "Img", &content_type)) {
+		if (!aclif->get_post_header_content_type(sd, POST_IMG, &content_type)) {
 			ShowError("Http request without Img or empty content_type %d\n", fd);
 			return false;
 		}
@@ -768,36 +759,32 @@ static bool aclif_decode_post_headers(int fd, struct api_session_data *sd)
 			ShowError("Http request without Img with wrong content_type %d\n", fd);
 			return false;
 		}
-		handled_count ++;
-#ifdef DEBUG_LOG
-		ShowInfo("Handled header: Img\n");
-#endif
+
+		HANDLE_HEADER(IMG);
 	}
 
 	if ((sd->handler->flags & REQ_VERSION) != 0) {
 		// check is Version present in request
 		int version = 0;
-		if (!aclif->get_post_header_data_int(sd, "Version", &version) || version == 0) {
+		if (!aclif->get_post_header_data_int(sd, POST_VERSION, &version) || version == 0) {
 			ShowError("Http request without Version %d\n", fd);
 			return false;
 		}
-		handled_count ++;
-#ifdef DEBUG_LOG
-		ShowInfo("Handled header: Version\n");
-#endif
+
+		HANDLE_HEADER(VERSION);
 	}
 
-	CHECK_POST_HEADER_PRESENT(REQ_DATA, "data")
-	CHECK_POST_HEADER_PRESENT(REQ_PAGE, "page")
-	CHECK_POST_HEADER_PRESENT(REQ_MINLV, "MinLV")
-	CHECK_POST_HEADER_PRESENT(REQ_MAXLV, "MaxLV")
-	CHECK_POST_HEADER_PRESENT(REQ_HEALER, "Healer")
-	CHECK_POST_HEADER_PRESENT(REQ_ASSIST, "Assist")
-	CHECK_POST_HEADER_PRESENT(REQ_TANKER, "Tanker")
-	CHECK_POST_HEADER_PRESENT(REQ_DEALER, "Dealer")
-	CHECK_POST_HEADER_PRESENT(REQ_TYPE, "Type")
-	CHECK_POST_HEADER_PRESENT_OR_EMPTY(REQ_MEMO, "Memo")
-	CHECK_POST_HEADER_PRESENT(REQ_CHAR_NAME, "CharName")
+	CHECK_POST_HEADER_PRESENT(DATA)
+	CHECK_POST_HEADER_PRESENT(PAGE)
+	CHECK_POST_HEADER_PRESENT(MINLV)
+	CHECK_POST_HEADER_PRESENT(MAXLV)
+	CHECK_POST_HEADER_PRESENT(HEALER)
+	CHECK_POST_HEADER_PRESENT(ASSIST)
+	CHECK_POST_HEADER_PRESENT(TANKER)
+	CHECK_POST_HEADER_PRESENT(DEALER)
+	CHECK_POST_HEADER_PRESENT(TYPE)
+	CHECK_POST_HEADER_PRESENT_OR_EMPTY(MEMO)
+	CHECK_POST_HEADER_PRESENT(CHAR_NAME)
 
 	if (handled_count != aclif->get_post_headers_count(sd)) {
 		ShowError("Handled wrong number of post headers. Handled %d, requested %d :%d\n", handled_count, aclif->get_post_headers_count(sd), fd);
@@ -933,6 +920,14 @@ static bool aclif_is_post_header_present_or_empty(struct api_session_data *sd, c
 	return strdb_get(sd->post_headers_db, name) != NULL;
 }
 
+static bool aclif_get_valid_header_data_int(struct api_session_data *sd, int header_id, const char *name, int *value)
+{
+	nullpo_retr(false, sd);
+	Assert_retr(false, header_id >= 0 && header_id < CONST_POST_MAX);
+	Assert_retr(false, sd->valid_post_headers[header_id]);
+	return aclif->get_post_header_data_int(sd, name, value);
+}
+
 static bool aclif_get_post_header_data_int(struct api_session_data *sd, const char *name, int *value)
 {
 	nullpo_retr(false, value);
@@ -950,6 +945,14 @@ static bool aclif_get_post_header_data_int(struct api_session_data *sd, const ch
 	return true;
 }
 
+static int aclif_ret_valid_header_data_int(struct api_session_data *sd, int header_id, const char *name, int def)
+{
+	nullpo_retr(false, sd);
+	Assert_retr(false, header_id >= 0 && header_id < CONST_POST_MAX);
+	Assert_retr(false, sd->valid_post_headers[header_id]);
+	return aclif->ret_post_header_data_int(sd, name, def);
+}
+
 static int aclif_ret_post_header_data_int(struct api_session_data *sd, const char *name, int def)
 {
 	int value = 0;
@@ -958,6 +961,14 @@ static int aclif_ret_post_header_data_int(struct api_session_data *sd, const cha
 	} else {
 		return def;
 	}
+}
+
+static bool aclif_get_valid_header_data_str(struct api_session_data *sd, int header_id, const char *name, char **data, uint32 *data_size)
+{
+	nullpo_retr(false, sd);
+	Assert_retr(false, header_id >= 0 && header_id < CONST_POST_MAX);
+	Assert_retr(false, sd->valid_post_headers[header_id]);
+	return aclif->get_post_header_data_str(sd, name, data, data_size);
 }
 
 static bool aclif_get_post_header_data_str(struct api_session_data *sd, const char *name, char **data, uint32 *data_size)
@@ -976,6 +987,14 @@ static bool aclif_get_post_header_data_str(struct api_session_data *sd, const ch
 	return *data != NULL;
 }
 
+static bool aclif_get_valid_header_data_json(struct api_session_data *sd, int header_id, const char *name, JsonP **json)
+{
+	nullpo_retr(false, sd);
+	Assert_retr(false, header_id >= 0 && header_id < CONST_POST_MAX);
+	Assert_retr(false, sd->valid_post_headers[header_id]);
+	return aclif->get_post_header_data_json(sd, name, json);
+}
+
 static bool aclif_get_post_header_data_json(struct api_session_data *sd, const char *name, JsonP **json)
 {
 	nullpo_retr(false, json);
@@ -988,6 +1007,14 @@ static bool aclif_get_post_header_data_json(struct api_session_data *sd, const c
 		return false;
 	*json = jsonparser->parse(header->data);
 	return *json != NULL;
+}
+
+static bool aclif_get_valid_header_content_type(struct api_session_data *sd, int header_id, const char *name, char **content_type)
+{
+	nullpo_retr(false, sd);
+	Assert_retr(false, header_id >= 0 && header_id < CONST_POST_MAX);
+	Assert_retr(false, sd->valid_post_headers[header_id]);
+	return aclif->get_post_header_content_type(sd, name, content_type);
 }
 
 static bool aclif_get_post_header_content_type(struct api_session_data *sd, const char *name, char **content_type)
@@ -1134,6 +1161,11 @@ void aclif_defaults(void)
 	aclif->get_post_header_content_type = aclif_get_post_header_content_type;
 	aclif->get_post_headers_count = aclif_get_post_headers_count;
 	aclif->ret_post_header_data_int = aclif_ret_post_header_data_int;
+	aclif->get_valid_header_data_int = aclif_get_valid_header_data_int;
+	aclif->get_valid_header_data_str = aclif_get_valid_header_data_str;
+	aclif->get_valid_header_data_json = aclif_get_valid_header_data_json;
+	aclif->get_valid_header_content_type = aclif_get_valid_header_content_type;
+	aclif->ret_valid_header_data_int = aclif_ret_valid_header_data_int;
 
 	aclif->delete_online_player = aclif_delete_online_player;
 	aclif->real_delete_online_player = aclif_real_delete_online_player;
