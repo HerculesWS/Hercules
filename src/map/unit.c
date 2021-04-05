@@ -98,6 +98,10 @@ static struct unit_data *unit_bl2ud(struct block_list *bl)
 		return &BL_UCAST(BL_ELEM, bl)->ud;
 	case BL_SKILL: // No assertion to not spam the server console when attacking a skill type unit such as Ice Wall.
 		return NULL;
+	case BL_NUL:
+	case BL_ITEM:
+	case BL_CHAT:
+	case BL_ALL:
 	default:
 		Assert_retr(NULL, false);
 	}
@@ -132,6 +136,10 @@ static const struct unit_data *unit_cbl2ud(const struct block_list *bl)
 		return &BL_UCCAST(BL_ELEM, bl)->ud;
 	case BL_SKILL: // No assertion to not spam the server console when attacking a skill type unit such as Ice Wall.
 		return NULL;
+	case BL_NUL:
+	case BL_ITEM:
+	case BL_CHAT:
+	case BL_ALL:
 	default:
 		Assert_retr(NULL, false);
 	}
@@ -1074,6 +1082,17 @@ static int unit_warp(struct block_list *bl, short m, short x, short y, enum clr_
 			if (map->list[bl->m].flag.noteleport)
 				return 1;
 			break;
+		case BL_NUL:
+		case BL_PET:
+		case BL_HOM:
+		case BL_MER:
+		case BL_ITEM:
+		case BL_SKILL:
+		case BL_NPC:
+		case BL_CHAT:
+		case BL_ELEM:
+		case BL_ALL:
+			break;
 	}
 
 	if (x<0 || y<0) {
@@ -1762,6 +1781,13 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 					md->target_id = src->id;
 					md->state.aggressive = (tstatus->mode&MD_ANGRY)?1:0;
 					md->min_chase = md->db->range3;
+					break;
+				case MSS_ANY:
+				case MSS_DEAD:
+				case MSS_BERSERK:
+				case MSS_ANGRY:
+				case MSS_ANYTARGET:
+				case MSS_LOOT:
 					break;
 				}
 			}
@@ -2797,6 +2823,12 @@ static int unit_remove_map(struct block_list *bl, enum clr_type clrtype, const c
 			}
 			break;
 		}
+		case BL_NUL:
+		case BL_ITEM:
+		case BL_SKILL:
+		case BL_NPC:
+		case BL_CHAT:
+		case BL_ALL:
 		default: break;// do nothing
 	}
 	/**
@@ -3086,6 +3118,13 @@ static int unit_free(struct block_list *bl, enum clr_type clrtype)
 			elemental->summon_stop(ed);
 			break;
 		}
+		case BL_NUL:
+		case BL_ITEM:
+		case BL_SKILL:
+		case BL_NPC:
+		case BL_CHAT:
+		case BL_ALL:
+			break;
 	}
 
 	skill->clear_unitgroup(bl);

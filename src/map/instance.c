@@ -108,6 +108,7 @@ static int instance_create(int owner_id, const char *name, enum instance_owner_t
 			iptr = g->instance;
 			icptr = &g->instances;
 			break;
+		case IOT_MAX:
 		default:
 			ShowError("instance_create: unknown type %u for owner_id %d and name %s.\n", type, owner_id, name);
 			return -1;
@@ -159,6 +160,9 @@ static int instance_create(int owner_id, const char *name, enum instance_owner_t
 				case IOT_GUILD:
 					RECREATE(g->instance, short, ++*icptr);
 					g->instance[g->instances-1] = i;
+					break;
+				case IOT_NONE:
+				case IOT_MAX:
 					break;
 			}
 		} else {
@@ -460,6 +464,13 @@ static int instance_cleanup_sub(struct block_list *bl, va_list ap)
 		case BL_SKILL:
 			skill->delunit(BL_UCAST(BL_SKILL, bl));
 			break;
+		case BL_NUL:
+		case BL_CHAT:
+		case BL_HOM:
+		case BL_MER:
+		case BL_ELEM:
+		case BL_ALL:
+			break;
 	}
 
 	return 1;
@@ -595,6 +606,7 @@ static void instance_destroy(int instance_id)
 			iptr = g->instance;
 			icptr = &g->instances;
 			break;
+		case IOT_MAX:
 		default:
 			ShowError("instance_destroy: unknown type %u for owner_id %d and name '%s'.\n", instance->list[instance_id].owner_type, instance->list[instance_id].owner_id, instance->list[instance_id].name);
 			break;
@@ -772,6 +784,8 @@ static void instance_force_destroy(struct map_session_data *sd)
 			}
 			break;
 		}
+		case IOT_NONE:
+		case IOT_MAX:
 		default:
 			continue;
 		}

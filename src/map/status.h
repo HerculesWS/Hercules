@@ -1409,6 +1409,7 @@ struct status_interface {
 	void (*copy) (struct status_data *a, const struct status_data *b);
 	int (*base_matk_min) (const struct status_data *st);
 	int (*base_matk_max) (const struct status_data *st);
+	void (*check_job_bonus) (int idx, const char *name, int class);
 };
 
 #ifdef HERCULES_CORE

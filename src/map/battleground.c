@@ -270,6 +270,13 @@ static int bg_team_get_id(struct block_list *bl)
 				return su->group->bg_id;
 		}
 			break;
+		case BL_NUL:
+		case BL_ITEM:
+		case BL_NPC:
+		case BL_ELEM:
+		case BL_CHAT:
+		case BL_ALL:
+			break;
 	}
 
 	return 0;
@@ -793,6 +800,8 @@ static void bg_queue_add(struct map_session_data *sd, struct bg_arena *arena, en
 		case BGQT_INDIVIDUAL:
 			count = 1;
 			break;
+		case BGQT_INVALID:
+			break;
 	}
 
 	if( !(queue = script->queue(arena->queue_id)) || (VECTOR_LENGTH(queue->entries)+count) > arena->max_players ) {
@@ -833,6 +842,8 @@ static void bg_queue_add(struct map_session_data *sd, struct bg_arena *arena, en
 				clif->bgqueue_joined(sd->guild->member[i].sd, VECTOR_LENGTH(queue->entries));
 				clif->bgqueue_update_info(sd->guild->member[i].sd,arena->id, VECTOR_LENGTH(queue->entries));
 			}
+			break;
+		case BGQT_INVALID:
 			break;
 	}
 	clif->bgqueue_ack(sd,BGQA_SUCCESS,arena->id);
@@ -938,6 +949,7 @@ static enum BATTLEGROUNDS_QUEUE_ACK bg_canqueue(struct map_session_data *sd, str
 			break;
 		case BGQT_INDIVIDUAL:/* already did */
 			break;
+		case BGQT_INVALID:
 		default:
 			ShowDebug("bg_canqueue: unknown/unsupported type %u\n", type);
 			return BGQA_DUPLICATE_REQUEST;

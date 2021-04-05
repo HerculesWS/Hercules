@@ -670,7 +670,7 @@ struct itemdb_interface {
 	int (*searchname_sub) (union DBKey key, struct DBData *data, va_list ap);
 	int (*searchname_array_sub) (union DBKey key, struct DBData data, va_list ap);
 	int (*searchrandomid) (struct item_group *group);
-	const char* (*typename) (int type);
+	const char* (*typename) (enum item_types type);
 	void (*jobmask2mapid) (uint64 *bclass, uint64 jobmask);
 	void (*jobid2mapid) (uint64 *bclass, int job_class, bool enable);
 	void (*create_dummy_data) (void);

@@ -728,6 +728,8 @@ static int auth_db_cleanup_sub(union DBKey key, struct DBData *data, va_list ap)
 				node->node_created = timer->gettick(); //Refresh tick (avoid char-server load if connection is really bad)
 				chrif->save(node->sd, 1);
 				break;
+			case ST_LOGIN:
+			case ST_MAPCHANGE:
 			default:
 				//Clear data. any connected players should have timed out by now.
 				ShowInfo("auth_db: Node (state %s) timed out for %d:%d\n", states[node->state], node->account_id, node->char_id);

@@ -1045,6 +1045,14 @@ static int status_damage(struct block_list *src, struct block_list *target, int6
 		case BL_HOM: homun->damaged(BL_UCAST(BL_HOM, target)); break;
 		case BL_MER: mercenary->heal(BL_UCAST(BL_MER, target), hp, sp); break;
 		case BL_ELEM: elemental->heal(BL_UCAST(BL_ELEM, target), hp, sp); break;
+		case BL_NUL:
+		case BL_PET:
+		case BL_ITEM:
+		case BL_SKILL:
+		case BL_NPC:
+		case BL_CHAT:
+		case BL_ALL:
+			break;
 	}
 
 	if (src != NULL && target->type == BL_PC && BL_UCAST(BL_PC, target)->disguise > 0) {
@@ -1071,6 +1079,13 @@ static int status_damage(struct block_list *src, struct block_list *target, int6
 		case BL_HOM: flag = homun->dead(BL_UCAST(BL_HOM, target)); break;
 		case BL_MER: flag = mercenary->dead(BL_UCAST(BL_MER, target)); break;
 		case BL_ELEM: flag = elemental->dead(BL_UCAST(BL_ELEM, target)); break;
+		case BL_NUL:
+		case BL_PET:
+		case BL_ITEM:
+		case BL_SKILL:
+		case BL_NPC:
+		case BL_CHAT:
+		case BL_ALL:
 		default: //Unhandled case, do nothing to object.
 			flag = 0;
 			break;
@@ -1225,6 +1240,14 @@ static int status_heal(struct block_list *bl, int64 in_hp, int64 in_sp, enum sta
 		case BL_HOM: homun->healed(BL_UCAST(BL_HOM, bl)); break;
 		case BL_MER: mercenary->heal(BL_UCAST(BL_MER, bl), hp, sp); break;
 		case BL_ELEM: elemental->heal(BL_UCAST(BL_ELEM, bl), hp, sp); break;
+		case BL_NUL:
+		case BL_PET:
+		case BL_ITEM:
+		case BL_SKILL:
+		case BL_NPC:
+		case BL_CHAT:
+		case BL_ALL:
+			break;
 	}
 
 	return (int)(hp+sp);
@@ -1324,6 +1347,16 @@ static int status_revive(struct block_list *bl, unsigned char per_hp, unsigned c
 		case BL_PC:  pc->revive(BL_UCAST(BL_PC, bl), hp, sp); break;
 		case BL_MOB: mob->revive(BL_UCAST(BL_MOB, bl), hp); break;
 		case BL_HOM: homun->revive(BL_UCAST(BL_HOM, bl), hp, sp); break;
+		case BL_NUL:
+		case BL_PET:
+		case BL_MER:
+		case BL_ELEM:
+		case BL_ITEM:
+		case BL_SKILL:
+		case BL_NPC:
+		case BL_CHAT:
+		case BL_ALL:
+			break;
 	}
 	return 1;
 }
@@ -1361,6 +1394,16 @@ static int status_fixed_revive(struct block_list *bl, unsigned int per_hp, unsig
 		case BL_PC:  pc->revive(BL_UCAST(BL_PC, bl), hp, sp); break;
 		case BL_MOB: mob->revive(BL_UCAST(BL_MOB, bl), hp); break;
 		case BL_HOM: homun->revive(BL_UCAST(BL_HOM, bl), hp, sp); break;
+		case BL_NUL:
+		case BL_PET:
+		case BL_MER:
+		case BL_ELEM:
+		case BL_ITEM:
+		case BL_SKILL:
+		case BL_NPC:
+		case BL_CHAT:
+		case BL_ALL:
+			break;
 	}
 	return 1;
 }
@@ -1681,6 +1724,13 @@ static int status_check_skilluse(struct block_list *src, struct block_list *targ
 			if( skill_id == AM_POTIONPITCHER && ( target->type == BL_MER || target->type == BL_ELEM) )
 				return 0; // Can't use Potion Pitcher on Mercenaries
 			FALLTHROUGH
+		case BL_NUL:
+		case BL_PET:
+		case BL_SKILL:
+		case BL_NPC:
+		case BL_CHAT:
+		case BL_MOB:
+		case BL_ALL:
 		default:
 			//Check for chase-walk/hiding/cloaking opponents.
 			if( tsc ) {
@@ -3398,6 +3448,14 @@ static void status_calc_regen(struct block_list *bl, struct status_data *st, str
 	case BL_ELEM:
 		status->calc_regen_elemental(BL_UCAST(BL_ELEM, bl), st, regen);
 		break;
+	case BL_NUL:
+	case BL_PET:
+	case BL_SKILL:
+	case BL_NPC:
+	case BL_CHAT:
+	case BL_MOB:
+	case BL_ITEM:
+	case BL_ALL:
 	default:
 		Assert(0);
 		break;
@@ -3518,6 +3576,16 @@ static void status_calc_regen_rate(struct block_list *bl, struct regen_data *reg
 		break;
 	case BL_HOM:
 		status->calc_regen_rate_homunculus(BL_UCAST(BL_HOM, bl), regen);
+		break;
+	case BL_NUL:
+	case BL_PET:
+	case BL_SKILL:
+	case BL_NPC:
+	case BL_CHAT:
+	case BL_MOB:
+	case BL_MER:
+	case BL_ITEM:
+	case BL_ALL:
 		break;
 	}
 
@@ -3974,6 +4042,12 @@ static void status_calc_bl_(struct block_list *bl, enum scb_flag flag, enum e_st
 			case BL_MER:  status->calc_mercenary_(BL_CAST(BL_MER,bl), opt);  break;
 			case BL_ELEM: status->calc_elemental_(BL_CAST(BL_ELEM,bl), opt); break;
 			case BL_NPC:  status->calc_npc_(BL_CAST(BL_NPC,bl), opt);        break;
+			case BL_NUL:
+			case BL_SKILL:
+			case BL_CHAT:
+			case BL_ITEM:
+			case BL_ALL:
+				break;
 		}
 	}
 
@@ -4143,6 +4217,16 @@ static int status_check_visibility(struct block_list *src, struct block_list *ta
 	case BL_PET:
 		view_range = BL_UCCAST(BL_PET, src)->db->range2;
 		break;
+	case BL_NUL:
+	case BL_HOM:
+	case BL_SKILL:
+	case BL_NPC:
+	case BL_CHAT:
+	case BL_MER:
+	case BL_PC:
+	case BL_ITEM:
+	case BL_ELEM:
+	case BL_ALL:
 	default:
 		view_range = AREA_SIZE;
 	}
@@ -4169,6 +4253,17 @@ static int status_check_visibility(struct block_list *src, struct block_list *ta
 			 && (BL_UCCAST(BL_PC, target)->special_state.perfect_hiding || !(st->mode&MD_DETECTOR)))
 				return 0;
 			break;
+		case BL_NUL:
+		case BL_HOM:
+		case BL_SKILL:
+		case BL_NPC:
+		case BL_CHAT:
+		case BL_MER:
+		case BL_ELEM:
+		case BL_MOB:
+		case BL_ITEM:
+		case BL_PET:
+		case BL_ALL:
 		default:
 			if ( (tsc->option&(OPTION_HIDE | OPTION_CLOAK | OPTION_CHASEWALK) || tsc->data[SC_CAMOUFLAGE]) && !(st->mode&(MD_BOSS | MD_DETECTOR)) )
 				return 0;
@@ -4331,6 +4426,14 @@ static int status_base_matk(struct block_list *bl, const struct status_data *st,
 			matk = st->int_ + st->int_ / 5 * st->int_ / 5;
 			break;
 		case BL_PC:
+		case BL_NUL:
+		case BL_SKILL:
+		case BL_NPC:
+		case BL_CHAT:
+		case BL_ELEM:
+		case BL_PET:
+		case BL_ITEM:
+		case BL_ALL:
 		default: // temporary until all are formulated
 			matk = st->int_ + (st->int_ / 2) + (st->dex / 5) + (st->luk / 3) + (level / 4);
 			break;
@@ -4413,6 +4516,15 @@ static void status_calc_misc(struct block_list *bl, struct status_data *st, int 
 				st->mdef2 = level / 10 + st->int_ / 5;
 	#endif
 			/* Fall through */
+			case BL_HOM:
+			case BL_NUL:
+			case BL_SKILL:
+			case BL_NPC:
+			case BL_CHAT:
+			case BL_ELEM:
+			case BL_PET:
+			case BL_ITEM:
+			case BL_ALL:
 			default:
 				if ( battle_config.critical_rate != 100 )
 					st->cri = st->cri*battle_config.critical_rate / 100;
@@ -6348,6 +6460,14 @@ static const char *status_get_name(const struct block_list *bl)
 		case BL_PET: return BL_UCCAST(BL_PET, bl)->pet.name;
 		case BL_HOM: return BL_UCCAST(BL_HOM, bl)->homunculus.name;
 		case BL_NPC: return BL_UCCAST(BL_NPC, bl)->name;
+		case BL_NUL:
+		case BL_SKILL:
+		case BL_CHAT:
+		case BL_ELEM:
+		case BL_MER:
+		case BL_ITEM:
+		case BL_ALL:
+			break;
 	}
 	return NULL;
 }
@@ -6380,6 +6500,12 @@ static int status_get_class(const struct block_list *bl)
 			return BL_UCCAST(BL_NPC, bl)->class_;
 		case BL_ELEM:
 			return BL_UCCAST(BL_ELEM, bl)->elemental.class_;
+		case BL_NUL:
+		case BL_SKILL:
+		case BL_CHAT:
+		case BL_ITEM:
+		case BL_ALL:
+			break;
 	}
 	return 0;
 }
@@ -6400,6 +6526,12 @@ static int status_get_lv(const struct block_list *bl)
 		case BL_MER: return BL_UCCAST(BL_MER, bl)->db->lv;
 		case BL_ELEM: return BL_UCCAST(BL_ELEM, bl)->db->lv;
 		case BL_NPC: return BL_UCCAST(BL_NPC, bl)->level;
+		case BL_NUL:
+		case BL_CHAT:
+		case BL_SKILL:
+		case BL_ITEM:
+		case BL_ALL:
+			break;
 	}
 	return 1;
 }
@@ -6412,6 +6544,14 @@ static struct regen_data *status_get_regen_data(struct block_list *bl)
 		case BL_HOM: return &BL_UCAST(BL_HOM, bl)->regen;
 		case BL_MER: return &BL_UCAST(BL_MER, bl)->regen;
 		case BL_ELEM: return &BL_UCAST(BL_ELEM, bl)->regen;
+		case BL_NUL:
+		case BL_CHAT:
+		case BL_SKILL:
+		case BL_ITEM:
+		case BL_MOB:
+		case BL_PET:
+		case BL_NPC:
+		case BL_ALL:
 		default:
 			return NULL;
 	}
@@ -6433,6 +6573,11 @@ static struct status_data *status_get_status_data(struct block_list *bl)
 			struct npc_data *nd = BL_UCAST(BL_NPC, bl);
 			return mob->db_checkid(nd->class_) == 0 ? &nd->status : &status->dummy;
 		}
+		case BL_NUL:
+		case BL_CHAT:
+		case BL_SKILL:
+		case BL_ITEM:
+		case BL_ALL:
 		default:
 			return &status->dummy;
 	}
@@ -6457,6 +6602,11 @@ static struct status_data *status_get_base_status(struct block_list *bl)
 			struct npc_data *nd = BL_UCAST(BL_NPC, bl);
 			return mob->db_checkid(nd->class_) == 0 ? &nd->status : NULL;
 		}
+		case BL_NUL:
+		case BL_CHAT:
+		case BL_SKILL:
+		case BL_ITEM:
+		case BL_ALL:
 		default:
 			return NULL;
 	}
@@ -6534,6 +6684,12 @@ static int status_get_party_id(const struct block_list *bl)
 			return ed->master->status.party_id;
 	}
 		break;
+	case BL_NUL:
+	case BL_CHAT:
+	case BL_ITEM:
+	case BL_NPC:
+	case BL_ALL:
+		break;
 	}
 	return 0;
 }
@@ -6600,6 +6756,11 @@ static int status_get_guild_id(const struct block_list *bl)
 			return ed->master->status.guild_id;
 	}
 		break;
+	case BL_NUL:
+	case BL_CHAT:
+	case BL_ITEM:
+	case BL_ALL:
+		break;
 	}
 	return 0;
 }
@@ -6662,6 +6823,12 @@ static int status_get_emblem_id(const struct block_list *bl)
 			return ed->master->guild_emblem_id;
 	}
 		break;
+	case BL_NUL:
+	case BL_CHAT:
+	case BL_ITEM:
+	case BL_SKILL:
+	case BL_ALL:
+		break;
 	}
 	return 0;
 }
@@ -6720,6 +6887,12 @@ static struct view_data *status_get_viewdata(struct block_list *bl)
 		case BL_HOM: return BL_UCAST(BL_HOM, bl)->vd;
 		case BL_MER: return BL_UCAST(BL_MER, bl)->vd;
 		case BL_ELEM: return BL_UCAST(BL_ELEM, bl)->vd;
+		case BL_NUL:
+		case BL_CHAT:
+		case BL_ITEM:
+		case BL_SKILL:
+		case BL_ALL:
+			break;
 	}
 	return NULL;
 }
@@ -6747,6 +6920,8 @@ static void status_set_viewdata(struct block_list *bl, int class_)
 		struct map_session_data *sd = BL_UCAST(BL_PC, bl);
 		if (pc->db_checkid(class_)) {
 			if (pc_isridingpeco(sd)) {
+				PRAGMA_GCC46(GCC diagnostic push)
+				PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 				switch (class_) {
 					//Adapt class to a Mounted one.
 					case JOB_KNIGHT:
@@ -6768,6 +6943,7 @@ static void status_set_viewdata(struct block_list *bl, int class_)
 						class_ = JOB_BABY_CRUSADER2;
 						break;
 				}
+				PRAGMA_GCC46(GCC diagnostic pop)
 			}
 			sd->vd.class = class_;
 			clif->get_weapon_view(sd, &sd->vd.weapon, &sd->vd.shield);
@@ -6871,6 +7047,12 @@ static void status_set_viewdata(struct block_list *bl, int class_)
 			ShowError("status_set_viewdata (ELEMENTAL): No view data for class %d\n", class_);
 	}
 		break;
+	case BL_NUL:
+	case BL_ITEM:
+	case BL_SKILL:
+	case BL_CHAT:
+	case BL_ALL:
+		break;
 	}
 }
 
@@ -6885,6 +7067,13 @@ static struct status_change *status_get_sc(struct block_list *bl)
 		case BL_HOM: return &BL_UCAST(BL_HOM, bl)->sc;
 		case BL_MER: return &BL_UCAST(BL_MER, bl)->sc;
 		case BL_ELEM: return &BL_UCAST(BL_ELEM, bl)->sc;
+		case BL_NUL:
+		case BL_ITEM:
+		case BL_SKILL:
+		case BL_CHAT:
+		case BL_PET:
+		case BL_ALL:
+			break;
 		}
 	}
 	return NULL;
@@ -6928,6 +7117,8 @@ static int status_get_sc_def(struct block_list *src, struct block_list *bl, enum
 
 	//Status that are blocked by Golden Thief Bug card or Wand of Hermod
 	if (status->isimmune(bl))
+		PRAGMA_GCC46(GCC diagnostic push)
+		PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 		switch (type) {
 		case SC_DEC_AGI:
 		case SC_SILENCE:
@@ -6954,6 +7145,7 @@ static int status_get_sc_def(struct block_list *src, struct block_list *bl, enum
 		case SC_SWING:
 			return 0;
 		}
+		PRAGMA_GCC46(GCC diagnostic pop)
 
 	sd = BL_CAST(BL_PC,bl);
 	st = status->get_status_data(bl);
@@ -6965,6 +7157,8 @@ static int status_get_sc_def(struct block_list *src, struct block_list *bl, enum
 
 	if (sc && sc->data[SC_KINGS_GRACE]) {
 		// Protects against status effects
+		PRAGMA_GCC46(GCC diagnostic push)
+		PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 		switch (type) {
 			case SC_POISON:
 			case SC_BLIND:
@@ -6986,8 +7180,11 @@ static int status_get_sc_def(struct block_list *src, struct block_list *bl, enum
 			case SC__CHAOS:
 				return 0;
 		}
+		PRAGMA_GCC46(GCC diagnostic pop)
 	}
 
+	PRAGMA_GCC46(GCC diagnostic push)
+	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 	switch (type) {
 	case SC_STUN:
 		sc_def = st->vit*100;
@@ -7155,6 +7352,7 @@ static int status_get_sc_def(struct block_list *src, struct block_list *bl, enum
 			return 0;
 		return tick ? tick : 1;
 	}
+	PRAGMA_GCC46(GCC diagnostic pop)
 
 	if (sd) {
 
@@ -7205,6 +7403,8 @@ static int status_get_sc_def(struct block_list *src, struct block_list *bl, enum
 		rate -= sc_def2;
 
 		//Minimum chances
+		PRAGMA_GCC46(GCC diagnostic push)
+		PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 		switch (type) {
 		case SC_OBLIVIONCURSE:
 			rate = max(rate,500); //Minimum of 5%
@@ -7213,6 +7413,7 @@ static int status_get_sc_def(struct block_list *src, struct block_list *bl, enum
 			rate = max(rate,5000); //Minimum of 50%
 			break;
 		}
+		PRAGMA_GCC46(GCC diagnostic pop)
 
 		//Item resistance (only applies to rate%)
 		if (sd && SC_COMMON_MIN <= type && type <= SC_COMMON_MAX)
@@ -7241,6 +7442,8 @@ static int status_get_sc_def(struct block_list *src, struct block_list *bl, enum
 	tick -= tick_def2;
 
 	//Minimum durations
+	PRAGMA_GCC46(GCC diagnostic push)
+	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 	switch (type) {
 	case SC_ANKLESNARE:
 	case SC_BURNING:
@@ -7263,6 +7466,7 @@ static int status_get_sc_def(struct block_list *src, struct block_list *bl, enum
 		tick = max(tick, 1);
 		break;
 	}
+	PRAGMA_GCC46(GCC diagnostic pop)
 
 	return tick;
 #undef SCDEF_LVL_CAP
@@ -7398,6 +7602,8 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 	}
 
 	undead_flag = battle->check_undead(st->race, st->def_ele);
+	PRAGMA_GCC46(GCC diagnostic push)
+	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 	// Check for inmunities / sc fails
 	switch (type) {
 		case SC_DRUMBATTLE:
@@ -7664,6 +7870,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				return 0;
 			break;
 	}
+	PRAGMA_GCC46(GCC diagnostic pop)
 
 	//Check for BOSS resistances
 	if (st->mode & MD_BOSS && !(flag & SCFLAG_NOAVOID)) {
@@ -7677,6 +7884,8 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 
 	//Check for overlapping fails
 	if( (sce = sc->data[type]) ) {
+		PRAGMA_GCC46(GCC diagnostic push)
+		PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 		switch( type ) {
 			case SC_MER_FLEE:
 			case SC_MER_ATK:
@@ -7796,11 +8005,14 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				if(sce->val1 > val1)
 					return 1; //Return true to not mess up skill animations. [Skotlex]
 		}
+		PRAGMA_GCC46(GCC diagnostic pop)
 	}
 
 	vd = status->get_viewdata(bl);
 	calc_flag = status->dbs->ChangeFlagTable[type];
 	if(!(flag&SCFLAG_LOADED)) { // Do not parse val settings when loading SCs
+		PRAGMA_GCC46(GCC diagnostic push)
+		PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 		switch(type) {
 			case SC_AUTOTRADE:
 			case SC_KSPROTECTED:
@@ -9643,7 +9855,10 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 					return 0;
 				}
 		}
+		PRAGMA_GCC46(GCC diagnostic pop)
 	} else { // Special considerations when loading SC data.
+		PRAGMA_GCC46(GCC diagnostic push)
+		PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 		switch (type) {
 			case SC_WEDDING:
 			case SC_XMAS:
@@ -9662,6 +9877,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			case SC_KAAHI:
 				val4 = INVALID_TIMER;
 				break;
+		PRAGMA_GCC46(GCC diagnostic pop)
 		}
 	}
 
@@ -9751,6 +9967,8 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 	if(sd && sd->pd)
 		pet->sc_check(sd, type); //Skotlex: Pet Status Effect Healing
 
+	PRAGMA_GCC46(GCC diagnostic push)
+	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 	switch (type) {
 		case SC_BERSERK:
 			if (!(sce->val2)) { //don't heal if already set
@@ -9835,6 +10053,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				sce->val2 = st->max_hp / 100;// Officially tested its 1%hp drain. [Jobbie]
 			break;
 	}
+	PRAGMA_GCC46(GCC diagnostic pop)
 
 	if( opt_flag&2 && sd && sd->touching_id )
 		npc->touchnext_areanpc(sd,false); // run OnTouch_ on next char in range
@@ -9881,6 +10100,8 @@ static void status_change_start_display(struct map_session_data *sd, enum sc_typ
 
 	if (sd && status->dbs->DisplayType[type]) {
 		int dval1 = 0, dval2 = 0, dval3 = 0;
+		PRAGMA_GCC46(GCC diagnostic push)
+		PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 		switch (type) {
 			case SC_ALL_RIDING:
 				dval1 = 1;
@@ -9894,6 +10115,7 @@ static void status_change_start_display(struct map_session_data *sd, enum sc_typ
 				dval1 = val1;
 				break;
 		}
+		PRAGMA_GCC46(GCC diagnostic pop)
 		status->display_add(sd, type, dval1, dval2, dval3);
 	}
 }
@@ -9908,6 +10130,8 @@ static void status_change_start_display(struct map_session_data *sd, enum sc_typ
 static int status_get_val_flag(enum sc_type type)
 {
 	int val_flag = 0;
+	PRAGMA_GCC46(GCC diagnostic push)
+	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 	switch (type) {
 		case SC_CLAN_INFO:
 			val_flag |= 1 | 2;
@@ -10044,6 +10268,7 @@ static int status_get_val_flag(enum sc_type type)
 			val_flag |= 1;
 			break;
 	}
+	PRAGMA_GCC46(GCC diagnostic pop)
 	return val_flag;
 }
 
@@ -10066,6 +10291,8 @@ static int status_change_start_set_option(struct block_list *bl, struct status_c
 
 	nullpo_retr(true, bl);
 	nullpo_retr(true, sc);
+	PRAGMA_GCC46(GCC diagnostic push)
+	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 	switch (type) {
 		//OPT1
 		case SC_STONE:         sc->opt1 = OPT1_STONEWAIT;  break;
@@ -10241,6 +10468,7 @@ static int status_change_start_set_option(struct block_list *bl, struct status_c
 		default:
 			opt_flag = 0;
 	}
+	PRAGMA_GCC46(GCC diagnostic pop)
 	return opt_flag;
 }
 
@@ -10253,6 +10481,8 @@ static int status_change_start_set_option(struct block_list *bl, struct status_c
 static void status_change_start_stop_action(struct block_list *bl, enum sc_type type)
 {
 	nullpo_retv(bl);
+	PRAGMA_GCC46(GCC diagnostic push)
+	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 	switch (type) {
 		case SC_VACUUM_EXTREME:
 			if (!map_flag_gvg(bl->m))
@@ -10319,6 +10549,7 @@ static void status_change_start_stop_action(struct block_list *bl, enum sc_type 
 				unit->skillcastcancel(bl, 0);
 			break;
 	}
+	PRAGMA_GCC46(GCC diagnostic pop)
 }
 
 /**
@@ -10344,6 +10575,8 @@ static bool status_end_sc_before_start(struct block_list *bl, struct status_data
 	nullpo_retr(true, st);
 	nullpo_retr(true, sc);
 
+	PRAGMA_GCC46(GCC diagnostic push)
+	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 	switch (type) {
 	case SC_BLESSING:
 		// TODO: Blessing and Agi up should do 1 damage against players on Undead Status, even on PvM
@@ -10651,6 +10884,7 @@ static bool status_end_sc_before_start(struct block_list *bl, struct status_data
 		status_change_end(bl, type, INVALID_TIMER);
 		break;
 	}
+	PRAGMA_GCC46(GCC diagnostic pop)
 
 	return false;
 }
@@ -10689,6 +10923,8 @@ static bool status_is_immune_to_status(struct status_change *sc, enum sc_type ty
 	if (sc->data[SC_REFRESH]) {
 		if (type >= SC_COMMON_MIN && type <= SC_COMMON_MAX) // Confirmed.
 			return true; // Immune to status ailements
+		PRAGMA_GCC46(GCC diagnostic push)
+		PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 		switch (type) {
 			case SC__CHAOS:
 			case SC_STONE:
@@ -10704,9 +10940,12 @@ static bool status_is_immune_to_status(struct status_change *sc, enum sc_type ty
 			case SC_MANDRAGORA:
 				return true;
 		}
+		PRAGMA_GCC46(GCC diagnostic pop)
 	} else if (sc->data[SC_INSPIRATION]) {
 		if (type >= SC_COMMON_MIN && type <= SC_COMMON_MAX)
 			return true; // Immune to status ailements
+		PRAGMA_GCC46(GCC diagnostic push)
+		PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 		switch (type) {
 			case SC__CHAOS:
 			case SC_STONE:
@@ -10729,6 +10968,7 @@ static bool status_is_immune_to_status(struct status_change *sc, enum sc_type ty
 			case SC__WEAKNESS:
 				return true;
 		}
+		PRAGMA_GCC46(GCC diagnostic pop)
 	}
 	return false;
 }
@@ -10834,7 +11074,9 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 				return 0;
 		if (sce->timer != INVALID_TIMER) //Could be a SC with infinite duration
 			timer->delete(sce->timer,status->change_timer);
-		if (sc->opt1)
+		if (sc->opt1) {
+			PRAGMA_GCC46(GCC diagnostic push)
+			PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 			switch (type) {
 				//"Ugly workaround"  [Skotlex]
 				//delays status change ending so that a skill that sets opt1 fails to
@@ -10853,6 +11095,8 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 						sce->timer = timer->add(timer->gettick()+10, status->change_timer, bl->id, type);
 						return 1;
 					}
+			}
+			PRAGMA_GCC46(GCC diagnostic pop)
 		}
 	}
 
@@ -10872,6 +11116,8 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 
 	bool remove_icon = true;
 
+	PRAGMA_GCC46(GCC diagnostic push)
+	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 	switch(type) {
 		case SC_GRANITIC_ARMOR:
 		{
@@ -11477,8 +11723,11 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 
 			break;
 	}
+	PRAGMA_GCC46(GCC diagnostic pop)
 
 	opt_flag = 1;
+	PRAGMA_GCC46(GCC diagnostic push)
+	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 	switch(type) {
 		case SC_STONE:
 		case SC_FREEZE:
@@ -11660,6 +11909,7 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 		default:
 			opt_flag = 0;
 	}
+	PRAGMA_GCC46(GCC diagnostic pop)
 
 #ifdef ANTI_MAYAP_CHEAT
 	if (invisible && !(sc->option&(OPTION_HIDE|OPTION_CLOAK|OPTION_INVISIBLE))) {
@@ -11798,6 +12048,8 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 		ShowError("status_change_timer: Unexpected NULL status change id: %d data: %"PRIdPTR"\n", id, data); \
 } while(0)
 
+	PRAGMA_GCC46(GCC diagnostic push)
+	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 	switch(type) {
 		case SC_MAXIMIZEPOWER:
 		case SC_CLOAKING:
@@ -12635,6 +12887,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 			}
 			break;
 	}
+	PRAGMA_GCC46(GCC diagnostic pop)
 
 	// default for all non-handled control paths is to end the status
 	return status_change_end( bl,type,tid );
@@ -12660,6 +12913,8 @@ static int status_change_timer_sub(struct block_list *bl, va_list ap)
 
 	tsc = status->get_sc(bl);
 
+	PRAGMA_GCC46(GCC diagnostic push)
+	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 	switch( type ) {
 		case SC_SIGHT: /* Reveal hidden ennemy on 3*3 range */
 			if( tsc && tsc->data[SC__SHADOWFORM] && (sce && sce->val4 >0 && sce->val4%2000 == 0) && // for every 2 seconds do the checking
@@ -12717,6 +12972,7 @@ static int status_change_timer_sub(struct block_list *bl, va_list ap)
 			}
 			break;
 	}
+	PRAGMA_GCC46(GCC diagnostic pop)
 	return 0;
 }
 
@@ -12869,6 +13125,15 @@ static void status_get_matk_sub(struct block_list *bl, int flag, unsigned short 
 			*matk_max += (status_get_homluk(st, hd) + status_get_homint(st, hd) + status_get_homdex(st, hd)) / 3;
 		}
 			break;
+		case BL_NUL:
+		case BL_PET:
+		case BL_ITEM:
+		case BL_SKILL:
+		case BL_NPC:
+		case BL_CHAT:
+		case BL_ELEM:
+		case BL_ALL:
+			break;
 	}
 
 #else // not RENEWAL
@@ -13017,6 +13282,8 @@ static int status_change_clear_buffs(struct block_list *bl, int type)
 			if( type&2 && !(status->get_sc_type(i)&SC_DEBUFF) )
 				continue;
 		}
+		PRAGMA_GCC46(GCC diagnostic push)
+		PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 		switch (i) {
 		case SC_DEEP_SLEEP:
 		case SC_FROSTMISTY:
@@ -13044,6 +13311,7 @@ static int status_change_clear_buffs(struct block_list *bl, int type)
 				continue;
 
 		}
+		PRAGMA_GCC46(GCC diagnostic pop)
 		status_change_end(bl, (sc_type)i, INVALID_TIMER);
 	}
 
@@ -13068,6 +13336,8 @@ static int status_change_spread(struct block_list *src, struct block_list *bl)
 		if( !sc->data[i] || i == SC_COMMON_MAX )
 			continue;
 
+		PRAGMA_GCC46(GCC diagnostic push)
+		PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 		switch( i ) {
 			//Debuffs that can be spreaded.
 			// NOTE: We'll add/delte SCs when we are able to confirm it.
@@ -13129,6 +13399,7 @@ static int status_change_spread(struct block_list *src, struct block_list *bl)
 		default:
 			continue;
 		}
+		PRAGMA_GCC46(GCC diagnostic pop)
 		if( i ) {
 			data.val1 = sc->data[i]->val1;
 			data.val2 = sc->data[i]->val2;
@@ -13293,6 +13564,16 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 		hp_interval = battle_config.elem_natural_heal_hp;
 		sp_interval = battle_config.elem_natural_heal_sp;
 		interval_cap = battle_config.elem_natural_heal_cap;
+		break;
+	case BL_NUL:
+	case BL_PET:
+	case BL_ITEM:
+	case BL_SKILL:
+	case BL_NPC:
+	case BL_CHAT:
+	case BL_PC:
+	case BL_MOB:
+	case BL_ALL:
 		break;
 	}
 
@@ -13657,10 +13938,29 @@ static void status_read_job_db(void)
 
 		idx = pc->class2idx(class);
 		status->read_job_db_sub(idx, name, jdb);
+		status->check_job_bonus(idx, name, class);
 	}
 
 	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", i, config_filename);
 	libconfig->destroy(&job_db_conf);
+}
+
+static void status_check_job_bonus(int idx, const char *name, int class)
+{
+	if (class == JOB_NOVICE || class == JOB_BABY)
+		return;
+
+	Assert_retv(idx >= 0 && idx < CLASS_COUNT);
+	bool isEmpty = true;
+	for(int i2 = 0; i2 < MAX_LEVEL; i2++) {
+		if (status->dbs->job_bonus[idx][i2] != 0) {
+			isEmpty = false;
+			break;
+		}
+	}
+	if (isEmpty) {
+		ShowWarning("Missing job %s (%d) in job_db2.txt\n", name, class);
+	}
 }
 
 static bool status_readdb_job2(char *fields[], int columns, int current)
@@ -14074,4 +14374,5 @@ void status_defaults(void)
 	status->copy = status_copy;
 	status->base_matk_min = status_base_matk_min;
 	status->base_matk_max = status_base_matk_max;
+	status->check_job_bonus = status_check_job_bonus;
 }

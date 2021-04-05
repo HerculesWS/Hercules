@@ -133,6 +133,8 @@ bool HPM_map_data_store_validate(enum HPluginDataTypes type, struct hplugin_data
 	case HPDT_CLAN:
 		// Initialized by the caller.
 		return true;
+	case HPDT_UNKNOWN:
+	case HPDT_SESSION:
 	default:
 		break;
 	}

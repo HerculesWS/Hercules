@@ -373,7 +373,7 @@ static struct itemdb_option *itemdb_option_exists(int idx)
 
 /// Returns human readable name for given item type.
 /// @param type Type id to retrieve name for ( IT_* ).
-static const char *itemdb_typename(int type)
+static const char *itemdb_typename(enum item_types type)
 {
 	switch(type)
 	{
@@ -388,6 +388,9 @@ static const char *itemdb_typename(int type)
 		case IT_AMMO:           return "Arrow/Ammunition";
 		case IT_DELAYCONSUME:   return "Delay-Consume Usable";
 		case IT_CASH:           return "Cash Usable";
+		case IT_UNKNOWN2:
+		case IT_MAX:
+		case IT_UNKNOWN:        return "Unknown Type";
 	}
 	return "Unknown Type";
 }
@@ -683,12 +686,23 @@ static struct item_data *itemdb_search(int nameid)
  *------------------------------------------*/
 static int itemdb_isequip(int nameid)
 {
-	int type=itemdb_type(nameid);
+	enum item_types type = itemdb_type(nameid);
 	switch (type) {
 		case IT_WEAPON:
 		case IT_ARMOR:
 		case IT_AMMO:
 			return 1;
+		case IT_HEALING:
+		case IT_UNKNOWN:
+		case IT_USABLE:
+		case IT_ETC:
+		case IT_CARD:
+		case IT_PETEGG:
+		case IT_PETARMOR:
+		case IT_UNKNOWN2:
+		case IT_DELAYCONSUME:
+		case IT_CASH:
+		case IT_MAX:
 		default:
 			return 0;
 	}
@@ -700,7 +714,7 @@ static int itemdb_isequip(int nameid)
 static int itemdb_isequip2(struct item_data *data)
 {
 	nullpo_ret(data);
-	switch(data->type) {
+	switch (data->type) {
 		case IT_WEAPON:
 		case IT_ARMOR:
 		case IT_AMMO:
@@ -715,13 +729,23 @@ static int itemdb_isequip2(struct item_data *data)
  *------------------------------------------*/
 static int itemdb_isstackable(int nameid)
 {
-	int type=itemdb_type(nameid);
-	switch(type) {
+	enum item_types type = itemdb_type(nameid);
+	switch (type) {
 		case IT_WEAPON:
 		case IT_ARMOR:
 		case IT_PETEGG:
 		case IT_PETARMOR:
 			return 0;
+		case IT_HEALING:
+		case IT_UNKNOWN:
+		case IT_USABLE:
+		case IT_ETC:
+		case IT_CARD:
+		case IT_UNKNOWN2:
+		case IT_AMMO:
+		case IT_DELAYCONSUME:
+		case IT_CASH:
+		case IT_MAX:
 		default:
 			return 1;
 	}
@@ -733,12 +757,22 @@ static int itemdb_isstackable(int nameid)
 static int itemdb_isstackable2(struct item_data *data)
 {
 	nullpo_ret(data);
-	switch(data->type) {
+	switch (data->type) {
 		case IT_WEAPON:
 		case IT_ARMOR:
 		case IT_PETEGG:
 		case IT_PETARMOR:
 			return 0;
+		case IT_HEALING:
+		case IT_UNKNOWN:
+		case IT_USABLE:
+		case IT_ETC:
+		case IT_CARD:
+		case IT_UNKNOWN2:
+		case IT_AMMO:
+		case IT_DELAYCONSUME:
+		case IT_CASH:
+		case IT_MAX:
 		default:
 			return 1;
 	}
@@ -818,12 +852,23 @@ static int itemdb_isrestricted(struct item *item, int gmlv, int gmlv2, int (*fun
  *------------------------------------------*/
 static int itemdb_isidentified(int nameid)
 {
-	int type=itemdb_type(nameid);
+	enum item_types type = itemdb_type(nameid);
 	switch (type) {
 		case IT_WEAPON:
 		case IT_ARMOR:
 		case IT_PETARMOR:
 			return 0;
+		case IT_HEALING:
+		case IT_UNKNOWN:
+		case IT_USABLE:
+		case IT_ETC:
+		case IT_CARD:
+		case IT_PETEGG:
+		case IT_UNKNOWN2:
+		case IT_AMMO:
+		case IT_DELAYCONSUME:
+		case IT_CASH:
+		case IT_MAX:
 		default:
 			return 1;
 	}

@@ -184,6 +184,7 @@ HPExport void plugin_init (void) {
 		case SERVER_TYPE_LOGIN: printf("Login Server\n"); break;
 		case SERVER_TYPE_CHAR: printf("Char Server\n"); break;
 		case SERVER_TYPE_MAP: printf ("Map Server\n"); break;
+		case SERVER_TYPE_UNKNOWN: printf ("Unknown Server\n"); break;
 	}
 
 	ShowInfo("I'm being run from the '%s' filename\n", SERVER_NAME);

@@ -78,11 +78,13 @@
  */
 bool HPM_char_data_store_validate(enum HPluginDataTypes type, struct hplugin_data_store **storeptr, bool initialize)
 {
+/*
 	switch (type) {
 		// No supported types at the moment.
 		default:
 			break;
 	}
+*/
 	return false;
 }
 

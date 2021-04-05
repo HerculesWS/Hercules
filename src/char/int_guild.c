@@ -1169,7 +1169,7 @@ static bool inter_guild_disband(int guild_id)
  * Changes basic guild information
  * The types are available in mmo.h::guild_basic_info
  **/
-static bool inter_guild_update_basic_info(int guild_id, int type, const void *data, int len)
+static bool inter_guild_update_basic_info(int guild_id, enum guild_basic_info type, const void *data, int len)
 {
 	struct guild *g;
 	struct guild_skill gd_skill;
@@ -1215,7 +1215,7 @@ static bool inter_guild_update_basic_info(int guild_id, int type, const void *da
 			break;
 
 		default:
-			ShowError("int_guild: GuildBasicInfoChange: Unknown type %d, see mmo.h::guild_basic_info for more information\n",type);
+			ShowError("int_guild: GuildBasicInfoChange: Unknown type %u, see mmo.h::guild_basic_info for more information\n", type);
 			return false;
 	}
 	mapif->guild_info(-1,g);
@@ -1225,7 +1225,7 @@ static bool inter_guild_update_basic_info(int guild_id, int type, const void *da
 }
 
 // Modification of the guild
-static bool inter_guild_update_member_info(int guild_id, int account_id, int char_id, int type, const char *data, int len)
+static bool inter_guild_update_member_info(int guild_id, int account_id, int char_id, enum guild_member_info type, const char *data, int len)
 {
 	// Could make some improvement in speed, because only change guild_member
 	int i;
@@ -1326,7 +1326,7 @@ static bool inter_guild_update_member_info(int guild_id, int account_id, int cha
 			break;
 		}
 		default:
-		  ShowError("int_guild: GuildMemberInfoChange: Unknown type %d\n",type);
+		  ShowError("int_guild: GuildMemberInfoChange: Unknown type %u\n", type);
 		  return false;
 		  break;
 	}

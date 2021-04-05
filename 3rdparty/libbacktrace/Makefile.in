@@ -72,4 +72,4 @@ Makefile: Makefile.in
 
 %.o: %.c $(LIBBACKTRACE_H) Makefile
 	@echo "	CC	$<"
-	@$(CC) @CFLAGS@ @DEFS@ @CPPFLAGS@ -Wno-pointer-arith -c $(OUTPUT_OPTION) $<
+	@$(CC) @CFLAGS@ @DEFS@ @CPPFLAGS@ -Wno-pointer-arith -Wno-switch-enum -c $(OUTPUT_OPTION) $<

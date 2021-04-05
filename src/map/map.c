@@ -6368,6 +6368,13 @@ static int cleanup_sub(struct block_list *bl, va_list ap)
 		case BL_SKILL:
 			skill->delunit(BL_UCAST(BL_SKILL, bl));
 			break;
+		case BL_NUL:
+		case BL_HOM:
+		case BL_MER:
+		case BL_CHAT:
+		case BL_ELEM:
+		case BL_ALL:
+			break;
 	}
 
 	return 1;

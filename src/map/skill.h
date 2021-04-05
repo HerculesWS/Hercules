@@ -168,7 +168,11 @@ enum {
 };
 
 //Returns the cast type of the skill: ground cast, castend damage, castend no damage
-enum { CAST_GROUND, CAST_DAMAGE, CAST_NODAMAGE };
+enum cast_enum {
+	CAST_GROUND,
+	CAST_DAMAGE,
+	CAST_NODAMAGE
+};
 
 enum wl_spheres {
 	WLS_FIRE = 0x44,
@@ -1345,6 +1349,47 @@ enum e_skill {
 	RL_B_FLICKER_ATK,
 	RL_GLITTERING_GREED_ATK,
 
+	SJ_LIGHTOFMOON = 2574,
+	SJ_LUNARSTANCE = 2575,
+	SJ_FULLMOONKICK = 2576,
+	SJ_LIGHTOFSTAR = 2577,
+	SJ_STARSTANCE = 2578,
+	SJ_NEWMOONKICK = 2579,
+	SJ_FLASHKICK = 2580,
+	SJ_STAREMPEROR = 2581,
+	SJ_NOVAEXPLOSING = 2582,
+	SJ_UNIVERSESTANCE = 2583,
+	SJ_FALLINGSTAR = 2584,
+	SJ_GRAVITYCONTROL = 2585,
+	SJ_BOOKOFDIMENSION = 2586,
+	SJ_BOOKOFCREATINGSTAR = 2587,
+	SJ_DOCUMENT = 2588,
+	SJ_PURIFY = 2589,
+	SJ_LIGHTOFSUN = 2590,
+	SJ_SUNSTANCE = 2591,
+	SJ_SOLARBURST = 2592,
+	SJ_PROMINENCEKICK = 2593,
+	SJ_FALLINGSTAR_ATK = 2594,
+	SJ_FALLINGSTAR_ATK2 = 2595,
+
+	SP_SOULGOLEM = 2596,
+	SP_SOULSHADOW = 2597,
+	SP_SOULFALCON = 2598,
+	SP_SOULFAIRY = 2599,
+	SP_CURSEEXPLOSION = 2600,
+	SP_SOULCURSE = 2601,
+	SP_SPA = 2602,
+	SP_SHA = 2603,
+	SP_SWHOO = 2604,
+	SP_SOULUNITY = 2605,
+	SP_SOULDIVISION = 2606,
+	SP_SOULREAPER = 2607,
+	SP_SOULREVOLVE = 2608,
+	SP_SOULCOLLECT = 2609,
+	SP_SOULEXPLOSION = 2610,
+	SP_SOULENERGY = 2611,
+	SP_KAUTE = 2612,
+
 	KO_YAMIKUMO = 3001,
 	KO_RIGHT,
 	KO_LEFT,
@@ -2110,7 +2155,7 @@ struct skill_interface {
 	int (*can_produce_mix) ( struct map_session_data *sd, int nameid, int trigger, int qty);
 	int (*produce_mix) ( struct map_session_data *sd, uint16 skill_id, int nameid, int slot1, int slot2, int slot3, int qty );
 	int (*arrow_create) ( struct map_session_data *sd,int nameid);
-	void (*castend_type) (int type, struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag);
+	void (*castend_type) (enum cast_enum type, struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag);
 	int (*castend_nodamage_id) (struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag);
 	int (*castend_damage_id) (struct block_list* src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick,int flag);
 	int (*castend_pos2) (struct block_list *src, int x, int y, uint16 skill_id, uint16 skill_lv, int64 tick, int flag);

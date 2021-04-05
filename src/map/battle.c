@@ -147,6 +147,13 @@ static int battle_gettarget(struct block_list *bl)
 		case BL_HOM: return BL_UCCAST(BL_HOM, bl)->ud.target;
 		case BL_MER: return BL_UCCAST(BL_MER, bl)->ud.target;
 		case BL_ELEM: return BL_UCCAST(BL_ELEM, bl)->ud.target;
+		case BL_NUL:
+		case BL_ITEM:
+		case BL_NPC:
+		case BL_SKILL:
+		case BL_CHAT:
+		case BL_ALL:
+			break;
 	}
 
 	return 0;
@@ -1081,6 +1088,16 @@ static int64 battle_calc_cardfix(int attack_type, struct block_list *src, struct
 							case BL_PC:
 								ele_fix += tsd->magic_sub_def_ele[ele].rate_pc;
 								break;
+							case BL_NUL:
+							case BL_ITEM:
+							case BL_NPC:
+							case BL_ELEM:
+							case BL_HOM:
+							case BL_MER:
+							case BL_SKILL:
+							case BL_CHAT:
+							case BL_PET:
+							case BL_ALL:
 							default:
 								break;
 							}
@@ -1266,6 +1283,16 @@ static int64 battle_calc_cardfix(int attack_type, struct block_list *src, struct
 								case BL_PC:
 									ele_fix = tsd->sub_def_ele[ele].rate_pc;
 									break;
+								case BL_NUL:
+								case BL_ITEM:
+								case BL_NPC:
+								case BL_ELEM:
+								case BL_HOM:
+								case BL_MER:
+								case BL_SKILL:
+								case BL_CHAT:
+								case BL_PET:
+								case BL_ALL:
 								default:
 									break;
 								}
@@ -5359,9 +5386,11 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 				case RL_B_FLICKER_ATK:
 					rskill = RL_FLICKER;
 					break;
+#ifndef RENEWAL
 				case RL_GLITTERING_GREED_ATK:
 					rskill = RL_GLITTERING_GREED;
 					break;
+#endif
 				default:
 					rskill = skill_id;
 			}
@@ -6613,6 +6642,13 @@ static struct block_list *battle_get_master(struct block_list *src)
 					src = map->id2bl(su->group->src_id);
 			}
 				break;
+			case BL_NUL:
+			case BL_ITEM:
+			case BL_NPC:
+			case BL_PC:
+			case BL_CHAT:
+			case BL_ALL:
+				break;
 		}
 	} while (src && src != prev);
 	return prev;
@@ -6664,6 +6700,16 @@ static int battle_check_target(struct block_list *src, struct block_list *target
 				if (pc_has_permission(s_sd, PC_PERM_DISABLE_PVP))
 					return 0;
 				break;
+			case BL_NUL:
+			case BL_ITEM:
+			case BL_NPC:
+			case BL_ELEM:
+			case BL_HOM:
+			case BL_MER:
+			case BL_SKILL:
+			case BL_CHAT:
+			case BL_PET:
+			case BL_ALL:
 			default:/* anything else goes */
 				break;
 		}
@@ -6774,6 +6820,12 @@ static int battle_check_target(struct block_list *src, struct block_list *target
 		case BL_ELEM:
 			break;
 		//All else not specified is an invalid target.
+		case BL_NUL:
+		case BL_ITEM:
+		case BL_CHAT:
+		case BL_NPC:
+		case BL_PET:
+		case BL_ALL:
 		default:
 			return 0;
 	} //end switch actual target
@@ -6804,7 +6856,18 @@ static int battle_check_target(struct block_list *src, struct block_list *target
 				return 0; // Disable guardians/emperiums owned by Guilds on non-woe times.
 			break;
 		}
-		default: break; //other type doesn't have slave yet
+		case BL_NUL:
+		case BL_ITEM:
+		case BL_NPC:
+		case BL_ELEM:
+		case BL_HOM:
+		case BL_MER:
+		case BL_SKILL:
+		case BL_CHAT:
+		case BL_PET:
+		case BL_ALL:
+		default:
+			break; //other type doesn't have slave yet
 	} //end switch master target
 
 	switch( src->type ) { //Checks on actual src type
@@ -6838,6 +6901,16 @@ static int battle_check_target(struct block_list *src, struct block_list *target
 		case BL_MER:
 			if (t_bl->type == BL_MOB && BL_UCCAST(BL_MOB, t_bl)->class_ == MOBID_EMPELIUM && flag&BCT_ENEMY)
 				return 0; //mercenary may not attack Emperium
+			break;
+		case BL_NUL:
+		case BL_ITEM:
+		case BL_NPC:
+		case BL_ELEM:
+		case BL_HOM:
+		case BL_MOB:
+		case BL_CHAT:
+		case BL_PC:
+		case BL_ALL:
 			break;
 	} //end switch actual src
 
@@ -6885,6 +6958,16 @@ static int battle_check_target(struct block_list *src, struct block_list *target
 			}
 			break;
 		}
+		case BL_NUL:
+		case BL_ITEM:
+		case BL_NPC:
+		case BL_ELEM:
+		case BL_HOM:
+		case BL_MER:
+		case BL_SKILL:
+		case BL_CHAT:
+		case BL_PET:
+		case BL_ALL:
 		default:
 		//Need some sort of default behavior for unhandled types.
 			if (t_bl->type != s_bl->type)

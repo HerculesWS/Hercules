@@ -73,7 +73,7 @@ static struct view_data *homunculus_get_viewdata(int class_)
 	return &homun->dbs->viewdb[class_-HM_CLASS_BASE];
 }
 
-static enum homun_type homunculus_class2type(int class_)
+static enum homun_type homunculus_class2type(enum homun_id class_)
 {
 	switch(class_) {
 		// Normal Homunculus
@@ -378,6 +378,8 @@ static bool homunculus_levelup(struct homun_data *hd)
 			if( hd->homunculus.level >= battle_config.hom_S_max_level )
 				return false;
 			break;
+		case HT_INVALID:
+			break;
 	}
 
 	hom = &hd->homunculus;
@@ -583,6 +585,8 @@ static int homunculus_gainexp(struct homun_data *hd, unsigned int exp)
 		case HT_S:
 			if( hd->homunculus.level >= battle_config.hom_S_max_level )
 				return 0;
+			break;
+		case HT_INVALID:
 			break;
 	}
 
@@ -821,7 +825,7 @@ static bool homunculus_change_name_ack(struct map_session_data *sd, const char *
 	return true;
 }
 
-static int homunculus_db_search(int key, int type)
+static int homunculus_db_search(int key, enum HOMUN_TYPE type)
 {
 	int i;
 
@@ -1009,6 +1013,8 @@ static bool homunculus_recv_data(int account_id, const struct s_homunculus *sh, 
 			case HT_S:
 				if( hd->homunculus.level > battle_config.hom_S_max_level )
 					homun->shuffle(hd);
+				break;
+			case HT_INVALID:
 				break;
 		}
 

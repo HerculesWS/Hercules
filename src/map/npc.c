@@ -1028,6 +1028,9 @@ static int npc_touch_areanpc(struct map_session_data *sd, int16 m, int16 x, int1
 			xs=map->list[m].npc[i]->u.scr.xs;
 			ys=map->list[m].npc[i]->u.scr.ys;
 			break;
+		case CASHSHOP:
+		case SHOP:
+		case TOMB:
 		default:
 			continue;
 		}
@@ -1080,6 +1083,10 @@ static int npc_touch_areanpc(struct map_session_data *sd, int16 m, int16 x, int1
 				sd->areanpc_id = map->list[m].npc[i]->bl.id;
 				npc->click(sd,map->list[m].npc[i]);
 			}
+			break;
+		case CASHSHOP:
+		case SHOP:
+		case TOMB:
 			break;
 	}
 	return 0;
@@ -1137,6 +1144,9 @@ static int npc_touch_areanpc2(struct mob_data *md)
 				xs = map->list[m].npc[i]->u.scr.xs;
 				ys = map->list[m].npc[i]->u.scr.ys;
 				break;
+			case CASHSHOP:
+			case SHOP:
+			case TOMB:
 			default:
 				continue; // Keep Searching
 		}
@@ -1161,6 +1171,10 @@ static int npc_touch_areanpc2(struct mob_data *md)
 					id = md->bl.id; // Stores Unique ID
 					script->run_npc(ev->nd->u.scr.script, ev->pos, md->bl.id, ev->nd->bl.id);
 					if( map->id2md(id) == NULL ) return 1; // Not Warped, but killed
+					break;
+				case CASHSHOP:
+				case SHOP:
+				case TOMB:
 					break;
 			}
 
@@ -1217,6 +1231,9 @@ static int npc_check_areanpc(int flag, int16 m, int16 x, int16 y, int16 range)
 				xs=map->list[m].npc[i]->u.scr.xs;
 				ys=map->list[m].npc[i]->u.scr.ys;
 				break;
+			case CASHSHOP:
+			case SHOP:
+			case TOMB:
 			default:
 				continue;
 		}
@@ -1363,6 +1380,8 @@ static int npc_click(struct map_session_data *sd, struct npc_data *nd)
 			break;
 		case TOMB:
 			npc->run_tomb(sd,nd);
+			break;
+		case WARP:
 			break;
 	}
 
@@ -4246,6 +4265,9 @@ static int npc_duplicate4instance(struct npc_data *snd, int16 m)
 			return 1;
 		}
 		break;
+	case CASHSHOP:
+	case SHOP:
+	case TOMB:
 	default: // Other types have no xs/ys
 		break;
 	}
@@ -4282,6 +4304,9 @@ static void npc_setcells(struct npc_data *nd)
 			xs = nd->u.scr.xs;
 			ys = nd->u.scr.ys;
 			break;
+		case CASHSHOP:
+		case SHOP:
+		case TOMB:
 		default:
 			return; // Other types doesn't have touch area
 	}
@@ -4331,6 +4356,9 @@ static void npc_unsetcells(struct npc_data *nd)
 			xs = nd->u.scr.xs;
 			ys = nd->u.scr.ys;
 			break;
+		case CASHSHOP:
+		case SHOP:
+		case TOMB:
 		default:
 			return; // Other types doesn't have touch area
 	}
@@ -5686,6 +5714,16 @@ static int npc_reload(void)
 		case BL_MOB:
 			unit->free(bl, CLR_OUTSIGHT);
 			break;
+		case BL_NUL:
+		case BL_PC:
+		case BL_PET:
+		case BL_HOM:
+		case BL_MER:
+		case BL_ITEM:
+		case BL_SKILL:
+		case BL_CHAT:
+		case BL_ELEM:
+		case BL_ALL:
 		default:
 			break;
 		}

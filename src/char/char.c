@@ -767,6 +767,7 @@ static int char_getitemdata_from_sql(struct item *items, int max, int guid, enum
 		tablename = guild_storage_db;
 		selectoption = "guild_id";
 		break;
+	case TABLE_STORAGE:
 	default:
 		ShowError("char_getitemdata_from_sql: Invalid table type %d!\n", (int) table);
 		Assert_retr(-1, table);
@@ -874,6 +875,7 @@ static int char_memitemdata_to_sql(const struct item *p_items, int guid, enum in
 		selectoption = "guild_id";
 		item_count = MAX_GUILD_STORAGE;
 		break;
+	case TABLE_STORAGE:
 	default:
 		ShowError("Invalid table type %d!\n", (int) table);
 		Assert_retr(-1, table);
@@ -2584,6 +2586,8 @@ static void char_change_sex_sub(int sex, int acc, int char_id, int class, int gu
 		class = (sex == SEX_MALE ? JOB_BABY_MINSTREL : JOB_BABY_WANDERER);
 	else if (class == JOB_KAGEROU || class == JOB_OBORO)
 		class = (sex == SEX_MALE ? JOB_KAGEROU : JOB_OBORO);
+	else if (class == JOB_BABY_KAGEROU || class == JOB_BABY_OBORO)
+		class = (sex == SEX_MALE ? JOB_BABY_KAGEROU : JOB_BABY_OBORO);
 
 #if PACKETVER >= 20141016
 	char gender = (sex == SEX_MALE) ? 'M' : ((sex == SEX_FEMALE) ? 'F' : 'U');
@@ -3009,7 +3013,7 @@ static void char_read_fame_list(void)
 		memcpy(chemist_fame_list[i].name, data, min(len, NAME_LENGTH));
 	}
 	// Build Taekwon ranking list
-	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `char_id`,`fame`,`name` FROM `%s` WHERE `fame`>0 AND (`class`='%d') ORDER BY `fame` DESC LIMIT 0,%d", char_db, JOB_TAEKWON, fame_list_size_taekwon) )
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `char_id`,`fame`,`name` FROM `%s` WHERE `fame`>0 AND (`class` in('%d', '%d')) ORDER BY `fame` DESC LIMIT 0,%d", char_db, JOB_TAEKWON, JOB_BABY_TAEKWON, fame_list_size_taekwon) )
 		Sql_ShowDebug(inter->sql_handle);
 	for( i = 0; i < fame_list_size_taekwon && SQL_SUCCESS == SQL->NextRow(inter->sql_handle); ++i )
 	{
@@ -3614,7 +3618,7 @@ static void char_parse_frommap_change_account(int fd)
 
 	int acc = RFIFOL(fd,2); // account_id of who ask (-1 if server itself made this request)
 	const char *name = RFIFOP(fd,6); // name of the target character
-	int type = RFIFOW(fd,30); // type of operation: 1-block, 2-ban, 3-unblock, 4-unban, 5 changesex, 6 charban, 7 charunban
+	enum zh_char_ask_name_type type = RFIFOW(fd,30); // type of operation: 1-block, 2-ban, 3-unblock, 4-unban, 5 changesex, 6 charban, 7 charunban
 	short year = 0, month = 0, day = 0, hour = 0, minute = 0, second = 0;
 	int sex = SEX_MALE;
 	if (type == 2 || type == 6) {
