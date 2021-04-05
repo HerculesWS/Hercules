@@ -1805,6 +1805,7 @@ struct s_skill_db {
 	int unit_interval[MAX_SKILL_LEVEL];
 	int unit_target[MAX_SKILL_LEVEL];
 	int unit_flag;
+	sc_type status_type;
 	struct skill_required_item_data req_items;
 	struct skill_required_item_data req_equip;
 };
@@ -2047,6 +2048,7 @@ struct skill_interface {
 	/* whether its CAST_GROUND, CAST_DAMAGE or CAST_NODAMAGE */
 	int (*get_casttype) (int skill_id);
 	int (*get_casttype2) (int index);
+	sc_type (*get_sc_type) (int skill_id);
 	bool (*is_combo) (int skill_id);
 	int (*name2id) (const char* name);
 	int (*isammotype) (struct map_session_data *sd, int skill_id, int skill_lv);
@@ -2225,6 +2227,7 @@ struct skill_interface {
 	int (*validate_unit_target_sub) (const char *target);
 	void (*validate_unit_target) (struct config_setting_t *conf, struct s_skill_db *sk);
 	void (*validate_unit) (struct config_setting_t *conf, struct s_skill_db *sk);
+	void (*validate_status_change) (struct config_setting_t *conf, struct s_skill_db *sk);
 	void (*validate_additional_fields) (struct config_setting_t *conf, struct s_skill_db *sk);
 	bool (*read_skilldb) (const char *filename);
 	void (*config_set_level) (struct config_setting_t *conf, int *arr);

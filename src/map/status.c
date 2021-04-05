@@ -68,21 +68,6 @@ static struct s_status_dbs statusdbs;
 struct status_interface *status;
 
 /**
- * Returns the status change associated with a skill.
- * @param skill The skill to look up
- * @return The status registered for this skill
- */
-static sc_type status_skill2sc(int skill_id)
-{
-	int idx;
-	if( (idx = skill->get_index(skill_id)) == 0 ) {
-		ShowError("status_skill2sc: Unsupported skill id %d\n", skill_id);
-		return SC_NONE;
-	}
-	return status->dbs->Skill2SCTable[idx];
-}
-
-/**
  * Returns the FIRST skill (in order of definition in initChangeTables) to use a given status change.
  * Utilized for various duration lookups. Use with caution!
  * @param sc The status to look up
@@ -151,9 +136,6 @@ static void initChangeTables(void)
 #define set_sc_with_vfx(sc, flag) do { status->set_sc( (sc), (flag)); status->dbs->IconChangeTable[sc].relevant_bl_types |= BL_SCEFFECT; } while(0)
 
 	int i;
-
-	for (i = 0; i < MAX_SKILL_DB; i++)
-		status->dbs->Skill2SCTable[i] = SC_NONE;
 
 	for (i = 0; i < SC_MAX; i++) {
 		status->dbs->IconChangeTable[i].id = SI_BLANK;
@@ -626,21 +608,21 @@ static void initChangeTables(void)
 	set_sc_with_vfx(SC_ILLUSIONDOPING, SCB_HIT);
 
 	// Storing the target job rather than simply SC_SOULLINK simplifies code later on.
-	status->dbs->Skill2SCTable[skill->get_index(SL_ALCHEMIST)]   = (sc_type)MAPID_ALCHEMIST,
-	status->dbs->Skill2SCTable[skill->get_index(SL_MONK)]        = (sc_type)MAPID_MONK,
-	status->dbs->Skill2SCTable[skill->get_index(SL_STAR)]        = (sc_type)MAPID_STAR_GLADIATOR,
-	status->dbs->Skill2SCTable[skill->get_index(SL_SAGE)]        = (sc_type)MAPID_SAGE,
-	status->dbs->Skill2SCTable[skill->get_index(SL_CRUSADER)]    = (sc_type)MAPID_CRUSADER,
-	status->dbs->Skill2SCTable[skill->get_index(SL_SUPERNOVICE)] = (sc_type)MAPID_SUPER_NOVICE,
-	status->dbs->Skill2SCTable[skill->get_index(SL_KNIGHT)]      = (sc_type)MAPID_KNIGHT,
-	status->dbs->Skill2SCTable[skill->get_index(SL_WIZARD)]      = (sc_type)MAPID_WIZARD,
-	status->dbs->Skill2SCTable[skill->get_index(SL_PRIEST)]      = (sc_type)MAPID_PRIEST,
-	status->dbs->Skill2SCTable[skill->get_index(SL_BARDDANCER)]  = (sc_type)MAPID_BARDDANCER,
-	status->dbs->Skill2SCTable[skill->get_index(SL_ROGUE)]       = (sc_type)MAPID_ROGUE,
-	status->dbs->Skill2SCTable[skill->get_index(SL_ASSASIN)]     = (sc_type)MAPID_ASSASSIN,
-	status->dbs->Skill2SCTable[skill->get_index(SL_BLACKSMITH)]  = (sc_type)MAPID_BLACKSMITH,
-	status->dbs->Skill2SCTable[skill->get_index(SL_HUNTER)]      = (sc_type)MAPID_HUNTER,
-	status->dbs->Skill2SCTable[skill->get_index(SL_SOULLINKER)]  = (sc_type)MAPID_SOUL_LINKER,
+	skill->dbs->db[skill->get_index(SL_ALCHEMIST)].status_type   = (sc_type)MAPID_ALCHEMIST,
+	skill->dbs->db[skill->get_index(SL_MONK)].status_type        = (sc_type)MAPID_MONK,
+	skill->dbs->db[skill->get_index(SL_STAR)].status_type        = (sc_type)MAPID_STAR_GLADIATOR,
+	skill->dbs->db[skill->get_index(SL_SAGE)].status_type        = (sc_type)MAPID_SAGE,
+	skill->dbs->db[skill->get_index(SL_CRUSADER)].status_type    = (sc_type)MAPID_CRUSADER,
+	skill->dbs->db[skill->get_index(SL_SUPERNOVICE)].status_type = (sc_type)MAPID_SUPER_NOVICE,
+	skill->dbs->db[skill->get_index(SL_KNIGHT)].status_type      = (sc_type)MAPID_KNIGHT,
+	skill->dbs->db[skill->get_index(SL_WIZARD)].status_type      = (sc_type)MAPID_WIZARD,
+	skill->dbs->db[skill->get_index(SL_PRIEST)].status_type      = (sc_type)MAPID_PRIEST,
+	skill->dbs->db[skill->get_index(SL_BARDDANCER)].status_type  = (sc_type)MAPID_BARDDANCER,
+	skill->dbs->db[skill->get_index(SL_ROGUE)].status_type       = (sc_type)MAPID_ROGUE,
+	skill->dbs->db[skill->get_index(SL_ASSASIN)].status_type     = (sc_type)MAPID_ASSASSIN,
+	skill->dbs->db[skill->get_index(SL_BLACKSMITH)].status_type  = (sc_type)MAPID_BLACKSMITH,
+	skill->dbs->db[skill->get_index(SL_HUNTER)].status_type      = (sc_type)MAPID_HUNTER,
+	skill->dbs->db[skill->get_index(SL_SOULLINKER)].status_type  = (sc_type)MAPID_SOUL_LINKER,
 
 	// Other SC which are not necessarily associated to skills.
 	status->dbs->ChangeFlagTable[SC_ATTHASTE_POTION1] |= SCB_ASPD;
@@ -1125,7 +1107,7 @@ static int status_damage(struct block_list *src, struct block_list *target, int6
 			status->revive(target, sc->data[SC_KAIZEL]->val2, 0);
 		status->change_clear(target,0);
 		clif->skill_nodamage(target,target,ALL_RESURRECTION,1,1);
-		sc_start(target,target,status->skill2sc(PR_KYRIE),100,10,time);
+		sc_start(target,target,skill->get_sc_type(PR_KYRIE),100,10,time);
 
 		if( target->type == BL_MOB )
 			BL_UCAST(BL_MOB, target)->state.rebirth = 1;
@@ -13243,7 +13225,7 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 
 					int rate;
 					if ((rate = pc->checkskill(sd, TK_SPTIME)) != 0)
-						sc_start(bl, bl, status->skill2sc(TK_SPTIME), 100, rate, skill->get_time(TK_SPTIME, rate));
+						sc_start(bl, bl, skill->get_sc_type(TK_SPTIME), 100, rate, skill->get_time(TK_SPTIME, rate));
 
 					if ((sd->job & MAPID_UPPERMASK) == MAPID_STAR_GLADIATOR
 						&& rnd() % 10000 < battle_config.sg_angel_skill_ratio) { //Angel of the Sun/Moon/Star
@@ -13768,7 +13750,7 @@ static bool status_read_scdb_libconfig_sub(struct config_setting_t *it, int idx,
 		status->dbs->IconChangeTable[status_id].id = SI_BLANK;
 
 
-	struct config_setting_t *sk = libconfig->setting_get_member(it, "Skills");
+	struct config_setting_t *sk = libconfig->setting_get_member(it, "Skill");
 	if (sk != NULL)
 		status->read_scdb_libconfig_sub_skill(sk, status_id, source);
 
@@ -13833,32 +13815,14 @@ static bool status_read_scdb_libconfig_sub_skill(struct config_setting_t *it, in
 	nullpo_retr(false, source);
 	Assert_retr(false, type > SC_NONE && type < SC_MAX);
 
-	if (!config_setting_is_aggregate(it)) {
-		ShowWarning("status_read_scdb_libconfig_sub_skill: skills for status (%d) must be a list, in (%s), ignoring..\n", type, source);
+	int skill_id = 0;
+	const char *skill_name = libconfig->setting_get_string(it);
+	if ((skill_id = skill->name2id(skill_name)) == 0) {
+		ShowWarning("status_read_scdb_libconfig_sub_skill: Unknown skill name (%s) found for status (%d), in (%s), ignoring..\n", skill_name, type, source);
 		return false;
 	}
 
-	const int len = libconfig->setting_length(it);
-	for (int i = 0; i < len; i++) {
-		int skill_id = 0;
-		const char *skill_name = libconfig->setting_get_string_elem(it, i);
-		if ((skill_id = skill->name2id(skill_name)) == 0) {
-			ShowWarning("status_read_scdb_libconfig_sub_skill: Unknown skill name (%s) found for status (%d), in (%s), ignoring..\n", skill_name, type, source);
-			continue;
-		}
-
-		if (status->dbs->SkillChangeTable[type] == 0)
-			status->dbs->SkillChangeTable[type] = skill_id;
-
-		int skill_idx = 0;
-		if ((skill_idx = skill->get_index(skill_id)) == 0) {
-			ShowWarning("status_read_scdb_libconfig_sub_skill: Invalid skill index (%d) found for status (%d), in (%s), ignoring..\n", skill_id, type, source);
-			continue;
-		}
-
-		if (status->dbs->Skill2SCTable[skill_idx] == SC_NONE)
-			status->dbs->Skill2SCTable[skill_idx] = type;
-	}
+	status->dbs->SkillChangeTable[type] = skill_id;
 	return true;
 }
 
@@ -13958,7 +13922,6 @@ void status_defaults(void)
 	status->natural_heal_diff_tick = 0;
 	/* funcs */
 	// for looking up associated data
-	status->skill2sc = status_skill2sc;
 	status->sc2skill = status_sc2skill;
 	status->sc2scb_flag = status_sc2scb_flag;
 	status->get_sc_relevant_bl_types = status_get_sc_relevant_bl_types;

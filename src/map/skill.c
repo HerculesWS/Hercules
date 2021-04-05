@@ -1156,6 +1156,13 @@ static int skill_get_range2(struct block_list *bl, int skill_id, int skill_lv)
 	return range;
 }
 
+static sc_type skill_get_sc_type(int skill_id)
+{
+	if (skill_id == 0)
+		return SC_NONE;
+	return skill->dbs->db[skill->get_index(skill_id)].status_type;
+}
+
 static int skill_calc_heal(struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, bool heal)
 {
 	int skill2_lv, hp;
@@ -1886,7 +1893,7 @@ static int skill_additional_effect(struct block_list *src, struct block_list *bl
 			break;
 
 		case NPC_PETRIFYATTACK:
-			sc_start4(src,bl,status->skill2sc(skill_id),50+10*skill_lv,
+			sc_start4(src,bl,skill->get_sc_type(skill_id),50+10*skill_lv,
 				skill_lv,0,0,skill->get_time(skill_id,skill_lv),
 				skill->get_time2(skill_id,skill_lv));
 			break;
@@ -1897,11 +1904,11 @@ static int skill_additional_effect(struct block_list *src, struct block_list *bl
 		case NPC_SILENCEATTACK:
 		case NPC_STUNATTACK:
 		case NPC_HELLPOWER:
-			sc_start(src,bl,status->skill2sc(skill_id),50+10*skill_lv,skill_lv,skill->get_time2(skill_id,skill_lv));
+			sc_start(src,bl,skill->get_sc_type(skill_id),50+10*skill_lv,skill_lv,skill->get_time2(skill_id,skill_lv));
 			break;
 		case NPC_ACIDBREATH:
 		case NPC_ICEBREATH:
-			sc_start(src,bl,status->skill2sc(skill_id),70,skill_lv,skill->get_time2(skill_id,skill_lv));
+			sc_start(src,bl,skill->get_sc_type(skill_id),70,skill_lv,skill->get_time2(skill_id,skill_lv));
 			break;
 		case NPC_BLEEDING:
 			sc_start2(src,bl,SC_BLOODING,(20*skill_lv),skill_lv,src->id,skill->get_time2(skill_id,skill_lv));
@@ -1955,7 +1962,7 @@ static int skill_additional_effect(struct block_list *src, struct block_list *bl
 
 		case LK_JOINTBEAT:
 			if (tsc->jb_flag) {
-				enum sc_type type = status->skill2sc(skill_id);
+				enum sc_type type = skill->get_sc_type(skill_id);
 				sc_start4(src,bl,type,(5*skill_lv+5),skill_lv,tsc->jb_flag&BREAK_FLAGS,src->id,0,skill->get_time2(skill_id,skill_lv));
 				tsc->jb_flag = 0;
 			}
@@ -2244,7 +2251,7 @@ static int skill_additional_effect(struct block_list *src, struct block_list *bl
 			break;
 		case EL_ROCK_CRUSHER:
 		case EL_ROCK_CRUSHER_ATK:
-			sc_start(src, bl,status->skill2sc(skill_id),50,skill_lv,skill->get_time(EL_ROCK_CRUSHER,skill_lv));
+			sc_start(src, bl,skill->get_sc_type(skill_id),50,skill_lv,skill->get_time(EL_ROCK_CRUSHER,skill_lv));
 			break;
 		case EL_TYPOON_MIS:
 			sc_start(src, bl,SC_SILENCE,10*skill_lv,skill_lv,skill->get_time(skill_id,skill_lv));
@@ -4592,7 +4599,7 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 
 	if (skill_id != 0 && skill->get_type(skill_id, skill_lv) == BF_MAGIC && status->isimmune(bl) == 100) {
 		//GTB makes all targeted magic display miss with a single bolt.
-		sc_type sct = status->skill2sc(skill_id);
+		sc_type sct = skill->get_sc_type(skill_id);
 		if(sct != SC_NONE)
 			status_change_end(bl, sct, INVALID_TIMER);
 		clif->skill_damage(src, bl, tick, status_get_amotion(src), status_get_dmotion(bl), 0, 1, skill_id, skill_lv, skill->get_hit(skill_id, skill_lv));
@@ -5234,7 +5241,7 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 
 		case NPC_MAGICALATTACK:
 			skill->attack(BF_MAGIC,src,src,bl,skill_id,skill_lv,tick,flag);
-			sc_start(src, src,status->skill2sc(skill_id),100,skill_lv,skill->get_time(skill_id,skill_lv));
+			sc_start(src, src,skill->get_sc_type(skill_id),100,skill_lv,skill->get_time(skill_id,skill_lv));
 			break;
 
 		case HVAN_CAPRICE: //[blackhole89]
@@ -5827,7 +5834,7 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 				struct elemental_data *ele = BL_CAST(BL_ELEM,src);
 				struct status_change *esc = status->get_sc(&ele->bl);
 				struct status_change *tsc = status->get_sc(bl);
-				sc_type type = status->skill2sc(skill_id), type2;
+				sc_type type = skill->get_sc_type(skill_id), type2;
 				type2 = type-1;
 
 				clif->skill_nodamage(src,battle->get_master(src),skill_id,skill_lv,1);
@@ -5878,7 +5885,7 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 				skill->addtimerskill(src, tick + skill->get_delay(skill_id, skill_lv), bl->id, 0, 0, skill_id, skill_lv, (skill_id == SU_SV_STEMSPEAR) ? BF_MAGIC : BF_WEAPON, flag);
 			break;
 		case SU_SCAROFTAROU:
-			sc_start(src, bl, status->skill2sc(skill_id), 10, skill_lv, skill->get_time(skill_id, skill_lv)); // TODO: What's the activation chance for the effect?
+			sc_start(src, bl, skill->get_sc_type(skill_id), 10, skill_lv, skill->get_time(skill_id, skill_lv)); // TODO: What's the activation chance for the effect?
 			break;
 
 		case 0:/* no skill - basic/normal attack */
@@ -6470,7 +6477,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 			break;
 	}
 
-	type = status->skill2sc(skill_id);
+	type = skill->get_sc_type(skill_id);
 	tsc = status->get_sc(bl);
 	tsce = (tsc != NULL && type != SC_NONE) ? tsc->data[type] : NULL;
 
@@ -11459,7 +11466,7 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 	sd = BL_CAST(BL_PC, src);
 
 	sc = status->get_sc(src);
-	type = status->skill2sc(skill_id);
+	type = skill->get_sc_type(skill_id);
 	sce = (sc != NULL && type != SC_NONE) ? sc->data[type] : NULL;
 
 	switch (skill_id) { //Skill effect.
@@ -12927,7 +12934,7 @@ static int skill_unit_onplace(struct skill_unit *src, struct block_list *bl, int
 	if ( sc && sc->data[SC_HOVERING] && ( sg->skill_id == SO_VACUUM_EXTREME || sg->skill_id == SO_ELECTRICWALK || sg->skill_id == SO_FIREWALK || sg->skill_id == WZ_QUAGMIRE ) )
 		return 0;
 
-	type = status->skill2sc(sg->skill_id);
+	type = skill->get_sc_type(sg->skill_id);
 	sce = (sc != NULL && type != SC_NONE) ? sc->data[type] : NULL;
 	skill_id = sg->skill_id; //In case the group is deleted, we need to return the correct skill id, still.
 	switch (sg->unit_id) {
@@ -13188,7 +13195,7 @@ static int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *b
 
 	tstatus = status->get_status_data(bl);
 	nullpo_ret(tstatus);
-	type = status->skill2sc(sg->skill_id);
+	type = skill->get_sc_type(sg->skill_id);
 	skill_id = sg->skill_id;
 
 	if ( tsc && tsc->data[SC_HOVERING] ) {
@@ -14007,7 +14014,7 @@ static int skill_unit_onout(struct skill_unit *src, struct block_list *bl, int64
 	nullpo_ret(bl);
 	nullpo_ret(sg=src->group);
 	sc = status->get_sc(bl);
-	type = status->skill2sc(sg->skill_id);
+	type = skill->get_sc_type(sg->skill_id);
 	sce = (sc != NULL && type != SC_NONE) ? sc->data[type] : NULL;
 
 	if( bl->prev == NULL
@@ -14072,7 +14079,7 @@ static int skill_unit_onleft(uint16 skill_id, struct block_list *bl, int64 tick)
 	if (sc && !sc->count)
 		sc = NULL;
 
-	type = status->skill2sc(skill_id);
+	type = skill->get_sc_type(skill_id);
 	sce = (sc != NULL && type != SC_NONE) ? sc->data[type] : NULL;
 
 	switch (skill_id) {
@@ -14617,7 +14624,7 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 		case RA_WUGDASH:
 		case KO_YAMIKUMO:
 		case SU_HIDE:
-			if (sc && sc->data[status->skill2sc(skill_id)])
+			if (sc && sc->data[skill->get_sc_type(skill_id)])
 				return 1;
 			FALLTHROUGH
 		default:
@@ -15959,7 +15966,7 @@ static struct skill_condition skill_get_requirement(struct map_session_data *sd,
 		case SG_FUSION:
 		case KO_YAMIKUMO:
 		case SU_HIDE:
-			if (sc && sc->data[status->skill2sc(skill_id)])
+			if (sc && sc->data[skill->get_sc_type(skill_id)])
 				return req;
 			/* Fall through */
 		default:
@@ -23628,6 +23635,29 @@ static void skill_validate_unit_target(struct config_setting_t *conf, struct s_s
 }
 
 /**
+ * Validates a skill's status change when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the unit data should be set it.
+ *
+ **/
+static void skill_validate_status_change(struct config_setting_t *conf, struct s_skill_db *sk)
+{
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	int status_id = SC_NONE;
+	const char *name = NULL;
+	libconfig->setting_lookup_string(conf, "StatusChange", &name);
+
+	if (name != NULL && (!script->get_constant(name, &status_id) || status_id <= SC_NONE || status_id >= SC_MAX)) {
+		ShowWarning("%s: Invalid status change %s specified for skill ID %d in %s! Defaulting to SC_NONE...\n", __func__, name, sk->nameid, conf->file);
+		status_id = SC_NONE;
+	}
+	sk->status_type = status_id;
+}
+
+/**
  * Validates a skill's unit data when reading the skill DB.
  *
  * @param conf The libconfig settings block which contains the skill's data.
@@ -23742,6 +23772,7 @@ static bool skill_read_skilldb(const char *filename)
 		skill->validate_castnodex(conf, &tmp_db, true);
 		skill->validate_requirements(conf, &tmp_db);
 		skill->validate_unit(conf, &tmp_db);
+		skill->validate_status_change(conf, &tmp_db);
 
 		/** Validate additional fields for plugins. **/
 		skill->validate_additional_fields(conf, &tmp_db);
@@ -23979,6 +24010,7 @@ void skill_defaults(void)
 	skill->get_desc = skill_get_desc;
 	skill->get_casttype = skill_get_casttype;
 	skill->get_casttype2 = skill_get_casttype2;
+	skill->get_sc_type = skill_get_sc_type;
 	skill->is_combo = skill_is_combo;
 	skill->name2id = skill_name2id;
 	skill->isammotype = skill_isammotype;
@@ -24158,6 +24190,7 @@ void skill_defaults(void)
 	skill->validate_unit_target_sub = skill_validate_unit_target_sub;
 	skill->validate_unit_target = skill_validate_unit_target;
 	skill->validate_unit = skill_validate_unit;
+	skill->validate_status_change = skill_validate_status_change;
 	skill->validate_additional_fields = skill_validate_additional_fields;
 	skill->read_skilldb = skill_read_skilldb;
 	skill->config_set_level = skill_config_set_level;
