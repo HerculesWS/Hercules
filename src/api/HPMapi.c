@@ -70,11 +70,6 @@
  */
 bool HPM_api_data_store_validate(enum HPluginDataTypes type, struct hplugin_data_store **storeptr, bool initialize)
 {
-	switch (type) {
-		// No supported types at the moment.
-		default:
-			break;
-	}
 	return false;
 }
 
