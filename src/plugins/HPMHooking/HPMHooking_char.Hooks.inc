@@ -7058,11 +7058,11 @@ bool HP_inter_guild_update_member_info_short(int guild_id, int account_id, int c
 	}
 	return retVal___;
 }
-bool HP_inter_guild_update_member_info(int guild_id, int account_id, int char_id, int type, const char *data, int len) {
+bool HP_inter_guild_update_member_info(int guild_id, int account_id, int char_id, enum guild_member_info type, const char *data, int len) {
 	int hIndex = 0;
 	bool retVal___ = false;
 	if (HPMHooks.count.HP_inter_guild_update_member_info_pre > 0) {
-		bool (*preHookFunc) (int *guild_id, int *account_id, int *char_id, int *type, const char **data, int *len);
+		bool (*preHookFunc) (int *guild_id, int *account_id, int *char_id, enum guild_member_info *type, const char **data, int *len);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_guild_update_member_info_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_inter_guild_update_member_info_pre[hIndex].func;
@@ -7077,7 +7077,7 @@ bool HP_inter_guild_update_member_info(int guild_id, int account_id, int char_id
 		retVal___ = HPMHooks.source.inter_guild.update_member_info(guild_id, account_id, char_id, type, data, len);
 	}
 	if (HPMHooks.count.HP_inter_guild_update_member_info_post > 0) {
-		bool (*postHookFunc) (bool retVal___, int guild_id, int account_id, int char_id, int type, const char *data, int len);
+		bool (*postHookFunc) (bool retVal___, int guild_id, int account_id, int char_id, enum guild_member_info type, const char *data, int len);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_guild_update_member_info_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_inter_guild_update_member_info_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, guild_id, account_id, char_id, type, data, len);
@@ -7112,11 +7112,11 @@ bool HP_inter_guild_disband(int guild_id) {
 	}
 	return retVal___;
 }
-bool HP_inter_guild_update_basic_info(int guild_id, int type, const void *data, int len) {
+bool HP_inter_guild_update_basic_info(int guild_id, enum guild_basic_info type, const void *data, int len) {
 	int hIndex = 0;
 	bool retVal___ = false;
 	if (HPMHooks.count.HP_inter_guild_update_basic_info_pre > 0) {
-		bool (*preHookFunc) (int *guild_id, int *type, const void **data, int *len);
+		bool (*preHookFunc) (int *guild_id, enum guild_basic_info *type, const void **data, int *len);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_guild_update_basic_info_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_inter_guild_update_basic_info_pre[hIndex].func;
@@ -7131,7 +7131,7 @@ bool HP_inter_guild_update_basic_info(int guild_id, int type, const void *data, 
 		retVal___ = HPMHooks.source.inter_guild.update_basic_info(guild_id, type, data, len);
 	}
 	if (HPMHooks.count.HP_inter_guild_update_basic_info_post > 0) {
-		bool (*postHookFunc) (bool retVal___, int guild_id, int type, const void *data, int len);
+		bool (*postHookFunc) (bool retVal___, int guild_id, enum guild_basic_info type, const void *data, int len);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_guild_update_basic_info_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_inter_guild_update_basic_info_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, guild_id, type, data, len);

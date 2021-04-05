@@ -6778,6 +6778,8 @@ struct {
 	struct HPMHookPoint *HP_status_base_matk_min_post;
 	struct HPMHookPoint *HP_status_base_matk_max_pre;
 	struct HPMHookPoint *HP_status_base_matk_max_post;
+	struct HPMHookPoint *HP_status_check_job_bonus_pre;
+	struct HPMHookPoint *HP_status_check_job_bonus_post;
 	struct HPMHookPoint *HP_storage_reconnect_pre;
 	struct HPMHookPoint *HP_storage_reconnect_post;
 	struct HPMHookPoint *HP_storage_delitem_pre;
@@ -13863,6 +13865,8 @@ struct {
 	int HP_status_base_matk_min_post;
 	int HP_status_base_matk_max_pre;
 	int HP_status_base_matk_max_post;
+	int HP_status_check_job_bonus_pre;
+	int HP_status_check_job_bonus_post;
 	int HP_storage_reconnect_pre;
 	int HP_storage_reconnect_post;
 	int HP_storage_delitem_pre;

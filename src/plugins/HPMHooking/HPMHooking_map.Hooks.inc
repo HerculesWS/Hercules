@@ -10020,10 +10020,10 @@ void HP_clif_fixpos(struct block_list *bl) {
 	}
 	return;
 }
-void HP_clif_changelook(struct block_list *bl, int type, int val) {
+void HP_clif_changelook(struct block_list *bl, enum look type, int val) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_changelook_pre > 0) {
-		void (*preHookFunc) (struct block_list **bl, int *type, int *val);
+		void (*preHookFunc) (struct block_list **bl, enum look *type, int *val);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_changelook_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_clif_changelook_pre[hIndex].func;
@@ -10038,7 +10038,7 @@ void HP_clif_changelook(struct block_list *bl, int type, int val) {
 		HPMHooks.source.clif.changelook(bl, type, val);
 	}
 	if (HPMHooks.count.HP_clif_changelook_post > 0) {
-		void (*postHookFunc) (struct block_list *bl, int type, int val);
+		void (*postHookFunc) (struct block_list *bl, enum look type, int val);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_changelook_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_changelook_post[hIndex].func;
 			postHookFunc(bl, type, val);
@@ -36043,11 +36043,11 @@ struct view_data* HP_homun_get_viewdata(int class_) {
 	}
 	return retVal___;
 }
-enum homun_type HP_homun_class2type(int class_) {
+enum homun_type HP_homun_class2type(enum homun_id class_) {
 	int hIndex = 0;
 	enum homun_type retVal___ = HT_INVALID;
 	if (HPMHooks.count.HP_homun_class2type_pre > 0) {
-		enum homun_type (*preHookFunc) (int *class_);
+		enum homun_type (*preHookFunc) (enum homun_id *class_);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_homun_class2type_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_homun_class2type_pre[hIndex].func;
@@ -36062,7 +36062,7 @@ enum homun_type HP_homun_class2type(int class_) {
 		retVal___ = HPMHooks.source.homun.class2type(class_);
 	}
 	if (HPMHooks.count.HP_homun_class2type_post > 0) {
-		enum homun_type (*postHookFunc) (enum homun_type retVal___, int class_);
+		enum homun_type (*postHookFunc) (enum homun_type retVal___, enum homun_id class_);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_homun_class2type_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_homun_class2type_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, class_);
@@ -36713,11 +36713,11 @@ bool HP_homun_change_name_ack(struct map_session_data *sd, const char *name, int
 	}
 	return retVal___;
 }
-int HP_homun_db_search(int key, int type) {
+int HP_homun_db_search(int key, enum HOMUN_TYPE type) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_homun_db_search_pre > 0) {
-		int (*preHookFunc) (int *key, int *type);
+		int (*preHookFunc) (int *key, enum HOMUN_TYPE *type);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_homun_db_search_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_homun_db_search_pre[hIndex].func;
@@ -36732,7 +36732,7 @@ int HP_homun_db_search(int key, int type) {
 		retVal___ = HPMHooks.source.homun.db_search(key, type);
 	}
 	if (HPMHooks.count.HP_homun_db_search_post > 0) {
-		int (*postHookFunc) (int retVal___, int key, int type);
+		int (*postHookFunc) (int retVal___, int key, enum HOMUN_TYPE type);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_homun_db_search_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_homun_db_search_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, key, type);
@@ -42621,11 +42621,11 @@ int HP_itemdb_searchrandomid(struct item_group *group) {
 	}
 	return retVal___;
 }
-const char* HP_itemdb_typename(int type) {
+const char* HP_itemdb_typename(enum item_types type) {
 	int hIndex = 0;
 	const char* retVal___ = NULL;
 	if (HPMHooks.count.HP_itemdb_typename_pre > 0) {
-		const char* (*preHookFunc) (int *type);
+		const char* (*preHookFunc) (enum item_types *type);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_typename_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_itemdb_typename_pre[hIndex].func;
@@ -42640,7 +42640,7 @@ const char* HP_itemdb_typename(int type) {
 		retVal___ = HPMHooks.source.itemdb.typename(type);
 	}
 	if (HPMHooks.count.HP_itemdb_typename_post > 0) {
-		const char* (*postHookFunc) (const char* retVal___, int type);
+		const char* (*postHookFunc) (const char* retVal___, enum item_types type);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_typename_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_itemdb_typename_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, type);
@@ -80324,10 +80324,10 @@ int HP_skill_arrow_create(struct map_session_data *sd, int nameid) {
 	}
 	return retVal___;
 }
-void HP_skill_castend_type(int type, struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag) {
+void HP_skill_castend_type(enum cast_enum type, struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_skill_castend_type_pre > 0) {
-		void (*preHookFunc) (int *type, struct block_list **src, struct block_list **bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag);
+		void (*preHookFunc) (enum cast_enum *type, struct block_list **src, struct block_list **bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_castend_type_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_skill_castend_type_pre[hIndex].func;
@@ -80342,7 +80342,7 @@ void HP_skill_castend_type(int type, struct block_list *src, struct block_list *
 		HPMHooks.source.skill.castend_type(type, src, bl, skill_id, skill_lv, tick, flag);
 	}
 	if (HPMHooks.count.HP_skill_castend_type_post > 0) {
-		void (*postHookFunc) (int type, struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag);
+		void (*postHookFunc) (enum cast_enum type, struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_castend_type_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_skill_castend_type_post[hIndex].func;
 			postHookFunc(type, src, bl, skill_id, skill_lv, tick, flag);
@@ -90650,6 +90650,32 @@ int HP_status_base_matk_max(const struct status_data *st) {
 		}
 	}
 	return retVal___;
+}
+void HP_status_check_job_bonus(int idx, const char *name, int class) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_status_check_job_bonus_pre > 0) {
+		void (*preHookFunc) (int *idx, const char **name, int *class);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_check_job_bonus_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_status_check_job_bonus_pre[hIndex].func;
+			preHookFunc(&idx, &name, &class);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.status.check_job_bonus(idx, name, class);
+	}
+	if (HPMHooks.count.HP_status_check_job_bonus_post > 0) {
+		void (*postHookFunc) (int idx, const char *name, int class);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_check_job_bonus_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_status_check_job_bonus_post[hIndex].func;
+			postHookFunc(idx, name, class);
+		}
+	}
+	return;
 }
 /* storage_interface */
 void HP_storage_reconnect(void) {
