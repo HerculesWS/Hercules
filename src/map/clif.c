@@ -13236,14 +13236,14 @@ static void clif_parse_UseSkillToPosSub(int fd, struct map_session_data *sd, uin
 
 	pc->autocast_set_current(sd, skill_id);
 
-	/**
+	/*
 	 * When using clif_item_skill() to initiate the execution of ground skills,
-	 * the client sometimes passes 0 for the skill level in packet 0x0af4.
+	 * the client sometimes passes 0 for the skill level in packet 0x0af4 (and in some clients,
+	 * this may be memory garbage instead of 0).
 	 * In that case sd->autocast.skill_lv is used for the auto-cast data validation,
 	 * since clif_item_skill() is only used for auto-cast skills.
-	 *
-	 **/
-	skill->validate_autocast_data(sd, skill_id, (skill_lv == 0) ? sd->auto_cast_current.skill_lv : skill_lv);
+	 */
+	skill->validate_autocast_data(sd, skill_id, (skill_lv == 0 || skill_lv > MAX_SKILL_LEVEL) ? sd->auto_cast_current.skill_lv : skill_lv);
 
 	if( !(skill->get_inf(skill_id)&INF_GROUND_SKILL) )
 		return; //Using a target skill on the ground? WRONG.
