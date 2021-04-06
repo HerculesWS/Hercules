@@ -22,6 +22,53 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
+## [v2021.04.05] `April 05 2021`
+
+### Added
+
+- Added new `SP_*` constants in preparation for adding 4th jobs and reformatted the `status_point_types` enum to have one entry per line, with their respective values. (part of #2968)
+- Added support for the Baby Summoner job class. (part of #2968)
+- Added support for the Baby Ninja job class. (part of #2968)
+- Added support for the Baby Kagerou and Baby Oboro job classes. (part of #2968)
+- Added support for the Baby Taekwon job class. (part of #2968)
+- Added support for the Baby Star Gladiator job class. (part of #2968)
+- Added support for the Baby Soul Linker job class. (part of #2968)
+- Added support for the Baby Gunslinger job class. (part of #2968)
+- Added support for the Baby Rebellion job class. (part of #2968)
+- Added support for the Star Emperor job class and related skill ID constants and skill database entries. Skill ID conflicts between Star Emperor and Rebellion were solved in favor of the former for renewal and the latter for pre-renewal for the time being. (part of #2968)
+- Added support for the Baby Star Emperor job class. (part of #2968)
+- Added support for the Soul Reaper job class and related skill ID constants and skill database entries. (part of #2968)
+- Added support for the Baby Soul Reaper job class. (part of #2968)
+
+### Changed
+
+- Moved the mappings between skills and status changes (`Skill2SC` table) into the `StatusChange` field of the skill database. The `Skills` field of the `sc_config` is renamed to `Skill` and limited to one associated skill per SC. (#2971)
+- Added the corresponding numeric value next to each entry in the `e_class` enum, to prevent accidental renumbering and to make lookup easier. (part of #2968)
+- Added some missing constants for job IDs or separators in the `e_class` enum. (part of #2968)
+- Improved validation of the `class_exp_table` of the `job_db` with additional sanity checks. (part of #2968)
+- Moved the `EAJ_*` constants from `constants.conf` to the source and added the ones that were missing (`EAJ_WEDDING`, `EAJ_XMAS`, `EAJ_SUMMER`, `EAJ_BABY_SUMMONER`). (part of #2968)
+- Changed the warning message displayed when a constant is redefined with the same value as previously defined to mention that it has the same value. (part of #2968)
+- Renamed the `job_name()` function to `pc_job_name()`. The public interface name is still `pc->job_name()`. (part of #2968)
+- Moved the job enum values into separate files (`common/class.h`, `common/class_special.h` and `common/class_hidden.h`), to be accessed through the `ENUM_VALUE()` X-macro and reduce repetition. (part of #2968)
+- Added the `-Wswitch-enum` warning to the default compiler settings (with an exception for libbacktrace). (part of #2968)
+- Improved validation of `job_db2`, now detecting missing jobs. (part of #2968)
+- Changed some function parameters from integers to the appropriate enums. (part of #2968)
+- Split the status change config into renewal and pre-renewal. (part of #2963)
+- De-hardcoded the status change calculation flags, moving them from the source to the `CalcFlags` field of the `sc_config`. (#2963)
+
+### Fixed
+
+- Fixed a regression in the association between skills and status changes. (part of #2971, issue #2969)
+- Added support for the Summoner job to the `db2sql` plugin. (part of #2968)
+- Fixed validation of the skills cast through Abracadabra (Hocus Pocus). (#2972, related to #2859, issue #2824)
+- Fixed validation of the skills cast through Improvised Song. (#2972, related to #2859, issue #2823)
+- Worked around a client issue (packet containing garbage) that prevented proper validation of the Warp Portal skill use request when cast through Abracadabra, causing the caster to get stuck and unable to cast any other skills until relogging or teleporting. (#2972)
+
+### Removed
+
+- Removed the unused `FixedCastTime` field from the pre-renewal skill DB. (part of #2968)
+- Removed the `status->set_sc()` function, no longer needed. (part of #2963)
+
 ## [v2021.03.08] `March 08 2021`
 
 ### Added
@@ -1831,6 +1878,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2021.04.05]: https://github.com/HerculesWS/Hercules/compare/v2021.03.08...v2021.04.05
 [v2021.03.08]: https://github.com/HerculesWS/Hercules/compare/v2021.02.08...v2021.03.08
 [v2021.02.08]: https://github.com/HerculesWS/Hercules/compare/v2021.01.11...v2021.02.08
 [v2021.01.11]: https://github.com/HerculesWS/Hercules/compare/v2020.12.14+1...v2021.01.11
