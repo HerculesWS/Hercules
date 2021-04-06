@@ -6704,6 +6704,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 					VECTOR_ENSURE(sd->auto_cast, 1, 1);
 					VECTOR_PUSH(sd->auto_cast, sd->auto_cast_current);
 					clif->item_skill(sd, abra_skill_id, abra_skill_lv);
+					pc->autocast_clear_current(sd);
 				} else {
 					// mob-casted
 					struct unit_data *ud = unit->bl2ud(src);
@@ -10487,6 +10488,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 					VECTOR_ENSURE(sd->auto_cast, 1, 1);
 					VECTOR_PUSH(sd->auto_cast, sd->auto_cast_current);
 					clif->item_skill(sd, improv_skill_id, improv_skill_lv);
+					pc->autocast_clear_current(sd);
 				} else {
 					struct unit_data *ud = unit->bl2ud(src);
 					int inf = skill->get_inf(improv_skill_id);
@@ -14625,6 +14627,9 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 		return 1;
 	}
 
+	if ((sd->auto_cast_current.type == AUTOCAST_ABRA || sd->auto_cast_current.type == AUTOCAST_IMPROVISE) && sd->auto_cast_current.skill_id == skill_id)
+		return 1;
+
 	if (pc_has_permission(sd, PC_PERM_SKILL_UNCONDITIONAL) && sd->auto_cast_current.type != AUTOCAST_ITEM) {
 		// GMs don't override the AUTOCAST_ITEM check, otherwise they can use items without them being consumed!
 		sd->state.arrow_atk = skill->get_ammotype(skill_id)?1:0; //Need to do arrow state check.
@@ -15714,6 +15719,9 @@ static int skill_check_condition_castend(struct map_session_data *sd, uint16 ski
 	    && sd->auto_cast_current.type == AUTOCAST_ITEM) || sd->auto_cast_current.type == AUTOCAST_IMPROVISE) {
 		return 1;
 	}
+
+	if ((sd->auto_cast_current.type == AUTOCAST_ABRA || sd->auto_cast_current.type == AUTOCAST_IMPROVISE) && sd->auto_cast_current.skill_id == skill_id)
+		return 1;
 
 	if (pc_has_permission(sd, PC_PERM_SKILL_UNCONDITIONAL) && sd->auto_cast_current.type != AUTOCAST_ITEM) {
 		// GMs don't override the AUTOCAST_ITEM check, otherwise they can use items without them being consumed!
