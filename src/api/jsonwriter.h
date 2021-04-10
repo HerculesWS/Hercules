@@ -38,6 +38,7 @@ struct jsonwriter_interface {
 	void (*final) (void);
 
 	JsonW *(*create) (const char *text);
+	JsonW *(*create_empty) (void);
 	JsonW *(*new_array) (void);
 	JsonW *(*new_object) (void);
 	JsonW *(*new_string) (const char *str);

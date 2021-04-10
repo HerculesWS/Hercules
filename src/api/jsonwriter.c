@@ -49,6 +49,11 @@ static JsonW *jsonwriter_create(const char *text)
 	return cJSON_Parse(text);
 }
 
+static JsonW *jsonwriter_create_empty(void)
+{
+	return cJSON_Parse("{}");
+}
+
 JsonW *jsonwriter_new_array(void)
 {
 	return cJSON_CreateArray();
@@ -257,6 +262,7 @@ void jsonwriter_defaults(void)
 	jsonwriter->init = do_init_jsonwriter;
 	jsonwriter->final = do_final_jsonwriter;
 	jsonwriter->create = jsonwriter_create;
+	jsonwriter->create_empty = jsonwriter_create_empty;
 	jsonwriter->new_array = jsonwriter_new_array;
 	jsonwriter->new_object = jsonwriter_new_object;
 	jsonwriter->new_string = jsonwriter_new_string;
