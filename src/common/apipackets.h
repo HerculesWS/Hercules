@@ -151,7 +151,7 @@ struct PACKET_API_emblem_download {
 	struct PACKET_API_emblem_download_data data;
 } __attribute__((packed));
 
-struct PACKET_API_party_add_data {
+struct party_add_data {
 	char char_name[NAME_LENGTH];
 	char message[NAME_LENGTH];
 	int type;
@@ -161,6 +161,10 @@ struct PACKET_API_party_add_data {
 	char assist;
 	char tanker;
 	char dealer;
+} __attribute__((packed));
+
+struct PACKET_API_party_add_data {
+	struct party_add_data entry;
 } __attribute__((packed));
 
 struct PACKET_API_party_add {
@@ -195,6 +199,10 @@ struct PACKET_API_REPLY_emblem_upload {
 struct PACKET_API_REPLY_emblem_download {
 	uint8 flag;
 	char data[];
+} __attribute__((packed));
+
+struct PACKET_API_REPLY_party_add {
+	int result;
 } __attribute__((packed));
 
 #define WFIFO_APICHAR_SIZE sizeof(struct PACKET_API_PROXY)

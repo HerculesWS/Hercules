@@ -25,6 +25,7 @@
 
 #include "char/char.h"
 #include "char/mapif.h"
+#include "char/int_adventurer_agency.h"
 #include "char/int_guild.h"
 #include "char/int_userconfig.h"
 #include "common/api.h"
@@ -105,6 +106,9 @@ static int capiif_parse_fromlogin_api_proxy(int fd)
 			break;
 		case API_MSG_userconfig_load_hotkeys:
 			capiif->parse_userconfig_load_hotkeys(fd);
+			break;
+		case API_MSG_party_add:
+			capiif->parse_party_add(fd);
 			break;
 		default:
 			ShowError("Unknown proxy packet 0x%04x received from login-server, disconnecting.\n", command);
@@ -271,6 +275,20 @@ void capiif_parse_userconfig_load_hotkeys(int fd)
 	WFIFOSET(chr->login_fd, packet->packet_len);
 }
 
+void capiif_parse_party_add(int fd)
+{
+	RFIFO_API_DATA(rdata, party_add_data);
+	RFIFO_API_PROXY_PACKET(p);
+	WFIFO_APICHAR_PACKET_REPLY(party_add);
+
+	if (inter_adventurer_agency->entry_add(p->char_id, &rdata->entry))
+		data->result = 1;
+	else
+		data->result = 0;
+
+	WFIFOSET(chr->login_fd, packet->packet_len);
+}
+
 static void do_init_capiif(void)
 {
 }
@@ -295,4 +313,5 @@ void capiif_defaults(void) {
 	capiif->parse_emblem_download = capiif_parse_emblem_download;
 	capiif->parse_userconfig_save_userhotkey_v2 = capiif_parse_userconfig_save_userhotkey_v2;
 	capiif->parse_userconfig_load_hotkeys = capiif_parse_userconfig_load_hotkeys;
+	capiif->parse_party_add = capiif_parse_party_add;
 }

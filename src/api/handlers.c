@@ -90,6 +90,8 @@
 		aclif->terminate_connection(fd); \
 		return false; \
 	}
+#define GET_STR_HEADER_EMPTY(name, var, varSize) aclif->get_valid_header_data_str(sd, CONST_POST_ ## name, POST_ ## name, var, varSize);
+
 #define RET_INT_HEADER(name, def) aclif->ret_valid_header_data_int(sd, CONST_POST_ ## name, POST_ ## name, def);
 #define GET_INT_HEADER(name, var) aclif->get_valid_header_data_int(sd, CONST_POST_ ## name, POST_ ## name, var);
 
@@ -384,6 +386,7 @@ HTTPURL(party_list)
 
 	JsonW *json = jsonwriter->create("{\"totalPage\":0,\"data\":[],\"Type\":1}");
 	httpsender->send_json(fd, json);
+	jsonwriter->delete(json);
 
 	return true;
 }
@@ -399,11 +402,28 @@ HTTPURL(party_get)
 
 	JsonW *json = jsonwriter->create("{\"Type\":1}");
 	httpsender->send_json(fd, json);
+	jsonwriter->delete(json);
+	aclif->terminate_connection(fd);
 
 	return true;
 }
 
-IGNORE_DATA(party_add)
+DATA(party_add)
+{
+	GET_DATA(p, party_add);
+	ShowError("result: %d\n", p->result);
+
+	JsonW *json = jsonwriter->create_empty();
+	jsonwriter->add_new_number(json, "Type", p->result);
+
+#ifdef DEBUG_LOG
+	jsonwriter->print(json);
+#endif
+
+	httpsender->send_json(fd, json);
+	jsonwriter->delete(json);
+	aclif->terminate_connection(fd);
+}
 
 HTTPURL(party_add)
 {
@@ -416,16 +436,19 @@ HTTPURL(party_add)
 	CREATE_DATA(data, party_add);
 
 	GET_STR_HEADER(CHAR_NAME, &text, NULL);
-	safestrncpy(data.char_name, text, NAME_LENGTH);
-	GET_STR_HEADER(MEMO, &text, NULL);
-	safestrncpy(data.message, text, NAME_LENGTH);
-	data.type = RET_INT_HEADER(TYPE, 0);
-	data.min_level = RET_INT_HEADER(MINLV, 0);
-	data.max_level = RET_INT_HEADER(MAXLV, 0);
-	data.healer = RET_INT_HEADER(HEALER, 0);
-	data.assist = RET_INT_HEADER(ASSIST, 0);
-	data.tanker = RET_INT_HEADER(TANKER, 0);
-	data.dealer = RET_INT_HEADER(DEALER, 0);
+	safestrncpy(data.entry.char_name, text, NAME_LENGTH);
+	GET_STR_HEADER_EMPTY(MEMO, &text, NULL);
+	if (text != NULL)
+		safestrncpy(data.entry.message, text, NAME_LENGTH);
+	else
+		memset(data.entry.message, 0, NAME_LENGTH);
+	data.entry.type = RET_INT_HEADER(TYPE, 0);
+	data.entry.min_level = RET_INT_HEADER(MINLV, 0);
+	data.entry.max_level = RET_INT_HEADER(MAXLV, 0);
+	data.entry.healer = RET_INT_HEADER(HEALER, 0);
+	data.entry.assist = RET_INT_HEADER(ASSIST, 0);
+	data.entry.tanker = RET_INT_HEADER(TANKER, 0);
+	data.entry.dealer = RET_INT_HEADER(DEALER, 0);
 
 	SEND_ASYNC_DATA(party_add, &data);
 

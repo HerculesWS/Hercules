@@ -4,7 +4,6 @@
  *
  * Copyright (C) 2012-2020 Hercules Dev Team
  * Copyright (C) 2020-2021 Andrei Karas (4144)
- * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,38 +18,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef CHAR_CAPIIF_H
-#define CHAR_CAPIIF_H
+#ifndef CHAR_INT_ADVENTURER_AGENCY_H
+#define CHAR_INT_ADVENTURER_AGENCY_H
 
 #include "common/hercules.h"
 
-struct online_char_data;
-struct PACKET_API_PROXY;
+struct party_add_data;
+
+enum adventurer_agency_flags {
+	AGENCY_HEALER = 1,
+	AGENCY_ASSIST = 2,
+	AGENCY_TANKER = 4,
+	AGENCY_DEALER = 8
+};
 
 /**
- * capiif interface
+ * inter_adventurer_agency_interface interface
  **/
-struct capiif_interface {
-	void (*init) (void);
-	void (*final) (void);
-	struct online_char_data* (*get_online_character) (const struct PACKET_API_PROXY *p);
-	void (*emblem_download) (int fd, int guild_id, int emblem_id);
-	void (*parse_userconfig_load_emotes) (int fd);
-	void (*parse_userconfig_save_emotes) (int fd);
-	void (*parse_charconfig_load) (int fd);
-	void (*parse_emblem_upload) (int fd);
-	void (*parse_emblem_upload_guild_id) (int fd);
-	void (*parse_emblem_download) (int fd);
-	void (*parse_userconfig_save_userhotkey_v2) (int fd);
-	void (*parse_userconfig_load_hotkeys) (int fd);
-	void (*parse_party_add) (int fd);
-	int (*parse_fromlogin_api_proxy) (int fd);
+struct inter_adventurer_agency_interface {
+	bool (*entry_add) (int char_id, const struct party_add_data *entry);
+	bool (*check_existing) (int char_id, int party_id);
+	bool (*entry_tosql) (int char_id, int party_id, const struct party_add_data *entry);
+	int (*entry_to_flags) (int char_id, const struct party_add_data *entry);
 };
 
 #ifdef HERCULES_CORE
-void capiif_defaults(void);
+void inter_adventurer_agency_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct capiif_interface *capiif;
+HPShared struct inter_adventurer_agency_interface *inter_adventurer_agency;
 
-#endif /* CHAR_CAPIIF_H */
+#endif /* CHAR_INT_ADVENTURER_AGENCY_H */

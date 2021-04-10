@@ -26,6 +26,7 @@
 #include "char/HPMchar.h"
 #include "char/capiif.h"
 #include "char/geoip.h"
+#include "char/int_adventurer_agency.h"
 #include "char/int_auction.h"
 #include "char/int_clan.h"
 #include "char/int_elemental.h"
@@ -112,6 +113,7 @@ char char_reg_num_db[32] = "char_reg_num_db";
 char char_achievement_db[256] = "char_achievements";
 char emotes_db[256] = "emotes";
 char hotkeys_db[256] = "hotkeys";
+char adventurer_agency_db[256] = "adventurer_agency";
 
 static struct char_interface char_s;
 struct char_interface *chr;
@@ -6405,6 +6407,7 @@ void char_load_defaults(void)
 	inter_rodex_defaults();
 	inter_achievement_defaults();
 	inter_userconfig_defaults();
+	inter_adventurer_agency_defaults();
 	inter_defaults();
 	geoip_defaults();
 }
