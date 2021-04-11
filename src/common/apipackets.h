@@ -46,6 +46,10 @@
 #define MAX_USERHOTKEYS 50
 #endif
 
+#ifndef ADVENTURER_AGENCY_PAGE_SIZE
+#define ADVENTURER_AGENCY_PAGE_SIZE 10
+#endif
+
 #define HEADER_API_PROXY_REQUEST 0x2842
 #define HEADER_API_PROXY_REPLY 0x2818
 
@@ -56,6 +60,13 @@ enum UserHotKey_v2
 	UserHotKey_v2_InterfaceTab = 2,
 	UserHotKey_v2_EmotionTab = 3,
 	UserHotKey_v2_max
+};
+
+enum adventurer_agency_flags {
+	AGENCY_HEALER = 1,
+	AGENCY_ASSIST = 2,
+	AGENCY_TANKER = 4,
+	AGENCY_DEALER = 8
 };
 
 // base
@@ -171,6 +182,15 @@ struct PACKET_API_party_add {
 	struct PACKET_API_party_add_data data;
 } __attribute__((packed));
 
+
+struct PACKET_API_party_list_data {
+	int page;
+} __attribute__((packed));
+
+struct PACKET_API_party_list {
+	struct PACKET_API_party_list_data data;
+} __attribute__((packed));
+
 // char to api
 struct PACKET_API_REPLY_userconfig_load_emotes {
 	struct userconfig_emotes emotes;
@@ -203,6 +223,28 @@ struct PACKET_API_REPLY_emblem_download {
 
 struct PACKET_API_REPLY_party_add {
 	int result;
+} __attribute__((packed));
+
+struct adventuter_agency_entry {
+	int account_id;
+	int char_id;
+	char char_name[NAME_LENGTH];
+	char message[NAME_LENGTH];
+//	char world_name[MAX_CHARSERVER_NAME_SIZE];
+	int flags;
+	int min_level;
+	int max_level;
+	int type;
+} __attribute__((packed));
+
+struct adventuter_agency_page {
+	struct adventuter_agency_entry entry[ADVENTURER_AGENCY_PAGE_SIZE];
+} __attribute__((packed));
+
+struct PACKET_API_REPLY_party_list {
+	int page;
+	int totalPage;
+	struct adventuter_agency_page data;
 } __attribute__((packed));
 
 #define WFIFO_APICHAR_SIZE sizeof(struct PACKET_API_PROXY)

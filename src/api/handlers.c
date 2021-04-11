@@ -375,7 +375,42 @@ HTTPURL(emblem_download)
 	return true;
 }
 
-IGNORE_DATA(party_list)
+DATA(party_list)
+{
+	GET_DATA(p, party_list);
+	int index = 0;
+	JsonW *json = jsonwriter->create_empty();
+	jsonwriter->add_new_number(json, "totalPage", p->totalPage);
+	JsonW *dataNode = jsonwriter->add_new_array(json, "data");
+
+	while (index < ADVENTURER_AGENCY_PAGE_SIZE) {
+		struct adventuter_agency_entry *entry = &p->data.entry[index];
+		if (entry->char_id == 0)
+			break;
+		JsonW *objNode = jsonwriter->add_new_object_to_array(dataNode);
+		jsonwriter->add_new_number(objNode, "AID", entry->account_id);
+		jsonwriter->add_new_number(objNode, "GID", entry->char_id);
+		jsonwriter->add_new_string(objNode, "CharName", entry->char_name);
+		jsonwriter->add_new_string(objNode, "WorldName", sd->world_name);
+		jsonwriter->add_new_number(objNode, "Tanker", (entry->flags & AGENCY_TANKER) ? 1 : 0);
+		jsonwriter->add_new_number(objNode, "Dealer", (entry->flags & AGENCY_DEALER) ? 1 : 0);
+		jsonwriter->add_new_number(objNode, "Healer", (entry->flags & AGENCY_HEALER) ? 1 : 0);
+		jsonwriter->add_new_number(objNode, "Assist", (entry->flags & AGENCY_ASSIST) ? 1 : 0);
+		jsonwriter->add_new_number(objNode, "MinLV", entry->min_level);
+		jsonwriter->add_new_number(objNode, "MaxLV", entry->max_level);
+		jsonwriter->add_new_number(objNode, "Type", entry->type);
+		jsonwriter->add_new_string(objNode, "Memo", entry->message);
+		index ++;
+	}
+
+#ifdef DEBUG_LOG
+	jsonwriter->print(json);
+#endif
+
+	httpsender->send_json(fd, json);
+	jsonwriter->delete(json);
+	aclif->terminate_connection(fd);
+}
 
 HTTPURL(party_list)
 {
@@ -384,9 +419,9 @@ HTTPURL(party_list)
 #endif
 	aclif->show_request(fd, sd, false);
 
-	JsonW *json = jsonwriter->create("{\"totalPage\":0,\"data\":[],\"Type\":1}");
-	httpsender->send_json(fd, json);
-	jsonwriter->delete(json);
+	CREATE_DATA(data, party_list);
+	data.page = RET_INT_HEADER(PAGE, 0);
+	SEND_ASYNC_DATA(party_list, &data);
 
 	return true;
 }

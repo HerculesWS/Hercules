@@ -110,6 +110,9 @@ static int capiif_parse_fromlogin_api_proxy(int fd)
 		case API_MSG_party_add:
 			capiif->parse_party_add(fd);
 			break;
+		case API_MSG_party_list:
+			capiif->parse_party_list(fd);
+			break;
 		default:
 			ShowError("Unknown proxy packet 0x%04x received from login-server, disconnecting.\n", command);
 			sockt->eof(fd);
@@ -289,6 +292,18 @@ void capiif_parse_party_add(int fd)
 	WFIFOSET(chr->login_fd, packet->packet_len);
 }
 
+void capiif_parse_party_list(int fd)
+{
+	RFIFO_API_DATA(rdata, party_list_data);
+	RFIFO_API_PROXY_PACKET(p);
+	WFIFO_APICHAR_PACKET_REPLY(party_list);
+
+	inter_adventurer_agency->get_page(p->char_id, rdata->page, &data->data);
+	data->totalPage = inter_adventurer_agency->get_pages_count();
+
+	WFIFOSET(chr->login_fd, packet->packet_len);
+}
+
 static void do_init_capiif(void)
 {
 }
@@ -314,4 +329,5 @@ void capiif_defaults(void) {
 	capiif->parse_userconfig_save_userhotkey_v2 = capiif_parse_userconfig_save_userhotkey_v2;
 	capiif->parse_userconfig_load_hotkeys = capiif_parse_userconfig_load_hotkeys;
 	capiif->parse_party_add = capiif_parse_party_add;
+	capiif->parse_party_list = capiif_parse_party_list;
 }

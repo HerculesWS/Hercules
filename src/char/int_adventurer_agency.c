@@ -112,6 +112,76 @@ bool inter_adventurer_agency_entry_add(int char_id, const struct party_add_data 
 	return inter_adventurer_agency->entry_tosql(char_id, cp->party_id, entry);
 }
 
+void inter_adventurer_agency_get_page(int char_id, int page, struct adventuter_agency_page *packet)
+{
+	if (page > 0)
+		page --;
+	if (SQL_SUCCESS != SQL->Query(inter->sql_handle,
+	    "SELECT `char_id`, `min_level`, `max_level`, `type`, `flags`, `message` FROM `%s` LIMIT %d, %d",
+	    adventurer_agency_db, page * ADVENTURER_AGENCY_PAGE_SIZE, ADVENTURER_AGENCY_PAGE_SIZE)) {
+		Sql_ShowDebug(inter->sql_handle);
+		return;
+	}
+
+	char *data = NULL;
+	int index = 0;
+	packet->entry[0].char_id = 0;
+	while (index < ADVENTURER_AGENCY_PAGE_SIZE) {
+		if (SQL_SUCCESS != SQL->NextRow(inter->sql_handle)) {
+			break;
+		}
+		SQL->GetData(inter->sql_handle, 0, &data, NULL);
+		packet->entry[index].char_id = atoi(data);
+
+		// do not access any methods for avoid new db connections
+		struct mmo_charstatus *cp = (struct mmo_charstatus*)idb_get(chr->char_db_, packet->entry[index].char_id);
+		if (cp == NULL) {
+			safestrncpy(packet->entry[index].char_name, "offline", NAME_LENGTH);
+			packet->entry[index].account_id = 0;
+		} else {
+			safestrncpy(packet->entry[index].char_name, cp->name, NAME_LENGTH);
+			packet->entry[index].account_id = cp->account_id;
+		}
+
+		SQL->GetData(inter->sql_handle, 1, &data, NULL);
+		packet->entry[index].min_level = atoi(data);
+		SQL->GetData(inter->sql_handle, 2, &data, NULL);
+		packet->entry[index].max_level = atoi(data);
+		SQL->GetData(inter->sql_handle, 3, &data, NULL);
+		packet->entry[index].type = atoi(data);
+		SQL->GetData(inter->sql_handle, 4, &data, NULL);
+		packet->entry[index].flags = atoi(data);
+		SQL->GetData(inter->sql_handle, 5, &data, NULL);
+		safestrncpy(packet->entry[index].message, data, NAME_LENGTH);
+
+		index ++;
+	}
+	packet->entry[index].char_id = 0;
+	SQL->FreeResult(inter->sql_handle);
+
+	return;
+}
+
+int inter_adventurer_agency_get_pages_count(void)
+{
+	if (SQL_SUCCESS != SQL->Query(inter->sql_handle,
+	    "SELECT count(`char_id`) FROM `%s`", adventurer_agency_db)) {
+		Sql_ShowDebug(inter->sql_handle);
+		return 0;
+	}
+
+	char *data = NULL;
+	int count = 0;
+	if (SQL_SUCCESS == SQL->NextRow(inter->sql_handle)) {
+		SQL->GetData(inter->sql_handle, 0, &data, NULL);
+		count = atoi(data);
+	}
+
+	SQL->FreeResult(inter->sql_handle);
+
+	return count / ADVENTURER_AGENCY_PAGE_SIZE;
+}
+
 void inter_adventurer_agency_defaults(void)
 {
 	inter_adventurer_agency = &inter_adventurer_agency_s;
@@ -120,4 +190,6 @@ void inter_adventurer_agency_defaults(void)
 	inter_adventurer_agency->check_existing = inter_adventurer_agency_check_existing;
 	inter_adventurer_agency->entry_to_flags = inter_adventurer_agency_entry_to_flags;
 	inter_adventurer_agency->entry_tosql = inter_adventurer_agency_entry_tosql;
+	inter_adventurer_agency->get_page = inter_adventurer_agency_get_page;
+	inter_adventurer_agency->get_pages_count = inter_adventurer_agency_get_pages_count;
 }

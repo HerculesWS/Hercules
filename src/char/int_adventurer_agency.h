@@ -24,13 +24,7 @@
 #include "common/hercules.h"
 
 struct party_add_data;
-
-enum adventurer_agency_flags {
-	AGENCY_HEALER = 1,
-	AGENCY_ASSIST = 2,
-	AGENCY_TANKER = 4,
-	AGENCY_DEALER = 8
-};
+struct adventuter_agency_page;
 
 /**
  * inter_adventurer_agency_interface interface
@@ -39,7 +33,9 @@ struct inter_adventurer_agency_interface {
 	bool (*entry_add) (int char_id, const struct party_add_data *entry);
 	bool (*check_existing) (int char_id, int party_id);
 	bool (*entry_tosql) (int char_id, int party_id, const struct party_add_data *entry);
+	void (*get_page) (int char_id, int page, struct adventuter_agency_page *packet);
 	int (*entry_to_flags) (int char_id, const struct party_add_data *entry);
+	int (*get_pages_count) (void);
 };
 
 #ifdef HERCULES_CORE
