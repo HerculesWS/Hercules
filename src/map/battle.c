@@ -301,15 +301,20 @@ static int battle_delay_damage(int64 tick, int amotion, struct block_list *src, 
 	struct delay_damage *dat;
 	struct status_change *sc;
 	struct block_list *d_tbl = NULL;
+	struct block_list *e_tbl = NULL;
 	nullpo_ret(src);
 	nullpo_ret(target);
 
 	sc = status->get_sc(target);
 
-	if (sc && sc->data[SC_DEVOTION] && sc->data[SC_DEVOTION]->val1)
-		d_tbl = map->id2bl(sc->data[SC_DEVOTION]->val1);
+	if (sc) {
+		if (sc->data[SC_DEVOTION] && sc->data[SC_DEVOTION]->val1)
+			d_tbl = map->id2bl(sc->data[SC_DEVOTION]->val1);
+		if (sc->data[SC_WATER_SCREEN_OPTION] && sc->data[SC_WATER_SCREEN_OPTION]->val1)
+			e_tbl = map->id2bl(sc->data[SC_WATER_SCREEN_OPTION]->val1);
+	}
 
-	if (d_tbl && sc && check_distance_bl(target, d_tbl, sc->data[SC_DEVOTION]->val3) && damage > 0 && skill_id != PA_PRESSURE && skill_id != CR_REFLECTSHIELD)
+	if (((d_tbl && sc && check_distance_bl(target, d_tbl, sc->data[SC_DEVOTION]->val3)) || e_tbl) && damage > 0 && skill_id != PA_PRESSURE && skill_id != CR_REFLECTSHIELD)
 		damage = 0;
 
 	if ( !battle_config.delay_battle_damage || amotion <= 1 ) {
@@ -6457,15 +6462,11 @@ static enum damage_lv battle_weapon_attack(struct block_list *src, struct block_
 				clif->skill_damage(&ed->bl, target, tick, status_get_amotion(src), 0, -30000, 1, EL_CIRCLE_OF_FIRE, tsc->data[SC_CIRCLE_OF_FIRE_OPTION]->val1, BDT_SKILL);
 				skill->attack(BF_MAGIC,&ed->bl,&ed->bl,src,EL_CIRCLE_OF_FIRE,tsc->data[SC_CIRCLE_OF_FIRE_OPTION]->val1,tick,wd.flag);
 			}
-		} else if( tsc->data[SC_WATER_SCREEN_OPTION] && tsc->data[SC_WATER_SCREEN_OPTION]->val1 ) {
+		} else if (tsc->data[SC_WATER_SCREEN_OPTION]) {
 			struct block_list *e_bl = map->id2bl(tsc->data[SC_WATER_SCREEN_OPTION]->val1);
-			if( e_bl && !status->isdead(e_bl) ) {
-				clif->damage(e_bl,e_bl,wd.amotion,wd.dmotion,damage,wd.div_,wd.type,wd.damage2);
-				status->damage(target,e_bl,damage,0,0,0);
-				// Just show damage in target.
-				clif->damage(src, target, wd.amotion, wd.dmotion, damage, wd.div_, wd.type, wd.damage2 );
-				map->freeblock_unlock();
-				return ATK_NONE;
+			if (e_bl && !status->isdead(e_bl)) {
+				clif->damage(e_bl, e_bl, 0, 0, damage, wd.div_, BDT_NORMAL, 0);
+				status_fix_damage(NULL, e_bl, damage, 0);
 			}
 		}
 	}

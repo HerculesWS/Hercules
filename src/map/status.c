@@ -9194,6 +9194,9 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				val2 = 50; // WATK%, MATK%
 				val3 = 25 * val1; // Move speed reduction
 				break;
+			case SC_WATER_SCREEN_OPTION:
+				tick_time = 10000;
+				break;
 			default:
 				if (status->change_start_unknown_sc(src, bl, type, calc_flag, rate, val1, val2, val3, val4, total_tick, flag)) {
 					return 0;
@@ -12235,6 +12238,10 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 				return 0;
 			}
 			break;
+		case SC_WATER_SCREEN_OPTION:
+			status_heal(bl, 1000, 0, 2);
+			sc_timer_next(10000 + tick, status->change_timer, bl->id, data);
+			return 0;
 	}
 	PRAGMA_GCC46(GCC diagnostic pop)
 
