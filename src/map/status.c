@@ -6459,7 +6459,7 @@ static int status_get_sc_def(struct block_list *src, struct block_list *bl, enum
 #define SCDEF_LVL_DIFF(bl, src, maxlv, factor) ( ( SCDEF_LVL_CAP((bl), (maxlv)) - SCDEF_LVL_CAP((src), (maxlv)) ) * (factor) )
 
 	//Status that are blocked by Golden Thief Bug card or Wand of Hermod
-	if (status->isimmune(bl))
+	if (status->isimmune(bl)) {
 		PRAGMA_GCC46(GCC diagnostic push)
 		PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 		switch (type) {
@@ -6489,6 +6489,7 @@ static int status_get_sc_def(struct block_list *src, struct block_list *bl, enum
 			return 0;
 		}
 		PRAGMA_GCC46(GCC diagnostic pop)
+	}
 
 	sd = BL_CAST(BL_PC,bl);
 	st = status->get_status_data(bl);
