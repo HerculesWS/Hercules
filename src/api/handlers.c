@@ -516,6 +516,36 @@ HTTPURL(party_add)
 	return true;
 }
 
+DATA(party_del)
+{
+	GET_DATA(p, party_del);
+
+	JsonW *json = jsonwriter->create_empty();
+	jsonwriter->add_new_number(json, "Type", p->type);
+
+#ifdef DEBUG_LOG
+	jsonwriter->print(json);
+#endif
+
+	httpsender->send_json(fd, json);
+	jsonwriter->delete(json);
+	aclif->terminate_connection(fd);
+}
+
+HTTPURL(party_del)
+{
+#ifdef DEBUG_LOG
+	ShowInfo("party_del called %d: %s\n", fd, httpparser->get_method_str(sd));
+#endif
+	aclif->show_request(fd, sd, false);
+
+	CREATE_DATA(data, party_del);
+	data.master_aid = RET_INT_HEADER(MASTER_AID, 0);
+	SEND_ASYNC_DATA(party_del, &data);
+
+	return true;
+}
+
 HTTPURL(test_url)
 {
 #ifdef DEBUG_LOG

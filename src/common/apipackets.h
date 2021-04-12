@@ -191,6 +191,14 @@ struct PACKET_API_party_list {
 	struct PACKET_API_party_list_data data;
 } __attribute__((packed));
 
+struct PACKET_API_party_del_data {
+	int master_aid;
+} __attribute__((packed));
+
+struct PACKET_API_party_del {
+	struct PACKET_API_party_del_data data;
+} __attribute__((packed));
+
 // char to api
 struct PACKET_API_REPLY_userconfig_load_emotes {
 	struct userconfig_emotes emotes;
@@ -249,6 +257,10 @@ struct PACKET_API_REPLY_party_list {
 struct PACKET_API_REPLY_party_get {
 	int type;
 	struct adventuter_agency_entry data;
+} __attribute__((packed));
+
+struct PACKET_API_REPLY_party_del {
+	int type;
 } __attribute__((packed));
 
 #define WFIFO_APICHAR_SIZE sizeof(struct PACKET_API_PROXY)

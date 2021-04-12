@@ -116,6 +116,9 @@ static int capiif_parse_fromlogin_api_proxy(int fd)
 		case API_MSG_party_get:
 			capiif->parse_party_get(fd);
 			break;
+		case API_MSG_party_del:
+			capiif->parse_party_del(fd);
+			break;
 		default:
 			ShowError("Unknown proxy packet 0x%04x received from login-server, disconnecting.\n", command);
 			sockt->eof(fd);
@@ -317,6 +320,17 @@ void capiif_parse_party_get(int fd)
 	WFIFOSET(chr->login_fd, packet->packet_len);
 }
 
+void capiif_parse_party_del(int fd)
+{
+	RFIFO_API_DATA(rdata, party_del_data);
+	RFIFO_API_PROXY_PACKET(p);
+	WFIFO_APICHAR_PACKET_REPLY(party_del);
+
+	data->type = inter_adventurer_agency->entry_delete(p->char_id, rdata->master_aid);
+
+	WFIFOSET(chr->login_fd, packet->packet_len);
+}
+
 static void do_init_capiif(void)
 {
 }
@@ -344,4 +358,5 @@ void capiif_defaults(void) {
 	capiif->parse_party_add = capiif_parse_party_add;
 	capiif->parse_party_list = capiif_parse_party_list;
 	capiif->parse_party_get = capiif_parse_party_get;
+	capiif->parse_party_del = capiif_parse_party_del;
 }

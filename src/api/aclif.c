@@ -785,9 +785,11 @@ static bool aclif_decode_post_headers(int fd, struct api_session_data *sd)
 	CHECK_POST_HEADER_PRESENT(TYPE)
 	CHECK_POST_HEADER_PRESENT_OR_EMPTY(MEMO)
 	CHECK_POST_HEADER_PRESENT(CHAR_NAME)
+	CHECK_POST_HEADER_PRESENT(MASTER_AID)
 
 	if (handled_count != aclif->get_post_headers_count(sd)) {
 		ShowError("Handled wrong number of post headers. Handled %d, requested %d :%d\n", handled_count, aclif->get_post_headers_count(sd), fd);
+		aclif->show_request(fd, sd, false);
 	}
 	return true;
 }

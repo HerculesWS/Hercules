@@ -69,6 +69,24 @@ static void inter_adventurer_agency_entry_delete_existing(int char_id, int party
 	return;
 }
 
+static int inter_adventurer_agency_entry_delete(int char_id, int master_aid)
+{
+	struct mmo_charstatus *cp = (struct mmo_charstatus*)idb_get(chr->char_db_, char_id);
+	nullpo_retr(1, cp);
+	if (cp->party_id == 0)
+		return 1;
+
+	struct party_data* p = (struct party_data*)idb_get(inter_party->db, cp->party_id);
+	if (p == NULL)
+		return 1;
+
+	if (inter_party->is_leader(p, char_id) != 1)
+		return 1;
+
+	inter_adventurer_agency->entry_delete_existing(char_id, cp->party_id);
+	return 1;
+}
+
 bool inter_adventurer_agency_entry_tosql(int char_id, int party_id, const struct party_add_data *entry)
 {
 	nullpo_retr(false, entry);
@@ -249,6 +267,7 @@ void inter_adventurer_agency_defaults(void)
 	inter_adventurer_agency->entry_delete_existing = inter_adventurer_agency_entry_delete_existing;
 	inter_adventurer_agency->entry_to_flags = inter_adventurer_agency_entry_to_flags;
 	inter_adventurer_agency->entry_tosql = inter_adventurer_agency_entry_tosql;
+	inter_adventurer_agency->entry_delete = inter_adventurer_agency_entry_delete;
 	inter_adventurer_agency->get_page = inter_adventurer_agency_get_page;
 	inter_adventurer_agency->get_pages_count = inter_adventurer_agency_get_pages_count;
 	inter_adventurer_agency->get_player_request = inter_adventurer_agency_get_player_request;
