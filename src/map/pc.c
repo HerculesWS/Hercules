@@ -3855,6 +3855,19 @@ static int pc_bonus2(struct map_session_data *sd, int type, int type2, int val)
 				sd->subskill[i].val = val;
 			}
 			break;
+		case SP_ADD_DROP_RACE:
+		{
+			uint32 race_mask = map->race_id2mask(type2);
+			if (race_mask == RCMASK_NONE) {
+				ShowWarning("pc_bonus2: SP_ADD_DROP_RACE: Invalid Race (%d)\n", type2);
+				break;
+			}
+			if (sd->state.lr_flag == 2) 
+				break;
+			BONUS_FOREACH_RCARRAY_FROMMASK(i, race_mask)
+				sd->dropaddrace[i] += val;
+		}
+			break;
 		default:
 			ShowWarning("pc_bonus2: unknown type %d %d %d!\n",type,type2,val);
 			Assert_report(0);

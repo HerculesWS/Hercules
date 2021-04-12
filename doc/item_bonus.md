@@ -420,6 +420,7 @@ bonus bAddMonsterDropChainItem,`ic`;       | Able to get Item of chain `ic` when
 bonus2 bAddMonsterDropChainItem,`ic`,`r`;  | Able to get item of chain `ic` when you kill a monster of race `r`
 bonus2 bGetZenyNum,`x`,`n`;                | When killing a monster, there is a `n`% chance of gaining 1~x zeny (only the highest among all is applied).
 bonus2 bAddGetZenyNum,`x`,`n`;             | When killing a monster, there is a `n`% chance of gaining 1~x zeny (Stackable) <br/> x: <br/> < 0: Max Zeny gain is `(-x*monster_level)`
+bonus2 bDropAddRace,`r`,`n`;               | Increase item drop rate by `n`% when you kill a monster of race `r`
 
 Misc effects                           | Description
 :------------------------------------- | :-------------------------

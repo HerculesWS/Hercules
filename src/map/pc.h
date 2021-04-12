@@ -368,6 +368,7 @@ BEGIN_ZEROED_BLOCK; // this block will be globally zeroed at the beginning of st
 #ifdef RENEWAL
 	int race_tolerance[RC_MAX];
 #endif
+	int dropaddrace[RC_MAX];
 	struct s_autospell autospell[15], autospell2[15], autospell3[15];
 	struct s_addeffect addeff[MAX_PC_BONUS], addeff2[MAX_PC_BONUS];
 	struct s_addeffectonskill addeff3[MAX_PC_BONUS];
