@@ -230,7 +230,6 @@ struct adventuter_agency_entry {
 	int char_id;
 	char char_name[NAME_LENGTH];
 	char message[NAME_LENGTH];
-//	char world_name[MAX_CHARSERVER_NAME_SIZE];
 	int flags;
 	int min_level;
 	int max_level;
@@ -245,6 +244,11 @@ struct PACKET_API_REPLY_party_list {
 	int page;
 	int totalPage;
 	struct adventuter_agency_page data;
+} __attribute__((packed));
+
+struct PACKET_API_REPLY_party_get {
+	int type;
+	struct adventuter_agency_entry data;
 } __attribute__((packed));
 
 #define WFIFO_APICHAR_SIZE sizeof(struct PACKET_API_PROXY)

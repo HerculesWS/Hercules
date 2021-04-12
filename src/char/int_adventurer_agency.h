@@ -24,6 +24,7 @@
 #include "common/hercules.h"
 
 struct party_add_data;
+struct adventuter_agency_entry;
 struct adventuter_agency_page;
 
 /**
@@ -36,6 +37,7 @@ struct inter_adventurer_agency_interface {
 	void (*get_page) (int char_id, int page, struct adventuter_agency_page *packet);
 	int (*entry_to_flags) (int char_id, const struct party_add_data *entry);
 	int (*get_pages_count) (void);
+	int (*get_player_request) (int char_id, struct adventuter_agency_entry *entry);
 };
 
 #ifdef HERCULES_CORE

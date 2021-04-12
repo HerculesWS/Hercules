@@ -384,7 +384,7 @@ DATA(party_list)
 	JsonW *dataNode = jsonwriter->add_new_array(json, "data");
 
 	while (index < ADVENTURER_AGENCY_PAGE_SIZE) {
-		struct adventuter_agency_entry *entry = &p->data.entry[index];
+		const struct adventuter_agency_entry *entry = &p->data.entry[index];
 		if (entry->char_id == 0)
 			break;
 		JsonW *objNode = jsonwriter->add_new_object_to_array(dataNode);
@@ -426,7 +426,36 @@ HTTPURL(party_list)
 	return true;
 }
 
-IGNORE_DATA(party_get)
+DATA(party_get)
+{
+	GET_DATA(p, party_get);
+
+	JsonW *json = jsonwriter->create("{\"Type\":1}");
+	if (p->data.char_id != 0) {
+		JsonW *dataNode = jsonwriter->add_new_object(json, "data");
+		const struct adventuter_agency_entry *entry = &p->data;
+		jsonwriter->add_new_number(dataNode, "AID", entry->account_id);
+		jsonwriter->add_new_number(dataNode, "GID", entry->char_id);
+		jsonwriter->add_new_string(dataNode, "CharName", entry->char_name);
+		jsonwriter->add_new_string(dataNode, "WorldName", sd->world_name);
+		jsonwriter->add_new_number(dataNode, "Tanker", (entry->flags & AGENCY_TANKER) ? 1 : 0);
+		jsonwriter->add_new_number(dataNode, "Dealer", (entry->flags & AGENCY_DEALER) ? 1 : 0);
+		jsonwriter->add_new_number(dataNode, "Healer", (entry->flags & AGENCY_HEALER) ? 1 : 0);
+		jsonwriter->add_new_number(dataNode, "Assist", (entry->flags & AGENCY_ASSIST) ? 1 : 0);
+		jsonwriter->add_new_number(dataNode, "MinLV", entry->min_level);
+		jsonwriter->add_new_number(dataNode, "MaxLV", entry->max_level);
+		jsonwriter->add_new_number(dataNode, "Type", entry->type);
+		jsonwriter->add_new_string(dataNode, "Memo", entry->message);
+	}
+
+#ifdef DEBUG_LOG
+	jsonwriter->print(json);
+#endif
+
+	httpsender->send_json(fd, json);
+	jsonwriter->delete(json);
+	aclif->terminate_connection(fd);
+}
 
 HTTPURL(party_get)
 {
@@ -435,10 +464,7 @@ HTTPURL(party_get)
 #endif
 	aclif->show_request(fd, sd, false);
 
-	JsonW *json = jsonwriter->create("{\"Type\":1}");
-	httpsender->send_json(fd, json);
-	jsonwriter->delete(json);
-	aclif->terminate_connection(fd);
+	SEND_ASYNC_DATA_EMPTY(party_get, NULL);
 
 	return true;
 }

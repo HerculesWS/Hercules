@@ -45,6 +45,7 @@ struct capiif_interface {
 	void (*parse_userconfig_load_hotkeys) (int fd);
 	void (*parse_party_add) (int fd);
 	void (*parse_party_list) (int fd);
+	void (*parse_party_get) (int fd);
 	int (*parse_fromlogin_api_proxy) (int fd);
 };
 

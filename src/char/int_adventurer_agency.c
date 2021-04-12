@@ -114,6 +114,10 @@ bool inter_adventurer_agency_entry_add(int char_id, const struct party_add_data 
 
 void inter_adventurer_agency_get_page(int char_id, int page, struct adventuter_agency_page *packet)
 {
+	nullpo_retv(packet);
+
+	packet->entry[0].char_id = 0;
+
 	if (page > 0)
 		page --;
 	if (SQL_SUCCESS != SQL->Query(inter->sql_handle,
@@ -125,7 +129,6 @@ void inter_adventurer_agency_get_page(int char_id, int page, struct adventuter_a
 
 	char *data = NULL;
 	int index = 0;
-	packet->entry[0].char_id = 0;
 	while (index < ADVENTURER_AGENCY_PAGE_SIZE) {
 		if (SQL_SUCCESS != SQL->NextRow(inter->sql_handle)) {
 			break;
@@ -182,6 +185,49 @@ int inter_adventurer_agency_get_pages_count(void)
 	return count / ADVENTURER_AGENCY_PAGE_SIZE;
 }
 
+int inter_adventurer_agency_get_player_request(int char_id, struct adventuter_agency_entry *entry)
+{
+	nullpo_retr(1, entry);
+
+	entry->char_id = 0;
+
+	if (SQL_SUCCESS != SQL->Query(inter->sql_handle,
+	    "SELECT `char_id`, `min_level`, `max_level`, `type`, `flags`, `message` FROM `%s` WHERE char_id='%d'",
+	    adventurer_agency_db, char_id)) {
+		Sql_ShowDebug(inter->sql_handle);
+		return 1;
+	}
+
+	char *data = NULL;
+	if (SQL_SUCCESS == SQL->NextRow(inter->sql_handle)) {
+		SQL->GetData(inter->sql_handle, 0, &data, NULL);
+		entry->char_id = atoi(data);
+		// do not access any methods for avoid new db connections
+		struct mmo_charstatus *cp = (struct mmo_charstatus*)idb_get(chr->char_db_, entry->char_id);
+		if (cp == NULL) {
+			safestrncpy(entry->char_name, "offline", NAME_LENGTH);
+			entry->account_id = 0;
+		} else {
+			safestrncpy(entry->char_name, cp->name, NAME_LENGTH);
+			entry->account_id = cp->account_id;
+		}
+
+		SQL->GetData(inter->sql_handle, 1, &data, NULL);
+		entry->min_level = atoi(data);
+		SQL->GetData(inter->sql_handle, 2, &data, NULL);
+		entry->max_level = atoi(data);
+		SQL->GetData(inter->sql_handle, 3, &data, NULL);
+		entry->type = atoi(data);
+		SQL->GetData(inter->sql_handle, 4, &data, NULL);
+		entry->flags = atoi(data);
+		SQL->GetData(inter->sql_handle, 5, &data, NULL);
+		safestrncpy(entry->message, data, NAME_LENGTH);
+	}
+
+	SQL->FreeResult(inter->sql_handle);
+	return 1;
+}
+
 void inter_adventurer_agency_defaults(void)
 {
 	inter_adventurer_agency = &inter_adventurer_agency_s;
@@ -192,4 +238,5 @@ void inter_adventurer_agency_defaults(void)
 	inter_adventurer_agency->entry_tosql = inter_adventurer_agency_entry_tosql;
 	inter_adventurer_agency->get_page = inter_adventurer_agency_get_page;
 	inter_adventurer_agency->get_pages_count = inter_adventurer_agency_get_pages_count;
+	inter_adventurer_agency->get_player_request = inter_adventurer_agency_get_player_request;
 }
