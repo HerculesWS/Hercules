@@ -43,7 +43,7 @@
 static struct inter_adventurer_agency_interface inter_adventurer_agency_s;
 struct inter_adventurer_agency_interface *inter_adventurer_agency;
 
-static bool inter_adventurer_agency_check_existing(int char_id, int party_id)
+static bool inter_adventurer_agency_entry_check_existing(int char_id, int party_id)
 {
 	if (SQL_ERROR == SQL->Query(inter->sql_handle,
 	    "SELECT `char_id` FROM `%s` WHERE `char_id`='%d' OR `party_id`='%d'",
@@ -56,6 +56,17 @@ static bool inter_adventurer_agency_check_existing(int char_id, int party_id)
 	SQL->FreeResult(inter->sql_handle);
 
 	return false;
+}
+
+static void inter_adventurer_agency_entry_delete_existing(int char_id, int party_id)
+{
+	if (SQL_ERROR == SQL->Query(inter->sql_handle,
+	    "DELETE FROM `%s` WHERE `char_id`='%d' OR `party_id`='%d'",
+	    adventurer_agency_db, char_id, party_id)) {
+		Sql_ShowDebug(inter->sql_handle);
+	}
+
+	return;
 }
 
 bool inter_adventurer_agency_entry_tosql(int char_id, int party_id, const struct party_add_data *entry)
@@ -106,8 +117,9 @@ bool inter_adventurer_agency_entry_add(int char_id, const struct party_add_data 
 	if (inter_party->is_leader(p, char_id) != 1)
 		return false;
 
-	if (inter_adventurer_agency->check_existing(char_id, cp->party_id))
-		return false;
+	if (inter_adventurer_agency->entry_check_existing(char_id, cp->party_id)) {
+		inter_adventurer_agency->entry_delete_existing(char_id, cp->party_id);
+	}
 
 	return inter_adventurer_agency->entry_tosql(char_id, cp->party_id, entry);
 }
@@ -233,7 +245,8 @@ void inter_adventurer_agency_defaults(void)
 	inter_adventurer_agency = &inter_adventurer_agency_s;
 
 	inter_adventurer_agency->entry_add = inter_adventurer_agency_entry_add;
-	inter_adventurer_agency->check_existing = inter_adventurer_agency_check_existing;
+	inter_adventurer_agency->entry_check_existing = inter_adventurer_agency_entry_check_existing;
+	inter_adventurer_agency->entry_delete_existing = inter_adventurer_agency_entry_delete_existing;
 	inter_adventurer_agency->entry_to_flags = inter_adventurer_agency_entry_to_flags;
 	inter_adventurer_agency->entry_tosql = inter_adventurer_agency_entry_tosql;
 	inter_adventurer_agency->get_page = inter_adventurer_agency_get_page;
