@@ -87,17 +87,19 @@ static int inter_adventurer_agency_entry_delete(int char_id, int master_aid)
 	return 1;
 }
 
-bool inter_adventurer_agency_entry_tosql(int char_id, int party_id, const struct party_add_data *entry)
+bool inter_adventurer_agency_entry_tosql(int char_id, const char *char_name, int party_id, const struct party_add_data *entry)
 {
 	nullpo_retr(false, entry);
 
 	char message_esc[NAME_LENGTH];
 	SQL->EscapeStringLen(inter->sql_handle, message_esc, entry->message, strlen(entry->message));
+	char char_name_esc[NAME_LENGTH];
+	SQL->EscapeStringLen(inter->sql_handle, char_name_esc, char_name, strlen(char_name));
 
 	const int flags = inter_adventurer_agency->entry_to_flags(char_id, entry);
 	if (SQL_ERROR == SQL->Query(inter->sql_handle,
-	    "INSERT INTO `%s` (`char_id`,`party_id`,`min_level`,`max_level`,`type`,`flags`,`message`) VALUES ('%d','%d','%u','%u','%d','%d','%s')",
-	    adventurer_agency_db, char_id, party_id, entry->min_level, entry->max_level, entry->type, flags, message_esc)) {
+	    "INSERT INTO `%s` (`char_id`,`char_name`,`party_id`,`min_level`,`max_level`,`type`,`flags`,`message`) VALUES ('%d','%s','%d','%u','%u','%d','%d','%s')",
+	    adventurer_agency_db, char_id, char_name_esc, party_id, entry->min_level, entry->max_level, entry->type, flags, message_esc)) {
 		Sql_ShowDebug(inter->sql_handle);
 		return false;
 	}
@@ -139,7 +141,7 @@ bool inter_adventurer_agency_entry_add(int char_id, const struct party_add_data 
 		inter_adventurer_agency->entry_delete_existing(char_id, cp->party_id);
 	}
 
-	return inter_adventurer_agency->entry_tosql(char_id, cp->party_id, entry);
+	return inter_adventurer_agency->entry_tosql(char_id, cp->name, cp->party_id, entry);
 }
 
 void inter_adventurer_agency_get_page(int char_id, int page, struct adventuter_agency_page *packet)
@@ -151,7 +153,7 @@ void inter_adventurer_agency_get_page(int char_id, int page, struct adventuter_a
 	if (page > 0)
 		page --;
 	if (SQL_SUCCESS != SQL->Query(inter->sql_handle,
-	    "SELECT `char_id`, `min_level`, `max_level`, `type`, `flags`, `message` FROM `%s` LIMIT %d, %d",
+	    "SELECT `char_id`, `char_name`, `min_level`, `max_level`, `type`, `flags`, `message` FROM `%s` LIMIT %d, %d",
 	    adventurer_agency_db, page * ADVENTURER_AGENCY_PAGE_SIZE, ADVENTURER_AGENCY_PAGE_SIZE)) {
 		Sql_ShowDebug(inter->sql_handle);
 		return;
@@ -169,22 +171,23 @@ void inter_adventurer_agency_get_page(int char_id, int page, struct adventuter_a
 		// do not access any methods for avoid new db connections
 		struct mmo_charstatus *cp = (struct mmo_charstatus*)idb_get(chr->char_db_, packet->entry[index].char_id);
 		if (cp == NULL) {
-			safestrncpy(packet->entry[index].char_name, "offline", NAME_LENGTH);
+			// add offline char
 			packet->entry[index].account_id = 0;
 		} else {
-			safestrncpy(packet->entry[index].char_name, cp->name, NAME_LENGTH);
 			packet->entry[index].account_id = cp->account_id;
 		}
 
 		SQL->GetData(inter->sql_handle, 1, &data, NULL);
-		packet->entry[index].min_level = atoi(data);
+		safestrncpy(packet->entry[index].char_name, data, NAME_LENGTH);
 		SQL->GetData(inter->sql_handle, 2, &data, NULL);
-		packet->entry[index].max_level = atoi(data);
+		packet->entry[index].min_level = atoi(data);
 		SQL->GetData(inter->sql_handle, 3, &data, NULL);
-		packet->entry[index].type = atoi(data);
+		packet->entry[index].max_level = atoi(data);
 		SQL->GetData(inter->sql_handle, 4, &data, NULL);
-		packet->entry[index].flags = atoi(data);
+		packet->entry[index].type = atoi(data);
 		SQL->GetData(inter->sql_handle, 5, &data, NULL);
+		packet->entry[index].flags = atoi(data);
+		SQL->GetData(inter->sql_handle, 6, &data, NULL);
 		safestrncpy(packet->entry[index].message, data, NAME_LENGTH);
 
 		index ++;

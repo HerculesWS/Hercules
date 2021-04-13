@@ -34,7 +34,7 @@ struct inter_adventurer_agency_interface {
 	bool (*entry_add) (int char_id, const struct party_add_data *entry);
 	bool (*entry_check_existing) (int char_id, int party_id);
 	void (*entry_delete_existing) (int char_id, int party_id);
-	bool (*entry_tosql) (int char_id, int party_id, const struct party_add_data *entry);
+	bool (*entry_tosql) (int char_id, const char *char_name, int party_id, const struct party_add_data *entry);
 	int (*entry_delete) (int char_id, int master_aid);
 	void (*get_page) (int char_id, int page, struct adventuter_agency_page *packet);
 	int (*entry_to_flags) (int char_id, const struct party_add_data *entry);
