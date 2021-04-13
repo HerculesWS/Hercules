@@ -11770,14 +11770,11 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 			r = skill->get_splash(skill_id, skill_lv);
 			map->foreachinarea(skill->graffitiremover,src->m,x-r,y-r,x+r,y+r,BL_SKILL);
 			break;
-
 		case SO_WARMER:
-			flag|= 8;
-			/* Fall through */
 		case SO_CLOUD_KILL:
+			flag |= (skill_id == SO_WARMER) ? 8 : 4;
 			skill->unitsetting(src,skill_id,skill_lv,x,y,0);
 			break;
-
 		case WZ_METEOR:
 		case SU_CN_METEOR:
 			{
