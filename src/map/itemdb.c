@@ -1567,13 +1567,20 @@ static void itemdb_read_chains(void)
 			} else if( !( data = itemdb->name2id(itname) ) )
 				ShowWarning("itemdb_read_chains: unknown item '%s' in chain '%s'!\n",itname,name);
 
+			struct item_chain_entry *item = &itemdb->chains[count].items[c - 1];
+
 			if( prev )
-				prev->next = &itemdb->chains[count].items[c - 1];
+				prev->next = item;
 
-			itemdb->chains[count].items[c - 1].id = data ? data->nameid : 0;
-			itemdb->chains[count].items[c - 1].rate = data ? libconfig->setting_get_int(entry) : 0;
+			item->id = data ? data->nameid : 0;
 
-			prev = &itemdb->chains[count].items[c - 1];
+			int rate = data ? libconfig->setting_get_int(entry) : 0;
+			if (battle_config.item_rate_add_chain != 100)
+				rate = rate * battle_config.item_rate_add_chain / 100;
+
+			item->rate = cap_value(rate, battle_config.item_drop_add_chain_min, battle_config.item_drop_add_chain_max);
+
+			prev = item;
 		}
 
 		if( prev )
@@ -2613,7 +2620,7 @@ static void itemdb_read(bool minimal)
 	itemdb->other->foreach(itemdb->other, itemdb->addname_sub);
 
 	itemdb->read_options();
-	
+
 	if (minimal)
 		return;
 
