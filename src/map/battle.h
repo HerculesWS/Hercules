@@ -477,8 +477,6 @@ struct Battle_Config {
 	int mail_show_status;
 	int client_limit_unit_lv;
 	int client_emblem_max_blank_percent;
-	int hom_max_level;
-	int hom_S_max_level;
 	int hom_bonus_exp_from_master;
 
 	// [BattleGround Settings]

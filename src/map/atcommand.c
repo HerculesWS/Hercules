@@ -7217,26 +7217,11 @@ ACMD(homlevel)
 		return false;
 	}
 
-	switch( htype ) {
-		case HT_REG:
-		case HT_EVO:
-			if( hd->homunculus.level >= battle_config.hom_max_level ) {
-				snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1478), hd->homunculus.level); // Homun reached its maximum level of '%d'
-				clif->message(fd, atcmd_output);
-				return true;
-			}
-			break;
-		case HT_S:
-			if( hd->homunculus.level >= battle_config.hom_S_max_level ) {
-				snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1478), hd->homunculus.level); // Homun reached its maximum level of '%d'
-				clif->message(fd, atcmd_output);
-				return true;
-			}
-			break;
-		case HT_INVALID:
-		default:
-			ShowError("atcommand_homlevel: unknown htype '%d'\n",htype);
-			return false;
+
+	if (hd->homunculus.level >= homun->get_max_level(hd)) {
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1478), hd->homunculus.level); // Homun reached its maximum level of '%d'
+		clif->message(fd, atcmd_output);
+		return true;
 	}
 
 	do {

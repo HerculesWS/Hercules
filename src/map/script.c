@@ -22966,10 +22966,6 @@ static BUILDIN(setquestinfo)
 	case QINFO_HOMUN_LEVEL:
 	{
 		int min = script_getnum(st, 3);
-		if (min > battle_config.hom_max_level && min > battle_config.hom_S_max_level) {
-			ShowWarning("buildin_setquestinfo: minimum homunculus level given (%d) is bigger than the max possible level.\n", min);
-			return false;
-		}
 		qi->homunculus.level = min;
 		break;
 	}
