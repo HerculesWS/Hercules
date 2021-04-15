@@ -547,7 +547,7 @@ CREATE TABLE IF NOT EXISTS `homunculus` (
   `prev_class` MEDIUMINT NOT NULL DEFAULT '0',
   `name` VARCHAR(24) NOT NULL DEFAULT '',
   `level` SMALLINT NOT NULL DEFAULT '0',
-  `exp` INT NOT NULL DEFAULT '0',
+  `exp` BIGINT NOT NULL DEFAULT '0',
   `intimacy` INT NOT NULL DEFAULT '0',
   `hunger` SMALLINT NOT NULL DEFAULT '0',
   `str` SMALLINT UNSIGNED NOT NULL DEFAULT '0',
@@ -952,6 +952,7 @@ INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1584842940); -- 2020-03-2
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1588301040); -- 2020-05-01--04-44.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1589145060); -- 2020-05-10--23-11.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1597467600); -- 2020-08-15--13-00.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1612286353); -- 2021-05-03--10-19.sql
 
 --
 -- Table structure for table `storage`

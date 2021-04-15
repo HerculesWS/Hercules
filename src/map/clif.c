@@ -1758,8 +1758,8 @@ static void clif_hominfo(struct map_session_data *sd, struct homun_data *hd, int
 		p.sp = hstatus->sp;
 		p.maxSp = hstatus->max_sp;
 	}
-	p.exp = hd->homunculus.exp;
-	p.expNext = hd->exp_next;
+	p.exp = (uint32)min(hd->homunculus.exp, UINT32_MAX);
+	p.expNext = (uint32)min(hd->exp_next, UINT32_MAX);
 	switch (htype) {
 		case HT_REG:
 		case HT_EVO:

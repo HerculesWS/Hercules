@@ -124,7 +124,7 @@ struct homun_data {
 
 	struct map_session_data *master;      //pointer back to its master
 	int hungry_timer;                     //[orn]
-	unsigned int exp_next;
+	uint64 exp_next;
 	char blockskill[MAX_SKILL_DB];        // [orn]
 
 	int64 masterteleport_timer;
@@ -149,7 +149,7 @@ enum homun_type {
 };
 
 struct homun_dbs {
-	unsigned int exptable[MAX_LEVEL];
+	struct class_exp_group *exptable[MAX_HOMUNCULUS_CLASS];
 	struct view_data viewdb[MAX_HOMUNCULUS_CLASS];
 	struct s_homunculus_db db[MAX_HOMUNCULUS_CLASS];
 	struct homun_skill_tree_entry skill_tree[MAX_HOMUNCULUS_CLASS][MAX_SKILL_TREE];
@@ -205,9 +205,9 @@ struct homunculus_interface {
 	bool (*read_db_libconfig_sub) (struct config_setting_t *it, int idx, const char *source);
 	bool (*read_db_libconfig_sub_stats) (struct config_setting_t *it, int idx);
 	bool (*read_db_libconfig_sub_stats_group) (struct config_setting_t *it, struct h_stats *smin, struct h_stats *smax);
+	bool (*read_db_libconfig_sub_expgroup) (struct config_setting_t* it, int idx);
 	bool (*read_skill_db_sub) (char* split[], int columns, int current);
 	void (*skill_db_read) (void);
-	void (*exp_db_read) (void);
 	void (*addspiritball) (struct homun_data *hd, int max);
 	void (*delspiritball) (struct homun_data *hd, int count, int type);
 	int8 (*get_intimacy_grade) (struct homun_data *hd);

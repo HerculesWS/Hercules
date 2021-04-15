@@ -388,7 +388,7 @@ static bool homunculus_levelup(struct homun_data *hd)
 		hom->skillpts++; //1 skillpoint each 3 base level
 
 	hom->exp -= hd->exp_next;
-	hd->exp_next = homun->dbs->exptable[hom->level - 1];
+	hd->exp_next = VECTOR_INDEX(homun->dbs->exptable[hom->class_ - HM_CLASS_BASE]->exp, hom->level - 1);
 
 	max  = &hd->homunculusDB->gmax;
 	min  = &hd->homunculusDB->gmin;
@@ -886,7 +886,7 @@ static bool homunculus_create(struct map_session_data *sd, const struct s_homunc
 	hd->homunculusDB = &homun->dbs->db[i];
 	memcpy(&hd->homunculus, hom, sizeof(struct s_homunculus));
 	hd->homunculus.char_id = sd->status.char_id; // Fix character ID if necessary.
-	hd->exp_next = homun->dbs->exptable[hd->homunculus.level - 1];
+	hd->exp_next = VECTOR_INDEX(homun->dbs->exptable[hd->homunculus.class_ - HM_CLASS_BASE]->exp, hd->homunculus.level - 1);
 
 	status->set_viewdata(&hd->bl, hd->homunculus.class_);
 	status->change_init(&hd->bl);
@@ -1129,7 +1129,7 @@ static void homunculus_stat_reset(struct homun_data *hd)
 	hom->dex = base->dex *10;
 	hom->luk = base->luk *10;
 	hom->exp = 0;
-	hd->exp_next = homun->dbs->exptable[0];
+	hd->exp_next = VECTOR_INDEX(homun->dbs->exptable[hom->class_ - HM_CLASS_BASE]->exp, 0);
 	memset(&hd->homunculus.hskill, 0, sizeof hd->homunculus.hskill);
 	hd->homunculus.skillpts = 0;
 }
@@ -1138,7 +1138,7 @@ static bool homunculus_shuffle(struct homun_data *hd)
 {
 	struct map_session_data *sd;
 	int lv, skillpts;
-	unsigned int exp;
+	uint64 exp;
 	struct s_skill b_skill[MAX_HOMUNSKILL];
 
 	nullpo_retr(false, hd);
@@ -1279,6 +1279,11 @@ static bool homunculus_read_db_libconfig_sub(struct config_setting_t *it, int id
 		return false;
 	}
 
+	if (!homun->read_db_libconfig_sub_expgroup(it, idx)) {
+		ShowError("homunculus_read_db_libconfig_sub: Failed to read homunculus exp group for entry %d in '%s', skipping...\n", idx, source);
+		return false;
+	}
+
 	return true;
 }
 
@@ -1350,6 +1355,27 @@ static bool homunculus_read_db_libconfig_sub_stats_group(struct config_setting_t
 	return true;
 }
 
+static bool homunculus_read_db_libconfig_sub_expgroup(struct config_setting_t *it, int idx)
+{
+	nullpo_retr(false, it);
+	Assert_retr(false, idx >= 0 && idx < MAX_HOMUNCULUS_CLASS);
+
+	const char *str = NULL;
+
+	if (libconfig->setting_lookup_string(it, "ExpGroup", &str) != CONFIG_FALSE) {
+		int i = 0;
+		ARR_FIND(0, VECTOR_LENGTH(pc->class_exp_groups[CLASS_EXP_TABLE_BASE]), i, strcmp(str, VECTOR_INDEX(pc->class_exp_groups[CLASS_EXP_TABLE_BASE], i).name) == 0);
+		if (i == VECTOR_LENGTH(pc->class_exp_groups[CLASS_EXP_TABLE_BASE])) {
+			ShowError("%s: Unknown Exp Group '%s' provided for entry %d\n", __func__, str, idx);
+			return false;
+		}
+		homun->dbs->exptable[idx] = &VECTOR_INDEX(pc->class_exp_groups[CLASS_EXP_TABLE_BASE], i);
+		return true;
+	}
+	ShowError("%s: ExpGroup setting not found for entry %d, skipping..\n", __func__, idx);
+	return false;
+}
+
 // <hom class>,<skill id>,<max level>[,<job level>],<req id1>,<req lv1>,<req id2>,<req lv2>,<req id3>,<req lv3>,<req id4>,<req lv4>,<req id5>,<req lv5>,<intimacy lv req>
 static bool homunculus_read_skill_db_sub(char *split[], int columns, int current)
 {
@@ -1419,45 +1445,9 @@ static void homunculus_skill_db_read(void)
 	sv->readdb(map->db_path, "homun_skill_tree.txt", ',', 13, 15, -1, homun->read_skill_db_sub);
 }
 
-static void homunculus_exp_db_read(void)
-{
-	char line[1024];
-	int i, j=0;
-	char *filename[]={
-		DBPATH"exp_homun.txt",
-		"exp_homun2.txt"};
-
-	memset(homun->dbs->exptable, 0, sizeof(homun->dbs->exptable));
-	for(i = 0; i < 2; i++) {
-		FILE *fp;
-		sprintf(line, "%s/%s", map->db_path, filename[i]);
-		if( (fp=fopen(line,"r")) == NULL) {
-			if(i != 0)
-				continue;
-			ShowError("can't read %s\n",line);
-			return;
-		}
-		while(fgets(line, sizeof(line), fp) && j < MAX_LEVEL) {
-			if(line[0] == '/' && line[1] == '/')
-				continue;
-
-			if (!(homun->dbs->exptable[j++] = (unsigned int)strtoul(line, NULL, 10)))
-				break;
-		}
-		// Last permitted level have to be 0!
-		if (homun->dbs->exptable[MAX_LEVEL - 1]) {
-			ShowWarning("homunculus_exp_db_read: Reached max level in exp_homun [%d]. Remaining lines were not read.\n ", MAX_LEVEL);
-			homun->dbs->exptable[MAX_LEVEL - 1] = 0;
-		}
-		fclose(fp);
-		ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' levels in '"CL_WHITE"%s/%s"CL_RESET"'.\n", j, map->db_path, filename[i]);
-	}
-}
-
 static void homunculus_reload(void)
 {
 	homun->read_db();
-	homun->exp_db_read();
 }
 
 static void homunculus_skill_reload(void)
@@ -1473,7 +1463,6 @@ static void do_init_homunculus(bool minimal)
 		return;
 
 	homun->read_db();
-	homun->exp_db_read();
 	homun->skill_db_read();
 	// Add homunc timer function to timer func list [Toms]
 	timer->add_func_list(homun->hunger_timer, "homunculus_hunger_timer");
@@ -1540,9 +1529,9 @@ void homunculus_defaults(void)
 	homun->read_db_libconfig_sub = homunculus_read_db_libconfig_sub;
 	homun->read_db_libconfig_sub_stats = homunculus_read_db_libconfig_sub_stats;
 	homun->read_db_libconfig_sub_stats_group = homunculus_read_db_libconfig_sub_stats_group;
+	homun->read_db_libconfig_sub_expgroup = homunculus_read_db_libconfig_sub_expgroup;
 	homun->read_skill_db_sub = homunculus_read_skill_db_sub;
 	homun->skill_db_read = homunculus_skill_db_read;
-	homun->exp_db_read = homunculus_exp_db_read;
 	homun->addspiritball = homunculus_addspiritball;
 	homun->delspiritball = homunculus_delspiritball;
 	homun->get_intimacy_grade = homunculus_get_intimacy_grade;
