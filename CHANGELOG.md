@@ -22,6 +22,12 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
+## [v2021.04.05+1] `April 05 2021` `PATCH 1`
+
+### Fixed
+
+- Fixed a regression that caused the buffs from various skills not to get applied. (#2979, issue #2977)
+
 ## [v2021.04.05] `April 05 2021`
 
 ### Added
@@ -1878,6 +1884,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2021.04.05+1]: https://github.com/HerculesWS/Hercules/compare/v2021.04.05...v2021.04.05+1
 [v2021.04.05]: https://github.com/HerculesWS/Hercules/compare/v2021.03.08...v2021.04.05
 [v2021.03.08]: https://github.com/HerculesWS/Hercules/compare/v2021.02.08...v2021.03.08
 [v2021.02.08]: https://github.com/HerculesWS/Hercules/compare/v2021.01.11...v2021.02.08
