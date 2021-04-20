@@ -5051,19 +5051,20 @@ static unsigned short status_calc_speed(struct block_list *bl, struct status_cha
 	if( sc == NULL || ( sd && sd->state.permanent_speed ) )
 		return (unsigned short)cap_value(speed,MIN_WALK_SPEED,MAX_WALK_SPEED);
 
-	if (sd && sd->ud.skilltimer != INVALID_TIMER)
-	{
-		if (sd->ud.skill_id == LG_EXEEDBREAK) {
-			speed_rate = 160 - 10 * sd->ud.skill_lv;
-		} else if ((skill->get_inf2(sd->ud.skill_id) & INF2_FREE_CAST_REDUCED) != 0) {
-			speed_rate = 175 - 5 * sd->ud.skill_lv;
-		} else if (pc->checkskill(sd, SA_FREECAST) > 0) {
-			speed_rate = 175 - 5 * pc->checkskill(sd,SA_FREECAST);
-		}
-	}
+	bool skillTimerIsValid = sd != NULL && sd->ud.skilltimer != INVALID_TIMER;
+
+	if (skillTimerIsValid && sd->ud.skill_id == LG_EXEEDBREAK)
+		speed_rate = 160 - 10 * sd->ud.skill_lv;
+
 	if (speed_rate == -1)
 	{
 		speed_rate = 100;
+		if (skillTimerIsValid) {
+			if ((skill->get_inf2(sd->ud.skill_id) & INF2_FREE_CAST_REDUCED) != 0)
+				speed_rate = 175 - 5 * sd->ud.skill_lv;
+			else if (pc->checkskill(sd, SA_FREECAST) > 0)
+				speed_rate = 175 - 5 * pc->checkskill(sd, SA_FREECAST);
+		}
 
 		//GetMoveHasteValue2()
 		{
