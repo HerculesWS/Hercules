@@ -1795,8 +1795,9 @@ OnInit:
 	end;
 
 	function	MN	{
+		.@numMonsters = 6; // can't use getarraysize since that requires an attached rid
 		setarray .@n$[1], "poring","lunatic","savagebebe","desertwolf","deviruchi","baphomet";
-		for (.@i = 1; .@i <= getarraysize(.@n$); ++.@i) {
+		for (.@i = 1; .@i <= .@numMonsters; ++.@i) {
 			if (compare(strnpcinfo(NPC_NAME),.@n$[.@i]))
 				break;
 		}
@@ -1804,12 +1805,12 @@ OnInit:
 	}
 
 }
-p_track02,30,38,0	duplicate(mob1#main)	#poring1	HIDDEN_WARP_NPC,0,0
-p_track02,30,36,0	duplicate(mob1#main)	#lunatic1	HIDDEN_WARP_NPC,0,0
-p_track02,30,34,0	duplicate(mob1#main)	#savagebebe1	HIDDEN_WARP_NPC,0,0
-p_track02,30,32,0	duplicate(mob1#main)	#desertwolf1	HIDDEN_WARP_NPC,0,0
-p_track02,30,30,0	duplicate(mob1#main)	#deviruchi1	HIDDEN_WARP_NPC,0,0
-p_track02,30,28,0	duplicate(mob1#main)	#baphomet1	HIDDEN_WARP_NPC,0,0
+p_track02,30,38,0	duplicate(mob1#main)	#poring1	HIDDEN_WARP_NPC,1,0
+p_track02,30,36,0	duplicate(mob1#main)	#lunatic1	HIDDEN_WARP_NPC,1,0
+p_track02,30,34,0	duplicate(mob1#main)	#savagebebe1	HIDDEN_WARP_NPC,1,0
+p_track02,30,32,0	duplicate(mob1#main)	#desertwolf1	HIDDEN_WARP_NPC,1,0
+p_track02,30,30,0	duplicate(mob1#main)	#deviruchi1	HIDDEN_WARP_NPC,1,0
+p_track02,30,28,0	duplicate(mob1#main)	#baphomet1	HIDDEN_WARP_NPC,1,0
 
 p_track02,19,48,0	script	TrapGlobal#race02	FAKE_NPC,{
 OnEnable:
