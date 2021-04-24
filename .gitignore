@@ -136,6 +136,7 @@ Thumbs.db
 /vcproj-*/char-server
 /vcproj-*/login-server
 /vcproj-*/map-server
+/vcproj-*/api-server
 /vcproj-*/mapcache
 /vcproj-*/plugin-*/
 

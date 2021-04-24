@@ -160,6 +160,7 @@
     <ClInclude Include="..\src\api\jsonparser.h" />
     <ClInclude Include="..\src\api\jsonwriter.h" />
     <ClInclude Include="..\src\api\mimepart.h" />
+    <ClInclude Include="..\src\api\postheader.h" />
     <ClInclude Include="..\src\api\urlhandlers.h" />
     <ClInclude Include="..\src\common\atomic.h" />
     <ClInclude Include="..\src\common\conf.h" />
@@ -218,6 +219,7 @@
     <ClCompile Include="..\src\api\httpsender.c" />
     <ClCompile Include="..\src\api\jsonparser.c" />
     <ClCompile Include="..\src\api\jsonwriter.c" />
+    <ClCompile Include="..\src\api\postheader.c" />
     <ClCompile Include="..\src\common\des.c" />
     <ClCompile Include="..\src\common\mapindex.c" />
     <ClCompile Include="..\src\common\mutex.c" />

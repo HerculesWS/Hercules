@@ -154,6 +154,9 @@
     <ClCompile Include="..\src\char\int_userconfig.c">
       <Filter>char</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\char\int_adventurer_agency.c">
+      <Filter>char</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\common\cbasetypes.h">
@@ -358,6 +361,9 @@
       <Filter>char</Filter>
     </ClInclude>
     <ClInclude Include="..\src\char\packets_hc_struct.h">
+      <Filter>char</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\char\int_adventurer_agency.h">
       <Filter>char</Filter>
     </ClInclude>
   </ItemGroup>

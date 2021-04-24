@@ -1972,6 +1972,9 @@ struct clif_interface {
 	void (*pDynamicnpcCreateRequest) (int fd, struct map_session_data *sd);
 	void (*dynamicnpc_create_result) (struct map_session_data *sd, enum dynamicnpc_create_result result);
 	void (*goldpc_info) (struct map_session_data *sd);
+
+	void (*pAdventuterAgencyJoinReq) (int fd, struct map_session_data *sd);
+	void (*adventurerAgencyResult) (struct map_session_data *sd, enum adventurer_agency_result result, const char *player_name, const char *party_name);
 };
 
 #ifdef HERCULES_CORE

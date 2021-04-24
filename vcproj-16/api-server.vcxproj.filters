@@ -106,6 +106,9 @@
     <ClCompile Include="..\src\api\jsonwriter.c">
       <Filter>api</Filter>
     </ClCompile>
+	<ClCompile Include="..\src\api\postheader.c">
+      <Filter>api</Filter>
+    </ClCompile>
     <ClCompile Include="..\3rdparty\cJSON\cJSON.c">
       <Filter>3rdparty\cJSON</Filter>
     </ClCompile>
@@ -314,6 +317,9 @@
     </ClInclude>
     <ClInclude Include="..\src\common\mapindex.h">
       <Filter>commom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\api\postheader.h">
+      <Filter>api</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

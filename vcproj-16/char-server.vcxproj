@@ -139,6 +139,7 @@
     <ClInclude Include="..\3rdparty\libconfig\wincompat.h" />
     <ClInclude Include="..\3rdparty\mt19937ar\mt19937ar.h" />
     <ClInclude Include="..\src\char\capiif.h" />
+    <ClInclude Include="..\src\char\int_adventurer_agency.h" />
     <ClInclude Include="..\src\char\int_rodex.h" />
     <ClInclude Include="..\src\char\int_userconfig.h" />
     <ClInclude Include="..\src\char\packets_hc_struct.h" />
@@ -207,6 +208,7 @@
     <ClCompile Include="..\3rdparty\libconfig\strbuf.c" />
     <ClCompile Include="..\3rdparty\mt19937ar\mt19937ar.c" />
     <ClCompile Include="..\src\char\capiif.c" />
+    <ClCompile Include="..\src\char\int_adventurer_agency.c" />
     <ClCompile Include="..\src\char\int_rodex.c" />
     <ClCompile Include="..\src\char\int_userconfig.c" />
     <ClCompile Include="..\src\common\conf.c" />

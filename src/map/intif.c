@@ -43,6 +43,8 @@
 #include "map/storage.h"
 #include "map/achievement.h"
 
+#include "common/charmappackets.h"
+#include "common/mapcharpackets.h"
 #include "common/memmgr.h"
 #include "common/nullpo.h"
 #include "common/packets_struct.h"
@@ -2678,6 +2680,27 @@ static void intif_parse_GetItemsAck(int fd)
 	rodex->getItemsAck(sd, mail_id, opentype, count, &items[0]);
 }
 
+static void intif_request_agency_join_party(int char_id, int party_id, int map_index)
+{
+	WFIFOHEAD(inter_fd, sizeof(struct PACKET_MAPCHAR_AGENCY_JOIN_PARTY_REQ));
+	struct PACKET_MAPCHAR_AGENCY_JOIN_PARTY_REQ *p = WFIFOP(inter_fd, 0);
+	p->packetType = 0x3084;
+	p->char_id = char_id;
+	p->party_id = party_id;
+	p->map_index = map_index;
+	WFIFOSET(inter_fd, sizeof(struct PACKET_MAPCHAR_AGENCY_JOIN_PARTY_REQ));
+}
+
+static void intif_parse_agency_joinResult(int fd)
+{
+	const struct PACKET_CHARMAP_AGENCY_JOIN_PARTY *p = RFIFOP(fd, 0);
+	const int char_id = p->char_id;
+	const int result = p->result;
+	struct map_session_data *sd = map->charid2sd(char_id);
+	if (sd != NULL)
+		clif->adventurerAgencyResult(sd, result, "", "");
+}
+
 //-----------------------------------------------------------------
 // Communication from the inter server
 // Return a 0 (false) if there were any errors.
@@ -2785,6 +2808,8 @@ static int intif_parse(int fd)
 		case 0x3899: intif->pGetZenyAck(fd); break;
 		case 0x389a: intif->pGetItemsAck(fd); break;
 
+		case 0x389b: intif->pAgencyJoinResult(fd); break;
+
 		// Clan System
 		case 0x3858: intif->pRecvClanMemberAction(fd); break;
 	default:
@@ -2803,6 +2828,19 @@ static int intif_parse(int fd)
  *-------------------------------------*/
 void intif_defaults(void)
 {
+	const int packet_len_table [INTIF_PACKET_LEN_TABLE_SIZE] = {
+		 0, 0, 0, 0, -1,-1,37,-1,  7, 0, 0, 0,  0, 0,  0, 0, //0x3800-0x380f
+		-1, 0, 0, 0,  0, 0, 0, 0, -1,11, 0, 0,  0, 0,  0, 0, //0x3810 Achievements [Smokexyz/Hercules]
+		39,-1,15,15, 14,19, 7, 0,  0, 0, 0, 0,  0, 0,  0, 0, //0x3820
+		10,-1,15, 0, 79,25, 7, 0,  0,-1,-1,-1, 14,67,186,-1, //0x3830
+		-1, 0, 0,14,  0, 0, 0, 0, -1,74,-1,11, 11,-1,  0, 0, //0x3840
+		-1,-1, 7, 7,  7,11, 8, 0, 10, 0, 0, 0,  0, 0,  0, 0, //0x3850  Auctions [Zephyrus] itembound[Akinari] Clan System[Murilo BiO]
+		-1, 7, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0, //0x3860  Quests [Kevin] [Inkfish]
+		-1, 3, 3, 0,  0, 0, 0, 0,  0, 0, 0, 0, -1, 3,  3, 0, //0x3870  Mercenaries [Zephyrus] / Elemental [pakpil]
+		14,-1, 7, 3,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0, //0x3880
+		-1,-1, 7, 3,  0,-1, 7, 15,18 + NAME_LENGTH, 23, 16 + sizeof(struct rodex_item) * RODEX_MAX_ITEM, 10, 0, 0, 0, 0, //0x3890  Homunculus [albator] / RoDEX [KirieZ]
+	};
+
 	intif = &intif_s;
 
 	/* funcs */
@@ -2960,4 +2998,7 @@ void intif_defaults(void)
 	intif->pRecvClanMemberAction = intif_parse_RecvClanMemberAction;
 	/* Achievement System */
 	intif->pAchievementsLoad = intif_parse_achievements_load;
+	intif->request_agency_join_party = intif_request_agency_join_party;
+
+	intif->pAgencyJoinResult = intif_parse_agency_joinResult;
 }

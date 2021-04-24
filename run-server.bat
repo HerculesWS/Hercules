@@ -6,3 +6,4 @@ rem Writen by Jbain
 start cmd /k login-server.bat
 start cmd /k char-server.bat
 start cmd /k map-server.bat
+start cmd /k api-server.bat

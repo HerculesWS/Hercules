@@ -39,6 +39,7 @@
 #include "char/int_storage.h"
 #include "char/inter.h"
 #include "common/cbasetypes.h"
+#include "common/charmappackets.h"
 #include "common/memmgr.h"
 #include "common/mmo.h"
 #include "common/nullpo.h"
@@ -2297,6 +2298,17 @@ static void mapif_rodex_getitemsack(int char_id, int64 mail_id, uint8 opentype, 
 	mapif->send(buf, 16 + sizeof(struct rodex_item) * RODEX_MAX_ITEM);
 }
 
+static void mapif_agency_joinPartyResult(int fd, int char_id, enum adventurer_agency_result result)
+{
+	WFIFOHEAD(fd, sizeof(struct PACKET_CHARMAP_AGENCY_JOIN_PARTY));
+	struct PACKET_CHARMAP_AGENCY_JOIN_PARTY *p = WFIFOP(fd, 0);
+
+	p->packetType = 0x389b;
+	p->char_id = char_id;
+	p->result = result;
+	WFIFOSET(fd, sizeof(struct PACKET_CHARMAP_AGENCY_JOIN_PARTY));
+}
+
 void mapif_defaults(void)
 {
 	mapif = &mapif_s;
@@ -2457,4 +2469,5 @@ void mapif_defaults(void)
 	/* Clan System */
 	mapif->parse_ClanMemberKick = mapif_parse_ClanMemberKick;
 	mapif->parse_ClanMemberCount = mapif_parse_ClanMemberCount;
+	mapif->agency_joinPartyResult = mapif_agency_joinPartyResult;
 }

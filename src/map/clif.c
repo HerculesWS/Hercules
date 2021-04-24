@@ -25838,6 +25838,48 @@ static void clif_goldpc_info(struct map_session_data *sd)
 #endif // 20140611
 }
 
+static void clif_parse_adventuterAgencyJoinReq(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+static void clif_parse_adventuterAgencyJoinReq(int fd, struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20171213 || PACKETVER_RE_NUM >= 20171213 || PACKETVER_ZERO_NUM >= 20171214
+	const struct PACKET_CZ_ADVENTURER_AGENCY_JOIN_REQ *p = RP2PTR(fd);
+	if (sd->status.party_id != 0) {
+		clif->adventurerAgencyResult(sd, AGENCY_PLAYER_ALREADY_IN_PARTY, sd->status.name, "");
+		return;
+	}
+	if (sd->party_invite_account != 0) {
+		clif->adventurerAgencyResult(sd, AGENCY_UNKNOWN_ERROR, "", "");
+		return;
+	}
+	struct map_session_data *tsd = map->charid2sd(p->GID);
+	if (tsd == NULL) {
+		clif->adventurerAgencyResult(sd, AGENCY_MASTER_UNABLE_ACCEPT_REQUEST, "", "");
+		return;
+	}
+	if (tsd->status.party_id == 0) {
+		clif->adventurerAgencyResult(sd, AGENCY_PARTY_NOT_FOUND, "", "");
+		return;
+	}
+
+	intif->request_agency_join_party(sd->status.char_id, tsd->status.party_id, sd->mapindex);
+#endif
+}
+
+static void clif_adventurerAgencyResult(struct map_session_data *sd, enum adventurer_agency_result result, const char *player_name, const char *party_name)
+{
+#if PACKETVER_MAIN_NUM >= 20191218 || PACKETVER_RE_NUM >= 20191211 || PACKETVER_ZERO_NUM >= 20191224
+	nullpo_retv(sd);
+	nullpo_retv(player_name);
+	nullpo_retv(party_name);
+	struct PACKET_ZC_ADVENTURER_AGENCY_JOIN_RESULT p = {};
+	p.packetType = HEADER_ZC_ADVENTURER_AGENCY_JOIN_RESULT;
+	p.result = result;
+	safestrncpy(p.player_name, player_name, NAME_LENGTH);
+	safestrncpy(p.party_name, party_name, NAME_LENGTH);
+	clif->send(&p, sizeof(p), &sd->bl, SELF);
+#endif
+}
+
 /*==========================================
  * Main client packet processing function
  *------------------------------------------*/
@@ -27192,4 +27234,7 @@ void clif_defaults(void)
 	clif->dynamicnpc_create_result = clif_dynamicnpc_create_result;
 
 	clif->goldpc_info = clif_goldpc_info;
+
+	clif->pAdventuterAgencyJoinReq = clif_parse_adventuterAgencyJoinReq;
+	clif->adventurerAgencyResult = clif_adventurerAgencyResult;
 }

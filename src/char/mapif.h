@@ -24,6 +24,7 @@
 #include "common/mmo.h"
 
 struct rodex_item;
+enum adventurer_agency_result;
 
 /**
  * mapif interface
@@ -184,6 +185,7 @@ struct mapif_interface {
 	// Clan System
 	int (*parse_ClanMemberKick) (int fd, int clan_id, int kick_interval);
 	int (*parse_ClanMemberCount) (int fd, int clan_id, int kick_interval);
+	void (*agency_joinPartyResult) (int fd, int char_id, enum adventurer_agency_result result);
 };
 
 #ifdef HERCULES_CORE

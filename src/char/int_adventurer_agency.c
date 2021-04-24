@@ -25,7 +25,9 @@
 #include "char/char.h"
 #include "char/int_party.h"
 #include "char/inter.h"
+#include "char/mapif.h"
 #include "common/cbasetypes.h"
+#include "common/mapcharpackets.h"
 #include "common/apipackets.h"
 #include "common/db.h"
 #include "common/memmgr.h"
@@ -42,6 +44,60 @@
 
 static struct inter_adventurer_agency_interface inter_adventurer_agency_s;
 struct inter_adventurer_agency_interface *inter_adventurer_agency;
+
+static int inter_adventurer_agency_parse_frommap(int fd)
+{
+	RFIFOHEAD(fd);
+
+	switch (RFIFOW(fd, 0)) {
+		case 0x3084:
+			inter_adventurer_agency->pJoinParty(fd);
+			break;
+		default:
+			return 0;
+	}
+
+	return 1;
+}
+
+static void inter_adventurer_agency_parse_joinParty(int fd)
+{
+	const struct PACKET_MAPCHAR_AGENCY_JOIN_PARTY_REQ *p = RFIFOP(fd, 0);
+	const int char_id = p->char_id;
+	const int party_id = p->party_id;
+	const int map_index = p->map_index;
+
+	struct mmo_charstatus *cp = (struct mmo_charstatus*)idb_get(chr->char_db_, char_id);
+	nullpo_retv(cp);
+	if (cp->party_id != 0) {
+		mapif->agency_joinPartyResult(fd, char_id, AGENCY_PLAYER_ALREADY_IN_PARTY);
+		return;
+	}
+
+	struct party_data* party = (struct party_data*)idb_get(inter_party->db, party_id);
+	if (party == NULL) {
+		mapif->agency_joinPartyResult(fd, char_id, AGENCY_PARTY_NOT_FOUND);
+		return;
+	}
+
+	struct party_member member = { 0 };
+	member.account_id = cp->account_id;
+	member.char_id    = cp->char_id;
+	safestrncpy(member.name, cp->name, NAME_LENGTH);
+	member.class      = cp->class;
+	member.map        = map_index;
+	member.lv         = cp->base_level;
+	member.online     = 1;
+	member.leader     = 0;
+
+	if (!inter_party->add_member(party_id, &member)) {
+		// for avoid another request to db, considerer only error
+		// from inter_party->add_member is too much members already
+		mapif->agency_joinPartyResult(fd, char_id, AGENCY_PARTY_NUMBER_EXCEEDED);
+		return;
+	}
+	mapif->agency_joinPartyResult(fd, char_id, AGENCY_JOIN_ACCEPTED);
+}
 
 static bool inter_adventurer_agency_entry_check_existing(int char_id, int party_id)
 {
@@ -265,6 +321,8 @@ void inter_adventurer_agency_defaults(void)
 {
 	inter_adventurer_agency = &inter_adventurer_agency_s;
 
+	inter_adventurer_agency->pJoinParty = inter_adventurer_agency_parse_joinParty;
+	inter_adventurer_agency->parse_frommap = inter_adventurer_agency_parse_frommap;
 	inter_adventurer_agency->entry_add = inter_adventurer_agency_entry_add;
 	inter_adventurer_agency->entry_check_existing = inter_adventurer_agency_entry_check_existing;
 	inter_adventurer_agency->entry_delete_existing = inter_adventurer_agency_entry_delete_existing;

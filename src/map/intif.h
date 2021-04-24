@@ -207,6 +207,9 @@ struct intif_interface {
 	void (*pRecvClanMemberAction) (int fd);
 	/* Achievements */
 	void (*pAchievementsLoad) (int fd);
+	void (*request_agency_join_party) (int char_id, int party_id, int map_index);
+
+	void (*pAgencyJoinResult) (int fd);
 };
 
 #ifdef HERCULES_CORE

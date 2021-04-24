@@ -31,6 +31,8 @@ struct adventuter_agency_page;
  * inter_adventurer_agency_interface interface
  **/
 struct inter_adventurer_agency_interface {
+	int (*parse_frommap) (int fd);
+	void (*pJoinParty) (int fd);
 	bool (*entry_add) (int char_id, const struct party_add_data *entry);
 	bool (*entry_check_existing) (int char_id, int party_id);
 	void (*entry_delete_existing) (int char_id, int party_id);

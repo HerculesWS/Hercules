@@ -24,6 +24,7 @@
 
 #include "char/char.h"
 #include "char/geoip.h"
+#include "char/int_adventurer_agency.h"
 #include "char/int_auction.h"
 #include "char/int_clan.h"
 #include "char/int_elemental.h"
@@ -65,6 +66,20 @@ static char char_server_db[32] = "ragnarok";
 static char default_codepage[32] = ""; //Feature by irmin.
 
 int party_share_level = 10;
+
+// recv. packet list
+static int inter_recv_packet_length[] = {
+	 0, 0, 0, 0, -1,13,36, (2 + 4 + 4 + 4 + NAME_LENGTH),  0, 0, 0, 0,  0, 0,  0, 0, // 3000-
+	 6,-1, 6,-1,  0, 0, 0, 0, 10,-1, 0, 0,  0, 0,  0, 0,    // 3010- Account Storage, Achievements [Smokexyz]
+	-1,10,-1,14, 14,19, 6, 0, 14,14, 0, 0,  0, 0,  0, 0,    // 3020- Party
+	-1, 6,-1,-1, 55,23, 6, 0, 14,-1,-1,-1, 18,19,186,-1,    // 3030-
+	-1, 9, 0, 0, 10,10, 0, 0,  7, 6,10,10, 10,-1,  0, 0,    // 3040- Clan System(3044-3045)
+	-1,-1,10,10,  0,-1,12, 0,  0, 0, 0, 0,  0, 0,  0, 0,    // 3050-  Auction System [Zephyrus], Item Bound [Mhalicot]
+	 6,-1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0,    // 3060-  Quest system [Kevin] [Inkfish]
+	-1,10, 6,-1,  0, 0, 0, 0,  0, 0, 0, 0, -1,10,  6,-1,    // 3070-  Mercenary packets [Zephyrus], Elemental packets [pakpil]
+	56,14,-1, 6, 10, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0,    // 3080-
+	-1,10,-1, 6,  0, 20,10,20, -1,6 + NAME_LENGTH, 0, 0,  0, 0,  0, 0,    // 3090-  Homunculus packets [albator], RoDEX packets
+};
 
 #define MAX_JOB_NAMES 150
 static char *msg_table[MAX_JOB_NAMES]; //  messages 550 ~ 699 are job names
@@ -1043,6 +1058,7 @@ static int inter_parse_frommap(int fd)
 		  || inter_rodex->parse_frommap(fd)
 		  || inter_clan->parse_frommap(fd)
 		  || inter_achievement->parse_frommap(fd)
+		  || inter_adventurer_agency->parse_frommap(fd)
 		   )
 			break;
 		else

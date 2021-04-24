@@ -598,7 +598,7 @@ static void aclif_check_headers(int fd, struct api_session_data *sd)
 
 	const char *size_str = strdb_get(sd->headers_db, "Content-Length");
 	if (size_str != NULL) {
-		const size_t sz = atoll(size_str);
+		const size_t sz = (size_t)atoll(size_str);
 		if (sz > MAX_BODY_SIZE) {
 			ShowError("Body size too big: %d\n", fd);
 			sockt->eof(fd);
