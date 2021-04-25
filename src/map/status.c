@@ -10460,6 +10460,8 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 
 	bool remove_icon = true;
 
+	map->freeblock_lock();
+
 	PRAGMA_GCC46(GCC diagnostic push)
 	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 	switch(type) {
@@ -10736,6 +10738,7 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 				map->quit(sd);
 				// Because map->quit calls status_change_end with tid INVALID_TIMER
 				// from here it's not neccesary to continue
+				map->freeblock_unlock();
 				return 1;
 			}
 			break;
@@ -11314,6 +11317,8 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 	}
 
 	ers_free(status->data_ers, sce);
+	map->freeblock_unlock();
+
 	return 1;
 }
 
