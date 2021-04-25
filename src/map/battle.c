@@ -5787,6 +5787,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 				battle->reflect_damage(target, src, &wd, skill_id);
 		}
 	}
+	map->freeblock_lock();
 	//Reject Sword bugreport:4493 by Daegaladh
 	if (wd.damage != 0 && tsc != NULL && tsc->data[SC_SWORDREJECT] != NULL
 	 && (sd == NULL || sd->weapontype1 == W_DAGGER || sd->weapontype1 == W_1HSWORD || sd->weapontype == W_2HSWORD)
@@ -5805,7 +5806,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 		wd.damage += md.damage;
 	}
 #endif
-
+	map->freeblock_unlock();
 	return wd;
 }
 
