@@ -2441,6 +2441,8 @@ static void mob_damage(struct mob_data *md, struct block_list *src, int damage)
  *------------------------------------------*/
 static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 {
+	GUARD_MAP_LOCK
+
 	struct status_data *mstatus;
 	struct map_session_data *sd = BL_CAST(BL_PC, src);
 	struct map_session_data *tmpsd[DAMAGELOG_SIZE] = { NULL };
@@ -3513,6 +3515,8 @@ static struct block_list *mob_getfriendstatus(struct mob_data *md, int cond1, in
  **/
 static int mob_use_skill(struct mob_data *md, int64 tick, int event)
 {
+	GUARD_MAP_LOCK
+
 	nullpo_retr(1, md);
 
 	struct mob_skill *ms = md->db->skill;

@@ -11863,6 +11863,8 @@ static int buildin_killmonster_sub(struct block_list *bl, va_list ap)
 }
 static BUILDIN(killmonster)
 {
+	GUARD_MAP_LOCK
+
 	const char *mapname,*event;
 	int16 m,allflag=0;
 	mapname=script_getstr(st,2);

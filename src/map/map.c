@@ -565,6 +565,8 @@ static struct skill_unit *map_find_skill_unit_oncell(struct block_list *target, 
  */
 static int bl_vforeach(int (*func)(struct block_list*, va_list), int blockcount, int max, va_list args)
 {
+	GUARD_MAP_LOCK
+
 	int i;
 	int returnCount = 0;
 
@@ -6388,6 +6390,19 @@ static int cleanup_db_sub(union DBKey key, struct DBData *data, va_list va)
 	return map->cleanup_sub(DB->data2ptr(data), va);
 }
 
+static void map_lock_check(const char *file, const char *func, int line, int lock_count)
+{
+	if (map->block_free_lock != lock_count) {
+		if (map->block_free_lock > lock_count) {
+			ShowError("map_lock_check: found missing call to map->freeblock_unlock: %s %s:%d\n", file, func, line);
+		} else {
+			ShowError("map_lock_check: found extra call to map->freeblock_unlock: %s %s:%d\n", file, func, line);
+		}
+		Assert_report(0);
+		map->block_free_lock = lock_count;
+	}
+}
+
 /*==========================================
  * map destructor
  *------------------------------------------*/
@@ -7327,6 +7342,8 @@ PRAGMA_GCC9(GCC diagnostic pop)
 
 	map->merge_zone = map_merge_zone;
 	map->zone_clear_single = map_zone_clear_single;
+
+	map->lock_check = map_lock_check;
 
 	/**
 	 * mapit interface

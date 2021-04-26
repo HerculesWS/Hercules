@@ -1389,6 +1389,8 @@ static int unit_set_walkdelay(struct block_list *bl, int64 tick, int delay, int 
 //-------------- stop here
 static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, uint16 skill_lv, int casttime, int castcancel)
 {
+	GUARD_MAP_LOCK
+
 	struct unit_data *ud;
 	struct status_data *tstatus;
 	struct status_change *sc;
@@ -2293,6 +2295,8 @@ static int unit_calc_pos(struct block_list *bl, int tx, int ty, enum unit_dir di
  *------------------------------------------*/
 static int unit_attack_timer_sub(struct block_list *src, int tid, int64 tick)
 {
+	GUARD_MAP_LOCK
+
 	struct block_list *target;
 	struct unit_data *ud;
 	struct status_data *sstatus;
@@ -2590,6 +2594,8 @@ static int unit_changeviewsize(struct block_list *bl, short size)
  *------------------------------------------*/
 static int unit_remove_map(struct block_list *bl, enum clr_type clrtype, const char *file, int line, const char *func)
 {
+	GUARD_MAP_LOCK
+
 	struct unit_data *ud = unit->bl2ud(bl);
 	struct status_change *sc = status->get_sc(bl);
 	nullpo_ret(bl);
@@ -2875,6 +2881,8 @@ static void unit_free_pc(struct map_session_data *sd)
  *------------------------------------------*/
 static int unit_free(struct block_list *bl, enum clr_type clrtype)
 {
+	GUARD_MAP_LOCK
+
 	struct unit_data *ud = unit->bl2ud( bl );
 	nullpo_ret(bl);
 	nullpo_ret(ud);

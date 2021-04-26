@@ -3108,6 +3108,8 @@ static int skill_magic_reflect(struct block_list *src, struct block_list *bl, in
  *-------------------------------------------------------------------------*/
 static int skill_attack(int attack_type, struct block_list *src, struct block_list *dsrc, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag)
 {
+	GUARD_MAP_LOCK
+
 	struct Damage dmg;
 #if MAGIC_REFLECTION_TYPE
 	struct status_data *sstatus, *tstatus;
@@ -4600,6 +4602,8 @@ static void skill_castend_type(enum cast_enum type, struct block_list *src, stru
  *------------------------------------------*/
 static int skill_castend_damage_id(struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag)
 {
+	GUARD_MAP_LOCK
+
 	struct map_session_data *sd = NULL;
 	struct status_data *tstatus;
 	struct status_change *sc;
@@ -5973,6 +5977,8 @@ static bool skill_castend_damage_id_unknown(struct block_list *src, struct block
  *------------------------------------------*/
 static int skill_castend_id(int tid, int64 tick, int id, intptr_t data)
 {
+	GUARD_MAP_LOCK
+
 	struct block_list *target, *src;
 	struct map_session_data *sd;
 	struct mob_data *md;
@@ -6326,6 +6332,8 @@ static bool skill_castend_id_unknown(struct unit_data *ud, struct block_list *sr
  *------------------------------------------*/
 static int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag)
 {
+	GUARD_MAP_LOCK
+
 	struct map_session_data *sd, *dstsd;
 	struct mob_data *md, *dstmd;
 	struct homun_data *hd;
@@ -11160,6 +11168,8 @@ static bool skill_castend_nodamage_id_unknown(struct block_list *src, struct blo
  *------------------------------------------*/
 static int skill_castend_pos(int tid, int64 tick, int id, intptr_t data)
 {
+	GUARD_MAP_LOCK
+
 	struct block_list* src = map->id2bl(id);
 	struct map_session_data *sd;
 	struct unit_data *ud = unit->bl2ud(src);
@@ -13226,6 +13236,8 @@ static void skill_unit_onplace_unknown(struct skill_unit *src, struct block_list
  *------------------------------------------*/
 static int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int64 tick)
 {
+	GUARD_MAP_LOCK
+
 	struct skill_unit_group *sg;
 	struct block_list *ss;
 	struct map_session_data *tsd;
@@ -18442,6 +18454,8 @@ static int skill_unit_timer_sub(union DBKey key, struct DBData *data, va_list ap
  *------------------------------------------*/
 static int skill_unit_timer(int tid, int64 tick, int id, intptr_t data)
 {
+	GUARD_MAP_LOCK
+
 	map->freeblock_lock();
 
 	skill->unit_db->foreach(skill->unit_db, skill->unit_timer_sub, tick);
