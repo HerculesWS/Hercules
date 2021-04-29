@@ -142,6 +142,8 @@ static void initChangeTables(void)
 	set_sc_with_vfx(SC_KO_JYUMONJIKIRI);
 	set_sc_with_vfx(SC_AKAITSUKI);
 	set_sc_with_vfx(SC_ILLUSIONDOPING);
+	set_sc_with_vfx(SC_ANTI_MATERIAL_BLAST);
+	set_sc_with_vfx(SC_CRIMSON_MARKER);
 
 	// Storing the target job rather than simply SC_SOULLINK simplifies code later on.
 	skill->dbs->db[skill->get_index(SL_ALCHEMIST)].status_type   = (sc_type)MAPID_ALCHEMIST;
@@ -4642,6 +4644,8 @@ static int status_calc_hit(struct block_list *bl, struct status_change *sc, int 
 		hit += sc->data[SC_ACARAJE]->val1;
 	if (sc->data[SC_BUCHEDENOEL])
 		hit += sc->data[SC_BUCHEDENOEL]->val3;
+	if (sc->data[SC_HEAT_BARREL])
+		hit -= sc->data[SC_HEAT_BARREL]->val4;
 
 	return cap_value(hit, battle_config.hit_min, battle_config.hit_max);
 }
@@ -4725,6 +4729,8 @@ static int status_calc_flee(struct block_list *bl, struct status_change *sc, int
 		flee += flee * 20 / 100;
 	if (sc->data[SC_FIRE_EXPANSION_TEAR_GAS])
 		flee -= flee * 50 / 100;
+	if (sc->data[SC_CRIMSON_MARKER])
+		flee -= sc->data[SC_CRIMSON_MARKER]->val3;
 	if (sc->data[SC_WIND_STEP_OPTION])
 		flee += flee * sc->data[SC_WIND_STEP_OPTION]->val2 / 100;
 	if (sc->data[SC_ZEPHYR])
@@ -5163,6 +5169,8 @@ static unsigned short status_calc_speed(struct block_list *bl, struct status_cha
 					}
 					if (sc->data[SC_CATNIPPOWDER])
 						val = max(val, sc->data[SC_CATNIPPOWDER]->val3);
+					if (sc->data[SC_BIND_TRAP])
+						val = max(val, sc->data[SC_BIND_TRAP]->val3);
 
 					if( sd && sd->bonus.speed_rate + sd->bonus.speed_add_rate > 0 ) // permanent item-based speedup
 						val = max( val, sd->bonus.speed_rate + sd->bonus.speed_add_rate );
@@ -5393,6 +5401,8 @@ static short status_calc_fix_aspd(struct block_list *bl, struct status_change *s
 		aspd -= (bl->type == BL_PC ? pc->checkskill(BL_UCAST(BL_PC, bl), RK_RUNEMASTERY) : 10) / 10 * 40;
 	if (sc->data[SC_MTF_ASPD])
 		aspd -= sc->data[SC_MTF_ASPD]->val1;
+	if (sc->data[SC_HEAT_BARREL])
+		aspd -= sc->data[SC_HEAT_BARREL]->val1 * 10;
 
 	if (sc->data[SC_OVERED_BOOST]) // should be final and unmodifiable by any means
 		aspd = (200 - sc->data[SC_OVERED_BOOST]->val3) * 10;
@@ -6691,6 +6701,9 @@ static int status_get_sc_def(struct block_list *src, struct block_list *bl, enum
 	case SC_NO_RECOVER_STATE:
 		tick_def2 = st->luk * 100;
 		break;
+	case SC_BIND_TRAP:
+		tick_def = bst->str * 50;
+		break;
 	default:
 		//Effect that cannot be reduced? Likely a buff.
 		if (!(rnd()%10000 < rate))
@@ -7212,6 +7225,18 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			break;
 		case SC_MAGNETICFIELD:
 			if(sc->data[SC_HOVERING])
+				return 0;
+			break;
+		case SC_HEAT_BARREL:
+			if (sc->data[SC_PLATINUM_ALTER] || sc->data[SC_GS_MADNESSCANCEL])
+				return 0;
+			break;
+		case SC_PLATINUM_ALTER:
+			if (sc->data[SC_HEAT_BARREL] || sc->data[SC_GS_MADNESSCANCEL])
+				return 0;
+			break;
+		case SC_GS_MADNESSCANCEL:
+			if (sc->data[SC_PLATINUM_ALTER] || sc->data[SC_HEAT_BARREL])
 				return 0;
 			break;
 	}
@@ -9198,6 +9223,48 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			case SC_WATER_SCREEN_OPTION:
 				tick_time = 10000;
 				break;
+			case SC_HEAT_BARREL:
+				{
+					int n = 10;
+					if (sd)
+						n = sd->spiritball_old;
+
+					val2 = n * 5; // -fixed casttime
+					val3 = (6 + val1 * 2) * n; // ATK
+					val4 = 25 + val1 * 5; // -hit
+				}
+				break;
+			case SC_PLATINUM_ALTER:
+				{
+					int n = 10;
+					if (sd)
+						n = sd->spiritball_old;
+					val2 = 10 * n; // +atk
+					val3 = (st->max_hp * (val1 * 5) / 100); // Barrier HP
+				}
+				break;
+			case SC_ANTI_MATERIAL_BLAST:
+				val2 = val1 * 10;
+				break;
+			case SC_ETERNAL_CHAIN:
+				val2 = 10;
+				if (sd)
+					val2 = sd->spiritball_old;
+				break;
+			case SC_CRIMSON_MARKER:
+				// val1 = skill_lv
+				// val2 = src_id
+				val3 = 10;
+				val4 = total_tick / 1000;
+				tick_time = 1000;
+				break;
+			case SC_BIND_TRAP:
+				val2 = src->id;
+				val3 = val1 * 25;
+				break;
+			case SC_HOWLING_MINE:
+				val2 = src->id;
+				break;
 			default:
 				if (status->change_start_unknown_sc(src, bl, type, calc_flag, rate, val1, val2, val3, val4, total_tick, flag)) {
 					return 0;
@@ -9399,6 +9466,10 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			break;
 			case SC_RAISINGDRAGON:
 				sce->val2 = st->max_hp / 100;// Officially tested its 1%hp drain. [Jobbie]
+			break;
+			case SC_CRIMSON_MARKER:
+				if (src->type == BL_PC && (sd = map->id2sd(src->id)))
+					clif->crimson_marker(sd, bl, false);
 			break;
 	}
 	PRAGMA_GCC46(GCC diagnostic pop)
@@ -11073,7 +11144,42 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 					clif->status_change_sub(bl, sc_icn, sc_typ, 1, sc_tck, sc_ttl, 0, 0, 0);
 				}
 			}
+			break;
+		case SC_HOWLING_MINE:
+			{
+				// Drop the material from target if expired
+				struct item it;
+				struct map_session_data *caster = NULL;
+				struct skill_condition req;
 
+				if (sce->val3 || status_isdead(bl) || !(caster = map->id2sd(sce->val2)))
+					break;
+
+				req = skill->get_requirement(sd, RL_H_MINE, 1);
+
+				if (!itemdb->exists(req.itemid[0]))
+					break;
+				memset(&it, 0, sizeof(it));
+				it.nameid = req.itemid[0];
+				it.amount = max(req.amount[0], 1);
+				it.identify = 1;
+				map->addflooritem(&sd->bl, &it, it.amount, bl->m, bl->x, bl->y, caster->status.char_id, 0, 0, 4, false);
+			}
+			break;
+		case SC_CRIMSON_MARKER:
+		{
+			// Remove mark data from caster
+			struct map_session_data *caster = map->id2sd(sce->val2);
+			uint8 i = 0;
+
+			if (!caster)
+				break;
+			ARR_FIND(0, MAX_SKILL_CRIMSON_MARKER, i, caster->c_marker[i] == bl->id);
+			if (i < MAX_SKILL_CRIMSON_MARKER) {
+				caster->c_marker[i] = 0;
+				clif->crimson_marker(caster, bl, true);
+			}
+		}
 			break;
 	}
 	PRAGMA_GCC46(GCC diagnostic pop)
@@ -12247,6 +12353,16 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 			status_heal(bl, 1000, 0, 2);
 			sc_timer_next(10000 + tick, status->change_timer, bl->id, data);
 			return 0;
+		case SC_CRIMSON_MARKER:
+			if (--(sce->val4) >= 0) {
+				struct map_session_data *caster = map->id2sd(sce->val2);
+				if (!caster || caster->bl.m != bl->m)
+					break;
+				sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
+				clif->crimson_marker(caster, bl, false);
+				return 0;
+			}
+			break;
 	}
 	PRAGMA_GCC46(GCC diagnostic pop)
 

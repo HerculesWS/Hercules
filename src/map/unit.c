@@ -1473,6 +1473,13 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 					return 0;
 				}
 				break;
+			case RL_QD_SHOT:
+				if (sc && sc->data[SC_QD_SHOT_READY]) {
+					if ((target = map->id2bl(sc->data[SC_QD_SHOT_READY]->val1)) == NULL)
+						return 0;
+					temp = 1;
+				}
+				break;
 		}
 		if (target)
 			target_id = target->id;
@@ -1720,6 +1727,20 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 			struct mob_data *md;
 			if( (md = map->id2md(target->id)) && md->master_id != src->id )
 				casttime <<= 1;
+		}
+		break;
+	case RL_C_MARKER:
+		{
+			uint8 i = 0;
+
+			ARR_FIND(0, MAX_SKILL_CRIMSON_MARKER, i, sd->c_marker[i] == target_id);
+			if (i == MAX_SKILL_CRIMSON_MARKER) {
+				ARR_FIND(0, MAX_SKILL_CRIMSON_MARKER, i, sd->c_marker[i] == 0);
+				if (i == MAX_SKILL_CRIMSON_MARKER) { // No free slots, skill Fail
+					clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
+					return 0;
+				}
+			}
 		}
 		break;
 	}

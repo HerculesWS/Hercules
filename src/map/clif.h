@@ -909,6 +909,7 @@ struct clif_interface {
 	void (*bossmapinfo) (int fd, struct mob_data *md, enum bossmap_info_type flag);
 	void (*map_type) (struct map_session_data* sd, enum map_type type);
 	void (*maptypeproperty2) (struct block_list *bl,enum send_target t);
+	void (*crimson_marker) (struct map_session_data *sd, struct block_list *bl, bool remove);
 	/* multi-map-server */
 	void (*changemapserver) (struct map_session_data* sd, unsigned short map_index, int x, int y, uint32 ip, uint16 port, char *dnsHost);
 	void (*changemapserver_airship) (struct map_session_data* sd, unsigned short map_index, int x, int y, uint32 ip, uint16 port);

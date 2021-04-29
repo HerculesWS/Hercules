@@ -24390,6 +24390,24 @@ static bool clif_lapineUpgrade_result(struct map_session_data *sd, enum lapineUp
 #endif  // PACKETVER_MAIN_NUM >= 20170726 || PACKETVER_RE_NUM >= 20170621 || defined(PACKETVER_ZERO)
 }
 
+/**
+* Marks Crimson Marker target on mini-map to the caster
+* 09C1 <id>.L <x>.W <y>.W (ZC_C_MARKERINFO)
+* @param fd
+* @param bl Crimson Marker target
+**/
+void clif_crimson_marker(struct map_session_data *sd, struct block_list *bl, bool remove)
+{
+	unsigned char buf[10];
+	nullpo_retv(sd);
+
+	WBUFW(buf, 0) = 0x09C1;
+	WBUFL(buf, 2) = bl->id;
+	WBUFW(buf, 6) = (remove ? -1 : bl->x);
+	WBUFW(buf, 8) = (remove ? -1 : bl->y);
+	clif->send(buf, packet_len(0x09C1), &sd->bl, SELF);
+}
+
 /*==========================================
  * Main client packet processing function
  *------------------------------------------*/
@@ -24800,6 +24818,7 @@ void clif_defaults(void)
 	clif->bossmapinfo = clif_bossmapinfo;
 	clif->map_type = clif_map_type;
 	clif->maptypeproperty2 = clif_maptypeproperty2;
+	clif->crimson_marker = clif_crimson_marker;
 	/* multi-map-server */
 	clif->changemapserver = clif_changemapserver;
 	clif->changemapserver_airship = clif_changemapserver_airship;

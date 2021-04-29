@@ -51,8 +51,8 @@ struct status_change_entry;
 #define MAX_SKILL_ABRA_DB         210
 #define MAX_SKILL_IMPROVISE_DB    30
 #define MAX_SKILL_LEVEL           20
-#define MAX_SKILL_UNIT_LAYOUT     45
-#define MAX_SQUARE_LAYOUT         5 // 11*11 Placement of a maximum unit
+#define MAX_SKILL_UNIT_LAYOUT     (48 + MAX_SQUARE_LAYOUT)
+#define MAX_SQUARE_LAYOUT         7 // 11*11 Placement of a maximum unit
 #define MAX_SKILL_UNIT_COUNT      ((MAX_SQUARE_LAYOUT*2+1)*(MAX_SQUARE_LAYOUT*2+1))
 #define MAX_SKILLTIMERSKILL       15
 #define MAX_SKILLUNITGROUP        25
@@ -80,6 +80,9 @@ struct status_change_entry;
 
 //Walk intervals at which chase-skills are attempted to be triggered.
 #define WALK_SKILL_INTERVAL 5
+
+// Max Crimson Marker targets (RL_C_MARKER)
+#define MAX_SKILL_CRIMSON_MARKER 3
 
 /**
  * Enumerations
@@ -151,20 +154,21 @@ enum e_skill_display {
 };
 
 enum {
-	UF_NONE             = 0x0000,
-	UF_DEFNOTENEMY      = 0x0001, // If 'defunit_not_enemy' is set, the target is changed to 'friend'
-	UF_NOREITERATION    = 0x0002, // Spell cannot be stacked
-	UF_NOFOOTSET        = 0x0004, // Spell cannot be cast near/on targets
-	UF_NOOVERLAP        = 0x0008, // Spell effects do not overlap
-	UF_PATHCHECK        = 0x0010, // Only cells with a shootable path will be placed
-	UF_NOPC             = 0x0020, // May not target players
-	UF_NOMOB            = 0x0040, // May not target mobs
-	UF_SKILL            = 0x0080, // May target skills
-	UF_DANCE            = 0x0100, // Dance
-	UF_ENSEMBLE         = 0x0200, // Duet
-	UF_SONG             = 0x0400, // Song
-	UF_DUALMODE         = 0x0800, // Spells should trigger both ontimer and onplace/onout/onleft effects.
-	UF_RANGEDSINGLEUNIT = 0x2000, // Hack for ranged layout, only display center
+	UF_NONE              = 0x0000,
+	UF_DEFNOTENEMY       = 0x0001, // If 'defunit_not_enemy' is set, the target is changed to 'friend'
+	UF_NOREITERATION     = 0x0002, // Spell cannot be stacked
+	UF_NOFOOTSET         = 0x0004, // Spell cannot be cast near/on targets
+	UF_NOOVERLAP         = 0x0008, // Spell effects do not overlap
+	UF_PATHCHECK         = 0x0010, // Only cells with a shootable path will be placed
+	UF_NOPC              = 0x0020, // May not target players
+	UF_NOMOB             = 0x0040, // May not target mobs
+	UF_SKILL             = 0x0080, // May target skills
+	UF_DANCE             = 0x0100, // Dance
+	UF_ENSEMBLE          = 0x0200, // Duet
+	UF_SONG              = 0x0400, // Song
+	UF_DUALMODE          = 0x0800, // Spells should trigger both ontimer and onplace/onout/onleft effects.
+	UF_RANGEDSINGLEUNIT  = 0x2000, // Hack for ranged layout, only display center
+	UF_REMOVEDBYFIRERAIN = 0x4000, // Can be deleted by RL_FIRE_RAIN
 };
 
 //Returns the cast type of the skill: ground cast, castend damage, castend no damage
@@ -206,6 +210,7 @@ enum {
 	ST_MH_FIGHTING,
 	ST_MH_GRAPPLING,
 	ST_PECO,
+	ST_QD_SHOT_READY,
 };
 
 enum e_skill {
@@ -2033,6 +2038,7 @@ struct skill_interface {
 	int firewall_unit_pos;
 	int icewall_unit_pos;
 	int earthstrain_unit_pos;
+	int firerain_unit_pos;
 	int area_temp[8];
 	int unit_temp[20];  // temporary storage for tracking skill unit skill ids as players move in/out of them
 	int unit_group_newid;
@@ -2173,6 +2179,7 @@ struct skill_interface {
 	void (*toggle_magicpower) (struct block_list *bl, uint16 skill_id, int skill_lv);
 	int (*magic_reflect) (struct block_list* src, struct block_list* bl, int type);
 	int (*onskillusage) (struct map_session_data *sd, struct block_list *bl, uint16 skill_id, int64 tick);
+	int (*bind_trap) (struct block_list *bl, va_list ap);
 	int (*cell_overlap) (struct block_list *bl, va_list ap);
 	int (*timerskill) (int tid, int64 tick, int id, intptr_t data);
 	void (*trap_do_splash) (struct block_list *bl, uint16 skill_id, uint16 skill_lv, int bl_flag, int64 tick);

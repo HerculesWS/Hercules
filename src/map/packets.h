@@ -1425,6 +1425,7 @@ packet(0x96e,clif->ackmergeitems);
 	packet(0x0887,clif->pStoragePassword,0);  // CZ_ACK_STORE_PASSWORD
 	packet(0x0363,clif->pDull); // CZ_JOIN_BATTLE_FIELD
 	packet(0x0436,clif->pDull); // CZ_GANGSI_RANK
+	packet(0x09C1,clif->crimson_marker,10,2,6,8); // ZC_C_MARKERINFO
 #endif
 
 //2013-08-14aRagexe - Themon

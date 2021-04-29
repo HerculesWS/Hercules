@@ -1650,6 +1650,7 @@ static int pc_calc_skilltree(struct map_session_data *sd)
 				case WL_SUMMON_ATK_GROUND:
 				case LG_OVERBRAND_BRANDISH:
 				case LG_OVERBRAND_PLUSATK:
+				case RL_R_TRIP_PLUSATK:
 					continue;
 				default:
 					break;
@@ -10552,6 +10553,7 @@ static int pc_unequipitem(struct map_session_data *sd, int n, int flag)
 	pc->unequipitem_pos(sd, n, pos);
 	clif->unequipitemack(sd, n, pos, UIA_SUCCESS);
 
+	status_change_end(&sd->bl, SC_HEAT_BARREL, INVALID_TIMER);
 	if ((pos & EQP_ARMS) != 0 && sd->weapontype1 == W_FIST && sd->weapontype2 == W_FIST
 	    && (sd->sc.data[SC_TK_SEVENWIND] == NULL || sd->sc.data[SC_ASPERSIO] != NULL)) { // Check for Seven Wind. (But not level seven!)
 		skill->enchant_elemental_end(&sd->bl, -1);
@@ -10566,6 +10568,9 @@ static int pc_unequipitem(struct map_session_data *sd, int n, int flag)
 	if (battle->bc->bow_unequip_arrow != 0 && (pos & EQP_ARMS) != 0 && sd->equip_index[EQI_AMMO] > 0)
 		pc->unequipitem(sd, sd->equip_index[EQI_AMMO], PCUNEQUIPITEM_FORCE);
 #endif
+
+	if (sd->inventory_data[n]->type == IT_AMMO && (sd->inventory_data[n]->nameid != ITEMID_SILVER_BULLET || sd->inventory_data[n]->nameid != ITEMID_SANCTIFIED_BULLET || sd->inventory_data[n]->nameid != ITEMID_SILVER_BULLET_))
+		status_change_end(&sd->bl, SC_PLATINUM_ALTER, INVALID_TIMER);
 
 	if ((sd->state.autobonus & pos) != 0)  // Check for activated autobonus. [Inkfish]
 		sd->state.autobonus &= ~sd->status.inventory[n].equip;
@@ -12608,6 +12613,23 @@ static bool pc_auto_exp_insurance(struct map_session_data *sd)
 	return true;
 }
 
+/**
+* Clear Crimson Marker data from caster
+* @param sd: Player
+**/
+void pc_crimson_marker_clear(struct map_session_data *sd)
+{
+	uint8 i;
+	nullpo_retv(sd);
+
+	for (i = 0; i < MAX_SKILL_CRIMSON_MARKER; i++) {
+		struct block_list *bl = NULL;
+		if (sd->c_marker[i] && (bl = map->id2bl(sd->c_marker[i])))
+			status_change_end(bl, SC_CRIMSON_MARKER, INVALID_TIMER);
+		sd->c_marker[i] = 0;
+	}
+}
+
 static void do_final_pc(void)
 {
 
@@ -13022,4 +13044,6 @@ void pc_defaults(void)
 	pc->has_second_costume = pc_has_second_costume;
 	pc->expandInventory = pc_expandInventory;
 	pc->auto_exp_insurance = pc_auto_exp_insurance;
+
+	pc->crimson_marker_clear = pc_crimson_marker_clear;
 }
