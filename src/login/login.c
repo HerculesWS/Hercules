@@ -1056,6 +1056,13 @@ static int login_mmo_auth_new(const char *userid, const char *pass, const char s
 	return -1;
 }
 
+static int login_check_client_version(struct login_session_data *sd)
+{
+	if (login->config->check_client_version && sd->version != login->config->client_version_to_connect)
+		return 5;
+	return -1;
+}
+
 //-----------------------------------------------------
 // Check/authentication of a connection
 //-----------------------------------------------------
@@ -1090,8 +1097,9 @@ static int login_mmo_auth(struct login_session_data *sd, bool isServer)
 	}
 
 	//Client Version check
-	if (login->config->check_client_version && sd->version != login->config->client_version_to_connect)
-		return 5;
+	const int versionError = login->check_client_version(sd);
+	if (versionError != -1)
+		return versionError;
 
 	len = strnlen(sd->userid, NAME_LENGTH);
 
@@ -2285,6 +2293,7 @@ void login_defaults(void)
 	login->auth_failed = login_auth_failed;
 	login->char_server_connection_status = login_char_server_connection_status;
 	login->kick = login_kick;
+	login->check_client_version = login_check_client_version;
 
 	login->config_set_defaults = login_config_set_defaults;
 	login->config_read = login_config_read;
