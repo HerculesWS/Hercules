@@ -1058,8 +1058,23 @@ static int login_mmo_auth_new(const char *userid, const char *pass, const char s
 
 static int login_check_client_version(struct login_session_data *sd)
 {
-	if (login->config->check_client_version && sd->version != login->config->client_version_to_connect)
-		return 5;
+	// if check flags enabled skip version check with flags pattern present in version field
+	if (!login->config->check_client_flags || (sd->version & 0x80000000) == 0) {
+		if (login->config->check_client_version && sd->version != login->config->client_version_to_connect)
+			return 5;
+	}
+
+	// check flags only if enabled and if client flags set to known value
+	if (login->config->check_client_flags && (sd->version & 0x80000000) != 0) {
+		const uint32 emulatorFlags = 0x80000000
+#ifdef ENABLE_CASHSHOP_PREVIEW_PATCH
+			| 1
+#endif  // ENABLE_CASHSHOP_PREVIEW_PATCH
+		;
+		if (emulatorFlags != sd->version)
+			return 5;
+	}
+
 	return -1;
 }
 
@@ -1096,10 +1111,12 @@ static int login_mmo_auth(struct login_session_data *sd, bool isServer)
 
 	}
 
-	//Client Version check
-	const int versionError = login->check_client_version(sd);
-	if (versionError != -1)
-		return versionError;
+	if (!isServer) {
+		//Client Version check
+		const int versionError = login->check_client_version(sd);
+		if (versionError != -1)
+			return versionError;
+	}
 
 	len = strnlen(sd->userid, NAME_LENGTH);
 
@@ -1496,6 +1513,7 @@ static void login_config_set_defaults(void)
 	login->config->group_id_to_connect = -1;
 	login->config->min_group_id_to_connect = -1;
 	login->config->check_client_version = false;
+	login->config->check_client_flags = true;
 	login->config->client_version_to_connect = 20;
 	login->config->allowed_regs = 1;
 	login->config->time_allowed = 10;
@@ -1857,6 +1875,7 @@ static bool login_config_read_permission(const char *filename, struct config_t *
 	libconfig->setting_lookup_int(setting, "group_id_to_connect", &login->config->group_id_to_connect);
 	libconfig->setting_lookup_int(setting, "min_group_id_to_connect", &login->config->min_group_id_to_connect);
 	libconfig->setting_lookup_bool_real(setting, "check_client_version", &login->config->check_client_version);
+	libconfig->setting_lookup_bool_real(setting, "check_client_flags", &login->config->check_client_flags);
 	libconfig->setting_lookup_uint32(setting, "client_version_to_connect", &login->config->client_version_to_connect);
 
 	if (!login->config_read_permission_hash(filename, config, imported))
