@@ -5439,13 +5439,18 @@ static void clif_skillinfoblock(struct map_session_data *sd)
 	int skillIndex = 0;
 	int len = sizeof(struct PACKET_ZC_SKILLINFO_LIST);
 	int i;
+	bool haveCallPartnerSkill = false;
 	for (i = 0; i < MAX_SKILL_DB; i++) {
 		int id = sd->status.skill[i].id;
 		if (id != 0) {
 			// workaround for bugreport:5348
 			if (len + sizeof(struct SKILLDATA) > 8192)
 				break;
-
+			// skip WE_CALLPARTNER and send it in special way
+			if (id == WE_CALLPARTNER) {
+				haveCallPartnerSkill = true;
+				continue;
+			}
 			clif->playerSkillToPacket(sd, &p->skills[skillIndex], id, i, false);
 			len += sizeof(struct SKILLDATA);
 			skillIndex++;
@@ -5453,6 +5458,12 @@ static void clif_skillinfoblock(struct map_session_data *sd)
 	}
 	p->packetLength = len;
 	WFIFOSET(fd, len);
+
+	// adoption fix
+	if (haveCallPartnerSkill) {
+		clif->addskill(sd, WE_CALLPARTNER);
+		clif->skillinfo(sd, WE_CALLPARTNER, 0);
+	}
 
 	// workaround for bugreport:5348; send the remaining skills one by one to bypass packet size limit
 	for (; i < MAX_SKILL_DB; i++) {
