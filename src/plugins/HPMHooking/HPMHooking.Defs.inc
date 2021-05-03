@@ -3268,12 +3268,12 @@ typedef bool (*HPMHOOK_pre_homun_read_db_libconfig_sub_stats) (struct config_set
 typedef bool (*HPMHOOK_post_homun_read_db_libconfig_sub_stats) (bool retVal___, struct config_setting_t *it, int idx);
 typedef bool (*HPMHOOK_pre_homun_read_db_libconfig_sub_stats_group) (struct config_setting_t **it, struct h_stats **smin, struct h_stats **smax);
 typedef bool (*HPMHOOK_post_homun_read_db_libconfig_sub_stats_group) (bool retVal___, struct config_setting_t *it, struct h_stats *smin, struct h_stats *smax);
+typedef bool (*HPMHOOK_pre_homun_read_db_libconfig_sub_expgroup) (struct config_setting_t **it, int *idx);
+typedef bool (*HPMHOOK_post_homun_read_db_libconfig_sub_expgroup) (bool retVal___, struct config_setting_t *it, int idx);
 typedef bool (*HPMHOOK_pre_homun_read_skill_db_sub) (char **split[], int *columns, int *current);
 typedef bool (*HPMHOOK_post_homun_read_skill_db_sub) (bool retVal___, char *split[], int columns, int current);
 typedef void (*HPMHOOK_pre_homun_skill_db_read) (void);
 typedef void (*HPMHOOK_post_homun_skill_db_read) (void);
-typedef void (*HPMHOOK_pre_homun_exp_db_read) (void);
-typedef void (*HPMHOOK_post_homun_exp_db_read) (void);
 typedef void (*HPMHOOK_pre_homun_addspiritball) (struct homun_data **hd, int *max);
 typedef void (*HPMHOOK_post_homun_addspiritball) (struct homun_data *hd, int max);
 typedef void (*HPMHOOK_pre_homun_delspiritball) (struct homun_data **hd, int *count, int *type);
