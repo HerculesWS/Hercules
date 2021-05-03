@@ -4709,7 +4709,7 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 
 	struct map_session_data *sd = NULL;
 	struct status_data *tstatus;
-	struct status_change* sc, * tsc;
+	struct status_change *sc, *tsc;
 
 	if (skill_id > 0 && !skill_lv) return 0;
 
@@ -13495,7 +13495,6 @@ static int skill_unit_onplace(struct skill_unit *src, struct block_list *bl, int
 			if (!sce && battle->check_target(&src->bl,bl,sg->target_flag) > 0)
 				sc_start4(ss,bl,type,100,sg->skill_lv,0,0,0,1000);
 			break;
-
 		default:
 			skill->unit_onplace_unknown(src, bl, &tick);
 			break;

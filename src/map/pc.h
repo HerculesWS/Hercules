@@ -1242,7 +1242,7 @@ END_ZEROED_BLOCK; /* End */
 	bool (*expandInventory) (struct map_session_data *sd, int adjustSize);
 	bool (*auto_exp_insurance) (struct map_session_data *sd);
 
-	void (*crimson_marker_clear) (struct map_session_data* sd);
+	void (*crimson_marker_clear) (struct map_session_data *sd);
 };
 
 #ifdef HERCULES_CORE

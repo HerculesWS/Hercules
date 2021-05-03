@@ -52,7 +52,7 @@ struct status_change_entry;
 #define MAX_SKILL_IMPROVISE_DB    30
 #define MAX_SKILL_LEVEL           20
 #define MAX_SKILL_UNIT_LAYOUT     (48 + MAX_SQUARE_LAYOUT)
-#define MAX_SQUARE_LAYOUT         7 // 11*11 Placement of a maximum unit
+#define MAX_SQUARE_LAYOUT         7 // 15*15 Placement of a maximum unit
 #define MAX_SKILL_UNIT_COUNT      ((MAX_SQUARE_LAYOUT*2+1)*(MAX_SQUARE_LAYOUT*2+1))
 #define MAX_SKILLTIMERSKILL       15
 #define MAX_SKILLUNITGROUP        25

@@ -2286,7 +2286,7 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					break;
 				case GS_DESPERADO:
 					skillratio += 50 * (skill_lv-1);
-					if (sc &&  sc->data[SC_FALLEN_ANGEL])
+					if (sc && sc->data[SC_FALLEN_ANGEL])
 						skillratio *= 2;
 					break;
 				case GS_DUST:
@@ -4768,7 +4768,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 				wd.type = BDT_MULTIHIT;
 			}
 		}
-		else if (((sd->weapontype1 == W_REVOLVER && (skill_lv = pc->checkskill(sd,GS_CHAINACTION)) > 0)
+		else if (((sd->weapontype1 == W_REVOLVER && (skill_lv = pc->checkskill(sd, GS_CHAINACTION)) > 0)
 			|| (sc && sc->count && sc->data[SC_ETERNAL_CHAIN] && (skill_lv = sc->data[SC_ETERNAL_CHAIN]->val1) > 0))
 			&& rnd() % 100 < 5 * skill_lv)
 		{
