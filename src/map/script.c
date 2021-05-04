@@ -16429,12 +16429,11 @@ static int soundeffect_sub(struct block_list *bl, va_list ap)
  *------------------------------------------*/
 static BUILDIN(soundeffectall)
 {
-	struct block_list* bl;
 	const char* name;
 	int type;
 
-	bl = (st->rid) ? &(script->rid2sd(st)->bl) : map->id2bl(st->oid);
-	if (!bl)
+	struct block_list *bl = st->rid != 0 ? map->id2bl(st->rid) : map->id2bl(st->oid);
+	if (bl == NULL)
 		return true;
 
 	name = script_getstr(st,2);
