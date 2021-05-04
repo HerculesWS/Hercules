@@ -3034,7 +3034,7 @@ static struct map_session_data *script_rid2sd(struct script_state *st)
 {
 	struct map_session_data *sd;
 	nullpo_retr(NULL, st);
-	if( !( sd = map->id2sd(st->rid) ) ) {
+	if ((sd = map->id2sd(st->rid)) == NULL) {
 		ShowError("script_rid2sd: fatal error ! player not attached!\n");
 		script->reportfunc(st);
 		script->reportsrc(st);
@@ -4194,13 +4194,13 @@ static void script_free_state(struct script_state *st)
 {
 	nullpo_retv(st);
 	if( idb_exists(script->st_db,st->id) ) {
-		struct map_session_data *sd = st->rid ? map->id2sd(st->rid) : NULL;
+		struct map_session_data *sd = st->rid != 0 ? map->id2sd(st->rid) : NULL;
 
 		if(st->bk_st) {// backup was not restored
 			ShowDebug("script_free_state: Previous script state lost (rid=%d, oid=%d, state=%u, bk_npcid=%d).\n", st->bk_st->rid, st->bk_st->oid, st->bk_st->state, st->bk_npcid);
 		}
 
-		if(sd && sd->st == st) { //Current script is aborted.
+		if (sd != NULL && sd->st == st) { //Current script is aborted.
 			if(sd->state.using_fake_npc){
 				clif->clearunit_single(sd->npc_id, CLR_OUTSIGHT, sd->fd);
 				sd->state.using_fake_npc = 0;
@@ -4839,7 +4839,7 @@ static int run_script_timer(int tid, int64 tick, int id, intptr_t data)
 	if( st ) {
 		struct map_session_data *sd = map->id2sd(st->rid);
 
-		if((sd && sd->status.char_id != id) || (st->rid && !sd)) { //Character mismatch. Cancel execution.
+		if ((sd != NULL && sd->status.char_id != id) || (st->rid != 0 && sd == NULL)) { // Character mismatch. Cancel execution.
 			st->rid = 0;
 			st->state = END;
 		}
@@ -4860,7 +4860,7 @@ static void script_detach_state(struct script_state *st, bool dequeue_event)
 	struct map_session_data* sd;
 
 	nullpo_retv(st);
-	if(st->rid && (sd = map->id2sd(st->rid))!=NULL) {
+	if (st->rid != 0 && (sd = map->id2sd(st->rid)) != NULL) {
 		sd->st = st->bk_st;
 		sd->npc_id = st->bk_npcid;
 		if(st->bk_st) {
@@ -4895,12 +4895,10 @@ static void script_attach_state(struct script_state *st)
 	struct map_session_data* sd;
 
 	nullpo_retv(st);
-	if(st->rid && (sd = map->id2sd(st->rid))!=NULL)
-	{
-		if(st!=sd->st)
-		{
-			if(st->bk_st)
-			{// there is already a backup
+	if (st->rid != 0 && (sd = map->id2sd(st->rid)) != NULL) {
+		if (st != sd->st) {
+			if (st->bk_st != NULL) {
+				// there is already a backup
 				ShowDebug("script_free_state: Previous script state lost (rid=%d, oid=%d, state=%u, bk_npcid=%d).\n", st->bk_st->rid, st->bk_st->oid, st->bk_st->state, st->bk_npcid);
 			}
 			st->bk_st = sd->st;
@@ -4986,9 +4984,9 @@ static void run_script_main(struct script_state *st)
 				translations = *((uint8 *)(&VECTOR_INDEX(st->script->script_buf, st->pos)));
 				st->pos += sizeof(translations);
 
-				if( (!st->rid || !(lsd = map->id2sd(st->rid)) || !lsd->lang_id) && !map->default_lang_id )
+				if ((st->rid == 0 || (lsd = map->id2sd(st->rid)) == NULL || lsd->lang_id == 0) && map->default_lang_id == 0) {
 					script->push_conststr(stack, script->string_list+string_id);
-				else {
+				} else {
 					uint8 k, wlang_id = lsd ? lsd->lang_id : map->default_lang_id;
 					int offset = st->pos;
 
@@ -5082,7 +5080,7 @@ static void run_script_main(struct script_state *st)
 		st->sleep.charid = sd?sd->status.char_id:0;
 		st->sleep.timer  = timer->add(timer->gettick()+st->sleep.tick,
 			script->run_timer, st->sleep.charid, (intptr_t)st->id);
-	} else if(st->state != END && st->rid) {
+	} else if (st->state != END && st->rid != 0) {
 		//Resume later (st is already attached to player).
 		if(st->bk_st) {
 			ShowWarning("Unable to restore stack! Double continuation!\n");
@@ -5097,7 +5095,7 @@ static void run_script_main(struct script_state *st)
 		}
 	} else {
 		//Dispose of script.
-		if ((sd = map->id2sd(st->rid))!=NULL) { //Restore previous stack and save char.
+		if ((sd = map->id2sd(st->rid)) != NULL) { // Restore previous stack and save char.
 			if(sd->state.using_fake_npc) {
 				clif->clearunit_single(sd->npc_id, CLR_OUTSIGHT, sd->fd);
 				sd->state.using_fake_npc = 0;
@@ -11662,7 +11660,6 @@ static BUILDIN(monster)
 	unsigned int ai   = AI_NONE;
 	int mob_id;
 
-	struct map_session_data* sd;
 	int16 m;
 
 	if (script_hasdata(st, 8))
@@ -11696,11 +11693,10 @@ static BUILDIN(monster)
 		return false;
 	}
 
-	sd = map->id2sd(st->rid);
-
-	if (sd && strcmp(mapn, "this") == 0)
+	struct map_session_data *sd = map->id2sd(st->rid);
+	if (sd != NULL && strcmp(mapn, "this") == 0) {
 		m = sd->bl.m;
-	else {
+	} else {
 		if ( ( m = map->mapname2mapid(mapn) ) == -1 ) {
 			ShowWarning("buildin_monster: Attempted to spawn monster class %d on non-existing map '%s'\n",class_, mapn);
 			return false;
@@ -11771,7 +11767,6 @@ static BUILDIN(areamonster)
 	unsigned int ai   = AI_NONE;
 	int mob_id;
 
-	struct map_session_data* sd;
 	int16 m;
 
 	if (script_hasdata(st,10)) {
@@ -11795,11 +11790,10 @@ static BUILDIN(areamonster)
 		}
 	}
 
-	sd = map->id2sd(st->rid);
-
-	if (sd && strcmp(mapn, "this") == 0)
+	struct map_session_data *sd = map->id2sd(st->rid);
+	if (sd != NULL && strcmp(mapn, "this") == 0) {
 		m = sd->bl.m;
-	else {
+	} else {
 		if ( ( m = map->mapname2mapid(mapn) ) == -1 ) {
 			ShowWarning("buildin_areamonster: Attempted to spawn monster class %d on non-existing map '%s'\n",class_, mapn);
 			return false;
@@ -12596,7 +12590,7 @@ static BUILDIN(detachnpctimer)
  *------------------------------------------*/
 static BUILDIN(playerattached)
 {
-	if(st->rid == 0 || map->id2sd(st->rid) == NULL)
+	if (st->rid == 0 || map->id2sd(st->rid) == NULL)
 		script_pushint(st,0);
 	else
 		script_pushint(st,st->rid);
@@ -13172,7 +13166,7 @@ static BUILDIN(sc_start)
 		val4 = 1;// Mark that this was a thrown sc_effect
 	}
 
-	if(!bl)
+	if (bl == NULL)
 		return true;
 
 	switch(start_type) {
@@ -13210,7 +13204,7 @@ static BUILDIN(sc_end)
 	if (script->potion_flag == 1 && script->potion_target) //##TODO how does this work [FlavioJS]
 		bl = map->id2bl(script->potion_target);
 
-	if (!bl)
+	if (bl == NULL)
 		return true;
 
 	if (type >= 0 && type < SC_MAX) {
@@ -13258,7 +13252,7 @@ static BUILDIN(getscrate)
 	else
 		bl = map->id2bl(st->rid);
 
-	if (bl)
+	if (bl != NULL)
 		rate = status->get_sc_def(bl, bl, (sc_type)type, 10000, 10000, SCFLAG_NONE);
 
 	script_pushint(st,rate);
@@ -13507,10 +13501,10 @@ static BUILDIN(roclass)
 		sex = script_getnum(st,3);
 	} else {
 		struct map_session_data *sd;
-		if (st->rid && (sd=script->rid2sd(st)) != NULL)
+		if (st->rid != 0 && (sd = map->id2sd(st->rid)) != NULL)
 			sex = sd->status.sex;
 		else
-			sex = 1; //Just use male when not found.
+			sex = SEX_MALE; //Just use male when not found.
 	}
 	script_pushint(st,pc->mapid2jobid(job, sex));
 	return true;
@@ -14031,7 +14025,7 @@ static BUILDIN(warpwaitingpc)
 /// @param st Script state to detach the character from.
 static void script_detach_rid(struct script_state *st)
 {
-	if(st->rid) {
+	if (st->rid != 0) {
 		script->detach_state(st, false);
 		st->rid = 0;
 	}
@@ -14127,7 +14121,7 @@ static BUILDIN(getmapinfo)
 
 		if (st->oid) {
 			bl = map->id2bl(st->oid);
-		} else if (st->rid) {
+		} else if (st->rid != 0) {
 			bl = map->id2bl(st->rid);
 		}
 
@@ -22338,7 +22332,7 @@ static BUILDIN(sleep2)
 
 	if( ticks <= 0 ) {
 		// do nothing
-		script_pushint(st, (map->id2sd(st->rid)!=NULL));
+		script_pushint(st, (map->id2sd(st->rid) != NULL));
 	} else if( !st->sleep.tick ) {
 		// sleep for the target amount of time
 		st->state = RERUNLINE;
@@ -22347,7 +22341,7 @@ static BUILDIN(sleep2)
 		// sleep time is over
 		st->state = RUN;
 		st->sleep.tick = 0;
-		script_pushint(st, (map->id2sd(st->rid)!=NULL));
+		script_pushint(st, (map->id2sd(st->rid) != NULL));
 	}
 	return true;
 }
@@ -22370,12 +22364,11 @@ static BUILDIN(awake)
 
 	for( tst = dbi_first(iter); dbi_exists(iter); tst = dbi_next(iter) ) {
 		if( tst->oid == nd->bl.id ) {
-			struct map_session_data *sd = map->id2sd(tst->rid);
-
 			if( tst->sleep.timer == INVALID_TIMER ) {// already awake ???
 				continue;
 			}
-			if( (sd && sd->status.char_id != tst->sleep.charid) || (tst->rid && !sd)) {
+			struct map_session_data *sd = map->id2sd(tst->rid);
+			if ((sd != NULL && sd->status.char_id != tst->sleep.charid) || (tst->rid != 0 && sd == NULL)) {
 				// char not online anymore / another char of the same account is online - Cancel execution
 				tst->state = END;
 				tst->rid = 0;
@@ -26385,19 +26378,18 @@ static BUILDIN(removechannelhandler)
  */
 static BUILDIN(showscript)
 {
-	struct block_list *bl = NULL;
 	const char *msg = script_getstr(st, 2);
 	int id = 0, flag = AREA;
 
-	if (script_hasdata(st, 3)) {
+	if (script_hasdata(st, 3))
 		id = script_getnum(st, 3);
-		bl = map->id2bl(id);
-	}
-	else {
-		bl = st->rid ? map->id2bl(st->rid) : map->id2bl(st->oid);
-	}
+	else if (st->rid != 0)
+		id = st->rid;
+	else
+		id = st->oid;
 
-	if (!bl) {
+	struct block_list *bl = map->id2bl(id);
+	if (bl == NULL) {
 		ShowError("buildin_showscript: Script not attached. (id=%d, rid=%d, oid=%d)\n", id, st->rid, st->oid);
 		return false;
 	}
