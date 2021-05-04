@@ -7831,7 +7831,8 @@ static BUILDIN(getarraysize)
 		return false;// not a variable
 	}
 
-	script_pushint(st, script->array_highest_key(st,st->rid ? script->rid2sd(st) : NULL,reference_getname(data),reference_getref(data)));
+	struct map_session_data *sd = st->rid != 0 ? map->id2sd(st->rid) : NULL;
+	script_pushint(st, script->array_highest_key(st, sd, reference_getname(data), reference_getref(data)));
 	return true;
 }
 static int script_array_index_cmp(const void *a, const void *b)
