@@ -24904,12 +24904,8 @@ static BUILDIN(montransform)
 {
 	int tick;
 	enum sc_type type;
-	struct block_list* bl;
 	int mob_id, val1, val2, val3, val4;
 	val1 = val2 = val3 = val4 = 0;
-
-	if( (bl = map->id2bl(st->rid)) == NULL )
-		return true;
 
 	if( script_isstringtype(st, 2) ) {
 		mob_id = mob->db_searchname(script_getstr(st, 2));
@@ -24952,10 +24948,9 @@ static BUILDIN(montransform)
 		val4 = script_getnum(st, 8);
 
 	if (tick != 0) {
-		struct map_session_data *sd = script->id2sd(st, bl->id);
-
+		struct map_session_data *sd = script->rid2sd(st);
 		if (sd == NULL)
-			return true;
+			return false;
 
 		if( battle_config.mon_trans_disable_in_gvg && map_flag_gvg2(sd->bl.m) ) {
 			clif->message(sd->fd, msg_sd(sd,1488)); // Transforming into monster is not allowed in Guild Wars.
@@ -24967,11 +24962,11 @@ static BUILDIN(montransform)
 			return true;
 		}
 
-		status_change_end(bl, SC_MONSTER_TRANSFORM, INVALID_TIMER); // Clear previous
-		sc_start2(NULL, bl, SC_MONSTER_TRANSFORM, 100, mob_id, type, tick);
+		status_change_end(&sd->bl, SC_MONSTER_TRANSFORM, INVALID_TIMER); // Clear previous
+		sc_start2(NULL, &sd->bl, SC_MONSTER_TRANSFORM, 100, mob_id, type, tick);
 
 		if (script_hasdata(st, 4))
-			sc_start4(NULL, bl, type, 100, val1, val2, val3, val4, tick);
+			sc_start4(NULL, &sd->bl, type, 100, val1, val2, val3, val4, tick);
 	}
 
 	return true;
