@@ -1474,7 +1474,7 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 				}
 				break;
 			case RL_QD_SHOT:
-				if (sc && sc->data[SC_QD_SHOT_READY]) {
+				if (sc != NULL && sc->data[SC_QD_SHOT_READY]) {
 					if ((target = map->id2bl(sc->data[SC_QD_SHOT_READY]->val1)) == NULL)
 						return 0;
 					temp = 1;

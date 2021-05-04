@@ -2285,8 +2285,8 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					skillratio += 10 * skill_lv;
 					break;
 				case GS_DESPERADO:
-					skillratio += 50 * (skill_lv-1);
-					if (sc && sc->data[SC_FALLEN_ANGEL])
+					skillratio += 50 * (skill_lv - 1);
+					if (sc != NULL && sc->data[SC_FALLEN_ANGEL])
 						skillratio *= 2;
 					break;
 				case GS_DUST:
@@ -2776,7 +2776,7 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					break;
 				case RL_FIREDANCE:
 					skillratio += 100 + 100 * skill_lv;
-					skillratio += (sd ? pc->checkskill(sd, GS_DESPERADO) * 20 : 0);
+					skillratio += (sd != NULL ? pc->checkskill(sd, GS_DESPERADO) * 20 : 0);
 					RE_LVL_DMOD(100);
 					break;
 				case RL_S_STORM:
@@ -2802,7 +2802,7 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					break;
 				case RL_HAMMER_OF_GOD:
 					skillratio += -100 + 100 * skill_lv;
-					if (sd) {
+					if (sd != NULL) {
 						if (flag & 8)
 							skillratio += 400 * sd->spiritball_old;
 						else
@@ -2811,14 +2811,14 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					RE_LVL_DMOD(100);
 					break;
 				case RL_H_MINE:
-					if (sd && sd->flicker) // Flicker explosion damage: 500 + 300 * SkillLv
+					if (sd != NULL && sd->flicker) // Flicker explosion damage: 500 + 300 * SkillLv
 						skillratio += -100 + 500 + 300 * skill_lv;
 					else // 200 + 200 * SkillLv
 						skillratio += -100 + 200 + 200 * skill_lv;
 					break;
 				case RL_D_TAIL:
 					skillratio += -100 + 500 + 200 * skill_lv;
-					if (sd && (flag & 8))
+					if (sd != NULL && (flag & 8))
 						skillratio *= 2;
 					RE_LVL_DMOD(100);
 					break;
@@ -3351,7 +3351,7 @@ static int64 battle_calc_damage(struct block_list *src, struct block_list *bl, s
 				status_change_end(bl, SC_KYRIE, INVALID_TIMER);
 		}
 
-		if ((sce = sc->data[SC_PLATINUM_ALTER]) && damage > 0) {
+		if ((sce = sc->data[SC_PLATINUM_ALTER]) != NULL && damage > 0) {
 			clif->specialeffect(bl, 336, AREA);
 			sce->val3 -= (int)cap_value(damage, INT_MIN, INT_MAX);
 			if (sce->val3 >= 0)
@@ -4662,7 +4662,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 				break;
 
 			case RL_QD_SHOT:
-				wd.div_ = 1 + (sd ? sd->status.job_level : 1) / 20 + (tsc && tsc->data[SC_CRIMSON_MARKER] ? 2 : 0);
+				wd.div_ = 1 + (sd != NULL ? sd->status.job_level : 1) / 20 + (tsc != NULL&& tsc->data[SC_CRIMSON_MARKER] ? 2 : 0);
 				break;
 
 			case NPC_EARTHQUAKE:
@@ -4732,7 +4732,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 				s_ele = ELE_HOLY; // Banding with 5 RGs: change atk element to Holy.
 			break;
 		case RL_H_MINE:
-			if (sd && sd->flicker) //Force RL_H_MINE deals fire damage if activated by RL_FLICKER
+			if (sd != NULL && sd->flicker) //Force RL_H_MINE deals fire damage if activated by RL_FLICKER
 				s_ele = s_ele_ = ELE_FIRE;
 			break;
 	}
@@ -4997,7 +4997,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 				break;
 			case RL_SLUGSHOT:
 				{
-					int8 dist = distance_bl(src, target);
+					int dist = distance_bl(src, target);
 					if (dist > 3) {
 						// Reduce n hitrate for each cell after initial 3 cells. Different each level
 						// -10:-9:-8:-7:-6
@@ -5218,7 +5218,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 			}
 		}
 
-		if (sc && sc->data[SC_HEAT_BARREL])
+		if (sc != NULL && sc->data[SC_HEAT_BARREL])
 			ATK_ADDRATE(sc->data[SC_HEAT_BARREL]->val3);
 
 		if ( sc && !skill_id && sc->data[SC_EXEEDBREAK] ) {

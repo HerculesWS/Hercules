@@ -9226,7 +9226,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			case SC_HEAT_BARREL:
 				{
 					int n = 10;
-					if (sd)
+					if (sd != NULL)
 						n = sd->spiritball_old;
 
 					val2 = n * 5; // -fixed casttime
@@ -9237,7 +9237,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			case SC_PLATINUM_ALTER:
 				{
 					int n = 10;
-					if (sd)
+					if (sd != NULL)
 						n = sd->spiritball_old;
 					val2 = 10 * n; // +atk
 					val3 = (st->max_hp * (val1 * 5) / 100); // Barrier HP
@@ -9248,7 +9248,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				break;
 			case SC_ETERNAL_CHAIN:
 				val2 = 10;
-				if (sd)
+				if (sd != NULL)
 					val2 = sd->spiritball_old;
 				break;
 			case SC_CRIMSON_MARKER:

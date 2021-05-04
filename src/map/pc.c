@@ -10569,8 +10569,10 @@ static int pc_unequipitem(struct map_session_data *sd, int n, int flag)
 		pc->unequipitem(sd, sd->equip_index[EQI_AMMO], PCUNEQUIPITEM_FORCE);
 #endif
 
-	if (sd->inventory_data[n]->type == IT_AMMO && (sd->inventory_data[n]->nameid != ITEMID_SILVER_BULLET || sd->inventory_data[n]->nameid != ITEMID_SANCTIFIED_BULLET || sd->inventory_data[n]->nameid != ITEMID_SILVER_BULLET_))
-		status_change_end(&sd->bl, SC_PLATINUM_ALTER, INVALID_TIMER);
+	if (sd->inventory_data[n] != NULL) {
+		if (sd->inventory_data[n]->type == IT_AMMO && (sd->inventory_data[n]->nameid != ITEMID_SILVER_BULLET || sd->inventory_data[n]->nameid != ITEMID_SANCTIFIED_BULLET || sd->inventory_data[n]->nameid != ITEMID_SILVER_BULLET_))
+			status_change_end(&sd->bl, SC_PLATINUM_ALTER, INVALID_TIMER);
+	}
 
 	if ((sd->state.autobonus & pos) != 0)  // Check for activated autobonus. [Inkfish]
 		sd->state.autobonus &= ~sd->status.inventory[n].equip;
@@ -12619,10 +12621,9 @@ static bool pc_auto_exp_insurance(struct map_session_data *sd)
 **/
 void pc_crimson_marker_clear(struct map_session_data *sd)
 {
-	uint8 i;
 	nullpo_retv(sd);
 
-	for (i = 0; i < MAX_SKILL_CRIMSON_MARKER; i++) {
+	for (int i = 0; i < MAX_SKILL_CRIMSON_MARKER; i++) {
 		struct block_list *bl = NULL;
 		if (sd->c_marker[i] && (bl = map->id2bl(sd->c_marker[i])))
 			status_change_end(bl, SC_CRIMSON_MARKER, INVALID_TIMER);
