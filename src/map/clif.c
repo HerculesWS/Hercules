@@ -24393,19 +24393,24 @@ static bool clif_lapineUpgrade_result(struct map_session_data *sd, enum lapineUp
 /**
 * Marks Crimson Marker target on mini-map to the caster
 * 09C1 <id>.L <x>.W <y>.W (ZC_C_MARKERINFO)
-* @param fd
+* @param fd Crimson Marker Source
 * @param bl Crimson Marker target
+* @param remove Either add/remove indictator to target
 **/
 void clif_crimson_marker(struct map_session_data *sd, struct block_list *bl, bool remove)
 {
-	unsigned char buf[10];
+#if PACKETVER_MAIN_NUM >= 20130731 || PACKETVER_RE_NUM >= 20130717 || defined(PACKETVER_ZERO)
 	nullpo_retv(sd);
+	nullpo_retv(bl);
+	struct PACKET_ZC_C_MARKERINFO p;
 
-	WBUFW(buf, 0) = 0x09C1;
-	WBUFL(buf, 2) = bl->id;
-	WBUFW(buf, 6) = (remove ? -1 : bl->x);
-	WBUFW(buf, 8) = (remove ? -1 : bl->y);
-	clif->send(buf, packet_len(0x09C1), &sd->bl, SELF);
+	p.PacketType = HEADER_ZC_C_MARKERINFO;
+	p.AID = bl->id;
+	p.xPos = (remove ? -1 : bl->x);
+	p.yPos = (remove ? -1 : bl->y);
+
+	clif->send(&p, sizeof(p), &sd->bl, SELF);
+#endif
 }
 
 /*==========================================
