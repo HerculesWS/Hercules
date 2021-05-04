@@ -26941,7 +26941,7 @@ static BUILDIN(clan_join)
 	if (script_hasdata(st, 3))
 		sd = map->id2sd(script_getnum(st, 3));
 	else
-		sd = map->id2sd(st->rid);
+		sd = script->rid2sd(st);
 
 	if (sd == NULL) {
 		script_pushint(st, false);
@@ -26966,7 +26966,7 @@ static BUILDIN(clan_leave)
 	if (script_hasdata(st, 2))
 		sd = map->id2sd(script_getnum(st, 2));
 	else
-		sd = map->id2sd(st->rid);
+		sd = script->rid2sd(st);
 
 	if (sd == NULL) {
 		script_pushint(st, false);
@@ -27011,7 +27011,7 @@ static BUILDIN(clan_master)
 
 static BUILDIN(airship_respond)
 {
-	struct map_session_data *sd = map->id2sd(st->rid);
+	struct map_session_data *sd = script->rid2sd(st);
 	int32 flag = script_getnum(st, 2);
 
 	if (sd == NULL)
