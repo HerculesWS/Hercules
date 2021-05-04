@@ -696,7 +696,8 @@ struct script_state {
 	int start,end;
 	int pos;
 	enum e_script_state state;
-	int rid,oid;
+	int rid; ///< GID of the player attached to the script (or the mob, when called through OnTouchNPC)
+	int oid;
 	struct script_code *script;
 	struct sleep_data {
 		int tick,timer,charid;
