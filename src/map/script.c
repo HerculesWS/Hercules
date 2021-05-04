@@ -24667,16 +24667,14 @@ static BUILDIN(unbindatcmd)
 
 static BUILDIN(useatcmd)
 {
-	struct map_session_data *sd, *dummy_sd = NULL;
+	struct map_session_data *sd = NULL;
+	struct map_session_data *dummy_sd = NULL;
 	int fd;
 	const char* cmd;
 
 	cmd = script_getstr(st,2);
 
-	if (st->rid) {
-		sd = script->rid2sd(st);
-		if (sd == NULL)
-			return true;
+	if (st->rid != 0 && (sd = map->id2sd(st->rid)) != NULL) {
 		fd = sd->fd;
 	} else {
 		// Use a dummy character.
@@ -24699,7 +24697,8 @@ static BUILDIN(useatcmd)
 	}
 
 	atcommand->exec(fd, sd, cmd, true);
-	if (dummy_sd) aFree(dummy_sd);
+	if (dummy_sd)
+		aFree(dummy_sd);
 	return true;
 }
 
