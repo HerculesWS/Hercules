@@ -3280,6 +3280,10 @@ typedef void (*HPMHOOK_pre_homun_delspiritball) (struct homun_data **hd, int *co
 typedef void (*HPMHOOK_post_homun_delspiritball) (struct homun_data *hd, int count, int type);
 typedef int8 (*HPMHOOK_pre_homun_get_intimacy_grade) (struct homun_data **hd);
 typedef int8 (*HPMHOOK_post_homun_get_intimacy_grade) (int8 retVal___, struct homun_data *hd);
+typedef int (*HPMHOOK_pre_homun_get_max_level) (struct homun_data **hd);
+typedef int (*HPMHOOK_post_homun_get_max_level) (int retVal___, struct homun_data *hd);
+typedef uint64 (*HPMHOOK_pre_homun_get_exp) (struct homun_data **hd, int *idx);
+typedef uint64 (*HPMHOOK_post_homun_get_exp) (uint64 retVal___, struct homun_data *hd, int idx);
 #endif // MAP_HOMUNCULUS_H
 #ifdef MAP_INSTANCE_H /* instance */
 typedef void (*HPMHOOK_pre_instance_init) (bool *minimal);

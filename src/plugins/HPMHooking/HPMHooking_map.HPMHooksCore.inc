@@ -2840,6 +2840,10 @@ struct {
 	struct HPMHookPoint *HP_homun_delspiritball_post;
 	struct HPMHookPoint *HP_homun_get_intimacy_grade_pre;
 	struct HPMHookPoint *HP_homun_get_intimacy_grade_post;
+	struct HPMHookPoint *HP_homun_get_max_level_pre;
+	struct HPMHookPoint *HP_homun_get_max_level_post;
+	struct HPMHookPoint *HP_homun_get_exp_pre;
+	struct HPMHookPoint *HP_homun_get_exp_post;
 	struct HPMHookPoint *HP_instance_init_pre;
 	struct HPMHookPoint *HP_instance_init_post;
 	struct HPMHookPoint *HP_instance_final_pre;
@@ -9931,6 +9935,10 @@ struct {
 	int HP_homun_delspiritball_post;
 	int HP_homun_get_intimacy_grade_pre;
 	int HP_homun_get_intimacy_grade_post;
+	int HP_homun_get_max_level_pre;
+	int HP_homun_get_max_level_post;
+	int HP_homun_get_exp_pre;
+	int HP_homun_get_exp_post;
 	int HP_instance_init_pre;
 	int HP_instance_init_post;
 	int HP_instance_final_pre;

@@ -37273,6 +37273,60 @@ int8 HP_homun_get_intimacy_grade(struct homun_data *hd) {
 	}
 	return retVal___;
 }
+int HP_homun_get_max_level(struct homun_data *hd) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_homun_get_max_level_pre > 0) {
+		int (*preHookFunc) (struct homun_data **hd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_homun_get_max_level_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_homun_get_max_level_pre[hIndex].func;
+			retVal___ = preHookFunc(&hd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.homun.get_max_level(hd);
+	}
+	if (HPMHooks.count.HP_homun_get_max_level_post > 0) {
+		int (*postHookFunc) (int retVal___, struct homun_data *hd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_homun_get_max_level_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_homun_get_max_level_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, hd);
+		}
+	}
+	return retVal___;
+}
+uint64 HP_homun_get_exp(struct homun_data *hd, int idx) {
+	int hIndex = 0;
+	uint64 retVal___ = 0;
+	if (HPMHooks.count.HP_homun_get_exp_pre > 0) {
+		uint64 (*preHookFunc) (struct homun_data **hd, int *idx);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_homun_get_exp_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_homun_get_exp_pre[hIndex].func;
+			retVal___ = preHookFunc(&hd, &idx);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.homun.get_exp(hd, idx);
+	}
+	if (HPMHooks.count.HP_homun_get_exp_post > 0) {
+		uint64 (*postHookFunc) (uint64 retVal___, struct homun_data *hd, int idx);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_homun_get_exp_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_homun_get_exp_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, hd, idx);
+		}
+	}
+	return retVal___;
+}
 /* instance_interface */
 void HP_instance_init(bool minimal) {
 	int hIndex = 0;
