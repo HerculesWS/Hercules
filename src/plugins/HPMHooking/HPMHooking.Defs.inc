@@ -4884,6 +4884,8 @@ typedef struct map_zone_data* (*HPMHOOK_pre_map_merge_zone) (struct map_zone_dat
 typedef struct map_zone_data* (*HPMHOOK_post_map_merge_zone) (struct map_zone_data* retVal___, struct map_zone_data *main, struct map_zone_data *other);
 typedef void (*HPMHOOK_pre_map_zone_clear_single) (struct map_zone_data **zone);
 typedef void (*HPMHOOK_post_map_zone_clear_single) (struct map_zone_data *zone);
+typedef void (*HPMHOOK_pre_map_lock_check) (const char **file, const char **func, int *line, int *lock_count);
+typedef void (*HPMHOOK_post_map_lock_check) (const char *file, const char *func, int line, int lock_count);
 #endif // MAP_MAP_H
 #ifdef CHAR_MAPIF_H /* mapif */
 typedef void (*HPMHOOK_pre_mapif_ban) (int *id, unsigned int *flag, int *status);

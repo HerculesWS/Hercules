@@ -50353,6 +50353,32 @@ void HP_map_zone_clear_single(struct map_zone_data *zone) {
 	}
 	return;
 }
+void HP_map_lock_check(const char *file, const char *func, int line, int lock_count) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_map_lock_check_pre > 0) {
+		void (*preHookFunc) (const char **file, const char **func, int *line, int *lock_count);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_map_lock_check_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_map_lock_check_pre[hIndex].func;
+			preHookFunc(&file, &func, &line, &lock_count);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.map.lock_check(file, func, line, lock_count);
+	}
+	if (HPMHooks.count.HP_map_lock_check_post > 0) {
+		void (*postHookFunc) (const char *file, const char *func, int line, int lock_count);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_map_lock_check_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_map_lock_check_post[hIndex].func;
+			postHookFunc(file, func, line, lock_count);
+		}
+	}
+	return;
+}
 /* mapindex_interface */
 bool HP_mapindex_config_read_dbpath(const char *filename, const struct config_t *config) {
 	int hIndex = 0;

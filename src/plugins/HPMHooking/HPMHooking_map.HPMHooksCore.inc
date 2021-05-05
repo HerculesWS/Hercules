@@ -3808,6 +3808,8 @@ struct {
 	struct HPMHookPoint *HP_map_merge_zone_post;
 	struct HPMHookPoint *HP_map_zone_clear_single_pre;
 	struct HPMHookPoint *HP_map_zone_clear_single_post;
+	struct HPMHookPoint *HP_map_lock_check_pre;
+	struct HPMHookPoint *HP_map_lock_check_post;
 	struct HPMHookPoint *HP_mapindex_config_read_dbpath_pre;
 	struct HPMHookPoint *HP_mapindex_config_read_dbpath_post;
 	struct HPMHookPoint *HP_mapindex_config_read_pre;
@@ -10897,6 +10899,8 @@ struct {
 	int HP_map_merge_zone_post;
 	int HP_map_zone_clear_single_pre;
 	int HP_map_zone_clear_single_post;
+	int HP_map_lock_check_pre;
+	int HP_map_lock_check_post;
 	int HP_mapindex_config_read_dbpath_pre;
 	int HP_mapindex_config_read_dbpath_post;
 	int HP_mapindex_config_read_pre;
