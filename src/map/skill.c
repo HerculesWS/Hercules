@@ -3645,7 +3645,7 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 
 	if( !dmg.amotion ) {
 		//Instant damage
-		if( (!sc || (!sc->data[SC_DEVOTION] && skill_id != CR_REFLECTSHIELD)) && !shadow_flag)
+		if ((!sc || (!sc->data[SC_DEVOTION] && skill_id != CR_REFLECTSHIELD && !sc->data[SC_WATER_SCREEN_OPTION])) && !shadow_flag)
 			status_fix_damage(src,bl,damage,dmg.dmotion); //Deal damage before knockback to allow stuff like firewall+storm gust combo.
 		if( !status->isdead(bl) && additional_effects )
 			skill->additional_effect(src,bl,skill_id,skill_lv,dmg.flag,dmg.dmg_lv,tick);
@@ -3729,30 +3729,45 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 			battle->delay_damage(tick, dmg.amotion,src,bl,dmg.flag,skill_id,skill_lv,damage,dmg.dmg_lv,dmg.dmotion, additional_effects);
 	}
 
-	if( sc && sc->data[SC_DEVOTION] && skill_id != PA_PRESSURE ) {
-		struct status_change_entry *sce = sc->data[SC_DEVOTION];
-		struct block_list *d_bl = map->id2bl(sce->val1);
-		struct mercenary_data *d_md = BL_CAST(BL_MER, d_bl);
-		struct map_session_data *d_sd = BL_CAST(BL_PC, d_bl);
+	if (sc && skill_id != PA_PRESSURE) {
+		if (sc->data[SC_DEVOTION]) {
+			struct status_change_entry *sce = sc->data[SC_DEVOTION];
+			struct block_list *d_bl = map->id2bl(sce->val1);
+			struct mercenary_data *d_md = BL_CAST(BL_MER, d_bl);
+			struct map_session_data *d_sd = BL_CAST(BL_PC, d_bl);
 
-		if (d_bl != NULL
-		 && ((d_md != NULL && d_md->master && d_md->master->bl.id == bl->id) || (d_sd != NULL && d_sd->devotion[sce->val2] == bl->id))
-		 && check_distance_bl(bl, d_bl, sce->val3)
-		) {
-			if(!rmdamage){
-				clif->damage(d_bl,d_bl, 0, 0, damage, 0, BDT_NORMAL, 0);
-				status_fix_damage(NULL,d_bl, damage, 0);
-			} else{ //Reflected magics are done directly on the target not on paladin
-				//This check is only for magical skill.
-				//For BF_WEAPON skills types track var rdamage and function battle_calc_return_damage
-				clif->damage(bl,bl, 0, 0, damage, 0, BDT_NORMAL, 0);
-				status_fix_damage(bl,bl, damage, 0);
+			if (d_bl != NULL
+			 && ((d_md != NULL && d_md->master && d_md->master->bl.id == bl->id) || (d_sd != NULL && d_sd->devotion[sce->val2] == bl->id))
+			 && check_distance_bl(bl, d_bl, sce->val3)
+			) {
+				if (!rmdamage){
+					clif->damage(d_bl, d_bl, 0, 0, damage, 0, BDT_NORMAL, 0);
+					status_fix_damage(NULL, d_bl, damage, 0);
+				} else { //Reflected magics are done directly on the target not on paladin
+					//This check is only for magical skill.
+					//For BF_WEAPON skills types track var rdamage and function battle_calc_return_damage
+					clif->damage(bl, bl, 0, 0, damage, 0, BDT_NORMAL, 0);
+					status_fix_damage(bl, bl, damage, 0);
+				}
+			} else {
+				status_change_end(bl, SC_DEVOTION, INVALID_TIMER);
+				if (!dmg.amotion)
+					status_fix_damage(src, bl, damage, dmg.dmotion);
 			}
 		}
-		else {
-			status_change_end(bl, SC_DEVOTION, INVALID_TIMER);
-			if( !dmg.amotion )
-				status_fix_damage(src,bl,damage,dmg.dmotion);
+		if (sc->data[SC_WATER_SCREEN_OPTION]) {
+			struct status_change_entry *sce = sc->data[SC_WATER_SCREEN_OPTION];
+			struct block_list *e_bl = map->id2bl(sce->val1);
+
+			if (e_bl) {
+				if (!rmdamage) {
+					clif->skill_damage(e_bl, e_bl, timer->gettick(), 0, 0, damage, dmg.div_, skill_id, -1, skill->get_hit(skill_id, skill_lv));
+					status_fix_damage(NULL, e_bl, damage, 0);
+				} else {
+					clif->skill_damage(bl, bl, timer->gettick(), 0, 0, damage, dmg.div_, skill_id, -1, skill->get_hit(skill_id, skill_lv));
+					status_fix_damage(bl, bl, damage, 0);
+				}
+			}
 		}
 	}
 
