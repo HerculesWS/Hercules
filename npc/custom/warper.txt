@@ -35,7 +35,10 @@ menu	"Last Warp ^777777["+lastwarp$+"]^000000",-,
 		" ~ Special Areas",Special;
 
 	if (lastwarp$ == "")
+	{
 		message strcharinfo(PC_NAME),"You haven't warped anywhere yet.";
+		close;
+	}
 	else
 		warp lastwarp$,lastwarpx,lastwarpy;
 	end;
