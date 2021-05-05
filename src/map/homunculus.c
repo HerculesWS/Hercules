@@ -981,8 +981,8 @@ static bool homunculus_recv_data(int account_id, const struct s_homunculus *sh, 
 		clif->homskillinfoblock(sd);
 		homun->init_timers(hd);
 		/* force shuffle if your level is higher than the allowed */
-		if (hd->homunculus.level >= homun->get_max_level(hd))
-			return 0;
+		if (hd->homunculus.level > homun->get_max_level(hd))
+			homun->shuffle(hd);
 
 	}
 	return true;
