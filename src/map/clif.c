@@ -1696,14 +1696,12 @@ static void clif_hominfo(struct map_session_data *sd, struct homun_data *hd, int
 {
 #if PACKETVER_MAIN_NUM >= 20101005 || PACKETVER_RE_NUM >= 20080827 || defined(PACKETVER_ZERO)
 	struct status_data *hstatus;
-	enum homun_type htype;
 	struct PACKET_ZC_PROPERTY_HOMUN p;
 
 	nullpo_retv(sd);
 	nullpo_retv(hd);
 
 	hstatus  = &hd->battle_status;
-	htype = homun->class2type(hd->homunculus.class_);
 
 	memset(&p, 0, sizeof(p));
 	p.packetType = HEADER_ZC_PROPERTY_HOMUN;
@@ -1758,21 +1756,12 @@ static void clif_hominfo(struct map_session_data *sd, struct homun_data *hd, int
 		p.sp = hstatus->sp;
 		p.maxSp = hstatus->max_sp;
 	}
-	p.exp = hd->homunculus.exp;
-	p.expNext = hd->exp_next;
-	switch (htype) {
-		case HT_REG:
-		case HT_EVO:
-			if (hd->homunculus.level >= battle_config.hom_max_level)
-				p.expNext = 0;
-			break;
-		case HT_S:
-			if (hd->homunculus.level >= battle_config.hom_S_max_level)
-				p.expNext = 0;
-			break;
-		case HT_INVALID:
-			break;
-	}
+	p.exp = (uint32)min(hd->homunculus.exp, UINT32_MAX);
+	p.expNext = (uint32)min(hd->exp_next, UINT32_MAX);
+
+	if (hd->homunculus.level >= homun->get_max_level(hd))
+		p.expNext = 0;
+
 	p.skillPoints = hd->homunculus.skillpts;
 	p.range = status_get_range(&hd->bl);
 	clif->send(&p, sizeof(p), &sd->bl, SELF);
