@@ -306,7 +306,7 @@ struct Battle_Config {
 	int attack_attr_none;
 	int item_rate_mvp, item_rate_common, item_rate_common_boss, item_rate_card, item_rate_card_boss,
 	item_rate_equip, item_rate_equip_boss, item_rate_heal, item_rate_heal_boss, item_rate_use,
-	item_rate_use_boss, item_rate_treasure, item_rate_adddrop;
+	item_rate_use_boss, item_rate_treasure, item_rate_adddrop, item_rate_add_chain;
 
 	int logarithmic_drops;
 	int item_drop_common_min,item_drop_common_max; // Added by TyrNemesis^
@@ -317,6 +317,7 @@ struct Battle_Config {
 	int item_drop_use_min,item_drop_use_max; //End
 	int item_drop_treasure_min,item_drop_treasure_max; //by [Skotlex]
 	int item_drop_adddrop_min,item_drop_adddrop_max; //[Skotlex]
+	int item_drop_add_chain_min,item_drop_add_chain_max;
 
 	int prevent_logout; // Added by RoVeRT
 
