@@ -10388,6 +10388,8 @@ static int status_change_clear(struct block_list *bl, int type)
  *------------------------------------------*/
 static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 {
+	GUARD_MAP_LOCK
+
 	struct map_session_data *sd;
 	struct status_change *sc;
 	struct status_change_entry *sce;
@@ -11361,6 +11363,8 @@ static int kaahi_heal_timer(int tid, int64 tick, int id, intptr_t data)
  *------------------------------------------*/
 static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 {
+	GUARD_MAP_LOCK
+
 	enum sc_type type = (sc_type)data;
 	struct block_list *bl;
 	struct map_session_data *sd;
@@ -12607,6 +12611,8 @@ static void status_update_matk(struct block_list *bl)
  *------------------------------------------*/
 static int status_change_clear_buffs(struct block_list *bl, int type)
 {
+	GUARD_MAP_LOCK
+
 	int i;
 	struct status_change *sc= status->get_sc(bl);
 
