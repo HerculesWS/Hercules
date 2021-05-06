@@ -22,6 +22,35 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
+## [v2021.05.05] `May 05 2021`
+
+### Added
+
+- Added settings to modify the chain item drop rates. See `item_rate_add_chain`, `item_drop_add_chain_min` and `item_drop_add_chain_max` in drops.conf for details. (#2983, issue #2982)
+- Added a check to ensure that the `map->freeblock_lock()` and `map->freeblock_unlock()` calls are balanced (GCC only). (#2992)
+
+### Changed
+
+- Documented that `struct script_state::rid` can contain the GID of a mob when called through `OnTouchNPC`. (part of #3000)
+- Merged the homunculus exp tables into `exp_group_db` (#2998)
+
+### Fixed
+
+- Fixed a crash in the `WL_WHITEIMPRISON` skill as well as possible crashes in the `ST_SWORDREJECT` and `ASC_BREAKER` skills. (#2991)
+- Fixed the adoption request entry in the character context menu. (#2993)
+- Fixed the Vacuum Extreme status becoming permanent until logout or death. (#2995, issue #2919)
+- Fixed Free Cast ignoring other speed modifiers (bypassing speed debuffs such as Curse). (#2987, issue #2976)
+- Fixed the trade restrictions for the Monster Ticket item, which should disallow dropping, trading, etc. (#2986, issue #2985)
+- Fixed an issue in the custom warper NPC that caused characters to get stuck when selecting the last warp option when it wasn't set yet. (#2984)
+- Fixed an error when `getarraysize()`, `soundeffectall()`, `atcommand()` or `useatcmd()` are called from an `OnTouchNPC` script. (#3000, related to issue #2989)
+- Fixed `montransform()`, `clan_join()`, `clan_leave()` and `clan_master()` not reporting an error when called without RID attached. (part of #3000)
+- Fixed the Water Screen skill, now deflecting the damage to the Aqua elemental spirit and healing the master by 1000 HP every 10 seconds. (#2981)
+- Fixed the Guardians in WoE:SE spawning in random locations instead of their designated ones. (#2999)
+
+### Removed
+
+- Removed the `homunculus_max_level` and `homunculus_S_max_level` battle configuration flags, now replaced by the `exp_group_db` configuration. (part of #2998 and 32fea2586d)
+
 ## [v2021.04.05+1] `April 05 2021` `PATCH 1`
 
 ### Fixed
@@ -1884,6 +1913,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2021.05.05]: https://github.com/HerculesWS/Hercules/compare/v2021.04.05+1...v2021.05.05
 [v2021.04.05+1]: https://github.com/HerculesWS/Hercules/compare/v2021.04.05...v2021.04.05+1
 [v2021.04.05]: https://github.com/HerculesWS/Hercules/compare/v2021.03.08...v2021.04.05
 [v2021.03.08]: https://github.com/HerculesWS/Hercules/compare/v2021.02.08...v2021.03.08
