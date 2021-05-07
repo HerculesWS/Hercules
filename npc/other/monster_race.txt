@@ -1795,9 +1795,8 @@ OnInit:
 	end;
 
 	function	MN	{
-		.@numMonsters = 6; // can't use getarraysize since that requires an attached rid
 		setarray .@n$[1], "poring","lunatic","savagebebe","desertwolf","deviruchi","baphomet";
-		for (.@i = 1; .@i <= .@numMonsters; ++.@i) {
+		for (.@i = 1; .@i < getarraysize(.@n$); ++.@i) {
 			if (compare(strnpcinfo(NPC_NAME),.@n$[.@i]))
 				break;
 		}
