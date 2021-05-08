@@ -41,6 +41,7 @@
 #include "common/showmsg.h"
 #include "common/socket.h"
 #include "common/strlib.h"
+#include "common/sysinfo.h"
 #include "common/timer.h"
 #include "common/utils.h"
 
@@ -1066,11 +1067,7 @@ static int login_check_client_version(struct login_session_data *sd)
 
 	// check flags only if enabled and if client flags set to known value
 	if (login->config->check_client_flags && (sd->version & 0x80000000) != 0) {
-		const uint32 emulatorFlags = 0x80000000
-#ifdef ENABLE_CASHSHOP_PREVIEW_PATCH
-			| 1
-#endif  // ENABLE_CASHSHOP_PREVIEW_PATCH
-		;
+		const uint32 emulatorFlags = 0x80000000 | sysinfo->fflags();
 		if (emulatorFlags != sd->version)
 			return 5;
 	}

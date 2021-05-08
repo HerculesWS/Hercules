@@ -91,6 +91,7 @@ static void display_title(void)
 	ShowInfo("CPU: '"CL_WHITE"%s [%d]"CL_RESET"'\n", sysinfo->cpu(), sysinfo->cpucores());
 	ShowInfo("Compiled with %s\n", sysinfo->compiler());
 	ShowInfo("Compile Flags: %s\n", sysinfo->cflags());
+	ShowInfo("Feature Flags: 0x%x\n", sysinfo->fflags());
 	ShowInfo("Timer Function Type: %s\n", sysinfo->time());
 	ShowInfo("Packet version: %d " PACKETTYPE "\n", PACKETVER);
 }
