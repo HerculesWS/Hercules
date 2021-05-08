@@ -110,6 +110,7 @@ struct Login_Config {
 	int min_group_id_to_connect;                    ///< minimum group id to connect
 	bool check_client_version;                      ///< check the clientversion set in the clientinfo ?
 	bool check_client_flags;                        ///< check the clientversion flags set in the clientinfo
+	bool report_client_flags_error;                 ///< report the clientversion flags set errors
 	uint32 client_version_to_connect;               ///< the client version needed to connect (if checking is enabled)
 	int allowed_regs;                               ///< account registration flood protection [Kevin]
 	int time_allowed;                               ///< time in seconds

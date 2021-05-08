@@ -1068,8 +1068,11 @@ static int login_check_client_version(struct login_session_data *sd)
 	// check flags only if enabled and if client flags set to known value
 	if (login->config->check_client_flags && (sd->version & 0x80000000) != 0) {
 		const uint32 emulatorFlags = 0x80000000 | sysinfo->fflags();
-		if (emulatorFlags != sd->version)
+		if (emulatorFlags != sd->version) {
+			if (login->config->report_client_flags_error)
+				ShowNotice("Wrong client flags detected (account: %s, received flags: 0x%x)\n", sd->userid, sd->version);
 			return 5;
+		}
 	}
 
 	return -1;
@@ -1511,6 +1514,7 @@ static void login_config_set_defaults(void)
 	login->config->min_group_id_to_connect = -1;
 	login->config->check_client_version = false;
 	login->config->check_client_flags = true;
+	login->config->report_client_flags_error = true;
 	login->config->client_version_to_connect = 20;
 	login->config->allowed_regs = 1;
 	login->config->time_allowed = 10;
@@ -1873,6 +1877,7 @@ static bool login_config_read_permission(const char *filename, struct config_t *
 	libconfig->setting_lookup_int(setting, "min_group_id_to_connect", &login->config->min_group_id_to_connect);
 	libconfig->setting_lookup_bool_real(setting, "check_client_version", &login->config->check_client_version);
 	libconfig->setting_lookup_bool_real(setting, "check_client_flags", &login->config->check_client_flags);
+	libconfig->setting_lookup_bool_real(setting, "report_client_flags_error", &login->config->report_client_flags_error);
 	libconfig->setting_lookup_uint32(setting, "client_version_to_connect", &login->config->client_version_to_connect);
 
 	if (!login->config_read_permission_hash(filename, config, imported))
