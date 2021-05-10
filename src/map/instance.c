@@ -801,10 +801,11 @@ static void instance_force_destroy(struct map_session_data *sd)
  */
 static void instance_reload_map_flags(int instance_id)
 {
-	struct instance_data *curInst = &instance->list[instance_id];
-	int i;
+	Assert_ret(instance->valid(instance_id));
 
-	for (i = 0; i < instance->list[instance_id].num_map; i++) {
+	struct instance_data *curInst = &instance->list[instance_id];
+
+	for (int i = 0; i < instance->list[instance_id].num_map; i++) {
 		struct map_data *dstMap = &map->list[curInst->map[i]];
 		struct map_data *srcMap = &map->list[dstMap->instance_src_map];
 
@@ -826,7 +827,7 @@ static void do_reload_instance(void)
 				break;
 		}
 
-		if( k != instance->list[i].num_map ) /* any (or all) of them were disabled, we destroy */ {
+		if (k != instance->list[i].num_map) /* any (or all) of them were disabled, we destroy */ {
 			instance->destroy(i);
 		} else {
 			/* populate the instance again */
