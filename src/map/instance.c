@@ -803,11 +803,11 @@ static void instance_reload_map_flags(int instance_id)
 {
 	Assert_retv(instance->valid(instance_id));
 
-	struct instance_data *curInst = &instance->list[instance_id];
+	const struct instance_data *curInst = &instance->list[instance_id];
 
-	for (int i = 0; i < instance->list[instance_id].num_map; i++) {
+	for (int i = 0; i < curInst->num_map; i++) {
 		struct map_data *dstMap = &map->list[curInst->map[i]];
-		struct map_data *srcMap = &map->list[dstMap->instance_src_map];
+		const struct map_data *srcMap = &map->list[dstMap->instance_src_map];
 
 		memcpy(&dstMap->flag, &srcMap->flag, sizeof(struct map_flag));
 
