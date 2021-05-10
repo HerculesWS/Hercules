@@ -97,6 +97,7 @@ struct instance_interface {
 	bool (*valid) (int instance_id);
 	int (*destroy_timer) (int tid, int64 tick, int id, intptr_t data);
 	void (*force_destroy) (struct map_session_data *sd);
+	void (*reload_map_flags) (int instance_id);
 };
 
 #ifdef HERCULES_CORE
