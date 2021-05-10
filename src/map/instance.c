@@ -801,7 +801,7 @@ static void instance_force_destroy(struct map_session_data *sd)
  */
 static void instance_reload_map_flags(int instance_id)
 {
-	Assert_ret(instance->valid(instance_id));
+	Assert_retv(instance->valid(instance_id));
 
 	struct instance_data *curInst = &instance->list[instance_id];
 
