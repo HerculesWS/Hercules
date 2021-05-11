@@ -14965,12 +14965,13 @@ static BUILDIN(successremovecards)
 			item_tmp.option[j].param = sd->status.inventory[i].option[j].param;
 		}
 
+		int ep = sd->status.inventory[i].equip;
 		pc->delitem(sd, i, 1, 0, DELITEM_MATERIALCHANGE, LOG_TYPE_SCRIPT);
 		if ((flag = pc->additem(sd, &item_tmp, 1, LOG_TYPE_SCRIPT))) {
 			clif->additem(sd, 0, 0, flag);
 			map->addflooritem(&sd->bl, &item_tmp, 1, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0, false);
 		}
-
+		pc->equipitem(sd, i, ep);
 		clif->misceffect(&sd->bl,3);
 	}
 	return true;
@@ -15030,10 +15031,11 @@ static BUILDIN(failedremovecards)
 		if (typefail == 0 || typefail == 2) { // destroy the item
 			pc->delitem(sd, i, 1, 0, DELITEM_FAILREFINE, LOG_TYPE_SCRIPT);
 		} else if (typefail == 1) {
+			int ep = sd->status.inventory[i].equip;
 			pc->unequipitem(sd, i, PCUNEQUIPITEM_FORCE);
 			clif->delitem(sd, i, 1, DELITEM_MATERIALCHANGE);
 			clif->additem(sd, i, 1, 0);
-			pc->equipitem(sd, i, sd->status.inventory[i].equip);
+			pc->equipitem(sd, i, ep);
 		}
 	}
 	clif->misceffect(&sd->bl, 2);
@@ -15822,7 +15824,8 @@ static BUILDIN(setequipoption)
 			/* Add Option Value */
 			sd->status.inventory[i].option[slot-1].value = value;
 		}
-
+		
+		int ep = sd->status.inventory[i].equip;
 		/* Unequip and simulate deletion of the item. */
 		pc->unequipitem(sd, i, PCUNEQUIPITEM_FORCE); // status calc will happen in pc->equipitem() below
 		clif->refine(sd->fd, 0, i, sd->status.inventory[i].refine); // notify client of a refine.
@@ -15833,7 +15836,7 @@ static BUILDIN(setequipoption)
 		clif->additem(sd, i, 1, 0); // notify client to simulate item addition.
 		/* Log addition of the item. */
 		logs->pick_pc(sd, LOG_TYPE_SCRIPT, 1, &sd->status.inventory[i], sd->inventory_data[i]);
-		pc->equipitem(sd, i, sd->status.inventory[i].equip); // force equip the item at the original position.
+		pc->equipitem(sd, i, ep); // force equip the item at the original position.
 		clif->misceffect(&sd->bl, 2); // show effect
 	}
 
