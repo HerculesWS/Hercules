@@ -6833,6 +6833,8 @@ static void clif_item_refine_list(struct map_session_data *sd)
 	if (c > 0) {
 		sd->menuskill_id = WS_WEAPONREFINE;
 		sd->menuskill_val = skill_lv;
+	} else {	// If no items to refine
+		sd->state.prerefining = 0;
 	}
 }
 
