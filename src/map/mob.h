@@ -215,6 +215,7 @@ struct mob_data {
 	struct block_list bl;
 	struct unit_data  ud;
 	struct view_data *vd;
+	bool vd_changed;
 	struct status_data status, *base_status; //Second one is in case of leveling up mobs, or tiny/large mobs.
 	struct status_change sc;
 	struct mob_db *db; //For quick data access (saves doing mob_db(md->class_) all the time) [Skotlex]
@@ -515,6 +516,8 @@ struct mob_interface {
 	int (*db_searchname_array) (struct mob_db **data, int size, const char *str, int flag);
 	int (*db_checkid) (const int id);
 	struct view_data* (*get_viewdata) (int class_);
+	void (*set_dynamic_viewdata) (struct mob_data *md);
+	void (*free_dynamic_viewdata) (struct mob_data *md);
 	int (*parse_dataset) (struct spawn_data *data);
 	struct mob_data* (*spawn_dataset) (struct spawn_data *data, int npc_id);
 	int (*get_random_id) (int type, int flag, int lv);

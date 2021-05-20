@@ -6327,10 +6327,17 @@ static void status_set_viewdata(struct block_list *bl, int class_)
 	case BL_MOB:
 	{
 		struct mob_data *md = BL_UCAST(BL_MOB, bl);
-		if (vd != NULL)
+		if (vd != NULL) {
+			mob->free_dynamic_viewdata(md);
+			
 			md->vd = vd;
-		else
+		} else if (pc->db_checkid(class_)) {
+			mob->set_dynamic_viewdata(md);
+			
+			md->vd->class = class_;
+		} else {
 			ShowError("status_set_viewdata (MOB): No view data for class %d\n", class_);
+		}
 	}
 		break;
 	case BL_PET:
