@@ -2988,7 +2988,7 @@ static void status_calc_regen_rate(struct block_list *bl, struct regen_data *reg
 
 /// Recalculates parts of an object's battle status according to the specified flags.
 /// @param flag bitfield of values from enum scb_flag
-static void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag)
+static void status_calc_bl_main(struct block_list *bl, enum scb_flag flag)
 {
 	const struct status_data *bst = status->get_base_status(bl);
 	struct status_data *st = status->get_status_data(bl);
@@ -3078,6 +3078,18 @@ static void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag
 #endif
 			;
 	}
+
+	if ((flag & SCB_ATK_PERC) != 0)
+		st->atk_percent = status->calc_atk_percent(bl, sc);
+
+	if ((flag & SCB_MATK_PERC) != 0)
+		st->matk_percent = status->calc_matk_percent(bl, sc);
+
+	if ((flag & SCB_DEF_PERC) != 0)
+		st->def_percent = status->calc_def_percent(bl, sc);
+
+	if ((flag & SCB_MDEF_PERC) != 0)
+		st->mdef_percent = status->calc_mdef_percent(bl, sc);
 
 	if(flag&SCB_BATK && bst->batk) {
 		st->batk = status->base_atk(bl,st);
@@ -4290,6 +4302,86 @@ static unsigned short status_calc_luk(struct block_list *bl, struct status_chang
 		luk += sc->data[SC_UNIVERSESTANCE]->val2;
 
 	return (unsigned short)cap_value(luk, 0, USHRT_MAX);
+}
+
+/**
+ * Adds up the granted ATK percent bonuses.
+ *
+ * @param bl the object who's ATK percent we're calculating.
+ * @param sc the status change data of our object.
+ * @return the calculated ATK percent.
+ */
+static int status_calc_atk_percent(struct block_list *bl, struct status_change *sc)
+{
+	nullpo_ret(bl);
+	int atk_percent = 100; // [Aegis] by default we have 100% of our atk.
+
+	if (sc == NULL || sc->count == 0)
+		return cap_value(atk_percent, 0, USHRT_MAX);
+
+	// Add/Subtract additively according to status changes.
+
+	return cap_value(atk_percent, 0, USHRT_MAX);
+}
+
+/**
+ * Adds up the granted MATK percent bonuses.
+ *
+ * @param bl the object who's MATK percent we're calculating.
+ * @param sc the status change data of our object.
+ * @return the calculated MATK percent.
+ */
+static int status_calc_matk_percent(struct block_list *bl, struct status_change *sc)
+{
+	nullpo_ret(bl);
+	int matk_percent = 100; // [Aegis] by default we have 100% of our matk.
+
+	if (sc == NULL || sc->count == 0)
+		return cap_value(matk_percent, 0, USHRT_MAX);
+
+	// Add/Subtract additively according to status changes.
+
+	return cap_value(matk_percent, 0, USHRT_MAX);
+}
+
+/**
+ * Adds up the granted DEF percent bonuses.
+ *
+ * @param bl the object who's DEF percent we're calculating.
+ * @param sc the status change data of our object.
+ * @return the calculated DEF percent.
+ */
+static int status_calc_def_percent(struct block_list *bl, struct status_change *sc)
+{
+	nullpo_ret(bl);
+	int def_percent = 100; // [Aegis] by default we have 100% of our def.
+
+	if (sc == NULL || sc->count == 0)
+		return cap_value(def_percent, 0, USHRT_MAX);
+
+	// Add/Subtract additively according to status changes.
+
+	return cap_value(def_percent, 0, USHRT_MAX);
+}
+
+/**
+ * Adds up the granted MDEF percent bonuses.
+ *
+ * @param bl the object who's MDEF percent we're calculating.
+ * @param sc the status change data of our object.
+ * @return the calculated MDEF percent.
+ */
+static int status_calc_mdef_percent(struct block_list *bl, struct status_change *sc)
+{
+	nullpo_ret(bl);
+	int mdef_percent = 100; // [Aegis] by default we have 100% of our mdef.
+
+	if (sc == NULL || sc->count == 0)
+		return cap_value(mdef_percent, 0, USHRT_MAX);
+
+	// Add/Subtract additively according to status changes.
+
+	return cap_value(mdef_percent, 0, USHRT_MAX);
 }
 
 static int status_calc_batk(struct block_list *bl, struct status_change *sc, int batk, bool viewable)
@@ -14030,6 +14122,10 @@ static bool status_read_scdb_libconfig_sub_calcflag(struct config_setting_t *it,
 			{ "Range", SCB_RANGE },
 			{ "Regen", SCB_REGEN },
 			{ "Dye", SCB_DYE },
+			{ "AtkPerc", SCB_ATK_PERC },
+			{ "DefPerc", SCB_DEF_PERC },
+			{ "MatkPerc", SCB_MATK_PERC },
+			{ "MdefPerc", SCB_MDEF_PERC },
 			{ "All", SCB_ALL },
 		};
 
@@ -14555,6 +14651,10 @@ void status_defaults(void)
 	status->calc_int = status_calc_int;
 	status->calc_dex = status_calc_dex;
 	status->calc_luk = status_calc_luk;
+	status->calc_atk_percent = status_calc_atk_percent;
+	status->calc_matk_percent = status_calc_matk_percent;
+	status->calc_def_percent = status_calc_def_percent;
+	status->calc_mdef_percent = status_calc_mdef_percent;
 	status->calc_watk = status_calc_watk;
 	status->calc_matk = status_calc_matk;
 	status->calc_hit = status_calc_hit;

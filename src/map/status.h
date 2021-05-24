@@ -1068,9 +1068,13 @@ enum scb_flag
 #if 0 // Currently No SC use it. Also, when this will be implemented, there will be need to change to 64bit variable
 	SCB_BODY    = 0x80000000, // Force bodysStyle change to 0
 #endif
+	SCB_ATK_PERC  = 0x100000000,
+	SCB_MATK_PERC = 0x200000000,
+	SCB_DEF_PERC  = 0x400000000,
+	SCB_MDEF_PERC = 0x800000000,
 
-	SCB_BATTLE  = 0x3FFFFFFE,
-	SCB_ALL     = 0x3FFFFFFF
+	SCB_BATTLE  = 0xF3FFFFFFE,
+	SCB_ALL     = 0xF3FFFFFFF
 };
 
 //Regen related flags.
@@ -1113,6 +1117,10 @@ struct status_data {
 		hp, sp,  // see status_cpy before adding members before hp and sp
 		max_hp, max_sp;
 	uint16 str, agi, vit, int_, dex, luk;
+	int atk_percent;
+	int matk_percent;
+	int def_percent;
+	int mdef_percent;
 	uint32
 		batk,
 		matk_min, matk_max,
@@ -1450,6 +1458,10 @@ struct status_interface {
 	unsigned short (*calc_int) (struct block_list *bl, struct status_change *sc, int int_);
 	unsigned short (*calc_dex) (struct block_list *bl, struct status_change *sc, int dex);
 	unsigned short (*calc_luk) (struct block_list *bl, struct status_change *sc, int luk);
+	int (*calc_atk_percent) (struct block_list *bl, struct status_change *sc);
+	int (*calc_matk_percent) (struct block_list *bl, struct status_change *sc);
+	int (*calc_def_percent) (struct block_list *bl, struct status_change *sc);
+	int (*calc_mdef_percent) (struct block_list *bl, struct status_change *sc);
 	int (*calc_watk) (struct block_list *bl, struct status_change *sc, int watk, bool viewable);
 	int (*calc_matk) (struct block_list *bl, struct status_change *sc, int matk, bool viewable);
 	signed int (*calc_hit) (struct block_list *bl, struct status_change *sc, int hit, bool viewable);
@@ -1467,7 +1479,7 @@ struct status_interface {
 	unsigned char (*calc_element_lv) (struct block_list *bl, struct status_change *sc, int lv);
 	uint32 (*calc_mode) (const struct block_list *bl, const struct status_change *sc, uint32 mode);
 	int (*calc_ematk) (struct block_list *bl, struct status_change *sc, int matk);
-	void (*calc_bl_main) (struct block_list *bl, int flag);
+	void (*calc_bl_main) (struct block_list *bl, enum scb_flag flag);
 	void (*display_add) (struct map_session_data *sd, enum sc_type type, int dval1, int dval2, int dval3);
 	void (*display_remove) (struct map_session_data *sd, enum sc_type type);
 	int (*natural_heal) (struct block_list *bl, va_list args);
