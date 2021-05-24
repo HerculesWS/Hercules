@@ -1077,6 +1077,12 @@ enum scb_flag
 	SCB_ALL     = 0xF3FFFFFFF
 };
 
+STATIC_ASSERT(sizeof(enum scb_flag) > 4, "The compiler doesn't support enums larger than 32 bits");
+STATIC_ASSERT(sizeof(SCB_ATK_PERC) > 4, "The compiler doesn't support enums larger than 32 bits");
+STATIC_ASSERT(sizeof(SCB_MATK_PERC) > 4, "The compiler doesn't support enums larger than 32 bits");
+STATIC_ASSERT(sizeof(SCB_DEF_PERC) > 4, "The compiler doesn't support enums larger than 32 bits");
+STATIC_ASSERT(sizeof(SCB_MDEF_PERC) > 4, "The compiler doesn't support enums larger than 32 bits");
+
 //Regen related flags.
 enum e_regen {
 	RGN_HP  = 0x01,
