@@ -5303,6 +5303,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 						ShowError("0 enemies targeted by %d:%s, divide per 0 avoided!\n", skill_id, skill->get_name(skill_id));
 				}
 
+				int temp_atk_rate = sstatus->atk_percent;
 				//Add any bonuses that modify the base baseatk+watk (pre-skills)
 				if(sd) {
 #ifndef RENEWAL
@@ -5314,13 +5315,13 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 					if(flag.cri && sc && sc->data[SC_MTF_CRIDAMAGE])
 						ATK_ADDRATE(sc->data[SC_MTF_CRIDAMAGE]->val1);// temporary it should be 'bonus.crit_atk_rate'
 #ifndef RENEWAL
-
 					if(sd->status.party_id && (temp=pc->checkskill(sd,TK_POWER)) > 0){
 						if ((i = party->foreachsamemap(party->sub_count, sd, 0, sd->status.char_id)) > 0)
-							ATK_ADDRATE(2*temp*i);
+							temp_atk_rate += 2 * temp * i;
 					}
 #endif
 				}
+				ATK_RATE(temp_atk_rate);
 				break;
 			} //End default case
 		} //End switch(skill_id)
