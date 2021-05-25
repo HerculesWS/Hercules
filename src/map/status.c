@@ -5106,6 +5106,7 @@ static signed short status_calc_def2(struct block_list *bl, struct status_change
 		def2 -= def2 * sc->data[SC_NEEDLE_OF_PARALYZE]->val2 / 100;
 	if (sc->data[SC_UNLIMIT])
 		return 1;
+
 #ifdef RENEWAL
 	return (short)cap_value(def2,SHRT_MIN,SHRT_MAX);
 #else

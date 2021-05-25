@@ -1489,6 +1489,7 @@ static int64 battle_calc_defense(int attack_type, struct block_list *src, struct
 #else
 				vit_def = def2;
 #endif
+				vit_def = (vit_def * tstatus->def_percent) / 100;
 				if((battle->check_undead(sstatus->race,sstatus->def_ele) || sstatus->race==RC_DEMON) && //This bonus already doesn't work vs players
 					src->type == BL_MOB && (i=pc->checkskill(tsd,AL_DP)) > 0)
 					vit_def += i*(int)(3 +(tsd->status.base_level+1)*0.04);   // [orn]
@@ -1504,6 +1505,8 @@ static int64 battle_calc_defense(int attack_type, struct block_list *src, struct
 #else
 				vit_def = def2;
 #endif
+				vit_def = (vit_def * tstatus->def_percent) / 100;
+				def1 = (def1 * tstatus->def_percent) / 100;
 			}
 
 			if (battle_config.weapon_defense_type) {
