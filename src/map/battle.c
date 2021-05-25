@@ -4015,6 +4015,10 @@ static struct Damage battle_calc_magic_attack(struct block_list *src, struct blo
 					default:
 						MATK_RATE(battle->calc_skillratio(BF_MAGIC, src, target, skill_id, skill_lv, skillratio, mflag));
 				}
+
+				// Aegis: It seems like most percentual matk bonuses, besides matk_percent, are used additively.
+				MATK_RATE(sstatus->matk_percent);
+
 				//Constant/misc additions from skills
 				if (skill_id == WZ_FIREPILLAR)
 					MATK_ADD(100+50*skill_lv);
