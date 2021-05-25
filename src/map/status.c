@@ -3483,7 +3483,7 @@ static void status_calc_bl_(struct block_list *bl, enum scb_flag flag, enum e_st
 
 		if(bst.batk != st->batk
 #ifndef RENEWAL
-		   || bst.rhw.atk != st->rhw.atk || bst.lhw.atk != st->lhw.atk
+		   || bst.rhw.atk != st->rhw.atk || bst.lhw.atk != st->lhw.atk || bst.atk_percent != st->atk_percent
 #endif
 		)
 			clif->updatestatus(sd,SP_ATK1);
