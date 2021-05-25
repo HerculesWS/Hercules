@@ -3096,8 +3096,10 @@ static void status_calc_bl_main(struct block_list *bl, enum scb_flag flag)
 			clif->updatestatus(sd, SP_DEF2);
 	}
 
-	if ((flag & SCB_MDEF_PERC) != 0)
+	if ((flag & SCB_MDEF_PERC) != 0) {
 		st->mdef_percent = status->calc_mdef_percent(bl, sc);
+		flag |= SCB_MDEF;
+	}
 
 	if(flag&SCB_BATK && bst->batk) {
 		st->batk = status->base_atk(bl,st);
@@ -5205,6 +5207,11 @@ static signed short status_calc_mdef2(struct block_list *bl, struct status_chang
 		mdef2 -= mdef2 * ( 14 * sc->data[SC_ANALYZE]->val1 ) / 100;
 	if (sc->data[SC_UNLIMIT])
 		return 1;
+
+	struct status_data *sstatus = status->get_status_data(bl);
+	if (sstatus != NULL) // may be NULL on first call
+		mdef2 = (mdef2 * sstatus->mdef_percent) / 100;
+
 #ifdef RENEWAL
 	return (short)cap_value(mdef2,SHRT_MIN,SHRT_MAX);
 #else
