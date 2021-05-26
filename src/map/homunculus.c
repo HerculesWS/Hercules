@@ -1410,7 +1410,10 @@ static int homunculus_get_max_level(struct homun_data *hd)
 	nullpo_ret(hd);
 	Assert_ret(homdb_checkid(hd->homunculus.class_));
 
-	return homun->dbs->exptable[hd->homunculus.class_ - HM_CLASS_BASE]->max_level;
+	const struct class_exp_group *gp = homun->dbs->exptable[hd->homunculus.class_ - HM_CLASS_BASE];
+	nullpo_ret(gp);
+
+	return gp->max_level;
 }
 
 static uint64 homunculus_get_exp(struct homun_data *hd, int idx)
@@ -1419,8 +1422,9 @@ static uint64 homunculus_get_exp(struct homun_data *hd, int idx)
 	Assert_ret(homdb_checkid(hd->homunculus.class_));
 
 	const struct class_exp_group *gp = homun->dbs->exptable[hd->homunculus.class_ - HM_CLASS_BASE];
-	const int exp_len = VECTOR_LENGTH(gp->exp);
+	nullpo_ret(gp);
 
+	const int exp_len = VECTOR_LENGTH(gp->exp);
 	Assert_ret(idx >= 0 && idx <= exp_len);
 
 	return VECTOR_INDEX(gp->exp, idx);
