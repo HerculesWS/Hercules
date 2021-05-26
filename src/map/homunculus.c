@@ -1184,7 +1184,7 @@ static bool homunculus_read_db_libconfig(const char *filename)
 	struct config_setting_t *it = NULL;
 
 	while ((it = libconfig->setting_get_elem(homun_db, i++)) != NULL) {
-		if (homun->read_db_libconfig_sub(it, i - 1, filepath))
+		if (homun->read_db_libconfig_sub(it, filepath))
 			++count;
 	}
 
@@ -1193,20 +1193,23 @@ static bool homunculus_read_db_libconfig(const char *filename)
 	return true;
 }
 
-static bool homunculus_read_db_libconfig_sub(struct config_setting_t *it, int idx, const char *source)
+static bool homunculus_read_db_libconfig_sub(struct config_setting_t *it, const char *source)
 {
 	nullpo_retr(false, it);
 	nullpo_retr(false, source);
-	Assert_retr(false, idx >= 0 && idx < MAX_HOMUNCULUS_CLASS);
 
-	struct s_homunculus_db *db = &homun->dbs->db[idx];
 	const char *str = NULL;
 	int i32 = 0;
 
 	if (libconfig->setting_lookup_int(it, "Id", &i32) != CONFIG_TRUE || !homdb_checkid(i32)) {
-		ShowError("homunculus_read_db_libconfig_sub: Invalid homunculus Id (%d) provided for entry %d in '%s', skipping...\n", i32, idx, source);
+		ShowError("homunculus_read_db_libconfig_sub: Invalid homunculus Id (%d) provided '%s', skipping...\n", i32, source);
 		return false;
 	}
+
+	const int idx = i32 - HM_CLASS_BASE;
+	Assert_retr(false, idx >= 0 && idx < MAX_HOMUNCULUS_CLASS);
+
+	struct s_homunculus_db *db = &homun->dbs->db[idx];
 	db->base_class = i32;
 
 	if (libconfig->setting_lookup_int(it, "EvoId", &i32) != CONFIG_TRUE || !homdb_checkid(i32)) {
