@@ -1318,6 +1318,9 @@ struct map_interface {
 	struct DBMap *iwall_db;
 	struct block_list **block_free;
 	int block_free_count, block_free_lock, block_free_list_size;
+#ifdef SANITIZE
+	int **block_free_sanitize;
+#endif  // SANITIZE
 	struct block_list **bl_list;
 	int bl_list_count, bl_list_size;
 BEGIN_ZEROED_BLOCK; // This block is zeroed in map_defaults()

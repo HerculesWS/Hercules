@@ -513,8 +513,12 @@ AC_ARG_ENABLE(
 		enable_sanitize="$enableval"
 		case $enableval in
 			"no");;
-			"yes");;
-			"full");;
+			"yes")
+				CPPFLAGS="$CPPFLAGS -DSANITIZE"
+				;;
+			"full")
+				CPPFLAGS="$CPPFLAGS -DSANITIZE"
+				;;
 			*) AC_MSG_ERROR([[invalid argument --enable-sanitize=$enableval... stopping]]);;
 		esac
 	],

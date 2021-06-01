@@ -124,6 +124,9 @@ static inline void map_block_free_expand(void)
 {
 	map->block_free_list_size += 100;
 	RECREATE(map->block_free, struct block_list *, map->block_free_list_size);
+#ifdef SANITIZE
+	RECREATE(map->block_free_sanitize, int *, map->block_free_list_size);
+#endif
 }
 
 /*==========================================
@@ -151,7 +154,11 @@ static int map_freeblock(struct block_list *bl)
 		if( map->block_free_count >= map->block_free_list_size )
 			map_block_free_expand();
 
-		map->block_free[map->block_free_count++] = bl;
+		map->block_free[map->block_free_count] = bl;
+#ifdef SANITIZE
+		map->block_free_sanitize[map->block_free_count] = aMalloc(4);
+#endif
+		map->block_free_count++;
 	}
 
 	return map->block_free_lock;
@@ -172,6 +179,10 @@ static int map_freeblock_unlock(void)
 	if ((--map->block_free_lock) == 0) {
 		int i;
 		for (i = 0; i < map->block_free_count; i++) {
+#ifdef SANITIZE
+			aFree(map->block_free_sanitize[i]);
+			map->block_free_sanitize[i] = NULL;
+#endif
 			if( map->block_free[i]->type == BL_ITEM )
 				ers_free(map->flooritem_ers, map->block_free[i]);
 			else
@@ -6511,6 +6522,10 @@ int do_final(void)
 
 	if( map->block_free )
 		aFree(map->block_free);
+#ifdef SANITIZE
+	if (map->block_free_sanitize)
+		aFree(map->block_free_sanitize);
+#endif
 	if( map->bl_list )
 		aFree(map->bl_list);
 
@@ -7140,6 +7155,9 @@ void map_defaults(void)
 	map->iwall_db = NULL;
 
 	map->block_free = NULL;
+#ifdef SANITIZE
+	map->block_free_sanitize = NULL;
+#endif
 	map->block_free_count = 0;
 	map->block_free_lock = 0;
 	map->block_free_list_size = 0;
