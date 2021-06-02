@@ -1076,6 +1076,16 @@ static int sysinfo_build_revision(void)
 	return HERCULES_VERSION;
 }
 
+static uint32 sysinfo_fflags(void)
+{
+	const uint32 flags = 0
+#ifdef ENABLE_CASHSHOP_PREVIEW_PATCH
+		| 1
+#endif  // ENABLE_CASHSHOP_PREVIEW_PATCH
+	;
+	return flags;
+}
+
 /**
  * Interface default values initialization.
  */
@@ -1100,6 +1110,7 @@ void sysinfo_defaults(void)
 	sysinfo->vcsrevision_scripts = sysinfo_vcsrevision_scripts;
 	sysinfo->vcsrevision_reload = sysinfo_vcsrevision_reload;
 	sysinfo->build_revision = sysinfo_build_revision;
+	sysinfo->fflags = sysinfo_fflags;
 	sysinfo->is_superuser = sysinfo_is_superuser;
 	sysinfo->init = sysinfo_init;
 	sysinfo->final = sysinfo_final;

@@ -41,6 +41,7 @@
 #include "common/showmsg.h"
 #include "common/socket.h"
 #include "common/strlib.h"
+#include "common/sysinfo.h"
 #include "common/timer.h"
 #include "common/utils.h"
 
@@ -1056,6 +1057,27 @@ static int login_mmo_auth_new(const char *userid, const char *pass, const char s
 	return -1;
 }
 
+static int login_check_client_version(struct login_session_data *sd)
+{
+	// if check flags enabled skip version check with flags pattern present in version field
+	if (!login->config->check_client_flags || (sd->version & 0x80000000) == 0) {
+		if (login->config->check_client_version && sd->version != login->config->client_version_to_connect)
+			return 5;
+	}
+
+	// check flags only if enabled and if client flags set to known value
+	if (login->config->check_client_flags && (sd->version & 0x80000000) != 0) {
+		const uint32 emulatorFlags = 0x80000000 | sysinfo->fflags();
+		if (emulatorFlags != sd->version) {
+			if (login->config->report_client_flags_error)
+				ShowNotice("Wrong client flags detected (account: %s, received flags: 0x%x)\n", sd->userid, sd->version);
+			return 5;
+		}
+	}
+
+	return -1;
+}
+
 //-----------------------------------------------------
 // Check/authentication of a connection
 //-----------------------------------------------------
@@ -1089,9 +1111,12 @@ static int login_mmo_auth(struct login_session_data *sd, bool isServer)
 
 	}
 
-	//Client Version check
-	if (login->config->check_client_version && sd->version != login->config->client_version_to_connect)
-		return 5;
+	if (!isServer) {
+		//Client Version check
+		const int versionError = login->check_client_version(sd);
+		if (versionError != -1)
+			return versionError;
+	}
 
 	len = strnlen(sd->userid, NAME_LENGTH);
 
@@ -1488,6 +1513,8 @@ static void login_config_set_defaults(void)
 	login->config->group_id_to_connect = -1;
 	login->config->min_group_id_to_connect = -1;
 	login->config->check_client_version = false;
+	login->config->check_client_flags = true;
+	login->config->report_client_flags_error = true;
 	login->config->client_version_to_connect = 20;
 	login->config->allowed_regs = 1;
 	login->config->time_allowed = 10;
@@ -1849,6 +1876,8 @@ static bool login_config_read_permission(const char *filename, struct config_t *
 	libconfig->setting_lookup_int(setting, "group_id_to_connect", &login->config->group_id_to_connect);
 	libconfig->setting_lookup_int(setting, "min_group_id_to_connect", &login->config->min_group_id_to_connect);
 	libconfig->setting_lookup_bool_real(setting, "check_client_version", &login->config->check_client_version);
+	libconfig->setting_lookup_bool_real(setting, "check_client_flags", &login->config->check_client_flags);
+	libconfig->setting_lookup_bool_real(setting, "report_client_flags_error", &login->config->report_client_flags_error);
 	libconfig->setting_lookup_uint32(setting, "client_version_to_connect", &login->config->client_version_to_connect);
 
 	if (!login->config_read_permission_hash(filename, config, imported))
@@ -2285,6 +2314,7 @@ void login_defaults(void)
 	login->auth_failed = login_auth_failed;
 	login->char_server_connection_status = login_char_server_connection_status;
 	login->kick = login_kick;
+	login->check_client_version = login_check_client_version;
 
 	login->config_set_defaults = login_config_set_defaults;
 	login->config_read = login_config_read;
