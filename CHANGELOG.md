@@ -22,6 +22,29 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
+## [v2021.06.02] `June 02 2021`
+
+### Added
+
+- Added diagnostic checks around map free blocks when asan is on, to track bl double free issues. (#3005)
+- Added support for checking the clients' supported features through client flags (requires a client patched with the [SendClientFlags](http://nemo.herc.ws/patches/SendClientFlags/) patch - currently supports `ENABLE_CASHSHOP_PREVIEW_PATCH` only, more to come later). See the `login_configuration/permission/check_client_flags` and `login_configuration/permission/report_client_flags_error` settings in `login-server.conf`. (#3001)
+- Added support for the Rebellion skills. (#2997)
+
+### Changed
+
+- Updated the cooldown of Neutral Barrier (`NC_NEUTRALBARRIER`) to depend on the skill level. (#2934)
+- Changed `successremovecards()` to automatically re-equip the item, for consistency with `failedremovecards()`. (part of #3004)
+
+### Fixed
+
+- Fixed an issue that prevented dual monster races from completing. (#2990, issue #2989)
+- Fixed a crash with evolved homunculi. (#3008)
+- Fixed mapflags in instanced maps not getting reloaded correctly after scripts are reloaded. (#3003, issue #3002)
+- Fixed the visual effect of Killing Cloud (`SO_CLOUD_KILL`). (#2980, issue #2978)
+- Fixed a regression in Ankle Snare (`HT_ANKLESNARE`) caused by a recent Manhole update. (#2965, issue #2964)
+- Fixed an issue that prevented a character from equipping items after attempting to use the Refine skill with no refinable items in inventory. (#3007)
+- Fixed an issue that prevented the automatic re-equipping of items by `failedremovecards()` `setequipoption()`. (#3004)
+
 ## [v2021.05.05] `May 05 2021`
 
 ### Added
@@ -1913,6 +1936,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2021.06.02]: https://github.com/HerculesWS/Hercules/compare/v2021.05.05...v2021.06.02
 [v2021.05.05]: https://github.com/HerculesWS/Hercules/compare/v2021.04.05+1...v2021.05.05
 [v2021.04.05+1]: https://github.com/HerculesWS/Hercules/compare/v2021.04.05...v2021.04.05+1
 [v2021.04.05]: https://github.com/HerculesWS/Hercules/compare/v2021.03.08...v2021.04.05
