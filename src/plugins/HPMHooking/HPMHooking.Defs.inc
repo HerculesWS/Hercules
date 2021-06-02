@@ -4548,6 +4548,8 @@ typedef void (*HPMHOOK_pre_login_config_set_md5hash) (struct config_setting_t **
 typedef void (*HPMHOOK_post_login_config_set_md5hash) (struct config_setting_t *setting);
 typedef uint16 (*HPMHOOK_pre_login_convert_users_to_colors) (uint16 *users);
 typedef uint16 (*HPMHOOK_post_login_convert_users_to_colors) (uint16 retVal___, uint16 users);
+typedef int (*HPMHOOK_pre_login_check_client_version) (struct login_session_data **sd);
+typedef int (*HPMHOOK_post_login_check_client_version) (int retVal___, struct login_session_data *sd);
 #endif // LOGIN_LOGIN_H
 #ifdef CHAR_LOGINIF_H /* loginif */
 typedef void (*HPMHOOK_pre_loginif_init) (void);
@@ -8422,6 +8424,8 @@ typedef const char* (*HPMHOOK_pre_sysinfo_vcsrevision_scripts) (void);
 typedef const char* (*HPMHOOK_post_sysinfo_vcsrevision_scripts) (const char* retVal___);
 typedef int (*HPMHOOK_pre_sysinfo_build_revision) (void);
 typedef int (*HPMHOOK_post_sysinfo_build_revision) (int retVal___);
+typedef uint32 (*HPMHOOK_pre_sysinfo_fflags) (void);
+typedef uint32 (*HPMHOOK_post_sysinfo_fflags) (uint32 retVal___);
 typedef void (*HPMHOOK_pre_sysinfo_vcsrevision_reload) (void);
 typedef void (*HPMHOOK_post_sysinfo_vcsrevision_reload) (void);
 typedef bool (*HPMHOOK_pre_sysinfo_is_superuser) (void);

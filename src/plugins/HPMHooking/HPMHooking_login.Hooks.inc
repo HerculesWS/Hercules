@@ -6105,6 +6105,33 @@ uint16 HP_login_convert_users_to_colors(uint16 users) {
 	}
 	return retVal___;
 }
+int HP_login_check_client_version(struct login_session_data *sd) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_login_check_client_version_pre > 0) {
+		int (*preHookFunc) (struct login_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_login_check_client_version_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_login_check_client_version_pre[hIndex].func;
+			retVal___ = preHookFunc(&sd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.login.check_client_version(sd);
+	}
+	if (HPMHooks.count.HP_login_check_client_version_post > 0) {
+		int (*postHookFunc) (int retVal___, struct login_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_login_check_client_version_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_login_check_client_version_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, sd);
+		}
+	}
+	return retVal___;
+}
 /* loginlog_interface */
 unsigned long HP_loginlog_failedattempts(uint32 ip, unsigned int minutes) {
 	int hIndex = 0;
@@ -10114,6 +10141,33 @@ int HP_sysinfo_build_revision(void) {
 		int (*postHookFunc) (int retVal___);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_sysinfo_build_revision_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_sysinfo_build_revision_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___);
+		}
+	}
+	return retVal___;
+}
+uint32 HP_sysinfo_fflags(void) {
+	int hIndex = 0;
+	uint32 retVal___ = 0;
+	if (HPMHooks.count.HP_sysinfo_fflags_pre > 0) {
+		uint32 (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_sysinfo_fflags_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_sysinfo_fflags_pre[hIndex].func;
+			retVal___ = preHookFunc();
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.sysinfo.fflags();
+	}
+	if (HPMHooks.count.HP_sysinfo_fflags_post > 0) {
+		uint32 (*postHookFunc) (uint32 retVal___);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_sysinfo_fflags_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_sysinfo_fflags_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___);
 		}
 	}

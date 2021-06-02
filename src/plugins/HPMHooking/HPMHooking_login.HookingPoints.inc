@@ -266,6 +266,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(login->clear_client_hash_nodes, HP_login_clear_client_hash_nodes) },
 	{ HP_POP(login->config_set_md5hash, HP_login_config_set_md5hash) },
 	{ HP_POP(login->convert_users_to_colors, HP_login_convert_users_to_colors) },
+	{ HP_POP(login->check_client_version, HP_login_check_client_version) },
 /* loginlog_interface */
 	{ HP_POP(loginlog->failedattempts, HP_loginlog_failedattempts) },
 	{ HP_POP(loginlog->log, HP_loginlog_log) },
@@ -428,6 +429,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(sysinfo->vcsrevision_src, HP_sysinfo_vcsrevision_src) },
 	{ HP_POP(sysinfo->vcsrevision_scripts, HP_sysinfo_vcsrevision_scripts) },
 	{ HP_POP(sysinfo->build_revision, HP_sysinfo_build_revision) },
+	{ HP_POP(sysinfo->fflags, HP_sysinfo_fflags) },
 	{ HP_POP(sysinfo->vcsrevision_reload, HP_sysinfo_vcsrevision_reload) },
 	{ HP_POP(sysinfo->is_superuser, HP_sysinfo_is_superuser) },
 	{ HP_POP(sysinfo->init, HP_sysinfo_init) },

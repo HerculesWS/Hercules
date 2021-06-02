@@ -480,6 +480,8 @@ struct {
 	struct HPMHookPoint *HP_login_config_set_md5hash_post;
 	struct HPMHookPoint *HP_login_convert_users_to_colors_pre;
 	struct HPMHookPoint *HP_login_convert_users_to_colors_post;
+	struct HPMHookPoint *HP_login_check_client_version_pre;
+	struct HPMHookPoint *HP_login_check_client_version_post;
 	struct HPMHookPoint *HP_loginlog_failedattempts_pre;
 	struct HPMHookPoint *HP_loginlog_failedattempts_post;
 	struct HPMHookPoint *HP_loginlog_log_pre;
@@ -778,6 +780,8 @@ struct {
 	struct HPMHookPoint *HP_sysinfo_vcsrevision_scripts_post;
 	struct HPMHookPoint *HP_sysinfo_build_revision_pre;
 	struct HPMHookPoint *HP_sysinfo_build_revision_post;
+	struct HPMHookPoint *HP_sysinfo_fflags_pre;
+	struct HPMHookPoint *HP_sysinfo_fflags_post;
 	struct HPMHookPoint *HP_sysinfo_vcsrevision_reload_pre;
 	struct HPMHookPoint *HP_sysinfo_vcsrevision_reload_post;
 	struct HPMHookPoint *HP_sysinfo_is_superuser_pre;
@@ -1291,6 +1295,8 @@ struct {
 	int HP_login_config_set_md5hash_post;
 	int HP_login_convert_users_to_colors_pre;
 	int HP_login_convert_users_to_colors_post;
+	int HP_login_check_client_version_pre;
+	int HP_login_check_client_version_post;
 	int HP_loginlog_failedattempts_pre;
 	int HP_loginlog_failedattempts_post;
 	int HP_loginlog_log_pre;
@@ -1589,6 +1595,8 @@ struct {
 	int HP_sysinfo_vcsrevision_scripts_post;
 	int HP_sysinfo_build_revision_pre;
 	int HP_sysinfo_build_revision_post;
+	int HP_sysinfo_fflags_pre;
+	int HP_sysinfo_fflags_post;
 	int HP_sysinfo_vcsrevision_reload_pre;
 	int HP_sysinfo_vcsrevision_reload_post;
 	int HP_sysinfo_is_superuser_pre;
