@@ -202,7 +202,7 @@ struct homunculus_interface {
 	bool (*shuffle) (struct homun_data *hd);
 	void (*read_db) (void);
 	bool (*read_db_libconfig) (const char *filename);
-	bool (*read_db_libconfig_sub) (struct config_setting_t *it, int idx, const char *source);
+	bool (*read_db_libconfig_sub) (struct config_setting_t *it, const char *source);
 	bool (*read_db_libconfig_sub_stats) (struct config_setting_t *it, int idx);
 	bool (*read_db_libconfig_sub_stats_group) (struct config_setting_t *it, struct h_stats *smin, struct h_stats *smax);
 	bool (*read_db_libconfig_sub_expgroup) (struct config_setting_t* it, int idx);

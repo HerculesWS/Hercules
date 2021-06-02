@@ -37033,15 +37033,15 @@ bool HP_homun_read_db_libconfig(const char *filename) {
 	}
 	return retVal___;
 }
-bool HP_homun_read_db_libconfig_sub(struct config_setting_t *it, int idx, const char *source) {
+bool HP_homun_read_db_libconfig_sub(struct config_setting_t *it, const char *source) {
 	int hIndex = 0;
 	bool retVal___ = false;
 	if (HPMHooks.count.HP_homun_read_db_libconfig_sub_pre > 0) {
-		bool (*preHookFunc) (struct config_setting_t **it, int *idx, const char **source);
+		bool (*preHookFunc) (struct config_setting_t **it, const char **source);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_homun_read_db_libconfig_sub_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_homun_read_db_libconfig_sub_pre[hIndex].func;
-			retVal___ = preHookFunc(&it, &idx, &source);
+			retVal___ = preHookFunc(&it, &source);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -37049,13 +37049,13 @@ bool HP_homun_read_db_libconfig_sub(struct config_setting_t *it, int idx, const 
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.homun.read_db_libconfig_sub(it, idx, source);
+		retVal___ = HPMHooks.source.homun.read_db_libconfig_sub(it, source);
 	}
 	if (HPMHooks.count.HP_homun_read_db_libconfig_sub_post > 0) {
-		bool (*postHookFunc) (bool retVal___, struct config_setting_t *it, int idx, const char *source);
+		bool (*postHookFunc) (bool retVal___, struct config_setting_t *it, const char *source);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_homun_read_db_libconfig_sub_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_homun_read_db_libconfig_sub_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, it, idx, source);
+			retVal___ = postHookFunc(retVal___, it, source);
 		}
 	}
 	return retVal___;
