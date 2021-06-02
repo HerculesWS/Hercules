@@ -37843,6 +37843,32 @@ void HP_instance_force_destroy(struct map_session_data *sd) {
 	}
 	return;
 }
+void HP_instance_reload_map_flags(int instance_id) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_instance_reload_map_flags_pre > 0) {
+		void (*preHookFunc) (int *instance_id);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_instance_reload_map_flags_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_instance_reload_map_flags_pre[hIndex].func;
+			preHookFunc(&instance_id);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.instance.reload_map_flags(instance_id);
+	}
+	if (HPMHooks.count.HP_instance_reload_map_flags_post > 0) {
+		void (*postHookFunc) (int instance_id);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_instance_reload_map_flags_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_instance_reload_map_flags_post[hIndex].func;
+			postHookFunc(instance_id);
+		}
+	}
+	return;
+}
 /* intif_interface */
 int HP_intif_parse(int fd) {
 	int hIndex = 0;

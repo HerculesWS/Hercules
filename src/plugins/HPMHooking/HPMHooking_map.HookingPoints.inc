@@ -1477,6 +1477,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(instance->valid, HP_instance_valid) },
 	{ HP_POP(instance->destroy_timer, HP_instance_destroy_timer) },
 	{ HP_POP(instance->force_destroy, HP_instance_force_destroy) },
+	{ HP_POP(instance->reload_map_flags, HP_instance_reload_map_flags) },
 /* intif_interface */
 	{ HP_POP(intif->parse, HP_intif_parse) },
 	{ HP_POP(intif->create_pet, HP_intif_create_pet) },

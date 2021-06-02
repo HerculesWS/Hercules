@@ -2882,6 +2882,8 @@ struct {
 	struct HPMHookPoint *HP_instance_destroy_timer_post;
 	struct HPMHookPoint *HP_instance_force_destroy_pre;
 	struct HPMHookPoint *HP_instance_force_destroy_post;
+	struct HPMHookPoint *HP_instance_reload_map_flags_pre;
+	struct HPMHookPoint *HP_instance_reload_map_flags_post;
 	struct HPMHookPoint *HP_intif_parse_pre;
 	struct HPMHookPoint *HP_intif_parse_post;
 	struct HPMHookPoint *HP_intif_create_pet_pre;
@@ -9977,6 +9979,8 @@ struct {
 	int HP_instance_destroy_timer_post;
 	int HP_instance_force_destroy_pre;
 	int HP_instance_force_destroy_post;
+	int HP_instance_reload_map_flags_pre;
+	int HP_instance_reload_map_flags_post;
 	int HP_intif_parse_pre;
 	int HP_intif_parse_post;
 	int HP_intif_create_pet_pre;

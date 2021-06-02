@@ -3324,6 +3324,8 @@ typedef int (*HPMHOOK_pre_instance_destroy_timer) (int *tid, int64 *tick, int *i
 typedef int (*HPMHOOK_post_instance_destroy_timer) (int retVal___, int tid, int64 tick, int id, intptr_t data);
 typedef void (*HPMHOOK_pre_instance_force_destroy) (struct map_session_data **sd);
 typedef void (*HPMHOOK_post_instance_force_destroy) (struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_instance_reload_map_flags) (int *instance_id);
+typedef void (*HPMHOOK_post_instance_reload_map_flags) (int instance_id);
 #endif // MAP_INSTANCE_H
 #ifdef CHAR_INT_ACHIEVEMENT_H /* inter_achievement */
 typedef int (*HPMHOOK_pre_inter_achievement_sql_init) (void);
