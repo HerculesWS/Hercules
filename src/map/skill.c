@@ -13385,11 +13385,11 @@ static int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *b
 		case UNT_MANHOLE:
 			if (sg->val2 == 0 && tsc && (sg->unit_id == UNT_ANKLESNARE || bl->id != sg->src_id)) {
 				int sec = skill->get_time2(sg->skill_id, sg->skill_lv);
-				struct mob_data* md;
-				if (sg->unit_id == UNT_MANHOLE && (md = BL_CAST(BL_MOB, bl)) && md != NULL && 
-					(md->class_ == MOBID_EMPELIUM || md->class_ == MOBID_BARRICADE || md->class_ == MOBID_S_EMPEL_1 || md->class_ == MOBID_S_EMPEL_2)
+				struct mob_data *md = NULL;
+				if (sg->unit_id == UNT_MANHOLE && (md = BL_CAST(BL_MOB, bl)) != NULL
+				 && (md->class_ == MOBID_EMPELIUM || md->class_ == MOBID_BARRICADE || md->class_ == MOBID_S_EMPEL_1 || md->class_ == MOBID_S_EMPEL_2)
 					) {
-					// Do nothing if target are the specified monsters on manhole.	
+					// Do nothing if target are the specified monsters on manhole
 				} else if (status->change_start(ss, bl, type, 10000, sg->skill_lv, sg->group_id, 0, 0, sec, SCFLAG_FIXEDRATE)) {
 					const struct TimerData* td = tsc->data[type] ? timer->get(tsc->data[type]->timer) : NULL;
 					if (td)
