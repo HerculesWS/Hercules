@@ -438,6 +438,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->bossmapinfo, HP_clif_bossmapinfo) },
 	{ HP_POP(clif->map_type, HP_clif_map_type) },
 	{ HP_POP(clif->maptypeproperty2, HP_clif_maptypeproperty2) },
+	{ HP_POP(clif->crimson_marker, HP_clif_crimson_marker) },
 	{ HP_POP(clif->changemapserver, HP_clif_changemapserver) },
 	{ HP_POP(clif->changemapserver_airship, HP_clif_changemapserver_airship) },
 	{ HP_POP(clif->npcbuysell, HP_clif_npcbuysell) },
@@ -2618,6 +2619,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(pc->has_second_costume, HP_pc_has_second_costume) },
 	{ HP_POP(pc->expandInventory, HP_pc_expandInventory) },
 	{ HP_POP(pc->auto_exp_insurance, HP_pc_auto_exp_insurance) },
+	{ HP_POP(pc->crimson_marker_clear, HP_pc_crimson_marker_clear) },
 /* pcre_interface */
 	{ HP_POP(libpcre->compile, HP_libpcre_compile) },
 	{ HP_POP(libpcre->study, HP_libpcre_study) },
@@ -3099,6 +3101,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(skill->toggle_magicpower, HP_skill_toggle_magicpower) },
 	{ HP_POP(skill->magic_reflect, HP_skill_magic_reflect) },
 	{ HP_POP(skill->onskillusage, HP_skill_onskillusage) },
+	{ HP_POP(skill->bind_trap, HP_skill_bind_trap) },
 	{ HP_POP(skill->cell_overlap, HP_skill_cell_overlap) },
 	{ HP_POP(skill->timerskill, HP_skill_timerskill) },
 	{ HP_POP(skill->trap_do_splash, HP_skill_trap_do_splash) },

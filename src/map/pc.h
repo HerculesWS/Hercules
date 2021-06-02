@@ -663,6 +663,9 @@ END_ZEROED_BLOCK;
 	bool achievements_received;
 	// Title
 	VECTOR_DECL(int) title_ids;
+
+	int c_marker[MAX_SKILL_CRIMSON_MARKER]; /// Store target that marked by Crimson Marker [Cydh]
+	bool flicker; /// Check RL_FLICKER usage status [Cydh]
 };
 
 #define EQP_WEAPON EQP_HAND_R
@@ -1238,6 +1241,8 @@ END_ZEROED_BLOCK; /* End */
 	bool (*has_second_costume) (struct map_session_data *sd);
 	bool (*expandInventory) (struct map_session_data *sd, int adjustSize);
 	bool (*auto_exp_insurance) (struct map_session_data *sd);
+
+	void (*crimson_marker_clear) (struct map_session_data *sd);
 };
 
 #ifdef HERCULES_CORE

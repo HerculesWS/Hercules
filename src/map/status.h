@@ -862,6 +862,18 @@ typedef enum sc_type {
 	SC_SKF_CAST,
 	SC_ALMIGHTY,
 	SC_NO_RECOVER_STATE,
+
+	// Rebel
+	SC_FALLEN_ANGEL,
+	SC_HEAT_BARREL,
+	SC_PLATINUM_ALTER,
+	SC_ANTI_MATERIAL_BLAST,
+	SC_ETERNAL_CHAIN,
+	SC_CRIMSON_MARKER,
+	SC_QD_SHOT_READY,
+	SC_HOWLING_MINE,
+	SC_BIND_TRAP,
+
 #ifndef SC_MAX
 	SC_MAX, //Automatically updated max, used in for's to check we are within bounds.
 #endif

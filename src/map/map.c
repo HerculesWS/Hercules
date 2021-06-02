@@ -2123,6 +2123,7 @@ static int map_quit(struct map_session_data *sd)
 	party->booking_delete(sd); // Party Booking [Spiria]
 	pc->makesavestatus(sd);
 	pc->clean_skilltree(sd);
+	pc->crimson_marker_clear(sd);
 	chrif->save(sd,1);
 	unit->free_pc(sd);
 	return 0;

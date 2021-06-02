@@ -1238,6 +1238,8 @@ typedef void (*HPMHOOK_pre_clif_map_type) (struct map_session_data **sd, enum ma
 typedef void (*HPMHOOK_post_clif_map_type) (struct map_session_data *sd, enum map_type type);
 typedef void (*HPMHOOK_pre_clif_maptypeproperty2) (struct block_list **bl, enum send_target *t);
 typedef void (*HPMHOOK_post_clif_maptypeproperty2) (struct block_list *bl, enum send_target t);
+typedef void (*HPMHOOK_pre_clif_crimson_marker) (struct map_session_data **sd, struct block_list **bl, bool *remove);
+typedef void (*HPMHOOK_post_clif_crimson_marker) (struct map_session_data *sd, struct block_list *bl, bool remove);
 typedef void (*HPMHOOK_pre_clif_changemapserver) (struct map_session_data **sd, unsigned short *map_index, int *x, int *y, uint32 *ip, uint16 *port, char **dnsHost);
 typedef void (*HPMHOOK_post_clif_changemapserver) (struct map_session_data *sd, unsigned short map_index, int x, int y, uint32 ip, uint16 port, char *dnsHost);
 typedef void (*HPMHOOK_pre_clif_changemapserver_airship) (struct map_session_data **sd, unsigned short *map_index, int *x, int *y, uint32 *ip, uint16 *port);
@@ -6542,6 +6544,8 @@ typedef bool (*HPMHOOK_pre_pc_expandInventory) (struct map_session_data **sd, in
 typedef bool (*HPMHOOK_post_pc_expandInventory) (bool retVal___, struct map_session_data *sd, int adjustSize);
 typedef bool (*HPMHOOK_pre_pc_auto_exp_insurance) (struct map_session_data **sd);
 typedef bool (*HPMHOOK_post_pc_auto_exp_insurance) (bool retVal___, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_pc_crimson_marker_clear) (struct map_session_data **sd);
+typedef void (*HPMHOOK_post_pc_crimson_marker_clear) (struct map_session_data *sd);
 #endif // MAP_PC_H
 #ifdef MAP_NPC_H /* libpcre */
 typedef pcre* (*HPMHOOK_pre_libpcre_compile) (const char **pattern, int *options, const char ***errptr, int **erroffset, const unsigned char **tableptr);
@@ -7538,6 +7542,8 @@ typedef int (*HPMHOOK_pre_skill_magic_reflect) (struct block_list **src, struct 
 typedef int (*HPMHOOK_post_skill_magic_reflect) (int retVal___, struct block_list *src, struct block_list *bl, int type);
 typedef int (*HPMHOOK_pre_skill_onskillusage) (struct map_session_data **sd, struct block_list **bl, uint16 *skill_id, int64 *tick);
 typedef int (*HPMHOOK_post_skill_onskillusage) (int retVal___, struct map_session_data *sd, struct block_list *bl, uint16 skill_id, int64 tick);
+typedef int (*HPMHOOK_pre_skill_bind_trap) (struct block_list **bl, va_list ap);
+typedef int (*HPMHOOK_post_skill_bind_trap) (int retVal___, struct block_list *bl, va_list ap);
 typedef int (*HPMHOOK_pre_skill_cell_overlap) (struct block_list **bl, va_list ap);
 typedef int (*HPMHOOK_post_skill_cell_overlap) (int retVal___, struct block_list *bl, va_list ap);
 typedef int (*HPMHOOK_pre_skill_timerskill) (int *tid, int64 *tick, int *id, intptr_t *data);

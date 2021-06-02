@@ -4045,7 +4045,18 @@ struct PACKET_ZC_NOTIFY_SKILL_POSITION {
 	int16 count;
 	int8 action;
 };
+
 DEFINE_PACKET_HEADER(ZC_NOTIFY_SKILL_POSITION, 0x0115);
+
+#if PACKETVER_MAIN_NUM >= 20130731 || PACKETVER_RE_NUM >= 20130707 || defined(PACKETVER_ZERO)
+struct PACKET_ZC_C_MARKERINFO {
+	int16 PacketType;
+	uint32 AID;
+	int16 xPos;
+	int16 yPos;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_C_MARKERINFO, 0x09c1);
+#endif
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)

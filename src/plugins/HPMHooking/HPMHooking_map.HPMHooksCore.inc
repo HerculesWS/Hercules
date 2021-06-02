@@ -828,6 +828,8 @@ struct {
 	struct HPMHookPoint *HP_clif_map_type_post;
 	struct HPMHookPoint *HP_clif_maptypeproperty2_pre;
 	struct HPMHookPoint *HP_clif_maptypeproperty2_post;
+	struct HPMHookPoint *HP_clif_crimson_marker_pre;
+	struct HPMHookPoint *HP_clif_crimson_marker_post;
 	struct HPMHookPoint *HP_clif_changemapserver_pre;
 	struct HPMHookPoint *HP_clif_changemapserver_post;
 	struct HPMHookPoint *HP_clif_changemapserver_airship_pre;
@@ -5120,6 +5122,8 @@ struct {
 	struct HPMHookPoint *HP_pc_expandInventory_post;
 	struct HPMHookPoint *HP_pc_auto_exp_insurance_pre;
 	struct HPMHookPoint *HP_pc_auto_exp_insurance_post;
+	struct HPMHookPoint *HP_pc_crimson_marker_clear_pre;
+	struct HPMHookPoint *HP_pc_crimson_marker_clear_post;
 	struct HPMHookPoint *HP_libpcre_compile_pre;
 	struct HPMHookPoint *HP_libpcre_compile_post;
 	struct HPMHookPoint *HP_libpcre_study_pre;
@@ -6060,6 +6064,8 @@ struct {
 	struct HPMHookPoint *HP_skill_magic_reflect_post;
 	struct HPMHookPoint *HP_skill_onskillusage_pre;
 	struct HPMHookPoint *HP_skill_onskillusage_post;
+	struct HPMHookPoint *HP_skill_bind_trap_pre;
+	struct HPMHookPoint *HP_skill_bind_trap_post;
 	struct HPMHookPoint *HP_skill_cell_overlap_pre;
 	struct HPMHookPoint *HP_skill_cell_overlap_post;
 	struct HPMHookPoint *HP_skill_timerskill_pre;
@@ -7927,6 +7933,8 @@ struct {
 	int HP_clif_map_type_post;
 	int HP_clif_maptypeproperty2_pre;
 	int HP_clif_maptypeproperty2_post;
+	int HP_clif_crimson_marker_pre;
+	int HP_clif_crimson_marker_post;
 	int HP_clif_changemapserver_pre;
 	int HP_clif_changemapserver_post;
 	int HP_clif_changemapserver_airship_pre;
@@ -12219,6 +12227,8 @@ struct {
 	int HP_pc_expandInventory_post;
 	int HP_pc_auto_exp_insurance_pre;
 	int HP_pc_auto_exp_insurance_post;
+	int HP_pc_crimson_marker_clear_pre;
+	int HP_pc_crimson_marker_clear_post;
 	int HP_libpcre_compile_pre;
 	int HP_libpcre_compile_post;
 	int HP_libpcre_study_pre;
@@ -13159,6 +13169,8 @@ struct {
 	int HP_skill_magic_reflect_post;
 	int HP_skill_onskillusage_pre;
 	int HP_skill_onskillusage_post;
+	int HP_skill_bind_trap_pre;
+	int HP_skill_bind_trap_post;
 	int HP_skill_cell_overlap_pre;
 	int HP_skill_cell_overlap_post;
 	int HP_skill_timerskill_pre;
