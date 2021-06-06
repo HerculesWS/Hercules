@@ -1325,7 +1325,7 @@ BEGIN_ZEROED_BLOCK; /* Everything within this block will be memset to 0 when sta
 		int id;
 		int relevant_bl_types;
 	} IconChangeTable[SC_MAX];
-	unsigned int ChangeFlagTable[SC_MAX]; // status -> flags
+	enum scb_flag ChangeFlagTable[SC_MAX]; // status -> flags
 	int SkillChangeTable[SC_MAX];         // status -> skill
 	bool DisplayType[SC_MAX];
 	/* */
@@ -1361,7 +1361,7 @@ struct status_interface {
 	/* funcs */
 	// for looking up associated data
 	int (*sc2skill) (sc_type sc);
-	unsigned int (*sc2scb_flag) (sc_type sc);
+	enum scb_flag (*sc2scb_flag) (sc_type sc);
 	int (*get_sc_relevant_bl_types) (sc_type type);
 	int (*get_sc_type) (sc_type idx);
 	int (*get_sc_icon) (sc_type type);
@@ -1406,7 +1406,7 @@ struct status_interface {
 	int (*change_start_set_option) (struct block_list *bl, struct status_change* sc, enum sc_type type, int val1, int val2, int val3, int val4);
 	int (*get_val_flag) (enum sc_type type);
 	void (*change_start_display) (struct map_session_data *sd, enum sc_type type, int val1, int val2, int val3, int val4);
-	bool (*change_start_unknown_sc) (struct block_list *src, struct block_list *bl, enum sc_type type, int calc_flag, int rate, int val1, int val2, int val3, int val4, int total_tick, int flag);
+	bool (*change_start_unknown_sc) (struct block_list *src, struct block_list *bl, enum sc_type type, enum scb_flag calc_flag, int rate, int val1, int val2, int val3, int val4, int total_tick, int flag);
 	int (*kaahi_heal_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*change_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*change_timer_sub) (struct block_list* bl, va_list ap);

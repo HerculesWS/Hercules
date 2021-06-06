@@ -89,7 +89,7 @@ static int status_sc2skill(sc_type sc)
  * @param sc The status to look up
  * @return The scb_flag registered for this status (see enum scb_flag)
  */
-static unsigned int status_sc2scb_flag(sc_type sc)
+static enum scb_flag status_sc2scb_flag(sc_type sc)
 {
 	if( sc < 0 || sc >= SC_MAX ) {
 		ShowError("status_sc2scb_flag: Unsupported status change id %d\n", sc);
@@ -7072,7 +7072,8 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 	struct status_change_entry* sce;
 	struct status_data *st;
 	struct view_data *vd;
-	int opt_flag, calc_flag, undead_flag, val_flag = 0, tick_time = 0;
+	int opt_flag, undead_flag, val_flag = 0, tick_time = 0;
+	enum scb_flag calc_flag = SCB_NONE;
 
 	nullpo_ret(bl);
 	sc = status->get_sc(bl);
@@ -9766,7 +9767,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 	return 1;
 }
 
-static bool status_change_start_unknown_sc(struct block_list *src, struct block_list *bl, enum sc_type type, int calc_flag, int rate, int val1, int val2, int val3, int val4, int total_tick, int flag)
+static bool status_change_start_unknown_sc(struct block_list *src, struct block_list *bl, enum sc_type type, enum scb_flag calc_flag, int rate, int val1, int val2, int val3, int val4, int total_tick, int flag)
 {
 	Assert_retr(false, type >= SC_NONE && type < SC_MAX);
 	if (calc_flag == SCB_NONE && status->dbs->SkillChangeTable[type] == 0 && status->get_sc_icon(type) == SI_BLANK) {
@@ -10793,8 +10794,9 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 	struct status_change_entry *sce;
 	struct status_data *st;
 	struct view_data *vd;
-	int opt_flag=0, calc_flag;
+	int opt_flag=0;
 	bool invisible = false;
+	enum scb_flag calc_flag = SCB_NONE;
 
 	nullpo_ret(bl);
 
