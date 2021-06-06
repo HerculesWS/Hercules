@@ -4336,6 +4336,9 @@ static int status_calc_atk_percent(struct block_list *bl, struct status_change *
 	if (sc->data[SC_GOSPEL_ATK_PERC] != NULL)
 		atk_percent += sc->data[SC_GOSPEL_ATK_PERC]->val1;
 
+	if (sc->data[SC_PROVOKE] != NULL)
+		atk_percent += sc->data[SC_PROVOKE]->val3;
+
 	return cap_value(atk_percent, 0, USHRT_MAX);
 }
 
@@ -4379,6 +4382,9 @@ static int status_calc_def_percent(struct block_list *bl, struct status_change *
 	// Add/Subtract additively according to status changes.
 	if (sc->data[SC_TAROTCARD_DEF_PERC] != NULL)
 		def_percent += sc->data[SC_TAROTCARD_DEF_PERC]->val1;
+
+	if (sc->data[SC_PROVOKE] != NULL)
+		def_percent -= sc->data[SC_PROVOKE]->val4; // passed as absolute value.
 
 	return cap_value(def_percent, 0, USHRT_MAX);
 }
@@ -4451,8 +4457,6 @@ static int status_calc_batk(struct block_list *bl, struct status_change *sc, int
 
 	if(sc->data[SC_INCATKRATE])
 		batk += batk * sc->data[SC_INCATKRATE]->val1/100;
-	if(sc->data[SC_PROVOKE])
-		batk += batk * sc->data[SC_PROVOKE]->val3/100;
 #ifndef RENEWAL
 	if(sc->data[SC_LKCONCENTRATION])
 		batk += batk * sc->data[SC_LKCONCENTRATION]->val2/100;
@@ -4566,8 +4570,6 @@ static int status_calc_watk(struct block_list *bl, struct status_change *sc, int
 #endif
 	if(sc->data[SC_INCATKRATE])
 		watk += watk * sc->data[SC_INCATKRATE]->val1/100;
-	if(sc->data[SC_PROVOKE])
-		watk += watk * sc->data[SC_PROVOKE]->val3/100;
 	if(sc->data[SC_SKE])
 		watk += watk * 3;
 	if(sc->data[SC_HLIF_FLEET])
@@ -5006,8 +5008,6 @@ static defType status_calc_def(struct block_list *bl, struct status_change *sc, 
 		def -= def * sc->data[SC_LKCONCENTRATION]->val4/100;
 	if (sc->data[SC_SKE])
 		def >>=1;
-	if (sc->data[SC_PROVOKE] && bl->type != BL_PC) // Provoke doesn't alter player defense->
-		def -= def * sc->data[SC_PROVOKE]->val4/100;
 	if (sc->data[SC_NOEQUIPSHIELD])
 		def -= def * sc->data[SC_NOEQUIPSHIELD]->val2/100;
 	if (sc->data[SC_FLING])
@@ -5098,8 +5098,6 @@ static signed short status_calc_def2(struct block_list *bl, struct status_change
 		def2 -= def2 * 25/100;
 	if (sc->data[SC_SKE])
 		def2 -= def2 * 50/100;
-	if (sc->data[SC_PROVOKE])
-		def2 -= def2 * sc->data[SC_PROVOKE]->val4/100;
 	if (sc->data[SC_JOINTBEAT])
 		def2 -= def2 * ((sc->data[SC_JOINTBEAT]->val2&BREAK_SHOULDER) ? 50 : 0) / 100
 		+ def2 * ((sc->data[SC_JOINTBEAT]->val2&BREAK_WAIST) ? 25 : 0) / 100;

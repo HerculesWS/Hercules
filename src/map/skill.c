@@ -14343,7 +14343,9 @@ static int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *b
 						sc_start(ss, bl, SC_POISON, 100, 1, time, skill_id);
 						break;
 					case 4: // Level 10 Provoke
-						// TODO: [Aegis] while this does apply provoke, it manually sets the atk / def percentage changes...
+						// TODO: [Aegis] while this does apply the status effect of provoke, it manually sets the atk / def percentage changes...
+						// this means you could be affected by gospel provoke as well as normal provoke, since provoke also manually applies the atk / def changes in Aegis.
+						// We're not doing that here.
 						sc_start(ss, bl, SC_PROVOKE, 100, 10, time, skill_id);
 						break;
 					case 5: // DEF -100%
