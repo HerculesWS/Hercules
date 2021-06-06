@@ -914,6 +914,9 @@ typedef enum sc_type {
 
 	SC_FIRE_EXPANSION_TEAR_GAS_SOB,
 
+	SC_TAROTCARD_ATK_PERC,
+	SC_TAROTCARD_MATK_PERC,
+	SC_TAROTCARD_DEF_PERC,
 #ifndef SC_MAX
 	SC_MAX, //Automatically updated max, used in for's to check we are within bounds.
 #endif

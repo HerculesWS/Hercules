@@ -4330,6 +4330,8 @@ static int status_calc_atk_percent(struct block_list *bl, struct status_change *
 		return cap_value(atk_percent, 0, USHRT_MAX);
 
 	// Add/Subtract additively according to status changes.
+	if (sc->data[SC_TAROTCARD_ATK_PERC] != NULL)
+		atk_percent += sc->data[SC_TAROTCARD_ATK_PERC]->val1;
 
 	return cap_value(atk_percent, 0, USHRT_MAX);
 }
@@ -4350,6 +4352,8 @@ static int status_calc_matk_percent(struct block_list *bl, struct status_change 
 		return cap_value(matk_percent, 0, USHRT_MAX);
 
 	// Add/Subtract additively according to status changes.
+	if (sc->data[SC_TAROTCARD_MATK_PERC] != NULL)
+		matk_percent += sc->data[SC_TAROTCARD_MATK_PERC]->val1;
 
 	return cap_value(matk_percent, 0, USHRT_MAX);
 }
@@ -4370,6 +4374,8 @@ static int status_calc_def_percent(struct block_list *bl, struct status_change *
 		return cap_value(def_percent, 0, USHRT_MAX);
 
 	// Add/Subtract additively according to status changes.
+	if (sc->data[SC_TAROTCARD_DEF_PERC] != NULL)
+		def_percent += sc->data[SC_TAROTCARD_DEF_PERC]->val1;
 
 	return cap_value(def_percent, 0, USHRT_MAX);
 }
@@ -7568,6 +7574,13 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			case SC_HAWKEYES:
 				if( sce->val4 && !val4 )//you cannot override master guild aura
 					return 0;
+				break;
+			case SC_TAROTCARD_ATK_PERC:
+			case SC_TAROTCARD_MATK_PERC:
+			case SC_TAROTCARD_DEF_PERC:
+				// [Aegis] Don't override stronger (m)atk & m(def) percentage based buffs.
+				if (abs(val1) < abs(sce->val1))
+					return 1;
 				break;
 			case SC_JOINTBEAT:
 				val2 |= sce->val2; // stackable ailments

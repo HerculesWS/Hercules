@@ -9332,7 +9332,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 						status_percent_damage(src, bl, 0, 100, false);
 						break;
 					case 1: // matk halved
-						sc_start(src, bl, SC_INCMATKRATE, 100, -50, skill->get_time2(skill_id, skill_lv), skill_id);
+						sc_start(src, bl, SC_TAROTCARD_MATK_PERC, 100, -50, skill->get_time2(skill_id, skill_lv), skill_id);
 						break;
 					case 2: // all buffs removed
 						status->change_clear_buffs(bl,1);
@@ -9348,7 +9348,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 						}
 						break;
 					case 4: // atk halved
-						sc_start(src, bl, SC_INCATKRATE, 100, -50, skill->get_time2(skill_id, skill_lv), skill_id);
+						sc_start(src, bl, SC_TAROTCARD_ATK_PERC, 100, -50, skill->get_time2(skill_id, skill_lv), skill_id);
 						break;
 					case 5: // 2000HP heal, random teleported
 						status->heal(src, 2000, 0, STATUS_HEAL_DEFAULT);
@@ -9378,8 +9378,8 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 					case 10: // 6666 damage, atk matk halved, cursed
 						status_fix_damage(src, bl, 6666, 0);
 						clif->damage(src,bl,0,0,6666,0,BDT_NORMAL,0);
-						sc_start(src, bl, SC_INCATKRATE, 100, -50, skill->get_time2(skill_id, skill_lv), skill_id);
-						sc_start(src, bl, SC_INCMATKRATE, 100, -50, skill->get_time2(skill_id, skill_lv), skill_id);
+						sc_start(src, bl, SC_TAROTCARD_ATK_PERC, 100, -50, skill->get_time2(skill_id, skill_lv), skill_id);
+						sc_start(src, bl, SC_TAROTCARD_MATK_PERC, 100, -50, skill->get_time2(skill_id, skill_lv), skill_id);
 						sc_start(src, bl, SC_CURSE, skill_lv, 100, skill->get_time2(skill_id, skill_lv), skill_id);
 						break;
 					case 11: // 4444 damage
@@ -9390,11 +9390,11 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 						sc_start(src, bl, SC_STUN, 100, skill_lv, 5000, skill_id);
 						break;
 					case 13: // atk,matk,hit,flee,def reduced
-						sc_start(src, bl, SC_INCATKRATE, 100, -20, skill->get_time2(skill_id, skill_lv), skill_id);
-						sc_start(src, bl, SC_INCMATKRATE, 100, -20, skill->get_time2(skill_id, skill_lv), skill_id);
+						sc_start(src, bl, SC_TAROTCARD_ATK_PERC, 100, -20, skill->get_time2(skill_id, skill_lv), skill_id);
+						sc_start(src, bl, SC_TAROTCARD_MATK_PERC, 100, -20, skill->get_time2(skill_id, skill_lv), skill_id);
 						sc_start(src, bl, SC_INCHITRATE, 100, -20, skill->get_time2(skill_id, skill_lv), skill_id);
 						sc_start(src, bl, SC_INCFLEERATE, 100, -20, skill->get_time2(skill_id, skill_lv), skill_id);
-						sc_start(src, bl, SC_INCDEFRATE, 100, -20, skill->get_time2(skill_id, skill_lv), skill_id);
+						sc_start(src, bl, SC_TAROTCARD_DEF_PERC, 100, -20, skill->get_time2(skill_id, skill_lv), skill_id);
 						sc_start(src, bl, type, 100, skill_lv, skill->get_time2(skill_id, skill_lv), skill_id);
 						break;
 					default:
