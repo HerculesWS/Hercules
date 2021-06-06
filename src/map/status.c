@@ -4333,6 +4333,9 @@ static int status_calc_atk_percent(struct block_list *bl, struct status_change *
 	if (sc->data[SC_TAROTCARD_ATK_PERC] != NULL)
 		atk_percent += sc->data[SC_TAROTCARD_ATK_PERC]->val1;
 
+	if (sc->data[SC_GOSPEL_ATK_PERC] != NULL)
+		atk_percent += sc->data[SC_GOSPEL_ATK_PERC]->val1;
+
 	return cap_value(atk_percent, 0, USHRT_MAX);
 }
 
@@ -7578,6 +7581,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			case SC_TAROTCARD_ATK_PERC:
 			case SC_TAROTCARD_MATK_PERC:
 			case SC_TAROTCARD_DEF_PERC:
+			case SC_GOSPEL_ATK_PERC:
 				// [Aegis] Don't override stronger (m)atk & m(def) percentage based buffs.
 				if (abs(val1) < abs(sce->val1))
 					return 1;

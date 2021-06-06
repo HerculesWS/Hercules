@@ -14314,7 +14314,7 @@ static int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *b
 						if (tsd) clif->gospel_info(tsd, 0x1e);
 						break;
 					case 11: // ATK +100%
-						sc_start(ss, bl, SC_INCATKRATE, 100, 100, time, skill_id);
+						sc_start(ss, bl, SC_GOSPEL_ATK_PERC, 100, 100, time, skill_id);
 						if (tsd) clif->gospel_info(tsd, 0x1f);
 						break;
 					case 12: // HIT/Flee +50
@@ -14343,13 +14343,14 @@ static int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *b
 						sc_start(ss, bl, SC_POISON, 100, 1, time, skill_id);
 						break;
 					case 4: // Level 10 Provoke
+						// TODO: [Aegis] while this does apply provoke, it manually sets the atk / def percentage changes...
 						sc_start(ss, bl, SC_PROVOKE, 100, 10, time, skill_id);
 						break;
 					case 5: // DEF -100%
 				                sc_start(ss, bl, SC_INCDEFRATE, 100, -100, time, skill_id);
 						break;
 					case 6: // ATK -100%
-				                sc_start(ss, bl, SC_INCATKRATE, 100, -100, time, skill_id);
+						sc_start(ss, bl, SC_GOSPEL_ATK_PERC, 100, -100, time, skill_id);
 						break;
 					case 7: // Flee -100%
 				                sc_start(ss, bl, SC_INCFLEERATE, 100, -100, time, skill_id);
