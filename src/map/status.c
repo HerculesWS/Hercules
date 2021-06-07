@@ -4345,6 +4345,9 @@ static int status_calc_atk_percent(struct block_list *bl, struct status_change *
 	if (sc->data[SC_HAMI_BLOODLUST] != NULL)
 		atk_percent += sc->data[SC_HAMI_BLOODLUST]->val2;
 
+	if (sc->data[SC_JOINTBEAT] != NULL && (sc->data[SC_JOINTBEAT]->val2 & BREAK_WAIST) != 0)
+		atk_percent -= 25;
+
 	return cap_value(atk_percent, 0, USHRT_MAX);
 }
 
@@ -4394,6 +4397,15 @@ static int status_calc_def_percent(struct block_list *bl, struct status_change *
 
 	if (sc->data[SC_LKCONCENTRATION] != NULL)
 		def_percent -= sc->data[SC_LKCONCENTRATION]->val4; // passed as absolute value.
+
+	if (sc->data[SC_JOINTBEAT]) {
+		// [Aegis] General (m)atk/m(def) percentage buffs/debuffs take the stronger one, as in max(abs(fst_perc), abs(snd_perc)).
+		// This is done individually for def, mdef, atk, def. And compared is only with same-skill originating changes.
+		if ((sc->data[SC_JOINTBEAT]->val2 & BREAK_SHOULDER) != 0)
+			def_percent -= 50;
+		else if ((sc->data[SC_JOINTBEAT]->val2 & BREAK_WAIST) != 0)
+			def_percent -= 25;
+	}
 
 	return cap_value(def_percent, 0, USHRT_MAX);
 }
@@ -4468,8 +4480,6 @@ static int status_calc_batk(struct block_list *bl, struct status_change *sc, int
 		batk += batk * sc->data[SC_INCATKRATE]->val1/100;
 	if(sc->data[SC_SKE])
 		batk += batk * 3;
-	if(sc->data[SC_JOINTBEAT] && sc->data[SC_JOINTBEAT]->val2&BREAK_WAIST)
-		batk -= batk * 25/100;
 	if(sc->data[SC_CURSE])
 		batk -= batk * 25/100;
 	if( sc->data[SC_ZANGETSU] )
@@ -5095,9 +5105,6 @@ static signed short status_calc_def2(struct block_list *bl, struct status_change
 		def2 -= def2 * 25/100;
 	if (sc->data[SC_SKE])
 		def2 -= def2 * 50/100;
-	if (sc->data[SC_JOINTBEAT])
-		def2 -= def2 * ((sc->data[SC_JOINTBEAT]->val2&BREAK_SHOULDER) ? 50 : 0) / 100
-		+ def2 * ((sc->data[SC_JOINTBEAT]->val2&BREAK_WAIST) ? 25 : 0) / 100;
 	if (sc->data[SC_FLING])
 		def2 -= def2 * (sc->data[SC_FLING]->val3)/100;
 	if (sc->data[SC_ANALYZE])
