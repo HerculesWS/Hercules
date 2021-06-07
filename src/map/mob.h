@@ -30,8 +30,6 @@
 
 struct hplugin_data_store;
 
-#define MAX_RANDOMMONSTER 5
-
 // Change this to increase the table size in your mob_db to accommodate a larger mob database.
 // Be sure to note that IDs 4001 to 4048 are reserved for advanced/baby/expanded classes.
 // Notice that the last 1000 entries are used for player clones, so always set this to desired value +1000
@@ -127,6 +125,17 @@ enum ksprotection_mode {
 	KSPROTECT_GUILD = 3,
 };
 
+enum mob_groups {
+	MOBG_DEAD_BRANCH = 0,
+	MOBG_PORING = 1,
+	MOBG_BLOODY_BRANCH = 2,
+	MOBG_POUCH = 3,
+	MOBG_CLASS_CHANGE = 4,
+#ifndef MOBG_MAX_GROUP
+	MOBG_MAX_GROUP
+#endif
+};
+
 struct mob_skill {
 	enum MobSkillState state;
 	uint16 skill_id,skill_lv;
@@ -203,7 +212,7 @@ struct mob_db {
 	struct status_data status;
 	struct view_data vd;
 	unsigned int option;
-	int summonper[MAX_RANDOMMONSTER];
+	int summonper[MOBG_MAX_GROUP];
 	int maxskill;
 	int dmg_taken_rate;
 	struct mob_skill skill[MAX_MOBSKILL];
@@ -325,7 +334,7 @@ enum {
 };
 
 /** Special monster(-name) constants used to assign skills to a group of monsters. **/
-enum mob_group {
+enum mob_type_group {
 	ALL_MOBS_NONBOSS = -1,
 	ALL_MOBS_BOSS = -2,
 	ALL_MOBS = -3,
@@ -471,6 +480,7 @@ struct item_drop_list {
 	struct item_drop* item;            // linked list of drops
 };
 
+VECTOR_STRUCT_DECL(mob_group, int);
 
 #define mob_stop_walking(md, type) (unit->stop_walking(&(md)->bl, (type)))
 #define mob_stop_attack(md)        (unit->stop_attack(&(md)->bl))
@@ -488,6 +498,7 @@ struct mob_interface {
 	// Random Option Drop groups
 	struct optdrop_group *opt_drop_groups;
 	int opt_drop_groups_count;
+	struct mob_group mob_groups[MOBG_MAX_GROUP];
 	// Defines the Manuk/Splendide/Mora mob groups for the status reductions [Epoque & Frost]
 	int manuk[8];
 	int splendide[5];
@@ -517,7 +528,7 @@ struct mob_interface {
 	struct view_data* (*get_viewdata) (int class_);
 	int (*parse_dataset) (struct spawn_data *data);
 	struct mob_data* (*spawn_dataset) (struct spawn_data *data, int npc_id);
-	int (*get_random_id) (int type, int flag, int lv);
+	int (*get_random_id) (enum mob_groups type, int flag, int lv);
 	bool (*ksprotected) (struct block_list *src, struct block_list *target);
 	struct mob_data* (*once_spawn_sub) (struct block_list *bl, int16 m, int16 x, int16 y, const char *mobname, int class_, const char *event, unsigned int size, unsigned int ai, int npc_id);
 	int (*once_spawn) (struct map_session_data *sd, int16 m, int16 x, int16 y, const char *mobname, int class_, int amount, const char *event, unsigned int size, unsigned int ai);
@@ -601,7 +612,6 @@ struct mob_interface {
 	void (*read_db_viewdata_sub) (struct mob_db *entry, struct config_setting_t *t);
 	void (*name_constants) (void);
 	void (*mobavail_removal_notice) (void);
-	int (*read_randommonster) (void);
 	bool (*parse_row_chatdb) (char **str, const char *source, int line, int *last_msg_id);
 	void (*readchatdb) (void);
 	void (*readskilldb) (void);
@@ -617,6 +627,10 @@ struct mob_interface {
 	bool (*skill_db_libconfig) (const char *filename, bool ignore_missing);
 	bool (*skill_db_libconfig_sub) (struct config_setting_t *it, int n);
 	bool (*skill_db_libconfig_sub_skill) (struct config_setting_t *it, int n, int mob_id);
+	void (*read_group_db) (void);
+	bool (*read_group_db_libconfig) (const char *filename);
+	bool (*read_group_db_libconfig_sub) (struct config_setting_t *it, const char *source);
+	bool (*read_group_db_libconfig_sub_group) (struct config_setting_t *it, enum mob_groups group_id, const char *source);
 };
 
 #ifdef HERCULES_CORE

@@ -29087,6 +29087,13 @@ static void script_hardcoded_constants(void)
 	script->set_constant("EAJ_BABY_GENETIC", MAPID_BABY_GENETIC, false, false);
 	script->set_constant("EAJ_BABY_CHASER", MAPID_BABY_CHASER, false, false);
 
+	script->constdb_comment("Monster Group Ids");
+	script->set_constant("MOBG_DEAD_BRANCH", MOBG_DEAD_BRANCH, false, false);
+	script->set_constant("MOBG_PORING", MOBG_PORING, false, false);
+	script->set_constant("MOBG_BLOODY_BRANCH", MOBG_BLOODY_BRANCH, false, false);
+	script->set_constant("MOBG_POUCH", MOBG_POUCH, false, false);
+	script->set_constant("MOBG_CLASS_CHANGE", MOBG_CLASS_CHANGE, false, false);
+
 	script->constdb_comment("Renewal");
 #ifdef RENEWAL
 	script->set_constant("RENEWAL", 1, false, false);

@@ -2576,7 +2576,7 @@ static int skill_additional_effect(struct block_list *src, struct block_list *bl
 			rate = rnd() % 1000000;
 			monster = mob->db(class_);
 		} while (
-			(monster->status.mode&(MD_BOSS|MD_PLANT) || monster->summonper[0] <= rate) &&
+			(monster->status.mode&(MD_BOSS|MD_PLANT) || monster->summonper[MOBG_DEAD_BRANCH] <= rate) &&
 			(temp++) < 2000);
 		if (temp < 2000)
 			mob->class_change(dstmd,class_);
@@ -6963,7 +6963,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 					clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
 					break;
 				}
-				class_ = skill_id == SA_MONOCELL ? MOBID_PORING : mob->get_random_id(4, 1, 0);
+				class_ = skill_id == SA_MONOCELL ? MOBID_PORING : mob->get_random_id(MOBG_CLASS_CHANGE, 1, 0);
 				clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
 				mob->class_change(dstmd,class_);
 				if( tsc && dstmd->status.mode&MD_BOSS )
@@ -7364,7 +7364,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 					clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
 					break;
 				}
-				id = mob->get_random_id(0,0xF, sd->status.base_level);
+				id = mob->get_random_id(MOBG_DEAD_BRANCH, 0xF, sd->status.base_level);
 				if (!id) {
 					clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
 					break;
