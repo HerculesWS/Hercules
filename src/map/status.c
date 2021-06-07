@@ -4360,6 +4360,9 @@ static int status_calc_atk_percent(struct block_list *bl, struct status_change *
 	if (sc->data[SC_INCATKRATE] != NULL) // should be used by NPC_POWERUP only
 		atk_percent += sc->data[SC_INCATKRATE]->val1;
 
+	if (sc->data[SC_NOEQUIPWEAPON] != NULL && bl->type != BL_PC)
+		atk_percent -= sc->data[SC_NOEQUIPWEAPON]->val2;
+
 	return cap_value(atk_percent, 0, USHRT_MAX);
 }
 
@@ -4586,8 +4589,6 @@ static int status_calc_watk(struct block_list *bl, struct status_change *sc, int
 		}
 	}
 #endif
-	if(sc->data[SC_NOEQUIPWEAPON] && bl->type != BL_PC)
-		watk -= watk * sc->data[SC_NOEQUIPWEAPON]->val2/100;
 	if(sc->data[SC__ENERVATION])
 		watk -= watk * sc->data[SC__ENERVATION]->val2 / 100;
 	if(sc->data[SC_RUSH_WINDMILL])
@@ -7734,7 +7735,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				}
 				break;
 			case SC_NOEQUIPWEAPON:
-				if (!sd) //Watk reduction
+				if (sd == NULL) // ATK% reduction
 					val2 = 25;
 				break;
 			case SC_NOEQUIPSHIELD:
