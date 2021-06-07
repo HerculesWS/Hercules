@@ -4696,7 +4696,7 @@ static int status_calc_matk(struct block_list *bl, struct status_change *sc, int
 		matk += sc->data[SC_ZANGETSU]->val3;
 	if (sc->data[SC_MAGICPOWER] && sc->data[SC_MAGICPOWER]->val4)
 		matk += matk * sc->data[SC_MAGICPOWER]->val3 / 100;
-	if (sc->data[SC_INCMATKRATE])
+	if (sc->data[SC_INCMATKRATE]) // Apparently nothing in Hercules uses this. Why does this exist?
 		matk += matk * sc->data[SC_INCMATKRATE]->val1 / 100;
 	if (sc->data[SC_MOONLIT_SERENADE])
 		matk += matk * sc->data[SC_MOONLIT_SERENADE]->val2 / 100;
