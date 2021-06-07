@@ -4385,6 +4385,9 @@ static int status_calc_matk_percent(struct block_list *bl, struct status_change 
 	if (sc->data[SC_TAROTCARD_MATK_PERC] != NULL)
 		matk_percent += sc->data[SC_TAROTCARD_MATK_PERC]->val1;
 
+	if (sc->data[SC_MINDBREAKER] != NULL)
+		matk_percent += sc->data[SC_MINDBREAKER]->val2;
+
 	return cap_value(matk_percent, 0, USHRT_MAX);
 }
 
@@ -4444,6 +4447,8 @@ static int status_calc_mdef_percent(struct block_list *bl, struct status_change 
 		return cap_value(mdef_percent, 0, USHRT_MAX);
 
 	// Add/Subtract additively according to status changes.
+	if (sc->data[SC_MINDBREAKER] != NULL)
+		mdef_percent -= sc->data[SC_MINDBREAKER]->val3;
 
 	return cap_value(mdef_percent, 0, USHRT_MAX);
 }
@@ -4659,8 +4664,6 @@ static int status_calc_matk(struct block_list *bl, struct status_change *sc, int
 
 	if (!viewable) {
 		/* some statuses that are hidden in the status window */
-		if (sc->data[SC_MINDBREAKER])
-			matk += matk * sc->data[SC_MINDBREAKER]->val2 / 100;
 		if (sc->data[SC_POPECOOKIE] != NULL)
 			matk += matk * sc->data[SC_POPECOOKIE]->val2 / 100;
 		if (sc->data[SC_VITALIZE_POTION] != NULL)
@@ -5195,8 +5198,6 @@ static signed short status_calc_mdef2(struct block_list *bl, struct status_chang
 		/* some statuses that are hidden in the status window */
 		if(sc->data[SC_MDEFSET])
 			return sc->data[SC_MDEFSET]->val1;
-		if(sc->data[SC_MINDBREAKER])
-			mdef2 -= mdef2 * sc->data[SC_MINDBREAKER]->val3/100;
 #ifdef RENEWAL
 		if (sc->data[SC_ASSUMPTIO])
 			mdef2 <<= 1;
@@ -8354,8 +8355,8 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				val3 = 5+5*val1; // ATK% change
 				break;
 			case SC_MINDBREAKER:
-				val2 = 20*val1; //matk increase.
-				val3 = 12*val1; //mdef2 reduction.
+				val2 = 20 * val1; // MATK% increase.
+				val3 = 12 * val1; // MDEF% reduction.
 				break;
 			case SC_SKA:
 				val2 = total_tick/1000;
