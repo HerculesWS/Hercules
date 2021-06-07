@@ -4351,6 +4351,9 @@ static int status_calc_atk_percent(struct block_list *bl, struct status_change *
 	if (sc->data[SC_SKE] != NULL)
 		atk_percent += 300;
 
+	if (sc->data[SC_HLIF_FLEET] != NULL)
+		atk_percent += sc->data[SC_HLIF_FLEET]->val3;
+
 	return cap_value(atk_percent, 0, USHRT_MAX);
 }
 
@@ -4492,8 +4495,6 @@ static int status_calc_batk(struct block_list *bl, struct status_change *sc, int
 	if(sc->data[SC_BLOODING])
 		batk -= batk * 25/100;
 #endif // 0
-	if(sc->data[SC_HLIF_FLEET])
-		batk += batk * sc->data[SC_HLIF_FLEET]->val3/100;
 	if(sc->data[SC__ENERVATION])
 		batk -= batk * sc->data[SC__ENERVATION]->val2 / 100;
 	if(sc->data[SC_SATURDAY_NIGHT_FEVER])
@@ -4585,8 +4586,6 @@ static int status_calc_watk(struct block_list *bl, struct status_change *sc, int
 #endif
 	if(sc->data[SC_INCATKRATE])
 		watk += watk * sc->data[SC_INCATKRATE]->val1/100;
-	if(sc->data[SC_HLIF_FLEET])
-		watk += watk * sc->data[SC_HLIF_FLEET]->val3/100;
 	if(sc->data[SC_CURSE])
 		watk -= watk * 25/100;
 	if(sc->data[SC_NOEQUIPWEAPON] && bl->type != BL_PC)
@@ -8353,7 +8352,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				break;
 			case SC_HLIF_FLEET:
 				val2 = 30*val1; //Aspd change
-				val3 = 5+5*val1; //bAtk/wAtk rate change
+				val3 = 5+5*val1; // ATK% change
 				break;
 			case SC_MINDBREAKER:
 				val2 = 20*val1; //matk increase.
