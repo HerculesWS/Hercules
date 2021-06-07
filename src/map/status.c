@@ -4354,6 +4354,9 @@ static int status_calc_atk_percent(struct block_list *bl, struct status_change *
 	if (sc->data[SC_HLIF_FLEET] != NULL)
 		atk_percent += sc->data[SC_HLIF_FLEET]->val3;
 
+	if (sc->data[SC_CURSE] != NULL)
+		atk_percent -= 25;
+
 	return cap_value(atk_percent, 0, USHRT_MAX);
 }
 
@@ -4487,8 +4490,6 @@ static int status_calc_batk(struct block_list *bl, struct status_change *sc, int
 
 	if(sc->data[SC_INCATKRATE])
 		batk += batk * sc->data[SC_INCATKRATE]->val1/100;
-	if(sc->data[SC_CURSE])
-		batk -= batk * 25/100;
 	if( sc->data[SC_ZANGETSU] )
 		batk += sc->data[SC_ZANGETSU]->val2;
 #if 0 //Curse shouldn't effect on this?  <- Curse OR Bleeding??
@@ -4586,8 +4587,6 @@ static int status_calc_watk(struct block_list *bl, struct status_change *sc, int
 #endif
 	if(sc->data[SC_INCATKRATE])
 		watk += watk * sc->data[SC_INCATKRATE]->val1/100;
-	if(sc->data[SC_CURSE])
-		watk -= watk * 25/100;
 	if(sc->data[SC_NOEQUIPWEAPON] && bl->type != BL_PC)
 		watk -= watk * sc->data[SC_NOEQUIPWEAPON]->val2/100;
 	if(sc->data[SC__ENERVATION])
