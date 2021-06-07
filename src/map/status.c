@@ -4348,6 +4348,9 @@ static int status_calc_atk_percent(struct block_list *bl, struct status_change *
 	if (sc->data[SC_JOINTBEAT] != NULL && (sc->data[SC_JOINTBEAT]->val2 & BREAK_WAIST) != 0)
 		atk_percent -= 25;
 
+	if (sc->data[SC_SKE] != NULL)
+		atk_percent += 300;
+
 	return cap_value(atk_percent, 0, USHRT_MAX);
 }
 
@@ -4406,6 +4409,9 @@ static int status_calc_def_percent(struct block_list *bl, struct status_change *
 		else if ((sc->data[SC_JOINTBEAT]->val2 & BREAK_WAIST) != 0)
 			def_percent -= 25;
 	}
+
+	if (sc->data[SC_SKE] != NULL)
+		def_percent -= 50;
 
 	return cap_value(def_percent, 0, USHRT_MAX);
 }
@@ -4478,8 +4484,6 @@ static int status_calc_batk(struct block_list *bl, struct status_change *sc, int
 
 	if(sc->data[SC_INCATKRATE])
 		batk += batk * sc->data[SC_INCATKRATE]->val1/100;
-	if(sc->data[SC_SKE])
-		batk += batk * 3;
 	if(sc->data[SC_CURSE])
 		batk -= batk * 25/100;
 	if( sc->data[SC_ZANGETSU] )
@@ -4581,8 +4585,6 @@ static int status_calc_watk(struct block_list *bl, struct status_change *sc, int
 #endif
 	if(sc->data[SC_INCATKRATE])
 		watk += watk * sc->data[SC_INCATKRATE]->val1/100;
-	if(sc->data[SC_SKE])
-		watk += watk * 3;
 	if(sc->data[SC_HLIF_FLEET])
 		watk += watk * sc->data[SC_HLIF_FLEET]->val3/100;
 	if(sc->data[SC_CURSE])
@@ -5015,8 +5017,6 @@ static defType status_calc_def(struct block_list *bl, struct status_change *sc, 
 		def -= 30 + 20 * sc->data[SC_ANGRIFFS_MODUS]->val1;
 	if (sc->data[SC_CRUCIS])
 		def -= def * sc->data[SC_CRUCIS]->val2/100;
-	if (sc->data[SC_SKE])
-		def >>=1;
 	if (sc->data[SC_NOEQUIPSHIELD])
 		def -= def * sc->data[SC_NOEQUIPSHIELD]->val2/100;
 	if (sc->data[SC_FLING])
@@ -5103,8 +5103,6 @@ static signed short status_calc_def2(struct block_list *bl, struct status_change
 		def2 -= def2 * 25/100;
 	if (sc->data[SC_DPOISON])
 		def2 -= def2 * 25/100;
-	if (sc->data[SC_SKE])
-		def2 -= def2 * 50/100;
 	if (sc->data[SC_FLING])
 		def2 -= def2 * (sc->data[SC_FLING]->val3)/100;
 	if (sc->data[SC_ANALYZE])
