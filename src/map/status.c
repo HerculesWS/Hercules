@@ -4342,6 +4342,9 @@ static int status_calc_atk_percent(struct block_list *bl, struct status_change *
 	if (sc->data[SC_LKCONCENTRATION] != NULL)
 		atk_percent += sc->data[SC_LKCONCENTRATION]->val2;
 
+	if (sc->data[SC_HAMI_BLOODLUST] != NULL)
+		atk_percent += sc->data[SC_HAMI_BLOODLUST]->val2;
+
 	return cap_value(atk_percent, 0, USHRT_MAX);
 }
 
@@ -4465,8 +4468,6 @@ static int status_calc_batk(struct block_list *bl, struct status_change *sc, int
 		batk += batk * sc->data[SC_INCATKRATE]->val1/100;
 	if(sc->data[SC_SKE])
 		batk += batk * 3;
-	if(sc->data[SC_HAMI_BLOODLUST])
-		batk += batk * sc->data[SC_HAMI_BLOODLUST]->val2/100;
 	if(sc->data[SC_JOINTBEAT] && sc->data[SC_JOINTBEAT]->val2&BREAK_WAIST)
 		batk -= batk * 25/100;
 	if(sc->data[SC_CURSE])
