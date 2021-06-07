@@ -4339,6 +4339,9 @@ static int status_calc_atk_percent(struct block_list *bl, struct status_change *
 	if (sc->data[SC_PROVOKE] != NULL)
 		atk_percent += sc->data[SC_PROVOKE]->val3;
 
+	if (sc->data[SC_LKCONCENTRATION] != NULL)
+		atk_percent += sc->data[SC_LKCONCENTRATION]->val2;
+
 	return cap_value(atk_percent, 0, USHRT_MAX);
 }
 
@@ -4385,6 +4388,9 @@ static int status_calc_def_percent(struct block_list *bl, struct status_change *
 
 	if (sc->data[SC_PROVOKE] != NULL)
 		def_percent -= sc->data[SC_PROVOKE]->val4; // passed as absolute value.
+
+	if (sc->data[SC_LKCONCENTRATION] != NULL)
+		def_percent -= sc->data[SC_LKCONCENTRATION]->val4; // passed as absolute value.
 
 	return cap_value(def_percent, 0, USHRT_MAX);
 }
@@ -4457,10 +4463,6 @@ static int status_calc_batk(struct block_list *bl, struct status_change *sc, int
 
 	if(sc->data[SC_INCATKRATE])
 		batk += batk * sc->data[SC_INCATKRATE]->val1/100;
-#ifndef RENEWAL
-	if(sc->data[SC_LKCONCENTRATION])
-		batk += batk * sc->data[SC_LKCONCENTRATION]->val2/100;
-#endif
 	if(sc->data[SC_SKE])
 		batk += batk * 3;
 	if(sc->data[SC_HAMI_BLOODLUST])
@@ -4565,8 +4567,6 @@ static int status_calc_watk(struct block_list *bl, struct status_change *sc, int
 				watk += sc->data[SC_NIBELUNGEN]->val2;
 		}
 	}
-	if(sc->data[SC_LKCONCENTRATION])
-		watk += watk * sc->data[SC_LKCONCENTRATION]->val2/100;
 #endif
 	if(sc->data[SC_INCATKRATE])
 		watk += watk * sc->data[SC_INCATKRATE]->val1/100;
@@ -5004,8 +5004,6 @@ static defType status_calc_def(struct block_list *bl, struct status_change *sc, 
 		def -= 30 + 20 * sc->data[SC_ANGRIFFS_MODUS]->val1;
 	if (sc->data[SC_CRUCIS])
 		def -= def * sc->data[SC_CRUCIS]->val2/100;
-	if (sc->data[SC_LKCONCENTRATION])
-		def -= def * sc->data[SC_LKCONCENTRATION]->val4/100;
 	if (sc->data[SC_SKE])
 		def >>=1;
 	if (sc->data[SC_NOEQUIPSHIELD])
@@ -5089,8 +5087,6 @@ static signed short status_calc_def2(struct block_list *bl, struct status_change
 		def2 += status_get_vit(bl) / 2 * sc->data[SC_ANGELUS]->val2/100;
 #else
 		def2 += def2 * sc->data[SC_ANGELUS]->val2/100;
-	if (sc->data[SC_LKCONCENTRATION])
-		def2 -= def2 * sc->data[SC_LKCONCENTRATION]->val4/100;
 #endif
 	if (sc->data[SC_POISON])
 		def2 -= def2 * 25/100;
@@ -8285,9 +8281,9 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 					total_tick += total_tick / 10;
 				break;
 			case SC_LKCONCENTRATION:
-				val2 = 5*val1; //Batk/Watk Increase
+				val2 = 5 * val1; // ATK% Increase
 				val3 = 10*val1; //Hit Increase
-				val4 = 5*val1; //Def reduction
+				val4 = 5 * val1; // Def% reduction
 				sc_start(src, bl, SC_ENDURE, 100, 1, total_tick, skill_id); // Endure effect
 				break;
 			case SC_ANGELUS:
