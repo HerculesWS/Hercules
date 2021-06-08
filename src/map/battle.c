@@ -5731,7 +5731,9 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 	}
 	//Card Fix, tsd side
 	if ( tsd ) { //if player on player then it was already measured above
-		wd.damage = battle->calc_cardfix(BF_WEAPON, src, target, nk, s_ele, s_ele_, wd.damage, (flag.lh ? 1 : 0), wd.flag);
+		wd.damage = battle->calc_cardfix(BF_WEAPON, src, target, nk, s_ele, s_ele_, wd.damage, 0, wd.flag);
+		if (flag.lh)
+			wd.damage2 = battle->calc_cardfix(BF_WEAPON, src, target, nk, s_ele, s_ele_, wd.damage2, 1, wd.flag);
 	}
 #endif
 
