@@ -4428,6 +4428,9 @@ static int status_calc_def_percent(struct block_list *bl, struct status_change *
 	if (sc->data[SC_SKE] != NULL)
 		def_percent -= 50;
 
+	if (sc->data[SC_NOEQUIPSHIELD] != NULL)
+		def_percent -= sc->data[SC_NOEQUIPSHIELD]->val2;
+
 	return cap_value(def_percent, 0, USHRT_MAX);
 }
 
@@ -5018,8 +5021,6 @@ static defType status_calc_def(struct block_list *bl, struct status_change *sc, 
 		def -= 30 + 20 * sc->data[SC_ANGRIFFS_MODUS]->val1;
 	if (sc->data[SC_CRUCIS])
 		def -= def * sc->data[SC_CRUCIS]->val2/100;
-	if (sc->data[SC_NOEQUIPSHIELD])
-		def -= def * sc->data[SC_NOEQUIPSHIELD]->val2/100;
 	if (sc->data[SC_FLING])
 		def -= def * (sc->data[SC_FLING]->val2)/100;
 	if (sc->data[SC_ANALYZE])
@@ -7740,7 +7741,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 					val2 = 25;
 				break;
 			case SC_NOEQUIPSHIELD:
-				if (!sd) //Def reduction
+				if (sd == NULL) // DEF% reduction
 					val2 = 15;
 				break;
 			case SC_NOEQUIPARMOR:
