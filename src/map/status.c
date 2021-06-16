@@ -4431,6 +4431,9 @@ static int status_calc_def_percent(struct block_list *bl, struct status_change *
 	if (sc->data[SC_NOEQUIPSHIELD] != NULL)
 		def_percent -= sc->data[SC_NOEQUIPSHIELD]->val2;
 
+	if (sc->data[SC_FLING] != NULL)
+		def_percent -= sc->data[SC_FLING]->val2;
+
 	return cap_value(def_percent, 0, USHRT_MAX);
 }
 
@@ -5021,8 +5024,6 @@ static defType status_calc_def(struct block_list *bl, struct status_change *sc, 
 		def -= 30 + 20 * sc->data[SC_ANGRIFFS_MODUS]->val1;
 	if (sc->data[SC_CRUCIS])
 		def -= def * sc->data[SC_CRUCIS]->val2/100;
-	if (sc->data[SC_FLING])
-		def -= def * (sc->data[SC_FLING]->val2)/100;
 	if (sc->data[SC_ANALYZE])
 		def -= def * ( 14 * sc->data[SC_ANALYZE]->val1 ) / 100;
 	if (sc->data[SC_SATURDAY_NIGHT_FEVER])
@@ -5105,8 +5106,6 @@ static signed short status_calc_def2(struct block_list *bl, struct status_change
 		def2 -= def2 * 25/100;
 	if (sc->data[SC_DPOISON])
 		def2 -= def2 * 25/100;
-	if (sc->data[SC_FLING])
-		def2 -= def2 * (sc->data[SC_FLING]->val3)/100;
 	if (sc->data[SC_ANALYZE])
 		def2 -= def2 * ( 14 * sc->data[SC_ANALYZE]->val1 ) / 100;
 	if (sc->data[SC_ECHOSONG])
@@ -8329,11 +8328,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				break;
 
 			case SC_FLING:
-				if (bl->type == BL_PC)
-					val2 = 0; //No armor reduction to players.
-				else
-					val2 = 5*val1; //Def reduction
-				val3 = 5*val1; //Def2 reduction
+				val2 = 5*val1; // DEF% reduction
 				break;
 			case SC_PROVOKE:
 				//val2 signals autoprovoke.
