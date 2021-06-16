@@ -4434,6 +4434,11 @@ static int status_calc_def_percent(struct block_list *bl, struct status_change *
 	if (sc->data[SC_FLING] != NULL)
 		def_percent -= sc->data[SC_FLING]->val2;
 
+#ifndef RENEWAL
+	if (sc->data[SC_ANGELUS] != NULL)
+		def_percent += sc->data[SC_ANGELUS]->val2;
+#endif
+
 	return cap_value(def_percent, 0, USHRT_MAX);
 }
 
@@ -5096,11 +5101,9 @@ static signed short status_calc_def2(struct block_list *bl, struct status_change
 		def2 += sc->data[SC_SUN_COMFORT]->val2;
 	if (sc->data[SC_BANDING] && sc->data[SC_BANDING]->val2 > 1)
 		def2 += (5 + sc->data[SC_BANDING]->val1) * (sc->data[SC_BANDING]->val2);
-	if (sc->data[SC_ANGELUS])
 #ifdef RENEWAL //in renewal only the VIT stat bonus is boosted by angelus
+	if (sc->data[SC_ANGELUS])
 		def2 += status_get_vit(bl) / 2 * sc->data[SC_ANGELUS]->val2/100;
-#else
-		def2 += def2 * sc->data[SC_ANGELUS]->val2/100;
 #endif
 	if (sc->data[SC_POISON])
 		def2 -= def2 * 25/100;
@@ -8292,7 +8295,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				sc_start(src, bl, SC_ENDURE, 100, 1, total_tick, skill_id); // Endure effect
 				break;
 			case SC_ANGELUS:
-				val2 = 5*val1; //def increase
+				val2 = 5*val1; // DEF% increase
 				break;
 			case SC_IMPOSITIO:
 				val2 = 5*val1; //watk increase
