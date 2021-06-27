@@ -8339,50 +8339,46 @@ static void clif_guild_castleinfo(struct map_session_data *sd, struct guild_cast
 ///     probably member's self-introduction (unused, no client UI/packets for editing it)
 static void clif_guild_memberlist(struct map_session_data *sd)
 {
-	int fd;
-	int i,c;
-	struct guild *g;
-#if PACKETVER < 20161026
-	const int cmd = 0x154;
-	const int size = 104;
-#else
-	const int cmd = 0xaa5;
-	const int size = 34;
-#endif
-
 	nullpo_retv(sd);
 
-	if ((fd = sd->fd) == 0)
-		return;
-	if ((g = sd->guild) == NULL)
+	int fd = sd->fd;
+	const struct guild *g = sd->guild;
+
+	if (fd == 0 || g == NULL)
 		return;
 
-	WFIFOHEAD(fd, g->max_member * size + 4);
-	WFIFOW(fd, 0) = cmd;
-	for (i = 0, c = 0; i < g->max_member; i++) {
-		struct guild_member *m = &g->member[i];
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_MEMBERMGR_INFO) + sizeof(struct GUILD_MEMBER_INFO) * g->max_member);
+
+	struct PACKET_ZC_MEMBERMGR_INFO *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_MEMBERMGR_INFO;
+
+	int c = 0;
+	for (int i = 0; i < g->max_member; i++) {
+		const struct guild_member *m = &g->member[i];
+
 		if (m->account_id == 0)
 			continue;
-		WFIFOL(fd, c * size + 4) = m->account_id;
-		WFIFOL(fd, c * size + 8) = m->char_id;
-		WFIFOW(fd, c * size + 12) = m->hair;
-		WFIFOW(fd, c * size + 14) = m->hair_color;
-		WFIFOW(fd, c * size + 16) = m->gender;
-		WFIFOW(fd, c * size + 18) = m->class;
-		WFIFOW(fd, c * size + 20) = m->lv;
-		WFIFOL(fd, c * size + 22) = (int)cap_value(m->exp, 0, INT32_MAX);
-		WFIFOL(fd, c * size + 26) = m->online;
-		WFIFOL(fd, c * size + 30) = m->position;
-#if PACKETVER < 20161026
-		memset(WFIFOP(fd, c * size + 34), 0, 50);  //[Ind] - This is displayed in the 'note' column but being you can't edit it it's sent empty.
-		memcpy(WFIFOP(fd, c * size + 84), m->name, NAME_LENGTH);
+
+		p->guildMemberInfo[c].AID = m->account_id;
+		p->guildMemberInfo[c].GID = m->char_id;
+		p->guildMemberInfo[c].head = m->hair;
+		p->guildMemberInfo[c].headPalette = m->hair_color;
+		p->guildMemberInfo[c].sex = m->gender;
+		p->guildMemberInfo[c].job = m->class;
+		p->guildMemberInfo[c].level = m->lv;
+		p->guildMemberInfo[c].contributionExp = (int)cap_value(m->exp, 0, INT32_MAX);
+		p->guildMemberInfo[c].currentState = m->online;
+		p->guildMemberInfo[c].positionID = m->position;
+#if PACKETVER_MAIN_NUM >= 20161214 || PACKETVER_RE_NUM >= 20161130 || defined(PACKETVER_ZERO)
+		p->guildMemberInfo[c].lastLoginTime = m->last_login; // [Megasantos] - Shows last date online
 #else
-		WFIFOL(fd, c * size + 34) = m->last_login;  // [Megasantos] - Shows last date online
+		memset(p->guildMemberInfo[c].intro, 0, sizeof(p->guildMemberInfo[c].intro));  //[Ind] - This is displayed in the 'note' column but being you can't edit it it's sent empty.
+		memcpy(p->guildMemberInfo[c].CharName, m->name, NAME_LENGTH);
 #endif
 		c++;
 	}
-	WFIFOW(fd, 2) = c * size + 4;
-	WFIFOSET(fd, WFIFOW(fd, 2));
+	p->packetLength = sizeof(struct PACKET_ZC_MEMBERMGR_INFO) + sizeof(struct GUILD_MEMBER_INFO) * c;
+	WFIFOSET(fd, p->packetLength);
 }
 
 /// Guild position name information (ZC_POSITION_ID_NAME_INFO).

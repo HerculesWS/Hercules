@@ -4058,6 +4058,48 @@ struct PACKET_ZC_C_MARKERINFO {
 DEFINE_PACKET_HEADER(ZC_C_MARKERINFO, 0x09c1);
 #endif
 
+#if PACKETVER_MAIN_NUM >= 20161214 || PACKETVER_RE_NUM >= 20161130 || defined(PACKETVER_ZERO)
+struct GUILD_MEMBER_INFO {
+	uint32 AID;
+	uint32 GID;
+	int16 head;
+	int16 headPalette;
+	int16 sex;
+	int16 job;
+	int16 level;
+	int32 contributionExp;
+	int32 currentState;
+	int32 positionID;
+	uint32 lastLoginTime;
+} __attribute__((packed));
+#else
+struct GUILD_MEMBER_INFO {
+	uint32 AID;
+	uint32 GID;
+	int16 head;
+	int16 headPalette;
+	int16 sex;
+	int16 job;
+	int16 level;
+	int32 contributionExp;
+	int32 currentState;
+	int32 positionID;
+	char intro[50];
+	char CharName[NAME_LENGTH];
+} __attribute__((packed));
+#endif
+
+struct PACKET_ZC_MEMBERMGR_INFO {
+	int16 PacketType;
+	int16 packetLength;
+	struct GUILD_MEMBER_INFO guildMemberInfo[];
+} __attribute__((packed));
+#if PACKETVER_MAIN_NUM >= 20161214 || PACKETVER_RE_NUM >= 20161130 || defined(PACKETVER_ZERO)
+DEFINE_PACKET_HEADER(ZC_MEMBERMGR_INFO, 0x0aa5);
+#else
+DEFINE_PACKET_HEADER(ZC_MEMBERMGR_INFO, 0x0154);
+#endif
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
