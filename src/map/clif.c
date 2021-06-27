@@ -8213,46 +8213,37 @@ static void clif_guild_masterormember(struct map_session_data *sd)
 /// 01b6 <guild id>.L <level>.L <member num>.L <member max>.L <exp>.L <max exp>.L <points>.L <honor>.L <virtue>.L <emblem id>.L <name>.24B <master name>.24B <manage land>.16B <zeny>.L (ZC_GUILD_INFO2)
 static void clif_guild_basicinfo(struct map_session_data *sd)
 {
-	int fd;
-	struct guild *g;
-
-#if PACKETVER < 20160622
-	const int cmd = 0x1b6;  //0x150; [4144] this is packet for older versions?
-#else
-	const int cmd = 0xa84;
-#endif
-
 	nullpo_retv(sd);
-	fd = sd->fd;
+	int fd = sd->fd;
+	struct guild *g = sd->guild;
 
-	if ((g = sd->guild) == NULL)
+	if (fd == 0 || g == NULL)
 		return;
 
-	WFIFOHEAD(fd, packet_len(cmd));
-	WFIFOW(fd, 0) = cmd;
-	WFIFOL(fd, 2) = g->guild_id;
-	WFIFOL(fd, 6) = g->guild_lv;
-	WFIFOL(fd, 10) = g->connect_member;
-	WFIFOL(fd, 14) = g->max_member;
-	WFIFOL(fd, 18) = g->average_lv;
-	WFIFOL(fd, 22) = (uint32)cap_value(g->exp, 0, INT32_MAX);
-	WFIFOL(fd, 26) = g->next_exp;
-	WFIFOL(fd, 30) = 0;  // Tax Points
-	WFIFOL(fd, 34) = 0;  // Honor: (left) Vulgar [-100,100] Famed (right)
-	WFIFOL(fd, 38) = 0;  // Virtue: (down) Wicked [-100,100] Righteous (up)
-	WFIFOL(fd, 42) = g->emblem_id;
-	memcpy(WFIFOP(fd, 46), g->name, NAME_LENGTH);
-#if PACKETVER < 20160622
-	memcpy(WFIFOP(fd, 70), g->master, NAME_LENGTH);
-	safestrncpy(WFIFOP(fd, 94), msg_sd(sd, 300 + guild->checkcastles(g)), 16);  // "'N' castles"
-	WFIFOL(fd, 110) = 0;  // zeny
-#else
-	safestrncpy(WFIFOP(fd, 70), msg_sd(sd, 300 + guild->checkcastles(g)), 16);  // "'N' castles"
-	WFIFOL(fd, 86) = 0;  // zeny
-	WFIFOL(fd, 90) = g->member[0].char_id;  // leader
-#endif
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_GUILD_INFO));
+	struct PACKET_ZC_GUILD_INFO *p = WFIFOP(fd, 0);
 
-	WFIFOSET(fd, packet_len(cmd));
+	p->PacketType = HEADER_ZC_GUILD_INFO;
+	p->GDID = g->guild_id;
+	p->level = g->guild_lv;
+	p->userNum = g->connect_member;
+	p->maxUserNum = g->max_member;
+	p->userAverageLevel = g->average_lv;
+	p->exp = (uint32)cap_value(g->exp, 0, INT32_MAX);
+	p->maxExp = g->next_exp;
+	p->point = 0;  // Tax Points
+	p->honor = 0;  // Honor: (left) Vulgar [-100,100] Famed (right)
+	p->virtue = 0;  // Virtue: (down) Wicked [-100,100] Righteous (up)
+	p->emblemVersion = g->emblem_id;
+	memcpy(p->guildname, g->name, NAME_LENGTH);
+	memcpy(p->manageLand, msg_sd(sd, 300 + guild->checkcastles(g)), MAP_NAME_LENGTH_EXT);
+	p->zeny = 0;
+#if PACKETVER_MAIN_NUM >= 20161019 || PACKETVER_RE_NUM >= 20160921 || defined(PACKETVER_ZERO)
+	p->masterGID = g->member[0].char_id;  // leader
+#else
+	memcpy(p->masterName, g->master, NAME_LENGTH);
+#endif
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_GUILD_INFO));
 }
 
 /// Guild alliance and opposition list (ZC_MYGUILD_BASIC_INFO).
