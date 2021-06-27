@@ -8376,22 +8376,24 @@ static void clif_guild_memberlist(struct map_session_data *sd)
 /// 0166 <packet len>.W { <position id>.L <position name>.24B }*
 static void clif_guild_positionnamelist(struct map_session_data *sd)
 {
-	int i,fd;
-	struct guild *g;
-
 	nullpo_retv(sd);
-	if( (g = sd->guild) == NULL )
+
+	int fd = sd->fd;
+	const struct guild *g = sd->guild;
+
+	if (fd == 0 || g == NULL)
 		return;
 
-	fd = sd->fd;
-	WFIFOHEAD(fd, MAX_GUILDPOSITION * 28 + 4);
-	WFIFOW(fd, 0)=0x166;
-	for(i=0;i<MAX_GUILDPOSITION;i++){
-		WFIFOL(fd,i*28+4)=i;
-		memcpy(WFIFOP(fd,i*28+8),g->position[i].name,NAME_LENGTH);
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_POSITION_ID_NAME_INFO));
+
+	struct PACKET_ZC_POSITION_ID_NAME_INFO *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_POSITION_ID_NAME_INFO;
+	p->PacketLength = sizeof(struct PACKET_ZC_POSITION_ID_NAME_INFO);
+	for (int i = 0; i < MAX_GUILDPOSITION; i++) {
+		p->posInfo[i].positionID = i;
+		memcpy(p->posInfo[i].posName, g->position[i].name, NAME_LENGTH);
 	}
-	WFIFOW(fd,2)=i*28+4;
-	WFIFOSET(fd,WFIFOW(fd,2));
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_POSITION_ID_NAME_INFO));
 }
 
 /// Guild position information (ZC_POSITION_INFO).
