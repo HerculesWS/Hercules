@@ -8250,27 +8250,31 @@ static void clif_guild_basicinfo(struct map_session_data *sd)
 /// 014c <packet len>.W { <relation>.L <guild id>.L <guild name>.24B }*
 static void clif_guild_allianceinfo(struct map_session_data *sd)
 {
-	int fd,i,c;
-	struct guild *g;
-
 	nullpo_retv(sd);
-	if( (g = sd->guild) == NULL )
+
+	int fd = sd->fd;
+	const struct guild *g = sd->guild;
+
+	if (fd == 0 || g == NULL)
 		return;
 
-	fd = sd->fd;
-	WFIFOHEAD(fd, MAX_GUILDALLIANCE * 32 + 4);
-	WFIFOW(fd, 0)=0x14c;
-	for(i=c=0;i<MAX_GUILDALLIANCE;i++){
-		struct guild_alliance *a=&g->alliance[i];
-		if(a->guild_id>0){
-			WFIFOL(fd,c*32+4)=a->opposition;
-			WFIFOL(fd,c*32+8)=a->guild_id;
-			memcpy(WFIFOP(fd,c*32+12),a->name,NAME_LENGTH);
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_MYGUILD_BASIC_INFO) + sizeof(struct RELATED_GUILD_INFO) * MAX_GUILDALLIANCE);
+
+	struct PACKET_ZC_MYGUILD_BASIC_INFO *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_MYGUILD_BASIC_INFO;
+
+	int c = 0;
+	for (int i = 0; i < MAX_GUILDALLIANCE; i++) {
+		const struct guild_alliance *a = &g->alliance[i];
+		if (a->guild_id > 0) {
+			p->rgInfo[c].relation = a->opposition;
+			p->rgInfo[c].GDID = a->guild_id;
+			memcpy(p->rgInfo[c].guildname, a->name, NAME_LENGTH);
 			c++;
 		}
 	}
-	WFIFOW(fd, 2)=c*32+4;
-	WFIFOSET(fd,WFIFOW(fd,2));
+	p->PacketLength = sizeof(struct PACKET_ZC_MYGUILD_BASIC_INFO) + sizeof(struct RELATED_GUILD_INFO) * c;
+	WFIFOSET(fd, p->PacketLength);
 }
 
 static void clif_guild_castlelist(struct map_session_data *sd)

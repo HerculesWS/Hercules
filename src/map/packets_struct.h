@@ -4183,6 +4183,19 @@ struct PACKET_ZC_GUILD_SKILLINFO {
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(ZC_GUILD_SKILLINFO, 0x0162);
 
+struct RELATED_GUILD_INFO {
+	int relation;
+	int GDID;
+	char guildname[NAME_LENGTH];
+} __attribute__((packed));
+
+struct PACKET_ZC_MYGUILD_BASIC_INFO {
+	int16 PacketType;
+	int16 PacketLength;
+	struct RELATED_GUILD_INFO rgInfo[];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_MYGUILD_BASIC_INFO, 0x014c);
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
