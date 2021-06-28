@@ -4165,6 +4165,24 @@ struct PACKET_ZC_POSITION_INFO {
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(ZC_POSITION_INFO, 0x0160);
 
+struct GUILD_SKILLDATA {
+	uint16 id;
+	int inf;
+	uint16 level;
+	uint16 sp;
+	uint16 range2;
+	char name[NAME_LENGTH];
+	uint8 upFlag;
+} __attribute__((packed));
+
+struct PACKET_ZC_GUILD_SKILLINFO {
+	int16 PacketType;
+	int16 PacketLength;
+	int16 skillPoint;
+	struct GUILD_SKILLDATA skillInfo[];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_GUILD_SKILLINFO, 0x0162);
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris

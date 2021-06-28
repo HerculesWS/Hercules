@@ -8520,39 +8520,41 @@ static void clif_guild_emblem_area(struct block_list *bl)
 /// 0162 <packet len>.W <skill points>.W { <skill id>.W <type>.L <level>.W <sp cost>.W <atk range>.W <skill name>.24B <upgradeable>.B }*
 static void clif_guild_skillinfo(struct map_session_data *sd)
 {
-	int fd;
-	struct guild* g;
-	int i,c;
-
 	nullpo_retv(sd);
-	if( (g = sd->guild) == NULL )
+
+	int fd = sd->fd;
+	struct guild *g = sd->guild;
+
+	if (fd == 0 || g == NULL)
 		return;
 
-	fd = sd->fd;
-	WFIFOHEAD(fd, 6 + MAX_GUILDSKILL*37);
-	WFIFOW(fd,0) = 0x0162;
-	WFIFOW(fd,4) = g->skill_point;
-	for(i = 0, c = 0; i < MAX_GUILDSKILL; i++) {
-		if(g->skill[i].id > 0 && guild->check_skill_require(g, g->skill[i].id)) {
-			int id = g->skill[i].id;
-			int p = 6 + c*37;
-			WFIFOW(fd,p+0) = id;
-			WFIFOL(fd,p+2) = skill->get_inf(id);
-			WFIFOW(fd,p+6) = g->skill[i].lv;
-			if ( g->skill[i].lv ) {
-				WFIFOW(fd, p + 8) = skill->get_sp(id, g->skill[i].lv);
-				WFIFOW(fd, p + 10) = skill->get_range(id, g->skill[i].lv);
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_GUILD_SKILLINFO) + sizeof(struct GUILD_SKILLDATA) * MAX_GUILDSKILL);
+
+	struct PACKET_ZC_GUILD_SKILLINFO *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_GUILD_SKILLINFO;
+	p->skillPoint = g->skill_point;
+
+	int c = 0;
+	for (int i = 0; i < MAX_GUILDSKILL; i++) {
+		if (g->skill[i].id > 0 && guild->check_skill_require(g, g->skill[i].id)) {
+			const int id = g->skill[i].id;
+			p->skillInfo[c].id = id;
+			p->skillInfo[c].inf = skill->get_inf(id);
+			p->skillInfo[c].level = g->skill[i].lv;
+			if (g->skill[i].lv) {
+				p->skillInfo[c].sp = skill->get_sp(id, g->skill[i].lv);
+				p->skillInfo[c].range2 = skill->get_range(id, g->skill[i].lv);
 			} else {
-				WFIFOW(fd, p + 8) = 0;
-				WFIFOW(fd, p + 10) = 0;
+				p->skillInfo[c].sp = 0;
+				p->skillInfo[c].range2 = 0;
 			}
-			safestrncpy(WFIFOP(fd,p+12), skill->get_name(id), NAME_LENGTH);
-			WFIFOB(fd,p+36)= (g->skill[i].lv < guild->skill_get_max(id) && sd == g->member[0].sd) ? 1 : 0;
+			safestrncpy(p->skillInfo[c].name, skill->get_name(id), NAME_LENGTH);
+			p->skillInfo[c].upFlag = (g->skill[i].lv < guild->skill_get_max(id) && sd == g->member[0].sd) ? 1 : 0;
 			c++;
 		}
 	}
-	WFIFOW(fd,2) = 6 + c*37;
-	WFIFOSET(fd,WFIFOW(fd,2));
+	p->PacketLength = sizeof(struct PACKET_ZC_GUILD_SKILLINFO) + sizeof(struct GUILD_SKILLDATA) * c;
+	WFIFOSET(fd, p->PacketLength);
 }
 
 /// Sends guild notice to client (ZC_GUILD_NOTICE).
