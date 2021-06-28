@@ -4153,6 +4153,18 @@ struct PACKET_ZC_POSITION_ID_NAME_INFO {
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(ZC_POSITION_ID_NAME_INFO, 0x0166);
 
+struct PACKET_ZC_POSITION_INFO {
+	int16 PacketType;
+	int16 PacketLength;
+	struct {
+		int positionID;
+		int right;
+		int ranking;
+		int payRate;
+	} posInfo[MAX_GUILDPOSITION];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_POSITION_INFO, 0x0160);
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris

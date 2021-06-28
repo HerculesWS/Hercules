@@ -8403,25 +8403,28 @@ static void clif_guild_positionnamelist(struct map_session_data *sd)
 ///     TODO
 static void clif_guild_positioninfolist(struct map_session_data *sd)
 {
-	int i,fd;
-	struct guild *g;
-
 	nullpo_retv(sd);
-	if( (g = sd->guild) == NULL )
+
+	int fd = sd->fd;
+	const struct guild *g = sd->guild;
+
+	if (fd == 0 || g == NULL)
 		return;
 
-	fd = sd->fd;
-	WFIFOHEAD(fd, MAX_GUILDPOSITION * 16 + 4);
-	WFIFOW(fd, 0)=0x160;
-	for(i=0;i<MAX_GUILDPOSITION;i++){
-		struct guild_position *p=&g->position[i];
-		WFIFOL(fd,i*16+ 4)=i;
-		WFIFOL(fd,i*16+ 8)=p->mode;
-		WFIFOL(fd,i*16+12)=i;
-		WFIFOL(fd,i*16+16)=p->exp_mode;
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_POSITION_INFO));
+
+	struct PACKET_ZC_POSITION_INFO *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_POSITION_INFO;
+	p->PacketLength = sizeof(struct PACKET_ZC_POSITION_INFO);
+
+	for (int i = 0; i < MAX_GUILDPOSITION; i++) {
+		const struct guild_position *gp = &g->position[i];
+		p->posInfo[i].positionID = i;
+		p->posInfo[i].right = gp->mode;
+		p->posInfo[i].ranking = i;
+		p->posInfo[i].payRate = gp->exp_mode;
 	}
-	WFIFOW(fd, 2)=i*16+4;
-	WFIFOSET(fd,WFIFOW(fd,2));
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_POSITION_INFO));
 }
 
 /// Notifies clients in a guild about updated position information (ZC_ACK_CHANGE_GUILD_POSITIONINFO).
