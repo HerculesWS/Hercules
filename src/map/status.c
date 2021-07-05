@@ -4439,6 +4439,10 @@ static int status_calc_def_percent(struct block_list *bl, struct status_change *
 		def_percent += sc->data[SC_ANGELUS]->val2;
 #endif
 
+	// [Aegis] These can't stack.
+	if (sc->data[SC_POISON] != NULL || sc->data[SC_DPOISON] != NULL)
+		def_percent -= 25;
+
 	return cap_value(def_percent, 0, USHRT_MAX);
 }
 
@@ -5105,10 +5109,6 @@ static signed short status_calc_def2(struct block_list *bl, struct status_change
 	if (sc->data[SC_ANGELUS])
 		def2 += status_get_vit(bl) / 2 * sc->data[SC_ANGELUS]->val2/100;
 #endif
-	if (sc->data[SC_POISON])
-		def2 -= def2 * 25/100;
-	if (sc->data[SC_DPOISON])
-		def2 -= def2 * 25/100;
 	if (sc->data[SC_ANALYZE])
 		def2 -= def2 * ( 14 * sc->data[SC_ANALYZE]->val1 ) / 100;
 	if (sc->data[SC_ECHOSONG])
