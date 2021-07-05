@@ -5154,7 +5154,7 @@ static defType status_calc_mdef(struct block_list *bl, struct status_change *sc,
 		return 90;
 #endif
 
-	if(sc->data[SC_STONESKIN])
+	if(sc->data[SC_STONESKIN]) // [Aegis] Technically this uses MDEFPercent/DEFPercent + sth else
 		mdef += sc->data[SC_STONESKIN]->val3;
 	if(sc->data[SC_EARTH_INSIGNIA] && sc->data[SC_EARTH_INSIGNIA]->val1 == 3)
 		mdef += 50;
