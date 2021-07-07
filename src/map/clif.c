@@ -8213,73 +8213,68 @@ static void clif_guild_masterormember(struct map_session_data *sd)
 /// 01b6 <guild id>.L <level>.L <member num>.L <member max>.L <exp>.L <max exp>.L <points>.L <honor>.L <virtue>.L <emblem id>.L <name>.24B <master name>.24B <manage land>.16B <zeny>.L (ZC_GUILD_INFO2)
 static void clif_guild_basicinfo(struct map_session_data *sd)
 {
-	int fd;
-	struct guild *g;
-
-#if PACKETVER < 20160622
-	const int cmd = 0x1b6;  //0x150; [4144] this is packet for older versions?
-#else
-	const int cmd = 0xa84;
-#endif
-
 	nullpo_retv(sd);
-	fd = sd->fd;
+	int fd = sd->fd;
+	struct guild *g = sd->guild;
 
-	if ((g = sd->guild) == NULL)
+	if (fd == 0 || g == NULL)
 		return;
 
-	WFIFOHEAD(fd, packet_len(cmd));
-	WFIFOW(fd, 0) = cmd;
-	WFIFOL(fd, 2) = g->guild_id;
-	WFIFOL(fd, 6) = g->guild_lv;
-	WFIFOL(fd, 10) = g->connect_member;
-	WFIFOL(fd, 14) = g->max_member;
-	WFIFOL(fd, 18) = g->average_lv;
-	WFIFOL(fd, 22) = (uint32)cap_value(g->exp, 0, INT32_MAX);
-	WFIFOL(fd, 26) = g->next_exp;
-	WFIFOL(fd, 30) = 0;  // Tax Points
-	WFIFOL(fd, 34) = 0;  // Honor: (left) Vulgar [-100,100] Famed (right)
-	WFIFOL(fd, 38) = 0;  // Virtue: (down) Wicked [-100,100] Righteous (up)
-	WFIFOL(fd, 42) = g->emblem_id;
-	memcpy(WFIFOP(fd, 46), g->name, NAME_LENGTH);
-#if PACKETVER < 20160622
-	memcpy(WFIFOP(fd, 70), g->master, NAME_LENGTH);
-	safestrncpy(WFIFOP(fd, 94), msg_sd(sd, 300 + guild->checkcastles(g)), 16);  // "'N' castles"
-	WFIFOL(fd, 110) = 0;  // zeny
-#else
-	safestrncpy(WFIFOP(fd, 70), msg_sd(sd, 300 + guild->checkcastles(g)), 16);  // "'N' castles"
-	WFIFOL(fd, 86) = 0;  // zeny
-	WFIFOL(fd, 90) = g->member[0].char_id;  // leader
-#endif
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_GUILD_INFO));
+	struct PACKET_ZC_GUILD_INFO *p = WFIFOP(fd, 0);
 
-	WFIFOSET(fd, packet_len(cmd));
+	p->PacketType = HEADER_ZC_GUILD_INFO;
+	p->GDID = g->guild_id;
+	p->level = g->guild_lv;
+	p->userNum = g->connect_member;
+	p->maxUserNum = g->max_member;
+	p->userAverageLevel = g->average_lv;
+	p->exp = (uint32)cap_value(g->exp, 0, INT32_MAX);
+	p->maxExp = g->next_exp;
+	p->point = 0;  // Tax Points
+	p->honor = 0;  // Honor: (left) Vulgar [-100,100] Famed (right)
+	p->virtue = 0;  // Virtue: (down) Wicked [-100,100] Righteous (up)
+	p->emblemVersion = g->emblem_id;
+	memcpy(p->guildname, g->name, NAME_LENGTH);
+	memcpy(p->manageLand, msg_sd(sd, 300 + guild->checkcastles(g)), MAP_NAME_LENGTH_EXT);
+	p->zeny = 0;
+#if PACKETVER_MAIN_NUM >= 20161019 || PACKETVER_RE_NUM >= 20160921 || defined(PACKETVER_ZERO)
+	p->masterGID = g->member[0].char_id;  // leader
+#else
+	memcpy(p->masterName, g->master, NAME_LENGTH);
+#endif
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_GUILD_INFO));
 }
 
 /// Guild alliance and opposition list (ZC_MYGUILD_BASIC_INFO).
 /// 014c <packet len>.W { <relation>.L <guild id>.L <guild name>.24B }*
 static void clif_guild_allianceinfo(struct map_session_data *sd)
 {
-	int fd,i,c;
-	struct guild *g;
-
 	nullpo_retv(sd);
-	if( (g = sd->guild) == NULL )
+
+	int fd = sd->fd;
+	const struct guild *g = sd->guild;
+
+	if (fd == 0 || g == NULL)
 		return;
 
-	fd = sd->fd;
-	WFIFOHEAD(fd, MAX_GUILDALLIANCE * 32 + 4);
-	WFIFOW(fd, 0)=0x14c;
-	for(i=c=0;i<MAX_GUILDALLIANCE;i++){
-		struct guild_alliance *a=&g->alliance[i];
-		if(a->guild_id>0){
-			WFIFOL(fd,c*32+4)=a->opposition;
-			WFIFOL(fd,c*32+8)=a->guild_id;
-			memcpy(WFIFOP(fd,c*32+12),a->name,NAME_LENGTH);
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_MYGUILD_BASIC_INFO) + sizeof(struct RELATED_GUILD_INFO) * MAX_GUILDALLIANCE);
+
+	struct PACKET_ZC_MYGUILD_BASIC_INFO *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_MYGUILD_BASIC_INFO;
+
+	int c = 0;
+	for (int i = 0; i < MAX_GUILDALLIANCE; i++) {
+		const struct guild_alliance *a = &g->alliance[i];
+		if (a->guild_id > 0) {
+			p->rgInfo[c].relation = a->opposition;
+			p->rgInfo[c].GDID = a->guild_id;
+			memcpy(p->rgInfo[c].guildname, a->name, NAME_LENGTH);
 			c++;
 		}
 	}
-	WFIFOW(fd, 2)=c*32+4;
-	WFIFOSET(fd,WFIFOW(fd,2));
+	p->PacketLength = sizeof(struct PACKET_ZC_MYGUILD_BASIC_INFO) + sizeof(struct RELATED_GUILD_INFO) * c;
+	WFIFOSET(fd, p->PacketLength);
 }
 
 static void clif_guild_castlelist(struct map_session_data *sd)
@@ -8339,72 +8334,70 @@ static void clif_guild_castleinfo(struct map_session_data *sd, struct guild_cast
 ///     probably member's self-introduction (unused, no client UI/packets for editing it)
 static void clif_guild_memberlist(struct map_session_data *sd)
 {
-	int fd;
-	int i,c;
-	struct guild *g;
-#if PACKETVER < 20161026
-	const int cmd = 0x154;
-	const int size = 104;
-#else
-	const int cmd = 0xaa5;
-	const int size = 34;
-#endif
-
 	nullpo_retv(sd);
 
-	if ((fd = sd->fd) == 0)
-		return;
-	if ((g = sd->guild) == NULL)
+	int fd = sd->fd;
+	const struct guild *g = sd->guild;
+
+	if (fd == 0 || g == NULL)
 		return;
 
-	WFIFOHEAD(fd, g->max_member * size + 4);
-	WFIFOW(fd, 0) = cmd;
-	for (i = 0, c = 0; i < g->max_member; i++) {
-		struct guild_member *m = &g->member[i];
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_MEMBERMGR_INFO) + sizeof(struct GUILD_MEMBER_INFO) * g->max_member);
+
+	struct PACKET_ZC_MEMBERMGR_INFO *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_MEMBERMGR_INFO;
+
+	int c = 0;
+	for (int i = 0; i < g->max_member; i++) {
+		const struct guild_member *m = &g->member[i];
+
 		if (m->account_id == 0)
 			continue;
-		WFIFOL(fd, c * size + 4) = m->account_id;
-		WFIFOL(fd, c * size + 8) = m->char_id;
-		WFIFOW(fd, c * size + 12) = m->hair;
-		WFIFOW(fd, c * size + 14) = m->hair_color;
-		WFIFOW(fd, c * size + 16) = m->gender;
-		WFIFOW(fd, c * size + 18) = m->class;
-		WFIFOW(fd, c * size + 20) = m->lv;
-		WFIFOL(fd, c * size + 22) = (int)cap_value(m->exp, 0, INT32_MAX);
-		WFIFOL(fd, c * size + 26) = m->online;
-		WFIFOL(fd, c * size + 30) = m->position;
-#if PACKETVER < 20161026
-		memset(WFIFOP(fd, c * size + 34), 0, 50);  //[Ind] - This is displayed in the 'note' column but being you can't edit it it's sent empty.
-		memcpy(WFIFOP(fd, c * size + 84), m->name, NAME_LENGTH);
+
+		p->guildMemberInfo[c].AID = m->account_id;
+		p->guildMemberInfo[c].GID = m->char_id;
+		p->guildMemberInfo[c].head = m->hair;
+		p->guildMemberInfo[c].headPalette = m->hair_color;
+		p->guildMemberInfo[c].sex = m->gender;
+		p->guildMemberInfo[c].job = m->class;
+		p->guildMemberInfo[c].level = m->lv;
+		p->guildMemberInfo[c].contributionExp = (int)cap_value(m->exp, 0, INT32_MAX);
+		p->guildMemberInfo[c].currentState = m->online;
+		p->guildMemberInfo[c].positionID = m->position;
+#if PACKETVER_MAIN_NUM >= 20161214 || PACKETVER_RE_NUM >= 20161130 || defined(PACKETVER_ZERO)
+		p->guildMemberInfo[c].lastLoginTime = m->last_login; // [Megasantos] - Shows last date online
 #else
-		WFIFOL(fd, c * size + 34) = m->last_login;  // [Megasantos] - Shows last date online
+		memset(p->guildMemberInfo[c].intro, 0, sizeof(p->guildMemberInfo[c].intro));  //[Ind] - This is displayed in the 'note' column but being you can't edit it it's sent empty.
+		memcpy(p->guildMemberInfo[c].CharName, m->name, NAME_LENGTH);
 #endif
 		c++;
 	}
-	WFIFOW(fd, 2) = c * size + 4;
-	WFIFOSET(fd, WFIFOW(fd, 2));
+	p->packetLength = sizeof(struct PACKET_ZC_MEMBERMGR_INFO) + sizeof(struct GUILD_MEMBER_INFO) * c;
+	WFIFOSET(fd, p->packetLength);
 }
 
 /// Guild position name information (ZC_POSITION_ID_NAME_INFO).
 /// 0166 <packet len>.W { <position id>.L <position name>.24B }*
 static void clif_guild_positionnamelist(struct map_session_data *sd)
 {
-	int i,fd;
-	struct guild *g;
-
 	nullpo_retv(sd);
-	if( (g = sd->guild) == NULL )
+
+	int fd = sd->fd;
+	const struct guild *g = sd->guild;
+
+	if (fd == 0 || g == NULL)
 		return;
 
-	fd = sd->fd;
-	WFIFOHEAD(fd, MAX_GUILDPOSITION * 28 + 4);
-	WFIFOW(fd, 0)=0x166;
-	for(i=0;i<MAX_GUILDPOSITION;i++){
-		WFIFOL(fd,i*28+4)=i;
-		memcpy(WFIFOP(fd,i*28+8),g->position[i].name,NAME_LENGTH);
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_POSITION_ID_NAME_INFO));
+
+	struct PACKET_ZC_POSITION_ID_NAME_INFO *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_POSITION_ID_NAME_INFO;
+	p->PacketLength = sizeof(struct PACKET_ZC_POSITION_ID_NAME_INFO);
+	for (int i = 0; i < MAX_GUILDPOSITION; i++) {
+		p->posInfo[i].positionID = i;
+		memcpy(p->posInfo[i].posName, g->position[i].name, NAME_LENGTH);
 	}
-	WFIFOW(fd,2)=i*28+4;
-	WFIFOSET(fd,WFIFOW(fd,2));
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_POSITION_ID_NAME_INFO));
 }
 
 /// Guild position information (ZC_POSITION_INFO).
@@ -8414,25 +8407,28 @@ static void clif_guild_positionnamelist(struct map_session_data *sd)
 ///     TODO
 static void clif_guild_positioninfolist(struct map_session_data *sd)
 {
-	int i,fd;
-	struct guild *g;
-
 	nullpo_retv(sd);
-	if( (g = sd->guild) == NULL )
+
+	int fd = sd->fd;
+	const struct guild *g = sd->guild;
+
+	if (fd == 0 || g == NULL)
 		return;
 
-	fd = sd->fd;
-	WFIFOHEAD(fd, MAX_GUILDPOSITION * 16 + 4);
-	WFIFOW(fd, 0)=0x160;
-	for(i=0;i<MAX_GUILDPOSITION;i++){
-		struct guild_position *p=&g->position[i];
-		WFIFOL(fd,i*16+ 4)=i;
-		WFIFOL(fd,i*16+ 8)=p->mode;
-		WFIFOL(fd,i*16+12)=i;
-		WFIFOL(fd,i*16+16)=p->exp_mode;
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_POSITION_INFO));
+
+	struct PACKET_ZC_POSITION_INFO *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_POSITION_INFO;
+	p->PacketLength = sizeof(struct PACKET_ZC_POSITION_INFO);
+
+	for (int i = 0; i < MAX_GUILDPOSITION; i++) {
+		const struct guild_position *gp = &g->position[i];
+		p->posInfo[i].positionID = i;
+		p->posInfo[i].right = gp->mode;
+		p->posInfo[i].ranking = i;
+		p->posInfo[i].payRate = gp->exp_mode;
 	}
-	WFIFOW(fd, 2)=i*16+4;
-	WFIFOSET(fd,WFIFOW(fd,2));
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_POSITION_INFO));
 }
 
 /// Notifies clients in a guild about updated position information (ZC_ACK_CHANGE_GUILD_POSITIONINFO).
@@ -8528,39 +8524,41 @@ static void clif_guild_emblem_area(struct block_list *bl)
 /// 0162 <packet len>.W <skill points>.W { <skill id>.W <type>.L <level>.W <sp cost>.W <atk range>.W <skill name>.24B <upgradeable>.B }*
 static void clif_guild_skillinfo(struct map_session_data *sd)
 {
-	int fd;
-	struct guild* g;
-	int i,c;
-
 	nullpo_retv(sd);
-	if( (g = sd->guild) == NULL )
+
+	int fd = sd->fd;
+	struct guild *g = sd->guild;
+
+	if (fd == 0 || g == NULL)
 		return;
 
-	fd = sd->fd;
-	WFIFOHEAD(fd, 6 + MAX_GUILDSKILL*37);
-	WFIFOW(fd,0) = 0x0162;
-	WFIFOW(fd,4) = g->skill_point;
-	for(i = 0, c = 0; i < MAX_GUILDSKILL; i++) {
-		if(g->skill[i].id > 0 && guild->check_skill_require(g, g->skill[i].id)) {
-			int id = g->skill[i].id;
-			int p = 6 + c*37;
-			WFIFOW(fd,p+0) = id;
-			WFIFOL(fd,p+2) = skill->get_inf(id);
-			WFIFOW(fd,p+6) = g->skill[i].lv;
-			if ( g->skill[i].lv ) {
-				WFIFOW(fd, p + 8) = skill->get_sp(id, g->skill[i].lv);
-				WFIFOW(fd, p + 10) = skill->get_range(id, g->skill[i].lv);
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_GUILD_SKILLINFO) + sizeof(struct GUILD_SKILLDATA) * MAX_GUILDSKILL);
+
+	struct PACKET_ZC_GUILD_SKILLINFO *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_GUILD_SKILLINFO;
+	p->skillPoint = g->skill_point;
+
+	int c = 0;
+	for (int i = 0; i < MAX_GUILDSKILL; i++) {
+		if (g->skill[i].id > 0 && guild->check_skill_require(g, g->skill[i].id)) {
+			const int id = g->skill[i].id;
+			p->skillInfo[c].id = id;
+			p->skillInfo[c].inf = skill->get_inf(id);
+			p->skillInfo[c].level = g->skill[i].lv;
+			if (g->skill[i].lv) {
+				p->skillInfo[c].sp = skill->get_sp(id, g->skill[i].lv);
+				p->skillInfo[c].range2 = skill->get_range(id, g->skill[i].lv);
 			} else {
-				WFIFOW(fd, p + 8) = 0;
-				WFIFOW(fd, p + 10) = 0;
+				p->skillInfo[c].sp = 0;
+				p->skillInfo[c].range2 = 0;
 			}
-			safestrncpy(WFIFOP(fd,p+12), skill->get_name(id), NAME_LENGTH);
-			WFIFOB(fd,p+36)= (g->skill[i].lv < guild->skill_get_max(id) && sd == g->member[0].sd) ? 1 : 0;
+			safestrncpy(p->skillInfo[c].name, skill->get_name(id), NAME_LENGTH);
+			p->skillInfo[c].upFlag = (g->skill[i].lv < guild->skill_get_max(id) && sd == g->member[0].sd) ? 1 : 0;
 			c++;
 		}
 	}
-	WFIFOW(fd,2) = 6 + c*37;
-	WFIFOSET(fd,WFIFOW(fd,2));
+	p->PacketLength = sizeof(struct PACKET_ZC_GUILD_SKILLINFO) + sizeof(struct GUILD_SKILLDATA) * c;
+	WFIFOSET(fd, p->PacketLength);
 }
 
 /// Sends guild notice to client (ZC_GUILD_NOTICE).

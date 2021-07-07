@@ -4058,6 +4058,144 @@ struct PACKET_ZC_C_MARKERINFO {
 DEFINE_PACKET_HEADER(ZC_C_MARKERINFO, 0x09c1);
 #endif
 
+#if PACKETVER_MAIN_NUM >= 20161214 || PACKETVER_RE_NUM >= 20161130 || defined(PACKETVER_ZERO)
+struct GUILD_MEMBER_INFO {
+	uint32 AID;
+	uint32 GID;
+	int16 head;
+	int16 headPalette;
+	int16 sex;
+	int16 job;
+	int16 level;
+	int32 contributionExp;
+	int32 currentState;
+	int32 positionID;
+	uint32 lastLoginTime;
+} __attribute__((packed));
+#else
+struct GUILD_MEMBER_INFO {
+	uint32 AID;
+	uint32 GID;
+	int16 head;
+	int16 headPalette;
+	int16 sex;
+	int16 job;
+	int16 level;
+	int32 contributionExp;
+	int32 currentState;
+	int32 positionID;
+	char intro[50];
+	char CharName[NAME_LENGTH];
+} __attribute__((packed));
+#endif
+
+struct PACKET_ZC_MEMBERMGR_INFO {
+	int16 PacketType;
+	int16 packetLength;
+	struct GUILD_MEMBER_INFO guildMemberInfo[];
+} __attribute__((packed));
+#if PACKETVER_MAIN_NUM >= 20161214 || PACKETVER_RE_NUM >= 20161130 || defined(PACKETVER_ZERO)
+DEFINE_PACKET_HEADER(ZC_MEMBERMGR_INFO, 0x0aa5);
+#else
+DEFINE_PACKET_HEADER(ZC_MEMBERMGR_INFO, 0x0154);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20161019 || PACKETVER_RE_NUM >= 20160921 || defined(PACKETVER_ZERO)
+struct PACKET_ZC_GUILD_INFO {
+	int16 PacketType;
+	int GDID;
+	int level;
+	int userNum;
+	int maxUserNum;
+	int userAverageLevel;
+	int exp;
+	int maxExp;
+	int point;
+	int honor;
+	int virtue;
+	int emblemVersion;
+	char guildname[NAME_LENGTH];
+	char manageLand[MAP_NAME_LENGTH_EXT];
+	int zeny;
+	int masterGID;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_GUILD_INFO, 0x0a84);
+#else
+struct PACKET_ZC_GUILD_INFO {
+	int16 PacketType;
+	int GDID;
+	int level;
+	int userNum;
+	int maxUserNum;
+	int userAverageLevel;
+	int exp;
+	int maxExp;
+	int point;
+	int honor;
+	int virtue;
+	int emblemVersion;
+	char guildname[NAME_LENGTH];
+	char masterName[NAME_LENGTH];
+	char manageLand[MAP_NAME_LENGTH_EXT];
+	int zeny;
+} __attribute__((packed));
+//0x150; [4144] this is packet for older versions?
+DEFINE_PACKET_HEADER(ZC_GUILD_INFO, 0x01b6);
+#endif
+
+struct PACKET_ZC_POSITION_ID_NAME_INFO {
+	int16 PacketType;
+	int16 PacketLength;
+	struct {
+		int positionID;
+		char posName[NAME_LENGTH];
+	} posInfo[MAX_GUILDPOSITION];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_POSITION_ID_NAME_INFO, 0x0166);
+
+struct PACKET_ZC_POSITION_INFO {
+	int16 PacketType;
+	int16 PacketLength;
+	struct {
+		int positionID;
+		int right;
+		int ranking;
+		int payRate;
+	} posInfo[MAX_GUILDPOSITION];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_POSITION_INFO, 0x0160);
+
+struct GUILD_SKILLDATA {
+	uint16 id;
+	int inf;
+	uint16 level;
+	uint16 sp;
+	uint16 range2;
+	char name[NAME_LENGTH];
+	uint8 upFlag;
+} __attribute__((packed));
+
+struct PACKET_ZC_GUILD_SKILLINFO {
+	int16 PacketType;
+	int16 PacketLength;
+	int16 skillPoint;
+	struct GUILD_SKILLDATA skillInfo[];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_GUILD_SKILLINFO, 0x0162);
+
+struct RELATED_GUILD_INFO {
+	int relation;
+	int GDID;
+	char guildname[NAME_LENGTH];
+} __attribute__((packed));
+
+struct PACKET_ZC_MYGUILD_BASIC_INFO {
+	int16 PacketType;
+	int16 PacketLength;
+	struct RELATED_GUILD_INFO rgInfo[];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_MYGUILD_BASIC_INFO, 0x014c);
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
