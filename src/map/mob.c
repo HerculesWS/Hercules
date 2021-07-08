@@ -322,19 +322,17 @@ static void mob_set_dynamic_viewdata(struct mob_data *md)
 	nullpo_retv(md);
 
 	// If it is a valid monster and it has not already been created
-	if (!md->vd_changed) {
-		// Allocate a dynamic entry
-		struct view_data *vd = (struct view_data*)aMalloc(sizeof(struct view_data));
+	if (md->vd_changed)
+		return;
 
-		// Copy the current values
-		memcpy(vd, md->vd, sizeof(struct view_data));
-
-		// Update the pointer to the new entry
-		md->vd = vd;
-
-		// Flag it as changed so it is freed later on
-		md->vd_changed = true;
-	}
+	// Allocate a dynamic entry
+	struct view_data *vd = (struct view_data *)aMalloc(sizeof(struct view_data));
+	// Copy the current values
+	memcpy(vd, md->vd, sizeof(struct view_data));
+	// Update the pointer to the new entry
+	md->vd = vd;
+	// Flag it as changed so it is freed later on
+	md->vd_changed = true;
 }
 
 /**
@@ -346,16 +344,15 @@ static void mob_free_dynamic_viewdata(struct mob_data *md)
 	nullpo_retv(md);
 
 	// If it is a valid monster and it has already been allocated
-	if (md->vd_changed) {
-		// Free it
-		aFree(md->vd);
+	if (!md->vd_changed)
+		return;
 
-		// Remove the reference
-		md->vd = NULL;
-
-		// Unflag it as changed
-		md->vd_changed = false;
-	}
+	// Free it
+	aFree(md->vd);
+	// Remove the reference
+	md->vd = NULL;
+	// Unflag it as changed
+	md->vd_changed = false;
 }
 
 /*==========================================
