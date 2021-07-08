@@ -312,6 +312,49 @@ static struct view_data *mob_get_viewdata(int class_)
 		return 0;
 	return &mob->db(class_)->vd;
 }
+
+/**
+ * Create unique view data associated to a spawned monster.
+ * @param md: Mob to adjust
+ */
+static void mob_set_dynamic_viewdata(struct mob_data *md)
+{
+	nullpo_retv(md);
+
+	// If it is a valid monster and it has not already been created
+	if (md->vd_changed)
+		return;
+
+	// Allocate a dynamic entry
+	struct view_data *vd = (struct view_data *)aMalloc(sizeof(struct view_data));
+	// Copy the current values
+	memcpy(vd, md->vd, sizeof(struct view_data));
+	// Update the pointer to the new entry
+	md->vd = vd;
+	// Flag it as changed so it is freed later on
+	md->vd_changed = true;
+}
+
+/**
+ * Free any view data associated to a spawned monster.
+ * @param md: Mob to free
+ */
+static void mob_free_dynamic_viewdata(struct mob_data *md)
+{
+	nullpo_retv(md);
+
+	// If it is a valid monster and it has already been allocated
+	if (!md->vd_changed)
+		return;
+
+	// Free it
+	aFree(md->vd);
+	// Remove the reference
+	md->vd = NULL;
+	// Unflag it as changed
+	md->vd_changed = false;
+}
+
 /*==========================================
  * Cleans up mob-spawn data to make it "valid"
  *------------------------------------------*/
@@ -4069,11 +4112,11 @@ static int mob_clone_delete(struct mob_data *md)
 
 	nullpo_ret(md);
 	class_ = md->class_;
-	if (class_ >= MOB_CLONE_START && class_ < MOB_CLONE_END
-		&& mob->db_data[class_]!=NULL) {
+	if (class_ >= MOB_CLONE_START && class_ < MOB_CLONE_END && mob->db_data[class_] != NULL) {
 		mob->destroy_mob_db(class_);
 		//Clear references to the db
 		md->db = mob->dummy;
+		mob->free_dynamic_viewdata(md);
 		md->vd = NULL;
 		return 1;
 	}
@@ -5932,7 +5975,7 @@ static int mob_reload_sub_mob(struct mob_data *md, va_list args)
 	status_calc_mob(md, SCO_FIRST);
 
 	// If the view data was not overwritten manually
-	if (md->vd != NULL) {
+	if (md->vd != NULL && !md->vd_changed) {
 		// Get the new view data from the mob database
 		md->vd = mob_get_viewdata(md->class_);
 
@@ -6145,6 +6188,8 @@ void mob_defaults(void)
 	mob->db_searchname_array = mobdb_searchname_array;
 	mob->db_checkid = mobdb_checkid;
 	mob->get_viewdata = mob_get_viewdata;
+	mob->set_dynamic_viewdata = mob_set_dynamic_viewdata;
+	mob->free_dynamic_viewdata = mob_free_dynamic_viewdata;
 	mob->parse_dataset = mob_parse_dataset;
 	mob->spawn_dataset = mob_spawn_dataset;
 	mob->get_random_id = mob_get_random_id;

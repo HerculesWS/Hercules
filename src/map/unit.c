@@ -3040,6 +3040,9 @@ static int unit_free(struct block_list *bl, enum clr_type clrtype)
 		case BL_MOB:
 		{
 			struct mob_data *md = BL_UCAST(BL_MOB, bl);
+
+			mob->free_dynamic_viewdata(md);
+
 			if( md->spawn_timer != INVALID_TIMER )
 			{
 				timer->delete(md->spawn_timer,mob->delayspawn);

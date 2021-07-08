@@ -20437,6 +20437,22 @@ static BUILDIN(setunitdata)
 			return false;
 		}
 
+		// Check if the view data will be modified
+		switch (type) {
+		case UDT_SEX:
+		//case UMOB_CLASS: // Called by status_set_viewdata
+		case UDT_HAIRSTYLE:
+		case UDT_HAIRCOLOR:
+		case UDT_HEADBOTTOM:
+		case UDT_HEADMIDDLE:
+		case UDT_HEADTOP:
+		case UDT_CLOTHCOLOR:
+		case UDT_SHIELD:
+		case UDT_WEAPON:
+			mob->set_dynamic_viewdata(md);
+			break;
+		}
+
 		switch (type) {
 		case UDT_SIZE:
 			md->status.size = (unsigned char)val;
@@ -20487,9 +20503,13 @@ static BUILDIN(setunitdata)
 			break;
 		case UDT_SEX:
 			md->vd->sex = (char)val;
+			clif->clearunit_area(bl, CLR_OUTSIGHT);
+			clif->spawn(bl);
 			break;
 		case UDT_CLASS:
 			mob->class_change(md, val);
+			clif->clearunit_area(bl, CLR_OUTSIGHT);
+			clif->spawn(bl);
 			break;
 		case UDT_HAIRSTYLE:
 			clif->changelook(bl, LOOK_HAIR, val);
