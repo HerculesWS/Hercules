@@ -22,6 +22,18 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
+## [v2021.07.07] `July 07 2021`
+
+### Changed
+
+- Updated some guild-related packets to use the struct format. (#3016)
+
+### Fixed
+
+- Fixed off-hand damage bypassing any card reductions on the target. (#3014, issue #3011)
+- Fixed indentation and extra blank lines in the renewal skill db file. (#3012)
+- Fixed the use of `setunitdata()` on a mob to change that specific unit's view data instead of overwriting it globally. Any such changes will now persist in case of the mob database is reloaded. (#3006)
+
 ## [v2021.06.02] `June 02 2021`
 
 ### Added
@@ -1936,6 +1948,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2021.07.07]: https://github.com/HerculesWS/Hercules/compare/v2021.06.02...v2021.07.07
 [v2021.06.02]: https://github.com/HerculesWS/Hercules/compare/v2021.05.05...v2021.06.02
 [v2021.05.05]: https://github.com/HerculesWS/Hercules/compare/v2021.04.05+1...v2021.05.05
 [v2021.04.05+1]: https://github.com/HerculesWS/Hercules/compare/v2021.04.05...v2021.04.05+1
