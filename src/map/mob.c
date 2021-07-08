@@ -4115,11 +4115,11 @@ static int mob_clone_delete(struct mob_data *md)
 
 	nullpo_ret(md);
 	class_ = md->class_;
-	if (class_ >= MOB_CLONE_START && class_ < MOB_CLONE_END
-		&& mob->db_data[class_]!=NULL) {
+	if (class_ >= MOB_CLONE_START && class_ < MOB_CLONE_END && mob->db_data[class_] != NULL) {
 		mob->destroy_mob_db(class_);
 		//Clear references to the db
 		md->db = mob->dummy;
+		mob->free_dynamic_viewdata(md);
 		md->vd = NULL;
 		return 1;
 	}
