@@ -317,8 +317,8 @@ static struct view_data *mob_get_viewdata(int class_)
  * Create unique view data associated to a spawned monster.
  * @param md: Mob to adjust
  */
-void mob_set_dynamic_viewdata(struct mob_data *md) {
-
+static void mob_set_dynamic_viewdata(struct mob_data *md)
+{
 	nullpo_retv(md);
 
 	// If it is a valid monster and it has not already been created
@@ -341,8 +341,8 @@ void mob_set_dynamic_viewdata(struct mob_data *md) {
  * Free any view data associated to a spawned monster.
  * @param md: Mob to free
  */
-void mob_free_dynamic_viewdata(struct mob_data *md) {
-
+static void mob_free_dynamic_viewdata(struct mob_data *md)
+{
 	nullpo_retv(md);
 
 	// If it is a valid monster and it has already been allocated
