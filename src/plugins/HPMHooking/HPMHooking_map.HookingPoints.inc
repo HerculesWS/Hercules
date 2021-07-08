@@ -2042,6 +2042,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(mob->db_searchname_array, HP_mob_db_searchname_array) },
 	{ HP_POP(mob->db_checkid, HP_mob_db_checkid) },
 	{ HP_POP(mob->get_viewdata, HP_mob_get_viewdata) },
+	{ HP_POP(mob->set_dynamic_viewdata, HP_mob_set_dynamic_viewdata) },
+	{ HP_POP(mob->free_dynamic_viewdata, HP_mob_free_dynamic_viewdata) },
 	{ HP_POP(mob->parse_dataset, HP_mob_parse_dataset) },
 	{ HP_POP(mob->spawn_dataset, HP_mob_spawn_dataset) },
 	{ HP_POP(mob->get_random_id, HP_mob_get_random_id) },

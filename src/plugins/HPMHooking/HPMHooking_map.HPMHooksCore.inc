@@ -3986,6 +3986,10 @@ struct {
 	struct HPMHookPoint *HP_mob_db_checkid_post;
 	struct HPMHookPoint *HP_mob_get_viewdata_pre;
 	struct HPMHookPoint *HP_mob_get_viewdata_post;
+	struct HPMHookPoint *HP_mob_set_dynamic_viewdata_pre;
+	struct HPMHookPoint *HP_mob_set_dynamic_viewdata_post;
+	struct HPMHookPoint *HP_mob_free_dynamic_viewdata_pre;
+	struct HPMHookPoint *HP_mob_free_dynamic_viewdata_post;
 	struct HPMHookPoint *HP_mob_parse_dataset_pre;
 	struct HPMHookPoint *HP_mob_parse_dataset_post;
 	struct HPMHookPoint *HP_mob_spawn_dataset_pre;
@@ -11091,6 +11095,10 @@ struct {
 	int HP_mob_db_checkid_post;
 	int HP_mob_get_viewdata_pre;
 	int HP_mob_get_viewdata_post;
+	int HP_mob_set_dynamic_viewdata_pre;
+	int HP_mob_set_dynamic_viewdata_post;
+	int HP_mob_free_dynamic_viewdata_pre;
+	int HP_mob_free_dynamic_viewdata_post;
 	int HP_mob_parse_dataset_pre;
 	int HP_mob_parse_dataset_post;
 	int HP_mob_spawn_dataset_pre;

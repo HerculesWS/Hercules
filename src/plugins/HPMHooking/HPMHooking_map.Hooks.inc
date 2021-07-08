@@ -52749,6 +52749,58 @@ struct view_data* HP_mob_get_viewdata(int class_) {
 	}
 	return retVal___;
 }
+void HP_mob_set_dynamic_viewdata(struct mob_data *md) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_mob_set_dynamic_viewdata_pre > 0) {
+		void (*preHookFunc) (struct mob_data **md);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mob_set_dynamic_viewdata_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_mob_set_dynamic_viewdata_pre[hIndex].func;
+			preHookFunc(&md);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.mob.set_dynamic_viewdata(md);
+	}
+	if (HPMHooks.count.HP_mob_set_dynamic_viewdata_post > 0) {
+		void (*postHookFunc) (struct mob_data *md);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mob_set_dynamic_viewdata_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_mob_set_dynamic_viewdata_post[hIndex].func;
+			postHookFunc(md);
+		}
+	}
+	return;
+}
+void HP_mob_free_dynamic_viewdata(struct mob_data *md) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_mob_free_dynamic_viewdata_pre > 0) {
+		void (*preHookFunc) (struct mob_data **md);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mob_free_dynamic_viewdata_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_mob_free_dynamic_viewdata_pre[hIndex].func;
+			preHookFunc(&md);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.mob.free_dynamic_viewdata(md);
+	}
+	if (HPMHooks.count.HP_mob_free_dynamic_viewdata_post > 0) {
+		void (*postHookFunc) (struct mob_data *md);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mob_free_dynamic_viewdata_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_mob_free_dynamic_viewdata_post[hIndex].func;
+			postHookFunc(md);
+		}
+	}
+	return;
+}
 int HP_mob_parse_dataset(struct spawn_data *data) {
 	int hIndex = 0;
 	int retVal___ = 0;
