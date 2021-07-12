@@ -3884,6 +3884,11 @@ static void status_calc_misc(struct block_list *bl, struct status_data *st, int 
 	st->mdef2 += st->int_ + (st->vit >> 1);
 #endif // RENEWAL
 
+	st->atk_percent = 100;
+	st->matk_percent = 100;
+	st->def_percent = 100;
+	st->mdef_percent = 100;
+
 	if ( bl->type&battle_config.enable_critical )
 		st->cri += 10 + (st->luk * 10 / 3); // (every 1 luk = +0.33 critical -> 3 luk = +1 critical)
 	else
