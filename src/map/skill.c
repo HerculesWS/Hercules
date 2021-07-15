@@ -5063,14 +5063,13 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 				skill->attack(BF_WEAPON,src,src,bl,skill_id,skill_lv,tick,flag);
 			break;
 
-		case SU_BITE:
-			skill->attack(BF_WEAPON, src, src, bl, skill_id, skill_lv, tick, flag);
-			if (status->get_lv(src) >= 30 && (rnd() % 100 < (int)(status->get_lv(src) / 30) + 10)) // TODO: Need activation chance.
-				skill->addtimerskill(src, tick + skill->get_delay(skill_id, skill_lv), bl->id, 0, 0, skill_id, skill_lv, BF_WEAPON, flag);
-			break;
-
 		case SU_PICKYPECK:
 			clif->skill_nodamage(src, bl, skill_id, skill_lv, 1);
+			FALLTHROUGH
+		case SU_BITE:
+			skill->attack(BF_WEAPON, src, src, bl, skill_id, skill_lv, tick, flag);
+			if (status->get_lv(src) >= 30 && (rnd() % 100 < (int)(status->get_lv(src) / 30) * 10 + 10))
+				skill->addtimerskill(src, tick + skill->get_delay(skill_id, skill_lv), bl->id, 0, 0, skill_id, skill_lv, BF_WEAPON, flag);
 			break;
 
 		// Splash attack skills.
