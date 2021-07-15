@@ -1767,6 +1767,8 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					skillratio += 100 + 100 * skill_lv;
 					if ((status_get_max_hp(target) / 100) <= 50)
 						skillratio *= 2;
+					if(sd && pc->checkskill(sd, SU_SPIRITOFLIFE))
+						skillratio += skillratio * status_get_hp(src) / status_get_max_hp(src);
 					break;
 				case SU_LUNATICCARROTBEAT:
 					skillratio += 100 + 100 * skill_lv;
