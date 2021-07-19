@@ -11331,8 +11331,10 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 			}
 			break;
 		default:
-			if (skill->castend_nodamage_id_unknown(src, bl, &skill_id, &skill_lv, &tick, &flag))
+			if (skill->castend_nodamage_id_unknown(src, bl, &skill_id, &skill_lv, &tick, &flag)) {
+				map->freeblock_unlock();
 				return 1;
+			}
 			break;
 	}
 	PRAGMA_GCC46(GCC diagnostic pop)
@@ -11385,7 +11387,6 @@ static bool skill_castend_nodamage_id_unknown(struct block_list *src, struct blo
 	nullpo_retr(true, skill_lv);
 	ShowWarning("skill_castend_nodamage_id: Unknown skill used:%d\n", *skill_id);
 	clif->skill_nodamage(src, bl, *skill_id, *skill_lv, 1);
-	map->freeblock_unlock();
 	return true;
 }
 
