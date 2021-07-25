@@ -475,7 +475,8 @@ enum search_freecell {
 struct block_list {
 	struct block_list *next,*prev;
 	int id;
-	int16 m,x,y;
+	int16 m, x, y;
+	bool deleted;
 	enum bl_type type;
 };
 
