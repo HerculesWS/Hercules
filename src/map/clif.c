@@ -7518,15 +7518,14 @@ static void clif_party_message(struct party_data *p, int account_id, const char 
 /// 0107 <account id>.L <x>.W <y>.W
 static void clif_party_xy(struct map_session_data *sd)
 {
-	unsigned char buf[16];
-
 	nullpo_retv(sd);
 
-	WBUFW(buf,0)=0x107;
-	WBUFL(buf,2)=sd->status.account_id;
-	WBUFW(buf,6)=sd->bl.x;
-	WBUFW(buf,8)=sd->bl.y;
-	clif->send(buf,packet_len(0x107),&sd->bl,PARTY_SAMEMAP_WOS);
+	struct PACKET_ZC_NOTIFY_POSITION_TO_GROUPM p = {0};
+	p.PacketType = HEADER_ZC_NOTIFY_POSITION_TO_GROUPM;
+	p.AID = sd->status.account_id;
+	p.xPos = sd->bl.x;
+	p.yPos = sd->bl.y;
+	clif->send(&p, sizeof(struct PACKET_ZC_NOTIFY_POSITION_TO_GROUPM), &sd->bl, PARTY_SAMEMAP_WOS);
 }
 
 /*==========================================
@@ -7535,12 +7534,15 @@ static void clif_party_xy(struct map_session_data *sd)
 static void clif_party_xy_single(int fd, struct map_session_data *sd)
 {
 	nullpo_retv(sd);
-	WFIFOHEAD(fd,packet_len(0x107));
-	WFIFOW(fd,0)=0x107;
-	WFIFOL(fd,2)=sd->status.account_id;
-	WFIFOW(fd,6)=sd->bl.x;
-	WFIFOW(fd,8)=sd->bl.y;
-	WFIFOSET(fd,packet_len(0x107));
+
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_NOTIFY_POSITION_TO_GROUPM));
+	struct PACKET_ZC_NOTIFY_POSITION_TO_GROUPM *p = WFIFOP(fd, 0);
+
+	p->PacketType = HEADER_ZC_NOTIFY_POSITION_TO_GROUPM;
+	p->AID = sd->status.account_id;
+	p->xPos = sd->bl.x;
+	p->yPos = sd->bl.y;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_NOTIFY_POSITION_TO_GROUPM));
 }
 
 /// Updates HP bar of a party member.
