@@ -7298,27 +7298,22 @@ static void clif_partyinvitationstate(struct map_session_data *sd)
 /// 02c6 <party id>.L <party name>.24B (ZC_PARTY_JOIN_REQ)
 static void clif_party_invite(struct map_session_data *sd, struct map_session_data *tsd)
 {
-#if PACKETVER < 20070821
-	const int cmd = 0xfe;
-#else
-	const int cmd = 0x2c6;
-#endif
-	int fd;
-	struct party_data *p;
-
 	nullpo_retv(sd);
 	nullpo_retv(tsd);
 
-	fd=tsd->fd;
+	const int fd = tsd->fd;
+	const struct party_data *p = party->search(sd->status.party_id);
 
-	if( (p=party->search(sd->status.party_id))==NULL )
+	if (p == NULL)
 		return;
 
-	WFIFOHEAD(fd,packet_len(cmd));
-	WFIFOW(fd,0)=cmd;
-	WFIFOL(fd,2)=sd->status.party_id;
-	memcpy(WFIFOP(fd,6),p->party.name,NAME_LENGTH);
-	WFIFOSET(fd,packet_len(cmd));
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_PARTY_JOIN_REQ));
+	struct PACKET_ZC_PARTY_JOIN_REQ *packet = WFIFOP(fd, 0);
+
+	packet->PacketType = HEADER_ZC_PARTY_JOIN_REQ;
+	packet->GRID = sd->status.party_id;
+	safestrncpy(packet->groupName, p->party.name, NAME_LENGTH);
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_PARTY_JOIN_REQ));
 }
 
 /// Party invite result.
