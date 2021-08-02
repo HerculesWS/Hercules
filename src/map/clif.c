@@ -7148,15 +7148,14 @@ static void clif_vendingreport(struct map_session_data *sd, int index, int amoun
 ///     ? = nothing
 static void clif_party_created(struct map_session_data *sd, int result)
 {
-	int fd;
-
 	nullpo_retv(sd);
+	const int fd = sd->fd;
 
-	fd=sd->fd;
-	WFIFOHEAD(fd,packet_len(0xfa));
-	WFIFOW(fd,0)=0xfa;
-	WFIFOB(fd,2)=result;
-	WFIFOSET(fd,packet_len(0xfa));
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_ACK_MAKE_GROUP));
+	struct PACKET_ZC_ACK_MAKE_GROUP *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_ACK_MAKE_GROUP;
+	p->result = result;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_ACK_MAKE_GROUP));
 }
 
 /// Adds new member to a party.

@@ -4345,6 +4345,12 @@ struct PACKET_ZC_MACRO_REPORTER_SELECT {
 DEFINE_PACKET_HEADER(ZC_MACRO_REPORTER_SELECT, 0x0a6d);
 #endif
 
+struct PACKET_ZC_ACK_MAKE_GROUP {
+	int16 PacketType;
+	int8 result;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_ACK_MAKE_GROUP, 0x00fa);
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
