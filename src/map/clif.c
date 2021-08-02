@@ -7332,31 +7332,25 @@ static void clif_party_invite(struct map_session_data *sd, struct map_session_da
 /// result=11 : The character is a level that can not join the party -> message: MSG_ID_C9A (since 20170412)
 static void clif_party_inviteack(struct map_session_data *sd, const char *nick, int result)
 {
-	int fd;
 	nullpo_retv(sd);
 	nullpo_retv(nick);
-	fd=sd->fd;
+
+	const int fd = sd->fd;
 
 #if PACKETVER < 20070904
-	if( result == 7 ) {
-		clif->message(fd, msg_sd(sd,3)); // Character not found.
+	if (result == 7) {
+		clif->message(fd, msg_sd(sd, 3)); // Character not found.
 		return;
 	}
 #endif
 
-#if PACKETVER < 20070821
-	WFIFOHEAD(fd,packet_len(0xfd));
-	WFIFOW(fd,0) = 0xfd;
-	safestrncpy(WFIFOP(fd,2),nick,NAME_LENGTH);
-	WFIFOB(fd,26) = result;
-	WFIFOSET(fd,packet_len(0xfd));
-#else
-	WFIFOHEAD(fd,packet_len(0x2c5));
-	WFIFOW(fd,0) = 0x2c5;
-	safestrncpy(WFIFOP(fd,2),nick,NAME_LENGTH);
-	WFIFOL(fd,26) = result;
-	WFIFOSET(fd,packet_len(0x2c5));
-#endif
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_PARTY_JOIN_REQ_ACK));
+	struct PACKET_ZC_PARTY_JOIN_REQ_ACK *p = WFIFOP(fd, 0);
+
+	p->PacketType = HEADER_ZC_PARTY_JOIN_REQ_ACK;
+	safestrncpy(p->characterName, nick, NAME_LENGTH);
+	p->result = result;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_PARTY_JOIN_REQ_ACK));
 }
 
 /**

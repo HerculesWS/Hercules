@@ -4362,6 +4362,17 @@ DEFINE_PACKET_HEADER(ZC_PARTY_JOIN_REQ, 0x00fe);
 DEFINE_PACKET_HEADER(ZC_PARTY_JOIN_REQ, 0x02c6);
 #endif
 
+struct PACKET_ZC_PARTY_JOIN_REQ_ACK {
+	int16 PacketType;
+	char characterName[NAME_LENGTH];
+	int result;
+} __attribute__((packed));
+#if PACKETVER < 20070821
+DEFINE_PACKET_HEADER(ZC_PARTY_JOIN_REQ_ACK, 0x00fd);
+#else
+DEFINE_PACKET_HEADER(ZC_PARTY_JOIN_REQ_ACK, 0x02c5);
+#endif
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
