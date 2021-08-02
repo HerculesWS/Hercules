@@ -7488,30 +7488,29 @@ static void clif_party_withdraw(struct party_data *p, struct map_session_data *s
 /// 0109 <packet len>.W <account id>.L <message>.?B
 static void clif_party_message(struct party_data *p, int account_id, const char *mes, int len)
 {
-	struct map_session_data *sd;
-	int i;
-
 	nullpo_retv(p);
 	nullpo_retv(mes);
 
+	int i;
 	ARR_FIND(0, MAX_PARTY, i, p->data[i].sd != NULL);
 
 	if (i < MAX_PARTY) {
-		unsigned char buf[1024];
-		int maxlen = (int)sizeof(buf) - 9;
-
-		if (len > maxlen) {
+		if (len > CHAT_SIZE_MAX) {
 			ShowWarning("clif_party_message: Truncated message '%s' (len=%d, max=%d, party_id=%d).\n",
-			            mes, len, maxlen, p->party.party_id);
-			len = maxlen;
+			            mes, len, CHAT_SIZE_MAX, p->party.party_id);
+			len = CHAT_SIZE_MAX;
 		}
 
-		sd = p->data[i].sd;
-		WBUFW(buf,0) = 0x109;
-		WBUFW(buf,2) = len+9;
-		WBUFL(buf,4) = account_id;
-		safestrncpy(WBUFP(buf,8), mes, len+1);
-		clif->send(buf, len+9, &sd->bl, PARTY);
+		char buf[CHAT_SIZE_MAX + sizeof(struct PACKET_ZC_NOTIFY_CHAT_PARTY)];
+		struct PACKET_ZC_NOTIFY_CHAT_PARTY *packet = (struct PACKET_ZC_NOTIFY_CHAT_PARTY *)&buf;
+
+		packet->PacketType = HEADER_ZC_NOTIFY_CHAT_PARTY;
+		packet->PacketLength = len + sizeof(struct PACKET_ZC_NOTIFY_CHAT_PARTY);
+		packet->AID = account_id;
+		safestrncpy(packet->chatMsg, mes, len + 1);
+
+		struct map_session_data *sd = p->data[i].sd;
+		clif->send(packet, packet->PacketLength, &sd->bl, PARTY);
 	}
 }
 
