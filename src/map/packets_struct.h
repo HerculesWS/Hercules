@@ -4389,6 +4389,24 @@ struct PACKET_ZC_NOTIFY_POSITION_TO_GROUPM {
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(ZC_NOTIFY_POSITION_TO_GROUPM, 0x0107);
 
+#if PACKETVER < 20100126
+struct PACKET_ZC_NOTIFY_HP_TO_GROUPM {
+	int16 PacketType;
+	int AID;
+	int16 hp;
+	int16 maxhp;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_NOTIFY_HP_TO_GROUPM, 0x0106);
+#else
+struct PACKET_ZC_NOTIFY_HP_TO_GROUPM {
+	int16 PacketType;
+	int AID;
+	int hp;
+	int maxhp;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_NOTIFY_HP_TO_GROUPM, 0x080e);
+#endif
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris

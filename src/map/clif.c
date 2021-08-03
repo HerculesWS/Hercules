@@ -7550,30 +7550,24 @@ static void clif_party_xy_single(int fd, struct map_session_data *sd)
 /// 080e <account id>.L <hp>.L <max hp>.L (ZC_NOTIFY_HP_TO_GROUPM_R2)
 static void clif_party_hp(struct map_session_data *sd)
 {
-	unsigned char buf[16];
-#if PACKETVER < 20100126
-	const int cmd = 0x106;
-#else
-	const int cmd = 0x80e;
-#endif
-
 	nullpo_retv(sd);
 
-	WBUFW(buf,0)=cmd;
-	WBUFL(buf,2)=sd->status.account_id;
+	struct PACKET_ZC_NOTIFY_HP_TO_GROUPM p = {0};
+	p.PacketType = HEADER_ZC_NOTIFY_HP_TO_GROUPM;
+	p.AID = sd->status.account_id;
 #if PACKETVER < 20100126
 	if (sd->battle_status.max_hp > INT16_MAX) { //To correctly display the %hp bar. [Skotlex]
-		WBUFW(buf,6) = sd->battle_status.hp/(sd->battle_status.max_hp/100);
-		WBUFW(buf,8) = 100;
+		p.hp = sd->battle_status.hp/(sd->battle_status.max_hp/100);
+		p.maxhp = 100;
 	} else {
-		WBUFW(buf,6) = sd->battle_status.hp;
-		WBUFW(buf,8) = sd->battle_status.max_hp;
+		p.hp = sd->battle_status.hp;
+		p.maxhp = sd->battle_status.max_hp;
 	}
 #else
-	WBUFL(buf,6) = sd->battle_status.hp;
-	WBUFL(buf,10) = sd->battle_status.max_hp;
+	p.hp = sd->battle_status.hp;
+	p.maxhp = sd->battle_status.max_hp;
 #endif
-	clif->send(buf,packet_len(cmd),&sd->bl,PARTY_AREA_WOS);
+	clif->send(&p, sizeof(struct PACKET_ZC_NOTIFY_HP_TO_GROUPM), &sd->bl, PARTY_AREA_WOS);
 }
 
 /*==========================================
