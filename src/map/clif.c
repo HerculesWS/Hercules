@@ -7260,16 +7260,15 @@ static void clif_party_info(struct party_data *p, struct map_session_data *sd)
 static void clif_party_job_and_level(struct map_session_data *sd)
 {
 #if PACKETVER_MAIN_NUM >= 20170502 || PACKETVER_RE_NUM >= 20170419 || defined(PACKETVER_ZERO)
-	unsigned char buf[10];
-
 	nullpo_retv(sd);
 
-	WBUFW(buf, 0) = 0xabd;
-	WBUFL(buf, 2) = sd->status.account_id;
-	WBUFW(buf, 6) = sd->status.class;
-	WBUFW(buf, 8) = sd->status.base_level;
+	struct PACKET_ZC_PARTY_MEMBER_JOB_LEVEL p = {0};
+	p.PacketType = HEADER_ZC_PARTY_MEMBER_JOB_LEVEL;
+	p.AID = sd->status.account_id;
+	p.job = sd->status.class;
+	p.level = sd->status.base_level;
 
-	clif->send(buf, packet_len(0xabd), &sd->bl, PARTY);
+	clif->send(&p, sizeof(struct PACKET_ZC_PARTY_MEMBER_JOB_LEVEL), &sd->bl, PARTY);
 #endif
 }
 

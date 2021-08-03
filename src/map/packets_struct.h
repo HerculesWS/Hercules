@@ -4407,6 +4407,16 @@ struct PACKET_ZC_NOTIFY_HP_TO_GROUPM {
 DEFINE_PACKET_HEADER(ZC_NOTIFY_HP_TO_GROUPM, 0x080e);
 #endif
 
+#if PACKETVER_MAIN_NUM >= 20170502 || PACKETVER_RE_NUM >= 20170419 || defined(PACKETVER_ZERO)
+struct PACKET_ZC_PARTY_MEMBER_JOB_LEVEL {
+	int16 PacketType;
+	int AID;
+	int16 job;
+	int16 level;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_PARTY_MEMBER_JOB_LEVEL, 0x0abd);
+#endif
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
