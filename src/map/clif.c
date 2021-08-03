@@ -7457,12 +7457,10 @@ static void clif_party_option(struct party_data *p, struct map_session_data *sd,
 ///     3 = cannot expel from party on this map
 static void clif_party_withdraw(struct party_data *p, struct map_session_data *sd, int account_id, const char *name, int flag)
 {
-	unsigned char buf[64];
-
 	nullpo_retv(p);
 	nullpo_retv(name);
 
-	if(!sd && (flag&0xf0)==0) { // TODO: Document this flag
+	if (sd == NULL && (flag & 0xf0) == 0) { // TODO: Document this flag
 		int i;
 		// Search for any online party member
 		ARR_FIND(0, MAX_PARTY, i, p->data[i].sd != NULL);
@@ -7470,17 +7468,18 @@ static void clif_party_withdraw(struct party_data *p, struct map_session_data *s
 			sd = p->data[i].sd;
 	}
 
-	if (!sd)
+	if (sd == NULL)
 		return;
 
-	WBUFW(buf,0)=0x105;
-	WBUFL(buf,2)=account_id;
-	memcpy(WBUFP(buf,6),name,NAME_LENGTH);
-	WBUFB(buf,30)=flag&0x0f;
-	if((flag&0xf0)==0)
-		clif->send(buf,packet_len(0x105),&sd->bl,PARTY);
+	struct PACKET_ZC_DELETE_MEMBER_FROM_GROUP packet = {0};
+	packet.PacketType = HEADER_ZC_DELETE_MEMBER_FROM_GROUP;
+	packet.AID = account_id;
+	safestrncpy(&packet.characterName[0], name, NAME_LENGTH);
+	packet.result = flag & 0x0f;
+	if ((flag & 0xf0) == 0)
+		clif->send(&packet, sizeof(struct PACKET_ZC_DELETE_MEMBER_FROM_GROUP), &sd->bl, PARTY);
 	else
-		clif->send(buf,packet_len(0x105),&sd->bl,SELF);
+		clif->send(&packet, sizeof(struct PACKET_ZC_DELETE_MEMBER_FROM_GROUP), &sd->bl, SELF);
 }
 
 /// Party chat message (ZC_NOTIFY_CHAT_PARTY).

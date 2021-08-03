@@ -4417,6 +4417,14 @@ struct PACKET_ZC_PARTY_MEMBER_JOB_LEVEL {
 DEFINE_PACKET_HEADER(ZC_PARTY_MEMBER_JOB_LEVEL, 0x0abd);
 #endif
 
+struct PACKET_ZC_DELETE_MEMBER_FROM_GROUP {
+	int16 PacketType;
+	int AID;
+	char characterName[NAME_LENGTH];
+	int8 result;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_DELETE_MEMBER_FROM_GROUP, 0x0105);
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
