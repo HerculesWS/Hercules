@@ -589,6 +589,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "mob_data", sizeof(struct mob_data), SERVER_TYPE_MAP },
 		{ "mob_db", sizeof(struct mob_db), SERVER_TYPE_MAP },
 		{ "mob_drop", sizeof(struct mob_drop), SERVER_TYPE_MAP },
+		{ "mob_group", sizeof(struct mob_group), SERVER_TYPE_MAP },
 		{ "mob_interface", sizeof(struct mob_interface), SERVER_TYPE_MAP },
 		{ "mob_skill", sizeof(struct mob_skill), SERVER_TYPE_MAP },
 		{ "optdrop_group", sizeof(struct optdrop_group), SERVER_TYPE_MAP },
