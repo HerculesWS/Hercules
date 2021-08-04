@@ -199,6 +199,13 @@
 #if PACKETVER >= 20131223
 	#define OFFICIAL_GUILD_STORAGE
 #endif // PACKETVER >= 20131223
+#ifdef DISABLE_OFFICIAL_GUILD_STORAGE
+	#undef OFFICIAL_GUILD_STORAGE
+	#undef DISABLE_OFFICIAL_GUILD_STORAGE
+#endif // DISABLE_OFFICIAL_GUILD_STORAGE
+#if PACKETVER < 20131223 && defined(OFFICIAL_GUILD_STORAGE)
+	#error The current PACKETVER does not support the official guild storage system.
+#endif // PACKETVER >= 20131223
 
 //Max number of characters per account. Note that changing this setting alone is not enough if the client is not hexed to support more characters as well.
 #if PACKETVER >= 20100413
