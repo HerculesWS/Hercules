@@ -151,13 +151,16 @@ static int map_freeblock(struct block_list *bl)
 			aFree(bl);
 		bl = NULL;
 	} else {
-		if( map->block_free_count >= map->block_free_list_size )
+		if (bl->deleted == true)
+			return map->block_free_lock;
+		if (map->block_free_count >= map->block_free_list_size)
 			map_block_free_expand();
 
 		map->block_free[map->block_free_count] = bl;
 #ifdef SANITIZE
 		map->block_free_sanitize[map->block_free_count] = aMalloc(4);
 #endif
+		bl->deleted = true;
 		map->block_free_count++;
 	}
 
