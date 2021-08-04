@@ -95,11 +95,6 @@ static struct DBMap *item_drop_ratio_other_db = NULL;
 static struct eri *item_drop_ers; //For loot drops delay structures.
 static struct eri *item_drop_list_ers;
 
-static struct {
-	int qty;
-	int class_[350];
-} summon[MAX_RANDOMMONSTER];
-
 static struct mob_db *mob_db(int index)
 {
 	if (index < 0 || index > MAX_MOB_DB || mob->db_data[index] == NULL)
@@ -445,20 +440,21 @@ static struct mob_data *mob_spawn_dataset(struct spawn_data *data, int npc_id)
  * &8: Selected monster must have normal spawn.
  * lv: Mob level to check against
  *------------------------------------------*/
-static int mob_get_random_id(int type, int flag, int lv)
+static int mob_get_random_id(enum mob_groups type, int flag, int lv)
 {
+	Assert_ret(type >= 0 && type < MOBG_MAX_GROUP);
+
 	struct mob_db *monster;
-	int i=0, class_;
-	if(type < 0 || type >= MAX_RANDOMMONSTER) {
-		ShowError("mob_get_random_id: Invalid type (%d) of random monster.\n", type);
-		return 0;
-	}
-	Assert_ret(type >= 0 && type < MAX_RANDOMMONSTER);
+	int i = 0;
+	int class_ = 0;
+
 	do {
-		if (type)
-			class_ = summon[type].class_[rnd()%summon[type].qty];
-		else //Dead branch
+		if (type) {
+			const int idx = rnd() % VECTOR_LENGTH(mob->mob_groups[type]);
+			class_ = VECTOR_INDEX(mob->mob_groups[type], idx);
+		} else {
 			class_ = rnd() % MAX_MOB_DB;
+		}
 		monster = mob->db(class_);
 	} while ((monster == mob->dummy ||
 		mob->is_clone(class_) ||
@@ -468,8 +464,8 @@ static int mob_get_random_id(int type, int flag, int lv)
 		(flag&8 && monster->spawn[0].qty < 1)
 	) && (i++) < MAX_MOB_DB);
 
-	if(i >= MAX_MOB_DB)  // no suitable monster found, use fallback for given list
-		class_ = mob->db_data[0]->summonper[type];
+	if (i >= MAX_MOB_DB) // no suitable monster found, use fallback
+		class_ = MOBID_PORING;
 	return class_;
 }
 
@@ -5410,70 +5406,107 @@ static void mob_mobavail_removal_notice(void)
 	}
 }
 
-/*==========================================
- * Reading of random monster data
- *------------------------------------------*/
-static int mob_read_randommonster(void)
+static void mob_read_group_db(void)
 {
-	char line[1024];
-	char *str[10],*p;
-	int i,j;
-	const char* mobfile[] = {
-		DBPATH"mob_branch.txt",
-		DBPATH"mob_poring.txt",
-		DBPATH"mob_boss.txt",
-		"mob_pouch.txt",
-		"mob_classchange.txt"};
+	const char *filename[] = {
+		DBPATH"mob_group.conf",
+		"mob_group2.conf"
+	};
 
-	memset(&summon, 0, sizeof(summon));
+	for (int i = 0; i < ARRAYLENGTH(filename); i++)
+		mob->read_group_db_libconfig(filename[i]);
+}
 
-	for (i = 0; i < ARRAYLENGTH(mobfile) && i < MAX_RANDOMMONSTER; i++) {
-		FILE *fp;
-		unsigned int count = 0;
-		mob->db_data[0]->summonper[i] = MOBID_PORING; // Default fallback value, in case the database does not provide one
-		sprintf(line, "%s/%s", map->db_path, mobfile[i]);
-		fp=fopen(line,"r");
-		if(fp==NULL){
-			ShowError("can't read %s\n",line);
-			return -1;
-		}
-		while(fgets(line, sizeof(line), fp))
-		{
-			int class_;
-			if(line[0] == '/' && line[1] == '/')
-				continue;
-			memset(str,0,sizeof(str));
-			for(j=0,p=line;j<3 && p;j++){
-				str[j]=p;
-				p=strchr(p,',');
-				if(p) *p++=0;
-			}
+static bool mob_read_group_db_libconfig(const char *filename)
+{
+	struct config_t mg_conf;
+	char filepath[256];
 
-			if(str[0]==NULL || str[2]==NULL)
-				continue;
-
-			class_ = atoi(str[0]);
-			if(mob->db(class_) == mob->dummy)
-				continue;
-			count++;
-			mob->db_data[class_]->summonper[i]=atoi(str[2]);
-			if (i) {
-				if( summon[i].qty < ARRAYLENGTH(summon[i].class_) ) //MvPs
-					summon[i].class_[summon[i].qty++] = class_;
-				else {
-					ShowDebug("Can't store more random mobs from %s, increase size of mob.c:summon variable!\n", mobfile[i]);
-					break;
-				}
-			}
-		}
-		if (i && !summon[i].qty) { //At least have the default here.
-			summon[i].class_[0] = mob->db_data[0]->summonper[i];
-			summon[i].qty = 1;
-		}
-		fclose(fp);
-		ShowStatus("Done reading '"CL_WHITE"%u"CL_RESET"' entries in '"CL_WHITE"%s/%s"CL_RESET"'.\n",count, map->db_path, mobfile[i]);
+	safesnprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, filename);
+	if (libconfig->load_file(&mg_conf, filepath) == CONFIG_FALSE) {
+		ShowError("%s: can't read %s\n", __func__, filepath);
+		return false;
 	}
-	return 0;
+
+	int i = 0;
+	int count = 0;
+	struct config_setting_t *it = NULL;
+
+	while ((it = libconfig->setting_get_elem(mg_conf.root, i++)) != NULL) {
+		if (mob->read_group_db_libconfig_sub(it, filepath))
+			++count;
+	}
+
+	libconfig->destroy(&mg_conf);
+	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	return true;
+}
+
+static bool mob_read_group_db_libconfig_sub(struct config_setting_t *it, const char *source)
+{
+	nullpo_retr(false, it);
+	nullpo_retr(false, source);
+
+	const char *name = config_setting_name(it);
+	int group_id;
+
+	if (!script->get_constant(name, &group_id)) {
+		ShowWarning("%s: unknown monster group '%s' in \"%s\", skipping..\n", __func__, name, source);
+		return false;
+	}
+
+	if (!config_setting_is_list(it)) {
+		ShowWarning("%s: monster group '%s' in \"%s\" must be a list, skipping..\n", __func__, name, source);
+		return false;
+	}
+
+	if (!mob->read_group_db_libconfig_sub_group(it, group_id, source))
+		return false;
+
+	return true;
+}
+
+static bool mob_read_group_db_libconfig_sub_group(struct config_setting_t *it, enum mob_groups group_id, const char *source)
+{
+	nullpo_retr(false, it);
+	nullpo_retr(false, source);
+	Assert_retr(false, group_id >= 0 && group_id < MOBG_MAX_GROUP);
+
+	if (VECTOR_LENGTH(mob->mob_groups[group_id]) > 0) {
+		VECTOR_CLEAR(mob->mob_groups[group_id]);
+	}
+	VECTOR_INIT(mob->mob_groups[group_id]);
+
+	int i = 0;
+	struct config_setting_t *entry = NULL;
+
+	while ((entry = libconfig->setting_get_elem(it, i++)) != NULL) {
+		int class_ = 0;
+		const char *name = libconfig->setting_get_string_elem(entry, 0);
+
+		if (!script->get_constant(name, &class_)) {
+			ShowWarning("%s: Invalid monster '%s' in \"%s\", skipping..\n", __func__, name, source);
+			continue;
+		}
+
+		struct mob_db *m = mob->db(class_);
+		if (m == mob->dummy) {
+			ShowWarning("%s: Invalid monster '%s' in \"%s\", skipping..\n", __func__, name, source);
+			continue;
+		}
+
+		int rate = 0;
+		if (config_setting_is_list(entry))
+			rate = libconfig->setting_get_int_elem(it, 1);
+		else
+			rate = 1;
+
+		VECTOR_ENSURE(mob->mob_groups[group_id], 1, 1);
+		VECTOR_PUSH(mob->mob_groups[group_id], class_);
+		m->summonper[group_id] = rate;
+	}
+
+	return true;
 }
 
 /*==========================================
@@ -5950,7 +5983,7 @@ static void mob_load(bool minimal)
 	mob->readdb();
 	mob->readskilldb();
 	mob->mobavail_removal_notice();
-	mob->read_randommonster();
+	mob->read_group_db();
 	sv->readdb(map->db_path, DBPATH"mob_race2_db.txt", ',', 2, 20, -1, mob->readdb_race2);
 }
 
@@ -6007,6 +6040,9 @@ static void mob_reload(void)
 			aFree(item_drop_ratio_db[i]);
 			item_drop_ratio_db[i] = NULL;
 		}
+	}
+	for (i = 0; i < MOBG_MAX_GROUP; i++) {
+		VECTOR_CLEAR(mob->mob_groups[i]);
 	}
 	mob->item_drop_ratio_other_db->clear(mob->item_drop_ratio_other_db, mob->final_ratio_sub);
 
@@ -6118,6 +6154,9 @@ static int do_final_mob(void)
 			aFree(item_drop_ratio_db[i]);
 			item_drop_ratio_db[i] = NULL;
 		}
+	}
+	for (i = 0; i < MOBG_MAX_GROUP; i++) {
+		VECTOR_CLEAR(mob->mob_groups[i]);
 	}
 	mob->item_drop_ratio_other_db->clear(mob->item_drop_ratio_other_db, mob->final_ratio_sub);
 	db_destroy(mob->item_drop_ratio_other_db);
@@ -6276,7 +6315,6 @@ void mob_defaults(void)
 	mob->read_db_viewdata_sub = mob_read_db_viewdata_sub;
 	mob->name_constants = mob_name_constants;
 	mob->mobavail_removal_notice = mob_mobavail_removal_notice;
-	mob->read_randommonster = mob_read_randommonster;
 	mob->parse_row_chatdb = mob_parse_row_chatdb;
 	mob->readchatdb = mob_readchatdb;
 	mob->readskilldb = mob_readskilldb;
@@ -6292,4 +6330,8 @@ void mob_defaults(void)
 	mob->skill_db_libconfig = mob_skill_db_libconfig;
 	mob->skill_db_libconfig_sub = mob_skill_db_libconfig_sub;
 	mob->skill_db_libconfig_sub_skill = mob_skill_db_libconfig_sub_skill;
+	mob->read_group_db = mob_read_group_db;
+	mob->read_group_db_libconfig = mob_read_group_db_libconfig;
+	mob->read_group_db_libconfig_sub = mob_read_group_db_libconfig_sub;
+	mob->read_group_db_libconfig_sub_group = mob_read_group_db_libconfig_sub_group;
 }

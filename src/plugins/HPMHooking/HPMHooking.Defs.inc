@@ -5398,8 +5398,8 @@ typedef int (*HPMHOOK_pre_mob_parse_dataset) (struct spawn_data **data);
 typedef int (*HPMHOOK_post_mob_parse_dataset) (int retVal___, struct spawn_data *data);
 typedef struct mob_data* (*HPMHOOK_pre_mob_spawn_dataset) (struct spawn_data **data, int *npc_id);
 typedef struct mob_data* (*HPMHOOK_post_mob_spawn_dataset) (struct mob_data* retVal___, struct spawn_data *data, int npc_id);
-typedef int (*HPMHOOK_pre_mob_get_random_id) (int *type, int *flag, int *lv);
-typedef int (*HPMHOOK_post_mob_get_random_id) (int retVal___, int type, int flag, int lv);
+typedef int (*HPMHOOK_pre_mob_get_random_id) (enum mob_groups *type, int *flag, int *lv);
+typedef int (*HPMHOOK_post_mob_get_random_id) (int retVal___, enum mob_groups type, int flag, int lv);
 typedef bool (*HPMHOOK_pre_mob_ksprotected) (struct block_list **src, struct block_list **target);
 typedef bool (*HPMHOOK_post_mob_ksprotected) (bool retVal___, struct block_list *src, struct block_list *target);
 typedef struct mob_data* (*HPMHOOK_pre_mob_once_spawn_sub) (struct block_list **bl, int16 *m, int16 *x, int16 *y, const char **mobname, int *class_, const char **event, unsigned int *size, unsigned int *ai, int *npc_id);
@@ -5566,8 +5566,6 @@ typedef void (*HPMHOOK_pre_mob_name_constants) (void);
 typedef void (*HPMHOOK_post_mob_name_constants) (void);
 typedef void (*HPMHOOK_pre_mob_mobavail_removal_notice) (void);
 typedef void (*HPMHOOK_post_mob_mobavail_removal_notice) (void);
-typedef int (*HPMHOOK_pre_mob_read_randommonster) (void);
-typedef int (*HPMHOOK_post_mob_read_randommonster) (int retVal___);
 typedef bool (*HPMHOOK_pre_mob_parse_row_chatdb) (char ***str, const char **source, int *line, int **last_msg_id);
 typedef bool (*HPMHOOK_post_mob_parse_row_chatdb) (bool retVal___, char **str, const char *source, int line, int *last_msg_id);
 typedef void (*HPMHOOK_pre_mob_readchatdb) (void);
@@ -5598,6 +5596,14 @@ typedef bool (*HPMHOOK_pre_mob_skill_db_libconfig_sub) (struct config_setting_t 
 typedef bool (*HPMHOOK_post_mob_skill_db_libconfig_sub) (bool retVal___, struct config_setting_t *it, int n);
 typedef bool (*HPMHOOK_pre_mob_skill_db_libconfig_sub_skill) (struct config_setting_t **it, int *n, int *mob_id);
 typedef bool (*HPMHOOK_post_mob_skill_db_libconfig_sub_skill) (bool retVal___, struct config_setting_t *it, int n, int mob_id);
+typedef void (*HPMHOOK_pre_mob_read_group_db) (void);
+typedef void (*HPMHOOK_post_mob_read_group_db) (void);
+typedef bool (*HPMHOOK_pre_mob_read_group_db_libconfig) (const char **filename);
+typedef bool (*HPMHOOK_post_mob_read_group_db_libconfig) (bool retVal___, const char *filename);
+typedef bool (*HPMHOOK_pre_mob_read_group_db_libconfig_sub) (struct config_setting_t **it, const char **source);
+typedef bool (*HPMHOOK_post_mob_read_group_db_libconfig_sub) (bool retVal___, struct config_setting_t *it, const char *source);
+typedef bool (*HPMHOOK_pre_mob_read_group_db_libconfig_sub_group) (struct config_setting_t **it, enum mob_groups *group_id, const char **source);
+typedef bool (*HPMHOOK_post_mob_read_group_db_libconfig_sub_group) (bool retVal___, struct config_setting_t *it, enum mob_groups group_id, const char *source);
 #endif // MAP_MOB_H
 #ifdef COMMON_MUTEX_H /* mutex */
 typedef struct mutex_data* (*HPMHOOK_pre_mutex_create) (void);

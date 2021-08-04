@@ -2130,7 +2130,6 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(mob->read_db_viewdata_sub, HP_mob_read_db_viewdata_sub) },
 	{ HP_POP(mob->name_constants, HP_mob_name_constants) },
 	{ HP_POP(mob->mobavail_removal_notice, HP_mob_mobavail_removal_notice) },
-	{ HP_POP(mob->read_randommonster, HP_mob_read_randommonster) },
 	{ HP_POP(mob->parse_row_chatdb, HP_mob_parse_row_chatdb) },
 	{ HP_POP(mob->readchatdb, HP_mob_readchatdb) },
 	{ HP_POP(mob->readskilldb, HP_mob_readskilldb) },
@@ -2146,6 +2145,10 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(mob->skill_db_libconfig, HP_mob_skill_db_libconfig) },
 	{ HP_POP(mob->skill_db_libconfig_sub, HP_mob_skill_db_libconfig_sub) },
 	{ HP_POP(mob->skill_db_libconfig_sub_skill, HP_mob_skill_db_libconfig_sub_skill) },
+	{ HP_POP(mob->read_group_db, HP_mob_read_group_db) },
+	{ HP_POP(mob->read_group_db_libconfig, HP_mob_read_group_db_libconfig) },
+	{ HP_POP(mob->read_group_db_libconfig_sub, HP_mob_read_group_db_libconfig_sub) },
+	{ HP_POP(mob->read_group_db_libconfig_sub_group, HP_mob_read_group_db_libconfig_sub_group) },
 /* mutex_interface */
 	{ HP_POP(mutex->create, HP_mutex_create) },
 	{ HP_POP(mutex->destroy, HP_mutex_destroy) },
