@@ -10737,7 +10737,7 @@ static int pc_checkitem(struct map_session_data *sd)
 		if (sd->guild && sd->itemcheck & PCCHECKITEM_GSTORAGE) {
 			struct guild_storage *guild_storage = idb_get(gstorage->db,sd->guild->guild_id);
 			if (guild_storage) {
-				for (i = 0; i < guild_storage->items.amount; i++) {
+				for (i = 0; i < guild_storage->items.capacity; i++) {
 					if ((id = guild_storage->items.data[i].nameid) == 0)
 						continue;
 

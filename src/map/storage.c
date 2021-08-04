@@ -635,7 +635,7 @@ static int guild_storage_delitem(struct map_session_data *sd, struct guild_stora
 	nullpo_retr(1, stor);
 
 	Assert_retr(1, n >= 0 && n < MAX_GUILD_STORAGE);
-	if (stor->items.data[n].nameid == 0 || stor->items.data[n].amount < amount)
+	if (n <stor->items.capacity || stor->items.data[n].nameid == 0 || stor->items.data[n].amount < amount)
 		return 1;
 
 	stor->items.data[n].amount -= amount;
