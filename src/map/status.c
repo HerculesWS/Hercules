@@ -5597,7 +5597,7 @@ static unsigned int status_calc_maxhp(struct block_list *bl, struct status_chang
 	if (sc->data[SC_SOLID_SKIN_OPTION])
 		maxhp += 2000; // Fix amount.
 	if (sc->data[SC_POWER_OF_GAIA])
-		maxhp += 3000;
+		maxhp += maxhp * sc->data[SC_POWER_OF_GAIA]->val3 / 100;
 	if (sc->data[SC_EARTH_INSIGNIA] && sc->data[SC_EARTH_INSIGNIA]->val1 == 2)
 		maxhp += 500;
 	if (sc->data[SC_MER_HP])
@@ -9015,6 +9015,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			case SC_ROCK_CRUSHER_ATK:
 			case SC_POWER_OF_GAIA:
 				val2 = 33;
+				val3 = 20; // HP% rate bonus
 				break;
 			case SC_MELON_BOMB:
 			case SC_BANANA_BOMB:
