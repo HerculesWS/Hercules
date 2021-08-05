@@ -270,12 +270,16 @@
 	#ifndef MAX_GUILD_STORAGE
 	#define MAX_GUILD_STORAGE 600
 	#endif
+	#undef GUILD_STORAGE_EXPANSION_STEP
 #else // ! OFFICIAL_GUILD_STORAGE
 	#ifdef MAX_GUILD_STORAGE
 	#error You cannot redefine MAX_GUILD_STORAGE when using the official guild storage system.
 	#endif
-	// 100 slots * 5 skill levels
-	#define MAX_GUILD_STORAGE (100 * 5)
+	#ifndef GUILD_STORAGE_EXPANSION_STEP
+		#define GUILD_STORAGE_EXPANSION_STEP 100
+	#endif
+	// GUILD_STORAGE_EXPANSION_STEP slots * 5 skill levels
+	#define MAX_GUILD_STORAGE (GUILD_STORAGE_EXPANSION_STEP * 5)
 #endif // OFFICIAL_GUILD_STORAGE
 #ifndef MAX_PARTY
 #define MAX_PARTY 12

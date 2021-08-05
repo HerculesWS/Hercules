@@ -881,7 +881,9 @@ static int inter_guild_calcinfo(struct guild *g)
 
 	// Set the max storage size
 #ifdef OFFICIAL_GUILD_STORAGE
-	g->max_storage = inter_guild->checkskill(g, GD_GUILD_STORAGE)*100;
+	g->max_storage = inter_guild->checkskill(g, GD_GUILD_STORAGE) * GUILD_STORAGE_EXPANSION_STEP;
+	if (g->max_storage > MAX_GUILD_STORAGE)
+		g->max_storage = MAX_GUILD_STORAGE;
 #else // ! OFFICIAL_GUILD_STORAGE
 	g->max_storage = MAX_GUILD_STORAGE;
 #endif // OFFICIAL_GUILD_STORAGE
