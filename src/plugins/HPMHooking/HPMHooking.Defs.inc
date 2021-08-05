@@ -534,8 +534,8 @@ typedef int (*HPMHOOK_pre_chr_mmo_char_tosql) (int *char_id, struct mmo_charstat
 typedef int (*HPMHOOK_post_chr_mmo_char_tosql) (int retVal___, int char_id, struct mmo_charstatus *p);
 typedef int (*HPMHOOK_pre_chr_getitemdata_from_sql) (struct item **items, int *max, int *guid, enum inventory_table_type *table);
 typedef int (*HPMHOOK_post_chr_getitemdata_from_sql) (int retVal___, struct item *items, int max, int guid, enum inventory_table_type table);
-typedef int (*HPMHOOK_pre_chr_memitemdata_to_sql) (const struct item *items[], int *id, enum inventory_table_type *table);
-typedef int (*HPMHOOK_post_chr_memitemdata_to_sql) (int retVal___, const struct item items[], int id, enum inventory_table_type table);
+typedef int (*HPMHOOK_pre_chr_memitemdata_to_sql) (const struct item *items[], int *current_size, int *guid, enum inventory_table_type *table);
+typedef int (*HPMHOOK_post_chr_memitemdata_to_sql) (int retVal___, const struct item items[], int current_size, int guid, enum inventory_table_type table);
 typedef int (*HPMHOOK_pre_chr_mmo_gender) (const struct char_session_data **sd, const struct mmo_charstatus **p, char *sex);
 typedef int (*HPMHOOK_post_chr_mmo_gender) (int retVal___, const struct char_session_data *sd, const struct mmo_charstatus *p, char sex);
 typedef int (*HPMHOOK_pre_chr_mmo_chars_fromsql) (struct char_session_data **sd, uint8 **buf, int **count);
