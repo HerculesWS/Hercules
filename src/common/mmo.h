@@ -274,7 +274,8 @@
 	#ifdef MAX_GUILD_STORAGE
 	#error You cannot redefine MAX_GUILD_STORAGE when using the official guild storage system.
 	#endif
-	#define MAX_GUILD_STORAGE (-1)
+	// 100 slots * 5 skill levels
+	#define MAX_GUILD_STORAGE (100 * 5)
 #endif // OFFICIAL_GUILD_STORAGE
 #ifndef MAX_PARTY
 #define MAX_PARTY 12
@@ -663,7 +664,7 @@ struct guild_storage {
  * @anchor MAX_GUILD_STORAGE_ASSERT
  *
  **/
-STATIC_ASSERT(sizeof(struct guild_storage) + 12 <= 0xFFFF, "The maximum amount of item slots per guild storage is limited by the inter-server communication layout. Use a smaller value!");
+STATIC_ASSERT(20 + sizeof(struct item) * MAX_GUILD_STORAGE <= 0xFFFF, "The maximum amount of item slots per guild storage is limited by the inter-server communication layout. Use a smaller value!");
 
 struct s_pet {
 	int account_id;
