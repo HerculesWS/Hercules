@@ -245,7 +245,7 @@
 #define MAX_CART 100
 #endif
 #ifndef MAX_SKILL_DB
-#define MAX_SKILL_DB 1353 ///< Maximum number of skills in the skill DB (compacted array size)
+#define MAX_SKILL_DB 1355 ///< Maximum number of skills in the skill DB (compacted array size)
 #endif
 #ifndef MAX_SKILL_ID
 #define MAX_SKILL_ID 10016   // [Ind/Hercules] max used skill ID
