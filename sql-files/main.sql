@@ -925,7 +925,6 @@ INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1467934919); -- 2016-07-0
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1467935469); -- 2016-07-08--02-51.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1475526420); -- 2016-10-03--20-27.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1477434595); -- 2016-10-26--10-29.sql
-INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1479662748); -- 2016-11-20--17-26.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1488454834); -- 2017-03-02--11-40.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1488744559); -- 2017-03-05--08-09.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1489588190); -- 2017-03-15--14-29.sql
@@ -955,6 +954,7 @@ INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1588301040); -- 2020-05-0
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1589145060); -- 2020-05-10--23-11.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1597467600); -- 2020-08-15--13-00.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1612286353); -- 2021-05-03--10-19.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1628121360); -- 2021-08-04--23-56.sql
 
 --
 -- Table structure for table `storage`
