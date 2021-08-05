@@ -2714,6 +2714,8 @@ struct {
 	struct HPMHookPoint *HP_gstorage_init_post;
 	struct HPMHookPoint *HP_gstorage_final_pre;
 	struct HPMHookPoint *HP_gstorage_final_post;
+	struct HPMHookPoint *HP_gstorage_final_sub_pre;
+	struct HPMHookPoint *HP_gstorage_final_sub_post;
 	struct HPMHookPoint *HP_gstorage_delete_pre;
 	struct HPMHookPoint *HP_gstorage_delete_post;
 	struct HPMHookPoint *HP_gstorage_open_pre;
@@ -9829,6 +9831,8 @@ struct {
 	int HP_gstorage_init_post;
 	int HP_gstorage_final_pre;
 	int HP_gstorage_final_post;
+	int HP_gstorage_final_sub_pre;
+	int HP_gstorage_final_sub_post;
 	int HP_gstorage_delete_pre;
 	int HP_gstorage_delete_post;
 	int HP_gstorage_open_pre;

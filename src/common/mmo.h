@@ -196,6 +196,17 @@
 #error FIXED_INVENTORY_SIZE must be same or smaller than MAX_INVENTORY
 #endif
 
+#if PACKETVER >= 20131223
+	#define OFFICIAL_GUILD_STORAGE
+#endif // PACKETVER >= 20131223
+#ifdef DISABLE_OFFICIAL_GUILD_STORAGE
+	#undef OFFICIAL_GUILD_STORAGE
+	#undef DISABLE_OFFICIAL_GUILD_STORAGE
+#endif // DISABLE_OFFICIAL_GUILD_STORAGE
+#if PACKETVER < 20131223 && defined(OFFICIAL_GUILD_STORAGE)
+	#error The current PACKETVER does not support the official guild storage system.
+#endif // PACKETVER >= 20131223
+
 //Max number of characters per account. Note that changing this setting alone is not enough if the client is not hexed to support more characters as well.
 #if PACKETVER >= 20100413
 #ifndef MAX_CHARS
@@ -234,10 +245,10 @@
 #define MAX_CART 100
 #endif
 #ifndef MAX_SKILL_DB
-#define MAX_SKILL_DB 1353 ///< Maximum number of skills in the skill DB (compacted array size)
+#define MAX_SKILL_DB 1355 ///< Maximum number of skills in the skill DB (compacted array size)
 #endif
 #ifndef MAX_SKILL_ID
-#define MAX_SKILL_ID 10015   // [Ind/Hercules] max used skill ID
+#define MAX_SKILL_ID 10016   // [Ind/Hercules] max used skill ID
 #endif
 #ifndef MAX_SKILL_TREE
 // Update this max as necessary. 86 is the value needed for Expanded Super Novice.
@@ -255,9 +266,21 @@
 #ifndef MAX_STORAGE
 #define MAX_STORAGE 600
 #endif
-#ifndef MAX_GUILD_STORAGE
-#define MAX_GUILD_STORAGE 600
-#endif
+#ifndef OFFICIAL_GUILD_STORAGE
+	#ifndef MAX_GUILD_STORAGE
+	#define MAX_GUILD_STORAGE 600
+	#endif
+	#undef GUILD_STORAGE_EXPANSION_STEP
+#else // ! OFFICIAL_GUILD_STORAGE
+	#ifdef MAX_GUILD_STORAGE
+	#error You cannot redefine MAX_GUILD_STORAGE when using the official guild storage system.
+	#endif
+	#ifndef GUILD_STORAGE_EXPANSION_STEP
+		#define GUILD_STORAGE_EXPANSION_STEP 100
+	#endif
+	// GUILD_STORAGE_EXPANSION_STEP slots * 5 skill levels
+	#define MAX_GUILD_STORAGE (GUILD_STORAGE_EXPANSION_STEP * 5)
+#endif // OFFICIAL_GUILD_STORAGE
 #ifndef MAX_PARTY
 #define MAX_PARTY 12
 #endif
@@ -277,7 +300,7 @@
 #define MAX_GUILDALLIANCE 16
 #endif
 #ifndef MAX_GUILDSKILL
-#define MAX_GUILDSKILL 15                // Increased max guild skills because of new skills [Sara-chan]
+#define MAX_GUILDSKILL 17                // Increased max guild skills because of new skills [Sara-chan]
 #endif
 #ifndef MAX_GUILDLEVEL
 #define MAX_GUILDLEVEL 50
@@ -623,12 +646,15 @@ struct storage_data {
 };
 
 struct guild_storage {
-	int dirty;
-	int guild_id;
-	short storage_status;
-	short storage_amount;
-	struct item items[MAX_GUILD_STORAGE];
-	unsigned short lock;
+	int guild_id; ///< Owner guild ID
+	bool in_use;  ///< Whether storage is in use by other guild members
+	bool dirty;   ///< Whether the struct was modified and needs to be saved
+	bool locked;  ///< Whenever item retrieval is happening and the storage can't be accessed
+	struct {
+		int amount;        ///< Currently stored items (Note: the array is not compacted!)
+		int capacity;      ///< Current size of the data array
+		struct item *data; ///< Data array
+	} items;      ///< Items
 };
 
 /**
@@ -642,7 +668,7 @@ struct guild_storage {
  * @anchor MAX_GUILD_STORAGE_ASSERT
  *
  **/
-STATIC_ASSERT(sizeof(struct guild_storage) + 12 <= 0xFFFF, "The maximum amount of item slots per guild storage is limited by the inter-server communication layout. Use a smaller value!");
+STATIC_ASSERT(20 + sizeof(struct item) * MAX_GUILD_STORAGE <= 0xFFFF, "The maximum amount of item slots per guild storage is limited by the inter-server communication layout. Use a smaller value!");
 
 struct s_pet {
 	int account_id;
@@ -923,29 +949,35 @@ struct guild_skill {
 
 struct channel_data;
 struct guild {
-	int guild_id;
-	short guild_lv, connect_member, max_member, average_lv;
-	uint64 exp;
-	unsigned int next_exp;
-	int skill_point;
-	char name[NAME_LENGTH],master[NAME_LENGTH];
-	struct guild_member member[MAX_GUILD];
-	struct guild_position position[MAX_GUILDPOSITION];
-	char mes1[MAX_GUILDMES1],mes2[MAX_GUILDMES2];
-	int emblem_len,emblem_id;
-	char emblem_data[2048];
-	struct guild_alliance alliance[MAX_GUILDALLIANCE];
-	struct guild_expulsion expulsion[MAX_GUILDEXPULSION];
-	struct guild_skill skill[MAX_GUILDSKILL];
+	int guild_id;                                         ///< Guild's unique identifier
+	int16 guild_lv;                                       ///< Guild level
+	int16 connect_member;                                 ///< Current online members
+	int16 max_member;                                     ///< Total guild member slots
+	int16 average_lv;                                     ///< Average level of guild members
+	int16 max_storage;                                    ///< Current guild storage capacity (note: NOT the same as gstor->items.capacity)
+	uint64 exp;                                           ///< Current guild experience
+	unsigned int next_exp;                                ///< Experience needed for the next level
+	int skill_point;                                      ///< Available skill points
+	char name[NAME_LENGTH];                               ///< Guild name
+	char master[NAME_LENGTH];                             ///< Guild leader's name
+	struct guild_member member[MAX_GUILD];                ///< Guild members data
+	struct guild_position position[MAX_GUILDPOSITION];    ///< Guild positions data
+	char mes1[MAX_GUILDMES1];                             ///< Guild message (first line)
+	char mes2[MAX_GUILDMES2];                             ///< Guild message (second line)
+	int emblem_id;                                        ///< Sequential ID of the current emblem
+	int emblem_len;                                       ///< Guild emblem data length
+	char emblem_data[2048];                               ///< Guild emblem data
+	struct guild_alliance alliance[MAX_GUILDALLIANCE];    ///< Guild alliances data
+	struct guild_expulsion expulsion[MAX_GUILDEXPULSION]; ///< Guild expulsion records
+	struct guild_skill skill[MAX_GUILDSKILL];             ///< Guild skills data
 
-	/* used on char.c to state what kind of data is being saved/processed */
-	unsigned short save_flag;
+	unsigned short save_flag; ///< Flag used in char.c to state what kind of data is being saved/processed
 
-	short *instance;
-	unsigned short instances;
+	short *instance;                                      ///< Array of instances
+	unsigned short instances;                             ///< Amount of instances
 
-	struct channel_data *channel;
-	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
+	struct channel_data *channel;                         ///< Guild's `#ally` channel
+	struct hplugin_data_store *hdata;                     ///< HPM Plugin Data Store
 };
 
 struct guild_castle {
@@ -1116,10 +1148,16 @@ enum guild_member_info { //Change Member Infos
 };
 
 enum guild_permission { // Guild permissions
-	GPERM_INVITE = 0x01,
-	GPERM_EXPEL = 0x10,
-	GPERM_ALL = GPERM_INVITE|GPERM_EXPEL,
-	GPERM_MASK = GPERM_ALL,
+	GPERM_INVITE  = 0x001,
+	GPERM_EXPEL   = 0x010,
+#if PACKETVER >= 20140205
+	GPERM_STORAGE = 0x100,
+	GPERM_ALL     = GPERM_INVITE|GPERM_EXPEL|GPERM_STORAGE,
+#else
+	GPERM_ALL     = GPERM_INVITE|GPERM_EXPEL,
+#endif
+	GPERM_MASK    = GPERM_ALL,
+	GPERM_DEFAULT = GPERM_ALL,
 };
 
 enum {
@@ -1139,6 +1177,8 @@ enum {
 	GD_RESTORE=10012,
 	GD_EMERGENCYCALL=10013,
 	GD_DEVELOPMENT=10014,
+	GD_ITEMEMERGENCYCALL = 10015,
+	GD_GUILD_STORAGE = 10016,
 #ifndef GD_MAX
 	GD_MAX,
 #endif

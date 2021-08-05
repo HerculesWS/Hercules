@@ -33,8 +33,8 @@ struct guild_storage;
 struct inter_storage_interface {
 	int (*tosql) (int account_id, const struct storage_data *p);
 	int (*fromsql) (int account_id, struct storage_data *p);
-	bool (*guild_storage_tosql) (int guild_id, const struct guild_storage *p);
-	int (*guild_storage_fromsql) (int guild_id, struct guild_storage* p);
+	bool (*guild_storage_tosql) (int guild_id, const struct guild_storage *gstor);
+	int (*guild_storage_fromsql) (int guild_id, struct guild_storage *gstor);
 	int (*sql_init) (void);
 	void (*sql_final) (void);
 	int (*delete_) (int account_id);

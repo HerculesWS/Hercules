@@ -1,0 +1,4 @@
+#1628121360
+ALTER TABLE `guild_position` CHANGE `mode` `mode` SMALLINT UNSIGNED NOT NULL DEFAULT '0';
+ALTER TABLE `guild` ADD `max_storage` SMALLINT UNSIGNED NOT NULL DEFAULT '0' AFTER `max_member`;
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1628121360);

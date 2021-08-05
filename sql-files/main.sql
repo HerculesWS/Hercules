@@ -389,6 +389,7 @@ CREATE TABLE IF NOT EXISTS `guild` (
   `guild_lv` TINYINT UNSIGNED NOT NULL DEFAULT '0',
   `connect_member` TINYINT UNSIGNED NOT NULL DEFAULT '0',
   `max_member` TINYINT UNSIGNED NOT NULL DEFAULT '0',
+  `max_storage` SMALLINT UNSIGNED NOT NULL DEFAULT '0',
   `average_lv` SMALLINT UNSIGNED NOT NULL DEFAULT '1',
   `exp` BIGINT UNSIGNED NOT NULL DEFAULT '0',
   `next_exp` INT UNSIGNED NOT NULL DEFAULT '0',
@@ -486,7 +487,7 @@ CREATE TABLE IF NOT EXISTS `guild_position` (
   `guild_id` INT UNSIGNED NOT NULL DEFAULT '0',
   `position` TINYINT UNSIGNED NOT NULL DEFAULT '0',
   `name` VARCHAR(24) NOT NULL DEFAULT '',
-  `mode` TINYINT UNSIGNED NOT NULL DEFAULT '0',
+  `mode` SMALLINT UNSIGNED NOT NULL DEFAULT '0',
   `exp_mode` TINYINT UNSIGNED NOT NULL DEFAULT '0',
   PRIMARY KEY (`guild_id`,`position`)
 ) ENGINE=MyISAM;
@@ -953,6 +954,7 @@ INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1588301040); -- 2020-05-0
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1589145060); -- 2020-05-10--23-11.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1597467600); -- 2020-08-15--13-00.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1612286353); -- 2021-05-03--10-19.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1628121360); -- 2021-08-04--23-56.sql
 
 --
 -- Table structure for table `storage`

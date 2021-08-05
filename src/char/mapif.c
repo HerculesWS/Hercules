@@ -1776,23 +1776,49 @@ static void mapif_rodex_checkname(int fd, int reqchar_id, int target_char_id, in
 	WFIFOSET(fd, 18 + NAME_LENGTH);
 }
 
+/**
+ * Sends loaded guild storage to a map-server.
+ *
+ * Packets sent:
+ * 0x3818 <len>.W <account id>.L <guild id != 0>.L <flag>.B <capacity>.L <amount>.L {<item>.P}*<capacity>
+ * 0x3818 <len>.W <account id>.L <guild id == 0>.L
+ *
+ * @param fd         The map-server's fd.
+ * @param account_id The requesting character's account id.
+ * @param guild_id   The requesting guild's ID.
+ * @param flag       Additional options, passed through to the map server (1 = open storage)
+ * @return Error code
+ * @retval 0 in case of success.
+ */
 static int mapif_load_guild_storage(int fd, int account_id, int guild_id, char flag)
 {
 	if (SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `guild_id` FROM `%s` WHERE `guild_id`='%d'", guild_db, guild_id)) {
 		Sql_ShowDebug(inter->sql_handle);
 	} else if (SQL->NumRows(inter->sql_handle) > 0) {
 		// guild exists
-		WFIFOHEAD(fd, sizeof(struct guild_storage) + 13);
-		WFIFOW(fd, 0) = 0x3818;
-		WFIFOW(fd, 2) = sizeof(struct guild_storage)+13;
-		WFIFOL(fd, 4) = account_id;
-		WFIFOL(fd, 8) = guild_id;
-		WFIFOB(fd, 12) = flag; //1 open storage, 0 don't open
-		inter_storage->guild_storage_fromsql(guild_id, WFIFOP(fd, 13));
-		WFIFOSET(fd, WFIFOW(fd, 2));
-		return 0;
+		struct guild_storage *gs = aCalloc(1, sizeof(*gs));
+
+		if (inter_storage->guild_storage_fromsql(guild_id, gs) == 0) {
+			int size = 21 + sizeof gs->items.data[0] * gs->items.capacity;
+			WFIFOHEAD(fd, size);
+			WFIFOW(fd, 0) = 0x3818;
+			WFIFOW(fd, 2) = size;
+			WFIFOL(fd, 4) = account_id;
+			WFIFOL(fd, 8) = guild_id;
+			WFIFOB(fd, 12) = flag;
+			WFIFOL(fd, 13) = gs->items.capacity;
+			WFIFOL(fd, 17) = gs->items.amount;
+			if (gs->items.data != NULL) {
+				memcpy(WFIFOP(fd, 21), gs->items.data, sizeof gs->items.data[0] * gs->items.capacity);
+				aFree(gs->items.data);
+			}
+			WFIFOSET(fd, size);
+			aFree(gs);
+			return 0;
+		}
+		aFree(gs);
 	}
-	// guild does not exist
+	// guild does not exist or there was an error
 	SQL->FreeResult(inter->sql_handle);
 	WFIFOHEAD(fd, 12);
 	WFIFOW(fd, 0) = 0x3818;
@@ -1946,7 +1972,7 @@ static int mapif_parse_LoadGuildStorage(int fd)
  * Parses a guild storage save request from the map server.
  *
  * @code{.unparsed}
- *	@packet 0x3019 [in] <packet_len>.W <account_id>.L <guild_id>.L <struct guild_storage>.P
+ *	@packet 0x3019 [in] <packet_len>.W <account_id>.L <guild_id>.L {<struct item>.P}*<capacity>
  * @endcode
  *
  * @attention If the size of packet 0x3019 changes,
@@ -1961,21 +1987,41 @@ static int mapif_parse_LoadGuildStorage(int fd)
  **/
 static int mapif_parse_SaveGuildStorage(int fd)
 {
-	int guild_id;
-	int len;
-
 	RFIFOHEAD(fd);
-	guild_id = RFIFOL(fd, 8);
-	len = RFIFOW(fd, 2);
+	int len = RFIFOW(fd, 2);
+	int account_id = RFIFOL(fd, 4);
+	int guild_id = RFIFOL(fd, 8);
+	int storage_capacity = RFIFOL(fd, 12);
+	int storage_amount = RFIFOL(fd, 16);
 
-	if (sizeof(struct guild_storage) != len - 12) {
-		ShowError("inter storage: data size mismatch: %d != %"PRIuS"\n", len - 12, sizeof(struct guild_storage));
-	} else if (inter_storage->guild_storage_tosql(guild_id, RFIFOP(fd, 12))) {
-		mapif->save_guild_storage_ack(fd, RFIFOL(fd, 4), guild_id, 0);
-		return 0;
+	int expected = 20 + sizeof(struct item) * storage_capacity;
+	if (expected != len) {
+		ShowError("mapif_parse_SaveGuildStorage: data size mismatch: %d != %d\n", len, expected);
+
+		mapif->save_guild_storage_ack(fd, account_id, guild_id, 1);
+		return 1;
 	}
-	mapif->save_guild_storage_ack(fd, RFIFOL(fd, 4), guild_id, 1);
 
+	struct guild_storage gstor = { 0 };
+
+	if (storage_capacity > 0) {
+		gstor.items.data = aCalloc(storage_capacity, sizeof gstor.items.data[0]);
+		memcpy(&gstor.items.data, RFIFOP(fd, 20), sizeof gstor.items.data[0] * storage_capacity);
+	}
+	gstor.items.amount = storage_amount;
+	gstor.items.capacity = storage_capacity;
+	gstor.guild_id = guild_id;
+
+	if (!inter_storage->guild_storage_tosql(guild_id, &gstor)) {
+		if (gstor.items.data != NULL)
+			aFree(gstor.items.data);
+		mapif->save_guild_storage_ack(fd, account_id, guild_id, 1);
+		return 1;
+	}
+
+	if (gstor.items.data != NULL)
+		aFree(gstor.items.data);
+	mapif->save_guild_storage_ack(fd, RFIFOL(fd, 4), guild_id, 0);
 	return 0;
 }
 
