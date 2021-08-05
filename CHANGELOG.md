@@ -22,6 +22,37 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
+## [v2021.08.04] `August 04 2021`
+
+### Added
+
+- Added support for the official Guild Storage system, supported starting with PACKETVER 20131223. Older PACKETVERs aren't affected by this change. (#1092)
+  - When the official system is enabled, a guild will require the `GD_GUILD_STORAGE` skill in order to obtain access to Guild Storage.
+  - Starting with PACKETVER 20140205 it's possible to control access to the Guild Storage through permissions defined in the Guild window.
+  - Since this change can lock existing guilds out of their storage until and if they invest skill points in `GD_GUILD_STORAGE`, it's possible to opt out and keep using the custom system (fixed size, no skills required) by defining the `DISABLE_OFFICIAL_GUILD_STORAGE` preprocessor macro.
+  - When the official guild storage is enabled, `MAX_GUILD_STORAGE` can't/shouldn't be redefined. The `GUILD_STORAGE_EXPANSION_STEP` macro is instead provided, defining the amount of storage slots that each level of the `GD_GUILD_STORAGE` skill will provide.
+  - Increasing the maximum level of the `GD_GUILD_STORAGE` skill may lead to unexpected behaviors. If you must, you'll at least need to edit the `MAX_GUILD_STORAGE` macro definition to increase the maximum skill level.
+  - When this is enabled, the `MAX_GUILD_STORAGE` script constant will refer to the maximum possible guild storage, rather than the current size of a specific guild's storage.
+  - This requires a database migration.
+
+### Changed
+
+- Moved the `map->freeblock_unlock()` call from `skill_castend_nodamage_id_unknown()` to its caller. (#3019)
+- Converted the random monster databases to libconfig. See `db/*/mob_group.conf` and `db/mob_group2.conf`. A converter (`tools/mobgroupconverter.py`) is provided, in order to convert custom databases. (#3013)
+- Major refactoring of the Guild Storage related code and documentation. The Guild Storage items are now held in a dynamically sized array. (part of #1092)
+
+### Fixed
+
+- Fixed a crash when a bl is deleted twice. `map->freeblock()` will now detect it and prevent the double deletion. (#3021)
+- Fixed a damage overflow in `GN_CART_TORNADO` when a character's base strength is very high. The base str value is now capped to 130 for the skill formula's purposes. (#2927, issue #659)
+- Fixed the behavior of `SC_POWER_OF_GAIA` to increase the maximum HP in percentage rather than by a fixed amount. (#2918)
+
+### Deprecated
+
+### Removed
+
+- The txt version of the random monster databases (`mob_classchange`, `mob_pouch`, `mob_boss`, `mob_branch`, `mob_poring`) is no longer supported. Custom databases need to be converted to libconfig with the provided tool. (part of #3013)
+
 ## [v2021.07.07] `July 07 2021`
 
 ### Changed
@@ -1948,6 +1979,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2021.08.04]: https://github.com/HerculesWS/Hercules/compare/v2021.07.07...v2021.08.04
 [v2021.07.07]: https://github.com/HerculesWS/Hercules/compare/v2021.06.02...v2021.07.07
 [v2021.06.02]: https://github.com/HerculesWS/Hercules/compare/v2021.05.05...v2021.06.02
 [v2021.05.05]: https://github.com/HerculesWS/Hercules/compare/v2021.04.05+1...v2021.05.05
