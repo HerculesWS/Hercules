@@ -459,6 +459,9 @@ static int64 battle_attr_fix(struct block_list *src, struct block_list *target, 
 		case ELE_NEUTRAL:
 			if (tsc->data[SC_ANTI_MATERIAL_BLAST]) ratio += tsc->data[SC_ANTI_MATERIAL_BLAST]->val2;
 			break;
+		case ELE_DARK:
+			if (tsc->data[SC_SOULCURSE] != NULL) ratio += 100;
+			break;
 		}
 	} //end tsc check
 
@@ -1998,6 +2001,23 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 				case SU_CN_METEOR:
 					skillratio += 100 + 100 * skill_lv;
 					break;
+				case SP_CURSEEXPLOSION:
+					if (tsc != NULL && tsc->data[SC_SOULCURSE] != NULL)
+						skillratio += 1400 + 200 * skill_lv;
+					else
+						skillratio += 300 + 100 * skill_lv;
+					break;
+				case SP_SPA:
+					skillratio += 400 + 250 * skill_lv;
+					RE_LVL_DMOD(100);
+					break;
+				case SP_SHA:
+					skillratio += -100 + 5 * skill_lv;
+					break;
+				case SP_SWHOO:
+					skillratio += 1000 + 200 * skill_lv;
+					RE_LVL_DMOD(100);
+					break;
 				default:
 					battle->calc_skillratio_magic_unknown(&attack_type, src, target, &skill_id, &skill_lv, &skillratio, &flag);
 					break;
@@ -2762,6 +2782,16 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 				case KO_SETSUDAN:
 					skillratio += -100 + 100 * skill_lv;
 					RE_LVL_DMOD(100);
+					if (tsc != NULL) {
+						struct status_change_entry *sce;
+
+						if ((sce = tsc->data[SC_SOULLINK]) != NULL
+						|| (sce = tsc->data[SC_SOULGOLEM]) != NULL
+						|| (sce = tsc->data[SC_SOULSHADOW]) != NULL
+						|| (sce = tsc->data[SC_SOULFALCON]) != NULL
+						|| (sce = tsc->data[SC_SOULFAIRY]) != NULL) // Bonus damage added when target is soul linked.
+							skillratio += 200 * sce->val1;
+					}
 					break;
 				case MH_NEEDLE_OF_PARALYZE:
 					skillratio += 600 + 100 * skill_lv;
@@ -2830,6 +2860,34 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					break;
 				case RL_R_TRIP_PLUSATK:
 					skillratio += -100 + 300 + 300 * skill_lv;
+					break;
+				case SJ_FULLMOONKICK:
+					skillratio += 1000 + 100 * skill_lv;
+					RE_LVL_DMOD(100);
+					if (sc != NULL && sc->data[SC_LIGHTOFMOON] != NULL)
+						skillratio += skillratio * sc->data[SC_LIGHTOFMOON]->val2 / 100;
+					break;
+				case SJ_NEWMOONKICK:
+					skillratio += 600 + 100 * skill_lv;
+					break;
+				case SJ_STAREMPEROR:
+					skillratio += 700 + 200 * skill_lv;
+					break;
+				case SJ_SOLARBURST:
+					skillratio += 900 + 220 * skill_lv;
+					RE_LVL_DMOD(100);
+					if (sc != NULL && sc->data[SC_LIGHTOFSUN] != NULL)
+						skillratio += skillratio * sc->data[SC_LIGHTOFSUN]->val2 / 100;
+					break;
+				case SJ_PROMINENCEKICK:
+						skillratio += 50 + 50 * skill_lv;
+					break;
+				case SJ_FALLINGSTAR_ATK:
+				case SJ_FALLINGSTAR_ATK2:
+					skillratio += 100 * skill_lv;
+					RE_LVL_DMOD(100);
+					if (sc != NULL && sc->data[SC_LIGHTOFSTAR] != NULL)
+						skillratio += skillratio * sc->data[SC_LIGHTOFSTAR]->val2 / 100;
 					break;
 				default:
 					battle->calc_skillratio_weapon_unknown(&attack_type, src, target, &skill_id, &skill_lv, &skillratio, &flag);
@@ -2933,8 +2991,13 @@ static int64 battle_calc_damage(struct block_list *src, struct block_list *bl, s
 	if( sc && sc->data[SC_INVINCIBLE] && !sc->data[SC_INVINCIBLEOFF] )
 		return 1;
 
-	if (skill_id == PA_PRESSURE)
-		return damage; //This skill bypass everything else.
+	switch(skill_id) {
+		case PA_PRESSURE:
+		case SP_SOULEXPLOSION:
+			return damage; //This skill bypass everything else.
+	}
+	if (skill_id == SJ_NOVAEXPLOSING && !(sc != NULL && (sc->data[SC_SAFETYWALL] != NULL || sc->data[SC_MILLENNIUMSHIELD] != NULL)))
+		return damage;
 
 	if( sc && sc->count )
 	{
@@ -3006,7 +3069,7 @@ static int64 battle_calc_damage(struct block_list *src, struct block_list *bl, s
 			status_change_end(bl, SC_SAFETYWALL, INVALID_TIMER);
 		}
 
-		if( ( sc->data[SC_PNEUMA] && (flag&(BF_MAGIC|BF_LONG)) == BF_LONG ) || sc->data[SC__MANHOLE] ) {
+		if ((sc->data[SC_PNEUMA] && (flag&(BF_MAGIC|BF_LONG)) == BF_LONG) || (sc->data[SC__MANHOLE] || sc->data[SC_GRAVITYCONTROL]) && skill_id != SP_SOULEXPLOSION) {
 			d->dmg_lv = ATK_BLOCK;
 			return 0;
 		}
@@ -3377,6 +3440,20 @@ static int64 battle_calc_damage(struct block_list *src, struct block_list *bl, s
 			}
 		}
 
+		if ((sce = sc->data[SC_DIMENSION1]) != NULL && damage > 0) {
+			sce->val2 -= (int)cap_value(damage, INT_MIN, INT_MAX);
+			if (sce->val2 <= 0)
+				status_change_end(bl, SC_DIMENSION1, INVALID_TIMER);
+			return 0;
+		}
+
+		if ((sce = sc->data[SC_DIMENSION2]) != NULL && damage > 0) {
+			sce->val2 -= (int)cap_value(damage, INT_MIN, INT_MAX);
+			if (sce->val2 <= 0)
+				status_change_end(bl, SC_DIMENSION2, INVALID_TIMER);
+			return 0;
+		}
+
 		if( sc->data[SC_MEIKYOUSISUI] && rnd()%100 < 40 ) // custom value
 			damage = 0;
 
@@ -3464,6 +3541,12 @@ static int64 battle_calc_damage(struct block_list *src, struct block_list *bl, s
 		if (src->type == BL_PC && damage > 0 && (sce = s_sc->data[SC_GENTLETOUCH_ENERGYGAIN]) != NULL) {
 			if (s_sd != NULL && rnd() % 100 < sce->val2)
 				pc->addspiritball(s_sd, skill->get_time(MO_CALLSPIRITS, 1), pc->getmaxspiritball(s_sd, 0));
+		}
+		if (s_sd != NULL && (sce = s_sc->data[SC_SOULREAPER]) != NULL) {
+			if (rnd() % 100 < sce->val2 && s_sd->soulball < MAX_SOUL_BALL) {
+				clif->specialeffect(src, 1208, AREA);
+				pc->addsoulball(s_sd, 5 + 3 * pc->checkskill(s_sd, SP_SOULENERGY));
+			}
 		}
 	}
 	/* no data claims these settings affect anything other than players */
@@ -4344,6 +4427,15 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 		if (status_get_mode(target) & MD_BOSS)
 			md.damage /= 10;
 		break;
+	case SJ_NOVAEXPLOSING:
+		// (Base ATK + Weapon ATK) * Ratio
+		md.damage = (sstatus->batk + sstatus->rhw.atk) * (200 + 100 * skill_lv) / 100;
+		// Additional Damage
+		md.damage += sstatus->max_hp / (6 - min(5, skill_lv)) + status_get_max_sp(src) * (2 * skill_lv);
+		break;
+	case SP_SOULEXPLOSION:
+		md.damage = tstatus->hp * (20 + 10 * skill_lv) / 100;
+		break;
 	default:
 		battle->calc_misc_attack_unknown(src, target, &skill_id, &skill_lv, &mflag, &md);
 		break;
@@ -4736,6 +4828,9 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 		case RL_H_MINE:
 			if (sd != NULL && sd->flicker) //Force RL_H_MINE deals fire damage if activated by RL_FLICKER
 				s_ele = s_ele_ = ELE_FIRE;
+			break;
+		case SJ_PROMINENCEKICK:
+			s_ele = s_ele_ = ELE_FIRE;
 			break;
 	}
 
@@ -6420,6 +6515,8 @@ static enum damage_lv battle_weapon_attack(struct block_list *src, struct block_
 			status_change_end(src, SC_CLOAKING, INVALID_TIMER);
 		else if (sc->data[SC_CLOAKINGEXCEED] && !(sc->data[SC_CLOAKINGEXCEED]->val4 & 2))
 			status_change_end(src, SC_CLOAKINGEXCEED, INVALID_TIMER);
+		else if (sc->data[SC_NEWMOON] != NULL && --(sc->data[SC_NEWMOON]->val2) <= 0)
+			status_change_end(src, SC_NEWMOON, INVALID_TIMER);
 	}
 	if( tsc && tsc->data[SC_AUTOCOUNTER] && status->check_skilluse(target, src, KN_AUTOCOUNTER, 1) ) {
 		enum unit_dir   dir = map->calc_dir(target, src->x, src->y);
@@ -6653,6 +6750,15 @@ static enum damage_lv battle_weapon_attack(struct block_list *src, struct block_
 				sd->ud.canact_tick = tick + skill->delay_fix(src, r_skill, r_lv);
 				clif->status_change(src, status->get_sc_icon(SC_POSTDELAY), status->get_sc_relevant_bl_types(SC_POSTDELAY), 1, skill->delay_fix(src, r_skill, r_lv), 0, 0, 1);
 			}
+		}
+
+		if (wd.flag&BF_WEAPON && sc != NULL && sc->data[SC_FALLINGSTAR] != NULL && rand()%100 < sc->data[SC_FALLINGSTAR]->val2) {
+			if (sd != NULL)
+				sd->auto_cast_current.type = AUTOCAST_TEMP;
+			if (status->charge(src, 0, skill->get_sp(SJ_FALLINGSTAR_ATK, sc->data[SC_FALLINGSTAR]->val1)))
+				skill->castend_nodamage_id(src, src, SJ_FALLINGSTAR_ATK, sc->data[SC_FALLINGSTAR]->val1, tick, flag);
+			if (sd != NULL)
+				sd->auto_cast_current.type = AUTOCAST_NONE;
 		}
 
 		if (wd.flag & BF_WEAPON && src != target && damage > 0) {
