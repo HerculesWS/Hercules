@@ -3413,10 +3413,9 @@ ACMD(spiritball)
  *------------------------------------------*/
  ACMD(soulball)
 {
-	int i, number;
+	int number;
 
-	if (!*message || (number = atoi(message)) < 0 || number > MAX_SOUL_BALL)
-	{
+	if (!*message || (number = atoi(message)) < 0 || number > MAX_SOUL_BALL) {
 		char msg[CHAT_SIZE_MAX];
 		safesnprintf(msg, sizeof(msg), "Usage: @soulball <number: 0-%d>", MAX_SOUL_BALL);
 		clif->message(fd, msg);
@@ -3426,7 +3425,7 @@ ACMD(spiritball)
 	if (sd->soulball > 0)
 		pc->delsoulball(sd, sd->soulball, true);
 
-	for(i = 0; i < number; i++)
+	for (int i = 0; i < number; i++)
 		pc->addsoulball(sd, MAX_SOUL_BALL);
 
 	return true;

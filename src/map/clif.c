@@ -9480,7 +9480,7 @@ static void clif_refresh(struct map_session_data *sd)
 		clif->spiritball_single(sd->fd, sd);
 	if (sd->charm_type != CHARM_TYPE_NONE && sd->charm_count > 0)
 		clif->charm_single(sd->fd, sd);
-	if (sd->soulball)
+	if (sd->soulball > 0)
 		clif->soulball(sd, &sd->bl, SELF);
 
 	if (sd->vd.cloth_color)

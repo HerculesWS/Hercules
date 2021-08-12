@@ -1044,8 +1044,8 @@ static int status_check_skilluse(struct block_list *src, struct block_list *targ
 				return 0;
 			if (tsc != NULL) {
 				if (tsc->option&hide_flag
-				&& !is_boss
-				&& ((tsd->special_state.perfect_hiding || !is_detect) || ((tsc->data[SC_CLOAKINGEXCEED] != NULL || tsc->data[SC_NEWMOON] != NULL) && is_detect))
+					&& !is_boss
+					&& (tsd->special_state.perfect_hiding || !is_detect || tsc->data[SC_CLOAKINGEXCEED] != NULL || tsc->data[SC_NEWMOON] != NULL)
 				)
 					return 0;
 				if (tsc->data[SC_CAMOUFLAGE] && !(is_boss || is_detect) && flag == 0)
@@ -3589,7 +3589,7 @@ static int status_check_visibility(struct block_list *src, struct block_list *ta
 
 		switch ( target->type ) { //Check for chase-walk/hiding/cloaking opponents.
 		case BL_PC:
-			if ((tsc->data[SC_CLOAKINGEXCEED] != NULL || tsc->data[SC_NEWMOON] != NULL) && !(st->mode&MD_BOSS))
+			if ((tsc->data[SC_CLOAKINGEXCEED] != NULL || tsc->data[SC_NEWMOON] != NULL) && !(st->mode & MD_BOSS))
 				return 0;
 			if ((tsc->option&(OPTION_HIDE | OPTION_CLOAK | OPTION_CHASEWALK)
 			  || tsc->data[SC_STEALTHFIELD] != NULL
@@ -12573,7 +12573,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 				struct block_list *caster = map->id2bl(sce->val2);
 				struct skill_unit *caster_aoe = (struct skill_unit *)map->id2bl(sce->val3);
 
-				if (caster == NULL || status_isdead(caster) || caster->m != bl->m || caster_aoe == NULL)
+				if (caster == NULL || status->isdead(caster) || caster->m != bl->m || caster_aoe == NULL)
 					break;
 
 				sc_timer_next(500 + tick, status->change_timer, bl->id, data);
@@ -12594,7 +12594,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 			if (--(sce->val4) >= 0) { // Needed to check the caster's location for the range check.
 				struct block_list *src = map->id2bl(sce->val2);
 
-				if (!src || status_isdead(src) || src->m != bl->m || !check_distance_bl(bl, src, 11))
+				if (!src || status->isdead(src) || src->m != bl->m || !check_distance_bl(bl, src, 11))
 					break;
 
 				status->heal(bl, 150 * sce->val1, 0, 2);

@@ -2992,9 +2992,9 @@ static int64 battle_calc_damage(struct block_list *src, struct block_list *bl, s
 		return 1;
 
 	switch(skill_id) {
-		case PA_PRESSURE:
-		case SP_SOULEXPLOSION:
-			return damage; //This skill bypass everything else.
+	case PA_PRESSURE:
+	case SP_SOULEXPLOSION:
+		return damage; //This skill bypass everything else.
 	}
 	if (skill_id == SJ_NOVAEXPLOSING && !(sc != NULL && (sc->data[SC_SAFETYWALL] != NULL || sc->data[SC_MILLENNIUMSHIELD] != NULL)))
 		return damage;
@@ -6762,7 +6762,7 @@ static enum damage_lv battle_weapon_attack(struct block_list *src, struct block_
 			}
 		}
 
-		if (wd.flag&BF_WEAPON && sc != NULL && sc->data[SC_FALLINGSTAR] != NULL && rand()%100 < sc->data[SC_FALLINGSTAR]->val2) {
+		if ((wd.flag & BF_WEAPON && sc != NULL && sc->data[SC_FALLINGSTAR] != NULL && rand() % 100 < sc->data[SC_FALLINGSTAR]->val2)) {
 			if (sd != NULL)
 				sd->auto_cast_current.type = AUTOCAST_TEMP;
 			if (status->charge(src, 0, skill->get_sp(SJ_FALLINGSTAR_ATK, sc->data[SC_FALLINGSTAR]->val1)))

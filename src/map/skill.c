@@ -3556,7 +3556,7 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 		case SP_SHA:
 			if (dmg.div_ < 2)
 				type = BDT_SPLASH;
-			if (!(flag&SD_ANIMATION))
+			if ((flag & SD_ANIMATION) == 0)
 				clif->skill_nodamage(dsrc, bl, skill_id, skill_lv, 1);
 			FALLTHROUGH
 		case WM_REVERBERATION_MELEE:
@@ -5734,7 +5734,7 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 					clif->status_change(src, status->get_sc_icon(SC_POSTDELAY), status->get_sc_relevant_bl_types(SC_POSTDELAY), 1, skill->delay_fix(src, spell_skill_id, spell_skill_lv), 0, 0, 0);
 
 					cooldown = pc->get_skill_cooldown(sd, spell_skill_id, spell_skill_lv);
-					if (cooldown)
+					if (cooldown != 0)
 						skill->blockpc_start(sd, spell_skill_id, cooldown);
 				}else if( sc ){ // Summon Balls
 					for(i = SC_SUMMON5; i >= SC_SUMMON1; i--){
@@ -6105,18 +6105,21 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 		case SJ_FLASHKICK:
 		{
 			struct map_session_data *tsd = BL_CAST(BL_PC, bl);
-			struct mob_data *md = BL_CAST(BL_MOB, src), *tmd = BL_CAST(BL_MOB, bl);
+			struct mob_data *md = BL_CAST(BL_MOB, src);
+			struct mob_data *tmd = BL_CAST(BL_MOB, bl);
 
 			// Only players and monsters can be tagged....I think??? [Rytech]
 			// Lets only allow players and monsters to use this skill for safety reasons.
-			if ((!tsd && !tmd) || (!sd && !md)) {
+			if ((tsd == NULL && tmd == NULL) || (sd == NULL && md == NULL)) {
 				if (sd != NULL)
 					clif->skill_fail(sd, skill_id, USESKILL_FAIL, 0, 0);
 				break;
 			}
 
 			// Check if the target is already tagged by another source.
-			if ((tsd != NULL && tsd->sc.data[SC_FLASHKICK] != NULL && tsd->sc.data[SC_FLASHKICK]->val1 != src->id) || (tmd != NULL && tmd->sc.data[SC_FLASHKICK] != NULL && tmd->sc.data[SC_FLASHKICK]->val1 != src->id) ) { // Same as the above check, but for monsters.
+			if ((tsd != NULL && tsd->sc.data[SC_FLASHKICK] != NULL && tsd->sc.data[SC_FLASHKICK]->val1 != src->id) ||
+				(tmd != NULL && tmd->sc.data[SC_FLASHKICK] != NULL && tmd->sc.data[SC_FLASHKICK]->val1 != src->id)
+			) { // Same as the above check, but for monsters.
 				// Can't tag a player that was already tagged from another source.
 				if (sd != NULL) {
 					clif->skill_fail(sd, skill_id, USESKILL_FAIL, 0, 0);
@@ -6190,15 +6193,15 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 				tsc->data[SC_SOULSHADOW] != NULL ||
 				tsc->data[SC_SOULFALCON] != NULL ||
 				tsc->data[SC_SOULFAIRY] != NULL))
-				|| tstatus->hp < 10 * tstatus->max_hp / 100
-			)) { // Requires target to have a soul link and more then 10% of MaxHP.
-				// With this skill requiring a soul link, and the target to have more then 10% if MaxHP, I wonder
-				// if the cooldown still happens after it fails. Need a confirm. [Rytech] 
+				|| tstatus->hp > (10 * tstatus->max_hp / 100)
+			)) {
+				// Requires target to have a soul link or target to have more than 10% of MaxHP.
+				// With this skill requiring a soul link or the target to have more than 10% of MaxHP
+				// I wonder, if the cooldown still happens after it fails. Need a confirm. [Rytech] 
 				if (sd != NULL)
 					clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
 				break;
 			}
-
 			skill->attack(BF_MISC, src, src, bl, skill_id, skill_lv, tick, flag);
 			break;
 		case 0:/* no skill - basic/normal attack */
@@ -6473,9 +6476,9 @@ static int skill_castend_id(int tid, int64 tick, int id, intptr_t data)
 
 		if (sd == NULL || sd->auto_cast_current.skill_id != ud->skill_id || skill->get_delay(ud->skill_id, ud->skill_lv) != 0)
 			ud->canact_tick = tick + skill->delay_fix(src, ud->skill_id, ud->skill_lv); // Tests show wings don't overwrite the delay but skill scrolls do. [Inkfish]
-		if (sd) { // Cooldown application
+		if (sd != NULL) { // Cooldown application
 			int cooldown = pc->get_skill_cooldown(sd, ud->skill_id, ud->skill_lv);
-			if (cooldown)
+			if (cooldown != 0)
 				skill->blockpc_start(sd, ud->skill_id, cooldown);
 		}
 		if( battle_config.display_status_timers && sd )
@@ -7617,9 +7620,9 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 
 		case SP_SOULUNITY:
 		{
-			int i, count = min(5 + skill_lv, MAX_UNITED_SOULS);
-
 			if (sd == NULL || sd->status.party_id == 0 || (flag & 1)) {
+				int i = 0;
+				int count = min(5 + skill_lv, MAX_UNITED_SOULS);
 				if (dstsd == NULL || sd == NULL) { // Only put player's souls in unity.
 					if (sd != NULL)
 						clif->skill_fail(sd, skill_id, USESKILL_FAIL, 0, 0);
@@ -7633,12 +7636,11 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 					return 1;
 				}
 
-				i = 0;
 				if (sd != NULL) { // Unite player's soul with caster's soul.
 					ARR_FIND(0, count, i, sd->united_soul[i] == bl->id);
 					if (i == count) {
 						ARR_FIND(0, count, i, sd->united_soul[i] == 0);
-						if(i == count) { // No more free slots? Fail the skill.
+						if (i == count) { // No more free slots? Fail the skill.
 							clif->skill_fail(sd, skill_id, USESKILL_FAIL, 0, 0);
 							map->freeblock_unlock();
 							return 1;
@@ -7650,7 +7652,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 
 				clif->skill_nodamage(src, bl, skill_id, skill_lv, sc_start4(src, bl, type, 100, skill_lv, src->id, i, 0, skill->get_time(skill_id, skill_lv)));
 			} else if (sd != NULL) {
-				party->foreachsamemap(skill->area_sub, sd, skill->get_splash(skill_id, skill_lv), src, skill_id, skill_lv, tick, flag|BCT_PARTY|1, skill->castend_nodamage_id);
+				party->foreachsamemap(skill->area_sub, sd, skill->get_splash(skill_id, skill_lv), src, skill_id, skill_lv, tick, flag | BCT_PARTY | 1, skill->castend_nodamage_id);
 			}
 		}
 			break;
@@ -7910,14 +7912,14 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 		case SJ_SUNSTANCE:
 		case SP_SOULCOLLECT:
 			if (tsce != NULL) {
-				clif->skill_nodamage(src,bl,skill_id,skill_lv,status_change_end(bl, type, INVALID_TIMER));
+				clif->skill_nodamage(src, bl, skill_id, skill_lv, status_change_end(bl, type, INVALID_TIMER));
 				map->freeblock_unlock();
 				return 0;
 			}
 			if (skill_id == SP_SOULCOLLECT) {
 				clif->skill_nodamage(src, bl, skill_id, skill_lv, sc_start2(src, bl, type, 100, skill_lv, pc->checkskill(sd, SP_SOULENERGY), max(1000, skill->get_time(skill_id, skill_lv))));
 			} else {
-				clif->skill_nodamage(src,bl,skill_id,skill_lv,sc_start(src,bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv)));
+				clif->skill_nodamage(src, bl, skill_id, skill_lv, sc_start(src, bl, type, 100, skill_lv, skill->get_time(skill_id, skill_lv)));
 			}
 			break;
 		case SL_KAITE:
@@ -7926,14 +7928,15 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 		case SL_KAUPE:
 		case SP_KAUTE:
 			if (sd != NULL) {
-				if (!dstsd || !(
-				                (sd->sc.data[SC_SOULLINK] && sd->sc.data[SC_SOULLINK]->val2 == SL_SOULLINKER)
-				             || (dstsd->job & MAPID_UPPERMASK) == MAPID_SOUL_LINKER
-				             || dstsd->status.char_id == sd->status.char_id
-				             || dstsd->status.char_id == sd->status.partner_id
-				             || dstsd->status.char_id == sd->status.child
-							 || (skill_id == SP_KAUTE && dstsd->sc.data[SC_SOULUNITY])
-				               )
+				if (!dstsd ||
+					!(
+						(sd->sc.data[SC_SOULLINK] && sd->sc.data[SC_SOULLINK]->val2 == SL_SOULLINKER)
+						|| (dstsd->job & MAPID_UPPERMASK) == MAPID_SOUL_LINKER
+						|| dstsd->status.char_id == sd->status.char_id
+						|| dstsd->status.char_id == sd->status.partner_id
+						|| dstsd->status.char_id == sd->status.child
+						|| (skill_id == SP_KAUTE && dstsd->sc.data[SC_SOULUNITY] != NULL)
+					)
 				) {
 					status->change_start(src, src, SC_STUN, 10000, skill_lv, 0, 0, 0, 500, SCFLAG_FIXEDRATE);
 					clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
@@ -9464,7 +9467,13 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 				if (tsc->data[skill->get_sc_type(skill_id)]) { // Allow refreshing an already active soul link.
 					clif->skill_nodamage(src, bl, skill_id, skill_lv, sc_start(src, bl, type, 100, skill_lv, skill->get_time(skill_id, skill_lv)));
 					break;
-				} else if (tsc->data[SC_SOULLINK] != NULL || tsc->data[SC_SOULGOLEM] != NULL || tsc->data[SC_SOULSHADOW] != NULL || tsc->data[SC_SOULFALCON] != NULL || tsc->data[SC_SOULFAIRY] != NULL) { // Soul links from Soul Linker and Soul Reaper skills don't stack.
+				} else if (
+					(tsc->data[SC_SOULLINK] != NULL ||
+					tsc->data[SC_SOULGOLEM] != NULL ||
+					tsc->data[SC_SOULSHADOW] != NULL ||
+					tsc->data[SC_SOULFALCON] != NULL ||
+					tsc->data[SC_SOULFAIRY] != NULL)
+				) { // Soul links from Soul Linker and Soul Reaper skills don't stack.
 					clif->skill_fail(sd, skill_id, USESKILL_FAIL, 0, 0);
 					break;
 				}
@@ -9473,7 +9482,13 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 			break;
 
 		case SP_SOULREVOLVE:
-			if (!(tsc != NULL && (tsc->data[SC_SOULLINK] != NULL || tsc->data[SC_SOULGOLEM] != NULL || tsc->data[SC_SOULSHADOW] != NULL || tsc->data[SC_SOULFALCON] != NULL || tsc->data[SC_SOULFAIRY] != NULL))) {
+			if (!(tsc != NULL &&
+				(tsc->data[SC_SOULLINK] != NULL ||
+				tsc->data[SC_SOULGOLEM] != NULL ||
+				tsc->data[SC_SOULSHADOW] != NULL ||
+				tsc->data[SC_SOULFALCON] != NULL ||
+				tsc->data[SC_SOULFAIRY] != NULL)
+			)) {
 				if (sd != NULL)
 					clif->skill_fail(sd, skill_id, USESKILL_FAIL, 0, 0);
 				break;
@@ -11619,16 +11634,16 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 		case SJ_DOCUMENT:
 			if (sd != NULL) {
 				switch (skill_lv) {
-					case 1:
-						pc->resetfeel(sd);
-						break;
-					case 2:
-						pc->resethate(sd);
-						break;
-					case 3:
-						pc->resetfeel(sd);
-						pc->resethate(sd);
-						break;
+				case 1:
+					pc->resetfeel(sd);
+					break;
+				case 2:
+					pc->resethate(sd);
+					break;
+				case 3:
+					pc->resetfeel(sd);
+					pc->resethate(sd);
+					break;
 				}
 			}
 			clif->skill_nodamage(src, bl, skill_id, skill_lv, 1);
@@ -11646,7 +11661,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 
 			clif->skill_nodamage(src, bl, skill_id, skill_lv, sc_start2(src, bl, type, 100, skill_lv, fall_damage, skill->get_time(skill_id, skill_lv)));
 		}
-		break;
+			break;
 		default:
 			if (skill->castend_nodamage_id_unknown(src, bl, &skill_id, &skill_lv, &tick, &flag)) {
 				map->freeblock_unlock();
@@ -11822,7 +11837,7 @@ static int skill_castend_pos(int tid, int64 tick, int id, intptr_t data)
 			ud->canact_tick = tick + skill->delay_fix(src, ud->skill_id, ud->skill_lv);
 		if (sd != NULL) { //Cooldown application
 			int cooldown = pc->get_skill_cooldown(sd, ud->skill_id, ud->skill_lv);
-			if (cooldown)
+			if (cooldown != 0)
 				skill->blockpc_start(sd, ud->skill_id, cooldown);
 		}
 		if( battle_config.display_status_timers && sd )
@@ -13797,7 +13812,7 @@ static int skill_unit_onplace(struct skill_unit *src, struct block_list *bl, int
 			break;
 
 		case UNT_BOOKOFCREATINGSTAR:
-			if (!sce)
+			if (sce == NULL)
 				sc_start4(ss, bl, type, 100, sg->skill_lv, ss->id, src->bl.id, 0, sg->limit);
 			break;
 
@@ -15253,7 +15268,6 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 		// GMs don't override the AUTOCAST_ITEM check, otherwise they can use items without them being consumed!
 		sd->state.arrow_atk = skill->get_ammotype(skill_id)?1:0; //Need to do arrow state check.
 		sd->spiritball_old = sd->spiritball; //Need to do Spiritball check.
-		sd->soulball_old = sd->soulball; //Need to do Soulball check.
 		return 1;
 	}
 
@@ -16449,7 +16463,6 @@ static int skill_check_condition_castend(struct map_session_data *sd, uint16 ski
 		// GMs don't override the AUTOCAST_ITEM check, otherwise they can use items without them being consumed!
 		sd->state.arrow_atk = skill->get_ammotype(skill_id)?1:0; //Need to do arrow state check.
 		sd->spiritball_old = sd->spiritball; //Need to do Spiritball check.
-		sd->soulball_old = sd->soulball; //Need to do Soulball check.
 		return 1;
 	}
 

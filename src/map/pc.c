@@ -317,46 +317,43 @@ static int pc_delspiritball_sub(struct map_session_data *sd)
 }
 
 /**
- * Adds a soulball to player
- * @param sd: Player data
- * @param max: Max amount of soulballs
+ * @brief Adds a soulball to player
+ * @param sd Player data
+ * @param max Maximum amount of soulballs
+ * @return (void)
  */
-int pc_addsoulball(struct map_session_data *sd, int max)
+static void pc_addsoulball(struct map_session_data *sd, int max)
 {
-	nullpo_ret(sd);
+	nullpo_retv(sd);
 
-	struct status_change *sc = status->get_sc(&sd->bl);
+	const struct status_change *sc = status->get_sc(&sd->bl);
 
 	if (sc == NULL || sc->data[SC_SOULENERGY] == NULL) {
 		sc_start(&sd->bl, &sd->bl, SC_SOULENERGY, 100, 0, skill->get_time2(SP_SOULCOLLECT, 1));
 		sd->soulball = 0;
 	}
 
-	max = min(max, MAX_SOUL_BALL);
-	sd->soulball = cap_value(sd->soulball, 0, MAX_SOUL_BALL);
+	if (max > MAX_SOUL_BALL)
+		max = MAX_SOUL_BALL;
 
-	if (sd->soulball && sd->soulball >= max)
-		sd->soulball--;
-
-	sd->soulball++;
+	sd->soulball = cap_value(sd->soulball + 1, 0, max);
 	sc_start(&sd->bl, &sd->bl, SC_SOULENERGY, 100, sd->soulball, skill->get_time2(SP_SOULCOLLECT, 1));
 	clif->soulball(sd, NULL, AREA);
-
-	return 0;
 }
 
 /**
- * Removes number of soulball from player
- * @param sd: Player data
- * @param count: Amount to remove
- * @param type: true = doesn't give client effect
+ * @brief Removes number of soulball from player
+ * @param sd Player data
+ * @param count Amount to remove
+ * @param type true means doesn't give client effect
+ * @return (void)
  */
-int pc_delsoulball(struct map_session_data *sd, int count, bool type)
+static void pc_delsoulball(struct map_session_data *sd, int count, bool type)
 {
-	nullpo_ret(sd);
+	nullpo_retv(sd);
 
 	if (count <= 0)
-		return 0;
+		return;
 
 	struct status_change *sc = status->get_sc(&sd->bl);
 
@@ -370,10 +367,8 @@ int pc_delsoulball(struct map_session_data *sd, int count, bool type)
 			sc->data[SC_SOULENERGY]->val1 = sd->soulball;
 	}
 
-	if (!type)
+	if (type == 0)
 		clif->soulball(sd, NULL, AREA);
-
-	return 0;
 }
 
 static int pc_check_banding(struct block_list *bl, va_list ap)
@@ -6375,15 +6370,18 @@ static int pc_checkequip(struct map_session_data *sd, int pos)
  * @return player skill cooldown
  */
 int pc_get_skill_cooldown(struct map_session_data *sd, uint16 skill_id, uint16 skill_lv)
-{		
-	if (skill_id == SJ_NOVAEXPLOSING) {
-		struct status_change* sc = status->get_sc(&sd->bl);
+{
+	nullpo_ret(sd);
+	Assert_ret(skill_id > 0 && skill_lv > 0);
 
+	if (skill_id == SJ_NOVAEXPLOSING) {
+		const struct status_change *sc = status->get_sc(&sd->bl);
 		if (sc != NULL && sc->data[SC_DIMENSION] != NULL)
 			return 0;
 	}
 
-	int i, cooldown = skill->get_cooldown(skill_id, skill_lv);
+	int i;
+	int cooldown = skill->get_cooldown(skill_id, skill_lv);
 
 	ARR_FIND(0, ARRAYLENGTH(sd->skillcooldown), i, sd->skillcooldown[i].id == skill_id);
 
@@ -8231,7 +8229,7 @@ static int pc_dead(struct map_session_data *sd, struct block_list *src)
 		pc->delspiritball(sd, sd->spiritball, 0);
 
 	if (sd->soulball != 0)
-		pc->delsoulball(sd, sd->soulball, 0);
+		pc->delsoulball(sd, sd->soulball, false);
 
 	if (sd->charm_type != CHARM_TYPE_NONE && sd->charm_count > 0)
 		pc->del_charm(sd, sd->charm_count, sd->charm_type);
