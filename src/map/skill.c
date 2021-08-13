@@ -21100,6 +21100,9 @@ static void skill_validate_id(struct config_setting_t *conf, struct s_skill_db *
 	else if (*skill->get_name(id) != '\0')
 		ShowError("%s: Duplicate skill ID %d in entry %d in %s! Skipping skill...\n",
 			  __func__, id, conf_index, conf->file);
+	else if (id >= MAX_SKILL_ID)
+		ShowError("%s: Invalid skill ID %d specified in entry %d in %s! Skill id must be smaller than MAX_SKILL_ID (%d). Skipping skill...\n",
+			  __func__, id, conf_index, conf->file, MAX_SKILL_ID);
 	else
 		sk->nameid = id;
 }
