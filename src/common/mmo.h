@@ -248,7 +248,7 @@
 #define MAX_SKILL_DB 1355 ///< Maximum number of skills in the skill DB (compacted array size)
 #endif
 #ifndef MAX_SKILL_ID
-#define MAX_SKILL_ID 10016   // [Ind/Hercules] max used skill ID
+#define MAX_SKILL_ID 10020   // [Ind/Hercules] max used skill ID
 #endif
 #ifndef MAX_SKILL_TREE
 // Update this max as necessary. 86 is the value needed for Expanded Super Novice.
