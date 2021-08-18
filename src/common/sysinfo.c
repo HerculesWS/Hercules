@@ -1082,6 +1082,9 @@ static uint32 sysinfo_fflags(void)
 #ifdef ENABLE_CASHSHOP_PREVIEW_PATCH
 		| 1
 #endif  // ENABLE_CASHSHOP_PREVIEW_PATCH
+#ifdef ENABLE_OLD_CASHSHOP_PREVIEW_PATCH
+		| 2
+#endif  // ENABLE_OLD_CASHSHOP_PREVIEW_PATCH
 	;
 	return flags;
 }
