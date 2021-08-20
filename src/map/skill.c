@@ -9545,7 +9545,12 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 		case LG_EARTHDRIVE:
 			{
 				int splash;
+#if PACKETVER >= 20180207 /// unconfirmed
+				if (skill_id == RK_IGNITIONBREAK)
+					clif->skill_nodamage(src, bl, skill_id, skill_lv, 1);
+#else
 				clif->skill_damage(src,bl,tick, status_get_amotion(src), 0, -30000, 1, skill_id, skill_lv, BDT_SKILL);
+#endif
 				splash = skill->get_splash(skill_id,skill_lv);
 				if( skill_id == LG_EARTHDRIVE ) {
 					int dummy = 1;
