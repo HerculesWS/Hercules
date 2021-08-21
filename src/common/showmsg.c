@@ -223,7 +223,7 @@ static int VFPRINTF(HANDLE handle, const char *fmt, va_list argptr)
 			p=q+1; //and start searching again
 		} else {
 			// from here, we will skip the '\033['
-			// we break at the first unprocessible position
+			// we break at the first unprocessable position
 			// assuming regular text is starting there
 			uint8 numbers[16], numpoint=0;
 			CONSOLE_SCREEN_BUFFER_INFO info;
@@ -516,7 +516,7 @@ static int VFPRINTF(FILE *file, const char *fmt, va_list argptr)
 			p=q+1; //and start searching again
 		} else {
 			// from here, we will skip the '\033['
-			// we break at the first unprocessible position
+			// we break at the first unprocessable position
 			// assuming regular text is starting there
 
 			// skip escape and bracket

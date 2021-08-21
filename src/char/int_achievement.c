@@ -95,7 +95,7 @@ static int inter_achievement_tosql(int char_id, struct char_achievements *cp, co
 	if (rows) {
 		ShowInfo("achievements saved for char %d (total: %d, saved: %d)\n", char_id, VECTOR_LENGTH(*p), rows);
 
-		/* Sync with inter-db acheivements. */
+		/* Sync with inter-db achievements. */
 		VECTOR_CLEAR(*cp);
 		VECTOR_ENSURE(*cp, VECTOR_LENGTH(*p), 1);
 		VECTOR_PUSHARRAY(*cp, VECTOR_DATA(*p), VECTOR_LENGTH(*p));

@@ -3664,7 +3664,7 @@ static bool script_is_permanent_variable(const char *name)
 		return false;
 
 	if (ISALNUM(name[0]) != 0)
-		return true; // Permanent characater variable.
+		return true; // Permanent character variable.
 
 	if (name[0] == '#')
 		return true; // Permanent (global) account variable.

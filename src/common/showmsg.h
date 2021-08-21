@@ -84,7 +84,7 @@ struct config_setting_t;
 #define CL_MAGENTA CL_BT_MAGENTA
 #define CL_CYAN    CL_BT_CYAN
 
-#define CL_SPACE   "           "   // space aquivalent of the print messages
+#define CL_SPACE   "           "   // space equivalent of the print messages
 
 enum msg_type {
 	MSG_NONE,

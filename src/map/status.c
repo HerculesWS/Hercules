@@ -7690,7 +7690,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			case SC_M_LIFEPOTION:
 			case SC_G_LIFEPOTION:
 				if (val1 == 0) return 0;
-				// val1 = heal percent/amout
+				// val1 = heal percent/amount
 				// val2 = seconds between heals
 				// val4 = total of heals
 				if (val2 < 1) val2 = 1;

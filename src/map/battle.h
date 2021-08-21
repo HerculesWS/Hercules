@@ -631,7 +631,7 @@ struct Battle_Config {
 	int merc_natural_heal_cap;
 };
 
-/* criteria for battle_config.idletime_critera */
+/* criteria for battle_config.idletime_criteria */
 enum e_battle_config_idletime {
 	BCIDLE_WALK          = 0x001,
 	BCIDLE_USESKILLTOID  = 0x002,
