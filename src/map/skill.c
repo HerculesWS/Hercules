@@ -2325,7 +2325,7 @@ static int skill_additional_effect(struct block_list *src, struct block_list *bl
 					if (!tsc->data[i])
 						continue;
 					if (SC_COMMON_MAX < i) {
-						if (status->get_sc_type(i) & SC_NO_DISPELL)
+						if (status->get_sc_type(i) & SC_BB_NO_RESET)
 							continue;
 					}
 					switch (i) {

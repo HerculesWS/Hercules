@@ -13572,6 +13572,7 @@ static bool status_read_scdb_libconfig_sub_flag(struct config_setting_t *it, int
 			{ "NoMadoReset", SC_MADO_NO_RESET },
 			{ "NoAllReset", SC_NO_CLEAR },
 			{ "NoBoss", SC_NO_BOSS },
+			{ "NoBBReset", SC_BB_NO_RESET },
 		};
 
 		ARR_FIND(0, ARRAYLENGTH(flags), j, strcmpi(flag, flags[j].name) == 0);
@@ -13586,7 +13587,7 @@ static bool status_read_scdb_libconfig_sub_flag(struct config_setting_t *it, int
 			}
 		} else {
 			if (!status->read_scdb_libconfig_sub_flag_additional(it, type, source))
-				ShowWarning("status_read_scdb_libconfig_sub_flag: invalid flag (%s) for status effect (%d).", flag, type);
+				ShowWarning("status_read_scdb_libconfig_sub_flag: invalid flag (%s) for status effect (%d).\n", flag, type);
 		}
 	}
 	return true;
