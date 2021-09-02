@@ -22,6 +22,28 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
+## [v2021.09.01] `September 01 2021`
+
+### Added
+
+- Added a sanity check of skill IDs against `MAX_SKILL_ID` when loading the skill database. (part of #3033)
+- Added Rebellion skills, items and SCs to the Pre-Renewal database. (#3031)
+- Added the `NoBBReset` flag for SC types that shouldn't be reset by the Rebellion skill Banishing Buster. (#3032)
+
+### Changed
+
+- Increased `MAX_SKILL_ID` to 10020 to fit all the currently existing skills. (#3033)
+- Updated the list of job IDs displayed by `@jobchange`. (#3029)
+
+### Fixed
+
+- Fixed the mob groups reading the rate from the wrong object, resulting in the fallback value `MOBID_PORING` being returned in many cases. (#3037, issue #3036)
+- Fixed typos in various documentation comments. (#3035)
+- Fixed the Extreme Vacuum skill causing a permanent `SC_VACUUM_EXTREME` status when it hits several targets at the same time. (#3025, related to #2995)
+- Fixed the damage of piercing critical attacks with Thanatos Card in Renewal. (#3023, issue #3022)
+- Fixed the Ignition Break animation in recent (2018 and newer) clients. (#3034, issue #2511)
+- Fixed the Blast Mine, Claymore Trap and Land Mine damage to ignore card damage reductions. (#3024, formerly #1149)
+
 ## [v2021.08.04] `August 04 2021`
 
 ### Added
@@ -46,8 +68,6 @@ If you are reading this in a text editor, simply ignore this section
 - Fixed a crash when a bl is deleted twice. `map->freeblock()` will now detect it and prevent the double deletion. (#3021)
 - Fixed a damage overflow in `GN_CART_TORNADO` when a character's base strength is very high. The base str value is now capped to 130 for the skill formula's purposes. (#2927, issue #659)
 - Fixed the behavior of `SC_POWER_OF_GAIA` to increase the maximum HP in percentage rather than by a fixed amount. (#2918)
-
-### Deprecated
 
 ### Removed
 
@@ -1979,6 +1999,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2021.09.01]: https://github.com/HerculesWS/Hercules/compare/v2021.08.04...v2021.09.01
 [v2021.08.04]: https://github.com/HerculesWS/Hercules/compare/v2021.07.07...v2021.08.04
 [v2021.07.07]: https://github.com/HerculesWS/Hercules/compare/v2021.06.02...v2021.07.07
 [v2021.06.02]: https://github.com/HerculesWS/Hercules/compare/v2021.05.05...v2021.06.02
