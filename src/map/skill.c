@@ -14231,6 +14231,8 @@ static int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *b
 				if (basestr > 130)
 					basestr = 130;
 				sg->limit -= 1000 * basestr / 20;
+				if (sg->limit < 0)
+					sg->limit = 0;
 				sc_start(ss, bl, SC_VACUUM_EXTREME, 100, sg->skill_lv, sg->limit);
 
 				if ( !map_flag_gvg(bl->m) && !map->list[bl->m].flag.battleground && !is_boss(bl) ) {
