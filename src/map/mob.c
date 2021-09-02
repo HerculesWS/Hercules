@@ -5497,7 +5497,7 @@ static bool mob_read_group_db_libconfig_sub_group(struct config_setting_t *it, e
 
 		int rate = 0;
 		if (config_setting_is_list(entry))
-			rate = libconfig->setting_get_int_elem(it, 1);
+			rate = libconfig->setting_get_int_elem(entry, 1);
 		else
 			rate = 1;
 
