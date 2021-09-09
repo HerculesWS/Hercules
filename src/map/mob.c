@@ -2723,60 +2723,63 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 			if ( !(it = itemdb->exists(md->db->dropitem[i].nameid)) )
 				continue;
 			drop_rate = md->db->dropitem[i].p;
-			if (drop_rate <= 0) {
-				if (battle_config.drop_rate0item)
-					continue;
-				drop_rate = 1;
-			}
 
 			// change drops depending on monsters size [Valaris]
-			if (battle_config.mob_size_influence)
-			{
+			if (battle_config.mob_size_influence) {
 				if (md->special_state.size == SZ_MEDIUM && drop_rate >= 2)
 					drop_rate /= 2;
 				else if( md->special_state.size == SZ_BIG)
 					drop_rate *= 2;
 			}
 
-			if (src) {
+			if (src != NULL) {
 				//Drops affected by luk as a fixed increase [Valaris]
 				if (battle_config.drops_by_luk)
-					drop_rate += status_get_luk(src)*battle_config.drops_by_luk/100;
+					drop_rate += status_get_luk(src) * battle_config.drops_by_luk / 100;
+
 				//Drops affected by luk as a % increase [Skotlex]
 				if (battle_config.drops_by_luk2)
-					drop_rate += (int)(0.5+drop_rate*status_get_luk(src)*battle_config.drops_by_luk2/10000.);
+					drop_rate += (int)(0.5 + drop_rate * status_get_luk(src) * battle_config.drops_by_luk2 / 10000.);
+
+				if (sd != NULL) {
+					int drop_rate_bonus = 100;
+
+					// When PK Mode is enabled, increase item drop rate bonus of each items by 25% when there is a 20 level difference between the player and the monster.[KeiKun]
+					if (battle_config.pk_mode && (md->level - sd->status.base_level >= 20))
+						drop_rate_bonus += 25; // flat 25% bonus 
+
+					drop_rate_bonus += sd->dropaddrace[md->status.race] + (is_boss(src) ? sd->dropaddrace[RC_BOSS] : sd->dropaddrace[RC_NONBOSS]); // bonus2 bDropAddRace[KeiKun] 
+
+					if (sd->sc.data[SC_CASH_RECEIVEITEM] != NULL) // Increase drop rate if user has SC_CASH_RECEIVEITEM
+						drop_rate_bonus += sd->sc.data[SC_CASH_RECEIVEITEM]->val1;
+
+					if (sd->sc.data[SC_OVERLAPEXPUP] != NULL)
+						drop_rate_bonus += sd->sc.data[SC_OVERLAPEXPUP]->val2;
+
+					drop_rate = (int)(0.5 + drop_rate * drop_rate_bonus / 100.);
+
+					// Limit drop rate, default: 90%
+					drop_rate = max(drop_rate, 90000);
+				}
 			}
-			if (sd && battle_config.pk_mode &&
-				md->level - sd->status.base_level >= 20)
-				drop_rate = (int)(drop_rate*1.25); // pk_mode increase drops if 20 level difference [Valaris]
-
-			// Increase drop rate if user has SC_CASH_RECEIVEITEM
-			if (sd) {
-				temp = 0;
-
-				if (src)
-					temp += sd->dropaddrace[md->status.race] + (is_boss(src) ? sd->dropaddrace[RC_BOSS] : sd->dropaddrace[RC_NONBOSS]);
-
-				if (sd->sc.data[SC_CASH_RECEIVEITEM]) // now rig the drop rate to never be over 90% unless it is originally >90%.
-					temp += sd->sc.data[SC_CASH_RECEIVEITEM]->val1;
-
-				if (sd->sc.data[SC_OVERLAPEXPUP])
-					temp += sd->sc.data[SC_OVERLAPEXPUP]->val2;
-
-				drop_rate = max(drop_rate, cap_value((int)(0.5 + drop_rate * temp / 100.), 0, 9000));
-			}
+			
 #ifdef RENEWAL_DROP
-			if( drop_modifier != 100 ) {
+			if (drop_modifier != 100) {
 				drop_rate = drop_rate * drop_modifier / 100;
-				if( drop_rate < 1 )
+				if (drop_rate < 1)
 					drop_rate = 1;
 			}
 #endif
-			if( sd && sd->status.mod_drop != 100 ) {
+			if (sd != NULL && sd->status.mod_drop != 100) {
 				drop_rate = drop_rate * sd->status.mod_drop / 100;
-				if( drop_rate < 1 )
+				if (drop_rate < 1)
 					drop_rate = 1;
 			}
+
+			if (battle_config.drop_rate0item)
+				drop_rate = max(drop_rate, 0);
+			else
+				drop_rate = max(drop_rate, 1);
 
 			// attempt to drop the item
 			if (rnd() % 10000 >= drop_rate)
