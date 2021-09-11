@@ -797,7 +797,7 @@ END_ZEROED_BLOCK;
 	)
 	#define pc_rightside_atk(sd) ((sd)->battle_status.rhw.atk2 + (sd)->battle_status.lhw.atk2)
 	#define pc_leftside_def(sd) ((sd)->battle_status.def)
-	#define pc_rightside_def(sd) ((sd)->battle_status.def2)
+	#define pc_rightside_def(sd) (((sd)->battle_status.def2 * (sd)->battle_status.def_percent) / 100)
 	#define pc_leftside_mdef(sd) ((sd)->battle_status.mdef)
 	#define pc_rightside_mdef(sd) ( (sd)->battle_status.mdef2 - ((sd)->battle_status.vit>>1) )
 #define pc_leftside_matk(sd) (\
