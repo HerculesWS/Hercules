@@ -26,6 +26,7 @@
 #include "map/buyingstore.h"  // struct s_buyingstore
 #include "map/itemdb.h" // MAX_ITEMDELAYS
 #include "map/log.h" // struct e_log_pick_type
+#include "map/macro.h" // struct macro_detect
 #include "map/map.h" // RC_MAX, ELE_MAX
 #include "map/pc_groups.h" // GroupSettings
 #include "map/rodex.h"
@@ -190,7 +191,6 @@ struct autocast_data {
 	bool itemskill_instant_cast; // Used by itemskill() script command, to cast skill instantaneously.
 	bool itemskill_cast_on_self; // Used by itemskill() script command, to forcefully cast skill on invoking character.
 };
-
 struct map_session_data {
 	struct block_list bl;
 	struct unit_data ud;
@@ -666,6 +666,8 @@ END_ZEROED_BLOCK;
 
 	int c_marker[MAX_SKILL_CRIMSON_MARKER]; /// Store target that marked by Crimson Marker [Cydh]
 	bool flicker; /// Check RL_FLICKER usage status [Cydh]
+
+	struct macro_detect macro_detect;
 };
 
 #define EQP_WEAPON EQP_HAND_R

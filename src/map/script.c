@@ -861,7 +861,7 @@ static const char *parse_callfunc(const char *p, int require_paren, int is_custo
 	char *arg = NULL;
 	char null_arg = '\0';
 	int func;
-	bool macro = false;
+	bool lang_macro = false;
 
 	nullpo_retr(NULL, p);
 	// is need add check for arg null pointer below?
@@ -910,14 +910,14 @@ static const char *parse_callfunc(const char *p, int require_paren, int is_custo
 			if (script->syntax.last_func != -1) {
 				if (script->str_data[func].val == script->buildin_lang_macro_offset) {
 					script->syntax.lang_macro_active = true;
-					macro = true;
+					lang_macro = true;
 				} else if (script->str_data[func].val == script->buildin_lang_macro_fmtstring_offset) {
 					script->syntax.lang_macro_fmtstring_active = true;
-					macro = true;
+					lang_macro = true;
 				}
 			}
 
-			if (!macro) {
+			if (!lang_macro) {
 				// buildin function
 				script->syntax.last_func = script->str_data[func].val;
 				script->addl(func);
@@ -1051,7 +1051,7 @@ static const char *parse_callfunc(const char *p, int require_paren, int is_custo
 		}
 	}
 
-	if (!macro) {
+	if (!lang_macro) {
 		if (0 == --script->syntax.nested_call) {
 			script->syntax.last_func = -1;
 		}

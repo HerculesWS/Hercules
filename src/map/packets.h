@@ -1997,4 +1997,18 @@ packet(0x96e,clif->ackmergeitems);
 	packet(0x0b6d,clif->pCashShopOpen2);
 #endif
 
+#if PACKETVER >= 20160316
+	packet(0x0a52,clif->pCaptchaRegister);
+	packet(0x0a54,clif->pCaptchaUpload);
+	packet(0x0a5a,clif->pMacroDetectorDownloadAck);
+	packet(0x0a5c,clif->pMacroDetectorAnswer);
+	packet(0x0a56,clif->pMacroReporterAck);
+#endif
+#if PACKETVER >= 20160323
+	packet(0x0a69,clif->pCaptchaPreviewRequest);
+#endif
+#if PACKETVER >= 20160330
+	packet(0x0a6c,clif->pMacroReporterSelect);
+#endif
+
 #endif /* MAP_PACKETS_H */

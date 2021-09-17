@@ -450,6 +450,7 @@ static void do_init_pc_groups(void)
 		{ "disable_exp", PC_PERM_DISABLE_EXP },
 		{ "disable_skill_usage", PC_PERM_DISABLE_SKILL_USAGE },
 		{ "bypass_nostorage", PC_PERM_BYPASS_NOSTORAGE },
+		{ "use_macro_interface", PC_PERM_USE_MACRO_INTERFACE },
 	};
 	unsigned char i, len = ARRAYLENGTH(pc_g_defaults);
 
