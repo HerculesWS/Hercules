@@ -1072,7 +1072,6 @@ static int skill_get_casttype2(int index)
 static int skill_get_range2(struct block_list *bl, int skill_id, int skill_lv)
 {
 	int range;
-	int inf = 0;
 	struct map_session_data *sd = BL_CAST(BL_PC, bl);
 	if( bl->type == BL_MOB && battle_config.mob_ai&0x400 )
 		return 9; //Mobs have a range of 9 regardless of skill used.
@@ -1085,35 +1084,29 @@ static int skill_get_range2(struct block_list *bl, int skill_id, int skill_lv)
 		range *=-1;
 	}
 
-	inf = skill->get_inf2(skill_id);
+	int inf = skill->get_inf2(skill_id);
 
-	if (inf & INF2_RANGE_VULTURE) {
-		if (sd != NULL)
+	if (sd != NULL) {
+		if (inf & INF2_RANGE_VULTURE)
 			range += pc->checkskill(sd, AC_VULTURE);
-		else
-			range += battle->bc->mob_eye_range_bonus;
-	}
 
-	if (inf & INF2_RANGE_SNAKEEYE) {
-		if (sd != NULL)
+		if (inf & INF2_RANGE_SNAKEEYE)
 			range += pc->checkskill(sd, GS_SNAKEEYE);
-		else
-			range += battle->bc->mob_eye_range_bonus;
-	}
 
-	if (inf & INF2_RANGE_SHADOWJUMP) {
-		if (sd != NULL)
+		if (inf & INF2_RANGE_SHADOWJUMP)
 			range = skill->get_range(NJ_SHADOWJUMP, pc->checkskill(sd, NJ_SHADOWJUMP));
-	}
 
-	if (inf & INF2_RANGE_RADIUS) {
-		if (sd != NULL)
+		if (inf & INF2_RANGE_RADIUS)
 			range += pc->checkskill(sd, WL_RADIUS);
-	}
 
-	if (inf & INF2_RANGE_RESEARCHTRAP) {
-		if (sd != NULL)
+		if (inf & INF2_RANGE_RESEARCHTRAP)
 			range += (1 + pc->checkskill(sd, RA_RESEARCHTRAP)) / 2;
+	} else {
+		if (inf & INF2_RANGE_VULTURE)
+			range += battle->bc->mob_eye_range_bonus;
+
+		if (inf & INF2_RANGE_SNAKEEYE)
+			range += battle->bc->mob_eye_range_bonus;
 	}
 
 	if( !range && bl->type != BL_PC )
