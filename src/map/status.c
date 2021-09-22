@@ -11158,7 +11158,7 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 				struct map_session_data *caster = NULL;
 				struct skill_condition req;
 
-				if (sce->val3 || status_isdead(bl) || !(caster = map->id2sd(sce->val2)))
+				if (sce->val3 || status->isdead(bl) || !(caster = map->id2sd(sce->val2)))
 					break;
 
 				req = skill->get_requirement(sd, RL_H_MINE, 1);
