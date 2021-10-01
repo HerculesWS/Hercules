@@ -398,6 +398,8 @@ static int64 battle_attr_fix(struct block_list *src, struct block_list *target, 
 			ratio += skill->enchant_eff[sc->data[SC_DELUGE]->val1-1];
 		if(sc->data[SC_FIRE_CLOAK_OPTION] && atk_elem == ELE_FIRE)
 			damage += damage * sc->data[SC_FIRE_CLOAK_OPTION]->val2 / 100;
+		if (sc->data[SC_TELEKINESIS_INTENSE] != NULL && atk_elem == ELE_GHOST)
+			damage += damage * sc->data[SC_TELEKINESIS_INTENSE]->val3 / 100;
 	}
 	if( target && target->type == BL_SKILL ) {
 		if( atk_elem == ELE_FIRE && battle->get_current_skill(target) == GN_WALLOFTHORN ) {
@@ -3900,10 +3902,6 @@ static struct Damage battle_calc_magic_attack(struct block_list *src, struct blo
 						ShowError("0 enemies targeted by %d:%s, divide per 0 avoided!\n", skill_id, skill->get_name(skill_id));
 				}
 
-				if (sc){
-					if( sc->data[SC_TELEKINESIS_INTENSE] && s_ele == ELE_GHOST )
-						ad.damage += ad.damage * sc->data[SC_TELEKINESIS_INTENSE]->val3 / 100;
-				}
 				switch(skill_id){
 					case MG_FIREBOLT:
 					case MG_COLDBOLT:
