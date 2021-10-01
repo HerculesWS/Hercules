@@ -23804,7 +23804,7 @@ static void clif_item_preview(struct map_session_data *sd, int n)
 }
 
 // insert cardId into equipped item in pos equipment slot into slot cardSlot.
-static bool clif_enchant_equipment(struct map_session_data *sd, enum equip_pos pos, int cardSlot, int cardId)
+static bool clif_enchant_equipment(struct map_session_data *sd, enum equip_pos pos, int cardSlot, int cardId, int8 equipFlag)
 {
 #if PACKETVER_MAIN_NUM >= 20160831 || PACKETVER_RE_NUM >= 20151118 || defined(PACKETVER_ZERO)
 	nullpo_ret(sd);
@@ -23814,6 +23814,7 @@ static bool clif_enchant_equipment(struct map_session_data *sd, enum equip_pos p
 	p.wearState = pos;
 	p.cardSlot = cardSlot;
 	p.itemId = cardId;
+	p.equipFlag = equipFlag;
 	clif->send(&p, sizeof(p), &sd->bl, SELF);
 	return true;
 #else

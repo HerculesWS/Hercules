@@ -1711,7 +1711,7 @@ struct clif_interface {
 	void (*camera_change) (struct map_session_data *sd, float range, float rotation, float latitude, enum send_target target);
 	void (*pCameraInfo) (int fd, struct map_session_data *sd);
 	void (*item_preview) (struct map_session_data *sd, int n);
-	bool (*enchant_equipment) (struct map_session_data *sd, enum equip_pos pos, int cardSlot, int cardId);
+	bool (*enchant_equipment) (struct map_session_data *sd, enum equip_pos pos, int cardSlot, int cardId, int8 equipFlag);
 	void (*pReqRemainTime) (int fd, struct map_session_data *sd);
 	void (*npc_barter_open) (struct map_session_data *sd, struct npc_data *nd);
 	void (*pNPCBarterClosed) (int fd, struct map_session_data *sd);

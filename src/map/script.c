@@ -27201,7 +27201,7 @@ static BUILDIN(enchantitem)
 		script_pushint(st, false);
 		return true;
 	}
-	const bool res = clif->enchant_equipment(sd, pc->equip_pos[pos], cardSlot, cardId);
+	const bool res = clif->enchant_equipment(sd, pc->equip_pos[pos], cardSlot, cardId, 1);
 	if (res) {
 		logs->pick_pc(sd, LOG_TYPE_CARD, -1, &sd->status.inventory[n],sd->inventory_data[n]);
 		sd->status.inventory[n].card[cardSlot] = cardId;
