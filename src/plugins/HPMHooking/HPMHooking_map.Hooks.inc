@@ -30029,15 +30029,15 @@ void HP_clif_item_preview(struct map_session_data *sd, int n) {
 	}
 	return;
 }
-bool HP_clif_enchant_equipment(struct map_session_data *sd, enum equip_pos pos, int cardSlot, int cardId) {
+bool HP_clif_enchant_equipment(struct map_session_data *sd, enum equip_pos pos, int cardSlot, int cardId, int8 equipFlag) {
 	int hIndex = 0;
 	bool retVal___ = false;
 	if (HPMHooks.count.HP_clif_enchant_equipment_pre > 0) {
-		bool (*preHookFunc) (struct map_session_data **sd, enum equip_pos *pos, int *cardSlot, int *cardId);
+		bool (*preHookFunc) (struct map_session_data **sd, enum equip_pos *pos, int *cardSlot, int *cardId, int8 *equipFlag);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_enchant_equipment_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_clif_enchant_equipment_pre[hIndex].func;
-			retVal___ = preHookFunc(&sd, &pos, &cardSlot, &cardId);
+			retVal___ = preHookFunc(&sd, &pos, &cardSlot, &cardId, &equipFlag);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -30045,13 +30045,13 @@ bool HP_clif_enchant_equipment(struct map_session_data *sd, enum equip_pos pos, 
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.clif.enchant_equipment(sd, pos, cardSlot, cardId);
+		retVal___ = HPMHooks.source.clif.enchant_equipment(sd, pos, cardSlot, cardId, equipFlag);
 	}
 	if (HPMHooks.count.HP_clif_enchant_equipment_post > 0) {
-		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, enum equip_pos pos, int cardSlot, int cardId);
+		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, enum equip_pos pos, int cardSlot, int cardId, int8 equipFlag);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_enchant_equipment_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_enchant_equipment_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, sd, pos, cardSlot, cardId);
+			retVal___ = postHookFunc(retVal___, sd, pos, cardSlot, cardId, equipFlag);
 		}
 	}
 	return retVal___;
