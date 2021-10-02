@@ -5136,7 +5136,12 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 			case RK_DRAGONBREATH_WATER:
 				wd.damage = ((status_get_hp(src) / 50) + (status_get_max_sp(src) / 4)) * skill_lv;
 				wd.damage = wd.damage * status->get_lv(src) / 150;
-				if (sd) wd.damage = wd.damage * (95 + 5 * pc->checkskill(sd, RK_DRAGONTRAINING)) / 100;
+				if (sd != NULL)
+					wd.damage = wd.damage * (95 + 5 * pc->checkskill(sd, RK_DRAGONTRAINING)) / 100;
+#ifdef RENEWAL
+				wd.damage = battle->attr_fix(src, target, battle->calc_cardfix2(src, target, wd.damage, s_ele, nk, wd.flag), s_ele, tstatus->def_ele, tstatus->ele_lv);
+#endif
+				wd.flag |= BF_LONG;
 				break;
 			default:
 			{
