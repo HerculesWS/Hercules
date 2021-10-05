@@ -9135,13 +9135,12 @@ static int pc_jobchange(struct map_session_data *sd, int class, int upper)
 	} else if (sd->status.fame > 0) {
 		//It may be that now they are famous?
 		switch (sd->job & MAPID_UPPERMASK) {
-			case MAPID_BLACKSMITH:
-			case MAPID_ALCHEMIST:
-			case MAPID_TAEKWON:
-			case MAPID_BABY_TAEKWON:
-				chrif->save(sd,0);
-				chrif->buildfamelist();
-			break;
+		case MAPID_BLACKSMITH:
+		case MAPID_ALCHEMIST:
+		case MAPID_TAEKWON:
+			chrif->save(sd,0);
+			chrif->buildfamelist();
+		break;
 		}
 	}
 	quest->questinfo_refresh(sd);
