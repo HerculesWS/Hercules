@@ -5709,7 +5709,7 @@ ACMD(useskill)
 	pc->autocast_clear(sd);
 
 	if (skill_id >= HM_SKILLBASE && skill_id < HM_SKILLBASE+MAX_HOMUNSKILL
-		&& sd->hd && homun_alive(sd->hd)) // (If used with @useskill, put the homunc as dest)
+		&& homun_alive(sd->hd)) // (If used with @useskill, put the homunc as dest)
 		bl = &sd->hd->bl;
 	else
 		bl = &sd->bl;
@@ -7306,7 +7306,7 @@ ACMD(makehomun)
 
 	homunid = atoi(message);
 
-	if (homunid == -1 && sd->status.hom_id && !(sd->hd && homun_alive(sd->hd))) {
+	if (homunid == -1 && sd->status.hom_id && !(homun_alive(sd->hd))) {
 		if (!sd->hd)
 			homun->call(sd);
 		else if( sd->hd->homunculus.vaporize )
