@@ -838,6 +838,12 @@ struct {
 	struct HPMHookPoint *HP_timer_init_post;
 	struct HPMHookPoint *HP_timer_final_pre;
 	struct HPMHookPoint *HP_timer_final_post;
+	struct HPMHookPoint *HP_timer_check_timers_pre;
+	struct HPMHookPoint *HP_timer_check_timers_post;
+	struct HPMHookPoint *HP_timer_get_current_clocksource_pre;
+	struct HPMHookPoint *HP_timer_get_current_clocksource_post;
+	struct HPMHookPoint *HP_timer_get_available_clocksource_pre;
+	struct HPMHookPoint *HP_timer_get_available_clocksource_post;
 } list;
 
 struct {
@@ -1653,6 +1659,12 @@ struct {
 	int HP_timer_init_post;
 	int HP_timer_final_pre;
 	int HP_timer_final_post;
+	int HP_timer_check_timers_pre;
+	int HP_timer_check_timers_post;
+	int HP_timer_get_current_clocksource_pre;
+	int HP_timer_get_current_clocksource_post;
+	int HP_timer_get_available_clocksource_pre;
+	int HP_timer_get_available_clocksource_post;
 } count;
 
 struct {

@@ -8564,6 +8564,12 @@ typedef void (*HPMHOOK_pre_timer_init) (void);
 typedef void (*HPMHOOK_post_timer_init) (void);
 typedef void (*HPMHOOK_pre_timer_final) (void);
 typedef void (*HPMHOOK_post_timer_final) (void);
+typedef void (*HPMHOOK_pre_timer_check_timers) (void);
+typedef void (*HPMHOOK_post_timer_check_timers) (void);
+typedef bool (*HPMHOOK_pre_timer_get_current_clocksource) (char **buf, int *buf_size);
+typedef bool (*HPMHOOK_post_timer_get_current_clocksource) (bool retVal___, char *buf, int buf_size);
+typedef bool (*HPMHOOK_pre_timer_get_available_clocksource) (char **buf, int *buf_size);
+typedef bool (*HPMHOOK_post_timer_get_available_clocksource) (bool retVal___, char *buf, int buf_size);
 #endif // COMMON_TIMER_H
 #ifdef MAP_TRADE_H /* trade */
 typedef void (*HPMHOOK_pre_trade_request) (struct map_session_data **sd, struct map_session_data **target_sd);
