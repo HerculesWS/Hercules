@@ -6475,37 +6475,8 @@ static int status_get_sc_def(struct block_list *src, struct block_list *bl, enum
 #define SCDEF_LVL_DIFF(bl, src, maxlv, factor) ( ( SCDEF_LVL_CAP((bl), (maxlv)) - SCDEF_LVL_CAP((src), (maxlv)) ) * (factor) )
 
 	//Status that are blocked by Golden Thief Bug card or Wand of Hermod
-	if (status->isimmune(bl)) {
-		PRAGMA_GCC46(GCC diagnostic push)
-		PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
-		switch (type) {
-		case SC_DEC_AGI:
-		case SC_SILENCE:
-		case SC_COMA:
-		case SC_INC_AGI:
-		case SC_BLESSING:
-		case SC_SLOWPOISON:
-		case SC_IMPOSITIO:
-		case SC_LEXAETERNA:
-		case SC_SUFFRAGIUM:
-		case SC_BENEDICTIO:
-		case SC_PROVIDENCE:
-		case SC_KYRIE:
-		case SC_ASSUMPTIO:
-		case SC_ANGELUS:
-		case SC_MAGNIFICAT:
-		case SC_GLORIA:
-		case SC_WINDWALK:
-		case SC_MAGICROD:
-		case SC_ILLUSION:
-		case SC_STONE:
-		case SC_QUAGMIRE:
-		case SC_NJ_SUITON:
-		case SC_SWING:
-			return 0;
-		}
-		PRAGMA_GCC46(GCC diagnostic pop)
-	}
+	if (status->isimmune(bl) && (status->get_sc_type(type) & SC_NO_MAGIC_BLOCK) != 0)
+		return 0;
 
 	sd = BL_CAST(BL_PC,bl);
 	st = status->get_status_data(bl);
@@ -13573,6 +13544,7 @@ static bool status_read_scdb_libconfig_sub_flag(struct config_setting_t *it, int
 			{ "NoAllReset", SC_NO_CLEAR },
 			{ "NoBoss", SC_NO_BOSS },
 			{ "NoBBReset", SC_BB_NO_RESET },
+			{ "NoMagicBlocked", SC_NO_MAGIC_BLOCK },
 		};
 
 		ARR_FIND(0, ARRAYLENGTH(flags), j, strcmpi(flag, flags[j].name) == 0);
