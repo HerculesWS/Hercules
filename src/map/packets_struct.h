@@ -4345,6 +4345,86 @@ struct PACKET_ZC_MACRO_REPORTER_SELECT {
 DEFINE_PACKET_HEADER(ZC_MACRO_REPORTER_SELECT, 0x0a6d);
 #endif
 
+struct PACKET_ZC_ACK_MAKE_GROUP {
+	int16 PacketType;
+	int8 result;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_ACK_MAKE_GROUP, 0x00fa);
+
+struct PACKET_ZC_PARTY_JOIN_REQ {
+	int16 PacketType;
+	int GRID;
+	char groupName[NAME_LENGTH];
+} __attribute__((packed));
+#if PACKETVER < 20070821
+DEFINE_PACKET_HEADER(ZC_PARTY_JOIN_REQ, 0x00fe);
+#else
+DEFINE_PACKET_HEADER(ZC_PARTY_JOIN_REQ, 0x02c6);
+#endif
+
+struct PACKET_ZC_PARTY_JOIN_REQ_ACK {
+	int16 PacketType;
+	char characterName[NAME_LENGTH];
+	int result;
+} __attribute__((packed));
+#if PACKETVER < 20070821
+DEFINE_PACKET_HEADER(ZC_PARTY_JOIN_REQ_ACK, 0x00fd);
+#else
+DEFINE_PACKET_HEADER(ZC_PARTY_JOIN_REQ_ACK, 0x02c5);
+#endif
+
+struct PACKET_ZC_NOTIFY_CHAT_PARTY {
+	int16 PacketType;
+	int16 PacketLength;
+	int AID;
+	char chatMsg[];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_NOTIFY_CHAT_PARTY, 0x0109);
+
+struct PACKET_ZC_NOTIFY_POSITION_TO_GROUPM {
+	int16 PacketType;
+	int AID;
+	int16 xPos;
+	int16 yPos;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_NOTIFY_POSITION_TO_GROUPM, 0x0107);
+
+#if PACKETVER < 20100126
+struct PACKET_ZC_NOTIFY_HP_TO_GROUPM {
+	int16 PacketType;
+	int AID;
+	int16 hp;
+	int16 maxhp;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_NOTIFY_HP_TO_GROUPM, 0x0106);
+#else
+struct PACKET_ZC_NOTIFY_HP_TO_GROUPM {
+	int16 PacketType;
+	int AID;
+	int hp;
+	int maxhp;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_NOTIFY_HP_TO_GROUPM, 0x080e);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20170502 || PACKETVER_RE_NUM >= 20170419 || defined(PACKETVER_ZERO)
+struct PACKET_ZC_PARTY_MEMBER_JOB_LEVEL {
+	int16 PacketType;
+	int AID;
+	int16 job;
+	int16 level;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_PARTY_MEMBER_JOB_LEVEL, 0x0abd);
+#endif
+
+struct PACKET_ZC_DELETE_MEMBER_FROM_GROUP {
+	int16 PacketType;
+	int AID;
+	char characterName[NAME_LENGTH];
+	int8 result;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_DELETE_MEMBER_FROM_GROUP, 0x0105);
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris

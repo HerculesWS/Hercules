@@ -7148,15 +7148,14 @@ static void clif_vendingreport(struct map_session_data *sd, int index, int amoun
 ///     ? = nothing
 static void clif_party_created(struct map_session_data *sd, int result)
 {
-	int fd;
-
 	nullpo_retv(sd);
+	const int fd = sd->fd;
 
-	fd=sd->fd;
-	WFIFOHEAD(fd,packet_len(0xfa));
-	WFIFOW(fd,0)=0xfa;
-	WFIFOB(fd,2)=result;
-	WFIFOSET(fd,packet_len(0xfa));
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_ACK_MAKE_GROUP));
+	struct PACKET_ZC_ACK_MAKE_GROUP *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_ACK_MAKE_GROUP;
+	p->result = result;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_ACK_MAKE_GROUP));
 }
 
 /// Adds new member to a party.
@@ -7261,16 +7260,15 @@ static void clif_party_info(struct party_data *p, struct map_session_data *sd)
 static void clif_party_job_and_level(struct map_session_data *sd)
 {
 #if PACKETVER_MAIN_NUM >= 20170502 || PACKETVER_RE_NUM >= 20170419 || defined(PACKETVER_ZERO)
-	unsigned char buf[10];
-
 	nullpo_retv(sd);
 
-	WBUFW(buf, 0) = 0xabd;
-	WBUFL(buf, 2) = sd->status.account_id;
-	WBUFW(buf, 6) = sd->status.class;
-	WBUFW(buf, 8) = sd->status.base_level;
+	struct PACKET_ZC_PARTY_MEMBER_JOB_LEVEL p = {0};
+	p.PacketType = HEADER_ZC_PARTY_MEMBER_JOB_LEVEL;
+	p.AID = sd->status.account_id;
+	p.job = sd->status.class;
+	p.level = sd->status.base_level;
 
-	clif->send(buf, packet_len(0xabd), &sd->bl, PARTY);
+	clif->send(&p, sizeof(struct PACKET_ZC_PARTY_MEMBER_JOB_LEVEL), &sd->bl, PARTY);
 #endif
 }
 
@@ -7299,27 +7297,22 @@ static void clif_partyinvitationstate(struct map_session_data *sd)
 /// 02c6 <party id>.L <party name>.24B (ZC_PARTY_JOIN_REQ)
 static void clif_party_invite(struct map_session_data *sd, struct map_session_data *tsd)
 {
-#if PACKETVER < 20070821
-	const int cmd = 0xfe;
-#else
-	const int cmd = 0x2c6;
-#endif
-	int fd;
-	struct party_data *p;
-
 	nullpo_retv(sd);
 	nullpo_retv(tsd);
 
-	fd=tsd->fd;
+	const int fd = tsd->fd;
+	const struct party_data *p = party->search(sd->status.party_id);
 
-	if( (p=party->search(sd->status.party_id))==NULL )
+	if (p == NULL)
 		return;
 
-	WFIFOHEAD(fd,packet_len(cmd));
-	WFIFOW(fd,0)=cmd;
-	WFIFOL(fd,2)=sd->status.party_id;
-	memcpy(WFIFOP(fd,6),p->party.name,NAME_LENGTH);
-	WFIFOSET(fd,packet_len(cmd));
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_PARTY_JOIN_REQ));
+	struct PACKET_ZC_PARTY_JOIN_REQ *packet = WFIFOP(fd, 0);
+
+	packet->PacketType = HEADER_ZC_PARTY_JOIN_REQ;
+	packet->GRID = sd->status.party_id;
+	safestrncpy(packet->groupName, p->party.name, NAME_LENGTH);
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_PARTY_JOIN_REQ));
 }
 
 /// Party invite result.
@@ -7338,31 +7331,25 @@ static void clif_party_invite(struct map_session_data *sd, struct map_session_da
 /// result=11 : The character is a level that can not join the party -> message: MSG_ID_C9A (since 20170412)
 static void clif_party_inviteack(struct map_session_data *sd, const char *nick, int result)
 {
-	int fd;
 	nullpo_retv(sd);
 	nullpo_retv(nick);
-	fd=sd->fd;
+
+	const int fd = sd->fd;
 
 #if PACKETVER < 20070904
-	if( result == 7 ) {
-		clif->message(fd, msg_sd(sd,3)); // Character not found.
+	if (result == 7) {
+		clif->message(fd, msg_sd(sd, 3)); // Character not found.
 		return;
 	}
 #endif
 
-#if PACKETVER < 20070821
-	WFIFOHEAD(fd,packet_len(0xfd));
-	WFIFOW(fd,0) = 0xfd;
-	safestrncpy(WFIFOP(fd,2),nick,NAME_LENGTH);
-	WFIFOB(fd,26) = result;
-	WFIFOSET(fd,packet_len(0xfd));
-#else
-	WFIFOHEAD(fd,packet_len(0x2c5));
-	WFIFOW(fd,0) = 0x2c5;
-	safestrncpy(WFIFOP(fd,2),nick,NAME_LENGTH);
-	WFIFOL(fd,26) = result;
-	WFIFOSET(fd,packet_len(0x2c5));
-#endif
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_PARTY_JOIN_REQ_ACK));
+	struct PACKET_ZC_PARTY_JOIN_REQ_ACK *p = WFIFOP(fd, 0);
+
+	p->PacketType = HEADER_ZC_PARTY_JOIN_REQ_ACK;
+	safestrncpy(p->characterName, nick, NAME_LENGTH);
+	p->result = result;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_PARTY_JOIN_REQ_ACK));
 }
 
 /**
@@ -7470,12 +7457,10 @@ static void clif_party_option(struct party_data *p, struct map_session_data *sd,
 ///     3 = cannot expel from party on this map
 static void clif_party_withdraw(struct party_data *p, struct map_session_data *sd, int account_id, const char *name, int flag)
 {
-	unsigned char buf[64];
-
 	nullpo_retv(p);
 	nullpo_retv(name);
 
-	if(!sd && (flag&0xf0)==0) { // TODO: Document this flag
+	if (sd == NULL && (flag & 0xf0) == 0) { // TODO: Document this flag
 		int i;
 		// Search for any online party member
 		ARR_FIND(0, MAX_PARTY, i, p->data[i].sd != NULL);
@@ -7483,47 +7468,47 @@ static void clif_party_withdraw(struct party_data *p, struct map_session_data *s
 			sd = p->data[i].sd;
 	}
 
-	if (!sd)
+	if (sd == NULL)
 		return;
 
-	WBUFW(buf,0)=0x105;
-	WBUFL(buf,2)=account_id;
-	memcpy(WBUFP(buf,6),name,NAME_LENGTH);
-	WBUFB(buf,30)=flag&0x0f;
-	if((flag&0xf0)==0)
-		clif->send(buf,packet_len(0x105),&sd->bl,PARTY);
+	struct PACKET_ZC_DELETE_MEMBER_FROM_GROUP packet = {0};
+	packet.PacketType = HEADER_ZC_DELETE_MEMBER_FROM_GROUP;
+	packet.AID = account_id;
+	safestrncpy(&packet.characterName[0], name, NAME_LENGTH);
+	packet.result = flag & 0x0f;
+	if ((flag & 0xf0) == 0)
+		clif->send(&packet, sizeof(struct PACKET_ZC_DELETE_MEMBER_FROM_GROUP), &sd->bl, PARTY);
 	else
-		clif->send(buf,packet_len(0x105),&sd->bl,SELF);
+		clif->send(&packet, sizeof(struct PACKET_ZC_DELETE_MEMBER_FROM_GROUP), &sd->bl, SELF);
 }
 
 /// Party chat message (ZC_NOTIFY_CHAT_PARTY).
 /// 0109 <packet len>.W <account id>.L <message>.?B
 static void clif_party_message(struct party_data *p, int account_id, const char *mes, int len)
 {
-	struct map_session_data *sd;
-	int i;
-
 	nullpo_retv(p);
 	nullpo_retv(mes);
 
+	int i;
 	ARR_FIND(0, MAX_PARTY, i, p->data[i].sd != NULL);
 
 	if (i < MAX_PARTY) {
-		unsigned char buf[1024];
-		int maxlen = (int)sizeof(buf) - 9;
-
-		if (len > maxlen) {
+		if (len > CHAT_SIZE_MAX) {
 			ShowWarning("clif_party_message: Truncated message '%s' (len=%d, max=%d, party_id=%d).\n",
-			            mes, len, maxlen, p->party.party_id);
-			len = maxlen;
+			            mes, len, CHAT_SIZE_MAX, p->party.party_id);
+			len = CHAT_SIZE_MAX;
 		}
 
-		sd = p->data[i].sd;
-		WBUFW(buf,0) = 0x109;
-		WBUFW(buf,2) = len+9;
-		WBUFL(buf,4) = account_id;
-		safestrncpy(WBUFP(buf,8), mes, len+1);
-		clif->send(buf, len+9, &sd->bl, PARTY);
+		char buf[CHAT_SIZE_MAX + sizeof(struct PACKET_ZC_NOTIFY_CHAT_PARTY)];
+		struct PACKET_ZC_NOTIFY_CHAT_PARTY *packet = (struct PACKET_ZC_NOTIFY_CHAT_PARTY *)&buf;
+
+		packet->PacketType = HEADER_ZC_NOTIFY_CHAT_PARTY;
+		packet->PacketLength = len + sizeof(struct PACKET_ZC_NOTIFY_CHAT_PARTY);
+		packet->AID = account_id;
+		safestrncpy(packet->chatMsg, mes, len + 1);
+
+		struct map_session_data *sd = p->data[i].sd;
+		clif->send(packet, packet->PacketLength, &sd->bl, PARTY);
 	}
 }
 
@@ -7531,15 +7516,14 @@ static void clif_party_message(struct party_data *p, int account_id, const char 
 /// 0107 <account id>.L <x>.W <y>.W
 static void clif_party_xy(struct map_session_data *sd)
 {
-	unsigned char buf[16];
-
 	nullpo_retv(sd);
 
-	WBUFW(buf,0)=0x107;
-	WBUFL(buf,2)=sd->status.account_id;
-	WBUFW(buf,6)=sd->bl.x;
-	WBUFW(buf,8)=sd->bl.y;
-	clif->send(buf,packet_len(0x107),&sd->bl,PARTY_SAMEMAP_WOS);
+	struct PACKET_ZC_NOTIFY_POSITION_TO_GROUPM p = {0};
+	p.PacketType = HEADER_ZC_NOTIFY_POSITION_TO_GROUPM;
+	p.AID = sd->status.account_id;
+	p.xPos = sd->bl.x;
+	p.yPos = sd->bl.y;
+	clif->send(&p, sizeof(struct PACKET_ZC_NOTIFY_POSITION_TO_GROUPM), &sd->bl, PARTY_SAMEMAP_WOS);
 }
 
 /*==========================================
@@ -7548,12 +7532,15 @@ static void clif_party_xy(struct map_session_data *sd)
 static void clif_party_xy_single(int fd, struct map_session_data *sd)
 {
 	nullpo_retv(sd);
-	WFIFOHEAD(fd,packet_len(0x107));
-	WFIFOW(fd,0)=0x107;
-	WFIFOL(fd,2)=sd->status.account_id;
-	WFIFOW(fd,6)=sd->bl.x;
-	WFIFOW(fd,8)=sd->bl.y;
-	WFIFOSET(fd,packet_len(0x107));
+
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_NOTIFY_POSITION_TO_GROUPM));
+	struct PACKET_ZC_NOTIFY_POSITION_TO_GROUPM *p = WFIFOP(fd, 0);
+
+	p->PacketType = HEADER_ZC_NOTIFY_POSITION_TO_GROUPM;
+	p->AID = sd->status.account_id;
+	p->xPos = sd->bl.x;
+	p->yPos = sd->bl.y;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_NOTIFY_POSITION_TO_GROUPM));
 }
 
 /// Updates HP bar of a party member.
@@ -7561,30 +7548,24 @@ static void clif_party_xy_single(int fd, struct map_session_data *sd)
 /// 080e <account id>.L <hp>.L <max hp>.L (ZC_NOTIFY_HP_TO_GROUPM_R2)
 static void clif_party_hp(struct map_session_data *sd)
 {
-	unsigned char buf[16];
-#if PACKETVER < 20100126
-	const int cmd = 0x106;
-#else
-	const int cmd = 0x80e;
-#endif
-
 	nullpo_retv(sd);
 
-	WBUFW(buf,0)=cmd;
-	WBUFL(buf,2)=sd->status.account_id;
+	struct PACKET_ZC_NOTIFY_HP_TO_GROUPM p = {0};
+	p.PacketType = HEADER_ZC_NOTIFY_HP_TO_GROUPM;
+	p.AID = sd->status.account_id;
 #if PACKETVER < 20100126
 	if (sd->battle_status.max_hp > INT16_MAX) { //To correctly display the %hp bar. [Skotlex]
-		WBUFW(buf,6) = sd->battle_status.hp/(sd->battle_status.max_hp/100);
-		WBUFW(buf,8) = 100;
+		p.hp = sd->battle_status.hp/(sd->battle_status.max_hp/100);
+		p.maxhp = 100;
 	} else {
-		WBUFW(buf,6) = sd->battle_status.hp;
-		WBUFW(buf,8) = sd->battle_status.max_hp;
+		p.hp = sd->battle_status.hp;
+		p.maxhp = sd->battle_status.max_hp;
 	}
 #else
-	WBUFL(buf,6) = sd->battle_status.hp;
-	WBUFL(buf,10) = sd->battle_status.max_hp;
+	p.hp = sd->battle_status.hp;
+	p.maxhp = sd->battle_status.max_hp;
 #endif
-	clif->send(buf,packet_len(cmd),&sd->bl,PARTY_AREA_WOS);
+	clif->send(&p, sizeof(struct PACKET_ZC_NOTIFY_HP_TO_GROUPM), &sd->bl, PARTY_AREA_WOS);
 }
 
 /*==========================================
