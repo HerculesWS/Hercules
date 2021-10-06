@@ -58,12 +58,15 @@ struct achievement_data; // map/achievement.h
 struct s_refine_requirement;
 struct PACKET_ZC_ACK_RANKING_sub;
 struct SKILLDATA;
+struct macroaidlist;
 
 enum battle_dmg_type;
 enum clif_messages;
 enum rodex_add_item;
 enum rodex_get_zeny;
 enum rodex_get_items;
+enum macro_detect_status;
+enum macro_report_status;
 
 /**
  * Defines
@@ -1745,6 +1748,31 @@ struct clif_interface {
 	void (*pLapineUpgrade_close) (int fd, struct map_session_data *sd);
 	void (*pLapineUpgrade_makeItem) (int fd, struct map_session_data *sd);
 	void (*pReqGearOff) (int fd, struct map_session_data *sd);
+
+	/* Captcha Register */
+	void (*pCaptchaRegister) (int fd, struct map_session_data *sd);
+	void (*pCaptchaUpload) (int fd, struct map_session_data *sd);
+	void (*captcha_upload_request) (struct map_session_data *sd, const char *captcha_key, const int captcha_flag);
+	void (*captcha_upload_end) (struct map_session_data *sd);
+
+	/* Captcha Preview */
+	void (*pCaptchaPreviewRequest) (int fd, struct map_session_data *sd);
+	void (*captcha_preview_request_init) (struct map_session_data *sd, const char *captcha_key, const int image_size, const int captcha_flag);
+	void (*captcha_preview_request_download) (struct map_session_data *sd, const char *captcha_key, const int chunk_size, const char *chunk_data);
+
+	/* Macro Detector */
+	void (*pMacroDetectorDownloadAck) (int fd, struct map_session_data *sd);
+	void (*pMacroDetectorAnswer) (int fd, struct map_session_data *sd);
+	void (*macro_detector_request_init) (struct map_session_data *sd, const char *captcha_key, const int image_size);
+	void (*macro_detector_request_download) (struct map_session_data *sd, const char *captcha_key, const int chunk_size, const char *chunk_data);
+	void (*macro_detector_request_show) (struct map_session_data *sd);
+	void (*macro_detector_status) (struct map_session_data *sd, enum macro_detect_status stype);
+
+	/* Macro Reporter */
+	void (*pMacroReporterSelect) (int fd, struct map_session_data *sd);
+	void (*pMacroReporterAck) (int fd, struct map_session_data *sd);
+	void (*macro_reporter_select) (struct map_session_data *sd, const struct macroaidlist *aid_list);
+	void (*macro_reporter_status) (struct map_session_data *sd, enum macro_report_status stype);
 };
 
 #ifdef HERCULES_CORE

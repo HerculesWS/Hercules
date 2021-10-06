@@ -1210,6 +1210,7 @@ static bool pc_authok(struct map_session_data *sd, int login_id2, time_t expirat
 	sd->pvp_timer = INVALID_TIMER;
 	sd->fontcolor_tid = INVALID_TIMER;
 	sd->expiration_tid = INVALID_TIMER;
+	sd->macro_detect.timer = INVALID_TIMER;
 	/**
 	 * For the Secure NPC Timeout option (check config/Secure.h) [RR]
 	 **/

@@ -38,6 +38,7 @@
 #include "map/irc-bot.h"
 #include "map/itemdb.h"
 #include "map/log.h"
+#include "map/macro.h"
 #include "map/mail.h"
 #include "map/map.h"
 #include "map/mercenary.h"
@@ -24419,6 +24420,294 @@ void clif_crimson_marker(struct map_session_data *sd, struct block_list *bl, boo
 #endif
 }
 
+static void clif_parse_captcha_register(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+static void clif_parse_captcha_register(int fd, struct map_session_data *sd)
+{
+#if PACKETVER >= 20160316
+	if (!pc_has_permission(sd, PC_PERM_USE_MACRO_INTERFACE)) {
+		clif->message(sd->fd, msg_txt(1521)); // You are not autorized to use the macro interface.
+		return;
+	}
+
+	const struct PACKET_CZ_CAPTCHA_REGISTER *p = RP2PTR(fd);
+	macro->captcha_register(sd, p->imageSize, p->answer);
+#endif
+}
+
+static void clif_captcha_upload_request(struct map_session_data *sd, const char *captcha_key, const int captcha_flag)
+{
+#if PACKETVER >= 20160330
+	nullpo_retv(sd);
+	nullpo_retv(captcha_key);
+
+	const int fd = sd->fd;
+	struct PACKET_ZC_CAPTCHA_UPLOAD_REQUEST p = { 0 };
+	p.PacketType = HEADER_ZC_CAPTCHA_UPLOAD_REQUEST;
+	safestrncpy(p.captchaKey, captcha_key, sizeof(p.captchaKey));
+	p.captchaFlag = captcha_flag;
+
+	WFIFOHEAD(fd, sizeof(p));
+	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
+	WFIFOSET(fd, sizeof(p));
+#endif
+}
+
+static void clif_parse_captcha_upload(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+static void clif_parse_captcha_upload(int fd, struct map_session_data *sd)
+{
+#if PACKETVER >= 20160316
+	if (!pc_has_permission(sd, PC_PERM_USE_MACRO_INTERFACE)) {
+		clif->message(sd->fd, msg_txt(1521)); // You are not autorized to use the macro interface.
+		return;
+	}
+
+	const struct PACKET_CZ_CAPTCHA_UPLOAD_REQUEST_ACK *p = RP2PTR(fd);
+	const int upload_size = p->PacketLength - sizeof(struct PACKET_CZ_CAPTCHA_UPLOAD_REQUEST_ACK);
+
+	macro->captcha_register_upload(sd, p->captchaKey, upload_size, p->imageData);
+#endif
+}
+
+static void clif_captcha_upload_end(struct map_session_data *sd)
+{
+#if PACKETVER >= 20160330
+	nullpo_retv(sd);
+
+	const int fd = sd->fd;
+	struct PACKET_ZC_CAPTCHA_UPLOAD_REQUEST_STATUS p = { 0 };
+	p.PacketType = HEADER_ZC_CAPTCHA_UPLOAD_REQUEST_STATUS;
+
+	WFIFOHEAD(fd, sizeof(p));
+	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
+	WFIFOSET(fd, sizeof(p));
+#endif
+}
+
+static void clif_parse_captcha_preview_request(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+static void clif_parse_captcha_preview_request(int fd, struct map_session_data *sd)
+{
+#if PACKETVER >= 20160323
+	if (!pc_has_permission(sd, PC_PERM_USE_MACRO_INTERFACE)) {
+		clif->message(sd->fd, msg_txt(1521)); // You are not autorized to use the macro interface.
+		return;
+	}
+
+	const struct PACKET_CZ_CAPTCHA_PREVIEW_REQUEST *p = RP2PTR(fd);
+	macro->captcha_preview(sd, p->captchaID);
+#endif
+}
+
+static void clif_captcha_preview_request_init(struct map_session_data *sd, const char *captcha_key, const int image_size, const int captcha_flag)
+{
+#if PACKETVER >= 20160330
+	nullpo_retv(sd);
+	nullpo_retv(captcha_key);
+
+	const int fd = sd->fd;
+	struct PACKET_ZC_CAPTCHA_PREVIEW_REQUEST p = { 0 };
+	p.PacketType = HEADER_ZC_CAPTCHA_PREVIEW_REQUEST;
+	p.captchaFlag = captcha_flag;
+	p.imageSize = image_size;
+	safestrncpy(p.captchaKey, captcha_key, sizeof(p.captchaKey));
+	
+	WFIFOHEAD(fd, sizeof(p));
+	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
+	WFIFOSET(fd, sizeof(p));
+#endif
+}
+
+static void clif_captcha_preview_request_download(struct map_session_data *sd, const char *captcha_key, const int chunk_size, const char *chunk_data)
+{
+#if PACKETVER >= 20160330
+	nullpo_retv(sd);
+	nullpo_retv(captcha_key);
+	nullpo_retv(chunk_data);
+
+	const int fd = sd->fd;
+	const int len = sizeof(struct PACKET_ZC_CAPTCHA_PREVIEW_REQUEST_DOWNLOAD) + chunk_size;
+
+	WFIFOHEAD(fd, len);
+	struct PACKET_ZC_CAPTCHA_PREVIEW_REQUEST_DOWNLOAD *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_CAPTCHA_PREVIEW_REQUEST_DOWNLOAD;
+	p->PacketLength = len;
+	safestrncpy(p->captchaKey, captcha_key, sizeof(p->captchaKey));
+	memcpy(p->imageData, chunk_data, chunk_size);
+	WFIFOSET(fd, len);
+#endif
+}
+
+static void clif_macro_detector_request_init(struct map_session_data *sd, const char *captcha_key, const int image_size)
+{
+#if PACKETVER >= 20160330
+	nullpo_retv(sd);
+	nullpo_retv(captcha_key);
+
+	const int fd = sd->fd;
+	struct PACKET_ZC_MACRO_DETECTOR_REQUEST p = { 0 };
+	p.PacketType = HEADER_ZC_MACRO_DETECTOR_REQUEST;
+	p.imageSize = image_size;
+	safestrncpy(p.captchaKey, captcha_key, sizeof(p.captchaKey));
+
+	WFIFOHEAD(fd, sizeof(p));
+	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
+	WFIFOSET(fd, sizeof(p));
+#endif
+}
+
+static void clif_macro_detector_request_download(struct map_session_data *sd, const char *captcha_key, const int chunk_size, const char *chunk_data)
+{
+#if PACKETVER >= 20160330
+	nullpo_retv(sd);
+	nullpo_retv(captcha_key);
+	nullpo_retv(chunk_data);
+
+	const int fd = sd->fd;
+	const int len = sizeof(struct PACKET_ZC_MACRO_DETECTOR_REQUEST_DOWNLOAD) + chunk_size;
+
+	WFIFOHEAD(fd, len);
+	struct PACKET_ZC_MACRO_DETECTOR_REQUEST_DOWNLOAD *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_MACRO_DETECTOR_REQUEST_DOWNLOAD;
+	p->PacketLength = len;
+	safestrncpy(p->captchaKey, captcha_key, sizeof(p->captchaKey));
+	memcpy(p->imageData, chunk_data, chunk_size);
+	WFIFOSET(fd, len);
+#endif
+}
+
+static void clif_macro_detector_request_show(struct map_session_data *sd)
+{
+#if PACKETVER >= 20160330
+	nullpo_retv(sd);
+
+	const int fd = sd->fd;
+	struct PACKET_ZC_MACRO_DETECTOR_SHOW p = { 0 };
+	p.PacketType = HEADER_ZC_MACRO_DETECTOR_SHOW;
+	p.retryCount = sd->macro_detect.retry;
+	p.timeout = battle->bc->macro_detect_timeout;
+
+	WFIFOHEAD(fd, sizeof(p));
+	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
+	WFIFOSET(fd, sizeof(p));
+#endif
+}
+
+static void clif_parse_macro_detector_download_ack(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+static void clif_parse_macro_detector_download_ack(int fd, struct map_session_data *sd)
+{
+#if PACKETVER >= 20160316
+	if (sd->macro_detect.retry != 0) {
+		// const struct PACKET_CZ_MACRO_DETECTOR_DOWNLOAD *p = RP2PTR(fd);
+		clif->macro_detector_request_show(sd);
+	}
+#endif
+}
+
+static void clif_parse_macro_detector_answer(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+static void clif_parse_macro_detector_answer(int fd, struct map_session_data *sd)
+{
+#if PACKETVER >= 20160316
+	if (sd->macro_detect.retry != 0) {
+		const struct PACKET_CZ_MACRO_DETECTOR_ANSWER *p = RP2PTR(fd);
+		macro->detector_process_answer(sd, p->answer);
+	}
+#endif
+}
+
+static void clif_macro_detector_status(struct map_session_data *sd, enum macro_detect_status stype)
+{
+#if PACKETVER >= 20160330
+	nullpo_retv(sd);
+
+	const int fd = sd->fd;
+	struct PACKET_ZC_MACRO_DETECTOR_STATUS p = { 0 };
+	p.PacketType = HEADER_ZC_MACRO_DETECTOR_STATUS;
+	p.status = stype;
+
+	WFIFOHEAD(fd, sizeof(p));
+	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
+	WFIFOSET(fd, sizeof(p));
+#endif
+}
+
+static void clif_parse_macro_reporter_select(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+static void clif_parse_macro_reporter_select(int fd, struct map_session_data *sd)
+{
+#if PACKETVER >= 20160330
+	if (!pc_has_permission(sd, PC_PERM_USE_MACRO_INTERFACE)) {
+		clif->message(sd->fd, msg_txt(1521)); // You are not autorized to use the macro interface.
+		return;
+	}
+
+	const struct PACKET_CZ_MACRO_REPORTER_SELECT *p = RP2PTR(fd);
+	macro->reporter_area_select(sd, p->xPos, p->yPos, p->RadiusRange);
+#endif
+}
+
+static void clif_macro_reporter_select(struct map_session_data *sd, const struct macroaidlist *aid_list)
+{
+#if PACKETVER >= 20160330
+	nullpo_retv(sd);
+	nullpo_retv(aid_list);
+
+	const int fd = sd->fd;
+	const int len = sizeof(struct PACKET_ZC_MACRO_REPORTER_SELECT) + sizeof(int) * VECTOR_LENGTH(*aid_list);
+
+	WFIFOHEAD(fd, len);
+	struct PACKET_ZC_MACRO_REPORTER_SELECT *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_MACRO_REPORTER_SELECT;
+	p->PacketLength = len;
+	for (int i = 0; i < VECTOR_LENGTH(*aid_list); i++)
+		p->AID[i] = VECTOR_INDEX(*aid_list, i);
+	WFIFOSET(fd, len);
+#endif
+}
+
+static void clif_parse_macro_reporter_ack(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+static void clif_parse_macro_reporter_ack(int fd, struct map_session_data *sd)
+{
+#if PACKETVER >= 20160316
+	if (!pc_has_permission(sd, PC_PERM_USE_MACRO_INTERFACE)) {
+		clif->message(sd->fd, msg_txt(1521)); // You are not autorized to use the macro interface.
+		return;
+	}
+
+	const struct PACKET_CZ_MACRO_REPORTER_ACK *p = RP2PTR(fd);
+	struct map_session_data *tsd = map->id2sd(p->AID);
+	if (tsd == NULL) {
+		char buf[256];
+		sprintf(buf, msg_fd(fd, 1520), p->AID); // Player %d is unavailable.
+		clif->message(fd, buf);
+		return;
+	}
+	if (tsd->macro_detect.retry != 0) {
+		clif->macro_reporter_status(sd, MCR_INPROGRESS);
+		return;
+	}
+	if (VECTOR_LENGTH(macro->captcha_registery) == 0) {
+		clif->macro_reporter_status(sd, MCR_NO_DATA);
+		return;
+	}
+	macro->reporter_process(sd, tsd);
+	clif->macro_reporter_status(sd, MCR_MONITORING);
+#endif
+}
+
+static void clif_macro_reporter_status(struct map_session_data *sd, enum macro_report_status stype)
+{
+#if PACKETVER >= 20160330
+	nullpo_retv(sd);
+
+	const int fd = sd->fd;
+	struct PACKET_ZC_MACRO_REPORTER_STATUS p = { 0 };
+	p.PacketType = HEADER_ZC_MACRO_REPORTER_STATUS;
+	p.status = stype;
+
+	WFIFOHEAD(fd, sizeof(p));
+	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
+	WFIFOSET(fd, sizeof(p));
+#endif
+}
+
 /*==========================================
  * Main client packet processing function
  *------------------------------------------*/
@@ -25672,4 +25961,25 @@ void clif_defaults(void)
 	clif->pLapineUpgrade_close = clif_parse_lapineUpgrade_close;
 	clif->pLapineUpgrade_makeItem = clif_parse_lapineUpgrade_makeItem;
 	clif->pReqGearOff = clif_parse_reqGearOff;
+
+	clif->pCaptchaRegister = clif_parse_captcha_register;
+	clif->pCaptchaUpload = clif_parse_captcha_upload;
+	clif->captcha_upload_request = clif_captcha_upload_request;
+	clif->captcha_upload_end = clif_captcha_upload_end;
+
+	clif->pCaptchaPreviewRequest = clif_parse_captcha_preview_request;
+	clif->captcha_preview_request_init = clif_captcha_preview_request_init;
+	clif->captcha_preview_request_download = clif_captcha_preview_request_download;
+
+	clif->pMacroDetectorDownloadAck = clif_parse_macro_detector_download_ack;
+	clif->pMacroDetectorAnswer = clif_parse_macro_detector_answer;
+	clif->macro_detector_request_init = clif_macro_detector_request_init;
+	clif->macro_detector_request_download = clif_macro_detector_request_download;
+	clif->macro_detector_request_show = clif_macro_detector_request_show;
+	clif->macro_detector_status = clif_macro_detector_status;
+
+	clif->pMacroReporterSelect = clif_parse_macro_reporter_select;
+	clif->pMacroReporterAck = clif_parse_macro_reporter_ack;
+	clif->macro_reporter_select = clif_macro_reporter_select;
+	clif->macro_reporter_status = clif_macro_reporter_status;
 }

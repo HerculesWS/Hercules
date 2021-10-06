@@ -2127,6 +2127,7 @@ static int map_quit(struct map_session_data *sd)
 	pc->makesavestatus(sd);
 	pc->clean_skilltree(sd);
 	pc->crimson_marker_clear(sd);
+	macro->detector_disconnect(sd);
 	chrif->save(sd,1);
 	unit->free_pc(sd);
 	return 0;
@@ -6683,6 +6684,7 @@ static void map_load_defaults(void)
 	ircbot_defaults();
 	itemdb_defaults();
 	log_defaults();
+	macro_defaults();
 	mail_defaults();
 	npc_defaults();
 	script_defaults();

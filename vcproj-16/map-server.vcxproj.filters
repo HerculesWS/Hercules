@@ -61,6 +61,9 @@
     <ClCompile Include="..\src\map\log.c">
       <Filter>map</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\map\macro.c">
+      <Filter>map</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\map\mail.c">
       <Filter>map</Filter>
     </ClCompile>
@@ -283,6 +286,9 @@
       <Filter>map</Filter>
     </ClInclude>
     <ClInclude Include="..\src\map\log.h">
+      <Filter>map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\map\macro.h">
       <Filter>map</Filter>
     </ClInclude>
     <ClInclude Include="..\src\map\mail.h">

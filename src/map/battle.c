@@ -7724,6 +7724,8 @@ static const struct battle_data {
 	{ "merc_natural_heal_hp",               &battle_config.merc_natural_heal_hp,           6000, NATURAL_HEAL_INTERVAL, INT_MAX,},
 	{ "merc_natural_heal_sp",               &battle_config.merc_natural_heal_sp,           8000, NATURAL_HEAL_INTERVAL, INT_MAX,},
 	{ "merc_natural_heal_cap",              &battle_config.merc_natural_heal_cap,          1000,    1,      INT_MAX,        },
+	{ "macro_detect_retry",                 &battle_config.macro_detect_retry,                1,    1,      INT_MAX,        },
+	{ "macro_detect_timeout",               &battle_config.macro_detect_timeout,              0,    0,      INT_MAX,        },
 };
 
 static bool battle_set_value_sub(int index, int value)

@@ -629,6 +629,9 @@ struct Battle_Config {
 	int merc_natural_heal_hp;
 	int merc_natural_heal_sp;
 	int merc_natural_heal_cap;
+
+	int macro_detect_retry;
+	int macro_detect_timeout;
 };
 
 /* criteria for battle_config.idletime_criteria */

@@ -4196,6 +4196,155 @@ struct PACKET_ZC_MYGUILD_BASIC_INFO {
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(ZC_MYGUILD_BASIC_INFO, 0x014c);
 
+#if PACKETVER >= 20160316
+struct PACKET_CZ_CAPTCHA_REGISTER {
+	int16 PacketType;
+	char answer[16];
+	int16 imageSize;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_CAPTCHA_REGISTER, 0x0a52);
+#endif
+
+#if PACKETVER >= 20160330
+struct PACKET_ZC_CAPTCHA_UPLOAD_REQUEST {
+	int16 PacketType;
+	char captchaKey[4];
+	int captchaFlag;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_CAPTCHA_UPLOAD_REQUEST, 0x0a53);
+#endif
+
+#if PACKETVER >= 20160316
+struct PACKET_CZ_CAPTCHA_UPLOAD_REQUEST_ACK {
+	int16 PacketType;
+	int16 PacketLength;
+	char captchaKey[4];
+	char imageData[];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_CAPTCHA_UPLOAD_REQUEST_ACK, 0x0a54);
+#endif
+
+#if PACKETVER >= 20160330
+struct PACKET_ZC_CAPTCHA_UPLOAD_REQUEST_STATUS {
+	int16 PacketType;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_CAPTCHA_UPLOAD_REQUEST_STATUS, 0x0a55);
+#endif
+
+#if PACKETVER >= 20160316
+struct PACKET_CZ_MACRO_REPORTER_ACK {
+	int16 PacketType;
+	uint32 AID;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_MACRO_REPORTER_ACK, 0x0a56);
+#endif
+
+#if PACKETVER >= 20160330
+struct PACKET_ZC_MACRO_REPORTER_STATUS {
+	int16 PacketType;
+	int status;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_MACRO_REPORTER_STATUS, 0x0a57);
+#endif
+
+#if PACKETVER >= 20160330
+struct PACKET_ZC_MACRO_DETECTOR_REQUEST {
+	int16 PacketType;
+	int16 imageSize;
+	char captchaKey[4];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_MACRO_DETECTOR_REQUEST, 0x0a58);
+#endif
+
+#if PACKETVER >= 20160330
+struct PACKET_ZC_MACRO_DETECTOR_REQUEST_DOWNLOAD {
+	int16 PacketType;
+	int16 PacketLength;
+	char captchaKey[4];
+	char imageData[];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_MACRO_DETECTOR_REQUEST_DOWNLOAD, 0x0a59);
+#endif
+
+#if PACKETVER >= 20160316
+struct PACKET_CZ_MACRO_DETECTOR_DOWNLOAD {
+	int16 PacketType;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_MACRO_DETECTOR_DOWNLOAD, 0x0a5a);
+#endif
+
+#if PACKETVER >= 20160330
+struct PACKET_ZC_MACRO_DETECTOR_SHOW {
+	int16 PacketType;
+	uint8 retryCount;
+	int timeout;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_MACRO_DETECTOR_SHOW, 0x0a5b);
+#endif
+
+#if PACKETVER >= 20160316
+struct PACKET_CZ_MACRO_DETECTOR_ANSWER {
+	int16 PacketType;
+	char answer[16];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_MACRO_DETECTOR_ANSWER, 0x0a5c);
+#endif
+
+#if PACKETVER >= 20160330
+struct PACKET_ZC_MACRO_DETECTOR_STATUS {
+	int16 PacketType;
+	int status;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_MACRO_DETECTOR_STATUS, 0x0a5d);
+#endif
+
+#if PACKETVER >= 20160323
+struct PACKET_CZ_CAPTCHA_PREVIEW_REQUEST {
+	int16 PacketType;
+	int captchaID;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_CAPTCHA_PREVIEW_REQUEST, 0x0a69);
+#endif
+
+#if PACKETVER >= 20160330
+struct PACKET_ZC_CAPTCHA_PREVIEW_REQUEST {
+	int16 PacketType;
+	int captchaFlag;
+	int16 imageSize;
+	char captchaKey[4];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_CAPTCHA_PREVIEW_REQUEST, 0x0a6a);
+#endif
+
+#if PACKETVER >= 20160330
+struct PACKET_ZC_CAPTCHA_PREVIEW_REQUEST_DOWNLOAD {
+	int16 PacketType;
+	int16 PacketLength;
+	char captchaKey[4];
+	char imageData[];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_CAPTCHA_PREVIEW_REQUEST_DOWNLOAD, 0x0a6b);
+#endif
+
+#if PACKETVER >= 20160330
+struct PACKET_CZ_MACRO_REPORTER_SELECT {
+	int16 PacketType;
+	int16 xPos;
+	int16 yPos;
+	int8 RadiusRange;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_MACRO_REPORTER_SELECT, 0x0a6c);
+#endif
+
+#if PACKETVER >= 20160330
+struct PACKET_ZC_MACRO_REPORTER_SELECT {
+	int16 PacketType;
+	int16 PacketLength;
+	uint32 AID[];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_MACRO_REPORTER_SELECT, 0x0a6d);
+#endif
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
