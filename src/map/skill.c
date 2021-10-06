@@ -15626,6 +15626,14 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 				return 0;
 			}
 			break;
+		case KO_JYUMONJIKIRI:
+			if (sd->weapontype1 != W_FIST && (sd->weapontype2 != W_FIST || sd->has_shield != W_FIST)) {
+				return 1;
+			} else {
+				clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
+				return 0;
+			}
+			break;
 		default:
 		{
 			int ret = skill->check_condition_castbegin_unknown(sc, &skill_id);
