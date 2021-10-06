@@ -7541,44 +7541,45 @@ ACMD(iteminfo)
 	int i, count = 1;
 
 	if (!*message) {
-		clif->message(fd, msg_fd(fd,1276)); // Please enter an item name/ID (usage: @ii/@iteminfo <item name/ID>).
+		clif->message(fd, msg_fd(fd, 1276)); // Please enter an item name/ID (usage: @ii/@iteminfo <item name/ID>).
 		return false;
 	}
 	if ((item_array[0] = itemdb->exists(atoi(message))) == NULL)
 		count = itemdb->search_name_array(item_array, MAX_SEARCH, message, IT_SEARCH_NAME_PARTIAL);
 
 	if (!count) {
-		clif->message(fd, msg_fd(fd,19)); // Invalid item ID or name.
+		clif->message(fd, msg_fd(fd, 19)); // Invalid item ID or name.
 		return false;
 	}
 
 	if (count > MAX_SEARCH) {
-		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,269), MAX_SEARCH, count); // Displaying first %d out of %d matches
+		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 269), MAX_SEARCH, count); // Displaying first %d out of %d matches
 		clif->message(fd, atcmd_output);
 		count = MAX_SEARCH;
 	}
 	for (i = 0; i < count; i++) {
 		struct item_data *item_data = item_array[i];
-		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1277), // Item: '%s'/'%s'[%d] (%d) Type: %s | Extra Effect: %s
-				item_data->name,item_data->jname,item_data->slot,item_data->nameid,
+		if (item_data != NULL) {
+			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 1277), // Item: '%s'/'%s'[%d] (%d) Type: %s | Extra Effect: %s
+				item_data->name, item_data->jname, item_data->slot, item_data->nameid,
 				itemdb->typename(item_data->type),
-				(item_data->script==NULL)? msg_fd(fd,1278) : msg_fd(fd,1279) // None / With script
-				);
-		clif->message(fd, atcmd_output);
+				(item_data->script == NULL) ? msg_fd(fd, 1278) : msg_fd(fd, 1279) // None / With script
+			);
+			clif->message(fd, atcmd_output);
 
-		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1280), item_data->value_buy, item_data->value_sell, item_data->weight/10. ); // NPC Buy:%dz, Sell:%dz | Weight: %.1f
-		clif->message(fd, atcmd_output);
+			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 1280), item_data->value_buy, item_data->value_sell, item_data->weight / 10.); // NPC Buy:%dz, Sell:%dz | Weight: %.1f
+			clif->message(fd, atcmd_output);
 
-		if (item_data->maxchance == -1)
-			safestrncpy(atcmd_output, msg_fd(fd,1281), sizeof(atcmd_output)); //  - Available in the shops only.
-		else if ( !battle_config.atcommand_mobinfo_type ) {
-			if( item_data->maxchance )
-				safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1282), (float)item_data->maxchance / 100 ); //  - Maximal monsters drop chance: %02.02f%%
-			else
-				safestrncpy(atcmd_output, msg_fd(fd,1283), sizeof(atcmd_output)); //  - Monsters don't drop this item.
+			if (item_data->maxchance == -1)
+				safestrncpy(atcmd_output, msg_fd(fd, 1281), sizeof(atcmd_output)); //  - Available in the shops only.
+			else if (!battle_config.atcommand_mobinfo_type) {
+				if (item_data->maxchance)
+					safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 1282), (float)item_data->maxchance / 100); //  - Maximal monsters drop chance: %02.02f%%
+				else
+					safestrncpy(atcmd_output, msg_fd(fd, 1283), sizeof(atcmd_output)); //  - Monsters don't drop this item.
+			}
+			clif->message(fd, atcmd_output);
 		}
-		clif->message(fd, atcmd_output);
-
 	}
 	return true;
 }
@@ -7589,41 +7590,42 @@ ACMD(iteminfo)
 ACMD(whodrops)
 {
 	struct item_data *item_array[MAX_SEARCH];
-	int i,j, count = 1;
+	int i, j, count = 1;
 
 	if (!*message) {
-		clif->message(fd, msg_fd(fd,1284)); // Please enter item name/ID (usage: @whodrops <item name/ID>).
+		clif->message(fd, msg_fd(fd, 1284)); // Please enter item name/ID (usage: @whodrops <item name/ID>).
 		return false;
 	}
 	if ((item_array[0] = itemdb->exists(atoi(message))) == NULL)
 		count = itemdb->search_name_array(item_array, MAX_SEARCH, message, IT_SEARCH_NAME_PARTIAL);
 
 	if (!count) {
-		clif->message(fd, msg_fd(fd,19)); // Invalid item ID or name.
+		clif->message(fd, msg_fd(fd, 19)); // Invalid item ID or name.
 		return false;
 	}
 
 	if (count > MAX_SEARCH) {
-		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,269), MAX_SEARCH, count); // Displaying first %d out of %d matches
+		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 269), MAX_SEARCH, count); // Displaying first %d out of %d matches
 		clif->message(fd, atcmd_output);
 		count = MAX_SEARCH;
 	}
 	for (i = 0; i < count; i++) {
 		struct item_data *item_data = item_array[i];
-		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1285), item_data->jname,item_data->slot); // Item: '%s'[%d]
-		clif->message(fd, atcmd_output);
-
-		if (item_data->mob[0].chance == 0) {
-			safestrncpy(atcmd_output, msg_fd(fd,1286), sizeof(atcmd_output)); //  - Item is not dropped by mobs.
-			clif->message(fd, atcmd_output);
-		} else {
-			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1287), MAX_SEARCH); //  - Common mobs with highest drop chance (only max %d are listed):
+		if (item_data != NULL) {
+			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 1285), item_data->jname, item_data->slot); // Item: '%s'[%d]
 			clif->message(fd, atcmd_output);
 
-			for (j=0; j < MAX_SEARCH && item_data->mob[j].chance > 0; j++)
-			{
-				safesnprintf(atcmd_output, sizeof(atcmd_output), "- %s (%02.02f%%)", mob->db(item_data->mob[j].id)->jname, item_data->mob[j].chance/100.);
+			if (item_data->mob[0].chance == 0) {
+				safestrncpy(atcmd_output, msg_fd(fd, 1286), sizeof(atcmd_output)); //  - Item is not dropped by mobs.
 				clif->message(fd, atcmd_output);
+			} else {
+				safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 1287), MAX_SEARCH); //  - Common mobs with highest drop chance (only max %d are listed):
+				clif->message(fd, atcmd_output);
+
+				for (j = 0; j < MAX_SEARCH && item_data->mob[j].chance > 0; j++) {
+					safesnprintf(atcmd_output, sizeof(atcmd_output), "- %s (%02.02f%%)", mob->db(item_data->mob[j].id)->jname, item_data->mob[j].chance / 100.);
+					clif->message(fd, atcmd_output);
+				}
 			}
 		}
 	}

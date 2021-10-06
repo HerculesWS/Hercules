@@ -4557,11 +4557,11 @@ static void clif_tradeadditem(struct map_session_data *sd, struct map_session_da
 	memset(&p, 0, sizeof(p));
 	p.packetType = tradeaddType;
 	p.amount = amount;
-	if (index != 0)
-	{
+	if (index != 0) {
 		index -= 2; //index fix
 		Assert_retv(index >= 0 && index < sd->status.inventorySize);
-		if(sd->inventory_data[index] && sd->inventory_data[index]->view_id > 0)
+		nullpo_retv(sd->inventory_data[index]);
+		if (sd->inventory_data[index]->view_id > 0)
 			p.itemId = sd->inventory_data[index]->view_id;
 		else
 			p.itemId = sd->status.inventory[index].nameid;
