@@ -3142,6 +3142,12 @@ static int64 battle_calc_damage(struct block_list *src, struct block_list *bl, s
 		}
 
 		//Now damage increasing effects
+#ifdef RENEWAL
+		// Increase melee damage taken by 400%[KeiKun]
+		if (sc->data[SC_KAITE] != NULL && (flag & (BF_SHORT | BF_MAGIC)) == BF_SHORT)
+			damage <<= 2;
+#endif
+
 		if( sc->data[SC_LEXAETERNA] && skill_id != PF_SOULBURN
 #ifdef RENEWAL
 		&& skill_id != CR_ACIDDEMONSTRATION
