@@ -77,6 +77,9 @@ struct timer_interface {
 	int (*perform) (int64 tick);
 	void (*init) (void);
 	void (*final) (void);
+	void (*check_timers) (void);
+	bool (*get_current_clocksource) (char *buf, int buf_size);
+	bool (*get_available_clocksource) (char *buf, int buf_size);
 };
 
 #ifdef HERCULES_CORE

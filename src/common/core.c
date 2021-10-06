@@ -499,8 +499,10 @@ int main(int argc, char **argv)
 
 	sysinfo->init();
 
-	if (!(showmsg->silent&0x1))
+	if (!(showmsg->silent&0x1)) {
 		console->display_title();
+		timer->check_timers();
+	}
 
 	if (!usercheck())
 		return EXIT_FAILURE;
