@@ -53,6 +53,7 @@ HPMHooks.source.ircbot = *ircbot;
 HPMHooks.source.itemdb = *itemdb;
 HPMHooks.source.libconfig = *libconfig;
 HPMHooks.source.logs = *logs;
+HPMHooks.source.macro = *macro;
 HPMHooks.source.mail = *mail;
 HPMHooks.source.map = *map;
 HPMHooks.source.mapindex = *mapindex;

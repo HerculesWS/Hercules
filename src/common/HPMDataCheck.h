@@ -542,6 +542,14 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#else
 		#define MAP_LOG_H
 	#endif // MAP_LOG_H
+	#ifdef MAP_MACRO_H
+		{ "captcha_data", sizeof(struct captcha_data), SERVER_TYPE_MAP },
+		{ "macro_detect", sizeof(struct macro_detect), SERVER_TYPE_MAP },
+		{ "macro_interface", sizeof(struct macro_interface), SERVER_TYPE_MAP },
+		{ "macroaidlist", sizeof(struct macroaidlist), SERVER_TYPE_MAP },
+	#else
+		#define MAP_MACRO_H
+	#endif // MAP_MACRO_H
 	#ifdef MAP_MAIL_H
 		{ "mail_interface", sizeof(struct mail_interface), SERVER_TYPE_MAP },
 	#else

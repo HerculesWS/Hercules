@@ -179,6 +179,9 @@ struct loginif_interface *loginif;
 #ifdef LOGIN_LOGINLOG_H /* loginlog */
 struct loginlog_interface *loginlog;
 #endif // LOGIN_LOGINLOG_H
+#ifdef MAP_MACRO_H /* macro */
+struct macro_interface *macro;
+#endif // MAP_MACRO_H
 #ifdef MAP_MAIL_H /* mail */
 struct mail_interface *mail;
 #endif // MAP_MAIL_H
@@ -516,6 +519,10 @@ HPExport const char *HPM_shared_symbols(int server_type)
 	if ((server_type&(SERVER_TYPE_LOGIN)) != 0 && !HPM_SYMBOL("loginlog", loginlog))
 		return "loginlog";
 #endif // LOGIN_LOGINLOG_H
+#ifdef MAP_MACRO_H /* macro */
+	if ((server_type&(SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("macro", macro))
+		return "macro";
+#endif // MAP_MACRO_H
 #ifdef MAP_MAIL_H /* mail */
 	if ((server_type&(SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("mail", mail))
 		return "mail";

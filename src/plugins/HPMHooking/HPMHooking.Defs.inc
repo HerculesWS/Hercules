@@ -2782,6 +2782,40 @@ typedef void (*HPMHOOK_pre_clif_pLapineUpgrade_makeItem) (int *fd, struct map_se
 typedef void (*HPMHOOK_post_clif_pLapineUpgrade_makeItem) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_pReqGearOff) (int *fd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_pReqGearOff) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_pCaptchaRegister) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pCaptchaRegister) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_pCaptchaUpload) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pCaptchaUpload) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_captcha_upload_request) (struct map_session_data **sd, const char **captcha_key, const int *captcha_flag);
+typedef void (*HPMHOOK_post_clif_captcha_upload_request) (struct map_session_data *sd, const char *captcha_key, const int captcha_flag);
+typedef void (*HPMHOOK_pre_clif_captcha_upload_end) (struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_captcha_upload_end) (struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_pCaptchaPreviewRequest) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pCaptchaPreviewRequest) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_captcha_preview_request_init) (struct map_session_data **sd, const char **captcha_key, const int *image_size, const int *captcha_flag);
+typedef void (*HPMHOOK_post_clif_captcha_preview_request_init) (struct map_session_data *sd, const char *captcha_key, const int image_size, const int captcha_flag);
+typedef void (*HPMHOOK_pre_clif_captcha_preview_request_download) (struct map_session_data **sd, const char **captcha_key, const int *chunk_size, const char **chunk_data);
+typedef void (*HPMHOOK_post_clif_captcha_preview_request_download) (struct map_session_data *sd, const char *captcha_key, const int chunk_size, const char *chunk_data);
+typedef void (*HPMHOOK_pre_clif_pMacroDetectorDownloadAck) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pMacroDetectorDownloadAck) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_pMacroDetectorAnswer) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pMacroDetectorAnswer) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_macro_detector_request_init) (struct map_session_data **sd, const char **captcha_key, const int *image_size);
+typedef void (*HPMHOOK_post_clif_macro_detector_request_init) (struct map_session_data *sd, const char *captcha_key, const int image_size);
+typedef void (*HPMHOOK_pre_clif_macro_detector_request_download) (struct map_session_data **sd, const char **captcha_key, const int *chunk_size, const char **chunk_data);
+typedef void (*HPMHOOK_post_clif_macro_detector_request_download) (struct map_session_data *sd, const char *captcha_key, const int chunk_size, const char *chunk_data);
+typedef void (*HPMHOOK_pre_clif_macro_detector_request_show) (struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_macro_detector_request_show) (struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_macro_detector_status) (struct map_session_data **sd, enum macro_detect_status *stype);
+typedef void (*HPMHOOK_post_clif_macro_detector_status) (struct map_session_data *sd, enum macro_detect_status stype);
+typedef void (*HPMHOOK_pre_clif_pMacroReporterSelect) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pMacroReporterSelect) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_pMacroReporterAck) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pMacroReporterAck) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_macro_reporter_select) (struct map_session_data **sd, const struct macroaidlist **aid_list);
+typedef void (*HPMHOOK_post_clif_macro_reporter_select) (struct map_session_data *sd, const struct macroaidlist *aid_list);
+typedef void (*HPMHOOK_pre_clif_macro_reporter_status) (struct map_session_data **sd, enum macro_report_status *stype);
+typedef void (*HPMHOOK_post_clif_macro_reporter_status) (struct map_session_data *sd, enum macro_report_status stype);
 #endif // MAP_CLIF_H
 #ifdef COMMON_CORE_H /* cmdline */
 typedef void (*HPMHOOK_pre_cmdline_init) (void);
@@ -4599,6 +4633,32 @@ typedef bool (*HPMHOOK_post_loginlog_config_read_log) (bool retVal___, const cha
 typedef bool (*HPMHOOK_pre_loginlog_config_read) (const char **filename, bool *imported);
 typedef bool (*HPMHOOK_post_loginlog_config_read) (bool retVal___, const char *filename, bool imported);
 #endif // LOGIN_LOGINLOG_H
+#ifdef MAP_MACRO_H /* macro */
+typedef int (*HPMHOOK_pre_macro_init) (bool *minimal);
+typedef int (*HPMHOOK_post_macro_init) (int retVal___, bool minimal);
+typedef void (*HPMHOOK_pre_macro_final) (void);
+typedef void (*HPMHOOK_post_macro_final) (void);
+typedef void (*HPMHOOK_pre_macro_captcha_register) (struct map_session_data **sd, const int *image_size, const char **captcha_answer);
+typedef void (*HPMHOOK_post_macro_captcha_register) (struct map_session_data *sd, const int image_size, const char *captcha_answer);
+typedef void (*HPMHOOK_pre_macro_captcha_register_upload) (struct map_session_data **sd, const char **captcha_key, const int *upload_size, const char **upload_data);
+typedef void (*HPMHOOK_post_macro_captcha_register_upload) (struct map_session_data *sd, const char *captcha_key, const int upload_size, const char *upload_data);
+typedef void (*HPMHOOK_pre_macro_captcha_preview) (struct map_session_data **sd, const int *captcha_idx);
+typedef void (*HPMHOOK_post_macro_captcha_preview) (struct map_session_data *sd, const int captcha_idx);
+typedef void (*HPMHOOK_pre_macro_detector_request) (struct map_session_data **sd);
+typedef void (*HPMHOOK_post_macro_detector_request) (struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_macro_detector_process_answer) (struct map_session_data **sd, const char **captcha_answer);
+typedef void (*HPMHOOK_post_macro_detector_process_answer) (struct map_session_data *sd, const char *captcha_answer);
+typedef int (*HPMHOOK_pre_macro_detector_timeout) (int *tid, int64 *tick, int *id, intptr_t *data);
+typedef int (*HPMHOOK_post_macro_detector_timeout) (int retVal___, int tid, int64 tick, int id, intptr_t data);
+typedef void (*HPMHOOK_pre_macro_detector_disconnect) (struct map_session_data **sd);
+typedef void (*HPMHOOK_post_macro_detector_disconnect) (struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_macro_reporter_area_select) (struct map_session_data **sd, const int16 *x, const int16 *y, const int8 *radius);
+typedef void (*HPMHOOK_post_macro_reporter_area_select) (struct map_session_data *sd, const int16 x, const int16 y, const int8 radius);
+typedef int (*HPMHOOK_pre_macro_reporter_area_select_sub) (struct block_list **bl, va_list ap);
+typedef int (*HPMHOOK_post_macro_reporter_area_select_sub) (int retVal___, struct block_list *bl, va_list ap);
+typedef void (*HPMHOOK_pre_macro_reporter_process) (struct map_session_data **ssd, struct map_session_data **tsd);
+typedef void (*HPMHOOK_post_macro_reporter_process) (struct map_session_data *ssd, struct map_session_data *tsd);
+#endif // MAP_MACRO_H
 #ifdef MAP_MAIL_H /* mail */
 typedef void (*HPMHOOK_pre_mail_clear) (struct map_session_data **sd);
 typedef void (*HPMHOOK_post_mail_clear) (struct map_session_data *sd);
