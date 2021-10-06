@@ -34,7 +34,7 @@ prontera,167,177,5	script	Luppy	DESERT_WOLF_B,{
 		mes "I like "+callfunc("F_Sex","smiling ladies!","bloody pirates!");
 
 		// Show one of 3 emotion from the list (we added ,1 to show emotion over PLAYER's head)
-		emotion callfunc("F_RandMes", 3, e_scissors, e_kis, e_pat), 1;
+		emotion callfunc("F_Rand", 3, e_scissors, e_kis, e_pat), 1;
 		close;
 	}
 
@@ -42,7 +42,7 @@ prontera,167,177,5	script	Luppy	DESERT_WOLF_B,{
 	@gotstuff = 1;
 
 	// Get item ID from the list of presents: Apple, Mastela Fruit, Yggdrasil Seed or Orange Juice
-	.@itemIDfromList = callfunc("F_RandMes", 4, Apple, Fruit_Of_Mastela, Seed_Of_Yggdrasil, Orange_Juice);
+	.@itemIDfromList = callfunc("F_Rand", 4, Apple, Fruit_Of_Mastela, Seed_Of_Yggdrasil, Orange_Juice);
 
 	// Again, say stuff according to player's gender
 	mes "Hey, "+callfunc("F_Sex","sister!","brother!")+" I have "+getitemname(.@itemIDfromList)+" for you!";
