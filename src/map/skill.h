@@ -118,30 +118,35 @@ enum e_skill_nk {
 //A skill with 3 would be no damage + splash: area of effect.
 //Constants to identify a skill's inf2 value.
 enum e_skill_inf2 {
-	INF2_NONE              = 0x00000,
-	INF2_QUEST_SKILL       = 0x00001,
-	INF2_NPC_SKILL         = 0x00002, // NPC skills are those that players can't have in their skill tree.
-	INF2_WEDDING_SKILL     = 0x00004,
-	INF2_SPIRIT_SKILL      = 0x00008,
-	INF2_GUILD_SKILL       = 0x00010,
-	INF2_SONG_DANCE        = 0x00020,
-	INF2_ENSEMBLE_SKILL    = 0x00040,
-	INF2_TRAP              = 0x00080,
-	INF2_TARGET_SELF       = 0x00100, // Refers to ground placed skills that will target the caster as well (like Grandcross)
-	INF2_NO_TARGET_SELF    = 0x00200,
-	INF2_PARTY_ONLY        = 0x00400,
-	INF2_GUILD_ONLY        = 0x00800,
-	INF2_NO_ENEMY          = 0x01000,
-	INF2_NOLP              = 0x02000, // Spells that can ignore Land Protector
-	INF2_CHORUS_SKILL      = 0x04000, // Chorus skill
-	INF2_FREE_CAST_NORMAL  = 0x08000,
-	INF2_FREE_CAST_REDUCED = 0x10000,
-	INF2_SHOW_SKILL_SCALE  = 0x20000,
-	INF2_ALLOW_REPRODUCE   = 0x40000,
-	INF2_HIDDEN_TRAP       = 0x80000, // Traps that are hidden (based on trap_visiblity battle conf)
-	INF2_IS_COMBO_SKILL    = 0x100000, // Sets whether a skill can be used in combos or not
-	INF2_NO_STASIS         = 0x200000,
-	INF2_NO_KAGEHUMI       = 0x400000,
+	INF2_NONE               = 0x0000000,
+	INF2_QUEST_SKILL        = 0x0000001,
+	INF2_NPC_SKILL          = 0x0000002, // NPC skills are those that players can't have in their skill tree.
+	INF2_WEDDING_SKILL      = 0x0000004,
+	INF2_SPIRIT_SKILL       = 0x0000008,
+	INF2_GUILD_SKILL        = 0x0000010,
+	INF2_SONG_DANCE         = 0x0000020,
+	INF2_ENSEMBLE_SKILL     = 0x0000040,
+	INF2_TRAP               = 0x0000080,
+	INF2_TARGET_SELF        = 0x0000100, // Refers to ground placed skills that will target the caster as well (like Grandcross)
+	INF2_NO_TARGET_SELF     = 0x0000200,
+	INF2_PARTY_ONLY         = 0x0000400,
+	INF2_GUILD_ONLY         = 0x0000800,
+	INF2_NO_ENEMY           = 0x0001000,
+	INF2_NOLP               = 0x0002000, // Spells that can ignore Land Protector
+	INF2_CHORUS_SKILL       = 0x0004000, // Chorus skill
+	INF2_FREE_CAST_NORMAL   = 0x0008000,
+	INF2_FREE_CAST_REDUCED  = 0x0010000,
+	INF2_SHOW_SKILL_SCALE   = 0x0020000,
+	INF2_ALLOW_REPRODUCE    = 0x0040000,
+	INF2_HIDDEN_TRAP        = 0x0080000, // Traps that are hidden (based on trap_visiblity battle conf)
+	INF2_IS_COMBO_SKILL     = 0x0100000, // Sets whether a skill can be used in combos or not
+	INF2_NO_STASIS          = 0x0200000,
+	INF2_NO_KAGEHUMI        = 0x0400000,
+	INF2_RANGE_VULTURE      = 0x0800000, // Range is modified by AC_VULTURE
+	INF2_RANGE_SNAKEEYE     = 0x1000000, // Range is modified by GS_SNAKEEYE
+	INF2_RANGE_SHADOWJUMP   = 0x2000000, // Range is modified by NJ_SHADOWJUMP
+	INF2_RANGE_RADIUS       = 0x4000000, // Range is modified by WL_RADIUS
+	INF2_RANGE_RESEARCHTRAP = 0x8000000, // Range is modified by RA_RESEARCHTRAP
 };
 
 

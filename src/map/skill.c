@@ -1084,73 +1084,29 @@ static int skill_get_range2(struct block_list *bl, int skill_id, int skill_lv)
 		range *=-1;
 	}
 
-	//TODO: Find a way better than hardcoding the list of skills affected by AC_VULTURE
-	switch( skill_id ) {
-		case AC_SHOWER:
-		case MA_SHOWER:
-		case AC_DOUBLE:
-		case MA_DOUBLE:
-		case HT_BLITZBEAT:
-		case AC_CHARGEARROW:
-		case MA_CHARGEARROW:
-		case SN_FALCONASSAULT:
-		case HT_POWER:
-		/**
-		 * Ranger
-		 **/
-		case RA_ARROWSTORM:
-		case RA_AIMEDBOLT:
-		case RA_WUGBITE:
-			if (sd != NULL)
-				range += pc->checkskill(sd, AC_VULTURE);
-			else
-				range += battle->bc->mob_eye_range_bonus;
-			break;
-		// added to allow GS skills to be effected by the range of Snake Eyes [Reddozen]
-		case GS_RAPIDSHOWER:
-		case GS_PIERCINGSHOT:
-		case GS_FULLBUSTER:
-		case GS_SPREADATTACK:
-		case GS_GROUNDDRIFT:
-			if (sd != NULL)
-				range += pc->checkskill(sd, GS_SNAKEEYE);
-			else
-				range += battle->bc->mob_eye_range_bonus;
-			break;
-		case NJ_KIRIKAGE:
-			if (sd != NULL)
-				range = skill->get_range(NJ_SHADOWJUMP, pc->checkskill(sd, NJ_SHADOWJUMP));
-			break;
-		/**
-		 * Warlock
-		 **/
-		case WL_WHITEIMPRISON:
-		case WL_SOULEXPANSION:
-		case WL_MARSHOFABYSS:
-		case WL_SIENNAEXECRATE:
-		case WL_DRAINLIFE:
-		case WL_CRIMSONROCK:
-		case WL_HELLINFERNO:
-		case WL_COMET:
-		case WL_CHAINLIGHTNING:
-		case WL_TETRAVORTEX:
-		case WL_EARTHSTRAIN:
-		case WL_RELEASE:
-			if (sd != NULL)
-				range += pc->checkskill(sd, WL_RADIUS);
-			break;
-		/**
-		 * Ranger Bonus
-		 **/
-		case HT_LANDMINE:
-		case HT_FREEZINGTRAP:
-		case HT_BLASTMINE:
-		case HT_CLAYMORETRAP:
-		case RA_CLUSTERBOMB:
-		case RA_FIRINGTRAP:
-		case RA_ICEBOUNDTRAP:
-			if (sd != NULL)
-				range += (1 + pc->checkskill(sd, RA_RESEARCHTRAP))/2;
+	int inf = skill->get_inf2(skill_id);
+
+	if (sd != NULL) {
+		if (inf & INF2_RANGE_VULTURE)
+			range += pc->checkskill(sd, AC_VULTURE);
+
+		if (inf & INF2_RANGE_SNAKEEYE)
+			range += pc->checkskill(sd, GS_SNAKEEYE);
+
+		if (inf & INF2_RANGE_SHADOWJUMP)
+			range = skill->get_range(NJ_SHADOWJUMP, pc->checkskill(sd, NJ_SHADOWJUMP));
+
+		if (inf & INF2_RANGE_RADIUS)
+			range += pc->checkskill(sd, WL_RADIUS);
+
+		if (inf & INF2_RANGE_RESEARCHTRAP)
+			range += (1 + pc->checkskill(sd, RA_RESEARCHTRAP)) / 2;
+	} else {
+		if (inf & INF2_RANGE_VULTURE)
+			range += battle->bc->mob_eye_range_bonus;
+
+		if (inf & INF2_RANGE_SNAKEEYE)
+			range += battle->bc->mob_eye_range_bonus;
 	}
 
 	if( !range && bl->type != BL_PC )
@@ -21514,6 +21470,31 @@ static void skill_validate_skillinfo(struct config_setting_t *conf, struct s_ski
 					sk->inf2 |= INF2_NO_KAGEHUMI;
 				else
 					sk->inf2 &= ~INF2_NO_KAGEHUMI;
+			} else if (strcmpi(skill_info, "RangeModByVulture") == 0) {
+				if (on)
+					sk->inf2 |= INF2_RANGE_VULTURE;
+				else
+					sk->inf2 &= ~INF2_RANGE_VULTURE;
+			} else if (strcmpi(skill_info, "RangeModBySnakeEye") == 0) {
+				if (on)
+					sk->inf2 |= INF2_RANGE_SNAKEEYE;
+				else
+					sk->inf2 &= ~INF2_RANGE_SNAKEEYE;
+			} else if (strcmpi(skill_info, "RangeModByShadowJump") == 0) {
+				if (on)
+					sk->inf2 |= INF2_RANGE_SHADOWJUMP;
+				else
+					sk->inf2 &= ~INF2_RANGE_SHADOWJUMP;
+			} else if (strcmpi(skill_info, "RangeModByRadius") == 0) {
+				if (on)
+					sk->inf2 |= INF2_RANGE_RADIUS;
+				else
+					sk->inf2 &= ~INF2_RANGE_RADIUS;
+			} else if (strcmpi(skill_info, "RangeModByResearchTrap") == 0) {
+				if (on)
+					sk->inf2 |= INF2_RANGE_RESEARCHTRAP;
+				else
+					sk->inf2 &= ~INF2_RANGE_RESEARCHTRAP;
 			} else if (strcmpi(skill_info, "None") != 0) {
 				ShowWarning("%s: Invalid sub-type %s specified for skill ID %d in %s! Skipping sub-type...\n",
 					    __func__, skill_info, sk->nameid, conf->file);
