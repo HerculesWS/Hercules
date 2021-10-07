@@ -2006,7 +2006,7 @@ static int mapif_parse_SaveGuildStorage(int fd)
 
 	if (storage_capacity > 0) {
 		gstor.items.data = aCalloc(storage_capacity, sizeof gstor.items.data[0]);
-		memcpy(&gstor.items.data, RFIFOP(fd, 20), sizeof gstor.items.data[0] * storage_capacity);
+		memcpy(gstor.items.data, RFIFOP(fd, 20), sizeof gstor.items.data[0] * storage_capacity);
 	}
 	gstor.items.amount = storage_amount;
 	gstor.items.capacity = storage_capacity;
