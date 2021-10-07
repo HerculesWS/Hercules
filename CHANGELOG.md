@@ -22,6 +22,47 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
+## [v2021.10.06] `October 06 2021`
+
+### Added
+
+- Implemented the official Macro Detection/Captcha system. Note: a client patch may be necessary, in order to correct an inconsistency between the BMP formats accepted by the Register functions and the Detector/Preview UI. (#3051)
+  - Includes:
+    - The Macro Register UI, available through the `/macro_register` command.
+    - The Macro Detector UI, triggered by the server to send captcha challenges to players.
+    - The Macro Reporter UI, available through the `/macro_detector` command.
+    - The Captcha Preview UI, available through the `/macro_preview <captcha_id>` command.
+  - See the Pull Request #3051 description and http://nemo.herc.ws/patches/ChangeCaptchaImageDecompressionSize/ for screenshots and more details.
+- Added a new SC flag `NoMagicBlocked`, to block a status change while under the no magic state. (#3050)
+- Added a startup check to ensure the best/fastest available clock source is used on Linux. (#3046)
+  - Additional related resources:
+    - https://www.kernel.org/doc/Documentation/timers/timekeeping.txt
+    - https://www.kernel.org/doc/Documentation/timers/
+    - https://access.redhat.com/solutions/18627
+- Added the skill flags `RangeModByVulture`, `RangeModBySnakeEye`, `RangeModByShadowJump`, `RangeModByRadius`, `RangeModByResearchTrap`, replacing hardcoded skill range modifiers. (#3043)
+
+### Changed
+
+- Removed redundant `sd->hd` NULL checks before calls to `homun_alive()`. (#3056)
+- Regenerated the `configure` script with Autoconf 2.71. (part of #3046)
+- Updated some party-related packets (`PACKET_ZC_ACK_MAKE_GROUP`, `PACKET_ZC_PARTY_JOIN_REQ`, `PACKET_ZC_PARTY_JOIN_REQ_ACK`, `PACKET_ZC_NOTIFY_CHAT_PARTY`, `PACKET_ZC_NOTIFY_POSITION_TO_GROUPM`, `PACKET_ZC_NOTIFY_HP_TO_GROUPM`, `PACKET_ZC_PARTY_MEMBER_JOB_LEVEL`, `PACKET_ZC_DELETE_MEMBER_FROM_GROUP`  to use the struct format. (#3049)
+- Updated `.mailmap`. (#3010)
+
+### Fixed
+
+- Fixed Kaite in Renewal to increase melee damage to 400% as in official servers. (#3054)
+- Added a missing `equipFlag` to the `ZC_ENCHANT_EQUIPMENT` packet. (#3052)
+- Fixed `SC_GENTLETOUCH_CHANGE` not applying the WATK bonus. (#3048, issue #1629)
+- Fixed the `Daehyon_Card` script effect to only work on One or Two Handed Sword. (#3047, issue #2996)
+- Fixed `SC_HOWLING_MINE` to use `status->isdead()` through the HPM interface instead of directly. (#3044)
+- Fixed the weapon type requirement of `KO_JYUMONJIKIRI` to require that left and right hand aren't bare fists (but the right hand can be a shield). (#3041)
+- Fixed the `Womens_Bundle` item script and the `npc_live_dialogues.txt` documentation still referencing the `F_RandMes()` function instead of `F_Rand()`. (#3040, issue #3039)
+- Fixed a redundant `MAPID_BABY_TAEKWON` in the `pc_jobchange()` fame list check. (#3057)
+
+### Others
+
+- Note: Even if we release at the beginning of the month, Hacktoberfest is still in progress! We'll be granting the `hacktoberfest-accepted` label to any valid PRs opened before October 31st, even if we'll include them in the November release. Make sure to sign up on https://hacktoberfest.digitalocean.com/ and open your PRs before the deadline if you wish to participate. Happy Hacktoberfest!
+
 ## [v2021.09.01] `September 01 2021`
 
 ### Added
@@ -1999,6 +2040,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2021.10.06]: https://github.com/HerculesWS/Hercules/compare/v2021.09.01...v2021.10.06
 [v2021.09.01]: https://github.com/HerculesWS/Hercules/compare/v2021.08.04...v2021.09.01
 [v2021.08.04]: https://github.com/HerculesWS/Hercules/compare/v2021.07.07...v2021.08.04
 [v2021.07.07]: https://github.com/HerculesWS/Hercules/compare/v2021.06.02...v2021.07.07
