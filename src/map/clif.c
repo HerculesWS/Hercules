@@ -15862,7 +15862,7 @@ static void clif_parse_GM_Monster_Item(int fd, struct map_session_data *sd) __at
 /// /item money - grants 2147483647 Zeny
 /// /item whereisboss - locate boss mob in current map.(not yet implemented)
 /// /item regenboss_n t - regenerate n boss monster by t millisecond.(not yet implemented)
-/// /item onekillmonster - toggle an ability to kill mobs in one hit.(not yet implemented)
+/// /item onekillmonster - toggle an ability to kill mobs in one hit.
 /// /item bossinfo - display the information of a boss monster in current map.(not yet implemented)
 /// /item cap_n - capture n monster as pet.(not yet implemented)
 /// /item agitinvest - reset current global agit investments.(not yet implemented)
@@ -15921,6 +15921,15 @@ static void clif_parse_GM_Monster_Item(int fd, struct map_session_data *sd)
 			snprintf(command, sizeof(command)-1, "%cmonster %s", atcommand->at_symbol, mob_array[i]->sprite);
 			atcommand->exec(fd, sd, command, true);
 		}
+	}
+
+	if (strcmp("onekillmonster", item_monster_name) == 0) {
+		sd->state.onekillmonster = !sd->state.onekillmonster;
+		if (sd->state.onekillmonster != 0)
+			clif->message(fd, msg_fd(fd, 1522)); // Instant monster kill state started.
+		else
+			clif->message(fd, msg_fd(fd, 1523)); // Instant monster kill state ended.
+		return;
 	}
 }
 
