@@ -8218,7 +8218,7 @@ static void clif_guild_basicinfo(struct map_session_data *sd)
 	p->virtue = 0;  // Virtue: (down) Wicked [-100,100] Righteous (up)
 	p->emblemVersion = g->emblem_id;
 	memcpy(p->guildname, g->name, NAME_LENGTH);
-	memcpy(p->manageLand, msg_sd(sd, 300 + guild->checkcastles(g)), MAP_NAME_LENGTH_EXT);
+	safestrncpy(p->manageLand, msg_sd(sd, 300 + guild->checkcastles(g)), MAP_NAME_LENGTH_EXT);
 	p->zeny = 0;
 #if PACKETVER_MAIN_NUM >= 20161019 || PACKETVER_RE_NUM >= 20160921 || defined(PACKETVER_ZERO)
 	p->masterGID = g->member[0].char_id;  // leader
