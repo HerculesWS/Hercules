@@ -2021,7 +2021,7 @@ static int mapif_parse_SaveGuildStorage(int fd)
 
 	if (gstor.items.data != NULL)
 		aFree(gstor.items.data);
-	mapif->save_guild_storage_ack(fd, RFIFOL(fd, 4), guild_id, 0);
+	mapif->save_guild_storage_ack(fd, account_id, guild_id, 0);
 	return 0;
 }
 
