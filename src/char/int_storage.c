@@ -260,8 +260,8 @@ static bool inter_storage_guild_storage_tosql(int guild_id, const struct guild_s
 	}
 	SQL->FreeResult(inter->sql_handle);
 
-	int err_count = chr->memitemdata_to_sql(gstor->items.data, gstor->items.capacity, gstor->guild_id, TABLE_GUILD_STORAGE);
-	if (err_count != 0) {
+	int changes = chr->memitemdata_to_sql(gstor->items.data, gstor->items.capacity, gstor->guild_id, TABLE_GUILD_STORAGE);
+	if (changes == -1) {
 		ShowError("guild_storage_tosql: Couldn't save storage item data! (GID: %d)\n", gstor->guild_id);
 		return false;
 	}
