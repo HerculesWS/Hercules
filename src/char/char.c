@@ -441,7 +441,7 @@ static int char_mmo_char_tosql(int char_id, struct mmo_charstatus *p)
 
 	//map inventory data
 	if( memcmp(p->inventory, cp->inventory, sizeof(p->inventory)) ) {
-		if (!chr->memitemdata_to_sql(p->inventory, -1, p->char_id, TABLE_INVENTORY))
+		if (chr->memitemdata_to_sql(p->inventory, -1, p->char_id, TABLE_INVENTORY) >= 0)
 			strcat(save_status, " inventory");
 		else
 			errors++;
@@ -449,7 +449,7 @@ static int char_mmo_char_tosql(int char_id, struct mmo_charstatus *p)
 
 	//map cart data
 	if( memcmp(p->cart, cp->cart, sizeof(p->cart)) ) {
-		if (!chr->memitemdata_to_sql(p->cart, -1, p->char_id, TABLE_CART))
+		if (chr->memitemdata_to_sql(p->cart, -1, p->char_id, TABLE_CART) >= 0)
 			strcat(save_status, " cart");
 		else
 			errors++;
@@ -851,7 +851,7 @@ static int char_memitemdata_to_sql(const struct item *p_items, int current_size,
 	const char *tablename = NULL;
 	const char *selectoption = NULL;
 	bool has_favorite = false;
-	int total_updates = 0, total_deletes = 0, total_inserts = 0, total_changes = 0;
+	int total_updates = 0, total_deletes = 0, total_inserts = 0;
 	int max_size = 0;
 	int db_size = 0;
 
@@ -1019,7 +1019,7 @@ static int char_memitemdata_to_sql(const struct item *p_items, int current_size,
 
 	ShowInfo("%s save complete - guid: %d (replace: %d, insert: %d, delete: %d)\n", tablename, guid, total_updates, total_inserts, total_deletes);
 
-	return total_changes;
+	return total_updates + total_inserts + total_deletes;
 }
 
 /**

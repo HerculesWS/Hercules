@@ -2006,7 +2006,7 @@ static int mapif_parse_SaveGuildStorage(int fd)
 
 	if (storage_capacity > 0) {
 		gstor.items.data = aCalloc(storage_capacity, sizeof gstor.items.data[0]);
-		memcpy(&gstor.items.data, RFIFOP(fd, 20), sizeof gstor.items.data[0] * storage_capacity);
+		memcpy(gstor.items.data, RFIFOP(fd, 20), sizeof gstor.items.data[0] * storage_capacity);
 	}
 	gstor.items.amount = storage_amount;
 	gstor.items.capacity = storage_capacity;
@@ -2021,7 +2021,7 @@ static int mapif_parse_SaveGuildStorage(int fd)
 
 	if (gstor.items.data != NULL)
 		aFree(gstor.items.data);
-	mapif->save_guild_storage_ack(fd, RFIFOL(fd, 4), guild_id, 0);
+	mapif->save_guild_storage_ack(fd, account_id, guild_id, 0);
 	return 0;
 }
 
