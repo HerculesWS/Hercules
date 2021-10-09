@@ -22,6 +22,14 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
+## [v2021.10.06+1] `October 06 2021`  `PATCH 1`
+
+### Fixed
+
+- Fixed a critical guild storage saving issue causing item duplication. (#3059)
+- Fixed the return code of `chr->memitemdata_to_sql()` to behave as documented. (part of #3059)
+- Fixed a possible out of bound read from a buffer in `clif_guild_basicinfo()`. (part of #3059)
+
 ## [v2021.10.06] `October 06 2021`
 
 ### Added
