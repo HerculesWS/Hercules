@@ -21,12 +21,17 @@
 
 #include "macro.h"
 
+#include "common/conf.h"
 #include "common/db.h"
+#include "common/grfio.h"
 #include "common/memmgr.h"
 #include "common/mmo.h"
 #include "common/nullpo.h"
 #include "common/random.h"
+#include "common/showmsg.h"
+#include "common/strlib.h"
 #include "common/timer.h"
+#include "common/utils.h"
 #include "map/battle.h"
 #include "map/chrif.h"
 #include "map/clif.h"
@@ -36,6 +41,7 @@
 
 static struct macro_interface macro_s;
 struct macro_interface *macro;
+const char *macro_allowed_answer_chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 
 static void macro_captcha_register(struct map_session_data *sd, const int image_size, const char *captcha_answer)
 {
@@ -272,6 +278,135 @@ static void macro_reporter_process(struct map_session_data *ssd, struct map_sess
 										macro->detector_timeout, tsd->bl.id, 0);
 }
 
+static bool macro_read_captcha_db_libconfig(void)
+{
+	char filepath[256];
+	safesnprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, "captcha_db.conf");
+
+	struct config_t captcha_db_conf;
+	if (libconfig->load_file(&captcha_db_conf, filepath) == CONFIG_FALSE) {
+		ShowError("%s: can't read %s\n", __func__, filepath);
+		return false;
+	}
+
+	int i = 0;
+	int count = 0;
+	struct config_setting_t *it = NULL;
+	struct config_setting_t *cdb = libconfig->lookup(&captcha_db_conf, "captcha_db");
+
+	while ((it = libconfig->setting_get_elem(cdb, i++)) != NULL) {
+		if (macro->read_captcha_db_libconfig_sub(it, i - 1, filepath))
+			++count;
+	}
+
+	libconfig->destroy(&captcha_db_conf);
+	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	return true;
+}
+
+static bool macro_read_captcha_db_libconfig_sub(const struct config_setting_t *it, int n, const char *source)
+{
+	nullpo_ret(it);
+	nullpo_ret(source);
+
+	const char *filename = libconfig->setting_get_string_elem(it, 0);
+
+	if (filename == NULL) {
+		ShowError("%s: Invalid filename for entry %d in %s\n", __func__, n, source);
+		return false;
+	}
+
+	char filepath[256];
+	safesnprintf(filepath, sizeof(filepath), "%s/captcha/%s", map->db_path, filename);
+
+	if (!exists(filepath)) {
+		ShowError("%s: File %s does not exist for entry %d in %s\n", __func__, filepath, n, source);
+		return false;
+	}
+
+	const char *answer = libconfig->setting_get_string_elem(it, 1);
+
+	if (answer == NULL) {
+		ShowError("%s: Invalid answer for entry %d in %s\n", __func__, n, source);
+		return false;
+	}
+
+	const unsigned long alen = strlen(answer);
+	if (alen < 4 || alen > 15) {
+		ShowError("%s: Answer \"%s\" must be between 4~15 chars in len for entry %d in %s\n", __func__, answer, n, source);
+		return false;
+	}
+
+	for (int i = 0; i < alen; ++i) {
+		if (strchr(macro_allowed_answer_chars, answer[i]) == NULL) {
+			ShowError("%s: Answer \"%s\" have an invalid character \"%c\" for entry %d in %s\n", __func__, answer, answer[i], n, source);
+			return false;
+		}
+	}
+
+	struct captcha_data cd = { 0 };
+	if (!macro->read_captcha_db_libconfig_sub_loadbmp(filepath, &cd))
+		return false;
+
+	VECTOR_ENSURE(macro->captcha_registery, 1, 1);
+
+	cd.upload_size = cd.image_size;
+	safestrncpy(cd.captcha_answer, answer, sizeof(cd.captcha_answer));
+
+	char captcha_key[4];
+	sprintf(captcha_key, "%03X", (unsigned int)VECTOR_CAPACITY(macro->captcha_registery));
+	safestrncpy(cd.captcha_key, captcha_key, sizeof(cd.captcha_key));
+
+	VECTOR_PUSH(macro->captcha_registery, cd);
+	return true;
+}
+
+static bool macro_read_captcha_db_libconfig_sub_loadbmp(const char *filepath, struct captcha_data *cd)
+{
+	nullpo_retr(false, filepath);
+	nullpo_retr(false, cd);
+
+	FILE *fp = fopen(filepath, "rb");
+	nullpo_retr(false, fp);
+
+	// Get the file size
+	fseek(fp, 0, SEEK_END);
+	const unsigned int file_len = (unsigned int)ftell(fp);
+	fseek(fp, 0, SEEK_SET);
+
+	if (file_len != CAPTCHA_BMP_SIZE) {
+		ShowError("%s: Invalid BMP file given at \"%s\"\n", __func__, filepath);
+		fclose(fp);
+		return false;
+	}
+
+	// Load the file data and verify magic
+	char *bmp_data = aMalloc(CAPTCHA_BMP_SIZE);
+	if (fread(bmp_data, CAPTCHA_BMP_SIZE, 1, fp) != 1) {
+		ShowError("%s: Failed to read data from \"%s\"\n", __func__, filepath);
+		fclose(fp);
+		aFree(bmp_data);
+		return false;
+	}
+	if (bmp_data[0] != 'B' || bmp_data[1] != 'M') {
+		ShowError("%s: Invalid BMP file header given at \"%s\"\n", __func__, filepath);
+		fclose(fp);
+		aFree(bmp_data);
+		return false;
+	}
+
+	// Initialize the destination buffer
+	cd->image_size = 0;
+	memset(cd->image_data, 0, CAPTCHA_BMP_SIZE);
+
+	// Compress the data into the destination
+	grfio->encode_zip(cd->image_data, (unsigned long *)&cd->image_size, bmp_data, CAPTCHA_BMP_SIZE);
+
+	fclose(fp);
+	aFree(bmp_data);
+	return true;
+}
+
 static int do_init_macro(bool minimal)
 {
 	if (minimal)
@@ -279,6 +414,7 @@ static int do_init_macro(bool minimal)
 
 	VECTOR_INIT(macro->captcha_registery);
 	timer->add_func_list(macro->detector_timeout, "macro_detector_timeout");
+	macro->read_captcha_db_libconfig();
 	return 0;
 }
 
@@ -305,4 +441,7 @@ void macro_defaults(void)
 	macro->reporter_area_select = macro_reporter_area_select;
 	macro->reporter_area_select_sub = macro_reporter_area_select_sub;
 	macro->reporter_process = macro_reporter_process;
+	macro->read_captcha_db_libconfig = macro_read_captcha_db_libconfig;
+	macro->read_captcha_db_libconfig_sub = macro_read_captcha_db_libconfig_sub;
+	macro->read_captcha_db_libconfig_sub_loadbmp = macro_read_captcha_db_libconfig_sub_loadbmp;
 }

@@ -25,6 +25,8 @@
 #include "common/hercules.h"
 #include "common/mmo.h"
 
+struct config_setting_t;
+
 #define CAPTCHA_BMP_SIZE (2 + 52 + (3 * 220 * 90)) // sizeof("BM") + sizeof(BITMAPV2INFOHEADER) + 24bits 220x90 BMP
 #define CAPTCHA_REGISTERY_MAX_SIZE 0xFFF
 #define MAX_CAPTCHA_CHUNK_SIZE 1024
@@ -99,6 +101,10 @@ struct macro_interface {
 	int (*reporter_area_select_sub) (struct block_list *bl, va_list ap);
 	void (*reporter_process) (struct map_session_data *ssd, struct map_session_data *tsd);
 
+	/* Libconfig Database */
+	bool (*read_captcha_db_libconfig) (void);
+	bool (*read_captcha_db_libconfig_sub) (const struct config_setting_t *it, int n, const char *source);
+	bool (*read_captcha_db_libconfig_sub_loadbmp) (const char *filepath, struct captcha_data *cd);
 };
 
 #ifdef HERCULES_CORE
