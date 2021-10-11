@@ -41,6 +41,7 @@
 #include "map/irc-bot.h"
 #include "map/itemdb.h"
 #include "map/log.h"
+#include "map/macro.h"
 #include "map/mail.h"
 #include "map/mapreg.h"
 #include "map/mercenary.h"
@@ -7031,6 +7032,7 @@ int do_init(int argc, char *argv[])
 	quest->init(minimal);
 	achievement->init(minimal);
 	stylist->init(minimal);
+	macro->init(minimal);
 	npc->init(minimal);
 	unit->init(minimal);
 	bg->init(minimal);
