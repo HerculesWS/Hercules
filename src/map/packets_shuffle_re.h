@@ -3,7 +3,7 @@
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
  * Copyright (C) 2013-2021 Hercules Dev Team
- * Copyright (C) 2018-2020 Andrei Karas (4144)
+ * Copyright (C) 2018-2021 Andrei Karas (4144)
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -9618,7 +9618,7 @@
 	packet(0x0969,clif->pActionRequest,2,6);
 #endif
 
-// 2018-03-21aRagexeRE, 2018-03-28bRagexeRE, 2018-04-04cRagexeRE, 2018-04-18bRagexeRE, 2018-04-25cRagexeRE, 2018-05-02bRagexeRE, 2018-05-02dRagexeRE, 2018-05-16cRagexeRE, 2018-05-23aRagexeRE, 2018-05-30bRagexeRE, 2018-05-30cRagexeRE, 2018-06-05bRagexeRE, 2018-06-12aRagexeRE, 2018-06-12bRagexeRE, 2018-06-20dRagexeRE, 2018-06-20eRagexeRE, 2018-06-21aRagexeRE, 2018-07-04aRagexeRE, 2018-07-11aRagexeRE, 2018-07-18bRagexeRE, 2018-07-18bRagexeRE1, 2018-07-18cRagexeRE, 2018-08-01cRagexeRE, 2018-08-08bRagexeRE, 2018-08-22cRagexeRE, 2018-08-29aRagexeRE, 2018-08-29bRagexeRE, 2018-09-12dRagexeRE, 2018-09-19aRagexeRE, 2018-10-02aRagexeRE, 2018-10-02bRagexeRE, 2018-10-17_02aRagexeRE, 2018-10-17_03aRagexeRE, 2018-10-17bRagexeRE, 2018-10-31cRagexeRE, 2018-11-07aRagexeRE, 2018-11-14cRagexeRE, 2018-11-14dRagexeRE, 2018-11-21cRagexeRE, 2018-11-28aRagexeRE, 2018-12-05bRagexeRE, 2018-12-12aRagexeRE, 2018-12-12bRagexeRE, 2018-12-19bRagexeRE, 2018-12-26aRagexeRE, 2019-01-09bRagexeRE, 2019-01-16bRagexeRE, 2019-01-16cRagexeRE, 2019-01-23dRagexeRE, 2019-02-13IRagexeRE, 2019-02-20aRagexeRE, 2019-02-27bRagexeRE, 2019-02-28aRagexeRE, 2019-03-06bRagexeRE, 2019-03-06cRagexeRE, 2019-03-20aRagexeRE, 2019-03-22aRagexeRE, 2019-03-27bRagexeRE, 2019-04-03bRagexeRE, 2019-04-03cRagexeRE, 2019-04-17cRagexeRE, 2019-04-18aRagexeRE, 2019-05-08dRagexeRE, 2019-05-08eRagexeRE, 2019-05-22bRagexeRE, 2019-05-22cRagexeRE, 2019-05-29bRagexeRE, 2019-05-29cRagexeRE, 2019-05-30aRagexeRE, 2019-06-05hRagexeRE, 2019-06-05JRagexeRE, 2019-06-05LRagexeRE, 2019-06-19cRagexeRE, 2019-06-26bRagexeRE, 2019-07-03bRagexeRE, 2019-07-17cRagexeRE, 2019-07-17dRagexeRE, 2019-07-24bRagexeRE, 2019-07-31bRagexeRE, 2019-08-02aRagexeRE, 2019-08-07dRagexeRE, 2019-08-21cRagexeRE, 2019-08-21dRagexeRE, 2019-08-28aRagexeRE, 2019-09-04bRagexeRE, 2019-09-18cRagexeRE, 2019-09-25aRagexeRE, 2019-09-25bRagexeRE, 2019-10-02bRagexeRE, 2019-10-02dRagexeRE, 2019-10-02dRagexeRE_2, 2019-10-16fRagexeRE, 2019-10-16gRagexeRE, 2019-10-23aRagexeRE, 2019-10-30bRagexeRE, 2019-11-06bRagexeRE, 2019-11-07aRagexeRE, 2019-11-13eRagexeRE, 2019-11-20cRagexeRE, 2019-11-27aRagexeRE, 2019-12-04aRagexeRE, 2019-12-04bRagexeRE, 2019-12-04cRagexeRE, 2019-12-11fRagexeRE, 2019-12-18bRagexeRE, 2019-12-24aRagexeRE, 2019-12-24bRagexeRE, 2020-01-08bRagexeRE, 2020-01-22cRagexeRE, 2020-02-05aRagexeRE, 2020-02-12aRagexeRE, 2020-02-19eRagexeRE, 2020-03-04aRagexeRE, 2020-07-09_sakaRagexeRE
+// 2018-03-21aRagexeRE, 2018-03-28bRagexeRE, 2018-04-04cRagexeRE, 2018-04-18bRagexeRE, 2018-04-25cRagexeRE, 2018-05-02bRagexeRE, 2018-05-02dRagexeRE, 2018-05-16cRagexeRE, 2018-05-23aRagexeRE, 2018-05-30bRagexeRE, 2018-05-30cRagexeRE, 2018-06-05bRagexeRE, 2018-06-12aRagexeRE, 2018-06-12bRagexeRE, 2018-06-20dRagexeRE, 2018-06-20eRagexeRE, 2018-06-21aRagexeRE, 2018-07-04aRagexeRE, 2018-07-11aRagexeRE, 2018-07-18bRagexeRE, 2018-07-18bRagexeRE1, 2018-07-18cRagexeRE, 2018-08-01cRagexeRE, 2018-08-08bRagexeRE, 2018-08-22cRagexeRE, 2018-08-29aRagexeRE, 2018-08-29bRagexeRE, 2018-09-12dRagexeRE, 2018-09-19aRagexeRE, 2018-10-02aRagexeRE, 2018-10-02bRagexeRE, 2018-10-17_02aRagexeRE, 2018-10-17_03aRagexeRE, 2018-10-17bRagexeRE, 2018-10-31cRagexeRE, 2018-11-07aRagexeRE, 2018-11-14cRagexeRE, 2018-11-14dRagexeRE, 2018-11-21cRagexeRE, 2018-11-28aRagexeRE, 2018-12-05bRagexeRE, 2018-12-12aRagexeRE, 2018-12-12bRagexeRE, 2018-12-19bRagexeRE, 2018-12-26aRagexeRE, 2019-01-09bRagexeRE, 2019-01-16bRagexeRE, 2019-01-16cRagexeRE, 2019-01-23dRagexeRE, 2019-02-13IRagexeRE, 2019-02-20aRagexeRE, 2019-02-27bRagexeRE, 2019-02-28aRagexeRE, 2019-03-06bRagexeRE, 2019-03-06cRagexeRE, 2019-03-20aRagexeRE, 2019-03-22aRagexeRE, 2019-03-27bRagexeRE, 2019-04-03bRagexeRE, 2019-04-03cRagexeRE, 2019-04-17cRagexeRE, 2019-04-18aRagexeRE, 2019-05-08dRagexeRE, 2019-05-08eRagexeRE, 2019-05-22bRagexeRE, 2019-05-22cRagexeRE, 2019-05-29bRagexeRE, 2019-05-29cRagexeRE, 2019-05-30aRagexeRE, 2019-06-05hRagexeRE, 2019-06-05JRagexeRE, 2019-06-05LRagexeRE, 2019-06-19cRagexeRE, 2019-06-26bRagexeRE, 2019-07-03bRagexeRE, 2019-07-17cRagexeRE, 2019-07-17dRagexeRE, 2019-07-24bRagexeRE, 2019-07-31bRagexeRE, 2019-08-02aRagexeRE, 2019-08-07dRagexeRE, 2019-08-21cRagexeRE, 2019-08-21dRagexeRE, 2019-08-28aRagexeRE, 2019-09-04bRagexeRE, 2019-09-18cRagexeRE, 2019-09-25aRagexeRE, 2019-09-25bRagexeRE, 2019-10-02bRagexeRE, 2019-10-02dRagexeRE, 2019-10-02dRagexeRE_2, 2019-10-16fRagexeRE, 2019-10-16gRagexeRE, 2019-10-23aRagexeRE, 2019-10-30bRagexeRE, 2019-11-06bRagexeRE, 2019-11-07aRagexeRE, 2019-11-13eRagexeRE, 2019-11-20cRagexeRE, 2019-11-27aRagexeRE, 2019-12-04aRagexeRE, 2019-12-04bRagexeRE, 2019-12-04cRagexeRE, 2019-12-11fRagexeRE, 2019-12-18bRagexeRE, 2019-12-24aRagexeRE, 2019-12-24bRagexeRE, 2020-01-08bRagexeRE, 2020-01-22cRagexeRE, 2020-02-05aRagexeRE, 2020-02-12aRagexeRE, 2020-02-19eRagexeRE, 2020-03-04aRagexeRE, 2020-07-09_sakaRagexeRE, 2020-07-23_sakaRagexeRE, 2020-07-23_sakbRagexeRE, 2020-07-24aRagexeRE, 2020-07-29aRagexeRE, 2020-08-05aRagexeRE, 2020-08-06aRagexeRE, 2020-08-12aRagexeRE, 2020-08-19aRagexeRE, 2020-09-02aRagexeRE, 2020-09-02bRagexeRE, 2021-01-07aRagexeRE
 #if PACKETVER == 20180321 || \
     PACKETVER == 20180328 || \
     PACKETVER == 20180404 || \
@@ -9703,7 +9703,16 @@
     PACKETVER == 20200212 || \
     PACKETVER == 20200219 || \
     PACKETVER == 20200304 || \
-    PACKETVER >= 20200709
+    PACKETVER == 20200709 || \
+    PACKETVER == 20200723 || \
+    PACKETVER == 20200724 || \
+    PACKETVER == 20200729 || \
+    PACKETVER == 20200805 || \
+    PACKETVER == 20200806 || \
+    PACKETVER == 20200812 || \
+    PACKETVER == 20200819 || \
+    PACKETVER == 20200902 || \
+    PACKETVER == 20210107
 	packet(0x0202,clif->pFriendsListAdd,2);
 	packet(0x022d,clif->pHomMenu,2,4);
 	packet(0x023b,clif->pStoragePassword,0);
@@ -9721,6 +9730,42 @@
 	packet(0x0368,clif->pGetCharNameRequest,2);
 	packet(0x0369,clif->pSolveCharName,2);
 	packet(0x0436,clif->pWantToConnection,2,6,10,14,18);
+	packet(0x0437,clif->pActionRequest,2,6);
+	packet(0x0438,clif->pUseSkillToId,2,4,6);
+	packet(0x07e4,clif->pItemListWindowSelected,2,4,8);
+	packet(0x07ec,clif->pDull/*,XXX*/);
+	packet(0x0802,clif->pPartyBookingRegisterReq,2,4);
+	packet(0x0811,clif->pReqOpenBuyingStore,2,4,8,9,89);
+	packet(0x0815,clif->pReqCloseBuyingStore,0);
+	packet(0x0817,clif->pReqClickBuyingStore,2);
+	packet(0x0819,clif->pReqTradeBuyingStore,2,4,8,12);
+	packet(0x0835,clif->pSearchStoreInfo,2,4,5,9,13,14,15);
+	packet(0x0838,clif->pSearchStoreInfoNextPage,0);
+	packet(0x083c,clif->pSearchStoreInfoListItemClick,2,6,10);
+#endif
+
+// 2021-11-03_Ragexe_1635824489, 2021-11-03_Ragexe_1635926200, 2021-11-05_Ragexe_1636095152, 2021-11-10_Ragexe_1636525031, 2021-11-17_Ragexe_1637052357
+#if PACKETVER == 20211103 || \
+    PACKETVER == 20211105 || \
+    PACKETVER == 20211110 || \
+    PACKETVER >= 20211117
+	packet(0x0202,clif->pFriendsListAdd,2);
+	packet(0x022d,clif->pHomMenu,2,4);
+	packet(0x023b,clif->pStoragePassword,0);
+	packet(0x0281,clif->pDull/*,XXX*/);
+	packet(0x02c4,clif->pPartyInvite2,2);
+	packet(0x035f,clif->pWalkToXY,2);
+	packet(0x0360,clif->pTickSend,2);
+	packet(0x0361,clif->pChangeDir,2,4);
+	packet(0x0362,clif->pTakeItem,2);
+	packet(0x0363,clif->pDropItem,2,4);
+	packet(0x0364,clif->pMoveToKafra,2,4);
+	packet(0x0365,clif->pMoveFromKafra,2,4);
+	packet(0x0366,clif->pUseSkillToPos,2,4,6,8);
+	packet(0x0367,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);
+	packet(0x0368,clif->pGetCharNameRequest,2);
+	packet(0x0369,clif->pSolveCharName,2);
+	packet(0x0436,clif->pWantToConnection,2,6,10,18,22);
 	packet(0x0437,clif->pActionRequest,2,6);
 	packet(0x0438,clif->pUseSkillToId,2,4,6);
 	packet(0x07e4,clif->pItemListWindowSelected,2,4,8);
