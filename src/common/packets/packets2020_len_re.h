@@ -3,7 +3,7 @@
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
  * Copyright (C) 2018-2021 Hercules Dev Team
- * Copyright (C) 2018-2020 Andrei Karas (4144)
+ * Copyright (C) 2018-2021 Andrei Karas (4144)
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -4263,6 +4263,11 @@ packetLen(0x0aef, 2)
 // Packet: 0x0af0
 packetLen(0x0af0, 10)
 
+// Packet: 0x0af1
+#if PACKETVER >= 20200902
+packetLen(0x0af1, 102)
+#endif
+
 // Packet: 0x0af2
 packetLen(0x0af2, 40)
 
@@ -4709,6 +4714,21 @@ packetLen(0x0b7f, 10)
 // Packet: 0x0b80
 #if PACKETVER >= 20200709
 packetLen(0x0b80, 10)
+#endif
+
+// Packet: 0x0b8c
+#if PACKETVER >= 20200812
+packetLen(0x0b8c, -1)
+#endif
+
+// Packet: 0x0b8d
+#if PACKETVER >= 20200902
+packetLen(0x0b8d, -1)
+#endif
+
+// Packet: 0x0b8e
+#if PACKETVER >= 20200902
+packetLen(0x0b8e, 18)
 #endif
 
 
