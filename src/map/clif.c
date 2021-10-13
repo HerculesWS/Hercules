@@ -2210,12 +2210,16 @@ static void clif_buylist(struct map_session_data *sd, struct npc_data *nd)
 	p->packetType = 0xc6;
 
 	c = 0;
+
 	for (i = 0; i < shop_size; i++) {
 		if (shop[i].nameid) {
-			struct item_data* id = itemdb->exists(shop[i].nameid);
+			struct item_data *id = itemdb->exists(shop[i].nameid);
+
 			int val = shop[i].value;
+
 			if (id == NULL)
 				continue;
+
 			p->items[c].price = val;
 			p->items[c].discountPrice = pc->modifybuyvalue(sd, val, id->flag.ignore_discount);
 			p->items[c].itemType = itemtype(id->type);
@@ -2233,40 +2237,43 @@ static void clif_buylist(struct map_session_data *sd, struct npc_data *nd)
 /// 00c7 <packet len>.W { <index>.W <price>.L <overcharge price>.L }*
 static void clif_selllist(struct map_session_data *sd)
 {
-	int c = 0, val;
+	int c = 0;
 
 	nullpo_retv(sd);
 
 	int fd = sd->fd;
+
 	WFIFOHEAD(fd, sd->status.inventorySize * 10 + 4);
-	WFIFOW(fd,0)=0xc7;
-	for (int i = 0; i < sd->status.inventorySize; i++)
-	{
-		if( sd->status.inventory[i].nameid > 0 && sd->inventory_data[i] )
-		{
-			if( !itemdb_cansell(&sd->status.inventory[i], pc_get_group_level(sd)) )
+	WFIFOW(fd, 0) = 0xc7;
+
+	for (int i = 0; i < sd->status.inventorySize; i++) {
+		if (sd->status.inventory[i].nameid > 0 && sd->inventory_data[i]) {
+			if (!itemdb_cansell(&sd->status.inventory[i], pc_get_group_level(sd)))
 				continue;
 
 			if (sd->status.inventory[i].favorite != 0)
 				continue; // Cannot Sell Favorite item
 
-			if( sd->status.inventory[i].expire_time )
+			if (sd->status.inventory[i].expire_time)
 				continue; // Cannot Sell Rental Items
 
-			if( sd->status.inventory[i].bound && !pc_can_give_bound_items(sd))
+			if (sd->status.inventory[i].bound && !pc_can_give_bound_items(sd))
 				continue; // Don't allow sale of bound items
 
-			val=sd->inventory_data[i]->value_sell;
-			if( val < 0 )
+			int val = sd->inventory_data[i]->value_sell;
+
+			if (val < 0)
 				continue;
-			WFIFOW(fd,4+c*10)=i+2;
-			WFIFOL(fd,6+c*10)=val;
-			WFIFOL(fd,10+c*10)=pc->modifysellvalue(sd,val, sd->inventory_data[i]->flag.ignore_overcharge);
+
+			WFIFOW(fd, 4 + c * 10) = i + 2;
+			WFIFOL(fd, 6 + c * 10) = val;
+			WFIFOL(fd, 10 + c * 10) = pc->modifysellvalue(sd, val, sd->inventory_data[i]->flag.ignore_overcharge);
 			c++;
 		}
 	}
-	WFIFOW(fd,2)=c*10+4;
-	WFIFOSET(fd,WFIFOW(fd,2));
+
+	WFIFOW(fd, 2) = c * 10 + 4;
+	WFIFOSET(fd, WFIFOW(fd, 2));
 }
 
 /// Displays an NPC dialog message (ZC_SAY_DIALOG).

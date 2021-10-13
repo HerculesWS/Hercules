@@ -2251,21 +2251,22 @@ static int npc_cashshop_buy(struct map_session_data *sd, int nameid, int amount,
  */
 static int npc_buylist(struct map_session_data *sd, struct itemlist *item_list)
 {
-	struct npc_data* nd;
+	struct npc_data *nd;
 	struct npc_item_list *shop = NULL;
 	int64 z;
-	int i,j,w,skill_t,new_, idx = skill->get_index(MC_DISCOUNT);
+	int i, j, w, skill_t, new_, idx = skill->get_index(MC_DISCOUNT);
 	unsigned short shop_size = 0;
 
 	nullpo_retr(3, sd);
 	nullpo_retr(3, item_list);
 
-	nd = npc->checknear(sd,map->id2bl(sd->npc_shopid));
-	if( nd == NULL )
+	nd = npc->checknear(sd, map->id2bl(sd->npc_shopid));
+
+	if (nd == NULL)
 		return 3;
 
-	if( nd->subtype != SHOP ) {
-		if( nd->subtype == SCRIPT && nd->u.scr.shop && nd->u.scr.shop->type == NST_ZENY ) {
+	if (nd->subtype != SHOP) {
+		if (nd->subtype == SCRIPT && nd->u.scr.shop && nd->u.scr.shop->type == NST_ZENY) {
 			shop = nd->u.scr.shop->item;
 			shop_size = nd->u.scr.shop->items;
 		} else
@@ -2278,69 +2279,70 @@ static int npc_buylist(struct map_session_data *sd, struct itemlist *item_list)
 	z = 0;
 	w = 0;
 	new_ = 0;
-	// process entries in buy list, one by one
+
+	// Process entries in buy list, one by one
 	for (i = 0; i < VECTOR_LENGTH(*item_list); ++i) {
 		int value;
 		struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
 
-		// find this entry in the shop's sell list
-		ARR_FIND( 0, shop_size, j,
-				 entry->id == shop[j].nameid || //Normal items
-				 entry->id == itemdb_viewid(shop[j].nameid) //item_avail replacement
+		// Find this entry in the shop's sell list
+		ARR_FIND(0, shop_size, j,
+				 entry->id == shop[j].nameid || // Normal items
+				 entry->id == itemdb_viewid(shop[j].nameid) // item_avail replacement
 				 );
-		if (j == shop_size)
-			return 3; // no such item in shop
 
-		entry->id = shop[j].nameid; //item_avail replacement
+		if (j == shop_size)
+			return 3; // No such item in shop
+
+		entry->id = shop[j].nameid; // item_avail replacement
 		value = shop[j].value;
 
 		struct item_data *id = itemdb->exists(entry->id);
 
 		if (id == NULL)
-			return 3; // item no longer in itemdb
+			return 3; // Item no longer in itemdb
 
 		if (!itemdb->isstackable(entry->id) && entry->amount > 1) {
-			//Exploit? You can't buy more than 1 of equipment types o.O
+			// Exploit? You can't buy more than 1 of equipment types o.O
 			ShowWarning("Player %s (%d:%d) sent a hexed packet trying to buy %d of non-stackable item %d!\n",
 						sd->status.name, sd->status.account_id, sd->status.char_id, entry->amount, entry->id);
 			entry->amount = 1;
 		}
 
-		if( nd->master_nd ) {
+		if (nd->master_nd) {
 			// Script-controlled shops decide by themselves, what can be bought and for what price.
 			continue;
 		}
 
 		switch (pc->checkadditem(sd, entry->id, entry->amount)) {
-			case ADDITEM_EXIST:
-				break;
+		case ADDITEM_EXIST:
+			break;
 
-			case ADDITEM_NEW:
-				new_++;
-				break;
+		case ADDITEM_NEW:
+			new_++;
+			break;
 
-			case ADDITEM_OVERAMOUNT:
+		case ADDITEM_OVERAMOUNT:
 #if PACKETVER >= 20110705
-				return 9;
+			return 9;
 #else
-				return 2;
+			return 2;
 #endif
 		}
 
-		value = pc->modifybuyvalue(sd,value, id->flag.ignore_discount);
+		value = pc->modifybuyvalue(sd, value, id->flag.ignore_discount);
 
 		z += (int64)value * entry->amount;
 		w += itemdb_weight(entry->id) * entry->amount;
 	}
 
-	if (nd->master_nd != NULL) //Script-based shops.
+	if (nd->master_nd != NULL) // Script-based shops.
 		return npc->buylist_sub(sd, item_list, nd->master_nd);
-
 	if (z > sd->status.zeny)
 		return 1; // Not enough Zeny
-	if( w + sd->weight > sd->max_weight )
+	if (w + sd->weight > sd->max_weight)
 		return 2; // Too heavy
-	if( pc->inventoryblank(sd) < new_ )
+	if (pc->inventoryblank(sd) < new_)
 		return 3; // Not enough space to store items
 
 	pc->payzeny(sd, (int)z, LOG_TYPE_NPC, NULL);
@@ -2351,7 +2353,7 @@ static int npc_buylist(struct map_session_data *sd, struct itemlist *item_list)
 			pet->create_egg(sd, entry->id);
 		} else {
 			struct item item_tmp;
-			memset(&item_tmp,0,sizeof(item_tmp));
+			memset(&item_tmp, 0, sizeof(item_tmp));
 			item_tmp.nameid = entry->id;
 			item_tmp.identify = 1;
 
@@ -2359,15 +2361,17 @@ static int npc_buylist(struct map_session_data *sd, struct itemlist *item_list)
 		}
 	}
 
-	// custom merchant shop exp bonus
-	if( battle_config.shop_exp > 0 && z > 0 && (skill_t = pc->checkskill2(sd,idx)) > 0 ) {
-		if( sd->status.skill[idx].flag >= SKILL_FLAG_REPLACED_LV_0 )
+	// Custom merchant shop exp bonus
+	if (battle_config.shop_exp > 0 && z > 0 && (skill_t = pc->checkskill2(sd, idx)) > 0) {
+		if (sd->status.skill[idx].flag >= SKILL_FLAG_REPLACED_LV_0)
 			skill_t = sd->status.skill[idx].flag - SKILL_FLAG_REPLACED_LV_0;
 
-		if( skill_t > 0 ) {
+		if (skill_t > 0) {
 			z = apply_percentrate64(z, skill_t * battle_config.shop_exp, 10000);
+
 			if (z < 1)
 				z = 1;
+
 			pc->gainexp(sd, NULL, 0, (int)z, false);
 		}
 	}

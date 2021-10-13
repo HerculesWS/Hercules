@@ -1024,8 +1024,8 @@ END_ZEROED_BLOCK; /* End */
 	int (*steal_item) (struct map_session_data *sd,struct block_list *bl, uint16 skill_lv);
 	int (*steal_coin) (struct map_session_data *sd,struct block_list *bl, uint16 skill_lv);
 
-	int (*modifybuyvalue) (struct map_session_data *sd,int orig_value, bool ignore_discount);
-	int (*modifysellvalue) (struct map_session_data *sd,int orig_value, bool ignore_overcharge);
+	int (*modifybuyvalue) (struct map_session_data *sd, int orig_value, bool ignore_discount);
+	int (*modifysellvalue) (struct map_session_data *sd, int orig_value, bool ignore_overcharge);
 
 	int (*follow) (struct map_session_data *sd, int target_id); // [MouseJstr]
 	int (*stop_following) (struct map_session_data *sd);
