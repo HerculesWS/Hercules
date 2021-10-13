@@ -64201,15 +64201,15 @@ int HP_pc_steal_coin(struct map_session_data *sd, struct block_list *bl, uint16 
 	}
 	return retVal___;
 }
-int HP_pc_modifybuyvalue(struct map_session_data *sd, int orig_value) {
+int HP_pc_modifybuyvalue(struct map_session_data *sd, int orig_value, bool ignore_discount) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_pc_modifybuyvalue_pre > 0) {
-		int (*preHookFunc) (struct map_session_data **sd, int *orig_value);
+		int (*preHookFunc) (struct map_session_data **sd, int *orig_value, bool *ignore_discount);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_modifybuyvalue_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_pc_modifybuyvalue_pre[hIndex].func;
-			retVal___ = preHookFunc(&sd, &orig_value);
+			retVal___ = preHookFunc(&sd, &orig_value, &ignore_discount);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -64217,26 +64217,26 @@ int HP_pc_modifybuyvalue(struct map_session_data *sd, int orig_value) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.pc.modifybuyvalue(sd, orig_value);
+		retVal___ = HPMHooks.source.pc.modifybuyvalue(sd, orig_value, ignore_discount);
 	}
 	if (HPMHooks.count.HP_pc_modifybuyvalue_post > 0) {
-		int (*postHookFunc) (int retVal___, struct map_session_data *sd, int orig_value);
+		int (*postHookFunc) (int retVal___, struct map_session_data *sd, int orig_value, bool ignore_discount);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_modifybuyvalue_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_pc_modifybuyvalue_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, sd, orig_value);
+			retVal___ = postHookFunc(retVal___, sd, orig_value, ignore_discount);
 		}
 	}
 	return retVal___;
 }
-int HP_pc_modifysellvalue(struct map_session_data *sd, int orig_value) {
+int HP_pc_modifysellvalue(struct map_session_data *sd, int orig_value, bool ignore_overcharge) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_pc_modifysellvalue_pre > 0) {
-		int (*preHookFunc) (struct map_session_data **sd, int *orig_value);
+		int (*preHookFunc) (struct map_session_data **sd, int *orig_value, bool *ignore_overcharge);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_modifysellvalue_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_pc_modifysellvalue_pre[hIndex].func;
-			retVal___ = preHookFunc(&sd, &orig_value);
+			retVal___ = preHookFunc(&sd, &orig_value, &ignore_overcharge);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -64244,13 +64244,13 @@ int HP_pc_modifysellvalue(struct map_session_data *sd, int orig_value) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.pc.modifysellvalue(sd, orig_value);
+		retVal___ = HPMHooks.source.pc.modifysellvalue(sd, orig_value, ignore_overcharge);
 	}
 	if (HPMHooks.count.HP_pc_modifysellvalue_post > 0) {
-		int (*postHookFunc) (int retVal___, struct map_session_data *sd, int orig_value);
+		int (*postHookFunc) (int retVal___, struct map_session_data *sd, int orig_value, bool ignore_overcharge);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_modifysellvalue_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_pc_modifysellvalue_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, sd, orig_value);
+			retVal___ = postHookFunc(retVal___, sd, orig_value, ignore_overcharge);
 		}
 	}
 	return retVal___;
