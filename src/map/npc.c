@@ -2294,7 +2294,9 @@ static int npc_buylist(struct map_session_data *sd, struct itemlist *item_list)
 		entry->id = shop[j].nameid; //item_avail replacement
 		value = shop[j].value;
 
-		if (!itemdb->exists(entry->id))
+		struct item_data *id = itemdb->exists(entry->id);
+
+		if (id == NULL)
 			return 3; // item no longer in itemdb
 
 		if (!itemdb->isstackable(entry->id) && entry->amount > 1) {
@@ -2325,7 +2327,7 @@ static int npc_buylist(struct map_session_data *sd, struct itemlist *item_list)
 #endif
 		}
 
-		value = pc->modifybuyvalue(sd,value);
+		value = pc->modifybuyvalue(sd,value, id->flag.ignore_discount);
 
 		z += (int64)value * entry->amount;
 		w += itemdb_weight(entry->id) * entry->amount;
@@ -2901,7 +2903,7 @@ static int npc_selllist(struct map_session_data *sd, struct itemlist *item_list)
 		if (nd->master_nd != NULL) // Script-controlled shops decide by themselves, what can be sold and at what price.
 			continue;
 
-		int value = pc->modifysellvalue(sd, sd->inventory_data[idx]->value_sell);
+		int value = pc->modifysellvalue(sd, sd->inventory_data[idx]->value_sell, sd->inventory_data[idx]->flag.ignore_overcharge);
 
 		z += (int64)value * entry->amount;
 	}

@@ -2217,7 +2217,7 @@ static void clif_buylist(struct map_session_data *sd, struct npc_data *nd)
 			if (id == NULL)
 				continue;
 			p->items[c].price = val;
-			p->items[c].discountPrice = pc->modifybuyvalue(sd, val);
+			p->items[c].discountPrice = pc->modifybuyvalue(sd, val, id->flag.ignore_discount);
 			p->items[c].itemType = itemtype(id->type);
 			p->items[c].itemId = (id->view_id > 0) ? id->view_id : id->nameid;
 			c++;
@@ -2261,7 +2261,7 @@ static void clif_selllist(struct map_session_data *sd)
 				continue;
 			WFIFOW(fd,4+c*10)=i+2;
 			WFIFOL(fd,6+c*10)=val;
-			WFIFOL(fd,10+c*10)=pc->modifysellvalue(sd,val);
+			WFIFOL(fd,10+c*10)=pc->modifysellvalue(sd,val, sd->inventory_data[i]->flag.ignore_overcharge);
 			c++;
 		}
 	}

@@ -2040,6 +2040,8 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 	 * BuyingStore: (true or false)
 	 * Delay: Delay to use item
 	 * ForceSerial: (true or false)
+	 * IgnoreDiscount: (true or false)
+	 * IgnoreOvercharge: (true or false)
 	 * Trade: {
 	 *   override: Group to override
 	 *   nodrop: (true or false)
@@ -2229,6 +2231,12 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 
 	if (itemdb->lookup_const(it, "Delay", &i32) && i32 >= 0)
 		id.delay = i32;
+
+	if ((t = libconfig->setting_get_member(it, "IgnoreDiscount")))
+		id.flag.ignore_discount = libconfig->setting_get_bool(t) ? 1 : 0;
+
+	if ((t = libconfig->setting_get_member(it, "IgnoreOvercharge")))
+		id.flag.ignore_overcharge = libconfig->setting_get_bool(t) ? 1 : 0;
 
 	if ( (t = libconfig->setting_get_member(it, "Trade")) ) {
 		if (config_setting_is_group(t)) {
