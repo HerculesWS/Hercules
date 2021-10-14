@@ -3184,7 +3184,7 @@ count items number 512 (Apple).
 
 *getequipcardcnt(<equipment slot>)
 
-This function will return the number of cards that have been compounded
+This function will return the number of items/cards that have been compounded
 onto a specific equipped item for the invoking character. See 'getequipid'
 for a list of possible equipment slots.
 
@@ -4575,7 +4575,7 @@ night mode or day mode:
 *isequipped(<item id>{, <item id>{, <item id>{, <item id>}}})
 
 This function will return true if the invoking character has all of the item
-IDs given equipped (if card IDs are passed, then it checks if the cards
+IDs given equipped (if item/card IDs are passed, then it checks if the item/card
 are inserted into slots in the equipment they are currently wearing).
 Theoretically there is no limit to the number of items that may be tested
 for at the same time.
@@ -4609,9 +4609,9 @@ invoking character.
 
 ---------------------------------------
 
-*checkequipedcard(<card id>)
+*checkequipedcard(<item id>)
 
-This function will return true if the card specified by it's item ID number
+This function will return true if the item/card specified by it's item ID number
 is inserted into any equipment they have in their inventory, currently
 equipped or not.
 

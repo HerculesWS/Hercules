@@ -14895,8 +14895,8 @@ static BUILDIN(getequipcardcnt)
 	}
 
 	count = 0;
-	for( j = 0; j < sd->inventory_data[i]->slot; j++ )
-		if( sd->status.inventory[i].card[j] && itemdb_type(sd->status.inventory[i].card[j]) == IT_CARD )
+	for( j = 0; j < MAX_SLOTS; j++ )
+		if(sd->status.inventory[i].card[j])
 			count++;
 
 	script_pushint(st,count);
@@ -17106,7 +17106,7 @@ static BUILDIN(checkequipedcard)
 		if(sd->status.inventory[i].nameid > 0 && sd->status.inventory[i].amount && sd->inventory_data[i]) {
 			if (itemdb_isspecial(sd->status.inventory[i].card[0]))
 				continue;
-			for (int n = 0; n < sd->inventory_data[i]->slot; n++) {
+			for (int n = 0; n < MAX_SLOTS; n++) {
 				if(sd->status.inventory[i].card[n]==c) {
 					script_pushint(st,1);
 					return true;
@@ -17800,7 +17800,7 @@ static BUILDIN(isequippedcnt)
 			} else { //Count cards.
 				if (itemdb_isspecial(sd->status.inventory[index].card[0]))
 					continue; //No cards
-				for(k=0; k<sd->inventory_data[index]->slot; k++) {
+				for(k = 0; k < MAX_SLOTS; k++) {
 					if (sd->status.inventory[index].card[k] == id)
 						ret++; //[Lupus]
 				}
@@ -17859,7 +17859,7 @@ static BUILDIN(isequipped)
 					itemdb_isspecial(sd->status.inventory[index].card[0]))
 					continue;
 
-				for (k = 0; k < sd->inventory_data[index]->slot; k++) {
+				for (k = 0; k < MAX_SLOTS; k++) {
 					//New hash system which should support up to 4 slots on any equipment. [Skotlex]
 					unsigned int hash = 0;
 					if (sd->status.inventory[index].card[k] != id)
@@ -17927,7 +17927,7 @@ static BUILDIN(cardscnt)
 		} else {
 			if (itemdb_isspecial(sd->status.inventory[index].card[0]))
 				continue;
-			for(k=0; k<sd->inventory_data[index]->slot; k++) {
+			for(k = 0; k < MAX_SLOTS; k++) {
 				if (sd->status.inventory[index].card[k] == id)
 					ret++;
 			}
