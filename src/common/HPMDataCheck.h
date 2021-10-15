@@ -857,7 +857,6 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "packet_status_change_end", sizeof(struct packet_status_change_end), SERVER_TYPE_MAP },
 		{ "packet_unequipitem_ack", sizeof(struct packet_unequipitem_ack), SERVER_TYPE_MAP },
 		{ "packet_unit_walking", sizeof(struct packet_unit_walking), SERVER_TYPE_MAP },
-		{ "packet_viewequip_ack", sizeof(struct packet_viewequip_ack), SERVER_TYPE_MAP },
 		{ "packet_whisper_message", sizeof(struct packet_whisper_message), SERVER_TYPE_MAP },
 		{ "packet_wis_end", sizeof(struct packet_wis_end), SERVER_TYPE_MAP },
 		{ "pet_evolution_items", sizeof(struct pet_evolution_items), SERVER_TYPE_MAP },
