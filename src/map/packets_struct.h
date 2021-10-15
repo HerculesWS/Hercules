@@ -2383,7 +2383,35 @@ struct PACKET_ZC_ACK_WEAPONREFINE {
 #endif
 } __attribute__((packed));
 
-#if PACKETVER_MAIN_NUM >= 20190619 || PACKETVER_RE_NUM >= 20190605 || PACKETVER_ZERO_NUM >= 20190626
+#if PACKETVER_MAIN_NUM >= 20200819 || PACKETVER_RE_NUM >= 20200723
+// PACKET_ZC_PROPERTY_HOMUN3
+struct PACKET_ZC_PROPERTY_HOMUN {
+	int16 packetType;
+	char name[NAME_LENGTH];
+	// Bit field, bit 0 : rename_flag (1 = already renamed), bit 1 : homunc vaporized (1 = true), bit 2 : homunc dead (1 = true)
+	uint8 flags;
+	uint16 level;
+	uint16 hunger;
+	uint16 intimacy;
+	uint16 atk2;
+	uint16 matk;
+	uint16 hit;
+	uint16 crit;
+	uint16 def;
+	uint16 mdef;
+	uint16 flee;
+	uint16 amotion;
+	uint32 hp;
+	uint32 maxHp;
+	uint32 sp;
+	uint32 maxSp;
+	uint32 exp;
+	uint32 expNext;
+	uint16 skillPoints;
+	uint16 range;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_PROPERTY_HOMUN, 0x0b76);
+#elif PACKETVER_MAIN_NUM >= 20190619 || PACKETVER_RE_NUM >= 20190605 || PACKETVER_ZERO_NUM >= 20190626
 // PACKET_ZC_PROPERTY_HOMUN3
 struct PACKET_ZC_PROPERTY_HOMUN {
 	int16 packetType;
