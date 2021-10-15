@@ -29,7 +29,14 @@
 #pragma pack(push, 1)
 #endif // not NetBSD < 6 / Solaris
 
-#if PACKETVER_MAIN_NUM >= 20130522 || PACKETVER_RE_NUM >= 20130327 || defined(PACKETVER_ZERO)
+#if PACKETVER_MAIN_NUM >= 20201007
+struct PACKET_HC_ACK_CHARINFO_PER_PAGE {
+	int16 packetId;
+	int16 packetLen;
+	// chars list[]
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(HC_ACK_CHARINFO_PER_PAGE, 0x0b72);
+#elif PACKETVER_MAIN_NUM >= 20130522 || PACKETVER_RE_NUM >= 20130327 || defined(PACKETVER_ZERO)
 struct PACKET_HC_ACK_CHARINFO_PER_PAGE {
 	int16 packetId;
 	int16 packetLen;
@@ -37,6 +44,23 @@ struct PACKET_HC_ACK_CHARINFO_PER_PAGE {
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(HC_ACK_CHARINFO_PER_PAGE, 0x099d);
 #endif
+
+#if PACKETVER_MAIN_NUM >= 20201007
+#define MAX_CHAR_BUF (PACKET_LEN_0x0b6f - 2)
+#else  // PACKETVER_MAIN_NUM >= 20201007
+#define MAX_CHAR_BUF (PACKET_LEN_0x006d - 2)
+#endif  // // PACKETVER_MAIN_NUM >= 20201007
+
+// because no structs set packet ids in define
+#if PACKETVER_MAIN_NUM >= 20201007
+DEFINE_PACKET_ID(HC_ACCEPT_MAKECHAR, 0x0b6f)
+DEFINE_PACKET_ID(HC_ACK_CHANGE_CHARACTER_SLOT, 0x0b70)
+DEFINE_PACKET_ID(HC_UPDATE_CHARINFO, 0x0b71)
+#else  // PACKETVER_MAIN_NUM >= 20201007
+DEFINE_PACKET_ID(HC_ACCEPT_MAKECHAR, 0x006d)
+DEFINE_PACKET_ID(HC_ACK_CHANGE_CHARACTER_SLOT, 0x08d5)
+DEFINE_PACKET_ID(HC_UPDATE_CHARINFO, 0x08e3)
+#endif  // // PACKETVER_MAIN_NUM >= 20201007
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)

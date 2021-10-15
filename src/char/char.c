@@ -54,7 +54,6 @@
 #include "common/mapindex.h"
 #include "common/mmo.h"
 #include "common/nullpo.h"
-#include "common/packetsstatic_len.h"
 #include "common/showmsg.h"
 #include "common/socket.h"
 #include "common/strlib.h"
@@ -2034,9 +2033,7 @@ static int char_count_users(void)
 }
 
 // Writes char data to the buffer in the format used by the client.
-// Used in packets 0x6b (chars info) and 0x6d (new char info)
-// Returns the size
-#define MAX_CHAR_BUF (PACKET_LEN_0x006d - 2)
+// Returns CHARACTER_INFO size
 static int char_mmo_char_tobuf(uint8 *buffer, struct mmo_charstatus *p)
 {
 	unsigned short offset = 0;
@@ -2070,7 +2067,12 @@ static int char_mmo_char_tobuf(uint8 *buffer, struct mmo_charstatus *p)
 	WBUFL(buf,32) = p->karma;
 	WBUFL(buf,36) = p->manner;
 	WBUFW(buf,40) = min(p->status_point, INT16_MAX);
-#if PACKETVER > 20081217
+#if PACKETVER_MAIN_NUM >= 20201007
+	WBUFQ(buf, 42) = p->hp;
+	WBUFQ(buf, 50) = p->max_hp;
+	offset += 12;
+	buf = WBUFP(buffer, offset);
+#elif PACKETVER > 20081217
 	WBUFL(buf,42) = p->hp;
 	WBUFL(buf,46) = p->max_hp;
 	offset+=4;
@@ -2079,8 +2081,15 @@ static int char_mmo_char_tobuf(uint8 *buffer, struct mmo_charstatus *p)
 	WBUFW(buf,42) = min(p->hp, INT16_MAX);
 	WBUFW(buf,44) = min(p->max_hp, INT16_MAX);
 #endif
-	WBUFW(buf,46) = min(p->sp, INT16_MAX);
-	WBUFW(buf,48) = min(p->max_sp, INT16_MAX);
+#if PACKETVER_MAIN_NUM >= 20201007
+	WBUFQ(buf, 46) = p->sp;
+	WBUFQ(buf, 54) = p->max_sp;
+	offset += 12;
+	buf = WBUFP(buffer, offset);
+#else  // PACKETVER_MAIN_NUM >= 20201007
+	WBUFW(buf, 46) = min(p->sp, INT16_MAX);
+	WBUFW(buf, 48) = min(p->max_sp, INT16_MAX);
+#endif  // PACKETVER_MAIN_NUM >= 20201007
 	WBUFW(buf,50) = DEFAULT_WALK_SPEED; // p->speed;
 	WBUFW(buf,52) = p->class;
 	WBUFW(buf,54) = p->hair;
@@ -2150,11 +2159,12 @@ static int char_mmo_char_tobuf(uint8 *buffer, struct mmo_charstatus *p)
 static void char_send_HC_ACK_CHARINFO_PER_PAGE(int fd, struct char_session_data *sd)
 {
 #if PACKETVER_MAIN_NUM >= 20130522 || PACKETVER_RE_NUM >= 20130327 || defined(PACKETVER_ZERO)
-	WFIFOHEAD(fd, sizeof(struct PACKET_HC_ACK_CHARINFO_PER_PAGE) + (MAX_CHARS * MAX_CHAR_BUF));
+	const int len = sizeof(struct PACKET_HC_ACK_CHARINFO_PER_PAGE);
+	WFIFOHEAD(fd, len + (MAX_CHARS * MAX_CHAR_BUF));
 	struct PACKET_HC_ACK_CHARINFO_PER_PAGE *p = WFIFOP(fd, 0);
 	int count = 0;
 	p->packetId = HEADER_HC_ACK_CHARINFO_PER_PAGE;
-	p->packetLen = chr->mmo_chars_fromsql(sd, WFIFOP(fd, 4), &count) + sizeof(struct PACKET_HC_ACK_CHARINFO_PER_PAGE);
+	p->packetLen = chr->mmo_chars_fromsql(sd, WFIFOP(fd, len), &count) + len;
 	WFIFOSET(fd, p->packetLen);
 	// send empty packet if chars count is 3, for trigger final code in client
 	if (count == 3) {
@@ -2166,10 +2176,11 @@ static void char_send_HC_ACK_CHARINFO_PER_PAGE(int fd, struct char_session_data 
 static void char_send_HC_ACK_CHARINFO_PER_PAGE_tail(int fd, struct char_session_data *sd)
 {
 #if PACKETVER_MAIN_NUM >= 20130522 || PACKETVER_RE_NUM >= 20130327 || defined(PACKETVER_ZERO)
-	WFIFOHEAD(fd, sizeof(struct PACKET_HC_ACK_CHARINFO_PER_PAGE));
+	const int len = sizeof(struct PACKET_HC_ACK_CHARINFO_PER_PAGE);
+	WFIFOHEAD(fd, len);
 	struct PACKET_HC_ACK_CHARINFO_PER_PAGE *p = WFIFOP(fd, 0);
 	p->packetId = HEADER_HC_ACK_CHARINFO_PER_PAGE;
-	p->packetLen = sizeof(struct PACKET_HC_ACK_CHARINFO_PER_PAGE);
+	p->packetLen = len;
 	WFIFOSET(fd, p->packetLen);
 #endif
 }
@@ -4820,10 +4831,10 @@ static void char_creation_ok(int fd, struct mmo_charstatus *char_dat)
 	int len;
 
 	// send to player
-	WFIFOHEAD(fd,2+MAX_CHAR_BUF);
-	WFIFOW(fd,0) = 0x6d;
-	len = 2 + chr->mmo_char_tobuf(WFIFOP(fd,2), char_dat);
-	WFIFOSET(fd,len);
+	WFIFOHEAD(fd, 2 + MAX_CHAR_BUF);
+	WFIFOW(fd, 0) = HEADER_HC_ACCEPT_MAKECHAR;
+	len = 2 + chr->mmo_char_tobuf(WFIFOP(fd, 2), char_dat);
+	WFIFOSET(fd, len);
 }
 
 static void char_parse_char_create_new_char(int fd, struct char_session_data *sd) __attribute__((nonnull (2)));
@@ -5162,7 +5173,7 @@ static void char_parse_char_request_chars(int fd, struct char_session_data *sd)
 static void char_change_character_slot_ack(int fd, bool ret)
 {
 	WFIFOHEAD(fd, 8);
-	WFIFOW(fd, 0) = 0x8d5;
+	WFIFOW(fd, 0) = HEADER_HC_ACK_CHANGE_CHARACTER_SLOT;
 	WFIFOW(fd, 2) = 8;
 	WFIFOW(fd, 4) = ret?0:1;
 	WFIFOW(fd, 6) = 0;/* we enforce it elsewhere, go 0 */
