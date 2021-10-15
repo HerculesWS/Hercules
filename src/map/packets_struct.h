@@ -283,20 +283,6 @@ enum packet_headers {
 #else
 	unequipitemackType = 0xac,
 #endif
-#if PACKETVER_MAIN_NUM >= 20180801 || PACKETVER_RE_NUM >= 20180801 || PACKETVER_ZERO_NUM >= 20180808
-	viewequipackType = 0xb03,
-#elif PACKETVER >= 20150226
-	viewequipackType = 0xa2d,
-#elif PACKETVER >= 20120925
-	viewequipackType = 0x997,
-// [4144] not supported due other packets/structs not updated
-//#elif (PACKETVER_MAIN_NUM >= 20111207) || (PACKETVER_RE_NUM >= 20111122)
-//	viewequipackType = 0x906,
-#elif PACKETVER >= 20101124
-	viewequipackType = 0x859,
-#else
-	viewequipackType = 0x2d7,
-#endif
 	notifybindonequip = 0x2d3,
 	monsterhpType = 0x977,
 	maptypeproperty2Type = 0x99b,
@@ -1259,7 +1245,8 @@ struct packet_unequipitem_ack {
 	uint8 result;
 } __attribute__((packed));
 
-struct packet_viewequip_ack {
+#if PACKETVER_MAIN_NUM >= 20180801 || PACKETVER_RE_NUM >= 20180801 || PACKETVER_ZERO_NUM >= 20180808
+struct PACKET_ZC_EQUIPWIN_MICROSCOPE {
 	int16 PacketType;
 	int16 PacketLength;
 	char characterName[NAME_LENGTH];
@@ -1268,18 +1255,99 @@ struct packet_viewequip_ack {
 	int16 accessory;
 	int16 accessory2;
 	int16 accessory3;
-#if PACKETVER >= 20101124
 	int16 robe;
-#endif
 	int16 headpalette;
 	int16 bodypalette;
-#if PACKETVER_MAIN_NUM >= 20180801 || PACKETVER_RE_NUM >= 20180801 || PACKETVER_ZERO_NUM >= 20180808
 	int16 body2;
-#endif
 	uint8 sex;
-	// [4144] need remove MAX_INVENTORY from here
-	struct EQUIPITEM_INFO list[MAX_INVENTORY];
+	struct EQUIPITEM_INFO list[];
 } __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_EQUIPWIN_MICROSCOPE, 0x0b03);
+#elif PACKETVER >= 20140820
+struct PACKET_ZC_EQUIPWIN_MICROSCOPE {
+	int16 PacketType;
+	int16 PacketLength;
+	char characterName[NAME_LENGTH];
+	int16 job;
+	int16 head;
+	int16 accessory;
+	int16 accessory2;
+	int16 accessory3;
+	int16 robe;
+	int16 headpalette;
+	int16 bodypalette;
+	uint8 sex;
+	struct EQUIPITEM_INFO list[];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_EQUIPWIN_MICROSCOPE, 0x0a2d);
+#elif PACKETVER_MAIN_NUM >= 20121205 || PACKETVER_RE_NUM >= 20121107
+struct PACKET_ZC_EQUIPWIN_MICROSCOPE {
+	int16 PacketType;
+	int16 PacketLength;
+	char characterName[NAME_LENGTH];
+	int16 job;
+	int16 head;
+	int16 accessory;
+	int16 accessory2;
+	int16 accessory3;
+	int16 robe;
+	int16 headpalette;
+	int16 bodypalette;
+	uint8 sex;
+	struct EQUIPITEM_INFO list[];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_EQUIPWIN_MICROSCOPE, 0x0997);
+#elif PACKETVER_MAIN_NUM >= 20111207 || PACKETVER_RE_NUM >= 20111122
+struct PACKET_ZC_EQUIPWIN_MICROSCOPE {
+	int16 PacketType;
+	int16 PacketLength;
+	char characterName[NAME_LENGTH];
+	int16 job;
+	int16 head;
+	int16 accessory;
+	int16 accessory2;
+	int16 accessory3;
+	int16 robe;
+	int16 headpalette;
+	int16 bodypalette;
+	uint8 sex;
+	struct EQUIPITEM_INFO list[];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_EQUIPWIN_MICROSCOPE, 0x0906);
+#elif PACKETVER >= 20101123
+struct PACKET_ZC_EQUIPWIN_MICROSCOPE {
+	int16 PacketType;
+	int16 PacketLength;
+	char characterName[NAME_LENGTH];
+	int16 job;
+	int16 head;
+	int16 accessory;
+	int16 accessory2;
+	int16 accessory3;
+	int16 robe;
+	int16 headpalette;
+	int16 bodypalette;
+	uint8 sex;
+	struct EQUIPITEM_INFO list[];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_EQUIPWIN_MICROSCOPE, 0x0859);
+#elif PACKETVER_AD_NUM >= 20071211 || PACKETVER_SAK_NUM >= 20071127 || PACKETVER_MAIN_NUM >= 20071211 || defined(PACKETVER_RE)
+struct PACKET_ZC_EQUIPWIN_MICROSCOPE {
+	int16 PacketType;
+	int16 PacketLength;
+	char characterName[NAME_LENGTH];
+	int16 job;
+	int16 head;
+	int16 accessory;
+	int16 accessory2;
+	int16 accessory3;
+	int16 headpalette;
+	int16 bodypalette;
+	uint8 sex;
+	struct EQUIPITEM_INFO list[];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_EQUIPWIN_MICROSCOPE, 0x02d7);
+#endif
 
 struct packet_notify_bounditem {
 	int16 PacketType;

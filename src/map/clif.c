@@ -92,7 +92,6 @@ static struct packet_itemlist_normal itemlist_normal;
 static struct packet_itemlist_equip itemlist_equip;
 static struct ZC_STORE_ITEMLIST_NORMAL storelist_normal;
 static struct ZC_STORE_ITEMLIST_EQUIP storelist_equip;
-static struct packet_viewequip_ack viewequip_list;
 // temporart buffer for send big packets
 char packet_buf[0xffff];
 //#define DUMP_UNKNOWN_PACKET
@@ -10290,42 +10289,49 @@ static void clif_equpcheckbox(struct map_session_data *sd)
 /// 0859 <packet len>.W <name>.24B <class>.W <hairstyle>.W <bottom-viewid>.W <mid-viewid>.W <up-viewid>.W <robe>.W <haircolor>.W <cloth-dye>.W <gender>.B {equip item}.28B* (ZC_EQUIPWIN_MICROSCOPE2, PACKETVER >= 20110111)
 static void clif_viewequip_ack(struct map_session_data *sd, struct map_session_data *tsd)
 {
+#if PACKETVER_AD_NUM >= 20071211 || PACKETVER_SAK_NUM >= 20071127 || PACKETVER_MAIN_NUM >= 20071211 || defined(PACKETVER_RE) || defined(PACKETVER_ZERO)
 	int i, equip = 0;
 
 	nullpo_retv(sd);
 	nullpo_retv(tsd);
 
+	struct PACKET_ZC_EQUIPWIN_MICROSCOPE *packet = (struct PACKET_ZC_EQUIPWIN_MICROSCOPE*)&packet_buf[0];
 	for (i = 0; i < EQI_MAX; i++) {
 		int k = tsd->equip_index[i];
 		if (k >= 0) {
 			if (tsd->status.inventory[k].nameid <= 0 || tsd->inventory_data[k] == NULL) // Item doesn't exist
 				continue;
 
-			clif->item_equip(k+2,&viewequip_list.list[equip++],&tsd->status.inventory[k],tsd->inventory_data[k],pc->equippoint(tsd,k));
+			clif->item_equip(k + 2,
+				&packet->list[equip++],
+				&tsd->status.inventory[k],
+				tsd->inventory_data[k],
+				pc->equippoint(tsd, k));
 		}
 	}
 
-	viewequip_list.PacketType = viewequipackType;
-	viewequip_list.PacketLength = ( sizeof( viewequip_list ) - sizeof( viewequip_list.list ) ) + ( sizeof(struct EQUIPITEM_INFO) * equip );
+	packet->PacketType = HEADER_ZC_EQUIPWIN_MICROSCOPE;
+	packet->PacketLength = sizeof(struct PACKET_ZC_EQUIPWIN_MICROSCOPE) + (sizeof(struct EQUIPITEM_INFO) * equip);
 
-	safestrncpy(viewequip_list.characterName, tsd->status.name, NAME_LENGTH);
+	safestrncpy(packet->characterName, tsd->status.name, NAME_LENGTH);
 
-	viewequip_list.job         = tsd->status.class;
-	viewequip_list.head        = tsd->vd.hair_style;
-	viewequip_list.accessory   = tsd->vd.head_bottom;
-	viewequip_list.accessory2  = tsd->vd.head_mid;
-	viewequip_list.accessory3  = tsd->vd.head_top;
-#if PACKETVER >= 20110111
-	viewequip_list.robe        = tsd->vd.robe;
+	packet->job         = tsd->status.class;
+	packet->head        = tsd->vd.hair_style;
+	packet->accessory   = tsd->vd.head_bottom;
+	packet->accessory2  = tsd->vd.head_mid;
+	packet->accessory3  = tsd->vd.head_top;
+#if PACKETVER >= 20101123
+	packet->robe        = tsd->vd.robe;
 #endif
-	viewequip_list.headpalette = tsd->vd.hair_color;
-	viewequip_list.bodypalette = tsd->vd.cloth_color;
+	packet->headpalette = tsd->vd.hair_color;
+	packet->bodypalette = tsd->vd.cloth_color;
 #if PACKETVER_MAIN_NUM >= 20180801 || PACKETVER_RE_NUM >= 20180801 || PACKETVER_ZERO_NUM >= 20180808
-	viewequip_list.body2       = tsd->vd.body_style;
+	packet->body2       = tsd->vd.body_style;
 #endif
-	viewequip_list.sex         = tsd->vd.sex;
+	packet->sex         = tsd->vd.sex;
 
-	clif->send(&viewequip_list, viewequip_list.PacketLength, &sd->bl, SELF);
+	clif->send(packet, packet->PacketLength, &sd->bl, SELF);
+#endif  // PACKETVER_AD_NUM >= 20071211 || PACKETVER_SAK_NUM >= 20071127 || PACKETVER_MAIN_NUM >= 20071211 || defined(PACKETVER_RE) || defined(PACKETVER_ZERO)
 }
 
 /**
