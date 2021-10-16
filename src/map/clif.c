@@ -8708,7 +8708,10 @@ static void clif_guild_expulsionlist(struct map_session_data *sd)
 
 		if (e->account_id > 0)
 		{
-#if PACKETVER_MAIN_NUM >= 20161019 || PACKETVER_RE_NUM >= 20160921 || defined(PACKETVER_ZERO)
+#if PACKETVER >= 20200902
+			packet->chars[c].char_id = e->char_id;
+			memcpy(packet->chars[c].char_name, e->name, NAME_LENGTH);
+#elif PACKETVER_MAIN_NUM >= 20161019 || PACKETVER_RE_NUM >= 20160921 || defined(PACKETVER_ZERO)
 			packet->chars[c].char_id = e->char_id;
 // version unconfirmed
 #elif PACKETVER >= 20100803
