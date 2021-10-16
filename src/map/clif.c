@@ -8380,11 +8380,14 @@ static void clif_guild_memberlist(struct map_session_data *sd)
 		p->guildMemberInfo[c].contributionExp = (int)cap_value(m->exp, 0, INT32_MAX);
 		p->guildMemberInfo[c].currentState = m->online;
 		p->guildMemberInfo[c].positionID = m->position;
-#if PACKETVER_MAIN_NUM >= 20161214 || PACKETVER_RE_NUM >= 20161130 || defined(PACKETVER_ZERO)
+#if PACKETVER >= 20200902
+		p->guildMemberInfo[c].lastLoginTime = m->last_login; // [Megasantos] - Shows last date online
+		memcpy(p->guildMemberInfo[c].char_name, m->name, NAME_LENGTH);
+#elif PACKETVER_MAIN_NUM >= 20161214 || PACKETVER_RE_NUM >= 20161130 || defined(PACKETVER_ZERO)
 		p->guildMemberInfo[c].lastLoginTime = m->last_login; // [Megasantos] - Shows last date online
 #else
 		memset(p->guildMemberInfo[c].intro, 0, sizeof(p->guildMemberInfo[c].intro));  //[Ind] - This is displayed in the 'note' column but being you can't edit it it's sent empty.
-		memcpy(p->guildMemberInfo[c].CharName, m->name, NAME_LENGTH);
+		memcpy(p->guildMemberInfo[c].char_name, m->name, NAME_LENGTH);
 #endif
 		c++;
 	}
