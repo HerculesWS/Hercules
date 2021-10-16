@@ -4196,7 +4196,28 @@ DEFINE_PACKET_HEADER(ZC_MEMBERMGR_INFO, 0x0aa5);
 DEFINE_PACKET_HEADER(ZC_MEMBERMGR_INFO, 0x0154);
 #endif
 
-#if PACKETVER_MAIN_NUM >= 20161019 || PACKETVER_RE_NUM >= 20160921 || defined(PACKETVER_ZERO)
+#if PACKETVER >= 20200902
+struct PACKET_ZC_GUILD_INFO {
+	int16 PacketType;
+	int GDID;
+	int level;
+	int userNum;
+	int maxUserNum;
+	int userAverageLevel;
+	int exp;
+	int maxExp;
+	int point;
+	int honor;
+	int virtue;
+	int emblemVersion;
+	char guildname[NAME_LENGTH];
+	char manageLand[MAP_NAME_LENGTH_EXT];
+	int zeny;
+	int masterGID;
+	char masterName[NAME_LENGTH];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_GUILD_INFO, 0x0b7b);
+#elif PACKETVER_MAIN_NUM >= 20161019 || PACKETVER_RE_NUM >= 20160921 || defined(PACKETVER_ZERO)
 struct PACKET_ZC_GUILD_INFO {
 	int16 PacketType;
 	int GDID;
