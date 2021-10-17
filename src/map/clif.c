@@ -3435,9 +3435,9 @@ static void clif_updatestatus(struct map_session_data *sd, enum status_point_typ
 		return;
 
 	WFIFOHEAD(fd, 14);
-	WFIFOW(fd,0)=0xb0;
-	WFIFOW(fd,2)=type;
-	len = packet_len(0xb0);
+	WFIFOW(fd, 0) = HEADER_ZC_PAR_CHANGE1;
+	WFIFOW(fd, 2) = type;
+	len = packet_len(HEADER_ZC_PAR_CHANGE1);
 
 	PRAGMA_GCC46(GCC diagnostic push)
 	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
@@ -3446,9 +3446,9 @@ static void clif_updatestatus(struct map_session_data *sd, enum status_point_typ
 		case SP_WEIGHT:
 			pc->updateweightstatus(sd);
 			WFIFOHEAD(fd,14);
-			WFIFOW(fd,0)=0xb0; //Need to re-set as pc->updateweightstatus can alter the buffer. [Skotlex]
-			WFIFOW(fd,2)=type;
-			WFIFOL(fd,4)=sd->weight;
+			WFIFOW(fd, 0) = HEADER_ZC_PAR_CHANGE1; //Need to re-set as pc->updateweightstatus can alter the buffer. [Skotlex]
+			WFIFOW(fd, 2) = type;
+			WFIFOL(fd, 4) = sd->weight;
 			break;
 		case SP_MAXWEIGHT:
 			WFIFOL(fd,4)=sd->max_weight;
@@ -3539,92 +3539,95 @@ static void clif_updatestatus(struct map_session_data *sd, enum status_point_typ
 		case SP_MATK2:
 			WFIFOL(fd,4)=pc_leftside_matk(sd);
 			break;
-		case SP_ZENY:
-// [4144] possible send 64 bit value from PACKETVER_MAIN_NUM >= 20170906 || PACKETVER_RE_NUM >= 20170830 || defined(PACKETVER_ZERO)
-// but kro sending 0xb1 packet only.
-			WFIFOW(fd,0)=0xb1;
-			WFIFOL(fd,4)=sd->status.zeny;
-			len = packet_len(0xb1);
-			break;
 #if PACKETVER_MAIN_NUM >= 20170906 || PACKETVER_RE_NUM >= 20170830 || defined(PACKETVER_ZERO)
+		case SP_ZENY:
+			WFIFOW(fd, 0) = HEADER_ZC_LONGPAR_CHANGE;
+			WFIFOQ(fd, 4) = sd->status.zeny;
+			len = packet_len(HEADER_ZC_LONGPAR_CHANGE);
+			break;
 		case SP_BASEEXP:
-			WFIFOW(fd, 0) = 0xacb;
+			WFIFOW(fd, 0) = HEADER_ZC_LONGPAR_CHANGE;
 			WFIFOQ(fd, 4) = sd->status.base_exp;
-			len = packet_len(0xacb);
+			len = packet_len(HEADER_ZC_LONGPAR_CHANGE);
 			break;
 		case SP_JOBEXP:
-			WFIFOW(fd, 0) = 0xacb;
+			WFIFOW(fd, 0) = HEADER_ZC_LONGPAR_CHANGE;
 			WFIFOQ(fd, 4) = sd->status.job_exp;
-			len = packet_len(0xacb);
+			len = packet_len(HEADER_ZC_LONGPAR_CHANGE);
 			break;
 		case SP_NEXTBASEEXP:
-			WFIFOW(fd, 0) = 0xacb;
+			WFIFOW(fd, 0) = HEADER_ZC_LONGPAR_CHANGE;
 			WFIFOQ(fd, 4) = pc->nextbaseexp(sd);
-			len = packet_len(0xacb);
+			len = packet_len(HEADER_ZC_LONGPAR_CHANGE);
 			break;
 		case SP_NEXTJOBEXP:
-			WFIFOW(fd, 0) = 0xacb;
+			WFIFOW(fd, 0) = HEADER_ZC_LONGPAR_CHANGE;
 			WFIFOQ(fd, 4) = pc->nextjobexp(sd);
-			len = packet_len(0xacb);
+			len = packet_len(HEADER_ZC_LONGPAR_CHANGE);
 			break;
 #else
+		case SP_ZENY:
+			WFIFOW(fd, 0) = HEADER_ZC_LONGPAR_CHANGE;
+			WFIFOL(fd, 4) = sd->status.zeny;
+			len = packet_len(HEADER_ZC_LONGPAR_CHANGE);
+			break;
 		case SP_BASEEXP:
-			WFIFOW(fd, 0) = 0xb1;
+			WFIFOW(fd, 0) = HEADER_ZC_LONGPAR_CHANGE;
 			WFIFOL(fd, 4) = (uint32)(sd->status.base_exp);
-			len = packet_len(0xb1);
+			len = packet_len(HEADER_ZC_LONGPAR_CHANGE);
 			break;
 		case SP_JOBEXP:
-			WFIFOW(fd, 0) = 0xb1;
+			WFIFOW(fd, 0) = HEADER_ZC_LONGPAR_CHANGE;
 			WFIFOL(fd, 4) = (uint32)(sd->status.job_exp);
-			len = packet_len(0xb1);
+			len = packet_len(HEADER_ZC_LONGPAR_CHANGE);
 			break;
 		case SP_NEXTBASEEXP:
-			WFIFOW(fd, 0) = 0xb1;
+			WFIFOW(fd, 0) = HEADER_ZC_LONGPAR_CHANGE;
 			WFIFOL(fd, 4) = (uint32)pc->nextbaseexp(sd);
-			len = packet_len(0xb1);
+			len = packet_len(HEADER_ZC_LONGPAR_CHANGE);
 			break;
 		case SP_NEXTJOBEXP:
-			WFIFOW(fd, 0) = 0xb1;
+			WFIFOW(fd, 0) = HEADER_ZC_LONGPAR_CHANGE;
 			WFIFOL(fd, 4) = (uint32)pc->nextjobexp(sd);
-			len = packet_len(0xb1);
+			len = packet_len(HEADER_ZC_LONGPAR_CHANGE);
 			break;
 #endif
 #if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
 		case SP_POW:
-			WFIFOW(fd, 0) = 0xb25;
+			WFIFOW(fd, 0) = HEADER_ZC_PAR_4JOB_CHANGE;
 			WFIFOB(fd, 4) = 1;
 			WFIFOB(fd, 5) = sd->status.pow;
-			len = packet_len(0xb25);
+			len = packet_len(HEADER_ZC_PAR_4JOB_CHANGE);
 			break;
 		case SP_STA:
-			WFIFOW(fd, 0) = 0xb25;
+			WFIFOW(fd, 0) = HEADER_ZC_PAR_4JOB_CHANGE;
 			WFIFOB(fd, 4) = 1;
 			WFIFOB(fd, 5) = sd->status.sta;
-			len = packet_len(0xb25);
+			len = packet_len(HEADER_ZC_PAR_4JOB_CHANGE);
 			break;
 		case SP_WIS:
-			WFIFOW(fd, 0) = 0xb25;
+			WFIFOW(fd, 0) = HEADER_ZC_PAR_4JOB_CHANGE;
 			WFIFOB(fd, 4) = 1;
 			WFIFOB(fd, 5) = sd->status.wis;
-			len = packet_len(0xb25);
+			len = packet_len(HEADER_ZC_PAR_4JOB_CHANGE);
 			break;
 		case SP_SPL:
-			WFIFOW(fd, 0) = 0xb25;
+			WFIFOW(fd, 0) = HEADER_ZC_PAR_4JOB_CHANGE;
 			WFIFOB(fd, 4) = 1;
 			WFIFOB(fd, 5) = sd->status.spl;
-			len = packet_len(0xb25);
+			len = packet_len(HEADER_ZC_PAR_4JOB_CHANGE);
 			break;
 		case SP_CON:
-			WFIFOW(fd, 0) = 0xb25;
+			WFIFOW(fd, 0) = HEADER_ZC_PAR_4JOB_CHANGE;
 			WFIFOB(fd, 4) = 1;
 			WFIFOB(fd, 5) = sd->status.con;
-			len = packet_len(0xb25);
+			len = packet_len(HEADER_ZC_PAR_4JOB_CHANGE);
 			break;
 		case SP_CRT:
-			WFIFOW(fd, 0) = 0xb25;
+			WFIFOW(fd, 0) = HEADER_ZC_PAR_4JOB_CHANGE;
 			WFIFOB(fd, 4) = 1;
 			WFIFOB(fd, 5) = sd->status.crt;
-			len = packet_len(0xb25);
+			len = packet_len(HEADER_ZC_PAR_4JOB_CHANGE);
 			break;
 #endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
 
@@ -3637,70 +3640,71 @@ static void clif_updatestatus(struct map_session_data *sd, enum status_point_typ
 		case SP_UINT:
 		case SP_UDEX:
 		case SP_ULUK:
-			WFIFOW(fd,0)=0xbe;
-			WFIFOB(fd,4)=pc->need_status_point(sd,type-SP_USTR+SP_STR,1);
-			len = packet_len(0xbe);
+			WFIFOW(fd, 0) = HEADER_ZC_STATUS_CHANGE;
+			WFIFOB(fd, 4) = pc->need_status_point(sd, type - SP_USTR + SP_STR, 1);
+			len = packet_len(HEADER_ZC_STATUS_CHANGE);
 			break;
 
 		/**
 		 * Tells the client how far it is allowed to attack (weapon range)
 		 **/
 		case SP_ATTACKRANGE:
-			WFIFOW(fd,0)=0x13a;
-			WFIFOW(fd,2)=sd->battle_status.rhw.range;
-			len = packet_len(0x13a);
+			WFIFOW(fd, 0) = HEADER_ZC_ATTACK_RANGE;
+			WFIFOW(fd, 2) = sd->battle_status.rhw.range;
+			len = packet_len(HEADER_ZC_ATTACK_RANGE);
 			break;
 
+		// [4144] with ZC_COUPLESTATUS also possible send packets from SP_POW to SP_CRT
 		case SP_STR:
-			WFIFOW(fd,0)=0x141;
-			WFIFOL(fd,2)=type;
-			WFIFOL(fd,6)=sd->status.str;
-			WFIFOL(fd,10)=sd->battle_status.str - sd->status.str;
-			len = packet_len(0x141);
+			WFIFOW(fd, 0) = HEADER_ZC_COUPLESTATUS;
+			WFIFOL(fd, 2) = type;
+			WFIFOL(fd, 6) = sd->status.str;
+			WFIFOL(fd, 10) = sd->battle_status.str - sd->status.str;
+			len = packet_len(HEADER_ZC_COUPLESTATUS);
 			break;
 		case SP_AGI:
-			WFIFOW(fd,0)=0x141;
-			WFIFOL(fd,2)=type;
-			WFIFOL(fd,6)=sd->status.agi;
-			WFIFOL(fd,10)=sd->battle_status.agi - sd->status.agi;
-			len = packet_len(0x141);
+			WFIFOW(fd, 0) = HEADER_ZC_COUPLESTATUS;
+			WFIFOL(fd, 2) = type;
+			WFIFOL(fd, 6) = sd->status.agi;
+			WFIFOL(fd, 10) = sd->battle_status.agi - sd->status.agi;
+			len = packet_len(HEADER_ZC_COUPLESTATUS);
 			break;
 		case SP_VIT:
-			WFIFOW(fd,0)=0x141;
-			WFIFOL(fd,2)=type;
-			WFIFOL(fd,6)=sd->status.vit;
-			WFIFOL(fd,10)=sd->battle_status.vit - sd->status.vit;
-			len = packet_len(0x141);
+			WFIFOW(fd, 0) = HEADER_ZC_COUPLESTATUS;
+			WFIFOL(fd, 2) = type;
+			WFIFOL(fd, 6) = sd->status.vit;
+			WFIFOL(fd, 10) = sd->battle_status.vit - sd->status.vit;
+			len = packet_len(HEADER_ZC_COUPLESTATUS);
 			break;
 		case SP_INT:
-			WFIFOW(fd,0)=0x141;
-			WFIFOL(fd,2)=type;
-			WFIFOL(fd,6)=sd->status.int_;
-			WFIFOL(fd,10)=sd->battle_status.int_ - sd->status.int_;
-			len = packet_len(0x141);
+			WFIFOW(fd, 0) = HEADER_ZC_COUPLESTATUS;
+			WFIFOL(fd, 2) = type;
+			WFIFOL(fd, 6) = sd->status.int_;
+			WFIFOL(fd, 10) = sd->battle_status.int_ - sd->status.int_;
+			len = packet_len(HEADER_ZC_COUPLESTATUS);
 			break;
 		case SP_DEX:
-			WFIFOW(fd,0)=0x141;
-			WFIFOL(fd,2)=type;
-			WFIFOL(fd,6)=sd->status.dex;
-			WFIFOL(fd,10)=sd->battle_status.dex - sd->status.dex;
-			len = packet_len(0x141);
+			WFIFOW(fd, 0) = HEADER_ZC_COUPLESTATUS;
+			WFIFOL(fd, 2) = type;
+			WFIFOL(fd, 6) = sd->status.dex;
+			WFIFOL(fd, 10) = sd->battle_status.dex - sd->status.dex;
+			len = packet_len(HEADER_ZC_COUPLESTATUS);
 			break;
 		case SP_LUK:
-			WFIFOW(fd,0)=0x141;
-			WFIFOL(fd,2)=type;
-			WFIFOL(fd,6)=sd->status.luk;
-			WFIFOL(fd,10)=sd->battle_status.luk - sd->status.luk;
-			len = packet_len(0x141);
+			WFIFOW(fd, 0) = HEADER_ZC_COUPLESTATUS;
+			WFIFOL(fd, 2) = type;
+			WFIFOL(fd, 6) = sd->status.luk;
+			WFIFOL(fd, 10) = sd->battle_status.luk - sd->status.luk;
+			len = packet_len(HEADER_ZC_COUPLESTATUS);
 			break;
 
 		case SP_CARTINFO:
-			WFIFOW(fd,0)=0x121;
-			WFIFOW(fd,2)=sd->cart_num;
-			WFIFOW(fd,4)=MAX_CART;
-			WFIFOL(fd,6)=sd->cart_weight;
-			WFIFOL(fd,10)=sd->cart_weight_max;
-			len = packet_len(0x121);
+			WFIFOW(fd, 0) = HEADER_ZC_NOTIFY_CARTITEM_COUNTINFO;
+			WFIFOW(fd, 2) = sd->cart_num;
+			WFIFOW(fd, 4) = MAX_CART;
+			WFIFOL(fd, 6) = sd->cart_weight;
+			WFIFOL(fd, 10) = sd->cart_weight_max;
+			len = packet_len(HEADER_ZC_NOTIFY_CARTITEM_COUNTINFO);
 			break;
 
 		default:
