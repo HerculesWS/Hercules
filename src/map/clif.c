@@ -3589,6 +3589,45 @@ static void clif_updatestatus(struct map_session_data *sd, enum status_point_typ
 			len = packet_len(0xb1);
 			break;
 #endif
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+		case SP_POW:
+			WFIFOW(fd, 0) = 0xb25;
+			WFIFOB(fd, 4) = 1;
+			WFIFOB(fd, 5) = sd->status.pow;
+			len = packet_len(0xb25);
+			break;
+		case SP_STA:
+			WFIFOW(fd, 0) = 0xb25;
+			WFIFOB(fd, 4) = 1;
+			WFIFOB(fd, 5) = sd->status.sta;
+			len = packet_len(0xb25);
+			break;
+		case SP_WIS:
+			WFIFOW(fd, 0) = 0xb25;
+			WFIFOB(fd, 4) = 1;
+			WFIFOB(fd, 5) = sd->status.wis;
+			len = packet_len(0xb25);
+			break;
+		case SP_SPL:
+			WFIFOW(fd, 0) = 0xb25;
+			WFIFOB(fd, 4) = 1;
+			WFIFOB(fd, 5) = sd->status.spl;
+			len = packet_len(0xb25);
+			break;
+		case SP_CON:
+			WFIFOW(fd, 0) = 0xb25;
+			WFIFOB(fd, 4) = 1;
+			WFIFOB(fd, 5) = sd->status.con;
+			len = packet_len(0xb25);
+			break;
+		case SP_CRT:
+			WFIFOW(fd, 0) = 0xb25;
+			WFIFOB(fd, 4) = 1;
+			WFIFOB(fd, 5) = sd->status.crt;
+			len = packet_len(0xb25);
+			break;
+#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+
 		/**
 		 * SP_U<STAT> are used to update the amount of points necessary to increase that stat
 		 **/
