@@ -7358,8 +7358,8 @@ typedef bool (*HPMHOOK_pre_searchstore_queryremote) (struct map_session_data **s
 typedef bool (*HPMHOOK_post_searchstore_queryremote) (bool retVal___, struct map_session_data *sd, int account_id);
 typedef void (*HPMHOOK_pre_searchstore_clearremote) (struct map_session_data **sd);
 typedef void (*HPMHOOK_post_searchstore_clearremote) (struct map_session_data *sd);
-typedef bool (*HPMHOOK_pre_searchstore_result) (struct map_session_data **sd, unsigned int *store_id, int *account_id, const char **store_name, int *nameid, unsigned short *amount, unsigned int *price, const int **card, unsigned char *refine_level, const struct item_option **option);
-typedef bool (*HPMHOOK_post_searchstore_result) (bool retVal___, struct map_session_data *sd, unsigned int store_id, int account_id, const char *store_name, int nameid, unsigned short amount, unsigned int price, const int *card, unsigned char refine_level, const struct item_option *option);
+typedef bool (*HPMHOOK_pre_searchstore_result) (struct map_session_data **sd, unsigned int *store_id, int *account_id, const char **store_name, int *nameid, unsigned short *amount, unsigned int *price, const int **card, unsigned char *refine_level, unsigned char *grade_level, const struct item_option **option);
+typedef bool (*HPMHOOK_post_searchstore_result) (bool retVal___, struct map_session_data *sd, unsigned int store_id, int account_id, const char *store_name, int nameid, unsigned short amount, unsigned int price, const int *card, unsigned char refine_level, unsigned char grade_level, const struct item_option *option);
 #endif // MAP_SEARCHSTORE_H
 #ifdef COMMON_SHOWMSG_H /* showmsg */
 typedef void (*HPMHOOK_pre_showmsg_init) (void);
