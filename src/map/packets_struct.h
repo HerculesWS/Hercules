@@ -2787,7 +2787,27 @@ struct PACKET_ZC_MAKINGARROW_LIST {
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(ZC_MAKINGARROW_LIST, 0x01ad);
 
-struct PACKET_ZC_REPAIRITEMLIST_sub {
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+struct REPAIRITEM_INFO {
+	int16 index;
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+	uint32 itemId;
+#else
+	uint16 itemId;
+#endif
+	struct EQUIPSLOTINFO slot;  // unused?
+	uint8 refine;  // unused?
+	uint8 grade;  // unused?
+} __attribute__((packed));
+
+struct PACKET_ZC_REPAIRITEMLIST {
+	int16 packetType;
+	int16 packetLength;
+	struct REPAIRITEM_INFO items[];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_REPAIRITEMLIST, 0x0b65);
+#else  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+struct REPAIRITEM_INFO {
 	int16 index;
 #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
@@ -2801,8 +2821,10 @@ struct PACKET_ZC_REPAIRITEMLIST_sub {
 struct PACKET_ZC_REPAIRITEMLIST {
 	int16 packetType;
 	int16 packetLength;
-	struct PACKET_ZC_REPAIRITEMLIST_sub items[];
+	struct REPAIRITEM_INFO items[];
 } __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_REPAIRITEMLIST, 0x01fc);
+#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
 
 struct PACKET_ZC_NOTIFY_WEAPONITEMLIST_sub {
 	int16 index;

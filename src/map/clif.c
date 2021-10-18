@@ -6781,22 +6781,25 @@ static void clif_item_repair_list(struct map_session_data *sd, struct map_sessio
 
 	fd = sd->fd;
 
-	len = dstsd->status.inventorySize * sizeof(struct PACKET_ZC_REPAIRITEMLIST_sub) + sizeof(struct PACKET_ZC_REPAIRITEMLIST);
+	len = dstsd->status.inventorySize * sizeof(struct REPAIRITEM_INFO) + sizeof(struct PACKET_ZC_REPAIRITEMLIST);
 	WFIFOHEAD(fd, len);
 	p = WFIFOP(fd, 0);
-	p->packetType = 0x1fc;
+	p->packetType = HEADER_ZC_REPAIRITEMLIST;
 	for (i = c = 0; i < sd->status.inventorySize; i++) {
 		int nameid = dstsd->status.inventory[i].nameid;
 		if (nameid > 0 && (dstsd->status.inventory[i].attribute & ATTR_BROKEN) != 0) { // && skill_can_repair(sd,nameid)) {
 			p->items[c].index = i;
 			p->items[c].itemId = nameid;
 			p->items[c].refine = dstsd->status.inventory[i].refine;
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+			p->items[c].grade = dstsd->status.inventory[i].grade;
+#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
 			clif->addcards(&p->items[c].slot, &dstsd->status.inventory[i]);
 			c++;
 		}
 	}
 	if (c > 0) {
-		len = c * sizeof(struct PACKET_ZC_REPAIRITEMLIST_sub) + sizeof(struct PACKET_ZC_REPAIRITEMLIST);
+		len = c * sizeof(struct REPAIRITEM_INFO) + sizeof(struct PACKET_ZC_REPAIRITEMLIST);
 		p->packetLength = len;
 		WFIFOSET(fd, len);
 		sd->menuskill_id = BS_REPAIRWEAPON;
