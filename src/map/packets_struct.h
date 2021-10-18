@@ -2356,6 +2356,25 @@ struct PACKET_ZC_CASH_ITEM_DELETE {
 #endif
 } __attribute__((packed));
 
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+struct PACKET_ZC_ITEM_PICKUP_PARTY {
+	int16 packetType;
+	uint32 AID;
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+	uint32 itemId;
+#else
+	uint16 itemId;
+#endif
+	uint8 identified;
+	uint8 damaged;
+	struct EQUIPSLOTINFO slot;
+	uint16 location;
+	uint8 itemType;
+	uint8 refine;
+	uint8 grade;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_ITEM_PICKUP_PARTY, 0x0b67);
+#elif PACKETVER >= 20070731
 struct PACKET_ZC_ITEM_PICKUP_PARTY {
 	int16 packetType;
 	uint32 AID;
@@ -2371,6 +2390,8 @@ struct PACKET_ZC_ITEM_PICKUP_PARTY {
 	uint16 location;
 	uint8 itemType;
 } __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_ITEM_PICKUP_PARTY, 0x02b8);
+#endif
 
 struct PACKET_ZC_UPDATE_ITEM_FROM_BUYING_STORE {
 	int16 packetType;

@@ -19350,14 +19350,14 @@ static void clif_instance_leave(int fd)
 /// 02b8 <account id>.L <name id>.W <identified>.B <damaged>.B <refine>.B <card1>.W <card2>.W <card3>.W <card4>.W <equip location>.W <item type>.B
 static void clif_party_show_picker(struct map_session_data *sd, struct item *item_data)
 {
-#if PACKETVER >= 20071002
+#if PACKETVER >= 20070731
 	struct item_data* id;
 	struct PACKET_ZC_ITEM_PICKUP_PARTY p;
 
 	nullpo_retv(sd);
 	nullpo_retv(item_data);
 	id = itemdb->search(item_data->nameid);
-	p.packetType = 0x2b8;
+	p.packetType = HEADER_ZC_ITEM_PICKUP_PARTY;
 	p.AID = sd->status.account_id;
 	p.itemId = item_data->nameid;
 	p.identified = item_data->identify;
@@ -19366,6 +19366,9 @@ static void clif_party_show_picker(struct map_session_data *sd, struct item *ite
 	clif->addcards(&p.slot, item_data);
 	p.location = id->equip; // equip location
 	p.itemType = itemtype(id->type); // item type
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+	p.grade = item_data->grade;
+#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
 	clif->send(&p, sizeof(p), &sd->bl, PARTY_SAMEMAP_WOS);
 #endif
 }
