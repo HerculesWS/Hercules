@@ -2011,4 +2011,8 @@ packet(0x96e,clif->ackmergeitems);
 	packet(0x0a6c,clif->pMacroReporterSelect);
 #endif
 
+#if PACKETVER >= 20191224
+	packet(0x0b66,clif->pRepairItem);
+#endif
+
 #endif /* MAP_PACKETS_H */

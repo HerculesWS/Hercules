@@ -2534,6 +2534,9 @@ struct PACKET_ZC_FAILED_TRADE_BUYING_STORE_TO_SELLER {
 #endif
 } __attribute__((packed));
 
+// [4144] here should be used structs PACKET_CZ_REQ_ITEMREPAIR1 and PACKET_CZ_REQ_ITEMREPAIR2
+// but because any fields except index and itemId unused, possible to mix both of structs
+#if PACKETVER >= 29191224
 struct PACKET_CZ_REQ_ITEMREPAIR {
 	int16 packetType;
 	int16 index;
@@ -2542,9 +2545,25 @@ struct PACKET_CZ_REQ_ITEMREPAIR {
 #else
 	uint16 itemId;
 #endif
-	uint8 refine;
-	struct EQUIPSLOTINFO slot;
+	struct EQUIPSLOTINFO slot;  // unused
+	uint8 refine;  // unused
+	uint8 grade;  // unused
 } __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_REQ_ITEMREPAIR, 0x0b66);
+#else  // PACKETVER >= 29191224
+struct PACKET_CZ_REQ_ITEMREPAIR {
+	int16 packetType;
+	int16 index;
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+	uint32 itemId;
+#else
+	uint16 itemId;
+#endif
+	uint8 refine;  // unused
+	struct EQUIPSLOTINFO slot;  // unused
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_REQ_ITEMREPAIR, 0x01fd);
+#endif  // PACKETVER >= 29191224
 
 struct PACKET_CZ_REQ_MAKINGITEM {
 	int16 packetType;
