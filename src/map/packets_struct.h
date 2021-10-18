@@ -2905,6 +2905,35 @@ struct PACKET_CZ_SEARCH_STORE_INFO {
 */
 } __attribute__((packed));
 
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+struct PACKET_ZC_SEARCH_STORE_INFO_ACK_sub {
+	uint32 storeId;
+	uint32 AID;
+	char shopName[MESSAGE_SIZE];
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+	uint32 itemId;
+#else
+	uint16 itemId;
+#endif
+	uint8 itemType;
+	uint32 price;
+	uint16 amount;
+	struct EQUIPSLOTINFO slot;
+	struct ItemOptions option_data[MAX_ITEM_OPTIONS];
+	uint8 refine;
+	uint8 grade;
+} __attribute__((packed));
+
+struct PACKET_ZC_SEARCH_STORE_INFO_ACK {
+	int16 packetType;
+	int16 packetLength;
+	uint8 firstPage;
+	uint8 nextPage;
+	uint8 usesCount;
+	struct PACKET_ZC_SEARCH_STORE_INFO_ACK_sub items[];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_SEARCH_STORE_INFO_ACK, 0x0b64);
+#elif PACKETVER_MAIN_NUM >= 20100817 || PACKETVER_RE_NUM >= 20100706 || defined(PACKETVER_ZERO)
 struct PACKET_ZC_SEARCH_STORE_INFO_ACK_sub {
 	uint32 storeId;
 	uint32 AID;
@@ -2932,6 +2961,9 @@ struct PACKET_ZC_SEARCH_STORE_INFO_ACK {
 	uint8 usesCount;
 	struct PACKET_ZC_SEARCH_STORE_INFO_ACK_sub items[];
 } __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_SEARCH_STORE_INFO_ACK, 0x0836);
+#endif  // PACKETVER_MAIN_NUM >= 20100817 || PACKETVER_RE_NUM >= 20100706 || defined(PACKETVER_ZERO)
+
 
 /* Achievement System */
 struct ach_list_info {

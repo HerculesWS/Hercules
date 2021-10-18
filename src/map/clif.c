@@ -20012,6 +20012,7 @@ static void clif_parse_SearchStoreInfo(int fd, struct map_session_data *sd)
 ///     1 = "next" label to retrieve more results
 static void clif_search_store_info_ack(struct map_session_data *sd)
 {
+#if PACKETVER_MAIN_NUM >= 20100817 || PACKETVER_RE_NUM >= 20100706 || defined(PACKETVER_ZERO)
 	const unsigned int blocksize = sizeof(struct PACKET_ZC_SEARCH_STORE_INFO_ACK_sub);
 	int fd;
 	unsigned int i, start, end;
@@ -20026,7 +20027,7 @@ static void clif_search_store_info_ack(struct map_session_data *sd)
 	len = sizeof(struct PACKET_ZC_SEARCH_STORE_INFO_ACK) + (end - start) * blocksize;
 	WFIFOHEAD(fd, len);
 	p = WFIFOP(fd, 0);
-	p->packetType = 0x836;
+	p->packetType = HEADER_ZC_SEARCH_STORE_INFO_ACK;
 	p->packetLength = len;
 	p->firstPage = !sd->searchstore.pages;
 	p->nextPage = searchstore->querynext(sd);
@@ -20045,6 +20046,10 @@ static void clif_search_store_info_ack(struct map_session_data *sd)
 		p->items[i].amount = ssitem->amount;
 		p->items[i].refine = ssitem->refine;
 
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+		p->items[i].grade = ssitem->grade;
+#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+
 		// make-up an item for clif_addcards
 		memset(&it, 0, sizeof(it));
 		memcpy(&it.card, &ssitem->card, sizeof(it.card));
@@ -20059,6 +20064,7 @@ static void clif_search_store_info_ack(struct map_session_data *sd)
 	}
 
 	WFIFOSET(fd, len);
+#endif  // PACKETVER_MAIN_NUM >= 20100817 || PACKETVER_RE_NUM >= 20100706 || defined(PACKETVER_ZERO)
 }
 
 /// Notification of failure when searching for stores (ZC_SEARCH_STORE_INFO_FAILED).

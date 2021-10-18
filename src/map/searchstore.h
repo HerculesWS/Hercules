@@ -77,6 +77,7 @@ struct s_search_store_info_item {
 	unsigned int price;
 	int card[MAX_SLOTS];
 	unsigned char refine;
+	unsigned char grade;  // [4144] for now unused
 	struct item_option option[MAX_ITEM_OPTIONS];
 };
 
