@@ -478,8 +478,8 @@ static bool buyingstore_searchall(struct map_session_data *sd, const struct s_se
 			;
 		}
 
-		// TODO: add support for cards and options
-		if (!searchstore->result(s->search_sd, sd->buyer_id, sd->status.account_id, sd->message, it->nameid, it->amount, it->price, buyingstore->blankslots, 0, buyingstore->blankoptions))
+		// TODO: add support for cards, options, grade
+		if (!searchstore->result(s->search_sd, sd->buyer_id, sd->status.account_id, sd->message, it->nameid, it->amount, it->price, buyingstore->blankslots, 0, 0, buyingstore->blankoptions))
 		{// result set full
 			return false;
 		}

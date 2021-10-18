@@ -351,7 +351,7 @@ static void searchstore_clearremote(struct map_session_data *sd)
 }
 
 /// receives results from a store-specific callback
-static bool searchstore_result(struct map_session_data *sd, unsigned int store_id, int account_id, const char *store_name, int nameid, unsigned short amount, unsigned int price, const int *card, unsigned char refine_level, const struct item_option *option)
+static bool searchstore_result(struct map_session_data *sd, unsigned int store_id, int account_id, const char *store_name, int nameid, unsigned short amount, unsigned int price, const int *card, unsigned char refine_level, unsigned char grade_level, const struct item_option *option)
 {
 	struct s_search_store_info_item* ssitem;
 
@@ -371,6 +371,7 @@ static bool searchstore_result(struct map_session_data *sd, unsigned int store_i
 	ssitem->price = price;
 	memcpy(ssitem->card, card, sizeof(ssitem->card));
 	ssitem->refine = refine_level;
+	ssitem->grade = grade_level;
 	memcpy(ssitem->option, option, sizeof(ssitem->option));
 
 	return true;

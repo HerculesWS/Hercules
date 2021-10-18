@@ -77,7 +77,7 @@ struct s_search_store_info_item {
 	unsigned int price;
 	int card[MAX_SLOTS];
 	unsigned char refine;
-	unsigned char grade;  // [4144] for now unused
+	unsigned char grade;
 	struct item_option option[MAX_ITEM_OPTIONS];
 };
 
@@ -110,7 +110,7 @@ struct searchstore_interface {
 	void (*click) (struct map_session_data* sd, int account_id, int store_id, int nameid);
 	bool (*queryremote) (struct map_session_data* sd, int account_id);
 	void (*clearremote) (struct map_session_data* sd);
-	bool (*result) (struct map_session_data* sd, unsigned int store_id, int account_id, const char* store_name, int nameid, unsigned short amount, unsigned int price, const int* card, unsigned char refine_level, const struct item_option *option);
+	bool (*result) (struct map_session_data* sd, unsigned int store_id, int account_id, const char* store_name, int nameid, unsigned short amount, unsigned int price, const int* card, unsigned char refine_level, unsigned char grade_level, const struct item_option *option);
 };
 
 #ifdef HERCULES_CORE
