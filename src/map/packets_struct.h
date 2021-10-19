@@ -2683,6 +2683,32 @@ struct PACKET_ZC_ACK_SCHEDULER_CASHITEM {
 	struct PACKET_ZC_ACK_SCHEDULER_CASHITEM_sub items[];
 } __attribute__((packed));
 
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+struct PACKET_ZC_PC_PURCHASE_MYITEMLIST_sub {
+	uint32 price;
+	int16 index;
+	int16 amount;
+	uint8 itemType;
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+	uint32 itemId;
+#else
+	uint16 itemId;
+#endif
+	uint8 identified;
+	uint8 damaged;
+	struct EQUIPSLOTINFO slot;
+	struct ItemOptions option_data[MAX_ITEM_OPTIONS];
+	uint8 refine;
+	uint8 grade;
+} __attribute__((packed));
+struct PACKET_ZC_PC_PURCHASE_MYITEMLIST {
+	int16 packetType;
+	int16 packetLength;
+	uint32 AID;
+	struct PACKET_ZC_PC_PURCHASE_MYITEMLIST_sub items[];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_PC_PURCHASE_MYITEMLIST, 0x0b40);
+#else  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
 struct PACKET_ZC_PC_PURCHASE_MYITEMLIST_sub {
 	uint32 price;
 	int16 index;
@@ -2701,13 +2727,14 @@ struct PACKET_ZC_PC_PURCHASE_MYITEMLIST_sub {
 	struct ItemOptions option_data[MAX_ITEM_OPTIONS];
 #endif
 } __attribute__((packed));
-
 struct PACKET_ZC_PC_PURCHASE_MYITEMLIST {
 	int16 packetType;
 	int16 packetLength;
 	uint32 AID;
 	struct PACKET_ZC_PC_PURCHASE_MYITEMLIST_sub items[];
 } __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_PC_PURCHASE_MYITEMLIST, 0x0136);
+#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
 
 struct PACKET_ZC_PC_PURCHASE_ITEMLIST_sub {
 	uint32 price;

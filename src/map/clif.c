@@ -7113,24 +7113,18 @@ static void clif_buyvending(struct map_session_data *sd, int index, int amount, 
 /// 0136 <packet len>.W <owner id>.L { <price>.L <index>.W <amount>.W <type>.B <name id>.W <identified>.B <damaged>.B <refine>.B <card1>.W <card2>.W <card3>.W <card4>.W }*
 static void clif_openvending(struct map_session_data *sd, int id, struct s_vending *vending_items)
 {
-	int i, fd;
-	int count;
-
-	struct PACKET_ZC_PC_PURCHASE_MYITEMLIST *p;
-	int len;
-
 	nullpo_retv(sd);
 	nullpo_retv(vending_items);
 
-	fd = sd->fd;
-	count = sd->vend_num;
-	len = sizeof(struct PACKET_ZC_PC_PURCHASE_MYITEMLIST) + count * sizeof(struct PACKET_ZC_PC_PURCHASE_MYITEMLIST_sub);
+	int fd = sd->fd;
+	int count = sd->vend_num;
+	int len = sizeof(struct PACKET_ZC_PC_PURCHASE_MYITEMLIST) + count * sizeof(struct PACKET_ZC_PC_PURCHASE_MYITEMLIST_sub);
 	WFIFOHEAD(fd, len);
-	p = WFIFOP(fd, 0);
-	p->packetType = 0x136;
+	struct PACKET_ZC_PC_PURCHASE_MYITEMLIST *p = WFIFOP(fd, 0);
+	p->packetType = HEADER_ZC_PC_PURCHASE_MYITEMLIST;
 	p->packetLength = len;
 	p->AID = id;
-	for (i = 0; i < count; i++) {
+	for (int i = 0; i < count; i++) {
 		int index = vending_items[i].index;
 		struct item_data* data = itemdb->search(sd->status.cart[index].nameid);
 		p->items[i].price = vending_items[i].value;
@@ -7141,6 +7135,9 @@ static void clif_openvending(struct map_session_data *sd, int id, struct s_vendi
 		p->items[i].identified = sd->status.cart[index].identify;
 		p->items[i].damaged = sd->status.cart[index].attribute;
 		p->items[i].refine = sd->status.cart[index].refine;
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+		p->items[i].grade = sd->status.cart[index].grade;
+#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
 		clif->addcards(&p->items[i].slot, &sd->status.cart[index]);
 #if PACKETVER >= 20150226
 		clif->add_item_options(&p->items[i].option_data[0], &sd->status.cart[index]);
