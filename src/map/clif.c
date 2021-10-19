@@ -2828,6 +2828,9 @@ static void clif_item_equip(short idx, struct EQUIPITEM_INFO *p, struct item *it
 	p->IsDamaged = (it->attribute & ATTR_BROKEN) != 0 ? 1 : 0;
 #endif
 	p->RefiningLevel = it->refine;
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+	p->grade = it->grade;
+#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
 
 	clif->addcards(&p->slot, it);
 

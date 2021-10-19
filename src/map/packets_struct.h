@@ -485,6 +485,7 @@ struct ItemOptions {
 	uint8 param;
 } __attribute__((packed));
 
+// TODO split struct inside blocks of #if/#elif
 struct EQUIPITEM_INFO {
 	int16 index;
 #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
@@ -506,7 +507,9 @@ struct EQUIPITEM_INFO {
 #if PACKETVER < 20120925
 	uint8 IsDamaged;
 #endif
+#if !(PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723)
 	uint8 RefiningLevel;
+#endif  // !(PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723)
 	struct EQUIPSLOTINFO slot;
 #if PACKETVER >= 20071002
 	int32 HireExpireDate;
@@ -521,6 +524,10 @@ struct EQUIPITEM_INFO {
 	uint8 option_count;
 	struct ItemOptions option_data[MAX_ITEM_OPTIONS];
 #endif
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+	uint8 RefiningLevel;
+	uint8 grade;
+#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
 #if PACKETVER >= 20120925
 	struct {
 		uint8 IsIdentified : 1;
@@ -1262,7 +1269,25 @@ struct packet_unequipitem_ack {
 	uint8 result;
 } __attribute__((packed));
 
-#if PACKETVER_MAIN_NUM >= 20180801 || PACKETVER_RE_NUM >= 20180801 || PACKETVER_ZERO_NUM >= 20180808
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+struct PACKET_ZC_EQUIPWIN_MICROSCOPE {
+	int16 PacketType;
+	int16 PacketLength;
+	char characterName[NAME_LENGTH];
+	int16 job;
+	int16 head;
+	int16 accessory;
+	int16 accessory2;
+	int16 accessory3;
+	int16 robe;
+	int16 headpalette;
+	int16 bodypalette;
+	int16 body2;
+	uint8 sex;
+	struct EQUIPITEM_INFO list[];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_EQUIPWIN_MICROSCOPE, 0x0b37);
+#elif PACKETVER_MAIN_NUM >= 20180801 || PACKETVER_RE_NUM >= 20180801 || PACKETVER_ZERO_NUM >= 20180808
 struct PACKET_ZC_EQUIPWIN_MICROSCOPE {
 	int16 PacketType;
 	int16 PacketLength;
