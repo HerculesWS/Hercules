@@ -22719,8 +22719,11 @@ static void clif_parse_rodex_add_item(int fd, struct map_session_data *sd)
 
 static void clif_rodex_add_item_result(struct map_session_data *sd, int16 idx, int16 amount, enum rodex_add_item result)
 {
+// [4144] this packet exists from
+// PACKETVER_MAIN_NUM >= 20141112 || PACKETVER_RE_NUM >= 20140924 || defined(PACKETVER_ZERO)
+// but used only packet versions with known struct
 #if PACKETVER >= 20141119
-	struct PACKET_ZC_ADD_ITEM_TO_MAIL *packet;
+	struct PACKET_ZC_ACK_ADD_ITEM_RODEX *packet;
 	int fd, j;
 
 	nullpo_retv(sd);
@@ -22732,7 +22735,7 @@ static void clif_rodex_add_item_result(struct map_session_data *sd, int16 idx, i
 	WFIFOHEAD(fd, sizeof(*packet));
 	packet = WFIFOP(fd, 0);
 	memset(packet, 0x0, sizeof(*packet));
-	packet->PacketType = rodexadditem;
+	packet->PacketType = HEADER_ZC_ACK_ADD_ITEM_RODEX;
 	packet->result = result;
 
 	if (result != RODEX_ADD_ITEM_SUCCESS) { //No need to continue building the packet if it failed
@@ -22757,8 +22760,11 @@ static void clif_rodex_add_item_result(struct map_session_data *sd, int16 idx, i
 	packet->weight = sd->rodex.tmp.weight / 10;
 	packet->favorite = sd->status.inventory[idx].favorite;
 	packet->location = pc->equippoint(sd, idx);
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+	packet->grade = sd->status.inventory[idx].grade;
+#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
 	WFIFOSET(fd, sizeof(*packet));
-#endif
+#endif  // PACKETVER >= 20141119
 }
 
 static void clif_parse_rodex_remove_item(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));

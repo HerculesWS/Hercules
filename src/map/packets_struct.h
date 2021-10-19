@@ -319,7 +319,6 @@ enum packet_headers {
 	rodexgetzeny = 0x09F2,
 	rodexgetitem = 0x09F4,
 	rodexdelete = 0x09F6,
-	rodexadditem = 0x0A05,
 	rodexremoveitem = 0x0A07,
 	rodexopenwrite = 0x0A12,
 #if PACKETVER < 20160601
@@ -1676,7 +1675,34 @@ struct PACKET_CZ_ADD_ITEM_TO_MAIL {
 	int16 count;
 } __attribute__((packed));
 
-struct PACKET_ZC_ADD_ITEM_TO_MAIL {
+// [4144] this packet exists from
+// PACKETVER_MAIN_NUM >= 20141112 || PACKETVER_RE_NUM >= 20140924 || defined(PACKETVER_ZERO)
+// but used only packet versions with known struct
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+struct PACKET_ZC_ACK_ADD_ITEM_RODEX {
+	int16 PacketType;
+	int8 result;
+	int16 index;
+	int16 count;
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+	uint32 itemId;
+#else
+	uint16 itemId;
+#endif
+	int8 type;
+	int8 IsIdentified;
+	int8 IsDamaged;
+	struct EQUIPSLOTINFO slot;
+	struct ItemOptions optionData[MAX_ITEM_OPTIONS];
+	int16 weight;
+	uint8 favorite;
+	uint32 location;
+	int8 refiningLevel;
+	int8 grade;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_ACK_ADD_ITEM_RODEX, 0x0b3f);
+#elif PACKETVER >= 20141119
+struct PACKET_ZC_ACK_ADD_ITEM_RODEX {
 	int16 PacketType;
 	int8 result;
 	int16 index;
@@ -1696,6 +1722,8 @@ struct PACKET_ZC_ADD_ITEM_TO_MAIL {
 	uint8 favorite;
 	uint32 location;
 } __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_ACK_ADD_ITEM_RODEX, 0x0a05);
+#endif  // PACKETVER >= 20141119
 
 struct mail_item {
 	int16 count;
