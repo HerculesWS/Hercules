@@ -2232,8 +2232,10 @@ typedef void (*HPMHOOK_pre_clif_pProduceMix) (int *fd, struct map_session_data *
 typedef void (*HPMHOOK_post_clif_pProduceMix) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_pCooking) (int *fd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_pCooking) (int fd, struct map_session_data *sd);
-typedef void (*HPMHOOK_pre_clif_pRepairItem) (int *fd, struct map_session_data **sd);
-typedef void (*HPMHOOK_post_clif_pRepairItem) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_pRepairItem1) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pRepairItem1) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_pRepairItem2) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pRepairItem2) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_pWeaponRefine) (int *fd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_pWeaponRefine) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_pNpcSelectMenu) (int *fd, struct map_session_data **sd);

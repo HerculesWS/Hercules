@@ -23757,13 +23757,13 @@ void HP_clif_pCooking(int fd, struct map_session_data *sd) {
 	}
 	return;
 }
-void HP_clif_pRepairItem(int fd, struct map_session_data *sd) {
+void HP_clif_pRepairItem1(int fd, struct map_session_data *sd) {
 	int hIndex = 0;
-	if (HPMHooks.count.HP_clif_pRepairItem_pre > 0) {
+	if (HPMHooks.count.HP_clif_pRepairItem1_pre > 0) {
 		void (*preHookFunc) (int *fd, struct map_session_data **sd);
 		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pRepairItem_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_clif_pRepairItem_pre[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pRepairItem1_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_pRepairItem1_pre[hIndex].func;
 			preHookFunc(&fd, &sd);
 		}
 		if (*HPMforce_return) {
@@ -23772,12 +23772,38 @@ void HP_clif_pRepairItem(int fd, struct map_session_data *sd) {
 		}
 	}
 	{
-		HPMHooks.source.clif.pRepairItem(fd, sd);
+		HPMHooks.source.clif.pRepairItem1(fd, sd);
 	}
-	if (HPMHooks.count.HP_clif_pRepairItem_post > 0) {
+	if (HPMHooks.count.HP_clif_pRepairItem1_post > 0) {
 		void (*postHookFunc) (int fd, struct map_session_data *sd);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pRepairItem_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_clif_pRepairItem_post[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pRepairItem1_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_pRepairItem1_post[hIndex].func;
+			postHookFunc(fd, sd);
+		}
+	}
+	return;
+}
+void HP_clif_pRepairItem2(int fd, struct map_session_data *sd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_pRepairItem2_pre > 0) {
+		void (*preHookFunc) (int *fd, struct map_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pRepairItem2_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_pRepairItem2_pre[hIndex].func;
+			preHookFunc(&fd, &sd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.pRepairItem2(fd, sd);
+	}
+	if (HPMHooks.count.HP_clif_pRepairItem2_post > 0) {
+		void (*postHookFunc) (int fd, struct map_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pRepairItem2_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_pRepairItem2_post[hIndex].func;
 			postHookFunc(fd, sd);
 		}
 	}

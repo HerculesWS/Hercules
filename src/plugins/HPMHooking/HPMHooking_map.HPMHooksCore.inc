@@ -1822,8 +1822,10 @@ struct {
 	struct HPMHookPoint *HP_clif_pProduceMix_post;
 	struct HPMHookPoint *HP_clif_pCooking_pre;
 	struct HPMHookPoint *HP_clif_pCooking_post;
-	struct HPMHookPoint *HP_clif_pRepairItem_pre;
-	struct HPMHookPoint *HP_clif_pRepairItem_post;
+	struct HPMHookPoint *HP_clif_pRepairItem1_pre;
+	struct HPMHookPoint *HP_clif_pRepairItem1_post;
+	struct HPMHookPoint *HP_clif_pRepairItem2_pre;
+	struct HPMHookPoint *HP_clif_pRepairItem2_post;
 	struct HPMHookPoint *HP_clif_pWeaponRefine_pre;
 	struct HPMHookPoint *HP_clif_pWeaponRefine_post;
 	struct HPMHookPoint *HP_clif_pNpcSelectMenu_pre;
@@ -9041,8 +9043,10 @@ struct {
 	int HP_clif_pProduceMix_post;
 	int HP_clif_pCooking_pre;
 	int HP_clif_pCooking_post;
-	int HP_clif_pRepairItem_pre;
-	int HP_clif_pRepairItem_post;
+	int HP_clif_pRepairItem1_pre;
+	int HP_clif_pRepairItem1_post;
+	int HP_clif_pRepairItem2_pre;
+	int HP_clif_pRepairItem2_post;
 	int HP_clif_pWeaponRefine_pre;
 	int HP_clif_pWeaponRefine_post;
 	int HP_clif_pNpcSelectMenu_pre;
