@@ -225,7 +225,9 @@ enum packet_headers {
 #else
 	storageListNormalType = 0xa5,
 #endif
-#if PACKETVER_RE_NUM >= 20180829 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+	storageListEquipType = 0xb39,
+#elif PACKETVER_RE_NUM >= 20180829 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 	storageListEquipType = 0xb0a,
 #elif PACKETVER >= 20150226
 	storageListEquipType = 0xa10,
