@@ -1457,7 +1457,8 @@ struct clif_interface {
 	void (*pRequestMemo) (int fd,struct map_session_data *sd);
 	void (*pProduceMix) (int fd,struct map_session_data *sd);
 	void (*pCooking) (int fd,struct map_session_data *sd);
-	void (*pRepairItem) (int fd, struct map_session_data *sd);
+	void (*pRepairItem1) (int fd, struct map_session_data *sd);
+	void (*pRepairItem2) (int fd, struct map_session_data *sd);
 	void (*pWeaponRefine) (int fd, struct map_session_data *sd);
 	void (*pNpcSelectMenu) (int fd,struct map_session_data *sd);
 	void (*pNpcNextClicked) (int fd,struct map_session_data *sd);

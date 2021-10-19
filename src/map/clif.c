@@ -13538,12 +13538,12 @@ static void clif_parse_Cooking(int fd, struct map_session_data *sd)
 	clif_menuskill_clear(sd);
 }
 
-static void clif_parse_RepairItem(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+static void clif_parse_RepairItem1(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
 /// Answer to repair weapon item selection dialog (CZ_REQ_ITEMREPAIR).
 /// 01fd <index>.W <name id>.W <refine>.B <card1>.W <card2>.W <card3>.W <card4>.W
-static void clif_parse_RepairItem(int fd, struct map_session_data *sd)
+static void clif_parse_RepairItem1(int fd, struct map_session_data *sd)
 {
-	const struct PACKET_CZ_REQ_ITEMREPAIR *p = RFIFOP(fd, 0);
+	const struct PACKET_CZ_REQ_ITEMREPAIR1 *p = RFIFOP(fd, 0);
 
 	if (sd->menuskill_id != BS_REPAIRWEAPON)
 		return;
@@ -13554,8 +13554,30 @@ static void clif_parse_RepairItem(int fd, struct map_session_data *sd)
 		clif_menuskill_clear(sd);
 		return;
 	}
-	skill->repairweapon(sd, p->index);
+	skill->repairweapon(sd, p->item.index);
 	clif_menuskill_clear(sd);
+}
+
+static void clif_parse_RepairItem2(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+/// Answer to repair weapon item selection dialog (CZ_REQ_ITEMREPAIR).
+/// 01fd <index>.W <name id>.W <refine>.B <card1>.W <card2>.W <card3>.W <card4>.W
+static void clif_parse_RepairItem2(int fd, struct map_session_data *sd)
+{
+#if PACKETVER >= 20191224
+	const struct PACKET_CZ_REQ_ITEMREPAIR2 *p = RFIFOP(fd, 0);
+
+	if (sd->menuskill_id != BS_REPAIRWEAPON)
+		return;
+	if (pc_istrading_except_npc(sd) || pc_isdead(sd) || pc_isvending(sd)
+	    || (sd->npc_id != 0 && sd->state.using_megaphone == 0)) {
+		//Make it fail to avoid shop exploits where you sell something different than you see.
+		clif->skill_fail(sd, sd->ud.skill_id, USESKILL_FAIL_LEVEL, 0, 0);
+		clif_menuskill_clear(sd);
+		return;
+	}
+	skill->repairweapon(sd, p->item.index);
+	clif_menuskill_clear(sd);
+#endif  // PACKETVER >= 20191224
 }
 
 static void clif_parse_WeaponRefine(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
@@ -25862,7 +25884,8 @@ void clif_defaults(void)
 	clif->pRequestMemo = clif_parse_RequestMemo;
 	clif->pProduceMix = clif_parse_ProduceMix;
 	clif->pCooking = clif_parse_Cooking;
-	clif->pRepairItem = clif_parse_RepairItem;
+	clif->pRepairItem1 = clif_parse_RepairItem1;
+	clif->pRepairItem2 = clif_parse_RepairItem2;
 	clif->pWeaponRefine = clif_parse_WeaponRefine;
 	clif->pNpcSelectMenu = clif_parse_NpcSelectMenu;
 	clif->pNpcNextClicked = clif_parse_NpcNextClicked;

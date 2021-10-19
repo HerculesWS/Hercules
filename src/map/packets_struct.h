@@ -2610,36 +2610,55 @@ struct PACKET_ZC_FAILED_TRADE_BUYING_STORE_TO_SELLER {
 #endif
 } __attribute__((packed));
 
-// [4144] here should be used structs PACKET_CZ_REQ_ITEMREPAIR1 and PACKET_CZ_REQ_ITEMREPAIR2
-// but because any fields except index and itemId unused, possible to mix both of structs
-#if PACKETVER >= 29191224
-struct PACKET_CZ_REQ_ITEMREPAIR {
-	int16 packetType;
+#if PACKETVER >= 20191224
+struct REPAIRITEM_INFO2 {
 	int16 index;
 #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
 #else
 	uint16 itemId;
 #endif
-	struct EQUIPSLOTINFO slot;  // unused
-	uint8 refine;  // unused
-	uint8 grade;  // unused
+	struct EQUIPSLOTINFO slot;  // unused?
+	uint8 refine;  // unused?
+	uint8 grade;  // unused?
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_REQ_ITEMREPAIR, 0x0b66);
-#else  // PACKETVER >= 29191224
-struct PACKET_CZ_REQ_ITEMREPAIR {
-	int16 packetType;
+#elif PACKETVER >= 20191106
+struct REPAIRITEM_INFO2 {
 	int16 index;
 #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
 #else
 	uint16 itemId;
 #endif
-	uint8 refine;  // unused
-	struct EQUIPSLOTINFO slot;  // unused
+	uint8 refine;  // unused?
+	struct EQUIPSLOTINFO slot;  // unused?
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_REQ_ITEMREPAIR, 0x01fd);
-#endif  // PACKETVER >= 29191224
+#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+
+struct REPAIRITEM_INFO1 {
+	int16 index;
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+	uint32 itemId;
+#else
+	uint16 itemId;
+#endif
+	uint8 refine;  // unused?
+	struct EQUIPSLOTINFO slot;  // unused?
+} __attribute__((packed));
+
+#if PACKETVER >= 20191224
+struct PACKET_CZ_REQ_ITEMREPAIR2 {
+	int16 packetType;
+	struct REPAIRITEM_INFO2 item;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_REQ_ITEMREPAIR2, 0x0b66);
+#endif  // PACKETVER >= 20191224
+
+struct PACKET_CZ_REQ_ITEMREPAIR1 {
+	int16 packetType;
+	struct REPAIRITEM_INFO1 item;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_REQ_ITEMREPAIR1, 0x01fd);
 
 struct PACKET_CZ_REQ_MAKINGITEM {
 	int16 packetType;
@@ -2910,18 +2929,7 @@ struct PACKET_ZC_MAKINGARROW_LIST {
 DEFINE_PACKET_HEADER(ZC_MAKINGARROW_LIST, 0x01ad);
 
 #if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
-struct REPAIRITEM_INFO {
-	int16 index;
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
-	uint32 itemId;
-#else
-	uint16 itemId;
-#endif
-	struct EQUIPSLOTINFO slot;  // unused?
-	uint8 refine;  // unused?
-	uint8 grade;  // unused?
-} __attribute__((packed));
-
+#define REPAIRITEM_INFO REPAIRITEM_INFO2
 struct PACKET_ZC_REPAIRITEMLIST {
 	int16 packetType;
 	int16 packetLength;
@@ -2929,17 +2937,7 @@ struct PACKET_ZC_REPAIRITEMLIST {
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(ZC_REPAIRITEMLIST, 0x0b65);
 #else  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
-struct REPAIRITEM_INFO {
-	int16 index;
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
-	uint32 itemId;
-#else
-	uint16 itemId;
-#endif
-	uint8 refine;  // unused?
-	struct EQUIPSLOTINFO slot;  // unused?
-} __attribute__((packed));
-
+#define REPAIRITEM_INFO REPAIRITEM_INFO1
 struct PACKET_ZC_REPAIRITEMLIST {
 	int16 packetType;
 	int16 packetLength;
