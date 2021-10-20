@@ -53,13 +53,6 @@ enum packet_headers {
 #else
 	storageaddType = 0xf4,
 #endif
-#if PACKETVER >= 20150226
-	tradeaddType = 0xa09,
-#elif PACKETVER >= 20100223
-	tradeaddType = 0x80f,
-#else
-	tradeaddType = 0x0e9,
-#endif
 #if PACKETVER < 4
 	idle_unitType = 0x78,
 #elif PACKETVER < 7
@@ -2379,6 +2372,8 @@ struct PACKET_ZC_SPRITE_CHANGE {
 #endif
 } __attribute__((packed));
 
+// TODO put struct under #ifdef/#elif
+// [4144] dates unconfirmed
 struct PACKET_ZC_ADD_EXCHANGE_ITEM {
 	int16 packetType;
 #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
@@ -2395,12 +2390,34 @@ struct PACKET_ZC_ADD_EXCHANGE_ITEM {
 #endif
 	uint8 identified;
 	uint8 damaged;
+#if !(PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723)
 	uint8 refine;
+#endif  // !(PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723)
 	struct EQUIPSLOTINFO slot;
 #if PACKETVER >= 20150226
 	struct ItemOptions option_data[MAX_ITEM_OPTIONS];
 #endif
+#if PACKETVER_MAIN_NUM >= 20161102 || PACKETVER_RE_NUM >= 20161026 || defined(PACKETVER_ZERO)
+	uint32 location;
+	uint16 look;
+#endif  // PACKETVER_MAIN_NUM >= 20161102 || PACKETVER_RE_NUM >= 20161026 || defined(PACKETVER_ZERO)
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+	uint8 refine;
+	uint8 grade;
+#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
 } __attribute__((packed));
+
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+DEFINE_PACKET_HEADER(ZC_ADD_EXCHANGE_ITEM, 0x0b42);
+#elif PACKETVER_MAIN_NUM >= 20161102 || PACKETVER_RE_NUM >= 20161026 || defined(PACKETVER_ZERO)
+DEFINE_PACKET_HEADER(ZC_ADD_EXCHANGE_ITEM, 0x0a96);
+#elif PACKETVER >= 20150226
+DEFINE_PACKET_HEADER(ZC_ADD_EXCHANGE_ITEM, 0x0a09);
+#elif PACKETVER >= 20100223
+DEFINE_PACKET_HEADER(ZC_ADD_EXCHANGE_ITEM, 0x080f);
+#else
+DEFINE_PACKET_HEADER(ZC_ADD_EXCHANGE_ITEM, 0x00e9);
+#endif
 
 struct PACKET_ZC_CASH_TIME_COUNTER {
 	int16 packetType;

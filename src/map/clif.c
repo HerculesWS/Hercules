@@ -4593,7 +4593,7 @@ static void clif_tradeadditem(struct map_session_data *sd, struct map_session_da
 	fd = tsd->fd;
 	WFIFOHEAD(fd, sizeof(p));
 	memset(&p, 0, sizeof(p));
-	p.packetType = tradeaddType;
+	p.packetType = HEADER_ZC_ADD_EXCHANGE_ITEM;
 	p.amount = amount;
 	if (index != 0) {
 		index -= 2; //index fix
@@ -4609,6 +4609,13 @@ static void clif_tradeadditem(struct map_session_data *sd, struct map_session_da
 		p.identified = sd->status.inventory[index].identify;
 		p.damaged = sd->status.inventory[index].attribute;
 		p.refine = sd->status.inventory[index].refine;
+#if PACKETVER_MAIN_NUM >= 20161102 || PACKETVER_RE_NUM >= 20161026 || defined(PACKETVER_ZERO)
+		p.location = pc->equippoint(sd, index);
+		p.look = sd->inventory_data[index]->view_sprite;
+#endif  // PACKETVER_MAIN_NUM >= 20161102 || PACKETVER_RE_NUM >= 20161026 || defined(PACKETVER_ZERO)
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+		p.grade = sd->status.inventory[index].refine;
+#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
 		clif->addcards(&p.slot, &sd->status.inventory[index]);
 #if PACKETVER >= 20150226
 		clif->add_item_options(&p.option_data[0], &sd->status.inventory[index]);
