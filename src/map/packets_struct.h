@@ -60,19 +60,6 @@ enum packet_headers {
 #else
 	tradeaddType = 0x0e9,
 #endif
-#if PACKETVER < 20061218
-	additemType = 0x0a0,
-#elif PACKETVER < 20071002
-	additemType = 0x29a,
-#elif PACKETVER < 20120925
-	additemType = 0x2d4,
-#elif PACKETVER < 20150226
-	additemType = 0x990,
-#elif PACKETVER < 20160921
-	additemType = 0xa0c,
-#else
-	additemType = 0xa37,
-#endif
 #if PACKETVER < 4
 	idle_unitType = 0x78,
 #elif PACKETVER < 7
@@ -568,7 +555,9 @@ struct packet_sc_notick {
 	uint8 state;
 } __attribute__((packed));
 
-struct packet_additem {
+// TODO put struct under #ifdef/#elif
+// [4144] dates unconfirmed
+struct PACKET_ZC_ITEM_PICKUP_ACK {
 	int16 PacketType;
 	uint16 Index;
 	uint16 count;
@@ -579,7 +568,9 @@ struct packet_additem {
 #endif
 	uint8 IsIdentified;
 	uint8 IsDamaged;
+#if !(PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723)
 	uint8 refiningLevel;
+#endif  // !(PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723)
 	struct EQUIPSLOTINFO slot;
 #if PACKETVER >= 20120925
 	uint32 location;
@@ -601,7 +592,27 @@ struct packet_additem {
 	uint8 favorite;
 	uint16 look;
 #endif
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+	uint8 refiningLevel;
+	uint8 grade;
+#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
 } __attribute__((packed));
+
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+DEFINE_PACKET_HEADER(ZC_ITEM_PICKUP_ACK, 0x0b41);
+#elif PACKETVER >= 20160921
+DEFINE_PACKET_HEADER(ZC_ITEM_PICKUP_ACK, 0x0a37);
+#elif PACKETVER >= 20150226
+DEFINE_PACKET_HEADER(ZC_ITEM_PICKUP_ACK, 0x0a0c);
+#elif PACKETVER >= 20120925
+DEFINE_PACKET_HEADER(ZC_ITEM_PICKUP_ACK, 0x0990);
+#elif PACKETVER >= 20071002
+DEFINE_PACKET_HEADER(ZC_ITEM_PICKUP_ACK, 0x02d4);
+#elif PACKETVER >= 20061218
+DEFINE_PACKET_HEADER(ZC_ITEM_PICKUP_ACK, 0x029a);
+#else
+DEFINE_PACKET_HEADER(ZC_ITEM_PICKUP_ACK, 0x00a0);
+#endif
 
 struct packet_dropflooritem {
 	int16 PacketType;

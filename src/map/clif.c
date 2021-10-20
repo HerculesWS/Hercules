@@ -2672,7 +2672,7 @@ static int clif_add_item_options(struct ItemOptions *buf, const struct item *it)
 /// 0a37 <index>.W <amount>.W <name id>.W <identified>.B <damaged>.B <refine>.B <card1>.W <card2>.W <card3>.W <card4>.W <equip location>.L <item type>.B <result>.B <expire time>.L <bindOnEquipType>.W <favorite>.B <view id>.W (ZC_ITEM_PICKUP_ACK_V7)
 static void clif_additem(struct map_session_data *sd, int n, int amount, int fail)
 {
-	struct packet_additem p;
+	struct PACKET_ZC_ITEM_PICKUP_ACK p;
 	nullpo_retv(sd);
 
 	if (!sockt->session_is_active(sd->fd))  //Sasuke-
@@ -2681,7 +2681,7 @@ static void clif_additem(struct map_session_data *sd, int n, int amount, int fai
 	if( fail )
 		memset(&p, 0, sizeof(p));
 
-	p.PacketType = additemType;
+	p.PacketType = HEADER_ZC_ITEM_PICKUP_ACK;
 	p.Index = n+2;
 	p.count = amount;
 
@@ -2709,6 +2709,9 @@ static void clif_additem(struct map_session_data *sd, int n, int amount, int fai
 		 */
 		p.bindOnEquipType = sd->status.inventory[n].bound && !itemdb->isstackable2(sd->inventory_data[n]) ? 2 : sd->inventory_data[n]->flag.bindonequip ? 1 : 0;
 #endif
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+		p.grade = sd->status.inventory[n].grade;
+#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
 #if PACKETVER >= 20150226
 		clif->add_item_options(&p.option_data[0], &sd->status.inventory[n]);
 #endif
