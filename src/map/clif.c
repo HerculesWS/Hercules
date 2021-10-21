@@ -6950,7 +6950,7 @@ static void clif_cart_additem(struct map_session_data *sd, int n, int amount, in
 		return;
 
 	WFIFOHEAD(fd, sizeof(p));
-	p.packetType = cartaddType;
+	p.packetType = HEADER_ZC_ADD_ITEM_TO_CART;
 	p.index = n + 2;
 	p.amount = amount;
 	if ((view = itemdb_viewid(sd->status.cart[n].nameid)) > 0)
@@ -6963,6 +6963,9 @@ static void clif_cart_additem(struct map_session_data *sd, int n, int amount, in
 	p.identified = sd->status.cart[n].identify;
 	p.damaged  = sd->status.cart[n].attribute;
 	p.refine = sd->status.cart[n].refine;
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+	p.grade = sd->status.cart[n].grade;
+#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
 	clif->addcards(&p.slot, &sd->status.cart[n]);
 #if PACKETVER >= 20150226
 	clif->add_item_options(&p.option_data[0], &sd->status.cart[n]);

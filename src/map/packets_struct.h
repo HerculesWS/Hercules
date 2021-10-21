@@ -39,13 +39,6 @@ enum packet_headers {
 	banking_checkType = 0x9a6,
 	cart_additem_ackType = 0x12c,
 	sc_notickType = 0x196,
-#if PACKETVER >= 20150226
-	cartaddType = 0xa0b,
-#elif PACKETVER >= 5
-	cartaddType = 0x1c5,
-#else
-	cartaddType = 0x124,
-#endif
 #if PACKETVER < 4
 	idle_unitType = 0x78,
 #elif PACKETVER < 7
@@ -2326,6 +2319,7 @@ struct PACKET_ZC_ACK_TOUSESKILL {
 	uint8 cause;
 } __attribute__((packed));
 
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
 struct PACKET_ZC_ADD_ITEM_TO_CART {
 	int16 packetType;
 	int16 index;
@@ -2335,17 +2329,68 @@ struct PACKET_ZC_ADD_ITEM_TO_CART {
 #else
 	uint16 itemId;
 #endif
-#if PACKETVER >= 5
 	uint8 itemType;
+	uint8 identified;
+	uint8 damaged;
+	struct EQUIPSLOTINFO slot;
+	struct ItemOptions option_data[MAX_ITEM_OPTIONS];
+	uint8 refine;
+	uint8 grade;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_ADD_ITEM_TO_CART, 0x0b45);
+#elif PACKETVER_MAIN_NUM >= 20140813 || PACKETVER_RE_NUM >= 20140402 || defined(PACKETVER_ZERO)
+struct PACKET_ZC_ADD_ITEM_TO_CART {
+	int16 packetType;
+	int16 index;
+	int32 amount;
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+	uint32 itemId;
+#else
+	uint16 itemId;
+#endif
+	uint8 itemType;
+	uint8 identified;
+	uint8 damaged;
+	uint8 refine;
+	struct EQUIPSLOTINFO slot;
+	struct ItemOptions option_data[MAX_ITEM_OPTIONS];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_ADD_ITEM_TO_CART, 0x0a0b);
+// [4144] this version unconfirmed
+#elif PACKETVER >= 5
+struct PACKET_ZC_ADD_ITEM_TO_CART {
+	int16 packetType;
+	int16 index;
+	int32 amount;
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+	uint32 itemId;
+#else
+	uint16 itemId;
+#endif
+	uint8 itemType;
+	uint8 identified;
+	uint8 damaged;
+	uint8 refine;
+	struct EQUIPSLOTINFO slot;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_ADD_ITEM_TO_CART, 0x01c5);
+#else
+struct PACKET_ZC_ADD_ITEM_TO_CART {
+	int16 packetType;
+	int16 index;
+	int32 amount;
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+	uint32 itemId;
+#else
+	uint16 itemId;
 #endif
 	uint8 identified;
 	uint8 damaged;
 	uint8 refine;
 	struct EQUIPSLOTINFO slot;
-#if PACKETVER >= 20150226
-	struct ItemOptions option_data[MAX_ITEM_OPTIONS];
-#endif
 } __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_ADD_ITEM_TO_CART, 0x0124);
+#endif
 
 struct PACKET_CZ_REQMAKINGITEM {
 	int16 packetType;
