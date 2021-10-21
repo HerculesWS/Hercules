@@ -4740,18 +4740,21 @@ static void clif_storageitemadded(struct map_session_data *sd, struct item *i, i
 	view = itemdb_viewid(i->nameid);
 
 	WFIFOHEAD(fd, sizeof(p));
-	p.packetType = storageaddType; // Storage item added
-	p.index = index + 1; // index
-	p.amount = amount; // amount
-	p.itemId = (view > 0) ? view : i->nameid; // id
+	p.packetType = HEADER_ZC_ADD_ITEM_TO_STORE;
+	p.index = index + 1;
+	p.amount = amount;
+	p.itemId = (view > 0) ? view : i->nameid;
 #if PACKETVER >= 5
-	p.itemType = itemtype(itemdb_type(i->nameid)); //type
+	p.itemType = itemtype(itemdb_type(i->nameid));
 #endif
-	p.identified = i->identify; //identify flag
-	p.damaged = i->attribute; // attribute
-	p.refine = i->refine; //refine
+	p.identified = i->identify;
+	p.damaged = i->attribute;
+	p.refine = i->refine;
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+	p.grade = i->grade;
+#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
 	clif->addcards(&p.slot, i);
-#if PACKETVER >= 20150226
+#if PACKETVER_MAIN_NUM >= 20140813 || PACKETVER_RE_NUM >= 20140402 || defined(PACKETVER_ZERO)
 	clif->add_item_options(&p.option_data[0], i);
 #endif
 	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
