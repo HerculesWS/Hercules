@@ -1715,23 +1715,6 @@ struct PACKET_ZC_ACK_ADD_ITEM_RODEX {
 DEFINE_PACKET_HEADER(ZC_ACK_ADD_ITEM_RODEX, 0x0a05);
 #endif  // PACKETVER >= 20141119
 
-struct mail_item {
-	int16 count;
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
-	uint32 ITID;
-#else
-	uint16 ITID;
-#endif
-	int8 IsIdentified;
-	int8 IsDamaged;
-	int8 refiningLevel;
-	struct EQUIPSLOTINFO slot;
-	uint32 location;
-	uint8 type;
-	uint16 viewSprite;
-	uint16 bindOnEquip;
-	struct ItemOptions optionData[MAX_ITEM_OPTIONS];
-} __attribute__((packed));
 
 struct PACKET_CZ_REQ_OPEN_WRITE_MAIL {
 	int16 PacketType;
@@ -1847,7 +1830,27 @@ struct PACKET_CZ_REQ_READ_MAIL {
 	int64 MailID;
 } __attribute__((packed));
 
-struct PACKET_ZC_READ_MAIL {
+// [4144] date unconfirmed
+#if PACKETVER >= 20140115
+struct PACKET_ZC_ACK_READ_RODEX_SUB {
+	int16 count;
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+	uint32 ITID;
+#else
+	uint16 ITID;
+#endif
+	int8 IsIdentified;
+	int8 IsDamaged;
+	int8 refiningLevel;
+	struct EQUIPSLOTINFO slot;
+	uint32 location;
+	uint8 type;
+	uint16 viewSprite;
+	uint16 bindOnEquip;
+	struct ItemOptions option_data[MAX_ITEM_OPTIONS];
+} __attribute__((packed));
+
+struct PACKET_ZC_ACK_READ_RODEX {
 	int16 PacketType;
 	int16 PacketLength;
 	int8 opentype;
@@ -1856,6 +1859,7 @@ struct PACKET_ZC_READ_MAIL {
 	int64 zeny;
 	int8 ItemCnt;
 } __attribute__((packed));
+#endif  // PACKETVER >= 20140115
 
 struct PACKET_CZ_REQ_DELETE_MAIL {
 	int16 PacketType;

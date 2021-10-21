@@ -23148,20 +23148,17 @@ static void clif_parse_rodex_read_mail(int fd, struct map_session_data *sd)
 
 static void clif_rodex_read_mail(struct map_session_data *sd, int8 opentype, struct rodex_message *msg)
 {
+// [4144] date unconfirmed
 #if PACKETVER >= 20140115
-	struct PACKET_ZC_READ_MAIL *sPacket;
-	struct mail_item *item;
-	int fd, i, body_len, size;
-
 	nullpo_retv(sd);
 	nullpo_retv(msg);
 
-	fd = sd->fd;
-	body_len = (int)strlen(msg->body) + 1;
-	size = sizeof(*sPacket);
+	int fd = sd->fd;
+	int body_len = (int)strlen(msg->body) + 1;
+	int size = sizeof(struct PACKET_ZC_ACK_READ_RODEX);
 
-	WFIFOHEAD(fd, sizeof(*sPacket) + body_len + (sizeof(*item) * RODEX_MAX_ITEM));
-	sPacket = WFIFOP(fd, 0);
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_ACK_READ_RODEX) + body_len + (sizeof(struct PACKET_ZC_ACK_READ_RODEX_SUB) * RODEX_MAX_ITEM));
+	struct PACKET_ZC_ACK_READ_RODEX *sPacket = WFIFOP(fd, 0);
 	sPacket->PacketType = rodexread;
 	sPacket->opentype = opentype;
 	sPacket->MailID = msg->id;
@@ -23170,19 +23167,17 @@ static void clif_rodex_read_mail(struct map_session_data *sd, int8 opentype, str
 	sPacket->ItemCnt = msg->items_count;
 	strncpy(WFIFOP(fd, size), msg->body, body_len);
 	size += body_len;
-	for (i = 0; i < RODEX_MAX_ITEM; ++i) {
+	for (int i = 0; i < RODEX_MAX_ITEM; ++i) {
 		struct item *it = &msg->items[i].item;
-		struct item_data *data;
-		int j, k;
-
 		if (it->nameid == 0)
 			continue;
-		data = itemdb->search(it->nameid);
+
+		struct item_data *data = itemdb->search(it->nameid);
 		if (data == NULL)
 			continue;
 
-		item = WFIFOP(fd, size);
-		memset(item, 0x0, sizeof(*item));
+		struct PACKET_ZC_ACK_READ_RODEX_SUB *item = WFIFOP(fd, size);
+		memset(item, 0x0, sizeof(struct PACKET_ZC_ACK_READ_RODEX_SUB));
 		item->ITID = it->nameid;
 		item->count = it->amount;
 		item->type = itemtype(itemdb->search(it->nameid)->type);
@@ -23192,15 +23187,9 @@ static void clif_rodex_read_mail(struct map_session_data *sd, int8 opentype, str
 		item->location = pc->item_equippoint(sd, data);
 		item->viewSprite = data->view_sprite;
 		item->bindOnEquip = it->bound ? 2 : data->flag.bindonequip ? 1 : 0;
-		for (k = 0; k < MAX_SLOTS; ++k) {
-			item->slot.card[k] = it->card[k];
-		}
-		for (j = 0; j < MAX_ITEM_OPTIONS; ++j) {
-			item->optionData[j].index = it->option[j].index;
-			item->optionData[j].value = it->option[j].value;
-		}
-
-		size += sizeof(*item);
+		clif->addcards(&item->slot, it);
+		clif->add_item_options(&item->option_data[0], it);
+		size += sizeof(struct PACKET_ZC_ACK_READ_RODEX_SUB);
 	}
 	sPacket->PacketLength = size;
 	WFIFOSET(fd, size);
