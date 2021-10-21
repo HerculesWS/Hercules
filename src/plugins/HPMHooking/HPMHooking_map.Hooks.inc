@@ -28959,13 +28959,13 @@ void HP_clif_pRodexOpenMailbox(int fd, struct map_session_data *sd) {
 	}
 	return;
 }
-void HP_clif_pRodexCheckName(int fd, struct map_session_data *sd) {
+void HP_clif_pRodexCheckName1(int fd, struct map_session_data *sd) {
 	int hIndex = 0;
-	if (HPMHooks.count.HP_clif_pRodexCheckName_pre > 0) {
+	if (HPMHooks.count.HP_clif_pRodexCheckName1_pre > 0) {
 		void (*preHookFunc) (int *fd, struct map_session_data **sd);
 		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pRodexCheckName_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_clif_pRodexCheckName_pre[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pRodexCheckName1_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_pRodexCheckName1_pre[hIndex].func;
 			preHookFunc(&fd, &sd);
 		}
 		if (*HPMforce_return) {
@@ -28974,12 +28974,38 @@ void HP_clif_pRodexCheckName(int fd, struct map_session_data *sd) {
 		}
 	}
 	{
-		HPMHooks.source.clif.pRodexCheckName(fd, sd);
+		HPMHooks.source.clif.pRodexCheckName1(fd, sd);
 	}
-	if (HPMHooks.count.HP_clif_pRodexCheckName_post > 0) {
+	if (HPMHooks.count.HP_clif_pRodexCheckName1_post > 0) {
 		void (*postHookFunc) (int fd, struct map_session_data *sd);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pRodexCheckName_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_clif_pRodexCheckName_post[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pRodexCheckName1_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_pRodexCheckName1_post[hIndex].func;
+			postHookFunc(fd, sd);
+		}
+	}
+	return;
+}
+void HP_clif_pRodexCheckName2(int fd, struct map_session_data *sd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_pRodexCheckName2_pre > 0) {
+		void (*preHookFunc) (int *fd, struct map_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pRodexCheckName2_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_pRodexCheckName2_pre[hIndex].func;
+			preHookFunc(&fd, &sd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.pRodexCheckName2(fd, sd);
+	}
+	if (HPMHooks.count.HP_clif_pRodexCheckName2_post > 0) {
+		void (*postHookFunc) (int fd, struct map_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pRodexCheckName2_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_pRodexCheckName2_post[hIndex].func;
 			postHookFunc(fd, sd);
 		}
 	}

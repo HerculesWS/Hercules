@@ -2632,8 +2632,10 @@ typedef void (*HPMHOOK_pre_clif_pRodexCancelWriteMail) (int *fd, struct map_sess
 typedef void (*HPMHOOK_post_clif_pRodexCancelWriteMail) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_pRodexOpenMailbox) (int *fd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_pRodexOpenMailbox) (int fd, struct map_session_data *sd);
-typedef void (*HPMHOOK_pre_clif_pRodexCheckName) (int *fd, struct map_session_data **sd);
-typedef void (*HPMHOOK_post_clif_pRodexCheckName) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_pRodexCheckName1) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pRodexCheckName1) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_pRodexCheckName2) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pRodexCheckName2) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_rodex_checkname_result) (struct map_session_data **sd, int *char_id, int *class_, int *base_level, const char **name);
 typedef void (*HPMHOOK_post_clif_rodex_checkname_result) (struct map_session_data *sd, int char_id, int class_, int base_level, const char *name);
 typedef void (*HPMHOOK_pre_clif_pRodexDeleteMail) (int *fd, struct map_session_data **sd);

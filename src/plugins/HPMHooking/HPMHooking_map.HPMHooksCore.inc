@@ -2222,8 +2222,10 @@ struct {
 	struct HPMHookPoint *HP_clif_pRodexCancelWriteMail_post;
 	struct HPMHookPoint *HP_clif_pRodexOpenMailbox_pre;
 	struct HPMHookPoint *HP_clif_pRodexOpenMailbox_post;
-	struct HPMHookPoint *HP_clif_pRodexCheckName_pre;
-	struct HPMHookPoint *HP_clif_pRodexCheckName_post;
+	struct HPMHookPoint *HP_clif_pRodexCheckName1_pre;
+	struct HPMHookPoint *HP_clif_pRodexCheckName1_post;
+	struct HPMHookPoint *HP_clif_pRodexCheckName2_pre;
+	struct HPMHookPoint *HP_clif_pRodexCheckName2_post;
 	struct HPMHookPoint *HP_clif_rodex_checkname_result_pre;
 	struct HPMHookPoint *HP_clif_rodex_checkname_result_post;
 	struct HPMHookPoint *HP_clif_pRodexDeleteMail_pre;
@@ -9443,8 +9445,10 @@ struct {
 	int HP_clif_pRodexCancelWriteMail_post;
 	int HP_clif_pRodexOpenMailbox_pre;
 	int HP_clif_pRodexOpenMailbox_post;
-	int HP_clif_pRodexCheckName_pre;
-	int HP_clif_pRodexCheckName_post;
+	int HP_clif_pRodexCheckName1_pre;
+	int HP_clif_pRodexCheckName1_post;
+	int HP_clif_pRodexCheckName2_pre;
+	int HP_clif_pRodexCheckName2_post;
 	int HP_clif_rodex_checkname_result_pre;
 	int HP_clif_rodex_checkname_result_post;
 	int HP_clif_pRodexDeleteMail_pre;
