@@ -2328,6 +2328,104 @@ ACMD(refine)
 	return true;
 }
 
+ACMD(grade)
+{
+	const struct {
+		int pos_id;
+		int msg_id;
+	} messages_list[] = {
+		{ -3,                   1527 }, // %d: Grade All Equip (Shadow)
+		{ -2,                   1526 }, // %d: Grade All Equip (Costume)
+		{ -1,                   1525 }, // %d: Grade All Equip (General)
+		{ EQP_HEAD_LOW,          997 }, // %d: Headgear (Low)
+		{ EQP_HAND_R,            998 }, // %d: Hand (Right)
+		{ EQP_GARMENT,           999 }, // %d: Garment
+		{ EQP_ACC_L,            1000 }, // %d: Accessory (Left)
+		{ EQP_ARMOR,            1001 }, // %d: Body Armor
+		{ EQP_HAND_L,           1002 }, // %d: Hand (Left)
+		{ EQP_SHOES,            1003 }, // %d: Shoes
+		{ EQP_ACC_R,            1004 }, // %d: Accessory (Right)
+		{ EQP_HEAD_TOP,         1005 }, // %d: Headgear (Top)
+		{ EQP_HEAD_MID,         1006 }, // %d: Headgear (Mid)
+		{ EQP_COSTUME_HEAD_TOP, 1503 }, // %d: Costume Headgear (Top)
+		{ EQP_COSTUME_HEAD_MID, 1504 }, // %d: Costume Headgear (Mid)
+		{ EQP_COSTUME_HEAD_LOW, 1505 }, // %d: Costume Headgear (Low)
+		{ EQP_COSTUME_GARMENT,  1506 }, // %d: Costume Garment
+		{ EQP_SHADOW_ARMOR,     1507 }, // %d: Shadow Armor
+		{ EQP_SHADOW_WEAPON,    1508 }, // %d: Shadow Weapon
+		{ EQP_SHADOW_SHIELD,    1509 }, // %d: Shadow Shield
+		{ EQP_SHADOW_SHOES,     1510 }, // %d: Shadow Shoes
+		{ EQP_SHADOW_ACC_R,     1511 }, // %d: Shadow Accessory (Right)
+		{ EQP_SHADOW_ACC_L,     1512 }, // %d: Shadow Accessory (Left)
+	};
+
+	memset(atcmd_output, '\0', sizeof(atcmd_output));
+
+	int position = 0;
+	int grade_level = 0;
+	if (!*message || sscanf(message, "%12d %12d", &position, &grade_level) < 2) {
+		clif->message(fd, msg_fd(fd, 1524)); // Please enter a position and an amount (usage: @grade <equip position> <+/- amount>).
+		for (int i = 0; i < ARRAYLENGTH(messages_list); ++i) {
+			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, messages_list[i].msg_id), messages_list[i].pos_id);
+			clif->message(fd, atcmd_output);
+		}
+		return false;
+	}
+
+	grade_level = cap_value(grade_level, 0, MAX_ITEM_GRADE);
+
+	int count = 0;
+	for (int j = 0; j < EQI_MAX; j++) {
+		int idx = sd->equip_index[j];
+		if (idx < 0)
+			continue;
+		if (j == EQI_AMMO)
+			continue; /* can't equip ammo */
+		if (j == EQI_HAND_R && sd->equip_index[EQI_HAND_L] == idx)
+			continue;
+		if (j == EQI_HEAD_MID && sd->equip_index[EQI_HEAD_LOW] == idx)
+			continue;
+		if (j == EQI_HEAD_TOP && (sd->equip_index[EQI_HEAD_MID] == idx || sd->equip_index[EQI_HEAD_LOW] == idx))
+			continue;
+		if (j == EQI_COSTUME_MID && sd->equip_index[EQI_COSTUME_LOW] == idx)
+			continue;
+		if (j == EQI_COSTUME_TOP && (sd->equip_index[EQI_COSTUME_MID] == idx || sd->equip_index[EQI_COSTUME_LOW] == idx))
+			continue;
+
+		if (position == -3 && !itemdb_is_shadowequip(sd->status.inventory[idx].equip))
+			continue;
+		else if (position == -2 && !itemdb_is_costumeequip(sd->status.inventory[idx].equip))
+			continue;
+		else if (position == -1 && (itemdb_is_costumeequip(sd->status.inventory[idx].equip) || itemdb_is_shadowequip(sd->status.inventory[idx].equip)))
+			continue;
+		else if (position && !(sd->status.inventory[idx].equip & position))
+			continue;
+
+		int final_grade = cap_value(sd->status.inventory[idx].grade + grade_level, 0, MAX_ITEM_GRADE);
+		if (sd->status.inventory[idx].grade != final_grade) {
+			sd->status.inventory[idx].grade = final_grade;
+			const int current_position = sd->status.inventory[idx].equip;
+			pc->unequipitem(sd, idx, PCUNEQUIPITEM_RECALC | PCUNEQUIPITEM_FORCE);
+			clif->delitem(sd, idx, 1, DELITEM_MATERIALCHANGE);
+			clif->additem(sd, idx, 1, 0);
+			pc->equipitem(sd, idx, current_position);
+			clif->misceffect(&sd->bl, 3);
+			count++;
+		}
+	}
+
+	if (count == 0)
+		clif->message(fd, msg_fd(fd, 1528)); // No item has been graded.
+	else if (count == 1)
+		clif->message(fd, msg_fd(fd, 1529)); // 1 item has been graded.
+	else {
+		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 168), 1530); // %d items have been graded.
+		clif->message(fd, atcmd_output);
+	}
+
+	return true;
+}
+
 /*==========================================
  *
  *------------------------------------------*/
@@ -10307,6 +10405,7 @@ static void atcommand_basecommands(void)
 		ACMD_DEF(killmonster),
 		ACMD_DEF2("killmonster2", killmonster),
 		ACMD_DEF(refine),
+		ACMD_DEF(grade),
 		ACMD_DEF(produce),
 		ACMD_DEF(memo),
 		ACMD_DEF(gat),
