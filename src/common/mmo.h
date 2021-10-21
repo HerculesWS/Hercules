@@ -483,7 +483,7 @@ struct item {
 	unsigned int equip; // Location(s) where item is equipped (using enum equip_pos for bitmasking).
 	char identify;
 	char refine;
-	char grade;  // TODO implement saving/loading grade to db
+	char grade;
 	char attribute;
 	int card[MAX_SLOTS];
 	unsigned int expire_time;

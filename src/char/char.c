@@ -775,7 +775,7 @@ static int char_getitemdata_from_sql(struct item *items, int max, int guid, enum
 	}
 
 	StrBuf->Init(&buf);
-	StrBuf->AppendStr(&buf, "SELECT `id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `expire_time`, `bound`, `unique_id`");
+	StrBuf->AppendStr(&buf, "SELECT `id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `grade`, `attribute`, `expire_time`, `bound`, `unique_id`");
 	for(i = 0; i < MAX_SLOTS; i++)
 		StrBuf->Printf(&buf, ", `card%d`", i);
 	for(i = 0; i < MAX_ITEM_OPTIONS; i++)
@@ -800,27 +800,28 @@ static int char_getitemdata_from_sql(struct item *items, int max, int guid, enum
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 3, SQLDT_UINT,   &item.equip,       sizeof item.equip,       NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 4, SQLDT_CHAR,   &item.identify,    sizeof item.identify,    NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 5, SQLDT_CHAR,   &item.refine,      sizeof item.refine,      NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 6, SQLDT_CHAR,   &item.attribute,   sizeof item.attribute,   NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 7, SQLDT_UINT,   &item.expire_time, sizeof item.expire_time, NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 8, SQLDT_UCHAR,  &item.bound,       sizeof item.bound,       NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 9, SQLDT_UINT64, &item.unique_id,   sizeof item.unique_id,   NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 6, SQLDT_CHAR,   &item.grade,       sizeof item.grade,      NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 7, SQLDT_CHAR,   &item.attribute,   sizeof item.attribute,   NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 8, SQLDT_UINT,   &item.expire_time, sizeof item.expire_time, NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 9, SQLDT_UCHAR,  &item.bound,       sizeof item.bound,       NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 10, SQLDT_UINT64, &item.unique_id,   sizeof item.unique_id,   NULL, NULL)
 	) {
 		SqlStmt_ShowDebug(stmt);
 	}
 
 	for (i = 0; i < MAX_SLOTS; i++) {
-		if (SQL_ERROR == SQL->StmtBindColumn(stmt, 10 + i, SQLDT_INT, &item.card[i], sizeof item.card[i], NULL, NULL))
+		if (SQL_ERROR == SQL->StmtBindColumn(stmt, 11 + i, SQLDT_INT, &item.card[i], sizeof item.card[i], NULL, NULL))
 			SqlStmt_ShowDebug(stmt);
 	}
 
 	for (i = 0; i < MAX_ITEM_OPTIONS; i++) {
-		if (SQL_ERROR == SQL->StmtBindColumn(stmt, 10 + MAX_SLOTS + i * 2, SQLDT_INT16, &item.option[i].index, sizeof item.option[i].index, NULL, NULL)
-		 || SQL_ERROR == SQL->StmtBindColumn(stmt, 11 + MAX_SLOTS + i * 2, SQLDT_INT16, &item.option[i].value, sizeof item.option[i].index, NULL, NULL))
+		if (SQL_ERROR == SQL->StmtBindColumn(stmt, 11 + MAX_SLOTS + i * 2, SQLDT_INT16, &item.option[i].index, sizeof item.option[i].index, NULL, NULL)
+		 || SQL_ERROR == SQL->StmtBindColumn(stmt, 12 + MAX_SLOTS + i * 2, SQLDT_INT16, &item.option[i].value, sizeof item.option[i].index, NULL, NULL))
 			SqlStmt_ShowDebug(stmt);
 	}
 
 	if (has_favorite) {
-		if (SQL_ERROR == SQL->StmtBindColumn(stmt, 10 + MAX_SLOTS + MAX_ITEM_OPTIONS * 2, SQLDT_CHAR, &item.favorite, sizeof item.favorite, NULL, NULL))
+		if (SQL_ERROR == SQL->StmtBindColumn(stmt, 11 + MAX_SLOTS + MAX_ITEM_OPTIONS * 2, SQLDT_CHAR, &item.favorite, sizeof item.favorite, NULL, NULL))
 			SqlStmt_ShowDebug(stmt);
 	}
 
@@ -916,7 +917,7 @@ static int char_memitemdata_to_sql(const struct item *p_items, int current_size,
 				if (memcmp(cp_it, &p_items[j], sizeof(struct item)) != 0) {
 					if (total_updates == 0) {
 						StrBuf->Clear(&buf);
-						StrBuf->Printf(&buf, "REPLACE INTO `%s` (`id`, `%s`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`", tablename, selectoption);
+						StrBuf->Printf(&buf, "REPLACE INTO `%s` (`id`, `%s`, `nameid`, `amount`, `equip`, `identify`, `refine`, `grade`, `attribute`", tablename, selectoption);
 						for (int k = 0; k < MAX_SLOTS; k++)
 							StrBuf->Printf(&buf, ", `card%d`", k);
 						for (int k = 0; k < MAX_ITEM_OPTIONS; k++)
@@ -929,8 +930,8 @@ static int char_memitemdata_to_sql(const struct item *p_items, int current_size,
 
 					}
 
-					StrBuf->Printf(&buf, "%s('%d', '%d', '%d', '%d', '%u', '%d', '%d', '%d'",
-								   total_updates > 0 ? ", " : "", cp_it->id, guid, p_items[j].nameid, p_items[j].amount, p_items[j].equip, p_items[j].identify, p_items[j].refine, p_items[j].attribute);
+					StrBuf->Printf(&buf, "%s('%d', '%d', '%d', '%d', '%u', '%d', '%d', '%d', '%d'",
+								   total_updates > 0 ? ", " : "", cp_it->id, guid, p_items[j].nameid, p_items[j].amount, p_items[j].equip, p_items[j].identify, p_items[j].refine, p_items[j].grade, p_items[j].attribute);
 					for (int k = 0; k < MAX_SLOTS; k++)
 						StrBuf->Printf(&buf, ", '%d'", p_items[j].card[k]);
 					for (int k = 0; k < MAX_ITEM_OPTIONS; ++k)
@@ -980,7 +981,7 @@ static int char_memitemdata_to_sql(const struct item *p_items, int current_size,
 
 		if (total_inserts == 0) {
 			StrBuf->Clear(&buf);
-			StrBuf->Printf(&buf, "INSERT INTO `%s` (`%s`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `expire_time`, `bound`, `unique_id`", tablename, selectoption);
+			StrBuf->Printf(&buf, "INSERT INTO `%s` (`%s`, `nameid`, `amount`, `equip`, `identify`, `refine`, `grade`, `attribute`, `expire_time`, `bound`, `unique_id`", tablename, selectoption);
 			for (int j = 0; j < MAX_SLOTS; ++j)
 				StrBuf->Printf(&buf, ", `card%d`", j);
 			for (int j = 0; j < MAX_ITEM_OPTIONS; ++j)
@@ -990,8 +991,8 @@ static int char_memitemdata_to_sql(const struct item *p_items, int current_size,
 			StrBuf->AppendStr(&buf, ") VALUES ");
 		}
 
-		StrBuf->Printf(&buf, "%s('%d', '%d', '%d', '%u', '%d', '%d', '%d', '%u', '%d', '%"PRIu64"'",
-					   total_inserts > 0 ? ", " : "", guid, p_it->nameid, p_it->amount, p_it->equip, p_it->identify, p_it->refine,
+		StrBuf->Printf(&buf, "%s('%d', '%d', '%d', '%u', '%d', '%d', '%d', '%d', '%u', '%d', '%"PRIu64"'",
+					   total_inserts > 0 ? ", " : "", guid, p_it->nameid, p_it->amount, p_it->equip, p_it->identify, p_it->refine, p_it->grade,
 					   p_it->attribute, p_it->expire_time, p_it->bound, p_it->unique_id);
 
 		for (int j = 0; j < MAX_SLOTS; ++j)

@@ -78,7 +78,7 @@ static int inter_storage_tosql(int account_id, const struct storage_data *p)
 				int k = 0;
 				if (memcmp(cp_it, p_it, sizeof(struct item)) != 0) {
 					if (total_updates == 0) {
-						StrBuf->Printf(&buf, "REPLACE INTO `%s` (`id`, `account_id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`", storage_db);
+						StrBuf->Printf(&buf, "REPLACE INTO `%s` (`id`, `account_id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `grade`, `attribute`", storage_db);
 						for (k = 0; k < MAX_SLOTS; k++)
 							StrBuf->Printf(&buf, ", `card%d`", k);
 						for (k = 0; k < MAX_ITEM_OPTIONS; k++)
@@ -86,8 +86,8 @@ static int inter_storage_tosql(int account_id, const struct storage_data *p)
 						StrBuf->AppendStr(&buf, ", `expire_time`, `bound`, `unique_id`) VALUES");
 					}
 
-					StrBuf->Printf(&buf, "%s('%d', '%d', '%d', '%d', '%u', '%d', '%d', '%d'",
-								   total_updates > 0 ? ", " : "", cp_it->id, account_id, p_it->nameid, p_it->amount, p_it->equip, p_it->identify, p_it->refine, p_it->attribute);
+					StrBuf->Printf(&buf, "%s('%d', '%d', '%d', '%d', '%u', '%d', '%d', '%d', '%d'",
+								   total_updates > 0 ? ", " : "", cp_it->id, account_id, p_it->nameid, p_it->amount, p_it->equip, p_it->identify, p_it->refine, p_it->grade, p_it->attribute);
 					for (k = 0; k < MAX_SLOTS; k++)
 						StrBuf->Printf(&buf, ", '%d'", p_it->card[k]);
 					for (k = 0; k < MAX_ITEM_OPTIONS; ++k)
@@ -133,7 +133,7 @@ static int inter_storage_tosql(int account_id, const struct storage_data *p)
 		// Store the remaining items.
 		if (total_inserts == 0) {
 			StrBuf->Clear(&buf);
-			StrBuf->Printf(&buf, "INSERT INTO `%s` (`account_id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `expire_time`, `bound`, `unique_id`", storage_db);
+			StrBuf->Printf(&buf, "INSERT INTO `%s` (`account_id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `grade`, `attribute`, `expire_time`, `bound`, `unique_id`", storage_db);
 			for (j = 0; j < MAX_SLOTS; ++j)
 				StrBuf->Printf(&buf, ", `card%d`", j);
 			for (j = 0; j < MAX_ITEM_OPTIONS; ++j)
@@ -141,8 +141,8 @@ static int inter_storage_tosql(int account_id, const struct storage_data *p)
 			StrBuf->AppendStr(&buf, ") VALUES ");
 		}
 
-		StrBuf->Printf(&buf, "%s('%d', '%d', '%d', '%u', '%d', '%d', '%d', '%u', '%d', '%"PRIu64"'",
-					   total_inserts > 0 ? ", " : "", account_id, p_it->nameid, p_it->amount, p_it->equip, p_it->identify, p_it->refine,
+		StrBuf->Printf(&buf, "%s('%d', '%d', '%d', '%u', '%d',  '%d', '%d', '%d', '%u', '%d', '%"PRIu64"'",
+					   total_inserts > 0 ? ", " : "", account_id, p_it->nameid, p_it->amount, p_it->equip, p_it->identify, p_it->refine, p_it->grade,
 					   p_it->attribute, p_it->expire_time, p_it->bound, p_it->unique_id);
 		for (j = 0; j < MAX_SLOTS; ++j)
 			StrBuf->Printf(&buf, ", '%d'", p_it->card[j]);
@@ -178,9 +178,9 @@ static int inter_storage_fromsql(int account_id, struct storage_data *p)
 	if (VECTOR_LENGTH(p->item) > 0)
 		VECTOR_CLEAR(p->item);
 
-	// storage {`account_id`/`id`/`nameid`/`amount`/`equip`/`identify`/`refine`/`attribute`/`card0`/`card1`/`card2`/`card3`}
+	// storage {`account_id`/`id`/`nameid`/`amount`/`equip`/`identify`/`refine`/`grade`/`attribute`/`card0`/`card1`/`card2`/`card3`}
 	StrBuf->Init(&buf);
-	StrBuf->AppendStr(&buf, "SELECT `id`,`nameid`,`amount`,`equip`,`identify`,`refine`,`attribute`,`expire_time`,`bound`,`unique_id`");
+	StrBuf->AppendStr(&buf, "SELECT `id`,`nameid`,`amount`,`equip`,`identify`,`refine`,`grade`,`attribute`,`expire_time`,`bound`,`unique_id`");
 	for (j = 0; j < MAX_SLOTS; ++j)
 		StrBuf->Printf(&buf, ",`card%d`", j);
 	for (j = 0; j < MAX_ITEM_OPTIONS; ++j)
@@ -204,22 +204,23 @@ static int inter_storage_fromsql(int account_id, struct storage_data *p)
 			SQL->GetData(inter->sql_handle, 3, &data, NULL); item.equip = atoi(data);
 			SQL->GetData(inter->sql_handle, 4, &data, NULL); item.identify = atoi(data);
 			SQL->GetData(inter->sql_handle, 5, &data, NULL); item.refine = atoi(data);
-			SQL->GetData(inter->sql_handle, 6, &data, NULL); item.attribute = atoi(data);
-			SQL->GetData(inter->sql_handle, 7, &data, NULL); item.expire_time = (unsigned int)atoi(data);
-			SQL->GetData(inter->sql_handle, 8, &data, NULL); item.bound = atoi(data);
-			SQL->GetData(inter->sql_handle, 9, &data, NULL); item.unique_id = strtoull(data, NULL, 10);
+			SQL->GetData(inter->sql_handle, 6, &data, NULL); item.grade = atoi(data);
+			SQL->GetData(inter->sql_handle, 7, &data, NULL); item.attribute = atoi(data);
+			SQL->GetData(inter->sql_handle, 8, &data, NULL); item.expire_time = (unsigned int)atoi(data);
+			SQL->GetData(inter->sql_handle, 9, &data, NULL); item.bound = atoi(data);
+			SQL->GetData(inter->sql_handle, 10, &data, NULL); item.unique_id = strtoull(data, NULL, 10);
 
 			/* Card Slots */
 			for (j = 0; j < MAX_SLOTS; ++j) {
-				SQL->GetData(inter->sql_handle, 10 + j, &data, NULL);
+				SQL->GetData(inter->sql_handle, 11 + j, &data, NULL);
 				item.card[j] = atoi(data);
 			}
 
 			/* Item Options */
 			for (j = 0; j < MAX_ITEM_OPTIONS; ++j) {
-				SQL->GetData(inter->sql_handle, 10 + MAX_SLOTS + j * 2, &data, NULL);
-				item.option[j].index = atoi(data);
 				SQL->GetData(inter->sql_handle, 11 + MAX_SLOTS + j * 2, &data, NULL);
+				item.option[j].index = atoi(data);
+				SQL->GetData(inter->sql_handle, 12 + MAX_SLOTS + j * 2, &data, NULL);
 				item.option[j].value = atoi(data);
 			}
 
@@ -299,9 +300,9 @@ static int inter_storage_guild_storage_fromsql(int guild_id, struct guild_storag
 	}
 	SQL->FreeResult(inter->sql_handle);
 
-	// storage {`guild_id`/`id`/`nameid`/`amount`/`equip`/`identify`/`refine`/`attribute`/`card0`/`card1`/`card2`/`card3`}
+	// storage {`guild_id`/`id`/`nameid`/`amount`/`equip`/`identify`/`refine`/`grade`/`attribute`/`card0`/`card1`/`card2`/`card3`}
 	StrBuf->Init(&buf);
-	StrBuf->AppendStr(&buf, "SELECT `id`,`nameid`,`amount`,`equip`,`identify`,`refine`,`attribute`,`bound`,`unique_id`");
+	StrBuf->AppendStr(&buf, "SELECT `id`,`nameid`,`amount`,`equip`,`identify`,`refine`,`grade`,`attribute`,`bound`,`unique_id`");
 	for (j = 0; j < MAX_SLOTS; ++j)
 		StrBuf->Printf(&buf, ",`card%d`", j);
 	for (j = 0; j < MAX_ITEM_OPTIONS; ++j)
@@ -326,20 +327,21 @@ static int inter_storage_guild_storage_fromsql(int guild_id, struct guild_storag
 		SQL->GetData(inter->sql_handle, 3, &data, NULL); item->equip = atoi(data);
 		SQL->GetData(inter->sql_handle, 4, &data, NULL); item->identify = atoi(data);
 		SQL->GetData(inter->sql_handle, 5, &data, NULL); item->refine = atoi(data);
-		SQL->GetData(inter->sql_handle, 6, &data, NULL); item->attribute = atoi(data);
-		SQL->GetData(inter->sql_handle, 7, &data, NULL); item->bound = atoi(data);
-		SQL->GetData(inter->sql_handle, 8, &data, NULL); item->unique_id = strtoull(data, NULL, 10);
+		SQL->GetData(inter->sql_handle, 6, &data, NULL); item->grade = atoi(data);
+		SQL->GetData(inter->sql_handle, 7, &data, NULL); item->attribute = atoi(data);
+		SQL->GetData(inter->sql_handle, 8, &data, NULL); item->bound = atoi(data);
+		SQL->GetData(inter->sql_handle, 9, &data, NULL); item->unique_id = strtoull(data, NULL, 10);
 		item->expire_time = 0;
 		/* Card Slots */
 		for (j = 0; j < MAX_SLOTS; ++j) {
-			SQL->GetData(inter->sql_handle, 9 + j, &data, NULL);
+			SQL->GetData(inter->sql_handle, 10 + j, &data, NULL);
 			item->card[j] = atoi(data);
 		}
 		/* Item Options */
 		for (j = 0; j < MAX_ITEM_OPTIONS; ++j) {
-			SQL->GetData(inter->sql_handle, 9 + MAX_SLOTS + j * 2, &data, NULL);
-			item->option[j].index = atoi(data);
 			SQL->GetData(inter->sql_handle, 10 + MAX_SLOTS + j * 2, &data, NULL);
+			item->option[j].index = atoi(data);
+			SQL->GetData(inter->sql_handle, 11 + MAX_SLOTS + j * 2, &data, NULL);
 			item->option[j].value = atoi(data);
 		}
 	}
@@ -403,7 +405,7 @@ static bool inter_storage_retrieve_bound_items(int char_id, int account_id, int 
 	unsigned int bound_item[MAX_INVENTORY] = {0};
 
 	StrBuf->Init(&buf);
-	StrBuf->AppendStr(&buf, "SELECT `id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `expire_time`, `bound`, `unique_id`");
+	StrBuf->AppendStr(&buf, "SELECT `id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `grade`, `attribute`, `expire_time`, `bound`, `unique_id`");
 	for (j = 0; j < MAX_SLOTS; ++j)
 		StrBuf->Printf(&buf, ", `card%d`", j);
 	for (j = 0; j < MAX_ITEM_OPTIONS; ++j)
@@ -427,17 +429,18 @@ static bool inter_storage_retrieve_bound_items(int char_id, int account_id, int 
 	SQL->StmtBindColumn(stmt, 3, SQLDT_UINT,      &item.equip,       sizeof item.equip,       NULL, NULL);
 	SQL->StmtBindColumn(stmt, 4, SQLDT_CHAR,      &item.identify,    sizeof item.identify,    NULL, NULL);
 	SQL->StmtBindColumn(stmt, 5, SQLDT_CHAR,      &item.refine,      sizeof item.refine,      NULL, NULL);
-	SQL->StmtBindColumn(stmt, 6, SQLDT_CHAR,      &item.attribute,   sizeof item.attribute,   NULL, NULL);
-	SQL->StmtBindColumn(stmt, 7, SQLDT_UINT,      &item.expire_time, sizeof item.expire_time, NULL, NULL);
-	SQL->StmtBindColumn(stmt, 8, SQLDT_UCHAR,     &item.bound,       sizeof item.bound,       NULL, NULL);
-	SQL->StmtBindColumn(stmt, 9, SQLDT_UINT64,    &item.unique_id,   sizeof item.unique_id,   NULL, NULL);
+	SQL->StmtBindColumn(stmt, 6, SQLDT_CHAR,      &item.grade,       sizeof item.grade,       NULL, NULL);
+	SQL->StmtBindColumn(stmt, 7, SQLDT_CHAR,      &item.attribute,   sizeof item.attribute,   NULL, NULL);
+	SQL->StmtBindColumn(stmt, 8, SQLDT_UINT,      &item.expire_time, sizeof item.expire_time, NULL, NULL);
+	SQL->StmtBindColumn(stmt, 9, SQLDT_UCHAR,     &item.bound,       sizeof item.bound,       NULL, NULL);
+	SQL->StmtBindColumn(stmt, 10, SQLDT_UINT64,    &item.unique_id,   sizeof item.unique_id,   NULL, NULL);
 	/* Card Slots */
 	for (j = 0; j < MAX_SLOTS; ++j)
-		SQL->StmtBindColumn(stmt, 10 + j, SQLDT_INT, &item.card[j], sizeof item.card[j], NULL, NULL);
+		SQL->StmtBindColumn(stmt, 11 + j, SQLDT_INT, &item.card[j], sizeof item.card[j], NULL, NULL);
 	/* Item Options */
 	for (j = 0; j < MAX_ITEM_OPTIONS; ++j) {
-		SQL->StmtBindColumn(stmt, 10 + MAX_SLOTS + j * 2, SQLDT_INT16, &item.option[j].index, sizeof item.option[j].index, NULL, NULL);
-		SQL->StmtBindColumn(stmt, 11 + MAX_SLOTS + j * 2, SQLDT_INT16, &item.option[j].value, sizeof item.option[j].value, NULL, NULL);
+		SQL->StmtBindColumn(stmt, 11 + MAX_SLOTS + j * 2, SQLDT_INT16, &item.option[j].index, sizeof item.option[j].index, NULL, NULL);
+		SQL->StmtBindColumn(stmt, 12 + MAX_SLOTS + j * 2, SQLDT_INT16, &item.option[j].value, sizeof item.option[j].value, NULL, NULL);
 	}
 	while (SQL_SUCCESS == SQL->StmtNextRow(stmt)) {
 		Assert_retb(i < MAX_INVENTORY);
@@ -529,7 +532,7 @@ static bool inter_storage_retrieve_bound_items(int char_id, int account_id, int 
 	/// call that function here as well [Panikon]
 	StrBuf->Clear(&buf);
 	StrBuf->Printf(&buf,"INSERT INTO `%s` (`guild_id`,`nameid`,`amount`,`equip`,`identify`,`refine`,"
-						"`attribute`,`expire_time`,`bound`,`unique_id`",
+						"`grade`, `attribute`,`expire_time`,`bound`,`unique_id`",
 					guild_storage_db);
 	for (s = 0; s < MAX_SLOTS; ++s)
 		StrBuf->Printf(&buf, ", `card%d`", s);
@@ -541,8 +544,8 @@ static bool inter_storage_retrieve_bound_items(int char_id, int account_id, int 
 		if (j != 0)
 			StrBuf->AppendStr(&buf, ",");
 
-		StrBuf->Printf(&buf, "('%d', '%d', '%d', '%u', '%d', '%d', '%d', '%u', '%d', '%"PRIu64"'",
-			guild_id, items[j].nameid, items[j].amount, items[j].equip, items[j].identify, items[j].refine,
+		StrBuf->Printf(&buf, "('%d', '%d', '%d', '%u', '%d', '%d', '%d', '%d', '%u', '%d', '%"PRIu64"'",
+			guild_id, items[j].nameid, items[j].amount, items[j].equip, items[j].identify, items[j].refine, items[j].grade,
 			items[j].attribute, items[j].expire_time, items[j].bound, items[j].unique_id);
 		for (s = 0; s < MAX_SLOTS; ++s)
 			StrBuf->Printf(&buf, ", '%d'", items[j].card[s]);

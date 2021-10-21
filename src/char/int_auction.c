@@ -69,8 +69,8 @@ static void inter_auction_save(struct auction_data *auction)
 		return;
 
 	StrBuf->Init(&buf);
-	StrBuf->Printf(&buf, "UPDATE `%s` SET `seller_id` = '%d', `seller_name` = ?, `buyer_id` = '%d', `buyer_name` = ?, `price` = '%d', `buynow` = '%d', `hours` = '%d', `timestamp` = '%lu', `nameid` = '%d', `item_name` = ?, `type` = '%d', `refine` = '%d', `attribute` = '%d'",
-		auction_db, auction->seller_id, auction->buyer_id, auction->price, auction->buynow, auction->hours, (unsigned long)auction->timestamp, auction->item.nameid, auction->type, auction->item.refine, auction->item.attribute);
+	StrBuf->Printf(&buf, "UPDATE `%s` SET `seller_id` = '%d', `seller_name` = ?, `buyer_id` = '%d', `buyer_name` = ?, `price` = '%d', `buynow` = '%d', `hours` = '%d', `timestamp` = '%lu', `nameid` = '%d', `item_name` = ?, `type` = '%d', `refine` = '%d', `grade` = '%d', `attribute` = '%d'",
+		auction_db, auction->seller_id, auction->buyer_id, auction->price, auction->buynow, auction->hours, (unsigned long)auction->timestamp, auction->item.nameid, auction->type, auction->item.refine, auction->item.grade, auction->item.attribute);
 	for (j = 0; j < MAX_SLOTS; j++)
 		StrBuf->Printf(&buf, ", `card%d` = '%d'", j, auction->item.card[j]);
 	for (j = 0; j < MAX_ITEM_OPTIONS; j++)
@@ -102,13 +102,13 @@ static unsigned int inter_auction_create(struct auction_data *auction)
 	auction->timestamp = time(NULL) + (auction->hours * 3600);
 
 	StrBuf->Init(&buf);
-	StrBuf->Printf(&buf, "INSERT INTO `%s` (`seller_id`,`seller_name`,`buyer_id`,`buyer_name`,`price`,`buynow`,`hours`,`timestamp`,`nameid`,`item_name`,`type`,`refine`,`attribute`,`unique_id`", auction_db);
+	StrBuf->Printf(&buf, "INSERT INTO `%s` (`seller_id`,`seller_name`,`buyer_id`,`buyer_name`,`price`,`buynow`,`hours`,`timestamp`,`nameid`,`item_name`,`type`,`refine`,`grade`,`attribute`,`unique_id`", auction_db);
 	for (j = 0; j < MAX_SLOTS; j++)
 		StrBuf->Printf(&buf, ",`card%d`", j);
 	for (j = 0; j < MAX_ITEM_OPTIONS; j++)
 		StrBuf->Printf(&buf, ", `opt_idx%d`, `opt_val%d`", j, j);
-	StrBuf->Printf(&buf, ") VALUES ('%d',?,'%d',?,'%d','%d','%d','%lu','%d',?,'%d','%d','%d','%"PRIu64"'",
-		auction->seller_id, auction->buyer_id, auction->price, auction->buynow, auction->hours, (unsigned long)auction->timestamp, auction->item.nameid, auction->type, auction->item.refine, auction->item.attribute, auction->item.unique_id);
+	StrBuf->Printf(&buf, ") VALUES ('%d',?,'%d',?,'%d','%d','%d','%lu','%d',?,'%d','%d','%d','%d','%"PRIu64"'",
+		auction->seller_id, auction->buyer_id, auction->price, auction->buynow, auction->hours, (unsigned long)auction->timestamp, auction->item.nameid, auction->type, auction->item.refine, auction->item.grade, auction->item.attribute, auction->item.unique_id);
 	for (j = 0; j < MAX_SLOTS; j++)
 		StrBuf->Printf(&buf, ",'%d'", auction->item.card[j]);
 	for (j = 0; j < MAX_ITEM_OPTIONS; j++)
@@ -198,7 +198,7 @@ static void inter_auctions_fromsql(void)
 
 	StrBuf->Init(&buf);
 	StrBuf->AppendStr(&buf, "SELECT `auction_id`,`seller_id`,`seller_name`,`buyer_id`,`buyer_name`,"
-		"`price`,`buynow`,`hours`,`timestamp`,`nameid`,`item_name`,`type`,`refine`,`attribute`,`unique_id`");
+		"`price`,`buynow`,`hours`,`timestamp`,`nameid`,`item_name`,`type`,`refine`,`grade`,`attribute`,`unique_id`");
 	for (i = 0; i < MAX_SLOTS; i++)
 		StrBuf->Printf(&buf, ",`card%d`", i);
 	for (i = 0; i < MAX_ITEM_OPTIONS; i++)
@@ -229,22 +229,23 @@ static void inter_auctions_fromsql(void)
 		SQL->GetData(inter->sql_handle,11, &data, NULL); auction->type = atoi(data);
 
 		SQL->GetData(inter->sql_handle,12, &data, NULL); item->refine = atoi(data);
-		SQL->GetData(inter->sql_handle,13, &data, NULL); item->attribute = atoi(data);
-		SQL->GetData(inter->sql_handle,14, &data, NULL); item->unique_id = strtoull(data, NULL, 10);
+		SQL->GetData(inter->sql_handle,13, &data, NULL); item->grade = atoi(data);
+		SQL->GetData(inter->sql_handle,14, &data, NULL); item->attribute = atoi(data);
+		SQL->GetData(inter->sql_handle,15, &data, NULL); item->unique_id = strtoull(data, NULL, 10);
 
 		item->identify = 1;
 		item->amount = 1;
 		item->expire_time = 0;
 		/* Card Slots */
 		for (i = 0; i < MAX_SLOTS; i++) {
-			SQL->GetData(inter->sql_handle, 15 + i, &data, NULL);
+			SQL->GetData(inter->sql_handle, 16 + i, &data, NULL);
 			item->card[i] = atoi(data);
 		}
 		/* Item Options */
 		for (i = 0; i < MAX_ITEM_OPTIONS; i++) {
-			SQL->GetData(inter->sql_handle, 15 + MAX_SLOTS + i * 2, &data, NULL);
-			item->option[i].index = atoi(data);
 			SQL->GetData(inter->sql_handle, 16 + MAX_SLOTS + i * 2, &data, NULL);
+			item->option[i].index = atoi(data);
+			SQL->GetData(inter->sql_handle, 17 + MAX_SLOTS + i * 2, &data, NULL);
 			item->option[i].value = atoi(data);
 		}
 
