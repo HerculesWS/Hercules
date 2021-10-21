@@ -1712,17 +1712,16 @@ packet(0x96e,clif->ackmergeitems);
 #if PACKETVER >= 20140416
 // new packets
 	packet(0x0a04,clif->pRodexAddItem); // CZ_REQ_ADD_ITEM_RODEX
-	packet(0x0a13,clif->pRodexCheckName); // CZ_CHECK_RECEIVE_CHARACTER_NAME
 // changed packet sizes
 	packet(0x0a06,clif->pRodexRemoveItem); // CZ_REQ_REMOVE_RODEX_ITEM
 	packet(0x0a08,clif->pRodexOpenWriteMail); // CZ_REQ_OPEN_WRITE_RODEX
 #endif
 
-// 2014-04-23aRagexeRE
+// 2014-04-23aRagexe, 2014-04-23aRagexeRE
 #if PACKETVER >= 20140423
 // new packets
 // changed packet sizes
-	packet(0x0a13,clif->pRodexCheckName); // CZ_CHECK_RECEIVE_CHARACTER_NAME
+	packet(0x0a13,clif->pRodexCheckName1); // CZ_CHECK_RECEIVE_CHARACTER_NAME
 #endif
 
 // 2014-04-30aRagexeRE
@@ -2014,5 +2013,9 @@ packet(0x96e,clif->ackmergeitems);
 #if PACKETVER >= 20191224
 	packet(0x0b66,clif->pRepairItem2);
 #endif
+
+#if PACKETVER_MAIN_NUM >= 20201104 || PACKETVER_ZERO_NUM >= 20201118
+	packet(0x0b97,clif->pRodexCheckName2);
+#endif  // PACKETVER_MAIN_NUM >= 20201104 || PACKETVER_ZERO_NUM >= 20201118
 
 #endif /* MAP_PACKETS_H */

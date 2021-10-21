@@ -22843,10 +22843,11 @@ static void clif_rodex_remove_item_result(struct map_session_data *sd, int16 idx
 #endif
 }
 
-static void clif_parse_rodex_checkname(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
-static void clif_parse_rodex_checkname(int fd, struct map_session_data *sd)
+static void clif_parse_rodex_checkname1(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
+static void clif_parse_rodex_checkname1(int fd, struct map_session_data *sd)
 {
-	const struct PACKET_CZ_CHECKNAME *rPacket = RFIFOP(fd, 0);
+#if PACKETVER >= 20140423
+	const struct PACKET_CZ_CHECKNAME1 *rPacket = RFIFOP(fd, 0);
 	int char_id = 0, base_level = 0;
 	int class = 0;
 	char name[NAME_LENGTH];
@@ -22854,6 +22855,22 @@ static void clif_parse_rodex_checkname(int fd, struct map_session_data *sd)
 	safestrncpy(name, rPacket->Name, NAME_LENGTH);
 
 	rodex->check_player(sd, name, &base_level, &char_id, &class);
+#endif  // PACKETVER >= 20140423
+}
+
+static void clif_parse_rodex_checkname2(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
+static void clif_parse_rodex_checkname2(int fd, struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20201104 || PACKETVER_ZERO_NUM >= 20201118
+	const struct PACKET_CZ_CHECKNAME2 *rPacket = RFIFOP(fd, 0);
+	int char_id = 0, base_level = 0;
+	int class = 0;
+	char name[NAME_LENGTH];
+
+	safestrncpy(name, rPacket->Name, NAME_LENGTH);
+
+	rodex->check_player(sd, name, &base_level, &char_id, &class);
+#endif  // PACKETVER_MAIN_NUM >= 20201104 || PACKETVER_ZERO_NUM >= 20201118
 }
 
 static void clif_rodex_checkname_result(struct map_session_data *sd, int char_id, int class_, int base_level, const char *name)
@@ -26106,7 +26123,8 @@ void clif_defaults(void)
 	clif->pRodexCloseMailbox = clif_parse_rodex_close_mailbox;
 	clif->pRodexCancelWriteMail = clif_parse_rodex_cancel_write_mail;
 	clif->pRodexOpenMailbox = clif_parse_rodex_open_mailbox;
-	clif->pRodexCheckName = clif_parse_rodex_checkname;
+	clif->pRodexCheckName1 = clif_parse_rodex_checkname1;
+	clif->pRodexCheckName2 = clif_parse_rodex_checkname2;
 	clif->rodex_checkname_result = clif_rodex_checkname_result;
 	clif->pRodexDeleteMail = clif_parse_rodex_delete_mail;
 	clif->rodex_delete_mail = clif_rodex_delete_mail;

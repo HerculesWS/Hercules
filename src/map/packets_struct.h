@@ -1763,10 +1763,22 @@ struct PACKET_ZC_WRITE_MAIL_RESULT {
 	int8 result;
 } __attribute__((packed));
 
-struct PACKET_CZ_CHECKNAME {
+#if PACKETVER >= 20140423
+struct PACKET_CZ_CHECKNAME1 {
 	int16 PacketType;
 	char Name[24];
 } __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_CHECKNAME1, 0x0a13)
+#endif  // PACKETVER >= 20140423
+
+#if PACKETVER_MAIN_NUM >= 20201104 || PACKETVER_ZERO_NUM >= 20201118
+struct PACKET_CZ_CHECKNAME2 {
+	int16 PacketType;
+	char Name[24];
+	char own_char;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_CHECKNAME2, 0x0b97)
+#endif  // PACKETVER_MAIN_NUM >= 20201104 || PACKETVER_ZERO_NUM >= 20201118
 
 struct PACKET_ZC_CHECKNAME {
 	int16 PacketType;
