@@ -23159,7 +23159,7 @@ static void clif_rodex_read_mail(struct map_session_data *sd, int8 opentype, str
 
 	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_ACK_READ_RODEX) + body_len + (sizeof(struct PACKET_ZC_ACK_READ_RODEX_SUB) * RODEX_MAX_ITEM));
 	struct PACKET_ZC_ACK_READ_RODEX *sPacket = WFIFOP(fd, 0);
-	sPacket->PacketType = rodexread;
+	sPacket->PacketType = HEADER_ZC_ACK_READ_RODEX;
 	sPacket->opentype = opentype;
 	sPacket->MailID = msg->id;
 	sPacket->TextcontentsLength = body_len;
@@ -23187,6 +23187,9 @@ static void clif_rodex_read_mail(struct map_session_data *sd, int8 opentype, str
 		item->location = pc->item_equippoint(sd, data);
 		item->viewSprite = data->view_sprite;
 		item->bindOnEquip = it->bound ? 2 : data->flag.bindonequip ? 1 : 0;
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+		item->grade = it->grade;
+#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
 		clif->addcards(&item->slot, it);
 		clif->add_item_options(&item->option_data[0], it);
 		size += sizeof(struct PACKET_ZC_ACK_READ_RODEX_SUB);

@@ -279,7 +279,6 @@ enum packet_headers {
 #endif // PACKETVER >= 20141022
 	/* Rodex */
 	rodexicon = 0x09E7,
-	rodexread = 0x09EB,
 	rodexwriteresult = 0x09ED,
 	rodexnextpage = 0x09F0,
 	rodexgetzeny = 0x09F2,
@@ -1830,8 +1829,38 @@ struct PACKET_CZ_REQ_READ_MAIL {
 	int64 MailID;
 } __attribute__((packed));
 
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+struct PACKET_ZC_ACK_READ_RODEX_SUB {
+	int16 count;
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+	uint32 ITID;
+#else
+	uint16 ITID;
+#endif
+	int8 IsIdentified;
+	int8 IsDamaged;
+	struct EQUIPSLOTINFO slot;
+	uint32 location;
+	uint8 type;
+	uint16 viewSprite;
+	uint16 bindOnEquip;
+	struct ItemOptions option_data[MAX_ITEM_OPTIONS];
+	int8 refiningLevel;
+	int8 grade;
+} __attribute__((packed));
+
+struct PACKET_ZC_ACK_READ_RODEX {
+	int16 PacketType;
+	int16 PacketLength;
+	int8 opentype;
+	int64 MailID;
+	int16 TextcontentsLength;
+	int64 zeny;
+	int8 ItemCnt;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_ACK_READ_RODEX, 0x0b63);
 // [4144] date unconfirmed
-#if PACKETVER >= 20140115
+#elif PACKETVER >= 20140115
 struct PACKET_ZC_ACK_READ_RODEX_SUB {
 	int16 count;
 #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
@@ -1859,6 +1888,7 @@ struct PACKET_ZC_ACK_READ_RODEX {
 	int64 zeny;
 	int8 ItemCnt;
 } __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_ACK_READ_RODEX, 0x09eb);
 #endif  // PACKETVER >= 20140115
 
 struct PACKET_CZ_REQ_DELETE_MAIL {
