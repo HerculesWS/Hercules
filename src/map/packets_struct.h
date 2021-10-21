@@ -167,7 +167,9 @@ enum packet_headers {
 #else
 	inventorylistnormalType = 0xa3,
 #endif
-#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+	inventorylistequipType = 0xb39,
+#elif PACKETVER_MAIN_NUM >= 20181002 || PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919
 	inventorylistequipType = 0xb0a,
 #elif PACKETVER >= 20150226
 	inventorylistequipType = 0xa0d,
@@ -193,7 +195,7 @@ enum packet_headers {
 #endif
 #if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
 	storageListEquipType = 0xb39,
-#elif PACKETVER_RE_NUM >= 20180829 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
+#elif PACKETVER_MAIN_NUM >= 20181002 || PACKETVER_RE_NUM >= 20180829 || PACKETVER_ZERO_NUM >= 20180919
 	storageListEquipType = 0xb0a,
 #elif PACKETVER >= 20150226
 	storageListEquipType = 0xa10,
@@ -217,7 +219,9 @@ enum packet_headers {
 #else
 	cartlistnormalType = 0x123,
 #endif
-#if PACKETVER_RE_NUM >= 20180829 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+	cartlistequipType = 0xb39,
+#elif PACKETVER_MAIN_NUM >= 20181002 || PACKETVER_RE_NUM >= 20180829 || PACKETVER_ZERO_NUM >= 20180919
 	cartlistequipType = 0xb0a,
 #elif PACKETVER >= 20150226
 	cartlistequipType = 0xa0f,
