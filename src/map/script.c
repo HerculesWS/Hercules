@@ -15646,6 +15646,9 @@ static BUILDIN(getiteminfo)
 	case ITEMINFO_FLAG_NO_REFINE:
 		script_pushint(st, it->flag.no_refine);
 		break;
+	case ITEMINFO_FLAG_NO_GRADE:
+		script_pushint(st, it->flag.no_grade);
+		break;
 	case ITEMINFO_FLAG_DELAY_CONSUME:
 		script_pushint(st, it->flag.delay_consume);
 		break;
@@ -16010,6 +16013,9 @@ static BUILDIN(setiteminfo)
 	case ITEMINFO_FLAG_NO_REFINE:
 		it->flag.no_refine = cap_value(value, 0, MAX_REFINE);
 		break;
+	case ITEMINFO_FLAG_NO_GRADE:
+		it->flag.no_grade = cap_value(value, 0, 1);
+		break;
 	case ITEMINFO_FLAG_DELAY_CONSUME:
 		it->flag.delay_consume = value;
 		break;
@@ -16205,6 +16211,7 @@ static BUILDIN(getinventorylist)
 				pc->setreg(sd, reference_uid(script->add_variable("@inventorylist_equip"), j), 0);
 			}
 			pc->setreg(sd, reference_uid(script->add_variable("@inventorylist_refine"), j), sd->status.inventory[i].refine);
+			pc->setreg(sd, reference_uid(script->add_variable("@inventorylist_grade"), j), sd->status.inventory[i].grade);
 			pc->setreg(sd, reference_uid(script->add_variable("@inventorylist_identify"), j), sd->status.inventory[i].identify);
 			pc->setreg(sd, reference_uid(script->add_variable("@inventorylist_attribute"), j), sd->status.inventory[i].attribute);
 			for (k = 0; k < MAX_SLOTS; k++) {
@@ -16244,6 +16251,7 @@ static BUILDIN(getcartinventorylist)
 			pc->setreg(sd,reference_uid(script->add_variable("@cartinventorylist_amount"), j),sd->status.cart[i].amount);
 			pc->setreg(sd,reference_uid(script->add_variable("@cartinventorylist_equip"), j),sd->status.cart[i].equip);
 			pc->setreg(sd,reference_uid(script->add_variable("@cartinventorylist_refine"), j),sd->status.cart[i].refine);
+			pc->setreg(sd,reference_uid(script->add_variable("@cartinventorylist_grade"), j),sd->status.cart[i].grade);
 			pc->setreg(sd,reference_uid(script->add_variable("@cartinventorylist_identify"), j),sd->status.cart[i].identify);
 			pc->setreg(sd,reference_uid(script->add_variable("@cartinventorylist_attribute"), j),sd->status.cart[i].attribute);
 			for (k = 0; k < MAX_SLOTS; k++) {
@@ -27399,6 +27407,68 @@ BUILDIN(resethate)
 	return true;
 }
 
+static BUILDIN(getgrade)
+{
+	struct map_session_data *sd = script->rid2sd(st);
+
+	if (sd == NULL)
+		return true;
+
+	if (status->current_equip_item_index < 0)
+		script_pushint(st, 0);
+	else
+		script_pushint(st, sd->status.inventory[status->current_equip_item_index].grade);
+	return true;
+}
+
+static BUILDIN(getequipisenablegrade)
+{
+	struct map_session_data *sd = script->rid2sd(st);
+
+	if (sd == NULL)
+		return true;
+
+	int i = -1;
+	const int num = script_getnum(st, 2);
+	if (num > 0 && num <= ARRAYLENGTH(script->equip))
+		i = pc->checkequip(sd, script->equip[num - 1]);
+
+	if (i >= 0 && sd->inventory_data[i] != NULL && sd->inventory_data[i]->flag.no_grade == 0 && sd->status.inventory[i].expire_time == 0)
+		script_pushint(st, 1);
+	else
+		script_pushint(st, 0);
+
+	return true;
+}
+
+static BUILDIN(getequipgrade)
+{
+	struct map_session_data *sd = script->rid2sd(st);
+
+	if (sd == NULL) {
+		script_pushint(st, -1);
+		ShowError("buildin_getequipgrade: Player not attached!\n");
+		return false;
+	}
+
+	int i = -1;
+	const int equip_index = script_getnum(st, 2);
+	if (equip_index > 0 && equip_index <= ARRAYLENGTH(script->equip)) {
+		if ((i = pc->checkequip(sd, script->equip[equip_index - 1])) == -1) {
+			ShowError("buildin_getequipgrade: No equipment is equipped in the given index %d.\n", equip_index);
+			script_pushint(st, -1);
+			return false;
+		}
+	} else {
+		ShowError("buildin_getequipgrade: Invalid equipment index %d provided.\n", equip_index);
+		script_pushint(st, -1);
+		return false;
+	}
+
+	script_pushint(st, sd->status.inventory[i].grade);
+	return true;
+}
+
 /**
  * Adds a built-in script function.
  *
@@ -28234,6 +28304,10 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(openlapineupgradeui, "i"),
 
 		BUILDIN_DEF(callfunctionofnpc, "vs*"),
+
+		BUILDIN_DEF(getgrade, ""),
+		BUILDIN_DEF(getequipisenablegrade, "i"),
+		BUILDIN_DEF(getequipgrade, "i"),
 	};
 	int i, len = ARRAYLENGTH(BUILDIN);
 	RECREATE(script->buildin, char *, script->buildin_count + len); // Pre-alloc to speed up
@@ -28283,6 +28357,7 @@ static void script_hardcoded_constants(void)
 	script->set_constant("MAX_BG_MEMBERS", MAX_BG_MEMBERS, false, false);
 	script->set_constant("MAX_CHAT_USERS", MAX_CHAT_USERS, false, false);
 	script->set_constant("MAX_REFINE", MAX_REFINE, false, false);
+	script->set_constant("MAX_ITEM_GRADE", MAX_ITEM_GRADE, false, false);
 	script->set_constant("MAX_ITEM_ID", MAX_ITEM_ID, false, false);
 	script->set_constant("MAX_MENU_OPTIONS", MAX_MENU_OPTIONS, false, false);
 	script->set_constant("MAX_MENU_LENGTH", MAX_MENU_LENGTH, false, false);
@@ -28577,6 +28652,7 @@ static void script_hardcoded_constants(void)
 	script->set_constant("ITEMINFO_CLASS_BASE_3", ITEMINFO_CLASS_BASE_3, false, false);
 	script->set_constant("ITEMINFO_CLASS_UPPER", ITEMINFO_CLASS_UPPER, false, false);
 	script->set_constant("ITEMINFO_FLAG_NO_REFINE", ITEMINFO_FLAG_NO_REFINE, false, false);
+	script->set_constant("ITEMINFO_FLAG_NO_GRADE", ITEMINFO_FLAG_NO_GRADE, false, false);
 	script->set_constant("ITEMINFO_FLAG_DELAY_CONSUME", ITEMINFO_FLAG_DELAY_CONSUME, false, false);
 	script->set_constant("ITEMINFO_FLAG_AUTOEQUIP", ITEMINFO_FLAG_AUTOEQUIP, false, false);
 	script->set_constant("ITEMINFO_FLAG_AUTO_FAVORITE", ITEMINFO_FLAG_AUTO_FAVORITE, false, false);
