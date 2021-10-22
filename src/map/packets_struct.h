@@ -297,11 +297,6 @@ enum packet_headers {
 #else // PACKETVER >= 20170419
 	rodexmailList = 0x0Ac2,
 #endif
-#if PACKETVER < 20160316
-	rodexcheckplayer = 0x0A14,
-#else // PACKETVER >= 20160316
-	rodexcheckplayer = 0x0A51,
-#endif
 #if PACKETVER >= 20151223
 	skillscale = 0xA41,
 #endif
@@ -1780,15 +1775,24 @@ struct PACKET_CZ_CHECKNAME2 {
 DEFINE_PACKET_HEADER(CZ_CHECKNAME2, 0x0b97)
 #endif  // PACKETVER_MAIN_NUM >= 20201104 || PACKETVER_ZERO_NUM >= 20201118
 
+#if PACKETVER >= 20160302
 struct PACKET_ZC_CHECKNAME {
 	int16 PacketType;
 	int32 CharId;
 	int16 Class;
 	int16 BaseLevel;
-#if PACKETVER >= 20160316
 	char Name[24];
-#endif
 } __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_CHECKNAME, 0x0a51)
+#elif PACKETVER >= 20141119
+struct PACKET_ZC_CHECKNAME {
+	int16 PacketType;
+	int32 CharId;
+	int16 Class;
+	int16 BaseLevel;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_CHECKNAME, 0x0a14)
+#endif
 
 struct PACKET_ZC_NOTIFY_UNREADMAIL {
 	int16 PacketType;

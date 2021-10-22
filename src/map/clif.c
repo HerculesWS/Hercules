@@ -22875,7 +22875,7 @@ static void clif_parse_rodex_checkname2(int fd, struct map_session_data *sd)
 
 static void clif_rodex_checkname_result(struct map_session_data *sd, int char_id, int class_, int base_level, const char *name)
 {
-#if PACKETVER >= 20140521
+#if PACKETVER >= 20141119
 	struct PACKET_ZC_CHECKNAME *sPacket;
 	int fd;
 
@@ -22885,7 +22885,7 @@ static void clif_rodex_checkname_result(struct map_session_data *sd, int char_id
 	fd = sd->fd;
 	WFIFOHEAD(fd, sizeof(*sPacket));
 	sPacket = WFIFOP(fd, 0);
-	sPacket->PacketType = rodexcheckplayer;
+	sPacket->PacketType = HEADER_ZC_CHECKNAME;
 	if (char_id == 0) {
 		sPacket->CharId = 0;
 		WFIFOSET(fd, sizeof(*sPacket));
@@ -22898,7 +22898,7 @@ static void clif_rodex_checkname_result(struct map_session_data *sd, int char_id
 	safestrncpy(sPacket->Name, name, NAME_LENGTH);
 #endif
 	WFIFOSET(fd, sizeof(*sPacket));
-#endif
+#endif  // PACKETVER >= 20141119
 }
 
 static void clif_parse_rodex_send_mail(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
