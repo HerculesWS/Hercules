@@ -560,6 +560,7 @@ struct item_data {
 	struct {
 		unsigned available : 1;
 		unsigned no_refine : 1; // [celest]
+		unsigned no_grade : 1;
 		unsigned delay_consume : 1;     ///< Signifies items that are not consumed immediately upon double-click [Skotlex]
 		unsigned trade_restriction : 9; ///< Item trade restrictions mask (@see enum ItemTradeRestrictions)
 		unsigned autoequip : 1;
