@@ -32,6 +32,7 @@
 #include "map/clif.h"
 #include "map/duel.h"
 #include "map/elemental.h"
+#include "map/grader.h"
 #include "map/guild.h"
 #include "map/homunculus.h"
 #include "map/intif.h"
@@ -10377,6 +10378,24 @@ ACMD(refineryui)
 #endif
 }
 
+ACMD(gradeui)
+{
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+	clif->open_ui_send(sd, ZC_GRADE_ENCHANT_UI);
+	return true;
+#else
+	clif->message(fd, "Grade Enchant UI is not supported.");
+	return false;
+#endif
+}
+
+ACMD(reloadgradedb)
+{
+	grader->reload_db();
+	clif->message(fd, "Grade Database has been reloaded.");
+	return true;
+}
+
 /**
  * Fills the reference of available commands in atcommand DBMap
  **/
@@ -10668,6 +10687,8 @@ static void atcommand_basecommands(void)
 		ACMD_DEF(setzone),
 		ACMD_DEF(camerainfo),
 		ACMD_DEF(refineryui),
+		ACMD_DEF(gradeui),
+		ACMD_DEF(reloadgradedb),
 	};
 	int i;
 

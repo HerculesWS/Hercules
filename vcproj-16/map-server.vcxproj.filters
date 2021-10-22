@@ -226,6 +226,9 @@
     <ClCompile Include="..\src\map\refine.c">
       <Filter>map</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\map\grader.c">
+      <Filter>map</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\map\achievement.h">
@@ -514,6 +517,9 @@
       <Filter>map</Filter>
     </ClInclude>
     <ClInclude Include="..\src\map\refine.h">
+      <Filter>map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\map\grader.h">
       <Filter>map</Filter>
     </ClInclude>
   </ItemGroup>

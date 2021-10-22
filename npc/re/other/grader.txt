@@ -1,0 +1,105 @@
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2021 Hercules Dev Team
+//= Copyright (C) 2021 Asheraf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Grade Enchancer
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
+
+/*@LOADGRADESCRIPTS
+-	trader	Grade_Materials	FAKE_NPC,{
+	end;
+OnInit:
+	tradertype(NST_EXPANDED_BARTER);
+	sellitem(Etel_Stone,         100000, -1,  Etel_Dust,  5, -1);
+	sellitem(Blessed_Etel_Dust,  100000, -1,  Etel_Dust,  5, -1, Blacksmith_Blessing, 1, -1);
+	sellitem(Etel_Skyblue_Jewel, 100000, -1, Etel_Stone,  3, -1,       Skyblue_Jewel, 1, -1);
+	sellitem(Etel_Topaz,         200000, -1, Etel_Stone,  6, -1,        Golden_Jewel, 1, -1);
+	sellitem(Etel_Violet_Jewel,  300000, -1, Etel_Stone, 10, -1,        Violet_Jewel, 1, -1);
+	sellitem(Etel_Amber,         500000, -1, Etel_Stone, 15, -1,               Amber, 1, -1);
+	end;
+}
+
+grademk,34,184,4	script	Sratos#sratos	4_JP_GARM_H,{
+	mes("[Sratos]");
+	mes("Hello, dear customer who walked in hope for a miracle today.");
+	mes("How can I help you?");
+	next();
+	switch (select("Enhance the equipment's grade.", "Exchange Etel items", "What is Grade Enhancement?")) {
+	case 1: // Enhance the equipment's grade.
+		mes("[Sratos]");
+		mes("Our customer. You want to strengthen the level of equipment.");
+		mes("It is not easy to move the mana of jewelry.");
+		next();
+		mes("[Sratos]");
+		mes("Mana can explode on the spot.");
+		mes("Then, the weapon that will inherit the magical power also explodes!");
+		next();
+		switch (select("I'll still do it!", "I'll think about it.")) {
+		case 1: // I'll still do it!
+			mes("[Sratos]");
+			mes("I wish good luck to our courageous customers!");
+			close2();
+			opengradeui();
+			end;
+		case 2: // I'll think about it.
+			mes("[Sratos]");
+			mes("Whenever you have the courage to challenge, please come back.");
+			close();
+		}
+		end;
+	case 2: // Exchange Etel items
+		mes("[Sratos]");
+		mes("These are jewels used to strengthen grades.");
+		mes("Etel Dust, the jewelry that will be the base, and if you give me a small fee, I'll exchange it for etel jewelry.");
+		close2(); 
+		openshop("Grade_Materials");
+		end;
+	case 3: // What is Grade Enhancement?
+		mes("[Sratos]");
+		mes("Occasionally, unstable jewels with a lot of pure magical power are found.");
+		mes("We call these etheric gems, right?");
+		next();
+		mes("[Sratos]");
+		mes("You can transfer the magical power of the etheric gem to other weapons, but of course there is some risk.");
+		mes("It's delicate, so if you don't, it'll pop! and it will explode");
+		next();
+		mes("[Sratos]");
+		mes("Anyway, if you use this etheric gem, you can enchant the weapon you are using.");
+		mes("performance gets better. We call this grading.");
+		next();
+		mes("[Sratos]");
+		mes("You too, wouldn't you be happy if the weapons you love grow one step further?");
+		mes("We are the people who help it. It's a bit risky, though. ahahaha.");
+		close();
+	}
+	end;
+OnInit:
+	setunittitle(getnpcid(), "<Grade Enhancer>");
+	end;
+}
+//@*/

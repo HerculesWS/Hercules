@@ -34,6 +34,7 @@
 #include "map/clif.h"
 #include "map/duel.h"
 #include "map/elemental.h"
+#include "map/grader.h"
 #include "map/guild.h"
 #include "map/homunculus.h"
 #include "map/instance.h"
@@ -6496,6 +6497,7 @@ int do_final(void)
 	skill->final();
 	status->final();
 	refine->final();
+	grader->final();
 	unit->final();
 	bg->final();
 	duel->final();
@@ -6722,6 +6724,7 @@ static void map_load_defaults(void)
 	rodex_defaults();
 	stylist_defaults();
 	refine_defaults();
+	grader_defaults();
 }
 /**
  * --run-once handler
@@ -7029,6 +7032,7 @@ int do_init(int argc, char *argv[])
 	mob->init(minimal);
 	pc->init(minimal);
 	refine->init(minimal);
+	grader->init(minimal);
 	status->init(minimal);
 	party->init(minimal);
 	guild->init(minimal);

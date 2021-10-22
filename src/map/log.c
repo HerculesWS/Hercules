@@ -76,6 +76,7 @@ static char log_picktype2char(e_log_pick_type type)
 		case LOG_TYPE_REFINE:           return '2';  // Refine
 		case LOG_TYPE_OTHER:            return 'X';  // Other
 		case LOG_TYPE_ACHIEVEMENT:      return '3';  // Achievement
+		case LOG_TYPE_GRADE:            return '4';  // Grade Enchant
 		case LOG_TYPE_NONE:             break;
 		case LOG_TYPE_ALL:              break;
 	}

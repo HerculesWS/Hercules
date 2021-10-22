@@ -409,6 +409,10 @@ STATIC_ASSERT(MAX_ITEM_OPTIONS <= 5, "This value is limited by the client and da
 #define RODEX_MAIL_PER_PAGE 7
 #endif
 
+#ifndef MAX_GRADE_MATERIALS
+#define MAX_GRADE_MATERIALS 3
+#endif
+
 // The following system marks a different job ID system used by the map server,
 // which makes a lot more sense than the normal one. [Skotlex]
 // These marks the "level" of the job.

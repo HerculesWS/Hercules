@@ -31,6 +31,7 @@
 #include "map/chrif.h"
 #include "map/clan.h"
 #include "map/elemental.h"
+#include "map/grader.h"
 #include "map/guild.h"
 #include "map/homunculus.h"
 #include "map/instance.h"
@@ -23722,6 +23723,12 @@ static void clif_open_ui_send(struct map_session_data *sd, enum zc_ui_types ui_t
 #endif
 		break;
 #endif
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+	case ZC_GRADE_ENCHANT_UI:
+		sd->state.grade_ui = 1;
+		p.data = 0;
+		break;
+#endif
 	case zc_ui_unused:
 	default:
 		ShowWarning("clif_open_ui_send: Requested UI (%u) is not implemented yet.\n", ui_type);
@@ -25099,6 +25106,124 @@ static void clif_sayDialogAlign(struct map_session_data *sd, int npcid, enum say
 #endif  // PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103
 }
 
+static void clif_parse_grade_enchant_close(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+static void clif_parse_grade_enchant_close(int fd, struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20191016 || PACKETVER_RE_NUM >= 20191016 || PACKETVER_ZERO_NUM >= 20191008
+	sd->state.grade_ui = 0;
+#endif
+}
+
+static void clif_grade_enchant_add_item_result_success(struct map_session_data *sd, int idx, const struct s_grade_info *gi)
+{
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+	nullpo_retv(sd);
+	nullpo_retv(gi);
+
+	const int fd = sd->fd;
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_GRADE_ENCHANT_ADD_ITEM_RESULT) + sizeof(struct GRADE_ENCHANT_MATERIAL) * MAX_GRADE_MATERIALS);
+	struct PACKET_ZC_GRADE_ENCHANT_ADD_ITEM_RESULT *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_GRADE_ENCHANT_ADD_ITEM_RESULT;
+	p->PacketLength = sizeof(struct PACKET_ZC_GRADE_ENCHANT_ADD_ITEM_RESULT);
+	p->index = idx + 2;
+	p->success_chance = gi->success_chance;
+	p->blessing_info.id = gi->blessing.nameid;
+	p->blessing_info.amount = gi->blessing.amount;
+	p->blessing_info.max_blessing = gi->blessing.max_blessing;
+	p->blessing_info.bonus = gi->blessing.bonus;
+	p->protect_itemid = p->protect_amount = 0; // TODO: support these fields PACKETVER_RE_NUM >= 20200723 && PACKETVER_RE_NUM <= 20200819
+	for (int i = 0, count = 0; i < MAX_GRADE_MATERIALS; ++i) {
+		if (gi->materials[i].nameid != 0) {
+			p->material_info[count].nameid = gi->materials[i].nameid;
+			p->material_info[count].amount = gi->materials[i].amount;
+			p->material_info[count].price = gi->materials[i].zeny_cost;
+			p->material_info[count].downgrade = (gi->materials[i].failure_behavior == GRADE_FAILURE_BEHAVIOR_DOWNGRADE);
+			p->material_info[count].breakable = (gi->materials[i].failure_behavior == GRADE_FAILURE_BEHAVIOR_DESTROY);
+
+			++count;
+			p->PacketLength += sizeof(p->material_info[i]);
+		}
+	}
+	WFIFOSET(fd, p->PacketLength);
+#endif
+}
+
+static void clif_grade_enchant_add_item_result_fail(struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+	nullpo_retv(sd);
+
+	const int fd = sd->fd;
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_GRADE_ENCHANT_ADD_ITEM_RESULT));
+	struct PACKET_ZC_GRADE_ENCHANT_ADD_ITEM_RESULT *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_GRADE_ENCHANT_ADD_ITEM_RESULT;
+	p->PacketLength = sizeof(struct PACKET_ZC_GRADE_ENCHANT_ADD_ITEM_RESULT);
+	p->index = -1;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_GRADE_ENCHANT_ADD_ITEM_RESULT));
+#endif
+}
+
+static void clif_parse_grade_enchant_add_item(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
+static void clif_parse_grade_enchant_add_item(int fd, struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20191016 || PACKETVER_RE_NUM >= 20191016 || PACKETVER_ZERO_NUM >= 20191008
+	if (sd->state.grade_ui == 0)
+		return;
+
+	if (pc_cant_act_except_grade(sd))
+		return;
+
+	const struct PACKET_CZ_GRADE_ENCHANT_ADD_ITEM *p = RP2PTR(fd);
+	grader->enchant_add_item(sd, p->index - 2);
+#endif
+}
+
+static void clif_parse_grade_enchant_start(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
+static void clif_parse_grade_enchant_start(int fd, struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20191016 || PACKETVER_RE_NUM >= 20191016 || PACKETVER_ZERO_NUM >= 20191008
+	if (sd->state.grade_ui == 0)
+		return;
+
+	if (pc_cant_act_except_grade(sd))
+		return;
+
+	const struct PACKET_CZ_GRADE_ENCHANT_START *p = RP2PTR(fd);
+	grader->enchant_start(sd, p->index - 2, p->material_index, (bool)p->blessing_flag, p->blessing_amount);
+#endif
+}
+
+static void clif_grade_enchant_result(struct map_session_data *sd, int16 index, enum grade_level gl, enum grade_ui_result result)
+{
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+	nullpo_retv(sd);
+
+	const int fd = sd->fd;
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_GRADE_ENCHANT_RESULT));
+	struct PACKET_ZC_GRADE_ENCHANT_RESULT *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_GRADE_ENCHANT_RESULT;
+	p->index = index + 2;
+	p->grade = gl;
+	p->result = result;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_GRADE_ENCHANT_RESULT));
+#endif
+}
+
+static void clif_announce_grade_status(struct map_session_data *sd, int item_id, enum grade_level gl, bool success, enum send_target target)
+{
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+	nullpo_retv(sd);
+
+	struct PACKET_ZC_GRADE_STATUS p;
+	p.packetType = HEADER_ZC_GRADE_STATUS;
+	safestrncpy(p.name, sd->status.name, NAME_LENGTH);
+	p.itemId = item_id;
+	p.grade = gl;
+	p.status = (success) ? true : false;
+	clif->send(&p, sizeof(p), &sd->bl, target);
+#endif
+}
+
 /*==========================================
  * Main client packet processing function
  *------------------------------------------*/
@@ -26384,4 +26509,11 @@ void clif_defaults(void)
 	clif->macro_reporter_status = clif_macro_reporter_status;
 
 	clif->sayDialogAlign = clif_sayDialogAlign;
+	clif->pGradeEnchantAddItem = clif_parse_grade_enchant_add_item;
+	clif->pGradeEnchantStart = clif_parse_grade_enchant_start;
+	clif->pGradeEnchantClose = clif_parse_grade_enchant_close;
+	clif->grade_enchant_add_item_result_success = clif_grade_enchant_add_item_result_success;
+	clif->grade_enchant_add_item_result_fail = clif_grade_enchant_add_item_result_fail;
+	clif->grade_enchant_result = clif_grade_enchant_result;
+	clif->announce_grade_status = clif_announce_grade_status;
 }

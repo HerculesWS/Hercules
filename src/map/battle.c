@@ -7853,6 +7853,7 @@ static const struct battle_data {
 	{ "roulette_gold_step",                 &battle_config.roulette_gold_step,               10,   1,      INT_MAX,        },
 	{ "roulette_silver_step",               &battle_config.roulette_silver_step,             10,   1,      INT_MAX,        },
 	{ "roulette_bronze_step",               &battle_config.roulette_bronze_step,             1,    1,      INT_MAX,        },
+	{ "features/grader_max_used",           &battle_config.grader_max_used,                   0,    0,      MAX_ITEM_GRADE, },
 };
 
 static bool battle_set_value_sub(int index, int value)

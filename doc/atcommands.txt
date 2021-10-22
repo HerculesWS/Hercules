@@ -1592,3 +1592,15 @@ Unequip all equipped items.
 If basic parameter added, unequip only from first tab in equipment window.
 
 ---------------------------------------
+
+@gradeui
+
+Opens the Grade Enchant UI
+
+---------------------------------------
+
+@reloadgradedb
+
+Reloads the 'db/grade_db.conf' file.
+
+---------------------------------------

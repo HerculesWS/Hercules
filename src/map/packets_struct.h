@@ -5183,6 +5183,82 @@ struct PACKET_ZC_SAY_DIALOG_ALIGN {
 DEFINE_PACKET_HEADER(ZC_SAY_DIALOG_ALIGN, 0x0ba1);
 #endif  // PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103
 
+#if PACKETVER_MAIN_NUM >= 20191016 || PACKETVER_RE_NUM >= 20191016 || PACKETVER_ZERO_NUM >= 20191008
+struct PACKET_CZ_GRADE_ENCHANT_ADD_ITEM {
+	int16 PacketType;
+	int16 index;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_GRADE_ENCHANT_ADD_ITEM, 0x0b59);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+struct GRADE_ENCHANT_BLESSING {
+	int32 id;
+	int32 amount;
+	int32 max_blessing;
+	int32 bonus;
+} __attribute__((packed));
+
+struct GRADE_ENCHANT_MATERIAL {
+	int32 nameid;
+	int32 amount;
+	int32 price;
+	int32 downgrade;
+	int8 breakable;
+} __attribute__((packed));
+
+struct PACKET_ZC_GRADE_ENCHANT_ADD_ITEM_RESULT {
+	int16 PacketType;
+	int16 PacketLength;
+	int16 index;
+	int32 success_chance;
+	struct GRADE_ENCHANT_BLESSING blessing_info;
+	int32 protect_itemid; // used only for PACKETVER_RE_NUM >= 20200723 && PACKETVER_RE_NUM <= 20200819
+	int32 protect_amount; // used only for PACKETVER_RE_NUM >= 20200723 && PACKETVER_RE_NUM <= 20200819
+	struct GRADE_ENCHANT_MATERIAL material_info[];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_GRADE_ENCHANT_ADD_ITEM_RESULT, 0x0b5a);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20191016 || PACKETVER_RE_NUM >= 20191016 || PACKETVER_ZERO_NUM >= 20191008
+struct PACKET_CZ_GRADE_ENCHANT_START {
+	int16 PacketType;
+	int16 index;
+	int material_index;
+	int8 blessing_flag;
+	int blessing_amount;
+	int8 protect_flag; // used only for PACKETVER_RE_NUM >= 20200723 && PACKETVER_RE_NUM <= 20200819
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_GRADE_ENCHANT_START, 0x0b5b);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20191016 || PACKETVER_RE_NUM >= 20191016 || PACKETVER_ZERO_NUM >= 20191008
+struct PACKET_CZ_GRADE_ENCHANT_CLOSE {
+	int16 PacketType;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_GRADE_ENCHANT_CLOSE, 0x0b5c);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+struct PACKET_ZC_GRADE_ENCHANT_RESULT {
+	int16 PacketType;
+	int16 index;
+	int16 grade;
+	int result;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_GRADE_ENCHANT_RESULT, 0x0b5d);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+struct PACKET_ZC_GRADE_STATUS {
+	int16 packetType;
+	char name[NAME_LENGTH];
+	uint32 itemId;
+	int16 grade;
+	int8 status;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_GRADE_STATUS, 0x0b5e);
+#endif
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)

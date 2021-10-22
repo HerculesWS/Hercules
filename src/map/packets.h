@@ -2026,4 +2026,10 @@ packet(0x96e,clif->ackmergeitems);
 	packet(0x0ba8,clif->pNpcSelectMenuZero);
 #endif  // PACKETVER_MAIN_NUM >= 20210317 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20210317
 
+#if PACKETVER_MAIN_NUM >= 20191016 || PACKETVER_RE_NUM >= 20191016 || PACKETVER_ZERO_NUM >= 20191008
+	packet(0x0b59, clif->pGradeEnchantAddItem);
+	packet(0x0b5b, clif->pGradeEnchantStart);
+	packet(0x0b5c, clif->pGradeEnchantClose);
+#endif // PACKETVER_MAIN_NUM >= 20191016 || PACKETVER_RE_NUM >= 20191016 || PACKETVER_ZERO_NUM >= 20191008
+
 #endif /* MAP_PACKETS_H */
