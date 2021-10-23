@@ -191,14 +191,12 @@ static void rodex_remove_item(struct map_session_data *sd, int16 idx, int16 amou
 		}
 		memset(&sd->rodex.tmp.items[i], 0x0, sizeof(sd->rodex.tmp.items[0]));
 		sd->rodex.tmp.items[i].idx = -1;
-		clif->rodex_remove_item_result(sd, idx, 0);
-		return;
+	} else {
+		it->amount -= amount;
+		sd->rodex.tmp.weight -= itd->weight * amount;
 	}
 
-	it->amount -= amount;
-	sd->rodex.tmp.weight -= itd->weight * amount;
-
-	clif->rodex_remove_item_result(sd, idx, it->amount);
+	clif->rodex_remove_item_result(sd, idx, amount);
 }
 
 /// Request if character with given name exists and returns information about him
