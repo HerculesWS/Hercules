@@ -22990,6 +22990,13 @@ static void clif_parse_rodex_read_mail(int fd, struct map_session_data *sd)
 
 	const struct PACKET_CZ_REQ_READ_MAIL *rPacket = RFIFOP(fd, 0);
 
+#if PACKETVER_RE_NUM >= 20190508 || PACKETVER_MAIN_NUM >= 20190522 || PACKETVER_ZERO_NUM >= 20190529
+	// After the bulk actions were added, the deleted mails are still clickable, but they send mail_id = -1
+	// Packet dates based on tests and patch notes
+	if (rPacket->MailID == -1)
+		return;
+#endif
+
 	rodex->read_mail(sd, rPacket->MailID);
 }
 
