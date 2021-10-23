@@ -78,9 +78,6 @@ static void rodex_refresh_stamps(struct map_session_data *sd)
 /// @param amount : Amount of the item to be attached
 static void rodex_add_item(struct map_session_data *sd, int16 idx, int16 amount)
 {
-	int i;
-	bool is_stack = false;
-
 	nullpo_retv(sd);
 
 	if (idx < 0 || idx >= sd->status.inventorySize) {
@@ -101,24 +98,27 @@ static void rodex_add_item(struct map_session_data *sd, int16 idx, int16 amount)
 		return;
 	}
 
+	bool is_new = true;
+	int i;
+
+	// stackable item, try to find it in the current list
 	if (itemdb->isstackable(inv_item->nameid) == 1) {
 		for (i = 0; i < RODEX_MAX_ITEM; ++i) {
-			if (sd->rodex.tmp.items[i].idx == idx) {
-				if (inv_item->nameid == sd->rodex.tmp.items[i].item.nameid
-					&& inv_item->unique_id == sd->rodex.tmp.items[i].item.unique_id) {
-					is_stack = true;
-					break;
-				}
+			if (sd->rodex.tmp.items[i].idx == idx
+				&& inv_item->nameid == sd->rodex.tmp.items[i].item.nameid
+				&& inv_item->unique_id == sd->rodex.tmp.items[i].item.unique_id) {
+				is_new = false;
+				break;
 			}
 		}
-
-		if (i == RODEX_MAX_ITEM && sd->rodex.tmp.items_count < RODEX_MAX_ITEM) {
-			ARR_FIND(0, RODEX_MAX_ITEM, i, sd->rodex.tmp.items[i].item.id == 0);
-		}
-	} else if (sd->rodex.tmp.items_count < RODEX_MAX_ITEM) {
-		ARR_FIND(0, RODEX_MAX_ITEM, i, sd->rodex.tmp.items[i].idx == -1);
-	} else {
-		i = RODEX_MAX_ITEM;
+	}
+	
+	// item is not attached yet, find a new slot
+	if (is_new) {
+		if (sd->rodex.tmp.items_count < RODEX_MAX_ITEM)
+			ARR_FIND(0, RODEX_MAX_ITEM, i, sd->rodex.tmp.items[i].idx == -1);
+		else
+			i = RODEX_MAX_ITEM;
 	}
 
 	if (i == RODEX_MAX_ITEM) {
@@ -139,7 +139,7 @@ static void rodex_add_item(struct map_session_data *sd, int16 idx, int16 amount)
 
 	msg_slot->idx = idx;
 	sd->rodex.tmp.weight += sd->inventory_data[idx]->weight * amount;
-	if (is_stack == false) {
+	if (is_new) {
 		msg_slot->item = sd->status.inventory[idx];
 		msg_slot->item.amount = amount;
 		sd->rodex.tmp.items_count++;
