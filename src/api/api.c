@@ -266,6 +266,14 @@ static bool api_config_read_inter(const char *filename, struct config_t *config,
 	if (libconfig->setting_lookup_string(setting, "bind_ip", &str) == CONFIG_TRUE)
 		aclif->setbindip(str);
 
+	if (!api->login_ip_set) {
+		char ip_str[16];
+		sockt->ip2str(sockt->addr_[0], ip_str);
+		ShowInfo("Login ip not set, defaulting to %s as IP address\n", ip_str);
+
+		aloginif->setip(ip_str);
+	}
+
 	return true;
 }
 
