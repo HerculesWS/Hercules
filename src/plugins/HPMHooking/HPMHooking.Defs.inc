@@ -6460,6 +6460,12 @@ typedef int (*HPMHOOK_pre_pc_read_exp_db_sub) (struct config_setting_t **conf, b
 typedef int (*HPMHOOK_post_pc_read_exp_db_sub) (int retVal___, struct config_setting_t *conf, bool base);
 typedef bool (*HPMHOOK_pre_pc_read_exp_db_sub_class) (struct config_setting_t **t, bool *base);
 typedef bool (*HPMHOOK_post_pc_read_exp_db_sub_class) (bool retVal___, struct config_setting_t *t, bool base);
+typedef bool (*HPMHOOK_pre_pc_read_attr_fix_db) (void);
+typedef bool (*HPMHOOK_post_pc_read_attr_fix_db) (bool retVal___);
+typedef int (*HPMHOOK_pre_pc_read_attr_fix_db_entry) (struct config_setting_t **def_attr, enum elements *def_ele, const char **def_ele_name);
+typedef int (*HPMHOOK_post_pc_read_attr_fix_db_entry) (int retVal___, struct config_setting_t *def_attr, enum elements def_ele, const char *def_ele_name);
+typedef int (*HPMHOOK_pre_pc_read_attr_fix_db_level) (struct config_setting_t **def_lv, enum elements *def_ele, int *lv, const char **def_ele_name);
+typedef int (*HPMHOOK_post_pc_read_attr_fix_db_level) (int retVal___, struct config_setting_t *def_lv, enum elements def_ele, int lv, const char *def_ele_name);
 typedef int (*HPMHOOK_pre_pc_map_day_timer) (int *tid, int64 *tick, int *id, intptr_t *data);
 typedef int (*HPMHOOK_post_pc_map_day_timer) (int retVal___, int tid, int64 tick, int id, intptr_t data);
 typedef int (*HPMHOOK_pre_pc_map_night_timer) (int *tid, int64 *tick, int *id, intptr_t *data);

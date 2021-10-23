@@ -5036,6 +5036,12 @@ struct {
 	struct HPMHookPoint *HP_pc_read_exp_db_sub_post;
 	struct HPMHookPoint *HP_pc_read_exp_db_sub_class_pre;
 	struct HPMHookPoint *HP_pc_read_exp_db_sub_class_post;
+	struct HPMHookPoint *HP_pc_read_attr_fix_db_pre;
+	struct HPMHookPoint *HP_pc_read_attr_fix_db_post;
+	struct HPMHookPoint *HP_pc_read_attr_fix_db_entry_pre;
+	struct HPMHookPoint *HP_pc_read_attr_fix_db_entry_post;
+	struct HPMHookPoint *HP_pc_read_attr_fix_db_level_pre;
+	struct HPMHookPoint *HP_pc_read_attr_fix_db_level_post;
 	struct HPMHookPoint *HP_pc_map_day_timer_pre;
 	struct HPMHookPoint *HP_pc_map_day_timer_post;
 	struct HPMHookPoint *HP_pc_map_night_timer_pre;
@@ -12217,6 +12223,12 @@ struct {
 	int HP_pc_read_exp_db_sub_post;
 	int HP_pc_read_exp_db_sub_class_pre;
 	int HP_pc_read_exp_db_sub_class_post;
+	int HP_pc_read_attr_fix_db_pre;
+	int HP_pc_read_attr_fix_db_post;
+	int HP_pc_read_attr_fix_db_entry_pre;
+	int HP_pc_read_attr_fix_db_entry_post;
+	int HP_pc_read_attr_fix_db_level_pre;
+	int HP_pc_read_attr_fix_db_level_post;
 	int HP_pc_map_day_timer_pre;
 	int HP_pc_map_day_timer_post;
 	int HP_pc_map_night_timer_pre;
