@@ -112,10 +112,10 @@ static void rodex_add_item(struct map_session_data *sd, int16 idx, int16 amount)
 		}
 
 		if (i == RODEX_MAX_ITEM && sd->rodex.tmp.items_count < RODEX_MAX_ITEM) {
-			ARR_FIND(0, RODEX_MAX_ITEM, i, sd->rodex.tmp.items[i].idx == 0);
+			ARR_FIND(0, RODEX_MAX_ITEM, i, sd->rodex.tmp.items[i].item.id == 0);
 		}
 	} else if (sd->rodex.tmp.items_count < RODEX_MAX_ITEM) {
-		ARR_FIND(0, RODEX_MAX_ITEM, i, sd->rodex.tmp.items[i].idx == 0);
+		ARR_FIND(0, RODEX_MAX_ITEM, i, sd->rodex.tmp.items[i].idx == -1);
 	} else {
 		i = RODEX_MAX_ITEM;
 	}
@@ -188,6 +188,7 @@ static void rodex_remove_item(struct map_session_data *sd, int16 idx, int16 amou
 			sd->rodex.tmp.type &= ~MAIL_TYPE_ITEM;
 		}
 		memset(&sd->rodex.tmp.items[i], 0x0, sizeof(sd->rodex.tmp.items[0]));
+		sd->rodex.tmp.items[i].idx = -1;
 		clif->rodex_remove_item_result(sd, idx, 0);
 		return;
 	}
@@ -563,7 +564,7 @@ static void rodex_get_items(struct map_session_data *sd, int8 opentype, int64 ma
 }
 
 /// Cleans user's RoDEX related data
-/// - should be called everytime we're going to stop using rodex in this character
+/// - should be called everytime we're going to start/stop using rodex in this character
 /// @param sd : Target to clean
 /// @param flag :
 ///     0 - clear everything
@@ -577,6 +578,10 @@ static void rodex_clean(struct map_session_data *sd, int8 flag)
 
 	sd->state.workinprogress &= ~2;
 	memset(&sd->rodex.tmp, 0x0, sizeof(sd->rodex.tmp));
+
+	// idx 0 is still a valid index, set it to -1 to ensure it is not in use.
+	for (int i = 0; i < RODEX_MAX_ITEM; ++i)
+		sd->rodex.tmp.items[i].idx = -1;
 }
 
 /// User request to open rodex, load mails from char-server
