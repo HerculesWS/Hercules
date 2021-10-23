@@ -88,23 +88,24 @@ static void rodex_add_item(struct map_session_data *sd, int16 idx, int16 amount)
 		return;
 	}
 
-	if (amount < 0 || amount > sd->status.inventory[idx].amount) {
+	struct item *inv_item = &sd->status.inventory[idx];
+	if (amount < 0 || amount > inv_item->amount) {
 		clif->rodex_add_item_result(sd, idx, amount, RODEX_ADD_ITEM_FATAL_ERROR);
 		return;
 	}
 
-	if (!pc_can_give_items(sd) || sd->status.inventory[idx].expire_time ||
-		!itemdb_canmail(&sd->status.inventory[idx], pc_get_group_level(sd)) ||
-		(sd->status.inventory[idx].bound && !pc_can_give_bound_items(sd))) {
+	if (!pc_can_give_items(sd) || inv_item->expire_time
+		|| !itemdb_canmail(&sd->status.inventory[idx], pc_get_group_level(sd))
+		|| (inv_item->bound && !pc_can_give_bound_items(sd))) {
 		clif->rodex_add_item_result(sd, idx, amount, RODEX_ADD_ITEM_NOT_TRADEABLE);
 		return;
 	}
 
-	if (itemdb->isstackable(sd->status.inventory[idx].nameid) == 1) {
+	if (itemdb->isstackable(inv_item->nameid) == 1) {
 		for (i = 0; i < RODEX_MAX_ITEM; ++i) {
 			if (sd->rodex.tmp.items[i].idx == idx) {
-				if (sd->status.inventory[idx].nameid == sd->rodex.tmp.items[i].item.nameid &&
-					sd->status.inventory[idx].unique_id == sd->rodex.tmp.items[i].item.unique_id) {
+				if (inv_item->nameid == sd->rodex.tmp.items[i].item.nameid
+					&& inv_item->unique_id == sd->rodex.tmp.items[i].item.unique_id) {
 					is_stack = true;
 					break;
 				}
@@ -125,7 +126,8 @@ static void rodex_add_item(struct map_session_data *sd, int16 idx, int16 amount)
 		return;
 	}
 
-	if (sd->rodex.tmp.items[i].item.amount + amount > sd->status.inventory[idx].amount) {
+	struct rodex_item *msg_slot = &sd->rodex.tmp.items[i];
+	if (msg_slot->item.amount + amount > inv_item->amount) {
 		clif->rodex_add_item_result(sd, idx, amount, RODEX_ADD_ITEM_FATAL_ERROR);
 		return;
 	}
@@ -135,14 +137,14 @@ static void rodex_add_item(struct map_session_data *sd, int16 idx, int16 amount)
 		return;
 	}
 
-	sd->rodex.tmp.items[i].idx = idx;
+	msg_slot->idx = idx;
 	sd->rodex.tmp.weight += sd->inventory_data[idx]->weight * amount;
 	if (is_stack == false) {
-		sd->rodex.tmp.items[i].item = sd->status.inventory[idx];
-		sd->rodex.tmp.items[i].item.amount = amount;
+		msg_slot->item = sd->status.inventory[idx];
+		msg_slot->item.amount = amount;
 		sd->rodex.tmp.items_count++;
 	} else {
-		sd->rodex.tmp.items[i].item.amount += amount;
+		msg_slot->item.amount += amount;
 	}
 	sd->rodex.tmp.type |= MAIL_TYPE_ITEM;
 
