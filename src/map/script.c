@@ -26730,7 +26730,7 @@ static BUILDIN(navigateto)
 #endif
 }
 
-static bool rodex_sendmail_sub(struct script_state *st, struct rodex_message *msg)
+static bool buildin_rodex_sendmail_sub(struct script_state *st, struct rodex_message *msg)
 {
 	const char *sender_name, *title, *body;
 	const char *func_name = script->getfuncname(st);
@@ -26790,7 +26790,7 @@ static BUILDIN(rodex_sendmail)
 	int item_count = 0, i = 0, param = 7;
 
 	// Common parameters - sender/message/zeny
-	if (rodex_sendmail_sub(st, &msg) == false)
+	if (script->buildin_rodex_sendmail_sub(st, &msg) == false)
 		return false;
 
 	// Item list
@@ -26858,7 +26858,7 @@ static BUILDIN(rodex_sendmail2)
 	int item_count = 0, i = 0, param = 7;
 
 	// Common parameters - sender/message/zeny
-	if (rodex_sendmail_sub(st, &msg) == false)
+	if (script->buildin_rodex_sendmail_sub(st, &msg) == false)
 		return false;
 
 	// Item list
@@ -29395,6 +29395,7 @@ void script_defaults(void)
 	script->buildin_query_sql_sub = buildin_query_sql_sub;
 	script->buildin_instance_warpall_sub = buildin_instance_warpall_sub;
 	script->buildin_mobuseskill_sub = buildin_mobuseskill_sub;
+	script->buildin_rodex_sendmail_sub = buildin_rodex_sendmail_sub;
 	script->cleanfloor_sub = script_cleanfloor_sub;
 	script->run_func = run_func;
 	script->getfuncname = script_getfuncname;
