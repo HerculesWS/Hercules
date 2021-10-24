@@ -8636,9 +8636,9 @@ ACMD(itemlist)
 		}
 
 		if( it->refine )
-			StrBuf->Printf(&buf, "%d %s %+d (%s, id: %d)", it->amount, itd->jname, it->refine, itd->name, it->nameid);
+			StrBuf->Printf(&buf, "%d: %d %s %+d (%s, id: %d)", i, it->amount, itd->jname, it->refine, itd->name, it->nameid);
 		else
-			StrBuf->Printf(&buf, "%d %s (%s, id: %d)", it->amount, itd->jname, itd->name, it->nameid);
+			StrBuf->Printf(&buf, "%d: %d %s (%s, id: %d)", i, it->amount, itd->jname, itd->name, it->nameid);
 
 		if( it->equip ) {
 			char equipstr[CHAT_SIZE_MAX];
