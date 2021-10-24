@@ -1491,6 +1491,56 @@ static bool party_booking_delete(struct map_session_data *sd)
 	}
 	return true;
 }
+
+static bool party_is_leader(struct map_session_data *sd, const struct party_data *p)
+{
+	nullpo_retr(false, sd);
+	nullpo_retr(false, p);
+
+	int i;
+	ARR_FIND(0, MAX_PARTY, i, p->data[i].sd == sd);
+
+	if (i == MAX_PARTY || p->party.member[i].leader == 0)
+		return false;
+
+	return true;
+}
+
+void party_agency_request_join(struct map_session_data *sd, struct map_session_data *tsd)
+{
+	nullpo_retv(sd);
+
+	if (sd->status.party_id != 0) {
+		clif->adventurerAgencyResult(sd, AGENCY_PLAYER_ALREADY_IN_PARTY, sd->status.name, "");
+		return;
+	}
+
+	if (sd->party_invite_account != 0) {
+		clif->adventurerAgencyResult(sd, AGENCY_UNKNOWN_ERROR, "", "");
+		return;
+	}
+
+	if (tsd == NULL) {
+		clif->adventurerAgencyResult(sd, AGENCY_MASTER_UNABLE_ACCEPT_REQUEST, "", "");
+		return;
+	}
+
+	const struct party_data *p = party->search(tsd->status.party_id);
+	if (p == NULL) {
+		clif->adventurerAgencyResult(sd, AGENCY_PARTY_NOT_FOUND, "", "");
+		return;
+	}
+
+	// party is full: AGENCY_PARTY_NUMBER_EXCEEDED
+
+	if (!party->is_leader(tsd, p)) {
+		clif->adventurerAgencyResult(sd, AGENCY_CANT_FIND_PARTY_LEADER_DELAYED, "", "");
+		return;
+	}
+
+	clif->adventurerAgencyJoinReq(sd, tsd);
+}
+
 static void do_final_party(void)
 {
 	party->db->destroy(party->db,party->db_final);
@@ -1573,4 +1623,6 @@ void party_defaults(void)
 	party->check_state = party_check_state;
 	party->create_booking_data = create_party_booking_data;
 	party->db_final = party_db_final;
+	party->is_leader = party_is_leader;
+	party->agency_request_join = party_agency_request_join;
 }

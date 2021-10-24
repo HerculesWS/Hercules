@@ -2017,6 +2017,7 @@ packet(0x96e,clif->ackmergeitems);
 
 #if PACKETVER_MAIN_NUM >= 20171213 || PACKETVER_RE_NUM >= 20171213 || PACKETVER_ZERO_NUM >= 20171214
 	packet(0x0ae6,clif->pAdventuterAgencyJoinReq);
+	packet(0x0af8, clif->pAdventuterAgencyJoinResult);
 #endif
 
 #if PACKETVER >= 20191224

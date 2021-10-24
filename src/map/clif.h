@@ -1975,6 +1975,8 @@ struct clif_interface {
 
 	void (*pAdventuterAgencyJoinReq) (int fd, struct map_session_data *sd);
 	void (*adventurerAgencyResult) (struct map_session_data *sd, enum adventurer_agency_result result, const char *player_name, const char *party_name);
+	void (*adventurerAgencyJoinReq) (struct map_session_data *sd, struct map_session_data *tsd);
+	void (*pAdventuterAgencyJoinResult) (int fd, struct map_session_data *sd);
 };
 
 #ifdef HERCULES_CORE

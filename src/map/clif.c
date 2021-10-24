@@ -25843,25 +25843,7 @@ static void clif_parse_adventuterAgencyJoinReq(int fd, struct map_session_data *
 {
 #if PACKETVER_MAIN_NUM >= 20171213 || PACKETVER_RE_NUM >= 20171213 || PACKETVER_ZERO_NUM >= 20171214
 	const struct PACKET_CZ_ADVENTURER_AGENCY_JOIN_REQ *p = RP2PTR(fd);
-	if (sd->status.party_id != 0) {
-		clif->adventurerAgencyResult(sd, AGENCY_PLAYER_ALREADY_IN_PARTY, sd->status.name, "");
-		return;
-	}
-	if (sd->party_invite_account != 0) {
-		clif->adventurerAgencyResult(sd, AGENCY_UNKNOWN_ERROR, "", "");
-		return;
-	}
-	struct map_session_data *tsd = map->charid2sd(p->GID);
-	if (tsd == NULL) {
-		clif->adventurerAgencyResult(sd, AGENCY_MASTER_UNABLE_ACCEPT_REQUEST, "", "");
-		return;
-	}
-	if (tsd->status.party_id == 0) {
-		clif->adventurerAgencyResult(sd, AGENCY_PARTY_NOT_FOUND, "", "");
-		return;
-	}
-
-	intif->request_agency_join_party(sd->status.char_id, tsd->status.party_id, sd->mapindex);
+	party->agency_request_join(sd, map->charid2sd(p->GID));
 #endif
 }
 
@@ -25871,12 +25853,71 @@ static void clif_adventurerAgencyResult(struct map_session_data *sd, enum advent
 	nullpo_retv(sd);
 	nullpo_retv(player_name);
 	nullpo_retv(party_name);
-	struct PACKET_ZC_ADVENTURER_AGENCY_JOIN_RESULT p = {};
+	struct PACKET_ZC_ADVENTURER_AGENCY_JOIN_RESULT p = { 0 };
 	p.packetType = HEADER_ZC_ADVENTURER_AGENCY_JOIN_RESULT;
 	p.result = result;
 	safestrncpy(p.player_name, player_name, NAME_LENGTH);
 	safestrncpy(p.party_name, party_name, NAME_LENGTH);
 	clif->send(&p, sizeof(p), &sd->bl, SELF);
+#endif
+}
+
+static void clif_adventurerAgencyJoinReq(struct map_session_data *sd, struct map_session_data *tsd)
+{
+#if PACKETVER_MAIN_NUM >= 20191218 || PACKETVER_RE_NUM >= 20191211 || PACKETVER_ZERO_NUM >= 20191224
+	nullpo_retv(sd);
+	nullpo_retv(tsd);
+
+	const int fd = tsd->fd;
+	const struct party_data *p = party->search(tsd->status.party_id);
+
+	if (p == NULL)
+		return;
+
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_ADVENTURER_AGENCY_JOIN_REQ));
+	struct PACKET_ZC_ADVENTURER_AGENCY_JOIN_REQ *packet = WFIFOP(fd, 0);
+	packet->packetType = HEADER_ZC_ADVENTURER_AGENCY_JOIN_REQ;
+	packet->GRID = p->party.party_id;
+	packet->AID = sd->bl.id;
+	safestrncpy(packet->groupName, p->party.name, NAME_LENGTH);
+	packet->level = sd->status.base_level;
+	packet->job = sd->status.class;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_ADVENTURER_AGENCY_JOIN_REQ));
+#endif
+}
+
+static void clif_parse_adventuterAgencyJoinResult(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
+static void clif_parse_adventuterAgencyJoinResult(int fd, struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20191218 || PACKETVER_RE_NUM >= 20191211 || PACKETVER_ZERO_NUM >= 20191224
+	const struct PACKET_CZ_ADVENTURER_AGENCY_JOIN_RESULT *packet = RP2PTR(fd);
+
+	if (sd->status.party_id == 0 || packet->GRID != sd->status.party_id)
+		return;
+
+	const struct party_data *p = party->search(sd->status.party_id);
+	if (p == NULL || !party->is_leader(sd, p))
+		return;
+
+	struct map_session_data *tsd = map->id2sd(packet->AID);
+	if (tsd == NULL)
+		return;
+
+	if (packet->result == 0) {
+		clif->adventurerAgencyResult(tsd, AGENCY_JOIN_REJECTED, "", "");
+		return;
+	}
+
+	// Set party invite info
+	tsd->party_joining = true;
+	tsd->party_invite = sd->status.party_id;
+	tsd->party_invite_account = sd->status.account_id;
+
+	// Call char server for adding
+	struct party_member member;
+	party->fill_member(&member, tsd, 0);
+	intif->party_addmember(p->party.party_id, &member);
+	clif->adventurerAgencyResult(tsd, AGENCY_JOIN_ACCEPTED, "", "");
 #endif
 }
 
@@ -27237,4 +27278,6 @@ void clif_defaults(void)
 
 	clif->pAdventuterAgencyJoinReq = clif_parse_adventuterAgencyJoinReq;
 	clif->adventurerAgencyResult = clif_adventurerAgencyResult;
+	clif->adventurerAgencyJoinReq = clif_adventurerAgencyJoinReq;
+	clif->pAdventuterAgencyJoinResult = clif_parse_adventuterAgencyJoinResult;
 }
