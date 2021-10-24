@@ -688,6 +688,8 @@ END_ZEROED_BLOCK;
 		int tid; //< Timer to get points
 		int64 start_tick; //< tick when the timer started
 	} goldpc;
+
+	VECTOR_DECL(int) agency_requests;
 };
 
 #define EQP_WEAPON EQP_HAND_R

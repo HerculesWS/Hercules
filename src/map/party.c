@@ -1538,6 +1538,14 @@ void party_agency_request_join(struct map_session_data *sd, struct map_session_d
 		return;
 	}
 
+	int i;
+	ARR_FIND(0, VECTOR_LENGTH(tsd->agency_requests), i, VECTOR_INDEX(tsd->agency_requests, i) == sd->bl.id);
+	if (i != VECTOR_LENGTH(tsd->agency_requests)) {
+		return;
+	}
+
+	VECTOR_ENSURE(tsd->agency_requests, 1, 1);
+	VECTOR_PUSH(tsd->agency_requests, sd->bl.id);
 	clif->adventurerAgencyJoinReq(sd, tsd);
 }
 

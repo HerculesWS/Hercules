@@ -25903,6 +25903,13 @@ static void clif_parse_adventuterAgencyJoinResult(int fd, struct map_session_dat
 	if (tsd == NULL)
 		return;
 
+	int i;
+	ARR_FIND(0, VECTOR_LENGTH(sd->agency_requests), i, VECTOR_INDEX(sd->agency_requests, i) == tsd->bl.id);
+	if (i == VECTOR_LENGTH(sd->agency_requests)) {
+		return;
+	}
+	VECTOR_ERASE(sd->agency_requests, i);
+
 	if (packet->result == 0) {
 		clif->adventurerAgencyResult(tsd, AGENCY_JOIN_REJECTED, "", "");
 		return;
