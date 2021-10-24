@@ -657,6 +657,7 @@ static int party_member_withdraw(int party_id, int account_id, int char_id)
 					intif->party_leaderchange(p->party.party_id, p->party.member[k].account_id, p->party.member[k].char_id);
 					clif->party_info(p, NULL);
 				}
+				VECTOR_CLEAR(sd->agency_requests);
 			}
 		}
 	}
@@ -803,6 +804,7 @@ static bool party_changeleader(struct map_session_data *sd, struct map_session_d
 	//Update info.
 	intif->party_leaderchange(p->party.party_id,p->party.member[tmi].account_id,p->party.member[tmi].char_id);
 	clif->party_info(p,NULL);
+	VECTOR_CLEAR(sd->agency_requests);
 	return true;
 }
 
