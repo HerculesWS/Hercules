@@ -2927,6 +2927,26 @@ struct PACKET_ZC_PC_PURCHASE_MYITEMLIST {
 DEFINE_PACKET_HEADER(ZC_PC_PURCHASE_MYITEMLIST, 0x0136);
 #endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
 
+#if PACKETVER_MAIN_NUM >= 20210203
+struct PACKET_ZC_PC_PURCHASE_ITEMLIST_sub {
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+	uint32 itemId;
+#else
+	uint16 itemId;
+#endif
+	uint32 price;
+	uint32 discountPrice;
+	uint8 itemType;
+	uint16 viewSprite;
+	uint32 location;
+} __attribute__((packed));
+struct PACKET_ZC_PC_PURCHASE_ITEMLIST {
+	int16 packetType;
+	int16 packetLength;
+	struct PACKET_ZC_PC_PURCHASE_ITEMLIST_sub items[];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_PC_PURCHASE_ITEMLIST, 0x0b77)
+#else  // PACKETVER_MAIN_NUM >= 20210203
 struct PACKET_ZC_PC_PURCHASE_ITEMLIST_sub {
 	uint32 price;
 	uint32 discountPrice;
@@ -2937,12 +2957,13 @@ struct PACKET_ZC_PC_PURCHASE_ITEMLIST_sub {
 	uint16 itemId;
 #endif
 } __attribute__((packed));
-
 struct PACKET_ZC_PC_PURCHASE_ITEMLIST {
 	int16 packetType;
 	int16 packetLength;
 	struct PACKET_ZC_PC_PURCHASE_ITEMLIST_sub items[];
 } __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_PC_PURCHASE_ITEMLIST, 0x00c6)
+#endif  // PACKETVER_MAIN_NUM >= 20210203
 
 struct PACKET_CZ_PC_PURCHASE_ITEMLIST_sub {
 	uint16 amount;

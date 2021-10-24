@@ -2213,7 +2213,7 @@ static void clif_buylist(struct map_session_data *sd, struct npc_data *nd)
 	len = sizeof(struct PACKET_ZC_PC_PURCHASE_ITEMLIST) + shop_size * sizeof(struct PACKET_ZC_PC_PURCHASE_ITEMLIST_sub);
 	WFIFOHEAD(fd, len);
 	p = WFIFOP(fd, 0);
-	p->packetType = 0xc6;
+	p->packetType = HEADER_ZC_PC_PURCHASE_ITEMLIST;
 
 	c = 0;
 
@@ -2230,6 +2230,10 @@ static void clif_buylist(struct map_session_data *sd, struct npc_data *nd)
 			p->items[c].discountPrice = pc->modifybuyvalue(sd, val, id->flag.ignore_discount);
 			p->items[c].itemType = itemtype(id->type);
 			p->items[c].itemId = (id->view_id > 0) ? id->view_id : id->nameid;
+#if PACKETVER_MAIN_NUM >= 20210203
+			p->items[c].viewSprite = id->view_sprite;
+			p->items[c].location = pc->item_equippoint(sd, id);
+#endif // PACKETVER_MAIN_NUM >= 20210203
 			c++;
 		}
 	}
