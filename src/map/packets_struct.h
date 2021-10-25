@@ -3649,7 +3649,33 @@ struct PACKET_CZ_PARTY_CONFIG {
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(CZ_PARTY_CONFIG, 0x02c8);
 
-#if PACKETVER_MAIN_NUM >= 20190116 || PACKETVER_RE_NUM >= 20190116 || PACKETVER_ZERO_NUM >= 20181226
+#if PACKETVER_MAIN_NUM >= 20210203
+struct PACKET_ZC_NPC_BARTER_OPEN_sub {
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+	uint32 nameid;
+#else
+	uint16 nameid;
+#endif
+	uint8 type;
+	uint32 amount;
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+	uint32 currencyNameid;
+#else
+	uint16 currencyNameid;
+#endif
+	uint32 currencyAmount;
+	uint32 weight;
+	uint32 index;
+	uint16 viewSprite;
+	uint32 location;
+} __attribute__((packed));
+struct PACKET_ZC_NPC_BARTER_OPEN {
+	int16 packetType;
+	int16 packetLength;
+	struct PACKET_ZC_NPC_BARTER_OPEN_sub list[];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_NPC_BARTER_OPEN, 0x0b78);
+#elif PACKETVER_MAIN_NUM >= 20190116 || PACKETVER_RE_NUM >= 20190116 || PACKETVER_ZERO_NUM >= 20181226
 struct PACKET_ZC_NPC_BARTER_OPEN_sub {
 #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 nameid;
@@ -3667,13 +3693,11 @@ struct PACKET_ZC_NPC_BARTER_OPEN_sub {
 	uint32 weight;
 	uint32 index;
 } __attribute__((packed));
-
 struct PACKET_ZC_NPC_BARTER_OPEN {
 	int16 packetType;
 	int16 packetLength;
 	struct PACKET_ZC_NPC_BARTER_OPEN_sub list[];
 } __attribute__((packed));
-
 DEFINE_PACKET_HEADER(ZC_NPC_BARTER_OPEN, 0x0b0e);
 #endif
 

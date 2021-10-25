@@ -24006,6 +24006,10 @@ static void clif_npc_barter_open(struct map_session_data *sd, struct npc_data *n
 			packet->list[c].currencyAmount = shop[i].value2;
 			packet->list[c].weight = id->weight * 10;
 			packet->list[c].index = i;
+#if PACKETVER_MAIN_NUM >= 20210203
+			packet->list[c].viewSprite = id->view_sprite;
+			packet->list[c].location = pc->item_equippoint(sd, id);
+#endif  // PACKETVER_MAIN_NUM >= 20210203
 			c++;
 		}
 	}
