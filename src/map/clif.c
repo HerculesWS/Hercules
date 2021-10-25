@@ -1763,8 +1763,13 @@ static void clif_hominfo(struct map_session_data *sd, struct homun_data *hd, int
 		p.maxSp = hstatus->max_sp;
 	}
 #endif  // PACKETVER_MAIN_NUM >= 20200819 || PACKETVER_RE_NUM >= 20200723
+#if PACKETVER_MAIN_NUM >= 20210303
+	p.exp = hd->homunculus.exp;
+	p.expNext = hd->exp_next;
+#else  // PACKETVER_MAIN_NUM >= 20210303
 	p.exp = (uint32)min(hd->homunculus.exp, UINT32_MAX);
 	p.expNext = (uint32)min(hd->exp_next, UINT32_MAX);
+#endif  // PACKETVER_MAIN_NUM >= 20210303
 
 	if (hd->homunculus.level >= homun->get_max_level(hd))
 		p.expNext = 0;
