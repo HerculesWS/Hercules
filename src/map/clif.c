@@ -21631,6 +21631,9 @@ static void clif_npc_market_open(struct map_session_data *sd, struct npc_data *n
 			packet->list[c].qty    = shop[i].qty;
 			packet->list[c].type   = itemtype(id->type);
 			packet->list[c].weight = id->weight * 10;
+#if PACKETVER_MAIN_NUM >= 20210203
+			packet->list[c].location = pc->item_equippoint(sd, id);
+#endif // PACKETVER_MAIN_NUM >= 20210203
 			c++;
 		}
 	}
