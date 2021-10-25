@@ -24097,6 +24097,10 @@ static void clif_npc_expanded_barter_open(struct map_session_data *sd, struct np
 			item->weight = id->weight * 10;
 			item->index  = i;
 			item->zeny   = shop[i].value;
+#if PACKETVER_MAIN_NUM >= 20210203
+			item->viewSprite = id->view_sprite;
+			item->location = pc->item_equippoint(sd, id);
+#endif // PACKETVER_MAIN_NUM >= 20210203
 			item->currency_count = 0;
 			buf_left -= ptr_size;
 			items_count ++;

@@ -4325,7 +4325,50 @@ struct PACKET_CZ_NPC_EXPANDED_BARTER_CLOSE {
 DEFINE_PACKET_HEADER(CZ_NPC_EXPANDED_BARTER_CLOSE, 0x0b58);
 #endif
 
-#if PACKETVER_MAIN_NUM >= 20191120 || PACKETVER_RE_NUM >= 20191106 || PACKETVER_ZERO_NUM >= 20191127
+#if PACKETVER_MAIN_NUM >= 20210203
+struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN_sub2 {
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+	uint32 nameid;
+#else
+	uint16 nameid;
+#endif
+	uint16 refine_level;
+	uint32 amount;
+	uint16 type;
+} __attribute__((packed));
+
+struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN_sub {
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+	uint32 nameid;
+#else
+	uint16 nameid;
+#endif
+	uint16 type;
+	uint32 amount;
+	uint32 weight;
+	uint32 index;
+	uint32 zeny;
+	uint16 viewSprite;
+	uint32 location;
+	uint32 currency_count;
+	// Workaround for fix Visual Studio bug (error C2233). Here should be currencies[]
+	struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN_sub2 currencies[1];
+} __attribute__((packed));
+
+// Workaround check for Visual Studio bug (error C2233)
+STATIC_ASSERT(sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN_sub2[1]) ==
+	sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN_sub2),
+	"Wrong PACKET_ZC_NPC_EXPANDED_BARTER_OPEN_sub size");
+
+struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN {
+	int16 packetType;
+	int16 packetLength;
+	int32 items_count;
+	struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN_sub items[];
+} __attribute__((packed));
+
+DEFINE_PACKET_HEADER(ZC_NPC_EXPANDED_BARTER_OPEN, 0x0b79);
+#elif PACKETVER_MAIN_NUM >= 20191120 || PACKETVER_RE_NUM >= 20191106 || PACKETVER_ZERO_NUM >= 20191127
 struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN_sub2 {
 #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 nameid;
@@ -4366,7 +4409,7 @@ struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN {
 } __attribute__((packed));
 
 DEFINE_PACKET_HEADER(ZC_NPC_EXPANDED_BARTER_OPEN, 0x0b56);
-#endif
+#endif  // PACKETVER_MAIN_NUM >= 20191120 || PACKETVER_RE_NUM >= 20191106 || PACKETVER_ZERO_NUM >= 20191127
 
 #if PACKETVER_MAIN_NUM >= 20190904 || PACKETVER_RE_NUM >= 20190904 || PACKETVER_ZERO_NUM >= 20190828
 struct PACKET_CZ_NPC_EXPANDED_BARTER_PURCHASE_sub {
