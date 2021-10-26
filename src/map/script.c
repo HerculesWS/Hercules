@@ -24885,8 +24885,11 @@ static BUILDIN(npcskill)
 	return true;
 }
 
-/* Turns a player into a monster and grants SC attribute effect. [malufett/Hercules]
- * montransform <monster name/id>, <duration>, <sc type>, <val1>, <val2>, <val3>, <val4>; */
+/**
+ * Turns a player into a monster and grants SC attribute effect. [malufett/Hercules]
+ * montransform(<monster name/id>, <duration>, <sc type>, <val1>, <val2>, <val3>, <val4>);
+ * active_montransform(<monster name/id>, <duration>, <sc type>, <val1>, <val2>, <val3>, <val4>);
+ */
 static BUILDIN(montransform)
 {
 	int tick;
@@ -24949,8 +24952,13 @@ static BUILDIN(montransform)
 			return true;
 		}
 
-		status_change_end(&sd->bl, SC_MONSTER_TRANSFORM, INVALID_TIMER); // Clear previous
-		sc_start2(NULL, &sd->bl, SC_MONSTER_TRANSFORM, 100, mob_id, type, tick);
+		enum sc_type transform_type;
+		if (strcmp(script_getfuncname(st), "active_transform") == 0)
+			transform_type = SC_ACTIVE_MONSTER_TRANSFORM;
+		else
+			transform_type = SC_MONSTER_TRANSFORM;
+		status_change_end(&sd->bl, transform_type, INVALID_TIMER); // Clear previous
+		sc_start2(NULL, &sd->bl, transform_type, 100, mob_id, type, tick);
 
 		if (script_hasdata(st, 4))
 			sc_start4(NULL, &sd->bl, type, 100, val1, val2, val3, val4, tick);
@@ -28167,6 +28175,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(issit, "?"),
 
 		BUILDIN_DEF(montransform, "vi?????"), // Monster Transform [malufett/Hercules]
+		BUILDIN_DEF2(montransform, "active_transform", "vi?????"),
 
 		/* New BG Commands [Hercules] */
 		BUILDIN_DEF(bg_create_team,"sii"),
