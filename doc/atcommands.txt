@@ -1584,3 +1584,9 @@ Obs: it will reload 'db/clans.conf' too since it's included inside 'conf/clans.c
 Allow show/hide or change client camera parameters
 
 ---------------------------------------
+
+@unequipall
+
+Unequip all equipped items.
+
+---------------------------------------

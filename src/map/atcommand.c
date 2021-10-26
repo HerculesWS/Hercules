@@ -6989,6 +6989,15 @@ ACMD(changecharsex)
 	return true;
 }
 
+ACMD(unequipall)
+{
+	for (int i = 0; i < EQI_MAX; i++) {
+		if (sd->equip_index[i] >= 0)
+			pc->unequipitem(sd, sd->equip_index[i], PCUNEQUIPITEM_RECALC | PCUNEQUIPITEM_FORCE);
+	}
+	return true;
+}
+
 /*================================================
  * @mute - Mutes a player for a set amount of time
  *------------------------------------------------*/
@@ -10517,6 +10526,7 @@ static void atcommand_basecommands(void)
 		ACMD_DEF(uptime),
 		ACMD_DEF(changesex),
 		ACMD_DEF(changecharsex),
+		ACMD_DEF(unequipall),
 		ACMD_DEF(mute),
 		ACMD_DEF(refresh),
 		ACMD_DEF(refreshall),
