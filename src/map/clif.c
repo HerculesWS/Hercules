@@ -12453,6 +12453,55 @@ static void clif_parse_UnequipItem(int fd, struct map_session_data *sd)
 	pc->unequipitem(sd,index, PCUNEQUIPITEM_RECALC);
 }
 
+static void clif_parse_UnequipAllItems(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+static void clif_parse_UnequipAllItems(int fd, struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20210818 || PACKETVER_ZERO_NUM >= 20210818
+	// commented because no fields in use
+	// struct PACKET_CZ_REQ_TAKEOFF_EQUIP_ALL *p = RFIFOP(fd, 0);
+
+	if (pc_isvending(sd)) {
+		clif->unequipAllItemsAck(sd, TAKEOFF_EQUIP_ALL_FAILED);
+		return;
+	}
+
+	if (pc_isdead(sd)) {
+		clif->clearunit_area(&sd->bl,CLR_DEAD);
+		return;
+	}
+
+	if (sd->npc_id) {
+		if ((sd->npc_item_flag & ITEMENABLEDNPC_EQUIP) == 0 && sd->state.using_megaphone == 0) {
+			clif->unequipAllItemsAck(sd, TAKEOFF_EQUIP_ALL_FAILED);
+			return;
+		}
+	} else if (sd->state.storage_flag != STORAGE_FLAG_CLOSED || sd->sc.opt1) {
+		; //You can equip/unequip stuff while storage is open/under status changes
+	} else if (pc_cant_act2(sd) || sd->state.prerefining) {
+		clif->unequipAllItemsAck(sd, TAKEOFF_EQUIP_ALL_FAILED);
+		return;
+	}
+
+	pc->update_idle_time(sd, BCIDLE_USEITEM);
+
+	char command[20];
+	sprintf(command, "%cunequipall", atcommand->at_symbol);
+	atcommand->exec(sd->fd, sd, command, true);
+
+	clif->unequipAllItemsAck(sd, TAKEOFF_EQUIP_ALL_SUCCESS);
+#endif  // PACKETVER_MAIN_NUM >= 20210818 || PACKETVER_ZERO_NUM >= 20210818
+}
+
+static void clif_unequipAllItemsAck(struct map_session_data *sd, enum unequip_all result)
+{
+#if PACKETVER_MAIN_NUM >= 20210818
+	struct PACKET_ZC_TAKEOFF_EQUIP_ALL_ACK packet = {0};
+	packet.PacketType = HEADER_ZC_TAKEOFF_EQUIP_ALL_ACK;
+	packet.result = result;
+	clif->send(&packet, sizeof(struct PACKET_ZC_TAKEOFF_EQUIP_ALL_ACK), &sd->bl, SELF);
+#endif  // PACKETVER_MAIN_NUM >= 20210818
+}
+
 static void clif_parse_NpcClicked(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
 /// Request to start a conversation with an NPC (CZ_CONTACTNPC).
 /// 0090 <id>.L <type>.B
@@ -25333,6 +25382,7 @@ void clif_defaults(void)
 	clif->cart_delitem = clif_cart_delitem;
 	clif->equipitemack = clif_equipitemack;
 	clif->unequipitemack = clif_unequipitemack;
+	clif->unequipAllItemsAck = clif_unequipAllItemsAck;
 	clif->useitemack = clif_useitemack;
 	clif->addcards = clif_addcards;
 	clif->item_sub = clif_item_sub;  // look like unused
@@ -25893,6 +25943,7 @@ void clif_defaults(void)
 	clif->pUseItem = clif_parse_UseItem;
 	clif->pEquipItem = clif_parse_EquipItem;
 	clif->pUnequipItem = clif_parse_UnequipItem;
+	clif->pUnequipAllItems = clif_parse_UnequipAllItems;
 	clif->pNpcClicked = clif_parse_NpcClicked;
 	clif->pNpcBuySellSelected = clif_parse_NpcBuySellSelected;
 	clif->pNpcBuyListSend = clif_parse_NpcBuyListSend;

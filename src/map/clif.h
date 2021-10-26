@@ -667,6 +667,11 @@ enum action_type {
 	ACT_TOUCHSKILL
 };
 
+enum unequip_all {
+	TAKEOFF_EQUIP_ALL_SUCCESS = 0,
+	TAKEOFF_EQUIP_ALL_FAILED = 1
+};
+
 /**
  * Structures
  **/
@@ -862,6 +867,7 @@ struct clif_interface {
 	void (*cart_delitem) (struct map_session_data *sd,int n,int amount);
 	void (*equipitemack) (struct map_session_data *sd,int n,int pos,enum e_EQUIP_ITEM_ACK result);
 	void (*unequipitemack) (struct map_session_data *sd,int n,int pos,enum e_UNEQUIP_ITEM_ACK result);
+	void (*unequipAllItemsAck) (struct map_session_data *sd, enum unequip_all result);
 	void (*useitemack) (struct map_session_data *sd,int index,int amount,bool ok);
 	void (*addcards) (struct EQUIPSLOTINFO *buf, struct item* item);
 	void (*item_sub) (unsigned char *buf, int n, struct item *i, struct item_data *id, int equip);
@@ -1419,6 +1425,7 @@ struct clif_interface {
 	void (*pUseItem) (int fd, struct map_session_data *sd);
 	void (*pEquipItem) (int fd,struct map_session_data *sd);
 	void (*pUnequipItem) (int fd,struct map_session_data *sd);
+	void (*pUnequipAllItems) (int fd,struct map_session_data *sd);
 	void (*pNpcClicked) (int fd,struct map_session_data *sd);
 	void (*pNpcBuySellSelected) (int fd,struct map_session_data *sd);
 	void (*pNpcBuyListSend) (int fd, struct map_session_data* sd);

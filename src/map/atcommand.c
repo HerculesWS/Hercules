@@ -6991,6 +6991,24 @@ ACMD(changecharsex)
 
 ACMD(unequipall)
 {
+	if (pc_isvending(sd))
+		return false;
+
+	if (pc_isdead(sd)) {
+		clif->clearunit_area(&sd->bl,CLR_DEAD);
+		return false;
+	}
+
+	if (sd->npc_id) {
+		if ((sd->npc_item_flag & ITEMENABLEDNPC_EQUIP) == 0 && sd->state.using_megaphone == 0)
+			return false;
+	} else if (sd->state.storage_flag != STORAGE_FLAG_CLOSED || sd->sc.opt1) {
+		; //You can equip/unequip stuff while storage is open/under status changes
+	} else if (pc_cant_act2(sd) || sd->state.prerefining)
+		return false;
+
+	pc->update_idle_time(sd, BCIDLE_USEITEM);
+
 	for (int i = 0; i < EQI_MAX; i++) {
 		if (sd->equip_index[i] >= 0)
 			pc->unequipitem(sd, sd->equip_index[i], PCUNEQUIPITEM_RECALC | PCUNEQUIPITEM_FORCE);

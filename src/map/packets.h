@@ -2018,4 +2018,8 @@ packet(0x96e,clif->ackmergeitems);
 	packet(0x0b97,clif->pRodexCheckName2);
 #endif  // PACKETVER_MAIN_NUM >= 20201104 || PACKETVER_ZERO_NUM >= 20201118
 
+#if PACKETVER_MAIN_NUM >= 20210818 || PACKETVER_ZERO_NUM >= 20210818
+	packet(0x0bad,clif->pUnequipAllItems);
+#endif  // PACKETVER_MAIN_NUM >= 20210818 || PACKETVER_ZERO_NUM >= 20210818
+
 #endif /* MAP_PACKETS_H */
