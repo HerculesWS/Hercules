@@ -211,7 +211,8 @@ typedef enum c_op {
 	C_LSTR, //Language Str (struct script_code_str)
 
 	// operators
-	C_OP3, // a ? b : c
+	C_OP3_JNZ, // a ? b : c (jnz)
+	C_OP3_JMP, // a ? b : c (jmp)
 	C_LOR, // a || b
 	C_LAND, // a && b
 	C_LE, // a <= b

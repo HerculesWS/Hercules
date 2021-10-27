@@ -127,7 +127,8 @@ static const char *script_op2name(int op)
 	RETURN_OP_NAME(C_LSTR);
 
 	// operators
-	RETURN_OP_NAME(C_OP3);
+	RETURN_OP_NAME(C_OP3_JNZ);
+	RETURN_OP_NAME(C_OP3_JMP);
 	RETURN_OP_NAME(C_LOR);
 	RETURN_OP_NAME(C_LAND);
 	RETURN_OP_NAME(C_LE);
@@ -1651,7 +1652,7 @@ static const char *script_parse_subexpr(const char *p, int limit)
 	}
 	p=script->skip_space(p);
 	while((
-	   (op=C_OP3,    opl=0, len=1,*p=='?')              // ?:
+	   (op=C_OP3_JNZ,opl=0, len=1,*p=='?')              // ?:
 	|| (op=C_ADD,    opl=9, len=1,*p=='+' && p[1]!='+') // +
 	|| (op=C_SUB,    opl=9, len=1,*p=='-' && p[1]!='-') // -
 	|| (op=C_POW,    opl=11,len=2,*p=='*' && p[1]=='*') // **
@@ -1675,17 +1676,47 @@ static const char *script_parse_subexpr(const char *p, int limit)
 	|| (op=C_LT,     opl=7, len=1,*p=='<')              // <
 	) && opl>limit) {
 		p+=len;
-		if(op == C_OP3) {
-			p=script->parse_subexpr(p,-1);
-			p=script->skip_space(p);
-			if( *(p++) != ':')
-				disp_error_message("parse_subexpr: need ':'", p-1);
-			p=script->parse_subexpr(p,-1);
+		if (op == C_OP3_JNZ) {
+			// Ternary operator: given A ? B : C produces the rough equivalent of:
+			// A
+			// (op_3 jnz) jump_zero L1
+			// B
+			// (op_3 jmp) jump L2
+			// L1:
+			// C
+			// L2:
+			// (with the appropriate stack adjustments)
+			unsigned int n = (unsigned int)((intptr_t)p & 0xffffffffULL);
+			char label1[20] = "";
+			char label2[20] = "";
+			sprintf(label1, "__TR%x_JMP", n);
+			sprintf(label2, "__TR%x_FIN", n);
+			int l1 = script->add_str(label1);
+			int l2 = script->add_str(label2);
+			// (A is already parsed before this block)
+			// op_3 jnz (skip over B if A)
+			script->addl(l1);
+			script->addc(op);
+			// B
+			p = script->parse_subexpr(p, -1);
+			p = script->skip_space(p);
+			if (*(p++) != ':')
+				disp_error_message("parse_subexpr: need ':'", p - 1);
+			// op_3 jmp (skip over C)
+			script->addl(l2);
+			script->addc(C_OP3_JMP);
+			// L1:
+			script->set_label(l1, VECTOR_LENGTH(script->buf), p);
+			// C
+			p = script->parse_subexpr(p, -1);
+			p = script->skip_space(p);
+			// L2:
+			script->set_label(l2, VECTOR_LENGTH(script->buf), p);
 		} else {
-			p=script->parse_subexpr(p,opl);
+			p = script->parse_subexpr(p,opl);
+			script->addc(op);
+			p = script->skip_space(p);
 		}
-		script->addc(op);
-		p=script->skip_space(p);
 	}
 
 	return p;  /* return first untreated operator */
@@ -4298,29 +4329,58 @@ static int get_num(const struct script_buf *scriptbuf, int *pos)
 /// test ? if_true : if_false
 static void op_3(struct script_state *st, int op)
 {
-	struct script_data* data;
-	int flag = 0;
+	if (op == C_OP3_JNZ) {
+		// Top of the stack has comparison result (-2) and label (-1)
+		struct script_data *data = script_getdatatop(st, -2);
+		script->get_val(st, data);
 
-	data = script_getdatatop(st, -3);
-	script->get_val(st, data);
-
-	if (data_isstring(data)) {
-		flag = data->u.str[0]; // "" -> false
-	} else if (data_isint(data)) {
-		flag = data->u.num == 0 ? 0 : 1;// 0 -> false
+		bool jump = false;
+		if (data_isstring(data)) {
+			jump = data->u.str[0] == '\0' ? true : false;
+		} else if (data_isint(data)) {
+			jump = data->u.num == 0 ? true : false;
+		} else {
+			ShowError("script:op_3: invalid data for the ternary operator test\n");
+			script->reportdata(data);
+			script->reportsrc(st);
+			script_removetop(st, -2, 0);
+			script_pushnil(st);
+			return;
+		}
+		if (jump) {
+			data = script_getdatatop(st, -1);
+			if (!data_islabel(data)) {
+				ShowError("script:op_3: critical internal error in the ternary operator jnz label\n");
+				script->reportsrc(st);
+				script_pushnil(st);
+				st->state = END;
+				return;
+			}
+			int pos = script->conv_num(st, data);
+			script_removetop(st, -2, 0);
+			st->pos = pos;
+		} else {
+			script_removetop(st, -2, 0);
+		}
+	} else if (op == C_OP3_JMP) {
+		// Top of the stack has label (-1)
+		struct script_data* data = script_getdatatop(st, -1);
+		if (!data_islabel(data)) {
+			ShowError("script:op_3: critical internal error in the ternary operator jmp label\n");
+			script->reportsrc(st);
+			script_pushnil(st);
+			st->state = END;
+			return;
+		}
+		int pos = script->conv_num(st, data);
+		script_removetop(st, -1, 0);
+		st->pos = pos;
 	} else {
-		ShowError("script:op_3: invalid data for the ternary operator test\n");
-		script->reportdata(data);
+		ShowError("script:op3: unexpected operator %s\n", script->op2name(op));
 		script->reportsrc(st);
-		script_removetop(st, -3, 0);
 		script_pushnil(st);
-		return;
+		st->state = END;
 	}
-	if( flag )
-		script_pushcopytop(st, -2);
-	else
-		script_pushcopytop(st, -1);
-	script_removetop(st, -4, -1);
 }
 
 /// Binary string operators
@@ -5051,7 +5111,8 @@ static void run_script_main(struct script_state *st)
 				script->op_2(st, c);
 				break;
 
-			case C_OP3:
+			case C_OP3_JNZ:
+			case C_OP3_JMP:
 				script->op_3(st, c);
 				break;
 
