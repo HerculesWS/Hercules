@@ -503,6 +503,12 @@ function	script	HerculesSelfTestHelper	{
 	callsub(OnCheck, "Ternary conditional operator", .@x, 2);
 	callsub(OnCheck, "Ternary conditional operator", .@y, 3);
 
+	// Ternary conditional operator ?: (with strings)
+	.@x = ("0" ? 4 : 5); // 4
+	.@y = ("" ? 4 : 5); // 5
+	callsub(OnCheck, "Ternary conditional operator (strings)", .@x, 4);
+	callsub(OnCheck, "Ternary conditional operator (strings)", .@y, 5);
+
 	// Associativity of ?:
 	.@x = (1 ? 2 : 0 ? 3 : 4);
 	.@y = (1 ? 1 ? 2 : 3 : 5);
