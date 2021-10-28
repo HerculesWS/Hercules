@@ -9664,28 +9664,6 @@ static BUILDIN(getguildinfo)
 	return true;
 }
 
-/*==========================================
- * Return the name of the guild master of @guild_id
- * null if not found
- *------------------------------------------*/
-static BUILDIN(getguildmaster)
-{
-	int guild_id;
-	struct guild* g;
-
-	guild_id = script_getnum(st,2);
-
-	if( ( g = guild->search(guild_id) ) != NULL )
-	{
-		script_pushstrcopy(st,g->member[0].name);
-	}
-	else
-	{
-		script_pushconststr(st,"null");
-	}
-	return true;
-}
-
 static BUILDIN(getguildmasterid)
 {
 	int guild_id;
@@ -27714,7 +27692,6 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(getpartyname,"i"),
 		BUILDIN_DEF(getpartymember,"i?"),
 		BUILDIN_DEF(getpartyleader,"i?"),
-		BUILDIN_DEF_DEPRECATED(getguildmaster,"i"),
 		BUILDIN_DEF_DEPRECATED(getguildmasterid,"i"),
 		BUILDIN_DEF(getguildmember,"i?"),
 		BUILDIN_DEF(getguildinfo,"i?"),

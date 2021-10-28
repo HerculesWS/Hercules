@@ -3792,41 +3792,6 @@ Example:
 
 ---------------------------------------
 
-*getguildmaster(<guild id>)
-
-    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    @ /!\ This command is deprecated @
-    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-This function return the name of the master of the guild which has the
-specified ID number. If there is no such guild, "null" will be returned.
-
-// Would return the guild master of guild 10007, whatever that might be.
-	mes(getguildmaster(10007)+" runs " + getguildinfo(GUILDINFO_NAME, 10007));
-
-Can be used to check if the character is the guild master of the specified
-guild.
-
-Maybe you want to make a room only guild masters can enter:
-
-	.@GID = getcharid(CHAR_ID_GUILD);
-	if (.@GID == 0) {
-		mes("Sorry you are not in a guild");
-		close();
-	}
-	if (strcharinfo(PC_NAME) == getguildmaster(.@GID)) {
-		mes("Welcome guild master of " + getguildinfo(GUILDINFO_NAME, .@GID));
-		close();
-	}
-	mes("Sorry you don't own the guild you are in");
-	close();
-
-This command is deprecated and it should not be used in new scripts, as it is
-likely to be removed at a later time. Please use getguildinfo instead:
-	getguildinfo(GUILDINFO_MASTER_NAME, <guild id>)
-
----------------------------------------
-
 *getguildmasterid(<guild id>)
 
     @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
