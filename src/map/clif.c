@@ -19141,6 +19141,10 @@ static void clif_bg_hp(struct map_session_data *sd)
 		p.maxhp = sd->battle_status.max_hp;
 	}
 #endif
+#if PACKETVER_ZERO_NUM >= 20210504
+	p.sp = sd->battle_status.sp;
+	p.maxsp = sd->battle_status.max_sp;
+#endif  // PACKETVER_ZERO_NUM >= 20210504
 	clif->send(&p, sizeof(struct PACKET_ZC_BATTLEFIELD_NOTIFY_HP), &sd->bl, BG_AREA_WOS);
 }
 
