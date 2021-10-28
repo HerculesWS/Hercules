@@ -9552,6 +9552,32 @@ void HP_clif_unequipitemack(struct map_session_data *sd, int n, int pos, enum e_
 	}
 	return;
 }
+void HP_clif_unequipAllItemsAck(struct map_session_data *sd, enum unequip_all result) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_unequipAllItemsAck_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, enum unequip_all *result);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_unequipAllItemsAck_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_unequipAllItemsAck_pre[hIndex].func;
+			preHookFunc(&sd, &result);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.unequipAllItemsAck(sd, result);
+	}
+	if (HPMHooks.count.HP_clif_unequipAllItemsAck_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, enum unequip_all result);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_unequipAllItemsAck_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_unequipAllItemsAck_post[hIndex].func;
+			postHookFunc(sd, result);
+		}
+	}
+	return;
+}
 void HP_clif_useitemack(struct map_session_data *sd, int index, int amount, bool ok) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_useitemack_pre > 0) {
@@ -13219,14 +13245,14 @@ int HP_clif_hpmeter(struct map_session_data *sd) {
 	}
 	return retVal___;
 }
-void HP_clif_hpmeter_single(int fd, int id, unsigned int hp, unsigned int maxhp) {
+void HP_clif_hpmeter_single(int fd, int id, unsigned int hp, unsigned int maxhp, unsigned int sp, unsigned int maxsp) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_hpmeter_single_pre > 0) {
-		void (*preHookFunc) (int *fd, int *id, unsigned int *hp, unsigned int *maxhp);
+		void (*preHookFunc) (int *fd, int *id, unsigned int *hp, unsigned int *maxhp, unsigned int *sp, unsigned int *maxsp);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_hpmeter_single_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_clif_hpmeter_single_pre[hIndex].func;
-			preHookFunc(&fd, &id, &hp, &maxhp);
+			preHookFunc(&fd, &id, &hp, &maxhp, &sp, &maxsp);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -13234,13 +13260,13 @@ void HP_clif_hpmeter_single(int fd, int id, unsigned int hp, unsigned int maxhp)
 		}
 	}
 	{
-		HPMHooks.source.clif.hpmeter_single(fd, id, hp, maxhp);
+		HPMHooks.source.clif.hpmeter_single(fd, id, hp, maxhp, sp, maxsp);
 	}
 	if (HPMHooks.count.HP_clif_hpmeter_single_post > 0) {
-		void (*postHookFunc) (int fd, int id, unsigned int hp, unsigned int maxhp);
+		void (*postHookFunc) (int fd, int id, unsigned int hp, unsigned int maxhp, unsigned int sp, unsigned int maxsp);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_hpmeter_single_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_hpmeter_single_post[hIndex].func;
-			postHookFunc(fd, id, hp, maxhp);
+			postHookFunc(fd, id, hp, maxhp, sp, maxsp);
 		}
 	}
 	return;
@@ -22764,6 +22790,32 @@ void HP_clif_pUnequipItem(int fd, struct map_session_data *sd) {
 		void (*postHookFunc) (int fd, struct map_session_data *sd);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pUnequipItem_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_pUnequipItem_post[hIndex].func;
+			postHookFunc(fd, sd);
+		}
+	}
+	return;
+}
+void HP_clif_pUnequipAllItems(int fd, struct map_session_data *sd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_pUnequipAllItems_pre > 0) {
+		void (*preHookFunc) (int *fd, struct map_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pUnequipAllItems_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_pUnequipAllItems_pre[hIndex].func;
+			preHookFunc(&fd, &sd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.pUnequipAllItems(fd, sd);
+	}
+	if (HPMHooks.count.HP_clif_pUnequipAllItems_post > 0) {
+		void (*postHookFunc) (int fd, struct map_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pUnequipAllItems_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_pUnequipAllItems_post[hIndex].func;
 			postHookFunc(fd, sd);
 		}
 	}

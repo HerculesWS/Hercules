@@ -734,6 +734,8 @@ struct {
 	struct HPMHookPoint *HP_clif_equipitemack_post;
 	struct HPMHookPoint *HP_clif_unequipitemack_pre;
 	struct HPMHookPoint *HP_clif_unequipitemack_post;
+	struct HPMHookPoint *HP_clif_unequipAllItemsAck_pre;
+	struct HPMHookPoint *HP_clif_unequipAllItemsAck_post;
 	struct HPMHookPoint *HP_clif_useitemack_pre;
 	struct HPMHookPoint *HP_clif_useitemack_post;
 	struct HPMHookPoint *HP_clif_addcards_pre;
@@ -1746,6 +1748,8 @@ struct {
 	struct HPMHookPoint *HP_clif_pEquipItem_post;
 	struct HPMHookPoint *HP_clif_pUnequipItem_pre;
 	struct HPMHookPoint *HP_clif_pUnequipItem_post;
+	struct HPMHookPoint *HP_clif_pUnequipAllItems_pre;
+	struct HPMHookPoint *HP_clif_pUnequipAllItems_post;
 	struct HPMHookPoint *HP_clif_pNpcClicked_pre;
 	struct HPMHookPoint *HP_clif_pNpcClicked_post;
 	struct HPMHookPoint *HP_clif_pNpcBuySellSelected_pre;
@@ -7957,6 +7961,8 @@ struct {
 	int HP_clif_equipitemack_post;
 	int HP_clif_unequipitemack_pre;
 	int HP_clif_unequipitemack_post;
+	int HP_clif_unequipAllItemsAck_pre;
+	int HP_clif_unequipAllItemsAck_post;
 	int HP_clif_useitemack_pre;
 	int HP_clif_useitemack_post;
 	int HP_clif_addcards_pre;
@@ -8969,6 +8975,8 @@ struct {
 	int HP_clif_pEquipItem_post;
 	int HP_clif_pUnequipItem_pre;
 	int HP_clif_pUnequipItem_post;
+	int HP_clif_pUnequipAllItems_pre;
+	int HP_clif_pUnequipAllItems_post;
 	int HP_clif_pNpcClicked_pre;
 	int HP_clif_pNpcClicked_post;
 	int HP_clif_pNpcBuySellSelected_pre;

@@ -1144,6 +1144,8 @@ typedef void (*HPMHOOK_pre_clif_equipitemack) (struct map_session_data **sd, int
 typedef void (*HPMHOOK_post_clif_equipitemack) (struct map_session_data *sd, int n, int pos, enum e_EQUIP_ITEM_ACK result);
 typedef void (*HPMHOOK_pre_clif_unequipitemack) (struct map_session_data **sd, int *n, int *pos, enum e_UNEQUIP_ITEM_ACK *result);
 typedef void (*HPMHOOK_post_clif_unequipitemack) (struct map_session_data *sd, int n, int pos, enum e_UNEQUIP_ITEM_ACK result);
+typedef void (*HPMHOOK_pre_clif_unequipAllItemsAck) (struct map_session_data **sd, enum unequip_all *result);
+typedef void (*HPMHOOK_post_clif_unequipAllItemsAck) (struct map_session_data *sd, enum unequip_all result);
 typedef void (*HPMHOOK_pre_clif_useitemack) (struct map_session_data **sd, int *index, int *amount, bool *ok);
 typedef void (*HPMHOOK_post_clif_useitemack) (struct map_session_data *sd, int index, int amount, bool ok);
 typedef void (*HPMHOOK_pre_clif_addcards) (struct EQUIPSLOTINFO **buf, struct item **item);
@@ -1424,8 +1426,8 @@ typedef bool (*HPMHOOK_pre_clif_show_monster_hp_bar) (struct block_list **bl);
 typedef bool (*HPMHOOK_post_clif_show_monster_hp_bar) (bool retVal___, struct block_list *bl);
 typedef int (*HPMHOOK_pre_clif_hpmeter) (struct map_session_data **sd);
 typedef int (*HPMHOOK_post_clif_hpmeter) (int retVal___, struct map_session_data *sd);
-typedef void (*HPMHOOK_pre_clif_hpmeter_single) (int *fd, int *id, unsigned int *hp, unsigned int *maxhp);
-typedef void (*HPMHOOK_post_clif_hpmeter_single) (int fd, int id, unsigned int hp, unsigned int maxhp);
+typedef void (*HPMHOOK_pre_clif_hpmeter_single) (int *fd, int *id, unsigned int *hp, unsigned int *maxhp, unsigned int *sp, unsigned int *maxsp);
+typedef void (*HPMHOOK_post_clif_hpmeter_single) (int fd, int id, unsigned int hp, unsigned int maxhp, unsigned int sp, unsigned int maxsp);
 typedef int (*HPMHOOK_pre_clif_hpmeter_sub) (struct block_list **bl, va_list ap);
 typedef int (*HPMHOOK_post_clif_hpmeter_sub) (int retVal___, struct block_list *bl, va_list ap);
 typedef void (*HPMHOOK_pre_clif_upgrademessage) (int *fd, int *result, int *item_id);
@@ -2156,6 +2158,8 @@ typedef void (*HPMHOOK_pre_clif_pEquipItem) (int *fd, struct map_session_data **
 typedef void (*HPMHOOK_post_clif_pEquipItem) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_pUnequipItem) (int *fd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_pUnequipItem) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_pUnequipAllItems) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pUnequipAllItems) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_pNpcClicked) (int *fd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_pNpcClicked) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_pNpcBuySellSelected) (int *fd, struct map_session_data **sd);
