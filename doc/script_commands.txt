@@ -3792,31 +3792,6 @@ Example:
 
 ---------------------------------------
 
-*getguildname(<guild id>)
-
-    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    @ /!\ This command is deprecated @
-    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-This function returns a guild's name given an ID number. If there is no
-such guild, "null" will be returned;
-
-	// Would print whatever guild 10007 name is.
-	mes("The guild "+getguildname(10007)+" are all nice people.");
-
-	// This will do the same as above:
-	.@var = 10007;
-	mes("We have some friends in "+getguildname(.@var)+", you know.");
-
-This is used all over the WoE controlling scripts. You could also use it
-for a guild-based event.
-
-This command is deprecated and it should not be used in new scripts, as it is
-likely to be removed at a later time. Please use getguildinfo instead:
-	getguildinfo(GUILDINFO_NAME, <guild id>)
-
----------------------------------------
-
 *getguildmaster(<guild id>)
 
     @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -3827,7 +3802,7 @@ This function return the name of the master of the guild which has the
 specified ID number. If there is no such guild, "null" will be returned.
 
 // Would return the guild master of guild 10007, whatever that might be.
-	mes(getguildmaster(10007)+" runs "+getguildname(10007));
+	mes(getguildmaster(10007)+" runs " + getguildinfo(GUILDINFO_NAME, 10007));
 
 Can be used to check if the character is the guild master of the specified
 guild.
@@ -3840,7 +3815,7 @@ Maybe you want to make a room only guild masters can enter:
 		close();
 	}
 	if (strcharinfo(PC_NAME) == getguildmaster(.@GID)) {
-		mes("Welcome guild master of "+getguildname(.@GID));
+		mes("Welcome guild master of " + getguildinfo(GUILDINFO_NAME, .@GID));
 		close();
 	}
 	mes("Sorry you don't own the guild you are in");
