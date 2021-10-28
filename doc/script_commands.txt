@@ -3981,7 +3981,7 @@ These fields are associate in 'db/(pre-)re/pet_db.conf'. Valid types are:
 
 	PETINFO_ID            - Pet Database ID, stored in `pet` table to distinguish from other pets.
 	PETINFO_CLASS         - Pet class ID. (Id field)
-	PETINFO_NAME          - Pet Name, return "null" if there's no active pet.
+	PETINFO_NAME          - Pet Name, return "" if there's no active pet.
 	PETINFO_INTIMACY      - Pet Intimacy level. 1000 is full loyalty.
 	PETINFO_HUNGRY        - Pet hungry level. 100 is completely full.
 	PETINFO_RENAME        - Pet rename flag. 0 means this pet has not been named yet.
@@ -3994,7 +3994,7 @@ These fields are associate in 'db/(pre-)re/pet_db.conf'. Valid types are:
 	PETINFO_AUTOFEED      - Pet AutoFeed flag.
 
 If the invoking player doesn't own a pet, this command will
-return "null" for type PETINFO_NAME, and return 0 for other types.
+return "" for type PETINFO_NAME, and return 0 for other types.
 
 ---------------------------------------
 

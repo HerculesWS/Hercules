@@ -16931,7 +16931,7 @@ static BUILDIN(getpetinfo)
 	int type = script_getnum(st, 2);
 	if (pd == NULL) {
 		if (type == PETINFO_NAME)
-			script_pushconststr(st, "null");
+			script_pushconststr(st, "");
 		else
 			script_pushint(st, 0);
 		return true;
