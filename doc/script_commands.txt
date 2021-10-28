@@ -8225,26 +8225,6 @@ without event labels. If specified name is not found, command does nothing.
 
 ---------------------------------------
 
-*misceffect(<effect number>)
-
-    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    @ /!\ This command is deprecated @
-    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-This command, if run from an NPC object that has a sprite, will call up a
-specified effect number, centered on the NPC sprite. If the running code
-does not have an object ID (a 'floating' NPC) or is not running from an
-NPC object at all (an item script) the effect will be centered on the
-character who's RID got attached to the script, if any. For usable item
-scripts, this command will create an effect centered on the player using
-the item.
-
-This command is deprecated and it should not be used in new scripts, as it is
-likely to be removed at a later time. Please use specialeffect instead,
-ie: specialeffect(<effect number>, <send target>, <unit id>)
-
----------------------------------------
-
 *soundeffect("<effect filename>", <type>)
 *soundeffectall("<effect filename>", <type>{, "<map name>"}{, <x0>, <y0>, <x1>, <y1>})
 

@@ -16245,25 +16245,6 @@ static BUILDIN(classchange)
 }
 
 /*==========================================
- * Display an effect
- *------------------------------------------*/
-static BUILDIN(misceffect)
-{
-	int type;
-
-	type=script_getnum(st,2);
-	if(st->oid && st->oid != npc->fake_nd->bl.id) {
-		struct block_list *bl = map->id2bl(st->oid);
-		if (bl)
-			clif->specialeffect(bl,type,AREA);
-	} else {
-		struct map_session_data *sd = script->rid2sd(st);
-		if (sd != NULL)
-			clif->specialeffect(&sd->bl,type,AREA);
-	}
-	return true;
-}
-/*==========================================
  * Play a BGM on a single client [Rikter/Yommy]
  *------------------------------------------*/
 static BUILDIN(playbgm)
@@ -27722,7 +27703,6 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(getskilllist,""),
 		BUILDIN_DEF(clearitem,""),
 		BUILDIN_DEF(classchange,"ii?"),
-		BUILDIN_DEF_DEPRECATED(misceffect,"i"),
 		BUILDIN_DEF(playbgm,"s"),
 		BUILDIN_DEF(playbgmall,"s?????"),
 		BUILDIN_DEF(soundeffect,"si"),
