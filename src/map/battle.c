@@ -606,6 +606,8 @@ static int64 battle_calc_base_damage2(struct status_data *st, struct weapon_atk 
 	nullpo_retr(damage, st);
 	nullpo_retr(damage, wa);
 	if (!sd) { //Mobs/Pets
+		if (sc != NULL && sc->data[SC_HLIF_CHANGE] != NULL)
+			return st->matk_max; // [Aegis] simply uses raw max matk for base damage when Mental Charge active
 		if(flag&4) {
 			atkmin = st->matk_min;
 			atkmax = st->matk_max;
