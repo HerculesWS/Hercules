@@ -6501,26 +6501,6 @@ Examples:
 
 ---------------------------------------
 
-*pcblockmove(<account id>, <option>)
-
-    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    @ /!\ This command is deprecated @
-    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-Prevents the player from moving when the option != 0, and 0 enables the
-player to move again. The player has to be the account ID of a character,
-and will run for the attached player if zero is supplied.
-
-Examples:
-
-// Prevents the current char from moving away.
-	pcblockmove(getcharid(CHAR_ID_ACCOUNT), true);
-
-// Enables the current char to move again.
-	pcblockmove(getcharid(CHAR_ID_ACCOUNT), false);
-
----------------------------------------
-
 *setpcblock(<type>, <option>{, <account id>})
 *checkpcblock({<account id>})
 

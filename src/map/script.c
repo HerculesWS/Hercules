@@ -19905,30 +19905,6 @@ static BUILDIN(rid2name)
 	return true;
 }
 
-static BUILDIN(pcblockmove)
-{
-	int id, flag;
-	struct map_session_data *sd = NULL;
-
-	id = script_getnum(st,2);
-	flag = script_getnum(st,3);
-
-	if (id != 0)
-		sd = script->id2sd(st, id);
-	else
-		sd = script->rid2sd(st);
-
-	if (!sd)
-		return true;
-
-	if (flag)
-		sd->block_action.move = 1;
-	else
-		sd->block_action.move = 0;
-
-	return true;
-}
-
 static BUILDIN(setpcblock)
 {
 	struct map_session_data *sd = script_hasdata(st, 4) ? script->id2sd(st, script_getnum(st, 4)) : script->rid2sd(st);
@@ -27939,7 +27915,6 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(rid2name,"i"),
 		BUILDIN_DEF(pcfollow,"ii"),
 		BUILDIN_DEF(pcstopfollow,"i"),
-		BUILDIN_DEF_DEPRECATED(pcblockmove,"ii"), // Deprecated 2018-05-04
 		BUILDIN_DEF(setpcblock, "ii?"),
 		BUILDIN_DEF(checkpcblock, "?"),
 		// <--- [zBuffer] List of player cont commands
