@@ -3383,11 +3383,6 @@ static void clif_guild_xy_remove(struct map_session_data *sd)
  *------------------------------------------*/
 static int clif_hpmeter_sub(struct block_list *bl, va_list ap)
 {
-#if PACKETVER < 20100126
-	const int cmd = 0x106;
-#else
-	const int cmd = 0x80e;
-#endif
 	struct map_session_data *sd = va_arg(ap, struct map_session_data *);
 	struct map_session_data *tsd = BL_CAST(BL_PC, bl);
 
@@ -3399,23 +3394,8 @@ static int clif_hpmeter_sub(struct block_list *bl, va_list ap)
 
 	if( !pc_has_permission(tsd, PC_PERM_VIEW_HPMETER) )
 		return 0;
-	WFIFOHEAD(tsd->fd,packet_len(cmd));
-	WFIFOW(tsd->fd,0) = cmd;
-	WFIFOL(tsd->fd,2) = sd->status.account_id;
-#if PACKETVER < 20100126
-	if( sd->battle_status.max_hp > INT16_MAX )
-	{ //To correctly display the %hp bar. [Skotlex]
-		WFIFOW(tsd->fd,6) = sd->battle_status.hp/(sd->battle_status.max_hp/100);
-		WFIFOW(tsd->fd,8) = 100;
-	} else {
-		WFIFOW(tsd->fd,6) = sd->battle_status.hp;
-		WFIFOW(tsd->fd,8) = sd->battle_status.max_hp;
-	}
-#else
-	WFIFOL(tsd->fd,6) = sd->battle_status.hp;
-	WFIFOL(tsd->fd,10) = sd->battle_status.max_hp;
-#endif
-	WFIFOSET(tsd->fd,packet_len(cmd));
+
+	clif->hpmeter_single(tsd->fd, sd->status.account_id, sd->battle_status.hp, sd->battle_status.max_hp); 
 	return 0;
 }
 
@@ -7630,7 +7610,7 @@ static void clif_party_hp(struct map_session_data *sd)
 	struct PACKET_ZC_NOTIFY_HP_TO_GROUPM p = {0};
 	p.PacketType = HEADER_ZC_NOTIFY_HP_TO_GROUPM;
 	p.AID = sd->status.account_id;
-#if PACKETVER < 20100126
+#if PACKETVER < 20100119
 	if (sd->battle_status.max_hp > INT16_MAX) { //To correctly display the %hp bar. [Skotlex]
 		p.hp = sd->battle_status.hp/(sd->battle_status.max_hp/100);
 		p.maxhp = 100;
@@ -7650,28 +7630,24 @@ static void clif_party_hp(struct map_session_data *sd)
  *------------------------------------------*/
 static void clif_hpmeter_single(int fd, int id, unsigned int hp, unsigned int maxhp)
 {
-#if PACKETVER < 20100126
-	const int cmd = 0x106;
-#else
-	const int cmd = 0x80e;
-#endif
-	WFIFOHEAD(fd,packet_len(cmd));
-	WFIFOW(fd,0) = cmd;
-	WFIFOL(fd,2) = id;
-#if PACKETVER < 20100126
-	if( maxhp > INT16_MAX )
-	{// To correctly display the %hp bar. [Skotlex]
-		WFIFOW(fd,6) = hp/(maxhp/100);
-		WFIFOW(fd,8) = 100;
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_NOTIFY_HP_TO_GROUPM));
+	struct PACKET_ZC_NOTIFY_HP_TO_GROUPM *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_NOTIFY_HP_TO_GROUPM;
+	p->AID = id;
+#if PACKETVER < 20100119
+	if (maxhp > INT16_MAX) { //To correctly display the %hp bar. [Skotlex]
+		p->hp = hp / (maxhp / 100);
+		p->maxhp = 100;
 	} else {
-		WFIFOW(fd,6) = hp;
-		WFIFOW(fd,8) = maxhp;
+		p->hp = hp;
+		p->maxhp = maxhp;
 	}
 #else
-	WFIFOL(fd,6) = hp;
-	WFIFOL(fd,10) = maxhp;
+	p->hp = hp;
+	p->maxhp = maxhp;
 #endif
-	WFIFOSET(fd, packet_len(cmd));
+
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_NOTIFY_HP_TO_GROUPM));
 }
 
 /// Notifies the client, that it's attack target is too far (ZC_ATTACK_FAILURE_FOR_DISTANCE).

@@ -5046,23 +5046,23 @@ struct PACKET_ZC_NOTIFY_POSITION_TO_GROUPM {
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(ZC_NOTIFY_POSITION_TO_GROUPM, 0x0107);
 
-#if PACKETVER < 20100126
+#if PACKETVER >= 20100119
 struct PACKET_ZC_NOTIFY_HP_TO_GROUPM {
 	int16 PacketType;
-	int AID;
-	int16 hp;
-	int16 maxhp;
-} __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_NOTIFY_HP_TO_GROUPM, 0x0106);
-#else
-struct PACKET_ZC_NOTIFY_HP_TO_GROUPM {
-	int16 PacketType;
-	int AID;
+	uint32 AID;
 	int hp;
 	int maxhp;
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(ZC_NOTIFY_HP_TO_GROUPM, 0x080e);
-#endif
+#else  // PACKETVER >= 20100119
+struct PACKET_ZC_NOTIFY_HP_TO_GROUPM {
+	int16 PacketType;
+	uint32 AID;
+	int16 hp;
+	int16 maxhp;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_NOTIFY_HP_TO_GROUPM, 0x0106);
+#endif  // PACKETVER >= 20100119
 
 #if PACKETVER_MAIN_NUM >= 20170502 || PACKETVER_RE_NUM >= 20170419 || defined(PACKETVER_ZERO)
 struct PACKET_ZC_PARTY_MEMBER_JOB_LEVEL {
