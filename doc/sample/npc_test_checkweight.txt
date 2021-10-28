@@ -43,7 +43,7 @@ prontera,161,181,6	script	ChkSpace	4_M_JPN,{
 	.@ret = checkweight(Apple, 0);
 	.@success += ChkResult(.@testid++, 0, .@ret); //should be failure invalid amount
 
-	debugmes "End backward test";
+	consolemes(CONSOLEMES_DEBUG, "End backward test");
 	FinalReport(.@testid, .@succes);
 
 	//update using list test
@@ -77,7 +77,7 @@ prontera,161,181,6	script	ChkSpace	4_M_JPN,{
 	.@ret = checkweight(Apple, 1, Banana, 1, Grape, 1, Carrot, 1);
 	.@success += ChkResult(.@testid++, 1, .@ret); //should be sucess
 
-	debugmes "End update by list tests";
+	consolemes(CONSOLEMES_DEBUG, "End update by list tests");
 	FinalReport(.@testid, .@succes);
 
 	//update using array tests
@@ -134,7 +134,7 @@ prontera,161,181,6	script	ChkSpace	4_M_JPN,{
 	.@ret = checkweight2(.@item, .@count);
 	.@success += ChkResult(.@testid++, 0, .@ret); //should be failure, size mistmatch
 
-	debugmes "End update by array tests";
+	consolemes(CONSOLEMES_DEBUG, "End update by array tests");
 	FinalReport(.@testid, .@succes);
 
 	end;
@@ -143,16 +143,18 @@ prontera,161,181,6	script	ChkSpace	4_M_JPN,{
 		.@tid = getarg(0);
 		.@expected = getarg(1);
 		.@ret = getarg(2);
-		.@sucess = (.@ret==.@expected);
-		debugmes "Test "+.@tid+" = "+(.@sucess?"Sucess":"Fail");
-		return .@sucess;
+		.@success = (.@ret==.@expected);
+		consolemes(CONSOLEMES_DEBUG, "Test %d = %s", .@tid, .@success ? "Success" : "Failure");
+		return .@success;
 	}
 
 	function FinalReport {
 		.@tdone = getarg(0);
-		.@succes = getarg(1);
-		debugmes "Results = Pass : "+.@succes+"/"+.@tdone+" Fails : "+(.@tdone-.@succes)+"/"+.@tdone;
-		if(.@succes != .@tdone) { debugmes "Some failure as occured, enable chkresult print to found out"; }
+		.@success = getarg(1);
+		consolemes(CONSOLEMES_DEBUG, "Results = Pass : %d/%d Fails : %d/%d", .@succes, .@tdone, .@tdone - .@success, .@tdone);
+		if (.@success != .@tdone) {
+			consolemes(CONSOLEMES_DEBUG, "Some failure as occured, enable chkresult print to found out");
+		}
 		return;
 	}
 }

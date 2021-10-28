@@ -59,7 +59,7 @@ function	script	setmes2	{
 	.@mes2_text$  = getarg(2);
 	.@mes2_var$   = "$@__"+ .@mes2_name$ +"_"+ .@mes2_langid +"$";
 
-	//debugmes "setmes2 \""+ .@mes2_var$ +"\", \""+ .@mes2_text$ +"\";";
+	//consolemes(CONSOLEMES_DEBUG, "setmes2 \"%s\", \"%s\";", .@mes2_var$, .@mes2_text$);
 
 	// set the localized text
 	setd .@mes2_var$, .@mes2_text$;
@@ -78,7 +78,7 @@ function	script	getmes2	{
 	.@mes2_var$   = "$@__"+ .@mes2_name$ +"_"+ .@mes2_langid +"$";
 	.@mes2_text$  = getd(.@mes2_var$);
 
-	//debugmes "getmes2(\""+ .@mes2_var$ +"\")=\""+ .@mes2_text$ +"\"";
+	//consolemes(CONSOLEMES_DEBUG, "getmes2(\"%s\")=\"%s\"", .@mes2_var$, .@mes2_text$);
 
 	return .@mes2_text$;
 }
