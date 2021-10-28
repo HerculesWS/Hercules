@@ -3998,30 +3998,6 @@ return "" for type PETINFO_NAME, and return 0 for other types.
 
 ---------------------------------------
 
-*petstat(<flag>)
-
-    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    @ /!\ This command is deprecated @
-    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-Returns current pet status, all are integers except name.
-Returns 0 or "" if the player doesn't have pets.
-
-Flags usable:
-PET_CLASS
-PET_NAME
-PET_LEVEL
-PET_HUNGRY
-PET_INTIMATE
-
-Example:
-	.@i = petstat(PET_CLASS);
-
-This command is deprecated and it should not be used in new scripts, as it is
-likely to be removed at a later time. Please use 'getpetinfo' instead.
-
----------------------------------------
-
 *getmonsterinfo(<mob ID>, <type>)
 
 This function will look up the monster with the specified ID number in the
