@@ -19123,43 +19123,25 @@ static void clif_readbook(int fd, int book_id, int page)
 /// 0a0e <account id>.L <hp>.L <max hp>.L (ZC_BATTLEFIELD_NOTIFY_HP2)
 static void clif_bg_hp(struct map_session_data *sd)
 {
-	unsigned char buf[34];
-
-// packet version can be wrong, because inconsistend data in other servers. From packets table it start from 20140312 [4144]
-#if PACKETVER < 20140613
-	const int cmd = 0x2e0;
 	nullpo_retv(sd);
 
-	WBUFW(buf, 0) = cmd;
-	WBUFL(buf, 2) = sd->status.account_id;
-	memcpy(WBUFP(buf, 6), sd->status.name, NAME_LENGTH);
+	struct PACKET_ZC_BATTLEFIELD_NOTIFY_HP p = {0};
+	p.PacketType = HEADER_ZC_BATTLEFIELD_NOTIFY_HP;
 
-	if (sd->battle_status.max_hp > INT16_MAX)
-	{ // To correctly display the %hp bar. [Skotlex]
-		WBUFW(buf, 30) = sd->battle_status.hp / (sd->battle_status.max_hp / 100);
-		WBUFW(buf, 32) = 100;
-	}
-	else
-	{
-		WBUFW(buf, 30) = sd->battle_status.hp;
-		WBUFW(buf, 32) = sd->battle_status.max_hp;
-	}
+#if PACKETVER >= 20140312
+	p.hp = sd->battle_status.hp;
+	p.maxhp = sd->battle_status.max_hp;
 #else
-	const int cmd = 0xa0e;
-	nullpo_retv(sd);
-
-	WBUFW(buf, 0) = cmd;
-	WBUFL(buf, 2) = sd->status.account_id;
-	if (sd->battle_status.max_hp > INT32_MAX) {
-		WBUFL(buf, 6) = sd->battle_status.hp / (sd->battle_status.max_hp / 100);
-		WBUFL(buf, 10) = 100;
+	memcpy(p.name, sd->status.name, NAME_LENGTH);
+	if (sd->battle_status.max_hp > INT16_MAX) {
+		p.hp = sd->battle_status.hp / (sd->battle_status.max_hp / 100);
+		p.maxhp = 100;
 	} else {
-		WBUFL(buf, 6) = sd->battle_status.hp;
-		WBUFL(buf, 10) = sd->battle_status.max_hp;
+		p.hp = sd->battle_status.hp;
+		p.maxhp = sd->battle_status.max_hp;
 	}
 #endif
-
-	clif->send(buf, packet_len(cmd), &sd->bl, BG_AREA_WOS);
+	clif->send(&p, sizeof(struct PACKET_ZC_BATTLEFIELD_NOTIFY_HP), &sd->bl, BG_AREA_WOS);
 }
 
 /// Updates the position of a camp member on the minimap (ZC_BATTLEFIELD_NOTIFY_POSITION).

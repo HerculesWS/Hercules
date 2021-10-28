@@ -5107,6 +5107,25 @@ struct PACKET_ZC_TAKEOFF_EQUIP_ALL_ACK {
 DEFINE_PACKET_HEADER(ZC_TAKEOFF_EQUIP_ALL_ACK, 0x0bae);
 #endif  // PACKETVER_MAIN_NUM >= 20210818
 
+#if PACKETVER >= 20140312
+struct PACKET_ZC_BATTLEFIELD_NOTIFY_HP {
+	int16 PacketType;
+	uint32 AID;
+	int hp;
+	int maxhp;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_BATTLEFIELD_NOTIFY_HP, 0x0a0e);
+#elif PACKETVER >= 20071009
+struct PACKET_ZC_BATTLEFIELD_NOTIFY_HP {
+	int16 PacketType;
+	uint32 AID;
+	char name[NAME_LENGTH];
+	int16 hp;
+	int16 maxhp;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_BATTLEFIELD_NOTIFY_HP, 0x02e0);
+#endif  // PACKETVER >= 20071009
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
