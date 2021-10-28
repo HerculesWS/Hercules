@@ -19405,32 +19405,6 @@ static BUILDIN(getd)
 }
 
 // <--- [zBuffer] List of dynamic var commands
-// Pet stat [Lance]
-static BUILDIN(petstat)
-{
-	struct pet_data *pd;
-	int flag = script_getnum(st,2);
-	struct map_session_data *sd = script->rid2sd(st);
-	if (sd == NULL || sd->status.pet_id == 0 || sd->pd == NULL) {
-		if(flag == 2)
-			script_pushconststr(st, "");
-		else
-			script_pushint(st,0);
-		return true;
-	}
-	pd = sd->pd;
-	switch(flag) {
-		case 1: script_pushint(st,(int)pd->pet.class_); break;
-		case 2: script_pushstrcopy(st, pd->pet.name); break;
-		case 3: script_pushint(st,(int)pd->pet.level); break;
-		case 4: script_pushint(st,(int)pd->pet.hungry); break;
-		case 5: script_pushint(st,(int)pd->pet.intimate); break;
-		default:
-			script_pushint(st,0);
-			break;
-	}
-	return true;
-}
 
 static BUILDIN(callshop)
 {
@@ -27957,7 +27931,6 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(getd,"s"),
 		BUILDIN_DEF(setd,"sv"),
 		// <--- [zBuffer] List of dynamic var commands
-		BUILDIN_DEF_DEPRECATED(petstat, "i"), // Deprecated 2019-03-11
 		BUILDIN_DEF(callshop,"s?"), // [Skotlex]
 		BUILDIN_DEF(npcshopitem,"sii*"), // [Lance]
 		BUILDIN_DEF(npcshopadditem,"sii*"),
