@@ -16710,23 +16710,6 @@ static BUILDIN(specialeffectnum)
 	return true;
 }
 
-static BUILDIN(specialeffect2)
-{
-	struct map_session_data *sd;
-	int type = script_getnum(st,2);
-	enum send_target target = script_hasdata(st,3) ? (send_target)script_getnum(st,3) : AREA;
-
-	if (script_hasdata(st,4))
-		sd = script->nick2sd(st, script_getstr(st,4));
-	else
-		sd = script->rid2sd(st);
-
-	if (sd != NULL)
-		clif->specialeffect(&sd->bl, type, target);
-
-	return true;
-}
-
 static BUILDIN(removespecialeffect)
 {
 	struct block_list *bl = NULL;
@@ -27834,7 +27817,6 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(specialeffect,"i???"), // npc skill effect [Valaris]
 		BUILDIN_DEF(specialeffectnum,"iii???"), // npc skill effect with num [4144]
 		BUILDIN_DEF(removespecialeffect,"i???"),
-		BUILDIN_DEF_DEPRECATED(specialeffect2,"i??"), // skill effect on players[Valaris]
 		BUILDIN_DEF(nude,""), // nude command [Valaris]
 		BUILDIN_DEF(mapwarp,"ssii??"), // Added by RoVeRT
 		BUILDIN_DEF(atcommand,"s"), // [MouseJstr]

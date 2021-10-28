@@ -6267,21 +6267,6 @@ Examples and detailed explanation about parameters see in specialeffect.
 
 ---------------------------------------
 
-*specialeffect2(<effect number>{, <send_target>{, "<Player Name>"}})
-
-    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    @ /!\ This command is deprecated @
-    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-This command behaves identically to the specialeffect(), but the effect
-will be centered on the invoking character's sprite.
-
-This command is deprecated and it should not be used in new scripts, as it is
-likely to be removed at a later time. Please use specialeffect instead,
-ie: specialeffect(<effect number>, <send_target>, playerattached())
-
----------------------------------------
-
 *statusup(<stat>)
 
 This command will bump a specified stat of the invoking character up by
