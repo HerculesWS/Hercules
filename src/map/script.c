@@ -9664,24 +9664,6 @@ static BUILDIN(getguildinfo)
 	return true;
 }
 
-static BUILDIN(getguildmasterid)
-{
-	int guild_id;
-	struct guild* g;
-
-	guild_id = script_getnum(st,2);
-
-	if( ( g = guild->search(guild_id) ) != NULL )
-	{
-		script_pushint(st,g->member[0].char_id);
-	}
-	else
-	{
-		script_pushint(st,0);
-	}
-	return true;
-}
-
 /*==========================================
  * Get the information of the members of a guild by type.
  * getguildmember <guild_id>{,<type>};
@@ -27692,7 +27674,6 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(getpartyname,"i"),
 		BUILDIN_DEF(getpartymember,"i?"),
 		BUILDIN_DEF(getpartyleader,"i?"),
-		BUILDIN_DEF_DEPRECATED(getguildmasterid,"i"),
 		BUILDIN_DEF(getguildmember,"i?"),
 		BUILDIN_DEF(getguildinfo,"i?"),
 		BUILDIN_DEF(getguildonline, "i?"),
