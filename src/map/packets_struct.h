@@ -5046,7 +5046,17 @@ struct PACKET_ZC_NOTIFY_POSITION_TO_GROUPM {
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(ZC_NOTIFY_POSITION_TO_GROUPM, 0x0107);
 
-#if PACKETVER >= 20100119
+#if PACKETVER_ZERO_NUM >= 20210504
+struct PACKET_ZC_NOTIFY_HP_TO_GROUPM {
+	int16 PacketType;
+	uint32 AID;
+	int hp;
+	int maxhp;
+	int sp;
+	int maxsp;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_NOTIFY_HP_TO_GROUPM, 0x0bab);
+#elif PACKETVER >= 20100119
 struct PACKET_ZC_NOTIFY_HP_TO_GROUPM {
 	int16 PacketType;
 	uint32 AID;

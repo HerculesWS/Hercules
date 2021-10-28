@@ -1015,7 +1015,7 @@ struct clif_interface {
 	void (*monster_hp_bar) (struct mob_data *md, struct map_session_data *sd);
 	bool (*show_monster_hp_bar) (struct block_list *bl);
 	int (*hpmeter) (struct map_session_data *sd);
-	void (*hpmeter_single) (int fd, int id, unsigned int hp, unsigned int maxhp);
+	void (*hpmeter_single) (int fd, int id, unsigned int hp, unsigned int maxhp, unsigned int sp, unsigned int maxsp);
 	int (*hpmeter_sub) (struct block_list *bl, va_list ap);
 	void (*upgrademessage) (int fd, int result, int item_id);
 	void (*get_weapon_view) (struct map_session_data* sd, int *rhand, int *lhand);

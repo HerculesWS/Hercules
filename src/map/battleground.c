@@ -132,7 +132,7 @@ static bool bg_team_join(int bg_id, struct map_session_data *sd)
 	for( i = 0; i < MAX_BG_MEMBERS; i++ ) {
 		struct map_session_data *pl_sd = bgd->members[i].sd;
 		if (pl_sd != NULL && pl_sd != sd)
-			clif->hpmeter_single(sd->fd, pl_sd->bl.id, pl_sd->battle_status.hp, pl_sd->battle_status.max_hp);
+			clif->hpmeter_single(sd->fd, pl_sd->bl.id, pl_sd->battle_status.hp, pl_sd->battle_status.max_hp, pl_sd->battle_status.sp, pl_sd->battle_status.max_sp);
 	}
 
 	clif->bg_hp(sd);

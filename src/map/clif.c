@@ -3395,7 +3395,7 @@ static int clif_hpmeter_sub(struct block_list *bl, va_list ap)
 	if( !pc_has_permission(tsd, PC_PERM_VIEW_HPMETER) )
 		return 0;
 
-	clif->hpmeter_single(tsd->fd, sd->status.account_id, sd->battle_status.hp, sd->battle_status.max_hp); 
+	clif->hpmeter_single(tsd->fd, sd->status.account_id, sd->battle_status.hp, sd->battle_status.max_hp, sd->battle_status.sp, sd->battle_status.max_sp); 
 	return 0;
 }
 
@@ -4829,8 +4829,9 @@ static void clif_getareachar_pc(struct map_session_data *sd, struct map_session_
 	if( (sd->status.party_id && dstsd->status.party_id == sd->status.party_id) || //Party-mate, or hpdisp setting.
 		(sd->bg_id && sd->bg_id == dstsd->bg_id) || //BattleGround
 		pc_has_permission(sd, PC_PERM_VIEW_HPMETER)
-	)
-		clif->hpmeter_single(sd->fd, dstsd->bl.id, dstsd->battle_status.hp, dstsd->battle_status.max_hp);
+	) {
+		clif->hpmeter_single(sd->fd, dstsd->bl.id, dstsd->battle_status.hp, dstsd->battle_status.max_hp, dstsd->battle_status.sp, dstsd->battle_status.max_sp);
+	}
 
 	// display link (sd - dstsd) to sd
 	ARR_FIND( 0, MAX_PC_DEVOTION, i, sd->devotion[i] == dstsd->bl.id );
@@ -7622,13 +7623,17 @@ static void clif_party_hp(struct map_session_data *sd)
 	p.hp = sd->battle_status.hp;
 	p.maxhp = sd->battle_status.max_hp;
 #endif
+#if PACKETVER_ZERO_NUM >= 20210504
+	p.sp = sd->battle_status.sp;
+	p.maxsp = sd->battle_status.max_sp;
+#endif  // PACKETVER_ZERO_NUM >= 20210504
 	clif->send(&p, sizeof(struct PACKET_ZC_NOTIFY_HP_TO_GROUPM), &sd->bl, PARTY_AREA_WOS);
 }
 
 /*==========================================
  * Sends HP bar to a single fd. [Skotlex]
  *------------------------------------------*/
-static void clif_hpmeter_single(int fd, int id, unsigned int hp, unsigned int maxhp)
+static void clif_hpmeter_single(int fd, int id, unsigned int hp, unsigned int maxhp, unsigned int sp, unsigned int maxsp)
 {
 	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_NOTIFY_HP_TO_GROUPM));
 	struct PACKET_ZC_NOTIFY_HP_TO_GROUPM *p = WFIFOP(fd, 0);
@@ -7646,7 +7651,10 @@ static void clif_hpmeter_single(int fd, int id, unsigned int hp, unsigned int ma
 	p->hp = hp;
 	p->maxhp = maxhp;
 #endif
-
+#if PACKETVER_ZERO_NUM >= 20210504
+	p->sp = sp;
+	p->maxsp = maxsp;
+#endif  // PACKETVER_ZERO_NUM >= 20210504
 	WFIFOSET(fd, sizeof(struct PACKET_ZC_NOTIFY_HP_TO_GROUPM));
 }
 
@@ -11135,7 +11143,7 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 		clif->spawn(&sd->ed->bl);
 		clif->elemental_info(sd);
 		clif->elemental_updatestatus(sd, SP_HP);
-		clif->hpmeter_single(sd->fd, sd->ed->bl.id, sd->ed->battle_status.hp, sd->ed->battle_status.max_hp);
+		clif->hpmeter_single(sd->fd, sd->ed->bl.id, sd->ed->battle_status.hp, sd->ed->battle_status.max_hp, sd->ed->battle_status.sp, sd->ed->battle_status.max_sp);
 		clif->elemental_updatestatus(sd, SP_SP);
 		status_calc_bl(&sd->ed->bl, SCB_SPEED); // Elementals mimic their master's speed on each map change.
 	}

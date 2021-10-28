@@ -321,7 +321,7 @@ static int elemental_data_received(const struct s_elemental *ele, bool flag)
 		clif->spawn(&ed->bl);
 		clif->elemental_info(sd);
 		clif->elemental_updatestatus(sd,SP_HP);
-		clif->hpmeter_single(sd->fd,ed->bl.id,ed->battle_status.hp,ed->battle_status.max_hp);
+		clif->hpmeter_single(sd->fd, ed->bl.id, ed->battle_status.hp, ed->battle_status.max_hp, ed->battle_status.sp, ed->battle_status.max_sp);
 		clif->elemental_updatestatus(sd,SP_SP);
 	}
 
