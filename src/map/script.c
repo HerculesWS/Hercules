@@ -13734,37 +13734,6 @@ static BUILDIN(delwaitingroom)
 	return true;
 }
 
-/// Kicks all the players from the waiting room of the current or target npc.
-///
-/// kickwaitingroomall "<npc_name>";
-/// kickwaitingroomall;
-static BUILDIN(waitingroomkickall)
-{
-	struct npc_data *nd;
-	struct chat_data *cd;
-
-	if (script_hasdata(st, 2))
-		nd = npc->name2id(script_getstr(st, 2));
-	else
-		nd = map->id2nd(st->oid);
-
-	if (nd == NULL) {
-		if (script_hasdata(st, 2))
-			ShowWarning("buildin_waitingroomkickall: NPC '%s' not found.\n", script_getstr(st, 2));
-		else
-			ShowWarning("buildin_waitingroomkickall: NPC not found.\n");
-		return false;
-	}
-
-	if ((cd = map->id2cd(nd->chat_id)) == NULL) {
-		ShowWarning("buildin_waitingroomkickall: NPC '%s' does not have a chatroom.\n", nd->name);
-		return false;
-	}
-
-	chat->npc_kick_all(cd);
-	return true;
-}
-
 /// Kicks target player from the waiting room of the current or target npc.
 ///
 /// kickwaitingroom "<npc_name>"{,"<name>"|<account id>};
@@ -27726,7 +27695,6 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(changecharsex,""), // [4144]
 		BUILDIN_DEF(waitingroom, "si??????"),
 		BUILDIN_DEF(delwaitingroom, "?"),
-		BUILDIN_DEF2_DEPRECATED(waitingroomkickall, "kickwaitingroomall", "?"),
 		BUILDIN_DEF(waitingroomkick, "??"),
 		BUILDIN_DEF(enablewaitingroomevent, "?"),
 		BUILDIN_DEF(disablewaitingroomevent, "?"),
