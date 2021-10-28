@@ -18994,16 +18994,6 @@ static BUILDIN(sqrt) //[zBuffer]
 	return true;
 }
 
-static BUILDIN(pow) //[zBuffer]
-{
-	double i, a, b;
-	a = script_getnum(st,2);
-	b = script_getnum(st,3);
-	i = pow(a,b);
-	script_pushint(st,(int)i);
-	return true;
-}
-
 static BUILDIN(distance) //[zBuffer]
 {
 	int x0, y0, x1, y1;
@@ -27804,7 +27794,6 @@ static void script_parse_builtin(void)
 		// List of mathematics commands --->
 		BUILDIN_DEF(log10,"i"),
 		BUILDIN_DEF(sqrt,"i"), //[zBuffer]
-		BUILDIN_DEF_DEPRECATED(pow,"ii"), //[zBuffer]
 		BUILDIN_DEF(distance,"iiii"), //[zBuffer]
 		// <--- List of mathematics commands
 		BUILDIN_DEF(min, "i*"),

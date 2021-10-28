@@ -8675,23 +8675,6 @@ instead if they want it so much.
 
 ---------------------------------------
 
-*pow(<number>, <power>)
-
-    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    @ /!\ This command is deprecated @
-    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-Returns the result of the calculation.
-
-Example:
-	.@i = pow(2, 3); // .@i will be 8
-
-This command is deprecated and it should not be used in new scripts, as it is
-likely to be removed at a later time. Please use the exponentiation operator,
-ie: (2 ** 3) instead of pow(2, 3)
-
----------------------------------------
-
 *log10(<number>)
 
 Returns log base 10 of the number.
