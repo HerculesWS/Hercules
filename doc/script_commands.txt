@@ -1384,9 +1384,27 @@ Works only in zero clients starting from 20210721.
 
 ---------------------------------------
 
+*zmes2f("<format>"{, <param>{, <param>{, ...}}})
+
+This command will displays a box on the screen for the invoking character, with zero ui at center.
+Works same as *mesf* except zero ui.
+
+Works only in zero clients starting from 20210721.
+
+---------------------------------------
+
 *zmes1("<string>")
 
 This command will displays a box on the screen for the invoking character, with zero ui at bottom.
+Works same as *mes* except zero ui.
+
+Works only in zero clients starting from 20210721.
+
+---------------------------------------
+
+*zmes2("<string>")
+
+This command will displays a box on the screen for the invoking character, with zero ui at center.
 Works same as *mes* except zero ui.
 
 Works only in zero clients starting from 20210721.

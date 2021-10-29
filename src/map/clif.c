@@ -2371,6 +2371,41 @@ static void clif_zc_say_dialog_zero1(struct map_session_data *sd, int npcid, con
 #endif  // PACKETVER_ZERO_NUM >= 20210721
 }
 
+static void clif_zc_say_dialog_zero2(struct map_session_data *sd, int npcid, const char *mes)
+{
+#if PACKETVER_ZERO_NUM >= 20210721
+	nullpo_retv(sd);
+	nullpo_retv(mes);
+
+	const size_t msgLen = strlen(mes);
+	const size_t len = msgLen + sizeof(struct PACKET_ZC_SAY_DIALOG_ZERO2);
+	Assert_retv(len <= INT16_MAX);
+
+	pc->update_idle_time(sd, BCIDLE_SCRIPT);
+	sd->state.dialog = 1;
+
+	int fd = sd->fd;
+	WFIFOHEAD(fd, len);
+	struct PACKET_ZC_SAY_DIALOG_ZERO2 *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_SAY_DIALOG_ZERO2;
+	p->PacketLength = len;
+	p->NpcID = npcid;
+
+#ifdef SCRIPT_MES_STRIP_LINEBREAK
+	char *stripmes = aStrdup(mes);
+	for (int i = 0; stripmes[i] != '\0'; ++i) {
+		if (stripmes[i] == '\r')
+			stripmes[i] = ' ';
+	}
+	memcpy(p->message, stripmes, msgLen);
+	aFree(stripmes);
+#else // ! SCRIPT_MES_STRIP_LINEBREAK
+	memcpy(p->message, mes, msgLen);
+#endif // SCRIPT_MES_STRIP_LINEBREAK
+	WFIFOSET(fd, len);
+#endif  // PACKETVER_ZERO_NUM >= 20210721
+}
+
 /// Adds a 'next' button to an NPC dialog (ZC_WAIT_DIALOG).
 /// 00b5 <npc id>.L
 /// Client behavior (dialog window):
@@ -25453,6 +25488,7 @@ void clif_defaults(void)
 	/* npc-script-related */
 	clif->scriptmes = clif_scriptmes;
 	clif->zc_say_dialog_zero1 = clif_zc_say_dialog_zero1;
+	clif->zc_say_dialog_zero2 = clif_zc_say_dialog_zero2;
 	clif->scriptnext = clif_scriptnext;
 	clif->scriptclose = clif_scriptclose;
 	clif->scriptmenu = clif_scriptmenu;

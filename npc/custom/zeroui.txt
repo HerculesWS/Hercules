@@ -10,10 +10,12 @@
 
 prontera,161,284,4	script	Zero UI demo#prt	4_M_KID1,{
 	cutin("h_iris01.bmp", 2);
-	zmes1("test message ^FF00001");
+	zmes1("test message1 ^FF00001");
 	next;
-	zmes1("test message ^00FF002");
-	zmes1("test message ^0000FF3");
+	zmes1("test message1 ^00FF002");
+	zmes1("test message1 ^0000FF3");
 	zmes1f("format message1: ^FF0000%s^000000.", "string test");
+	next;
+	zmes2("test message2 ^00FF004");
 	close;
 }

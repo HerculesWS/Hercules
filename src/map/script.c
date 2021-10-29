@@ -6475,7 +6475,7 @@ static BUILDIN(mesf)
 /// Appends a message to the npc dialog.
 /// If a dialog doesn't exist yet, one is created.
 ///
-/// mes "<message>";
+/// zmes1 "<message>";
 static BUILDIN(zmes1)
 {
 	struct map_session_data *sd = script->rid2sd(st);
@@ -6507,6 +6507,46 @@ static BUILDIN(zmes1f)
 	}
 
 	clif->zc_say_dialog_zero1(sd, st->oid, StrBuf->Value(&buf));
+	StrBuf->Destroy(&buf);
+
+	return true;
+}
+
+/// Appends a message to the npc dialog.
+/// If a dialog doesn't exist yet, one is created.
+///
+/// zmes2 "<message>";
+static BUILDIN(zmes2)
+{
+	struct map_session_data *sd = script->rid2sd(st);
+
+	if (sd == NULL)
+		return true;
+
+	if (script_hasdata(st, 2))
+		clif->zc_say_dialog_zero2(sd, st->oid, script_getstr(st, 2));
+	else
+		clif->zc_say_dialog_zero2(sd, st->oid, "");
+
+	return true;
+}
+
+static BUILDIN(zmes2f)
+{
+	struct map_session_data *sd = script->rid2sd(st);
+	struct StringBuf buf;
+
+	if (sd == NULL)
+		return true;
+
+	StrBuf->Init(&buf);
+
+	if (!script->sprintf_helper(st, 2, &buf)) {
+		StrBuf->Destroy(&buf);
+		return false;
+	}
+
+	clif->zc_say_dialog_zero2(sd, st->oid, StrBuf->Value(&buf));
 	StrBuf->Destroy(&buf);
 
 	return true;
@@ -27571,8 +27611,10 @@ static bool script_add_builtin(const struct script_function *buildin, bool overr
 		else if( strcmp(buildin->name, "getelementofarray") == 0 ) script->buildin_getelementofarray_ref = n;
 		else if( strcmp(buildin->name, "mes") == 0 ) script->buildin_mes_offset = script->buildin_count;
 		else if( strcmp(buildin->name, "zmes1") == 0 ) script->buildin_zmes1_offset = script->buildin_count;
+		else if( strcmp(buildin->name, "zmes2") == 0 ) script->buildin_zmes2_offset = script->buildin_count;
 		else if( strcmp(buildin->name, "mesf") == 0 ) script->buildin_mesf_offset = script->buildin_count;
 		else if( strcmp(buildin->name, "zmes1f") == 0 ) script->buildin_zmes1f_offset = script->buildin_count;
+		else if( strcmp(buildin->name, "zmes2f") == 0 ) script->buildin_zmes2f_offset = script->buildin_count;
 		else if( strcmp(buildin->name, "select") == 0 ) script->buildin_select_offset = script->buildin_count;
 		else if( strcmp(buildin->name, "_") == 0 ) script->buildin_lang_macro_offset = script->buildin_count;
 		else if( strcmp(buildin->name, "_$") == 0 ) script->buildin_lang_macro_fmtstring_offset = script->buildin_count;
@@ -27736,8 +27778,10 @@ static void script_parse_builtin(void)
 		// NPC interaction
 		BUILDIN_DEF(mes, "?"),
 		BUILDIN_DEF(zmes1, "?"),
+		BUILDIN_DEF(zmes2, "?"),
 		BUILDIN_DEF(mesf, "s*"),
 		BUILDIN_DEF(zmes1f, "s*"),
+		BUILDIN_DEF(zmes2f, "s*"),
 		BUILDIN_DEF(next,""),
 		BUILDIN_DEF(mesclear,""),
 		BUILDIN_DEF(close,""),

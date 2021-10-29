@@ -933,6 +933,7 @@ struct clif_interface {
 	/* npc-script-related */
 	void (*scriptmes) (struct map_session_data *sd, int npcid, const char *mes);
 	void (*zc_say_dialog_zero1) (struct map_session_data *sd, int npcid, const char *mes);
+	void (*zc_say_dialog_zero2) (struct map_session_data *sd, int npcid, const char *mes);
 	void (*scriptnext) (struct map_session_data *sd,int npcid);
 	void (*scriptclose) (struct map_session_data *sd, int npcid);
 	void (*scriptmenu) (struct map_session_data* sd, int npcid, const char* mes);
