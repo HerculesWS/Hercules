@@ -5136,6 +5136,16 @@ struct PACKET_ZC_BATTLEFIELD_NOTIFY_HP {
 DEFINE_PACKET_HEADER(ZC_BATTLEFIELD_NOTIFY_HP, 0x02e0);
 #endif  // PACKETVER >= 20071009
 
+#if PACKETVER_ZERO_NUM >= 20210721
+struct PACKET_ZC_SAY_DIALOG_ZERO1 {
+	int16 PacketType;
+	int16 PacketLength;
+	uint32 NpcID;
+	char message[];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_SAY_DIALOG_ZERO1, 0x0ba6);
+#endif  // PACKETVER_ZERO_NUM >= 20210721
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris

@@ -1375,6 +1375,24 @@ for more details.
 
 ---------------------------------------
 
+*zmes1f("<format>"{, <param>{, <param>{, ...}}})
+
+This command will displays a box on the screen for the invoking character, with zero ui at bottom.
+Works same as *mesf* except zero ui.
+
+Works only in zero clients starting from 20210721.
+
+---------------------------------------
+
+*zmes1("<string>")
+
+This command will displays a box on the screen for the invoking character, with zero ui at bottom.
+Works same as *mes* except zero ui.
+
+Works only in zero clients starting from 20210721.
+
+---------------------------------------
+
 *next()
 
 This command will display a 'next' button in the message window for the

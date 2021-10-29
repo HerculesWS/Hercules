@@ -1,0 +1,19 @@
+//===== Hercules Script ======================================
+//= Zero ui demo
+//===== By: ==================================================
+//= 4144
+//===== Current Version: =====================================
+//= 1.0
+//===== Description: =========================================
+//= Zero ui demo in prontera.
+//============================================================
+
+prontera,161,284,4	script	Zero UI demo#prt	4_M_KID1,{
+	cutin("h_iris01.bmp", 2);
+	zmes1("test message ^FF00001");
+	next;
+	zmes1("test message ^00FF002");
+	zmes1("test message ^0000FF3");
+	zmes1f("format message1: ^FF0000%s^000000.", "string test");
+	close;
+}
