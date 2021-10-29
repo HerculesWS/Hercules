@@ -1521,6 +1521,7 @@ schg_que01,114,105,3	duplicate(GD_Ev_Flower2)	#sch_flower_53	4_YELL_FLOWER
 schg_que01,109,105,3	duplicate(GD_Ev_Flower2)	#sch_flower_54	4_RED_FLOWER
 schg_que01,104,105,3	duplicate(GD_Ev_Flower2)	#sch_flower_55	4_BLUE_FLOWER
 
+/*@LOADGMSCRIPTS
 schg_dun01,5,5,1	script	Event controller#sch_gd	4_DOG01,{
 	if (callfunc("F_GM_NPC",1854,0) < 1) {
 		mes "Incorrect password.";
@@ -1543,4 +1544,8 @@ schg_dun01,5,5,1	script	Event controller#sch_gd	4_DOG01,{
 			close;
 		}
 	}
+	end;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/

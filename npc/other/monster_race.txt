@@ -3008,6 +3008,7 @@ p_track01,45,42,3	script	Absent Minded Man#single	4_M_SITDOWN,{
 	close;
 }
 
+/*@LOADGMSCRIPTS
 hugel,5,5,3	script	Monster Race Manager	4_M_LGTGUARD,{
 	callfunc "F_GM_NPC";
 	mes "[Monster Race Manager]";
@@ -3059,4 +3060,7 @@ hugel,5,5,3	script	Monster Race Manager	4_M_LGTGUARD,{
 		close;
 	}
 	close;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/

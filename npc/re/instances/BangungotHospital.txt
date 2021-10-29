@@ -350,6 +350,7 @@ L_Complete:
 	return;
 }
 
+/*@LOADGMSCRIPTS
 sec_in02,27,30,0	script	Bangungot Gate	2_MONEMUS,{
 	callfunc "F_GM_NPC";
 	mes "Password";
@@ -371,7 +372,11 @@ sec_in02,27,30,0	script	Bangungot Gate	2_MONEMUS,{
 		case 10: completequest 11309; close;
 		case 11: close;
 	}
+	end;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/
 
 //== Instance Scripts ======================================
 1@ma_h,43,157,0	script	#Memorial Start	HIDDEN_WARP_NPC,2,2,{

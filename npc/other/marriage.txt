@@ -822,6 +822,7 @@ OnTimer180000:
 	end;
 }
 
+/*@LOADGMSCRIPTS
 prt_church,28,178,4	script	The King of Midgart	1_M_PRON_KING,{
 	callfunc "F_GM_NPC";
 	mes "[Vomars]";
@@ -865,8 +866,13 @@ prt_church,28,178,4	script	The King of Midgart	1_M_PRON_KING,{
 		mes "to proceed with weddings.";
 		close;
 	}
+	end;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/
 
+/*@LOADGMSCRIPTS
 prt_church,20,179,4	script	Divorce Staff	1_F_LIBRARYGIRL,{
 	callfunc "F_GM_NPC";
 	mes "[Bad Ending]";
@@ -912,8 +918,13 @@ prt_church,20,179,4	script	Divorce Staff	1_F_LIBRARYGIRL,{
 		mes "a problem, you come to me.";
 		close;
 	}
+	end;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/
 
+/*@LOADGMSCRIPTS
 prt_church,22,179,4	script	Remarry Staff	1_F_LIBRARYGIRL,{
 	callfunc "F_GM_NPC";
 	mes "[Wedding Again]";
@@ -970,4 +981,8 @@ prt_church,22,179,4	script	Remarry Staff	1_F_LIBRARYGIRL,{
 		mes "to need a new one, okay?";
 		close;
 	}
+	end;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/

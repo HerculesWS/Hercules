@@ -4567,6 +4567,7 @@ OnTimer300000:
 	end;
 }
 
+/*@LOADGMSCRIPTS
 mid_camp,7,3,0	script	Translator Preparation#1	4_M_PAY_SOLDIER,{
 	callfunc "F_GM_NPC";
 	mes "[EP13 Translator Quest Preparation]";
@@ -4624,7 +4625,11 @@ mid_camp,7,3,0	script	Translator Preparation#1	4_M_PAY_SOLDIER,{
 			close;
 		}
 	}
+	end;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/
 
 //== Daily Quests :: ep13_2_tre ============================
 // - Midgard Ore
@@ -7274,6 +7279,7 @@ OnTouch:
 nyd_dun01,255,142,0	warp	nynm_dun1f_to_2f	1,1,nyd_dun02,61,265
 nyd_dun02,56,264,0	warp	nynm_dun2f_to_1f	1,1,nyd_dun01,249,143
 
+/*@LOADGMSCRIPTS
 nyd_dun02,1,1,0	script	ep13_nd2f_mng	CLEAR_NPC,{
 	callfunc "F_GM_NPC";
 	mes "Enter password.";
@@ -7295,7 +7301,15 @@ nyd_dun02,1,1,0	script	ep13_nd2f_mng	CLEAR_NPC,{
 		mes "Invalid.";
 		close;
 	}
+	end;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
+	end;
+//@*/
 
+/*@!LOADGMSCRIPTS*/
+-	script	ep13_nd2f_mng	FAKE_NPC,{
+//@*/
 OnReset:
 	donpcevent "ep13_warp_s1::OnEnable";
 	donpcevent "ep13_warp_s3::OnEnable";

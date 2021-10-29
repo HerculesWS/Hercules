@@ -4292,6 +4292,7 @@ moc_para01,112,79,3	script	Weapons Expert BK#2nd11	4_M_REPAIR,{
 	close;
 }
 
+/*@LOADGMSCRIPTS
 sec_in02,25,33,4	script	Assistant#para_suvquest	4_M_BABYCAT,{
 	callfunc "F_GM_NPC";
 	mes "Password";
@@ -4310,4 +4311,8 @@ sec_in02,25,33,4	script	Assistant#para_suvquest	4_M_BABYCAT,{
 		mes "......meow wee.";
 		close;
 	}
+	end;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/

@@ -681,6 +681,7 @@ OnTimer183000:
 	stopnpctimer;
 }
 
+/*@LOADGMSCRIPTS
 sec_in02,35,153,0	script	Soul Linker Var	4_M_OPERATION,{
 	callfunc "F_GM_NPC";
 	mes "[Soul Linker Var]";
@@ -716,4 +717,8 @@ sec_in02,35,153,0	script	Soul Linker Var	4_M_OPERATION,{
 			close;
 		}
 	}
+	end;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/

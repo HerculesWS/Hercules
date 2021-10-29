@@ -254,6 +254,7 @@ in_rogue,376,104,4	duplicate(Valerie#sign)	Valerie#sc	2_BULLETIN_BOARD
 ve_in,244,122,4	duplicate(Valerie#sign)	Valerie#shu	2_BULLETIN_BOARD
 xmas,166,209,4	duplicate(Valerie#sign)	Valerie#wan	2_BULLETIN_BOARD
 
+/*@LOADGMSCRIPTS
 sec_in02,12,40,5	script	Job Repair	1_M_LIBRARYMASTER,1,1,{
 	callfunc "F_GM_NPC";
 	mes "Please input your password.";
@@ -288,4 +289,7 @@ sec_in02,12,40,5	script	Job Repair	1_M_LIBRARYMASTER,1,1,{
 		ADVJOB = 15;
 	}
 	close;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/

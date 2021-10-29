@@ -850,6 +850,7 @@ sword_1-1,223,167,2	script	Master#job_shu	4_M_SURA,{
 	end;
 }
 
+/*@LOADGMSCRIPTS
 sword_2-1,1,2,0	script	Button Girl#sura	1_F_01,{
 	callfunc "F_GM_NPC";
 	switch(select("Turn on arena.", "Turn off arena.", "Turn on the living room.", "Turn on Buddy.", "Turn on Gara.", "Turn off all.", "Close")) {
@@ -884,4 +885,8 @@ sword_2-1,1,2,0	script	Button Girl#sura	1_F_01,{
 	case 7:
 		close;
 	}
+	end;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/

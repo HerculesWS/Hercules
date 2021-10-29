@@ -418,11 +418,12 @@ parsed.
 The Hercules core provides the following conditional comment flags (plugins may
 provide more):
 
-- TRUE       - always defined
-- HERCULES   - always defined
-- FALSE      - never defined
-- RENEWAL    - only defined when compiled in renewal mode
-- PRERENEWAL - only defined when compiled in pre-renewal mode
+- TRUE          - always defined
+- HERCULES      - always defined
+- FALSE         - never defined
+- RENEWAL       - only defined when compiled in renewal mode
+- PRERENEWAL    - only defined when compiled in pre-renewal mode
+- LOADGMSCRIPTS - only defined when script_configuration.load_gm_scripts is true
 
 Note: conditional comments cannot be nested.
 

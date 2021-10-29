@@ -1483,6 +1483,7 @@ OnTouch:
 	}
 }
 
+/*@LOADGMSCRIPTS
 sec_in02,15,15,4	script	boss::boss_aru_monas	1_M_SIGNMONK,{
 	callfunc "F_GM_NPC";
 	mes "[Patch]";
@@ -1512,7 +1513,11 @@ sec_in02,15,15,4	script	boss::boss_aru_monas	1_M_SIGNMONK,{
 		lost_boy = 0;
 		close;
 	}
+	end;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/
 
 //== Rachel Addition :: aruna_nir ==========================
 ra_temple,165,57,5	script	Niren#ss	4_F_MADAME,{

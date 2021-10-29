@@ -4945,6 +4945,7 @@ OnTouch:
 	end;
 }
 
+/*@LOADGMSCRIPTS
 //== GM Management NPC =====================================
 sec_in02,39,167,0	script	Juperos Manager	4_F_OPERATION,{
 	callfunc "F_GM_NPC";
@@ -5007,4 +5008,8 @@ sec_in02,39,167,0	script	Juperos Manager	4_F_OPERATION,{
 			close;
 		}
 	}
+	end;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/

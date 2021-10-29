@@ -3528,6 +3528,7 @@ malangdo,129,146,3	script	Crime Prevention Staff	4_CAT_SAILOR2,{
 	close;
 }
 
+/*@LOADGMSCRIPTS
 malangdo,3,1,3	script	Guidance for quest#ml	4_MASK_SMOKEY,{
 	if (callfunc("F_GM_NPC",1854,0) < 1) {
 		mes "[Helper]";
@@ -3573,7 +3574,11 @@ malangdo,3,1,3	script	Guidance for quest#ml	4_MASK_SMOKEY,{
 		malang_bad_guys = 10;
 		close;
 	}
+	end;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/
 
 //== Clean the Ship :: mal_day_qook ========================
 mal_in02,76,63,7	script	Cleanyang	4_CAT_SAILOR1,{

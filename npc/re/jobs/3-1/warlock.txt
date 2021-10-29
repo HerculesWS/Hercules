@@ -1070,6 +1070,7 @@ OnTimer6000:
 	end;
 }
 
+/*@LOADGMSCRIPTS
 job3_war01,1,2,0	script	Button Girl#wl	1_F_01,{
 	callfunc "F_GM_NPC";
 	switch(select("Open Arena", "Close Arena", "Open the Chamber of Magic", "Close the Chamber of Magic", "Hollow Stone On", "Hollow Stone Off", "Cancel")) {
@@ -1106,7 +1107,11 @@ job3_war01,1,2,0	script	Button Girl#wl	1_F_01,{
 	case 7:
 		close;
 	}
+	end;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/
 
 spl_fild02,0,0,0,0	monster	Bradium Golem	2049,20,5000,0,0
 spl_fild02,0,0,0,0	monster	Naga	2047,20,5000,0,0

@@ -3876,6 +3876,7 @@ OnTouch:
 	end;
 }
 
+/*@LOADGMSCRIPTS
 job3_guil02,1,3,0	script	#GMhelper01_gc	CLEAR_NPC,{
 	callfunc "F_GM_NPC";
 	mes "What can I do for you?";
@@ -3913,8 +3914,13 @@ job3_guil02,1,3,0	script	#GMhelper01_gc	CLEAR_NPC,{
 		mes "-_-.";
 		close;
 	}
+	end;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/
 
+/*@LOADGMSCRIPTS
 job3_guil03,1,8,0	script	#GMhelper02_gc	CLEAR_NPC,{
 	callfunc "F_GM_NPC";
 	mes "What can I do for you?";
@@ -3984,4 +3990,8 @@ job3_guil03,1,8,0	script	#GMhelper02_gc	CLEAR_NPC,{
 		mes "-_-.";
 		close;
 	}
+	end;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/

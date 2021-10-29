@@ -5236,6 +5236,7 @@ static bool script_config_read(const char *filename, bool imported)
 	libconfig->setting_lookup_bool_real(setting, "warn_func_mismatch_argtypes", &script->config.warn_func_mismatch_argtypes);
 	libconfig->setting_lookup_bool_real(setting, "functions_private_by_default", &script->config.functions_private_by_default);
 	libconfig->setting_lookup_bool_real(setting, "functions_as_events", &script->config.functions_as_events);
+	libconfig->setting_lookup_bool_real(setting, "load_gm_scripts", &script->config.load_gm_scripts);
 	libconfig->setting_lookup_int(setting, "check_cmdcount", &script->config.check_cmdcount);
 	libconfig->setting_lookup_int(setting, "check_gotocount", &script->config.check_gotocount);
 	libconfig->setting_lookup_int(setting, "input_min_value", &script->config.input_min_value);
@@ -6115,6 +6116,7 @@ static void do_init_script(bool minimal)
 	script->declare_conditional_feature("RENEWAL", false);
 	script->declare_conditional_feature("PRERENEWAL", true);
 #endif
+	script->declare_conditional_feature("LOADGMSCRIPTS", script->config.load_gm_scripts);
 
 	if (minimal)
 		return;

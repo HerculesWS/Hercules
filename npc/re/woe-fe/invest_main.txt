@@ -401,6 +401,7 @@ OnReset:
 	end;
 }
 
+/*@LOADGMSCRIPTS
 prt_gld,2,2,0	script	Investment_total#fund00	CLEAR_NPC,{
 	callfunc "F_GM_NPC";
 	mes "Is this not working properly?";
@@ -421,8 +422,15 @@ prt_gld,2,2,0	script	Investment_total#fund00	CLEAR_NPC,{
 		mes "I don't need to adjust anything now.";
 		close;
 	}
+	end;
 
 OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
+//@*/
+/*@!LOADGMSCRIPTS*/
+-	script	Investment_total#fund00	FAKE_NPC,{
+OnInit:
+//@*/
 	if (callfunc("F_Invest_Status") == 1) {
 		initnpctimer;
 		donpcevent "Investment_total#fund00::OnVarInit";

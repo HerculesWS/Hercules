@@ -816,6 +816,7 @@ OnTimer615000:
 	end;
 }
 
+/*@LOADGMSCRIPTS
 // Original name: "Godly Item Quests Related#god"
 que_god01,293,3,0	script	Godly Item Quests#god	4_F_01,{
 	callfunc "F_GM_NPC";
@@ -857,4 +858,8 @@ que_god01,293,3,0	script	Godly Item Quests#god	4_F_01,{
 			close;
 		}
 	}
+	end;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/

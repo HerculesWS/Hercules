@@ -188,6 +188,7 @@ dic_dun01,266,113,5	script	Curious Sapha#ep13_3_	4_MAN_BENKUNI,{
 	}
 }
 
+/*@LOADGMSCRIPTS
 sec_in02,16,43,5	script	Scaraba Dungeon Entrance	4_MAN_BENKUNI,{
 	callfunc "F_GM_NPC";
 	mes "Setting you for dungeon entry.";
@@ -200,7 +201,10 @@ sec_in02,16,43,5	script	Scaraba Dungeon Entrance	4_MAN_BENKUNI,{
 	} else
 		mes "Wrong Password";
 	close;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/
 
 //== Vigilantes ============================================
 -	script	Vigilante#main	FAKE_NPC,{
@@ -449,6 +453,7 @@ dic_in01,254,119,0	script	Item Storage#01	CLEAR_NPC,{
 	end;
 }
 
+/*@LOADGMSCRIPTS
 sec_in02,10,42,1	script	13.3 Related Reset	4_MAN_BENKUNI,{
 	callfunc "F_GM_NPC";
 	mes "[Reset]";
@@ -460,7 +465,10 @@ sec_in02,10,42,1	script	13.3 Related Reset	4_MAN_BENKUNI,{
 	}
 	freeloop(0);
 	close;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/
 
 //== Civil Services ========================================
 function	script	que_dic	{

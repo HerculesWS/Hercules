@@ -1781,6 +1781,7 @@ prt_monk,223,123,3	script	Eavesdrop#tu	HIDDEN_NPC,{
 	}
 }
 
+/*@LOADGMSCRIPTS
 sec_in02,17,156,3	script	1st Job Quest Reset	4_F_JOB_BLACKSMITH,{
 	callfunc "F_GM_NPC";
 	mes "[1st Job Quest]";
@@ -1809,4 +1810,7 @@ sec_in02,17,156,3	script	1st Job Quest Reset	4_F_JOB_BLACKSMITH,{
 	}
 	mes "Completed.";
 	close;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/

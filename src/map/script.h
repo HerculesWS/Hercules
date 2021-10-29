@@ -592,6 +592,7 @@ struct Script_Config {
 	bool warn_func_mismatch_paramnum;
 	bool functions_private_by_default;
 	bool functions_as_events;
+	bool load_gm_scripts;
 	int check_cmdcount;
 	int check_gotocount;
 	int input_min_value;

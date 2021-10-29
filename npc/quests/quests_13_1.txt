@@ -1938,6 +1938,7 @@ moc_ruins,137,89,5	script	Time-Space Gap Guard	4_M_MOC_SOLDIER,{
 	close;
 }
 
+/*@LOADGMSCRIPTS
 moc_fild22b,370,370,3	script	Allied Manager#gm	4W_SAILOR,{
 	callfunc "F_GM_NPC";
 	mes "[Manager]";
@@ -1973,7 +1974,11 @@ moc_fild22b,370,370,3	script	Allied Manager#gm	4W_SAILOR,{
 			close;
 		}
 	}
+	end;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/
 
 //== New Surroundings :: ep13_newbs ========================
 mid_camp,222,283,4	script	Marian#ep13bs	4_F_JOB_HUNTER,{
@@ -6956,6 +6961,7 @@ OnTimer300000:
 }
 
 //== Part Time Work :: ep13_alba ===========================
+/*@LOADGMSCRIPTS
 mid_camp,1,1,0	script	#timer_alba01	CLEAR_NPC,{
 	callfunc "F_GM_NPC";
 	mes "Please enter the password";
@@ -6995,6 +7001,12 @@ mid_camp,1,1,0	script	#timer_alba01	CLEAR_NPC,{
 	}
 
 OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
+//@*/
+/*@!LOADGMSCRIPTS*/
+-	script	#timer_alba01	FAKE_NPC,{
+OnInit:
+//@*/
 	$@PartTimeOn = 0;
 	$@PartTimeSlots = 0;
 OnEnable:
@@ -8471,6 +8483,7 @@ man_fild03,104,248,0	duplicate(manukrock)	Mysterious Rock#16	CLEAR_NPC
 man_fild03,91,272,0	duplicate(manukrock)	Mysterious Rock#17	CLEAR_NPC
 man_fild03,95,301,0	duplicate(manukrock)	Mysterious Rock#18	CLEAR_NPC
 
+/*@LOADGMSCRIPTS
 sec_in02,80,171,0	script	Piece of crack#sec	2_MONEMUS,{
 	callfunc "F_GM_NPC";
 	mes "1~3000";
@@ -8483,7 +8496,10 @@ sec_in02,80,171,0	script	Piece of crack#sec	2_MONEMUS,{
 	}
 	ep13_yong1 = .@input;
 	close;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/
 
 //== Report from the New World :: ep13_1_edq ===============
 mid_campin,90,121,5	script	Hibba Agip	4_M_REDSWORD,{

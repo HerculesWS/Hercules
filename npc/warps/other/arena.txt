@@ -80,6 +80,7 @@ force_1-2,158,178,0	warp	force_08_09	1,1,force_1-2,133,178
 force_1-2,55,178,0	warp	force_09_10	1,1,force_1-2,29,178
 force_1-2,33,178,0	warp	force_10_09	1,1,force_1-2,59,178
 
+/*@LOADGMSCRIPTS
 // GM Control Panel
 //============================================================
 sec_in02,79,180,3	script	#arenacontrol	4_DOG01,{
@@ -112,4 +113,8 @@ sec_in02,79,180,3	script	#arenacontrol	4_DOG01,{
 			close;
 		}
 	}
+	end;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/

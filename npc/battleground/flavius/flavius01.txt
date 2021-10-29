@@ -744,6 +744,7 @@ OnInit:
 	end;
 }
 
+/*@LOADGMSCRIPTS
 bat_b01,1,10,3	script	Release all#b01	4_DOG01,{
 	.@i = callfunc("F_GM_NPC",1854,0);
 	if (.@i == -1) {
@@ -765,4 +766,8 @@ bat_b01,1,10,3	script	Release all#b01	4_DOG01,{
 			close;
 		}
 	}
+	end;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/

@@ -2648,6 +2648,7 @@ comodo,135,299,0	script	Young Man#sch2	1_M_SIGNMONK,{
 	}
 }
 
+/*@LOADGMSCRIPTS
 sec_in02,10,43,4	script	Extra Story Patch	1_M_SIGNMONK,{
 	callfunc "F_GM_NPC";
 	mes "[Patch]";
@@ -2660,7 +2661,10 @@ sec_in02,10,43,4	script	Extra Story Patch	1_M_SIGNMONK,{
 	mes " ";
 	mes ""+que_sch;
 	close;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/
 
 //== Siblings Quest :: veins_camel =========================
 veins,327,185,3	script	Kid#camelcamel	4_M_DST_CHILD,{

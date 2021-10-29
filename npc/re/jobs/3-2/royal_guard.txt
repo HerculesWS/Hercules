@@ -516,6 +516,7 @@ OnTouch:
 	end;
 }
 
+/*@LOADGMSCRIPTS
 sec_in02,12,43,3	script	sorcereryal	1_M_LIBRARYMASTER,1,1,{
 	callfunc "F_GM_NPC";
 	switch(select("Royal Guard", "Rune Knight", "Sorcerer")) {
@@ -556,4 +557,8 @@ sec_in02,12,43,3	script	sorcereryal	1_M_LIBRARYMASTER,1,1,{
 		}
 		close;
 	}
+	end;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/
