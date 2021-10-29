@@ -44,6 +44,21 @@
 #define MAX_SPIRITCHARM 10
 
 /**
+ * Stellar Marks Limitation
+ **/
+#define MAX_STELLAR_MARKS 5
+
+/**
+ * Soul Ball Limitation
+ **/
+#define MAX_SOUL_BALL 20
+
+/**
+ * United Soul Limitation
+ **/
+#define MAX_UNITED_SOULS 12
+
+/**
  * when enabled, reflect damage doesn't bypass devotion (and thus damage is passed to crusader)
  * uncomment to enable
  **/

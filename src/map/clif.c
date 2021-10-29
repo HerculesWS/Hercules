@@ -1614,6 +1614,8 @@ static bool clif_spawn(struct block_list *bl)
 			int i;
 			if (sd->spiritball > 0)
 				clif->spiritball(&sd->bl);
+			if (sd->soulball > 0)
+				clif->soulball(sd, NULL, AREA);
 			if (sd->state.size == SZ_BIG) // tiny/big players [Valaris]
 				clif->specialeffect(bl,423,AREA);
 			else if (sd->state.size == SZ_MEDIUM)
@@ -4745,6 +4747,23 @@ static void clif_storageclose(struct map_session_data *sd)
 	WFIFOSET(fd,packet_len(0xf8));
 }
 
+/// Notifies clients in an area of a player's souls.
+/// 01d0 <id>.L <amount>.W (ZC_SPIRITS)
+/// 01e1 <id>.L <amount>.W (ZC_SPIRITS2)
+/// 0b73 <id>.L <amount>.W
+void clif_soulball(struct map_session_data *sd, struct block_list *bl, enum send_target target)
+{
+	unsigned char buf[16];
+
+	nullpo_retv(sd);
+
+	WBUFW(buf, 0) = 0x1d0;
+	WBUFL(buf, 2) = sd->bl.id;
+	WBUFW(buf, 6) = sd->soulball;
+
+	clif->send(buf, packet_len(0x1d0), bl == NULL ? &sd->bl : bl, target);
+}
+
 /*==========================================
  * Server tells 'sd' player client the abouts of 'dstsd' player
  *------------------------------------------*/
@@ -4768,7 +4787,8 @@ static void clif_getareachar_pc(struct map_session_data *sd, struct map_session_
 		clif->spiritball_single(sd->fd, dstsd);
 	if (dstsd->charm_type != CHARM_TYPE_NONE && dstsd->charm_count > 0)
 		clif->charm_single(sd->fd, dstsd);
-
+	if (dstsd->soulball > 0)
+		clif->soulball(sd, NULL, AREA);
 	for( i = 0; i < dstsd->sc_display_count; i++ ) {
 		clif->sc_continue(&sd->bl, dstsd->bl.id, SELF, status->get_sc_icon(dstsd->sc_display[i]->type), dstsd->sc_display[i]->val1, dstsd->sc_display[i]->val2, dstsd->sc_display[i]->val3);
 	}
@@ -9460,6 +9480,8 @@ static void clif_refresh(struct map_session_data *sd)
 		clif->spiritball_single(sd->fd, sd);
 	if (sd->charm_type != CHARM_TYPE_NONE && sd->charm_count > 0)
 		clif->charm_single(sd->fd, sd);
+	if (sd->soulball)
+		clif->soulball(sd, &sd->bl, SELF);
 
 	if (sd->vd.cloth_color)
 		clif->refreshlook(&sd->bl,sd->bl.id,LOOK_CLOTHES_COLOR,sd->vd.cloth_color,SELF);
@@ -11554,8 +11576,15 @@ static void clif_parse_QuitGame(int fd, struct map_session_data *sd) __attribute
 static void clif_parse_QuitGame(int fd, struct map_session_data *sd)
 {
 	/* Rovert's prevent logout option fixed [Valaris] */
-	if (!sd->sc.data[SC_CLOAKING] && !sd->sc.data[SC_HIDING] && !sd->sc.data[SC_CHASEWALK] && !sd->sc.data[SC_CLOAKINGEXCEED] && !sd->sc.data[SC__INVISIBILITY] && !sd->sc.data[SC_SUHIDE] &&
-		(!battle_config.prevent_logout || DIFF_TICK(timer->gettick(), sd->canlog_tick) > battle_config.prevent_logout)) {
+	if (!sd->sc.data[SC_CLOAKING]
+		&& !sd->sc.data[SC_HIDING]
+		&& !sd->sc.data[SC_CHASEWALK]
+		&& !sd->sc.data[SC_CLOAKINGEXCEED]
+		&& !sd->sc.data[SC__INVISIBILITY]
+		&& !sd->sc.data[SC_SUHIDE]
+		&& !sd->sc.data[SC_NEWMOON]
+		&& (!battle_config.prevent_logout || DIFF_TICK(timer->gettick(), sd->canlog_tick) > battle_config.prevent_logout)
+	) {
 		clif->disconnect_ack(sd, 0);
 		sockt->flush(fd);
 		if (battle_config.drop_connection_on_quit)
@@ -11845,13 +11874,14 @@ static void clif_parse_ActionRequest_sub(struct map_session_data *sd, enum actio
 
 	// Statuses that don't let the player sit / attack / talk with NPCs(targeted)
 	// (not all are included in pc_can_attack)
-	if( sd->sc.count && (
-			sd->sc.data[SC_TRICKDEAD] ||
-			(sd->sc.data[SC_AUTOCOUNTER] && action_type != ACT_ATTACK_REPEAT) ||
-			 sd->sc.data[SC_BLADESTOP] ||
-			 sd->sc.data[SC_DEEP_SLEEP] ||
-			 sd->sc.data[SC_SUHIDE] )
-			 )
+	if (sd->sc.count && (
+		sd->sc.data[SC_TRICKDEAD] ||
+		(sd->sc.data[SC_AUTOCOUNTER] && action_type != ACT_ATTACK_REPEAT) ||
+		sd->sc.data[SC_BLADESTOP] ||
+		sd->sc.data[SC_DEEP_SLEEP] ||
+		sd->sc.data[SC_SUHIDE] ||
+		sd->sc.data[SC_GRAVITYCONTROL])
+		)
 		return;
 
 	if (action_type != ACT_ATTACK && action_type != ACT_ATTACK_REPEAT)
@@ -11995,9 +12025,14 @@ static void clif_parse_Restart(int fd, struct map_session_data *sd)
 			break;
 		case 0x01:
 			/* Rovert's Prevent logout option - Fixed [Valaris] */
-			if (!sd->sc.data[SC_CLOAKING] && !sd->sc.data[SC_HIDING] && !sd->sc.data[SC_CHASEWALK]
-			 && !sd->sc.data[SC_CLOAKINGEXCEED] && !sd->sc.data[SC__INVISIBILITY] && !sd->sc.data[SC_SUHIDE]
-			 && (!battle_config.prevent_logout || DIFF_TICK(timer->gettick(), sd->canlog_tick) > battle_config.prevent_logout)
+			if (!sd->sc.data[SC_CLOAKING]
+				&& !sd->sc.data[SC_HIDING]
+				&& !sd->sc.data[SC_CHASEWALK]
+				&& !sd->sc.data[SC_CLOAKINGEXCEED]
+				&& !sd->sc.data[SC__INVISIBILITY]
+				&& !sd->sc.data[SC_SUHIDE]
+				&& !sd->sc.data[SC_NEWMOON]
+				&& (!battle_config.prevent_logout || DIFF_TICK(timer->gettick(), sd->canlog_tick) > battle_config.prevent_logout)
 			) {
 				//Send to char-server for character selection.
 				chrif->charselectreq(sd, sockt->session[fd]->client_addr);
@@ -12182,6 +12217,7 @@ static void clif_parse_TakeItem(int fd, struct map_session_data *sd)
 				 sd->sc.data[SC_BLADESTOP] ||
 				 sd->sc.data[SC_CLOAKINGEXCEED] ||
 				 sd->sc.data[SC_SUHIDE] ||
+				 sd->sc.data[SC_NEWMOON] ||
 				 pc_ismuted(&sd->sc, MANNER_NOITEM)
 			) )
 			break;
@@ -25264,6 +25300,7 @@ void clif_defaults(void)
 	clif->devotion = clif_devotion;
 	clif->spiritball = clif_spiritball;
 	clif->spiritball_single = clif_spiritball_single;
+	clif->soulball = clif_soulball;
 	clif->bladestop = clif_bladestop;
 	clif->mvp_effect = clif_mvp_effect;
 	clif->heal = clif_heal;
