@@ -1262,12 +1262,18 @@ typedef void (*HPMHOOK_pre_clif_cashshop_ack) (struct map_session_data **sd, int
 typedef void (*HPMHOOK_post_clif_cashshop_ack) (struct map_session_data *sd, int error);
 typedef void (*HPMHOOK_pre_clif_scriptmes) (struct map_session_data **sd, int *npcid, const char **mes);
 typedef void (*HPMHOOK_post_clif_scriptmes) (struct map_session_data *sd, int npcid, const char *mes);
+typedef void (*HPMHOOK_pre_clif_zc_say_dialog_zero1) (struct map_session_data **sd, int *npcid, const char **mes);
+typedef void (*HPMHOOK_post_clif_zc_say_dialog_zero1) (struct map_session_data *sd, int npcid, const char *mes);
+typedef void (*HPMHOOK_pre_clif_zc_say_dialog_zero2) (struct map_session_data **sd, int *npcid, const char **mes);
+typedef void (*HPMHOOK_post_clif_zc_say_dialog_zero2) (struct map_session_data *sd, int npcid, const char *mes);
 typedef void (*HPMHOOK_pre_clif_scriptnext) (struct map_session_data **sd, int *npcid);
 typedef void (*HPMHOOK_post_clif_scriptnext) (struct map_session_data *sd, int npcid);
 typedef void (*HPMHOOK_pre_clif_scriptclose) (struct map_session_data **sd, int *npcid);
 typedef void (*HPMHOOK_post_clif_scriptclose) (struct map_session_data *sd, int npcid);
 typedef void (*HPMHOOK_pre_clif_scriptmenu) (struct map_session_data **sd, int *npcid, const char **mes);
 typedef void (*HPMHOOK_post_clif_scriptmenu) (struct map_session_data *sd, int npcid, const char *mes);
+typedef void (*HPMHOOK_pre_clif_zc_menu_list_zero) (struct map_session_data **sd, int *npcid, const char **mes);
+typedef void (*HPMHOOK_post_clif_zc_menu_list_zero) (struct map_session_data *sd, int npcid, const char *mes);
 typedef void (*HPMHOOK_pre_clif_scriptinput) (struct map_session_data **sd, int *npcid);
 typedef void (*HPMHOOK_post_clif_scriptinput) (struct map_session_data *sd, int npcid);
 typedef void (*HPMHOOK_pre_clif_scriptinputstr) (struct map_session_data **sd, int *npcid);
@@ -2244,6 +2250,8 @@ typedef void (*HPMHOOK_pre_clif_pWeaponRefine) (int *fd, struct map_session_data
 typedef void (*HPMHOOK_post_clif_pWeaponRefine) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_pNpcSelectMenu) (int *fd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_pNpcSelectMenu) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_pNpcSelectMenuZero) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pNpcSelectMenuZero) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_pNpcNextClicked) (int *fd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_pNpcNextClicked) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_pNpcAmountInput) (int *fd, struct map_session_data **sd);
