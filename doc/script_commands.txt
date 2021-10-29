@@ -1758,6 +1758,13 @@ perfectly equivalent.
 
 ---------------------------------------
 
+*zmenu("<option_text>", <target_label>{, "<option_text>", <target_label>, ...})
+
+Same as *menu* but for zero npc dialogs.
+Works only in zero clients starting from 20210721.
+
+---------------------------------------
+
 *select("<option>"{, "<option>", ...})
 
 This function is a handy replacement for 'menu' that doesn't use a complex
@@ -1772,11 +1779,25 @@ and empty options.
 
 ---------------------------------------
 
+*zselect("<option>"{, "<option>", ...})
+
+Same as *select* but for zero npc dialogs.
+Works only in zero clients starting from 20210721.
+
+---------------------------------------
+
 *prompt("<option>"{, "<option>", ...})
 
 This function behaves exactly like select(), but when a player presses cancel
 it returns MAX_MENU_OPTIONS and the script is not terminated. You almost always
 want to use select() rather than prompt().
+
+---------------------------------------
+
+*zprompt("<option>"{, "<option>", ...})
+
+Same as *prompt* but for zero npc dialogs.
+Works only in zero clients starting from 20210721.
 
 ---------------------------------------
 

@@ -10,12 +10,31 @@
 
 prontera,161,284,4	script	Zero UI demo#prt	4_M_KID1,{
 	cutin("h_iris01.bmp", 2);
-	zmes1("test message1 ^FF00001");
+	zmes1("Hello <FONT SIZE = 30><B>hercules</B></FONT> with zero ui!");
 	next;
-	zmes1("test message1 ^00FF002");
-	zmes1("test message1 ^0000FF3");
-	zmes1f("format message1: ^FF0000%s^000000.", "string test");
+	switch (zselect("zmes1", "zmes2", "zmes1f", "zmes2f")) {
+		case 1:
+			zmes1("zmes1: select 1");
+			break;
+		case 2:
+			zmes2("zmes2: 2");
+			break;
+		case 3:
+			zmes1f("zmes1f: %d", 3);
+			break;
+		case 4:
+			zmes2f("zmes2f: %d", 4);
+			break;
+		case 255:
+			zmes1("select cancel");
+			break;
+	}
 	next;
+	zmes1("line after ^FF0000next");
+	next;
+	zmes1("again line after ^FF0000next");
 	zmes2("test message2 ^00FF004");
+	next;
+	zmes2("Hello <FONT SIZE = 30><B>^00FF00hercules^FFFFFF</B></FONT> with zero <FONT SIZE = 20>^FF0000UI^FFFFFF</FONT>!");
 	close;
 }

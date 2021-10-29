@@ -6686,6 +6686,12 @@ static BUILDIN(menu)
 	// TODO detect multiple scripts waiting for input at the same time, and what to do when that happens
 	if (sd->state.menu_or_input == 0) {
 		struct StringBuf buf;
+		void (*menuFunc) (struct map_session_data* sd, int npcid, const char* mes) = NULL;
+		if (strncmp(get_buildin_name(st), "zmenu", 5) == 0) {
+			menuFunc = clif->zc_menu_list_zero;
+		} else {
+			menuFunc = clif->scriptmenu;
+		}
 
 		if (script_lastdata(st) % 2 == 0) {
 			// argument count is not even (1st argument is at index 2)
@@ -6729,10 +6735,11 @@ static BUILDIN(menu)
 			CREATE(menu, char, MAX_MENU_LENGTH);
 			safestrncpy(menu, StrBuf->Value(&buf), MAX_MENU_LENGTH - 1);
 			ShowWarning("NPC Menu too long! (source:%s / length:%d)\n",nd?nd->name:"Unknown",StrBuf->Length(&buf));
-			clif->scriptmenu(sd, st->oid, menu);
+			menuFunc(sd, st->oid, menu);
 			aFree(menu);
-		} else
-			clif->scriptmenu(sd, st->oid, StrBuf->Value(&buf));
+		} else {
+			menuFunc(sd, st->oid, StrBuf->Value(&buf));
+		}
 
 		StrBuf->Destroy(&buf);
 
@@ -6807,6 +6814,12 @@ static BUILDIN(select)
 
 	if( sd->state.menu_or_input == 0 ) {
 		struct StringBuf buf;
+		void (*menuFunc) (struct map_session_data* sd, int npcid, const char* mes) = NULL;
+		if (strncmp(get_buildin_name(st), "zselect", 7) == 0 || strncmp(get_buildin_name(st), "zprompt", 7) == 0) {
+			menuFunc = clif->zc_menu_list_zero;
+		} else {
+			menuFunc = clif->scriptmenu;
+		}
 
 		StrBuf->Init(&buf);
 		sd->npc_menu = 0;
@@ -6830,10 +6843,11 @@ static BUILDIN(select)
 			CREATE(menu, char, MAX_MENU_LENGTH);
 			safestrncpy(menu, StrBuf->Value(&buf), MAX_MENU_LENGTH - 1);
 			ShowWarning("NPC Menu too long! (source:%s / length:%d)\n",nd?nd->name:"Unknown",StrBuf->Length(&buf));
-			clif->scriptmenu(sd, st->oid, menu);
+			menuFunc(sd, st->oid, menu);
 			aFree(menu);
-		} else
-			clif->scriptmenu(sd, st->oid, StrBuf->Value(&buf));
+		} else {
+			menuFunc(sd, st->oid, StrBuf->Value(&buf));
+		}
 		StrBuf->Destroy(&buf);
 
 		if( sd->npc_menu >= MAX_MENU_OPTIONS ) {
@@ -6843,7 +6857,7 @@ static BUILDIN(select)
 	} else if(sd->npc_menu == MAX_MENU_OPTIONS) { // Cancel was pressed
 		sd->state.menu_or_input = 0;
 
-		if (strncmp(get_buildin_name(st), "prompt", 6) == 0) {
+		if (strncmp(get_buildin_name(st), "prompt", 6) == 0 || strncmp(get_buildin_name(st), "zprompt", 7) == 0) {
 			pc->setreg(sd, script->add_variable("@menu"), MAX_MENU_OPTIONS);
 			script_pushint(st, MAX_MENU_OPTIONS); // XXX: we should really be pushing -1 instead
 			st->state = RUN;
@@ -27787,8 +27801,11 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(close,""),
 		BUILDIN_DEF(close2,""),
 		BUILDIN_DEF(menu,"sl*"),
+		BUILDIN_DEF2(menu, "zmenu", "sl*"),
 		BUILDIN_DEF(select,"s*"), //for future jA script compatibility
 		BUILDIN_DEF2(select, "prompt", "s*"),
+		BUILDIN_DEF2(select, "zselect", "s*"),
+		BUILDIN_DEF2(select, "zprompt", "s*"),
 		//
 		BUILDIN_DEF(goto,"l"),
 		BUILDIN_DEF(callsub,"l*"),

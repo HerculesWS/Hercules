@@ -2535,6 +2535,37 @@ static void clif_scriptmenu(struct map_session_data *sd, int npcid, const char *
 	WFIFOSET(fd,WFIFOW(fd,2));
 }
 
+/// Displays an NPC dialog menu (ZC_MENU_LIST_ZERO).
+static void clif_zc_menu_list_zero(struct map_session_data *sd, int npcid, const char *mes)
+{
+#if PACKETVER_ZERO_NUM >= 20210721
+	nullpo_retv(sd);
+	nullpo_retv(mes);
+
+	const size_t msgLen = strlen(mes);
+	const size_t len = msgLen + sizeof(struct PACKET_ZC_MENU_LIST_ZERO);
+	Assert_retv(len <= INT16_MAX);
+
+	pc->update_idle_time(sd, BCIDLE_SCRIPT);
+
+	struct block_list *bl = NULL;
+	if (!sd->state.using_fake_npc && (npcid == npc->fake_nd->bl.id || ((bl = map->id2bl(npcid)) != NULL && (bl->m != sd->bl.m ||
+						bl->x < sd->bl.x - AREA_SIZE - 1 || bl->x > sd->bl.x + AREA_SIZE + 1 ||
+						bl->y < sd->bl.y - AREA_SIZE - 1 || bl->y > sd->bl.y + AREA_SIZE + 1)))) {
+		clif->sendfakenpc(sd, npcid);
+	}
+
+	int fd = sd->fd;
+	WFIFOHEAD(fd, len);
+	struct PACKET_ZC_MENU_LIST_ZERO *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_MENU_LIST_ZERO;
+	p->PacketLength = len;
+	p->NpcID = npcid;
+	memcpy(p->message, mes, msgLen);
+	WFIFOSET(fd, len);
+#endif  // PACKETVER_ZERO_NUM >= 20210721
+}
+
 /// Displays an NPC dialog input box for numbers (ZC_OPEN_EDITDLG).
 /// 0142 <npc id>.L
 /// Client behavior (inputnum window):
@@ -13758,8 +13789,50 @@ static void clif_parse_NpcSelectMenu(int fd, struct map_session_data *sd)
 		return;
 	}
 
+#if PACKETVER_MAIN_NUM >= 20210317 || PACKETVER_ZERO_NUM >= 20210317
+	// [4144] for zero ui cancel selection. Some times zero ui may send 0 as npc_id
+	if (select == MAX_MENU_OPTIONS && npc_id == 0) {
+		npc_id = sd->npc_id;
+	}
+#endif  // PACKETVER_MAIN_NUM >= 20210317 || PACKETVER_ZERO_NUM >= 20210317
+
 	sd->npc_menu = select;
-	npc->scriptcont(sd,npc_id, false);
+	npc->scriptcont(sd, npc_id, false);
+}
+
+static void clif_parse_NpcSelectMenuZero(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+static void clif_parse_NpcSelectMenuZero(int fd, struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20210317 || PACKETVER_ZERO_NUM >= 20210317
+	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
+		return;
+
+	const struct PACKET_CZ_CHOOSE_MENU_ZERO *packet = RFIFOP(fd, 0);
+	int npc_id = packet->NpcID;
+	const uint8 select = packet->menuIndex;
+
+	// [4144] Some times zero ui may send 0 as npc_id
+	if (npc_id == 0) {
+		npc_id = sd->npc_id;
+	}
+
+	if ((select > sd->npc_menu && select != MAX_MENU_OPTIONS) || select == 0 ) {
+#ifdef SECURE_NPCTIMEOUT
+		if (sd->npc_idle_timer != INVALID_TIMER) {
+#endif
+			struct npc_data *nd = map->id2nd(npc_id);
+			ShowWarning("Invalid menu selection on npc %d:'%s' - got %d, valid range is [%d..%d] (player AID:%d, CID:%d, name:'%s')!\n",
+				npc_id, nd ? nd->name : "invalid npc id", select, 1, sd->npc_menu, sd->bl.id, sd->status.char_id, sd->status.name);
+			clif->GM_kick(NULL,sd);
+#ifdef SECURE_NPCTIMEOUT
+		}
+#endif
+		return;
+	}
+
+	sd->npc_menu = select;
+	npc->scriptcont(sd, npc_id, false);
+#endif  // PACKETVER_MAIN_NUM >= 20210317 || PACKETVER_ZERO_NUM >= 20210317
 }
 
 static void clif_parse_NpcNextClicked(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
@@ -25492,6 +25565,7 @@ void clif_defaults(void)
 	clif->scriptnext = clif_scriptnext;
 	clif->scriptclose = clif_scriptclose;
 	clif->scriptmenu = clif_scriptmenu;
+	clif->zc_menu_list_zero = clif_zc_menu_list_zero;
 	clif->scriptinput = clif_scriptinput;
 	clif->scriptinputstr = clif_scriptinputstr;
 	clif->cutin = clif_cutin;
@@ -26029,6 +26103,7 @@ void clif_defaults(void)
 	clif->pRepairItem2 = clif_parse_RepairItem2;
 	clif->pWeaponRefine = clif_parse_WeaponRefine;
 	clif->pNpcSelectMenu = clif_parse_NpcSelectMenu;
+	clif->pNpcSelectMenuZero = clif_parse_NpcSelectMenuZero;
 	clif->pNpcNextClicked = clif_parse_NpcNextClicked;
 	clif->pNpcAmountInput = clif_parse_NpcAmountInput;
 	clif->pNpcStringInput = clif_parse_NpcStringInput;

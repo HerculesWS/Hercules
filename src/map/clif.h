@@ -937,6 +937,7 @@ struct clif_interface {
 	void (*scriptnext) (struct map_session_data *sd,int npcid);
 	void (*scriptclose) (struct map_session_data *sd, int npcid);
 	void (*scriptmenu) (struct map_session_data* sd, int npcid, const char* mes);
+	void (*zc_menu_list_zero) (struct map_session_data* sd, int npcid, const char* mes);
 	void (*scriptinput) (struct map_session_data *sd, int npcid);
 	void (*scriptinputstr) (struct map_session_data *sd, int npcid);
 	void (*cutin) (struct map_session_data* sd, const char* image, int type);
@@ -1470,6 +1471,7 @@ struct clif_interface {
 	void (*pRepairItem2) (int fd, struct map_session_data *sd);
 	void (*pWeaponRefine) (int fd, struct map_session_data *sd);
 	void (*pNpcSelectMenu) (int fd,struct map_session_data *sd);
+	void (*pNpcSelectMenuZero) (int fd,struct map_session_data *sd);
 	void (*pNpcNextClicked) (int fd,struct map_session_data *sd);
 	void (*pNpcAmountInput) (int fd,struct map_session_data *sd);
 	void (*pNpcStringInput) (int fd, struct map_session_data* sd);

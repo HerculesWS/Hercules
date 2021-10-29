@@ -2022,4 +2022,8 @@ packet(0x96e,clif->ackmergeitems);
 	packet(0x0bad,clif->pUnequipAllItems);
 #endif  // PACKETVER_MAIN_NUM >= 20210818 || PACKETVER_ZERO_NUM >= 20210818
 
+#if PACKETVER_MAIN_NUM >= 20210317 || PACKETVER_ZERO_NUM >= 20210317
+	packet(0x0ba8,clif->pNpcSelectMenuZero);
+#endif  // PACKETVER_MAIN_NUM >= 20210317 || PACKETVER_ZERO_NUM >= 20210317
+
 #endif /* MAP_PACKETS_H */
