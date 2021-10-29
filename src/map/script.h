@@ -891,6 +891,9 @@ struct script_interface {
 	struct script_string_buf parse_simpleexpr_strbuf;
 	/* */
 	int parse_cleanup_timer_id;
+
+	VECTOR_DECL(char *) conditional_features;
+
 	/*  */
 	void (*init) (bool minimal);
 	void (*final) (void);
@@ -1097,6 +1100,7 @@ struct script_interface {
 	void (*run_item_rental_start_script) (struct map_session_data *sd, struct item_data *data, int oid);
 	void (*run_item_lapineddukddak_script) (struct map_session_data *sd, struct item_data *data, int oid);
 	bool (*sellitemcurrency_add) (struct npc_data *nd, struct script_state* st, int argIndex);
+	void (*declare_conditional_feature) (const char *feature, bool enabled);
 };
 
 #ifdef HERCULES_CORE

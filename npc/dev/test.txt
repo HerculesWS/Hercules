@@ -810,6 +810,26 @@ function	script	HerculesSelfTestHelper	{
 	callsub(OnCheckStr, "sprintf (Two args)",   sprintf("'%+05d' '%x'", 5, 0x7f), "'+0005' '7f'");
 	callsub(OnCheckStr, "sprintf (positional)", sprintf("'%2$+05d'", 5, 6), "'+0006'");
 	callsub(OnCheckStr, "sprintf (positional)", sprintf("'%2$s' '%1$c'", "First", "Second"), "'Second' 'F'");
+	.@x = 0;
+	/*@TRUE
+	.@x = 1;
+	//@*/
+	callsub(OnCheck, "Conditional comment (TRUE)", .@x, 1);
+	.@x = 0;
+	/*@!TRUE
+	.@x = 1;
+	//@*/
+	callsub(OnCheck, "Conditional comment (!TRUE)", .@x, 0);
+	.@x = 0;
+	/*@TRUE*/
+	.@x = 1;
+	//@*/
+	callsub(OnCheck, "Conditional comment with fallback (TRUE)", .@x, 1);
+	.@x = 0;
+	/*@!TRUE*/
+	.@x = 1;
+	//@*/
+	callsub(OnCheck, "Conditional comment with fallback (!TRUE)", .@x, 0);
 
 	callsub(OnCheck, "Getdatatype (integer)",              getdatatype(5), DATATYPE_INT);
 	callsub(OnCheck, "Getdatatype (constant string)",      getdatatype("foo"), DATATYPE_STR | DATATYPE_CONST);

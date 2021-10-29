@@ -366,6 +366,66 @@ parameter.
 Once an object is defined which has a 'code' field to it's definition, it
 contains script commands which can actually be triggered and executed.
 
+Conditional comments
+--------------------
+
+An extension of the block comment syntax can be used for conditional comments.
+A conditional comment is treated as a block comment when the specified flag is
+not defined and as a normal block of code if it is, in a similar way to #ifdef
+blocks in the C preprocessor. This can be useful to make
+parts of scripts (including top-level commands) optional depending on a server
+feature, a setting or a plugin.
+
+A conditional comment begins with /*@CONDITION followed by whitespace or */ and
+ends with the first */ sequence encountered on a separate line, but the sequence
+//@*/ at the beginning of a line (optionally with indentation) is recommended as
+a terminator, since it provides compatibility with older versions of the script
+engine that don't support conditional comments. The condition flag can be
+negated by prefixing it with an exclamation mark (!). Condition flags consist of
+an uppercase letter followed by a sequence of uppercase letters, digits and
+underscores and are at least three characters long.
+
+The following block is only parsed if FLAG is defined. If not defined, or when
+loaded by an older engine, the block is treated as a block comment:
+
+/*@FLAG
+.@x = 1;
+//@*/
+
+The following block is only parsed if FLAG is not defined. If defined, or when
+loaded by an older engine, the block is treated as a block comment:
+
+/*@!FLAG
+.@x = 1;
+//@*/
+
+The following block is only parsed if FLAG is defined. If not defined, the block
+is treated as a block comment. When loaded by an older engine, the block is also
+parsed:
+
+/*@FLAG*/
+.@x = 1;
+//@*/
+
+The following block is only parsed if FLAG is not defined. If defined, the block
+is treated as a block comment. When loaded by an older engine, the block is also
+parsed.
+
+/*@!FLAG*/
+.@x = 1;
+//@*/
+
+The Hercules core provides the following conditional comment flags (plugins may
+provide more):
+
+- TRUE       - always defined
+- HERCULES   - always defined
+- FALSE      - never defined
+- RENEWAL    - only defined when compiled in renewal mode
+- PRERENEWAL - only defined when compiled in pre-renewal mode
+
+Note: conditional comments cannot be nested.
+
 ~ RID? GID? ~
 
 What a RID is and why do you need to know
