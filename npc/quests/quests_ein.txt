@@ -2683,6 +2683,7 @@ ein_in01,95,239,3	script	Conveyor#ins2	HIDDEN_NPC,{
 	end;
 }
 
+/*@LOADGMSCRIPTS
 //- Administrator NPC used to rig the invasion in Einbroch. -
 sec_in02,127,86,3	script	Factory Quest Test	4_M_REPAIR,{
 	.@i = callfunc("F_GM_NPC",8028,0,0,9000);
@@ -2729,7 +2730,11 @@ sec_in02,127,86,3	script	Factory Quest Test	4_M_REPAIR,{
 			close;
 		}
 	}
+	end;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/
 
 //== Murder Quest :: ein_main_tre ==========================
 einbech,165,105,7	script	Buender Hikeman#ein	4_M_EINOLD,{

@@ -1727,6 +1727,7 @@ arena_room,140,136,3	script	Guide Alias	4_F_NOVICE,{
 	close;
 }
 
+/*@LOADGMSCRIPTS
 arena_room,195,5,3	script	log-on-aco#arena	4_NFWISP,{
 	.@i = callfunc("F_GM_NPC",1357,0);
 	if (.@i == -1) {
@@ -1769,8 +1770,13 @@ arena_room,195,5,3	script	log-on-aco#arena	4_NFWISP,{
 		}
 		close;
 	}
+	end;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/
 
+/*@LOADGMSCRIPTS
 arena_room,195,10,3	script	acolink#arena	4_NFWISP,{
 	.@i = callfunc("F_GM_NPC",1357,0);
 	if (.@i == -1) {
@@ -1803,4 +1809,8 @@ arena_room,195,10,3	script	acolink#arena	4_NFWISP,{
 			close;
 		}
 	}
+	end;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/

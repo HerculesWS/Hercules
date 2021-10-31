@@ -10229,6 +10229,7 @@ que_job01,68,88,5	script	Simon#mao	4_M_SITDOWN,{
 
 que_job01,70,84,1	duplicate(Simon#mao)	Kimmie	4_F_SITDOWN,0,0
 
+/*@LOADGMSCRIPTS
 sec_in02,38,162,0	script	Morroc Invasion Manager	4_F_SITDOWN,{
 	callfunc "F_GM_NPC";
 	mes "A total of " + $maoattack + " users completed";
@@ -10285,4 +10286,8 @@ sec_in02,38,162,0	script	Morroc Invasion Manager	4_F_SITDOWN,{
 			mes "You have canceled.";
 			close;
 	}
+	end;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/

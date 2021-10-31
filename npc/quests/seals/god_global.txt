@@ -34,6 +34,7 @@
 //= 1.2
 //=========================================================================
 
+/*@LOADGMSCRIPTS
 sec_in02,15,170,0	script	Golbal var	4_F_CHNDRESS3,{
 	callfunc "F_GM_NPC";
 	mes "[Check]";
@@ -120,6 +121,12 @@ L_Var:
 	close;
 
 OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
+//@*/
+/*@!LOADGMSCRIPTS*/
+-	script	Golbal var	FAKE_NPC,{
+OnInit:
+//@*/
 	// Seals roll at 25/50 in Renewal and 50/100 in Pre-Renewal.
 	if (RENEWAL) {
 		$@god_check1 = 25;

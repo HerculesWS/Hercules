@@ -937,6 +937,7 @@ bat_a01,356,326,3	script	Guillaume Camp Soldier#bat_a01_guide	4_M_RASWORD,{
 }
 */
 
+/*@LOADGMSCRIPTS
 bat_a01,1,1,3	script	Release all#a01	4_DOG01,{
 	.@i = callfunc("F_GM_NPC",1854,0);
 	if (.@i == -1) {
@@ -958,4 +959,8 @@ bat_a01,1,1,3	script	Release all#a01	4_DOG01,{
 			close;
 		}
 	}
+	end;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/

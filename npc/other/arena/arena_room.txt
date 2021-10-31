@@ -410,6 +410,7 @@ arena_room,158,82,1	script	Helper Lonik	4_M_ROGUE,{
 	close;
 }
 
+/*@LOADGMSCRIPTS
 sec_in02,72,180,3	script	Arena Manager#arena	4_NFWISP,{
 	.@i = callfunc("F_GM_NPC",1357,0);
 	if (.@i == -1) {
@@ -530,8 +531,13 @@ sec_in02,72,180,3	script	Arena Manager#arena	4_NFWISP,{
 			}
 		}
 	}
+	end;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/
 
+/*@LOADGMSCRIPTS
 sec_in02,79,171,3	script	Reward Manager#arena	4_NFWISP,{
 	.@i = callfunc("F_GM_NPC",1357,0);
 	if (.@i == -1) {
@@ -563,7 +569,11 @@ sec_in02,79,171,3	script	Reward Manager#arena	4_NFWISP,{
 			close;
 		}
 	}
+	end;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/
 
 arena_room,105,93,5	script	Teleporter#arena	1_M_JOBTESTER,{
 	mes "[Teleporter]";
@@ -965,6 +975,7 @@ OnTimer62000:
 	end;
 }
 
+/*@LOADGMSCRIPTS
 sec_in02,72,171,3	script	Picture Manager#arena	4_NFWISP,{
 	.@i = callfunc("F_GM_NPC",1357,0);
 	if (.@i == -1) {
@@ -991,8 +1002,13 @@ sec_in02,72,171,3	script	Picture Manager#arena	4_NFWISP,{
 			close;
 		}
 	}
+	end;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/
 
+/*@LOADGMSCRIPTS
 sec_in02,76,176,5	script	Live Broadcast#arena	4_NFWISP,{
 	callfunc "F_GM_NPC";
 	mes "[Live Broadcast]";
@@ -1003,7 +1019,11 @@ sec_in02,76,176,5	script	Live Broadcast#arena	4_NFWISP,{
 	mes "Currently there are "+getmapusers("force_1-2")+" people in party map.";
 	mes "Currently there are "+getmapusers("arena_room")+" people in the waiting room.";
 	close;
+	end;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/
 
 function	script	Func_Are_Rew	{
 	mes "[Givu]";

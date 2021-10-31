@@ -2740,6 +2740,7 @@ OnMyMobDead:
 	end;
 }
 
+/*@LOADGMSCRIPTS
 //== GM Control Panel ======================================
 job_ko,3,1,4	script	Battle Test Control#ko	4_M_KAGE_OLD,{
 	callfunc "F_GM_NPC";
@@ -2771,8 +2772,12 @@ job_ko,3,1,4	script	Battle Test Control#ko	4_M_KAGE_OLD,{
 	next;
 	mes "Control has completed.";
 	close;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/
 
+/*@LOADGMSCRIPTS
 job_ko,4,1,4	script	Guide#ko_helper	4_M_KAGE_OLD,{
 	callfunc "F_GM_NPC";
 	if (callfunc("F_GM_NPC",1854,0) == 1) {
@@ -2864,4 +2869,7 @@ job_ko,4,1,4	script	Guide#ko_helper	4_M_KAGE_OLD,{
 		close;
 	}
 	end;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/

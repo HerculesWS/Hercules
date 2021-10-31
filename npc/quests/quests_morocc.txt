@@ -2004,6 +2004,7 @@ OnTimer5415000:
 	end;
 }
 
+/*@LOADGMSCRIPTS
 sec_in02,14,43,5	script	Morroc GlobalVar Admin::MorrocAdmin_sec	4_F_RUSGREEN,{
 	callfunc "F_GM_NPC";
 	mes "[Helper]";
@@ -2079,8 +2080,13 @@ sec_in02,14,43,5	script	Morroc GlobalVar Admin::MorrocAdmin_sec	4_F_RUSGREEN,{
 			close;
 		}
 	}
+	end;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+
 moc_fild21,5,5,5	duplicate(MorrocAdmin_sec)	Morroc GlobalVar Admin::MorrocAdmin_moc	4_F_RUSGREEN
+//@*/
 
 //== The Crow of the Fate ==================================
 moc_ruins,137,70,3	script	Book-Touching Man#garas	1_M_02,{

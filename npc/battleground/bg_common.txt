@@ -336,6 +336,7 @@ bat_room,138,144,4	script	Repairman#bg	4_M_04,{
 	end;
 }
 
+/*@LOADGMSCRIPTS
 //== GM Management NPC =====================================
 bat_room,1,151,3	script	Switch#batgnd	4_DOG01,{
 	.@i = callfunc("F_GM_NPC",1854,0);
@@ -384,7 +385,11 @@ bat_room,1,151,3	script	Switch#batgnd	4_DOG01,{
 		mes("Complete");
 		close;
 	}
+	end;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/
 
 //== Badges Exchange =======================================
 bat_room,160,150,3	script	Erundek	4_M_MANAGER,{

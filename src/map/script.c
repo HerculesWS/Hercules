@@ -777,6 +777,39 @@ static const char *script_skip_space(const char *p)
 		else if( *p == '/' && p[1] == '*' )
 		{// block comment
 			p += 2;
+			if (*p == '@') {
+				const char *cond = p + 1;
+				bool negated = false;
+				int len = 0;
+				if (*cond == '!') {
+					negated = true;
+					cond++;
+				}
+				if (ISUPPER(cond[0])) {
+					len++;
+					while (ISUPPER(cond[len]) || ISDIGIT(cond[len]) || cond[len] == '_')
+						len++;
+				}
+				if (len >= 3 && cond[len] != '_' && !ISALNUM(cond[len])) {
+					int found = false;
+					int i;
+					ARR_FIND(0, VECTOR_LENGTH(script->conditional_features), i, strncmp(cond, VECTOR_INDEX(script->conditional_features, i), len) != 0);
+					if (i != VECTOR_LENGTH(script->conditional_features))
+						found = true;
+					if (negated)
+						found = !found;
+					p = cond + len; // Skip
+					while (ISSPACE(*p) && *p != '\n' && *p != '\r') // Condition stops at the line boundary
+						p++;
+					if (*p == '*' && p[1] == '/')
+						p += 2;
+					if (found)
+						continue; // Condition met: continue skipping whitespace
+					// else fall through and keep skipping until the end of the comment
+				} else {
+					script->disp_warning_message("script:script->skip_space: Invalid conditional comment: missing condition.", cond);
+				}
+			}
 			for(;;)
 			{
 				if( *p == '\0' ) {
@@ -5203,6 +5236,7 @@ static bool script_config_read(const char *filename, bool imported)
 	libconfig->setting_lookup_bool_real(setting, "warn_func_mismatch_argtypes", &script->config.warn_func_mismatch_argtypes);
 	libconfig->setting_lookup_bool_real(setting, "functions_private_by_default", &script->config.functions_private_by_default);
 	libconfig->setting_lookup_bool_real(setting, "functions_as_events", &script->config.functions_as_events);
+	libconfig->setting_lookup_bool_real(setting, "load_gm_scripts", &script->config.load_gm_scripts);
 	libconfig->setting_lookup_int(setting, "check_cmdcount", &script->config.check_cmdcount);
 	libconfig->setting_lookup_int(setting, "check_gotocount", &script->config.check_gotocount);
 	libconfig->setting_lookup_int(setting, "input_min_value", &script->config.input_min_value);
@@ -5371,6 +5405,52 @@ static void script_generic_ui_array_expand(unsigned int plus)
 	script->generic_ui_array_size += plus + 100;
 	RECREATE(script->generic_ui_array, unsigned int, script->generic_ui_array_size);
 }
+
+static void script_declare_conditional_feature(const char *feature, bool enabled)
+{
+	nullpo_retv(feature);
+
+	if (!ISUPPER(feature[0])) {
+		ShowError("Invalid conditional feature '%s': identifier must begin with an uppercasee letter\n", feature);
+		return;
+	}
+	int i;
+	for (i = 1; feature[i] != '\0'; i++) {
+		if (!ISUPPER(feature[i]) && !ISDIGIT(feature[i]) && feature[i] != '_') {
+			ShowError("Invalid conditional feature '%s': identifier must be only composed of uppercase letters, numbers and/or underscores\n", feature);
+			return;
+		}
+	}
+	if (i < 3) {
+		ShowError("Invalid conditional feature '%s': identifier must be at least 3 characters long\n", feature);
+		return;
+	}
+	if (enabled == false && strcmp(feature, "TRUE") == 0) {
+		ShowError("Conditional feature '%s' cannot be disabled.\n", feature);
+		return;
+	}
+	if (enabled == true && strcmp(feature, "FALSE") == 0) {
+		ShowError("Conditional feature '%s' cannot be enabled.\n", feature);
+		return;
+	}
+
+	if (enabled) {
+		ARR_FIND(0, VECTOR_LENGTH(script->conditional_features), i, strcmp(feature, VECTOR_INDEX(script->conditional_features, i)) == 0);
+		if (i != VECTOR_LENGTH(script->conditional_features))
+			return; // Already declared
+		char *name = aStrdup(feature);
+		VECTOR_ENSURE(script->conditional_features, 1, 1);
+		VECTOR_PUSH(script->conditional_features, name);
+	} else {
+		ARR_FIND(0, VECTOR_LENGTH(script->conditional_features), i, strcmp(feature, VECTOR_INDEX(script->conditional_features, i)) == 0);
+		if (i == VECTOR_LENGTH(script->conditional_features))
+			return; // Not declared
+		char *name = VECTOR_INDEX(script->conditional_features, i);
+		VECTOR_ERASE(script->conditional_features, i);
+		aFree(name);
+	}
+}
+
 /*==========================================
  * Destructor
  *------------------------------------------*/
@@ -5480,6 +5560,11 @@ static void do_final_script(void)
 		VECTOR_CLEAR(VECTOR_INDEX(script->hqi, i).entries);
 	}
 	VECTOR_CLEAR(script->hqi);
+
+	while (VECTOR_LENGTH(script->conditional_features) > 0) {
+		aFree(VECTOR_POP(script->conditional_features));
+	}
+	VECTOR_CLEAR(script->conditional_features);
 
 	if( script->word_buf != NULL )
 		aFree(script->word_buf);
@@ -6020,6 +6105,18 @@ static void do_init_script(bool minimal)
 	script->read_constdb(false);
 	script->load_parameters();
 	script->hardcoded_constants();
+
+	script->declare_conditional_feature("TRUE", true);
+	script->declare_conditional_feature("FALSE", false);
+	script->declare_conditional_feature("HERCULES", true);
+#ifdef RENEWAL
+	script->declare_conditional_feature("RENEWAL", true);
+	script->declare_conditional_feature("PRERENEWAL", false);
+#else
+	script->declare_conditional_feature("RENEWAL", false);
+	script->declare_conditional_feature("PRERENEWAL", true);
+#endif
+	script->declare_conditional_feature("LOADGMSCRIPTS", script->config.load_gm_scripts);
 
 	if (minimal)
 		return;
@@ -29264,6 +29361,7 @@ void script_defaults(void)
 
 	VECTOR_INIT(script->buf);
 	VECTOR_INIT(script->translation_buf);
+	VECTOR_INIT(script->conditional_features);
 
 	script->parse_options = 0;
 	script->buildin_set_ref = 0;
@@ -29544,4 +29642,5 @@ void script_defaults(void)
 	script->run_item_lapineddukddak_script = script_run_item_lapineddukddak_script;
 
 	script->sellitemcurrency_add = script_sellitemcurrency_add;
+	script->declare_conditional_feature = script_declare_conditional_feature;
 }

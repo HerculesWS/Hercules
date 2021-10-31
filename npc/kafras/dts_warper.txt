@@ -1168,7 +1168,7 @@ OnTimer15000:
 	end;
 }
 
-/*
+/*@LOADGMSCRIPTS
 // GM only NPC used for modifying values related to the DTS system.
 // Disabled in official script.
 sec_in02,17,160,4	script	Vote Globalvar Girl#yuno	4_F_OPERATION,{
@@ -1325,5 +1325,8 @@ sec_in02,17,160,4	script	Vote Globalvar Girl#yuno	4_F_OPERATION,{
 		mes "Lady Christy...";
 		close;
 	}
+	end;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
-*/
+//@*/

@@ -532,11 +532,15 @@ spl_fild02,183,1,0	duplicate(#mora_bush_timer)	Bush4Timer	4_F_FAIRYKID5
 spl_fild02,184,1,0	duplicate(#mora_bush_timer)	Bush5Timer	4_F_FAIRYKID5
 spl_fild02,186,1,0	duplicate(#mora_bush_timer)	Bush6Timer	4_F_FAIRYKID5
 
+/*@LOADGMSCRIPTS
 spl_fild02,187,1,0	script	Field Bush Switch	4_F_FAIRYKID5,{
 	callfunc "F_GM_NPC";
 	donpcevent "Bush#ep14_1_bs1::OnEnable";
 	end;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/
 
 splendide,183,117,4	script	Tired-looking Fairy	4_F_FAIRYKID3,{
 	if (!isequipped(2782)) {
@@ -1466,6 +1470,7 @@ splendide,121,260,4	script	Daphrer#ep14_1_bs	4_F_FAIRY,{
 	close;
 }
 
+/*@LOADGMSCRIPTS
 sec_in02,35,175,0	script	Theore Set Guid	4_F_FAIRYKID,{
 	callfunc "F_GM_NPC";
 	switch(select("Set0", "Set33", "Set2_0")) {
@@ -1480,7 +1485,11 @@ sec_in02,35,175,0	script	Theore Set Guid	4_F_FAIRYKID,{
 		ep14_1_bs2 = 0;
 		end;
 	}
+	end;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/
 
 //== Chesire's New Day :: ep14_1_cheshir2 ==================
 dic_in01,262,191,0	script	#ep14_1_xq02	HIDDEN_WARP_NPC,0,3,{
@@ -5097,6 +5106,7 @@ mora,104,172,7	script	Victim#pa0829	4_F_MORAFINE1,{
 	close;
 }
 
+/*@LOADGMSCRIPTS
 sec_in02,29,34,5	script	Initializing Mora Sanjo	4_MAN_NITT,{
 	callfunc "F_GM_NPC";
 	mes "Enter your password";
@@ -5115,7 +5125,11 @@ sec_in02,29,34,5	script	Initializing Mora Sanjo	4_MAN_NITT,{
 		ep14_1_mistwoods = 10;
 		close;
 	}
+	end;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/
 
 //== Mora Daily Quests - Souls :: md_cadaver_in ============
 // callfunc "mora_remains",<quest ID>,<NPC name>,<Mora Coin amount>,<reward ID>,<max reward amount>;

@@ -2203,6 +2203,7 @@ OnMyPingDead:
 }
 
 //== GM Management NPCs ====================================
+/*@LOADGMSCRIPTS
 sec_in02,36,167,3	script	Nidhoggur Manager	4_M_FAIRYSOLDIER,1,1,{
 	callfunc("F_GM_NPC");
 	mes("Enter the password.");
@@ -2249,8 +2250,13 @@ sec_in02,36,167,3	script	Nidhoggur Manager	4_M_FAIRYSOLDIER,1,1,{
 		mesf("ins_nyd2 is at %d.", ins_nyd2);
 		close();
 	}
+	end;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/
 
+/*@LOADGMSCRIPTS
 nyd_dun02,7,7,2	script	Purification Admin#nyd2	CLEAR_NPC,2,0,{
 	callfunc("F_GM_NPC");
 	mes("Please enter the password");
@@ -2280,7 +2286,11 @@ nyd_dun02,7,7,2	script	Purification Admin#nyd2	CLEAR_NPC,2,0,{
 	case 5:
 		close();
 	}
+	end;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/
 
 nyd_dun02,88,195,4	script	Purification Stone#nyd2	2_MONEMUS,{
 	erasequest(3135);

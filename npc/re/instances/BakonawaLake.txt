@@ -121,6 +121,7 @@ ma_scene01,174,179,4	script	Taho	4_M_DEWZATIMAN,{
 	}
 }
 
+/*@LOADGMSCRIPTS
 sec_in02,26,26,4	script	Bakonawa's Rage	4_M_DEWZATIMAN,{
 	callfunc("F_GM_NPC");
 	mes("[Taho]");
@@ -132,7 +133,10 @@ sec_in02,26,26,4	script	Bakonawa's Rage	4_M_DEWZATIMAN,{
 		malaya_bakona2 = 15;
 	}
 	close();
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/
 
 1@ma_b,62,52,4	script	Taho#nf	4_M_DEWZATIMAN,{
 	mes("[Taho]");

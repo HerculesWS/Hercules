@@ -6549,6 +6549,7 @@ OnTouch:
 	end;
 }
 
+/*@LOADGMSCRIPTS
 // Original name: "Bakonawa Introduction Quest Helper#bako1"
 sec_in02,10,16,5	script	Bakonawa Intro Helper	4_MASK_SMOKEY,{
 	if (callfunc("F_GM_NPC",1854,0) < 1) {
@@ -6604,7 +6605,11 @@ sec_in02,10,16,5	script	Bakonawa Intro Helper	4_MASK_SMOKEY,{
 		}
 		close;
 	}
+	end;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/
 
 //== Nurse in Port Malaya :: malaya_bang ===================
 function	script	F_Malaya_Nurse	{
@@ -8259,6 +8264,7 @@ $malaya_pintados_03  - Number of dyestuffs collected. (range: 0~300)
 $malaya_pintados_04$ - Last player to create a tattoo.
 */
 
+/*@LOADGMSCRIPTS
 ma_fild01,1,1,4	script	Pintados Manager#pin	4_F_KHELLISIA,{
 	if (callfunc("F_GM_NPC",1854,0) == 1) {
 		mes "Bingo!";
@@ -8372,7 +8378,14 @@ ma_fild01,1,1,4	script	Pintados Manager#pin	4_F_KHELLISIA,{
 //	if ($malaya_pintados_00 > 0)
 //		donpcevent "Pintados Manager#pin::OnEnableNPC";
 //	end;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
+	end;
+//@*/
 
+/*@!LOADGMSCRIPTS*/
+-	script	Pintados Manager#pin	FAKE_NPC,{
+//@*/
 OnTimer1800000:
 	//$malaya_pintados_00 = $malaya_pintados_00;
 	if ($malaya_pintados_00 > 0 && $malaya_pintados_00 < 344) {

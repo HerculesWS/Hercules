@@ -10308,6 +10308,7 @@ lhz_dun02,282,278,0	script	Broken Machine	HIDDEN_NPC,{
 	}
 }
 
+/*@LOADGMSCRIPTS
 sec_in02,17,170,4	script	boss::lght_boss_admin	1_M_SIGNMONK,{
 	callfunc "F_GM_NPC";
 	mes "[Patch]";
@@ -10327,7 +10328,11 @@ sec_in02,17,170,4	script	boss::lght_boss_admin	1_M_SIGNMONK,{
 	mes " ";
 	mes ""+lght_boss;
 	close;
+	end;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/
 
 lhz_in02,19,274,2	script	Maintenance Guy	4_M_REPAIR,{
 
@@ -12003,6 +12008,7 @@ OnTouch:
 	end;
 }
 
+/*@LOADGMSCRIPTS
 airplane_01,10,10,3	script	#LyozienSwitch	HIDDEN_NPC,{
 	callfunc "F_GM_NPC";
 	mes "[Lyozien Switch]";
@@ -12043,4 +12049,8 @@ airplane_01,10,10,3	script	#LyozienSwitch	HIDDEN_NPC,{
 		mes "/mm airplane_01.gat 96 48";
 		close;
 	}
+	end;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/

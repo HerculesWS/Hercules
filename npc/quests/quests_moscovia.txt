@@ -11897,6 +11897,7 @@ pay_dun04,163,186,0	script	Ghost Tree#rus45	HIDDEN_NPC,{
 	end;
 }
 
+/*@LOADGMSCRIPTS
 mosk_dun01,3,3,3	script	Koshei GlobalVar#admin	4_F_RUSCHILD,{
 	callfunc "F_GM_NPC";
 	mes "[Koshei GlobalVar]";
@@ -11948,4 +11949,8 @@ mosk_dun01,3,3,3	script	Koshei GlobalVar#admin	4_F_RUSCHILD,{
 			close;
 		}
 	}
+	end;
+OnInit:
+	consolemes(CONSOLEMES_INFO, "GM script loaded: %s", strnpcinfo(NPC_NAME_UNIQUE));
 }
+//@*/
