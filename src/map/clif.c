@@ -25454,6 +25454,72 @@ static void clif_set_npc_window_pos_percent(struct map_session_data *sd, int x, 
 #endif  // PACKETVER_MAIN_NUM >= 20220504
 }
 
+static void clif_item_reform_open(struct map_session_data *sd, int itemId)
+{
+#if PACKETVER_MAIN_NUM >= 20201118 || PACKETVER_RE_NUM >= 20211103
+	nullpo_retv(sd);
+
+	const int fd = sd->fd;
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_OPEN_REFORM_UI));
+	struct PACKET_ZC_OPEN_REFORM_UI *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_OPEN_REFORM_UI;
+	p->ITID = itemId;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_OPEN_REFORM_UI));
+
+	sd->state.reform_ui = 1;
+#endif
+}
+
+static void clif_parse_item_reform_close(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
+static void clif_parse_item_reform_close(int fd, struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20211103
+	// const struct PACKET_CZ_CLOSE_REFORM_UI *p = RP2PTR(fd);
+	sd->state.reform_ui = 0;
+#endif
+}
+
+static void clif_parse_item_reform_ack(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
+static void clif_parse_item_reform_ack(int fd, struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20211103
+	const struct PACKET_CZ_ITEM_REFORM *p = RP2PTR(fd);
+
+	if (sd->state.reform_ui == 0)
+		return;
+
+	if (pc_cant_act_except_reform(sd))
+		return;
+
+	const struct item_data *itd = itemdb->exists(p->ITID);
+	if (itd == NULL)
+		return;
+
+	const int invidx = p->index - 2;
+	if (invidx < 0 || invidx >= sd->status.inventorySize || sd->status.inventory[invidx].nameid <= 0 || sd->inventory_data[invidx] == NULL)
+		return;
+
+	const struct item_reform *ir = itemdb->search_reform_baseitem(itd, sd->status.inventory[invidx].nameid);
+	if (ir != NULL)
+		itemdb->item_reform(sd, ir, invidx);
+#endif
+}
+
+static void clif_item_reform_result(struct map_session_data *sd, int index, enum item_reform_status result)
+{
+#if PACKETVER_MAIN_NUM >= 20201118 || PACKETVER_RE_NUM >= 20211103
+	nullpo_retv(sd);
+
+	const int fd = sd->fd;
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_ITEM_REFORM_ACK));
+	struct PACKET_ZC_ITEM_REFORM_ACK *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_ITEM_REFORM_ACK;
+	p->index = index + 2;
+	p->result = result;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_ITEM_REFORM_ACK));
+#endif
+}
+
 /*==========================================
  * Main client packet processing function
  *------------------------------------------*/
@@ -26782,4 +26848,8 @@ void clif_defaults(void)
 	clif->PartyBookingCancelVolunteerToPM = clif_PartyBookingCancelVolunteerToPM;
 	clif->PartyBookingRefuseVolunteerToPM = clif_PartyBookingRefuseVolunteerToPM;
 #endif
+	clif->item_reform_open = clif_item_reform_open;
+	clif->pItemReformClose = clif_parse_item_reform_close;
+	clif->pItemReformAck = clif_parse_item_reform_ack;
+	clif->item_reform_result = clif_item_reform_result;
 }

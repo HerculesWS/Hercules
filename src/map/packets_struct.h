@@ -5713,6 +5713,39 @@ struct PACKET_ZC_DISAPPEAR_BUYING_STORE_ENTRY {
 DEFINE_PACKET_HEADER(ZC_DISAPPEAR_BUYING_STORE_ENTRY, 0x0816);
 #endif
 
+#if PACKETVER_MAIN_NUM >= 20201118 || PACKETVER_RE_NUM >= 20211103
+struct PACKET_ZC_OPEN_REFORM_UI {
+	int16 PacketType;
+	int32 ITID;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_OPEN_REFORM_UI, 0x0b8f);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20211103
+struct PACKET_CZ_CLOSE_REFORM_UI {
+	int16 PacketType;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_CLOSE_REFORM_UI, 0x0b90);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20211103
+struct PACKET_CZ_ITEM_REFORM {
+	int16 PacketType;
+	int32 ITID;
+	int16 index;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_ITEM_REFORM, 0x0b91);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20201118 || PACKETVER_RE_NUM >= 20211103
+struct PACKET_ZC_ITEM_REFORM_ACK {
+	int16 PacketType;
+	int16 index;
+	int8 result;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_ITEM_REFORM_ACK, 0x0b92);
+#endif
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris

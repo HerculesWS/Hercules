@@ -434,6 +434,11 @@ enum item_name_search_flag {
 	IT_SEARCH_NAME_MAX,
 };
 
+enum item_reform_status {
+	IT_REFORM_SUCCESS = 0,
+	IT_REFORM_NOT_ENOUGH_MATERIALS = 3,
+};
+
 /** Convenience item list (entry) used in various functions */
 struct itemlist_entry {
 	int id;       ///< Item ID or (inventory) index
@@ -521,6 +526,21 @@ struct item_lapineupgrade {
 	struct script_code *script;
 };
 
+struct item_reform {
+	int Id;
+	int BaseItem;
+	int ResultItem;
+	VECTOR_DECL(struct itemlist_entry) Materials;
+	int8 NeedRefineMin;
+	int8 NeedRefineMax;
+	int8 NeedOptionNumMin;
+	bool IsEmptySocket;
+	int8 ChangeRefineValue;
+	bool PreserveSocketItem;
+	bool PreserveOptions;
+	bool PreserveGrade;
+};
+
 struct item_data {
 	int nameid;
 	char name[ITEM_NAME_LENGTH],jname[ITEM_NAME_LENGTH];
@@ -595,6 +615,7 @@ struct item_data {
 	struct item_package *package;
 	struct item_lapineddukddak *lapineddukddak;
 	struct item_lapineupgrade *lapineupgrade;
+	VECTOR_DECL(int) reform_list;
 	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
 };
 
@@ -667,6 +688,7 @@ struct itemdb_interface {
 	struct DBMap *other;// int nameid -> struct item_data*
 	struct DBMap *options; // int opt_id -> struct itemdb_option*
 	struct item_data dummy; //This is the default dummy item used for non-existant items. [Skotlex]
+	struct DBMap *reform; // int reform_id -> struct item_reform *
 	/* */
 	void (*read_groups) (void);
 	void (*read_chains) (void);
@@ -683,6 +705,7 @@ struct itemdb_interface {
 	struct item_data* (*search)(int nameid);
 	struct item_data* (*exists) (int nameid);
 	struct itemdb_option* (*option_exists) (int idx);
+	struct item_reform* (*reform_exists) (int idx);
 	bool (*in_group) (struct item_group *group, int nameid);
 	int (*group_item) (struct item_group *group);
 	int (*chain_item) (unsigned short chain_id, int *rate);
@@ -725,6 +748,7 @@ struct itemdb_interface {
 	void (*destroy_item_data) (struct item_data *self, int free_self);
 	int (*final_sub) (union DBKey key, struct DBData *data, va_list ap);
 	int (*options_final_sub) (union DBKey key, struct DBData *data, va_list ap);
+	int (*reform_final_sub) (union DBKey key, struct DBData *data, va_list ap);
 	void (*clear) (bool total);
 	struct item_combo * (*id2combo) (int id);
 	bool (*is_item_usable) (struct item_data *item);
@@ -738,6 +762,16 @@ struct itemdb_interface {
 	bool (*read_libconfig_lapineupgrade) (void);
 	bool (*read_libconfig_lapineupgrade_sub) (struct config_setting_t *it, const char *source);
 	bool (*read_libconfig_lapineupgrade_sub_targets) (struct config_setting_t *sources, struct item_data *data);
+	bool (*read_libconfig_item_reform_info) (void);
+	bool (*read_libconfig_item_reform_info_sub) (struct config_setting_t *it, const char *source);
+	bool (*read_libconfig_item_reform_info_materials) (struct config_setting_t *it, struct item_reform *ir);
+	bool (*read_libconfig_item_reform_info_reqinfo) (struct config_setting_t *it, struct item_reform *ir);
+	bool (*read_libconfig_item_reform_info_behinfo) (struct config_setting_t *it, struct item_reform *ir);
+	bool (*read_libconfig_item_reform_list) (void);
+	bool (*read_libconfig_item_reform_list_sub) (struct config_setting_t *it, const char *source);
+	void (*item_reform) (struct map_session_data *sd, const struct item_reform *ir, int idx);
+	const struct item_reform *(*search_reform_baseitem) (const struct item_data *itd, int nameid);
+
 };
 
 #ifdef HERCULES_CORE

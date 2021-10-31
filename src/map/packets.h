@@ -2036,4 +2036,9 @@ packet(0x96e,clif->ackmergeitems);
 	packet(0x0bb0, clif->pGuildMembersNear);
 #endif  // PACKETVER_MAIN_NUM >= 20220216
 
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20211103
+	packet(0x0b90, clif->pItemReformClose);
+	packet(0x0b91, clif->pItemReformAck);
+#endif // PACKETVER_MAIN_NUM >= 20201118 || PACKETVER_RE_NUM >= 20211103
+
 #endif /* MAP_PACKETS_H */

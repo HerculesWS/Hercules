@@ -11002,3 +11002,9 @@ Creates a dynamic npc copy in range of the player with certain criteria:
 a dynamic npc cannot be created from a FAKE_NPC source
 and it does not run OnInit event when created but rather uses OnDynamicNpcInit.
 returns true on success and false on failure
+
+---------------------------------------
+*openreformui(<item id>)
+
+Opens Item Reform user interface for the given item
+returns true on success and false on failure

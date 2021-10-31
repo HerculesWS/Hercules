@@ -70,6 +70,7 @@ enum macro_detect_status;
 enum macro_report_status;
 enum grade_level;
 enum grade_ui_result;
+enum item_reform_status;
 
 /**
  * Defines
@@ -1933,6 +1934,11 @@ struct clif_interface {
 	void (*PartyBookingCancelVolunteerToPM) (struct map_session_data *sd);
 	void (*PartyBookingRefuseVolunteerToPM) (struct map_session_data *sd);
 #endif
+	/* Item Reform */
+	void (*item_reform_open) (struct map_session_data *sd, int itemId);
+	void (*pItemReformClose) (int fd, struct map_session_data *sd);
+	void (*pItemReformAck) (int fd, struct map_session_data *sd);
+	void (*item_reform_result) (struct map_session_data *sd, int index, enum item_reform_status result);
 };
 
 #ifdef HERCULES_CORE

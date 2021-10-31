@@ -10396,6 +10396,30 @@ ACMD(reloadgradedb)
 	return true;
 }
 
+ACMD(itemreform)
+{
+#if PACKETVER_MAIN_NUM >= 20201118 || PACKETVER_RE_NUM >= 20211103
+	struct item_data *item_data;
+
+	if ((item_data = itemdb->search_name(message)) == NULL &&
+		(item_data = itemdb->exists(atoi(message))) == NULL)
+	{
+		clif->message(fd, msg_fd(fd, 19)); // Invalid item ID or name.
+		return false;
+	}
+	if (VECTOR_LENGTH(item_data->reform_list) == 0) {
+		clif->message(fd, "No reforms available for given item.");
+		return false;
+	}
+
+	clif->item_reform_open(sd, item_data->nameid);
+	return true;
+#else
+	clif->message(fd, "Item Reform UI is not supported.");
+	return false;
+#endif
+}
+
 /**
  * Fills the reference of available commands in atcommand DBMap
  **/
@@ -10689,6 +10713,7 @@ static void atcommand_basecommands(void)
 		ACMD_DEF(refineryui),
 		ACMD_DEF(gradeui),
 		ACMD_DEF(reloadgradedb),
+		ACMD_DEF(itemreform),
 	};
 	int i;
 
