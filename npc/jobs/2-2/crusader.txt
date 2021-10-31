@@ -1218,6 +1218,8 @@ OnDead:
 
 job_cru,98,105,4	script	 Summoner#cr5	WARPNPC,3,3,{
 OnTouch:
+	if (checkhiding())
+		end;
 	CRUS_Q = 6;
 	changequest 3010,3011;
 	warp "prt_castle",164,28;
@@ -1426,6 +1428,8 @@ OnInit:
 	end;
 
 OnTouch:
+	if (checkhiding())
+		end;
 	warp "prt_castle",35,147;
 	donpcevent "Monster Summon#cr0::OnReset";
 	donpcevent "Monster Summon#cr4::OnReset";

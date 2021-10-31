@@ -127,6 +127,8 @@ ma_fild02,312,317,5	script	Guard#buwaya_cave	4_MAL_SOLDIER,{
 ma_fild02,315,323,0	script	Cave Entrance#buwaya	WARPNPC,2,2,{
 	end;
 OnTouch:
+	if (checkhiding())
+		end;
 	if (BaseLevel < 130) {
 		mes("[Guard]");
 		mes("People under ^ff0000level 130^000000");
@@ -287,6 +289,8 @@ OnEnable:
 	enablenpc(instance_npcname("#box_out"));
 	end;
 OnTouch:
+	if (checkhiding())
+		end;
 	.@x = rand(1, 20) + 97;
 	.@y = rand(1, 20) + 74;
 	warp(instance_mapname("1@ma_c"), .@x, .@y);
@@ -447,6 +451,8 @@ OnEnable:
 	enablenpc(instance_npcname("#cave_out"));
 	end;
 OnTouch:
+	if (checkhiding())
+		end;
 	mes("Would like to go out?");
 	next();
 	if (select("Yes!", "No, I will stay.") == 1)

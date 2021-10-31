@@ -391,6 +391,8 @@ que_qsch05,345,82,3	duplicate(Wish Maiden#gq_main)	Wish Maiden#gq_sch05	4_F_VALK
 	.@sub$ = callfunc("F_Okolnir");
 
 OnTouch:
+	if (checkhiding())
+		end;
 	.@sub$ = callfunc("F_Okolnir");
 	.@saram = getmapusers("que_q"+.@sub$);
 	if (.@saram < 21) {
@@ -956,6 +958,8 @@ que_qsch05,2,3,0	duplicate(#miro_yf_main)	#miro_yf_sch05	CLEAR_NPC
 	end;
 
 OnTouch:
+	if (checkhiding())
+		end;
 	.@sub$ = callfunc("F_Okolnir");
 	if (countitem(Crystal_Key)) {
 		mes "The Warp Gate responds to the Crystal Key.";
@@ -1532,6 +1536,8 @@ que_qsch05,1,8,0	duplicate(#gd_main_mobctrl)	#gd_sch05_mobctrl	CLEAR_NPC
 	end;
 
 OnTouch:
+	if (checkhiding())
+		end;
 	.@sub$ = callfunc("F_Okolnir");
 	if (compare(strnpcinfo(NPC_NAME),"windpath03")) {
 		warp "que_q"+.@sub$,119,103;
@@ -2290,6 +2296,8 @@ que_qsch05,252,340,3	duplicate(Wish Maiden#main_gift)	Wish Maiden#sch05_gift	4_F
 	end;
 
 OnTouch:
+	if (checkhiding())
+		end;
 	.@t$ = ((compare(strnpcinfo(NPC_MAP),"aru"))?"arug_cas0":"schg_cas0")+(charat(strnpcinfo(NPC_MAP),getstrlen(strnpcinfo(NPC_MAP))-1));
 	warp .@t$,157,369;
 	end;

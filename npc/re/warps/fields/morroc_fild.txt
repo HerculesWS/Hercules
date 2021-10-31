@@ -61,7 +61,12 @@ moc_fild03,70,341,0	warp	mocf04-1	5,2,moc_fild02,332,23
 //moc_fild04,14,98,0	warp	mocf07	1,11,moc_fild05,378,119
 //moc_fild04,175,18,0	warp	mocf08	3,2,moc_fild08,170,380
 //moc_fild04,19,206,0	warp	mocf09	3,15,moc_fild05,373,208
-//moc_fild04,219,327,0	script	mocf016	WARPNPC,3,4,{ @anthell = 0; warp "anthell01",35,262; }
+//moc_fild04,219,327,0	script	mocf016	WARPNPC,3,4,{
+//	if (checkhiding())
+//		end;
+//	@anthell = 0;
+//	warp("anthell01", 35, 262);
+//}
 //moc_fild04,292,381,0	warp	mocf01-2	10,1,moc_fild01,76,25
 //moc_fild04,314,381,0	warp	mocf01-3	10,1,moc_fild01,76,25
 //moc_fild04,336,381,0	warp	mocf01-4	10,1,moc_fild01,76,25
@@ -114,7 +119,12 @@ moc_fild13,308,49,0	warp	mocf06-1	2,4,moc_fild03,20,37
 //moc_fild14,196,382,0	warp	mocf16-1	4,2,moc_fild08,204,19
 //moc_fild15,104,16,0	warp	mocf26	9,2,moc_fild16,125,380
 //moc_fild15,158,363,0	warp	mocf18-1	6,2,moc_fild09,126,23
-//moc_fild15,258,253,0	script	mocf017	WARPNPC,3,3,{ @anthell = 1; warp "anthell01",35,262; }
+//moc_fild15,258,253,0	script	mocf017	WARPNPC,3,3,{
+//	if (checkhiding())
+//		end;
+//	@anthell = 1;
+//	warp("anthell01", 35, 262);
+//}
 //moc_fild15,348,18,0	warp	mocf27	5,2,moc_fild16,334,379
 //moc_fild15,367,276,0	warp	mocf25-1	2,4,moc_fild14,19,278
 //moc_fild15,38,105,0	warp	mocf23-1	2,4,moc_fild11,376,197

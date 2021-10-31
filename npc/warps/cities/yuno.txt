@@ -105,6 +105,8 @@ yuno_in01,101,85,0	warp	yun66	1,1,yuno,245,144
 
 // Juno In05 (Entering Random Warps) -------------------------------------------
 yuno_in05,153,141,0	script	#yun63	WARPNPC,1,1,{
+	if (checkhiding())
+		end;
 	if (rand(2))
 		warp "yuno_in05",192,102;
 	else
@@ -113,6 +115,8 @@ yuno_in05,153,141,0	script	#yun63	WARPNPC,1,1,{
 }
 // Juno In05 (Random Warps - Cross Shaped) -------------------------------------
 yuno_in05,196,102,0	script	#yun64	WARPNPC,1,1,{
+	if (checkhiding())
+		end;
 	switch(rand(3)) {
 		case 0: warp "yuno_in05",169,102; end;
 		case 1: warp "yuno_in05",128,82;  end;
@@ -120,6 +124,8 @@ yuno_in05,196,102,0	script	#yun64	WARPNPC,1,1,{
 	}
 }
 yuno_in05,181,116,0	script	#yun65	WARPNPC,1,1,{
+	if (checkhiding())
+		end;
 	switch(rand(3)) {
 		case 0: warp "yuno_in05",181,94; end;
 		case 1: warp "yuno_in05",176,13; end;
@@ -127,6 +133,8 @@ yuno_in05,181,116,0	script	#yun65	WARPNPC,1,1,{
 	}
 }
 yuno_in05,165,102,0	script	#yun66	WARPNPC,1,1,{
+	if (checkhiding())
+		end;
 	if (rand(2))
 		warp "yuno_in05",192,102;
 	else
@@ -134,6 +142,8 @@ yuno_in05,165,102,0	script	#yun66	WARPNPC,1,1,{
 	end;
 }
 yuno_in05,181,91,0	script	#yun67	WARPNPC,1,1,{
+	if (checkhiding())
+		end;
 	if (rand(2))
 		warp "yuno_in05",181,112;
 	else
@@ -142,6 +152,8 @@ yuno_in05,181,91,0	script	#yun67	WARPNPC,1,1,{
 }
 // Juno In05 (Random Warps - T-Shaped) -----------------------------------------
 yuno_in05,148,82,0	script	#yun68	WARPNPC,1,1,{
+	if (checkhiding())
+		end;
 	switch(rand(3)) {
 		case 0: warp "yuno_in05",169,102; end;
 		case 1: warp "yuno_in05",128,82;  end;
@@ -149,6 +161,8 @@ yuno_in05,148,82,0	script	#yun68	WARPNPC,1,1,{
 	}
 }
 yuno_in05,125,82,0	script	#yun69	WARPNPC,1,1,{
+	if (checkhiding())
+		end;
 	if (rand(2))
 		warp "yuno_in05",192,102;
 	else
@@ -156,6 +170,8 @@ yuno_in05,125,82,0	script	#yun69	WARPNPC,1,1,{
 	end;
 }
 yuno_in05,136,71,0	script	#yun70	WARPNPC,1,1,{
+	if (checkhiding())
+		end;
 	switch(rand(3)) {
 		case 0: warp "yuno_in05",181,112; end;
 		case 1: warp "yuno_in05",16,185;  end;
@@ -164,6 +180,8 @@ yuno_in05,136,71,0	script	#yun70	WARPNPC,1,1,{
 }
 // Juno In05 (Random Warps - Other) --------------------------------------------
 yuno_in05,16,188,0	script	#yun71	WARPNPC,1,1,{
+	if (checkhiding())
+		end;
 	switch(rand(3)) {
 		case 0: warp "yuno_in05",181,94; end;
 		case 1: warp "yuno_in05",176,13; end;
@@ -171,6 +189,8 @@ yuno_in05,16,188,0	script	#yun71	WARPNPC,1,1,{
 	}
 }
 yuno_in05,176,9,0	script	#yun72	WARPNPC,1,1,{
+	if (checkhiding())
+		end;
 	if (rand(2))
 		warp "yuno_in05",181,112;
 	else
@@ -178,6 +198,8 @@ yuno_in05,176,9,0	script	#yun72	WARPNPC,1,1,{
 	end;
 }
 yuno_in05,176,52,0	script	#yun73	WARPNPC,1,1,{
+	if (checkhiding())
+		end;
 	switch(rand(3)) {
 		case 0: warp "yuno_in05",181,94; end;
 		case 1: warp "yuno_in05",176,13; end;
@@ -186,6 +208,8 @@ yuno_in05,176,52,0	script	#yun73	WARPNPC,1,1,{
 }
 // Juno In05 (Destination - Room) ----------------------------------------------
 yuno_in05,40,178,0	script	#yun74	WARPNPC,1,1,{
+	if (checkhiding())
+		end;
 	switch(rand(3)) {
 		case 0: warp "yuno_in05",181,94; end;
 		case 1: warp "yuno_in05",176,13; end;
@@ -193,6 +217,8 @@ yuno_in05,40,178,0	script	#yun74	WARPNPC,1,1,{
 	}
 }
 yuno_in05,47,186,0	script	#yun75	WARPNPC,1,1,{
+	if (checkhiding())
+		end;
 	switch(rand(3)) {
 		case 0: warp "yuno_in05",181,94; end;
 		case 1: warp "yuno_in05",176,13; end;

@@ -34,6 +34,8 @@
 //=========================================================================
 
 ra_san01,139,13,0	script	sanctuary01	WARPNPC,1,1,{
+	if (checkhiding())
+		end;
 	if (ra_tem_q == 21) { warp "que_san04",119,110; end; }
 	switch(rand(3)) {
 		case 1:  warp "ra_san02",213,275; break;

@@ -1446,6 +1446,8 @@ OnInit:
 	end;
 
 OnTouch:
+	if (checkhiding())
+		end;
 	donpcevent "Thomas#ASNTEST::OnDisable";
 	if (ASSIN_Q == 3)
 		ASSIN_Q = 3;
@@ -1594,6 +1596,8 @@ OnTouch:
 
 in_moc_16,182,169,0	script	Maze Assistant	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	if (ASSIN_Q == 5 || ASSIN_Q == 6) {
 		warp "in_moc_16",181,183;
 		++ASSIN_Q;

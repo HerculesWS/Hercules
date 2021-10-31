@@ -1174,7 +1174,9 @@ OnEnable:
 	callfunc("F_Tower_Monster", atoi(replacestr(strnpcinfo(NPC_NAME), "FGate102tower", "")) + 1, strnpcinfo(NPC_MAP), instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 	end;
 
-OnTouch_:
+OnTouch:
+	if (checkhiding())
+		end;
 	callfunc("F_Tower_Warp", atoi(replacestr(strnpcinfo(NPC_NAME), "FGate102tower", "")) + 1, strnpcinfo(NPC_MAP));
 	end;
 
@@ -1246,7 +1248,9 @@ OnEnable:
 	initnpctimer();
 	end;
 
-OnTouch_:
+OnTouch:
+	if (checkhiding())
+		end;
 	getitem(Dark_Ashes, 1);
 	warp(instance_mapname("2@tower"), 52, 354);
 	end;
@@ -1269,7 +1273,9 @@ OnEnable:
 	enablenpc(instance_npcname("25FGate102tower-2"));
 	end;
 
-OnTouch_:
+OnTouch:
+	if (checkhiding())
+		end;
 	warp(instance_mapname("2@tower"), 52, 354);
 	end;
 }
@@ -1375,7 +1381,9 @@ OnEnable:
 	initnpctimer();
 	end;
 
-OnTouch_:
+OnTouch:
+	if (checkhiding())
+		end;
 	getitem(Dark_Ashes, 1);
 	warp(instance_mapname("3@tower"), 52, 354);
 	end;
@@ -1398,7 +1406,9 @@ OnEnable:
 	enablenpc(instance_npcname("50FGate102tower-2"));
 	end;
 
-OnTouch_:
+OnTouch:
+	if (checkhiding())
+		end;
 	warp(instance_mapname("3@tower"), 52, 354);
 	end;
 }
@@ -1487,7 +1497,9 @@ OnEnable:
 	initnpctimer();
 	end;
 
-OnTouch_:
+OnTouch:
+	if (checkhiding())
+		end;
 	getitem(Dark_Ashes, 1);
 	warp(instance_mapname("4@tower"), 52, 354);
 	end;
@@ -1510,7 +1522,9 @@ OnEnable:
 	enablenpc(instance_npcname("75FGate102tower-2"));
 	end;
 
-OnTouch_:
+OnTouch:
+	if (checkhiding())
+		end;
 	warp(instance_mapname("4@tower"), 52, 354);
 	end;
 }
@@ -1598,7 +1612,9 @@ OnEnable:
 	initnpctimer();
 	end;
 
-OnTouch_:
+OnTouch:
+	if (checkhiding())
+		end;
 	getitem(Dark_Ashes, 1);
 	warp(instance_mapname("5@tower"), 101, 72);
 	end;
@@ -1621,7 +1637,9 @@ OnEnable:
 	enablenpc(instance_npcname("99FGate102tower-2"));
 	end;
 
-OnTouch_:
+OnTouch:
+	if (checkhiding())
+		end;
 	warp(instance_mapname("5@tower"), 101, 72);
 	end;
 }

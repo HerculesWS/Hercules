@@ -767,6 +767,8 @@ OnTouch:
 que_bingo,49,136,0	script	go3#bingo	WARPNPC,1,1,{
 
 OnTouch:
+	if (checkhiding())
+		end;
 	switch($@hu_bingob) {
 		case 0: warp "que_bingo",49,125; break;
 		case 1: warp "que_bingo",53,121; break;

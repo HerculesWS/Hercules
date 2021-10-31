@@ -50,6 +50,8 @@ umbala,107,130,0	warp	um_houseB1-1	1,1,um_in,99,66
 um_in,99,63,0	warp	um_houseB1-2	1,1,umbala,108,127
 umbala,220,189,0	script	um_shaman1-1	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	if (event_umbala == 7) {
 		warp "um_in",32,71;
 	}

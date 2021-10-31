@@ -551,6 +551,8 @@ OnInstanceInit:
 	disablenpc(instance_npcname("Culvert Entrance#i"));
 	end;
 OnTouch:
+	if (checkhiding())
+		end;
 	if (BaseLevel >= 140)
 		warp(instance_mapname("2@pump"), 38, 88);
 	else
@@ -943,6 +945,8 @@ OnInstanceInit:
 	disablenpc(instance_npcname(strnpcinfo(NPC_NAME)));
 	end;
 OnTouch:
+	if (checkhiding())
+		end;
 	warp("mal_in01", 161, 32);
 	end;
 }

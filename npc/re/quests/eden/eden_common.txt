@@ -287,6 +287,8 @@ malaya,238,206,6	duplicate(eto)	Eden Teleport Officer#32	4_F_NOVICE
 
 moc_para01,30,10,0	script	#eden_out	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	switch (nak_warp) {
 		case 1: warp "prontera",116,72; end;
 		case 2: warp "moc_ruins",64,161; end;

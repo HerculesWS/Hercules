@@ -9824,6 +9824,8 @@ OnTouch:
 
 hu_in01,15,108,0	script	alex#warp	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	if (hg_odin == 17) {
 		mes "[Alex]";
 		mes "Haven't you found it yet?";
@@ -9914,6 +9916,8 @@ OnTouch:
 
 hugel,52,90,0	script	alex#warp2	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	if (hg_odin > 59) warp "hu_in01",102,90;
 	else if (hg_odin > 21 && hg_odin < 60) warp "hu_in01",173,90;
 	else warp "hu_in01",33,90;
@@ -9922,12 +9926,16 @@ OnTouch:
 
 hu_in01,155,70,0	script	alex#warp3	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	mes "^3355FFThe door is locked.^000000";
 	close;
 }
 
 hu_in01,155,108,0	script	alex#warp4	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	mes "^3355FFThe door is locked.^000000";
 	close;
 }

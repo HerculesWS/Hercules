@@ -40,6 +40,8 @@ mosk_in,215,36,0	warp	babayagaout		1,1,mosk_dun02,53,217
 mosk_dun02,53,220,4	script	#babayagain	WARPNPC,1,1,{
 	end;
 OnTouch:
+	if (checkhiding())
+		end;
 	if (mos_nowinter == 11) {
 		donpcevent "Soldier1#mos::OnEnable";
 		donpcevent "Soldier2#mos::OnEnable";

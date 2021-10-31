@@ -1306,6 +1306,8 @@ OnDisable:
 
 job_prist,24,109,4	script	prst1_1	WARPNPC,3,3,{
 OnTouch:
+	if (checkhiding())
+		end;
 	.@mobs = getvariableofnpc(.MyMobs,"Zombie_Generator#prst");
 	if (BaseJob == Job_Priest) warp "job_prist",168,17;
 	else if (BaseClass == Job_Acolyte && .@mobs < 1) {
@@ -1610,6 +1612,8 @@ OnTouch:
 
 job_prist,168,180,4	script	prst2_1	WARPNPC,3,3,{
 OnTouch:
+	if (checkhiding())
+		end;
 	if (BaseJob == Job_Priest) warp "job_prist",98,40;
 	else if (BaseClass == Job_Acolyte) {
 		warp "job_prist",98,40;
@@ -1716,6 +1720,8 @@ OnDisable:
 
 job_prist,98,105,4	script	prst3_1	WARPNPC,3,3,{
 OnTouch:
+	if (checkhiding())
+		end;
 	if (BaseJob == Job_Priest) {
 		warp "prt_church",15,36;
 		end;

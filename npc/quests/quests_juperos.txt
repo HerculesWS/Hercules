@@ -4896,6 +4896,8 @@ OnInit:
 	end;
 
 OnTouch:
+	if (checkhiding())
+		end;
 	warp "jupe_core",rand(149,151),286;
 	end;
 }
@@ -4936,6 +4938,8 @@ OnTimer10000:
 
 juperos_02,33,59,0	script	jupe_goto2F	WARPNPC,2,2,{
 OnTouch:
+	if (checkhiding())
+		end;
 	switch(rand(1,4)) {
 	case 1: warp "juperos_01",120,72; end;
 	case 2: warp "juperos_01",120,112; end;

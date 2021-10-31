@@ -187,6 +187,8 @@ morocc,43,108,5	script	Sharp-Looking Kid#dan_07	4_KID01,{
 
 morocc,45,110,0	script	que_job01#01	WARPNPC,2,2,{
 OnTouch:
+	if (checkhiding())
+		end;
 	if (BaseJob == Job_Assassin) {
 		warp "que_job01",9,94;
 		end;
@@ -212,6 +214,8 @@ que_job01,68,96,0	warp	que_job01#03	2,2,que_job01,17,53
 
 que_job01,80,77,0	script	que_job01#04	WARPNPC,2,2,{
 OnTouch:
+	if (checkhiding())
+		end;
 	if (BaseJob == Job_Assassin) {
 		warp "que_job01",61,50;
 		end;
@@ -664,6 +668,8 @@ OnReset:
 	end;
 
 OnTouch:
+	if (checkhiding())
+		end;
 	if (prt_curse == 24) {
 		if ($@maobar_room == 0) {
 			$@maobar_room = 1;
@@ -781,6 +787,8 @@ que_job01,51,44,0	warp	que_job01#room_2	1,1,que_job01,80,23
 
 que_job01,11,4,0	script	que_job01#room1_out	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	warp "que_job01",52,50;
 	donpcevent " #room1timer::OnStop";
 	end;
@@ -7519,6 +7527,8 @@ OnDisable:
 
 prt_castle,318,276,0	script	#eisen	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	if ((nkprince_eisen == 4) || (nkprince_eisen == 5)) {
 		donpcevent "Prince#another_ern::OnEnable";
 		nkprince_eisen = 5;
@@ -7611,6 +7621,8 @@ OnTouch:
 
 prt_castle,336,276,0	script	#ern	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	if (questprogress(10023) == 1) {
 		donpcevent "Prince#eisen6::OnEnable";
 	}
@@ -7620,6 +7632,8 @@ OnTouch:
 
 prt_castle,300,276,0	script	#erich	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	if (questprogress(10020) == 1) {
 		donpcevent "Prince#eisen1::OnEnable";
 	}
@@ -7629,6 +7643,8 @@ OnTouch:
 
 prt_castle,330,271,0	script	#helmut	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	if (questprogress(10022) == 1) {
 		donpcevent "Prince#eisen3::OnEnable";
 	}
@@ -7638,6 +7654,8 @@ OnTouch:
 
 prt_castle,348,271,0	script	#poe	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	if (questprogress(10018) == 1) {
 		donpcevent "Prince#eisen4::OnEnable";
 	}
@@ -7647,6 +7665,8 @@ OnTouch:
 
 prt_castle,354,276,0	script	#peter	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	if (questprogress(10019) == 1) {
 		donpcevent "Prince#eisen5::OnEnable";
 	}
@@ -7656,6 +7676,8 @@ OnTouch:
 
 prt_castle,310,271,0	script	#urgen	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	if (questprogress(10021) == 1) {
 		donpcevent "Prince#eisen2::OnEnable";
 	}

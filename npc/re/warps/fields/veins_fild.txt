@@ -54,6 +54,8 @@ ve_fild04,115,50,0	warp	ve_fild4-3	1,1,ve_fild06,80,183
 ve_fild06,153,220,0	warp	ve_fild6-1	1,1,veins,218,355
 /*
 ve_fild06,81,177,0	script	ve_fild6-2	WARPNPC,1,1,{
+	if (checkhiding())
+		end;
 	if (rand(2))
 		warp "ve_fild04",115,55;
 	else

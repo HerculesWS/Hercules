@@ -1134,6 +1134,8 @@ nameless_in,12,37,0	script	Out_from_Monastery	WARPNPC,1,1,{
 	end;
 
 OnTouch:
+	if (checkhiding())
+		end;
 	if (aru_monas == 19) {
 		aru_monas = 20;
 		warp "nameless_n",168,252;
@@ -1149,6 +1151,8 @@ nameless_i,168,257,0	script	outtoin_01#mo	WARPNPC,1,1,{
 	end;
 
 OnTouch:
+	if (checkhiding())
+		end;
 	if (aru_monas == 18 || aru_monas == 19) {
 		warp "nameless_in",12,41;
 		end;

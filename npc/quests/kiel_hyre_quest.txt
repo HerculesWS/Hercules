@@ -4892,6 +4892,8 @@ OnTouch:
 // After 30-40 seonds this NPC should be disabled.
 kh_mansion,29,27,0	script	Kiehl_Room_Warp	WARPNPC,2,2,{
 OnTouch:
+	if (checkhiding())
+		end;
 	warp "kh_kiehl01",10,31;
 	end;
 
@@ -5165,6 +5167,8 @@ yuno,250,132,0	script	Old Lady#kh	4_F_05,{
 //- Warp portal into Rosimier Mansion -
 yuno,273,141,0	script	Rosimmir_Entrance	WARPNPC,2,2,{
 OnTouch:
+	if (checkhiding())
+		end;
 	if (countitem(Rosimier_Key) < 1) {
 		mes "That mansion seems to have";
 		mes "been destroyed by the time.";
@@ -5776,6 +5780,8 @@ OnTimer30000:
 	end;
 
 OnTouch:
+	if (checkhiding())
+		end;
 	warp "kh_kiehl01",55,33;
 	end;
 }
@@ -5832,6 +5838,8 @@ OnTimer30000:
 	end;
 
 OnTouch:
+	if (checkhiding())
+		end;
 	warp "kh_kiehl01",173,52;
 	end;
 }
@@ -5890,6 +5898,8 @@ OnTimer30000:
 	end;
 
 OnTouch:
+	if (checkhiding())
+		end;
 	warp "kh_kiehl01",68,108;
 	end;
 }
@@ -5945,6 +5955,8 @@ OnTimer30000:
 	end;
 
 OnTouch:
+	if (checkhiding())
+		end;
 	warp "kh_kiehl01",49,177;
 	end;
 }
@@ -6150,6 +6162,8 @@ OnInit:
 	end;
 
 OnTouch:
+	if (checkhiding())
+		end;
 	if (KielHyreQuest >= 46)
 		warp "kh_kiehl02",50,7;
 	else
@@ -6755,6 +6769,8 @@ OnInit:
 //- Kiehl's Room; Kiehl_Room_Exit -
 kh_kiehl02,50,59,0	script	Kiehl_Room_Exit	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	if (getmapusers("kh_kiehl02") < 1)
 		donpcevent "KiehlRoom::OnReset";
 	warp "lighthalzen",193,202;

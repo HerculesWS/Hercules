@@ -7243,7 +7243,9 @@ thor_camp,98,209,5	script	Thor Volcano Soldier#vo9	4_DST_SOLDIER,{
 }
 
 thor_v02,143,78,0	script	#totcamp	WARPNPC,2,2,{
-OnTouch_:
+OnTouch:
+	if (checkhiding())
+		end;
 	if (rachel_camel < 24) {
 		warp "que_thor",65,55;
 		end;
@@ -7253,13 +7255,17 @@ OnTouch_:
 }
 
 que_thor,69,56,0	script	#tov_1	WARPNPC,2,2,{
-OnTouch_:
+OnTouch:
+	if (checkhiding())
+		end;
 	warp "thor_v02",146,84;
 	end;
 }
 
 que_thor,187,56,0	script	#tov_2	WARPNPC,2,2,{
-OnTouch_:
+OnTouch:
+	if (checkhiding())
+		end;
 	warp "thor_v02",146,84;
 	end;
 }

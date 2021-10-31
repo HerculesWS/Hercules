@@ -306,6 +306,8 @@ OnInstanceInit:
 }
 
 1@spa,54,28,0	script	#gp3warp	WARPNPC,1,1,{
+	if (checkhiding())
+		end;
 	if (!'gp5) {
 		warp("1@spa", 218, 186);
 	} else {

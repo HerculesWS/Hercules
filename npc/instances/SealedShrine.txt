@@ -790,6 +790,8 @@ OnInstanceInit:
 //== To 2F Warp ============================================
 1@cata,281,12,0	script	ins_bapho_to_2f	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	if (countitem(Token_Of_Apostle) > 0) {
 		delitem(Token_Of_Apostle, countitem(Token_Of_Apostle));
 		'ins_baphomet = 5;

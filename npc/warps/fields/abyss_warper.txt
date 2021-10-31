@@ -173,6 +173,8 @@ OnInit:
 	end;
 
 OnTouch:
+	if (checkhiding())
+		end;
 	warp "abyss_01",260,268;
 	end;
 

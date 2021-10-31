@@ -748,6 +748,8 @@ OnEnable:
 	end;
 
 OnTouch:
+	if (checkhiding())
+		end;
 	.@map1$ = instance_mapname("1@gl_k");
 	.@map2$ = instance_mapname("2@gl_k");
 	switch (atoi(replacestr(strnpcinfo(NPC_NAME_HIDDEN), "ghinstancewarp", ""))) {
