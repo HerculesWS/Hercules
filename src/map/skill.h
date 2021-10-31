@@ -116,38 +116,39 @@ enum e_skill_nk {
 	NK_NO_CARDFIX_DEF = 0x80,
 };
 
-//A skill with 3 would be no damage + splash: area of effect.
-//Constants to identify a skill's inf2 value.
+/// A skill with 3 would be no damage + splash: area of effect.
+/// Constants to identify a skill's inf2 value.
 enum e_skill_inf2 {
-	INF2_NONE               = 0x0000000,
-	INF2_QUEST_SKILL        = 0x0000001,
-	INF2_NPC_SKILL          = 0x0000002, // NPC skills are those that players can't have in their skill tree.
-	INF2_WEDDING_SKILL      = 0x0000004,
-	INF2_SPIRIT_SKILL       = 0x0000008,
-	INF2_GUILD_SKILL        = 0x0000010,
-	INF2_SONG_DANCE         = 0x0000020,
-	INF2_ENSEMBLE_SKILL     = 0x0000040,
-	INF2_TRAP               = 0x0000080,
-	INF2_TARGET_SELF        = 0x0000100, // Refers to ground placed skills that will target the caster as well (like Grandcross)
-	INF2_NO_TARGET_SELF     = 0x0000200,
-	INF2_PARTY_ONLY         = 0x0000400,
-	INF2_GUILD_ONLY         = 0x0000800,
-	INF2_NO_ENEMY           = 0x0001000,
-	INF2_NOLP               = 0x0002000, // Spells that can ignore Land Protector
-	INF2_CHORUS_SKILL       = 0x0004000, // Chorus skill
-	INF2_FREE_CAST_NORMAL   = 0x0008000,
-	INF2_FREE_CAST_REDUCED  = 0x0010000,
-	INF2_SHOW_SKILL_SCALE   = 0x0020000,
-	INF2_ALLOW_REPRODUCE    = 0x0040000,
-	INF2_HIDDEN_TRAP        = 0x0080000, // Traps that are hidden (based on trap_visiblity battle conf)
-	INF2_IS_COMBO_SKILL     = 0x0100000, // Sets whether a skill can be used in combos or not
-	INF2_NO_STASIS          = 0x0200000,
-	INF2_NO_KAGEHUMI        = 0x0400000,
-	INF2_RANGE_VULTURE      = 0x0800000, // Range is modified by AC_VULTURE
-	INF2_RANGE_SNAKEEYE     = 0x1000000, // Range is modified by GS_SNAKEEYE
-	INF2_RANGE_SHADOWJUMP   = 0x2000000, // Range is modified by NJ_SHADOWJUMP
-	INF2_RANGE_RADIUS       = 0x4000000, // Range is modified by WL_RADIUS
-	INF2_RANGE_RESEARCHTRAP = 0x8000000, // Range is modified by RA_RESEARCHTRAP
+	INF2_NONE               = 0x00000000,
+	INF2_QUEST_SKILL        = 0x00000001,
+	INF2_NPC_SKILL          = 0x00000002, ///< NPC skills are those that players can't have in their skill tree.
+	INF2_WEDDING_SKILL      = 0x00000004,
+	INF2_SPIRIT_SKILL       = 0x00000008,
+	INF2_GUILD_SKILL        = 0x00000010,
+	INF2_SONG_DANCE         = 0x00000020,
+	INF2_ENSEMBLE_SKILL     = 0x00000040,
+	INF2_TRAP               = 0x00000080,
+	INF2_TARGET_SELF        = 0x00000100, ///< Refers to ground placed skills that will target the caster as well (like Grandcross)
+	INF2_NO_TARGET_SELF     = 0x00000200,
+	INF2_PARTY_ONLY         = 0x00000400,
+	INF2_GUILD_ONLY         = 0x00000800,
+	INF2_NO_ENEMY           = 0x00001000,
+	INF2_NOLP               = 0x00002000, ///< Spells that can ignore Land Protector
+	INF2_CHORUS_SKILL       = 0x00004000, ///< Chorus skill
+	INF2_FREE_CAST_NORMAL   = 0x00008000,
+	INF2_FREE_CAST_REDUCED  = 0x00010000,
+	INF2_SHOW_SKILL_SCALE   = 0x00020000,
+	INF2_ALLOW_REPRODUCE    = 0x00040000, ///< Allow skill to be copied via SC_REPRODUCE
+	INF2_HIDDEN_TRAP        = 0x00080000, ///< Traps that are hidden (based on trap_visiblity battle conf)
+	INF2_IS_COMBO_SKILL     = 0x00100000, ///< Sets whether a skill can be used in combos or not
+	INF2_NO_STASIS          = 0x00200000,
+	INF2_NO_KAGEHUMI        = 0x00400000, 
+	INF2_RANGE_VULTURE      = 0x00800000, ///< Range is modified by AC_VULTURE
+	INF2_RANGE_SNAKEEYE     = 0x01000000, ///< Range is modified by GS_SNAKEEYE
+	INF2_RANGE_SHADOWJUMP   = 0x02000000, ///< Range is modified by NJ_SHADOWJUMP
+	INF2_RANGE_RADIUS       = 0x04000000, ///< Range is modified by WL_RADIUS
+	INF2_RANGE_RESEARCHTRAP = 0x08000000, ///< Range is modified by RA_RESEARCHTRAP
+	INF2_ALLOW_PLAGIARIZE   = 0x10000000, ///< Allow skill to be copied via RG_PLAGIARISM[KeiKun]
 };
 
 
