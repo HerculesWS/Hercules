@@ -1231,9 +1231,14 @@ static int skill_calc_heal(struct block_list *src, struct block_list *target, ui
  **/
 static int can_copy(struct map_session_data *sd, uint16 skill_id)
 {
+	int idx = skill->get_index(skill_id);
 	nullpo_ret(sd);
 
 	/// Checks if preserve is active and if skill can be copied by Plagiarism
+	if (!idx)
+		return 0;
+
+	// Checks if preserve is active and if skill can be copied by Plagiarism
 	if (!sd->sc.data[SC_PRESERVE] && (skill->get_inf2(skill_id) & INF2_ALLOW_PLAGIARIZE))
 		return 1;
 
@@ -3599,12 +3604,12 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 	map->freeblock_lock();
 
 	// Plagiarism and Reproduce Code Block [KeiKun]
-	if (damage > 0 && dmg.flag&BF_SKILL && tsd
+	if (bl->type == BL_PC && damage > 0 && dmg.flag&BF_SKILL && tsd
 		&& (pc->checkskill(tsd, RG_PLAGIARISM) || pc->checkskill(tsd, SC_REPRODUCE))
 		&& (!tsd->sc.data[SC_PRESERVE] || tsd->sc.data[SC__REPRODUCE])
 		&& damage < tsd->battle_status.hp // Updated to not be able to copy skills if the blow will kill you. [Skotlex]
 		) {
-		int copy_skill, cidx = 0;
+		int copy_skill = 0;
 		/**
 		 * Copy Referral: dummy skills should point to their source upon copying
 		 **/
@@ -3640,53 +3645,51 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 				copy_skill = skill->attack_copy_unknown(&attack_type, src, dsrc, bl, &skill_id, &skill_lv, &tick, &flag);
 				break;
 		}
+
+		int cidx, idx, lv = 0;
 		cidx = skill->get_index(copy_skill);
-		if (tsd->status.skill[cidx].id == 0 || tsd->status.skill[cidx].flag == SKILL_FLAG_PLAGIARIZED) { // Split all the check into their own function [Aru]
-			int idx, lv = 0;
-			switch(can_copy(tsd, copy_skill)) {
-			case 1: // Plagiarism
-			{
-				idx = skill->get_index(tsd->cloneskill_id);
-				if (tsd->cloneskill_id && tsd->status.skill[idx].flag == SKILL_FLAG_PLAGIARIZED) {
-					tsd->status.skill[idx].id = 0;
-					tsd->status.skill[idx].lv = 0;
-					tsd->status.skill[idx].flag = 0;
-					clif->deleteskill(tsd, tsd->cloneskill_id);
-				}
-				lv = min(skill_lv, pc->checkskill(tsd, RG_PLAGIARISM));
-
-				tsd->cloneskill_id = copy_skill;
-				pc_setglobalreg(tsd, script->add_variable("CLONE_SKILL"), copy_skill);
-				pc_setglobalreg(tsd, script->add_variable("CLONE_SKILL_LV"), lv);
+		switch(can_copy(tsd, copy_skill)) {
+		case 1: // Plagiarism
+		{
+			idx = skill->get_index(tsd->cloneskill_id);
+			if (idx && tsd->status.skill[idx].flag == SKILL_FLAG_PLAGIARIZED) {
+				clif->deleteskill(tsd, tsd->status.skill[idx].id);
+				tsd->status.skill[idx].id = 0;
+				tsd->status.skill[idx].lv = 0;
+				tsd->status.skill[idx].flag = 0;
 			}
-			break;
-			case 2: // Reproduce
-			{
-				idx = skill->get_index(tsd->reproduceskill_id);
-				lv = sc ? sc->data[SC__REPRODUCE]->val1 : 1;
-				if (tsd->reproduceskill_id && tsd->status.skill[idx].flag == SKILL_FLAG_PLAGIARIZED) {
-					tsd->status.skill[idx].id = 0;
-					tsd->status.skill[idx].lv = 0;
-					tsd->status.skill[idx].flag = 0;
-					clif->deleteskill(tsd, tsd->reproduceskill_id);
+			lv = min(skill_lv, pc->checkskill(tsd, RG_PLAGIARISM));
 
-				}
-				//Level dependent and limitation.
-				lv = min(lv, skill->get_max(copy_skill));
-
-				tsd->reproduceskill_id = copy_skill;
-				pc_setglobalreg(tsd, script->add_variable("REPRODUCE_SKILL"), copy_skill);
-				pc_setglobalreg(tsd, script->add_variable("REPRODUCE_SKILL_LV"), lv);
-			}
-			break;
-			default:
-			break;
-			}
-			tsd->status.skill[cidx].id = copy_skill;
-			tsd->status.skill[cidx].lv = lv;
-			tsd->status.skill[cidx].flag = SKILL_FLAG_PLAGIARIZED;
-			clif->addskill(tsd, copy_skill);
+			tsd->cloneskill_id = cidx;
+			pc_setglobalreg(tsd, script->add_variable("CLONE_SKILL"), copy_skill);
+			pc_setglobalreg(tsd, script->add_variable("CLONE_SKILL_LV"), lv);
 		}
+		break;
+		case 2: // Reproduce
+		{
+			idx = skill->get_index(tsd->reproduceskill_id);
+			lv = sc ? sc->data[SC__REPRODUCE]->val1 : 1;
+			if (idx && tsd->status.skill[idx].flag == SKILL_FLAG_PLAGIARIZED) {
+				clif->deleteskill(tsd, tsd->status.skill[idx].id);
+				tsd->status.skill[idx].id = 0;
+				tsd->status.skill[idx].lv = 0;
+				tsd->status.skill[idx].flag = 0;
+			}
+			//Level dependent and limitation.
+			lv = min(lv, skill->get_max(copy_skill));
+
+			tsd->reproduceskill_id = cidx;
+			pc_setglobalreg(tsd, script->add_variable("REPRODUCE_SKILL"), copy_skill);
+			pc_setglobalreg(tsd, script->add_variable("REPRODUCE_SKILL_LV"), lv);
+		}
+		break;
+		default:
+		break;
+		}
+		tsd->status.skill[cidx].id = copy_skill;
+		tsd->status.skill[cidx].lv = lv;
+		tsd->status.skill[cidx].flag = SKILL_FLAG_PLAGIARIZED;
+		clif->addskill(tsd, copy_skill);
 	}
 
 	if (dmg.dmg_lv >= ATK_MISS && (type = skill->get_walkdelay(skill_id, skill_lv)) > 0) {
