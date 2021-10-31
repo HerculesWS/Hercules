@@ -77761,6 +77761,32 @@ bool HP_script_sellitemcurrency_add(struct npc_data *nd, struct script_state *st
 	}
 	return retVal___;
 }
+void HP_script_declare_conditional_feature(const char *feature, bool enabled) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_script_declare_conditional_feature_pre > 0) {
+		void (*preHookFunc) (const char **feature, bool *enabled);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_script_declare_conditional_feature_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_script_declare_conditional_feature_pre[hIndex].func;
+			preHookFunc(&feature, &enabled);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.script.declare_conditional_feature(feature, enabled);
+	}
+	if (HPMHooks.count.HP_script_declare_conditional_feature_post > 0) {
+		void (*postHookFunc) (const char *feature, bool enabled);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_script_declare_conditional_feature_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_script_declare_conditional_feature_post[hIndex].func;
+			postHookFunc(feature, enabled);
+		}
+	}
+	return;
+}
 /* searchstore_interface */
 bool HP_searchstore_open(struct map_session_data *sd, unsigned int uses, unsigned short effect) {
 	int hIndex = 0;

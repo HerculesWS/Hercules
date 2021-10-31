@@ -5828,6 +5828,8 @@ struct {
 	struct HPMHookPoint *HP_script_run_item_lapineddukddak_script_post;
 	struct HPMHookPoint *HP_script_sellitemcurrency_add_pre;
 	struct HPMHookPoint *HP_script_sellitemcurrency_add_post;
+	struct HPMHookPoint *HP_script_declare_conditional_feature_pre;
+	struct HPMHookPoint *HP_script_declare_conditional_feature_post;
 	struct HPMHookPoint *HP_searchstore_open_pre;
 	struct HPMHookPoint *HP_searchstore_open_post;
 	struct HPMHookPoint *HP_searchstore_query_pre;
@@ -13009,6 +13011,8 @@ struct {
 	int HP_script_run_item_lapineddukddak_script_post;
 	int HP_script_sellitemcurrency_add_pre;
 	int HP_script_sellitemcurrency_add_post;
+	int HP_script_declare_conditional_feature_pre;
+	int HP_script_declare_conditional_feature_post;
 	int HP_searchstore_open_pre;
 	int HP_searchstore_open_post;
 	int HP_searchstore_query_pre;

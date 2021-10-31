@@ -7302,6 +7302,8 @@ typedef void (*HPMHOOK_pre_script_run_item_lapineddukddak_script) (struct map_se
 typedef void (*HPMHOOK_post_script_run_item_lapineddukddak_script) (struct map_session_data *sd, struct item_data *data, int oid);
 typedef bool (*HPMHOOK_pre_script_sellitemcurrency_add) (struct npc_data **nd, struct script_state **st, int *argIndex);
 typedef bool (*HPMHOOK_post_script_sellitemcurrency_add) (bool retVal___, struct npc_data *nd, struct script_state *st, int argIndex);
+typedef void (*HPMHOOK_pre_script_declare_conditional_feature) (const char **feature, bool *enabled);
+typedef void (*HPMHOOK_post_script_declare_conditional_feature) (const char *feature, bool enabled);
 #endif // MAP_SCRIPT_H
 #ifdef MAP_SEARCHSTORE_H /* searchstore */
 typedef bool (*HPMHOOK_pre_searchstore_open) (struct map_session_data **sd, unsigned int *uses, unsigned short *effect);

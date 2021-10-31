@@ -2981,6 +2981,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(script->run_item_rental_start_script, HP_script_run_item_rental_start_script) },
 	{ HP_POP(script->run_item_lapineddukddak_script, HP_script_run_item_lapineddukddak_script) },
 	{ HP_POP(script->sellitemcurrency_add, HP_script_sellitemcurrency_add) },
+	{ HP_POP(script->declare_conditional_feature, HP_script_declare_conditional_feature) },
 /* searchstore_interface */
 	{ HP_POP(searchstore->open, HP_searchstore_open) },
 	{ HP_POP(searchstore->query, HP_searchstore_query) },
