@@ -21980,6 +21980,11 @@ static void skill_validate_skillinfo(struct config_setting_t *conf, struct s_ski
 					sk->inf2 |= INF2_RANGE_RESEARCHTRAP;
 				else
 					sk->inf2 &= ~INF2_RANGE_RESEARCHTRAP;
+			} else if (strcmpi(skill_info, "AllowPlagiarism") == 0) {
+				if (on)
+					sk->inf2 |= INF2_ALLOW_PLAGIARIZE;
+				else
+					sk->inf2 &= ~INF2_ALLOW_PLAGIARIZE;
 			} else if (strcmpi(skill_info, "None") != 0) {
 				ShowWarning("%s: Invalid sub-type %s specified for skill ID %d in %s! Skipping sub-type...\n",
 					    __func__, skill_info, sk->nameid, conf->file);
