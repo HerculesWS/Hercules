@@ -4322,21 +4322,6 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 		md.damage = skill_lv * status->get_lv(target) * 10 + sstatus->int_ * 7 / 2 * (18 + (sd ? sd->status.job_level : 0) / 4) * (5 / (10 - (sd ? pc->checkskill(sd, AM_CANNIBALIZE) : 0)));
 		md.damage = md.damage*(1000 + tstatus->mdef) / (1000 + tstatus->mdef * 10) - tstatus->mdef2;
 		break;
-	case KO_HAPPOKUNAI:
-		{
-			struct Damage wd = battle->calc_weapon_attack(src, target, 0, 1, mflag);
-#ifdef RENEWAL
-			short totaldef = status->get_total_def(target);
-#else
-			short totaldef = tstatus->def2 + (short)status->get_def(target);
-#endif
-			if (sd != NULL)
-				wd.damage += sd->bonus.arrow_atk;
-			md.damage = (int)(3 * (1 + wd.damage) * (5 + skill_lv) / 5.0f);
-			md.damage -= totaldef;
-
-		}
-		break;
 	case RL_B_TRAP:
 		md.damage = status_get_dex(src) * 10 + (skill_lv * 3 * status_get_hp(target)) / 100;
 		if (status_get_mode(target) & MD_BOSS)
@@ -4675,6 +4660,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 			case AM_DEMONSTRATION:
 			case NJ_ISSEN:
 			case PA_SACRIFICE:
+			case KO_HAPPOKUNAI:
 				flag.distinct = 1;
 				break;
 			case GN_CARTCANNON:
@@ -5143,6 +5129,15 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 #endif
 				wd.flag |= BF_LONG;
 				break;
+			case KO_HAPPOKUNAI:
+				if (sd != NULL) {
+					int index = sd->equip_index[EQI_AMMO];
+					int damagevalue = 3 * (((index >= 0 && sd->inventory_data[index]) ? sd->inventory_data[index]->atk : 0) + sstatus->rhw.atk + sstatus->batk) * (skill_lv + 5) / 5;
+					ATK_ADD(damagevalue);
+				} else {
+					ATK_ADD(sstatus->rhw.atk2);
+				}
+				break;
 			default:
 			{
 				i = (flag.cri
@@ -5534,9 +5529,14 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 			if( (i=pc->checkskill(sd,AB_EUCHARISTICA)) > 0 &&
 				(tstatus->race == RC_DEMON || tstatus->def_ele == ELE_DARK) )
 				ATK_ADDRATE(-i);
-			if (skill_id != PA_SACRIFICE && skill_id != MO_INVESTIGATE && skill_id != CR_GRANDCROSS && skill_id != NPC_GRANDDARKNESS && skill_id != PA_SHIELDCHAIN 
+			if (skill_id != PA_SACRIFICE
+				&& skill_id != MO_INVESTIGATE
+				&& skill_id != CR_GRANDCROSS
+				&& skill_id != NPC_GRANDDARKNESS
+				&& skill_id != PA_SHIELDCHAIN
+				&& skill_id != KO_HAPPOKUNAI
 #ifndef RENEWAL			
-			&& !flag.cri
+				&& !flag.cri
 #endif
 			) {
 				//Elemental/Racial adjustments
