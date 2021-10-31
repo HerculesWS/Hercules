@@ -10997,6 +10997,29 @@ static BUILDIN(end)
 	return true;
 }
 
+/// Checks if the player is hidden (Hiding, Cloaking or Chase Walk)
+///
+/// checkhiding({<account id>}) -> <bool>
+static BUILDIN(checkhiding)
+{
+	struct map_session_data *sd;
+
+	if (script_hasdata(st, 2))
+		sd = map->id2sd(script_getnum(st, 2));
+	else
+		sd = script->rid2sd(st);
+
+	if (sd == NULL)
+		return true;// no player attached, report source
+
+	if (pc_ishiding(sd))
+		script_pushint(st, 1);
+	else
+		script_pushint(st, 0);
+
+	return true;
+}
+
 /// Checks if the player has that effect state (option).
 ///
 /// checkoption(<option>) -> <bool>
@@ -27945,6 +27968,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(setnpcdir,"*"), // [4144]
 		BUILDIN_DEF(getnpcclass,"?"), // [4144]
 		BUILDIN_DEF(getmapxy,"rrri?"), //by Lorky [Lupus]
+		BUILDIN_DEF(checkhiding, "?"),
 		BUILDIN_DEF(checkoption1,"i?"),
 		BUILDIN_DEF(checkoption2,"i?"),
 		BUILDIN_DEF(guildgetexp,"i"),
