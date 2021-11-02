@@ -14064,10 +14064,10 @@ void HP_clif_cooldown_list(int fd, struct skill_cd *cd) {
 	}
 	return;
 }
-void HP_clif_updatestatus(struct map_session_data *sd, int type) {
+void HP_clif_updatestatus(struct map_session_data *sd, enum status_point_types type) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_updatestatus_pre > 0) {
-		void (*preHookFunc) (struct map_session_data **sd, int *type);
+		void (*preHookFunc) (struct map_session_data **sd, enum status_point_types *type);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_updatestatus_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_clif_updatestatus_pre[hIndex].func;
@@ -14082,7 +14082,7 @@ void HP_clif_updatestatus(struct map_session_data *sd, int type) {
 		HPMHooks.source.clif.updatestatus(sd, type);
 	}
 	if (HPMHooks.count.HP_clif_updatestatus_post > 0) {
-		void (*postHookFunc) (struct map_session_data *sd, int type);
+		void (*postHookFunc) (struct map_session_data *sd, enum status_point_types type);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_updatestatus_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_updatestatus_post[hIndex].func;
 			postHookFunc(sd, type);
@@ -14090,10 +14090,10 @@ void HP_clif_updatestatus(struct map_session_data *sd, int type) {
 	}
 	return;
 }
-void HP_clif_changestatus(struct map_session_data *sd, int type, int val) {
+void HP_clif_changestatus(struct map_session_data *sd, enum status_point_types type, int val) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_changestatus_pre > 0) {
-		void (*preHookFunc) (struct map_session_data **sd, int *type, int *val);
+		void (*preHookFunc) (struct map_session_data **sd, enum status_point_types *type, int *val);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_changestatus_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_clif_changestatus_pre[hIndex].func;
@@ -14108,7 +14108,7 @@ void HP_clif_changestatus(struct map_session_data *sd, int type, int val) {
 		HPMHooks.source.clif.changestatus(sd, type, val);
 	}
 	if (HPMHooks.count.HP_clif_changestatus_post > 0) {
-		void (*postHookFunc) (struct map_session_data *sd, int type, int val);
+		void (*postHookFunc) (struct map_session_data *sd, enum status_point_types type, int val);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_changestatus_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_changestatus_post[hIndex].func;
 			postHookFunc(sd, type, val);
@@ -20084,10 +20084,10 @@ void HP_clif_mercenary_message(struct map_session_data *sd, int message) {
 	}
 	return;
 }
-void HP_clif_mercenary_updatestatus(struct map_session_data *sd, int type) {
+void HP_clif_mercenary_updatestatus(struct map_session_data *sd, enum status_point_types type) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_mercenary_updatestatus_pre > 0) {
-		void (*preHookFunc) (struct map_session_data **sd, int *type);
+		void (*preHookFunc) (struct map_session_data **sd, enum status_point_types *type);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_mercenary_updatestatus_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_clif_mercenary_updatestatus_pre[hIndex].func;
@@ -20102,7 +20102,7 @@ void HP_clif_mercenary_updatestatus(struct map_session_data *sd, int type) {
 		HPMHooks.source.clif.mercenary_updatestatus(sd, type);
 	}
 	if (HPMHooks.count.HP_clif_mercenary_updatestatus_post > 0) {
-		void (*postHookFunc) (struct map_session_data *sd, int type);
+		void (*postHookFunc) (struct map_session_data *sd, enum status_point_types type);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_mercenary_updatestatus_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_mercenary_updatestatus_post[hIndex].func;
 			postHookFunc(sd, type);
@@ -21046,10 +21046,10 @@ void HP_clif_elemental_info(struct map_session_data *sd) {
 	}
 	return;
 }
-void HP_clif_elemental_updatestatus(struct map_session_data *sd, int type) {
+void HP_clif_elemental_updatestatus(struct map_session_data *sd, enum status_point_types type) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_elemental_updatestatus_pre > 0) {
-		void (*preHookFunc) (struct map_session_data **sd, int *type);
+		void (*preHookFunc) (struct map_session_data **sd, enum status_point_types *type);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_elemental_updatestatus_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_clif_elemental_updatestatus_pre[hIndex].func;
@@ -21064,7 +21064,7 @@ void HP_clif_elemental_updatestatus(struct map_session_data *sd, int type) {
 		HPMHooks.source.clif.elemental_updatestatus(sd, type);
 	}
 	if (HPMHooks.count.HP_clif_elemental_updatestatus_post > 0) {
-		void (*postHookFunc) (struct map_session_data *sd, int type);
+		void (*postHookFunc) (struct map_session_data *sd, enum status_point_types type);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_elemental_updatestatus_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_elemental_updatestatus_post[hIndex].func;
 			postHookFunc(sd, type);
