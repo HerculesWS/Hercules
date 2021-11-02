@@ -1042,8 +1042,8 @@ struct clif_interface {
 	void (*initialstatus) (struct map_session_data *sd);
 	void (*cooldown_list) (int fd, struct skill_cd* cd);
 	/* player-unit-specific-related */
-	void (*updatestatus) (struct map_session_data *sd,int type);
-	void (*changestatus) (struct map_session_data* sd,int type,int val);
+	void (*updatestatus) (struct map_session_data *sd, enum status_point_types type);
+	void (*changestatus) (struct map_session_data* sd, enum status_point_types type, int val);
 	void (*statusupack) (struct map_session_data *sd,int type,int ok,int val);
 	void (*movetoattack) (struct map_session_data *sd,struct block_list *bl);
 	void (*solved_charname) (int fd, int charid, const char* name);
@@ -1295,7 +1295,7 @@ struct clif_interface {
 	void (*mercenary_info) (struct map_session_data *sd);
 	void (*mercenary_skillblock) (struct map_session_data *sd);
 	void (*mercenary_message) (struct map_session_data* sd, int message);
-	void (*mercenary_updatestatus) (struct map_session_data *sd, int type);
+	void (*mercenary_updatestatus) (struct map_session_data *sd, enum status_point_types type);
 	/* item rental */
 	void (*rental_time) (int fd, int nameid, int seconds);
 	void (*rental_expired) (int fd, int index, int nameid);
@@ -1338,7 +1338,7 @@ struct clif_interface {
 	void (*search_store_info_click_ack) (struct map_session_data* sd, short x, short y);
 	/* elemental-related */
 	void (*elemental_info) (struct map_session_data *sd);
-	void (*elemental_updatestatus) (struct map_session_data *sd, int type);
+	void (*elemental_updatestatus) (struct map_session_data *sd, enum status_point_types type);
 	/* bgqueue */
 	void (*bgqueue_ack) (struct map_session_data *sd, enum BATTLEGROUNDS_QUEUE_ACK response, unsigned char arena_id);
 	void (*bgqueue_notice_delete) (struct map_session_data *sd, enum BATTLEGROUNDS_QUEUE_NOTICE_DELETED response, const char *name);
