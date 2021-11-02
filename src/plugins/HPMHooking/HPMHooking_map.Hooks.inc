@@ -14951,6 +14951,32 @@ void HP_clif_spiritball_single(int fd, struct map_session_data *sd) {
 	}
 	return;
 }
+void HP_clif_soulball(struct map_session_data *sd, struct block_list *bl, enum send_target target) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_soulball_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, struct block_list **bl, enum send_target *target);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_soulball_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_soulball_pre[hIndex].func;
+			preHookFunc(&sd, &bl, &target);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.soulball(sd, bl, target);
+	}
+	if (HPMHooks.count.HP_clif_soulball_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, struct block_list *bl, enum send_target target);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_soulball_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_soulball_post[hIndex].func;
+			postHookFunc(sd, bl, target);
+		}
+	}
+	return;
+}
 void HP_clif_bladestop(struct block_list *src, int dst_id, int active) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_bladestop_pre > 0) {
@@ -63015,6 +63041,33 @@ int HP_pc_checkequip(struct map_session_data *sd, int pos) {
 	}
 	return retVal___;
 }
+int HP_pc_get_skill_cooldown(struct map_session_data *sd, uint16 skill_id, uint16 skill_lv) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_pc_get_skill_cooldown_pre > 0) {
+		int (*preHookFunc) (struct map_session_data **sd, uint16 *skill_id, uint16 *skill_lv);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_get_skill_cooldown_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_pc_get_skill_cooldown_pre[hIndex].func;
+			retVal___ = preHookFunc(&sd, &skill_id, &skill_lv);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.pc.get_skill_cooldown(sd, skill_id, skill_lv);
+	}
+	if (HPMHooks.count.HP_pc_get_skill_cooldown_post > 0) {
+		int (*postHookFunc) (int retVal___, struct map_session_data *sd, uint16 skill_id, uint16 skill_lv);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_get_skill_cooldown_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_pc_get_skill_cooldown_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, sd, skill_id, skill_lv);
+		}
+	}
+	return retVal___;
+}
 int HP_pc_calc_skilltree(struct map_session_data *sd) {
 	int hIndex = 0;
 	int retVal___ = 0;
@@ -66801,6 +66854,58 @@ int HP_pc_getmaxspiritball(struct map_session_data *sd, int min) {
 		}
 	}
 	return retVal___;
+}
+void HP_pc_addsoulball(struct map_session_data *sd, int max) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_pc_addsoulball_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, int *max);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_addsoulball_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_pc_addsoulball_pre[hIndex].func;
+			preHookFunc(&sd, &max);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.pc.addsoulball(sd, max);
+	}
+	if (HPMHooks.count.HP_pc_addsoulball_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, int max);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_addsoulball_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_pc_addsoulball_post[hIndex].func;
+			postHookFunc(sd, max);
+		}
+	}
+	return;
+}
+void HP_pc_delsoulball(struct map_session_data *sd, int count, bool type) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_pc_delsoulball_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, int *count, bool *type);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_delsoulball_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_pc_delsoulball_pre[hIndex].func;
+			preHookFunc(&sd, &count, &type);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.pc.delsoulball(sd, count, type);
+	}
+	if (HPMHooks.count.HP_pc_delsoulball_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, int count, bool type);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_delsoulball_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_pc_delsoulball_post[hIndex].func;
+			postHookFunc(sd, count, type);
+		}
+	}
+	return;
 }
 void HP_pc_addfame(struct map_session_data *sd, int ranktype, int count) {
 	int hIndex = 0;

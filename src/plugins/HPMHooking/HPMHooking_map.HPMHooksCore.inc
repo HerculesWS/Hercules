@@ -1146,6 +1146,8 @@ struct {
 	struct HPMHookPoint *HP_clif_spiritball_post;
 	struct HPMHookPoint *HP_clif_spiritball_single_pre;
 	struct HPMHookPoint *HP_clif_spiritball_single_post;
+	struct HPMHookPoint *HP_clif_soulball_pre;
+	struct HPMHookPoint *HP_clif_soulball_post;
 	struct HPMHookPoint *HP_clif_bladestop_pre;
 	struct HPMHookPoint *HP_clif_bladestop_post;
 	struct HPMHookPoint *HP_clif_mvp_effect_pre;
@@ -4740,6 +4742,8 @@ struct {
 	struct HPMHookPoint *HP_pc_checkallowskill_post;
 	struct HPMHookPoint *HP_pc_checkequip_pre;
 	struct HPMHookPoint *HP_pc_checkequip_post;
+	struct HPMHookPoint *HP_pc_get_skill_cooldown_pre;
+	struct HPMHookPoint *HP_pc_get_skill_cooldown_post;
 	struct HPMHookPoint *HP_pc_calc_skilltree_pre;
 	struct HPMHookPoint *HP_pc_calc_skilltree_post;
 	struct HPMHookPoint *HP_pc_calc_skilltree_clear_pre;
@@ -5022,6 +5026,10 @@ struct {
 	struct HPMHookPoint *HP_pc_delspiritball_sub_post;
 	struct HPMHookPoint *HP_pc_getmaxspiritball_pre;
 	struct HPMHookPoint *HP_pc_getmaxspiritball_post;
+	struct HPMHookPoint *HP_pc_addsoulball_pre;
+	struct HPMHookPoint *HP_pc_addsoulball_post;
+	struct HPMHookPoint *HP_pc_delsoulball_pre;
+	struct HPMHookPoint *HP_pc_delsoulball_post;
 	struct HPMHookPoint *HP_pc_addfame_pre;
 	struct HPMHookPoint *HP_pc_addfame_post;
 	struct HPMHookPoint *HP_pc_fame_rank_pre;
@@ -8331,6 +8339,8 @@ struct {
 	int HP_clif_spiritball_post;
 	int HP_clif_spiritball_single_pre;
 	int HP_clif_spiritball_single_post;
+	int HP_clif_soulball_pre;
+	int HP_clif_soulball_post;
 	int HP_clif_bladestop_pre;
 	int HP_clif_bladestop_post;
 	int HP_clif_mvp_effect_pre;
@@ -11925,6 +11935,8 @@ struct {
 	int HP_pc_checkallowskill_post;
 	int HP_pc_checkequip_pre;
 	int HP_pc_checkequip_post;
+	int HP_pc_get_skill_cooldown_pre;
+	int HP_pc_get_skill_cooldown_post;
 	int HP_pc_calc_skilltree_pre;
 	int HP_pc_calc_skilltree_post;
 	int HP_pc_calc_skilltree_clear_pre;
@@ -12207,6 +12219,10 @@ struct {
 	int HP_pc_delspiritball_sub_post;
 	int HP_pc_getmaxspiritball_pre;
 	int HP_pc_getmaxspiritball_post;
+	int HP_pc_addsoulball_pre;
+	int HP_pc_addsoulball_post;
+	int HP_pc_delsoulball_pre;
+	int HP_pc_delsoulball_post;
 	int HP_pc_addfame_pre;
 	int HP_pc_addfame_post;
 	int HP_pc_fame_rank_pre;
