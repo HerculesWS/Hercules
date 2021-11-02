@@ -413,6 +413,8 @@
 - `bSubDefEle`: 2063
 - `bMagicSubDefEle`: 2064
 - `bStateNoRecoverRace`: 2065
+- `bSubSkill`: 2066
+- `bDropAddRace`: 2067
 
 ### Equip index
 
