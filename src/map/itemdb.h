@@ -558,6 +558,8 @@ struct item_data {
 		unsigned no_options: 1; // < disallows use of item options on the item. (non-equippable items are automatically flagged) [Smokexyz]
 		unsigned drop_announce : 1; // Official Drop Announce [Jedzkie]
 		unsigned showdropeffect: 1; // < Allow showing effect on item drop [Asheraf]
+		unsigned ignore_discount : 1; // [Jedzkie]
+		unsigned ignore_overcharge : 1; // [Jedzkie]
 	} flag;
 	struct {// item stacking limitation
 		unsigned short amount;

@@ -4475,36 +4475,44 @@ static int pc_insert_card(struct map_session_data *sd, int idx_card, int idx_equ
 /*==========================================
  * Update buying value by skills
  *------------------------------------------*/
-static int pc_modifybuyvalue(struct map_session_data *sd, int orig_value)
+static int pc_modifybuyvalue(struct map_session_data *sd, int orig_value, bool ignore_discount)
 {
-	int skill_lv, rate1 = 0, rate2 = 0;
-	if ((skill_lv=pc->checkskill(sd,MC_DISCOUNT)) > 0)   // merchant discount
-		rate1 = 5+skill_lv*2-((skill_lv==10)? 1:0);
-	if ((skill_lv=pc->checkskill(sd,RG_COMPULSION)) > 0) // rogue discount
-		rate2 = 5+skill_lv*4;
-	if (rate1 < rate2)
-		rate1 = rate2;
-	if (rate1 != 0)
-		orig_value = apply_percentrate(orig_value, 100-rate1, 100);
+	if (!ignore_discount) {
+		int skill_lv, rate1 = 0, rate2 = 0;
+
+		if ((skill_lv = pc->checkskill(sd, MC_DISCOUNT)) > 0) // Merchant Discount
+			rate1 = 5 + skill_lv * 2 - ((skill_lv == 10) ? 1 : 0);
+		if ((skill_lv = pc->checkskill(sd, RG_COMPULSION)) > 0) // Rogue Discount
+			rate2 = 5 + skill_lv * 4;
+		if (rate1 < rate2)
+			rate1 = rate2;
+		if (rate1 != 0)
+			orig_value = apply_percentrate(orig_value, 100 - rate1, 100);
+	}
 
 	if (orig_value < battle_config.min_item_buy_price)
 		orig_value = battle_config.min_item_buy_price;
+
 	return orig_value;
 }
 
 /*==========================================
  * Update selling value by skills
  *------------------------------------------*/
-static int pc_modifysellvalue(struct map_session_data *sd, int orig_value)
+static int pc_modifysellvalue(struct map_session_data *sd, int orig_value, bool ignore_overcharge)
 {
-	int skill_lv, rate = 0;
-	if ((skill_lv=pc->checkskill(sd,MC_OVERCHARGE)) > 0) //OverCharge
-		rate = 5+skill_lv*2-((skill_lv==10)? 1:0);
-	if (rate != 0)
-		orig_value = apply_percentrate(orig_value, 100+rate, 100);
+	if (!ignore_overcharge) {
+		int skill_lv, rate = 0;
+
+		if ((skill_lv = pc->checkskill(sd, MC_OVERCHARGE)) > 0) // Merchant Overcharge
+			rate = 5 + skill_lv * 2 - ((skill_lv == 10) ? 1 : 0);
+		if (rate != 0)
+			orig_value = apply_percentrate(orig_value, 100 + rate, 100);
+	}
 
 	if (orig_value < battle_config.min_item_sell_price)
 		orig_value = battle_config.min_item_sell_price;
+
 	return orig_value;
 }
 

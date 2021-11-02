@@ -75,6 +75,8 @@ item_db: (
 	DropAnnounce: true/false      (boolean, defaults to false)
 	ShowDropEffect: true/false    (boolean, defaults to false)
 	DropEffectMode: Effect Type   (int, default to 0)
+	IgnoreDiscount: true/false    (boolean, defaults to false)
+	IgnoreOvercharge: true/false  (boolean, defaults to false)
 	Trade: {                      (defaults to no restrictions)
 		override: GroupID             (int, defaults to 100)
 		nodrop: true/false            (boolean, defaults to false)
@@ -312,6 +314,10 @@ DropAnnounce: Enables global announcement of the selected item when dropped by m
 Delay: Delay for an item to be used again. Value is in milliseconds.
        There is a max concurrent number of entries modifiable in
        src/map/itemdb.h as MAX_ITEMDELAYS.
+
+IgnoreDiscount: Whether the item can be affected by the discount skill of Merchant/Rogue or not.
+
+IgnoreOvercharge: Whether the item can be affected by the overcharge skill of Merchant or not.
 
 Trade: Item trade restrictions. If this block is omitted, the item will have no
        trade restrictions.
