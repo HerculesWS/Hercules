@@ -122,9 +122,6 @@ static int status_get_sc_icon(enum sc_type type)
 
 static void initChangeTables(void)
 {
-// indicates that the status displays a visual effect for the affected unit, and should be sent to the client for all supported units
-#define set_sc_with_vfx(sc) do { status->dbs->IconChangeTable[sc].relevant_bl_types |= BL_SCEFFECT; } while(0)
-
 	int i;
 
 	for (i = 0; i < SC_MAX; i++) {
@@ -135,15 +132,6 @@ static void initChangeTables(void)
 	memset(status->dbs->SkillChangeTable, 0, sizeof(status->dbs->SkillChangeTable));
 	memset(status->dbs->ChangeFlagTable, 0, sizeof(status->dbs->ChangeFlagTable));
 	memset(status->dbs->DisplayType, 0, sizeof(status->dbs->DisplayType));
-
-	set_sc_with_vfx(SC_COLD); // it does show the snow icon on mobs but doesn't affect it.
-	set_sc_with_vfx(SC_BLOOD_SUCKER);
-	set_sc_with_vfx(SC_SV_ROOTTWIST);
-	set_sc_with_vfx(SC_KO_JYUMONJIKIRI);
-	set_sc_with_vfx(SC_AKAITSUKI);
-	set_sc_with_vfx(SC_ILLUSIONDOPING);
-	set_sc_with_vfx(SC_ANTI_MATERIAL_BLAST);
-	set_sc_with_vfx(SC_CRIMSON_MARKER);
 
 	// Storing the target job rather than simply SC_SOULLINK simplifies code later on.
 	skill->dbs->db[skill->get_index(SL_ALCHEMIST)].status_type   = (sc_type)MAPID_ALCHEMIST;
@@ -13777,6 +13765,9 @@ static bool status_read_scdb_libconfig_sub(struct config_setting_t *it, int idx,
 	struct config_setting_t *sk = libconfig->setting_get_member(it, "Skill");
 	if (sk != NULL)
 		status->read_scdb_libconfig_sub_skill(sk, status_id, source);
+
+	if (libconfig->setting_lookup_bool(it, "HasVisualEffect", &i32) == CONFIG_TRUE && i32 != 0)
+		status->dbs->IconChangeTable[status_id].relevant_bl_types |= BL_SCEFFECT;
 
 	return true;
 }
