@@ -4660,6 +4660,12 @@ typedef int (*HPMHOOK_pre_macro_reporter_area_select_sub) (struct block_list **b
 typedef int (*HPMHOOK_post_macro_reporter_area_select_sub) (int retVal___, struct block_list *bl, va_list ap);
 typedef void (*HPMHOOK_pre_macro_reporter_process) (struct map_session_data **ssd, struct map_session_data **tsd);
 typedef void (*HPMHOOK_post_macro_reporter_process) (struct map_session_data *ssd, struct map_session_data *tsd);
+typedef bool (*HPMHOOK_pre_macro_read_captcha_db_libconfig) (void);
+typedef bool (*HPMHOOK_post_macro_read_captcha_db_libconfig) (bool retVal___);
+typedef bool (*HPMHOOK_pre_macro_read_captcha_db_libconfig_sub) (const struct config_setting_t **it, int *n, const char **source);
+typedef bool (*HPMHOOK_post_macro_read_captcha_db_libconfig_sub) (bool retVal___, const struct config_setting_t *it, int n, const char *source);
+typedef bool (*HPMHOOK_pre_macro_read_captcha_db_libconfig_sub_loadbmp) (const char **filepath, struct captcha_data **cd);
+typedef bool (*HPMHOOK_post_macro_read_captcha_db_libconfig_sub_loadbmp) (bool retVal___, const char *filepath, struct captcha_data *cd);
 #endif // MAP_MACRO_H
 #ifdef MAP_MAIL_H /* mail */
 typedef void (*HPMHOOK_pre_mail_clear) (struct map_session_data **sd);

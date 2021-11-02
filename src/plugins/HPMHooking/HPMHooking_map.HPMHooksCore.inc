@@ -3584,6 +3584,12 @@ struct {
 	struct HPMHookPoint *HP_macro_reporter_area_select_sub_post;
 	struct HPMHookPoint *HP_macro_reporter_process_pre;
 	struct HPMHookPoint *HP_macro_reporter_process_post;
+	struct HPMHookPoint *HP_macro_read_captcha_db_libconfig_pre;
+	struct HPMHookPoint *HP_macro_read_captcha_db_libconfig_post;
+	struct HPMHookPoint *HP_macro_read_captcha_db_libconfig_sub_pre;
+	struct HPMHookPoint *HP_macro_read_captcha_db_libconfig_sub_post;
+	struct HPMHookPoint *HP_macro_read_captcha_db_libconfig_sub_loadbmp_pre;
+	struct HPMHookPoint *HP_macro_read_captcha_db_libconfig_sub_loadbmp_post;
 	struct HPMHookPoint *HP_mail_clear_pre;
 	struct HPMHookPoint *HP_mail_clear_post;
 	struct HPMHookPoint *HP_mail_removeitem_pre;
@@ -10777,6 +10783,12 @@ struct {
 	int HP_macro_reporter_area_select_sub_post;
 	int HP_macro_reporter_process_pre;
 	int HP_macro_reporter_process_post;
+	int HP_macro_read_captcha_db_libconfig_pre;
+	int HP_macro_read_captcha_db_libconfig_post;
+	int HP_macro_read_captcha_db_libconfig_sub_pre;
+	int HP_macro_read_captcha_db_libconfig_sub_post;
+	int HP_macro_read_captcha_db_libconfig_sub_loadbmp_pre;
+	int HP_macro_read_captcha_db_libconfig_sub_loadbmp_post;
 	int HP_mail_clear_pre;
 	int HP_mail_clear_post;
 	int HP_mail_removeitem_pre;

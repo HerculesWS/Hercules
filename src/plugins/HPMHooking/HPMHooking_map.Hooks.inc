@@ -47203,6 +47203,87 @@ void HP_macro_reporter_process(struct map_session_data *ssd, struct map_session_
 	}
 	return;
 }
+bool HP_macro_read_captcha_db_libconfig(void) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_macro_read_captcha_db_libconfig_pre > 0) {
+		bool (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_macro_read_captcha_db_libconfig_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_macro_read_captcha_db_libconfig_pre[hIndex].func;
+			retVal___ = preHookFunc();
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.macro.read_captcha_db_libconfig();
+	}
+	if (HPMHooks.count.HP_macro_read_captcha_db_libconfig_post > 0) {
+		bool (*postHookFunc) (bool retVal___);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_macro_read_captcha_db_libconfig_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_macro_read_captcha_db_libconfig_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___);
+		}
+	}
+	return retVal___;
+}
+bool HP_macro_read_captcha_db_libconfig_sub(const struct config_setting_t *it, int n, const char *source) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_macro_read_captcha_db_libconfig_sub_pre > 0) {
+		bool (*preHookFunc) (const struct config_setting_t **it, int *n, const char **source);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_macro_read_captcha_db_libconfig_sub_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_macro_read_captcha_db_libconfig_sub_pre[hIndex].func;
+			retVal___ = preHookFunc(&it, &n, &source);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.macro.read_captcha_db_libconfig_sub(it, n, source);
+	}
+	if (HPMHooks.count.HP_macro_read_captcha_db_libconfig_sub_post > 0) {
+		bool (*postHookFunc) (bool retVal___, const struct config_setting_t *it, int n, const char *source);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_macro_read_captcha_db_libconfig_sub_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_macro_read_captcha_db_libconfig_sub_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, it, n, source);
+		}
+	}
+	return retVal___;
+}
+bool HP_macro_read_captcha_db_libconfig_sub_loadbmp(const char *filepath, struct captcha_data *cd) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_macro_read_captcha_db_libconfig_sub_loadbmp_pre > 0) {
+		bool (*preHookFunc) (const char **filepath, struct captcha_data **cd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_macro_read_captcha_db_libconfig_sub_loadbmp_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_macro_read_captcha_db_libconfig_sub_loadbmp_pre[hIndex].func;
+			retVal___ = preHookFunc(&filepath, &cd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.macro.read_captcha_db_libconfig_sub_loadbmp(filepath, cd);
+	}
+	if (HPMHooks.count.HP_macro_read_captcha_db_libconfig_sub_loadbmp_post > 0) {
+		bool (*postHookFunc) (bool retVal___, const char *filepath, struct captcha_data *cd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_macro_read_captcha_db_libconfig_sub_loadbmp_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_macro_read_captcha_db_libconfig_sub_loadbmp_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, filepath, cd);
+		}
+	}
+	return retVal___;
+}
 /* mail_interface */
 void HP_mail_clear(struct map_session_data *sd) {
 	int hIndex = 0;

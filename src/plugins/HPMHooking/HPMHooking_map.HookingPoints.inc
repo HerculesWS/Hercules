@@ -1834,6 +1834,9 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(macro->reporter_area_select, HP_macro_reporter_area_select) },
 	{ HP_POP(macro->reporter_area_select_sub, HP_macro_reporter_area_select_sub) },
 	{ HP_POP(macro->reporter_process, HP_macro_reporter_process) },
+	{ HP_POP(macro->read_captcha_db_libconfig, HP_macro_read_captcha_db_libconfig) },
+	{ HP_POP(macro->read_captcha_db_libconfig_sub, HP_macro_read_captcha_db_libconfig_sub) },
+	{ HP_POP(macro->read_captcha_db_libconfig_sub_loadbmp, HP_macro_read_captcha_db_libconfig_sub_loadbmp) },
 /* mail_interface */
 	{ HP_POP(mail->clear, HP_mail_clear) },
 	{ HP_POP(mail->removeitem, HP_mail_removeitem) },
