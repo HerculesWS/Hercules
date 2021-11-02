@@ -670,7 +670,7 @@ struct delay_damage {
 struct battle_interface {
 	/* */
 	struct Battle_Config *bc;
-	/* */
+	/* elemental damage rate. [Defending Element Level][Attacking Element][Defending Element] */
 	int attr_fix_table[4][ELE_MAX][ELE_MAX];
 	struct eri *delay_damage_ers; //For battle delay damage structures.
 	/* init */

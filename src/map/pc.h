@@ -1152,6 +1152,9 @@ END_ZEROED_BLOCK; /* End */
 	bool (*read_exp_db) (void);
 	int (*read_exp_db_sub) (struct config_setting_t *conf, bool base);
 	bool (*read_exp_db_sub_class) (struct config_setting_t *t, bool base);
+	bool (*read_attr_fix_db) (void);
+	int (*read_attr_fix_db_entry) (struct config_setting_t *def_attr, enum elements def_ele, const char *def_ele_name);
+	int (*read_attr_fix_db_level) (struct config_setting_t *def_lv, enum elements def_ele, int lv, const char *def_ele_name);
 	int (*map_day_timer) (int tid, int64 tick, int id, intptr_t data); // by [yor]
 	int (*map_night_timer) (int tid, int64 tick, int id, intptr_t data); // by [yor]
 	// Rental System

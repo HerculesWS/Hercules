@@ -11929,19 +11929,149 @@ static bool pc_read_exp_db(void)
 	return true;
 }
 
+/**
+ * Reads the elemental damage modifiers table of a single defending element level.
+ * @param def_lv defending element level config
+ * @param def_ele defending element id
+ * @param lv defending element level
+ * @param def_ele_name constant of the defending element (for error messages)
+ * @returns number of modifiers read or -1 if something went wrong
+ */
+static int pc_read_attr_fix_db_level(struct config_setting_t *def_lv, enum elements def_ele, int lv, const char *def_ele_name)
+{
+	nullpo_retr(-1, def_lv);
+	nullpo_retr(-1, def_ele_name);
+
+	struct config_setting_t *atk_attr = NULL;
+	int i = 0;
+	int count = 0;
+	while ((atk_attr = libconfig->setting_get_elem(def_lv, i++)) != NULL) {
+		const char *atk_ele_name = config_setting_name(atk_attr);
+		int atk_ele;
+		if (!script->get_constant(atk_ele_name, &atk_ele)) {
+			ShowError("%s: Could not find attacking element '%s'. Skipping entry...\n", __func__, atk_ele_name);
+			continue;
+		}
+
+		if (atk_ele < ELE_NEUTRAL || atk_ele >= ELE_MAX) {
+			ShowError("%s: Invalid element '%s' (%d). Skipping entry...\n", __func__, atk_ele_name, atk_ele);
+			continue;
+		}
+
+		if (!config_setting_is_number(atk_attr)) {
+			ShowError("%s: Damage modifier for element '%s' (%u) attacked by '%s' (%d) is not numeric. Skipping entry...\n", __func__, def_ele_name, def_ele, atk_ele_name, atk_ele);
+			continue;
+		}
+
+		int dmg_mod = libconfig->setting_get_int(atk_attr);
+		battle->attr_fix_table[lv - 1][atk_ele][def_ele] = dmg_mod;
+		count++;
+
+#ifndef RENEWAL
+		if (battle_config.attr_recover == 0 && battle->attr_fix_table[lv - 1][atk_ele][def_ele] < 0)
+			battle->attr_fix_table[lv - 1][atk_ele][def_ele] = 0;
+#endif
+	}
+
+	return count;
+}
+
+/**
+ * Reads the elemental damage modifiers table of a single defending element.
+ * @param def_attr defending element config
+ * @param def_ele defending element id
+ * @param def_ele_name constant of the defending element (for error messages)
+ * @returns number of modifiers read or -1 if something went wrong
+ */
+static int pc_read_attr_fix_db_entry(struct config_setting_t *def_attr, enum elements def_ele, const char *def_ele_name)
+{
+	nullpo_retr(-1, def_attr);
+	nullpo_retr(-1, def_ele_name);
+
+	int count = 0;
+	for (int i = 1; i <= 4; ++i) {
+		char name[5];
+		sprintf(name, "Lv%d", i);
+
+		struct config_setting_t *def_lv = libconfig->setting_lookup(def_attr, name);
+		if (def_lv != NULL) {
+			int result = pc->read_attr_fix_db_level(def_lv, def_ele, i, def_ele_name);
+			if (result == -1)
+				return -1;
+
+			count += result;
+		}
+	}
+
+	return count;
+}
+
+/**
+ * Reads elemental damage modifier table (attr_fix.conf)
+ * @returns true if it was loaded (even if partially), false if a fatal error happened.
+ */
+static bool pc_read_attr_fix_db(void)
+{
+	// Reset attr_fix to default, with all values as 100%
+	for (int i = 0; i < 4; ++i) {
+		for (int j = ELE_NEUTRAL; j < ELE_MAX; ++j) {
+			for (int k = ELE_NEUTRAL; k < ELE_MAX; ++k)
+				battle->attr_fix_table[i][j][k] = 100;
+		}
+	}
+	
+	char filepath[256];
+	libconfig->format_db_path(DBPATH"attr_fix.conf", filepath, sizeof(filepath));
+
+	struct config_t attr_fix_conf;
+	if (!libconfig->load_file(&attr_fix_conf, filepath))
+		return false;
+
+#ifdef ENABLE_CASE_CHECK
+	script->parser_current_file = filepath;
+#endif // ENABLE_CASE_CHECK
+
+	struct config_setting_t *def_attr = NULL;
+	int i = 0;
+	int count = 0;
+	while ((def_attr = libconfig->setting_get_elem(attr_fix_conf.root, i++)) != NULL) {
+		const char *def_ele_name = config_setting_name(def_attr);
+		int def_ele;
+		if (!script->get_constant(def_ele_name, &def_ele)) {
+			ShowError("%s: Could not find defending element '%s'. Skipping entry...\n", __func__, def_ele_name);
+			continue;
+		}
+
+		if (def_ele < ELE_NEUTRAL || def_ele >= ELE_MAX) {
+			ShowError("%s: Invalid element '%s' (%d). Skipping entry...\n", __func__, def_ele_name, def_ele);
+			continue;
+		}
+
+		int result = pc->read_attr_fix_db_entry(def_attr, (enum elements) def_ele, def_ele_name);
+		if (result == -1)
+			return false;
+
+		count += result;
+	}
+
+#ifdef ENABLE_CASE_CHECK
+	script->parser_current_file = NULL;
+#endif // ENABLE_CASE_CHECK
+
+	libconfig->destroy(&attr_fix_conf);
+	
+	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	return true;
+}
+
 /*==========================================
  * PC DB reading.
  * exp_group_db.conf - required experience values
  * skill_tree.txt    - skill tree for every class
- * attr_fix.txt      - elemental adjustment table
+ * attr_fix.conf     - elemental adjustment table
  *------------------------------------------*/
 static int pc_readdb(void)
 {
-	int i,j,k;
-	unsigned int count = 0;
-	FILE *fp;
-	char line[24000],*p;
-
 	/**
 	 * Read and load into memory, the exp_group_db.conf file.
 	 */
@@ -11953,10 +12083,10 @@ static int pc_readdb(void)
 	pc->read_skill_tree();
 #if defined(RENEWAL_DROP) || defined(RENEWAL_EXP)
 	sv->readdb(map->db_path, "re/level_penalty.txt", ',', 4, 4, -1, pc->readdb_levelpenalty);
-	for( k=1; k < 3; k++ ){ // fill in the blanks
-		for (j = RC_FORMLESS; j < RC_MAX; j++) {
+	for (int k = 1; k < 3; k++) { // fill in the blanks
+		for (int j = RC_FORMLESS; j < RC_MAX; j++) {
 			int tmp = 0;
-			for( i = 0; i < MAX_LEVEL*2; i++ ){
+			for (int i = 0; i < MAX_LEVEL * 2; i++) {
 				if( i == MAX_LEVEL+1 )
 					tmp = pc->level_penalty[k][j][0];// reset
 				if( pc->level_penalty[k][j][i] > 0 )
@@ -11969,70 +12099,22 @@ static int pc_readdb(void)
 #endif
 
 	// Reset then read attr_fix
-	for(i=0;i<4;i++)
-		for ( j = ELE_NEUTRAL; j<ELE_MAX; j++ )
-			for ( k = ELE_NEUTRAL; k<ELE_MAX; k++ )
-				battle->attr_fix_table[i][j][k]=100;
-
-	sprintf(line, "%s/"DBPATH"attr_fix.txt", map->db_path);
-
-	fp=fopen(line,"r");
-	if(fp==NULL){
-		ShowError("can't read %s\n", line);
+	if (!pc_read_attr_fix_db())
 		return 1;
-	}
-	while (fgets(line, sizeof(line), fp)) {
-		char *split[10];
-		int lv,n;
-		if (line[0]=='/' && line[1]=='/')
-			continue;
-		for (j = 0, p = line; j < 3 && p != NULL; j++) {
-			split[j] = p;
-			p = strchr(p,',');
-			if (p != NULL)
-				*p++ = 0;
-		}
-		if (j < 2)
-			continue;
 
-		lv=atoi(split[0]);
-		n=atoi(split[1]);
-		count++;
-		for ( i = ELE_NEUTRAL; i<n && i<ELE_MAX; ) {
-			if( !fgets(line, sizeof(line), fp) )
-				break;
-			if(line[0]=='/' && line[1]=='/')
-				continue;
-
-			for (j = ELE_NEUTRAL, p = line; j < n && j < ELE_MAX && p != NULL; j++) {
-				while (*p == ' ')
-					p++;
-				battle->attr_fix_table[lv-1][i][j]=atoi(p);
-#ifndef RENEWAL
-				if(battle_config.attr_recover == 0 && battle->attr_fix_table[lv-1][i][j] < 0)
-					battle->attr_fix_table[lv-1][i][j] = 0;
-#endif
-				p=strchr(p,',');
-				if (p != NULL)
-					*p++ = 0;
-			}
-
-			i++;
-		}
-	}
-	fclose(fp);
-	ShowStatus("Done reading '"CL_WHITE"%u"CL_RESET"' entries in '"CL_WHITE"%s/"DBPATH"%s"CL_RESET"'.\n",count,map->db_path,"attr_fix.txt");
-	count = 0;
 	// reset then read statspoint
 	memset(pc->statp,0,sizeof(pc->statp));
-	i=1;
-
+	int i = 1;
+	
+	char line[24000];
 	sprintf(line, "%s/"DBPATH"statpoint.txt", map->db_path);
-	fp=fopen(line,"r");
+	FILE *fp = fopen(line, "r");
 	if(fp == NULL){
 		ShowWarning("Can't read '"CL_WHITE"%s"CL_RESET"'... Generating DB.\n",line);
 		//return 1;
 	} else {
+		unsigned int count = 0;
+
 		while(fgets(line, sizeof(line), fp))
 		{
 			int stat;
@@ -12051,7 +12133,7 @@ static int pc_readdb(void)
 		ShowStatus("Done reading '"CL_WHITE"%u"CL_RESET"' entries in '"CL_WHITE"%s/"DBPATH"%s"CL_RESET"'.\n",count,map->db_path,"statpoint.txt");
 	}
 	// generate the remaining parts of the db if necessary
-	k = battle_config.use_statpoint_table; //save setting
+	int k = battle_config.use_statpoint_table; //save setting
 	battle_config.use_statpoint_table = 0; //temporarily disable to force pc->gets_status_point use default values
 	pc->statp[0] = 45; // seed value
 	for (; i <= MAX_LEVEL; i++)
@@ -13110,6 +13192,9 @@ void pc_defaults(void)
 	pc->read_exp_db = pc_read_exp_db;
 	pc->read_exp_db_sub = pc_read_exp_db_sub;
 	pc->read_exp_db_sub_class = pc_read_exp_db_sub_class;
+	pc->read_attr_fix_db = pc_read_attr_fix_db;
+	pc->read_attr_fix_db_entry = pc_read_attr_fix_db_entry;
+	pc->read_attr_fix_db_level = pc_read_attr_fix_db_level;
 	pc->map_day_timer = map_day_timer; // by [yor]
 	pc->map_night_timer = map_night_timer; // by [yor]
 	// Rental System

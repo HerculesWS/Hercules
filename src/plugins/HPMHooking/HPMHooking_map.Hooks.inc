@@ -67284,6 +67284,87 @@ bool HP_pc_read_exp_db_sub_class(struct config_setting_t *t, bool base) {
 	}
 	return retVal___;
 }
+bool HP_pc_read_attr_fix_db(void) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_pc_read_attr_fix_db_pre > 0) {
+		bool (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_read_attr_fix_db_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_pc_read_attr_fix_db_pre[hIndex].func;
+			retVal___ = preHookFunc();
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.pc.read_attr_fix_db();
+	}
+	if (HPMHooks.count.HP_pc_read_attr_fix_db_post > 0) {
+		bool (*postHookFunc) (bool retVal___);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_read_attr_fix_db_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_pc_read_attr_fix_db_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___);
+		}
+	}
+	return retVal___;
+}
+int HP_pc_read_attr_fix_db_entry(struct config_setting_t *def_attr, enum elements def_ele, const char *def_ele_name) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_pc_read_attr_fix_db_entry_pre > 0) {
+		int (*preHookFunc) (struct config_setting_t **def_attr, enum elements *def_ele, const char **def_ele_name);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_read_attr_fix_db_entry_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_pc_read_attr_fix_db_entry_pre[hIndex].func;
+			retVal___ = preHookFunc(&def_attr, &def_ele, &def_ele_name);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.pc.read_attr_fix_db_entry(def_attr, def_ele, def_ele_name);
+	}
+	if (HPMHooks.count.HP_pc_read_attr_fix_db_entry_post > 0) {
+		int (*postHookFunc) (int retVal___, struct config_setting_t *def_attr, enum elements def_ele, const char *def_ele_name);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_read_attr_fix_db_entry_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_pc_read_attr_fix_db_entry_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, def_attr, def_ele, def_ele_name);
+		}
+	}
+	return retVal___;
+}
+int HP_pc_read_attr_fix_db_level(struct config_setting_t *def_lv, enum elements def_ele, int lv, const char *def_ele_name) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_pc_read_attr_fix_db_level_pre > 0) {
+		int (*preHookFunc) (struct config_setting_t **def_lv, enum elements *def_ele, int *lv, const char **def_ele_name);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_read_attr_fix_db_level_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_pc_read_attr_fix_db_level_pre[hIndex].func;
+			retVal___ = preHookFunc(&def_lv, &def_ele, &lv, &def_ele_name);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.pc.read_attr_fix_db_level(def_lv, def_ele, lv, def_ele_name);
+	}
+	if (HPMHooks.count.HP_pc_read_attr_fix_db_level_post > 0) {
+		int (*postHookFunc) (int retVal___, struct config_setting_t *def_lv, enum elements def_ele, int lv, const char *def_ele_name);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_read_attr_fix_db_level_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_pc_read_attr_fix_db_level_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, def_lv, def_ele, lv, def_ele_name);
+		}
+	}
+	return retVal___;
+}
 int HP_pc_map_day_timer(int tid, int64 tick, int id, intptr_t data) {
 	int hIndex = 0;
 	int retVal___ = 0;
