@@ -1224,7 +1224,7 @@ static int status_calc_mob_(struct mob_data *md, enum e_status_calc_opt opt)
 		if (!gc)
 			ShowError("status_calc_mob: No castle set at map %s\n", map->list[md->bl.m].name);
 		else
-			if (gc->castle_id < 24 || md->class_ == MOBID_EMPELIUM) {
+			if (gc->siege_type == SIEGE_TYPE_FE || gc->siege_type == SIEGE_TYPE_TE || md->class_ == MOBID_EMPELIUM) {
 #ifdef RENEWAL
 				mstatus->max_hp += 50 * gc->defense;
 				mstatus->max_sp += 70 * gc->defense;
