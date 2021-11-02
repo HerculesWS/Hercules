@@ -398,6 +398,8 @@ static int64 battle_attr_fix(struct block_list *src, struct block_list *target, 
 			ratio += skill->enchant_eff[sc->data[SC_DELUGE]->val1-1];
 		if(sc->data[SC_FIRE_CLOAK_OPTION] && atk_elem == ELE_FIRE)
 			damage += damage * sc->data[SC_FIRE_CLOAK_OPTION]->val2 / 100;
+		if (sc->data[SC_TELEKINESIS_INTENSE] != NULL && atk_elem == ELE_GHOST)
+			damage += damage * sc->data[SC_TELEKINESIS_INTENSE]->val3 / 100;
 	}
 	if( target && target->type == BL_SKILL ) {
 		if( atk_elem == ELE_FIRE && battle->get_current_skill(target) == GN_WALLOFTHORN ) {
@@ -3990,10 +3992,6 @@ static struct Damage battle_calc_magic_attack(struct block_list *src, struct blo
 						ShowError("0 enemies targeted by %d:%s, divide per 0 avoided!\n", skill_id, skill->get_name(skill_id));
 				}
 
-				if (sc){
-					if( sc->data[SC_TELEKINESIS_INTENSE] && s_ele == ELE_GHOST )
-						ad.damage += ad.damage * sc->data[SC_TELEKINESIS_INTENSE]->val3 / 100;
-				}
 				switch(skill_id){
 					case MG_FIREBOLT:
 					case MG_COLDBOLT:
@@ -4416,21 +4414,6 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 		md.damage = skill_lv * status->get_lv(target) * 10 + sstatus->int_ * 7 / 2 * (18 + (sd ? sd->status.job_level : 0) / 4) * (5 / (10 - (sd ? pc->checkskill(sd, AM_CANNIBALIZE) : 0)));
 		md.damage = md.damage*(1000 + tstatus->mdef) / (1000 + tstatus->mdef * 10) - tstatus->mdef2;
 		break;
-	case KO_HAPPOKUNAI:
-		{
-			struct Damage wd = battle->calc_weapon_attack(src, target, 0, 1, mflag);
-#ifdef RENEWAL
-			short totaldef = status->get_total_def(target);
-#else
-			short totaldef = tstatus->def2 + (short)status->get_def(target);
-#endif
-			if (sd != NULL)
-				wd.damage += sd->bonus.arrow_atk;
-			md.damage = (int)(3 * (1 + wd.damage) * (5 + skill_lv) / 5.0f);
-			md.damage -= totaldef;
-
-		}
-		break;
 	case RL_B_TRAP:
 		md.damage = status_get_dex(src) * 10 + (skill_lv * 3 * status_get_hp(target)) / 100;
 		if (status_get_mode(target) & MD_BOSS)
@@ -4780,6 +4763,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 			case AM_DEMONSTRATION:
 			case NJ_ISSEN:
 			case PA_SACRIFICE:
+			case KO_HAPPOKUNAI:
 				flag.distinct = 1;
 				break;
 			case GN_CARTCANNON:
@@ -5244,7 +5228,21 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 			case RK_DRAGONBREATH_WATER:
 				wd.damage = ((status_get_hp(src) / 50) + (status_get_max_sp(src) / 4)) * skill_lv;
 				wd.damage = wd.damage * status->get_lv(src) / 150;
-				if (sd) wd.damage = wd.damage * (95 + 5 * pc->checkskill(sd, RK_DRAGONTRAINING)) / 100;
+				if (sd != NULL)
+					wd.damage = wd.damage * (95 + 5 * pc->checkskill(sd, RK_DRAGONTRAINING)) / 100;
+#ifdef RENEWAL
+				wd.damage = battle->attr_fix(src, target, battle->calc_cardfix2(src, target, wd.damage, s_ele, nk, wd.flag), s_ele, tstatus->def_ele, tstatus->ele_lv);
+#endif
+				wd.flag |= BF_LONG;
+				break;
+			case KO_HAPPOKUNAI:
+				if (sd != NULL) {
+					int index = sd->equip_index[EQI_AMMO];
+					int damagevalue = 3 * (((index >= 0 && sd->inventory_data[index]) ? sd->inventory_data[index]->atk : 0) + sstatus->rhw.atk + sstatus->batk) * (skill_lv + 5) / 5;
+					ATK_ADD(damagevalue);
+				} else {
+					ATK_ADD(sstatus->rhw.atk2);
+				}
 				break;
 			default:
 			{
@@ -5637,9 +5635,14 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 			if( (i=pc->checkskill(sd,AB_EUCHARISTICA)) > 0 &&
 				(tstatus->race == RC_DEMON || tstatus->def_ele == ELE_DARK) )
 				ATK_ADDRATE(-i);
-			if (skill_id != PA_SACRIFICE && skill_id != MO_INVESTIGATE && skill_id != CR_GRANDCROSS && skill_id != NPC_GRANDDARKNESS && skill_id != PA_SHIELDCHAIN 
+			if (skill_id != PA_SACRIFICE
+				&& skill_id != MO_INVESTIGATE
+				&& skill_id != CR_GRANDCROSS
+				&& skill_id != NPC_GRANDDARKNESS
+				&& skill_id != PA_SHIELDCHAIN
+				&& skill_id != KO_HAPPOKUNAI
 #ifndef RENEWAL			
-			&& !flag.cri
+				&& !flag.cri
 #endif
 			) {
 				//Elemental/Racial adjustments
