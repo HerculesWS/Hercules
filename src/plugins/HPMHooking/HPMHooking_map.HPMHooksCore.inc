@@ -3376,6 +3376,12 @@ struct {
 	struct HPMHookPoint *HP_itemdb_read_libconfig_lapineddukddak_sub_post;
 	struct HPMHookPoint *HP_itemdb_read_libconfig_lapineddukddak_sub_sources_pre;
 	struct HPMHookPoint *HP_itemdb_read_libconfig_lapineddukddak_sub_sources_post;
+	struct HPMHookPoint *HP_itemdb_read_libconfig_lapineupgrade_pre;
+	struct HPMHookPoint *HP_itemdb_read_libconfig_lapineupgrade_post;
+	struct HPMHookPoint *HP_itemdb_read_libconfig_lapineupgrade_sub_pre;
+	struct HPMHookPoint *HP_itemdb_read_libconfig_lapineupgrade_sub_post;
+	struct HPMHookPoint *HP_itemdb_read_libconfig_lapineupgrade_sub_targets_pre;
+	struct HPMHookPoint *HP_itemdb_read_libconfig_lapineupgrade_sub_targets_post;
 	struct HPMHookPoint *HP_libconfig_set_db_path_pre;
 	struct HPMHookPoint *HP_libconfig_set_db_path_post;
 	struct HPMHookPoint *HP_libconfig_format_db_path_pre;
@@ -5842,6 +5848,8 @@ struct {
 	struct HPMHookPoint *HP_script_run_item_rental_start_script_post;
 	struct HPMHookPoint *HP_script_run_item_lapineddukddak_script_pre;
 	struct HPMHookPoint *HP_script_run_item_lapineddukddak_script_post;
+	struct HPMHookPoint *HP_script_run_item_lapineupgrade_script_pre;
+	struct HPMHookPoint *HP_script_run_item_lapineupgrade_script_post;
 	struct HPMHookPoint *HP_script_sellitemcurrency_add_pre;
 	struct HPMHookPoint *HP_script_sellitemcurrency_add_post;
 	struct HPMHookPoint *HP_script_declare_conditional_feature_pre;
@@ -10575,6 +10583,12 @@ struct {
 	int HP_itemdb_read_libconfig_lapineddukddak_sub_post;
 	int HP_itemdb_read_libconfig_lapineddukddak_sub_sources_pre;
 	int HP_itemdb_read_libconfig_lapineddukddak_sub_sources_post;
+	int HP_itemdb_read_libconfig_lapineupgrade_pre;
+	int HP_itemdb_read_libconfig_lapineupgrade_post;
+	int HP_itemdb_read_libconfig_lapineupgrade_sub_pre;
+	int HP_itemdb_read_libconfig_lapineupgrade_sub_post;
+	int HP_itemdb_read_libconfig_lapineupgrade_sub_targets_pre;
+	int HP_itemdb_read_libconfig_lapineupgrade_sub_targets_post;
 	int HP_libconfig_set_db_path_pre;
 	int HP_libconfig_set_db_path_post;
 	int HP_libconfig_format_db_path_pre;
@@ -13041,6 +13055,8 @@ struct {
 	int HP_script_run_item_rental_start_script_post;
 	int HP_script_run_item_lapineddukddak_script_pre;
 	int HP_script_run_item_lapineddukddak_script_post;
+	int HP_script_run_item_lapineupgrade_script_pre;
+	int HP_script_run_item_lapineupgrade_script_post;
 	int HP_script_sellitemcurrency_add_pre;
 	int HP_script_sellitemcurrency_add_post;
 	int HP_script_declare_conditional_feature_pre;

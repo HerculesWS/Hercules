@@ -1727,6 +1727,9 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(itemdb->read_libconfig_lapineddukddak, HP_itemdb_read_libconfig_lapineddukddak) },
 	{ HP_POP(itemdb->read_libconfig_lapineddukddak_sub, HP_itemdb_read_libconfig_lapineddukddak_sub) },
 	{ HP_POP(itemdb->read_libconfig_lapineddukddak_sub_sources, HP_itemdb_read_libconfig_lapineddukddak_sub_sources) },
+	{ HP_POP(itemdb->read_libconfig_lapineupgrade, HP_itemdb_read_libconfig_lapineupgrade) },
+	{ HP_POP(itemdb->read_libconfig_lapineupgrade_sub, HP_itemdb_read_libconfig_lapineupgrade_sub) },
+	{ HP_POP(itemdb->read_libconfig_lapineupgrade_sub_targets, HP_itemdb_read_libconfig_lapineupgrade_sub_targets) },
 /* libconfig_interface */
 	{ HP_POP(libconfig->set_db_path, HP_libconfig_set_db_path) },
 	{ HP_POP(libconfig->format_db_path, HP_libconfig_format_db_path) },
@@ -2988,6 +2991,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(script->run_item_rental_end_script, HP_script_run_item_rental_end_script) },
 	{ HP_POP(script->run_item_rental_start_script, HP_script_run_item_rental_start_script) },
 	{ HP_POP(script->run_item_lapineddukddak_script, HP_script_run_item_lapineddukddak_script) },
+	{ HP_POP(script->run_item_lapineupgrade_script, HP_script_run_item_lapineupgrade_script) },
 	{ HP_POP(script->sellitemcurrency_add, HP_script_sellitemcurrency_add) },
 	{ HP_POP(script->declare_conditional_feature, HP_script_declare_conditional_feature) },
 /* searchstore_interface */

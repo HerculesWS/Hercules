@@ -44425,6 +44425,87 @@ bool HP_itemdb_read_libconfig_lapineddukddak_sub_sources(struct config_setting_t
 	}
 	return retVal___;
 }
+bool HP_itemdb_read_libconfig_lapineupgrade(void) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_itemdb_read_libconfig_lapineupgrade_pre > 0) {
+		bool (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_read_libconfig_lapineupgrade_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_itemdb_read_libconfig_lapineupgrade_pre[hIndex].func;
+			retVal___ = preHookFunc();
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.itemdb.read_libconfig_lapineupgrade();
+	}
+	if (HPMHooks.count.HP_itemdb_read_libconfig_lapineupgrade_post > 0) {
+		bool (*postHookFunc) (bool retVal___);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_read_libconfig_lapineupgrade_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_itemdb_read_libconfig_lapineupgrade_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___);
+		}
+	}
+	return retVal___;
+}
+bool HP_itemdb_read_libconfig_lapineupgrade_sub(struct config_setting_t *it, const char *source) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_itemdb_read_libconfig_lapineupgrade_sub_pre > 0) {
+		bool (*preHookFunc) (struct config_setting_t **it, const char **source);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_read_libconfig_lapineupgrade_sub_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_itemdb_read_libconfig_lapineupgrade_sub_pre[hIndex].func;
+			retVal___ = preHookFunc(&it, &source);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.itemdb.read_libconfig_lapineupgrade_sub(it, source);
+	}
+	if (HPMHooks.count.HP_itemdb_read_libconfig_lapineupgrade_sub_post > 0) {
+		bool (*postHookFunc) (bool retVal___, struct config_setting_t *it, const char *source);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_read_libconfig_lapineupgrade_sub_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_itemdb_read_libconfig_lapineupgrade_sub_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, it, source);
+		}
+	}
+	return retVal___;
+}
+bool HP_itemdb_read_libconfig_lapineupgrade_sub_targets(struct config_setting_t *sources, struct item_data *data) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_itemdb_read_libconfig_lapineupgrade_sub_targets_pre > 0) {
+		bool (*preHookFunc) (struct config_setting_t **sources, struct item_data **data);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_read_libconfig_lapineupgrade_sub_targets_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_itemdb_read_libconfig_lapineupgrade_sub_targets_pre[hIndex].func;
+			retVal___ = preHookFunc(&sources, &data);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.itemdb.read_libconfig_lapineupgrade_sub_targets(sources, data);
+	}
+	if (HPMHooks.count.HP_itemdb_read_libconfig_lapineupgrade_sub_targets_post > 0) {
+		bool (*postHookFunc) (bool retVal___, struct config_setting_t *sources, struct item_data *data);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_read_libconfig_lapineupgrade_sub_targets_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_itemdb_read_libconfig_lapineupgrade_sub_targets_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, sources, data);
+		}
+	}
+	return retVal___;
+}
 /* libconfig_interface */
 void HP_libconfig_set_db_path(const char *db_path) {
 	int hIndex = 0;
@@ -77942,6 +78023,32 @@ void HP_script_run_item_lapineddukddak_script(struct map_session_data *sd, struc
 		void (*postHookFunc) (struct map_session_data *sd, struct item_data *data, int oid);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_script_run_item_lapineddukddak_script_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_script_run_item_lapineddukddak_script_post[hIndex].func;
+			postHookFunc(sd, data, oid);
+		}
+	}
+	return;
+}
+void HP_script_run_item_lapineupgrade_script(struct map_session_data *sd, struct item_data *data, int oid) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_script_run_item_lapineupgrade_script_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, struct item_data **data, int *oid);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_script_run_item_lapineupgrade_script_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_script_run_item_lapineupgrade_script_pre[hIndex].func;
+			preHookFunc(&sd, &data, &oid);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.script.run_item_lapineupgrade_script(sd, data, oid);
+	}
+	if (HPMHooks.count.HP_script_run_item_lapineupgrade_script_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, struct item_data *data, int oid);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_script_run_item_lapineupgrade_script_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_script_run_item_lapineupgrade_script_post[hIndex].func;
 			postHookFunc(sd, data, oid);
 		}
 	}

@@ -4204,6 +4204,12 @@ typedef bool (*HPMHOOK_pre_itemdb_read_libconfig_lapineddukddak_sub) (struct con
 typedef bool (*HPMHOOK_post_itemdb_read_libconfig_lapineddukddak_sub) (bool retVal___, struct config_setting_t *it, const char *source);
 typedef bool (*HPMHOOK_pre_itemdb_read_libconfig_lapineddukddak_sub_sources) (struct config_setting_t **sources, struct item_data **data);
 typedef bool (*HPMHOOK_post_itemdb_read_libconfig_lapineddukddak_sub_sources) (bool retVal___, struct config_setting_t *sources, struct item_data *data);
+typedef bool (*HPMHOOK_pre_itemdb_read_libconfig_lapineupgrade) (void);
+typedef bool (*HPMHOOK_post_itemdb_read_libconfig_lapineupgrade) (bool retVal___);
+typedef bool (*HPMHOOK_pre_itemdb_read_libconfig_lapineupgrade_sub) (struct config_setting_t **it, const char **source);
+typedef bool (*HPMHOOK_post_itemdb_read_libconfig_lapineupgrade_sub) (bool retVal___, struct config_setting_t *it, const char *source);
+typedef bool (*HPMHOOK_pre_itemdb_read_libconfig_lapineupgrade_sub_targets) (struct config_setting_t **sources, struct item_data **data);
+typedef bool (*HPMHOOK_post_itemdb_read_libconfig_lapineupgrade_sub_targets) (bool retVal___, struct config_setting_t *sources, struct item_data *data);
 #endif // MAP_ITEMDB_H
 #ifdef LOGIN_LOGIN_H /* lchrif */
 typedef void (*HPMHOOK_pre_lchrif_server_init) (int *id);
@@ -7316,6 +7322,8 @@ typedef void (*HPMHOOK_pre_script_run_item_rental_start_script) (struct map_sess
 typedef void (*HPMHOOK_post_script_run_item_rental_start_script) (struct map_session_data *sd, struct item_data *data, int oid);
 typedef void (*HPMHOOK_pre_script_run_item_lapineddukddak_script) (struct map_session_data **sd, struct item_data **data, int *oid);
 typedef void (*HPMHOOK_post_script_run_item_lapineddukddak_script) (struct map_session_data *sd, struct item_data *data, int oid);
+typedef void (*HPMHOOK_pre_script_run_item_lapineupgrade_script) (struct map_session_data **sd, struct item_data **data, int *oid);
+typedef void (*HPMHOOK_post_script_run_item_lapineupgrade_script) (struct map_session_data *sd, struct item_data *data, int oid);
 typedef bool (*HPMHOOK_pre_script_sellitemcurrency_add) (struct npc_data **nd, struct script_state **st, int *argIndex);
 typedef bool (*HPMHOOK_post_script_sellitemcurrency_add) (bool retVal___, struct npc_data *nd, struct script_state *st, int argIndex);
 typedef void (*HPMHOOK_pre_script_declare_conditional_feature) (const char **feature, bool *enabled);
