@@ -24279,7 +24279,10 @@ static bool clif_lapineDdukDdak_open(struct map_session_data *sd, int item_id)
 {
 #if PACKETVER_MAIN_NUM >= 20160601 || PACKETVER_RE_NUM >= 20160525 || defined(PACKETVER_ZERO)
 	nullpo_retr(false, sd);
-	nullpo_retr(false, itemdb->exists(item_id));
+
+	if (itemdb->exists(item_id) == NULL)
+		return false;
+
 	struct PACKET_ZC_LAPINEDDUKDDAK_OPEN p;
 
 	p.packetType = HEADER_ZC_LAPINEDDUKDDAK_OPEN;
@@ -24385,13 +24388,17 @@ static bool clif_lapineUpgrade_open(struct map_session_data *sd, int item_id)
 {
 #if PACKETVER_MAIN_NUM >= 20170726 || PACKETVER_RE_NUM >= 20170621 || defined(PACKETVER_ZERO)
 	nullpo_retr(false, sd);
-	nullpo_retr(false, itemdb->exists(item_id));
+
+	if (itemdb->exists(item_id) == NULL)
+		return false;
+
 	struct PACKET_ZC_LAPINEUPGRADE_OPEN p;
 
 	p.packetType = HEADER_ZC_LAPINEUPGRADE_OPEN;
 	p.itemId = item_id;
 	clif->send(&p, sizeof(p), &sd->bl, SELF);
 
+	sd->state.lapine_ui = 1;
 	return true;
 #else
 	return false;
@@ -24402,6 +24409,7 @@ static void clif_parse_lapineUpgrade_close(int fd, struct map_session_data *sd) 
 static void clif_parse_lapineUpgrade_close(int fd, struct map_session_data *sd)
 {
 #if PACKETVER_MAIN_NUM >= 20170111 || PACKETVER_RE_NUM >= 20170111 || defined(PACKETVER_ZERO)
+	sd->state.lapine_ui = 0;
 #endif  // PACKETVER_MAIN_NUM >= 20170111 || PACKETVER_RE_NUM >= 20170111 || defined(PACKETVER_ZERO)
 }
 
@@ -24409,9 +24417,93 @@ static void clif_parse_lapineUpgrade_makeItem(int fd, struct map_session_data *s
 static void clif_parse_lapineUpgrade_makeItem(int fd, struct map_session_data *sd)
 {
 #if PACKETVER_MAIN_NUM >= 20170111 || PACKETVER_RE_NUM >= 20170111 || defined(PACKETVER_ZERO)
-	ShowError("Lapin upgrade not implemented yet.");
-	clif->lapineUpgrade_result(sd, LAPINE_UPGRADE_FAILED);
-#endif  // PACKETVER_MAIN_NUM >= 20170111 || PACKETVER_RE_NUM >= 20170111 || defined(PACKETVER_ZERO)
+	const struct PACKET_CZ_LAPINEUPGRADE_MAKE_ITEM *p = RP2PTR(fd);
+	struct item_data *it = itemdb->exists(p->itemId);
+
+	if (it == NULL || it->lapineupgrade == NULL)
+		return;
+
+	if (sd->state.lapine_ui != 1)
+		return;
+
+	if (pc_cant_act_except_lapine(sd))
+		return;
+
+	if (pc->search_inventory(sd, it->nameid) == INDEX_NOT_FOUND)
+		return;
+
+	const int index = p->index - 2;
+	if (index < 0 || index >= sd->status.inventorySize)
+		return;
+
+	int i;
+
+	for (i = 0; i < VECTOR_LENGTH(it->lapineupgrade->TargetItems); ++i) {
+		struct itemlist_entry *entry = &VECTOR_INDEX(it->lapineupgrade->TargetItems, i);
+
+		if (entry->id != sd->status.inventory[index].nameid)
+			continue;
+
+		if (it->lapineupgrade->NeedRefineMin > sd->status.inventory[index].refine
+			|| it->lapineupgrade->NeedRefineMax < sd->status.inventory[index].refine) {
+			clif->lapineUpgrade_result(sd, LAPINE_UPGRADE_FAILED);
+			return;
+		}
+
+		if (it->lapineupgrade->NoEnchant) {
+			int j;
+
+			ARR_FIND(0, MAX_SLOTS, j, sd->status.inventory[index].card[j] != 0);
+
+			if (j != MAX_SLOTS) {
+				clif->lapineUpgrade_result(sd, LAPINE_UPGRADE_FAILED);
+				return;
+			}
+		}
+
+		if (it->lapineupgrade->NeedOptionMin > 0) {
+			int options = 0;
+			for (int j = 0; j < MAX_ITEM_OPTIONS; ++j) {
+				if (sd->status.inventory[index].option[j].index != 0)
+					options++;
+			}
+
+			if (it->lapineupgrade->NeedOptionMin > options) {
+				clif->lapineUpgrade_result(sd, LAPINE_UPGRADE_FAILED);
+				return;
+			}
+		}
+
+		break;
+	}
+
+	if (i == VECTOR_LENGTH(it->lapineupgrade->TargetItems)) {
+		clif->lapineUpgrade_result(sd, LAPINE_UPGRADE_FAILED);
+		return;
+	}
+
+	if (it->lapineupgrade->script != NULL) {
+		pc->setreg(sd, script->add_variable("@lapine_itemid"), sd->status.inventory[index].nameid);
+		pc->setreg(sd, script->add_variable("@lapine_idx"), index);
+		pc->setreg(sd, script->add_variable("@lapine_refine"), sd->status.inventory[index].refine);
+		pc->setreg(sd, script->add_variable("@lapine_attribute"), sd->status.inventory[index].attribute);
+		pc->setreg(sd, script->add_variable("@lapine_bound"), sd->status.inventory[index].bound);
+
+		for (int j = 0; j < MAX_SLOTS; ++j)
+			pc->setreg(sd, reference_uid(script->add_variable("@lapine_card"), j), sd->status.inventory[index].card[j]);
+
+		for (int j = 0; j < MAX_ITEM_OPTIONS; ++j) {
+			pc->setreg(sd, reference_uid(script->add_variable("@lapine_option_idx"), j), sd->status.inventory[index].option[j].index);
+			pc->setreg(sd, reference_uid(script->add_variable("@lapine_option_value"), j), sd->status.inventory[index].option[j].value);
+			pc->setreg(sd, reference_uid(script->add_variable("@lapine_option_param"), j), sd->status.inventory[index].option[j].param);
+		}
+
+		script->run_item_lapineupgrade_script(sd, it, npc->fake_nd->bl.id);
+	}
+
+	clif->lapineUpgrade_result(sd, LAPINE_UPGRADE_SUCCESS);
+	return;
+#endif // PACKETVER_MAIN_NUM >= 20170111 || PACKETVER_RE_NUM >= 20170111 || defined(PACKETVER_ZERO)
 }
 
 static bool clif_lapineUpgrade_result(struct map_session_data *sd, enum lapineUpgrade_result result)
