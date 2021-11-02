@@ -6657,7 +6657,12 @@ static enum damage_lv battle_weapon_attack(struct block_list *src, struct block_
 		}
 	}
 
-	wd.dmotion = clif->damage(src, target, wd.amotion, wd.dmotion, wd.damage, wd.div_ , wd.type, wd.damage2);
+	if (sd != NULL && sd->state.onekillmonster != 0 && target->type == BL_MOB) {
+		damage = tstatus->hp;
+		wd.dmotion = clif->damage(src, target, wd.amotion, wd.dmotion, damage, wd.div_ , wd.type, 0);
+	} else {
+		wd.dmotion = clif->damage(src, target, wd.amotion, wd.dmotion, wd.damage, wd.div_ , wd.type, wd.damage2);
+	}
 
 	if (sd && sd->bonus.splash_range > 0 && damage > 0)
 		skill->castend_damage_id(src, target, 0, 1, tick, 0);
