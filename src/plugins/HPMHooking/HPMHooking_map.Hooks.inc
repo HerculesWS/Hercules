@@ -65220,6 +65220,33 @@ int HP_pc_skillatk_bonus(struct map_session_data *sd, uint16 skill_id) {
 	}
 	return retVal___;
 }
+int HP_pc_sub_skillatk_bonus(struct map_session_data *sd, uint16 skill_id) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_pc_sub_skillatk_bonus_pre > 0) {
+		int (*preHookFunc) (struct map_session_data **sd, uint16 *skill_id);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_sub_skillatk_bonus_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_pc_sub_skillatk_bonus_pre[hIndex].func;
+			retVal___ = preHookFunc(&sd, &skill_id);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.pc.sub_skillatk_bonus(sd, skill_id);
+	}
+	if (HPMHooks.count.HP_pc_sub_skillatk_bonus_post > 0) {
+		int (*postHookFunc) (int retVal___, struct map_session_data *sd, uint16 skill_id);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_sub_skillatk_bonus_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_pc_sub_skillatk_bonus_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, sd, skill_id);
+		}
+	}
+	return retVal___;
+}
 int HP_pc_skillheal_bonus(struct map_session_data *sd, uint16 skill_id) {
 	int hIndex = 0;
 	int retVal___ = 0;

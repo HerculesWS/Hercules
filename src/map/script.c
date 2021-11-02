@@ -10712,6 +10712,7 @@ static BUILDIN(bonus)
 		case SP_VARCASTRATE:
 		case SP_FIXCASTRATE:
 		case SP_SKILL_USE_SP:
+		case SP_SUB_SKILL:
 			// these bonuses support skill names
 			if (script_isstringtype(st, 3)) {
 				val1 = skill->name2id(script_getstr(st, 3));

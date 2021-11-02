@@ -773,6 +773,8 @@ enum status_point_types { //we better clean up this enum and change it name [Hem
 	SP_SUB_DEF_ELE = 2063,
 	SP_MAGIC_SUB_DEF_ELE = 2064,
 	SP_STATE_NO_RECOVER_RACE = 2065,
+	SP_SUB_SKILL = 2066,
+	SP_ADD_DROP_RACE = 2067,
 
 #ifndef SP_LAST_KNOWN
 	SP_LAST_KNOWN
