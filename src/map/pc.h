@@ -456,11 +456,14 @@ END_ZEROED_BLOCK;
 	int charm_count;
 	enum spirit_charm_types charm_type;
 	int charm_timer[MAX_SPIRITCHARM];
+	int soulball;
 	unsigned char potion_success_counter; //Potion successes in row counter
 	unsigned char mission_count; //Stores the bounty kill count for TK_MISSION
 	int mission_mobid; //Stores the target mob_id for TK_MISSION
 	int die_counter; //Total number of times you've died
 	int devotion[MAX_PC_DEVOTION]; //Stores the account IDs of chars devoted to.
+	int stellar_mark[MAX_STELLAR_MARKS]; // Stores the account ID's of character's with a stellar mark.
+	int united_soul[MAX_UNITED_SOULS]; // Stores the account ID's of character's who's soul is united.
 	int trade_partner;
 	struct {
 		struct {
@@ -967,6 +970,7 @@ END_ZEROED_BLOCK; /* End */
 	int (*checkskill2) (struct map_session_data *sd,uint16 index);
 	int (*checkallowskill) (struct map_session_data *sd);
 	int (*checkequip) (struct map_session_data *sd,int pos);
+	int (*get_skill_cooldown) (struct map_session_data *sd, uint16 skill_id, uint16 skill_lv);
 
 	int (*calc_skilltree) (struct map_session_data *sd);
 	void (*calc_skilltree_clear) (struct map_session_data *sd);
@@ -1136,6 +1140,8 @@ END_ZEROED_BLOCK; /* End */
 	int (*delspiritball) (struct map_session_data *sd,int count,int type);
 	int (*delspiritball_sub) (struct map_session_data *sd);
 	int (*getmaxspiritball) (struct map_session_data *sd, int min);
+	void (*addsoulball) (struct map_session_data *sd, int max);
+	void (*delsoulball) (struct map_session_data *sd, int count, bool type);
 	void (*addfame) (struct map_session_data *sd, int ranktype, int count);
 	int (*fame_rank) (int char_id, int ranktype);
 	int (*famelist_type) (uint16 job_mapid);

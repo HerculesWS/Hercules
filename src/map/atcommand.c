@@ -3411,6 +3411,29 @@ ACMD(spiritball)
 /*==========================================
  *
  *------------------------------------------*/
+ ACMD(soulball)
+{
+	int number;
+
+	if (!*message || (number = atoi(message)) < 0 || number > MAX_SOUL_BALL) {
+		char msg[CHAT_SIZE_MAX];
+		safesnprintf(msg, sizeof(msg), "Usage: @soulball <number: 0-%d>", MAX_SOUL_BALL);
+		clif->message(fd, msg);
+		return false;
+	}
+
+	if (sd->soulball > 0)
+		pc->delsoulball(sd, sd->soulball, true);
+
+	for (int i = 0; i < number; i++)
+		pc->addsoulball(sd, MAX_SOUL_BALL);
+
+	return true;
+}
+
+/*==========================================
+ *
+ *------------------------------------------*/
 ACMD(party)
 {
 	char party_name[NAME_LENGTH];
@@ -10314,6 +10337,7 @@ static void atcommand_basecommands(void)
 		ACMD_DEF(questskill),
 		ACMD_DEF(lostskill),
 		ACMD_DEF(spiritball),
+		ACMD_DEF(soulball),
 		ACMD_DEF(party),
 		ACMD_DEF(guild),
 		ACMD_DEF(breakguild),

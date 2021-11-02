@@ -316,6 +316,61 @@ static int pc_delspiritball_sub(struct map_session_data *sd)
 	return 0;
 }
 
+/**
+ * @brief Adds a soulball to player
+ * @param sd Player data
+ * @param max Maximum amount of soulballs
+ * @return (void)
+ */
+static void pc_addsoulball(struct map_session_data *sd, int max)
+{
+	nullpo_retv(sd);
+
+	const struct status_change *sc = status->get_sc(&sd->bl);
+
+	if (sc == NULL || sc->data[SC_SOULENERGY] == NULL) {
+		sc_start(&sd->bl, &sd->bl, SC_SOULENERGY, 100, 0, skill->get_time2(SP_SOULCOLLECT, 1));
+		sd->soulball = 0;
+	}
+
+	if (max > MAX_SOUL_BALL)
+		max = MAX_SOUL_BALL;
+
+	sd->soulball = cap_value(sd->soulball + 1, 0, max);
+	sc_start(&sd->bl, &sd->bl, SC_SOULENERGY, 100, sd->soulball, skill->get_time2(SP_SOULCOLLECT, 1));
+	clif->soulball(sd, NULL, AREA);
+}
+
+/**
+ * @brief Removes number of soulball from player
+ * @param sd Player data
+ * @param count Amount to remove
+ * @param type true means doesn't give client effect
+ * @return (void)
+ */
+static void pc_delsoulball(struct map_session_data *sd, int count, bool type)
+{
+	nullpo_retv(sd);
+
+	if (count <= 0)
+		return;
+
+	struct status_change *sc = status->get_sc(&sd->bl);
+
+	if (sd->soulball <= 0 || sc == NULL || sc->data[SC_SOULENERGY] == NULL) {
+		sd->soulball = 0;
+	} else {
+		sd->soulball -= cap_value(count, 0, sd->soulball);
+		if (sd->soulball == 0)
+			status_change_end(&sd->bl, SC_SOULENERGY, INVALID_TIMER);
+		else
+			sc->data[SC_SOULENERGY]->val1 = sd->soulball;
+	}
+
+	if (type == 0)
+		clif->soulball(sd, NULL, AREA);
+}
+
 static int pc_check_banding(struct block_list *bl, va_list ap)
 {
 	int *c, *b_sd;
@@ -6335,6 +6390,36 @@ static int pc_checkequip(struct map_session_data *sd, int pos)
 	return -1;
 }
 
+/**
+ * Get the skill current cooldown for player.
+ * (get the db base cooldown for skill + player specific cooldown)
+ * @param sd : player pointer
+ * @param id : skill id
+ * @param lv : skill lv
+ * @return player skill cooldown
+ */
+int pc_get_skill_cooldown(struct map_session_data *sd, uint16 skill_id, uint16 skill_lv)
+{
+	nullpo_ret(sd);
+	Assert_ret(skill_id > 0 && skill_lv > 0);
+
+	if (skill_id == SJ_NOVAEXPLOSING) {
+		const struct status_change *sc = status->get_sc(&sd->bl);
+		if (sc != NULL && sc->data[SC_DIMENSION] != NULL)
+			return 0;
+	}
+
+	int i;
+	int cooldown = skill->get_cooldown(skill_id, skill_lv);
+
+	ARR_FIND(0, ARRAYLENGTH(sd->skillcooldown), i, sd->skillcooldown[i].id == skill_id);
+
+	if (i < ARRAYLENGTH(sd->skillcooldown))
+		cooldown += sd->skillcooldown[i].val;
+
+	return max(0, cooldown);
+}
+
 /*==========================================
  * Convert's from the client's lame Job ID system
  * to the map server's 'makes sense' system. [Skotlex]
@@ -8075,6 +8160,24 @@ static int pc_dead(struct map_session_data *sd, struct block_list *src)
 			sd->devotion[i] = 0;
 		}
 	}
+	for (int i = 0; i < MAX_STELLAR_MARKS; i++) {
+		if (sd->stellar_mark[i] != 0) {
+			struct map_session_data *smarksd = map->id2sd(sd->stellar_mark[i]);
+
+			if (smarksd != NULL)
+				status_change_end(&smarksd->bl, SC_FLASHKICK, INVALID_TIMER);
+			sd->stellar_mark[i] = 0;
+		}
+	}
+	for (int i = 0; i < MAX_UNITED_SOULS; i++) {
+		if (sd->united_soul[i]) {
+			struct map_session_data *usoulsd = map->id2sd(sd->united_soul[i]);
+
+			if (usoulsd != NULL)
+				status_change_end(&usoulsd->bl, SC_SOULUNITY, INVALID_TIMER);
+			sd->united_soul[i] = 0;
+		}
+	}
 
 	if (sd->status.pet_id > 0 && sd->pd != NULL) {
 		struct pet_data *pd = sd->pd;
@@ -8166,6 +8269,9 @@ static int pc_dead(struct map_session_data *sd, struct block_list *src)
 
 	if (sd->spiritball != 0)
 		pc->delspiritball(sd, sd->spiritball, 0);
+
+	if (sd->soulball != 0)
+		pc->delsoulball(sd, sd->soulball, false);
 
 	if (sd->charm_type != CHARM_TYPE_NONE && sd->charm_count > 0)
 		pc->del_charm(sd, sd->charm_count, sd->charm_type);
@@ -12085,6 +12191,9 @@ static void pc_scdata_received(struct map_session_data *sd)
 		pc->autotrade_populate(sd);
 		pc->autotrade_start(sd);
 	}
+
+	if (sd->sc.data[SC_SOULENERGY] != NULL)
+		sd->soulball = sd->sc.data[SC_SOULENERGY]->val1;
 }
 static int pc_expiration_timer(int tid, int64 tick, int id, intptr_t data)
 {
@@ -12811,6 +12920,7 @@ void pc_defaults(void)
 	pc->checkskill2 = pc_checkskill2;
 	pc->checkallowskill = pc_checkallowskill;
 	pc->checkequip = pc_checkequip;
+	pc->get_skill_cooldown = pc_get_skill_cooldown;
 
 	pc->calc_skilltree = pc_calc_skilltree;
 	pc->calc_skilltree_bonus = pc_calc_skilltree_bonus;
@@ -12980,6 +13090,8 @@ void pc_defaults(void)
 	pc->addspiritball_sub = pc_addspiritball_sub;
 	pc->delspiritball = pc_delspiritball;
 	pc->delspiritball_sub = pc_delspiritball_sub;
+	pc->addsoulball = pc_addsoulball;
+	pc->delsoulball = pc_delsoulball;
 	pc->addfame = pc_addfame;
 	pc->fame_rank = pc_fame_rank;
 	pc->famelist_type = pc_famelist_type;
