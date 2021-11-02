@@ -949,7 +949,7 @@ static bool pc_isequipped(struct map_session_data *sd, int nameid)
 		if( sd->inventory_data[index]->nameid == nameid )
 			return true;
 
-		for( j = 0; j < sd->inventory_data[index]->slot; j++ )
+		for( j = 0; j < MAX_SLOTS; j++ )
 			if( sd->status.inventory[index].card[j] == nameid )
 				return true;
 	}
