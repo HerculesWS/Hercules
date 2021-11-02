@@ -6256,10 +6256,10 @@ typedef int (*HPMHOOK_pre_pc_steal_item) (struct map_session_data **sd, struct b
 typedef int (*HPMHOOK_post_pc_steal_item) (int retVal___, struct map_session_data *sd, struct block_list *bl, uint16 skill_lv);
 typedef int (*HPMHOOK_pre_pc_steal_coin) (struct map_session_data **sd, struct block_list **bl, uint16 *skill_lv);
 typedef int (*HPMHOOK_post_pc_steal_coin) (int retVal___, struct map_session_data *sd, struct block_list *bl, uint16 skill_lv);
-typedef int (*HPMHOOK_pre_pc_modifybuyvalue) (struct map_session_data **sd, int *orig_value);
-typedef int (*HPMHOOK_post_pc_modifybuyvalue) (int retVal___, struct map_session_data *sd, int orig_value);
-typedef int (*HPMHOOK_pre_pc_modifysellvalue) (struct map_session_data **sd, int *orig_value);
-typedef int (*HPMHOOK_post_pc_modifysellvalue) (int retVal___, struct map_session_data *sd, int orig_value);
+typedef int (*HPMHOOK_pre_pc_modifybuyvalue) (struct map_session_data **sd, int *orig_value, bool *ignore_discount);
+typedef int (*HPMHOOK_post_pc_modifybuyvalue) (int retVal___, struct map_session_data *sd, int orig_value, bool ignore_discount);
+typedef int (*HPMHOOK_pre_pc_modifysellvalue) (struct map_session_data **sd, int *orig_value, bool *ignore_overcharge);
+typedef int (*HPMHOOK_post_pc_modifysellvalue) (int retVal___, struct map_session_data *sd, int orig_value, bool ignore_overcharge);
 typedef int (*HPMHOOK_pre_pc_follow) (struct map_session_data **sd, int *target_id);
 typedef int (*HPMHOOK_post_pc_follow) (int retVal___, struct map_session_data *sd, int target_id);
 typedef int (*HPMHOOK_pre_pc_stop_following) (struct map_session_data **sd);
