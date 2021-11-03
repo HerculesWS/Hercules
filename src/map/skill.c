@@ -1950,7 +1950,8 @@ static int skill_additional_effect(struct block_list *src, struct block_list *bl
 			break;
 
 		case CR_ACIDDEMONSTRATION:
-			skill->break_equip(bl, EQP_WEAPON|EQP_ARMOR, 100*skill_lv, BCT_ENEMY);
+			if (dstsd != NULL) // [Aegis] Doesn't apply for non-player characters.
+				skill->break_equip(bl, EQP_WEAPON | EQP_ARMOR, 100 * skill_lv, BCT_ENEMY);
 			break;
 
 		case TK_DOWNKICK:
