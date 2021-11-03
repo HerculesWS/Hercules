@@ -26651,7 +26651,7 @@ static BUILDIN(getcalendartime)
 		if (day_of_month < day) { // Next Month
 			info.tm_mon++;
 		} else if (day_of_month == day) { // Today
-			if (hour < cur_hour || (hour == cur_hour && minute < cur_min)) { // But past time, next month
+			if (hour < cur_hour || (hour == cur_hour && minute <= cur_min)) { // But past time, next month
 				info.tm_mon++;
 			}
 		}
@@ -26678,7 +26678,7 @@ static BUILDIN(getcalendartime)
 			info.tm_mday += (7 - cur_wday + day_of_week);
 		}
 	} else if (day_of_week == -1 && day_of_month == -1) { // Next occurence of hour/min
-		if (hour < cur_hour || (hour == cur_hour && minute < cur_min)) {
+		if (hour < cur_hour || (hour == cur_hour && minute <= cur_min)) {
 			info.tm_mday++;
 		}
 	}

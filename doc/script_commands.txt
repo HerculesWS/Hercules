@@ -3726,7 +3726,9 @@ Example :
 
 *getcalendartime(<hour>, <minute>{, <day of month>{, <day of week>}})
 
-This function returns the timestamp of the next ocurrence of given time.
+This function returns the timestamp of the next ocurrence of a given time.
+If this time is later today, it will stay in the same day, otherwise, it will adjust to a future
+day as needed.
 
 Day of Month specifies a day between 1 and 31 in the future, by default its value is -1 (don't use).
 Day of Week specifies a day in the week and its valid values are:
@@ -3745,6 +3747,12 @@ Examples :
 	getcalendartime(19, 00); // Next 7 pm
 	getcalendartime(19, 00, 6); // Next day 6 of the month, at 7pm
 	getcalendartime(19, 10, -1, 1); // Next Monday, at 7:10pm
+
+Note: If supplied with the current hour and minute, you will get the timestamp for the same
+hour and minute in the next day. For example, if is now August 1st 7:00pm and you use:
+	getcalendartime(gettime(GETTIME_HOUR), gettime(GETTIME_MINUTE));
+
+You will get August 2nd 7pm
 
 ---------------------------------------
 

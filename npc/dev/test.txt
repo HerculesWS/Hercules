@@ -150,6 +150,24 @@ function	script	F_TestVarOfAnotherNPC	{
 	}
 }
 
+function	script	F_TestCalendarNextTime	{
+	.@hour = gettime(GETTIME_HOUR);
+	.@min = gettime(GETTIME_MINUTE);
+	
+	.@result = getcalendartime(.@hour, .@min);
+	.@expected = gettimetick(2) + 24 * 60 * 60;
+	
+	// We give it a range of 70 seconds more or less in the result because:
+	// 1. getcalendartime doesn't take seconds into account, so we may have differing seconds;
+	// 2. We can't mock time, the second may change during the commands execution,
+	//    so we give it a few seconds to spare.
+	// This still gives a good test, because we are looking for 24 hours into the future,
+	// ~3 minutes aren't really an issue for correcteness here.
+	.@check = (.@result >= .@expected - 70 && .@result <= .@expected + 70);
+	
+	return .@check;
+}
+
 function	script	HerculesSelfTestHelper	{
 	if (.once > 0)
 		return .errors;
@@ -859,6 +877,8 @@ function	script	HerculesSelfTestHelper	{
 	callsub(OnCheck, "public local function ownership",          "export test"::Public(), getnpcid());
 	callsub(OnCheck, "public local function var reference test", .@refTest, 1337);
 	callsub(OnCheck, "programatic public local call",            callfunctionofnpc("export test", "RefTest", .@refTest = 1), 1337);
+
+	callsub(OnCheck, "getcalendartime: next occurence of current Hour/Minute", F_TestCalendarNextTime(), true);
 
 	if (.errors) {
 		consolemes(CONSOLEMES_DEBUG, "Script engine self-test   [ \033[0;31mFAILED\033[0m ]");
