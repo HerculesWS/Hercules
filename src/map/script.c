@@ -9762,68 +9762,6 @@ static BUILDIN(getguildinfo)
 }
 
 /*==========================================
- * Return the name of the @guild_id
- * null if not found
- *------------------------------------------*/
-static BUILDIN(getguildname)
-{
-	int guild_id;
-	struct guild* g;
-
-	guild_id = script_getnum(st,2);
-
-	if( ( g = guild->search(guild_id) ) != NULL )
-	{
-		script_pushstrcopy(st,g->name);
-	}
-	else
-	{
-		script_pushconststr(st,"null");
-	}
-	return true;
-}
-
-/*==========================================
- * Return the name of the guild master of @guild_id
- * null if not found
- *------------------------------------------*/
-static BUILDIN(getguildmaster)
-{
-	int guild_id;
-	struct guild* g;
-
-	guild_id = script_getnum(st,2);
-
-	if( ( g = guild->search(guild_id) ) != NULL )
-	{
-		script_pushstrcopy(st,g->member[0].name);
-	}
-	else
-	{
-		script_pushconststr(st,"null");
-	}
-	return true;
-}
-
-static BUILDIN(getguildmasterid)
-{
-	int guild_id;
-	struct guild* g;
-
-	guild_id = script_getnum(st,2);
-
-	if( ( g = guild->search(guild_id) ) != NULL )
-	{
-		script_pushint(st,g->member[0].char_id);
-	}
-	else
-	{
-		script_pushint(st,0);
-	}
-	return true;
-}
-
-/*==========================================
  * Get the information of the members of a guild by type.
  * getguildmember <guild_id>{,<type>};
  * @param guild_id: ID of guild
@@ -13472,26 +13410,6 @@ static BUILDIN(getstatus)
 }
 
 /*==========================================
- *
- *------------------------------------------*/
-static BUILDIN(debugmes)
-{
-	struct StringBuf buf;
-	StrBuf->Init(&buf);
-
-	if (!script->sprintf_helper(st, 2, &buf)) {
-		StrBuf->Destroy(&buf);
-		script_pushint(st, 0);
-		return false;
-	}
-
-	ShowDebug("script debug : %d %d : %s\n", st->rid, st->oid, StrBuf->Value(&buf));
-	StrBuf->Destroy(&buf);
-	script_pushint(st, 1);
-	return true;
-}
-
-/*==========================================
  *------------------------------------------*/
 static BUILDIN(catchpet)
 {
@@ -13891,37 +13809,6 @@ static BUILDIN(delwaitingroom)
 	}
 
 	chat->delete_npc_chat(nd);
-	return true;
-}
-
-/// Kicks all the players from the waiting room of the current or target npc.
-///
-/// kickwaitingroomall "<npc_name>";
-/// kickwaitingroomall;
-static BUILDIN(waitingroomkickall)
-{
-	struct npc_data *nd;
-	struct chat_data *cd;
-
-	if (script_hasdata(st, 2))
-		nd = npc->name2id(script_getstr(st, 2));
-	else
-		nd = map->id2nd(st->oid);
-
-	if (nd == NULL) {
-		if (script_hasdata(st, 2))
-			ShowWarning("buildin_waitingroomkickall: NPC '%s' not found.\n", script_getstr(st, 2));
-		else
-			ShowWarning("buildin_waitingroomkickall: NPC not found.\n");
-		return false;
-	}
-
-	if ((cd = map->id2cd(nd->chat_id)) == NULL) {
-		ShowWarning("buildin_waitingroomkickall: NPC '%s' does not have a chatroom.\n", nd->name);
-		return false;
-	}
-
-	chat->npc_kick_all(cd);
 	return true;
 }
 
@@ -16456,25 +16343,6 @@ static BUILDIN(classchange)
 }
 
 /*==========================================
- * Display an effect
- *------------------------------------------*/
-static BUILDIN(misceffect)
-{
-	int type;
-
-	type=script_getnum(st,2);
-	if(st->oid && st->oid != npc->fake_nd->bl.id) {
-		struct block_list *bl = map->id2bl(st->oid);
-		if (bl)
-			clif->specialeffect(bl,type,AREA);
-	} else {
-		struct map_session_data *sd = script->rid2sd(st);
-		if (sd != NULL)
-			clif->specialeffect(&sd->bl,type,AREA);
-	}
-	return true;
-}
-/*==========================================
  * Play a BGM on a single client [Rikter/Yommy]
  *------------------------------------------*/
 static BUILDIN(playbgm)
@@ -16870,23 +16738,6 @@ static BUILDIN(specialeffectnum)
 	return true;
 }
 
-static BUILDIN(specialeffect2)
-{
-	struct map_session_data *sd;
-	int type = script_getnum(st,2);
-	enum send_target target = script_hasdata(st,3) ? (send_target)script_getnum(st,3) : AREA;
-
-	if (script_hasdata(st,4))
-		sd = script->nick2sd(st, script_getstr(st,4));
-	else
-		sd = script->rid2sd(st);
-
-	if (sd != NULL)
-		clif->specialeffect(&sd->bl, type, target);
-
-	return true;
-}
-
 static BUILDIN(removespecialeffect)
 {
 	struct block_list *bl = NULL;
@@ -17091,7 +16942,7 @@ static BUILDIN(getpetinfo)
 	int type = script_getnum(st, 2);
 	if (pd == NULL) {
 		if (type == PETINFO_NAME)
-			script_pushconststr(st, "null");
+			script_pushconststr(st, "");
 		else
 			script_pushint(st, 0);
 		return true;
@@ -19241,16 +19092,6 @@ static BUILDIN(sqrt) //[zBuffer]
 	return true;
 }
 
-static BUILDIN(pow) //[zBuffer]
-{
-	double i, a, b;
-	a = script_getnum(st,2);
-	b = script_getnum(st,3);
-	i = pow(a,b);
-	script_pushint(st,(int)i);
-	return true;
-}
-
 static BUILDIN(distance) //[zBuffer]
 {
 	int x0, y0, x1, y1;
@@ -19565,32 +19406,6 @@ static BUILDIN(getd)
 }
 
 // <--- [zBuffer] List of dynamic var commands
-// Pet stat [Lance]
-static BUILDIN(petstat)
-{
-	struct pet_data *pd;
-	int flag = script_getnum(st,2);
-	struct map_session_data *sd = script->rid2sd(st);
-	if (sd == NULL || sd->status.pet_id == 0 || sd->pd == NULL) {
-		if(flag == 2)
-			script_pushconststr(st, "");
-		else
-			script_pushint(st,0);
-		return true;
-	}
-	pd = sd->pd;
-	switch(flag) {
-		case 1: script_pushint(st,(int)pd->pet.class_); break;
-		case 2: script_pushstrcopy(st, pd->pet.name); break;
-		case 3: script_pushint(st,(int)pd->pet.level); break;
-		case 4: script_pushint(st,(int)pd->pet.hungry); break;
-		case 5: script_pushint(st,(int)pd->pet.intimate); break;
-		default:
-			script_pushint(st,0);
-			break;
-	}
-	return true;
-}
 
 static BUILDIN(callshop)
 {
@@ -20105,30 +19920,6 @@ static BUILDIN(rid2name)
 		ShowError("buildin_rid2name: invalid RID\n");
 		script_pushconststr(st,"(null)");
 	}
-	return true;
-}
-
-static BUILDIN(pcblockmove)
-{
-	int id, flag;
-	struct map_session_data *sd = NULL;
-
-	id = script_getnum(st,2);
-	flag = script_getnum(st,3);
-
-	if (id != 0)
-		sd = script->id2sd(st, id);
-	else
-		sd = script->rid2sd(st);
-
-	if (!sd)
-		return true;
-
-	if (flag)
-		sd->block_action.move = 1;
-	else
-		sd->block_action.move = 0;
-
 	return true;
 }
 
@@ -27872,9 +27663,6 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(getpartyname,"i"),
 		BUILDIN_DEF(getpartymember,"i?"),
 		BUILDIN_DEF(getpartyleader,"i?"),
-		BUILDIN_DEF_DEPRECATED(getguildname,"i"),
-		BUILDIN_DEF_DEPRECATED(getguildmaster,"i"),
-		BUILDIN_DEF_DEPRECATED(getguildmasterid,"i"),
 		BUILDIN_DEF(getguildmember,"i?"),
 		BUILDIN_DEF(getguildinfo,"i?"),
 		BUILDIN_DEF(getguildonline, "i?"),
@@ -27979,7 +27767,6 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(sc_end,"i?"),
 		BUILDIN_DEF(getstatus, "i?"),
 		BUILDIN_DEF(getscrate,"ii?"),
-		BUILDIN_DEF_DEPRECATED(debugmes,"v*"),
 		BUILDIN_DEF(consolemes,"iv*"),
 		BUILDIN_DEF2(catchpet,"pet","i"),
 		BUILDIN_DEF2(birthpet,"bpet",""),
@@ -27994,7 +27781,6 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(changecharsex,""), // [4144]
 		BUILDIN_DEF(waitingroom, "si??????"),
 		BUILDIN_DEF(delwaitingroom, "?"),
-		BUILDIN_DEF2_DEPRECATED(waitingroomkickall, "kickwaitingroomall", "?"),
 		BUILDIN_DEF(waitingroomkick, "??"),
 		BUILDIN_DEF(enablewaitingroomevent, "?"),
 		BUILDIN_DEF(disablewaitingroomevent, "?"),
@@ -28043,7 +27829,6 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(getskilllist,""),
 		BUILDIN_DEF(clearitem,""),
 		BUILDIN_DEF(classchange,"ii?"),
-		BUILDIN_DEF_DEPRECATED(misceffect,"i"),
 		BUILDIN_DEF(playbgm,"s"),
 		BUILDIN_DEF(playbgmall,"s?????"),
 		BUILDIN_DEF(soundeffect,"si"),
@@ -28061,7 +27846,6 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(specialeffect,"i???"), // npc skill effect [Valaris]
 		BUILDIN_DEF(specialeffectnum,"iii???"), // npc skill effect with num [4144]
 		BUILDIN_DEF(removespecialeffect,"i???"),
-		BUILDIN_DEF_DEPRECATED(specialeffect2,"i??"), // skill effect on players[Valaris]
 		BUILDIN_DEF(nude,""), // nude command [Valaris]
 		BUILDIN_DEF(mapwarp,"ssii??"), // Added by RoVeRT
 		BUILDIN_DEF(atcommand,"s"), // [MouseJstr]
@@ -28146,7 +27930,6 @@ static void script_parse_builtin(void)
 		// List of mathematics commands --->
 		BUILDIN_DEF(log10,"i"),
 		BUILDIN_DEF(sqrt,"i"), //[zBuffer]
-		BUILDIN_DEF_DEPRECATED(pow,"ii"), //[zBuffer]
 		BUILDIN_DEF(distance,"iiii"), //[zBuffer]
 		// <--- List of mathematics commands
 		BUILDIN_DEF(min, "i*"),
@@ -28158,7 +27941,6 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(getd,"s"),
 		BUILDIN_DEF(setd,"sv"),
 		// <--- [zBuffer] List of dynamic var commands
-		BUILDIN_DEF_DEPRECATED(petstat, "i"), // Deprecated 2019-03-11
 		BUILDIN_DEF(callshop,"s?"), // [Skotlex]
 		BUILDIN_DEF(npcshopitem,"sii*"), // [Lance]
 		BUILDIN_DEF(npcshopadditem,"sii*"),
@@ -28185,7 +27967,6 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(rid2name,"i"),
 		BUILDIN_DEF(pcfollow,"ii"),
 		BUILDIN_DEF(pcstopfollow,"i"),
-		BUILDIN_DEF_DEPRECATED(pcblockmove,"ii"), // Deprecated 2018-05-04
 		BUILDIN_DEF(setpcblock, "ii?"),
 		BUILDIN_DEF(checkpcblock, "?"),
 		// <--- [zBuffer] List of player cont commands

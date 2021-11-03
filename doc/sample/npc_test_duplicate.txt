@@ -9,7 +9,7 @@
 //=  NPC variables are shared between all duplicates.
 //=  In this sample, to get the NPC coordinate, has to trigger OnTouch
 //=  Duplicates always override the source NPC's trigger area (even 0x0).
-//=  'OnInit' loads the main npc last, for some reason. (check with debugmes)
+//=  'OnInit' loads the main npc last, for some reason. (check with consolemes)
 //============================================================
 
 -	script	Test Script	FAKE_NPC,1,1,{
@@ -19,7 +19,7 @@
 
 OnInit:
 	getmapxy(.map$, .x, .y, 1);
-	debugmes strnpcinfo(NPC_NAME);
+	consolemes(CONSOLEMES_DEBUG, "%s", strnpcinfo(NPC_NAME));
 	end;
 
 OnTouch:

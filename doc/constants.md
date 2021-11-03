@@ -1317,14 +1317,6 @@
 - `e_panic`: 79
 - `e_whisp`: 80
 
-### petstat - deprecated, use *getpetinfo
-
-- `PET_CLASS`: 1 **(DEPRECATED)**
-- `PET_NAME`: 2 **(DEPRECATED)**
-- `PET_LEVEL`: 3 **(DEPRECATED)**
-- `PET_HUNGRY`: 4 **(DEPRECATED)**
-- `PET_INTIMATE`: 5 **(DEPRECATED)**
-
 ### getmonsterinfo
 
 - `MOB_NAME`: 0

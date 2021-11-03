@@ -3861,82 +3861,6 @@ Example:
 
 ---------------------------------------
 
-*getguildname(<guild id>)
-
-    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    @ /!\ This command is deprecated @
-    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-This function returns a guild's name given an ID number. If there is no
-such guild, "null" will be returned;
-
-	// Would print whatever guild 10007 name is.
-	mes("The guild "+getguildname(10007)+" are all nice people.");
-
-	// This will do the same as above:
-	.@var = 10007;
-	mes("We have some friends in "+getguildname(.@var)+", you know.");
-
-This is used all over the WoE controlling scripts. You could also use it
-for a guild-based event.
-
-This command is deprecated and it should not be used in new scripts, as it is
-likely to be removed at a later time. Please use getguildinfo instead:
-	getguildinfo(GUILDINFO_NAME, <guild id>)
-
----------------------------------------
-
-*getguildmaster(<guild id>)
-
-    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    @ /!\ This command is deprecated @
-    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-This function return the name of the master of the guild which has the
-specified ID number. If there is no such guild, "null" will be returned.
-
-// Would return the guild master of guild 10007, whatever that might be.
-	mes(getguildmaster(10007)+" runs "+getguildname(10007));
-
-Can be used to check if the character is the guild master of the specified
-guild.
-
-Maybe you want to make a room only guild masters can enter:
-
-	.@GID = getcharid(CHAR_ID_GUILD);
-	if (.@GID == 0) {
-		mes("Sorry you are not in a guild");
-		close();
-	}
-	if (strcharinfo(PC_NAME) == getguildmaster(.@GID)) {
-		mes("Welcome guild master of "+getguildname(.@GID));
-		close();
-	}
-	mes("Sorry you don't own the guild you are in");
-	close();
-
-This command is deprecated and it should not be used in new scripts, as it is
-likely to be removed at a later time. Please use getguildinfo instead:
-	getguildinfo(GUILDINFO_MASTER_NAME, <guild id>)
-
----------------------------------------
-
-*getguildmasterid(<guild id>)
-
-    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    @ /!\ This command is deprecated @
-    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-This function will return the character ID number of the guild master of
-the guild specified by the ID. 0 if the character is not a guild master of
-any guild.
-
-This command is deprecated and it should not be used in new scripts, as it is
-likely to be removed at a later time. Please use getguildinfo instead:
-	getguildinfo(GUILDINFO_MASTER_CID, <guild id>)
-
----------------------------------------
-
 *getcastlename("<map name>")
 
 This function returns the name of the castle when given the map name for
@@ -4126,7 +4050,7 @@ These fields are associate in 'db/(pre-)re/pet_db.conf'. Valid types are:
 
 	PETINFO_ID            - Pet Database ID, stored in `pet` table to distinguish from other pets.
 	PETINFO_CLASS         - Pet class ID. (Id field)
-	PETINFO_NAME          - Pet Name, return "null" if there's no active pet.
+	PETINFO_NAME          - Pet Name, return "" if there's no active pet.
 	PETINFO_INTIMACY      - Pet Intimacy level. 1000 is full loyalty.
 	PETINFO_HUNGRY        - Pet hungry level. 100 is completely full.
 	PETINFO_RENAME        - Pet rename flag. 0 means this pet has not been named yet.
@@ -4139,31 +4063,7 @@ These fields are associate in 'db/(pre-)re/pet_db.conf'. Valid types are:
 	PETINFO_AUTOFEED      - Pet AutoFeed flag.
 
 If the invoking player doesn't own a pet, this command will
-return "null" for type PETINFO_NAME, and return 0 for other types.
-
----------------------------------------
-
-*petstat(<flag>)
-
-    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    @ /!\ This command is deprecated @
-    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-Returns current pet status, all are integers except name.
-Returns 0 or "" if the player doesn't have pets.
-
-Flags usable:
-PET_CLASS
-PET_NAME
-PET_LEVEL
-PET_HUNGRY
-PET_INTIMATE
-
-Example:
-	.@i = petstat(PET_CLASS);
-
-This command is deprecated and it should not be used in new scripts, as it is
-likely to be removed at a later time. Please use 'getpetinfo' instead.
+return "" for type PETINFO_NAME, and return 0 for other types.
 
 ---------------------------------------
 
@@ -6436,21 +6336,6 @@ Examples and detailed explanation about parameters see in specialeffect.
 
 ---------------------------------------
 
-*specialeffect2(<effect number>{, <send_target>{, "<Player Name>"}})
-
-    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    @ /!\ This command is deprecated @
-    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-This command behaves identically to the specialeffect(), but the effect
-will be centered on the invoking character's sprite.
-
-This command is deprecated and it should not be used in new scripts, as it is
-likely to be removed at a later time. Please use specialeffect instead,
-ie: specialeffect(<effect number>, <send_target>, playerattached())
-
----------------------------------------
-
 *statusup(<stat>)
 
 This command will bump a specified stat of the invoking character up by
@@ -6682,26 +6567,6 @@ Examples:
 
 // Makes Aaron stop following whoever he is following.
 	pcstopfollow(getcharid(CHAR_ID_ACCOUNT, "Aaron"));
-
----------------------------------------
-
-*pcblockmove(<account id>, <option>)
-
-    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    @ /!\ This command is deprecated @
-    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-Prevents the player from moving when the option != 0, and 0 enables the
-player to move again. The player has to be the account ID of a character,
-and will run for the attached player if zero is supplied.
-
-Examples:
-
-// Prevents the current char from moving away.
-	pcblockmove(getcharid(CHAR_ID_ACCOUNT), true);
-
-// Enables the current char to move again.
-	pcblockmove(getcharid(CHAR_ID_ACCOUNT), false);
 
 ---------------------------------------
 
@@ -7923,16 +7788,6 @@ one-on-one duel, for example.
 
 ---------------------------------------
 
-*kickwaitingroomall({"<NPC object name>"})
-
-	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-	@ /!\ This command is deprecated @
-	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-This command kicks everybody out of a specified waiting room chat.
-
----------------------------------------
-
 *waitingroomkick({"<NPC object name>"{,"<player name>"|<account_id>}})
 
 This command kicks target player(s) out of a waiting room chat of specific NPC if any.
@@ -8237,25 +8092,6 @@ solution rather than sending the map and the monster_id.
 //=====================================
 ---------------------------------------
 
-*debugmes("<format string>"{, <param>{, ...}})
-
-	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-	@ /!\ This command is deprecated @
-	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-This command will print a message in the server console (map-server window),
-after applying the same format-string replacements as sprintf(). It will not be
-displayed anywhere else. Returns true on success.
-
-Example:
-
-	// Displays "NAME has clicked me!" in the map-server window.
-	debugmes("%s has clicked me!", strcharinfo(PC_NAME));
-
-	debugmes("\033[0;32mHello World"); // supports ANSI escape sequences
-
----------------------------------------
-
 *consolemes("<type>", "<format string>"{,<param>{, ...}})
 
 This command will print a message in the server console (map-server window),
@@ -8455,26 +8291,6 @@ the emotion, if true, the player that is running the script will display it.
 
 Target name parameter allows to display emotion on top of other NPC/PC
 without event labels. If specified name is not found, command does nothing.
-
----------------------------------------
-
-*misceffect(<effect number>)
-
-    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    @ /!\ This command is deprecated @
-    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-This command, if run from an NPC object that has a sprite, will call up a
-specified effect number, centered on the NPC sprite. If the running code
-does not have an object ID (a 'floating' NPC) or is not running from an
-NPC object at all (an item script) the effect will be centered on the
-character who's RID got attached to the script, if any. For usable item
-scripts, this command will create an effect centered on the player using
-the item.
-
-This command is deprecated and it should not be used in new scripts, as it is
-likely to be removed at a later time. Please use specialeffect instead,
-ie: specialeffect(<effect number>, <send target>, <unit id>)
 
 ---------------------------------------
 
@@ -8925,23 +8741,6 @@ For an example of this in use, see doc/sample/npc_test_pcre.txt
 With this you could, for example, automatically punish players for asking
 for Zeny in public places, or alternatively, automatically give them Zeny
 instead if they want it so much.
-
----------------------------------------
-
-*pow(<number>, <power>)
-
-    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    @ /!\ This command is deprecated @
-    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-Returns the result of the calculation.
-
-Example:
-	.@i = pow(2, 3); // .@i will be 8
-
-This command is deprecated and it should not be used in new scripts, as it is
-likely to be removed at a later time. Please use the exponentiation operator,
-ie: (2 ** 3) instead of pow(2, 3)
 
 ---------------------------------------
 
