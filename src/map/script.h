@@ -1053,6 +1053,7 @@ struct script_interface {
 	int (*buildin_query_sql_sub) (struct script_state *st, struct Sql *handle);
 	int (*buildin_instance_warpall_sub) (struct block_list *bl, va_list ap);
 	int (*buildin_mobuseskill_sub) (struct block_list *bl, va_list ap);
+	bool (*buildin_rodex_sendmail_sub) (struct script_state *st, struct rodex_message *msg);
 	int (*cleanfloor_sub) (struct block_list *bl, va_list ap);
 	int (*run_func) (struct script_state *st);
 	bool (*sprintf_helper) (struct script_state *st, int start, struct StringBuf *out);

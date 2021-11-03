@@ -22720,6 +22720,13 @@ static void clif_parse_rodex_remove_item(int fd, struct map_session_data *sd)
 	rodex->remove_item(sd, idx, (int16)rPacket->cnt);
 }
 
+/**
+ * Acknowledges the removal of an item in the message being written.
+ * @param sd player writting the mail
+ * @param idx item inventory index
+ * @param amount amount of items removed from the message or -1 in case of error
+ *               (it should be the same value received in clif_parse_rodex_remove_item)
+ */
 static void clif_rodex_remove_item_result(struct map_session_data *sd, int16 idx, int16 amount)
 {
 #if PACKETVER >= 20140521
@@ -22735,7 +22742,7 @@ static void clif_rodex_remove_item_result(struct map_session_data *sd, int16 idx
 	packet = WFIFOP(fd, 0);
 	packet->PacketType = rodexremoveitem;
 	packet->result = (amount < 0) ? 0 : 1;
-	packet->cnt = (amount < 0) ? 0 : sd->status.inventory[idx].amount - amount;
+	packet->cnt = (amount < 0) ? 0 : amount;
 	packet->index = idx + 2;
 	packet->weight = sd->rodex.tmp.weight / 10;
 	WFIFOSET(fd, sizeof(*packet));
@@ -23034,6 +23041,13 @@ static void clif_parse_rodex_read_mail(int fd, struct map_session_data *sd)
 		return;
 
 	const struct PACKET_CZ_REQ_READ_MAIL *rPacket = RFIFOP(fd, 0);
+
+#if PACKETVER_RE_NUM >= 20190508 || PACKETVER_MAIN_NUM >= 20190522 || PACKETVER_ZERO_NUM >= 20190529
+	// After the bulk actions were added, the deleted mails are still clickable, but they send mail_id = -1
+	// Packet dates based on tests and patch notes
+	if (rPacket->MailID == -1)
+		return;
+#endif
 
 	rodex->read_mail(sd, rPacket->MailID);
 }

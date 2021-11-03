@@ -26889,7 +26889,7 @@ static BUILDIN(navigateto)
 #endif
 }
 
-static bool rodex_sendmail_sub(struct script_state *st, struct rodex_message *msg)
+static bool buildin_rodex_sendmail_sub(struct script_state *st, struct rodex_message *msg)
 {
 	const char *sender_name, *title, *body;
 	const char *func_name = script->getfuncname(st);
@@ -26912,25 +26912,25 @@ static bool rodex_sendmail_sub(struct script_state *st, struct rodex_message *ms
 	}
 
 	sender_name = script_getstr(st, 3);
-	if (strlen(sender_name) >= NAME_LENGTH) {
-		ShowError("script:rodex_sendmail: Sender name must not be bigger than %d!\n", NAME_LENGTH - 1);
+	if (strlen(sender_name) >= sizeof(msg->sender_name)) {
+		ShowError("script:rodex_sendmail: Sender name must not be longer than %lu characters!\n", sizeof(msg->sender_name) - 1);
 		return false;
 	}
-	safestrncpy(msg->sender_name, sender_name, NAME_LENGTH);
+	safestrncpy(msg->sender_name, sender_name, sizeof(msg->sender_name));
 
 	title = script_getstr(st, 4);
-	if (strlen(title) >= RODEX_TITLE_LENGTH) {
-		ShowError("script:rodex_sendmail: Mail Title must not be bigger than %d!\n", RODEX_TITLE_LENGTH - 1);
+	if (strlen(title) >= sizeof(msg->title)) {
+		ShowError("script:rodex_sendmail: Mail Title must not be longer than %lu characters!\n", sizeof(msg->title) - 1);
 		return false;
 	}
-	safestrncpy(msg->title, title, RODEX_TITLE_LENGTH);
+	safestrncpy(msg->title, title, sizeof(msg->title));
 
 	body = script_getstr(st, 5);
-	if (strlen(body) >= MAIL_BODY_LENGTH) {
-		ShowError("script:rodex_sendmail: Mail Message must not be bigger than %d!\n", RODEX_BODY_LENGTH - 1);
+	if (strlen(body) >= sizeof(msg->body)) {
+		ShowError("script:rodex_sendmail: Mail Message must not be longer than %lu characters!\n", sizeof(msg->body) - 1);
 		return false;
 	}
-	safestrncpy(msg->body, body, MAIL_BODY_LENGTH);
+	safestrncpy(msg->body, body, sizeof(msg->body));
 
 	if (script_hasdata(st, 6)) {
 		msg->zeny = script_getnum(st, 6);
@@ -26949,7 +26949,7 @@ static BUILDIN(rodex_sendmail)
 	int item_count = 0, i = 0, param = 7;
 
 	// Common parameters - sender/message/zeny
-	if (rodex_sendmail_sub(st, &msg) == false)
+	if (script->buildin_rodex_sendmail_sub(st, &msg) == false)
 		return false;
 
 	// Item list
@@ -27017,7 +27017,7 @@ static BUILDIN(rodex_sendmail2)
 	int item_count = 0, i = 0, param = 7;
 
 	// Common parameters - sender/message/zeny
-	if (rodex_sendmail_sub(st, &msg) == false)
+	if (script->buildin_rodex_sendmail_sub(st, &msg) == false)
 		return false;
 
 	// Item list
@@ -29594,6 +29594,7 @@ void script_defaults(void)
 	script->buildin_query_sql_sub = buildin_query_sql_sub;
 	script->buildin_instance_warpall_sub = buildin_instance_warpall_sub;
 	script->buildin_mobuseskill_sub = buildin_mobuseskill_sub;
+	script->buildin_rodex_sendmail_sub = buildin_rodex_sendmail_sub;
 	script->cleanfloor_sub = script_cleanfloor_sub;
 	script->run_func = run_func;
 	script->getfuncname = script_getfuncname;

@@ -78,9 +78,6 @@ static void rodex_refresh_stamps(struct map_session_data *sd)
 /// @param amount : Amount of the item to be attached
 static void rodex_add_item(struct map_session_data *sd, int16 idx, int16 amount)
 {
-	int i;
-	bool is_stack = false;
-
 	nullpo_retv(sd);
 
 	if (idx < 0 || idx >= sd->status.inventorySize) {
@@ -88,36 +85,40 @@ static void rodex_add_item(struct map_session_data *sd, int16 idx, int16 amount)
 		return;
 	}
 
-	if (amount < 0 || amount > sd->status.inventory[idx].amount) {
+	struct item *inv_item = &sd->status.inventory[idx];
+	if (amount < 0 || amount > inv_item->amount) {
 		clif->rodex_add_item_result(sd, idx, amount, RODEX_ADD_ITEM_FATAL_ERROR);
 		return;
 	}
 
-	if (!pc_can_give_items(sd) || sd->status.inventory[idx].expire_time ||
-		!itemdb_canmail(&sd->status.inventory[idx], pc_get_group_level(sd)) ||
-		(sd->status.inventory[idx].bound && !pc_can_give_bound_items(sd))) {
+	if (!pc_can_give_items(sd) || inv_item->expire_time
+		|| !itemdb_canmail(&sd->status.inventory[idx], pc_get_group_level(sd))
+		|| (inv_item->bound && !pc_can_give_bound_items(sd))) {
 		clif->rodex_add_item_result(sd, idx, amount, RODEX_ADD_ITEM_NOT_TRADEABLE);
 		return;
 	}
 
-	if (itemdb->isstackable(sd->status.inventory[idx].nameid) == 1) {
+	bool is_new = true;
+	int i;
+
+	// stackable item, try to find it in the current list
+	if (itemdb->isstackable(inv_item->nameid) == 1) {
 		for (i = 0; i < RODEX_MAX_ITEM; ++i) {
-			if (sd->rodex.tmp.items[i].idx == idx) {
-				if (sd->status.inventory[idx].nameid == sd->rodex.tmp.items[i].item.nameid &&
-					sd->status.inventory[idx].unique_id == sd->rodex.tmp.items[i].item.unique_id) {
-					is_stack = true;
-					break;
-				}
+			if (sd->rodex.tmp.items[i].idx == idx
+				&& inv_item->nameid == sd->rodex.tmp.items[i].item.nameid
+				&& inv_item->unique_id == sd->rodex.tmp.items[i].item.unique_id) {
+				is_new = false;
+				break;
 			}
 		}
-
-		if (i == RODEX_MAX_ITEM && sd->rodex.tmp.items_count < RODEX_MAX_ITEM) {
-			ARR_FIND(0, RODEX_MAX_ITEM, i, sd->rodex.tmp.items[i].idx == 0);
-		}
-	} else if (sd->rodex.tmp.items_count < RODEX_MAX_ITEM) {
-		ARR_FIND(0, RODEX_MAX_ITEM, i, sd->rodex.tmp.items[i].idx == 0);
-	} else {
-		i = RODEX_MAX_ITEM;
+	}
+	
+	// item is not attached yet, find a new slot
+	if (is_new) {
+		if (sd->rodex.tmp.items_count < RODEX_MAX_ITEM)
+			ARR_FIND(0, RODEX_MAX_ITEM, i, sd->rodex.tmp.items[i].idx == -1);
+		else
+			i = RODEX_MAX_ITEM;
 	}
 
 	if (i == RODEX_MAX_ITEM) {
@@ -125,7 +126,8 @@ static void rodex_add_item(struct map_session_data *sd, int16 idx, int16 amount)
 		return;
 	}
 
-	if (sd->rodex.tmp.items[i].item.amount + amount > sd->status.inventory[idx].amount) {
+	struct rodex_item *msg_slot = &sd->rodex.tmp.items[i];
+	if (msg_slot->item.amount + amount > inv_item->amount) {
 		clif->rodex_add_item_result(sd, idx, amount, RODEX_ADD_ITEM_FATAL_ERROR);
 		return;
 	}
@@ -135,14 +137,14 @@ static void rodex_add_item(struct map_session_data *sd, int16 idx, int16 amount)
 		return;
 	}
 
-	sd->rodex.tmp.items[i].idx = idx;
+	msg_slot->idx = idx;
 	sd->rodex.tmp.weight += sd->inventory_data[idx]->weight * amount;
-	if (is_stack == false) {
-		sd->rodex.tmp.items[i].item = sd->status.inventory[idx];
-		sd->rodex.tmp.items[i].item.amount = amount;
+	if (is_new) {
+		msg_slot->item = sd->status.inventory[idx];
+		msg_slot->item.amount = amount;
 		sd->rodex.tmp.items_count++;
 	} else {
-		sd->rodex.tmp.items[i].item.amount += amount;
+		msg_slot->item.amount += amount;
 	}
 	sd->rodex.tmp.type |= MAIL_TYPE_ITEM;
 
@@ -188,14 +190,13 @@ static void rodex_remove_item(struct map_session_data *sd, int16 idx, int16 amou
 			sd->rodex.tmp.type &= ~MAIL_TYPE_ITEM;
 		}
 		memset(&sd->rodex.tmp.items[i], 0x0, sizeof(sd->rodex.tmp.items[0]));
-		clif->rodex_remove_item_result(sd, idx, 0);
-		return;
+		sd->rodex.tmp.items[i].idx = -1;
+	} else {
+		it->amount -= amount;
+		sd->rodex.tmp.weight -= itd->weight * amount;
 	}
 
-	it->amount -= amount;
-	sd->rodex.tmp.weight -= itd->weight * amount;
-
-	clif->rodex_remove_item_result(sd, idx, it->amount);
+	clif->rodex_remove_item_result(sd, idx, amount);
 }
 
 /// Request if character with given name exists and returns information about him
@@ -563,7 +564,7 @@ static void rodex_get_items(struct map_session_data *sd, int8 opentype, int64 ma
 }
 
 /// Cleans user's RoDEX related data
-/// - should be called everytime we're going to stop using rodex in this character
+/// - should be called everytime we're going to start/stop using rodex in this character
 /// @param sd : Target to clean
 /// @param flag :
 ///     0 - clear everything
@@ -577,6 +578,10 @@ static void rodex_clean(struct map_session_data *sd, int8 flag)
 
 	sd->state.workinprogress &= ~2;
 	memset(&sd->rodex.tmp, 0x0, sizeof(sd->rodex.tmp));
+
+	// idx 0 is still a valid index, set it to -1 to ensure it is not in use.
+	for (int i = 0; i < RODEX_MAX_ITEM; ++i)
+		sd->rodex.tmp.items[i].idx = -1;
 }
 
 /// User request to open rodex, load mails from char-server
