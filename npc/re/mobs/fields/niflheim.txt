@@ -64,7 +64,7 @@ niflheim,0,0,0	script	mvp_niflheim	FAKE_NPC,{
 OnTimer7980000: // delay1 = 7980000 ms (133 min)
 	stopnpctimer;
 OnInit:
-	switch(rand(6)) {
+	switch(rand(7)) {
 	case 0:
 		monster "niflheim",327,193,"Lord Of Death",1373,1,strnpcinfo(NPC_NAME_UNIQUE)+"::OnLoDDead";
 		monster "niflheim",330,193,"Bloody Murderer",1507,1,strnpcinfo(NPC_NAME_UNIQUE)+"::OnInvasionMonsters";
