@@ -312,6 +312,8 @@ OnReset_All:
 
 force_1-1,62,26,1	script	force_08_01#50	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	donpcevent "Heel and Toe#arena::On01_Start";
 	warp "force_1-1",40,26;
 	end;
@@ -319,6 +321,8 @@ OnTouch:
 
 force_1-1,25,44,1	script	force_01_02#50	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	donpcevent "Heel and Toe#arena::On02_Start";
 	warp "force_1-1",25,69;
 	end;
@@ -326,6 +330,8 @@ OnTouch:
 
 force_1-1,25,134,1	script	force_02_03#50	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	donpcevent "arena#50::OnReset_02";
 	donpcevent "Heel and Toe#arena::On03_Start";
 	warp "force_1-1",25,159;
@@ -334,6 +340,8 @@ OnTouch:
 
 force_1-1,44,174,1	script	force_03_04#50	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	donpcevent "Heel and Toe#arena::On04_Start";
 	warp "force_1-1",69,174;
 	end;
@@ -341,6 +349,8 @@ OnTouch:
 
 force_1-1,134,174,1	script	force_04_05#50	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	donpcevent "Heel and Toe#arena::On05_Start";
 	warp "force_1-1",159,174;
 	end;
@@ -348,6 +358,8 @@ OnTouch:
 
 force_1-1,174,155,1	script	force_05_06#50	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	donpcevent "Heel and Toe#arena::On06_Start";
 	warp "force_1-1",174,130;
 	end;
@@ -355,6 +367,8 @@ OnTouch:
 
 force_1-1,174,65,1	script	force_06_07#50	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	donpcevent "Heel and Toe#arena::On07_Start";
 	warp "force_1-1",174,40;
 	end;
@@ -362,6 +376,8 @@ OnTouch:
 
 force_1-1,155,26,1	script	force_07_08#50	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	donpcevent "Heel and Toe#arena::On08_Start";
 	warp "force_1-1",132,26;
 	enablenpc "force_08_09#50";
@@ -370,6 +386,8 @@ OnTouch:
 
 force_1-1,99,54,1	script	force_08_09#50	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	donpcevent "Heel and Toe#arena::On09_Start";
 	warp "force_1-1",99,82;
 	end;
@@ -377,6 +395,8 @@ OnTouch:
 
 force_1-1,99,124,1	script	force_exit#50	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	donpcevent "Heel and Toe#arena::OnTimerOff";
 	donpcevent "#arn_timer_50::OnEnable";
 	mapwarp "force_1-1","prt_are_in",22,191,0,0;

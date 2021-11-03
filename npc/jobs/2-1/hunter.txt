@@ -1239,6 +1239,8 @@ OnInit:
 	end;
 
 OnTouch:
+	if (checkhiding())
+		end;
 	donpcevent "Manager#hnt::OnReset";
 	donpcevent "Waiting Room#hnt::OnStart";
 	HNTR_Q = 16;

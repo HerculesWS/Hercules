@@ -3835,6 +3835,8 @@ L_Info:
 job3_guil01,80,77,0	script	#gate_to_guil05	WARPNPC,1,1,{
 	end;
 OnTouch:
+	if (checkhiding())
+		end;
 	if (job_3rd_gc > 3)
 		warp "job3_guil01",60,50;
 	else {
@@ -3848,6 +3850,8 @@ OnTouch:
 job3_guil01,51,55,0	script	#gate_to_guil07	WARPNPC,1,1,{
 	end;
 OnTouch:
+	if (checkhiding())
+		end;
 	if (job_3rd_gc == 4 || job_3rd_gc == 14 || job_3rd_gc > 17)
 		warp "job3_guil01",12,7;
 	else {
@@ -3865,6 +3869,8 @@ OnTouch:
 job3_guil01,51,44,0	script	#gate_to_guil09	WARPNPC,1,1,{
 	end;
 OnTouch:
+	if (checkhiding())
+		end;
 	if (job_3rd_gc == 11 || job_3rd_gc == 12)
 		warp "job3_guil01",79,23;
 	else if (job_3rd_gc > 19)

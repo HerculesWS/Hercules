@@ -4196,6 +4196,8 @@ einbroch,51,52,0	script	Security#ein	WARPNPC,1,1,{
 	end;
 
 OnTouch:
+	if (checkhiding())
+		end;
 	if (((Shinokas_Quest == 7) || (lhz_heart == 9)) || (lhz_heart == 10)) {
 		mes "[Security System]";
 		mes "^8B0000*Beep Boop*^000000";

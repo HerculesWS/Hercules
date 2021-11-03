@@ -387,6 +387,8 @@ OnEnable:
 	end;
 
 OnTouch:
+	if (checkhiding())
+		end;
 	warp(instance_mapname("1@orcs"), 168, 130);
 	end;
 
@@ -416,6 +418,8 @@ OnEnable:
 	end;
 
 OnTouch:
+	if (checkhiding())
+		end;
 	warp(instance_mapname("1@orcs"), 85, 85);
 	end;
 
@@ -445,6 +449,8 @@ OnEnable:
 	end;
 
 OnTouch:
+	if (checkhiding())
+		end;
 	warp(instance_mapname("1@orcs"), 38, 110);
 	end;
 
@@ -477,6 +483,8 @@ OnEnable:
 	end;
 
 OnTouch:
+	if (checkhiding())
+		end;
 	warp(instance_mapname("2@orcs"), 32, 171);
 	end;
 }
@@ -711,6 +719,8 @@ OnTimer10000:
 	end;
 
 OnTouch:
+	if (checkhiding())
+		end;
 	warp(instance_mapname("2@orcs"), 47, 93);
 	end;
 }
@@ -742,6 +752,8 @@ OnTimer10000:
 	end;
 
 OnTouch:
+	if (checkhiding())
+		end;
 	warp(instance_mapname("2@orcs"), 107, 55);
 	end;
 }
@@ -787,6 +799,8 @@ OnTimer13110:
 	end;
 
 OnTouch:
+	if (checkhiding())
+		end;
 	warp(instance_mapname("2@orcs"), 167, 95);
 	end;
 }
@@ -835,6 +849,8 @@ OnEnable:
 	end;
 
 OnTouch:
+	if (checkhiding())
+		end;
 	warp("gef_fild10", 240, 197);
 	end;
 }

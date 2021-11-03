@@ -2504,6 +2504,8 @@ s_atelier,26,68,3	script	Vito#sc11_lgt	4_M_KHMAN,{
 tha_t01,149,228,0	script	#shadowc02	WARPNPC,2,2,{
 	end;
 OnTouch:
+	if (checkhiding())
+		end;
 	mes "You can feel weird power.";
 	if (BaseJob == Job_Rogue && job_sha == 27) {
 		mes "You are getting dizzy.";

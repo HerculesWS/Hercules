@@ -36,6 +36,8 @@
 
 arena_room,114,102,0	script	onlyaco#arena	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	if (BaseClass == Job_Acolyte) {
 		warp "arena_room",135,129;
 		end;
@@ -1045,6 +1047,8 @@ OnMyMobDead:
 
 force_5-1,62,26,0	script	force_08_01#aco	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	warp "force_5-1",40,26;
 	if (BaseJob == Job_Acolyte) {
 		enablenpc "force_01start#aco";
@@ -1057,6 +1061,8 @@ OnTouch:
 
 force_5-1,99,124,0	script	force_exit#aco	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	donpcevent "Trocco#aco1::OnTimerOff";
 	donpcevent "#arn_timer_aco::OnEnable";
 	mapwarp "force_5-1","prt_are_in",21,35;

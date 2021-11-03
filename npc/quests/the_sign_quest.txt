@@ -12251,6 +12251,8 @@ OnInit:
 	end;
 
 OnTouch:
+	if (checkhiding())
+		end;
 	callfunc("F_UpdateSignVars");
 	.@geffenia_warp = rand(1,4);
 	if (.@geffenia_warp == 1) warp "gefenia01",58,169;
@@ -12418,6 +12420,8 @@ que_sign02,0,0,0,0	monster	Wraith Dead	1566,8,0,0,0
 
 que_sign02,378,235,0	script	sign_w6	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	callfunc "F_UpdateSignVars";
 	if ((countitem(Seal_Of_Witch) == 1) && ((sign_q != 124) || (sign_q != 125) || (sign_q != 126))) {
 		warp "que_sign01",197,190;

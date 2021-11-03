@@ -44,6 +44,8 @@ c_tower2,273,26,0	warp	clt005	1,1,c_tower1,235,223
 //== Level 2 ===============================================
 //- Random 2-1 -
 c_tower2,13,288,4	script	clt006r	WARPNPC,1,1,{
+	if (checkhiding())
+		end;
 	switch(rand(3)) {
 		case 0: warp "c_tower2",13,282; end;
 		case 1: warp "alde_dun03",175,131; end;
@@ -53,6 +55,8 @@ c_tower2,13,288,4	script	clt006r	WARPNPC,1,1,{
 
 //- Random 2-2 -
 c_tower2,223,267,4	script	clt007r	WARPNPC,1,1,{
+	if (checkhiding())
+		end;
 	switch(rand(3)) {
 		case 0: warp "c_tower2",288,267; end;
 		case 1: warp "alde_dun03",130,130; end;
@@ -69,6 +73,8 @@ c_tower3,146,8,0	warp	clt013	1,1,c_tower1,235,223
 
 //- Random 3-1 -
 c_tower3,163,252,4	script	clt014r	WARPNPC,1,1,{
+	if (checkhiding())
+		end;
 	if (rand(2))
 		warp "c_tower3",168,252;
 	else
@@ -78,6 +84,8 @@ c_tower3,163,252,4	script	clt014r	WARPNPC,1,1,{
 
 //- Random 3-2 -
 c_tower3,240,7,4	script	clt015r	WARPNPC,1,1,{
+	if (checkhiding())
+		end;
 	switch(rand(3)) {
 		case 0: warp "c_tower2",13,282; end;
 		case 1: warp "alde_dun03",175,131; end;
@@ -87,6 +95,8 @@ c_tower3,240,7,4	script	clt015r	WARPNPC,1,1,{
 
 //- Random 3-3 -
 c_tower3,252,24,4	script	clt016r	WARPNPC,1,1,{
+	if (checkhiding())
+		end;
 	switch(rand(3)) {
 		case 0: warp "c_tower2",228,267; end;
 		case 1: warp "alde_dun03",130,130; end;
@@ -108,6 +118,8 @@ c_tower4,204,57,0	warp	clt026	1,1,c_tower4,65,77
 
 //- Random 4-1 -
 c_tower4,75,156,4	script	clt027r	WARPNPC,0,0,{
+	if (checkhiding())
+		end;
 	switch(rand(4)) {
 		case 0: warp "c_tower3",168,252; end;
 		case 1: warp "alde_dun02",262,41; end;
@@ -118,6 +130,8 @@ c_tower4,75,156,4	script	clt027r	WARPNPC,0,0,{
 
 //- Random 4-2 -
 c_tower4,68,79,4	script	clt028r	WARPNPC,0,0,{
+	if (checkhiding())
+		end;
 	switch(rand(4)) {
 		case 0: warp "c_tower2",13,282; end;
 		case 1: warp "alde_dun03",175,131; end;
@@ -128,6 +142,8 @@ c_tower4,68,79,4	script	clt028r	WARPNPC,0,0,{
 
 //- Random 4-3 -
 c_tower4,142,151,4	script	clt029r	WARPNPC,0,0,{
+	if (checkhiding())
+		end;
 	switch(rand(4)) {
 		case 0: warp "c_tower3",168,252; end;
 		case 1: warp "alde_dun02",262,41; end;
@@ -138,6 +154,8 @@ c_tower4,142,151,4	script	clt029r	WARPNPC,0,0,{
 
 //- Random 4-4 -
 c_tower4,151,96,4	script	clt030r	WARPNPC,0,0,{
+	if (checkhiding())
+		end;
 	switch(rand(4)) {
 		case 0: warp "c_tower2",228,267; end;
 		case 1: warp "alde_dun03",130,130; end;
@@ -148,6 +166,8 @@ c_tower4,151,96,4	script	clt030r	WARPNPC,0,0,{
 
 //- Random 4-5 -
 c_tower4,189,40,4	script	clt031r	WARPNPC,2,2,{
+	if (checkhiding())
+		end;
 	switch(rand(4)) {
 		case 0: warp "c_tower2",228,267; end;
 		case 1: warp "alde_dun03",130,130; end;

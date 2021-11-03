@@ -1787,6 +1787,8 @@ OnEnable:
 	end;
 
 OnTouch:
+	if (checkhiding())
+		end;
 	'ins_nyd2 = 3;
 	warp(instance_mapname("2@nyd"), 200, 10);
 	end;

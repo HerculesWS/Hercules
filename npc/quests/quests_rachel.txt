@@ -3739,6 +3739,8 @@ OnTimer60000:
 
 ice_dun03,150,137,0	script	#ice_4f_1	WARPNPC,2,2,{
 OnTouch:
+	if (checkhiding())
+		end;
 	warp "ice_dun04",33,144;
 	end;
 
@@ -3749,6 +3751,8 @@ OnInit:
 
 ice_dun03,138,148,0	script	#ice_4f_2	WARPNPC,2,2,{
 OnTouch:
+	if (checkhiding())
+		end;
 	warp "ice_dun04",33,144;
 	end;
 
@@ -3759,6 +3763,8 @@ OnInit:
 
 ice_dun03,161,148,0	script	#ice_4f_3	WARPNPC,2,2,{
 OnTouch:
+	if (checkhiding())
+		end;
 	warp "ice_dun04",33,144;
 	end;
 
@@ -3769,6 +3775,8 @@ OnInit:
 
 ice_dun03,151,162,0	script	#ice_4f_4	WARPNPC,2,2,{
 OnTouch:
+	if (checkhiding())
+		end;
 	warp "ice_dun04",33,144;
 	end;
 
@@ -3780,6 +3788,8 @@ OnInit:
 //== Donation Lottery Quest/High Priest Quest :: rachel_oz & rachel_ma1 =
 ra_temple,119,180,0	script	Temple Entrance#ra_tem	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	if ($rachel_donate >= 10000) {
 		if (MISC_QUEST & 8192) { warp "ra_temin",169,23; end; }
 
@@ -4705,6 +4715,8 @@ que_rachel,165,37,0	duplicate(nemma01)	nemma04	FAKE_NPC,5,5
 que_rachel,160,37,0	duplicate(nemma01)	nemma05	FAKE_NPC,5,5
 
 que_rachel,169,18,0	script	Quest Temple Exit#ra_tem	WARPNPC,2,2,{
+	if (checkhiding())
+		end;
 	mes "^3355FFThe gate is closed.^000000";
 	next;
 	switch(select("Push Gate", "Examine Gate", "Kick Gate", "Smash Gate with Weapon")) {
@@ -6801,6 +6813,8 @@ ra_temin,134,134,3	duplicate(raofficeguard)	Pope's Office Guard#2ra	4_M_MASK1
 
 ra_temin,134,131,0	script	gyoin1#rachel	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	if (ra_tem_q == 16)
 		warp "ra_temin",276,239;
 	else if ((ra_tem_q > 16) || (MISC_QUEST & 8192)){
@@ -6825,6 +6839,8 @@ OnTouch:
 ra_temin,275,226,0	script	#rachel33	WARPNPC,1,1,{
 	end;
 OnTouch:
+	if (checkhiding())
+		end;
 	if (aru_em == 21)
 		warp "que_temsky",99,11;
 	else
@@ -7285,6 +7301,8 @@ OnTouch:
 
 ra_temin,28,319,0	script	saint1#rachel	WARPNPC,4,2,{
 OnTouch:
+	if (checkhiding())
+		end;
 	if ((ra_tem_q > 21) || (MISC_QUEST & 8192)) { warp "ra_san01",140,135; end; }
 
 	if (ra_tem_q == 21) {

@@ -50,6 +50,8 @@ ecl_in02,157,68,0	warp	in02-3_in02-2	1,1,ecl_in02,83,18
 ecl_in01,84,68,0	script	in01e_hub2-1	WARPNPC,1,1,{
 	end;
 OnTouch:
+	if (checkhiding())
+		end;
 	if (ep14_2_mylord == 29) {
 		warp "ecl_hub01",106,31;
 	}
@@ -63,6 +65,8 @@ ecl_hub01,127,95,0	warp	hub2-2_hub3-1	1,1,ecl_hub01,18,32
 ecl_hub01,18,34,0	script	hub3-1_hub2-2	WARPNPC,1,1,{
 	end;
 OnTouch:
+	if (checkhiding())
+		end;
 	if (ep14_2_mylord == 29) {
 		warp "ecl_hub01",135,14;
 	}

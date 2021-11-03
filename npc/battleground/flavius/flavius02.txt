@@ -340,6 +340,8 @@ OnInit:
 	end;
 
 OnTouch:
+	if (checkhiding())
+		end;
 	percentheal 100,100;
 	warp "bat_b02",87,73;
 	end;
@@ -385,6 +387,8 @@ OnInit:
 	end;
 
 OnTouch:
+	if (checkhiding())
+		end;
 	percentheal 100,100;
 	warp "bat_b02",312,225;
 	end;

@@ -259,6 +259,8 @@ S_TicketExchange:
 
 evt_zombie,16,142,1	script	zombiewarp001	WARPNPC,2,2,{
 OnTouch:
+	if (checkhiding())
+		end;
 	if (@Hallow08Warp == 1) {
 		Hallow08Kill = 2;
 		specialeffect EF_BASH;
@@ -269,6 +271,8 @@ OnTouch:
 
 evt_zombie,122,27,1	script	zombiewarp002	WARPNPC,2,2,{
 OnTouch:
+	if (checkhiding())
+		end;
 	if (@Hallow08Warp == 2) {
 		Hallow08Kill = 2;
 		specialeffect EF_BASH;
@@ -279,6 +283,8 @@ OnTouch:
 
 evt_zombie,267,89,1	script	zombiewarp003	WARPNPC,2,2,{
 OnTouch:
+	if (checkhiding())
+		end;
 	if (@Hallow08Warp == 3) {
 		Hallow08Kill = 2;
 		specialeffect EF_BASH;

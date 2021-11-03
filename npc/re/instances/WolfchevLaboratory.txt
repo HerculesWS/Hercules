@@ -1338,6 +1338,8 @@ lhz_dun03,239,78,1	script	lhz_dun03_lhz_dun04	WARPNPC,1,1,{
 	end;
 
 	OnTouch:
+		if (checkhiding())
+			end;
 		if (lght_duk01 > 0 && lght_duk01 < 6) {
 			mes "In order to investigate human experimentation, I had to go down whilst I didn't want to because of gruesome sound.";
 			close2;
@@ -2245,6 +2247,8 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 		end;
 
 	OnTouch:
+		if (checkhiding())
+			end;
 		warp instance_mapname("1@lhz"), 151, 29;
 		end;
 }
@@ -2611,6 +2615,8 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 		end;
 
 	OnTouch:
+		if (checkhiding())
+			end;
 		warp instance_mapname("1@lhz"), 84, 28;
 		end;
 }
@@ -2809,6 +2815,8 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 		end;
 
 	OnTouch:
+		if (checkhiding())
+			end;
 		warp instance_mapname("1@lhz"), 137, 100;
 		end;
 }

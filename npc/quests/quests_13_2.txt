@@ -1860,6 +1860,8 @@ man_in01,175,59,5	script	Snorren#ep13_13	4_MAN_PIOM,{
 
 man_in01,183,58,0	script	to_in013ep13mdwarp01	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	if ((ep13_mdrama > 17) && (ep13_mdrama < 24)) {
 		warp "man_in01",13,125;
 		end;
@@ -2533,6 +2535,8 @@ spl_in02,239,93,3	duplicate(Arc#ep13md_l02)	Terra#ep13md_l03	4_F_FAIRYKID6
 
 splendide,287,140,0	script	terrashome_in	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	if (ep13_mdrama > 25) {
 		warp "spl_in02",237,89;
 		end;

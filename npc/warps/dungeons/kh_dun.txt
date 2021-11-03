@@ -46,6 +46,8 @@ kh_dun01,232,176,0	warp	kh_dun_03	1,1,kh_dun01,63,12
 //== Second Floor -> First floor Random warp ===============
 kh_dun02,43,195,0	script	kh_dun04	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	if (rand(1,2) == 1) {
 		warp "kh_dun01",41,206;
 	}

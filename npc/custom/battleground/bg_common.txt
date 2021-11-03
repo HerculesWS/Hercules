@@ -1125,6 +1125,8 @@ bat_room,161,158,3	duplicate(bat_aid)	General Guillaume's Aid::bat_aid4	4_M_KY_H
 	end;
 
 OnTouch:
+	if (checkhiding())
+		end;
 	set BG_Delay_Tick, gettimetick(2) + 30;
 	warp "bat_room",154,149;
 	end;

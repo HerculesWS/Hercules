@@ -1030,6 +1030,8 @@ S_CheckItems:
 
 cmd_fild09,106,195,0	script	Warp#1	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	mes "[???]";
 	mes "Who's there?!";
 	mes "Who would dare";
@@ -1100,6 +1102,8 @@ OnTouch:
 
 cmd_fild09,335,143,0	script	Warp#2	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	mes "[???]";
 	mes "Who's there?!";
 	mes "Who would dare";
@@ -1170,6 +1174,8 @@ OnTouch:
 
 cmd_fild04,304,180,0	script	Warp#3	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	mes "[???]";
 	mes "Who's there?!";
 	mes "Who would dare";
@@ -1290,6 +1296,8 @@ in_rogue,272,135,1	script	Hermanthorn Jr#rg	4_M_03,{
 
 in_rogue,270,130,0	script	he_to_rogue#rg	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	mes "^3355FFThe door is locked. You'll need to enter the four number combination to open it.^000000";
 	next;
 	input(.@input);
@@ -1400,6 +1408,8 @@ OnMyMobDead:
 
 in_rogue,9,389,0	script	oneway_to_gu	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	donpcevent "gen_ro#4::OnDisable";
 	ROGUE_Q = 17;
 	warp "in_rogue",367,10;
@@ -1665,6 +1675,8 @@ in_rogue,177,109,1	script	Antonio junior#rg	4_M_ORIENT01,{
 
 in_rogue,370,320,0	script	quest_out	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	ROGUE_Q = 16;
 	warp "in_rogue",378,113;
 	end;

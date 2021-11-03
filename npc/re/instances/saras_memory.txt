@@ -432,6 +432,8 @@ OnEnable:
 	enablenpc(instance_npcname("#sarawarp1"));
 	end;
 OnTouch:
+	if (checkhiding())
+		end;
 	.@map$ = instance_mapname("1@sara");
 	warp(.@map$, 94, 320);
 	end;
@@ -449,6 +451,8 @@ OnEnable:
 	enablenpc(instance_npcname("#sarawarp2"));
 	end;
 OnTouch:
+	if (checkhiding())
+		end;
 	.@map$ = instance_mapname("1@sara");
 	warp(.@map$, 230, 316);
 	end;
@@ -466,6 +470,8 @@ OnEnable:
 	enablenpc(instance_npcname("#sarawarp3"));
 	end;
 OnTouch:
+	if (checkhiding())
+		end;
 	.@map$ = instance_mapname("1@sara");
 	warp(.@map$, 263, 94);
 	end;
@@ -483,6 +489,8 @@ OnEnable:
 	enablenpc(instance_npcname("#sarawarp4"));
 	end;
 OnTouch:
+	if (checkhiding())
+		end;
 	.@map$ = instance_mapname("1@sara");
 	warp(.@map$, 164, 81);
 	end;
@@ -500,6 +508,8 @@ OnEnable:
 	enablenpc(instance_npcname("#sarawarp5"));
 	end;
 OnTouch:
+	if (checkhiding())
+		end;
 	.@map$ = instance_mapname("1@sara");
 	warp(.@map$, 155, 196);
 	end;
@@ -517,6 +527,8 @@ OnEnable:
 	enablenpc(instance_npcname("#sarawarp6"));
 	end;
 OnTouch:
+	if (checkhiding())
+		end;
 	.@map$ = instance_mapname("1@sara");
 	warp(.@map$, 89, 175);
 	if (getcharid(CHAR_ID_CHAR) == getpartyleader(getcharid(CHAR_ID_PARTY), 2))
@@ -536,6 +548,8 @@ OnEnable:
 	enablenpc(instance_npcname("#sarawarp7"));
 	end;
 OnTouch:
+	if (checkhiding())
+		end;
 	completequest(15003);
 	warp("dali", 134, 111);
 	end;

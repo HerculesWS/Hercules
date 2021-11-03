@@ -11994,6 +11994,8 @@ morocc,43,108,5	script	Sharp-Looking Boy#dan_07	4_KID01,{
 
 morocc,45,110,0	script	que_job01#01	WARPNPC,2,2,{
 OnTouch:
+	if (checkhiding())
+		end;
 	if (BaseJob == Job_Assassin) {
 		warp "que_job01",9,94;
 		end;
@@ -12221,6 +12223,8 @@ que_job01,82,95,3	script	Bar Master#moc2_01	1_ETC_01,{
 
 que_job01,80,77,0	script	que_job01#04	WARPNPC,2,2,{
 OnTouch:
+	if (checkhiding())
+		end;
 	if (BaseJob == Job_Assassin || mao_request > 0 || mao_morocc2 > 4) {
 		warp "que_job01",61,50;
 		end;
@@ -12429,6 +12433,8 @@ OnReset:
 	end;
 
 OnTouch:
+	if (checkhiding())
+		end;
 	mes "[Tao]";
 	if (prt_curse == 24) {
 		if ($@moc_mao_room1 == 0) {
@@ -12535,6 +12541,8 @@ OnTouch:
 
 que_job01,11,4,0	script	que_job01#room1_out	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	warp "que_job01",52,50;
 	donpcevent " #room1timer::OnStop";
 	end;
@@ -12589,6 +12597,8 @@ OnReset:
 	end;
 
 OnTouch:
+	if (checkhiding())
+		end;
 	if ((mao_morocc2 > 4) && (mao_morocc2 < 10)) {
 		if ($@moc_mao_room2 == 0) {
 			$@moc_mao_room2 = 1; //Global Variable
@@ -12733,6 +12743,8 @@ OnTouch:
 
 que_job01,80,27,0	script	que_job01#room2_1_out	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	warp "que_job01",52,50;
 	donpcevent " #room2timer::OnStop";
 	end;
@@ -12740,6 +12752,8 @@ OnTouch:
 
 que_job01,144,61,0	script	que_job01#room2_2_out	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	warp "que_job01",52,50;
 	donpcevent " #room2timer::OnStop";
 	end;

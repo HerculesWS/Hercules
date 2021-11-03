@@ -4486,6 +4486,17 @@ they don't.
 
 ---------------------------------------
 
+*checkhiding({<account id>};
+
+This function returns true if the invoking character is hidden (including
+Hiding, Cloaking and Chase Walk, but excluding GM Perfect Hide) and false
+otherwise.
+
+If <account id> is given, this character will be checked instead of the invoking
+character.
+
+---------------------------------------
+
 *checkvending({"<Player Name>"})
 *checkchatting({"<Player Name>"})
 

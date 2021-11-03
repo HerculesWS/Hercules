@@ -34,6 +34,8 @@
 ra_fild12,295,208,0	script	toairplane#rachel	WARPNPC,1,1,{
 	end;
 OnTouch:
+	if (checkhiding())
+		end;
 	mes("To use the airship, you are required to pay 1,200 zeny or a Free Airship Ticket.");
 	mes("Would you like to use the service?");
 	next;

@@ -1631,6 +1631,8 @@ turbo_n_1,236,3,0	duplicate(WaterTrap#tt_main)	flasher#n1-48b	FAKE_NPC,3,0
 
 -	script	snake01#tt_main	FAKE_NPC,{
 OnTouch:
+	if (checkhiding())
+		end;
 	.@turbo2 = rand(1,7);
 	if (.@turbo2 < 3) warp strnpcinfo(NPC_MAP),370,292;
 	if (.@turbo2 < 5) warp strnpcinfo(NPC_MAP),295,293;
@@ -1648,6 +1650,8 @@ turbo_n_1,324,279,0	duplicate(snake01#tt_main)	snake01#n1	WARPNPC,1,1
 
 -	script	snake02#tt_main	FAKE_NPC,{
 OnTouch:
+	if (checkhiding())
+		end;
 	.@turbo2 = rand(1,8);
 	if (.@turbo2 < 3) warp strnpcinfo(NPC_MAP),287,256;
 	if (.@turbo2 < 5) warp strnpcinfo(NPC_MAP),303,256;
@@ -1665,6 +1669,8 @@ turbo_n_1,332,279,0	duplicate(snake02#tt_main)	snake02#n1	WARPNPC,1,1
 
 -	script	snake03#tt_main	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	.@turbo2 = rand(1,8);
 	if (.@turbo2 < 3) warp strnpcinfo(NPC_MAP),279,292;
 	if (.@turbo2 < 5) warp strnpcinfo(NPC_MAP),311,292;
@@ -1682,6 +1688,8 @@ turbo_n_1,324,270,0	duplicate(snake03#tt_main)	snake03#n1	WARPNPC,1,1
 
 -	script	snake04#tt_main	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	.@turbo2 = rand(1,7);
 	if (.@turbo2 < 3) warp strnpcinfo(NPC_MAP),363,256;
 	if (.@turbo2 < 5) warp strnpcinfo(NPC_MAP),295,293;
@@ -1738,6 +1746,8 @@ turbo_n_1,90,46,0	duplicate(SnakeHunt#tt_main)	hunting#n1	HIDDEN_NPC
 
 -	script	cos#tt_main	FAKE_NPC,{
 OnTouch:
+	if (checkhiding())
+		end;
 	.@n = charat(strnpcinfo(NPC_NAME_HIDDEN),getstrlen(strnpcinfo(NPC_NAME_HIDDEN))-1);
 	switch (.@n) {
 		case 1:
@@ -1941,6 +1951,8 @@ turbo_n_1,222,65,0	duplicate(TurboHint_4#tt_main)	#n1NoWayOut7	FAKE_NPC,1,1
 -	script	cos_end#tt_main	FAKE_NPC,{
 	function	GetNumber;
 OnTouch:
+	if (checkhiding())
+		end;
 	.@w$ = callfunc("F_tt");
 	if (.@w$ == "n1") $@end_time = gettimetick(0);
 	mapannounce strnpcinfo(NPC_MAP),strcharinfo(PC_NAME) +" has just arrived at the Finish Line! Congratulations!",bc_map,"0xFFFF00";
@@ -1991,6 +2003,8 @@ turbo_n_1,371,47,0	duplicate(cos_end#tt_main)	#cos_n1_end	WARPNPC,1,1
 
 -	script	cos_end2#tt_main	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	.@w$ = callfunc("F_tt");
 	mapannounce strnpcinfo(NPC_MAP),strcharinfo(PC_NAME) +" is second to reach the Finish Line! Congratulations!",bc_map,"0xFFFF00";
 	if (.@w$ == "e8" || .@w$ == "n8") setarray .@pts, 28961,40;
@@ -2013,6 +2027,8 @@ turbo_n_16,371,51,0	duplicate(cos_end2#tt_main)	#cos_n16_end2	WARPNPC,1,1
 
 -	script	cos_end3#tt_main	FAKE_NPC,{
 OnTouch:
+	if (checkhiding())
+		end;
 	.@w$ = callfunc("F_tt");
 	mapannounce strnpcinfo(NPC_MAP),"" + strcharinfo(PC_NAME) +" is third to reach the Finish Line! Congratulations!",bc_map,"0xFFFF00";
 	if (.@w$ == "e8" || .@w$ == "n8") setarray .@pts, 28971,30;
@@ -2055,6 +2071,8 @@ turbo_n_1,316,365,0	duplicate(DSwitch#tt_main)	Disposable_Switch#n1	FAKE_NPC,1,1
 
 -	script	Flasher#tt_main	FAKE_NPC,{
 OnTouch:
+	if (checkhiding())
+		end;
 	mapannounce strnpcinfo(NPC_MAP),strcharinfo(PC_NAME) +" has just passed the Flasher Maze!",bc_map,"0x70DBDB";
 	warp strnpcinfo(NPC_MAP),185,227;
 	end;
@@ -3609,6 +3627,8 @@ turbo_n_1,340,55,0	duplicate(TurboTrap_2#tt_main)	trap_n1#F48	HIDDEN_WARP_NPC,1,
 -	script	bing_1#tt_main	FAKE_NPC,{
 	end;
 OnTouch:
+	if (checkhiding())
+		end;
 	.@w$ = callfunc("F_tt");
 	.@bing1 = rand(1,10);
 	if (.@bing1 > 0 && .@bing1 < 4)
@@ -3635,6 +3655,8 @@ turbo_n_16,217,214,0	duplicate(bing_1#tt_main)	bing#n16	WARPNPC,3,3
 -	script	bing_2#tt_main	FAKE_NPC,{
 	end;
 OnTouch:
+	if (checkhiding())
+		end;
 	switch (rand(1,10)) {
 		case 1: warp strnpcinfo(NPC_MAP),217,232; break;
 		case 2: warp strnpcinfo(NPC_MAP),233,207; break;
@@ -4598,6 +4620,8 @@ S_ExchangePoints:
 
 alde_gld,183,204,0	script	en_turbo	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	if (checkweight(Knife,1) == 0) {
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";

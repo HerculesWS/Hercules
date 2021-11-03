@@ -407,6 +407,8 @@ pvp_room,86,85,4	duplicate(PVPSpectator)	Spectator's Entrance#4	8W_SOLDIER
 //== Spectator Warps =======================================
 -	script	Combat Square Staff#dum::PVPSpecWarp	FAKE_NPC,{
 OnTouch:
+	if (checkhiding())
+		end;
 	mes "[Combat Square Staff]";
 	mes "May I help you?";
 	if (select("To the center viewer seat.", "Leave Combat Square.") == 1) {
@@ -422,6 +424,8 @@ pvp_2vs2,74,74,0	duplicate(PVPSpecWarp)	Combat Square Staff#3	WARPNPC,1,1
 pvp_2vs2,74,5,0	duplicate(PVPSpecWarp)	Combat Square Staff#4	WARPNPC,1,1
 
 pvp_2vs2,40,40,0	script	Combat Square Staff#5	WARPNPC,1,1,{
+	if (checkhiding())
+		end;
 	mes "[Combat Square Staff]";
 	mes "May I help you?";
 	switch(select("To the side viewer seat.", "Leave Combat Square.")) {
@@ -441,6 +445,8 @@ pvp_2vs2,40,40,0	script	Combat Square Staff#5	WARPNPC,1,1,{
 //== PVP Area Exit warp ====================================
 pvp_room,51,19,0	script	out#eventpvp	WARPNPC,4,2,{
 OnTouch:
+	if (checkhiding())
+		end;
 	mes "[Combat Square Staff]";
 	mes "Did you have fun in Combat Square?";
 	mes "May I ask where you want to go?";

@@ -377,27 +377,39 @@ job_sword1,223,243,0	warp	checkp1-2#swd_1	1,1,job_sword1,11,206
 job_sword1,223,205,0	warp	checkp2-3#swd_1	1,1,job_sword1,11,168
 
 job_sword1,7,245,0	script	Test Hall Staff#swd_4	WARPNPC,1,3,{
+	if (checkhiding())
+		end;
 	callfunc "F_JobSwdTestStaff",10,245;
 }
 
 job_sword1,8,207,0	script	Test Hall Staff#swd_5	WARPNPC,1,6,{
+	if (checkhiding())
+		end;
 	callfunc "F_JobSwdTestStaff",11,207;
 }
 
 job_sword1,8,169,0	script	Test Hall Staff#swd_6	WARPNPC,1,6,{
+	if (checkhiding())
+		end;
 	callfunc "F_JobSwdTestStaff",11,169;
 }
 
 job_sword1,192,244,0	script	Test Hall Staff#swd_7	WARPNPC,1,3,{
+	if (checkhiding())
+		end;
 	callfunc "F_JobSwdTestStaff2","1st",215,244;
 }
 
 job_sword1,193,207,0	script	Test Hall Staff#swd_8	WARPNPC,1,3,{
+	if (checkhiding())
+		end;
 	callfunc "F_JobSwdTestStaff2","2nd",215,205;
 	warp "job_sword1",215,205;
 }
 
 job_sword1,193,168,0	script	Test Hall Staff#swd_9	WARPNPC,1,3,{
+	if (checkhiding())
+		end;
 	callfunc "F_JobSwdTestStaff2","3rd",215,167;
 }
 

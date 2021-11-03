@@ -78,6 +78,8 @@ iz_int,27,30,0	script	noviship#room1-1	WARPNPC,2,2,{
 	end;
 
 OnTouch:
+	if (checkhiding())
+		end;
 	warp(strnpcinfo(NPC_MAP), 51, 30);
 	end;
 
@@ -92,6 +94,8 @@ iz_int,47,30,3	script	noviship#room1-2	WARPNPC,2,2,{
 	end;
 
 OnTouch:
+	if (checkhiding())
+		end;
 	@display = 0;
 	warp(strnpcinfo(NPC_MAP), 22, 30);
 	end;
@@ -101,6 +105,8 @@ iz_int,56,15,0	script	noviship	WARPNPC,2,2,{
 	end;
 
 OnTouch:
+	if (checkhiding())
+		end;
 	savepoint("int_land"+strnpcinfo(NPC_NAME_HIDDEN), 77, 101);
 	warp("int_land"+strnpcinfo(NPC_NAME_HIDDEN), 85, 107);
 	end;
@@ -110,6 +116,8 @@ int_land,49,57,0	script	noviship#izlude	WARPNPC,2,2,{
 	end;
 
 OnTouch:
+	if (checkhiding())
+		end;
 	mes("^4d4dffOnce you left this island there is no way back.");
 	mes("Are you sure you want to go directly to Izlude?^000000");
 	next();

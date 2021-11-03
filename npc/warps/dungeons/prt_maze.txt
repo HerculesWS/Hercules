@@ -130,6 +130,8 @@ prt_maze03,22,194,0	warp	mazewarp5301	1,1,prt_maze03,175,48	/*To No.3-20*/
 prt_maze03,5,186,0	warp	mazewarp5302	1,1,prt_maze03,151,134	/*To No.3-9*/
 //3rd Floor No.02
 prt_maze03,58,194,0	script	#mazewarp5303	WARPNPC,1,1,{
+	if (checkhiding())
+		end;
 	switch(rand(4)) {
 		case 0: warp "prt_maze03",98,151; end;	/*To No.3-8*/
 		case 1: warp "prt_maze03",137,128; end;	/*To No.3-9*/
@@ -188,6 +190,8 @@ prt_maze03,14,45,0	warp	mazewarp5337	1,1,prt_maze03,88,174	/*To No.3-3*/
 prt_maze03,5,58,0	warp	mazewarp5338	1,1,prt_maze03,191,15	/*To No.3-25*/
 // 3rd Floor No.17
 prt_maze03,74,74,0	script	#mazewarp5339	WARPNPC,1,1,{
+	if (checkhiding())
+		end;
 	switch(rand(4)) {
 		case 0: warp "prt_maze03",98,151; end;	/*To No.3-8*/
 		case 1: warp "prt_maze03",137,128; end;	/*To No.3-9*/
@@ -204,6 +208,8 @@ prt_maze03,85,56,0	warp	mazewarp5344	1,1,prt_maze03,176,31	/*To No.3-25*/
 // 3rd Floor No.19
 prt_maze03,137,74,0	warp	mazewarp5345	1,1,prt_maze03,102,168	/*To No.3-3*/
 prt_maze03,139,45,0	script	#mazewarp5346	WARPNPC,1,1,{
+	if (checkhiding())
+		end;
 	switch(rand(4)) {
 		case 0: warp "prt_maze03",98,151; end;	/*To No.3-8*/
 		case 1: warp "prt_maze03",137,128; end;	/*To No.3-9*/
@@ -228,6 +234,8 @@ prt_maze03,114,22,0	warp	mazewarp5356	1,1,prt_maze03,104,71	/*To No.3-18*/
 prt_maze03,85,13,0	warp	mazewarp5357	1,1,prt_maze03,23,8	/*To No.3-21*/
 // 3rd Floor No.24
 prt_maze03,154,22,0	script	#mazewarp5358	WARPNPC,1,1,{
+	if (checkhiding())
+		end;
 	switch(rand(4)) {
 		case 0: warp "prt_maze03",98,151; end;	/*To No.3-8*/
 		case 1: warp "prt_maze03",137,128; end;	/*To No.3-9*/

@@ -434,6 +434,8 @@ OnReset:
 
 force_1-2,95,187,0	script	force_09_exit	WARPNPC,1,1,{
 OnTouch:
+	if (checkhiding())
+		end;
 	$arena_minptend = gettime(GETTIME_MINUTE);
 	$arena_secptend = gettime(GETTIME_SECOND);
 	warp "prt_are_in",73,139;

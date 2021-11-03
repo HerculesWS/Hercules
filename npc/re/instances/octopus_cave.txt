@@ -352,6 +352,8 @@ OnEnable:
 	enablenpc(instance_npcname(strnpcinfo(NPC_NAME)));
 	end;
 OnTouch:
+	if (checkhiding())
+		end;
 	warp(instance_mapname("1@cash"), 198, 99);
 	end;
 }
@@ -671,6 +673,8 @@ OnInstanceInit:
 	disablenpc(instance_npcname("oct_boss_warp"));
 	end;
 OnTouch:
+	if (checkhiding())
+		end;
 	warp(instance_mapname("1@cash"), 210, 172);
 	end;
 }
@@ -681,6 +685,8 @@ OnInstanceInit:
 	disablenpc(instance_npcname(strnpcinfo(NPC_NAME)));
 	end;
 OnTouch:
+	if (checkhiding())
+		end;
 	mes("Do you want to go out from the octopus dungeon?");
 	next();
 	if (select("No!", "Yes!") == 2)
