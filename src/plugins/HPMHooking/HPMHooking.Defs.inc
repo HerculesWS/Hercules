@@ -7254,6 +7254,8 @@ typedef int (*HPMHOOK_pre_script_buildin_instance_warpall_sub) (struct block_lis
 typedef int (*HPMHOOK_post_script_buildin_instance_warpall_sub) (int retVal___, struct block_list *bl, va_list ap);
 typedef int (*HPMHOOK_pre_script_buildin_mobuseskill_sub) (struct block_list **bl, va_list ap);
 typedef int (*HPMHOOK_post_script_buildin_mobuseskill_sub) (int retVal___, struct block_list *bl, va_list ap);
+typedef bool (*HPMHOOK_pre_script_buildin_rodex_sendmail_sub) (struct script_state **st, struct rodex_message **msg);
+typedef bool (*HPMHOOK_post_script_buildin_rodex_sendmail_sub) (bool retVal___, struct script_state *st, struct rodex_message *msg);
 typedef int (*HPMHOOK_pre_script_cleanfloor_sub) (struct block_list **bl, va_list ap);
 typedef int (*HPMHOOK_post_script_cleanfloor_sub) (int retVal___, struct block_list *bl, va_list ap);
 typedef int (*HPMHOOK_pre_script_run_func) (struct script_state **st);

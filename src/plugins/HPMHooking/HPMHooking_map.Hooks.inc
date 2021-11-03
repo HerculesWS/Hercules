@@ -77103,6 +77103,33 @@ int HP_script_buildin_mobuseskill_sub(struct block_list *bl, va_list ap) {
 	}
 	return retVal___;
 }
+bool HP_script_buildin_rodex_sendmail_sub(struct script_state *st, struct rodex_message *msg) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_script_buildin_rodex_sendmail_sub_pre > 0) {
+		bool (*preHookFunc) (struct script_state **st, struct rodex_message **msg);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_script_buildin_rodex_sendmail_sub_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_script_buildin_rodex_sendmail_sub_pre[hIndex].func;
+			retVal___ = preHookFunc(&st, &msg);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.script.buildin_rodex_sendmail_sub(st, msg);
+	}
+	if (HPMHooks.count.HP_script_buildin_rodex_sendmail_sub_post > 0) {
+		bool (*postHookFunc) (bool retVal___, struct script_state *st, struct rodex_message *msg);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_script_buildin_rodex_sendmail_sub_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_script_buildin_rodex_sendmail_sub_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, st, msg);
+		}
+	}
+	return retVal___;
+}
 int HP_script_cleanfloor_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
 	int retVal___ = 0;

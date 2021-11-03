@@ -5780,6 +5780,8 @@ struct {
 	struct HPMHookPoint *HP_script_buildin_instance_warpall_sub_post;
 	struct HPMHookPoint *HP_script_buildin_mobuseskill_sub_pre;
 	struct HPMHookPoint *HP_script_buildin_mobuseskill_sub_post;
+	struct HPMHookPoint *HP_script_buildin_rodex_sendmail_sub_pre;
+	struct HPMHookPoint *HP_script_buildin_rodex_sendmail_sub_post;
 	struct HPMHookPoint *HP_script_cleanfloor_sub_pre;
 	struct HPMHookPoint *HP_script_cleanfloor_sub_post;
 	struct HPMHookPoint *HP_script_run_func_pre;
@@ -12993,6 +12995,8 @@ struct {
 	int HP_script_buildin_instance_warpall_sub_post;
 	int HP_script_buildin_mobuseskill_sub_pre;
 	int HP_script_buildin_mobuseskill_sub_post;
+	int HP_script_buildin_rodex_sendmail_sub_pre;
+	int HP_script_buildin_rodex_sendmail_sub_post;
 	int HP_script_cleanfloor_sub_pre;
 	int HP_script_cleanfloor_sub_post;
 	int HP_script_run_func_pre;

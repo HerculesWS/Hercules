@@ -2957,6 +2957,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(script->buildin_query_sql_sub, HP_script_buildin_query_sql_sub) },
 	{ HP_POP(script->buildin_instance_warpall_sub, HP_script_buildin_instance_warpall_sub) },
 	{ HP_POP(script->buildin_mobuseskill_sub, HP_script_buildin_mobuseskill_sub) },
+	{ HP_POP(script->buildin_rodex_sendmail_sub, HP_script_buildin_rodex_sendmail_sub) },
 	{ HP_POP(script->cleanfloor_sub, HP_script_cleanfloor_sub) },
 	{ HP_POP(script->run_func, HP_script_run_func) },
 	{ HP_POP(script->sprintf_helper, HP_script_sprintf_helper) },
