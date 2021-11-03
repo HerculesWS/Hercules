@@ -1367,7 +1367,6 @@ static int bl_vgetall_inpath(struct block_list *bl, va_list args)
 
 	int xi;
 	int yi;
-	int xu, yu;
 	int k;
 
 	nullpo_ret(bl);
@@ -1381,21 +1380,29 @@ static int bl_vgetall_inpath(struct block_list *bl, va_list args)
 	if ( k > magnitude2 && !path->search_long(NULL, NULL, m, x0, y0, xi, yi, CELL_CHKWALL) )
 		return 0; //Targets beyond the initial ending point need the wall check.
 
-	//All these shifts are to increase the precision of the intersection point and distance considering how it's
-	//int math.
-	k  = ( k << 4 ) / magnitude2; //k will be between 1~16 instead of 0~1
-	xi <<= 4;
-	yi <<= 4;
-	xu = ( x0 << 4 ) + k * ( x1 - x0 );
-	yu = ( y0 << 4 ) + k * ( y1 - y0 );
+	/**
+	 * We're shifting the coords 8 bits higher
+	 * to have higher precision on the cell comparisons.
+	 * Especially the multiplication of k * (x1 - x0)
+	 * between the intersecting point on the line and the bl we might affect
+	 * requires higher precision due to int math.
+	 * Since the coords are 8 bits higher,
+	 * the range is 8 bits higher too when comparing
+	 */
+	k = (k << 8) / magnitude2;
+	int xu = (x0 << 8) + k * (x1 - x0);
+	int yu = (y0 << 8) + k * (y1 - y0);
+	xi <<= 8;
+	yi <<= 8;
 
-//Avoid needless calculations by not getting the sqrt right away.
-#define MAGNITUDE2(x0, y0, x1, y1) ( ( ( x1 ) - ( x0 ) ) * ( ( x1 ) - ( x0 ) ) + ( ( y1 ) - ( y0 ) ) * ( ( y1 ) - ( y0 ) ) )
-
-	k  = MAGNITUDE2(xi, yi, xu, yu);
-
-	//If all dot coordinates were <<4 the square of the magnitude is <<8
-	if ( k > range )
+	/**
+	 * We're calculating the distance like path->distance,
+	 * but without CIRCULAR_AREA since NPCs use map->foreachinpath too.
+	 */
+	int dx = abs(xi - xu);
+	int dy = abs(yi - yu);
+	int distance = (dx < dy ? dy : dx);
+	if (distance > (range << 8))
 		return 0;
 
 	return 1;
@@ -1440,6 +1447,8 @@ static int map_vforeachinpath(int (*func)(struct block_list*, va_list), int16 m,
 	int magnitude2, len_limit; //The square of the magnitude
 	int mx0 = x0, mx1 = x1, my0 = y0, my1 = y1;
 
+//Avoid needless calculations by not getting the sqrt right away.
+#define MAGNITUDE2(x0, y0, x1, y1) ( ( ( x1 ) - ( x0 ) ) * ( ( x1 ) - ( x0 ) ) + ( ( y1 ) - ( y0 ) ) * ( ( y1 ) - ( y0 ) ) )
 	len_limit = magnitude2 = MAGNITUDE2(x0, y0, x1, y1);
 	if (magnitude2 < 1) //Same begin and ending point, can't trace path.
 		return 0;
@@ -1466,7 +1475,6 @@ static int map_vforeachinpath(int (*func)(struct block_list*, va_list), int16 m,
 		my0 -= range;
 		my1 += range;
 	}
-	range *= range << 8; //Values are shifted later on for higher precision using int math.
 
 	bl_getall_area(type, m, mx0, my0, mx1, my1, bl_vgetall_inpath, m, x0, y0, x1, y1, range, len_limit, magnitude2);
 
