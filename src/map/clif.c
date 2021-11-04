@@ -15966,7 +15966,7 @@ static void clif_parse_GM_Monster_Item(int fd, struct map_session_data *sd)
 		}
 	}
 
-	if (strcmp("onekillmonster", item_monster_name) == 0) {
+	if (strcmp("onekillmonster", item_monster_name) == 0 && pc->can_use_command(sd, "@killmonster")) {
 		sd->state.onekillmonster = !sd->state.onekillmonster;
 		if (sd->state.onekillmonster != 0)
 			clif->message(fd, msg_fd(fd, 1522)); // Instant monster kill state started.
