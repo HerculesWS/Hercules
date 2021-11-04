@@ -22,6 +22,79 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
+## [v2021.11.03] `November 03 2021`
+
+### Added
+
+- Implemented support for conditional comments in the script engine's parser, allowing to exclude blocks of code (including top-level commands) from parsing based on a condition, in a similar fashion to ifdef directives in the C preprocessor. See `doc/script_commands.txt` and the pull request description for detailed information on their use. (#3080)
+- Added a setting to prevent the GM administration NPCs from loading (leveraging conditional comments). (part of #3080)
+  - See `script_configuration.load_gm_scripts` in `conf/map/script.conf`.
+  - The provided administrative NPCs have been updated to support this setting and third party scripters that want to do the same can put their administrative NPCs behind conditional comments controlled by the `LOADGMSCRIPTS` feature (see `doc/script_commands.txt` for details.
+- Implemented the `bSubSkill` item bonus, reducing damage in percentage from the specified skill. (#2970)
+- Implemented the `bDropAddRace` item bonus, increasing item drop rate in percentage when killing monsters of the specified race. (part of #2970)
+- Implemented the Star Emperor and the Soul Reaper job classes and their respective skills. (#3030)
+- Implemented an option to ignore the Discount and Overcharge effect for a given item ID. See the Item DB flags `IgnoreDiscount` and `IgnoreOvercharge` respectively. (#3060, issue #3055)
+- Implemented an SC config option `HasVisualEffect` to indicate that a skill displays a visual effect on the affected unit, de-hardcoding it from source. (#3061)
+- Implemented the Instant kill state (`/item onekillmonster`), allowing GMs to kill mobs in one hit (the `@killmonster` permission is necessary). (#3063)
+- Implemented support for loading captcha images on server startup (#3064)
+- Implemented the Lapine Upgrade user interface. (#3068)
+- Exposed the former `rodex_sendmail_sub()` function as part of the script interface, as `script->buildin_rodex_sendmail_sub()`. (part of #3071)
+- Implemented a `checkhiding()` script command, returning true if a character is hidden (Hiding, Cloaking or Chase Walking but not GM Perfect Hide). See `doc/script_commands.txt` for details. (part of #3081)
+
+### Changed
+
+- Reworked the drop rate calculation and the way drop rate bonuses stack, to better accommodate for the new `bDropAddRace` bonus. (part of #2970)
+- Changed various card slot processing functions to check all of them even if an item has a limited amount of card slots, since they could contain other (non-card) enchantment items. (#3066)
+- Converted the elemental damage table to libconfig. See `(pre-)-re/attr_fix.conf`. A converter script `tools/attr_fix_converter.php` has been provided in order to help converting any customized tables. (#3070)
+- Added the inventory index for each item in the `@itemlist` command (part of #3071)
+- Changed the ambiguous return value of `getpetinfo(PETINFO_NAME)` when no pet is found. The empty string `""` is now returned instead of `"null"`, which could ambiguously be considered a valid pet name. (part of #3079)
+- Changed the WARPNPC scripted warps to behave in a consistent way to real non-scripted warps. (#3081)
+  - The use of `OnTouch_` has been replaced with `OnTouch` to prevent players from holding an NPC dialogue open to abuse the serialization mechanism of the former event and block the script from triggering for other players.
+  - A check for the hidden/cloaked status has been added, to match the behavior of non-scripted warps.
+- Applied the above `OnTouch_` to `OnTouch` conversion to the NPCs from the Cursed Spirit quest in order to prevent the same serialization abuse and the glitches that derive from it. (part of #3081)
+
+### Fixed
+
+- Fixed (implemented) lazy evaluation of the ternary conditional operator in the scripting language. Only the expected branch is now executed, as opposed to both branches. (#3074)
+- Fixed the behavior of the Splash Kunai (`KO_HAPPOKUNAI`) skill: (#3053, issue #1597)
+  - Updated damage formula to `3 * (Kunai Atk+ Weapon Atk + Base Atk)) * (Skill Level + 5) / 5`.
+  - Pierce attack modifier no longer applies to it.
+  - Element comes from the kunai rather than from the weapon.
+  - SP Cost gets increased and Hit count should be 1.
+- Fixed the behavior of the Dragon Breath (`RK_DRAGONBREATH`) skill: (part of #3053, issue #1597)
+  - It now applies the elemental modifier and ignores the target's flee.
+- Fixed the behavior of the Intense Telekinesis (`WL_TELEKINESIS_INTENSE`) skill: (part of #3053, issue #1597)
+  - Damage is now tripled when the skill element is Ghost.
+- Fixed several warnings reported by the Visual Studio compiler (#3058)
+- Fixed an incorrect condition in the WoE mob status calculation. Instead of relying on castle IDs it now correctly detects the type of WoE castle (FE or TE) and applies the appropriate status modifiers. (#3062)
+- Fixed the inconsistent behavior of `getcalendartime()` when supplied with the current hour and minute. (#3072)
+  - The command will now always return the next occurrence of the given time (as specified by the day of month or day of week parameter) instead of inconsistently returning today's timestamp in some cases.
+- Fixed the Lord Of Death spawning script never using one of the spawn locations. (#3075)
+- Fixed visual glitches in RoDEX when the first item of a character's inventory (having index 0) is added to an attachment slot. (#3071)
+- Fixed visual glitches when removing parts of an item stack from an attachment slot. (part of #3071)
+- Fixed some processing errors in RoDEX with newer clients, after the "bulk actions" update, that keep the rows from deleted messages on screen until refreshing and send bogus data to the server. (part of #3071)
+- Fixed the message body length check in the `rodex_sendmail()` script command, now allowing for the full message length of the RoDEX system as opposed to the shorter length from the earlier Mail system. (part of #3071)
+- Fixed the `map->foreachinpath()` path calculation having gaps or too narrow paths, affecting skills such as Sharpshooting. (#3076)
+- Fixed the behavior of the Acid Demonstration (`CR_ACIDDEMONSTRATION`) skill: (#3077)
+  - The strip effect from rogues was incorrectly applied when the Armor & Weapon Break triggers for non-player characters. Now nothing is applied instead, matching the official behavior.
+- Fixed the behavior of the Mental Charge (`HLIF_CHANGE`) skill: (#3078)
+  - In pre-renewal the skill now makes the caster always use the raw max MATK as base damage, as in official servers.
+
+### Removed
+
+- Removed the `set_sc_with_vfx()` macro, superseded by the `HasVisualEffect` SC config flag. (part of #3061)
+- Removed the `getguildname()` script command, deprecated since v2019.11.17 and superseded by `getguildinfo()` - see PR page for replacements if you were still relying on the deprecated command. (#3079)
+- Removed the `getguildmaster()` script command, deprecated since v2019.11.17 and superseded by `getguildinfo()` - see PR page for replacements if you were still relying on the deprecated command. (part of #3079)
+- Removed the `getguildmasterid()` script command, deprecated since v2019.11.17 and superseded by `getguildinfo()` - see PR page for replacements if you were still relying on the deprecated command. (part of #3079)
+- Removed the `petstat()` script command, deprecated since v2019.04.07 and superseded by `getpetinfo()` - see PR page for replacements if you were still relying on the deprecated command. (part of #3079)
+- Removed the `PET_*` constants related to the `petstat()` command. (part of #3079)
+- Removed the `specialeffect2()` script command, deprecated since 2017 and superseded by `specialeffect()` - see PR page for replacements if you were still relying on the deprecated command. (part of #3079)
+- Removed the `pcblockmove()` script command, deprecated since v2018.06.03 and superseded by `setpcblock()` - see PR page for replacements if you were still relying on the deprecated command. (part of #3079)
+- Removed the `kickwaitingroomall()` script command, deprecated since v2020.11.16 and superseded by `waitingroomkick()` - see PR page for replacements if you were still relying on the deprecated command. (part of #3079)
+- Removed the `debugmes()` script command, deprecated since v2019.05.05 and superseded by `consolemes()` - see PR page for replacements if you were still relying on the deprecated command. (part of #3079)
+- Removed the `misceffect()` script command, deprecated since 2017 and superseded by `specialeffect()` - see PR page for replacements if you were still relying on the deprecated command. (part of #3079)
+- Removed the `pow()` script command, deprecated since 2017 and superseded by the exponentiation oeprator `**` - see PR page for replacements if you were still relying on the deprecated command. (part of #3079)
+
 ## [v2021.10.06+1] `October 06 2021`  `PATCH 1`
 
 ### Fixed
@@ -2048,6 +2121,8 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2021.11.03]: https://github.com/HerculesWS/Hercules/compare/v2021.10.06+1...v2021.11.03
+[v2021.10.06+1]: https://github.com/HerculesWS/Hercules/compare/v2021.10.06...v2021.10.06+1
 [v2021.10.06]: https://github.com/HerculesWS/Hercules/compare/v2021.09.01...v2021.10.06
 [v2021.09.01]: https://github.com/HerculesWS/Hercules/compare/v2021.08.04...v2021.09.01
 [v2021.08.04]: https://github.com/HerculesWS/Hercules/compare/v2021.07.07...v2021.08.04
