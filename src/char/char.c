@@ -2068,7 +2068,7 @@ static int char_mmo_char_tobuf(uint8 *buffer, struct mmo_charstatus *p)
 	WBUFL(buf,32) = p->karma;
 	WBUFL(buf,36) = p->manner;
 	WBUFW(buf,40) = min(p->status_point, INT16_MAX);
-#if PACKETVER_MAIN_NUM >= 20201007
+#if PACKETVER_MAIN_NUM >= 20201007 || PACKETVER_RE_NUM >= 20211103
 	WBUFQ(buf, 42) = p->hp;
 	WBUFQ(buf, 50) = p->max_hp;
 	offset += 12;
@@ -2082,15 +2082,15 @@ static int char_mmo_char_tobuf(uint8 *buffer, struct mmo_charstatus *p)
 	WBUFW(buf,42) = min(p->hp, INT16_MAX);
 	WBUFW(buf,44) = min(p->max_hp, INT16_MAX);
 #endif
-#if PACKETVER_MAIN_NUM >= 20201007
+#if PACKETVER_MAIN_NUM >= 20201007 || PACKETVER_RE_NUM >= 20211103
 	WBUFQ(buf, 46) = p->sp;
 	WBUFQ(buf, 54) = p->max_sp;
 	offset += 12;
 	buf = WBUFP(buffer, offset);
-#else  // PACKETVER_MAIN_NUM >= 20201007
+#else  // PACKETVER_MAIN_NUM >= 20201007 || PACKETVER_RE_NUM >= 20211103
 	WBUFW(buf, 46) = min(p->sp, INT16_MAX);
 	WBUFW(buf, 48) = min(p->max_sp, INT16_MAX);
-#endif  // PACKETVER_MAIN_NUM >= 20201007
+#endif  // PACKETVER_MAIN_NUM >= 20201007 || PACKETVER_RE_NUM >= 20211103
 	WBUFW(buf,50) = DEFAULT_WALK_SPEED; // p->speed;
 	WBUFW(buf,52) = p->class;
 	WBUFW(buf,54) = p->hair;

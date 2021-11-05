@@ -1763,13 +1763,13 @@ static void clif_hominfo(struct map_session_data *sd, struct homun_data *hd, int
 		p.maxSp = hstatus->max_sp;
 	}
 #endif  // PACKETVER_MAIN_NUM >= 20200819 || PACKETVER_RE_NUM >= 20200723
-#if PACKETVER_MAIN_NUM >= 20210303
+#if PACKETVER_MAIN_NUM >= 20210303 || PACKETVER_RE_NUM >= 20211103
 	p.exp = hd->homunculus.exp;
 	p.expNext = hd->exp_next;
-#else  // PACKETVER_MAIN_NUM >= 20210303
+#else  // PACKETVER_MAIN_NUM >= 20210303 || PACKETVER_RE_NUM >= 20211103
 	p.exp = (uint32)min(hd->homunculus.exp, UINT32_MAX);
 	p.expNext = (uint32)min(hd->exp_next, UINT32_MAX);
-#endif  // PACKETVER_MAIN_NUM >= 20210303
+#endif  // PACKETVER_MAIN_NUM >= 20210303 || PACKETVER_RE_NUM >= 20211103
 
 	if (hd->homunculus.level >= homun->get_max_level(hd))
 		p.expNext = 0;
@@ -2235,7 +2235,7 @@ static void clif_buylist(struct map_session_data *sd, struct npc_data *nd)
 			p->items[c].discountPrice = pc->modifybuyvalue(sd, val, id->flag.ignore_discount);
 			p->items[c].itemType = itemtype(id->type);
 			p->items[c].itemId = (id->view_id > 0) ? id->view_id : id->nameid;
-#if PACKETVER_MAIN_NUM >= 20210203
+#if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103
 			p->items[c].viewSprite = id->view_sprite;
 			p->items[c].location = pc->item_equippoint(sd, id);
 #endif // PACKETVER_MAIN_NUM >= 20210203
@@ -12541,7 +12541,7 @@ static void clif_parse_UnequipItem(int fd, struct map_session_data *sd)
 static void clif_parse_UnequipAllItems(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
 static void clif_parse_UnequipAllItems(int fd, struct map_session_data *sd)
 {
-#if PACKETVER_MAIN_NUM >= 20210818 || PACKETVER_ZERO_NUM >= 20210818
+#if PACKETVER_MAIN_NUM >= 20210818 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20210818
 	// commented because no fields in use
 	// struct PACKET_CZ_REQ_TAKEOFF_EQUIP_ALL *p = RFIFOP(fd, 0);
 
@@ -12574,17 +12574,17 @@ static void clif_parse_UnequipAllItems(int fd, struct map_session_data *sd)
 	atcommand->exec(sd->fd, sd, command, true);
 
 	clif->unequipAllItemsAck(sd, TAKEOFF_EQUIP_ALL_SUCCESS);
-#endif  // PACKETVER_MAIN_NUM >= 20210818 || PACKETVER_ZERO_NUM >= 20210818
+#endif  // PACKETVER_MAIN_NUM >= 20210818 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20210818
 }
 
 static void clif_unequipAllItemsAck(struct map_session_data *sd, enum unequip_all result)
 {
-#if PACKETVER_MAIN_NUM >= 20210818
+#if PACKETVER_MAIN_NUM >= 20210818 || PACKETVER_RE_NUM >= 20211103
 	struct PACKET_ZC_TAKEOFF_EQUIP_ALL_ACK packet = {0};
 	packet.PacketType = HEADER_ZC_TAKEOFF_EQUIP_ALL_ACK;
 	packet.result = result;
 	clif->send(&packet, sizeof(struct PACKET_ZC_TAKEOFF_EQUIP_ALL_ACK), &sd->bl, SELF);
-#endif  // PACKETVER_MAIN_NUM >= 20210818
+#endif  // PACKETVER_MAIN_NUM >= 20210818 || PACKETVER_RE_NUM >= 20211103
 }
 
 static void clif_parse_NpcClicked(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
@@ -13803,7 +13803,7 @@ static void clif_parse_NpcSelectMenu(int fd, struct map_session_data *sd)
 static void clif_parse_NpcSelectMenuZero(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
 static void clif_parse_NpcSelectMenuZero(int fd, struct map_session_data *sd)
 {
-#if PACKETVER_MAIN_NUM >= 20210317 || PACKETVER_ZERO_NUM >= 20210317
+#if PACKETVER_MAIN_NUM >= 20210317 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20210317
 	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
 		return;
 
@@ -13832,7 +13832,7 @@ static void clif_parse_NpcSelectMenuZero(int fd, struct map_session_data *sd)
 
 	sd->npc_menu = select;
 	npc->scriptcont(sd, npc_id, false);
-#endif  // PACKETVER_MAIN_NUM >= 20210317 || PACKETVER_ZERO_NUM >= 20210317
+#endif  // PACKETVER_MAIN_NUM >= 20210317 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20210317
 }
 
 static void clif_parse_NpcNextClicked(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
@@ -21798,9 +21798,9 @@ static void clif_npc_market_open(struct map_session_data *sd, struct npc_data *n
 			packet->list[c].qty    = shop[i].qty;
 			packet->list[c].type   = itemtype(id->type);
 			packet->list[c].weight = id->weight * 10;
-#if PACKETVER_MAIN_NUM >= 20210203
+#if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103
 			packet->list[c].location = pc->item_equippoint(sd, id);
-#endif // PACKETVER_MAIN_NUM >= 20210203
+#endif // PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103
 			c++;
 		}
 	}
@@ -23035,7 +23035,7 @@ static void clif_parse_rodex_checkname1(int fd, struct map_session_data *sd)
 static void clif_parse_rodex_checkname2(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
 static void clif_parse_rodex_checkname2(int fd, struct map_session_data *sd)
 {
-#if PACKETVER_MAIN_NUM >= 20201104 || PACKETVER_ZERO_NUM >= 20201118
+#if PACKETVER_MAIN_NUM >= 20201104 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20201118
 	const struct PACKET_CZ_CHECKNAME2 *rPacket = RFIFOP(fd, 0);
 	int char_id = 0, base_level = 0;
 	int class = 0;
@@ -23044,7 +23044,7 @@ static void clif_parse_rodex_checkname2(int fd, struct map_session_data *sd)
 	safestrncpy(name, rPacket->Name, NAME_LENGTH);
 
 	rodex->check_player(sd, name, &base_level, &char_id, &class);
-#endif  // PACKETVER_MAIN_NUM >= 20201104 || PACKETVER_ZERO_NUM >= 20201118
+#endif  // PACKETVER_MAIN_NUM >= 20201104 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20201118
 }
 
 static void clif_rodex_checkname_result(struct map_session_data *sd, int char_id, int class_, int base_level, const char *name)
@@ -24176,7 +24176,7 @@ static void clif_npc_barter_open(struct map_session_data *sd, struct npc_data *n
 			packet->list[c].currencyAmount = shop[i].value2;
 			packet->list[c].weight = id->weight * 10;
 			packet->list[c].index = i;
-#if PACKETVER_MAIN_NUM >= 20210203
+#if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103
 			packet->list[c].viewSprite = id->view_sprite;
 			packet->list[c].location = pc->item_equippoint(sd, id);
 #endif  // PACKETVER_MAIN_NUM >= 20210203
@@ -24267,10 +24267,10 @@ static void clif_npc_expanded_barter_open(struct map_session_data *sd, struct np
 			item->weight = id->weight * 10;
 			item->index  = i;
 			item->zeny   = shop[i].value;
-#if PACKETVER_MAIN_NUM >= 20210203
+#if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103
 			item->viewSprite = id->view_sprite;
 			item->location = pc->item_equippoint(sd, id);
-#endif // PACKETVER_MAIN_NUM >= 20210203
+#endif // PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103
 			item->currency_count = 0;
 			buf_left -= ptr_size;
 			items_count ++;
