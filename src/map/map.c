@@ -34,6 +34,7 @@
 #include "map/clif.h"
 #include "map/duel.h"
 #include "map/elemental.h"
+#include "map/enchantui.h"
 #include "map/grader.h"
 #include "map/guild.h"
 #include "map/homunculus.h"
@@ -6519,6 +6520,7 @@ int do_final(void)
 	rodex->final();
 	achievement->final();
 	stylist->final();
+	enchantui->final();
 
 	HPM_map_do_final();
 
@@ -6736,6 +6738,7 @@ static void map_load_defaults(void)
 	stylist_defaults();
 	refine_defaults();
 	grader_defaults();
+	enchantui_defaults();
 }
 /**
  * --run-once handler
@@ -7055,6 +7058,7 @@ int do_init(int argc, char *argv[])
 	achievement->init(minimal);
 	stylist->init(minimal);
 	macro->init(minimal);
+	enchantui->init(minimal);
 	npc->init(minimal);
 	unit->init(minimal);
 	bg->init(minimal);

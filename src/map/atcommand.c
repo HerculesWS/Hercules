@@ -10500,6 +10500,23 @@ ACMD(itemreform)
 #endif
 }
 
+ACMD(enchantui)
+{
+#if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
+	int egroup = 0;
+	if (!*message || !(egroup = atoi(message))) {
+		clif->message(fd, msg_fd(fd, 1544));
+		return false;
+	}
+
+	clif->enchantui_open(sd, egroup);
+		return true;
+#else
+	clif->message(fd, "Enchant UI is not supported.");
+	return false;
+#endif
+}
+
 /**
  * Fills the reference of available commands in atcommand DBMap
  **/
@@ -10795,6 +10812,7 @@ static void atcommand_basecommands(void)
 		ACMD_DEF(gradeui),
 		ACMD_DEF(reloadgradedb),
 		ACMD_DEF(itemreform),
+		ACMD_DEF(enchantui),
 	};
 	int i;
 

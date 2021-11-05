@@ -229,6 +229,8 @@
     <ClCompile Include="..\src\map\grader.c">
       <Filter>map</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\map\enchantui.c">
+      <Filter>map</Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\map\achievement.h">
@@ -524,6 +526,9 @@
     </ClInclude>
     <ClInclude Include="..\src\common\packets_struct.h">
       <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\map\enchantui.h">
+      <Filter>map</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

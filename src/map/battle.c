@@ -7814,6 +7814,7 @@ static const struct battle_data {
 	{ "ping_timer_inverval",                &battle_config.ping_timer_interval,             30,     0,      99999999,       },
 	{ "ping_time",                          &battle_config.ping_time,                       20,     0,      99999999,       },
 	{ "option_drop_max_loop",               &battle_config.option_drop_max_loop,            10,     1,      100000,         },
+	{ "enchant_ui_max_loop",                &battle_config.enchant_ui_max_loop,             10,     1,      100000,         },
 	{ "drop_connection_on_quit",            &battle_config.drop_connection_on_quit,         0,      0,      1,              },
 	{ "display_rate_messages",              &battle_config.display_rate_messages,           1,      0,      7,              },
 	{ "display_config_messages",            &battle_config.display_config_messages,         0x1F1,  0,      0x1F7,          },

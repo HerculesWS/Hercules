@@ -31,6 +31,7 @@
 #include "map/chrif.h"
 #include "map/clan.h"
 #include "map/elemental.h"
+#include "map/enchantui.h"
 #include "map/grader.h"
 #include "map/guild.h"
 #include "map/homunculus.h"
@@ -23887,9 +23888,9 @@ static void clif_open_ui_send1(struct map_session_data *sd, enum zc_ui_types ui_
 		p.data = 0;
 		break;
 #endif
-#if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103
+#if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 	case ZC_ENCHANT_UI:
-#endif  // PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103
+#endif  // PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 	case zc_ui_unused:
 	case zc_ui_unused9:
 	default:
@@ -23911,7 +23912,7 @@ static void clif_open_ui_send1(struct map_session_data *sd, enum zc_ui_types ui_
 static void clif_open_ui_send2(struct map_session_data *sd, enum zc_ui_types ui_type, uint64 data)
 {
 	nullpo_retv(sd);
-#if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103
+#if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 	struct PACKET_ZC_UI_OPEN2 p;
 
 	p.PacketType = HEADER_ZC_UI_OPEN2;
@@ -23925,7 +23926,7 @@ static void clif_open_ui_send2(struct map_session_data *sd, enum zc_ui_types ui_
 	}
 
 	clif->send(&p, sizeof(p), &sd->bl, SELF);
-#endif  // PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103
+#endif  // PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 }
 
 /**
@@ -23960,11 +23961,11 @@ static void clif_open_ui_send(struct map_session_data *sd, enum zc_ui_types ui_t
 		clif->open_ui_send1(sd, ui_type);
 		break;
 #endif
-#if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103
+#if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 	case ZC_ENCHANT_UI:
 		clif->open_ui_send2(sd, ui_type, 0);
 		break;
-#endif  // PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103
+#endif  // PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 	case zc_ui_unused:
 	case zc_ui_unused9:
 	default:
@@ -25573,6 +25574,100 @@ static void clif_item_reform_result(struct map_session_data *sd, int index, enum
 #endif
 }
 
+static void clif_enchantui_open(struct map_session_data *sd, int64 enchant_group)
+{
+#if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
+	nullpo_retv(sd);
+
+	sd->state.enchant_ui = 1;
+	clif->open_ui_send2(sd, ZC_ENCHANT_UI, enchant_group);
+#endif
+}
+
+static void clif_parse_enchantui_normal_request(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
+static void clif_parse_enchantui_normal_request(int fd, struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20201118 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
+	if (sd->state.enchant_ui == 0)
+		return;
+
+	if (pc_cant_act_except_enchant(sd))
+		return;
+
+	const struct PACKET_CZ_REQUEST_RANDOM_ENCHANT *p = RFIFO2PTR(fd);
+	enchantui->normal_request(sd, p->enchant_group, p->index - 2);
+#endif
+}
+
+static void clif_parse_enchantui_perfect_request(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
+static void clif_parse_enchantui_perfect_request(int fd, struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20201118 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
+	if (sd->state.enchant_ui == 0)
+		return;
+
+	if (pc_cant_act_except_enchant(sd))
+		return;
+
+	const struct PACKET_CZ_REQUEST_PERFECT_ENCHANT *p = RFIFO2PTR(fd);
+	enchantui->perfect_request(sd, p->enchant_group, p->index - 2, p->ITID);
+#endif
+}
+
+static void clif_parse_enchantui_upgrade_request(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
+static void clif_parse_enchantui_upgrade_request(int fd, struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20201118 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
+	if (sd->state.enchant_ui == 0)
+		return;
+
+	if (pc_cant_act_except_enchant(sd))
+		return;
+
+	const struct PACKET_CZ_REQUEST_UPGRADE_ENCHANT *p = RFIFO2PTR(fd);
+	enchantui->upgrade_request(sd, p->enchant_group, p->index - 2, p->slot);
+#endif
+}
+
+static void clif_parse_enchantui_reset_request(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
+static void clif_parse_enchantui_reset_request(int fd, struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20201118 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
+	if (sd->state.enchant_ui == 0)
+		return;
+
+	if (pc_cant_act_except_enchant(sd))
+		return;
+
+	const struct PACKET_CZ_REQUEST_RESET_ENCHANT *p = RFIFO2PTR(fd);
+	enchantui->reset_request(sd, p->enchant_group, p->index - 2);
+#endif
+}
+
+static void clif_enchantui_status(struct map_session_data *sd, enum enchantui_status result, int itemId)
+{
+#if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
+	nullpo_retv(sd);
+	const int fd = sd->fd;
+
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_RESPONSE_ENCHANT));
+	struct PACKET_ZC_RESPONSE_ENCHANT *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_RESPONSE_ENCHANT;
+	p->msgId = (result == ENCHANTUI_SUCCESS) ? MSG_ENCHANT_SUCCESS : MSG_ENCHANT_FAILED;
+	p->ITID = itemId;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_RESPONSE_ENCHANT));
+#endif
+}
+
+static void clif_parse_enchantui_close(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
+static void clif_parse_enchantui_close(int fd, struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20201118 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
+	// const struct PACKET_CZ_CLOSE_UI_ENCHANT *p = RFIFO2PTR(fd);
+	sd->state.enchant_ui = 0;
+#endif
+}
+
 /*==========================================
  * Main client packet processing function
  *------------------------------------------*/
@@ -26906,4 +27001,12 @@ void clif_defaults(void)
 	clif->pItemReformClose = clif_parse_item_reform_close;
 	clif->pItemReformAck = clif_parse_item_reform_ack;
 	clif->item_reform_result = clif_item_reform_result;
+
+	clif->enchantui_open = clif_enchantui_open;
+	clif->enchantui_status = clif_enchantui_status;
+	clif->pEnchantUINormalRequest = clif_parse_enchantui_normal_request;
+	clif->pEnchantUIPerfectRequest = clif_parse_enchantui_perfect_request;
+	clif->pEnchantUIUpgradeRequest = clif_parse_enchantui_upgrade_request;
+	clif->pEnchantUIResetRequest = clif_parse_enchantui_reset_request;
+	clif->pEnchantUIClose = clif_parse_enchantui_close;
 }

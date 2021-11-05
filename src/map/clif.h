@@ -641,10 +641,10 @@ enum zc_ui_types {
 #if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
 	ZC_GRADE_ENCHANT_UI = 8,
 #endif
-#if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103
+#if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 	zc_ui_unused9 = 9,  // for avoid compilation errors
 	ZC_ENCHANT_UI = 10
-#else  // PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103
+#else  // PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 	zc_ui_unused9 = 9  // for avoid compilation errors
 #endif  // PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103
 };
@@ -900,6 +900,11 @@ enum instance_window_info_type {
 	 * @see instance_destroy_reason for reason flag values.
 	 */
 	INSTANCE_WND_INFO_DESTROY = 5,
+};
+
+enum enchantui_status {
+	ENCHANTUI_SUCCESS,
+	ENCHANTUI_FAILURE,
 };
 
 /**
@@ -1940,6 +1945,14 @@ struct clif_interface {
 	void (*pItemReformClose) (int fd, struct map_session_data *sd);
 	void (*pItemReformAck) (int fd, struct map_session_data *sd);
 	void (*item_reform_result) (struct map_session_data *sd, int index, enum item_reform_status result);
+
+	void (*enchantui_open) (struct map_session_data *sd, int64 enchant_group);
+	void (*enchantui_status) (struct map_session_data *sd, enum enchantui_status result, int itemId);
+	void (*pEnchantUINormalRequest) (int fd, struct map_session_data *sd);
+	void (*pEnchantUIPerfectRequest) (int fd, struct map_session_data *sd);
+	void (*pEnchantUIUpgradeRequest) (int fd, struct map_session_data *sd);
+	void (*pEnchantUIResetRequest) (int fd, struct map_session_data *sd);
+	void (*pEnchantUIClose) (int fd, struct map_session_data *sd);
 };
 
 #ifdef HERCULES_CORE
