@@ -22,6 +22,12 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
+## [v2021.11.03+1] `November 03 2021` `PATCH 1`
+
+### Fixed
+
+- Fixed a regression in the mob drop rate bonus calculation, always overriding it to 900%. (#3083)
+
 ## [v2021.11.03] `November 03 2021`
 
 ### Added
@@ -2121,6 +2127,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2021.11.03+1]: https://github.com/HerculesWS/Hercules/compare/v2021.11.03...v2021.11.03+1
 [v2021.11.03]: https://github.com/HerculesWS/Hercules/compare/v2021.10.06+1...v2021.11.03
 [v2021.10.06+1]: https://github.com/HerculesWS/Hercules/compare/v2021.10.06...v2021.10.06+1
 [v2021.10.06]: https://github.com/HerculesWS/Hercules/compare/v2021.09.01...v2021.10.06
