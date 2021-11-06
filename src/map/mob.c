@@ -2748,7 +2748,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 					if (battle_config.pk_mode && (md->level - sd->status.base_level >= 20))
 						drop_rate_bonus += 25; // flat 25% bonus 
 
-					drop_rate_bonus += sd->dropaddrace[md->status.race] + (is_boss(src) ? sd->dropaddrace[RC_BOSS] : sd->dropaddrace[RC_NONBOSS]); // bonus2 bDropAddRace[KeiKun] 
+					drop_rate_bonus += sd->dropaddrace[md->status.race] + (is_boss(src) ? sd->dropaddrace[RC_BOSS] : sd->dropaddrace[RC_NONBOSS]); // bonus2 bDropAddRace[KeiKun]
 
 					if (sd->sc.data[SC_CASH_RECEIVEITEM] != NULL) // Increase drop rate if user has SC_CASH_RECEIVEITEM
 						drop_rate_bonus += sd->sc.data[SC_CASH_RECEIVEITEM]->val1;
@@ -2759,10 +2759,10 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 					drop_rate = (int)(0.5 + drop_rate * drop_rate_bonus / 100.);
 
 					// Limit drop rate, default: 90%
-					drop_rate = max(drop_rate, 90000);
+					drop_rate = min(drop_rate, 9000);
 				}
 			}
-			
+
 #ifdef RENEWAL_DROP
 			if (drop_modifier != 100) {
 				drop_rate = drop_rate * drop_modifier / 100;
