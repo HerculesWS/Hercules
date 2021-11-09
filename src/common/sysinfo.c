@@ -413,26 +413,17 @@ static void sysinfo_osversion_retrieve(void)
 			} else if (osvi.dwMinorVersion == 1) {
 				StrBuf->AppendStr(&buf, osvi.wProductType == VER_NT_WORKSTATION ? "Windows 7" : "Windows Server 2008 R2");
 			} else {
-				// If it's 2, it can be Windows 8, or any newer version (8.1 at the time of writing this) -- see above for the reason.
-				switch (osvi.dwMinorVersion) {
-				case 2:
-					{
-						ULONGLONG mask = 0;
-						OSVERSIONINFOEX osvi2;
-						ZeroMemory(&osvi2, sizeof(OSVERSIONINFOEX));
-						osvi2.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
-						osvi2.dwMajorVersion = 6;
-						osvi2.dwMinorVersion = 2;
-						VER_SET_CONDITION(mask, VER_MAJORVERSION, VER_LESS_EQUAL);
-						VER_SET_CONDITION(mask, VER_MINORVERSION, VER_LESS_EQUAL);
-						if (VerifyVersionInfo(&osvi2, VER_MAJORVERSION | VER_MINORVERSION, mask)) {
-							StrBuf->AppendStr(&buf, osvi.wProductType == VER_NT_WORKSTATION ? "Windows 8" : "Windows Server 2012");
-							break;
-						}
-					}
-				case 3:
-					StrBuf->AppendStr(&buf, osvi.wProductType == VER_NT_WORKSTATION ? "Windows 8.1" : "Windows Server 2012 R2");
-				}
+				// If it's 2, it can be Windows 8, or any newer version -- see above for the reason.
+				// Fallback to using RtlGetVersion api to get the version
+				NTSTATUS(WINAPI *RtlGetVersion)(LPOSVERSIONINFOEX);
+				*(FARPROC *)&RtlGetVersion = GetProcAddress(GetModuleHandle(TEXT("ntdll")), "RtlGetVersion");
+				RtlGetVersion((LPOSVERSIONINFOEX)&osvi);
+
+				// Windows 10 and Windows Server 2016 and 2019 all have 10.0 version as documented at
+				// https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_osversioninfoexw#remarks
+				StrBuf->Printf(&buf, "Windows%s %d", osvi.wProductType == VER_NT_WORKSTATION ? "" : " Server", osvi.dwMajorVersion);
+				if (osvi.dwMinorVersion > 0)
+					StrBuf->Printf(&buf, ".%d", osvi.dwMinorVersion);
 			}
 
 			pGPI = (PGPI) GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "GetProductInfo");
