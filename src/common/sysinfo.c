@@ -225,8 +225,10 @@ enum windows_ver_suite {
 #define SYSINFO_COMPILER "Microsoft Visual C++ 2015 (v" EXPAND_AND_QUOTE(_MSC_VER) ")"
 #elif _MSC_VER >= 1910 && _MSC_VER < 1920
 #define SYSINFO_COMPILER "Microsoft Visual C++ 2017 (v" EXPAND_AND_QUOTE(_MSC_VER) ")"
-#elif _MSC_VER >= 1920 && _MSC_VER < 2000
+#elif _MSC_VER >= 1920 && _MSC_VER < 1930
 #define SYSINFO_COMPILER "Microsoft Visual C++ 2019 (v" EXPAND_AND_QUOTE(_MSC_VER) ")"
+#elif _MSC_VER >= 1930 && _MSC_VER < 2000
+#define SYSINFO_COMPILER "Microsoft Visual C++ 2022 (v" EXPAND_AND_QUOTE(_MSC_VER) ")"
 #else // < 1300 || >= 2000
 #define SYSINFO_COMPILER "Microsoft Visual C++ v" EXPAND_AND_QUOTE(_MSC_VER)
 #endif
