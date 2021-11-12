@@ -5181,10 +5181,6 @@ static unsigned short status_calc_speed(struct block_list *bl, struct status_cha
 						val = max(val, sc->data[SC_STOMACHACHE]->val2);
 					if (sc->data[SC_MARSHOFABYSS]) // It stacks to other statuses so always put this at the end.
 						val = max(50, val + 10 * sc->data[SC_MARSHOFABYSS]->val1);
-					if (sc->data[SC_MOVHASTE_POTION]) { // Doesn't affect the movement speed by Quagmire, Decrease Agi, Slow Grace [Frost]
-						if (sc->data[SC_DEC_AGI] || sc->data[SC_QUAGMIRE] || sc->data[SC_DONTFORGETME] || sc->data[SC_CREATINGSTAR] != NULL)
-							return 0;
-					}
 					if (sc->data[SC_CATNIPPOWDER])
 						val = max(val, sc->data[SC_CATNIPPOWDER]->val3);
 					if (sc->data[SC_BIND_TRAP])
@@ -6971,6 +6967,13 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 	// Check for inmunities / sc fails
 	switch (type) {
+		case SC_DEC_AGI:
+		case SC_QUAGMIRE:
+		case SC_DONTFORGETME:
+		case SC_CREATINGSTAR:
+			if (sc->data[SC_MOVHASTE_POTION])
+				return 0;
+			break;
 		case SC_DRUMBATTLE:
 		case SC_NIBELUNGEN:
 		case SC_INTOABYSS:
