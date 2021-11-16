@@ -25135,6 +25135,20 @@ static void clif_macro_reporter_status(struct map_session_data *sd, enum macro_r
 #endif
 }
 
+static void clif_sayDialogAlign(struct map_session_data *sd, int npcid, enum say_dialog_align align)
+{
+#if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103
+	nullpo_retv(sd);
+
+	const int fd = sd->fd;
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_SAY_DIALOG_ALIGN));
+	struct PACKET_ZC_SAY_DIALOG_ALIGN *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_SAY_DIALOG_ALIGN;
+	p->align = align;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_SAY_DIALOG_ALIGN));
+#endif  // PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103
+}
+
 /*==========================================
  * Main client packet processing function
  *------------------------------------------*/
@@ -26418,4 +26432,6 @@ void clif_defaults(void)
 	clif->pMacroReporterAck = clif_parse_macro_reporter_ack;
 	clif->macro_reporter_select = clif_macro_reporter_select;
 	clif->macro_reporter_status = clif_macro_reporter_status;
+
+	clif->sayDialogAlign = clif_sayDialogAlign;
 }

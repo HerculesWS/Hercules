@@ -1787,6 +1787,8 @@ struct clif_interface {
 	void (*pMacroReporterAck) (int fd, struct map_session_data *sd);
 	void (*macro_reporter_select) (struct map_session_data *sd, const struct macroaidlist *aid_list);
 	void (*macro_reporter_status) (struct map_session_data *sd, enum macro_report_status stype);
+
+	void (*sayDialogAlign) (struct map_session_data *sd, int npcid, enum say_dialog_align align);
 };
 
 #ifdef HERCULES_CORE

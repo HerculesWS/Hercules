@@ -10896,3 +10896,17 @@ of equipment slots see getequipid().
 Gets the grade level of an equipment.
 
 ---------------------------------------
+*setdialogalign(<align>);
+
+Set vertical or horizontal align in npc dialog.
+Valid aligns:
+horizontal align:
+ DIALOG_ALIGN_LEFT
+ DIALOG_ALIGN_RIGHT
+ DIALOG_ALIGN_CENTER
+vertical align:
+ DIALOG_ALIGN_TOP
+ DIALOG_ALIGN_MIDDLE
+ DIALOG_ALIGN_BOTTOM
+
+Works from clients: main 20210203, re 20211103

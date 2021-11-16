@@ -5175,6 +5175,15 @@ struct PACKET_CZ_CHOOSE_MENU_ZERO {
 DEFINE_PACKET_HEADER(CZ_CHOOSE_MENU_ZERO, 0x0ba8);
 #endif  // PACKETVER_MAIN_NUM >= 20210317 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20210317
 
+#if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103
+struct PACKET_ZC_SAY_DIALOG_ALIGN {
+	int16 PacketType;
+	uint8 align;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_SAY_DIALOG_ALIGN, 0x0ba1);
+#endif  // PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103
+
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris

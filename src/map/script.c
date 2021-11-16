@@ -27563,6 +27563,18 @@ static BUILDIN(getequipgrade)
 	return true;
 }
 
+static BUILDIN(setdialogalign)
+{
+	struct map_session_data *sd = script->rid2sd(st);
+
+	if (sd == NULL)
+		return true;
+
+	clif->sayDialogAlign(sd, st->oid, script_getnum(st, 2));
+
+	return true;
+}
+
 /**
  * Adds a built-in script function.
  *
@@ -27806,6 +27818,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF2(select, "prompt", "s*"),
 		BUILDIN_DEF2(select, "zselect", "s*"),
 		BUILDIN_DEF2(select, "zprompt", "s*"),
+		BUILDIN_DEF(setdialogalign,"i"),
 		//
 		BUILDIN_DEF(goto,"l"),
 		BUILDIN_DEF(callsub,"l*"),
@@ -29296,6 +29309,14 @@ static void script_hardcoded_constants(void)
 	script->set_constant("MOBG_BLOODY_BRANCH", MOBG_BLOODY_BRANCH, false, false);
 	script->set_constant("MOBG_POUCH", MOBG_POUCH, false, false);
 	script->set_constant("MOBG_CLASS_CHANGE", MOBG_CLASS_CHANGE, false, false);
+
+	script->constdb_comment("Npc dialog text align");
+	script->set_constant("DIALOG_ALIGN_LEFT", DIALOG_ALIGN_LEFT, false, false);
+	script->set_constant("DIALOG_ALIGN_RIGHT", DIALOG_ALIGN_RIGHT, false, false);
+	script->set_constant("DIALOG_ALIGN_CENTER", DIALOG_ALIGN_CENTER, false, false);
+	script->set_constant("DIALOG_ALIGN_TOP", DIALOG_ALIGN_TOP, false, false);
+	script->set_constant("DIALOG_ALIGN_MIDDLE", DIALOG_ALIGN_MIDDLE, false, false);
+	script->set_constant("DIALOG_ALIGN_BOTTOM", DIALOG_ALIGN_BOTTOM, false, false);
 
 	script->constdb_comment("Renewal");
 #ifdef RENEWAL
