@@ -7009,7 +7009,12 @@ ACMD(unequipall)
 
 	pc->update_idle_time(sd, BCIDLE_USEITEM);
 
-	for (int i = 0; i < EQI_MAX; i++) {
+	int eqiLast = EQI_MAX;
+	if (strcmp(message, "basic") == 0) {
+		eqiLast = EQI_COSTUME_TOP;
+	}
+
+	for (int i = 0; i < eqiLast; i++) {
 		if (sd->equip_index[i] >= 0)
 			pc->unequipitem(sd, sd->equip_index[i], PCUNEQUIPITEM_RECALC | PCUNEQUIPITEM_FORCE);
 	}

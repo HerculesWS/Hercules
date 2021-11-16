@@ -12570,7 +12570,7 @@ static void clif_parse_UnequipAllItems(int fd, struct map_session_data *sd)
 	pc->update_idle_time(sd, BCIDLE_USEITEM);
 
 	char command[20];
-	sprintf(command, "%cunequipall", atcommand->at_symbol);
+	sprintf(command, "%cunequipall basic", atcommand->at_symbol);
 	atcommand->exec(sd->fd, sd, command, true);
 
 	clif->unequipAllItemsAck(sd, TAKEOFF_EQUIP_ALL_SUCCESS);
