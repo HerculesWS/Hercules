@@ -3,7 +3,7 @@
 //===== By: ==================================================
 //= Hercules Dev Team
 //===== Current Version: =====================================
-//= 20120904
+//= 20211111
 //===== Description: =========================================
 //= Explanation of the item_db.conf file and structure.
 //============================================================
@@ -15,7 +15,7 @@ item_db: (
 	AegisName: "Aegis_Name"       (string, optional if Inherit: true)
 	Name: "Item Name"             (string, optional if Inherit: true)
 	// =================== Optional fields ================================
-	Type: Item Type               (int, defaults to 3 = etc item)
+	Type: Item Type               (string, defaults to "IT_ETC")
 	Buy: Buy Price                (int, defaults to Sell * 2)
 	Sell: Sell Price              (int, defaults to Buy / 2)
 	Weight: Item Weight           (int, defaults to 0, units in Weight/10 )
@@ -65,6 +65,7 @@ item_db: (
 	EquipLv: Equip required level (int, defaults to 0)
 	EquipLv: [min, max]           (alternative syntax with min / max level)
 	Refine: Refineable            (boolean, defaults to true)
+	DisableOptions: true/false    (boolean, defaults to false !!for equipments only!!) [Smokexyz]
 	Subtype: Item Subtype         (int, defaults to 0)
 	ViewSprite: Sprite view ID    (int, defaults to 0)
 	BindOnEquip: true/false       (boolean, defaults to false)
@@ -85,7 +86,7 @@ item_db: (
 		nocart: true/false            (boolean, defaults to false)
 		noselltonpc: true/false       (boolean, defaults to false)
 		nomail: true/false            (boolean, defaults to false)
-		noauction: true/false         (boolean, defaults to false)		
+		noauction: true/false         (boolean, defaults to false)
 		nogstorage: true/false        (boolean, defaults to false)
 		partneroverride: true/false   (boolean, defaults to false)
 	}
@@ -101,6 +102,8 @@ item_db: (
 	">
 	OnEquipScript: <" OnEquip Script (can also be multi-line) ">
 	OnUnequipScript: <" OnUnequip Script (can also be multi-line) ">
+	OnRentalStartScript: <" On item renting script, gets called after item is created in inventory (can also be multi-line) ">
+	OnRentalEndScript: <" On item rent end/expire script, gets called after item is removed from inventory (can also be multi-line) ">
 	// =================== Optional fields (item_db2 only) ================
 	Inherit: true/false           (boolean, if true, inherit the values
 	                              that weren't specified, from item_db.conf,
@@ -109,7 +112,7 @@ item_db: (
 ...
 )
 
-Id: Item id
+Id: Item ID
 
 AegisName: Server name to reference the item in scripts and lookups.
            Allowed characters: [A-Za-z0-9_]
@@ -117,19 +120,20 @@ AegisName: Server name to reference the item in scripts and lookups.
 Name: Name in English for displaying as output for @ and script commands.
 
 Type:
-	0	Healing item.
-	2	Usable item.
-	3	Etc item
-	4	Weapon
-	5	Armor/Garment/Boots/Headgear
-	6	Card
-	7	Pet egg
-	8	Pet equipment
-	10	Ammo (Arrows/Bullets/etc)
-	11	Usable with delayed consumption (item is lost from inventory
-		after selecting a target, for use with skills and pet lures)
-	18	Another delayed consume that requires user confirmation before
-		using item.
+	IT_HEALING:			Healing Item
+	IT_USABLE:			Usable Item
+	IT_ETC:				Etc Item
+	IT_WEAPON:			Weapon
+	IT_ARMOR:			Armor / Garment / Boots / Headgear
+	IT_CARD:			Card
+	IT_PETEGG:			Pet Egg
+	IT_PETARMOR:		Pet Equipment
+	IT_AMMO:			Ammo (Arrows / Throwable Daggers / Bullets / Shells / Grenades / Shuriken / Kunai / Cannon Balls / Throwable Items (Sling Items))
+	IT_DELAYCONSUME:	Usable with delayed consumption (item is lost from inventory
+						after selecting a target, for use with skills and pet lures)
+	IT_CASH:			Another delayed consume that requires user confirmation before
+						using item.
+	When not specified, the item will automatically sets to "IT_ETC".
 
 Buy: Default buying price. When not specified, becomes double the sell price.
 
@@ -153,7 +157,7 @@ Job:  Job restrictions. If this block is omitted, item can be equipped by all cl
 		Default value is false (restriction not set) for any missing setting.
 
 	Alternate Format:
-		Equippable jobs. Uses the following bitmask table:
+		Equippable Jobs. Uses the following bitmask table:
 
 		(S.) Novice    (2^00): 0x00000001
 		Swordman       (2^01): 0x00000002
@@ -192,12 +196,12 @@ Job:  Job restrictions. If this block is omitted, item can be equipped by all cl
 		All (default value):   0xFFFFFFFF
 
 Upper: Equippable upper-types. Uses the following bitmasks:
-	Normal jobs:      ITEMUPPER_NORMAL     (0x01)
-	Upper jobs:       ITEMUPPER_UPPER      (0x02)
-	Baby jobs:        ITEMUPPER_BABY       (0x04)
-	Third jobs:       ITEMUPPER_THIRD      (0x08)
-	Upper Third jobs: ITEMUPPER_THIRDUPPER (0x10)
-	Baby Third jobs:  ITEMUPPER_THIRDBABY  (0x20)
+	Normal Jobs:      ITEMUPPER_NORMAL     (0x01)
+	Upper Jobs:       ITEMUPPER_UPPER      (0x02)
+	Baby Jobs:        ITEMUPPER_BABY       (0x04)
+	Third Jobs:       ITEMUPPER_THIRD      (0x08)
+	Upper Third Jobs: ITEMUPPER_THIRDUPPER (0x10)
+	Baby Third Jobs:  ITEMUPPER_THIRDBABY  (0x20)
 
 	Under pre-re mode third classes are considered upper, making use of
 	the ITEMUPPER_THIRD and above masks is therefore not necessary unless
@@ -209,7 +213,7 @@ Gender: Gender restriction.
 		SEX_FEMALE: 0
 		SEX_MALE:   1
 		SEX_ANY:    2
-	When not specified, becomes "SEX_ANY".
+	When not specified, the gender automatically sets to "SEX_ANY".
 
 Loc: Equipment's placement. A value needs to be specified if the item is an
      equipment piece. Values are (bitmask arrays are supported):
@@ -255,47 +259,47 @@ EquipLv: Base level required to be able to equip. It is possible to specify
 Refineable: true if the item can be refined, false otherwise. If no value is
             specified, it defaults to true.
 
-ViewSprite: Defines a replacement view-sprite for the item (eg:
-      Making apples look like apple juice).
-
 Subtype: For weapons and ammo, indicates the weapon-class of the item.
 
 	For weapons, the types are:
-		W_FIST      0: Bare fist
+		W_FIST      0: Bare Fist
 		W_DAGGER    1: Daggers
-		W_1HSWORD   2: One-handed swords
-		W_2HSWORD   3: Two-handed swords
-		W_1HSPEAR   4: One-handed spears
-		W_2HSPEAR   5: Two-handed spears
-		W_1HAXE     6: One-handed axes
-		W_2HAXE     7: Two-handed axes
+		W_1HSWORD   2: One-Handed Swords
+		W_2HSWORD   3: Two-Handed Swords
+		W_1HSPEAR   4: One-Handed Spears
+		W_2HSPEAR   5: Two-Handed Spears
+		W_1HAXE     6: One-Handed Axes
+		W_2HAXE     7: Two-Handed Axes
 		W_MACE      8: Maces
 		W_2HMACE    9: Unused
 		W_STAFF    10: Staves
 		W_BOW      11: Bows
 		W_KNUCKLE  12: Knuckles
-		W_MUSICAL  13: Musical instruments
+		W_MUSICAL  13: Musical Instruments
 		W_WHIP     14: Whips
 		W_BOOK     15: Books
 		W_KATAR    16: Katars
 		W_REVOLVER 17: Reveolvers
 		W_RIFLE    18: Rifles
-		W_GATLING  19: Gatling guns
+		W_GATLING  19: Gatling Guns
 		W_SHOTGUN  20: Shotguns
-		W_GRENADE  21: Grenade launchers
-		W_HUUMA    22: Fuuma shurikens
-		W_2HSTAFF  23: Two-handed staves
+		W_GRENADE  21: Grenade Launchers
+		W_HUUMA    22: Fuuma Shurikens
+		W_2HSTAFF  23: Two-Handed Staves
 
 	For ammo, the types are:
 		A_ARROW       1: Arrows
-		A_DAGGER      2: Throwable daggers
+		A_DAGGER      2: Throwable Daggers
 		A_BULLET      3: Bullets
 		A_SHELL       4: Shells
 		A_GRENADE     5: Grenades
 		A_SHURIKEN    6: Shuriken
 		A_KUNAI       7: Kunai
-		A_CANNONBALL  8: Cannon balls
-		A_THROWWEAPON 9: Throwable items (Sling Item)
+		A_CANNONBALL  8: Cannon Balls
+		A_THROWWEAPON 9: Throwable Items (Sling Item)
+
+ViewSprite: Defines a replacement view-sprite for the item (eg:
+      Making apples look like apple juice).
 
 BindOnEquip: Whether the item will automatically bind to the character when it
              is equipped for the first time. An item that has this field set,
@@ -309,11 +313,23 @@ ForceSerial: Whether the item will be given new unique id or not. When the item
 BuyingStore: Whether the item can be sold via buyingstore, one must also edit
              data\buyingstoreitemlist.txt for client to accept item.
 
-DropAnnounce: Enables global announcement of the selected item when dropped by monster.
-
 Delay: Delay for an item to be used again. Value is in milliseconds.
        There is a max concurrent number of entries modifiable in
        src/map/itemdb.h as MAX_ITEMDELAYS.
+
+KeepAfterUse: Prevents item consume when used.
+
+DropAnnounce: Enables global announcement of the selected item when dropped by monster.
+
+ShowDropEffect: Allow showing an effect when the item dropped by a monster. [ZERO client or PACKETVER >= 20180418]
+
+DropEffectMode: Set attribute for ShowDropEffect. [ZERO client or PACKETVER >= 20180418]
+				0 - Client Based (itemInfo EffectID)
+				1 - White Effect
+				2 - Blue Effect
+				3 - Yellow Effect
+				4 - Purple Effect
+				5 - Orange Effect
 
 IgnoreDiscount: Whether the item can be affected by the discount skill of Merchant/Rogue or not.
 
@@ -331,13 +347,13 @@ Trade: Item trade restrictions. If this block is omitted, the item will have no
 		          restrictions. This is an integer value.
 		nodrop: Item can't be dropped.
 		notrade: Item can't be traded (nor vended).
-		partneroverride: Wedded partners can override the notrade setting.
-		noselltonpc: Item can't be sold to NPCs.
-		nocart: Item can't be placed in the cart.
 		nostorage: Item can't be placed in the storage.
-		nogstorage: Item can't be placed in the guild storage.
+		nocart: Item can't be placed in the cart.
+		noselltonpc: Item can't be sold to NPCs.
 		nomail: Item can't be attached to mail messages.
 		noauction: Item can't be auctioned.
+		nogstorage: Item can't be placed in the guild storage.
+		partneroverride: Wedded partners can override the notrade setting.
 
 Nouse: Defines if an item cannot be used under certain circumstances. If this
        block is omitted, there will be no usage restrictions.
@@ -354,6 +370,7 @@ Nouse: Defines if an item cannot be used under certain circumstances. If this
 Stack: Prevents an item to be stacked more than x times in given
        inventory types. Generally used by 3rd class related skill items.
        Syntax: [amount, type]
+
     Available types:
        1: Character inventory restriction
        2: Character cart restriction
@@ -373,15 +390,10 @@ OnEquipScript: Script to execute when the item is equipped.
 OnUnequipScript: Script to execute when the item is unequipped.
                  Warning, not all item bonuses will work here as expected.
 
+OnRentalStartScript: On item renting script, gets called after item is created in inventory.
+
+OnRentalEndScript: On item rent end/expire script, gets called after item is removed from inventory.
+
 Inherit: This can be used only in item_db2.conf, and if set to true, and the
          item already exists in item_db.conf, all the missing fields will be
          inherited from there rather than using their default values.
-
-ShowDropEffect: Allow showing an effect when the item dropped by a monster. [ZERO client or PACKETVER >= 20180418]
-DropEffectMode: Set attribute for ShowDropEffect. [ZERO client or PACKETVER >= 20180418]
-				0 - Client Based (itemInfo EffectID)
-				1 - White effect
-				2 - Blue effect
-				3 - Yellow effect
-				4 - Purple effect
-				5 - Orange effect
