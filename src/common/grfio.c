@@ -281,7 +281,10 @@ static unsigned long grfio_crc32(const unsigned char *buf, unsigned int len)
 /// @copydoc grfio_interface::decode_zip
 static int grfio_decode_zip(void *dest, unsigned long *dest_len, const void *source, unsigned long source_len)
 {
-	return uncompress(dest, dest_len, source, source_len);
+	const int ret = uncompress(dest, dest_len, source, source_len);
+	if (ret != Z_OK)
+		grfio->report_error(ret);
+	return ret;
 }
 
 /// @copydoc grfio_interface::encode_zip
@@ -293,7 +296,10 @@ static int grfio_encode_zip(void *dest, unsigned long *dest_len, const void *sou
 		/* [Ind/Hercules] */
 		CREATE(dest, unsigned char, *dest_len);
 	}
-	return compress(dest, dest_len, source, source_len);
+	const int ret = compress(dest, dest_len, source, source_len);
+	if (ret != Z_OK)
+		grfio->report_error(ret);
+	return ret;
 }
 
 /* File List Subroutines */
@@ -956,6 +962,26 @@ static void grfio_init(const char *fname)
 	grfio_resourcecheck();
 }
 
+static void grfio_report_error(int err)
+{
+	switch (err) {
+		case Z_OK:
+			return;
+		case Z_BUF_ERROR:
+			ShowError("Zlib buffer error. Probably destination buffer too small\n");
+			break;
+		case Z_MEM_ERROR:
+			ShowError("Zlib buffer error. Insufficient memory\n");
+			break;
+		case Z_DATA_ERROR:
+			ShowError("Zlib buffer error. Compressed data was corrupted\n");
+			break;
+		default:
+			ShowError("Unknown zlib error: %d: %s\n", err, zError(err));
+			break;
+	}
+}
+
 /// Interface base initialization.
 void grfio_defaults(void)
 {
@@ -967,4 +993,5 @@ void grfio_defaults(void)
 	grfio->crc32 = grfio_crc32;
 	grfio->decode_zip = grfio_decode_zip;
 	grfio->encode_zip = grfio_encode_zip;
+	grfio->report_error = grfio_report_error;
 }
