@@ -57,6 +57,7 @@ struct sysinfo_interface {
 	uint32 (*fflags) (void);
 	void (*vcsrevision_reload) (void);
 	bool (*is_superuser) (void);
+	const char *(*zlib) (void);
 	void (*init) (void);
 	void (*final) (void);
 };
