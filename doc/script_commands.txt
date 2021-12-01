@@ -803,6 +803,7 @@ MAX_BANK_ZENY		- Maximum Zeny in the bank
 MAX_BG_MEMBERS		- Maximum BattleGround members
 MAX_CHAT_USERS		- Maximum Chat users
 MAX_REFINE			- Maximum Refine level
+MAX_ITEM_GRADE		- Maximum Grade level
 MAX_ITEM_ID			- Maximum Item ID
 MAX_MENU_OPTIONS    - Maximum NPC menu options
 MAX_MENU_LENGTH     - Maximum NPC menu string length
@@ -1374,6 +1375,42 @@ for more details.
 
 ---------------------------------------
 
+*zmes1f("<format>"{, <param>{, <param>{, ...}}})
+
+This command will displays a box on the screen for the invoking character, with zero ui at bottom.
+Works same as *mesf* except zero ui.
+
+Works only in zero clients starting from 20210721.
+
+---------------------------------------
+
+*zmes2f("<format>"{, <param>{, <param>{, ...}}})
+
+This command will displays a box on the screen for the invoking character, with zero ui at center.
+Works same as *mesf* except zero ui.
+
+Works only in zero clients starting from 20210721.
+
+---------------------------------------
+
+*zmes1("<string>")
+
+This command will displays a box on the screen for the invoking character, with zero ui at bottom.
+Works same as *mes* except zero ui.
+
+Works only in zero clients starting from 20210721.
+
+---------------------------------------
+
+*zmes2("<string>")
+
+This command will displays a box on the screen for the invoking character, with zero ui at center.
+Works same as *mes* except zero ui.
+
+Works only in zero clients starting from 20210721.
+
+---------------------------------------
+
 *next()
 
 This command will display a 'next' button in the message window for the
@@ -1721,6 +1758,13 @@ perfectly equivalent.
 
 ---------------------------------------
 
+*zmenu("<option_text>", <target_label>{, "<option_text>", <target_label>, ...})
+
+Same as *menu* but for zero npc dialogs.
+Works only in zero clients starting from 20210721.
+
+---------------------------------------
+
 *select("<option>"{, "<option>", ...})
 
 This function is a handy replacement for 'menu' that doesn't use a complex
@@ -1735,11 +1779,25 @@ and empty options.
 
 ---------------------------------------
 
+*zselect("<option>"{, "<option>", ...})
+
+Same as *select* but for zero npc dialogs.
+Works only in zero clients starting from 20210721.
+
+---------------------------------------
+
 *prompt("<option>"{, "<option>", ...})
 
 This function behaves exactly like select(), but when a player presses cancel
 it returns MAX_MENU_OPTIONS and the script is not terminated. You almost always
 want to use select() rather than prompt().
+
+---------------------------------------
+
+*zprompt("<option>"{, "<option>", ...})
+
+Same as *prompt* but for zero npc dialogs.
+Works only in zero clients starting from 20210721.
 
 ---------------------------------------
 
@@ -3262,6 +3320,7 @@ recreate these items perfectly if they are destroyed. Here's what you get:
 @inventorylist_amount[]        - their corresponding item amounts.
 @inventorylist_equip[]         - will return the slot the item is equipped on, if at all.
 @inventorylist_refine[]        - for how much it is refined.
+@inventorylist_grade[]         - for grade levels.
 @inventorylist_identify[]      - whether it is identified.
 @inventorylist_attribute[]     - whether it is broken.
 @inventorylist_card1[]         - These four arrays contain card data for the items.
@@ -3300,6 +3359,7 @@ recreate these items perfectly if they are destroyed. Here's what you get:
 @cartinventorylist_id[]            - array of item ids.
 @cartinventorylist_amount[]        - their corresponding item amounts.
 @cartinventorylist_refine[]        - for how much it is refined.
+@cartinventorylist_grade[]         - for grade levels.
 @cartinventorylist_identify[]      - whether it is identified.
 @cartinventorylist_attribute[]     - whether it is broken.
 @cartinventorylist_card1[]         - These four arrays contain card data for the items.
@@ -3429,6 +3489,7 @@ Valid types are:
 	ITEMINFO_CLASS_BASE_3            - Class base 3
 	ITEMINFO_CLASS_UPPER             - Class Upper
 	ITEMINFO_FLAG_NO_REFINE          - No refine flag
+	ITEMINFO_FLAG_NO_GRADE           - No grade flag
 	ITEMINFO_FLAG_DELAY_CONSUME      - Delay consume flag
 	ITEMINFO_FLAG_AUTOEQUIP          - Auto equip flag
 	ITEMINFO_FLAG_AUTO_FAVORITE      - Auto favorite flag
@@ -10814,3 +10875,38 @@ Opens lapine ddukddak upgrade user interface for the player
 returns true on success and false on failure
 
 ---------------------------------------
+*getgrade()
+
+This function will return the grade level of the equipment from which
+the function is called. This function is intended for use in item scripts.
+
+	if (getgrade() == 1)
+		mes("Wow. That's a 1st grade weapon.");
+
+---------------------------------------
+*getequipisenablegrade(<equipment slot>)
+
+Will return true if the item equipped on the invoking character in the
+specified equipment slot is gradable, and false if it isn't. For a list
+of equipment slots see getequipid().
+
+---------------------------------------
+*getequipgrade(<equipment slot>);
+
+Gets the grade level of an equipment.
+
+---------------------------------------
+*setdialogalign(<align>);
+
+Set vertical or horizontal align in npc dialog.
+Valid aligns:
+horizontal align:
+ DIALOG_ALIGN_LEFT
+ DIALOG_ALIGN_RIGHT
+ DIALOG_ALIGN_CENTER
+vertical align:
+ DIALOG_ALIGN_TOP
+ DIALOG_ALIGN_MIDDLE
+ DIALOG_ALIGN_BOTTOM
+
+Works from clients: main 20210203, re 20211103

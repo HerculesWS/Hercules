@@ -667,6 +667,11 @@ enum action_type {
 	ACT_TOUCHSKILL
 };
 
+enum unequip_all {
+	TAKEOFF_EQUIP_ALL_SUCCESS = 0,
+	TAKEOFF_EQUIP_ALL_FAILED = 1
+};
+
 /**
  * Structures
  **/
@@ -862,6 +867,7 @@ struct clif_interface {
 	void (*cart_delitem) (struct map_session_data *sd,int n,int amount);
 	void (*equipitemack) (struct map_session_data *sd,int n,int pos,enum e_EQUIP_ITEM_ACK result);
 	void (*unequipitemack) (struct map_session_data *sd,int n,int pos,enum e_UNEQUIP_ITEM_ACK result);
+	void (*unequipAllItemsAck) (struct map_session_data *sd, enum unequip_all result);
 	void (*useitemack) (struct map_session_data *sd,int index,int amount,bool ok);
 	void (*addcards) (struct EQUIPSLOTINFO *buf, struct item* item);
 	void (*item_sub) (unsigned char *buf, int n, struct item *i, struct item_data *id, int equip);
@@ -926,9 +932,12 @@ struct clif_interface {
 	void (*cashshop_ack) (struct map_session_data* sd, int error);
 	/* npc-script-related */
 	void (*scriptmes) (struct map_session_data *sd, int npcid, const char *mes);
+	void (*zc_say_dialog_zero1) (struct map_session_data *sd, int npcid, const char *mes);
+	void (*zc_say_dialog_zero2) (struct map_session_data *sd, int npcid, const char *mes);
 	void (*scriptnext) (struct map_session_data *sd,int npcid);
 	void (*scriptclose) (struct map_session_data *sd, int npcid);
 	void (*scriptmenu) (struct map_session_data* sd, int npcid, const char* mes);
+	void (*zc_menu_list_zero) (struct map_session_data* sd, int npcid, const char* mes);
 	void (*scriptinput) (struct map_session_data *sd, int npcid);
 	void (*scriptinputstr) (struct map_session_data *sd, int npcid);
 	void (*cutin) (struct map_session_data* sd, const char* image, int type);
@@ -1009,7 +1018,7 @@ struct clif_interface {
 	void (*monster_hp_bar) (struct mob_data *md, struct map_session_data *sd);
 	bool (*show_monster_hp_bar) (struct block_list *bl);
 	int (*hpmeter) (struct map_session_data *sd);
-	void (*hpmeter_single) (int fd, int id, unsigned int hp, unsigned int maxhp);
+	void (*hpmeter_single) (int fd, int id, unsigned int hp, unsigned int maxhp, unsigned int sp, unsigned int maxsp);
 	int (*hpmeter_sub) (struct block_list *bl, va_list ap);
 	void (*upgrademessage) (int fd, int result, int item_id);
 	void (*get_weapon_view) (struct map_session_data* sd, int *rhand, int *lhand);
@@ -1419,6 +1428,7 @@ struct clif_interface {
 	void (*pUseItem) (int fd, struct map_session_data *sd);
 	void (*pEquipItem) (int fd,struct map_session_data *sd);
 	void (*pUnequipItem) (int fd,struct map_session_data *sd);
+	void (*pUnequipAllItems) (int fd,struct map_session_data *sd);
 	void (*pNpcClicked) (int fd,struct map_session_data *sd);
 	void (*pNpcBuySellSelected) (int fd,struct map_session_data *sd);
 	void (*pNpcBuyListSend) (int fd, struct map_session_data* sd);
@@ -1457,9 +1467,11 @@ struct clif_interface {
 	void (*pRequestMemo) (int fd,struct map_session_data *sd);
 	void (*pProduceMix) (int fd,struct map_session_data *sd);
 	void (*pCooking) (int fd,struct map_session_data *sd);
-	void (*pRepairItem) (int fd, struct map_session_data *sd);
+	void (*pRepairItem1) (int fd, struct map_session_data *sd);
+	void (*pRepairItem2) (int fd, struct map_session_data *sd);
 	void (*pWeaponRefine) (int fd, struct map_session_data *sd);
 	void (*pNpcSelectMenu) (int fd,struct map_session_data *sd);
+	void (*pNpcSelectMenuZero) (int fd,struct map_session_data *sd);
 	void (*pNpcNextClicked) (int fd,struct map_session_data *sd);
 	void (*pNpcAmountInput) (int fd,struct map_session_data *sd);
 	void (*pNpcStringInput) (int fd, struct map_session_data* sd);
@@ -1668,7 +1680,8 @@ struct clif_interface {
 	void (*pRodexCloseMailbox) (int fd, struct map_session_data *sd);
 	void (*pRodexCancelWriteMail) (int fd, struct map_session_data *sd);
 	void (*pRodexOpenMailbox) (int fd, struct map_session_data *sd);
-	void (*pRodexCheckName) (int fd, struct map_session_data *sd);
+	void (*pRodexCheckName1) (int fd, struct map_session_data *sd);
+	void (*pRodexCheckName2) (int fd, struct map_session_data *sd);
 	void (*rodex_checkname_result) (struct map_session_data *sd, int char_id, int class_, int base_level, const char *name);
 	void (*pRodexDeleteMail) (int fd, struct map_session_data *sd);
 	void (*rodex_delete_mail) (struct map_session_data *sd, int8 opentype, int64 mail_id);
@@ -1774,6 +1787,8 @@ struct clif_interface {
 	void (*pMacroReporterAck) (int fd, struct map_session_data *sd);
 	void (*macro_reporter_select) (struct map_session_data *sd, const struct macroaidlist *aid_list);
 	void (*macro_reporter_status) (struct map_session_data *sd, enum macro_report_status stype);
+
+	void (*sayDialogAlign) (struct map_session_data *sd, int npcid, enum say_dialog_align align);
 };
 
 #ifdef HERCULES_CORE

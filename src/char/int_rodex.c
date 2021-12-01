@@ -144,7 +144,7 @@ static int inter_rodex_fromsql(int char_id, int account_id, int8 opentype, int64
 
 		StrBuf->Init(&buf);
 
-		StrBuf->AppendStr(&buf, "SELECT `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `expire_time`, `bound`, `unique_id`");
+		StrBuf->AppendStr(&buf, "SELECT `nameid`, `amount`, `equip`, `identify`, `refine`, `grade`, `attribute`, `expire_time`, `bound`, `unique_id`");
 		for (i = 0; i < MAX_SLOTS; i++) {
 			StrBuf->Printf(&buf, ", `card%d`", i);
 		}
@@ -169,20 +169,21 @@ static int inter_rodex_fromsql(int char_id, int account_id, int8 opentype, int64
 				 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 2,  SQLDT_UINT,   &it.equip,           sizeof it.equip,       NULL, NULL)
 				 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 3,  SQLDT_CHAR,   &it.identify,        sizeof it.identify,    NULL, NULL)
 				 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 4,  SQLDT_CHAR,   &it.refine,          sizeof it.refine,      NULL, NULL)
-				 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 5,  SQLDT_CHAR,   &it.attribute,       sizeof it.attribute,   NULL, NULL)
-				 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 6,  SQLDT_UINT,   &it.expire_time,     sizeof it.expire_time, NULL, NULL)
-				 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 7,  SQLDT_UCHAR,  &it.bound,           sizeof it.bound,       NULL, NULL)
-				 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 8,  SQLDT_UINT64, &it.unique_id,       sizeof it.unique_id,   NULL, NULL)
+				 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 5,  SQLDT_CHAR,   &it.grade,           sizeof it.grade,       NULL, NULL)
+				 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 6,  SQLDT_CHAR,   &it.attribute,       sizeof it.attribute,   NULL, NULL)
+				 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 7,  SQLDT_UINT,   &it.expire_time,     sizeof it.expire_time, NULL, NULL)
+				 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 8,  SQLDT_UCHAR,  &it.bound,           sizeof it.bound,       NULL, NULL)
+				 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 9,  SQLDT_UINT64, &it.unique_id,       sizeof it.unique_id,   NULL, NULL)
 				) {
 					SqlStmt_ShowDebug(stmt_items);
 				}
 				for (i = 0; i < MAX_SLOTS; i++) {
-					if (SQL_ERROR == SQL->StmtBindColumn(stmt_items, 9 + i, SQLDT_INT, &it.card[i], sizeof it.card[i], NULL, NULL))
+					if (SQL_ERROR == SQL->StmtBindColumn(stmt_items, 10 + i, SQLDT_INT, &it.card[i], sizeof it.card[i], NULL, NULL))
 						SqlStmt_ShowDebug(stmt_items);
 				}
 				for (i = 0; i < MAX_ITEM_OPTIONS; i++) {
-					if (SQL_ERROR == SQL->StmtBindColumn(stmt_items, 9 + MAX_SLOTS + i * 2, SQLDT_INT16, &it.option[i].index, sizeof it.option[i].index, NULL, NULL)
-					 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 10 + MAX_SLOTS + i * 2, SQLDT_INT16, &it.option[i].value, sizeof it.option[i].value, NULL, NULL)
+					if (SQL_ERROR == SQL->StmtBindColumn(stmt_items, 10 + MAX_SLOTS + i * 2, SQLDT_INT16, &it.option[i].index, sizeof it.option[i].index, NULL, NULL)
+					 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 11 + MAX_SLOTS + i * 2, SQLDT_INT16, &it.option[i].value, sizeof it.option[i].value, NULL, NULL)
 					) {
 						SqlStmt_ShowDebug(stmt_items);
 					}
@@ -331,10 +332,10 @@ static int64 inter_rodex_savemessage(struct rodex_message *msg)
 			continue;
 
 		if (SQL_ERROR == SQL->Query(inter->sql_handle, "INSERT INTO `%s` (`mail_id`, `nameid`, `amount`, `equip`, `identify`,"
-			"`refine`, `attribute`, `card0`, `card1`, `card2`, `card3`, `opt_idx0`, `opt_val0`, `opt_idx1`, `opt_val1`, `opt_idx2`,"
+			"`refine`, `grade`, `attribute`, `card0`, `card1`, `card2`, `card3`, `opt_idx0`, `opt_val0`, `opt_idx1`, `opt_val1`, `opt_idx2`,"
 			"`opt_val2`, `opt_idx3`, `opt_val3`, `opt_idx4`, `opt_val4`,`expire_time`, `bound`, `unique_id`) VALUES "
-			"('%"PRId64"', '%d', '%d', '%u', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%u', '%u', '%"PRIu64"')",
-			rodex_item_db, msg->id, it->nameid, it->amount, it->equip, it->identify, it->refine, it->attribute, it->card[0], it->card[1], it->card[2], it->card[3],
+			"('%"PRId64"', '%d', '%d', '%u', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%u', '%u', '%"PRIu64"')",
+			rodex_item_db, msg->id, it->nameid, it->amount, it->equip, it->identify, it->refine, it->grade, it->attribute, it->card[0], it->card[1], it->card[2], it->card[3],
 			it->option[0].index, it->option[0].value, it->option[1].index, it->option[1].value, it->option[2].index, it->option[2].value, it->option[3].index,
 			it->option[3].value, it->option[4].index, it->option[4].value, it->expire_time, it->bound, it->unique_id)
 			) {
@@ -404,7 +405,7 @@ static int inter_rodex_getitems(int64 mail_id, struct rodex_item *items)
 		StringBuf buf;
 		StrBuf->Init(&buf);
 
-		StrBuf->AppendStr(&buf, "SELECT `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `expire_time`, `bound`, `unique_id`");
+		StrBuf->AppendStr(&buf, "SELECT `nameid`, `amount`, `equip`, `identify`, `refine`, `grade`, `attribute`, `expire_time`, `bound`, `unique_id`");
 		for (int i = 0; i < MAX_SLOTS; i++) {
 			StrBuf->Printf(&buf, ", `card%d`", i);
 		}
@@ -427,20 +428,21 @@ static int inter_rodex_getitems(int64 mail_id, struct rodex_item *items)
 				 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 2,  SQLDT_UINT,   &it.equip,           sizeof it.equip,       NULL, NULL)
 				 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 3,  SQLDT_CHAR,   &it.identify,        sizeof it.identify,    NULL, NULL)
 				 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 4,  SQLDT_CHAR,   &it.refine,          sizeof it.refine,      NULL, NULL)
-				 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 5,  SQLDT_CHAR,   &it.attribute,       sizeof it.attribute,   NULL, NULL)
-				 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 6,  SQLDT_UINT,   &it.expire_time,     sizeof it.expire_time, NULL, NULL)
-				 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 7,  SQLDT_UCHAR,  &it.bound,           sizeof it.bound,       NULL, NULL)
-				 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 8,  SQLDT_UINT64, &it.unique_id,       sizeof it.unique_id,   NULL, NULL)
+				 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 5,  SQLDT_CHAR,   &it.grade,           sizeof it.grade,       NULL, NULL)
+				 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 6,  SQLDT_CHAR,   &it.attribute,       sizeof it.attribute,   NULL, NULL)
+				 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 7,  SQLDT_UINT,   &it.expire_time,     sizeof it.expire_time, NULL, NULL)
+				 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 8,  SQLDT_UCHAR,  &it.bound,           sizeof it.bound,       NULL, NULL)
+				 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 9,  SQLDT_UINT64, &it.unique_id,       sizeof it.unique_id,   NULL, NULL)
 				) {
 					SqlStmt_ShowDebug(stmt_items);
 				}
 				for (int i = 0; i < MAX_SLOTS; i++) {
-					if (SQL_ERROR == SQL->StmtBindColumn(stmt_items, 9 + i, SQLDT_INT, &it.card[i], sizeof it.card[i], NULL, NULL))
+					if (SQL_ERROR == SQL->StmtBindColumn(stmt_items, 10 + i, SQLDT_INT, &it.card[i], sizeof it.card[i], NULL, NULL))
 						SqlStmt_ShowDebug(stmt_items);
 				}
 				for (int i = 0; i < MAX_ITEM_OPTIONS; i++) {
-					if (SQL_ERROR == SQL->StmtBindColumn(stmt_items, 9 + MAX_SLOTS + i * 2, SQLDT_INT16, &it.option[i].index, sizeof it.option[i].index, NULL, NULL)
-					 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 10 + MAX_SLOTS + i * 2, SQLDT_INT16, &it.option[i].value, sizeof it.option[i].value, NULL, NULL)
+					if (SQL_ERROR == SQL->StmtBindColumn(stmt_items, 10 + MAX_SLOTS + i * 2, SQLDT_INT16, &it.option[i].index, sizeof it.option[i].index, NULL, NULL)
+					 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 11 + MAX_SLOTS + i * 2, SQLDT_INT16, &it.option[i].value, sizeof it.option[i].value, NULL, NULL)
 					) {
 						SqlStmt_ShowDebug(stmt_items);
 					}

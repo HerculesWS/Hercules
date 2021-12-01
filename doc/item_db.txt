@@ -65,6 +65,7 @@ item_db: (
 	EquipLv: Equip required level (int, defaults to 0)
 	EquipLv: [min, max]           (alternative syntax with min / max level)
 	Refine: Refineable            (boolean, defaults to true)
+	Grade: Gradable               (boolean, defaults to false)
 	DisableOptions: true/false    (boolean, defaults to false !!for equipments only!!) [Smokexyz]
 	Subtype: Item Subtype         (int, defaults to 0)
 	ViewSprite: Sprite view ID    (int, defaults to 0)
@@ -258,6 +259,9 @@ EquipLv: Base level required to be able to equip. It is possible to specify
 
 Refineable: true if the item can be refined, false otherwise. If no value is
             specified, it defaults to true.
+
+Gradable: true if the item can be graded, false otherwise. If no value is
+            specified, it defaults to false.
 
 Subtype: For weapons and ammo, indicates the weapon-class of the item.
 

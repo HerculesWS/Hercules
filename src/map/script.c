@@ -6472,6 +6472,86 @@ static BUILDIN(mesf)
 	return true;
 }
 
+/// Appends a message to the npc dialog.
+/// If a dialog doesn't exist yet, one is created.
+///
+/// zmes1 "<message>";
+static BUILDIN(zmes1)
+{
+	struct map_session_data *sd = script->rid2sd(st);
+
+	if (sd == NULL)
+		return true;
+
+	if (script_hasdata(st, 2))
+		clif->zc_say_dialog_zero1(sd, st->oid, script_getstr(st, 2));
+	else
+		clif->zc_say_dialog_zero1(sd, st->oid, "");
+
+	return true;
+}
+
+static BUILDIN(zmes1f)
+{
+	struct map_session_data *sd = script->rid2sd(st);
+	struct StringBuf buf;
+
+	if (sd == NULL)
+		return true;
+
+	StrBuf->Init(&buf);
+
+	if (!script->sprintf_helper(st, 2, &buf)) {
+		StrBuf->Destroy(&buf);
+		return false;
+	}
+
+	clif->zc_say_dialog_zero1(sd, st->oid, StrBuf->Value(&buf));
+	StrBuf->Destroy(&buf);
+
+	return true;
+}
+
+/// Appends a message to the npc dialog.
+/// If a dialog doesn't exist yet, one is created.
+///
+/// zmes2 "<message>";
+static BUILDIN(zmes2)
+{
+	struct map_session_data *sd = script->rid2sd(st);
+
+	if (sd == NULL)
+		return true;
+
+	if (script_hasdata(st, 2))
+		clif->zc_say_dialog_zero2(sd, st->oid, script_getstr(st, 2));
+	else
+		clif->zc_say_dialog_zero2(sd, st->oid, "");
+
+	return true;
+}
+
+static BUILDIN(zmes2f)
+{
+	struct map_session_data *sd = script->rid2sd(st);
+	struct StringBuf buf;
+
+	if (sd == NULL)
+		return true;
+
+	StrBuf->Init(&buf);
+
+	if (!script->sprintf_helper(st, 2, &buf)) {
+		StrBuf->Destroy(&buf);
+		return false;
+	}
+
+	clif->zc_say_dialog_zero2(sd, st->oid, StrBuf->Value(&buf));
+	StrBuf->Destroy(&buf);
+
+	return true;
+}
+
 /// Displays the button 'next' in the npc dialog.
 /// The dialog text is cleared and the script continues when the button is pressed.
 ///
@@ -6606,6 +6686,12 @@ static BUILDIN(menu)
 	// TODO detect multiple scripts waiting for input at the same time, and what to do when that happens
 	if (sd->state.menu_or_input == 0) {
 		struct StringBuf buf;
+		void (*menuFunc) (struct map_session_data* sd, int npcid, const char* mes) = NULL;
+		if (strncmp(get_buildin_name(st), "zmenu", 5) == 0) {
+			menuFunc = clif->zc_menu_list_zero;
+		} else {
+			menuFunc = clif->scriptmenu;
+		}
 
 		if (script_lastdata(st) % 2 == 0) {
 			// argument count is not even (1st argument is at index 2)
@@ -6649,10 +6735,11 @@ static BUILDIN(menu)
 			CREATE(menu, char, MAX_MENU_LENGTH);
 			safestrncpy(menu, StrBuf->Value(&buf), MAX_MENU_LENGTH - 1);
 			ShowWarning("NPC Menu too long! (source:%s / length:%d)\n",nd?nd->name:"Unknown",StrBuf->Length(&buf));
-			clif->scriptmenu(sd, st->oid, menu);
+			menuFunc(sd, st->oid, menu);
 			aFree(menu);
-		} else
-			clif->scriptmenu(sd, st->oid, StrBuf->Value(&buf));
+		} else {
+			menuFunc(sd, st->oid, StrBuf->Value(&buf));
+		}
 
 		StrBuf->Destroy(&buf);
 
@@ -6727,6 +6814,12 @@ static BUILDIN(select)
 
 	if( sd->state.menu_or_input == 0 ) {
 		struct StringBuf buf;
+		void (*menuFunc) (struct map_session_data* sd, int npcid, const char* mes) = NULL;
+		if (strncmp(get_buildin_name(st), "zselect", 7) == 0 || strncmp(get_buildin_name(st), "zprompt", 7) == 0) {
+			menuFunc = clif->zc_menu_list_zero;
+		} else {
+			menuFunc = clif->scriptmenu;
+		}
 
 		StrBuf->Init(&buf);
 		sd->npc_menu = 0;
@@ -6750,10 +6843,11 @@ static BUILDIN(select)
 			CREATE(menu, char, MAX_MENU_LENGTH);
 			safestrncpy(menu, StrBuf->Value(&buf), MAX_MENU_LENGTH - 1);
 			ShowWarning("NPC Menu too long! (source:%s / length:%d)\n",nd?nd->name:"Unknown",StrBuf->Length(&buf));
-			clif->scriptmenu(sd, st->oid, menu);
+			menuFunc(sd, st->oid, menu);
 			aFree(menu);
-		} else
-			clif->scriptmenu(sd, st->oid, StrBuf->Value(&buf));
+		} else {
+			menuFunc(sd, st->oid, StrBuf->Value(&buf));
+		}
 		StrBuf->Destroy(&buf);
 
 		if( sd->npc_menu >= MAX_MENU_OPTIONS ) {
@@ -6763,7 +6857,7 @@ static BUILDIN(select)
 	} else if(sd->npc_menu == MAX_MENU_OPTIONS) { // Cancel was pressed
 		sd->state.menu_or_input = 0;
 
-		if (strncmp(get_buildin_name(st), "prompt", 6) == 0) {
+		if (strncmp(get_buildin_name(st), "prompt", 6) == 0 || strncmp(get_buildin_name(st), "zprompt", 7) == 0) {
 			pc->setreg(sd, script->add_variable("@menu"), MAX_MENU_OPTIONS);
 			script_pushint(st, MAX_MENU_OPTIONS); // XXX: we should really be pushing -1 instead
 			st->state = RUN;
@@ -15646,6 +15740,9 @@ static BUILDIN(getiteminfo)
 	case ITEMINFO_FLAG_NO_REFINE:
 		script_pushint(st, it->flag.no_refine);
 		break;
+	case ITEMINFO_FLAG_NO_GRADE:
+		script_pushint(st, it->flag.no_grade);
+		break;
 	case ITEMINFO_FLAG_DELAY_CONSUME:
 		script_pushint(st, it->flag.delay_consume);
 		break;
@@ -16010,6 +16107,9 @@ static BUILDIN(setiteminfo)
 	case ITEMINFO_FLAG_NO_REFINE:
 		it->flag.no_refine = cap_value(value, 0, MAX_REFINE);
 		break;
+	case ITEMINFO_FLAG_NO_GRADE:
+		it->flag.no_grade = cap_value(value, 0, 1);
+		break;
 	case ITEMINFO_FLAG_DELAY_CONSUME:
 		it->flag.delay_consume = value;
 		break;
@@ -16205,6 +16305,7 @@ static BUILDIN(getinventorylist)
 				pc->setreg(sd, reference_uid(script->add_variable("@inventorylist_equip"), j), 0);
 			}
 			pc->setreg(sd, reference_uid(script->add_variable("@inventorylist_refine"), j), sd->status.inventory[i].refine);
+			pc->setreg(sd, reference_uid(script->add_variable("@inventorylist_grade"), j), sd->status.inventory[i].grade);
 			pc->setreg(sd, reference_uid(script->add_variable("@inventorylist_identify"), j), sd->status.inventory[i].identify);
 			pc->setreg(sd, reference_uid(script->add_variable("@inventorylist_attribute"), j), sd->status.inventory[i].attribute);
 			for (k = 0; k < MAX_SLOTS; k++) {
@@ -16244,6 +16345,7 @@ static BUILDIN(getcartinventorylist)
 			pc->setreg(sd,reference_uid(script->add_variable("@cartinventorylist_amount"), j),sd->status.cart[i].amount);
 			pc->setreg(sd,reference_uid(script->add_variable("@cartinventorylist_equip"), j),sd->status.cart[i].equip);
 			pc->setreg(sd,reference_uid(script->add_variable("@cartinventorylist_refine"), j),sd->status.cart[i].refine);
+			pc->setreg(sd,reference_uid(script->add_variable("@cartinventorylist_grade"), j),sd->status.cart[i].grade);
 			pc->setreg(sd,reference_uid(script->add_variable("@cartinventorylist_identify"), j),sd->status.cart[i].identify);
 			pc->setreg(sd,reference_uid(script->add_variable("@cartinventorylist_attribute"), j),sd->status.cart[i].attribute);
 			for (k = 0; k < MAX_SLOTS; k++) {
@@ -27399,6 +27501,80 @@ BUILDIN(resethate)
 	return true;
 }
 
+static BUILDIN(getgrade)
+{
+	struct map_session_data *sd = script->rid2sd(st);
+
+	if (sd == NULL)
+		return true;
+
+	if (status->current_equip_item_index < 0)
+		script_pushint(st, 0);
+	else
+		script_pushint(st, sd->status.inventory[status->current_equip_item_index].grade);
+	return true;
+}
+
+static BUILDIN(getequipisenablegrade)
+{
+	struct map_session_data *sd = script->rid2sd(st);
+
+	if (sd == NULL)
+		return true;
+
+	int i = -1;
+	const int num = script_getnum(st, 2);
+	if (num > 0 && num <= ARRAYLENGTH(script->equip))
+		i = pc->checkequip(sd, script->equip[num - 1]);
+
+	if (i >= 0 && sd->inventory_data[i] != NULL && sd->inventory_data[i]->flag.no_grade == 0 && sd->status.inventory[i].expire_time == 0)
+		script_pushint(st, 1);
+	else
+		script_pushint(st, 0);
+
+	return true;
+}
+
+static BUILDIN(getequipgrade)
+{
+	struct map_session_data *sd = script->rid2sd(st);
+
+	if (sd == NULL) {
+		script_pushint(st, -1);
+		ShowError("buildin_getequipgrade: Player not attached!\n");
+		return false;
+	}
+
+	int i = -1;
+	const int equip_index = script_getnum(st, 2);
+	if (equip_index > 0 && equip_index <= ARRAYLENGTH(script->equip)) {
+		if ((i = pc->checkequip(sd, script->equip[equip_index - 1])) == -1) {
+			ShowError("buildin_getequipgrade: No equipment is equipped in the given index %d.\n", equip_index);
+			script_pushint(st, -1);
+			return false;
+		}
+	} else {
+		ShowError("buildin_getequipgrade: Invalid equipment index %d provided.\n", equip_index);
+		script_pushint(st, -1);
+		return false;
+	}
+
+	script_pushint(st, sd->status.inventory[i].grade);
+	return true;
+}
+
+static BUILDIN(setdialogalign)
+{
+	struct map_session_data *sd = script->rid2sd(st);
+
+	if (sd == NULL)
+		return true;
+
+	clif->sayDialogAlign(sd, st->oid, script_getnum(st, 2));
+
+	return true;
+}
+
 /**
  * Adds a built-in script function.
  *
@@ -27460,7 +27636,11 @@ static bool script_add_builtin(const struct script_function *buildin, bool overr
 		else if( strcmp(buildin->name, "callfunc") == 0 ) script->buildin_callfunc_ref = n;
 		else if( strcmp(buildin->name, "getelementofarray") == 0 ) script->buildin_getelementofarray_ref = n;
 		else if( strcmp(buildin->name, "mes") == 0 ) script->buildin_mes_offset = script->buildin_count;
+		else if( strcmp(buildin->name, "zmes1") == 0 ) script->buildin_zmes1_offset = script->buildin_count;
+		else if( strcmp(buildin->name, "zmes2") == 0 ) script->buildin_zmes2_offset = script->buildin_count;
 		else if( strcmp(buildin->name, "mesf") == 0 ) script->buildin_mesf_offset = script->buildin_count;
+		else if( strcmp(buildin->name, "zmes1f") == 0 ) script->buildin_zmes1f_offset = script->buildin_count;
+		else if( strcmp(buildin->name, "zmes2f") == 0 ) script->buildin_zmes2f_offset = script->buildin_count;
 		else if( strcmp(buildin->name, "select") == 0 ) script->buildin_select_offset = script->buildin_count;
 		else if( strcmp(buildin->name, "_") == 0 ) script->buildin_lang_macro_offset = script->buildin_count;
 		else if( strcmp(buildin->name, "_$") == 0 ) script->buildin_lang_macro_fmtstring_offset = script->buildin_count;
@@ -27623,14 +27803,22 @@ static void script_parse_builtin(void)
 
 		// NPC interaction
 		BUILDIN_DEF(mes, "?"),
+		BUILDIN_DEF(zmes1, "?"),
+		BUILDIN_DEF(zmes2, "?"),
 		BUILDIN_DEF(mesf, "s*"),
+		BUILDIN_DEF(zmes1f, "s*"),
+		BUILDIN_DEF(zmes2f, "s*"),
 		BUILDIN_DEF(next,""),
 		BUILDIN_DEF(mesclear,""),
 		BUILDIN_DEF(close,""),
 		BUILDIN_DEF(close2,""),
 		BUILDIN_DEF(menu,"sl*"),
+		BUILDIN_DEF2(menu, "zmenu", "sl*"),
 		BUILDIN_DEF(select,"s*"), //for future jA script compatibility
 		BUILDIN_DEF2(select, "prompt", "s*"),
+		BUILDIN_DEF2(select, "zselect", "s*"),
+		BUILDIN_DEF2(select, "zprompt", "s*"),
+		BUILDIN_DEF(setdialogalign,"i"),
 		//
 		BUILDIN_DEF(goto,"l"),
 		BUILDIN_DEF(callsub,"l*"),
@@ -28234,6 +28422,10 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(openlapineupgradeui, "i"),
 
 		BUILDIN_DEF(callfunctionofnpc, "vs*"),
+
+		BUILDIN_DEF(getgrade, ""),
+		BUILDIN_DEF(getequipisenablegrade, "i"),
+		BUILDIN_DEF(getequipgrade, "i"),
 	};
 	int i, len = ARRAYLENGTH(BUILDIN);
 	RECREATE(script->buildin, char *, script->buildin_count + len); // Pre-alloc to speed up
@@ -28283,6 +28475,7 @@ static void script_hardcoded_constants(void)
 	script->set_constant("MAX_BG_MEMBERS", MAX_BG_MEMBERS, false, false);
 	script->set_constant("MAX_CHAT_USERS", MAX_CHAT_USERS, false, false);
 	script->set_constant("MAX_REFINE", MAX_REFINE, false, false);
+	script->set_constant("MAX_ITEM_GRADE", MAX_ITEM_GRADE, false, false);
 	script->set_constant("MAX_ITEM_ID", MAX_ITEM_ID, false, false);
 	script->set_constant("MAX_MENU_OPTIONS", MAX_MENU_OPTIONS, false, false);
 	script->set_constant("MAX_MENU_LENGTH", MAX_MENU_LENGTH, false, false);
@@ -28577,6 +28770,7 @@ static void script_hardcoded_constants(void)
 	script->set_constant("ITEMINFO_CLASS_BASE_3", ITEMINFO_CLASS_BASE_3, false, false);
 	script->set_constant("ITEMINFO_CLASS_UPPER", ITEMINFO_CLASS_UPPER, false, false);
 	script->set_constant("ITEMINFO_FLAG_NO_REFINE", ITEMINFO_FLAG_NO_REFINE, false, false);
+	script->set_constant("ITEMINFO_FLAG_NO_GRADE", ITEMINFO_FLAG_NO_GRADE, false, false);
 	script->set_constant("ITEMINFO_FLAG_DELAY_CONSUME", ITEMINFO_FLAG_DELAY_CONSUME, false, false);
 	script->set_constant("ITEMINFO_FLAG_AUTOEQUIP", ITEMINFO_FLAG_AUTOEQUIP, false, false);
 	script->set_constant("ITEMINFO_FLAG_AUTO_FAVORITE", ITEMINFO_FLAG_AUTO_FAVORITE, false, false);
@@ -29115,6 +29309,14 @@ static void script_hardcoded_constants(void)
 	script->set_constant("MOBG_BLOODY_BRANCH", MOBG_BLOODY_BRANCH, false, false);
 	script->set_constant("MOBG_POUCH", MOBG_POUCH, false, false);
 	script->set_constant("MOBG_CLASS_CHANGE", MOBG_CLASS_CHANGE, false, false);
+
+	script->constdb_comment("Npc dialog text align");
+	script->set_constant("DIALOG_ALIGN_LEFT", DIALOG_ALIGN_LEFT, false, false);
+	script->set_constant("DIALOG_ALIGN_RIGHT", DIALOG_ALIGN_RIGHT, false, false);
+	script->set_constant("DIALOG_ALIGN_CENTER", DIALOG_ALIGN_CENTER, false, false);
+	script->set_constant("DIALOG_ALIGN_TOP", DIALOG_ALIGN_TOP, false, false);
+	script->set_constant("DIALOG_ALIGN_MIDDLE", DIALOG_ALIGN_MIDDLE, false, false);
+	script->set_constant("DIALOG_ALIGN_BOTTOM", DIALOG_ALIGN_BOTTOM, false, false);
 
 	script->constdb_comment("Renewal");
 #ifdef RENEWAL

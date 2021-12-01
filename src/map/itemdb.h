@@ -76,6 +76,10 @@ struct hplugin_data_store;
 #error "For clients before 20181121 Main and 20180704 RE and 20181114 zero, MAX_ITEM_ID must be smaller than 0x10000"
 #endif
 
+#ifndef MAX_ITEM_GRADE
+#define MAX_ITEM_GRADE 7
+#endif
+
 enum item_itemid {
 	ITEMID_RED_POTION            = 501,
 	ITEMID_YELLOW_POTION         = 503,
@@ -556,6 +560,7 @@ struct item_data {
 	struct {
 		unsigned available : 1;
 		unsigned no_refine : 1; // [celest]
+		unsigned no_grade : 1;
 		unsigned delay_consume : 1;     ///< Signifies items that are not consumed immediately upon double-click [Skotlex]
 		unsigned trade_restriction : 9; ///< Item trade restrictions mask (@see enum ItemTradeRestrictions)
 		unsigned autoequip : 1;

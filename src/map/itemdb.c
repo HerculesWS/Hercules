@@ -2187,6 +2187,9 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 	if( (t = libconfig->setting_get_member(it, "Refine")) )
 		id.flag.no_refine = libconfig->setting_get_bool(t) ? 0 : 1;
 
+	if( (t = libconfig->setting_get_member(it, "Grade")) )
+		id.flag.no_grade = libconfig->setting_get_bool(t) ? 1 : 0;
+
 	if ((t = libconfig->setting_get_member(it, "DisableOptions")))
 		id.flag.no_options = libconfig->setting_get_bool(t) ? 1 : 0;
 

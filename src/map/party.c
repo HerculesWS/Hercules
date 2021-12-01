@@ -550,7 +550,7 @@ static int party_member_added(int party_id, int account_id, int char_id, int fla
 	{// hp of the other party members
 		sd2 = p->data[i].sd;
 		if( sd2 && sd2->status.account_id != account_id && sd2->status.char_id != char_id )
-			clif->hpmeter_single(sd->fd, sd2->bl.id, sd2->battle_status.hp, sd2->battle_status.max_hp);
+			clif->hpmeter_single(sd->fd, sd2->bl.id, sd2->battle_status.hp, sd2->battle_status.max_hp, sd2->battle_status.sp, sd2->battle_status.max_sp);
 	}
 	clif->party_hp(sd);
 	clif->party_xy(sd);

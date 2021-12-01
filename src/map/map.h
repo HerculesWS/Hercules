@@ -910,6 +910,18 @@ enum map_zone_merge_type {
 	MZMT_NEVERMERGE, ///< Cannot merge with any zones.
 };
 
+/**
+ * align for packet ZC_SAY_DIALOG_ALIGN
+ **/
+enum say_dialog_align {
+	DIALOG_ALIGN_LEFT   = 0,
+	DIALOG_ALIGN_RIGHT  = 1,
+	DIALOG_ALIGN_CENTER = 2,
+	DIALOG_ALIGN_TOP    = 3,
+	DIALOG_ALIGN_MIDDLE = 4,
+	DIALOG_ALIGN_BOTTOM = 5
+};
+
 struct map_zone_data {
 	char name[MAP_ZONE_NAME_LENGTH];/* 20'd */
 	enum map_zone_merge_type merge_type;

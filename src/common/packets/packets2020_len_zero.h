@@ -3,7 +3,7 @@
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
  * Copyright (C) 2018-2021 Hercules Dev Team
- * Copyright (C) 2018-2020 Andrei Karas (4144)
+ * Copyright (C) 2018-2021 Andrei Karas (4144)
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -4257,6 +4257,11 @@ packetLen(0x0aef, 2)
 // Packet: 0x0af0
 packetLen(0x0af0, 10)
 
+// Packet: 0x0af1
+#if PACKETVER >= 20200902
+packetLen(0x0af1, 102)
+#endif
+
 // Packet: 0x0af2
 packetLen(0x0af2, 40)
 
@@ -4703,6 +4708,113 @@ packetLen(0x0b7f, 10)
 // Packet: 0x0b80
 #if PACKETVER >= 20200701
 packetLen(0x0b80, 10)
+#endif
+
+// Packet: 0x0b8c
+#if PACKETVER >= 20200902
+packetLen(0x0b8c, -1)
+#endif
+
+// Packet: 0x0b8d
+#if PACKETVER >= 20200902
+packetLen(0x0b8d, -1)
+#endif
+
+// Packet: 0x0b8e
+#if PACKETVER >= 20201118
+packetLen(0x0b8e, 18)
+#elif PACKETVER >= 20200902
+packetLen(0x0b8e, 10)
+#endif
+
+// Packet: 0x0b8f
+#if PACKETVER >= 20201118
+packetLen(0x0b8f, 6)
+#endif
+
+// Packet: 0x0b90
+#if PACKETVER >= 20201118
+packetLen(0x0b90, 2)
+#endif
+
+// Packet: 0x0b91
+#if PACKETVER >= 20201118
+packetLen(0x0b91, 8)
+#endif
+
+// Packet: 0x0b92
+#if PACKETVER >= 20201118
+packetLen(0x0b92, 5)
+#endif
+
+// Packet: 0x0b93
+#if PACKETVER >= 20201118
+packetLen(0x0b93, 12)
+#endif
+
+// Packet: 0x0b94
+#if PACKETVER >= 20201118
+packetLen(0x0b94, 14)
+#endif
+
+// Packet: 0x0b95
+#if PACKETVER >= 20201118
+packetLen(0x0b95, -1)
+#endif
+
+// Packet: 0x0b96
+#if PACKETVER >= 20201118
+packetLen(0x0b96, 26)
+#endif
+
+// Packet: 0x0b97
+#if PACKETVER >= 20201118
+packetLen(0x0b97, 27)
+#endif
+
+// Packet: 0x0b98
+#if PACKETVER >= 20201118
+packetLen(0x0b98, 6)
+#endif
+
+// Packet: 0x0b99
+#if PACKETVER >= 20201118
+packetLen(0x0b99, 10)
+#endif
+
+// Packet: 0x0b9a
+#if PACKETVER >= 20201118
+packetLen(0x0b9a, 11)
+#endif
+
+// Packet: 0x0b9b
+#if PACKETVER >= 20201118
+packetLen(0x0b9b, 12)
+#endif
+
+// Packet: 0x0b9c
+#if PACKETVER >= 20201118
+packetLen(0x0b9c, 16)
+#endif
+
+// Packet: 0x0b9d
+#if PACKETVER >= 20201118
+packetLen(0x0b9d, 14)
+#endif
+
+// Packet: 0x0b9e
+#if PACKETVER >= 20201118
+packetLen(0x0b9e, 12)
+#endif
+
+// Packet: 0x0b9f
+#if PACKETVER >= 20201118
+packetLen(0x0b9f, 10)
+#endif
+
+// Packet: 0x0ba0
+#if PACKETVER >= 20201118
+packetLen(0x0ba0, 2)
 #endif
 
 

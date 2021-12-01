@@ -156,7 +156,7 @@ packet(0x01e8,clif->pCreateParty2,2);
 packet(0x01ed,clif->pNoviceExplosionSpirits,0);
 packet(0x01f7,clif->pAdopt_reply,0);
 packet(0x01f9,clif->pAdopt_request,0);
-packet(0x01fd,clif->pRepairItem,2);
+packet(0x01fd,clif->pRepairItem1,2);
 packet(0x0202,clif->pFriendsListAdd,2);  // CZ_ADD_FRIENDS
 packet(0x0203,clif->pFriendsListRemove,2,6);
 packet(0x0208,clif->pFriendsListReply,2,6,10);
@@ -582,7 +582,7 @@ packet(0x96e,clif->ackmergeitems);
 
 //2007-05-07aSakexe
 #if PACKETVER >= 20070507
-	packet(0x01fd,clif->pRepairItem,2);
+	packet(0x01fd,clif->pRepairItem1,2);
 #endif
 
 //2007-02-27aSakexe to 2007-10-02aSakexe
@@ -866,7 +866,7 @@ packet(0x96e,clif->ackmergeitems);
 
 //2012-04-10aRagexeRE
 #if PACKETVER >= 20120410
-	packet(0x01FD,clif->pRepairItem,2);
+	packet(0x01FD,clif->pRepairItem1,2);
 	packet(0x089C,clif->pFriendsListAdd,2);  // CZ_ADD_FRIENDS
 	packet(0x0885,clif->pHomMenu,2,4);  // CZ_COMMAND_MER
 	packet(0x0961,clif->pStoragePassword,0);  // CZ_ACK_STORE_PASSWORD
@@ -1712,17 +1712,16 @@ packet(0x96e,clif->ackmergeitems);
 #if PACKETVER >= 20140416
 // new packets
 	packet(0x0a04,clif->pRodexAddItem); // CZ_REQ_ADD_ITEM_RODEX
-	packet(0x0a13,clif->pRodexCheckName); // CZ_CHECK_RECEIVE_CHARACTER_NAME
 // changed packet sizes
 	packet(0x0a06,clif->pRodexRemoveItem); // CZ_REQ_REMOVE_RODEX_ITEM
 	packet(0x0a08,clif->pRodexOpenWriteMail); // CZ_REQ_OPEN_WRITE_RODEX
 #endif
 
-// 2014-04-23aRagexeRE
+// 2014-04-23aRagexe, 2014-04-23aRagexeRE
 #if PACKETVER >= 20140423
 // new packets
 // changed packet sizes
-	packet(0x0a13,clif->pRodexCheckName); // CZ_CHECK_RECEIVE_CHARACTER_NAME
+	packet(0x0a13,clif->pRodexCheckName1); // CZ_CHECK_RECEIVE_CHARACTER_NAME
 #endif
 
 // 2014-04-30aRagexeRE
@@ -1907,7 +1906,7 @@ packet(0x96e,clif->ackmergeitems);
 // changed packet sizes
 	packet(0x018e,clif->pProduceMix); // CZ_REQMAKINGITEM
 	packet(0x01ae,clif->pSelectArrow,2); // CZ_REQ_MAKINGARROW
-	packet(0x01fd,clif->pRepairItem); // CZ_REQ_ITEMREPAIR
+	packet(0x01fd,clif->pRepairItem1); // CZ_REQ_ITEMREPAIR
 	packet(0x025b,clif->pCooking); // CZ_REQ_MAKINGITEM
 	packet(0x0445,clif->pDull/*,XXX*/); // CZ_SIMPLE_BUY_CASH_POINT_ITEM
 	packet(0x09ae,clif->pDull/*,XXX*/); // CZ_REQ_APPLY_BARGAIN_SALE_ITEM
@@ -1922,7 +1921,7 @@ packet(0x96e,clif->ackmergeitems);
 // changed packet sizes
 	packet(0x018e,clif->pProduceMix); // CZ_REQMAKINGITEM
 	packet(0x01ae,clif->pSelectArrow,2); // CZ_REQ_MAKINGARROW
-	packet(0x01fd,clif->pRepairItem); // CZ_REQ_ITEMREPAIR
+	packet(0x01fd,clif->pRepairItem1); // CZ_REQ_ITEMREPAIR
 	packet(0x025b,clif->pCooking); // CZ_REQ_MAKINGITEM
 	packet(0x0445,clif->pDull/*,XXX*/); // CZ_SIMPLE_BUY_CASH_POINT_ITEM
 	packet(0x09ae,clif->pDull/*,XXX*/); // CZ_REQ_APPLY_BARGAIN_SALE_ITEM
@@ -1937,7 +1936,7 @@ packet(0x96e,clif->ackmergeitems);
 // changed packet sizes
 	packet(0x018e,clif->pProduceMix); // CZ_REQMAKINGITEM
 	packet(0x01ae,clif->pSelectArrow,2); // CZ_REQ_MAKINGARROW
-	packet(0x01fd,clif->pRepairItem); // CZ_REQ_ITEMREPAIR
+	packet(0x01fd,clif->pRepairItem1); // CZ_REQ_ITEMREPAIR
 	packet(0x025b,clif->pCooking); // CZ_REQ_MAKINGITEM
 	packet(0x0445,clif->pDull/*,XXX*/); // CZ_SIMPLE_BUY_CASH_POINT_ITEM
 	packet(0x09ae,clif->pDull/*,XXX*/); // CZ_REQ_APPLY_BARGAIN_SALE_ITEM
@@ -2010,5 +2009,21 @@ packet(0x96e,clif->ackmergeitems);
 #if PACKETVER >= 20160330
 	packet(0x0a6c,clif->pMacroReporterSelect);
 #endif
+
+#if PACKETVER >= 20191224
+	packet(0x0b66,clif->pRepairItem2);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20201104 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20201118
+	packet(0x0b97,clif->pRodexCheckName2);
+#endif  // PACKETVER_MAIN_NUM >= 20201104 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20201118
+
+#if PACKETVER_MAIN_NUM >= 20210818 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20210818
+	packet(0x0bad,clif->pUnequipAllItems);
+#endif  // PACKETVER_MAIN_NUM >= 20210818 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20210818
+
+#if PACKETVER_MAIN_NUM >= 20210317 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20210317
+	packet(0x0ba8,clif->pNpcSelectMenuZero);
+#endif  // PACKETVER_MAIN_NUM >= 20210317 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20210317
 
 #endif /* MAP_PACKETS_H */

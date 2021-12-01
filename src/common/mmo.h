@@ -483,6 +483,7 @@ struct item {
 	unsigned int equip; // Location(s) where item is equipped (using enum equip_pos for bitmasking).
 	char identify;
 	char refine;
+	char grade;
 	char attribute;
 	int card[MAX_SLOTS];
 	unsigned int expire_time;
@@ -784,6 +785,14 @@ struct mmo_charstatus {
 	int body;
 	int party_id,guild_id,clan_id,pet_id,hom_id,mer_id,ele_id;
 	int fame;
+
+	// 4th job basic stats. client using only char but here we save as int [4144]
+	int pow;
+	int sta;
+	int wis;
+	int spl;
+	int con;
+	int crt;
 
 	// Mercenary Guilds Rank
 	int arch_faith, arch_calls;

@@ -1,0 +1,74 @@
+//===== Hercules Script ======================================
+//= Dialog text align demo
+//===== By: ==================================================
+//= 4144
+//===== Current Version: =====================================
+//= 1.0
+//===== Description: =========================================
+//= Dialog align demo in prontera.
+//============================================================
+
+prontera,162,284,4	script	Align demo#prt	4_M_KID1,{
+	setdialogalign(DIALOG_ALIGN_LEFT);
+	mes("Align left");
+	next;
+	setdialogalign(DIALOG_ALIGN_RIGHT);
+	mes("Align right");
+	next;
+	setdialogalign(DIALOG_ALIGN_CENTER);
+	mes("Align center");
+	next;
+	// reset horizontal align
+	setdialogalign(DIALOG_ALIGN_LEFT);
+
+	setdialogalign(DIALOG_ALIGN_TOP);
+	mes("Align top");
+	next;
+	setdialogalign(DIALOG_ALIGN_MIDDLE);
+	mes("Align middle");
+	next;
+	setdialogalign(DIALOG_ALIGN_BOTTOM);
+	mes("Align bottom");
+	next;
+
+	setdialogalign(DIALOG_ALIGN_LEFT);
+	setdialogalign(DIALOG_ALIGN_TOP);
+	mes("Align left + top");
+	next;
+	setdialogalign(DIALOG_ALIGN_LEFT);
+	setdialogalign(DIALOG_ALIGN_MIDDLE);
+	mes("Align left + middle");
+	next;
+	setdialogalign(DIALOG_ALIGN_LEFT);
+	setdialogalign(DIALOG_ALIGN_BOTTOM);
+	mes("Align left + bottom");
+	next;
+
+	setdialogalign(DIALOG_ALIGN_RIGHT);
+	setdialogalign(DIALOG_ALIGN_TOP);
+	mes("Align right + top");
+	next;
+	setdialogalign(DIALOG_ALIGN_RIGHT);
+	setdialogalign(DIALOG_ALIGN_MIDDLE);
+	mes("Align right + middle");
+	next;
+	setdialogalign(DIALOG_ALIGN_RIGHT);
+	setdialogalign(DIALOG_ALIGN_BOTTOM);
+	mes("Align right + bottom");
+	next;
+
+	setdialogalign(DIALOG_ALIGN_CENTER);
+	setdialogalign(DIALOG_ALIGN_TOP);
+	mes("Align center + top");
+	next;
+	setdialogalign(DIALOG_ALIGN_CENTER);
+	setdialogalign(DIALOG_ALIGN_MIDDLE);
+	mes("Align center + middle");
+	next;
+	setdialogalign(DIALOG_ALIGN_CENTER);
+	setdialogalign(DIALOG_ALIGN_BOTTOM);
+	mes("Align center + bottom");
+	next;
+
+	close;
+}

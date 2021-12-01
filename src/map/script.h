@@ -475,6 +475,7 @@ enum script_iteminfo_types {
 	ITEMINFO_CLASS_UPPER,
 	// ITEMINFO_FLAG_AVAILABLE,
 	ITEMINFO_FLAG_NO_REFINE,
+	ITEMINFO_FLAG_NO_GRADE,
 	ITEMINFO_FLAG_DELAY_CONSUME,
 	ITEMINFO_FLAG_AUTOEQUIP,
 	ITEMINFO_FLAG_AUTO_FAVORITE,
@@ -878,7 +879,11 @@ struct script_interface {
 	const char *parser_current_npc_name;
 	/* */
 	int buildin_mes_offset;
+	int buildin_zmes1_offset;
+	int buildin_zmes2_offset;
 	int buildin_mesf_offset;
+	int buildin_zmes1f_offset;
+	int buildin_zmes2f_offset;
 	int buildin_select_offset;
 	int buildin_lang_macro_offset;
 	int buildin_lang_macro_fmtstring_offset;
