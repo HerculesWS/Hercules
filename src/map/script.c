@@ -26802,10 +26802,7 @@ static BUILDIN(rodex_sendmail)
 			return false;
 		}
 
-		struct script_data *data = script_getdata(st, param + 1);
-		script->get_val(st, data); // Dereference variable
-
-		if (!data_isint(data)) {
+		if (!script_isinttype(st, param + 1)) {
 			ShowError("script:rodex_sendmail: Passed amount for item %d is not a number!\n", i + 1);
 			return false;
 		}
@@ -26818,9 +26815,8 @@ static BUILDIN(rodex_sendmail)
 		}
 
 		++item_count;
-		data = script_getdata(st, param);
-		script->get_val(st, data); // Deference variable
-		if (data_isstring(data) == false) {
+
+		if (script_isstringtype(st, param) == false) {
 			int itemid = script_getnum(st, param);
 
 			if (itemdb->exists(itemid) == false) {
