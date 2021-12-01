@@ -400,7 +400,9 @@ static bool macro_read_captcha_db_libconfig_sub_loadbmp(const char *filepath, st
 	memset(cd->image_data, 0, CAPTCHA_BMP_SIZE);
 
 	// Compress the data into the destination
-	grfio->encode_zip(cd->image_data, (unsigned long *)&cd->image_size, bmp_data, CAPTCHA_BMP_SIZE);
+	unsigned long com_size = 0;
+	grfio->encode_zip(cd->image_data, &com_size, bmp_data, CAPTCHA_BMP_SIZE);
+	cd->image_size = (int)com_size;
 
 	fclose(fp);
 	aFree(bmp_data);
