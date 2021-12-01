@@ -24888,7 +24888,7 @@ static BUILDIN(npcskill)
 /**
  * Turns a player into a monster and grants SC attribute effect. [malufett/Hercules]
  * montransform(<monster name/id>, <duration>, <sc type>, <val1>, <val2>, <val3>, <val4>);
- * active_montransform(<monster name/id>, <duration>, <sc type>, <val1>, <val2>, <val3>, <val4>);
+ * active_transform(<monster name/id>, <duration>, <sc type>, <val1>, <val2>, <val3>, <val4>);
  */
 static BUILDIN(montransform)
 {
@@ -24918,18 +24918,20 @@ static BUILDIN(montransform)
 			return false;
 		}
 	}
-	
-	int val1, val2, val3, val4;
-	val1 = val2 = val3 = val4 = 0;
+
+	int val1 = 0;
 	if (script_hasdata(st, 5))
 		val1 = script_getnum(st, 5);
 
+	int val2 = 0;
 	if (script_hasdata(st, 6))
 		val2 = script_getnum(st, 6);
 
+	int val3 = 0;
 	if (script_hasdata(st, 7))
 		val3 = script_getnum(st, 7);
 
+	int val4 = 0;
 	if (script_hasdata(st, 8))
 		val4 = script_getnum(st, 8);
 
