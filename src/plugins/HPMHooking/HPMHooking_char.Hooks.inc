@@ -21141,6 +21141,33 @@ bool HP_sysinfo_is_superuser(void) {
 	}
 	return retVal___;
 }
+const char* HP_sysinfo_zlib(void) {
+	int hIndex = 0;
+	const char* retVal___ = NULL;
+	if (HPMHooks.count.HP_sysinfo_zlib_pre > 0) {
+		const char* (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_sysinfo_zlib_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_sysinfo_zlib_pre[hIndex].func;
+			retVal___ = preHookFunc();
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.sysinfo.zlib();
+	}
+	if (HPMHooks.count.HP_sysinfo_zlib_post > 0) {
+		const char* (*postHookFunc) (const char* retVal___);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_sysinfo_zlib_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_sysinfo_zlib_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___);
+		}
+	}
+	return retVal___;
+}
 void HP_sysinfo_init(void) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_sysinfo_init_pre > 0) {

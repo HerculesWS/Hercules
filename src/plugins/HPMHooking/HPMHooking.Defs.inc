@@ -3002,6 +3002,8 @@ typedef int (*HPMHOOK_pre_grfio_decode_zip) (void **dest, unsigned long **dest_l
 typedef int (*HPMHOOK_post_grfio_decode_zip) (int retVal___, void *dest, unsigned long *dest_len, const void *source, unsigned long source_len);
 typedef int (*HPMHOOK_pre_grfio_encode_zip) (void **dest, unsigned long **dest_len, const void **source, unsigned long *source_len);
 typedef int (*HPMHOOK_post_grfio_encode_zip) (int retVal___, void *dest, unsigned long *dest_len, const void *source, unsigned long source_len);
+typedef void (*HPMHOOK_pre_grfio_report_error) (int *err);
+typedef void (*HPMHOOK_post_grfio_report_error) (int err);
 #endif // COMMON_GRFIO_H
 #ifdef MAP_GUILD_H /* guild */
 typedef void (*HPMHOOK_pre_guild_init) (bool *minimal);
@@ -8542,6 +8544,8 @@ typedef void (*HPMHOOK_pre_sysinfo_vcsrevision_reload) (void);
 typedef void (*HPMHOOK_post_sysinfo_vcsrevision_reload) (void);
 typedef bool (*HPMHOOK_pre_sysinfo_is_superuser) (void);
 typedef bool (*HPMHOOK_post_sysinfo_is_superuser) (bool retVal___);
+typedef const char* (*HPMHOOK_pre_sysinfo_zlib) (void);
+typedef const char* (*HPMHOOK_post_sysinfo_zlib) (const char* retVal___);
 typedef void (*HPMHOOK_pre_sysinfo_init) (void);
 typedef void (*HPMHOOK_post_sysinfo_init) (void);
 typedef void (*HPMHOOK_pre_sysinfo_final) (void);

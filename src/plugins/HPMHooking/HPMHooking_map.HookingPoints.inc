@@ -1316,6 +1316,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(grfio->crc32, HP_grfio_crc32) },
 	{ HP_POP(grfio->decode_zip, HP_grfio_decode_zip) },
 	{ HP_POP(grfio->encode_zip, HP_grfio_encode_zip) },
+	{ HP_POP(grfio->report_error, HP_grfio_report_error) },
 /* guild_interface */
 	{ HP_POP(guild->init, HP_guild_init) },
 	{ HP_POP(guild->final, HP_guild_final) },
@@ -3601,6 +3602,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(sysinfo->fflags, HP_sysinfo_fflags) },
 	{ HP_POP(sysinfo->vcsrevision_reload, HP_sysinfo_vcsrevision_reload) },
 	{ HP_POP(sysinfo->is_superuser, HP_sysinfo_is_superuser) },
+	{ HP_POP(sysinfo->zlib, HP_sysinfo_zlib) },
 	{ HP_POP(sysinfo->init, HP_sysinfo_init) },
 	{ HP_POP(sysinfo->final, HP_sysinfo_final) },
 /* thread_interface */

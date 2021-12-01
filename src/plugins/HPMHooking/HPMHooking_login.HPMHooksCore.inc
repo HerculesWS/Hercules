@@ -786,6 +786,8 @@ struct {
 	struct HPMHookPoint *HP_sysinfo_vcsrevision_reload_post;
 	struct HPMHookPoint *HP_sysinfo_is_superuser_pre;
 	struct HPMHookPoint *HP_sysinfo_is_superuser_post;
+	struct HPMHookPoint *HP_sysinfo_zlib_pre;
+	struct HPMHookPoint *HP_sysinfo_zlib_post;
 	struct HPMHookPoint *HP_sysinfo_init_pre;
 	struct HPMHookPoint *HP_sysinfo_init_post;
 	struct HPMHookPoint *HP_sysinfo_final_pre;
@@ -1607,6 +1609,8 @@ struct {
 	int HP_sysinfo_vcsrevision_reload_post;
 	int HP_sysinfo_is_superuser_pre;
 	int HP_sysinfo_is_superuser_post;
+	int HP_sysinfo_zlib_pre;
+	int HP_sysinfo_zlib_post;
 	int HP_sysinfo_init_pre;
 	int HP_sysinfo_init_post;
 	int HP_sysinfo_final_pre;

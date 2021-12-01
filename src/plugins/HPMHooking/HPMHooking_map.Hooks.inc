@@ -33548,6 +33548,32 @@ int HP_grfio_encode_zip(void *dest, unsigned long *dest_len, const void *source,
 	}
 	return retVal___;
 }
+void HP_grfio_report_error(int err) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_grfio_report_error_pre > 0) {
+		void (*preHookFunc) (int *err);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_grfio_report_error_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_grfio_report_error_pre[hIndex].func;
+			preHookFunc(&err);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.grfio.report_error(err);
+	}
+	if (HPMHooks.count.HP_grfio_report_error_post > 0) {
+		void (*postHookFunc) (int err);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_grfio_report_error_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_grfio_report_error_post[hIndex].func;
+			postHookFunc(err);
+		}
+	}
+	return;
+}
 /* guild_interface */
 void HP_guild_init(bool minimal) {
 	int hIndex = 0;
@@ -94221,6 +94247,33 @@ bool HP_sysinfo_is_superuser(void) {
 		bool (*postHookFunc) (bool retVal___);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_sysinfo_is_superuser_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_sysinfo_is_superuser_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___);
+		}
+	}
+	return retVal___;
+}
+const char* HP_sysinfo_zlib(void) {
+	int hIndex = 0;
+	const char* retVal___ = NULL;
+	if (HPMHooks.count.HP_sysinfo_zlib_pre > 0) {
+		const char* (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_sysinfo_zlib_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_sysinfo_zlib_pre[hIndex].func;
+			retVal___ = preHookFunc();
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.sysinfo.zlib();
+	}
+	if (HPMHooks.count.HP_sysinfo_zlib_post > 0) {
+		const char* (*postHookFunc) (const char* retVal___);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_sysinfo_zlib_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_sysinfo_zlib_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___);
 		}
 	}
