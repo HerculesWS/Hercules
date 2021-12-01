@@ -5482,7 +5482,7 @@ specified location.
 	y               - The x coordinate
 	y               - The y coordinate.
 	showdropeffect  - enable pillar effect on the dropped item (default: 0)
-	
+
 This item will still disappear just like any other dropped item. Like
 getitem(), it also accepts an 'english name' field from the database and
 creates apples if the name isn't found.

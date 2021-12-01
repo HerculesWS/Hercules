@@ -8762,7 +8762,7 @@ static BUILDIN(makeitem)
 	int nameid;
 
 	if (script_isstringtype(st, 2)) {
-		const char* name = script_getstr(st, 2);
+		const char *name = script_getstr(st, 2);
 		struct item_data *item_data = itemdb->search_name(name);
 		if (item_data)
 			nameid = item_data->nameid;
@@ -8778,13 +8778,12 @@ static BUILDIN(makeitem)
 
 	int amount = script_getnum(st, 3);
 	const char *mapname = script_getstr(st, 4);
-	int16 x = script_getnum(st, 5);
-	int16 y = script_getnum(st, 6);
+	int x = script_getnum(st, 5);
+	int y = script_getnum(st, 6);
 	int16 m;
 
-	struct map_session_data* sd = NULL;
 	if (strcmp(mapname, "this") == 0) {
-		sd = script->rid2sd(st);
+		struct map_session_data *sd = script->rid2sd(st);
 		if (sd == NULL)
 			return true; //Failed...
 		m = sd->bl.m;
@@ -8799,15 +8798,21 @@ static BUILDIN(makeitem)
 
 	// pick random position on map
 	if (x <= 0 || x >= map->list[m].xs || y <= 0 || y >= map->list[m].ys) {
-		sd = map->id2sd(st->rid);
+		struct map_session_data *sd = map->id2sd(st->rid);
 		if (sd == NULL) {
 			if (x < 0 || y < 0) {
-				x = 0;
-				y = 0;
-				map->search_free_cell(NULL, m, &x, &y, -1, -1, SFC_XY_CENTER);
+				int16 search_x = 0;
+				int16 search_y = 0;
+				map->search_free_cell(NULL, m, &search_x, &search_y, -1, -1, SFC_XY_CENTER);
+				x = search_x;
+				y = search_y;
 			}
 		} else {
-			map->search_free_cell(&sd->bl, sd->bl.m, &x, &y, 3, 3, SFC_DEFAULT); // Locate spot next to player.
+			int16 search_x = 0;
+			int16 search_y = 0;
+			map->search_free_cell(&sd->bl, sd->bl.m, &search_x, &search_y, 3, 3, SFC_DEFAULT); // Locate spot next to player.
+			x = search_x;
+			y = search_y;
 		}
 	}
 
@@ -8847,10 +8852,9 @@ static BUILDIN(makeitem2)
 	}
 
 	struct map_session_data *sd = NULL;
-	const char *mapname;
 	int16 m = -1;
 	if (script_hasdata(st, 11)) {
-		mapname = script_getstr(st, 11);
+		const char *mapname = script_getstr(st, 11);
 		if (strcmp(mapname, "this") == 0) {
 			sd = script->rid2sd(st);
 			if (sd == NULL)
@@ -8871,20 +8875,25 @@ static BUILDIN(makeitem2)
 		return true;
 	}
 
-	int16 x = (script_hasdata(st, 12) ? script_getnum(st, 12) : 0);
-	int16 y = (script_hasdata(st, 13) ? script_getnum(st, 13) : 0);
-	int16 range;
+	int x = (script_hasdata(st, 12) ? script_getnum(st, 12) : 0);
+	int y = (script_hasdata(st, 13) ? script_getnum(st, 13) : 0);
 
 	// pick random position on map
 	if (x <= 0 || x >= map->list[m].xs || y <= 0 || y >= map->list[m].ys) {
 		sd = map->id2sd(st->rid);
 		if ((x < 0 || y < 0) && sd == NULL) {
-			x = 0;
-			y = 0;
-			map->search_free_cell(NULL, m, &x, &y, -1, -1, SFC_XY_CENTER);
+			int16 search_x = 0;
+			int16 search_y = 0;
+			map->search_free_cell(NULL, m, &search_x, &search_y, -1, -1, SFC_XY_CENTER);
+			x = search_x;
+			y = search_y;
 		} else {
-			range = (script_hasdata(st, 14) ? cap_value(script_getnum(st, 14), 1, battle_config.area_size) : 3);
-			map->search_free_cell(&sd->bl, sd->bl.m, &x, &y, range, range, SFC_DEFAULT); // Locate spot next to player.
+			int16 search_x = 0;
+			int16 search_y = 0;
+			int range = (script_hasdata(st, 14) ? cap_value(script_getnum(st, 14), 1, battle_config.area_size) : 3);
+			map->search_free_cell(&sd->bl, sd->bl.m, &search_x, &search_y, range, range, SFC_DEFAULT); // Locate spot next to player.
+			x = search_x;
+			y = search_y;
 		}
 	}
 
