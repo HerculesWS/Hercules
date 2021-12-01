@@ -8375,8 +8375,7 @@ static BUILDIN(countnameditem)
 			sd->status.inventory[i].amount > 0 &&
 			sd->status.inventory[i].nameid == id->nameid &&
 			sd->status.inventory[i].card[0] == CARD0_CREATE &&
-			sd->status.inventory[i].card[2] == sd->status.char_id &&
-			sd->status.inventory[i].card[3] == sd->status.char_id >> 16)
+			sd->status.char_id == (int)MakeDWord(sd->status.inventory[i].card[2], sd->status.inventory[i].card[3]))
 		{
 			count += sd->status.inventory[i].amount;
 		}
