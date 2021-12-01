@@ -9006,16 +9006,13 @@ static BUILDIN(grouprandomitem)
 }
 
 /*==========================================
- *
+ * makeitem <item_id>, <amount>, "<map name>", <X>, <Y> {, <showdropeffect>}};
  *------------------------------------------*/
 static BUILDIN(makeitem)
 {
-	int nameid,amount;
-	int x,y,m;
-	const char *mapname;
-	struct item item_tmp;
+	int nameid;
 
-	if( script_isstringtype(st, 2) ) {
+	if (script_isstringtype(st, 2)) {
 		const char *name = script_getstr(st, 2);
 		struct item_data *item_data = itemdb->search_name(name);
 		if (item_data)
@@ -9024,49 +9021,72 @@ static BUILDIN(makeitem)
 			nameid = UNKNOWN_ITEM_ID;
 	} else {
 		nameid = script_getnum(st, 2);
-		if( nameid <= 0 || !itemdb->exists(nameid)) {
-			ShowError("makeitem: Nonexistant item %d requested.\n", nameid);
+		if (nameid <= 0 || !itemdb->exists(nameid)) {
+			ShowError("buildin_makeitem: invalid item_id '%d'.\n", nameid);
 			return false; //No item created.
 		}
 	}
-	amount  = script_getnum(st,3);
-	mapname = script_getstr(st,4);
-	x       = script_getnum(st,5);
-	y       = script_getnum(st,6);
 
-	if(strcmp(mapname,"this")==0) {
+	int amount = script_getnum(st, 3);
+	const char *mapname = script_getstr(st, 4);
+	int x = script_getnum(st, 5);
+	int y = script_getnum(st, 6);
+	int16 m;
+
+	if (strcmp(mapname, "this") == 0) {
 		struct map_session_data *sd = script->rid2sd(st);
 		if (sd == NULL)
 			return true; //Failed...
-		m=sd->bl.m;
-	} else
-		m=map->mapname2mapid(mapname);
+		m = sd->bl.m;
+	} else {
+		m = map->mapname2mapid(mapname);
+	}
 
-	if( m == -1 ) {
-		ShowError("makeitem: creating map on unexistent map '%s'!\n", mapname);
+	if (m == -1) {
+		ShowError("buildin_makeitem: invalid map name '%s'.\n", mapname);
 		return false;
 	}
 
-	memset(&item_tmp,0,sizeof(item_tmp));
-	item_tmp.nameid = nameid;
-	item_tmp.identify=1;
+	// pick random position on map
+	if (x <= 0 || x >= map->list[m].xs || y <= 0 || y >= map->list[m].ys) {
+		struct map_session_data *sd = map->id2sd(st->rid);
+		if (sd == NULL) {
+			if (x < 0 || y < 0) {
+				int16 search_x = 0;
+				int16 search_y = 0;
+				map->search_free_cell(NULL, m, &search_x, &search_y, -1, -1, SFC_XY_CENTER);
+				x = search_x;
+				y = search_y;
+			}
+		} else {
+			int16 search_x = 0;
+			int16 search_y = 0;
+			map->search_free_cell(&sd->bl, sd->bl.m, &search_x, &search_y, 3, 3, SFC_DEFAULT); // Locate spot next to player.
+			x = search_x;
+			y = search_y;
+		}
+	}
 
-	map->addflooritem(NULL, &item_tmp, amount, m, x, y, 0, 0, 0, 0, false);
+	struct item item_tmp;
+	memset(&item_tmp, 0, sizeof(item_tmp));
+	item_tmp.nameid = nameid;
+	item_tmp.identify = 1;
+
+	bool showdropeffect = false;
+	if (script_hasdata(st, 7))
+		showdropeffect = (script_getnum(st, 7) != 0);
+
+	map->addflooritem(NULL, &item_tmp, amount, m, x, y, 0, 0, 0, 0, showdropeffect);
 
 	return true;
 }
 
 /*==========================================
- * makeitem2 <item id>, <amount>, <identify>, <refine>, <attribute>, <card1>, <card2>, <card3>, <card4>, {"<map name>", <X>, <Y>, <range>};
+ * makeitem2 <item_id>, <amount>, <identify>, <refine>, <attribute>, <card1>, <card2>, <card3>, <card4>, {"<map name>", <X>, <Y>, <range>, <showdropeffect>};
  *------------------------------------------*/
 static BUILDIN(makeitem2)
 {
-	struct map_session_data *sd = NULL;
-	struct item_data *i_data;
-	int nameid = 0, amount;
-	int16 x, y, m = -1, range;
-	struct item item_tmp;
-
+	int nameid = 0;
 	if (script_isstringtype(st, 2)) {
 		const char *name = script_getstr(st, 2);
 		struct item_data *item_data = itemdb->search_name(name);
@@ -9076,14 +9096,24 @@ static BUILDIN(makeitem2)
 		nameid = script_getnum(st, 2);
 	}
 
-	i_data = itemdb->exists(nameid);
+	struct item_data *i_data = itemdb->exists(nameid);
 	if (i_data == NULL) {
-		ShowError("makeitem2: Unknown item %d requested.\n", nameid);
+		ShowError("buildin_makeitem2: invalid item_id '%d'.\n", nameid);
 		return true;
 	}
 
+	struct map_session_data *sd = NULL;
+	int16 m = -1;
 	if (script_hasdata(st, 11)) {
-		m = map->mapname2mapid(script_getstr(st, 11));
+		const char *mapname = script_getstr(st, 11);
+		if (strcmp(mapname, "this") == 0) {
+			sd = script->rid2sd(st);
+			if (sd == NULL)
+				return true; //Failed...
+			m = sd->bl.m;
+		} else {
+			m = map->mapname2mapid(mapname);
+		}
 	} else {
 		sd = script->rid2sd(st);
 		if (sd == NULL)
@@ -9092,26 +9122,33 @@ static BUILDIN(makeitem2)
 	}
 
 	if (m == -1) {
-		ShowError("makeitem2: Nonexistant map requested.\n");
+		ShowError("buildin_makeitem2: invalid map name.\n");
 		return true;
 	}
 
-	x = (script_hasdata(st, 12) ? script_getnum(st, 12) : 0);
-	y = (script_hasdata(st, 13) ? script_getnum(st, 13) : 0);
+	int x = (script_hasdata(st, 12) ? script_getnum(st, 12) : 0);
+	int y = (script_hasdata(st, 13) ? script_getnum(st, 13) : 0);
 
 	// pick random position on map
 	if (x <= 0 || x >= map->list[m].xs || y <= 0 || y >= map->list[m].ys) {
 		sd = map->id2sd(st->rid);
 		if ((x < 0 || y < 0) && sd == NULL) {
-			x = 0;
-			y = 0;
-			map->search_free_cell(NULL, m, &x, &y, -1, -1, SFC_XY_CENTER);
+			int16 search_x = 0;
+			int16 search_y = 0;
+			map->search_free_cell(NULL, m, &search_x, &search_y, -1, -1, SFC_XY_CENTER);
+			x = search_x;
+			y = search_y;
 		} else {
-			range = (script_hasdata(st, 14) ? cap_value(script_getnum(st, 14), 1, battle_config.area_size) : 3);
-			map->search_free_cell(&sd->bl, sd->bl.m, &x, &y, range, range, SFC_DEFAULT); // Locate spot next to player.
+			int16 search_x = 0;
+			int16 search_y = 0;
+			int range = (script_hasdata(st, 14) ? cap_value(script_getnum(st, 14), 1, battle_config.area_size) : 3);
+			map->search_free_cell(&sd->bl, sd->bl.m, &search_x, &search_y, range, range, SFC_DEFAULT); // Locate spot next to player.
+			x = search_x;
+			y = search_y;
 		}
 	}
 
+	int amount;
 	// if equip or weapon or egg type only drop one.
 	switch (i_data->type) {
 	case IT_ARMOR:
@@ -9125,6 +9162,7 @@ static BUILDIN(makeitem2)
 		break;
 	}
 
+	struct item item_tmp;
 	memset(&item_tmp, 0, sizeof(item_tmp));
 	item_tmp.nameid = nameid;
 	item_tmp.identify = script_getnum(st, 4);
@@ -9135,7 +9173,11 @@ static BUILDIN(makeitem2)
 	item_tmp.card[2] = script_getnum(st, 9);
 	item_tmp.card[3] = script_getnum(st, 10);
 
-	map->addflooritem(NULL, &item_tmp, amount, m, x, y, 0, 0, 0, 0, false);
+	bool showdropeffect = false;
+	if (script_hasdata(st, 15))
+		showdropeffect = (script_getnum(st, 15) != 0);
+
+	map->addflooritem(NULL, &item_tmp, amount, m, x, y, 0, 0, 0, 0, showdropeffect);
 
 	return true;
 }
@@ -27848,8 +27890,8 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(getitem2,"viiiiiiii?"),
 		BUILDIN_DEF(getnameditem,"vv"),
 		BUILDIN_DEF2(grouprandomitem,"groupranditem","i"),
-		BUILDIN_DEF(makeitem,"visii"),
-		BUILDIN_DEF(makeitem2,"viiiiiiii????"),
+		BUILDIN_DEF(makeitem,"visii?"),
+		BUILDIN_DEF(makeitem2,"viiiiiiii?????"),
 		BUILDIN_DEF(delitem,"vi?"),
 		BUILDIN_DEF(delitem2,"viiiiiiii?"),
 		BUILDIN_DEF(delitemidx, "i??"),

@@ -5511,17 +5511,18 @@ Note: delitem() in an NPC script can still remove rental items.
 
 ---------------------------------------
 
-*makeitem(<item id>, <amount>, "<map name>", <X>, <Y>)
-*makeitem("<item name>", <amount>, "<map name>", <X>, <Y>)
+*makeitem(<item id>, <amount>, "<map name>", <x>, <y> {,<showdropeffect>})
+*makeitem("<item name>", <amount>, "<map name>", <x>, <y>)
 
 This command will create an item lying around on a specified map in the
 specified location.
 
-	itemid   - Found in 'db/(pre-)re/item_db.txt'
-	amount   - Amount you want produced
-	map name - The map name
-	X        - The X coordinate
-	Y        - The Y coordinate.
+	item id/name    - Found in 'db/(pre-)re/item_db.conf'
+	amount          - Amount you want produced
+	map name        - The map name
+	y               - The x coordinate
+	y               - The y coordinate.
+	showdropeffect  - enable pillar effect on the dropped item (default: 0)
 
 This item will still disappear just like any other dropped item. Like
 getitem(), it also accepts an 'english name' field from the database and
