@@ -1236,6 +1236,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->pMacroReporterAck, HP_clif_pMacroReporterAck) },
 	{ HP_POP(clif->macro_reporter_select, HP_clif_macro_reporter_select) },
 	{ HP_POP(clif->macro_reporter_status, HP_clif_macro_reporter_status) },
+	{ HP_POP(clif->sayDialogAlign, HP_clif_sayDialogAlign) },
 /* cmdline_interface */
 	{ HP_POP(cmdline->init, HP_cmdline_init) },
 	{ HP_POP(cmdline->final, HP_cmdline_final) },

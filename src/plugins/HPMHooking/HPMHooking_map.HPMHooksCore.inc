@@ -2424,6 +2424,8 @@ struct {
 	struct HPMHookPoint *HP_clif_macro_reporter_select_post;
 	struct HPMHookPoint *HP_clif_macro_reporter_status_pre;
 	struct HPMHookPoint *HP_clif_macro_reporter_status_post;
+	struct HPMHookPoint *HP_clif_sayDialogAlign_pre;
+	struct HPMHookPoint *HP_clif_sayDialogAlign_post;
 	struct HPMHookPoint *HP_cmdline_init_pre;
 	struct HPMHookPoint *HP_cmdline_init_post;
 	struct HPMHookPoint *HP_cmdline_final_pre;
@@ -9659,6 +9661,8 @@ struct {
 	int HP_clif_macro_reporter_select_post;
 	int HP_clif_macro_reporter_status_pre;
 	int HP_clif_macro_reporter_status_post;
+	int HP_clif_sayDialogAlign_pre;
+	int HP_clif_sayDialogAlign_post;
 	int HP_cmdline_init_pre;
 	int HP_cmdline_init_post;
 	int HP_cmdline_final_pre;

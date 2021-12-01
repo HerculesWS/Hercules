@@ -2834,6 +2834,8 @@ typedef void (*HPMHOOK_pre_clif_macro_reporter_select) (struct map_session_data 
 typedef void (*HPMHOOK_post_clif_macro_reporter_select) (struct map_session_data *sd, const struct macroaidlist *aid_list);
 typedef void (*HPMHOOK_pre_clif_macro_reporter_status) (struct map_session_data **sd, enum macro_report_status *stype);
 typedef void (*HPMHOOK_post_clif_macro_reporter_status) (struct map_session_data *sd, enum macro_report_status stype);
+typedef void (*HPMHOOK_pre_clif_sayDialogAlign) (struct map_session_data **sd, int *npcid, enum say_dialog_align *align);
+typedef void (*HPMHOOK_post_clif_sayDialogAlign) (struct map_session_data *sd, int npcid, enum say_dialog_align align);
 #endif // MAP_CLIF_H
 #ifdef COMMON_CORE_H /* cmdline */
 typedef void (*HPMHOOK_pre_cmdline_init) (void);

@@ -31602,6 +31602,32 @@ void HP_clif_macro_reporter_status(struct map_session_data *sd, enum macro_repor
 	}
 	return;
 }
+void HP_clif_sayDialogAlign(struct map_session_data *sd, int npcid, enum say_dialog_align align) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_sayDialogAlign_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, int *npcid, enum say_dialog_align *align);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_sayDialogAlign_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_sayDialogAlign_pre[hIndex].func;
+			preHookFunc(&sd, &npcid, &align);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.sayDialogAlign(sd, npcid, align);
+	}
+	if (HPMHooks.count.HP_clif_sayDialogAlign_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, int npcid, enum say_dialog_align align);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_sayDialogAlign_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_sayDialogAlign_post[hIndex].func;
+			postHookFunc(sd, npcid, align);
+		}
+	}
+	return;
+}
 /* cmdline_interface */
 void HP_cmdline_init(void) {
 	int hIndex = 0;
