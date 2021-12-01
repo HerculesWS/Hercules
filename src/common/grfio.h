@@ -104,6 +104,14 @@ struct grfio_interface {
 	 * @param[in]     source_len Source data length.
 	 */
 	int (*encode_zip) (void *dest, unsigned long *dest_len, const void *source, unsigned long source_len);
+
+	/**
+	 * Report zlib error
+	 *
+	 * @param[in] err    Error code to report.
+	 */
+	void (*report_error) (int err);
+
 };
 
 /**

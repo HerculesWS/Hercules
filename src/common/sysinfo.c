@@ -32,6 +32,7 @@
 #include "common/core.h"
 #include "common/memmgr.h"
 #include "common/nullpo.h"
+#include "common/showmsg.h"
 #include "common/strlib.h"
 
 #include <stdio.h> // fopen
@@ -42,6 +43,7 @@
 #	include <sys/time.h> // time constants
 #	include <unistd.h>
 #endif
+#include <zlib.h>
 
 /// Private interface fields
 struct sysinfo_private {
@@ -1079,6 +1081,18 @@ static uint32 sysinfo_fflags(void)
 	return flags;
 }
 
+static const char* sysinfo_zlib(void)
+{
+	const char *compiled = ZLIB_VERSION;
+#if ZLIB_VERNUM >= 0x1020
+	const char *linked = zlibVersion();
+	if (strcmp(compiled, linked) != 0) {
+		ShowError("Detected different zlib version: compiled %s, linked %s\n", compiled, linked);
+	}
+#endif  // ZLIB_VERNUM >= 0x1020
+	return compiled;
+}
+
 /**
  * Interface default values initialization.
  */
@@ -1105,6 +1119,7 @@ void sysinfo_defaults(void)
 	sysinfo->build_revision = sysinfo_build_revision;
 	sysinfo->fflags = sysinfo_fflags;
 	sysinfo->is_superuser = sysinfo_is_superuser;
+	sysinfo->zlib = sysinfo_zlib;
 	sysinfo->init = sysinfo_init;
 	sysinfo->final = sysinfo_final;
 }
