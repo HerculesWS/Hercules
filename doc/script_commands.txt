@@ -5207,10 +5207,17 @@ due to a wall), the character is pushed only up to the obstacle.
 
 *montransform(<monster id>, <duration>{, <sc_type>{, <val1>{, <val2>{, <val3>{, <val4>}}}}})
 *montransform("<monster name>", <duration>{, <sc_type>{, <val1>{, <val2>{, <val3>{, <val4>}}}}})
+*active_transform(<monster id>, <duration>{, <sc_type>{, <val1>{, <val2>{, <val3>{, <val4>}}}}})
+*active_transform("<monster name>", <duration>{, <sc_type>{, <val1>{, <val2>{, <val3>{, <val4>}}}}})
 
 This command can transform your character into monster and you can still
 use all your skills like a normal character.
-Can only be removed when your killed or if you die or if duration is over.
+Can only be removed when you die or if duration is over.
+
+active_transform works in the same way but it stacks with montransform, and is displayed first.
+This means that you may have a montransform, that effect and an active_transform effect at
+the same time, and the monster from active_transform will show first, once it ends, your appearance
+changes back to the montransform one, if it is still active.
 
 for sc_type, val1, val2, val3, val4, see sc_start(), sc_start2(), sc_start4() commands.
 

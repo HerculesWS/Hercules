@@ -9190,6 +9190,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				val2 = 30 * val1;
 				break;
 			case SC_MONSTER_TRANSFORM:
+			case SC_ACTIVE_MONSTER_TRANSFORM:
 				if (!mob->db_checkid(val1))
 					val1 = MOBID_PORING;
 				break;
@@ -9773,6 +9774,7 @@ static int status_get_val_flag(enum sc_type type)
 		case SC_CASH_PLUSEXP:
 		case SC_CASH_PLUSONLYJOBEXP:
 		case SC_MONSTER_TRANSFORM:
+		case SC_ACTIVE_MONSTER_TRANSFORM:
 		case SC_CASH_RECEIVEITEM:
 		case SC_OVERLAPEXPUP:
 			val_flag |= 1;
@@ -11064,7 +11066,8 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 			sc_start(bl,bl,SC_REBOUND,100,sce->val1,skill->get_time2(ALL_FULL_THROTTLE,sce->val1));
 			break;
 		case SC_MONSTER_TRANSFORM:
-			if( sce->val2 )
+		case SC_ACTIVE_MONSTER_TRANSFORM:
+			if (sce->val2)
 				status_change_end(bl, (sc_type)sce->val2, INVALID_TIMER);
 			break;
 		case SC_OVERED_BOOST:

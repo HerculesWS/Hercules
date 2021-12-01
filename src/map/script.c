@@ -25028,72 +25028,79 @@ static BUILDIN(npcskill)
 	return true;
 }
 
-/* Turns a player into a monster and grants SC attribute effect. [malufett/Hercules]
- * montransform <monster name/id>, <duration>, <sc type>, <val1>, <val2>, <val3>, <val4>; */
+/**
+ * Turns a player into a monster and grants SC attribute effect. [malufett/Hercules]
+ * montransform(<monster name/id>, <duration>, <sc type>, <val1>, <val2>, <val3>, <val4>);
+ * active_transform(<monster name/id>, <duration>, <sc type>, <val1>, <val2>, <val3>, <val4>);
+ */
 static BUILDIN(montransform)
 {
-	int tick;
-	enum sc_type type;
-	int mob_id, val1, val2, val3, val4;
-	val1 = val2 = val3 = val4 = 0;
-
-	if( script_isstringtype(st, 2) ) {
+	int mob_id;
+	if (script_isstringtype(st, 2))
 		mob_id = mob->db_searchname(script_getstr(st, 2));
-	} else {
+	else
 		mob_id = mob->db_checkid(script_getnum(st, 2));
-	}
 
-	if( mob_id == 0 ) {
-		if( script_isstringtype(st, 2) )
+	if (mob_id == 0) {
+		if (script_isstringtype(st, 2))
 			ShowWarning("buildin_montransform: Attempted to use non-existing monster '%s'.\n", script_getstr(st, 2));
 		else
 			ShowWarning("buildin_montransform: Attempted to use non-existing monster of ID '%d'.\n", script_getnum(st, 2));
 		return false;
 	}
 
-	tick = script_getnum(st, 3);
-
+	enum sc_type type;
 	if (script_hasdata(st, 4))
 		type = (sc_type)script_getnum(st, 4);
 	else
 		type = SC_NONE;
 
 	if (script_hasdata(st, 4)) {
-		if( !(type > SC_NONE && type < SC_MAX) ) {
+		if (!(type > SC_NONE && type < SC_MAX)) {
 			ShowWarning("buildin_montransform: Unsupported status change id %d\n", type);
 			return false;
 		}
 	}
 
+	int val1 = 0;
 	if (script_hasdata(st, 5))
 		val1 = script_getnum(st, 5);
 
+	int val2 = 0;
 	if (script_hasdata(st, 6))
 		val2 = script_getnum(st, 6);
 
+	int val3 = 0;
 	if (script_hasdata(st, 7))
 		val3 = script_getnum(st, 7);
 
+	int val4 = 0;
 	if (script_hasdata(st, 8))
 		val4 = script_getnum(st, 8);
 
+	int tick = script_getnum(st, 3);
 	if (tick != 0) {
 		struct map_session_data *sd = script->rid2sd(st);
 		if (sd == NULL)
 			return false;
 
-		if( battle_config.mon_trans_disable_in_gvg && map_flag_gvg2(sd->bl.m) ) {
-			clif->message(sd->fd, msg_sd(sd,1488)); // Transforming into monster is not allowed in Guild Wars.
+		if (battle_config.mon_trans_disable_in_gvg && map_flag_gvg2(sd->bl.m)) {
+			clif->message(sd->fd, msg_sd(sd, 1488)); // Transforming into monster is not allowed in Guild Wars.
 			return true;
 		}
 
-		if( sd->disguise != -1 ) {
-			clif->message(sd->fd, msg_sd(sd,1486)); // Cannot transform into monster while in disguise.
+		if (sd->disguise != -1) {
+			clif->message(sd->fd, msg_sd(sd, 1486)); // Cannot transform into monster while in disguise.
 			return true;
 		}
 
-		status_change_end(&sd->bl, SC_MONSTER_TRANSFORM, INVALID_TIMER); // Clear previous
-		sc_start2(NULL, &sd->bl, SC_MONSTER_TRANSFORM, 100, mob_id, type, tick);
+		enum sc_type transform_type;
+		if (strcmp(script_getfuncname(st), "active_transform") == 0)
+			transform_type = SC_ACTIVE_MONSTER_TRANSFORM;
+		else
+			transform_type = SC_MONSTER_TRANSFORM;
+		status_change_end(&sd->bl, transform_type, INVALID_TIMER); // Clear previous
+		sc_start2(NULL, &sd->bl, transform_type, 100, mob_id, type, tick);
 
 		if (script_hasdata(st, 4))
 			sc_start4(NULL, &sd->bl, type, 100, val1, val2, val3, val4, tick);
@@ -28396,6 +28403,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(issit, "?"),
 
 		BUILDIN_DEF(montransform, "vi?????"), // Monster Transform [malufett/Hercules]
+		BUILDIN_DEF2(montransform, "active_transform", "vi?????"),
 
 		/* New BG Commands [Hercules] */
 		BUILDIN_DEF(bg_create_team,"sii"),
