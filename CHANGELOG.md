@@ -22,6 +22,62 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
+## [v2021.12.01] `December 01 2021`
+
+### Added
+
+- Added support for Visual Studio 2022 - the solution is called Hercules-17.sln (#3087)
+- Added error reporting to the console when Zlib fails to decompress data. (#3090)
+- Added detection of a mismatched Zlib dynamic library vs the header used when compiling and reporting of the current version on startup. (part of #3090)
+- Added support for a number of 2020 and 2021 packetvers/encryption keys/client messages, including several Zero clients (up to 20211118). (#3082)
+- Added support for the item grade feature: (part of #3082)
+  - Added support to the relevant packets in compatible packetvers (generally starting with RE 20200723 or main 20200916)
+  - Implemented saving into the database (database migration required)
+  - Added the `@grade` atcommand.
+  - Added the item DB flag `Gradable` to enable grading support for individual item IDs. and the `ITEMINFO_FLAG_NO_GRADE` to the `getiteminfo()` and `setiteminfo()` commands.
+  - Added the `MAX_ITEM_GRADE` constant to the script engine.
+  - Added the `@inventorylist_grade[]` output variable to `getinventorylist()`.
+  - Added the `@cartinventorylist_grade[]` output variable to `getcartinventorylist()`.
+  - Added the `setgrade()` script (item DB script) command.
+  - Added the `getequipisenablegrade()` and `getequipgrade()` general script commands.
+- Added the `@unequipall` atcommand and the corresponding client packet for 20210818 and newer clients. (part of #3082)
+- Added the `zmes1()`, `zmes1f()`, `zmes2()`, `zmes2f()`, `zmenu()`, `zselect()`, `zprompt()` commands as counterparts using the Zero UI to the respective commands without the z prefix. Demo scripts are provided to showcase the functionality. (part of #3082)
+- Added the `setdialogalign()` script command to specify the text alignment in NPC dialogs. (part of #3082)
+- Added an optional argument to display a light pillar visual effect on the item created through `makeitem()`. (#3065)
+- Added the `active_transform()` script command, behaving like `montransform()` but with a different, stackable SC. (#3073, issue #2035)
+
+### Changed
+
+- Improved detection of recent versions of Windows for the system information screen. (part of #3087)
+- Updated the documentation of the Item DB structure to include all the new fields. (#3085)
+- Updated handling of several packets (`ZC_EQUIPWIN_MICROSCOPE`, `ZC_NOTIFY_HP_TO_GROUPM`, `ZC_BATTLEFIELD_NOTIFY_HP`) to use the struct format. (part of #3082)
+- Refactored `clif_updatestatus()` and updated to use packet names instead of numeric IDs. (part of #3082)
+
+### Fixed
+
+- Fixed the `countnameditem()` command never matching any items and always returning 0. (#3088)
+- Fixed an issue causing a failure to compressing captcha images on non-Windows systems. (#3091)
+- Fixed issues with packet `ZC_EQUIPWIN_MICROSCOPE` for old clients. (part of #3082)
+- Fixed the use of integer variables (as opposed to integer literals) in the `rodex_sendmail()` script command. (#3067, issue #3027)
+
+### Removed
+
+- Removed Visual Studio 2015 (Hercules-14.sln) solution. Developers still using it are advised to upgrade to a newer version or to switch to GCC since backward compatibility won't be guaranteed. (part of #3087)
+
+### Other
+
+- The wiki page about supported platforms has been updated, as it had been neglected for a while. Notable changes:
+  - Debian 11 was added, kicking out Debian 9 (no policy changes)
+  - The CentOS/RHEL support policy was changed, since there no longer are matching CentOS and RHEL regular releases. This means that RHEL support cannot be guaranteed and the only CentOS version that is officially supported is CentOS Stream (and CentOS 8 until it will be EOL on December 31st)
+  - Ubuntu 21.10 was added and Ubuntu 18.04 was removed (no policy changes)
+  - FreeBSD 13.0 was added, kicking out FreeBSD 11.x; 12.x versions older than 12.2 are unsupported (no policy changes)
+  - macOS 10.15, 11 and 12 have been added, kicking out macOS 10.13 and 10.14. GCC (latest version installed through Homebrew) is also supported as an alternative to Clang shipped with XCode. The total amount of supported versions has been increased from 2 to 3.
+  - The currently supported OpenBSD version has been updated to 7.0 (no policy changes)
+  - The currently supported NetBSD version has been updated to 9.2 (no policy changes)
+  - The currently supported Raspberry Pi OS version has been updated to 11 (bullseye). The supported distribution is now labeled Raspberry Pi OS, rather than Raspbian, following the official naming.
+  - Windows 11 21H2, Windows 10 21H2, Windows Server 2019, Windows Server v.20H2 and Windows Server 2022 were added. No policy changes but a note was added to discourage running Hercules on Windows on production servers.
+  - Visual Studio 2022 17.0 was added, kicking out Visual Studio 2015. No policy changes.
+
 ## [v2021.11.03+1] `November 03 2021` `PATCH 1`
 
 ### Fixed
