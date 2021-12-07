@@ -1882,18 +1882,15 @@ static void clif_homskillup(struct map_session_data *sd, uint16 skill_id)
 ///     1 = success
 static void clif_hom_food(struct map_session_data *sd, int foodid, int fail)
 {
-	int fd;
-	struct PACKET_ZC_FEED_MER p;
-
 	nullpo_retv(sd);
 
-	fd = sd->fd;
-	WFIFOHEAD(fd, sizeof(p));
-	p.packetType = 0x22f;
-	p.result = fail;
-	p.itemId = foodid;
-	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
-	WFIFOSET(fd, sizeof(p));
+	const int fd = sd->fd;
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_FEED_MER));
+	struct PACKET_ZC_FEED_MER *p = WFIFOP(fd, 0);
+	p->packetType = 0x22f;
+	p->result = fail;
+	p->itemId = foodid;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_FEED_MER));
 }
 
 /// Notifies the client, that it is walking (ZC_NOTIFY_PLAYERMOVE).
