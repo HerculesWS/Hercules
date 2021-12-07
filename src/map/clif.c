@@ -7009,38 +7009,33 @@ static void clif_item_skill(struct map_session_data *sd, uint16 skill_id, uint16
 /// 01c5 <index>.W <amount>.L <name id>.W <type>.B <identified>.B <damaged>.B <refine>.B <card1>.W <card2>.W <card3>.W <card4>.W (ZC_ADD_ITEM_TO_CART2)
 static void clif_cart_additem(struct map_session_data *sd, int n, int amount, int fail)
 {
-	int view, fd;
-	struct PACKET_ZC_ADD_ITEM_TO_CART p;
-
 	nullpo_retv(sd);
 
-	fd = sd->fd;
 	if (n < 0 || n >= MAX_CART || sd->status.cart[n].nameid <= 0)
 		return;
 
-	WFIFOHEAD(fd, sizeof(p));
-	p.packetType = HEADER_ZC_ADD_ITEM_TO_CART;
-	p.index = n + 2;
-	p.amount = amount;
-	if ((view = itemdb_viewid(sd->status.cart[n].nameid)) > 0)
-		p.itemId = view;
-	else
-		p.itemId = sd->status.cart[n].nameid;
+	const int fd = sd->fd;
+	const int view = itemdb_viewid(sd->status.cart[n].nameid);
+
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_ADD_ITEM_TO_CART));
+	struct PACKET_ZC_ADD_ITEM_TO_CART *p = WFIFOP(fd, 0);
+	p->packetType = HEADER_ZC_ADD_ITEM_TO_CART;
+	p->index = n + 2;
+	p->itemId = (view > 0) ? view : sd->status.cart[n].nameid;
 #if PACKETVER >= 5
-	p.itemType = itemdb_type(sd->status.cart[n].nameid);
+	p->itemType = itemdb_type(sd->status.cart[n].nameid);
 #endif
-	p.identified = sd->status.cart[n].identify;
-	p.damaged  = sd->status.cart[n].attribute;
-	p.refine = sd->status.cart[n].refine;
+	p->identified = sd->status.cart[n].identify;
+	p->damaged  = sd->status.cart[n].attribute;
+	p->refine = sd->status.cart[n].refine;
 #if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
-	p.grade = sd->status.cart[n].grade;
+	p->grade = sd->status.cart[n].grade;
 #endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
-	clif->addcards(&p.slot, &sd->status.cart[n]);
+	clif->addcards(&p->slot, &sd->status.cart[n]);
 #if PACKETVER >= 20150226
-	clif->add_item_options(&p.option_data[0], &sd->status.cart[n]);
+	clif->add_item_options(&p->option_data[0], &sd->status.cart[n]);
 #endif
-	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
-	WFIFOSET(fd, sizeof(p));
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_ADD_ITEM_TO_CART));
 }
 
 /// Deletes an item from character's cart (ZC_DELETE_ITEM_FROM_CART).
