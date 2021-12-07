@@ -8133,20 +8133,16 @@ static void clif_mvp_effect(struct map_session_data *sd)
 /// 010a <name id>.L
 static void clif_mvp_item(struct map_session_data *sd, int nameid)
 {
-	int view, fd;
-	struct PACKET_ZC_MVP_GETTING_ITEM p;
-
 	nullpo_retv(sd);
 
-	fd = sd->fd;
-	WFIFOHEAD(fd, sizeof(p));
-	p.packetType = 0x10a;
-	if ((view = itemdb_viewid(nameid)) > 0)
-		p.itemId = view;
-	else
-		p.itemId = nameid;
-	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
-	WFIFOSET(fd, sizeof(p));
+	const int fd = sd->fd;
+	const int view = itemdb_viewid(nameid);
+
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_MVP_GETTING_ITEM));
+	struct PACKET_ZC_MVP_GETTING_ITEM *p = WFIFOP(fd, 0);
+	p->packetType = 0x10a;
+	p->itemId = (view > 0) ? view : nameid;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_MVP_GETTING_ITEM));
 }
 
 /// MVP EXP reward message (ZC_MVP_GETTING_SPECIAL_EXP).
