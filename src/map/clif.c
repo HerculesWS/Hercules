@@ -24918,14 +24918,12 @@ static void clif_macro_detector_request_init(struct map_session_data *sd, const 
 	nullpo_retv(captcha_key);
 
 	const int fd = sd->fd;
-	struct PACKET_ZC_MACRO_DETECTOR_REQUEST p = { 0 };
-	p.PacketType = HEADER_ZC_MACRO_DETECTOR_REQUEST;
-	p.imageSize = image_size;
-	safestrncpy(p.captchaKey, captcha_key, sizeof(p.captchaKey));
-
-	WFIFOHEAD(fd, sizeof(p));
-	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
-	WFIFOSET(fd, sizeof(p));
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_MACRO_DETECTOR_REQUEST));
+	struct PACKET_ZC_MACRO_DETECTOR_REQUEST *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_MACRO_DETECTOR_REQUEST;
+	p->imageSize = image_size;
+	safestrncpy(p->captchaKey, captcha_key, sizeof(p->captchaKey));
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_MACRO_DETECTOR_REQUEST));
 #endif
 }
 
