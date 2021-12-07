@@ -24953,14 +24953,12 @@ static void clif_macro_detector_request_show(struct map_session_data *sd)
 	nullpo_retv(sd);
 
 	const int fd = sd->fd;
-	struct PACKET_ZC_MACRO_DETECTOR_SHOW p = { 0 };
-	p.PacketType = HEADER_ZC_MACRO_DETECTOR_SHOW;
-	p.retryCount = sd->macro_detect.retry;
-	p.timeout = battle->bc->macro_detect_timeout;
-
-	WFIFOHEAD(fd, sizeof(p));
-	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
-	WFIFOSET(fd, sizeof(p));
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_MACRO_DETECTOR_SHOW));
+	struct PACKET_ZC_MACRO_DETECTOR_SHOW *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_MACRO_DETECTOR_SHOW;
+	p->retryCount = sd->macro_detect.retry;
+	p->timeout = battle->bc->macro_detect_timeout;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_MACRO_DETECTOR_SHOW));
 #endif
 }
 
