@@ -25067,13 +25067,11 @@ static void clif_macro_reporter_status(struct map_session_data *sd, enum macro_r
 	nullpo_retv(sd);
 
 	const int fd = sd->fd;
-	struct PACKET_ZC_MACRO_REPORTER_STATUS p = { 0 };
-	p.PacketType = HEADER_ZC_MACRO_REPORTER_STATUS;
-	p.status = stype;
-
-	WFIFOHEAD(fd, sizeof(p));
-	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
-	WFIFOSET(fd, sizeof(p));
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_MACRO_REPORTER_STATUS));
+	struct PACKET_ZC_MACRO_REPORTER_STATUS *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_MACRO_REPORTER_STATUS;
+	p->status = stype;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_MACRO_REPORTER_STATUS));
 #endif
 }
 
