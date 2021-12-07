@@ -24990,13 +24990,11 @@ static void clif_macro_detector_status(struct map_session_data *sd, enum macro_d
 	nullpo_retv(sd);
 
 	const int fd = sd->fd;
-	struct PACKET_ZC_MACRO_DETECTOR_STATUS p = { 0 };
-	p.PacketType = HEADER_ZC_MACRO_DETECTOR_STATUS;
-	p.status = stype;
-
-	WFIFOHEAD(fd, sizeof(p));
-	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
-	WFIFOSET(fd, sizeof(p));
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_MACRO_DETECTOR_STATUS));
+	struct PACKET_ZC_MACRO_DETECTOR_STATUS *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_MACRO_DETECTOR_STATUS;
+	p->status = stype;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_MACRO_DETECTOR_STATUS));
 #endif
 }
 
