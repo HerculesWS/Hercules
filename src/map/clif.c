@@ -19186,13 +19186,12 @@ static void clif_mercenary_message(struct map_session_data *sd, int message)
 /// 0298 <name id>.W <seconds>.L
 static void clif_rental_time(int fd, int nameid, int seconds)
 { // '<ItemName>' item will disappear in <seconds/60> minutes.
-	struct PACKET_ZC_CASH_TIME_COUNTER p;
-	WFIFOHEAD(fd, sizeof(p));
-	p.packetType = 0x298;
-	p.itemId = nameid;
-	p.seconds = seconds;
-	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
-	WFIFOSET(fd, sizeof(p));
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_CASH_TIME_COUNTER));
+	struct PACKET_ZC_CASH_TIME_COUNTER *p = WFIFOP(fd, 0);
+	p->packetType = 0x298;
+	p->itemId = nameid;
+	p->seconds = seconds;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_CASH_TIME_COUNTER));
 }
 
 /// Deletes a rental item from client's inventory (ZC_CASH_ITEM_DELETE).
