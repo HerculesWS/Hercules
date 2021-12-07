@@ -10789,16 +10789,12 @@ static void clif_channel_msg2(struct channel_data *chan, char *msg)
 // 3 - Rejected by server
 static void clif_auth_error(int fd, int errorCode)
 {
-	struct packet_ZC_REFUSE_LOGIN p;
-	const int len = sizeof(p);
-
-	p.PacketType = authError;
-	p.error_code = errorCode;
-	p.block_date[0] = '\0';
-
-	WFIFOHEAD(fd, len);
-	memcpy(WFIFOP(fd, 0), &p, len);
-	WFIFOSET(fd, len);
+	WFIFOHEAD(fd, sizeof(struct packet_ZC_REFUSE_LOGIN));
+	struct packet_ZC_REFUSE_LOGIN *p = WFIFOP(fd, 0);
+	p->PacketType = authError;
+	p->error_code = errorCode;
+	p->block_date[0] = '\0';
+	WFIFOSET(fd, sizeof(struct packet_ZC_REFUSE_LOGIN));
 }
 
 // ------------
