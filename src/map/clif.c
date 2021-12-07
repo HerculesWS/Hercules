@@ -24822,14 +24822,12 @@ static void clif_captcha_upload_request(struct map_session_data *sd, const char 
 	nullpo_retv(captcha_key);
 
 	const int fd = sd->fd;
-	struct PACKET_ZC_CAPTCHA_UPLOAD_REQUEST p = { 0 };
-	p.PacketType = HEADER_ZC_CAPTCHA_UPLOAD_REQUEST;
-	safestrncpy(p.captchaKey, captcha_key, sizeof(p.captchaKey));
-	p.captchaFlag = captcha_flag;
-
-	WFIFOHEAD(fd, sizeof(p));
-	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
-	WFIFOSET(fd, sizeof(p));
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_CAPTCHA_UPLOAD_REQUEST));
+	struct PACKET_ZC_CAPTCHA_UPLOAD_REQUEST *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_CAPTCHA_UPLOAD_REQUEST;
+	safestrncpy(p->captchaKey, captcha_key, sizeof(p->captchaKey));
+	p->captchaFlag = captcha_flag;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_CAPTCHA_UPLOAD_REQUEST));
 #endif
 }
 
