@@ -5798,17 +5798,15 @@ static void clif_skillcastcancel(struct block_list *bl)
 /// suggesting this is an ACK packet for the UseSkill packets and should be sent on success too [FlavioJS]
 static void clif_skill_fail(struct map_session_data *sd, uint16 skill_id, enum useskill_fail_cause cause, int btype, int32 item_id)
 {
-	int fd;
-	struct PACKET_ZC_ACK_TOUSESKILL p;
-
-	if (!sd) {
+	if (sd == NULL) {
 		//Since this is the most common nullpo....
 		ShowDebug("clif_skill_fail: Error, received NULL sd for skill %d\n", skill_id);
 		return;
 	}
 
-	fd = sd->fd;
-	if (!fd) return;
+	int fd = sd->fd;
+	if (fd == 0)
+		return;
 
 	if (battle_config.display_skill_fail&1)
 		return; //Disable all skill failed messages
@@ -5822,16 +5820,15 @@ static void clif_skill_fail(struct map_session_data *sd, uint16 skill_id, enum u
 	if (skill_id == TF_POISON && battle_config.display_skill_fail & 8)
 		return;
 
-	WFIFOHEAD(fd, sizeof(p));
-	p.packetType = 0x110;
-	p.skillId = skill_id;
-	p.btype = btype;
-	p.itemId = item_id;
-	p.flag = 0; // 0 - failed
-	p.cause = cause;
-
-	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
-	WFIFOSET(fd, sizeof(p));
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_ACK_TOUSESKILL));
+	struct PACKET_ZC_ACK_TOUSESKILL *p = WFIFOP(fd, 0);
+	p->packetType = 0x110;
+	p->skillId = skill_id;
+	p->btype = btype;
+	p->itemId = item_id;
+	p->flag = 0; // 0 - failed
+	p->cause = cause;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_ACK_TOUSESKILL));
 }
 
 /// Skill cooldown display icon (ZC_SKILL_POSTDELAY).
