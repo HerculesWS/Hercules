@@ -4671,45 +4671,41 @@ static void clif_tradestart(struct map_session_data *sd, uint8 type)
 /// 080f <nameid>.W <item type>.B <amount>.L <identified>.B <damaged>.B <refine>.B <card1>.W <card2>.W <card3>.W <card4>.W (ZC_ADD_EXCHANGE_ITEM2)
 static void clif_tradeadditem(struct map_session_data *sd, struct map_session_data *tsd, int index, int amount)
 {
-	int fd;
-	struct PACKET_ZC_ADD_EXCHANGE_ITEM p;
-
 	nullpo_retv(sd);
 	nullpo_retv(tsd);
 
-	fd = tsd->fd;
-	WFIFOHEAD(fd, sizeof(p));
-	memset(&p, 0, sizeof(p));
-	p.packetType = HEADER_ZC_ADD_EXCHANGE_ITEM;
-	p.amount = amount;
+	const int fd = tsd->fd;
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_ADD_EXCHANGE_ITEM));
+	struct PACKET_ZC_ADD_EXCHANGE_ITEM *p = WFIFOP(fd, 0);
+	p->packetType = HEADER_ZC_ADD_EXCHANGE_ITEM;
+	p->amount = amount;
 	if (index != 0) {
 		index -= 2; //index fix
 		Assert_retv(index >= 0 && index < sd->status.inventorySize);
 		nullpo_retv(sd->inventory_data[index]);
 		if (sd->inventory_data[index]->view_id > 0)
-			p.itemId = sd->inventory_data[index]->view_id;
+			p->itemId = sd->inventory_data[index]->view_id;
 		else
-			p.itemId = sd->status.inventory[index].nameid;
+			p->itemId = sd->status.inventory[index].nameid;
 #if PACKETVER >= 20100223
-		p.itemType = sd->inventory_data[index]->type;
+		p->itemType = sd->inventory_data[index]->type;
 #endif
-		p.identified = sd->status.inventory[index].identify;
-		p.damaged = sd->status.inventory[index].attribute;
-		p.refine = sd->status.inventory[index].refine;
+		p->identified = sd->status.inventory[index].identify;
+		p->damaged = sd->status.inventory[index].attribute;
+		p->refine = sd->status.inventory[index].refine;
 #if PACKETVER_MAIN_NUM >= 20161102 || PACKETVER_RE_NUM >= 20161026 || defined(PACKETVER_ZERO)
-		p.location = pc->equippoint(sd, index);
-		p.look = sd->inventory_data[index]->view_sprite;
+		p->location = pc->equippoint(sd, index);
+		p->look = sd->inventory_data[index]->view_sprite;
 #endif  // PACKETVER_MAIN_NUM >= 20161102 || PACKETVER_RE_NUM >= 20161026 || defined(PACKETVER_ZERO)
 #if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
-		p.grade = sd->status.inventory[index].refine;
+		p->grade = sd->status.inventory[index].refine;
 #endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
-		clif->addcards(&p.slot, &sd->status.inventory[index]);
+		clif->addcards(&p->slot, &sd->status.inventory[index]);
 #if PACKETVER >= 20150226
-		clif->add_item_options(&p.option_data[0], &sd->status.inventory[index]);
+		clif->add_item_options(&p->option_data[0], &sd->status.inventory[index]);
 #endif
 	}
-	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
-	WFIFOSET(fd, sizeof(p));
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_ADD_EXCHANGE_ITEM));
 }
 
 /// Notifies the client about the result of request to add an item to the current trade (ZC_ACK_ADD_EXCHANGE_ITEM).
