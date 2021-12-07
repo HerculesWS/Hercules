@@ -20077,17 +20077,15 @@ static void clif_buyingstore_delete_item(struct map_session_data *sd, short inde
 static void clif_buyingstore_trade_failed_seller(struct map_session_data *sd, short result, int nameid)
 {
 #if PACKETVER >= 20100420
-	int fd;
-	struct PACKET_ZC_FAILED_TRADE_BUYING_STORE_TO_SELLER p;
-
 	nullpo_retv(sd);
-	fd = sd->fd;
-	WFIFOHEAD(fd, sizeof(p));
-	p.packetType = 0x824;
-	p.result = result;
-	p.itemId = nameid;
-	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
-	WFIFOSET(fd, sizeof(p));
+
+	const int fd = sd->fd;
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_FAILED_TRADE_BUYING_STORE_TO_SELLER));
+	struct PACKET_ZC_FAILED_TRADE_BUYING_STORE_TO_SELLER *p = WFIFOP(fd, 0);
+	p->packetType = 0x824;
+	p->result = result;
+	p->itemId = nameid;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_FAILED_TRADE_BUYING_STORE_TO_SELLER));
 #endif
 }
 
