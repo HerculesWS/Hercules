@@ -7932,18 +7932,15 @@ static void clif_pet_emotion(struct pet_data *pd, int param)
 ///     1 = success
 static void clif_pet_food(struct map_session_data *sd, int foodid, int fail)
 {
-	int fd;
-	struct PACKET_ZC_FEED_PET p;
-
 	nullpo_retv(sd);
 
-	fd = sd->fd;
-	WFIFOHEAD(fd, sizeof(p));
-	p.packetType = 0x1a3;
-	p.result = fail;
-	p.itemId = foodid;
-	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
-	WFIFOSET(fd, sizeof(p));
+	const int fd = sd->fd;
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_FEED_PET));
+	struct PACKET_ZC_FEED_PET *p = WFIFOP(fd, 0);
+	p->packetType = 0x1a3;
+	p->result = fail;
+	p->itemId = foodid;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_FEED_PET));
 }
 
 /// Presents a list of skills that can be auto-spelled (ZC_AUTOSPELLLIST).
