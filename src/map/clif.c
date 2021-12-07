@@ -5838,16 +5838,13 @@ static void clif_skill_cooldown(struct map_session_data *sd, uint16 skill_id, un
 #if PACKETVER_MAIN_NUM >= 20081112 || PACKETVER_RE_NUM >= 20081111 || defined(PACKETVER_ZERO)
 	nullpo_retv(sd);
 
-	int fd = sd->fd;
-	struct PACKET_ZC_SKILL_POSTDELAY p = { 0 };
-
-	WFIFOHEAD(fd, sizeof(p));
-	p.PacketType = HEADER_ZC_SKILL_POSTDELAY;
-	p.SKID = skill_id;
-	p.DelayTM = duration;
-
-	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
-	WFIFOSET(fd, sizeof(p));
+	const int fd = sd->fd;
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_SKILL_POSTDELAY));
+	struct PACKET_ZC_SKILL_POSTDELAY *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_SKILL_POSTDELAY;
+	p->SKID = skill_id;
+	p->DelayTM = duration;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_SKILL_POSTDELAY));
 #endif
 }
 
