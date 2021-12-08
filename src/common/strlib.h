@@ -111,28 +111,28 @@ struct StringBuf {
 typedef struct StringBuf StringBuf;
 
 struct strlib_interface {
-	char *(*jstrescape) (char* pt);
-	char *(*jstrescapecpy) (char* pt, const char* spt);
-	int (*jmemescapecpy) (char* pt, const char* spt, int size);
-	int (*remove_control_chars_) (char* str);
-	char *(*trim_) (char* str);
-	char *(*normalize_name_) (char* str,const char* delims);
-	const char *(*stristr_) (const char *haystack, const char *needle);
+	char *(*jstrescape) (char* pt) __attribute__ ((access (read_only, 1)));
+	char *(*jstrescapecpy) (char* pt, const char* spt) __attribute__ ((access (write_only, 1), access (read_only, 2)));
+	int (*jmemescapecpy) (char* pt, const char* spt, int size) __attribute__ ((access (write_only, 1), access (read_only, 2, 3)));
+	int (*remove_control_chars_) (char* str) __attribute__ ((access (read_write, 1)));
+	char *(*trim_) (char* str) __attribute__ ((access (read_write, 1)));
+	char *(*normalize_name_) (char* str, const char* delims)  __attribute__ ((access (read_write, 1), access (read_only, 2)));
+	const char *(*stristr_) (const char *haystack, const char *needle) __attribute__ ((access (read_only, 1), access (read_only, 2)));
 
 	/* only used when '!(defined(WIN32) && defined(_MSC_VER)) && !defined(HAVE_STRNLEN)', needs to be defined at all times however  */
-	size_t (*strnlen_) (const char* string, size_t maxlen);
+	size_t (*strnlen_) (const char* string, size_t maxlen) __attribute__ ((access (read_only, 1, 2)));
 
 	/* only used when 'WIN32' */
-	char * (*strtok_r_) (char *s1, const char *s2, char **lasts);
+	char * (*strtok_r_) (char *s1, const char *s2, char **lasts) __attribute__ ((access (read_write, 1), access (read_only, 2), access (read_write, 3)));
 
-	int (*e_mail_check_) (char* email);
-	int (*config_switch_) (const char* str);
+	int (*e_mail_check_) (char* email) __attribute__ ((access (read_write, 1)));
+	int (*config_switch_) (const char* str) __attribute__ ((access (read_only, 1)));
 
 	/// strncpy that always null-terminates the string
-	char *(*safestrncpy_) (char* dst, const char* src, size_t n);
+	char *(*safestrncpy_) (char* dst, const char* src, size_t n) __attribute__ ((access (write_only, 1, 3), access (read_only, 2)));
 
 	/// doesn't crash on null pointer
-	size_t (*safestrnlen_) (const char* string, size_t maxlen);
+	size_t (*safestrnlen_) (const char* string, size_t maxlen) __attribute__ ((access (read_only, 1, 2)));
 
 	/// Works like snprintf, but always null-terminates the buffer.
 	/// Returns the size of the string (without null-terminator)
@@ -141,26 +141,26 @@ struct strlib_interface {
 
 	/// Returns the line of the target position in the string.
 	/// Lines start at 1.
-	int (*strline_) (const char* str, size_t pos);
+	int (*strline_) (const char* str, size_t pos) __attribute__ ((access (read_only, 1)));
 
 	/// Produces the hexadecimal representation of the given input.
 	/// The output buffer must be at least count*2+1 in size.
 	/// Returns true on success, false on failure.
-	bool (*bin2hex_) (char *output, const unsigned char *input, size_t count);
+	bool (*bin2hex_) (char *output, const unsigned char *input, size_t count) __attribute__ ((access (write_only, 1), access (read_only, 2, 3)));
 };
 
 struct stringbuf_interface {
 	StringBuf* (*Malloc) (void);
-	void (*Init) (StringBuf* self);
-	int (*Printf) (StringBuf *self, const char *fmt, ...) __attribute__((format(printf, 2, 3)));
+	void (*Init) (StringBuf* self) __attribute__ ((access (read_write, 1)));
+	int (*Printf) (StringBuf *self, const char *fmt, ...) __attribute__((format(printf, 2, 3), access(read_write, 1)));
 	int (*Vprintf) (StringBuf* self, const char* fmt, va_list args);
-	int (*Append) (StringBuf* self, const StringBuf *sbuf);
-	int (*AppendStr) (StringBuf* self, const char* str);
-	int (*Length) (StringBuf* self);
-	char* (*Value) (StringBuf* self);
-	void (*Clear) (StringBuf* self);
-	void (*Destroy) (StringBuf* self);
-	void (*Free) (StringBuf* self);
+	int (*Append) (StringBuf* self, const StringBuf *sbuf) __attribute__ ((access (read_write, 1), access (read_only, 2)));
+	int (*AppendStr) (StringBuf* self, const char* str) __attribute__ ((access (read_write, 1), access (read_only, 2)));
+	int (*Length) (StringBuf* self) __attribute__ ((access (read_only, 1)));
+	char* (*Value) (StringBuf* self) __attribute__ ((access (read_write, 1)));
+	void (*Clear) (StringBuf* self) __attribute__ ((access (read_write, 1)));
+	void (*Destroy) (StringBuf* self) __attribute__ ((access (read_write, 1)));
+	void (*Free) (StringBuf* self) __attribute__ ((access (read_write, 1)));
 };
 
 struct sv_interface {
