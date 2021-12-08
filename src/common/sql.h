@@ -118,7 +118,7 @@ struct sql_interface {
 	/// The query is constructed as if it was svprintf.
 	///
 	/// @return SQL_SUCCESS or SQL_ERROR
-	int (*QueryV) (struct Sql *self, const char *query, va_list args);
+	int (*QueryV) (struct Sql *self, const char *query, va_list args) __attribute__((format(printf, 2, 0)));
 	/// Executes a query.
 	/// Any previous result is freed.
 	/// The query is used directly.
@@ -192,7 +192,7 @@ struct sql_interface {
 	/// The query is constructed as if it was svprintf.
 	///
 	/// @return SQL_SUCCESS or SQL_ERROR
-	int (*StmtPrepareV)(struct SqlStmt *self, const char *query, va_list args);
+	int (*StmtPrepareV)(struct SqlStmt *self, const char *query, va_list args) __attribute__((format(printf, 2, 0)));
 
 	/// Prepares the statement.
 	/// Any previous result is freed and all parameter bindings are removed.

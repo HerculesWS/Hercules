@@ -256,6 +256,7 @@ static int Sql_Query(struct Sql *self, const char *query, ...)
 }
 
 /// Executes a query.
+static int Sql_QueryV(struct Sql *self, const char *query, va_list args) __attribute__((format(printf, 2, 0)));
 static int Sql_QueryV(struct Sql *self, const char *query, va_list args)
 {
 	if( self == NULL )
@@ -639,6 +640,7 @@ static int SqlStmt_Prepare(struct SqlStmt *self, const char *query, ...)
 }
 
 /// Prepares the statement.
+static int SqlStmt_PrepareV(struct SqlStmt *self, const char *query, va_list args) __attribute__((format(printf, 2, 0)));
 static int SqlStmt_PrepareV(struct SqlStmt *self, const char *query, va_list args)
 {
 	if( self == NULL )

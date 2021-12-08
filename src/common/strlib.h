@@ -153,7 +153,7 @@ struct stringbuf_interface {
 	StringBuf* (*Malloc) (void);
 	void (*Init) (StringBuf* self) __attribute__ ((access (read_write, 1)));
 	int (*Printf) (StringBuf *self, const char *fmt, ...) __attribute__((format(printf, 2, 3), access(read_write, 1)));
-	int (*Vprintf) (StringBuf* self, const char* fmt, va_list args);
+	int (*Vprintf) (StringBuf* self, const char* fmt, va_list args) __attribute__((format(printf, 2, 0)));
 	int (*Append) (StringBuf* self, const StringBuf *sbuf) __attribute__ ((access (read_write, 1), access (read_only, 2)));
 	int (*AppendStr) (StringBuf* self, const char* str) __attribute__ ((access (read_write, 1), access (read_only, 2)));
 	int (*Length) (StringBuf* self) __attribute__ ((access (read_only, 1)));

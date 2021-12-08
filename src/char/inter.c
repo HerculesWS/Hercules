@@ -394,6 +394,7 @@ static const char *inter_job_name(int class)
  * Argument-list version of inter_msg_to_fd
  * @see inter_msg_to_fd
  */
+static void inter_vmsg_to_fd(int fd, int u_fd, int aid, char *msg, va_list ap) __attribute__((format(printf, 4, 0)));
 static void inter_vmsg_to_fd(int fd, int u_fd, int aid, char *msg, va_list ap)
 {
 	char msg_out[512];
@@ -903,6 +904,7 @@ static bool inter_config_read(const char *filename, bool imported)
  * Save interlog into sql (arglist version)
  * @see inter_log
  */
+static int inter_vlog(char *fmt, va_list ap) __attribute__((format(printf, 1, 0)));
 static int inter_vlog(char *fmt, va_list ap)
 {
 	char str[255];
@@ -926,6 +928,7 @@ static int inter_vlog(char *fmt, va_list ap)
  * @param ... Additional (printf-like) arguments
  * @return Always 0 // FIXME
  */
+static int inter_log(char *fmt, ...) __attribute__((format(printf, 1, 2)));
 static int inter_log(char *fmt, ...)
 {
 	va_list ap;
