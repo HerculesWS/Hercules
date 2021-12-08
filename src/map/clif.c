@@ -9951,8 +9951,13 @@ static void clif_mobname_additional_ack(int fd, struct block_list *bl)
 		str_p += sprintf(str_p, "HP: %u%% | ", get_percentage(md->status.hp, md->status.max_hp));
 	//Even thought mobhp ain't a name, we send it as one so the client
 	//can parse it. [Skotlex]
-	if (str_p != mobhp) {
-		*(str_p-3) = '\0'; //Remove trailing space + pipe.
+	if ((battle_config.show_mob_info & (4 | 1 | 2)) != 0 && str_p != mobhp) {
+		// ignoring bound check because gcc may detect is as error
+		PRAGMA_GCC46(GCC diagnostic push)
+		PRAGMA_GCC46(GCC diagnostic ignored "-Warray-bounds")
+		PRAGMA_GCC7(GCC diagnostic ignored "-Wstringop-overflow")
+		*(str_p - 3) = '\0'; //Remove trailing space + pipe.
+		PRAGMA_GCC46(GCC diagnostic pop)
 		memcpy(packet.party_name, mobhp, NAME_LENGTH);
 	}
 

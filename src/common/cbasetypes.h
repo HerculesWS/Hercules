@@ -321,6 +321,13 @@ typedef uintptr_t uintptr;
 #define PRAGMA_GCC5(str)
 #endif // ! defined(__GNUC__) && (GCC_VERSION >= 50000)
 
+// Pragma macro only enabled on gcc >= 7
+#if defined(__GNUC__) && (GCC_VERSION >= 70000)
+#define PRAGMA_GCC7(str) _Pragma(#str)
+#else // ! defined(__GNUC__) && (GCC_VERSION >= 70000)
+#define PRAGMA_GCC7(str)
+#endif // ! defined(__GNUC__) && (GCC_VERSION >= 70000)
+
 // Pragma macro only enabled on gcc >= 9
 #if defined(__GNUC__) && (GCC_VERSION >= 90000)
 #define PRAGMA_GCC9(str) _Pragma(#str)
