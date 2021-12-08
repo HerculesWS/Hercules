@@ -93,10 +93,10 @@ struct malloc_interface {
 };
 
 void free_proxy(void *p, const char *file, int line, const char *func);
-void *malloc_proxy(size_t size, const char *file, int line, const char *func) __attribute__ ((malloc, malloc (free_proxy, 1))) __attribute__ ((alloc_size (1)));
-void *calloc_proxy(size_t num, size_t size, const char *file, int line, const char *func) __attribute__ ((malloc, malloc (free_proxy, 1))) __attribute__ ((alloc_size (1, 2)));
-char *strdup_proxy(const char *p, const char *file, int line, const char *func) __attribute__ ((malloc, malloc (free_proxy, 1))) __attribute__((nonnull (1)));
-char *strndup_proxy(const char *p, size_t size, const char *file, int line, const char *func) __attribute__ ((malloc, malloc (free_proxy, 1))) __attribute__((nonnull (1)));
+void *malloc_proxy(size_t size, const char *file, int line, const char *func) GCCATTR ((malloc, malloc (free_proxy, 1))) __attribute__ ((alloc_size (1)));
+void *calloc_proxy(size_t num, size_t size, const char *file, int line, const char *func) GCCATTR ((malloc, malloc (free_proxy, 1))) __attribute__ ((alloc_size (1, 2)));
+char *strdup_proxy(const char *p, const char *file, int line, const char *func) GCCATTR ((malloc, malloc (free_proxy, 1))) __attribute__((nonnull (1)));
+char *strndup_proxy(const char *p, size_t size, const char *file, int line, const char *func) GCCATTR ((malloc, malloc (free_proxy, 1))) __attribute__((nonnull (1)));
 
 #ifdef HERCULES_CORE
 
