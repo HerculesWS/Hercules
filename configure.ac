@@ -22,7 +22,7 @@
 
 AC_INIT(Hercules)
 AC_REVISION([m4_esyscmd_s([type git >/dev/null 2>&1 && git describe --always 2>/dev/null || echo '(unknown version)'])])
-AC_PREREQ([2.59])
+AC_PREREQ([2.69])
 AC_CONFIG_SRCDIR([src/common/cbasetypes.h])
 AC_CONFIG_FILES([Makefile src/common/Makefile])
 AC_CONFIG_FILES([3rdparty/mt19937ar/Makefile 3rdparty/libconfig/Makefile 3rdparty/libbacktrace/Makefile 3rdparty/libbacktrace/backtrace-supported.h])
@@ -91,7 +91,7 @@ esac
 #
 AC_ARG_ENABLE(
 	[manager],
-	AC_HELP_STRING(
+	AS_HELP_STRING(
 		[--enable-manager=ARG],
 		[memory managers: no, builtin, memwatch, dmalloc, gcollect, bcheck (defaults to builtin)]
 	),
@@ -116,7 +116,7 @@ AC_ARG_ENABLE(
 #
 AC_ARG_ENABLE(
 	[packetver],
-	AC_HELP_STRING(
+	AS_HELP_STRING(
 		[--enable-packetver=ARG],
 		[Sets the PACKETVER define. (see src/common/mmo.h)]
 	),
@@ -129,7 +129,7 @@ AC_ARG_ENABLE(
 #
 AC_ARG_ENABLE(
 	[cashshop-preview-patch],
-	AC_HELP_STRING(
+	AS_HELP_STRING(
 		[--enable-cashshop-preview-patch],
 		[Enable Nemo patch ExtendCashShopPreview.]
 	),
@@ -143,7 +143,7 @@ AC_ARG_ENABLE(
 #
 AC_ARG_ENABLE(
 	[packetver-re],
-	AC_HELP_STRING(
+	AS_HELP_STRING(
 		[--enable-packetver-re],
 		[Sets or unsets the PACKETVER_RE define - see src/common/mmo.h (currently disabled by default)]
 	),
@@ -164,7 +164,7 @@ AC_ARG_ENABLE(
 #
 AC_ARG_ENABLE(
 	[packetver-zero],
-	AC_HELP_STRING(
+	AS_HELP_STRING(
 		[--enable-packetver-zero],
 		[Sets or unsets the PACKETVER_ZERO define - see src/common/mmo.h (currently disabled by default)]
 	),
@@ -184,7 +184,7 @@ AC_ARG_ENABLE(
 #
 AC_ARG_ENABLE(
 	[packetver-sak],
-	AC_HELP_STRING(
+	AS_HELP_STRING(
 		[--enable-packetver-sak],
 		[Sets or unsets the PACKETVER_SAK define - see src/common/mmo.h (currently disabled by default)]
 	),
@@ -204,7 +204,7 @@ AC_ARG_ENABLE(
 #
 AC_ARG_ENABLE(
 	[packetver-ad],
-	AC_HELP_STRING(
+	AS_HELP_STRING(
 		[--enable-packetver-ad],
 		[Sets or unsets the PACKETVER_AD define - see src/common/mmo.h (currently disabled by default)]
 	),
@@ -255,7 +255,7 @@ fi
 #
 AC_ARG_WITH(
 	[key1],
-	AC_HELP_STRING(
+	AS_HELP_STRING(
 		[--with-key1@<:@=ARG@:>@],
 		[Set the first obfuscation key (ignored unless the other two are also specified)]
 	),
@@ -271,7 +271,7 @@ AC_ARG_WITH(
 )
 AC_ARG_WITH(
 	[key2],
-	AC_HELP_STRING(
+	AS_HELP_STRING(
 		[--with-key2@<:@=ARG@:>@],
 		[Set the second obfuscation key (ignored unless the other two are also specified)]
 	),
@@ -287,7 +287,7 @@ AC_ARG_WITH(
 )
 AC_ARG_WITH(
 	[key3],
-	AC_HELP_STRING(
+	AS_HELP_STRING(
 		[--with-key3@<:@=ARG@:>@],
 		[Set the third obfuscation key (ignored unless the other two are also specified)]
 	),
@@ -308,7 +308,7 @@ AC_ARG_WITH(
 #
 AC_ARG_ENABLE(
 	[debug],
-	AC_HELP_STRING(
+	AS_HELP_STRING(
 		[--enable-debug@<:@=ARG@:>@],
 		[
 			Compiles extra debug code. (yes by default)
@@ -332,7 +332,7 @@ AC_ARG_ENABLE(
 #
 AC_ARG_ENABLE(
 	[libbacktrace],
-	AC_HELP_STRING(
+	AS_HELP_STRING(
 		[--enable-libbacktrace@<:@=ARG@:>@],
 		[
 			Compiles with libbacktrace. (no by default - experimental)
@@ -363,7 +363,7 @@ AC_ARG_ENABLE(
 #
 AC_ARG_ENABLE(
 	[buildbot],
-	AC_HELP_STRING(
+	AS_HELP_STRING(
 		[--enable-buildbot@<:@=ARG@:>@],
 		[(available options: yes, no)]
 	),
@@ -383,7 +383,7 @@ AC_ARG_ENABLE(
 #
 AC_ARG_ENABLE(
 	[rdtsc],
-	AC_HELP_STRING(
+	AS_HELP_STRING(
 		[--enable-rdtsc],
 		[
 			Uses rdtsc as timing source (disabled by default)
@@ -412,7 +412,7 @@ AC_ARG_ENABLE(
 #
 AC_ARG_ENABLE(
 	[profiler],
-	AC_HELP_STRING(
+	AS_HELP_STRING(
 		[--enable-profiler=ARG],
 		[Profilers: no, gprof (disabled by default)]
 	),
@@ -433,7 +433,7 @@ AC_ARG_ENABLE(
 #
 AC_ARG_ENABLE(
 	[64bit],
-	AC_HELP_STRING(
+	AS_HELP_STRING(
 		[--disable-64bit],
 		[
 			Enforce 32bit output on x86_64 systems.
@@ -456,7 +456,7 @@ AC_ARG_ENABLE(
 #
 AC_ARG_ENABLE(
 	[lto],
-	AC_HELP_STRING(
+	AS_HELP_STRING(
 		[--enable-lto],
 		[
 			Enables or Disables Linktime Code Optimization (LTO is disabled by default)
@@ -479,7 +479,7 @@ AC_ARG_ENABLE(
 #
 AC_ARG_ENABLE(
 	[static],
-	AC_HELP_STRING(
+	AS_HELP_STRING(
 		[--enable-static],
 		[
 			Enables or Disables Statick Linking (STATIC is disabled by default)
@@ -502,7 +502,7 @@ AC_ARG_ENABLE(
 #
 AC_ARG_ENABLE(
 	[sanitize],
-	AC_HELP_STRING(
+	AS_HELP_STRING(
 		[--enable-sanitize@<:@=ARG@:>@],
 		[
 			Enables sanitizer. (disabled by default)
@@ -534,7 +534,7 @@ AC_ARG_ENABLE(
 #
 AC_ARG_ENABLE(
 	[Werror],
-	AC_HELP_STRING(
+	AS_HELP_STRING(
 		[--enable-Werror],
 		[
 			Enables -Werror in the compiler flags. (disabled by default)
@@ -557,7 +557,7 @@ AC_ARG_ENABLE(
 #
 AC_ARG_ENABLE(
 	[renewal],
-	AC_HELP_STRING(
+	AS_HELP_STRING(
 		[--disable-renewal],
 		[
 			Disable Ragnarok Renewal support (override settings in src/config/renewal.h)
@@ -581,7 +581,7 @@ AC_ARG_ENABLE(
 #
 AC_ARG_WITH(
 	[maxconn],
-	AC_HELP_STRING(
+	AS_HELP_STRING(
 		[--with-maxconn@<:@=ARG@:>@],
 		[optionally set the maximum connections the core can handle (Without epoll enabled, default: 1024. With epol enabled: 3072)]
 	),
@@ -605,7 +605,7 @@ AC_ARG_WITH(
 #
 AC_ARG_WITH(
 	[mysql],
-	AC_HELP_STRING(
+	AS_HELP_STRING(
 		[--with-mysql@<:@=ARG@:>@],
 		[optionally specify the path to the mysql_config executable]
 	),
@@ -625,7 +625,7 @@ AC_ARG_WITH(
 #
 AC_ARG_WITH(
 	[MYSQL_CFLAGS],
-	AC_HELP_STRING(
+	AS_HELP_STRING(
 		[--with-MYSQL_CFLAGS=ARG],
 		[specify MYSQL_CFLAGS manually (instead of using "mysql_config --include")]
 	),
@@ -642,7 +642,7 @@ AC_ARG_WITH(
 #
 AC_ARG_WITH(
 	[MYSQL_LIBS],
-	AC_HELP_STRING(
+	AS_HELP_STRING(
 		[--with-MYSQL_LIBS=ARG],
 		[specify MYSQL_LIBS manually (instead of using "mysql_config --libs")]
 	),
