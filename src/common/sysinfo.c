@@ -47,16 +47,16 @@
 
 /// Private interface fields
 struct sysinfo_private {
-	char *platform;
-	char *osversion;
-	char *cpu;
+	const char *platform;
+	const char *osversion;
+	const char *cpu;
 	int cpucores;
-	char *arch;
-	char *compiler;
-	char *cflags;
+	const char *arch;
+	const char *compiler;
+	const char *cflags;
 	char *vcstype_name;
 	int vcstype;
-	char *vcsrevision_src;
+	const char *vcsrevision_src;
 	char *vcsrevision_scripts;
 };
 

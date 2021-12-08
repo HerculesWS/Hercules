@@ -81,7 +81,7 @@ static time_t start_time;
 static struct timer_func_list {
 	struct timer_func_list* next;
 	TimerFunc func;
-	char* name;
+	const char* name;
 } *tfl_root = NULL;
 
 /// Sets the name of a timer function.

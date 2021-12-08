@@ -89,7 +89,7 @@ struct mapindex_interface {
 	/* number of entries in the index table */
 	int num;
 	/* default map name */
-	char *default_map;
+	const char *default_map;
 	/* default x on map */
 	int default_x;
 	/* default y on map */

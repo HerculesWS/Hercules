@@ -8120,7 +8120,7 @@ static BUILDIN(deletearray)
 	struct map_session_data *sd = NULL;
 	struct script_array *sa = NULL;
 	struct reg_db *src = NULL;
-	void *value;
+	const void *value;
 
 	data = script_getdata(st, 2);
 	if( !data_isreference(data) )
@@ -8161,9 +8161,9 @@ static BUILDIN(deletearray)
 		return true;// nothing to free
 
 	if( is_string_variable(name) )
-		value = (void *)"";
+		value = (const void *)"";
 	else
-		value = (void *)0;
+		value = (const void *)0;
 
 	if( script_hasdata(st,3) ) {
 		unsigned int count = script_getnum(st, 3);
