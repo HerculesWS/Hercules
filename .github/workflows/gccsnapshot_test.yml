@@ -57,14 +57,20 @@ jobs:
 
       - name: gcc version
         run: |
+          export PATH=/usr/lib/gcc-snapshot/bin:$PATH
           gcc --version
+          ls -la /usr/lib/x86_64-linux-gnu/libasan.* || true
+          ls -la /usr/lib/gcc-snapshot/lib/libasan.* || true
+          ls -la /usr/lib/gcc-snapshot/lib/libasan.so.7.0.0
 
       - name: init database
         run: |
+          export PATH=/usr/lib/gcc-snapshot/bin:$PATH
           ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok $SQLHOST
 
       - name: get plugins
         run: |
+          export PATH=/usr/lib/gcc-snapshot/bin:$PATH
           ./tools/ci/travis.sh getplugins || true
 
       - name: build
@@ -75,9 +81,12 @@ jobs:
       - name: test
         run: |
           export PATH=/usr/lib/gcc-snapshot/bin:$PATH
+          export LD_PRELOAD=/usr/lib/gcc-snapshot/lib/libasan.so.7.0.0
           ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
 
       - name: extra test
         if: env.PACKET_VERSION != '--enable-packetver=20130724'
         run: |
+          export PATH=/usr/lib/gcc-snapshot/bin:$PATH
+          export LD_PRELOAD=/usr/lib/gcc-snapshot/lib/libasan.so.7.0.0
           ./tools/ci/travis.sh extratest
