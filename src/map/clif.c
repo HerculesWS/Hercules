@@ -16272,7 +16272,7 @@ static void clif_parse_GMReqNoChat(int fd, struct map_session_data *sd)
 {
 	int id, type, value;
 	struct map_session_data *dstsd;
-	char command[NAME_LENGTH+15];
+	char command[100];
 
 	id = RFIFOL(fd,2);
 	type = RFIFOB(fd,6);
@@ -23687,7 +23687,7 @@ static time_t clif_attendance_getendtime(void)
 	time_t timestamp;
 	struct tm tmtime = { 0 };
 	int year = 0, month = 0, day = 0;
-	char timestring[9];
+	char timestring[15];
 
 	sprintf(timestring, "%8d", battle_config.feature_attendance_endtime);
 	sscanf(timestring, "%4d%2d%2d", &year, &month, &day);
@@ -24105,11 +24105,11 @@ static void clif_parse_cameraInfo(int fd, struct map_session_data *sd)
 		return;
 
 	const struct PACKET_CZ_CAMERA_INFO *const p = RFIFOP(fd, 0);
-	char command[100];
+	char command[200];
 	if (p->action == 1) {
-		sprintf(command, "%ccamerainfo", atcommand->at_symbol);
+		safesnprintf(command, sizeof(command), "%ccamerainfo", atcommand->at_symbol);
 	} else {
-		sprintf(command, "%ccamerainfo %15f %15f %15f", atcommand->at_symbol, p->range, p->rotation, p->latitude);
+		safesnprintf(command, sizeof(command),  "%ccamerainfo %f %f %f", atcommand->at_symbol, p->range, p->rotation, p->latitude);
 	}
 	atcommand->exec(fd, sd, command, true);
 #endif

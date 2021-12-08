@@ -1523,7 +1523,7 @@ static bool achievement_readdb_validate_criteria_achievement(const struct config
 static bool achievement_readdb_objective_sub(const struct config_setting_t *conf, int index, struct achievement_data *entry)
 {
 	struct config_setting_t *tt = NULL;
-	char objnum[12];
+	char objnum[13];
 
 	nullpo_retr(false, conf);
 	nullpo_retr(false, entry);
