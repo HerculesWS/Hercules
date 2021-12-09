@@ -342,6 +342,13 @@ typedef uintptr_t uintptr;
 #define GCCATTR(str) 
 #endif // defined(__GNUC__) && !defined(__clang__)
 
+// attribute for gcc only
+#if defined(__GNUC__) && !defined(__clang__) && (GCC_VERSION >= 110000)
+#define GCC11ATTR(str) __attribute__ (str)
+#else  // defined(__GNUC__) && !defined(__clang__)
+#define GCC11ATTR(str) 
+#endif // defined(__GNUC__) && !defined(__clang__)
+
 // fallthrough attribute only enabled on gcc >= 7.0
 #if defined(__GNUC__) && (GCC_VERSION >= 70000)
 #define FALLTHROUGH __attribute__ ((fallthrough));

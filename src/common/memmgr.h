@@ -76,12 +76,12 @@ struct malloc_interface {
 	void (*init) (void);
 	void (*final) (void);
 	/* */
-	void* (*malloc)(size_t size, const char *file, int line, const char *func) __attribute__ ((alloc_size (1)));
-	void* (*calloc)(size_t num, size_t size, const char *file, int line, const char *func) __attribute__ ((alloc_size (1, 2)));
-	void* (*realloc)(void *p, size_t size, const char *file, int line, const char *func) __attribute__ ((alloc_size (2))) __attribute__((nonnull (1)));
-	void* (*reallocz)(void *p, size_t size, const char *file, int line, const char *func) __attribute__ ((alloc_size (2)));
-	char* (*astrdup)(const char *p, const char *file, int line, const char *func) __attribute__((nonnull (1)));
-	char *(*astrndup)(const char *p, size_t size, const char *file, int line, const char *func) __attribute__((nonnull (1)));
+	void* (*malloc)(size_t size, const char *file, int line, const char *func) __attribute__ ((alloc_size (1))) GCCATTR ((returns_nonnull));
+	void* (*calloc)(size_t num, size_t size, const char *file, int line, const char *func) __attribute__ ((alloc_size (1, 2))) GCCATTR ((returns_nonnull));
+	void* (*realloc)(void *p, size_t size, const char *file, int line, const char *func) __attribute__ ((alloc_size (2))) __attribute__((nonnull (1))) GCCATTR ((returns_nonnull));
+	void* (*reallocz)(void *p, size_t size, const char *file, int line, const char *func) __attribute__ ((alloc_size (2))) GCCATTR ((returns_nonnull));
+	char* (*astrdup)(const char *p, const char *file, int line, const char *func) __attribute__((nonnull (1))) GCCATTR ((returns_nonnull));
+	char *(*astrndup)(const char *p, size_t size, const char *file, int line, const char *func) __attribute__((nonnull (1))) GCCATTR ((returns_nonnull));
 	void  (*free)(void *p, const char *file, int line, const char *func);
 	/* */
 	void (*memory_check)(void);
@@ -93,10 +93,10 @@ struct malloc_interface {
 };
 
 void free_proxy(void *p, const char *file, int line, const char *func);
-void *malloc_proxy(size_t size, const char *file, int line, const char *func) GCCATTR ((malloc, malloc (free_proxy, 1))) __attribute__ ((alloc_size (1)));
-void *calloc_proxy(size_t num, size_t size, const char *file, int line, const char *func) GCCATTR ((malloc, malloc (free_proxy, 1))) __attribute__ ((alloc_size (1, 2)));
-char *strdup_proxy(const char *p, const char *file, int line, const char *func) GCCATTR ((malloc, malloc (free_proxy, 1))) __attribute__((nonnull (1)));
-char *strndup_proxy(const char *p, size_t size, const char *file, int line, const char *func) GCCATTR ((malloc, malloc (free_proxy, 1))) __attribute__((nonnull (1)));
+void *malloc_proxy(size_t size, const char *file, int line, const char *func) GCC11ATTR ((malloc, malloc (free_proxy, 1))) __attribute__ ((alloc_size (1))) GCCATTR ((returns_nonnull));
+void *calloc_proxy(size_t num, size_t size, const char *file, int line, const char *func) GCC11ATTR ((malloc, malloc (free_proxy, 1))) __attribute__ ((alloc_size (1, 2))) GCCATTR ((returns_nonnull));
+char *strdup_proxy(const char *p, const char *file, int line, const char *func) GCC11ATTR ((malloc, malloc (free_proxy, 1))) __attribute__((nonnull (1))) GCCATTR ((returns_nonnull));
+char *strndup_proxy(const char *p, size_t size, const char *file, int line, const char *func) GCC11ATTR ((malloc, malloc (free_proxy, 1))) __attribute__((nonnull (1))) GCCATTR ((returns_nonnull));
 
 #ifdef HERCULES_CORE
 

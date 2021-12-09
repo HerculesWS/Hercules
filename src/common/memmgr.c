@@ -113,7 +113,7 @@ struct malloc_interface *iMalloc;
 #error Unsupported OS
 #endif
 
-static void *aMalloc_(size_t size, const char *file, int line, const char *func) __attribute__ ((alloc_size (1)));
+static void *aMalloc_(size_t size, const char *file, int line, const char *func) __attribute__ ((alloc_size (1))) GCCATTR ((returns_nonnull));
 static void *aMalloc_(size_t size, const char *file, int line, const char *func)
 {
 	void *ret = MALLOC(size, file, line, func);
@@ -126,7 +126,7 @@ static void *aMalloc_(size_t size, const char *file, int line, const char *func)
 	return ret;
 }
 
-static void *aCalloc_(size_t num, size_t size, const char *file, int line, const char *func) __attribute__ ((alloc_size (1, 2)));
+static void *aCalloc_(size_t num, size_t size, const char *file, int line, const char *func) __attribute__ ((alloc_size (1, 2))) GCCATTR ((returns_nonnull));
 static void *aCalloc_(size_t num, size_t size, const char *file, int line, const char *func)
 {
 	void *ret = CALLOC(num, size, file, line, func);
@@ -138,7 +138,7 @@ static void *aCalloc_(size_t num, size_t size, const char *file, int line, const
 	return ret;
 }
 
-static void *aRealloc_(void *p, size_t size, const char *file, int line, const char *func) __attribute__ ((alloc_size (2))) __attribute__((nonnull (1)));
+static void *aRealloc_(void *p, size_t size, const char *file, int line, const char *func) __attribute__ ((alloc_size (2))) __attribute__((nonnull (1))) GCCATTR ((returns_nonnull));
 static void *aRealloc_(void *p, size_t size, const char *file, int line, const char *func)
 {
 	void *ret = REALLOC(p, size, file, line, func);
@@ -150,7 +150,7 @@ static void *aRealloc_(void *p, size_t size, const char *file, int line, const c
 	return ret;
 }
 
-static void *aReallocz_(void *p, size_t size, const char *file, int line, const char *func) __attribute__ ((alloc_size (2)));
+static void *aReallocz_(void *p, size_t size, const char *file, int line, const char *func) __attribute__ ((alloc_size (2))) GCCATTR ((returns_nonnull));
 static void *aReallocz_(void *p, size_t size, const char *file, int line, const char *func)
 {
 	unsigned char *ret = NULL;
@@ -174,7 +174,7 @@ static void *aReallocz_(void *p, size_t size, const char *file, int line, const 
 	return ret;
 }
 
-static char *aStrdup_(const char *p, const char *file, int line, const char *func) __attribute__((nonnull (1)));
+static char *aStrdup_(const char *p, const char *file, int line, const char *func) __attribute__((nonnull (1))) GCCATTR ((returns_nonnull));
 static char *aStrdup_(const char *p, const char *file, int line, const char *func)
 {
 	char *ret = STRDUP(p, file, line, func);
@@ -202,7 +202,7 @@ static char *aStrdup_(const char *p, const char *file, int line, const char *fun
  * @param func @see ALC_MARK.
  * @return the copied string.
  */
-static char *aStrndup_(const char *p, size_t size, const char *file, int line, const char *func) __attribute__((nonnull (1)));
+static char *aStrndup_(const char *p, size_t size, const char *file, int line, const char *func) __attribute__((nonnull (1))) GCCATTR ((returns_nonnull));
 static char *aStrndup_(const char *p, size_t size, const char *file, int line, const char *func)
 {
 	size_t len = strnlen(p, size);
