@@ -1,4 +1,4 @@
-name: gcc9_test
+name: gcc_test
 
 on: [push, pull_request]
 
@@ -18,7 +18,7 @@ jobs:
         RENEWAL: ["", "--disable-renewal"]
         CLIENT_TYPE: ["", "--enable-packetver-re", "--enable-packetver-zero"]
         SANITIZER: ["--disable-manager", "--disable-manager --enable-sanitize=full"]
-        PACKET_VERSION: ["--enable-packetver=20200304", "--enable-packetver=20130724"]
+        PACKET_VERSION: ["--enable-packetver=20211118", "--enable-packetver=20130724"]
         exclude:
           - PACKET_VERSION: "--enable-packetver=20130724"
             CLIENT_TYPE: "--enable-packetver-zero"

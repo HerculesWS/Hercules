@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix:
         # gcc, clang-8, clang-9 removed for reduce number of jobs
-        CC: ["gcc-10", "clang-11"]
+        CC: ["gcc-11", "clang-13"]
         RENEWAL: [""]
         CLIENT_TYPE: ["", "--enable-packetver-re", "--enable-packetver-zero"]
         SANITIZER: [""]
