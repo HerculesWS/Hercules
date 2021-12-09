@@ -1378,9 +1378,10 @@ struct config_setting_t *config_setting_set_int_elem(struct config_setting_t *ve
   {
     element = config_setting_get_elem(vector, idx);
 
-    if(! element)
-      return(NULL);
   }
+
+  if(! element)
+    return(NULL);
 
   if(! config_setting_set_int(element, value))
     return(NULL);
@@ -1418,10 +1419,10 @@ struct config_setting_t *config_setting_set_int64_elem(struct config_setting_t *
   else
   {
     element = config_setting_get_elem(vector, idx);
-
-    if(! element)
-      return(NULL);
   }
+
+  if(! element)
+    return(NULL);
 
   if(! config_setting_set_int64(element, value))
     return(NULL);

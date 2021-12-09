@@ -43,6 +43,14 @@ static const char *__scanctx_add_filename(struct scan_context *ctx,
   unsigned int count = ctx->num_filenames;
   char **f;
 
+  if(filename == NULL)
+  {
+    if (count > 0)
+      return ctx->filenames[0];
+    else
+      return "";
+  }
+
   for(f = ctx->filenames; count > 0; ++f, --count)
   {
     if(!strcmp(*f, filename))
@@ -105,10 +113,17 @@ FILE *scanctx_push_include(struct scan_context *ctx, void *buffer,
   }
 
   file = scanctx_take_string(ctx);
+  if(file == NULL)
+    return(NULL);
   if(ctx->config->include_dir)
   {
     full_file = (char *)malloc(strlen(ctx->config->include_dir) + strlen(file)
                                + 2);
+    if(full_file == NULL)
+    {
+      free(file);
+      return(NULL);
+    }
     strcpy(full_file, ctx->config->include_dir);
     strcat(full_file, FILE_SEPARATOR);
     strcat(full_file, file);
