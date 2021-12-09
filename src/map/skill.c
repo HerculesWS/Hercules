@@ -2738,9 +2738,8 @@ static int skill_counter_additional_effect(struct block_list *src, struct block_
 			break;
 		case LG_HESPERUSLIT:
 			if ( sc && sc->data[SC_FORCEOFVANGUARD] && sc->data[SC_BANDING] && sc->data[SC_BANDING]->val2 > 6 ) {
-					char i;
-					for( i = 0; i < sc->data[SC_FORCEOFVANGUARD]->val3 && sc->fv_counter <= sc->data[SC_FORCEOFVANGUARD]->val3 ; i++)
-					clif->millenniumshield(bl, sc->fv_counter++);
+					for(int i = 0; i < sc->data[SC_FORCEOFVANGUARD]->val3 && sc->fv_counter <= sc->data[SC_FORCEOFVANGUARD]->val3 ; i++)
+						clif->millenniumshield(bl, sc->fv_counter++);
 				}
 				break;
 		case SP_SPA:

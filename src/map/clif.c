@@ -20981,28 +20981,24 @@ static void clif_parse_cashShopBuy(int fd, struct map_session_data *sd)
 	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
 		return;
 
-	int len = RFIFOW(fd, 2);
-	unsigned short limit, i, j;
-	unsigned int kafra_pay;
-	int count;
-
 	if (map->list[sd->bl.m].flag.nocashshop) {
 		clif->messagecolor_self(fd, COLOR_RED, msg_fd(fd,1489)); //Cash Shop is disabled in this map
 		return;
 	}
 
+	int len = RFIFOW(fd, 2);
 	if (len < 10)
 		return;
 
-	limit = RFIFOW(fd, 4);
-	kafra_pay = RFIFOL(fd, 6); // [Ryuuzaki] - These are free cash points (strangely #CASH = main cash currently for us, confusing)
-	count = (len - 10) / 10;
+	unsigned short limit = RFIFOW(fd, 4);
+	unsigned int kafra_pay = RFIFOL(fd, 6); // [Ryuuzaki] - These are free cash points (strangely #CASH = main cash currently for us, confusing)
+	int count = (len - 10) / 10;
 	if (count != limit) {
 		ShowError("Wrong cash shop limit: %d\n", limit);
 		return;
 	}
 
-	for(i = 0; i < limit; i++) {
+	for(unsigned short i = 0; i < limit; i++) {
 		int qty = RFIFOL(fd, 14 + ( i * 10 ));
 		int id = RFIFOL(fd, 10 + ( i * 10 ));
 		short tab = RFIFOW(fd, 18 + ( i * 10 ));
@@ -21011,7 +21007,8 @@ static void clif_parse_cashShopBuy(int fd, struct map_session_data *sd)
 		if(tab < 0 || tab >= CASHSHOP_TAB_MAX)
 			continue;
 
-		for(j = 0; j < clif->cs.item_count[tab]; j++) {
+		int j;
+		for (j = 0; j < clif->cs.item_count[tab]; j++) {
 			if( clif->cs.data[tab][j]->id == id )
 				break;
 		}

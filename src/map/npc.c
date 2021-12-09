@@ -1661,7 +1661,6 @@ static void npc_market_fromsql(void)
 
 	while ( SQL_SUCCESS == SQL->StmtNextRow(stmt) ) {
 		struct npc_data *nd = NULL;
-		unsigned short i;
 
 		if( !(nd = npc->name2id(name)) ) {
 			ShowError("npc_market_fromsql: NPC '%s' not found! skipping...\n",name);
@@ -1673,7 +1672,8 @@ static void npc_market_fromsql(void)
 			continue;
 		}
 
-		for(i = 0; i < nd->u.scr.shop->items; i++) {
+		int i;
+		for (i = 0; i < nd->u.scr.shop->items; i++) {
 			if( nd->u.scr.shop->item[i].nameid == itemid ) {
 				nd->u.scr.shop->item[i].qty = amount;
 				break;
@@ -1751,7 +1751,6 @@ static void npc_barter_fromsql(void)
 
 	while (SQL_SUCCESS == SQL->StmtNextRow(stmt)) {
 		struct npc_data *nd = NULL;
-		unsigned short i;
 
 		if (!(nd = npc->name2id(name))) {
 			ShowError("npc_barter_fromsql: NPC '%s' not found! skipping...\n",name);
@@ -1763,6 +1762,7 @@ static void npc_barter_fromsql(void)
 			continue;
 		}
 
+		int i;
 		for (i = 0; i < nd->u.scr.shop->items; i++) {
 			struct npc_item_list *const item = &nd->u.scr.shop->item[i];
 			if (item->nameid == itemid && item->value == removeId && item->value2 == removeAmount) {
@@ -1869,7 +1869,6 @@ static void npc_expanded_barter_fromsql(void)
 
 	while (SQL_SUCCESS == SQL->StmtNextRow(stmt)) {
 		struct npc_data *nd = NULL;
-		unsigned short i;
 
 		if ((nd = npc->name2id(name)) == NULL) {
 			ShowError("npc_expanded_barter_fromsql: NPC '%s' not found! skipping...\n",name);
@@ -1881,6 +1880,7 @@ static void npc_expanded_barter_fromsql(void)
 			continue;
 		}
 
+		int i;
 		for (i = 0; i < nd->u.scr.shop->items; i++) {
 			struct npc_item_list *const item = &nd->u.scr.shop->item[i];
 			if (item->nameid == itemid && item->value == zeny) {
@@ -2016,7 +2016,7 @@ static bool npc_trader_open(struct map_session_data *sd, struct npc_data *nd)
 			clif->npcbuysell(sd,nd->bl.id);
 			return true;/* we skip sd->npc_shopid, npc->buysell will set it then when the player selects */
 		case NST_MARKET: {
-				unsigned short i;
+				int i;
 
 				for(i = 0; i < nd->u.scr.shop->items; i++) {
 					if( nd->u.scr.shop->item[i].qty )
@@ -2964,16 +2964,16 @@ static int npc_selllist(struct map_session_data *sd, struct itemlist *item_list)
 //This doesn't remove it from map_db
 static int npc_remove_map(struct npc_data *nd)
 {
-	int16 m,i;
 	nullpo_retr(1, nd);
 
 	if(nd->bl.prev == NULL || nd->bl.m < 0)
 		return 1; //Not assigned to a map.
-	m = nd->bl.m;
+	int16 m = nd->bl.m;
 	clif->clearunit_area(&nd->bl,CLR_RESPAWN);
 	npc->unsetcells(nd);
 	map->delblock(&nd->bl);
 	//Remove npc from map->list[].npc list. [Skotlex]
+	int i = 0;
 	ARR_FIND( 0, map->list[m].npc_num, i, map->list[m].npc[i] == nd );
 	if( i == map->list[m].npc_num ) return 2; //failed to find it?
 
@@ -5893,10 +5893,10 @@ static void npc_debug_warps_sub(struct npc_data *nd)
 
 static void npc_debug_warps(void)
 {
-	int16 m, i;
-	for (m = 0; m < map->count; m++)
-		for (i = 0; i < map->list[m].npc_num; i++)
+	for (int m = 0; m < map->count; m++) {
+		for (int i = 0; i < map->list[m].npc_num; i++)
 			npc->debug_warps_sub(map->list[m].npc[i]);
+	}
 }
 
 static void npc_questinfo_clear(struct npc_data *nd)
