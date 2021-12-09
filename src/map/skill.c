@@ -20865,7 +20865,7 @@ static void skill_init_unit_layout(void)
 	// afterwards add special ones
 	pos = i;
 	for (i=0;i<MAX_SKILL_DB;i++) {
-		if (!skill->dbs->db[i].unit_id[0] || skill->dbs->db[i].unit_layout_type[0] != -1)
+		if (skill->dbs->db[i].unit_layout_type[0] != -1)
 			continue;
 
 		switch (skill->dbs->db[i].nameid) {
