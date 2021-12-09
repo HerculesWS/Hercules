@@ -660,7 +660,7 @@ static int grfio_entryread(const char *grfname, int gentry)
 			int ofs2 = ofs+getlong(grf_filelist+ofs)+4;
 			unsigned char type = grf_filelist[ofs2+12];
 			if (type&FILELIST_TYPE_FILE) {
-				char *fname = grfio_decode_filename(grf_filelist+ofs+6, grf_filelist[ofs]-6);
+				char *fname = grfio->decode_filename(grf_filelist+ofs+6, grf_filelist[ofs]-6);
 				int srclen = getlong(grf_filelist+ofs2+0) - getlong(grf_filelist+ofs2+8) - 715;
 
 				if (strlen(fname) > sizeof(aentry.fn) - 1) {
@@ -994,4 +994,5 @@ void grfio_defaults(void)
 	grfio->decode_zip = grfio_decode_zip;
 	grfio->encode_zip = grfio_encode_zip;
 	grfio->report_error = grfio_report_error;
+	grfio->decode_filename = grfio_decode_filename;
 }

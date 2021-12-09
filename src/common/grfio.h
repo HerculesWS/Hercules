@@ -112,6 +112,7 @@ struct grfio_interface {
 	 */
 	void (*report_error) (int err);
 
+	char *(*decode_filename) (unsigned char *buf, int len);
 };
 
 /**
