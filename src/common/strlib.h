@@ -151,7 +151,7 @@ struct strlib_interface {
 
 struct stringbuf_interface {
 	StringBuf* (*Malloc) (void);
-	void (*Init) (StringBuf* self) GCCATTR ((access (read_write, 1)));
+	void (*Init) (StringBuf* self) GCCATTR ((access (write_only, 1)));
 	int (*Printf) (StringBuf *self, const char *fmt, ...) __attribute__((format(printf, 2, 3))) GCCATTR ((access(read_write, 1)));
 	int (*Vprintf) (StringBuf* self, const char* fmt, va_list args) __attribute__((format(printf, 2, 0)));
 	int (*Append) (StringBuf* self, const StringBuf *sbuf) GCCATTR ((access (read_write, 1), access (read_only, 2)));
