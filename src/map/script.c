@@ -791,9 +791,9 @@ static const char *script_skip_space(const char *p)
 						len++;
 				}
 				if (len >= 3 && cond[len] != '_' && !ISALNUM(cond[len])) {
-					int found = false;
+					bool found = false;
 					int i;
-					ARR_FIND(0, VECTOR_LENGTH(script->conditional_features), i, strncmp(cond, VECTOR_INDEX(script->conditional_features, i), len) != 0);
+					ARR_FIND(0, VECTOR_LENGTH(script->conditional_features), i, strncmp(cond, VECTOR_INDEX(script->conditional_features, i), len) == 0);
 					if (i != VECTOR_LENGTH(script->conditional_features))
 						found = true;
 					if (negated)
