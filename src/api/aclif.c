@@ -815,7 +815,7 @@ static void aclif_show_request(int fd, struct api_session_data *sd, bool show_ht
 
 	struct DBIterator *iter = db_iterator(sd->post_headers_db);
 	for (struct MimePart *data = dbi_first(iter); dbi_exists(iter); data = dbi_next(iter)) {
-		if (data->content_type == NULL || *data->content_type == '\x0')
+		if (*data->content_type == '\x0')
 			ShowInfo(" mime header: %s, '%s'\n", data->name, data->data);
 		else
 			ShowInfo(" mime header: %s, %s, '%s'\n", data->name, data->content_type, data->data);
