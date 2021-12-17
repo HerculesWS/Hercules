@@ -3793,6 +3793,9 @@ static void clif_updatestatus(struct map_session_data *sd, enum status_point_typ
 			pc->update_job_and_level(sd);
 			break;
 		case SP_HP:
+#if PACKETVER_ZERO_NUM >= 20210504
+		case SP_SP:
+#endif  // PACKETVER_ZERO_NUM >= 20210504
 			if (map->list[sd->bl.m].hpmeter_visible)
 				clif->hpmeter(sd);
 			if (!battle_config.party_hp_mode && sd->status.party_id)
