@@ -1352,9 +1352,6 @@ static int unit_set_walkdelay(struct block_list *bl, int64 tick, int delay, int 
 
 	nullpo_ret(bl);
 	if (type) {
-		//Bosses can ignore skill induced walkdelay (but not damage induced)
-		if (bl->type == BL_MOB && (BL_UCCAST(BL_MOB, bl)->status.mode&MD_BOSS))
-			return 0;
 		//Make sure walk delay is not decreased
 		if (DIFF_TICK(ud->canmove_tick, tick+delay) > 0)
 			return 0;
@@ -1363,7 +1360,7 @@ static int unit_set_walkdelay(struct block_list *bl, int64 tick, int delay, int 
 		if (!unit->can_move(bl))
 			return 0;
 		//Immune to being stopped for double the flinch time
-		if (DIFF_TICK(ud->canmove_tick, tick-delay) > 0)
+		if (DIFF_TICK(ud->canmove_tick, tick) > 0)
 			return 0;
 	}
 	ud->canmove_tick = tick + delay;
