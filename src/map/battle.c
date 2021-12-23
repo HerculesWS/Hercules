@@ -7850,6 +7850,9 @@ static const struct battle_data {
 	{ "merc_natural_heal_cap",              &battle_config.merc_natural_heal_cap,          1000,    1,      INT_MAX,        },
 	{ "macro_detect_retry",                 &battle_config.macro_detect_retry,                1,    1,      INT_MAX,        },
 	{ "macro_detect_timeout",               &battle_config.macro_detect_timeout,              0,    0,      INT_MAX,        },
+	{ "roulette_gold_step",                 &battle_config.roulette_gold_step,               10,   1,      INT_MAX,        },
+	{ "roulette_silver_step",               &battle_config.roulette_silver_step,             10,   1,      INT_MAX,        },
+	{ "roulette_bronze_step",               &battle_config.roulette_bronze_step,             1,    1,      INT_MAX,        },
 };
 
 static bool battle_set_value_sub(int index, int value)

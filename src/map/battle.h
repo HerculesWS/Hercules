@@ -632,6 +632,10 @@ struct Battle_Config {
 
 	int macro_detect_retry;
 	int macro_detect_timeout;
+
+	int roulette_gold_step;
+	int roulette_silver_step;
+	int roulette_bronze_step;
 };
 
 /* criteria for battle_config.idletime_criteria */

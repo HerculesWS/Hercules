@@ -22005,22 +22005,23 @@ static void clif_parse_RouletteGenerate(int fd, struct map_session_data *sd)
 	if( sd->roulette.stage >= MAX_ROULETTE_LEVEL )
 		stage = sd->roulette.stage = 0;
 
-	if( stage == 0 ) {
-		if( pc_readglobalreg(sd, script->add_variable("TmpRouletteBronze")) <= 0 &&
-		    pc_readglobalreg(sd, script->add_variable("TmpRouletteSilver")) < 10 &&
-		    pc_readglobalreg(sd, script->add_variable("TmpRouletteGold")) < 10 )
+	if (stage == 0) {
+		if (pc_readglobalreg(sd, script->add_variable("TmpRouletteBronze")) <= battle->bc->roulette_bronze_step - 1 &&
+		    pc_readglobalreg(sd, script->add_variable("TmpRouletteSilver")) <= battle->bc->roulette_silver_step - 1 &&
+		    pc_readglobalreg(sd, script->add_variable("TmpRouletteGold")) <= battle->bc->roulette_gold_step - 1) {
 			result = GENERATE_ROULETTE_NO_ENOUGH_POINT;
+		}
 	}
 
 	if( result == GENERATE_ROULETTE_SUCCESS ) {
 		if( stage == 0 ) {
-			if( pc_readglobalreg(sd, script->add_variable("TmpRouletteBronze")) > 0 ) {
-				pc_setglobalreg(sd, script->add_variable("TmpRouletteBronze"), pc_readglobalreg(sd, script->add_variable("TmpRouletteBronze")) - 1);
-			} else if( pc_readglobalreg(sd, script->add_variable("TmpRouletteSilver")) > 9 ) {
-				pc_setglobalreg(sd, script->add_variable("TmpRouletteSilver"), pc_readglobalreg(sd, script->add_variable("TmpRouletteSilver")) - 10);
+			if (pc_readglobalreg(sd, script->add_variable("TmpRouletteBronze")) > battle->bc->roulette_bronze_step - 1) {
+				pc_setglobalreg(sd, script->add_variable("TmpRouletteBronze"), pc_readglobalreg(sd, script->add_variable("TmpRouletteBronze")) - battle->bc->roulette_bronze_step);
+			} else if (pc_readglobalreg(sd, script->add_variable("TmpRouletteSilver")) > battle->bc->roulette_silver_step - 1) {
+				pc_setglobalreg(sd, script->add_variable("TmpRouletteSilver"), pc_readglobalreg(sd, script->add_variable("TmpRouletteSilver")) - battle->bc->roulette_silver_step);
 				stage = sd->roulette.stage = 2;
-			} else if( pc_readglobalreg(sd, script->add_variable("TmpRouletteGold")) > 9 ) {
-				pc_setglobalreg(sd, script->add_variable("TmpRouletteGold"), pc_readglobalreg(sd, script->add_variable("TmpRouletteGold")) - 10);
+			} else if (pc_readglobalreg(sd, script->add_variable("TmpRouletteGold")) > battle->bc->roulette_gold_step - 1) {
+				pc_setglobalreg(sd, script->add_variable("TmpRouletteGold"), pc_readglobalreg(sd, script->add_variable("TmpRouletteGold")) - battle->bc->roulette_gold_step);
 				stage = sd->roulette.stage = 4;
 			}
 		}
