@@ -24269,7 +24269,11 @@ static void clif_npc_expanded_barter_open(struct map_session_data *sd, struct np
 			item->nameid = shop[i].nameid;
 			item->type   = itemtype(id->type);
 			item->amount = shop[i].qty;
+#if PACKETVER_MAIN_NUM >= 20191224 || PACKETVER_RE_NUM >= 20191224 || PACKETVER_ZERO_NUM >= 20200115
 			item->weight = id->weight * 10;
+#else  // PACKETVER >= 20191224
+			item->weight = id->weight;
+#endif  // PACKETVER >= 20191224
 			item->index  = i;
 			item->zeny   = shop[i].value;
 #if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103
