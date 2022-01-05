@@ -5605,6 +5605,18 @@
 - `DIALOG_ALIGN_MIDDLE`: 4
 - `DIALOG_ALIGN_BOTTOM`: 5
 
+### Grade Enchant
+
+- `ITEM_GRADE_NONE`: 0
+- `ITEM_GRADE_D`: 1
+- `ITEM_GRADE_C`: 2
+- `ITEM_GRADE_B`: 3
+- `ITEM_GRADE_A`: 4
+- `ITEM_GRADE_R`: 5
+- `ITEM_GRADE_S`: 6
+- `ITEM_GRADE_SS`: 7
+- `ITEM_GRADE_MAX`: 8
+
 ### Renewal
 
 - `RENEWAL`: 1
@@ -19850,6 +19862,14 @@
 - `HighpriestStone_Middle2`: 1000017
 - `HighpriestStone_Bottom2`: 1000018
 - `ArchbishopStone_Robe2`: 1000019
+- `Amber`: 1000321
+- `Etel_Dust`: 1000322
+- `Etel_Stone`: 1000323
+- `Etel_Skyblue_Jewel`: 1000325
+- `Etel_Topaz`: 1000326
+- `Etel_Violet_Jewel`: 1000327
+- `Etel_Amber`: 1000328
+- `Blessed_Etel_Dust`: 1000337
 - `C_SharkHead`: 440000
 - `Atker_Greave`: 470000
 - `Ele_Shoes`: 470001
