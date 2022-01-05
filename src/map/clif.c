@@ -3790,6 +3790,9 @@ static void clif_updatestatus(struct map_session_data *sd, enum status_point_typ
 			pc->update_job_and_level(sd);
 			break;
 		case SP_HP:
+#if PACKETVER_ZERO_NUM >= 20210504
+		case SP_SP:
+#endif  // PACKETVER_ZERO_NUM >= 20210504
 			if (map->list[sd->bl.m].hpmeter_visible)
 				clif->hpmeter(sd);
 			if (!battle_config.party_hp_mode && sd->status.party_id)
@@ -24221,7 +24224,11 @@ static void clif_npc_expanded_barter_open(struct map_session_data *sd, struct np
 			item->nameid = shop[i].nameid;
 			item->type   = itemtype(id->type);
 			item->amount = shop[i].qty;
+#if PACKETVER_MAIN_NUM >= 20191224 || PACKETVER_RE_NUM >= 20191224 || PACKETVER_ZERO_NUM >= 20200115
 			item->weight = id->weight * 10;
+#else  // PACKETVER >= 20191224
+			item->weight = id->weight;
+#endif  // PACKETVER >= 20191224
 			item->index  = i;
 			item->zeny   = shop[i].value;
 #if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103
