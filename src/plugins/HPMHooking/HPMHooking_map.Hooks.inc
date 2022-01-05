@@ -38086,15 +38086,15 @@ int HP_homun_get_max_level(struct homun_data *hd) {
 	}
 	return retVal___;
 }
-uint64 HP_homun_get_exp(struct homun_data *hd, int idx) {
+uint64 HP_homun_get_exp_next(struct homun_data *hd) {
 	int hIndex = 0;
 	uint64 retVal___ = 0;
-	if (HPMHooks.count.HP_homun_get_exp_pre > 0) {
-		uint64 (*preHookFunc) (struct homun_data **hd, int *idx);
+	if (HPMHooks.count.HP_homun_get_exp_next_pre > 0) {
+		uint64 (*preHookFunc) (struct homun_data **hd);
 		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_homun_get_exp_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_homun_get_exp_pre[hIndex].func;
-			retVal___ = preHookFunc(&hd, &idx);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_homun_get_exp_next_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_homun_get_exp_next_pre[hIndex].func;
+			retVal___ = preHookFunc(&hd);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -38102,13 +38102,13 @@ uint64 HP_homun_get_exp(struct homun_data *hd, int idx) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.homun.get_exp(hd, idx);
+		retVal___ = HPMHooks.source.homun.get_exp_next(hd);
 	}
-	if (HPMHooks.count.HP_homun_get_exp_post > 0) {
-		uint64 (*postHookFunc) (uint64 retVal___, struct homun_data *hd, int idx);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_homun_get_exp_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_homun_get_exp_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, hd, idx);
+	if (HPMHooks.count.HP_homun_get_exp_next_post > 0) {
+		uint64 (*postHookFunc) (uint64 retVal___, struct homun_data *hd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_homun_get_exp_next_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_homun_get_exp_next_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, hd);
 		}
 	}
 	return retVal___;

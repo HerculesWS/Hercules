@@ -377,7 +377,7 @@ static bool homunculus_levelup(struct homun_data *hd)
 		hom->skillpts++; //1 skillpoint each 3 base level
 
 	hom->exp -= hd->exp_next;
-	hd->exp_next = homun->get_exp(hd, hom->level - 1);
+	hd->exp_next = homun->get_exp_next(hd);
 
 	max  = &hd->homunculusDB->gmax;
 	min  = &hd->homunculusDB->gmin;
@@ -864,7 +864,7 @@ static bool homunculus_create(struct map_session_data *sd, const struct s_homunc
 	hd->homunculusDB = &homun->dbs->db[i];
 	memcpy(&hd->homunculus, hom, sizeof(struct s_homunculus));
 	hd->homunculus.char_id = sd->status.char_id; // Fix character ID if necessary.
-	hd->exp_next = homun->get_exp(hd, hd->homunculus.level - 1);
+	hd->exp_next = homun->get_exp_next(hd);
 
 	status->set_viewdata(&hd->bl, hd->homunculus.class_);
 	status->change_init(&hd->bl);
@@ -1095,7 +1095,7 @@ static void homunculus_stat_reset(struct homun_data *hd)
 	hom->dex = base->dex *10;
 	hom->luk = base->luk *10;
 	hom->exp = 0;
-	hd->exp_next = homun->get_exp(hd, 0);
+	hd->exp_next = homun->get_exp_next(hd);
 	memset(&hd->homunculus.hskill, 0, sizeof hd->homunculus.hskill);
 	hd->homunculus.skillpts = 0;
 }
@@ -1419,18 +1419,18 @@ static int homunculus_get_max_level(struct homun_data *hd)
 	return gp->max_level;
 }
 
-static uint64 homunculus_get_exp(struct homun_data *hd, int idx)
+static uint64 homunculus_get_exp_next(struct homun_data *hd)
 {
 	nullpo_ret(hd);
 	Assert_ret(homdb_checkid(hd->homunculus.class_));
 
+	if (hd->homunculus.level >= homun->get_max_level(hd) || hd->homunculus.level <= 0)
+		return 0;
+
 	const struct class_exp_group *gp = homun->dbs->exptable[hd->homunculus.class_ - HM_CLASS_BASE];
 	nullpo_ret(gp);
 
-	const int exp_len = VECTOR_LENGTH(gp->exp);
-	Assert_ret(idx >= 0 && idx <= exp_len);
-
-	return VECTOR_INDEX(gp->exp, idx);
+	return VECTOR_INDEX(gp->exp, hd->homunculus.level >= gp->max_level ? 0 : hd->homunculus.level - 1);
 }
 
 static void homunculus_skill_db_read(void)
@@ -1530,5 +1530,5 @@ void homunculus_defaults(void)
 	homun->delspiritball = homunculus_delspiritball;
 	homun->get_intimacy_grade = homunculus_get_intimacy_grade;
 	homun->get_max_level = homunculus_get_max_level;
-	homun->get_exp = homunculus_get_exp;
+	homun->get_exp_next = homunculus_get_exp_next;
 }

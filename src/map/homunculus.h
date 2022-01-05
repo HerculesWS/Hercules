@@ -212,7 +212,7 @@ struct homunculus_interface {
 	void (*delspiritball) (struct homun_data *hd, int count, int type);
 	int8 (*get_intimacy_grade) (struct homun_data *hd);
 	int (*get_max_level) (struct homun_data *hd);
-	uint64 (*get_exp) (struct homun_data *hd, int idx);
+	uint64 (*get_exp_next) (struct homun_data *hd);
 };
 
 #ifdef HERCULES_CORE
