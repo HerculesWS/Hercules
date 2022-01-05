@@ -59,6 +59,7 @@ struct s_refine_requirement;
 struct PACKET_ZC_ACK_RANKING_sub;
 struct SKILLDATA;
 struct macroaidlist;
+struct s_grade_info;
 
 enum battle_dmg_type;
 enum clif_messages;
@@ -67,6 +68,8 @@ enum rodex_get_zeny;
 enum rodex_get_items;
 enum macro_detect_status;
 enum macro_report_status;
+enum grade_level;
+enum grade_ui_result;
 
 /**
  * Defines
@@ -591,7 +594,10 @@ enum zc_ui_types {
 #if PACKETVER >= 20171122
 	ZC_TIPBOX_UI = 5,
 	ZC_RENEWQUEST_UI = 6,
-	ZC_ATTENDANCE_UI = 7
+	ZC_ATTENDANCE_UI = 7,
+#endif
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+	ZC_GRADE_ENCHANT_UI = 8
 #endif
 };
 
@@ -1789,6 +1795,13 @@ struct clif_interface {
 	void (*macro_reporter_status) (struct map_session_data *sd, enum macro_report_status stype);
 
 	void (*sayDialogAlign) (struct map_session_data *sd, int npcid, enum say_dialog_align align);
+	void (*pGradeEnchantAddItem) (int fd, struct map_session_data *sd);
+	void (*pGradeEnchantStart) (int fd, struct map_session_data *sd);
+	void (*pGradeEnchantClose) (int fd, struct map_session_data *sd);
+	void (*grade_enchant_add_item_result_success) (struct map_session_data *sd, int idx, const struct s_grade_info *gi);
+	void (*grade_enchant_add_item_result_fail) (struct map_session_data *sd);
+	void (*grade_enchant_result) (struct map_session_data *sd, int16 index, enum grade_level gl, enum grade_ui_result result);
+	void (*announce_grade_status) (struct map_session_data *sd, int item_id, enum grade_level gl, bool success, enum send_target target);
 };
 
 #ifdef HERCULES_CORE

@@ -33,6 +33,7 @@
 #include "map/clif.h"
 #include "map/date.h"
 #include "map/elemental.h"
+#include "map/grader.h"
 #include "map/guild.h"
 #include "map/homunculus.h"
 #include "map/instance.h"
@@ -6117,6 +6118,7 @@ static void do_init_script(bool minimal)
 	script->declare_conditional_feature("PRERENEWAL", true);
 #endif
 	script->declare_conditional_feature("LOADGMSCRIPTS", script->config.load_gm_scripts);
+	script->declare_conditional_feature("LOADGRADESCRIPTS", (PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723));
 
 	if (minimal)
 		return;
@@ -27624,6 +27626,25 @@ static BUILDIN(setdialogalign)
 	return true;
 }
 
+static BUILDIN(opengradeui)
+{
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+	struct map_session_data *sd = script_rid2sd(st);
+
+	if (sd == NULL) {
+		script_pushint(st, 0);
+		return false;
+	}
+
+	clif->open_ui_send(sd, ZC_GRADE_ENCHANT_UI);
+	script_pushint(st, 1);
+	return true;
+#else
+	script_pushint(st, 0);
+	return false;
+#endif
+}
+
 /**
  * Adds a built-in script function.
  *
@@ -28476,6 +28497,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(getgrade, ""),
 		BUILDIN_DEF(getequipisenablegrade, "i"),
 		BUILDIN_DEF(getequipgrade, "i"),
+		BUILDIN_DEF(opengradeui, ""),
 	};
 	int i, len = ARRAYLENGTH(BUILDIN);
 	RECREATE(script->buildin, char *, script->buildin_count + len); // Pre-alloc to speed up
@@ -29367,6 +29389,17 @@ static void script_hardcoded_constants(void)
 	script->set_constant("DIALOG_ALIGN_TOP", DIALOG_ALIGN_TOP, false, false);
 	script->set_constant("DIALOG_ALIGN_MIDDLE", DIALOG_ALIGN_MIDDLE, false, false);
 	script->set_constant("DIALOG_ALIGN_BOTTOM", DIALOG_ALIGN_BOTTOM, false, false);
+
+	script->constdb_comment("Grade Enchant");
+	script->set_constant("ITEM_GRADE_NONE", ITEM_GRADE_NONE, false, false);
+	script->set_constant("ITEM_GRADE_D", ITEM_GRADE_D, false, false);
+	script->set_constant("ITEM_GRADE_C", ITEM_GRADE_C, false, false);
+	script->set_constant("ITEM_GRADE_B", ITEM_GRADE_B, false, false);
+	script->set_constant("ITEM_GRADE_A", ITEM_GRADE_A, false, false);
+	script->set_constant("ITEM_GRADE_R", ITEM_GRADE_R, false, false);
+	script->set_constant("ITEM_GRADE_S", ITEM_GRADE_S, false, false);
+	script->set_constant("ITEM_GRADE_SS", ITEM_GRADE_SS, false, false);
+	script->set_constant("ITEM_GRADE_MAX", ITEM_GRADE_MAX, false, false);
 
 	script->constdb_comment("Renewal");
 #ifdef RENEWAL

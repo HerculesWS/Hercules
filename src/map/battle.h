@@ -636,6 +636,7 @@ struct Battle_Config {
 	int roulette_gold_step;
 	int roulette_silver_step;
 	int roulette_bronze_step;
+	int grader_max_used;
 };
 
 /* criteria for battle_config.idletime_criteria */
