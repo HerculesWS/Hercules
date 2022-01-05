@@ -1326,6 +1326,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(grfio->decode_zip, HP_grfio_decode_zip) },
 	{ HP_POP(grfio->encode_zip, HP_grfio_encode_zip) },
 	{ HP_POP(grfio->report_error, HP_grfio_report_error) },
+	{ HP_POP(grfio->decode_filename, HP_grfio_decode_filename) },
 /* guild_interface */
 	{ HP_POP(guild->init, HP_guild_init) },
 	{ HP_POP(guild->final, HP_guild_final) },

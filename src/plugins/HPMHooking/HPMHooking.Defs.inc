@@ -3022,6 +3022,8 @@ typedef int (*HPMHOOK_pre_grfio_encode_zip) (void **dest, unsigned long **dest_l
 typedef int (*HPMHOOK_post_grfio_encode_zip) (int retVal___, void *dest, unsigned long *dest_len, const void *source, unsigned long source_len);
 typedef void (*HPMHOOK_pre_grfio_report_error) (int *err);
 typedef void (*HPMHOOK_post_grfio_report_error) (int err);
+typedef char* (*HPMHOOK_pre_grfio_decode_filename) (unsigned char **buf, int *len);
+typedef char* (*HPMHOOK_post_grfio_decode_filename) (char* retVal___, unsigned char *buf, int len);
 #endif // COMMON_GRFIO_H
 #ifdef MAP_GUILD_H /* guild */
 typedef void (*HPMHOOK_pre_guild_init) (bool *minimal);

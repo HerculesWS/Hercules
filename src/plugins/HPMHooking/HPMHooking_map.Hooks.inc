@@ -33808,6 +33808,33 @@ void HP_grfio_report_error(int err) {
 	}
 	return;
 }
+char* HP_grfio_decode_filename(unsigned char *buf, int len) {
+	int hIndex = 0;
+	char* retVal___ = NULL;
+	if (HPMHooks.count.HP_grfio_decode_filename_pre > 0) {
+		char* (*preHookFunc) (unsigned char **buf, int *len);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_grfio_decode_filename_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_grfio_decode_filename_pre[hIndex].func;
+			retVal___ = preHookFunc(&buf, &len);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.grfio.decode_filename(buf, len);
+	}
+	if (HPMHooks.count.HP_grfio_decode_filename_post > 0) {
+		char* (*postHookFunc) (char* retVal___, unsigned char *buf, int len);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_grfio_decode_filename_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_grfio_decode_filename_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, buf, len);
+		}
+	}
+	return retVal___;
+}
 /* guild_interface */
 void HP_guild_init(bool minimal) {
 	int hIndex = 0;

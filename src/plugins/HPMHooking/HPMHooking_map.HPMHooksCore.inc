@@ -2588,6 +2588,8 @@ struct {
 	struct HPMHookPoint *HP_grfio_encode_zip_post;
 	struct HPMHookPoint *HP_grfio_report_error_pre;
 	struct HPMHookPoint *HP_grfio_report_error_post;
+	struct HPMHookPoint *HP_grfio_decode_filename_pre;
+	struct HPMHookPoint *HP_grfio_decode_filename_post;
 	struct HPMHookPoint *HP_guild_init_pre;
 	struct HPMHookPoint *HP_guild_init_post;
 	struct HPMHookPoint *HP_guild_final_pre;
@@ -9825,6 +9827,8 @@ struct {
 	int HP_grfio_encode_zip_post;
 	int HP_grfio_report_error_pre;
 	int HP_grfio_report_error_post;
+	int HP_grfio_decode_filename_pre;
+	int HP_grfio_decode_filename_post;
 	int HP_guild_init_pre;
 	int HP_guild_init_post;
 	int HP_guild_final_pre;
