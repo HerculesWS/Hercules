@@ -5,7 +5,7 @@
 > This file is part of Hercules.
 > http://herc.ws - http://github.com/HerculesWS/Hercules
 > 
-> Copyright (C) 2020-2021 Hercules Dev Team
+> Copyright (C) 2020-2022 Hercules Dev Team
 > Copyright (C) Zarbony
 > Copyright (C) Kenpachi
 > 

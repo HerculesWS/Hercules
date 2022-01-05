@@ -3,7 +3,7 @@
 REM This file is part of Hercules.
 REM http://herc.ws - http://github.com/HerculesWS/Hercules
 REM
-REM Copyright (C) 2013-2021 Hercules Dev Team
+REM Copyright (C) 2013-2022 Hercules Dev Team
 REM
 REM Hercules is free software: you can redistribute it and/or modify
 REM it under the terms of the GNU General Public License as published by
