@@ -1882,18 +1882,15 @@ static void clif_homskillup(struct map_session_data *sd, uint16 skill_id)
 ///     1 = success
 static void clif_hom_food(struct map_session_data *sd, int foodid, int fail)
 {
-	int fd;
-	struct PACKET_ZC_FEED_MER p;
-
 	nullpo_retv(sd);
 
-	fd = sd->fd;
-	WFIFOHEAD(fd, sizeof(p));
-	p.packetType = 0x22f;
-	p.result = fail;
-	p.itemId = foodid;
-	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
-	WFIFOSET(fd, sizeof(p));
+	const int fd = sd->fd;
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_FEED_MER));
+	struct PACKET_ZC_FEED_MER *p = WFIFOP(fd, 0);
+	p->packetType = 0x22f;
+	p->result = fail;
+	p->itemId = foodid;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_FEED_MER));
 }
 
 /// Notifies the client, that it is walking (ZC_NOTIFY_PLAYERMOVE).
@@ -4674,45 +4671,41 @@ static void clif_tradestart(struct map_session_data *sd, uint8 type)
 /// 080f <nameid>.W <item type>.B <amount>.L <identified>.B <damaged>.B <refine>.B <card1>.W <card2>.W <card3>.W <card4>.W (ZC_ADD_EXCHANGE_ITEM2)
 static void clif_tradeadditem(struct map_session_data *sd, struct map_session_data *tsd, int index, int amount)
 {
-	int fd;
-	struct PACKET_ZC_ADD_EXCHANGE_ITEM p;
-
 	nullpo_retv(sd);
 	nullpo_retv(tsd);
 
-	fd = tsd->fd;
-	WFIFOHEAD(fd, sizeof(p));
-	memset(&p, 0, sizeof(p));
-	p.packetType = HEADER_ZC_ADD_EXCHANGE_ITEM;
-	p.amount = amount;
+	const int fd = tsd->fd;
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_ADD_EXCHANGE_ITEM));
+	struct PACKET_ZC_ADD_EXCHANGE_ITEM *p = WFIFOP(fd, 0);
+	p->packetType = HEADER_ZC_ADD_EXCHANGE_ITEM;
+	p->amount = amount;
 	if (index != 0) {
 		index -= 2; //index fix
 		Assert_retv(index >= 0 && index < sd->status.inventorySize);
 		nullpo_retv(sd->inventory_data[index]);
 		if (sd->inventory_data[index]->view_id > 0)
-			p.itemId = sd->inventory_data[index]->view_id;
+			p->itemId = sd->inventory_data[index]->view_id;
 		else
-			p.itemId = sd->status.inventory[index].nameid;
+			p->itemId = sd->status.inventory[index].nameid;
 #if PACKETVER >= 20100223
-		p.itemType = sd->inventory_data[index]->type;
+		p->itemType = sd->inventory_data[index]->type;
 #endif
-		p.identified = sd->status.inventory[index].identify;
-		p.damaged = sd->status.inventory[index].attribute;
-		p.refine = sd->status.inventory[index].refine;
+		p->identified = sd->status.inventory[index].identify;
+		p->damaged = sd->status.inventory[index].attribute;
+		p->refine = sd->status.inventory[index].refine;
 #if PACKETVER_MAIN_NUM >= 20161102 || PACKETVER_RE_NUM >= 20161026 || defined(PACKETVER_ZERO)
-		p.location = pc->equippoint(sd, index);
-		p.look = sd->inventory_data[index]->view_sprite;
+		p->location = pc->equippoint(sd, index);
+		p->look = sd->inventory_data[index]->view_sprite;
 #endif  // PACKETVER_MAIN_NUM >= 20161102 || PACKETVER_RE_NUM >= 20161026 || defined(PACKETVER_ZERO)
 #if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
-		p.grade = sd->status.inventory[index].refine;
+		p->grade = sd->status.inventory[index].refine;
 #endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
-		clif->addcards(&p.slot, &sd->status.inventory[index]);
+		clif->addcards(&p->slot, &sd->status.inventory[index]);
 #if PACKETVER >= 20150226
-		clif->add_item_options(&p.option_data[0], &sd->status.inventory[index]);
+		clif->add_item_options(&p->option_data[0], &sd->status.inventory[index]);
 #endif
 	}
-	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
-	WFIFOSET(fd, sizeof(p));
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_ADD_EXCHANGE_ITEM));
 }
 
 /// Notifies the client about the result of request to add an item to the current trade (ZC_ACK_ADD_EXCHANGE_ITEM).
@@ -4820,35 +4813,32 @@ static void clif_updatestorageamount(struct map_session_data *sd, int amount, in
 /// 01c4 <index>.W <amount>.L <nameid>.W <type>.B <identified>.B <damaged>.B <refine>.B <card1>.W <card2>.W <card3>.W <card4>.W (ZC_ADD_ITEM_TO_STORE2)
 static void clif_storageitemadded(struct map_session_data *sd, struct item *i, int index, int amount)
 {
-	int view, fd;
-	struct PACKET_ZC_ADD_ITEM_TO_STORE p;
-
 	nullpo_retv(sd);
 	nullpo_retv(i);
 
-	fd = sd->fd;
-	view = itemdb_viewid(i->nameid);
+	const int fd = sd->fd;
+	const int view = itemdb_viewid(i->nameid);
 
-	WFIFOHEAD(fd, sizeof(p));
-	p.packetType = HEADER_ZC_ADD_ITEM_TO_STORE;
-	p.index = index + 1;
-	p.amount = amount;
-	p.itemId = (view > 0) ? view : i->nameid;
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_ADD_ITEM_TO_STORE));
+	struct PACKET_ZC_ADD_ITEM_TO_STORE *p = WFIFOP(fd, 0);
+	p->packetType = HEADER_ZC_ADD_ITEM_TO_STORE;
+	p->index = index + 1;
+	p->amount = amount;
+	p->itemId = (view > 0) ? view : i->nameid;
 #if PACKETVER >= 5
-	p.itemType = itemtype(itemdb_type(i->nameid));
+	p->itemType = itemtype(itemdb_type(i->nameid));
 #endif
-	p.identified = i->identify;
-	p.damaged = i->attribute;
-	p.refine = i->refine;
+	p->identified = i->identify;
+	p->damaged = i->attribute;
+	p->refine = i->refine;
 #if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
-	p.grade = i->grade;
+	p->grade = i->grade;
 #endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
-	clif->addcards(&p.slot, i);
+	clif->addcards(&p->slot, i);
 #if PACKETVER_MAIN_NUM >= 20140813 || PACKETVER_RE_NUM >= 20140402 || defined(PACKETVER_ZERO)
-	clif->add_item_options(&p.option_data[0], i);
+	clif->add_item_options(&p->option_data[0], i);
 #endif
-	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
-	WFIFOSET(fd, sizeof(p));
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_ADD_ITEM_TO_STORE));
 }
 
 /// Notifies the client of an item being deleted from the storage (ZC_DELETE_ITEM_FROM_STORE).
@@ -5244,29 +5234,24 @@ static void clif_changemapcell(int fd, int16 m, int x, int y, int type, enum sen
 /// 009d <id>.L <name id>.W <identified>.B <x>.W <y>.W <amount>.W <subX>.B <subY>.B
 static void clif_getareachar_item(struct map_session_data *sd, struct flooritem_data *fitem)
 {
-	int view, fd;
-	struct PACKET_ZC_ITEM_ENTRY p;
-
 	nullpo_retv(sd);
 	nullpo_retv(fitem);
-	fd = sd->fd;
 
-	WFIFOHEAD(fd, sizeof(p));
-	p.packetType = 0x9d;
-	p.AID = fitem->bl.id;
-	if ((view = itemdb_viewid(fitem->item_data.nameid)) > 0)
-		p.itemId = view;
-	else
-		p.itemId = fitem->item_data.nameid;
-	p.identify = fitem->item_data.identify;
-	p.x = fitem->bl.x;
-	p.y = fitem->bl.y;
-	p.amount = fitem->item_data.amount;
-	p.subX = fitem->subx;
-	p.subY = fitem->suby;
+	const int fd = sd->fd;
+	const int view = itemdb_viewid(fitem->item_data.nameid);
 
-	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
-	WFIFOSET(fd, sizeof(p));
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_ITEM_ENTRY));
+	struct PACKET_ZC_ITEM_ENTRY *p = WFIFOP(fd, 0);
+	p->packetType = 0x9d;
+	p->AID = fitem->bl.id;
+	p->itemId = (view > 0) ? view : fitem->item_data.nameid;
+	p->identify = fitem->item_data.identify;
+	p->x = fitem->bl.x;
+	p->y = fitem->bl.y;
+	p->amount = fitem->item_data.amount;
+	p->subX = fitem->subx;
+	p->subY = fitem->suby;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_ITEM_ENTRY));
 }
 
 static void clif_graffiti_entry(struct block_list *bl, struct skill_unit *su, enum send_target target)
@@ -5813,17 +5798,15 @@ static void clif_skillcastcancel(struct block_list *bl)
 /// suggesting this is an ACK packet for the UseSkill packets and should be sent on success too [FlavioJS]
 static void clif_skill_fail(struct map_session_data *sd, uint16 skill_id, enum useskill_fail_cause cause, int btype, int32 item_id)
 {
-	int fd;
-	struct PACKET_ZC_ACK_TOUSESKILL p;
-
-	if (!sd) {
+	if (sd == NULL) {
 		//Since this is the most common nullpo....
 		ShowDebug("clif_skill_fail: Error, received NULL sd for skill %d\n", skill_id);
 		return;
 	}
 
-	fd = sd->fd;
-	if (!fd) return;
+	int fd = sd->fd;
+	if (fd == 0)
+		return;
 
 	if (battle_config.display_skill_fail&1)
 		return; //Disable all skill failed messages
@@ -5837,16 +5820,15 @@ static void clif_skill_fail(struct map_session_data *sd, uint16 skill_id, enum u
 	if (skill_id == TF_POISON && battle_config.display_skill_fail & 8)
 		return;
 
-	WFIFOHEAD(fd, sizeof(p));
-	p.packetType = 0x110;
-	p.skillId = skill_id;
-	p.btype = btype;
-	p.itemId = item_id;
-	p.flag = 0; // 0 - failed
-	p.cause = cause;
-
-	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
-	WFIFOSET(fd, sizeof(p));
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_ACK_TOUSESKILL));
+	struct PACKET_ZC_ACK_TOUSESKILL *p = WFIFOP(fd, 0);
+	p->packetType = 0x110;
+	p->skillId = skill_id;
+	p->btype = btype;
+	p->itemId = item_id;
+	p->flag = 0; // 0 - failed
+	p->cause = cause;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_ACK_TOUSESKILL));
 }
 
 /// Skill cooldown display icon (ZC_SKILL_POSTDELAY).
@@ -5856,16 +5838,13 @@ static void clif_skill_cooldown(struct map_session_data *sd, uint16 skill_id, un
 #if PACKETVER_MAIN_NUM >= 20081112 || PACKETVER_RE_NUM >= 20081111 || defined(PACKETVER_ZERO)
 	nullpo_retv(sd);
 
-	int fd = sd->fd;
-	struct PACKET_ZC_SKILL_POSTDELAY p = { 0 };
-
-	WFIFOHEAD(fd, sizeof(p));
-	p.PacketType = HEADER_ZC_SKILL_POSTDELAY;
-	p.SKID = skill_id;
-	p.DelayTM = duration;
-
-	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
-	WFIFOSET(fd, sizeof(p));
+	const int fd = sd->fd;
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_SKILL_POSTDELAY));
+	struct PACKET_ZC_SKILL_POSTDELAY *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_SKILL_POSTDELAY;
+	p->SKID = skill_id;
+	p->DelayTM = duration;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_SKILL_POSTDELAY));
 #endif
 }
 
@@ -6688,13 +6667,12 @@ static void clif_refine(int fd, int fail, int index, int val)
 ///     3 = "you lack the item %s to upgrade the weapon" MsgStringTable[914] in rgb(255,200,200)
 static void clif_upgrademessage(int fd, int result, int item_id)
 {
-	struct PACKET_ZC_ACK_WEAPONREFINE p;
-	WFIFOHEAD(fd, sizeof(p));
-	p.packetType = 0x223;
-	p.result = result;
-	p.itemId = item_id;
-	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
-	WFIFOSET(fd, sizeof(p));
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_ACK_WEAPONREFINE));
+	struct PACKET_ZC_ACK_WEAPONREFINE *p = WFIFOP(fd, 0);
+	p->packetType = 0x223;
+	p->result = result;
+	p->itemId = item_id;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_ACK_WEAPONREFINE));
 }
 
 /// Whisper is transmitted to the destination player (ZC_WHISPER).
@@ -7031,38 +7009,33 @@ static void clif_item_skill(struct map_session_data *sd, uint16 skill_id, uint16
 /// 01c5 <index>.W <amount>.L <name id>.W <type>.B <identified>.B <damaged>.B <refine>.B <card1>.W <card2>.W <card3>.W <card4>.W (ZC_ADD_ITEM_TO_CART2)
 static void clif_cart_additem(struct map_session_data *sd, int n, int amount, int fail)
 {
-	int view, fd;
-	struct PACKET_ZC_ADD_ITEM_TO_CART p;
-
 	nullpo_retv(sd);
 
-	fd = sd->fd;
 	if (n < 0 || n >= MAX_CART || sd->status.cart[n].nameid <= 0)
 		return;
 
-	WFIFOHEAD(fd, sizeof(p));
-	p.packetType = HEADER_ZC_ADD_ITEM_TO_CART;
-	p.index = n + 2;
-	p.amount = amount;
-	if ((view = itemdb_viewid(sd->status.cart[n].nameid)) > 0)
-		p.itemId = view;
-	else
-		p.itemId = sd->status.cart[n].nameid;
+	const int fd = sd->fd;
+	const int view = itemdb_viewid(sd->status.cart[n].nameid);
+
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_ADD_ITEM_TO_CART));
+	struct PACKET_ZC_ADD_ITEM_TO_CART *p = WFIFOP(fd, 0);
+	p->packetType = HEADER_ZC_ADD_ITEM_TO_CART;
+	p->index = n + 2;
+	p->itemId = (view > 0) ? view : sd->status.cart[n].nameid;
 #if PACKETVER >= 5
-	p.itemType = itemdb_type(sd->status.cart[n].nameid);
+	p->itemType = itemdb_type(sd->status.cart[n].nameid);
 #endif
-	p.identified = sd->status.cart[n].identify;
-	p.damaged  = sd->status.cart[n].attribute;
-	p.refine = sd->status.cart[n].refine;
+	p->identified = sd->status.cart[n].identify;
+	p->damaged  = sd->status.cart[n].attribute;
+	p->refine = sd->status.cart[n].refine;
 #if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
-	p.grade = sd->status.cart[n].grade;
+	p->grade = sd->status.cart[n].grade;
 #endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
-	clif->addcards(&p.slot, &sd->status.cart[n]);
+	clif->addcards(&p->slot, &sd->status.cart[n]);
 #if PACKETVER >= 20150226
-	clif->add_item_options(&p.option_data[0], &sd->status.cart[n]);
+	clif->add_item_options(&p->option_data[0], &sd->status.cart[n]);
 #endif
-	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
-	WFIFOSET(fd, sizeof(p));
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_ADD_ITEM_TO_CART));
 }
 
 /// Deletes an item from character's cart (ZC_DELETE_ITEM_FROM_CART).
@@ -7793,22 +7766,19 @@ static void clif_movetoattack(struct map_session_data *sd, struct block_list *bl
 ///     7 = failure (???)
 static void clif_produceeffect(struct map_session_data *sd, int flag, int nameid)
 {
-	int view, fd;
-	struct PACKET_ZC_ACK_REQMAKINGITEM p;
-
 	nullpo_retv(sd);
 
-	fd = sd->fd;
+	const int fd = sd->fd;
+	const int view = itemdb_viewid(nameid);
+
 	clif->solved_charname(fd, sd->status.char_id, sd->status.name);
-	WFIFOHEAD(fd, sizeof(p));
-	p.packetType = 0x18f;
-	p.result = flag;
-	if ((view = itemdb_viewid(nameid)) > 0)
-		p.itemId = view;
-	else
-		p.itemId = nameid;
-	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
-	WFIFOSET(fd, sizeof(p));
+
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_ACK_REQMAKINGITEM));
+	struct PACKET_ZC_ACK_REQMAKINGITEM *p = WFIFOP(fd, 0);
+	p->packetType = 0x18f;
+	p->result = flag;
+	p->itemId = (view > 0) ? view : nameid;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_ACK_REQMAKINGITEM));
 }
 
 /// Initiates the pet taming process (ZC_START_CAPTURE).
@@ -7962,18 +7932,15 @@ static void clif_pet_emotion(struct pet_data *pd, int param)
 ///     1 = success
 static void clif_pet_food(struct map_session_data *sd, int foodid, int fail)
 {
-	int fd;
-	struct PACKET_ZC_FEED_PET p;
-
 	nullpo_retv(sd);
 
-	fd = sd->fd;
-	WFIFOHEAD(fd, sizeof(p));
-	p.packetType = 0x1a3;
-	p.result = fail;
-	p.itemId = foodid;
-	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
-	WFIFOSET(fd, sizeof(p));
+	const int fd = sd->fd;
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_FEED_PET));
+	struct PACKET_ZC_FEED_PET *p = WFIFOP(fd, 0);
+	p->packetType = 0x1a3;
+	p->result = fail;
+	p->itemId = foodid;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_FEED_PET));
 }
 
 /// Presents a list of skills that can be auto-spelled (ZC_AUTOSPELLLIST).
@@ -8166,20 +8133,16 @@ static void clif_mvp_effect(struct map_session_data *sd)
 /// 010a <name id>.L
 static void clif_mvp_item(struct map_session_data *sd, int nameid)
 {
-	int view, fd;
-	struct PACKET_ZC_MVP_GETTING_ITEM p;
-
 	nullpo_retv(sd);
 
-	fd = sd->fd;
-	WFIFOHEAD(fd, sizeof(p));
-	p.packetType = 0x10a;
-	if ((view = itemdb_viewid(nameid)) > 0)
-		p.itemId = view;
-	else
-		p.itemId = nameid;
-	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
-	WFIFOSET(fd, sizeof(p));
+	const int fd = sd->fd;
+	const int view = itemdb_viewid(nameid);
+
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_MVP_GETTING_ITEM));
+	struct PACKET_ZC_MVP_GETTING_ITEM *p = WFIFOP(fd, 0);
+	p->packetType = 0x10a;
+	p->itemId = (view > 0) ? view : nameid;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_MVP_GETTING_ITEM));
 }
 
 /// MVP EXP reward message (ZC_MVP_GETTING_SPECIAL_EXP).
@@ -10831,16 +10794,12 @@ static void clif_channel_msg2(struct channel_data *chan, char *msg)
 // 3 - Rejected by server
 static void clif_auth_error(int fd, int errorCode)
 {
-	struct packet_ZC_REFUSE_LOGIN p;
-	const int len = sizeof(p);
-
-	p.PacketType = authError;
-	p.error_code = errorCode;
-	p.block_date[0] = '\0';
-
-	WFIFOHEAD(fd, len);
-	memcpy(WFIFOP(fd, 0), &p, len);
-	WFIFOSET(fd, len);
+	WFIFOHEAD(fd, sizeof(struct packet_ZC_REFUSE_LOGIN));
+	struct packet_ZC_REFUSE_LOGIN *p = WFIFOP(fd, 0);
+	p->PacketType = authError;
+	p->error_code = errorCode;
+	p->block_date[0] = '\0';
+	WFIFOSET(fd, sizeof(struct packet_ZC_REFUSE_LOGIN));
 }
 
 // ------------
@@ -19232,26 +19191,24 @@ static void clif_mercenary_message(struct map_session_data *sd, int message)
 /// 0298 <name id>.W <seconds>.L
 static void clif_rental_time(int fd, int nameid, int seconds)
 { // '<ItemName>' item will disappear in <seconds/60> minutes.
-	struct PACKET_ZC_CASH_TIME_COUNTER p;
-	WFIFOHEAD(fd, sizeof(p));
-	p.packetType = 0x298;
-	p.itemId = nameid;
-	p.seconds = seconds;
-	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
-	WFIFOSET(fd, sizeof(p));
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_CASH_TIME_COUNTER));
+	struct PACKET_ZC_CASH_TIME_COUNTER *p = WFIFOP(fd, 0);
+	p->packetType = 0x298;
+	p->itemId = nameid;
+	p->seconds = seconds;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_CASH_TIME_COUNTER));
 }
 
 /// Deletes a rental item from client's inventory (ZC_CASH_ITEM_DELETE).
 /// 0299 <index>.W <name id>.W
 static void clif_rental_expired(int fd, int index, int nameid)
 { // '<ItemName>' item has been deleted from the Inventory
-	struct PACKET_ZC_CASH_ITEM_DELETE p;
-	WFIFOHEAD(fd, sizeof(p));
-	p.packetType = 0x299;
-	p.index = index + 2;
-	p.itemId = nameid;
-	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
-	WFIFOSET(fd, sizeof(p));
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_CASH_ITEM_DELETE));
+	struct PACKET_ZC_CASH_ITEM_DELETE *p = WFIFOP(fd, 0);
+	p->packetType = 0x299;
+	p->index = index + 2;
+	p->itemId = nameid;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_CASH_ITEM_DELETE));
 }
 
 /// Book Reading (ZC_READ_BOOK).
@@ -20076,24 +20033,21 @@ static void clif_buyingstore_trade_failed_buyer(struct map_session_data *sd, sho
 /// 081b <name id>.W <amount>.W <limit zeny>.L
 static void clif_buyingstore_update_item(struct map_session_data *sd, int nameid, unsigned short amount, uint32 char_id, int zeny)
 {
-	int fd;
-	struct PACKET_ZC_UPDATE_ITEM_FROM_BUYING_STORE p;
-
 	nullpo_retv(sd);
 
-	fd = sd->fd;
-	WFIFOHEAD(fd, sizeof(p));
-	p.packetType = buyingStoreUpdateItemType;
-	p.itemId = nameid;
-	p.amount = amount;
-	p.zenyLimit = sd->buyingstore.zenylimit;
+	const int fd = sd->fd;
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_UPDATE_ITEM_FROM_BUYING_STORE));
+	struct PACKET_ZC_UPDATE_ITEM_FROM_BUYING_STORE *p = WFIFOP(fd, 0);
+	p->packetType = buyingStoreUpdateItemType;
+	p->itemId = nameid;
+	p->amount = amount;
+	p->zenyLimit = sd->buyingstore.zenylimit;
 #if PACKETVER >= 20141016
-	p.zeny = zeny;
-	p.charId = char_id;  // GID
-	p.updateTime = (int)time(NULL);
+	p->zeny = zeny;
+	p->charId = char_id;  // GID
+	p->updateTime = (int)time(NULL);
 #endif
-	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
-	WFIFOSET(fd, sizeof(p));
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_UPDATE_ITEM_FROM_BUYING_STORE));
 }
 
 /// Deletes item from inventory, that was sold to a buying store (ZC_ITEM_DELETE_BUYING_STORE).
@@ -20128,17 +20082,15 @@ static void clif_buyingstore_delete_item(struct map_session_data *sd, short inde
 static void clif_buyingstore_trade_failed_seller(struct map_session_data *sd, short result, int nameid)
 {
 #if PACKETVER >= 20100420
-	int fd;
-	struct PACKET_ZC_FAILED_TRADE_BUYING_STORE_TO_SELLER p;
-
 	nullpo_retv(sd);
-	fd = sd->fd;
-	WFIFOHEAD(fd, sizeof(p));
-	p.packetType = 0x824;
-	p.result = result;
-	p.itemId = nameid;
-	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
-	WFIFOSET(fd, sizeof(p));
+
+	const int fd = sd->fd;
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_FAILED_TRADE_BUYING_STORE_TO_SELLER));
+	struct PACKET_ZC_FAILED_TRADE_BUYING_STORE_TO_SELLER *p = WFIFOP(fd, 0);
+	p->packetType = 0x824;
+	p->result = result;
+	p->itemId = nameid;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_FAILED_TRADE_BUYING_STORE_TO_SELLER));
 #endif
 }
 
@@ -24873,14 +24825,12 @@ static void clif_captcha_upload_request(struct map_session_data *sd, const char 
 	nullpo_retv(captcha_key);
 
 	const int fd = sd->fd;
-	struct PACKET_ZC_CAPTCHA_UPLOAD_REQUEST p = { 0 };
-	p.PacketType = HEADER_ZC_CAPTCHA_UPLOAD_REQUEST;
-	safestrncpy(p.captchaKey, captcha_key, sizeof(p.captchaKey));
-	p.captchaFlag = captcha_flag;
-
-	WFIFOHEAD(fd, sizeof(p));
-	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
-	WFIFOSET(fd, sizeof(p));
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_CAPTCHA_UPLOAD_REQUEST));
+	struct PACKET_ZC_CAPTCHA_UPLOAD_REQUEST *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_CAPTCHA_UPLOAD_REQUEST;
+	safestrncpy(p->captchaKey, captcha_key, sizeof(p->captchaKey));
+	p->captchaFlag = captcha_flag;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_CAPTCHA_UPLOAD_REQUEST));
 #endif
 }
 
@@ -24906,12 +24856,10 @@ static void clif_captcha_upload_end(struct map_session_data *sd)
 	nullpo_retv(sd);
 
 	const int fd = sd->fd;
-	struct PACKET_ZC_CAPTCHA_UPLOAD_REQUEST_STATUS p = { 0 };
-	p.PacketType = HEADER_ZC_CAPTCHA_UPLOAD_REQUEST_STATUS;
-
-	WFIFOHEAD(fd, sizeof(p));
-	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
-	WFIFOSET(fd, sizeof(p));
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_CAPTCHA_UPLOAD_REQUEST_STATUS));
+	struct PACKET_ZC_CAPTCHA_UPLOAD_REQUEST_STATUS *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_CAPTCHA_UPLOAD_REQUEST_STATUS;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_CAPTCHA_UPLOAD_REQUEST_STATUS));
 #endif
 }
 
@@ -24936,15 +24884,13 @@ static void clif_captcha_preview_request_init(struct map_session_data *sd, const
 	nullpo_retv(captcha_key);
 
 	const int fd = sd->fd;
-	struct PACKET_ZC_CAPTCHA_PREVIEW_REQUEST p = { 0 };
-	p.PacketType = HEADER_ZC_CAPTCHA_PREVIEW_REQUEST;
-	p.captchaFlag = captcha_flag;
-	p.imageSize = image_size;
-	safestrncpy(p.captchaKey, captcha_key, sizeof(p.captchaKey));
-	
-	WFIFOHEAD(fd, sizeof(p));
-	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
-	WFIFOSET(fd, sizeof(p));
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_CAPTCHA_PREVIEW_REQUEST));
+	struct PACKET_ZC_CAPTCHA_PREVIEW_REQUEST *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_CAPTCHA_PREVIEW_REQUEST;
+	p->captchaFlag = captcha_flag;
+	p->imageSize = image_size;
+	safestrncpy(p->captchaKey, captcha_key, sizeof(p->captchaKey));
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_CAPTCHA_PREVIEW_REQUEST));
 #endif
 }
 
@@ -24975,14 +24921,12 @@ static void clif_macro_detector_request_init(struct map_session_data *sd, const 
 	nullpo_retv(captcha_key);
 
 	const int fd = sd->fd;
-	struct PACKET_ZC_MACRO_DETECTOR_REQUEST p = { 0 };
-	p.PacketType = HEADER_ZC_MACRO_DETECTOR_REQUEST;
-	p.imageSize = image_size;
-	safestrncpy(p.captchaKey, captcha_key, sizeof(p.captchaKey));
-
-	WFIFOHEAD(fd, sizeof(p));
-	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
-	WFIFOSET(fd, sizeof(p));
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_MACRO_DETECTOR_REQUEST));
+	struct PACKET_ZC_MACRO_DETECTOR_REQUEST *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_MACRO_DETECTOR_REQUEST;
+	p->imageSize = image_size;
+	safestrncpy(p->captchaKey, captcha_key, sizeof(p->captchaKey));
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_MACRO_DETECTOR_REQUEST));
 #endif
 }
 
@@ -25012,14 +24956,12 @@ static void clif_macro_detector_request_show(struct map_session_data *sd)
 	nullpo_retv(sd);
 
 	const int fd = sd->fd;
-	struct PACKET_ZC_MACRO_DETECTOR_SHOW p = { 0 };
-	p.PacketType = HEADER_ZC_MACRO_DETECTOR_SHOW;
-	p.retryCount = sd->macro_detect.retry;
-	p.timeout = battle->bc->macro_detect_timeout;
-
-	WFIFOHEAD(fd, sizeof(p));
-	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
-	WFIFOSET(fd, sizeof(p));
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_MACRO_DETECTOR_SHOW));
+	struct PACKET_ZC_MACRO_DETECTOR_SHOW *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_MACRO_DETECTOR_SHOW;
+	p->retryCount = sd->macro_detect.retry;
+	p->timeout = battle->bc->macro_detect_timeout;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_MACRO_DETECTOR_SHOW));
 #endif
 }
 
@@ -25051,13 +24993,11 @@ static void clif_macro_detector_status(struct map_session_data *sd, enum macro_d
 	nullpo_retv(sd);
 
 	const int fd = sd->fd;
-	struct PACKET_ZC_MACRO_DETECTOR_STATUS p = { 0 };
-	p.PacketType = HEADER_ZC_MACRO_DETECTOR_STATUS;
-	p.status = stype;
-
-	WFIFOHEAD(fd, sizeof(p));
-	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
-	WFIFOSET(fd, sizeof(p));
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_MACRO_DETECTOR_STATUS));
+	struct PACKET_ZC_MACRO_DETECTOR_STATUS *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_MACRO_DETECTOR_STATUS;
+	p->status = stype;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_MACRO_DETECTOR_STATUS));
 #endif
 }
 
@@ -25130,13 +25070,11 @@ static void clif_macro_reporter_status(struct map_session_data *sd, enum macro_r
 	nullpo_retv(sd);
 
 	const int fd = sd->fd;
-	struct PACKET_ZC_MACRO_REPORTER_STATUS p = { 0 };
-	p.PacketType = HEADER_ZC_MACRO_REPORTER_STATUS;
-	p.status = stype;
-
-	WFIFOHEAD(fd, sizeof(p));
-	memcpy(WFIFOP(fd, 0), &p, sizeof(p));
-	WFIFOSET(fd, sizeof(p));
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_MACRO_REPORTER_STATUS));
+	struct PACKET_ZC_MACRO_REPORTER_STATUS *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_MACRO_REPORTER_STATUS;
+	p->status = stype;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_MACRO_REPORTER_STATUS));
 #endif
 }
 
