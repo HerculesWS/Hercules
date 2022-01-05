@@ -482,6 +482,15 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#else
 		#define MAP_ELEMENTAL_H
 	#endif // MAP_ELEMENTAL_H
+	#ifdef MAP_GRADER_H
+		{ "grade_blessing", sizeof(struct grade_blessing), SERVER_TYPE_MAP },
+		{ "grade_interface_dbs", sizeof(struct grade_interface_dbs), SERVER_TYPE_MAP },
+		{ "grade_material", sizeof(struct grade_material), SERVER_TYPE_MAP },
+		{ "grader_interface", sizeof(struct grader_interface), SERVER_TYPE_MAP },
+		{ "s_grade_info", sizeof(struct s_grade_info), SERVER_TYPE_MAP },
+	#else
+		#define MAP_GRADER_H
+	#endif // MAP_GRADER_H
 	#ifdef MAP_GUILD_H
 		{ "eventlist", sizeof(struct eventlist), SERVER_TYPE_MAP },
 		{ "guardian_data", sizeof(struct guardian_data), SERVER_TYPE_MAP },

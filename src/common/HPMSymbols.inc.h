@@ -89,6 +89,9 @@ struct elemental_interface *elemental;
 #ifdef CHAR_GEOIP_H /* geoip */
 struct geoip_interface *geoip;
 #endif // CHAR_GEOIP_H
+#ifdef MAP_GRADER_H /* grader */
+struct grader_interface *grader;
+#endif // MAP_GRADER_H
 #ifdef COMMON_GRFIO_H /* grfio */
 struct grfio_interface *grfio;
 #endif // COMMON_GRFIO_H
@@ -399,6 +402,10 @@ HPExport const char *HPM_shared_symbols(int server_type)
 	if ((server_type&(SERVER_TYPE_CHAR)) != 0 && !HPM_SYMBOL("geoip", geoip))
 		return "geoip";
 #endif // CHAR_GEOIP_H
+#ifdef MAP_GRADER_H /* grader */
+	if ((server_type&(SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("grader", grader))
+		return "grader";
+#endif // MAP_GRADER_H
 #ifdef COMMON_GRFIO_H /* grfio */
 	if ((server_type&(SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("grfio", grfio))
 		return "grfio";

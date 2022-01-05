@@ -2836,6 +2836,20 @@ typedef void (*HPMHOOK_pre_clif_macro_reporter_status) (struct map_session_data 
 typedef void (*HPMHOOK_post_clif_macro_reporter_status) (struct map_session_data *sd, enum macro_report_status stype);
 typedef void (*HPMHOOK_pre_clif_sayDialogAlign) (struct map_session_data **sd, int *npcid, enum say_dialog_align *align);
 typedef void (*HPMHOOK_post_clif_sayDialogAlign) (struct map_session_data *sd, int npcid, enum say_dialog_align align);
+typedef void (*HPMHOOK_pre_clif_pGradeEnchantAddItem) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pGradeEnchantAddItem) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_pGradeEnchantStart) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pGradeEnchantStart) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_pGradeEnchantClose) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pGradeEnchantClose) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_grade_enchant_add_item_result_success) (struct map_session_data **sd, int *idx, const struct s_grade_info **gi);
+typedef void (*HPMHOOK_post_clif_grade_enchant_add_item_result_success) (struct map_session_data *sd, int idx, const struct s_grade_info *gi);
+typedef void (*HPMHOOK_pre_clif_grade_enchant_add_item_result_fail) (struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_grade_enchant_add_item_result_fail) (struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_grade_enchant_result) (struct map_session_data **sd, int16 *index, enum grade_level *gl, enum grade_ui_result *result);
+typedef void (*HPMHOOK_post_clif_grade_enchant_result) (struct map_session_data *sd, int16 index, enum grade_level gl, enum grade_ui_result result);
+typedef void (*HPMHOOK_pre_clif_announce_grade_status) (struct map_session_data **sd, int *item_id, enum grade_level *gl, bool *success, enum send_target *target);
+typedef void (*HPMHOOK_post_clif_announce_grade_status) (struct map_session_data *sd, int item_id, enum grade_level gl, bool success, enum send_target target);
 #endif // MAP_CLIF_H
 #ifdef COMMON_CORE_H /* cmdline */
 typedef void (*HPMHOOK_pre_cmdline_init) (void);
@@ -3005,6 +3019,34 @@ typedef void (*HPMHOOK_post_geoip_final) (bool shutdown);
 typedef void (*HPMHOOK_pre_geoip_init) (void);
 typedef void (*HPMHOOK_post_geoip_init) (void);
 #endif // CHAR_GEOIP_H
+#ifdef MAP_GRADER_H /* grader */
+typedef int (*HPMHOOK_pre_grader_init) (bool *minimal);
+typedef int (*HPMHOOK_post_grader_init) (int retVal___, bool minimal);
+typedef void (*HPMHOOK_pre_grader_final) (void);
+typedef void (*HPMHOOK_post_grader_final) (void);
+typedef void (*HPMHOOK_pre_grader_reload_db) (void);
+typedef void (*HPMHOOK_post_grader_reload_db) (void);
+typedef bool (*HPMHOOK_pre_grader_read_db_libconfig) (void);
+typedef bool (*HPMHOOK_post_grader_read_db_libconfig) (bool retVal___);
+typedef bool (*HPMHOOK_pre_grader_read_db_libconfig_sub) (const struct config_setting_t **it, int *n, const char **source);
+typedef bool (*HPMHOOK_post_grader_read_db_libconfig_sub) (bool retVal___, const struct config_setting_t *it, int n, const char *source);
+typedef bool (*HPMHOOK_pre_grader_read_db_libconfig_sub_materials) (const struct config_setting_t **it, enum grade_level *gl, int *n, const char **source);
+typedef bool (*HPMHOOK_post_grader_read_db_libconfig_sub_materials) (bool retVal___, const struct config_setting_t *it, enum grade_level gl, int n, const char *source);
+typedef bool (*HPMHOOK_pre_grader_read_db_libconfig_sub_material) (const struct config_setting_t **it, struct grade_material **gm, int *n, const char **source);
+typedef bool (*HPMHOOK_post_grader_read_db_libconfig_sub_material) (bool retVal___, const struct config_setting_t *it, struct grade_material *gm, int n, const char *source);
+typedef bool (*HPMHOOK_pre_grader_read_db_libconfig_sub_blessing) (const struct config_setting_t **it, enum grade_level *gl, int *n, const char **source);
+typedef bool (*HPMHOOK_post_grader_read_db_libconfig_sub_blessing) (bool retVal___, const struct config_setting_t *it, enum grade_level gl, int n, const char *source);
+typedef bool (*HPMHOOK_pre_grader_failure_behavior_string2enum) (const char **str, enum grade_ui_failure_behavior **result);
+typedef bool (*HPMHOOK_post_grader_failure_behavior_string2enum) (bool retVal___, const char *str, enum grade_ui_failure_behavior *result);
+typedef bool (*HPMHOOK_pre_grader_announce_behavior_string2enum) (const char **str, enum grade_announce_condition **result);
+typedef bool (*HPMHOOK_post_grader_announce_behavior_string2enum) (bool retVal___, const char *str, enum grade_announce_condition *result);
+typedef const struct s_grade_info* (*HPMHOOK_pre_grader_get_grade_info) (int *grade);
+typedef const struct s_grade_info* (*HPMHOOK_post_grader_get_grade_info) (const struct s_grade_info* retVal___, int grade);
+typedef void (*HPMHOOK_pre_grader_enchant_add_item) (struct map_session_data **sd, int *idx);
+typedef void (*HPMHOOK_post_grader_enchant_add_item) (struct map_session_data *sd, int idx);
+typedef void (*HPMHOOK_pre_grader_enchant_start) (struct map_session_data **sd, int *idx, int *mat_idx, bool *use_blessing, int *blessing_amount);
+typedef void (*HPMHOOK_post_grader_enchant_start) (struct map_session_data *sd, int idx, int mat_idx, bool use_blessing, int blessing_amount);
+#endif // MAP_GRADER_H
 #ifdef COMMON_GRFIO_H /* grfio */
 typedef void (*HPMHOOK_pre_grfio_init) (const char **fname);
 typedef void (*HPMHOOK_post_grfio_init) (const char *fname);

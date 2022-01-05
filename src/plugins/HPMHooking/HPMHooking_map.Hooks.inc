@@ -31628,6 +31628,188 @@ void HP_clif_sayDialogAlign(struct map_session_data *sd, int npcid, enum say_dia
 	}
 	return;
 }
+void HP_clif_pGradeEnchantAddItem(int fd, struct map_session_data *sd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_pGradeEnchantAddItem_pre > 0) {
+		void (*preHookFunc) (int *fd, struct map_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pGradeEnchantAddItem_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_pGradeEnchantAddItem_pre[hIndex].func;
+			preHookFunc(&fd, &sd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.pGradeEnchantAddItem(fd, sd);
+	}
+	if (HPMHooks.count.HP_clif_pGradeEnchantAddItem_post > 0) {
+		void (*postHookFunc) (int fd, struct map_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pGradeEnchantAddItem_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_pGradeEnchantAddItem_post[hIndex].func;
+			postHookFunc(fd, sd);
+		}
+	}
+	return;
+}
+void HP_clif_pGradeEnchantStart(int fd, struct map_session_data *sd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_pGradeEnchantStart_pre > 0) {
+		void (*preHookFunc) (int *fd, struct map_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pGradeEnchantStart_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_pGradeEnchantStart_pre[hIndex].func;
+			preHookFunc(&fd, &sd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.pGradeEnchantStart(fd, sd);
+	}
+	if (HPMHooks.count.HP_clif_pGradeEnchantStart_post > 0) {
+		void (*postHookFunc) (int fd, struct map_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pGradeEnchantStart_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_pGradeEnchantStart_post[hIndex].func;
+			postHookFunc(fd, sd);
+		}
+	}
+	return;
+}
+void HP_clif_pGradeEnchantClose(int fd, struct map_session_data *sd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_pGradeEnchantClose_pre > 0) {
+		void (*preHookFunc) (int *fd, struct map_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pGradeEnchantClose_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_pGradeEnchantClose_pre[hIndex].func;
+			preHookFunc(&fd, &sd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.pGradeEnchantClose(fd, sd);
+	}
+	if (HPMHooks.count.HP_clif_pGradeEnchantClose_post > 0) {
+		void (*postHookFunc) (int fd, struct map_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pGradeEnchantClose_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_pGradeEnchantClose_post[hIndex].func;
+			postHookFunc(fd, sd);
+		}
+	}
+	return;
+}
+void HP_clif_grade_enchant_add_item_result_success(struct map_session_data *sd, int idx, const struct s_grade_info *gi) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_grade_enchant_add_item_result_success_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, int *idx, const struct s_grade_info **gi);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_grade_enchant_add_item_result_success_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_grade_enchant_add_item_result_success_pre[hIndex].func;
+			preHookFunc(&sd, &idx, &gi);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.grade_enchant_add_item_result_success(sd, idx, gi);
+	}
+	if (HPMHooks.count.HP_clif_grade_enchant_add_item_result_success_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, int idx, const struct s_grade_info *gi);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_grade_enchant_add_item_result_success_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_grade_enchant_add_item_result_success_post[hIndex].func;
+			postHookFunc(sd, idx, gi);
+		}
+	}
+	return;
+}
+void HP_clif_grade_enchant_add_item_result_fail(struct map_session_data *sd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_grade_enchant_add_item_result_fail_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_grade_enchant_add_item_result_fail_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_grade_enchant_add_item_result_fail_pre[hIndex].func;
+			preHookFunc(&sd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.grade_enchant_add_item_result_fail(sd);
+	}
+	if (HPMHooks.count.HP_clif_grade_enchant_add_item_result_fail_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_grade_enchant_add_item_result_fail_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_grade_enchant_add_item_result_fail_post[hIndex].func;
+			postHookFunc(sd);
+		}
+	}
+	return;
+}
+void HP_clif_grade_enchant_result(struct map_session_data *sd, int16 index, enum grade_level gl, enum grade_ui_result result) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_grade_enchant_result_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, int16 *index, enum grade_level *gl, enum grade_ui_result *result);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_grade_enchant_result_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_grade_enchant_result_pre[hIndex].func;
+			preHookFunc(&sd, &index, &gl, &result);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.grade_enchant_result(sd, index, gl, result);
+	}
+	if (HPMHooks.count.HP_clif_grade_enchant_result_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, int16 index, enum grade_level gl, enum grade_ui_result result);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_grade_enchant_result_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_grade_enchant_result_post[hIndex].func;
+			postHookFunc(sd, index, gl, result);
+		}
+	}
+	return;
+}
+void HP_clif_announce_grade_status(struct map_session_data *sd, int item_id, enum grade_level gl, bool success, enum send_target target) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_announce_grade_status_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, int *item_id, enum grade_level *gl, bool *success, enum send_target *target);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_announce_grade_status_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_announce_grade_status_pre[hIndex].func;
+			preHookFunc(&sd, &item_id, &gl, &success, &target);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.announce_grade_status(sd, item_id, gl, success, target);
+	}
+	if (HPMHooks.count.HP_clif_announce_grade_status_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, int item_id, enum grade_level gl, bool success, enum send_target target);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_announce_grade_status_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_announce_grade_status_post[hIndex].func;
+			postHookFunc(sd, item_id, gl, success, target);
+		}
+	}
+	return;
+}
 /* cmdline_interface */
 void HP_cmdline_init(void) {
 	int hIndex = 0;
@@ -33593,6 +33775,354 @@ int HP_elemental_read_db(void) {
 		}
 	}
 	return retVal___;
+}
+/* grader_interface */
+int HP_grader_init(bool minimal) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_grader_init_pre > 0) {
+		int (*preHookFunc) (bool *minimal);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_grader_init_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_grader_init_pre[hIndex].func;
+			retVal___ = preHookFunc(&minimal);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.grader.init(minimal);
+	}
+	if (HPMHooks.count.HP_grader_init_post > 0) {
+		int (*postHookFunc) (int retVal___, bool minimal);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_grader_init_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_grader_init_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, minimal);
+		}
+	}
+	return retVal___;
+}
+void HP_grader_final(void) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_grader_final_pre > 0) {
+		void (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_grader_final_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_grader_final_pre[hIndex].func;
+			preHookFunc();
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.grader.final();
+	}
+	if (HPMHooks.count.HP_grader_final_post > 0) {
+		void (*postHookFunc) (void);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_grader_final_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_grader_final_post[hIndex].func;
+			postHookFunc();
+		}
+	}
+	return;
+}
+void HP_grader_reload_db(void) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_grader_reload_db_pre > 0) {
+		void (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_grader_reload_db_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_grader_reload_db_pre[hIndex].func;
+			preHookFunc();
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.grader.reload_db();
+	}
+	if (HPMHooks.count.HP_grader_reload_db_post > 0) {
+		void (*postHookFunc) (void);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_grader_reload_db_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_grader_reload_db_post[hIndex].func;
+			postHookFunc();
+		}
+	}
+	return;
+}
+bool HP_grader_read_db_libconfig(void) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_grader_read_db_libconfig_pre > 0) {
+		bool (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_grader_read_db_libconfig_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_grader_read_db_libconfig_pre[hIndex].func;
+			retVal___ = preHookFunc();
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.grader.read_db_libconfig();
+	}
+	if (HPMHooks.count.HP_grader_read_db_libconfig_post > 0) {
+		bool (*postHookFunc) (bool retVal___);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_grader_read_db_libconfig_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_grader_read_db_libconfig_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___);
+		}
+	}
+	return retVal___;
+}
+bool HP_grader_read_db_libconfig_sub(const struct config_setting_t *it, int n, const char *source) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_grader_read_db_libconfig_sub_pre > 0) {
+		bool (*preHookFunc) (const struct config_setting_t **it, int *n, const char **source);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_grader_read_db_libconfig_sub_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_grader_read_db_libconfig_sub_pre[hIndex].func;
+			retVal___ = preHookFunc(&it, &n, &source);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.grader.read_db_libconfig_sub(it, n, source);
+	}
+	if (HPMHooks.count.HP_grader_read_db_libconfig_sub_post > 0) {
+		bool (*postHookFunc) (bool retVal___, const struct config_setting_t *it, int n, const char *source);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_grader_read_db_libconfig_sub_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_grader_read_db_libconfig_sub_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, it, n, source);
+		}
+	}
+	return retVal___;
+}
+bool HP_grader_read_db_libconfig_sub_materials(const struct config_setting_t *it, enum grade_level gl, int n, const char *source) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_grader_read_db_libconfig_sub_materials_pre > 0) {
+		bool (*preHookFunc) (const struct config_setting_t **it, enum grade_level *gl, int *n, const char **source);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_grader_read_db_libconfig_sub_materials_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_grader_read_db_libconfig_sub_materials_pre[hIndex].func;
+			retVal___ = preHookFunc(&it, &gl, &n, &source);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.grader.read_db_libconfig_sub_materials(it, gl, n, source);
+	}
+	if (HPMHooks.count.HP_grader_read_db_libconfig_sub_materials_post > 0) {
+		bool (*postHookFunc) (bool retVal___, const struct config_setting_t *it, enum grade_level gl, int n, const char *source);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_grader_read_db_libconfig_sub_materials_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_grader_read_db_libconfig_sub_materials_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, it, gl, n, source);
+		}
+	}
+	return retVal___;
+}
+bool HP_grader_read_db_libconfig_sub_material(const struct config_setting_t *it, struct grade_material *gm, int n, const char *source) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_grader_read_db_libconfig_sub_material_pre > 0) {
+		bool (*preHookFunc) (const struct config_setting_t **it, struct grade_material **gm, int *n, const char **source);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_grader_read_db_libconfig_sub_material_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_grader_read_db_libconfig_sub_material_pre[hIndex].func;
+			retVal___ = preHookFunc(&it, &gm, &n, &source);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.grader.read_db_libconfig_sub_material(it, gm, n, source);
+	}
+	if (HPMHooks.count.HP_grader_read_db_libconfig_sub_material_post > 0) {
+		bool (*postHookFunc) (bool retVal___, const struct config_setting_t *it, struct grade_material *gm, int n, const char *source);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_grader_read_db_libconfig_sub_material_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_grader_read_db_libconfig_sub_material_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, it, gm, n, source);
+		}
+	}
+	return retVal___;
+}
+bool HP_grader_read_db_libconfig_sub_blessing(const struct config_setting_t *it, enum grade_level gl, int n, const char *source) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_grader_read_db_libconfig_sub_blessing_pre > 0) {
+		bool (*preHookFunc) (const struct config_setting_t **it, enum grade_level *gl, int *n, const char **source);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_grader_read_db_libconfig_sub_blessing_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_grader_read_db_libconfig_sub_blessing_pre[hIndex].func;
+			retVal___ = preHookFunc(&it, &gl, &n, &source);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.grader.read_db_libconfig_sub_blessing(it, gl, n, source);
+	}
+	if (HPMHooks.count.HP_grader_read_db_libconfig_sub_blessing_post > 0) {
+		bool (*postHookFunc) (bool retVal___, const struct config_setting_t *it, enum grade_level gl, int n, const char *source);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_grader_read_db_libconfig_sub_blessing_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_grader_read_db_libconfig_sub_blessing_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, it, gl, n, source);
+		}
+	}
+	return retVal___;
+}
+bool HP_grader_failure_behavior_string2enum(const char *str, enum grade_ui_failure_behavior *result) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_grader_failure_behavior_string2enum_pre > 0) {
+		bool (*preHookFunc) (const char **str, enum grade_ui_failure_behavior **result);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_grader_failure_behavior_string2enum_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_grader_failure_behavior_string2enum_pre[hIndex].func;
+			retVal___ = preHookFunc(&str, &result);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.grader.failure_behavior_string2enum(str, result);
+	}
+	if (HPMHooks.count.HP_grader_failure_behavior_string2enum_post > 0) {
+		bool (*postHookFunc) (bool retVal___, const char *str, enum grade_ui_failure_behavior *result);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_grader_failure_behavior_string2enum_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_grader_failure_behavior_string2enum_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, str, result);
+		}
+	}
+	return retVal___;
+}
+bool HP_grader_announce_behavior_string2enum(const char *str, enum grade_announce_condition *result) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_grader_announce_behavior_string2enum_pre > 0) {
+		bool (*preHookFunc) (const char **str, enum grade_announce_condition **result);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_grader_announce_behavior_string2enum_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_grader_announce_behavior_string2enum_pre[hIndex].func;
+			retVal___ = preHookFunc(&str, &result);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.grader.announce_behavior_string2enum(str, result);
+	}
+	if (HPMHooks.count.HP_grader_announce_behavior_string2enum_post > 0) {
+		bool (*postHookFunc) (bool retVal___, const char *str, enum grade_announce_condition *result);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_grader_announce_behavior_string2enum_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_grader_announce_behavior_string2enum_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, str, result);
+		}
+	}
+	return retVal___;
+}
+const struct s_grade_info* HP_grader_get_grade_info(int grade) {
+	int hIndex = 0;
+	const struct s_grade_info* retVal___ = NULL;
+	if (HPMHooks.count.HP_grader_get_grade_info_pre > 0) {
+		const struct s_grade_info* (*preHookFunc) (int *grade);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_grader_get_grade_info_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_grader_get_grade_info_pre[hIndex].func;
+			retVal___ = preHookFunc(&grade);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.grader.get_grade_info(grade);
+	}
+	if (HPMHooks.count.HP_grader_get_grade_info_post > 0) {
+		const struct s_grade_info* (*postHookFunc) (const struct s_grade_info* retVal___, int grade);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_grader_get_grade_info_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_grader_get_grade_info_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, grade);
+		}
+	}
+	return retVal___;
+}
+void HP_grader_enchant_add_item(struct map_session_data *sd, int idx) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_grader_enchant_add_item_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, int *idx);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_grader_enchant_add_item_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_grader_enchant_add_item_pre[hIndex].func;
+			preHookFunc(&sd, &idx);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.grader.enchant_add_item(sd, idx);
+	}
+	if (HPMHooks.count.HP_grader_enchant_add_item_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, int idx);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_grader_enchant_add_item_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_grader_enchant_add_item_post[hIndex].func;
+			postHookFunc(sd, idx);
+		}
+	}
+	return;
+}
+void HP_grader_enchant_start(struct map_session_data *sd, int idx, int mat_idx, bool use_blessing, int blessing_amount) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_grader_enchant_start_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, int *idx, int *mat_idx, bool *use_blessing, int *blessing_amount);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_grader_enchant_start_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_grader_enchant_start_pre[hIndex].func;
+			preHookFunc(&sd, &idx, &mat_idx, &use_blessing, &blessing_amount);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.grader.enchant_start(sd, idx, mat_idx, use_blessing, blessing_amount);
+	}
+	if (HPMHooks.count.HP_grader_enchant_start_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, int idx, int mat_idx, bool use_blessing, int blessing_amount);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_grader_enchant_start_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_grader_enchant_start_post[hIndex].func;
+			postHookFunc(sd, idx, mat_idx, use_blessing, blessing_amount);
+		}
+	}
+	return;
 }
 /* grfio_interface */
 void HP_grfio_init(const char *fname) {
