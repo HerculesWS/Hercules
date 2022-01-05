@@ -108,7 +108,7 @@ struct showmsg_interface {
 	void (*final) (void);
 
 	void (*clearScreen) (void);
-	int (*showMessageV) (const char *string, va_list ap);
+	int (*showMessageV) (const char *string, va_list ap) __attribute__((format(printf, 1, 0)));
 
 	void (*showMessage) (const char *, ...) __attribute__((format(printf, 1, 2)));
 	void (*showStatus) (const char *, ...) __attribute__((format(printf, 1, 2)));

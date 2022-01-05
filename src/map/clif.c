@@ -9951,8 +9951,13 @@ static void clif_mobname_additional_ack(int fd, struct block_list *bl)
 		str_p += sprintf(str_p, "HP: %u%% | ", get_percentage(md->status.hp, md->status.max_hp));
 	//Even thought mobhp ain't a name, we send it as one so the client
 	//can parse it. [Skotlex]
-	if (str_p != mobhp) {
-		*(str_p-3) = '\0'; //Remove trailing space + pipe.
+	if ((battle_config.show_mob_info & (4 | 1 | 2)) != 0 && str_p != mobhp) {
+		// ignoring bound check because gcc may detect is as error
+		PRAGMA_GCC46(GCC diagnostic push)
+		PRAGMA_GCC46(GCC diagnostic ignored "-Warray-bounds")
+		PRAGMA_GCC7(GCC diagnostic ignored "-Wstringop-overflow")
+		*(str_p - 3) = '\0'; //Remove trailing space + pipe.
+		PRAGMA_GCC46(GCC diagnostic pop)
 		memcpy(packet.party_name, mobhp, NAME_LENGTH);
 	}
 
@@ -16267,7 +16272,7 @@ static void clif_parse_GMReqNoChat(int fd, struct map_session_data *sd)
 {
 	int id, type, value;
 	struct map_session_data *dstsd;
-	char command[NAME_LENGTH+15];
+	char command[100];
 
 	id = RFIFOL(fd,2);
 	type = RFIFOB(fd,6);
@@ -20976,28 +20981,24 @@ static void clif_parse_cashShopBuy(int fd, struct map_session_data *sd)
 	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
 		return;
 
-	int len = RFIFOW(fd, 2);
-	unsigned short limit, i, j;
-	unsigned int kafra_pay;
-	int count;
-
 	if (map->list[sd->bl.m].flag.nocashshop) {
 		clif->messagecolor_self(fd, COLOR_RED, msg_fd(fd,1489)); //Cash Shop is disabled in this map
 		return;
 	}
 
+	int len = RFIFOW(fd, 2);
 	if (len < 10)
 		return;
 
-	limit = RFIFOW(fd, 4);
-	kafra_pay = RFIFOL(fd, 6); // [Ryuuzaki] - These are free cash points (strangely #CASH = main cash currently for us, confusing)
-	count = (len - 10) / 10;
+	unsigned short limit = RFIFOW(fd, 4);
+	unsigned int kafra_pay = RFIFOL(fd, 6); // [Ryuuzaki] - These are free cash points (strangely #CASH = main cash currently for us, confusing)
+	int count = (len - 10) / 10;
 	if (count != limit) {
 		ShowError("Wrong cash shop limit: %d\n", limit);
 		return;
 	}
 
-	for(i = 0; i < limit; i++) {
+	for(unsigned short i = 0; i < limit; i++) {
 		int qty = RFIFOL(fd, 14 + ( i * 10 ));
 		int id = RFIFOL(fd, 10 + ( i * 10 ));
 		short tab = RFIFOW(fd, 18 + ( i * 10 ));
@@ -21006,7 +21007,8 @@ static void clif_parse_cashShopBuy(int fd, struct map_session_data *sd)
 		if(tab < 0 || tab >= CASHSHOP_TAB_MAX)
 			continue;
 
-		for(j = 0; j < clif->cs.item_count[tab]; j++) {
+		int j;
+		for (j = 0; j < clif->cs.item_count[tab]; j++) {
 			if( clif->cs.data[tab][j]->id == id )
 				break;
 		}
@@ -23682,7 +23684,7 @@ static time_t clif_attendance_getendtime(void)
 	time_t timestamp;
 	struct tm tmtime = { 0 };
 	int year = 0, month = 0, day = 0;
-	char timestring[9];
+	char timestring[15];
 
 	sprintf(timestring, "%8d", battle_config.feature_attendance_endtime);
 	sscanf(timestring, "%4d%2d%2d", &year, &month, &day);
@@ -24100,11 +24102,11 @@ static void clif_parse_cameraInfo(int fd, struct map_session_data *sd)
 		return;
 
 	const struct PACKET_CZ_CAMERA_INFO *const p = RFIFOP(fd, 0);
-	char command[100];
+	char command[200];
 	if (p->action == 1) {
-		sprintf(command, "%ccamerainfo", atcommand->at_symbol);
+		safesnprintf(command, sizeof(command), "%ccamerainfo", atcommand->at_symbol);
 	} else {
-		sprintf(command, "%ccamerainfo %15f %15f %15f", atcommand->at_symbol, p->range, p->rotation, p->latitude);
+		safesnprintf(command, sizeof(command),  "%ccamerainfo %f %f %f", atcommand->at_symbol, p->range, p->rotation, p->latitude);
 	}
 	atcommand->exec(fd, sd, command, true);
 #endif

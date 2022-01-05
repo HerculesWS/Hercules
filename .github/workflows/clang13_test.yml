@@ -1,4 +1,4 @@
-name: gcc10_test
+name: clang13_test
 
 on: [push, pull_request]
 
@@ -14,11 +14,12 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        CC: [gcc-10]
+        # clang-8, clang-9 removed for reduce number of jobs
+        CC: [clang-13]
         RENEWAL: ["", "--disable-renewal"]
         CLIENT_TYPE: ["", "--enable-packetver-re", "--enable-packetver-zero"]
         SANITIZER: ["--disable-manager", "--disable-manager --enable-sanitize=full"]
-        PACKET_VERSION: ["--enable-packetver=20200304", "--enable-packetver=20130724"]
+        PACKET_VERSION: ["--enable-packetver=20211118", "--enable-packetver=20130724"]
         exclude:
           - PACKET_VERSION: "--enable-packetver=20130724"
             CLIENT_TYPE: "--enable-packetver-zero"
@@ -39,7 +40,7 @@ jobs:
       INSTALL_PACKAGES: ${{ matrix.CC }} mariadb-client libmariadbclient-dev-compat
       SQLHOST: mariadb
       CC: ${{ matrix.CC }}
-      CONFIGURE_FLAGS: CC=${{ matrix.CC }} --enable-debug --enable-Werror --enable-buildbot ${{ matrix.RENEWAL }} ${{ matrix.CLIENT_TYPE }} ${{ matrix.SANITIZER }} ${{ matrix.PACKET_VERSION }} --enable-lto
+      CONFIGURE_FLAGS: CC=${{ matrix.CC }} --enable-debug --enable-Werror --enable-buildbot ${{ matrix.RENEWAL }} ${{ matrix.CLIENT_TYPE }} ${{ matrix.SANITIZER }} ${{ matrix.PACKET_VERSION }}
       PACKET_VERSION: ${{ matrix.PACKET_VERSION }}
     steps:
       - uses: actions/checkout@v1

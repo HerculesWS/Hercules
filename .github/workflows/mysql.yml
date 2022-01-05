@@ -18,8 +18,8 @@ jobs:
         RENEWAL: [""]
         CLIENT_TYPE: [""]
         SANITIZER: ["--disable-manager", "--enable-sanitize=full"]
-        PACKET_VERSION: ["--enable-packetver=20200304"]
-        MYSQL: ["5.6", "5.7"]
+        PACKET_VERSION: ["--enable-packetver=20211118"]
+        MYSQL: ["5.6", "5.7", "latest"]
     container:
       image: debian:unstable
     services:

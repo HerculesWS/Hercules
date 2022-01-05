@@ -8120,7 +8120,7 @@ static BUILDIN(deletearray)
 	struct map_session_data *sd = NULL;
 	struct script_array *sa = NULL;
 	struct reg_db *src = NULL;
-	void *value;
+	const void *value;
 
 	data = script_getdata(st, 2);
 	if( !data_isreference(data) )
@@ -8161,9 +8161,9 @@ static BUILDIN(deletearray)
 		return true;// nothing to free
 
 	if( is_string_variable(name) )
-		value = (void *)"";
+		value = (const void *)"";
 	else
-		value = (void *)0;
+		value = (const void *)0;
 
 	if( script_hasdata(st,3) ) {
 		unsigned int count = script_getnum(st, 3);
@@ -26414,7 +26414,6 @@ static BUILDIN(shopcount)
 {
 	struct npc_data *nd;
 	int id = script_getnum(st, 2);
-	unsigned short i;
 
 	if( !(nd = map->id2nd(st->oid)) ) {
 		ShowWarning("buildin_shopcount(%d): trying to run without a proper NPC!\n",id);
@@ -26427,8 +26426,9 @@ static BUILDIN(shopcount)
 		return false;
 	}
 
+	int i;
 	/* lookup */
-	for(i = 0; i < nd->u.scr.shop->items; i++) {
+	for (i = 0; i < nd->u.scr.shop->items; i++) {
 		if( nd->u.scr.shop->item[i].nameid == id ) {
 			script_pushint(st, nd->u.scr.shop->item[i].qty);
 			break;

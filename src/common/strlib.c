@@ -24,6 +24,7 @@
 
 #include "common/cbasetypes.h"
 #include "common/memmgr.h"
+#include "common/nullpo.h"
 #include "common/showmsg.h"
 
 #include <errno.h>
@@ -43,6 +44,8 @@ struct sv_interface *sv;
 // escapes a string in-place (' -> \' , \ -> \\ , % -> _)
 static char *jstrescape(char *pt)
 {
+	nullpo_retr(NULL, pt);
+
 	//copy from here
 	char *ptr;
 	int i = 0, j = 0;
@@ -1030,6 +1033,7 @@ static int StringBuf_Printf(StringBuf *self, const char *fmt, ...)
 }
 
 /// Appends the result of vprintf to the StringBuf
+static int StringBuf_Vprintf(StringBuf *self, const char *fmt, va_list ap) __attribute__((format(printf, 2, 0)));
 static int StringBuf_Vprintf(StringBuf *self, const char *fmt, va_list ap)
 {
 	for(;;) {

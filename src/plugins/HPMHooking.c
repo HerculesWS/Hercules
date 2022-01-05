@@ -29,6 +29,7 @@
 
 PRAGMA_GCC5(GCC diagnostic push)
 PRAGMA_GCC5(GCC diagnostic ignored "-Wdiscarded-qualifiers")
+PRAGMA_GCC5(GCC diagnostic ignored "-Wsuggest-attribute=format")
 #if defined (HPMHOOKING_LOGIN)
 #define HPM_SERVER_TYPE SERVER_TYPE_LOGIN
 #define HPM_CORE_INCLUDE "HPMHooking/HPMHooking_login.HPMHooksCore.inc"
@@ -231,6 +232,7 @@ HPExport bool HPM_Plugin_AddHook(enum HPluginHookType type, const char *target, 
 
 PRAGMA_GCC5(GCC diagnostic push)
 PRAGMA_GCC5(GCC diagnostic ignored "-Wdiscarded-qualifiers")
+PRAGMA_GCC5(GCC diagnostic ignored "-Wsuggest-attribute=format")
 #include HPM_HOOKS_INCLUDE
 PRAGMA_GCC5(GCC diagnostic pop)
 

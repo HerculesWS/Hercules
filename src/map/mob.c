@@ -231,9 +231,7 @@ static void mvptomb_destroy(struct mob_data *md)
 
 	nullpo_retv(md);
 	if ( (nd = map->id2nd(md->tomb_nid)) ) {
-		int16 m, i;
-
-		m = nd->bl.m;
+		int16 m = nd->bl.m;
 
 		struct s_mapiterator *iter = mapit_geteachpc();
 		for (struct map_session_data *sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter))) {
@@ -247,6 +245,7 @@ static void mvptomb_destroy(struct mob_data *md)
 
 		map->delblock(&nd->bl);
 
+		int i = 0;
 		ARR_FIND( 0, map->list[m].npc_num, i, map->list[m].npc[i] == nd );
 		if( !(i == map->list[m].npc_num) ) {
 			map->list[m].npc_num--;

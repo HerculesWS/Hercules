@@ -47,17 +47,20 @@
 
 /// Private interface fields
 struct sysinfo_private {
-	char *platform;
-	char *osversion;
-	char *cpu;
+	const char *platform;
+	const char *osversion;
+	const char *cpu;
 	int cpucores;
-	char *arch;
-	char *compiler;
-	char *cflags;
+	const char *arch;
+	const char *compiler;
+	const char *cflags;
 	char *vcstype_name;
 	int vcstype;
-	char *vcsrevision_src;
+	const char *vcsrevision_src;
 	char *vcsrevision_scripts;
+
+	bool (*git_get_revision) (char **out);
+	bool (*svn_get_revision) (char **out);
 };
 
 /// sysinfo.c interface source
@@ -703,11 +706,11 @@ static void sysinfo_vcsrevision_src_retrieve(void)
 		sysinfo->p->vcsrevision_src = NULL;
 	}
 	// Try Git, then SVN
-	if (sysinfo_git_get_revision(&sysinfo->p->vcsrevision_src)) {
+	if (sysinfo->p->git_get_revision(&sysinfo->p->vcsrevision_src)) {
 		sysinfo->p->vcstype = VCSTYPE_GIT;
 		return;
 	}
-	if (sysinfo_svn_get_revision(&sysinfo->p->vcsrevision_src)) {
+	if (sysinfo->p->svn_get_revision(&sysinfo->p->vcsrevision_src)) {
 		sysinfo->p->vcstype = VCSTYPE_SVN;
 		return;
 	}
@@ -966,18 +969,20 @@ static const char *sysinfo_vcsrevision_scripts(void)
  */
 static void sysinfo_vcsrevision_reload(void)
 {
+#ifdef WIN32
 	if (sysinfo->p->vcsrevision_scripts != NULL) {
 		aFree(sysinfo->p->vcsrevision_scripts);
 		sysinfo->p->vcsrevision_scripts = NULL;
 	}
 	// Try Git, then SVN
-	if (sysinfo_git_get_revision(&sysinfo->p->vcsrevision_scripts)) {
+	if (sysinfo->p->git_get_revision(&sysinfo->p->vcsrevision_scripts)) {
 		return;
 	}
-	if (sysinfo_svn_get_revision(&sysinfo->p->vcsrevision_scripts)) {
+	if (sysinfo->p->svn_get_revision(&sysinfo->p->vcsrevision_scripts)) {
 		return;
 	}
 	sysinfo->p->vcsrevision_scripts = aStrdup("Unknown");
+#endif  // WIN32
 }
 
 /**
@@ -1101,6 +1106,9 @@ void sysinfo_defaults(void)
 	sysinfo = &sysinfo_s;
 	memset(&sysinfo_p, '\0', sizeof(sysinfo_p));
 	sysinfo->p = &sysinfo_p;
+	sysinfo->p->git_get_revision = sysinfo_git_get_revision;
+	sysinfo->p->svn_get_revision = sysinfo_svn_get_revision;
+
 	sysinfo->getpagesize = sysinfo_getpagesize;
 	sysinfo->platform = sysinfo_platform;
 	sysinfo->osversion = sysinfo_osversion;

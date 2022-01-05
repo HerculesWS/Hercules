@@ -489,6 +489,7 @@ static int FPRINTF(HANDLE handle, const char *fmt, ...)
 #define is_console(file) (0!=isatty(fileno(file)))
 
 //vprintf_without_ansiformats
+static int VFPRINTF(FILE *file, const char *fmt, va_list argptr) __attribute__((format(printf, 2, 0)));
 static int VFPRINTF(FILE *file, const char *fmt, va_list argptr)
 {
 	char *p, *q;
@@ -603,6 +604,7 @@ static int FPRINTF(FILE *file, const char *fmt, ...)
 
 #endif// not _WIN32
 
+static int vShowMessage_(enum msg_type flag, const char *string, va_list ap) __attribute__((format(printf, 2, 0)));
 static int vShowMessage_(enum msg_type flag, const char *string, va_list ap)
 {
 	va_list apcopy;
@@ -722,6 +724,7 @@ static int vShowMessage_(enum msg_type flag, const char *string, va_list ap)
 	return 0;
 }
 
+static int showmsg_vShowMessage(const char *string, va_list ap) __attribute__((format(printf, 1, 0)));
 static int showmsg_vShowMessage(const char *string, va_list ap)
 {
 	int ret;

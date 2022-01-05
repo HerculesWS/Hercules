@@ -113,6 +113,7 @@ struct malloc_interface *iMalloc;
 #error Unsupported OS
 #endif
 
+static void *aMalloc_(size_t size, const char *file, int line, const char *func) __attribute__ ((alloc_size (1))) GCCATTR ((returns_nonnull));
 static void *aMalloc_(size_t size, const char *file, int line, const char *func)
 {
 	void *ret = MALLOC(size, file, line, func);
@@ -124,6 +125,8 @@ static void *aMalloc_(size_t size, const char *file, int line, const char *func)
 
 	return ret;
 }
+
+static void *aCalloc_(size_t num, size_t size, const char *file, int line, const char *func) __attribute__ ((alloc_size (1, 2))) GCCATTR ((returns_nonnull));
 static void *aCalloc_(size_t num, size_t size, const char *file, int line, const char *func)
 {
 	void *ret = CALLOC(num, size, file, line, func);
@@ -134,6 +137,8 @@ static void *aCalloc_(size_t num, size_t size, const char *file, int line, const
 	}
 	return ret;
 }
+
+static void *aRealloc_(void *p, size_t size, const char *file, int line, const char *func) __attribute__ ((alloc_size (2))) __attribute__((nonnull (1))) GCCATTR ((returns_nonnull));
 static void *aRealloc_(void *p, size_t size, const char *file, int line, const char *func)
 {
 	void *ret = REALLOC(p, size, file, line, func);
@@ -145,6 +150,7 @@ static void *aRealloc_(void *p, size_t size, const char *file, int line, const c
 	return ret;
 }
 
+static void *aReallocz_(void *p, size_t size, const char *file, int line, const char *func) __attribute__ ((alloc_size (2))) GCCATTR ((returns_nonnull));
 static void *aReallocz_(void *p, size_t size, const char *file, int line, const char *func)
 {
 	unsigned char *ret = NULL;
@@ -168,6 +174,7 @@ static void *aReallocz_(void *p, size_t size, const char *file, int line, const 
 	return ret;
 }
 
+static char *aStrdup_(const char *p, const char *file, int line, const char *func) __attribute__((nonnull (1))) GCCATTR ((returns_nonnull));
 static char *aStrdup_(const char *p, const char *file, int line, const char *func)
 {
 	char *ret = STRDUP(p, file, line, func);
@@ -195,6 +202,7 @@ static char *aStrdup_(const char *p, const char *file, int line, const char *fun
  * @param func @see ALC_MARK.
  * @return the copied string.
  */
+static char *aStrndup_(const char *p, size_t size, const char *file, int line, const char *func) __attribute__((nonnull (1))) GCCATTR ((returns_nonnull));
 static char *aStrndup_(const char *p, size_t size, const char *file, int line, const char *func)
 {
 	size_t len = strnlen(p, size);
@@ -322,22 +330,21 @@ static size_t hash2size(unsigned short hash)
 	}
 }
 
+static void *mmalloc_(size_t size, const char *file, int line, const char *func) __attribute__ ((alloc_size (1))) GCCATTR ((returns_nonnull));
 static void *mmalloc_(size_t size, const char *file, int line, const char *func)
 {
-	struct block *block;
-	short size_hash = size2hash( size );
-	struct unit_head *head;
-
 	if (((long) size) < 0) {
-		ShowError("mmalloc_: %"PRIuS"\n", size);
-		return NULL;
+		ShowFatalError("%s:%d: in func %s: mmalloc_: %"PRIuS"\n", file, line, func, size);
+		exit(EXIT_FAILURE);
 	}
 
-	if(size == 0) {
-		return NULL;
+	if (size == 0) {
+		// simulate some allocations. because malloc must not return NULL
+		size = 1;
 	}
 	memmgr_usage_bytes += size;
 
+	short size_hash = size2hash( size );
 	/* To ensure the area that exceeds the length of the block, using malloc () to */
 	/* At that time, the distinction by assigning NULL to unit_head.block */
 	if(hash2size(size_hash) > BLOCK_DATA_SIZE - sizeof(struct unit_head)) {
@@ -366,6 +373,7 @@ static void *mmalloc_(size_t size, const char *file, int line, const char *func)
 		}
 	}
 
+	struct block *block;
 	/* When a block of the same size is not ensured, to ensure a new */
 	if(hash_unfill[size_hash]) {
 		block = hash_unfill[size_hash];
@@ -373,6 +381,7 @@ static void *mmalloc_(size_t size, const char *file, int line, const char *func)
 		block = block_malloc(size_hash);
 	}
 
+	struct unit_head *head;
 	if( block->unit_unfill == 0xFFFF ) {
 		// there are no more free space that
 		memmgr_assert(block->unit_used <  block->unit_count);
@@ -429,6 +438,7 @@ static void *mmalloc_(size_t size, const char *file, int line, const char *func)
 	return (char *)head + sizeof(struct unit_head) - sizeof(long);
 }
 
+static void *mcalloc_(size_t num, size_t size, const char *file, int line, const char *func) __attribute__ ((alloc_size (1, 2))) GCCATTR ((returns_nonnull));
 static void *mcalloc_(size_t num, size_t size, const char *file, int line, const char *func)
 {
 	void *p = iMalloc->malloc(num * size,file,line,func);
@@ -437,6 +447,7 @@ static void *mcalloc_(size_t num, size_t size, const char *file, int line, const
 	return p;
 }
 
+static void *mrealloc_(void *memblock, size_t size, const char *file, int line, const char *func) __attribute__ ((alloc_size (2))) GCCATTR ((returns_nonnull));
 static void *mrealloc_(void *memblock, size_t size, const char *file, int line, const char *func)
 {
 	size_t old_size;
@@ -463,6 +474,7 @@ static void *mrealloc_(void *memblock, size_t size, const char *file, int line, 
 }
 
 /* a mrealloc_ clone with the difference it 'z'eroes the newly created memory */
+static void *mreallocz_(void *memblock, size_t size, const char *file, int line, const char *func) __attribute__ ((alloc_size (2))) GCCATTR ((returns_nonnull));
 static void *mreallocz_(void *memblock, size_t size, const char *file, int line, const char *func)
 {
 	size_t old_size;
@@ -494,16 +506,13 @@ static void *mreallocz_(void *memblock, size_t size, const char *file, int line,
 }
 
 
+static char *mstrdup_(const char *p, const char *file, int line, const char *func) __attribute__((nonnull (1))) GCCATTR ((returns_nonnull));
 static char *mstrdup_(const char *p, const char *file, int line, const char *func)
 {
-	if(p == NULL) {
-		return NULL;
-	} else {
-		size_t len = strlen(p);
-		char *string  = (char *)iMalloc->malloc(len + 1,file,line,func);
-		memcpy(string,p,len+1);
-		return string;
-	}
+	size_t len = strlen(p);
+	char *string  = (char *)iMalloc->malloc(len + 1,file,line,func);
+	memcpy(string,p,len+1);
+	return string;
 }
 
 /**
@@ -523,17 +532,14 @@ static char *mstrdup_(const char *p, const char *file, int line, const char *fun
  * @return the copied string.
  * @retval NULL if the source string is NULL or in case of error.
  */
+static char *mstrndup_(const char *p, size_t size, const char *file, int line, const char *func) __attribute__((nonnull (1))) GCCATTR ((returns_nonnull));
 static char *mstrndup_(const char *p, size_t size, const char *file, int line, const char *func)
 {
-	if (p == NULL) {
-		return NULL;
-	} else {
-		size_t len = strnlen(p, size);
-		char *string = iMalloc->malloc(len + 1, file, line, func);
-		memcpy(string, p, len);
-		string[len] = '\0';
-		return string;
-	}
+	size_t len = strnlen(p, size);
+	char *string = iMalloc->malloc(len + 1, file, line, func);
+	memcpy(string, p, len);
+	string[len] = '\0';
+	return string;
 }
 
 
@@ -1027,3 +1033,6 @@ void malloc_defaults(void)
 	iMalloc->post_shutdown = NULL;
 	iMalloc->init_messages = malloc_init_messages;
 }
+
+// include allocation proxy functions
+#include "common/memmgr_inc.h"

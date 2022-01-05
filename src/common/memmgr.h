@@ -42,13 +42,13 @@
 // Enable memory manager logging by default
 #define LOG_MEMMGR
 
-#	define aMalloc(n)    (iMalloc->malloc((n),ALC_MARK))
-#	define aCalloc(m,n)  (iMalloc->calloc((m),(n),ALC_MARK))
-#	define aRealloc(p,n) (iMalloc->realloc((p),(n),ALC_MARK))
-#	define aReallocz(p,n) (iMalloc->reallocz((p),(n),ALC_MARK))
-#	define aStrdup(p)    (iMalloc->astrdup((p),ALC_MARK))
-#	define aStrndup(p,n) (iMalloc->astrndup((p),(n),ALC_MARK))
-#	define aFree(p)      (iMalloc->free((p),ALC_MARK))
+#define aMalloc(n)    (malloc_proxy((n), ALC_MARK))
+#define aCalloc(m, n) (calloc_proxy((m), (n),ALC_MARK))
+#define aFree(p)      (free_proxy((p), ALC_MARK))
+#define aStrdup(p)    (strdup_proxy((p),ALC_MARK))
+#define aStrndup(p,n) (strndup_proxy((p),(n),ALC_MARK))
+#define aRealloc(p,n) (iMalloc->realloc((p),(n),ALC_MARK))
+#define aReallocz(p,n) (iMalloc->reallocz((p),(n),ALC_MARK))
 
 /////////////// Buffer Creation /////////////////
 // Full credit for this goes to Shinomori [Ajarn]
@@ -76,12 +76,12 @@ struct malloc_interface {
 	void (*init) (void);
 	void (*final) (void);
 	/* */
-	void* (*malloc)(size_t size, const char *file, int line, const char *func);
-	void* (*calloc)(size_t num, size_t size, const char *file, int line, const char *func);
-	void* (*realloc)(void *p, size_t size, const char *file, int line, const char *func);
-	void* (*reallocz)(void *p, size_t size, const char *file, int line, const char *func);
-	char* (*astrdup)(const char *p, const char *file, int line, const char *func);
-	char *(*astrndup)(const char *p, size_t size, const char *file, int line, const char *func);
+	void* (*malloc)(size_t size, const char *file, int line, const char *func) __attribute__ ((alloc_size (1))) GCCATTR ((returns_nonnull));
+	void* (*calloc)(size_t num, size_t size, const char *file, int line, const char *func) __attribute__ ((alloc_size (1, 2))) GCCATTR ((returns_nonnull));
+	void* (*realloc)(void *p, size_t size, const char *file, int line, const char *func) __attribute__ ((alloc_size (2))) __attribute__((nonnull (1))) GCCATTR ((returns_nonnull));
+	void* (*reallocz)(void *p, size_t size, const char *file, int line, const char *func) __attribute__ ((alloc_size (2))) GCCATTR ((returns_nonnull));
+	char* (*astrdup)(const char *p, const char *file, int line, const char *func) __attribute__((nonnull (1))) GCCATTR ((returns_nonnull));
+	char *(*astrndup)(const char *p, size_t size, const char *file, int line, const char *func) __attribute__((nonnull (1))) GCCATTR ((returns_nonnull));
 	void  (*free)(void *p, const char *file, int line, const char *func);
 	/* */
 	void (*memory_check)(void);
@@ -92,14 +92,26 @@ struct malloc_interface {
 	void (*init_messages) (void);
 };
 
+void free_proxy(void *p, const char *file, int line, const char *func);
+void *malloc_proxy(size_t size, const char *file, int line, const char *func) GCC11ATTR ((malloc, malloc (free_proxy, 1))) __attribute__ ((alloc_size (1))) GCCATTR ((returns_nonnull));
+void *calloc_proxy(size_t num, size_t size, const char *file, int line, const char *func) GCC11ATTR ((malloc, malloc (free_proxy, 1))) __attribute__ ((alloc_size (1, 2))) GCCATTR ((returns_nonnull));
+char *strdup_proxy(const char *p, const char *file, int line, const char *func) GCC11ATTR ((malloc, malloc (free_proxy, 1))) __attribute__((nonnull (1))) GCCATTR ((returns_nonnull));
+char *strndup_proxy(const char *p, size_t size, const char *file, int line, const char *func) GCC11ATTR ((malloc, malloc (free_proxy, 1))) __attribute__((nonnull (1))) GCCATTR ((returns_nonnull));
+
 #ifdef HERCULES_CORE
+
 void malloc_defaults(void);
 
 void memmgr_report(int extra);
 
 HPShared struct malloc_interface *iMalloc;
 #else
+
+#ifndef iMalloc
 #define iMalloc HPMi->memmgr
+#endif  // iMalloc
+// include allocation proxy functions
+#include "common/memmgr_inc.h"
 #endif // HERCULES_CORE
 
 #endif /* COMMON_MEMMGR_H */
