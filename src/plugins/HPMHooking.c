@@ -87,6 +87,7 @@ PRAGMA_GCC5(GCC diagnostic ignored "-Wsuggest-attribute=format")
 #include "map/clif.h"
 #include "map/duel.h"
 #include "map/elemental.h"
+#include "map/grader.h"
 #include "map/guild.h"
 #include "map/homunculus.h"
 #include "map/instance.h"
