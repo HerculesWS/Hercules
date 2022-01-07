@@ -22,6 +22,17 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
+## [v2022.01.05+1] `January 05 2022` `PATCH 1`
+
+### Added
+
+- Added the `GCC10ATTR()` macro, to declare an `__attribute__` annotation only in GCC >= 10.0. (part of #3104)
+
+### Fixed
+
+- Fixed a missing header causing HPM compilation failures. (#3104)
+- Fixed warnings on GCC 9 and older versions. (part of #3104)
+
 ## [v2022.01.05] `January 05 2022`
 
 ### Added
@@ -2234,6 +2245,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2022.01.05+1]: https://github.com/HerculesWS/Hercules/compare/v2022.01.05...v2022.01.05+1
 [v2022.01.05]: https://github.com/HerculesWS/Hercules/compare/v2021.12.01...v2022.01.05
 [v2021.12.01]: https://github.com/HerculesWS/Hercules/compare/v2021.11.03+1...v2021.12.01
 [v2021.11.03+1]: https://github.com/HerculesWS/Hercules/compare/v2021.11.03...v2021.11.03+1
