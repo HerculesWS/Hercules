@@ -7025,6 +7025,7 @@ static void clif_cart_additem(struct map_session_data *sd, int n, int amount, in
 	struct PACKET_ZC_ADD_ITEM_TO_CART *p = WFIFOP(fd, 0);
 	p->packetType = HEADER_ZC_ADD_ITEM_TO_CART;
 	p->index = n + 2;
+	p->amount = amount;
 	p->itemId = (view > 0) ? view : sd->status.cart[n].nameid;
 #if PACKETVER >= 5
 	p->itemType = itemdb_type(sd->status.cart[n].nameid);
