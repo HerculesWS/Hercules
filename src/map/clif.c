@@ -3526,10 +3526,10 @@ static void clif_updatestatus(struct map_session_data *sd, enum status_point_typ
 	if (!sockt->session_is_active(fd)) // Invalid pointer fix, by sasuke [Kevin]
 		return;
 
-	int packetId = HEADER_ZC_PAR_CHANGE1;
+	int packetId = HEADER_ZC_PAR_CHANGE;
 
 	WFIFOHEAD(fd, 14);
-	WFIFOW(fd, 0) = HEADER_ZC_PAR_CHANGE1;
+	WFIFOW(fd, 0) = HEADER_ZC_PAR_CHANGE;
 	WFIFOW(fd, 2) = type;
 
 	PRAGMA_GCC46(GCC diagnostic push)
@@ -3633,23 +3633,23 @@ static void clif_updatestatus(struct map_session_data *sd, enum status_point_typ
 			break;
 #if PACKETVER_MAIN_NUM >= 20170906 || PACKETVER_RE_NUM >= 20170830 || defined(PACKETVER_ZERO)
 		case SP_ZENY:
-			packetId = HEADER_ZC_LONGPAR_CHANGE;
+			packetId = HEADER_ZC_LONGLONGPAR_CHANGE;
 			WFIFOQ(fd, 4) = sd->status.zeny;
 			break;
 		case SP_BASEEXP:
-			packetId = HEADER_ZC_LONGPAR_CHANGE;
+			packetId = HEADER_ZC_LONGLONGPAR_CHANGE;
 			WFIFOQ(fd, 4) = sd->status.base_exp;
 			break;
 		case SP_JOBEXP:
-			packetId = HEADER_ZC_LONGPAR_CHANGE;
+			packetId = HEADER_ZC_LONGLONGPAR_CHANGE;
 			WFIFOQ(fd, 4) = sd->status.job_exp;
 			break;
 		case SP_NEXTBASEEXP:
-			packetId = HEADER_ZC_LONGPAR_CHANGE;
+			packetId = HEADER_ZC_LONGLONGPAR_CHANGE;
 			WFIFOQ(fd, 4) = pc->nextbaseexp(sd);
 			break;
 		case SP_NEXTJOBEXP:
-			packetId = HEADER_ZC_LONGPAR_CHANGE;
+			packetId = HEADER_ZC_LONGLONGPAR_CHANGE;
 			WFIFOQ(fd, 4) = pc->nextjobexp(sd);
 			break;
 #else
@@ -7166,6 +7166,9 @@ static void clif_vendinglist(struct map_session_data *sd, unsigned int id, struc
 		p->items[i].location = pc->item_equippoint(sd, data);
 		p->items[i].viewSprite = data->view_sprite;
 #endif
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+		p->items[i].grade = vsd->status.cart[index].grade;
+#endif // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
 	}
 	WFIFOSET(fd, len);
 }
@@ -21832,7 +21835,7 @@ static void clif_parse_NPCMarketPurchase(int fd, struct map_session_data *sd)
 	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
 		return;
 
-	const struct packet_npc_market_purchase *p = RP2PTR(fd);
+	const struct PACKET_CZ_NPC_MARKET_PURCHASE *p = RP2PTR(fd);
 	int count = (p->PacketLength - 4) / sizeof p->list[0];
 	struct itemlist item_list;
 
@@ -23319,7 +23322,7 @@ static void clif_rodex_read_mail(struct map_session_data *sd, int8 opentype, str
 	sPacket->TextcontentsLength = body_len;
 	sPacket->zeny = msg->zeny;
 	sPacket->ItemCnt = msg->items_count;
-	strncpy(WFIFOP(fd, size), msg->body, body_len);
+	strncpy(sPacket->Textcontent, msg->body, body_len);
 	size += body_len;
 	for (int i = 0; i < RODEX_MAX_ITEM; ++i) {
 		struct item *it = &msg->items[i].item;
@@ -24416,7 +24419,7 @@ static void clif_AddItemRefineryUIAck(struct map_session_data *sd, int item_inde
 	struct PACKET_ZC_REFINE_ADD_ITEM *p = (struct PACKET_ZC_REFINE_ADD_ITEM *)buf;
 
 	p->packetType = HEADER_ZC_REFINE_ADD_ITEM;
-	p->packtLength = sizeof(*p) + sizeof(p->req[0]) * req->req_count;
+	p->packetLength = sizeof(*p) + sizeof(p->req[0]) * req->req_count;
 	p->itemIndex = item_index + 2;
 	p->blacksmithBlessing = req->blacksmith_blessing;
 
@@ -24427,7 +24430,7 @@ static void clif_AddItemRefineryUIAck(struct map_session_data *sd, int item_inde
 		p->req[i].zeny = req->req[i].cost;
 	}
 
-	clif->send(p, p->packtLength, &sd->bl, SELF);
+	clif->send(p, p->packetLength, &sd->bl, SELF);
 #endif
 }
 

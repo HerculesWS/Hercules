@@ -236,10 +236,11 @@ enum packet_headers {
 #endif
 #if PACKETVER < 20100105
 	vendinglistType = 0x133,
-#else
+#elif !(PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723)
 	vendinglistType = 0x800,
+#else
+	vendinglistType = 0xb3d,
 #endif
-	openvendingType = 0x136,
 #if PACKETVER >= 20120925
 	equipitemType = 0x998,
 #else
@@ -380,19 +381,6 @@ enum packet_headers {
 #endif
 };
 
-// TODO add here packets structs
-DEFINE_PACKET_ID(ZC_PAR_CHANGE1, 0x00b0);
-DEFINE_PACKET_ID(ZC_STATUS_CHANGE, 0x00be);
-DEFINE_PACKET_ID(ZC_NOTIFY_CARTITEM_COUNTINFO, 0x0121);
-DEFINE_PACKET_ID(ZC_ATTACK_RANGE, 0x013a);
-DEFINE_PACKET_ID(ZC_COUPLESTATUS, 0x0141);
-
-#if PACKETVER_MAIN_NUM >= 20170906 || PACKETVER_RE_NUM >= 20170830 || defined(PACKETVER_ZERO)
-DEFINE_PACKET_ID(ZC_LONGPAR_CHANGE, 0x0acb);
-#else  // PACKETVER_MAIN_NUM >= 20170906 || PACKETVER_RE_NUM >= 20170830 || defined(PACKETVER_ZERO)
-DEFINE_PACKET_ID(ZC_LONGPAR_CHANGE, 0x00b1);
-#endif  // PACKETVER_MAIN_NUM >= 20170906 || PACKETVER_RE_NUM >= 20170830 || defined(PACKETVER_ZERO)
-
 #if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
 DEFINE_PACKET_ID(ZC_PAR_4JOB_CHANGE, 0x0b25);
 #endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
@@ -400,6 +388,59 @@ DEFINE_PACKET_ID(ZC_PAR_4JOB_CHANGE, 0x0b25);
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(push, 1)
 #endif // not NetBSD < 6 / Solaris
+
+struct PACKET_ZC_PAR_CHANGE {
+	int16 PacketType;
+	uint16 varID;
+	int32 count;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_PAR_CHANGE, 0x00b0);
+
+struct PACKET_ZC_LONGPAR_CHANGE {
+	int16 PacketType;
+	uint16 varID;
+	int32 amount;
+} __attribute__((packed));
+DEFINE_PACKET_ID(ZC_LONGPAR_CHANGE, 0x00b1);
+
+struct PACKET_ZC_STATUS_CHANGE {
+	int16 PacketType;
+	uint16 statusID;
+	uint8 value;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_STATUS_CHANGE, 0x00be);
+
+struct PACKET_ZC_NOTIFY_CARTITEM_COUNTINFO {
+	int16 PacketType;
+	int16 curCount;
+	int16 maxCount;
+	int32 curWeight;
+	int32 maxWeight;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_NOTIFY_CARTITEM_COUNTINFO, 0x0121);
+
+struct PACKET_ZC_ATTACK_RANGE {
+	int16 PacketType;
+	int16 currentAttRange;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_ATTACK_RANGE, 0x013a);
+
+struct PACKET_ZC_COUPLESTATUS {
+	int16 PacketType;
+	uint32 statusType;
+	int32 defaultStatus;
+	int32 plusStatus;
+} __attribute__((packed));
+DEFINE_PACKET_ID(ZC_COUPLESTATUS, 0x0141);
+
+#if PACKETVER_MAIN_NUM >= 20170906 || PACKETVER_RE_NUM >= 20170830 || defined(PACKETVER_ZERO)
+struct PACKET_ZC_LONGLONGPAR_CHANGE {
+	int16 PacketType;
+	uint16 varID;
+	int64 amount;
+} __attribute__((packed));
+DEFINE_PACKET_ID(ZC_LONGLONGPAR_CHANGE, 0x0acb);
+#endif  // PACKETVER_MAIN_NUM >= 20170906 || PACKETVER_RE_NUM >= 20170830 || defined(PACKETVER_ZERO)
 
 /**
  * structs for data
@@ -1453,18 +1494,23 @@ struct packet_gm_monster_item {
 #endif
 } __attribute__((packed));
 
-struct packet_npc_market_purchase {
+#if PACKETVER_MAIN_NUM >= 20130911 || PACKETVER_RE_NUM >= 20130911 || defined(PACKETVER_ZERO)
+struct PACKET_CZ_NPC_MARKET_PURCHASE_sub {
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+	uint32 ITID;
+#else
+	uint16 ITID;
+#endif
+	int32 qty;
+} __attribute__((packed));
+
+struct PACKET_CZ_NPC_MARKET_PURCHASE {
 	int16 PacketType;
 	int16 PacketLength;
-	struct {
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
-		uint32 ITID;
-#else
-		uint16 ITID;
-#endif
-		int32 qty;
-	} list[]; // Note: We assume this should be <= MAX_INVENTORY (since you can't hold more than MAX_INVENTORY items thus cant buy that many at once).
+	struct PACKET_CZ_NPC_MARKET_PURCHASE_sub list[];
 } __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_NPC_MARKET_PURCHASE, 0x09d6)
+#endif
 
 #if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103
 struct PACKET_ZC_NPC_MARKET_OPEN_sub {
@@ -1894,6 +1940,7 @@ struct PACKET_ZC_ACK_READ_RODEX {
 	int16 TextcontentsLength;
 	int64 zeny;
 	int8 ItemCnt;
+	char Textcontent[];
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(ZC_ACK_READ_RODEX, 0x0b63);
 // [4144] date unconfirmed
@@ -1924,6 +1971,7 @@ struct PACKET_ZC_ACK_READ_RODEX {
 	int16 TextcontentsLength;
 	int64 zeny;
 	int8 ItemCnt;
+	char Textcontent[];
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(ZC_ACK_READ_RODEX, 0x09eb);
 #endif  // PACKETVER >= 20140115
@@ -3075,7 +3123,9 @@ struct PACKET_ZC_PC_PURCHASE_ITEMLIST_FROMMC_sub {
 #endif
 	uint8 identified;
 	uint8 damaged;
+#if !(PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723)
 	uint8 refine;
+#endif
 	struct EQUIPSLOTINFO slot;
 #if PACKETVER >= 20150226
 	struct ItemOptions option_data[MAX_ITEM_OPTIONS];
@@ -3084,6 +3134,10 @@ struct PACKET_ZC_PC_PURCHASE_ITEMLIST_FROMMC_sub {
 #if PACKETVER >= 20160921
 	uint32 location;
 	uint16 viewSprite;
+#endif
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+	uint8 refine;
+	uint8 grade;
 #endif
 } __attribute__((packed));
 
@@ -3999,7 +4053,7 @@ struct PACKET_ZC_REFINE_ADD_ITEM_SUB {
 
 struct PACKET_ZC_REFINE_ADD_ITEM {
 	int16 packetType;
-	int16 packtLength;
+	int16 packetLength;
 	int16 itemIndex;
 	int8 blacksmithBlessing;
 	struct PACKET_ZC_REFINE_ADD_ITEM_SUB req[];
