@@ -430,6 +430,13 @@ static int status_damage(struct block_list *src, struct block_list *target, int6
 
 	//Normal death
 	st->hp = 0;
+
+	//Cancel any skill started before death, Kaizel fix
+    struct unit_data* ud = unit->bl2ud(target);
+    if (ud) {
+        ud->skilltimer = INVALID_TIMER;
+    }
+
 	if (battle_config.clear_unit_ondeath &&
 		battle_config.clear_unit_ondeath&target->type)
 		skill->clear_unitgroup(target);
