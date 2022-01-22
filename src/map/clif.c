@@ -7124,30 +7124,25 @@ static void clif_closevendingboard(struct block_list *bl, int fd)
 /// R 0800 <packet len>.W <owner id>.L <unique id>.L { <price>.L <amount>.W <index>.W <type>.B <name id>.W <identified>.B <damaged>.B <refine>.B <card1>.W <card2>.W <card3>.W <card4>.W }* (ZC_PC_PURCHASE_ITEMLIST_FROMMC2)
 static void clif_vendinglist(struct map_session_data *sd, unsigned int id, struct s_vending *vending_items)
 {
-	int i, fd;
-	int count;
-	struct map_session_data* vsd;
-	int len;
-	struct PACKET_ZC_PC_PURCHASE_ITEMLIST_FROMMC *p;
-
 	nullpo_retv(sd);
 	nullpo_retv(vending_items);
-	nullpo_retv(vsd=map->id2sd(id));
+	struct map_session_data* vsd = map->id2sd(id);
+	nullpo_retv(vsd);
 
-	fd = sd->fd;
-	count = vsd->vend_num;
-	len = sizeof(struct PACKET_ZC_PC_PURCHASE_ITEMLIST_FROMMC) + count * sizeof(struct PACKET_ZC_PC_PURCHASE_ITEMLIST_FROMMC_sub);
+	int fd = sd->fd;
+	const int count = vsd->vend_num;
+	const int len = sizeof(struct PACKET_ZC_PC_PURCHASE_ITEMLIST_FROMMC) + count * sizeof(struct PACKET_ZC_PC_PURCHASE_ITEMLIST_FROMMC_sub);
 
 	WFIFOHEAD(fd, len);
-	p = WFIFOP(fd, 0);
-	p->packetType = vendinglistType;
+	struct PACKET_ZC_PC_PURCHASE_ITEMLIST_FROMMC *p = WFIFOP(fd, 0);
+	p->packetType = HEADER_ZC_PC_PURCHASE_ITEMLIST_FROMMC;
 	p->packetLength = len;
 	p->AID = id;
 #if PACKETVER >= 20100105
 	p->venderId = vsd->vender_id;
 #endif
 
-	for (i = 0; i < count; i++) {
+	for (int i = 0; i < count; i++) {
 		int index = vending_items[i].index;
 		struct item_data* data = itemdb->search(vsd->status.cart[index].nameid);
 		p->items[i].price = vending_items[i].value;
@@ -7169,7 +7164,7 @@ static void clif_vendinglist(struct map_session_data *sd, unsigned int id, struc
 #endif
 #if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
 		p->items[i].grade = vsd->status.cart[index].grade;
-#endif // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
 	}
 	WFIFOSET(fd, len);
 }

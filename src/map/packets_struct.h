@@ -241,6 +241,7 @@ enum packet_headers {
 #else
 	vendinglistType = 0xb3d,
 #endif
+	openvendingType = 0x136,
 #if PACKETVER >= 20120925
 	equipitemType = 0x998,
 #else
@@ -3111,6 +3112,36 @@ struct PACKET_ZC_MYITEMLIST_BUYING_STORE {
 	struct PACKET_ZC_MYITEMLIST_BUYING_STORE_sub items[];
 } __attribute__((packed));
 
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+struct PACKET_ZC_PC_PURCHASE_ITEMLIST_FROMMC_sub {
+	uint32 price;
+	uint16 amount;
+	int16 index;
+	uint8 itemType;
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+	uint32 itemId;
+#else
+	uint16 itemId;
+#endif
+	uint8 identified;
+	uint8 damaged;
+	struct EQUIPSLOTINFO slot;
+	struct ItemOptions option_data[MAX_ITEM_OPTIONS];
+	uint32 location;
+	uint16 viewSprite;
+	uint8 refine;
+	uint8 grade;
+} __attribute__((packed));
+
+struct PACKET_ZC_PC_PURCHASE_ITEMLIST_FROMMC {
+	int16 packetType;
+	int16 packetLength;
+	uint32 AID;
+	uint32 venderId;
+	struct PACKET_ZC_PC_PURCHASE_ITEMLIST_FROMMC_sub items[];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_PC_PURCHASE_ITEMLIST_FROMMC, 0x0b3d)
+#elif PACKETVER >= 20100105
 struct PACKET_ZC_PC_PURCHASE_ITEMLIST_FROMMC_sub {
 	uint32 price;
 	uint16 amount;
@@ -3145,11 +3176,36 @@ struct PACKET_ZC_PC_PURCHASE_ITEMLIST_FROMMC {
 	int16 packetType;
 	int16 packetLength;
 	uint32 AID;
-#if PACKETVER >= 20100105
+// [4144] unconfirmed field
 	uint32 venderId;
-#endif
 	struct PACKET_ZC_PC_PURCHASE_ITEMLIST_FROMMC_sub items[];
 } __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_PC_PURCHASE_ITEMLIST_FROMMC, 0x0800)
+#else
+struct PACKET_ZC_PC_PURCHASE_ITEMLIST_FROMMC_sub {
+	uint32 price;
+	uint16 amount;
+	int16 index;
+	uint8 itemType;
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+	uint32 itemId;
+#else
+	uint16 itemId;
+#endif
+	uint8 identified;
+	uint8 damaged;
+	uint8 refine;
+	struct EQUIPSLOTINFO slot;
+} __attribute__((packed));
+
+struct PACKET_ZC_PC_PURCHASE_ITEMLIST_FROMMC {
+	int16 packetType;
+	int16 packetLength;
+	uint32 AID;
+	struct PACKET_ZC_PC_PURCHASE_ITEMLIST_FROMMC_sub items[];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_PC_PURCHASE_ITEMLIST_FROMMC, 0x0133)
+#endif
 
 struct PACKET_ZC_ACK_ITEMLIST_BUYING_STORE_sub {
 	uint32 price;
