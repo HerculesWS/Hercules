@@ -2671,16 +2671,16 @@ static void clif_viewpoint(struct map_session_data *sd, int npc_id, int type, in
 ///   255 = hide
 static void clif_cutin(struct map_session_data *sd, const char *image, int type)
 {
-	int fd;
-
 	nullpo_retv(sd);
 
-	fd=sd->fd;
-	WFIFOHEAD(fd, packet_len(0x1b3));
-	WFIFOW(fd,0)=0x1b3;
-	strncpy(WFIFOP(fd,2),image,64);
-	WFIFOB(fd,66)=type;
-	WFIFOSET(fd,packet_len(0x1b3));
+	int fd = sd->fd;
+	const int len = sizeof(struct PACKET_ZC_SHOW_IMAGE);
+	WFIFOHEAD(fd, len);
+	struct PACKET_ZC_SHOW_IMAGE *p = WFIFOP(fd, 0);
+	p->packetType = HEADER_ZC_SHOW_IMAGE;
+	safestrncpy(p->image, image, sizeof(p->image));
+	p->type = type;
+	WFIFOSET(fd, len);
 }
 
 /*==========================================

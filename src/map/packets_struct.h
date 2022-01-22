@@ -5377,6 +5377,13 @@ struct PACKET_ZC_GRADE_STATUS {
 DEFINE_PACKET_HEADER(ZC_GRADE_STATUS, 0x0b5e);
 #endif
 
+struct PACKET_ZC_SHOW_IMAGE {
+	int16 packetType;
+	char image[64];
+	uint8 type;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_SHOW_IMAGE, 0x01b3)
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
