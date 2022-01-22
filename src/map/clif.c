@@ -6686,30 +6686,22 @@ static void clif_upgrademessage(int fd, int result, int item_id)
 /// 0097 <packet len>.W <nick>.24B <isAdmin>.L <message>.?B (PACKETVER >= 20091104)
 static void clif_wis_message(int fd, const char *nick, const char *mes, int mes_len)
 {
-#if PACKETVER >= 20091104
-	struct map_session_data *ssd = NULL;
-#endif // PACKETVER >= 20091104
 	nullpo_retv(nick);
 	nullpo_retv(mes);
 
-#if PACKETVER < 20091104
-	WFIFOHEAD(fd, mes_len + NAME_LENGTH + 5);
-	WFIFOW(fd,0) = 0x97;
-	WFIFOW(fd,2) = mes_len + NAME_LENGTH + 5;
-	safestrncpy(WFIFOP(fd,4), nick, NAME_LENGTH);
-	safestrncpy(WFIFOP(fd,28), mes, mes_len + 1);
-	WFIFOSET(fd,WFIFOW(fd,2));
-#else
-	ssd = map->nick2sd(nick, false);
-
-	WFIFOHEAD(fd, mes_len + NAME_LENGTH + 9);
-	WFIFOW(fd,0) = 0x97;
-	WFIFOW(fd,2) = mes_len + NAME_LENGTH + 9;
-	safestrncpy(WFIFOP(fd,4), nick, NAME_LENGTH);
-	WFIFOL(fd,28) = (ssd && pc_get_group_level(ssd) == 99) ? 1 : 0; // isAdmin; if nonzero, also displays text above char
-	safestrncpy(WFIFOP(fd,32), mes, mes_len + 1);
-	WFIFOSET(fd,WFIFOW(fd,2));
+	const int len = sizeof(struct PACKET_ZC_WHISPER) + mes_len + 1;
+	WFIFOHEAD(fd, len);
+	struct PACKET_ZC_WHISPER *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_WHISPER;
+	p->PacketLength = len;
+	safestrncpy(p->name, nick, NAME_LENGTH);
+	safestrncpy(p->message, mes, mes_len + 1);
+// [4144] unconfirmed version
+#if PACKETVER >= 20091104
+	struct map_session_data *ssd = map->nick2sd(nick, false);
+	p->isAdmin = (ssd && pc_get_group_level(ssd) == 99) ? 1 : 0; // isAdmin; if nonzero, also displays text above char
 #endif
+	WFIFOSET(fd, len);
 }
 
 /// Inform the player about the result of his whisper action (ZC_ACK_WHISPER).

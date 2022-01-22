@@ -5395,6 +5395,35 @@ struct PACKET_ZC_SHOW_IMAGE {
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(ZC_SHOW_IMAGE, 0x01b3)
 
+#if PACKETVER_MAIN_NUM >= 20131204 || PACKETVER_RE_NUM >= 20131120 || defined(PACKETVER_ZERO)
+struct PACKET_ZC_WHISPER {
+	int16 PacketType;
+	int16 PacketLength;
+	char name[NAME_LENGTH];
+	int32 isAdmin;
+	char message[];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_WHISPER, 0x09de)
+// [4144] unconfirmed version
+#elif PACKETVER >= 20091104
+struct PACKET_ZC_WHISPER {
+	int16 PacketType;
+	int16 PacketLength;
+	char name[NAME_LENGTH];
+	int32 isAdmin;
+	char message[];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_WHISPER, 0x0097)
+#else  // PACKETVER_MAIN_NUM >= 20131204 || PACKETVER_RE_NUM >= 20131120 || defined(PACKETVER_ZERO)
+struct PACKET_ZC_WHISPER {
+	int16 PacketType;
+	int16 PacketLength;
+	char name[NAME_LENGTH];
+	char message[];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_WHISPER, 0x0097)
+#endif  // PACKETVER_MAIN_NUM >= 20131204 || PACKETVER_RE_NUM >= 20131120 || defined(PACKETVER_ZERO)
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
