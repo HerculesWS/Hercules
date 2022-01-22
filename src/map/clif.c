@@ -23674,14 +23674,13 @@ static void clif_parse_open_ui_request(int fd, struct map_session_data *sd)
  * @param ui_type The UI which should be opened.
  *
  **/
-static void clif_open_ui_send(struct map_session_data *sd, enum zc_ui_types ui_type)
+static void clif_open_ui_send1(struct map_session_data *sd, enum zc_ui_types ui_type)
 {
 	nullpo_retv(sd);
-
-#if PACKETVER >= 20150128
+#if PACKETVER >= 20151202
 	struct PACKET_ZC_OPEN_UI p;
 
-	p.PacketType = openUiType;
+	p.PacketType = HEADER_ZC_OPEN_UI;
 	p.UIType = ui_type;
 
 	switch (ui_type) {
@@ -23730,14 +23729,91 @@ static void clif_open_ui_send(struct map_session_data *sd, enum zc_ui_types ui_t
 		p.data = 0;
 		break;
 #endif
+#if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103
+	case ZC_ENCHANT_UI:
+#endif  // PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103
 	case zc_ui_unused:
+	case zc_ui_unused9:
 	default:
-		ShowWarning("clif_open_ui_send: Requested UI (%u) is not implemented yet.\n", ui_type);
+		ShowWarning("clif_open_ui_send1: Requested UI (%u) is not implemented yet.\n", ui_type);
 		return;
 	}
 
 	clif->send(&p, sizeof(p), &sd->bl, SELF);
+#endif  // 20151202
+}
+
+/**
+ * Does the actual packet sending for clif_open_ui().
+ *
+ * @param sd The character who opens the UI.
+ * @param ui_type The UI which should be opened.
+ *
+ **/
+static void clif_open_ui_send2(struct map_session_data *sd, enum zc_ui_types ui_type, uint64 data)
+{
+	nullpo_retv(sd);
+#if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103
+	struct PACKET_ZC_OPEN_UI2 p;
+
+	p.PacketType = HEADER_ZC_OPEN_UI2;
+	p.UIType = ui_type;
+
+	if (ui_type == ZC_ENCHANT_UI) {
+		p.data = data;
+	} else {
+		ShowWarning("clif_open_ui_send2: Requested UI (%u) is not implemented yet.\n", ui_type);
+		return;
+	}
+
+	clif->send(&p, sizeof(p), &sd->bl, SELF);
+#endif  // PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103
+}
+
+/**
+ * Does the actual packet sending for clif_open_ui().
+ *
+ * @param sd The character who opens the UI.
+ * @param ui_type The UI which should be opened.
+ *
+ **/
+static void clif_open_ui_send(struct map_session_data *sd, enum zc_ui_types ui_type)
+{
+	nullpo_retv(sd);
+#if PACKETVER >= 20151202
+	switch (ui_type) {
+	case ZC_BANK_UI:
+	case ZC_STYLIST_UI:
+	case ZC_CAPTCHA_UI:
+	case ZC_MACRO_UI:
+		clif->open_ui_send1(sd, ui_type);
+		break;
+#if PACKETVER >= 20171122
+	case ZC_TIPBOX_UI:
+	case ZC_RENEWQUEST_UI:
+		clif->open_ui_send1(sd, ui_type);
+		break;
+	case ZC_ATTENDANCE_UI:
+		clif->open_ui_send1(sd, ui_type);
+		break;
 #endif
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+	case ZC_GRADE_ENCHANT_UI:
+		clif->open_ui_send1(sd, ui_type);
+		break;
+#endif
+#if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103
+	case ZC_ENCHANT_UI:
+		clif->open_ui_send2(sd, ui_type, 0);
+		break;
+#endif  // PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103
+	case zc_ui_unused:
+	case zc_ui_unused9:
+	default:
+		ShowWarning("clif_open_ui_send: Requested UI (%u) is not implemented yet.\n", ui_type);
+		return;
+	}
+#endif  // 20151202
 }
 
 static void clif_open_ui(struct map_session_data *sd, enum cz_ui_types uiType)
@@ -26430,6 +26506,8 @@ void clif_defaults(void)
 	clif->attendance_timediff = clif_attendance_timediff;
 	clif->attendance_getendtime = clif_attendance_getendtime;
 	clif->pOpenUIRequest = clif_parse_open_ui_request;
+	clif->open_ui_send1 = clif_open_ui_send1;
+	clif->open_ui_send2 = clif_open_ui_send2;
 	clif->open_ui_send = clif_open_ui_send;
 	clif->open_ui = clif_open_ui;
 	clif->pAttendanceRewardRequest = clif_parse_attendance_reward_request;

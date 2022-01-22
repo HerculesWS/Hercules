@@ -597,8 +597,14 @@ enum zc_ui_types {
 	ZC_ATTENDANCE_UI = 7,
 #endif
 #if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
-	ZC_GRADE_ENCHANT_UI = 8
+	ZC_GRADE_ENCHANT_UI = 8,
 #endif
+#if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103
+	zc_ui_unused9 = 9,  // for avoid compilation errors
+	ZC_ENCHANT_UI = 10
+#else  // PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103
+	zc_ui_unused9 = 9  // for avoid compilation errors
+#endif  // PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103
 };
 
 /**
@@ -1715,6 +1721,8 @@ struct clif_interface {
 	bool (*attendance_timediff) (struct map_session_data *sd);
 	time_t (*attendance_getendtime) (void);
 	void (*pOpenUIRequest) (int fd, struct map_session_data *sd);
+	void (*open_ui_send1) (struct map_session_data *sd, enum zc_ui_types ui_type);
+	void (*open_ui_send2) (struct map_session_data *sd, enum zc_ui_types ui_type, uint64 data);
 	void (*open_ui_send) (struct map_session_data *sd, enum zc_ui_types ui_type);
 	void (*open_ui) (struct map_session_data *sd, enum cz_ui_types uiType);
 	void (*pAttendanceRewardRequest) (int fd, struct map_session_data *sd);

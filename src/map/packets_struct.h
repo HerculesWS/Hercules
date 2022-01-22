@@ -335,11 +335,6 @@ enum packet_headers {
 	questUpdateType = 0x2b5,
 #endif // PACKETVER < 20150513
 	questUpdateType2 = 0x8fe,
-#if PACKETVER >= 20171122
-	openUiType = 0xAE2,
-#elif PACKETVER >= 20150128
-	openUiType = 0xA38,
-#endif
 #if PACKETVER >= 20180627
 	authError = 0xb02,
 #elif PACKETVER >= 20101123
@@ -2233,13 +2228,29 @@ struct PACKET_CZ_OPEN_UI {
 	int8 UIType;
 } __attribute__((packed));
 
+#if PACKETVER >= 20171122
 struct PACKET_ZC_OPEN_UI {
 	int16 PacketType;
 	int8 UIType;
-#if PACKETVER >= 20171122
 	int32 data;
-#endif
 } __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_OPEN_UI, 0x0ae2);
+#elif PACKETVER >= 20151202
+struct PACKET_ZC_OPEN_UI {
+	int16 PacketType;
+	int8 UIType;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_OPEN_UI, 0x0a38);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103
+struct PACKET_ZC_OPEN_UI2 {
+	int16 PacketType;
+	int8 UIType;
+	int64 data;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_OPEN_UI2, 0x0b9a);
+#endif  // PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103
 
 struct PACKET_ZC_UI_ACTION {
 	int16 PacketType;
