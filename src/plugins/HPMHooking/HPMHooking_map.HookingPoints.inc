@@ -1167,6 +1167,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->attendance_timediff, HP_clif_attendance_timediff) },
 	{ HP_POP(clif->attendance_getendtime, HP_clif_attendance_getendtime) },
 	{ HP_POP(clif->pOpenUIRequest, HP_clif_pOpenUIRequest) },
+	{ HP_POP(clif->open_ui_send1, HP_clif_open_ui_send1) },
+	{ HP_POP(clif->open_ui_send2, HP_clif_open_ui_send2) },
 	{ HP_POP(clif->open_ui_send, HP_clif_open_ui_send) },
 	{ HP_POP(clif->open_ui, HP_clif_open_ui) },
 	{ HP_POP(clif->pAttendanceRewardRequest, HP_clif_pAttendanceRewardRequest) },

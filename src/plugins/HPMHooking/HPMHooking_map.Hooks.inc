@@ -29795,6 +29795,58 @@ void HP_clif_pOpenUIRequest(int fd, struct map_session_data *sd) {
 	}
 	return;
 }
+void HP_clif_open_ui_send1(struct map_session_data *sd, enum zc_ui_types ui_type) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_open_ui_send1_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, enum zc_ui_types *ui_type);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_open_ui_send1_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_open_ui_send1_pre[hIndex].func;
+			preHookFunc(&sd, &ui_type);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.open_ui_send1(sd, ui_type);
+	}
+	if (HPMHooks.count.HP_clif_open_ui_send1_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, enum zc_ui_types ui_type);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_open_ui_send1_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_open_ui_send1_post[hIndex].func;
+			postHookFunc(sd, ui_type);
+		}
+	}
+	return;
+}
+void HP_clif_open_ui_send2(struct map_session_data *sd, enum zc_ui_types ui_type, uint64 data) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_open_ui_send2_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, enum zc_ui_types *ui_type, uint64 *data);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_open_ui_send2_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_open_ui_send2_pre[hIndex].func;
+			preHookFunc(&sd, &ui_type, &data);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.open_ui_send2(sd, ui_type, data);
+	}
+	if (HPMHooks.count.HP_clif_open_ui_send2_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, enum zc_ui_types ui_type, uint64 data);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_open_ui_send2_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_open_ui_send2_post[hIndex].func;
+			postHookFunc(sd, ui_type, data);
+		}
+	}
+	return;
+}
 void HP_clif_open_ui_send(struct map_session_data *sd, enum zc_ui_types ui_type) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_open_ui_send_pre > 0) {

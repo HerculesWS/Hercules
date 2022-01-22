@@ -2286,6 +2286,10 @@ struct {
 	struct HPMHookPoint *HP_clif_attendance_getendtime_post;
 	struct HPMHookPoint *HP_clif_pOpenUIRequest_pre;
 	struct HPMHookPoint *HP_clif_pOpenUIRequest_post;
+	struct HPMHookPoint *HP_clif_open_ui_send1_pre;
+	struct HPMHookPoint *HP_clif_open_ui_send1_post;
+	struct HPMHookPoint *HP_clif_open_ui_send2_pre;
+	struct HPMHookPoint *HP_clif_open_ui_send2_post;
 	struct HPMHookPoint *HP_clif_open_ui_send_pre;
 	struct HPMHookPoint *HP_clif_open_ui_send_post;
 	struct HPMHookPoint *HP_clif_open_ui_pre;
@@ -9565,6 +9569,10 @@ struct {
 	int HP_clif_attendance_getendtime_post;
 	int HP_clif_pOpenUIRequest_pre;
 	int HP_clif_pOpenUIRequest_post;
+	int HP_clif_open_ui_send1_pre;
+	int HP_clif_open_ui_send1_post;
+	int HP_clif_open_ui_send2_pre;
+	int HP_clif_open_ui_send2_post;
 	int HP_clif_open_ui_send_pre;
 	int HP_clif_open_ui_send_post;
 	int HP_clif_open_ui_pre;
