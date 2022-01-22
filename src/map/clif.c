@@ -23678,9 +23678,9 @@ static void clif_open_ui_send1(struct map_session_data *sd, enum zc_ui_types ui_
 {
 	nullpo_retv(sd);
 #if PACKETVER >= 20151202
-	struct PACKET_ZC_OPEN_UI p;
+	struct PACKET_ZC_UI_OPEN p;
 
-	p.PacketType = HEADER_ZC_OPEN_UI;
+	p.PacketType = HEADER_ZC_UI_OPEN;
 	p.UIType = ui_type;
 
 	switch (ui_type) {
@@ -23754,9 +23754,9 @@ static void clif_open_ui_send2(struct map_session_data *sd, enum zc_ui_types ui_
 {
 	nullpo_retv(sd);
 #if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103
-	struct PACKET_ZC_OPEN_UI2 p;
+	struct PACKET_ZC_UI_OPEN2 p;
 
-	p.PacketType = HEADER_ZC_OPEN_UI2;
+	p.PacketType = HEADER_ZC_UI_OPEN2;
 	p.UIType = ui_type;
 
 	if (ui_type == ZC_ENCHANT_UI) {
