@@ -11096,13 +11096,13 @@ void HP_clif_scriptmes(struct map_session_data *sd, int npcid, const char *mes) 
 	}
 	return;
 }
-void HP_clif_zc_say_dialog_zero1(struct map_session_data *sd, int npcid, const char *mes) {
+void HP_clif_zc_quest_dialog(struct map_session_data *sd, int npcid, const char *mes) {
 	int hIndex = 0;
-	if (HPMHooks.count.HP_clif_zc_say_dialog_zero1_pre > 0) {
+	if (HPMHooks.count.HP_clif_zc_quest_dialog_pre > 0) {
 		void (*preHookFunc) (struct map_session_data **sd, int *npcid, const char **mes);
 		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_zc_say_dialog_zero1_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_clif_zc_say_dialog_zero1_pre[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_zc_quest_dialog_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_zc_quest_dialog_pre[hIndex].func;
 			preHookFunc(&sd, &npcid, &mes);
 		}
 		if (*HPMforce_return) {
@@ -11111,24 +11111,24 @@ void HP_clif_zc_say_dialog_zero1(struct map_session_data *sd, int npcid, const c
 		}
 	}
 	{
-		HPMHooks.source.clif.zc_say_dialog_zero1(sd, npcid, mes);
+		HPMHooks.source.clif.zc_quest_dialog(sd, npcid, mes);
 	}
-	if (HPMHooks.count.HP_clif_zc_say_dialog_zero1_post > 0) {
+	if (HPMHooks.count.HP_clif_zc_quest_dialog_post > 0) {
 		void (*postHookFunc) (struct map_session_data *sd, int npcid, const char *mes);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_zc_say_dialog_zero1_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_clif_zc_say_dialog_zero1_post[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_zc_quest_dialog_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_zc_quest_dialog_post[hIndex].func;
 			postHookFunc(sd, npcid, mes);
 		}
 	}
 	return;
 }
-void HP_clif_zc_say_dialog_zero2(struct map_session_data *sd, int npcid, const char *mes) {
+void HP_clif_zc_monolog_dialog(struct map_session_data *sd, int npcid, const char *mes) {
 	int hIndex = 0;
-	if (HPMHooks.count.HP_clif_zc_say_dialog_zero2_pre > 0) {
+	if (HPMHooks.count.HP_clif_zc_monolog_dialog_pre > 0) {
 		void (*preHookFunc) (struct map_session_data **sd, int *npcid, const char **mes);
 		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_zc_say_dialog_zero2_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_clif_zc_say_dialog_zero2_pre[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_zc_monolog_dialog_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_zc_monolog_dialog_pre[hIndex].func;
 			preHookFunc(&sd, &npcid, &mes);
 		}
 		if (*HPMforce_return) {
@@ -11137,12 +11137,12 @@ void HP_clif_zc_say_dialog_zero2(struct map_session_data *sd, int npcid, const c
 		}
 	}
 	{
-		HPMHooks.source.clif.zc_say_dialog_zero2(sd, npcid, mes);
+		HPMHooks.source.clif.zc_monolog_dialog(sd, npcid, mes);
 	}
-	if (HPMHooks.count.HP_clif_zc_say_dialog_zero2_post > 0) {
+	if (HPMHooks.count.HP_clif_zc_monolog_dialog_post > 0) {
 		void (*postHookFunc) (struct map_session_data *sd, int npcid, const char *mes);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_zc_say_dialog_zero2_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_clif_zc_say_dialog_zero2_post[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_zc_monolog_dialog_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_zc_monolog_dialog_post[hIndex].func;
 			postHookFunc(sd, npcid, mes);
 		}
 	}
@@ -11226,13 +11226,13 @@ void HP_clif_scriptmenu(struct map_session_data *sd, int npcid, const char *mes)
 	}
 	return;
 }
-void HP_clif_zc_menu_list_zero(struct map_session_data *sd, int npcid, const char *mes) {
+void HP_clif_zc_quest_dialog_menu_list(struct map_session_data *sd, int npcid, const char *mes) {
 	int hIndex = 0;
-	if (HPMHooks.count.HP_clif_zc_menu_list_zero_pre > 0) {
+	if (HPMHooks.count.HP_clif_zc_quest_dialog_menu_list_pre > 0) {
 		void (*preHookFunc) (struct map_session_data **sd, int *npcid, const char **mes);
 		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_zc_menu_list_zero_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_clif_zc_menu_list_zero_pre[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_zc_quest_dialog_menu_list_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_zc_quest_dialog_menu_list_pre[hIndex].func;
 			preHookFunc(&sd, &npcid, &mes);
 		}
 		if (*HPMforce_return) {
@@ -11241,12 +11241,12 @@ void HP_clif_zc_menu_list_zero(struct map_session_data *sd, int npcid, const cha
 		}
 	}
 	{
-		HPMHooks.source.clif.zc_menu_list_zero(sd, npcid, mes);
+		HPMHooks.source.clif.zc_quest_dialog_menu_list(sd, npcid, mes);
 	}
-	if (HPMHooks.count.HP_clif_zc_menu_list_zero_post > 0) {
+	if (HPMHooks.count.HP_clif_zc_quest_dialog_menu_list_post > 0) {
 		void (*postHookFunc) (struct map_session_data *sd, int npcid, const char *mes);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_zc_menu_list_zero_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_clif_zc_menu_list_zero_post[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_zc_quest_dialog_menu_list_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_zc_quest_dialog_menu_list_post[hIndex].func;
 			postHookFunc(sd, npcid, mes);
 		}
 	}
