@@ -6679,6 +6679,7 @@ static void map_load_defaults(void)
 {
 	mapindex_defaults();
 	map_defaults();
+	mapit_defaults();
 	/* */
 	atcommand_defaults();
 	battle_defaults();
@@ -7382,7 +7383,10 @@ PRAGMA_GCC9(GCC diagnostic pop)
 	map->zone_clear_single = map_zone_clear_single;
 
 	map->lock_check = map_lock_check;
+}
 
+void mapit_defaults(void)
+{
 	/**
 	 * mapit interface
 	 **/

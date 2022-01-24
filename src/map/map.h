@@ -1538,6 +1538,7 @@ END_ZEROED_BLOCK;
 
 #ifdef HERCULES_CORE
 void map_defaults(void);
+void mapit_defaults(void);
 #endif // HERCULES_CORE
 
 HPShared struct mapit_interface *mapit;
