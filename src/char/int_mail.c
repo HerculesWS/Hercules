@@ -149,8 +149,8 @@ static int inter_mail_savemessage(struct mail_message *msg)
 		StrBuf->Printf(&buf, ", `card%d`", j);
 	for (j = 0; j < MAX_ITEM_OPTIONS; j++)
 		StrBuf->Printf(&buf, ", `opt_idx%d`, `opt_val%d`", j, j);
-	StrBuf->Printf(&buf, ") VALUES (?, '%d', ?, '%d', ?, ?, '%lu', '%u', '%d', '%d', '%d', '%d', '%d', '%d', '%"PRIu64"'",
-		msg->send_id, msg->dest_id, (unsigned long)msg->timestamp, msg->status, msg->zeny, msg->item.amount, msg->item.nameid, msg->item.refine, msg->item.attribute, msg->item.identify, msg->item.unique_id);
+	StrBuf->Printf(&buf, ") VALUES (?, '%d', ?, '%d', ?, ?, '%lu', '%u', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%"PRIu64"'",
+		msg->send_id, msg->dest_id, (unsigned long)msg->timestamp, msg->status, msg->zeny, msg->item.amount, msg->item.nameid, msg->item.refine, msg->item.grade, msg->item.attribute, msg->item.identify, msg->item.unique_id);
 	for (j = 0; j < MAX_SLOTS; j++)
 		StrBuf->Printf(&buf, ", '%d'", msg->item.card[j]);
 	for (j = 0; j < MAX_ITEM_OPTIONS; j++)
