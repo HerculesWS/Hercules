@@ -14609,7 +14609,7 @@ struct {
 	struct homunculus_interface homun;
 	struct instance_interface instance;
 	struct intif_interface intif;
-	struct irc_bot_interface ircbot;
+	struct ircbot_interface ircbot;
 	struct itemdb_interface itemdb;
 	struct libconfig_interface libconfig;
 	struct log_interface logs;

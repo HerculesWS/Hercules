@@ -42893,7 +42893,7 @@ void HP_intif_pAchievementsLoad(int fd) {
 	}
 	return;
 }
-/* irc_bot_interface */
+/* ircbot_interface */
 void HP_ircbot_init(bool minimal) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_ircbot_init_pre > 0) {

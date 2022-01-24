@@ -44,7 +44,7 @@ struct message_flood {
 	struct message_flood *next;
 };
 
-struct irc_bot_interface {
+struct ircbot_interface {
 	int fd;
 	bool isIn, isOn;
 	int64 last_try;
@@ -158,40 +158,40 @@ struct irc_bot_interface {
 
 	/**
 	 * Handler for the PING IRC command (send back a PONG)
-	 * @see irc_bot_interface::parse_sub
+	 * @see ircbot_interface::parse_sub
 	 */
 	void (*pong) (int fd, char *cmd, char *source, char *target, char *msg);
 
 	/**
 	 * Handler for the PRIVMSG IRC command (action depends on the message contents)
-	 * @see irc_bot_interface::parse_sub
+	 * @see ircbot_interface::parse_sub
 	 */
 	void (*privmsg) (int fd, char *cmd, char *source, char *target, char *msg);
 
 	/**
 	 * Handler for CTCP commands received via PRIVMSG
-	 * @see irc_bot_interface::privmsg
+	 * @see ircbot_interface::privmsg
 	 */
 	void (*privmsg_ctcp) (int fd, char *cmd, char *source, char *target, char *msg);
 
 	/**
 	 * Handler for the JOIN IRC command (notify an in-game channel of users joining
 	 * the IRC channel)
-	 * @see irc_bot_interface::parse_sub
+	 * @see ircbot_interface::parse_sub
 	 */
 	void (*userjoin) (int fd, char *cmd, char *source, char *target, char *msg);
 
 	/**
 	 * Handler for the PART and QUIT IRC commands (notify an in-game channel of
 	 * users leaving the IRC channel)
-	 * @see irc_bot_interface::parse_sub
+	 * @see ircbot_interface::parse_sub
 	 */
 	void (*userleave) (int fd, char *cmd, char *source, char *target, char *msg);
 
 	/**
 	 * Handler for the NICK IRC commands (notify an in-game channel of users
 	 * changing their name while in the IRC channel)
-	 * @see irc_bot_interface::parse_sub
+	 * @see ircbot_interface::parse_sub
 	 */
 	void (*usernick) (int fd, char *cmd, char *source, char *target, char *msg);
 };
@@ -200,6 +200,6 @@ struct irc_bot_interface {
 void ircbot_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct irc_bot_interface *ircbot;
+HPShared struct ircbot_interface *ircbot;
 
 #endif /* MAP_IRC_BOT_H */

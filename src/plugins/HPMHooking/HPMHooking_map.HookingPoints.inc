@@ -1670,7 +1670,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(intif->pRodexCheckName, HP_intif_pRodexCheckName) },
 	{ HP_POP(intif->pRecvClanMemberAction, HP_intif_pRecvClanMemberAction) },
 	{ HP_POP(intif->pAchievementsLoad, HP_intif_pAchievementsLoad) },
-/* irc_bot_interface */
+/* ircbot_interface */
 	{ HP_POP(ircbot->init, HP_ircbot_init) },
 	{ HP_POP(ircbot->final, HP_ircbot_final) },
 	{ HP_POP(ircbot->parse, HP_ircbot_parse) },
