@@ -2668,7 +2668,7 @@ static int char_parse_fromlogin_changesex_reply(int fd)
 	}
 
 	for (i = 0; i < MAX_CHARS && SQL_SUCCESS == SQL->StmtNextRow(stmt); ++i) {
-		char_change_sex_sub(sex, acc, char_id, class, guild_id);
+		chr->change_sex_sub(sex, acc, char_id, class, guild_id);
 	}
 	SQL->StmtFree(stmt);
 
@@ -3621,7 +3621,7 @@ static int char_changecharsex(int char_id, int sex)
 	}
 
 	SQL->StmtFree(stmt);
-	char_change_sex_sub(sex, account_id, char_id, class, guild_id);
+	chr->change_sex_sub(sex, account_id, char_id, class, guild_id);
 	chr->disconnect_player(account_id); // Disconnect player if online on char-server.
 	chr->changesex(account_id, sex); // Notify all mapservers about this change.
 
@@ -6716,6 +6716,7 @@ void char_defaults(void)
 	chr->check_connect_login_server = char_check_connect_login_server;
 	chr->online_data_cleanup_sub = char_online_data_cleanup_sub;
 	chr->online_data_cleanup = char_online_data_cleanup;
+	chr->change_sex_sub = char_change_sex_sub;
 	chr->sql_config_read = char_sql_config_read;
 	chr->sql_config_read_registry = char_sql_config_read_registry;
 	chr->sql_config_read_pc = char_sql_config_read_pc;

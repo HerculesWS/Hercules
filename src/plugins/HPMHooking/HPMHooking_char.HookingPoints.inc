@@ -188,6 +188,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(chr->check_connect_login_server, HP_chr_check_connect_login_server) },
 	{ HP_POP(chr->online_data_cleanup_sub, HP_chr_online_data_cleanup_sub) },
 	{ HP_POP(chr->online_data_cleanup, HP_chr_online_data_cleanup) },
+	{ HP_POP(chr->change_sex_sub, HP_chr_change_sex_sub) },
 	{ HP_POP(chr->sql_config_read, HP_chr_sql_config_read) },
 	{ HP_POP(chr->sql_config_read_registry, HP_chr_sql_config_read_registry) },
 	{ HP_POP(chr->sql_config_read_pc, HP_chr_sql_config_read_pc) },

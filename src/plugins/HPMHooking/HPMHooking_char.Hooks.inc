@@ -4270,6 +4270,32 @@ int HP_chr_online_data_cleanup(int tid, int64 tick, int id, intptr_t data) {
 	}
 	return retVal___;
 }
+void HP_chr_change_sex_sub(int sex, int acc, int char_id, int class, int guild_id) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_chr_change_sex_sub_pre > 0) {
+		void (*preHookFunc) (int *sex, int *acc, int *char_id, int *class, int *guild_id);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_chr_change_sex_sub_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_chr_change_sex_sub_pre[hIndex].func;
+			preHookFunc(&sex, &acc, &char_id, &class, &guild_id);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.chr.change_sex_sub(sex, acc, char_id, class, guild_id);
+	}
+	if (HPMHooks.count.HP_chr_change_sex_sub_post > 0) {
+		void (*postHookFunc) (int sex, int acc, int char_id, int class, int guild_id);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_chr_change_sex_sub_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_chr_change_sex_sub_post[hIndex].func;
+			postHookFunc(sex, acc, char_id, class, guild_id);
+		}
+	}
+	return;
+}
 bool HP_chr_sql_config_read(const char *filename, bool imported) {
 	int hIndex = 0;
 	bool retVal___ = false;

@@ -51673,6 +51673,141 @@ bool HP_map_config_read(const char *filename, bool imported) {
 	}
 	return retVal___;
 }
+bool HP_map_config_read_console(const char *filename, struct config_t *config, bool imported) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_map_config_read_console_pre > 0) {
+		bool (*preHookFunc) (const char **filename, struct config_t **config, bool *imported);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_map_config_read_console_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_map_config_read_console_pre[hIndex].func;
+			retVal___ = preHookFunc(&filename, &config, &imported);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.map.config_read_console(filename, config, imported);
+	}
+	if (HPMHooks.count.HP_map_config_read_console_post > 0) {
+		bool (*postHookFunc) (bool retVal___, const char *filename, struct config_t *config, bool imported);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_map_config_read_console_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_map_config_read_console_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, filename, config, imported);
+		}
+	}
+	return retVal___;
+}
+bool HP_map_config_read_connection(const char *filename, struct config_t *config, bool imported) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_map_config_read_connection_pre > 0) {
+		bool (*preHookFunc) (const char **filename, struct config_t **config, bool *imported);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_map_config_read_connection_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_map_config_read_connection_pre[hIndex].func;
+			retVal___ = preHookFunc(&filename, &config, &imported);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.map.config_read_connection(filename, config, imported);
+	}
+	if (HPMHooks.count.HP_map_config_read_connection_post > 0) {
+		bool (*postHookFunc) (bool retVal___, const char *filename, struct config_t *config, bool imported);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_map_config_read_connection_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_map_config_read_connection_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, filename, config, imported);
+		}
+	}
+	return retVal___;
+}
+bool HP_map_config_read_inter(const char *filename, struct config_t *config, bool imported) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_map_config_read_inter_pre > 0) {
+		bool (*preHookFunc) (const char **filename, struct config_t **config, bool *imported);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_map_config_read_inter_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_map_config_read_inter_pre[hIndex].func;
+			retVal___ = preHookFunc(&filename, &config, &imported);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.map.config_read_inter(filename, config, imported);
+	}
+	if (HPMHooks.count.HP_map_config_read_inter_post > 0) {
+		bool (*postHookFunc) (bool retVal___, const char *filename, struct config_t *config, bool imported);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_map_config_read_inter_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_map_config_read_inter_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, filename, config, imported);
+		}
+	}
+	return retVal___;
+}
+bool HP_map_config_read_database(const char *filename, struct config_t *config, bool imported) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_map_config_read_database_pre > 0) {
+		bool (*preHookFunc) (const char **filename, struct config_t **config, bool *imported);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_map_config_read_database_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_map_config_read_database_pre[hIndex].func;
+			retVal___ = preHookFunc(&filename, &config, &imported);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.map.config_read_database(filename, config, imported);
+	}
+	if (HPMHooks.count.HP_map_config_read_database_post > 0) {
+		bool (*postHookFunc) (bool retVal___, const char *filename, struct config_t *config, bool imported);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_map_config_read_database_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_map_config_read_database_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, filename, config, imported);
+		}
+	}
+	return retVal___;
+}
+bool HP_map_config_read_map_list(const char *filename, struct config_t *config, bool imported) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_map_config_read_map_list_pre > 0) {
+		bool (*preHookFunc) (const char **filename, struct config_t **config, bool *imported);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_map_config_read_map_list_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_map_config_read_map_list_pre[hIndex].func;
+			retVal___ = preHookFunc(&filename, &config, &imported);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.map.config_read_map_list(filename, config, imported);
+	}
+	if (HPMHooks.count.HP_map_config_read_map_list_post > 0) {
+		bool (*postHookFunc) (bool retVal___, const char *filename, struct config_t *config, bool imported);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_map_config_read_map_list_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_map_config_read_map_list_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, filename, config, imported);
+		}
+	}
+	return retVal___;
+}
 bool HP_map_read_npclist(const char *filename, bool imported) {
 	int hIndex = 0;
 	bool retVal___ = false;

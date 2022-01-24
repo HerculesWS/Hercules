@@ -5768,7 +5768,7 @@ static int npc_reload(void)
 	map->flags_init();
 	itemdb->name_constants();
 	clan->set_constants();
-	npc_process_files(npc_new_min);
+	npc->process_files(npc_new_min);
 	instance->reload();
 	map->zone_init();
 	npc->motd = npc->name2id("HerculesMOTD"); /// [Ind/Hercules]
@@ -5946,7 +5946,7 @@ static int do_init_npc(bool minimal)
 	if (!minimal) {
 		npc->timer_event_ers = ers_new(sizeof(struct timer_event_data),"clif.c::timer_event_ers",ERS_OPT_NONE);
 
-		npc_process_files(START_NPC_NUM);
+		npc->process_files(START_NPC_NUM);
 	}
 
 	if (!minimal) {
@@ -6139,4 +6139,5 @@ void npc_defaults(void)
 	npc->db_checkid = npc_db_checkid;
 	npc->refresh = npc_refresh;
 	npc->questinfo_clear = npc_questinfo_clear;
+	npc->process_files = npc_process_files;
 }

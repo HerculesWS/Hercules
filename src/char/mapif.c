@@ -2531,6 +2531,9 @@ void mapif_defaults(void)
 	mapif->parse_ItemBoundRetrieve = mapif_parse_ItemBoundRetrieve;
 	mapif->parse_accinfo = mapif_parse_accinfo;
 	mapif->account_reg_reply = mapif_account_reg_reply;
+#if 0
+	mapif->account_reg = mapif_account_reg;
+#endif
 	mapif->disconnectplayer = mapif_disconnectplayer;
 	mapif->parse_Registry = mapif_parse_Registry;
 	mapif->parse_RegistryRequest = mapif_parse_RegistryRequest;

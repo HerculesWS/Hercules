@@ -178,6 +178,9 @@ struct mapif_interface {
 	void (*parse_ItemBoundRetrieve) (int fd);
 	void (*parse_accinfo) (int fd);
 	int (*account_reg_reply) (int fd,int account_id,int char_id, int type);
+#if 0
+	void (*account_reg) (int fd, unsigned char *src);
+#endif
 	int (*disconnectplayer) (int fd, int account_id, int char_id, int reason);
 	int (*parse_Registry) (int fd);
 	int (*parse_RegistryRequest) (int fd);

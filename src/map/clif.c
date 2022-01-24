@@ -264,26 +264,6 @@ static void clif_setport(uint16 port)
 	clif->map_port = port;
 }
 
-#if 0 // Unused function
-/*==========================================
- * Returns map server IP
- *------------------------------------------*/
-static uint32 clif_getip(void)
-{
-	return clif->map_ip;
-}
-#endif // 0
-
-#if 0 // Unused function
-/*==========================================
- * Returns map port which is set by clif_setport()
- *------------------------------------------*/
-static uint16 clif_getport(void)
-{
-	return clif->map_port;
-}
-#endif // 0
-
 /*==========================================
  * Updates server ip resolution and returns it
  *------------------------------------------*/
@@ -1029,7 +1009,7 @@ static int clif_setlevel(struct block_list *bl)
 	int lv = status->get_lv(bl);
 	nullpo_retr(0, bl);
 	if( battle_config.client_limit_unit_lv&bl->type )
-		return clif_setlevel_sub(lv);
+		return clif->setlevel_sub(lv);
 	switch (bl->type) {
 		case BL_NPC:
 		case BL_PET:
@@ -1098,7 +1078,7 @@ static void clif_set_unit_idle2(struct block_list *bl, struct map_session_data *
 	WBUFPOS(&p.PosDir[0],0,bl->x,bl->y,unit->getdir(bl));
 	p.xSize = p.ySize = (sd) ? 5 : 0;
 	p.state = vd->dead_sit;
-	p.clevel = clif_setlevel(bl);
+	p.clevel = clif->setlevel(bl);
 
 	clif->send(&p,sizeof(p),tsd?&tsd->bl:bl,target);
 #else
@@ -1174,7 +1154,7 @@ static void clif_set_unit_idle(struct block_list *bl, struct map_session_data *t
 	WBUFPOS(&p.PosDir[0],0,bl->x,bl->y,unit->getdir(bl));
 	p.xSize = p.ySize = (sd) ? 5 : 0;
 	p.state = vd->dead_sit;
-	p.clevel = clif_setlevel(bl);
+	p.clevel = clif->setlevel(bl);
 #if PACKETVER >= 20080102
 	p.font = (sd) ? sd->status.font : 0;
 #endif
@@ -1332,7 +1312,7 @@ static void clif_spawn_unit(struct block_list *bl, enum send_target target)
 	p.sex = vd->sex;
 	WBUFPOS(&p.PosDir[0],0,bl->x,bl->y,unit->getdir(bl));
 	p.xSize = p.ySize = (sd) ? 5 : 0;
-	p.clevel = clif_setlevel(bl);
+	p.clevel = clif->setlevel(bl);
 #if PACKETVER >= 20080102
 	p.font = (sd) ? sd->status.font : 0;
 #endif
@@ -1436,7 +1416,7 @@ static void clif_set_unit_walking(struct block_list *bl, struct map_session_data
 	p.sex = vd->sex;
 	WBUFPOS2(&p.MoveData[0],0,bl->x,bl->y,ud->to_x,ud->to_y,8,8);
 	p.xSize = p.ySize = (sd) ? 5 : 0;
-	p.clevel = clif_setlevel(bl);
+	p.clevel = clif->setlevel(bl);
 #if PACKETVER >= 20080102
 	p.font = (sd) ? sd->status.font : 0;
 #endif
@@ -4313,7 +4293,7 @@ static void clif_changeoption2(struct block_list *bl)
 	WBUFW(buf,0) = 0x28a;
 	WBUFL(buf,2) = bl->id;
 	WBUFL(buf,6) = (sc != NULL) ? sc->option : ((bl->type == BL_NPC) ? BL_UCCAST(BL_NPC, bl)->option : 0);
-	WBUFL(buf,10) = clif_setlevel(bl);
+	WBUFL(buf,10) = clif->setlevel(bl);
 	WBUFL(buf,14) = (sc) ? sc->opt3 : 0;
 	if (clif->isdisguised(bl)) {
 		clif->send(buf,packet_len(0x28a),bl,AREA_WOS);
@@ -25469,7 +25449,7 @@ static void clif_bc_ready(void)
 	if( battle_config.display_status_timers )
 		clif->status_change_sub = clif_status_change_sub;
 	else
-		clif->status_change_sub = clif_status_change_notick;
+		clif->status_change_sub = clif->status_change_notick;
 
 	switch( battle_config.packet_obfuscation ) {
 		case 0:
@@ -25693,6 +25673,7 @@ void clif_defaults(void)
 	clif->combo_delay = clif_combo_delay;
 	clif->status_change = clif_status_change;
 	clif->status_change_sub = clif_status_change_sub;
+	clif->status_change_notick = clif_status_change_notick;
 	clif->insert_card = clif_insert_card;
 	clif->inventoryList = clif_inventoryList;
 	clif->inventoryItems = clif_inventoryItems;
@@ -25796,6 +25777,9 @@ void clif_defaults(void)
 	clif->divorced = clif_divorced;
 	clif->callpartner = clif_callpartner;
 	clif->skill_damage = clif_skill_damage;
+#if 0
+	clif->skill_damage2 = clif_skill_damage2;
+#endif
 	clif->skill_nodamage = clif_skill_nodamage;
 	clif->skill_poseffect = clif_skill_poseffect;
 	clif->skill_estimation = clif_skill_estimation;
@@ -25952,6 +25936,9 @@ void clif_defaults(void)
 	clif->guild_set_position = clif_guild_set_position;
 	clif->guild_position_selected = clif_guild_position_selected;
 	clif->validate_emblem = clif_validate_emblem;
+#if 0
+	clif->guild_allianceadded = clif_guild_allianceadded;
+#endif
 	/* battleground-specific */
 	clif->bg_hp = clif_bg_hp;
 	clif->bg_xy = clif_bg_xy;
@@ -26518,4 +26505,10 @@ void clif_defaults(void)
 	clif->grade_enchant_add_item_result_fail = clif_grade_enchant_add_item_result_fail;
 	clif->grade_enchant_result = clif_grade_enchant_result;
 	clif->announce_grade_status = clif_announce_grade_status;
+	clif->setlevel = clif_setlevel;
+	clif->setlevel_sub = clif_setlevel_sub;
+#if 0
+	clif->marriage_process = clif_marriage_process;
+	clif->marriage_proposal = clif_marriage_proposal;
+#endif
 }

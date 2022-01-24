@@ -4401,15 +4401,15 @@ static bool map_config_read(const char *filename, bool imported)
 	libconfig->setting_lookup_bool(setting, "use_grf", &map->enable_grf);
 	libconfig->setting_lookup_mutable_string(setting, "default_language", map->default_lang_str, sizeof(map->default_lang_str));
 
-	if (!map_config_read_console(filename, &config, imported))
+	if (!map->config_read_console(filename, &config, imported))
 		retval = false;
-	if (!map_config_read_connection(filename, &config, imported))
+	if (!map->config_read_connection(filename, &config, imported))
 		retval = false;
-	if (!map_config_read_inter(filename, &config, imported))
+	if (!map->config_read_inter(filename, &config, imported))
 		retval = false;
-	if (!map_config_read_database(filename, &config, imported))
+	if (!map->config_read_database(filename, &config, imported))
 		retval = false;
-	if (!map_config_read_map_list(filename, &config, imported))
+	if (!map->config_read_map_list(filename, &config, imported))
 		retval = false;
 
 	// import should overwrite any previous configuration, so it should be called last
@@ -7357,6 +7357,13 @@ PRAGMA_GCC9(GCC diagnostic pop)
 	map->readgat = map_readgat;
 	map->readallmaps = map_readallmaps;
 	map->config_read = map_config_read;
+
+	map->config_read_console = map_config_read_console;
+	map->config_read_connection = map_config_read_connection;
+	map->config_read_inter = map_config_read_inter;
+	map->config_read_database = map_config_read_database;
+	map->config_read_map_list = map_config_read_map_list;
+
 	map->read_npclist = map_read_npclist;
 	map->inter_config_read = inter_config_read;
 	map->inter_config_read_database_names = inter_config_read_database_names;

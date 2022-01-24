@@ -980,6 +980,7 @@ struct clif_interface {
 	void (*combo_delay) (struct block_list *bl,int wait);
 	void (*status_change) (struct block_list *bl, int relevant_bl, int type, int flag, int total_tick, int val1, int val2, int val3);
 	void (*status_change_sub) (struct block_list *bl, int type, int relevant_bl, int flag, int tick, int total_tick, int val1, int val2, int val3);
+	void (*status_change_notick) (struct block_list *bl, int type, int relevant_bl, int flag, int tick, int total_tick, int val1, int val2, int val3);
 	void (*insert_card) (struct map_session_data *sd,int idx_equip,int idx_card,int flag);
 	void (*inventoryList) (struct map_session_data *sd);
 	void (*inventoryItems) (struct map_session_data *sd, enum inventory_type type);
@@ -1083,6 +1084,9 @@ struct clif_interface {
 	void (*divorced) (struct map_session_data* sd, const char* name);
 	void (*callpartner) (struct map_session_data *sd);
 	int (*skill_damage) (struct block_list *src, struct block_list *dst, int64 tick, int sdelay, int ddelay, int64 damage, int div, uint16 skill_id, uint16 skill_lv, enum battle_dmg_type type);
+#if 0
+	int (*skill_damage2) (struct block_list *src, struct block_list *dst, int64 tick, int sdelay, int ddelay, int damage, int div, uint16 skill_id, uint16 skill_lv, enum battle_dmg_type type);
+#endif
 	int (*skill_nodamage) (struct block_list *src,struct block_list *dst,uint16 skill_id,int heal,int fail);
 	void (*skill_poseffect) (struct block_list *src, uint16 skill_id, int val, int x, int y, int64 tick);
 	void (*skill_estimation) (struct map_session_data *sd,struct block_list *dst);
@@ -1239,7 +1243,9 @@ struct clif_interface {
 	void (*guild_expulsionlist) (struct map_session_data* sd);
 	void (*guild_set_position) (struct map_session_data *sd);
 	void (*guild_position_selected) (struct map_session_data *sd);
-
+#if 0
+	void (*guild_allianceadded) (struct guild *g, int idx);
+#endif
 	bool (*validate_emblem) (const uint8* emblem, unsigned long emblem_len);
 	/* battleground-specific */
 	void (*bg_hp) (struct map_session_data *sd);
@@ -1802,6 +1808,12 @@ struct clif_interface {
 	void (*grade_enchant_add_item_result_fail) (struct map_session_data *sd);
 	void (*grade_enchant_result) (struct map_session_data *sd, int16 index, enum grade_level gl, enum grade_ui_result result);
 	void (*announce_grade_status) (struct map_session_data *sd, int item_id, enum grade_level gl, bool success, enum send_target target);
+	int (*setlevel) (struct block_list *bl);
+	int (*setlevel_sub) (int lv);
+#if 0
+	void (*marriage_process) (struct map_session_data *sd);
+	void (*marriage_proposal) (int fd, struct map_session_data *sd, struct map_session_data *ssd);
+#endif
 };
 
 #ifdef HERCULES_CORE
