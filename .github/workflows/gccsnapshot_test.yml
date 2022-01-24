@@ -61,7 +61,7 @@ jobs:
           gcc --version
           ls -la /usr/lib/x86_64-linux-gnu/libasan.* || true
           ls -la /usr/lib/gcc-snapshot/lib/libasan.* || true
-          ls -la /usr/lib/gcc-snapshot/lib/libasan.so.7.0.0
+          ls -la /usr/lib/gcc-snapshot/lib/libasan.so.8.0.0
 
       - name: init database
         run: |
@@ -81,12 +81,12 @@ jobs:
       - name: test
         run: |
           export PATH=/usr/lib/gcc-snapshot/bin:$PATH
-          export LD_PRELOAD=/usr/lib/gcc-snapshot/lib/libasan.so.7.0.0
+          export LD_PRELOAD=/usr/lib/gcc-snapshot/lib/libasan.so.8.0.0
           ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
 
       - name: extra test
         if: env.PACKET_VERSION != '--enable-packetver=20130724'
         run: |
           export PATH=/usr/lib/gcc-snapshot/bin:$PATH
-          export LD_PRELOAD=/usr/lib/gcc-snapshot/lib/libasan.so.7.0.0
+          export LD_PRELOAD=/usr/lib/gcc-snapshot/lib/libasan.so.8.0.0
           ./tools/ci/travis.sh extratest
