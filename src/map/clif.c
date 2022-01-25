@@ -5435,6 +5435,7 @@ static int clif_outsight(struct block_list *bl, va_list ap)
 		nullpo_ret(bl);
 		switch(bl->type){
 			case BL_PC:
+				nullpo_ret(sd);
 				if (sd->vd.class != INVISIBLE_CLASS)
 					clif->clearunit_single(bl->id,CLR_OUTSIGHT,tsd->fd);
 				if (sd->chat_id != 0) {
