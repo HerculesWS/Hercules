@@ -57,7 +57,7 @@ struct {
 	struct {
 		char *p;    ///< Buffer pointer
 		size_t len; ///< Buffer length
-	} buf[4]; ///< Output buffer
+	} buf[6]; ///< Output buffer
 	const char *db_name; ///< Database table name
 } tosql;
 
@@ -85,12 +85,12 @@ void do_mobskilldb2sql(void);
 void hstr(const char *str)
 {
 	nullpo_retv(str);
-	if (strlen(str) > tosql.buf[3].len) {
-		tosql.buf[3].len = tosql.buf[3].len + strlen(str) + 1000;
-		RECREATE(tosql.buf[3].p,char,tosql.buf[3].len);
+	if (strlen(str) > tosql.buf[5].len) {
+		tosql.buf[5].len = tosql.buf[5].len + strlen(str) + 1000;
+		RECREATE(tosql.buf[5].p,char,tosql.buf[5].len);
 	}
-	safestrncpy(tosql.buf[3].p,str,strlen(str));
-	normalize_name(tosql.buf[3].p,"\t\n ");
+	safestrncpy(tosql.buf[5].p,str,strlen(str));
+	normalize_name(tosql.buf[5].p,"\t\n ");
 }
 
 /**
@@ -334,6 +334,9 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source)
 		// refineable
 		StrBuf->Printf(&buf, "'%d',", it->flag.no_refine?0:1);
 
+		// gradeable
+		StrBuf->Printf(&buf, "'%d',", it->flag.no_grade?1:0);
+
 		// disable_options
 		StrBuf->Printf(&buf, "'%d',", it->flag.no_options?1:0);
 
@@ -351,6 +354,24 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source)
 
 		// delay
 		StrBuf->Printf(&buf, "'%d',", it->delay);
+
+		// keepafteruse
+		StrBuf->Printf(&buf, "'%d',", it->flag.keepafteruse?1:0);
+
+		// dropannounce
+		StrBuf->Printf(&buf, "'%d',", it->flag.drop_announce?1:0);
+
+		// showdropeffect
+		StrBuf->Printf(&buf, "'%d',", it->flag.showdropeffect?1:0);
+
+		// dropeffectmode
+		StrBuf->Printf(&buf, "'%d',", it->dropeffectmode);
+
+		// ignorediscount
+		StrBuf->Printf(&buf, "'%d',", it->flag.ignore_discount?1:0);
+
+		// ignoreovercharge
+		StrBuf->Printf(&buf, "'%d',", it->flag.ignore_overcharge?1:0);
 
 		// trade_flag
 		StrBuf->Printf(&buf, "'%d',", it->flag.trade_restriction);
@@ -397,7 +418,7 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source)
 		// script
 		if (it->script && libconfig->setting_lookup_string(entry, "Script", &bonus)) {
 			hstr(bonus);
-			str = tosql.buf[3].p;
+			str = tosql.buf[5].p;
 			if (strlen(str) > tosql.buf[0].len) {
 				tosql.buf[0].len = tosql.buf[0].len + strlen(str) + 1000;
 				RECREATE(tosql.buf[0].p,char,tosql.buf[0].len);
@@ -411,7 +432,7 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source)
 		// equip_script
 		if (it->equip_script && libconfig->setting_lookup_string(entry, "OnEquipScript", &bonus)) {
 			hstr(bonus);
-			str = tosql.buf[3].p;
+			str = tosql.buf[5].p;
 			if (strlen(str) > tosql.buf[1].len) {
 				tosql.buf[1].len = tosql.buf[1].len + strlen(str) + 1000;
 				RECREATE(tosql.buf[1].p,char,tosql.buf[1].len);
@@ -425,13 +446,41 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source)
 		// unequip_script
 		if (it->unequip_script && libconfig->setting_lookup_string(entry, "OnUnequipScript", &bonus)) {
 			hstr(bonus);
-			str = tosql.buf[3].p;
+			str = tosql.buf[5].p;
 			if (strlen(str) > tosql.buf[2].len) {
 				tosql.buf[2].len = tosql.buf[2].len + strlen(str) + 1000;
 				RECREATE(tosql.buf[2].p,char,tosql.buf[2].len);
 			}
 			SQL->EscapeString(sql_handle, tosql.buf[2].p, str);
-			StrBuf->Printf(&buf, "'%s'", tosql.buf[2].p);
+			StrBuf->Printf(&buf, "'%s',", tosql.buf[2].p);
+		} else {
+			StrBuf->AppendStr(&buf, "'',");
+		}
+
+		// rental_equip_script
+		if (it->rental_start_script && libconfig->setting_lookup_string(entry, "OnRentalStartScript", &bonus)) {
+			hstr(bonus);
+			str = tosql.buf[5].p;
+			if (strlen(str) > tosql.buf[3].len) {
+				tosql.buf[3].len = tosql.buf[3].len + strlen(str) + 1000;
+				RECREATE(tosql.buf[3].p,char,tosql.buf[3].len);
+			}
+			SQL->EscapeString(sql_handle, tosql.buf[3].p, str);
+			StrBuf->Printf(&buf, "'%s',", tosql.buf[3].p);
+		} else {
+			StrBuf->AppendStr(&buf, "'',");
+		}
+		
+		// rental_unequip_script
+		if (it->rental_end_script && libconfig->setting_lookup_string(entry, "OnRentalEndScript", &bonus)) {
+			hstr(bonus);
+			str = tosql.buf[5].p;
+			if (strlen(str) > tosql.buf[4].len) {
+				tosql.buf[4].len = tosql.buf[4].len + strlen(str) + 1000;
+				RECREATE(tosql.buf[4].p,char,tosql.buf[4].len);
+			}
+			SQL->EscapeString(sql_handle, tosql.buf[4].p, str);
+			StrBuf->Printf(&buf, "'%s'", tosql.buf[4].p);
 		} else {
 			StrBuf->AppendStr(&buf, "''");
 		}
@@ -479,12 +528,19 @@ void itemdb2sql_tableheader(void)
 			"  `equip_level_min` smallint UNSIGNED DEFAULT NULL,\n"
 			"  `equip_level_max` smallint UNSIGNED DEFAULT NULL,\n"
 			"  `refineable` tinyint UNSIGNED DEFAULT NULL,\n"
+			"  `gradeable` tinyint UNSIGNED DEFAULT NULL,\n"
 			"  `disable_options` tinyint UNSIGNED DEFAULT NULL,\n"
 			"  `view_sprite` smallint UNSIGNED DEFAULT NULL,\n"
 			"  `bindonequip` tinyint UNSIGNED DEFAULT NULL,\n"
 			"  `forceserial` tinyint UNSIGNED DEFAULT NULL,\n"
 			"  `buyingstore` tinyint UNSIGNED DEFAULT NULL,\n"
 			"  `delay` mediumint UNSIGNED DEFAULT NULL,\n"
+			"  `keepafteruse` tinyint UNSIGNED DEFAULT NULL,\n"
+			"  `dropannounce` tinyint UNSIGNED DEFAULT NULL,\n"
+			"  `showdropeffect` tinyint UNSIGNED DEFAULT NULL,\n"
+			"  `dropeffectmode` tinyint UNSIGNED DEFAULT NULL,\n"
+			"  `ignorediscount` tinyint UNSIGNED DEFAULT NULL,\n"
+			"  `ignoreovercharge` tinyint UNSIGNED DEFAULT NULL,\n"
 			"  `trade_flag` smallint UNSIGNED DEFAULT NULL,\n"
 			"  `trade_group` smallint UNSIGNED DEFAULT NULL,\n"
 			"  `nouse_flag` smallint UNSIGNED DEFAULT NULL,\n"
@@ -495,6 +551,8 @@ void itemdb2sql_tableheader(void)
 			"  `script` text,\n"
 			"  `equip_script` text,\n"
 			"  `unequip_script` text,\n"
+			"  `rental_start_script` text,\n"
+			"  `rental_end_script` text,\n"
 			" PRIMARY KEY (`id`)\n"
 			") ENGINE=MyISAM;\n"
 			"\n", tosql.db_name,tosql.db_name,tosql.db_name);
