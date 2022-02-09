@@ -718,7 +718,7 @@ int mobdb2sql_sub(struct config_setting_t *mobt, int n, const char *source)
 		// MEXP
 		StrBuf->Printf(&buf, "%u,", md->mexp);
 
-		for (i = 0; i < 3; i++) {
+		for (i = 0; i < MAX_MVP_DROP; i++) {
 			// MVP{i}id
 			StrBuf->Printf(&buf, "%d,", md->mvpitem[i].nameid);
 			// MVP{i}per
@@ -726,13 +726,13 @@ int mobdb2sql_sub(struct config_setting_t *mobt, int n, const char *source)
 		}
 
 		// Scan for cards
-		for (i = 0; i < 10; i++) {
+		for (i = 0; i < MAX_MOB_DROP; i++) {
 			struct item_data *it = NULL;
 			if (md->dropitem[i].nameid != 0 && (it = itemdb->exists(md->dropitem[i].nameid)) != NULL && it->type == IT_CARD)
 				card_idx = i;
 		}
 
-		for (i = 0; i < 10; i++) {
+		for (i = 0; i < MAX_MOB_DROP; i++) {
 			if (card_idx == i)
 				continue;
 			// Drop{i}id
