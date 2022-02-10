@@ -759,7 +759,21 @@ int mobdb2sql_sub(struct config_setting_t *mobt, int n, const char *source)
  */
 void mobdb2sql_tableheader(void)
 {
+	int i;
+	StringBuf buf;
 	db2sql_fileheader();
+
+	StrBuf->Init(&buf);
+
+	for (i = 1; i <= MAX_MVP_DROP; i++) {
+		StrBuf->Printf(&buf, "  `MVP%did` smallint UNSIGNED NOT NULL DEFAULT '0',\n", i);
+		StrBuf->Printf(&buf, "  `MVP%dper` smallint UNSIGNED NOT NULL DEFAULT '0',\n", i);
+	}
+
+	for (i = 1; i < MAX_MOB_DROP; i++) {
+		StrBuf->Printf(&buf, "  `Drop%did` smallint UNSIGNED NOT NULL DEFAULT '0',\n", i);
+		StrBuf->Printf(&buf, "  `Drop%dper` smallint UNSIGNED NOT NULL DEFAULT '0',\n", i);
+	}
 
 	fprintf(tosql.fp,
 			"--\n"
@@ -799,35 +813,14 @@ void mobdb2sql_tableheader(void)
 			"  `aMotion` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
 			"  `dMotion` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
 			"  `MEXP` mediumint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `MVP1id` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `MVP1per` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `MVP2id` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `MVP2per` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `MVP3id` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `MVP3per` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `Drop1id` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `Drop1per` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `Drop2id` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `Drop2per` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `Drop3id` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `Drop3per` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `Drop4id` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `Drop4per` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `Drop5id` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `Drop5per` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `Drop6id` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `Drop6per` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `Drop7id` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `Drop7per` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `Drop8id` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `Drop8per` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `Drop9id` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `Drop9per` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
+			"%s"
 			"  `DropCardid` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
 			"  `DropCardper` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
 			"  PRIMARY KEY (`ID`)\n"
 			") ENGINE=MyISAM;\n"
-			"\n", tosql.db_name, tosql.db_name, tosql.db_name);
+			"\n", tosql.db_name, tosql.db_name, tosql.db_name, StrBuf->Value(&buf));
+
+	StrBuf->Destroy(&buf);
 }
 
 /**
