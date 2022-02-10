@@ -1810,9 +1810,24 @@ struct clif_interface {
 	void (*announce_grade_status) (struct map_session_data *sd, int item_id, enum grade_level gl, bool success, enum send_target target);
 	int (*setlevel) (struct block_list *bl);
 	int (*setlevel_sub) (int lv);
+	void (*load_end_ack_sub_messages) (struct map_session_data *sd, bool connect_new, bool change_map);
+	bool (*sub_guild_invite) (int fd, struct map_session_data *sd, struct map_session_data *t_sd);
+	unsigned short (*parse_cmd_normal) (int fd, struct map_session_data *sd);
+	unsigned short (*parse_cmd_decrypt) (int fd, struct map_session_data *sd);
+	unsigned short (*parse_cmd_optional) (int fd, struct map_session_data *sd);
 #if 0
 	void (*marriage_process) (struct map_session_data *sd);
 	void (*marriage_proposal) (int fd, struct map_session_data *sd, struct map_session_data *ssd);
+	void (*storagepassword) (struct map_session_data *sd, short info);
+	void (*storagepassword_result) (struct map_session_data *sd, short result, short error_count);
+	void (*PartyBookingPersonalSetting) (int fd, struct map_session_data *sd);
+	void (*pPartyBookingShowEquipment) (int fd, struct map_session_data *sd);
+	void (*pPartyBookingReqRecall) (int fd, struct map_session_data *sd);
+	void (*PartyBookingRecallCost) (int fd, struct map_session_data *sd);
+	void (*pPartyBookingAckRecall) (int fd, struct map_session_data *sd);
+	void (*PartyBookingFailedRecall) (int fd, struct map_session_data *sd);
+	void (*PartyBookingCancelVolunteerToPM) (struct map_session_data *sd);
+	void (*PartyBookingRefuseVolunteerToPM) (struct map_session_data *sd);
 #endif
 };
 

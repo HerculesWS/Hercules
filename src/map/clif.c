@@ -11108,7 +11108,7 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 	map->addblock(&sd->bl); // Add the character to the map.
 	clif->spawn(&sd->bl); // Spawn character client side.
 
-	clif_load_end_ack_sub_messages(sd, (sd->state.connect_new != 0), (sd->state.changemap != 0));
+	clif->load_end_ack_sub_messages(sd, (sd->state.connect_new != 0), (sd->state.changemap != 0));
 
 	struct party_data *p = NULL;
 
@@ -15549,7 +15549,7 @@ static void clif_parse_GuildInvite(int fd, struct map_session_data *sd)
 
 	struct map_session_data *t_sd = map->id2sd(RFIFOL(fd,2));
 
-	if (!clif_sub_guild_invite(fd, sd, t_sd))
+	if (!clif->sub_guild_invite(fd, sd, t_sd))
 		return;
 }
 
@@ -15564,7 +15564,7 @@ static void clif_parse_GuildInvite2(int fd, struct map_session_data *sd)
 	safestrncpy(nick, RFIFOP(fd, 2), NAME_LENGTH);
 	t_sd = map->nick2sd(nick, true);
 
-	clif_sub_guild_invite(fd, sd, t_sd);
+	clif->sub_guild_invite(fd, sd, t_sd);
 }
 
 static void clif_parse_GuildReplyInvite(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
@@ -22599,10 +22599,10 @@ static unsigned short clif_parse_cmd_optional(int fd, struct map_session_data *s
 	// filter out invalid / unsupported packets
 	if( cmd > MAX_PACKET_DB || cmd < MIN_PACKET_DB || packets->db[cmd] == 0 ) {
 		if( sd )
-			sd->parse_cmd_func = clif_parse_cmd_decrypt;
-		return clif_parse_cmd_decrypt(fd, sd);
+			sd->parse_cmd_func = clif->parse_cmd_decrypt;
+		return clif->parse_cmd_decrypt(fd, sd);
 	} else if( sd ) {
-		sd->parse_cmd_func = clif_parse_cmd_normal;
+		sd->parse_cmd_func = clif->parse_cmd_normal;
 	}
 
 	return cmd;
@@ -25299,7 +25299,7 @@ static int clif_parse(int fd)
 		if ((int)RFIFOREST(fd) < packet_len)
 			return 0; // not enough data received to form the packet
 
-		if( battle_config.packet_obfuscation == 2 || cmd != RFIFOW(fd, 0) || (sd && sd->parse_cmd_func == clif_parse_cmd_decrypt) ) {
+		if( battle_config.packet_obfuscation == 2 || cmd != RFIFOW(fd, 0) || (sd && sd->parse_cmd_func == clif->parse_cmd_decrypt) ) {
 			// Note: Overriding const qualifier to re-inject the decoded packet ID.
 #define RFIFOP_mutable(fd, pos) ((void *)(sockt->session[fd]->rdata + sockt->session[fd]->rdata_pos + (pos)))
 			int16 *packet_id = RFIFOP_mutable(fd, 0);
@@ -25453,14 +25453,14 @@ static void clif_bc_ready(void)
 
 	switch( battle_config.packet_obfuscation ) {
 		case 0:
-			clif->parse_cmd = clif_parse_cmd_normal;
+			clif->parse_cmd = clif->parse_cmd_normal;
 			break;
 		default:
 		case 1:
-			clif->parse_cmd = clif_parse_cmd_optional;
+			clif->parse_cmd = clif->parse_cmd_optional;
 			break;
 		case 2:
-			clif->parse_cmd = clif_parse_cmd_decrypt;
+			clif->parse_cmd = clif->parse_cmd_decrypt;
 			break;
 	}
 }
@@ -26507,8 +26507,23 @@ void clif_defaults(void)
 	clif->announce_grade_status = clif_announce_grade_status;
 	clif->setlevel = clif_setlevel;
 	clif->setlevel_sub = clif_setlevel_sub;
+	clif->load_end_ack_sub_messages = clif_load_end_ack_sub_messages;
+	clif->sub_guild_invite = clif_sub_guild_invite;
+	clif->parse_cmd_normal = clif_parse_cmd_normal;
+	clif->parse_cmd_decrypt = clif_parse_cmd_decrypt;
+	clif->parse_cmd_optional = clif_parse_cmd_optional;
 #if 0
 	clif->marriage_process = clif_marriage_process;
 	clif->marriage_proposal = clif_marriage_proposal;
+	clif->storagepassword = clif_storagepassword;
+	clif->storagepassword_result = clif_storagepassword_result;
+	clif->PartyBookingPersonalSetting = clif_PartyBookingPersonalSetting;
+	clif->pPartyBookingShowEquipment = clif_parse_PartyBookingShowEquipment;
+	clif->pPartyBookingReqRecall = clif_parse_PartyBookingReqRecall;
+	clif->PartyBookingRecallCost = clif_PartyBookingRecallCost;
+	clif->pPartyBookingAckRecall = clif_parse_PartyBookingAckRecall;
+	clif->PartyBookingFailedRecall = clif_PartyBookingFailedRecall;
+	clif->PartyBookingCancelVolunteerToPM = clif_PartyBookingCancelVolunteerToPM;
+	clif->PartyBookingRefuseVolunteerToPM = clif_PartyBookingRefuseVolunteerToPM;
 #endif
 }
