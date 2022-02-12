@@ -22062,7 +22062,7 @@ static bool clif_parse_roulette_db(void)
 			struct config_setting_t *level;
 			char entry_name[10];
 
-			sprintf(entry_name,"level_%d",i+1);
+			safesnprintf(entry_name, 10, "level_%d", i + 1);
 
 			if( (level = libconfig->setting_get_member(levels, entry_name)) != NULL ) {
 				int k, item_count = libconfig->setting_length(level);
