@@ -5424,6 +5424,31 @@ struct PACKET_ZC_WHISPER {
 DEFINE_PACKET_HEADER(ZC_WHISPER, 0x0097)
 #endif  // PACKETVER_MAIN_NUM >= 20131204 || PACKETVER_RE_NUM >= 20131120 || defined(PACKETVER_ZERO)
 
+#if PACKETVER_MAIN_NUM >= 20220216
+struct PACKET_ZC_UPDATE_GDID {
+	int16 PacketType;
+	uint32 guildId;
+	int emblemVersion;
+	uint32 mode;
+	uint8 isMaster;
+	int32 interSid;
+	char guildName[NAME_LENGTH];
+	uint32 masterGID;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_UPDATE_GDID, 0x02f7)
+#else  // PACKETVER_MAIN_NUM >= 20220216
+struct PACKET_ZC_UPDATE_GDID {
+	int16 PacketType;
+	uint32 guildId;
+	int emblemVersion;
+	uint32 mode;
+	uint8 isMaster;
+	int32 interSid;
+	char guildName[NAME_LENGTH];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_UPDATE_GDID, 0x016c)
+#endif  // PACKETVER_MAIN_NUM >= 20220216
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris

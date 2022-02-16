@@ -8206,15 +8206,19 @@ static void clif_guild_belonginfo(struct map_session_data *sd, struct guild *g)
 	int ps = guild->getposition(g, sd);
 	Assert_retv(ps != -1);
 
-	WFIFOHEAD(fd,packet_len(0x16c));
-	WFIFOW(fd,0)=0x16c;
-	WFIFOL(fd,2)=g->guild_id;
-	WFIFOL(fd,6)=g->emblem_id;
-	WFIFOL(fd,10)=g->position[ps].mode;
-	WFIFOB(fd,14)=(bool)(sd->state.gmaster_flag == 1);
-	WFIFOL(fd,15)=0;  // InterSID (unknown purpose)
-	memcpy(WFIFOP(fd,19),g->name,NAME_LENGTH);
-	WFIFOSET(fd,packet_len(0x16c));
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_UPDATE_GDID));
+	struct PACKET_ZC_UPDATE_GDID *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_UPDATE_GDID;
+	p->guildId = g->guild_id;
+	p->emblemVersion = g->emblem_id;
+	p->mode = g->position[ps].mode;
+	p->isMaster = (sd->state.gmaster_flag == 1);
+	p->interSid = 0;  // InterSID (unknown purpose)
+	memcpy(p->guildName, g->name, NAME_LENGTH);
+#if PACKETVER_MAIN_NUM >= 20220216
+	p->masterGID = g->member[0].char_id;
+#endif  // PACKETVER_MAIN_NUM >= 20220216
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_UPDATE_GDID));
 }
 
 /// Guild member login notice.
