@@ -1544,6 +1544,7 @@ struct clif_interface {
 	void (*pGuildDelAlliance) (int fd, struct map_session_data *sd);
 	void (*pGuildOpposition) (int fd, struct map_session_data *sd);
 	void (*pGuildBreak) (int fd, struct map_session_data *sd);
+	void (*pGuildMembersNear) (int fd, struct map_session_data *sd);
 	void (*pPetMenu) (int fd, struct map_session_data *sd);
 	void (*pCatchPet) (int fd, struct map_session_data *sd);
 	void (*pSelectEgg) (int fd, struct map_session_data *sd);

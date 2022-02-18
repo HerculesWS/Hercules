@@ -5449,6 +5449,16 @@ struct PACKET_ZC_UPDATE_GDID {
 DEFINE_PACKET_HEADER(ZC_UPDATE_GDID, 0x016c)
 #endif  // PACKETVER_MAIN_NUM >= 20220216
 
+#if PACKETVER_MAIN_NUM >= 20220216
+struct PACKET_CZ_SEE_GUILD_MEMBERS {
+	int16 PacketType;
+	uint32 masterGID;
+	uint16 unused1;
+	uint8 unused2;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_SEE_GUILD_MEMBERS, 0x0bb0)
+#endif  // PACKETVER_MAIN_NUM >= 20220216
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris

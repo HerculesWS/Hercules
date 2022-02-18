@@ -15763,6 +15763,17 @@ static void clif_parse_GuildBreak(int fd, struct map_session_data *sd)
 	guild->dobreak(sd, key);
 }
 
+static void clif_parse_GuildMembersNear(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+static void clif_parse_GuildMembersNear(int fd, struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20220216
+	const struct PACKET_CZ_SEE_GUILD_MEMBERS *packet = RP2PTR(fd);
+	if (packet->unused1 != 1 || packet->unused2 != 1) {
+		ShowWarning("Unknown flags in CZ_SEE_GUILD_MEMBERS");
+	}
+#endif  // PACKETVER_MAIN_NUM >= 20220216
+}
+
 /// Pet
 ///
 
@@ -26326,6 +26337,7 @@ void clif_defaults(void)
 	clif->pGuildDelAlliance = clif_parse_GuildDelAlliance;
 	clif->pGuildOpposition = clif_parse_GuildOpposition;
 	clif->pGuildBreak = clif_parse_GuildBreak;
+	clif->pGuildMembersNear = clif_parse_GuildMembersNear;
 	clif->pPetMenu = clif_parse_PetMenu;
 	clif->pCatchPet = clif_parse_CatchPet;
 	clif->pSelectEgg = clif_parse_SelectEgg;
