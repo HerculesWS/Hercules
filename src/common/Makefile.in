@@ -60,7 +60,7 @@ COMMON_OBJ = $(addprefix obj_all/, $(COMMON_SHARED_OBJ) \
 COMMON_C += console.c core.c memmgr.c socket.c
 COMMON_H = atomic.h cbasetypes.h conf.h console.h core.h db.h des.h ers.h \
            grfio.h hercules.h HPM.h HPMi.h memmgr.h memmgr_inc.h mapindex.h \
-           md5calc.h mmo.h mutex.h nullpo.h packets.h packets_len.h random.h \
+           md5calc.h mmo.h mutex.h nullpo.h packets.h packets_len.h packets_struct.h random.h \
            showmsg.h socket.h spinlock.h sql.h strlib.h sysinfo.h thread.h \
            timer.h utils.h winapi.h ../plugins/HPMHooking.h
 COMMON_PH =
