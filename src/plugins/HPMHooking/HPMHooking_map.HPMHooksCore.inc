@@ -1962,6 +1962,8 @@ struct {
 	struct HPMHookPoint *HP_clif_pGuildOpposition_post;
 	struct HPMHookPoint *HP_clif_pGuildBreak_pre;
 	struct HPMHookPoint *HP_clif_pGuildBreak_post;
+	struct HPMHookPoint *HP_clif_pGuildMembersNear_pre;
+	struct HPMHookPoint *HP_clif_pGuildMembersNear_post;
 	struct HPMHookPoint *HP_clif_pPetMenu_pre;
 	struct HPMHookPoint *HP_clif_pPetMenu_post;
 	struct HPMHookPoint *HP_clif_pCatchPet_pre;
@@ -9245,6 +9247,8 @@ struct {
 	int HP_clif_pGuildOpposition_post;
 	int HP_clif_pGuildBreak_pre;
 	int HP_clif_pGuildBreak_post;
+	int HP_clif_pGuildMembersNear_pre;
+	int HP_clif_pGuildMembersNear_post;
 	int HP_clif_pPetMenu_pre;
 	int HP_clif_pPetMenu_post;
 	int HP_clif_pCatchPet_pre;

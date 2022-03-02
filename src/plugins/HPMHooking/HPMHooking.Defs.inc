@@ -2372,6 +2372,8 @@ typedef void (*HPMHOOK_pre_clif_pGuildOpposition) (int *fd, struct map_session_d
 typedef void (*HPMHOOK_post_clif_pGuildOpposition) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_pGuildBreak) (int *fd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_pGuildBreak) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_pGuildMembersNear) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pGuildMembersNear) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_pPetMenu) (int *fd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_pPetMenu) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_pCatchPet) (int *fd, struct map_session_data **sd);

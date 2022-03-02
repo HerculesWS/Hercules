@@ -1005,6 +1005,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->pGuildDelAlliance, HP_clif_pGuildDelAlliance) },
 	{ HP_POP(clif->pGuildOpposition, HP_clif_pGuildOpposition) },
 	{ HP_POP(clif->pGuildBreak, HP_clif_pGuildBreak) },
+	{ HP_POP(clif->pGuildMembersNear, HP_clif_pGuildMembersNear) },
 	{ HP_POP(clif->pPetMenu, HP_clif_pPetMenu) },
 	{ HP_POP(clif->pCatchPet, HP_clif_pCatchPet) },
 	{ HP_POP(clif->pSelectEgg, HP_clif_pSelectEgg) },
