@@ -597,8 +597,14 @@ enum zc_ui_types {
 	ZC_ATTENDANCE_UI = 7,
 #endif
 #if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
-	ZC_GRADE_ENCHANT_UI = 8
+	ZC_GRADE_ENCHANT_UI = 8,
 #endif
+#if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103
+	zc_ui_unused9 = 9,  // for avoid compilation errors
+	ZC_ENCHANT_UI = 10
+#else  // PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103
+	zc_ui_unused9 = 9  // for avoid compilation errors
+#endif  // PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103
 };
 
 /**
@@ -938,12 +944,12 @@ struct clif_interface {
 	void (*cashshop_ack) (struct map_session_data* sd, int error);
 	/* npc-script-related */
 	void (*scriptmes) (struct map_session_data *sd, int npcid, const char *mes);
-	void (*zc_say_dialog_zero1) (struct map_session_data *sd, int npcid, const char *mes);
-	void (*zc_say_dialog_zero2) (struct map_session_data *sd, int npcid, const char *mes);
+	void (*zc_quest_dialog) (struct map_session_data *sd, int npcid, const char *mes);
+	void (*zc_monolog_dialog) (struct map_session_data *sd, int npcid, const char *mes);
 	void (*scriptnext) (struct map_session_data *sd,int npcid);
 	void (*scriptclose) (struct map_session_data *sd, int npcid);
 	void (*scriptmenu) (struct map_session_data* sd, int npcid, const char* mes);
-	void (*zc_menu_list_zero) (struct map_session_data* sd, int npcid, const char* mes);
+	void (*zc_quest_dialog_menu_list) (struct map_session_data* sd, int npcid, const char* mes);
 	void (*scriptinput) (struct map_session_data *sd, int npcid);
 	void (*scriptinputstr) (struct map_session_data *sd, int npcid);
 	void (*cutin) (struct map_session_data* sd, const char* image, int type);
@@ -1538,6 +1544,7 @@ struct clif_interface {
 	void (*pGuildDelAlliance) (int fd, struct map_session_data *sd);
 	void (*pGuildOpposition) (int fd, struct map_session_data *sd);
 	void (*pGuildBreak) (int fd, struct map_session_data *sd);
+	void (*pGuildMembersNear) (int fd, struct map_session_data *sd);
 	void (*pPetMenu) (int fd, struct map_session_data *sd);
 	void (*pCatchPet) (int fd, struct map_session_data *sd);
 	void (*pSelectEgg) (int fd, struct map_session_data *sd);
@@ -1715,6 +1722,8 @@ struct clif_interface {
 	bool (*attendance_timediff) (struct map_session_data *sd);
 	time_t (*attendance_getendtime) (void);
 	void (*pOpenUIRequest) (int fd, struct map_session_data *sd);
+	void (*open_ui_send1) (struct map_session_data *sd, enum zc_ui_types ui_type);
+	void (*open_ui_send2) (struct map_session_data *sd, enum zc_ui_types ui_type, uint64 data);
 	void (*open_ui_send) (struct map_session_data *sd, enum zc_ui_types ui_type);
 	void (*open_ui) (struct map_session_data *sd, enum cz_ui_types uiType);
 	void (*pAttendanceRewardRequest) (int fd, struct map_session_data *sd);

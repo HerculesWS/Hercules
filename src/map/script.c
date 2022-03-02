@@ -6486,9 +6486,9 @@ static BUILDIN(zmes1)
 		return true;
 
 	if (script_hasdata(st, 2))
-		clif->zc_say_dialog_zero1(sd, st->oid, script_getstr(st, 2));
+		clif->zc_quest_dialog(sd, st->oid, script_getstr(st, 2));
 	else
-		clif->zc_say_dialog_zero1(sd, st->oid, "");
+		clif->zc_quest_dialog(sd, st->oid, "");
 
 	return true;
 }
@@ -6508,7 +6508,7 @@ static BUILDIN(zmes1f)
 		return false;
 	}
 
-	clif->zc_say_dialog_zero1(sd, st->oid, StrBuf->Value(&buf));
+	clif->zc_quest_dialog(sd, st->oid, StrBuf->Value(&buf));
 	StrBuf->Destroy(&buf);
 
 	return true;
@@ -6526,9 +6526,9 @@ static BUILDIN(zmes2)
 		return true;
 
 	if (script_hasdata(st, 2))
-		clif->zc_say_dialog_zero2(sd, st->oid, script_getstr(st, 2));
+		clif->zc_monolog_dialog(sd, st->oid, script_getstr(st, 2));
 	else
-		clif->zc_say_dialog_zero2(sd, st->oid, "");
+		clif->zc_monolog_dialog(sd, st->oid, "");
 
 	return true;
 }
@@ -6548,7 +6548,7 @@ static BUILDIN(zmes2f)
 		return false;
 	}
 
-	clif->zc_say_dialog_zero2(sd, st->oid, StrBuf->Value(&buf));
+	clif->zc_monolog_dialog(sd, st->oid, StrBuf->Value(&buf));
 	StrBuf->Destroy(&buf);
 
 	return true;
@@ -6690,7 +6690,7 @@ static BUILDIN(menu)
 		struct StringBuf buf;
 		void (*menuFunc) (struct map_session_data* sd, int npcid, const char* mes) = NULL;
 		if (strncmp(get_buildin_name(st), "zmenu", 5) == 0) {
-			menuFunc = clif->zc_menu_list_zero;
+			menuFunc = clif->zc_quest_dialog_menu_list;
 		} else {
 			menuFunc = clif->scriptmenu;
 		}
@@ -6818,7 +6818,7 @@ static BUILDIN(select)
 		struct StringBuf buf;
 		void (*menuFunc) (struct map_session_data* sd, int npcid, const char* mes) = NULL;
 		if (strncmp(get_buildin_name(st), "zselect", 7) == 0 || strncmp(get_buildin_name(st), "zprompt", 7) == 0) {
-			menuFunc = clif->zc_menu_list_zero;
+			menuFunc = clif->zc_quest_dialog_menu_list;
 		} else {
 			menuFunc = clif->scriptmenu;
 		}
