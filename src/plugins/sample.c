@@ -18,6 +18,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/*
+// add custom compile flags. Can be any compiler flags.
+-DTESTVAR -DTESTVAR2=2 #PLUGINFLAGS
+*/
+
+// check is TESTVAR defined from custom compile flags
+#ifndef TESTVAR
+#error TESTVAR not defined
+#endif
+
+// check is TESTVAR2 defined to value 2 from custom compile flags
+#if !(TESTVAR2 == 2)
+#error TESTVAR2 not defined
+#endif
+
 /// Sample Hercules Plugin
 
 #include "common/hercules.h" /* Should always be the first Hercules file included! (if you don't make it first, you won't be able to use interfaces) */
