@@ -11657,13 +11657,20 @@ static BUILDIN(gettime)
  */
 static BUILDIN(gettimestr)
 {
-	char *tmpstr;
-	const char *fmtstr;
-	int maxlen;
+	char tmpstr[1024];
+	const char *fmtstr = script_getstr(st, 2);
+	int maxlen = script_getnum(st, 3);
 	time_t now;
 
-	fmtstr = script_getstr(st, 2);
-	maxlen = script_getnum(st, 3);
+	if (maxlen < 0) {
+		ShowWarning("buildin_gettimestr: Length must be in positive value.\n");
+		return false;
+	}
+
+	if (maxlen >= sizeof(tmpstr)) {
+		ShowWarning("buildin_gettimestr: Length value is too big %d, max allowed %lu.\n", maxlen, sizeof(tmpstr) - 1);
+		return false;
+	}
 
 	if (script_hasdata(st, 4)) {
 		int timestamp = script_getnum(st, 4);
@@ -11677,11 +11684,10 @@ static BUILDIN(gettimestr)
 		now = time(NULL);
 	}
 
-	tmpstr = (char *)aMalloc((maxlen +1)*sizeof(char));
 	strftime(tmpstr, maxlen, fmtstr, localtime(&now));
 	tmpstr[maxlen] = '\0';
 
-	script_pushstr(st, tmpstr);
+	script_pushstrcopy(st, tmpstr);
 	return true;
 }
 

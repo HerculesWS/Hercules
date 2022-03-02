@@ -4681,6 +4681,7 @@ static void clif_tradeadditem(struct map_session_data *sd, struct map_session_da
 	const int fd = tsd->fd;
 	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_ADD_EXCHANGE_ITEM));
 	struct PACKET_ZC_ADD_EXCHANGE_ITEM *p = WFIFOP(fd, 0);
+	memset(p, 0, sizeof(struct PACKET_ZC_ADD_EXCHANGE_ITEM));
 	p->packetType = HEADER_ZC_ADD_EXCHANGE_ITEM;
 	p->amount = amount;
 	if (index != 0) {
