@@ -22,6 +22,124 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
+## [v2022.03.02] `March 02 2022`
+
+### Added
+
+- Added support for custom compiler flags in each plugin individually, specified within the .c file and tagged with `#PLUGINFLAGS`. See the example in the sample plugin for more details. (#3110)
+- Added support for newer packetvers/encryption keys/client messages (up to 20220216). (#3112)
+  - Added packet `CZ_SEE_GUILD_MEMBERS`
+- Extended the itemdb2sql generator to include the `gradeable`, `keepafteruse`, `dropannounce`, `showdropeffect`, `dropeffectmode`, `ignorediscount`, `ignoreovercharge`, `rental_start_script`, `rental_end_script` columns (#3117)
+- Added GitHub CI builds with some old gcc and clang versions. (part of #3118)
+- Added support for loading maps with RSW format 2.6. (#3119)
+- Added several new maps to the index and mapcache. (part of #3119)
+- Added new NPC sprite and hat effect IDs to the constants database. (part of #3119)
+- Added `common/packet_struct.h` for inter-server packet definitions. (#3120)
+
+### Changed
+
+- Added a missing nullpo check in clif.c. (#3114)
+- Fixed some packet header and field names and added the struct definition for some missing ones. (#3107 and #3112)
+  - Symbol renames cheatsheet:
+    - `ZC_PAR_CHANGE1` -> `ZC_PAR_CHANGE`
+    - `ZC_LONGPAR_CHANGE` -> `ZC_LONGLONGPAR_CHANGE`
+    - `packet_npc_market_purchase` -> `PACKET_CZ_NPC_MARKET_PURCHASE`
+    - `ZC_OPEN_UI` -> `ZC_UI_OPEN`
+    - `clif->zc_say_dialog_zero1()` -> `clif->zc_quest_dialog()`
+    - `clif->zc_say_dialog_zero2()` -> `clif->zc_monolog_dialog()`
+    - `clif->zc_menu_list_zero()` -> `clif->zc_quest_dialog_menu_list()`
+    - `ZC_ACK_REQNAME_TITLE` -> `ZC_ACK_REQNAMEALL_NPC`
+    - `ZC_CAMERA_INFO` -> `ZC_VIEW_CAMERAINFO`
+    - `ZC_ITEM_PREVIEW` -> `ZC_CHANGE_ITEM_OPTION`
+    - `ZC_ENCHANT_EQUIPMENT` -> `ZC_UPDATE_CARDSLOT`
+    - `ZC_SERVICE_MESSAGE_COLOR` -> `ZC_DEBUGMSG`
+    - `CZ_START_USE_SKILL` -> `CZ_USE_SKILL_START`
+    - `CZ_STOP_USE_SKILL` -> `CZ_USE_SKILL_END`
+    - `ZC_INVENTORY_EXPANSION_INFO` -> `ZC_EXTEND_BODYITEM_SIZE`
+    - `ZC_ACK_INVENTORY_EXPAND` -> `ZC_ACK_OPEN_MSGBOX_EXTEND_BODYITEM_SIZE`
+    - `ZC_ACK_INVENTORY_EXPAND_RESULT` -> `ZC_ACK_EXTEND_BODYITEM_SIZE`
+    - `CZ_INVENTORY_EXPAND` -> `CZ_REQ_OPEN_MSGBOX_EXTEND_BODYITEM_SIZE`
+    - `CZ_INVENTORY_EXPAND_CONFIRMED` -> `CZ_REQ_EXTEND_BODYITEM_SIZE`
+    - `CZ_INVENTORY_EXPAND_REJECTED` -> `CZ_CLOSE_MSGBOX_EXTEND_BODYITEM_SIZE`
+    - `ZC_NPC_BARTER_OPEN` -> `ZC_NPC_BARTER_MARKET_ITEMINFO`
+    - `CZ_NPC_BARTER_CLOSE` -> `CZ_NPC_BARTER_MARKET_CLOSE`
+    - `CZ_NPC_BARTER_PURCHASE` -> `CZ_NPC_BARTER_MARKET_PURCHASE`
+    - `CZ_PING` -> `CZ_PING_LIVE`
+    - `CZ_COOLDOWN_RESET` -> `CZ_CMD_RESETCOOLTIME`
+    - `CZ_STYLE_CLOSE` -> `CZ_CLOSE_UI_STYLINGSHOP`
+    - `ZC_LOAD_CONFIRM` -> `ZC_NOTIFY_ACTORINIT`
+    - `ZC_REFINE_OPEN_WINDOW` -> `ZC_OPEN_REFINING_UI`
+    - `CZ_REFINE_ADD_ITEM` -> `CZ_REFINING_SELECT_ITEM`
+    - `ZC_REFINE_ADD_ITEM` -> `ZC_REFINING_MATERIAL_LIST`
+    - `CZ_REFINE_ITEM_REQUEST` -> `CZ_REQ_REFINING`
+    - `CZ_REFINE_WINDOW_CLOSE` -> `CZ_CLOSE_REFINING_UI`
+    - `ZC_REFINE_STATUS` -> `ZC_BROADCAST_ITEMREFINING_RESULT`
+    - `ZC_HAT_EFFECT` -> `ZC_EQUIPMENT_EFFECT`
+    - `ZC_GUILD_CASTLE_LIST` -> `ZC_GUILD_AGIT_INFO`
+    - `CZ_CASTLE_TELEPORT_REQUEST` -> `CZ_REQ_MOVE_GUILD_AGIT`
+    - `ZC_CASTLE_TELEPORT_RESPONSE` -> `ZC_REQ_ACK_MOVE_GUILD_AGIT`
+    - `ZC_CASTLE_INFO` -> `ZC_REQ_ACK_AGIT_INVESTMENT`
+    - `CZ_CASTLE_INFO_REQUEST` -> `CZ_REQ_AGIT_INVESTMENT`
+    - `ZC_LAPINEDDUKDDAK_OPEN` -> `ZC_RANDOM_COMBINE_ITEM_UI_OPEN`
+    - `CZ_LAPINEDDUKDDAK_CLOSE` -> `CZ_RANDOM_COMBINE_ITEM_UI_CLOSE`
+    - `CZ_LAPINEDDUKDDAK_ACK` -> `CZ_REQ_RANDOM_COMBINE_ITEM`
+    - `ZC_LAPINEDDUKDDAK_RESULT` -> `ZC_ACK_RANDOM_COMBINE_ITEM`
+    - `CZ_REQ_MOUNTOFF` -> `CZ_UNINSTALLATION`
+    - `CZ_SE_CASHSHOP_LIMITED_REQ` -> `CZ_GET_ACCOUNT_LIMTIED_SALE_LIST`
+    - `CZ_NPC_EXPANDED_BARTER_CLOSE` -> `CZ_NPC_EXPANDED_BARTER_MARKET_CLOSE`
+    - `ZC_NPC_EXPANDED_BARTER_OPEN` -> `ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO`
+    - `CZ_NPC_EXPANDED_BARTER_PURCHASE` -> `CZ_NPC_EXPANDED_BARTER_MARKET_PURCHASE`
+    - `ZC_LAPINEUPGRADE_OPEN` -> `ZC_RANDOM_UPGRADE_ITEM_UI_OPEN`
+    - `ZC_LAPINEUPGRADE_RESULT` -> `ZC_ACK_RANDOM_UPGRADE_ITEM`
+    - `CZ_LAPINEUPGRADE_CLOSE` -> `CZ_RANDOM_UPGRADE_ITEM_UI_CLOSE`
+    - `CZ_LAPINEUPGRADE_MAKE_ITEM` -> `CZ_REQ_RANDOM_UPGRADE_ITEM`
+    - `CZ_CAPTCHA_REGISTER` -> `CZ_REQ_UPLOAD_MACRO_DETECTOR`
+    - `ZC_CAPTCHA_UPLOAD_REQUEST` -> `ZC_ACK_UPLOAD_MACRO_DETECTOR`
+    - `CZ_CAPTCHA_UPLOAD_REQUEST_ACK` -> `CZ_UPLOAD_MACRO_DETECTOR_CAPTCHA`
+    - `ZC_CAPTCHA_UPLOAD_REQUEST_STATUS` -> `ZC_COMPLETE_UPLOAD_MACRO_DETECTOR_CAPTCHA`
+    - `CZ_MACRO_REPORTER_ACK` -> `CZ_REQ_APPLY_MACRO_DETECTOR`
+    - `ZC_MACRO_REPORTER_STATUS` -> `ZC_ACK_APPLY_MACRO_DETECTOR`
+    - `ZC_MACRO_DETECTOR_REQUEST` -> `ZC_APPLY_MACRO_DETECTOR`
+    - `ZC_MACRO_DETECTOR_REQUEST_DOWNLOAD` -> `ZC_APPLY_MACRO_DETECTOR_CAPTCHA`
+    - `CZ_MACRO_DETECTOR_DOWNLOAD` -> `CZ_COMPLETE_APPLY_MACRO_DETECTOR_CAPTCHA`
+    - `ZC_MACRO_DETECTOR_SHOW` -> `ZC_REQ_ANSWER_MACRO_DETECTOR`
+    - `CZ_MACRO_DETECTOR_ANSWER` -> `CZ_ACK_ANSWER_MACRO_DETECTOR`
+    - `ZC_MACRO_DETECTOR_STATUS` -> `ZC_CLOSE_MACRO_DETECTOR`
+    - `CZ_CAPTCHA_PREVIEW_REQUEST` -> `CZ_REQ_PREVIEW_MACRO_DETECTOR`
+    - `ZC_CAPTCHA_PREVIEW_REQUEST` -> `ZC_ACK_PREVIEW_MACRO_DETECTOR`
+    - `ZC_CAPTCHA_PREVIEW_REQUEST_DOWNLOAD` -> `ZC_PREVIEW_MACRO_DETECTOR_CAPTCHA`
+    - `CZ_MACRO_REPORTER_SELECT` -> `CZ_REQ_PLAYER_AID_IN_RANGE`
+    - `ZC_MACRO_REPORTER_SELECT` -> `ZC_ACK_PLAYER_AID_IN_RANGE`
+    - `ZC_PARTY_MEMBER_JOB_LEVEL` -> `ZC_NOTIFY_MEMBERINFO_TO_GROUPM`
+    - `ZC_TAKEOFF_EQUIP_ALL_ACK` -> `ZC_ACK_TAKEOFF_EQUIP_ALL`
+    - `ZC_SAY_DIALOG_ZERO1` -> `ZC_QUEST_DIALOG`
+    - `ZC_SAY_DIALOG_ZERO2` -> `ZC_MONOLOG_DIALOG`
+    - `ZC_MENU_LIST_ZERO` -> `ZC_QUEST_DIALOG_MENU_LIST`
+    - `ZC_SAY_DIALOG_ALIGN` -> `ZC_DIALOG_TEXT_ALIGN`
+    - `CZ_GRADE_ENCHANT_ADD_ITEM` -> `CZ_GRADE_ENCHANT_SELECT_EQUIPMENT`
+    - `ZC_GRADE_ENCHANT_ADD_ITEM_RESULT` -> `ZC_GRADE_ENCHANT_MATERIAL_LIST`
+    - `CZ_GRADE_ENCHANT_START` -> `CZ_GRADE_ENCHANT_REQUEST`
+    - `CZ_GRADE_ENCHANT_CLOSE` -> `CZ_GRADE_ENCHANT_CLOSE_UI`
+    - `ZC_GRADE_ENCHANT_RESULT` -> `ZC_GRADE_ENCHANT_ACK`
+    - `ZC_GRADE_STATUS` -> `ZC_GRADE_ENCHANT_BROADCAST_RESULT`
+- Updated handling of various packets (`ZC_PC_PURCHASE_ITEMLIST_FROMMC`, `ZC_SHOW_IMAGE`, `PACKET_ZC_WHISPER`, `ZC_UPDATE_GDID`) to use the struct format. (part of #3112)
+- Improved support of the `ZC_SE_CASHSHOP_OPEN` for clients between 2014 and 2022. (part of #3112)
+- Improved handling of customized `MAX_MVP_DROP` and `MAX_MOB_DROP` values in the modbb2sql generator. (part of #3117)
+- Split the mapinit interface setup into a separate `mapit_defaults()` function. (part of #3118)
+- Renamed struct `irc_bot_interface` into `ircbot_interface` (part of #3118)
+- Improved the interface validation script to better detect errors and missing interface methods. (#3118)
+- Updated the inter-server packet `INTER_CREATE_PET` to use the struct format. (part of #3120)
+
+### Fixed
+
+- Updated the address sanitizer library version for gcc-snapshot ci builds. (#3113)
+- Fixed the item grade information lost from mail attachments when using the old mail system. (#3116)
+- Fixed an uninitialized send buffer in `PACKET_ZC_ADD_EXCHANGE_ITEM` causing memory garbage to be sent to the client. (part of #3116)
+- Limited the maximum string length in the script command `gettimestr()` to 1023 characters, preventing a rogue script from allocating gigabytes of memory with a single command. (part of #3116)
+- Fixed some missing methods from interfaces or direct calls that bypassed the interfaces. (part of #3118)
+- Fixed possible buffer overflows in clif.c and pc.c (part of #3118)
+- Fixed some visual options (such as `SC_BLIND`) not getting re-sent to the client after using `@refresh`. (#3121, issue #2706)
+
 ## [v2022.01.05+2] `January 05 2022` `PATCH 2`
 
 ### Fixed
@@ -2251,6 +2369,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2022.03.02]: https://github.com/HerculesWS/Hercules/compare/v2022.01.05+2...v2022.03.02
 [v2022.01.05+2]: https://github.com/HerculesWS/Hercules/compare/v2022.01.05+1...v2022.01.05+2
 [v2022.01.05+1]: https://github.com/HerculesWS/Hercules/compare/v2022.01.05...v2022.01.05+1
 [v2022.01.05]: https://github.com/HerculesWS/Hercules/compare/v2021.12.01...v2022.01.05
