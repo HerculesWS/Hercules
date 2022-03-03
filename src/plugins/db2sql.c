@@ -57,7 +57,7 @@ struct {
 	struct {
 		char *p;    ///< Buffer pointer
 		size_t len; ///< Buffer length
-	} buf[4]; ///< Output buffer
+	} buf[6]; ///< Output buffer
 	const char *db_name; ///< Database table name
 } tosql;
 
@@ -85,12 +85,12 @@ void do_mobskilldb2sql(void);
 void hstr(const char *str)
 {
 	nullpo_retv(str);
-	if (strlen(str) > tosql.buf[3].len) {
-		tosql.buf[3].len = tosql.buf[3].len + strlen(str) + 1000;
-		RECREATE(tosql.buf[3].p,char,tosql.buf[3].len);
+	if (strlen(str) > tosql.buf[5].len) {
+		tosql.buf[5].len = tosql.buf[5].len + strlen(str) + 1000;
+		RECREATE(tosql.buf[5].p,char,tosql.buf[5].len);
 	}
-	safestrncpy(tosql.buf[3].p,str,strlen(str));
-	normalize_name(tosql.buf[3].p,"\t\n ");
+	safestrncpy(tosql.buf[5].p,str,strlen(str));
+	normalize_name(tosql.buf[5].p,"\t\n ");
 }
 
 /**
@@ -334,6 +334,9 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source)
 		// refineable
 		StrBuf->Printf(&buf, "'%d',", it->flag.no_refine?0:1);
 
+		// gradeable
+		StrBuf->Printf(&buf, "'%d',", it->flag.no_grade?1:0);
+
 		// disable_options
 		StrBuf->Printf(&buf, "'%d',", it->flag.no_options?1:0);
 
@@ -351,6 +354,24 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source)
 
 		// delay
 		StrBuf->Printf(&buf, "'%d',", it->delay);
+
+		// keepafteruse
+		StrBuf->Printf(&buf, "'%d',", it->flag.keepafteruse?1:0);
+
+		// dropannounce
+		StrBuf->Printf(&buf, "'%d',", it->flag.drop_announce?1:0);
+
+		// showdropeffect
+		StrBuf->Printf(&buf, "'%d',", it->flag.showdropeffect?1:0);
+
+		// dropeffectmode
+		StrBuf->Printf(&buf, "'%d',", it->dropeffectmode);
+
+		// ignorediscount
+		StrBuf->Printf(&buf, "'%d',", it->flag.ignore_discount?1:0);
+
+		// ignoreovercharge
+		StrBuf->Printf(&buf, "'%d',", it->flag.ignore_overcharge?1:0);
 
 		// trade_flag
 		StrBuf->Printf(&buf, "'%d',", it->flag.trade_restriction);
@@ -397,7 +418,7 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source)
 		// script
 		if (it->script && libconfig->setting_lookup_string(entry, "Script", &bonus)) {
 			hstr(bonus);
-			str = tosql.buf[3].p;
+			str = tosql.buf[5].p;
 			if (strlen(str) > tosql.buf[0].len) {
 				tosql.buf[0].len = tosql.buf[0].len + strlen(str) + 1000;
 				RECREATE(tosql.buf[0].p,char,tosql.buf[0].len);
@@ -411,7 +432,7 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source)
 		// equip_script
 		if (it->equip_script && libconfig->setting_lookup_string(entry, "OnEquipScript", &bonus)) {
 			hstr(bonus);
-			str = tosql.buf[3].p;
+			str = tosql.buf[5].p;
 			if (strlen(str) > tosql.buf[1].len) {
 				tosql.buf[1].len = tosql.buf[1].len + strlen(str) + 1000;
 				RECREATE(tosql.buf[1].p,char,tosql.buf[1].len);
@@ -425,13 +446,41 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source)
 		// unequip_script
 		if (it->unequip_script && libconfig->setting_lookup_string(entry, "OnUnequipScript", &bonus)) {
 			hstr(bonus);
-			str = tosql.buf[3].p;
+			str = tosql.buf[5].p;
 			if (strlen(str) > tosql.buf[2].len) {
 				tosql.buf[2].len = tosql.buf[2].len + strlen(str) + 1000;
 				RECREATE(tosql.buf[2].p,char,tosql.buf[2].len);
 			}
 			SQL->EscapeString(sql_handle, tosql.buf[2].p, str);
-			StrBuf->Printf(&buf, "'%s'", tosql.buf[2].p);
+			StrBuf->Printf(&buf, "'%s',", tosql.buf[2].p);
+		} else {
+			StrBuf->AppendStr(&buf, "'',");
+		}
+
+		// rental_equip_script
+		if (it->rental_start_script && libconfig->setting_lookup_string(entry, "OnRentalStartScript", &bonus)) {
+			hstr(bonus);
+			str = tosql.buf[5].p;
+			if (strlen(str) > tosql.buf[3].len) {
+				tosql.buf[3].len = tosql.buf[3].len + strlen(str) + 1000;
+				RECREATE(tosql.buf[3].p,char,tosql.buf[3].len);
+			}
+			SQL->EscapeString(sql_handle, tosql.buf[3].p, str);
+			StrBuf->Printf(&buf, "'%s',", tosql.buf[3].p);
+		} else {
+			StrBuf->AppendStr(&buf, "'',");
+		}
+		
+		// rental_unequip_script
+		if (it->rental_end_script && libconfig->setting_lookup_string(entry, "OnRentalEndScript", &bonus)) {
+			hstr(bonus);
+			str = tosql.buf[5].p;
+			if (strlen(str) > tosql.buf[4].len) {
+				tosql.buf[4].len = tosql.buf[4].len + strlen(str) + 1000;
+				RECREATE(tosql.buf[4].p,char,tosql.buf[4].len);
+			}
+			SQL->EscapeString(sql_handle, tosql.buf[4].p, str);
+			StrBuf->Printf(&buf, "'%s'", tosql.buf[4].p);
 		} else {
 			StrBuf->AppendStr(&buf, "''");
 		}
@@ -479,12 +528,19 @@ void itemdb2sql_tableheader(void)
 			"  `equip_level_min` smallint UNSIGNED DEFAULT NULL,\n"
 			"  `equip_level_max` smallint UNSIGNED DEFAULT NULL,\n"
 			"  `refineable` tinyint UNSIGNED DEFAULT NULL,\n"
+			"  `gradeable` tinyint UNSIGNED DEFAULT NULL,\n"
 			"  `disable_options` tinyint UNSIGNED DEFAULT NULL,\n"
 			"  `view_sprite` smallint UNSIGNED DEFAULT NULL,\n"
 			"  `bindonequip` tinyint UNSIGNED DEFAULT NULL,\n"
 			"  `forceserial` tinyint UNSIGNED DEFAULT NULL,\n"
 			"  `buyingstore` tinyint UNSIGNED DEFAULT NULL,\n"
 			"  `delay` mediumint UNSIGNED DEFAULT NULL,\n"
+			"  `keepafteruse` tinyint UNSIGNED DEFAULT NULL,\n"
+			"  `dropannounce` tinyint UNSIGNED DEFAULT NULL,\n"
+			"  `showdropeffect` tinyint UNSIGNED DEFAULT NULL,\n"
+			"  `dropeffectmode` tinyint UNSIGNED DEFAULT NULL,\n"
+			"  `ignorediscount` tinyint UNSIGNED DEFAULT NULL,\n"
+			"  `ignoreovercharge` tinyint UNSIGNED DEFAULT NULL,\n"
 			"  `trade_flag` smallint UNSIGNED DEFAULT NULL,\n"
 			"  `trade_group` smallint UNSIGNED DEFAULT NULL,\n"
 			"  `nouse_flag` smallint UNSIGNED DEFAULT NULL,\n"
@@ -495,6 +551,8 @@ void itemdb2sql_tableheader(void)
 			"  `script` text,\n"
 			"  `equip_script` text,\n"
 			"  `unequip_script` text,\n"
+			"  `rental_start_script` text,\n"
+			"  `rental_end_script` text,\n"
 			" PRIMARY KEY (`id`)\n"
 			") ENGINE=MyISAM;\n"
 			"\n", tosql.db_name,tosql.db_name,tosql.db_name);
@@ -660,7 +718,7 @@ int mobdb2sql_sub(struct config_setting_t *mobt, int n, const char *source)
 		// MEXP
 		StrBuf->Printf(&buf, "%u,", md->mexp);
 
-		for (i = 0; i < 3; i++) {
+		for (i = 0; i < MAX_MVP_DROP; i++) {
 			// MVP{i}id
 			StrBuf->Printf(&buf, "%d,", md->mvpitem[i].nameid);
 			// MVP{i}per
@@ -668,13 +726,13 @@ int mobdb2sql_sub(struct config_setting_t *mobt, int n, const char *source)
 		}
 
 		// Scan for cards
-		for (i = 0; i < 10; i++) {
+		for (i = 0; i < MAX_MOB_DROP; i++) {
 			struct item_data *it = NULL;
 			if (md->dropitem[i].nameid != 0 && (it = itemdb->exists(md->dropitem[i].nameid)) != NULL && it->type == IT_CARD)
 				card_idx = i;
 		}
 
-		for (i = 0; i < 10; i++) {
+		for (i = 0; i < MAX_MOB_DROP; i++) {
 			if (card_idx == i)
 				continue;
 			// Drop{i}id
@@ -701,7 +759,21 @@ int mobdb2sql_sub(struct config_setting_t *mobt, int n, const char *source)
  */
 void mobdb2sql_tableheader(void)
 {
+	int i;
+	StringBuf buf;
 	db2sql_fileheader();
+
+	StrBuf->Init(&buf);
+
+	for (i = 1; i <= MAX_MVP_DROP; i++) {
+		StrBuf->Printf(&buf, "  `MVP%did` smallint UNSIGNED NOT NULL DEFAULT '0',\n", i);
+		StrBuf->Printf(&buf, "  `MVP%dper` smallint UNSIGNED NOT NULL DEFAULT '0',\n", i);
+	}
+
+	for (i = 1; i < MAX_MOB_DROP; i++) {
+		StrBuf->Printf(&buf, "  `Drop%did` smallint UNSIGNED NOT NULL DEFAULT '0',\n", i);
+		StrBuf->Printf(&buf, "  `Drop%dper` smallint UNSIGNED NOT NULL DEFAULT '0',\n", i);
+	}
 
 	fprintf(tosql.fp,
 			"--\n"
@@ -741,35 +813,14 @@ void mobdb2sql_tableheader(void)
 			"  `aMotion` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
 			"  `dMotion` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
 			"  `MEXP` mediumint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `MVP1id` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `MVP1per` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `MVP2id` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `MVP2per` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `MVP3id` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `MVP3per` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `Drop1id` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `Drop1per` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `Drop2id` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `Drop2per` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `Drop3id` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `Drop3per` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `Drop4id` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `Drop4per` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `Drop5id` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `Drop5per` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `Drop6id` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `Drop6per` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `Drop7id` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `Drop7per` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `Drop8id` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `Drop8per` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `Drop9id` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `Drop9per` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
+			"%s"
 			"  `DropCardid` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
 			"  `DropCardper` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
 			"  PRIMARY KEY (`ID`)\n"
 			") ENGINE=MyISAM;\n"
-			"\n", tosql.db_name, tosql.db_name, tosql.db_name);
+			"\n", tosql.db_name, tosql.db_name, tosql.db_name, StrBuf->Value(&buf));
+
+	StrBuf->Destroy(&buf);
 }
 
 /**
