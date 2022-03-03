@@ -46,6 +46,10 @@ static void packets_addLens(void)
 #undef packetLen
 #define packetLen(id, len) packets->addLenInter(id, len);
 #include "common/packets_inter_len.h"
+#undef packetLen
+#define packetLen(id, len) packets->addLenChrif(id, len);
+#include "common/packets_chrif_len.h"
+#undef packetLen
 }
 
 static void packets_addLen(int id, int len)
@@ -66,6 +70,12 @@ static void packets_addLenInter(int id, int len)
 	packets->inter_db[id - MIN_INTER_PACKET_DB] = len;
 }
 
+static void packets_addLenChrif(int id, int len)
+{
+	Assert_retv(id <= MAX_CHRIF_PACKET_DB && id >= MIN_CHRIF_PACKET_DB);
+	packets->chrif_db[id - MIN_CHRIF_PACKET_DB] = len;
+}
+
 static void packets_final(void)
 {
 }
@@ -79,8 +89,10 @@ void packets_defaults(void)
 	packets->addLen = packets_addLen;
 	packets->addLenIntif = packets_addLenIntif;
 	packets->addLenInter = packets_addLenInter;
+	packets->addLenChrif = packets_addLenChrif;
 
 	memset(&packets->db, 0, sizeof(packets->db));
 	memset(&packets->intif_db, 0, sizeof(packets->intif_db));
 	memset(&packets->inter_db, 0, sizeof(packets->inter_db));
+	memset(&packets->chrif_db, 0, sizeof(packets->chrif_db));
 }

@@ -37,8 +37,6 @@ struct status_change_entry;
 //Interval at which map server sends number of connected users. [Skotlex]
 #define UPDATE_INTERVAL 10000
 
-#define CHRIF_PACKET_LEN_TABLE_SIZE 0x3d
-
 /**
  * Enumerations
  **/
@@ -74,7 +72,6 @@ struct chrif_interface {
 	struct eri *auth_db_ers; //For re-utilizing player login structures.
 	struct DBMap *auth_db; // int id -> struct auth_node*
 	/* */
-	int packet_len_table[CHRIF_PACKET_LEN_TABLE_SIZE];
 	int fd;
 	int srvinfo;
 	char ip_str[128];

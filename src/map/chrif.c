@@ -48,6 +48,7 @@
 #include "common/socket.h"
 #include "common/strlib.h"
 #include "common/timer.h"
+#include "common/packets.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -1476,7 +1477,7 @@ static int chrif_parse(int fd)
 				return 0;
 		}
 
-		if (cmd < 0x2af8 || cmd >= 0x2af8 + ARRAYLENGTH(chrif->packet_len_table) || chrif->packet_len_table[cmd-0x2af8] == 0) {
+		if (cmd < MIN_CHRIF_PACKET_DB || cmd >= MAX_CHRIF_PACKET_DB || packets->chrif_db[cmd - MIN_CHRIF_PACKET_DB] == 0) {
 			int result = intif->parse(fd); // Passed on to the intif
 
 			if (result == 1) continue; // Treated in intif
@@ -1487,7 +1488,7 @@ static int chrif_parse(int fd)
 			return 0;
 		}
 
-		if ( ( packet_len = chrif->packet_len_table[cmd-0x2af8] ) == -1) { // dynamic-length packet, second WORD holds the length
+		if ((packet_len = packets->chrif_db[cmd - MIN_CHRIF_PACKET_DB]) == -1) { // dynamic-length packet, second WORD holds the length
 			if (RFIFOREST(fd) < 4)
 				return 0;
 			packet_len = RFIFOW(fd,2);
@@ -1741,22 +1742,12 @@ static void do_init_chrif(bool minimal)
 *-------------------------------------*/
 void chrif_defaults(void)
 {
-	const int packet_len_table[CHRIF_PACKET_LEN_TABLE_SIZE] = { // U - used, F - free
-		60,  3, -1, 27, 10, -1,  6, -1, // 2af8-2aff: U->2af8, U->2af9, U->2afa, U->2afb, U->2afc, U->2afd, U->2afe, U->2aff
-		 6, -1, 18,  7, -1, 39, 30, 10, // 2b00-2b07: U->2b00, U->2b01, U->2b02, U->2b03, U->2b04, U->2b05, U->2b06, U->2b07
-		 6, 30, -1,  0, 86,  7, 44, 34, // 2b08-2b0f: U->2b08, U->2b09, U->2b0a, F->2b0b, U->2b0c, U->2b0d, U->2b0e, U->2b0f
-		11, 10, 10,  0, 11,  0,266, 10, // 2b10-2b17: U->2b10, U->2b11, U->2b12, F->2b13, U->2b14, F->2b15, U->2b16, U->2b17
-		 2, 10,  2, -1, -1, -1,  2,  7, // 2b18-2b1f: U->2b18, U->2b19, U->2b1a, U->2b1b, U->2b1c, U->2b1d, U->2b1e, U->2b1f
-		-1, 10,  8,  2,  2, 14, 19, 19, // 2b20-2b27: U->2b20, U->2b21, U->2b22, U->2b23, U->2b24, U->2b25, U->2b26, U->2b27
-	};
-
 	chrif = &chrif_s;
 
 	/* vars */
 	chrif->connected = 0;
 	chrif->other_mapserver_count = 0;
 
-	memcpy(chrif->packet_len_table,&packet_len_table,sizeof(chrif->packet_len_table));
 	chrif->fd = -1;
 	chrif->srvinfo = 0;
 	memset(chrif->ip_str,0,sizeof(chrif->ip_str));
