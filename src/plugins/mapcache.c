@@ -288,7 +288,7 @@ bool mapcache_cache_map(const char *mapname)
 		}
 		int major_version = rsw[4];
 		int minor_version = rsw[5];
-		if (major_version > 2 || (major_version == 2 && minor_version > 5)) {
+		if (major_version > 2 || (major_version == 2 && minor_version > 6)) {
 			ShowError("mapcache_cache_map: Unsupported version %d.%d for rsw file %s\n", major_version, minor_version, filepath);
 			aFree(rsw);
 			return false;
