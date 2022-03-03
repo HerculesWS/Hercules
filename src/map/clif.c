@@ -9571,6 +9571,11 @@ static void clif_refresh(struct map_session_data *sd)
 	clif->updatestatus(sd,SP_INT);
 	clif->updatestatus(sd,SP_DEX);
 	clif->updatestatus(sd,SP_LUK);
+	
+	// Resume some options that are still ticking after refreshed e.g: SC_BLIND [KeiKun]
+	if (sd->sc.opt2 != 0)
+		clif->changeoption(&sd->bl);
+
 	if (sd->spiritball)
 		clif->spiritball_single(sd->fd, sd);
 	if (sd->charm_type != CHARM_TYPE_NONE && sd->charm_count > 0)
