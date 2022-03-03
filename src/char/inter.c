@@ -49,6 +49,7 @@
 #include "common/sql.h"
 #include "common/strlib.h"
 #include "common/timer.h"
+#include "common/packets.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -64,21 +65,6 @@ static char char_server_db[32] = "ragnarok";
 static char default_codepage[32] = ""; //Feature by irmin.
 
 int party_share_level = 10;
-
-// recv. packet list
-static int inter_recv_packet_length[] = {
-	 0, 0, 0, 0, -1,13,36, (2 + 4 + 4 + 4 + NAME_LENGTH),  0, 0, 0, 0,  0, 0,  0, 0, // 3000-
-	 6,-1, 6,-1,  0, 0, 0, 0, 10,-1, 0, 0,  0, 0,  0, 0,    // 3010- Account Storage, Achievements [Smokexyz]
-	-1,10,-1,14, 14,19, 6, 0, 14,14, 0, 0,  0, 0,  0, 0,    // 3020- Party
-	-1, 6,-1,-1, 55,23, 6, 0, 14,-1,-1,-1, 18,19,186,-1,    // 3030-
-	-1, 9, 0, 0, 10,10, 0, 0,  7, 6,10,10, 10,-1,  0, 0,    // 3040- Clan System(3044-3045)
-	-1,-1,10,10,  0,-1,12, 0,  0, 0, 0, 0,  0, 0,  0, 0,    // 3050-  Auction System [Zephyrus], Item Bound [Mhalicot]
-	 6,-1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0,    // 3060-  Quest system [Kevin] [Inkfish]
-	-1,10, 6,-1,  0, 0, 0, 0,  0, 0, 0, 0, -1,10,  6,-1,    // 3070-  Mercenary packets [Zephyrus], Elemental packets [pakpil]
-	sizeof(struct PACKET_INTER_CREATE_PET),                 // 3080
-	14,-1, 6,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0,       // 3081-
-	-1,10,-1, 6,  0, 20,10,20, -1,6 + NAME_LENGTH, 0, 0,  0, 0,  0, 0,    // 3090-  Homunculus packets [albator], RoDEX packets
-};
 
 #define MAX_JOB_NAMES 150
 static char *msg_table[MAX_JOB_NAMES]; //  messages 550 ~ 699 are job names
@@ -1031,11 +1017,11 @@ static int inter_parse_frommap(int fd)
 	int len = 0;
 	cmd = RFIFOW(fd,0);
 	// Check is valid packet entry
-	if(cmd < 0x3000 || cmd >= 0x3000 + ARRAYLENGTH(inter_recv_packet_length) || inter_recv_packet_length[cmd - 0x3000] == 0)
+	if (cmd < MIN_INTER_PACKET_DB || cmd >= MAX_INTER_PACKET_DB || packets->inter_db[cmd - MIN_INTER_PACKET_DB] == 0)
 		return 0;
 
 	// Check packet length
-	if((len = inter->check_length(fd, inter_recv_packet_length[cmd - 0x3000])) == 0)
+	if ((len = inter->check_length(fd, packets->inter_db[cmd - MIN_INTER_PACKET_DB])) == 0)
 		return 2;
 
 	switch(cmd) {

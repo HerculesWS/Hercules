@@ -38,15 +38,25 @@
 #define MAX_INTIF_PACKET_DB 0x3900
 #endif
 
+#ifndef MIN_INTER_PACKET_DB
+#define MIN_INTER_PACKET_DB 0x3000
+#endif
+
+#ifndef MAX_INTER_PACKET_DB
+#define MAX_INTER_PACKET_DB 0x30a0
+#endif
+
 struct packets_interface {
 	void (*init) (void);
 	void (*final) (void);
 	void (*addLens) (void);
 	void (*addLen) (int id, int len);
 	void (*addLenIntif) (int id, int len);
+	void (*addLenInter) (int id, int len);
 
 	int db[MAX_PACKET_DB + 1];
 	int intif_db[MAX_INTIF_PACKET_DB - MIN_INTIF_PACKET_DB + 1];
+	int inter_db[MAX_INTER_PACKET_DB - MIN_INTER_PACKET_DB + 1];
 };
 
 #ifdef HERCULES_CORE
