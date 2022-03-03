@@ -156,7 +156,7 @@ struct intif_interface *intif;
 struct ipban_interface *ipban;
 #endif // LOGIN_IPBAN_H
 #ifdef MAP_IRC_BOT_H /* ircbot */
-struct irc_bot_interface *ircbot;
+struct ircbot_interface *ircbot;
 #endif // MAP_IRC_BOT_H
 #ifdef MAP_ITEMDB_H /* itemdb */
 struct itemdb_interface *itemdb;

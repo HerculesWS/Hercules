@@ -11991,7 +11991,7 @@ static int pc_read_attr_fix_db_entry(struct config_setting_t *def_attr, enum ele
 	int count = 0;
 	for (int i = 1; i <= 4; ++i) {
 		char name[5];
-		sprintf(name, "Lv%d", i);
+		safesnprintf(name, 5, "Lv%d", i);
 
 		struct config_setting_t *def_lv = libconfig->setting_lookup(def_attr, name);
 		if (def_lv != NULL) {

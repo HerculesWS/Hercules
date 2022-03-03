@@ -43,12 +43,12 @@
 
 //#define IRCBOT_DEBUG
 
-static struct irc_bot_interface irc_bot_s;
-struct irc_bot_interface *ircbot;
+static struct ircbot_interface ircbot_s;
+struct ircbot_interface *ircbot;
 
 static char send_string[IRC_MESSAGE_LENGTH];
 
-/// @copydoc irc_bot_interface::connect_timer()
+/// @copydoc ircbot_interface::connect_timer()
 static int irc_connect_timer(int tid, int64 tick, int id, intptr_t data)
 {
 	struct hSockOpt opt;
@@ -70,7 +70,7 @@ static int irc_connect_timer(int tid, int64 tick, int id, intptr_t data)
 	return 0;
 }
 
-/// @copydoc irc_bot_interface::identify_timer()
+/// @copydoc ircbot_interface::identify_timer()
 static int irc_identify_timer(int tid, int64 tick, int id, intptr_t data)
 {
 	if( !ircbot->isOn )
@@ -86,7 +86,7 @@ static int irc_identify_timer(int tid, int64 tick, int id, intptr_t data)
 	return 0;
 }
 
-/// @copydoc irc_bot_interface::join_timer()
+/// @copydoc ircbot_interface::join_timer()
 static int irc_join_timer(int tid, int64 tick, int id, intptr_t data)
 {
 	if( !ircbot->isOn )
@@ -108,7 +108,7 @@ static int irc_join_timer(int tid, int64 tick, int id, intptr_t data)
 	return 0;
 }
 
-/// @copydoc irc_bot_interface::func_search()
+/// @copydoc ircbot_interface::func_search()
 static struct irc_func *irc_func_search(char *function_name)
 {
 	int i;
@@ -121,7 +121,7 @@ static struct irc_func *irc_func_search(char *function_name)
 	return NULL;
 }
 
-/// @copydoc irc_bot_interface::parse()
+/// @copydoc ircbot_interface::parse()
 static int irc_parse(int fd)
 {
 	char *parse_string = NULL, *p = NULL, *str_safe = NULL;
@@ -156,7 +156,7 @@ static int irc_parse(int fd)
 	return 0;
 }
 
-/// @copydoc irc_bot_interface::parse_source()
+/// @copydoc ircbot_interface::parse_source()
 static void irc_parse_source(char *source, char *nick, char *ident, char *host)
 {
 	int i, pos = 0;
@@ -181,7 +181,7 @@ static void irc_parse_source(char *source, char *nick, char *ident, char *host)
 	}
 }
 
-/// @copydoc irc_bot_interface::parse_sub()
+/// @copydoc ircbot_interface::parse_sub()
 static void irc_parse_sub(int fd, char *str)
 {
 	char source[180], command[60], buf1[IRC_MESSAGE_LENGTH], buf2[IRC_MESSAGE_LENGTH];
@@ -212,7 +212,7 @@ static void irc_parse_sub(int fd, char *str)
 	func->func(fd,command,source,target,message);
 }
 
-/// @copydoc irc_bot_interface::queue()
+/// @copydoc ircbot_interface::queue()
 static void irc_queue(char *str)
 {
 	struct message_flood *queue_entry = NULL;
@@ -249,7 +249,7 @@ static void irc_queue(char *str)
 	}
 }
 
-/// @copydoc irc_bot_interface::queue_timer()
+/// @copydoc ircbot_interface::queue_timer()
 static int irc_queue_timer(int tid, int64 tick, int id, intptr_t data)
 {
 	struct message_flood *queue_entry = ircbot->message_current;
@@ -270,7 +270,7 @@ static int irc_queue_timer(int tid, int64 tick, int id, intptr_t data)
 	return 0;
 }
 
-/// @copydoc irc_bot_interface::send()
+/// @copydoc ircbot_interface::send()
 static void irc_send(char *str, bool force)
 {
 	size_t len;
@@ -345,7 +345,7 @@ static void irc_privmsg_ctcp(int fd, char *cmd, char *source, char *target, char
 	}
 }
 
-/// @copydoc irc_bot_interface::privmsg()
+/// @copydoc ircbot_interface::privmsg()
 static void irc_privmsg(int fd, char *cmd, char *source, char *target, char *msg)
 {
 	size_t len = msg ? strlen(msg) : 0;
@@ -384,7 +384,7 @@ static void irc_privmsg(int fd, char *cmd, char *source, char *target, char *msg
 	}
 }
 
-/// @copydoc irc_bot_interface::userjoin()
+/// @copydoc ircbot_interface::userjoin()
 static void irc_userjoin(int fd, char *cmd, char *source, char *target, char *msg)
 {
 	char source_nick[IRC_NICK_LENGTH], source_ident[IRC_IDENT_LENGTH], source_host[IRC_HOST_LENGTH];
@@ -401,7 +401,7 @@ static void irc_userjoin(int fd, char *cmd, char *source, char *target, char *ms
 	}
 }
 
-/// @copydoc irc_bot_interface::userleave()
+/// @copydoc ircbot_interface::userleave()
 static void irc_userleave(int fd, char *cmd, char *source, char *target, char *msg)
 {
 	char source_nick[IRC_NICK_LENGTH], source_ident[IRC_IDENT_LENGTH], source_host[IRC_HOST_LENGTH];
@@ -421,7 +421,7 @@ static void irc_userleave(int fd, char *cmd, char *source, char *target, char *m
 	}
 }
 
-/// @copydoc irc_bot_interface::usernick()
+/// @copydoc ircbot_interface::usernick()
 static void irc_usernick(int fd, char *cmd, char *source, char *target, char *msg)
 {
 	char source_nick[IRC_NICK_LENGTH], source_ident[IRC_IDENT_LENGTH], source_host[IRC_HOST_LENGTH];
@@ -438,7 +438,7 @@ static void irc_usernick(int fd, char *cmd, char *source, char *target, char *ms
 	}
 }
 
-/// @copydoc irc_bot_interface::relay()
+/// @copydoc ircbot_interface::relay()
 static void irc_relay(const char *name, const char *msg)
 {
 	if (!ircbot->isIn)
@@ -453,8 +453,8 @@ static void irc_relay(const char *name, const char *msg)
 	ircbot->send(send_string, false);
 }
 
-/// @copydoc irc_bot_interface::init()
-static void irc_bot_init(bool minimal)
+/// @copydoc ircbot_interface::init()
+static void ircbot_init(bool minimal)
 {
 	/// Command handlers
 	const struct irc_func irc_func_base[] = {
@@ -505,8 +505,8 @@ static void irc_bot_init(bool minimal)
 	timer->add(timer->gettick() + 7000, ircbot->connect_timer, 0, 0);
 }
 
-/// @copydoc irc_bot_interface::final()
-static void irc_bot_final(void)
+/// @copydoc ircbot_interface::final()
+static void ircbot_final(void)
 {
 	int i;
 
@@ -537,7 +537,7 @@ static void irc_bot_final(void)
  */
 void ircbot_defaults(void)
 {
-	ircbot = &irc_bot_s;
+	ircbot = &ircbot_s;
 
 	ircbot->channel = NULL;
 
@@ -550,8 +550,8 @@ void ircbot_defaults(void)
 	ircbot->message_current = NULL;
 	ircbot->message_last = NULL;
 
-	ircbot->init = irc_bot_init;
-	ircbot->final = irc_bot_final;
+	ircbot->init = ircbot_init;
+	ircbot->final = ircbot_final;
 
 	ircbot->parse = irc_parse;
 	ircbot->parse_sub = irc_parse_sub;

@@ -283,6 +283,7 @@ struct char_interface {
 	int (*check_connect_login_server) (int tid, int64 tick, int id, intptr_t data);
 	int (*online_data_cleanup_sub) (union DBKey key, struct DBData *data, va_list ap);
 	int (*online_data_cleanup) (int tid, int64 tick, int id, intptr_t data);
+	void (*change_sex_sub) (int sex, int acc, int char_id, int class, int guild_id);
 
 	bool (*sql_config_read) (const char *filename, bool imported);
 	bool (*sql_config_read_registry) (const char *filename, const struct config_t *config, bool imported);

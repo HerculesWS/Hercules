@@ -346,6 +346,8 @@ struct {
 	struct HPMHookPoint *HP_chr_online_data_cleanup_sub_post;
 	struct HPMHookPoint *HP_chr_online_data_cleanup_pre;
 	struct HPMHookPoint *HP_chr_online_data_cleanup_post;
+	struct HPMHookPoint *HP_chr_change_sex_sub_pre;
+	struct HPMHookPoint *HP_chr_change_sex_sub_post;
 	struct HPMHookPoint *HP_chr_sql_config_read_pre;
 	struct HPMHookPoint *HP_chr_sql_config_read_post;
 	struct HPMHookPoint *HP_chr_sql_config_read_registry_pre;
@@ -1987,6 +1989,8 @@ struct {
 	int HP_chr_online_data_cleanup_sub_post;
 	int HP_chr_online_data_cleanup_pre;
 	int HP_chr_online_data_cleanup_post;
+	int HP_chr_change_sex_sub_pre;
+	int HP_chr_change_sex_sub_post;
 	int HP_chr_sql_config_read_pre;
 	int HP_chr_sql_config_read_post;
 	int HP_chr_sql_config_read_registry_pre;

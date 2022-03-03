@@ -352,6 +352,7 @@ struct npc_interface {
 	 * For the Secure NPC Timeout option (check config/Secure.h) [RR]
 	 **/
 	int (*secure_timeout_timer) (int tid, int64 tick, int id, intptr_t data);
+	void (*process_files) (int npc_min);
 };
 
 #ifdef HERCULES_CORE

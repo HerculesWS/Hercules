@@ -816,6 +816,8 @@ typedef int (*HPMHOOK_pre_chr_online_data_cleanup_sub) (union DBKey *key, struct
 typedef int (*HPMHOOK_post_chr_online_data_cleanup_sub) (int retVal___, union DBKey key, struct DBData *data, va_list ap);
 typedef int (*HPMHOOK_pre_chr_online_data_cleanup) (int *tid, int64 *tick, int *id, intptr_t *data);
 typedef int (*HPMHOOK_post_chr_online_data_cleanup) (int retVal___, int tid, int64 tick, int id, intptr_t data);
+typedef void (*HPMHOOK_pre_chr_change_sex_sub) (int *sex, int *acc, int *char_id, int *class, int *guild_id);
+typedef void (*HPMHOOK_post_chr_change_sex_sub) (int sex, int acc, int char_id, int class, int guild_id);
 typedef bool (*HPMHOOK_pre_chr_sql_config_read) (const char **filename, bool *imported);
 typedef bool (*HPMHOOK_post_chr_sql_config_read) (bool retVal___, const char *filename, bool imported);
 typedef bool (*HPMHOOK_pre_chr_sql_config_read_registry) (const char **filename, const struct config_t **config, bool *imported);
@@ -1344,6 +1346,8 @@ typedef void (*HPMHOOK_pre_clif_status_change) (struct block_list **bl, int *rel
 typedef void (*HPMHOOK_post_clif_status_change) (struct block_list *bl, int relevant_bl, int type, int flag, int total_tick, int val1, int val2, int val3);
 typedef void (*HPMHOOK_pre_clif_status_change_sub) (struct block_list **bl, int *type, int *relevant_bl, int *flag, int *tick, int *total_tick, int *val1, int *val2, int *val3);
 typedef void (*HPMHOOK_post_clif_status_change_sub) (struct block_list *bl, int type, int relevant_bl, int flag, int tick, int total_tick, int val1, int val2, int val3);
+typedef void (*HPMHOOK_pre_clif_status_change_notick) (struct block_list **bl, int *type, int *relevant_bl, int *flag, int *tick, int *total_tick, int *val1, int *val2, int *val3);
+typedef void (*HPMHOOK_post_clif_status_change_notick) (struct block_list *bl, int type, int relevant_bl, int flag, int tick, int total_tick, int val1, int val2, int val3);
 typedef void (*HPMHOOK_pre_clif_insert_card) (struct map_session_data **sd, int *idx_equip, int *idx_card, int *flag);
 typedef void (*HPMHOOK_post_clif_insert_card) (struct map_session_data *sd, int idx_equip, int idx_card, int flag);
 typedef void (*HPMHOOK_pre_clif_inventoryList) (struct map_session_data **sd);
@@ -2856,6 +2860,20 @@ typedef void (*HPMHOOK_pre_clif_grade_enchant_result) (struct map_session_data *
 typedef void (*HPMHOOK_post_clif_grade_enchant_result) (struct map_session_data *sd, int16 index, enum grade_level gl, enum grade_ui_result result);
 typedef void (*HPMHOOK_pre_clif_announce_grade_status) (struct map_session_data **sd, int *item_id, enum grade_level *gl, bool *success, enum send_target *target);
 typedef void (*HPMHOOK_post_clif_announce_grade_status) (struct map_session_data *sd, int item_id, enum grade_level gl, bool success, enum send_target target);
+typedef int (*HPMHOOK_pre_clif_setlevel) (struct block_list **bl);
+typedef int (*HPMHOOK_post_clif_setlevel) (int retVal___, struct block_list *bl);
+typedef int (*HPMHOOK_pre_clif_setlevel_sub) (int *lv);
+typedef int (*HPMHOOK_post_clif_setlevel_sub) (int retVal___, int lv);
+typedef void (*HPMHOOK_pre_clif_load_end_ack_sub_messages) (struct map_session_data **sd, bool *connect_new, bool *change_map);
+typedef void (*HPMHOOK_post_clif_load_end_ack_sub_messages) (struct map_session_data *sd, bool connect_new, bool change_map);
+typedef bool (*HPMHOOK_pre_clif_sub_guild_invite) (int *fd, struct map_session_data **sd, struct map_session_data **t_sd);
+typedef bool (*HPMHOOK_post_clif_sub_guild_invite) (bool retVal___, int fd, struct map_session_data *sd, struct map_session_data *t_sd);
+typedef unsigned short (*HPMHOOK_pre_clif_parse_cmd_normal) (int *fd, struct map_session_data **sd);
+typedef unsigned short (*HPMHOOK_post_clif_parse_cmd_normal) (unsigned short retVal___, int fd, struct map_session_data *sd);
+typedef unsigned short (*HPMHOOK_pre_clif_parse_cmd_decrypt) (int *fd, struct map_session_data **sd);
+typedef unsigned short (*HPMHOOK_post_clif_parse_cmd_decrypt) (unsigned short retVal___, int fd, struct map_session_data *sd);
+typedef unsigned short (*HPMHOOK_pre_clif_parse_cmd_optional) (int *fd, struct map_session_data **sd);
+typedef unsigned short (*HPMHOOK_post_clif_parse_cmd_optional) (unsigned short retVal___, int fd, struct map_session_data *sd);
 #endif // MAP_CLIF_H
 #ifdef COMMON_CORE_H /* cmdline */
 typedef void (*HPMHOOK_pre_cmdline_init) (void);
@@ -4998,6 +5016,16 @@ typedef int (*HPMHOOK_pre_map_readallmaps) (void);
 typedef int (*HPMHOOK_post_map_readallmaps) (int retVal___);
 typedef bool (*HPMHOOK_pre_map_config_read) (const char **filename, bool *imported);
 typedef bool (*HPMHOOK_post_map_config_read) (bool retVal___, const char *filename, bool imported);
+typedef bool (*HPMHOOK_pre_map_config_read_console) (const char **filename, struct config_t **config, bool *imported);
+typedef bool (*HPMHOOK_post_map_config_read_console) (bool retVal___, const char *filename, struct config_t *config, bool imported);
+typedef bool (*HPMHOOK_pre_map_config_read_connection) (const char **filename, struct config_t **config, bool *imported);
+typedef bool (*HPMHOOK_post_map_config_read_connection) (bool retVal___, const char *filename, struct config_t *config, bool imported);
+typedef bool (*HPMHOOK_pre_map_config_read_inter) (const char **filename, struct config_t **config, bool *imported);
+typedef bool (*HPMHOOK_post_map_config_read_inter) (bool retVal___, const char *filename, struct config_t *config, bool imported);
+typedef bool (*HPMHOOK_pre_map_config_read_database) (const char **filename, struct config_t **config, bool *imported);
+typedef bool (*HPMHOOK_post_map_config_read_database) (bool retVal___, const char *filename, struct config_t *config, bool imported);
+typedef bool (*HPMHOOK_pre_map_config_read_map_list) (const char **filename, struct config_t **config, bool *imported);
+typedef bool (*HPMHOOK_post_map_config_read_map_list) (bool retVal___, const char *filename, struct config_t *config, bool imported);
 typedef bool (*HPMHOOK_pre_map_read_npclist) (const char **filename, bool *imported);
 typedef bool (*HPMHOOK_post_map_read_npclist) (bool retVal___, const char *filename, bool imported);
 typedef bool (*HPMHOOK_pre_map_inter_config_read) (const char **filename, bool *imported);
@@ -6042,6 +6070,8 @@ typedef void (*HPMHOOK_pre_npc_questinfo_clear) (struct npc_data **nd);
 typedef void (*HPMHOOK_post_npc_questinfo_clear) (struct npc_data *nd);
 typedef int (*HPMHOOK_pre_npc_secure_timeout_timer) (int *tid, int64 *tick, int *id, intptr_t *data);
 typedef int (*HPMHOOK_post_npc_secure_timeout_timer) (int retVal___, int tid, int64 tick, int id, intptr_t data);
+typedef void (*HPMHOOK_pre_npc_process_files) (int *npc_min);
+typedef void (*HPMHOOK_post_npc_process_files) (int npc_min);
 #endif // MAP_NPC_H
 #ifdef COMMON_NULLPO_H /* nullpo */
 typedef void (*HPMHOOK_pre_nullpo_init) (void);

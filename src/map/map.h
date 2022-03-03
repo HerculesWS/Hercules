@@ -1512,6 +1512,12 @@ END_ZEROED_BLOCK;
 	int (*readgat) (struct map_data *m);
 	int (*readallmaps) (void);
 	bool (*config_read) (const char *filename, bool imported);
+	bool (*config_read_console) (const char *filename, struct config_t *config, bool imported);
+	bool (*config_read_connection) (const char *filename, struct config_t *config, bool imported);
+	bool (*config_read_inter) (const char *filename, struct config_t *config, bool imported);
+	bool (*config_read_database) (const char *filename, struct config_t *config, bool imported);
+	bool (*config_read_map_list) (const char *filename, struct config_t *config, bool imported);
+
 	bool (*read_npclist) (const char *filename, bool imported);
 	bool (*inter_config_read) (const char *filename, bool imported);
 	bool (*inter_config_read_database_names) (const char *filename, const struct config_t *config, bool imported);
@@ -1538,6 +1544,7 @@ END_ZEROED_BLOCK;
 
 #ifdef HERCULES_CORE
 void map_defaults(void);
+void mapit_defaults(void);
 #endif // HERCULES_CORE
 
 HPShared struct mapit_interface *mapit;
