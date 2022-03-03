@@ -342,6 +342,9 @@
     <ClInclude Include="..\src\char\int_rodex.h">
       <Filter>char</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\common\packets_struct.h">
+      <Filter>common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="common">

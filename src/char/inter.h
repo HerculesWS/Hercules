@@ -23,6 +23,7 @@
 
 #include "common/hercules.h"
 #include "common/db.h"
+#include "common/packets_struct.h"
 
 #include <stdarg.h>
 

@@ -159,6 +159,7 @@
     <ClInclude Include="..\src\common\mmo.h" />
     <ClInclude Include="..\src\common\mutex.h" />
     <ClInclude Include="..\src\common\nullpo.h" />
+    <ClInclude Include="..\src\common\packets_struct.h" />
     <ClInclude Include="..\src\common\random.h" />
     <ClInclude Include="..\src\common\showmsg.h" />
     <ClInclude Include="..\src\common\socket.h" />

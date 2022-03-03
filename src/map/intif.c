@@ -45,6 +45,7 @@
 
 #include "common/memmgr.h"
 #include "common/nullpo.h"
+#include "common/packets_struct.h"
 #include "common/showmsg.h"
 #include "common/socket.h"
 #include "common/strlib.h"
@@ -77,21 +78,22 @@ static int intif_create_pet(int account_id, int char_id, int pet_class, int pet_
 	if (intif->CheckForCharServer())
 		return 0;
 	nullpo_ret(pet_name);
-	WFIFOHEAD(inter_fd, 32 + NAME_LENGTH);
-	WFIFOW(inter_fd, 0) = 0x3080;
-	WFIFOL(inter_fd, 2) = account_id;
-	WFIFOL(inter_fd, 6) = char_id;
-	WFIFOL(inter_fd, 10) = pet_class;
-	WFIFOL(inter_fd, 14) = pet_lv;
-	WFIFOL(inter_fd, 18) = pet_egg_id;
-	WFIFOL(inter_fd, 22) = pet_equip;
-	WFIFOW(inter_fd, 26) = intimate;
-	WFIFOW(inter_fd, 28) = hungry;
-	WFIFOB(inter_fd, 30) = rename_flag;
-	WFIFOB(inter_fd, 31) = incubate;
-	memcpy(WFIFOP(inter_fd, 32), pet_name, NAME_LENGTH);
-	WFIFOSET(inter_fd, 32 + NAME_LENGTH);
 
+	WFIFOHEAD(inter_fd, sizeof(struct PACKET_INTER_CREATE_PET));
+	struct PACKET_INTER_CREATE_PET *p = WFIFOP(inter_fd, 0);
+	p->packet_id = HEADER_INTER_CREATE_PET;
+	p->account_id = account_id;
+	p->char_id = char_id;
+	p->pet_class = pet_class;
+	p->pet_lv = pet_lv;
+	p->pet_egg_id = pet_egg_id;
+	p->pet_equip = pet_equip;
+	p->intimate = intimate;
+	p->hungry = hungry;
+	p->rename_flag = rename_flag;
+	p->incubate = incubate;
+	safestrncpy(p->pet_name, pet_name, NAME_LENGTH);
+	WFIFOSET(inter_fd, sizeof(struct PACKET_INTER_CREATE_PET));
 	return 0;
 }
 

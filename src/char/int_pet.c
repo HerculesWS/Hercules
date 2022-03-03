@@ -293,7 +293,7 @@ static int inter_pet_parse_frommap(int fd)
 {
 	RFIFOHEAD(fd);
 	switch(RFIFOW(fd, 0)){
-	case 0x3080: mapif->parse_CreatePet(fd); break;
+	case HEADER_INTER_CREATE_PET: mapif->parse_CreatePet(fd); break;
 	case 0x3081: mapif->parse_LoadPet(fd); break;
 	case 0x3082: mapif->parse_SavePet(fd); break;
 	case 0x3083: mapif->parse_DeletePet(fd); break;

@@ -522,6 +522,9 @@
     <ClInclude Include="..\src\map\grader.h">
       <Filter>map</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\common\packets_struct.h">
+      <Filter>common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="common">
