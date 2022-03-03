@@ -40,12 +40,21 @@ static void packets_addLens(void)
 {
 #define packetLen(id, len) packets->addLen(id, len);
 #include "common/packets_len.h"
+#undef packetLen
+#define packetLen(id, len) packets->addLenIntif(id, len);
+#include "common/packets_intif_len.h"
 }
 
 static void packets_addLen(int id, int len)
 {
 	Assert_retv(id <= MAX_PACKET_DB && id >= MIN_PACKET_DB);
 	packets->db[id] = len;
+}
+
+static void packets_addLenIntif(int id, int len)
+{
+	Assert_retv(id <= MAX_INTIF_PACKET_DB && id >= MIN_INTIF_PACKET_DB);
+	packets->intif_db[id - MIN_INTIF_PACKET_DB] = len;
 }
 
 static void packets_final(void)
@@ -59,6 +68,8 @@ void packets_defaults(void)
 	packets->final = packets_final;
 	packets->addLens = packets_addLens;
 	packets->addLen = packets_addLen;
+	packets->addLenIntif = packets_addLenIntif;
 
 	memset(&packets->db, 0, sizeof(packets->db));
+	memset(&packets->intif_db, 0, sizeof(packets->intif_db));
 }

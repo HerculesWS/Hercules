@@ -45,8 +45,6 @@ struct rodex_message;
 #define intif_rename_pc(sd, name)  (intif->rename((sd), 0, (name)))
 #define intif_rename_pet(sd, name) (intif->rename((sd), 1, (name)))
 #define intif_rename_hom(sd, name) (intif->rename((sd), 2, (name)))
-#define INTIF_PACKET_LEN_TABLE_SIZE 161
-
 
 /*=====================================
 * Interface : intif.h
@@ -54,8 +52,6 @@ struct rodex_message;
 * created by Susu
 *-------------------------------------*/
 struct intif_interface {
-	/* */
-	int packet_len_table[INTIF_PACKET_LEN_TABLE_SIZE];
 	/* funcs */
 	int (*parse) (int fd);
 	int (*create_pet)(int account_id, int char_id, int pet_type, int pet_lv, int pet_egg_id,
