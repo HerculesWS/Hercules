@@ -24,7 +24,7 @@
 
 #include "common/cbasetypes.h"
 #include "common/mmo.h"
-#include "common/packetsstatic_len.h"
+#include "common/packetsmacro.h"
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(push, 1)

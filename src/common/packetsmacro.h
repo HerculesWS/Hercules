@@ -17,19 +17,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef COMMON_PACKETSSTATIC_LEN_H
-#define COMMON_PACKETSSTATIC_LEN_H
+#ifndef COMMON_PACKETSMACRO_H
+#define COMMON_PACKETSMACRO_H
 
 #ifdef packetLen
 #error packetLen already defined
 #endif
 
-#include "common/packetsmacro.h"
+#define DEFINE_PACKET_HEADER(name, id) \
+	STATIC_ASSERT((int32)(PACKET_LEN_##id) == -1 || sizeof(struct PACKET_##name) == \
+		(size_t)PACKET_LEN_##id, "Wrong size PACKET_"#name); \
+	enum { HEADER_##name = id };
 
-#define packetLen(id, len) PACKET_LEN_##id = (len),
-enum packet_lengths {
-#include "common/packets_len.h"
-};
-#undef packetLen
+#define DEFINE_PACKET_ID(name, id) \
+	enum { HEADER_##name = id };
 
-#endif /* COMMON_PACKETSSTATIC_LEN_H */
+#define CHECK_PACKET_HEADER(name, id) \
+	STATIC_ASSERT((int32)(PACKET_LEN_##id) == -1 || sizeof(struct PACKET_##name) == \
+		(size_t)PACKET_LEN_##id, "Wrong size PACKET_"#name); \
+
+#endif /* COMMON_PACKETSMACRO_H */
