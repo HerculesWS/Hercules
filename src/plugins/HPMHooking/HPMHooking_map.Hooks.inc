@@ -20838,14 +20838,14 @@ void HP_clif_buyingstore_myitemlist(struct map_session_data *sd) {
 	}
 	return;
 }
-void HP_clif_buyingstore_entry(struct map_session_data *sd) {
+void HP_clif_buyingstore_entry(struct block_list *bl, const char *message) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_buyingstore_entry_pre > 0) {
-		void (*preHookFunc) (struct map_session_data **sd);
+		void (*preHookFunc) (struct block_list **bl, const char **message);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_buyingstore_entry_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_clif_buyingstore_entry_pre[hIndex].func;
-			preHookFunc(&sd);
+			preHookFunc(&bl, &message);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -20853,25 +20853,25 @@ void HP_clif_buyingstore_entry(struct map_session_data *sd) {
 		}
 	}
 	{
-		HPMHooks.source.clif.buyingstore_entry(sd);
+		HPMHooks.source.clif.buyingstore_entry(bl, message);
 	}
 	if (HPMHooks.count.HP_clif_buyingstore_entry_post > 0) {
-		void (*postHookFunc) (struct map_session_data *sd);
+		void (*postHookFunc) (struct block_list *bl, const char *message);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_buyingstore_entry_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_buyingstore_entry_post[hIndex].func;
-			postHookFunc(sd);
+			postHookFunc(bl, message);
 		}
 	}
 	return;
 }
-void HP_clif_buyingstore_entry_single(struct map_session_data *sd, struct map_session_data *pl_sd) {
+void HP_clif_buyingstore_entry_single(struct block_list *bl, const char *message, int fd) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_buyingstore_entry_single_pre > 0) {
-		void (*preHookFunc) (struct map_session_data **sd, struct map_session_data **pl_sd);
+		void (*preHookFunc) (struct block_list **bl, const char **message, int *fd);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_buyingstore_entry_single_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_clif_buyingstore_entry_single_pre[hIndex].func;
-			preHookFunc(&sd, &pl_sd);
+			preHookFunc(&bl, &message, &fd);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -20879,25 +20879,25 @@ void HP_clif_buyingstore_entry_single(struct map_session_data *sd, struct map_se
 		}
 	}
 	{
-		HPMHooks.source.clif.buyingstore_entry_single(sd, pl_sd);
+		HPMHooks.source.clif.buyingstore_entry_single(bl, message, fd);
 	}
 	if (HPMHooks.count.HP_clif_buyingstore_entry_single_post > 0) {
-		void (*postHookFunc) (struct map_session_data *sd, struct map_session_data *pl_sd);
+		void (*postHookFunc) (struct block_list *bl, const char *message, int fd);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_buyingstore_entry_single_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_buyingstore_entry_single_post[hIndex].func;
-			postHookFunc(sd, pl_sd);
+			postHookFunc(bl, message, fd);
 		}
 	}
 	return;
 }
-void HP_clif_buyingstore_disappear_entry(struct map_session_data *sd) {
+void HP_clif_buyingstore_disappear_entry(struct block_list *bl) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_buyingstore_disappear_entry_pre > 0) {
-		void (*preHookFunc) (struct map_session_data **sd);
+		void (*preHookFunc) (struct block_list **bl);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_buyingstore_disappear_entry_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_clif_buyingstore_disappear_entry_pre[hIndex].func;
-			preHookFunc(&sd);
+			preHookFunc(&bl);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -20905,25 +20905,25 @@ void HP_clif_buyingstore_disappear_entry(struct map_session_data *sd) {
 		}
 	}
 	{
-		HPMHooks.source.clif.buyingstore_disappear_entry(sd);
+		HPMHooks.source.clif.buyingstore_disappear_entry(bl);
 	}
 	if (HPMHooks.count.HP_clif_buyingstore_disappear_entry_post > 0) {
-		void (*postHookFunc) (struct map_session_data *sd);
+		void (*postHookFunc) (struct block_list *bl);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_buyingstore_disappear_entry_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_buyingstore_disappear_entry_post[hIndex].func;
-			postHookFunc(sd);
+			postHookFunc(bl);
 		}
 	}
 	return;
 }
-void HP_clif_buyingstore_disappear_entry_single(struct map_session_data *sd, struct map_session_data *pl_sd) {
+void HP_clif_buyingstore_disappear_entry_single(struct block_list *bl, int fd) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_buyingstore_disappear_entry_single_pre > 0) {
-		void (*preHookFunc) (struct map_session_data **sd, struct map_session_data **pl_sd);
+		void (*preHookFunc) (struct block_list **bl, int *fd);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_buyingstore_disappear_entry_single_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_clif_buyingstore_disappear_entry_single_pre[hIndex].func;
-			preHookFunc(&sd, &pl_sd);
+			preHookFunc(&bl, &fd);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -20931,13 +20931,13 @@ void HP_clif_buyingstore_disappear_entry_single(struct map_session_data *sd, str
 		}
 	}
 	{
-		HPMHooks.source.clif.buyingstore_disappear_entry_single(sd, pl_sd);
+		HPMHooks.source.clif.buyingstore_disappear_entry_single(bl, fd);
 	}
 	if (HPMHooks.count.HP_clif_buyingstore_disappear_entry_single_post > 0) {
-		void (*postHookFunc) (struct map_session_data *sd, struct map_session_data *pl_sd);
+		void (*postHookFunc) (struct block_list *bl, int fd);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_buyingstore_disappear_entry_single_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_buyingstore_disappear_entry_single_post[hIndex].func;
-			postHookFunc(sd, pl_sd);
+			postHookFunc(bl, fd);
 		}
 	}
 	return;
