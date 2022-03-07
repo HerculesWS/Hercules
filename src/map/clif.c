@@ -7105,20 +7105,19 @@ static void clif_openvendingreq(struct map_session_data *sd, int num)
 /// 0131 <owner id>.L <message>.80B
 static void clif_showvendingboard(struct block_list *bl, const char *message, int fd)
 {
-	unsigned char buf[128];
-
 	nullpo_retv(bl);
+	nullpo_retv(message);
 
-	WBUFW(buf,0) = 0x131;
-	WBUFL(buf,2) = bl->id;
-	safestrncpy(WBUFP(buf,6), message, 80);
-
-	if( fd ) {
-		WFIFOHEAD(fd,packet_len(0x131));
-		memcpy(WFIFOP(fd,0),buf,packet_len(0x131));
-		WFIFOSET(fd,packet_len(0x131));
+	struct PACKET_ZC_STORE_ENTRY p = { 0 };
+	p.packetType = HEADER_ZC_STORE_ENTRY;
+	p.makerAID = bl->id;
+	safestrncpy(p.storeName, message, MESSAGE_SIZE);
+	if (fd != 0) {
+		WFIFOHEAD(fd, sizeof(struct PACKET_ZC_STORE_ENTRY));
+		memcpy(WFIFOP(fd, 0), &p, sizeof(struct PACKET_ZC_STORE_ENTRY));
+		WFIFOSET(fd, sizeof(struct PACKET_ZC_STORE_ENTRY));
 	} else {
-		clif->send(buf,packet_len(0x131),bl,AREA_WOS);
+		clif->send(&p, sizeof(struct PACKET_ZC_STORE_ENTRY), bl, AREA_WOS);
 	}
 }
 

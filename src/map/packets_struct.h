@@ -5676,6 +5676,13 @@ struct PACKET_ZC_BUYING_STORE_ENTRY {
 DEFINE_PACKET_HEADER(ZC_BUYING_STORE_ENTRY, 0x0814);
 #endif
 
+struct PACKET_ZC_STORE_ENTRY {
+	int16 packetType;
+	uint32 makerAID;
+	char storeName[MESSAGE_SIZE];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_STORE_ENTRY, 0x0131);
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
