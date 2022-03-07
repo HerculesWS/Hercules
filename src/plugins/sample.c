@@ -23,6 +23,8 @@
 -DTESTVAR -DTESTVAR2=2 #PLUGINFLAGS
 */
 
+#ifndef WIN32
+
 // check is TESTVAR defined from custom compile flags
 #ifndef TESTVAR
 #error TESTVAR not defined
@@ -32,6 +34,8 @@
 #if !(TESTVAR2 == 2)
 #error TESTVAR2 not defined
 #endif
+
+#endif  // WIN32
 
 /// Sample Hercules Plugin
 
