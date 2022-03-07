@@ -5705,6 +5705,14 @@ struct PACKET_CZ_PC_PURCHASE_ITEMLIST_FROMMC2 {
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(CZ_PC_PURCHASE_ITEMLIST_FROMMC2, 0x0801);
 
+#if PACKETVER >= 20100309
+struct PACKET_ZC_DISAPPEAR_BUYING_STORE_ENTRY {
+	int16 packetType;
+	uint32 makerAID;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_DISAPPEAR_BUYING_STORE_ENTRY, 0x0816);
+#endif
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris

@@ -5474,7 +5474,7 @@ static int clif_outsight(struct block_list *bl, va_list ap)
 				if( sd->state.vending )
 					clif->closevendingboard(bl,tsd->fd);
 				if( sd->state.buyingstore )
-					clif->buyingstore_disappear_entry_single(tsd, sd);
+					clif->buyingstore_disappear_entry_single(bl, tsd->fd);
 				break;
 			case BL_ITEM:
 				clif->clearflooritem(BL_UCAST(BL_ITEM, bl), tsd->fd);
@@ -19987,31 +19987,26 @@ static void clif_parse_ReqCloseBuyingStore(int fd, struct map_session_data *sd)
 
 /// Notifies clients in area that a buying store was closed (ZC_DISAPPEAR_BUYING_STORE_ENTRY).
 /// 0816 <account id>.L
-static void clif_buyingstore_disappear_entry(struct map_session_data *sd)
+static void clif_buyingstore_disappear_entry(struct block_list *bl)
 {
 #if PACKETVER >= 20100309
-	uint8 buf[6];
+	nullpo_retv(bl);
 
-	nullpo_retv(sd);
-	WBUFW(buf,0) = 0x816;
-	WBUFL(buf,2) = sd->bl.id;
-
-	clif->send(buf, packet_len(0x816), &sd->bl, AREA_WOS);
+	struct PACKET_ZC_DISAPPEAR_BUYING_STORE_ENTRY p = { 0 };
+	p.packetType = HEADER_ZC_DISAPPEAR_BUYING_STORE_ENTRY;
+	p.makerAID = bl->id;
+	clif->send(&p, sizeof(struct PACKET_ZC_DISAPPEAR_BUYING_STORE_ENTRY), bl, AREA_WOS);
 #endif
 }
 
-static void clif_buyingstore_disappear_entry_single(struct map_session_data *sd, struct map_session_data *pl_sd)
+static void clif_buyingstore_disappear_entry_single(struct block_list *bl, int fd)
 {
 #if PACKETVER >= 20100309
-	int fd;
-
-	nullpo_retv(sd);
-	nullpo_retv(pl_sd);
-	fd = sd->fd;
-	WFIFOHEAD(fd,packet_len(0x816));
-	WFIFOW(fd,0) = 0x816;
-	WFIFOL(fd,2) = pl_sd->bl.id;
-	WFIFOSET(fd,packet_len(0x816));
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_DISAPPEAR_BUYING_STORE_ENTRY));
+	struct PACKET_ZC_DISAPPEAR_BUYING_STORE_ENTRY *p = WFIFOP(fd, 0);
+	p->packetType = HEADER_ZC_DISAPPEAR_BUYING_STORE_ENTRY;
+	p->makerAID = bl->id;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_DISAPPEAR_BUYING_STORE_ENTRY));
 #endif
 }
 

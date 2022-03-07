@@ -210,7 +210,7 @@ static void buyingstore_close(struct map_session_data *sd)
 		memset(&sd->buyingstore, 0, sizeof(sd->buyingstore));
 
 		// notify other players
-		clif->buyingstore_disappear_entry(sd);
+		clif->buyingstore_disappear_entry(&sd->bl);
 	}
 }
 
