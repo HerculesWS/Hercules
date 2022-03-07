@@ -15242,18 +15242,14 @@ static void clif_parse_PurchaseReq2(int fd, struct map_session_data *sd)
 	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
 		return;
 
-	int len = (int)RFIFOW(fd, 2) - 12;
-	int aid;
-	int uid;
-	const uint8 *data;
+	const struct PACKET_CZ_PC_PURCHASE_ITEMLIST_FROMMC2 *p = RP2PTR(fd);
+	const int len = p->packetLength - sizeof(struct PACKET_CZ_PC_PURCHASE_ITEMLIST_FROMMC2);
 
 	if (len < 1)
 		return;
-	aid = RFIFOL(fd, 4);
-	uid = RFIFOL(fd, 8);
-	data = RFIFOP(fd, 12);
 
-	vending->purchase(sd, aid, uid, data, len/4);
+	int item_count = len / sizeof(struct CZ_PURCHASE_ITEM_FROMMC);
+	vending->purchase(sd, p->AID, p->UniqueID, (const uint8 *)&p->list, item_count);
 
 	// whether it fails or not, the buy window is closed
 	sd->vended_id = 0;

@@ -5696,6 +5696,15 @@ struct PACKET_CZ_PC_PURCHASE_ITEMLIST_FROMMC {
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(CZ_PC_PURCHASE_ITEMLIST_FROMMC, 0x0134);
 
+struct PACKET_CZ_PC_PURCHASE_ITEMLIST_FROMMC2 {
+	int16 packetType;
+	int16 packetLength;
+	uint32 AID;
+	uint32 UniqueID;
+	struct CZ_PURCHASE_ITEM_FROMMC list[];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_PC_PURCHASE_ITEMLIST_FROMMC2, 0x0801);
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
