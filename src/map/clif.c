@@ -4938,7 +4938,7 @@ static void clif_getareachar_pc(struct map_session_data *sd, struct map_session_
 	} else if( dstsd->state.vending )
 		clif->showvendingboard(&dstsd->bl,dstsd->message,sd->fd);
 	else if( dstsd->state.buyingstore )
-		clif->buyingstore_entry_single(sd, dstsd);
+		clif->buyingstore_entry_single(&dstsd->bl, dstsd->message, sd->fd);
 
 	if(dstsd->spiritball > 0)
 		clif->spiritball_single(sd->fd, dstsd);
@@ -19958,31 +19958,30 @@ static void clif_buyingstore_myitemlist(struct map_session_data *sd)
 
 /// Notifies clients in area of a buying store (ZC_BUYING_STORE_ENTRY).
 /// 0814 <account id>.L <store name>.80B
-static void clif_buyingstore_entry(struct map_session_data *sd)
+static void clif_buyingstore_entry(struct block_list *bl, const char *message)
 {
 #if PACKETVER >= 20100420
-	uint8 buf[86];
+	nullpo_retv(bl);
 
-	nullpo_retv(sd);
-	WBUFW(buf,0) = 0x814;
-	WBUFL(buf,2) = sd->bl.id;
-	memcpy(WBUFP(buf,6), sd->message, MESSAGE_SIZE);
-
-	clif->send(buf, packet_len(0x814), &sd->bl, AREA_WOS);
+	struct PACKET_ZC_BUYING_STORE_ENTRY p = { 0 };
+	p.packetType = HEADER_ZC_BUYING_STORE_ENTRY;
+	p.makerAID = bl->id;
+	safestrncpy(p.storeName, message, MESSAGE_SIZE);
+	clif->send(&p, sizeof(struct PACKET_ZC_BUYING_STORE_ENTRY), bl, AREA_WOS);
 #endif
 }
-static void clif_buyingstore_entry_single(struct map_session_data *sd, struct map_session_data *pl_sd)
+static void clif_buyingstore_entry_single(struct block_list *bl, const char *message, int fd)
 {
 #if PACKETVER >= 20100420
-	int fd;
+	nullpo_retv(bl);
+	nullpo_retv(message);
 
-	nullpo_retv(sd);
-	fd = sd->fd;
-	WFIFOHEAD(fd,packet_len(0x814));
-	WFIFOW(fd,0) = 0x814;
-	WFIFOL(fd,2) = pl_sd->bl.id;
-	memcpy(WFIFOP(fd,6), pl_sd->message, MESSAGE_SIZE);
-	WFIFOSET(fd,packet_len(0x814));
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_BUYING_STORE_ENTRY));
+	struct PACKET_ZC_BUYING_STORE_ENTRY *p = WFIFOP(fd, 0);
+	p->packetType = HEADER_ZC_BUYING_STORE_ENTRY;
+	p->makerAID = bl->id;
+	safestrncpy(p->storeName, message, MESSAGE_SIZE);
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_BUYING_STORE_ENTRY));
 #endif
 }
 

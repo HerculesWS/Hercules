@@ -1414,8 +1414,8 @@ struct clif_interface {
 	void (*buyingstore_open) (struct map_session_data* sd);
 	void (*buyingstore_open_failed) (struct map_session_data* sd, unsigned short result, unsigned int weight);
 	void (*buyingstore_myitemlist) (struct map_session_data* sd);
-	void (*buyingstore_entry) (struct map_session_data* sd);
-	void (*buyingstore_entry_single) (struct map_session_data* sd, struct map_session_data* pl_sd);
+	void (*buyingstore_entry) (struct block_list *bl, const char *message);
+	void (*buyingstore_entry_single) (struct block_list *bl, const char *message, int fd);
 	void (*buyingstore_disappear_entry) (struct map_session_data* sd);
 	void (*buyingstore_disappear_entry_single) (struct map_session_data* sd, struct map_session_data* pl_sd);
 	void (*buyingstore_itemlist) (struct map_session_data* sd, struct map_session_data* pl_sd);
