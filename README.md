@@ -212,6 +212,9 @@ articles or pages on the Wiki or topics within the Hercules forum.
 * Git Repository URL:
   https://github.com/HerculesWS/Hercules
 
+* Discord Server Invite URL:
+  https://discord.gg/ZUzbRSp
+
 * Hercules IRC Channel:
   Network: `irc.rizon.net`
   Channel: `#Hercules`
