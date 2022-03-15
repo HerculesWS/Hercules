@@ -23697,7 +23697,7 @@ static void clif_open_ui_send1(struct map_session_data *sd, enum zc_ui_types ui_
 
 		if (clif->attendance_getendtime() < time(NULL)) {
 #if PACKETVER >= 20180207
-			clif->msgtable_color(sd, MSG_ATTENDANCE_UNAVAILABLE, COLOR_RED);
+			clif->msgtable_color(sd, MSG_CHECK_ATTENDANCE_NOT_EVENT, COLOR_RED);
 #endif
 			return;
 		}
@@ -23855,7 +23855,7 @@ static void clif_parse_attendance_reward_request(int fd, struct map_session_data
 	char title[RODEX_TITLE_LENGTH], body[MAIL_BODY_LENGTH];
 
 	if (clif->attendance_getendtime() < time(NULL)) {
-		clif->msgtable_color(sd, MSG_ATTENDANCE_UNAVAILABLE, COLOR_RED);
+		clif->msgtable_color(sd, MSG_CHECK_ATTENDANCE_NOT_EVENT, COLOR_RED);
 		return;
 	}
 
