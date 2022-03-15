@@ -12548,6 +12548,8 @@ static void clif_parse_NpcClicked(int fd, struct map_session_data *sd)
 {
 	struct block_list *bl;
 
+	struct PACKET_CZ_CONTACTNPC *packet = RFIFOP(fd, 0);
+
 	if( pc_isdead(sd) ) {
 		clif->clearunit_area(&sd->bl,CLR_DEAD);
 		return;
@@ -12560,7 +12562,7 @@ static void clif_parse_NpcClicked(int fd, struct map_session_data *sd)
 #endif
 		return;
 	}
-	if (pc_cant_act2(sd) || !(bl = map->id2bl(RFIFOL(fd,2))) || sd->state.vending || sd->state.prevend)
+	if (pc_cant_act2(sd) || !(bl = map->id2bl(packet->AID)) || sd->state.vending || sd->state.prevend)
 		return;
 
 	switch (bl->type) {
