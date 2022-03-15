@@ -3905,7 +3905,7 @@ struct PACKET_ZC_USESKILL_ACK {
 	uint32 element;
 	uint32 delayTime;
 	uint8 disposable;
-	uint32 unknown;
+	uint32 attackMT;
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(ZC_USESKILL_ACK, 0x0b1a);
 #elif PACKETVER_MAIN_NUM >= 20091124 || PACKETVER_RE_NUM >= 20091124 || defined(PACKETVER_ZERO)
