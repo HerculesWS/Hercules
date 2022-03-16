@@ -10654,14 +10654,14 @@ void HP_clif_changemapcell(int fd, int16 m, int x, int y, int type, enum send_ta
 	}
 	return;
 }
-void HP_clif_map_property(struct map_session_data *sd, enum map_property property) {
+void HP_clif_map_property(struct block_list *bl, enum map_property property, enum send_target target) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_map_property_pre > 0) {
-		void (*preHookFunc) (struct map_session_data **sd, enum map_property *property);
+		void (*preHookFunc) (struct block_list **bl, enum map_property *property, enum send_target *target);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_map_property_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_clif_map_property_pre[hIndex].func;
-			preHookFunc(&sd, &property);
+			preHookFunc(&bl, &property, &target);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -10669,13 +10669,13 @@ void HP_clif_map_property(struct map_session_data *sd, enum map_property propert
 		}
 	}
 	{
-		HPMHooks.source.clif.map_property(sd, property);
+		HPMHooks.source.clif.map_property(bl, property, target);
 	}
 	if (HPMHooks.count.HP_clif_map_property_post > 0) {
-		void (*postHookFunc) (struct map_session_data *sd, enum map_property property);
+		void (*postHookFunc) (struct block_list *bl, enum map_property property, enum send_target target);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_map_property_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_map_property_post[hIndex].func;
-			postHookFunc(sd, property);
+			postHookFunc(bl, property, target);
 		}
 	}
 	return;
@@ -10780,32 +10780,6 @@ void HP_clif_map_type(struct map_session_data *sd, enum map_type type) {
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_map_type_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_map_type_post[hIndex].func;
 			postHookFunc(sd, type);
-		}
-	}
-	return;
-}
-void HP_clif_maptypeproperty2(struct block_list *bl, enum send_target t) {
-	int hIndex = 0;
-	if (HPMHooks.count.HP_clif_maptypeproperty2_pre > 0) {
-		void (*preHookFunc) (struct block_list **bl, enum send_target *t);
-		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_maptypeproperty2_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_clif_maptypeproperty2_pre[hIndex].func;
-			preHookFunc(&bl, &t);
-		}
-		if (*HPMforce_return) {
-			*HPMforce_return = false;
-			return;
-		}
-	}
-	{
-		HPMHooks.source.clif.maptypeproperty2(bl, t);
-	}
-	if (HPMHooks.count.HP_clif_maptypeproperty2_post > 0) {
-		void (*postHookFunc) (struct block_list *bl, enum send_target t);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_maptypeproperty2_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_clif_maptypeproperty2_post[hIndex].func;
-			postHookFunc(bl, t);
 		}
 	}
 	return;

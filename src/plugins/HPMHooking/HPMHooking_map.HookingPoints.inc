@@ -438,7 +438,6 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->map_property_mapall, HP_clif_map_property_mapall) },
 	{ HP_POP(clif->bossmapinfo, HP_clif_bossmapinfo) },
 	{ HP_POP(clif->map_type, HP_clif_map_type) },
-	{ HP_POP(clif->maptypeproperty2, HP_clif_maptypeproperty2) },
 	{ HP_POP(clif->crimson_marker, HP_clif_crimson_marker) },
 	{ HP_POP(clif->changemapserver, HP_clif_changemapserver) },
 	{ HP_POP(clif->changemapserver_airship, HP_clif_changemapserver_airship) },

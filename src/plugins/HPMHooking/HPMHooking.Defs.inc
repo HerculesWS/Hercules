@@ -1230,8 +1230,8 @@ typedef void (*HPMHOOK_pre_clif_changemap_airship) (struct map_session_data **sd
 typedef void (*HPMHOOK_post_clif_changemap_airship) (struct map_session_data *sd, short m, int x, int y);
 typedef void (*HPMHOOK_pre_clif_changemapcell) (int *fd, int16 *m, int *x, int *y, int *type, enum send_target *target);
 typedef void (*HPMHOOK_post_clif_changemapcell) (int fd, int16 m, int x, int y, int type, enum send_target target);
-typedef void (*HPMHOOK_pre_clif_map_property) (struct map_session_data **sd, enum map_property *property);
-typedef void (*HPMHOOK_post_clif_map_property) (struct map_session_data *sd, enum map_property property);
+typedef void (*HPMHOOK_pre_clif_map_property) (struct block_list **bl, enum map_property *property, enum send_target *target);
+typedef void (*HPMHOOK_post_clif_map_property) (struct block_list *bl, enum map_property property, enum send_target target);
 typedef void (*HPMHOOK_pre_clif_pvpset) (struct map_session_data **sd, int *pvprank, int *pvpnum, int *type);
 typedef void (*HPMHOOK_post_clif_pvpset) (struct map_session_data *sd, int pvprank, int pvpnum, int type);
 typedef void (*HPMHOOK_pre_clif_map_property_mapall) (int *mapid, enum map_property *property);
@@ -1240,8 +1240,6 @@ typedef void (*HPMHOOK_pre_clif_bossmapinfo) (int *fd, struct mob_data **md, enu
 typedef void (*HPMHOOK_post_clif_bossmapinfo) (int fd, struct mob_data *md, enum bossmap_info_type flag);
 typedef void (*HPMHOOK_pre_clif_map_type) (struct map_session_data **sd, enum map_type *type);
 typedef void (*HPMHOOK_post_clif_map_type) (struct map_session_data *sd, enum map_type type);
-typedef void (*HPMHOOK_pre_clif_maptypeproperty2) (struct block_list **bl, enum send_target *t);
-typedef void (*HPMHOOK_post_clif_maptypeproperty2) (struct block_list *bl, enum send_target t);
 typedef void (*HPMHOOK_pre_clif_crimson_marker) (struct map_session_data **sd, struct block_list **bl, bool *remove);
 typedef void (*HPMHOOK_post_clif_crimson_marker) (struct map_session_data *sd, struct block_list *bl, bool remove);
 typedef void (*HPMHOOK_pre_clif_changemapserver) (struct map_session_data **sd, unsigned short *map_index, int *x, int *y, uint32 *ip, uint16 *port, char **dnsHost);
