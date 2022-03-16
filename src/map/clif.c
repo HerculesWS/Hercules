@@ -7830,31 +7830,34 @@ static void clif_sendegg(struct map_session_data *sd)
 	sd->menuskill_val = -1;
 }
 
-/// Sends a specific pet data update (ZC_CHANGESTATE_PET).
-/// 01a4 <type>.B <id>.L <data>.L
-/// type:
-///     0 = pre-init (data = 0)
-///     1 = intimacy (data = 0~4)
-///     2 = hunger (data = 0~4)
-///     3 = accessory
-///     4 = performance (data = 1~3: normal, 4: special)
-///     5 = hairstyle
-///     6 = close egg selection ui and update egg in inventory (PACKETVER >= 20180704)
-///
-/// If sd is null, the update is sent to nearby objects, otherwise it is sent only to that player.
-static void clif_send_petdata(struct map_session_data *sd, struct pet_data *pd, int type, int param)
+/**
+ * Sends a specific pet data update(ZC_CHANGESTATE_PET).
+ * 01a4 <type>.B <id>.L <data>.L
+ * type:
+ *     0 = pre-init (data = 0)
+ *     1 = intimacy (data = 0~4)
+ *     2 = hunger (data = 0~4)
+ *     3 = accessory
+ *     4 = performance (data = 1~3: normal, 4: special)
+ *     5 = hairstyle
+ *     6 = close egg selection ui and update egg in inventory (PACKETVER >= 20180704)
+ *
+ * If sd is null, the update is sent to nearby objects, otherwise it is sent only to that player.
+ **/
+ static void clif_send_petdata(struct map_session_data *sd, struct pet_data *pd, int type, int param)
 {
-	uint8 buf[16];
 	nullpo_retv(pd);
 
-	WBUFW(buf,0) = 0x1a4;
-	WBUFB(buf,2) = type;
-	WBUFL(buf,3) = pd->bl.id;
-	WBUFL(buf,7) = param;
-	if (sd)
-		clif->send(buf, packet_len(0x1a4), &sd->bl, SELF);
+	struct PACKET_ZC_CHANGESTATE_PET p = { 0 };
+	p.PacketType = HEADER_ZC_CHANGESTATE_PET;
+	p.type = type;
+	p.GID = pd->bl.id;
+	p.data = param;
+
+	if (sd != NULL)
+		clif->send(&p, sizeof(struct PACKET_ZC_CHANGESTATE_PET), &sd->bl, SELF);
 	else
-		clif->send(buf, packet_len(0x1a4), &pd->bl, AREA);
+		clif->send(&p, sizeof(struct PACKET_ZC_CHANGESTATE_PET), &pd->bl, AREA);
 }
 
 /**
