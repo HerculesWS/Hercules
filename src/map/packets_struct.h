@@ -5469,12 +5469,24 @@ struct PACKET_CZ_SEE_GUILD_MEMBERS {
 DEFINE_PACKET_HEADER(CZ_SEE_GUILD_MEMBERS, 0x0bb0)
 #endif  // PACKETVER_MAIN_NUM >= 20220216
 
+
 struct PACKET_CZ_CONTACTNPC {
 	int16 PacketType;
 	uint32 AID;
 	uint8 type;
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(CZ_CONTACTNPC, 0x0090)
+
+struct PACKET_ZC_ATTACK_FAILURE_FOR_DISTANCE {
+	int16 PacketType;
+	uint32 targetAID;
+	int16 targetXPos;
+	int16 targetYPos;
+	int16 xPos;
+	int16 yPos;
+	int16 currentAttRange;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_ATTACK_FAILURE_FOR_DISTANCE, 0x0139)
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)

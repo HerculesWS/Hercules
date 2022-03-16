@@ -7712,25 +7712,27 @@ static void clif_hpmeter_single(int fd, int id, unsigned int hp, unsigned int ma
 	WFIFOSET(fd, sizeof(struct PACKET_ZC_NOTIFY_HP_TO_GROUPM));
 }
 
-/// Notifies the client, that it's attack target is too far (ZC_ATTACK_FAILURE_FOR_DISTANCE).
-/// 0139 <target id>.L <target x>.W <target y>.W <x>.W <y>.W <atk range>.W
+/**
+ * Notifies the client, that it's attack target is too far (ZC_ATTACK_FAILURE_FOR_DISTANCE).
+ * 0139 <target id>.L <target x>.W <target y>.W <x>.W <y>.W <atk range>.W
+ **/
 static void clif_movetoattack(struct map_session_data *sd, struct block_list *bl)
 {
-	int fd;
-
 	nullpo_retv(sd);
 	nullpo_retv(bl);
 
-	fd=sd->fd;
-	WFIFOHEAD(fd,packet_len(0x139));
-	WFIFOW(fd, 0)=0x139;
-	WFIFOL(fd, 2)=bl->id;
-	WFIFOW(fd, 6)=bl->x;
-	WFIFOW(fd, 8)=bl->y;
-	WFIFOW(fd,10)=sd->bl.x;
-	WFIFOW(fd,12)=sd->bl.y;
-	WFIFOW(fd,14)=sd->battle_status.rhw.range;
-	WFIFOSET(fd,packet_len(0x139));
+	int fd = sd->fd;
+
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_ATTACK_FAILURE_FOR_DISTANCE));
+	struct PACKET_ZC_ATTACK_FAILURE_FOR_DISTANCE *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_ATTACK_FAILURE_FOR_DISTANCE;
+	p->targetAID = bl->id;
+	p->targetXPos = bl->x;
+	p->targetYPos = bl->y;
+	p->xPos = sd->bl.x;
+	p->yPos = sd->bl.y;
+	p->currentAttRange = sd->battle_status.rhw.range;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_ATTACK_FAILURE_FOR_DISTANCE));
 }
 
 /// Notifies the client about the result of an item produce request (ZC_ACK_REQMAKINGITEM).
