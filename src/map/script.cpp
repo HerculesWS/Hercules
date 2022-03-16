@@ -14871,8 +14871,7 @@ static int script_mapflag_pvp_sub(struct block_list *bl, va_list ap)
 		sd->pvp_won = 0;
 		sd->pvp_lost = 0;
 	}
-	clif->map_property(sd, MAPPROPERTY_FREEPVPZONE);
-	clif->maptypeproperty2(&sd->bl,SELF);
+	clif->map_property(&sd->bl, MAPPROPERTY_FREEPVPZONE, SELF);
 	return 0;
 }
 
@@ -14918,9 +14917,6 @@ static BUILDIN(setmapflag)
 			memset(&bl, 0, sizeof(bl));
 			map->list[m].flag.gvg = 1;
 			clif->map_property_mapall(m, MAPPROPERTY_AGITZONE);
-			bl.type = BL_NUL;
-			bl.m = m;
-			clif->maptypeproperty2(&bl, ALL_SAMEMAP);
 		}
 		break;
 		case MF_GVG_NOPARTY: map->list[m].flag.gvg_noparty = 1; break;
@@ -15010,11 +15006,8 @@ static BUILDIN(removemapflag)
 		{
 			struct block_list bl;
 			memset(&bl, 0, sizeof(bl));
-			bl.type = BL_NUL;
-			bl.m = m;
 			map->list[m].flag.pvp = 0;
 			clif->map_property_mapall(m, MAPPROPERTY_NOTHING);
-			clif->maptypeproperty2(&bl, ALL_SAMEMAP);
 		}
 		break;
 		case MF_PVP_NOPARTY: map->list[m].flag.pvp_noparty = 0; break;
@@ -15023,11 +15016,8 @@ static BUILDIN(removemapflag)
 		{
 			struct block_list bl;
 			memset(&bl, 0, sizeof(bl));
-			bl.type = BL_NUL;
-			bl.m = m;
 			map->list[m].flag.gvg = 0;
 			clif->map_property_mapall(m, MAPPROPERTY_NOTHING);
-			clif->maptypeproperty2(&bl, ALL_SAMEMAP);
 		}
 		break;
 		case MF_GVG_NOPARTY: map->list[m].flag.gvg_noparty = 0; break;
@@ -15111,9 +15101,6 @@ static BUILDIN(pvpon)
 	map->zone_change2(m, (struct map_zone_data *)strdb_get(map->zone_db, MAP_ZONE_PVP_NAME));
 	map->list[m].flag.pvp = 1;
 	clif->map_property_mapall(m, MAPPROPERTY_FREEPVPZONE);
-	bl.type = BL_NUL;
-	bl.m = m;
-	clif->maptypeproperty2(&bl,ALL_SAMEMAP);
 
 	if(battle_config.pk_mode) // disable ranking functions if pk_mode is on [Valaris]
 		return true;
@@ -15167,9 +15154,6 @@ static BUILDIN(pvpoff)
 	map->zone_change2(m, map->list[m].prev_zone);
 	map->list[m].flag.pvp = 0;
 	clif->map_property_mapall(m, MAPPROPERTY_NOTHING);
-	bl.type = BL_NUL;
-	bl.m = m;
-	clif->maptypeproperty2(&bl,ALL_SAMEMAP);
 
 	if(battle_config.pk_mode) // disable ranking options if pk_mode is on [Valaris]
 		return true;
@@ -15197,9 +15181,6 @@ static BUILDIN(gvgon)
 		map->zone_change2(m, (struct map_zone_data *)strdb_get(map->zone_db, MAP_ZONE_GVG_NAME));
 		map->list[m].flag.gvg = 1;
 		clif->map_property_mapall(m, MAPPROPERTY_AGITZONE);
-		bl.type = BL_NUL;
-		bl.m = m;
-		clif->maptypeproperty2(&bl,ALL_SAMEMAP);
 	}
 
 	return true;
@@ -15217,9 +15198,6 @@ static BUILDIN(gvgoff)
 		map->zone_change2(m, map->list[m].prev_zone);
 		map->list[m].flag.gvg = 0;
 		clif->map_property_mapall(m, MAPPROPERTY_NOTHING);
-		bl.type = BL_NUL;
-		bl.m = m;
-		clif->maptypeproperty2(&bl,ALL_SAMEMAP);
 	}
 
 	return true;
