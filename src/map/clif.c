@@ -6595,19 +6595,36 @@ static void clif_resurrection(struct block_list *bl, int type)
 	}
 }
 
-/// Sets the map property (ZC_NOTIFY_MAPPROPERTY).
-/// 0199 <type>.W
-static void clif_map_property(struct map_session_data *sd, enum map_property property)
+/**
+ * Sets the map property(ZC_NOTIFY_MAPPROPERTY).
+ * 0199 <type>.W (ZC_NOTIFY_MAPPROPERTY)
+ * 099b <type>.W <Flags> 
+ **/ 
+static void clif_map_property(struct block_list *bl, enum map_property property, enum send_target target)
 {
-	int fd;
+	struct packet_maptypeproperty p;
 
-	nullpo_retv(sd);
+	nullpo_retv(bl);
 
-	fd=sd->fd;
-	WFIFOHEAD(fd,packet_len(0x199));
-	WFIFOW(fd,0)=0x199;
-	WFIFOW(fd,2)=property;
-	WFIFOSET(fd,packet_len(0x199));
+	p.PacketType = maptypeproperty;
+	p.property = property;
+
+#if PACKETVER >= 20121010
+	p.flag.party = map->list[bl->m].flag.pvp ? 1 : 0; //PARTY
+	p.flag.guild = (map->list[bl->m].flag.battleground || map_flag_gvg(bl->m)) ? 1 : 0; // GUILD
+	p.flag.siege = (map->list[bl->m].flag.battleground || map_flag_gvg2(bl->m)) ? 1 : 0; // SIEGE
+	p.flag.mineffect = map_flag_gvg2(bl->m) ? 1 : 0; // USE_SIMPLE_EFFECT - Automatically enable /mineffect in guild arenas and castles.
+	p.flag.nolockon = 0; // DISABLE_LOCKON - TODO
+	p.flag.countpk = map->list[bl->m].flag.pvp ? 1 : 0; // COUNT_PK
+	p.flag.nopartyformation = map->list[bl->m].flag.partylock ? 1 : 0; // NO_PARTY_FORMATION
+	p.flag.bg = map->list[bl->m].flag.battleground ? 1 : 0; // BATTLEFIELD
+	p.flag.nocostume = (map->list[bl->m].flag.noviewid & EQP_COSTUME) ? 1 : 0; // DISABLE_COSTUMEITEM - Disables Costume Sprite
+	p.flag.usecart = 1; // USECART - TODO
+	p.flag.summonstarmiracle = 0; // SUNMOONSTAR_MIRACLE - TODO
+	p.flag.SpareBits = 0; // UNUSED
+#endif
+
+	clif->send(&p, sizeof(p), bl, target);
 }
 
 /// Set the map type (ZC_NOTIFY_MAPPROPERTY2).
@@ -6664,15 +6681,13 @@ static void clif_pvpset(struct map_session_data *sd, int pvprank, int pvpnum, in
 static void clif_map_property_mapall(int mapid, enum map_property property)
 {
 	struct block_list bl;
-	unsigned char buf[16];
 
 	memset(&bl, 0, sizeof(bl));
 	bl.id = 0;
 	bl.type = BL_NUL;
 	bl.m = mapid;
-	WBUFW(buf,0)=0x199;
-	WBUFW(buf,2)=property;
-	clif->send(buf,packet_len(0x199),&bl,ALL_SAMEMAP);
+
+	clif->map_property(&bl, property, ALL_SAMEMAP);
 }
 
 /// Notifies the client about the result of a refine attempt (ZC_ACK_ITEMREFINING).
@@ -11228,17 +11243,16 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 			sd->pvp_won = 0;
 			sd->pvp_lost = 0;
 		}
-
-		clif->map_property(sd, MAPPROPERTY_FREEPVPZONE);
+		clif->map_property(&sd->bl, MAPPROPERTY_FREEPVPZONE, SELF);
 	} else if(sd->duel_group != 0) { // Set flag, if it's a duel. [LuzZza]
-		clif->map_property(sd, MAPPROPERTY_FREEPVPZONE);
+		clif->map_property(&sd->bl, MAPPROPERTY_FREEPVPZONE, SELF);
+	} else if (map->list[sd->bl.m].flag.gvg_dungeon != 0) {
+		clif->map_property(&sd->bl, MAPPROPERTY_FREEPVPZONE, SELF); //TODO: Figure out the real packet to send here.
+	} else if (map_flag_gvg2(sd->bl.m)) {
+		clif->map_property(&sd->bl, MAPPROPERTY_AGITZONE, SELF);
+	} else {
+		clif->map_property(&sd->bl, MAPPROPERTY_NOTHING, SELF);
 	}
-
-	if (map->list[sd->bl.m].flag.gvg_dungeon != 0)
-		clif->map_property(sd, MAPPROPERTY_FREEPVPZONE); //TODO: Figure out the real packet to send here.
-
-	if (map_flag_gvg2(sd->bl.m))
-		clif->map_property(sd, MAPPROPERTY_AGITZONE);
 
 	// Info about nearby objects. Must use map->foreachinarea(). (CIRCULAR_AREA interferes with map->foreachinrange().)
 	map->foreachinarea(clif->getareachar, sd->bl.m, sd->bl.x - AREA_SIZE, sd->bl.y - AREA_SIZE,
@@ -11437,7 +11451,6 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 	}
 
 	mail->clear(sd);
-	clif->maptypeproperty2(&sd->bl, SELF);
 
 	if (sd->guild != NULL) {
 		// Init guild aura.
@@ -21166,32 +21179,6 @@ static void clif_parse_cashShopReqTab(int fd, struct map_session_data *sd)
 #endif
 }
 
-/* [Ind/Hercules] */
-static void clif_maptypeproperty2(struct block_list *bl, enum send_target t)
-{
-#if PACKETVER >= 20121010
-	struct packet_maptypeproperty2 p;
-	nullpo_retv(bl);
-
-	p.PacketType = maptypeproperty2Type;
-	p.type = 0x28;
-	p.flag.party = map->list[bl->m].flag.pvp ? 1 : 0; //PARTY
-	p.flag.guild = (map->list[bl->m].flag.battleground || map_flag_gvg(bl->m)) ? 1 : 0; // GUILD
-	p.flag.siege = (map->list[bl->m].flag.battleground || map_flag_gvg2(bl->m)) ? 1: 0; // SIEGE
-	p.flag.mineffect = map_flag_gvg2(bl->m) ? 1 : 0; // USE_SIMPLE_EFFECT - Automatically enable /mineffect in guild arenas and castles.
-	p.flag.nolockon = 0; // DISABLE_LOCKON - TODO
-	p.flag.countpk = map->list[bl->m].flag.pvp ? 1 : 0; // COUNT_PK
-	p.flag.nopartyformation = map->list[bl->m].flag.partylock ? 1 : 0; // NO_PARTY_FORMATION
-	p.flag.bg = map->list[bl->m].flag.battleground ? 1 : 0; // BATTLEFIELD
-	p.flag.nocostume = (map->list[bl->m].flag.noviewid & EQP_COSTUME) ? 1 : 0; // DISABLE_COSTUMEITEM - Disables Costume Sprite
-	p.flag.usecart = 1; // USECART - TODO
-	p.flag.summonstarmiracle = 0; // SUNMOONSTAR_MIRACLE - TODO
-	p.flag.SpareBits = 0; // UNUSED
-
-	clif->send(&p,sizeof(p),bl,t);
-#endif
-}
-
 static void clif_status_change2(struct block_list *bl, int tid, enum send_target target, int type, int val1, int val2, int val3)
 {
 	struct packet_status_change2 p;
@@ -25854,7 +25841,6 @@ void clif_defaults(void)
 	clif->map_property_mapall = clif_map_property_mapall;
 	clif->bossmapinfo = clif_bossmapinfo;
 	clif->map_type = clif_map_type;
-	clif->maptypeproperty2 = clif_maptypeproperty2;
 	clif->crimson_marker = clif_crimson_marker;
 	/* multi-map-server */
 	clif->changemapserver = clif_changemapserver;

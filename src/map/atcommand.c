@@ -1605,10 +1605,9 @@ ACMD(pvpoff)
 	map->zone_change2(sd->bl.m,map->list[sd->bl.m].prev_zone);
 	map->list[sd->bl.m].flag.pvp = 0;
 
-	if (!battle_config.pk_mode) {
+	if (!battle_config.pk_mode)
 		clif->map_property_mapall(sd->bl.m, MAPPROPERTY_NOTHING);
-		clif->maptypeproperty2(&sd->bl,ALL_SAMEMAP);
-	}
+
 	map->foreachinmap(atcommand->pvpoff_sub,sd->bl.m, BL_PC);
 	map->foreachinmap(atcommand->stopattack,sd->bl.m, BL_CHAR, 0);
 	clif->message(fd, msg_fd(fd,31)); // PvP: Off.
@@ -1647,9 +1646,8 @@ ACMD(pvpon)
 	map->zone_change2(sd->bl.m,strdb_get(map->zone_db, MAP_ZONE_PVP_NAME));
 	map->list[sd->bl.m].flag.pvp = 1;
 
-	if (!battle_config.pk_mode) {// display pvp circle and rank
+	if (!battle_config.pk_mode) { // display pvp circle and rank
 		clif->map_property_mapall(sd->bl.m, MAPPROPERTY_FREEPVPZONE);
-		clif->maptypeproperty2(&sd->bl,ALL_SAMEMAP);
 		map->foreachinmap(atcommand->pvpon_sub,sd->bl.m, BL_PC);
 	}
 
@@ -1672,7 +1670,6 @@ ACMD(gvgoff)
 	map->zone_change2(sd->bl.m,map->list[sd->bl.m].prev_zone);
 	map->list[sd->bl.m].flag.gvg = 0;
 	clif->map_property_mapall(sd->bl.m, MAPPROPERTY_NOTHING);
-	clif->maptypeproperty2(&sd->bl,ALL_SAMEMAP);
 	map->foreachinmap(atcommand->stopattack,sd->bl.m, BL_CHAR, 0);
 	clif->message(fd, msg_fd(fd,33)); // GvG: Off.
 
@@ -1692,7 +1689,6 @@ ACMD(gvgon)
 	map->zone_change2(sd->bl.m,strdb_get(map->zone_db, MAP_ZONE_GVG_NAME));
 	map->list[sd->bl.m].flag.gvg = 1;
 	clif->map_property_mapall(sd->bl.m, MAPPROPERTY_AGITZONE);
-	clif->maptypeproperty2(&sd->bl,ALL_SAMEMAP);
 	clif->message(fd, msg_fd(fd,34)); // GvG: On.
 
 	return true;
@@ -1711,7 +1707,6 @@ ACMD(cvcoff)
 	map->zone_change2(sd->bl.m, map->list[sd->bl.m].prev_zone);
 	map->list[sd->bl.m].flag.cvc = 0;
 	clif->map_property_mapall(sd->bl.m, MAPPROPERTY_NOTHING);
-	clif->maptypeproperty2(&sd->bl, ALL_SAMEMAP);
 	map->foreachinmap(atcommand->stopattack, sd->bl.m, BL_CHAR, 0);
 	clif->message(fd, msg_fd(fd, 137)); // CvC: Off.
 
@@ -1731,7 +1726,6 @@ ACMD(cvcon)
 	map->zone_change2(sd->bl.m, strdb_get(map->zone_db, MAP_ZONE_CVC_NAME));
 	map->list[sd->bl.m].flag.cvc = 1;
 	clif->map_property_mapall(sd->bl.m, MAPPROPERTY_AGITZONE);
-	clif->maptypeproperty2(&sd->bl, ALL_SAMEMAP);
 	clif->message(fd, msg_fd(fd, 138)); // CvC: On.
 
 	return true;

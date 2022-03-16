@@ -254,7 +254,11 @@ enum packet_headers {
 #endif
 	notifybindonequip = 0x2d3,
 	monsterhpType = 0x977,
-	maptypeproperty2Type = 0x99b,
+#if PACKETVER >= 20121010
+	maptypeproperty = 0x99b, // ZC_MAPPROPERTY_R2 [KeiKun]
+#else
+	maptypeproperty = 0x199,
+#endif
 #if PACKETVER >= 20131223  // version probably can be 20131030 [4144]
 	wisendType = 0x9df,
 #else
@@ -964,9 +968,10 @@ struct packet_status_change2 {
 	int32 val3;
 } __attribute__((packed));
 
-struct packet_maptypeproperty2 {
+struct packet_maptypeproperty {
 	int16 PacketType;
-	int16 type;
+	int16 property;
+#if PACKETVER >= 20121010
 	struct {
 		uint32 party             : 1;  // Show attack cursor on non-party members (PvP)
 		uint32 guild             : 1;  // Show attack cursor on non-guild members (GvG)
@@ -981,6 +986,7 @@ struct packet_maptypeproperty2 {
 		uint32 summonstarmiracle : 1;  // TODO: What does this do? Related to Taekwon Masters, but I have no idea.
 		uint32 SpareBits         : 21; /// Currently ignored, reserved for future updates
 	} flag;
+#endif
 } __attribute__((packed));
 
 struct packet_bgqueue_ack {
