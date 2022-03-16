@@ -7779,21 +7779,23 @@ static void clif_catch_process(struct map_session_data *sd)
 	WFIFOSET(fd, sizeof(struct PACKET_ZC_START_CAPTURE));
 }
 
-/// Displays the result of a pet taming attempt (ZC_TRYCAPTURE_MONSTER).
-/// 01a0 <result>.B
-///     0 = failure
-///     1 = success
-static void clif_pet_roulette(struct map_session_data *sd, int data)
+/**
+ * Displays the result of a pet taming attempt(ZC_TRYCAPTURE_MONSTER).
+ * 01a0 <result>.B
+ *     0 = failure
+ *     1 = success
+ **/
+ static void clif_pet_roulette(struct map_session_data *sd, int data)
 {
-	int fd;
-
 	nullpo_retv(sd);
 
-	fd=sd->fd;
-	WFIFOHEAD(fd,packet_len(0x1a0));
-	WFIFOW(fd,0)=0x1a0;
-	WFIFOB(fd,2)=data;
-	WFIFOSET(fd,packet_len(0x1a0));
+	int fd = sd->fd;
+
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_TRYCAPTURE_MONSTER));
+	struct PACKET_ZC_TRYCAPTURE_MONSTER *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_TRYCAPTURE_MONSTER;
+	p->result = data;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_TRYCAPTURE_MONSTER));
 }
 
 /// Presents a list of pet eggs that can be hatched (ZC_PETEGG_LIST).

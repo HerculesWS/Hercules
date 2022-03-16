@@ -5493,6 +5493,12 @@ struct PACKET_ZC_START_CAPTURE {
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(ZC_START_CAPTURE, 0x019e)
 
+struct PACKET_ZC_TRYCAPTURE_MONSTER {
+	int16 PacketType;
+	int8 result;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_TRYCAPTURE_MONSTER, 0x01a0)
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
