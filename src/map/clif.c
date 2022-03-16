@@ -7763,18 +7763,20 @@ static void clif_produceeffect(struct map_session_data *sd, int flag, int nameid
 	WFIFOSET(fd, sizeof(struct PACKET_ZC_ACK_REQMAKINGITEM));
 }
 
-/// Initiates the pet taming process (ZC_START_CAPTURE).
-/// 019e
+/**
+ * Initiates the pet taming process(ZC_START_CAPTURE).
+ * 019e
+ **/
 static void clif_catch_process(struct map_session_data *sd)
 {
-	int fd;
-
 	nullpo_retv(sd);
 
-	fd=sd->fd;
-	WFIFOHEAD(fd,packet_len(0x19e));
-	WFIFOW(fd,0)=0x19e;
-	WFIFOSET(fd,packet_len(0x19e));
+	int fd = sd->fd;
+
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_START_CAPTURE));
+	struct PACKET_ZC_START_CAPTURE *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_START_CAPTURE;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_START_CAPTURE));
 }
 
 /// Displays the result of a pet taming attempt (ZC_TRYCAPTURE_MONSTER).

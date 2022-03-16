@@ -5488,6 +5488,11 @@ struct PACKET_ZC_ATTACK_FAILURE_FOR_DISTANCE {
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(ZC_ATTACK_FAILURE_FOR_DISTANCE, 0x0139)
 
+struct PACKET_ZC_START_CAPTURE {
+	int16 PacketType;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_START_CAPTURE, 0x019e)
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
