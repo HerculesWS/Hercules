@@ -7857,30 +7857,31 @@ static void clif_send_petdata(struct map_session_data *sd, struct pet_data *pd, 
 		clif->send(buf, packet_len(0x1a4), &pd->bl, AREA);
 }
 
-/// Pet's base data (ZC_PROPERTY_PET).
-/// 01a2 <name>.24B <renamed>.B <level>.W <hunger>.W <intimacy>.W <accessory id>.W <class>.W
+/**
+ * Pet's base data (ZC_PROPERTY_PET).
+ * 01a2 <name>.24B <renamed>.B <level>.W <hunger>.W <intimacy>.W <accessory id>.W <class>.W
+ **/
 static void clif_send_petstatus(struct map_session_data *sd)
 {
-	int fd;
-	struct s_pet *p;
-
 	nullpo_retv(sd);
 	nullpo_retv(sd->pd);
 
-	fd=sd->fd;
-	p = &sd->pd->pet;
-	WFIFOHEAD(fd,packet_len(0x1a2));
-	WFIFOW(fd,0)=0x1a2;
-	memcpy(WFIFOP(fd,2),p->name,NAME_LENGTH);
-	WFIFOB(fd,26)=battle_config.pet_rename?0:p->rename_flag;
-	WFIFOW(fd,27)=p->level;
-	WFIFOW(fd,29)=p->hungry;
-	WFIFOW(fd,31)=p->intimate;
-	WFIFOW(fd,33)=p->equip;
+	int fd = sd->fd;
+	const struct s_pet *p = &sd->pd->pet;
+
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_PROPERTY_PET));
+	struct PACKET_ZC_PROPERTY_PET *packet = WFIFOP(fd, 0);
+	packet->PacketType = HEADER_ZC_PROPERTY_PET;
+	safestrncpy(packet->szName, p->name, NAME_LENGTH);
+	packet->bModified = battle_config.pet_rename ? 0 : p->rename_flag;
+	packet->nLevel = p->level;
+	packet->nFullness = p->hungry;
+	packet->nRelationship = p->intimate;
+	packet->ITID = p->equip;
 #if PACKETVER >= 20081126
-	WFIFOW(fd,35)=p->class_;
+	packet->job = p->class_;
 #endif
-	WFIFOSET(fd,packet_len(0x1a2));
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_PROPERTY_PET));
 }
 
 /// Notification about a pet's emotion/talk (ZC_PET_ACT).

@@ -5499,6 +5499,20 @@ struct PACKET_ZC_TRYCAPTURE_MONSTER {
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(ZC_TRYCAPTURE_MONSTER, 0x01a0)
 
+struct PACKET_ZC_PROPERTY_PET {
+	int16 PacketType;
+	char szName[NAME_LENGTH];
+	int8 bModified;
+	int16 nLevel;
+	int16 nFullness;
+	int16 nRelationship;
+	int16 ITID;
+#if PACKETVER >= 20081126
+	int16 job;
+#endif
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_PROPERTY_PET, 0x01a2)
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
