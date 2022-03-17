@@ -8308,8 +8308,15 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				val2 = 20*val1; //Power increase
 				break;
 			case SC_OVERTHRUST:
-				//val2 holds if it was casted on self, or is bonus received from others
-				val3 = 5*val1; //Power increase
+#ifndef RENEWAL
+				if (val2 == 1) // cast on self
+					val3 = 5 * val1; //Power increase
+				else // received cast
+					val3 = 5;
+#else
+				// for renewal this is actually wrong for party members since 2020 and will need to be changed.
+				val3 = 5 * val1; // Power increase
+#endif
 				if(sd && pc->checkskill(sd,BS_HILTBINDING)>0)
 					total_tick += total_tick / 10;
 				break;
