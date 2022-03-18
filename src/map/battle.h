@@ -637,6 +637,8 @@ struct Battle_Config {
 	int roulette_silver_step;
 	int roulette_bronze_step;
 	int grader_max_used;
+	int dynamic_npc_timeout;
+	int dynamic_npc_range;
 };
 
 /* criteria for battle_config.idletime_criteria */

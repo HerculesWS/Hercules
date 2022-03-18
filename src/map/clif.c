@@ -389,6 +389,13 @@ static int clif_send_sub(struct block_list *bl, va_list ap)
 #endif
 	}
 
+	// Supress sending area packets for dynamic npcs
+	if (src_bl->type == BL_NPC) {
+		const struct npc_data *nd = BL_UCCAST(BL_NPC, src_bl);
+		if (nd->dyn.isdynamic && nd->dyn.owner_id != sd->status.char_id)
+			return 0;
+	}
+
 	/* unless visible, hold it here */
 	if( clif->ally_only && !sd->sc.data[SC_CLAIRVOYANCE] && !sd->special_state.intravision && battle->check_target( src_bl, &sd->bl, BCT_ENEMY ) > 0 )
 		return 0;
@@ -4983,6 +4990,9 @@ static void clif_getareachar_unit(struct map_session_data *sd, struct block_list
 		// Hide NPC from maya purple card.
 		struct npc_data *nd = BL_UCAST(BL_NPC, bl);
 		if (nd->chat_id == 0 && (nd->option&OPTION_INVISIBLE))
+			return;
+		// Dynamic npcs are hidden from non owner characters
+		if (nd->dyn.isdynamic && nd->dyn.owner_id != sd->status.char_id)
 			return;
 	}
 

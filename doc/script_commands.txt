@@ -10989,3 +10989,14 @@ Works from clients: main 20220504.
 
 Opens Grade Enchant user interface for the player
 returns true on success and false on failure
+
+---------------------------------------
+*calldynamicnpc("<npc name>");
+
+Creates a dynamic npc copy in range of the player with certain criteria:
+	- Only the owner of the npc can see and interact with the npc
+	- The npc will despawn after a certain period of inactivity
+
+a dynamic npc cannot be created from a FAKE_NPC source
+and it does not run OnInit event when created but rather uses OnDynamicNpcInit.
+returns true on success and false on failure

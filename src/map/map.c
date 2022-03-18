@@ -491,7 +491,7 @@ static int map_count_oncell(int16 m, int16 x, int16 y, int type, int flag)
 						continue;
 					if (bl->type == BL_NPC) {
 						const struct npc_data *nd = BL_UCCAST(BL_NPC, bl);
-						if (nd->class_ == FAKE_NPC || nd->class_ == HIDDEN_WARP_CLASS)
+						if (nd->class_ == FAKE_NPC || nd->class_ == HIDDEN_WARP_CLASS || nd->dyn.isdynamic)
 							continue;
 					}
 				}

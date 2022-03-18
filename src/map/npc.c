@@ -157,6 +157,9 @@ static int npc_isnear_sub(struct block_list *bl, va_list args)
 	if( battle_config.vendchat_near_hiddennpc && ( nd->class_ == FAKE_NPC || nd->class_ == HIDDEN_WARP_CLASS ) )
 		return 0;
 
+	if (nd->dyn.isdynamic)
+		return 0;
+
 	return 1;
 }
 
@@ -224,6 +227,9 @@ static int npc_enable_sub(struct block_list *bl, va_list ap)
 		struct map_session_data *sd = BL_UCAST(BL_PC, bl);
 
 		if (nd->option&OPTION_INVISIBLE)
+			return 1;
+
+		if (nd->dyn.isdynamic && nd->dyn.owner_id != sd->status.char_id)
 			return 1;
 
 		if( npc->ontouch_event(sd,nd) > 0 && npc->ontouch2_event(sd,nd) > 0 )
@@ -1018,6 +1024,10 @@ static int npc_touch_areanpc(struct map_session_data *sd, int16 m, int16 x, int1
 			f=0; // a npc was found, but it is disabled; don't print warning
 			continue;
 		}
+		if (map->list[m].npc[i]->dyn.isdynamic && map->list[m].npc[i]->dyn.owner_id != sd->status.char_id) {
+			f = 0;
+			continue;
+		}
 
 		switch(map->list[m].npc[i]->subtype) {
 		case WARP:
@@ -1132,6 +1142,8 @@ static int npc_touch_areanpc2(struct mob_data *md)
 	for( i = 0; i < map->list[m].npc_num; i++ ) {
 		if( map->list[m].npc[i]->option&OPTION_INVISIBLE )
 			continue;
+		if (map->list[m].npc[i]->dyn.isdynamic)
+			continue;
 
 		switch( map->list[m].npc[i]->subtype ) {
 			case WARP:
@@ -1216,6 +1228,8 @@ static int npc_check_areanpc(int flag, int16 m, int16 x, int16 y, int16 range)
 	//Now check for the actual NPC on said range.
 	for(i=0;i<map->list[m].npc_num;i++) {
 		if (map->list[m].npc[i]->option&OPTION_INVISIBLE)
+			continue;
+		if (map->list[m].npc[i]->dyn.isdynamic)
 			continue;
 
 		switch(map->list[m].npc[i]->subtype) {
@@ -1364,6 +1378,13 @@ static int npc_click(struct map_session_data *sd, struct npc_data *nd)
 	if (nd->class_ < 0 || nd->option&(OPTION_INVISIBLE|OPTION_HIDE))
 		return 1;
 
+	// Dynamic npcs only triggerable by the owner
+	if (nd->dyn.isdynamic && nd->dyn.owner_id != sd->status.char_id)
+		return 1;
+
+	// Update the interaction tick
+	npc->update_interaction_tick(nd);
+
 	switch(nd->subtype) {
 		case SHOP:
 			clif->npcbuysell(sd,nd->bl.id);
@@ -1439,6 +1460,8 @@ static int npc_scriptcont(struct map_session_data *sd, int id, bool closing)
 #ifdef SECURE_NPCTIMEOUT
 	sd->npc_idle_tick = timer->gettick(); /// Update the last NPC iteration.
 #endif
+	// Update the interaction tick
+	npc->update_interaction_tick(BL_CAST(BL_NPC, target));
 
 	/// WPE can get to this point with a progressbar; we deny it.
 	if (sd->progressbar.npc_id != 0 && DIFF_TICK(sd->progressbar.timeout, timer->gettick()) > 0)
@@ -1481,6 +1504,9 @@ static int npc_buysellsel(struct map_session_data *sd, int id, int type)
 	}
 
 	if (nd->option & OPTION_INVISIBLE) // can't buy if npc is not visible (hack?)
+		return 1;
+
+	if (nd->dyn.isdynamic && nd->dyn.owner_id != sd->status.char_id)
 		return 1;
 
 	if( nd->class_ < 0 && !sd->state.callshop ) {// not called through a script and is not a visible NPC so an invalid call
@@ -3471,6 +3497,11 @@ static struct npc_data *npc_create_npc(enum npc_subtype subtype, int m, int x, i
 	nd->vd = npc_viewdb[0]; // Copy INVISIBLE_CLASS view data. Actual view data is set by npc->add_to_location() later.
 	VECTOR_INIT(nd->qi_data);
 
+	nd->dyn.isdynamic = false;
+	nd->dyn.owner_id = 0;
+	nd->dyn.despawn_timer = INVALID_TIMER;
+	nd->dyn.last_interaction_tick = timer->gettick();
+
 	return nd;
 }
 
@@ -4462,7 +4493,6 @@ static int npc_do_atcmd_event(struct map_session_data *sd, const char *command, 
 	struct npc_data *nd;
 	struct script_state *st;
 	int i = 0, nargs = 0;
-	size_t len;
 
 	nullpo_ret(sd);
 	nullpo_ret(message);
@@ -4483,7 +4513,7 @@ static int npc_do_atcmd_event(struct map_session_data *sd, const char *command, 
 		return 1;
 	}
 
-	if( ev->nd->option&OPTION_INVISIBLE ) { // Disabled npc, shouldn't trigger event.
+	if ((ev->nd->option & OPTION_INVISIBLE) != 0 || ev->nd->dyn.isdynamic) { // Disabled npc, shouldn't trigger event.
 		npc->event_dequeue(sd);
 		return 2;
 	}
@@ -4491,8 +4521,8 @@ static int npc_do_atcmd_event(struct map_session_data *sd, const char *command, 
 	st = script->alloc_state(ev->nd->u.scr.script, ev->pos, sd->bl.id, ev->nd->bl.id);
 	script->setd_sub(st, NULL, ".@atcmd_command$", 0, command, NULL);
 
-	len = strlen(message);
-	if (len) {
+	int len = (int)strlen(message);
+	if (len > 0) {
 		char *temp, *p;
 		p = temp = aStrdup(message);
 		// Sanity check - Skip leading spaces (shouldn't happen)
@@ -5911,6 +5941,31 @@ static void npc_questinfo_clear(struct npc_data *nd)
 	VECTOR_CLEAR(nd->qi_data);
 }
 
+static int npc_dynamic_npc_despawn(int tid, int64 tick, int id, intptr_t data)
+{
+	struct npc_data *nd = map->id2nd(id);
+
+	if (nd == NULL || nd->dyn.despawn_timer != tid)
+		return 0;
+
+	if (DIFF_TICK(tick, nd->dyn.last_interaction_tick) >= data) {
+		nd->dyn.despawn_timer = INVALID_TIMER;
+		npc->unload(nd, true, false);
+		return 0;
+	}
+
+	int64 next_tick = battle->bc->dynamic_npc_timeout - DIFF_TICK(tick, nd->dyn.last_interaction_tick);
+	nd->dyn.despawn_timer = timer->add(tick + next_tick, npc->dynamic_npc_despawn, nd->bl.id, (intptr_t)next_tick);
+	return 0;
+}
+
+static void npc_update_interaction_tick(struct npc_data *nd)
+{
+	nullpo_retv(nd);
+
+	nd->dyn.last_interaction_tick = timer->gettick();
+}
+
 /*==========================================
  * npc initialization
  *------------------------------------------*/
@@ -6140,4 +6195,6 @@ void npc_defaults(void)
 	npc->refresh = npc_refresh;
 	npc->questinfo_clear = npc_questinfo_clear;
 	npc->process_files = npc_process_files;
+	npc->dynamic_npc_despawn = npc_dynamic_npc_despawn;
+	npc->update_interaction_tick = npc_update_interaction_tick;
 }
