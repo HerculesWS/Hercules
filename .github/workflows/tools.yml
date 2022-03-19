@@ -1,0 +1,39 @@
+name: build
+
+on: [push, pull_request]
+
+env:
+  MYSQL_DATABASE: 'ragnarok'
+  MYSQL_USER: 'ragnarok'
+  MYSQL_PASSWORD: 'ragnarok'
+  MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+  DEBIAN_COMMON_PACKAGES: php php-dom composer
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: debian:unstable
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+
+      - name: info
+        run: |
+          uname -a
+
+      - name: install packages
+        run: |
+          ./tools/ci/retry.sh apt-get update
+          ./tools/ci/retry.sh apt-get install -y -qq $INSTALL_PACKAGES $DEBIAN_COMMON_PACKAGES
+
+      - name: check sql
+        run: |
+          cd tools/php-sqllint
+          ../../tools/ci/retry.sh composer update
+          ../../tools/ci/retry.sh composer install --no-interaction --prefer-source
+          cd ../..
+          ./tools/checksql.sh
+
+          #./tools/ci/retry.sh composer self-update
