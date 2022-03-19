@@ -7,7 +7,7 @@ env:
   MYSQL_USER: 'ragnarok'
   MYSQL_PASSWORD: 'ragnarok'
   MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
-  DEBIAN_COMMON_PACKAGES: php php-dom composer
+  DEBIAN_COMMON_PACKAGES: php php-dom composer wget
 
 jobs:
   build:
@@ -27,12 +27,16 @@ jobs:
         run: |
           ./tools/ci/retry.sh apt-get update
           ./tools/ci/retry.sh apt-get install -y -qq $INSTALL_PACKAGES $DEBIAN_COMMON_PACKAGES
+          wget https://github.com/open-composer/composer/releases/download/2.2.9/composer.phar
+          mkdir -p /usr/local/bin
+          mv composer.phar /usr/local/bin/composer
+          chmod +x /usr/local/bin/composer
 
       - name: check sql
         run: |
           cd tools/php-sqllint
-          ../../tools/ci/retry.sh composer update
-          ../../tools/ci/retry.sh composer install --no-interaction --prefer-source
+          ../../tools/ci/retry.sh /usr/local/bin/composer update
+          ../../tools/ci/retry.sh /usr/local/bin/composer install --no-interaction --prefer-source
           cd ../..
           ./tools/checksql.sh
 
