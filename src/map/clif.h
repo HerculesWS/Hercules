@@ -292,7 +292,9 @@ enum map_type { // clif_map_type
 	MAPTYPE_PVP_TOURNAMENT       = 20,
 	//Map types 21 - 24 not used.
 	MAPTYPE_SIEGE_LOWLEVEL       = 25,
-	//Map types 26 - 28 remains opens for future types.
+	MAPTYPE_2012_RWC_BATTLE_FIELD = 26,
+	MAPTYPE_ANOTHERWORLD_FIELD   = 27,
+	MAPTYPE_LOCALIZING_FIELD     = 28,
 	MAPTYPE_UNUSED               = 29,
 };
 
