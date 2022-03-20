@@ -605,6 +605,7 @@ enum CZ_CONFIG {
 	CZ_CONFIG_CALL                   = 1,
 	CZ_CONFIG_PET_AUTOFEEDING        = 2,
 	CZ_CONFIG_HOMUNCULUS_AUTOFEEDING = 3,
+	CZ_CONFIG_STORE_ASSISTANT_FEE    = 4,  // for now unused
 };
 
 /**

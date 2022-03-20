@@ -18624,6 +18624,9 @@ static void clif_parse_cz_config(int fd, struct map_session_data *sd)
 	case CZ_CONFIG_CALL:
 		sd->status.allow_call = flag;
 		break;
+	case CZ_CONFIG_STORE_ASSISTANT_FEE:
+		// not implemented yet
+		break;
 	default:
 		ShowWarning("clif_parse_cz_config: Unsupported type has been received (%u).\n", type);
 		return;
