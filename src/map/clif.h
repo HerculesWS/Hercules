@@ -641,14 +641,16 @@ enum zc_ui_types {
 **/
 enum cz_ui_types {
 #if PACKETVER >= 20150128
+	CZ_BANK_UI = 0,
 	CZ_STYLIST_UI = 1,
 	CZ_MACRO_REGISTER_UI = 2,
 	CZ_MACRO_DETECTOR_UI = 3,
 #endif
+	// [4144] packet version unknown because unused
+	CZ_ZENY_LOTTO_UI = 4,
 #if PACKETVER >= 20171122
 	CZ_ATTENDANCE_UI = 5,
 #endif
-	cz_ui_unused  // for avoid compilation errors
 };
 
 /**

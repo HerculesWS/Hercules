@@ -23824,6 +23824,9 @@ static void clif_open_ui(struct map_session_data *sd, enum cz_ui_types uiType)
 
 	switch (uiType) {
 #if PACKETVER >= 20150128
+	case CZ_BANK_UI:
+		send_ui_type = ZC_BANK_UI;
+		break;
 	case CZ_STYLIST_UI:
 		send_ui_type = ZC_STYLIST_UI;
 		break;
@@ -23839,7 +23842,7 @@ static void clif_open_ui(struct map_session_data *sd, enum cz_ui_types uiType)
 		send_ui_type = ZC_ATTENDANCE_UI;
 		break;
 #endif
-	case cz_ui_unused:
+	case CZ_ZENY_LOTTO_UI:  // [4144] packet version unknown because unused
 	default:
 		ShowWarning("clif_open_ui: Requested UI (%u) is not implemented yet.\n", uiType);
 		return;
