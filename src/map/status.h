@@ -1015,6 +1015,7 @@ enum e_opt3 {
 	OPT3_SOULLINK         = 0x00008000,
 	OPT3_UNDEAD           = 0x00010000,
 	OPT3_CONTRACT         = 0x00020000,
+	OPT3_ELEMENTAL_VEIL   = 0x00040000,
 };
 
 //Defines for the manner system [Skotlex]
