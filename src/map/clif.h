@@ -691,6 +691,7 @@ enum inventory_type {
 	INVTYPE_CART = 1,
 	INVTYPE_STORAGE = 2,
 	INVTYPE_GUILD_STORAGE = 3,
+	INVTYPE_WORLD_STORAGE = 4,
 };
 
 /** Guild Teleport Results */
