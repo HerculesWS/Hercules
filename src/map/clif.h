@@ -813,7 +813,7 @@ enum lapineUpgrade_result {
 enum removeGear_flag {
 	REMOVE_MOUNT_0 = 0,  // unused
 	REMOVE_MOUNT_DRAGON = 1,
-	REMOVE_MOUNT_2 = 2,  // unused
+	REMOVE_MOUNT_WUG = 2,
 	REMOVE_MOUNT_MADO = 3,
 	REMOVE_MOUNT_PECO = 4,
 	REMOVE_MOUNT_FALCON = 5,

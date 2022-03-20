@@ -13034,10 +13034,14 @@ static void clif_parse_reqGearOff(int fd, struct map_session_data *sd)
 {
 #if PACKETVER_MAIN_NUM >= 20190703 || PACKETVER_RE_NUM >= 20190703 || PACKETVER_ZERO_NUM >= 20190709
 	const struct PACKET_CZ_UNINSTALLATION *p = RFIFOP(fd, 0);
-	switch (p->action) {
+	switch (p->InstallationKind) {
 	case REMOVE_MOUNT_DRAGON:
 		if (pc_isridingdragon(sd))
 			pc->setoption(sd, sd->sc.option &~ OPTION_DRAGON);
+		break;
+	case REMOVE_MOUNT_WUG:
+		if (pc_isridingwug(sd))
+			pc->setoption(sd, sd->sc.option &~ OPTION_WUGRIDER);
 		break;
 	case REMOVE_MOUNT_MADO:
 		if (pc_ismadogear(sd))
@@ -13057,9 +13061,8 @@ static void clif_parse_reqGearOff(int fd, struct map_session_data *sd)
 			pc->setcart(sd, 0);
 		break;
 	case REMOVE_MOUNT_0:
-	case REMOVE_MOUNT_2:
 	default:
-		ShowError("Unknown action in remove mount packet: %d\n", p->action);
+		ShowError("Unknown action in remove mount packet: %d\n", p->InstallationKind);
 		break;
 	}
 #endif
