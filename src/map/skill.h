@@ -94,9 +94,10 @@ enum e_skill_inf {
 	INF_ATTACK_SKILL  = 0x01,
 	INF_GROUND_SKILL  = 0x02,
 	INF_SELF_SKILL    = 0x04, // Skills casted on self where target is automatically chosen
-	// 0x08 not assigned
+	INF_ITEM_SKILL    = 0x08,
 	INF_SUPPORT_SKILL = 0x10,
 	INF_TARGET_TRAP   = 0x20,
+	INF_UNKNOWN       = 0xff,
 };
 
 //Constants to identify a skill's nk value (damage properties)

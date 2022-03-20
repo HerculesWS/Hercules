@@ -21822,6 +21822,11 @@ static void skill_validate_skilltype(struct config_setting_t *conf, struct s_ski
 					sk->inf |= INF_TARGET_TRAP;
 				else
 					sk->inf &= ~INF_TARGET_TRAP;
+			} else if (strcmpi(skill_type, "Item") == 0) {
+				if (on)
+					sk->inf |= INF_ITEM_SKILL;
+				else
+					sk->inf &= ~INF_ITEM_SKILL;
 			} else if (strcmpi(skill_type, "Passive") != 0) {
 				ShowWarning("%s: Invalid skill type %s specified for skill ID %d in %s! Skipping type...\n",
 					    __func__, skill_type, sk->nameid, conf->file);
