@@ -2848,7 +2848,7 @@ static void clif_item_movefailed(struct map_session_data *sd, int n)
 /// Notifies the client, that an inventory item was deleted (ZC_DELETE_ITEM_FROM_BODY).
 /// 07fa <delete type>.W <index>.W <amount>.W
 /// delete type: @see enum delitem_reason
-static void clif_delitem(struct map_session_data *sd, int n, int amount, short reason)
+static void clif_delitem(struct map_session_data *sd, int n, int amount, enum delitem_reason reason)
 {
 #if PACKETVER < 20091117
 	clif->dropitem(sd,n,amount);

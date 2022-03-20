@@ -48,6 +48,8 @@
 #define MAX_PC_DEVOTION 5          ///< Max amount of devotion targets
 #define PVP_CALCRANK_INTERVAL 1000 ///< PVP calculation interval
 
+enum delitem_reason;
+
 //Equip indexes constants. (eg: sd->equip_index[EQI_AMMO] returns the index
 //where the arrows are equipped)
 enum equip_index {
@@ -992,7 +994,7 @@ END_ZEROED_BLOCK; /* End */
 	int (*payzeny) (struct map_session_data *sd,int zeny, enum e_log_pick_type type, struct map_session_data *tsd);
 	int (*additem) (struct map_session_data *sd, const struct item *item_data, int amount, e_log_pick_type log_type);
 	int (*getzeny) (struct map_session_data *sd,int zeny, enum e_log_pick_type type, struct map_session_data *tsd);
-	int (*delitem) (struct map_session_data *sd,int n,int amount,int type, short reason, e_log_pick_type log_type);
+	int (*delitem) (struct map_session_data *sd,int n,int amount,int type, enum delitem_reason reason, e_log_pick_type log_type);
 
 	// Special Shop System
 	int (*paycash) (struct map_session_data *sd, int price, int points);

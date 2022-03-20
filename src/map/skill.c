@@ -5231,7 +5231,7 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 					short item_idx = pc->search_inventory(sd, ITEMID_CARROT);
 
 					if (item_idx >= 0) {
-						pc->delitem(sd, item_idx, 1, 0, 1, LOG_TYPE_CONSUME);
+						pc->delitem(sd, item_idx, 1, 0, DELITEM_SKILLUSE, LOG_TYPE_CONSUME);
 						skill->area_temp[3] = 1;
 					}
 				}
@@ -12352,7 +12352,7 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 				if (sd && skill_id == SU_CN_METEOR) {
 					short item_idx = pc->search_inventory(sd, ITEMID_CATNIP_FRUIT);
 					if (item_idx >= 0) {
-						pc->delitem(sd, item_idx, 1, 0, 1, LOG_TYPE_SKILL);
+						pc->delitem(sd, item_idx, 1, 0, DELITEM_SKILLUSE, LOG_TYPE_SKILL);
 						flag |= 1;
 					}
 				}

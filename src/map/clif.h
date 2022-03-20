@@ -569,6 +569,13 @@ enum delitem_reason {
 	DELITEM_TOCART         = 5, /// Moved to cart
 	DELITEM_SOLD           = 6, /// Item sold
 	DELITEM_ANALYSIS       = 7, /// Consumed by Four Spirit Analysis (SO_EL_ANALYSIS) skill
+	DELITEM_LAPINE_DDUKDDAK = 8,
+	DELITEM_ASSISTANT_VENDING = 9,
+	DELITEM_FAIL_LAPINE_UPGRADE = 10,
+	DELITEM_MOVETO_WORLDSTORE = 11,
+	DELITEM_BARTER         = 12,
+	DELITEM_FAIL_GRADE_ENCHANT = 13,
+	DELITEM_REFORM         = 14,
 };
 
 /**
@@ -898,7 +905,7 @@ struct clif_interface {
 	void (*clearflooritem) (struct flooritem_data *fitem, int fd);
 	void (*additem) (struct map_session_data *sd, int n, int amount, int fail);
 	void (*dropitem) (struct map_session_data *sd,int n,int amount);
-	void (*delitem) (struct map_session_data *sd,int n,int amount, short reason);
+	void (*delitem) (struct map_session_data *sd,int n,int amount, enum delitem_reason reason);
 	void (*takeitem) (struct block_list* src, struct block_list* dst);
 	void (*item_movefailed) (struct map_session_data *sd, int n);
 	void (*item_equip) (short idx, struct EQUIPITEM_INFO *p, struct item *i, struct item_data *id, int eqp_pos);
