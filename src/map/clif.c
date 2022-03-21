@@ -12096,6 +12096,8 @@ static void clif_parse_ActionRequest_sub(struct map_session_data *sd, enum actio
 		case ACT_ATTACK_LUCKY:
 		case ACT_TOUCHSKILL:
 		case ACT_ATTACK_NOMOTION:
+		case ACT_ATTACK_MULTIPLE_CRITICAL:
+		case ACT_SPLASH_NOMOTION:
 			break;
 	}
 }
