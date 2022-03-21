@@ -5310,6 +5310,19 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 						ShowError("0 enemies targeted by %d:%s, divide per 0 avoided!\n", skill_id, skill->get_name(skill_id));
 				}
 
+				bool skip_atk_rate_bonus;
+				switch (skill_id) {
+				case MO_EXTREMITYFIST:
+					skip_atk_rate_bonus = true;
+					break;
+				default:
+					skip_atk_rate_bonus = false;
+					break;
+				}
+
+				if (skip_atk_rate_bonus)
+					break;
+
 				int temp_atk_rate = sstatus->atk_percent;
 				//Add any bonuses that modify the base baseatk+watk (pre-skills)
 				if(sd) {
