@@ -8992,7 +8992,7 @@ static void clif_guild_set_position(struct map_session_data *sd)
 /// 00c0 <id>.L <type>.B
 /// type:
 ///     enum emotion_type
-static void clif_emotion(struct block_list *bl, int type)
+static void clif_emotion(struct block_list *bl, enum emotion_type type)
 {
 	unsigned char buf[8];
 
@@ -11924,7 +11924,7 @@ static void clif_parse_Emotion(int fd, struct map_session_data *sd) __attribute_
 ///     @see enum emotion_type
 static void clif_parse_Emotion(int fd, struct map_session_data *sd)
 {
-	int emoticon = RFIFOB(fd,packet_db[RFIFOW(fd,0)].pos[0]);
+	enum emotion_type emoticon = RFIFOB(fd,packet_db[RFIFOW(fd,0)].pos[0]);
 
 	if (battle_config.basic_skill_check == 0 || pc->check_basicskill(sd, 2)) {
 		if (emoticon == E_MUTE) {// prevent use of the mute emote [Valaris]

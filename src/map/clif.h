@@ -246,6 +246,11 @@ typedef enum emotion_type {
 	E_YUT5,
 	E_YUT6,
 	E_YUT7,
+	E_CLICK_ME,
+	E_DAILY_QUEST,
+	E_EVENT,
+	E_JOB_QUEST,
+	E_TRAFFIC_LINE_QUEST,
 	/* ... */
 	E_MAX
 } emotion_type;
@@ -1123,7 +1128,7 @@ struct clif_interface {
 	void (*changeoption) (struct block_list* bl);
 	void (*changeoption_target) (struct block_list *bl, struct block_list *target_bl, enum send_target target);
 	void (*changeoption2) (struct block_list* bl);
-	void (*emotion) (struct block_list *bl,int type);
+	void (*emotion) (struct block_list *bl, enum emotion_type type);
 	void (*talkiebox) (struct block_list* bl, const char* talkie);
 	void (*wedding_effect) (struct block_list *bl);
 	void (*divorced) (struct map_session_data* sd, const char* name);
