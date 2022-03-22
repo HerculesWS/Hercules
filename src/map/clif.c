@@ -6674,13 +6674,16 @@ static void clif_wis_message(int fd, const char *nick, const char *mes, int mes_
 	struct PACKET_ZC_WHISPER *p = WFIFOP(fd, 0);
 	p->PacketType = HEADER_ZC_WHISPER;
 	p->PacketLength = len;
-	safestrncpy(p->name, nick, NAME_LENGTH);
-	safestrncpy(p->message, mes, mes_len + 1);
+	safestrncpy(p->sender, nick, NAME_LENGTH);
 // [4144] unconfirmed version
 #if PACKETVER >= 20091104
 	struct map_session_data *ssd = map->nick2sd(nick, false);
 	p->isAdmin = (ssd && pc_get_group_level(ssd) == 99) ? 1 : 0; // isAdmin; if nonzero, also displays text above char
 #endif
+#if PACKETVER_MAIN_NUM >= 20131204 || PACKETVER_RE_NUM >= 20131120 || defined(PACKETVER_ZERO)
+	p->senderGID = ssd ? ssd->status.char_id : 0;
+#endif  // PACKETVER_MAIN_NUM >= 20131204 || PACKETVER_RE_NUM >= 20131120 || defined(PACKETVER_ZERO)
+	safestrncpy(p->message, mes, mes_len + 1);
 	WFIFOSET(fd, len);
 }
 

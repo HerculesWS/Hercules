@@ -5399,8 +5399,9 @@ DEFINE_PACKET_HEADER(ZC_SHOW_IMAGE, 0x01b3)
 struct PACKET_ZC_WHISPER {
 	int16 PacketType;
 	int16 PacketLength;
-	char name[NAME_LENGTH];
-	int32 isAdmin;
+	uint32 senderGID;
+	char sender[NAME_LENGTH];
+	uint8 isAdmin;
 	char message[];
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(ZC_WHISPER, 0x09de)
@@ -5409,7 +5410,7 @@ DEFINE_PACKET_HEADER(ZC_WHISPER, 0x09de)
 struct PACKET_ZC_WHISPER {
 	int16 PacketType;
 	int16 PacketLength;
-	char name[NAME_LENGTH];
+	char sender[NAME_LENGTH];
 	int32 isAdmin;
 	char message[];
 } __attribute__((packed));
@@ -5418,7 +5419,7 @@ DEFINE_PACKET_HEADER(ZC_WHISPER, 0x0097)
 struct PACKET_ZC_WHISPER {
 	int16 PacketType;
 	int16 PacketLength;
-	char name[NAME_LENGTH];
+	char sender[NAME_LENGTH];
 	char message[];
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(ZC_WHISPER, 0x0097)
