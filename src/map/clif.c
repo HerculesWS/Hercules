@@ -4160,14 +4160,14 @@ static void clif_statusupack(struct map_session_data *sd, int type, int ok, int 
 /// 00aa <index>.W <equip location>.W <view id>.W <result>.B (PACKETVER >= 20100629)
 static void clif_equipitemack(struct map_session_data *sd, int n, int pos, enum e_EQUIP_ITEM_ACK result)
 {
-	struct packet_equipitem_ack p;
+	struct PACKET_ZC_REQ_WEAR_EQUIP_ACK p;
 
 	nullpo_retv(sd);
 
-	p.PacketType = equipitemackType;
+	p.PacketType = HEADER_ZC_REQ_WEAR_EQUIP_ACK;
 	p.index = n+2;
 	p.wearLocation = pos;
-#if PACKETVER >= 20100629
+#if PACKETVER_MAIN_NUM >= 20101123 || PACKETVER_RE_NUM >= 20100629 || defined(PACKETVER_ZERO)
 	Assert_retv(n >= 0 && n < sd->status.inventorySize);
 	if (result == EIA_SUCCESS && sd->inventory_data[n]->equip&EQP_VISIBLE)
 		p.wItemSpriteNumber = sd->inventory_data[n]->view_sprite;

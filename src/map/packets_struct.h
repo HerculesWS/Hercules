@@ -248,11 +248,6 @@ enum packet_headers {
 	equipitemType = 0xa9,
 #endif
 #if PACKETVER >= 20120925
-	equipitemackType = 0x999,
-#else
-	equipitemackType = 0xaa,
-#endif
-#if PACKETVER >= 20120925
 	unequipitemackType = 0x99a,
 #else
 	unequipitemackType = 0xac,
@@ -1270,19 +1265,33 @@ struct packet_equip_item {
 #endif
 } __attribute__((packed));
 
-struct packet_equipitem_ack {
+#if PACKETVER_MAIN_NUM >= 20121205 || PACKETVER_RE_NUM >= 20121107 || defined(PACKETVER_ZERO)
+struct PACKET_ZC_REQ_WEAR_EQUIP_ACK {
 	int16 PacketType;
 	uint16 index;
-#if PACKETVER >= 20120925
 	uint32 wearLocation;
-#else
-	uint16 wearLocation;
-#endif
-#if PACKETVER >= 20100629
 	uint16 wItemSpriteNumber;
-#endif
 	uint8 result;
 } __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_REQ_WEAR_EQUIP_ACK, 0x0999)
+#elif PACKETVER_MAIN_NUM >= 20101123 || PACKETVER_RE_NUM >= 20100629
+struct PACKET_ZC_REQ_WEAR_EQUIP_ACK {
+	int16 PacketType;
+	uint16 index;
+	uint16 wearLocation;
+	uint16 wItemSpriteNumber;
+	uint8 result;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_REQ_WEAR_EQUIP_ACK, 0x00aa)
+#else  // PACKETVER_MAIN_NUM >= 20121205 || PACKETVER_RE_NUM >= 20121107 || defined(PACKETVER_ZERO)
+struct PACKET_ZC_REQ_WEAR_EQUIP_ACK {
+	int16 PacketType;
+	uint16 index;
+	uint16 wearLocation;
+	uint8 result;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_REQ_WEAR_EQUIP_ACK, 0x00aa)
+#endif  // PACKETVER_MAIN_NUM >= 20121205 || PACKETVER_RE_NUM >= 20121107 || defined(PACKETVER_ZERO)
 
 struct packet_unequipitem_ack {
 	int16 PacketType;
