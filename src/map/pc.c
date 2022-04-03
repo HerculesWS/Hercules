@@ -201,7 +201,7 @@ static int pc_spiritball_timer(int tid, int64 tick, int id, intptr_t data)
 		memmove(sd->spirit_timer+i, sd->spirit_timer+i+1, (sd->spiritball-i)*sizeof(int));
 	sd->spirit_timer[sd->spiritball] = INVALID_TIMER;
 
-	clif->spiritball(&sd->bl);
+	clif->spiritball(&sd->bl, BALL_TYPE_SPIRIT, AREA);
 
 	return 0;
 }
@@ -266,7 +266,7 @@ static int pc_addspiritball_sub(struct map_session_data *sd)
 	if ((sd->job & MAPID_THIRDMASK) == MAPID_ROYAL_GUARD)
 		clif->millenniumshield(&sd->bl,sd->spiritball);
 	else
-		clif->spiritball(&sd->bl);
+		clif->spiritball(&sd->bl, BALL_TYPE_SPIRIT, AREA);
 	return 0;
 }
 
@@ -312,7 +312,7 @@ static int pc_delspiritball_sub(struct map_session_data *sd)
 	if ((sd->job & MAPID_THIRDMASK) == MAPID_ROYAL_GUARD)
 		clif->millenniumshield(&sd->bl,sd->spiritball);
 	else
-		clif->spiritball(&sd->bl);
+		clif->spiritball(&sd->bl, BALL_TYPE_SPIRIT, AREA);
 	return 0;
 }
 
@@ -338,7 +338,7 @@ static void pc_addsoulball(struct map_session_data *sd, int max)
 
 	sd->soulball = cap_value(sd->soulball + 1, 0, max);
 	sc_start(&sd->bl, &sd->bl, SC_SOULENERGY, 100, sd->soulball, skill->get_time2(SP_SOULCOLLECT, 1));
-	clif->soulball(sd, NULL, AREA);
+	clif->spiritball(&sd->bl, BALL_TYPE_SOUL, AREA);
 }
 
 /**
@@ -368,7 +368,7 @@ static void pc_delsoulball(struct map_session_data *sd, int count, bool type)
 	}
 
 	if (type == 0)
-		clif->soulball(sd, NULL, AREA);
+		clif->spiritball(&sd->bl, BALL_TYPE_SOUL, AREA);
 }
 
 static int pc_check_banding(struct block_list *bl, va_list ap)
