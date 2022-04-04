@@ -8022,13 +8022,13 @@ static void clif_devotion(struct block_list *src, struct map_session_data *tsd)
   */
 static void clif_spiritball(struct block_list *bl, enum spirit_ball_types spirit, enum send_target target)
 {
-	unsigned char buf[16];
-
 	nullpo_retv(bl);
 
-	WBUFW(buf, 0) = 0x1d0;
-	WBUFL(buf, 2) = bl->id;
-	WBUFW(buf, 6) = 0; //init to 0
+	struct PACKET_ZC_SPIRITS p = { 0 };
+
+	p.PacketType = HEADER_ZC_SPIRITS;
+	p.AID = bl->id;
+	p.num = 0;
 	switch (bl->type) {
 	case BL_PC:
 	{
@@ -8037,23 +8037,23 @@ static void clif_spiritball(struct block_list *bl, enum spirit_ball_types spirit
 
 		switch (spirit) {
 		case BALL_TYPE_SPIRIT:
-			WBUFW(buf, 6) = sd->spiritball;
+			p.num = sd->spiritball;
 			break;
 		case BALL_TYPE_SOUL:
-			WBUFL(buf, 2) = sd->bl.id;
-			WBUFW(buf, 6) = sd->soulball;
+			p.AID = sd->bl.id;
+			p.num = sd->soulball;
 			break;
 		case BALL_TYPE_NONE:
 			break;
 		}
-		clif->send(buf, packet_len(0x1d0), ((bl == NULL && spirit == BALL_TYPE_SOUL) ? &sd->bl : bl), (spirit == BALL_TYPE_SPIRIT ? AREA : target));
+		clif->send(&p, sizeof(struct PACKET_ZC_SPIRITS), ((bl == NULL && spirit == BALL_TYPE_SOUL) ? &sd->bl : bl), (spirit == BALL_TYPE_SPIRIT ? AREA : target));
 		break;
 	}
 	case BL_HOM:
 	{
 		struct homun_data *hd = BL_CAST(BL_HOM, bl);
 		nullpo_retv(hd);
-		WBUFW(buf, 6) = hd->homunculus.spiritball;
+		p.num = hd->homunculus.spiritball;
 	}
 	FALLTHROUGH
 	case BL_NUL:
@@ -8066,7 +8066,7 @@ static void clif_spiritball(struct block_list *bl, enum spirit_ball_types spirit
 	case BL_PET:
 	case BL_MER:
 	case BL_ALL:
-		clif->send(buf, packet_len(0x1d0), bl, AREA);
+		clif->send(&p, sizeof(struct PACKET_ZC_SPIRITS), bl, AREA);
 		break;
 	}
 }
