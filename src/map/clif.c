@@ -7712,25 +7712,27 @@ static void clif_hpmeter_single(int fd, int id, unsigned int hp, unsigned int ma
 	WFIFOSET(fd, sizeof(struct PACKET_ZC_NOTIFY_HP_TO_GROUPM));
 }
 
-/// Notifies the client, that it's attack target is too far (ZC_ATTACK_FAILURE_FOR_DISTANCE).
-/// 0139 <target id>.L <target x>.W <target y>.W <x>.W <y>.W <atk range>.W
+/**
+ * Notifies the client, that it's attack target is too far (ZC_ATTACK_FAILURE_FOR_DISTANCE).
+ * 0139 <target id>.L <target x>.W <target y>.W <x>.W <y>.W <atk range>.W
+ **/
 static void clif_movetoattack(struct map_session_data *sd, struct block_list *bl)
 {
-	int fd;
-
 	nullpo_retv(sd);
 	nullpo_retv(bl);
 
-	fd=sd->fd;
-	WFIFOHEAD(fd,packet_len(0x139));
-	WFIFOW(fd, 0)=0x139;
-	WFIFOL(fd, 2)=bl->id;
-	WFIFOW(fd, 6)=bl->x;
-	WFIFOW(fd, 8)=bl->y;
-	WFIFOW(fd,10)=sd->bl.x;
-	WFIFOW(fd,12)=sd->bl.y;
-	WFIFOW(fd,14)=sd->battle_status.rhw.range;
-	WFIFOSET(fd,packet_len(0x139));
+	int fd = sd->fd;
+
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_ATTACK_FAILURE_FOR_DISTANCE));
+	struct PACKET_ZC_ATTACK_FAILURE_FOR_DISTANCE *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_ATTACK_FAILURE_FOR_DISTANCE;
+	p->targetAID = bl->id;
+	p->targetXPos = bl->x;
+	p->targetYPos = bl->y;
+	p->xPos = sd->bl.x;
+	p->yPos = sd->bl.y;
+	p->currentAttRange = sd->battle_status.rhw.range;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_ATTACK_FAILURE_FOR_DISTANCE));
 }
 
 /// Notifies the client about the result of an item produce request (ZC_ACK_REQMAKINGITEM).
@@ -7761,35 +7763,39 @@ static void clif_produceeffect(struct map_session_data *sd, int flag, int nameid
 	WFIFOSET(fd, sizeof(struct PACKET_ZC_ACK_REQMAKINGITEM));
 }
 
-/// Initiates the pet taming process (ZC_START_CAPTURE).
-/// 019e
+/**
+ * Initiates the pet taming process(ZC_START_CAPTURE).
+ * 019e
+ **/
 static void clif_catch_process(struct map_session_data *sd)
 {
-	int fd;
-
 	nullpo_retv(sd);
 
-	fd=sd->fd;
-	WFIFOHEAD(fd,packet_len(0x19e));
-	WFIFOW(fd,0)=0x19e;
-	WFIFOSET(fd,packet_len(0x19e));
+	int fd = sd->fd;
+
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_START_CAPTURE));
+	struct PACKET_ZC_START_CAPTURE *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_START_CAPTURE;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_START_CAPTURE));
 }
 
-/// Displays the result of a pet taming attempt (ZC_TRYCAPTURE_MONSTER).
-/// 01a0 <result>.B
-///     0 = failure
-///     1 = success
-static void clif_pet_roulette(struct map_session_data *sd, int data)
+/**
+ * Displays the result of a pet taming attempt(ZC_TRYCAPTURE_MONSTER).
+ * 01a0 <result>.B
+ *     0 = failure
+ *     1 = success
+ **/
+ static void clif_pet_roulette(struct map_session_data *sd, int data)
 {
-	int fd;
-
 	nullpo_retv(sd);
 
-	fd=sd->fd;
-	WFIFOHEAD(fd,packet_len(0x1a0));
-	WFIFOW(fd,0)=0x1a0;
-	WFIFOB(fd,2)=data;
-	WFIFOSET(fd,packet_len(0x1a0));
+	int fd = sd->fd;
+
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_TRYCAPTURE_MONSTER));
+	struct PACKET_ZC_TRYCAPTURE_MONSTER *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_TRYCAPTURE_MONSTER;
+	p->result = data;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_TRYCAPTURE_MONSTER));
 }
 
 /// Presents a list of pet eggs that can be hatched (ZC_PETEGG_LIST).
@@ -7824,57 +7830,61 @@ static void clif_sendegg(struct map_session_data *sd)
 	sd->menuskill_val = -1;
 }
 
-/// Sends a specific pet data update (ZC_CHANGESTATE_PET).
-/// 01a4 <type>.B <id>.L <data>.L
-/// type:
-///     0 = pre-init (data = 0)
-///     1 = intimacy (data = 0~4)
-///     2 = hunger (data = 0~4)
-///     3 = accessory
-///     4 = performance (data = 1~3: normal, 4: special)
-///     5 = hairstyle
-///     6 = close egg selection ui and update egg in inventory (PACKETVER >= 20180704)
-///
-/// If sd is null, the update is sent to nearby objects, otherwise it is sent only to that player.
-static void clif_send_petdata(struct map_session_data *sd, struct pet_data *pd, int type, int param)
+/**
+ * Sends a specific pet data update(ZC_CHANGESTATE_PET).
+ * 01a4 <type>.B <id>.L <data>.L
+ * type:
+ *     0 = pre-init (data = 0)
+ *     1 = intimacy (data = 0~4)
+ *     2 = hunger (data = 0~4)
+ *     3 = accessory
+ *     4 = performance (data = 1~3: normal, 4: special)
+ *     5 = hairstyle
+ *     6 = close egg selection ui and update egg in inventory (PACKETVER >= 20180704)
+ *
+ * If sd is null, the update is sent to nearby objects, otherwise it is sent only to that player.
+ **/
+ static void clif_send_petdata(struct map_session_data *sd, struct pet_data *pd, int type, int param)
 {
-	uint8 buf[16];
 	nullpo_retv(pd);
 
-	WBUFW(buf,0) = 0x1a4;
-	WBUFB(buf,2) = type;
-	WBUFL(buf,3) = pd->bl.id;
-	WBUFL(buf,7) = param;
-	if (sd)
-		clif->send(buf, packet_len(0x1a4), &sd->bl, SELF);
+	struct PACKET_ZC_CHANGESTATE_PET p = { 0 };
+	p.PacketType = HEADER_ZC_CHANGESTATE_PET;
+	p.type = type;
+	p.GID = pd->bl.id;
+	p.data = param;
+
+	if (sd != NULL)
+		clif->send(&p, sizeof(struct PACKET_ZC_CHANGESTATE_PET), &sd->bl, SELF);
 	else
-		clif->send(buf, packet_len(0x1a4), &pd->bl, AREA);
+		clif->send(&p, sizeof(struct PACKET_ZC_CHANGESTATE_PET), &pd->bl, AREA);
 }
 
-/// Pet's base data (ZC_PROPERTY_PET).
-/// 01a2 <name>.24B <renamed>.B <level>.W <hunger>.W <intimacy>.W <accessory id>.W <class>.W
+/**
+ * Pet's base data (ZC_PROPERTY_PET).
+ * 01a2 <name>.24B <renamed>.B <level>.W <hunger>.W <intimacy>.W <accessory id>.W <class>.W
+ **/
 static void clif_send_petstatus(struct map_session_data *sd)
 {
-	int fd;
-	struct s_pet *p;
-
 	nullpo_retv(sd);
 	nullpo_retv(sd->pd);
 
-	fd=sd->fd;
-	p = &sd->pd->pet;
-	WFIFOHEAD(fd,packet_len(0x1a2));
-	WFIFOW(fd,0)=0x1a2;
-	memcpy(WFIFOP(fd,2),p->name,NAME_LENGTH);
-	WFIFOB(fd,26)=battle_config.pet_rename?0:p->rename_flag;
-	WFIFOW(fd,27)=p->level;
-	WFIFOW(fd,29)=p->hungry;
-	WFIFOW(fd,31)=p->intimate;
-	WFIFOW(fd,33)=p->equip;
+	int fd = sd->fd;
+	const struct s_pet *p = &sd->pd->pet;
+
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_PROPERTY_PET));
+	struct PACKET_ZC_PROPERTY_PET *packet = WFIFOP(fd, 0);
+	packet->PacketType = HEADER_ZC_PROPERTY_PET;
+	safestrncpy(packet->szName, p->name, NAME_LENGTH);
+	packet->bModified = battle_config.pet_rename ? 0 : p->rename_flag;
+	packet->nLevel = p->level;
+	packet->nFullness = p->hungry;
+	packet->nRelationship = p->intimate;
+	packet->ITID = p->equip;
 #if PACKETVER >= 20081126
-	WFIFOW(fd,35)=p->class_;
+	packet->job = p->class_;
 #endif
-	WFIFOSET(fd,packet_len(0x1a2));
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_PROPERTY_PET));
 }
 
 /// Notification about a pet's emotion/talk (ZC_PET_ACT).

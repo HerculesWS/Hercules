@@ -5469,12 +5469,57 @@ struct PACKET_CZ_SEE_GUILD_MEMBERS {
 DEFINE_PACKET_HEADER(CZ_SEE_GUILD_MEMBERS, 0x0bb0)
 #endif  // PACKETVER_MAIN_NUM >= 20220216
 
+
 struct PACKET_CZ_CONTACTNPC {
 	int16 PacketType;
 	uint32 AID;
 	uint8 type;
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(CZ_CONTACTNPC, 0x0090)
+
+struct PACKET_ZC_ATTACK_FAILURE_FOR_DISTANCE {
+	int16 PacketType;
+	uint32 targetAID;
+	int16 targetXPos;
+	int16 targetYPos;
+	int16 xPos;
+	int16 yPos;
+	int16 currentAttRange;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_ATTACK_FAILURE_FOR_DISTANCE, 0x0139)
+
+struct PACKET_ZC_START_CAPTURE {
+	int16 PacketType;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_START_CAPTURE, 0x019e)
+
+struct PACKET_ZC_TRYCAPTURE_MONSTER {
+	int16 PacketType;
+	int8 result;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_TRYCAPTURE_MONSTER, 0x01a0)
+
+struct PACKET_ZC_PROPERTY_PET {
+	int16 PacketType;
+	char szName[NAME_LENGTH];
+	int8 bModified;
+	int16 nLevel;
+	int16 nFullness;
+	int16 nRelationship;
+	int16 ITID;
+#if PACKETVER >= 20081126
+	int16 job;
+#endif
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_PROPERTY_PET, 0x01a2)
+
+struct PACKET_ZC_CHANGESTATE_PET {
+	int16 PacketType;
+	int8 type;
+	int GID;
+	int data;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_CHANGESTATE_PET, 0x01a4)
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
