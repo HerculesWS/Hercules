@@ -968,7 +968,8 @@ enum e_mode
 
 //opt1: Non stackable status changes.
 enum e_opt1 {
-	OPT1_STONE = 1, //Petrified
+	OPT1_NONE = 0,
+	OPT1_STONE, //Petrified
 	OPT1_FREEZE,
 	OPT1_STUN,
 	OPT1_SLEEP,
@@ -981,6 +982,7 @@ enum e_opt1 {
 
 //opt2: Stackable status changes.
 enum e_opt2 {
+	OPT2_NORMAL       = 0x0000,
 	OPT2_POISON       = 0x0001,
 	OPT2_CURSE        = 0x0002,
 	OPT2_SILENCE      = 0x0004,
@@ -1013,6 +1015,7 @@ enum e_opt3 {
 	OPT3_SOULLINK         = 0x00008000,
 	OPT3_UNDEAD           = 0x00010000,
 	OPT3_CONTRACT         = 0x00020000,
+	OPT3_ELEMENTAL_VEIL   = 0x00040000,
 };
 
 //Defines for the manner system [Skotlex]

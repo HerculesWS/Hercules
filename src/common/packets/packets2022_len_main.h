@@ -4803,5 +4803,10 @@ packetLen(0x0bb2, 2)
 packetLen(0x0bb3, -1)
 #endif
 
+// Packet: 0x0bb4
+#if PACKETVER >= 20220302
+packetLen(0x0bb4, 31)
+#endif
+
 
 #endif /* COMMON_PACKETS2022_LEN_MAIN_H */

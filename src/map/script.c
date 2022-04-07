@@ -27219,6 +27219,19 @@ static BUILDIN(openstylist)
 	return true;
 }
 
+static BUILDIN(openbank)
+{
+	struct map_session_data *sd = script_rid2sd(st);
+
+	if (sd == NULL)
+		return false;
+
+#if PACKETVER >= 20150128
+	clif->open_ui(sd, CZ_BANK_UI);
+#endif
+	return true;
+}
+
 static BUILDIN(msgtable)
 {
 	struct map_session_data *sd = script_rid2sd(st);
@@ -28471,6 +28484,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF2(rodex_sendmail2, "rodex_sendmail_acc2", "isss?????????????????????????????????????????"),
 		BUILDIN_DEF(airship_respond, "i"),
 		BUILDIN_DEF(openstylist,""),
+		BUILDIN_DEF(openbank, ""),
 		BUILDIN_DEF(_,"s"),
 		BUILDIN_DEF2(_, "_$", "s"),
 

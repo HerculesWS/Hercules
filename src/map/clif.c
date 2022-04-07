@@ -2848,7 +2848,7 @@ static void clif_item_movefailed(struct map_session_data *sd, int n)
 /// Notifies the client, that an inventory item was deleted (ZC_DELETE_ITEM_FROM_BODY).
 /// 07fa <delete type>.W <index>.W <amount>.W
 /// delete type: @see enum delitem_reason
-static void clif_delitem(struct map_session_data *sd, int n, int amount, short reason)
+static void clif_delitem(struct map_session_data *sd, int n, int amount, enum delitem_reason reason)
 {
 #if PACKETVER < 20091117
 	clif->dropitem(sd,n,amount);
@@ -4160,14 +4160,14 @@ static void clif_statusupack(struct map_session_data *sd, int type, int ok, int 
 /// 00aa <index>.W <equip location>.W <view id>.W <result>.B (PACKETVER >= 20100629)
 static void clif_equipitemack(struct map_session_data *sd, int n, int pos, enum e_EQUIP_ITEM_ACK result)
 {
-	struct packet_equipitem_ack p;
+	struct PACKET_ZC_REQ_WEAR_EQUIP_ACK p;
 
 	nullpo_retv(sd);
 
-	p.PacketType = equipitemackType;
+	p.PacketType = HEADER_ZC_REQ_WEAR_EQUIP_ACK;
 	p.index = n+2;
 	p.wearLocation = pos;
-#if PACKETVER >= 20100629
+#if PACKETVER_MAIN_NUM >= 20101123 || PACKETVER_RE_NUM >= 20100629 || defined(PACKETVER_ZERO)
 	Assert_retv(n >= 0 && n < sd->status.inventorySize);
 	if (result == EIA_SUCCESS && sd->inventory_data[n]->equip&EQP_VISIBLE)
 		p.wItemSpriteNumber = sd->inventory_data[n]->view_sprite;
@@ -5730,7 +5730,7 @@ static void clif_useskill(struct block_list *bl, int src_id, int dst_id, int dst
 	p.disposable = 0;
 #endif
 #if PACKETVER_MAIN_NUM >= 20181212 || PACKETVER_RE_NUM >= 20181212 || PACKETVER_ZERO_NUM >= 20190130
-	p.unknown = 0;
+	p.attackMT = 0;
 #endif
 
 	if (clif->isdisguised(bl)) {
@@ -6674,13 +6674,16 @@ static void clif_wis_message(int fd, const char *nick, const char *mes, int mes_
 	struct PACKET_ZC_WHISPER *p = WFIFOP(fd, 0);
 	p->PacketType = HEADER_ZC_WHISPER;
 	p->PacketLength = len;
-	safestrncpy(p->name, nick, NAME_LENGTH);
-	safestrncpy(p->message, mes, mes_len + 1);
+	safestrncpy(p->sender, nick, NAME_LENGTH);
 // [4144] unconfirmed version
 #if PACKETVER >= 20091104
 	struct map_session_data *ssd = map->nick2sd(nick, false);
 	p->isAdmin = (ssd && pc_get_group_level(ssd) == 99) ? 1 : 0; // isAdmin; if nonzero, also displays text above char
 #endif
+#if PACKETVER_MAIN_NUM >= 20131204 || PACKETVER_RE_NUM >= 20131120 || defined(PACKETVER_ZERO)
+	p->senderGID = ssd ? ssd->status.char_id : 0;
+#endif  // PACKETVER_MAIN_NUM >= 20131204 || PACKETVER_RE_NUM >= 20131120 || defined(PACKETVER_ZERO)
+	safestrncpy(p->message, mes, mes_len + 1);
 	WFIFOSET(fd, len);
 }
 
@@ -8992,7 +8995,7 @@ static void clif_guild_set_position(struct map_session_data *sd)
 /// 00c0 <id>.L <type>.B
 /// type:
 ///     enum emotion_type
-static void clif_emotion(struct block_list *bl, int type)
+static void clif_emotion(struct block_list *bl, enum emotion_type type)
 {
 	unsigned char buf[8];
 
@@ -11924,7 +11927,7 @@ static void clif_parse_Emotion(int fd, struct map_session_data *sd) __attribute_
 ///     @see enum emotion_type
 static void clif_parse_Emotion(int fd, struct map_session_data *sd)
 {
-	int emoticon = RFIFOB(fd,packet_db[RFIFOW(fd,0)].pos[0]);
+	enum emotion_type emoticon = RFIFOB(fd,packet_db[RFIFOW(fd,0)].pos[0]);
 
 	if (battle_config.basic_skill_check == 0 || pc->check_basicskill(sd, 2)) {
 		if (emoticon == E_MUTE) {// prevent use of the mute emote [Valaris]
@@ -12096,6 +12099,8 @@ static void clif_parse_ActionRequest_sub(struct map_session_data *sd, enum actio
 		case ACT_ATTACK_LUCKY:
 		case ACT_TOUCHSKILL:
 		case ACT_ATTACK_NOMOTION:
+		case ACT_ATTACK_MULTIPLE_CRITICAL:
+		case ACT_SPLASH_NOMOTION:
 			break;
 	}
 }
@@ -12548,6 +12553,8 @@ static void clif_parse_NpcClicked(int fd, struct map_session_data *sd)
 {
 	struct block_list *bl;
 
+	struct PACKET_CZ_CONTACTNPC *packet = RFIFOP(fd, 0);
+
 	if( pc_isdead(sd) ) {
 		clif->clearunit_area(&sd->bl,CLR_DEAD);
 		return;
@@ -12560,7 +12567,7 @@ static void clif_parse_NpcClicked(int fd, struct map_session_data *sd)
 #endif
 		return;
 	}
-	if (pc_cant_act2(sd) || !(bl = map->id2bl(RFIFOL(fd,2))) || sd->state.vending || sd->state.prevend)
+	if (pc_cant_act2(sd) || !(bl = map->id2bl(packet->AID)) || sd->state.vending || sd->state.prevend)
 		return;
 
 	switch (bl->type) {
@@ -13032,10 +13039,14 @@ static void clif_parse_reqGearOff(int fd, struct map_session_data *sd)
 {
 #if PACKETVER_MAIN_NUM >= 20190703 || PACKETVER_RE_NUM >= 20190703 || PACKETVER_ZERO_NUM >= 20190709
 	const struct PACKET_CZ_UNINSTALLATION *p = RFIFOP(fd, 0);
-	switch (p->action) {
+	switch (p->InstallationKind) {
 	case REMOVE_MOUNT_DRAGON:
 		if (pc_isridingdragon(sd))
 			pc->setoption(sd, sd->sc.option &~ OPTION_DRAGON);
+		break;
+	case REMOVE_MOUNT_WUG:
+		if (pc_isridingwug(sd))
+			pc->setoption(sd, sd->sc.option &~ OPTION_WUGRIDER);
 		break;
 	case REMOVE_MOUNT_MADO:
 		if (pc_ismadogear(sd))
@@ -13055,9 +13066,8 @@ static void clif_parse_reqGearOff(int fd, struct map_session_data *sd)
 			pc->setcart(sd, 0);
 		break;
 	case REMOVE_MOUNT_0:
-	case REMOVE_MOUNT_2:
 	default:
-		ShowError("Unknown action in remove mount packet: %d\n", p->action);
+		ShowError("Unknown action in remove mount packet: %d\n", p->InstallationKind);
 		break;
 	}
 #endif
@@ -18619,6 +18629,9 @@ static void clif_parse_cz_config(int fd, struct map_session_data *sd)
 	case CZ_CONFIG_CALL:
 		sd->status.allow_call = flag;
 		break;
+	case CZ_CONFIG_STORE_ASSISTANT_FEE:
+		// not implemented yet
+		break;
 	default:
 		ShowWarning("clif_parse_cz_config: Unsupported type has been received (%u).\n", type);
 		return;
@@ -23695,7 +23708,7 @@ static void clif_open_ui_send1(struct map_session_data *sd, enum zc_ui_types ui_
 
 		if (clif->attendance_getendtime() < time(NULL)) {
 #if PACKETVER >= 20180207
-			clif->msgtable_color(sd, MSG_ATTENDANCE_UNAVAILABLE, COLOR_RED);
+			clif->msgtable_color(sd, MSG_CHECK_ATTENDANCE_NOT_EVENT, COLOR_RED);
 #endif
 			return;
 		}
@@ -23816,6 +23829,9 @@ static void clif_open_ui(struct map_session_data *sd, enum cz_ui_types uiType)
 
 	switch (uiType) {
 #if PACKETVER >= 20150128
+	case CZ_BANK_UI:
+		send_ui_type = ZC_BANK_UI;
+		break;
 	case CZ_STYLIST_UI:
 		send_ui_type = ZC_STYLIST_UI;
 		break;
@@ -23831,7 +23847,7 @@ static void clif_open_ui(struct map_session_data *sd, enum cz_ui_types uiType)
 		send_ui_type = ZC_ATTENDANCE_UI;
 		break;
 #endif
-	case cz_ui_unused:
+	case CZ_ZENY_LOTTO_UI:  // [4144] packet version unknown because unused
 	default:
 		ShowWarning("clif_open_ui: Requested UI (%u) is not implemented yet.\n", uiType);
 		return;
@@ -23853,7 +23869,7 @@ static void clif_parse_attendance_reward_request(int fd, struct map_session_data
 	char title[RODEX_TITLE_LENGTH], body[MAIL_BODY_LENGTH];
 
 	if (clif->attendance_getendtime() < time(NULL)) {
-		clif->msgtable_color(sd, MSG_ATTENDANCE_UNAVAILABLE, COLOR_RED);
+		clif->msgtable_color(sd, MSG_CHECK_ATTENDANCE_NOT_EVENT, COLOR_RED);
 		return;
 	}
 

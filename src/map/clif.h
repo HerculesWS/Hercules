@@ -246,6 +246,11 @@ typedef enum emotion_type {
 	E_YUT5,
 	E_YUT6,
 	E_YUT7,
+	E_CLICK_ME,
+	E_DAILY_QUEST,
+	E_EVENT,
+	E_JOB_QUEST,
+	E_TRAFFIC_LINE_QUEST,
 	/* ... */
 	E_MAX
 } emotion_type;
@@ -292,7 +297,9 @@ enum map_type { // clif_map_type
 	MAPTYPE_PVP_TOURNAMENT       = 20,
 	//Map types 21 - 24 not used.
 	MAPTYPE_SIEGE_LOWLEVEL       = 25,
-	//Map types 26 - 28 remains opens for future types.
+	MAPTYPE_2012_RWC_BATTLE_FIELD = 26,
+	MAPTYPE_ANOTHERWORLD_FIELD   = 27,
+	MAPTYPE_LOCALIZING_FIELD     = 28,
 	MAPTYPE_UNUSED               = 29,
 };
 
@@ -382,7 +389,33 @@ typedef enum useskill_fail_cause { // clif_skill_fail
 	USESKILL_FAIL_STYLE_CHANGE_GRAPPLER = 82,
 	USESKILL_FAIL_THERE_ARE_NPC_AROUND = 83,
 	USESKILL_FAIL_NEED_MORE_BULLET = 84,
-	// max known value 96
+	USESKILL_FAIL_COINS = 85,
+	USESKILL_FAIL_MSG = 86,
+	USESKILL_FAIL_MAP = 87,
+	USESKILL_FAIL_SUMMON_SP_INSUFFICIENT = 88,
+	USESKILL_FAIL_EXIST_STORE_ASSISTANT = 89,
+	USESKILL_FAIL_NEED_MORE_BULLET_CNT = 90,
+	USESKILL_FAIL_NEED_MORE_ARROW_CNT = 91,
+	USESKILL_FAIL_NOT_PARTY_MEMBER = 92,
+	USESKILL_FAIL_NOT_PARTY_MASTER = 93,
+	USESKILL_FAIL_ENSEMBLE_PARTYNER = 94,
+	USESKILL_FAIL_NEED_EQUIPPED_WEAPONE = 95,
+	USESKILL_FAIL_EMPTY_SOUL_ENERGY = 96,
+	USESKILL_FAIL_GC_WEAPONBLOK_ON = 97,
+	USESKILL_FAIL_OVER_INSTALLATION = 98,
+	USESKILL_FAIL_SPELLBOOK_NONE = 99,
+	USESKILL_FAIL_AP_INSUFFICIENT = 100,
+	USESKILL_FAIL_EMPTY_SERVANTWEAPON = 101,
+	USESKILL_FAIL_NEED_TWINKLING_GALAXY_AREA = 102,
+	USESKILL_FAIL_NEED_SOULCOLLECT = 103,
+	USESKILL_FAIL_NEED_CHARMS = 104,
+	USESKILL_FAIL_NEED_GATLING_OR_SHOTGUN = 105,
+	USESKILL_FAIL_NEED_RIFLE_OR_HANDGUN = 106,
+	USESKILL_FAIL_NEED_GRANADE_OR_RIFLE = 107,
+	USESKILL_FAIL_NEED_GATLING_OR_HANDGUN = 108,
+	USESKILL_FAIL_NEED_SHOTGUN_OR_GRANADE = 109,
+	USESKILL_FAIL_NEED_SHIELD_WEAPON = 110,
+	USESKILL_FAIL_NO_SPACE_BEHIND_THE_TARGET = 111,
 } useskill_fail_cause;
 
 /**
@@ -541,6 +574,13 @@ enum delitem_reason {
 	DELITEM_TOCART         = 5, /// Moved to cart
 	DELITEM_SOLD           = 6, /// Item sold
 	DELITEM_ANALYSIS       = 7, /// Consumed by Four Spirit Analysis (SO_EL_ANALYSIS) skill
+	DELITEM_LAPINE_DDUKDDAK = 8,
+	DELITEM_ASSISTANT_VENDING = 9,
+	DELITEM_FAIL_LAPINE_UPGRADE = 10,
+	DELITEM_MOVETO_WORLDSTORE = 11,
+	DELITEM_BARTER         = 12,
+	DELITEM_FAIL_GRADE_ENCHANT = 13,
+	DELITEM_REFORM         = 14,
 };
 
 /**
@@ -577,6 +617,7 @@ enum CZ_CONFIG {
 	CZ_CONFIG_CALL                   = 1,
 	CZ_CONFIG_PET_AUTOFEEDING        = 2,
 	CZ_CONFIG_HOMUNCULUS_AUTOFEEDING = 3,
+	CZ_CONFIG_STORE_ASSISTANT_FEE    = 4,  // for now unused
 };
 
 /**
@@ -612,14 +653,16 @@ enum zc_ui_types {
 **/
 enum cz_ui_types {
 #if PACKETVER >= 20150128
+	CZ_BANK_UI = 0,
 	CZ_STYLIST_UI = 1,
 	CZ_MACRO_REGISTER_UI = 2,
 	CZ_MACRO_DETECTOR_UI = 3,
 #endif
+	// [4144] packet version unknown because unused
+	CZ_ZENY_LOTTO_UI = 4,
 #if PACKETVER >= 20171122
 	CZ_ATTENDANCE_UI = 5,
 #endif
-	cz_ui_unused  // for avoid compilation errors
 };
 
 /**
@@ -653,6 +696,7 @@ enum inventory_type {
 	INVTYPE_CART = 1,
 	INVTYPE_STORAGE = 2,
 	INVTYPE_GUILD_STORAGE = 3,
+	INVTYPE_WORLD_STORAGE = 4,
 };
 
 /** Guild Teleport Results */
@@ -676,7 +720,9 @@ enum action_type {
 	ACT_ATTACK_MULTIPLE_NOMOTION,
 	ACT_ATTACK_CRITICAL,
 	ACT_ATTACK_LUCKY,
-	ACT_TOUCHSKILL
+	ACT_TOUCHSKILL,
+	ACT_ATTACK_MULTIPLE_CRITICAL,
+	ACT_SPLASH_NOMOTION
 };
 
 enum unequip_all {
@@ -785,7 +831,7 @@ enum lapineUpgrade_result {
 enum removeGear_flag {
 	REMOVE_MOUNT_0 = 0,  // unused
 	REMOVE_MOUNT_DRAGON = 1,
-	REMOVE_MOUNT_2 = 2,  // unused
+	REMOVE_MOUNT_WUG = 2,
 	REMOVE_MOUNT_MADO = 3,
 	REMOVE_MOUNT_PECO = 4,
 	REMOVE_MOUNT_FALCON = 5,
@@ -867,7 +913,7 @@ struct clif_interface {
 	void (*clearflooritem) (struct flooritem_data *fitem, int fd);
 	void (*additem) (struct map_session_data *sd, int n, int amount, int fail);
 	void (*dropitem) (struct map_session_data *sd,int n,int amount);
-	void (*delitem) (struct map_session_data *sd,int n,int amount, short reason);
+	void (*delitem) (struct map_session_data *sd,int n,int amount, enum delitem_reason reason);
 	void (*takeitem) (struct block_list* src, struct block_list* dst);
 	void (*item_movefailed) (struct map_session_data *sd, int n);
 	void (*item_equip) (short idx, struct EQUIPITEM_INFO *p, struct item *i, struct item_data *id, int eqp_pos);
@@ -1084,7 +1130,7 @@ struct clif_interface {
 	void (*changeoption) (struct block_list* bl);
 	void (*changeoption_target) (struct block_list *bl, struct block_list *target_bl, enum send_target target);
 	void (*changeoption2) (struct block_list* bl);
-	void (*emotion) (struct block_list *bl,int type);
+	void (*emotion) (struct block_list *bl, enum emotion_type type);
 	void (*talkiebox) (struct block_list* bl, const char* talkie);
 	void (*wedding_effect) (struct block_list *bl);
 	void (*divorced) (struct map_session_data* sd, const char* name);

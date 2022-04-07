@@ -4905,7 +4905,7 @@ static int pc_additem(struct map_session_data *sd, const struct item *item_data,
  *   0 = success
  *   1 = invalid itemid or negative amount
  *------------------------------------------*/
-static int pc_delitem(struct map_session_data *sd, int n, int amount, int type, short reason, e_log_pick_type log_type)
+static int pc_delitem(struct map_session_data *sd, int n, int amount, int type, enum delitem_reason reason, e_log_pick_type log_type)
 {
 	nullpo_retr(1, sd);
 	Assert_retr(1, n >= 0 && n < sd->status.inventorySize);

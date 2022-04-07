@@ -25,6 +25,8 @@
   <include name="vendor/pear/console_commandline/Console/**"/>
   <include name="vendor/pear/pear_exception/PEAR/**"/>
   <include name="vendor/phpmyadmin/sql-parser/src/**"/>
+  <include name="vendor/symfony/polyfill-mbstring/bootstrap.php"/>
+  <include name="vendor/symfony/polyfill-mbstring/Mbstring.php"/>
  </fileset>
 
 

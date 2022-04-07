@@ -1122,8 +1122,8 @@ typedef void (*HPMHOOK_pre_clif_additem) (struct map_session_data **sd, int *n, 
 typedef void (*HPMHOOK_post_clif_additem) (struct map_session_data *sd, int n, int amount, int fail);
 typedef void (*HPMHOOK_pre_clif_dropitem) (struct map_session_data **sd, int *n, int *amount);
 typedef void (*HPMHOOK_post_clif_dropitem) (struct map_session_data *sd, int n, int amount);
-typedef void (*HPMHOOK_pre_clif_delitem) (struct map_session_data **sd, int *n, int *amount, short *reason);
-typedef void (*HPMHOOK_post_clif_delitem) (struct map_session_data *sd, int n, int amount, short reason);
+typedef void (*HPMHOOK_pre_clif_delitem) (struct map_session_data **sd, int *n, int *amount, enum delitem_reason *reason);
+typedef void (*HPMHOOK_post_clif_delitem) (struct map_session_data *sd, int n, int amount, enum delitem_reason reason);
 typedef void (*HPMHOOK_pre_clif_takeitem) (struct block_list **src, struct block_list **dst);
 typedef void (*HPMHOOK_post_clif_takeitem) (struct block_list *src, struct block_list *dst);
 typedef void (*HPMHOOK_pre_clif_item_movefailed) (struct map_session_data **sd, int *n);
@@ -1538,8 +1538,8 @@ typedef void (*HPMHOOK_pre_clif_changeoption_target) (struct block_list **bl, st
 typedef void (*HPMHOOK_post_clif_changeoption_target) (struct block_list *bl, struct block_list *target_bl, enum send_target target);
 typedef void (*HPMHOOK_pre_clif_changeoption2) (struct block_list **bl);
 typedef void (*HPMHOOK_post_clif_changeoption2) (struct block_list *bl);
-typedef void (*HPMHOOK_pre_clif_emotion) (struct block_list **bl, int *type);
-typedef void (*HPMHOOK_post_clif_emotion) (struct block_list *bl, int type);
+typedef void (*HPMHOOK_pre_clif_emotion) (struct block_list **bl, enum emotion_type *type);
+typedef void (*HPMHOOK_post_clif_emotion) (struct block_list *bl, enum emotion_type type);
 typedef void (*HPMHOOK_pre_clif_talkiebox) (struct block_list **bl, const char **talkie);
 typedef void (*HPMHOOK_post_clif_talkiebox) (struct block_list *bl, const char *talkie);
 typedef void (*HPMHOOK_pre_clif_wedding_effect) (struct block_list **bl);
@@ -6316,8 +6316,8 @@ typedef int (*HPMHOOK_pre_pc_additem) (struct map_session_data **sd, const struc
 typedef int (*HPMHOOK_post_pc_additem) (int retVal___, struct map_session_data *sd, const struct item *item_data, int amount, e_log_pick_type log_type);
 typedef int (*HPMHOOK_pre_pc_getzeny) (struct map_session_data **sd, int *zeny, enum e_log_pick_type *type, struct map_session_data **tsd);
 typedef int (*HPMHOOK_post_pc_getzeny) (int retVal___, struct map_session_data *sd, int zeny, enum e_log_pick_type type, struct map_session_data *tsd);
-typedef int (*HPMHOOK_pre_pc_delitem) (struct map_session_data **sd, int *n, int *amount, int *type, short *reason, e_log_pick_type *log_type);
-typedef int (*HPMHOOK_post_pc_delitem) (int retVal___, struct map_session_data *sd, int n, int amount, int type, short reason, e_log_pick_type log_type);
+typedef int (*HPMHOOK_pre_pc_delitem) (struct map_session_data **sd, int *n, int *amount, int *type, enum delitem_reason *reason, e_log_pick_type *log_type);
+typedef int (*HPMHOOK_post_pc_delitem) (int retVal___, struct map_session_data *sd, int n, int amount, int type, enum delitem_reason reason, e_log_pick_type log_type);
 typedef int (*HPMHOOK_pre_pc_paycash) (struct map_session_data **sd, int *price, int *points);
 typedef int (*HPMHOOK_post_pc_paycash) (int retVal___, struct map_session_data *sd, int price, int points);
 typedef int (*HPMHOOK_pre_pc_getcash) (struct map_session_data **sd, int *cash, int *points);

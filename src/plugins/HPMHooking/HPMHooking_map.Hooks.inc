@@ -9240,10 +9240,10 @@ void HP_clif_dropitem(struct map_session_data *sd, int n, int amount) {
 	}
 	return;
 }
-void HP_clif_delitem(struct map_session_data *sd, int n, int amount, short reason) {
+void HP_clif_delitem(struct map_session_data *sd, int n, int amount, enum delitem_reason reason) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_delitem_pre > 0) {
-		void (*preHookFunc) (struct map_session_data **sd, int *n, int *amount, short *reason);
+		void (*preHookFunc) (struct map_session_data **sd, int *n, int *amount, enum delitem_reason *reason);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_delitem_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_clif_delitem_pre[hIndex].func;
@@ -9258,7 +9258,7 @@ void HP_clif_delitem(struct map_session_data *sd, int n, int amount, short reaso
 		HPMHooks.source.clif.delitem(sd, n, amount, reason);
 	}
 	if (HPMHooks.count.HP_clif_delitem_post > 0) {
-		void (*postHookFunc) (struct map_session_data *sd, int n, int amount, short reason);
+		void (*postHookFunc) (struct map_session_data *sd, int n, int amount, enum delitem_reason reason);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_delitem_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_delitem_post[hIndex].func;
 			postHookFunc(sd, n, amount, reason);
@@ -14689,10 +14689,10 @@ void HP_clif_changeoption2(struct block_list *bl) {
 	}
 	return;
 }
-void HP_clif_emotion(struct block_list *bl, int type) {
+void HP_clif_emotion(struct block_list *bl, enum emotion_type type) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_emotion_pre > 0) {
-		void (*preHookFunc) (struct block_list **bl, int *type);
+		void (*preHookFunc) (struct block_list **bl, enum emotion_type *type);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_emotion_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_clif_emotion_pre[hIndex].func;
@@ -14707,7 +14707,7 @@ void HP_clif_emotion(struct block_list *bl, int type) {
 		HPMHooks.source.clif.emotion(bl, type);
 	}
 	if (HPMHooks.count.HP_clif_emotion_post > 0) {
-		void (*postHookFunc) (struct block_list *bl, int type);
+		void (*postHookFunc) (struct block_list *bl, enum emotion_type type);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_emotion_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_emotion_post[hIndex].func;
 			postHookFunc(bl, type);
@@ -64981,11 +64981,11 @@ int HP_pc_getzeny(struct map_session_data *sd, int zeny, enum e_log_pick_type ty
 	}
 	return retVal___;
 }
-int HP_pc_delitem(struct map_session_data *sd, int n, int amount, int type, short reason, e_log_pick_type log_type) {
+int HP_pc_delitem(struct map_session_data *sd, int n, int amount, int type, enum delitem_reason reason, e_log_pick_type log_type) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_pc_delitem_pre > 0) {
-		int (*preHookFunc) (struct map_session_data **sd, int *n, int *amount, int *type, short *reason, e_log_pick_type *log_type);
+		int (*preHookFunc) (struct map_session_data **sd, int *n, int *amount, int *type, enum delitem_reason *reason, e_log_pick_type *log_type);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_delitem_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_pc_delitem_pre[hIndex].func;
@@ -65000,7 +65000,7 @@ int HP_pc_delitem(struct map_session_data *sd, int n, int amount, int type, shor
 		retVal___ = HPMHooks.source.pc.delitem(sd, n, amount, type, reason, log_type);
 	}
 	if (HPMHooks.count.HP_pc_delitem_post > 0) {
-		int (*postHookFunc) (int retVal___, struct map_session_data *sd, int n, int amount, int type, short reason, e_log_pick_type log_type);
+		int (*postHookFunc) (int retVal___, struct map_session_data *sd, int n, int amount, int type, enum delitem_reason reason, e_log_pick_type log_type);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_delitem_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_pc_delitem_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, sd, n, amount, type, reason, log_type);

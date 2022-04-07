@@ -248,11 +248,6 @@ enum packet_headers {
 	equipitemType = 0xa9,
 #endif
 #if PACKETVER >= 20120925
-	equipitemackType = 0x999,
-#else
-	equipitemackType = 0xaa,
-#endif
-#if PACKETVER >= 20120925
 	unequipitemackType = 0x99a,
 #else
 	unequipitemackType = 0xac,
@@ -1270,19 +1265,33 @@ struct packet_equip_item {
 #endif
 } __attribute__((packed));
 
-struct packet_equipitem_ack {
+#if PACKETVER_MAIN_NUM >= 20121205 || PACKETVER_RE_NUM >= 20121107 || defined(PACKETVER_ZERO)
+struct PACKET_ZC_REQ_WEAR_EQUIP_ACK {
 	int16 PacketType;
 	uint16 index;
-#if PACKETVER >= 20120925
 	uint32 wearLocation;
-#else
-	uint16 wearLocation;
-#endif
-#if PACKETVER >= 20100629
 	uint16 wItemSpriteNumber;
-#endif
 	uint8 result;
 } __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_REQ_WEAR_EQUIP_ACK, 0x0999)
+#elif PACKETVER_MAIN_NUM >= 20101123 || PACKETVER_RE_NUM >= 20100629
+struct PACKET_ZC_REQ_WEAR_EQUIP_ACK {
+	int16 PacketType;
+	uint16 index;
+	uint16 wearLocation;
+	uint16 wItemSpriteNumber;
+	uint8 result;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_REQ_WEAR_EQUIP_ACK, 0x00aa)
+#else  // PACKETVER_MAIN_NUM >= 20121205 || PACKETVER_RE_NUM >= 20121107 || defined(PACKETVER_ZERO)
+struct PACKET_ZC_REQ_WEAR_EQUIP_ACK {
+	int16 PacketType;
+	uint16 index;
+	uint16 wearLocation;
+	uint8 result;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_REQ_WEAR_EQUIP_ACK, 0x00aa)
+#endif  // PACKETVER_MAIN_NUM >= 20121205 || PACKETVER_RE_NUM >= 20121107 || defined(PACKETVER_ZERO)
 
 struct packet_unequipitem_ack {
 	int16 PacketType;
@@ -3905,7 +3914,7 @@ struct PACKET_ZC_USESKILL_ACK {
 	uint32 element;
 	uint32 delayTime;
 	uint8 disposable;
-	uint32 unknown;
+	uint32 attackMT;
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(ZC_USESKILL_ACK, 0x0b1a);
 #elif PACKETVER_MAIN_NUM >= 20091124 || PACKETVER_RE_NUM >= 20091124 || defined(PACKETVER_ZERO)
@@ -4419,8 +4428,8 @@ DEFINE_PACKET_HEADER(ZC_ACK_RANDOM_COMBINE_ITEM, 0x0a50);
 
 #if PACKETVER_MAIN_NUM >= 20190703 || PACKETVER_RE_NUM >= 20190703 || PACKETVER_ZERO_NUM >= 20190709
 struct PACKET_CZ_UNINSTALLATION {
-	int16 packetType;
-	uint8 action;
+	int16 PacketType;
+	uint8 InstallationKind;
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(CZ_UNINSTALLATION, 0x0b35);
 #endif
@@ -5399,8 +5408,9 @@ DEFINE_PACKET_HEADER(ZC_SHOW_IMAGE, 0x01b3)
 struct PACKET_ZC_WHISPER {
 	int16 PacketType;
 	int16 PacketLength;
-	char name[NAME_LENGTH];
-	int32 isAdmin;
+	uint32 senderGID;
+	char sender[NAME_LENGTH];
+	uint8 isAdmin;
 	char message[];
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(ZC_WHISPER, 0x09de)
@@ -5409,7 +5419,7 @@ DEFINE_PACKET_HEADER(ZC_WHISPER, 0x09de)
 struct PACKET_ZC_WHISPER {
 	int16 PacketType;
 	int16 PacketLength;
-	char name[NAME_LENGTH];
+	char sender[NAME_LENGTH];
 	int32 isAdmin;
 	char message[];
 } __attribute__((packed));
@@ -5418,7 +5428,7 @@ DEFINE_PACKET_HEADER(ZC_WHISPER, 0x0097)
 struct PACKET_ZC_WHISPER {
 	int16 PacketType;
 	int16 PacketLength;
-	char name[NAME_LENGTH];
+	char sender[NAME_LENGTH];
 	char message[];
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(ZC_WHISPER, 0x0097)
@@ -5458,6 +5468,13 @@ struct PACKET_CZ_SEE_GUILD_MEMBERS {
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(CZ_SEE_GUILD_MEMBERS, 0x0bb0)
 #endif  // PACKETVER_MAIN_NUM >= 20220216
+
+struct PACKET_CZ_CONTACTNPC {
+	int16 PacketType;
+	uint32 AID;
+	uint8 type;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_CONTACTNPC, 0x0090)
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)

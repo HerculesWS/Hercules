@@ -91,7 +91,7 @@ class Cli
         $lines = array(1 => 0);
         $pos = -1;
         $line = 1;
-        while (false !== $pos = strpos($sql, "\n", ++$pos)) {
+        while (false !== $pos = mb_strpos($sql, "\n", ++$pos)) {
             $lines[++$line] = $pos;
         }
 

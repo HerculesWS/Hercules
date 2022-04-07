@@ -5,10 +5,11 @@
     "bin": ["bin/php-sqllint"],
     "require": {
         "phpmyadmin/sql-parser": "^4.1.1",
-        "pear/console_commandline": "^1.2"
+        "pear/console_commandline": "^1.2",
+        "ext-mbstring": "*"
     },
     "homepage": "http://cweiske.de/php-sqllint.htm",
-    "license": "AGPL-3.0",
+    "license": "AGPL-3.0-or-later",
     "authors": [
         {
             "name": "Christian Weiske",

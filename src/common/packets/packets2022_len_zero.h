@@ -1933,7 +1933,9 @@ packetLen(0x02f5, 7)
 packetLen(0x02f6, 7)
 
 // Packet: 0x02f7
-#if PACKETVER >= 20220203
+#if PACKETVER >= 20220316
+// removed
+#elif PACKETVER >= 20220203
 packetLen(0x02f7, 47)
 #endif
 
@@ -4778,6 +4780,11 @@ packetLen(0x0bad, 2)
 // Packet: 0x0bae
 packetLen(0x0bae, 3)
 
+// Packet: 0x0baf
+#if PACKETVER >= 20220316
+packetLen(0x0baf, 16)
+#endif
+
 // Packet: 0x0bb0
 #if PACKETVER >= 20220203
 packetLen(0x0bb0, 9)
@@ -4791,6 +4798,16 @@ packetLen(0x0bb1, 3)
 // Packet: 0x0bb2
 #if PACKETVER >= 20220203
 packetLen(0x0bb2, 2)
+#endif
+
+// Packet: 0x0bb3
+#if PACKETVER >= 20220316
+packetLen(0x0bb3, -1)
+#endif
+
+// Packet: 0x0bb4
+#if PACKETVER >= 20220316
+packetLen(0x0bb4, 31)
 #endif
 
 
