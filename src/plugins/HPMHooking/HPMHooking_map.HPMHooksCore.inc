@@ -4670,6 +4670,12 @@ struct {
 	struct HPMHookPoint *HP_packets_addLens_post;
 	struct HPMHookPoint *HP_packets_addLen_pre;
 	struct HPMHookPoint *HP_packets_addLen_post;
+	struct HPMHookPoint *HP_packets_addLenIntif_pre;
+	struct HPMHookPoint *HP_packets_addLenIntif_post;
+	struct HPMHookPoint *HP_packets_addLenInter_pre;
+	struct HPMHookPoint *HP_packets_addLenInter_post;
+	struct HPMHookPoint *HP_packets_addLenChrif_pre;
+	struct HPMHookPoint *HP_packets_addLenChrif_post;
 	struct HPMHookPoint *HP_party_init_pre;
 	struct HPMHookPoint *HP_party_init_post;
 	struct HPMHookPoint *HP_party_final_pre;
@@ -11983,6 +11989,12 @@ struct {
 	int HP_packets_addLens_post;
 	int HP_packets_addLen_pre;
 	int HP_packets_addLen_post;
+	int HP_packets_addLenIntif_pre;
+	int HP_packets_addLenIntif_post;
+	int HP_packets_addLenInter_pre;
+	int HP_packets_addLenInter_post;
+	int HP_packets_addLenChrif_pre;
+	int HP_packets_addLenChrif_post;
 	int HP_party_init_pre;
 	int HP_party_init_post;
 	int HP_party_final_pre;

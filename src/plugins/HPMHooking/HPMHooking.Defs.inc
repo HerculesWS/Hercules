@@ -6090,6 +6090,12 @@ typedef void (*HPMHOOK_pre_packets_addLens) (void);
 typedef void (*HPMHOOK_post_packets_addLens) (void);
 typedef void (*HPMHOOK_pre_packets_addLen) (int *id, int *len);
 typedef void (*HPMHOOK_post_packets_addLen) (int id, int len);
+typedef void (*HPMHOOK_pre_packets_addLenIntif) (int *id, int *len);
+typedef void (*HPMHOOK_post_packets_addLenIntif) (int id, int len);
+typedef void (*HPMHOOK_pre_packets_addLenInter) (int *id, int *len);
+typedef void (*HPMHOOK_post_packets_addLenInter) (int id, int len);
+typedef void (*HPMHOOK_pre_packets_addLenChrif) (int *id, int *len);
+typedef void (*HPMHOOK_post_packets_addLenChrif) (int id, int len);
 #endif // COMMON_PACKETS_H
 #ifdef MAP_PARTY_H /* party */
 typedef void (*HPMHOOK_pre_party_init) (bool *minimal);

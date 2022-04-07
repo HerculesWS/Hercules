@@ -705,6 +705,9 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(packets->final, HP_packets_final) },
 	{ HP_POP(packets->addLens, HP_packets_addLens) },
 	{ HP_POP(packets->addLen, HP_packets_addLen) },
+	{ HP_POP(packets->addLenIntif, HP_packets_addLenIntif) },
+	{ HP_POP(packets->addLenInter, HP_packets_addLenInter) },
+	{ HP_POP(packets->addLenChrif, HP_packets_addLenChrif) },
 /* pincode_interface */
 	{ HP_POP(pincode->handle, HP_pincode_handle) },
 	{ HP_POP(pincode->decrypt, HP_pincode_decrypt) },

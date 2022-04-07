@@ -2391,6 +2391,9 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(packets->final, HP_packets_final) },
 	{ HP_POP(packets->addLens, HP_packets_addLens) },
 	{ HP_POP(packets->addLen, HP_packets_addLen) },
+	{ HP_POP(packets->addLenIntif, HP_packets_addLenIntif) },
+	{ HP_POP(packets->addLenInter, HP_packets_addLenInter) },
+	{ HP_POP(packets->addLenChrif, HP_packets_addLenChrif) },
 /* party_interface */
 	{ HP_POP(party->init, HP_party_init) },
 	{ HP_POP(party->final, HP_party_final) },
