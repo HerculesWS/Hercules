@@ -50,6 +50,7 @@
 #include "common/socket.h"
 #include "common/strlib.h"
 #include "common/timer.h"
+#include "common/packets.h"
 
 #include <fcntl.h>
 #include <signal.h>
@@ -2686,13 +2687,11 @@ static int intif_parse(int fd)
 	int packet_len, cmd;
 	cmd = RFIFOW(fd,0);
 	// Verify ID of the packet
-	if (cmd < 0x3800 || cmd >= 0x3800+(sizeof(intif->packet_len_table)/sizeof(intif->packet_len_table[0]))
-	 || intif->packet_len_table[cmd-0x3800] == 0
-	) {
+	if (cmd < MIN_INTIF_PACKET_DB || cmd >= MAX_INTIF_PACKET_DB || packets->intif_db[cmd - MIN_INTIF_PACKET_DB] == 0) {
 		return 0;
 	}
 	// Check the length of the packet
-	packet_len = intif->packet_len_table[cmd-0x3800];
+	packet_len = packets->intif_db[cmd - MIN_INTIF_PACKET_DB];
 	if(packet_len==-1){
 		if(RFIFOREST(fd)<4)
 			return 2;
@@ -2804,23 +2803,7 @@ static int intif_parse(int fd)
  *-------------------------------------*/
 void intif_defaults(void)
 {
-	const int packet_len_table [INTIF_PACKET_LEN_TABLE_SIZE] = {
-		 0, 0, 0, 0, -1,-1,37,-1,  7, 0, 0, 0,  0, 0,  0, 0, //0x3800-0x380f
-		-1, 0, 0, 0,  0, 0, 0, 0, -1,11, 0, 0,  0, 0,  0, 0, //0x3810 Achievements [Smokexyz/Hercules]
-		39,-1,15,15, 14,19, 7, 0,  0, 0, 0, 0,  0, 0,  0, 0, //0x3820
-		10,-1,15, 0, 79,25, 7, 0,  0,-1,-1,-1, 14,67,186,-1, //0x3830
-		-1, 0, 0,14,  0, 0, 0, 0, -1,74,-1,11, 11,-1,  0, 0, //0x3840
-		-1,-1, 7, 7,  7,11, 8, 0, 10, 0, 0, 0,  0, 0,  0, 0, //0x3850  Auctions [Zephyrus] itembound[Akinari] Clan System[Murilo BiO]
-		-1, 7, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0, //0x3860  Quests [Kevin] [Inkfish]
-		-1, 3, 3, 0,  0, 0, 0, 0,  0, 0, 0, 0, -1, 3,  3, 0, //0x3870  Mercenaries [Zephyrus] / Elemental [pakpil]
-		14,-1, 7, 3,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0, //0x3880
-		-1,-1, 7, 3,  0,-1, 7, 15,18 + NAME_LENGTH, 23, 16 + sizeof(struct rodex_item) * RODEX_MAX_ITEM, 0, 0, 0, 0, 0, //0x3890  Homunculus [albator] / RoDEX [KirieZ]
-	};
-
 	intif = &intif_s;
-
-	/* */
-	memcpy(intif->packet_len_table,&packet_len_table,sizeof(intif->packet_len_table));
 
 	/* funcs */
 	intif->parse = intif_parse;
