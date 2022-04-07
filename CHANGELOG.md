@@ -22,6 +22,49 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
+## [v2022.04.07] `April 07 2022`
+
+### Added
+
+- Added support for newer packetvers/encryption keys/client messages (up to 20220316). (#3123)
+- Added support for `REMOVE_MOUNT_WUG` in `PACKET_CZ_UNINSTALLATION`. (part of #3123)
+- Added the `openbank()` script command to open the Bank UI on packetver 20150128 and newer. (part of #3123)
+- Added support for the `Item` skill type to the skill database. (part of #3123)
+- Fixed `clif->wis_message()` for packetvers starting from 20131204. (part of #3123)
+- Fixed `clif->equipitemack()` for some 2010 and 2012 packetvers. (part of #3123)
+
+### Changed
+
+- Split the intif, inter and chrif packet lengths to separate files, removing the hand-written packet length arrays. (#3122)
+- Moved the packet related macros from `packetsstatic_len.h` to a dedicated header, `packetsmacro.h`. (part of #3122)
+- Updated handling of various packets (`CZ_CONTACTNPC`, `ZC_ATTACK_FAILURE_FOR_DISTANCE`, `ZC_START_CAPTURE`, `ZC_TRYCAPTURE_MONSTER`, `ZC_PROPERTY_PET`, `ZC_CHANGESTATE_PET`) to use the struct format. (#3126 and part of #2123)
+- Updated/added some packet and enum values. (part of #1234)
+  - Renamed:
+    - Many client message IDs were renamed in commit (too many to list them here, see commit 37771a82da).
+    - `ZC_USESKILL_ACK::unknown` -> `ZC_USESKILL_ACK::attackMT`
+    - `PACKET_CZ_UNINSTALLATION::packetType` -> `PACKET_CZ_UNINSTALLATION::PacketType`
+    - `PACKET_CZ_UNINSTALLATION::action` -> `PACKET_CZ_UNINSTALLATION::InstallationKind`
+    - `REMOVE_MOUNT_2` -> `REMOVE_MOUNT_WUG`
+    - `PACKET_ZC_WHISPER::name` -> `PACKET_ZC_WHISPER::sender`
+  - Added:
+    - Missing values in `enum useskill_fail_cause`
+    - Missing values in `enum map_type`
+    - `CZ_CONFIG_STORE_ASSISTANT_FEE` in `enum CZ_CONFIG`
+    - `CZ_BANK_UI` and `CZ_ZENY_LOTTO_UI` in `enum cz_ui_types`
+    - Missing values in `enum delitem_reason`
+    - `INF_ITEM_SKILL` and `INF_UNKNOWN` in `enum e_skill_inf`
+    - `OPT1_NONE` and `OPT2_NORMAL` as empty values for `enum e_opt1` and `enum e_opt2` respectively
+    - `INVTYPE_WORLD_STORAGE` in `enum inventory_type`
+    - `OPT3_ELEMENTAL_VEIL` in `enum e_opt3`
+    - Missing values in `enum emotion_type`
+    - `ACT_ATTACK_MULTIPLE_CRITICAL` and `ACT_SPLASH_NOMOTION` in `enum action_type`
+- Updated main Readme file. Replaced TravisCI build badge with GitHub Actions badge and added Discord invitation link. (#3124)
+
+### Fixed
+
+- Fixed the sample plugin failing to compile in Visual Studio. (part of #3123)
+- Added the SQL script checks to the GitHub actions CI (restored functionality previously present in TravisCI). Updated the SQL analyzer tool and switched to open composer. (part of #3123)
+
 ## [v2022.03.02] `March 02 2022`
 
 ### Added
@@ -2369,6 +2412,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2022.04.07]: https://github.com/HerculesWS/Hercules/compare/v2022.03.02...v2022.04.07
 [v2022.03.02]: https://github.com/HerculesWS/Hercules/compare/v2022.01.05+2...v2022.03.02
 [v2022.01.05+2]: https://github.com/HerculesWS/Hercules/compare/v2022.01.05+1...v2022.01.05+2
 [v2022.01.05+1]: https://github.com/HerculesWS/Hercules/compare/v2022.01.05...v2022.01.05+1
