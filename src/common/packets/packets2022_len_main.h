@@ -4808,5 +4808,35 @@ packetLen(0x0bb3, -1)
 packetLen(0x0bb4, 31)
 #endif
 
+// Packet: 0x0bb5
+#if PACKETVER >= 20220330
+packetLen(0x0bb5, 10)
+#endif
+
+// Packet: 0x0bb6
+#if PACKETVER >= 20220406
+packetLen(0x0bb6, 18)
+#endif
+
+// Packet: 0x0bb7
+#if PACKETVER >= 20220406
+packetLen(0x0bb7, -1)
+#endif
+
+// Packet: 0x0bb8
+#if PACKETVER >= 20220406
+packetLen(0x0bb8, 16)
+#endif
+
+// Packet: 0x0bb9
+#if PACKETVER >= 20220406
+packetLen(0x0bb9, 27)
+#endif
+
+// Packet: 0x0bba
+#if PACKETVER >= 20220518
+packetLen(0x0bba, -1)
+#endif
+
 
 #endif /* COMMON_PACKETS2022_LEN_MAIN_H */
