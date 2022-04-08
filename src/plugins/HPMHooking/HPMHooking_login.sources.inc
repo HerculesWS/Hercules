@@ -33,6 +33,7 @@ HPMHooks.source.core = *core;
 HPMHooks.source.DB = *DB;
 HPMHooks.source.des = *des;
 HPMHooks.source.ipban = *ipban;
+HPMHooks.source.lapiif = *lapiif;
 HPMHooks.source.lchrif = *lchrif;
 HPMHooks.source.lclif = *lclif;
 HPMHooks.source.PRIV__lclif = *lclif->p;

@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2013-2021 Hercules Dev Team
+ * Copyright (C) 2013-2022 Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -63,11 +63,18 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(aclif->decode_post_headers, HP_aclif_decode_post_headers) },
 	{ HP_POP(aclif->print_header, HP_aclif_print_header) },
 	{ HP_POP(aclif->is_post_header_present, HP_aclif_is_post_header_present) },
+	{ HP_POP(aclif->is_post_header_present_or_empty, HP_aclif_is_post_header_present_or_empty) },
 	{ HP_POP(aclif->get_post_header_data_int, HP_aclif_get_post_header_data_int) },
 	{ HP_POP(aclif->get_post_header_data_str, HP_aclif_get_post_header_data_str) },
 	{ HP_POP(aclif->get_post_header_data_json, HP_aclif_get_post_header_data_json) },
 	{ HP_POP(aclif->get_post_header_content_type, HP_aclif_get_post_header_content_type) },
 	{ HP_POP(aclif->get_post_headers_count, HP_aclif_get_post_headers_count) },
+	{ HP_POP(aclif->ret_post_header_data_int, HP_aclif_ret_post_header_data_int) },
+	{ HP_POP(aclif->get_valid_header_data_int, HP_aclif_get_valid_header_data_int) },
+	{ HP_POP(aclif->get_valid_header_data_str, HP_aclif_get_valid_header_data_str) },
+	{ HP_POP(aclif->get_valid_header_data_json, HP_aclif_get_valid_header_data_json) },
+	{ HP_POP(aclif->get_valid_header_content_type, HP_aclif_get_valid_header_content_type) },
+	{ HP_POP(aclif->ret_valid_header_data_int, HP_aclif_ret_valid_header_data_int) },
 	{ HP_POP(aclif->delete_online_player, HP_aclif_delete_online_player) },
 	{ HP_POP(aclif->real_delete_online_player, HP_aclif_real_delete_online_player) },
 	{ HP_POP(aclif->add_online_player, HP_aclif_add_online_player) },
@@ -166,6 +173,14 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(handlers->emblem_upload, HP_handlers_emblem_upload) },
 	{ HP_POP(handlers->parse_emblem_download, HP_handlers_parse_emblem_download) },
 	{ HP_POP(handlers->emblem_download, HP_handlers_emblem_download) },
+	{ HP_POP(handlers->parse_party_list, HP_handlers_parse_party_list) },
+	{ HP_POP(handlers->party_list, HP_handlers_party_list) },
+	{ HP_POP(handlers->parse_party_get, HP_handlers_parse_party_get) },
+	{ HP_POP(handlers->party_get, HP_handlers_party_get) },
+	{ HP_POP(handlers->parse_party_add, HP_handlers_parse_party_add) },
+	{ HP_POP(handlers->party_add, HP_handlers_party_add) },
+	{ HP_POP(handlers->parse_party_del, HP_handlers_parse_party_del) },
+	{ HP_POP(handlers->party_del, HP_handlers_party_del) },
 	{ HP_POP(handlers->parse_test_url, HP_handlers_parse_test_url) },
 	{ HP_POP(handlers->userconfig_load_emotes, HP_handlers_userconfig_load_emotes) },
 	{ HP_POP(handlers->userconfig_load_hotkeys, HP_handlers_userconfig_load_hotkeys) },
@@ -233,6 +248,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(jsonwriter->init, HP_jsonwriter_init) },
 	{ HP_POP(jsonwriter->final, HP_jsonwriter_final) },
 	{ HP_POP(jsonwriter->create, HP_jsonwriter_create) },
+	{ HP_POP(jsonwriter->create_empty, HP_jsonwriter_create_empty) },
 	{ HP_POP(jsonwriter->new_array, HP_jsonwriter_new_array) },
 	{ HP_POP(jsonwriter->new_object, HP_jsonwriter_new_object) },
 	{ HP_POP(jsonwriter->new_string, HP_jsonwriter_new_string) },
@@ -348,6 +364,9 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(packets->final, HP_packets_final) },
 	{ HP_POP(packets->addLens, HP_packets_addLens) },
 	{ HP_POP(packets->addLen, HP_packets_addLen) },
+	{ HP_POP(packets->addLenIntif, HP_packets_addLenIntif) },
+	{ HP_POP(packets->addLenInter, HP_packets_addLenInter) },
+	{ HP_POP(packets->addLenChrif, HP_packets_addLenChrif) },
 /* rnd_interface */
 	{ HP_POP(rnd->init, HP_rnd_init) },
 	{ HP_POP(rnd->final, HP_rnd_final) },
@@ -483,8 +502,10 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(sysinfo->vcsrevision_src, HP_sysinfo_vcsrevision_src) },
 	{ HP_POP(sysinfo->vcsrevision_scripts, HP_sysinfo_vcsrevision_scripts) },
 	{ HP_POP(sysinfo->build_revision, HP_sysinfo_build_revision) },
+	{ HP_POP(sysinfo->fflags, HP_sysinfo_fflags) },
 	{ HP_POP(sysinfo->vcsrevision_reload, HP_sysinfo_vcsrevision_reload) },
 	{ HP_POP(sysinfo->is_superuser, HP_sysinfo_is_superuser) },
+	{ HP_POP(sysinfo->zlib, HP_sysinfo_zlib) },
 	{ HP_POP(sysinfo->init, HP_sysinfo_init) },
 	{ HP_POP(sysinfo->final, HP_sysinfo_final) },
 /* thread_interface */
@@ -513,6 +534,9 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(timer->perform, HP_timer_perform) },
 	{ HP_POP(timer->init, HP_timer_init) },
 	{ HP_POP(timer->final, HP_timer_final) },
+	{ HP_POP(timer->check_timers, HP_timer_check_timers) },
+	{ HP_POP(timer->get_current_clocksource, HP_timer_get_current_clocksource) },
+	{ HP_POP(timer->get_available_clocksource, HP_timer_get_available_clocksource) },
 };
 
 int HookingPointsLenMax = 40;

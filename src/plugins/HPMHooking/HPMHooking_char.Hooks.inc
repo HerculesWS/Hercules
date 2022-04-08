@@ -420,6 +420,110 @@ void HP_capiif_parse_userconfig_load_hotkeys(int fd) {
 	}
 	return;
 }
+void HP_capiif_parse_party_add(int fd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_capiif_parse_party_add_pre > 0) {
+		void (*preHookFunc) (int *fd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_capiif_parse_party_add_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_capiif_parse_party_add_pre[hIndex].func;
+			preHookFunc(&fd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.capiif.parse_party_add(fd);
+	}
+	if (HPMHooks.count.HP_capiif_parse_party_add_post > 0) {
+		void (*postHookFunc) (int fd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_capiif_parse_party_add_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_capiif_parse_party_add_post[hIndex].func;
+			postHookFunc(fd);
+		}
+	}
+	return;
+}
+void HP_capiif_parse_party_list(int fd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_capiif_parse_party_list_pre > 0) {
+		void (*preHookFunc) (int *fd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_capiif_parse_party_list_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_capiif_parse_party_list_pre[hIndex].func;
+			preHookFunc(&fd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.capiif.parse_party_list(fd);
+	}
+	if (HPMHooks.count.HP_capiif_parse_party_list_post > 0) {
+		void (*postHookFunc) (int fd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_capiif_parse_party_list_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_capiif_parse_party_list_post[hIndex].func;
+			postHookFunc(fd);
+		}
+	}
+	return;
+}
+void HP_capiif_parse_party_get(int fd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_capiif_parse_party_get_pre > 0) {
+		void (*preHookFunc) (int *fd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_capiif_parse_party_get_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_capiif_parse_party_get_pre[hIndex].func;
+			preHookFunc(&fd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.capiif.parse_party_get(fd);
+	}
+	if (HPMHooks.count.HP_capiif_parse_party_get_post > 0) {
+		void (*postHookFunc) (int fd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_capiif_parse_party_get_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_capiif_parse_party_get_post[hIndex].func;
+			postHookFunc(fd);
+		}
+	}
+	return;
+}
+void HP_capiif_parse_party_del(int fd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_capiif_parse_party_del_pre > 0) {
+		void (*preHookFunc) (int *fd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_capiif_parse_party_del_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_capiif_parse_party_del_pre[hIndex].func;
+			preHookFunc(&fd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.capiif.parse_party_del(fd);
+	}
+	if (HPMHooks.count.HP_capiif_parse_party_del_post > 0) {
+		void (*postHookFunc) (int fd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_capiif_parse_party_del_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_capiif_parse_party_del_post[hIndex].func;
+			postHookFunc(fd);
+		}
+	}
+	return;
+}
 int HP_capiif_parse_fromlogin_api_proxy(int fd) {
 	int hIndex = 0;
 	int retVal___ = 0;
@@ -4559,6 +4663,117 @@ void HP_chr_change_sex_sub(int sex, int acc, int char_id, int class, int guild_i
 	}
 	return;
 }
+void HP_chr_online_char_destroy(struct online_char_data *character) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_chr_online_char_destroy_pre > 0) {
+		void (*preHookFunc) (struct online_char_data **character);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_chr_online_char_destroy_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_chr_online_char_destroy_pre[hIndex].func;
+			preHookFunc(&character);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.chr.online_char_destroy(character);
+	}
+	if (HPMHooks.count.HP_chr_online_char_destroy_post > 0) {
+		void (*postHookFunc) (struct online_char_data *character);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_chr_online_char_destroy_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_chr_online_char_destroy_post[hIndex].func;
+			postHookFunc(character);
+		}
+	}
+	return;
+}
+int HP_chr_online_char_destroy_sub(union DBKey key, struct DBData *data, va_list ap) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_chr_online_char_destroy_sub_pre > 0) {
+		int (*preHookFunc) (union DBKey *key, struct DBData **data, va_list ap);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_chr_online_char_destroy_sub_pre; hIndex++) {
+			va_list ap___copy; va_copy(ap___copy, ap);
+			preHookFunc = HPMHooks.list.HP_chr_online_char_destroy_sub_pre[hIndex].func;
+			retVal___ = preHookFunc(&key, &data, ap___copy);
+			va_end(ap___copy);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		va_list ap___copy; va_copy(ap___copy, ap);
+		retVal___ = HPMHooks.source.chr.online_char_destroy_sub(key, data, ap___copy);
+		va_end(ap___copy);
+	}
+	if (HPMHooks.count.HP_chr_online_char_destroy_sub_post > 0) {
+		int (*postHookFunc) (int retVal___, union DBKey key, struct DBData *data, va_list ap);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_chr_online_char_destroy_sub_post; hIndex++) {
+			va_list ap___copy; va_copy(ap___copy, ap);
+			postHookFunc = HPMHooks.list.HP_chr_online_char_destroy_sub_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, key, data, ap___copy);
+			va_end(ap___copy);
+		}
+	}
+	return retVal___;
+}
+void HP_chr_ensure_online_char_data(struct online_char_data *character) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_chr_ensure_online_char_data_pre > 0) {
+		void (*preHookFunc) (struct online_char_data **character);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_chr_ensure_online_char_data_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_chr_ensure_online_char_data_pre[hIndex].func;
+			preHookFunc(&character);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.chr.ensure_online_char_data(character);
+	}
+	if (HPMHooks.count.HP_chr_ensure_online_char_data_post > 0) {
+		void (*postHookFunc) (struct online_char_data *character);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_chr_ensure_online_char_data_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_chr_ensure_online_char_data_post[hIndex].func;
+			postHookFunc(character);
+		}
+	}
+	return;
+}
+void HP_chr_clean_online_char_emblem_data(struct online_char_data *character) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_chr_clean_online_char_emblem_data_pre > 0) {
+		void (*preHookFunc) (struct online_char_data **character);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_chr_clean_online_char_emblem_data_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_chr_clean_online_char_emblem_data_pre[hIndex].func;
+			preHookFunc(&character);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.chr.clean_online_char_emblem_data(character);
+	}
+	if (HPMHooks.count.HP_chr_clean_online_char_emblem_data_post > 0) {
+		void (*postHookFunc) (struct online_char_data *character);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_chr_clean_online_char_emblem_data_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_chr_clean_online_char_emblem_data_post[hIndex].func;
+			postHookFunc(character);
+		}
+	}
+	return;
+}
 bool HP_chr_sql_config_read(const char *filename, bool imported) {
 	int hIndex = 0;
 	bool retVal___ = false;
@@ -6156,6 +6371,301 @@ int HP_inter_achievement_parse_frommap(int fd) {
 	}
 	return retVal___;
 }
+/* inter_adventurer_agency_interface */
+int HP_inter_adventurer_agency_parse_frommap(int fd) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_inter_adventurer_agency_parse_frommap_pre > 0) {
+		int (*preHookFunc) (int *fd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_adventurer_agency_parse_frommap_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_inter_adventurer_agency_parse_frommap_pre[hIndex].func;
+			retVal___ = preHookFunc(&fd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.inter_adventurer_agency.parse_frommap(fd);
+	}
+	if (HPMHooks.count.HP_inter_adventurer_agency_parse_frommap_post > 0) {
+		int (*postHookFunc) (int retVal___, int fd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_adventurer_agency_parse_frommap_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_inter_adventurer_agency_parse_frommap_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, fd);
+		}
+	}
+	return retVal___;
+}
+void HP_inter_adventurer_agency_pJoinParty(int fd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_inter_adventurer_agency_pJoinParty_pre > 0) {
+		void (*preHookFunc) (int *fd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_adventurer_agency_pJoinParty_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_inter_adventurer_agency_pJoinParty_pre[hIndex].func;
+			preHookFunc(&fd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.inter_adventurer_agency.pJoinParty(fd);
+	}
+	if (HPMHooks.count.HP_inter_adventurer_agency_pJoinParty_post > 0) {
+		void (*postHookFunc) (int fd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_adventurer_agency_pJoinParty_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_inter_adventurer_agency_pJoinParty_post[hIndex].func;
+			postHookFunc(fd);
+		}
+	}
+	return;
+}
+bool HP_inter_adventurer_agency_entry_add(int char_id, const struct party_add_data *entry) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_inter_adventurer_agency_entry_add_pre > 0) {
+		bool (*preHookFunc) (int *char_id, const struct party_add_data **entry);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_adventurer_agency_entry_add_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_inter_adventurer_agency_entry_add_pre[hIndex].func;
+			retVal___ = preHookFunc(&char_id, &entry);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.inter_adventurer_agency.entry_add(char_id, entry);
+	}
+	if (HPMHooks.count.HP_inter_adventurer_agency_entry_add_post > 0) {
+		bool (*postHookFunc) (bool retVal___, int char_id, const struct party_add_data *entry);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_adventurer_agency_entry_add_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_inter_adventurer_agency_entry_add_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, char_id, entry);
+		}
+	}
+	return retVal___;
+}
+bool HP_inter_adventurer_agency_entry_check_existing(int char_id, int party_id) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_inter_adventurer_agency_entry_check_existing_pre > 0) {
+		bool (*preHookFunc) (int *char_id, int *party_id);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_adventurer_agency_entry_check_existing_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_inter_adventurer_agency_entry_check_existing_pre[hIndex].func;
+			retVal___ = preHookFunc(&char_id, &party_id);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.inter_adventurer_agency.entry_check_existing(char_id, party_id);
+	}
+	if (HPMHooks.count.HP_inter_adventurer_agency_entry_check_existing_post > 0) {
+		bool (*postHookFunc) (bool retVal___, int char_id, int party_id);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_adventurer_agency_entry_check_existing_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_inter_adventurer_agency_entry_check_existing_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, char_id, party_id);
+		}
+	}
+	return retVal___;
+}
+void HP_inter_adventurer_agency_entry_delete_existing(int char_id, int party_id) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_inter_adventurer_agency_entry_delete_existing_pre > 0) {
+		void (*preHookFunc) (int *char_id, int *party_id);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_adventurer_agency_entry_delete_existing_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_inter_adventurer_agency_entry_delete_existing_pre[hIndex].func;
+			preHookFunc(&char_id, &party_id);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.inter_adventurer_agency.entry_delete_existing(char_id, party_id);
+	}
+	if (HPMHooks.count.HP_inter_adventurer_agency_entry_delete_existing_post > 0) {
+		void (*postHookFunc) (int char_id, int party_id);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_adventurer_agency_entry_delete_existing_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_inter_adventurer_agency_entry_delete_existing_post[hIndex].func;
+			postHookFunc(char_id, party_id);
+		}
+	}
+	return;
+}
+bool HP_inter_adventurer_agency_entry_tosql(int char_id, const char *char_name, int party_id, const struct party_add_data *entry) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_inter_adventurer_agency_entry_tosql_pre > 0) {
+		bool (*preHookFunc) (int *char_id, const char **char_name, int *party_id, const struct party_add_data **entry);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_adventurer_agency_entry_tosql_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_inter_adventurer_agency_entry_tosql_pre[hIndex].func;
+			retVal___ = preHookFunc(&char_id, &char_name, &party_id, &entry);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.inter_adventurer_agency.entry_tosql(char_id, char_name, party_id, entry);
+	}
+	if (HPMHooks.count.HP_inter_adventurer_agency_entry_tosql_post > 0) {
+		bool (*postHookFunc) (bool retVal___, int char_id, const char *char_name, int party_id, const struct party_add_data *entry);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_adventurer_agency_entry_tosql_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_inter_adventurer_agency_entry_tosql_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, char_id, char_name, party_id, entry);
+		}
+	}
+	return retVal___;
+}
+int HP_inter_adventurer_agency_entry_delete(int char_id, int master_aid) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_inter_adventurer_agency_entry_delete_pre > 0) {
+		int (*preHookFunc) (int *char_id, int *master_aid);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_adventurer_agency_entry_delete_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_inter_adventurer_agency_entry_delete_pre[hIndex].func;
+			retVal___ = preHookFunc(&char_id, &master_aid);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.inter_adventurer_agency.entry_delete(char_id, master_aid);
+	}
+	if (HPMHooks.count.HP_inter_adventurer_agency_entry_delete_post > 0) {
+		int (*postHookFunc) (int retVal___, int char_id, int master_aid);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_adventurer_agency_entry_delete_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_inter_adventurer_agency_entry_delete_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, char_id, master_aid);
+		}
+	}
+	return retVal___;
+}
+void HP_inter_adventurer_agency_get_page(int char_id, int page, struct adventuter_agency_page *packet) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_inter_adventurer_agency_get_page_pre > 0) {
+		void (*preHookFunc) (int *char_id, int *page, struct adventuter_agency_page **packet);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_adventurer_agency_get_page_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_inter_adventurer_agency_get_page_pre[hIndex].func;
+			preHookFunc(&char_id, &page, &packet);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.inter_adventurer_agency.get_page(char_id, page, packet);
+	}
+	if (HPMHooks.count.HP_inter_adventurer_agency_get_page_post > 0) {
+		void (*postHookFunc) (int char_id, int page, struct adventuter_agency_page *packet);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_adventurer_agency_get_page_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_inter_adventurer_agency_get_page_post[hIndex].func;
+			postHookFunc(char_id, page, packet);
+		}
+	}
+	return;
+}
+int HP_inter_adventurer_agency_entry_to_flags(int char_id, const struct party_add_data *entry) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_inter_adventurer_agency_entry_to_flags_pre > 0) {
+		int (*preHookFunc) (int *char_id, const struct party_add_data **entry);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_adventurer_agency_entry_to_flags_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_inter_adventurer_agency_entry_to_flags_pre[hIndex].func;
+			retVal___ = preHookFunc(&char_id, &entry);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.inter_adventurer_agency.entry_to_flags(char_id, entry);
+	}
+	if (HPMHooks.count.HP_inter_adventurer_agency_entry_to_flags_post > 0) {
+		int (*postHookFunc) (int retVal___, int char_id, const struct party_add_data *entry);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_adventurer_agency_entry_to_flags_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_inter_adventurer_agency_entry_to_flags_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, char_id, entry);
+		}
+	}
+	return retVal___;
+}
+int HP_inter_adventurer_agency_get_pages_count(void) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_inter_adventurer_agency_get_pages_count_pre > 0) {
+		int (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_adventurer_agency_get_pages_count_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_inter_adventurer_agency_get_pages_count_pre[hIndex].func;
+			retVal___ = preHookFunc();
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.inter_adventurer_agency.get_pages_count();
+	}
+	if (HPMHooks.count.HP_inter_adventurer_agency_get_pages_count_post > 0) {
+		int (*postHookFunc) (int retVal___);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_adventurer_agency_get_pages_count_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_inter_adventurer_agency_get_pages_count_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___);
+		}
+	}
+	return retVal___;
+}
+int HP_inter_adventurer_agency_get_player_request(int char_id, struct adventuter_agency_entry *entry) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_inter_adventurer_agency_get_player_request_pre > 0) {
+		int (*preHookFunc) (int *char_id, struct adventuter_agency_entry **entry);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_adventurer_agency_get_player_request_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_inter_adventurer_agency_get_player_request_pre[hIndex].func;
+			retVal___ = preHookFunc(&char_id, &entry);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.inter_adventurer_agency.get_player_request(char_id, entry);
+	}
+	if (HPMHooks.count.HP_inter_adventurer_agency_get_player_request_post > 0) {
+		int (*postHookFunc) (int retVal___, int char_id, struct adventuter_agency_entry *entry);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_adventurer_agency_get_player_request_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_inter_adventurer_agency_get_player_request_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, char_id, entry);
+		}
+	}
+	return retVal___;
+}
 /* inter_auction_interface */
 int HP_inter_auction_count(int char_id, bool buy) {
 	int hIndex = 0;
@@ -7640,6 +8150,60 @@ bool HP_inter_guild_change_leader(int guild_id, const char *name, int len) {
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_guild_change_leader_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_inter_guild_change_leader_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, guild_id, name, len);
+		}
+	}
+	return retVal___;
+}
+bool HP_inter_guild_is_guild_master(int char_id, int guild_id) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_inter_guild_is_guild_master_pre > 0) {
+		bool (*preHookFunc) (int *char_id, int *guild_id);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_guild_is_guild_master_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_inter_guild_is_guild_master_pre[hIndex].func;
+			retVal___ = preHookFunc(&char_id, &guild_id);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.inter_guild.is_guild_master(char_id, guild_id);
+	}
+	if (HPMHooks.count.HP_inter_guild_is_guild_master_post > 0) {
+		bool (*postHookFunc) (bool retVal___, int char_id, int guild_id);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_guild_is_guild_master_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_inter_guild_is_guild_master_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, char_id, guild_id);
+		}
+	}
+	return retVal___;
+}
+bool HP_inter_guild_validate_emblem(const char *emblem, unsigned long emblem_len) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_inter_guild_validate_emblem_pre > 0) {
+		bool (*preHookFunc) (const char **emblem, unsigned long *emblem_len);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_guild_validate_emblem_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_inter_guild_validate_emblem_pre[hIndex].func;
+			retVal___ = preHookFunc(&emblem, &emblem_len);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.inter_guild.validate_emblem(emblem, emblem_len);
+	}
+	if (HPMHooks.count.HP_inter_guild_validate_emblem_post > 0) {
+		bool (*postHookFunc) (bool retVal___, const char *emblem, unsigned long emblem_len);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_guild_validate_emblem_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_inter_guild_validate_emblem_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, emblem, emblem_len);
 		}
 	}
 	return retVal___;
@@ -9535,6 +10099,33 @@ bool HP_inter_party_change_leader(int party_id, int account_id, int char_id) {
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_party_change_leader_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_inter_party_change_leader_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, party_id, account_id, char_id);
+		}
+	}
+	return retVal___;
+}
+int HP_inter_party_is_leader(struct party_data *p, int char_id) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_inter_party_is_leader_pre > 0) {
+		int (*preHookFunc) (struct party_data **p, int *char_id);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_party_is_leader_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_inter_party_is_leader_pre[hIndex].func;
+			retVal___ = preHookFunc(&p, &char_id);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.inter_party.is_leader(p, char_id);
+	}
+	if (HPMHooks.count.HP_inter_party_is_leader_post > 0) {
+		int (*postHookFunc) (int retVal___, struct party_data *p, int char_id);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_party_is_leader_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_inter_party_is_leader_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, p, char_id);
 		}
 	}
 	return retVal___;
@@ -12885,6 +13476,32 @@ void HP_loginif_connect_to_server(void) {
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_loginif_connect_to_server_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_loginif_connect_to_server_post[hIndex].func;
 			postHookFunc();
+		}
+	}
+	return;
+}
+void HP_loginif_set_char_online(int char_id, int account_id) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_loginif_set_char_online_pre > 0) {
+		void (*preHookFunc) (int *char_id, int *account_id);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_loginif_set_char_online_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_loginif_set_char_online_pre[hIndex].func;
+			preHookFunc(&char_id, &account_id);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.loginif.set_char_online(char_id, account_id);
+	}
+	if (HPMHooks.count.HP_loginif_set_char_online_post > 0) {
+		void (*postHookFunc) (int char_id, int account_id);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_loginif_set_char_online_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_loginif_set_char_online_post[hIndex].func;
+			postHookFunc(char_id, account_id);
 		}
 	}
 	return;
@@ -16968,6 +17585,32 @@ int HP_mapif_parse_ClanMemberCount(int fd, int clan_id, int kick_interval) {
 	}
 	return retVal___;
 }
+void HP_mapif_agency_joinPartyResult(int fd, int char_id, enum adventurer_agency_result result) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_mapif_agency_joinPartyResult_pre > 0) {
+		void (*preHookFunc) (int *fd, int *char_id, enum adventurer_agency_result *result);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_agency_joinPartyResult_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_mapif_agency_joinPartyResult_pre[hIndex].func;
+			preHookFunc(&fd, &char_id, &result);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.mapif.agency_joinPartyResult(fd, char_id, result);
+	}
+	if (HPMHooks.count.HP_mapif_agency_joinPartyResult_post > 0) {
+		void (*postHookFunc) (int fd, int char_id, enum adventurer_agency_result result);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_agency_joinPartyResult_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_mapif_agency_joinPartyResult_post[hIndex].func;
+			postHookFunc(fd, char_id, result);
+		}
+	}
+	return;
+}
 /* mapindex_interface */
 bool HP_mapindex_config_read_dbpath(const char *filename, const struct config_t *config) {
 	int hIndex = 0;
@@ -19015,6 +19658,59 @@ bool HP_sockt_session_is_active(int fd) {
 	}
 	return retVal___;
 }
+int HP_sockt_create_session(int fd, RecvFunc func_recv, SendFunc func_send, ParseFunc func_parse, ConnectedFunc func_client_connected, DeleteFunc func_delete) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_sockt_create_session_pre > 0) {
+		int (*preHookFunc) (int *fd, RecvFunc *func_recv, SendFunc *func_send, ParseFunc *func_parse, ConnectedFunc *func_client_connected, DeleteFunc *func_delete);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_sockt_create_session_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_sockt_create_session_pre[hIndex].func;
+			retVal___ = preHookFunc(&fd, &func_recv, &func_send, &func_parse, &func_client_connected, &func_delete);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.sockt.create_session(fd, func_recv, func_send, func_parse, func_client_connected, func_delete);
+	}
+	if (HPMHooks.count.HP_sockt_create_session_post > 0) {
+		int (*postHookFunc) (int retVal___, int fd, RecvFunc func_recv, SendFunc func_send, ParseFunc func_parse, ConnectedFunc func_client_connected, DeleteFunc func_delete);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_sockt_create_session_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_sockt_create_session_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, fd, func_recv, func_send, func_parse, func_client_connected, func_delete);
+		}
+	}
+	return retVal___;
+}
+void HP_sockt_delete_session(int fd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_sockt_delete_session_pre > 0) {
+		void (*preHookFunc) (int *fd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_sockt_delete_session_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_sockt_delete_session_pre[hIndex].func;
+			preHookFunc(&fd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.sockt.delete_session(fd);
+	}
+	if (HPMHooks.count.HP_sockt_delete_session_post > 0) {
+		void (*postHookFunc) (int fd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_sockt_delete_session_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_sockt_delete_session_post[hIndex].func;
+			postHookFunc(fd);
+		}
+	}
+	return;
+}
 void HP_sockt_flush(int fd) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_sockt_flush_pre > 0) {
@@ -19142,6 +19838,58 @@ void HP_sockt_set_defaultparse(ParseFunc defaultparse) {
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_sockt_set_defaultparse_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_sockt_set_defaultparse_post[hIndex].func;
 			postHookFunc(defaultparse);
+		}
+	}
+	return;
+}
+void HP_sockt_set_default_client_connected(ConnectedFunc defaultparse) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_sockt_set_default_client_connected_pre > 0) {
+		void (*preHookFunc) (ConnectedFunc *defaultparse);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_sockt_set_default_client_connected_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_sockt_set_default_client_connected_pre[hIndex].func;
+			preHookFunc(&defaultparse);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.sockt.set_default_client_connected(defaultparse);
+	}
+	if (HPMHooks.count.HP_sockt_set_default_client_connected_post > 0) {
+		void (*postHookFunc) (ConnectedFunc defaultparse);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_sockt_set_default_client_connected_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_sockt_set_default_client_connected_post[hIndex].func;
+			postHookFunc(defaultparse);
+		}
+	}
+	return;
+}
+void HP_sockt_set_default_delete(DeleteFunc defaultdelete) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_sockt_set_default_delete_pre > 0) {
+		void (*preHookFunc) (DeleteFunc *defaultdelete);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_sockt_set_default_delete_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_sockt_set_default_delete_pre[hIndex].func;
+			preHookFunc(&defaultdelete);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.sockt.set_default_delete(defaultdelete);
+	}
+	if (HPMHooks.count.HP_sockt_set_default_delete_post > 0) {
+		void (*postHookFunc) (DeleteFunc defaultdelete);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_sockt_set_default_delete_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_sockt_set_default_delete_post[hIndex].func;
+			postHookFunc(defaultdelete);
 		}
 	}
 	return;
@@ -19686,6 +20434,33 @@ int HP_SQL_QueryStr(struct Sql *self, const char *query) {
 		int (*postHookFunc) (int retVal___, struct Sql *self, const char *query);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_SQL_QueryStr_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_SQL_QueryStr_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, self, query);
+		}
+	}
+	return retVal___;
+}
+int HP_SQL_QueryStrFetch(struct Sql *self, const char *query) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_SQL_QueryStrFetch_pre > 0) {
+		int (*preHookFunc) (struct Sql **self, const char **query);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_SQL_QueryStrFetch_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_SQL_QueryStrFetch_pre[hIndex].func;
+			retVal___ = preHookFunc(&self, &query);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.SQL.QueryStrFetch(self, query);
+	}
+	if (HPMHooks.count.HP_SQL_QueryStrFetch_post > 0) {
+		int (*postHookFunc) (int retVal___, struct Sql *self, const char *query);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_SQL_QueryStrFetch_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_SQL_QueryStrFetch_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, self, query);
 		}
 	}

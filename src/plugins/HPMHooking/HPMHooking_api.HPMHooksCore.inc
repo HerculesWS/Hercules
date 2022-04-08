@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2013-2021 Hercules Dev Team
+ * Copyright (C) 2013-2022 Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -96,6 +96,8 @@ struct {
 	struct HPMHookPoint *HP_aclif_print_header_post;
 	struct HPMHookPoint *HP_aclif_is_post_header_present_pre;
 	struct HPMHookPoint *HP_aclif_is_post_header_present_post;
+	struct HPMHookPoint *HP_aclif_is_post_header_present_or_empty_pre;
+	struct HPMHookPoint *HP_aclif_is_post_header_present_or_empty_post;
 	struct HPMHookPoint *HP_aclif_get_post_header_data_int_pre;
 	struct HPMHookPoint *HP_aclif_get_post_header_data_int_post;
 	struct HPMHookPoint *HP_aclif_get_post_header_data_str_pre;
@@ -106,6 +108,18 @@ struct {
 	struct HPMHookPoint *HP_aclif_get_post_header_content_type_post;
 	struct HPMHookPoint *HP_aclif_get_post_headers_count_pre;
 	struct HPMHookPoint *HP_aclif_get_post_headers_count_post;
+	struct HPMHookPoint *HP_aclif_ret_post_header_data_int_pre;
+	struct HPMHookPoint *HP_aclif_ret_post_header_data_int_post;
+	struct HPMHookPoint *HP_aclif_get_valid_header_data_int_pre;
+	struct HPMHookPoint *HP_aclif_get_valid_header_data_int_post;
+	struct HPMHookPoint *HP_aclif_get_valid_header_data_str_pre;
+	struct HPMHookPoint *HP_aclif_get_valid_header_data_str_post;
+	struct HPMHookPoint *HP_aclif_get_valid_header_data_json_pre;
+	struct HPMHookPoint *HP_aclif_get_valid_header_data_json_post;
+	struct HPMHookPoint *HP_aclif_get_valid_header_content_type_pre;
+	struct HPMHookPoint *HP_aclif_get_valid_header_content_type_post;
+	struct HPMHookPoint *HP_aclif_ret_valid_header_data_int_pre;
+	struct HPMHookPoint *HP_aclif_ret_valid_header_data_int_post;
 	struct HPMHookPoint *HP_aclif_delete_online_player_pre;
 	struct HPMHookPoint *HP_aclif_delete_online_player_post;
 	struct HPMHookPoint *HP_aclif_real_delete_online_player_pre;
@@ -286,6 +300,22 @@ struct {
 	struct HPMHookPoint *HP_handlers_parse_emblem_download_post;
 	struct HPMHookPoint *HP_handlers_emblem_download_pre;
 	struct HPMHookPoint *HP_handlers_emblem_download_post;
+	struct HPMHookPoint *HP_handlers_parse_party_list_pre;
+	struct HPMHookPoint *HP_handlers_parse_party_list_post;
+	struct HPMHookPoint *HP_handlers_party_list_pre;
+	struct HPMHookPoint *HP_handlers_party_list_post;
+	struct HPMHookPoint *HP_handlers_parse_party_get_pre;
+	struct HPMHookPoint *HP_handlers_parse_party_get_post;
+	struct HPMHookPoint *HP_handlers_party_get_pre;
+	struct HPMHookPoint *HP_handlers_party_get_post;
+	struct HPMHookPoint *HP_handlers_parse_party_add_pre;
+	struct HPMHookPoint *HP_handlers_parse_party_add_post;
+	struct HPMHookPoint *HP_handlers_party_add_pre;
+	struct HPMHookPoint *HP_handlers_party_add_post;
+	struct HPMHookPoint *HP_handlers_parse_party_del_pre;
+	struct HPMHookPoint *HP_handlers_parse_party_del_post;
+	struct HPMHookPoint *HP_handlers_party_del_pre;
+	struct HPMHookPoint *HP_handlers_party_del_post;
 	struct HPMHookPoint *HP_handlers_parse_test_url_pre;
 	struct HPMHookPoint *HP_handlers_parse_test_url_post;
 	struct HPMHookPoint *HP_handlers_userconfig_load_emotes_pre;
@@ -412,6 +442,8 @@ struct {
 	struct HPMHookPoint *HP_jsonwriter_final_post;
 	struct HPMHookPoint *HP_jsonwriter_create_pre;
 	struct HPMHookPoint *HP_jsonwriter_create_post;
+	struct HPMHookPoint *HP_jsonwriter_create_empty_pre;
+	struct HPMHookPoint *HP_jsonwriter_create_empty_post;
 	struct HPMHookPoint *HP_jsonwriter_new_array_pre;
 	struct HPMHookPoint *HP_jsonwriter_new_array_post;
 	struct HPMHookPoint *HP_jsonwriter_new_object_pre;
@@ -632,6 +664,12 @@ struct {
 	struct HPMHookPoint *HP_packets_addLens_post;
 	struct HPMHookPoint *HP_packets_addLen_pre;
 	struct HPMHookPoint *HP_packets_addLen_post;
+	struct HPMHookPoint *HP_packets_addLenIntif_pre;
+	struct HPMHookPoint *HP_packets_addLenIntif_post;
+	struct HPMHookPoint *HP_packets_addLenInter_pre;
+	struct HPMHookPoint *HP_packets_addLenInter_post;
+	struct HPMHookPoint *HP_packets_addLenChrif_pre;
+	struct HPMHookPoint *HP_packets_addLenChrif_post;
 	struct HPMHookPoint *HP_rnd_init_pre;
 	struct HPMHookPoint *HP_rnd_init_post;
 	struct HPMHookPoint *HP_rnd_final_pre;
@@ -886,10 +924,14 @@ struct {
 	struct HPMHookPoint *HP_sysinfo_vcsrevision_scripts_post;
 	struct HPMHookPoint *HP_sysinfo_build_revision_pre;
 	struct HPMHookPoint *HP_sysinfo_build_revision_post;
+	struct HPMHookPoint *HP_sysinfo_fflags_pre;
+	struct HPMHookPoint *HP_sysinfo_fflags_post;
 	struct HPMHookPoint *HP_sysinfo_vcsrevision_reload_pre;
 	struct HPMHookPoint *HP_sysinfo_vcsrevision_reload_post;
 	struct HPMHookPoint *HP_sysinfo_is_superuser_pre;
 	struct HPMHookPoint *HP_sysinfo_is_superuser_post;
+	struct HPMHookPoint *HP_sysinfo_zlib_pre;
+	struct HPMHookPoint *HP_sysinfo_zlib_post;
 	struct HPMHookPoint *HP_sysinfo_init_pre;
 	struct HPMHookPoint *HP_sysinfo_init_post;
 	struct HPMHookPoint *HP_sysinfo_final_pre;
@@ -942,6 +984,12 @@ struct {
 	struct HPMHookPoint *HP_timer_init_post;
 	struct HPMHookPoint *HP_timer_final_pre;
 	struct HPMHookPoint *HP_timer_final_post;
+	struct HPMHookPoint *HP_timer_check_timers_pre;
+	struct HPMHookPoint *HP_timer_check_timers_post;
+	struct HPMHookPoint *HP_timer_get_current_clocksource_pre;
+	struct HPMHookPoint *HP_timer_get_current_clocksource_post;
+	struct HPMHookPoint *HP_timer_get_available_clocksource_pre;
+	struct HPMHookPoint *HP_timer_get_available_clocksource_post;
 } list;
 
 struct {
@@ -1015,6 +1063,8 @@ struct {
 	int HP_aclif_print_header_post;
 	int HP_aclif_is_post_header_present_pre;
 	int HP_aclif_is_post_header_present_post;
+	int HP_aclif_is_post_header_present_or_empty_pre;
+	int HP_aclif_is_post_header_present_or_empty_post;
 	int HP_aclif_get_post_header_data_int_pre;
 	int HP_aclif_get_post_header_data_int_post;
 	int HP_aclif_get_post_header_data_str_pre;
@@ -1025,6 +1075,18 @@ struct {
 	int HP_aclif_get_post_header_content_type_post;
 	int HP_aclif_get_post_headers_count_pre;
 	int HP_aclif_get_post_headers_count_post;
+	int HP_aclif_ret_post_header_data_int_pre;
+	int HP_aclif_ret_post_header_data_int_post;
+	int HP_aclif_get_valid_header_data_int_pre;
+	int HP_aclif_get_valid_header_data_int_post;
+	int HP_aclif_get_valid_header_data_str_pre;
+	int HP_aclif_get_valid_header_data_str_post;
+	int HP_aclif_get_valid_header_data_json_pre;
+	int HP_aclif_get_valid_header_data_json_post;
+	int HP_aclif_get_valid_header_content_type_pre;
+	int HP_aclif_get_valid_header_content_type_post;
+	int HP_aclif_ret_valid_header_data_int_pre;
+	int HP_aclif_ret_valid_header_data_int_post;
 	int HP_aclif_delete_online_player_pre;
 	int HP_aclif_delete_online_player_post;
 	int HP_aclif_real_delete_online_player_pre;
@@ -1205,6 +1267,22 @@ struct {
 	int HP_handlers_parse_emblem_download_post;
 	int HP_handlers_emblem_download_pre;
 	int HP_handlers_emblem_download_post;
+	int HP_handlers_parse_party_list_pre;
+	int HP_handlers_parse_party_list_post;
+	int HP_handlers_party_list_pre;
+	int HP_handlers_party_list_post;
+	int HP_handlers_parse_party_get_pre;
+	int HP_handlers_parse_party_get_post;
+	int HP_handlers_party_get_pre;
+	int HP_handlers_party_get_post;
+	int HP_handlers_parse_party_add_pre;
+	int HP_handlers_parse_party_add_post;
+	int HP_handlers_party_add_pre;
+	int HP_handlers_party_add_post;
+	int HP_handlers_parse_party_del_pre;
+	int HP_handlers_parse_party_del_post;
+	int HP_handlers_party_del_pre;
+	int HP_handlers_party_del_post;
 	int HP_handlers_parse_test_url_pre;
 	int HP_handlers_parse_test_url_post;
 	int HP_handlers_userconfig_load_emotes_pre;
@@ -1331,6 +1409,8 @@ struct {
 	int HP_jsonwriter_final_post;
 	int HP_jsonwriter_create_pre;
 	int HP_jsonwriter_create_post;
+	int HP_jsonwriter_create_empty_pre;
+	int HP_jsonwriter_create_empty_post;
 	int HP_jsonwriter_new_array_pre;
 	int HP_jsonwriter_new_array_post;
 	int HP_jsonwriter_new_object_pre;
@@ -1551,6 +1631,12 @@ struct {
 	int HP_packets_addLens_post;
 	int HP_packets_addLen_pre;
 	int HP_packets_addLen_post;
+	int HP_packets_addLenIntif_pre;
+	int HP_packets_addLenIntif_post;
+	int HP_packets_addLenInter_pre;
+	int HP_packets_addLenInter_post;
+	int HP_packets_addLenChrif_pre;
+	int HP_packets_addLenChrif_post;
 	int HP_rnd_init_pre;
 	int HP_rnd_init_post;
 	int HP_rnd_final_pre;
@@ -1805,10 +1891,14 @@ struct {
 	int HP_sysinfo_vcsrevision_scripts_post;
 	int HP_sysinfo_build_revision_pre;
 	int HP_sysinfo_build_revision_post;
+	int HP_sysinfo_fflags_pre;
+	int HP_sysinfo_fflags_post;
 	int HP_sysinfo_vcsrevision_reload_pre;
 	int HP_sysinfo_vcsrevision_reload_post;
 	int HP_sysinfo_is_superuser_pre;
 	int HP_sysinfo_is_superuser_post;
+	int HP_sysinfo_zlib_pre;
+	int HP_sysinfo_zlib_post;
 	int HP_sysinfo_init_pre;
 	int HP_sysinfo_init_post;
 	int HP_sysinfo_final_pre;
@@ -1861,6 +1951,12 @@ struct {
 	int HP_timer_init_post;
 	int HP_timer_final_pre;
 	int HP_timer_final_post;
+	int HP_timer_check_timers_pre;
+	int HP_timer_check_timers_post;
+	int HP_timer_get_current_clocksource_pre;
+	int HP_timer_get_current_clocksource_post;
+	int HP_timer_get_available_clocksource_pre;
+	int HP_timer_get_available_clocksource_post;
 } count;
 
 struct {

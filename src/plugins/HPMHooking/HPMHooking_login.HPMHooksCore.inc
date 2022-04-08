@@ -254,6 +254,8 @@ struct {
 	struct HPMHookPoint *HP_PRIV__lclif_parse_CA_REQ_HASH_post;
 	struct HPMHookPoint *HP_PRIV__lclif_parse_CA_CHARSERVERCONNECT_pre;
 	struct HPMHookPoint *HP_PRIV__lclif_parse_CA_CHARSERVERCONNECT_post;
+	struct HPMHookPoint *HP_PRIV__lclif_parse_CA_APISERVERCONNECT_pre;
+	struct HPMHookPoint *HP_PRIV__lclif_parse_CA_APISERVERCONNECT_post;
 	struct HPMHookPoint *HP_libconfig_set_db_path_pre;
 	struct HPMHookPoint *HP_libconfig_set_db_path_post;
 	struct HPMHookPoint *HP_libconfig_format_db_path_pre;
@@ -474,6 +476,8 @@ struct {
 	struct HPMHookPoint *HP_login_fromchar_parse_wrong_pincode_post;
 	struct HPMHookPoint *HP_login_fromchar_parse_accinfo_pre;
 	struct HPMHookPoint *HP_login_fromchar_parse_accinfo_post;
+	struct HPMHookPoint *HP_login_fromchar_parse_set_char_online_pre;
+	struct HPMHookPoint *HP_login_fromchar_parse_set_char_online_post;
 	struct HPMHookPoint *HP_login_parse_fromchar_pre;
 	struct HPMHookPoint *HP_login_parse_fromchar_post;
 	struct HPMHookPoint *HP_login_kick_pre;
@@ -488,10 +492,14 @@ struct {
 	struct HPMHookPoint *HP_login_client_login_otp_post;
 	struct HPMHookPoint *HP_login_client_login_mobile_otp_request_pre;
 	struct HPMHookPoint *HP_login_client_login_mobile_otp_request_post;
+	struct HPMHookPoint *HP_login_api_server_connection_status_pre;
+	struct HPMHookPoint *HP_login_api_server_connection_status_post;
 	struct HPMHookPoint *HP_login_char_server_connection_status_pre;
 	struct HPMHookPoint *HP_login_char_server_connection_status_post;
 	struct HPMHookPoint *HP_login_parse_request_connection_pre;
 	struct HPMHookPoint *HP_login_parse_request_connection_post;
+	struct HPMHookPoint *HP_login_parse_request_api_connection_pre;
+	struct HPMHookPoint *HP_login_parse_request_api_connection_post;
 	struct HPMHookPoint *HP_login_config_set_defaults_pre;
 	struct HPMHookPoint *HP_login_config_set_defaults_post;
 	struct HPMHookPoint *HP_login_config_read_pre;
@@ -524,6 +532,8 @@ struct {
 	struct HPMHookPoint *HP_login_convert_users_to_colors_post;
 	struct HPMHookPoint *HP_login_check_client_version_pre;
 	struct HPMHookPoint *HP_login_check_client_version_post;
+	struct HPMHookPoint *HP_login_generate_token_pre;
+	struct HPMHookPoint *HP_login_generate_token_post;
 	struct HPMHookPoint *HP_loginlog_failedattempts_pre;
 	struct HPMHookPoint *HP_loginlog_failedattempts_post;
 	struct HPMHookPoint *HP_loginlog_log_pre;
@@ -638,6 +648,10 @@ struct {
 	struct HPMHookPoint *HP_sockt_session_is_valid_post;
 	struct HPMHookPoint *HP_sockt_session_is_active_pre;
 	struct HPMHookPoint *HP_sockt_session_is_active_post;
+	struct HPMHookPoint *HP_sockt_create_session_pre;
+	struct HPMHookPoint *HP_sockt_create_session_post;
+	struct HPMHookPoint *HP_sockt_delete_session_pre;
+	struct HPMHookPoint *HP_sockt_delete_session_post;
 	struct HPMHookPoint *HP_sockt_flush_pre;
 	struct HPMHookPoint *HP_sockt_flush_post;
 	struct HPMHookPoint *HP_sockt_flush_fifos_pre;
@@ -648,6 +662,10 @@ struct {
 	struct HPMHookPoint *HP_sockt_set_nonblocking_post;
 	struct HPMHookPoint *HP_sockt_set_defaultparse_pre;
 	struct HPMHookPoint *HP_sockt_set_defaultparse_post;
+	struct HPMHookPoint *HP_sockt_set_default_client_connected_pre;
+	struct HPMHookPoint *HP_sockt_set_default_client_connected_post;
+	struct HPMHookPoint *HP_sockt_set_default_delete_pre;
+	struct HPMHookPoint *HP_sockt_set_default_delete_post;
 	struct HPMHookPoint *HP_sockt_host2ip_pre;
 	struct HPMHookPoint *HP_sockt_host2ip_post;
 	struct HPMHookPoint *HP_sockt_ip2str_pre;
@@ -688,6 +706,8 @@ struct {
 	struct HPMHookPoint *HP_SQL_QueryV_post;
 	struct HPMHookPoint *HP_SQL_QueryStr_pre;
 	struct HPMHookPoint *HP_SQL_QueryStr_post;
+	struct HPMHookPoint *HP_SQL_QueryStrFetch_pre;
+	struct HPMHookPoint *HP_SQL_QueryStrFetch_post;
 	struct HPMHookPoint *HP_SQL_LastInsertId_pre;
 	struct HPMHookPoint *HP_SQL_LastInsertId_post;
 	struct HPMHookPoint *HP_SQL_NumColumns_pre;
@@ -1125,6 +1145,8 @@ struct {
 	int HP_PRIV__lclif_parse_CA_REQ_HASH_post;
 	int HP_PRIV__lclif_parse_CA_CHARSERVERCONNECT_pre;
 	int HP_PRIV__lclif_parse_CA_CHARSERVERCONNECT_post;
+	int HP_PRIV__lclif_parse_CA_APISERVERCONNECT_pre;
+	int HP_PRIV__lclif_parse_CA_APISERVERCONNECT_post;
 	int HP_libconfig_set_db_path_pre;
 	int HP_libconfig_set_db_path_post;
 	int HP_libconfig_format_db_path_pre;
@@ -1345,6 +1367,8 @@ struct {
 	int HP_login_fromchar_parse_wrong_pincode_post;
 	int HP_login_fromchar_parse_accinfo_pre;
 	int HP_login_fromchar_parse_accinfo_post;
+	int HP_login_fromchar_parse_set_char_online_pre;
+	int HP_login_fromchar_parse_set_char_online_post;
 	int HP_login_parse_fromchar_pre;
 	int HP_login_parse_fromchar_post;
 	int HP_login_kick_pre;
@@ -1359,10 +1383,14 @@ struct {
 	int HP_login_client_login_otp_post;
 	int HP_login_client_login_mobile_otp_request_pre;
 	int HP_login_client_login_mobile_otp_request_post;
+	int HP_login_api_server_connection_status_pre;
+	int HP_login_api_server_connection_status_post;
 	int HP_login_char_server_connection_status_pre;
 	int HP_login_char_server_connection_status_post;
 	int HP_login_parse_request_connection_pre;
 	int HP_login_parse_request_connection_post;
+	int HP_login_parse_request_api_connection_pre;
+	int HP_login_parse_request_api_connection_post;
 	int HP_login_config_set_defaults_pre;
 	int HP_login_config_set_defaults_post;
 	int HP_login_config_read_pre;
@@ -1395,6 +1423,8 @@ struct {
 	int HP_login_convert_users_to_colors_post;
 	int HP_login_check_client_version_pre;
 	int HP_login_check_client_version_post;
+	int HP_login_generate_token_pre;
+	int HP_login_generate_token_post;
 	int HP_loginlog_failedattempts_pre;
 	int HP_loginlog_failedattempts_post;
 	int HP_loginlog_log_pre;
@@ -1509,6 +1539,10 @@ struct {
 	int HP_sockt_session_is_valid_post;
 	int HP_sockt_session_is_active_pre;
 	int HP_sockt_session_is_active_post;
+	int HP_sockt_create_session_pre;
+	int HP_sockt_create_session_post;
+	int HP_sockt_delete_session_pre;
+	int HP_sockt_delete_session_post;
 	int HP_sockt_flush_pre;
 	int HP_sockt_flush_post;
 	int HP_sockt_flush_fifos_pre;
@@ -1519,6 +1553,10 @@ struct {
 	int HP_sockt_set_nonblocking_post;
 	int HP_sockt_set_defaultparse_pre;
 	int HP_sockt_set_defaultparse_post;
+	int HP_sockt_set_default_client_connected_pre;
+	int HP_sockt_set_default_client_connected_post;
+	int HP_sockt_set_default_delete_pre;
+	int HP_sockt_set_default_delete_post;
 	int HP_sockt_host2ip_pre;
 	int HP_sockt_host2ip_post;
 	int HP_sockt_ip2str_pre;
@@ -1559,6 +1597,8 @@ struct {
 	int HP_SQL_QueryV_post;
 	int HP_SQL_QueryStr_pre;
 	int HP_SQL_QueryStr_post;
+	int HP_SQL_QueryStrFetch_pre;
+	int HP_SQL_QueryStrFetch_post;
 	int HP_SQL_LastInsertId_pre;
 	int HP_SQL_LastInsertId_post;
 	int HP_SQL_NumColumns_pre;
@@ -1776,6 +1816,7 @@ struct {
 	struct db_interface DB;
 	struct des_interface des;
 	struct ipban_interface ipban;
+	struct lapiif_interface lapiif;
 	struct lchrif_interface lchrif;
 	struct lclif_interface lclif;
 	struct lclif_interface_private PRIV__lclif;

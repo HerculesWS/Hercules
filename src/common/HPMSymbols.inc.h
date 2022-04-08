@@ -56,6 +56,9 @@ struct battleground_interface *bg;
 #ifdef MAP_BUYINGSTORE_H /* buyingstore */
 struct buyingstore_interface *buyingstore;
 #endif // MAP_BUYINGSTORE_H
+#ifdef CHAR_CAPIIF_H /* capiif */
+struct capiif_interface *capiif;
+#endif // CHAR_CAPIIF_H
 #ifdef MAP_CHANNEL_H /* channel */
 struct channel_interface *channel;
 #endif // MAP_CHANNEL_H
@@ -134,6 +137,9 @@ struct instance_interface *instance;
 #ifdef CHAR_INT_ACHIEVEMENT_H /* inter_achievement */
 struct inter_achievement_interface *inter_achievement;
 #endif // CHAR_INT_ACHIEVEMENT_H
+#ifdef CHAR_INT_ADVENTURER_AGENCY_H /* inter_adventurer_agency */
+struct inter_adventurer_agency_interface *inter_adventurer_agency;
+#endif // CHAR_INT_ADVENTURER_AGENCY_H
 #ifdef CHAR_INT_AUCTION_H /* inter_auction */
 struct inter_auction_interface *inter_auction;
 #endif // CHAR_INT_AUCTION_H
@@ -173,6 +179,9 @@ struct inter_rodex_interface *inter_rodex;
 #ifdef CHAR_INT_STORAGE_H /* inter_storage */
 struct inter_storage_interface *inter_storage;
 #endif // CHAR_INT_STORAGE_H
+#ifdef CHAR_INT_USERCONFIG_H /* inter_userconfig */
+struct inter_userconfig_interface *inter_userconfig;
+#endif // CHAR_INT_USERCONFIG_H
 #ifdef MAP_INTIF_H /* intif */
 struct intif_interface *intif;
 #endif // MAP_INTIF_H
@@ -391,6 +400,10 @@ HPExport const char *HPM_shared_symbols(int server_type)
 	if ((server_type&(SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("buyingstore", buyingstore))
 		return "buyingstore";
 #endif // MAP_BUYINGSTORE_H
+#ifdef CHAR_CAPIIF_H /* capiif */
+	if ((server_type&(SERVER_TYPE_CHAR)) != 0 && !HPM_SYMBOL("capiif", capiif))
+		return "capiif";
+#endif // CHAR_CAPIIF_H
 #ifdef MAP_CHANNEL_H /* channel */
 	if ((server_type&(SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("channel", channel))
 		return "channel";
@@ -495,6 +508,10 @@ HPExport const char *HPM_shared_symbols(int server_type)
 	if ((server_type&(SERVER_TYPE_CHAR)) != 0 && !HPM_SYMBOL("inter_achievement", inter_achievement))
 		return "inter_achievement";
 #endif // CHAR_INT_ACHIEVEMENT_H
+#ifdef CHAR_INT_ADVENTURER_AGENCY_H /* inter_adventurer_agency */
+	if ((server_type&(SERVER_TYPE_CHAR)) != 0 && !HPM_SYMBOL("inter_adventurer_agency", inter_adventurer_agency))
+		return "inter_adventurer_agency";
+#endif // CHAR_INT_ADVENTURER_AGENCY_H
 #ifdef CHAR_INT_AUCTION_H /* inter_auction */
 	if ((server_type&(SERVER_TYPE_CHAR)) != 0 && !HPM_SYMBOL("inter_auction", inter_auction))
 		return "inter_auction";
@@ -547,6 +564,10 @@ HPExport const char *HPM_shared_symbols(int server_type)
 	if ((server_type&(SERVER_TYPE_CHAR)) != 0 && !HPM_SYMBOL("inter_storage", inter_storage))
 		return "inter_storage";
 #endif // CHAR_INT_STORAGE_H
+#ifdef CHAR_INT_USERCONFIG_H /* inter_userconfig */
+	if ((server_type&(SERVER_TYPE_CHAR)) != 0 && !HPM_SYMBOL("inter_userconfig", inter_userconfig))
+		return "inter_userconfig";
+#endif // CHAR_INT_USERCONFIG_H
 #ifdef MAP_INTIF_H /* intif */
 	if ((server_type&(SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("intif", intif))
 		return "intif";
