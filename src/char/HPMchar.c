@@ -29,6 +29,7 @@
 #include "char/geoip.h"
 #include "char/inter.h"
 #include "char/int_achievement.h"
+#include "char/int_adventurer_agency.h"
 #include "char/int_auction.h"
 #include "char/int_clan.h"
 #include "char/int_elemental.h"

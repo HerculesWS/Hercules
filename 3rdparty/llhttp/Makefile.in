@@ -52,4 +52,4 @@ Makefile: Makefile.in
 
 %.o: %.c $(LLHTTP_H) Makefile
 	@echo "	CC	$<"
-	@$(CC) @CFLAGS@ @DEFS@ @CPPFLAGS@ -Wno-error -c $(OUTPUT_OPTION) $<
+	@$(CC) @CFLAGS@ @DEFS@ @CPPFLAGS@ -Wno-error -Wno-format -Wno-redundant-decls -Wno-undef -Wno-switch-enum -c $(OUTPUT_OPTION) $<
