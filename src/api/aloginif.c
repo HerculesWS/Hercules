@@ -49,13 +49,14 @@
 static struct aloginif_interface aloginif_s;
 struct aloginif_interface *aloginif;
 
-#define INIT_PACKET_PROXY_FIELDS(p, sd) \
+#define INIT_PACKET_PROXY_FIELDS(p, sd, param) \
 	(p)->msg_id = msg_id; \
 	(p)->char_server_id = aclif->get_char_server_id(sd); \
 	(p)->client_fd = sd->fd; \
 	(p)->account_id = sd->account_id; \
 	(p)->char_id = sd->char_id; \
-	(p)->client_random_id = sd->id
+	(p)->client_random_id = sd->id; \
+	(p)->flags = param
 
 // sets login-server's user id
 static void aloginif_setuserid(char *id)
@@ -318,7 +319,7 @@ static void aloginif_send_to_char(int fd, struct api_session_data *sd, int msg_i
 	struct PACKET_API_PROXY *p = WFIFOP(aloginif->fd, 0);
 	p->packet_id = HEADER_API_PROXY_REQUEST;
 	p->packet_len = len;
-	INIT_PACKET_PROXY_FIELDS(p, sd);
+	INIT_PACKET_PROXY_FIELDS(p, sd, proxy_flag_default);
 	if (data && data_len > 0)
 		memcpy(((struct PACKET_API_PROXY0*)p)->data, data, data_len);
 
@@ -335,11 +336,11 @@ static void aloginif_send_split_to_char(int fd, struct api_session_data *sd, int
 
 	WFIFO_CHUNKED_INIT(p, aloginif->fd, HEADER_API_PROXY_REQUEST, PACKET_API_PROXY_CHUNKED, data, data_len) {
 		WFIFO_CHUNKED_BLOCK_START(p);
-		INIT_PACKET_PROXY_FIELDS(&p->base, sd);
+		INIT_PACKET_PROXY_FIELDS(&p->base, sd, proxy_flag_default);
 		WFIFO_CHUNKED_BLOCK_END();
 	}
 	WFIFO_CHUNKED_FINAL_START(p);
-	INIT_PACKET_PROXY_FIELDS(&p->base, sd);
+	INIT_PACKET_PROXY_FIELDS(&p->base, sd, proxy_flag_default);
 	WFIFO_CHUNKED_FINAL_END();
 }
 

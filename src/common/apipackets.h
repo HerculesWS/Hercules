@@ -74,6 +74,7 @@ struct PACKET_API_PROXY {
 	int16 packet_id;
 	int16 packet_len;
 	int16 msg_id;
+	uint16 flags;
 	int32 char_server_id;
 	int32 client_fd;
 	int32 account_id;
@@ -87,6 +88,11 @@ struct PACKET_API_PROXY0 {
 	struct PACKET_API_PROXY base;
 	char data[];
 } __attribute__((packed));
+
+enum proxy_flag
+{
+	proxy_flag_default = 0
+};
 
 STATIC_ASSERT(sizeof(struct PACKET_API_PROXY) == sizeof(struct PACKET_API_PROXY0),
 		"Structs PACKET_API_PROXY and PACKET_API_PROXY0 must be same");
