@@ -195,7 +195,7 @@ static void lapiif_parse_proxy_api_to_char(int fd)
 	memcpy(WFIFOP(char_fd, 0), RFIFOP(fd, 0), len);
 	struct PACKET_API_PROXY *p = WFIFOP(char_fd, 0);
 	p->packet_id = HEADER_API_PROXY_REQUEST;
-	p->server_id = fd;
+	p->char_server_id = fd;
 	WFIFOSET(char_fd, len);
 }
 

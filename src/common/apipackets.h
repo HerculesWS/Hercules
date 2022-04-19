@@ -74,7 +74,7 @@ struct PACKET_API_PROXY {
 	int16 packet_id;
 	int16 packet_len;
 	int16 msg_id;
-	int32 server_id;
+	int32 char_server_id;
 	int32 client_fd;
 	int32 account_id;
 	int32 char_id;

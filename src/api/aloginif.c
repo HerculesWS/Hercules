@@ -51,7 +51,7 @@ struct aloginif_interface *aloginif;
 
 #define INIT_PACKET_PROXY_FIELDS(p, sd) \
 	(p)->msg_id = msg_id; \
-	(p)->server_id = aclif->get_char_server_id(sd); \
+	(p)->char_server_id = aclif->get_char_server_id(sd); \
 	(p)->client_fd = sd->fd; \
 	(p)->account_id = sd->account_id; \
 	(p)->char_id = sd->char_id; \

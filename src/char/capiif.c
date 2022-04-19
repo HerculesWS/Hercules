@@ -64,7 +64,7 @@ struct capiif_interface *capiif;
 
 #define INIT_PACKET_REPLY_PROXY_FIELDS(p, p2) \
 	(p)->msg_id = (p2)->msg_id; \
-	(p)->server_id = (p2)->server_id; \
+	(p)->char_server_id = (p2)->char_server_id; \
 	(p)->client_fd = (p2)->client_fd; \
 	(p)->account_id = (p2)->account_id; \
 	(p)->char_id = (p2)->char_id; \
