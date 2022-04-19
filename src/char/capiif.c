@@ -70,19 +70,17 @@ struct capiif_interface *capiif;
 	(p)->char_id = (p2)->char_id; \
 	(p)->client_random_id = (p2)->client_random_id
 
-#define RFIFO_DATA_PTR() RFIFOP(fd, WFIFO_APICHAR_SIZE)
-#define RFIFO_API_DATA(var, type) const struct PACKET_API_ ## type *var = (const struct PACKET_API_ ## type*)RFIFO_DATA_PTR()
-#define RFIFO_API_PROXY_PACKET(var) const struct PACKET_API_PROXY *var = RFIFOP(fd, 0)
-#define RFIFO_API_PROXY_PACKET_CHUNKED(var) const struct PACKET_API_PROXY_CHUNKED *var = RFIFOP(fd, 0)
-#define GET_RFIFO_API_PROXY_PACKET_SIZE(fd) (RFIFOW(fd, 2) - sizeof(struct PACKET_API_PROXY))
-
 #define DEBUG_LOG
 
 static int capiif_parse_fromlogin_api_proxy(int fd)
 {
-	const uint32 command = RFIFOW(fd, 4);
+	RFIFO_API_PROXY_PACKET(packet);
+	const uint32 msg = packet->msg_id;
 
-	switch (command) {
+	if (PROXY_PACKET_FLAG(packet, proxy_flag_map)) {
+		mapif->send_first(packet, packet->packet_len);
+	}
+	switch (msg) {
 		case API_MSG_userconfig_load_emotes:
 			capiif->parse_userconfig_load_emotes(fd);
 			break;
@@ -120,12 +118,12 @@ static int capiif_parse_fromlogin_api_proxy(int fd)
 			capiif->parse_party_del(fd);
 			break;
 		default:
-			ShowError("Unknown proxy packet 0x%04x received from login-server, disconnecting.\n", command);
+			ShowError("Unknown proxy packet 0x%04x received from login-server, disconnecting.\n", msg);
 			sockt->eof(fd);
 			return 0;
 	}
 
-	RFIFOSKIP(fd, RFIFOW(fd, 2));
+	RFIFOSKIP(fd, packet->packet_len);
 	return 0;
 }
 

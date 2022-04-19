@@ -23,6 +23,7 @@
 #define COMMON_API_PACKETS_H
 
 #include "common/hercules.h"
+#include "common/mmo.h"
 
 /* Packets Structs */
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
@@ -89,9 +90,9 @@ struct PACKET_API_PROXY0 {
 	char data[];
 } __attribute__((packed));
 
-enum proxy_flag
-{
-	proxy_flag_default = 0
+enum proxy_flag {
+	proxy_flag_default = 0,
+	proxy_flag_map = 1
 };
 
 STATIC_ASSERT(sizeof(struct PACKET_API_PROXY) == sizeof(struct PACKET_API_PROXY0),
@@ -271,6 +272,13 @@ struct PACKET_API_REPLY_party_del {
 
 #define WFIFO_APICHAR_SIZE sizeof(struct PACKET_API_PROXY)
 #define CHUNKED_FLAG_SIZE 1
+
+#define RFIFO_DATA_PTR() RFIFOP(fd, WFIFO_APICHAR_SIZE)
+#define RFIFO_API_DATA(var, type) const struct PACKET_API_ ## type *var = (const struct PACKET_API_ ## type*)RFIFO_DATA_PTR()
+#define RFIFO_API_PROXY_PACKET(var) const struct PACKET_API_PROXY *var = RFIFOP(fd, 0)
+#define RFIFO_API_PROXY_PACKET_CHUNKED(var) const struct PACKET_API_PROXY_CHUNKED *var = RFIFOP(fd, 0)
+#define GET_RFIFO_API_PROXY_PACKET_SIZE(fd) (RFIFOW(fd, 2) - sizeof(struct PACKET_API_PROXY))
+#define PROXY_PACKET_FLAG(packet, flag) ((packet)->flags & flag) != 0
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)

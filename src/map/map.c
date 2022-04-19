@@ -45,6 +45,7 @@
 #include "map/itemdb.h"
 #include "map/log.h"
 #include "map/macro.h"
+#include "map/mapiif.h"
 #include "map/mail.h"
 #include "map/mapreg.h"
 #include "map/mercenary.h"
@@ -6544,6 +6545,7 @@ int do_final(void)
 	stylist->final();
 	enchantui->final();
 	goldpc->final();
+	mapiif->final();
 
 	HPM_map_do_final();
 
@@ -6763,6 +6765,7 @@ static void map_load_defaults(void)
 	grader_defaults();
 	enchantui_defaults();
 	goldpc_defaults();
+	mapiif_defaults();
 }
 /**
  * --run-once handler
@@ -7090,6 +7093,7 @@ int do_init(int argc, char *argv[])
 	duel->init(minimal);
 	vending->init(minimal);
 	rodex->init(minimal);
+	mapiif->init(minimal);
 
 	if (map->scriptcheck) {
 		bool failed = map->extra_scripts_count > 0 ? false : true;

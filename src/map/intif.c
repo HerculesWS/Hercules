@@ -34,6 +34,7 @@
 #include "map/log.h"
 #include "map/mail.h"
 #include "map/map.h"
+#include "map/mapiif.h"
 #include "map/mercenary.h"
 #include "map/party.h"
 #include "map/pc.h"
@@ -43,6 +44,7 @@
 #include "map/storage.h"
 #include "map/achievement.h"
 
+#include "common/apipackets.h"
 #include "common/charmappackets.h"
 #include "common/mapcharpackets.h"
 #include "common/memmgr.h"
@@ -2709,6 +2711,10 @@ static int intif_parse(int fd)
 {
 	int packet_len, cmd;
 	cmd = RFIFOW(fd,0);
+
+	if (cmd == HEADER_API_PROXY_REQUEST)
+		return mapiif->parse_fromchar_api_proxy(fd);
+
 	// Verify ID of the packet
 	if (cmd < MIN_INTIF_PACKET_DB || cmd >= MAX_INTIF_PACKET_DB || packets->intif_db[cmd - MIN_INTIF_PACKET_DB] == 0) {
 		return 0;
@@ -2812,6 +2818,7 @@ static int intif_parse(int fd)
 
 		// Clan System
 		case 0x3858: intif->pRecvClanMemberAction(fd); break;
+
 	default:
 		ShowError("intif_parse : unknown packet %d %x\n",fd,RFIFOW(fd,0));
 		return 0;

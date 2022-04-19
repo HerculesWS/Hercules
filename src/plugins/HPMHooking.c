@@ -122,6 +122,7 @@ PRAGMA_GCC5(GCC diagnostic ignored "-Wsuggest-attribute=format")
 #include "map/log.h"
 #include "map/mail.h"
 #include "map/map.h"
+#include "map/mapiif.h"
 #include "map/mapreg.h"
 #include "map/mercenary.h"
 #include "map/messages.h"
