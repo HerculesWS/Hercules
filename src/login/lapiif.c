@@ -32,6 +32,7 @@
 #include "common/showmsg.h"
 #include "common/socket.h"
 #include "common/strlib.h"
+#include "common/HPM.h"
 
 #include <string.h>
 
@@ -160,6 +161,14 @@ static int lapiif_parse(int fd)
 			return 0;
 
 		ShowDebug("Received packet 0x%4x (%d bytes) from api-server (connection %d)\n", (uint32)cmd, packet_len, fd);
+
+		if (VECTOR_LENGTH(HPM->packets[hpParse_ApiLogin]) > 0) {
+			int result = HPM->parse_packets(fd, cmd, hpParse_ApiLogin);
+			if (result == 1)
+				continue;
+			if (result == 2)
+				return 0;
+		}
 
 		switch (cmd) {
 			case 0x2841: lapiif->parse_ping(fd); break;

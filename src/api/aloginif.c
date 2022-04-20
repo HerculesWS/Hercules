@@ -178,6 +178,14 @@ static int aloginif_parse(int fd)
 
 		ShowDebug("Received packet 0x%4x (%d bytes) from login-server (connection %d)\n", (uint32)cmd, packet_len, fd);
 
+		if (VECTOR_LENGTH(HPM->packets[hpParse_LoginApi]) > 0) {
+			int result = HPM->parse_packets(fd, cmd, hpParse_LoginApi);
+			if (result == 1)
+				continue;
+			if (result == 2)
+				return 0;
+		}
+
 		switch (cmd) {
 			case 0x2811: aloginif->parse_connection_state(fd); break;
 			case 0x2812: aloginif->parse_pong(fd); break;
