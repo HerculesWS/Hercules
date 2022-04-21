@@ -153,6 +153,7 @@ struct aclif_interface {
 	int (*parse_request) (int fd, struct api_session_data *sd);
 	void (*terminate_connection) (int fd);
 	int (*connected) (int fd);
+	bool (*socket_secure_check) (int fd);
 	int (*session_delete) (int fd);
 	void (*init_handlers) (void);
 	void (*register_handlers) (void);

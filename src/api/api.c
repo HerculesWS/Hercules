@@ -214,6 +214,7 @@ static bool api_config_read_connection(const char *filename, struct config_t *co
 	libconfig->setting_lookup_mutable_string(setting, "db_password", api->server_pw, sizeof(api->server_pw));
 	libconfig->setting_lookup_mutable_string(setting, "db_database", api->server_db, sizeof(api->server_db));
 	libconfig->setting_lookup_mutable_string(setting, "default_codepage", api->default_codepage, sizeof(api->default_codepage));
+
 	return true;
 }
 
@@ -307,6 +308,7 @@ static bool api_config_read(const char *filename, bool imported)
 	}
 
 	libconfig->setting_lookup_int(setting, "remove_disconnected_delay", &aclif->remove_disconnected_delay);
+	libconfig->setting_lookup_int(setting, "ip_connections_limit", &api->ip_connections_limit);
 
 	if (!api_config_read_console(filename, &config, imported))
 		retval = false;
@@ -412,6 +414,7 @@ void api_defaults(void)
 	sprintf(api->server_pw,"ragnarok");
 	sprintf(api->server_db,"ragnarok");
 	api->mysql_handle = NULL;
+	api->ip_connections_limit = 5;
 
 	api->port = 7121;
 	api->ip_set = 0;

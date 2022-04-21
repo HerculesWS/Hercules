@@ -93,6 +93,8 @@ struct api_interface {
 
 	uint16 port;
 
+	int ip_connections_limit;
+
 	int (*setipport) (unsigned short map_index, uint32 ip, uint16 port);
 	bool (*config_read) (const char *filename, bool imported);
 	bool (*config_read_console) (const char *filename, struct config_t *config, bool imported);

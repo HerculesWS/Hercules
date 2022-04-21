@@ -206,6 +206,12 @@ static int aclif_connected(int fd)
 {
 	ShowInfo("connected: %d\n", fd);
 
+	if (!aclif->socket_secure_check(fd)) {
+		char ip_str[16];
+		ShowError("Too many connections from %d ip %s\n", fd, sockt->ip2str(sockt->session[fd]->client_addr, ip_str));
+		aclif->terminate_connection(fd);
+		return 1;
+	}
 	nullpo_ret(sockt->session[fd]);
 	struct api_session_data *sd = NULL;
 	CREATE(sd, struct api_session_data, 1);
@@ -216,6 +222,25 @@ static int aclif_connected(int fd)
 	sockt->session[fd]->session_data = sd;
 	httpparser->init_parser(fd, sd);
 	return 0;
+}
+
+static bool aclif_socket_secure_check(int fd)
+{
+	nullpo_retr(false, sockt->session[fd]);
+
+	int count = 0;
+	const int max_count = api->ip_connections_limit;
+	const int client_addr = sockt->session[fd]->client_addr;
+	for (int fd2 = 0; fd2 < sockt->fd_max; fd2 ++) {
+		if (!sockt->session_is_valid(fd2))
+			continue;
+		if (client_addr == sockt->session[fd2]->client_addr) {
+			count ++;
+			if (count > max_count)
+				return false;
+		}
+	}
+	return true;
 }
 
 static int aclif_post_headers_destroy_sub(union DBKey key, struct DBData *data, va_list ap)
@@ -1134,6 +1159,7 @@ void aclif_defaults(void)
 	aclif->parse_request = aclif_parse_request;
 	aclif->terminate_connection = aclif_terminate_connection;
 	aclif->connected = aclif_connected;
+	aclif->socket_secure_check = aclif_socket_secure_check;
 	aclif->session_delete = aclif_session_delete;
 	aclif->init_handlers = aclif_init_handlers;
 	aclif->register_handlers = aclif_register_handlers;
