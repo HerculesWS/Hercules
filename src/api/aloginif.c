@@ -354,12 +354,12 @@ static void aloginif_send_split_to_char(int fd, struct api_session_data *sd, int
 
 static void aloginif_parse_from_char(int fd, Handler_func func)
 {
-	const int user_fd = RFIFOL(fd, 10);
+	RFIFO_API_PROXY_PACKET(p);
+	const int user_fd = p->client_fd;
 	if (!sockt->session_is_active(user_fd))
 		return;
 	struct api_session_data *sd = sockt->session[user_fd]->session_data;
 	nullpo_retv(sd);
-	const struct PACKET_API_PROXY *p = RFIFOP(fd, 0);
 	if (sd->account_id != p->account_id)
 		return;
 	if (p->char_id != 0 && sd->char_id != p->char_id)
@@ -376,7 +376,8 @@ static void aloginif_parse_from_char(int fd, Handler_func func)
 
 static int aloginif_parse_proxy_from_char_server(int fd)
 {
-	const uint32 command = RFIFOW(fd, 4);
+	RFIFO_API_PROXY_PACKET(p);
+	const uint32 command = p->msg_id;
 	Assert_ret(command > 0 && command < API_MSG_MAX);
 	aloginif->parse_from_char(fd, aloginif->msg_map[command]);
 	return 0;

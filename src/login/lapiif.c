@@ -192,16 +192,17 @@ static void lapiif_parse_ping(int fd)
 
 static void lapiif_parse_proxy_api_to_char(int fd)
 {
-	const int char_server_id = RFIFOL(fd, 6);
+	RFIFO_API_PROXY_PACKET(inPacket);
+	const int char_server_id = inPacket->char_server_id;
 
 	Assert_retv(char_server_id >= 0 && char_server_id < MAX_SERVERS);
 	const int char_fd = login->dbs->server[char_server_id].fd;
 	if (!sockt->session_is_valid(fd)) {
 		return;
 	}
-	const int len = RFIFOW(fd, 2);
+	const int len = inPacket->packet_len;
 	WFIFOHEAD(char_fd, len);
-	memcpy(WFIFOP(char_fd, 0), RFIFOP(fd, 0), len);
+	memcpy(WFIFOP(char_fd, 0), inPacket, len);
 	struct PACKET_API_PROXY *p = WFIFOP(char_fd, 0);
 	p->packet_id = HEADER_API_PROXY_REQUEST;
 	p->char_server_id = fd;
@@ -210,10 +211,11 @@ static void lapiif_parse_proxy_api_to_char(int fd)
 
 static void lapiif_parse_proxy_api_from_char(int fd)
 {
-	const int api_fd = RFIFOL(fd, 6);
-	const int len = RFIFOW(fd, 2);
+	RFIFO_API_PROXY_PACKET(inPacket);
+	const int api_fd = inPacket->char_server_id;
+	const int len = inPacket->packet_len;
 	WFIFOHEAD(api_fd, len);
-	memcpy(WFIFOP(api_fd, 0), RFIFOP(fd, 0), len);
+	memcpy(WFIFOP(api_fd, 0), inPacket, len);
 	WFIFOW(api_fd, 0) = HEADER_API_PROXY_REPLY;
 	WFIFOSET(api_fd, len);
 }
