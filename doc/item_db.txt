@@ -134,6 +134,8 @@ Type:
 						after selecting a target, for use with skills and pet lures)
 	IT_CASH:			Another delayed consume that requires user confirmation before
 						using item.
+	IT_SELECTPACKAGE:	Selectable Package items with special client interface, when the item is used the variables @selectpackage_itemid and @selectpackage_boxidx
+		are set to the original item id and the selected index respectively. this is restricted to clients PACKETVER_MAIN_NUM >= 20220216 || PACKETVER_ZERO_NUM >= 20220316
 	When not specified, the item will automatically sets to "IT_ETC".
 
 Buy: Default buying price. When not specified, becomes double the sell price.

@@ -5751,6 +5751,17 @@ struct PACKET_ZC_ITEM_REFORM_ACK {
 DEFINE_PACKET_HEADER(ZC_ITEM_REFORM_ACK, 0x0b92);
 #endif
 
+#if PACKETVER_MAIN_NUM >= 20220216 || PACKETVER_ZERO_NUM >= 20220316
+struct PACKET_CZ_USE_PACKAGEITEM {
+	int16 PacketType;
+	uint16 index;
+	uint32 AID;
+	uint32 itemID;
+	uint32 BoxIndex;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_USE_PACKAGEITEM, 0x0baf)
+#endif  // PACKETVER_MAIN_NUM >= 20220216 || PACKETVER_ZERO_NUM >= 20220316
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris

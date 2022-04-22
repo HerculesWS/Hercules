@@ -3534,6 +3534,7 @@ Valid types are:
 	ITEMINFO_ITEM_USAGE_FLAG         - Item usage flag
 	ITEMINFO_ITEM_USAGE_OVERRIDE     - Item usage override
 	ITEMINFO_GM_LV_TRADE_OVERRIDE    - Min. GM level override trade restriction
+	ITEMINFO_FLAG_SELECT_PACKAGE     - Selection packages flag
 
 Check sample in doc/sample/getiteminfo.txt
 

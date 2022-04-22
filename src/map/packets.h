@@ -2041,4 +2041,8 @@ packet(0x96e,clif->ackmergeitems);
 	packet(0x0b91, clif->pItemReformAck);
 #endif // PACKETVER_MAIN_NUM >= 20201118 || PACKETVER_RE_NUM >= 20211103
 
+#if PACKETVER_MAIN_NUM >= 20220216 || PACKETVER_ZERO_NUM >= 20220316
+	packet(0x0baf, clif->pUsePackageItem);
+#endif  // PACKETVER_MAIN_NUM >= 20220216 || PACKETVER_ZERO_NUM >= 20220316
+
 #endif /* MAP_PACKETS_H */

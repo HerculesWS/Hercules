@@ -15943,6 +15943,9 @@ static BUILDIN(getiteminfo)
 	case ITEMINFO_NAME:
 		script_pushstrcopy(st, it->jname);
 		break;
+	case ITEMINFO_FLAG_SELECT_PACKAGE:
+		script_pushint(st, it->flag.select_package);
+		break;
 	default:
 		ShowError("buildin_getiteminfo: Invalid item info type %d.\n", type);
 		script_pushint(st, -1);
@@ -16288,6 +16291,9 @@ static BUILDIN(setiteminfo)
 		break;
 	case ITEMINFO_GM_LV_TRADE_OVERRIDE:
 		it->gm_lv_trade_override = value;
+		break;
+	case ITEMINFO_FLAG_SELECT_PACKAGE:
+		it->flag.select_package = value;
 		break;
 	default:
 		ShowError("buildin_setiteminfo: invalid type %d.\n", n);
@@ -29258,6 +29264,7 @@ static void script_hardcoded_constants(void)
 	script->set_constant("ITEMINFO_ID", ITEMINFO_ID, false, false);
 	script->set_constant("ITEMINFO_AEGISNAME", ITEMINFO_AEGISNAME, false, false);
 	script->set_constant("ITEMINFO_NAME", ITEMINFO_NAME, false, false);
+	script->set_constant("ITEMINFO_FLAG_SELECT_PACKAGE", ITEMINFO_FLAG_SELECT_PACKAGE, false, false);
 
 	script->constdb_comment("getmercinfo options");
 	script->set_constant("MERCINFO_ID", MERCINFO_ID, false, false);
