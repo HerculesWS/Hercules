@@ -68,12 +68,21 @@ HTTP_URL(sample_test_simple)
 	ShowInfo("/httpsample/simple url called %d: %d\n", fd, sd->parser.method);
 
 	char buf[1000];
+	// get client user agent
 	const char *user_agent = (const char*)strdb_get(sd->headers_db, "User-Agent");
 	const char *format = "<html>Hercules test from sample plugin.<br/>Your user agent is: %s<br/></html>\n";
-	safesnprintf(buf, sizeof(buf), format, user_agent);
+	if (user_agent != NULL) {
+		// copy user agent from http request to buffer
+		safesnprintf(buf, sizeof(buf), format, user_agent);
+	} else {
+		// use unknown as user agent string
+		safestrncpy(buf, "unknown", 8);
+	}
 
+	// send html text back to client
 	httpsender->send_html(fd, buf);
 
+	// terminating http connection
 	aclif->terminate_connection(fd);
 
 	return true;
@@ -87,15 +96,21 @@ HTTP_URL(sample_test_char)
 	// sleecting default in hercules configs: server_name: "Hercules"
 	sd->world_name = "Hercules";
 
-	struct PACKET_API_sample_api_data_request data = { 0 };
-
+	// create variable with custom data for send other char server
+	CREATE_HTTP_DATA(sample_api_data_request);
+	// get client user agent
 	const char *user_agent = (const char*)strdb_get(sd->headers_db, "User-Agent");
-	// copy user agent from http request to text field
-	safestrncpy(data.text, user_agent, sizeof(data.text));
+	if (user_agent != NULL) {
+		// copy user agent from http request to text field
+		safestrncpy(data.text, user_agent, sizeof(data.text));
+	} else {
+		// use unknown as user agent string
+		safestrncpy(data.text, "unknown", 8);
+	}
 	// set flag field to value 123
 	data.flag = 123;
 	// send packet from api server to char server
-	aloginif->send_to_char(fd, sd, API_MSG_CUSTOM, &data, sizeof(data));
+	SEND_ASYNC_DATA(API_MSG_CUSTOM, &data, sizeof(data));
 	// not termination http connection here because waiting packet from char server with data...
 	return true;
 }
@@ -107,7 +122,7 @@ HTTP_DATA(sample_test_char)
 	ShowInfo("sample_test_char called\n");
 
 	// unpacking own data struct
-	GET_DATA(p, sample_api_data_response);
+	GET_HTTP_DATA(p, sample_api_data_response);
 
 	// generate html and send
 	const char *format = "<html>Hercules test from sample plugin.<br/>Users count on char server: %d<br/></html>\n";
@@ -123,15 +138,20 @@ HTTP_DATA(sample_test_char)
 // sample handler for message from api server url /test/msg
 void sample_char_api_packet(int fd)
 {
+	// define variable with received data from packet
 	RFIFO_API_DATA(sdata, sample_api_data_request);
 	ShowInfo("sample_char_api_packet called: %s, %d\n", sdata->text, sdata->flag);
+	// deine variable with sending packet
 	WFIFO_APICHAR_PACKET_REPLY(sample_api_data_response);
+	// store user count into packet field
 	data->users_count = chr->count_users();
+	// send created packet
 	WFIFOSET(chr->login_fd, packet->packet_len);
 }
 
 /* run when server starts */
-HPExport void plugin_init (void) {
+HPExport void plugin_init (void)
+{
 	ShowInfo("Server type is ");
 
 	switch (SERVER_TYPE) {

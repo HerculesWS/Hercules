@@ -24,11 +24,19 @@
 #include "common/apipackets.h"
 #include "api/aloginif.h"
 
-#define GET_DATA(var, type) const struct PACKET_API_REPLY_ ## type *var = (const struct PACKET_API_REPLY_ ## type*)data;
-#define CREATE_DATA(var, type) struct PACKET_API_ ## type ## _data var = { 0 };
+#define GET_HTTP_DATA(var, type) const struct PACKET_API_REPLY_ ## type *var = (const struct PACKET_API_REPLY_ ## type*)data;
+#define CREATE_HTTP_DATA(var, type) struct PACKET_API_ ## type ## _data var = { 0 };
+
+#ifdef HERCULES_CORE
 #define SEND_ASYNC_DATA(name, data) aloginif->send_to_char(fd, sd, API_MSG_ ## name, data, sizeof(struct PACKET_API_ ## name));
 // SEND_ASYNC_DATA_EMPTY is workaround for visual studio bugs
 #define SEND_ASYNC_DATA_EMPTY(name, data) aloginif->send_to_char(fd, sd, API_MSG_ ## name, data, 0);
 #define SEND_ASYNC_DATA_SPLIT(name, data, size) aloginif->send_split_to_char(fd, sd, API_MSG_ ## name, data, size);
+#else  // HERCULES_CORE
+#define SEND_ASYNC_DATA(name, data, size) aloginif->send_to_char(fd, sd, name, data, size);
+// SEND_ASYNC_DATA_EMPTY is workaround for visual studio bugs
+#define SEND_ASYNC_DATA_EMPTY(name, data) aloginif->send_to_char(fd, sd, name, data, 0);
+#define SEND_ASYNC_DATA_SPLIT(name, data, size) aloginif->send_split_to_char(fd, sd, name, data, size);
+#endif  // HERCULES_CORE
 
 #endif /* API_APIPACKETS_H */

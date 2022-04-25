@@ -48,7 +48,7 @@
 	JsonP *name = jsonparser->get(userHotkeyV2, #name); \
 	if (!jsonparser->is_null_or_missing(name)) { \
 		ShowInfo("send tab " # name "\n"); \
-		CREATE_DATA(data, userconfig_save_userhotkey_v2); \
+		CREATE_HTTP_DATA(data, userconfig_save_userhotkey_v2); \
 		data.hotkeys.tab = UserHotKey_v2_ ## name; \
 		handlers->sendHotkeyV2Tab(name, &data.hotkeys); \
 		SEND_ASYNC_DATA(userconfig_save_userhotkey_v2, &data); \
@@ -122,7 +122,7 @@ HTTP_DATA(userconfig_load_emotes)
 	// add empty UserHotkey_V2 for future usage
 	jsonwriter->add_new_object(dataNode, "UserHotkey_V2");
 
-	GET_DATA(p, userconfig_load_emotes);
+	GET_HTTP_DATA(p, userconfig_load_emotes);
 
 	jsonwriter->add_new_strings_to_array(emotionHotkey,
 		p->emotes.emote[0], p->emotes.emote[1], p->emotes.emote[2], p->emotes.emote[3], p->emotes.emote[4],
@@ -135,7 +135,7 @@ HTTP_DATA(userconfig_load_hotkeys)
 	JsonW *json = sd->json;
 	nullpo_retv(json);
 
-	GET_DATA(p, userconfig_load_hotkeys_tab);
+	GET_HTTP_DATA(p, userconfig_load_hotkeys_tab);
 
 	JsonW *dataNode = jsonwriter->get(json, "data");
 	JsonW *userHotkeyV2Node = jsonwriter->get(dataNode, "UserHotkey_V2");
@@ -231,7 +231,7 @@ HTTP_URL(userconfig_save)
 	if (!jsonparser->is_null_or_missing(emotionHotkey)) {
 		const int sz = jsonparser->get_array_size(emotionHotkey);
 		Assert_retr(false, sz == MAX_EMOTES);
-		CREATE_DATA(data, userconfig_save_emotes);
+		CREATE_HTTP_DATA(data, userconfig_save_emotes);
 		int i = 0;
 		JSONPARSER_FOR_EACH(emotion, emotionHotkey) {
 			// should be used strncpy [4144]
@@ -301,7 +301,7 @@ HTTP_URL(emblem_upload)
 		return false;
 	}
 
-	CREATE_DATA(data, emblem_upload_guild_id);
+	CREATE_HTTP_DATA(data, emblem_upload_guild_id);
 	data.guild_id = RET_INT_HEADER(GUILD_ID, 0);
 	SEND_ASYNC_DATA(emblem_upload_guild_id, &data);
 	SEND_ASYNC_DATA_SPLIT(emblem_upload, img, img_size);
@@ -315,7 +315,7 @@ HTTP_DATA(emblem_download)
 	ShowError("emblem_download data called\n");
 #endif
 
-	GET_DATA(p, emblem_download);
+	GET_HTTP_DATA(p, emblem_download);
 	const size_t src_emblem_size = data_size - CHUNKED_FLAG_SIZE;
 
 	RFIFO_CHUNKED_INIT(p, src_emblem_size, sd->data, sd->data_size);
@@ -344,7 +344,7 @@ HTTP_URL(emblem_download)
 #endif
 	aclif->show_request(fd, sd, false);
 
-	CREATE_DATA(data, emblem_download);
+	CREATE_HTTP_DATA(data, emblem_download);
 
 	data.guild_id = RET_INT_HEADER(GUILD_ID, 0);
 	data.version = RET_INT_HEADER(VERSION, 0);
@@ -356,7 +356,7 @@ HTTP_URL(emblem_download)
 
 HTTP_DATA(party_list)
 {
-	GET_DATA(p, party_list);
+	GET_HTTP_DATA(p, party_list);
 	int index = 0;
 	JsonW *json = jsonwriter->create_empty();
 	jsonwriter->add_new_number(json, "totalPage", p->totalPage);
@@ -398,7 +398,7 @@ HTTP_URL(party_list)
 #endif
 	aclif->show_request(fd, sd, false);
 
-	CREATE_DATA(data, party_list);
+	CREATE_HTTP_DATA(data, party_list);
 	data.page = RET_INT_HEADER(PAGE, 0);
 	SEND_ASYNC_DATA(party_list, &data);
 
@@ -407,7 +407,7 @@ HTTP_URL(party_list)
 
 HTTP_DATA(party_get)
 {
-	GET_DATA(p, party_get);
+	GET_HTTP_DATA(p, party_get);
 
 	JsonW *json = jsonwriter->create("{\"Type\":1}");
 	if (p->data.char_id != 0) {
@@ -450,7 +450,7 @@ HTTP_URL(party_get)
 
 HTTP_DATA(party_add)
 {
-	GET_DATA(p, party_add);
+	GET_HTTP_DATA(p, party_add);
 	ShowError("result: %d\n", p->result);
 
 	JsonW *json = jsonwriter->create_empty();
@@ -473,7 +473,7 @@ HTTP_URL(party_add)
 	aclif->show_request(fd, sd, false);
 
 	char *text = NULL;
-	CREATE_DATA(data, party_add);
+	CREATE_HTTP_DATA(data, party_add);
 
 	GET_STR_HEADER(CHAR_NAME, &text, NULL);
 	safestrncpy(data.entry.char_name, text, NAME_LENGTH);
@@ -497,7 +497,7 @@ HTTP_URL(party_add)
 
 HTTP_DATA(party_del)
 {
-	GET_DATA(p, party_del);
+	GET_HTTP_DATA(p, party_del);
 
 	JsonW *json = jsonwriter->create_empty();
 	jsonwriter->add_new_number(json, "Type", p->type);
@@ -518,7 +518,7 @@ HTTP_URL(party_del)
 #endif
 	aclif->show_request(fd, sd, false);
 
-	CREATE_DATA(data, party_del);
+	CREATE_HTTP_DATA(data, party_del);
 	data.master_aid = RET_INT_HEADER(MASTER_AID, 0);
 	SEND_ASYNC_DATA(party_del, &data);
 
