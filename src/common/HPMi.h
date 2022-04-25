@@ -70,6 +70,7 @@ enum HPluginPacketHookingPoints {
 	hpParse_Login,     ///< login-server (client-login)
 	hpParse_ApiLogin,  ///< login-server (api-login)
 	hpParse_LoginApi,  ///< api-server (login-api)
+	hpProxy_ApiChar,   ///< char-server (api-char)
 	/* */
 	hpPHP_MAX,
 };

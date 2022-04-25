@@ -46,8 +46,11 @@
 #include "common/socket.h"
 #include "common/strlib.h"
 #include "api/aclif.h"
+#include "api/aloginif.h"
+#include "api/apipackets.h"
 #include "api/apisessiondata.h"
 #include "api/httpsender.h"
+#include "char/apipackets.h"
 #include "login/login.h"
 #include "login/lclif.p.h"
 #include "map/clif.h"
@@ -85,6 +88,15 @@ struct sample_data_struct {
 };
 
 int my_setting;
+
+struct PACKET_API_sample_api_data_request {
+	char text[100];
+	int flag;
+};
+
+struct PACKET_API_REPLY_sample_api_data_response {
+	int users_count;
+};
 
 /* sample packet implementation */
 /* cmd 0xf3 - it is a client-server existent id, for clif_parse_GlobalMessage */
@@ -198,8 +210,7 @@ int return_my_setting(const char *key)
 	return 0;
 }
 
-bool sample_test_url(int fd, struct api_session_data *sd) __attribute__((nonnull (2)));
-bool sample_test_url(int fd, struct api_session_data *sd)
+HTTP_URL(sample_test_url)
 {
 	ShowInfo("/sample/test url called %d: %d\n", fd, sd->parser.method);
 
@@ -213,6 +224,54 @@ bool sample_test_url(int fd, struct api_session_data *sd)
 	aclif->terminate_connection(fd);
 
 	return true;
+}
+
+HTTP_URL(sample_test_msg)
+{
+	ShowInfo("/sample/msg url called %d: %d\n", fd, sd->parser.method);
+	// this request unrelated to loggedin player, we should select char server for send packet to
+	// sleecting default in hercules configs: server_name: "Hercules"
+	sd->world_name = "Hercules";
+
+	struct PACKET_API_sample_api_data_request data = { 0 };
+
+	const char *user_agent = (const char*)strdb_get(sd->headers_db, "User-Agent");
+	// copy user agent from http request to text field
+	safestrncpy(data.text, user_agent, sizeof(data.text));
+	// set flag field to value 123
+	data.flag = 123;
+	// send packet from api server to char server
+	aloginif->send_to_char(fd, sd, API_MSG_CUSTOM, &data, sizeof(data));
+	// not termination http connection here because waiting packet from char server with data...
+	return true;
+}
+
+// sample handler for receiving data from char server for http request /sample/msg
+HTTP_DATA(sample_test_msg)
+{
+	ShowInfo("sample_test_msg called\n");
+
+	// unpacking own data struct
+	GET_DATA(p, sample_api_data_response);
+
+	// generate html and send
+	const char *format = "<html>Hercules test from sample plugin.<br/>Users count on char server: %d<br/></html>\n";
+	char buf[1000];
+	safesnprintf(buf, sizeof(buf), format, p->users_count);
+	httpsender->send_html(fd, buf);
+
+	// terminating http connection here after we got requested data from char server
+	aclif->terminate_connection(fd);
+}
+
+// sample handler for message from api server url /test/msg
+void sample_api_char_packet(int fd)
+{
+	RFIFO_API_DATA(sdata, sample_api_data_request);
+	ShowInfo("sample_api_char_packet called: %s, %d\n", sdata->text, sdata->flag);
+	WFIFO_APICHAR_PACKET_REPLY(sample_api_data_response);
+	data->users_count = chr->count_users();
+	WFIFOSET(chr->login_fd, packet->packet_len);
 }
 
 /* run when server starts */
@@ -255,6 +314,11 @@ HPExport void plugin_init (void) {
 	 * to trigger packetFunction in the packetIncomingPoint section ( available points listed in enum HPluginPacketHookingPoints within src/common/HPMi.h ) */
 	addPacket(0xf3,-1,sample_packet0f3,hpClif_Parse);
 
+	if (SERVER_TYPE == SERVER_TYPE_CHAR) {
+		// Add handler for message from api server url /test/msg
+		addPacket(API_MSG_CUSTOM, WFIFO_APICHAR_SIZE + sizeof(struct PACKET_API_sample_api_data_request), sample_api_char_packet, hpProxy_ApiChar);
+	}
+
 	// The following hooks would show an error message where pc->dropitem doesn't exist (login or char server)
 	if (SERVER_TYPE == SERVER_TYPE_MAP) {
 		/* in this sample we add a PreHook to pc->dropitem */
@@ -276,6 +340,7 @@ HPExport void plugin_init (void) {
 		 **/
 		addHookPrePriv(lclif, parse_CA_CONNECT_INFO_CHANGED, my_lclif_parse_CA_CONNECT_INFO_CHANGED_pre);
 	}
+
 }
 /* triggered when server starts loading, before any server-specific data is set */
 HPExport void server_preinit(void)
@@ -292,6 +357,8 @@ HPExport void server_online (void)
 	// Register url for GET request
 	if (SERVER_TYPE == SERVER_TYPE_API) {
 		addHttpHandler(HTTP_GET, "/sample/test", sample_test_url, REQ_DEFAULT);
+		addHttpHandler(HTTP_GET, "/sample/msg", sample_test_msg, REQ_DEFAULT);
+		addProxyPacketHandler(sample_test_msg, API_MSG_CUSTOM);
 	}
 }
 

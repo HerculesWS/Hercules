@@ -18,32 +18,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef COMMON_API_H
-#define COMMON_API_H
+#ifndef API_APIPACKETS_H
+#define API_APIPACKETS_H
 
-#define MAX_CUSTOM_API_MSG 100
+#include "common/apipackets.h"
+#include "api/aloginif.h"
 
-enum API_MSG {
-	API_MSG_userconfig_load = 1,
-	API_MSG_userconfig_save = 2,
-	API_MSG_charconfig_load = 3,
-	API_MSG_userconfig_save_emotes = 4,
-	API_MSG_userconfig_save_hotkeys_emotion = 5,
-	API_MSG_userconfig_save_hotkeys_interface = 6,
-	API_MSG_userconfig_save_hotkeys_skill_bar1 = 7,
-	API_MSG_userconfig_save_hotkeys_skill_bar2 = 8,
-	API_MSG_emblem_upload = 9,
-	API_MSG_emblem_upload_guild_id = 10,
-	API_MSG_emblem_download = 11,
-	API_MSG_userconfig_save_userhotkey_v2 = 12,
-	API_MSG_userconfig_load_emotes = 13,
-	API_MSG_userconfig_load_hotkeys = 14,
-	API_MSG_party_list = 15,
-	API_MSG_party_get = 16,
-	API_MSG_party_add = 17,
-	API_MSG_party_del = 18,
-	API_MSG_CUSTOM,
-	API_MSG_MAX = API_MSG_CUSTOM + MAX_CUSTOM_API_MSG
-};
+#define GET_DATA(var, type) const struct PACKET_API_REPLY_ ## type *var = (const struct PACKET_API_REPLY_ ## type*)data;
+#define CREATE_DATA(var, type) struct PACKET_API_ ## type ## _data var = { 0 };
+#define SEND_ASYNC_DATA(name, data) aloginif->send_to_char(fd, sd, API_MSG_ ## name, data, sizeof(struct PACKET_API_ ## name));
+// SEND_ASYNC_DATA_EMPTY is workaround for visual studio bugs
+#define SEND_ASYNC_DATA_EMPTY(name, data) aloginif->send_to_char(fd, sd, API_MSG_ ## name, data, 0);
+#define SEND_ASYNC_DATA_SPLIT(name, data, size) aloginif->send_split_to_char(fd, sd, API_MSG_ ## name, data, size);
 
-#endif /* COMMON_API_H */
+#endif /* API_APIPACKETS_H */

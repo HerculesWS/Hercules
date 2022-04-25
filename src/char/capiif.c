@@ -23,17 +23,17 @@
 
 #include "capiif.h"
 
-#include "char/char.h"
 #include "char/mapif.h"
 #include "char/int_adventurer_agency.h"
 #include "char/int_guild.h"
 #include "char/int_userconfig.h"
+#include "char/apipackets.h"
 #include "common/api.h"
-#include "common/apipackets.h"
 #include "common/cbasetypes.h"
 #include "common/chunked.h"
 #include "common/core.h"
 #include "common/db.h"
+#include "common/HPM.h"
 #include "common/memmgr.h"
 #include "common/nullpo.h"
 #include "common/showmsg.h"
@@ -47,29 +47,6 @@
 static struct capiif_interface capiif_s;
 struct capiif_interface *capiif;
 
-#define WFIFO_APICHAR_PACKET_REPLY_EMPTY() \
-	WFIFOHEAD(chr->login_fd, WFIFO_APICHAR_SIZE); \
-	memcpy(WFIFOP(chr->login_fd, 0), RFIFOP(fd, 0), WFIFO_APICHAR_SIZE); \
-	struct PACKET_API_PROXY *packet = WFIFOP(chr->login_fd, 0); \
-	packet->packet_id = HEADER_API_PROXY_REPLY; \
-	packet->packet_len = WFIFO_APICHAR_SIZE; \
-
-#define WFIFO_APICHAR_PACKET_REPLY(type) \
-	WFIFOHEAD(chr->login_fd, WFIFO_APICHAR_SIZE + sizeof(struct PACKET_API_REPLY_ ## type)); \
-	memcpy(WFIFOP(chr->login_fd, 0), RFIFOP(fd, 0), WFIFO_APICHAR_SIZE); \
-	struct PACKET_API_PROXY *packet = WFIFOP(chr->login_fd, 0); \
-	packet->packet_id = HEADER_API_PROXY_REPLY; \
-	packet->packet_len = WFIFO_APICHAR_SIZE + sizeof(struct PACKET_API_REPLY_ ## type); \
-	struct PACKET_API_REPLY_ ## type *data = WFIFOP(chr->login_fd, sizeof(struct PACKET_API_PROXY))
-
-#define INIT_PACKET_REPLY_PROXY_FIELDS(p, p2) \
-	(p)->msg_id = (p2)->msg_id; \
-	(p)->char_server_id = (p2)->char_server_id; \
-	(p)->client_fd = (p2)->client_fd; \
-	(p)->account_id = (p2)->account_id; \
-	(p)->char_id = (p2)->char_id; \
-	(p)->client_random_id = (p2)->client_random_id
-
 #define DEBUG_LOG
 
 static int capiif_parse_fromlogin_api_proxy(int fd)
@@ -79,7 +56,20 @@ static int capiif_parse_fromlogin_api_proxy(int fd)
 
 	if (PROXY_PACKET_FLAG(packet, proxy_flag_map)) {
 		mapif->send_first(packet, packet->packet_len);
+		RFIFOSKIP(fd, packet->packet_len);
+		return 0;
 	}
+
+	if (VECTOR_LENGTH(HPM->packets[hpProxy_ApiChar]) > 0) {
+		int result = HPM->parse_packets(fd, msg, hpProxy_ApiChar);
+		if (result == 1)
+			return 0;
+		if (result == 2) {
+			RFIFOSKIP(fd, packet->packet_len);
+			return 0;
+		}
+	}
+
 	switch (msg) {
 		case API_MSG_userconfig_load_emotes:
 			capiif->parse_userconfig_load_emotes(fd);

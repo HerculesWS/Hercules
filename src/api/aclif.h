@@ -211,9 +211,15 @@ void aclif_defaults(void);
 #else
 #define addHttpHandler(method, url, func, flags) \
 	( \
-		(void)((bool (*)(int fd, struct api_session_data *sd))0 == (func)), \
-		aclif->add_handler(method, url, func, NULL, 0, flags) \
+		(void)((bool (*)(int fd, struct api_session_data *sd))0 == (handlers_parse_ ## func)), \
+		aclif->add_handler(method, url, handlers_parse_ ## func, NULL, 0, flags) \
 	)
+#define addProxyPacketHandler(func, msg) \
+	( \
+		(void)((void (*)(int fd, struct api_session_data *sd, const void *data, size_t data_size))0 == (handlers_ ## func)), \
+		aclif->add_packet_handler(handlers_ ## func, msg) \
+	)
+
 #endif // HERCULES_CORE
 
 HPShared struct aclif_interface *aclif;

@@ -25,7 +25,6 @@
 
 #include "common/cbasetypes.h"
 #include "common/api.h"
-#include "common/apipackets.h"
 #include "common/chunked.h"
 #include "common/memmgr.h"
 #include "common/nullpo.h"
@@ -34,7 +33,7 @@
 #include "common/strlib.h"
 #include "common/utils.h"
 #include "api/aclif.h"
-#include "api/aloginif.h"
+#include "api/apipackets.h"
 #include "api/apisessiondata.h"
 #include "api/httpparser.h"
 #include "api/httpsender.h"
@@ -44,26 +43,6 @@
 #include <string.h>
 #include <stdarg.h>
 #include <time.h>
-
-#define HTTPURL(x) \
-	static bool handlers_parse_ ## x(int fd, struct api_session_data *sd) __attribute__((nonnull (2))); \
-	static bool handlers_parse_ ## x(int fd, struct api_session_data *sd)
-
-#define DATA(x) \
-	static void handlers_ ## x(int fd, struct api_session_data *sd, const void *data, size_t data_size) __attribute__((nonnull (2))); \
-	static void handlers_ ## x(int fd, struct api_session_data *sd, const void *data, size_t data_size)
-
-#define IGNORE_DATA(x) \
-	DATA(x) \
-	{ \
-	}
-
-#define GET_DATA(var, type) const struct PACKET_API_REPLY_ ## type *var = (const struct PACKET_API_REPLY_ ## type*)data;
-#define CREATE_DATA(var, type) struct PACKET_API_ ## type ## _data var = { 0 };
-#define SEND_ASYNC_DATA(name, data) aloginif->send_to_char(fd, sd, API_MSG_ ## name, data, sizeof(struct PACKET_API_ ## name));
-// SEND_ASYNC_DATA_EMPTY is workaround for visual studio bugs
-#define SEND_ASYNC_DATA_EMPTY(name, data) aloginif->send_to_char(fd, sd, API_MSG_ ## name, data, 0);
-#define SEND_ASYNC_DATA_SPLIT(name, data, size) aloginif->send_split_to_char(fd, sd, API_MSG_ ## name, data, size);
 
 #define SEND_ASYNC_USERHOKEY_V2_TAB(name) \
 	JsonP *name = jsonparser->get(userHotkeyV2, #name); \
@@ -113,7 +92,7 @@ const char *handlers_hotkeyTabIdToName(int tab_id)
 	return name[tab_id];
 }
 
-DATA(userconfig_load)
+HTTP_DATA(userconfig_load)
 {
 	JsonW *json = sd->json;
 	nullpo_retv(json);
@@ -129,7 +108,7 @@ DATA(userconfig_load)
 	aclif->terminate_connection(fd);
 }
 
-DATA(userconfig_load_emotes)
+HTTP_DATA(userconfig_load_emotes)
 {
 	// create initial json node and add emotionHotkey
 	JsonW *json = jsonwriter->create("{\"Type\":1}");
@@ -151,7 +130,7 @@ DATA(userconfig_load_emotes)
 		NULL);
 }
 
-DATA(userconfig_load_hotkeys)
+HTTP_DATA(userconfig_load_hotkeys)
 {
 	JsonW *json = sd->json;
 	nullpo_retv(json);
@@ -175,7 +154,7 @@ DATA(userconfig_load_hotkeys)
 	}
 }
 
-HTTPURL(userconfig_load)
+HTTP_URL(userconfig_load)
 {
 #ifdef DEBUG_LOG
 	ShowInfo("userconfig_load called %d: %s\n", fd, httpparser->get_method_str(sd));
@@ -207,9 +186,9 @@ void handlers_sendHotkeyV2Tab(JsonP *json, struct userconfig_userhotkeys_v2 *hot
 	hotkeys->count = i;
 }
 
-IGNORE_DATA(userconfig_save)
+HTTP_IGNORE_DATA(userconfig_save)
 
-HTTPURL(userconfig_save)
+HTTP_URL(userconfig_save)
 {
 #ifdef DEBUG_LOG
 	ShowInfo("userconfig_save called %d: %s\n", fd, httpparser->get_method_str(sd));
@@ -269,7 +248,7 @@ HTTPURL(userconfig_save)
 	return true;
 }
 
-DATA(charconfig_load)
+HTTP_DATA(charconfig_load)
 {
 	// send hardcoded settings
 	httpsender->send_plain(fd, "{\"Type\":1,\"data\":{\"HomunSkillInfo\":null,\"UseSkillInfo\":null}}");
@@ -277,7 +256,7 @@ DATA(charconfig_load)
 	aclif->terminate_connection(fd);
 }
 
-HTTPURL(charconfig_load)
+HTTP_URL(charconfig_load)
 {
 #ifdef DEBUG_LOG
 	ShowInfo("charconfig_load called %d: %s\n", fd, httpparser->get_method_str(sd));
@@ -289,12 +268,12 @@ HTTPURL(charconfig_load)
 	return true;
 }
 
-DATA(emblem_upload)
+HTTP_DATA(emblem_upload)
 {
 	aclif->terminate_connection(fd);
 }
 
-HTTPURL(emblem_upload)
+HTTP_URL(emblem_upload)
 {
 #ifdef DEBUG_LOG
 	ShowInfo("emblem_upload called %d: %s\n", fd, httpparser->get_method_str(sd));
@@ -330,7 +309,7 @@ HTTPURL(emblem_upload)
 	return true;
 }
 
-DATA(emblem_download)
+HTTP_DATA(emblem_download)
 {
 #ifdef DEBUG_LOG
 	ShowError("emblem_download data called\n");
@@ -358,7 +337,7 @@ DATA(emblem_download)
 	}
 }
 
-HTTPURL(emblem_download)
+HTTP_URL(emblem_download)
 {
 #ifdef DEBUG_LOG
 	ShowInfo("emblem_download called %d: %s\n", fd, httpparser->get_method_str(sd));
@@ -375,7 +354,7 @@ HTTPURL(emblem_download)
 	return true;
 }
 
-DATA(party_list)
+HTTP_DATA(party_list)
 {
 	GET_DATA(p, party_list);
 	int index = 0;
@@ -412,7 +391,7 @@ DATA(party_list)
 	aclif->terminate_connection(fd);
 }
 
-HTTPURL(party_list)
+HTTP_URL(party_list)
 {
 #ifdef DEBUG_LOG
 	ShowInfo("party_list called %d: %s\n", fd, httpparser->get_method_str(sd));
@@ -426,7 +405,7 @@ HTTPURL(party_list)
 	return true;
 }
 
-DATA(party_get)
+HTTP_DATA(party_get)
 {
 	GET_DATA(p, party_get);
 
@@ -457,7 +436,7 @@ DATA(party_get)
 	aclif->terminate_connection(fd);
 }
 
-HTTPURL(party_get)
+HTTP_URL(party_get)
 {
 #ifdef DEBUG_LOG
 	ShowInfo("party_get called %d: %s\n", fd, httpparser->get_method_str(sd));
@@ -469,7 +448,7 @@ HTTPURL(party_get)
 	return true;
 }
 
-DATA(party_add)
+HTTP_DATA(party_add)
 {
 	GET_DATA(p, party_add);
 	ShowError("result: %d\n", p->result);
@@ -486,7 +465,7 @@ DATA(party_add)
 	aclif->terminate_connection(fd);
 }
 
-HTTPURL(party_add)
+HTTP_URL(party_add)
 {
 #ifdef DEBUG_LOG
 	ShowInfo("party_add called %d: %s\n", fd, httpparser->get_method_str(sd));
@@ -516,7 +495,7 @@ HTTPURL(party_add)
 	return true;
 }
 
-DATA(party_del)
+HTTP_DATA(party_del)
 {
 	GET_DATA(p, party_del);
 
@@ -532,7 +511,7 @@ DATA(party_del)
 	aclif->terminate_connection(fd);
 }
 
-HTTPURL(party_del)
+HTTP_URL(party_del)
 {
 #ifdef DEBUG_LOG
 	ShowInfo("party_del called %d: %s\n", fd, httpparser->get_method_str(sd));
@@ -546,7 +525,7 @@ HTTPURL(party_del)
 	return true;
 }
 
-HTTPURL(test_url)
+HTTP_URL(test_url)
 {
 #ifdef DEBUG_LOG
 	ShowInfo("test_url called %d: %s\n", fd, httpparser->get_method_str(sd));
