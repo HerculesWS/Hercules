@@ -4191,7 +4191,7 @@ static bool map_config_read_database(const char *filename, struct config_t *conf
 
 	if (libconfig->setting_lookup_int(setting, "autosave_time", &map->autosave_interval) == CONFIG_TRUE) {
 		if (map->autosave_interval < 1) // Revert to default saving
-			map->autosave_interval = DEFAULT_AUTOSAVE_INTERVAL;
+			map->autosave_interval = DEFAULT_MAP_AUTOSAVE_INTERVAL;
 		else
 			map->autosave_interval *= 1000; // Pass from s to ms
 	}
@@ -7170,7 +7170,7 @@ void map_defaults(void)
 
 	sprintf(map->wisp_server_name ,"Server"); // can be modified in char-server configuration file
 
-	map->autosave_interval = DEFAULT_AUTOSAVE_INTERVAL;
+	map->autosave_interval = DEFAULT_MAP_AUTOSAVE_INTERVAL;
 	map->minsave_interval = 100;
 	map->save_settings = 0xFFFF;
 	map->agit_flag = 0;

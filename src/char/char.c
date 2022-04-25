@@ -141,7 +141,7 @@ static bool char_aegis_rename = false; // whether or not the player can be renam
 
 static int max_connect_user = -1;
 static int gm_allow_group = -1;
-int autosave_interval = DEFAULT_AUTOSAVE_INTERVAL;
+int autosave_interval = DEFAULT_CHAR_AUTOSAVE_INTERVAL;
 static int start_zeny = 0;
 
 /// Start items for new characters
@@ -5718,7 +5718,7 @@ static bool char_config_read_database(const char *filename, const struct config_
 	if (libconfig->setting_lookup_int(setting, "autosave_time", &autosave_interval) == CONFIG_TRUE) {
 		autosave_interval *= 1000;
 		if (autosave_interval <= 0)
-			autosave_interval = DEFAULT_AUTOSAVE_INTERVAL;
+			autosave_interval = DEFAULT_CHAR_AUTOSAVE_INTERVAL;
 	}
 	libconfig->setting_lookup_mutable_string(setting, "db_path", chr->db_path, sizeof(chr->db_path));
 	libconfig->set_db_path(chr->db_path);
