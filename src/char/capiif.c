@@ -142,7 +142,7 @@ void capiif_parse_userconfig_load_emotes(int fd)
 
 void capiif_parse_userconfig_save_emotes(int fd)
 {
-	RFIFO_API_DATA(data, userconfig_save_emotes_data);
+	RFIFO_API_DATA(data, userconfig_save_emotes);
 	RFIFO_API_PROXY_PACKET(p);
 
 	inter_userconfig->save_emotes(p->account_id, &data->emotes);
@@ -159,7 +159,7 @@ void capiif_parse_charconfig_load(int fd)
 void capiif_parse_emblem_upload_guild_id(int fd)
 {
 	RFIFO_API_PROXY_PACKET_CHUNKED(p);
-	RFIFO_API_DATA(data, emblem_upload_guild_id_data);
+	RFIFO_API_DATA(data, emblem_upload_guild_id);
 
 	struct online_char_data* character = capiif->get_online_character(&p->base);
 	if (character == NULL)
@@ -219,7 +219,7 @@ void capiif_parse_emblem_upload(int fd)
 
 void capiif_parse_emblem_download(int fd)
 {
-	RFIFO_API_DATA(data, emblem_download_data);
+	RFIFO_API_DATA(data, emblem_download);
 
 #ifdef DEBUG_LOG
 	ShowInfo("download emblem for %d, %d\n", data->guild_id, data->version);
@@ -230,7 +230,7 @@ void capiif_parse_emblem_download(int fd)
 
 void capiif_parse_userconfig_save_userhotkey_v2(int fd)
 {
-	RFIFO_API_DATA(data, userconfig_save_userhotkey_v2_data);
+	RFIFO_API_DATA(data, userconfig_save_userhotkey_v2);
 	RFIFO_API_PROXY_PACKET(p);
 
 	inter_userconfig->hotkey_tab_tosql(p->account_id, &data->hotkeys);
@@ -286,7 +286,7 @@ void capiif_parse_userconfig_load_hotkeys(int fd)
 
 void capiif_parse_party_add(int fd)
 {
-	RFIFO_API_DATA(rdata, party_add_data);
+	RFIFO_API_DATA(rdata, party_add);
 	RFIFO_API_PROXY_PACKET(p);
 	WFIFO_APICHAR_PACKET_REPLY(party_add);
 
@@ -300,7 +300,7 @@ void capiif_parse_party_add(int fd)
 
 void capiif_parse_party_list(int fd)
 {
-	RFIFO_API_DATA(rdata, party_list_data);
+	RFIFO_API_DATA(rdata, party_list);
 	RFIFO_API_PROXY_PACKET(p);
 	WFIFO_APICHAR_PACKET_REPLY(party_list);
 
@@ -322,7 +322,7 @@ void capiif_parse_party_get(int fd)
 
 void capiif_parse_party_del(int fd)
 {
-	RFIFO_API_DATA(rdata, party_del_data);
+	RFIFO_API_DATA(rdata, party_del);
 	RFIFO_API_PROXY_PACKET(p);
 	WFIFO_APICHAR_PACKET_REPLY(party_del);
 

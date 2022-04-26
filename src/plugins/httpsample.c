@@ -195,7 +195,7 @@ HTTP_DATA(sample_test_map)
 void sample_char_api_packet(int fd)
 {
 	// define variable with received data from packet
-	RFIFO_API_DATA(sdata, sample_api_data_request_data);
+	RFIFO_API_DATA(sdata, sample_api_data_request);
 	ShowInfo("sample_char_api_packet called: %s, %d\n", sdata->text, sdata->flag);
 	// deine variable with sending packet
 	WFIFO_APICHAR_PACKET_REPLY(sample_api_data_response);
@@ -210,7 +210,7 @@ void sample_char_api_packet(int fd)
 void sample_map_api_packet(int fd)
 {
 	// define variable with received data from packet
-	RFIFO_API_DATA(sdata, sample_api_data_request2_data);
+	RFIFO_API_DATA(sdata, sample_api_data_request2);
 	ShowInfo("sample_map_api_packet called: %s, %d\n", sdata->text, sdata->flag);
 	// deine variable with sending packet
 	WFIFO_APIMAP_PACKET_REPLY(sample_api_data_response2);
