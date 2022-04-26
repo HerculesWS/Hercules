@@ -236,6 +236,9 @@ struct map_interface *map;
 #ifdef CHAR_MAPIF_H /* mapif */
 struct mapif_interface *mapif;
 #endif // CHAR_MAPIF_H
+#ifdef MAP_MAPIIF_H /* mapiif */
+struct mapiif_interface *mapiif;
+#endif // MAP_MAPIIF_H
 #ifdef COMMON_MAPINDEX_H /* mapindex */
 struct mapindex_interface *mapindex;
 #endif // COMMON_MAPINDEX_H
@@ -640,6 +643,10 @@ HPExport const char *HPM_shared_symbols(int server_type)
 	if ((server_type&(SERVER_TYPE_CHAR)) != 0 && !HPM_SYMBOL("mapif", mapif))
 		return "mapif";
 #endif // CHAR_MAPIF_H
+#ifdef MAP_MAPIIF_H /* mapiif */
+	if ((server_type&(SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("mapiif", mapiif))
+		return "mapiif";
+#endif // MAP_MAPIIF_H
 #ifdef COMMON_MAPINDEX_H /* mapindex */
 	if ((server_type&(SERVER_TYPE_MAP|SERVER_TYPE_CHAR)) != 0 && !HPM_SYMBOL("mapindex", mapindex))
 		return "mapindex";

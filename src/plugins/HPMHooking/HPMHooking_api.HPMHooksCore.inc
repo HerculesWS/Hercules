@@ -52,6 +52,8 @@ struct {
 	struct HPMHookPoint *HP_aclif_terminate_connection_post;
 	struct HPMHookPoint *HP_aclif_connected_pre;
 	struct HPMHookPoint *HP_aclif_connected_post;
+	struct HPMHookPoint *HP_aclif_socket_secure_check_pre;
+	struct HPMHookPoint *HP_aclif_socket_secure_check_post;
 	struct HPMHookPoint *HP_aclif_session_delete_pre;
 	struct HPMHookPoint *HP_aclif_session_delete_post;
 	struct HPMHookPoint *HP_aclif_init_handlers_pre;
@@ -1019,6 +1021,8 @@ struct {
 	int HP_aclif_terminate_connection_post;
 	int HP_aclif_connected_pre;
 	int HP_aclif_connected_post;
+	int HP_aclif_socket_secure_check_pre;
+	int HP_aclif_socket_secure_check_post;
 	int HP_aclif_session_delete_pre;
 	int HP_aclif_session_delete_post;
 	int HP_aclif_init_handlers_pre;

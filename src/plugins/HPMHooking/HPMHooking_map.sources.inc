@@ -59,6 +59,7 @@ HPMHooks.source.logs = *logs;
 HPMHooks.source.macro = *macro;
 HPMHooks.source.mail = *mail;
 HPMHooks.source.map = *map;
+HPMHooks.source.mapiif = *mapiif;
 HPMHooks.source.mapindex = *mapindex;
 HPMHooks.source.mapit = *mapit;
 HPMHooks.source.mapreg = *mapreg;

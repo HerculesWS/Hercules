@@ -41,6 +41,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(aclif->parse_request, HP_aclif_parse_request) },
 	{ HP_POP(aclif->terminate_connection, HP_aclif_terminate_connection) },
 	{ HP_POP(aclif->connected, HP_aclif_connected) },
+	{ HP_POP(aclif->socket_secure_check, HP_aclif_socket_secure_check) },
 	{ HP_POP(aclif->session_delete, HP_aclif_session_delete) },
 	{ HP_POP(aclif->init_handlers, HP_aclif_init_handlers) },
 	{ HP_POP(aclif->register_handlers, HP_aclif_register_handlers) },

@@ -2110,6 +2110,10 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(map->merge_zone, HP_map_merge_zone) },
 	{ HP_POP(map->zone_clear_single, HP_map_zone_clear_single) },
 	{ HP_POP(map->lock_check, HP_map_lock_check) },
+/* mapiif_interface */
+	{ HP_POP(mapiif->init, HP_mapiif_init) },
+	{ HP_POP(mapiif->final, HP_mapiif_final) },
+	{ HP_POP(mapiif->parse_fromchar_api_proxy, HP_mapiif_parse_fromchar_api_proxy) },
 /* mapindex_interface */
 	{ HP_POP(mapindex->config_read_dbpath, HP_mapindex_config_read_dbpath) },
 	{ HP_POP(mapindex->config_read, HP_mapindex_config_read) },

@@ -711,6 +711,11 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#else
 		#define MAP_MAIL_H
 	#endif // MAP_MAIL_H
+	#ifdef MAP_MAPIIF_H
+		{ "mapiif_interface", sizeof(struct mapiif_interface), SERVER_TYPE_MAP },
+	#else
+		#define MAP_MAPIIF_H
+	#endif // MAP_MAPIIF_H
 	#ifdef MAP_MAPREG_H
 		{ "mapreg_interface", sizeof(struct mapreg_interface), SERVER_TYPE_MAP },
 		{ "mapreg_save", sizeof(struct mapreg_save), SERVER_TYPE_MAP },

@@ -54556,6 +54556,86 @@ void HP_map_lock_check(const char *file, const char *func, int line, int lock_co
 	}
 	return;
 }
+/* mapiif_interface */
+void HP_mapiif_init(bool minimal) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_mapiif_init_pre > 0) {
+		void (*preHookFunc) (bool *minimal);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapiif_init_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_mapiif_init_pre[hIndex].func;
+			preHookFunc(&minimal);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.mapiif.init(minimal);
+	}
+	if (HPMHooks.count.HP_mapiif_init_post > 0) {
+		void (*postHookFunc) (bool minimal);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapiif_init_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_mapiif_init_post[hIndex].func;
+			postHookFunc(minimal);
+		}
+	}
+	return;
+}
+void HP_mapiif_final(void) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_mapiif_final_pre > 0) {
+		void (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapiif_final_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_mapiif_final_pre[hIndex].func;
+			preHookFunc();
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.mapiif.final();
+	}
+	if (HPMHooks.count.HP_mapiif_final_post > 0) {
+		void (*postHookFunc) (void);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapiif_final_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_mapiif_final_post[hIndex].func;
+			postHookFunc();
+		}
+	}
+	return;
+}
+int HP_mapiif_parse_fromchar_api_proxy(int fd) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_mapiif_parse_fromchar_api_proxy_pre > 0) {
+		int (*preHookFunc) (int *fd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapiif_parse_fromchar_api_proxy_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_mapiif_parse_fromchar_api_proxy_pre[hIndex].func;
+			retVal___ = preHookFunc(&fd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.mapiif.parse_fromchar_api_proxy(fd);
+	}
+	if (HPMHooks.count.HP_mapiif_parse_fromchar_api_proxy_post > 0) {
+		int (*postHookFunc) (int retVal___, int fd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapiif_parse_fromchar_api_proxy_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_mapiif_parse_fromchar_api_proxy_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, fd);
+		}
+	}
+	return retVal___;
+}
 /* mapindex_interface */
 bool HP_mapindex_config_read_dbpath(const char *filename, const struct config_t *config) {
 	int hIndex = 0;

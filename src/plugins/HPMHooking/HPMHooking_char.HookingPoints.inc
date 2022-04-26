@@ -48,6 +48,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(capiif->parse_party_get, HP_capiif_parse_party_get) },
 	{ HP_POP(capiif->parse_party_del, HP_capiif_parse_party_del) },
 	{ HP_POP(capiif->parse_fromlogin_api_proxy, HP_capiif_parse_fromlogin_api_proxy) },
+	{ HP_POP(capiif->parse_proxy_api_from_map, HP_capiif_parse_proxy_api_from_map) },
 /* char_interface */
 	{ HP_POP(chr->waiting_disconnect, HP_chr_waiting_disconnect) },
 	{ HP_POP(chr->delete_char_sql, HP_chr_delete_char_sql) },

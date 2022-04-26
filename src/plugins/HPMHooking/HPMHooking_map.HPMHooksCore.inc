@@ -4126,6 +4126,12 @@ struct {
 	struct HPMHookPoint *HP_map_zone_clear_single_post;
 	struct HPMHookPoint *HP_map_lock_check_pre;
 	struct HPMHookPoint *HP_map_lock_check_post;
+	struct HPMHookPoint *HP_mapiif_init_pre;
+	struct HPMHookPoint *HP_mapiif_init_post;
+	struct HPMHookPoint *HP_mapiif_final_pre;
+	struct HPMHookPoint *HP_mapiif_final_post;
+	struct HPMHookPoint *HP_mapiif_parse_fromchar_api_proxy_pre;
+	struct HPMHookPoint *HP_mapiif_parse_fromchar_api_proxy_post;
 	struct HPMHookPoint *HP_mapindex_config_read_dbpath_pre;
 	struct HPMHookPoint *HP_mapindex_config_read_dbpath_post;
 	struct HPMHookPoint *HP_mapindex_config_read_pre;
@@ -11607,6 +11613,12 @@ struct {
 	int HP_map_zone_clear_single_post;
 	int HP_map_lock_check_pre;
 	int HP_map_lock_check_post;
+	int HP_mapiif_init_pre;
+	int HP_mapiif_init_post;
+	int HP_mapiif_final_pre;
+	int HP_mapiif_final_post;
+	int HP_mapiif_parse_fromchar_api_proxy_pre;
+	int HP_mapiif_parse_fromchar_api_proxy_post;
 	int HP_mapindex_config_read_dbpath_pre;
 	int HP_mapindex_config_read_dbpath_post;
 	int HP_mapindex_config_read_pre;
@@ -15022,6 +15034,7 @@ struct {
 	struct macro_interface macro;
 	struct mail_interface mail;
 	struct map_interface map;
+	struct mapiif_interface mapiif;
 	struct mapindex_interface mapindex;
 	struct mapit_interface mapit;
 	struct mapreg_interface mapreg;

@@ -204,6 +204,8 @@ typedef void (*HPMHOOK_pre_aclif_terminate_connection) (int *fd);
 typedef void (*HPMHOOK_post_aclif_terminate_connection) (int fd);
 typedef int (*HPMHOOK_pre_aclif_connected) (int *fd);
 typedef int (*HPMHOOK_post_aclif_connected) (int retVal___, int fd);
+typedef bool (*HPMHOOK_pre_aclif_socket_secure_check) (int *fd);
+typedef bool (*HPMHOOK_post_aclif_socket_secure_check) (bool retVal___, int fd);
 typedef int (*HPMHOOK_pre_aclif_session_delete) (int *fd);
 typedef int (*HPMHOOK_post_aclif_session_delete) (int retVal___, int fd);
 typedef void (*HPMHOOK_pre_aclif_init_handlers) (void);
@@ -322,10 +324,10 @@ typedef void (*HPMHOOK_pre_aloginif_keepalive) (int *fd);
 typedef void (*HPMHOOK_post_aloginif_keepalive) (int fd);
 typedef void (*HPMHOOK_pre_aloginif_on_ready) (void);
 typedef void (*HPMHOOK_post_aloginif_on_ready) (void);
-typedef void (*HPMHOOK_pre_aloginif_send_to_char) (int *fd, struct api_session_data **sd, int *msg_id, void **data, size_t *data_len);
-typedef void (*HPMHOOK_post_aloginif_send_to_char) (int fd, struct api_session_data *sd, int msg_id, void *data, size_t data_len);
-typedef void (*HPMHOOK_pre_aloginif_send_split_to_char) (int *fd, struct api_session_data **sd, int *msg_id, char **data, size_t *data_len);
-typedef void (*HPMHOOK_post_aloginif_send_split_to_char) (int fd, struct api_session_data *sd, int msg_id, char *data, size_t data_len);
+typedef void (*HPMHOOK_pre_aloginif_send_to_char) (int *fd, struct api_session_data **sd, int *msg_id, void **data, size_t *data_len, int *proxy_flag);
+typedef void (*HPMHOOK_post_aloginif_send_to_char) (int fd, struct api_session_data *sd, int msg_id, void *data, size_t data_len, int proxy_flag);
+typedef void (*HPMHOOK_pre_aloginif_send_split_to_char) (int *fd, struct api_session_data **sd, int *msg_id, char **data, size_t *data_len, int *proxy_flag);
+typedef void (*HPMHOOK_post_aloginif_send_split_to_char) (int fd, struct api_session_data *sd, int msg_id, char *data, size_t data_len, int proxy_flag);
 typedef int (*HPMHOOK_pre_aloginif_parse) (int *fd);
 typedef int (*HPMHOOK_post_aloginif_parse) (int retVal___, int fd);
 typedef int (*HPMHOOK_pre_aloginif_parse_connection_state) (int *fd);
@@ -676,6 +678,8 @@ typedef void (*HPMHOOK_pre_capiif_parse_party_del) (int *fd);
 typedef void (*HPMHOOK_post_capiif_parse_party_del) (int fd);
 typedef int (*HPMHOOK_pre_capiif_parse_fromlogin_api_proxy) (int *fd);
 typedef int (*HPMHOOK_post_capiif_parse_fromlogin_api_proxy) (int retVal___, int fd);
+typedef void (*HPMHOOK_pre_capiif_parse_proxy_api_from_map) (int *fd);
+typedef void (*HPMHOOK_post_capiif_parse_proxy_api_from_map) (int fd);
 #endif // CHAR_CAPIIF_H
 #ifdef MAP_CHANNEL_H /* channel */
 typedef int (*HPMHOOK_pre_channel_init) (bool *minimal);
@@ -6073,6 +6077,14 @@ typedef int (*HPMHOOK_post_mapif_parse_ClanMemberCount) (int retVal___, int fd, 
 typedef void (*HPMHOOK_pre_mapif_agency_joinPartyResult) (int *fd, int *char_id, enum adventurer_agency_result *result);
 typedef void (*HPMHOOK_post_mapif_agency_joinPartyResult) (int fd, int char_id, enum adventurer_agency_result result);
 #endif // CHAR_MAPIF_H
+#ifdef MAP_MAPIIF_H /* mapiif */
+typedef void (*HPMHOOK_pre_mapiif_init) (bool *minimal);
+typedef void (*HPMHOOK_post_mapiif_init) (bool minimal);
+typedef void (*HPMHOOK_pre_mapiif_final) (void);
+typedef void (*HPMHOOK_post_mapiif_final) (void);
+typedef int (*HPMHOOK_pre_mapiif_parse_fromchar_api_proxy) (int *fd);
+typedef int (*HPMHOOK_post_mapiif_parse_fromchar_api_proxy) (int retVal___, int fd);
+#endif // MAP_MAPIIF_H
 #ifdef COMMON_MAPINDEX_H /* mapindex */
 typedef bool (*HPMHOOK_pre_mapindex_config_read_dbpath) (const char **filename, const struct config_t **config);
 typedef bool (*HPMHOOK_post_mapindex_config_read_dbpath) (bool retVal___, const char *filename, const struct config_t *config);

@@ -66,6 +66,8 @@ struct {
 	struct HPMHookPoint *HP_capiif_parse_party_del_post;
 	struct HPMHookPoint *HP_capiif_parse_fromlogin_api_proxy_pre;
 	struct HPMHookPoint *HP_capiif_parse_fromlogin_api_proxy_post;
+	struct HPMHookPoint *HP_capiif_parse_proxy_api_from_map_pre;
+	struct HPMHookPoint *HP_capiif_parse_proxy_api_from_map_post;
 	struct HPMHookPoint *HP_chr_waiting_disconnect_pre;
 	struct HPMHookPoint *HP_chr_waiting_disconnect_post;
 	struct HPMHookPoint *HP_chr_delete_char_sql_pre;
@@ -1805,6 +1807,8 @@ struct {
 	int HP_capiif_parse_party_del_post;
 	int HP_capiif_parse_fromlogin_api_proxy_pre;
 	int HP_capiif_parse_fromlogin_api_proxy_post;
+	int HP_capiif_parse_proxy_api_from_map_pre;
+	int HP_capiif_parse_proxy_api_from_map_post;
 	int HP_chr_waiting_disconnect_pre;
 	int HP_chr_waiting_disconnect_post;
 	int HP_chr_delete_char_sql_pre;
