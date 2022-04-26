@@ -237,11 +237,11 @@ HPExport void plugin_init (void)
 
 	if (SERVER_TYPE == SERVER_TYPE_CHAR) {
 		// Add handler for message from api server url /test/char
-		addPacket(API_MSG_CUSTOM, WFIFO_APICHAR_SIZE + sizeof(struct PACKET_API_sample_api_data_request_data), sample_char_api_packet, hpProxy_ApiChar);
+		addProxyPacket(API_MSG_CUSTOM, sample_api_data_request, sample_char_api_packet, hpProxy_ApiChar);
 	}
 	if (SERVER_TYPE == SERVER_TYPE_MAP) {
 		// Add handler for message from api server url /test/map
-		addPacket(API_MSG_CUSTOM + 1, WFIFO_APICHAR_SIZE + sizeof(struct PACKET_API_sample_api_data_request2_data), sample_map_api_packet, hpProxy_ApiMap);
+		addProxyPacket(API_MSG_CUSTOM + 1, sample_api_data_request2, sample_map_api_packet, hpProxy_ApiMap);
 	}
 }
 /* triggered when server starts loading, before any server-specific data is set */

@@ -21,6 +21,7 @@
 #define COMMON_HPMI_H
 
 #include "common/hercules.h"
+#include "common/apipackets.h"
 #include "common/console.h"
 #include "common/core.h"
 #include "common/showmsg.h"
@@ -213,6 +214,8 @@ enum HPluginConfType {
 
 /* HPMi->addPCGPermission */
 #define addGroupPermission(pcgname,maskptr) HPMi->addPCGPermission(HPMi->pid,pcgname,&maskptr)
+
+#define addProxyPacket(cmd, structname, receive, point) addPacket(cmd, WFIFO_APICHAR_SIZE + sizeof(struct PACKET_API_ ## structname ## _data), receive, point)
 
 /* Hercules Plugin Mananger Include Interface */
 struct HPMi_interface {
