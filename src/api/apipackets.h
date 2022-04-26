@@ -28,15 +28,21 @@
 #define CREATE_HTTP_DATA(var, type) struct PACKET_API_ ## type ## _data var = { 0 };
 
 #ifdef HERCULES_CORE
-#define SEND_ASYNC_DATA(name, data) aloginif->send_to_char(fd, sd, API_MSG_ ## name, data, sizeof(struct PACKET_API_ ## name));
-// SEND_ASYNC_DATA_EMPTY is workaround for visual studio bugs
-#define SEND_ASYNC_DATA_EMPTY(name, data) aloginif->send_to_char(fd, sd, API_MSG_ ## name, data, 0);
-#define SEND_ASYNC_DATA_SPLIT(name, data, size) aloginif->send_split_to_char(fd, sd, API_MSG_ ## name, data, size);
+#define SEND_CHAR_ASYNC_DATA(name, data) aloginif->send_to_char(fd, sd, API_MSG_ ## name, data, sizeof(struct PACKET_API_ ## name), proxy_flag_default);
+#define SEND_MAP_ASYNC_DATA(name, data) aloginif->send_to_char(fd, sd, API_MSG_ ## name, data, sizeof(struct PACKET_API_ ## name), proxy_flag_map);
+// *_DATA_EMPTY is workaround for visual studio bugs
+#define SEND_CHAR_ASYNC_DATA_EMPTY(name, data) aloginif->send_to_char(fd, sd, API_MSG_ ## name, data, 0, proxy_flag_default);
+#define SEND_MAP_ASYNC_DATA_EMPTY(name, data) aloginif->send_to_char(fd, sd, API_MSG_ ## name, data, 0, proxy_flag_map);
+#define SEND_CHAR_ASYNC_DATA_SPLIT(name, data, size) aloginif->send_split_to_char(fd, sd, API_MSG_ ## name, data, size, proxy_flag_default);
+#define SEND_MAP_ASYNC_DATA_SPLIT(name, data, size) aloginif->send_split_to_char(fd, sd, API_MSG_ ## name, data, size, proxy_flag_map);
 #else  // HERCULES_CORE
-#define SEND_ASYNC_DATA(name, data, size) aloginif->send_to_char(fd, sd, name, data, size);
-// SEND_ASYNC_DATA_EMPTY is workaround for visual studio bugs
-#define SEND_ASYNC_DATA_EMPTY(name, data) aloginif->send_to_char(fd, sd, name, data, 0);
-#define SEND_ASYNC_DATA_SPLIT(name, data, size) aloginif->send_split_to_char(fd, sd, name, data, size);
+#define SEND_CHAR_ASYNC_DATA(name, data, size) aloginif->send_to_char(fd, sd, name, data, size, proxy_flag_default);
+#define SEND_MAP_ASYNC_DATA(name, data, size) aloginif->send_to_char(fd, sd, name, data, size, proxy_flag_map);
+// *_DATA_EMPTY is workaround for visual studio bugs
+#define SEND_CHAR_ASYNC_DATA_EMPTY(name, data) aloginif->send_to_char(fd, sd, name, data, 0, proxy_flag_default);
+#define SEND_MAP_ASYNC_DATA_EMPTY(name, data) aloginif->send_to_char(fd, sd, name, data, 0, proxy_flag_map);
+#define SEND_CHAR_ASYNC_DATA_SPLIT(name, data, size) aloginif->send_split_to_char(fd, sd, name, data, size, proxy_flag_default);
+#define SEND_MAP_ASYNC_DATA_SPLIT(name, data, size) aloginif->send_split_to_char(fd, sd, name, data, size, proxy_flag_map);
 #endif  // HERCULES_CORE
 
 #endif /* API_APIPACKETS_H */

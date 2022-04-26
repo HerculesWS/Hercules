@@ -35,6 +35,7 @@
 #include "common/socket.h"
 #include "common/strlib.h"
 #include "common/timer.h"
+#include "common/HPM.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -49,6 +50,16 @@ static int mapiif_parse_fromchar_api_proxy(int fd)
 	RFIFO_API_PROXY_PACKET(packet);
 	const uint32 msg = packet->msg_id;
 
+	if (VECTOR_LENGTH(HPM->packets[hpProxy_ApiMap]) > 0) {
+		int result = HPM->parse_packets(fd, msg, hpProxy_ApiMap);
+		if (result == 1)
+			return 1;
+		if (result == 2) {
+			RFIFOSKIP(fd, packet->packet_len);
+			return 1;
+		}
+	}
+
 	switch (msg) {
 		default:
 			ShowError("Unknown proxy packet 0x%04x received from char-server, disconnecting.\n", msg);
@@ -57,7 +68,7 @@ static int mapiif_parse_fromchar_api_proxy(int fd)
 	}
 
 	RFIFOSKIP(fd, packet->packet_len);
-	return 0;
+	return 1;
 }
 
 static void do_init_mapiif(bool minimal)

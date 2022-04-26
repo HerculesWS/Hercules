@@ -317,7 +317,7 @@ static void aloginif_keepalive(int fd)
 	WFIFOSET(fd, 2);
 }
 
-static void aloginif_send_to_char(int fd, struct api_session_data *sd, int msg_id, void *data, size_t data_len)
+static void aloginif_send_to_char(int fd, struct api_session_data *sd, int msg_id, void *data, size_t data_len, int proxy_flag)
 {
 	nullpo_retv(sd);
 	Assert_retv(aloginif->fd != -1);
@@ -327,14 +327,14 @@ static void aloginif_send_to_char(int fd, struct api_session_data *sd, int msg_i
 	struct PACKET_API_PROXY *p = WFIFOP(aloginif->fd, 0);
 	p->packet_id = HEADER_API_PROXY_REQUEST;
 	p->packet_len = len;
-	INIT_PACKET_PROXY_FIELDS(p, sd, proxy_flag_default);
+	INIT_PACKET_PROXY_FIELDS(p, sd, proxy_flag);
 	if (data && data_len > 0)
 		memcpy(((struct PACKET_API_PROXY0*)p)->data, data, data_len);
 
 	WFIFOSET(aloginif->fd, len);
 }
 
-static void aloginif_send_split_to_char(int fd, struct api_session_data *sd, int msg_id, char *data, size_t data_len)
+static void aloginif_send_split_to_char(int fd, struct api_session_data *sd, int msg_id, char *data, size_t data_len, int proxy_flag)
 {
 	nullpo_retv(sd);
 	Assert_retv(aloginif->fd != -1);
@@ -344,11 +344,11 @@ static void aloginif_send_split_to_char(int fd, struct api_session_data *sd, int
 
 	WFIFO_CHUNKED_INIT(p, aloginif->fd, HEADER_API_PROXY_REQUEST, PACKET_API_PROXY_CHUNKED, data, data_len) {
 		WFIFO_CHUNKED_BLOCK_START(p);
-		INIT_PACKET_PROXY_FIELDS(&p->base, sd, proxy_flag_default);
+		INIT_PACKET_PROXY_FIELDS(&p->base, sd, proxy_flag);
 		WFIFO_CHUNKED_BLOCK_END();
 	}
 	WFIFO_CHUNKED_FINAL_START(p);
-	INIT_PACKET_PROXY_FIELDS(&p->base, sd, proxy_flag_default);
+	INIT_PACKET_PROXY_FIELDS(&p->base, sd, proxy_flag);
 	WFIFO_CHUNKED_FINAL_END();
 }
 

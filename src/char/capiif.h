@@ -48,6 +48,7 @@ struct capiif_interface {
 	void (*parse_party_get) (int fd);
 	void (*parse_party_del) (int fd);
 	int (*parse_fromlogin_api_proxy) (int fd);
+	void (*parse_proxy_api_from_map) (int fd);
 };
 
 #ifdef HERCULES_CORE

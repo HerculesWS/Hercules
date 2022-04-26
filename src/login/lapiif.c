@@ -213,6 +213,8 @@ static void lapiif_parse_proxy_api_from_char(int fd)
 {
 	RFIFO_API_PROXY_PACKET(inPacket);
 	const int api_fd = inPacket->char_server_id;
+	if (!sockt->session_is_active(api_fd))
+		return;
 	const int len = inPacket->packet_len;
 	WFIFOHEAD(api_fd, len);
 	memcpy(WFIFOP(api_fd, 0), inPacket, len);

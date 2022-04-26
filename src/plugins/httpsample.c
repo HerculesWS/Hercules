@@ -35,6 +35,7 @@
 #include "char/apipackets.h"
 #include "login/login.h"
 #include "login/lclif.p.h"
+#include "map/apipackets.h"
 #include "map/clif.h"
 #include "map/pc.h"
 #include "map/script.h"
@@ -53,12 +54,21 @@ HPExport struct hplugin_info pinfo = {
 	HPM_VERSION, // HPM Version (don't change, macro is automatically updated)
 };
 
-struct PACKET_API_sample_api_data_request {
+struct PACKET_API_sample_api_data_request_data {
+	char text[100];
+	int flag;
+};
+
+struct PACKET_API_sample_api_data_request2_data {
 	char text[100];
 	int flag;
 };
 
 struct PACKET_API_REPLY_sample_api_data_response {
+	int users_count;
+};
+
+struct PACKET_API_REPLY_sample_api_data_response2 {
 	int users_count;
 };
 
@@ -93,11 +103,11 @@ HTTP_URL(sample_test_char)
 {
 	ShowInfo("/httpsample/char url called %d: %d\n", fd, sd->parser.method);
 	// this request unrelated to loggedin player, we should select char server for send packet to
-	// sleecting default in hercules configs: server_name: "Hercules"
+	// selecting default in hercules configs: server_name: "Hercules"
 	sd->world_name = "Hercules";
 
 	// create variable with custom data for send other char server
-	CREATE_HTTP_DATA(sample_api_data_request);
+	CREATE_HTTP_DATA(data, sample_api_data_request);
 	// get client user agent
 	const char *user_agent = (const char*)strdb_get(sd->headers_db, "User-Agent");
 	if (user_agent != NULL) {
@@ -110,8 +120,8 @@ HTTP_URL(sample_test_char)
 	// set flag field to value 123
 	data.flag = 123;
 	// send packet from api server to char server
-	SEND_ASYNC_DATA(API_MSG_CUSTOM, &data, sizeof(data));
-	// not termination http connection here because waiting packet from char server with data...
+	SEND_CHAR_ASYNC_DATA(API_MSG_CUSTOM, &data, sizeof(data));
+	// not terminating http connection here because waiting packet from char server with data...
 	return true;
 }
 
@@ -134,12 +144,58 @@ HTTP_DATA(sample_test_char)
 	aclif->terminate_connection(fd);
 }
 
+// runs on api server
+HTTP_URL(sample_test_map)
+{
+	ShowInfo("/httpsample/map url called %d: %d\n", fd, sd->parser.method);
+	// this request unrelated to loggedin player, we should select char server for send packet to
+	// selecting default in hercules configs: server_name: "Hercules"
+	sd->world_name = "Hercules";
+
+	// create variable with custom data for send other char server
+	CREATE_HTTP_DATA(data, sample_api_data_request2);
+	// get client user agent
+	const char *user_agent = (const char*)strdb_get(sd->headers_db, "User-Agent");
+	if (user_agent != NULL) {
+		// copy user agent from http request to text field
+		safestrncpy(data.text, user_agent, sizeof(data.text));
+	} else {
+		// use unknown as user agent string
+		safestrncpy(data.text, "unknown", 8);
+	}
+	// set flag field to value 123
+	data.flag = 234;
+	// send packet from api server to map server
+	SEND_MAP_ASYNC_DATA(API_MSG_CUSTOM + 1, &data, sizeof(data));
+	// not terminating http connection here because waiting packet from map server with data...
+	return true;
+}
+
+// runs on api server
+// sample handler for receiving data from char server for http request /httpsample/char
+HTTP_DATA(sample_test_map)
+{
+	ShowInfo("sample_test_map called\n");
+
+	// unpacking own data struct
+	GET_HTTP_DATA(p, sample_api_data_response2);
+
+	// generate html and send
+	const char *format = "<html>Hercules test from sample plugin.<br/>Users count on map server: %d<br/></html>\n";
+	char buf[1000];
+	safesnprintf(buf, sizeof(buf), format, p->users_count);
+	httpsender->send_html(fd, buf);
+
+	// terminating http connection here after we got requested data from char server
+	aclif->terminate_connection(fd);
+}
+
 // runs on char server
-// sample handler for message from api server url /test/msg
+// sample handler for message from api server url /test/char
 void sample_char_api_packet(int fd)
 {
 	// define variable with received data from packet
-	RFIFO_API_DATA(sdata, sample_api_data_request);
+	RFIFO_API_DATA(sdata, sample_api_data_request_data);
 	ShowInfo("sample_char_api_packet called: %s, %d\n", sdata->text, sdata->flag);
 	// deine variable with sending packet
 	WFIFO_APICHAR_PACKET_REPLY(sample_api_data_response);
@@ -147,6 +203,21 @@ void sample_char_api_packet(int fd)
 	data->users_count = chr->count_users();
 	// send created packet
 	WFIFOSET(chr->login_fd, packet->packet_len);
+}
+
+// runs on map server
+// sample handler for message from api server url /test/map
+void sample_map_api_packet(int fd)
+{
+	// define variable with received data from packet
+	RFIFO_API_DATA(sdata, sample_api_data_request2_data);
+	ShowInfo("sample_map_api_packet called: %s, %d\n", sdata->text, sdata->flag);
+	// deine variable with sending packet
+	WFIFO_APIMAP_PACKET_REPLY(sample_api_data_response2);
+	// store user count into packet field
+	data->users_count = map->getusers();
+	// send created packet
+	WFIFOSET(chrif->fd, packet->packet_len);
 }
 
 /* run when server starts */
@@ -165,8 +236,12 @@ HPExport void plugin_init (void)
 	ShowInfo("I'm being run from the '%s' filename\n", SERVER_NAME);
 
 	if (SERVER_TYPE == SERVER_TYPE_CHAR) {
-		// Add handler for message from api server url /test/msg
-		addPacket(API_MSG_CUSTOM, WFIFO_APICHAR_SIZE + sizeof(struct PACKET_API_sample_api_data_request), sample_char_api_packet, hpProxy_ApiChar);
+		// Add handler for message from api server url /test/char
+		addPacket(API_MSG_CUSTOM, WFIFO_APICHAR_SIZE + sizeof(struct PACKET_API_sample_api_data_request_data), sample_char_api_packet, hpProxy_ApiChar);
+	}
+	if (SERVER_TYPE == SERVER_TYPE_MAP) {
+		// Add handler for message from api server url /test/map
+		addPacket(API_MSG_CUSTOM + 1, WFIFO_APICHAR_SIZE + sizeof(struct PACKET_API_sample_api_data_request2_data), sample_map_api_packet, hpProxy_ApiMap);
 	}
 }
 /* triggered when server starts loading, before any server-specific data is set */
@@ -181,7 +256,9 @@ HPExport void server_online (void)
 	if (SERVER_TYPE == SERVER_TYPE_API) {
 		addHttpHandler(HTTP_GET, "/httpsample/simple", sample_test_simple, REQ_DEFAULT);
 		addHttpHandler(HTTP_GET, "/httpsample/char", sample_test_char, REQ_DEFAULT);
+		addHttpHandler(HTTP_GET, "/httpsample/map", sample_test_map, REQ_DEFAULT);
 		addProxyPacketHandler(sample_test_char, API_MSG_CUSTOM);
+		addProxyPacketHandler(sample_test_map, API_MSG_CUSTOM + 1);
 	}
 }
 

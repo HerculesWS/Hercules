@@ -4069,6 +4069,13 @@ static int char_parse_frommap(int fd)
 				}
 				break;
 
+			case HEADER_API_PROXY_REPLY:
+				if (RFIFOREST(fd) < 4 || RFIFOREST(fd) < RFIFOW(fd, 2))
+					return 2;
+				capiif->parse_proxy_api_from_map(fd);
+				RFIFOSKIP(fd, RFIFOW(fd, 2));
+				break;
+
 			default:
 			{
 				// inter server - packet

@@ -51,7 +51,7 @@
 		CREATE_HTTP_DATA(data, userconfig_save_userhotkey_v2); \
 		data.hotkeys.tab = UserHotKey_v2_ ## name; \
 		handlers->sendHotkeyV2Tab(name, &data.hotkeys); \
-		SEND_ASYNC_DATA(userconfig_save_userhotkey_v2, &data); \
+		SEND_CHAR_ASYNC_DATA(userconfig_save_userhotkey_v2, &data); \
 	}
 
 #define GET_JSON_HEADER(name, json) \
@@ -161,9 +161,9 @@ HTTP_URL(userconfig_load)
 #endif
 	aclif->show_request(fd, sd, false);
 
-	SEND_ASYNC_DATA_EMPTY(userconfig_load_emotes, NULL);
-	SEND_ASYNC_DATA_EMPTY(userconfig_load_hotkeys, NULL);
-//	SEND_ASYNC_DATA_EMPTY(userconfig_load, NULL);
+	SEND_CHAR_ASYNC_DATA_EMPTY(userconfig_load_emotes, NULL);
+	SEND_CHAR_ASYNC_DATA_EMPTY(userconfig_load_hotkeys, NULL);
+//	SEND_CHAR_ASYNC_DATA_EMPTY(userconfig_load, NULL);
 
 	return true;
 }
@@ -240,7 +240,7 @@ HTTP_URL(userconfig_save)
 				strncpy(data.emotes.emote[i], str, EMOTE_SIZE);
 			i++;
 		}
-		SEND_ASYNC_DATA(userconfig_save_emotes, &data);
+		SEND_CHAR_ASYNC_DATA(userconfig_save_emotes, &data);
 	}
 
 	jsonparser->delete(json);
@@ -263,7 +263,7 @@ HTTP_URL(charconfig_load)
 #endif
 	aclif->show_request(fd, sd, false);
 
-	SEND_ASYNC_DATA_EMPTY(charconfig_load, NULL);
+	SEND_CHAR_ASYNC_DATA_EMPTY(charconfig_load, NULL);
 
 	return true;
 }
@@ -303,8 +303,8 @@ HTTP_URL(emblem_upload)
 
 	CREATE_HTTP_DATA(data, emblem_upload_guild_id);
 	data.guild_id = RET_INT_HEADER(GUILD_ID, 0);
-	SEND_ASYNC_DATA(emblem_upload_guild_id, &data);
-	SEND_ASYNC_DATA_SPLIT(emblem_upload, img, img_size);
+	SEND_CHAR_ASYNC_DATA(emblem_upload_guild_id, &data);
+	SEND_CHAR_ASYNC_DATA_SPLIT(emblem_upload, img, img_size);
 
 	return true;
 }
@@ -349,7 +349,7 @@ HTTP_URL(emblem_download)
 	data.guild_id = RET_INT_HEADER(GUILD_ID, 0);
 	data.version = RET_INT_HEADER(VERSION, 0);
 
-	SEND_ASYNC_DATA(emblem_download, &data);
+	SEND_CHAR_ASYNC_DATA(emblem_download, &data);
 
 	return true;
 }
@@ -400,7 +400,7 @@ HTTP_URL(party_list)
 
 	CREATE_HTTP_DATA(data, party_list);
 	data.page = RET_INT_HEADER(PAGE, 0);
-	SEND_ASYNC_DATA(party_list, &data);
+	SEND_CHAR_ASYNC_DATA(party_list, &data);
 
 	return true;
 }
@@ -443,7 +443,7 @@ HTTP_URL(party_get)
 #endif
 	aclif->show_request(fd, sd, false);
 
-	SEND_ASYNC_DATA_EMPTY(party_get, NULL);
+	SEND_CHAR_ASYNC_DATA_EMPTY(party_get, NULL);
 
 	return true;
 }
@@ -490,7 +490,7 @@ HTTP_URL(party_add)
 	data.entry.tanker = RET_INT_HEADER(TANKER, 0);
 	data.entry.dealer = RET_INT_HEADER(DEALER, 0);
 
-	SEND_ASYNC_DATA(party_add, &data);
+	SEND_CHAR_ASYNC_DATA(party_add, &data);
 
 	return true;
 }
@@ -520,7 +520,7 @@ HTTP_URL(party_del)
 
 	CREATE_HTTP_DATA(data, party_del);
 	data.master_aid = RET_INT_HEADER(MASTER_AID, 0);
-	SEND_ASYNC_DATA(party_del, &data);
+	SEND_CHAR_ASYNC_DATA(party_del, &data);
 
 	return true;
 }

@@ -117,6 +117,18 @@ static int capiif_parse_fromlogin_api_proxy(int fd)
 	return 0;
 }
 
+static void capiif_parse_proxy_api_from_map(int fd)
+{
+	RFIFO_API_PROXY_PACKET(inPacket);
+	const int len = inPacket->packet_len;
+	const int login_fd = chr->login_fd;
+	if (!sockt->session_is_active(login_fd))
+		return;
+	WFIFOHEAD(login_fd, len);
+	memcpy(WFIFOP(login_fd, 0), inPacket, len);
+	WFIFOW(login_fd, 0) = HEADER_API_PROXY_REPLY;
+	WFIFOSET(login_fd, len);
+}
 
 void capiif_parse_userconfig_load_emotes(int fd)
 {
@@ -335,6 +347,7 @@ void capiif_defaults(void) {
 	capiif->get_online_character = capiif_get_online_character;
 	capiif->emblem_download = capiif_emblem_download;
 	capiif->parse_fromlogin_api_proxy = capiif_parse_fromlogin_api_proxy;
+	capiif->parse_proxy_api_from_map = capiif_parse_proxy_api_from_map;
 	capiif->parse_userconfig_load_emotes = capiif_parse_userconfig_load_emotes;
 	capiif->parse_userconfig_save_emotes = capiif_parse_userconfig_save_emotes;
 	capiif->parse_charconfig_load = capiif_parse_charconfig_load;
