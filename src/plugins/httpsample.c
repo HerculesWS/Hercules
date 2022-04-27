@@ -60,26 +60,26 @@ HPExport struct hplugin_info pinfo = {
 	HPM_VERSION, // HPM Version (don't change, macro is automatically updated)
 };
 
-struct PACKET_API_sample_api_data_request_data {
+struct PACKET_API_sample_char_request_data {
 	char text[100];
 	int flag;
 };
 
-struct PACKET_API_sample_api_data_request2_data {
+struct PACKET_API_sample_map_request_data {
 	char text[100];
 	int flag;
 };
 
-struct PACKET_API_REPLY_sample_api_data_response {
+struct PACKET_API_REPLY_sample_char_response {
 	int users_count;
 };
 
-struct PACKET_API_REPLY_sample_api_data_response2 {
+struct PACKET_API_REPLY_sample_map_response {
 	int users_count;
 };
 
 // runs on api server
-HTTP_URL(sample_test_simple)
+HTTP_URL(my_sample_test_simple)
 {
 	ShowInfo("/httpsample/simple url called %d: %d\n", fd, sd->parser.method);
 
@@ -105,7 +105,7 @@ HTTP_URL(sample_test_simple)
 }
 
 // runs on api server
-HTTP_URL(sample_test_char)
+HTTP_URL(my_sample_test_char)
 {
 	ShowInfo("/httpsample/char url called %d: %d\n", fd, sd->parser.method);
 	// this request unrelated to loggedin player, we should select char server for send packet to
@@ -113,7 +113,7 @@ HTTP_URL(sample_test_char)
 	sd->world_name = "Hercules";
 
 	// create variable with custom data for send other char server
-	CREATE_HTTP_DATA(data, sample_api_data_request);
+	CREATE_HTTP_DATA(data, sample_char_request);
 	// get client user agent
 	const char *user_agent = (const char*)strdb_get(sd->headers_db, "User-Agent");
 	if (user_agent != NULL) {
@@ -133,12 +133,12 @@ HTTP_URL(sample_test_char)
 
 // runs on api server
 // sample handler for receiving data from char server for http request /httpsample/char
-HTTP_DATA(sample_test_char)
+HTTP_DATA(my_sample_test_char)
 {
 	ShowInfo("sample_test_char called\n");
 
 	// unpacking own data struct
-	GET_HTTP_DATA(p, sample_api_data_response);
+	GET_HTTP_DATA(p, sample_char_response);
 
 	// generate html and send
 	const char *format = "<html>Hercules test from sample plugin.<br/>Users count on char server: %d<br/></html>\n";
@@ -151,7 +151,7 @@ HTTP_DATA(sample_test_char)
 }
 
 // runs on api server
-HTTP_URL(sample_test_map)
+HTTP_URL(my_sample_test_map)
 {
 	ShowInfo("/httpsample/map url called %d: %d\n", fd, sd->parser.method);
 	// this request unrelated to loggedin player, we should select char server for send packet to
@@ -159,7 +159,7 @@ HTTP_URL(sample_test_map)
 	sd->world_name = "Hercules";
 
 	// create variable with custom data for send other char server
-	CREATE_HTTP_DATA(data, sample_api_data_request2);
+	CREATE_HTTP_DATA(data, sample_map_request);
 	// get client user agent
 	const char *user_agent = (const char*)strdb_get(sd->headers_db, "User-Agent");
 	if (user_agent != NULL) {
@@ -179,12 +179,12 @@ HTTP_URL(sample_test_map)
 
 // runs on api server
 // sample handler for receiving data from char server for http request /httpsample/char
-HTTP_DATA(sample_test_map)
+HTTP_DATA(my_sample_test_map)
 {
 	ShowInfo("sample_test_map called\n");
 
 	// unpacking own data struct
-	GET_HTTP_DATA(p, sample_api_data_response2);
+	GET_HTTP_DATA(p, sample_map_response);
 
 	// generate html and send
 	const char *format = "<html>Hercules test from sample plugin.<br/>Users count on map server: %d<br/></html>\n";
@@ -201,10 +201,10 @@ HTTP_DATA(sample_test_map)
 void sample_char_api_packet(int fd)
 {
 	// define variable with received data from packet
-	RFIFO_API_DATA(sdata, sample_api_data_request);
+	RFIFO_API_DATA(sdata, sample_char_request);
 	ShowInfo("sample_char_api_packet called: %s, %d\n", sdata->text, sdata->flag);
 	// deine variable with sending packet
-	WFIFO_APICHAR_PACKET_REPLY(sample_api_data_response);
+	WFIFO_APICHAR_PACKET_REPLY(sample_char_response);
 	// store user count into packet field
 	data->users_count = chr->count_users();
 	// send created packet
@@ -216,10 +216,10 @@ void sample_char_api_packet(int fd)
 void sample_map_api_packet(int fd)
 {
 	// define variable with received data from packet
-	RFIFO_API_DATA(sdata, sample_api_data_request2);
+	RFIFO_API_DATA(sdata, sample_map_request);
 	ShowInfo("sample_map_api_packet called: %s, %d\n", sdata->text, sdata->flag);
 	// deine variable with sending packet
-	WFIFO_APIMAP_PACKET_REPLY(sample_api_data_response2);
+	WFIFO_APIMAP_PACKET_REPLY(sample_map_response);
 	// store user count into packet field
 	data->users_count = map->getusers();
 	// send created packet
@@ -243,11 +243,11 @@ HPExport void plugin_init (void)
 
 	if (SERVER_TYPE == SERVER_TYPE_CHAR) {
 		// Add handler for message from api server url /test/char
-		addProxyPacket(API_MSG_SAMPLE_CHAR, sample_api_data_request, sample_char_api_packet, hpProxy_ApiChar);
+		addProxyPacket(API_MSG_SAMPLE_CHAR, sample_char_request, sample_char_api_packet, hpProxy_ApiChar);
 	}
 	if (SERVER_TYPE == SERVER_TYPE_MAP) {
 		// Add handler for message from api server url /test/map
-		addProxyPacket(API_MSG_SAMPLE_MAP, sample_api_data_request2, sample_map_api_packet, hpProxy_ApiMap);
+		addProxyPacket(API_MSG_SAMPLE_MAP, sample_map_request, sample_map_api_packet, hpProxy_ApiMap);
 	}
 }
 /* triggered when server starts loading, before any server-specific data is set */
@@ -260,11 +260,11 @@ HPExport void server_online (void)
 {
 	// Register url for GET request
 	if (SERVER_TYPE == SERVER_TYPE_API) {
-		addHttpHandler(HTTP_GET, "/httpsample/simple", sample_test_simple, REQ_DEFAULT);
-		addHttpHandler(HTTP_GET, "/httpsample/char", sample_test_char, REQ_DEFAULT);
-		addHttpHandler(HTTP_GET, "/httpsample/map", sample_test_map, REQ_DEFAULT);
-		addProxyPacketHandler(sample_test_char, API_MSG_SAMPLE_CHAR);
-		addProxyPacketHandler(sample_test_map, API_MSG_SAMPLE_MAP);
+		addHttpHandler(HTTP_GET, "/httpsample/simple", my_sample_test_simple, REQ_DEFAULT);
+		addHttpHandler(HTTP_GET, "/httpsample/char", my_sample_test_char, REQ_DEFAULT);
+		addHttpHandler(HTTP_GET, "/httpsample/map", my_sample_test_map, REQ_DEFAULT);
+		addProxyPacketHandler(my_sample_test_char, API_MSG_SAMPLE_CHAR);
+		addProxyPacketHandler(my_sample_test_map, API_MSG_SAMPLE_MAP);
 	}
 }
 
