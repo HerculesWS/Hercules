@@ -122,6 +122,7 @@ struct online_api_login_data {
 
 struct char_server_data {
 	int id;
+	const char *world_name;
 };
 
 /**
@@ -202,6 +203,7 @@ struct aclif_interface {
 	int (*get_char_server_id) (struct api_session_data *sd);
 	void (*add_remove_timer) (struct online_api_login_data *data);
 	void (*remove_remove_timer) (struct online_api_login_data *data);
+	const char *(*get_first_world_name) (void);
 
 	void (*show_request) (int fd, struct api_session_data *sd, bool show_http_headers);
 };

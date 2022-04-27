@@ -292,6 +292,7 @@ static int aloginif_parse_add_char_server(int fd)
 	struct char_server_data *data = aCalloc(1, sizeof(struct char_server_data));
 	data->id = char_server_id;
 	char *name = aStrdup(RFIFOP(fd, 4));
+	data->world_name = name;
 	strdb_put(aclif->char_servers_db, name, data);
 	idb_put(aclif->char_servers_id_db, data->id, name);
 	ShowInfo("Connection of the char-server '%s' accepted.\n", name);

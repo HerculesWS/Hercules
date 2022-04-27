@@ -166,8 +166,7 @@ HTTP_URL(my_sample_test_char)
 {
 	ShowInfo("/httpsample/char url called %d: %d\n", fd, sd->parser.method);
 	// this request unrelated to loggedin player, we should select char server for send packet to
-	// selecting default in hercules configs: server_name: "Hercules"
-	sd->world_name = "Hercules";
+	sd->world_name = aclif->get_first_world_name();
 
 	// create variable with custom data for send other char server
 	CREATE_HTTP_DATA(data, sample_char_request);
@@ -212,8 +211,7 @@ HTTP_URL(my_sample_test_map)
 {
 	ShowInfo("/httpsample/map url called %d: %d\n", fd, sd->parser.method);
 	// this request unrelated to loggedin player, we should select char server for send packet to
-	// selecting default in hercules configs: server_name: "Hercules"
-	sd->world_name = "Hercules";
+	sd->world_name = aclif->get_first_world_name();
 
 	// create variable with custom data for send other char server
 	CREATE_HTTP_DATA(data, sample_map_request);

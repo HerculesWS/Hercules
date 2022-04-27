@@ -1068,6 +1068,7 @@ static void aclif_add_char_server(int char_server_id, const char *name)
 	struct char_server_data *data = aCalloc(1, sizeof(struct char_server_data));
 	data->id = char_server_id;
 	char *name2 = aStrdup(name);
+	data->world_name = name2;
 	strdb_put(aclif->char_servers_db, name2, data);
 	idb_put(aclif->char_servers_id_db, char_server_id, name2);
 }
@@ -1096,6 +1097,17 @@ static void aclif_remove_remove_timer(struct online_api_login_data *user)
 {
 	nullpo_retv(user);
 	user->remove_tick = 0;
+}
+
+static const char *aclif_get_first_world_name(void)
+{
+	struct DBIterator *iter = db_iterator(aclif->char_servers_db);
+	for (struct char_server_data *data = dbi_first(iter); dbi_exists(iter); data = dbi_next(iter)) {
+		dbi_destroy(iter);
+		return data->world_name;
+	}
+	dbi_destroy(iter);
+	return NULL;
 }
 
 static int do_init_aclif(bool minimal)
@@ -1207,6 +1219,7 @@ void aclif_defaults(void)
 	aclif->add_online_char = aclif_add_online_char;
 	aclif->add_remove_timer = aclif_add_remove_timer;
 	aclif->remove_remove_timer = aclif_remove_remove_timer;
+	aclif->get_first_world_name = aclif_get_first_world_name;
 
 	aclif->reportError = aclif_reportError;
 }
