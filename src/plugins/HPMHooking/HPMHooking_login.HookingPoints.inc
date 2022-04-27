@@ -116,6 +116,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(lapiif->set_char_online, HP_lapiif_set_char_online) },
 	{ HP_POP(lapiif->set_char_online_to, HP_lapiif_set_char_online_to) },
 	{ HP_POP(lapiif->parse, HP_lapiif_parse) },
+	{ HP_POP(lapiif->parse_fromapi_api_proxy, HP_lapiif_parse_fromapi_api_proxy) },
 	{ HP_POP(lapiif->parse_ping, HP_lapiif_parse_ping) },
 	{ HP_POP(lapiif->parse_proxy_api_to_char, HP_lapiif_parse_proxy_api_to_char) },
 	{ HP_POP(lapiif->parse_proxy_api_from_char, HP_lapiif_parse_proxy_api_from_char) },

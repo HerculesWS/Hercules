@@ -1957,13 +1957,13 @@ void HP_aloginif_on_ready(void) {
 	}
 	return;
 }
-void HP_aloginif_send_to_char(int fd, struct api_session_data *sd, int msg_id, void *data, size_t data_len, int proxy_flag) {
+void HP_aloginif_send_to_server(int fd, struct api_session_data *sd, int msg_id, void *data, size_t data_len, int proxy_flag) {
 	int hIndex = 0;
-	if (HPMHooks.count.HP_aloginif_send_to_char_pre > 0) {
+	if (HPMHooks.count.HP_aloginif_send_to_server_pre > 0) {
 		void (*preHookFunc) (int *fd, struct api_session_data **sd, int *msg_id, void **data, size_t *data_len, int *proxy_flag);
 		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_aloginif_send_to_char_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_aloginif_send_to_char_pre[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_aloginif_send_to_server_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_aloginif_send_to_server_pre[hIndex].func;
 			preHookFunc(&fd, &sd, &msg_id, &data, &data_len, &proxy_flag);
 		}
 		if (*HPMforce_return) {
@@ -1972,24 +1972,24 @@ void HP_aloginif_send_to_char(int fd, struct api_session_data *sd, int msg_id, v
 		}
 	}
 	{
-		HPMHooks.source.aloginif.send_to_char(fd, sd, msg_id, data, data_len, proxy_flag);
+		HPMHooks.source.aloginif.send_to_server(fd, sd, msg_id, data, data_len, proxy_flag);
 	}
-	if (HPMHooks.count.HP_aloginif_send_to_char_post > 0) {
+	if (HPMHooks.count.HP_aloginif_send_to_server_post > 0) {
 		void (*postHookFunc) (int fd, struct api_session_data *sd, int msg_id, void *data, size_t data_len, int proxy_flag);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_aloginif_send_to_char_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_aloginif_send_to_char_post[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_aloginif_send_to_server_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_aloginif_send_to_server_post[hIndex].func;
 			postHookFunc(fd, sd, msg_id, data, data_len, proxy_flag);
 		}
 	}
 	return;
 }
-void HP_aloginif_send_split_to_char(int fd, struct api_session_data *sd, int msg_id, char *data, size_t data_len, int proxy_flag) {
+void HP_aloginif_send_split_to_server(int fd, struct api_session_data *sd, int msg_id, char *data, size_t data_len, int proxy_flag) {
 	int hIndex = 0;
-	if (HPMHooks.count.HP_aloginif_send_split_to_char_pre > 0) {
+	if (HPMHooks.count.HP_aloginif_send_split_to_server_pre > 0) {
 		void (*preHookFunc) (int *fd, struct api_session_data **sd, int *msg_id, char **data, size_t *data_len, int *proxy_flag);
 		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_aloginif_send_split_to_char_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_aloginif_send_split_to_char_pre[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_aloginif_send_split_to_server_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_aloginif_send_split_to_server_pre[hIndex].func;
 			preHookFunc(&fd, &sd, &msg_id, &data, &data_len, &proxy_flag);
 		}
 		if (*HPMforce_return) {
@@ -1998,12 +1998,12 @@ void HP_aloginif_send_split_to_char(int fd, struct api_session_data *sd, int msg
 		}
 	}
 	{
-		HPMHooks.source.aloginif.send_split_to_char(fd, sd, msg_id, data, data_len, proxy_flag);
+		HPMHooks.source.aloginif.send_split_to_server(fd, sd, msg_id, data, data_len, proxy_flag);
 	}
-	if (HPMHooks.count.HP_aloginif_send_split_to_char_post > 0) {
+	if (HPMHooks.count.HP_aloginif_send_split_to_server_post > 0) {
 		void (*postHookFunc) (int fd, struct api_session_data *sd, int msg_id, char *data, size_t data_len, int proxy_flag);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_aloginif_send_split_to_char_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_aloginif_send_split_to_char_post[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_aloginif_send_split_to_server_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_aloginif_send_split_to_server_post[hIndex].func;
 			postHookFunc(fd, sd, msg_id, data, data_len, proxy_flag);
 		}
 	}

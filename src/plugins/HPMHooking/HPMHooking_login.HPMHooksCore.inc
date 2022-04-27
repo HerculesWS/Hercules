@@ -188,6 +188,8 @@ struct {
 	struct HPMHookPoint *HP_lapiif_set_char_online_to_post;
 	struct HPMHookPoint *HP_lapiif_parse_pre;
 	struct HPMHookPoint *HP_lapiif_parse_post;
+	struct HPMHookPoint *HP_lapiif_parse_fromapi_api_proxy_pre;
+	struct HPMHookPoint *HP_lapiif_parse_fromapi_api_proxy_post;
 	struct HPMHookPoint *HP_lapiif_parse_ping_pre;
 	struct HPMHookPoint *HP_lapiif_parse_ping_post;
 	struct HPMHookPoint *HP_lapiif_parse_proxy_api_to_char_pre;
@@ -1079,6 +1081,8 @@ struct {
 	int HP_lapiif_set_char_online_to_post;
 	int HP_lapiif_parse_pre;
 	int HP_lapiif_parse_post;
+	int HP_lapiif_parse_fromapi_api_proxy_pre;
+	int HP_lapiif_parse_fromapi_api_proxy_post;
 	int HP_lapiif_parse_ping_pre;
 	int HP_lapiif_parse_ping_post;
 	int HP_lapiif_parse_proxy_api_to_char_pre;

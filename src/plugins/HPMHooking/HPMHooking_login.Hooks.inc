@@ -2185,6 +2185,33 @@ int HP_lapiif_parse(int fd) {
 	}
 	return retVal___;
 }
+int HP_lapiif_parse_fromapi_api_proxy(int fd) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_lapiif_parse_fromapi_api_proxy_pre > 0) {
+		int (*preHookFunc) (int *fd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_lapiif_parse_fromapi_api_proxy_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_lapiif_parse_fromapi_api_proxy_pre[hIndex].func;
+			retVal___ = preHookFunc(&fd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.lapiif.parse_fromapi_api_proxy(fd);
+	}
+	if (HPMHooks.count.HP_lapiif_parse_fromapi_api_proxy_post > 0) {
+		int (*postHookFunc) (int retVal___, int fd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_lapiif_parse_fromapi_api_proxy_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_lapiif_parse_fromapi_api_proxy_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, fd);
+		}
+	}
+	return retVal___;
+}
 void HP_lapiif_parse_ping(int fd) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_lapiif_parse_ping_pre > 0) {
