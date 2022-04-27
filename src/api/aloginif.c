@@ -317,7 +317,7 @@ static void aloginif_keepalive(int fd)
 	WFIFOSET(fd, 2);
 }
 
-static void aloginif_send_to_char(int fd, struct api_session_data *sd, int msg_id, void *data, size_t data_len, int proxy_flag)
+static void aloginif_send_to_server(int fd, struct api_session_data *sd, int msg_id, void *data, size_t data_len, int proxy_flag)
 {
 	nullpo_retv(sd);
 	Assert_retv(aloginif->fd != -1);
@@ -334,7 +334,7 @@ static void aloginif_send_to_char(int fd, struct api_session_data *sd, int msg_i
 	WFIFOSET(aloginif->fd, len);
 }
 
-static void aloginif_send_split_to_char(int fd, struct api_session_data *sd, int msg_id, char *data, size_t data_len, int proxy_flag)
+static void aloginif_send_split_to_server(int fd, struct api_session_data *sd, int msg_id, char *data, size_t data_len, int proxy_flag)
 {
 	nullpo_retv(sd);
 	Assert_retv(aloginif->fd != -1);
@@ -448,8 +448,8 @@ void aloginif_defaults(void)
 	aloginif->on_disconnect = aloginif_on_disconnect;
 	aloginif->keepalive = aloginif_keepalive;
 	aloginif->on_ready = aloginif_on_ready;
-	aloginif->send_to_char = aloginif_send_to_char;
-	aloginif->send_split_to_char = aloginif_send_split_to_char;
+	aloginif->send_to_server = aloginif_send_to_server;
+	aloginif->send_split_to_server = aloginif_send_split_to_server;
 
 	aloginif->parse = aloginif_parse;
 	aloginif->parse_connection_state = aloginif_parse_connection_state;
