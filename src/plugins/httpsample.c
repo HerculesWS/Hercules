@@ -35,11 +35,8 @@
 #include "char/apipackets.h"
 #include "login/apipackets.h"
 #include "login/login.h"
-#include "login/lclif.p.h"
 #include "map/apipackets.h"
-#include "map/clif.h"
-#include "map/pc.h"
-#include "map/script.h"
+#include "map/map.h"
 
 #include "plugins/HPMHooking.h"
 #include "common/HPMDataCheck.h" /* should always be the last Hercules file included! (if you don't make it last, it'll intentionally break compile time) */
