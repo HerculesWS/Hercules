@@ -47,6 +47,12 @@
 #include <stdlib.h>
 #include <string.h>
 
+// this message ids must not conflict with other plugins or hercules itself
+enum apimessages {
+	API_MSG_SAMPLE_CHAR = API_MSG_CUSTOM,
+	API_MSG_SAMPLE_MAP = API_MSG_CUSTOM + 1
+};
+
 HPExport struct hplugin_info pinfo = {
 	"Http sample",    // Plugin name
 	SERVER_TYPE_CHAR|SERVER_TYPE_LOGIN|SERVER_TYPE_MAP|SERVER_TYPE_API, // Which server types this plugin works with?
@@ -120,7 +126,7 @@ HTTP_URL(sample_test_char)
 	// set flag field to value 123
 	data.flag = 123;
 	// send packet from api server to char server
-	SEND_CHAR_ASYNC_DATA(API_MSG_CUSTOM, &data, sizeof(data));
+	SEND_CHAR_ASYNC_DATA(API_MSG_SAMPLE_CHAR, &data, sizeof(data));
 	// not terminating http connection here because waiting packet from char server with data...
 	return true;
 }
@@ -166,7 +172,7 @@ HTTP_URL(sample_test_map)
 	// set flag field to value 123
 	data.flag = 234;
 	// send packet from api server to map server
-	SEND_MAP_ASYNC_DATA(API_MSG_CUSTOM + 1, &data, sizeof(data));
+	SEND_MAP_ASYNC_DATA(API_MSG_SAMPLE_MAP, &data, sizeof(data));
 	// not terminating http connection here because waiting packet from map server with data...
 	return true;
 }
@@ -237,11 +243,11 @@ HPExport void plugin_init (void)
 
 	if (SERVER_TYPE == SERVER_TYPE_CHAR) {
 		// Add handler for message from api server url /test/char
-		addProxyPacket(API_MSG_CUSTOM, sample_api_data_request, sample_char_api_packet, hpProxy_ApiChar);
+		addProxyPacket(API_MSG_SAMPLE_CHAR, sample_api_data_request, sample_char_api_packet, hpProxy_ApiChar);
 	}
 	if (SERVER_TYPE == SERVER_TYPE_MAP) {
 		// Add handler for message from api server url /test/map
-		addProxyPacket(API_MSG_CUSTOM + 1, sample_api_data_request2, sample_map_api_packet, hpProxy_ApiMap);
+		addProxyPacket(API_MSG_SAMPLE_MAP, sample_api_data_request2, sample_map_api_packet, hpProxy_ApiMap);
 	}
 }
 /* triggered when server starts loading, before any server-specific data is set */
@@ -257,8 +263,8 @@ HPExport void server_online (void)
 		addHttpHandler(HTTP_GET, "/httpsample/simple", sample_test_simple, REQ_DEFAULT);
 		addHttpHandler(HTTP_GET, "/httpsample/char", sample_test_char, REQ_DEFAULT);
 		addHttpHandler(HTTP_GET, "/httpsample/map", sample_test_map, REQ_DEFAULT);
-		addProxyPacketHandler(sample_test_char, API_MSG_CUSTOM);
-		addProxyPacketHandler(sample_test_map, API_MSG_CUSTOM + 1);
+		addProxyPacketHandler(sample_test_char, API_MSG_SAMPLE_CHAR);
+		addProxyPacketHandler(sample_test_map, API_MSG_SAMPLE_MAP);
 	}
 }
 
