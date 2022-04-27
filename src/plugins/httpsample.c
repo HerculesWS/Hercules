@@ -33,6 +33,7 @@
 #include "api/apisessiondata.h"
 #include "api/httpsender.h"
 #include "char/apipackets.h"
+#include "login/apipackets.h"
 #include "login/login.h"
 #include "login/lclif.p.h"
 #include "map/apipackets.h"
@@ -49,8 +50,9 @@
 
 // this message ids must not conflict with other plugins or hercules itself
 enum apimessages {
-	API_MSG_SAMPLE_CHAR = API_MSG_CUSTOM,
-	API_MSG_SAMPLE_MAP = API_MSG_CUSTOM + 1
+	API_MSG_SAMPLE_LOGIN = API_MSG_CUSTOM + 0,
+	API_MSG_SAMPLE_CHAR  = API_MSG_CUSTOM + 1,
+	API_MSG_SAMPLE_MAP   = API_MSG_CUSTOM + 2
 };
 
 HPExport struct hplugin_info pinfo = {
@@ -58,6 +60,11 @@ HPExport struct hplugin_info pinfo = {
 	SERVER_TYPE_CHAR|SERVER_TYPE_LOGIN|SERVER_TYPE_MAP|SERVER_TYPE_API, // Which server types this plugin works with?
 	"0.1",       // Plugin version
 	HPM_VERSION, // HPM Version (don't change, macro is automatically updated)
+};
+
+struct PACKET_API_sample_login_request_data {
+	char text[100];
+	int flag;
 };
 
 struct PACKET_API_sample_char_request_data {
@@ -68,6 +75,11 @@ struct PACKET_API_sample_char_request_data {
 struct PACKET_API_sample_map_request_data {
 	char text[100];
 	int flag;
+};
+
+struct PACKET_API_REPLY_sample_login_response {
+	int api_servers_count;
+	int char_servers_count;
 };
 
 struct PACKET_API_REPLY_sample_char_response {
@@ -102,6 +114,51 @@ HTTP_URL(my_sample_test_simple)
 	aclif->terminate_connection(fd);
 
 	return true;
+}
+
+// runs on api server
+HTTP_URL(my_sample_test_login)
+{
+	ShowInfo("/httpsample/login url called %d: %d\n", fd, sd->parser.method);
+	// create variable with custom data for send to login server
+	CREATE_HTTP_DATA(data, sample_login_request);
+	// get client user agent
+	const char *user_agent = (const char*)strdb_get(sd->headers_db, "User-Agent");
+	if (user_agent != NULL) {
+		// copy user agent from http request to text field
+		safestrncpy(data.text, user_agent, sizeof(data.text));
+	} else {
+		// use unknown as user agent string
+		safestrncpy(data.text, "unknown", 8);
+	}
+	// set flag field to value 123
+	data.flag = 123;
+	// send packet from api server to login server
+	SEND_LOGIN_ASYNC_DATA(API_MSG_SAMPLE_LOGIN, &data, sizeof(data));
+	// not terminating http connection here because waiting packet from login server with data...
+	return true;
+}
+
+// runs on api server
+// sample handler for receiving data from login server for http request /httpsample/login
+HTTP_DATA(my_sample_test_login)
+{
+	ShowInfo("sample_test_login called\n");
+
+	// unpacking own data struct
+	GET_HTTP_DATA(p, sample_login_response);
+
+	// generate html and send
+	const char *format = "<html>Hercules test from sample plugin.<br/>\n"
+		"Connected api servers count: %d<br/>\n"
+		"Connected char servers count: %d<br/>\n"
+		"</html>\n";
+	char buf[1000];
+	safesnprintf(buf, sizeof(buf), format, p->api_servers_count, p->char_servers_count);
+	httpsender->send_html(fd, buf);
+
+	// terminating http connection here after we got requested data from login server
+	aclif->terminate_connection(fd);
 }
 
 // runs on api server
@@ -196,8 +253,36 @@ HTTP_DATA(my_sample_test_map)
 	aclif->terminate_connection(fd);
 }
 
+// runs on login server
+// sample handler for message from api server url /httpsample/login
+void sample_login_api_packet(int fd)
+{
+	// define variable with received data from packet
+	RFIFO_API_DATA(sdata, sample_login_request);
+	ShowInfo("sample_login_api_packet called: %s, %d\n", sdata->text, sdata->flag);
+	// deine variable with sending packet
+	WFIFO_APILOGIN_PACKET_REPLY(fd, sample_login_response);
+	// store servers count into packet fields
+
+	int server_num = 0;
+	for (int i = 0; i < ARRAYLENGTH(login->dbs->server); ++i) {
+		if (sockt->session_is_active(login->dbs->server[i].fd))
+			server_num ++;
+	}
+	data->char_servers_count = server_num;
+	server_num = 0;
+	for (int i = 0; i < ARRAYLENGTH(login->dbs->api_server); ++i) {
+		if (sockt->session_is_active(login->dbs->api_server[i].fd))
+			server_num ++;
+	}
+	data->api_servers_count = server_num;
+
+	// send created packet
+	WFIFOSET(fd, packet->packet_len);
+}
+
 // runs on char server
-// sample handler for message from api server url /test/char
+// sample handler for message from api server url /httpsample/char
 void sample_char_api_packet(int fd)
 {
 	// define variable with received data from packet
@@ -212,7 +297,7 @@ void sample_char_api_packet(int fd)
 }
 
 // runs on map server
-// sample handler for message from api server url /test/map
+// sample handler for message from api server url /httpsample/map
 void sample_map_api_packet(int fd)
 {
 	// define variable with received data from packet
@@ -241,12 +326,16 @@ HPExport void plugin_init (void)
 
 	ShowInfo("I'm being run from the '%s' filename\n", SERVER_NAME);
 
+	if (SERVER_TYPE == SERVER_TYPE_LOGIN) {
+		// Add handler for message from api server url /httpsample/login
+		addProxyPacket(API_MSG_SAMPLE_LOGIN, sample_login_request, sample_login_api_packet, hpProxy_ApiLogin);
+	}
 	if (SERVER_TYPE == SERVER_TYPE_CHAR) {
-		// Add handler for message from api server url /test/char
+		// Add handler for message from api server url /httpsample/char
 		addProxyPacket(API_MSG_SAMPLE_CHAR, sample_char_request, sample_char_api_packet, hpProxy_ApiChar);
 	}
 	if (SERVER_TYPE == SERVER_TYPE_MAP) {
-		// Add handler for message from api server url /test/map
+		// Add handler for message from api server url /httpsample/map
 		addProxyPacket(API_MSG_SAMPLE_MAP, sample_map_request, sample_map_api_packet, hpProxy_ApiMap);
 	}
 }
@@ -261,8 +350,10 @@ HPExport void server_online (void)
 	// Register url for GET request
 	if (SERVER_TYPE == SERVER_TYPE_API) {
 		addHttpHandler(HTTP_GET, "/httpsample/simple", my_sample_test_simple, REQ_DEFAULT);
+		addHttpHandler(HTTP_GET, "/httpsample/login", my_sample_test_login, REQ_DEFAULT);
 		addHttpHandler(HTTP_GET, "/httpsample/char", my_sample_test_char, REQ_DEFAULT);
 		addHttpHandler(HTTP_GET, "/httpsample/map", my_sample_test_map, REQ_DEFAULT);
+		addProxyPacketHandler(my_sample_test_login, API_MSG_SAMPLE_LOGIN);
 		addProxyPacketHandler(my_sample_test_char, API_MSG_SAMPLE_CHAR);
 		addProxyPacketHandler(my_sample_test_map, API_MSG_SAMPLE_MAP);
 	}

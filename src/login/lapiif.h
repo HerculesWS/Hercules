@@ -54,6 +54,7 @@ struct lapiif_interface {
 	void (*set_char_online) (int account_id, int char_id);
 	void (*set_char_online_to) (int account_id, int char_id, int api_server_id);
 	int (*parse) (int fd);
+	int (*parse_fromapi_api_proxy) (int fd);
 	void (*parse_ping) (int fd);
 	void (*parse_proxy_api_to_char) (int fd);
 	void (*parse_proxy_api_from_char) (int fd);

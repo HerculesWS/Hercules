@@ -133,16 +133,6 @@ static int lapiif_parse(int fd)
 	while (RFIFOREST(fd) >= 2) {
 		int cmd = RFIFOW(fd, 0);
 
-/*
-		if (VECTOR_LENGTH(HPM->packets[hpChrif_Parse]) > 0) {
-			int result = HPM->parse_packets(fd,cmd,hpChrif_Parse);
-			if (result == 1)
-				continue;
-			if (result == 2)
-				return 0;
-		}
-*/
-
 		if (cmd < LAPIIF_PACKET_LEN_TABLE_START || cmd >= LAPIIF_PACKET_LEN_TABLE_START + ARRAYLENGTH(lapiif->packet_len_table) || lapiif->packet_len_table[cmd - LAPIIF_PACKET_LEN_TABLE_START] == 0) {
 			ShowWarning("lapiif_parse: session #%d, failed (unrecognized command 0x%.4x).\n", fd, (unsigned int)cmd);
 			sockt->eof(fd);
@@ -171,14 +161,17 @@ static int lapiif_parse(int fd)
 		}
 
 		switch (cmd) {
-			case 0x2841: lapiif->parse_ping(fd); break;
-			case HEADER_API_PROXY_REQUEST: lapiif->parse_proxy_api_to_char(fd); break;
+			case 0x2841:
+				lapiif->parse_ping(fd);
+				break;
+			case HEADER_API_PROXY_REQUEST:
+				return lapiif->parse_fromapi_api_proxy(fd);
 			default:
 				ShowError("lapiif_parse : unknown packet (session #%d): 0x%x. Disconnecting.\n", fd, (unsigned int)cmd);
 				sockt->eof(fd);
 				return 0;
 		}
-		if (sockt->session_is_valid(fd)) //There's the slight chance we lost the connection during parse, in which case this would segfault if not checked [Skotlex]
+		if (sockt->session_is_valid(fd))
 			RFIFOSKIP(fd, packet_len);
 	}
 
@@ -188,6 +181,38 @@ static int lapiif_parse(int fd)
 static void lapiif_parse_ping(int fd)
 {
 	lapiif->pong(fd);
+}
+
+static int lapiif_parse_fromapi_api_proxy(int fd)
+{
+	RFIFO_API_PROXY_PACKET(packet);
+	const uint32 msg = packet->msg_id;
+
+	if (PROXY_PACKET_FLAG(packet, proxy_flag_char | proxy_flag_map)) {
+		lapiif->parse_proxy_api_to_char(fd);
+		RFIFOSKIP(fd, packet->packet_len);
+		return 0;
+	}
+
+	if (VECTOR_LENGTH(HPM->packets[hpProxy_ApiLogin]) > 0) {
+		int result = HPM->parse_packets(fd, msg, hpProxy_ApiLogin);
+		if (result == 1)
+			return 0;
+		if (result == 2) {
+			RFIFOSKIP(fd, packet->packet_len);
+			return 0;
+		}
+	}
+
+	switch (msg) {
+		default:
+			ShowError("Unknown proxy packet 0x%04x received from api-server, disconnecting.\n", msg);
+			sockt->eof(fd);
+			return 0;
+	}
+
+	RFIFOSKIP(fd, packet->packet_len);
+	return 0;
 }
 
 static void lapiif_parse_proxy_api_to_char(int fd)
@@ -364,6 +389,7 @@ void lapiif_defaults(void)
 	lapiif->on_disconnect = lapiif_on_disconnect;
 	lapiif->pong = lapiif_pong;
 	lapiif->parse = lapiif_parse;
+	lapiif->parse_fromapi_api_proxy = lapiif_parse_fromapi_api_proxy;
 	lapiif->parse_ping = lapiif_parse_ping;
 	lapiif->parse_proxy_api_to_char = lapiif_parse_proxy_api_to_char;
 	lapiif->parse_proxy_api_from_char = lapiif_parse_proxy_api_from_char;
