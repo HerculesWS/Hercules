@@ -32,11 +32,13 @@
 #include "api/apipackets.h"
 #include "api/apisessiondata.h"
 #include "api/httpsender.h"
+#include "api/postheader.h"
 #include "char/apipackets.h"
 #include "login/apipackets.h"
 #include "login/login.h"
 #include "map/apipackets.h"
 #include "map/map.h"
+#include "map/pc.h"
 
 #include "plugins/HPMHooking.h"
 #include "common/HPMDataCheck.h" /* should always be the last Hercules file included! (if you don't make it last, it'll intentionally break compile time) */
@@ -49,7 +51,8 @@
 enum apimessages {
 	API_MSG_SAMPLE_LOGIN = API_MSG_CUSTOM + 0,
 	API_MSG_SAMPLE_CHAR  = API_MSG_CUSTOM + 1,
-	API_MSG_SAMPLE_MAP   = API_MSG_CUSTOM + 2
+	API_MSG_SAMPLE_MAP   = API_MSG_CUSTOM + 2,
+	API_MSG_SAMPLE_USER  = API_MSG_CUSTOM + 3
 };
 
 HPExport struct hplugin_info pinfo = {
@@ -74,6 +77,10 @@ struct PACKET_API_sample_map_request_data {
 	int flag;
 };
 
+struct PACKET_API_sample_user_request_data {
+	int account_id;
+};
+
 struct PACKET_API_REPLY_sample_login_response {
 	int api_servers_count;
 	int char_servers_count;
@@ -85,6 +92,15 @@ struct PACKET_API_REPLY_sample_char_response {
 
 struct PACKET_API_REPLY_sample_map_response {
 	int users_count;
+};
+
+struct PACKET_API_REPLY_sample_user_response {
+	int dead_sit;
+	bool error;
+};
+
+struct sample_player_id {
+	int account_id;
 };
 
 // runs on api server
@@ -230,7 +246,7 @@ HTTP_URL(my_sample_test_map)
 }
 
 // runs on api server
-// sample handler for receiving data from char server for http request /httpsample/char
+// sample handler for receiving data from map server for http request /httpsample/map
 HTTP_DATA(my_sample_test_map)
 {
 	ShowInfo("sample_test_map called\n");
@@ -244,6 +260,60 @@ HTTP_DATA(my_sample_test_map)
 	safesnprintf(buf, sizeof(buf), format, p->users_count);
 	httpsender->send_html(fd, buf);
 
+	// terminating http connection here after we got requested data from char server
+	aclif->terminate_connection(fd);
+}
+
+HTTP_URL(my_sample_test_user)
+{
+	ShowInfo("/httpsample/user url called\n");
+	if (!aclif->is_post_header_present(sd, POST_ACCOUNT_ID))
+		return false;
+
+	int account_id = 0;
+	if (!aclif->get_post_header_data_int(sd, POST_ACCOUNT_ID, &account_id))
+		return false;
+	char buf[1000];
+	if (!idb_exists(aclif->online_db, account_id)) {
+		const char *format = "<html>Player with id %d is not online<br/></html>\n";
+		safesnprintf(buf, sizeof(buf), format, account_id);
+		httpsender->send_html(fd, buf);
+		return false;
+	}
+
+	// store account_id into request field data
+	struct sample_player_id *player_id = NULL;
+	CREATE(player_id, struct sample_player_id, 1);
+	player_id->account_id = account_id;
+	sd->custom = player_id;
+	// prepare and send packet to map server
+	CREATE_HTTP_DATA(data, sample_user_request);
+	data.account_id = account_id;
+	SEND_MAP_ASYNC_DATA(API_MSG_SAMPLE_USER, &data, sizeof(data));
+
+	return true;
+}
+
+// runs on api server
+// sample handler for receiving data from map server for http request /httpsample/user
+HTTP_DATA(my_sample_test_user)
+{
+	ShowInfo("sample_test_data called\n");
+
+	// unpacking own data struct
+	GET_HTTP_DATA(p, sample_user_response);
+	char buf[1000];
+	// restore saved account_id
+	const int account_id = ((struct sample_player_id *)sd->custom)->account_id;
+	// prepare html page
+	if (p->error) {
+		const char *format = "<html>Player with id %d is not online<br/></html>\n";
+		safesnprintf(buf, sizeof(buf), format, account_id);
+	} else {
+		const char *format = "<html>Player with id %d dead sit state: %d<br/></html>\n";
+		safesnprintf(buf, sizeof(buf), format, account_id, p->dead_sit);
+	}
+	httpsender->send_html(fd, buf);
 	// terminating http connection here after we got requested data from char server
 	aclif->terminate_connection(fd);
 }
@@ -306,6 +376,28 @@ void sample_map_api_packet(int fd)
 	WFIFOSET(chrif->fd, packet->packet_len);
 }
 
+// runs on map server
+// sample handler for message from api server url /httpsample/user
+void sample_user_api_packet(int fd)
+{
+	// define variable with received data from packet
+	RFIFO_API_DATA(sdata, sample_user_request);
+	ShowInfo("sample_user_api_packet called: %d\n", sdata->account_id);
+	// deine variable with sending packet
+	WFIFO_APIMAP_PACKET_REPLY(sample_user_response);
+	// find user by aid and store his dead/sit flag into sending packet
+	struct map_session_data *sd = map->id2sd(sdata->account_id);
+	if (sd == NULL) {
+		data->error = true;
+		data->dead_sit = 0;
+	} else {
+		data->error = false;
+		data->dead_sit = sd->state.dead_sit;
+	}
+	// send created packet
+	WFIFOSET(chrif->fd, packet->packet_len);
+}
+
 /* run when server starts */
 HPExport void plugin_init (void)
 {
@@ -332,6 +424,7 @@ HPExport void plugin_init (void)
 	if (SERVER_TYPE == SERVER_TYPE_MAP) {
 		// Add handler for message from api server url /httpsample/map
 		addProxyPacket(API_MSG_SAMPLE_MAP, sample_map_request, sample_map_api_packet, hpProxy_ApiMap);
+		addProxyPacket(API_MSG_SAMPLE_USER, sample_user_request, sample_user_api_packet, hpProxy_ApiMap);
 	}
 }
 /* triggered when server starts loading, before any server-specific data is set */
@@ -348,9 +441,16 @@ HPExport void server_online (void)
 		addHttpHandler(HTTP_GET, "/httpsample/login", my_sample_test_login, REQ_DEFAULT);
 		addHttpHandler(HTTP_GET, "/httpsample/char", my_sample_test_char, REQ_DEFAULT);
 		addHttpHandler(HTTP_GET, "/httpsample/map", my_sample_test_map, REQ_DEFAULT);
+		// can be tested with command:
+		//  curl -X POST -F WorldName=Hercules -F AID=2000000 "http://127.0.0.1:7121/httpsample/user"
+		// REQ_WORLD_NAME - automatically parse header WorldName for select world aka char server
+		// REQ_EXTRA_HEADERS - allow any unparsed post header
+		addHttpHandler(HTTP_POST, "/httpsample/user", my_sample_test_user, REQ_WORLD_NAME | REQ_EXTRA_HEADERS);
+
 		addProxyPacketHandler(my_sample_test_login, API_MSG_SAMPLE_LOGIN);
 		addProxyPacketHandler(my_sample_test_char, API_MSG_SAMPLE_CHAR);
 		addProxyPacketHandler(my_sample_test_map, API_MSG_SAMPLE_MAP);
+		addProxyPacketHandler(my_sample_test_user, API_MSG_SAMPLE_USER);
 	}
 }
 
