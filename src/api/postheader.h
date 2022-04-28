@@ -21,7 +21,12 @@
 #ifndef API_POSTHEADER_H
 #define API_POSTHEADER_H
 
+#ifdef HERCULES_CORE
 #define POSTHEADER(name, str) extern const char *POST_ ## name;
+#else  // HERCULES_CORE
+#define POSTHEADER(name, str) const char *POST_ ## name;
+#endif  // HERCULES_CORE
+
 #include "api/postconst.h"
 #undef POSTHEADER
 

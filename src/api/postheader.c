@@ -19,6 +19,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define HERCULES_CORE
+
 #define POSTHEADER(name, str) const char * POST_ ## name = str;
 #include "api/postconst.h"
 #undef POSTHEADER
