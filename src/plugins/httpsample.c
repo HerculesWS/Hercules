@@ -447,10 +447,10 @@ HPExport void server_online (void)
 		// REQ_EXTRA_HEADERS - allow any unparsed post header
 		addHttpHandler(HTTP_POST, "/httpsample/user", my_sample_test_user, REQ_WORLD_NAME | REQ_EXTRA_HEADERS);
 
-		addProxyPacketHandler(my_sample_test_login, API_MSG_SAMPLE_LOGIN);
-		addProxyPacketHandler(my_sample_test_char, API_MSG_SAMPLE_CHAR);
-		addProxyPacketHandler(my_sample_test_map, API_MSG_SAMPLE_MAP);
-		addProxyPacketHandler(my_sample_test_user, API_MSG_SAMPLE_USER);
+		addHttpDataHandler(my_sample_test_login, API_MSG_SAMPLE_LOGIN);
+		addHttpDataHandler(my_sample_test_char, API_MSG_SAMPLE_CHAR);
+		addHttpDataHandler(my_sample_test_map, API_MSG_SAMPLE_MAP);
+		addHttpDataHandler(my_sample_test_user, API_MSG_SAMPLE_USER);
 	}
 }
 
