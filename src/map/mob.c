@@ -2757,8 +2757,8 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 
 					drop_rate = (int)(0.5 + drop_rate * drop_rate_bonus / 100.);
 
-					// Limit drop rate, default: 90%
-					drop_rate = min(drop_rate, 9000);
+					// Make sure drop rate does not go beyond 100% after the drop rate modifiers are applied
+					drop_rate = min(drop_rate, 10000);
 				}
 			}
 
