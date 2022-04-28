@@ -282,6 +282,8 @@ static int aclif_session_delete(int fd)
 	aFree(sd->data);
 	sd->data = NULL;
 	sd->data_size = 0;
+	aFree(sd->custom);
+	sd->custom = NULL;
 	aFree(sd->request_temp);
 	sd->request_temp = NULL;
 	if (sd->json != NULL)
@@ -812,9 +814,17 @@ static bool aclif_decode_post_headers(int fd, struct api_session_data *sd)
 	CHECK_POST_HEADER_PRESENT(CHAR_NAME)
 	CHECK_POST_HEADER_PRESENT(MASTER_AID)
 
-	if (handled_count != aclif->get_post_headers_count(sd)) {
-		ShowError("Handled wrong number of post headers. Handled %d, requested %d :%d\n", handled_count, aclif->get_post_headers_count(sd), fd);
-		aclif->show_request(fd, sd, false);
+	const int count = aclif->get_post_headers_count(sd);
+	if ((sd->handler->flags & REQ_EXTRA_HEADERS) != 0) {
+		if (handled_count > count) {
+			ShowError("Handled wrong number of post headers. Handled %d, requested %d :%d\n", handled_count, count, fd);
+			aclif->show_request(fd, sd, false);
+		}
+	} else {
+		if (handled_count != count) {
+			ShowError("Handled wrong number of post headers. Handled %d, requested %d :%d\n", handled_count, count, fd);
+			aclif->show_request(fd, sd, false);
+		}
 	}
 	return true;
 }

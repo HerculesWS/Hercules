@@ -79,6 +79,7 @@ struct api_session_data {
 	char *data;
 	int data_size;
 	JsonW *json;
+	void *custom;
 	char valid_post_headers[CONST_POST_MAX];
 };
 
