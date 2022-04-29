@@ -17363,27 +17363,41 @@ static BUILDIN(getpetinfo)
 static BUILDIN(gethominfo)
 {
 	struct map_session_data *sd = script->rid2sd(st);
-	int type = script_getnum(st,2);
+	int type = script_getnum(st, 2);
 
 	if (sd == NULL || sd->hd == NULL) {
 		if (type == 2)
-			script_pushconststr(st,"null");
+			script_pushconststr(st, "null");
 		else
-			script_pushint(st,0);
+			script_pushint(st, 0);
 		return true;
 	}
 
 	switch(type) {
-		case 0: script_pushint(st,sd->hd->homunculus.hom_id); break;
-		case 1: script_pushint(st,sd->hd->homunculus.class_); break;
-		case 2: script_pushstrcopy(st,sd->hd->homunculus.name); break;
-		case 3: script_pushint(st,sd->hd->homunculus.intimacy); break;
-		case 4: script_pushint(st,sd->hd->homunculus.hunger); break;
-		case 5: script_pushint(st,sd->hd->homunculus.rename_flag); break;
-		case 6: script_pushint(st,sd->hd->homunculus.level); break;
-		default:
-			script_pushint(st,0);
-			break;
+	case HOMINFO_ID:
+		script_pushint(st, sd->hd->homunculus.hom_id);
+		break;
+	case HOMINFO_CLASS:
+		script_pushint(st, sd->hd->homunculus.class_);
+		break;
+	case HOMINFO_NAME:
+		script_pushstrcopy(st, sd->hd->homunculus.name);
+		break;
+	case HOMINFO_INTIMACY:
+		script_pushint(st, sd->hd->homunculus.intimacy);
+		break;
+	case HOMINFO_HUNGRY:
+		script_pushint(st, sd->hd->homunculus.hunger);
+		break;
+	case HOMINFO_RENAME:
+		script_pushint(st, sd->hd->homunculus.rename_flag);
+		break;
+	case HOMINFO_LEVEL:
+		script_pushint(st, sd->hd->homunculus.level);
+		break;
+	default:
+		script_pushint(st, 0);
+		break;
 	}
 	return true;
 }
@@ -29659,6 +29673,15 @@ static void script_hardcoded_constants(void)
 	script->set_constant("PLAY_SOUND_ONCE", PLAY_SOUND_ONCE, false, false);
 	script->set_constant("PLAY_SOUND_REPEAT", PLAY_SOUND_REPEAT, false, false);
 	script->set_constant("PLAY_SOUND_STOP", PLAY_SOUND_STOP, false, false);
+
+	script->constdb_comment("gethominfo types");
+	script->set_constant("HOMINFO_ID", HOMINFO_ID, false, false);
+	script->set_constant("HOMINFO_CLASS", HOMINFO_CLASS, false, false);
+	script->set_constant("HOMINFO_NAME", HOMINFO_NAME, false, false);
+	script->set_constant("HOMINFO_INTIMACY", HOMINFO_INTIMACY, false, false);
+	script->set_constant("HOMINFO_HUNGRY", HOMINFO_HUNGRY, false, false);
+	script->set_constant("HOMINFO_RENAME", HOMINFO_RENAME, false, false);
+	script->set_constant("HOMINFO_LEVEL", HOMINFO_LEVEL, false, false);
 
 	script->constdb_comment("Renewal");
 #ifdef RENEWAL
