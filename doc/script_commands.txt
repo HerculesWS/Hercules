@@ -7010,16 +7010,16 @@ above 91000 intimacy with its owner.
 *gethominfo(<type>)
 
 This function works as a direct counterpart of 'getpetinfo':
- 0 - Homunculus unique ID
- 1 - Homunculus Class
- 2 - Name
- 3 - Friendly level (intimacy score). 100000 is full loyalty.
- 4 - Hungry level. 100 is completely full.
- 5 - Rename flag. 0 means this homunculus has not been named yet.
- 6 - Homunculus level
+	HOMINFO_ID       - Homunculus unique ID
+	HOMINFO_CLASS    - Homunculus Class
+	HOMINFO_NAME     - Name
+	HOMINFO_INTIMACY - Friendly level (intimacy score). 100000 is full loyalty.
+	HOMINFO_HUNGRY   - Hungry level. 100 is completely full.
+	HOMINFO_RENAME   - Rename flag. 0 means this homunculus has not been named yet.
+	HOMINFO_LEVEL    - Homunculus level
 
 If the attached player doesn't own a homunculus, this command will return
-"null" for type 2, and return 0 for other types.
+"null" for type HOMINFO_NAME, and return 0 for other types.
 
 ---------------------------------------
 
