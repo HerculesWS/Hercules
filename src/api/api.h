@@ -45,11 +45,6 @@ struct api_interface {
 
 	/* vars */
 	bool minimal;     ///< Starts the server in minimal initialization mode.
-	bool scriptcheck; ///< Starts the server in script-check mode.
-
-	/** Additional scripts requested through the command-line */
-	char **extra_scripts;
-	int extra_scripts_count;
 
 	int retval;
 	int count;
@@ -58,31 +53,11 @@ struct api_interface {
 	bool char_ip_set;
 	bool login_ip_set;
 
-	char db_path[256];
-
-	char help_txt[256];
-	char charhelp_txt[256];
-
-	char wisp_server_name[NAME_LENGTH];
-
 	char *NET_CONF_NAME;
 	char *LOG_CONF_NAME;
 	char *API_CONF_NAME;
-	char *BATTLE_CONF_FILENAME;
-	char *ATCOMMAND_CONF_FILENAME;
-	char *SCRIPT_CONF_NAME;
-	char *MSG_CONF_NAME;
-	char *GRF_PATH_FILENAME;
-
-	char autotrade_merchants_db[32];
-	char autotrade_data_db[32];
-	char npc_market_data_db[32];
-	char npc_barter_data_db[32];
-	char npc_expanded_barter_data_db[32];
 
 	char default_codepage[32];
-	char default_lang_str[64];
-	uint8 default_lang_id;
 
 	int server_port;
 	char server_ip[32];

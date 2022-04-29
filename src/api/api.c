@@ -450,7 +450,6 @@ void api_defaults(void)
 
 	/* */
 	api->minimal = false;
-	api->count = 0;
 	api->retval = EXIT_SUCCESS;
 
 	api->server_port = 3306;
