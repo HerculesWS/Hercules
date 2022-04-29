@@ -70,6 +70,7 @@ int do_final(void)
 	aclif->final();
 
 	HPM_api_do_final();
+	aFree(api->NET_CONF_NAME);
 
 	HPM->event(HPET_POST_FINAL);
 
@@ -122,10 +123,51 @@ static void api_load_defaults(void)
 }
 
 /**
+ * --api-config handler
+ *
+ * Overrides the default api configuration file.
+ * @see cmdline->exec
+ */
+static CMDLINEARG(apiconfig)
+{
+	aFree(api->API_CONF_NAME);
+	api->API_CONF_NAME = aStrdup(params);
+	return true;
+}
+
+/**
+ * --run-once handler
+ *
+ * Causes the server to run its loop once, and shutdown. Useful for testing.
+ * @see cmdline->exec
+ */
+static CMDLINEARG(runonce)
+{
+	core->runflag = CORE_ST_STOP;
+	return true;
+}
+
+/**
+ * --net-config handler
+ *
+ * Overrides the default subnet configuration file.
+ * @see cmdline->exec
+ */
+static CMDLINEARG(netconfig)
+{
+	aFree(api->NET_CONF_NAME);
+	api->NET_CONF_NAME = aStrdup(params);
+	return true;
+}
+
+/**
  * Defines the local command line arguments
  */
 void cmdline_args_init_local(void)
 {
+	CMDLINEARG_DEF2(run-once, runonce, "Closes server after loading (testing).", CMDLINE_OPT_NORMAL);
+	CMDLINEARG_DEF2(api-config, apiconfig, "Alternative api-server configuration.", CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2(net-config, netconfig, "Alternative subnet configuration.", CMDLINE_OPT_PARAM);
 }
 
 static int api_check_connect_login_server(int tid, int64 tick, int id, intptr_t data)
@@ -343,12 +385,15 @@ int do_init(int argc, char *argv[])
 	handlers_defaults();
 
 	api->API_CONF_NAME = aStrdup("conf/api/api-server.conf");
+	api->NET_CONF_NAME = aStrdup("conf/api_network.conf");
 
 	HPM_api_do_init();
 	cmdline->exec(argc, argv, CMDLINE_OPT_PREINIT);
 	HPM->config_read();
 
 	HPM->event(HPET_PRE_INIT);
+
+	sockt->net_config_read(api->NET_CONF_NAME);
 
 	cmdline->exec(argc, argv, CMDLINE_OPT_NORMAL);
 	minimal = api->minimal;

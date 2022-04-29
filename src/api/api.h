@@ -65,7 +65,7 @@ struct api_interface {
 
 	char wisp_server_name[NAME_LENGTH];
 
-	char *INTER_CONF_NAME;
+	char *NET_CONF_NAME;
 	char *LOG_CONF_NAME;
 	char *API_CONF_NAME;
 	char *BATTLE_CONF_FILENAME;

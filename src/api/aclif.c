@@ -228,6 +228,11 @@ static bool aclif_socket_secure_check(int fd)
 {
 	nullpo_retr(false, sockt->session[fd]);
 
+	const uint32 ipl = sockt->session[fd]->client_addr;
+	if (sockt->trusted_ip_check(ipl)) {
+		return true;
+	}
+
 	int count = 0;
 	const int max_count = api->ip_connections_limit;
 	const int client_addr = sockt->session[fd]->client_addr;
