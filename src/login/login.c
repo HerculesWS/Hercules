@@ -1682,6 +1682,7 @@ static bool login_config_read_console(const char *filename, struct config_t *con
 			ShowInfo("Console Silent Setting: %d\n", showmsg->silent);
 	}
 	libconfig->setting_lookup_mutable_string(setting, "timestamp_format", showmsg->timestamp_format, sizeof(showmsg->timestamp_format));
+	libconfig->setting_lookup_int(setting, "console_msg_log", &showmsg->console_log);
 
 	return true;
 }

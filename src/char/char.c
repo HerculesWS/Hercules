@@ -5762,6 +5762,7 @@ static bool char_config_read_console(const char *filename, const struct config_t
 			ShowInfo("Console Silent Setting: %d\n", showmsg->silent);
 	}
 	libconfig->setting_lookup_mutable_string(setting, "timestamp_format", showmsg->timestamp_format, sizeof(showmsg->timestamp_format));
+	libconfig->setting_lookup_int(setting, "console_msg_log", &showmsg->console_log);
 
 	return true;
 }

@@ -120,6 +120,7 @@ struct showmsg_interface {
 	void (*showError) (const char *, ...) __attribute__((format(printf, 1, 2)));
 	void (*showFatalError) (const char *, ...) __attribute__((format(printf, 1, 2)));
 	void (*showConfigWarning) (struct config_setting_t *config, const char *string, ...) __attribute__((format(printf, 2, 3)));
+	const char *(*getLogFileName) (void);
 };
 
 /* the purpose of these macros is simply to not make calling them be an annoyance */
