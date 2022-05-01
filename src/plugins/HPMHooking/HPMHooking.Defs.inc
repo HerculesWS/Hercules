@@ -6352,6 +6352,10 @@ typedef int (*HPMHOOK_pre_pc_endautobonus) (int *tid, int64 *tick, int *id, intp
 typedef int (*HPMHOOK_post_pc_endautobonus) (int retVal___, int tid, int64 tick, int id, intptr_t data);
 typedef int (*HPMHOOK_pre_pc_delautobonus) (struct map_session_data **sd, struct s_autobonus **bonus, char *max, bool *restore);
 typedef int (*HPMHOOK_post_pc_delautobonus) (int retVal___, struct map_session_data *sd, struct s_autobonus *bonus, char max, bool restore);
+typedef void (*HPMHOOK_pre_pc_bonus_addele) (struct map_session_data **sd, unsigned char *ele, short *rate, short *flag);
+typedef void (*HPMHOOK_post_pc_bonus_addele) (struct map_session_data *sd, unsigned char ele, short rate, short flag);
+typedef void (*HPMHOOK_pre_pc_bonus_subele) (struct map_session_data **sd, unsigned char *ele, short *rate, short *flag);
+typedef void (*HPMHOOK_post_pc_bonus_subele) (struct map_session_data *sd, unsigned char ele, short rate, short flag);
 typedef int (*HPMHOOK_pre_pc_bonus) (struct map_session_data **sd, int *type, int *val);
 typedef int (*HPMHOOK_post_pc_bonus) (int retVal___, struct map_session_data *sd, int type, int val);
 typedef int (*HPMHOOK_pre_pc_bonus2) (struct map_session_data **sd, int *type, int *type2, int *val);

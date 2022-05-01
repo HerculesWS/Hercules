@@ -2522,6 +2522,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(pc->exeautobonus, HP_pc_exeautobonus) },
 	{ HP_POP(pc->endautobonus, HP_pc_endautobonus) },
 	{ HP_POP(pc->delautobonus, HP_pc_delautobonus) },
+	{ HP_POP(pc->bonus_addele, HP_pc_bonus_addele) },
+	{ HP_POP(pc->bonus_subele, HP_pc_bonus_subele) },
 	{ HP_POP(pc->bonus, HP_pc_bonus) },
 	{ HP_POP(pc->bonus2, HP_pc_bonus2) },
 	{ HP_POP(pc->bonus3, HP_pc_bonus3) },

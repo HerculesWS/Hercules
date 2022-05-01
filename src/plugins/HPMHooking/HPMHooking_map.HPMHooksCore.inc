@@ -4924,6 +4924,10 @@ struct {
 	struct HPMHookPoint *HP_pc_endautobonus_post;
 	struct HPMHookPoint *HP_pc_delautobonus_pre;
 	struct HPMHookPoint *HP_pc_delautobonus_post;
+	struct HPMHookPoint *HP_pc_bonus_addele_pre;
+	struct HPMHookPoint *HP_pc_bonus_addele_post;
+	struct HPMHookPoint *HP_pc_bonus_subele_pre;
+	struct HPMHookPoint *HP_pc_bonus_subele_post;
 	struct HPMHookPoint *HP_pc_bonus_pre;
 	struct HPMHookPoint *HP_pc_bonus_post;
 	struct HPMHookPoint *HP_pc_bonus2_pre;
@@ -12243,6 +12247,10 @@ struct {
 	int HP_pc_endautobonus_post;
 	int HP_pc_delautobonus_pre;
 	int HP_pc_delautobonus_post;
+	int HP_pc_bonus_addele_pre;
+	int HP_pc_bonus_addele_post;
+	int HP_pc_bonus_subele_pre;
+	int HP_pc_bonus_subele_post;
 	int HP_pc_bonus_pre;
 	int HP_pc_bonus_post;
 	int HP_pc_bonus2_pre;
