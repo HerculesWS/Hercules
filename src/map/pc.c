@@ -2365,71 +2365,67 @@ static int pc_endautobonus(int tid, int64 tick, int id, intptr_t data)
 	return 0;
 }
 
-static int pc_bonus_addele(struct map_session_data *sd, unsigned char ele, short rate, short flag)
+static void pc_bonus_addele(struct map_session_data *sd, unsigned char ele, short rate, short flag)
 {
 	int i;
-	struct weapon_data* wd;
+	struct weapon_data *wd;
 
-	nullpo_ret(sd);
+	nullpo_retv(sd);
 	wd = (sd->state.lr_flag ? &sd->left_weapon : &sd->right_weapon);
 
 	ARR_FIND(0, MAX_PC_BONUS, i, wd->addele2[i].rate == 0);
 
-	if (i == MAX_PC_BONUS)
-	{
+	if (i == MAX_PC_BONUS) {
 		ShowWarning("pc_addele: Reached max (%d) possible bonuses for this player.\n", MAX_PC_BONUS);
-		return 0;
+		return;
 	}
 
-	if (!(flag&BF_RANGEMASK))
-		flag |= BF_SHORT|BF_LONG;
-	if (!(flag&BF_WEAPONMASK))
+	if ((flag & BF_RANGEMASK) == 0)
+		flag |= BF_SHORT | BF_LONG;
+	if ((flag & BF_WEAPONMASK) == 0)
 		flag |= BF_WEAPON;
-	if (!(flag&BF_SKILLMASK))
-	{
-		if (flag&(BF_MAGIC|BF_MISC))
+	if ((flag & BF_SKILLMASK) == 0) {
+		if ((flag & (BF_MAGIC | BF_MISC)) != 0)
 			flag |= BF_SKILL;
-		if (flag&BF_WEAPON)
-			flag |= BF_NORMAL|BF_SKILL;
+		if ((flag & BF_WEAPON) != 0)
+			flag |= BF_NORMAL | BF_SKILL;
 	}
 
 	wd->addele2[i].ele = ele;
 	wd->addele2[i].rate = rate;
 	wd->addele2[i].flag = flag;
 
-	return 0;
+	return;
 }
 
-static int pc_bonus_subele(struct map_session_data *sd, unsigned char ele, short rate, short flag)
+static void pc_bonus_subele(struct map_session_data *sd, unsigned char ele, short rate, short flag)
 {
 	int i;
 
-	nullpo_ret(sd);
+	nullpo_retv(sd);
 	ARR_FIND(0, MAX_PC_BONUS, i, sd->subele2[i].rate == 0);
 
-	if (i == MAX_PC_BONUS)
-	{
+	if (i == MAX_PC_BONUS) {
 		ShowWarning("pc_subele: Reached max (%d) possible bonuses for this player.\n", MAX_PC_BONUS);
-		return 0;
+		return;
 	}
 
-	if (!(flag&BF_RANGEMASK))
-		flag |= BF_SHORT|BF_LONG;
-	if (!(flag&BF_WEAPONMASK))
+	if ((flag & BF_RANGEMASK) == 0)
+		flag |= BF_SHORT | BF_LONG;
+	if ((flag & BF_WEAPONMASK) == 0)
 		flag |= BF_WEAPON;
-	if (!(flag&BF_SKILLMASK))
-	{
-		if (flag&(BF_MAGIC|BF_MISC))
+	if ((flag & BF_SKILLMASK) == 0) {
+		if ((flag & (BF_MAGIC | BF_MISC)) != 0)
 			flag |= BF_SKILL;
-		if (flag&BF_WEAPON)
-			flag |= BF_NORMAL|BF_SKILL;
+		if ((flag & BF_WEAPON) != 0)
+			flag |= BF_NORMAL | BF_SKILL;
 	}
 
 	sd->subele2[i].ele = ele;
 	sd->subele2[i].rate = rate;
 	sd->subele2[i].flag = flag;
 
-	return 0;
+	return;
 }
 
 /**
