@@ -4057,9 +4057,9 @@ static int pc_bonus3(struct map_session_data *sd, int type, int type2, int type3
 			if ( sd->state.lr_flag != 2 ) {
 				if ( type2 == ELE_ALL ) {
 					for ( i = ELE_NEUTRAL; i < ELE_MAX; i++ )
-						pc_bonus_addele(sd, (unsigned char)i, type3, val);
+						pc->bonus_addele(sd, (unsigned char)i, type3, val);
 				} else {
-					pc_bonus_addele(sd, (unsigned char)type2, type3, val);
+					pc->bonus_addele(sd, (unsigned char)type2, type3, val);
 				}
 			}
 			break;
@@ -4072,9 +4072,9 @@ static int pc_bonus3(struct map_session_data *sd, int type, int type2, int type3
 			if ( sd->state.lr_flag != 2 ) {
 				if ( type2 == ELE_ALL ) {
 					for ( i = ELE_NEUTRAL; i < ELE_MAX; i++ )
-						pc_bonus_subele(sd, (unsigned char)i, type3, val);
+						pc->bonus_subele(sd, (unsigned char)i, type3, val);
 				} else {
-					pc_bonus_subele(sd, (unsigned char)type2, type3, val);
+					pc->bonus_subele(sd, (unsigned char)type2, type3, val);
 				}
 			}
 			break;
@@ -13049,6 +13049,9 @@ void pc_defaults(void)
 	pc->exeautobonus = pc_exeautobonus;
 	pc->endautobonus = pc_endautobonus;
 	pc->delautobonus = pc_delautobonus;
+
+	pc->bonus_addele = pc_bonus_addele;
+	pc->bonus_subele = pc_bonus_subele;
 
 	pc->bonus = pc_bonus;
 	pc->bonus2 = pc_bonus2;

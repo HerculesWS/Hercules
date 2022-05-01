@@ -1020,6 +1020,9 @@ END_ZEROED_BLOCK; /* End */
 	int (*endautobonus) (int tid, int64 tick, int id, intptr_t data);
 	int (*delautobonus) (struct map_session_data* sd,struct s_autobonus *bonus,char max,bool restore);
 
+	void (*bonus_addele) (struct map_session_data* sd, unsigned char ele, short rate, short flag);
+	void (*bonus_subele) (struct map_session_data* sd, unsigned char ele, short rate, short flag);
+
 	int (*bonus) (struct map_session_data *sd,int type,int val);
 	int (*bonus2) (struct map_session_data *sd,int type,int type2,int val);
 	int (*bonus3) (struct map_session_data *sd,int type,int type2,int type3,int val);
