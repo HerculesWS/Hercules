@@ -385,7 +385,7 @@ int do_init(int argc, char *argv[])
 	handlers_defaults();
 
 	api->API_CONF_NAME = aStrdup("conf/api/api-server.conf");
-	api->NET_CONF_NAME = aStrdup("conf/api_network.conf");
+	api->NET_CONF_NAME = aStrdup("conf/api/api_network.conf");
 
 	HPM_api_do_init();
 	cmdline->exec(argc, argv, CMDLINE_OPT_PREINIT);
