@@ -445,7 +445,8 @@ HPExport void server_online (void)
 		//  curl -X POST -F WorldName=Hercules -F AID=2000000 "http://127.0.0.1:7121/httpsample/user"
 		// REQ_WORLD_NAME - automatically parse header WorldName for select world aka char server
 		// REQ_EXTRA_HEADERS - allow any unparsed post header
-		addHttpHandler(HTTP_POST, "/httpsample/user", my_sample_test_user, REQ_WORLD_NAME | REQ_EXTRA_HEADERS);
+		// REQ_TRUSTED - allow use url only from trusted ip
+		addHttpHandler(HTTP_POST, "/httpsample/user", my_sample_test_user, REQ_WORLD_NAME | REQ_EXTRA_HEADERS | REQ_TRUSTED);
 
 		addHttpDataHandler(my_sample_test_login, API_MSG_SAMPLE_LOGIN);
 		addHttpDataHandler(my_sample_test_char, API_MSG_SAMPLE_CHAR);

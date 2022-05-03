@@ -674,6 +674,14 @@ static bool aclif_decode_post_headers(int fd, struct api_session_data *sd)
 	struct char_server_data *char_server_data;
 	int handled_count = 0;
 
+	if ((sd->handler->flags & REQ_TRUSTED) != 0) {
+		const uint32 ipl = sockt->session[fd]->client_addr;
+		if (!sockt->trusted_ip_check(ipl)) {
+			ShowError("Http request to trusted url without trusted ip: %d\n", fd);
+			return false;
+		}
+	}
+
 	if ((sd->handler->flags & REQ_ACCOUNT_ID) != 0) {
 		// check is account_id logged in
 		int account_id = 0;
