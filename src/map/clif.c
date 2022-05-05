@@ -2310,6 +2310,49 @@ static void clif_scriptmes(struct map_session_data *sd, int npcid, const char *m
 	WFIFOSET(fd, len);
 }
 
+/// Displays an NPC dialog message (ZC_SAY_DIALOG2).
+/// Client behavior (dialog window):
+/// - disable mouse targeting
+/// - open the dialog window
+/// - set npcid of dialog window (0 by default)
+/// - if set to clear on next mes, clear contents
+/// - append this text
+static void clif_scriptmes2(struct map_session_data *sd, int npcid, const char *mes, int type)
+{
+	nullpo_retv(sd);
+	nullpo_retv(mes);
+
+	const int fd = sd->fd;
+	const size_t slen = strlen(mes) + 1;
+	const size_t len = sizeof(struct PACKET_ZC_SAY_DIALOG2) + slen;
+	Assert_retv(slen <= INT16_MAX);
+
+	pc->update_idle_time(sd, BCIDLE_SCRIPT);
+	sd->state.dialog = 1;
+
+	WFIFOHEAD(fd, len);
+	struct PACKET_ZC_SAY_DIALOG2 *p = WFIFOP(fd, 0);
+
+	p->PacketType = HEADER_ZC_SAY_DIALOG2;
+	p->PacketLength = len;
+	p->NpcID = npcid;
+#if PACKETVER_MAIN_NUM >= 20220504
+	p->type = type;
+#endif  // PACKETVER_MAIN_NUM >= 20220504
+#ifdef SCRIPT_MES_STRIP_LINEBREAK
+	char *stripmes = aStrdup(mes);
+	for (int i = 0; stripmes[i] != '\0'; ++i) {
+		if (stripmes[i] == '\r')
+			stripmes[i] = ' ';
+	}
+	memcpy(p->message, stripmes, slen);
+	aFree(stripmes);
+#else // ! SCRIPT_MES_STRIP_LINEBREAK
+	memcpy(p->message, mes, slen);
+#endif // SCRIPT_MES_STRIP_LINEBREAK
+	WFIFOSET(fd, len);
+}
+
 static void clif_zc_quest_dialog(struct map_session_data *sd, int npcid, const char *mes)
 {
 #if PACKETVER_ZERO_NUM >= 20210721
@@ -25739,6 +25782,7 @@ void clif_defaults(void)
 	clif->cashshop_ack = clif_cashshop_ack;
 	/* npc-script-related */
 	clif->scriptmes = clif_scriptmes;
+	clif->scriptmes2 = clif_scriptmes2;
 	clif->zc_quest_dialog = clif_zc_quest_dialog;
 	clif->zc_monolog_dialog = clif_zc_monolog_dialog;
 	clif->scriptnext = clif_scriptnext;

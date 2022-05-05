@@ -990,6 +990,7 @@ struct clif_interface {
 	void (*cashshop_ack) (struct map_session_data* sd, int error);
 	/* npc-script-related */
 	void (*scriptmes) (struct map_session_data *sd, int npcid, const char *mes);
+	void (*scriptmes2) (struct map_session_data *sd, int npcid, const char *mes, int type);
 	void (*zc_quest_dialog) (struct map_session_data *sd, int npcid, const char *mes);
 	void (*zc_monolog_dialog) (struct map_session_data *sd, int npcid, const char *mes);
 	void (*scriptnext) (struct map_session_data *sd,int npcid);
