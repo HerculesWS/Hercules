@@ -2435,17 +2435,16 @@ static void clif_zc_monolog_dialog(struct map_session_data *sd, int npcid, const
 /// - remove 'next' button
 static void clif_scriptnext(struct map_session_data *sd, int npcid)
 {
-	int fd;
-
 	nullpo_retv(sd);
 
 	pc->update_idle_time(sd, BCIDLE_SCRIPT);
 
-	fd=sd->fd;
-	WFIFOHEAD(fd, packet_len(0xb5));
-	WFIFOW(fd,0)=0xb5;
-	WFIFOL(fd,2)=npcid;
-	WFIFOSET(fd,packet_len(0xb5));
+	int fd = sd->fd;
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_WAIT_DIALOG));
+	struct PACKET_ZC_WAIT_DIALOG *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_WAIT_DIALOG;
+	p->NpcID = npcid;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_WAIT_DIALOG));
 }
 
 /// Adds a 'close' button to an NPC dialog (ZC_CLOSE_DIALOG).

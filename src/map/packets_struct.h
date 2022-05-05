@@ -5555,6 +5555,12 @@ struct PACKET_ZC_SAY_DIALOG2 {
 DEFINE_PACKET_HEADER(ZC_SAY_DIALOG2, 0x00b4)
 #endif  // PACKETVER_MAIN_NUM >= 20220504
 
+struct PACKET_ZC_WAIT_DIALOG {
+	int16 PacketType;
+	uint32 NpcID;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_WAIT_DIALOG, 0x00b5)
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
