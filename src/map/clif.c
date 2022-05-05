@@ -2447,6 +2447,32 @@ static void clif_scriptnext(struct map_session_data *sd, int npcid)
 	WFIFOSET(fd, sizeof(struct PACKET_ZC_WAIT_DIALOG));
 }
 
+/// Adds a 'next' button to an NPC dialog (ZC_WAIT_DIALOG).
+/// Client behavior (dialog window):
+/// - disable mouse targeting
+/// - open the dialog window
+/// - add 'next' button
+/// When 'next' is pressed:
+/// - 00B9 <npcid of dialog window>.L
+/// - set to clear on next mes
+/// - remove 'next' button
+static void clif_scriptnext2(struct map_session_data *sd, int npcid, int type)
+{
+	nullpo_retv(sd);
+
+	pc->update_idle_time(sd, BCIDLE_SCRIPT);
+
+	int fd = sd->fd;
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_WAIT_DIALOG2));
+	struct PACKET_ZC_WAIT_DIALOG2 *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_WAIT_DIALOG2;
+	p->NpcID = npcid;
+#if PACKETVER_MAIN_NUM >= 20220504
+	p->type = type;
+#endif  // PACKETVER_MAIN_NUM >= 20220504
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_WAIT_DIALOG2));
+}
+
 /// Adds a 'close' button to an NPC dialog (ZC_CLOSE_DIALOG).
 /// 00b6 <npc id>.L
 /// Client behavior:
@@ -25785,6 +25811,7 @@ void clif_defaults(void)
 	clif->zc_quest_dialog = clif_zc_quest_dialog;
 	clif->zc_monolog_dialog = clif_zc_monolog_dialog;
 	clif->scriptnext = clif_scriptnext;
+	clif->scriptnext2 = clif_scriptnext2;
 	clif->scriptclose = clif_scriptclose;
 	clif->scriptmenu = clif_scriptmenu;
 	clif->zc_quest_dialog_menu_list = clif_zc_quest_dialog_menu_list;
