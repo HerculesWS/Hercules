@@ -879,6 +879,7 @@ struct script_interface {
 	const char *parser_current_npc_name;
 	/* */
 	int buildin_mes_offset;
+	int buildin_mes2_offset;
 	int buildin_zmes1_offset;
 	int buildin_zmes2_offset;
 	int buildin_mesf_offset;

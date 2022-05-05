@@ -6443,6 +6443,35 @@ static BUILDIN(mes)
 	return true;
 }
 
+/////////////////////////////////////////////////////////////////////
+// NPC interaction
+//
+
+/// Appends a message to the npc dialog in format 2.
+/// If a dialog doesn't exist yet, one is created.
+///
+/// mes2 "<message>", type;
+/// mes2 "<message>";
+static BUILDIN(mes2)
+{
+	struct map_session_data *sd = script->rid2sd(st);
+
+	if (sd == NULL)
+		return true;
+
+	if (script_hasdata(st, 2)) {
+		if (script_hasdata(st, 3)) {
+			clif->scriptmes2(sd, st->oid, script_getstr(st, 2), script_getnum(st, 3));
+		} else {
+			clif->scriptmes2(sd, st->oid, script_getstr(st, 2), 0);
+		}
+	} else {
+		clif->scriptmes2(sd, st->oid, "", 0);
+	}
+
+	return true;
+}
+
 /**
  * Appends a message to the npc dialog, applying format string conversions (see
  * sprintf).
@@ -27725,6 +27754,7 @@ static bool script_add_builtin(const struct script_function *buildin, bool overr
 		else if( strcmp(buildin->name, "callfunc") == 0 ) script->buildin_callfunc_ref = n;
 		else if( strcmp(buildin->name, "getelementofarray") == 0 ) script->buildin_getelementofarray_ref = n;
 		else if( strcmp(buildin->name, "mes") == 0 ) script->buildin_mes_offset = script->buildin_count;
+		else if( strcmp(buildin->name, "mes2") == 0 ) script->buildin_mes2_offset = script->buildin_count;
 		else if( strcmp(buildin->name, "zmes1") == 0 ) script->buildin_zmes1_offset = script->buildin_count;
 		else if( strcmp(buildin->name, "zmes2") == 0 ) script->buildin_zmes2_offset = script->buildin_count;
 		else if( strcmp(buildin->name, "mesf") == 0 ) script->buildin_mesf_offset = script->buildin_count;
@@ -27892,6 +27922,7 @@ static void script_parse_builtin(void)
 
 		// NPC interaction
 		BUILDIN_DEF(mes, "?"),
+		BUILDIN_DEF(mes2, "*"),
 		BUILDIN_DEF(zmes1, "?"),
 		BUILDIN_DEF(zmes2, "?"),
 		BUILDIN_DEF(mesf, "s*"),

@@ -1411,6 +1411,15 @@ Works only in zero clients starting from 20210721.
 
 ---------------------------------------
 
+*mes2("<string>"{, type})
+
+This command will displays a box on the screen for the invoking character.
+Work same as *mes* except positionting window with text at bottom.
+
+Works only on main client starting from 20220504.
+
+---------------------------------------
+
 *next()
 
 This command will display a 'next' button in the message window for the

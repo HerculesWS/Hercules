@@ -116,6 +116,7 @@ void script_add_translatable_string_posthook(const struct script_string_buf *str
 
 	if (!duplicate) {
 		if (script->syntax.last_func == script->buildin_mes_offset
+		 || script->syntax.last_func == script->buildin_mes2_offset
 		 || script->syntax.last_func == script->buildin_zmes1_offset
 		 || script->syntax.last_func == script->buildin_zmes2_offset
 		 || script->syntax.last_func == script->buildin_select_offset
