@@ -883,6 +883,7 @@ struct script_interface {
 	int buildin_zmes1_offset;
 	int buildin_zmes2_offset;
 	int buildin_mesf_offset;
+	int buildin_mes2f_offset;
 	int buildin_zmes1f_offset;
 	int buildin_zmes2f_offset;
 	int buildin_select_offset;

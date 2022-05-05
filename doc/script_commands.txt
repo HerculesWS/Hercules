@@ -1420,6 +1420,15 @@ Works only on main client starting from 20220504.
 
 ---------------------------------------
 
+*mes2f("<format>"{, <param>{, <param>{, ...{, type}}}})
+
+This command will displays a box on the screen for the invoking character.
+Works same as *mesf* except positionting window with text at bottom.
+
+Works only on main client starting from 20220504.
+
+---------------------------------------
+
 *next()
 
 This command will display a 'next' button in the message window for the

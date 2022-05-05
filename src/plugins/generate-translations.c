@@ -124,6 +124,7 @@ void script_add_translatable_string_posthook(const struct script_string_buf *str
 		 ) {
 			is_translatable_string = true;
 		} else if (script->syntax.last_func == script->buildin_mesf_offset
+				|| script->syntax.last_func == script->buildin_mes2f_offset
 				|| script->syntax.last_func == script->buildin_zmes1f_offset
 				|| script->syntax.last_func == script->buildin_zmes2f_offset
 				|| script->syntax.lang_macro_fmtstring_active
