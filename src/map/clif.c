@@ -2279,39 +2279,35 @@ static void clif_selllist(struct map_session_data *sd)
 /// - append this text
 static void clif_scriptmes(struct map_session_data *sd, int npcid, const char *mes)
 {
-	int fd, slen;
-#ifdef SCRIPT_MES_STRIP_LINEBREAK
-	char *stripmes = NULL;
-	int i;
-#endif
-
 	nullpo_retv(sd);
 	nullpo_retv(mes);
 
-	fd = sd->fd;
-	slen = (int)strlen(mes) + 9;
+	const int fd = sd->fd;
+	const size_t slen = strlen(mes) + 1;
+	const size_t len = sizeof(struct PACKET_ZC_SAY_DIALOG) + slen;
 	Assert_retv(slen <= INT16_MAX);
 
 	pc->update_idle_time(sd, BCIDLE_SCRIPT);
-
 	sd->state.dialog = 1;
 
-	WFIFOHEAD(fd, slen);
-	WFIFOW(fd,0) = 0xb4;
-	WFIFOW(fd,2) = slen;
-	WFIFOL(fd,4) = npcid;
+	WFIFOHEAD(fd, len);
+	struct PACKET_ZC_SAY_DIALOG *p = WFIFOP(fd, 0);
+
+	p->PacketType = HEADER_ZC_SAY_DIALOG;
+	p->PacketLength = len;
+	p->NpcID = npcid;
 #ifdef SCRIPT_MES_STRIP_LINEBREAK
-	stripmes = aStrdup(mes);
-	for (i = 0; stripmes[i] != '\0'; ++i) {
+	char *stripmes = aStrdup(mes);
+	for (int i = 0; stripmes[i] != '\0'; ++i) {
 		if (stripmes[i] == '\r')
 			stripmes[i] = ' ';
 	}
-	memcpy(WFIFOP(fd,8), stripmes, slen-8);
+	memcpy(p->message, stripmes, slen);
 	aFree(stripmes);
 #else // ! SCRIPT_MES_STRIP_LINEBREAK
-	memcpy(WFIFOP(fd,8), mes, slen-8);
+	memcpy(p->message, mes, slen);
 #endif // SCRIPT_MES_STRIP_LINEBREAK
-	WFIFOSET(fd,WFIFOW(fd,2));
+	WFIFOSET(fd, len);
 }
 
 static void clif_zc_quest_dialog(struct map_session_data *sd, int npcid, const char *mes)
