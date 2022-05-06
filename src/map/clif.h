@@ -1868,6 +1868,7 @@ struct clif_interface {
 	int (*setlevel_sub) (int lv);
 	void (*load_end_ack_sub_messages) (struct map_session_data *sd, bool connect_new, bool change_map);
 	bool (*sub_guild_invite) (int fd, struct map_session_data *sd, struct map_session_data *t_sd);
+	void (*set_npc_window_size) (struct map_session_data *sd, int width, int height);
 	unsigned short (*parse_cmd_normal) (int fd, struct map_session_data *sd);
 	unsigned short (*parse_cmd_decrypt) (int fd, struct map_session_data *sd);
 	unsigned short (*parse_cmd_optional) (int fd, struct map_session_data *sd);

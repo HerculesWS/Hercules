@@ -25382,6 +25382,21 @@ static void clif_announce_grade_status(struct map_session_data *sd, int item_id,
 #endif
 }
 
+static void clif_set_npc_window_size(struct map_session_data *sd, int width, int height)
+{
+#if PACKETVER_MAIN_NUM >= 20220504
+	nullpo_retv(sd);
+
+	const int fd = sd->fd;
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_DIALOG_WINDOW_SIZE));
+	struct PACKET_ZC_DIALOG_WINDOW_SIZE *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_DIALOG_WINDOW_SIZE;
+	p->width = width;
+	p->height = height;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_DIALOG_WINDOW_SIZE));
+#endif  // PACKETVER_MAIN_NUM >= 20220504
+}
+
 /*==========================================
  * Main client packet processing function
  *------------------------------------------*/
@@ -26689,6 +26704,8 @@ void clif_defaults(void)
 	clif->setlevel_sub = clif_setlevel_sub;
 	clif->load_end_ack_sub_messages = clif_load_end_ack_sub_messages;
 	clif->sub_guild_invite = clif_sub_guild_invite;
+	clif->set_npc_window_size = clif_set_npc_window_size;
+
 	clif->parse_cmd_normal = clif_parse_cmd_normal;
 	clif->parse_cmd_decrypt = clif_parse_cmd_decrypt;
 	clif->parse_cmd_optional = clif_parse_cmd_optional;
