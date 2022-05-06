@@ -10949,6 +10949,15 @@ vertical align:
 Works from clients: main 20210203, re 20211103
 
 ---------------------------------------
+
+*setdialogsize(<width>, <height>)
+
+Set size for npc dialog.
+
+Works from clients: main 20220504.
+
+---------------------------------------
+
 *opengradeui()
 
 Opens Grade Enchant user interface for the player
