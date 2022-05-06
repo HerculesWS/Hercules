@@ -10966,6 +10966,14 @@ Works from clients: main 20220504.
 
 ---------------------------------------
 
+*setdialogpospercent(<x>, <y>)
+
+Set position for npc dialog in screen size percent.
+
+Works from clients: main 20220504.
+
+---------------------------------------
+
 *opengradeui()
 
 Opens Grade Enchant user interface for the player
