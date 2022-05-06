@@ -10958,6 +10958,14 @@ Works from clients: main 20220504.
 
 ---------------------------------------
 
+*setdialogpos(<x>, <y>)
+
+Set position for npc dialog in pixels.
+
+Works from clients: main 20220504.
+
+---------------------------------------
+
 *opengradeui()
 
 Opens Grade Enchant user interface for the player

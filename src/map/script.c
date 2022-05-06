@@ -27760,6 +27760,21 @@ static BUILDIN(setdialogsize)
 #endif
 }
 
+static BUILDIN(setdialogpos)
+{
+#if PACKETVER_MAIN_NUM >= 20220504
+	struct map_session_data *sd = script_rid2sd(st);
+
+	if (sd == NULL) {
+		script_pushint(st, 0);
+		return false;
+	}
+
+	clif->set_npc_window_pos(sd, script_getnum(st, 2), script_getnum(st, 3));
+	return true;
+#endif
+}
+
 /**
  * Adds a built-in script function.
  *
@@ -28061,6 +28076,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(getcharid,"i?"),
 		BUILDIN_DEF(getnpcid, "?"),
 		BUILDIN_DEF(setdialogsize, "ii"),
+		BUILDIN_DEF(setdialogpos, "ii"),
 		BUILDIN_DEF(getpartyname,"i"),
 		BUILDIN_DEF(getpartymember,"i?"),
 		BUILDIN_DEF(getpartyleader,"i?"),

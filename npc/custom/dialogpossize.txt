@@ -9,15 +9,19 @@
 //============================================================
 
 prontera,162,286,4	script	Pos / Size demo#prt	4_M_KID1,{
+	mes("setdialogpos(100, 100)");
 	mes("setdialogsize(400, 100)");
 	mes("select next ...");
 	next;
+	setdialogpos(100, 100);
 	setdialogsize(400, 100);
 	next;
 
+	mes("setdialogpos(200, 150)");
 	mes("setdialogsize(700, 500)");
 	mes("select next ...");
 	next;
+	setdialogpos(200, 150);
 	setdialogsize(700, 500);
 	next;
 
