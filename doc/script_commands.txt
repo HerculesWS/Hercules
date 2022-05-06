@@ -1448,6 +1448,17 @@ and the script will terminate.
 
 ---------------------------------------
 
+*next2()
+*next2(type)
+
+This command will display a 'next' button in the message window for the
+invoking character.
+Work same as *next* but should be used with *mes2*.
+
+Works only on main client starting from 20220504.
+
+---------------------------------------
+
 *mesclear();
 
 This command will clear the dialog text and continue the script without player interaction.

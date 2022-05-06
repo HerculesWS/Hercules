@@ -6632,6 +6632,26 @@ static BUILDIN(next)
 	return true;
 }
 
+/// Displays the button 'next' in the npc dialog.
+/// The dialog text is cleared and the script continues when the button is pressed.
+///
+/// next;
+static BUILDIN(next2)
+{
+	struct map_session_data *sd = script->rid2sd(st);
+	if (sd == NULL)
+		return true;
+#ifdef SECURE_NPCTIMEOUT
+	sd->npc_idle_type = NPCT_WAIT;
+#endif
+	st->state = STOP;
+	if (script_hasdata(st, 2))
+		clif->scriptnext2(sd, st->oid, script_getnum(st, 2));
+	else
+		clif->scriptnext2(sd, st->oid, 0);
+	return true;
+}
+
 /// Clears the NPC dialog and continues the script without press next button.
 ///
 /// mesclear();
@@ -27963,6 +27983,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(zmes1f, "s*"),
 		BUILDIN_DEF(zmes2f, "s*"),
 		BUILDIN_DEF(next,""),
+		BUILDIN_DEF(next2,"?"),
 		BUILDIN_DEF(mesclear,""),
 		BUILDIN_DEF(close,""),
 		BUILDIN_DEF(close2,""),
