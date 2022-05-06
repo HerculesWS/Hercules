@@ -5594,6 +5594,15 @@ struct PACKET_ZC_DIALOG_WINDOW_POS {
 DEFINE_PACKET_HEADER(ZC_DIALOG_WINDOW_POS, 0x0ba3)
 #endif  // PACKETVER_MAIN_NUM >= 20220504
 
+#if PACKETVER_MAIN_NUM >= 20220504
+struct PACKET_ZC_DIALOG_WINDOW_POS2 {
+	int16 PacketType;
+	int x;
+	int y;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_DIALOG_WINDOW_POS2, 0x0bb5)
+#endif  // PACKETVER_MAIN_NUM >= 20220504
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris

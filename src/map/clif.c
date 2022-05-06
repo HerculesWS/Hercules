@@ -25412,6 +25412,21 @@ static void clif_set_npc_window_pos(struct map_session_data *sd, int x, int y)
 #endif  // PACKETVER_MAIN_NUM >= 20220504
 }
 
+static void clif_set_npc_window_pos_percent(struct map_session_data *sd, int x, int y)
+{
+#if PACKETVER_MAIN_NUM >= 20220504
+	nullpo_retv(sd);
+
+	const int fd = sd->fd;
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_DIALOG_WINDOW_POS2));
+	struct PACKET_ZC_DIALOG_WINDOW_POS *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_DIALOG_WINDOW_POS2;
+	p->x = x;
+	p->y = y;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_DIALOG_WINDOW_POS2));
+#endif  // PACKETVER_MAIN_NUM >= 20220504
+}
+
 /*==========================================
  * Main client packet processing function
  *------------------------------------------*/
@@ -26721,6 +26736,7 @@ void clif_defaults(void)
 	clif->sub_guild_invite = clif_sub_guild_invite;
 	clif->set_npc_window_size = clif_set_npc_window_size;
 	clif->set_npc_window_pos = clif_set_npc_window_pos;
+	clif->set_npc_window_pos_percent = clif_set_npc_window_pos_percent;
 
 	clif->parse_cmd_normal = clif_parse_cmd_normal;
 	clif->parse_cmd_decrypt = clif_parse_cmd_decrypt;

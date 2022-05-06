@@ -1870,6 +1870,7 @@ struct clif_interface {
 	bool (*sub_guild_invite) (int fd, struct map_session_data *sd, struct map_session_data *t_sd);
 	void (*set_npc_window_size) (struct map_session_data *sd, int width, int height);
 	void (*set_npc_window_pos) (struct map_session_data *sd, int x, int y);
+	void (*set_npc_window_pos_percent) (struct map_session_data *sd, int x, int y);
 	unsigned short (*parse_cmd_normal) (int fd, struct map_session_data *sd);
 	unsigned short (*parse_cmd_decrypt) (int fd, struct map_session_data *sd);
 	unsigned short (*parse_cmd_optional) (int fd, struct map_session_data *sd);
