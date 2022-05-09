@@ -112,6 +112,9 @@ static void refine_refinery_refine_request(struct map_session_data *sd, int item
 	if (rnd() % 100 >= refine_chance) {
 		clif->misceffect(&sd->bl, 2);
 
+		if ((req->announce & REFINE_ANNOUNCE_FAILURE) != 0)
+			clif->announce_refine_status(sd, sd->status.inventory[item_index].nameid, sd->status.inventory[item_index].refine, false, ALL_CLIENT);
+
 		int failure_behabior = (use_blacksmith_blessing) ? REFINE_FAILURE_BEHAVIOR_KEEP : req->req[i].failure_behavior;
 		switch (failure_behabior) {
 		case REFINE_FAILURE_BEHAVIOR_KEEP:
@@ -131,9 +134,6 @@ static void refine_refinery_refine_request(struct map_session_data *sd, int item
 			pc->delitem(sd, item_index, 1, 0, DELITEM_FAILREFINE, LOG_TYPE_REFINE);
 			break;
 		}
-
-		if ((req->announce & REFINE_ANNOUNCE_FAILURE) != 0)
-			clif->announce_refine_status(sd, sd->status.inventory[item_index].nameid, sd->status.inventory[item_index].refine, false, ALL_CLIENT);
 	} else {
 		sd->status.inventory[item_index].refine += 1;
 		sd->status.inventory[item_index].refine = cap_value(sd->status.inventory[item_index].refine, 0, MAX_REFINE);
