@@ -5603,7 +5603,15 @@ struct PACKET_ZC_DIALOG_WINDOW_POS2 {
 DEFINE_PACKET_HEADER(ZC_DIALOG_WINDOW_POS2, 0x0bb5)
 #endif  // PACKETVER_MAIN_NUM >= 20220504
 
-#if PACKETVER >= 20091201
+#if PACKETVER_MAIN_NUM >= 20220504
+struct PACKET_ZC_PLAY_NPC_BGM {
+	int16 PacketType;
+	int16 PacketLength;
+	uint8 playType;
+	char bgm[];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_PLAY_NPC_BGM, 0x0b8c)
+#elif PACKETVER >= 20091201
 struct PACKET_ZC_PLAY_NPC_BGM {
 	int16 PacketType;
 	char bgm[NAME_LENGTH];

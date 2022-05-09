@@ -9330,13 +9330,25 @@ static void clif_wisall(struct map_session_data *sd, int type, int flag)
 static void clif_playBGM(struct map_session_data *sd, const char *name)
 {
 	nullpo_retv(sd);
+	nullpo_retv(name);
 
 	const int fd = sd->fd;
-	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_PLAY_NPC_BGM));
+#if PACKETVER_MAIN_NUM >= 20220504
+	const int nameLen = (int)strlen(name) + 1;
+	const int sz = sizeof(struct PACKET_ZC_PLAY_NPC_BGM) + nameLen;
+#else  // PACKETVER_MAIN_NUM >= 20220504
+	const int nameLen = NAME_LENGTH;
+	const int sz = sizeof(struct PACKET_ZC_PLAY_NPC_BGM);
+#endif  // PACKETVER_MAIN_NUM >= 20220504
+	WFIFOHEAD(fd, sz);
 	struct PACKET_ZC_PLAY_NPC_BGM *p = WFIFOP(fd, 0);
 	p->PacketType = HEADER_ZC_PLAY_NPC_BGM;
-	safestrncpy(p->bgm, name, NAME_LENGTH);
-	WFIFOSET(fd, sizeof(struct PACKET_ZC_PLAY_NPC_BGM));
+	safestrncpy(p->bgm, name, nameLen);
+#if PACKETVER_MAIN_NUM >= 20220504
+	p->PacketLength = sz;
+	p->playType = PLAY_BGM_LOOP;
+#endif  // PACKETVER_MAIN_NUM >= 20220504
+	WFIFOSET(fd, sz);
 }
 
 /// Plays/stops a wave sound (ZC_SOUND).

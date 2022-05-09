@@ -856,6 +856,12 @@ enum bossmap_info_type {
 	BOSS_INFO_DEAD,          // Boss is dead
 };
 
+enum play_npc_bgm {
+	PLAY_BGM_LOOP = 0,
+	PLAY_BGM_OMCE = 1,
+	PLAY_BGM_STOP = 2,
+};
+
 /**
  * Clif.c Interface
  **/
