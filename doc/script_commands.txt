@@ -8431,14 +8431,22 @@ You can add your own effects this way, naturally.
 
 ---------------------------------------
 
-*playbgm("<BGM filename>")
+*playbgm("<BGM filename>"{, <type>})
 *playbgmall("<BGM filename>"{, "<map name>"{, <x0>, <y0>, <x1>, <y1>}})
+*playbgmall2("<BGM filename>"{, <type>{, "<map name>"{, <x0>, <y0>, <x1>, <y1>}}})
 
 These two commands will play a Background Music to either the invoking
-character only (playbgm()) or multiple characters (playbgmall()).
+character only (playbgm()) or multiple characters (playbgmall(), playbgmall2()).
 
 BGM filename is the filename in /BGM/ folder. It has to be in .mp3
 extension, but it's not required to specify the extension in the script.
+
+type set play type and can be:
+	PLAY_BGM_LOOP - play music in loop
+	PLAY_BGM_OMCE - play music once
+	PLAY_BGM_STOP - stop music
+
+Parameter type make sense only for clients main 20220504 and newer.
 
 If coordinates are omitted, BGM will be broadcasted on the entire map. If
 the map name is also omitted the BGM will be played for the entire server.

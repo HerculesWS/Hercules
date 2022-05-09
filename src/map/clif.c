@@ -9327,7 +9327,7 @@ static void clif_wisall(struct map_session_data *sd, int type, int flag)
 
 /// Play a BGM! [Rikter/Yommy] (ZC_PLAY_NPC_BGM).
 /// 07fe <bgm>.24B
-static void clif_playBGM(struct map_session_data *sd, const char *name)
+static void clif_playBGM(struct map_session_data *sd, const char *name, enum play_npc_bgm type)
 {
 	nullpo_retv(sd);
 	nullpo_retv(name);
@@ -9346,7 +9346,7 @@ static void clif_playBGM(struct map_session_data *sd, const char *name)
 	safestrncpy(p->bgm, name, nameLen);
 #if PACKETVER_MAIN_NUM >= 20220504
 	p->PacketLength = sz;
-	p->playType = PLAY_BGM_LOOP;
+	p->playType = type;
 #endif  // PACKETVER_MAIN_NUM >= 20220504
 	WFIFOSET(fd, sz);
 }

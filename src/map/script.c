@@ -16607,7 +16607,10 @@ static BUILDIN(playbgm)
 	if (sd != NULL) {
 		const char *name = script_getstr(st,2);
 
-		clif->playBGM(sd, name);
+		if (script_hasdata(st, 3))
+			clif->playBGM(sd, name, script_getnum(st, 3));
+		else
+			clif->playBGM(sd, name, PLAY_BGM_LOOP);
 	}
 
 	return true;
@@ -16616,8 +16619,9 @@ static BUILDIN(playbgm)
 static int playbgm_sub(struct block_list *bl, va_list ap)
 {
 	const char* name = va_arg(ap,const char*);
+	enum play_npc_bgm type = va_arg(ap, int);
 
-	clif->playBGM(BL_CAST(BL_PC, bl), name);
+	clif->playBGM(BL_CAST(BL_PC, bl), name, type);
 
 	return 0;
 }
@@ -16625,9 +16629,10 @@ static int playbgm_sub(struct block_list *bl, va_list ap)
 static int playbgm_foreachpc_sub(struct map_session_data *sd, va_list args)
 {
 	const char* name = va_arg(args, const char*);
+	enum play_npc_bgm type = va_arg(args, int);
 
 	nullpo_ret(name);
-	clif->playBGM(sd, name);
+	clif->playBGM(sd, name, type);
 	return 0;
 }
 
@@ -16654,7 +16659,7 @@ static BUILDIN(playbgmall)
 			return true;
 		}
 
-		map->foreachinarea(script->playbgm_sub, m, x0, y0, x1, y1, BL_PC, name);
+		map->foreachinarea(script->playbgm_sub, m, x0, y0, x1, y1, BL_PC, name, PLAY_BGM_LOOP);
 	} else if( script_hasdata(st,3) ) {
 		// entire map
 		const char* mapname = script_getstr(st,3);
@@ -16665,10 +16670,49 @@ static BUILDIN(playbgmall)
 			return true;
 		}
 
-		map->foreachinmap(script->playbgm_sub, m, BL_PC, name);
+		map->foreachinmap(script->playbgm_sub, m, BL_PC, name, PLAY_BGM_LOOP);
 	} else {
 		// entire server
-		map->foreachpc(script->playbgm_foreachpc_sub, name);
+		map->foreachpc(script->playbgm_foreachpc_sub, name, PLAY_BGM_LOOP);
+	}
+
+	return true;
+}
+
+static BUILDIN(playbgmall2)
+{
+	const char *name = script_getstr(st, 2);
+	const int type = script_getnum(st, 3);
+
+	if (script_hasdata(st, 8)) {
+		// specified part of map
+		const char *mapname = script_getstr(st, 4);
+		int x0 = script_getnum(st, 5);
+		int y0 = script_getnum(st, 6);
+		int x1 = script_getnum(st, 7);
+		int y1 = script_getnum(st, 8);
+		int m;
+
+		if ((m = map->mapname2mapid(mapname)) == -1) {
+			ShowWarning("playbgmall: Attempted to play song '%s' on non-existent map '%s'\n", name, mapname);
+			return true;
+		}
+
+		map->foreachinarea(script->playbgm_sub, m, x0, y0, x1, y1, BL_PC, name, type);
+	} else if (script_hasdata(st, 4)) {
+		// entire map
+		const char *mapname = script_getstr(st, 4);
+		int m;
+
+		if ((m = map->mapname2mapid(mapname)) == -1) {
+			ShowWarning("playbgmall: Attempted to play song '%s' on non-existent map '%s'\n", name, mapname);
+			return true;
+		}
+
+		map->foreachinmap(script->playbgm_sub, m, BL_PC, name, type);
+	} else {
+		// entire server
+		map->foreachpc(script->playbgm_foreachpc_sub, name, type);
 	}
 
 	return true;
@@ -28262,8 +28306,9 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(getskilllist,""),
 		BUILDIN_DEF(clearitem,""),
 		BUILDIN_DEF(classchange,"ii?"),
-		BUILDIN_DEF(playbgm,"s"),
+		BUILDIN_DEF(playbgm,"s?"),
 		BUILDIN_DEF(playbgmall,"s?????"),
+		BUILDIN_DEF(playbgmall2,"si?????"),
 		BUILDIN_DEF(soundeffect,"si"),
 		BUILDIN_DEF(soundeffectall,"si?????"), // SoundEffectAll [Codemaster]
 		BUILDIN_DEF(strmobinfo,"ii"), // display mob data [Valaris]
@@ -29554,6 +29599,11 @@ static void script_hardcoded_constants(void)
 	script->set_constant("ITEM_GRADE_S", ITEM_GRADE_S, false, false);
 	script->set_constant("ITEM_GRADE_SS", ITEM_GRADE_SS, false, false);
 	script->set_constant("ITEM_GRADE_MAX", ITEM_GRADE_MAX, false, false);
+
+	script->constdb_comment("BGM play type");
+	script->set_constant("PLAY_BGM_LOOP", PLAY_BGM_LOOP, false, false);
+	script->set_constant("PLAY_BGM_ONCE", PLAY_BGM_ONCE, false, false);
+	script->set_constant("PLAY_BGM_STOP", PLAY_BGM_STOP, false, false);
 
 	script->constdb_comment("Renewal");
 #ifdef RENEWAL

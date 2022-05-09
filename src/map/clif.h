@@ -858,7 +858,7 @@ enum bossmap_info_type {
 
 enum play_npc_bgm {
 	PLAY_BGM_LOOP = 0,
-	PLAY_BGM_OMCE = 1,
+	PLAY_BGM_ONCE = 1,
 	PLAY_BGM_STOP = 2,
 };
 
@@ -1174,7 +1174,7 @@ struct clif_interface {
 	void (*snap) ( struct block_list *bl, short x, short y );
 	void (*weather_check) (struct map_session_data *sd);
 	/* sound effects client-side */
-	void (*playBGM) (struct map_session_data* sd, const char* name);
+	void (*playBGM) (struct map_session_data* sd, const char* name, enum play_npc_bgm type);
 	void (*soundeffect) (struct map_session_data* sd, struct block_list* bl, const char* name, int type);
 	void (*soundeffectall) (struct block_list* bl, const char* name, int type, enum send_target coverage);
 	/* chat/message-related */
