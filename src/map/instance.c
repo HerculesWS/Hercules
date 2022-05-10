@@ -170,7 +170,7 @@ static int instance_create(int owner_id, const char *name, enum instance_owner_t
 		}
 	}
 
-	clif->instance(i, 1, 0); // Start instancing window
+	clif->instance(i, INSTANCE_WND_INFO_CREATE, 0); // Start instancing window
 	return i;
 }
 
@@ -567,20 +567,18 @@ static void instance_destroy(int instance_id)
 	struct party_data *p = NULL;
 	struct guild *g = NULL;
 	short *iptr = NULL;
-	int type;
 	unsigned int now = (unsigned int)time(NULL);
 
 	if( !instance->valid(instance_id) )
 		return; // nothing to do
 
+	enum instance_destroy_reason type = INSTANCE_DESTROY_OTHER;
 	if( instance->list[instance_id].progress_timeout && instance->list[instance_id].progress_timeout <= now )
-		type = 1;
+		type = INSTANCE_DESTROY_PROG_TIMEOUT;
 	else if( instance->list[instance_id].idle_timeout && instance->list[instance_id].idle_timeout <= now )
-		type = 2;
-	else
-		type = 3;
+		type = INSTANCE_DESTROY_IDLE_TIMEOUT;
 
-	clif->instance(instance_id, 5, type); // Report users this instance has been destroyed
+	clif->instance(instance_id, INSTANCE_WND_INFO_DESTROY, type); // Report users this instance has been destroyed
 
 	switch ( instance->list[instance_id].owner_type ) {
 		case IOT_NONE:
@@ -655,24 +653,28 @@ static void instance_destroy(int instance_id)
  *--------------------------------------*/
 static void instance_check_idle(int instance_id)
 {
-	bool idle = true;
-	unsigned int now = (unsigned int)time(NULL);
-
-	if( !instance->valid(instance_id) || instance->list[instance_id].idle_timeoutval == 0 )
+	if (!instance->valid(instance_id) || instance->list[instance_id].idle_timeoutval == 0)
 		return;
 
-	if( instance->list[instance_id].users )
+	bool idle = true;
+	if (instance->list[instance_id].users)
 		idle = false;
 
-	if( instance->list[instance_id].idle_timer != INVALID_TIMER && !idle ) {
+	if (instance->list[instance_id].idle_timer != INVALID_TIMER && !idle) {
 		timer->delete(instance->list[instance_id].idle_timer, instance->destroy_timer);
 		instance->list[instance_id].idle_timer = INVALID_TIMER;
 		instance->list[instance_id].idle_timeout = 0;
-		clif->instance(instance_id, 3, 0); // Notify instance users normal instance expiration
-	} else if( instance->list[instance_id].idle_timer == INVALID_TIMER && idle ) {
+		
+		// Notify instance users normal instance expiration
+		clif->instance(instance_id, INSTANCE_WND_INFO_PROGRESS_TIME, 0);
+	} else if (instance->list[instance_id].idle_timer == INVALID_TIMER && idle) {
+		unsigned int now = (unsigned int) time(NULL);
+		int64 destroy_tick = timer->gettick() + instance->list[instance_id].idle_timeoutval * 1000;
 		instance->list[instance_id].idle_timeout = now + instance->list[instance_id].idle_timeoutval;
-		instance->list[instance_id].idle_timer = timer->add( timer->gettick() + instance->list[instance_id].idle_timeoutval * 1000, instance->destroy_timer, instance_id, 0);
-		clif->instance(instance_id, 4, 0); // Notify instance users it will be destroyed of no user join it again in "X" time
+		instance->list[instance_id].idle_timer = timer->add(destroy_tick, instance->destroy_timer, instance_id, 0);
+		
+		// Notify instance users it will be destroyed if no user join it again in "X" time
+		clif->instance(instance_id, INSTANCE_WND_INFO_IDLE_TIME, 0);
 	}
 }
 

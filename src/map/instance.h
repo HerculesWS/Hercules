@@ -46,6 +46,25 @@ enum instance_owner_type {
 	IOT_MAX,
 };
 
+/**
+ * Reason for instance being destroyed.
+ * Note: These numbers are client-dependent.
+ */
+enum instance_destroy_reason {
+	/**
+	 * Time to progress in the instance has expired.
+	 */
+	INSTANCE_DESTROY_PROG_TIMEOUT = 1,
+	/**
+	 * The instance has been empty for too long.
+	 */
+	INSTANCE_DESTROY_IDLE_TIMEOUT = 2,
+	/**
+	 * Other reason
+	 */
+	INSTANCE_DESTROY_OTHER = 3,
+};
+
 struct instance_data {
 	unsigned short id;
 	char name[INSTANCE_NAME_LENGTH]; ///< Instance Name - required for clif functions.

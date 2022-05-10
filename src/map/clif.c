@@ -19430,13 +19430,13 @@ static void clif_font(struct map_session_data *sd)
 /*==========================================
  * Instancing Window
  *------------------------------------------*/
-static int clif_instance(int instance_id, int type, int flag)
+static int clif_instance(int instance_id, enum instance_window_info_type type, int flag)
 {
 	struct map_session_data *sd = NULL;
 	unsigned char buf[255];
 	enum send_target target = PARTY;
 
-	switch( instance->list[instance_id].owner_type ) {
+	switch (instance->list[instance_id].owner_type) {
 		case IOT_NONE:
 			return 0;
 		case IOT_GUILD:
@@ -19455,52 +19455,52 @@ static int clif_instance(int instance_id, int type, int flag)
 			break;
 	}
 
-	if( !sd )
+	if (!sd)
 		return 0;
 
-	switch( type ) {
-		case 1:
+	switch (type) {
+		case INSTANCE_WND_INFO_CREATE:
 			// S 0x2cb <Instance name>.61B <Standby Position>.W
 			// Required to start the instancing information window on Client
 			// This window re-appear each "refresh" of client automatically until type 4 is send to client.
-			WBUFW(buf,0) = 0x02CB;
-			memcpy(WBUFP(buf,2),instance->list[instance_id].name,INSTANCE_NAME_LENGTH);
-			WBUFW(buf,63) = flag;
-			clif->send(buf,packet_len(0x02CB),&sd->bl,target);
+			WBUFW(buf, 0) = 0x02CB;
+			memcpy(WBUFP(buf, 2), instance->list[instance_id].name, INSTANCE_NAME_LENGTH);
+			WBUFW(buf, 63) = flag;
+			clif->send(buf, packet_len(0x02CB), &sd->bl, target);
 			break;
-		case 2:
+		case INSTANCE_WND_INFO_QUEUE_POS:
 			// S 0x2cc <Standby Position>.W
 			// To announce Instancing queue creation if no maps available
 			// flag is priority, negative value mean cancel reservation
-			WBUFW(buf,0) = 0x02CC;
-			WBUFW(buf,2) = flag;
-			clif->send(buf,packet_len(0x02CC),&sd->bl,target);
+			WBUFW(buf, 0) = 0x02CC;
+			WBUFW(buf, 2) = flag;
+			clif->send(buf, packet_len(0x02CC), &sd->bl, target);
 			break;
-		case 3:
-		case 4:
+		case INSTANCE_WND_INFO_PROGRESS_TIME:
+		case INSTANCE_WND_INFO_IDLE_TIME:
 			// S 0x2cd <Instance Name>.61B <Instance Remaining Time>.L <Instance Noplayers close time>.L
-			WBUFW(buf,0) = 0x02CD;
-			memcpy(WBUFP(buf,2),instance->list[instance_id].name,61);
-			if( type == 3 ) {
-				WBUFL(buf,63) = instance->list[instance_id].progress_timeout;
-				WBUFL(buf,67) = 0;
+			WBUFW(buf, 0) = 0x02CD;
+			memcpy(WBUFP(buf, 2), instance->list[instance_id].name, 61);
+			if (type == INSTANCE_WND_INFO_PROGRESS_TIME) {
+				WBUFL(buf, 63) = instance->list[instance_id].progress_timeout;
+				WBUFL(buf, 67) = 0;
 			} else {
-				WBUFL(buf,63) = 0;
-				WBUFL(buf,67) = instance->list[instance_id].idle_timeout;
+				WBUFL(buf, 63) = 0;
+				WBUFL(buf, 67) = instance->list[instance_id].idle_timeout;
 			}
-			clif->send(buf,packet_len(0x02CD),&sd->bl,target);
+			clif->send(buf, packet_len(0x02CD), &sd->bl, target);
 			break;
-		case 5:
+		case INSTANCE_WND_INFO_DESTROY:
 			// S 0x2ce <Message ID>.L
 			// 0 = Notification (EnterLimitDate update?)
 			// 1 = The Memorial Dungeon expired; it has been destroyed
 			// 2 = The Memorial Dungeon's entry time limit expired; it has been destroyed
 			// 3 = The Memorial Dungeon has been removed.
 			// 4 = Create failure (removes the instance window)
-			WBUFW(buf,0) = 0x02CE;
-			WBUFL(buf,2) = flag;
+			WBUFW(buf, 0) = 0x02CE;
+			WBUFL(buf, 2) = flag;
 			//WBUFL(buf,6) = EnterLimitDate;
-			clif->send(buf,packet_len(0x02CE),&sd->bl,target);
+			clif->send(buf, packet_len(0x02CE), &sd->bl, target);
 			break;
 	}
 	return 0;

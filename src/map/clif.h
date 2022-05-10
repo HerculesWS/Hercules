@@ -857,6 +857,33 @@ enum bossmap_info_type {
 };
 
 /**
+ * Instance information window update types.
+ */
+enum instance_window_info_type {
+	/**
+	 * Informs about instance creation
+	 */
+	INSTANCE_WND_INFO_CREATE = 1,
+	/**
+	 * Informs an update in instance queue position
+	 */
+	INSTANCE_WND_INFO_QUEUE_POS = 2,
+	/**
+	 * Informs the instance is in progress (has players on it) and when it will timeout
+	 */
+	INSTANCE_WND_INFO_PROGRESS_TIME = 3,
+	/**
+	 * Informs the instance is idle (no players on it) and when it will timeout
+	 */
+	INSTANCE_WND_INFO_IDLE_TIME = 4,
+	/**
+	 * Informs the instance was destroyed.
+	 * @see instance_destroy_reason for reason flag values.
+	 */
+	INSTANCE_WND_INFO_DESTROY = 5,
+};
+
+/**
  * Clif.c Interface
  **/
 struct clif_interface {
@@ -1309,7 +1336,7 @@ struct clif_interface {
 	void (*sendbgemblem_area) (struct map_session_data *sd);
 	void (*sendbgemblem_single) (int fd, struct map_session_data *sd);
 	/* instance-related */
-	int (*instance) (int instance_id, int type, int flag);
+	int (*instance) (int instance_id, enum instance_window_info_type type, int flag);
 	void (*instance_join) (int fd, int instance_id);
 	void (*instance_leave) (int fd);
 	/* pet-related */
