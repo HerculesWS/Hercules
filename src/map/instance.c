@@ -828,6 +828,9 @@ static void do_reload_instance(void)
 	int i, k;
 
 	for(i = 0; i < instance->instances; i++) {
+		if (!instance_is_valid(i))
+			continue; // don't try to restart an invalid instance
+
 		for(k = 0; k < instance->list[i].num_map; k++) {
 			if( !map->list[map->list[instance->list[i].map[k]].instance_src_map].flag.src4instance )
 				break;
