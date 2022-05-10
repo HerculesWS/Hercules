@@ -190,7 +190,7 @@ static int instance_create(int owner_id, const char *name, enum instance_owner_t
 static int instance_add_map(const char *name, int instance_id, bool usebasename, const char *map_name)
 {
 	int16 m = map->mapname2mapid(name);
-	int i, im = -1;
+	int i, im = MAPID_NONE;
 	size_t num_cell, size, j;
 
 	nullpo_retr(-1, name);
@@ -543,6 +543,7 @@ static void instance_del_map(int16 m)
 
 	map->removemapdb(&map->list[m]);
 	memset(&map->list[m], 0x00, sizeof(map->list[0]));
+	map->list[m].m = MAPID_NONE; // Marks this map as unallocated so server doesn't try to clean it up later on.
 	map->list[m].name[0] = 0;
 	map->list[m].instance_id = -1;
 	map->list[m].mob_delete_timer = INVALID_TIMER;

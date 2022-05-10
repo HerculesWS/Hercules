@@ -948,6 +948,11 @@ struct map_drop_list {
 	int drop_per;
 };
 
+/**
+ * Map ID (m) for "none" or unallocated map.
+ */
+#define MAPID_NONE -1
+
 struct map_data {
 	char name[MAP_NAME_LENGTH];
 	uint16 index; // The map index used by the mapindex* functions.
