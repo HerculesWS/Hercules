@@ -3593,11 +3593,14 @@ struct PACKET_ZC_GUILD_POSITION {
 	char position[];
 } __attribute__((packed));
 
-struct PACKET_ZC_INVENTORY_MOVE_FAILED {
+#if PACKETVER_MAIN_NUM >= 20161214 || PACKETVER_RE_NUM >= 20161130 || defined(PACKETVER_ZERO)
+struct PACKET_ZC_MOVE_ITEM_FAILED {
 	int16 packetType;
-	int16 index;
-	int16 unknown;
+	int16 itemIndex;
+	int16 itemCount;
 } __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_MOVE_ITEM_FAILED, 0x0aa7);
+#endif  // PACKETVER_MAIN_NUM >= 20161214 || PACKETVER_RE_NUM >= 20161130 || defined(PACKETVER_ZERO)
 
 #if PACKETVER_MAIN_NUM >= 20161019 || PACKETVER_RE_NUM >= 20160921 || defined(PACKETVER_ZERO)
 #define PACKET_ZC_ACK_BAN_GUILD PACKET_ZC_ACK_BAN_GUILD3

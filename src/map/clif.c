@@ -2897,12 +2897,12 @@ static void clif_item_movefailed(struct map_session_data *sd, int n)
 {
 #if PACKETVER_MAIN_NUM >= 20161214 || PACKETVER_RE_NUM >= 20161130 || defined(PACKETVER_ZERO)
 	int fd = sd->fd;
-	const int len = sizeof(struct PACKET_ZC_INVENTORY_MOVE_FAILED);
+	const int len = sizeof(struct PACKET_ZC_MOVE_ITEM_FAILED);
 	WFIFOHEAD(fd, len);
-	struct PACKET_ZC_INVENTORY_MOVE_FAILED *p = WFIFOP(fd, 0);
-	p->packetType = 0xaa7;
-	p->index = n + 2;
-	p->unknown = 1;
+	struct PACKET_ZC_MOVE_ITEM_FAILED *p = WFIFOP(fd, 0);
+	p->packetType = HEADER_ZC_MOVE_ITEM_FAILED;
+	p->itemIndex = n + 2;
+	p->itemCount = 1;
 	WFIFOSET(fd, len);
 #else
 	clif->dropitem(sd, n, 0);
