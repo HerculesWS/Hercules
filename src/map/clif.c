@@ -5855,7 +5855,7 @@ static void clif_skill_fail(struct map_session_data *sd, uint16 skill_id, enum u
 
 	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_ACK_TOUSESKILL));
 	struct PACKET_ZC_ACK_TOUSESKILL *p = WFIFOP(fd, 0);
-	p->packetType = 0x110;
+	p->packetType = HEADER_ZC_ACK_TOUSESKILL;
 	p->skillId = skill_id;
 	p->btype = btype;
 	p->itemId = item_id;
