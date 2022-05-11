@@ -58,7 +58,7 @@ static bool instance_is_valid(int instance_id)
 		return false;
 	}
 
-	if( instance->list[instance_id].state == INSTANCE_FREE ) {// uninitialized/freed instance slot
+	if (!instance_is_active(instance->list[instance_id])) { // uninitialized/freed/being freed instance slot
 		return false;
 	}
 
@@ -617,6 +617,9 @@ static void instance_destroy(int instance_id)
 			iptr[i] = -1;
 	}
 
+	// mark it as being destroyed so server doesn't try to give players more information about it
+	instance->list[instance_id].state = INSTANCE_DESTROYING;
+
 	if (instance->list[instance_id].map) {
 		int last = 0;
 		while (instance->list[instance_id].num_map && last != instance->list[instance_id].map[0]) {
@@ -641,11 +644,12 @@ static void instance_destroy(int instance_id)
 	if( instance->list[instance_id].map )
 		aFree(instance->list[instance_id].map);
 
+	HPM->data_store_destroy(&instance->list[instance_id].hdata);
+
+	// Clean up remains of the old instance and mark it as available for a new one
+	memset(&instance->list[instance_id], 0x0, sizeof(instance->list[0]));
 	instance->list[instance_id].map = NULL;
 	instance->list[instance_id].state = INSTANCE_FREE;
-	instance->list[instance_id].num_map = 0;
-
-	HPM->data_store_destroy(&instance->list[instance_id].hdata);
 }
 
 /*--------------------------------------

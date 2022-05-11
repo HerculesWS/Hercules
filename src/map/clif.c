@@ -11426,7 +11426,8 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 	if (first_time) {
 		int i;
 
-		ARR_FIND(0, instance->instances, i, instance->list[i].owner_type == IOT_CHAR && instance->list[i].owner_id == sd->status.account_id);
+		ARR_FIND(0, instance->instances, i, instance_is_active(instance->list[i])
+		    && instance->list[i].owner_type == IOT_CHAR && instance->list[i].owner_id == sd->status.account_id);
 
 		if (i < instance->instances) {
 			sd->instances = 1;
