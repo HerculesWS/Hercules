@@ -3855,7 +3855,7 @@ OnTouch:
 	next;
 	mes "[Echoing Voice]";
 	mes "You are bound to your fate, no matter how hard you try to escape...";
-	soundeffect "loli_ruri_stand.wav",0;
+	soundeffect "loli_ruri_stand.wav", PLAY_SOUND_ONCE;
 	next;
 	mes "..................";
 	mes "..................";

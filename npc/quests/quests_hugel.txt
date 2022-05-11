@@ -7557,9 +7557,9 @@ L_MilkCow:
 	mes "to chime, and Booboo the";
 	mes "cow beings to express her^FFFFFF ^3355FF feelings in the center of Hugel.^000000";
 	delitem Center_Potion,3;
-	soundeffect ""+getarg(0)+"",0;
+	soundeffect "" + getarg(0) + "", PLAY_SOUND_ONCE;
 	next;
-	soundeffect ""+getarg(0)+"",0;
+	soundeffect "" + getarg(0) + "", PLAY_SOUND_ONCE;
 	mes "^3355FFNow it's time for you";
 	mes "to brush Booboo the cow.";
 	mes "Depending on her mood,";
@@ -7568,7 +7568,7 @@ L_MilkCow:
 	next;
 	input(.@cowbrush);
 	if (.@cowbrush != getarg(1)) {
-		soundeffect "taming_fail.wav",0;
+		soundeffect "taming_fail.wav", PLAY_SOUND_ONCE;
 		mes "^3355FFAwwww...";
 		mes "Booboo the cow looks";
 		mes "so disappointed. She";
@@ -7577,12 +7577,12 @@ L_MilkCow:
 		mes "from the rest of the world...^000000";
 		close;
 	}
-	soundeffect "cow_06.wav",0;
+	soundeffect "cow_06.wav", PLAY_SOUND_ONCE;
 	mes "^3355FFBooboo the cow";
 	mes "seems fairly content,";
 	mes "and is singing a serenade.^000000";
 	next;
-	soundeffect "cow_06.wav",0;
+	soundeffect "cow_06.wav", PLAY_SOUND_ONCE;
 	mes "[Mrs. Booboo]";
 	switch(rand(1,6)) {
 	case 1:
@@ -7648,7 +7648,7 @@ L_MilkCow:
 	next;
 	input(.@cowanswer$);
 	if (.@cowanswer$ == .@cowsong$) {
-		soundeffect "tming_success.wav",0;
+		soundeffect "tming_success.wav", PLAY_SOUND_ONCE;
 		mes "^3355FFSuccess!";
 		mes "Booboo the cow";
 		mes "is quite happy, and";
@@ -7660,7 +7660,7 @@ L_MilkCow:
 		setquest 12043;
 		close;
 	}
-	soundeffect "taming_fail.wav",0;
+	soundeffect "taming_fail.wav", PLAY_SOUND_ONCE;
 	mes "^3355FFUh oh...";
 	mes "Booboo the cow is starting";
 	mes "to snort violently! She seems";

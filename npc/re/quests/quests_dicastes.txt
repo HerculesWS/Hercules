@@ -1332,7 +1332,7 @@ OnTouch:
 	if (ep13_3_secret == 13) {
 		mes "As soon as you enter the room, someone";
 		mes "pushes down your head to force you to bow.";
-		soundeffect "wander_man_move.wav",0;
+		soundeffect "wander_man_move.wav", PLAY_SOUND_ONCE;
 		sc_start SC_BLIND,60000,0;
 		next;
 		mes "[Ringing Voice]";
@@ -1537,7 +1537,7 @@ dic_in01,300,280,5	script	Minister Ahat#ep133_21	4_HUMAN_GERUTOO,{
 	else if (ep13_3_secret == 13) {
 		mes "As soon as you try to approach Ahat, someone";
 		mes "pushes down your head to force you to bow.";
-		soundeffect "wander_man_move.wav",0;
+		soundeffect "wander_man_move.wav", PLAY_SOUND_ONCE;
 		sc_start SC_BLIND,60000,0;
 		next;
 		mes "[Ringing Voice]";

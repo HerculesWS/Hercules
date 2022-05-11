@@ -1734,7 +1734,7 @@ OnMyMobDead:
 	else if (.MyMobs == 0) {
 		mapannounce "juperos_02","Have you come to see me? Fine! Find me first!",bc_map,"0xFF0000";
 		specialeffect(EF_SCREEN_QUAKE, AREA, playerattached());
-		soundeffectall "earth_quake.wav",0;
+		soundeffectall "earth_quake.wav", PLAY_SOUND_ONCE;
 		disablenpc "3F Gate Switch#jupe";
 		donpcevent "Restricted Area#jupe::OnEnable";
 	}
@@ -1941,7 +1941,7 @@ OnInit:
 OnEnable:
 	enablenpc "Warp#1-1";
 	specialeffect EF_BIG_PORTAL;
-	soundeffectall "jupe_warp.wav",0;
+	soundeffectall "jupe_warp.wav", PLAY_SOUND_ONCE;
 	initnpctimer;
 	end;
 
@@ -1985,8 +1985,8 @@ OnTimer1000:
 
 OnTimer3000:
 	mapannounce "jupe_area1","I do not intend to stop you.",bc_map,"0xFF0000";
-	soundeffectall "jupe_warning.wav",0,"jupe_area1";
-	soundeffectall "jupe_warning.wav",0,"jupe_area1";
+	soundeffectall "jupe_warning.wav", PLAY_SOUND_ONCE, "jupe_area1";
+	soundeffectall "jupe_warning.wav", PLAY_SOUND_ONCE, "jupe_area1";
 	end;
 
 OnTimer5000:
@@ -2000,8 +2000,8 @@ OnTimer7000:
 
 OnTimer8000:
 	disablenpc "Red Alarm On#1-1";
-	soundeffectall "jupe_warning.wav",0,"jupe_area1";
-	soundeffectall "jupe_warning.wav",0,"jupe_area1";
+	soundeffectall "jupe_warning.wav", PLAY_SOUND_ONCE, "jupe_area1";
+	soundeffectall "jupe_warning.wav", PLAY_SOUND_ONCE, "jupe_area1";
 	stopnpctimer;
 	end;
 }
@@ -2068,8 +2068,8 @@ OnEnable:
 
 OnTimer2000:
 	mapannounce "jupe_area1","How about now?",bc_map,"0xFF0000";
-	soundeffectall "jupe_warning.wav",0,"jupe_area1";
-	soundeffectall "jupe_warning.wav",0,"jupe_area1";
+	soundeffectall "jupe_warning.wav", PLAY_SOUND_ONCE, "jupe_area1";
+	soundeffectall "jupe_warning.wav", PLAY_SOUND_ONCE, "jupe_area1";
 	end;
 
 OnTimer4000:
@@ -2078,8 +2078,8 @@ OnTimer4000:
 
 OnTimer7000:
 	mapannounce "jupe_area1","Just how strong you are!",bc_map,"0xFF0000";
-	soundeffectall "jupe_warning.wav",0,"jupe_area1";
-	soundeffectall "jupe_warning.wav",0,"jupe_area1";
+	soundeffectall "jupe_warning.wav", PLAY_SOUND_ONCE, "jupe_area1";
+	soundeffectall "jupe_warning.wav", PLAY_SOUND_ONCE, "jupe_area1";
 	.MyMobs = 8;
 	monster "jupe_area1",30,238,"Security Guard",1675,1,"Monster2#1-1::OnMyMobDead";
 	monster "jupe_area1",31,238,"Security Guard",1669,1,"Monster2#1-1::OnMyMobDead";
@@ -2233,7 +2233,7 @@ OnInit:
 OnEnable:
 	enablenpc "Warp#1-2";
 	specialeffect EF_BIG_PORTAL;
-	soundeffectall "jupe_warp.wav",0;
+	soundeffectall "jupe_warp.wav", PLAY_SOUND_ONCE;
 	initnpctimer;
 	end;
 
@@ -2518,7 +2518,7 @@ OnInit:
 OnEnable:
 	enablenpc "Warp#1-3";
 	specialeffect EF_BIG_PORTAL;
-	soundeffectall "jupe_warp.wav",0;
+	soundeffectall "jupe_warp.wav", PLAY_SOUND_ONCE;
 	initnpctimer;
 	end;
 
@@ -2805,7 +2805,7 @@ OnInit:
 OnEnable:
 	enablenpc "Warp#1-4";
 	specialeffect EF_BIG_PORTAL;
-	soundeffectall "jupe_warp.wav",0;
+	soundeffectall "jupe_warp.wav", PLAY_SOUND_ONCE;
 	initnpctimer;
 	end;
 
@@ -3009,7 +3009,7 @@ OnInit:
 OnEnable:
 	enablenpc "LeverWarp#ufe";
 	specialeffect EF_BIG_PORTAL;
-	soundeffectall "jupe_warp.wav",0;
+	soundeffectall "jupe_warp.wav", PLAY_SOUND_ONCE;
 	initnpctimer;
 	end;
 
@@ -3140,7 +3140,7 @@ OnInit:
 OnEnable:
 	enablenpc "Warp#2-1";
 	specialeffect EF_BIG_PORTAL;
-	soundeffectall "jupe_warp.wav",0;
+	soundeffectall "jupe_warp.wav", PLAY_SOUND_ONCE;
 	initnpctimer;
 	end;
 
@@ -3184,8 +3184,8 @@ OnTimer1000:
 
 OnTimer3000:
 	mapannounce "jupe_area2","I do not intend to stop you.",bc_map,"0xFF0000";
-	soundeffectall "jupe_warning.wav",0,"jupe_area2";
-	soundeffectall "jupe_warning.wav",0,"jupe_area2";
+	soundeffectall "jupe_warning.wav", PLAY_SOUND_ONCE, "jupe_area2";
+	soundeffectall "jupe_warning.wav", PLAY_SOUND_ONCE, "jupe_area2";
 	end;
 
 OnTimer5000:
@@ -3199,8 +3199,8 @@ OnTimer7000:
 
 OnTimer8000:
 	disablenpc "Red Alarm On#2-1";
-	soundeffectall "jupe_warning.wav",0,"jupe_area2";
-	soundeffectall "jupe_warning.wav",0,"jupe_area2";
+	soundeffectall "jupe_warning.wav", PLAY_SOUND_ONCE, "jupe_area2";
+	soundeffectall "jupe_warning.wav", PLAY_SOUND_ONCE, "jupe_area2";
 	stopnpctimer;
 	end;
 }
@@ -3267,8 +3267,8 @@ OnEnable:
 
 OnTimer2000:
 	mapannounce "jupe_area2","How about now?",bc_map,"0xFF0000";
-	soundeffectall "jupe_warning.wav",0,"jupe_area2";
-	soundeffectall "jupe_warning.wav",0,"jupe_area2";
+	soundeffectall "jupe_warning.wav", PLAY_SOUND_ONCE, "jupe_area2";
+	soundeffectall "jupe_warning.wav", PLAY_SOUND_ONCE, "jupe_area2";
 	end;
 
 OnTimer4000:
@@ -3277,8 +3277,8 @@ OnTimer4000:
 
 OnTimer7000:
 	mapannounce "jupe_area2","Just how strong you are!",bc_map,"0xFF0000";
-	soundeffectall "jupe_warning.wav",0,"jupe_area2";
-	soundeffectall "jupe_warning.wav",0,"jupe_area2";
+	soundeffectall "jupe_warning.wav", PLAY_SOUND_ONCE, "jupe_area2";
+	soundeffectall "jupe_warning.wav", PLAY_SOUND_ONCE, "jupe_area2";
 	.MyMobs = 8;
 	monster "jupe_area2",126,236,"Security Guard",1675,1,"Monster2#2-1::OnMyMobDead";
 	monster "jupe_area2",127,236,"Security Guard",1669,1,"Monster2#2-1::OnMyMobDead";
@@ -3432,7 +3432,7 @@ OnInit:
 OnEnable:
 	enablenpc "Warp#2-2";
 	specialeffect EF_BIG_PORTAL;
-	soundeffectall "jupe_warp.wav",0;
+	soundeffectall "jupe_warp.wav", PLAY_SOUND_ONCE;
 	initnpctimer;
 	end;
 
@@ -3717,7 +3717,7 @@ OnInit:
 OnEnable:
 	enablenpc "Warp#2-3";
 	specialeffect EF_BIG_PORTAL;
-	soundeffectall "jupe_warp.wav",0;
+	soundeffectall "jupe_warp.wav", PLAY_SOUND_ONCE;
 	initnpctimer;
 	end;
 
@@ -4006,7 +4006,7 @@ OnInit:
 OnEnable:
 	enablenpc "Warp#2-4";
 	specialeffect EF_BIG_PORTAL;
-	soundeffectall "jupe_warp.wav",0;
+	soundeffectall "jupe_warp.wav", PLAY_SOUND_ONCE;
 	initnpctimer;
 	end;
 
@@ -4212,7 +4212,7 @@ OnInit:
 OnEnable:
 	enablenpc "LeverWarp#ufe2";
 	specialeffect EF_BIG_PORTAL;
-	soundeffectall "jupe_warp.wav",0;
+	soundeffectall "jupe_warp.wav", PLAY_SOUND_ONCE;
 	initnpctimer;
 	end;
 
@@ -4304,7 +4304,7 @@ jupe_ele_r,51,98,0	script	Switch#ufe	CLEAR_NPC,{
 							enablenpc "Switch On#ufe";
 							initnpctimer;
 							specialeffect(EF_SCREEN_QUAKE, AREA, playerattached());
-							soundeffectall "earth_quake.wav",0;
+							soundeffectall "earth_quake.wav", PLAY_SOUND_ONCE;
 							close2;
 							cutin "5-1",255;
 							end;
@@ -4471,7 +4471,7 @@ OnEnable:
 
 OnTimer5000:
 	mapannounce "jupe_ele_r","Those of you who have defeated the hallucination, step forward.",bc_map,"0x66FF00";
-	soundeffectall "earth_quake.wav",0;
+	soundeffectall "earth_quake.wav", PLAY_SOUND_ONCE;
 	end;
 
 OnTimer8000:
@@ -4870,7 +4870,7 @@ OnTimer12000:
 
 OnTimer22000:
 	mapannounce "jupe_ele","It's not real anyway. All of it's safe, it can't hurt you...",bc_map,"0x66FF00";
-	soundeffectall "earth_quake.wav",0;
+	soundeffectall "earth_quake.wav", PLAY_SOUND_ONCE;
 	disablenpc "4F Enter#ufe";
 	end;
 

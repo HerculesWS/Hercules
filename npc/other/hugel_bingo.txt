@@ -669,7 +669,7 @@ OnInit:
 OnTouch:
 	if ($@bingowinner$ != strcharinfo(PC_NAME)) end;
 	specialeffect EF_SUI_EXPLOSION;
-	soundeffect "tming_success.wav",1;
+	soundeffect "tming_success.wav", PLAY_SOUND_REPEAT;
 	if ($@bingoresult == 16) getitem 7515,50;
 	else getitem 7515,1;
 	initnpctimer;

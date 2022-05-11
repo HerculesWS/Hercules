@@ -1277,7 +1277,7 @@ mosk_fild01,86,104,3	script	Aged Stranger#npc	4_M_GUSLIMAN,{
 		mes "dry land. If you don't go back";
 		mes "soon, some people may worry.";
 		next;
-		soundeffect "mos_gusli1.wav",0;
+		soundeffect "mos_gusli1.wav", PLAY_SOUND_ONCE;
 		mes "-The island starts to move slowly";
 		mes "when the old man plays an";
 		mes "unfamiliar instrument...-";
@@ -1379,7 +1379,7 @@ mosk_fild01,86,104,3	script	Aged Stranger#npc	4_M_GUSLIMAN,{
 		mes "That's all you need if only it";
 		mes "existed in this island...";
 		next;
-		soundeffect "mos_gusli1.wav",0;
+		soundeffect "mos_gusli1.wav", PLAY_SOUND_ONCE;
 		mes "-The aged man closes his eyes and";
 		mes "starts to play his instrument, as";
 		mes "he falls in thought.-";
@@ -1548,7 +1548,7 @@ mosk_fild01,86,104,3	script	Aged Stranger#npc	4_M_GUSLIMAN,{
 			mes "At first, look at me how I play,";
 			mes "then you play it slowly.";
 			next;
-			soundeffect "mos_gusli1.wav",0;
+			soundeffect "mos_gusli1.wav", PLAY_SOUND_ONCE;
 			mes "[Aged Stranger]";
 			mes "Do not hurry,";
 			mes "keep your composure,";
@@ -1686,7 +1686,7 @@ mosk_fild01,86,104,3	script	Aged Stranger#npc	4_M_GUSLIMAN,{
 		mes "Good. I will go to the place";
 		mes "right way.";
 		next;
-		soundeffect "mos_gusli1.wav",0;
+		soundeffect "mos_gusli1.wav", PLAY_SOUND_ONCE;
 		mes "A old man started to play a instrument";
 		mes "closing his eyes.";
 		mes "And then he didn't any answer so, looks like";
@@ -1699,7 +1699,7 @@ mosk_fild01,86,104,3	script	Aged Stranger#npc	4_M_GUSLIMAN,{
 
 S_AS_1:
 	if (rand(1,3) == 2) {
-		soundeffect "mos_gusli1.wav",0;
+		soundeffect "mos_gusli1.wav", PLAY_SOUND_ONCE;
 		emotion e_no1;
 		specialeffect(EF_EXIT, AREA, playerattached());
 		mes "[Aged Stranger]";
@@ -1816,7 +1816,7 @@ S_AS_2:
 			mes "with this island. Only if you are a";
 			mes "friend... heheh.";
 			next;
-			soundeffect "mos_gusli1.wav",0;
+			soundeffect "mos_gusli1.wav", PLAY_SOUND_ONCE;
 			mes "-The old man starts to play";
 			mes "his instrument, with eyes closed.";
 			mes "He is unresponsive...";
@@ -1828,7 +1828,7 @@ S_AS_2:
 	}
 
 S_AS_3:
-	soundeffect "mos_gusli1.wav",0;
+	soundeffect "mos_gusli1.wav", PLAY_SOUND_ONCE;
 	mes "-The old man starts to play";
 	mes "his instrument, with eyes closed.";
 	mes "He is unresponsive...";
@@ -2188,7 +2188,7 @@ mosk_in,131,92,3	script	Csar Alexsay III#npc	4_M_RUSKING,{
 				mes "You can play it!";
 				mes "Good, play it right away!";
 				next;
-				soundeffect "mos_gusli2.wav",0;
+				soundeffect "mos_gusli2.wav", PLAY_SOUND_ONCE;
 				emotion e_ag,0,"Csar Alexsay III#npc";
 				emotion e_ag,0,"Prime Minister Dmitree#m";
 				mes "[Csar Alexsay III]";
@@ -2299,7 +2299,7 @@ mosk_in,131,92,3	script	Csar Alexsay III#npc	4_M_RUSKING,{
 			mes "Oh! Oh!... You can play it!";
 			mes "Play it right away. I wonder about its sound.";
 			next;
-			soundeffect "mos_gusli1.wav",0;
+			soundeffect "mos_gusli1.wav", PLAY_SOUND_ONCE;
 			mes "-When the music of the Gusli is";
 			mes "played, all the people in the";
 			mes "Csar's Palace fall in with the tune.-";
@@ -2512,7 +2512,7 @@ OnTouch:
 	next;
 	if(select("Go to Whale Island.", "Stay put.") == 1) {
 		if (getequipid(EQI_ACC_L) == GUSLI || getequipid(EQI_ACC_R) == GUSLI) {
-			soundeffect "mos_gusli2.wav",0;
+			soundeffect "mos_gusli2.wav", PLAY_SOUND_ONCE;
 			mes "-Slowly, your hands are on the";
 			mes "Gusli, and the playing starts...";
 			mes "reminding you of the melody which";

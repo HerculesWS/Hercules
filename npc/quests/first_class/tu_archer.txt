@@ -1743,7 +1743,7 @@ prontera,126,335,5	script	Arthail	1_M_BARD,{
 		next;
 		mes "[???]";
 		mes "...";
-		soundeffectall "se_littlewaves02.wav",0;
+		soundeffectall "se_littlewaves02.wav", PLAY_SOUND_ONCE;
 		next;
 		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Huh?";
@@ -1753,7 +1753,7 @@ prontera,126,335,5	script	Arthail	1_M_BARD,{
 		mes "[????]";
 		mes "AAAAAAAAAAAAAAAHHHHHHHHHHH!!!!!";
 		emotion e_omg;
-		soundeffectall "se_scream_w01.wav",0;
+		soundeffectall "se_scream_w01.wav", PLAY_SOUND_ONCE;
 		next;
 		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "What the--?!";
