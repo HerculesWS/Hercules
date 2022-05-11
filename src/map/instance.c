@@ -574,9 +574,10 @@ static void instance_destroy(int instance_id)
 		return; // nothing to do
 
 	enum instance_destroy_reason type = INSTANCE_DESTROY_OTHER;
-	if( instance->list[instance_id].progress_timeout && instance->list[instance_id].progress_timeout <= now )
+	bool idle = (instance->list[instance_id].users == 0);
+	if (!idle && instance->list[instance_id].progress_timeout && instance->list[instance_id].progress_timeout <= now)
 		type = INSTANCE_DESTROY_PROG_TIMEOUT;
-	else if( instance->list[instance_id].idle_timeout && instance->list[instance_id].idle_timeout <= now )
+	else if (idle && instance->list[instance_id].idle_timeout && instance->list[instance_id].idle_timeout <= now)
 		type = INSTANCE_DESTROY_IDLE_TIMEOUT;
 
 	clif->instance(instance_id, INSTANCE_WND_INFO_DESTROY, type); // Report users this instance has been destroyed
