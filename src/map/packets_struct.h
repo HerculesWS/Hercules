@@ -5622,6 +5622,13 @@ struct PACKET_ZC_PLAY_NPC_BGM {
 DEFINE_PACKET_HEADER(ZC_PLAY_NPC_BGM, 0x07fe)
 #endif  // PACKETVER >= 20091201
 
+struct PACKET_CZ_MOVE_ITEM_FROM_BODY_TO_CART {
+	int16 PacketType;
+	int16 index;
+	int count;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_MOVE_ITEM_FROM_BODY_TO_CART, 0x0126)
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris

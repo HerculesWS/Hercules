@@ -13074,16 +13074,19 @@ static void clif_parse_PutItemToCart(int fd, struct map_session_data *sd) __attr
 /// 0126 <index>.W <amount>.L
 static void clif_parse_PutItemToCart(int fd, struct map_session_data *sd)
 {
-	int flag = 0;
-
 	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || sd->state.prevend != 0)
 		return;
 
 	if (!pc_iscarton(sd))
 		return;
-	if ( (flag = pc->putitemtocart(sd,RFIFOW(fd,2)-2,RFIFOL(fd,4))) ) {
-		clif->item_movefailed(sd, RFIFOW(fd,2)-2);
-		clif->cart_additem_ack(sd,flag == 1?0x0:0x1);
+
+	struct PACKET_CZ_MOVE_ITEM_FROM_BODY_TO_CART *p = RFIFOP(fd, 0);
+	const int index = p->index - 2;
+	const int flag = pc->putitemtocart(sd, index, p->count);
+
+	if (flag) {
+		clif->item_movefailed(sd, index);
+		clif->cart_additem_ack(sd, flag == 1 ? 0x0 : 0x1);
 	}
 }
 
