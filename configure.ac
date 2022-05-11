@@ -1176,6 +1176,10 @@ AC_CHECK_COMPILER_WNOFLAG(missing-field-initializers)
 #AC_CHECK_COMPILER_WNOFLAG(suggest-attribute=format)
 AC_CHECK_COMPILER_WNOFLAG(incompatible-pointer-types-discards-qualifiers)
 AC_CHECK_COMPILER_WNOFLAG(discarded-qualifiers)
+# issue in clang-15 in libconfig
+AC_CHECK_COMPILER_WNOFLAG(deprecated-non-prototype)
+# issue in clang-15 in libconfig
+AC_CHECK_COMPILER_WNOFLAG(unused-but-set-variable)
 
 # Certain versions of gcc make -Wshadow completely useless by making it flood
 # you with unnecessary warnings <https://lkml.org/lkml/2006/11/28/239>
