@@ -8,7 +8,7 @@
 //= soundeffect player demo in prontera.
 //============================================================
 
-prontera,162,286,4	script	Sound demo#prt	4_M_KID1,{
+prontera,169,284,4	script	Sound demo#prt	4_M_KID1,{
 	mes("soundeffect(\"loli_ruri_stand.wav\", PLAY_SOUND_ONCE)");
 	soundeffect("loli_ruri_stand.wav", PLAY_SOUND_ONCE);
 	next();

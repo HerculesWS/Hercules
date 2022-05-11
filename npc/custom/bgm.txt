@@ -8,7 +8,7 @@
 //= Bgm player demo in prontera.
 //============================================================
 
-prontera,162,286,4	script	Bgm demo#prt	4_M_KID1,{
+prontera,161,284,4	script	Bgm demo#prt	4_M_KID1,{
 	mes("Play track 30.mp3 once and return to normal music");
 	mes("playbgm \"30\", PLAY_BGM_ONCE");
 	playbgm("30", PLAY_BGM_ONCE);

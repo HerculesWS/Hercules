@@ -8,7 +8,7 @@
 //= Expanded barter shop demo in prontera.
 //============================================================
 
-prontera,160,284,4	trader	Expanded Barter Shop#prt	4_M_KID1,{
+prontera,167,284,4	trader	Expanded Barter Shop#prt	4_M_KID1,{
 	end;
 OnInit:
 	tradertype(NST_EXPANDED_BARTER);

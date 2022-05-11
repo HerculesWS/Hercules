@@ -8,7 +8,7 @@
 //= Dialog pos and size demo in prontera.
 //============================================================
 
-prontera,162,286,4	script	Pos / Size demo#prt	4_M_KID1,{
+prontera,165,284,4	script	Pos / Size demo#prt	4_M_KID1,{
 	mes("setdialogsize(400, 100)");
 	mes("setdialogpos(100, 100)");
 	mes("select next ...");
