@@ -2757,7 +2757,7 @@ elf_add (struct backtrace_state *state, const char *filename, int descriptor,
       shdr = (const b_elf_shdr *) shdr_view.data;
 
       if (shnum == 0)
-	shnum = shdr->sh_size;
+	shnum = (unsigned int)shdr->sh_size;
 
       if (shstrndx == SHN_XINDEX)
 	{
@@ -2940,7 +2940,7 @@ elf_add (struct backtrace_state *state, const char *filename, int descriptor,
 
 	      debugaltlink_buildid_data
 		= debugaltlink_data + debugaltlink_name_len;
-	      debugaltlink_buildid_size = shdr->sh_size - debugaltlink_name_len;
+	      debugaltlink_buildid_size = (unsigned int)(shdr->sh_size - debugaltlink_name_len);
 	    }
 	}
 
