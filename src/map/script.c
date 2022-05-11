@@ -27846,7 +27846,6 @@ static BUILDIN(opengradeui)
 
 static BUILDIN(setdialogsize)
 {
-#if PACKETVER_MAIN_NUM >= 20220504
 	struct map_session_data *sd = script_rid2sd(st);
 
 	if (sd == NULL) {
@@ -27856,12 +27855,10 @@ static BUILDIN(setdialogsize)
 
 	clif->set_npc_window_size(sd, script_getnum(st, 2), script_getnum(st, 3));
 	return true;
-#endif
 }
 
 static BUILDIN(setdialogpos)
 {
-#if PACKETVER_MAIN_NUM >= 20220504
 	struct map_session_data *sd = script_rid2sd(st);
 
 	if (sd == NULL) {
@@ -27871,12 +27868,10 @@ static BUILDIN(setdialogpos)
 
 	clif->set_npc_window_pos(sd, script_getnum(st, 2), script_getnum(st, 3));
 	return true;
-#endif
 }
 
 static BUILDIN(setdialogpospercent)
 {
-#if PACKETVER_MAIN_NUM >= 20220504
 	struct map_session_data *sd = script_rid2sd(st);
 
 	if (sd == NULL) {
@@ -27886,7 +27881,6 @@ static BUILDIN(setdialogpospercent)
 
 	clif->set_npc_window_pos_percent(sd, script_getnum(st, 2), script_getnum(st, 3));
 	return true;
-#endif
 }
 
 /**
