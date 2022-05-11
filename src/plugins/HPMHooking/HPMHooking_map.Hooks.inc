@@ -9292,14 +9292,14 @@ void HP_clif_takeitem(struct block_list *src, struct block_list *dst) {
 	}
 	return;
 }
-void HP_clif_item_movefailed(struct map_session_data *sd, int n) {
+void HP_clif_item_movefailed(struct map_session_data *sd, int n, int amount) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_item_movefailed_pre > 0) {
-		void (*preHookFunc) (struct map_session_data **sd, int *n);
+		void (*preHookFunc) (struct map_session_data **sd, int *n, int *amount);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_item_movefailed_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_clif_item_movefailed_pre[hIndex].func;
-			preHookFunc(&sd, &n);
+			preHookFunc(&sd, &n, &amount);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -9307,13 +9307,13 @@ void HP_clif_item_movefailed(struct map_session_data *sd, int n) {
 		}
 	}
 	{
-		HPMHooks.source.clif.item_movefailed(sd, n);
+		HPMHooks.source.clif.item_movefailed(sd, n, amount);
 	}
 	if (HPMHooks.count.HP_clif_item_movefailed_post > 0) {
-		void (*postHookFunc) (struct map_session_data *sd, int n);
+		void (*postHookFunc) (struct map_session_data *sd, int n, int amount);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_item_movefailed_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_item_movefailed_post[hIndex].func;
-			postHookFunc(sd, n);
+			postHookFunc(sd, n, amount);
 		}
 	}
 	return;
