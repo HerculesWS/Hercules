@@ -863,9 +863,9 @@ enum play_npc_bgm {
 };
 
 enum play_sound_act {
-	SOUND_TYPE_PLAY = 0,
-	SOUND_TYPE_REPEAT = 1,
-	SOUND_TYPE_STOP = 2,
+	PLAY_SOUND_ONCE = 0,
+	PLAY_SOUND_REPEAT = 1,
+	PLAY_SOUND_STOP = 2,
 };
 
 /**

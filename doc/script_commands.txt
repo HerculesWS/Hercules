@@ -8403,8 +8403,9 @@ without event labels. If specified name is not found, command does nothing.
 
 ---------------------------------------
 
-*soundeffect("<effect filename>", <type>)
+*soundeffect("<effect filename>", <type>{, <term>})
 *soundeffectall("<effect filename>", <type>{, "<map name>"}{, <x0>, <y0>, <x1>, <y1>})
+*soundeffectall2("<effect filename>", <type>{, <term>{, "<map name>"}}{, <x0>, <y0>, <x1>, <y1>})
 
 These two commands will play a sound effect to either the invoking
 character only (soundeffect()) or multiple characters (soundeffectall()).

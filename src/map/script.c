@@ -16724,11 +16724,14 @@ static BUILDIN(playbgmall2)
 static BUILDIN(soundeffect)
 {
 	struct map_session_data *sd = script->rid2sd(st);
-	const char* name = script_getstr(st,2);
-	enum play_sound_act type = script_getnum(st,3);
+	const char* name = script_getstr(st, 2);
+	enum play_sound_act type = script_getnum(st, 3);
+	int term = 0;
+	if (script_hasdata(st, 4))
+		term = script_getnum(st, 4);
 
 	if (sd != NULL) {
-		clif->soundeffect(sd, &sd->bl, name, type, 0);
+		clif->soundeffect(sd, &sd->bl, name, type, term);
 	}
 	return true;
 }
@@ -16737,13 +16740,14 @@ static int soundeffect_sub(struct block_list *bl, va_list ap)
 {
 	struct map_session_data *sd = NULL;
 	char *name = va_arg(ap, char *);
-	int type = va_arg(ap, int);
+	enum play_sound_act type = va_arg(ap, int);
+	int term = va_arg(ap, int);
 
 	nullpo_ret(bl);
 	Assert_ret(bl->type == BL_PC);
 	sd = BL_UCAST(BL_PC, bl);
 
-	clif->soundeffect(sd, bl, name, type, 0);
+	clif->soundeffect(sd, bl, name, type, term);
 
 	return true;
 }
@@ -16775,7 +16779,7 @@ static BUILDIN(soundeffectall)
 				return true;
 			}
 
-			map->foreachinmap(script->soundeffect_sub, m, BL_PC, name, type);
+			map->foreachinmap(script->soundeffect_sub, m, BL_PC, name, type, 0);
 		} else if(script_hasdata(st,8)) { // specified part of map
 			const char *mapname = script_getstr(st,4);
 			int x0 = script_getnum(st,5);
@@ -16789,7 +16793,7 @@ static BUILDIN(soundeffectall)
 				return true;
 			}
 
-			map->foreachinarea(script->soundeffect_sub, m, x0, y0, x1, y1, BL_PC, name, type);
+			map->foreachinarea(script->soundeffect_sub, m, x0, y0, x1, y1, BL_PC, name, type, 0);
 		} else {
 			ShowError("buildin_soundeffectall: insufficient arguments for specific area broadcast.\n");
 		}
@@ -16797,6 +16801,60 @@ static BUILDIN(soundeffectall)
 
 	return true;
 }
+
+/*==========================================
+ * Play a sound effect (.wav) on multiple clients
+ * soundeffectall "<filepath>",<type>{, term{,"<map name>"}}{,<x0>,<y0>,<x1>,<y1>};
+ *------------------------------------------*/
+static BUILDIN(soundeffectall2)
+{
+	struct block_list *bl = st->rid != 0 ? map->id2bl(st->rid) : map->id2bl(st->oid);
+	if (bl == NULL)
+		return true;
+
+	const char *name = script_getstr(st, 2);
+	enum play_sound_act type = script_getnum(st, 3);
+	int term = 0;
+	if (script_hasdata(st, 4))
+		term = script_getnum(st, 4);
+
+	//FIXME: enumerating map squares (map->foreach) is slower than enumerating the list of online players (map->foreachpc?) [ultramage]
+
+	if (!script_hasdata(st, 5)) { // area around
+		clif->soundeffectall(bl, name, type, term, AREA);
+	} else {
+		if (!script_hasdata(st, 6)) { // entire map
+			const char *mapname = script_getstr(st, 5);
+			int m;
+
+			if ((m = map->mapname2mapid(mapname)) == -1) {
+				ShowWarning("soundeffectall2: Attempted to play song '%s' (type %d) on non-existent map '%s'\n", name, (int)type, mapname);
+				return true;
+			}
+
+			map->foreachinmap(script->soundeffect_sub, m, BL_PC, name, type, term);
+		} else if (script_hasdata(st, 9)) { // specified part of map
+			const char *mapname = script_getstr(st, 5);
+			int x0 = script_getnum(st, 6);
+			int y0 = script_getnum(st, 7);
+			int x1 = script_getnum(st, 8);
+			int y1 = script_getnum(st, 9);
+			int m;
+
+			if ((m = map->mapname2mapid(mapname)) == -1) {
+				ShowWarning("soundeffectall2: Attempted to play song '%s' (type %d) on non-existent map '%s'\n", name, (int)type, mapname);
+				return true;
+			}
+
+			map->foreachinarea(script->soundeffect_sub, m, x0, y0, x1, y1, BL_PC, name, type, term);
+		} else {
+			ShowError("buildin_soundeffectall2: insufficient arguments for specific area broadcast.\n");
+		}
+	}
+
+	return true;
+}
+
 /*==========================================
  * pet status recovery [Valaris] / Rewritten by [Skotlex]
  *------------------------------------------*/
@@ -28306,8 +28364,9 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(playbgm,"s?"),
 		BUILDIN_DEF(playbgmall,"s?????"),
 		BUILDIN_DEF(playbgmall2,"si?????"),
-		BUILDIN_DEF(soundeffect,"si"),
+		BUILDIN_DEF(soundeffect,"si?"),
 		BUILDIN_DEF(soundeffectall,"si?????"), // SoundEffectAll [Codemaster]
+		BUILDIN_DEF(soundeffectall2,"si??????"), // SoundEffectAll2 [Codemaster]
 		BUILDIN_DEF(strmobinfo,"ii"), // display mob data [Valaris]
 		BUILDIN_DEF(guardian,"siisi??"), // summon guardians
 		BUILDIN_DEF(guardianinfo,"sii"), // display guardian data [Valaris]
@@ -29601,6 +29660,11 @@ static void script_hardcoded_constants(void)
 	script->set_constant("PLAY_BGM_LOOP", PLAY_BGM_LOOP, false, false);
 	script->set_constant("PLAY_BGM_ONCE", PLAY_BGM_ONCE, false, false);
 	script->set_constant("PLAY_BGM_STOP", PLAY_BGM_STOP, false, false);
+
+	script->constdb_comment("Sound play type");
+	script->set_constant("PLAY_SOUND_ONCE", PLAY_SOUND_ONCE, false, false);
+	script->set_constant("PLAY_SOUND_REPEAT", PLAY_SOUND_REPEAT, false, false);
+	script->set_constant("PLAY_SOUND_STOP", PLAY_SOUND_STOP, false, false);
 
 	script->constdb_comment("Renewal");
 #ifdef RENEWAL
