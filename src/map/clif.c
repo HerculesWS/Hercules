@@ -9364,7 +9364,7 @@ static void clif_playBGM(struct map_session_data *sd, const char *name, enum pla
 /// npc id:
 ///     The acoustic direction of the sound is determined by the
 ///     relative position of the NPC to the player (3D sound).
-static void clif_soundeffect(struct map_session_data *sd, struct block_list *bl, const char *name, int type)
+static void clif_soundeffect(struct map_session_data *sd, struct block_list *bl, const char *name, enum play_sound_act type, int term)
 {
 	nullpo_retv(sd);
 	nullpo_retv(bl);
@@ -9376,12 +9376,12 @@ static void clif_soundeffect(struct map_session_data *sd, struct block_list *bl,
 	p->PacketType = HEADER_ZC_SOUND;
 	safestrncpy(p->name, name, NAME_LENGTH);
 	p->act = type;
-	p->term = 0;
+	p->term = term;
 	p->AID = bl->id;
 	WFIFOSET(fd, sizeof(struct PACKET_ZC_SOUND));
 }
 
-static void clif_soundeffectall(struct block_list *bl, const char *name, int type, enum send_target coverage)
+static void clif_soundeffectall(struct block_list *bl, const char *name, enum play_sound_act type, int term, enum send_target coverage)
 {
 	nullpo_retv(bl);
 	nullpo_retv(name);
@@ -9391,7 +9391,7 @@ static void clif_soundeffectall(struct block_list *bl, const char *name, int typ
 	p.PacketType = HEADER_ZC_SOUND;
 	safestrncpy(p.name, name, NAME_LENGTH);
 	p.act = type;
-	p.term = 0;
+	p.term = term;
 	p.AID = bl->id;
 	clif->send(&p, sizeof(struct PACKET_ZC_SOUND), bl, coverage);
 }

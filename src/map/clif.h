@@ -862,6 +862,12 @@ enum play_npc_bgm {
 	PLAY_BGM_STOP = 2,
 };
 
+enum play_sound_act {
+	SOUND_TYPE_PLAY = 0,
+	SOUND_TYPE_REPEAT = 1,
+	SOUND_TYPE_STOP = 2,
+};
+
 /**
  * Clif.c Interface
  **/
@@ -1175,8 +1181,8 @@ struct clif_interface {
 	void (*weather_check) (struct map_session_data *sd);
 	/* sound effects client-side */
 	void (*playBGM) (struct map_session_data* sd, const char* name, enum play_npc_bgm type);
-	void (*soundeffect) (struct map_session_data* sd, struct block_list* bl, const char* name, int type);
-	void (*soundeffectall) (struct block_list* bl, const char* name, int type, enum send_target coverage);
+	void (*soundeffect) (struct map_session_data* sd, struct block_list* bl, const char* name, enum play_sound_act type, int term);
+	void (*soundeffectall) (struct block_list* bl, const char* name, enum play_sound_act type, int term, enum send_target coverage);
 	/* chat/message-related */
 	void (*GlobalMessage) (struct block_list* bl, const char* message);
 	void (*createchat) (struct map_session_data* sd, int flag);

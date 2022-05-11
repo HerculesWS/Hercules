@@ -16725,10 +16725,10 @@ static BUILDIN(soundeffect)
 {
 	struct map_session_data *sd = script->rid2sd(st);
 	const char* name = script_getstr(st,2);
-	int type = script_getnum(st,3);
+	enum play_sound_act type = script_getnum(st,3);
 
 	if (sd != NULL) {
-		clif->soundeffect(sd,&sd->bl,name,type);
+		clif->soundeffect(sd, &sd->bl, name, type, 0);
 	}
 	return true;
 }
@@ -16743,7 +16743,7 @@ static int soundeffect_sub(struct block_list *bl, va_list ap)
 	Assert_ret(bl->type == BL_PC);
 	sd = BL_UCAST(BL_PC, bl);
 
-	clif->soundeffect(sd, bl, name, type);
+	clif->soundeffect(sd, bl, name, type, 0);
 
 	return true;
 }
@@ -16754,27 +16754,24 @@ static int soundeffect_sub(struct block_list *bl, va_list ap)
  *------------------------------------------*/
 static BUILDIN(soundeffectall)
 {
-	const char* name;
-	int type;
-
 	struct block_list *bl = st->rid != 0 ? map->id2bl(st->rid) : map->id2bl(st->oid);
 	if (bl == NULL)
 		return true;
 
-	name = script_getstr(st,2);
-	type = script_getnum(st,3);
+	const char *name = script_getstr(st, 2);
+	enum play_sound_act type = script_getnum(st, 3);
 
 	//FIXME: enumerating map squares (map->foreach) is slower than enumerating the list of online players (map->foreachpc?) [ultramage]
 
 	if(!script_hasdata(st,4)) { // area around
-		clif->soundeffectall(bl, name, type, AREA);
+		clif->soundeffectall(bl, name, type, 0, AREA);
 	} else {
 		if(!script_hasdata(st,5)) { // entire map
 			const char *mapname = script_getstr(st,4);
 			int m;
 
 			if ( ( m = map->mapname2mapid(mapname) ) == -1 ) {
-				ShowWarning("soundeffectall: Attempted to play song '%s' (type %d) on non-existent map '%s'\n",name,type, mapname);
+				ShowWarning("soundeffectall: Attempted to play song '%s' (type %d) on non-existent map '%s'\n", name, (int)type, mapname);
 				return true;
 			}
 
@@ -16788,7 +16785,7 @@ static BUILDIN(soundeffectall)
 			int m;
 
 			if ( ( m = map->mapname2mapid(mapname) ) == -1 ) {
-				ShowWarning("soundeffectall: Attempted to play song '%s' (type %d) on non-existent map '%s'\n",name,type, mapname);
+				ShowWarning("soundeffectall: Attempted to play song '%s' (type %d) on non-existent map '%s'\n", name, (int)type, mapname);
 				return true;
 			}
 
