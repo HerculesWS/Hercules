@@ -146,7 +146,7 @@ ecl_hub01,130,15,0	script	It is closed shut.	CLEAR_NPC,{
 	mes("No...way!!!");
 	specialeffect(EF_LORD, AREA, playerattached());
 	percentheal(-99, 0);
-	soundeffect("wander_man_move.wav", PLAY_SOUND_REPEAT);
+	soundeffect("wander_man_move.wav", PLAY_SOUND_ONCE);
 	sc_start(SC_BLIND, 60000, 0);
 	close2();
 	warp("1@ecl", 146, 95);

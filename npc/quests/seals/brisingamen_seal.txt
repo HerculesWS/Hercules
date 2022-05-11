@@ -66,7 +66,7 @@ prt_fild08,175,374,3	script	Bard#brising	1_M_BARD,{
 					mes "I must say this song";
 					mes "represents the";
 					mes "heart of a poet!";
-					soundeffect "bragis_poem.wav", PLAY_SOUND_REPEAT;
+					soundeffect "bragis_poem.wav", PLAY_SOUND_ONCE;
 					close2;
 					break;
 				case 2:
@@ -78,7 +78,7 @@ prt_fild08,175,374,3	script	Bard#brising	1_M_BARD,{
 					mes "what the title really";
 					mes "means. Is it the chaos";
 					mes "of hell or our own reality?";
-					soundeffect "chaos_of_eternity.wav", PLAY_SOUND_REPEAT;
+					soundeffect "chaos_of_eternity.wav", PLAY_SOUND_ONCE;
 					close2;
 					break;
 				case 3:
@@ -86,7 +86,7 @@ prt_fild08,175,374,3	script	Bard#brising	1_M_BARD,{
 					mes "[Nelliorde]";
 					mes "Assassin in the Sunset!";
 					mes "Yes, no one looks cooler than an Assassin, the bringer of death, standing alone in the sunset! Heh heh~";
-					soundeffect "assassin_of_sunset.wav", PLAY_SOUND_REPEAT;
+					soundeffect "assassin_of_sunset.wav", PLAY_SOUND_ONCE;
 					close2;
 					break;
 				case 4:
@@ -96,7 +96,7 @@ prt_fild08,175,374,3	script	Bard#brising	1_M_BARD,{
 					mes "Okay, are you ready to listen?";
 					mes "Hum hum hum....";
 					next;
-					soundeffect "ring_of_nibelungen.wav", PLAY_SOUND_REPEAT;
+					soundeffect "ring_of_nibelungen.wav", PLAY_SOUND_ONCE;
 					mes "^4D4DFFRheingold...";
 					mes "Hidden in the Rhein river.";
 					mes "If made into a ring,";
@@ -801,7 +801,7 @@ prt_fild08,175,374,3	script	Bard#brising	1_M_BARD,{
 					mes "I must say this song";
 					mes "represents the";
 					mes "heart of a poet!";
-					soundeffect "bragis_poem.wav", PLAY_SOUND_REPEAT;
+					soundeffect "bragis_poem.wav", PLAY_SOUND_ONCE;
 					Zeny -= 500;
 					close2;
 				}
@@ -819,7 +819,7 @@ prt_fild08,175,374,3	script	Bard#brising	1_M_BARD,{
 					mes "You must like robust";
 					mes "and energetic music, eh?";
 					mes "As you wish~";
-					soundeffect "chaos_of_eternity.wav", PLAY_SOUND_REPEAT;
+					soundeffect "chaos_of_eternity.wav", PLAY_SOUND_ONCE;
 					Zeny -= 500;
 					close2;
 				}
@@ -839,7 +839,7 @@ prt_fild08,175,374,3	script	Bard#brising	1_M_BARD,{
 					mes "the setting sun fits";
 					mes "well with Assassins.";
 					mes "Don't you agree?";
-					soundeffect "assassin_of_sunset.wav", PLAY_SOUND_REPEAT;
+					soundeffect "assassin_of_sunset.wav", PLAY_SOUND_ONCE;
 					Zeny -= 500;
 					close2;
 				}

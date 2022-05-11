@@ -13520,7 +13520,7 @@ OnEnable:
 	end;
 
 OnTouch:
-	soundeffect "wander_man_move.wav", PLAY_SOUND_REPEAT;
+	soundeffect "wander_man_move.wav", PLAY_SOUND_ONCE;
 	sc_start SC_BLIND,600000,0;
 	mes "As soon as you touched the crystal,";
 	mes "you feel your body being pulled into the space gap.";
@@ -13550,7 +13550,7 @@ OnTouch:
 	mes "Shut up! It's creepy that you all look alike. Bring it on! I'm not afraid of you!";
 	mes "I'm not going to let you run away again!";
 	next;
-	soundeffect "wander_man_move.wav", PLAY_SOUND_REPEAT;
+	soundeffect "wander_man_move.wav", PLAY_SOUND_ONCE;
 	sc_end SC_BLIND;
 	mes "[" + strcharinfo(PC_NAME) + "]";
 	mes "... !!!!";
