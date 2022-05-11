@@ -9377,7 +9377,13 @@ static void clif_soundeffect(struct map_session_data *sd, struct block_list *bl,
 	safestrncpy(p->name, name, NAME_LENGTH);
 	p->act = type;
 	p->term = term;
-	p->AID = bl->id;
+	if (type == PLAY_SOUND_REPEAT) {
+		// for repeat look like used wrong 3d sound position and player cant hear sound only once. [4144]
+		// Without AID sound played without any position in space. [4144]
+		p->AID = 0;
+	} else {
+		p->AID = bl->id;
+	}
 	WFIFOSET(fd, sizeof(struct PACKET_ZC_SOUND));
 }
 
