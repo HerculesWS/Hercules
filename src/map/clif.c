@@ -9366,35 +9366,34 @@ static void clif_playBGM(struct map_session_data *sd, const char *name, enum pla
 ///     relative position of the NPC to the player (3D sound).
 static void clif_soundeffect(struct map_session_data *sd, struct block_list *bl, const char *name, int type)
 {
-	int fd;
-
 	nullpo_retv(sd);
 	nullpo_retv(bl);
 	nullpo_retv(name);
 
-	fd = sd->fd;
-	WFIFOHEAD(fd,packet_len(0x1d3));
-	WFIFOW(fd,0) = 0x1d3;
-	safestrncpy(WFIFOP(fd,2), name, NAME_LENGTH);
-	WFIFOB(fd,26) = type;
-	WFIFOL(fd,27) = 0;
-	WFIFOL(fd,31) = bl->id;
-	WFIFOSET(fd,packet_len(0x1d3));
+	const int fd = sd->fd;
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_SOUND));
+	struct PACKET_ZC_SOUND *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_SOUND;
+	safestrncpy(p->name, name, NAME_LENGTH);
+	p->act = type;
+	p->term = 0;
+	p->AID = bl->id;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_SOUND));
 }
 
 static void clif_soundeffectall(struct block_list *bl, const char *name, int type, enum send_target coverage)
 {
-	unsigned char buf[40];
-
 	nullpo_retv(bl);
 	nullpo_retv(name);
 
-	WBUFW(buf,0) = 0x1d3;
-	safestrncpy(WBUFP(buf,2), name, NAME_LENGTH);
-	WBUFB(buf,26) = type;
-	WBUFL(buf,27) = 0;
-	WBUFL(buf,31) = bl->id;
-	clif->send(buf, packet_len(0x1d3), bl, coverage);
+	struct PACKET_ZC_SOUND p = { 0 };
+
+	p.PacketType = HEADER_ZC_SOUND;
+	safestrncpy(p.name, name, NAME_LENGTH);
+	p.act = type;
+	p.term = 0;
+	p.AID = bl->id;
+	clif->send(&p, sizeof(struct PACKET_ZC_SOUND), bl, coverage);
 }
 
 /// Displays special effects (npcs, weather, etc) [Valaris] (ZC_NOTIFY_EFFECT2).

@@ -5629,6 +5629,15 @@ struct PACKET_CZ_MOVE_ITEM_FROM_BODY_TO_CART {
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(CZ_MOVE_ITEM_FROM_BODY_TO_CART, 0x0126)
 
+struct PACKET_ZC_SOUND {
+	int16 PacketType;
+	char name[NAME_LENGTH];
+	uint8 act;
+	uint32 term;
+	uint32 AID;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_SOUND, 0x01d3)
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
