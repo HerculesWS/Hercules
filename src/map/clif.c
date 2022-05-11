@@ -2893,7 +2893,7 @@ static void clif_dropitem(struct map_session_data *sd, int n, int amount)
 	WFIFOSET(fd,packet_len(0xaf));
 }
 
-static void clif_item_movefailed(struct map_session_data *sd, int n)
+static void clif_item_movefailed(struct map_session_data *sd, int n, int amount)
 {
 #if PACKETVER_MAIN_NUM >= 20161214 || PACKETVER_RE_NUM >= 20161130 || defined(PACKETVER_ZERO)
 	int fd = sd->fd;
@@ -2902,7 +2902,7 @@ static void clif_item_movefailed(struct map_session_data *sd, int n)
 	struct PACKET_ZC_MOVE_ITEM_FAILED *p = WFIFOP(fd, 0);
 	p->packetType = HEADER_ZC_MOVE_ITEM_FAILED;
 	p->itemIndex = n + 2;
-	p->itemCount = 1;
+	p->itemCount = amount;
 	WFIFOSET(fd, len);
 #else
 	clif->dropitem(sd, n, 0);
@@ -13085,7 +13085,7 @@ static void clif_parse_PutItemToCart(int fd, struct map_session_data *sd)
 	const int flag = pc->putitemtocart(sd, index, p->count);
 
 	if (flag) {
-		clif->item_movefailed(sd, index);
+		clif->item_movefailed(sd, index, p->count);
 		clif->cart_additem_ack(sd, flag == 1 ? 0x0 : 0x1);
 	}
 }
