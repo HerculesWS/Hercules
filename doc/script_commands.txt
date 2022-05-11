@@ -8416,10 +8416,12 @@ If it does, it will be centered on that object. (an NPC sprite)
 
 Effect filename is the filename in a GRF. It must have the .wav extension.
 
-It's not quite certain what the 'type' actually does, it is sent to the
-client directly. It probably determines which directory to play the effect
-from. It's certain that giving 0 for the number will play sound files from
-'\data\wav\', but where the other numbers will read from is unclear.
+Possible values for type:
+	PLAY_SOUND_ONCE   - play sound file once (default)
+	PLAY_SOUND_REPEAT - play sound in repeat mode. Term parameter set delay before next sound play.
+	PLAY_SOUND_STOP   - stop repeated sound. Not stop already playing sound but terminate future repeats.
+
+Term parameter make sense only for type PLAY_SOUND_REPEAT.
 
 The sound files themselves must be in the PCM format, and file names
 should also have a maximum length of 23 characters including the .wav
