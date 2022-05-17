@@ -795,8 +795,10 @@ static bool aclif_decode_post_headers(int fd, struct api_session_data *sd)
 			ShowError("Http request without Img or empty content_type %d\n", fd);
 			return false;
 		}
-		if (strcmp(content_type, "application/octet-stream") != 0) {
-			ShowError("Http request without Img with wrong content_type %d\n", fd);
+		if (strcmp(content_type, "application/octet-stream") != 0 &&
+		    strcmp(content_type, "image/gif") != 0) {
+			ShowError("Http request with Img with wrong content_type %d\n", fd);
+			aclif->show_request(fd, sd, false);
 			return false;
 		}
 

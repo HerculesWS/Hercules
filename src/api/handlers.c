@@ -292,7 +292,7 @@ HTTP_URL(emblem_upload)
 		}
 	} else if (strcmp(imgType, "GIF") == 0) {
 		if (img_size < 10 || strncmp(img, "GIF", 3) != 0 ||
-		    memcmp(img + 3, "87a", 3) != 0 || memcmp(img + 3, "89a", 3) != 0) {
+		    (memcmp(img + 3, "87a", 3) != 0 && memcmp(img + 3, "89a", 3) != 0)) {
 			ShowError("wrong gif image %d: %s\n", fd, sd->url);
 			return false;
 		}
