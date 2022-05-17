@@ -52,4 +52,4 @@ Makefile: Makefile.in
 
 %.o: %.c $(LIBGIF_H) Makefile
 	@echo "	CC	$<"
-	@$(CC) @CFLAGS@ @DEFS@ @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
+	@$(CC) @CFLAGS@ @DEFS@ @CPPFLAGS@ -Wno-switch-enum -c $(OUTPUT_OPTION) $<
