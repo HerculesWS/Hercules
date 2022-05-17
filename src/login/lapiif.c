@@ -36,6 +36,8 @@
 
 #include <string.h>
 
+//#define DEBUG_PACKETS
+
 static struct lapiif_interface lapiif_s;
 struct lapiif_interface *lapiif;
 
@@ -187,6 +189,10 @@ static int lapiif_parse_fromapi_api_proxy(int fd)
 {
 	RFIFO_API_PROXY_PACKET(packet);
 	const uint32 msg = packet->msg_id;
+
+#ifdef DEBUG_PACKETS
+	ShowInfo("lapiif_parse_fromapi_api_proxy: msg: %u, flags: %u\n", msg, packet->flags);
+#endif  // DEBUG_PACKETS
 
 	if (PROXY_PACKET_FLAG(packet, proxy_flag_char | proxy_flag_map)) {
 		lapiif->parse_proxy_api_to_char(fd);

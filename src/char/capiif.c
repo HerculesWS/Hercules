@@ -48,11 +48,16 @@ static struct capiif_interface capiif_s;
 struct capiif_interface *capiif;
 
 #define DEBUG_LOG
+//#define DEBUG_PACKETS
 
 static int capiif_parse_fromlogin_api_proxy(int fd)
 {
 	RFIFO_API_PROXY_PACKET(packet);
 	const uint32 msg = packet->msg_id;
+
+#ifdef DEBUG_PACKETS
+	ShowInfo("capiif_parse_fromlogin_api_proxy: msg: %u, flags: %u\n", msg, packet->flags);
+#endif  // DEBUG_PACKETS
 
 	if (PROXY_PACKET_FLAG(packet, proxy_flag_map)) {
 		mapif->send_first(packet, packet->packet_len);
