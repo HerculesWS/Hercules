@@ -284,6 +284,7 @@ HTTP_URL(emblem_upload)
 	GET_STR_HEADER(IMG_TYPE, &imgType, NULL);
 	char *img = NULL;
 	uint32 img_size = 0;
+	bool is_gif = false;
 	GET_STR_HEADER(IMG, &img, &img_size);
 	if (strcmp(imgType, "BMP") == 0) {
 		if (img_size < 10 || strncmp(img, "BM", 2) != 0) {
@@ -296,6 +297,7 @@ HTTP_URL(emblem_upload)
 			ShowError("wrong gif image %d: %s\n", fd, sd->url);
 			return false;
 		}
+		is_gif = true;
 	} else {
 		ShowError("unknown image type '%s'. %d: %s\n", imgType, fd, sd->url);
 		return false;
@@ -303,6 +305,7 @@ HTTP_URL(emblem_upload)
 
 	CREATE_HTTP_DATA(data, emblem_upload_guild_id);
 	data.guild_id = RET_INT_HEADER(GUILD_ID, 0);
+	data.is_gif = is_gif;
 	SEND_CHAR_ASYNC_DATA(emblem_upload_guild_id, &data);
 	SEND_CHAR_ASYNC_DATA_SPLIT(emblem_upload, img, img_size);
 

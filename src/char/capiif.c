@@ -177,6 +177,7 @@ void capiif_parse_emblem_upload_guild_id(int fd)
 		return;
 	}
 	character->data->emblem_guild_id = data->guild_id;
+	character->data->emblem_gif = data->is_gif;
 }
 
 void capiif_parse_emblem_upload(int fd)
@@ -186,14 +187,15 @@ void capiif_parse_emblem_upload(int fd)
 	struct online_char_data* character = capiif->get_online_character(&p->base);
 	if (character == NULL)
 		return;
+	struct online_char_data2 *char_data = character->data;
 
-	if (character->data->emblem_guild_id == 0) {
+	if (char_data->emblem_guild_id == 0) {
 		chr->clean_online_char_emblem_data(character);
 		ShowError("Upload emblem guild data while emblem guild id is not set.\n");
 		return;
 	}
 
-	RFIFO_CHUNKED_INIT(p, GET_RFIFO_API_PROXY_PACKET_CHUNKED_SIZE(fd), character->data->emblem_data, character->data->emblem_data_size);
+	RFIFO_CHUNKED_INIT(p, GET_RFIFO_API_PROXY_PACKET_CHUNKED_SIZE(fd), char_data->emblem_data, char_data->emblem_data_size);
 
 	RFIFO_CHUNKED_ERROR(p) {
 		ShowError("Wrong guild emblem packets order\n");
@@ -202,20 +204,22 @@ void capiif_parse_emblem_upload(int fd)
 	}
 
 	RFIFO_CHUNKED_COMPLETE(p) {
-		if (character->data->emblem_data_size > 65000) {
+		if (char_data->emblem_data_size > 65000) {
 			ShowError("Big emblems not supported yet\n");
 			chr->clean_online_char_emblem_data(character);
 			return;
 		}
 
-		if (inter_guild->is_guild_master(p->base.char_id, character->data->emblem_guild_id)) {
-			if (!inter_guild->validate_emblem(character->data->emblem_data,
-			    character->data->emblem_data_size)) {
+		if (inter_guild->is_guild_master(p->base.char_id, char_data->emblem_guild_id)) {
+			if (!inter_guild->validate_emblem(char_data->emblem_data,
+			    char_data->emblem_data_size,
+			    char_data->emblem_gif)) {
 				ShowError("Invalid image uploaded\n");
+			} else {
+				inter_guild->update_emblem(char_data->emblem_data_size,
+				char_data->emblem_guild_id,
+				char_data->emblem_data);
 			}
-			inter_guild->update_emblem(character->data->emblem_data_size,
-				character->data->emblem_guild_id,
-				character->data->emblem_data);
 		}
 
 		chr->clean_online_char_emblem_data(character);

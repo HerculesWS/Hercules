@@ -155,6 +155,7 @@ struct PACKET_API_emblem_upload {
 
 struct PACKET_API_emblem_upload_guild_id_data {
 	int guild_id;
+	bool is_gif;
 } __attribute__((packed));
 
 struct PACKET_API_emblem_upload_guild_id {

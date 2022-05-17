@@ -1646,7 +1646,22 @@ static bool inter_guild_is_guild_master(int char_id, int guild_id)
 	return true;
 }
 
-static bool inter_guild_validate_emblem(const char *emblem, unsigned long emblem_len)
+static bool inter_guild_validate_emblem(const char *emblem, unsigned long emblem_len, bool is_gif)
+{
+	if (is_gif) {
+		return inter_guild->validate_gif_emblem(emblem, emblem_len);
+	} else {
+		return inter_guild->validate_bmp_emblem(emblem, emblem_len);
+	}
+}
+
+static bool inter_guild_validate_gif_emblem(const char *emblem, unsigned long emblem_len)
+{
+	// here need validate gif image
+	return true;
+}
+
+static bool inter_guild_validate_bmp_emblem(const char *emblem, unsigned long emblem_len)
 {
 	nullpo_retr(false, emblem);
 
@@ -1807,4 +1822,6 @@ void inter_guild_defaults(void)
 	inter_guild->change_leader = inter_guild_change_leader;
 	inter_guild->is_guild_master = inter_guild_is_guild_master;
 	inter_guild->validate_emblem = inter_guild_validate_emblem;
+	inter_guild->validate_bmp_emblem = inter_guild_validate_bmp_emblem;
+	inter_guild->validate_gif_emblem = inter_guild_validate_gif_emblem;
 }

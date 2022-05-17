@@ -76,6 +76,7 @@ struct online_char_data {
 
 struct online_char_data2 {
 	int emblem_guild_id;
+	bool emblem_gif;
 	char *emblem_data;
 	int emblem_data_size;
 };

@@ -1356,6 +1356,7 @@ static int guild_emblem_changed(int len, int guild_id, int emblem_id, const char
 	if(g==NULL)
 		return 0;
 
+        ShowError("guild_emblem_changed: len %d, id %d\n", len, emblem_id);
 	memcpy(g->emblem_data,data,len);
 	g->emblem_len=len;
 	g->emblem_id=emblem_id;
