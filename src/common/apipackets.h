@@ -73,7 +73,7 @@ enum adventurer_agency_flags {
 // base
 struct PACKET_API_PROXY {
 	int16 packet_id;
-	int16 packet_len;
+	uint16 packet_len;
 	int16 msg_id;
 	int32 char_server_id;
 	int32 client_fd;
