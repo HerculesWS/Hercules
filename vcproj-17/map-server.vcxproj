@@ -193,6 +193,7 @@
     <ClInclude Include="..\src\map\macro.h" />
     <ClInclude Include="..\src\map\mail.h" />
     <ClInclude Include="..\src\map\map.h" />
+    <ClInclude Include="..\src\map\mapiif.h" />
     <ClInclude Include="..\src\map\mapreg.h" />
     <ClInclude Include="..\src\map\homunculus.h" />
     <ClInclude Include="..\src\map\HPMmap.h" />
@@ -284,6 +285,7 @@
     <ClCompile Include="..\src\map\macro.c" />
     <ClCompile Include="..\src\map\mail.c" />
     <ClCompile Include="..\src\map\map.c" />
+    <ClCompile Include="..\src\map\mapiif.c" />
     <ClCompile Include="..\src\map\mapreg_sql.c" />
     <ClCompile Include="..\src\map\homunculus.c" />
     <ClCompile Include="..\src\map\HPMmap.c" />

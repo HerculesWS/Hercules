@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -11,8 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{D356871D-58E1-450B-967A-E4E9646175AF}</ProjectGuid>
-    <RootNamespace>char-server</RootNamespace>
+    <ProjectGuid>{4960b7c9-d943-4eb6-a5ed-9a38ed1f437c}</ProjectGuid>
+    <RootNamespace>api-server</RootNamespace>
     <Keyword>Win32Proj</Keyword>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -48,14 +48,14 @@
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectName)\$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">char-server</TargetName>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">char-server</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">api-server</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">api-server</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>..\src;..\3rdparty;..\3rdparty\mariadb\include;..\3rdparty\zlib\include;..\3rdparty\msinttypes\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_WIN32;__WIN32;_DEBUG;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;FD_SETSIZE=4096;LIBCONFIG_STATIC;YY_USE_CONST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WIN32;__WIN32;_DEBUG;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;FD_SETSIZE=4096;LIBCONFIG_STATIC;YY_USE_CONST;USE_HTTP_PARSER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessToFile>false</PreprocessToFile>
       <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
       <ExceptionHandling>
@@ -70,7 +70,7 @@
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <CompileAs>CompileAsC</CompileAs>
-      <DisableSpecificWarnings>4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4100;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -105,10 +105,14 @@
       </AdditionalOptions>
       <PrecompiledHeader>
       </PrecompiledHeader>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>
+      </PrecompiledHeaderOutputFile>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <CompileAs>CompileAsC</CompileAs>
-      <DisableSpecificWarnings>4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4100;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -130,6 +134,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\3rdparty\cJSON\cJSON.h" />
+    <ClInclude Include="..\3rdparty\cJSON\cJSON_Utils.h" />
+    <ClInclude Include="..\3rdparty\http-parser\http_parser.h" />
     <ClInclude Include="..\3rdparty\libconfig\grammar.h" />
     <ClInclude Include="..\3rdparty\libconfig\libconfig.h" />
     <ClInclude Include="..\3rdparty\libconfig\parsectx.h" />
@@ -137,92 +144,96 @@
     <ClInclude Include="..\3rdparty\libconfig\scanner.h" />
     <ClInclude Include="..\3rdparty\libconfig\strbuf.h" />
     <ClInclude Include="..\3rdparty\libconfig\wincompat.h" />
-    <ClInclude Include="..\3rdparty\mt19937ar\mt19937ar.h" />
-    <ClInclude Include="..\src\char\capiif.h" />
-    <ClInclude Include="..\src\char\int_adventurer_agency.h" />
-    <ClInclude Include="..\src\char\int_rodex.h" />
-    <ClInclude Include="..\src\char\int_userconfig.h" />
+    <ClInclude Include="..\3rdparty\multipart-parser\multipartparser.h" />
+    <ClInclude Include="..\src\api\aclif.h" />
+    <ClInclude Include="..\src\api\aloginif.h" />
+    <ClInclude Include="..\src\api\api.h" />
+    <ClInclude Include="..\src\api\apisessiondata.h" />
+    <ClInclude Include="..\src\api\handlerfunc.h" />
+    <ClInclude Include="..\src\api\handlers.h" />
+    <ClInclude Include="..\src\api\HPMapi.h" />
+    <ClInclude Include="..\src\api\httphandler.h" />
+    <ClInclude Include="..\src\api\httpparsehandler.h" />
+    <ClInclude Include="..\src\api\httpparser.h" />
+    <ClInclude Include="..\src\api\httpsender.h" />
+    <ClInclude Include="..\src\api\http_include.h" />
+    <ClInclude Include="..\src\api\jsonparser.h" />
+    <ClInclude Include="..\src\api\jsonwriter.h" />
+    <ClInclude Include="..\src\api\mimepart.h" />
+    <ClInclude Include="..\src\api\postheader.h" />
+    <ClInclude Include="..\src\api\urlhandlers.h" />
     <ClInclude Include="..\src\common\atomic.h" />
-    <ClInclude Include="..\src\common\cbasetypes.h" />
     <ClInclude Include="..\src\common\conf.h" />
-    <ClInclude Include="..\src\common\core.h" />
-    <ClInclude Include="..\src\common\console.h" />
-    <ClInclude Include="..\src\common\db.h" />
     <ClInclude Include="..\src\common\des.h" />
-    <ClInclude Include="..\src\common\ers.h" />
-    <ClInclude Include="..\src\common\grfio.h" />
     <ClInclude Include="..\src\common\hercules.h" />
-    <ClInclude Include="..\src\common\HPM.h" />
     <ClInclude Include="..\src\common\HPMDataCheck.h" />
-    <ClInclude Include="..\src\common\HPMi.h" />
     <ClInclude Include="..\src\common\HPMSymbols.inc.h" />
-    <ClInclude Include="..\src\common\memmgr.h" />
     <ClInclude Include="..\src\common\mapindex.h" />
-    <ClInclude Include="..\src\common\md5calc.h" />
-    <ClInclude Include="..\src\common\mmo.h" />
     <ClInclude Include="..\src\common\mutex.h" />
-    <ClInclude Include="..\src\common\nullpo.h" />
-    <ClInclude Include="..\src\common\packets_struct.h" />
-    <ClInclude Include="..\src\common\random.h" />
-    <ClInclude Include="..\src\common\showmsg.h" />
-    <ClInclude Include="..\src\common\socket.h" />
     <ClInclude Include="..\src\common\spinlock.h" />
-    <ClInclude Include="..\src\common\sql.h" />
-    <ClInclude Include="..\src\common\strlib.h" />
-    <ClInclude Include="..\src\common\sysinfo.h" />
     <ClInclude Include="..\src\common\thread.h" />
-    <ClInclude Include="..\src\common\timer.h" />
-    <ClInclude Include="..\src\common\utils.h" />
     <ClInclude Include="..\src\common\winapi.h" />
-    <ClInclude Include="..\src\char\HPMchar.h" />
-    <ClInclude Include="..\src\char\char.h" />
-    <ClInclude Include="..\src\char\geoip.h" />
-    <ClInclude Include="..\src\char\int_achievement.h" />
-    <ClInclude Include="..\src\char\int_auction.h" />
-    <ClInclude Include="..\src\char\int_clan.h" />
-    <ClInclude Include="..\src\char\int_elemental.h" />
-    <ClInclude Include="..\src\char\int_guild.h" />
-    <ClInclude Include="..\src\char\int_homun.h" />
-    <ClInclude Include="..\src\char\int_mail.h" />
-    <ClInclude Include="..\src\char\int_mercenary.h" />
-    <ClInclude Include="..\src\char\int_party.h" />
-    <ClInclude Include="..\src\char\int_pet.h" />
-    <ClInclude Include="..\src\char\int_quest.h" />
-    <ClInclude Include="..\src\char\int_storage.h" />
-    <ClInclude Include="..\src\char\inter.h" />
-    <ClInclude Include="..\src\char\loginif.h" />
-    <ClInclude Include="..\src\char\mapif.h" />
-    <ClInclude Include="..\src\char\pincode.h" />
     <ClInclude Include="..\src\config\classes\general.h" />
     <ClInclude Include="..\src\config\const.h" />
     <ClInclude Include="..\src\config\core.h" />
     <ClInclude Include="..\src\config\renewal.h" />
     <ClInclude Include="..\src\config\secure.h" />
+    <ClInclude Include="..\src\common\cbasetypes.h" />
+    <ClInclude Include="..\src\common\core.h" />
+    <ClInclude Include="..\src\common\console.h" />
+    <ClInclude Include="..\src\common\db.h" />
+    <ClInclude Include="..\src\common\ers.h" />
+    <ClInclude Include="..\src\common\grfio.h" />
+    <ClInclude Include="..\src\common\HPM.h" />
+    <ClInclude Include="..\src\common\HPMi.h" />
+    <ClInclude Include="..\src\common\memmgr.h" />
+    <ClInclude Include="..\src\common\md5calc.h" />
+    <ClInclude Include="..\src\common\mmo.h" />
+    <ClInclude Include="..\src\common\nullpo.h" />
+    <ClInclude Include="..\src\common\random.h" />
+    <ClInclude Include="..\src\common\showmsg.h" />
+    <ClInclude Include="..\src\common\socket.h" />
+    <ClInclude Include="..\src\common\sql.h" />
+    <ClInclude Include="..\src\common\strlib.h" />
+    <ClInclude Include="..\src\common\sysinfo.h" />
+    <ClInclude Include="..\src\common\timer.h" />
+    <ClInclude Include="..\src\common\utils.h" />
+    <ClInclude Include="..\3rdparty\mt19937ar\mt19937ar.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\3rdparty\cJSON\cJSON.c" />
+    <ClCompile Include="..\3rdparty\cJSON\cJSON_Utils.c" />
+    <ClCompile Include="..\3rdparty\http-parser\http_parser.c" />
     <ClCompile Include="..\3rdparty\libconfig\grammar.c" />
     <ClCompile Include="..\3rdparty\libconfig\libconfig.c" />
     <ClCompile Include="..\3rdparty\libconfig\scanctx.c" />
     <ClCompile Include="..\3rdparty\libconfig\scanner.c" />
     <ClCompile Include="..\3rdparty\libconfig\strbuf.c" />
-    <ClCompile Include="..\3rdparty\mt19937ar\mt19937ar.c" />
-    <ClCompile Include="..\src\char\capiif.c" />
-    <ClCompile Include="..\src\char\int_adventurer_agency.c" />
-    <ClCompile Include="..\src\char\int_rodex.c" />
-    <ClCompile Include="..\src\char\int_userconfig.c" />
+    <ClCompile Include="..\3rdparty\multipart-parser\multipartparser.c" />
+    <ClCompile Include="..\src\api\aclif.c" />
+    <ClCompile Include="..\src\api\aloginif.c" />
+    <ClCompile Include="..\src\api\api.c" />
+    <ClCompile Include="..\src\api\handlers.c" />
+    <ClCompile Include="..\src\api\HPMapi.c" />
+    <ClCompile Include="..\src\api\httpparser.c" />
+    <ClCompile Include="..\src\api\httpsender.c" />
+    <ClCompile Include="..\src\api\jsonparser.c" />
+    <ClCompile Include="..\src\api\jsonwriter.c" />
+    <ClCompile Include="..\src\api\postheader.c" />
+    <ClCompile Include="..\src\common\des.c" />
+    <ClCompile Include="..\src\common\mapindex.c" />
+    <ClCompile Include="..\src\common\mutex.c" />
+    <ClCompile Include="..\src\common\thread.c" />
     <ClCompile Include="..\src\common\conf.c" />
     <ClCompile Include="..\src\common\core.c" />
     <ClCompile Include="..\src\common\packets.c" />
     <ClCompile Include="..\src\common\console.c" />
     <ClCompile Include="..\src\common\db.c" />
-    <ClCompile Include="..\src\common\des.c" />
     <ClCompile Include="..\src\common\ers.c" />
     <ClCompile Include="..\src\common\grfio.c" />
     <ClCompile Include="..\src\common\HPM.c" />
     <ClCompile Include="..\src\common\memmgr.c" />
-    <ClCompile Include="..\src\common\mapindex.c" />
     <ClCompile Include="..\src\common\md5calc.c" />
-    <ClCompile Include="..\src\common\mutex.c" />
     <ClCompile Include="..\src\common\nullpo.c" />
     <ClCompile Include="..\src\common\random.c" />
     <ClCompile Include="..\src\common\showmsg.c" />
@@ -230,28 +241,9 @@
     <ClCompile Include="..\src\common\sql.c" />
     <ClCompile Include="..\src\common\strlib.c" />
     <ClCompile Include="..\src\common\sysinfo.c" />
-    <ClCompile Include="..\src\common\thread.c" />
     <ClCompile Include="..\src\common\timer.c" />
     <ClCompile Include="..\src\common\utils.c" />
-    <ClCompile Include="..\src\char\HPMchar.c" />
-    <ClCompile Include="..\src\char\char.c" />
-    <ClCompile Include="..\src\char\geoip.c" />
-    <ClCompile Include="..\src\char\int_achievement.c" />
-    <ClCompile Include="..\src\char\int_auction.c" />
-    <ClCompile Include="..\src\char\int_clan.c" />
-    <ClCompile Include="..\src\char\int_elemental.c" />
-    <ClCompile Include="..\src\char\int_guild.c" />
-    <ClCompile Include="..\src\char\int_homun.c" />
-    <ClCompile Include="..\src\char\int_mail.c" />
-    <ClCompile Include="..\src\char\int_mercenary.c" />
-    <ClCompile Include="..\src\char\int_party.c" />
-    <ClCompile Include="..\src\char\int_pet.c" />
-    <ClCompile Include="..\src\char\int_quest.c" />
-    <ClCompile Include="..\src\char\int_storage.c" />
-    <ClCompile Include="..\src\char\inter.c" />
-    <ClCompile Include="..\src\char\loginif.c" />
-    <ClCompile Include="..\src\char\mapif.c" />
-    <ClCompile Include="..\src\char\pincode.c" />
+    <ClCompile Include="..\3rdparty\mt19937ar\mt19937ar.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

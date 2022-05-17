@@ -103,6 +103,9 @@
     <ClCompile Include="..\src\login\lclif.c">
       <Filter>login</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\login\lapiif.c">
+      <Filter>login</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\login\account.h">
@@ -253,6 +256,9 @@
       <Filter>login</Filter>
     </ClInclude>
     <ClInclude Include="..\src\login\lclif.p.h">
+      <Filter>login</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\login\lapiif.h">
       <Filter>login</Filter>
     </ClInclude>
   </ItemGroup>

@@ -159,6 +159,7 @@
     <ClInclude Include="..\src\login\account.h" />
     <ClInclude Include="..\src\login\HPMlogin.h" />
     <ClInclude Include="..\src\login\ipban.h" />
+    <ClInclude Include="..\src\login\lapiif.h" />
     <ClInclude Include="..\src\login\lclif.h" />
     <ClInclude Include="..\src\login\lclif.p.h" />
     <ClInclude Include="..\src\login\login.h" />
@@ -197,6 +198,7 @@
     <ClCompile Include="..\src\login\account.c" />
     <ClCompile Include="..\src\login\HPMlogin.c" />
     <ClCompile Include="..\src\login\ipban.c" />
+    <ClCompile Include="..\src\login\lapiif.c" />
     <ClCompile Include="..\src\login\lclif.c" />
     <ClCompile Include="..\src\login\login.c" />
     <ClCompile Include="..\src\login\loginlog.c" />
