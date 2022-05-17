@@ -207,6 +207,15 @@ struct PACKET_API_party_del {
 	struct PACKET_API_party_del_data data;
 } __attribute__((packed));
 
+struct PACKET_API_party_info_data {
+	int account_id;
+	int master_aid;
+} __attribute__((packed));
+
+struct PACKET_API_party_info {
+	struct PACKET_API_party_info_data data;
+} __attribute__((packed));
+
 // char to api
 struct PACKET_API_REPLY_userconfig_load_emotes {
 	struct userconfig_emotes emotes;
@@ -268,6 +277,10 @@ struct PACKET_API_REPLY_party_get {
 } __attribute__((packed));
 
 struct PACKET_API_REPLY_party_del {
+	int type;
+} __attribute__((packed));
+
+struct PACKET_API_REPLY_party_info {
 	int type;
 } __attribute__((packed));
 

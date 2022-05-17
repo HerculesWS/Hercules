@@ -826,6 +826,7 @@ static bool aclif_decode_post_headers(int fd, struct api_session_data *sd)
 	CHECK_POST_HEADER_PRESENT_OR_EMPTY(MEMO)
 	CHECK_POST_HEADER_PRESENT(CHAR_NAME)
 	CHECK_POST_HEADER_PRESENT(MASTER_AID)
+	CHECK_POST_HEADER_PRESENT(QUERY_AID)
 
 	const int count = aclif->get_post_headers_count(sd);
 	if ((sd->handler->flags & REQ_EXTRA_HEADERS) != 0) {

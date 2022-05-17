@@ -33,6 +33,7 @@ handler2(HTTP_POST, "/party/list", party_list, REQ_API_AUTH | REQ_CHAR_ID | REQ_
 handler2(HTTP_POST, "/party/get", party_get, REQ_API_AUTH | REQ_CHAR_ID);
 handler2(HTTP_POST, "/party/add", party_add, REQ_API_AUTH | REQ_CHAR_ID | REQ_PARTY_ADD);
 handler2(HTTP_POST, "/party/del", party_del, REQ_API_AUTH | REQ_MASTER_AID);
+handler2(HTTP_POST, "/party/info", party_info, REQ_API_AUTH | REQ_CHAR_ID | REQ_QUERY_AID);
 handler(HTTP_GET, "/test/url", test_url, REQ_DEFAULT);
 packet_handler(userconfig_load_emotes);
 packet_handler(userconfig_load_hotkeys);

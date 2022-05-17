@@ -42,6 +42,7 @@ enum API_MSG {
 	API_MSG_party_get = 16,
 	API_MSG_party_add = 17,
 	API_MSG_party_del = 18,
+	API_MSG_party_info = 19,
 	API_MSG_CUSTOM,
 	API_MSG_MAX = API_MSG_CUSTOM + MAX_CUSTOM_API_MSG
 };

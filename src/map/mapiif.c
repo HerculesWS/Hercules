@@ -24,7 +24,6 @@
 #include "mapiif.h"
 
 #include "common/api.h"
-#include "common/apipackets.h"
 #include "common/cbasetypes.h"
 #include "common/chunked.h"
 #include "common/core.h"
@@ -36,6 +35,10 @@
 #include "common/strlib.h"
 #include "common/timer.h"
 #include "common/HPM.h"
+#include "map/apipackets.h"
+#include "map/chrif.h"
+#include "map/map.h"
+#include "map/party.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -61,14 +64,29 @@ static int mapiif_parse_fromchar_api_proxy(int fd)
 	}
 
 	switch (msg) {
-		default:
-			ShowError("Unknown proxy packet 0x%04x received from char-server, disconnecting.\n", msg);
-			sockt->eof(fd);
-			return 0;
+	case API_MSG_party_info:
+		mapiif->parse_adventurer_agency_info(fd);
+		break;
+	default:
+		ShowError("Unknown proxy packet 0x%04x received from char-server, disconnecting.\n", msg);
+		sockt->eof(fd);
+		return 0;
 	}
 
 	RFIFOSKIP(fd, packet->packet_len);
 	return 1;
+}
+
+void mapiif_parse_adventurer_agency_info(int fd)
+{
+	RFIFO_API_DATA(p, party_info);
+	struct map_session_data *sd = map->id2sd(p->account_id);
+	if (sd != NULL)
+		party->agency_request_join(sd, map->id2sd(p->master_aid));
+
+	WFIFO_APIMAP_PACKET_REPLY(party_info);
+	data->type = (sd == NULL);
+	WFIFOSET(chrif->fd, packet->packet_len);
 }
 
 static void do_init_mapiif(bool minimal)
@@ -85,4 +103,5 @@ void mapiif_defaults(void) {
 	mapiif->init = do_init_mapiif;
 	mapiif->final = do_final_mapiif;
 	mapiif->parse_fromchar_api_proxy = mapiif_parse_fromchar_api_proxy;
+	mapiif->parse_adventurer_agency_info = mapiif_parse_adventurer_agency_info;
 }

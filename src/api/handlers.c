@@ -525,6 +525,37 @@ HTTP_URL(party_del)
 	return true;
 }
 
+HTTP_DATA(party_info)
+{
+	GET_HTTP_DATA(p, party_info);
+
+	JsonW *json = jsonwriter->create_empty();
+	jsonwriter->add_new_number(json, "Type", p->type);
+
+#ifdef DEBUG_LOG
+	jsonwriter->print(json);
+#endif
+
+	httpsender->send_json(fd, json);
+	jsonwriter->delete(json);
+	aclif->terminate_connection(fd);
+}
+
+HTTP_URL(party_info)
+{
+#ifdef DEBUG_LOG
+	ShowInfo("party_info called %d: %s\n", fd, httpparser->get_method_str(sd));
+#endif
+	aclif->show_request(fd, sd, false);
+
+	CREATE_HTTP_DATA(data, party_info);
+	data.account_id = RET_INT_HEADER(ACCOUNT_ID, 0);
+	data.master_aid = RET_INT_HEADER(QUERY_AID, 0);
+	SEND_MAP_ASYNC_DATA(party_info, &data);
+
+	return true;
+}
+
 HTTP_URL(test_url)
 {
 #ifdef DEBUG_LOG
