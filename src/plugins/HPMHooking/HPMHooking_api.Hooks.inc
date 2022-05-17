@@ -1643,6 +1643,33 @@ void HP_aclif_remove_remove_timer(struct online_api_login_data *data) {
 	}
 	return;
 }
+const char* HP_aclif_get_first_world_name(void) {
+	int hIndex = 0;
+	const char* retVal___ = NULL;
+	if (HPMHooks.count.HP_aclif_get_first_world_name_pre > 0) {
+		const char* (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_aclif_get_first_world_name_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_aclif_get_first_world_name_pre[hIndex].func;
+			retVal___ = preHookFunc();
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.aclif.get_first_world_name();
+	}
+	if (HPMHooks.count.HP_aclif_get_first_world_name_post > 0) {
+		const char* (*postHookFunc) (const char* retVal___);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_aclif_get_first_world_name_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_aclif_get_first_world_name_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___);
+		}
+	}
+	return retVal___;
+}
 void HP_aclif_show_request(int fd, struct api_session_data *sd, bool show_http_headers) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_aclif_show_request_pre > 0) {
@@ -8995,6 +9022,33 @@ int HP_showmsg_showMessageV(const char *string, va_list ap) {
 			postHookFunc = HPMHooks.list.HP_showmsg_showMessageV_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, string, ap___copy);
 			va_end(ap___copy);
+		}
+	}
+	return retVal___;
+}
+const char* HP_showmsg_getLogFileName(void) {
+	int hIndex = 0;
+	const char* retVal___ = NULL;
+	if (HPMHooks.count.HP_showmsg_getLogFileName_pre > 0) {
+		const char* (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_showmsg_getLogFileName_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_showmsg_getLogFileName_pre[hIndex].func;
+			retVal___ = preHookFunc();
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.showmsg.getLogFileName();
+	}
+	if (HPMHooks.count.HP_showmsg_getLogFileName_post > 0) {
+		const char* (*postHookFunc) (const char* retVal___);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_showmsg_getLogFileName_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_showmsg_getLogFileName_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___);
 		}
 	}
 	return retVal___;

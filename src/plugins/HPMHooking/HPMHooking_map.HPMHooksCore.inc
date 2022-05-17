@@ -6150,6 +6150,8 @@ struct {
 	struct HPMHookPoint *HP_showmsg_clearScreen_post;
 	struct HPMHookPoint *HP_showmsg_showMessageV_pre;
 	struct HPMHookPoint *HP_showmsg_showMessageV_post;
+	struct HPMHookPoint *HP_showmsg_getLogFileName_pre;
+	struct HPMHookPoint *HP_showmsg_getLogFileName_post;
 	struct HPMHookPoint *HP_skill_init_pre;
 	struct HPMHookPoint *HP_skill_init_post;
 	struct HPMHookPoint *HP_skill_final_pre;
@@ -13637,6 +13639,8 @@ struct {
 	int HP_showmsg_clearScreen_post;
 	int HP_showmsg_showMessageV_pre;
 	int HP_showmsg_showMessageV_post;
+	int HP_showmsg_getLogFileName_pre;
+	int HP_showmsg_getLogFileName_post;
 	int HP_skill_init_pre;
 	int HP_skill_init_post;
 	int HP_skill_final_pre;

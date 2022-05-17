@@ -3148,6 +3148,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(showmsg->final, HP_showmsg_final) },
 	{ HP_POP(showmsg->clearScreen, HP_showmsg_clearScreen) },
 	{ HP_POP(showmsg->showMessageV, HP_showmsg_showMessageV) },
+	{ HP_POP(showmsg->getLogFileName, HP_showmsg_getLogFileName) },
 /* skill_interface */
 	{ HP_POP(skill->init, HP_skill_init) },
 	{ HP_POP(skill->final, HP_skill_final) },

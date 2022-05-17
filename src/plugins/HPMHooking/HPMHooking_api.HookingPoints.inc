@@ -88,6 +88,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(aclif->get_char_server_id, HP_aclif_get_char_server_id) },
 	{ HP_POP(aclif->add_remove_timer, HP_aclif_add_remove_timer) },
 	{ HP_POP(aclif->remove_remove_timer, HP_aclif_remove_remove_timer) },
+	{ HP_POP(aclif->get_first_world_name, HP_aclif_get_first_world_name) },
 	{ HP_POP(aclif->show_request, HP_aclif_show_request) },
 /* aloginif_interface */
 	{ HP_POP(aloginif->init, HP_aloginif_init) },
@@ -382,6 +383,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(showmsg->final, HP_showmsg_final) },
 	{ HP_POP(showmsg->clearScreen, HP_showmsg_clearScreen) },
 	{ HP_POP(showmsg->showMessageV, HP_showmsg_showMessageV) },
+	{ HP_POP(showmsg->getLogFileName, HP_showmsg_getLogFileName) },
 /* socket_interface */
 	{ HP_POP(sockt->init, HP_sockt_init) },
 	{ HP_POP(sockt->final, HP_sockt_final) },

@@ -640,6 +640,10 @@ struct {
 	struct HPMHookPoint *HP_inter_guild_is_guild_master_post;
 	struct HPMHookPoint *HP_inter_guild_validate_emblem_pre;
 	struct HPMHookPoint *HP_inter_guild_validate_emblem_post;
+	struct HPMHookPoint *HP_inter_guild_validate_bmp_emblem_pre;
+	struct HPMHookPoint *HP_inter_guild_validate_bmp_emblem_post;
+	struct HPMHookPoint *HP_inter_guild_validate_gif_emblem_pre;
+	struct HPMHookPoint *HP_inter_guild_validate_gif_emblem_post;
 	struct HPMHookPoint *HP_inter_homunculus_sql_init_pre;
 	struct HPMHookPoint *HP_inter_homunculus_sql_init_post;
 	struct HPMHookPoint *HP_inter_homunculus_sql_final_pre;
@@ -1468,6 +1472,8 @@ struct {
 	struct HPMHookPoint *HP_showmsg_clearScreen_post;
 	struct HPMHookPoint *HP_showmsg_showMessageV_pre;
 	struct HPMHookPoint *HP_showmsg_showMessageV_post;
+	struct HPMHookPoint *HP_showmsg_getLogFileName_pre;
+	struct HPMHookPoint *HP_showmsg_getLogFileName_post;
 	struct HPMHookPoint *HP_sockt_init_pre;
 	struct HPMHookPoint *HP_sockt_init_post;
 	struct HPMHookPoint *HP_sockt_final_pre;
@@ -2381,6 +2387,10 @@ struct {
 	int HP_inter_guild_is_guild_master_post;
 	int HP_inter_guild_validate_emblem_pre;
 	int HP_inter_guild_validate_emblem_post;
+	int HP_inter_guild_validate_bmp_emblem_pre;
+	int HP_inter_guild_validate_bmp_emblem_post;
+	int HP_inter_guild_validate_gif_emblem_pre;
+	int HP_inter_guild_validate_gif_emblem_post;
 	int HP_inter_homunculus_sql_init_pre;
 	int HP_inter_homunculus_sql_init_post;
 	int HP_inter_homunculus_sql_final_pre;
@@ -3209,6 +3219,8 @@ struct {
 	int HP_showmsg_clearScreen_post;
 	int HP_showmsg_showMessageV_pre;
 	int HP_showmsg_showMessageV_post;
+	int HP_showmsg_getLogFileName_pre;
+	int HP_showmsg_getLogFileName_post;
 	int HP_sockt_init_pre;
 	int HP_sockt_init_post;
 	int HP_sockt_final_pre;

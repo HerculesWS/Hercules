@@ -7958,6 +7958,33 @@ int HP_showmsg_showMessageV(const char *string, va_list ap) {
 	}
 	return retVal___;
 }
+const char* HP_showmsg_getLogFileName(void) {
+	int hIndex = 0;
+	const char* retVal___ = NULL;
+	if (HPMHooks.count.HP_showmsg_getLogFileName_pre > 0) {
+		const char* (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_showmsg_getLogFileName_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_showmsg_getLogFileName_pre[hIndex].func;
+			retVal___ = preHookFunc();
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.showmsg.getLogFileName();
+	}
+	if (HPMHooks.count.HP_showmsg_getLogFileName_post > 0) {
+		const char* (*postHookFunc) (const char* retVal___);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_showmsg_getLogFileName_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_showmsg_getLogFileName_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___);
+		}
+	}
+	return retVal___;
+}
 /* socket_interface */
 void HP_sockt_init(void) {
 	int hIndex = 0;

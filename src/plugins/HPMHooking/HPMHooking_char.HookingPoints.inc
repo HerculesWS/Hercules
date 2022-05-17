@@ -348,6 +348,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(inter_guild->change_leader, HP_inter_guild_change_leader) },
 	{ HP_POP(inter_guild->is_guild_master, HP_inter_guild_is_guild_master) },
 	{ HP_POP(inter_guild->validate_emblem, HP_inter_guild_validate_emblem) },
+	{ HP_POP(inter_guild->validate_bmp_emblem, HP_inter_guild_validate_bmp_emblem) },
+	{ HP_POP(inter_guild->validate_gif_emblem, HP_inter_guild_validate_gif_emblem) },
 /* inter_homunculus_interface */
 	{ HP_POP(inter_homunculus->sql_init, HP_inter_homunculus_sql_init) },
 	{ HP_POP(inter_homunculus->sql_final, HP_inter_homunculus_sql_final) },
@@ -783,6 +785,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(showmsg->final, HP_showmsg_final) },
 	{ HP_POP(showmsg->clearScreen, HP_showmsg_clearScreen) },
 	{ HP_POP(showmsg->showMessageV, HP_showmsg_showMessageV) },
+	{ HP_POP(showmsg->getLogFileName, HP_showmsg_getLogFileName) },
 /* socket_interface */
 	{ HP_POP(sockt->init, HP_sockt_init) },
 	{ HP_POP(sockt->final, HP_sockt_final) },

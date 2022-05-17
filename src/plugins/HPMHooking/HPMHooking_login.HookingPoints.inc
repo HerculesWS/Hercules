@@ -344,6 +344,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(showmsg->final, HP_showmsg_final) },
 	{ HP_POP(showmsg->clearScreen, HP_showmsg_clearScreen) },
 	{ HP_POP(showmsg->showMessageV, HP_showmsg_showMessageV) },
+	{ HP_POP(showmsg->getLogFileName, HP_showmsg_getLogFileName) },
 /* socket_interface */
 	{ HP_POP(sockt->init, HP_sockt_init) },
 	{ HP_POP(sockt->final, HP_sockt_final) },

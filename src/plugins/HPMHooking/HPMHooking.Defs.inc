@@ -298,6 +298,8 @@ typedef void (*HPMHOOK_pre_aclif_add_remove_timer) (struct online_api_login_data
 typedef void (*HPMHOOK_post_aclif_add_remove_timer) (struct online_api_login_data *data);
 typedef void (*HPMHOOK_pre_aclif_remove_remove_timer) (struct online_api_login_data **data);
 typedef void (*HPMHOOK_post_aclif_remove_remove_timer) (struct online_api_login_data *data);
+typedef const char* (*HPMHOOK_pre_aclif_get_first_world_name) (void);
+typedef const char* (*HPMHOOK_post_aclif_get_first_world_name) (const char* retVal___);
 typedef void (*HPMHOOK_pre_aclif_show_request) (int *fd, struct api_session_data **sd, bool *show_http_headers);
 typedef void (*HPMHOOK_post_aclif_show_request) (int fd, struct api_session_data *sd, bool show_http_headers);
 #endif // API_ACLIF_H
@@ -4104,8 +4106,12 @@ typedef bool (*HPMHOOK_pre_inter_guild_change_leader) (int *guild_id, const char
 typedef bool (*HPMHOOK_post_inter_guild_change_leader) (bool retVal___, int guild_id, const char *name, int len);
 typedef bool (*HPMHOOK_pre_inter_guild_is_guild_master) (int *char_id, int *guild_id);
 typedef bool (*HPMHOOK_post_inter_guild_is_guild_master) (bool retVal___, int char_id, int guild_id);
-typedef bool (*HPMHOOK_pre_inter_guild_validate_emblem) (const char **emblem, unsigned long *emblem_len);
-typedef bool (*HPMHOOK_post_inter_guild_validate_emblem) (bool retVal___, const char *emblem, unsigned long emblem_len);
+typedef bool (*HPMHOOK_pre_inter_guild_validate_emblem) (const char **emblem, unsigned long *emblem_len, bool *is_gif);
+typedef bool (*HPMHOOK_post_inter_guild_validate_emblem) (bool retVal___, const char *emblem, unsigned long emblem_len, bool is_gif);
+typedef bool (*HPMHOOK_pre_inter_guild_validate_bmp_emblem) (const char **emblem, unsigned long *emblem_len);
+typedef bool (*HPMHOOK_post_inter_guild_validate_bmp_emblem) (bool retVal___, const char *emblem, unsigned long emblem_len);
+typedef bool (*HPMHOOK_pre_inter_guild_validate_gif_emblem) (const char **emblem, unsigned long *emblem_len);
+typedef bool (*HPMHOOK_post_inter_guild_validate_gif_emblem) (bool retVal___, const char *emblem, unsigned long emblem_len);
 #endif // CHAR_INT_GUILD_H
 #ifdef CHAR_INT_HOMUN_H /* inter_homunculus */
 typedef int (*HPMHOOK_pre_inter_homunculus_sql_init) (void);
@@ -8188,6 +8194,8 @@ typedef void (*HPMHOOK_pre_showmsg_clearScreen) (void);
 typedef void (*HPMHOOK_post_showmsg_clearScreen) (void);
 typedef int (*HPMHOOK_pre_showmsg_showMessageV) (const char **string, va_list ap);
 typedef int (*HPMHOOK_post_showmsg_showMessageV) (int retVal___, const char *string, va_list ap);
+typedef const char* (*HPMHOOK_pre_showmsg_getLogFileName) (void);
+typedef const char* (*HPMHOOK_post_showmsg_getLogFileName) (const char* retVal___);
 #endif // COMMON_SHOWMSG_H
 #ifdef MAP_SKILL_H /* skill */
 typedef int (*HPMHOOK_pre_skill_init) (bool *minimal);

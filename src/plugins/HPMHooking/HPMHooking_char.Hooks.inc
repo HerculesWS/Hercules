@@ -8207,14 +8207,41 @@ bool HP_inter_guild_is_guild_master(int char_id, int guild_id) {
 	}
 	return retVal___;
 }
-bool HP_inter_guild_validate_emblem(const char *emblem, unsigned long emblem_len) {
+bool HP_inter_guild_validate_emblem(const char *emblem, unsigned long emblem_len, bool is_gif) {
 	int hIndex = 0;
 	bool retVal___ = false;
 	if (HPMHooks.count.HP_inter_guild_validate_emblem_pre > 0) {
-		bool (*preHookFunc) (const char **emblem, unsigned long *emblem_len);
+		bool (*preHookFunc) (const char **emblem, unsigned long *emblem_len, bool *is_gif);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_guild_validate_emblem_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_inter_guild_validate_emblem_pre[hIndex].func;
+			retVal___ = preHookFunc(&emblem, &emblem_len, &is_gif);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.inter_guild.validate_emblem(emblem, emblem_len, is_gif);
+	}
+	if (HPMHooks.count.HP_inter_guild_validate_emblem_post > 0) {
+		bool (*postHookFunc) (bool retVal___, const char *emblem, unsigned long emblem_len, bool is_gif);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_guild_validate_emblem_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_inter_guild_validate_emblem_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, emblem, emblem_len, is_gif);
+		}
+	}
+	return retVal___;
+}
+bool HP_inter_guild_validate_bmp_emblem(const char *emblem, unsigned long emblem_len) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_inter_guild_validate_bmp_emblem_pre > 0) {
+		bool (*preHookFunc) (const char **emblem, unsigned long *emblem_len);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_guild_validate_bmp_emblem_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_inter_guild_validate_bmp_emblem_pre[hIndex].func;
 			retVal___ = preHookFunc(&emblem, &emblem_len);
 		}
 		if (*HPMforce_return) {
@@ -8223,12 +8250,39 @@ bool HP_inter_guild_validate_emblem(const char *emblem, unsigned long emblem_len
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.inter_guild.validate_emblem(emblem, emblem_len);
+		retVal___ = HPMHooks.source.inter_guild.validate_bmp_emblem(emblem, emblem_len);
 	}
-	if (HPMHooks.count.HP_inter_guild_validate_emblem_post > 0) {
+	if (HPMHooks.count.HP_inter_guild_validate_bmp_emblem_post > 0) {
 		bool (*postHookFunc) (bool retVal___, const char *emblem, unsigned long emblem_len);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_guild_validate_emblem_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_inter_guild_validate_emblem_post[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_guild_validate_bmp_emblem_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_inter_guild_validate_bmp_emblem_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, emblem, emblem_len);
+		}
+	}
+	return retVal___;
+}
+bool HP_inter_guild_validate_gif_emblem(const char *emblem, unsigned long emblem_len) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_inter_guild_validate_gif_emblem_pre > 0) {
+		bool (*preHookFunc) (const char **emblem, unsigned long *emblem_len);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_guild_validate_gif_emblem_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_inter_guild_validate_gif_emblem_pre[hIndex].func;
+			retVal___ = preHookFunc(&emblem, &emblem_len);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.inter_guild.validate_gif_emblem(emblem, emblem_len);
+	}
+	if (HPMHooks.count.HP_inter_guild_validate_gif_emblem_post > 0) {
+		bool (*postHookFunc) (bool retVal___, const char *emblem, unsigned long emblem_len);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_guild_validate_gif_emblem_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_inter_guild_validate_gif_emblem_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, emblem, emblem_len);
 		}
 	}
@@ -19280,6 +19334,33 @@ int HP_showmsg_showMessageV(const char *string, va_list ap) {
 			postHookFunc = HPMHooks.list.HP_showmsg_showMessageV_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, string, ap___copy);
 			va_end(ap___copy);
+		}
+	}
+	return retVal___;
+}
+const char* HP_showmsg_getLogFileName(void) {
+	int hIndex = 0;
+	const char* retVal___ = NULL;
+	if (HPMHooks.count.HP_showmsg_getLogFileName_pre > 0) {
+		const char* (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_showmsg_getLogFileName_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_showmsg_getLogFileName_pre[hIndex].func;
+			retVal___ = preHookFunc();
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.showmsg.getLogFileName();
+	}
+	if (HPMHooks.count.HP_showmsg_getLogFileName_post > 0) {
+		const char* (*postHookFunc) (const char* retVal___);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_showmsg_getLogFileName_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_showmsg_getLogFileName_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___);
 		}
 	}
 	return retVal___;
