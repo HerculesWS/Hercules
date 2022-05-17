@@ -56,6 +56,10 @@ CJSON_D = $(THIRDPARTY_D)/cJSON/
 CJSON_OBJ = $(addprefix $(CJSON_D)/, cJSON.o cJSON_Utils.o)
 CJSON_H = $(addprefix $(CJSON_D)/, cJSON.h cJSON_Utils.h)
 
+LIBGIF_D = $(THIRDPARTY_D)/libgif/
+LIBGIF_OBJ = $(addprefix $(LIBGIF_D)/, dgif_lib.o egif_lib.o gifalloc.o gif_err.o gif_font.o gif_hash.o openbsd-reallocarray.o)
+LIBGIF_H = $(addprefix $(LIBGIF_D)/, gif_hash.h gif_lib.h gif_lib_private.h)
+
 ifeq (@USE_LIBBACKTRACE@,yes)
 	LIBBACKTRACE_D = $(THIRDPARTY_D)/libbacktrace
 	LIBBACKTRACE_OBJ = $(addprefix $(LIBBACKTRACE_D)/, atomic.o backtrace.o \
@@ -82,7 +86,7 @@ API_H = api.h apipackets.h aclif.h aloginif.h HPMapi.h apisessiondata.h httppars
 
 HAVE_MYSQL=@HAVE_MYSQL@
 ifeq ($(HAVE_MYSQL),yes)
-	API_SERVER_SQL_DEPENDS=$(API_OBJ) $(COMMON_D)/obj_all/common.a $(COMMON_D)/obj_sql/common_sql.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) $(HTTPPARSER_OBJ) $(MULTIPARTPARSER_OBJ) $(CJSON_OBJ) $(LIBBACKTRACE_OBJ) $(SYSINFO_INC)
+	API_SERVER_SQL_DEPENDS=$(API_OBJ) $(COMMON_D)/obj_all/common.a $(COMMON_D)/obj_sql/common_sql.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) $(HTTPPARSER_OBJ) $(MULTIPARTPARSER_OBJ) $(CJSON_OBJ) $(LIBGIF_OBJ) $(LIBBACKTRACE_OBJ) $(SYSINFO_INC)
 else
 	API_SERVER_SQL_DEPENDS=needs_mysql
 endif
@@ -121,7 +125,7 @@ help:
 Makefile: Makefile.in
 	@$(MAKE) -C ../.. src/api/Makefile
 
-$(SYSINFO_INC): $(API_C) $(API_H) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(HTTPPARSER_H) $(MULTIPARTPARSER_H) $(CJSON_H) $(LIBCONFIG_H) $(LIBBACKTRACE_H)
+$(SYSINFO_INC): $(API_C) $(API_H) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(HTTPPARSER_H) $(MULTIPARTPARSER_H) $(CJSON_H) $(LIBGIF_H) $(LIBCONFIG_H) $(LIBBACKTRACE_H)
 	@echo "	MAKE	$@"
 	@$(MAKE) -C ../.. sysinfo
 
@@ -142,7 +146,7 @@ api-server: ../../api-server@EXEEXT@
 ../../api-server@EXEEXT@: $(API_SERVER_SQL_DEPENDS) Makefile
 	@echo "	LD	$(notdir $@)"
 	@$(CC) @STATIC@ @LDFLAGS@ -o ../../api-server@EXEEXT@ $(API_OBJ) $(COMMON_D)/obj_all/common.a $(COMMON_D)/obj_sql/common_sql.a \
-		$(MT19937AR_OBJ) $(LIBCONFIG_OBJ) $(HTTPPARSER_OBJ) $(MULTIPARTPARSER_OBJ) $(CJSON_OBJ) $(LIBBACKTRACE_OBJ) @LIBS@ @MYSQL_LIBS@
+		$(MT19937AR_OBJ) $(LIBCONFIG_OBJ) $(HTTPPARSER_OBJ) $(MULTIPARTPARSER_OBJ) $(CJSON_OBJ) $(LIBGIF_OBJ) $(LIBBACKTRACE_OBJ) @LIBS@ @MYSQL_LIBS@
 
 # missing object files
 $(COMMON_D)/obj_all/common.a:
@@ -169,6 +173,10 @@ $(CJSON_OBJ):
 	@echo "	MAKE	$@"
 	@$(MAKE) -C $(CJSON_D)
 
+$(LIBGIF_OBJ):
+	@echo "	MAKE	$@"
+	@$(MAKE) -C $(LIBGIF_D)
+
 $(MULTIPARTPARSER_OBJ):
 	@echo "	MAKE	$@"
 	@$(MAKE) -C $(MULTIPARTPARSER_D)
@@ -181,6 +189,6 @@ $(LIBBACKTRACE_OBJ):
 
 # api object files
 
-obj_sql/%.o: %.c $(API_H) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) $(HTTPPARSER_H) $(MULTIPARTPARSER_H) $(CJSON_H) $(LIBBACKTRACE_H) | obj_sql
+obj_sql/%.o: %.c $(API_H) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) $(HTTPPARSER_H) $(MULTIPARTPARSER_H) $(CJSON_H) $(LIBGIF_H) $(LIBBACKTRACE_H) | obj_sql
 	@echo "	CC	$<"
 	@$(CC) @CFLAGS@ @DEFS@ $(COMMON_INCLUDE) $(THIRDPARTY_INCLUDE) @MYSQL_CFLAGS@ @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
