@@ -855,7 +855,6 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "packet_mission_info_sub", sizeof(struct packet_mission_info_sub), SERVER_TYPE_MAP },
 		{ "packet_monster_hp", sizeof(struct packet_monster_hp), SERVER_TYPE_MAP },
 		{ "packet_notify_bounditem", sizeof(struct packet_notify_bounditem), SERVER_TYPE_MAP },
-		{ "packet_package_item_announce", sizeof(struct packet_package_item_announce), SERVER_TYPE_MAP },
 		{ "packet_party_leader_changed", sizeof(struct packet_party_leader_changed), SERVER_TYPE_MAP },
 		{ "packet_quest_add_header", sizeof(struct packet_quest_add_header), SERVER_TYPE_MAP },
 		{ "packet_quest_hunt_info", sizeof(struct packet_quest_hunt_info), SERVER_TYPE_MAP },
