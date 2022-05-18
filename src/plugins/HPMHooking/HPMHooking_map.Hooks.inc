@@ -9760,14 +9760,14 @@ void HP_clif_cashShopSchedule(int fd, struct map_session_data *sd) {
 	}
 	return;
 }
-void HP_clif_package_announce(struct map_session_data *sd, int nameid, int containerid) {
+void HP_clif_package_announce(struct map_session_data *sd, int nameid, int containerid, int refine_level) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_package_announce_pre > 0) {
-		void (*preHookFunc) (struct map_session_data **sd, int *nameid, int *containerid);
+		void (*preHookFunc) (struct map_session_data **sd, int *nameid, int *containerid, int *refine_level);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_package_announce_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_clif_package_announce_pre[hIndex].func;
-			preHookFunc(&sd, &nameid, &containerid);
+			preHookFunc(&sd, &nameid, &containerid, &refine_level);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -9775,13 +9775,13 @@ void HP_clif_package_announce(struct map_session_data *sd, int nameid, int conta
 		}
 	}
 	{
-		HPMHooks.source.clif.package_announce(sd, nameid, containerid);
+		HPMHooks.source.clif.package_announce(sd, nameid, containerid, refine_level);
 	}
 	if (HPMHooks.count.HP_clif_package_announce_post > 0) {
-		void (*postHookFunc) (struct map_session_data *sd, int nameid, int containerid);
+		void (*postHookFunc) (struct map_session_data *sd, int nameid, int containerid, int refine_level);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_package_announce_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_package_announce_post[hIndex].func;
-			postHookFunc(sd, nameid, containerid);
+			postHookFunc(sd, nameid, containerid, refine_level);
 		}
 	}
 	return;
