@@ -15854,9 +15854,9 @@ static void clif_parse_GuildMembersNear(int fd, struct map_session_data *sd) __a
 static void clif_parse_GuildMembersNear(int fd, struct map_session_data *sd)
 {
 #if PACKETVER_MAIN_NUM >= 20220216
-	const struct PACKET_CZ_SEE_GUILD_MEMBERS *packet = RP2PTR(fd);
+	const struct PACKET_CZ_APPROXIMATE_ACTOR *packet = RP2PTR(fd);
 	if (packet->unused1 != 1 || packet->unused2 != 1) {
-		ShowWarning("Unknown flags in CZ_SEE_GUILD_MEMBERS");
+		ShowWarning("Unknown flags in CZ_APPROXIMATE_ACTOR");
 	}
 #endif  // PACKETVER_MAIN_NUM >= 20220216
 }
