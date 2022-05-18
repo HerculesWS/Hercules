@@ -21474,6 +21474,10 @@ static void clif_package_item_announce(struct map_session_data *sd, int nameid, 
 	safestrncpy(p.Name, sd->status.name, sizeof(p.Name));
 	p.boxItemID_len = itemLen;
 	p.BoxItemID = containerid;
+#if PACKETVER_MAIN_NUM >= 20220518 || PACKETVER_ZERO_NUM >= 20220518
+	p.refineLevel_len = itemLen;
+	p.refineLevel = 0;
+#endif  // PACKETVER_MAIN_NUM >= 20091201
 
 	clif->send(&p, p.PacketLength, &sd->bl, ALL_CLIENT);
 #endif  // 20091201
