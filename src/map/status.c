@@ -5842,11 +5842,11 @@ static const char *status_get_name(const struct block_list *bl)
 		case BL_PET: return BL_UCCAST(BL_PET, bl)->pet.name;
 		case BL_HOM: return BL_UCCAST(BL_HOM, bl)->homunculus.name;
 		case BL_NPC: return BL_UCCAST(BL_NPC, bl)->name;
+		case BL_MER: return BL_UCCAST(BL_MER, bl)->db->name;
 		case BL_NUL:
 		case BL_SKILL:
 		case BL_CHAT:
 		case BL_ELEM:
-		case BL_MER:
 		case BL_ITEM:
 		case BL_ALL:
 			break;
