@@ -335,24 +335,23 @@ void grader_enchant_start(struct map_session_data *sd, int idx, int mat_idx, boo
 
 	const int grade_chance = gi->success_chance + (use_blessing ? gi->blessing.bonus * blessing_amount : 0);
 	if (rnd() % 100 >= grade_chance) {
+		if ((gi->announce & GRADE_ANNOUNCE_FAILURE) != 0)
+			clif->announce_grade_status(sd, sd->status.inventory[idx].nameid, sd->status.inventory[idx].grade, false, ALL_CLIENT);
+
 		switch (gmaterial->failure_behavior) {
 		case GRADE_FAILURE_BEHAVIOR_KEEP:
 			clif->grade_enchant_result(sd, idx, (enum grade_level)sd->status.inventory[idx].grade, GRADE_UPGRADE_FAILED_KEEP);
 			break;
 		case GRADE_FAILURE_BEHAVIOR_DOWNGRADE:
+			clif->grade_enchant_result(sd, idx, (enum grade_level)sd->status.inventory[idx].grade, GRADE_UPGRADE_FAILED_DOWNGRADE);
 			sd->status.inventory[idx].grade -= 1;
 			sd->status.inventory[idx].grade = cap_value(sd->status.inventory[idx].grade, ITEM_GRADE_NONE, ITEM_GRADE_MAX - 1);
-			clif->grade_enchant_result(sd, idx, (enum grade_level)sd->status.inventory[idx].grade, GRADE_UPGRADE_FAILED_DOWNGRADE);
 			break;
 		case GRADE_FAILURE_BEHAVIOR_DESTROY:
-			pc->delitem(sd, idx, 1, 0, DELITEM_FAILREFINE, LOG_TYPE_GRADE);
 			clif->grade_enchant_result(sd, idx, (enum grade_level)sd->status.inventory[idx].grade, GRADE_UPGRADE_FAILED_DESTROY);
+			pc->delitem(sd, idx, 1, 0, DELITEM_FAILREFINE, LOG_TYPE_GRADE);
 			break;
 		}
-
-		if ((gi->announce & GRADE_ANNOUNCE_FAILURE) != 0)
-			clif->announce_grade_status(sd, sd->status.inventory[idx].nameid, sd->status.inventory[idx].grade, false, ALL_CLIENT);
-
 	} else {
 		sd->status.inventory[idx].refine = 0; // Hardcoded in the client
 		sd->status.inventory[idx].grade += 1;
