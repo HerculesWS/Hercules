@@ -552,7 +552,7 @@ HTTP_URL(party_info)
 	aclif->show_request(fd, sd, false);
 
 	CREATE_HTTP_DATA(data, party_info);
-	data.account_id = RET_INT_HEADER(ACCOUNT_ID, 0);
+	data.account_id = sd->account_id;
 	data.master_aid = RET_INT_HEADER(QUERY_AID, 0);
 	SEND_MAP_ASYNC_DATA(party_info, &data);
 
