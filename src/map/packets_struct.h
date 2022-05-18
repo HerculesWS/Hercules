@@ -1041,8 +1041,9 @@ struct packet_script_clear {
 	uint32 NpcID;
 } __attribute__((packed));
 
+#if PACKETVER >= 20091201
 /* made possible thanks to Yommy!! */
-struct packet_package_item_announce {
+struct PACKET_ZC_BROADCASTING_SPECIAL_ITEM_OBTAIN_item {
 	int16 PacketType;
 	int16 PacketLength;
 	uint8 type;
@@ -1053,13 +1054,15 @@ struct packet_package_item_announce {
 #endif
 	int8 len;
 	char Name[NAME_LENGTH];
-	int8 unknown;  // probably unused
+	int8 boxItemID_len;
 #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 BoxItemID;
 #else
 	uint16 BoxItemID;
 #endif
 } __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_BROADCASTING_SPECIAL_ITEM_OBTAIN_item, 0x07fd)
+#endif
 
 /* made possible thanks to Yommy!! */
 struct packet_item_drop_announce {

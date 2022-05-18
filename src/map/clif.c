@@ -21456,23 +21456,27 @@ static void clif_scriptclear(struct map_session_data *sd, int npcid)
 /* Made Possible Thanks to Yommy! */
 static void clif_package_item_announce(struct map_session_data *sd, int nameid, int containerid)
 {
-	struct packet_package_item_announce p;
+#if PACKETVER >= 20091201
+	struct PACKET_ZC_BROADCASTING_SPECIAL_ITEM_OBTAIN_item p;
 
 	nullpo_retv(sd);
-	p.PacketType = package_item_announceType;
 #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
-	p.PacketLength = 7 + 4 + 4 + NAME_LENGTH;
-#else
-	p.PacketLength = 7 + 2 + 2 + NAME_LENGTH;
-#endif
-	p.type = 0x0;
+	const int itemLen = 4;
+#else  // PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+	const int itemLen = 2;
+#endif  // PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+
+	p.PacketType = HEADER_ZC_BROADCASTING_SPECIAL_ITEM_OBTAIN_item;
+	p.PacketLength = sizeof(struct PACKET_ZC_BROADCASTING_SPECIAL_ITEM_OBTAIN_item);
+	p.type = ITEM_OBTAIN_TYPE_BOX_ITEM;
 	p.ItemID = nameid;
 	p.len = NAME_LENGTH;
 	safestrncpy(p.Name, sd->status.name, sizeof(p.Name));
-	p.unknown = 0x2; // some strange byte, IDA shows.. BYTE3(BoxItemIDLength) = 2;
+	p.boxItemID_len = itemLen;
 	p.BoxItemID = containerid;
 
 	clif->send(&p, p.PacketLength, &sd->bl, ALL_CLIENT);
+#endif  // 20091201
 }
 
 /* Made Possible Thanks to Yommy! */
@@ -21489,11 +21493,11 @@ static void clif_item_drop_announce(struct map_session_data *sd, int nameid, cha
 	safestrncpy(p.Name, sd->status.name, sizeof(p.Name));
 	if (monsterName == NULL) {
 		// message: MSG_BROADCASTING_SPECIAL_ITEM_OBTAIN2
-		p.type = 0x2;
+		p.type = ITEM_OBTAIN_TYPE_NPC_ITEM;
 		p.PacketLength -= NAME_LENGTH;
 	} else {
 		// message: MSG_BROADCASTING_SPECIAL_ITEM_OBTAIN
-		p.type = 0x1;
+		p.type = ITEM_OBTAIN_TYPE_MONSTER_ITEM;
 		safestrncpy(p.monsterName, monsterName, sizeof(p.monsterName));
 	}
 	clif->send(&p, p.PacketLength, &sd->bl, ALL_CLIENT);

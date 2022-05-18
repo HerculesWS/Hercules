@@ -868,6 +868,12 @@ enum play_sound_act {
 	PLAY_SOUND_STOP = 2,
 };
 
+enum ITEM_OBTAIN_TYPE {
+	ITEM_OBTAIN_TYPE_BOX_ITEM = 0,
+	ITEM_OBTAIN_TYPE_MONSTER_ITEM = 1,
+	ITEM_OBTAIN_TYPE_NPC_ITEM = 2,
+};
+
 /**
  * Clif.c Interface
  **/
