@@ -21454,7 +21454,7 @@ static void clif_scriptclear(struct map_session_data *sd, int npcid)
 }
 
 /* Made Possible Thanks to Yommy! */
-static void clif_package_item_announce(struct map_session_data *sd, int nameid, int containerid)
+static void clif_package_item_announce(struct map_session_data *sd, int nameid, int containerid, int refine_level)
 {
 #if PACKETVER >= 20091201
 	struct PACKET_ZC_BROADCASTING_SPECIAL_ITEM_OBTAIN_item p;
@@ -21476,7 +21476,7 @@ static void clif_package_item_announce(struct map_session_data *sd, int nameid, 
 	p.BoxItemID = containerid;
 #if PACKETVER_MAIN_NUM >= 20220518 || PACKETVER_ZERO_NUM >= 20220518
 	p.refineLevel_len = itemLen;
-	p.refineLevel = 0;
+	p.refineLevel = refine_level;
 #endif  // PACKETVER_MAIN_NUM >= 20091201
 
 	clif->send(&p, p.PacketLength, &sd->bl, ALL_CLIENT);

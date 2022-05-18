@@ -261,7 +261,7 @@ static void itemdb_package_item(struct map_session_data *sd, struct item_package
 		}
 
 		if( package->must_items[i].announce )
-			clif->package_announce(sd,package->must_items[i].id,package->id);
+			clif->package_announce(sd, package->must_items[i].id, package->id, it.refine);
 
 		if ( package->must_items[i].force_serial )
 			it.unique_id = itemdb->unique_id(sd);
@@ -305,7 +305,7 @@ static void itemdb_package_item(struct map_session_data *sd, struct item_package
 					}
 
 					if( entry->announce )
-						clif->package_announce(sd,entry->id,package->id);
+						clif->package_announce(sd, entry->id, package->id, it.refine);
 
 					get_count = itemdb->isstackable(entry->id) ? entry->qty : 1;
 

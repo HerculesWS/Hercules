@@ -951,7 +951,7 @@ struct clif_interface {
 	void (*cart_additem_ack) (struct map_session_data *sd, int flag);
 	void (*cashshop_load) (void);
 	void (*cashShopSchedule) (int fd, struct map_session_data *sd);
-	void (*package_announce) (struct map_session_data *sd, int nameid, int containerid);
+	void (*package_announce) (struct map_session_data *sd, int nameid, int containerid, int refine_level);
 	void (*item_drop_announce) (struct map_session_data *sd, int nameid, char *monsterName);
 	/* unit-related */
 	void (*clearunit_single) (int id, enum clr_type type, int fd);
