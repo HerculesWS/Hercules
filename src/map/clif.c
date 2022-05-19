@@ -15564,8 +15564,6 @@ static bool clif_validate_emblem(const uint8 *emblem, unsigned long emblem_len)
 		RGBQUAD_SIZE = 4,           // sizeof(RGBQUAD)
 		BITMAPFILEHEADER_SIZE = 14, // sizeof(BITMAPFILEHEADER)
 		BITMAPINFOHEADER_SIZE = 40, // sizeof(BITMAPINFOHEADER)
-		BITMAP_WIDTH = 24,
-		BITMAP_HEIGHT = 24,
 	};
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(push, 1)
@@ -15589,8 +15587,8 @@ static bool clif_validate_emblem(const uint8 *emblem, unsigned long emblem_len)
 	 || RBUFW(buf,0) != 0x4d42 // BITMAPFILEHEADER.bfType (signature)
 	 || RBUFL(buf,2) != buf_len // BITMAPFILEHEADER.bfSize (file size)
 	 || RBUFL(buf,14) != BITMAPINFOHEADER_SIZE // BITMAPINFOHEADER.biSize (other headers are not supported)
-	 || RBUFL(buf,18) != BITMAP_WIDTH // BITMAPINFOHEADER.biWidth
-	 || RBUFL(buf,22) != BITMAP_HEIGHT // BITMAPINFOHEADER.biHeight (top-down bitmaps (-24) are not supported)
+	 || RBUFL(buf,18) != GUILD_EMBLEM_WIDTH // BITMAPINFOHEADER.biWidth
+	 || RBUFL(buf,22) != GUILD_EMBLEM_HEIGHT // BITMAPINFOHEADER.biHeight (top-down bitmaps (-24) are not supported)
 	 || RBUFL(buf,30) != 0 // BITMAPINFOHEADER.biCompression == BI_RGB (compression not supported)
 	 ) {
 		// Invalid data
@@ -15607,11 +15605,11 @@ static bool clif_validate_emblem(const uint8 *emblem, unsigned long emblem_len)
 			else if( palettesize > 256 )
 				return false;
 			header = BITMAPFILEHEADER_SIZE + BITMAPINFOHEADER_SIZE + RGBQUAD_SIZE * palettesize; // headers + palette
-			bitmap = BITMAP_WIDTH * BITMAP_HEIGHT;
+			bitmap = GUILD_EMBLEM_WIDTH * GUILD_EMBLEM_HEIGHT;
 			break;
 		case 24:
 			header = BITMAPFILEHEADER_SIZE + BITMAPINFOHEADER_SIZE;
-			bitmap = BITMAP_WIDTH * BITMAP_HEIGHT * RGBTRIPLE_SIZE;
+			bitmap = GUILD_EMBLEM_WIDTH * GUILD_EMBLEM_HEIGHT * RGBTRIPLE_SIZE;
 			break;
 		default:
 			return false;
@@ -15627,7 +15625,7 @@ static bool clif_validate_emblem(const uint8 *emblem, unsigned long emblem_len)
 	}
 
 	if( battle_config.client_emblem_max_blank_percent < 100 ) {
-		int required_pixels = BITMAP_WIDTH * BITMAP_HEIGHT * (100 - battle_config.client_emblem_max_blank_percent) / 100;
+		int required_pixels = GUILD_EMBLEM_WIDTH * GUILD_EMBLEM_HEIGHT * (100 - battle_config.client_emblem_max_blank_percent) / 100;
 		int found_pixels = 0;
 		int i;
 		/// Checks what percentage of a guild emblem is blank. A blank emblem
@@ -15644,7 +15642,7 @@ static bool clif_validate_emblem(const uint8 *emblem, unsigned long emblem_len)
 				const uint8 *indexes = RBUFP(buf,offbits);
 				const uint32 *palette = RBUFP(buf,BITMAPFILEHEADER_SIZE + BITMAPINFOHEADER_SIZE);
 
-				for (i = 0; i < BITMAP_WIDTH * BITMAP_HEIGHT; i++) {
+				for (i = 0; i < GUILD_EMBLEM_WIDTH * GUILD_EMBLEM_HEIGHT; i++) {
 					if( indexes[i] >= palettesize ) // Invalid color
 						return false;
 
@@ -15662,7 +15660,7 @@ static bool clif_validate_emblem(const uint8 *emblem, unsigned long emblem_len)
 			{
 				const struct s_bitmaptripple *pixels = RBUFP(buf,offbits);
 
-				for (i = 0; i < BITMAP_WIDTH * BITMAP_HEIGHT; i++) {
+				for (i = 0; i < GUILD_EMBLEM_WIDTH * GUILD_EMBLEM_HEIGHT; i++) {
 					// if( pixels[i].r < 0xF8 || pixels[i].g > 0x07 || pixels[i].b < 0xF8 )
 					if( ( pixels[i].rgb&0xF8F8F8 ) != 0xF800F8 ) {
 						if( ++found_pixels >= required_pixels ) {

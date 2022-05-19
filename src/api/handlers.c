@@ -288,17 +288,12 @@ HTTP_URL(emblem_upload)
 	bool is_gif = false;
 	GET_STR_HEADER(IMG, &img, &img_size);
 	if (strcmp(imgType, "BMP") == 0) {
-		if (img_size < 10 ||
-		    strncmp(img, "BM", 2) != 0 ||
-		    !imageparser->validate_bmp_emblem(img, img_size)) {
+		if (!imageparser->validate_bmp_emblem(img, img_size)) {
 			ShowError("wrong bmp image %d: %s\n", fd, sd->url);
 			return false;
 		}
 	} else if (strcmp(imgType, "GIF") == 0) {
-		if (img_size < 10 ||
-		    strncmp(img, "GIF", 3) != 0 ||
-		    (memcmp(img + 3, "87a", 3) != 0 && memcmp(img + 3, "89a", 3) != 0) ||
-		    !imageparser->validate_gif_emblem(img, img_size)) {
+		if (!imageparser->validate_gif_emblem(img, img_size)) {
 			ShowError("wrong gif image %d: %s\n", fd, sd->url);
 			return false;
 		}

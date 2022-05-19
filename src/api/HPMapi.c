@@ -54,6 +54,7 @@
 #include "api/handlers.h"
 #include "api/httpparser.h"
 #include "api/httpsender.h"
+#include "api/imageparser.h"
 #include "api/jsonparser.h"
 #include "api/jsonwriter.h"
 

@@ -1405,4 +1405,17 @@ enum adventurer_agency_result {
 #define MAX_CHARSERVER_NAME_SIZE 20
 #endif
 
+#ifndef GUILD_EMBLEM_WIDTH
+#define GUILD_EMBLEM_WIDTH 24
+#endif
+#ifndef GUILD_EMBLEM_HEIGHT
+#define GUILD_EMBLEM_HEIGHT 24
+#endif
+#ifndef MAX_BMP_GUILD_EMBLEM_SIZE
+#define MAX_BMP_GUILD_EMBLEM_SIZE 1800
+#endif
+#ifndef MAX_GIF_GUILD_EMBLEM_SIZE
+#define MAX_GIF_GUILD_EMBLEM_SIZE 1800
+#endif
+
 #endif /* COMMON_MMO_H */

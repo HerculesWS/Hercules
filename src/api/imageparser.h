@@ -23,9 +23,15 @@
 
 #include "common/hercules.h"
 
-#include <cJSON/cJSON.h>
+#include <libgif/gif_lib.h>
 
 #include <stdarg.h>
+
+struct gif_user_data {
+	const char *emblem;
+	uint64 emblem_len;
+	uint64 read_pos;
+};
 
 /**
  * imageparser.c Interface
@@ -33,8 +39,9 @@
 struct imageparser_interface {
 	int (*init) (bool minimal);
 	void (*final) (void);
-	bool (*validate_bmp_emblem) (const char *emblem, unsigned long emblem_len);
-	bool (*validate_gif_emblem) (const char *emblem, unsigned long emblem_len);
+	bool (*validate_bmp_emblem) (const char *emblem, uint64 emblem_len);
+	bool (*validate_gif_emblem) (const char *emblem, uint64 emblem_len);
+	int (*read_gif_func) (GifFileType *gif, GifByteType *buf, int len);
 };
 
 #ifdef HERCULES_CORE

@@ -43,9 +43,13 @@ static void do_final_imageparser(void)
 {
 }
 
-static bool imageparser_validate_bmp_emblem(const char *emblem, unsigned long emblem_len)
+static bool imageparser_validate_bmp_emblem(const char *emblem, uint64 emblem_len)
 {
 	nullpo_retr(false, emblem);
+
+	// basic check for bmp format
+	if (emblem_len < 10 || strncmp(emblem, "BM", 2) != 0)
+		return false;
 
 	const uint8 *buf = (const uint8 *)emblem;
 
@@ -54,9 +58,6 @@ static bool imageparser_validate_bmp_emblem(const char *emblem, unsigned long em
 		RGBQUAD_SIZE = 4,           // sizeof(RGBQUAD)
 		BITMAPFILEHEADER_SIZE = 14, // sizeof(BITMAPFILEHEADER)
 		BITMAPINFOHEADER_SIZE = 40, // sizeof(BITMAPINFOHEADER)
-		BITMAP_WIDTH = 24,
-		BITMAP_HEIGHT = 24,
-		MAX_BITMAP_SIZE = 1800
 	};
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(push, 1)
@@ -70,13 +71,13 @@ static bool imageparser_validate_bmp_emblem(const char *emblem, unsigned long em
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
-	if (emblem_len >= MAX_BITMAP_SIZE
-	 || MAX_BITMAP_SIZE < BITMAPFILEHEADER_SIZE + BITMAPINFOHEADER_SIZE
+	if (emblem_len >= MAX_BMP_GUILD_EMBLEM_SIZE
+	 || MAX_BMP_GUILD_EMBLEM_SIZE < BITMAPFILEHEADER_SIZE + BITMAPINFOHEADER_SIZE
 	 || RBUFW(buf, 0) != 0x4d42 // BITMAPFILEHEADER.bfType (signature)
 	 || RBUFL(buf, 2) != emblem_len // BITMAPFILEHEADER.bfSize (file size)
 	 || RBUFL(buf, 14) != BITMAPINFOHEADER_SIZE // BITMAPINFOHEADER.biSize (other headers are not supported)
-	 || RBUFL(buf, 18) != BITMAP_WIDTH // BITMAPINFOHEADER.biWidth
-	 || RBUFL(buf, 22) != BITMAP_HEIGHT // BITMAPINFOHEADER.biHeight (top-down bitmaps (-24) are not supported)
+	 || RBUFL(buf, 18) != GUILD_EMBLEM_WIDTH // BITMAPINFOHEADER.biWidth
+	 || RBUFL(buf, 22) != GUILD_EMBLEM_HEIGHT // BITMAPINFOHEADER.biHeight (top-down bitmaps (-24) are not supported)
 	 || RBUFL(buf, 30) != 0 // BITMAPINFOHEADER.biCompression == BI_RGB (compression not supported)
 	 ) {
 		// Invalid data
@@ -96,11 +97,11 @@ static bool imageparser_validate_bmp_emblem(const char *emblem, unsigned long em
 			else if (palettesize > 256)
 				return false;
 			header = BITMAPFILEHEADER_SIZE + BITMAPINFOHEADER_SIZE + RGBQUAD_SIZE * palettesize; // headers + palette
-			bitmap = BITMAP_WIDTH * BITMAP_HEIGHT;
+			bitmap = GUILD_EMBLEM_WIDTH * GUILD_EMBLEM_HEIGHT;
 			break;
 		case 24:
 			header = BITMAPFILEHEADER_SIZE + BITMAPINFOHEADER_SIZE;
-			bitmap = BITMAP_WIDTH * BITMAP_HEIGHT * RGBTRIPLE_SIZE;
+			bitmap = GUILD_EMBLEM_WIDTH * GUILD_EMBLEM_HEIGHT * RGBTRIPLE_SIZE;
 			break;
 		default:
 			return false;
@@ -111,15 +112,78 @@ static bool imageparser_validate_bmp_emblem(const char *emblem, unsigned long em
 	// If you want it paranoidly strict, change the first condition from < to !=.
 	// This also allows files with trailing garbage at the end of the file.
 	// If you want to avoid that, change the last condition to !=.
-	if (offbits < header || MAX_BITMAP_SIZE <= bitmap || offbits > MAX_BITMAP_SIZE - bitmap) {
+	if (offbits < header || MAX_BMP_GUILD_EMBLEM_SIZE <= bitmap || offbits > MAX_BMP_GUILD_EMBLEM_SIZE - bitmap) {
 		return false;
 	}
 
 	return true;
 }
 
-static bool imageparser_validate_gif_emblem(const char *emblem, unsigned long emblem_len)
+// emulate fread like function
+static int imageparser_read_gif_func(GifFileType *gif, GifByteType *buf, int len)
 {
+	nullpo_ret(gif);
+	nullpo_ret(buf);
+
+	if (len < 0)
+		return 0;
+	struct gif_user_data *userData = gif->UserData;
+	nullpo_ret(userData);
+	const uint64 read_pos = userData->read_pos;
+	const uint64 emblem_len = userData->emblem_len;
+	if (read_pos >= emblem_len)
+		return 0;
+	// for real fread here need return possible number of bytes to read
+	if (read_pos + len > emblem_len)
+		return 0;
+	memcpy(buf, userData->emblem + read_pos, len);
+	userData->read_pos += len;
+	return len;
+}
+
+static bool imageparser_validate_gif_emblem(const char *emblem, uint64 emblem_len)
+{
+	nullpo_retr(false, emblem);
+
+	if (emblem_len > MAX_GIF_GUILD_EMBLEM_SIZE)
+		return false;
+
+	// basic check for gif format
+	if (emblem_len < 10 ||
+	    strncmp(emblem, "GIF", 3) != 0 ||
+	    (memcmp(emblem + 3, "87a", 3) != 0 && memcmp(emblem + 3, "89a", 3) != 0)) {
+		return false;
+	}
+
+	int error = D_GIF_SUCCEEDED;
+	struct gif_user_data userData;
+	userData.emblem = emblem;
+	userData.emblem_len = emblem_len;
+	userData.read_pos = 0;
+
+	GifFileType *image = DGifOpen(&userData, imageparser->read_gif_func, &error);
+	if (image == NULL)
+		return false;
+	const int ret = DGifSlurp(image);
+	if (ret != GIF_OK) {
+		DGifCloseFile(image, &error);
+		return false;
+	}
+
+	// check image resolution and images count
+	if (image->SWidth != GUILD_EMBLEM_WIDTH ||
+	    image->SHeight != GUILD_EMBLEM_HEIGHT ||
+	    image->Image.Width != GUILD_EMBLEM_WIDTH ||
+	    image->Image.Height != GUILD_EMBLEM_HEIGHT ||
+	    image->ImageCount <= 0) {
+		DGifCloseFile(image, &error);
+		return false;
+	}
+	DGifCloseFile(image, &error);
+
+	// check used bytes from image buffer
+	if (userData.read_pos != emblem_len)
+		return false;
 	return true;
 }
 
@@ -131,4 +195,5 @@ void imageparser_defaults(void)
 
 	imageparser->validate_bmp_emblem = imageparser_validate_bmp_emblem;
 	imageparser->validate_gif_emblem = imageparser_validate_gif_emblem;
+	imageparser->read_gif_func = imageparser_read_gif_func;
 }
