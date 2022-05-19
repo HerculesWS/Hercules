@@ -46,6 +46,7 @@
 #include "api/handlers.h"
 #include "api/httpparser.h"
 #include "api/httpsender.h"
+#include "api/imageparser.h"
 #include "api/jsonparser.h"
 
 #include <math.h>
@@ -120,6 +121,7 @@ static void api_load_defaults(void)
 	httpsender_defaults();
 	jsonparser_defaults();
 	jsonwriter_defaults();
+	imageparser_defaults();
 }
 
 /**

@@ -46,6 +46,7 @@ PRAGMA_GCC5(GCC diagnostic ignored "-Wsuggest-attribute=format")
 #include "api/httpparsehandler.h"
 #include "api/httpparser.h"
 #include "api/httpsender.h"
+#include "api/imageparser.h"
 #include "api/jsonparser.h"
 #include "api/jsonwriter.h"
 #include "api/mimepart.h"

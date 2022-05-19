@@ -211,15 +211,9 @@ void capiif_parse_emblem_upload(int fd)
 		}
 
 		if (inter_guild->is_guild_master(p->base.char_id, char_data->emblem_guild_id)) {
-			if (!inter_guild->validate_emblem(char_data->emblem_data,
-			    char_data->emblem_data_size,
-			    char_data->emblem_gif)) {
-				ShowError("Invalid image uploaded\n");
-			} else {
-				inter_guild->update_emblem(char_data->emblem_data_size,
+			inter_guild->update_emblem(char_data->emblem_data_size,
 				char_data->emblem_guild_id,
 				char_data->emblem_data);
-			}
 		}
 
 		chr->clean_online_char_emblem_data(character);
