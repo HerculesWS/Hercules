@@ -2114,6 +2114,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(mapiif->init, HP_mapiif_init) },
 	{ HP_POP(mapiif->final, HP_mapiif_final) },
 	{ HP_POP(mapiif->parse_fromchar_api_proxy, HP_mapiif_parse_fromchar_api_proxy) },
+	{ HP_POP(mapiif->parse_adventurer_agency_info, HP_mapiif_parse_adventurer_agency_info) },
 /* mapindex_interface */
 	{ HP_POP(mapindex->config_read_dbpath, HP_mapindex_config_read_dbpath) },
 	{ HP_POP(mapindex->config_read, HP_mapindex_config_read) },

@@ -4132,6 +4132,8 @@ struct {
 	struct HPMHookPoint *HP_mapiif_final_post;
 	struct HPMHookPoint *HP_mapiif_parse_fromchar_api_proxy_pre;
 	struct HPMHookPoint *HP_mapiif_parse_fromchar_api_proxy_post;
+	struct HPMHookPoint *HP_mapiif_parse_adventurer_agency_info_pre;
+	struct HPMHookPoint *HP_mapiif_parse_adventurer_agency_info_post;
 	struct HPMHookPoint *HP_mapindex_config_read_dbpath_pre;
 	struct HPMHookPoint *HP_mapindex_config_read_dbpath_post;
 	struct HPMHookPoint *HP_mapindex_config_read_pre;
@@ -11621,6 +11623,8 @@ struct {
 	int HP_mapiif_final_post;
 	int HP_mapiif_parse_fromchar_api_proxy_pre;
 	int HP_mapiif_parse_fromchar_api_proxy_post;
+	int HP_mapiif_parse_adventurer_agency_info_pre;
+	int HP_mapiif_parse_adventurer_agency_info_post;
 	int HP_mapindex_config_read_dbpath_pre;
 	int HP_mapindex_config_read_dbpath_post;
 	int HP_mapindex_config_read_pre;

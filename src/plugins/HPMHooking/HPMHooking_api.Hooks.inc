@@ -3963,6 +3963,59 @@ void HP_handlers_party_del(int fd, struct api_session_data *sd, const void *data
 	}
 	return;
 }
+bool HP_handlers_parse_party_info(int fd, struct api_session_data *sd) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_handlers_parse_party_info_pre > 0) {
+		bool (*preHookFunc) (int *fd, struct api_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_handlers_parse_party_info_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_handlers_parse_party_info_pre[hIndex].func;
+			retVal___ = preHookFunc(&fd, &sd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.handlers.parse_party_info(fd, sd);
+	}
+	if (HPMHooks.count.HP_handlers_parse_party_info_post > 0) {
+		bool (*postHookFunc) (bool retVal___, int fd, struct api_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_handlers_parse_party_info_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_handlers_parse_party_info_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, fd, sd);
+		}
+	}
+	return retVal___;
+}
+void HP_handlers_party_info(int fd, struct api_session_data *sd, const void *data, size_t data_size) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_handlers_party_info_pre > 0) {
+		void (*preHookFunc) (int *fd, struct api_session_data **sd, const void **data, size_t *data_size);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_handlers_party_info_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_handlers_party_info_pre[hIndex].func;
+			preHookFunc(&fd, &sd, &data, &data_size);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.handlers.party_info(fd, sd, data, data_size);
+	}
+	if (HPMHooks.count.HP_handlers_party_info_post > 0) {
+		void (*postHookFunc) (int fd, struct api_session_data *sd, const void *data, size_t data_size);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_handlers_party_info_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_handlers_party_info_post[hIndex].func;
+			postHookFunc(fd, sd, data, data_size);
+		}
+	}
+	return;
+}
 bool HP_handlers_parse_test_url(int fd, struct api_session_data *sd) {
 	int hIndex = 0;
 	bool retVal___ = false;
@@ -5084,6 +5137,114 @@ bool HP_httpsender_send_binary(int fd, const char *data, const size_t data_len) 
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_httpsender_send_binary_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_httpsender_send_binary_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, fd, data, data_len);
+		}
+	}
+	return retVal___;
+}
+/* imageparser_interface */
+int HP_imageparser_init(bool minimal) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_imageparser_init_pre > 0) {
+		int (*preHookFunc) (bool *minimal);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_imageparser_init_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_imageparser_init_pre[hIndex].func;
+			retVal___ = preHookFunc(&minimal);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.imageparser.init(minimal);
+	}
+	if (HPMHooks.count.HP_imageparser_init_post > 0) {
+		int (*postHookFunc) (int retVal___, bool minimal);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_imageparser_init_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_imageparser_init_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, minimal);
+		}
+	}
+	return retVal___;
+}
+void HP_imageparser_final(void) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_imageparser_final_pre > 0) {
+		void (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_imageparser_final_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_imageparser_final_pre[hIndex].func;
+			preHookFunc();
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.imageparser.final();
+	}
+	if (HPMHooks.count.HP_imageparser_final_post > 0) {
+		void (*postHookFunc) (void);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_imageparser_final_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_imageparser_final_post[hIndex].func;
+			postHookFunc();
+		}
+	}
+	return;
+}
+bool HP_imageparser_validate_bmp_emblem(const char *emblem, unsigned long emblem_len) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_imageparser_validate_bmp_emblem_pre > 0) {
+		bool (*preHookFunc) (const char **emblem, unsigned long *emblem_len);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_imageparser_validate_bmp_emblem_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_imageparser_validate_bmp_emblem_pre[hIndex].func;
+			retVal___ = preHookFunc(&emblem, &emblem_len);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.imageparser.validate_bmp_emblem(emblem, emblem_len);
+	}
+	if (HPMHooks.count.HP_imageparser_validate_bmp_emblem_post > 0) {
+		bool (*postHookFunc) (bool retVal___, const char *emblem, unsigned long emblem_len);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_imageparser_validate_bmp_emblem_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_imageparser_validate_bmp_emblem_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, emblem, emblem_len);
+		}
+	}
+	return retVal___;
+}
+bool HP_imageparser_validate_gif_emblem(const char *emblem, unsigned long emblem_len) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_imageparser_validate_gif_emblem_pre > 0) {
+		bool (*preHookFunc) (const char **emblem, unsigned long *emblem_len);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_imageparser_validate_gif_emblem_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_imageparser_validate_gif_emblem_pre[hIndex].func;
+			retVal___ = preHookFunc(&emblem, &emblem_len);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.imageparser.validate_gif_emblem(emblem, emblem_len);
+	}
+	if (HPMHooks.count.HP_imageparser_validate_gif_emblem_post > 0) {
+		bool (*postHookFunc) (bool retVal___, const char *emblem, unsigned long emblem_len);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_imageparser_validate_gif_emblem_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_imageparser_validate_gif_emblem_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, emblem, emblem_len);
 		}
 	}
 	return retVal___;

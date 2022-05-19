@@ -131,6 +131,9 @@ struct httpparser_interface *httpparser;
 #ifdef API_HTTPSENDER_H /* httpsender */
 struct httpsender_interface *httpsender;
 #endif // API_HTTPSENDER_H
+#ifdef API_IMAGEPARSER_H /* imageparser */
+struct imageparser_interface *imageparser;
+#endif // API_IMAGEPARSER_H
 #ifdef MAP_INSTANCE_H /* instance */
 struct instance_interface *instance;
 #endif // MAP_INSTANCE_H
@@ -503,6 +506,10 @@ HPExport const char *HPM_shared_symbols(int server_type)
 	if ((server_type&(SERVER_TYPE_API)) != 0 && !HPM_SYMBOL("httpsender", httpsender))
 		return "httpsender";
 #endif // API_HTTPSENDER_H
+#ifdef API_IMAGEPARSER_H /* imageparser */
+	if ((server_type&(SERVER_TYPE_API)) != 0 && !HPM_SYMBOL("imageparser", imageparser))
+		return "imageparser";
+#endif // API_IMAGEPARSER_H
 #ifdef MAP_INSTANCE_H /* instance */
 	if ((server_type&(SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("instance", instance))
 		return "instance";

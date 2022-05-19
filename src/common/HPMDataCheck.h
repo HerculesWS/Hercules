@@ -73,6 +73,11 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#else
 		#define API_HTTPSENDER_H
 	#endif // API_HTTPSENDER_H
+	#ifdef API_IMAGEPARSER_H
+		{ "imageparser_interface", sizeof(struct imageparser_interface), SERVER_TYPE_UNKNOWN },
+	#else
+		#define API_IMAGEPARSER_H
+	#endif // API_IMAGEPARSER_H
 	#ifdef API_JSONPARSER_H
 		{ "jsonparser_interface", sizeof(struct jsonparser_interface), SERVER_TYPE_UNKNOWN },
 	#else
@@ -212,6 +217,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "PACKET_API_REPLY_party_add", sizeof(struct PACKET_API_REPLY_party_add), SERVER_TYPE_ALL },
 		{ "PACKET_API_REPLY_party_del", sizeof(struct PACKET_API_REPLY_party_del), SERVER_TYPE_ALL },
 		{ "PACKET_API_REPLY_party_get", sizeof(struct PACKET_API_REPLY_party_get), SERVER_TYPE_ALL },
+		{ "PACKET_API_REPLY_party_info", sizeof(struct PACKET_API_REPLY_party_info), SERVER_TYPE_ALL },
 		{ "PACKET_API_REPLY_party_list", sizeof(struct PACKET_API_REPLY_party_list), SERVER_TYPE_ALL },
 		{ "PACKET_API_REPLY_userconfig_load_emotes", sizeof(struct PACKET_API_REPLY_userconfig_load_emotes), SERVER_TYPE_ALL },
 		{ "PACKET_API_REPLY_userconfig_load_hotkeys_tab", sizeof(struct PACKET_API_REPLY_userconfig_load_hotkeys_tab), SERVER_TYPE_ALL },
@@ -223,6 +229,8 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "PACKET_API_party_add_data", sizeof(struct PACKET_API_party_add_data), SERVER_TYPE_ALL },
 		{ "PACKET_API_party_del", sizeof(struct PACKET_API_party_del), SERVER_TYPE_ALL },
 		{ "PACKET_API_party_del_data", sizeof(struct PACKET_API_party_del_data), SERVER_TYPE_ALL },
+		{ "PACKET_API_party_info", sizeof(struct PACKET_API_party_info), SERVER_TYPE_ALL },
+		{ "PACKET_API_party_info_data", sizeof(struct PACKET_API_party_info_data), SERVER_TYPE_ALL },
 		{ "PACKET_API_party_list", sizeof(struct PACKET_API_party_list), SERVER_TYPE_ALL },
 		{ "PACKET_API_party_list_data", sizeof(struct PACKET_API_party_list_data), SERVER_TYPE_ALL },
 		{ "PACKET_API_userconfig_save_emotes", sizeof(struct PACKET_API_userconfig_save_emotes), SERVER_TYPE_ALL },

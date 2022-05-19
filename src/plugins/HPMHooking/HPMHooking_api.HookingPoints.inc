@@ -183,6 +183,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(handlers->party_add, HP_handlers_party_add) },
 	{ HP_POP(handlers->parse_party_del, HP_handlers_parse_party_del) },
 	{ HP_POP(handlers->party_del, HP_handlers_party_del) },
+	{ HP_POP(handlers->parse_party_info, HP_handlers_parse_party_info) },
+	{ HP_POP(handlers->party_info, HP_handlers_party_info) },
 	{ HP_POP(handlers->parse_test_url, HP_handlers_parse_test_url) },
 	{ HP_POP(handlers->userconfig_load_emotes, HP_handlers_userconfig_load_emotes) },
 	{ HP_POP(handlers->userconfig_load_hotkeys, HP_handlers_userconfig_load_hotkeys) },
@@ -227,6 +229,11 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(httpsender->send_html, HP_httpsender_send_html) },
 	{ HP_POP(httpsender->send_json, HP_httpsender_send_json) },
 	{ HP_POP(httpsender->send_binary, HP_httpsender_send_binary) },
+/* imageparser_interface */
+	{ HP_POP(imageparser->init, HP_imageparser_init) },
+	{ HP_POP(imageparser->final, HP_imageparser_final) },
+	{ HP_POP(imageparser->validate_bmp_emblem, HP_imageparser_validate_bmp_emblem) },
+	{ HP_POP(imageparser->validate_gif_emblem, HP_imageparser_validate_gif_emblem) },
 /* jsonparser_interface */
 	{ HP_POP(jsonparser->init, HP_jsonparser_init) },
 	{ HP_POP(jsonparser->final, HP_jsonparser_final) },

@@ -347,9 +347,6 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(inter_guild->update_castle_data, HP_inter_guild_update_castle_data) },
 	{ HP_POP(inter_guild->change_leader, HP_inter_guild_change_leader) },
 	{ HP_POP(inter_guild->is_guild_master, HP_inter_guild_is_guild_master) },
-	{ HP_POP(inter_guild->validate_emblem, HP_inter_guild_validate_emblem) },
-	{ HP_POP(inter_guild->validate_bmp_emblem, HP_inter_guild_validate_bmp_emblem) },
-	{ HP_POP(inter_guild->validate_gif_emblem, HP_inter_guild_validate_gif_emblem) },
 /* inter_homunculus_interface */
 	{ HP_POP(inter_homunculus->sql_init, HP_inter_homunculus_sql_init) },
 	{ HP_POP(inter_homunculus->sql_final, HP_inter_homunculus_sql_final) },

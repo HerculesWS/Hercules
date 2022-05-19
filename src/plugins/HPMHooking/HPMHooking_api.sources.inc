@@ -37,6 +37,7 @@ HPMHooks.source.des = *des;
 HPMHooks.source.handlers = *handlers;
 HPMHooks.source.httpparser = *httpparser;
 HPMHooks.source.httpsender = *httpsender;
+HPMHooks.source.imageparser = *imageparser;
 HPMHooks.source.jsonparser = *jsonparser;
 HPMHooks.source.jsonwriter = *jsonwriter;
 HPMHooks.source.libconfig = *libconfig;

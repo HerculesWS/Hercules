@@ -54636,6 +54636,32 @@ int HP_mapiif_parse_fromchar_api_proxy(int fd) {
 	}
 	return retVal___;
 }
+void HP_mapiif_parse_adventurer_agency_info(int fd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_mapiif_parse_adventurer_agency_info_pre > 0) {
+		void (*preHookFunc) (int *fd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapiif_parse_adventurer_agency_info_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_mapiif_parse_adventurer_agency_info_pre[hIndex].func;
+			preHookFunc(&fd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.mapiif.parse_adventurer_agency_info(fd);
+	}
+	if (HPMHooks.count.HP_mapiif_parse_adventurer_agency_info_post > 0) {
+		void (*postHookFunc) (int fd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapiif_parse_adventurer_agency_info_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_mapiif_parse_adventurer_agency_info_post[hIndex].func;
+			postHookFunc(fd);
+		}
+	}
+	return;
+}
 /* mapindex_interface */
 bool HP_mapindex_config_read_dbpath(const char *filename, const struct config_t *config) {
 	int hIndex = 0;

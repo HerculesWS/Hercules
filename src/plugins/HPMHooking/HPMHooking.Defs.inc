@@ -3708,6 +3708,10 @@ typedef bool (*HPMHOOK_pre_handlers_parse_party_del) (int *fd, struct api_sessio
 typedef bool (*HPMHOOK_post_handlers_parse_party_del) (bool retVal___, int fd, struct api_session_data *sd);
 typedef void (*HPMHOOK_pre_handlers_party_del) (int *fd, struct api_session_data **sd, const void **data, size_t *data_size);
 typedef void (*HPMHOOK_post_handlers_party_del) (int fd, struct api_session_data *sd, const void *data, size_t data_size);
+typedef bool (*HPMHOOK_pre_handlers_parse_party_info) (int *fd, struct api_session_data **sd);
+typedef bool (*HPMHOOK_post_handlers_parse_party_info) (bool retVal___, int fd, struct api_session_data *sd);
+typedef void (*HPMHOOK_pre_handlers_party_info) (int *fd, struct api_session_data **sd, const void **data, size_t *data_size);
+typedef void (*HPMHOOK_post_handlers_party_info) (int fd, struct api_session_data *sd, const void *data, size_t data_size);
 typedef bool (*HPMHOOK_pre_handlers_parse_test_url) (int *fd, struct api_session_data **sd);
 typedef bool (*HPMHOOK_post_handlers_parse_test_url) (bool retVal___, int fd, struct api_session_data *sd);
 typedef void (*HPMHOOK_pre_handlers_userconfig_load_emotes) (int *fd, struct api_session_data **sd, const void **data, size_t *data_size);
@@ -3905,6 +3909,16 @@ typedef bool (*HPMHOOK_post_httpsender_send_json) (bool retVal___, int fd, const
 typedef bool (*HPMHOOK_pre_httpsender_send_binary) (int *fd, const char **data, const size_t *data_len);
 typedef bool (*HPMHOOK_post_httpsender_send_binary) (bool retVal___, int fd, const char *data, const size_t data_len);
 #endif // API_HTTPSENDER_H
+#ifdef API_IMAGEPARSER_H /* imageparser */
+typedef int (*HPMHOOK_pre_imageparser_init) (bool *minimal);
+typedef int (*HPMHOOK_post_imageparser_init) (int retVal___, bool minimal);
+typedef void (*HPMHOOK_pre_imageparser_final) (void);
+typedef void (*HPMHOOK_post_imageparser_final) (void);
+typedef bool (*HPMHOOK_pre_imageparser_validate_bmp_emblem) (const char **emblem, unsigned long *emblem_len);
+typedef bool (*HPMHOOK_post_imageparser_validate_bmp_emblem) (bool retVal___, const char *emblem, unsigned long emblem_len);
+typedef bool (*HPMHOOK_pre_imageparser_validate_gif_emblem) (const char **emblem, unsigned long *emblem_len);
+typedef bool (*HPMHOOK_post_imageparser_validate_gif_emblem) (bool retVal___, const char *emblem, unsigned long emblem_len);
+#endif // API_IMAGEPARSER_H
 #ifdef MAP_INSTANCE_H /* instance */
 typedef void (*HPMHOOK_pre_instance_init) (bool *minimal);
 typedef void (*HPMHOOK_post_instance_init) (bool minimal);
@@ -4106,12 +4120,6 @@ typedef bool (*HPMHOOK_pre_inter_guild_change_leader) (int *guild_id, const char
 typedef bool (*HPMHOOK_post_inter_guild_change_leader) (bool retVal___, int guild_id, const char *name, int len);
 typedef bool (*HPMHOOK_pre_inter_guild_is_guild_master) (int *char_id, int *guild_id);
 typedef bool (*HPMHOOK_post_inter_guild_is_guild_master) (bool retVal___, int char_id, int guild_id);
-typedef bool (*HPMHOOK_pre_inter_guild_validate_emblem) (const char **emblem, unsigned long *emblem_len, bool *is_gif);
-typedef bool (*HPMHOOK_post_inter_guild_validate_emblem) (bool retVal___, const char *emblem, unsigned long emblem_len, bool is_gif);
-typedef bool (*HPMHOOK_pre_inter_guild_validate_bmp_emblem) (const char **emblem, unsigned long *emblem_len);
-typedef bool (*HPMHOOK_post_inter_guild_validate_bmp_emblem) (bool retVal___, const char *emblem, unsigned long emblem_len);
-typedef bool (*HPMHOOK_pre_inter_guild_validate_gif_emblem) (const char **emblem, unsigned long *emblem_len);
-typedef bool (*HPMHOOK_post_inter_guild_validate_gif_emblem) (bool retVal___, const char *emblem, unsigned long emblem_len);
 #endif // CHAR_INT_GUILD_H
 #ifdef CHAR_INT_HOMUN_H /* inter_homunculus */
 typedef int (*HPMHOOK_pre_inter_homunculus_sql_init) (void);
@@ -6092,6 +6100,8 @@ typedef void (*HPMHOOK_pre_mapiif_final) (void);
 typedef void (*HPMHOOK_post_mapiif_final) (void);
 typedef int (*HPMHOOK_pre_mapiif_parse_fromchar_api_proxy) (int *fd);
 typedef int (*HPMHOOK_post_mapiif_parse_fromchar_api_proxy) (int retVal___, int fd);
+typedef void (*HPMHOOK_pre_mapiif_parse_adventurer_agency_info) (int *fd);
+typedef void (*HPMHOOK_post_mapiif_parse_adventurer_agency_info) (int fd);
 #endif // MAP_MAPIIF_H
 #ifdef COMMON_MAPINDEX_H /* mapindex */
 typedef bool (*HPMHOOK_pre_mapindex_config_read_dbpath) (const char **filename, const struct config_t **config);
