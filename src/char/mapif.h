@@ -26,6 +26,8 @@
 struct rodex_item;
 enum adventurer_agency_result;
 
+typedef int (*SendAll_func)(int fd, va_list args);
+
 /**
  * mapif interface
  **/
@@ -76,6 +78,7 @@ struct mapif_interface {
 	int (*guild_position) (struct guild *g, int idx);
 	int (*guild_notice) (struct guild *g);
 	int (*guild_emblem) (struct guild *g);
+	int (*guild_emblem_sub) (int fd, va_list args);
 	int (*guild_master_changed) (struct guild *g, int aid, int cid);
 	int (*guild_castle_dataload) (int fd, int sz, const int *castle_ids);
 	int (*parse_CreateGuild) (int fd, int account_id, const char *name, const struct guild_member *master);

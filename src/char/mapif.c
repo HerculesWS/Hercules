@@ -636,7 +636,14 @@ static int mapif_guild_notice(struct guild *g)
 // Send emblem data
 static int mapif_guild_emblem(struct guild *g)
 {
+	return mapif->sendall_func(mapif->guild_emblem_sub, g);
+}
+
+static int mapif_guild_emblem_sub(int fd, va_list args)
+{
+	struct guild *g = va_arg(args, struct guild*);
 	nullpo_ret(g);
+
 	const int len = sizeof(struct PACKET_CHARMAP_GUILD_EMBLEM) + sizeof(g->emblem_data);
 	struct PACKET_CHARMAP_GUILD_EMBLEM *p = aCalloc(1, len);
 
@@ -2361,6 +2368,7 @@ void mapif_defaults(void)
 	mapif->guild_position = mapif_guild_position;
 	mapif->guild_notice = mapif_guild_notice;
 	mapif->guild_emblem = mapif_guild_emblem;
+	mapif->guild_emblem_sub = mapif_guild_emblem_sub;
 	mapif->guild_master_changed = mapif_guild_master_changed;
 	mapif->guild_castle_dataload = mapif_guild_castle_dataload;
 	mapif->parse_CreateGuild = mapif_parse_CreateGuild;
