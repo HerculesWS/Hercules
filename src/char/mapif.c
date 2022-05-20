@@ -636,14 +636,16 @@ static int mapif_guild_notice(struct guild *g)
 // Send emblem data
 static int mapif_guild_emblem(struct guild *g)
 {
-	unsigned char buf[12 + sizeof(g->emblem_data)];
 	nullpo_ret(g);
-	WBUFW(buf, 0) = 0x383f;
-	WBUFW(buf, 2) = g->emblem_len+12;
-	WBUFL(buf, 4) = g->guild_id;
-	WBUFL(buf, 8) = g->emblem_id;
-	memcpy(WBUFP(buf, 12), g->emblem_data, g->emblem_len);
-	mapif->send(buf, WBUFW(buf, 2));
+	const int len = sizeof(struct PACKET_CHARMAP_GUILD_EMBLEM) + sizeof(g->emblem_data);
+	struct PACKET_CHARMAP_GUILD_EMBLEM *p = aCalloc(1, len);
+
+	p->packetType = HEADER_CHARMAP_GUILD_EMBLEM;
+	p->packetLength = len;
+	p->guild_id = g->guild_id;
+	p->emblem_id = g->emblem_id;
+	memcpy(p->emblem_data, g->emblem_data, g->emblem_len);
+	mapif->send((const unsigned char *)p, len);
 	return 0;
 }
 

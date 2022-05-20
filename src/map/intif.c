@@ -1415,7 +1415,11 @@ static void intif_parse_GuildNotice(int fd)
 // ACK change of guild emblem
 static void intif_parse_GuildEmblem(int fd)
 {
-	guild->emblem_changed(RFIFOW(fd,2)-12, RFIFOL(fd,4), RFIFOL(fd,8), RFIFOP(fd,12));
+	struct PACKET_CHARMAP_GUILD_EMBLEM *p = RFIFOP(fd, 0);
+	guild->emblem_changed(p->packetLength - sizeof(struct PACKET_CHARMAP_GUILD_EMBLEM),
+		p->guild_id,
+		p->emblem_id,
+		p->emblem_data);
 }
 
 // Reply guild castle data request
@@ -2758,7 +2762,7 @@ static int intif_parse(int fd)
 		case 0x383c: intif->pGuildSkillUp(fd); break;
 		case 0x383d: intif->pGuildAlliance(fd); break;
 		case 0x383e: intif->pGuildNotice(fd); break;
-		case 0x383f: intif->pGuildEmblem(fd); break;
+		case HEADER_CHARMAP_GUILD_EMBLEM: intif->pGuildEmblem(fd); break;
 		case 0x3840: intif->pGuildCastleDataLoad(fd); break;
 		case 0x3843: intif->pGuildMasterChanged(fd); break;
 
