@@ -1349,6 +1349,11 @@ static int guild_change_emblem(struct map_session_data *sd, int len, const char 
  *---------------------------------------------------*/
 static int guild_emblem_changed(int len, int guild_id, int emblem_id, const char *data)
 {
+	if (len > 2048) {
+		ShowError("guild_emblem_changed: Big emblems (len %d) not supported yet\n", len);
+		return 0;
+	}
+
 	int i;
 	struct map_session_data *sd;
 	struct guild *g=guild->search(guild_id);
@@ -1356,7 +1361,6 @@ static int guild_emblem_changed(int len, int guild_id, int emblem_id, const char
 	if(g==NULL)
 		return 0;
 
-        ShowError("guild_emblem_changed: len %d, id %d\n", len, emblem_id);
 	memcpy(g->emblem_data,data,len);
 	g->emblem_len=len;
 	g->emblem_id=emblem_id;

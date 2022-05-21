@@ -1540,8 +1540,10 @@ static bool inter_guild_update_emblem(int len, int guild_id, const char *data)
 	if(g==NULL)
 		return false;
 
-	if (len > sizeof(g->emblem_data))
+	if (len > sizeof(g->emblem_data)) {
+		ShowError("inter_guild_update_emblem: Big emblems (len %d) not supported yet\n", len);
 		len = sizeof(g->emblem_data);
+	}
 
 	memcpy(g->emblem_data,data,len);
 	g->emblem_len=len;
