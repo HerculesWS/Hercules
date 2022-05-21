@@ -400,7 +400,7 @@ CREATE TABLE IF NOT EXISTS `guild` (
   `mes2` VARCHAR(120) NOT NULL DEFAULT '',
   `emblem_len` INT UNSIGNED NOT NULL DEFAULT '0',
   `emblem_id` INT UNSIGNED NOT NULL DEFAULT '0',
-  `emblem_data` blob,
+  `emblem_data` mediumblob,
   PRIMARY KEY (`guild_id`,`char_id`),
   UNIQUE KEY `guild_id` (`guild_id`),
   KEY `char_id` (`char_id`)
@@ -966,6 +966,7 @@ INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1665257750); -- 2022-10-0
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1599908598); -- 2020-09-12--14-02.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1613840320); -- 2021-02-20--19-57.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1618058468); -- 2021-04-10--15-36.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1653155461); -- 2022-05-21--29-49.sql
 
 --
 -- Table structure for table `storage`
