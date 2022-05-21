@@ -466,8 +466,33 @@ static int mapif_guild_noinfo(int guild_id)
 	return 0;
 }
 
+static int mapif_guild_info(struct guild *g)
+{
+	mapif->guild_info_emblem(g);
+	mapif->guild_info_basic(g);
+	return 0;
+}
+
+// Send emblem before guild info
+static int mapif_guild_info_emblem(int fd, struct guild *g)
+{
+	nullpo_ret(g);
+
+	WFIFO_CHUNKED_INIT(p, fd, HEADER_CHARMAP_GUILD_INFO_EMBLEM, PACKET_CHARMAP_GUILD_INFO_EMBLEM, g->emblem_data, g->emblem_len) {
+		WFIFO_CHUNKED_BLOCK_START(p);
+		p->guild_id = g->guild_id;
+		p->emblem_id = g->emblem_id;
+		WFIFO_CHUNKED_BLOCK_END();
+	}
+	WFIFO_CHUNKED_FINAL_START(p);
+	p->guild_id = g->guild_id;
+	p->emblem_id = g->emblem_id;
+	WFIFO_CHUNKED_FINAL_END();
+	return 0;
+}
+
 // Send guild info
-static int mapif_guild_info(const struct guild *g)
+static int mapif_guild_info_basic(int fd, struct guild *g)
 {
 	nullpo_ret(g);
 
@@ -2359,6 +2384,8 @@ void mapif_defaults(void)
 	mapif->guild_created = mapif_guild_created;
 	mapif->guild_noinfo = mapif_guild_noinfo;
 	mapif->guild_info = mapif_guild_info;
+	mapif->guild_info_basic = mapif_guild_info_basic;
+	mapif->guild_info_emblem = mapif_guild_info_emblem;
 	mapif->guild_memberadded = mapif_guild_memberadded;
 	mapif->guild_withdraw = mapif_guild_withdraw;
 	mapif->guild_memberinfoshort = mapif_guild_memberinfoshort;

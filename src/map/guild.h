@@ -26,6 +26,7 @@
 #include "common/db.h"
 #include "common/mmo.h"
 
+struct fifo_chunk_buf;
 struct map_session_data;
 
 /**
@@ -107,7 +108,7 @@ struct guild_interface {
 	int (*created) (int account_id,int guild_id);
 	int (*request_info) (int guild_id);
 	int (*recv_noinfo) (int guild_id);
-	int (*recv_info) (const struct guild *sg);
+	int (*recv_info) (const struct guild *sg, struct fifo_chunk_buf *emblem_buf);
 	int (*npc_request_info) (int guild_id,const char *ev);
 	int (*invite) (struct map_session_data *sd,struct map_session_data *tsd);
 	int (*reply_invite) (struct map_session_data *sd,int guild_id,int flag);

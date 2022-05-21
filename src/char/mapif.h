@@ -67,6 +67,8 @@ struct mapif_interface {
 	int (*guild_created) (int fd, int account_id, struct guild *g);
 	int (*guild_noinfo) (int guild_id);
 	int (*guild_info) (const struct guild *g);
+	int (*guild_info_basic) (const struct guild *g);
+	int (*guild_info_emblem) (const struct guild *g);
 	int (*guild_memberadded) (int guild_id, int account_id, int char_id, int flag);
 	int (*guild_withdraw) (int guild_id, int account_id, int char_id, int flag, const char *name, const char *mes);
 	int (*guild_memberinfoshort) (struct guild *g, int idx);

@@ -1276,6 +1276,28 @@ static void intif_parse_GuildCreated(int fd)
 }
 
 // ACK guild infos
+static void intif_parse_GuildInfoEmblem(int fd)
+{
+	struct PACKET_CHARMAP_GUILD_INFO_EMBLEM *p = RFIFOP(fd, 0);
+
+	RFIFO_CHUNKED_INIT(p, p->packetLength - sizeof(struct PACKET_CHARMAP_GUILD_INFO_EMBLEM), intif->emblem_tmp);
+
+	RFIFO_CHUNKED_ERROR(p) {
+		intif->emblem_tmp_done = false;
+		intif->emblem_tmp_guild_id = 0;
+		intif->emblem_tmp_emblem_id = 0;
+		fifo_chunk_buf_clear(intif->emblem_tmp);
+		return;
+	}
+
+	RFIFO_CHUNKED_COMPLETE(p) {
+		intif->emblem_tmp_done = true;
+		intif->emblem_tmp_guild_id = p->guild_id;
+		intif->emblem_tmp_emblem_id = p->emblem_id;
+	}
+}
+
+// ACK guild infos
 static void intif_parse_GuildInfo(int fd)
 {
 	if (RFIFOW(fd, 2) == sizeof(struct PACKET_CHARMAP_GUILD_INFO_EMPTY)) {
@@ -1288,7 +1310,17 @@ static void intif_parse_GuildInfo(int fd)
 	if (p->packetLength != sizeof(struct PACKET_CHARMAP_GUILD_INFO))
 		ShowError("intif: guild info: data size mismatch - Gid: %d recv size: %d Expected size: %"PRIuS"\n",
 		          p->g.guild_id, p->packetLength, sizeof(struct PACKET_CHARMAP_GUILD_INFO));
-	guild->recv_info(&p->g);
+	if (intif->emblem_tmp_done == false ||
+	    intif->emblem_tmp_guild_id != p->g.guild_id ||
+	    intif->emblem_tmp_emblem_id != p->g.emblem_id) {
+		guild->recv_info(&p->g, NULL);
+	} else {
+		guild->recv_info(&p->g, &intif->emblem_tmp);
+	}
+	intif->emblem_tmp_done = false;
+	intif->emblem_tmp_guild_id = 0;
+	intif->emblem_tmp_emblem_id = 0;
+	fifo_chunk_buf_clear(intif->emblem_tmp);
 }
 
 // ACK adding guild member
@@ -1418,6 +1450,11 @@ static void intif_parse_GuildNotice(int fd)
 static void intif_parse_GuildEmblem(int fd)
 {
 	struct PACKET_CHARMAP_GUILD_EMBLEM *p = RFIFOP(fd, 0);
+
+	// reset tmp emblem fields always for avoid reuse emblem buffer for other things [4144]
+	intif->emblem_tmp_done = false;
+	intif->emblem_tmp_guild_id = 0;
+	intif->emblem_tmp_emblem_id = 0;
 
 	RFIFO_CHUNKED_INIT(p, p->packetLength - sizeof(struct PACKET_CHARMAP_GUILD_EMBLEM), intif->emblem_tmp);
 
@@ -2765,6 +2802,7 @@ static int intif_parse(int fd)
 		case 0x3826: intif->pPartyBroken(fd); break;
 		case 0x3830: intif->pGuildCreated(fd); break;
 		case HEADER_CHARMAP_GUILD_INFO: intif->pGuildInfo(fd); break;
+		case HEADER_CHARMAP_GUILD_INFO_EMBLEM: intif->pGuildInfoEmblem(fd); break;
 		case 0x3832: intif->pGuildMemberAdded(fd); break;
 		case 0x3834: intif->pGuildMemberWithdraw(fd); break;
 		case 0x3835: intif->pGuildMemberInfoShort(fd); break;
@@ -2855,6 +2893,9 @@ void intif_defaults(void)
 	intif = &intif_s;
 
 	fifo_chunk_buf_init(intif->emblem_tmp);
+	intif->emblem_tmp_done = false;
+	intif->emblem_tmp_guild_id = 0;
+	intif->emblem_tmp_emblem_id = 0;
 
 	/* funcs */
 	intif->parse = intif_parse;
@@ -2958,6 +2999,7 @@ void intif_defaults(void)
 	intif->pPartyBroken = intif_parse_PartyBroken;
 	intif->pGuildCreated = intif_parse_GuildCreated;
 	intif->pGuildInfo = intif_parse_GuildInfo;
+	intif->pGuildInfoEmblem = intif_parse_GuildInfoEmblem;
 	intif->pGuildMemberAdded = intif_parse_GuildMemberAdded;
 	intif->pGuildMemberWithdraw = intif_parse_GuildMemberWithdraw;
 	intif->pGuildMemberInfoShort = intif_parse_GuildMemberInfoShort;

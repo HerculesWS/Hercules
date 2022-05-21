@@ -54,6 +54,9 @@ struct rodex_message;
 *-------------------------------------*/
 struct intif_interface {
 	struct fifo_chunk_buf emblem_tmp;
+	bool emblem_tmp_done;
+	int emblem_tmp_guild_id;
+	int emblem_tmp_emblem_id;
 
 	/* funcs */
 	int (*parse) (int fd);
@@ -159,6 +162,7 @@ struct intif_interface {
 	void (*pPartyBroken) (int fd);
 	void (*pGuildCreated) (int fd);
 	void (*pGuildInfo) (int fd);
+	void (*pGuildInfoEmblem) (int fd);
 	void (*pGuildMemberAdded) (int fd);
 	void (*pGuildMemberWithdraw) (int fd);
 	void (*pGuildMemberInfoShort) (int fd);

@@ -595,7 +595,7 @@ static int guild_recv_noinfo(int guild_id)
 }
 
 //Get and display information for all member
-static int guild_recv_info(const struct guild *sg)
+static int guild_recv_info(const struct guild *sg, struct fifo_chunk_buf *emblem_buf)
 {
 	struct guild *g,before;
 	int i,bm,m;
@@ -686,9 +686,13 @@ static int guild_recv_info(const struct guild *sg)
 	g->instance = instance_save;
 	g->instances = instances_save;
 
-	// reset emblem before actual emblem received
-	g->emblem_data = NULL;
-	g->emblem_len = 0;
+	if (emblem_buf == NULL) {
+		g->emblem_data = NULL;
+		g->emblem_len = 0;
+	} else {
+		g->emblem_data = aMalloc(emblem_buf->data_size);
+		memcpy(g->emblem_data, emblem_buf->data, emblem_buf->data_size);
+	}
 
 	if(g->max_member > MAX_GUILD) {
 		ShowError("guild_recv_info: Received guild with %d members, but MAX_GUILD is only %d. Extra guild-members have been lost!\n", g->max_member, MAX_GUILD);
@@ -714,8 +718,7 @@ static int guild_recv_info(const struct guild *sg)
 		if (before.guild_lv != g->guild_lv || bm != m
 		 || before.max_member != g->max_member) {
 			clif->guild_basicinfo(sd); //Submit basic information
-// temporary disabled because emblem should be sent in separate packet
-//			clif->guild_emblem(sd, g); //Submit emblem
+			clif->guild_emblem(sd, g); //Submit emblem
 		}
 
 		if (bm != m) { //Send members information
