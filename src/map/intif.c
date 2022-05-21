@@ -1416,10 +1416,21 @@ static void intif_parse_GuildNotice(int fd)
 static void intif_parse_GuildEmblem(int fd)
 {
 	struct PACKET_CHARMAP_GUILD_EMBLEM *p = RFIFOP(fd, 0);
-	guild->emblem_changed(p->packetLength - sizeof(struct PACKET_CHARMAP_GUILD_EMBLEM),
-		p->guild_id,
-		p->emblem_id,
-		p->data);
+
+	RFIFO_CHUNKED_INIT(p, p->packetLength - sizeof(struct PACKET_CHARMAP_GUILD_EMBLEM), intif->emblem_tmp);
+
+	RFIFO_CHUNKED_ERROR(p) {
+		fifo_chunk_buf_clear(intif->emblem_tmp);
+		return;
+	}
+
+	RFIFO_CHUNKED_COMPLETE(p) {
+		guild->emblem_changed(intif->emblem_tmp.data_size,
+			p->guild_id,
+			p->emblem_id,
+			intif->emblem_tmp.data);
+		fifo_chunk_buf_clear(intif->emblem_tmp);
+	}
 }
 
 // Reply guild castle data request
@@ -2840,6 +2851,8 @@ static int intif_parse(int fd)
 void intif_defaults(void)
 {
 	intif = &intif_s;
+
+	fifo_chunk_buf_init(intif->emblem_tmp);
 
 	/* funcs */
 	intif->parse = intif_parse;

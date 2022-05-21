@@ -22,6 +22,7 @@
 #define MAP_INTIF_H
 
 #include "common/hercules.h"
+#include "common/chunked.h"
 
 /**
  * Declarations
@@ -52,6 +53,8 @@ struct rodex_message;
 * created by Susu
 *-------------------------------------*/
 struct intif_interface {
+	struct fifo_chunk_buf emblem_tmp;
+
 	/* funcs */
 	int (*parse) (int fd);
 	int (*create_pet)(int account_id, int char_id, int pet_type, int pet_lv, int pet_egg_id,

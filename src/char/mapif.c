@@ -644,15 +644,16 @@ static int mapif_guild_emblem_sub(int fd, va_list args)
 	struct guild *g = va_arg(args, struct guild*);
 	nullpo_ret(g);
 
-	const int len = sizeof(struct PACKET_CHARMAP_GUILD_EMBLEM) + sizeof(g->emblem_data);
-	struct PACKET_CHARMAP_GUILD_EMBLEM *p = aCalloc(1, len);
-
-	p->packetType = HEADER_CHARMAP_GUILD_EMBLEM;
-	p->packetLength = len;
+	WFIFO_CHUNKED_INIT(p, fd, HEADER_CHARMAP_GUILD_EMBLEM, PACKET_CHARMAP_GUILD_EMBLEM, g->emblem_data, g->emblem_len) {
+		WFIFO_CHUNKED_BLOCK_START(p);
+		p->guild_id = g->guild_id;
+		p->emblem_id = g->emblem_id;
+		WFIFO_CHUNKED_BLOCK_END();
+	}
+	WFIFO_CHUNKED_FINAL_START(p);
 	p->guild_id = g->guild_id;
 	p->emblem_id = g->emblem_id;
-	memcpy(p->emblem_data, g->emblem_data, g->emblem_len);
-	mapif->send((const unsigned char *)p, len);
+	WFIFO_CHUNKED_FINAL_END();
 	return 0;
 }
 
