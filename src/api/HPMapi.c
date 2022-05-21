@@ -25,6 +25,7 @@
 #include "common/cbasetypes.h"
 
 #include "common/HPMi.h"
+#include "common/chunked.h"
 #include "common/conf.h"
 #include "common/console.h"
 #include "common/core.h"

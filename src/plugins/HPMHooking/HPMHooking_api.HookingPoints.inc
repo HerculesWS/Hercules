@@ -234,6 +234,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(imageparser->final, HP_imageparser_final) },
 	{ HP_POP(imageparser->validate_bmp_emblem, HP_imageparser_validate_bmp_emblem) },
 	{ HP_POP(imageparser->validate_gif_emblem, HP_imageparser_validate_gif_emblem) },
+	{ HP_POP(imageparser->read_gif_func, HP_imageparser_read_gif_func) },
 /* jsonparser_interface */
 	{ HP_POP(jsonparser->init, HP_jsonparser_init) },
 	{ HP_POP(jsonparser->final, HP_jsonparser_final) },

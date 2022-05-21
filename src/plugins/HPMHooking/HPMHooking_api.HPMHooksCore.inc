@@ -416,6 +416,8 @@ struct {
 	struct HPMHookPoint *HP_imageparser_validate_bmp_emblem_post;
 	struct HPMHookPoint *HP_imageparser_validate_gif_emblem_pre;
 	struct HPMHookPoint *HP_imageparser_validate_gif_emblem_post;
+	struct HPMHookPoint *HP_imageparser_read_gif_func_pre;
+	struct HPMHookPoint *HP_imageparser_read_gif_func_post;
 	struct HPMHookPoint *HP_jsonparser_init_pre;
 	struct HPMHookPoint *HP_jsonparser_init_post;
 	struct HPMHookPoint *HP_jsonparser_final_pre;
@@ -1401,6 +1403,8 @@ struct {
 	int HP_imageparser_validate_bmp_emblem_post;
 	int HP_imageparser_validate_gif_emblem_pre;
 	int HP_imageparser_validate_gif_emblem_post;
+	int HP_imageparser_read_gif_func_pre;
+	int HP_imageparser_read_gif_func_post;
 	int HP_jsonparser_init_pre;
 	int HP_jsonparser_init_post;
 	int HP_jsonparser_final_pre;

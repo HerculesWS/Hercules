@@ -74,6 +74,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		#define API_HTTPSENDER_H
 	#endif // API_HTTPSENDER_H
 	#ifdef API_IMAGEPARSER_H
+		{ "gif_user_data", sizeof(struct gif_user_data), SERVER_TYPE_UNKNOWN },
 		{ "imageparser_interface", sizeof(struct imageparser_interface), SERVER_TYPE_UNKNOWN },
 	#else
 		#define API_IMAGEPARSER_H
@@ -248,9 +249,16 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#endif // COMMON_APIPACKETS_H
 	#ifdef COMMON_CHARMAPPACKETS_H
 		{ "PACKET_CHARMAP_AGENCY_JOIN_PARTY", sizeof(struct PACKET_CHARMAP_AGENCY_JOIN_PARTY), SERVER_TYPE_ALL },
+		{ "PACKET_CHARMAP_GUILD_EMBLEM", sizeof(struct PACKET_CHARMAP_GUILD_EMBLEM), SERVER_TYPE_ALL },
+		{ "PACKET_CHARMAP_GUILD_INFO", sizeof(struct PACKET_CHARMAP_GUILD_INFO), SERVER_TYPE_ALL },
 	#else
 		#define COMMON_CHARMAPPACKETS_H
 	#endif // COMMON_CHARMAPPACKETS_H
+	#ifdef COMMON_CHUNKED_H
+		{ "fifo_chunk_buf", sizeof(struct fifo_chunk_buf), SERVER_TYPE_ALL },
+	#else
+		#define COMMON_CHUNKED_H
+	#endif // COMMON_CHUNKED_H
 	#ifdef COMMON_CONF_H
 		{ "libconfig_interface", sizeof(struct libconfig_interface), SERVER_TYPE_ALL },
 	#else

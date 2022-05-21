@@ -36918,15 +36918,15 @@ int HP_guild_recv_noinfo(int guild_id) {
 	}
 	return retVal___;
 }
-int HP_guild_recv_info(const struct guild *sg) {
+int HP_guild_recv_info(const struct guild *sg, struct fifo_chunk_buf *emblem_buf) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_guild_recv_info_pre > 0) {
-		int (*preHookFunc) (const struct guild **sg);
+		int (*preHookFunc) (const struct guild **sg, struct fifo_chunk_buf **emblem_buf);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_guild_recv_info_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_guild_recv_info_pre[hIndex].func;
-			retVal___ = preHookFunc(&sg);
+			retVal___ = preHookFunc(&sg, &emblem_buf);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -36934,13 +36934,13 @@ int HP_guild_recv_info(const struct guild *sg) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.guild.recv_info(sg);
+		retVal___ = HPMHooks.source.guild.recv_info(sg, emblem_buf);
 	}
 	if (HPMHooks.count.HP_guild_recv_info_post > 0) {
-		int (*postHookFunc) (int retVal___, const struct guild *sg);
+		int (*postHookFunc) (int retVal___, const struct guild *sg, struct fifo_chunk_buf *emblem_buf);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_guild_recv_info_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_guild_recv_info_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, sg);
+			retVal___ = postHookFunc(retVal___, sg, emblem_buf);
 		}
 	}
 	return retVal___;
@@ -43627,6 +43627,32 @@ void HP_intif_pGuildInfo(int fd) {
 		void (*postHookFunc) (int fd);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_intif_pGuildInfo_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_intif_pGuildInfo_post[hIndex].func;
+			postHookFunc(fd);
+		}
+	}
+	return;
+}
+void HP_intif_pGuildInfoEmblem(int fd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_intif_pGuildInfoEmblem_pre > 0) {
+		void (*preHookFunc) (int *fd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_intif_pGuildInfoEmblem_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_intif_pGuildInfoEmblem_pre[hIndex].func;
+			preHookFunc(&fd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.intif.pGuildInfoEmblem(fd);
+	}
+	if (HPMHooks.count.HP_intif_pGuildInfoEmblem_post > 0) {
+		void (*postHookFunc) (int fd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_intif_pGuildInfoEmblem_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_intif_pGuildInfoEmblem_post[hIndex].func;
 			postHookFunc(fd);
 		}
 	}

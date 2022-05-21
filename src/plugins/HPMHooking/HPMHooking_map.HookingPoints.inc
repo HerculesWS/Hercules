@@ -1699,6 +1699,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(intif->pPartyBroken, HP_intif_pPartyBroken) },
 	{ HP_POP(intif->pGuildCreated, HP_intif_pGuildCreated) },
 	{ HP_POP(intif->pGuildInfo, HP_intif_pGuildInfo) },
+	{ HP_POP(intif->pGuildInfoEmblem, HP_intif_pGuildInfoEmblem) },
 	{ HP_POP(intif->pGuildMemberAdded, HP_intif_pGuildMemberAdded) },
 	{ HP_POP(intif->pGuildMemberWithdraw, HP_intif_pGuildMemberWithdraw) },
 	{ HP_POP(intif->pGuildMemberInfoShort, HP_intif_pGuildMemberInfoShort) },

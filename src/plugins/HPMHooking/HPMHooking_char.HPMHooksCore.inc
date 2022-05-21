@@ -1102,6 +1102,10 @@ struct {
 	struct HPMHookPoint *HP_mapif_guild_noinfo_post;
 	struct HPMHookPoint *HP_mapif_guild_info_pre;
 	struct HPMHookPoint *HP_mapif_guild_info_post;
+	struct HPMHookPoint *HP_mapif_guild_info_basic_pre;
+	struct HPMHookPoint *HP_mapif_guild_info_basic_post;
+	struct HPMHookPoint *HP_mapif_guild_info_emblem_pre;
+	struct HPMHookPoint *HP_mapif_guild_info_emblem_post;
 	struct HPMHookPoint *HP_mapif_guild_memberadded_pre;
 	struct HPMHookPoint *HP_mapif_guild_memberadded_post;
 	struct HPMHookPoint *HP_mapif_guild_withdraw_pre;
@@ -1124,6 +1128,8 @@ struct {
 	struct HPMHookPoint *HP_mapif_guild_notice_post;
 	struct HPMHookPoint *HP_mapif_guild_emblem_pre;
 	struct HPMHookPoint *HP_mapif_guild_emblem_post;
+	struct HPMHookPoint *HP_mapif_guild_emblem_sub_pre;
+	struct HPMHookPoint *HP_mapif_guild_emblem_sub_post;
 	struct HPMHookPoint *HP_mapif_guild_master_changed_pre;
 	struct HPMHookPoint *HP_mapif_guild_master_changed_post;
 	struct HPMHookPoint *HP_mapif_guild_castle_dataload_pre;
@@ -2843,6 +2849,10 @@ struct {
 	int HP_mapif_guild_noinfo_post;
 	int HP_mapif_guild_info_pre;
 	int HP_mapif_guild_info_post;
+	int HP_mapif_guild_info_basic_pre;
+	int HP_mapif_guild_info_basic_post;
+	int HP_mapif_guild_info_emblem_pre;
+	int HP_mapif_guild_info_emblem_post;
 	int HP_mapif_guild_memberadded_pre;
 	int HP_mapif_guild_memberadded_post;
 	int HP_mapif_guild_withdraw_pre;
@@ -2865,6 +2875,8 @@ struct {
 	int HP_mapif_guild_notice_post;
 	int HP_mapif_guild_emblem_pre;
 	int HP_mapif_guild_emblem_post;
+	int HP_mapif_guild_emblem_sub_pre;
+	int HP_mapif_guild_emblem_sub_post;
 	int HP_mapif_guild_master_changed_pre;
 	int HP_mapif_guild_master_changed_post;
 	int HP_mapif_guild_castle_dataload_pre;

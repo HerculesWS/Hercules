@@ -14420,6 +14420,60 @@ int HP_mapif_guild_info(const struct guild *g) {
 	}
 	return retVal___;
 }
+int HP_mapif_guild_info_basic(struct guild *g) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_mapif_guild_info_basic_pre > 0) {
+		int (*preHookFunc) (struct guild **g);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_guild_info_basic_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_mapif_guild_info_basic_pre[hIndex].func;
+			retVal___ = preHookFunc(&fd, &g);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.mapif.guild_info_basic(fd, g);
+	}
+	if (HPMHooks.count.HP_mapif_guild_info_basic_post > 0) {
+		int (*postHookFunc) (int retVal___, struct guild *g);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_guild_info_basic_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_mapif_guild_info_basic_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, fd, g);
+		}
+	}
+	return retVal___;
+}
+int HP_mapif_guild_info_emblem(struct guild *g) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_mapif_guild_info_emblem_pre > 0) {
+		int (*preHookFunc) (struct guild **g);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_guild_info_emblem_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_mapif_guild_info_emblem_pre[hIndex].func;
+			retVal___ = preHookFunc(&fd, &g);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.mapif.guild_info_emblem(fd, g);
+	}
+	if (HPMHooks.count.HP_mapif_guild_info_emblem_post > 0) {
+		int (*postHookFunc) (int retVal___, struct guild *g);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_guild_info_emblem_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_mapif_guild_info_emblem_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, g);
+		}
+	}
+	return retVal___;
+}
 int HP_mapif_guild_memberadded(int guild_id, int account_id, int char_id, int flag) {
 	int hIndex = 0;
 	int retVal___ = 0;
@@ -14713,6 +14767,39 @@ int HP_mapif_guild_emblem(struct guild *g) {
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_guild_emblem_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_mapif_guild_emblem_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, g);
+		}
+	}
+	return retVal___;
+}
+int HP_mapif_guild_emblem_sub(int fd, va_list args) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_mapif_guild_emblem_sub_pre > 0) {
+		int (*preHookFunc) (int *fd, va_list args);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_guild_emblem_sub_pre; hIndex++) {
+			va_list args___copy; va_copy(args___copy, args);
+			preHookFunc = HPMHooks.list.HP_mapif_guild_emblem_sub_pre[hIndex].func;
+			retVal___ = preHookFunc(&fd, args___copy);
+			va_end(args___copy);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		va_list args___copy; va_copy(args___copy, args);
+		retVal___ = HPMHooks.source.mapif.guild_emblem_sub(fd, args___copy);
+		va_end(args___copy);
+	}
+	if (HPMHooks.count.HP_mapif_guild_emblem_sub_post > 0) {
+		int (*postHookFunc) (int retVal___, int fd, va_list args);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_guild_emblem_sub_post; hIndex++) {
+			va_list args___copy; va_copy(args___copy, args);
+			postHookFunc = HPMHooks.list.HP_mapif_guild_emblem_sub_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, fd, args___copy);
+			va_end(args___copy);
 		}
 	}
 	return retVal___;

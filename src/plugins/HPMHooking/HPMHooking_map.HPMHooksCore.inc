@@ -3318,6 +3318,8 @@ struct {
 	struct HPMHookPoint *HP_intif_pGuildCreated_post;
 	struct HPMHookPoint *HP_intif_pGuildInfo_pre;
 	struct HPMHookPoint *HP_intif_pGuildInfo_post;
+	struct HPMHookPoint *HP_intif_pGuildInfoEmblem_pre;
+	struct HPMHookPoint *HP_intif_pGuildInfoEmblem_post;
 	struct HPMHookPoint *HP_intif_pGuildMemberAdded_pre;
 	struct HPMHookPoint *HP_intif_pGuildMemberAdded_post;
 	struct HPMHookPoint *HP_intif_pGuildMemberWithdraw_pre;
@@ -10809,6 +10811,8 @@ struct {
 	int HP_intif_pGuildCreated_post;
 	int HP_intif_pGuildInfo_pre;
 	int HP_intif_pGuildInfo_post;
+	int HP_intif_pGuildInfoEmblem_pre;
+	int HP_intif_pGuildInfoEmblem_post;
 	int HP_intif_pGuildMemberAdded_pre;
 	int HP_intif_pGuildMemberAdded_post;
 	int HP_intif_pGuildMemberWithdraw_pre;
