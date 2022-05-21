@@ -980,7 +980,7 @@ struct guild {
 	char mes2[MAX_GUILDMES2];                             ///< Guild message (second line)
 	int emblem_id;                                        ///< Sequential ID of the current emblem
 	int emblem_len;                                       ///< Guild emblem data length
-	char emblem_data[2048];                               ///< Guild emblem data
+	char *emblem_data;                                   ///< Guild emblem data
 	struct guild_alliance alliance[MAX_GUILDALLIANCE];    ///< Guild alliances data
 	struct guild_expulsion expulsion[MAX_GUILDEXPULSION]; ///< Guild expulsion records
 	struct guild_skill skill[MAX_GUILDSKILL];             ///< Guild skills data

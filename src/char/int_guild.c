@@ -181,7 +181,7 @@ static bool inter_guild_tosql(struct guild *g, int flag)
 
 		if (flag & GS_EMBLEM)
 		{
-			char emblem_data[sizeof(g->emblem_data)*2+1];
+			char *emblem_data = aMalloc(g->emblem_len * 2 + 1);
 			char* pData = emblem_data;
 
 			strcat(t_info, " emblem");
@@ -193,6 +193,7 @@ static bool inter_guild_tosql(struct guild *g, int flag)
 			}
 			*pData = 0;
 			StrBuf->Printf(&buf, "`emblem_len`=%d, `emblem_id`=%d, `emblem_data`='%s'", g->emblem_len, g->emblem_id, emblem_data);
+			aFree(emblem_data);
 			add_comma = true;
 		}
 		if (flag & GS_BASIC)
@@ -412,6 +413,9 @@ static struct guild *inter_guild_fromsql(int guild_id)
 	SQL->GetData(inter->sql_handle, 12, &data, &len); g->emblem_len = atoi(data);
 	SQL->GetData(inter->sql_handle, 13, &data, &len); g->emblem_id = atoi(data);
 	SQL->GetData(inter->sql_handle, 14, &data, &len);
+
+	g->emblem_data = aMalloc(g->emblem_len);
+
 	// convert emblem data from hexadecimal to binary
 	//TODO: why not store it in the db as binary directly? [ultramage]
 	for( i = 0, p = g->emblem_data; i < g->emblem_len; ++i, ++p )
@@ -439,6 +443,7 @@ static struct guild *inter_guild_fromsql(int guild_id)
 		"FROM `%s` g LEFT JOIN `%s` c ON c.`char_id` = g.`char_id` WHERE g.`guild_id`='%d' ORDER BY `position`", guild_member_db, char_db, guild_id) )
 	{
 		Sql_ShowDebug(inter->sql_handle);
+		aFree(g->emblem_data);
 		aFree(g);
 		return NULL;
 	}
@@ -476,6 +481,7 @@ static struct guild *inter_guild_fromsql(int guild_id)
 	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `position`,`name`,`mode`,`exp_mode` FROM `%s` WHERE `guild_id`='%d'", guild_position_db, guild_id) )
 	{
 		Sql_ShowDebug(inter->sql_handle);
+		aFree(g->emblem_data);
 		aFree(g);
 		return NULL;
 	}
@@ -498,6 +504,7 @@ static struct guild *inter_guild_fromsql(int guild_id)
 	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `opposition`,`alliance_id`,`name` FROM `%s` WHERE `guild_id`='%d'", guild_alliance_db, guild_id) )
 	{
 		Sql_ShowDebug(inter->sql_handle);
+		aFree(g->emblem_data);
 		aFree(g);
 		return NULL;
 	}
@@ -514,6 +521,7 @@ static struct guild *inter_guild_fromsql(int guild_id)
 	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `account_id`,`char_id`,`name`,`mes` FROM `%s` WHERE `guild_id`='%d'", guild_expulsion_db, guild_id) )
 	{
 		Sql_ShowDebug(inter->sql_handle);
+		aFree(g->emblem_data);
 		aFree(g);
 		return NULL;
 	}
@@ -531,6 +539,7 @@ static struct guild *inter_guild_fromsql(int guild_id)
 	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `id`,`lv` FROM `%s` WHERE `guild_id`='%d' ORDER BY `id`", guild_skill_db, guild_id) )
 	{
 		Sql_ShowDebug(inter->sql_handle);
+		aFree(g->emblem_data);
 		aFree(g);
 		return NULL;
 	}
@@ -1540,13 +1549,10 @@ static bool inter_guild_update_emblem(int len, int guild_id, const char *data)
 	if(g==NULL)
 		return false;
 
-	if (len > sizeof(g->emblem_data)) {
-		ShowError("inter_guild_update_emblem: Big emblems (len %d) not supported yet\n", len);
-		len = sizeof(g->emblem_data);
-	}
-
-	memcpy(g->emblem_data,data,len);
-	g->emblem_len=len;
+	if (len > g->emblem_len)
+		g->emblem_data = aReallocz(g->emblem_data, len);
+	memcpy(g->emblem_data, data, len);
+	g->emblem_len = len;
 	g->emblem_id++;
 	g->save_flag |= GS_EMBLEM; //Change guild
 	mapif->guild_emblem(g);

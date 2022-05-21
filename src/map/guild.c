@@ -686,6 +686,10 @@ static int guild_recv_info(const struct guild *sg)
 	g->instance = instance_save;
 	g->instances = instances_save;
 
+	// reset emblem before actual emblem received
+	g->emblem_data = NULL;
+	g->emblem_len = 0;
+
 	if(g->max_member > MAX_GUILD) {
 		ShowError("guild_recv_info: Received guild with %d members, but MAX_GUILD is only %d. Extra guild-members have been lost!\n", g->max_member, MAX_GUILD);
 		g->max_member = MAX_GUILD;
@@ -710,7 +714,8 @@ static int guild_recv_info(const struct guild *sg)
 		if (before.guild_lv != g->guild_lv || bm != m
 		 || before.max_member != g->max_member) {
 			clif->guild_basicinfo(sd); //Submit basic information
-			clif->guild_emblem(sd, g); //Submit emblem
+// temporary disabled because emblem should be sent in separate packet
+//			clif->guild_emblem(sd, g); //Submit emblem
 		}
 
 		if (bm != m) { //Send members information
@@ -1361,9 +1366,11 @@ static int guild_emblem_changed(int len, int guild_id, int emblem_id, const char
 	if(g==NULL)
 		return 0;
 
-	memcpy(g->emblem_data,data,len);
-	g->emblem_len=len;
-	g->emblem_id=emblem_id;
+	if (len > g->emblem_len)
+		g->emblem_data = aReallocz(g->emblem_data, len);
+	memcpy(g->emblem_data, data, len);
+	g->emblem_len = len;
+	g->emblem_id = emblem_id;
 
 	for(i=0;i<g->max_member;i++){
 		if((sd=g->member[i].sd)!=NULL){
