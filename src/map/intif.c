@@ -1419,7 +1419,7 @@ static void intif_parse_GuildEmblem(int fd)
 	guild->emblem_changed(p->packetLength - sizeof(struct PACKET_CHARMAP_GUILD_EMBLEM),
 		p->guild_id,
 		p->emblem_id,
-		p->emblem_data);
+		p->data);
 }
 
 // Reply guild castle data request

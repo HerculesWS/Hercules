@@ -284,9 +284,7 @@ static int aclif_session_delete(int fd)
 	sd->multi_parser = NULL;
 	aFree(sd->temp_mime_header);
 	sd->temp_mime_header = NULL;
-	aFree(sd->data);
-	sd->data = NULL;
-	sd->data_size = 0;
+	fifo_chunk_buf_clear(sd->data);
 	aFree(sd->custom);
 	sd->custom = NULL;
 	aFree(sd->request_temp);

@@ -111,8 +111,7 @@ static void (*pWFIFOSET) (int fd, int size) = NULL;
 static int fake_wchunk_size = 5;
 
 static int fake_rfd = 0;
-static int fake_rsize = 0;
-static char *fake_rbuf = NULL;
+static struct fifo_chunk_buf fake_rbuf;
 static char *fake_rflags = NULL;
 static int fake_rflags_ptr = 0;
 static void (*pRecv) (char *buf, int size) = NULL;
@@ -170,9 +169,7 @@ static void *fake_WFIFOP(int fd, int pos)
 static void recv_clear(void)
 {
 	fake_rfd = 0;
-	fake_rsize = 0;
-	aFree(fake_rbuf);
-	fake_rbuf = NULL;
+	fifo_chunk_buf_clear(fake_rbuf);
 	aFree(fake_rflags);
 	fake_rflags = NULL;
 	fake_rflags_ptr = 0;
@@ -278,7 +275,7 @@ static void testChunked1Recv(char *buf, int size)
 
 	TEST_INT(p->msg_id, 10);
 
-	RFIFO_CHUNKED_INIT(p, src_size, fake_rbuf, fake_rsize);
+	RFIFO_CHUNKED_INIT(p, src_size, fake_rbuf);
 
 	RFIFO_CHUNKED_ERROR(p) {
 		ShowError("Error in testChunked1Recv\n");
@@ -286,7 +283,7 @@ static void testChunked1Recv(char *buf, int size)
 	}
 
 #ifdef DEBUGLOG
-	ShowBuf("recv buffer before: ", fake_rbuf, fake_rsize);
+	ShowBuf("recv buffer before: ", fake_rbuf.data, fake_rbuf.data_size);
 #endif
 
 	RFIFO_CHUNKED_COMPLETE(p) {
@@ -298,7 +295,7 @@ static void testChunked1Recv(char *buf, int size)
 
 	fake_rflags[fake_rflags_ptr++] = p->flag;
 #ifdef DEBUGLOG
-	ShowBuf("recv buffer after: ", fake_rbuf, fake_rsize);
+	ShowBuf("recv buffer after: ", fake_rbuf.data, fake_rbuf.data_size);
 #endif
 }
 
@@ -333,7 +330,7 @@ static void testChunkedBuf2(char *data, int sz)
 	WFIFO_CHUNKED_FINAL_END();
 
 	TEST_INT(recv_complete, true);
-	TEST_BUF(data, fake_rbuf, fake_rsize);
+	TEST_BUF(data, fake_rbuf.data, fake_rbuf.data_size);
 	TEST_INT(recv_cnt, cnt);
 
 	if (recv_cnt == 1) {

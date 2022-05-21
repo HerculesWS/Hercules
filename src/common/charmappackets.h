@@ -40,7 +40,7 @@ struct PACKET_CHARMAP_GUILD_EMBLEM {
 	uint16 packetLength;
 	int guild_id;
 	int emblem_id;
-	char emblem_data[];
+	char data[];
 } __attribute__((packed));
 DEFINE_PACKET_ID(CHARMAP_GUILD_EMBLEM, 0x383f)
 

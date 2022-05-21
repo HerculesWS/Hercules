@@ -25,6 +25,20 @@
 #define WFIFO_CHUNK_SIZE 65500
 #endif  // WFIFO_CHUNK_SIZE
 
+struct fifo_chunk_buf {
+	char *data;
+	int data_size;
+};
+
+#define fifo_chunk_buf_init(dataVar) \
+	(dataVar).data = NULL; \
+	(dataVar).data_size = 0
+
+#define fifo_chunk_buf_clear(dataVar) \
+	aFree((dataVar).data); \
+	(dataVar).data = NULL; \
+	(dataVar).data_size = 0
+
 #define WFIFO_CHUNKED_INIT(p, fd, header, pname, pdata, pdata_len) \
 	struct pname *p = NULL; \
 	int p ## _len = 0; \
@@ -66,10 +80,10 @@
 #define WFIFO_CHUNKED_FINAL_END() \
 		WFIFOSET(p ## _fd, p ## _len)
 
-#define RFIFO_CHUNKED_INIT(p, src_data_size, dst_data, dst_data_size) \
+#define RFIFO_CHUNKED_INIT(p, src_data_size, dst_data) \
 	const int p ## _flag = (p)->flag; \
-	char **p ## _dst_data_ptr = &(dst_data); \
-	int *p ## _dst_data_size_ptr = &(dst_data_size); \
+	char **p ## _dst_data_ptr = &((dst_data).data); \
+	int *p ## _dst_data_size_ptr = &((dst_data).data_size); \
 	const char *p ## _src_data = (p)->data; \
 	const size_t p ## _src_data_size = src_data_size
 
@@ -87,6 +101,10 @@
 		*p ## _dst_data_size_ptr += p ## _src_data_size; \
 	} \
 	if (p ## _flag == 2)
+
+#define RFIFO_CHUNKED_FREE(p) \
+	aFree(*p ## _dst_data_ptr); \
+	*p ## _dst_data_ptr = NULL
 
 #define GET_RFIFO_PACKET_CHUNKED_SIZE(fd, pname) (RFIFOW(fd, 2) - sizeof(struct pname))
 #define GET_RBUF_PACKET_CHUNKED_SIZE(fd, pname) (RBUFW(fd, 2) - sizeof(struct pname))

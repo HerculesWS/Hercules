@@ -24,6 +24,7 @@
 #include "http_include.h"
 
 #include "common/cbasetypes.h"
+#include "common/chunked.h"
 #include "api/httpparsehandler.h"
 #include "api/jsonwriter.h"
 #include "api/postheader.h"
@@ -76,8 +77,7 @@ struct api_session_data {
 	char *body;
 	char *world_name;
 	size_t body_size;
-	char *data;
-	int data_size;
+	struct fifo_chunk_buf data;
 	JsonW *json;
 	void *custom;
 	char valid_post_headers[CONST_POST_MAX];

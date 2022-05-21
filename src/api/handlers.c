@@ -321,7 +321,7 @@ HTTP_DATA(emblem_download)
 	GET_HTTP_DATA(p, emblem_download);
 	const size_t src_emblem_size = data_size - CHUNKED_FLAG_SIZE;
 
-	RFIFO_CHUNKED_INIT(p, src_emblem_size, sd->data, sd->data_size);
+	RFIFO_CHUNKED_INIT(p, src_emblem_size, sd->data);
 
 	RFIFO_CHUNKED_ERROR(p) {
 		ShowError("Wrong guild emblem packets order\n");
@@ -330,12 +330,12 @@ HTTP_DATA(emblem_download)
 	}
 
 	RFIFO_CHUNKED_COMPLETE(p) {
-		if (sd->data_size > 65000) {
+		if (sd->data.data_size > 65000) {
 			ShowError("Big emblems not supported yet\n");
 			aclif->terminate_connection(fd);
 			return;
 		}
-		httpsender->send_binary(fd, sd->data, sd->data_size);
+		httpsender->send_binary(fd, sd->data.data, sd->data.data_size);
 		aclif->terminate_connection(fd);
 	}
 }

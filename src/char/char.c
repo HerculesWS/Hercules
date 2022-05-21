@@ -50,6 +50,7 @@
 #include "common/HPM.h"
 #include "common/apipackets.h"
 #include "common/cbasetypes.h"
+#include "common/chunked.h"
 #include "common/conf.h"
 #include "common/console.h"
 #include "common/core.h"
@@ -6075,7 +6076,7 @@ static void char_online_char_destroy(struct online_char_data *character)
 {
 	nullpo_retv(character);
 	if (character->data) {
-		aFree(character->data->emblem_data);
+		aFree(character->data->emblem_data.data);
 		aFree(character->data);
 	}
 }
@@ -6101,9 +6102,7 @@ static void char_clean_online_char_emblem_data(struct online_char_data *characte
 	nullpo_retv(character);
 	if (character->data == NULL)
 		return;
-	aFree(character->data->emblem_data);
-	character->data->emblem_data = 0;
-	character->data->emblem_data_size = 0;
+	fifo_chunk_buf_clear(character->data->emblem_data);
 	character->data->emblem_guild_id = 0;
 }
 

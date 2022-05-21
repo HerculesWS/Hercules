@@ -170,9 +170,9 @@ void capiif_parse_emblem_upload_guild_id(int fd)
 	if (character == NULL)
 		return;
 	chr->ensure_online_char_data(character);
-	if (character->data->emblem_data != NULL) {
+	if (character->data->emblem_data.data != NULL) {
 		character->data->emblem_guild_id = 0;
-		character->data->emblem_data_size = 0;
+		fifo_chunk_buf_clear(character->data->emblem_data);
 		ShowError("Upload emblem guild id while emblem data transfer in progress.");
 		return;
 	}
@@ -195,7 +195,7 @@ void capiif_parse_emblem_upload(int fd)
 		return;
 	}
 
-	RFIFO_CHUNKED_INIT(p, GET_RFIFO_API_PROXY_PACKET_CHUNKED_SIZE(fd), char_data->emblem_data, char_data->emblem_data_size);
+	RFIFO_CHUNKED_INIT(p, GET_RFIFO_API_PROXY_PACKET_CHUNKED_SIZE(fd), char_data->emblem_data);
 
 	RFIFO_CHUNKED_ERROR(p) {
 		ShowError("Wrong guild emblem packets order\n");
@@ -204,16 +204,16 @@ void capiif_parse_emblem_upload(int fd)
 	}
 
 	RFIFO_CHUNKED_COMPLETE(p) {
-		if (char_data->emblem_data_size > 65000) {
+		if (char_data->emblem_data.data_size > 65000) {
 			ShowError("Big emblems not supported yet\n");
 			chr->clean_online_char_emblem_data(character);
 			return;
 		}
 
 		if (inter_guild->is_guild_master(p->base.char_id, char_data->emblem_guild_id)) {
-			inter_guild->update_emblem(char_data->emblem_data_size,
+			inter_guild->update_emblem(char_data->emblem_data.data_size,
 				char_data->emblem_guild_id,
-				char_data->emblem_data);
+				char_data->emblem_data.data);
 		}
 
 		chr->clean_online_char_emblem_data(character);

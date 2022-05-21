@@ -25,6 +25,7 @@
 #include "common/core.h" // CORE_ST_LAST
 #include "common/db.h"
 #include "common/mmo.h"
+#include "common/chunked.h"
 
 /* Forward Declarations */
 struct config_setting_t; // common/conf.h
@@ -77,8 +78,7 @@ struct online_char_data {
 struct online_char_data2 {
 	int emblem_guild_id;
 	bool emblem_gif;
-	char *emblem_data;
-	int emblem_data_size;
+	struct fifo_chunk_buf emblem_data;
 };
 
 struct mmo_map_server {
