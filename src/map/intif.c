@@ -1278,15 +1278,17 @@ static void intif_parse_GuildCreated(int fd)
 // ACK guild infos
 static void intif_parse_GuildInfo(int fd)
 {
-	if (RFIFOW(fd,2) == 8) {
-		ShowWarning("intif: guild noinfo %u\n", RFIFOL(fd,4));
-		guild->recv_noinfo(RFIFOL(fd,4));
+	if (RFIFOW(fd, 2) == sizeof(struct PACKET_CHARMAP_GUILD_INFO_EMPTY)) {
+		struct PACKET_CHARMAP_GUILD_INFO_EMPTY *empty = RFIFOP(fd, 0);
+		ShowWarning("intif: guild noinfo %d\n", empty->guild_id);
+		guild->recv_noinfo(empty->guild_id);
 		return;
 	}
-	if (RFIFOW(fd,2)!=sizeof(struct guild)+4)
-		ShowError("intif: guild info: data size mismatch - Gid: %u recv size: %d Expected size: %"PRIuS"\n",
-		          RFIFOL(fd,4), RFIFOW(fd,2), sizeof(struct guild)+4);
-	guild->recv_info(RFIFOP(fd,4));
+	struct PACKET_CHARMAP_GUILD_INFO *p = RFIFOP(fd, 0);
+	if (p->packetLength != sizeof(struct PACKET_CHARMAP_GUILD_INFO))
+		ShowError("intif: guild info: data size mismatch - Gid: %d recv size: %d Expected size: %"PRIuS"\n",
+		          p->g.guild_id, p->packetLength, sizeof(struct PACKET_CHARMAP_GUILD_INFO));
+	guild->recv_info(&p->g);
 }
 
 // ACK adding guild member
@@ -2762,7 +2764,7 @@ static int intif_parse(int fd)
 		case 0x3825: intif->pPartyMove(fd); break;
 		case 0x3826: intif->pPartyBroken(fd); break;
 		case 0x3830: intif->pGuildCreated(fd); break;
-		case 0x3831: intif->pGuildInfo(fd); break;
+		case HEADER_CHARMAP_GUILD_INFO: intif->pGuildInfo(fd); break;
 		case 0x3832: intif->pGuildMemberAdded(fd); break;
 		case 0x3834: intif->pGuildMemberWithdraw(fd); break;
 		case 0x3835: intif->pGuildMemberInfoShort(fd); break;

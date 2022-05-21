@@ -457,24 +457,25 @@ static int mapif_guild_created(int fd, int account_id, struct guild *g)
 // Guild not found
 static int mapif_guild_noinfo(int guild_id)
 {
-	unsigned char buf[12];
-	WBUFW(buf, 0) = 0x3831;
-	WBUFW(buf, 2) = 8;
-	WBUFL(buf, 4) = guild_id;
+	struct PACKET_CHARMAP_GUILD_INFO_EMPTY p;
+	p.packetType = HEADER_CHARMAP_GUILD_INFO;
+	p.packetLength = sizeof(struct PACKET_CHARMAP_GUILD_INFO_EMPTY);
+	p.guild_id = guild_id;
 	ShowWarning("int_guild: info not found %d\n", guild_id);
-	mapif->send(buf, 8);
+	mapif->send((const unsigned char *)&p, p.packetLength);
 	return 0;
 }
 
 // Send guild info
 static int mapif_guild_info(const struct guild *g)
 {
-	unsigned char buf[8 + sizeof(struct guild)];
 	nullpo_ret(g);
-	WBUFW(buf, 0) = 0x3831;
-	WBUFW(buf, 2) = 4 + sizeof(struct guild);
-	memcpy(buf + 4, g, sizeof(struct guild));
-	mapif->send(buf, WBUFW(buf, 2));
+
+	struct PACKET_CHARMAP_GUILD_INFO p;
+	p.packetType = HEADER_CHARMAP_GUILD_INFO;
+	p.packetLength = sizeof(struct PACKET_CHARMAP_GUILD_INFO);
+	memcpy(&p.g, g, sizeof(struct guild));
+	mapif->send((const unsigned char *)&p, p.packetLength);
 	return 0;
 }
 
