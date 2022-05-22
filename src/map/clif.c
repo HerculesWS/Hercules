@@ -78,6 +78,7 @@
 #include "common/strlib.h"
 #include "common/timer.h"
 #include "common/utils.h"
+#include "common/chunked/wfifo.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -8721,6 +8722,21 @@ static void clif_guild_emblem_body(struct map_session_data *sd, struct guild *g)
 	nullpo_retv(g);
 
 	const int fd = sd->fd;
+
+#if PACKETVER_MAIN_NUM >= 20190821 || PACKETVER_RE_NUM >= 20190807 || PACKETVER_ZERO_NUM >= 20190710
+	WFIFO_CLIENT_CHUNKED_INIT(p, fd, HEADER_ZC_GUILD_EMBLEM_IMG, PACKET_ZC_GUILD_EMBLEM_IMG, g->emblem_data, g->emblem_len) {
+		WFIFO_CLIENT_CHUNKED_BLOCK_START(p, emblem_data);
+		p->guild_id = g->guild_id;
+		p->emblem_id = g->emblem_id;
+		p->result = ZC_GUILD_EMBLEM_TYPE_ADD;
+		WFIFO_CLIENT_CHUNKED_BLOCK_END();
+	}
+	WFIFO_CLIENT_CHUNKED_FINAL_START(p, emblem_data);
+	p->guild_id = g->guild_id;
+	p->emblem_id = g->emblem_id;
+	p->result = ZC_GUILD_EMBLEM_TYPE_ADD;
+	WFIFO_CLIENT_CHUNKED_FINAL_END();
+#else  // PACKETVER_MAIN_NUM >= 20190821 || PACKETVER_RE_NUM >= 20190807 || PACKETVER_ZERO_NUM >= 20190710
 	const int len = g->emblem_len + sizeof(struct PACKET_ZC_GUILD_EMBLEM_IMG);
 	WFIFOHEAD(fd, len);
 	struct PACKET_ZC_GUILD_EMBLEM_IMG *p = WFIFOP(fd, 0);
@@ -8728,11 +8744,9 @@ static void clif_guild_emblem_body(struct map_session_data *sd, struct guild *g)
 	p->packetLength = len;
 	p->guild_id = g->guild_id;
 	p->emblem_id = g->emblem_id;
-#if PACKETVER_MAIN_NUM >= 20190821 || PACKETVER_RE_NUM >= 20190807 || PACKETVER_ZERO_NUM >= 20190710
-	p->result = ZC_GUILD_EMBLEM_TYPE_ADD;
-#endif  // PACKETVER_MAIN_NUM >= 20190821 || PACKETVER_RE_NUM >= 20190807 || PACKETVER_ZERO_NUM >= 20190710
 	memcpy(p->emblem_data, g->emblem_data, g->emblem_len);
 	WFIFOSET(fd, len);
+#endif  // PACKETVER_MAIN_NUM >= 20190821 || PACKETVER_RE_NUM >= 20190807 || PACKETVER_ZERO_NUM >= 20190710
 }
 
 /// Sends update of the guild id/emblem id to everyone in the area (ZC_CHANGE_GUILD).
