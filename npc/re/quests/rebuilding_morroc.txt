@@ -1,0 +1,314 @@
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2013-2022 Hercules Dev Team
+//= Copyright (C) KirieZ
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Quest NPCs related to the reconstruction of Morroc.
+//================= Description ===========================================
+//= The reconstruction of Morroc was a temporary set of quests around
+//= helping Morroc to be restored.
+//=
+//= This was active during Episode 14.3 and removed afterwards, leaving
+//= only the contribution board and reward machine active
+//=
+//= (Play through conversion)
+//================= Variables Used ========================================
+//= re_wood
+//= - Number of wood gathered (when gathering wood)
+//=
+//= $mocre_wood
+//= - Quantity of wood in the woodpiles (0 .. 1000)
+//================= Current Version =======================================
+//= 0.1
+//=========================================================================
+
+//== Making Wood :: re_wood ==========
+morocc, 285, 70, 4	script	Wood Supply Team Chief	2_M_OLDBLSMITH,{
+	if (!checkweight(MoroccMerit, 1)) {
+		mes("[Wood Supply Team Chief]");
+		mes(" - You're carrying too many items. Please make some room in your bag first. - ");
+		close();
+	}
+
+	if (questprogress(5251) == 1) {
+		mes("[Wood Supply Team Chief]");
+		mes("How can I help you?");
+		next();
+		switch (select("I brought some wood.", "Where can I get a Hatchet?", "End conversation.")) {
+		case 1:
+			.@count = countitem(Wood_);
+			if (.@count == 0) {
+				mes("[Wood Supply Team Chief]");
+				mes("You don't have any wood.");
+				next();
+				mes("[Wood Supply Team Chief]");
+				mes("Don't push yourself too hard. You don't have to bring all 10 wood at once.");
+				close();
+			}
+
+			delitem(Wood_, .@count);
+			re_wood += .@count;
+
+			if (re_wood < 10) {
+				mes("[Wood Supply Team Chief]");
+				mesf("You brought %d pieces of wood. Now you only need to bring %d more. Keep up with the good job.", .@count, (10 - re_wood));
+				close();
+			}
+			
+			mes("[Wood Supply Team Chief]");
+			mes("Good job. Here is your reward.");
+			mes("Take this to the ^7D9BE3Morroc Restauration Comitee^000000, and you will be able to exchange it for something you want.");
+			changequest(5251, 5252);
+			getitem(MoroccMerit, 1);
+			re_wood = 0;
+			donpcevent("MocReMaterialController::OnAddWood");
+			close();
+
+		case 2:
+			mes("[Wood Supply Team Chief]");
+			mes("Oh, I didn't tell you? Sorry, I have been busy. You may ask one from the Carpenter Helper right there.");
+			close();
+
+		case 3:
+			mes("[Wood Supply Team Chief]");
+			mes("Keep up with the good job.");
+			close();
+		}
+		end;
+	}
+	
+	if (questprogress(5252, PLAYTIME) == 2) {
+		erasequest(5252);
+		mes("[Wood Supply Team Chief]");
+		mes("You're back. How can I help you?");
+	} else {
+		mes("[Wood Supply Team Chief]");
+		mes("Welcome to the Provision Departament of the Morroc Restauration Comitee, Wood Team. How can I help you?");
+	}
+	next();
+	switch (select("Morroc Restauration Comitee?", "I came to help.")) {
+	case 1:
+		mes("[Wood Supply Team Chief]");
+		mes("We, Morroc citizens, finally decided to do something regarding the damage done to our city by Satan Morroc.");
+		next();
+		mes("[Wood Supply Team Chief]");
+		mes("So we created the ^7D9BE3Morroc Restauration Comitee^000000.");
+		next();
+		mes("[Wood Supply Team Chief]");
+		mes("We have already finished the repairs for most of the city buildings, except for the symbol of our city, the ^7D9BE3Morroc Castle^000000.");
+		close();
+	
+	case 2:
+		if (BaseLevel < 80) {
+			mes("[Wood Supply Team Chief]");
+			mes("I appreciate your desire to help, but we are not desperate enough to ask help from an adventurer under training.");
+			mes("Please, raise your ^006400Level^000000 to ^ff000080^000000 first.");
+			close();
+		}
+
+		if (questprogress(5252, PLAYTIME) == 1) {
+			mes("[Wood Supply Team Chief]");
+			mes("Your rest time didn't finish yet. I understand your enthusiasm, but your well-being should come first.");
+			close();
+		}
+
+		if (questprogress(5253) == 1) {
+			mes("[Wood Supply Team Chief]");
+			mes("At this time, you are assigned\r"
+				"to another task.");
+			mes("You should first deliver those woods\r"
+				"before you go back to working in making more.");
+			close();
+		}
+
+		mes("[Wood Supply Team Chief]");
+		mes("Did you came from the HQ? You don't look strong enough to work in a construction site like this.");
+		next();
+		mes("[Wood Supply Team Chief]");
+		mes("Go out through the south gate and you will find trees that gives you the perfect wood for construction.");
+		next();
+		mes("[Wood Supply Team Chief]");
+		mes("Bring me 10 pieces of wood. You don't have to bring them all at once.");
+		next();
+		re_wood = 0;
+		setquest(5251);
+		mes("[Wood Supply Team Chief]");
+		mes("Oh, and don't forget to get you hatchet from the Carpenter Helper right there.");
+		close();
+	}
+}
+
+morocc, 278, 80, 3	script	Carpenter Helper	1_M_04,{
+	if (!checkweight(Hatchet, 1)) {
+		mes("[Carpenter Helper]");
+		mes(" - You're carrying too many items. Please make some room in your bag first. - ");
+		close();
+	}
+
+	if (questprogress(5251) == 1) {
+		mes("[Carpenter Helper]");
+		mes("Oh, you are a volunteer. Do you need an Hatchet?");
+		next();
+		if (select("Ask for an Hatchet.","End conversation.") == 2) {
+			mes("[Carpenter Helper]");
+			mes("Have a good day.");
+			close();
+		}
+
+		if (countitem(Hatchet) >= 1) {
+			mes("[Carpenter Helper]");
+			mes("Uhm? It looks like you already have an Hatchet.");
+			close();
+		}
+		mes("[Carpenter Helper]");
+		mes("Here is an Hatchet from the Morroc Restoration Comitte for you. Thanks for your help.");
+		getitem(Hatchet, 1);
+		next();
+		mes("[Carpenter Helper]");
+		mes("When you are done, you may simply sell it to the nearest merchant.");
+		close();
+	}
+
+	mes("[Carpenter Helper]");
+	mes("Welcome to the Provision Departament of the Morroc Restauration Comitee, Wood Team.");
+	close();
+}
+
+-	script	MocReTree	FAKE_NPC,{
+	mes("This tree seems to be strong enough for construction purposes.");
+	close();
+
+OnTouch:
+	if (questprogress(5251) == 0 || countitem(Hatchet) == 0)
+		end;
+
+	if (!checkweight(Wood_, 1)) {
+		mes("^FF0000 - You're carrying too many items. Please make some room in your bag first. - ^000000");
+		close();
+	}
+
+	specialeffect(EF_BASH);
+	if (rand(10000) > 2000) {
+		mes("You hit the tree vigorously using you hatchet.");
+		close();
+	}
+	
+	mes("You've got 1 Wood for construction.");
+	getitem(Wood_, 1);
+	close();
+}
+
+// Duplicates
+moc_fild12,  42, 369, 4	duplicate(MocReTree)	Tree#ep14.3_01	CLEAR_NPC,1,1
+moc_fild12,  55, 376, 4	duplicate(MocReTree)	Tree#ep14.3_02	CLEAR_NPC,1,1
+moc_fild12,  57, 347, 4	duplicate(MocReTree)	Tree#ep14.3_03	CLEAR_NPC,1,1
+moc_fild12,  83, 376, 4	duplicate(MocReTree)	Tree#ep14.3_04	CLEAR_NPC,1,1
+moc_fild12,  92, 345, 4	duplicate(MocReTree)	Tree#ep14.3_05	CLEAR_NPC,1,1
+moc_fild12, 113, 366, 4	duplicate(MocReTree)	Tree#ep14.3_06	CLEAR_NPC,1,1
+moc_fild12, 125, 374, 4	duplicate(MocReTree)	Tree#ep14.3_07	CLEAR_NPC,1,1
+moc_fild12, 136, 343, 4	duplicate(MocReTree)	Tree#ep14.3_08	CLEAR_NPC,1,1
+moc_fild12, 151, 372, 4	duplicate(MocReTree)	Tree#ep14.3_09	CLEAR_NPC,1,1
+moc_fild12, 166, 370, 4	duplicate(MocReTree)	Tree#ep14.3_10	CLEAR_NPC,1,1
+moc_fild12, 167, 315, 4	duplicate(MocReTree)	Tree#ep14.3_11	CLEAR_NPC,1,1
+moc_fild12, 168, 365, 4	duplicate(MocReTree)	Tree#ep14.3_12	CLEAR_NPC,1,1
+moc_fild12, 169, 351, 4	duplicate(MocReTree)	Tree#ep14.3_13	CLEAR_NPC,1,1
+moc_fild12, 186, 370, 4	duplicate(MocReTree)	Tree#ep14.3_14	CLEAR_NPC,1,1
+moc_fild12, 218, 375, 4	duplicate(MocReTree)	Tree#ep14.3_15	CLEAR_NPC,1,1
+moc_fild12, 218, 361, 4	duplicate(MocReTree)	Tree#ep14.3_16	CLEAR_NPC,1,1
+moc_fild12, 221, 322, 4	duplicate(MocReTree)	Tree#ep14.3_17	CLEAR_NPC,1,1
+moc_fild12, 229, 362, 4	duplicate(MocReTree)	Tree#ep14.3_18	CLEAR_NPC,1,1
+moc_fild12, 236, 352, 4	duplicate(MocReTree)	Tree#ep14.3_19	CLEAR_NPC,1,1
+moc_fild12, 264, 357, 4	duplicate(MocReTree)	Tree#ep14.3_20	CLEAR_NPC,1,1
+
+//== Wood Piles ========================
+-	script	MocReWoodpile	4_WOODPILE,{
+	mes("- A material used in the restauration of the castle and other buildings in Morroc. -");
+	close();
+}
+
+// Duplicates
+morocc, 270, 75, 5	duplicate(MocReWoodpile)	Woodpile#1	4_WOODPILE,
+morocc, 272, 75, 5	duplicate(MocReWoodpile)	Woodpile#2	4_WOODPILE
+morocc, 274, 75, 5	duplicate(MocReWoodpile)	Woodpile#3	4_WOODPILE
+morocc, 276, 75, 5	duplicate(MocReWoodpile)	Woodpile#4	4_WOODPILE
+morocc, 278, 75, 5	duplicate(MocReWoodpile)	Woodpile#5	4_WOODPILE
+morocc, 270, 73, 5	duplicate(MocReWoodpile)	Woodpile#6	4_WOODPILE
+morocc, 272, 73, 5	duplicate(MocReWoodpile)	Woodpile#7	4_WOODPILE
+morocc, 274, 73, 5	duplicate(MocReWoodpile)	Woodpile#8	4_WOODPILE
+morocc, 276, 73, 5	duplicate(MocReWoodpile)	Woodpile#9	4_WOODPILE
+morocc, 278, 73, 5	duplicate(MocReWoodpile)	Woodpile#10	4_WOODPILE
+
+//== Material Controller ===============
+// Controls the display/update of Wood, Brick and Ropes
+-	script	MocReMaterialController	FAKE_NPC,{
+	end;
+
+	/**
+	 * showPiles(materialQuantity, "NPC Name Base")
+	 * Show NPCs until the expected number of piles are displayed.
+	 * "NPC Name Base" should be the name before the pile number.
+	 * Example: "Woodpile#" for "Woodpile#1", "Woodpile#2",...
+	 */
+	function showPiles {
+		.@count = getarg(0) / 100;
+		.@npc$ = sprintf("%s%%d", getarg(1));
+		
+		for (.@i = 1; .@i <= .@count; ++.@i)
+			hideoffnpc(sprintf(.@npc$, .@i));
+
+		return;
+	}
+
+	/**
+	 * hidePiles(materialQuantity, "NPC Name Base")
+	 * Hide NPCs until the expected number of piles are displayed.
+	 * "NPC Name Base" should be the name before the pile number.
+	 * Example: "Woodpile#" for "Woodpile#1", "Woodpile#2",...
+	 */
+	function hidePiles {
+		.@count = 0;
+		if (getarg(0) >= 100)
+			.@count = ($mocre_wood / 100);
+		else if (getarg(0) > 0)
+			.@count = 1;
+		
+		.@npc$ = sprintf("%s%%d", getarg(1));
+		for (.@i = 10; .@i > .@count; --.@i)
+			hideonnpc(sprintf(.@npc$, .@i));
+
+		return;
+	}
+
+// Someone has delivered Wood, update global state
+OnAddWood:
+	$mocre_wood = cap_value($mocre_wood + 200, 0, 1000);
+	sleep(2000);
+	showPiles($mocre_wood, "Woodpile#");
+	end;
+
+OnInit:
+	hidePiles($mocre_wood, "Woodpile#");
+	end;
+}
