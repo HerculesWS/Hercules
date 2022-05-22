@@ -31,6 +31,8 @@
 
 #include <stdlib.h>
 
+#define DEBUG_ERRORS
+
 static struct imageparser_interface imageparser_s;
 struct imageparser_interface *imageparser;
 
@@ -152,6 +154,9 @@ static bool imageparser_validate_gif_emblem(const char *emblem, uint64 emblem_le
 	if (emblem_len < 10 ||
 	    strncmp(emblem, "GIF", 3) != 0 ||
 	    (memcmp(emblem + 3, "87a", 3) != 0 && memcmp(emblem + 3, "89a", 3) != 0)) {
+#ifdef DEBUG_ERRORS
+		ShowError("Error: Unknown gif image header\n");
+#endif
 		return false;
 	}
 
@@ -162,28 +167,56 @@ static bool imageparser_validate_gif_emblem(const char *emblem, uint64 emblem_le
 	userData.read_pos = 0;
 
 	GifFileType *image = DGifOpen(&userData, imageparser->read_gif_func, &error);
-	if (image == NULL)
+	if (image == NULL) {
+#ifdef DEBUG_ERRORS
+		ShowError("Error: Gif open error\n");
+#endif
 		return false;
+	}
 	const int ret = DGifSlurp(image);
 	if (ret != GIF_OK) {
+#ifdef DEBUG_ERRORS
+		ShowError("Error: Gif parse error\n");
+#endif
 		DGifCloseFile(image, &error);
 		return false;
 	}
 
 	// check image resolution and images count
+/*
+	if (image->Image.Width != GUILD_EMBLEM_WIDTH ||
+	    image->Image.Height != GUILD_EMBLEM_HEIGHT) {
+#ifdef DEBUG_ERRORS
+		ShowError("Error: Gif image resolution error: %d, %d\n", image->Image.Width, image->Image.Height);
+#endif
+		DGifCloseFile(image, &error);
+		return false;
+	}
+*/
 	if (image->SWidth != GUILD_EMBLEM_WIDTH ||
-	    image->SHeight != GUILD_EMBLEM_HEIGHT ||
-	    image->Image.Width != GUILD_EMBLEM_WIDTH ||
-	    image->Image.Height != GUILD_EMBLEM_HEIGHT ||
-	    image->ImageCount <= 0) {
+	    image->SHeight != GUILD_EMBLEM_HEIGHT) {
+#ifdef DEBUG_ERRORS
+		ShowError("Error: Gif canvas resolution error: %d, %d\n", image->SWidth, image->SHeight);
+#endif
+		DGifCloseFile(image, &error);
+		return false;
+	}
+	if (image->ImageCount <= 0) {
+#ifdef DEBUG_ERRORS
+		ShowError("Error: Gif frames count error: %d\n", image->ImageCount);
+#endif
 		DGifCloseFile(image, &error);
 		return false;
 	}
 	DGifCloseFile(image, &error);
 
 	// check used bytes from image buffer
-	if (userData.read_pos != emblem_len)
+	if (userData.read_pos != emblem_len) {
+#ifdef DEBUG_ERRORS
+		ShowError("Error: Gif extra bytes found\n");
+#endif
 		return false;
+	}
 	return true;
 }
 
