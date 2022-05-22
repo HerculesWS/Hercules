@@ -28,7 +28,7 @@
 #include "common/HPM.h"
 #include "common/api.h"
 #include "common/apipackets.h"
-#include "common/chunked.h"
+#include "common/chunked/wfifo.h"
 #include "common/cbasetypes.h"
 #include "common/ers.h"
 #include "common/memmgr.h"

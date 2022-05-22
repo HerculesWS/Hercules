@@ -22,7 +22,7 @@
 #define MAP_INTIF_H
 
 #include "common/hercules.h"
-#include "common/chunked.h"
+#include "common/chunked/rfifo.h"
 
 /**
  * Declarations

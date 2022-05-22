@@ -20,7 +20,8 @@
 #define HERCULES_CORE
 
 #include "common/cbasetypes.h"
-#include "common/chunked.h"
+#include "common/chunked/rfifo.h"
+#include "common/chunked/wfifo.h"
 #include "common/core.h"
 #include "common/memmgr.h"
 #include "common/nullpo.h"

@@ -49,6 +49,7 @@
 #include "common/socket.h"
 #include "common/sql.h"
 #include "common/strlib.h"
+#include "common/chunked/wfifo.h"
 
 #include <stdlib.h>
 

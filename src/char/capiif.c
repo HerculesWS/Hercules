@@ -30,7 +30,7 @@
 #include "char/apipackets.h"
 #include "common/api.h"
 #include "common/cbasetypes.h"
-#include "common/chunked.h"
+#include "common/chunked/wfifo.h"
 #include "common/core.h"
 #include "common/db.h"
 #include "common/HPM.h"

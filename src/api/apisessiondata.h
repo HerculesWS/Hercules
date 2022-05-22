@@ -24,7 +24,7 @@
 #include "http_include.h"
 
 #include "common/cbasetypes.h"
-#include "common/chunked.h"
+#include "common/chunked/rfifo.h"
 #include "api/httpparsehandler.h"
 #include "api/jsonwriter.h"
 #include "api/postheader.h"

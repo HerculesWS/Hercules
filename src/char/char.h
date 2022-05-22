@@ -25,7 +25,7 @@
 #include "common/core.h" // CORE_ST_LAST
 #include "common/db.h"
 #include "common/mmo.h"
-#include "common/chunked.h"
+#include "common/chunked/rfifo.h"
 
 /* Forward Declarations */
 struct config_setting_t; // common/conf.h
