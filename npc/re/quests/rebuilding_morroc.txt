@@ -39,10 +39,16 @@
 //= - Number of wood gathered (when gathering wood)
 //= - Number of wood delivered (when delivering wood)
 //=
+//= re_rope
+//= - Number of ropes delivered (when delivering rope)
+//=
 //= $mocre_wood
 //= - Quantity of wood in the woodpiles (0 .. 1000)
+//=
+//= $mocre_rope
+//= - Quantity of rope in the rope piles (0 .. 1000)
 //================= Current Version =======================================
-//= 0.2
+//= 0.3
 //=========================================================================
 
 //== Making Wood :: re_wood ==========
@@ -243,6 +249,154 @@ moc_fild12, 229, 362, 4	duplicate(MocReTree)	Tree#ep14.3_18	CLEAR_NPC,1,1
 moc_fild12, 236, 352, 4	duplicate(MocReTree)	Tree#ep14.3_19	CLEAR_NPC,1,1
 moc_fild12, 264, 357, 4	duplicate(MocReTree)	Tree#ep14.3_20	CLEAR_NPC,1,1
 
+//== Making Rope =======================
+morocc, 282, 284, 4	script	Rope Team Chief#ep14	1_M_ORIENT01,{
+	if (!checkweight(MoroccMerit, 1)) {
+		mes("[Rope Team Chief]");
+		mes(" - You're carrying too many items. Please make some room in your bag first. - ");
+		close();
+	}
+
+	if (questprogress(5255) == 1) {
+		mes("[Rope Team Chief]");
+		mes("Do you have the materials? Already?");
+		next();
+		switch (select("Yes, I do.", "Sorry, can you repeat what you need?", "End conversation.")) {
+		case 1:
+			mes("[Rope Team Chief]");
+			mes("Thank you. Which materials you brought?");
+			next();
+			.@item1 = 0;
+			.@item2 = 0;
+			setarray(.@materialList, Pointed_Scale, Spiderweb, Tendon, Thin_Stem, Tough_Scalelike_Stem);
+			
+			.@menu$ = "";
+			for (.@i = 0; .@i < getarraysize(.@materialList); ++.@i) {
+				.@menu$ = sprintf("%s10 %s (%d):", .@menu$, getitemname(.@materialList[.@i]), countitem(.@materialList[.@i]));
+			}
+			while (.@item1 == 0 || .@item2 == 0) {
+				.@sel = select(.@menu$) - 1;
+				.@itemId = .@materialList[.@sel];
+
+				if (countitem(.@itemId) < 10) {
+					mes("[Rope Team Chief]");
+					mesf("You don't have 10 ^DC3D3D%s^000000. Do you have something else?", getitemname(.@itemId));
+					next();
+					continue;
+				}
+				
+				if (.@item1 == 0) {
+					.@item1 = .@itemId;
+					mes("[Rope Team Chief]");
+					mesf("You brought ^DC3D3D%s^000000. And what else?", getitemname(.@item1));
+					next();
+					continue;
+				}
+				
+				if (.@item1 == .@itemId) {
+					mes("[Rope Team Chief]");
+					mes("You have already said you have this one. What is the other material?");
+					next();
+					continue;
+				}
+
+				.@item2 = .@itemId;
+				mes("[Rope Team Chief]");
+				mesf("You brought ^DC3D3D%s^000000. Good job.", getitemname(.@item2));
+				next();
+			}
+
+			if (countitem(.@item1) < 10 || countitem(.@item2) < 10)
+				end; // exploit attempt
+			delitem(.@item1, 10);
+			delitem(.@item2, 10);
+			changequest(5255, 5256);
+			getitem(MoroccMerit, 1);
+			donpcevent("MocReMaterialController::OnAddRope");
+			mes("[Rope Team Chief]");
+			mes("Please, receive this small token of our gratitude.");
+			mes("Take this to the ^7D9BE3Morroc Restauration Comitee^000000, and you will be able to exchange it for something you want.");
+			close();
+		
+		case 2:
+			mes("[Rope Team Chief]");
+			mes("You didn't read the memo I gave you?");
+			mes("It's alright, it's not that much. Let me explain it to you.");
+			next();
+			mes("[Rope Team Chief]");
+			mes("The materials to produce rope are:");
+			mes("10 Pointed Scales, 10 Cobwebs, 10 Tendons, 10 Thin Trunk e 10 Though Scalelike Stems.");
+			next();
+			mes("[Rope Team Chief]");
+			mes("I would appreciate a lot if you could bring everything, but that would be asking too much. Can you bring two of those materials?");
+			next();
+			mes("[Rope Team Chief]");
+			mes("Please, remember, 10 units of two different, not 20 of the same.");
+			close();
+		
+		case 3:
+			mes("[Rope Team Chief]");
+			mes("Have a good day.");
+			close();
+		}
+	}
+
+	if (questprogress(5256, PLAYTIME) == 2) {
+		erasequest(5256);
+		mes("[Rope Team Chief]");
+		mes("Thanks for coming back in time, as always.");
+	} else {
+		mes("[Rope Team Chief]");
+		mes("Welcome to the Provision Departament of the Morroc Restauration Comitee, Rope Team. How can I help you?");
+	}
+	next();
+	switch (select("Morroc Restauration Comitee?", "I came to help.")) {
+	case 1:
+		mes("[Rope Team Chief]");
+		mes("After Satan Morroc left our city kinda destroyed, it took some time for us to start repairing it.");
+		next();
+		mes("[Rope Team Chief]");
+		mes("So far, we managed to restore most of the city, except for the Morroc Castle. The castle will need more labor and materials than all the other restauration in the city together.");
+		next();
+		mes("[Rope Team Chief]");
+		mes("It may take years for us to finish the castle restauration.");
+		close();
+
+	case 2:
+		if (BaseLevel < 80) {
+			mes("[Rope Team Chief]");
+			mes("You don't have enough experience to receive this task. Please, come back later.");
+			close();
+		}
+
+		if (questprogress(5257) == 1) {
+			mes("[Rope Team Chief]");
+			mes("You did not finish the rope delivery. Finish it first. The chief at the construction site is eagerly waiting for you.");
+			close();
+		}
+
+		if (questprogress(5256, PLAYTIME) == 1) {
+			mes("[Rope Team Chief]");
+			mes("I can se you are in a break. Why don't you fully enjoy your break? You deserve it.");
+			close();
+		}
+
+		mes("[Rope Team Chief]");
+		mes("Thanks for coming to help us. Given the size of this repair, rope is never enough.");
+		next();
+		mes("[Rope Team Chief]");
+		mes("We need help to make rope, but if they are made by inexperienced hands, they will have defects and may become a security risk.");
+		next();
+		mes("[Rope Team Chief]");
+		mes("If you can bring two kinds of materials, our specialists will take care of using them to make rope.");
+		next();
+		setquest(5255);
+		mes("[Rope Team Chief]");
+		mes("Please, check this memo with the list of materials that you may bring. Thanks for your help.");
+		close();
+	}
+}
+
 //== Delivery quest base NPCs =========
 -	script	MocReDeliveryStart	FAKE_NPC,{
 	.@npc$ = sprintf("[%s]", strnpcinfo(NPC_NAME_VISIBLE));
@@ -268,6 +422,17 @@ moc_fild12, 264, 357, 4	duplicate(MocReTree)	Tree#ep14.3_20	CLEAR_NPC,1,1
 		.@materialName$ = _("wood");
 		.@unitName$ = _("pieces of wood");
 		.@pileName$ = _("woodpile");
+	} else if (.@npcType$ == "r") {
+		.@makeQuestId = 5255;
+		.@questId = 5257;
+		.@cooldownQuestId = 5258;
+		
+		.@globalVar$ = "$mocre_rope";
+		.@charVar$ = "re_rope";
+		
+		.@materialName$ = _("rope");
+		.@unitName$ = _("pieces of rope");
+		.@pileName$ = _("rope pile");
 	} else {
 		consolemes(CONSOLEMES_ERROR, "Invalid NPC Type for Delivery quest: '%s'", .@npcType$);
 		end;
@@ -392,6 +557,12 @@ OnTouch:
 		.@charVar$ = "re_wood";
 		.@materialName$ = _("wood");
 		.@npc$ = _("[Woodworker]");
+	} else if (.@npcType$ == "rope") {
+		.@questId = 5257;
+		.@item = LongRopes;
+		.@charVar$ = "re_rope";
+		.@materialName$ = "rope";
+		.@npc$ = "[Artisan]";
 	} else {
 		consolemes(CONSOLEMES_ERROR, "Invalid NPC Type for Delivery quest: '%s'", .@npcType$);
 		end;
@@ -441,6 +612,14 @@ OnTouch:
 		.@unitName$ = _("pieces of wood");
 		.@npc$ = _("[Woodworker]");
 		.@pileName$ = _("woodpile");
+	} else if (.@npcType$ == "rope") {
+		.@questId = 5257;
+		.@item = LongRopes;
+		.@charVar$ = "re_rope";
+		.@materialName$ = "rope";
+		.@unitName$ = _("pieces of rope");
+		.@npc$ = _("[Artisan]");
+		.@pileName$ = _("rope pile");
 	} else {
 		consolemes(CONSOLEMES_ERROR, "Invalid NPC Type for Delivery quest: '%s'", .@npcType$);
 		end;
@@ -515,6 +694,16 @@ morocc, 162, 109, 5	duplicate(MocReDeliveryPile)	Woodpile#wood	4_WOODPILE,2,2
 
 morocc, 162, 112, 5	duplicate(MocReDeliveryInfo)	Woodworker#wood	4_M_ORIENT01
 
+//== Rope Delivery :: re_rope ==========
+// Note: for those duplicates, the hidden name is relevant for code logic.
+
+morocc, 266, 288, 5	duplicate(MocReDeliveryStart)	Artisan#ep14_3r	4_M_BARBER
+
+// morocc, 148, 109, 0	script	#rope_or	HIDDEN_WARP_NPC,2,2
+morocc, 148, 109, 5	duplicate(MocReDeliveryPile)	Rope Pile#rope	4_ROPEPILE,2,2
+
+morocc, 148, 112, 5	duplicate(MocReDeliveryInfo)	Artisan#rope	4_M_BARBER
+
 //== Wood Piles ========================
 -	script	MocReWoodpile	4_WOODPILE,{
 	if (questprogress(5253) == 0) {
@@ -537,6 +726,28 @@ morocc, 272, 73, 5	duplicate(MocReWoodpile)	Woodpile#7	4_WOODPILE
 morocc, 274, 73, 5	duplicate(MocReWoodpile)	Woodpile#8	4_WOODPILE
 morocc, 276, 73, 5	duplicate(MocReWoodpile)	Woodpile#9	4_WOODPILE
 morocc, 278, 73, 5	duplicate(MocReWoodpile)	Woodpile#10	4_WOODPILE
+
+//== Rope Piles ========================
+-	script	MocReRopePile	FAKE_NPC,{
+	if (questprogress(5257) == 0) {
+		mes("- A material used in the restauration of the castle and other buildings in Morroc. -");
+		close();
+	}
+
+	"MocReMaterialController"::pickMaterial(LongRopes, re_rope, "$mocre_rope", "MocReMaterialController::OnGetRope");
+	end;
+}
+
+morocc, 270, 287, 5	duplicate(MocReRopePile)	Rope Pile#1	4_ROPEPILE
+morocc, 272, 287, 5	duplicate(MocReRopePile)	Rope Pile#2	4_ROPEPILE
+morocc, 274, 287, 5	duplicate(MocReRopePile)	Rope Pile#3	4_ROPEPILE
+morocc, 276, 287, 5	duplicate(MocReRopePile)	Rope Pile#4	4_ROPEPILE
+morocc, 278, 287, 5	duplicate(MocReRopePile)	Rope Pile#5	4_ROPEPILE
+morocc, 270, 289, 5	duplicate(MocReRopePile)	Rope Pile#6	4_ROPEPILE
+morocc, 272, 289, 5	duplicate(MocReRopePile)	Rope Pile#7	4_ROPEPILE
+morocc, 274, 289, 5	duplicate(MocReRopePile)	Rope Pile#8	4_ROPEPILE
+morocc, 276, 289, 5	duplicate(MocReRopePile)	Rope Pile#9	4_ROPEPILE
+morocc, 278, 289, 5	duplicate(MocReRopePile)	Rope Pile#10	4_ROPEPILE
 
 //== Material Controller ===============
 // Controls the display/update of Wood, Brick and Ropes
@@ -637,6 +848,13 @@ OnGetWood:
 	hidePiles($mocre_wood, "Woodpile#");
 	end;
 
+// Someone has got some Rope from the piles update rope piles
+// Note that $mocre_rope was already decremented by the NPC
+OnGetRope:
+	sleep(1000);
+	hidePiles($mocre_rope, "Rope Pile#");
+	end;
+
 // Someone has delivered Wood, update global state
 OnAddWood:
 	$mocre_wood = cap_value($mocre_wood + 200, 0, 1000);
@@ -644,8 +862,16 @@ OnAddWood:
 	showPiles($mocre_wood, "Woodpile#");
 	end;
 
+// Someone has delivered Rope, update global state
+OnAddRope:
+	$mocre_rope = cap_value($mocre_rope + 200, 0, 1000);
+	sleep(2000);
+	showPiles($mocre_rope, "Rope Pile#");
+	end;
+
 OnInit:
 	hidePiles($mocre_wood, "Woodpile#");
+	hidePiles($mocre_rope, "Rope Pile#");
 	end;
 }
 
@@ -673,12 +899,19 @@ morocc, 54, 190, 5	script	Reward Coordinator	4_M_SAGE_C,{
 			mes("Oh, you already did it.");
 			mes("So, how did you help us?");
 			next();
-			switch (select("Wood Delivery"/*, "Brick Delivery", "Rope Delivery", "Worker Transport", "Purging the Land"*/)) {
+			switch (select("Wood Delivery", ""/* "Brick Delivery",*/, "Rope Delivery"/*, "Worker Transport", "Purging the Land"*/)) {
 			case 1:
 				callsub(S_DeliveryReward, _("Wood Team"), _("wood delivery"), _("pieces of wood"), "re_wood", 5253, 5254);
 				break;
 
-			// TODO: case 2 .. 5
+			case 2: // TODO:
+				break;
+
+			case 3:
+				callsub(S_DeliveryReward, _("Rope Team"), _("rope delivery"), _("pieces of rope"), "re_rope", 5257, 5258);
+				break;
+
+			// TODO: case 4 .. 5
 			}
 			break;
 
