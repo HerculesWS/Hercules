@@ -787,10 +787,12 @@ static int inter_guild_db_final(union DBKey key, struct DBData *data, va_list ap
 {
 	struct guild *g = DB->data2ptr(data);
 	nullpo_ret(g);
-	if (g->save_flag&GS_MASK) {
-		inter_guild->tosql(g, g->save_flag&GS_MASK);
+	if (g->save_flag & GS_MASK) {
+		inter_guild->tosql(g, g->save_flag & GS_MASK);
+		aFree(g->emblem_data);
 		return 1;
 	}
+	aFree(g->emblem_data);
 	return 0;
 }
 

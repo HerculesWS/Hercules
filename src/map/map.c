@@ -6546,6 +6546,7 @@ int do_final(void)
 	enchantui->final();
 	goldpc->final();
 	mapiif->final();
+	intif->final();
 
 	HPM_map_do_final();
 

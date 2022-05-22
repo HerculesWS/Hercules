@@ -1357,11 +1357,6 @@ static int guild_change_emblem(struct map_session_data *sd, int len, const char 
  *---------------------------------------------------*/
 static int guild_emblem_changed(int len, int guild_id, int emblem_id, const char *data)
 {
-	if (len > 2048) {
-		ShowError("guild_emblem_changed: Big emblems (len %d) not supported yet\n", len);
-		return 0;
-	}
-
 	int i;
 	struct map_session_data *sd;
 	struct guild *g=guild->search(guild_id);
@@ -1979,6 +1974,7 @@ static int guild_broken(int guild_id, int flag)
 
 	HPM->data_store_destroy(&g->hdata);
 
+	aFree(g->emblem_data);
 	idb_remove(guild->db,guild_id);
 	return 0;
 }
@@ -2454,6 +2450,13 @@ static int guild_castle_db_final(union DBKey key, struct DBData *data, va_list a
 	return 0;
 }
 
+static int guild_db_final(union DBKey key, struct DBData *data, va_list ap)
+{
+	struct guild* g = DB->data2ptr(data);
+	aFree(g->emblem_data);
+	return 0;
+}
+
 /* called when scripts are reloaded/unloaded */
 static void guild_flags_clear(void)
 {
@@ -2503,7 +2506,7 @@ static void do_final_guild(void)
 
 	dbi_destroy(iter);
 
-	db_destroy(guild->db);
+	guild->db->destroy(guild->db, guild->guild_db_final);
 	guild->castle_db->destroy(guild->castle_db,guild->castle_db_final);
 	guild->expcache_db->destroy(guild->expcache_db,guild->expcache_db_final);
 	guild->infoevent_db->destroy(guild->infoevent_db,guild->eventlist_db_final);
@@ -2621,6 +2624,7 @@ void guild_defaults(void)
 	guild->eventlist_db_final = eventlist_db_final;
 	guild->expcache_db_final = guild_expcache_db_final;
 	guild->castle_db_final = guild_castle_db_final;
+	guild->guild_db_final = guild_db_final;
 	guild->broken_sub = guild_broken_sub;
 	guild->castle_broken_sub = castle_guild_broken_sub;
 	guild->makemember = guild_makemember;

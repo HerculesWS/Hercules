@@ -59,6 +59,7 @@ struct intif_interface {
 	int emblem_tmp_emblem_id;
 
 	/* funcs */
+	void (*final) (void);
 	int (*parse) (int fd);
 	int (*create_pet)(int account_id, int char_id, int pet_type, int pet_lv, int pet_egg_id,
 	                  int pet_equip, short intimate, short hungry, char rename_flag, char incubate, char *pet_name);

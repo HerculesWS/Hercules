@@ -175,6 +175,7 @@ struct guild_interface {
 	int (*eventlist_db_final) (union DBKey key, struct DBData *data, va_list ap);
 	int (*expcache_db_final) (union DBKey key, struct DBData *data, va_list ap);
 	int (*castle_db_final) (union DBKey key, struct DBData *data, va_list ap);
+	int (*guild_db_final) (union DBKey key, struct DBData *data, va_list ap);
 	int (*broken_sub) (union DBKey key, struct DBData *data, va_list ap);
 	int (*castle_broken_sub) (union DBKey key, struct DBData *data, va_list ap);
 	void (*makemember) (struct guild_member *m,struct map_session_data *sd);
