@@ -56,7 +56,7 @@ static int capiif_parse_fromlogin_api_proxy(int fd)
 	const uint32 msg = packet->msg_id;
 
 #ifdef DEBUG_PACKETS
-	ShowInfo("capiif_parse_fromlogin_api_proxy: msg: %u, flags: %u\n", msg, packet->flags);
+	ShowInfo("capiif_parse_fromlogin_api_proxy: msg: %u, flags: %u, len: %u\n", msg, packet->flags, packet->packet_len);
 #endif  // DEBUG_PACKETS
 
 	if (PROXY_PACKET_FLAG(packet, proxy_flag_map)) {
