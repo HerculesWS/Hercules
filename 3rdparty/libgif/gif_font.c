@@ -11,6 +11,10 @@ SPDX-License-Identifier: MIT
 
 #include "gif_lib.h"
 
+#if WIN32
+    #define strtok_r strtok_s
+#endif
+
 /*****************************************************************************
  Ascii 8 by 8 regular font - only first 128 characters are supported.
 *****************************************************************************/

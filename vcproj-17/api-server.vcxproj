@@ -144,6 +144,9 @@
     <ClInclude Include="..\3rdparty\libconfig\scanner.h" />
     <ClInclude Include="..\3rdparty\libconfig\strbuf.h" />
     <ClInclude Include="..\3rdparty\libconfig\wincompat.h" />
+    <ClInclude Include="..\3rdparty\libgif\gif_hash.h" />
+    <ClInclude Include="..\3rdparty\libgif\gif_lib.h" />
+    <ClInclude Include="..\3rdparty\libgif\gif_lib_private.h" />
     <ClInclude Include="..\3rdparty\multipart-parser\multipartparser.h" />
     <ClInclude Include="..\src\api\aclif.h" />
     <ClInclude Include="..\src\api\aloginif.h" />
@@ -157,6 +160,7 @@
     <ClInclude Include="..\src\api\httpparser.h" />
     <ClInclude Include="..\src\api\httpsender.h" />
     <ClInclude Include="..\src\api\http_include.h" />
+    <ClInclude Include="..\src\api\imageparser.h" />
     <ClInclude Include="..\src\api\jsonparser.h" />
     <ClInclude Include="..\src\api\jsonwriter.h" />
     <ClInclude Include="..\src\api\mimepart.h" />
@@ -209,6 +213,13 @@
     <ClCompile Include="..\3rdparty\libconfig\scanctx.c" />
     <ClCompile Include="..\3rdparty\libconfig\scanner.c" />
     <ClCompile Include="..\3rdparty\libconfig\strbuf.c" />
+    <ClCompile Include="..\3rdparty\libgif\dgif_lib.c" />
+    <ClCompile Include="..\3rdparty\libgif\egif_lib.c" />
+    <ClCompile Include="..\3rdparty\libgif\gifalloc.c" />
+    <ClCompile Include="..\3rdparty\libgif\gif_err.c" />
+    <ClCompile Include="..\3rdparty\libgif\gif_font.c" />
+    <ClCompile Include="..\3rdparty\libgif\gif_hash.c" />
+    <ClCompile Include="..\3rdparty\libgif\openbsd-reallocarray.c" />
     <ClCompile Include="..\3rdparty\multipart-parser\multipartparser.c" />
     <ClCompile Include="..\src\api\aclif.c" />
     <ClCompile Include="..\src\api\aloginif.c" />
@@ -217,6 +228,7 @@
     <ClCompile Include="..\src\api\HPMapi.c" />
     <ClCompile Include="..\src\api\httpparser.c" />
     <ClCompile Include="..\src\api\httpsender.c" />
+    <ClCompile Include="..\src\api\imageparser.c" />
     <ClCompile Include="..\src\api\jsonparser.c" />
     <ClCompile Include="..\src\api\jsonwriter.c" />
     <ClCompile Include="..\src\api\postheader.c" />

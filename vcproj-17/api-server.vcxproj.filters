@@ -87,6 +87,30 @@
     <ClCompile Include="..\src\common\sysinfo.c" />
     <ClCompile Include="..\src\common\timer.c" />
     <ClCompile Include="..\src\common\utils.c" />
+    <ClCompile Include="..\src\api\imageparser.c">
+      <Filter>api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparty\libgif\dgif_lib.c">
+      <Filter>3rdparty\libgif</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparty\libgif\egif_lib.c">
+      <Filter>3rdparty\libgif</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparty\libgif\gifalloc.c">
+      <Filter>3rdparty\libgif</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparty\libgif\gif_err.c">
+      <Filter>3rdparty\libgif</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparty\libgif\gif_font.c">
+      <Filter>3rdparty\libgif</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparty\libgif\gif_hash.c">
+      <Filter>3rdparty\libgif</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparty\libgif\openbsd-reallocarray.c">
+      <Filter>3rdparty\libgif</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\3rdparty\mt19937ar\mt19937ar.h">
@@ -284,6 +308,18 @@
     <ClInclude Include="..\src\api\postheader.h">
       <Filter>api</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\api\imageparser.h">
+      <Filter>api</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparty\libgif\gif_hash.h">
+      <Filter>3rdparty\libgif</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparty\libgif\gif_lib.h">
+      <Filter>3rdparty\libgif</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparty\libgif\gif_lib_private.h">
+      <Filter>3rdparty\libgif</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="3rdparty">
@@ -309,6 +345,9 @@
     </Filter>
     <Filter Include="3rdparty\multipart-parser">
       <UniqueIdentifier>{7d241991-b832-4445-ac48-8d1fa9693f33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdparty\libgif">
+      <UniqueIdentifier>{83a2192a-8174-4bf9-a54b-04862a01d8f6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
