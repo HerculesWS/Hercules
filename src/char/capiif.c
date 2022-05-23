@@ -204,12 +204,6 @@ void capiif_parse_emblem_upload(int fd)
 	}
 
 	RFIFO_CHUNKED_COMPLETE(p) {
-		if (char_data->emblem_data.data_size > 65000) {
-			ShowError("Big emblems not supported yet\n");
-			chr->clean_online_char_emblem_data(character);
-			return;
-		}
-
 		if (inter_guild->is_guild_master(p->base.char_id, char_data->emblem_guild_id)) {
 			inter_guild->update_emblem(char_data->emblem_data.data_size,
 				char_data->emblem_guild_id,

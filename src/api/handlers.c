@@ -330,11 +330,6 @@ HTTP_DATA(emblem_download)
 	}
 
 	RFIFO_CHUNKED_COMPLETE(p) {
-		if (sd->data.data_size > 65000) {
-			ShowError("Big emblems not supported yet\n");
-			aclif->terminate_connection(fd);
-			return;
-		}
 		httpsender->send_binary(fd, sd->data.data, sd->data.data_size);
 		aclif->terminate_connection(fd);
 	}
