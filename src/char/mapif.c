@@ -40,6 +40,7 @@
 #include "char/inter.h"
 #include "common/cbasetypes.h"
 #include "common/charmappackets.h"
+#include "common/mapcharpackets.h"
 #include "common/memmgr.h"
 #include "common/mmo.h"
 #include "common/nullpo.h"
@@ -824,9 +825,12 @@ static int mapif_parse_GuildNotice(int fd, int guild_id, const char *mes1, const
 	return 0;
 }
 
-static int mapif_parse_GuildEmblem(int fd, int len, int guild_id, int dummy, const char *data)
+static int mapif_parse_GuildEmblem(int fd)
 {
-	inter_guild->update_emblem(len, guild_id, data);
+	struct PACKET_MAPCHAR_GUILD_EMBLEM *p = WFIFOP(fd, 0);
+	inter_guild->update_emblem(p->packetLength - sizeof(struct PACKET_MAPCHAR_GUILD_EMBLEM),
+		p->guild_id,
+		p->data);
 	return 0;
 }
 

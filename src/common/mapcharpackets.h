@@ -36,6 +36,15 @@ struct PACKET_MAPCHAR_AGENCY_JOIN_PARTY_REQ {
 	int map_index;
 } __attribute__((packed));
 
+struct PACKET_MAPCHAR_GUILD_EMBLEM {
+	int16 packetType;
+	uint16 packetLength;
+	int guild_id;
+	int unused;
+	char data[];
+} __attribute__((packed));
+DEFINE_PACKET_ID(MAPCHAR_GUILD_EMBLEM, 0x303f)
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris

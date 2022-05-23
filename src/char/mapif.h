@@ -95,7 +95,7 @@ struct mapif_interface {
 	int (*parse_GuildSkillUp) (int fd, int guild_id, uint16 skill_id, int account_id, int max);
 	int (*parse_GuildAlliance) (int fd, int guild_id1, int guild_id2, int account_id1, int account_id2, int flag);
 	int (*parse_GuildNotice) (int fd, int guild_id, const char *mes1, const char *mes2);
-	int (*parse_GuildEmblem) (int fd, int len, int guild_id, int dummy, const char *data);
+	int (*parse_GuildEmblem) (int fd);
 	int (*parse_GuildCastleDataLoad) (int fd, int len, const int *castle_ids);
 	int (*parse_GuildCastleDataSave) (int fd, int castle_id, int index, int value);
 	int (*parse_GuildMasterChange) (int fd, int guild_id, const char* name, int len);

@@ -914,21 +914,22 @@ static int intif_guild_notice(int guild_id, const char *mes1, const char *mes2)
 }
 
 // Request to change guild emblem
-static int intif_guild_emblem(int guild_id, int len, const char *data)
+static int intif_guild_emblem(int guild_id, int data_len, const char *data)
 {
 	if (intif->CheckForCharServer())
 		return 0;
-	if(guild_id<=0 || len<0 || len>2000)
+	if (guild_id <= 0 || data_len < 0)
 		return 0;
 	nullpo_ret(data);
-	Assert_ret(len >= 0 && len < 32000);
-	WFIFOHEAD(inter_fd,len + 12);
-	WFIFOW(inter_fd,0)=0x303f;
-	WFIFOW(inter_fd,2)=len+12;
-	WFIFOL(inter_fd,4)=guild_id;
-	WFIFOL(inter_fd,8)=0;
-	memcpy(WFIFOP(inter_fd,12),data,len);
-	WFIFOSET(inter_fd,len+12);
+	const int len = data_len + sizeof(struct PACKET_MAPCHAR_GUILD_EMBLEM);
+	WFIFOHEAD(inter_fd, len);
+	struct PACKET_MAPCHAR_GUILD_EMBLEM *p = WFIFOP(inter_fd, 0);
+	p->packetType = HEADER_MAPCHAR_GUILD_EMBLEM;
+	p->packetLength = len;
+	p->guild_id = guild_id;
+	p->unused = 0;
+	memcpy(p->data, data, data_len);
+	WFIFOSET(inter_fd, len);
 	return 0;
 }
 
