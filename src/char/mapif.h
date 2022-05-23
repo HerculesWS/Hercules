@@ -22,6 +22,7 @@
 
 #include "common/hercules.h"
 #include "common/mmo.h"
+#include "common/chunked/rfifo.h"
 
 struct rodex_item;
 enum adventurer_agency_result;
@@ -32,6 +33,8 @@ typedef int (*SendAll_func)(int fd, va_list args);
  * mapif interface
  **/
 struct mapif_interface {
+	struct fifo_chunk_buf emblem_tmp;
+	void (*final) (void);
 	void (*ban) (int id, unsigned int flag, int status);
 	void (*server_init) (void);
 	void (*server_destroy) (void);

@@ -827,10 +827,21 @@ static int mapif_parse_GuildNotice(int fd, int guild_id, const char *mes1, const
 
 static int mapif_parse_GuildEmblem(int fd)
 {
-	struct PACKET_MAPCHAR_GUILD_EMBLEM *p = WFIFOP(fd, 0);
-	inter_guild->update_emblem(p->packetLength - sizeof(struct PACKET_MAPCHAR_GUILD_EMBLEM),
-		p->guild_id,
-		p->data);
+	struct PACKET_MAPCHAR_GUILD_EMBLEM *p = RFIFOP(fd, 0);
+	RFIFO_CHUNKED_INIT(p, p->packetLength - sizeof(struct PACKET_MAPCHAR_GUILD_EMBLEM), mapif->emblem_tmp);
+
+	RFIFO_CHUNKED_ERROR(p) {
+		fifo_chunk_buf_clear(mapif->emblem_tmp);
+		return 0;
+	}
+
+	RFIFO_CHUNKED_COMPLETE(p) {
+		inter_guild->update_emblem(mapif->emblem_tmp.data_size,
+			p->guild_id,
+			p->data);
+		fifo_chunk_buf_clear(mapif->emblem_tmp);
+	}
+
 	return 0;
 }
 
@@ -2350,10 +2361,18 @@ static void mapif_agency_joinPartyResult(int fd, int char_id, enum adventurer_ag
 	WFIFOSET(fd, sizeof(struct PACKET_CHARMAP_AGENCY_JOIN_PARTY));
 }
 
+void mapif_final(void)
+{
+	fifo_chunk_buf_clear(mapif->emblem_tmp);
+}
+
 void mapif_defaults(void)
 {
 	mapif = &mapif_s;
 
+	fifo_chunk_buf_init(mapif->emblem_tmp);
+
+	mapif->final = mapif_final;
 	mapif->ban = mapif_ban;
 	mapif->server_init = mapif_server_init;
 	mapif->server_destroy = mapif_server_destroy;

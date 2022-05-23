@@ -41,6 +41,7 @@ struct PACKET_MAPCHAR_GUILD_EMBLEM {
 	uint16 packetLength;
 	int guild_id;
 	int unused;
+	uint8 flag;
 	char data[];
 } __attribute__((packed));
 DEFINE_PACKET_ID(MAPCHAR_GUILD_EMBLEM, 0x303f)

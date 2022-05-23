@@ -6115,6 +6115,7 @@ int do_final(void)
 	chr->set_all_offline(true);
 	chr->set_all_offline_sql();
 
+	mapif->final();
 	inter->final();
 
 	sockt->flush_fifos();

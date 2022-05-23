@@ -55,6 +55,7 @@
 #include "common/strlib.h"
 #include "common/timer.h"
 #include "common/packets.h"
+#include "common/chunked/wfifo.h"
 
 #include <fcntl.h>
 #include <signal.h>
@@ -916,20 +917,24 @@ static int intif_guild_notice(int guild_id, const char *mes1, const char *mes2)
 // Request to change guild emblem
 static int intif_guild_emblem(int guild_id, int data_len, const char *data)
 {
+	nullpo_ret(data);
+
 	if (intif->CheckForCharServer())
 		return 0;
 	if (guild_id <= 0 || data_len < 0)
 		return 0;
-	nullpo_ret(data);
-	const int len = data_len + sizeof(struct PACKET_MAPCHAR_GUILD_EMBLEM);
-	WFIFOHEAD(inter_fd, len);
-	struct PACKET_MAPCHAR_GUILD_EMBLEM *p = WFIFOP(inter_fd, 0);
-	p->packetType = HEADER_MAPCHAR_GUILD_EMBLEM;
-	p->packetLength = len;
+
+	WFIFO_CHUNKED_INIT(p, inter_fd, HEADER_MAPCHAR_GUILD_EMBLEM, PACKET_MAPCHAR_GUILD_EMBLEM, data, data_len) {
+		WFIFO_CHUNKED_BLOCK_START(p);
+		p->guild_id = guild_id;
+		p->unused = 0;
+		WFIFO_CHUNKED_BLOCK_END();
+	}
+	WFIFO_CHUNKED_FINAL_START(p);
 	p->guild_id = guild_id;
 	p->unused = 0;
-	memcpy(p->data, data, data_len);
-	WFIFOSET(inter_fd, len);
+	WFIFO_CHUNKED_FINAL_END();
+
 	return 0;
 }
 
