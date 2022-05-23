@@ -15182,15 +15182,15 @@ int HP_mapif_parse_GuildNotice(int fd, int guild_id, const char *mes1, const cha
 	}
 	return retVal___;
 }
-int HP_mapif_parse_GuildEmblem(int fd, int len, int guild_id, int dummy, const char *data) {
+int HP_mapif_parse_GuildEmblem(int fd) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_mapif_parse_GuildEmblem_pre > 0) {
-		int (*preHookFunc) (int *fd, int *len, int *guild_id, int *dummy, const char **data);
+		int (*preHookFunc) (int *fd);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_parse_GuildEmblem_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_mapif_parse_GuildEmblem_pre[hIndex].func;
-			retVal___ = preHookFunc(&fd, &len, &guild_id, &dummy, &data);
+			retVal___ = preHookFunc(&fd);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -15198,13 +15198,13 @@ int HP_mapif_parse_GuildEmblem(int fd, int len, int guild_id, int dummy, const c
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.mapif.parse_GuildEmblem(fd, len, guild_id, dummy, data);
+		retVal___ = HPMHooks.source.mapif.parse_GuildEmblem(fd);
 	}
 	if (HPMHooks.count.HP_mapif_parse_GuildEmblem_post > 0) {
-		int (*postHookFunc) (int retVal___, int fd, int len, int guild_id, int dummy, const char *data);
+		int (*postHookFunc) (int retVal___, int fd);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_parse_GuildEmblem_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_mapif_parse_GuildEmblem_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, fd, len, guild_id, dummy, data);
+			retVal___ = postHookFunc(retVal___, fd);
 		}
 	}
 	return retVal___;

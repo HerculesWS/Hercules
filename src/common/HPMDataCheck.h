@@ -254,11 +254,6 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#else
 		#define COMMON_CHARMAPPACKETS_H
 	#endif // COMMON_CHARMAPPACKETS_H
-	#ifdef COMMON_CHUNKED_H
-		{ "fifo_chunk_buf", sizeof(struct fifo_chunk_buf), SERVER_TYPE_ALL },
-	#else
-		#define COMMON_CHUNKED_H
-	#endif // COMMON_CHUNKED_H
 	#ifdef COMMON_CONF_H
 		{ "libconfig_interface", sizeof(struct libconfig_interface), SERVER_TYPE_ALL },
 	#else
@@ -312,6 +307,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#endif // COMMON_HPMI_H
 	#ifdef COMMON_MAPCHARPACKETS_H
 		{ "PACKET_MAPCHAR_AGENCY_JOIN_PARTY_REQ", sizeof(struct PACKET_MAPCHAR_AGENCY_JOIN_PARTY_REQ), SERVER_TYPE_ALL },
+		{ "PACKET_MAPCHAR_GUILD_EMBLEM", sizeof(struct PACKET_MAPCHAR_GUILD_EMBLEM), SERVER_TYPE_ALL },
 	#else
 		#define COMMON_MAPCHARPACKETS_H
 	#endif // COMMON_MAPCHARPACKETS_H

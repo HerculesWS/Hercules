@@ -3612,6 +3612,8 @@ typedef int (*HPMHOOK_pre_guild_expcache_db_final) (union DBKey *key, struct DBD
 typedef int (*HPMHOOK_post_guild_expcache_db_final) (int retVal___, union DBKey key, struct DBData *data, va_list ap);
 typedef int (*HPMHOOK_pre_guild_castle_db_final) (union DBKey *key, struct DBData **data, va_list ap);
 typedef int (*HPMHOOK_post_guild_castle_db_final) (int retVal___, union DBKey key, struct DBData *data, va_list ap);
+typedef int (*HPMHOOK_pre_guild_guild_db_final) (union DBKey *key, struct DBData **data, va_list ap);
+typedef int (*HPMHOOK_post_guild_guild_db_final) (int retVal___, union DBKey key, struct DBData *data, va_list ap);
 typedef int (*HPMHOOK_pre_guild_broken_sub) (union DBKey *key, struct DBData **data, va_list ap);
 typedef int (*HPMHOOK_post_guild_broken_sub) (int retVal___, union DBKey key, struct DBData *data, va_list ap);
 typedef int (*HPMHOOK_pre_guild_castle_broken_sub) (union DBKey *key, struct DBData **data, va_list ap);
@@ -4370,6 +4372,8 @@ typedef void (*HPMHOOK_pre_inter_userconfig_hotkey_tab_fromsql) (int *account_id
 typedef void (*HPMHOOK_post_inter_userconfig_hotkey_tab_fromsql) (int account_id, struct userconfig_userhotkeys_v2 *hotkeys, int tab_id);
 #endif // CHAR_INT_USERCONFIG_H
 #ifdef MAP_INTIF_H /* intif */
+typedef void (*HPMHOOK_pre_intif_final) (void);
+typedef void (*HPMHOOK_post_intif_final) (void);
 typedef int (*HPMHOOK_pre_intif_parse) (int *fd);
 typedef int (*HPMHOOK_post_intif_parse) (int retVal___, int fd);
 typedef int (*HPMHOOK_pre_intif_create_pet) (int *account_id, int *char_id, int *pet_type, int *pet_lv, int *pet_egg_id, int *pet_equip, short *intimate, short *hungry, char *rename_flag, char *incubate, char **pet_name);
@@ -5912,8 +5916,8 @@ typedef int (*HPMHOOK_pre_mapif_parse_GuildAlliance) (int *fd, int *guild_id1, i
 typedef int (*HPMHOOK_post_mapif_parse_GuildAlliance) (int retVal___, int fd, int guild_id1, int guild_id2, int account_id1, int account_id2, int flag);
 typedef int (*HPMHOOK_pre_mapif_parse_GuildNotice) (int *fd, int *guild_id, const char **mes1, const char **mes2);
 typedef int (*HPMHOOK_post_mapif_parse_GuildNotice) (int retVal___, int fd, int guild_id, const char *mes1, const char *mes2);
-typedef int (*HPMHOOK_pre_mapif_parse_GuildEmblem) (int *fd, int *len, int *guild_id, int *dummy, const char **data);
-typedef int (*HPMHOOK_post_mapif_parse_GuildEmblem) (int retVal___, int fd, int len, int guild_id, int dummy, const char *data);
+typedef int (*HPMHOOK_pre_mapif_parse_GuildEmblem) (int *fd);
+typedef int (*HPMHOOK_post_mapif_parse_GuildEmblem) (int retVal___, int fd);
 typedef int (*HPMHOOK_pre_mapif_parse_GuildCastleDataLoad) (int *fd, int *len, const int **castle_ids);
 typedef int (*HPMHOOK_post_mapif_parse_GuildCastleDataLoad) (int retVal___, int fd, int len, const int *castle_ids);
 typedef int (*HPMHOOK_pre_mapif_parse_GuildCastleDataSave) (int *fd, int *castle_id, int *index, int *value);

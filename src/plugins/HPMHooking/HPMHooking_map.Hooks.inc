@@ -38561,6 +38561,39 @@ int HP_guild_castle_db_final(union DBKey key, struct DBData *data, va_list ap) {
 	}
 	return retVal___;
 }
+int HP_guild_guild_db_final(union DBKey key, struct DBData *data, va_list ap) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_guild_guild_db_final_pre > 0) {
+		int (*preHookFunc) (union DBKey *key, struct DBData **data, va_list ap);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_guild_guild_db_final_pre; hIndex++) {
+			va_list ap___copy; va_copy(ap___copy, ap);
+			preHookFunc = HPMHooks.list.HP_guild_guild_db_final_pre[hIndex].func;
+			retVal___ = preHookFunc(&key, &data, ap___copy);
+			va_end(ap___copy);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		va_list ap___copy; va_copy(ap___copy, ap);
+		retVal___ = HPMHooks.source.guild.guild_db_final(key, data, ap___copy);
+		va_end(ap___copy);
+	}
+	if (HPMHooks.count.HP_guild_guild_db_final_post > 0) {
+		int (*postHookFunc) (int retVal___, union DBKey key, struct DBData *data, va_list ap);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_guild_guild_db_final_post; hIndex++) {
+			va_list ap___copy; va_copy(ap___copy, ap);
+			postHookFunc = HPMHooks.list.HP_guild_guild_db_final_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, key, data, ap___copy);
+			va_end(ap___copy);
+		}
+	}
+	return retVal___;
+}
 int HP_guild_broken_sub(union DBKey key, struct DBData *data, va_list ap) {
 	int hIndex = 0;
 	int retVal___ = 0;
@@ -41200,6 +41233,32 @@ void HP_instance_reload_map_flags(int instance_id) {
 	return;
 }
 /* intif_interface */
+void HP_intif_final(void) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_intif_final_pre > 0) {
+		void (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_intif_final_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_intif_final_pre[hIndex].func;
+			preHookFunc();
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.intif.final();
+	}
+	if (HPMHooks.count.HP_intif_final_post > 0) {
+		void (*postHookFunc) (void);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_intif_final_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_intif_final_post[hIndex].func;
+			postHookFunc();
+		}
+	}
+	return;
+}
 int HP_intif_parse(int fd) {
 	int hIndex = 0;
 	int retVal___ = 0;

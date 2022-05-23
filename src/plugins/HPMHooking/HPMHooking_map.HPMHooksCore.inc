@@ -2942,6 +2942,8 @@ struct {
 	struct HPMHookPoint *HP_guild_expcache_db_final_post;
 	struct HPMHookPoint *HP_guild_castle_db_final_pre;
 	struct HPMHookPoint *HP_guild_castle_db_final_post;
+	struct HPMHookPoint *HP_guild_guild_db_final_pre;
+	struct HPMHookPoint *HP_guild_guild_db_final_post;
 	struct HPMHookPoint *HP_guild_broken_sub_pre;
 	struct HPMHookPoint *HP_guild_broken_sub_post;
 	struct HPMHookPoint *HP_guild_castle_broken_sub_pre;
@@ -3136,6 +3138,8 @@ struct {
 	struct HPMHookPoint *HP_instance_force_destroy_post;
 	struct HPMHookPoint *HP_instance_reload_map_flags_pre;
 	struct HPMHookPoint *HP_instance_reload_map_flags_post;
+	struct HPMHookPoint *HP_intif_final_pre;
+	struct HPMHookPoint *HP_intif_final_post;
 	struct HPMHookPoint *HP_intif_parse_pre;
 	struct HPMHookPoint *HP_intif_parse_post;
 	struct HPMHookPoint *HP_intif_create_pet_pre;
@@ -10435,6 +10439,8 @@ struct {
 	int HP_guild_expcache_db_final_post;
 	int HP_guild_castle_db_final_pre;
 	int HP_guild_castle_db_final_post;
+	int HP_guild_guild_db_final_pre;
+	int HP_guild_guild_db_final_post;
 	int HP_guild_broken_sub_pre;
 	int HP_guild_broken_sub_post;
 	int HP_guild_castle_broken_sub_pre;
@@ -10629,6 +10635,8 @@ struct {
 	int HP_instance_force_destroy_post;
 	int HP_instance_reload_map_flags_pre;
 	int HP_instance_reload_map_flags_post;
+	int HP_intif_final_pre;
+	int HP_intif_final_post;
 	int HP_intif_parse_pre;
 	int HP_intif_parse_post;
 	int HP_intif_create_pet_pre;

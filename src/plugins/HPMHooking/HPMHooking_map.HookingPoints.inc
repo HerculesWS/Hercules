@@ -1507,6 +1507,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(guild->eventlist_db_final, HP_guild_eventlist_db_final) },
 	{ HP_POP(guild->expcache_db_final, HP_guild_expcache_db_final) },
 	{ HP_POP(guild->castle_db_final, HP_guild_castle_db_final) },
+	{ HP_POP(guild->guild_db_final, HP_guild_guild_db_final) },
 	{ HP_POP(guild->broken_sub, HP_guild_broken_sub) },
 	{ HP_POP(guild->castle_broken_sub, HP_guild_castle_broken_sub) },
 	{ HP_POP(guild->makemember, HP_guild_makemember) },
@@ -1608,6 +1609,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(instance->force_destroy, HP_instance_force_destroy) },
 	{ HP_POP(instance->reload_map_flags, HP_instance_reload_map_flags) },
 /* intif_interface */
+	{ HP_POP(intif->final, HP_intif_final) },
 	{ HP_POP(intif->parse, HP_intif_parse) },
 	{ HP_POP(intif->create_pet, HP_intif_create_pet) },
 	{ HP_POP(intif->saveregistry, HP_intif_saveregistry) },
