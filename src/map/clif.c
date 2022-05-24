@@ -67,6 +67,7 @@
 #include "common/cbasetypes.h"
 #include "common/conf.h"
 #include "common/ers.h"
+#include "common/extraconf.h"
 #include "common/grfio.h"
 #include "common/memmgr.h"
 #include "common/mmo.h" // NEW_CARTS, char_achievements
@@ -15598,11 +15599,12 @@ static bool clif_validate_emblem(const uint8 *emblem, unsigned long emblem_len)
 	nullpo_retr(false, emblem);
 	if (grfio->decode_zip(buf, &buf_len, emblem, emblem_len) != 0
 	 || buf_len < BITMAPFILEHEADER_SIZE + BITMAPINFOHEADER_SIZE
+	 || buf_len > extraconf->emblems->max_bmp_guild_emblem_size
 	 || RBUFW(buf,0) != 0x4d42 // BITMAPFILEHEADER.bfType (signature)
 	 || RBUFL(buf,2) != buf_len // BITMAPFILEHEADER.bfSize (file size)
 	 || RBUFL(buf,14) != BITMAPINFOHEADER_SIZE // BITMAPINFOHEADER.biSize (other headers are not supported)
-	 || RBUFL(buf,18) != GUILD_EMBLEM_WIDTH // BITMAPINFOHEADER.biWidth
-	 || RBUFL(buf,22) != GUILD_EMBLEM_HEIGHT // BITMAPINFOHEADER.biHeight (top-down bitmaps (-24) are not supported)
+	 || RBUFL(buf,18) != extraconf->emblems->guild_emblem_width // BITMAPINFOHEADER.biWidth
+	 || RBUFL(buf,22) != extraconf->emblems->guild_emblem_height // BITMAPINFOHEADER.biHeight (top-down bitmaps (-24) are not supported)
 	 || RBUFL(buf,30) != 0 // BITMAPINFOHEADER.biCompression == BI_RGB (compression not supported)
 	 ) {
 		// Invalid data
@@ -15619,11 +15621,11 @@ static bool clif_validate_emblem(const uint8 *emblem, unsigned long emblem_len)
 			else if( palettesize > 256 )
 				return false;
 			header = BITMAPFILEHEADER_SIZE + BITMAPINFOHEADER_SIZE + RGBQUAD_SIZE * palettesize; // headers + palette
-			bitmap = GUILD_EMBLEM_WIDTH * GUILD_EMBLEM_HEIGHT;
+			bitmap = extraconf->emblems->guild_emblem_width * extraconf->emblems->guild_emblem_height;
 			break;
 		case 24:
 			header = BITMAPFILEHEADER_SIZE + BITMAPINFOHEADER_SIZE;
-			bitmap = GUILD_EMBLEM_WIDTH * GUILD_EMBLEM_HEIGHT * RGBTRIPLE_SIZE;
+			bitmap = extraconf->emblems->guild_emblem_width * extraconf->emblems->guild_emblem_height * RGBTRIPLE_SIZE;
 			break;
 		default:
 			return false;
@@ -15639,7 +15641,7 @@ static bool clif_validate_emblem(const uint8 *emblem, unsigned long emblem_len)
 	}
 
 	if( battle_config.client_emblem_max_blank_percent < 100 ) {
-		int required_pixels = GUILD_EMBLEM_WIDTH * GUILD_EMBLEM_HEIGHT * (100 - battle_config.client_emblem_max_blank_percent) / 100;
+		int required_pixels = extraconf->emblems->guild_emblem_width * extraconf->emblems->guild_emblem_height * (100 - battle_config.client_emblem_max_blank_percent) / 100;
 		int found_pixels = 0;
 		int i;
 		/// Checks what percentage of a guild emblem is blank. A blank emblem
@@ -15656,7 +15658,7 @@ static bool clif_validate_emblem(const uint8 *emblem, unsigned long emblem_len)
 				const uint8 *indexes = RBUFP(buf,offbits);
 				const uint32 *palette = RBUFP(buf,BITMAPFILEHEADER_SIZE + BITMAPINFOHEADER_SIZE);
 
-				for (i = 0; i < GUILD_EMBLEM_WIDTH * GUILD_EMBLEM_HEIGHT; i++) {
+				for (i = 0; i < extraconf->emblems->guild_emblem_width * extraconf->emblems->guild_emblem_height; i++) {
 					if( indexes[i] >= palettesize ) // Invalid color
 						return false;
 
@@ -15674,7 +15676,7 @@ static bool clif_validate_emblem(const uint8 *emblem, unsigned long emblem_len)
 			{
 				const struct s_bitmaptripple *pixels = RBUFP(buf,offbits);
 
-				for (i = 0; i < GUILD_EMBLEM_WIDTH * GUILD_EMBLEM_HEIGHT; i++) {
+				for (i = 0; i < extraconf->emblems->guild_emblem_width * extraconf->emblems->guild_emblem_height; i++) {
 					// if( pixels[i].r < 0xF8 || pixels[i].g > 0x07 || pixels[i].b < 0xF8 )
 					if( ( pixels[i].rgb&0xF8F8F8 ) != 0xF800F8 ) {
 						if( ++found_pixels >= required_pixels ) {

@@ -31,6 +31,7 @@
 #include "common/console.h"
 #include "common/core.h"
 #include "common/ers.h"
+#include "common/extraconf.h"
 #include "common/grfio.h"
 #include "common/md5calc.h"
 #include "common/memmgr.h"
@@ -72,6 +73,7 @@ int do_final(void)
 
 	HPM_api_do_final();
 	aFree(api->NET_CONF_NAME);
+	extraconf->final();
 
 	HPM->event(HPET_POST_FINAL);
 
@@ -115,6 +117,7 @@ static void do_shutdown(void)
 static void api_load_defaults(void)
 {
 	api_defaults();
+	extraconf_defaults();
 	aclif_defaults();
 	aloginif_defaults();
 	httpparser_defaults();
@@ -384,6 +387,7 @@ int do_init(int argc, char *argv[])
 #endif
 
 	api_load_defaults();
+	extraconf->init();
 	handlers_defaults();
 
 	api->API_CONF_NAME = aStrdup("conf/api/api-server.conf");
@@ -403,6 +407,7 @@ int do_init(int argc, char *argv[])
 		aloginif->checkdefaultlogin();
 
 		api->config_read(api->API_CONF_NAME, false);
+		extraconf->read_emblems();
 		if (!api->ip_set) {
 			char ip_str[16];
 			sockt->ip2str(sockt->addr_[0], ip_str);

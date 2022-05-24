@@ -72,6 +72,7 @@
 #include "common/console.h"
 #include "common/core.h"
 #include "common/ers.h"
+#include "common/extraconf.h"
 #include "common/grfio.h"
 #include "common/md5calc.h"
 #include "common/memmgr.h"
@@ -6547,6 +6548,7 @@ int do_final(void)
 	goldpc->final();
 	mapiif->final();
 	intif->final();
+	extraconf->final();
 
 	HPM_map_do_final();
 
@@ -6715,6 +6717,7 @@ static void map_cp_defaults(void)
 
 static void map_load_defaults(void)
 {
+	extraconf_defaults();
 	mapindex_defaults();
 	map_defaults();
 	mapit_defaults();
@@ -6929,6 +6932,7 @@ int do_init(int argc, char *argv[])
 #endif
 
 	map_load_defaults();
+	extraconf->init();
 
 	map->INTER_CONF_NAME         = aStrdup("conf/common/inter-server.conf");
 	map->LOG_CONF_NAME           = aStrdup("conf/map/logs.conf");
@@ -6999,6 +7003,7 @@ int do_init(int argc, char *argv[])
 				chrif->setip(ip_str);
 		}
 
+		extraconf->read_emblems();
 		battle->config_read(map->BATTLE_CONF_FILENAME, false);
 		atcommand->msg_read(map->MSG_CONF_NAME, false);
 		map->inter_config_read(map->INTER_CONF_NAME, false);
