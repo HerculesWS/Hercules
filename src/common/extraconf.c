@@ -50,7 +50,7 @@ CONFIG_END
 static struct extraconf_interface extraconf_s;
 struct extraconf_interface *extraconf;
 
-static bool extraconf_read_conf(const char *filename, bool imported, const char *node, const struct config_data *conf_vars)
+static bool extraconf_read_conf_file(const char *filename, bool imported, const char *node, const struct config_data *conf_vars)
 {
 	nullpo_retr(false, filename);
 	nullpo_retr(false, node);
@@ -61,30 +61,39 @@ static bool extraconf_read_conf(const char *filename, bool imported, const char 
 	if (!libconfig->load_file(&config, filename))
 		return false;
 
+	bool retval = extraconf->read_conf(filename, imported, &config, node, conf_vars);
+	libconfig->destroy(&config);
+	return retval;
+}
+
+static bool extraconf_read_conf(const char *filename, bool imported, struct config_t *config, const char *node, const struct config_data *conf_vars)
+{
+	nullpo_retr(false, filename);
+	nullpo_retr(false, node);
+	nullpo_retr(false, conf_vars);
+
 	struct config_setting_t *setting = NULL;
-	if ((setting = libconfig->lookup(&config, node)) == NULL) {
-		libconfig->destroy(&config);
+	if ((setting = libconfig->lookup(config, node)) == NULL) {
 		if (imported)
 			return true;
 		ShowError("extraconf_read_conf: %s was not found in %s!\n", node, filename);
 		return false;
 	}
-	bool retval = extraconf->read_vars(filename, imported, &config, node, conf_vars);
+	bool retval = extraconf->read_vars(filename, imported, config, node, conf_vars);
 	if (!retval)
 		return retval;
 
 	// import should overwrite any previous configuration, so it should be called last
 	const char *import = NULL;
-	if (libconfig->lookup_string(&config, "import", &import) == CONFIG_TRUE) {
+	if (libconfig->lookup_string(config, "import", &import) == CONFIG_TRUE) {
 		if (strcmp(import, filename) == 0 || strcmp(import, filename) == 0) {
 			ShowWarning("extraconf_read_conf: Loop detected! Skipping 'import'...\n");
 		} else {
-			if (!extraconf->read_conf(import, true, node, conf_vars))
+			if (!extraconf->read_conf_file(import, true, node, conf_vars))
 				retval = false;
 		}
 	}
 
-	libconfig->destroy(&config);
 	return retval;
 }
 
@@ -153,7 +162,7 @@ static bool extraconf_set_var(struct config_data *conf_var, int value)
 
 static bool extraconf_read_emblems(void)
 {
-	return extraconf->read_conf(extraconf->EMBLEMS_CONF_NAME,
+	return extraconf->read_conf_file(extraconf->EMBLEMS_CONF_NAME,
 		false,
 		"emblem_configuration",
 		emblems_data);
@@ -177,6 +186,7 @@ void extraconf_defaults(void) {
 	extraconf->init = extraconf_init;
 	extraconf->final = extraconf_final;
 
+	extraconf->read_conf_file = extraconf_read_conf_file;
 	extraconf->read_conf = extraconf_read_conf;
 	extraconf->read_vars = extraconf_read_vars;
 	extraconf->set_var = extraconf_set_var;

@@ -56,7 +56,8 @@ struct extraconf_interface {
 	void (*init) (void);
 	void (*final) (void);
 
-	bool (*read_conf) (const char *filename, bool imported, const char *node, const struct config_data *conf_vars);
+	bool (*read_conf_file) (const char *filename, bool imported, const char *node, const struct config_data *conf_vars);
+	bool (*read_conf) (const char *filename, bool imported, struct config_t *config, const char *node, const struct config_data *conf_vars);
 	bool (*read_vars) (const char *filename, bool imported, struct config_t *config, const char *node, const struct config_data *conf_vars);
 	bool (*set_var) (struct config_data *conf_var, int val);
 	bool (*read_emblems) (void);
