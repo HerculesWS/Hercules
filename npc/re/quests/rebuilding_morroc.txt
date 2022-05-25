@@ -42,13 +42,20 @@
 //= re_rope
 //= - Number of ropes delivered (when delivering rope)
 //=
+//= re_brick
+//= - Number of bricks gathered (when making bricks)
+//= - Number of bricks delivered (when delivering bricks)
+//=
 //= $mocre_wood
 //= - Quantity of wood in the woodpiles (0 .. 1000)
 //=
 //= $mocre_rope
 //= - Quantity of rope in the rope piles (0 .. 1000)
+//=
+//= $mocre_brick
+//= - Quantity of brick in the brick piles (0 .. 1000)
 //================= Current Version =======================================
-//= 0.3
+//= 0.4
 //=========================================================================
 
 //== Making Wood :: re_wood ==========
@@ -397,6 +404,189 @@ morocc, 282, 284, 4	script	Rope Team Chief#ep14	1_M_ORIENT01,{
 	}
 }
 
+//== Making Bricks :: re_brick ========
+morocc, 42, 73, 6	script	Brick Team Chief#ep1	4_M_NFMAN,{
+	if (!checkweight(MoroccMerit, 1)) {
+		mes("[Brick Team Chief]");
+		mes(" - You're carrying too many items. Please make some room in your bag first. - ");
+		close();
+	}
+
+	if (questprogress(5259) == 0) {
+		mes("[Brick Team Chief]");
+		mes("Provision Department of the MRC, Brick Team. Say it.");
+		next();
+		switch (select("MRC?","I came to help make bricks.")) {
+		case 1:
+			mes("[Brick Team Chief]");
+			mes("You don't know? Hmpf, the HR imbeciles and the other team didn't tell you?");
+			next();
+			mes("[Brick Team Chief]");
+			mes("Bah, I hate to explain things, but I guess I can't help it.");
+			next();
+			mes("[Brick Team Chief]");
+			mes("The Morroc Restauration Comitee, or MRC, was formed to restore Morroc City after it was destroyed by Satan Morroc.");
+			next();
+			select("Is this it?");
+			mes("[Brick Team Chief]");
+			mes("...");
+			next();
+			mes("[Brick Team Chief]");
+			mes("Bah, you want me to explain more?");
+			next();
+			mes("[Brick Team Chief]");
+			mes("So far, we were able to restore most of the city, except for the Lord's Castle that is the symbol of our city.");
+			next();
+			mes("[Brick Team Chief]");
+			mes("The management is recruiting volunteers to make for the short budget for the repairs.");
+			next();
+			mes("[Brick Team Chief]");
+			mes("Did you come to help? Otherwise, forget it.");
+			close();
+
+		case 2:
+			if (BaseLevel < 80) {
+				mes("[Brick Team Chief]");
+				mes("Kid, you are too unexperienced for that. Go get more experience on fields and dungeons.");
+				close();
+			}
+
+			if (questprogress(5260, PLAYTIME) == 1) {
+				mes("[Brick Team Chief]");
+				mes("Your rest time didn't finish yet. I understand your enthusiasm, but your well-being should come first.");
+				close();
+			}
+
+			if (questprogress(5261) == 1) {
+				mes("[Brick Team Chief]");
+				mes("You did not finish your brick delivery yet. Finish it first. The bricklayers at the construction site are eagerly waiting for you.");
+				close();
+			}
+
+			mes("[Brick Team Chief]");
+			mes("You are here to work? Great.");
+			next();
+			mes("[Brick Team Chief]");
+			mesf("First, gather a %s and a %s around the city.", getitemname(Fine_Sand), getitemname(Grit));
+			next();
+			mes("[Brick Team Chief]");
+			mes("Afterwards, feed them to the Mimic right there, and it will give you a Brick in exchange.");
+			next();
+			mes("[Brick Team Chief]");
+			mes("Bring me 10 Bricks. But be warned, there is a chance that the brick making fails and the Mimic gives you nothing.");
+			next();
+			re_brick = 0;
+			setquest(5259);
+			mes("[Brick Team Chief]");
+			mes("Good luck.");
+			close();
+		}
+	} else if (questprogress(5259) == 1) {
+		mes("[Brick Team Chief]");
+		mes("Hey, how is the brick making going?");
+		next();
+		switch (select("I brought some bricks.", "How to make bricks?", "End conversation.")) {
+		case 1:
+			.@count = countitem(Brick);
+			if (.@count == 0) {
+				mes("[Brick Team Chief]");
+				mes("Where are the bricks that you mentioned?");
+				next();
+				mes("[Brick Team Chief]");
+				mes("Don't push yourself too hard, you don't have to bring all 10 bricks at once.");
+				close();
+			}
+			delitem(Brick, .@count);
+			re_brick += .@count;
+			if (re_brick < 10) {
+				mes("[Brick Team Chief]");
+				mesf("You brought %d bricks. Now you only need to bring %d more. Keep up with the good job.", .@count, (10 - re_brick));
+				close();
+			}
+
+			re_brick = 0;
+			changequest(5259, 5260);
+			getitem(MoroccMerit, 1);
+			mes("[Brick Team Chief]");
+			mes("Good job. Here is your reward.");
+			mes("Take this to the ^7D9BE3Morroc Restauration Comitee^000000, and you will be able to exchange it for something you want.");
+			donpcevent("MocReMaterialController::OnAddBrick");
+			close();
+
+		case 2:
+			mes("[Brick Team Chief]");
+			mes("I think I already told you that. Don't make me repeat myself.");
+			next();
+			mes("[Brick Team Chief]");
+			mesf("First, gather a %s and a %s around the city.", getitemname(Fine_Sand), getitemname(Grit));
+			next();
+			mes("[Brick Team Chief]");
+			mes("Afterwards, feed them to the Mimic right there, and it will give you a Brick in exchange.");
+			next();
+			mes("[Brick Team Chief]");
+			mes("But be careful:");
+			next();
+			mes("[Brick Team Chief]");
+			mes("Sometimes, the Mimic eats your materials and gives nothing back. I never had this problem, but lots of others had.");
+			close();
+
+		case 3:
+			mes("[Brick Team Chief]");
+			mes("We are very busy, so let's skip the formalities.");
+			close();
+		}
+	}
+	end;
+}
+
+morocc, 40, 72, 6	script	Annoyed Mimic#ep14_3	4_MIMIC,{
+	if (!checkweight(Brick, 1)) {
+		mes("^FF0000You're carrying too many items. Please make some room in your bag first.^000000");
+		close();
+	}
+	if (questprogress(5259) != 1) {
+		mes("This Mimic doesn't seem to be aggressive.");
+		close();
+	}
+	if (re_brick + countitem(Brick) >= 10) {
+		mes("You have made all the bricks that you need.");
+		close();
+	}
+	if (countitem(Fine_Sand) < 1 || countitem(Grit) < 1) {
+		mes("You don't have enough materials to make a brick.");
+		close();
+	}
+	mesf("You fed the Mimic with a %s and a %s.", getitemname(Fine_Sand), getitemname(Grit));
+	next();
+	progressbar("0xFFFF00", 1);
+	if (countitem(Fine_Sand) < 1 || countitem(Grit) < 1)
+		end; // Exploit attempt
+
+	if (rand(10000) > 3000) {
+		specialeffect(EF_PHARMACY_FAIL);
+		mes("You've failed to make a brick:");
+		switch (rand(3)) {
+		case 1:
+			mesf("the Mimic ate the %s.", getitemname(Grit));
+			delitem(Grit, 1);
+			break;
+
+		case 2:
+			mesf("the Mimic ate the %s.", getitemname(Fine_Sand));
+			delitem(Fine_Sand, 1);
+			break;
+		}
+		close();
+	}
+
+	specialeffect(EF_PHARMACY_OK);
+	mes("You successfully made a Brick.");
+	delitem(Fine_Sand, 1);
+	delitem(Grit, 1);
+	getitem(Brick, 1);
+	close();
+}
+
 //== Delivery quest base NPCs =========
 -	script	MocReDeliveryStart	FAKE_NPC,{
 	.@npc$ = sprintf("[%s]", strnpcinfo(NPC_NAME_VISIBLE));
@@ -433,6 +623,17 @@ morocc, 282, 284, 4	script	Rope Team Chief#ep14	1_M_ORIENT01,{
 		.@materialName$ = _("rope");
 		.@unitName$ = _("pieces of rope");
 		.@pileName$ = _("rope pile");
+	} else if (.@npcType$ == "b") {
+		.@makeQuestId = 5259;
+		.@questId = 5261;
+		.@cooldownQuestId = 5262;
+		
+		.@globalVar$ = "$mocre_brick";
+		.@charVar$ = "re_brick";
+		
+		.@materialName$ = _("brick");
+		.@unitName$ = _("bricks");
+		.@pileName$ = _("brick pile");
 	} else {
 		consolemes(CONSOLEMES_ERROR, "Invalid NPC Type for Delivery quest: '%s'", .@npcType$);
 		end;
@@ -563,6 +764,12 @@ OnTouch:
 		.@charVar$ = "re_rope";
 		.@materialName$ = "rope";
 		.@npc$ = "[Artisan]";
+	} else if (.@npcType$ == "brick") {
+		.@questId = 5261;
+		.@item = Brick;
+		.@charVar$ = "re_brick";
+		.@materialName$ = _("brick");
+		.@npc$ = "[Bricklayer]";
 	} else {
 		consolemes(CONSOLEMES_ERROR, "Invalid NPC Type for Delivery quest: '%s'", .@npcType$);
 		end;
@@ -620,6 +827,13 @@ OnTouch:
 		.@unitName$ = _("pieces of rope");
 		.@npc$ = _("[Artisan]");
 		.@pileName$ = _("rope pile");
+	} else if (.@npcType$ == "brick") {
+		.@questId = 5261;
+		.@item = Brick;
+		.@charVar$ = "re_brick";
+		.@materialName$ = _("brick");
+		.@unitName$ = _("bricks");
+		.@npc$ = _("[Bricklayer]");
 	} else {
 		consolemes(CONSOLEMES_ERROR, "Invalid NPC Type for Delivery quest: '%s'", .@npcType$);
 		end;
@@ -704,6 +918,16 @@ morocc, 148, 109, 5	duplicate(MocReDeliveryPile)	Rope Pile#rope	4_ROPEPILE,2,2
 
 morocc, 148, 112, 5	duplicate(MocReDeliveryInfo)	Artisan#rope	4_M_BARBER
 
+//== Brick Delivery :: re_brick ========
+// Note: for those duplicates, the hidden name is relevant for code logic.
+
+morocc, 55, 67, 4	duplicate(MocReDeliveryStart)	Bricklayer#ep14_3b	4_M_03
+
+// morocc, 155, 109, 0	script	#brick_or	HIDDEN_WARP_NPC,2,2
+morocc, 155, 109, 5	duplicate(MocReDeliveryPile)	Brick Pile#brick	4_BRICKPILE,2,2
+
+morocc, 155, 112, 5	duplicate(MocReDeliveryInfo)	Bricklayer#brick	4_M_03
+
 //== Wood Piles ========================
 -	script	MocReWoodpile	4_WOODPILE,{
 	if (questprogress(5253) == 0) {
@@ -748,6 +972,28 @@ morocc, 272, 289, 5	duplicate(MocReRopePile)	Rope Pile#7	4_ROPEPILE
 morocc, 274, 289, 5	duplicate(MocReRopePile)	Rope Pile#8	4_ROPEPILE
 morocc, 276, 289, 5	duplicate(MocReRopePile)	Rope Pile#9	4_ROPEPILE
 morocc, 278, 289, 5	duplicate(MocReRopePile)	Rope Pile#10	4_ROPEPILE
+
+//== Brick Piles =======================
+-	script	MocReBrickPile	FAKE_NPC,{
+	if (questprogress(5261) == 0) {
+		mes("- A material used in the restauration of the castle and other buildings in Morroc. -");
+		close();
+	}
+
+	"MocReMaterialController"::pickMaterial(Brick, re_brick, "$mocre_brick", "MocReMaterialController::OnGetBrick");
+	end;
+}
+
+morocc, 50, 67, 5	duplicate(MocReBrickPile)	Brick Pile#1	4_BRICKPILE
+morocc, 48, 67, 5	duplicate(MocReBrickPile)	Brick Pile#2	4_BRICKPILE
+morocc, 46, 67, 5	duplicate(MocReBrickPile)	Brick Pile#3	4_BRICKPILE
+morocc, 44, 67, 5	duplicate(MocReBrickPile)	Brick Pile#4	4_BRICKPILE
+morocc, 42, 67, 5	duplicate(MocReBrickPile)	Brick Pile#5	4_BRICKPILE
+morocc, 50, 65, 5	duplicate(MocReBrickPile)	Brick Pile#6	4_BRICKPILE
+morocc, 48, 65, 5	duplicate(MocReBrickPile)	Brick Pile#7	4_BRICKPILE
+morocc, 46, 65, 5	duplicate(MocReBrickPile)	Brick Pile#8	4_BRICKPILE
+morocc, 44, 65, 5	duplicate(MocReBrickPile)	Brick Pile#9	4_BRICKPILE
+morocc, 42, 65, 5	duplicate(MocReBrickPile)	Brick Pile#10	4_BRICKPILE
 
 //== Material Controller ===============
 // Controls the display/update of Wood, Brick and Ropes
@@ -855,6 +1101,13 @@ OnGetRope:
 	hidePiles($mocre_rope, "Rope Pile#");
 	end;
 
+// Someone has got some Bricks from the pile update brick piles
+// Note that $mocre_brick was already decremented by the NPC
+OnGetBrick:
+	sleep(1000);
+	hidePiles($mocre_rope, "Brick Pile#");
+	end;
+
 // Someone has delivered Wood, update global state
 OnAddWood:
 	$mocre_wood = cap_value($mocre_wood + 200, 0, 1000);
@@ -869,9 +1122,17 @@ OnAddRope:
 	showPiles($mocre_rope, "Rope Pile#");
 	end;
 
+// Someone has delivered Bricks, update global state
+OnAddBrick:
+	$mocre_brick = cap_value($mocre_brick + 200, 0, 1000);
+	sleep(2000);
+	showPiles($mocre_brick, "Brick Pile#");
+	end;
+
 OnInit:
 	hidePiles($mocre_wood, "Woodpile#");
 	hidePiles($mocre_rope, "Rope Pile#");
+	hidePiles($mocre_rope, "Brick Pile#");
 	end;
 }
 
@@ -899,12 +1160,13 @@ morocc, 54, 190, 5	script	Reward Coordinator	4_M_SAGE_C,{
 			mes("Oh, you already did it.");
 			mes("So, how did you help us?");
 			next();
-			switch (select("Wood Delivery", ""/* "Brick Delivery",*/, "Rope Delivery"/*, "Worker Transport", "Purging the Land"*/)) {
+			switch (select("Wood Delivery", "Brick Delivery", "Rope Delivery"/*, "Worker Transport", "Purging the Land"*/)) {
 			case 1:
 				callsub(S_DeliveryReward, _("Wood Team"), _("wood delivery"), _("pieces of wood"), "re_wood", 5253, 5254);
 				break;
 
-			case 2: // TODO:
+			case 2:
+				callsub(S_DeliveryReward, _("Brick Team"), _("brick delivery"), _("bricks"), "re_brick", 5261, 5262);
 				break;
 
 			case 3:
