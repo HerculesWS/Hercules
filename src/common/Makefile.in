@@ -63,7 +63,7 @@ COMMON_H = atomic.h cbasetypes.h conf.h console.h core.h db.h des.h ers.h extrac
            md5calc.h mmo.h mutex.h nullpo.h packets.h packets_len.h packets_struct.h random.h \
            showmsg.h socket.h spinlock.h sql.h strlib.h sysinfo.h thread.h \
            timer.h utils.h winapi.h api.h charmappackets.h mapcharpackets.h \
-           chunked/rfifo.h chunked/wfifo.h \
+           chunked/rfifo.h chunked/wfifo.h config/def.h config/emblems.h config/undef.h \
            ../plugins/HPMHooking.h
 COMMON_PH =
 
