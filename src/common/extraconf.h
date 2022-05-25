@@ -26,16 +26,33 @@
 struct config_t;
 struct config_setting_t;
 
-struct config_data {
-	const char* str;
-	int* val;
+struct config_data_old {
+	const char *str;
+	int *val;
 	int defval;
+	int min;
+	int max;
+};
+
+enum config_type {
+	config_type_int = 0,
+	config_type_str = 1,
+};
+
+struct config_data {
+	const char *str;
+	enum config_type type;
+	int *val;
+	const char **val_str;
+	int defval;
+	const char *defval_str;
 	int min;
 	int max;
 };
 
 // defines
 #define CONFIG(type, name, def, min, max) type name;
+#define CONFIGSTR(type, name, def, min, max) const char *name;
 
 // structs
 struct emblems_config {
@@ -44,6 +61,7 @@ struct emblems_config {
 
 // undefines
 #undef CONFIG
+#undef CONFIGSTR
 
 /**
  * The extraconf interface
@@ -60,6 +78,7 @@ struct extraconf_interface {
 	bool (*read_conf) (const char *filename, bool imported, struct config_t *config, const char *node, const struct config_data *conf_vars);
 	bool (*read_vars) (const char *filename, bool imported, struct config_t *config, const char *node, const struct config_data *conf_vars);
 	bool (*set_var) (struct config_data *conf_var, int val);
+	bool (*set_var_str) (struct config_data *conf_var, const char *val);
 	bool (*read_emblems) (void);
 };
 

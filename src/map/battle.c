@@ -7372,7 +7372,8 @@ static bool battle_check_range(struct block_list *src, struct block_list *bl, in
 	return path->search_long(NULL,src,src->m,src->x,src->y,bl->x,bl->y,CELL_CHKWALL);
 }
 
-static const struct config_data battle_data[] = {
+// can be converted in future into macroses from common/config
+static const struct config_data_old battle_data[] = {
 	{ "warp_point_debug",                   &battle_config.warp_point_debug,                0,      0,      1,              },
 	{ "enable_critical",                    &battle_config.enable_critical,                 BL_PC,  BL_NUL, BL_ALL,         },
 	{ "mob_critical_rate",                  &battle_config.mob_critical_rate,               100,    0,      INT_MAX,        },

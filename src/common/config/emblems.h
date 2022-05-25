@@ -22,6 +22,9 @@
 #ifndef CONFIG
 #define CONFIG(a, b, c, d, e)
 #endif
+#ifndef CONFIGSTR
+#define CONFIGSTR(a, b, c, d, e)
+#endif
 
 CONFIG(int, max_gif_guild_emblem_size, 51200, 0, 8388607)
 CONFIG(int, max_bmp_guild_emblem_size, 1800,  0, 2000)

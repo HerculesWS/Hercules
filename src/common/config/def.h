@@ -25,9 +25,13 @@
 #define CONFIG_START0(varName) CONFIG_START1(varName)
 #define CONFIG_START CONFIG_START0(CONFIG_VARS)
 #define CONFIG1(type, name, varName, def, min, max) \
-	{ #name, &varName ## _vars.name, def, min, max },
+	{ #name, config_type_ ## type, &varName ## _vars.name, NULL,                   def, NULL, min, max },
 #define CONFIG0(type, name, varName, def, min, max) CONFIG1(type, name, varName, def, min, max)
 #define CONFIG(type, name, def, min, max) CONFIG0(type, name, CONFIG_VARS, def, min, max)
+#define CONFIGSTR1(type, name, varName, def, min, max) \
+	{ #name, config_type_ ## type, NULL,                   &varName ## _vars.name, 0,   def,  min, max },
+#define CONFIGSTR0(type, name, varName, def, min, max) CONFIGSTR1(type, name, varName, def, min, max)
+#define CONFIGSTR(type, name, def, min, max) CONFIGSTR0(type, name, CONFIG_VARS, def, min, max)
 #define CONFIG_END \
-	{ NULL,    NULL,      0,   0,   0   }, \
+	{ NULL,  config_type_int,      NULL,                   NULL,                   0,   NULL, 0,   0   } \
 };

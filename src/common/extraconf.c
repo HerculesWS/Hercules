@@ -122,12 +122,16 @@ static bool extraconf_read_vars(const char *filename, bool imported, struct conf
 
 		const int type = config_setting_type(setting);
 		int val = 0;
+		const char *valStr = NULL;
 		switch (type) {
 		case CONFIG_TYPE_INT:
 			val = libconfig->setting_get_int(setting);
 			break;
 		case CONFIG_TYPE_BOOL:
 			val = libconfig->setting_get_bool(setting);
+			break;
+		case CONFIG_TYPE_STRING:
+			valStr = libconfig->setting_get_string(setting);
 			break;
 		default: // Unsupported type
 			ShowWarning("Setting %s has unsupported type %d, ignoring...\n", config_name, type);
@@ -136,8 +140,13 @@ static bool extraconf_read_vars(const char *filename, bool imported, struct conf
 			continue;
 		}
 
-		if (!extraconf->set_var(&conf_vars[i], val))
-			retval = false;
+		if (type == CONFIG_TYPE_STRING) {
+			if (!extraconf->set_var_str(&conf_vars[i], valStr))
+				retval = false;
+		} else {
+			if (!extraconf->set_var(&conf_vars[i], val))
+				retval = false;
+		}
 		i++;
 	}
 
@@ -148,6 +157,11 @@ static bool extraconf_set_var(struct config_data *conf_var, int value)
 {
 	nullpo_retr(false, conf_var);
 
+	if (conf_var->type == config_type_str) {
+		ShowWarning("Setting %s has wrong type string, but need non string, ignoring...\n", conf_var->str);
+		return false;
+	}
+
 	if (value < conf_var->min || value > conf_var->max) {
 		ShowWarning("Value for setting '%s': %d is invalid (min:%d max:%d)! Defaulting to %d...\n",
 				conf_var->str, value, conf_var->min, conf_var->max, conf_var->defval);
@@ -157,6 +171,30 @@ static bool extraconf_set_var(struct config_data *conf_var, int value)
 	ShowInfo("Read config setting '%s': %d\n", conf_var->str, value);
 #endif
 	*conf_var->val = value;
+	return true;
+}
+
+static bool extraconf_set_var_str(struct config_data *conf_var, const char *val)
+{
+	nullpo_retr(false, conf_var);
+	nullpo_retr(false, val);
+
+	const enum config_type varType = conf_var->type;
+	if (varType != config_type_str) {
+		ShowWarning("Setting %s has wrong type %d, but need string, ignoring...\n", conf_var->str, (int)varType);
+		return false;
+	}
+
+	const int len = strlen(val);
+	if ((conf_var->min != 0 && len < conf_var->min) || (conf_var->max != 0 && len > conf_var->max)) {
+		ShowWarning("Value for setting '%s': '%s' is invalid (min:%d max:%d)! Defaulting to '%s'...\n",
+				conf_var->str, val, conf_var->min, conf_var->max, conf_var->defval_str);
+		val = conf_var->defval_str;
+	}
+#ifdef CONFIG_DEBUG
+	ShowInfo("Read config setting '%s': '%s'\n", conf_var->str, val);
+#endif
+	*conf_var->val_str = val;
 	return true;
 }
 
@@ -190,5 +228,6 @@ void extraconf_defaults(void) {
 	extraconf->read_conf = extraconf_read_conf;
 	extraconf->read_vars = extraconf_read_vars;
 	extraconf->set_var = extraconf_set_var;
+	extraconf->set_var_str = extraconf_set_var_str;
 	extraconf->read_emblems = extraconf_read_emblems;
 }
