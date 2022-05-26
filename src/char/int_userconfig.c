@@ -28,6 +28,7 @@
 #include "char/mapif.h"
 #include "common/cbasetypes.h"
 #include "common/apipackets.h"
+#include "common/conf.h"
 #include "common/db.h"
 #include "common/memmgr.h"
 #include "common/mmo.h"
@@ -41,8 +42,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define DEBUG_EMOTES
+
 static struct inter_userconfig_interface inter_userconfig_s;
 struct inter_userconfig_interface *inter_userconfig;
+static struct inter_userconfig_dbs inter_userconfigdbs;
 
 static int inter_userconfig_load_emotes(int account_id, struct userconfig_emotes *emotes)
 {
@@ -73,8 +77,7 @@ static bool inter_userconfig_emotes_from_sql(int account_id, struct userconfig_e
 	char *data = NULL;
 	for (int index = 0; index < MAX_EMOTES; index ++) {
 		SQL->GetData(inter->sql_handle, index, &data, NULL);
-		strncpy(emotes->emote[index], data, EMOTE_SIZE);
-                ShowError("load emote %d: %s\n", index, emotes->emote[index]);
+		safestrncpy(emotes->emote[index], data, EMOTE_SIZE);
 	}
 
 	SQL->FreeResult(inter->sql_handle);
@@ -86,20 +89,9 @@ static void inter_userconfig_use_default_emotes(int account_id, struct userconfi
 {
 	nullpo_retv(emotes);
 
-	// should be used strncpy [4144]
-	strncpy(emotes->emote[0], "/!", EMOTE_SIZE);
-	strncpy(emotes->emote[1], "/?", EMOTE_SIZE);
-	strncpy(emotes->emote[2], "/기쁨", EMOTE_SIZE);
-	strncpy(emotes->emote[3], "/하트", EMOTE_SIZE);
-	strncpy(emotes->emote[4], "/땀", EMOTE_SIZE);
-	strncpy(emotes->emote[5], "/아하", EMOTE_SIZE);
-	strncpy(emotes->emote[6], "/짜증", EMOTE_SIZE);
-	strncpy(emotes->emote[7], "/화", EMOTE_SIZE);
-	strncpy(emotes->emote[8], "/돈", EMOTE_SIZE);
-	strncpy(emotes->emote[9], "/...", EMOTE_SIZE);
-
-	// english emotes
-//	"/!","/?","/ho","/lv","/swt","/ic","/an","/ag","/$","/..."
+	for (int i = 0; i < MAX_EMOTES; i ++) {
+		safestrncpy(emotes->emote[0], inter_userconfig->dbs->default_emotes[i], EMOTE_SIZE);
+	}
 }
 
 static int inter_userconfig_save_emotes(int account_id, const struct userconfig_emotes *emotes)
@@ -130,7 +122,7 @@ static bool inter_userconfig_emotes_to_sql(int account_id, const struct userconf
 		return false;
 	}
 	for (int i = 0; i < MAX_EMOTES; i++) {
-		if (SQL_SUCCESS != SQL->StmtBindParam(stmt, i, SQLDT_STRING, emotes->emote[i], strnlen(emotes->emote[i], EMOTE_SIZE))) {
+		if (SQL_SUCCESS != SQL->StmtBindParam(stmt, i, SQLDT_STRING, emotes->emote[i], strnlen(emotes->emote[i], EMOTE_SIZE - 1))) {
 			SqlStmt_ShowDebug(stmt);
 			SQL->StmtFree(stmt);
 			StrBuf->Destroy(&buf);
@@ -156,13 +148,16 @@ void inter_userconfig_hotkey_tab_tosql(int account_id, const struct userconfig_u
 	inter_userconfig->hotkey_tab_clear(account_id, hotkeys->tab);
 
 	char desc_esc[HOTKEY_DESCRIPTION_SIZE * 2 + 1];
+#ifdef DEBUG_EMOTES
 	ShowError("tab: %d\n", hotkeys->tab);
+#endif
 	for (int i = 0; i < hotkeys->count; i ++) {
+#ifdef DEBUG_EMOTES
 		ShowError("desc: %s\n", hotkeys->keys[i].desc);
 		ShowError("index: %d\n", hotkeys->keys[i].index);
 		ShowError("key1: %d\n", hotkeys->keys[i].key1);
 		ShowError("key2: %d\n", hotkeys->keys[i].key2);
-
+#endif
 		SQL->EscapeString(inter->sql_handle, desc_esc, hotkeys->keys[i].desc);
 		if (SQL_ERROR == SQL->Query(inter->sql_handle,
 		    "INSERT INTO `%s` (`account_id`,`tab`,`desc`,`index`,`key1`,`key2`) VALUES ('%d','%d','%s','%d','%d','%d')",
@@ -210,10 +205,65 @@ void inter_userconfig_hotkey_tab_fromsql(int account_id, struct userconfig_userh
 	hotkeys->count = index;
 }
 
+static bool inter_userconfig_config_read(const char *filename, const struct config_t *config, bool imported)
+{
+	nullpo_retr(false, filename);
+	nullpo_retr(false, config);
+
+	const struct config_setting_t *setting = libconfig->lookup(config, "char_configuration/emotes");
+	if (setting == NULL) {
+		if (imported)
+			return true;
+		ShowError("inter_userconfig_config_read: char_configuration/emotes was not found in %s!\n", filename);
+		return false;
+	}
+
+	const struct config_setting_t *t = libconfig->setting_get_member(setting, "default_emotes");
+	const int len = libconfig->setting_length(t);
+	if (len != MAX_EMOTES) {
+		ShowError("inter_userconfig_config_read: wrong number of default emotes found: %d vs %d\n", len, MAX_EMOTES);
+		return false;
+	}
+
+	if (t == NULL) {
+		if (imported)
+			return true;
+		ShowError("inter_userconfig_config_read: default_emotes not found\n");
+		return false;
+	}
+	for (int i = 0; i < len; ++i) {
+		const char *emote_str = libconfig->setting_get_string_elem(t, i);
+		if (emote_str == NULL || strlen(emote_str) >= EMOTE_SIZE) {
+			ShowError("inter_userconfig_config_read: default_emotes[%d] size too big: '%s'\n", i, emote_str);
+			return false;
+		}
+		safestrncpy(inter_userconfig->dbs->default_emotes[i], emote_str, EMOTE_SIZE);
+	}
+
+	return true;
+}
+
+static void inter_userconfig_init(void)
+{
+	safestrncpy(inter_userconfig->dbs->default_emotes[0], "/!", EMOTE_SIZE);
+	safestrncpy(inter_userconfig->dbs->default_emotes[1], "/?", EMOTE_SIZE);
+	safestrncpy(inter_userconfig->dbs->default_emotes[2], "/기쁨", EMOTE_SIZE);
+	safestrncpy(inter_userconfig->dbs->default_emotes[3], "/하트", EMOTE_SIZE);
+	safestrncpy(inter_userconfig->dbs->default_emotes[4], "/땀", EMOTE_SIZE);
+	safestrncpy(inter_userconfig->dbs->default_emotes[5], "/아하", EMOTE_SIZE);
+	safestrncpy(inter_userconfig->dbs->default_emotes[6], "/짜증", EMOTE_SIZE);
+	safestrncpy(inter_userconfig->dbs->default_emotes[7], "/화", EMOTE_SIZE);
+	safestrncpy(inter_userconfig->dbs->default_emotes[8], "/돈", EMOTE_SIZE);
+	safestrncpy(inter_userconfig->dbs->default_emotes[9], "/...", EMOTE_SIZE);
+}
+
 void inter_userconfig_defaults(void)
 {
 	inter_userconfig = &inter_userconfig_s;
+	inter_userconfig->dbs = &inter_userconfigdbs;
 
+	inter_userconfig->init = inter_userconfig_init;
+	inter_userconfig->config_read = inter_userconfig_config_read;
 	inter_userconfig->load_emotes = inter_userconfig_load_emotes;
 	inter_userconfig->save_emotes = inter_userconfig_save_emotes;
 	inter_userconfig->use_default_emotes = inter_userconfig_use_default_emotes;

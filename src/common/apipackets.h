@@ -31,7 +31,8 @@
 #endif // not NetBSD < 6 / Solaris
 
 #ifndef EMOTE_SIZE
-#define EMOTE_SIZE 50
+// 50 + end of string
+#define EMOTE_SIZE 51
 #endif
 
 #ifndef MAX_EMOTES

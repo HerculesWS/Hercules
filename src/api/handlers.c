@@ -235,10 +235,9 @@ HTTP_URL(userconfig_save)
 		CREATE_HTTP_DATA(data, userconfig_save_emotes);
 		int i = 0;
 		JSONPARSER_FOR_EACH(emotion, emotionHotkey) {
-			// should be used strncpy [4144]
 			const char *str = jsonparser->get_string_value(emotion);
 			if (str != NULL)
-				strncpy(data.emotes.emote[i], str, EMOTE_SIZE);
+				safestrncpy(data.emotes.emote[i], str, EMOTE_SIZE);
 			i++;
 		}
 		SEND_CHAR_ASYNC_DATA(userconfig_save_emotes, &data);

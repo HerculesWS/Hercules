@@ -5593,6 +5593,8 @@ static bool char_config_read(const char *filename, bool imported)
 		retval = false;
 	if (!pincode->config_read(filename, &config, imported))
 		retval = false;
+	if (!inter_userconfig->config_read(filename, &config, imported))
+		retval = false;
 
 	if (!HPM->parse_conf(&config, filename, HPCT_CHAR, imported))
 		retval = false;
@@ -6268,6 +6270,7 @@ int do_init(int argc, char **argv)
 	//Read map indexes
 	mapindex->init();
 	pincode->init();
+	inter_userconfig->init();
 
 	#ifdef RENEWAL
 		start_point.map = mapindex->name2id("iz_int");

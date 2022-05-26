@@ -22,14 +22,23 @@
 #define CHAR_INT_USERCONFIG_H
 
 #include "common/hercules.h"
+#include "common/apipackets.h"
 
+struct config_t;
 struct userconfig_emotes;
 struct userconfig_userhotkeys_v2;
+
+struct inter_userconfig_dbs {
+	char default_emotes[MAX_EMOTES][EMOTE_SIZE];
+};
 
 /**
  * inter_userconfig_interface interface
  **/
 struct inter_userconfig_interface {
+	struct inter_userconfig_dbs *dbs;
+	void (*init) (void);
+	bool (*config_read) (const char *filename, const struct config_t *config, bool imported);
 	int (*load_emotes) (int account_id, struct userconfig_emotes *emotes);
 	int (*save_emotes) (int account_id, const struct userconfig_emotes *emotes);
 	void (*use_default_emotes) (int account_id, struct userconfig_emotes *emotes);
