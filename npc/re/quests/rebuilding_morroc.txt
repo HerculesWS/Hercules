@@ -55,7 +55,7 @@
 //= $mocre_brick
 //= - Quantity of brick in the brick piles (0 .. 1000)
 //================= Current Version =======================================
-//= 0.4
+//= 0.5
 //=========================================================================
 
 //== Making Wood :: re_wood ==========
@@ -1273,4 +1273,128 @@ morocc, 54, 190, 5	script	Reward Coordinator	4_M_SAGE_C,{
 		mes("Keep up with the good job.");
 		next();
 		return;
+}
+
+// == Snack Order =====================
+morocc, 40, 190, 6	script	Snack Lady#ep14_3	4_F_CAVE1,{
+	if (!checkweight(MoroccMerit, 1)) {
+		mes(" - You're carrying too many items. Please make some room in your bag first. - ");
+		close();
+	}
+
+	if (questprogress(5263) == 0) {
+		if (questprogress(5264, PLAYTIME) == 2) {
+			mes("[Snack Lady]");
+			mes("It is time to prepare the next snack order.");
+		} else {
+			mes("[Snack Lady]");
+			mes("Sorry, I am busy. May you come back later?");
+		}
+		next();
+		switch (select("What do you do?", "What kind of dishes you need?")) {
+		case 1:
+			mes("[Snack Lady]");
+			mes("I am here to prepare snacks for the workers of the Morroc Restoration Comittee.");
+			next();
+			mes("[Snack Lady]");
+			mes("I am working a lot to feed a crowd of workers every day.");
+			next();
+			mes("[Snack Lady]");
+			mes("It would be very helpful if someone could help me by bringing some cooked food.");
+			close();
+
+		case 2:
+			if (BaseLevel < 80) {
+				mes("[Snack Lady]");
+				mes("Thanks for your concern, but I am not desperate enough to abuse of an unexperienced adventurer like you.");
+				close();
+			}
+
+			if (questprogress(5264, PLAYTIME) == 1) {
+				mes("[Snack Lady]");
+				mesf("I will take a break until the time for the next order comes. %s, you should rest too, while you can.", strcharinfo(PC_NAME));
+				close();
+			}
+
+			mes("[Snack Lady]");
+			mes("Ah, you want to help?");
+			mes("Phew, thanks. I can't express how grateful I am.");
+			next();
+			mes("[Snack Lady]");
+			mes("I don't want you to hurt your back carrying a lot of dishes. Let me give you a list of dishes, you just have to bring one of them.");
+			next();
+			setquest(5263);
+			mes("[Snack Lady]");
+			mes("You can always check the list using Alt + U. Thank you.");
+			close();
+		}
+	} else if (questprogress(5263) == 1) {
+		setarray(.@snackList[0], 
+			Str_Dish03, Str_Dish04, Str_Dish05, Str_Dish06,
+			Agi_Dish03, Agi_Dish04, Agi_Dish05, Agi_Dish06,
+			Vit_Dish03, Vit_Dish04, Vit_Dish05, Vit_Dish06,
+			Int_Dish03, Int_Dish04, Int_Dish05, Int_Dish06,
+			Dex_Dish03, Dex_Dish04, Dex_Dish05, Dex_Dish06,
+			Luk_Dish03, Luk_Dish04, Luk_Dish05, Luk_Dish06);
+
+		mes("[Snack Lady]");
+		mes("Oh, I am so busy! You are back. Did you bring the dish I asked?");
+		next();
+		switch (select("Yes.", "What kind of dish?", "End conversation.")) {
+		case 1:
+			mes("[Snack Lady]");
+			mes("Which dish you brought?");
+			next();
+			input(.@snack$);
+			.@i = 0;
+			while (.@i < getarraysize(.@snackList) && getitemname(.@snackList[.@i]) != .@snack$) {
+				++.@i;
+			}
+
+			if (.@i == getarraysize(.@snackList)) {
+				mes("[Snack Lady]");
+				mesf("%s? I did not ask for that. Please, check the memo I gave you.", .@snack$);
+				close();
+			}
+
+			if (countitem(.@snackList[.@i]) < 1) {
+				mes("[Snack Lady]");
+				mesf("%s... right, but where is it? I don't see any of it with you.", .@snack$);
+				close();
+			}
+
+			mes("[Snack Lady]");
+			mes("Thank you for you generous donation.");
+			mes("Please, take this small token of my gratitude.");
+			mes("Take this to the ^7D9BE3Morroc Restauration Comitee^000000, and you will be able to exchange it for something you want.");
+			mes("I have finished preparing the dishes for the next order. I will rest now.");
+			changequest(5263, 5264);
+			delitem(.@snackList[.@i], 1);
+			getitem(MoroccMerit, 1);
+			close();
+
+		case 2:
+			mes("[Snack Lady]");
+			mes("Did you not read the memo I gave you?");
+			next();
+			mes("[Snack Lady]");
+			mes("Bring me one of the following dishes:");
+			.@msg$ = "";
+			for (.@i = 0; .@i < getarraysize(.@snackList) - 2; .@i++) {
+				.@msg$ = sprintf("%s%s%s", .@msg$, getitemname(.@snackList[.@i]), (.@i % 4 == 3) ? ",\r" : ", ");
+			}
+			.@msg$ = sprintf("%s%s or %s.", .@msg$, getitemname(.@snackList[.@i]), getitemname(.@snackList[.@i + 1]));
+			mes(.@msg$);
+			next();
+			mes("[Snack Lady]");
+			mes("You can always check the list using Alt + U. Thank you.");
+			close();
+		
+		case 3:
+			mes("[Snack Lady]");
+			mes("Aah, I am so busy, I am losing my mind!");
+			close();
+		}
+	}
+	end;
 }
