@@ -19,10 +19,5 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#undef CONFIG
-#undef CONFIG0
-#undef CONFIG1
-#undef CONFIG_START
-#undef CONFIG_START0
-#undef CONFIG_START1
-#undef CONFIG_END
+#define CONFIG(type, name, def, min, max) type name;
+#define CONFIGSTR(type, name, def, min, max) char *name;

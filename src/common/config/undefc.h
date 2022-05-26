@@ -19,13 +19,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CONFIG
-#define CONFIG(a, b, c, d, e)
-#endif
-
-CONFIG(int, max_gif_guild_emblem_size, 51200, 0, 8388607)
-CONFIG(int, max_bmp_guild_emblem_size, 1800,  0, 2000)
-CONFIG(int, guild_emblem_width,        24,    1, 10000)
-CONFIG(int, guild_emblem_height,       24,    1, 10000)
-CONFIG(int, min_guild_emblem_frames,   1,     1, 10000)
-CONFIG(int, max_guild_emblem_frames,   10000, 1, 10000)
+#undef CONFIG
+#undef CONFIG0
+#undef CONFIG1
+#undef CONFIG_START
+#undef CONFIG_START0
+#undef CONFIG_START1
+#undef CONFIG_START_VARS
+#undef CONFIG_START_VARS0
+#undef CONFIG_START_VARS1
+#undef CONFIG_END

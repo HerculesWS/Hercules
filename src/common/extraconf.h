@@ -51,8 +51,7 @@ struct config_data {
 };
 
 // defines
-#define CONFIG(type, name, def, min, max) type name;
-#define CONFIGSTR(type, name, def, min, max) const char *name;
+#include "common/config/defh.h"
 
 // structs
 struct emblems_config {
@@ -60,8 +59,7 @@ struct emblems_config {
 };
 
 // undefines
-#undef CONFIG
-#undef CONFIGSTR
+#include "common/config/undefh.h"
 
 /**
  * The extraconf interface

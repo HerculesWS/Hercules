@@ -20,7 +20,7 @@
  */
 #define HERCULES_CORE
 
-#include "extraconf.h"
+#include "common/extraconf.h"
 
 #include "common/core.h"
 #include "common/conf.h"
@@ -34,7 +34,7 @@
 #define CONFIG_DEBUG
 
 // defines for vars
-#include "common/config/def.h"
+#include "common/config/defc.h"
 
 // include vars files
 #define CONFIG_VARS emblems
@@ -44,7 +44,7 @@ CONFIG_END
 #undef CONFIG_VARS
 
 // remove all temporary defines
-#include "common/config/undef.h"
+#include "common/config/undefc.h"
 
 /* interface source */
 static struct extraconf_interface extraconf_s;
