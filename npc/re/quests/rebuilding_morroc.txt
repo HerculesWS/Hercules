@@ -32,6 +32,9 @@
 //=
 //= This was active during Episode 14.3 and removed afterwards, leaving
 //= only the contribution board and reward machine active
+//= re/quests/rebuilding_morroc_rewards.txt
+//=
+//= Note: This file expects MocReContribute from rewards file to be active.
 //=
 //= (Play/Walk through conversion)
 //================= Variables Used ========================================
@@ -62,7 +65,7 @@
 //= $mocre_brick
 //= - Quantity of brick in the brick piles (0 .. 1000)
 //================= Current Version =======================================
-//= 0.7
+//= 0.8
 //=========================================================================
 
 //== Making Wood :: re_wood ==========
@@ -103,6 +106,7 @@ morocc, 285, 70, 4	script	Wood Supply Team Chief	2_M_OLDBLSMITH,{
 			mes("Take this to the ^7D9BE3Morroc Restauration Comitee^000000, and you will be able to exchange it for something you want.");
 			changequest(5251, 5252);
 			getitem(MoroccMerit, 1);
+			"MocReContribute"::AddContribution();
 			re_wood = 0;
 			donpcevent("MocReMaterialController::OnAddWood");
 			close();
@@ -326,6 +330,7 @@ morocc, 282, 284, 4	script	Rope Team Chief#ep14	1_M_ORIENT01,{
 			delitem(.@item2, 10);
 			changequest(5255, 5256);
 			getitem(MoroccMerit, 1);
+			"MocReContribute"::AddContribution();
 			donpcevent("MocReMaterialController::OnAddRope");
 			mes("[Rope Team Chief]");
 			mes("Please, receive this small token of our gratitude.");
@@ -514,6 +519,7 @@ morocc, 42, 73, 6	script	Brick Team Chief#ep1	4_M_NFMAN,{
 			re_brick = 0;
 			changequest(5259, 5260);
 			getitem(MoroccMerit, 1);
+			"MocReContribute"::AddContribution();
 			mes("[Brick Team Chief]");
 			mes("Good job. Here is your reward.");
 			mes("Take this to the ^7D9BE3Morroc Restauration Comitee^000000, and you will be able to exchange it for something you want.");
@@ -1219,6 +1225,7 @@ morocc, 54, 190, 5	script	Reward Coordinator	4_M_SAGE_C,{
 				@re_questId = 0;
 				setquest(5275);
 				getitem(MoroccMerit, 1);
+				"MocReContribute"::AddContribution();
 				next();
 				break;
 
@@ -1244,6 +1251,7 @@ morocc, 54, 190, 5	script	Reward Coordinator	4_M_SAGE_C,{
 				setquest(5269);
 				erasequest(5265, 5269);
 				getitem(MoroccMerit, 4);
+				"MocReContribute"::AddContribution();
 				next();
 				break;
 			}
@@ -1336,6 +1344,7 @@ morocc, 54, 190, 5	script	Reward Coordinator	4_M_SAGE_C,{
 		changequest(getarg(4), getarg(5));
 		setd(getarg(3), 0);
 		getitem(MoroccMerit, 1);
+		"MocReContribute"::AddContribution();
 		mes("[Reward Coordinator]");
 		mesf("According to these records, you have delivered\r"
 			"more than 100 %s.", getarg(2));
@@ -1443,6 +1452,7 @@ morocc, 40, 190, 6	script	Snack Lady#ep14_3	4_F_CAVE1,{
 			changequest(5263, 5264);
 			delitem(.@snackList[.@i], 1);
 			getitem(MoroccMerit, 1);
+			"MocReContribute"::AddContribution();
 			close();
 
 		case 2:

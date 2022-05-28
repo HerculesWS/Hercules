@@ -1,0 +1,74 @@
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2013-2022 Hercules Dev Team
+//= Copyright (C) KirieZ
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= NPCs related to the reconstruction of Morroc quest rewards.
+//================= Description ===========================================
+//= The reconstruction of Morroc was a temporary set of quests around
+//= helping Morroc to be restored.
+//=
+//= This file includes the reward machine and honors to the best contributor.
+//= And has been kept enabled from Episode 14.3 onwards.
+//= The quests itself were disabled after Episode 14.3, and they may be found
+//= at re/quests/rebuilding_morroc.txt
+//=
+//= (Play/Walk through conversion)
+//================= Variables Used ========================================
+//= re_contribution
+//= - Number of rebuilding quests made by this player (contributions)
+//=
+//= $mocre_highestnum
+//= $mocre_highestcontrib$
+//= - Information related to the highest contributor:
+//= -- num: How many contributions the highest contributor made
+//= -- contrib: The character name of the hightest contributor
+//================= Current Version =======================================
+//= 0.1
+//=========================================================================
+
+morocc, 43, 191, 5	script	Notice Board#moc_re::MocReContribute	4_BOARD3,{
+	if ($mocre_highestcontrib$ == "") {
+		mes("There is a blank notice board here.");
+		close();
+	}
+
+	mes("[Notice Board]");
+	mesf("Right now the biggest contributor to the Morroc restauration is\r"
+		"the Great Adventurer %s,\r"
+		"who, so far, made a total of %s contributions.", $mocre_highestcontrib$, $mocre_highestnum);
+	mes("I want to offer my gratitude to the adventurer in the name of the entire city.");
+	close();
+
+	public function AddContribution {
+		re_contribution++;
+		if (re_contribution > $mocre_highestnum) {
+			$mocre_highestnum = re_contribution;
+			$mocre_highestcontrib$ = strcharinfo(PC_NAME);
+		}
+
+		return;
+	}
+}
