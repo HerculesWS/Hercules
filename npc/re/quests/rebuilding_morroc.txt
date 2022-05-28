@@ -35,6 +35,10 @@
 //=
 //= (Play through conversion)
 //================= Variables Used ========================================
+//= @re_site , @re_questId
+//= Stores the construction site ID and questID
+//= for the last worker transport NPC talked to.
+//=
 //= re_wood
 //= - Number of wood gathered (when gathering wood)
 //= - Number of wood delivered (when delivering wood)
@@ -46,6 +50,9 @@
 //= - Number of bricks gathered (when making bricks)
 //= - Number of bricks delivered (when delivering bricks)
 //=
+//= re_transport
+//= - Expected deliver site (when doing worker transport quest)
+//=
 //= $mocre_wood
 //= - Quantity of wood in the woodpiles (0 .. 1000)
 //=
@@ -55,7 +62,7 @@
 //= $mocre_brick
 //= - Quantity of brick in the brick piles (0 .. 1000)
 //================= Current Version =======================================
-//= 0.5
+//= 0.6
 //=========================================================================
 
 //== Making Wood :: re_wood ==========
@@ -1160,7 +1167,7 @@ morocc, 54, 190, 5	script	Reward Coordinator	4_M_SAGE_C,{
 			mes("Oh, you already did it.");
 			mes("So, how did you help us?");
 			next();
-			switch (select("Wood Delivery", "Brick Delivery", "Rope Delivery"/*, "Worker Transport", "Purging the Land"*/)) {
+			switch (select("Wood Delivery", "Brick Delivery", "Rope Delivery", "Worker Transport"/*, "Purging the Land"*/)) {
 			case 1:
 				callsub(S_DeliveryReward, _("Wood Team"), _("wood delivery"), _("pieces of wood"), "re_wood", 5253, 5254);
 				break;
@@ -1173,7 +1180,49 @@ morocc, 54, 190, 5	script	Reward Coordinator	4_M_SAGE_C,{
 				callsub(S_DeliveryReward, _("Rope Team"), _("rope delivery"), _("pieces of rope"), "re_rope", 5257, 5258);
 				break;
 
-			// TODO: case 4 .. 5
+			case 4:
+				if (re_transport != 5) {
+					mes("[Reward Coordinator]");
+					mes("That is weird.");
+					mes("I don't have\r"
+						"any report of your contribution.");
+					next();
+					mes("[Reward Coordinator]");
+					mes("It might be an error.");
+					mes("I recommend you to talk to\r"
+						"the one in charge for this task.");
+					close();
+				}
+
+				mes("[Reward Coordinator]");
+				mes("Ah, so you are telling me\r"
+					"that you brought a worker to a construction site\r"
+					"on your own. Right?");
+				next();
+				mes("[Reward Coordinator]");
+				mes("...");
+				next();
+				mes("[Reward Coordinator]");
+				mes("Oh my, that lazy imbecile.");
+				mes("I wish they had simply fired him...");
+				next();
+				mes("[Reward Coordinator]");
+				mes("...");
+				next();
+				mes("[Reward Coordinator]");
+				mes("Oh, right.");
+				mes("Let me give you a Morroc Merit\r"
+					"for helping with the workers transportation.");
+				mes("Thank you for your contribution.");
+				re_transport = 0;
+				@re_site = 0;
+				@re_questId = 0;
+				setquest(5275);
+				getitem(MoroccMerit, 1);
+				next();
+				break;
+
+			// TODO: case 5
 			}
 			break;
 
@@ -1398,3 +1447,492 @@ morocc, 40, 190, 6	script	Snack Lady#ep14_3	4_F_CAVE1,{
 	}
 	end;
 }
+
+// == Worker Transport : re_transport ======
+morocc, 57, 196, 5	script	HR Coordinator	4_M_ALCHE_A,{
+	if (BaseLevel < 80) {
+		mes("[HR Coordinator]");
+		mes("You don't have enough experience for this task.");
+		mes("Please, raise your ^006400Level^000000 to ^ff000080^000000 first.");
+		close();
+	}
+
+	if (questprogress(5270) == 1) {
+		mes("[HR Coordinator]");
+		mes("Please, take this worker to the construction site that best suits his competencies.");
+		close();
+	} else if (re_transport == 5) {
+		mes("[HR Coordinator]");
+		mes("Phew, you are my savior.");
+		mes("If it weren't for you, I would have been in a hard spot.");
+		mes("Thank you for\r"
+			"guiding the worker in time.");
+		next();
+		mes("[HR Coordinator]");
+		mes("Contrary to what you should be thinking,\r"
+			"I am not a lazy person.");
+		next();
+		mes("[HR Coordinator]");
+		mes("I sent a report detailing your contribution.");
+		mes("Go to the Reward Coordinator\r"
+			"to get your para Morroc Merit.");
+		mes("He is right there by my side.");
+		close();
+	} else if (questprogress(5271) == 1 || questprogress(5272) == 1 || questprogress(5273) == 1 || questprogress(5274) == 1) {
+		// Player is delivering to the NPC
+		mes("[HR Coordinator]");
+		mes("Oh,\r"
+			"why did you come back?");
+		mes("You should have talked to the HR Supervisor at the site.");
+		close();
+	} else if (questprogress(5275, PLAYTIME) == 1) {
+		mes("[HR Coordinator]");
+		mes("You've helped me dispatch a worker last time.");
+		next();
+		mes("[HR Coordinator]");
+		mes("Don't worry,\r"
+			"we don't have to dispatch any other workers for now.");
+		next();
+		mes("[HR Coordinator]");
+		mes("I was happy working on our office in Prontera,\r"
+			"but then my superiores sent me\r"
+			"to this dusty Morroc\r"
+			"to work with\r"
+			"construction workers.");
+		next();
+		mes("*Grumble Grumble*");
+		close();
+	} else if (questprogress(5275, PLAYTIME) == 2) {
+		mes("[HR Coordinator]");
+		mes("Oh, it's you.");
+		mes("Welcome back!");
+		mes("We have new workers\r"
+			"waiting to be dispatched.");
+		next();
+		mes("[HR Coordinator]");
+		mes("You are helping me again,\r"
+			"aren't you?");
+		mes("I've receied requests for some extra manpower\r"
+			"from several teams.");
+		next();
+		if (select("Accept", "Refuse") == 2) {
+			mes("[HR Coordinator]");
+			mes("Huh?");
+			mes("You are really leaving?");
+			mes("Please help just once more, please?");
+			close();
+		}
+		callsub(S_QuestStart);
+		end;
+	} else {
+		mes("[HR Coordinator]");
+		mes("Aah, what should I do?!");
+		mes("If I get blamed for that,\r"
+			"all my chances of promotion are gone.");
+		mes("Man, I can get fired because of that.");
+		next();
+		mes("[HR Coordinator]");
+		mes("Think, think...");
+		mes("I have to blame someone else for this...");
+		mes("If I can blame him for being late,\r"
+			"I'm saved.");
+		next();
+		if (select("Ask if he needs help.", "Ignore.") == 2) {
+			mes("(It is better to leave while I can.)");
+			next();
+			mes("[HR Coordinator]");
+			mes("Uh?");
+			mes("Are you really leaving?");
+			mes("Come on, this is not that hard.");
+			close();
+		}
+		mes("[HR Coordinator]");
+		mes("Thank god,\r"
+			"a helping hand showed up just when I needed!");
+		mes("You are my savior.");
+		emotion(e_gasp);
+		next();
+		mes("[HR Coordinator]");
+		mes("Well, let me tell you.");
+		mes("As you know,"
+			"a large-scale work is happening"
+			"to restore the central castle and nearby buildings.");
+		next();
+		mes("[HR Coordinator]");
+		mes("And it has been hard to hire new workers for it,"
+			"as the young people of today"
+			"avoids those kind of labor with all their will.");
+		mes("I was able\r"
+			"to get some potential workers from other cities.");
+		next();
+		mes("[HR Coordinator]");
+		mes("But to get them to the proper construction site\r"
+			"is revealing to be the hardest task of it all.");
+		mes("I am assigned to guide them\r"
+			"to the best construction site based on their competencies,\r"
+			"but I have no idea how to do that.");
+		next();
+		mes("[HR Coordinator]");
+		mes("Can you replace me in that work\r"
+			"and take the new workers\r"
+			"to the site that best suits their competencies?");
+		next();
+		mes("[HR Coordinator]");
+		mes("Prety much every construction site\r"
+			"is in need of manpower, and the teams are not happy with me\r"
+			"because I'm taking too long\r"
+			"to select and dispatch the workers for them.");
+		next();
+		if (select("Help.", "Refuse.") == 2) {
+			mes("[HR Coordinator]");
+			mes("Ah, come on, you heard my story.");
+			mes("You are not going back now.");
+			mes("Please, lend me a hand.");
+			close();
+		}
+		callsub(S_QuestStart);
+		end;
+	}
+	end;
+
+S_QuestStart:
+	// Captured data shows that it is possible that no NPC will accept this worker
+	// But it is unknown if this is intended or not, as there is no "quest progression"
+	// when this happens. Change this to 'false' to disable the chance of this happening.
+	.@includeNoJob = true;
+
+	if (getmercinfo(MERCINFO_ID) != 0) {
+		mes("[HR Coordinator]");
+		mes("Oh-oh,\r"
+			"you have a mercenary with you.");
+		mes("You can't have more than one\r"
+			"mercenary with you at the same time.");
+		mes("Please, dismiss your mercenary,\r"
+			"and then talk to me again.");
+		close();
+	}
+
+	if (questprogress(5275) == 0) {
+		// First time
+		mes("[HR Coordinator]");
+		mes("Ah, thank you very much!");
+		mes("Let me introduce you to\r"
+			"the new hires. Let me see...");
+		next();
+	} else {
+		erasequest(5275);
+		mes("[HR Coordinator]");
+		mes("Ah, thank you.");
+		mes("Now, please, take this worker with you.");
+		mes("Take him to the construction site that best suits his competencies,");
+		mes("and present him to the HR Supervisor in there.");
+		next();
+	}
+	setquest(5270);
+	mes("[HR Coordinator]");
+	mes("Workers are sent to 4 different places:\r"
+		"the castle at the center of the city\r"
+		"and the supply centers for wood, brick and rope.");
+	next();
+	mercenary_create(3025, 1_800_000); // 30 minutes
+	mes("[HR Coordinator]");
+	mes("We have a supervisor in each place\r"
+		"checking the workers.");
+	mes("When you reach one of the places with a worker, introduce yourself to the supervisor first,\r"
+		"if he accepts him, dismiss the Mercenary from your information window,\r"
+		"and confirm with the supervisor that the worker was properly assigned to the job.");
+	next();
+	mes("[HR Coordinator]");
+	mes("Let's see...");
+
+	// Weighted list of worker types, each line represents how many times this "woker type"
+	// should be repeated.
+	// Array index is the type and refers to a case when assigning a worker to the player.
+	// Each workerType has different acceptable construction sites, and this is handled by
+	// the assigning part on npc chat.
+	setarray(.@workerTypes,
+		1, // I Can't tell
+		1, // Would like to work with construction
+		1, // Is phisically strong
+		1, // Best choice for making ropes
+		1, // Used to work on construction
+		1, // Used to work with wood
+		4, // Is from Payon
+		4, // Used to be a sailor
+		4, // Most skilled to deal with wood
+		4, // Most skilled to bake bricks
+		4, // Used to treat the soil
+		5, // Can handle any task
+		7, // Good with this hands
+		7, // Doesn't have skills
+		8, // a junior worker
+	   10, // lots of areas
+	   10, // likes to create things
+	   20  // worked in contruction for a long time
+	);
+	.@type = callsub(S_RandomIndex, .@workerTypes);
+
+	// .@sites contains the weights of each site, in this order:
+	// setarray(.@sites[0], <no one>, <rope>, <brick>, <wood>, <center>)
+	switch (.@type) {
+	case 0: // I Can't tell
+		mes("This person... I can't tell. You'll have to find out by yourself.");
+		setarray(.@sites[0], /*none*/ 10, /*rope*/ 5, /*brick*/ 5, /*wood*/ 5, /*center*/ 5);
+		break;
+
+	case 1: // Would like to work with construction
+		mes("This person says he would like to work with construction.");
+		setarray(.@sites[0], /*none*/ 2, /*rope*/ 0, /*brick*/ 0, /*wood*/ 0, /*center*/ 10);
+		break;
+
+	case 2: // Is phisically strong
+		mes("This person says he is phisically strong.");
+		setarray(.@sites[0], /*none*/ 0, /*rope*/ 0, /*brick*/ 10, /*wood*/ 10, /*center*/ 0);
+		break;
+
+	case 3: // Best choice for making ropes
+		mes("This person seems to be the best choise for making ropes.");
+		setarray(.@sites[0], /*none*/ 0, /*rope*/ 1, /*brick*/ 0, /*wood*/0, /*center*/ 0);
+		break;
+
+	case 4: // Used to work on construction
+		mes("This person says he used to work on construction.");
+		setarray(.@sites[0], /*none*/ 2, /*rope*/ 0, /*brick*/ 0, /*wood*/ 0, /*center*/ 5);
+		break;
+
+	case 5: // Used to work with wood
+		mes("This person says he used to work with wood.");
+		setarray(.@sites[0], /*none*/ 2, /*rope*/ 0, /*brick*/ 0, /*wood*/ 5, /*center*/ 0);
+		break;
+
+	case 6: // Is from Payon
+		mes("This person says he came from Payon.");
+		setarray(.@sites[0], /*none*/ 0, /*rope*/ 0, /*brick*/ 0, /*wood*/ 1, /*center*/ 0);
+		break;
+
+	case 7: // Used to be a sailor
+		mes("This person says he used to be a Sailor.");
+		setarray(.@sites[0], /*none*/ 0, /*rope*/ 1, /*brick*/ 0, /*wood*/ 0, /*center*/ 0);
+		break;
+
+	case 8: // Most skilled to deal with wood
+		mes("This person seems to be the most skilled to deal with wood.");
+		setarray(.@sites[0], /*none*/ 0, /*rope*/ 0, /*brick*/ 0, /*wood*/ 1, /*center*/ 0);
+		break;
+
+	case 9: // Most skilled to bake bricks
+		mes("This person seems to be the most skilled to bake bricks.");
+		setarray(.@sites[0], /*none*/ 0, /*rope*/ 0, /*brick*/ 1, /*wood*/ 0, /*center*/ 0);
+		break;
+
+	case 10: // Used to treat the soil
+		mes("This person seems to be used to treat the soil.");
+		setarray(.@sites[0], /*none*/ 5, /*rope*/ 0, /*brick*/ 0, /*wood*/ 0, /*center*/ 10);
+		break;
+
+	case 11: // Can handle any task
+		mes("This person says he can handle any task.");
+		setarray(.@sites[0], /*none*/ 5, /*rope*/ 10, /*brick*/ 10, /*wood*/ 10, /*center*/ 10);
+		break;
+
+	case 12: // Good with this hands
+		mes("This person is small, but is good with his hands.");
+		setarray(.@sites[0], /*none*/ 0, /*rope*/ 10, /*brick*/ 10, /*wood*/ 0, /*center*/ 0);
+		break;
+
+	case 13: // Doesn't have skills
+		mes("This person doesn't seem to have any skills.");
+		setarray(.@sites[0], /*none*/ 6, /*rope*/ 0, /*brick*/ 0, /*wood*/ 3, /*center*/ 3);
+		break;
+
+	case 14: // a junior worker
+		mes("This person is a junior worker.");
+		setarray(.@sites[0], /*none*/ 10, /*rope*/ 20, /*brick*/ 0, /*wood*/ 20, /*center*/ 30);
+		break;
+
+	case 15: // lots of areas
+		mes("This person says he has experience in lots of areas.");
+		setarray(.@sites[0], /*none*/ 20, /*rope*/ 30, /*brick*/ 20, /*wood*/ 20, /*center*/ 20);
+		break;
+
+	case 16: // likes to create things
+		mes("This person says he likes to create things.");
+		setarray(.@sites[0], /*none*/ 20, /*rope*/ 20, /*brick*/ 20, /*wood*/ 0, /*center*/ 0);
+		break;
+
+	case 17: // worked in contruction for a long time
+		mes("This person says he works on constructions for a long time.");
+		setarray(.@sites[0], /*none*/ 20, /*rope*/ 20, /*brick*/ 0, /*wood*/ 0, /*center*/ 50);
+		break;
+	}
+
+	if (!.@includeNoJob)
+		.@sites[0] = 0;
+
+	re_transport = callsub(S_RandomIndex, .@sites);
+	mes("This is it.");
+	mes("Take the worker to the construction site that is most appropriate for their competencies.");
+	close();
+
+S_RandomIndex:
+	.@maxValue = 0;
+	for (.@i = 0; .@i < getarraysize(getarg(0)); ++.@i)
+		.@maxValue += getelementofarray(getarg(0), .@i);
+
+	.@value = rand(1, .@maxValue);
+	.@i = 0;
+	.@accumulated = 0;
+	while (.@i < getarraysize(getarg(0)) && (.@accumulated + getelementofarray(getarg(0), .@i) < .@value)) {
+		.@accumulated += getelementofarray(getarg(0), .@i);
+		++.@i;
+	}
+
+	return .@i;
+}
+
+-	script	HRSupervisor	FAKE_NPC,{
+	callsub(S_LoadSite);
+
+	if (re_transport == 5) {
+		mes("[HR Supervisor]");
+		mes("I sent a to the HQ.");
+		mes("You may go there to\r"
+			"ask for your reward.");
+		mes("Thank you for your hard work.");
+		close();
+	} else if (questprogress(@re_questId) == 1) {
+		if (getmercinfo(MERCINFO_ID) != 0) {
+			mes("[HR Supervisor]");
+			mes("I said\r"
+				"that I want to keep him,\r"
+				"so dismiss him from your care now.");
+			next();
+			mes("- ^ff0000Dismiss the worker using the Mercenary information window,\r"
+				"and talk to the ^006400HR Supervisor^ff0000 again.^000000 -");
+			close();
+		}
+
+		switch (@re_site) {
+		case 1: .@siteName$ = _("rope supply team"); break;
+		case 2: .@siteName$ = _("brick supply team"); break;
+		case 3: .@siteName$ = _("wood supply team"); break;
+		case 4: .@siteName$ = _("central castle construction site"); break;
+		}
+		
+		mes("[HR Supervisor]");
+		mesf("You have delivered\r"
+			"1 worker\r"
+			"to the %s.", .@siteName$);
+		next();
+		mes("[HR Supervisor]");
+		mes("I will report it to the HQ.");
+		mes("You may go there to\r"
+			"ask for your reward.");
+		mes("Thank you for your hard work.");
+		re_transport = 5;
+		erasequest(@re_questId);
+		close();
+	}
+
+	/* Fallthrough - Most messages are shared between click and touch */
+OnTouch:
+	callsub(S_LoadSite);
+	if (questprogress(5270) == 0) {
+		mes("[HR Supervisor]");
+		mes("Bureaucrats like him\r"
+			"have no idea\r"
+			"about the things that happens outside their cublicles.");
+		mes("Humpf.");
+		close();
+	} else if (questprogress(5270, PLAYTIME) == 2) {
+		mes("[HR Supervisor]");
+		mes("How long I still have to wait?");
+		mes("Why did you take so long?");
+		mes("Too late,\r"
+			"our schedule is a mess already.");
+		next();
+		mes("[HR Supervisor]");
+		mes("I don't need that worker anymore.");
+		mes("And tell that white collar from the HQ\r"
+			"that he may expect to have a word with me.");
+		@re_site = 0;
+		@re_questId = 0;
+		re_transport = 0;
+		changequest(5270, 5275);
+		close();
+	} else if (questprogress(5270) == 1) {
+		if (re_transport != @re_site) {
+			mes("[HR Supervisor]");
+			mes("How long I still have to wait\r"
+				"to get more workers?");
+			mes("Tsc, tsc.");
+			mes("That's why I don't trust that white collar from Prontera.");
+			next();
+			if (rand(2) == 1) {
+				mes("[HR Supervisor]");
+				mes("It doesn mather how much I try\r"
+					"I can't think of a job for this worker.");
+				next();
+				mes("[HR Supervisor]");
+				mes("That white collar from Prontera\r"
+					"doesn't have a good eye for people.");
+				mes("Hey, adventurer.");
+				mes("I can't use that worker here,\r"
+					"take him to some other site.");
+			} else {
+				mes("[HR Supervisor]");
+				mes("This worker that you brought\r"
+					"is not good for the work we do here.");
+				mes("Take him to another place.");
+				mes("Grr, what an incompetent idiot!");
+			}
+			close();
+		}
+
+		mes("[HR Supervisor]");
+		mes("I have been screaming for him\r"
+			"to bring more workers,\r"
+			"and he sent only one man. Oh, that's wonderful!");
+		next();
+		mes("[HR Supervisor]");
+		mes("Let me see...");
+		mes("Right,\r"
+			"looks like he will fit our work.");
+		mes("Thanks for bringing him here.");
+		next();
+		mes("[HR Supervisor]");
+		mes("I want to keep him,\r"
+			"you can dismiss him from your care.");
+		next();
+		mes("- ^ff0000Dismiss the worker using the Mercenary information window,\r"
+			"and talk to the ^006400HR Supervisor^ff0000 again.^000000 -");
+		changequest(5270, @re_questId);
+		close();
+	}
+	end;
+
+S_LoadSite:
+	.@name$ = strnpcinfo(NPC_NAME_HIDDEN);
+	if (.@name$ == "rope") {
+		@re_site = 1;
+		@re_questId = 5271;
+	} else if (.@name$ == "brick") {
+		@re_site = 2;
+		@re_questId = 5272;
+	} else if (.@name$ == "wood") {
+		@re_site = 3;
+		@re_questId = 5273;
+	} else if (.@name$ == "siro") { // center
+		@re_site = 4;
+		@re_questId = 5274;
+	} else {
+		end; /* Invalid site, should never happen */
+	}
+
+	return;
+}
+
+morocc, 50, 75, 5	duplicate(HRSupervisor)	HR Supervisor#brick	4_M_SEAMAN,4,4
+morocc, 161, 117, 5	duplicate(HRSupervisor)	HR Supervisor#siro	4_M_SEAMAN,4,4
+morocc, 270, 282, 5	duplicate(HRSupervisor)	HR Supervisor#rope	4_M_SEAMAN,4,4
+morocc, 275, 68, 5	duplicate(HRSupervisor)	HR Supervisor#wood	4_M_SEAMAN,4,4
