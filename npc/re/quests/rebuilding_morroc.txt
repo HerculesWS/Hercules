@@ -65,7 +65,7 @@
 //= $mocre_brick
 //= - Quantity of brick in the brick piles (0 .. 1000)
 //================= Current Version =======================================
-//= 0.8
+//= 1.0
 //=========================================================================
 
 //== Making Wood :: re_wood ==========
@@ -2047,6 +2047,69 @@ morocc, 47, 193, 6	script	HR Centurion#ep14_3	4_M_MOCASS1,{
 		mes("[Centurion Van]");
 		mes("You may find those creatures at the fields Notheast of Morroc.");
 		mes("Good luck!");
+		close();
+	}
+}
+
+// == Other NPCs ======================
+morocc, 50, 188, 5	script	Architect#ep14	4_M_DOCTOR,{
+	switch (select("What do you do?", "Where can I get jobs?", "What does the HQ do?", "End conversation.")) {
+	case 1:
+		mes("[Architect]");
+		mes("Hum?");
+		next();
+		mes("[Architect]");
+		mes("I take care of everything related to the city restauration work.");
+		mes("Excuse me, I have work to do.");
+		close();
+
+	case 2:
+		mes("[Architect]");
+		mes("Hm,\r"
+			"ask one of my employees about that.");
+		mes("I am busy.");
+		close();
+
+	case 3:
+		mes("[Architect]");
+		mes("We take care of lots of tasks here at the Headquarters.");
+		mes("For more details, ask my employees.");
+		close();
+
+	case 4:
+		mes("[Architect]");
+		mes("Bye.");
+		close();
+	}
+}
+
+morocc, 50, 197, 6	script	Accountant#ep14_3	4_M_01,{
+	switch (rand(3)) {
+	case 0:
+		mes("[Accountant]");
+		mes("I think vending machines are the best thing ever invented in the entire Midgard Continent.");
+		next();
+		mes("[Accountant]");
+		mes("Before the invention of the vending machines, I would have to stay in place here the entire time just waiting for someone to come exchange certificates.");
+		next();
+		mes("[Accountant]");
+		mes("Now it is the machine doing all the work.");
+		next();
+		mes("[Accountant]");
+		mes("The world is way more convenient with techonlogy.");
+		close();
+
+	case 1:
+		mes("[Accountant]");
+		mes("You must be at least Level 80 to use this vending machine.");
+		next();
+		mes("[Accountant]");
+		mes("Why? No idea. It is just what I was told.");
+		close();
+
+	case 2:
+		mes("[Accountant]");
+		mes("I wonder how long it will take for Morroc to become beautiful again.");
 		close();
 	}
 }
