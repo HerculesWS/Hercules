@@ -33,7 +33,7 @@
 //= This was active during Episode 14.3 and removed afterwards, leaving
 //= only the contribution board and reward machine active
 //=
-//= (Play through conversion)
+//= (Play/Walk through conversion)
 //================= Variables Used ========================================
 //= @re_site , @re_questId
 //= Stores the construction site ID and questID
@@ -62,7 +62,7 @@
 //= $mocre_brick
 //= - Quantity of brick in the brick piles (0 .. 1000)
 //================= Current Version =======================================
-//= 0.6
+//= 0.7
 //=========================================================================
 
 //== Making Wood :: re_wood ==========
@@ -1167,7 +1167,7 @@ morocc, 54, 190, 5	script	Reward Coordinator	4_M_SAGE_C,{
 			mes("Oh, you already did it.");
 			mes("So, how did you help us?");
 			next();
-			switch (select("Wood Delivery", "Brick Delivery", "Rope Delivery", "Worker Transport"/*, "Purging the Land"*/)) {
+			switch (select("Wood Delivery", "Brick Delivery", "Rope Delivery", "Worker Transport", "Purging the Land")) {
 			case 1:
 				callsub(S_DeliveryReward, _("Wood Team"), _("wood delivery"), _("pieces of wood"), "re_wood", 5253, 5254);
 				break;
@@ -1222,7 +1222,30 @@ morocc, 54, 190, 5	script	Reward Coordinator	4_M_SAGE_C,{
 				next();
 				break;
 
-			// TODO: case 5
+			case 5:
+				if (questprogress(5265, HUNTING) != 2 || questprogress(5266, HUNTING) != 2 || questprogress(5267, HUNTING) != 2 || questprogress(5268, HUNTING) != 2) {
+					mes("[Reward Coordinator]");
+					mes("That is weird.");
+					mes("I don't have\r"
+						"any report that you have completed the purging job.");
+					next();
+					mes("[Reward Coordinator]");
+					mes("It might be an error.");
+					mes("I recommend you to talk to\r"
+						"the one in charge for this task.");
+					close();
+				}
+
+				mes("[Reward Coordinator]");
+				mes("Ah, so you helped purging the land from Morroc's presence.");
+				mes("Let me give you a Morroc Merit\r"
+					"for helping with the workers transportation.");
+				mes("Thank you for your contribution.");
+				setquest(5269);
+				erasequest(5265, 5269);
+				getitem(MoroccMerit, 4);
+				next();
+				break;
 			}
 			break;
 
@@ -1936,3 +1959,84 @@ morocc, 50, 75, 5	duplicate(HRSupervisor)	HR Supervisor#brick	4_M_SEAMAN,4,4
 morocc, 161, 117, 5	duplicate(HRSupervisor)	HR Supervisor#siro	4_M_SEAMAN,4,4
 morocc, 270, 282, 5	duplicate(HRSupervisor)	HR Supervisor#rope	4_M_SEAMAN,4,4
 morocc, 275, 68, 5	duplicate(HRSupervisor)	HR Supervisor#wood	4_M_SEAMAN,4,4
+
+// == Purging the Land ================
+// Note: The NPC logic regarding the quest itself is totally based on online information.
+
+morocc, 47, 193, 6	script	HR Centurion#ep14_3	4_M_MOCASS1,{
+	if (questprogress(5265) == 0) {
+		mes("[Centurion Van]");
+		mes("I am Van, and I am in charge of purging the monsters around Morroc. What brings you here?");
+		next();
+		switch (select("Centurion?", "Dou you have a job for me?")) {
+		case 1:
+			mes("[Centurion Van]");
+			mes("Yes, because I lead 100 soldiers.");
+			next();
+			mes("[Centurion Van]");
+			mes("The Centurion rank is the highest rank a mercenary soldier may reach.");
+			close();
+
+		case 2:
+			if (BaseLevel < 120) {
+				mes("[Centurion Van]");
+				mes("Hmm, I am sorry, but you don't look strong enough to deal with the monsters in there. You must be at least on Level 120.");
+				close();
+			}
+
+			if (questprogress(5269, PLAYTIME) == 1) {
+				mes("[Centurion Van]");
+				mes("I understand your eagerness to continue fighting to make Morroc a better place.");
+				next();
+				mes("[Centurion Van]");
+				mes("But you should also take care of yourself and use your rest time to its fullness.");
+				mes("Please, come back later.");
+				close();
+			}
+
+			if (questprogress(5269, PLAYTIME) == 2) {
+				erasequest(5269);
+			} else {
+				mes("[Centurion Van]");
+				mes("Ah, yes, I do.");
+				mes("After Satan Morroc came back, it brought together lots of its underlyings.");
+				next();
+				mes("[Centurion Van]");
+				mes("Those are dangerous creatures that are near the city.");
+				mes("I am here with the task of purging those dangerous monsters to make Morroc area safe again.");
+				next();
+			}
+			mes("[Centurion Van]");
+			mes("Please, can you help us by defeating 10 of each of kind of those underlyings?");
+			mes("There are 4 kinds in total.");
+			next();
+			if (select("Accept", "Refuse") == 2) {
+				mes("[Centurion Van]");
+				mes("Oh, okay.");
+				mes("Well, this is the only job I really have right now.");
+				close();
+			}
+
+			mes("[Centurion Van]");
+			mes("Thank you!");
+			mes("You may find those creatures at the fields Notheast of Morroc.");
+			next();
+			mes("[Centurion Van]");
+			mes("After you defeat 10 of each, you may report directly to the Rewards Coordinator right there.");
+			setquest(5265);
+			setquest(5266);
+			setquest(5267);
+			setquest(5268);
+			close();
+		}
+	} else {
+		mes("[Centurion Van]");
+		mes("Please, defeat 10 of each kind of Satan Morroc's underlyings.");
+		mes("Once you are done, you may report directly to the Rewards Coordinator right there.");
+		next();
+		mes("[Centurion Van]");
+		mes("You may find those creatures at the fields Notheast of Morroc.");
+		mes("Good luck!");
+		close();
+	}
+}
