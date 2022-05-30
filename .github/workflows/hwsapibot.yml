@@ -19,6 +19,9 @@ env:
 jobs:
   hwsapi:
     runs-on: ubuntu-latest
+    concurrency:
+      group: hwsapibot
+      cancel-in-progress: true
     steps:
       - uses: actions/checkout@v3
 
