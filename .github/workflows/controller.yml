@@ -1,0 +1,50 @@
+name: controller
+
+on:
+  push:
+
+jobs:
+  hwsapibot:
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+    uses: ./.github/workflows/hwsapibot.yml
+    secrets: inherit
+  codeql:
+    needs: hwsapibot
+    if: ${{ !failure() && !cancelled() }}
+    uses: ./.github/workflows/codeql-analysis.yml
+  tools:
+    needs: hwsapibot
+    if: ${{ !failure() && !cancelled() }}
+    uses: ./.github/workflows/tools.yml
+  build:
+    needs: tools
+    if: ${{ !failure() && !cancelled() }}
+    uses: ./.github/workflows/build.yml
+  clang13_test:
+    needs: build
+    if: ${{ !failure() && !cancelled() }}
+    uses: ./.github/workflows/clang13_test.yml
+  gcc_test:
+    needs: build
+    if: ${{ !failure() && !cancelled() }}
+    uses: ./.github/workflows/gcc_test.yml
+  gccold1:
+    needs: build
+    if: ${{ !failure() && !cancelled() }}
+    uses: ./.github/workflows/gccold1.yml
+  gccold2:
+    needs: build
+    if: ${{ !failure() && !cancelled() }}
+    uses: ./.github/workflows/gccold2.yml
+  gccsnapshot_test:
+    needs: build
+    if: ${{ !failure() && !cancelled() }}
+    uses: ./.github/workflows/gccsnapshot_test.yml
+  mariadb:
+    needs: build
+    if: ${{ !failure() && !cancelled() }}
+    uses: ./.github/workflows/mariadb.yml
+  mysql:
+    needs: build
+    if: ${{ !failure() && !cancelled() }}
+    uses: ./.github/workflows/mysql.yml

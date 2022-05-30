@@ -1,15 +1,7 @@
 name: hwsapibot
 
 on:
-  push:
-    branches:
-      - master
-    paths-ignore:
-      - doc/constants.md
-      - sql-files/item_db*.sql
-      - sql-files/mob_db*.sql
-      - sql-files/mob_skill_db*.sql
-      - src/plugins/HPMHooking/**
+  workflow_call:
 
 env:
   INSTALL_PACKAGES: make gcc zlib1g-dev libpcre3-dev git libmariadbclient-dev-compat doxygen perl libxml-simple-perl bc curl
