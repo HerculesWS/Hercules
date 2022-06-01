@@ -1,6 +1,6 @@
 name: gccsnapshot_test
 
-on: [push, pull_request]
+on: [workflow_call, pull_request]
 
 env:
   MYSQL_DATABASE: 'ragnarok'

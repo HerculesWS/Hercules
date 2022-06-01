@@ -1,0 +1,117 @@
+name: hwsapibot
+
+on:
+  workflow_call:
+
+env:
+  INSTALL_PACKAGES: make gcc zlib1g-dev libpcre3-dev git libmariadbclient-dev-compat doxygen perl libxml-simple-perl bc curl
+  BUILDSTATS_API_KEY: ${{ secrets.BUILDSTATS_API_KEY }}
+  GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
+
+jobs:
+  hwsapi:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: hwsapibot
+      cancel-in-progress: true
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: info
+        run: |
+          uname -a
+
+      - name: install packages
+        run: |
+          ./tools/ci/retry.sh sudo apt-get update
+          ./tools/ci/retry.sh sudo apt-get install -y -qq $INSTALL_PACKAGES
+
+      - name: configure
+        run: |
+          start_time=$(date +%s.%3N)
+          echo "start_time=$start_time" >> $GITHUB_ENV
+          git config --local user.name hwsapibot
+          git config --local user.email dev@herc.ws
+          echo -n "$GPG_SIGNING_KEY" | base64 --decode | gpg --import
+          git config --local user.signingkey A667DC2F80D63FEF
+          ./configure --enable-debug --disable-lto
+          make clean
+
+      - name: hpmhooking
+        run: |
+          start_this=$(date +%s.%3N)
+          make hooks
+          end_this=$(date +%s.%3N)
+          elapsed_hooks=$(echo "scale=0; ($end_this - $start_this) * 1000 / 1" | bc)
+          echo "elapsed_hooks=$elapsed_hooks" >> $GITHUB_ENV
+          git commit -am 'Update HPM hooks' --signoff --gpg-sign || echo "Nothing to commit"
+
+      - name: build
+        run: |
+          start_this=$(date +%s.%3N)
+          make sql -j3
+          end_this=$(date +%s.%3N)
+          elapsed_build=$(echo "scale=0; ($end_this - $start_this) * 1000 / 1" | bc)
+          echo "elapsed_build=$elapsed_build" >> $GITHUB_ENV
+
+      - name: itemdb2sql
+        run: |
+          ./configure --enable-debug --disable-lto --disable-renewal
+          make clean
+          start_this=$(date +%s.%3N)
+          make map_sql plugin.db2sql -j3
+          ./map-server --load-plugin db2sql --itemdb2sql
+          end_this=$(date +%s.%3N)
+          elapsed_itemdb=$(echo "scale=0; ($end_this - $start_this) * 1000 / 1" | bc)
+          ./configure --enable-debug --disable-lto --enable-renewal
+          make clean
+          start_this=$(date +%s.%3N)
+          make map_sql plugin.db2sql -j3
+          ./map-server --load-plugin db2sql --itemdb2sql
+          end_this=$(date +%s.%3N)
+          elapsed_itemdb=$(echo "scale=0; $elapsed_itemdb + ($end_this - $start_this) * 1000 / 1" | bc)
+          echo "elapsed_itemdb=$elapsed_itemdb" >> $GITHUB_ENV
+          git commit -am 'Update item_db SQL data' --signoff --gpg-sign || echo "Nothing to commit"
+
+      - name: mobdb2sql
+        run: |
+          ./configure --enable-debug --disable-lto --disable-renewal
+          make clean
+          start_this=$(date +%s.%3N)
+          make map_sql plugin.db2sql -j3
+          ./map-server --load-plugin db2sql --mobdb2sql
+          end_this=$(date +%s.%3N)
+          elapsed_mobdb=$(echo "scale=0; ($end_this - $start_this) * 1000 / 1" | bc)
+          ./configure --enable-debug --disable-lto --enable-renewal
+          make clean
+          start_this=$(date +%s.%3N)
+          make map_sql plugin.db2sql -j3
+          ./map-server --load-plugin db2sql --mobdb2sql
+          end_this=$(date +%s.%3N)
+          elapsed_mobdb=$(echo "scale=0; $elapsed_mobdb + ($end_this - $start_this) * 1000 / 1" | bc)
+          echo "elapsed_mobdb=$elapsed_mobdb" >> $GITHUB_ENV
+          git commit -am 'Update mob_db SQL data' --signoff --gpg-sign || echo "Nothing to commit"
+
+      - name: constdb2doc
+        run: |
+          start_this=$(date +%s.%3N)
+          make map_sql plugin.constdb2doc -j3
+          ./map-server --load-plugin constdb2doc --constdb2doc
+          end_this=$(date +%s.%3N)
+          elapsed_constdb=$(echo "scale=0; ($end_this - $start_this) * 1000 / 1" | bc)
+          echo "elapsed_constdb=$elapsed_constdb" >> $GITHUB_ENV
+          git commit -am 'Update constants documentation' --signoff --gpg-sign || echo "Nothing to commit"
+
+      - name: push
+        run: |
+          start_this=$(date +%s.%3N)
+          end_time=$(date +%s.%3N)
+          elapsed_total=$(echo "scale=0; ($end_time - $start_time) * 1000 / 1" | bc)
+          echo "elapsed_total=$elapsed_total" >> $GITHUB_ENV
+          git push -u origin "HEAD:${GITHUB_REF##*/}"
+          git_hash=$(git rev-parse --short "$GITHUB_SHA")
+          echo "Commit $git_hash completed in";
+          json="{\"commit\":\"$git_hash\""
+          for i in hooks build itemdb mobdb constdb total; do fieldname="elapsed_${i}"; echo " [$i] ${!fieldname}"; json="$json,\"$i\":\"${!fieldname}\""; done
+          json="$json}"
+          curl -X POST https://herc.ws/hwsapi/publishstats -H 'Content-Type: application/json' -H "x-api-key: $BUILDSTATS_API_KEY" -d "$json"
