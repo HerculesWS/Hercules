@@ -15029,14 +15029,14 @@ void HP_clif_devotion(struct block_list *src, struct map_session_data *tsd) {
 	}
 	return;
 }
-void HP_clif_spiritball(struct block_list *bl) {
+void HP_clif_spiritball(struct block_list *bl, enum spirit_ball_types spirit, enum send_target target) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_spiritball_pre > 0) {
-		void (*preHookFunc) (struct block_list **bl);
+		void (*preHookFunc) (struct block_list **bl, enum spirit_ball_types *spirit, enum send_target *target);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_spiritball_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_clif_spiritball_pre[hIndex].func;
-			preHookFunc(&bl);
+			preHookFunc(&bl, &spirit, &target);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -15044,13 +15044,13 @@ void HP_clif_spiritball(struct block_list *bl) {
 		}
 	}
 	{
-		HPMHooks.source.clif.spiritball(bl);
+		HPMHooks.source.clif.spiritball(bl, spirit, target);
 	}
 	if (HPMHooks.count.HP_clif_spiritball_post > 0) {
-		void (*postHookFunc) (struct block_list *bl);
+		void (*postHookFunc) (struct block_list *bl, enum spirit_ball_types spirit, enum send_target target);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_spiritball_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_spiritball_post[hIndex].func;
-			postHookFunc(bl);
+			postHookFunc(bl, spirit, target);
 		}
 	}
 	return;
@@ -15077,32 +15077,6 @@ void HP_clif_spiritball_single(int fd, struct map_session_data *sd) {
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_spiritball_single_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_spiritball_single_post[hIndex].func;
 			postHookFunc(fd, sd);
-		}
-	}
-	return;
-}
-void HP_clif_soulball(struct map_session_data *sd, struct block_list *bl, enum send_target target) {
-	int hIndex = 0;
-	if (HPMHooks.count.HP_clif_soulball_pre > 0) {
-		void (*preHookFunc) (struct map_session_data **sd, struct block_list **bl, enum send_target *target);
-		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_soulball_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_clif_soulball_pre[hIndex].func;
-			preHookFunc(&sd, &bl, &target);
-		}
-		if (*HPMforce_return) {
-			*HPMforce_return = false;
-			return;
-		}
-	}
-	{
-		HPMHooks.source.clif.soulball(sd, bl, target);
-	}
-	if (HPMHooks.count.HP_clif_soulball_post > 0) {
-		void (*postHookFunc) (struct map_session_data *sd, struct block_list *bl, enum send_target target);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_soulball_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_clif_soulball_post[hIndex].func;
-			postHookFunc(sd, bl, target);
 		}
 	}
 	return;

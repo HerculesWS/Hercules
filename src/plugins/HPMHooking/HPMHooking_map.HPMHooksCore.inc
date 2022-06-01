@@ -1156,8 +1156,6 @@ struct {
 	struct HPMHookPoint *HP_clif_spiritball_post;
 	struct HPMHookPoint *HP_clif_spiritball_single_pre;
 	struct HPMHookPoint *HP_clif_spiritball_single_post;
-	struct HPMHookPoint *HP_clif_soulball_pre;
-	struct HPMHookPoint *HP_clif_soulball_post;
 	struct HPMHookPoint *HP_clif_bladestop_pre;
 	struct HPMHookPoint *HP_clif_bladestop_post;
 	struct HPMHookPoint *HP_clif_mvp_effect_pre;
@@ -8475,8 +8473,6 @@ struct {
 	int HP_clif_spiritball_post;
 	int HP_clif_spiritball_single_pre;
 	int HP_clif_spiritball_single_post;
-	int HP_clif_soulball_pre;
-	int HP_clif_soulball_post;
 	int HP_clif_bladestop_pre;
 	int HP_clif_bladestop_post;
 	int HP_clif_mvp_effect_pre;

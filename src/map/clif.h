@@ -1146,9 +1146,8 @@ struct clif_interface {
 	void (*useskill) (struct block_list* bl, int src_id, int dst_id, int dst_x, int dst_y, uint16 skill_id, uint16 skill_lv, int casttime);
 	void (*produce_effect) (struct map_session_data* sd,int flag,int nameid);
 	void (*devotion) (struct block_list *src, struct map_session_data *tsd);
-	void (*spiritball) (struct block_list *bl);
+	void (*spiritball) (struct block_list *bl, enum spirit_ball_types spirit, enum send_target target);
 	void (*spiritball_single) (int fd, struct map_session_data *sd);
-	void (*soulball) (struct map_session_data *sd, struct block_list *bl, enum send_target target);
 	void (*bladestop) (struct block_list *src, int dst_id, int active);
 	void (*mvp_effect) (struct map_session_data *sd);
 	void (*heal) (int fd,int type,int val);

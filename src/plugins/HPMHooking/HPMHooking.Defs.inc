@@ -1564,12 +1564,10 @@ typedef void (*HPMHOOK_pre_clif_produce_effect) (struct map_session_data **sd, i
 typedef void (*HPMHOOK_post_clif_produce_effect) (struct map_session_data *sd, int flag, int nameid);
 typedef void (*HPMHOOK_pre_clif_devotion) (struct block_list **src, struct map_session_data **tsd);
 typedef void (*HPMHOOK_post_clif_devotion) (struct block_list *src, struct map_session_data *tsd);
-typedef void (*HPMHOOK_pre_clif_spiritball) (struct block_list **bl);
-typedef void (*HPMHOOK_post_clif_spiritball) (struct block_list *bl);
+typedef void (*HPMHOOK_pre_clif_spiritball) (struct block_list **bl, enum spirit_ball_types *spirit, enum send_target *target);
+typedef void (*HPMHOOK_post_clif_spiritball) (struct block_list *bl, enum spirit_ball_types spirit, enum send_target target);
 typedef void (*HPMHOOK_pre_clif_spiritball_single) (int *fd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_spiritball_single) (int fd, struct map_session_data *sd);
-typedef void (*HPMHOOK_pre_clif_soulball) (struct map_session_data **sd, struct block_list **bl, enum send_target *target);
-typedef void (*HPMHOOK_post_clif_soulball) (struct map_session_data *sd, struct block_list *bl, enum send_target target);
 typedef void (*HPMHOOK_pre_clif_bladestop) (struct block_list **src, int *dst_id, int *active);
 typedef void (*HPMHOOK_post_clif_bladestop) (struct block_list *src, int dst_id, int active);
 typedef void (*HPMHOOK_pre_clif_mvp_effect) (struct map_session_data **sd);

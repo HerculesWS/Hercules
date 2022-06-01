@@ -5521,6 +5521,13 @@ struct PACKET_ZC_CHANGESTATE_PET {
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(ZC_CHANGESTATE_PET, 0x01a4)
 
+struct PACKET_ZC_SPIRITS {
+	int16 PacketType;
+	uint32 AID;
+	int16 num;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_SPIRITS, 0x01d0)
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris

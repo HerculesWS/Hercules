@@ -440,6 +440,16 @@ enum elements {
 };
 
 /**
+ * Types of Ball Types
+ * Used by clif_spiritball [KeiKun]
+ */
+enum spirit_ball_types {
+	BALL_TYPE_NONE = 0,
+	BALL_TYPE_SPIRIT,
+	BALL_TYPE_SOUL
+};
+
+/**
  * Types of spirit charms.
  *
  * Note: Code assumes that this matches the first entries in enum elements.

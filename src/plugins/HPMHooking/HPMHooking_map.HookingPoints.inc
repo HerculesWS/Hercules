@@ -602,7 +602,6 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->devotion, HP_clif_devotion) },
 	{ HP_POP(clif->spiritball, HP_clif_spiritball) },
 	{ HP_POP(clif->spiritball_single, HP_clif_spiritball_single) },
-	{ HP_POP(clif->soulball, HP_clif_soulball) },
 	{ HP_POP(clif->bladestop, HP_clif_bladestop) },
 	{ HP_POP(clif->mvp_effect, HP_clif_mvp_effect) },
 	{ HP_POP(clif->heal, HP_clif_heal) },
