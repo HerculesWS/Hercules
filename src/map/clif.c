@@ -15228,7 +15228,7 @@ static void clif_parse_PurchaseReq(int fd, struct map_session_data *sd)
 		return;
 
 	int item_count = len / sizeof(struct CZ_PURCHASE_ITEM_FROMMC);
-	vending->purchase(sd, p->AID, sd->vended_id, (const uint8 *)&p->list, item_count);
+	vending->purchase(sd, p->AID, sd->vended_id, p->list, item_count);
 
 	// whether it fails or not, the buy window is closed
 	sd->vended_id = 0;
@@ -15249,7 +15249,7 @@ static void clif_parse_PurchaseReq2(int fd, struct map_session_data *sd)
 		return;
 
 	int item_count = len / sizeof(struct CZ_PURCHASE_ITEM_FROMMC);
-	vending->purchase(sd, p->AID, p->UniqueID, (const uint8 *)&p->list, item_count);
+	vending->purchase(sd, p->AID, p->UniqueID, p->list, item_count);
 
 	// whether it fails or not, the buy window is closed
 	sd->vended_id = 0;

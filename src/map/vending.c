@@ -30,6 +30,7 @@
 #include "map/log.h"
 #include "map/map.h"
 #include "map/npc.h"
+#include "map/packets_struct.h"
 #include "map/path.h"
 #include "map/pc.h"
 #include "map/skill.h"
@@ -89,7 +90,7 @@ static void vending_vendinglistreq(struct map_session_data *sd, unsigned int id)
 /*==========================================
  * Purchase item(s) from a shop
  *------------------------------------------*/
-static void vending_purchasereq(struct map_session_data *sd, int aid, unsigned int uid, const uint8 *data, int count)
+static void vending_purchasereq(struct map_session_data *sd, int aid, unsigned int uid, const struct CZ_PURCHASE_ITEM_FROMMC *data, int count)
 {
 	int i, j, cursor, w, new_ = 0, blank, vend_list[MAX_VENDING];
 	int64 z;
@@ -123,9 +124,8 @@ static void vending_purchasereq(struct map_session_data *sd, int aid, unsigned i
 	z = 0; // zeny counter
 	w = 0;  // weight counter
 	for (i = 0; i < count; i++) {
-		short amount = *(const uint16*)(data + 4*i + 0);
-		short idx    = *(const uint16*)(data + 4*i + 2);
-		idx -= 2;
+		short amount = data[i].count;
+		short idx    = data[i].index - 2;
 
 		if( amount <= 0 )
 			return;
@@ -189,9 +189,8 @@ static void vending_purchasereq(struct map_session_data *sd, int aid, unsigned i
 	pc->getzeny(vsd, (int)z, LOG_TYPE_VENDING, sd);
 
 	for (i = 0; i < count; i++) {
-		short amount = *(const uint16*)(data + 4*i + 0);
-		short idx    = *(const uint16*)(data + 4*i + 2);
-		idx -= 2;
+		short amount = data[i].count;
+		short idx    = data[i].index - 2;
 
 		// vending item
 		pc->additem(sd, &vsd->status.cart[idx], amount, LOG_TYPE_VENDING);
