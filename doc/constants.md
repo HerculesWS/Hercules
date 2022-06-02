@@ -5713,6 +5713,16 @@
 - `PLAY_SOUND_REPEAT`: 1
 - `PLAY_SOUND_STOP`: 2
 
+### gethominfo types
+
+- `HOMINFO_ID`: 0
+- `HOMINFO_CLASS`: 1
+- `HOMINFO_NAME`: 2
+- `HOMINFO_INTIMACY`: 3
+- `HOMINFO_HUNGRY`: 4
+- `HOMINFO_RENAME`: 5
+- `HOMINFO_LEVEL`: 6
+
 ### Renewal
 
 - `RENEWAL`: 1

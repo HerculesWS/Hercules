@@ -585,6 +585,20 @@ enum itemskill_flag {
 };
 
 /**
+ * Homunculus Info types.
+ */
+enum script_hominfo_types {
+	HOMINFO_ID = 0,
+	HOMINFO_CLASS,
+	HOMINFO_NAME,
+	HOMINFO_INTIMACY,
+	HOMINFO_HUNGRY,
+	HOMINFO_RENAME,
+	HOMINFO_LEVEL,
+	HOMINFO_MAX
+};
+
+/**
  * Structures
  **/
 
