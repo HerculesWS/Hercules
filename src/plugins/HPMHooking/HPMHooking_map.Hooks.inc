@@ -65571,6 +65571,58 @@ int HP_pc_delautobonus(struct map_session_data *sd, struct s_autobonus *bonus, c
 	}
 	return retVal___;
 }
+void HP_pc_bonus_addele(struct map_session_data *sd, unsigned char ele, short rate, short flag) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_pc_bonus_addele_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, unsigned char *ele, short *rate, short *flag);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_bonus_addele_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_pc_bonus_addele_pre[hIndex].func;
+			preHookFunc(&sd, &ele, &rate, &flag);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.pc.bonus_addele(sd, ele, rate, flag);
+	}
+	if (HPMHooks.count.HP_pc_bonus_addele_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, unsigned char ele, short rate, short flag);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_bonus_addele_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_pc_bonus_addele_post[hIndex].func;
+			postHookFunc(sd, ele, rate, flag);
+		}
+	}
+	return;
+}
+void HP_pc_bonus_subele(struct map_session_data *sd, unsigned char ele, short rate, short flag) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_pc_bonus_subele_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, unsigned char *ele, short *rate, short *flag);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_bonus_subele_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_pc_bonus_subele_pre[hIndex].func;
+			preHookFunc(&sd, &ele, &rate, &flag);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.pc.bonus_subele(sd, ele, rate, flag);
+	}
+	if (HPMHooks.count.HP_pc_bonus_subele_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, unsigned char ele, short rate, short flag);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_bonus_subele_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_pc_bonus_subele_post[hIndex].func;
+			postHookFunc(sd, ele, rate, flag);
+		}
+	}
+	return;
+}
 int HP_pc_bonus(struct map_session_data *sd, int type, int val) {
 	int hIndex = 0;
 	int retVal___ = 0;
