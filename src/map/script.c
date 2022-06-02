@@ -27897,6 +27897,99 @@ static BUILDIN(setdialogpospercent)
 	return true;
 }
 
+static BUILDIN(calldynamicnpc)
+{
+	struct map_session_data *sd = script_rid2sd(st);
+	if (sd == NULL) {
+		ShowError("buildin_calldynamicnpc: No player attached.\n");
+		script->reportfunc(st);
+		script->reportsrc(st);
+		script_pushint(st, 0);
+		return false;
+	}
+
+	const struct npc_data *snd = NULL;
+	if (script_isstringtype(st, 2)) {
+		snd = npc->name2id(script_getstr(st, 2));
+	} else {
+		snd = map->id2nd(script_getnum(st, 2));
+	}
+
+	if (snd == NULL) {
+		ShowError("buildin_calldynamicnpc: NPC not found.\n");
+		script->reportfunc(st);
+		script->reportsrc(st);
+		script_pushint(st, 0);
+		return false;
+	}
+
+	if (snd->class_ == FAKE_NPC) {
+		ShowError("buildin_calldynamicnpc: trying to create a dynamic npc using a FAKE_NPC.\n");
+		script->reportfunc(st);
+		script->reportsrc(st);
+		script_pushint(st, 0);
+		return false;
+	}
+
+	int16 x = 0;
+	int16 y = 0;
+	if (map->search_free_cell(&sd->bl, sd->bl.m, &x, &y, battle->bc->dynamic_npc_range, battle->bc->dynamic_npc_range, SFC_REACHABLE) != 0) {
+		ShowError("buildin_calldynamicnpc: Failed to find a spawn cell.\n");
+		script->reportfunc(st);
+		script->reportsrc(st);
+		script_pushint(st, 0);
+		return false;
+	}
+
+	// Generate a unique npc name and return in case it already existed
+	char newname[NAME_LENGTH];
+	safesnprintf(newname, NAME_LENGTH, "dyn_%10d%10d", snd->bl.id, sd->status.char_id);
+	if (npc->name2id(newname) != NULL) {
+		script_pushint(st, 0);
+		return true;
+	}
+
+	// Create the npc
+	struct npc_data *nd_target = npc->create_npc(snd->subtype, sd->bl.m, x, y, UNIT_DIR_SOUTH, snd->class_);
+
+	// Copy the original npc name
+	safestrncpy(nd_target->name, snd->name, sizeof(nd_target->name));
+	safestrncpy(nd_target->exname, newname, sizeof(nd_target->exname));
+
+	// Set the dynamic npc data
+	nd_target->dyn.isdynamic = true;
+	nd_target->dyn.owner_id = sd->status.char_id;
+	nd_target->dyn.despawn_timer = timer->add(timer->gettick() + battle->bc->dynamic_npc_timeout,
+	                                          npc->dynamic_npc_despawn, nd_target->bl.id, (intptr_t)battle->bc->dynamic_npc_timeout);
+
+	// Spawn the npc
+	int xs = -1;
+	int ys = -1;
+	switch (snd->subtype) {
+	case SCRIPT:
+		xs = snd->u.scr.xs;
+		ys = snd->u.scr.ys;
+		break;
+	case WARP:
+		xs = snd->u.warp.xs;
+		ys = snd->u.warp.ys;
+		break;
+	case CASHSHOP:
+	case SHOP:
+	case TOMB:
+	default: // Other types have no xs/ys
+		break;
+	}
+	npc->duplicate_sub(nd_target, snd, xs, ys, NPO_NONE);
+	char evname[EVENT_NAME_LENGTH];
+	safesnprintf(evname, EVENT_NAME_LENGTH, "%s::OnDynamicNpcInit", nd_target->exname);
+	struct event_data *ev = strdb_get(npc->ev_db, evname);
+	if (ev != NULL)
+		script->run_npc(ev->nd->u.scr.script, ev->pos, sd->bl.id, ev->nd->bl.id);
+	script_pushint(st, 1);
+	return true;
+}
+
 /**
  * Adds a built-in script function.
  *
@@ -28761,6 +28854,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(getequipisenablegrade, "i"),
 		BUILDIN_DEF(getequipgrade, "i"),
 		BUILDIN_DEF(opengradeui, ""),
+		BUILDIN_DEF(calldynamicnpc, "v"),
 	};
 	int i, len = ARRAYLENGTH(BUILDIN);
 	RECREATE(script->buildin, char *, script->buildin_count + len); // Pre-alloc to speed up

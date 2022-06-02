@@ -147,6 +147,14 @@ struct npc_data {
 		} tomb;
 	} u;
 	VECTOR_DECL(struct questinfo) qi_data;
+
+	struct {
+		bool isdynamic;
+		int owner_id;
+		int64 last_interaction_tick;
+		int despawn_timer;
+	} dyn;
+
 	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
 };
 
@@ -353,6 +361,9 @@ struct npc_interface {
 	 **/
 	int (*secure_timeout_timer) (int tid, int64 tick, int id, intptr_t data);
 	void (*process_files) (int npc_min);
+
+	int (*dynamic_npc_despawn) (int tid, int64 tick, int id, intptr_t data);
+	void (*update_interaction_tick) (struct npc_data *nd);
 };
 
 #ifdef HERCULES_CORE

@@ -1,0 +1,39 @@
+//===== Hercules Script ======================================
+//= Sample: Dynamic NPC Call
+//===== By: ==================================================
+//= Hercules Dev Team
+//===== Current Version: =====================================
+//= 20220501
+//===== Description: =========================================
+//= Contains an example of calldynamicnpc
+//============================================================
+
+prontera,155,284,4	script	Teleport Service	4_M_DRZONDA01,{
+	switch (select("GlastHeim", "Amatsu")) {
+	case 1: calldynamicnpc("GlastHeim Teleporter"); break;
+	case 2: calldynamicnpc("Amatsu Teleporter"); break;
+	}
+	close();
+}
+
+// The source npc must have a real location in order to preserve
+// the view data, if you don't assign a map it will be treated as FAKE_NPC
+prontera,0,0,0	script	GlastHeim Teleporter	PORTAL,{
+	warp("glast_01", 200, 269);
+	end;
+OnDynamicNpcInit:
+	specialeffect(EF_ANGEL2, SELF, playerattached());
+	end;
+OnInit:
+	// Disable the source npc just in case
+	disablenpc(strnpcinfo(NPC_NAME));
+	end;
+}
+
+prontera,0,0,0	script	Amatsu Teleporter	PORTAL,{
+	warp("amatsu", 197, 79);
+	end;
+OnInit:
+	disablenpc(strnpcinfo(NPC_NAME));
+	end;
+}
