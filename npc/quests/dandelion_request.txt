@@ -7960,7 +7960,7 @@ OnTouch:
 	mes "......";
 	mes ".........";
 	next;
-	soundeffect "wander_man_move.wav",0;
+	soundeffect "wander_man_move.wav", PLAY_SOUND_ONCE;
 	sc_start SC_BLIND,60000,0;
 	mes "[?????]";
 	mes "...Isn't the moon";
@@ -7985,7 +7985,7 @@ OnTouch:
 	mes "Valdes? Anybody?";
 	mes "What was that?";
 	close2;
-	soundeffect "wander_man_move.wav",0;
+	soundeffect "wander_man_move.wav", PLAY_SOUND_ONCE;
 	sc_end SC_ALL;
 	disablenpc "#maogate1_talk2";
 	end;
@@ -8006,7 +8006,7 @@ OnTouch:
 	mes ".........";
 	mes "............";
 	next;
-	soundeffect "wander_man_move.wav",0;
+	soundeffect "wander_man_move.wav", PLAY_SOUND_ONCE;
 	sc_start SC_BLIND,60000,0;
 	mes "[?????]";
 	mes "So, you telling me you";
@@ -8042,7 +8042,7 @@ OnTouch:
 	mes ".........";
 	mes "............";
 	close2;
-	soundeffect "wander_man_move.wav",0;
+	soundeffect "wander_man_move.wav", PLAY_SOUND_ONCE;
 	sc_end SC_ALL;
 	disablenpc "#maogate1_talk3";
 	end;
@@ -8063,7 +8063,7 @@ OnTouch:
 	mes ".........";
 	mes "............";
 	next;
-	soundeffect "wander_man_move.wav",0;
+	soundeffect "wander_man_move.wav", PLAY_SOUND_ONCE;
 	sc_start SC_BLIND,60000,0;
 	mes "[?????]";
 	mes "Hmpf.";
@@ -8094,7 +8094,7 @@ OnTouch:
 	mes "that's happened here";
 	mes "in Castle Morroc...";
 	close2;
-	soundeffect "wander_man_move.wav",0;
+	soundeffect "wander_man_move.wav", PLAY_SOUND_ONCE;
 	sc_end SC_ALL;
 	disablenpc "#maogate1_talk4";
 	end;
@@ -8115,7 +8115,7 @@ OnTouch:
 	mes ".........";
 	mes "............";
 	next;
-	soundeffect "wander_man_move.wav",0;
+	soundeffect "wander_man_move.wav", PLAY_SOUND_ONCE;
 	sc_start SC_BLIND,60000,0;
 	mes "[?????]";
 	mes "Sir, our investigation has";
@@ -8131,7 +8131,7 @@ OnTouch:
 	mes "they be doing in there?!";
 	mes "Come on, let's go...";
 	close2;
-	soundeffect "wander_man_move.wav",0;
+	soundeffect "wander_man_move.wav", PLAY_SOUND_ONCE;
 	sc_end SC_ALL;
 	disablenpc "#maogate1_talk5";
 	end;
@@ -8152,7 +8152,7 @@ OnTouch:
 	mes ".........";
 	mes "............";
 	next;
-	soundeffect "wander_man_move.wav",0;
+	soundeffect "wander_man_move.wav", PLAY_SOUND_ONCE;
 	sc_start SC_BLIND,60000,0;
 	mes "[?????]";
 	mes "Wh-what's with";
@@ -8204,7 +8204,7 @@ OnTouch:
 	mes "much longer. Where";
 	mes "the hell is Raiyan Moore?!";
 	close2;
-	soundeffect "wander_man_move.wav",0;
+	soundeffect "wander_man_move.wav", PLAY_SOUND_ONCE;
 	sc_end SC_ALL;
 	disablenpc "#maogate1_talk6";
 	end;
@@ -8225,7 +8225,7 @@ OnTouch:
 	mes ".........";
 	mes "............";
 	next;
-	soundeffect "wander_man_move.wav",0;
+	soundeffect "wander_man_move.wav", PLAY_SOUND_ONCE;
 	sc_start SC_BLIND,60000,0;
 	mes "[?????]";
 	mes "Jeez, what's going";
@@ -8258,7 +8258,7 @@ OnTouch:
 	mes "right now! Please... Please";
 	mes "don't let me be too late!";
 	close2;
-	soundeffect "wander_man_move.wav",0;
+	soundeffect "wander_man_move.wav", PLAY_SOUND_ONCE;
 	sc_end SC_ALL;
 	disablenpc "#maogate1_talk7";
 	end;
@@ -8943,7 +8943,7 @@ OnTouch:
 	mes "......";
 	mes ".........";
 	next;
-	soundeffect "wander_man_move.wav",0;
+	soundeffect "wander_man_move.wav", PLAY_SOUND_ONCE;
 	sc_start SC_BLIND,60000,0;
 	mes "[?????]";
 	mes "...Isn't the moon";
@@ -8968,7 +8968,7 @@ OnTouch:
 	mes "Valdes? Anybody?";
 	mes "What was that?";
 	close2;
-	soundeffect "wander_man_move.wav",0;
+	soundeffect "wander_man_move.wav", PLAY_SOUND_ONCE;
 	sc_end SC_ALL;
 	disablenpc "#maogate2_talk2";
 	end;
@@ -8989,7 +8989,7 @@ OnTouch:
 	mes ".........";
 	mes "............";
 	next;
-	soundeffect "wander_man_move.wav",0;
+	soundeffect "wander_man_move.wav", PLAY_SOUND_ONCE;
 	sc_start SC_BLIND,60000,0;
 	mes "[?????]";
 	mes "So, you telling me you";
@@ -9025,7 +9025,7 @@ OnTouch:
 	mes ".........";
 	mes "............";
 	close2;
-	soundeffect "wander_man_move.wav",0;
+	soundeffect "wander_man_move.wav", PLAY_SOUND_ONCE;
 	sc_end SC_ALL;
 	disablenpc "#maogate2_talk3";
 	end;
@@ -9046,7 +9046,7 @@ OnTouch:
 	mes ".........";
 	mes "............";
 	next;
-	soundeffect "wander_man_move.wav",0;
+	soundeffect "wander_man_move.wav", PLAY_SOUND_ONCE;
 	sc_start SC_BLIND,60000,0;
 	mes "[?????]";
 	mes "Hmpf.";
@@ -9077,7 +9077,7 @@ OnTouch:
 	mes "that's happened here";
 	mes "in Castle Morroc...";
 	close2;
-	soundeffect "wander_man_move.wav",0;
+	soundeffect "wander_man_move.wav", PLAY_SOUND_ONCE;
 	sc_end SC_ALL;
 	disablenpc "#maogate2_talk4";
 	end;
@@ -9098,7 +9098,7 @@ OnTouch:
 	mes ".........";
 	mes "............";
 	next;
-	soundeffect "wander_man_move.wav",0;
+	soundeffect "wander_man_move.wav", PLAY_SOUND_ONCE;
 	sc_start SC_BLIND,60000,0;
 	mes "[?????]";
 	mes "Sir, our investigation has";
@@ -9114,7 +9114,7 @@ OnTouch:
 	mes "they be doing in there?!";
 	mes "Come on, let's go...";
 	close2;
-	soundeffect "wander_man_move.wav",0;
+	soundeffect "wander_man_move.wav", PLAY_SOUND_ONCE;
 	sc_end SC_ALL;
 	disablenpc "#maogate2_talk5";
 	end;
@@ -9135,7 +9135,7 @@ OnTouch:
 	mes ".........";
 	mes "............";
 	next;
-	soundeffect "wander_man_move.wav",0;
+	soundeffect "wander_man_move.wav", PLAY_SOUND_ONCE;
 	sc_start SC_BLIND,60000,0;
 	mes "[?????]";
 	mes "Wh-what's with";
@@ -9187,7 +9187,7 @@ OnTouch:
 	mes "much longer. Where";
 	mes "the hell is Raiyan Moore?!";
 	close2;
-	soundeffect "wander_man_move.wav",0;
+	soundeffect "wander_man_move.wav", PLAY_SOUND_ONCE;
 	sc_end SC_ALL;
 	disablenpc "#maogate2_talk6";
 	end;
@@ -9208,7 +9208,7 @@ OnTouch:
 	mes ".........";
 	mes "............";
 	next;
-	soundeffect "wander_man_move.wav",0;
+	soundeffect "wander_man_move.wav", PLAY_SOUND_ONCE;
 	sc_start SC_BLIND,60000,0;
 	mes "[?????]";
 	mes "Jeez, what's going";
@@ -9241,7 +9241,7 @@ OnTouch:
 	mes "right now! Please... Please";
 	mes "don't let me be too late!";
 	close2;
-	soundeffect "wander_man_move.wav",0;
+	soundeffect "wander_man_move.wav", PLAY_SOUND_ONCE;
 	sc_end SC_ALL;
 	disablenpc "#maogate2_talk7";
 	end;

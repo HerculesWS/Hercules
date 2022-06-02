@@ -8,7 +8,7 @@
 //= Zero ui demo in prontera.
 //============================================================
 
-prontera,161,284,4	script	Zero UI demo#prt	4_M_KID1,{
+prontera,171,284,4	script	Zero UI demo#prt	4_M_KID1,{
 	cutin("h_iris01.bmp", 2);
 	zmes1("Hello <FONT SIZE = 30><B>hercules</B></FONT> with zero ui!");
 	next;

@@ -513,14 +513,14 @@ spl_in01,172,225,3	script	Wandering Poet#ep13	1_M_BARD,{
 			mes "[Poet Nell]";
 			mes "Poet of Bragie!";
 			mes "You must have a keen ear.";
-			soundeffect "bragis_poem.wav",0;
+			soundeffect "bragis_poem.wav", PLAY_SOUND_ONCE;
 			break;
 		case 2:
 			cutin "god_nelluad02",2;
 			mes "[Poet Nell]";
 			mes "Chaos in Eternity...";
 			mes "This is a great piece but I wouldn't reccomend it while dining...";
-			soundeffect "chaos_of_eternity.wav",0;
+			soundeffect "chaos_of_eternity.wav", PLAY_SOUND_ONCE;
 			break;
 		case 3:
 			cutin "god_nelluad02",2;
@@ -528,7 +528,7 @@ spl_in01,172,225,3	script	Wandering Poet#ep13	1_M_BARD,{
 			mes "Sunset Assassin!";
 			mes "Do you like Assassins?";
 			mes "This song tells of a legendary Assassin Cross that lived in the desert.";
-			soundeffect "assassin_of_sunset.wav",0;
+			soundeffect "assassin_of_sunset.wav", PLAY_SOUND_ONCE;
 			break;
 		case 4:
 			cutin "god_nelluad02",2;
@@ -536,7 +536,7 @@ spl_in01,172,225,3	script	Wandering Poet#ep13	1_M_BARD,{
 			mes "Ring of Nibelungen...";
 			mes "This song has quite an interesting story~";
 			next;
-			soundeffect "ring_of_nibelungen.wav",0;
+			soundeffect "ring_of_nibelungen.wav", PLAY_SOUND_ONCE;
 			mes "^4d4dff There was a niver named Rhein that";
 			mes "that would shine as if made of gold.";
 			mes "It's secret hidden from all since";

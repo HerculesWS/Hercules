@@ -3107,7 +3107,7 @@ OnTouch:
 
 prt_maze02,25,161,0	script	#music	FAKE_NPC,7,7,{
 OnTouch:
-	soundeffect "effect\\석양의 어쌔신.wav",1;
+	soundeffect "effect\\석양의 어쌔신.wav", PLAY_SOUND_ONCE;
 	end;
 }
 
@@ -4481,7 +4481,7 @@ cmd_in02,88,51,4	script	Strange Guy#sign	1_M_SIGNART,{
 				mes "I'll freakin' beat you to near";
 				mes "freakin' death! Bam bam bam!";
 				close2;
-				soundeffect "effect\\sign_noise.wav",1;
+				soundeffect "effect\\sign_noise.wav", PLAY_SOUND_ONCE;
 				Hp = 1;
 				warp "comodo",122,100;
 				end;
@@ -5180,7 +5180,7 @@ OnReset:
 	end;
 
 OnTouch:
-	soundeffect "effect\\sign_up.wav",1;
+	soundeffect "effect\\sign_up.wav", PLAY_SOUND_ONCE;
 	if (.s_up == 1) {
 		donpcevent "Examiner#sd::OnUp";
 		donpcevent "s_dance#up::OnDisable";
@@ -5236,7 +5236,7 @@ OnReset:
 	end;
 
 OnTouch:
-	soundeffect "effect\\sign_down.wav",1;
+	soundeffect "effect\\sign_down.wav", PLAY_SOUND_ONCE;
 	if (.s_down == 1) {
 		donpcevent "Examiner#sd::OnUp";
 		donpcevent "s_dance#down::OnDisable";
@@ -5313,7 +5313,7 @@ OnReset:
 	end;
 
 OnTouch:
-	soundeffect "effect\\sign_left.wav",1;
+	soundeffect "effect\\sign_left.wav", PLAY_SOUND_ONCE;
 	if (.s_left == 1) {
 		donpcevent "Examiner#sd::OnUp";
 		donpcevent "s_dance#right::OnUp";
@@ -5381,7 +5381,7 @@ OnReset:
 	end;
 
 OnTouch:
-	soundeffect "effect\\sign_right.wav",1;
+	soundeffect "effect\\sign_right.wav", PLAY_SOUND_ONCE;
 	if (.s_right == 1) {
 		donpcevent "Examiner#sd::OnUp";
 		donpcevent "s_dance#right::OnDisable";
@@ -5455,7 +5455,7 @@ OnReset:
 	end;
 
 OnTouch:
-	soundeffect "effect\\sign_center.wav",1;
+	soundeffect "effect\\sign_center.wav", PLAY_SOUND_ONCE;
 	if (.s_center == 1) {
 		donpcevent "Examiner#sd::OnUp";
 		donpcevent "s_dance#cen::OnDisable";

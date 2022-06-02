@@ -8,7 +8,7 @@
 //= Dialog align demo in prontera.
 //============================================================
 
-prontera,162,284,4	script	Align demo#prt	4_M_KID1,{
+prontera,163,284,4	script	Align demo#prt	4_M_KID1,{
 	setdialogalign(DIALOG_ALIGN_LEFT);
 	mes("Align left");
 	next;

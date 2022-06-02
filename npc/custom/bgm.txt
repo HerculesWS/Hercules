@@ -1,0 +1,26 @@
+//===== Hercules Script ======================================
+//= Bgm play demo
+//===== By: ==================================================
+//= 4144
+//===== Current Version: =====================================
+//= 1.0
+//===== Description: =========================================
+//= Bgm player demo in prontera.
+//============================================================
+
+prontera,161,284,4	script	Bgm demo#prt	4_M_KID1,{
+	mes("Play track 30.mp3 once and return to normal music");
+	mes("playbgm \"30\", PLAY_BGM_ONCE");
+	playbgm("30", PLAY_BGM_ONCE);
+	next();
+	mes("Play track 100.mp3 in loop");
+	mes("playbgm \"100\", PLAY_BGM_LOOP");
+	playbgm("100", PLAY_BGM_LOOP);
+	next();
+	mes("Stop custom tracks");
+	mes("playbgm \"\", PLAY_BGM_STOP");
+	playbgm("", PLAY_BGM_STOP);
+	next;
+
+	close;
+}

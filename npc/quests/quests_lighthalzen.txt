@@ -3374,19 +3374,19 @@ lhz_dun01,147,106,0	script	#kiz01-1	FAKE_NPC,3,3,{
 OnTouch:
 	if (countitem(Armlet_Of_Prisoner) > 0 ) {
 		if (lhz_curse == 0) {
-			soundeffect "loli_ruri_stand.wav",0;
+			soundeffect "loli_ruri_stand.wav", PLAY_SOUND_ONCE;
 			lhz_curse = 1;
 			setquest 2086;
 		}
 		else if (lhz_curse < 26) {
 			@lhz_ghost = rand(1,5);
 			sc_start SC_CURSE,1000,0;
-			soundeffect "loli_ruri_stand.wav",0;
+			soundeffect "loli_ruri_stand.wav", PLAY_SOUND_ONCE;
 			if (@lhz_ghost == 1) {
 				mes "[??????]";
 				mes "...................";
 				next;
-				soundeffect "loli_ruri_stand.wav",0;
+				soundeffect "loli_ruri_stand.wav", PLAY_SOUND_ONCE;
 				mes "[??????]";
 				mes "...elp....help...";
 				close;
@@ -3395,7 +3395,7 @@ OnTouch:
 				mes "[??????]";
 				mes "...................";
 				next;
-				soundeffect "loli_ruri_stand.wav",0;
+				soundeffect "loli_ruri_stand.wav", PLAY_SOUND_ONCE;
 				mes "[??????]";
 				mes "I...";
 				mes "I despise the living.";
@@ -3414,19 +3414,19 @@ lhz_dun02,244,229,0	script	#kiz02-1	FAKE_NPC,3,3,{
 OnTouch:
 	if (countitem(Armlet_Of_Prisoner) > 0 ) {
 		if (lhz_curse == 0) {
-			soundeffect "tao_gunka_stand.wav",0;
+			soundeffect "tao_gunka_stand.wav", PLAY_SOUND_ONCE;
 			lhz_curse = 1;
 			setquest 2086;
 		}
 		else if (lhz_curse < 26) {
 			@lhz_ghost = rand(1,10);
 			sc_start SC_CURSE,1000,0;
-			soundeffect "tao_gunka_stand.wav",0;
+			soundeffect "tao_gunka_stand.wav", PLAY_SOUND_ONCE;
 			if (@lhz_ghost == 1) {
 				mes "[??????]";
 				mes "...................";
 				next;
-				soundeffect "tao_gunka_stand.wav",0;
+				soundeffect "tao_gunka_stand.wav", PLAY_SOUND_ONCE;
 				mes "[??????]";
 				mes "...elp....help...";
 				close;
@@ -3435,7 +3435,7 @@ OnTouch:
 				mes "[??????]";
 				mes "...................";
 				next;
-				soundeffect "tao_gunka_stand.wav",0;
+				soundeffect "tao_gunka_stand.wav", PLAY_SOUND_ONCE;
 				mes "[??????]";
 				mes "I...";
 				mes "I despise the living.";
@@ -3454,19 +3454,19 @@ lhz_dun03,244,51,0	script	#kiz03-1	FAKE_NPC,3,3,{
 OnTouch:
 	if (countitem(Armlet_Of_Prisoner) > 0 ) {
 		if (lhz_curse == 0) {
-			soundeffect "tao_gunka_stand.wav",0;
+			soundeffect "tao_gunka_stand.wav", PLAY_SOUND_ONCE;
 			lhz_curse = 1;
 			setquest 2086;
 		}
 		else if (lhz_curse < 26) {
 			@lhz_ghost = rand(1,10);
 			sc_start SC_CURSE,1000,0;
-			soundeffect "tao_gunka_stand.wav",0;
+			soundeffect "tao_gunka_stand.wav", PLAY_SOUND_ONCE;
 			if (@lhz_ghost == 1) {
 				mes "[??????]";
 				mes "...................";
 				next;
-				soundeffect "tao_gunka_stand.wav",0;
+				soundeffect "tao_gunka_stand.wav", PLAY_SOUND_ONCE;
 				mes "[??????]";
 				mes "...elp....help...";
 				close;
@@ -3475,7 +3475,7 @@ OnTouch:
 				mes "[??????]";
 				mes "...................";
 				next;
-				soundeffect "tao_gunka_stand.wav",0;
+				soundeffect "tao_gunka_stand.wav", PLAY_SOUND_ONCE;
 				mes "[??????]";
 				mes "I...";
 				mes "I despise the living.";
@@ -3493,13 +3493,13 @@ lighthalzen,344,278,0	script	#kiz03	FAKE_NPC,2,2,{
 OnTouch:
 	if (countitem(Armlet_Of_Prisoner) > 0 ) {
 		if (lhz_curse == 0) {
-			soundeffect "tao_gunka_stand.wav",0;
+			soundeffect "tao_gunka_stand.wav", PLAY_SOUND_ONCE;
 			sc_start SC_CURSE,1000,0;
 		}
 		else if ((lhz_curse > 0) && (lhz_curse < 26)) {
 			mes "............";
 			next;
-			soundeffect "tao_gunka_stand.wav",0;
+			soundeffect "tao_gunka_stand.wav", PLAY_SOUND_ONCE;
 			sc_start SC_BLIND,60000,0;
 			mes "............";
 			next;
@@ -3545,12 +3545,12 @@ OnTouch:
 	if (countitem(Armlet_Of_Prisoner) > 0 ) {
 		if (lhz_curse == 0) {
 			sc_start SC_CURSE,1000,0;
-			soundeffect "tao_gunka_stand.wav",0;
+			soundeffect "tao_gunka_stand.wav", PLAY_SOUND_ONCE;
 		}
 		else if ((lhz_curse > 0) && (lhz_curse < 26)) {
 			mes "............";
 			next;
-			soundeffect "tao_gunka_stand.wav",0;
+			soundeffect "tao_gunka_stand.wav", PLAY_SOUND_ONCE;
 			sc_start SC_BLIND,60000,0;
 			mes "............";
 			next;
@@ -3610,7 +3610,7 @@ OnTouch:
 			mes "again! Where are all of";
 			mes "these voices coming from?";
 			close2;
-			soundeffect "tao_gunka_stand.wav",0;
+			soundeffect "tao_gunka_stand.wav", PLAY_SOUND_ONCE;
 			sc_end SC_BLIND;
 			sc_start SC_CURSE,5000,0;
 			if (!lhz_spi02) lhz_spi02 = 1;
@@ -3628,7 +3628,7 @@ OnTouch:
 		else if ((lhz_curse > 0) && (lhz_curse < 26)) {
 			mes "............";
 			next;
-			soundeffect "loli_ruri_stand.wav",0;
+			soundeffect "loli_ruri_stand.wav", PLAY_SOUND_ONCE;
 			sc_start SC_BLIND,60000,0;
 			mes "............";
 			next;
@@ -3656,7 +3656,7 @@ OnTouch:
 			mes "This is insane!";
 			mes "I must be hallucinating!";
 			close2;
-			soundeffect "loli_ruri_stand.wav",0;
+			soundeffect "loli_ruri_stand.wav", PLAY_SOUND_ONCE;
 			sc_end SC_BLIND;
 			sc_start SC_CURSE,3000,0;
 			if (!lhz_spi03) lhz_spi03 = 1;
@@ -3674,7 +3674,7 @@ OnTouch:
 		else if ((lhz_curse > 0) && (lhz_curse < 26)) {
 			mes "............";
 			next;
-			soundeffect "tao_gunka_stand.wav",0;
+			soundeffect "tao_gunka_stand.wav", PLAY_SOUND_ONCE;
 			sc_start SC_BLIND,60000,0;
 			mes "............";
 			next;
@@ -3715,7 +3715,7 @@ OnTouch:
 			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "............";
 			close2;
-			soundeffect "tao_gunka_stand.wav",0;
+			soundeffect "tao_gunka_stand.wav", PLAY_SOUND_ONCE;
 			sc_end SC_BLIND;
 			sc_start SC_CURSE,5000,0;
 			if (!lhz_spi04) lhz_spi04 = 1;
@@ -3733,7 +3733,7 @@ OnTouch:
 		else if ((lhz_curse > 0) && (lhz_curse < 26)) {
 			mes "............";
 			next;
-			soundeffect "tao_gunka_stand.wav",0;
+			soundeffect "tao_gunka_stand.wav", PLAY_SOUND_ONCE;
 			sc_start SC_BLIND,60000,0;
 			mes "............";
 			next;
@@ -3769,7 +3769,7 @@ OnTouch:
 			next;
 			mes "............";
 			close2;
-			soundeffect "tao_gunka_stand.wav",0;
+			soundeffect "tao_gunka_stand.wav", PLAY_SOUND_ONCE;
 			sc_end SC_BLIND;
 			sc_start SC_CURSE,3000,0;
 			if (lhz_curse == 6) lhz_curse = 7;
@@ -3787,7 +3787,7 @@ OnTouch:
 		else if ((lhz_curse > 0) && (lhz_curse < 26)) {
 			mes "............";
 			next;
-			soundeffect "tao_gunka_stand.wav",0;
+			soundeffect "tao_gunka_stand.wav", PLAY_SOUND_ONCE;
 			sc_start SC_BLIND,60000,0;
 			mes "............";
 			next;
@@ -3853,7 +3853,7 @@ OnTouch:
 			next;
 			mes "............";
 			close2;
-			soundeffect "tao_gunka_stand.wav",0;
+			soundeffect "tao_gunka_stand.wav", PLAY_SOUND_ONCE;
 			sc_end SC_BLIND;
 			sc_start SC_CURSE,3000,0;
 			if (lhz_curse == 11) lhz_curse = 12;
@@ -3869,7 +3869,7 @@ OnTouch:
 			mes "............";
 			next;
 			mes "............";
-			soundeffect "loli_ruri_stand.wav",0;
+			soundeffect "loli_ruri_stand.wav", PLAY_SOUND_ONCE;
 			sc_start SC_CURSE,1000,0;
 			close2;
 			warp "lhz_que01",26,27;
@@ -3914,13 +3914,13 @@ lhz_que01,21,31,5	script	#li_Varmunt	4_M_SAGE_C,{
 			next;
 			mes "............";
 			next;
-			soundeffect "loli_ruri_stand.wav",0;
+			soundeffect "loli_ruri_stand.wav", PLAY_SOUND_ONCE;
 			mes ".................";
 			next;
-			soundeffect "loli_ruri_stand.wav",0;
+			soundeffect "loli_ruri_stand.wav", PLAY_SOUND_ONCE;
 			mes "...................";
 			next;
-			soundeffect "loli_ruri_stand.wav",0;
+			soundeffect "loli_ruri_stand.wav", PLAY_SOUND_ONCE;
 			mes ".....................";
 			next;
 			mes ".......................";
@@ -3946,13 +3946,13 @@ lhz_que01,21,31,5	script	#li_Varmunt	4_M_SAGE_C,{
 			next;
 			mes "............";
 			next;
-			soundeffect "loli_ruri_stand.wav",0;
+			soundeffect "loli_ruri_stand.wav", PLAY_SOUND_ONCE;
 			mes ".................";
 			next;
-			soundeffect "loli_ruri_stand.wav",0;
+			soundeffect "loli_ruri_stand.wav", PLAY_SOUND_ONCE;
 			mes "....................";
 			next;
-			soundeffect "loli_ruri_stand.wav",0;
+			soundeffect "loli_ruri_stand.wav", PLAY_SOUND_ONCE;
 			mes "......................";
 			next;
 			mes "[??]";
@@ -4049,13 +4049,13 @@ lhz_que01,29,24,3	script	#li_researcher	4_M_SAGE_A,{
 			next;
 			mes "............";
 			next;
-			soundeffect "loli_ruri_stand.wav",0;
+			soundeffect "loli_ruri_stand.wav", PLAY_SOUND_ONCE;
 			mes ".................";
 			next;
-			soundeffect "loli_ruri_stand.wav",0;
+			soundeffect "loli_ruri_stand.wav", PLAY_SOUND_ONCE;
 			mes "...................";
 			next;
-			soundeffect "loli_ruri_stand.wav",0;
+			soundeffect "loli_ruri_stand.wav", PLAY_SOUND_ONCE;
 			mes ".....................";
 			next;
 			mes ".......................";
@@ -4081,13 +4081,13 @@ lhz_que01,29,24,3	script	#li_researcher	4_M_SAGE_A,{
 			next;
 			mes "............";
 			next;
-			soundeffect "loli_ruri_stand.wav",0;
+			soundeffect "loli_ruri_stand.wav", PLAY_SOUND_ONCE;
 			mes ".................";
 			next;
-			soundeffect "loli_ruri_stand.wav",0;
+			soundeffect "loli_ruri_stand.wav", PLAY_SOUND_ONCE;
 			mes "....................";
 			next;
-			soundeffect "loli_ruri_stand.wav",0;
+			soundeffect "loli_ruri_stand.wav", PLAY_SOUND_ONCE;
 			mes "......................";
 			next;
 			mes "[??]";
@@ -4171,7 +4171,7 @@ OnTouch:
 			mes "...";
 			mes "......";
 			mes ".........";
-			soundeffect "loli_ruri_stand.wav",0;
+			soundeffect "loli_ruri_stand.wav", PLAY_SOUND_ONCE;
 			sc_start SC_CURSE,1000,0;
 			close2;
 			warp "lhz_que01",98,59;
@@ -4378,7 +4378,7 @@ lighthalzen,346,263,3	script	Elder#lhz	4_F_EINOLD,{
 				mes "you been experiencing chills";
 				mes "down your spine, cold sweats,";
 				mes "maybe even hearing voices?";
-				soundeffect "loli_ruri_stand.wav",0;
+				soundeffect "loli_ruri_stand.wav", PLAY_SOUND_ONCE;
 				sc_start SC_CURSE,5000,0;
 				next;
 				select("Yes! How do I get rid of them?");

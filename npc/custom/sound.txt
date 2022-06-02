@@ -1,0 +1,33 @@
+//===== Hercules Script ======================================
+//= soundeffect play demo
+//===== By: ==================================================
+//= 4144
+//===== Current Version: =====================================
+//= 1.0
+//===== Description: =========================================
+//= soundeffect player demo in prontera.
+//============================================================
+
+prontera,169,284,4	script	Sound demo#prt	4_M_KID1,{
+	mes("soundeffect(\"loli_ruri_stand.wav\", PLAY_SOUND_ONCE)");
+	soundeffect("loli_ruri_stand.wav", PLAY_SOUND_ONCE);
+	next();
+
+	mes("soundeffect(\"loli_ruri_stand.wav\", PLAY_SOUND_REPEAT, 1000)");
+	soundeffect("loli_ruri_stand.wav", PLAY_SOUND_REPEAT, 1000);
+	next();
+
+	mes("soundeffect(\"complete.wav\", PLAY_SOUND_REPEAT, 4000)");
+	soundeffect("complete.wav", PLAY_SOUND_REPEAT, 4000);
+	next();
+
+	mes("soundeffect(\"loli_ruri_stand.wav\", PLAY_SOUND_STOP)");
+	soundeffect("loli_ruri_stand.wav", PLAY_SOUND_STOP);
+	next();
+
+	mes("soundeffect(\"complete.wav\", PLAY_SOUND_STOP)");
+	soundeffect("complete.wav", PLAY_SOUND_STOP);
+	next();
+
+	close;
+}

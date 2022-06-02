@@ -297,7 +297,7 @@ static int storage_add_from_inventory(struct map_session_data *sd, int index, in
 	if (storage->additem(sd, &sd->status.inventory[index], amount) == 0)
 		pc->delitem(sd, index, amount, 0, DELITEM_TOSTORAGE, LOG_TYPE_STORAGE);
 	else
-		clif->item_movefailed(sd, index);
+		clif->item_movefailed(sd, index, amount);
 
 	return 1;
 }
@@ -683,7 +683,7 @@ static int storage_guild_storageadd(struct map_session_data *sd, int index, int 
 	if (gstorage->additem(sd, stor, &sd->status.inventory[index], amount) == 0)
 		pc->delitem(sd, index, amount, 0, DELITEM_TOSTORAGE, LOG_TYPE_GSTORAGE);
 	else
-		clif->item_movefailed(sd, index);
+		clif->item_movefailed(sd, index, amount);
 
 	return 1;
 }

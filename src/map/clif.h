@@ -856,6 +856,24 @@ enum bossmap_info_type {
 	BOSS_INFO_DEAD,          // Boss is dead
 };
 
+enum play_npc_bgm {
+	PLAY_BGM_LOOP = 0,
+	PLAY_BGM_ONCE = 1,
+	PLAY_BGM_STOP = 2,
+};
+
+enum play_sound_act {
+	PLAY_SOUND_ONCE = 0,
+	PLAY_SOUND_REPEAT = 1,
+	PLAY_SOUND_STOP = 2,
+};
+
+enum ITEM_OBTAIN_TYPE {
+	ITEM_OBTAIN_TYPE_BOX_ITEM = 0,
+	ITEM_OBTAIN_TYPE_MONSTER_ITEM = 1,
+	ITEM_OBTAIN_TYPE_NPC_ITEM = 2,
+};
+
 /**
  * Clif.c Interface
  **/
@@ -915,7 +933,7 @@ struct clif_interface {
 	void (*dropitem) (struct map_session_data *sd,int n,int amount);
 	void (*delitem) (struct map_session_data *sd,int n,int amount, enum delitem_reason reason);
 	void (*takeitem) (struct block_list* src, struct block_list* dst);
-	void (*item_movefailed) (struct map_session_data *sd, int n);
+	void (*item_movefailed) (struct map_session_data *sd, int n, int amount);
 	void (*item_equip) (short idx, struct EQUIPITEM_INFO *p, struct item *i, struct item_data *id, int eqp_pos);
 	void (*item_normal) (short idx, struct NORMALITEM_INFO *p, struct item *i, struct item_data *id);
 	void (*arrowequip) (struct map_session_data *sd,int val);
@@ -933,7 +951,7 @@ struct clif_interface {
 	void (*cart_additem_ack) (struct map_session_data *sd, int flag);
 	void (*cashshop_load) (void);
 	void (*cashShopSchedule) (int fd, struct map_session_data *sd);
-	void (*package_announce) (struct map_session_data *sd, int nameid, int containerid);
+	void (*package_announce) (struct map_session_data *sd, int nameid, int containerid, int refine_level);
 	void (*item_drop_announce) (struct map_session_data *sd, int nameid, char *monsterName);
 	/* unit-related */
 	void (*clearunit_single) (int id, enum clr_type type, int fd);
@@ -990,9 +1008,11 @@ struct clif_interface {
 	void (*cashshop_ack) (struct map_session_data* sd, int error);
 	/* npc-script-related */
 	void (*scriptmes) (struct map_session_data *sd, int npcid, const char *mes);
+	void (*scriptmes2) (struct map_session_data *sd, int npcid, const char *mes, int type);
 	void (*zc_quest_dialog) (struct map_session_data *sd, int npcid, const char *mes);
 	void (*zc_monolog_dialog) (struct map_session_data *sd, int npcid, const char *mes);
 	void (*scriptnext) (struct map_session_data *sd,int npcid);
+	void (*scriptnext2) (struct map_session_data *sd, int npcid, int type);
 	void (*scriptclose) (struct map_session_data *sd, int npcid);
 	void (*scriptmenu) (struct map_session_data* sd, int npcid, const char* mes);
 	void (*zc_quest_dialog_menu_list) (struct map_session_data* sd, int npcid, const char* mes);
@@ -1166,9 +1186,9 @@ struct clif_interface {
 	void (*snap) ( struct block_list *bl, short x, short y );
 	void (*weather_check) (struct map_session_data *sd);
 	/* sound effects client-side */
-	void (*playBGM) (struct map_session_data* sd, const char* name);
-	void (*soundeffect) (struct map_session_data* sd, struct block_list* bl, const char* name, int type);
-	void (*soundeffectall) (struct block_list* bl, const char* name, int type, enum send_target coverage);
+	void (*playBGM) (struct map_session_data* sd, const char* name, enum play_npc_bgm type);
+	void (*soundeffect) (struct map_session_data* sd, struct block_list* bl, const char* name, enum play_sound_act type, int term);
+	void (*soundeffectall) (struct block_list* bl, const char* name, enum play_sound_act type, int term, enum send_target coverage);
 	/* chat/message-related */
 	void (*GlobalMessage) (struct block_list* bl, const char* message);
 	void (*createchat) (struct map_session_data* sd, int flag);
@@ -1866,6 +1886,9 @@ struct clif_interface {
 	int (*setlevel_sub) (int lv);
 	void (*load_end_ack_sub_messages) (struct map_session_data *sd, bool connect_new, bool change_map);
 	bool (*sub_guild_invite) (int fd, struct map_session_data *sd, struct map_session_data *t_sd);
+	void (*set_npc_window_size) (struct map_session_data *sd, int width, int height);
+	void (*set_npc_window_pos) (struct map_session_data *sd, int x, int y);
+	void (*set_npc_window_pos_percent) (struct map_session_data *sd, int x, int y);
 	unsigned short (*parse_cmd_normal) (int fd, struct map_session_data *sd);
 	unsigned short (*parse_cmd_decrypt) (int fd, struct map_session_data *sd);
 	unsigned short (*parse_cmd_optional) (int fd, struct map_session_data *sd);

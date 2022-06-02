@@ -1144,11 +1144,11 @@ S_StorySong:
 
 				.@random = rand(1,3);
 				if (.@random == 1)
-					soundeffect "ring_of_nibelungen.wav",0;
+					soundeffect "ring_of_nibelungen.wav", PLAY_SOUND_ONCE;
 				else if (.@random == 2)
-					soundeffect "dont_forget_me_not.wav",0;
+					soundeffect "dont_forget_me_not.wav", PLAY_SOUND_ONCE;
 				else
-					soundeffect "in_to_the_abyss.wav",0;
+					soundeffect "in_to_the_abyss.wav", PLAY_SOUND_ONCE;
 
 			} else {
 				cutin "bard_eland04",2;
@@ -1515,7 +1515,7 @@ morocc,134,111,3	script	Bard#3	2_M_BARD_ORIENT,{
 			mes "Oh... Well, I have a chronic disease so I can't speak out loud. I, um, even cough up a little blood. But aside from that, I'm perfectly healthy.";
 			next;
 			mes "^3355FFA look of bitterness momentarily flashed across Kino Kitty's face. He then adjusted his guitar strings and began to play, humming a low tune.^000000";
-			soundeffect "humming.wav",0;
+			soundeffect "humming.wav", PLAY_SOUND_ONCE;
 			close;
 		case 3:
 			mes "[Kino Kitty]";
@@ -1657,7 +1657,7 @@ morocc,134,111,3	script	Bard#3	2_M_BARD_ORIENT,{
 			mes "Oh... Well, I have a chronic disease so I can't speak out loud. I, um, even cough up a little blood. But aside from that, I'm perfectly healthy.";
 			next;
 			mes "^3355FFA look of bitterness momentarily flashed across Kino Kitty's face. He then adjusted his guitar strings and began to play, humming a low tune.^000000";
-			soundeffect "humming.wav",0;
+			soundeffect "humming.wav", PLAY_SOUND_ONCE;
 			close;
 		case 3:
 			mes "[Kino Kitty]";

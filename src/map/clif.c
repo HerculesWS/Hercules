@@ -2279,39 +2279,78 @@ static void clif_selllist(struct map_session_data *sd)
 /// - append this text
 static void clif_scriptmes(struct map_session_data *sd, int npcid, const char *mes)
 {
-	int fd, slen;
-#ifdef SCRIPT_MES_STRIP_LINEBREAK
-	char *stripmes = NULL;
-	int i;
-#endif
-
 	nullpo_retv(sd);
 	nullpo_retv(mes);
 
-	fd = sd->fd;
-	slen = (int)strlen(mes) + 9;
+	const int fd = sd->fd;
+	const size_t slen = strlen(mes) + 1;
+	const size_t len = sizeof(struct PACKET_ZC_SAY_DIALOG) + slen;
 	Assert_retv(slen <= INT16_MAX);
 
 	pc->update_idle_time(sd, BCIDLE_SCRIPT);
-
 	sd->state.dialog = 1;
 
-	WFIFOHEAD(fd, slen);
-	WFIFOW(fd,0) = 0xb4;
-	WFIFOW(fd,2) = slen;
-	WFIFOL(fd,4) = npcid;
+	WFIFOHEAD(fd, len);
+	struct PACKET_ZC_SAY_DIALOG *p = WFIFOP(fd, 0);
+
+	p->PacketType = HEADER_ZC_SAY_DIALOG;
+	p->PacketLength = len;
+	p->NpcID = npcid;
 #ifdef SCRIPT_MES_STRIP_LINEBREAK
-	stripmes = aStrdup(mes);
-	for (i = 0; stripmes[i] != '\0'; ++i) {
+	char *stripmes = aStrdup(mes);
+	for (int i = 0; stripmes[i] != '\0'; ++i) {
 		if (stripmes[i] == '\r')
 			stripmes[i] = ' ';
 	}
-	memcpy(WFIFOP(fd,8), stripmes, slen-8);
+	memcpy(p->message, stripmes, slen);
 	aFree(stripmes);
 #else // ! SCRIPT_MES_STRIP_LINEBREAK
-	memcpy(WFIFOP(fd,8), mes, slen-8);
+	memcpy(p->message, mes, slen);
 #endif // SCRIPT_MES_STRIP_LINEBREAK
-	WFIFOSET(fd,WFIFOW(fd,2));
+	WFIFOSET(fd, len);
+}
+
+/// Displays an NPC dialog message (ZC_SAY_DIALOG2).
+/// Client behavior (dialog window):
+/// - disable mouse targeting
+/// - open the dialog window
+/// - set npcid of dialog window (0 by default)
+/// - if set to clear on next mes, clear contents
+/// - append this text
+static void clif_scriptmes2(struct map_session_data *sd, int npcid, const char *mes, int type)
+{
+	nullpo_retv(sd);
+	nullpo_retv(mes);
+
+	const int fd = sd->fd;
+	const size_t slen = strlen(mes) + 1;
+	const size_t len = sizeof(struct PACKET_ZC_SAY_DIALOG2) + slen;
+	Assert_retv(slen <= INT16_MAX);
+
+	pc->update_idle_time(sd, BCIDLE_SCRIPT);
+	sd->state.dialog = 1;
+
+	WFIFOHEAD(fd, len);
+	struct PACKET_ZC_SAY_DIALOG2 *p = WFIFOP(fd, 0);
+
+	p->PacketType = HEADER_ZC_SAY_DIALOG2;
+	p->PacketLength = len;
+	p->NpcID = npcid;
+#if PACKETVER_MAIN_NUM >= 20220504
+	p->type = type;
+#endif  // PACKETVER_MAIN_NUM >= 20220504
+#ifdef SCRIPT_MES_STRIP_LINEBREAK
+	char *stripmes = aStrdup(mes);
+	for (int i = 0; stripmes[i] != '\0'; ++i) {
+		if (stripmes[i] == '\r')
+			stripmes[i] = ' ';
+	}
+	memcpy(p->message, stripmes, slen);
+	aFree(stripmes);
+#else // ! SCRIPT_MES_STRIP_LINEBREAK
+	memcpy(p->message, mes, slen);
+#endif // SCRIPT_MES_STRIP_LINEBREAK
+	WFIFOSET(fd, len);
 }
 
 static void clif_zc_quest_dialog(struct map_session_data *sd, int npcid, const char *mes)
@@ -2396,17 +2435,42 @@ static void clif_zc_monolog_dialog(struct map_session_data *sd, int npcid, const
 /// - remove 'next' button
 static void clif_scriptnext(struct map_session_data *sd, int npcid)
 {
-	int fd;
-
 	nullpo_retv(sd);
 
 	pc->update_idle_time(sd, BCIDLE_SCRIPT);
 
-	fd=sd->fd;
-	WFIFOHEAD(fd, packet_len(0xb5));
-	WFIFOW(fd,0)=0xb5;
-	WFIFOL(fd,2)=npcid;
-	WFIFOSET(fd,packet_len(0xb5));
+	int fd = sd->fd;
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_WAIT_DIALOG));
+	struct PACKET_ZC_WAIT_DIALOG *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_WAIT_DIALOG;
+	p->NpcID = npcid;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_WAIT_DIALOG));
+}
+
+/// Adds a 'next' button to an NPC dialog (ZC_WAIT_DIALOG).
+/// Client behavior (dialog window):
+/// - disable mouse targeting
+/// - open the dialog window
+/// - add 'next' button
+/// When 'next' is pressed:
+/// - 00B9 <npcid of dialog window>.L
+/// - set to clear on next mes
+/// - remove 'next' button
+static void clif_scriptnext2(struct map_session_data *sd, int npcid, int type)
+{
+	nullpo_retv(sd);
+
+	pc->update_idle_time(sd, BCIDLE_SCRIPT);
+
+	int fd = sd->fd;
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_WAIT_DIALOG2));
+	struct PACKET_ZC_WAIT_DIALOG2 *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_WAIT_DIALOG2;
+	p->NpcID = npcid;
+#if PACKETVER_MAIN_NUM >= 20220504
+	p->type = type;
+#endif  // PACKETVER_MAIN_NUM >= 20220504
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_WAIT_DIALOG2));
 }
 
 /// Adds a 'close' button to an NPC dialog (ZC_CLOSE_DIALOG).
@@ -2829,16 +2893,16 @@ static void clif_dropitem(struct map_session_data *sd, int n, int amount)
 	WFIFOSET(fd,packet_len(0xaf));
 }
 
-static void clif_item_movefailed(struct map_session_data *sd, int n)
+static void clif_item_movefailed(struct map_session_data *sd, int n, int amount)
 {
 #if PACKETVER_MAIN_NUM >= 20161214 || PACKETVER_RE_NUM >= 20161130 || defined(PACKETVER_ZERO)
 	int fd = sd->fd;
-	const int len = sizeof(struct PACKET_ZC_INVENTORY_MOVE_FAILED);
+	const int len = sizeof(struct PACKET_ZC_MOVE_ITEM_FAILED);
 	WFIFOHEAD(fd, len);
-	struct PACKET_ZC_INVENTORY_MOVE_FAILED *p = WFIFOP(fd, 0);
-	p->packetType = 0xaa7;
-	p->index = n + 2;
-	p->unknown = 1;
+	struct PACKET_ZC_MOVE_ITEM_FAILED *p = WFIFOP(fd, 0);
+	p->packetType = HEADER_ZC_MOVE_ITEM_FAILED;
+	p->itemIndex = n + 2;
+	p->itemCount = amount;
 	WFIFOSET(fd, len);
 #else
 	clif->dropitem(sd, n, 0);
@@ -5791,7 +5855,7 @@ static void clif_skill_fail(struct map_session_data *sd, uint16 skill_id, enum u
 
 	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_ACK_TOUSESKILL));
 	struct PACKET_ZC_ACK_TOUSESKILL *p = WFIFOP(fd, 0);
-	p->packetType = 0x110;
+	p->packetType = HEADER_ZC_ACK_TOUSESKILL;
 	p->skillId = skill_id;
 	p->btype = btype;
 	p->itemId = item_id;
@@ -9263,17 +9327,28 @@ static void clif_wisall(struct map_session_data *sd, int type, int flag)
 
 /// Play a BGM! [Rikter/Yommy] (ZC_PLAY_NPC_BGM).
 /// 07fe <bgm>.24B
-static void clif_playBGM(struct map_session_data *sd, const char *name)
+static void clif_playBGM(struct map_session_data *sd, const char *name, enum play_npc_bgm type)
 {
-	int fd;
-
 	nullpo_retv(sd);
+	nullpo_retv(name);
 
-	fd = sd->fd;
-	WFIFOHEAD(fd,packet_len(0x7fe));
-	WFIFOW(fd,0) = 0x7fe;
-	safestrncpy(WFIFOP(fd,2), name, NAME_LENGTH);
-	WFIFOSET(fd,packet_len(0x7fe));
+	const int fd = sd->fd;
+#if PACKETVER_MAIN_NUM >= 20220504
+	const int nameLen = (int)strlen(name) + 1;
+	const int sz = sizeof(struct PACKET_ZC_PLAY_NPC_BGM) + nameLen;
+#else  // PACKETVER_MAIN_NUM >= 20220504
+	const int nameLen = NAME_LENGTH;
+	const int sz = sizeof(struct PACKET_ZC_PLAY_NPC_BGM);
+#endif  // PACKETVER_MAIN_NUM >= 20220504
+	WFIFOHEAD(fd, sz);
+	struct PACKET_ZC_PLAY_NPC_BGM *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_PLAY_NPC_BGM;
+	safestrncpy(p->bgm, name, nameLen);
+#if PACKETVER_MAIN_NUM >= 20220504
+	p->PacketLength = sz;
+	p->playType = type;
+#endif  // PACKETVER_MAIN_NUM >= 20220504
+	WFIFOSET(fd, sz);
 }
 
 /// Plays/stops a wave sound (ZC_SOUND).
@@ -9289,37 +9364,42 @@ static void clif_playBGM(struct map_session_data *sd, const char *name)
 /// npc id:
 ///     The acoustic direction of the sound is determined by the
 ///     relative position of the NPC to the player (3D sound).
-static void clif_soundeffect(struct map_session_data *sd, struct block_list *bl, const char *name, int type)
+static void clif_soundeffect(struct map_session_data *sd, struct block_list *bl, const char *name, enum play_sound_act type, int term)
 {
-	int fd;
-
 	nullpo_retv(sd);
 	nullpo_retv(bl);
 	nullpo_retv(name);
 
-	fd = sd->fd;
-	WFIFOHEAD(fd,packet_len(0x1d3));
-	WFIFOW(fd,0) = 0x1d3;
-	safestrncpy(WFIFOP(fd,2), name, NAME_LENGTH);
-	WFIFOB(fd,26) = type;
-	WFIFOL(fd,27) = 0;
-	WFIFOL(fd,31) = bl->id;
-	WFIFOSET(fd,packet_len(0x1d3));
+	const int fd = sd->fd;
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_SOUND));
+	struct PACKET_ZC_SOUND *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_SOUND;
+	safestrncpy(p->name, name, NAME_LENGTH);
+	p->act = type;
+	p->term = term;
+	if (type == PLAY_SOUND_REPEAT) {
+		// for repeat look like used wrong 3d sound position and player cant hear sound only once. [4144]
+		// Without AID sound played without any position in space. [4144]
+		p->AID = 0;
+	} else {
+		p->AID = bl->id;
+	}
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_SOUND));
 }
 
-static void clif_soundeffectall(struct block_list *bl, const char *name, int type, enum send_target coverage)
+static void clif_soundeffectall(struct block_list *bl, const char *name, enum play_sound_act type, int term, enum send_target coverage)
 {
-	unsigned char buf[40];
-
 	nullpo_retv(bl);
 	nullpo_retv(name);
 
-	WBUFW(buf,0) = 0x1d3;
-	safestrncpy(WBUFP(buf,2), name, NAME_LENGTH);
-	WBUFB(buf,26) = type;
-	WBUFL(buf,27) = 0;
-	WBUFL(buf,31) = bl->id;
-	clif->send(buf, packet_len(0x1d3), bl, coverage);
+	struct PACKET_ZC_SOUND p = { 0 };
+
+	p.PacketType = HEADER_ZC_SOUND;
+	safestrncpy(p.name, name, NAME_LENGTH);
+	p.act = type;
+	p.term = term;
+	p.AID = bl->id;
+	clif->send(&p, sizeof(struct PACKET_ZC_SOUND), bl, coverage);
 }
 
 /// Displays special effects (npcs, weather, etc) [Valaris] (ZC_NOTIFY_EFFECT2).
@@ -12999,16 +13079,19 @@ static void clif_parse_PutItemToCart(int fd, struct map_session_data *sd) __attr
 /// 0126 <index>.W <amount>.L
 static void clif_parse_PutItemToCart(int fd, struct map_session_data *sd)
 {
-	int flag = 0;
-
 	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || sd->state.prevend != 0)
 		return;
 
 	if (!pc_iscarton(sd))
 		return;
-	if ( (flag = pc->putitemtocart(sd,RFIFOW(fd,2)-2,RFIFOL(fd,4))) ) {
-		clif->item_movefailed(sd, RFIFOW(fd,2)-2);
-		clif->cart_additem_ack(sd,flag == 1?0x0:0x1);
+
+	struct PACKET_CZ_MOVE_ITEM_FROM_BODY_TO_CART *p = RFIFOP(fd, 0);
+	const int index = p->index - 2;
+	const int flag = pc->putitemtocart(sd, index, p->count);
+
+	if (flag) {
+		clif->item_movefailed(sd, index, p->count);
+		clif->cart_additem_ack(sd, flag == 1 ? 0x0 : 0x1);
 	}
 }
 
@@ -15771,9 +15854,9 @@ static void clif_parse_GuildMembersNear(int fd, struct map_session_data *sd) __a
 static void clif_parse_GuildMembersNear(int fd, struct map_session_data *sd)
 {
 #if PACKETVER_MAIN_NUM >= 20220216
-	const struct PACKET_CZ_SEE_GUILD_MEMBERS *packet = RP2PTR(fd);
+	const struct PACKET_CZ_APPROXIMATE_ACTOR *packet = RP2PTR(fd);
 	if (packet->unused1 != 1 || packet->unused2 != 1) {
-		ShowWarning("Unknown flags in CZ_SEE_GUILD_MEMBERS");
+		ShowWarning("Unknown flags in CZ_APPROXIMATE_ACTOR");
 	}
 #endif  // PACKETVER_MAIN_NUM >= 20220216
 }
@@ -21371,25 +21454,33 @@ static void clif_scriptclear(struct map_session_data *sd, int npcid)
 }
 
 /* Made Possible Thanks to Yommy! */
-static void clif_package_item_announce(struct map_session_data *sd, int nameid, int containerid)
+static void clif_package_item_announce(struct map_session_data *sd, int nameid, int containerid, int refine_level)
 {
-	struct packet_package_item_announce p;
+#if PACKETVER >= 20091201
+	struct PACKET_ZC_BROADCASTING_SPECIAL_ITEM_OBTAIN_item p;
 
 	nullpo_retv(sd);
-	p.PacketType = package_item_announceType;
 #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
-	p.PacketLength = 7 + 4 + 4 + NAME_LENGTH;
-#else
-	p.PacketLength = 7 + 2 + 2 + NAME_LENGTH;
-#endif
-	p.type = 0x0;
+	const int itemLen = 4;
+#else  // PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+	const int itemLen = 2;
+#endif  // PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+
+	p.PacketType = HEADER_ZC_BROADCASTING_SPECIAL_ITEM_OBTAIN_item;
+	p.PacketLength = sizeof(struct PACKET_ZC_BROADCASTING_SPECIAL_ITEM_OBTAIN_item);
+	p.type = ITEM_OBTAIN_TYPE_BOX_ITEM;
 	p.ItemID = nameid;
 	p.len = NAME_LENGTH;
 	safestrncpy(p.Name, sd->status.name, sizeof(p.Name));
-	p.unknown = 0x2; // some strange byte, IDA shows.. BYTE3(BoxItemIDLength) = 2;
+	p.boxItemID_len = itemLen;
 	p.BoxItemID = containerid;
+#if PACKETVER_MAIN_NUM >= 20220518 || PACKETVER_ZERO_NUM >= 20220518
+	p.refineLevel_len = itemLen;
+	p.refineLevel = refine_level;
+#endif  // PACKETVER_MAIN_NUM >= 20091201
 
 	clif->send(&p, p.PacketLength, &sd->bl, ALL_CLIENT);
+#endif  // 20091201
 }
 
 /* Made Possible Thanks to Yommy! */
@@ -21406,11 +21497,11 @@ static void clif_item_drop_announce(struct map_session_data *sd, int nameid, cha
 	safestrncpy(p.Name, sd->status.name, sizeof(p.Name));
 	if (monsterName == NULL) {
 		// message: MSG_BROADCASTING_SPECIAL_ITEM_OBTAIN2
-		p.type = 0x2;
+		p.type = ITEM_OBTAIN_TYPE_NPC_ITEM;
 		p.PacketLength -= NAME_LENGTH;
 	} else {
 		// message: MSG_BROADCASTING_SPECIAL_ITEM_OBTAIN
-		p.type = 0x1;
+		p.type = ITEM_OBTAIN_TYPE_MONSTER_ITEM;
 		safestrncpy(p.monsterName, monsterName, sizeof(p.monsterName));
 	}
 	clif->send(&p, p.PacketLength, &sd->bl, ALL_CLIENT);
@@ -25318,6 +25409,51 @@ static void clif_announce_grade_status(struct map_session_data *sd, int item_id,
 #endif
 }
 
+static void clif_set_npc_window_size(struct map_session_data *sd, int width, int height)
+{
+#if PACKETVER_MAIN_NUM >= 20220504
+	nullpo_retv(sd);
+
+	const int fd = sd->fd;
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_DIALOG_WINDOW_SIZE));
+	struct PACKET_ZC_DIALOG_WINDOW_SIZE *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_DIALOG_WINDOW_SIZE;
+	p->width = width;
+	p->height = height;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_DIALOG_WINDOW_SIZE));
+#endif  // PACKETVER_MAIN_NUM >= 20220504
+}
+
+static void clif_set_npc_window_pos(struct map_session_data *sd, int x, int y)
+{
+#if PACKETVER_MAIN_NUM >= 20220504
+	nullpo_retv(sd);
+
+	const int fd = sd->fd;
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_DIALOG_WINDOW_POS));
+	struct PACKET_ZC_DIALOG_WINDOW_POS *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_DIALOG_WINDOW_POS;
+	p->x = x;
+	p->y = y;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_DIALOG_WINDOW_POS));
+#endif  // PACKETVER_MAIN_NUM >= 20220504
+}
+
+static void clif_set_npc_window_pos_percent(struct map_session_data *sd, int x, int y)
+{
+#if PACKETVER_MAIN_NUM >= 20220504
+	nullpo_retv(sd);
+
+	const int fd = sd->fd;
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_DIALOG_WINDOW_POS2));
+	struct PACKET_ZC_DIALOG_WINDOW_POS *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_DIALOG_WINDOW_POS2;
+	p->x = x;
+	p->y = y;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_DIALOG_WINDOW_POS2));
+#endif  // PACKETVER_MAIN_NUM >= 20220504
+}
+
 /*==========================================
  * Main client packet processing function
  *------------------------------------------*/
@@ -25743,9 +25879,11 @@ void clif_defaults(void)
 	clif->cashshop_ack = clif_cashshop_ack;
 	/* npc-script-related */
 	clif->scriptmes = clif_scriptmes;
+	clif->scriptmes2 = clif_scriptmes2;
 	clif->zc_quest_dialog = clif_zc_quest_dialog;
 	clif->zc_monolog_dialog = clif_zc_monolog_dialog;
 	clif->scriptnext = clif_scriptnext;
+	clif->scriptnext2 = clif_scriptnext2;
 	clif->scriptclose = clif_scriptclose;
 	clif->scriptmenu = clif_scriptmenu;
 	clif->zc_quest_dialog_menu_list = clif_zc_quest_dialog_menu_list;
@@ -26623,6 +26761,10 @@ void clif_defaults(void)
 	clif->setlevel_sub = clif_setlevel_sub;
 	clif->load_end_ack_sub_messages = clif_load_end_ack_sub_messages;
 	clif->sub_guild_invite = clif_sub_guild_invite;
+	clif->set_npc_window_size = clif_set_npc_window_size;
+	clif->set_npc_window_pos = clif_set_npc_window_pos;
+	clif->set_npc_window_pos_percent = clif_set_npc_window_pos_percent;
+
 	clif->parse_cmd_normal = clif_parse_cmd_normal;
 	clif->parse_cmd_decrypt = clif_parse_cmd_decrypt;
 	clif->parse_cmd_optional = clif_parse_cmd_optional;

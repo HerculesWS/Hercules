@@ -1,4 +1,4 @@
-name: clang13_test
+name: clang15_test
 
 on: [workflow_call, pull_request]
 
@@ -14,12 +14,11 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        # clang-8, clang-9 removed for reduce number of jobs
-        CC: [clang-13]
+        CC: [clang-15]
         RENEWAL: ["", "--disable-renewal"]
         CLIENT_TYPE: ["", "--enable-packetver-re", "--enable-packetver-zero"]
         SANITIZER: ["--disable-manager", "--disable-manager --enable-sanitize=full"]
-        PACKET_VERSION: ["--enable-packetver=20211118", "--enable-packetver=20130724"]
+        PACKET_VERSION: ["--enable-packetver=20220518", "--enable-packetver=20130724"]
         exclude:
           - PACKET_VERSION: "--enable-packetver=20130724"
             CLIENT_TYPE: "--enable-packetver-zero"

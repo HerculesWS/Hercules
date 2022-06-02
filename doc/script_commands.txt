@@ -1411,6 +1411,24 @@ Works only in zero clients starting from 20210721.
 
 ---------------------------------------
 
+*mes2("<string>"{, type})
+
+This command will displays a box on the screen for the invoking character.
+Work same as *mes* except positionting window with text at bottom.
+
+Works only on main client starting from 20220504.
+
+---------------------------------------
+
+*mes2f("<format>"{, <param>{, <param>{, ...{, type}}}})
+
+This command will displays a box on the screen for the invoking character.
+Works same as *mesf* except positionting window with text at bottom.
+
+Works only on main client starting from 20220504.
+
+---------------------------------------
+
 *next()
 
 This command will display a 'next' button in the message window for the
@@ -1427,6 +1445,17 @@ and the script will terminate.
     next();
     mes("[Woman]"); // This is needed since it is a new page and the top will now be blank
     mes("This would appear on the 2nd page");
+
+---------------------------------------
+
+*next2()
+*next2(type)
+
+This command will display a 'next' button in the message window for the
+invoking character.
+Work same as *next* but should be used with *mes2*.
+
+Works only on main client starting from 20220504.
 
 ---------------------------------------
 
@@ -8374,8 +8403,9 @@ without event labels. If specified name is not found, command does nothing.
 
 ---------------------------------------
 
-*soundeffect("<effect filename>", <type>)
+*soundeffect("<effect filename>", <type>{, <term>})
 *soundeffectall("<effect filename>", <type>{, "<map name>"}{, <x0>, <y0>, <x1>, <y1>})
+*soundeffectall2("<effect filename>", <type>{, <term>{, "<map name>"}}{, <x0>, <y0>, <x1>, <y1>})
 
 These two commands will play a sound effect to either the invoking
 character only (soundeffect()) or multiple characters (soundeffectall()).
@@ -8386,10 +8416,12 @@ If it does, it will be centered on that object. (an NPC sprite)
 
 Effect filename is the filename in a GRF. It must have the .wav extension.
 
-It's not quite certain what the 'type' actually does, it is sent to the
-client directly. It probably determines which directory to play the effect
-from. It's certain that giving 0 for the number will play sound files from
-'\data\wav\', but where the other numbers will read from is unclear.
+Possible values for type:
+	PLAY_SOUND_ONCE   - play sound file once (default)
+	PLAY_SOUND_REPEAT - play sound in repeat mode. Term parameter set delay before next sound play.
+	PLAY_SOUND_STOP   - stop repeated sound. Not stop already playing sound but terminate future repeats.
+
+Term parameter make sense only for type PLAY_SOUND_REPEAT.
 
 The sound files themselves must be in the PCM format, and file names
 should also have a maximum length of 23 characters including the .wav
@@ -8402,14 +8434,22 @@ You can add your own effects this way, naturally.
 
 ---------------------------------------
 
-*playbgm("<BGM filename>")
+*playbgm("<BGM filename>"{, <type>})
 *playbgmall("<BGM filename>"{, "<map name>"{, <x0>, <y0>, <x1>, <y1>}})
+*playbgmall2("<BGM filename>"{, <type>{, "<map name>"{, <x0>, <y0>, <x1>, <y1>}}})
 
 These two commands will play a Background Music to either the invoking
-character only (playbgm()) or multiple characters (playbgmall()).
+character only (playbgm()) or multiple characters (playbgmall(), playbgmall2()).
 
 BGM filename is the filename in /BGM/ folder. It has to be in .mp3
 extension, but it's not required to specify the extension in the script.
+
+type set play type and can be:
+	PLAY_BGM_LOOP - play music in loop
+	PLAY_BGM_OMCE - play music once
+	PLAY_BGM_STOP - stop music
+
+Parameter type make sense only for clients main 20220504 and newer.
 
 If coordinates are omitted, BGM will be broadcasted on the entire map. If
 the map name is also omitted the BGM will be played for the entire server.
@@ -10920,6 +10960,31 @@ vertical align:
 Works from clients: main 20210203, re 20211103
 
 ---------------------------------------
+
+*setdialogsize(<width>, <height>)
+
+Set size for npc dialog.
+
+Works from clients: main 20220504.
+
+---------------------------------------
+
+*setdialogpos(<x>, <y>)
+
+Set position for npc dialog in pixels.
+
+Works from clients: main 20220504.
+
+---------------------------------------
+
+*setdialogpospercent(<x>, <y>)
+
+Set position for npc dialog in screen size percent.
+
+Works from clients: main 20220504.
+
+---------------------------------------
+
 *opengradeui()
 
 Opens Grade Enchant user interface for the player

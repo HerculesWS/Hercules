@@ -58,7 +58,7 @@ static char executable_path[PATH_MAX];
 
 static void nullpo_error_callback(void *data, const char *msg, int errnum)
 {
-	ShowError("Error: %s (%d)", msg, errnum);
+	ShowError("Error: %s (%d)\n", msg, errnum);
 }
 
 static int nullpo_print_callback(void *data, uintptr_t pc, const char *filename, int lineno, const char *function)

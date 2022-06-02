@@ -6443,6 +6443,35 @@ static BUILDIN(mes)
 	return true;
 }
 
+/////////////////////////////////////////////////////////////////////
+// NPC interaction
+//
+
+/// Appends a message to the npc dialog in format 2.
+/// If a dialog doesn't exist yet, one is created.
+///
+/// mes2 "<message>", type;
+/// mes2 "<message>";
+static BUILDIN(mes2)
+{
+	struct map_session_data *sd = script->rid2sd(st);
+
+	if (sd == NULL)
+		return true;
+
+	if (script_hasdata(st, 2)) {
+		if (script_hasdata(st, 3)) {
+			clif->scriptmes2(sd, st->oid, script_getstr(st, 2), script_getnum(st, 3));
+		} else {
+			clif->scriptmes2(sd, st->oid, script_getstr(st, 2), 0);
+		}
+	} else {
+		clif->scriptmes2(sd, st->oid, "", 0);
+	}
+
+	return true;
+}
+
 /**
  * Appends a message to the npc dialog, applying format string conversions (see
  * sprintf).
@@ -6469,6 +6498,38 @@ static BUILDIN(mesf)
 	}
 
 	clif->scriptmes(sd, st->oid, StrBuf->Value(&buf));
+	StrBuf->Destroy(&buf);
+
+	return true;
+}
+
+/**
+ * Appends a message to the npc dialog, applying format string conversions (see
+ * sprintf).
+ *
+ * If a dialog doesn't exist yet, one is created.
+ *
+ * @code
+ *    mes2f "<message>";
+ *    mes2f "<message>", type;
+ * @endcode
+ */
+static BUILDIN(mes2f)
+{
+	struct map_session_data *sd = script->rid2sd(st);
+	struct StringBuf buf;
+
+	if (sd == NULL)
+		return true;
+
+	StrBuf->Init(&buf);
+
+	if (!script->sprintf_helper(st, 2, &buf)) {
+		StrBuf->Destroy(&buf);
+		return false;
+	}
+
+	clif->scriptmes2(sd, st->oid, StrBuf->Value(&buf), script_lastdata(st));
 	StrBuf->Destroy(&buf);
 
 	return true;
@@ -6568,6 +6629,26 @@ static BUILDIN(next)
 #endif
 	st->state = STOP;
 	clif->scriptnext(sd, st->oid);
+	return true;
+}
+
+/// Displays the button 'next' in the npc dialog.
+/// The dialog text is cleared and the script continues when the button is pressed.
+///
+/// next;
+static BUILDIN(next2)
+{
+	struct map_session_data *sd = script->rid2sd(st);
+	if (sd == NULL)
+		return true;
+#ifdef SECURE_NPCTIMEOUT
+	sd->npc_idle_type = NPCT_WAIT;
+#endif
+	st->state = STOP;
+	if (script_hasdata(st, 2))
+		clif->scriptnext2(sd, st->oid, script_getnum(st, 2));
+	else
+		clif->scriptnext2(sd, st->oid, 0);
 	return true;
 }
 
@@ -16526,7 +16607,10 @@ static BUILDIN(playbgm)
 	if (sd != NULL) {
 		const char *name = script_getstr(st,2);
 
-		clif->playBGM(sd, name);
+		if (script_hasdata(st, 3))
+			clif->playBGM(sd, name, script_getnum(st, 3));
+		else
+			clif->playBGM(sd, name, PLAY_BGM_LOOP);
 	}
 
 	return true;
@@ -16535,8 +16619,9 @@ static BUILDIN(playbgm)
 static int playbgm_sub(struct block_list *bl, va_list ap)
 {
 	const char* name = va_arg(ap,const char*);
+	enum play_npc_bgm type = va_arg(ap, int);
 
-	clif->playBGM(BL_CAST(BL_PC, bl), name);
+	clif->playBGM(BL_CAST(BL_PC, bl), name, type);
 
 	return 0;
 }
@@ -16544,9 +16629,10 @@ static int playbgm_sub(struct block_list *bl, va_list ap)
 static int playbgm_foreachpc_sub(struct map_session_data *sd, va_list args)
 {
 	const char* name = va_arg(args, const char*);
+	enum play_npc_bgm type = va_arg(args, int);
 
 	nullpo_ret(name);
-	clif->playBGM(sd, name);
+	clif->playBGM(sd, name, type);
 	return 0;
 }
 
@@ -16573,7 +16659,7 @@ static BUILDIN(playbgmall)
 			return true;
 		}
 
-		map->foreachinarea(script->playbgm_sub, m, x0, y0, x1, y1, BL_PC, name);
+		map->foreachinarea(script->playbgm_sub, m, x0, y0, x1, y1, BL_PC, name, PLAY_BGM_LOOP);
 	} else if( script_hasdata(st,3) ) {
 		// entire map
 		const char* mapname = script_getstr(st,3);
@@ -16584,10 +16670,49 @@ static BUILDIN(playbgmall)
 			return true;
 		}
 
-		map->foreachinmap(script->playbgm_sub, m, BL_PC, name);
+		map->foreachinmap(script->playbgm_sub, m, BL_PC, name, PLAY_BGM_LOOP);
 	} else {
 		// entire server
-		map->foreachpc(script->playbgm_foreachpc_sub, name);
+		map->foreachpc(script->playbgm_foreachpc_sub, name, PLAY_BGM_LOOP);
+	}
+
+	return true;
+}
+
+static BUILDIN(playbgmall2)
+{
+	const char *name = script_getstr(st, 2);
+	const int type = script_getnum(st, 3);
+
+	if (script_hasdata(st, 8)) {
+		// specified part of map
+		const char *mapname = script_getstr(st, 4);
+		int x0 = script_getnum(st, 5);
+		int y0 = script_getnum(st, 6);
+		int x1 = script_getnum(st, 7);
+		int y1 = script_getnum(st, 8);
+		int m;
+
+		if ((m = map->mapname2mapid(mapname)) == -1) {
+			ShowWarning("playbgmall: Attempted to play song '%s' on non-existent map '%s'\n", name, mapname);
+			return true;
+		}
+
+		map->foreachinarea(script->playbgm_sub, m, x0, y0, x1, y1, BL_PC, name, type);
+	} else if (script_hasdata(st, 4)) {
+		// entire map
+		const char *mapname = script_getstr(st, 4);
+		int m;
+
+		if ((m = map->mapname2mapid(mapname)) == -1) {
+			ShowWarning("playbgmall: Attempted to play song '%s' on non-existent map '%s'\n", name, mapname);
+			return true;
+		}
+
+		map->foreachinmap(script->playbgm_sub, m, BL_PC, name, type);
+	} else {
+		// entire server
+		map->foreachpc(script->playbgm_foreachpc_sub, name, type);
 	}
 
 	return true;
@@ -16599,11 +16724,14 @@ static BUILDIN(playbgmall)
 static BUILDIN(soundeffect)
 {
 	struct map_session_data *sd = script->rid2sd(st);
-	const char* name = script_getstr(st,2);
-	int type = script_getnum(st,3);
+	const char* name = script_getstr(st, 2);
+	enum play_sound_act type = script_getnum(st, 3);
+	int term = 0;
+	if (script_hasdata(st, 4))
+		term = script_getnum(st, 4);
 
 	if (sd != NULL) {
-		clif->soundeffect(sd,&sd->bl,name,type);
+		clif->soundeffect(sd, &sd->bl, name, type, term);
 	}
 	return true;
 }
@@ -16612,13 +16740,14 @@ static int soundeffect_sub(struct block_list *bl, va_list ap)
 {
 	struct map_session_data *sd = NULL;
 	char *name = va_arg(ap, char *);
-	int type = va_arg(ap, int);
+	enum play_sound_act type = va_arg(ap, int);
+	int term = va_arg(ap, int);
 
 	nullpo_ret(bl);
 	Assert_ret(bl->type == BL_PC);
 	sd = BL_UCAST(BL_PC, bl);
 
-	clif->soundeffect(sd, bl, name, type);
+	clif->soundeffect(sd, bl, name, type, term);
 
 	return true;
 }
@@ -16629,31 +16758,28 @@ static int soundeffect_sub(struct block_list *bl, va_list ap)
  *------------------------------------------*/
 static BUILDIN(soundeffectall)
 {
-	const char* name;
-	int type;
-
 	struct block_list *bl = st->rid != 0 ? map->id2bl(st->rid) : map->id2bl(st->oid);
 	if (bl == NULL)
 		return true;
 
-	name = script_getstr(st,2);
-	type = script_getnum(st,3);
+	const char *name = script_getstr(st, 2);
+	enum play_sound_act type = script_getnum(st, 3);
 
 	//FIXME: enumerating map squares (map->foreach) is slower than enumerating the list of online players (map->foreachpc?) [ultramage]
 
 	if(!script_hasdata(st,4)) { // area around
-		clif->soundeffectall(bl, name, type, AREA);
+		clif->soundeffectall(bl, name, type, 0, AREA);
 	} else {
 		if(!script_hasdata(st,5)) { // entire map
 			const char *mapname = script_getstr(st,4);
 			int m;
 
 			if ( ( m = map->mapname2mapid(mapname) ) == -1 ) {
-				ShowWarning("soundeffectall: Attempted to play song '%s' (type %d) on non-existent map '%s'\n",name,type, mapname);
+				ShowWarning("soundeffectall: Attempted to play song '%s' (type %d) on non-existent map '%s'\n", name, (int)type, mapname);
 				return true;
 			}
 
-			map->foreachinmap(script->soundeffect_sub, m, BL_PC, name, type);
+			map->foreachinmap(script->soundeffect_sub, m, BL_PC, name, type, 0);
 		} else if(script_hasdata(st,8)) { // specified part of map
 			const char *mapname = script_getstr(st,4);
 			int x0 = script_getnum(st,5);
@@ -16663,11 +16789,11 @@ static BUILDIN(soundeffectall)
 			int m;
 
 			if ( ( m = map->mapname2mapid(mapname) ) == -1 ) {
-				ShowWarning("soundeffectall: Attempted to play song '%s' (type %d) on non-existent map '%s'\n",name,type, mapname);
+				ShowWarning("soundeffectall: Attempted to play song '%s' (type %d) on non-existent map '%s'\n", name, (int)type, mapname);
 				return true;
 			}
 
-			map->foreachinarea(script->soundeffect_sub, m, x0, y0, x1, y1, BL_PC, name, type);
+			map->foreachinarea(script->soundeffect_sub, m, x0, y0, x1, y1, BL_PC, name, type, 0);
 		} else {
 			ShowError("buildin_soundeffectall: insufficient arguments for specific area broadcast.\n");
 		}
@@ -16675,6 +16801,60 @@ static BUILDIN(soundeffectall)
 
 	return true;
 }
+
+/*==========================================
+ * Play a sound effect (.wav) on multiple clients
+ * soundeffectall "<filepath>",<type>{, term{,"<map name>"}}{,<x0>,<y0>,<x1>,<y1>};
+ *------------------------------------------*/
+static BUILDIN(soundeffectall2)
+{
+	struct block_list *bl = st->rid != 0 ? map->id2bl(st->rid) : map->id2bl(st->oid);
+	if (bl == NULL)
+		return true;
+
+	const char *name = script_getstr(st, 2);
+	enum play_sound_act type = script_getnum(st, 3);
+	int term = 0;
+	if (script_hasdata(st, 4))
+		term = script_getnum(st, 4);
+
+	//FIXME: enumerating map squares (map->foreach) is slower than enumerating the list of online players (map->foreachpc?) [ultramage]
+
+	if (!script_hasdata(st, 5)) { // area around
+		clif->soundeffectall(bl, name, type, term, AREA);
+	} else {
+		if (!script_hasdata(st, 6)) { // entire map
+			const char *mapname = script_getstr(st, 5);
+			int m;
+
+			if ((m = map->mapname2mapid(mapname)) == -1) {
+				ShowWarning("soundeffectall2: Attempted to play song '%s' (type %d) on non-existent map '%s'\n", name, (int)type, mapname);
+				return true;
+			}
+
+			map->foreachinmap(script->soundeffect_sub, m, BL_PC, name, type, term);
+		} else if (script_hasdata(st, 9)) { // specified part of map
+			const char *mapname = script_getstr(st, 5);
+			int x0 = script_getnum(st, 6);
+			int y0 = script_getnum(st, 7);
+			int x1 = script_getnum(st, 8);
+			int y1 = script_getnum(st, 9);
+			int m;
+
+			if ((m = map->mapname2mapid(mapname)) == -1) {
+				ShowWarning("soundeffectall2: Attempted to play song '%s' (type %d) on non-existent map '%s'\n", name, (int)type, mapname);
+				return true;
+			}
+
+			map->foreachinarea(script->soundeffect_sub, m, x0, y0, x1, y1, BL_PC, name, type, term);
+		} else {
+			ShowError("buildin_soundeffectall2: insufficient arguments for specific area broadcast.\n");
+		}
+	}
+
+	return true;
+}
+
 /*==========================================
  * pet status recovery [Valaris] / Rewritten by [Skotlex]
  *------------------------------------------*/
@@ -27664,6 +27844,45 @@ static BUILDIN(opengradeui)
 #endif
 }
 
+static BUILDIN(setdialogsize)
+{
+	struct map_session_data *sd = script_rid2sd(st);
+
+	if (sd == NULL) {
+		script_pushint(st, 0);
+		return false;
+	}
+
+	clif->set_npc_window_size(sd, script_getnum(st, 2), script_getnum(st, 3));
+	return true;
+}
+
+static BUILDIN(setdialogpos)
+{
+	struct map_session_data *sd = script_rid2sd(st);
+
+	if (sd == NULL) {
+		script_pushint(st, 0);
+		return false;
+	}
+
+	clif->set_npc_window_pos(sd, script_getnum(st, 2), script_getnum(st, 3));
+	return true;
+}
+
+static BUILDIN(setdialogpospercent)
+{
+	struct map_session_data *sd = script_rid2sd(st);
+
+	if (sd == NULL) {
+		script_pushint(st, 0);
+		return false;
+	}
+
+	clif->set_npc_window_pos_percent(sd, script_getnum(st, 2), script_getnum(st, 3));
+	return true;
+}
+
 /**
  * Adds a built-in script function.
  *
@@ -27725,9 +27944,11 @@ static bool script_add_builtin(const struct script_function *buildin, bool overr
 		else if( strcmp(buildin->name, "callfunc") == 0 ) script->buildin_callfunc_ref = n;
 		else if( strcmp(buildin->name, "getelementofarray") == 0 ) script->buildin_getelementofarray_ref = n;
 		else if( strcmp(buildin->name, "mes") == 0 ) script->buildin_mes_offset = script->buildin_count;
+		else if( strcmp(buildin->name, "mes2") == 0 ) script->buildin_mes2_offset = script->buildin_count;
 		else if( strcmp(buildin->name, "zmes1") == 0 ) script->buildin_zmes1_offset = script->buildin_count;
 		else if( strcmp(buildin->name, "zmes2") == 0 ) script->buildin_zmes2_offset = script->buildin_count;
 		else if( strcmp(buildin->name, "mesf") == 0 ) script->buildin_mesf_offset = script->buildin_count;
+		else if( strcmp(buildin->name, "mes2f") == 0 ) script->buildin_mes2f_offset = script->buildin_count;
 		else if( strcmp(buildin->name, "zmes1f") == 0 ) script->buildin_zmes1f_offset = script->buildin_count;
 		else if( strcmp(buildin->name, "zmes2f") == 0 ) script->buildin_zmes2f_offset = script->buildin_count;
 		else if( strcmp(buildin->name, "select") == 0 ) script->buildin_select_offset = script->buildin_count;
@@ -27892,12 +28113,15 @@ static void script_parse_builtin(void)
 
 		// NPC interaction
 		BUILDIN_DEF(mes, "?"),
+		BUILDIN_DEF(mes2, "*"),
 		BUILDIN_DEF(zmes1, "?"),
 		BUILDIN_DEF(zmes2, "?"),
 		BUILDIN_DEF(mesf, "s*"),
+		BUILDIN_DEF(mes2f, "s*"),
 		BUILDIN_DEF(zmes1f, "s*"),
 		BUILDIN_DEF(zmes2f, "s*"),
 		BUILDIN_DEF(next,""),
+		BUILDIN_DEF(next2,"?"),
 		BUILDIN_DEF(mesclear,""),
 		BUILDIN_DEF(close,""),
 		BUILDIN_DEF(close2,""),
@@ -27959,6 +28183,9 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(setparam,"ii?"),
 		BUILDIN_DEF(getcharid,"i?"),
 		BUILDIN_DEF(getnpcid, "?"),
+		BUILDIN_DEF(setdialogsize, "ii"),
+		BUILDIN_DEF(setdialogpos, "ii"),
+		BUILDIN_DEF(setdialogpospercent, "ii"),
 		BUILDIN_DEF(getpartyname,"i"),
 		BUILDIN_DEF(getpartymember,"i?"),
 		BUILDIN_DEF(getpartyleader,"i?"),
@@ -28128,10 +28355,12 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(getskilllist,""),
 		BUILDIN_DEF(clearitem,""),
 		BUILDIN_DEF(classchange,"ii?"),
-		BUILDIN_DEF(playbgm,"s"),
+		BUILDIN_DEF(playbgm,"s?"),
 		BUILDIN_DEF(playbgmall,"s?????"),
-		BUILDIN_DEF(soundeffect,"si"),
+		BUILDIN_DEF(playbgmall2,"si?????"),
+		BUILDIN_DEF(soundeffect,"si?"),
 		BUILDIN_DEF(soundeffectall,"si?????"), // SoundEffectAll [Codemaster]
+		BUILDIN_DEF(soundeffectall2,"si??????"), // SoundEffectAll2 [Codemaster]
 		BUILDIN_DEF(strmobinfo,"ii"), // display mob data [Valaris]
 		BUILDIN_DEF(guardian,"siisi??"), // summon guardians
 		BUILDIN_DEF(guardianinfo,"sii"), // display guardian data [Valaris]
@@ -29420,6 +29649,16 @@ static void script_hardcoded_constants(void)
 	script->set_constant("ITEM_GRADE_S", ITEM_GRADE_S, false, false);
 	script->set_constant("ITEM_GRADE_SS", ITEM_GRADE_SS, false, false);
 	script->set_constant("ITEM_GRADE_MAX", ITEM_GRADE_MAX, false, false);
+
+	script->constdb_comment("BGM play type");
+	script->set_constant("PLAY_BGM_LOOP", PLAY_BGM_LOOP, false, false);
+	script->set_constant("PLAY_BGM_ONCE", PLAY_BGM_ONCE, false, false);
+	script->set_constant("PLAY_BGM_STOP", PLAY_BGM_STOP, false, false);
+
+	script->constdb_comment("Sound play type");
+	script->set_constant("PLAY_SOUND_ONCE", PLAY_SOUND_ONCE, false, false);
+	script->set_constant("PLAY_SOUND_REPEAT", PLAY_SOUND_REPEAT, false, false);
+	script->set_constant("PLAY_SOUND_STOP", PLAY_SOUND_STOP, false, false);
 
 	script->constdb_comment("Renewal");
 #ifdef RENEWAL

@@ -268,7 +268,7 @@ OnTouch:
 		mes "the final empty key space";
 		mes "to take a better look at it...^000000";
 		next;
-		soundeffect "complete.wav",0;
+		soundeffect "complete.wav", PLAY_SOUND_ONCE;
 		next;
 		if (nif_esc == 12) {
 			MISC_QUEST |= 32;

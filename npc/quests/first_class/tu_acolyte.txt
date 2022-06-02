@@ -1085,7 +1085,7 @@ prt_monk,226,257,6	script	Ill Girl#tu	4_F_04,{
 		mes "................";
 		next;
 		specialeffect EF_CURSEATTACK;
-		soundeffectall "_curse.wav",0;
+		soundeffectall "_curse.wav", PLAY_SOUND_ONCE;
 		emotion e_omg;
 		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "This is....!";
