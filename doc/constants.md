@@ -5701,6 +5701,18 @@
 - `ITEM_GRADE_SS`: 7
 - `ITEM_GRADE_MAX`: 8
 
+### BGM play type
+
+- `PLAY_BGM_LOOP`: 0
+- `PLAY_BGM_ONCE`: 1
+- `PLAY_BGM_STOP`: 2
+
+### Sound play type
+
+- `PLAY_SOUND_ONCE`: 0
+- `PLAY_SOUND_REPEAT`: 1
+- `PLAY_SOUND_STOP`: 2
+
 ### Renewal
 
 - `RENEWAL`: 1
