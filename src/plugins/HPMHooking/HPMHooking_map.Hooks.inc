@@ -98219,10 +98219,10 @@ void HP_vending_list(struct map_session_data *sd, unsigned int id) {
 	}
 	return;
 }
-void HP_vending_purchase(struct map_session_data *sd, int aid, unsigned int uid, const uint8 *data, int count) {
+void HP_vending_purchase(struct map_session_data *sd, int aid, unsigned int uid, const struct CZ_PURCHASE_ITEM_FROMMC *data, int count) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_vending_purchase_pre > 0) {
-		void (*preHookFunc) (struct map_session_data **sd, int *aid, unsigned int *uid, const uint8 **data, int *count);
+		void (*preHookFunc) (struct map_session_data **sd, int *aid, unsigned int *uid, const struct CZ_PURCHASE_ITEM_FROMMC **data, int *count);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_vending_purchase_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_vending_purchase_pre[hIndex].func;
@@ -98237,7 +98237,7 @@ void HP_vending_purchase(struct map_session_data *sd, int aid, unsigned int uid,
 		HPMHooks.source.vending.purchase(sd, aid, uid, data, count);
 	}
 	if (HPMHooks.count.HP_vending_purchase_post > 0) {
-		void (*postHookFunc) (struct map_session_data *sd, int aid, unsigned int uid, const uint8 *data, int count);
+		void (*postHookFunc) (struct map_session_data *sd, int aid, unsigned int uid, const struct CZ_PURCHASE_ITEM_FROMMC *data, int count);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_vending_purchase_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_vending_purchase_post[hIndex].func;
 			postHookFunc(sd, aid, uid, data, count);

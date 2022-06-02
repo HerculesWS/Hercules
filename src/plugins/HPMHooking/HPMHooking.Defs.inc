@@ -8856,8 +8856,8 @@ typedef void (*HPMHOOK_pre_vending_open) (struct map_session_data **sd, const ch
 typedef void (*HPMHOOK_post_vending_open) (struct map_session_data *sd, const char *message, const uint8 *data, int count);
 typedef void (*HPMHOOK_pre_vending_list) (struct map_session_data **sd, unsigned int *id);
 typedef void (*HPMHOOK_post_vending_list) (struct map_session_data *sd, unsigned int id);
-typedef void (*HPMHOOK_pre_vending_purchase) (struct map_session_data **sd, int *aid, unsigned int *uid, const uint8 **data, int *count);
-typedef void (*HPMHOOK_post_vending_purchase) (struct map_session_data *sd, int aid, unsigned int uid, const uint8 *data, int count);
+typedef void (*HPMHOOK_pre_vending_purchase) (struct map_session_data **sd, int *aid, unsigned int *uid, const struct CZ_PURCHASE_ITEM_FROMMC **data, int *count);
+typedef void (*HPMHOOK_post_vending_purchase) (struct map_session_data *sd, int aid, unsigned int uid, const struct CZ_PURCHASE_ITEM_FROMMC *data, int count);
 typedef bool (*HPMHOOK_pre_vending_search) (struct map_session_data **sd, int *nameid);
 typedef bool (*HPMHOOK_post_vending_search) (bool retVal___, struct map_session_data *sd, int nameid);
 typedef bool (*HPMHOOK_pre_vending_searchall) (struct map_session_data **sd, const struct s_search_store_search **s);
