@@ -22,6 +22,57 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
+## [v2022.06.01] `June 01 2022`
+
+### Added
+
+- Added support for newer packetvers/encryption keys/client messages (up to 20220518). (#3142)
+- Added the `mes2()`, `mes2f()`, `next2()` script commands and related packets. (part of #3142)
+  - This family of commands is only supported by main clients starting from 20220504, client implementation may be incomplete.
+  - The commands work similarly to their respective counterparts without `2`, but will display the window with the NPC messages on the bottom of the screen.
+- Added the `setdialogsize()`, `setdialogpos()`, `setdialogpospercent()` script commands, allowing control over the NPC dialog size and position (supported by main clients starting from 20220504). Example scripts are provided in the `custom` folder. (part of #3142)
+- Added the `playbgmall2()` script command as an extended version of `playbgmall()` providing looping control (supported by main clients starting from 20220504). (part of #3142)
+- Added the `soundeffectall2()` script command as an extended version of `soundeffectall()` providing more precise looping control (supported by main clients starting from 20220504). (part of #3142)
+- Added the `PLAY_SOUND_*` constants to be used for the `type` parameter of `soundeffect()` and `soundeffectall()`. (part of #3142)
+- Added `pc->bonus_addele()` and `pc->bonus_subele()` to the `pc` interface. (#3139)
+- Added `enum instance_window_info_type` to specify the instance destruction reason. (part of #3141)
+- Added the `GETHOMINFO_*` constants to be used for the `type` parameter of `gethominfo()`. (#3137, issue #3133)
+- Implemented Dynamic NPCs, allowing a script to summon an NPC, only visible to a certain player and automatically despawn it after a certain time.
+  - See the `dynamicnpc()` script command as well as the `dynamic_npc_timeout` and `dynamic_npc_range` settings in `conf/map/battle/misc.conf` for details.
+  - Example script is provided in the `doc/sample` folder.
+
+### Changed
+
+- Refactored `clif_soulball()` and `clif_spiritball()` into a single function. (#3128)
+- Updated handling of various packets (`PACKET_ZC_SPIRITS`, `ZC_SAY_DIALOG`, `ZC_WAIT_DIALOG`, `ZC_PLAY_NPC_BGM`, `CZ_MOVE_ITEM_FROM_BODY_TO_CART`, `ZC_SOUND`, `ZC_BROADCASTING_SPECIAL_ITEM_OBTAIN_item`, `ZC_BUYING_STORE_ENTRY`, `ZC_STORE_ENTRY`, `CZ_PC_PURCHASE_ITEMLIST_FROMMC`, `CZ_PC_PURCHASE_ITEMLIST_FROMMC2`, `ZC_DISAPPEAR_BUYING_STORE_ENTRY`) to use the struct format. (#3128, #3131, #3142)
+- Reimplemented the "HWSAPI" build bot functionality (automatic HPM hooks updates, SQL item/mob/mobskill database generation, constants documentation generation) as a GitHub Actions workflow, migrating away from a legacy self-hosted homebrewed buildbot. (#3144)
+- Updated CodeQL GitHub Action to v2. (part of #3144)
+- Extended the `playbgm()` command with a new `type` parameter providing looping control (supported by main clients starting from 20220504). Example scripts are provided in the `npc/custom` folder. (part of #3142)
+- Extended the `soundeffect()` command with a new `term` parameter providing more precise looping control (supported by main clients starting from 20220504). Example scripts are provided in the `npc/custom` folder. (part of #3142)
+- Updated packetver in the CI builds to the most recent one. (part of #3142)
+- Updated libbacktrace. (part of #3142)
+- Replaced clang-13 with clang-15 in the GitHub Actions CI builds. (part of #3142)
+- Suppressed some warnings in libconfig when compiling with clang-15. (part of #3142)
+- Renamed the `CZ_SEE_GUILD_MEMBERS` packet into its official name `CZ_APPROXIMATE_ACTOR`. (part of #3142)
+- Updated `clif->package_announce()` (and the `ZC_BROADCASTING_SPECIAL_ITEM_OBTAIN_item` packet) to include the item refine level when supported by the client. (part of #3142)
+- Improved type safety of `vending->purchase()`. (part of #3131)
+
+### Fixed
+
+- Fixed an issue where the item is changed/deleted before the status update is sent to the grade enchant UI, resulting in wrong or missing information. (#3140)
+- Fixed a missing include preventing compilation or loading of HPM plugins. (#3129)
+- Fixed mercenaries showing with the "Unknown" name when idling, spawning or walking. (#3143)
+- Fixed `clif->item_movefailed()` (and the `ZC_MOVE_ITEM_FAILED` packet) to send the correct item amount. (part of #3142)
+- Fixed `soundeffect()` and `soundeffectall()`'s `PLAY_SOUND_REPEAT` mode not working as intended. (part of #3142)
+- Changed many scripts that were incorrectly using the `PLAY_SOUND_REPEAT` mode of `soundeffect()` to `PLAY_SOUND_ONCE`, as their behavior was equivalent before. (part of #3142)
+- Fixed a missing linebreak in the nullpo callback console error message. (part of #3142)
+- Fixed some issues around instance destruction, causing visual glitches and assertion failures. (#3141)
+  - When characters were moved out of an instance at its expiration, they were receiving information that the instance went idle rather than destroyed.
+  - When a character had a Player type instance attached, it would still receive instance info on login even after the instance was destroyed.
+  - When reloading scripts after playing an instance, an assertion was failing.
+  - When shutting down the server after playing an instance, an assertion was failing.
+  - In some cases, the wrong reason code was provided on instance destruction.
+
 ## [v2022.04.07] `April 07 2022`
 
 ### Added
@@ -2412,6 +2463,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2022.06.01]: https://github.com/HerculesWS/Hercules/compare/v2022.04.07...v2022.06.01
 [v2022.04.07]: https://github.com/HerculesWS/Hercules/compare/v2022.03.02...v2022.04.07
 [v2022.03.02]: https://github.com/HerculesWS/Hercules/compare/v2022.01.05+2...v2022.03.02
 [v2022.01.05+2]: https://github.com/HerculesWS/Hercules/compare/v2022.01.05+1...v2022.01.05+2
