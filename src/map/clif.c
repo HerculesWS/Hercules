@@ -12641,7 +12641,7 @@ static void clif_parse_NpcClicked(int fd, struct map_session_data *sd)
 {
 	struct block_list *bl;
 
-	struct PACKET_CZ_CONTACTNPC *packet = RFIFOP(fd, 0);
+	const struct PACKET_CZ_CONTACTNPC *packet = RFIFOP(fd, 0);
 
 	if( pc_isdead(sd) ) {
 		clif->clearunit_area(&sd->bl,CLR_DEAD);
