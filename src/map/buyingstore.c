@@ -197,7 +197,7 @@ static void buyingstore_create(struct map_session_data *sd, int zenylimit, unsig
 	sd->buyingstore.slots = i;  // store actual amount of items
 	safestrncpy(sd->message, storename, sizeof(sd->message));
 	clif->buyingstore_myitemlist(sd);
-	clif->buyingstore_entry(sd);
+	clif->buyingstore_entry(&sd->bl, sd->message);
 }
 
 static void buyingstore_close(struct map_session_data *sd)
@@ -210,7 +210,7 @@ static void buyingstore_close(struct map_session_data *sd)
 		memset(&sd->buyingstore, 0, sizeof(sd->buyingstore));
 
 		// notify other players
-		clif->buyingstore_disappear_entry(sd);
+		clif->buyingstore_disappear_entry(&sd->bl);
 	}
 }
 

@@ -5502,7 +5502,6 @@ struct PACKET_CZ_APPROXIMATE_ACTOR {
 DEFINE_PACKET_HEADER(CZ_APPROXIMATE_ACTOR, 0x0bb0)
 #endif  // PACKETVER_MAIN_NUM >= 20220216
 
-
 struct PACKET_CZ_CONTACTNPC {
 	int16 PacketType;
 	uint32 AID;
@@ -5667,6 +5666,52 @@ struct PACKET_ZC_SOUND {
 	uint32 AID;
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(ZC_SOUND, 0x01d3)
+
+#if PACKETVER >= 20100420
+struct PACKET_ZC_BUYING_STORE_ENTRY {
+	int16 packetType;
+	uint32 makerAID;
+	char storeName[MESSAGE_SIZE];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_BUYING_STORE_ENTRY, 0x0814);
+#endif
+
+struct PACKET_ZC_STORE_ENTRY {
+	int16 packetType;
+	uint32 makerAID;
+	char storeName[MESSAGE_SIZE];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_STORE_ENTRY, 0x0131);
+
+struct CZ_PURCHASE_ITEM_FROMMC {
+	int16 count;
+	int16 index;
+} __attribute__((packed));
+
+struct PACKET_CZ_PC_PURCHASE_ITEMLIST_FROMMC {
+	int16 packetType;
+	int16 packetLength;
+	uint32 AID;
+	struct CZ_PURCHASE_ITEM_FROMMC list[];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_PC_PURCHASE_ITEMLIST_FROMMC, 0x0134);
+
+struct PACKET_CZ_PC_PURCHASE_ITEMLIST_FROMMC2 {
+	int16 packetType;
+	int16 packetLength;
+	uint32 AID;
+	uint32 UniqueID;
+	struct CZ_PURCHASE_ITEM_FROMMC list[];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_PC_PURCHASE_ITEMLIST_FROMMC2, 0x0801);
+
+#if PACKETVER >= 20100309
+struct PACKET_ZC_DISAPPEAR_BUYING_STORE_ENTRY {
+	int16 packetType;
+	uint32 makerAID;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_DISAPPEAR_BUYING_STORE_ENTRY, 0x0816);
+#endif
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)

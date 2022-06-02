@@ -4938,7 +4938,7 @@ static void clif_getareachar_pc(struct map_session_data *sd, struct map_session_
 	} else if( dstsd->state.vending )
 		clif->showvendingboard(&dstsd->bl,dstsd->message,sd->fd);
 	else if( dstsd->state.buyingstore )
-		clif->buyingstore_entry_single(sd, dstsd);
+		clif->buyingstore_entry_single(&dstsd->bl, dstsd->message, sd->fd);
 
 	if(dstsd->spiritball > 0)
 		clif->spiritball_single(sd->fd, dstsd);
@@ -5474,7 +5474,7 @@ static int clif_outsight(struct block_list *bl, va_list ap)
 				if( sd->state.vending )
 					clif->closevendingboard(bl,tsd->fd);
 				if( sd->state.buyingstore )
-					clif->buyingstore_disappear_entry_single(tsd, sd);
+					clif->buyingstore_disappear_entry_single(bl, tsd->fd);
 				break;
 			case BL_ITEM:
 				clif->clearflooritem(BL_UCAST(BL_ITEM, bl), tsd->fd);
@@ -7105,20 +7105,19 @@ static void clif_openvendingreq(struct map_session_data *sd, int num)
 /// 0131 <owner id>.L <message>.80B
 static void clif_showvendingboard(struct block_list *bl, const char *message, int fd)
 {
-	unsigned char buf[128];
-
 	nullpo_retv(bl);
+	nullpo_retv(message);
 
-	WBUFW(buf,0) = 0x131;
-	WBUFL(buf,2) = bl->id;
-	safestrncpy(WBUFP(buf,6), message, 80);
-
-	if( fd ) {
-		WFIFOHEAD(fd,packet_len(0x131));
-		memcpy(WFIFOP(fd,0),buf,packet_len(0x131));
-		WFIFOSET(fd,packet_len(0x131));
+	struct PACKET_ZC_STORE_ENTRY p = { 0 };
+	p.packetType = HEADER_ZC_STORE_ENTRY;
+	p.makerAID = bl->id;
+	safestrncpy(p.storeName, message, MESSAGE_SIZE);
+	if (fd != 0) {
+		WFIFOHEAD(fd, sizeof(struct PACKET_ZC_STORE_ENTRY));
+		memcpy(WFIFOP(fd, 0), &p, sizeof(struct PACKET_ZC_STORE_ENTRY));
+		WFIFOSET(fd, sizeof(struct PACKET_ZC_STORE_ENTRY));
 	} else {
-		clif->send(buf,packet_len(0x131),bl,AREA_WOS);
+		clif->send(&p, sizeof(struct PACKET_ZC_STORE_ENTRY), bl, AREA_WOS);
 	}
 }
 
@@ -12642,7 +12641,7 @@ static void clif_parse_NpcClicked(int fd, struct map_session_data *sd)
 {
 	struct block_list *bl;
 
-	struct PACKET_CZ_CONTACTNPC *packet = RFIFOP(fd, 0);
+	const struct PACKET_CZ_CONTACTNPC *packet = RFIFOP(fd, 0);
 
 	if( pc_isdead(sd) ) {
 		clif->clearunit_area(&sd->bl,CLR_DEAD);
@@ -15222,17 +15221,14 @@ static void clif_parse_PurchaseReq(int fd, struct map_session_data *sd)
 	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
 		return;
 
-	int len = (int)RFIFOW(fd, 2) - 8;
-	int id;
-	const uint8 *data;
+	const struct PACKET_CZ_PC_PURCHASE_ITEMLIST_FROMMC *p = RP2PTR(fd);
+	const int len = p->packetLength - sizeof(struct PACKET_CZ_PC_PURCHASE_ITEMLIST_FROMMC);
 
 	if (len < 1)
 		return;
 
-	id = RFIFOL(fd, 4);
-	data = RFIFOP(fd, 8);
-
-	vending->purchase(sd, id, sd->vended_id, data, len/4);
+	int item_count = len / sizeof(struct CZ_PURCHASE_ITEM_FROMMC);
+	vending->purchase(sd, p->AID, sd->vended_id, p->list, item_count);
 
 	// whether it fails or not, the buy window is closed
 	sd->vended_id = 0;
@@ -15246,18 +15242,14 @@ static void clif_parse_PurchaseReq2(int fd, struct map_session_data *sd)
 	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
 		return;
 
-	int len = (int)RFIFOW(fd, 2) - 12;
-	int aid;
-	int uid;
-	const uint8 *data;
+	const struct PACKET_CZ_PC_PURCHASE_ITEMLIST_FROMMC2 *p = RP2PTR(fd);
+	const int len = p->packetLength - sizeof(struct PACKET_CZ_PC_PURCHASE_ITEMLIST_FROMMC2);
 
 	if (len < 1)
 		return;
-	aid = RFIFOL(fd, 4);
-	uid = RFIFOL(fd, 8);
-	data = RFIFOP(fd, 12);
 
-	vending->purchase(sd, aid, uid, data, len/4);
+	int item_count = len / sizeof(struct CZ_PURCHASE_ITEM_FROMMC);
+	vending->purchase(sd, p->AID, p->UniqueID, p->list, item_count);
 
 	// whether it fails or not, the buy window is closed
 	sd->vended_id = 0;
@@ -19958,31 +19950,31 @@ static void clif_buyingstore_myitemlist(struct map_session_data *sd)
 
 /// Notifies clients in area of a buying store (ZC_BUYING_STORE_ENTRY).
 /// 0814 <account id>.L <store name>.80B
-static void clif_buyingstore_entry(struct map_session_data *sd)
+static void clif_buyingstore_entry(struct block_list *bl, const char *message)
 {
 #if PACKETVER >= 20100420
-	uint8 buf[86];
+	nullpo_retv(bl);
+	nullpo_retv(message);
 
-	nullpo_retv(sd);
-	WBUFW(buf,0) = 0x814;
-	WBUFL(buf,2) = sd->bl.id;
-	memcpy(WBUFP(buf,6), sd->message, MESSAGE_SIZE);
-
-	clif->send(buf, packet_len(0x814), &sd->bl, AREA_WOS);
+	struct PACKET_ZC_BUYING_STORE_ENTRY p = { 0 };
+	p.packetType = HEADER_ZC_BUYING_STORE_ENTRY;
+	p.makerAID = bl->id;
+	safestrncpy(p.storeName, message, MESSAGE_SIZE);
+	clif->send(&p, sizeof(struct PACKET_ZC_BUYING_STORE_ENTRY), bl, AREA_WOS);
 #endif
 }
-static void clif_buyingstore_entry_single(struct map_session_data *sd, struct map_session_data *pl_sd)
+static void clif_buyingstore_entry_single(struct block_list *bl, const char *message, int fd)
 {
 #if PACKETVER >= 20100420
-	int fd;
+	nullpo_retv(bl);
+	nullpo_retv(message);
 
-	nullpo_retv(sd);
-	fd = sd->fd;
-	WFIFOHEAD(fd,packet_len(0x814));
-	WFIFOW(fd,0) = 0x814;
-	WFIFOL(fd,2) = pl_sd->bl.id;
-	memcpy(WFIFOP(fd,6), pl_sd->message, MESSAGE_SIZE);
-	WFIFOSET(fd,packet_len(0x814));
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_BUYING_STORE_ENTRY));
+	struct PACKET_ZC_BUYING_STORE_ENTRY *p = WFIFOP(fd, 0);
+	p->packetType = HEADER_ZC_BUYING_STORE_ENTRY;
+	p->makerAID = bl->id;
+	safestrncpy(p->storeName, message, MESSAGE_SIZE);
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_BUYING_STORE_ENTRY));
 #endif
 }
 
@@ -19996,31 +19988,28 @@ static void clif_parse_ReqCloseBuyingStore(int fd, struct map_session_data *sd)
 
 /// Notifies clients in area that a buying store was closed (ZC_DISAPPEAR_BUYING_STORE_ENTRY).
 /// 0816 <account id>.L
-static void clif_buyingstore_disappear_entry(struct map_session_data *sd)
+static void clif_buyingstore_disappear_entry(struct block_list *bl)
 {
 #if PACKETVER >= 20100309
-	uint8 buf[6];
+	nullpo_retv(bl);
 
-	nullpo_retv(sd);
-	WBUFW(buf,0) = 0x816;
-	WBUFL(buf,2) = sd->bl.id;
-
-	clif->send(buf, packet_len(0x816), &sd->bl, AREA_WOS);
+	struct PACKET_ZC_DISAPPEAR_BUYING_STORE_ENTRY p = { 0 };
+	p.packetType = HEADER_ZC_DISAPPEAR_BUYING_STORE_ENTRY;
+	p.makerAID = bl->id;
+	clif->send(&p, sizeof(struct PACKET_ZC_DISAPPEAR_BUYING_STORE_ENTRY), bl, AREA_WOS);
 #endif
 }
 
-static void clif_buyingstore_disappear_entry_single(struct map_session_data *sd, struct map_session_data *pl_sd)
+static void clif_buyingstore_disappear_entry_single(struct block_list *bl, int fd)
 {
 #if PACKETVER >= 20100309
-	int fd;
+	nullpo_retv(bl);
 
-	nullpo_retv(sd);
-	nullpo_retv(pl_sd);
-	fd = sd->fd;
-	WFIFOHEAD(fd,packet_len(0x816));
-	WFIFOW(fd,0) = 0x816;
-	WFIFOL(fd,2) = pl_sd->bl.id;
-	WFIFOSET(fd,packet_len(0x816));
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_DISAPPEAR_BUYING_STORE_ENTRY));
+	struct PACKET_ZC_DISAPPEAR_BUYING_STORE_ENTRY *p = WFIFOP(fd, 0);
+	p->packetType = HEADER_ZC_DISAPPEAR_BUYING_STORE_ENTRY;
+	p->makerAID = bl->id;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_DISAPPEAR_BUYING_STORE_ENTRY));
 #endif
 }
 
