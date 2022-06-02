@@ -6080,6 +6080,10 @@ typedef int (*HPMHOOK_pre_npc_secure_timeout_timer) (int *tid, int64 *tick, int 
 typedef int (*HPMHOOK_post_npc_secure_timeout_timer) (int retVal___, int tid, int64 tick, int id, intptr_t data);
 typedef void (*HPMHOOK_pre_npc_process_files) (int *npc_min);
 typedef void (*HPMHOOK_post_npc_process_files) (int npc_min);
+typedef int (*HPMHOOK_pre_npc_dynamic_npc_despawn) (int *tid, int64 *tick, int *id, intptr_t *data);
+typedef int (*HPMHOOK_post_npc_dynamic_npc_despawn) (int retVal___, int tid, int64 tick, int id, intptr_t data);
+typedef void (*HPMHOOK_pre_npc_update_interaction_tick) (struct npc_data **nd);
+typedef void (*HPMHOOK_post_npc_update_interaction_tick) (struct npc_data *nd);
 #endif // MAP_NPC_H
 #ifdef COMMON_NULLPO_H /* nullpo */
 typedef void (*HPMHOOK_pre_nullpo_init) (void);

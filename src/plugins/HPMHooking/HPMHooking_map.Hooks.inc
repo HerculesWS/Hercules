@@ -61957,6 +61957,59 @@ void HP_npc_process_files(int npc_min) {
 	}
 	return;
 }
+int HP_npc_dynamic_npc_despawn(int tid, int64 tick, int id, intptr_t data) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_npc_dynamic_npc_despawn_pre > 0) {
+		int (*preHookFunc) (int *tid, int64 *tick, int *id, intptr_t *data);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_npc_dynamic_npc_despawn_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_npc_dynamic_npc_despawn_pre[hIndex].func;
+			retVal___ = preHookFunc(&tid, &tick, &id, &data);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.npc.dynamic_npc_despawn(tid, tick, id, data);
+	}
+	if (HPMHooks.count.HP_npc_dynamic_npc_despawn_post > 0) {
+		int (*postHookFunc) (int retVal___, int tid, int64 tick, int id, intptr_t data);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_npc_dynamic_npc_despawn_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_npc_dynamic_npc_despawn_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, tid, tick, id, data);
+		}
+	}
+	return retVal___;
+}
+void HP_npc_update_interaction_tick(struct npc_data *nd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_npc_update_interaction_tick_pre > 0) {
+		void (*preHookFunc) (struct npc_data **nd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_npc_update_interaction_tick_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_npc_update_interaction_tick_pre[hIndex].func;
+			preHookFunc(&nd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.npc.update_interaction_tick(nd);
+	}
+	if (HPMHooks.count.HP_npc_update_interaction_tick_post > 0) {
+		void (*postHookFunc) (struct npc_data *nd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_npc_update_interaction_tick_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_npc_update_interaction_tick_post[hIndex].func;
+			postHookFunc(nd);
+		}
+	}
+	return;
+}
 /* nullpo_interface */
 void HP_nullpo_init(void) {
 	int hIndex = 0;

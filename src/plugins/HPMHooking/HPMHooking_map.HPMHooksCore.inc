@@ -4664,6 +4664,10 @@ struct {
 	struct HPMHookPoint *HP_npc_secure_timeout_timer_post;
 	struct HPMHookPoint *HP_npc_process_files_pre;
 	struct HPMHookPoint *HP_npc_process_files_post;
+	struct HPMHookPoint *HP_npc_dynamic_npc_despawn_pre;
+	struct HPMHookPoint *HP_npc_dynamic_npc_despawn_post;
+	struct HPMHookPoint *HP_npc_update_interaction_tick_pre;
+	struct HPMHookPoint *HP_npc_update_interaction_tick_post;
 	struct HPMHookPoint *HP_nullpo_init_pre;
 	struct HPMHookPoint *HP_nullpo_init_post;
 	struct HPMHookPoint *HP_nullpo_final_pre;
@@ -11995,6 +11999,10 @@ struct {
 	int HP_npc_secure_timeout_timer_post;
 	int HP_npc_process_files_pre;
 	int HP_npc_process_files_post;
+	int HP_npc_dynamic_npc_despawn_pre;
+	int HP_npc_dynamic_npc_despawn_post;
+	int HP_npc_update_interaction_tick_pre;
+	int HP_npc_update_interaction_tick_post;
 	int HP_nullpo_init_pre;
 	int HP_nullpo_init_post;
 	int HP_nullpo_final_pre;

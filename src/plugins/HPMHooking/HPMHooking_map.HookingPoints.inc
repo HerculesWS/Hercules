@@ -2386,6 +2386,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(npc->questinfo_clear, HP_npc_questinfo_clear) },
 	{ HP_POP(npc->secure_timeout_timer, HP_npc_secure_timeout_timer) },
 	{ HP_POP(npc->process_files, HP_npc_process_files) },
+	{ HP_POP(npc->dynamic_npc_despawn, HP_npc_dynamic_npc_despawn) },
+	{ HP_POP(npc->update_interaction_tick, HP_npc_update_interaction_tick) },
 /* nullpo_interface */
 	{ HP_POP(nullpo->init, HP_nullpo_init) },
 	{ HP_POP(nullpo->final, HP_nullpo_final) },
