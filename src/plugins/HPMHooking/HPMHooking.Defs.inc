@@ -1862,8 +1862,8 @@ typedef void (*HPMHOOK_pre_clif_sendbgemblem_area) (struct map_session_data **sd
 typedef void (*HPMHOOK_post_clif_sendbgemblem_area) (struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_sendbgemblem_single) (int *fd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_sendbgemblem_single) (int fd, struct map_session_data *sd);
-typedef int (*HPMHOOK_pre_clif_instance) (int *instance_id, int *type, int *flag);
-typedef int (*HPMHOOK_post_clif_instance) (int retVal___, int instance_id, int type, int flag);
+typedef int (*HPMHOOK_pre_clif_instance) (int *instance_id, enum instance_window_info_type *type, int *flag);
+typedef int (*HPMHOOK_post_clif_instance) (int retVal___, int instance_id, enum instance_window_info_type type, int flag);
 typedef void (*HPMHOOK_pre_clif_instance_join) (int *fd, int *instance_id);
 typedef void (*HPMHOOK_post_clif_instance_join) (int fd, int instance_id);
 typedef void (*HPMHOOK_pre_clif_instance_leave) (int *fd);

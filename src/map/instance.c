@@ -58,7 +58,7 @@ static bool instance_is_valid(int instance_id)
 		return false;
 	}
 
-	if( instance->list[instance_id].state == INSTANCE_FREE ) {// uninitialized/freed instance slot
+	if (!instance_is_active(instance->list[instance_id])) { // uninitialized/freed/being freed instance slot
 		return false;
 	}
 
@@ -170,7 +170,7 @@ static int instance_create(int owner_id, const char *name, enum instance_owner_t
 		}
 	}
 
-	clif->instance(i, 1, 0); // Start instancing window
+	clif->instance(i, INSTANCE_WND_INFO_CREATE, 0); // Start instancing window
 	return i;
 }
 
@@ -190,7 +190,7 @@ static int instance_create(int owner_id, const char *name, enum instance_owner_t
 static int instance_add_map(const char *name, int instance_id, bool usebasename, const char *map_name)
 {
 	int16 m = map->mapname2mapid(name);
-	int i, im = -1;
+	int i, im = MAPID_NONE;
 	size_t num_cell, size, j;
 
 	nullpo_retr(-1, name);
@@ -543,6 +543,7 @@ static void instance_del_map(int16 m)
 
 	map->removemapdb(&map->list[m]);
 	memset(&map->list[m], 0x00, sizeof(map->list[0]));
+	map->list[m].m = MAPID_NONE; // Marks this map as unallocated so server doesn't try to clean it up later on.
 	map->list[m].name[0] = 0;
 	map->list[m].instance_id = -1;
 	map->list[m].mob_delete_timer = INVALID_TIMER;
@@ -567,20 +568,19 @@ static void instance_destroy(int instance_id)
 	struct party_data *p = NULL;
 	struct guild *g = NULL;
 	short *iptr = NULL;
-	int type;
 	unsigned int now = (unsigned int)time(NULL);
 
 	if( !instance->valid(instance_id) )
 		return; // nothing to do
 
-	if( instance->list[instance_id].progress_timeout && instance->list[instance_id].progress_timeout <= now )
-		type = 1;
-	else if( instance->list[instance_id].idle_timeout && instance->list[instance_id].idle_timeout <= now )
-		type = 2;
-	else
-		type = 3;
+	enum instance_destroy_reason type = INSTANCE_DESTROY_OTHER;
+	bool idle = (instance->list[instance_id].users == 0);
+	if (!idle && instance->list[instance_id].progress_timeout && instance->list[instance_id].progress_timeout <= now)
+		type = INSTANCE_DESTROY_PROG_TIMEOUT;
+	else if (idle && instance->list[instance_id].idle_timeout && instance->list[instance_id].idle_timeout <= now)
+		type = INSTANCE_DESTROY_IDLE_TIMEOUT;
 
-	clif->instance(instance_id, 5, type); // Report users this instance has been destroyed
+	clif->instance(instance_id, INSTANCE_WND_INFO_DESTROY, type); // Report users this instance has been destroyed
 
 	switch ( instance->list[instance_id].owner_type ) {
 		case IOT_NONE:
@@ -619,6 +619,9 @@ static void instance_destroy(int instance_id)
 			iptr[i] = -1;
 	}
 
+	// mark it as being destroyed so server doesn't try to give players more information about it
+	instance->list[instance_id].state = INSTANCE_DESTROYING;
+
 	if (instance->list[instance_id].map) {
 		int last = 0;
 		while (instance->list[instance_id].num_map && last != instance->list[instance_id].map[0]) {
@@ -643,11 +646,12 @@ static void instance_destroy(int instance_id)
 	if( instance->list[instance_id].map )
 		aFree(instance->list[instance_id].map);
 
+	HPM->data_store_destroy(&instance->list[instance_id].hdata);
+
+	// Clean up remains of the old instance and mark it as available for a new one
+	memset(&instance->list[instance_id], 0x0, sizeof(instance->list[0]));
 	instance->list[instance_id].map = NULL;
 	instance->list[instance_id].state = INSTANCE_FREE;
-	instance->list[instance_id].num_map = 0;
-
-	HPM->data_store_destroy(&instance->list[instance_id].hdata);
 }
 
 /*--------------------------------------
@@ -655,24 +659,28 @@ static void instance_destroy(int instance_id)
  *--------------------------------------*/
 static void instance_check_idle(int instance_id)
 {
-	bool idle = true;
-	unsigned int now = (unsigned int)time(NULL);
-
-	if( !instance->valid(instance_id) || instance->list[instance_id].idle_timeoutval == 0 )
+	if (!instance->valid(instance_id) || instance->list[instance_id].idle_timeoutval == 0)
 		return;
 
-	if( instance->list[instance_id].users )
+	bool idle = true;
+	if (instance->list[instance_id].users)
 		idle = false;
 
-	if( instance->list[instance_id].idle_timer != INVALID_TIMER && !idle ) {
+	if (instance->list[instance_id].idle_timer != INVALID_TIMER && !idle) {
 		timer->delete(instance->list[instance_id].idle_timer, instance->destroy_timer);
 		instance->list[instance_id].idle_timer = INVALID_TIMER;
 		instance->list[instance_id].idle_timeout = 0;
-		clif->instance(instance_id, 3, 0); // Notify instance users normal instance expiration
-	} else if( instance->list[instance_id].idle_timer == INVALID_TIMER && idle ) {
+		
+		// Notify instance users normal instance expiration
+		clif->instance(instance_id, INSTANCE_WND_INFO_PROGRESS_TIME, 0);
+	} else if (instance->list[instance_id].idle_timer == INVALID_TIMER && idle) {
+		unsigned int now = (unsigned int) time(NULL);
+		int64 destroy_tick = timer->gettick() + instance->list[instance_id].idle_timeoutval * 1000;
 		instance->list[instance_id].idle_timeout = now + instance->list[instance_id].idle_timeoutval;
-		instance->list[instance_id].idle_timer = timer->add( timer->gettick() + instance->list[instance_id].idle_timeoutval * 1000, instance->destroy_timer, instance_id, 0);
-		clif->instance(instance_id, 4, 0); // Notify instance users it will be destroyed of no user join it again in "X" time
+		instance->list[instance_id].idle_timer = timer->add(destroy_tick, instance->destroy_timer, instance_id, 0);
+		
+		// Notify instance users it will be destroyed if no user join it again in "X" time
+		clif->instance(instance_id, INSTANCE_WND_INFO_IDLE_TIME, 0);
 	}
 }
 
@@ -822,6 +830,9 @@ static void do_reload_instance(void)
 	int i, k;
 
 	for(i = 0; i < instance->instances; i++) {
+		if (!instance_is_valid(i))
+			continue; // don't try to restart an invalid instance
+
 		for(k = 0; k < instance->list[i].num_map; k++) {
 			if( !map->list[map->list[instance->list[i].map[k]].instance_src_map].flag.src4instance )
 				break;

@@ -18906,11 +18906,11 @@ void HP_clif_sendbgemblem_single(int fd, struct map_session_data *sd) {
 	}
 	return;
 }
-int HP_clif_instance(int instance_id, int type, int flag) {
+int HP_clif_instance(int instance_id, enum instance_window_info_type type, int flag) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_clif_instance_pre > 0) {
-		int (*preHookFunc) (int *instance_id, int *type, int *flag);
+		int (*preHookFunc) (int *instance_id, enum instance_window_info_type *type, int *flag);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_instance_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_clif_instance_pre[hIndex].func;
@@ -18925,7 +18925,7 @@ int HP_clif_instance(int instance_id, int type, int flag) {
 		retVal___ = HPMHooks.source.clif.instance(instance_id, type, flag);
 	}
 	if (HPMHooks.count.HP_clif_instance_post > 0) {
-		int (*postHookFunc) (int retVal___, int instance_id, int type, int flag);
+		int (*postHookFunc) (int retVal___, int instance_id, enum instance_window_info_type type, int flag);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_instance_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_instance_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, instance_id, type, flag);

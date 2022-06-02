@@ -31,10 +31,19 @@ struct map_session_data;
 
 #define INSTANCE_NAME_LENGTH (60+1)
 
+/**
+ * true if instance is in an active/playable state.
+ * In other words, if a player can interact with it.
+ * 
+ * @param inst instance_data to be checked
+ */
+#define instance_is_active(inst) ((inst).state == INSTANCE_IDLE || (inst).state == INSTANCE_BUSY)
+
 typedef enum instance_state {
 	INSTANCE_FREE,
 	INSTANCE_IDLE,
-	INSTANCE_BUSY
+	INSTANCE_BUSY,
+	INSTANCE_DESTROYING,
 } instance_state;
 
 enum instance_owner_type {
@@ -44,6 +53,25 @@ enum instance_owner_type {
 	IOT_GUILD,
 	/* ... */
 	IOT_MAX,
+};
+
+/**
+ * Reason for instance being destroyed.
+ * Note: These numbers are client-dependent.
+ */
+enum instance_destroy_reason {
+	/**
+	 * Time to progress in the instance has expired.
+	 */
+	INSTANCE_DESTROY_PROG_TIMEOUT = 1,
+	/**
+	 * The instance has been empty for too long.
+	 */
+	INSTANCE_DESTROY_IDLE_TIMEOUT = 2,
+	/**
+	 * Other reason
+	 */
+	INSTANCE_DESTROY_OTHER = 3,
 };
 
 struct instance_data {
