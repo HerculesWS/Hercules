@@ -19954,6 +19954,7 @@ static void clif_buyingstore_entry(struct block_list *bl, const char *message)
 {
 #if PACKETVER >= 20100420
 	nullpo_retv(bl);
+	nullpo_retv(message);
 
 	struct PACKET_ZC_BUYING_STORE_ENTRY p = { 0 };
 	p.packetType = HEADER_ZC_BUYING_STORE_ENTRY;
@@ -20002,6 +20003,8 @@ static void clif_buyingstore_disappear_entry(struct block_list *bl)
 static void clif_buyingstore_disappear_entry_single(struct block_list *bl, int fd)
 {
 #if PACKETVER >= 20100309
+	nullpo_retv(bl);
+
 	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_DISAPPEAR_BUYING_STORE_ENTRY));
 	struct PACKET_ZC_DISAPPEAR_BUYING_STORE_ENTRY *p = WFIFOP(fd, 0);
 	p->packetType = HEADER_ZC_DISAPPEAR_BUYING_STORE_ENTRY;
