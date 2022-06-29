@@ -9268,6 +9268,9 @@ ACMD(set)
 			data->type = C_STR;
 			data->u.mutstr = aStrdup(str);
 		}
+	} else if (script->str_data[script->search_str(reg)].type == C_PARAM) {
+		data->type = C_PARAM;
+		data->u.num = pc->readparam(sd, script->str_data[script->search_str(reg)].val);
 	} else {// integer variable
 		data->type = C_INT;
 		switch( reg[0] ) {
@@ -9293,6 +9296,7 @@ ACMD(set)
 	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 	switch (data->type) {
 		case C_INT:
+		case C_PARAM:
 			safesnprintf(atcmd_output, sizeof(atcmd_output),msg_fd(fd,1373),reg,data->u.num); // %s value is now :%d
 			break;
 		case C_STR:
