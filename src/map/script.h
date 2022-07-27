@@ -441,6 +441,7 @@ enum script_unit_data_types {
 	UDT_BODY2,
 	UDT_GROUP,
 	UDT_DAMAGE_TAKEN_RATE,
+	UDT_OPTIONS,
 	UDT_MAX
 };
 

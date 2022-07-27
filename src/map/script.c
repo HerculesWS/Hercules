@@ -20726,6 +20726,9 @@ static BUILDIN(setunitdata)
 	case UDT_DAMAGE_TAKEN_RATE:
 		setunitdata_check_bounds(4, 1, INT_MAX);
 		break;
+	case UDT_OPTIONS:
+		setunitdata_check_bounds(4, 0, INT_MAX);
+		break;
 	default:
 		break;
 	}
@@ -20936,6 +20939,9 @@ static BUILDIN(setunitdata)
 			break;
 		case UDT_DAMAGE_TAKEN_RATE:
 			md->dmg_taken_rate = (int)val;
+			break;
+		case UDT_OPTIONS:
+			md->sc.option = (int)val;
 			break;
 		default:
 			ShowWarning("buildin_setunitdata: Invalid data type '%d' for mob unit.\n", type);
@@ -21813,6 +21819,7 @@ static BUILDIN(getunitdata)
 		case UDT_ADELAY:      script_pushint(st, md->status.adelay); break;
 		case UDT_DMOTION:     script_pushint(st, md->status.dmotion); break;
 		case UDT_DAMAGE_TAKEN_RATE: script_pushint(st, md->dmg_taken_rate); break;
+		case UDT_OPTIONS: script_pushint(st, md->sc.option); break;
 		default:
 			ShowWarning("buildin_getunitdata: Invalid data type '%s' for Mob unit.\n", udtype);
 			script_pushint(st, -1);
@@ -29475,6 +29482,7 @@ static void script_hardcoded_constants(void)
 	script->set_constant("UDT_BODY2", UDT_BODY2, false, false);
 	script->set_constant("UDT_GROUP", UDT_GROUP, false, false);
 	script->set_constant("UDT_DAMAGE_TAKEN_RATE", UDT_DAMAGE_TAKEN_RATE, false, false);
+	script->set_constant("UDT_OPTIONS", UDT_OPTIONS, false, false);
 
 	script->constdb_comment("getguildonline types");
 	script->set_constant("GUILD_ONLINE_ALL", GUILD_ONLINE_ALL, false, false);
