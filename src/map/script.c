@@ -20828,7 +20828,10 @@ static BUILDIN(setunitdata)
 			clif->spawn(bl);
 			break;
 		case UDT_CLASS:
-			mob->class_change(md, val);
+			if ((val >= JOB_NOVICE && val <= JOB_MAX_BASIC) || (val >= JOB_NOVICE_HIGH && val <= JOB_MAX))
+				md->vd->class = val;
+			else
+				mob->class_change(md, val);
 			clif->clearunit_area(bl, CLR_OUTSIGHT);
 			clif->spawn(bl);
 			break;
