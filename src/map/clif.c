@@ -16265,11 +16265,11 @@ static void clif_parse_GM_Monster_Item(int fd, struct map_session_data *sd)
 				break;
 		}
 
-		if( i < count ) {
-			if( item_array[i]->type == IT_WEAPON || item_array[i]->type == IT_ARMOR ) // nonstackable
-				snprintf(command, sizeof(command)-1, "%citem2 %d 1 0 0 0 0 0 0 0", atcommand->at_symbol, item_array[i]->nameid);
+		if (i < count) {
+			if (item_array[i]->type == IT_WEAPON || item_array[i]->type == IT_ARMOR) // nonstackable
+				snprintf(command, sizeof(command), "%citem2 %d 1 0 0 0 0 0 0 0", atcommand->at_symbol, item_array[i]->nameid);
 			else
-				snprintf(command, sizeof(command)-1, "%citem %d 20", atcommand->at_symbol, item_array[i]->nameid);
+				snprintf(command, sizeof(command), "%citem %d 20", atcommand->at_symbol, item_array[i]->nameid);
 			atcommand->exec(fd, sd, command, true);
 			return;
 		}
@@ -16292,8 +16292,8 @@ static void clif_parse_GM_Monster_Item(int fd, struct map_session_data *sd)
 				break;
 		}
 
-		if( i < count ){
-			snprintf(command, sizeof(command)-1, "%cmonster %s", atcommand->at_symbol, mob_array[i]->sprite);
+		if (i < count) {
+			snprintf(command, sizeof(command), "%cmonster %s", atcommand->at_symbol, mob_array[i]->sprite);
 			atcommand->exec(fd, sd, command, true);
 		}
 	}

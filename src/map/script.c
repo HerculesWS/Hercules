@@ -6358,7 +6358,7 @@ static bool script_sprintf_helper(struct script_state *st, int start, struct Str
 			if (flag_zero)
 				buf[i++] = '0';
 			if (width > 0)
-				snprintf(buf + i, buf_len - i - 1, "%d", width);
+				snprintf(buf + i, buf_len - i, "%d", width);
 		}
 		buf[(int)strlen(buf)] = *np;
 		switch (*np) {
