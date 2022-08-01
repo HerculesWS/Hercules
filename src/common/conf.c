@@ -55,8 +55,8 @@ static void config_format_db_path(const char *filename, char *path_buf, int buff
 {
 	nullpo_retv(filename);
 	nullpo_retv(path_buf);
-	
-	safesnprintf(path_buf, buffer_len, "%s/%s", libconfig->db_path, filename);
+
+	snprintf(path_buf, buffer_len, "%s/%s", libconfig->db_path, filename);
 }
 
 /**

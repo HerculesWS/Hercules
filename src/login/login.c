@@ -246,7 +246,7 @@ static bool login_check_encrypted(const char *str1, const char *str2, const char
 	nullpo_ret(str1);
 	nullpo_ret(str2);
 	nullpo_ret(passwd);
-	safesnprintf(tmpstr, sizeof(tmpstr), "%s%s", str1, str2);
+	snprintf(tmpstr, sizeof(tmpstr), "%s%s", str1, str2);
 	md5->string(tmpstr, md5str);
 
 	return (0==strcmp(passwd, md5str));

@@ -1485,7 +1485,7 @@ static int pet_read_db_libconfig(const char *filename, bool ignore_missing)
 
 	nullpo_ret(filename);
 
-	safesnprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, filename);
+	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, filename);
 
 	if (!exists(filepath)) {
 		if (!ignore_missing) {

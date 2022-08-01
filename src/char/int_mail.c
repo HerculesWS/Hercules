@@ -337,7 +337,7 @@ static bool inter_mail_return_message(int char_id, int mail_id, int *new_mail)
 		safestrncpy(msg.dest_name, temp_, NAME_LENGTH);
 
 		// set reply message title
-		safesnprintf(temp_, MAIL_TITLE_LENGTH, "RE:%s", msg.title);
+		snprintf(temp_, MAIL_TITLE_LENGTH, "RE:%s", msg.title);
 		safestrncpy(msg.title, temp_, MAIL_TITLE_LENGTH);
 
 		msg.status = MAIL_NEW;

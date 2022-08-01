@@ -152,7 +152,7 @@ int my_pc_dropitem_post(int retVal, struct map_session_data *sd, int n, int amou
 		return retVal;/* we don't do anything if pc_dropitem didn't return 1 (success) */
 	if (my_pc_dropitem_storage) {/* signs whether pre-hook did this */
 		char output[99];
-		safesnprintf(output, 99, "[ Warning ] you can only drop 1 item at a time, capped from %d to 1", my_pc_dropitem_storage);
+		snprintf(output, 99, "[ Warning ] you can only drop 1 item at a time, capped from %d to 1", my_pc_dropitem_storage);
 		clif->messagecolor_self(sd->fd, COLOR_RED, output);
 	}
 	return 1;

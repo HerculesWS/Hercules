@@ -8031,7 +8031,7 @@ static bool battle_config_read(const char *filename, bool imported)
 	for (i = 0; i < ARRAYLENGTH(battle_data); i++) {
 		int type, val;
 		char config_name[256];
-		safesnprintf(config_name, sizeof config_name, "battle_configuration/%s", battle_data[i].str);
+		snprintf(config_name, sizeof config_name, "battle_configuration/%s", battle_data[i].str);
 
 		if ((setting = libconfig->lookup(&config, config_name)) == NULL) {
 			if (!imported) {

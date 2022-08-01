@@ -4708,7 +4708,7 @@ static struct map_zone_data *map_merge_zone(struct map_zone_data *main, struct m
 	nullpo_retr(NULL, main);
 	nullpo_retr(NULL, other);
 
-	safesnprintf(newzone, MAP_ZONE_NAME_LENGTH, "%s+%s", main->name, other->name);
+	snprintf(newzone, MAP_ZONE_NAME_LENGTH, "%s+%s", main->name, other->name);
 
 	if( (zone = strdb_get(map->zone_db, newzone)) )
 		return zone;/* this zone has already been merged */

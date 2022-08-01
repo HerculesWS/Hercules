@@ -332,7 +332,7 @@ static bool sysinfo_git_get_revision(char **out)
 
 	while (*ref) {
 		FILE *fp;
-		safesnprintf(filepath, sizeof(filepath), ".git/%s", ref);
+		snprintf(filepath, sizeof(filepath), ".git/%s", ref);
 		if ((fp = fopen(filepath, "r")) != NULL) {
 			if (fgets(line, sizeof(line)-1, fp) == NULL) {
 				fclose(fp);

@@ -64,7 +64,7 @@ static void macro_captcha_register(struct map_session_data *sd, const int image_
 	memset(cd.image_data, 0, CAPTCHA_BMP_SIZE);
 
 	char captcha_key[50];
-	safesnprintf(captcha_key, 50, "%X", (unsigned int)VECTOR_CAPACITY(macro->captcha_registery));
+	snprintf(captcha_key, 50, "%X", (unsigned int)VECTOR_CAPACITY(macro->captcha_registery));
 	safestrncpy(cd.captcha_key, captcha_key, sizeof(cd.captcha_key));
 
 	VECTOR_PUSH(macro->captcha_registery, cd);
@@ -281,7 +281,7 @@ static void macro_reporter_process(struct map_session_data *ssd, struct map_sess
 static bool macro_read_captcha_db_libconfig(void)
 {
 	char filepath[256];
-	safesnprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, "captcha_db.conf");
+	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, "captcha_db.conf");
 
 	struct config_t captcha_db_conf;
 	if (libconfig->load_file(&captcha_db_conf, filepath) == CONFIG_FALSE) {
@@ -317,7 +317,7 @@ static bool macro_read_captcha_db_libconfig_sub(const struct config_setting_t *i
 	}
 
 	char filepath[256];
-	safesnprintf(filepath, sizeof(filepath), "%s/captcha/%s", map->db_path, filename);
+	snprintf(filepath, sizeof(filepath), "%s/captcha/%s", map->db_path, filename);
 
 	if (!exists(filepath)) {
 		ShowError("%s: File %s does not exist for entry %d in %s\n", __func__, filepath, n, source);
@@ -354,7 +354,7 @@ static bool macro_read_captcha_db_libconfig_sub(const struct config_setting_t *i
 	safestrncpy(cd.captcha_answer, answer, sizeof(cd.captcha_answer));
 
 	char captcha_key[50];
-	safesnprintf(captcha_key, 50, "%X", (unsigned int)VECTOR_CAPACITY(macro->captcha_registery));
+	snprintf(captcha_key, 50, "%X", (unsigned int)VECTOR_CAPACITY(macro->captcha_registery));
 	safestrncpy(cd.captcha_key, captcha_key, sizeof(cd.captcha_key));
 
 	VECTOR_PUSH(macro->captcha_registery, cd);

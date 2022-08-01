@@ -676,7 +676,7 @@ static int quest_read_db(void)
 	int i = 0, count = 0;
 	const char *filename = "quest_db.conf";
 
-	safesnprintf(filepath, 256, "%s/%s", map->db_path, filename);
+	snprintf(filepath, 256, "%s/%s", map->db_path, filename);
 	if (!libconfig->load_file(&quest_db_conf, filepath))
 		return -1;
 
