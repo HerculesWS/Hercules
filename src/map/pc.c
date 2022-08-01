@@ -11582,7 +11582,7 @@ static void pc_read_skill_tree(void)
 {
 	struct config_t skill_tree_conf;
 	struct config_setting_t *skt = NULL;
-	char config_filename[128];
+	char config_filename[280];
 	int i = 0;
 	struct s_mapiterator *iter;
 	struct map_session_data *sd;

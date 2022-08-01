@@ -2634,12 +2634,12 @@ static void script_set_constant2(const char *name, int value, bool is_parameter,
 static void read_constdb(bool reload)
 {
 	struct config_t constants_conf;
-	char filepath[256];
+	char filepath[512];
 	struct config_setting_t *cdb;
 	struct config_setting_t *t;
 	int i = 0;
 
-	snprintf(filepath, 256, "%s/constants.conf", map->db_path);
+	snprintf(filepath, sizeof(filepath), "%s/constants.conf", map->db_path);
 
 	if (!libconfig->load_file(&constants_conf, filepath))
 		return;
@@ -27953,7 +27953,7 @@ static BUILDIN(calldynamicnpc)
 
 	// Generate a unique npc name and return in case it already existed
 	char newname[NAME_LENGTH];
-	snprintf(newname, NAME_LENGTH, "dyn_%10d%10d", snd->bl.id, sd->status.char_id);
+	snprintf(newname, NAME_LENGTH, "dyn%10d%10d", snd->bl.id, sd->status.char_id);
 	if (npc->name2id(newname) != NULL) {
 		script_pushint(st, 0);
 		return true;

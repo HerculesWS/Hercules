@@ -280,7 +280,7 @@ static void macro_reporter_process(struct map_session_data *ssd, struct map_sess
 
 static bool macro_read_captcha_db_libconfig(void)
 {
-	char filepath[256];
+	char filepath[280];
 	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, "captcha_db.conf");
 
 	struct config_t captcha_db_conf;
@@ -316,7 +316,7 @@ static bool macro_read_captcha_db_libconfig_sub(const struct config_setting_t *i
 		return false;
 	}
 
-	char filepath[256];
+	char filepath[270];
 	snprintf(filepath, sizeof(filepath), "%s/captcha/%s", map->db_path, filename);
 
 	if (!exists(filepath)) {

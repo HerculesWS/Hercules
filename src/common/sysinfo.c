@@ -325,7 +325,7 @@ static bool sysinfo_git_get_revision(char **out)
 {
 	// Only include Git support if we detected it, or we're on MSVC
 #if !defined(SYSINFO_VCSTYPE) || SYSINFO_VCSTYPE == VCSTYPE_GIT || SYSINFO_VCSTYPE == VCSTYPE_UNKNOWN
-	char ref[128], filepath[128], line[128];
+	char ref[128], filepath[256], line[128];
 
 	nullpo_ret(out);
 	strcpy(ref, "HEAD");

@@ -337,7 +337,9 @@ static bool inter_mail_return_message(int char_id, int mail_id, int *new_mail)
 		safestrncpy(msg.dest_name, temp_, NAME_LENGTH);
 
 		// set reply message title
-		snprintf(temp_, MAIL_TITLE_LENGTH, "RE:%s", msg.title);
+		if (snprintf(temp_, MAIL_TITLE_LENGTH, "RE:%s", msg.title) >= MAIL_TITLE_LENGTH) {
+			// Truncation is expected, ignore it
+		}
 		safestrncpy(msg.title, temp_, MAIL_TITLE_LENGTH);
 
 		msg.status = MAIL_NEW;

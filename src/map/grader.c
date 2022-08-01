@@ -43,7 +43,7 @@ struct grader_interface *grader;
 
 static bool grader_read_db_libconfig(void)
 {
-	char filepath[256];
+	char filepath[280];
 	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH"grade_db.conf");
 
 	struct config_t grade_db_conf;

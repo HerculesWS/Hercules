@@ -1165,7 +1165,7 @@ static void homunculus_read_db(void)
 static bool homunculus_read_db_libconfig(const char *filename)
 {
 	struct config_t homun_conf;
-	char filepath[256];
+	char filepath[260];
 	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, filename);
 
 	if (libconfig->load_file(&homun_conf, filepath) == CONFIG_FALSE) {

@@ -24110,7 +24110,7 @@ static void skill_validate_unit_id_value(struct config_setting_t *conf, struct s
 	nullpo_retv(sk);
 
 	if (skill->validate_unit_id_sub(unit_id) == -1) {
-		char level_string[14]; // Big enough to contain "in level 999 " in case of custom MAX_SKILL_LEVEL.
+		char level_string[24];
 
 		if (index == -1)
 			*level_string = '\0';
@@ -24144,7 +24144,7 @@ static void skill_validate_unit_id_array(struct config_setting_t *conf, struct s
 	nullpo_retv(conf);
 	nullpo_retv(sk);
 
-	char level_string[14]; // Big enough to contain "in level 999 " in case of custom MAX_SKILL_LEVEL.
+	char level_string[24];
 
 	if (index == -1)
 		*level_string = '\0';

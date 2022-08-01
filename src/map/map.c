@@ -4701,14 +4701,27 @@ static int map_sql_close(void)
  **/
 static struct map_zone_data *map_merge_zone(struct map_zone_data *main, struct map_zone_data *other)
 {
-	char newzone[MAP_ZONE_NAME_LENGTH];
+	char newzone[MAP_ZONE_NAME_LENGTH * 2];
 	struct map_zone_data *zone = NULL;
 	int cursor, i, j;
 
 	nullpo_retr(NULL, main);
 	nullpo_retr(NULL, other);
 
-	snprintf(newzone, MAP_ZONE_NAME_LENGTH, "%s+%s", main->name, other->name);
+	if (snprintf(newzone, MAP_ZONE_NAME_LENGTH * 2, "%s+%s", main->name, other->name) >= MAP_ZONE_NAME_LENGTH) {
+		// In the unlikely case the name is too long and won't fit, there's a chance two different zones might be truncated to the same name.
+		// Hash the concatenation of the two names if that happens, to minimize the chance of collisions.
+		char newzone_temp[33];
+		md5->string(newzone, newzone_temp);
+		STATIC_ASSERT(MAP_ZONE_NAME_LENGTH > 32 + 12 + 12 + 2, "The next lines needs to be adjusted if MAP_ZONE_NAME_LENGTH is changed");
+		snprintf(newzone, MAP_ZONE_NAME_LENGTH, "%s_", newzone_temp);
+		size_t len = strlen(newzone);
+		safestrncpy(newzone + len, main->name, len + 12);
+		len = strlen(newzone);
+		newzone[len++] = '+';
+		newzone[len] = '\0';
+		safestrncpy(newzone + len, main->name, len + 12);
+	}
 
 	if( (zone = strdb_get(map->zone_db, newzone)) )
 		return zone;/* this zone has already been merged */

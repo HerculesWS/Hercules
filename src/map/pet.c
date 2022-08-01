@@ -1478,7 +1478,7 @@ static int pet_read_db_libconfig(const char *filename, bool ignore_missing)
 	struct config_t pet_db_conf;
 	struct config_setting_t *pdb;
 	struct config_setting_t *t;
-	char filepath[256];
+	char filepath[512];
 	bool duplicate[MAX_MOB_DB] = { 0 };
 	int i = 0;
 	int count = 0;

@@ -670,13 +670,13 @@ static struct quest_db *quest_read_db_sub(struct config_setting_t *cs, int n, co
  */
 static int quest_read_db(void)
 {
-	char filepath[256];
+	char filepath[512];
 	struct config_t quest_db_conf;
 	struct config_setting_t *qdb = NULL, *q = NULL;
 	int i = 0, count = 0;
 	const char *filename = "quest_db.conf";
 
-	snprintf(filepath, 256, "%s/%s", map->db_path, filename);
+	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, filename);
 	if (!libconfig->load_file(&quest_db_conf, filepath))
 		return -1;
 
