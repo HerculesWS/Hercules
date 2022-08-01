@@ -46,7 +46,6 @@
 #define config_switch(str)           (strlib->config_switch_(str))
 #define safestrncpy(dst,src,n)       (strlib->safestrncpy_((dst),(src),(n)))
 #define safestrnlen(string,maxlen)   (strlib->safestrnlen_((string),(maxlen)))
-#define safesnprintf(buf,sz,fmt,...) (strlib->safesnprintf_((buf),(sz),(fmt),##__VA_ARGS__))
 #define strline(str,pos)             (strlib->strline_((str),(pos)))
 #define bin2hex(output,input,count)  (strlib->bin2hex_((output),(input),(count)))
 #if (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L)
@@ -133,11 +132,6 @@ struct strlib_interface {
 
 	/// doesn't crash on null pointer
 	size_t (*safestrnlen_) (const char* string, size_t maxlen) GCC10ATTR ((access (read_only, 1, 2)));
-
-	/// Works like snprintf, but always null-terminates the buffer.
-	/// Returns the size of the string (without null-terminator)
-	/// or -1 if the buffer is too small.
-	int (*safesnprintf_) (char *buf, size_t sz, const char *fmt, ...) __attribute__((format(printf, 3, 4)));
 
 	/// Returns the line of the target position in the string.
 	/// Lines start at 1.
