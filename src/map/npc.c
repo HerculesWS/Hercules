@@ -3404,10 +3404,9 @@ static void npc_parsename(struct npc_data *nd, const char *name, const char *sta
 
 		do {
 			++i;
-			if (snprintf(newname, ARRAYLENGTH(newname), "%d_%d_%d_%d", i, nd->bl.m, nd->bl.x, nd->bl.y) >= ARRAYLENGTH(newname)) {
-				// Truncation is irrelevant, name is being checked for duplicates
-			}
-		} while( npc->name2id(newname) != NULL );
+			volatile size_t truncate_length = ARRAYLENGTH(newname); // Truncation is irrelevant, name is being checked for duplicates, so ignore any errors (gcc issue 80354, 89312)
+			truncate_length = snprintf(newname, truncate_length, "%d_%d_%d_%d", i, nd->bl.m, nd->bl.x, nd->bl.y);
+		} while(npc->name2id(newname) != NULL);
 
 		strcpy(this_mapname, (nd->bl.m == -1 ? "(not on a map)" : mapindex_id2name(map_id2index(nd->bl.m))));
 		strcpy(other_mapname, (dnd->bl.m == -1 ? "(not on a map)" : mapindex_id2name(map_id2index(dnd->bl.m))));
@@ -3518,15 +3517,13 @@ static struct npc_data *npc_add_warp(char *name, short from_mapid, short from_x,
 
 	safestrncpy(nd->exname, name, ARRAYLENGTH(nd->exname));
 	if (npc->name2id(nd->exname) != NULL) {
-		if (snprintf(nd->exname, ARRAYLENGTH(nd->exname), "warp_%d_%d_%d", from_mapid, from_x, from_y) >= ARRAYLENGTH(nd->exname)) {
-			// Truncation is irrelevant, name is checked for duplicates afterwards
-		}
+		volatile size_t truncate_length = ARRAYLENGTH(nd->exname); // Truncation is irrelevant, name is checked for duplicates after, so ignore any errors (gcc issue 80354, 89312)
+		truncate_length = snprintf(nd->exname, truncate_length, "warp_%d_%d_%d", from_mapid, from_x, from_y);
 	}
 
 	for (int i = 0; npc->name2id(nd->exname) != NULL; ++i) {
-		if (snprintf(nd->exname, ARRAYLENGTH(nd->exname), "warp%d_%d_%d_%d", i, from_mapid, from_x, from_y) >= ARRAYLENGTH(nd->exname)) {
-			// Truncation is irrelevant, name is being checked for duplicates
-		}
+		volatile size_t truncate_length = ARRAYLENGTH(nd->exname); // Truncation is irrelevant, name is being checked for duplicates, so ignore any errors (gcc issue 80354, 89312)
+		truncate_length = snprintf(nd->exname, truncate_length, "warp%d_%d_%d_%d", i, from_mapid, from_x, from_y);
 	}
 	safestrncpy(nd->name, nd->exname, ARRAYLENGTH(nd->name));
 
