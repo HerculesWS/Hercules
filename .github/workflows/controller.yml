@@ -36,6 +36,10 @@ jobs:
     needs: build
     if: ${{ !failure() && !cancelled() }}
     uses: ./.github/workflows/gccold2.yml
+  gccold3:
+    needs: build
+    if: ${{ !failure() && !cancelled() }}
+    uses: ./.github/workflows/gccold3.yml
   gccsnapshot_test:
     needs: build
     if: ${{ !failure() && !cancelled() }}
