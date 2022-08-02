@@ -24,7 +24,7 @@ jobs:
           - PACKET_VERSION: "--enable-packetver=20100105"
             CLIENT_TYPE: "--enable-packetver-zero"
     container:
-      image: ubuntu:21.10
+      image: ubuntu:22.04
     services:
       mariadb:
         image: mariadb:latest
