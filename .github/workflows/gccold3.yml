@@ -1,4 +1,4 @@
-name: gcc_old2
+name: gcc_old3
 
 on: [workflow_call, pull_request]
 
@@ -7,14 +7,14 @@ env:
   MYSQL_USER: 'ragnarok'
   MYSQL_PASSWORD: 'ragnarok'
   MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
-  DEBIAN_COMMON_PACKAGES: make zlib1g-dev libpcre3-dev git python2 libzstd-dev
+  DEBIAN_COMMON_PACKAGES: make zlib1g-dev libpcre3-dev git python libzstd-dev
 
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        CC: ["gcc-8", "gcc-7"]
+        CC: ["gcc-6", "gcc-5", "gcc-4.8"]
         RENEWAL: [""]
         CLIENT_TYPE: ["", "--enable-packetver-re", "--enable-packetver-zero"]
         SANITIZER: ["--disable-manager --enable-sanitize=full"]
@@ -24,7 +24,7 @@ jobs:
           - PACKET_VERSION: "--enable-packetver=20100105"
             CLIENT_TYPE: "--enable-packetver-zero"
     container:
-      image: ubuntu:20.04
+      image: ubuntu:18.04
     services:
       mariadb:
         image: mariadb:latest

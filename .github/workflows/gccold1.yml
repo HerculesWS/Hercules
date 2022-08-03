@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        CC: ["gcc-10", "gcc-9", "gcc-8"]
+        CC: ["gcc-10", "gcc-9"]
         RENEWAL: [""]
         CLIENT_TYPE: ["", "--enable-packetver-re", "--enable-packetver-zero"]
         SANITIZER: ["--disable-manager --enable-sanitize=full"]
@@ -24,7 +24,7 @@ jobs:
           - PACKET_VERSION: "--enable-packetver=20100105"
             CLIENT_TYPE: "--enable-packetver-zero"
     container:
-      image: ubuntu:21.10
+      image: ubuntu:22.04
     services:
       mariadb:
         image: mariadb:latest
