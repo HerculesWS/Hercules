@@ -1211,6 +1211,39 @@ if test "x$CFLAGS" != "x$SAVED_OLD_CFLAGS"; then
 	)
 fi
 
+# Certain versions of gcc implement -Wformat-truncation in a naive way,
+# disregarding the actual values that an integer can take in every code path
+# and assuming a worst case of INT_MAX. That makes it not very useful as it
+# produces meaningless warnings.
+SAVED_OLD_CFLAGS="$CFLAGS"
+AC_CHECK_COMPILER_WNOFLAG(format-truncation)
+if test "x$CFLAGS" != "x$SAVED_OLD_CFLAGS"; then
+	AC_MSG_CHECKING([whether $CC has a too naive -Wformat-truncation implementation])
+	NEW_CFLAGS="$CFLAGS"
+	CFLAGS="$SAVED_OLD_CFLAGS"
+	CFLAGS="$CFLAGS -Werror"
+	AC_COMPILE_IFELSE(
+		[AC_LANG_SOURCE([
+			#include <stdio.h>
+			char foo(void) {
+				[char buf[3];]
+				for (int i = 0; i < 4; i++) {
+					snprintf(buf, sizeof(buf), "a%d", i);
+				}
+				[return buf[1];]
+			}
+		])],
+		[
+			AC_MSG_RESULT([no])
+			CFLAGS="$SAVED_OLD_CFLAGS"
+		],
+		[
+			AC_MSG_RESULT([yes])
+			CFLAGS="$NEW_CFLAGS"
+		]
+	)
+fi
+
 AC_MSG_CHECKING([whether $CC supports -fPIC])
 OLD_CFLAGS="$CFLAGS"
 CFLAGS="$CFLAGS -fPIC"
@@ -1523,7 +1556,7 @@ else
 		)],
 		[
 			BACKTRACE_FILE="nounwind.lo"
-		 	backtrace_supported=no
+			backtrace_supported=no
 		]
 	)
 	AC_SUBST(BACKTRACE_FILE)
