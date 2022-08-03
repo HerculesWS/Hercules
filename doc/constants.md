@@ -5424,6 +5424,7 @@
 - `UDT_BODY2`: 56
 - `UDT_GROUP`: 57
 - `UDT_DAMAGE_TAKEN_RATE`: 58
+- `UDT_OPTIONS`: 59
 
 ### getguildonline types
 
