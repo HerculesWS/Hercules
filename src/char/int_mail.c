@@ -337,8 +337,7 @@ static bool inter_mail_return_message(int char_id, int mail_id, int *new_mail)
 		safestrncpy(msg.dest_name, temp_, NAME_LENGTH);
 
 		// set reply message title
-		volatile size_t truncate_length = MAIL_TITLE_LENGTH; // Truncation is expected, ignore any errors (gcc issue 80354, 89312)
-		truncate_length = snprintf(temp_, truncate_length, "RE:%s", msg.title);
+		snprintf_ignore_truncation(temp_, MAIL_TITLE_LENGTH, "RE:%s", msg.title); // String truncation expected and ignored
 		safestrncpy(msg.title, temp_, MAIL_TITLE_LENGTH);
 
 		msg.status = MAIL_NEW;

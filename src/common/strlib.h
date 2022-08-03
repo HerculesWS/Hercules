@@ -70,6 +70,19 @@
 #endif
 #endif
 
+/**
+ * Workaround for gcc issues 80354, 89312, that make it difficult to ignore
+ * -Wformat-truncation warnings in those rare cases where truncation is
+ * irrelevant to the program's correctness.
+ *
+ * @remark Do not use unless you're sure about the implications of ignoring
+ * this warning.
+ */
+#define snprintf_ignore_truncation(str, size, format, ...) do { \
+	volatile size_t snprintf_size_truncated = (size); \
+	snprintf_size_truncated = snprintf((str), snprintf_size_truncated, (format), ##__VA_ARGS__); \
+} while(false)
+
 /// Bitfield determining the behavior of sv_parse and sv_split.
 typedef enum e_svopt {
 	// default: no escapes and no line terminator
