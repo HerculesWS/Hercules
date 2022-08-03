@@ -4,7 +4,7 @@ on:
   workflow_call:
 
 env:
-  INSTALL_PACKAGES: make gcc zlib1g-dev libpcre3-dev git libmariadbclient-dev-compat doxygen perl libxml-simple-perl bc curl
+  INSTALL_PACKAGES: make gcc zlib1g-dev libpcre3-dev git libmariadbclient-dev-compat doxygen perl libxml-simple-perl libxml-parser-perl bc curl
   BUILDSTATS_API_KEY: ${{ secrets.BUILDSTATS_API_KEY }}
   GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
 
