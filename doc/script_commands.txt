@@ -10608,6 +10608,7 @@ Applicable Data Types (available as constants) -
 	UDT_STATADD:              Status Points - for NPCs.
 	UDT_GROUP:                group id
 	UDT_DAMAGE_TAKEN_RATE:    damage taken rate of a unit.
+	UDT_OPTIONS:              options
 
 returns 0 if value could not be set, 1 if successful.
 
@@ -10672,6 +10673,7 @@ Applicable Data types (available as constants) -
 	UDT_MERC_KILLCOUNT:       Kill count for mercenaries.
 	UDT_GROUP:                group id
 	UDT_DAMAGE_TAKEN_RATE:    damage taken rate of a unit.
+	UDT_OPTIONS:              options
 
 returns -1 if value could not be retrieved.
 
