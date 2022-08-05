@@ -3404,8 +3404,11 @@ static void npc_parsename(struct npc_data *nd, const char *name, const char *sta
 
 		do {
 			++i;
-			// Name is being checked for duplicates, so it's safe to ignore the possible string truncation
-			snprintf_ignore_truncation(newname, ARRAYLENGTH(newname), "%d_%d_%d_%d", i, nd->bl.m, nd->bl.x, nd->bl.y);
+			PRAGMA_GCC7(GCC diagnostic push)
+			PRAGMA_GCC7(GCC diagnostic ignored "-Wformat-truncation")
+			// Name is being checked for duplicates, so it's safe to ignore the unlikely but possible string truncation
+			snprintf(newname, ARRAYLENGTH(newname), "%d_%d_%d_%d", i, nd->bl.m, nd->bl.x, nd->bl.y);
+			PRAGMA_GCC7(GCC diagnostic pop)
 		} while(npc->name2id(newname) != NULL);
 
 		strcpy(this_mapname, (nd->bl.m == -1 ? "(not on a map)" : mapindex_id2name(map_id2index(nd->bl.m))));
@@ -3517,13 +3520,19 @@ static struct npc_data *npc_add_warp(char *name, short from_mapid, short from_x,
 
 	safestrncpy(nd->exname, name, ARRAYLENGTH(nd->exname));
 	if (npc->name2id(nd->exname) != NULL) {
-		// Name is being checked for duplicates afterwards, so it's safe to ignore the possible string truncation
-		snprintf_ignore_truncation(nd->exname, ARRAYLENGTH(nd->exname), "warp_%d_%d_%d", from_mapid, from_x, from_y);
+		PRAGMA_GCC7(GCC diagnostic push)
+		PRAGMA_GCC7(GCC diagnostic ignored "-Wformat-truncation")
+		// Name is being checked for duplicates afterwards, so it's safe to ignore the unlikely but possible string truncation
+		snprintf(nd->exname, ARRAYLENGTH(nd->exname), "warp_%d_%d_%d", from_mapid, from_x, from_y);
+		PRAGMA_GCC7(GCC diagnostic pop)
 	}
 
 	for (int i = 0; npc->name2id(nd->exname) != NULL; ++i) {
-		// Name is being checked for duplicates, so it's safe to ignore the possible string truncation
-		snprintf_ignore_truncation(nd->exname, ARRAYLENGTH(nd->exname), "warp%d_%d_%d_%d", i, from_mapid, from_x, from_y);
+		PRAGMA_GCC7(GCC diagnostic push)
+		PRAGMA_GCC7(GCC diagnostic ignored "-Wformat-truncation")
+		// Name is being checked for duplicates, so it's safe to ignore the unlikely but possible string truncation
+		snprintf(nd->exname, ARRAYLENGTH(nd->exname), "warp%d_%d_%d_%d", i, from_mapid, from_x, from_y);
+		PRAGMA_GCC7(GCC diagnostic pop)
 	}
 	safestrncpy(nd->name, nd->exname, ARRAYLENGTH(nd->name));
 
