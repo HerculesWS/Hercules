@@ -2634,12 +2634,12 @@ static void script_set_constant2(const char *name, int value, bool is_parameter,
 static void read_constdb(bool reload)
 {
 	struct config_t constants_conf;
-	char filepath[256];
+	char filepath[512];
 	struct config_setting_t *cdb;
 	struct config_setting_t *t;
 	int i = 0;
 
-	safesnprintf(filepath, 256, "%s/constants.conf", map->db_path);
+	snprintf(filepath, sizeof(filepath), "%s/constants.conf", map->db_path);
 
 	if (!libconfig->load_file(&constants_conf, filepath))
 		return;
@@ -6358,7 +6358,7 @@ static bool script_sprintf_helper(struct script_state *st, int start, struct Str
 			if (flag_zero)
 				buf[i++] = '0';
 			if (width > 0)
-				safesnprintf(buf + i, buf_len - i - 1, "%d", width);
+				snprintf(buf + i, buf_len - i, "%d", width);
 		}
 		buf[(int)strlen(buf)] = *np;
 		switch (*np) {
@@ -12990,7 +12990,7 @@ static BUILDIN(loudhailer)
 
 	strcpy(mes_formatted, sd->status.name);
 	strcpy(mes_formatted + 24, color);
-	safesnprintf(mes_formatted + 30, CHAT_SIZE_MAX, "%s Shouts : %s", sd->status.name, mes);
+	snprintf(mes_formatted + 30, CHAT_SIZE_MAX, "%s Shouts : %s", sd->status.name, mes);
 
 	size_t len_formatted = 30 + strlen(sd->status.name) + 10 + len_mes + 1;
 
@@ -17608,9 +17608,9 @@ static BUILDIN(npctalk)
 		safestrncpy(name, nd->name, sizeof(name));
 		strtok(name, "#"); // discard extra name identifier if present
 		if (show_name) {
-			safesnprintf(message, sizeof(message), "%s : %s", name, str);
+			snprintf(message, sizeof(message), "%s : %s", name, str);
 		} else {
-			safesnprintf(message, sizeof(message), "%s", str);
+			snprintf(message, sizeof(message), "%s", str);
 		}
 		clif->disp_overhead(&nd->bl, message, AREA_CHAT_WOC, NULL);
 	}
@@ -18652,7 +18652,7 @@ static BUILDIN(data_to_string)
 			char *str = NULL;
 
 			CREATE(str, char, 20);
-			safesnprintf(str, 20, "%"PRId64"", data->u.num);
+			snprintf(str, 20, "%"PRId64"", data->u.num);
 			script_pushstr(st, str);
 		} else if (data_islabel(data)) {
 			const char *str = "";
@@ -27953,7 +27953,7 @@ static BUILDIN(calldynamicnpc)
 
 	// Generate a unique npc name and return in case it already existed
 	char newname[NAME_LENGTH];
-	safesnprintf(newname, NAME_LENGTH, "dyn_%10d%10d", snd->bl.id, sd->status.char_id);
+	snprintf(newname, NAME_LENGTH, "dyn%10d%10d", snd->bl.id, sd->status.char_id);
 	if (npc->name2id(newname) != NULL) {
 		script_pushint(st, 0);
 		return true;
@@ -27992,7 +27992,7 @@ static BUILDIN(calldynamicnpc)
 	}
 	npc->duplicate_sub(nd_target, snd, xs, ys, NPO_NONE);
 	char evname[EVENT_NAME_LENGTH];
-	safesnprintf(evname, EVENT_NAME_LENGTH, "%s::OnDynamicNpcInit", nd_target->exname);
+	snprintf(evname, EVENT_NAME_LENGTH, "%s::OnDynamicNpcInit", nd_target->exname);
 	struct event_data *ev = strdb_get(npc->ev_db, evname);
 	if (ev != NULL)
 		script->run_npc(ev->nd->u.scr.script, ev->pos, sd->bl.id, ev->nd->bl.id);

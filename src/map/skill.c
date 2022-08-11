@@ -21692,7 +21692,7 @@ static void skill_validate_range(struct config_setting_t *conf, struct s_skill_d
 	if (t != NULL && config_setting_is_group(t)) {
 		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
 			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
-			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			snprintf(lv, sizeof(lv), "Lv%d", i + 1);
 			int range;
 
 			if (libconfig->setting_lookup_int(t, lv, &range) == CONFIG_TRUE) {
@@ -21737,7 +21737,7 @@ static void skill_validate_hittype(struct config_setting_t *conf, struct s_skill
 	if (t != NULL && config_setting_is_group(t)) {
 		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
 			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
-			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			snprintf(lv, sizeof(lv), "Lv%d", i + 1);
 			const char *hit_type;
 
 			if (libconfig->setting_lookup_string(t, lv, &hit_type) == CONFIG_TRUE) {
@@ -22026,7 +22026,7 @@ static void skill_validate_attacktype(struct config_setting_t *conf, struct s_sk
 	if (t != NULL && config_setting_is_group(t)) {
 		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
 			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
-			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			snprintf(lv, sizeof(lv), "Lv%d", i + 1);
 			const char *attack_type;
 
 			if (libconfig->setting_lookup_string(t, lv, &attack_type) == CONFIG_TRUE) {
@@ -22085,7 +22085,7 @@ static void skill_validate_element(struct config_setting_t *conf, struct s_skill
 	if (t != NULL && config_setting_is_group(t)) {
 		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
 			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
-			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			snprintf(lv, sizeof(lv), "Lv%d", i + 1);
 			const char *element;
 
 			if (libconfig->setting_lookup_string(t, lv, &element) == CONFIG_TRUE) {
@@ -22216,7 +22216,7 @@ static void skill_validate_splash_range(struct config_setting_t *conf, struct s_
 	if (t != NULL && config_setting_is_group(t)) {
 		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
 			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
-			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			snprintf(lv, sizeof(lv), "Lv%d", i + 1);
 			int splash_range;
 
 			if (libconfig->setting_lookup_int(t, lv, &splash_range) == CONFIG_TRUE) {
@@ -22261,7 +22261,7 @@ static void skill_validate_number_of_hits(struct config_setting_t *conf, struct 
 	if (t != NULL && config_setting_is_group(t)) {
 		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
 			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
-			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			snprintf(lv, sizeof(lv), "Lv%d", i + 1);
 			int number_of_hits;
 
 			if (libconfig->setting_lookup_int(t, lv, &number_of_hits) == CONFIG_TRUE) {
@@ -22306,7 +22306,7 @@ static void skill_validate_interrupt_cast(struct config_setting_t *conf, struct 
 	if (t != NULL && config_setting_is_group(t)) {
 		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
 			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
-			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			snprintf(lv, sizeof(lv), "Lv%d", i + 1);
 			int interrupt_cast;
 
 			if (libconfig->setting_lookup_bool(t, lv, &interrupt_cast) == CONFIG_TRUE)
@@ -22343,7 +22343,7 @@ static void skill_validate_cast_def_rate(struct config_setting_t *conf, struct s
 	if (t != NULL && config_setting_is_group(t)) {
 		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
 			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
-			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			snprintf(lv, sizeof(lv), "Lv%d", i + 1);
 			int cast_def_rate;
 
 			if (libconfig->setting_lookup_int(t, lv, &cast_def_rate) == CONFIG_TRUE) {
@@ -22388,7 +22388,7 @@ static void skill_validate_number_of_instances(struct config_setting_t *conf, st
 	if (t != NULL && config_setting_is_group(t)) {
 		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
 			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
-			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			snprintf(lv, sizeof(lv), "Lv%d", i + 1);
 			int number_of_instances;
 
 			if (libconfig->setting_lookup_int(t, lv, &number_of_instances) == CONFIG_TRUE) {
@@ -22433,7 +22433,7 @@ static void skill_validate_knock_back_tiles(struct config_setting_t *conf, struc
 	if (t != NULL && config_setting_is_group(t)) {
 		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
 			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
-			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			snprintf(lv, sizeof(lv), "Lv%d", i + 1);
 			int knock_back_tiles;
 
 			if (libconfig->setting_lookup_int(t, lv, &knock_back_tiles) == CONFIG_TRUE) {
@@ -22478,7 +22478,7 @@ static void skill_validate_cast_time(struct config_setting_t *conf, struct s_ski
 	if (t != NULL && config_setting_is_group(t)) {
 		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
 			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
-			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			snprintf(lv, sizeof(lv), "Lv%d", i + 1);
 			int cast_time;
 
 			if (libconfig->setting_lookup_int(t, lv, &cast_time) == CONFIG_TRUE) {
@@ -22523,7 +22523,7 @@ static void skill_validate_act_delay(struct config_setting_t *conf, struct s_ski
 	if (t != NULL && config_setting_is_group(t)) {
 		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
 			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
-			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			snprintf(lv, sizeof(lv), "Lv%d", i + 1);
 			int act_delay;
 
 			if (libconfig->setting_lookup_int(t, lv, &act_delay) == CONFIG_TRUE) {
@@ -22568,7 +22568,7 @@ static void skill_validate_walk_delay(struct config_setting_t *conf, struct s_sk
 	if (t != NULL && config_setting_is_group(t)) {
 		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
 			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
-			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			snprintf(lv, sizeof(lv), "Lv%d", i + 1);
 			int walk_delay;
 
 			if (libconfig->setting_lookup_int(t, lv, &walk_delay) == CONFIG_TRUE) {
@@ -22613,7 +22613,7 @@ static void skill_validate_skill_data1(struct config_setting_t *conf, struct s_s
 	if (t != NULL && config_setting_is_group(t)) {
 		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
 			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
-			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			snprintf(lv, sizeof(lv), "Lv%d", i + 1);
 			int skill_data1;
 
 			if (libconfig->setting_lookup_int(t, lv, &skill_data1) == CONFIG_TRUE) {
@@ -22658,7 +22658,7 @@ static void skill_validate_skill_data2(struct config_setting_t *conf, struct s_s
 	if (t != NULL && config_setting_is_group(t)) {
 		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
 			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
-			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			snprintf(lv, sizeof(lv), "Lv%d", i + 1);
 			int skill_data2;
 
 			if (libconfig->setting_lookup_int(t, lv, &skill_data2) == CONFIG_TRUE) {
@@ -22703,7 +22703,7 @@ static void skill_validate_cooldown(struct config_setting_t *conf, struct s_skil
 	if (t != NULL && config_setting_is_group(t)) {
 		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
 			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
-			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			snprintf(lv, sizeof(lv), "Lv%d", i + 1);
 			int cooldown;
 
 			if (libconfig->setting_lookup_int(t, lv, &cooldown) == CONFIG_TRUE) {
@@ -22750,7 +22750,7 @@ static void skill_validate_fixed_cast_time(struct config_setting_t *conf, struct
 	if (t != NULL && config_setting_is_group(t)) {
 		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
 			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
-			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			snprintf(lv, sizeof(lv), "Lv%d", i + 1);
 			int fixed_cast_time;
 
 			if (libconfig->setting_lookup_int(t, lv, &fixed_cast_time) == CONFIG_TRUE) {
@@ -22853,7 +22853,7 @@ static void skill_validate_hp_cost(struct config_setting_t *conf, struct s_skill
 	if (t != NULL && config_setting_is_group(t)) {
 		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
 			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
-			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			snprintf(lv, sizeof(lv), "Lv%d", i + 1);
 			int hp_cost;
 
 			if (libconfig->setting_lookup_int(t, lv, &hp_cost) == CONFIG_TRUE) {
@@ -22898,7 +22898,7 @@ static void skill_validate_sp_cost(struct config_setting_t *conf, struct s_skill
 	if (t != NULL && config_setting_is_group(t)) {
 		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
 			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
-			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			snprintf(lv, sizeof(lv), "Lv%d", i + 1);
 			int sp_cost;
 
 			if (libconfig->setting_lookup_int(t, lv, &sp_cost) == CONFIG_TRUE) {
@@ -22943,7 +22943,7 @@ static void skill_validate_hp_rate_cost(struct config_setting_t *conf, struct s_
 	if (t != NULL && config_setting_is_group(t)) {
 		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
 			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
-			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			snprintf(lv, sizeof(lv), "Lv%d", i + 1);
 			int hp_rate_cost;
 
 			if (libconfig->setting_lookup_int(t, lv, &hp_rate_cost) == CONFIG_TRUE) {
@@ -22988,7 +22988,7 @@ static void skill_validate_sp_rate_cost(struct config_setting_t *conf, struct s_
 	if (t != NULL && config_setting_is_group(t)) {
 		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
 			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
-			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			snprintf(lv, sizeof(lv), "Lv%d", i + 1);
 			int sp_rate_cost;
 
 			if (libconfig->setting_lookup_int(t, lv, &sp_rate_cost) == CONFIG_TRUE) {
@@ -23033,7 +23033,7 @@ static void skill_validate_max_hp_trigger(struct config_setting_t *conf, struct 
 	if (t != NULL && config_setting_is_group(t)) {
 		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
 			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
-			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			snprintf(lv, sizeof(lv), "Lv%d", i + 1);
 			int max_hp_trigger;
 
 			if (libconfig->setting_lookup_int(t, lv, &max_hp_trigger) == CONFIG_TRUE) {
@@ -23078,7 +23078,7 @@ static void skill_validate_max_sp_trigger(struct config_setting_t *conf, struct 
 	if (t != NULL && config_setting_is_group(t)) {
 		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
 			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
-			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			snprintf(lv, sizeof(lv), "Lv%d", i + 1);
 			int max_sp_trigger;
 
 			if (libconfig->setting_lookup_int(t, lv, &max_sp_trigger) == CONFIG_TRUE) {
@@ -23123,7 +23123,7 @@ static void skill_validate_zeny_cost(struct config_setting_t *conf, struct s_ski
 	if (t != NULL && config_setting_is_group(t)) {
 		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
 			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
-			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			snprintf(lv, sizeof(lv), "Lv%d", i + 1);
 			int zeny_cost;
 
 			if (libconfig->setting_lookup_int(t, lv, &zeny_cost) == CONFIG_TRUE) {
@@ -23491,7 +23491,7 @@ static void skill_validate_ammo_amount(struct config_setting_t *conf, struct s_s
 	if (t != NULL && config_setting_is_group(t)) {
 		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
 			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
-			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			snprintf(lv, sizeof(lv), "Lv%d", i + 1);
 			int ammo_amount;
 
 			if (libconfig->setting_lookup_int(t, lv, &ammo_amount) == CONFIG_TRUE) {
@@ -23611,7 +23611,7 @@ static void skill_validate_state(struct config_setting_t *conf, struct s_skill_d
 	if (t != NULL && config_setting_is_group(t)) {
 		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
 			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
-			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			snprintf(lv, sizeof(lv), "Lv%d", i + 1);
 			const char *state;
 
 			if (libconfig->setting_lookup_string(t, lv, &state) == CONFIG_TRUE) {
@@ -23660,7 +23660,7 @@ static void skill_validate_spirit_sphere_cost(struct config_setting_t *conf, str
 	if (t != NULL && config_setting_is_group(t)) {
 		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
 			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
-			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			snprintf(lv, sizeof(lv), "Lv%d", i + 1);
 			int spirit_sphere_cost;
 
 			if (libconfig->setting_lookup_int(t, lv, &spirit_sphere_cost) == CONFIG_TRUE) {
@@ -23704,7 +23704,7 @@ static void skill_validate_item_requirements_sub_item_amount(struct config_setti
 	if (config_setting_is_group(conf)) {
 		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
 			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
-			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			snprintf(lv, sizeof(lv), "Lv%d", i + 1);
 			int amount;
 
 			if (libconfig->setting_lookup_int(conf, lv, &amount) == CONFIG_TRUE) {
@@ -23810,7 +23810,7 @@ static void skill_validate_item_requirements_sub_any_flag(struct config_setting_
 	if (t != NULL && config_setting_is_group(t)) {
 		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
 			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
-			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			snprintf(lv, sizeof(lv), "Lv%d", i + 1);
 			int any_flag;
 
 			if (libconfig->setting_lookup_bool(t, lv, &any_flag) == CONFIG_TRUE)
@@ -23866,7 +23866,7 @@ static void skill_validate_equip_requirements_sub_item_amount(struct config_sett
 	if (config_setting_is_group(conf)) {
 		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
 			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
-			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			snprintf(lv, sizeof(lv), "Lv%d", i + 1);
 			int amount;
 
 			if (libconfig->setting_lookup_int(conf, lv, &amount) == CONFIG_TRUE) {
@@ -23979,7 +23979,7 @@ static void skill_validate_equip_requirements_sub_any_flag(struct config_setting
 	if (t != NULL && config_setting_is_group(t)) {
 		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
 			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
-			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			snprintf(lv, sizeof(lv), "Lv%d", i + 1);
 			int any_flag;
 
 			if (libconfig->setting_lookup_bool(t, lv, &any_flag) == CONFIG_TRUE)
@@ -24110,12 +24110,12 @@ static void skill_validate_unit_id_value(struct config_setting_t *conf, struct s
 	nullpo_retv(sk);
 
 	if (skill->validate_unit_id_sub(unit_id) == -1) {
-		char level_string[14]; // Big enough to contain "in level 999 " in case of custom MAX_SKILL_LEVEL.
+		char level_string[24];
 
 		if (index == -1)
 			*level_string = '\0';
 		else
-			safesnprintf(level_string, sizeof(level_string), "in level %d ", index + 1);
+			snprintf(level_string, sizeof(level_string), "in level %d ", index + 1);
 
 		ShowWarning("%s: Invalid unit ID %d specified %sfor skill ID %d in %s! Must be greater than or equal to 0. Defaulting to 0...\n",
 			    __func__, unit_id, level_string, sk->nameid, conf->file);
@@ -24144,12 +24144,12 @@ static void skill_validate_unit_id_array(struct config_setting_t *conf, struct s
 	nullpo_retv(conf);
 	nullpo_retv(sk);
 
-	char level_string[14]; // Big enough to contain "in level 999 " in case of custom MAX_SKILL_LEVEL.
+	char level_string[24];
 
 	if (index == -1)
 		*level_string = '\0';
 	else
-		safesnprintf(level_string, sizeof(level_string), "in level %d ", index + 1);
+		snprintf(level_string, sizeof(level_string), "in level %d ", index + 1);
 
 	if (libconfig->setting_length(conf) == 0) {
 		ShowWarning("%s: No unit ID(s) specified %sfor skill ID %d in %s! Defaulting to 0...\n",
@@ -24210,7 +24210,7 @@ static void skill_validate_unit_id_group(struct config_setting_t *conf, struct s
 	for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
 		struct config_setting_t *t;
 		char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
-		safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+		snprintf(lv, sizeof(lv), "Lv%d", i + 1);
 
 		if ((t = libconfig->setting_get_member(conf, lv)) != NULL && config_setting_is_array(t)) {
 			skill_validate_unit_id_array(t, sk, i);
@@ -24278,7 +24278,7 @@ static void skill_validate_unit_layout(struct config_setting_t *conf, struct s_s
 	if (t != NULL && config_setting_is_group(t)) {
 		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
 			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
-			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			snprintf(lv, sizeof(lv), "Lv%d", i + 1);
 			int unit_layout;
 
 			if (libconfig->setting_lookup_int(t, lv, &unit_layout) == CONFIG_TRUE) {
@@ -24323,7 +24323,7 @@ static void skill_validate_unit_range(struct config_setting_t *conf, struct s_sk
 	if (t != NULL && config_setting_is_group(t)) {
 		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
 			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
-			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			snprintf(lv, sizeof(lv), "Lv%d", i + 1);
 			int unit_range;
 
 			if (libconfig->setting_lookup_int(t, lv, &unit_range) == CONFIG_TRUE) {
@@ -24368,7 +24368,7 @@ static void skill_validate_unit_interval(struct config_setting_t *conf, struct s
 	if (t != NULL && config_setting_is_group(t)) {
 		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
 			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
-			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			snprintf(lv, sizeof(lv), "Lv%d", i + 1);
 			int unit_interval;
 
 			if (libconfig->setting_lookup_int(t, lv, &unit_interval) == CONFIG_TRUE) {
@@ -24580,7 +24580,7 @@ static void skill_validate_unit_target(struct config_setting_t *conf, struct s_s
 	if (t != NULL && config_setting_is_group(t)) {
 		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
 			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
-			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			snprintf(lv, sizeof(lv), "Lv%d", i + 1);
 			const char *unit_target;
 
 			if (libconfig->setting_lookup_string(t, lv, &unit_target) == CONFIG_TRUE) {

@@ -3796,13 +3796,13 @@ static int mob_use_skill(struct mob_data *md, int64 tick, int event)
 
 		// Skill used.
 		if (ms[skill_idx].msg_id != 0) { // Display color message. [SnakeDrak]
-			char temp[CHAT_SIZE_MAX];
+			char temp[CHAT_SIZE_MAX + NAME_LENGTH + 10];
 			char name[NAME_LENGTH];
 			struct mob_chat *mc = mob->chat(ms[skill_idx].msg_id);
 
 			snprintf(name, sizeof(name), "%s", md->name);
 			strtok(name, "#"); // Discard extra name identifier if present. [Daegaladh]
-			safesnprintf(temp, sizeof(temp), "%s : %s", name, mc->msg);
+			snprintf(temp, sizeof(temp), "%s : %s", name, mc->msg);
 			clif->messagecolor(&md->bl, mc->color, temp);
 		}
 
@@ -5352,13 +5352,13 @@ static int mob_read_libconfig(const char *filename, bool ignore_missing)
 {
 	bool duplicate[MAX_MOB_DB] = { 0 };
 	struct config_t mob_db_conf;
-	char filepath[256];
+	char filepath[512];
 	struct config_setting_t *mdb;
 	struct config_setting_t *t;
 	int i = 0, count = 0;
 
 	nullpo_ret(filename);
-	safesnprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, filename);
+	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, filename);
 
 	if (ignore_missing && !exists(filepath))
 		return 0;
@@ -5409,9 +5409,9 @@ static void mob_name_constants(void)
 
 static void mob_mobavail_removal_notice(void)
 {
-	char filepath[256];
+	char filepath[270];
 
-	safesnprintf(filepath, sizeof(filepath), "%s/mob_avail.txt", map->db_path);
+	snprintf(filepath, sizeof(filepath), "%s/mob_avail.txt", map->db_path);
 
 	if (exists(filepath)) {
 		ShowError("mob_mobavail_removal_notice: the usage of mob_avail.txt is no longer supported, move your data using tools/mobavailconverter.py and delete the database file to suspend this message.\n");
@@ -5432,9 +5432,9 @@ static void mob_read_group_db(void)
 static bool mob_read_group_db_libconfig(const char *filename)
 {
 	struct config_t mg_conf;
-	char filepath[256];
+	char filepath[512];
 
-	safesnprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, filename);
+	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, filename);
 	if (libconfig->load_file(&mg_conf, filepath) == CONFIG_FALSE) {
 		ShowError("%s: can't read %s\n", __func__, filepath);
 		return false;
@@ -5587,12 +5587,12 @@ static bool mob_parse_row_chatdb(char **str, const char *source, int line, int *
  *-------------------------------------------------------------------------*/
 static void mob_readchatdb(void)
 {
-	char arc[]="mob_chat_db.txt";
+	const char *arc = "mob_chat_db.txt";
 	uint32 lines=0, count=0;
-	char line[1024], filepath[256];
+	char line[1024], filepath[280];
 	int i, tmp=0;
 	FILE *fp;
-	safesnprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, arc);
+	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, arc);
 	fp=fopen(filepath, "r");
 	if(fp == NULL) {
 		ShowWarning("mob_readchatdb: File not found \"%s\", skipping.\n", filepath);
@@ -5643,12 +5643,12 @@ static bool mob_skill_db_libconfig(const char *filename, bool ignore_missing)
 {
 	struct config_t mob_skill_conf;
 	struct config_setting_t *it = NULL, *its = NULL, *mob_skill = NULL;
-	char filepath[256];
+	char filepath[512];
 	int i = 0;
 
 	nullpo_retr(false, filename);
 
-	safesnprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, filename);
+	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, filename);
 
 	if (!exists(filepath)) {
 		if (!ignore_missing) {

@@ -602,10 +602,10 @@ static int refine_readdb_refine_libconfig(const char *filename)
 	bool duplicate[REFINE_TYPE_MAX];
 	struct config_t refine_db_conf;
 	struct config_setting_t *r;
-	char filepath[256];
+	char filepath[512];
 	int i = 0, count = 0;
 
-	safesnprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, filename);
+	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, filename);
 	if (!libconfig->load_file(&refine_db_conf, filepath))
 		return 0;
 

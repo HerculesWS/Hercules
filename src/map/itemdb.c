@@ -1615,8 +1615,8 @@ static void itemdb_read_chains(void)
 static bool itemdb_read_combodb_libconfig(void)
 {
 	struct config_t combo_conf;
-	char filepath[256];
-	safesnprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH"item_combo_db.conf");
+	char filepath[290];
+	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH"item_combo_db.conf");
 
 	if (libconfig->load_file(&combo_conf, filepath) == CONFIG_FALSE) {
 		ShowError("itemdb_read_combodb_libconfig: can't read %s\n", filepath);
@@ -2451,12 +2451,12 @@ static int itemdb_readdb_libconfig(const char *filename)
 	struct DBMap *duplicate_db;
 	struct config_t item_db_conf;
 	struct config_setting_t *itdb, *it;
-	char filepath[256];
+	char filepath[260];
 	int i = 0, count = 0;
 
 	nullpo_ret(filename);
 
-	safesnprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, filename);
+	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, filename);
 	if (!libconfig->load_file(&item_db_conf, filepath))
 		return 0;
 
@@ -2515,12 +2515,12 @@ static bool itemdb_read_libconfig_lapineddukddak(void)
 {
 	struct config_t item_lapineddukddak;
 	struct config_setting_t *it = NULL;
-	char filepath[256];
+	char filepath[290];
 
 	int i = 0;
 	int count = 0;
 
-	safesnprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH"item_lapineddukddak.conf");
+	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH"item_lapineddukddak.conf");
 	if (libconfig->load_file(&item_lapineddukddak, filepath) == CONFIG_FALSE)
 		return false;
 
@@ -2607,12 +2607,12 @@ static bool itemdb_read_libconfig_lapineupgrade(void)
 {
 	struct config_t item_lapineupgrade;
 	struct config_setting_t *it = NULL;
-	char filepath[256];
+	char filepath[290];
 
 	int i = 0;
 	int count = 0;
 
-	safesnprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH"item_lapineupgrade.conf");
+	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH"item_lapineupgrade.conf");
 	if (libconfig->load_file(&item_lapineupgrade, filepath) == CONFIG_FALSE)
 		return false;
 

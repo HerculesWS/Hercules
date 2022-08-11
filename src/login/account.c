@@ -142,13 +142,13 @@ static bool account_db_sql_get_property(AccountDB *self, const char *key, char *
 	{
 		key += strlen(signature);
 		if( strcmpi(key, "name") == 0 )
-			safesnprintf(buf, buflen, "sql");
+			snprintf(buf, buflen, "sql");
 		else
 		if( strcmpi(key, "version") == 0 )
-			safesnprintf(buf, buflen, "%d", ACCOUNT_SQL_DB_VERSION);
+			snprintf(buf, buflen, "%d", ACCOUNT_SQL_DB_VERSION);
 		else
 		if( strcmpi(key, "comment") == 0 )
-			safesnprintf(buf, buflen, "SQL Account Database");
+			snprintf(buf, buflen, "SQL Account Database");
 		else
 			return false;// not found
 		return true;
@@ -159,34 +159,34 @@ static bool account_db_sql_get_property(AccountDB *self, const char *key, char *
 	{
 		key += strlen(signature);
 		if( strcmpi(key, "db_hostname") == 0 )
-			safesnprintf(buf, buflen, "%s", db->db_hostname);
+			snprintf(buf, buflen, "%s", db->db_hostname);
 		else
 		if( strcmpi(key, "db_port") == 0 )
-			safesnprintf(buf, buflen, "%d", db->db_port);
+			snprintf(buf, buflen, "%d", db->db_port);
 		else
 		if( strcmpi(key, "db_username") == 0 )
-			safesnprintf(buf, buflen, "%s", db->db_username);
+			snprintf(buf, buflen, "%s", db->db_username);
 		else
 		if( strcmpi(key, "db_password") == 0 )
-			safesnprintf(buf, buflen, "%s", db->db_password);
+			snprintf(buf, buflen, "%s", db->db_password);
 		else
 		if( strcmpi(key, "db_database") == 0 )
-			safesnprintf(buf, buflen, "%s", db->db_database);
+			snprintf(buf, buflen, "%s", db->db_database);
 		else
 		if( strcmpi(key, "codepage") == 0 )
-			safesnprintf(buf, buflen, "%s", db->codepage);
+			snprintf(buf, buflen, "%s", db->codepage);
 		else
 		if( strcmpi(key, "case_sensitive") == 0 )
-			safesnprintf(buf, buflen, "%d", (db->case_sensitive ? 1 : 0));
+			snprintf(buf, buflen, "%d", (db->case_sensitive ? 1 : 0));
 		else
 		if( strcmpi(key, "account_db") == 0 )
-			safesnprintf(buf, buflen, "%s", db->account_db);
+			snprintf(buf, buflen, "%s", db->account_db);
 		else
 		if( strcmpi(key, "global_acc_reg_str_db") == 0 )
-			safesnprintf(buf, buflen, "%s", db->global_acc_reg_str_db);
+			snprintf(buf, buflen, "%s", db->global_acc_reg_str_db);
 		else
 		if( strcmpi(key, "global_acc_reg_num_db") == 0 )
-			safesnprintf(buf, buflen, "%s", db->global_acc_reg_num_db);
+			snprintf(buf, buflen, "%s", db->global_acc_reg_num_db);
 		else
 			return false;// not found
 		return true;

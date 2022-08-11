@@ -453,9 +453,9 @@ static void grfio_localpath_create(char *buffer, size_t size, const char *filena
 	len = strlen(data_dir);
 
 	if (data_dir[0] == '\0' || data_dir[len-1] == '/' || data_dir[len-1] == '\\')
-		safesnprintf(buffer, size, "%s%s", data_dir, filename);
+		snprintf(buffer, size, "%s%s", data_dir, filename);
 	else
-		safesnprintf(buffer, size, "%s/%s", data_dir, filename);
+		snprintf(buffer, size, "%s/%s", data_dir, filename);
 
 	// normalize path
 	for (i = 0; buffer[i] != '\0'; ++i)
@@ -469,7 +469,7 @@ static void *grfio_reads(const char *fname, int *size)
 	struct grf_filelist *entry = grfio_filelist_find(fname);
 	if (entry == NULL || entry->gentry <= 0) {
 		// LocalFileCheck
-		char lfname[256];
+		char lfname[2048];
 		FILE *in;
 		grfio_localpath_create(lfname, sizeof(lfname), (entry && entry->fnd) ? entry->fnd : fname);
 
@@ -781,7 +781,7 @@ static int grfio_entryread(const char *grfname, int gentry)
 static bool grfio_parse_restable_row(const char *row)
 {
 	char w1[256], w2[256];
-	char src[256], dst[256];
+	char src[261], dst[261];
 	char local[256];
 	struct grf_filelist *entry = NULL;
 
@@ -792,8 +792,8 @@ static bool grfio_parse_restable_row(const char *row)
 	if (strstr(w2, ".gat") == NULL && strstr(w2, ".rsw") == NULL)
 		return false; // we only need the maps' GAT and RSW files
 
-	safesnprintf(src, 256, "data\\%s", w1);
-	safesnprintf(dst, 256, "data\\%s", w2);
+	snprintf(src, 261, "data\\%s", w1);
+	snprintf(dst, 261, "data\\%s", w2);
 
 	entry = grfio_filelist_find(dst);
 	if (entry != NULL) {

@@ -11582,13 +11582,13 @@ static void pc_read_skill_tree(void)
 {
 	struct config_t skill_tree_conf;
 	struct config_setting_t *skt = NULL;
-	char config_filename[128];
+	char config_filename[280];
 	int i = 0;
 	struct s_mapiterator *iter;
 	struct map_session_data *sd;
 	bool loaded[CLASS_COUNT] = { false };
 
-	safesnprintf(config_filename, sizeof(config_filename), "%s/"DBPATH"skill_tree.conf", map->db_path);
+	snprintf(config_filename, sizeof(config_filename), "%s/"DBPATH"skill_tree.conf", map->db_path);
 	if (!libconfig->load_file(&skill_tree_conf, config_filename))
 		return;
 
@@ -11987,7 +11987,7 @@ static int pc_read_attr_fix_db_entry(struct config_setting_t *def_attr, enum ele
 	int count = 0;
 	for (int i = 1; i <= 4; ++i) {
 		char name[5];
-		safesnprintf(name, 5, "Lv%d", i);
+		snprintf(name, 5, "Lv%d", i);
 
 		struct config_setting_t *def_lv = libconfig->setting_lookup(def_attr, name);
 		if (def_lv != NULL) {

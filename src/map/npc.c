@@ -3404,8 +3404,12 @@ static void npc_parsename(struct npc_data *nd, const char *name, const char *sta
 
 		do {
 			++i;
-			safesnprintf(newname, ARRAYLENGTH(newname), "%d_%d_%d_%d", i, nd->bl.m, nd->bl.x, nd->bl.y);
-		} while( npc->name2id(newname) != NULL );
+			PRAGMA_GCC7(GCC diagnostic push)
+			PRAGMA_GCC7(GCC diagnostic ignored "-Wformat-truncation")
+			// Name is being checked for duplicates, so it's safe to ignore the unlikely but possible string truncation
+			snprintf(newname, ARRAYLENGTH(newname), "%d_%d_%d_%d", i, nd->bl.m, nd->bl.x, nd->bl.y);
+			PRAGMA_GCC7(GCC diagnostic pop)
+		} while(npc->name2id(newname) != NULL);
 
 		strcpy(this_mapname, (nd->bl.m == -1 ? "(not on a map)" : mapindex_id2name(map_id2index(nd->bl.m))));
 		strcpy(other_mapname, (dnd->bl.m == -1 ? "(not on a map)" : mapindex_id2name(map_id2index(dnd->bl.m))));
@@ -3508,7 +3512,6 @@ static struct npc_data *npc_create_npc(enum npc_subtype subtype, int m, int x, i
 //Add then display an npc warp on map
 static struct npc_data *npc_add_warp(char *name, short from_mapid, short from_x, short from_y, short xs, short ys, unsigned short to_mapindex, short to_x, short to_y)
 {
-	int i, flag = 0;
 	struct npc_data *nd;
 
 	nullpo_retr(NULL, name);
@@ -3516,14 +3519,21 @@ static struct npc_data *npc_add_warp(char *name, short from_mapid, short from_x,
 	nd = npc->create_npc(WARP, from_mapid, from_x, from_y, 0, battle_config.warp_point_debug ? WARP_DEBUG_CLASS : WARP_CLASS);
 
 	safestrncpy(nd->exname, name, ARRAYLENGTH(nd->exname));
-	if (npc->name2id(nd->exname) != NULL)
-		flag = 1;
+	if (npc->name2id(nd->exname) != NULL) {
+		PRAGMA_GCC7(GCC diagnostic push)
+		PRAGMA_GCC7(GCC diagnostic ignored "-Wformat-truncation")
+		// Name is being checked for duplicates afterwards, so it's safe to ignore the unlikely but possible string truncation
+		snprintf(nd->exname, ARRAYLENGTH(nd->exname), "warp_%d_%d_%d", from_mapid, from_x, from_y);
+		PRAGMA_GCC7(GCC diagnostic pop)
+	}
 
-	if (flag == 1)
-		safesnprintf(nd->exname, ARRAYLENGTH(nd->exname), "warp_%d_%d_%d", from_mapid, from_x, from_y);
-
-	for( i = 0; npc->name2id(nd->exname) != NULL; ++i )
-		safesnprintf(nd->exname, ARRAYLENGTH(nd->exname), "warp%d_%d_%d_%d", i, from_mapid, from_x, from_y);
+	for (int i = 0; npc->name2id(nd->exname) != NULL; ++i) {
+		PRAGMA_GCC7(GCC diagnostic push)
+		PRAGMA_GCC7(GCC diagnostic ignored "-Wformat-truncation")
+		// Name is being checked for duplicates, so it's safe to ignore the unlikely but possible string truncation
+		snprintf(nd->exname, ARRAYLENGTH(nd->exname), "warp%d_%d_%d_%d", i, from_mapid, from_x, from_y);
+		PRAGMA_GCC7(GCC diagnostic pop)
+	}
 	safestrncpy(nd->name, nd->exname, ARRAYLENGTH(nd->name));
 
 	nd->u.warp.mapindex = to_mapindex;

@@ -11922,7 +11922,7 @@ static void clif_parse_GlobalMessage(int fd, struct map_session_data *sd)
 		WFIFOL(fd,4) = sd->bl.id;
 		WFIFOL(fd,8) = RGB2BGR(color);
 		if (is_fakename)
-			safesnprintf(WFIFOP(fd, 12), outlen, "%s : %s", sd->fakename, message);
+			snprintf(WFIFOP(fd, 12), outlen, "%s : %s", sd->fakename, message);
 		else
 			safestrncpy(WFIFOP(fd, 12), full_message, outlen);
 		clif->send(WFIFOP(fd,0), WFIFOW(fd,2), &sd->bl, AREA_WOS);
@@ -11938,7 +11938,7 @@ static void clif_parse_GlobalMessage(int fd, struct map_session_data *sd)
 		WBUFW(buf, 2) = 8 + outlen;
 		WBUFL(buf, 4) = sd->bl.id;
 		if (is_fakename)
-			safesnprintf(WBUFP(buf, 8), outlen, "%s : %s", sd->fakename, message);
+			snprintf(WBUFP(buf, 8), outlen, "%s : %s", sd->fakename, message);
 		else
 			safestrncpy(WBUFP(buf, 8), full_message, outlen);
 		//FIXME: chat has range of 9 only
@@ -11951,7 +11951,7 @@ static void clif_parse_GlobalMessage(int fd, struct map_session_data *sd)
 	WFIFOW(fd, 0) = 0x8e;
 	WFIFOW(fd, 2) = 4 + outlen;
 	if (is_fakename)
-		safesnprintf(WFIFOP(fd, 4), outlen, "%s : %s", sd->fakename, message);
+		snprintf(WFIFOP(fd, 4), outlen, "%s : %s", sd->fakename, message);
 	else
 		safestrncpy(WFIFOP(fd, 4), full_message, outlen);
 	WFIFOSET(fd, WFIFOW(fd,2));
@@ -12316,7 +12316,7 @@ static void clif_parse_WisMessage(int fd, struct map_session_data *sd)
 				script->set_var(sd,output,(char *) split_data[i]);
 			}
 
-			safesnprintf(output, 255, "%s::OnWhisperGlobal", nd->exname);
+			snprintf(output, 256, "%s::OnWhisperGlobal", nd->exname);
 			npc->event(sd,output, 0); // Calls the NPC label
 
 			return;
@@ -16265,11 +16265,11 @@ static void clif_parse_GM_Monster_Item(int fd, struct map_session_data *sd)
 				break;
 		}
 
-		if( i < count ) {
-			if( item_array[i]->type == IT_WEAPON || item_array[i]->type == IT_ARMOR ) // nonstackable
-				snprintf(command, sizeof(command)-1, "%citem2 %d 1 0 0 0 0 0 0 0", atcommand->at_symbol, item_array[i]->nameid);
+		if (i < count) {
+			if (item_array[i]->type == IT_WEAPON || item_array[i]->type == IT_ARMOR) // nonstackable
+				snprintf(command, sizeof(command), "%citem2 %d 1 0 0 0 0 0 0 0", atcommand->at_symbol, item_array[i]->nameid);
 			else
-				snprintf(command, sizeof(command)-1, "%citem %d 20", atcommand->at_symbol, item_array[i]->nameid);
+				snprintf(command, sizeof(command), "%citem %d 20", atcommand->at_symbol, item_array[i]->nameid);
 			atcommand->exec(fd, sd, command, true);
 			return;
 		}
@@ -16292,8 +16292,8 @@ static void clif_parse_GM_Monster_Item(int fd, struct map_session_data *sd)
 				break;
 		}
 
-		if( i < count ){
-			snprintf(command, sizeof(command)-1, "%cmonster %s", atcommand->at_symbol, mob_array[i]->sprite);
+		if (i < count) {
+			snprintf(command, sizeof(command), "%cmonster %s", atcommand->at_symbol, mob_array[i]->sprite);
 			atcommand->exec(fd, sd, command, true);
 		}
 	}
@@ -21710,7 +21710,7 @@ static void clif_show_modifiers(struct map_session_data *sd)
 		char output[128];
 
 		// Base EXP : %d%% | Base Drop: %d%% | Base Death Penalty: %d%%
-		safesnprintf(output, sizeof(output), msg_sd(sd, 896), sd->status.mod_exp, sd->status.mod_drop, sd->status.mod_death);
+		snprintf(output, sizeof(output), msg_sd(sd, 896), sd->status.mod_exp, sd->status.mod_drop, sd->status.mod_death);
 		clif->broadcast2(&sd->bl, output, (int)strlen(output) + 1, 0xffbc90, 0x190, 12, 0, 0, SELF);
 	}
 #endif  // PACKETVER_MAIN_NUM >= 20120503 || PACKETVER_RE_NUM >= 20120502 || defined(PACKETVER_ZERO)
@@ -22186,7 +22186,7 @@ static bool clif_parse_roulette_db(void)
 			struct config_setting_t *level;
 			char entry_name[10];
 
-			safesnprintf(entry_name, 10, "level_%d", i + 1);
+			snprintf(entry_name, 10, "level_%d", i + 1);
 
 			if( (level = libconfig->setting_get_member(levels, entry_name)) != NULL ) {
 				int k, item_count = libconfig->setting_length(level);
@@ -24252,9 +24252,9 @@ static void clif_parse_cameraInfo(int fd, struct map_session_data *sd)
 	const struct PACKET_CZ_VIEW_CAMERAINFO *const p = RFIFOP(fd, 0);
 	char command[200];
 	if (p->action == 1) {
-		safesnprintf(command, sizeof(command), "%ccamerainfo", atcommand->at_symbol);
+		snprintf(command, sizeof(command), "%ccamerainfo", atcommand->at_symbol);
 	} else {
-		safesnprintf(command, sizeof(command),  "%ccamerainfo %f %f %f", atcommand->at_symbol, p->range, p->rotation, p->latitude);
+		snprintf(command, sizeof(command),  "%ccamerainfo %f %f %f", atcommand->at_symbol, p->range, p->rotation, p->latitude);
 	}
 	atcommand->exec(fd, sd, command, true);
 #endif
