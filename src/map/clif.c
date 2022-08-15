@@ -7671,7 +7671,7 @@ static void clif_party_message(struct party_data *p, int account_id, const char 
 		struct PACKET_ZC_NOTIFY_CHAT_PARTY *packet = (struct PACKET_ZC_NOTIFY_CHAT_PARTY *)&buf;
 
 		packet->PacketType = HEADER_ZC_NOTIFY_CHAT_PARTY;
-		packet->PacketLength = len + sizeof(struct PACKET_ZC_NOTIFY_CHAT_PARTY);
+		packet->PacketLength = len + 1 + sizeof(struct PACKET_ZC_NOTIFY_CHAT_PARTY);
 		packet->AID = account_id;
 		safestrncpy(packet->chatMsg, mes, len + 1);
 
