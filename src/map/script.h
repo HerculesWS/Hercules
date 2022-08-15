@@ -353,6 +353,7 @@ enum {
 	MF_SRC4INSTANCE,
 	MF_CVC,
 	MF_SPECIALPOPUP,
+	MF_NOSENDMAIL,
 };
 
 enum navigation_service {

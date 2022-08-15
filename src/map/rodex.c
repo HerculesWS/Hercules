@@ -237,10 +237,10 @@ static int rodex_send_mail(struct map_session_data *sd, const char *receiver_nam
 		return RODEX_SEND_MAIL_FATAL_ERROR;
 	}
 
-	if (!pc_has_permission(sd, PC_PERM_BYPASS_NOSTORAGE) && (map->list[sd->bl.m].flag.nostorage & 2)) {
+	if (map->list[sd->bl.m].flag.nosendmail != 0) {
 		rodex->clean(sd, 1);
 		return RODEX_SEND_MAIL_FATAL_ERROR;
-    }
+	}
 
 	if (zeny < 0) {
 		rodex->clean(sd, 1);
