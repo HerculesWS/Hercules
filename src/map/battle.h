@@ -396,7 +396,6 @@ struct Battle_Config {
 
 	int ignore_items_gender; //[Lupus]
 
-	int copyskill_restrict; // [Aru]
 	int berserk_cancels_buffs; // [Aru]
 	int mob_ai; //Configures various mob_ai settings to make them smarter or dumber(official). [Skotlex]
 	int hom_setting; //Configures various homunc settings which make them behave unlike normal characters.. [Skotlex]

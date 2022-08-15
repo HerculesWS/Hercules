@@ -1220,41 +1220,36 @@ static int skill_calc_heal(struct block_list *src, struct block_list *target, ui
 	return hp;
 }
 
-// Making plagiarize check its own function [Aru]
-static int can_copy(struct map_session_data *sd, uint16 skill_id, struct block_list *bl)
+/**
+ * Making plagiarize check its own function [Aru]
+ * Note: If a particular skill can be copied by both skills,
+ *       Skill will be copied by the first condition which is Plagiarism[KeiKun]
+ *
+ * @param sd The character who cast the skill.
+ * @return 1 Skill can be copied via Plagiarism
+ *         2 Skill can be copied via Reproduce
+ **/
+static int can_copy(struct map_session_data *sd, uint16 skill_id)
 {
+	int cidx = skill->get_index(skill_id);
 	nullpo_ret(sd);
-	// Never copy NPC/Wedding Skills
-	if (skill->get_inf2(skill_id)&(INF2_NPC_SKILL|INF2_WEDDING_SKILL))
+
+	/// Checks if preserve is active and if skill can be copied by Plagiarism
+	if (!cidx)
 		return 0;
 
-	// Transcendent-class skills
-	if((skill_id >= LK_AURABLADE && skill_id <= ASC_CDP) || (skill_id >= ST_PRESERVE && skill_id <= CR_CULTIVATION)) {
-		if (battle_config.copyskill_restrict == 2) {
-			return 0;
-		} else if (battle_config.copyskill_restrict == 1) {
-			if ((sd->job & (MAPID_UPPERMASK | JOBL_UPPER)) != MAPID_STALKER)
-				return 0;
-		}
-	}
-
-	//Added so plagarize can't copy agi/bless if you're undead since it damages you
-	if ((skill_id == AL_INCAGI || skill_id == AL_BLESSING ||
-		skill_id == CASH_BLESSING || skill_id == CASH_INCAGI ||
-		skill_id == MER_INCAGI || skill_id == MER_BLESSING))
+	if (sd->status.skill[cidx].id && sd->status.skill[cidx].flag == SKILL_FLAG_PLAGIARIZED)
 		return 0;
 
-	// Couldn't preserve 3rd Class/Summoner skills except only when using Reproduce skill. [Jobbie]
-	if (!(sd->sc.data[SC__REPRODUCE]) &&
-		((skill_id >= RK_ENCHANTBLADE && skill_id <= LG_OVERBRAND_PLUSATK) ||
-		 (skill_id >= RL_GLITTERING_GREED && skill_id <= OB_AKAITSUKI) ||
-		 (skill_id >= GC_DARKCROW && skill_id <= SU_FRESHSHRIMP)))
-		return 0;
-	// Reproduce will only copy skills according on the list. [Jobbie]
-	else if (sd->sc.data[SC__REPRODUCE] && (skill->get_inf2(skill_id) & INF2_ALLOW_REPRODUCE) == 0)
-		return 0;
+	// Checks if preserve is active and if skill can be copied by Plagiarism
+	if (!sd->sc.data[SC_PRESERVE] && (skill->get_inf2(skill_id) & INF2_ALLOW_PLAGIARIZE))
+		return 1;
 
-	return 1;
+	/// Reproduce will only copy skills according on the list. [Jobbie]
+	if (sd->sc.data[SC__REPRODUCE] && sd->sc.data[SC__REPRODUCE]->val1 && (skill->get_inf2(skill_id) & INF2_ALLOW_REPRODUCE))
+		return 2;
+
+	return 0;
 }
 
 // [MouseJstr] - skill ok to cast? and when?
@@ -3611,17 +3606,17 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 
 	map->freeblock_lock();
 
-	if (damage > 0 && dmg.flag&BF_SKILL && tsd
-	 && pc->checkskill(tsd,RG_PLAGIARISM)
-	 && (!sc || !sc->data[SC_PRESERVE])
-	 && damage < tsd->battle_status.hp
-	) {
-		//Updated to not be able to copy skills if the blow will kill you. [Skotlex]
-		int copy_skill = skill_id, cidx = 0;
+	// Plagiarism and Reproduce Code Block [KeiKun]
+	if (bl->type == BL_PC && damage > 0 && dmg.flag&BF_SKILL && tsd
+		&& (pc->checkskill(tsd, RG_PLAGIARISM) || pc->checkskill(tsd, SC_REPRODUCE))
+		&& (!tsd->sc.data[SC_PRESERVE] || tsd->sc.data[SC__REPRODUCE])
+		&& damage < tsd->battle_status.hp // Updated to not be able to copy skills if the blow will kill you. [Skotlex]
+		) {
+		int copy_skill = 0;
 		/**
 		 * Copy Referral: dummy skills should point to their source upon copying
 		 **/
-		switch( skill_id ) {
+		switch(skill_id) {
 			case AB_DUPLELIGHT_MELEE:
 			case AB_DUPLELIGHT_MAGIC:
 				copy_skill = AB_DUPLELIGHT;
@@ -3653,58 +3648,60 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 				copy_skill = skill->attack_copy_unknown(&attack_type, src, dsrc, bl, &skill_id, &skill_lv, &tick, &flag);
 				break;
 		}
+
+		int cidx, idx, lv = 0;
 		cidx = skill->get_index(copy_skill);
-		if ((tsd->status.skill[cidx].id == 0 || tsd->status.skill[cidx].flag == SKILL_FLAG_PLAGIARIZED) &&
-			can_copy(tsd,copy_skill,bl)) // Split all the check into their own function [Aru]
+		switch(can_copy(tsd, copy_skill)) {
+		case 1: // Plagiarism
 		{
-			int lv, idx = 0;
-			if (sc && sc->data[SC__REPRODUCE] && (lv = sc->data[SC__REPRODUCE]->val1) > 0) {
-				//Level dependent and limitation.
-				lv = min(lv,skill->get_max(copy_skill));
-
-				if( tsd->reproduceskill_id ) {
-					idx = skill->get_index(tsd->reproduceskill_id);
-					if(tsd->status.skill[idx].flag == SKILL_FLAG_PLAGIARIZED ) {
-						tsd->status.skill[idx].id = 0;
-						tsd->status.skill[idx].lv = 0;
-						tsd->status.skill[idx].flag = 0;
-						clif->deleteskill(tsd,tsd->reproduceskill_id);
-					}
+			if (tsd->cloneskill_id) {
+				idx = skill->get_index(tsd->cloneskill_id);
+				if (tsd->status.skill[idx].flag == SKILL_FLAG_PLAGIARIZED) {
+					tsd->status.skill[idx].id = 0;
+					tsd->status.skill[idx].lv = 0;
+					tsd->status.skill[idx].flag = 0;
+					clif->deleteskill(tsd, tsd->cloneskill_id);
 				}
-
-				tsd->reproduceskill_id = copy_skill;
-				pc_setglobalreg(tsd, script->add_variable("REPRODUCE_SKILL"), copy_skill);
-				pc_setglobalreg(tsd, script->add_variable("REPRODUCE_SKILL_LV"), lv);
-
-				tsd->status.skill[cidx].id = copy_skill;
-				tsd->status.skill[cidx].lv = lv;
-				tsd->status.skill[cidx].flag = SKILL_FLAG_PLAGIARIZED;
-				clif->addskill(tsd,copy_skill);
-			} else {
-				int plagiarismlvl;
-				lv = skill_lv;
-				if ( tsd->cloneskill_id ) {
-					idx = skill->get_index(tsd->cloneskill_id);
-					if ( tsd->status.skill[idx].flag == SKILL_FLAG_PLAGIARIZED){
-						tsd->status.skill[idx].id = 0;
-						tsd->status.skill[idx].lv = 0;
-						tsd->status.skill[idx].flag = 0;
-						clif->deleteskill(tsd,tsd->cloneskill_id);
-					}
-				}
-
-				if ((plagiarismlvl = pc->checkskill(tsd,RG_PLAGIARISM)) < lv)
-					lv = plagiarismlvl;
-
-				tsd->cloneskill_id = copy_skill;
-				pc_setglobalreg(tsd, script->add_variable("CLONE_SKILL"), copy_skill);
-				pc_setglobalreg(tsd, script->add_variable("CLONE_SKILL_LV"), lv);
-
-				tsd->status.skill[cidx].id = copy_skill;
-				tsd->status.skill[cidx].lv = lv;
-				tsd->status.skill[cidx].flag = SKILL_FLAG_PLAGIARIZED;
-				clif->addskill(tsd,copy_skill);
 			}
+
+			lv = min(skill_lv, pc->checkskill(tsd, RG_PLAGIARISM));
+
+			tsd->cloneskill_id = copy_skill;
+			pc_setglobalreg(tsd, script->add_variable("CLONE_SKILL"), copy_skill);
+			pc_setglobalreg(tsd, script->add_variable("CLONE_SKILL_LV"), lv);
+
+			tsd->status.skill[cidx].id = copy_skill;
+			tsd->status.skill[cidx].lv = lv;
+			tsd->status.skill[cidx].flag = SKILL_FLAG_PLAGIARIZED;
+			clif->addskill(tsd, copy_skill);
+		}
+		break;
+		case 2: // Reproduce
+		{	
+			lv = sc ? sc->data[SC__REPRODUCE]->val1 : 1;
+			if (tsd->reproduceskill_id) {
+				idx = skill->get_index(tsd->reproduceskill_id);
+				if (tsd->status.skill[idx].flag == SKILL_FLAG_PLAGIARIZED) {
+					tsd->status.skill[idx].id = 0;
+					tsd->status.skill[idx].lv = 0;
+					tsd->status.skill[idx].flag = 0;
+					clif->deleteskill(tsd, tsd->reproduceskill_id);
+				}
+			}
+			lv = min(lv, skill->get_max(copy_skill));
+
+			tsd->reproduceskill_id = copy_skill;
+			pc_setglobalreg(tsd, script->add_variable("REPRODUCE_SKILL"), copy_skill);
+			pc_setglobalreg(tsd, script->add_variable("REPRODUCE_SKILL_LV"), lv);
+
+			tsd->status.skill[cidx].id = copy_skill;
+			tsd->status.skill[cidx].lv = lv;
+			tsd->status.skill[cidx].flag = SKILL_FLAG_PLAGIARIZED;
+			clif->addskill(tsd, copy_skill);
+		}
+		break;
+		default:
+		break;
 		}
 	}
 
@@ -21999,6 +21996,11 @@ static void skill_validate_skillinfo(struct config_setting_t *conf, struct s_ski
 					sk->inf2 |= INF2_RANGE_RESEARCHTRAP;
 				else
 					sk->inf2 &= ~INF2_RANGE_RESEARCHTRAP;
+			} else if (strcmpi(skill_info, "AllowPlagiarism") == 0) {
+				if (on)
+					sk->inf2 |= INF2_ALLOW_PLAGIARIZE;
+				else
+					sk->inf2 &= ~INF2_ALLOW_PLAGIARIZE;
 			} else if (strcmpi(skill_info, "None") != 0) {
 				ShowWarning("%s: Invalid sub-type %s specified for skill ID %d in %s! Skipping sub-type...\n",
 					    __func__, skill_info, sk->nameid, conf->file);
