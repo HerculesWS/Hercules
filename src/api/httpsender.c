@@ -79,7 +79,7 @@ static bool httpsender_send_html(int fd, const char *data)
 	nullpo_retr(false, data);
 
 	const size_t sz = strlen(data);
-	size_t buf_sz = safesnprintf(tmp_buffer, sizeof(tmp_buffer),
+	size_t buf_sz = snprintf(tmp_buffer, sizeof(tmp_buffer),
 		"HTTP/1.1 200 OK\n"
 		"Server: %s\n"
 		"Content-Type: text/html\n"
@@ -101,7 +101,7 @@ static bool httpsender_send_json(int fd, const JsonW *json)
 
 	char *data = jsonwriter->get_string(json);
 	const size_t sz = strlen(data);
-	size_t buf_sz = safesnprintf(tmp_buffer, sizeof(tmp_buffer),
+	size_t buf_sz = snprintf(tmp_buffer, sizeof(tmp_buffer),
 		"HTTP/1.1 200 OK\n"
 		"Server: %s\n"
 		"Content-Type: text/plain; charset=utf-8\n"
@@ -125,7 +125,7 @@ static bool httpsender_send_plain(int fd, const char *data)
 	nullpo_retr(false, data);
 
 	const size_t sz = strlen(data);
-	size_t buf_sz = safesnprintf(tmp_buffer, sizeof(tmp_buffer),
+	size_t buf_sz = snprintf(tmp_buffer, sizeof(tmp_buffer),
 		"HTTP/1.1 200 OK\n"
 		"Server: %s\n"
 		"Content-Type: text/plain; charset=utf-8\n"
@@ -147,7 +147,7 @@ static bool httpsender_send_binary(int fd, const char *data, const size_t data_l
 
 	nullpo_retr(false, data);
 
-	size_t buf_sz = safesnprintf(tmp_buffer, sizeof(tmp_buffer),
+	size_t buf_sz = snprintf(tmp_buffer, sizeof(tmp_buffer),
 		"HTTP/1.1 200 OK\n"
 		"Server: %s\n"
 		"Content-Type: octet-stream\n"

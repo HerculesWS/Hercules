@@ -108,7 +108,7 @@ static bool extraconf_read_vars(const char *filename, bool imported, struct conf
 	int i = 0;
 	while (conf_vars[i].str != NULL) {
 		char config_name[256];
-		safesnprintf(config_name, sizeof config_name, "%s/%s", node, conf_vars[i].str);
+		snprintf(config_name, sizeof config_name, "%s/%s", node, conf_vars[i].str);
 
 		struct config_setting_t *setting = libconfig->lookup(config, config_name);
 		if (setting == NULL) {

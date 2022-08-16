@@ -562,7 +562,7 @@ HTTP_URL(test_url)
 	char buf[1000];
 	const char *user_agent = (const char*)strdb_get(sd->headers_db, "User-Agent");
 	const char *format = "<html>Hercules test.<br/>Your user agent is: %s<br/></html>\n";
-	safesnprintf(buf, sizeof(buf), format, user_agent);
+	snprintf(buf, sizeof(buf), format, user_agent);
 
 	httpsender->send_html(fd, buf);
 

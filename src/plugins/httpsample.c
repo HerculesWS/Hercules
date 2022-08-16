@@ -114,7 +114,7 @@ HTTP_URL(my_sample_test_simple)
 	const char *format = "<html>Hercules test from sample plugin.<br/>Your user agent is: %s<br/></html>\n";
 	if (user_agent != NULL) {
 		// copy user agent from http request to buffer
-		safesnprintf(buf, sizeof(buf), format, user_agent);
+		snprintf(buf, sizeof(buf), format, user_agent);
 	} else {
 		// use unknown as user agent string
 		safestrncpy(buf, "unknown", 8);
@@ -167,7 +167,7 @@ HTTP_DATA(my_sample_test_login)
 		"Connected char servers count: %d<br/>\n"
 		"</html>\n";
 	char buf[1000];
-	safesnprintf(buf, sizeof(buf), format, p->api_servers_count, p->char_servers_count);
+	snprintf(buf, sizeof(buf), format, p->api_servers_count, p->char_servers_count);
 	httpsender->send_html(fd, buf);
 
 	// terminating http connection here after we got requested data from login server
@@ -212,7 +212,7 @@ HTTP_DATA(my_sample_test_char)
 	// generate html and send
 	const char *format = "<html>Hercules test from sample plugin.<br/>Users count on char server: %d<br/></html>\n";
 	char buf[1000];
-	safesnprintf(buf, sizeof(buf), format, p->users_count);
+	snprintf(buf, sizeof(buf), format, p->users_count);
 	httpsender->send_html(fd, buf);
 
 	// terminating http connection here after we got requested data from char server
@@ -257,7 +257,7 @@ HTTP_DATA(my_sample_test_map)
 	// generate html and send
 	const char *format = "<html>Hercules test from sample plugin.<br/>Users count on map server: %d<br/></html>\n";
 	char buf[1000];
-	safesnprintf(buf, sizeof(buf), format, p->users_count);
+	snprintf(buf, sizeof(buf), format, p->users_count);
 	httpsender->send_html(fd, buf);
 
 	// terminating http connection here after we got requested data from char server
@@ -276,7 +276,7 @@ HTTP_URL(my_sample_test_user)
 	char buf[1000];
 	if (!idb_exists(aclif->online_db, account_id)) {
 		const char *format = "<html>Player with id %d is not online<br/></html>\n";
-		safesnprintf(buf, sizeof(buf), format, account_id);
+		snprintf(buf, sizeof(buf), format, account_id);
 		httpsender->send_html(fd, buf);
 		return false;
 	}
@@ -308,10 +308,10 @@ HTTP_DATA(my_sample_test_user)
 	// prepare html page
 	if (p->error) {
 		const char *format = "<html>Player with id %d is not online<br/></html>\n";
-		safesnprintf(buf, sizeof(buf), format, account_id);
+		snprintf(buf, sizeof(buf), format, account_id);
 	} else {
 		const char *format = "<html>Player with id %d dead sit state: %d<br/></html>\n";
-		safesnprintf(buf, sizeof(buf), format, account_id, p->dead_sit);
+		snprintf(buf, sizeof(buf), format, account_id, p->dead_sit);
 	}
 	httpsender->send_html(fd, buf);
 	// terminating http connection here after we got requested data from char server
