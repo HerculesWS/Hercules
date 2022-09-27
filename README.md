@@ -9,6 +9,7 @@ Build Status:
 [![Coverage Report](https://gitlab.com/HerculesWS/Hercules/badges/master/coverage.svg)](https://gitlab.com/HerculesWS/Hercules/-/commits/master)
 [![Code Quality: Cpp](https://img.shields.io/lgtm/grade/cpp/g/HerculesWS/Hercules.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/HerculesWS/Hercules/context:cpp)
 [![Total Alerts](https://img.shields.io/lgtm/alerts/g/HerculesWS/Hercules.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/HerculesWS/Hercules/alerts)
+[![kandi X-Ray](https://kandi.openweaver.com/badges/xray.svg)](https://kandi.openweaver.com/c/HerculesWS/Hercules)
 
 Issues and pull requests:
 [![Open Issues](https://img.shields.io/github/issues-raw/HerculesWS/Hercules.svg?label=Open%20Issues)](https://github.com/HerculesWS/Hercules/issues)
