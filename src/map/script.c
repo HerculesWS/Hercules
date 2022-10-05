@@ -28000,6 +28000,35 @@ static BUILDIN(calldynamicnpc)
 	return true;
 }
 
+static BUILDIN(openreformui)
+{
+#if PACKETVER_MAIN_NUM >= 20201118 || PACKETVER_RE_NUM >= 20211103
+	struct map_session_data *sd = script_rid2sd(st);
+
+	if (sd == NULL) {
+		script_pushint(st, 0);
+		return false;
+	}
+
+	const int item_id = script_getnum(st, 2);
+	struct item_data *it = itemdb->exists(item_id);
+	if (it == NULL || VECTOR_LENGTH(it->reform_list) == 0) {
+		ShowError("buildin_openreformui: Item %d is not valid\n", item_id);
+		script->reportfunc(st);
+		script->reportsrc(st);
+		script_pushint(st, 0);
+		return true;
+	}
+
+	clif->item_reform_open(sd, item_id);
+	script_pushint(st, 1);
+	return true;
+#else
+	script_pushint(st, 0);
+	return false;
+#endif
+}
+
 /**
  * Adds a built-in script function.
  *
@@ -28865,6 +28894,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(getequipgrade, "i"),
 		BUILDIN_DEF(opengradeui, ""),
 		BUILDIN_DEF(calldynamicnpc, "v"),
+		BUILDIN_DEF(openreformui, "i"),
 	};
 	int i, len = ARRAYLENGTH(BUILDIN);
 	RECREATE(script->buildin, char *, script->buildin_count + len); // Pre-alloc to speed up
