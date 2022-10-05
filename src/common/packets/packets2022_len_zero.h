@@ -3865,6 +3865,21 @@ packetLen(0x0a5c, 18)
 // Packet: 0x0a5d
 packetLen(0x0a5d, 6)
 
+// Packet: 0x0a5e
+#if PACKETVER >= 20220817
+packetLen(0x0a5e, 26)
+#endif
+
+// Packet: 0x0a5f
+#if PACKETVER >= 20220817
+packetLen(0x0a5f, 8)
+#endif
+
+// Packet: 0x0a60
+#if PACKETVER >= 20220817
+packetLen(0x0a60, 3)
+#endif
+
 // Packet: 0x0a68
 packetLen(0x0a68, 3)
 
@@ -4838,6 +4853,26 @@ packetLen(0x0bb9, 27)
 // Packet: 0x0bba
 #if PACKETVER >= 20220518
 packetLen(0x0bba, -1)
+#endif
+
+// Packet: 0x0bbb
+#if PACKETVER >= 20220817
+packetLen(0x0bbb, -1)
+#endif
+
+// Packet: 0x0bbc
+#if PACKETVER >= 20220817
+packetLen(0x0bbc, 22)
+#endif
+
+// Packet: 0x0bbd
+#if PACKETVER >= 20220817
+packetLen(0x0bbd, 6)
+#endif
+
+// Packet: 0x0bbe
+#if PACKETVER >= 20220817
+packetLen(0x0bbe, 3)
 #endif
 
 

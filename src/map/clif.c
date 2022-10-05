@@ -18422,10 +18422,16 @@ static void clif_cashshop_show(struct map_session_data *sd, struct npc_data *nd)
 	for (i = 0; i < shop_size; i++) {
 		if (shop[i].nameid) {
 			struct item_data* id = itemdb->search(shop[i].nameid);
+			if (id == NULL)
+				continue;
 			p->items[c].price = shop[i].value;
 			p->items[c].discountPrice = shop[i].value;
 			p->items[c].itemType = itemtype(id->type);
 			p->items[c].itemId = (id->view_id > 0) ? id->view_id : id->nameid;
+#ifdef ENABLE_OLD_CASHSHOP_PREVIEW_PATCH
+			p->items[c].location = pc->item_equippoint(sd, id);
+			p->items[c].viewSprite = id->view_sprite;
+#endif  // ENABLE_OLD_CASHSHOP_PREVIEW_PATCH
 			c++;
 		}
 	}

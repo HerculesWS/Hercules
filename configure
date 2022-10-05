@@ -726,6 +726,7 @@ enable_option_checking
 enable_manager
 enable_packetver
 enable_cashshop_preview_patch
+enable_old_cashshop_preview_patch
 enable_packetver_re
 enable_packetver_zero
 enable_packetver_sak
@@ -1380,6 +1381,8 @@ Optional Features:
   --enable-packetver=ARG  Sets the PACKETVER define. (see src/common/mmo.h)
   --enable-cashshop-preview-patch
                           Enable Nemo patch ExtendCashShopPreview.
+  --enable-old-cashshop-preview-patch
+                          Enable Nemo patch ExtendOldCashShopPreview.
   --enable-packetver-re   Sets or unsets the PACKETVER_RE define - see
                           src/common/mmo.h (currently disabled by default)
   --enable-packetver-zero Sets or unsets the PACKETVER_ZERO define - see
@@ -3810,6 +3813,18 @@ then :
   enableval=$enable_cashshop_preview_patch; enable_cashshop_preview_patch=1
 else $as_nop
   enable_cashshop_preview_patch=0
+
+fi
+
+
+#
+# old cash shop preview patch
+#
+# Check whether --enable-old-cashshop-preview-patch was given.
+if test "${enable_old_cashshop_preview_patch+set}" = set; then :
+  enableval=$enable_old_cashshop_preview_patch; enable_old_cashshop_preview_patch=1
+else
+  enable_old_cashshop_preview_patch=0
 
 fi
 
@@ -10490,6 +10505,18 @@ case $enable_cashshop_preview_patch in
 		;;
 	1)
 		CPPFLAGS="$CPPFLAGS -DENABLE_CASHSHOP_PREVIEW_PATCH"
+		;;
+esac
+
+#
+# old cash shop preview patch
+#
+case $enable_old_cashshop_preview_patch in
+	0)
+		#default value
+		;;
+	1)
+		CPPFLAGS="$CPPFLAGS -DENABLE_OLD_CASHSHOP_PREVIEW_PATCH"
 		;;
 esac
 

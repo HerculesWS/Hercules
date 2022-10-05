@@ -22427,355 +22427,355 @@ UI 스킨
 무형
 Formless
 */
-	MSG_ID_F2F = 0xf2f,
+	MSG_MONSTERINFO_TRIBE_UNKNOWN = 0xf2f,
 /*20211103 to latest
 불사형
 Undead
 */
-	MSG_ID_F30 = 0xf30,
+	MSG_MONSTERINFO_TRIBE_UNDEAD = 0xf30,
 /*20211103 to latest
 동물형
 Brute
 */
-	MSG_ID_F31 = 0xf31,
+	MSG_MONSTERINFO_TRIBE_ANIMAL = 0xf31,
 /*20211103 to latest
 식물형
 Plant
 */
-	MSG_ID_F32 = 0xf32,
+	MSG_MONSTERINFO_TRIBE_PLANT = 0xf32,
 /*20211103 to latest
 곤충형
 Insect
 */
-	MSG_ID_F33 = 0xf33,
+	MSG_MONSTERINFO_TRIBE_INSECT = 0xf33,
 /*20211103 to latest
 어패형
 Fish
 */
-	MSG_ID_F34 = 0xf34,
+	MSG_MONSTERINFO_TRIBE_MARINE = 0xf34,
 /*20211103 to latest
 악마형
 Demon
 */
-	MSG_ID_F35 = 0xf35,
+	MSG_MONSTERINFO_TRIBE_DEVIL = 0xf35,
 /*20211103 to latest
 인간형
 Demi-Human
 */
-	MSG_ID_F36 = 0xf36,
+	MSG_MONSTERINFO_TRIBE_HUMAN = 0xf36,
 /*20211103 to latest
 천사형
 Angel
 */
-	MSG_ID_F37 = 0xf37,
+	MSG_MONSTERINFO_TRIBE_ANGEL = 0xf37,
 /*20211103 to latest
 용족
 Dragon
 */
-	MSG_ID_F38 = 0xf38,
+	MSG_MONSTERINFO_TRIBE_DRAGON = 0xf38,
 /*20211103 to latest
 무
 */
-	MSG_ID_F39 = 0xf39,
+	MSG_MONSTERINFO_PROPERTY_NEUTURAL = 0xf39,
 /*20211103 to latest
 수
 Water
 */
-	MSG_ID_F3A = 0xf3a,
+	MSG_MONSTERINFO_PROPERTY_WATER = 0xf3a,
 /*20211103 to latest
 지
 Earth
 */
-	MSG_ID_F3B = 0xf3b,
+	MSG_MONSTERINFO_PROPERTY_EARTH = 0xf3b,
 /*20211103 to latest
 화
 Fire
 */
-	MSG_ID_F3C = 0xf3c,
+	MSG_MONSTERINFO_PROPERTY_FIRE = 0xf3c,
 /*20211103 to latest
 풍
 Wind
 */
-	MSG_ID_F3D = 0xf3d,
+	MSG_MONSTERINFO_PROPERTY_WIND = 0xf3d,
 /*20211103 to latest
 독
 */
-	MSG_ID_F3E = 0xf3e,
+	MSG_MONSTERINFO_PROPERTY_POISON = 0xf3e,
 /*20211103 to latest
 성
 */
-	MSG_ID_F3F = 0xf3f,
+	MSG_MONSTERINFO_PROPERTY_SAINT = 0xf3f,
 /*20211103 to latest
 암
 */
-	MSG_ID_F40 = 0xf40,
+	MSG_MONSTERINFO_PROPERTY_DARK = 0xf40,
 /*20211103 to latest
 염
 */
-	MSG_ID_F41 = 0xf41,
+	MSG_MONSTERINFO_PROPERTY_MENTAL = 0xf41,
 /*20211103 to latest
 불사
 */
-	MSG_ID_F42 = 0xf42,
+	MSG_MONSTERINFO_PROPERTY_UNDEAD = 0xf42,
 /*20211103 to latest
 소형
 Small
 */
-	MSG_ID_F43 = 0xf43,
+	MSG_MONSTERINFO_SIZE_SMALL = 0xf43,
 /*20211103 to latest
 중형
 Medium
 */
-	MSG_ID_F44 = 0xf44,
+	MSG_MONSTERINFO_SIZE_MIDDLE = 0xf44,
 /*20211103 to latest
 대형
 Large
 */
-	MSG_ID_F45 = 0xf45,
+	MSG_MONSTERINFO_SIZE_BIG = 0xf45,
 /*20211103 to latest
 DEF
 */
-	MSG_ID_F46 = 0xf46,
+	MSG_MONSTERINFO_DEF = 0xf46,
 /*20211103 to latest
 청소년은 접속이 제한되어 있습니다.
 */
-	MSG_ID_F47 = 0xf47,
+	MSG_BAN_TEENAGER = 0xf47,
 /*20211103 to latest
 0Zeny (염색제거)
 */
-	MSG_ID_F48 = 0xf48,
+	MSG_STYLINGSHOP_COLOR_RESET = 0xf48,
 /*20211103 to latest
 모두 선택
 Select All
 */
-	MSG_ID_F49 = 0xf49,
+	MSG_ZEROQUEST_ALLSELECT = 0xf49,
 /*20211103 to latest
 간편 퀘스트 UI
 */
-	MSG_ID_F4A = 0xf4a,
+	MSG_ZEROQUEST_SIMPLEUI_ON = 0xf4a,
 /*20211103 to latest
 FREE!
 */
-	MSG_ID_F4B = 0xf4b,
+	MSG_CASHSHOP_FREE = 0xf4b,
 /*20211103 to latest
 임대 기간
 */
-	MSG_ID_F4C = 0xf4c,
+	MSG_ACCOUNT_LIMITED_TOOL_RENT_TIME = 0xf4c,
 /*20211103 to latest
 임대 기간은 최대 14일까지 입력 가능합니다.
 */
-	MSG_ID_F4D = 0xf4d,
+	MSG_ACCOUNT_LIMITED_TOOL_RENT_TIME_MAX_14DAY = 0xf4d,
 /*20211103 to latest
 거래 불가
 */
-	MSG_ID_F4E = 0xf4e,
+	MSG_CASHSHOP_NON_TRADABLE = 0xf4e,
 /*20211103 to latest
 간편 퀘스트 보기
 */
-	MSG_ID_F4F = 0xf4f,
+	MSG_ZEROQUEST_QUESTVIEWWND_ON = 0xf4f,
 /*20211103 to latest
 간편 퀘스트 숨김
 */
-	MSG_ID_F50 = 0xf50,
+	MSG_ZEROQUEST_QUESTVIEWWND_OFF = 0xf50,
 /*20211103 to latest
 간편 퀘스트창에 추가
 */
-	MSG_ID_F51 = 0xf51,
+	MSG_ZEROQUEST_QUESTVIEW_ON = 0xf51,
 /*20211103 to latest
 간편 퀘스트창에서 삭제
 */
-	MSG_ID_F52 = 0xf52,
+	MSG_ZEROQUEST_QUESTVIEW_OFF = 0xf52,
 /*20211103 to latest
 퀘스트 도움말
 */
-	MSG_ID_F53 = 0xf53,
+	MSG_ZEROQUEST_QUESTHELP_TITLE = 0xf53,
 /*20211103 to latest
 1. 콤보박스 + 검색어 입력창 : 퀘스트 정렬, 검색 기능
 */
-	MSG_ID_F54 = 0xf54,
+	MSG_ZEROQUEST_QUESTHELP_1 = 0xf54,
 /*20211103 to latest
 - ALL : 받은 퀘스트 전체보기
 */
-	MSG_ID_F55 = 0xf55,
+	MSG_ZEROQUEST_QUESTHELP_2 = 0xf55,
 /*20211103 to latest
 - 퀘스트 종류 : NORMAL(노멀)/ MAIN(메인)/ EPISODE(에피소드)/ DAILY(일일)/ LOCAL(지역)/ JOB(직업)/ GUIDE(가이드)/ EVENT(이벤트) 퀘스트로 분류하여 정렬합니다.
 */
-	MSG_ID_F56 = 0xf56,
+	MSG_ZEROQUEST_QUESTHELP_3 = 0xf56,
 /*20211103 to latest
 - 콤보 박스로 정렬한 퀘스트 목록에서 원하는 내용을 좀 더 세분화하여 검색할 수 있습니다.
 */
-	MSG_ID_F57 = 0xf57,
+	MSG_ZEROQUEST_QUESTHELP_4 = 0xf57,
 /*20211103 to latest
 2. 내비게이션 UI
 */
-	MSG_ID_F58 = 0xf58,
+	MSG_ZEROQUEST_QUESTHELP_5 = 0xf58,
 /*20211103 to latest
 - 내비게이션 UI 열기 :
 */
-	MSG_ID_F59 = 0xf59,
+	MSG_ZEROQUEST_QUESTHELP_6 = 0xf59,
 /*20211103 to latest
 메뉴아이콘 → 내비게이션 아이콘(단축키 : N)
 */
-	MSG_ID_F5A = 0xf5a,
+	MSG_ZEROQUEST_QUESTHELP_7 = 0xf5a,
 /*20211103 to latest
 - 텍스트 하이퍼링크 또는 npc(몬스터) 이미지 클릭 : 
 */
-	MSG_ID_F5B = 0xf5b,
+	MSG_ZEROQUEST_QUESTHELP_8 = 0xf5b,
 /*20211103 to latest
 내비게이션 경로 표시 & 필드 바닥에 목표 지점까지 발자국(화살표)표시
 */
-	MSG_ID_F5C = 0xf5c,
+	MSG_ZEROQUEST_QUESTHELP_9 = 0xf5c,
 /*20211103 to latest
 3. 내비게이션 실행 시, 채팅창에 이동 경로가 안내 됩니다
 */
-	MSG_ID_F5D = 0xf5d,
+	MSG_ZEROQUEST_QUESTHELP_10 = 0xf5d,
 /*20211103 to latest
 4. 카프라 직원과 대화하여[공간이동 서비스]를 이용할 수 있습니다.
 */
-	MSG_ID_F5E = 0xf5e,
+	MSG_ZEROQUEST_QUESTHELP_11 = 0xf5e,
 /*20211103 to latest
 5. 간편 퀘스트 UI :
 */
-	MSG_ID_F5F = 0xf5f,
+	MSG_ZEROQUEST_QUESTHELP_12 = 0xf5f,
 /*20211103 to latest
 퀘스트 UI를 게임 화면에 간단히 표시 해주는 기능
 */
-	MSG_ID_F60 = 0xf60,
+	MSG_ZEROQUEST_QUESTHELP_13 = 0xf60,
 /*20211103 to latest
 각 퀘스트 제목 마우스 우클릭 시, 퀘스트정보 UI 호출 또는 해당 퀘스트 목록 내 삭제
 */
-	MSG_ID_F61 = 0xf61,
+	MSG_ZEROQUEST_QUESTHELP_14 = 0xf61,
 /*20211103 to latest
 기능이 있습니다.
 */
-	MSG_ID_F62 = 0xf62,
+	MSG_ZEROQUEST_QUESTHELP_15 = 0xf62,
 /*20211103 to latest
 시작할 때 열기
 */
-	MSG_ID_F63 = 0xf63,
+	MSG_TIPBOX_START_OPEN = 0xf63,
 /*20211103 to latest
 결제정보 세션이 만료되었습니다. 클라이언트를 재실행 해주세요
 */
-	MSG_ID_F64 = 0xf64,
+	MSG_RESULT_ERROR_VTC_303 = 0xf64,
 /*20211103 to latest
 오류가 발생했습니다. 다시 시도해 주세요
 */
-	MSG_ID_F65 = 0xf65,
+	MSG_RESULT_ERROR_VTC_304 = 0xf65,
 /*20211103 to latest
 크기 변경(%s)
 */
-	MSG_ID_F66 = 0xf66,
+	MSG_ZEROCHATWND_RESIZE = 0xf66,
 /*20211103 to latest
 기능 잠금
 */
-	MSG_ID_F67 = 0xf67,
+	MSG_ZEROCHATWND_LOCK = 0xf67,
 /*20211103 to latest
 기능 해제
 */
-	MSG_ID_F68 = 0xf68,
+	MSG_ZEROCHATWND_UNLOCK = 0xf68,
 /*20211103 to latest
 입력 활성
 */
-	MSG_ID_F69 = 0xf69,
+	MSG_ZEROCHATWND_CHATON = 0xf69,
 /*20211103 to latest
 입력 비활성
 */
-	MSG_ID_F6A = 0xf6a,
+	MSG_ZEROCHATWND_CHATOFF = 0xf6a,
 /*20211103 to latest
 수신인 설정
 Select receiver
 */
-	MSG_ID_F6B = 0xf6b,
+	MSG_ZEROCHATWND_SEND = 0xf6b,
 /*20211103 to latest
 수신그룹 설정
 Select receiving group
 */
-	MSG_ID_F6C = 0xf6c,
+	MSG_ZEROCHATWND_SENDG = 0xf6c,
 /*20211103 to latest
 설정
 */
-	MSG_ID_F6D = 0xf6d,
+	MSG_ZEROCHATWND_OPTION = 0xf6d,
 /*20211103 to latest
 팝업창 분리
 */
-	MSG_ID_F6E = 0xf6e,
+	MSG_ZEROCHATWND_STICKOFF = 0xf6e,
 /*20211103 to latest
 탭으로 돌아가기
 */
-	MSG_ID_F6F = 0xf6f,
+	MSG_ZEROCHATWND_STICKON = 0xf6f,
 /*20211103 to latest
 탭 추가
 */
-	MSG_ID_F70 = 0xf70,
+	MSG_ZEROCHATWND_ADD = 0xf70,
 /*20211103 to latest
 탭 삭제
 */
-	MSG_ID_F71 = 0xf71,
+	MSG_ZEROCHATWND_DEL = 0xf71,
 /*20211103 to latest
 Enter키를 누르면 채팅을 시작할수 있습니다
 */
-	MSG_ID_F72 = 0xf72,
+	MSG_ZEROCHATWND_ENTER = 0xf72,
 /*20211103 to latest
 장비해제
 */
-	MSG_ID_F73 = 0xf73,
+	MSG_TAKEOFF_ALL = 0xf73,
 /*20211103 to latest
 잠시 후 다시 시도해주세요.
 Please try again in a moment.
 */
-	MSG_ID_F74 = 0xf74,
+	MSG_FAILED_BUSY = 0xf74,
 /*20211103 to latest
 천지만성 지역에서 사용가능합니다.
 */
-	MSG_ID_F75 = 0xf75,
+	MSG_USESKILL_FAIL_NEED_TWINKLING_GALAXY_AREA = 0xf75,
 /*20211103 to latest
 영혼 축적 효과가 필요합니다.
 */
-	MSG_ID_F76 = 0xf76,
+	MSG_USESKILL_FAIL_NEED_SOULCOLLECT = 0xf76,
 /*20211103 to latest
 부적이 부족합니다.
 */
-	MSG_ID_F77 = 0xf77,
+	MSG_USESKILL_FAIL_NEED_CHARMS = 0xf77,
 /*20211103 to latest
 개틀링건 혹은 샷건 계열의 총기류를 장착한 상태여야 합니다.
 */
-	MSG_ID_F78 = 0xf78,
+	MSG_USESKILL_FAIL_NEED_GATLING_OR_SHOTGUN = 0xf78,
 /*20211103 to latest
 라이플 혹은 리볼버 계열의 총기류를 장착한 상태여야 합니다.
 */
-	MSG_ID_F79 = 0xf79,
+	MSG_USESKILL_FAIL_NEED_RIFLE_OR_HANDGUN = 0xf79,
 /*20211103 to latest
 그레네이드 런처 혹은 라이플 계열의 총기류를 장착한 상태여야 합니다.
 */
-	MSG_ID_F7A = 0xf7a,
+	MSG_USESKILL_FAIL_NEED_GRANADE_OR_RIFLE = 0xf7a,
 /*20211103 to latest
 개틀링건 혹은 리볼버 계열의 총기류를 장착한 상태여야 합니다.
 */
-	MSG_ID_F7B = 0xf7b,
+	MSG_USESKILL_FAIL_NEED_GATLING_OR_HANDGUN = 0xf7b,
 /*20211103 to latest
 샷건 혹은 그레네이드 런처 계열의 총기류를 장착한 상태여야 합니다.
 */
-	MSG_ID_F7C = 0xf7c,
+	MSG_USESKILL_FAIL_NEED_SHOTGUN_OR_GRANADE = 0xf7c,
 /*20211103 to latest
 장착한 방패가 없습니다.
 */
-	MSG_ID_F7D = 0xf7d,
+	MSG_USESKILL_FAIL_NEED_SHIELD_WEAPON = 0xf7d,
 /*20211103 to latest
 다중 물물 교환 중에는 은행을 사용할 수 없습니다. 은행을 강제 종료하였습니다.
 */
-	MSG_ID_F7E = 0xf7e,
+	MSG_CLOSE_BANKING_FOR_EXPANDED_BARTERMARKET = 0xf7e,
 /*20211103 to latest
 다중 물물 교환 중에는 은행을 사용할 수 없습니다.
 */
-	MSG_ID_F7F = 0xf7f,
+	MSG_CANNOT_OPEN_BANKING_DURING_EXPANDED_BARTERMARKET = 0xf7f,
 /*20211103 to latest
 대상의 그림자에 이동할 공간이 없습니다.
 */
-	MSG_ID_F80 = 0xf80,
+	MSG_FAIL_NO_SPACE_BEHIND_THE_TARGET = 0xf80,
 /*20211103 to latest
 최소한 한종의 영물과 교감하는 상태여야 합니다.
 */
-	MSG_ID_F81 = 0xf81,
+	MSG_USESKILL_FAIL_NEED_COMMUNION_WITH_SPIRIT = 0xf81,
 #endif
 
 };

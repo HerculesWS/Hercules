@@ -137,6 +137,19 @@ AC_ARG_ENABLE(
 	[enable_cashshop_preview_patch=0]
 )
 
+#
+# old cash shop preview patch
+#
+AC_ARG_ENABLE(
+	[old-cashshop-preview-patch],
+	AC_HELP_STRING(
+		[--enable-old-cashshop-preview-patch],
+		[Enable Nemo patch ExtendOldCashShopPreview.]
+	),
+	[enable_old_cashshop_preview_patch=1],
+	[enable_old_cashshop_preview_patch=0]
+)
+
 
 #
 # packetver-RE
@@ -1484,6 +1497,18 @@ case $enable_cashshop_preview_patch in
 		;;
 	1)
 		CPPFLAGS="$CPPFLAGS -DENABLE_CASHSHOP_PREVIEW_PATCH"
+		;;
+esac
+
+#
+# old cash shop preview patch
+#
+case $enable_old_cashshop_preview_patch in
+	0)
+		#default value
+		;;
+	1)
+		CPPFLAGS="$CPPFLAGS -DENABLE_OLD_CASHSHOP_PREVIEW_PATCH"
 		;;
 esac
 
