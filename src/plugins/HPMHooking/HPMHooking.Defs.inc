@@ -2882,6 +2882,14 @@ typedef unsigned short (*HPMHOOK_pre_clif_parse_cmd_decrypt) (int *fd, struct ma
 typedef unsigned short (*HPMHOOK_post_clif_parse_cmd_decrypt) (unsigned short retVal___, int fd, struct map_session_data *sd);
 typedef unsigned short (*HPMHOOK_pre_clif_parse_cmd_optional) (int *fd, struct map_session_data **sd);
 typedef unsigned short (*HPMHOOK_post_clif_parse_cmd_optional) (unsigned short retVal___, int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_item_reform_open) (struct map_session_data **sd, int *itemId);
+typedef void (*HPMHOOK_post_clif_item_reform_open) (struct map_session_data *sd, int itemId);
+typedef void (*HPMHOOK_pre_clif_pItemReformClose) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pItemReformClose) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_pItemReformAck) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pItemReformAck) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_item_reform_result) (struct map_session_data **sd, int *index, enum item_reform_status *result);
+typedef void (*HPMHOOK_post_clif_item_reform_result) (struct map_session_data *sd, int index, enum item_reform_status result);
 #endif // MAP_CLIF_H
 #ifdef COMMON_CORE_H /* cmdline */
 typedef void (*HPMHOOK_pre_cmdline_init) (void);
@@ -4198,6 +4206,8 @@ typedef struct item_data* (*HPMHOOK_pre_itemdb_exists) (int *nameid);
 typedef struct item_data* (*HPMHOOK_post_itemdb_exists) (struct item_data* retVal___, int nameid);
 typedef struct itemdb_option* (*HPMHOOK_pre_itemdb_option_exists) (int *idx);
 typedef struct itemdb_option* (*HPMHOOK_post_itemdb_option_exists) (struct itemdb_option* retVal___, int idx);
+typedef struct item_reform* (*HPMHOOK_pre_itemdb_reform_exists) (int *idx);
+typedef struct item_reform* (*HPMHOOK_post_itemdb_reform_exists) (struct item_reform* retVal___, int idx);
 typedef bool (*HPMHOOK_pre_itemdb_in_group) (struct item_group **group, int *nameid);
 typedef bool (*HPMHOOK_post_itemdb_in_group) (bool retVal___, struct item_group *group, int nameid);
 typedef int (*HPMHOOK_pre_itemdb_group_item) (struct item_group **group);
@@ -4282,6 +4292,8 @@ typedef int (*HPMHOOK_pre_itemdb_final_sub) (union DBKey *key, struct DBData **d
 typedef int (*HPMHOOK_post_itemdb_final_sub) (int retVal___, union DBKey key, struct DBData *data, va_list ap);
 typedef int (*HPMHOOK_pre_itemdb_options_final_sub) (union DBKey *key, struct DBData **data, va_list ap);
 typedef int (*HPMHOOK_post_itemdb_options_final_sub) (int retVal___, union DBKey key, struct DBData *data, va_list ap);
+typedef int (*HPMHOOK_pre_itemdb_reform_final_sub) (union DBKey *key, struct DBData **data, va_list ap);
+typedef int (*HPMHOOK_post_itemdb_reform_final_sub) (int retVal___, union DBKey key, struct DBData *data, va_list ap);
 typedef void (*HPMHOOK_pre_itemdb_clear) (bool *total);
 typedef void (*HPMHOOK_post_itemdb_clear) (bool total);
 typedef struct item_combo* (*HPMHOOK_pre_itemdb_id2combo) (int *id);
@@ -4306,6 +4318,24 @@ typedef bool (*HPMHOOK_pre_itemdb_read_libconfig_lapineupgrade_sub) (struct conf
 typedef bool (*HPMHOOK_post_itemdb_read_libconfig_lapineupgrade_sub) (bool retVal___, struct config_setting_t *it, const char *source);
 typedef bool (*HPMHOOK_pre_itemdb_read_libconfig_lapineupgrade_sub_targets) (struct config_setting_t **sources, struct item_data **data);
 typedef bool (*HPMHOOK_post_itemdb_read_libconfig_lapineupgrade_sub_targets) (bool retVal___, struct config_setting_t *sources, struct item_data *data);
+typedef bool (*HPMHOOK_pre_itemdb_read_libconfig_item_reform_info) (void);
+typedef bool (*HPMHOOK_post_itemdb_read_libconfig_item_reform_info) (bool retVal___);
+typedef bool (*HPMHOOK_pre_itemdb_read_libconfig_item_reform_info_sub) (struct config_setting_t **it, const char **source);
+typedef bool (*HPMHOOK_post_itemdb_read_libconfig_item_reform_info_sub) (bool retVal___, struct config_setting_t *it, const char *source);
+typedef bool (*HPMHOOK_pre_itemdb_read_libconfig_item_reform_info_materials) (struct config_setting_t **it, struct item_reform **ir);
+typedef bool (*HPMHOOK_post_itemdb_read_libconfig_item_reform_info_materials) (bool retVal___, struct config_setting_t *it, struct item_reform *ir);
+typedef bool (*HPMHOOK_pre_itemdb_read_libconfig_item_reform_info_reqinfo) (struct config_setting_t **it, struct item_reform **ir);
+typedef bool (*HPMHOOK_post_itemdb_read_libconfig_item_reform_info_reqinfo) (bool retVal___, struct config_setting_t *it, struct item_reform *ir);
+typedef bool (*HPMHOOK_pre_itemdb_read_libconfig_item_reform_info_behinfo) (struct config_setting_t **it, struct item_reform **ir);
+typedef bool (*HPMHOOK_post_itemdb_read_libconfig_item_reform_info_behinfo) (bool retVal___, struct config_setting_t *it, struct item_reform *ir);
+typedef bool (*HPMHOOK_pre_itemdb_read_libconfig_item_reform_list) (void);
+typedef bool (*HPMHOOK_post_itemdb_read_libconfig_item_reform_list) (bool retVal___);
+typedef bool (*HPMHOOK_pre_itemdb_read_libconfig_item_reform_list_sub) (struct config_setting_t **it, const char **source);
+typedef bool (*HPMHOOK_post_itemdb_read_libconfig_item_reform_list_sub) (bool retVal___, struct config_setting_t *it, const char *source);
+typedef void (*HPMHOOK_pre_itemdb_item_reform) (struct map_session_data **sd, const struct item_reform **ir, int *idx);
+typedef void (*HPMHOOK_post_itemdb_item_reform) (struct map_session_data *sd, const struct item_reform *ir, int idx);
+typedef const struct item_reform* (*HPMHOOK_pre_itemdb_search_reform_baseitem) (const struct item_data **itd, int *nameid);
+typedef const struct item_reform* (*HPMHOOK_post_itemdb_search_reform_baseitem) (const struct item_reform* retVal___, const struct item_data *itd, int nameid);
 #endif // MAP_ITEMDB_H
 #ifdef LOGIN_LOGIN_H /* lchrif */
 typedef void (*HPMHOOK_pre_lchrif_server_init) (int *id);

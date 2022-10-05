@@ -32206,6 +32206,110 @@ unsigned short HP_clif_parse_cmd_optional(int fd, struct map_session_data *sd) {
 	}
 	return retVal___;
 }
+void HP_clif_item_reform_open(struct map_session_data *sd, int itemId) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_item_reform_open_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, int *itemId);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_item_reform_open_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_item_reform_open_pre[hIndex].func;
+			preHookFunc(&sd, &itemId);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.item_reform_open(sd, itemId);
+	}
+	if (HPMHooks.count.HP_clif_item_reform_open_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, int itemId);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_item_reform_open_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_item_reform_open_post[hIndex].func;
+			postHookFunc(sd, itemId);
+		}
+	}
+	return;
+}
+void HP_clif_pItemReformClose(int fd, struct map_session_data *sd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_pItemReformClose_pre > 0) {
+		void (*preHookFunc) (int *fd, struct map_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pItemReformClose_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_pItemReformClose_pre[hIndex].func;
+			preHookFunc(&fd, &sd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.pItemReformClose(fd, sd);
+	}
+	if (HPMHooks.count.HP_clif_pItemReformClose_post > 0) {
+		void (*postHookFunc) (int fd, struct map_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pItemReformClose_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_pItemReformClose_post[hIndex].func;
+			postHookFunc(fd, sd);
+		}
+	}
+	return;
+}
+void HP_clif_pItemReformAck(int fd, struct map_session_data *sd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_pItemReformAck_pre > 0) {
+		void (*preHookFunc) (int *fd, struct map_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pItemReformAck_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_pItemReformAck_pre[hIndex].func;
+			preHookFunc(&fd, &sd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.pItemReformAck(fd, sd);
+	}
+	if (HPMHooks.count.HP_clif_pItemReformAck_post > 0) {
+		void (*postHookFunc) (int fd, struct map_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pItemReformAck_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_pItemReformAck_post[hIndex].func;
+			postHookFunc(fd, sd);
+		}
+	}
+	return;
+}
+void HP_clif_item_reform_result(struct map_session_data *sd, int index, enum item_reform_status result) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_item_reform_result_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, int *index, enum item_reform_status *result);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_item_reform_result_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_item_reform_result_pre[hIndex].func;
+			preHookFunc(&sd, &index, &result);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.item_reform_result(sd, index, result);
+	}
+	if (HPMHooks.count.HP_clif_item_reform_result_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, int index, enum item_reform_status result);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_item_reform_result_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_item_reform_result_post[hIndex].func;
+			postHookFunc(sd, index, result);
+		}
+	}
+	return;
+}
 /* cmdline_interface */
 void HP_cmdline_init(void) {
 	int hIndex = 0;
@@ -44241,6 +44345,33 @@ struct itemdb_option* HP_itemdb_option_exists(int idx) {
 	}
 	return retVal___;
 }
+struct item_reform* HP_itemdb_reform_exists(int idx) {
+	int hIndex = 0;
+	struct item_reform* retVal___ = NULL;
+	if (HPMHooks.count.HP_itemdb_reform_exists_pre > 0) {
+		struct item_reform* (*preHookFunc) (int *idx);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_reform_exists_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_itemdb_reform_exists_pre[hIndex].func;
+			retVal___ = preHookFunc(&idx);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.itemdb.reform_exists(idx);
+	}
+	if (HPMHooks.count.HP_itemdb_reform_exists_post > 0) {
+		struct item_reform* (*postHookFunc) (struct item_reform* retVal___, int idx);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_reform_exists_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_itemdb_reform_exists_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, idx);
+		}
+	}
+	return retVal___;
+}
 bool HP_itemdb_in_group(struct item_group *group, int nameid) {
 	int hIndex = 0;
 	bool retVal___ = false;
@@ -45390,6 +45521,39 @@ int HP_itemdb_options_final_sub(union DBKey key, struct DBData *data, va_list ap
 	}
 	return retVal___;
 }
+int HP_itemdb_reform_final_sub(union DBKey key, struct DBData *data, va_list ap) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_itemdb_reform_final_sub_pre > 0) {
+		int (*preHookFunc) (union DBKey *key, struct DBData **data, va_list ap);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_reform_final_sub_pre; hIndex++) {
+			va_list ap___copy; va_copy(ap___copy, ap);
+			preHookFunc = HPMHooks.list.HP_itemdb_reform_final_sub_pre[hIndex].func;
+			retVal___ = preHookFunc(&key, &data, ap___copy);
+			va_end(ap___copy);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		va_list ap___copy; va_copy(ap___copy, ap);
+		retVal___ = HPMHooks.source.itemdb.reform_final_sub(key, data, ap___copy);
+		va_end(ap___copy);
+	}
+	if (HPMHooks.count.HP_itemdb_reform_final_sub_post > 0) {
+		int (*postHookFunc) (int retVal___, union DBKey key, struct DBData *data, va_list ap);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_reform_final_sub_post; hIndex++) {
+			va_list ap___copy; va_copy(ap___copy, ap);
+			postHookFunc = HPMHooks.list.HP_itemdb_reform_final_sub_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, key, data, ap___copy);
+			va_end(ap___copy);
+		}
+	}
+	return retVal___;
+}
 void HP_itemdb_clear(bool total) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_itemdb_clear_pre > 0) {
@@ -45715,6 +45879,248 @@ bool HP_itemdb_read_libconfig_lapineupgrade_sub_targets(struct config_setting_t 
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_read_libconfig_lapineupgrade_sub_targets_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_itemdb_read_libconfig_lapineupgrade_sub_targets_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, sources, data);
+		}
+	}
+	return retVal___;
+}
+bool HP_itemdb_read_libconfig_item_reform_info(void) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_itemdb_read_libconfig_item_reform_info_pre > 0) {
+		bool (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_read_libconfig_item_reform_info_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_itemdb_read_libconfig_item_reform_info_pre[hIndex].func;
+			retVal___ = preHookFunc();
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.itemdb.read_libconfig_item_reform_info();
+	}
+	if (HPMHooks.count.HP_itemdb_read_libconfig_item_reform_info_post > 0) {
+		bool (*postHookFunc) (bool retVal___);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_read_libconfig_item_reform_info_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_itemdb_read_libconfig_item_reform_info_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___);
+		}
+	}
+	return retVal___;
+}
+bool HP_itemdb_read_libconfig_item_reform_info_sub(struct config_setting_t *it, const char *source) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_itemdb_read_libconfig_item_reform_info_sub_pre > 0) {
+		bool (*preHookFunc) (struct config_setting_t **it, const char **source);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_read_libconfig_item_reform_info_sub_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_itemdb_read_libconfig_item_reform_info_sub_pre[hIndex].func;
+			retVal___ = preHookFunc(&it, &source);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.itemdb.read_libconfig_item_reform_info_sub(it, source);
+	}
+	if (HPMHooks.count.HP_itemdb_read_libconfig_item_reform_info_sub_post > 0) {
+		bool (*postHookFunc) (bool retVal___, struct config_setting_t *it, const char *source);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_read_libconfig_item_reform_info_sub_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_itemdb_read_libconfig_item_reform_info_sub_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, it, source);
+		}
+	}
+	return retVal___;
+}
+bool HP_itemdb_read_libconfig_item_reform_info_materials(struct config_setting_t *it, struct item_reform *ir) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_itemdb_read_libconfig_item_reform_info_materials_pre > 0) {
+		bool (*preHookFunc) (struct config_setting_t **it, struct item_reform **ir);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_read_libconfig_item_reform_info_materials_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_itemdb_read_libconfig_item_reform_info_materials_pre[hIndex].func;
+			retVal___ = preHookFunc(&it, &ir);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.itemdb.read_libconfig_item_reform_info_materials(it, ir);
+	}
+	if (HPMHooks.count.HP_itemdb_read_libconfig_item_reform_info_materials_post > 0) {
+		bool (*postHookFunc) (bool retVal___, struct config_setting_t *it, struct item_reform *ir);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_read_libconfig_item_reform_info_materials_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_itemdb_read_libconfig_item_reform_info_materials_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, it, ir);
+		}
+	}
+	return retVal___;
+}
+bool HP_itemdb_read_libconfig_item_reform_info_reqinfo(struct config_setting_t *it, struct item_reform *ir) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_itemdb_read_libconfig_item_reform_info_reqinfo_pre > 0) {
+		bool (*preHookFunc) (struct config_setting_t **it, struct item_reform **ir);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_read_libconfig_item_reform_info_reqinfo_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_itemdb_read_libconfig_item_reform_info_reqinfo_pre[hIndex].func;
+			retVal___ = preHookFunc(&it, &ir);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.itemdb.read_libconfig_item_reform_info_reqinfo(it, ir);
+	}
+	if (HPMHooks.count.HP_itemdb_read_libconfig_item_reform_info_reqinfo_post > 0) {
+		bool (*postHookFunc) (bool retVal___, struct config_setting_t *it, struct item_reform *ir);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_read_libconfig_item_reform_info_reqinfo_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_itemdb_read_libconfig_item_reform_info_reqinfo_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, it, ir);
+		}
+	}
+	return retVal___;
+}
+bool HP_itemdb_read_libconfig_item_reform_info_behinfo(struct config_setting_t *it, struct item_reform *ir) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_itemdb_read_libconfig_item_reform_info_behinfo_pre > 0) {
+		bool (*preHookFunc) (struct config_setting_t **it, struct item_reform **ir);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_read_libconfig_item_reform_info_behinfo_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_itemdb_read_libconfig_item_reform_info_behinfo_pre[hIndex].func;
+			retVal___ = preHookFunc(&it, &ir);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.itemdb.read_libconfig_item_reform_info_behinfo(it, ir);
+	}
+	if (HPMHooks.count.HP_itemdb_read_libconfig_item_reform_info_behinfo_post > 0) {
+		bool (*postHookFunc) (bool retVal___, struct config_setting_t *it, struct item_reform *ir);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_read_libconfig_item_reform_info_behinfo_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_itemdb_read_libconfig_item_reform_info_behinfo_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, it, ir);
+		}
+	}
+	return retVal___;
+}
+bool HP_itemdb_read_libconfig_item_reform_list(void) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_itemdb_read_libconfig_item_reform_list_pre > 0) {
+		bool (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_read_libconfig_item_reform_list_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_itemdb_read_libconfig_item_reform_list_pre[hIndex].func;
+			retVal___ = preHookFunc();
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.itemdb.read_libconfig_item_reform_list();
+	}
+	if (HPMHooks.count.HP_itemdb_read_libconfig_item_reform_list_post > 0) {
+		bool (*postHookFunc) (bool retVal___);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_read_libconfig_item_reform_list_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_itemdb_read_libconfig_item_reform_list_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___);
+		}
+	}
+	return retVal___;
+}
+bool HP_itemdb_read_libconfig_item_reform_list_sub(struct config_setting_t *it, const char *source) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_itemdb_read_libconfig_item_reform_list_sub_pre > 0) {
+		bool (*preHookFunc) (struct config_setting_t **it, const char **source);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_read_libconfig_item_reform_list_sub_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_itemdb_read_libconfig_item_reform_list_sub_pre[hIndex].func;
+			retVal___ = preHookFunc(&it, &source);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.itemdb.read_libconfig_item_reform_list_sub(it, source);
+	}
+	if (HPMHooks.count.HP_itemdb_read_libconfig_item_reform_list_sub_post > 0) {
+		bool (*postHookFunc) (bool retVal___, struct config_setting_t *it, const char *source);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_read_libconfig_item_reform_list_sub_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_itemdb_read_libconfig_item_reform_list_sub_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, it, source);
+		}
+	}
+	return retVal___;
+}
+void HP_itemdb_item_reform(struct map_session_data *sd, const struct item_reform *ir, int idx) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_itemdb_item_reform_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, const struct item_reform **ir, int *idx);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_item_reform_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_itemdb_item_reform_pre[hIndex].func;
+			preHookFunc(&sd, &ir, &idx);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.itemdb.item_reform(sd, ir, idx);
+	}
+	if (HPMHooks.count.HP_itemdb_item_reform_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, const struct item_reform *ir, int idx);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_item_reform_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_itemdb_item_reform_post[hIndex].func;
+			postHookFunc(sd, ir, idx);
+		}
+	}
+	return;
+}
+const struct item_reform* HP_itemdb_search_reform_baseitem(const struct item_data *itd, int nameid) {
+	int hIndex = 0;
+	const struct item_reform* retVal___ = NULL;
+	if (HPMHooks.count.HP_itemdb_search_reform_baseitem_pre > 0) {
+		const struct item_reform* (*preHookFunc) (const struct item_data **itd, int *nameid);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_search_reform_baseitem_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_itemdb_search_reform_baseitem_pre[hIndex].func;
+			retVal___ = preHookFunc(&itd, &nameid);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.itemdb.search_reform_baseitem(itd, nameid);
+	}
+	if (HPMHooks.count.HP_itemdb_search_reform_baseitem_post > 0) {
+		const struct item_reform* (*postHookFunc) (const struct item_reform* retVal___, const struct item_data *itd, int nameid);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_search_reform_baseitem_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_itemdb_search_reform_baseitem_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, itd, nameid);
 		}
 	}
 	return retVal___;
