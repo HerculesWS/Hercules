@@ -12622,6 +12622,7 @@
 - `Lyrica_Hat_`: 5905
 - `Oni_Horns`: 5906
 - `Sea_Captain_Hat_`: 5907
+- `C_Valkyrie_Circlet`: 5909
 - `Gambler_Seal`: 5918
 - `Fish_Monsters_Grill`: 5921
 - `Heaven_Cage`: 5932
@@ -17743,6 +17744,7 @@
 - `Fancy_Flower_IL`: 19247
 - `GoldFish_Hat`: 19264
 - `Smoky_TransformHat`: 19265
+- `SurviveOrb_K`: 19267
 - `Soda_In_Mouth`: 19277
 - `C_Shiba_Inu`: 19291
 - `C_CatEars_Cyber_HeadP_R`: 19294
@@ -19786,6 +19788,7 @@
 - `Ein_1HGUN`: 32303
 - `Ein_1HSWORD`: 32352
 - `Atker_Plate`: 450001
+- `Armor_Stone_3`: 1000436
 - `Ele_Robe`: 450002
 - `Atker_Manteau`: 480000
 - `Defn_Robe`: 450003
@@ -19797,6 +19800,7 @@
 - `Boost_Nindo`: 510002
 - `Boost_Spl_Book`: 540000
 - `Boost_Text`: 540001
+- `C_Armor_Reform_3`: 100786
 - `Boost_Guitar`: 570000
 - `Fatalist`: 510006
 - `Trumpet_Shell_K`: 570002
@@ -19857,6 +19861,7 @@
 - `WarlockStone_Top2`: 1000214
 - `Imperial_Tiger_Suit`: 450063
 - `WarlockStone_Middle2`: 1000215
+- `SurviveOrb_K_LT`: 420066
 - `Imperial_Tonado_Armor`: 450064
 - `WarlockStone_Bottom2`: 1000216
 - `Imperial_Vulcan_Armor`: 450065
