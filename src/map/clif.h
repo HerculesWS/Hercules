@@ -1953,6 +1953,8 @@ struct clif_interface {
 	void (*pEnchantUIUpgradeRequest) (int fd, struct map_session_data *sd);
 	void (*pEnchantUIResetRequest) (int fd, struct map_session_data *sd);
 	void (*pEnchantUIClose) (int fd, struct map_session_data *sd);
+
+	void (*special_popup) (struct map_session_data *sd, int popupId);
 };
 
 #ifdef HERCULES_CORE

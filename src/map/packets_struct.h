@@ -5816,6 +5816,14 @@ struct PACKET_CZ_CLOSE_UI_ENCHANT {
 DEFINE_PACKET_HEADER(CZ_CLOSE_UI_ENCHANT, 0x0ba0);
 #endif // PACKETVER_MAIN_NUM >= 20201118 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 
+#if PACKETVER_MAIN_NUM >= 20221005
+struct PACKET_ZC_SPECIALPOPUP {
+	int16 PacketType;
+	int32 ppId;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_SPECIALPOPUP, 0x0bbe);
+#endif  // PACKETVER_MAIN_NUM >= 20221005
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris

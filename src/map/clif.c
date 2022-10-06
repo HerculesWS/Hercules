@@ -25668,6 +25668,20 @@ static void clif_parse_enchantui_close(int fd, struct map_session_data *sd)
 #endif
 }
 
+static void clif_special_popup(struct map_session_data *sd, int popupId)
+{
+#if PACKETVER_MAIN_NUM >= 20221005
+	nullpo_retv(sd);
+
+	const int fd = sd->fd;
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_SPECIALPOPUP));
+	struct PACKET_ZC_SPECIALPOPUP *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_SPECIALPOPUP;
+	p->ppId = popupId;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_SPECIALPOPUP));
+#endif  // 20221005
+}
+
 /*==========================================
  * Main client packet processing function
  *------------------------------------------*/
@@ -27009,4 +27023,6 @@ void clif_defaults(void)
 	clif->pEnchantUIUpgradeRequest = clif_parse_enchantui_upgrade_request;
 	clif->pEnchantUIResetRequest = clif_parse_enchantui_reset_request;
 	clif->pEnchantUIClose = clif_parse_enchantui_close;
+
+	clif->special_popup = clif_special_popup;
 }
