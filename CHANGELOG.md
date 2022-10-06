@@ -22,6 +22,40 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
+## [v2022.10.05] `October 05 2022`
+
+### Added
+
+- Added support for `UDT_OPTIONS` to `getunitdata()` and `setunitdata()`, allowing to interact with mobs that are using job sprites. (#3146)
+- Implemented the `AllowPlagiarism` `SkillInfo` flag in the skill DB and the `INF2_ALLOW_PLAGIARIZE` source code counterpart, allowing separate per-skill settings for Plagiarize and Reproduce. (#2948)
+- Added support for newer packetvers/encryption keys/client messages (up to 20220831). (#3152)
+- Added support for preview in the old cash shop packet. This is disabled by default and can be enabled by defining `ENABLE_OLD_CASHSHOP_PREVIEW_PATCH` or through the configure flag `--enable-old-cashshop-preview-patch`. A client patch is necessary, available at http://nemo.herc.ws/patches/ExtendOldCashShopPreview (part of #3152)
+- Implemented the Item Reform user interface on supported clients (2020 and newer). The feature can be configured through the `item_reform_info.conf` and `item_reform_list.conf` db files. (#3150)
+
+### Changed
+
+- Replaced use of `safesnprintf()` with the C99 standard `snprintf()`. (part of #3148)
+- Improved detection of the usability of `-Wformat-truncation`, disabling it on older gcc versions where it doesn't produce useful warnings. (part of #3148)
+- Refactored and fixed some Plagiarize/Reproduce related code. (part of #2948, issue #989)
+- Updated the list of third job skills that can be plagiarized. (part of #2948)
+
+### Fixed
+
+- Fixed the gcc version specific GitHub CI builds that were running Ubuntu 21.10, which is EOL. LTS versions are now preferentially used, where possible. (#3147)
+- Fixed HWSAPI run failures caused by a missing XML::Parser perl module (872aebe2d3)
+- Fixed the `UDT_CLASS` option of `setunitdata()` to set the view data's class if a mob uses a job class ID. (part of #3146)
+- Fixed some improper use of `safesnprintf()`/`snprintf()`, potentially causing truncation at the wrong position or buffer overruns. (part of #3148)
+- Fixed text in old clients in packet `ZC_NOTIFY_CHAT_PARTY`. (#3149)
+- Code style fixes. (part of #3149)
+- Fixed an interaction issue between copied (Plagiarize/Reproduce) skills and ones already present in the character's skill list. (part of #2948, issue 2940)
+
+### Deprecated
+
+### Removed
+
+- Removed the `safesnprintf()` function, superseded by the C99 standard function `snprintf()`. Note: in case of truncation, `snprintf()` returns the amount of characters that would have been written if the buffer wasn't limited, while `safesnprintf()` returns a negative value. Care should be used when replacing the function in third party code. (#3148)
+- Removed the `copyskill_restrict` battle config setting, superseded by the configurable per-skill restrictions. (part of #2948)
+
 ## [v2022.06.01] `June 01 2022`
 
 ### Added
@@ -2463,6 +2497,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2022.10.05]: https://github.com/HerculesWS/Hercules/compare/v2022.06.01...v2022.10.05
 [v2022.06.01]: https://github.com/HerculesWS/Hercules/compare/v2022.04.07...v2022.06.01
 [v2022.04.07]: https://github.com/HerculesWS/Hercules/compare/v2022.03.02...v2022.04.07
 [v2022.03.02]: https://github.com/HerculesWS/Hercules/compare/v2022.01.05+2...v2022.03.02
