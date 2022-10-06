@@ -27998,6 +27998,19 @@ static BUILDIN(openreformui)
 #endif
 }
 
+static BUILDIN(specialpopup)
+{
+	struct map_session_data *sd = script_rid2sd(st);
+
+	if (sd == NULL) {
+		return false;
+	}
+
+	const int popup_id = script_getnum(st, 2);
+	clif->special_popup(sd, popup_id);
+	return true;
+}
+
 /**
  * Adds a built-in script function.
  *
@@ -28863,6 +28876,8 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(opengradeui, ""),
 		BUILDIN_DEF(calldynamicnpc, "v"),
 		BUILDIN_DEF(openreformui, "i"),
+
+		BUILDIN_DEF(specialpopup, "i"),
 	};
 	int i, len = ARRAYLENGTH(BUILDIN);
 	RECREATE(script->buildin, char *, script->buildin_count + len); // Pre-alloc to speed up
