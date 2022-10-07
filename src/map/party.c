@@ -965,7 +965,7 @@ static int party_skill_check(struct map_session_data *sd, int party_id, uint16 s
 				if ((p_sd->job & MAPID_UPPERMASK) == MAPID_MONK && pc->checkskill(p_sd, MO_TRIPLEATTACK)) {
 					sc_start4(&p_sd->bl,&p_sd->bl,SC_SKILLRATE_UP,100,MO_TRIPLEATTACK,
 						50+50*skill_lv, //+100/150/200% rate
-						0,0,skill->get_time(SG_FRIEND, 1));
+						0, 0, skill->get_time(SG_FRIEND, 1), skill_id);
 				}
 				break;
 			case MO_COMBOFINISH: //Increase Counter rate of Star Gladiators
@@ -974,7 +974,7 @@ static int party_skill_check(struct map_session_data *sd, int party_id, uint16 s
 					&& pc->checkskill(p_sd,SG_FRIEND)) {
 					sc_start4(&p_sd->bl,&p_sd->bl,SC_SKILLRATE_UP,100,TK_COUNTER,
 						50+50*pc->checkskill(p_sd,SG_FRIEND), //+100/150/200% rate
-						0,0,skill->get_time(SG_FRIEND, 1));
+						0, 0, skill->get_time(SG_FRIEND, 1), skill_id);
 				}
 				break;
 		}

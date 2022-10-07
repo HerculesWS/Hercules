@@ -1553,7 +1553,7 @@ static void guild_guildaura_refresh(struct map_session_data *sd, uint16 skill_id
 	}
 	group = skill->unitsetting(&sd->bl,skill_id,skill_lv,sd->bl.x,sd->bl.y,0);
 	if( group ) {
-		sc_start4(NULL,&sd->bl,type,100,(battle_config.guild_aura&16)?0:skill_lv,0,0,group->group_id,600000);//duration doesn't matter these status never end with val4
+		sc_start4(NULL, &sd->bl, type, 100, (battle_config.guild_aura & 16) ? 0 : skill_lv, 0, 0, group->group_id, 600000, skill_id);// duration doesn't matter these status never end with val4
 	}
 	return;
 }

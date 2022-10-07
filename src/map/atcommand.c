@@ -4930,7 +4930,7 @@ ACMD(jail)
 	}
 
 	//Duration of INT_MAX to specify infinity.
-	sc_start4(NULL,&pl_sd->bl,SC_JAILED,100,INT_MAX,m_index,x,y,1000);
+	sc_start4(NULL, &pl_sd->bl, SC_JAILED,100, INT_MAX, m_index, x, y, 1000, 0);
 	clif->message(pl_sd->fd, msg_fd(fd,117)); // You have been jailed by a GM.
 	clif->message(fd, msg_fd(fd,118)); // Player warped in jails.
 	return true;
@@ -4969,7 +4969,7 @@ ACMD(unjail)
 	}
 
 	//Reset jail time to 1 sec.
-	sc_start(NULL,&pl_sd->bl,SC_JAILED,100,1,1000);
+	sc_start(NULL, &pl_sd->bl, SC_JAILED, 100, 1, 1000, 0);
 	clif->message(pl_sd->fd, msg_fd(fd,120)); // A GM has discharged you from jail.
 	clif->message(fd, msg_fd(fd,121)); // Player unjailed.
 	return true;
@@ -5080,7 +5080,7 @@ ACMD(jailfor)
 			break;
 	}
 
-	sc_start4(NULL,&pl_sd->bl,SC_JAILED,100,jailtime,m_index,x,y,jailtime?60000:1000); //jailtime = 0: Time was reset to 0. Wait 1 second to warp player out (since it's done in status->change_timer).
+	sc_start4(NULL, &pl_sd->bl, SC_JAILED, 100, jailtime, m_index, x, y, jailtime ? 60000 : 1000, 0); // jailtime = 0: Time was reset to 0. Wait 1 second to warp player out (since it's done in status->change_timer).
 	return true;
 }
 
@@ -6042,7 +6042,7 @@ ACMD(autotrade)
 	if( battle_config.at_timeout ) {
 		int timeout = atoi(message);
 		status->change_start(NULL,&sd->bl, SC_AUTOTRADE, 10000, 0, 0, 0, 0,
-		                     ((timeout > 0) ? min(timeout,battle_config.at_timeout) : battle_config.at_timeout) * 60000, SCFLAG_NONE);
+		                     ((timeout > 0) ? min(timeout, battle_config.at_timeout) : battle_config.at_timeout) * 60000, SCFLAG_NONE, 0);
 	}
 
 	channel->quit(sd);
@@ -6836,7 +6836,7 @@ ACMD(summon)
 	md->deletetimer = timer->add(tick + (int64)cap_value(duration, 1, 60) * 60000, mob->timer_delete, md->bl.id, 0);
 	clif->specialeffect(&md->bl, 344, AREA);
 	mob->spawn(md);
-	sc_start4(NULL, &md->bl, SC_MODECHANGE, 100, 1, 0, MD_AGGRESSIVE, 0, 60000);
+	sc_start4(NULL, &md->bl, SC_MODECHANGE, 100, 1, 0, MD_AGGRESSIVE, 0, 60000, 0);
 	clif->skill_poseffect(&sd->bl, AM_CALLHOMUN, 1, md->bl.x, md->bl.y, tick);
 	clif->message(fd, msg_fd(fd, 39)); /// All monster summoned!
 	return true;
@@ -7051,7 +7051,7 @@ ACMD(mute)
 
 	if (pl_sd->status.manner < manner) {
 		pl_sd->status.manner -= manner;
-		sc_start(NULL,&pl_sd->bl,SC_NOCHAT,100,0,0);
+		sc_start(NULL, &pl_sd->bl, SC_NOCHAT, 100, 0, 0, 0);
 	} else {
 		pl_sd->status.manner = 0;
 		status_change_end(&pl_sd->bl, SC_NOCHAT, INVALID_TIMER);
@@ -7861,7 +7861,7 @@ static int atcommand_mutearea_sub(struct block_list *bl, va_list ap)
 	if (id != bl->id && !pc_get_group_level(pl_sd)) {
 		pl_sd->status.manner -= time;
 		if (pl_sd->status.manner < 0)
-			sc_start(NULL,&pl_sd->bl,SC_NOCHAT,100,0,0);
+			sc_start(NULL, &pl_sd->bl, SC_NOCHAT, 100, 0, 0, 0);
 		else
 			status_change_end(&pl_sd->bl, SC_NOCHAT, INVALID_TIMER);
 	}
@@ -9165,7 +9165,7 @@ ACMD(cashmount)
 
 	if (!sd->sc.data[SC_ALL_RIDING]) {
 		clif->message(sd->fd, msg_fd(fd, 1363)); // You are mounted now.
-		sc_start(NULL, &sd->bl, SC_ALL_RIDING, 100, battle_config.boarding_halter_speed, INFINITE_DURATION);
+		sc_start(NULL, &sd->bl, SC_ALL_RIDING, 100, battle_config.boarding_halter_speed, INFINITE_DURATION, 0);
 	} else {
 		clif->message(sd->fd, msg_fd(fd, 1364)); // You have released your mount.
 		status_change_end(&sd->bl, SC_ALL_RIDING, INVALID_TIMER);
@@ -10109,7 +10109,7 @@ ACMD(costume)
 		return false;
 	}
 
-	sc_start(NULL, &sd->bl, name2id[k], 100, 0, INFINITE_DURATION);
+	sc_start(NULL, &sd->bl, name2id[k], 100, 0, INFINITE_DURATION, 0);
 
 	return true;
 }

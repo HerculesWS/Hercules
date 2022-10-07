@@ -1280,7 +1280,7 @@ static bool chrif_load_scdata(int fd)
 	for (i = 0; i < count; i++) {
 		const struct status_change_data *data = RFIFOP(fd,14 + i*sizeof(struct status_change_data));
 		status->change_start_sub(NULL, &sd->bl, (sc_type)data->type, 10000, data->val1, data->val2, data->val3, data->val4,
-		                    data->tick, data->total_tick, SCFLAG_NOAVOID|SCFLAG_FIXEDTICK|SCFLAG_LOADED|SCFLAG_FIXEDRATE);
+			data->tick, data->total_tick, SCFLAG_NOAVOID | SCFLAG_FIXEDTICK | SCFLAG_LOADED | SCFLAG_FIXEDRATE, 0);
 	}
 
 	pc->scdata_received(sd);

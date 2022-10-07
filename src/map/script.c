@@ -13517,17 +13517,17 @@ static BUILDIN(sc_start)
 
 	switch(start_type) {
 		case 1:
-			status->change_start(bl, bl, type, rate, val1, 0, 0, val4, tick, flag);
+			status->change_start(bl, bl, type, rate, val1, 0, 0, val4, tick, flag, 0);
 			break;
 		case 2:
 			val2 = script_getnum(st,5);
-			status->change_start(bl, bl, type, rate, val1, val2, 0, val4, tick, flag);
+			status->change_start(bl, bl, type, rate, val1, val2, 0, val4, tick, flag, 0);
 			break;
 		case 4:
 			val2 = script_getnum(st,5);
 			val3 = script_getnum(st,6);
 			val4 = script_getnum(st,7);
-			status->change_start(bl, bl, type, rate, val1, val2, val3, val4, tick, flag);
+			status->change_start(bl, bl, type, rate, val1, val2, val3, val4, tick, flag, 0);
 			break;
 	}
 	return true;
@@ -13599,7 +13599,7 @@ static BUILDIN(getscrate)
 		bl = map->id2bl(st->rid);
 
 	if (bl != NULL)
-		rate = status->get_sc_def(bl, bl, (sc_type)type, 10000, 10000, SCFLAG_NONE);
+		rate = status->get_sc_def(bl, bl, (sc_type)type, 10000, 10000, SCFLAG_NONE, 0);
 
 	script_pushint(st,rate);
 	return true;
@@ -16120,7 +16120,7 @@ static BUILDIN(setequipoption)
 			/* Add Option Value */
 			sd->status.inventory[i].option[slot-1].value = value;
 		}
-		
+
 		int ep = sd->status.inventory[i].equip;
 		/* Unequip and simulate deletion of the item. */
 		pc->unequipitem(sd, i, PCUNEQUIPITEM_FORCE); // status calc will happen in pc->equipitem() below
@@ -18126,7 +18126,7 @@ static BUILDIN(summon)
 		md->deletetimer = timer->add(tick + ((timeout == 0) ? 60000 : timeout), mob->timer_delete, md->bl.id, 0);
 		mob->spawn(md);
 		clif->specialeffect(&md->bl, 344, AREA);
-		sc_start4(NULL, &md->bl, SC_MODECHANGE, 100, 1, 0, MD_AGGRESSIVE, 0, 60000);
+		sc_start4(NULL, &md->bl, SC_MODECHANGE, 100, 1, 0, MD_AGGRESSIVE, 0, 60000, 0);
 	}
 
 	return true;
@@ -23035,7 +23035,7 @@ static BUILDIN(mercenary_sc_start)
 	tick = script_getnum(st,3);
 	val1 = script_getnum(st,4);
 
-	status->change_start(NULL, &sd->md->bl, type, 10000, val1, 0, 0, 0, tick, SCFLAG_FIXEDTICK);
+	status->change_start(NULL, &sd->md->bl, type, 10000, val1, 0, 0, 0, tick, SCFLAG_FIXEDTICK, 0);
 	return true;
 }
 
@@ -24676,7 +24676,7 @@ static BUILDIN(setcashmount)
 		if (sd->sc.data[SC_ALL_RIDING]) {
 			status_change_end(&sd->bl, SC_ALL_RIDING, INVALID_TIMER);
 		} else {
-			sc_start(NULL, &sd->bl, SC_ALL_RIDING, 100, battle_config.boarding_halter_speed, INFINITE_DURATION);
+			sc_start(NULL, &sd->bl, SC_ALL_RIDING, 100, battle_config.boarding_halter_speed, INFINITE_DURATION, 0);
 		}
 		script_pushint(st, 1); // In both cases, return 1.
 	}
@@ -25312,10 +25312,10 @@ static BUILDIN(montransform)
 		else
 			transform_type = SC_MONSTER_TRANSFORM;
 		status_change_end(&sd->bl, transform_type, INVALID_TIMER); // Clear previous
-		sc_start2(NULL, &sd->bl, transform_type, 100, mob_id, type, tick);
+		sc_start2(NULL, &sd->bl, transform_type, 100, mob_id, type, tick, 0);
 
 		if (script_hasdata(st, 4))
-			sc_start4(NULL, &sd->bl, type, 100, val1, val2, val3, val4, tick);
+			sc_start4(NULL, &sd->bl, type, 100, val1, val2, val3, val4, tick, 0);
 	}
 
 	return true;
