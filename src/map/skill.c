@@ -4965,10 +4965,15 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 		case NPC_FIREBREATH:
 		case NPC_ICEBREATH:
 		case NPC_THUNDERBREATH:
+			// temporarily hard-coded call for BF_WEAPON, TODO: move skill logic to the proper place.
 			skill->area_temp[1] = bl->id;
 			map->foreachinpath(skill->attack_area,src->m,src->x,src->y,bl->x,bl->y,
 			                   skill->get_splash(skill_id, skill_lv),skill->get_maxcount(skill_id,skill_lv), skill->splash_target(src),
+#ifndef RENEWAL
+			                   BF_WEAPON, src, src, skill_id, skill_lv, tick, flag, BCT_ENEMY);
+#else
 			                   skill->get_type(skill_id, skill_lv), src, src, skill_id, skill_lv, tick, flag, BCT_ENEMY);
+#endif
 			break;
 
 		case MO_INVESTIGATE:
@@ -5153,7 +5158,23 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 				if ((skill_id == SP_SHA || skill_id == SP_SWHOO) && bl->type != BL_MOB)
 					break;
 
+#ifndef RENEWAL
+				switch (skill_id) {
+				case AS_SPLASHER:
+				case ASC_METEORASSAULT:
+				case NPC_PULSESTRIKE:
+				case NPC_HELLJUDGEMENT:
+				case NPC_VAMPIRE_GIFT:
+					// TODO: Place the logic of these according to their skill-type in Skill DB
+					heal = skill->attack(BF_WEAPON, src, src, bl, skill_id, skill_lv, tick, sflag);
+					break;
+				default:
+					heal = skill->attack(skill->get_type(skill_id, skill_lv), src, src, bl, skill_id, skill_lv, tick, sflag);
+				}
+#else
 				heal = skill->attack(skill->get_type(skill_id, skill_lv), src, src, bl, skill_id, skill_lv, tick, sflag);
+#endif
+
 				if (skill_id == NPC_VAMPIRE_GIFT && heal > 0) {
 					clif->skill_nodamage(NULL, src, AL_HEAL, heal, 1);
 					status->heal(src, heal, 0, STATUS_HEAL_DEFAULT);
@@ -18384,6 +18405,12 @@ static int skill_trap_splash(struct block_list *bl, va_list ap)
 			if (battle->check_target(ss, bl, sg->target_flag & ~BCT_SELF) > 0)
 				skill->castend_damage_id(ss, bl, sg->skill_id, sg->skill_lv, tick, SD_ANIMATION | SD_LEVEL | SD_SPLASH | 1);
 			break;
+#ifndef RENEWAL
+		case UNT_FREEZINGTRAP:
+			// temporarily hard-coded call for BF_WEAPON, TODO: move skill logic to the proper place.
+			skill->attack(BF_WEAPON, ss, src, bl, sg->skill_id, sg->skill_lv, tick, enemy_count);
+			break;
+#endif
 		case UNT_CLAYMORETRAP:
 			if (src->id == bl->id)
 				break;
