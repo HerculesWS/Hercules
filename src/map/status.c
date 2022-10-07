@@ -6503,7 +6503,9 @@ static int status_get_sc_def(struct block_list *src, struct block_list *bl, enum
 #define SCDEF_LVL_DIFF(bl, src, maxlv, factor) ( ( SCDEF_LVL_CAP((bl), (maxlv)) - SCDEF_LVL_CAP((src), (maxlv)) ) * (factor) )
 
 	//Status that are blocked by Golden Thief Bug card or Wand of Hermod
-	if (status->isimmune(bl) && (status->get_sc_type(type) & SC_NO_MAGIC_BLOCK) != 0)
+	if (status->isimmune(bl) && (skill->get_inf(skill_id) & INF_SELF_SKILL) == 0 // [Aegis] self-cast skills are not blocked, even if magic.
+	    && ((skill->get_type(skill_id, 1) & BF_MAGIC) != 0 // [Aegis] if an SC is caused by magic then it's blocked, no matter what SC.
+	        || (status->get_sc_type(type) & SC_NO_MAGIC_BLOCK) != 0))
 		return 0;
 
 	sd = BL_CAST(BL_PC,bl);
