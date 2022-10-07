@@ -7858,10 +7858,13 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 		case CASH_INCAGI:
 		case CASH_ASSUMPTIO:
 		case WM_FRIGG_SONG:
-			if( sd == NULL || sd->status.party_id == 0 || (flag & 1) )
-				clif->skill_nodamage(bl, bl, skill_id, skill_lv, sc_start(src, bl, type, 100, skill_lv, skill->get_time(skill_id, skill_lv), skill_id));
-			else if( sd )
+			if (sd == NULL || sd->status.party_id == 0 || (flag & 1) != 0) {
+				// Aegis: special handling, even though they aren't of magic skilltype.
+				if (status->isimmune(bl) == 0 || src == bl || (skill_id != AL_ANGELUS && skill_id != PR_MAGNIFICAT && skill_id != PR_GLORIA))
+					clif->skill_nodamage(bl, bl, skill_id, skill_lv, sc_start(src, bl, type, 100, skill_lv, skill->get_time(skill_id, skill_lv), skill_id));
+			} else if (sd != NULL) {
 				party->foreachsamemap(skill->area_sub, sd, skill->get_splash(skill_id, skill_lv), src, skill_id, skill_lv, tick, flag|BCT_PARTY|1, skill->castend_nodamage_id);
+			}
 			break;
 		case MER_MAGNIFICAT:
 			if( mer != NULL )
