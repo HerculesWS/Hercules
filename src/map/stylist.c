@@ -120,12 +120,8 @@ static bool stylist_validate_requirements(struct map_session_data *sd, int type,
 		return false;
 
 	if (entry->id >= 0) {
-		if (entry->zeny != 0) {
-			if (sd->status.zeny < entry->zeny)
-				return false;
-
-			sd->status.zeny -= entry->zeny;
-			clif->updatestatus(sd, SP_ZENY);
+		if (entry->zeny != 0 && pc->payzeny(sd, entry->zeny, LOG_TYPE_OTHER, NULL) != 0) {
+			return false;
 		} else if (entry->itemid != 0) {
 			it.nameid = entry->itemid;
 			it.amount = 1;
