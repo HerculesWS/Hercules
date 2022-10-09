@@ -15553,9 +15553,9 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 			if(!sc)
 				return 0;
 			if( sc && sc->data[SC_COMBOATTACK] ) {
-				if( sc->data[SC_COMBOATTACK]->val1 == CH_TIGERFIST )
+				if (sc->data[SC_COMBOATTACK]->val1 == CH_TIGERFIST || sc->data[SC_COMBOATTACK]->val1 == MO_COMBOFINISH)
 					break;
-				clif->skill_fail(sd, skill_id, USESKILL_FAIL_COMBOSKILL, CH_TIGERFIST, 0);
+				//clif->skill_fail(sd, skill_id, USESKILL_FAIL_COMBOSKILL, CH_TIGERFIST, 0);
 			}
 			return 0;
 		case MO_EXTREMITYFIST:
