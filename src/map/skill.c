@@ -9186,6 +9186,8 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 			{
 				unsigned int sp1 = 0, sp2 = 0;
 				if (dstmd) {
+					if ((dstmd->status.mode & MD_BOSS) != 0)
+						break; // [Aegis] can't use this on bosses
 					if (dstmd->state.soul_change_flag) {
 						if(sd) clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
 						break;
