@@ -9197,6 +9197,9 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 					status->heal(src, 0, sp2, STATUS_HEAL_SHOWEFFECT);
 					clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
 					break;
+				} else if (dstsd != NULL) {
+					if (tsc != NULL && tsc->data[SC_BERSERK] != NULL)
+						break; // [Aegis] can't use on berserked players.
 				}
 				sp1 = sstatus->sp;
 				sp2 = tstatus->sp;
