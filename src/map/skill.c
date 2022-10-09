@@ -9336,7 +9336,13 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 					map->freeblock_unlock();
 					return 0;
 				}
-				status_zap(src, 0, skill->get_sp(skill_id, skill_lv)); // consume sp only if succeeded [Inkfish]
+		                int sp;
+				if (sd != NULL)
+					sp = skill->get_requirement(sd, skill_id, skill_lv).sp;
+				else
+			                sp = skill->get_sp(skill_id, skill_lv);
+		                if (sp > 0)
+			                status_zap(src, 0, sp); // consume sp only if succeeded
 				do {
 					int eff = rnd() % 14;
 					if( eff == 5 )
