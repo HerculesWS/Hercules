@@ -7001,8 +7001,9 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			//Undead are immune to Freeze/Stone
 			if (undead_flag && !(flag&SCFLAG_NOAVOID))
 				return 0;
-			// SC_LEXAETERNA should be removed when applying SC_STONE or SC_FREEZE
-			if (sc->data[SC_LEXAETERNA] != NULL)
+			// SC_LEXAETERNA should be removed when applying SC_FREEZE on BL_PC types
+			// we remove SC_STONE later when we're done hardening the target.
+			if (type == SC_FREEZE && bl->type == BL_PC && sc->data[SC_LEXAETERNA] != NULL)
 				status_change_end(bl, SC_LEXAETERNA, INVALID_TIMER);
 			FALLTHROUGH
 		case SC_SLEEP:
@@ -11776,6 +11777,9 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 				clif->changeoption(bl);
 				sc_timer_next(1000+tick, status->change_timer, bl->id, data );
 				status_calc_bl(bl, status->dbs->ChangeFlagTable[type]);
+				// Remove Lex Aeterna from BL_PC types
+				if (bl->type == BL_PC && sc->data[SC_LEXAETERNA] != NULL)
+					status_change_end(bl, SC_LEXAETERNA, INVALID_TIMER);
 				return 0;
 			}
 			if(--(sce->val3) > 0) {
