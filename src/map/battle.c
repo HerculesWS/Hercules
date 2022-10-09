@@ -918,7 +918,7 @@ static int64 battle_calc_masteryfix(struct block_list *src, struct block_list *t
 		damage += 4;
 
 	if(sd->status.party_id && (skill2_lv=pc->checkskill(sd,TK_POWER)) > 0) {
-		if( (i = party->foreachsamemap(party->sub_count, sd, 0)) > 1 )
+		if ((i = party->foreachsamemap(party->sub_count, sd, 0, sd->status.char_id)) > 0)
 			damage += 2 * skill2_lv * i * (damage /*+ unknown value*/)  / 100 /*+ unknown value*/;
 	}
 #else
@@ -5308,7 +5308,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 #ifndef RENEWAL
 
 					if(sd->status.party_id && (temp=pc->checkskill(sd,TK_POWER)) > 0){
-						if( (i = party->foreachsamemap(party->sub_count, sd, 0)) > 1 ) // exclude the player himself [Inkfish]
+						if ((i = party->foreachsamemap(party->sub_count, sd, 0, sd->status.char_id)) > 0)
 							ATK_ADDRATE(2*temp*i);
 					}
 #endif

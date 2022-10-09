@@ -10109,7 +10109,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 					break;
 
 				if( sd && sd->status.party_id != 0 )
-						count = party->foreachsamemap(party->sub_count, sd, 0);
+						count = party->foreachsamemap(party->sub_count, sd, 0, 0);
 
 				clif->skill_nodamage(bl, bl, skill_id, skill_lv,
 					sc_start4(src, bl, type, 100, skill_lv, 0, 0, count, skill->get_time(skill_id, skill_lv), skill_id));
@@ -10123,7 +10123,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 					int heal = skill->calc_heal(src, bl, AL_HEAL, lv, true);
 
 					if( sd->status.party_id ) {
-						int partycount = party->foreachsamemap(party->sub_count, sd, 0);
+						int partycount = party->foreachsamemap(party->sub_count, sd, 0, 0);
 						if (partycount > 1)
 							heal += ((heal / 100) * (partycount * 10) / 4);
 					}

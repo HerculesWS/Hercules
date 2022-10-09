@@ -1156,8 +1156,7 @@ static int party_send_dot_remove(struct map_session_data *sd)
 }
 
 // To use for Taekwon's "Fighting Chant"
-// int c = 0;
-// party_foreachsamemap(party->sub_count, sd, 0, &c);
+// party_foreachsamemap(party->sub_count, sd, 0, except_char_id);
 static int party_sub_count(struct block_list *bl, va_list ap)
 {
 	const struct map_session_data *sd = NULL;
@@ -1166,6 +1165,10 @@ static int party_sub_count(struct block_list *bl, va_list ap)
 	Assert_ret(bl->type == BL_PC);
 	sd = BL_UCCAST(BL_PC, bl);
 	nullpo_ret(sd);
+
+	int taekwon_charid = va_arg(ap, int);
+	if (sd->status.char_id == taekwon_charid)
+		return 0; // Don't count the Taekwon himself for Kihop.
 
 	if (sd->state.autotrade)
 		return 0;
