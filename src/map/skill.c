@@ -6416,7 +6416,7 @@ static int skill_castend_id(int tid, int64 tick, int id, intptr_t data)
 					break; // You can use Phantom Thurst on party members in normal maps too. [pakpil]
 			}
 
-			if( inf&BCT_ENEMY
+			if ((inf & BCT_ENEMY) != 0 && ud->skill_id != PF_SOULCHANGE // PF_SOULCHANGE is a friendly skill in Aegis under all circumstances.
 			 && (sc = status->get_sc(target)) != NULL && sc->data[SC_FOGWALL]
 			 && rnd() % 100 < 75
 			) {
