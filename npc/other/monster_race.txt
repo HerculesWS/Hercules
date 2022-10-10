@@ -1058,12 +1058,12 @@ OnTimer300000:
 	mapannounce "p_track02","The Monster Race is starting now. Good luck, everybody!",bc_map,"0x87ceeb";
 	$@mon_time_2_2 = 1;
 	disablenpc "Ticket Helper#2";
-	donpcevent "#poring1::OnEnable";
-	donpcevent "#lunatic1::OnEnable";
-	donpcevent "#savagebebe1::OnEnable";
-	donpcevent "#desertwolf1::OnEnable";
-	donpcevent "#deviruchi1::OnEnable";
-	donpcevent "#baphomet1::OnEnable";
+	donpcevent "poring1#1::OnEnable";
+	donpcevent "lunatic1#2::OnEnable";
+	donpcevent "savagebebe1#3::OnEnable";
+	donpcevent "desertwolf1#4::OnEnable";
+	donpcevent "deviruchi1#5::OnEnable";
+	donpcevent "baphomet1#6::OnEnable";
 	stopnpctimer;
 	disablenpc "#race_timer2-2";
 	end;
@@ -1769,12 +1769,12 @@ OnTouchNPC:
 		specialeffect EF_MVP;
 		mapannounce "p_track02","The race is over! Monster "+.@i+" has reached the Finish Line!",bc_map,"0x66FFCC";
 		$@mon_race_2_2 = .@i;
-		donpcevent "#poring1::OnDisable";
-		donpcevent "#lunatic1::OnDisable";
-		donpcevent "#savagebebe1::OnDisable";
-		donpcevent "#desertwolf1::OnDisable";
-		donpcevent "#deviruchi1::OnDisable";
-		donpcevent "#baphomet1::OnDisable";
+		donpcevent "poring1#1::OnDisable";
+		donpcevent "lunatic1#2::OnDisable";
+		donpcevent "savagebebe1#3::OnDisable";
+		donpcevent "desertwolf1#4::OnDisable";
+		donpcevent "deviruchi1#5::OnDisable";
+		donpcevent "baphomet1#6::OnDisable";
 		donpcevent "TrapGlobal#race02::OnDisable";
 		enablenpc "Medal Distributor#medal";
 		donpcevent "#race_timer2-3::OnEnable";
@@ -1795,21 +1795,16 @@ OnInit:
 	end;
 
 	function	MN	{
-		setarray .@n$[1], "poring","lunatic","savagebebe","desertwolf","deviruchi","baphomet";
-		for (.@i = 1; .@i < getarraysize(.@n$); ++.@i) {
-			if (compare(strnpcinfo(NPC_NAME),.@n$[.@i]))
-				break;
-		}
-		return .@i;
+		return atoi(strnpcinfo(NPC_NAME_HIDDEN));
 	}
 
 }
-p_track02,30,38,0	duplicate(mob1#main)	#poring1	HIDDEN_WARP_NPC,1,0
-p_track02,30,36,0	duplicate(mob1#main)	#lunatic1	HIDDEN_WARP_NPC,1,0
-p_track02,30,34,0	duplicate(mob1#main)	#savagebebe1	HIDDEN_WARP_NPC,1,0
-p_track02,30,32,0	duplicate(mob1#main)	#desertwolf1	HIDDEN_WARP_NPC,1,0
-p_track02,30,30,0	duplicate(mob1#main)	#deviruchi1	HIDDEN_WARP_NPC,1,0
-p_track02,30,28,0	duplicate(mob1#main)	#baphomet1	HIDDEN_WARP_NPC,1,0
+p_track02,30,38,0	duplicate(mob1#main)	poring1#1	FAKE_NPC,1,0
+p_track02,30,36,0	duplicate(mob1#main)	lunatic1#2	FAKE_NPC,1,0
+p_track02,30,34,0	duplicate(mob1#main)	savagebebe1#3	FAKE_NPC,1,0
+p_track02,30,32,0	duplicate(mob1#main)	desertwolf1#4	FAKE_NPC,1,0
+p_track02,30,30,0	duplicate(mob1#main)	deviruchi1#5	FAKE_NPC,1,0
+p_track02,30,28,0	duplicate(mob1#main)	baphomet1#6	FAKE_NPC,1,0
 
 p_track02,19,48,0	script	TrapGlobal#race02	FAKE_NPC,{
 OnEnable:
