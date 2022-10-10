@@ -1232,7 +1232,7 @@ lou_in02,265,69,5	script	Doctor#lyang	4_F_CHNDOCTOR,{
 		close;
 	}
 	else if (ch_par == 9) {
-		if (countitem(Herb_Medicine) < 1) {
+		if (countitem(Herb_Medicine) < 1 && ch_par_herb_med == 0) {
 			mes "[Hua Tuo]";
 			mes "Umm.....";
 			mes "Is that so...?";
@@ -1249,13 +1249,17 @@ lou_in02,265,69,5	script	Doctor#lyang	4_F_CHNDOCTOR,{
 			mes "else's shoes sometimes.";
 			close;
 		}
-		mes "[Hua Tuo]";
-		mes "Ah...";
-		mes "You've finally";
-		mes "brought it to me!";
-		mes "Thank you so much,";
-		mes "I feel much more relieved...";
-		next;
+		if (ch_par_herb_med == 0) {
+			mes("[Hua Tuo]");
+			mes("Ah...");
+			mes("You've finally");
+			mes("brought it to me!");
+			mes("Thank you so much,");
+			mes("I feel much more relieved...");
+			delitem(Herb_Medicine, 1);
+			ch_par_herb_med = 1;
+			next();
+		}
 		mes "[Hua Tuo]";
 		mes "I apologize";
 		mes "in advance,";
@@ -1277,8 +1281,8 @@ lou_in02,265,69,5	script	Doctor#lyang	4_F_CHNDOCTOR,{
 			mes "[Hua Tuo]";
 			mes "This medicine is not that";
 			mes "great, but it's an old family secret. I hope it will be useful to you if you find yourself in great danger.";
-			delitem Herb_Medicine,1;
 			ch_par = 10;
+			ch_par_herb_med = 0;
 			completequest 11056;
 			getitem Gold_Pill,2;
 			getexp RENEWAL_EXP?1000:10000,0;
@@ -1319,6 +1323,7 @@ lou_in02,265,69,5	script	Doctor#lyang	4_F_CHNDOCTOR,{
 		mes "^3355FF10 Sprout^000000 and";
 		mes "^3355FF5 Honey Pot^000000.";
 		ch_par = 17;
+		ch_par_herb_med = 0;
 		changequest 11056,11057;
 		close;
 	}
@@ -1359,7 +1364,7 @@ lou_in02,265,69,5	script	Doctor#lyang	4_F_CHNDOCTOR,{
 		close;
 	}
 	else if (ch_par == 16) {
-		if (countitem(Herb_Medicine) < 1) {
+		if (countitem(Herb_Medicine) < 1 && ch_par_herb_med == 0) {
 			mes "[Hua Tuo]";
 			mes "Umm.....";
 			mes "Is that so...?";
@@ -1376,10 +1381,14 @@ lou_in02,265,69,5	script	Doctor#lyang	4_F_CHNDOCTOR,{
 			mes "Still, it's good to see that you're understanding of the troubles other people are having.";
 			close;
 		}
-		mes "[Hua Tuo]";
-		mes "Ah, finally...";
-		mes "You've brought what I need. Thank you so much, it's such a relief to have this medicine onhand again.";
-		next;
+		if (ch_par_herb_med == 0) {
+			mes("[Hua Tuo]");
+			mes("Ah, finally...");
+			mes("You've brought what I need. Thank you so much, it's such a relief to have this medicine onhand again.");
+			ch_par_herb_med = 1;
+			delitem(Herb_Medicine, 1);
+			next();
+		}
 		mes "[Hua Tuo]";
 		mes "I apologize in advance,";
 		mes "but may I ask you another favor?";
@@ -1396,7 +1405,7 @@ lou_in02,265,69,5	script	Doctor#lyang	4_F_CHNDOCTOR,{
 			mes "[Hua Tuo]";
 			mes "It's not much, but this medicine";
 			mes "is an old family secret. I hope that it will be of use to you in dangerous situations.";
-			delitem Herb_Medicine,1;
+			ch_par_herb_med = 0;
 			ch_par = 10;
 			completequest 11056;
 			getitem Gold_Pill,2;
@@ -1428,6 +1437,7 @@ lou_in02,265,69,5	script	Doctor#lyang	4_F_CHNDOCTOR,{
 		mes "^3355FF20 Brown Root^000000,";
 		mes "^3355FF10 Sprout^000000 and";
 		mes "^3355FF5 Honey Pot^000000.";
+		ch_par_herb_med = 0;
 		ch_par = 17;
 		changequest 11056,11057;
 		close;
@@ -1452,7 +1462,6 @@ lou_in02,265,69,5	script	Doctor#lyang	4_F_CHNDOCTOR,{
 			delitem Browny_Root,20;
 			delitem Germinating_Sprout,10;
 			delitem Honey_Jar,5;
-			delitem Herb_Medicine,1;
 			ch_par = 18;
 			completequest 11057;
 			getitem Gold_Pill,5;
