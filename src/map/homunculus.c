@@ -1232,13 +1232,13 @@ static bool homunculus_read_db_libconfig_sub(struct config_setting_t *it, const 
 
 	if (libconfig->setting_lookup_int(it, "HungryDelay", &i32) == CONFIG_TRUE && i32 >= 0)
 		db->hungryDelay = i32;
-	if (mob->lookup_const(it, "Size", &i32) && i32 >= 0)
+	if (map->setting_lookup_const(it, "Size", &i32) && i32 >= 0)
 		db->base_size = i32;
-	if (mob->lookup_const(it, "EvoSize", &i32) && i32 >= 0)
+	if (map->setting_lookup_const(it, "EvoSize", &i32) && i32 >= 0)
 		db->evo_size = i32;
-	if (mob->lookup_const(it, "Race", &i32) && i32 >= 0)
+	if (map->setting_lookup_const(it, "Race", &i32) && i32 >= 0)
 		db->race = i32;
-	if (mob->lookup_const(it, "Element", &i32) && i32 >= 0)
+	if (map->setting_lookup_const(it, "Element", &i32) && i32 >= 0)
 		db->element = i32;
 	if (libconfig->setting_lookup_int(it, "Aspd", &i32) == CONFIG_TRUE && i32 >= 0)
 		db->baseASPD = i32;

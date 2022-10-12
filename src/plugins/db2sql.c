@@ -1026,7 +1026,7 @@ bool mobskilldb2sql_sub(struct config_setting_t *it, int n, int mob_id)
 	SQL->EscapeString(sql_handle, e_name, md->name);
 	StrBuf->Printf(&buf, "'%s@%s',", e_name, name);
 
-	if (mob->lookup_const(it, "SkillState", &i32) && (i32 < MSS_ANY || i32 > MSS_ANYTARGET)) {
+	if (map->setting_lookup_const(it, "SkillState", &i32) && (i32 < MSS_ANY || i32 > MSS_ANYTARGET)) {
 		ShowWarning("mob_skill_db_libconfig_sub_skill: Invalid skill state %d for skill '%s' in monster %d, defaulting to MSS_ANY.\n", i32, name, mob_id);
 		i32 = MSS_ANY;
 	}
@@ -1068,20 +1068,20 @@ bool mobskilldb2sql_sub(struct config_setting_t *it, int n, int mob_id)
 	}
 
 	// Target
-	if (mob->lookup_const(it, "SkillTarget", &i32) && (i32 < MST_TARGET || i32 > MST_AROUND)) {
+	if (map->setting_lookup_const(it, "SkillTarget", &i32) && (i32 < MST_TARGET || i32 > MST_AROUND)) {
 		i32 = MST_TARGET;
 	}
 	StrBuf->Printf(&buf, "'%s',", mob_skill_target_tostring(i32));
 
 	// Condition
-	if (mob->lookup_const(it, "CastCondition", &i32) && (i32 < MSC_ALWAYS || i32 > MSC_SPAWN)) {
+	if (map->setting_lookup_const(it, "CastCondition", &i32) && (i32 < MSC_ALWAYS || i32 > MSC_SPAWN)) {
 		i32 = MSC_ALWAYS;
 	}
 	StrBuf->Printf(&buf, "'%s',", mob_skill_condition_tostring(i32));
 
 	// ConditionValue
 	i32 = 0;
-	if (mob->lookup_const(it, "ConditionData", &i32)) {
+	if (map->setting_lookup_const(it, "ConditionData", &i32)) {
 		StrBuf->Printf(&buf, "'%d',", i32);
 	} else {
 		StrBuf->Printf(&buf, "NULL,");
