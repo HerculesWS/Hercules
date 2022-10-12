@@ -3468,10 +3468,6 @@ struct {
 	struct HPMHookPoint *HP_itemdb_id2combo_post;
 	struct HPMHookPoint *HP_itemdb_is_item_usable_pre;
 	struct HPMHookPoint *HP_itemdb_is_item_usable_post;
-	struct HPMHookPoint *HP_itemdb_lookup_const_pre;
-	struct HPMHookPoint *HP_itemdb_lookup_const_post;
-	struct HPMHookPoint *HP_itemdb_lookup_const_mask_pre;
-	struct HPMHookPoint *HP_itemdb_lookup_const_mask_post;
 	struct HPMHookPoint *HP_itemdb_addname_sub_pre;
 	struct HPMHookPoint *HP_itemdb_addname_sub_post;
 	struct HPMHookPoint *HP_itemdb_read_libconfig_lapineddukddak_pre;
@@ -3988,6 +3984,10 @@ struct {
 	struct HPMHookPoint *HP_map_inter_config_read_database_names_post;
 	struct HPMHookPoint *HP_map_inter_config_read_connection_pre;
 	struct HPMHookPoint *HP_map_inter_config_read_connection_post;
+	struct HPMHookPoint *HP_map_setting_lookup_const_pre;
+	struct HPMHookPoint *HP_map_setting_lookup_const_post;
+	struct HPMHookPoint *HP_map_setting_lookup_const_mask_pre;
+	struct HPMHookPoint *HP_map_setting_lookup_const_mask_post;
 	struct HPMHookPoint *HP_map_sql_init_pre;
 	struct HPMHookPoint *HP_map_sql_init_post;
 	struct HPMHookPoint *HP_map_sql_close_pre;
@@ -4340,8 +4340,6 @@ struct {
 	struct HPMHookPoint *HP_mob_read_optdrops_db_post;
 	struct HPMHookPoint *HP_mob_readdb_pre;
 	struct HPMHookPoint *HP_mob_readdb_post;
-	struct HPMHookPoint *HP_mob_lookup_const_pre;
-	struct HPMHookPoint *HP_mob_lookup_const_post;
 	struct HPMHookPoint *HP_mob_get_const_pre;
 	struct HPMHookPoint *HP_mob_get_const_post;
 	struct HPMHookPoint *HP_mob_db_validate_entry_pre;
@@ -10833,10 +10831,6 @@ struct {
 	int HP_itemdb_id2combo_post;
 	int HP_itemdb_is_item_usable_pre;
 	int HP_itemdb_is_item_usable_post;
-	int HP_itemdb_lookup_const_pre;
-	int HP_itemdb_lookup_const_post;
-	int HP_itemdb_lookup_const_mask_pre;
-	int HP_itemdb_lookup_const_mask_post;
 	int HP_itemdb_addname_sub_pre;
 	int HP_itemdb_addname_sub_post;
 	int HP_itemdb_read_libconfig_lapineddukddak_pre;
@@ -11353,6 +11347,10 @@ struct {
 	int HP_map_inter_config_read_database_names_post;
 	int HP_map_inter_config_read_connection_pre;
 	int HP_map_inter_config_read_connection_post;
+	int HP_map_setting_lookup_const_pre;
+	int HP_map_setting_lookup_const_post;
+	int HP_map_setting_lookup_const_mask_pre;
+	int HP_map_setting_lookup_const_mask_post;
 	int HP_map_sql_init_pre;
 	int HP_map_sql_init_post;
 	int HP_map_sql_close_pre;
@@ -11705,8 +11703,6 @@ struct {
 	int HP_mob_read_optdrops_db_post;
 	int HP_mob_readdb_pre;
 	int HP_mob_readdb_post;
-	int HP_mob_lookup_const_pre;
-	int HP_mob_lookup_const_post;
 	int HP_mob_get_const_pre;
 	int HP_mob_get_const_post;
 	int HP_mob_db_validate_entry_pre;
