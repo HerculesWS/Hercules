@@ -361,6 +361,9 @@ static int unit_walk_toxy_timer(int tid, int64 tick, int id, intptr_t data)
 	if (ud->walkpath.path_pos >= ud->walkpath.path_len)
 		return 1;
 
+	if (status->isdead(bl)) // Should not be able to move
+		return 1;
+
 	enum unit_dir dir = ud->walkpath.path[ud->walkpath.path_pos];
 	Assert_retr(1, dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX);
 	int x = bl->x;
