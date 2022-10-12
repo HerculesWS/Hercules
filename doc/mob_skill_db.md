@@ -189,6 +189,8 @@ Additional data. Meaning depends on the situation.
  * `NPC_EMOTION`: Emotion ID. (See [doc/constants.md](./constants.md#emotes) for a list of available emotions.)
  * `NPC_EMOTION_ON`: Emotion ID. (See [doc/constants.md](./constants.md#emotes) for a list of available emotions.)
 
+`val0` may receive the number directly, a constant (e.g. "PORING" instead of 1002) or even a bitmask array (e.g. ["MD_CANMOVE", "MD_LOOTER"] instead of 3 (1 + 2))
+
 ### val1
 Additional data. Meaning depends on the situation.
  * `NPC_SUMMONMONSTER`: Slave monster ID.
@@ -197,11 +199,15 @@ Additional data. Meaning depends on the situation.
  * `NPC_EMOTION`: Monster's mode is changed to specified value.
  * `NPC_EMOTION_ON`: Monster's mode is changed to specified value.
 
+`val1` may receive the number directly, a constant (e.g. "PORING" instead of 1002) or even a bitmask array (e.g. ["MD_CANMOVE", "MD_LOOTER"] instead of 3 (1 + 2))
+
 ### val2
 Additional data. Meaning depends on the situation.
  * `NPC_SUMMONMONSTER`: Slave monster ID.
  * `NPC_SUMMONSLAVE`: Slave monster ID.
  * `NPC_METAMORPHOSIS`: Transform monster ID.
+
+`val2` may receive the number directly, a constant (e.g. "PORING" instead of 1002) or even a bitmask array (e.g. ["MD_CANMOVE", "MD_LOOTER"] instead of 3 (1 + 2))
 
 ### val3
 Additional data. Meaning depends on the situation.
@@ -209,11 +215,15 @@ Additional data. Meaning depends on the situation.
  * `NPC_SUMMONSLAVE`: Slave monster ID.
  * `NPC_METAMORPHOSIS`: Transform monster ID.
 
+`val3` may receive the number directly, a constant (e.g. "PORING" instead of 1002) or even a bitmask array (e.g. ["MD_CANMOVE", "MD_LOOTER"] instead of 3 (1 + 2))
+
 ### val4
 Additional data. Meaning depends on the situation.
  * `NPC_SUMMONMONSTER`: Slave monster ID.
  * `NPC_SUMMONSLAVE`: Slave monster ID.
  * `NPC_METAMORPHOSIS`: Transform monster ID.
+
+`val4` may receive the number directly, a constant (e.g. "PORING" instead of 1002) or even a bitmask array (e.g. ["MD_CANMOVE", "MD_LOOTER"] instead of 3 (1 + 2))
 
 ### Emotion
 The ID of the emotion the monster will use when casting the skill.  

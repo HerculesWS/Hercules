@@ -5811,7 +5811,7 @@ static bool mob_skill_db_libconfig_sub_skill(struct config_setting_t *it, int n,
 		char valname[16];
 		sprintf(valname, "val%1d", i);
 
-		if (libconfig->setting_lookup_int(it, valname, &i32) == CONFIG_TRUE)
+		if (map->setting_lookup_const_mask(it, valname, &i32))
 			ms->val[i] = i32;
 	}
 
@@ -5835,8 +5835,8 @@ static bool mob_skill_db_libconfig_sub_skill(struct config_setting_t *it, int n,
 		ms->val[1] = MD_NONE; // Do not "set" it.
 	}
 
-	res = libconfig->setting_lookup_int(it, "Emotion", &i32);
-	ms->emotion = (res == CONFIG_FALSE) ? -1 : cap_value(i32, -1, SHRT_MAX);
+	res = map->setting_lookup_const(it, "Emotion", &i32);
+	ms->emotion = res ? cap_value(i32, -1, SHRT_MAX) : -1;
 
 	if (libconfig->setting_lookup_int(it, "ChatMsgID", &i32) == CONFIG_TRUE) {
 		if (i32 <= 0 || i32 > MAX_MOB_CHAT || mob->chat_db[i32] == NULL) {
