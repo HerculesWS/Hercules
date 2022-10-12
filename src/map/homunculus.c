@@ -1224,7 +1224,7 @@ static bool homunculus_read_db_libconfig_sub(struct config_setting_t *it, const 
 	}
 	safestrncpy(db->name, str, NAME_LENGTH - 1);
 
-	if (!itemdb->lookup_const(it, "FoodItem", &i32)) {
+	if (!map->setting_lookup_const(it, "FoodItem", &i32)) {
 		ShowError("homunculus_read_db_libconfig_sub: Invalid homunculus FoodItem '%d' provided for entry %d in '%s', skipping...\n", i32, idx, source);
 		return false;
 	}

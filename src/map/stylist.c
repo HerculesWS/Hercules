@@ -72,11 +72,11 @@ static bool stylist_read_db_libconfig_sub(struct config_setting_t *it, int idx, 
 	nullpo_ret(it);
 	nullpo_ret(source);
 
-	if (!itemdb->lookup_const(it, "Type", &type) || type >= MAX_STYLIST_TYPE || type < 0) {
+	if (!map->setting_lookup_const(it, "Type", &type) || type >= MAX_STYLIST_TYPE || type < 0) {
 		ShowWarning("stylist_read_db_libconfig_sub: Invalid or missing Type (%d) in \"%s\", entry #%d, skipping.\n", type, source, idx);
 		return false;
 	}
-	if (!itemdb->lookup_const(it, "Id", &i32) || i32 < 0) {
+	if (!map->setting_lookup_const(it, "Id", &i32) || i32 < 0) {
 		ShowWarning("stylist_read_db_libconfig_sub: Invalid or missing Id (%d) in \"%s\", entry #%d, skipping.\n", i32, source, idx);
 		return false;
 	}
@@ -91,10 +91,10 @@ static bool stylist_read_db_libconfig_sub(struct config_setting_t *it, int idx, 
 		}
 	}
 
-	if (itemdb->lookup_const(it, "ItemID", &i32))
+	if (map->setting_lookup_const(it, "ItemID", &i32))
 		entry.itemid = i32;
 
-	if (itemdb->lookup_const(it, "BoxItemID", &i32))
+	if (map->setting_lookup_const(it, "BoxItemID", &i32))
 		entry.boxid = i32;
 
 	if (libconfig->setting_lookup_bool(it, "AllowDoram", &i32))

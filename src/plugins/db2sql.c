@@ -295,7 +295,7 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source)
 		if ((t = libconfig->setting_get_member(entry, "Job")) != NULL) {
 			if (config_setting_is_group(t)) {
 				ui64 = itemdb2sql_readdb_job_sub(t);
-			} else if (itemdb->lookup_const(entry, "Job", &i32)) { // This is an unsigned value, do not check for >= 0
+			} else if (map->setting_lookup_const(entry, "Job", &i32)) { // This is an unsigned value, do not check for >= 0
 				ui64 = (uint64)i32;
 			} else {
 				ui64 = UINT64_MAX;

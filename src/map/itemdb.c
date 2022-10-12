@@ -2080,7 +2080,7 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 	 * OnRentalEndScript: <" on renting end script ">
 	 * Inherit: inherit or override
 	 */
-	if( !itemdb->lookup_const(it, "Id", &i32) ) {
+	if(!map->setting_lookup_const(it, "Id", &i32)) {
 		ShowWarning("itemdb_readdb_libconfig_sub: Invalid or missing id in \"%s\", entry #%d, skipping.\n", source, n);
 		return 0;
 	}
@@ -2115,12 +2115,12 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 		safestrncpy(id.jname, str, sizeof(id.jname));
 	}
 
-	if( itemdb->lookup_const(it, "Type", &i32) )
+	if (map->setting_lookup_const(it, "Type", &i32))
 		id.type = i32;
-	else if( !inherit )
+	else if (!inherit)
 		id.type = IT_ETC;
 
-	if (itemdb->lookup_const(it, "Subtype", &i32) && i32 >= 0) {
+	if (map->setting_lookup_const(it, "Subtype", &i32) && i32 >= 0) {
 		if (id.type == IT_WEAPON || id.type == IT_AMMO)
 			id.subtype = i32;
 		else
@@ -2128,37 +2128,37 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 					id.nameid, id.name);
 	}
 
-	if( itemdb->lookup_const(it, "Buy", &i32) )
+	if (map->setting_lookup_const(it, "Buy", &i32))
 		id.value_buy = i32;
-	else if( !inherit )
+	else if (!inherit)
 		id.value_buy = -1;
-	if( itemdb->lookup_const(it, "Sell", &i32) )
+	if (map->setting_lookup_const(it, "Sell", &i32))
 		id.value_sell = i32;
-	else if( !inherit )
+	else if (!inherit)
 		id.value_sell = -1;
 
-	if( itemdb->lookup_const(it, "Weight", &i32) && i32 >= 0 )
+	if (map->setting_lookup_const(it, "Weight", &i32) && i32 >= 0)
 		id.weight = i32;
 
-	if( itemdb->lookup_const(it, "Atk", &i32) && i32 >= 0 )
+	if (map->setting_lookup_const(it, "Atk", &i32) && i32 >= 0)
 		id.atk = i32;
 
-	if( itemdb->lookup_const(it, "Matk", &i32) && i32 >= 0 )
+	if (map->setting_lookup_const(it, "Matk", &i32) && i32 >= 0)
 		id.matk = i32;
 
-	if( itemdb->lookup_const(it, "Def", &i32) && i32 >= 0 )
+	if (map->setting_lookup_const(it, "Def", &i32) && i32 >= 0)
 		id.def = i32;
 
-	if( itemdb->lookup_const(it, "Range", &i32) && i32 >= 0 )
+	if (map->setting_lookup_const(it, "Range", &i32) && i32 >= 0)
 		id.range = i32;
 
-	if( itemdb->lookup_const(it, "Slots", &i32) && i32 >= 0 )
+	if (map->setting_lookup_const(it, "Slots", &i32) && i32 >= 0)
 		id.slot = i32;
 
 	if ((t = libconfig->setting_get_member(it, "Job")) != NULL) {
 		if (config_setting_is_group(t)) {
 			itemdb->readdb_job_sub(&id, t);
-		} else if (itemdb->lookup_const(it, "Job", &i32)) { // This is an unsigned value, do not check for >= 0
+		} else if (map->setting_lookup_const(it, "Job", &i32)) { // This is an unsigned value, do not check for >= 0
 			itemdb->jobmask2mapid(id.class_base, (uint64)i32);
 		} else if (!inherit) {
 			itemdb->jobmask2mapid(id.class_base, UINT64_MAX);
@@ -2172,15 +2172,15 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 	else if( !inherit )
 		id.class_upper = ITEMUPPER_ALL;
 
-	if( itemdb->lookup_const(it, "Gender", &i32) && i32 >= 0 )
+	if (map->setting_lookup_const(it, "Gender", &i32) && i32 >= 0)
 		id.sex = i32;
-	else if( !inherit )
+	else if (!inherit)
 		id.sex = 2;
 
 	if (itemdb->lookup_const_mask(it, "Loc", &i32) && i32 >= 0)
 		id.equip = i32;
 
-	if( itemdb->lookup_const(it, "WeaponLv", &i32) && i32 >= 0 )
+	if (map->setting_lookup_const(it, "WeaponLv", &i32) && i32 >= 0)
 		id.wlv = i32;
 
 	if( (t = libconfig->setting_get_member(it, "EquipLv")) ) {
@@ -2206,13 +2206,13 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 	if ((t = libconfig->setting_get_member(it, "ShowDropEffect")))
 		id.flag.showdropeffect = libconfig->setting_get_bool(t) ? 1 : 0;
 
-	if (itemdb->lookup_const(it, "DropEffectMode", &i32) && i32 >= 0)
+	if (map->setting_lookup_const(it, "DropEffectMode", &i32) && i32 >= 0)
 		id.dropeffectmode = i32;
 
-	if (itemdb->lookup_const(it, "ViewSprite", &i32) && i32 >= 0)
+	if (map->setting_lookup_const(it, "ViewSprite", &i32) && i32 >= 0)
 		id.view_sprite = i32;
 
-	if (itemdb->lookup_const(it, "View", &i32) && i32 >= 0) { // TODO: Remove (Deprecated - 2016-09-04 [Haru])
+	if (map->setting_lookup_const(it, "View", &i32) && i32 >= 0) { // TODO: Remove (Deprecated - 2016-09-04 [Haru])
 		if ((id.type == IT_WEAPON || id.type == IT_AMMO) && id.subtype == 0) {
 			ShowWarning("itemdb_readdb_libconfig_sub: The 'View' field is deprecated. Please rename it to 'Subtype' (or 'ViewSprite'). (Item #%d: %s)\n",
 					id.nameid, id.name);
@@ -2242,7 +2242,7 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 	if ((t = libconfig->setting_get_member(it, "DropAnnounce")))
 		id.flag.drop_announce = libconfig->setting_get_bool(t) ? 1 : 0;
 
-	if (itemdb->lookup_const(it, "Delay", &i32) && i32 >= 0)
+	if (map->setting_lookup_const(it, "Delay", &i32) && i32 >= 0)
 		id.delay = i32;
 
 	if ((t = libconfig->setting_get_member(it, "IgnoreDiscount")))
@@ -2350,7 +2350,7 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 		}
 	}
 
-	if (itemdb->lookup_const(it, "Sprite", &i32) && i32 >= 0) {
+	if (map->setting_lookup_const(it, "Sprite", &i32) && i32 >= 0) {
 		id.flag.available = 1;
 		id.view_id = i32;
 	}
@@ -2371,25 +2371,6 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 		id.rental_end_script = (*str != '\0') ? script->parse(str, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
 
 	return itemdb->validate_entry(&id, n, source);
-}
-
-static bool itemdb_lookup_const(const struct config_setting_t *it, const char *name, int *value)
-{
-	const char *str = NULL;
-
-	nullpo_retr(false, name);
-	nullpo_retr(false, value);
-
-	if (libconfig->setting_lookup_int(it, name, value)) {
-		return true;
-	}
-
-	if (libconfig->setting_lookup_string(it, name, &str)) {
-		if (*str && script->get_constant(str, value))
-			return true;
-	}
-
-	return false;
 }
 
 static bool itemdb_lookup_const_mask(const struct config_setting_t *it, const char *name, int *value)
@@ -2745,12 +2726,12 @@ static bool itemdb_read_libconfig_item_reform_info_sub(struct config_setting_t *
 		return false;
 	}
 
-	if (!itemdb->lookup_const(it, "BaseItem", &ir.BaseItem)) {
+	if (!map->setting_lookup_const(it, "BaseItem", &ir.BaseItem)) {
 		ShowWarning("%s: invalid BaseItem for entry with Id %d, skipping..\n", __func__, ir.Id);
 		return false;
 	}
 
-	if (!itemdb->lookup_const(it, "ResultItem", &ir.ResultItem)) {
+	if (!map->setting_lookup_const(it, "ResultItem", &ir.ResultItem)) {
 		ShowWarning("%s: invalid ResultItem for entry with Id %d, skipping..\n", __func__, ir.Id);
 		return false;
 	}
@@ -3432,7 +3413,6 @@ void itemdb_defaults(void)
 	itemdb->clear = itemdb_clear;
 	itemdb->id2combo = itemdb_id2combo;
 	itemdb->is_item_usable = itemdb_is_item_usable;
-	itemdb->lookup_const = itemdb_lookup_const;
 	itemdb->lookup_const_mask = itemdb_lookup_const_mask;
 	itemdb->addname_sub = itemdb_addname_sub;
 	itemdb->read_libconfig_lapineddukddak = itemdb_read_libconfig_lapineddukddak;

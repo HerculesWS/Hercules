@@ -4662,6 +4662,40 @@ static bool inter_config_read_database_names(const char *filename, const struct 
 }
 
 /*=======================================
+ *  Config reading utilities
+ *---------------------------------------*/
+
+/**
+ * Looks up configuration "name" which is expect to have a final value of int, but may be specified by a string constant.
+ * 
+ * If the config is a string, it will be looked up using script->get_constant function to find the actual integer value.
+ *
+ * @param[in]  setting        The setting to read.
+ * @param[in]  name           The setting name to lookup.
+ * @param[out] value          Where to output the read value (after constant resolving, if necessary)
+ *
+ * @retval true if it was read successfully or false if it could not read or resolve it.
+ */
+static bool map_setting_lookup_const(const struct config_setting_t *setting, const char *name, int *value)
+{
+	const char *str = NULL;
+
+	nullpo_retr(false, name);
+	nullpo_retr(false, value);
+
+	if (libconfig->setting_lookup_int(setting, name, value)) {
+		return true;
+	}
+
+	if (libconfig->setting_lookup_string(setting, name, &str)) {
+		if (*str && script->get_constant(str, value))
+			return true;
+	}
+
+	return false;
+}
+
+/*=======================================
  *  MySQL Init
  *---------------------------------------*/
 static int map_sql_init(void)
@@ -7381,6 +7415,7 @@ PRAGMA_GCC9(GCC diagnostic pop)
 	map->inter_config_read = inter_config_read;
 	map->inter_config_read_database_names = inter_config_read_database_names;
 	map->inter_config_read_connection = inter_config_read_connection;
+	map->setting_lookup_const = map_setting_lookup_const;
 	map->sql_init = map_sql_init;
 	map->sql_close = map_sql_close;
 	map->zone_mf_cache = map_zone_mf_cache;
