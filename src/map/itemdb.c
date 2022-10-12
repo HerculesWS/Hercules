@@ -2167,7 +2167,7 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 		itemdb->jobmask2mapid(id.class_base, UINT64_MAX);
 	}
 
-	if (itemdb->lookup_const_mask(it, "Upper", &i32) && i32 >= 0)
+	if (map->setting_lookup_const_mask(it, "Upper", &i32) && i32 >= 0)
 		id.class_upper = (unsigned int)i32;
 	else if( !inherit )
 		id.class_upper = ITEMUPPER_ALL;
@@ -2177,7 +2177,7 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 	else if (!inherit)
 		id.sex = 2;
 
-	if (itemdb->lookup_const_mask(it, "Loc", &i32) && i32 >= 0)
+	if (map->setting_lookup_const_mask(it, "Loc", &i32) && i32 >= 0)
 		id.equip = i32;
 
 	if (map->setting_lookup_const(it, "WeaponLv", &i32) && i32 >= 0)
@@ -2371,62 +2371,6 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 		id.rental_end_script = (*str != '\0') ? script->parse(str, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
 
 	return itemdb->validate_entry(&id, n, source);
-}
-
-static bool itemdb_lookup_const_mask(const struct config_setting_t *it, const char *name, int *value)
-{
-	const struct config_setting_t *t = NULL;
-
-	nullpo_retr(false, it);
-	nullpo_retr(false, name);
-	nullpo_retr(false, value);
-
-	if ((t = libconfig->setting_get_member(it, name)) == NULL) {
-		return false;
-	}
-
-	if (config_setting_is_scalar(t)) {
-		const char *str = NULL;
-
-		if (config_setting_is_number(t)) {
-			*value = libconfig->setting_get_int(t);
-			return true;
-		}
-
-		if ((str = libconfig->setting_get_string(t)) != NULL) {
-			int i32 = -1;
-			if (script->get_constant(str, &i32) && i32 >= 0) {
-				*value = i32;
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	if (config_setting_is_aggregate(t) && libconfig->setting_length(t) >= 1) {
-		const struct config_setting_t *elem = NULL;
-		int i = 0;
-
-		*value = 0;
-
-		while ((elem = libconfig->setting_get_elem(t, i++)) != NULL) {
-			const char *str = libconfig->setting_get_string(elem);
-			int i32 = -1;
-
-			if (str == NULL)
-				return false;
-
-			if (!script->get_constant(str, &i32) || i32 < 0)
-				return false;
-
-			*value |= i32;
-		}
-
-		return true;
-	}
-
-	return false;
 }
 
 /**
@@ -3413,7 +3357,6 @@ void itemdb_defaults(void)
 	itemdb->clear = itemdb_clear;
 	itemdb->id2combo = itemdb_id2combo;
 	itemdb->is_item_usable = itemdb_is_item_usable;
-	itemdb->lookup_const_mask = itemdb_lookup_const_mask;
 	itemdb->addname_sub = itemdb_addname_sub;
 	itemdb->read_libconfig_lapineddukddak = itemdb_read_libconfig_lapineddukddak;
 	itemdb->read_libconfig_lapineddukddak_sub = itemdb_read_libconfig_lapineddukddak_sub;

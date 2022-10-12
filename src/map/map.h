@@ -1538,6 +1538,7 @@ END_ZEROED_BLOCK;
 	bool (*inter_config_read_database_names) (const char *filename, const struct config_t *config, bool imported);
 	bool (*inter_config_read_connection) (const char *filename, const struct config_t *config, bool imported);
 	bool (*setting_lookup_const) (const struct config_setting_t *setting, const char *name, int *value);
+	bool (*setting_lookup_const_mask) (const struct config_setting_t *setting, const char *name, int *value);
 	int (*sql_init) (void);
 	int (*sql_close) (void);
 	bool (*zone_mf_cache) (int m, char *flag, char *params);

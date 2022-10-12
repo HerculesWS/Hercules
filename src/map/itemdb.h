@@ -752,7 +752,6 @@ struct itemdb_interface {
 	void (*clear) (bool total);
 	struct item_combo * (*id2combo) (int id);
 	bool (*is_item_usable) (struct item_data *item);
-	bool (*lookup_const_mask) (const struct config_setting_t *it, const char *name, int *value);
 	int (*addname_sub) (union DBKey key, struct DBData *data, va_list ap);
 	bool (*read_libconfig_lapineddukddak) (void);
 	bool (*read_libconfig_lapineddukddak_sub) (struct config_setting_t *it, const char *source);

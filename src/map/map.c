@@ -4695,6 +4695,75 @@ static bool map_setting_lookup_const(const struct config_setting_t *setting, con
 	return false;
 }
 
+/**
+ * Looks up configuration "name" which is expect to have a final value of int,
+ * but may be specified by a string constant or an array of bitflag constants.
+ * 
+ * If the config is a string, it will be looked up using script->get_constant function to find the actual integer value.
+ * If the config is an array, each value will be read and added to the final bitmask.
+ *
+ * @param[in]  setting        The setting to read.
+ * @param[in]  name           The setting name to lookup.
+ * @param[out] value          Where to output the read value (after constant resolving, if necessary)
+ *
+ * @retval true if it was read successfully or false if it could not read or resolve it.
+ */
+static bool map_setting_lookup_const_mask(const struct config_setting_t *setting, const char *name, int *value)
+{
+	const struct config_setting_t *t = NULL;
+
+	nullpo_retr(false, setting);
+	nullpo_retr(false, name);
+	nullpo_retr(false, value);
+
+	if ((t = libconfig->setting_get_member(setting, name)) == NULL) {
+		return false;
+	}
+
+	if (config_setting_is_scalar(t)) {
+		const char *str = NULL;
+
+		if (config_setting_is_number(t)) {
+			*value = libconfig->setting_get_int(t);
+			return true;
+		}
+
+		if ((str = libconfig->setting_get_string(t)) != NULL) {
+			int i32 = -1;
+			if (script->get_constant(str, &i32) && i32 >= 0) {
+				*value = i32;
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	if (config_setting_is_aggregate(t) && libconfig->setting_length(t) >= 1) {
+		const struct config_setting_t *elem = NULL;
+		int i = 0;
+
+		*value = 0;
+
+		while ((elem = libconfig->setting_get_elem(t, i++)) != NULL) {
+			const char *str = libconfig->setting_get_string(elem);
+			int i32 = -1;
+
+			if (str == NULL)
+				return false;
+
+			if (!script->get_constant(str, &i32) || i32 < 0)
+				return false;
+
+			*value |= i32;
+		}
+
+		return true;
+	}
+
+	return false;
+}
+
 /*=======================================
  *  MySQL Init
  *---------------------------------------*/
@@ -7416,6 +7485,7 @@ PRAGMA_GCC9(GCC diagnostic pop)
 	map->inter_config_read_database_names = inter_config_read_database_names;
 	map->inter_config_read_connection = inter_config_read_connection;
 	map->setting_lookup_const = map_setting_lookup_const;
+	map->setting_lookup_const_mask = map_setting_lookup_const_mask;
 	map->sql_init = map_sql_init;
 	map->sql_close = map_sql_close;
 	map->zone_mf_cache = map_zone_mf_cache;

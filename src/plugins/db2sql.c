@@ -306,7 +306,7 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source)
 		StrBuf->Printf(&buf, "'%"PRIu64"',", ui64);
 
 		// equip_upper
-		if (itemdb->lookup_const_mask(entry, "Upper", &i32) && i32 >= 0)
+		if (map->setting_lookup_const_mask(entry, "Upper", &i32) && i32 >= 0)
 			ui32 = (uint32)i32;
 		else
 			ui32 = ITEMUPPER_ALL;
