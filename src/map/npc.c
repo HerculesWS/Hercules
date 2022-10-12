@@ -5116,6 +5116,10 @@ static const char *npc_parse_mapflag(const char *w1, const char *w2, const char 
 		if (map->list[m].bexp < 0)
 			map->list[m].bexp = 100;
 		map->list[m].flag.nobaseexp = (map->list[m].bexp == 0) ? 1 : 0;
+	} else if (strcmpi(w3, "specialpopup") == 0) {
+		map->list[m].flag.specialpopup = (state != 0) ? atoi(w4) : 100;
+		if (map->list[m].flag.specialpopup < 0)
+			map->list[m].flag.specialpopup = 0;
 	} else if (strcmpi(w3, "novending") == 0)
 		map->list[m].flag.novending = (state != 0) ? 1 : 0;
 	else if (strcmpi(w3, "loadevent") == 0)

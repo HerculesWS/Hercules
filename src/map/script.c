@@ -14534,6 +14534,7 @@ static BUILDIN(getmapflag)
 		case MF_NOKNOCKBACK: script_pushint(st, map->list[m].flag.noknockback); break;
 		case MF_SRC4INSTANCE: script_pushint(st, map->list[m].flag.src4instance); break;
 		case MF_CVC: script_pushint(st, map->list[m].flag.cvc); break;
+		case MF_SPECIALPOPUP: script_pushint(st, map->list[m].flag.specialpopup); break;
 		}
 	}
 
@@ -14671,6 +14672,7 @@ static BUILDIN(setmapflag)
 		case MF_NOKNOCKBACK: map->list[m].flag.noknockback = 1; break;
 		case MF_SRC4INSTANCE: map->list[m].flag.src4instance = 1; break;
 		case MF_CVC: map->list[m].flag.cvc = 1; break;
+		case MF_SPECIALPOPUP: map->list[m].flag.specialpopup = val; break;
 		}
 	}
 
@@ -14766,6 +14768,7 @@ static BUILDIN(removemapflag)
 		case MF_NOKNOCKBACK: map->list[m].flag.noknockback = 0; break;
 		case MF_SRC4INSTANCE: map->list[m].flag.src4instance = 0; break;
 		case MF_CVC: map->list[m].flag.cvc = 0; break;
+		case MF_SPECIALPOPUP: map->list[m].flag.specialpopup = 0; break;
 		}
 	}
 
@@ -29624,6 +29627,7 @@ static void script_hardcoded_constants(void)
 	script->set_constant("MF_NOKNOCKBACK", MF_NOKNOCKBACK, false, false);
 	script->set_constant("MF_SRC4INSTANCE", MF_SRC4INSTANCE, false, false);
 	script->set_constant("MF_CVC", MF_CVC, false, false);
+	script->set_constant("MF_SPECIALPOPUP", MF_SPECIALPOPUP, false, false);
 
 	script->constdb_comment("Job masks / Job map_ids");
 

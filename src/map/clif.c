@@ -24067,6 +24067,7 @@ static void clif_parse_cz_blocking_play_cancel(int fd, struct map_session_data *
 static void clif_parse_cz_blocking_play_cancel(int fd, struct map_session_data *sd)
 {
 	clif->loadConfirm(sd);
+	clif->updateSpecialPopup(sd);
 }
 
 static void clif_loadConfirm(struct map_session_data *sd)
@@ -24077,6 +24078,17 @@ static void clif_loadConfirm(struct map_session_data *sd)
 	p.packetType = HEADER_ZC_NOTIFY_ACTORINIT;
 	clif->send(&p, sizeof(p), &sd->bl, SELF);
 #endif
+}
+
+static void clif_updateSpecialPopup(struct map_session_data *sd)
+{
+	nullpo_retv(sd);
+
+	int m = sd->bl.m;
+
+	if (map->list[m].flag.specialpopup) {
+		clif->special_popup(sd, map->list[m].flag.specialpopup);
+	}
 }
 
 static void clif_ui_action(struct map_session_data *sd, int32 UIType, int32 data)
@@ -26937,6 +26949,7 @@ void clif_defaults(void)
 	clif->pingTimerSub = clif_pingTimerSub;
 	clif->pResetCooldown = clif_parse_ResetCooldown;
 	clif->loadConfirm = clif_loadConfirm;
+	clif->updateSpecialPopup = clif_updateSpecialPopup;
 	clif->send_selforarea = clif_send_selforarea;
 	clif->OpenRefineryUI = clif_OpenRefineryUI;
 	clif->pAddItemRefineryUI = clif_parse_AddItemRefineryUI;
