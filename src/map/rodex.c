@@ -63,11 +63,11 @@ static void rodex_refresh_stamps(struct map_session_data *sd)
 	// Note : Weirdly, iRO starts this with maximum messages of the day and decrements
 	//        but our clients starts this at 0 and increments
 	if (sd->sc.data[SC_DAILYSENDMAILCNT] == NULL) {
-		sc_start2(NULL, &sd->bl, SC_DAILYSENDMAILCNT, 100, today, 0, INFINITE_DURATION);
+		sc_start2(NULL, &sd->bl, SC_DAILYSENDMAILCNT, 100, today, 0, INFINITE_DURATION, 0);
 	} else {
 		int sc_date = sd->sc.data[SC_DAILYSENDMAILCNT]->val1;
 		if (sc_date != today) {
-			sc_start2(NULL, &sd->bl, SC_DAILYSENDMAILCNT, 100, today, 0, INFINITE_DURATION);
+			sc_start2(NULL, &sd->bl, SC_DAILYSENDMAILCNT, 100, today, 0, INFINITE_DURATION, 0);
 		}
 	}
 }
@@ -262,9 +262,9 @@ static int rodex_send_mail(struct map_session_data *sd, const char *receiver_nam
 			return RODEX_SEND_MAIL_COUNT_ERROR;
 		}
 
-		sc_start2(NULL, &sd->bl, SC_DAILYSENDMAILCNT, 100, sd->sc.data[SC_DAILYSENDMAILCNT]->val1, sd->sc.data[SC_DAILYSENDMAILCNT]->val2 + 1, INFINITE_DURATION);
+		sc_start2(NULL, &sd->bl, SC_DAILYSENDMAILCNT, 100, sd->sc.data[SC_DAILYSENDMAILCNT]->val1, sd->sc.data[SC_DAILYSENDMAILCNT]->val2 + 1, INFINITE_DURATION, 0);
 	} else {
-		sc_start2(NULL, &sd->bl, SC_DAILYSENDMAILCNT, 100, date_get_date(), 1, INFINITE_DURATION);
+		sc_start2(NULL, &sd->bl, SC_DAILYSENDMAILCNT, 100, date_get_date(), 1, INFINITE_DURATION, 0);
 	}
 
 	for (i = 0; i < RODEX_MAX_ITEM; i++) {

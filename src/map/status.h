@@ -1266,9 +1266,9 @@ struct status_change {
 #define status_get_mode(bl)                  (status->get_status_data(bl)->mode)
 
 //Short version, receives rate in 1->100 range, and does not uses a flag setting.
-#define sc_start(src, bl, type, rate, val1, tick)                    (status->change_start((src),(bl),(type),100*(rate),(val1),0,0,0,(tick),SCFLAG_NONE))
-#define sc_start2(src, bl, type, rate, val1, val2, tick)             (status->change_start((src),(bl),(type),100*(rate),(val1),(val2),0,0,(tick),SCFLAG_NONE))
-#define sc_start4(src, bl, type, rate, val1, val2, val3, val4, tick) (status->change_start((src),(bl),(type),100*(rate),(val1),(val2),(val3),(val4),(tick),SCFLAG_NONE))
+#define sc_start(src, bl, type, rate, val1, tick, skill_id)                    (status->change_start((src),(bl),(type),100*(rate),(val1),0,0,0,(tick),SCFLAG_NONE,(skill_id)))
+#define sc_start2(src, bl, type, rate, val1, val2, tick, skill_id)             (status->change_start((src),(bl),(type),100*(rate),(val1),(val2),0,0,(tick),SCFLAG_NONE,(skill_id)))
+#define sc_start4(src, bl, type, rate, val1, val2, val3, val4, tick, skill_id) (status->change_start((src),(bl),(type),100*(rate),(val1),(val2),(val3),(val4),(tick),SCFLAG_NONE,(skill_id)))
 
 #define status_change_end(bl,type,tid) (status->change_end_((bl),(type),(tid)))
 
@@ -1359,9 +1359,9 @@ struct status_interface {
 	struct status_change * (*get_sc) (struct block_list *bl);
 	int (*isdead) (struct block_list *bl);
 	int (*isimmune) (struct block_list *bl);
-	int (*get_sc_def) (struct block_list *src, struct block_list *bl, enum sc_type type, int rate, int tick, int flag);
-	int (*change_start) (struct block_list *src, struct block_list *bl, enum sc_type type, int rate, int val1, int val2, int val3, int val4, int tick, int flag);
-	int (*change_start_sub) (struct block_list *src, struct block_list *bl, enum sc_type type, int rate, int val1, int val2, int val3, int val4, int tick, int total_tick, int flag);
+	int (*get_sc_def) (struct block_list *src, struct block_list *bl, enum sc_type type, int rate, int tick, int flag, int skill_id);
+	int (*change_start) (struct block_list *src, struct block_list *bl, enum sc_type type, int rate, int val1, int val2, int val3, int val4, int tick, int flag, int skill_id);
+	int (*change_start_sub) (struct block_list *src, struct block_list *bl, enum sc_type type, int rate, int val1, int val2, int val3, int val4, int tick, int total_tick, int flag, int skill_id);
 	int (*change_end_) (struct block_list* bl, enum sc_type type, int tid);
 	bool (*is_immune_to_status) (struct status_change* sc, enum sc_type type);
 	bool (*is_boss_resist_sc) (enum sc_type type);
@@ -1398,7 +1398,7 @@ struct status_interface {
 	bool (*check_skilluse_mapzone) (struct block_list *src, struct status_data *st, uint16 skill_id);
 	int (*check_skilluse) (struct block_list *src, struct block_list *target, uint16 skill_id, int flag); // [Skotlex]
 	int (*check_visibility) (struct block_list *src, struct block_list *target); //[Skotlex]
-	int (*change_spread) (struct block_list *src, struct block_list *bl);
+	int (*change_spread) (struct block_list *src, struct block_list *bl, int skill_id);
 	defType (*calc_def) (struct block_list *bl, struct status_change *sc, int def, bool viewable);
 	short (*calc_def2) (struct block_list *bl, struct status_change *sc, int def2, bool viewable);
 	defType (*calc_mdef) (struct block_list *bl, struct status_change *sc, int mdef, bool viewable);

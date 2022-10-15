@@ -329,7 +329,7 @@ static void pc_addsoulball(struct map_session_data *sd, int max)
 	const struct status_change *sc = status->get_sc(&sd->bl);
 
 	if (sc == NULL || sc->data[SC_SOULENERGY] == NULL) {
-		sc_start(&sd->bl, &sd->bl, SC_SOULENERGY, 100, 0, skill->get_time2(SP_SOULCOLLECT, 1));
+		sc_start(&sd->bl, &sd->bl, SC_SOULENERGY, 100, 0, skill->get_time2(SP_SOULCOLLECT, 1), 0);
 		sd->soulball = 0;
 	}
 
@@ -337,7 +337,7 @@ static void pc_addsoulball(struct map_session_data *sd, int max)
 		max = MAX_SOUL_BALL;
 
 	sd->soulball = cap_value(sd->soulball + 1, 0, max);
-	sc_start(&sd->bl, &sd->bl, SC_SOULENERGY, 100, sd->soulball, skill->get_time2(SP_SOULCOLLECT, 1));
+	sc_start(&sd->bl, &sd->bl, SC_SOULENERGY, 100, sd->soulball, skill->get_time2(SP_SOULCOLLECT, 1), 0);
 	clif->spiritball(&sd->bl, BALL_TYPE_SOUL, AREA);
 }
 
@@ -2009,9 +2009,9 @@ static int pc_updateweightstatus(struct map_session_data *sd)
 
 	// start new status change
 	if( new_overweight == 1 )
-		sc_start(NULL,&sd->bl, SC_WEIGHTOVER50, 100, 0, 0);
+		sc_start(NULL, &sd->bl, SC_WEIGHTOVER50, 100, 0, 0, 0);
 	else if( new_overweight == 2 )
-		sc_start(NULL,&sd->bl, SC_WEIGHTOVER90, 100, 0, 0);
+		sc_start(NULL, &sd->bl, SC_WEIGHTOVER90, 100, 0, 0, 0);
 
 	// update overweight status
 	sd->regen.state.overweight = new_overweight;
@@ -3914,7 +3914,7 @@ static int pc_bonus2(struct map_session_data *sd, int type, int type2, int val)
 				ShowWarning("pc_bonus2: SP_ADD_DROP_RACE: Invalid Race (%d)\n", type2);
 				break;
 			}
-			if (sd->state.lr_flag == 2) 
+			if (sd->state.lr_flag == 2)
 				break;
 			BONUS_FOREACH_RCARRAY_FROMMASK(i, race_mask)
 				sd->dropaddrace[i] += val;
@@ -7019,16 +7019,16 @@ static void pc_checkbaselevelup_sc(struct map_session_data *sd)
 	nullpo_retv(sd);
 
 	if ((sd->job & MAPID_UPPERMASK) == MAPID_SUPER_NOVICE) {
-		sc_start(NULL, &sd->bl, skill->get_sc_type(PR_KYRIE), 100, 1, skill->get_time(PR_KYRIE, 1));
-		sc_start(NULL, &sd->bl, skill->get_sc_type(PR_IMPOSITIO), 100, 1, skill->get_time(PR_IMPOSITIO, 1));
-		sc_start(NULL, &sd->bl, skill->get_sc_type(PR_MAGNIFICAT), 100, 1, skill->get_time(PR_MAGNIFICAT, 1));
-		sc_start(NULL, &sd->bl, skill->get_sc_type(PR_GLORIA), 100, 1, skill->get_time(PR_GLORIA, 1));
-		sc_start(NULL, &sd->bl, skill->get_sc_type(PR_SUFFRAGIUM), 100, 1, skill->get_time(PR_SUFFRAGIUM, 1));
+		sc_start(NULL, &sd->bl, skill->get_sc_type(PR_KYRIE), 100, 1, skill->get_time(PR_KYRIE, 1), PR_KYRIE);
+		sc_start(NULL, &sd->bl, skill->get_sc_type(PR_IMPOSITIO), 100, 1, skill->get_time(PR_IMPOSITIO, 1), PR_IMPOSITIO);
+		sc_start(NULL, &sd->bl, skill->get_sc_type(PR_MAGNIFICAT), 100, 1, skill->get_time(PR_MAGNIFICAT, 1), PR_MAGNIFICAT);
+		sc_start(NULL, &sd->bl, skill->get_sc_type(PR_GLORIA), 100, 1, skill->get_time(PR_GLORIA, 1), PR_GLORIA);
+		sc_start(NULL, &sd->bl, skill->get_sc_type(PR_SUFFRAGIUM), 100, 1, skill->get_time(PR_SUFFRAGIUM, 1), PR_SUFFRAGIUM);
 		if (sd->state.snovice_dead_flag)
 			sd->state.snovice_dead_flag = 0; //Reenable steelbody resurrection on dead.
 	} else if ((sd->job & MAPID_BASEMASK) == MAPID_TAEKWON) {
-		sc_start(NULL, &sd->bl, skill->get_sc_type(AL_INCAGI), 100, 10, 600000);
-		sc_start(NULL, &sd->bl, skill->get_sc_type(AL_BLESSING), 100, 10, 600000);
+		sc_start(NULL, &sd->bl, skill->get_sc_type(AL_INCAGI), 100, 10, 600000, AL_INCAGI);
+		sc_start(NULL, &sd->bl, skill->get_sc_type(AL_BLESSING), 100, 10, 600000, AL_BLESSING);
 	}
 }
 
@@ -8015,7 +8015,7 @@ static int pc_sub_skillatk_bonus(struct map_session_data *sd, uint16 skill_id)
 	nullpo_ret(sd);
 
 	ARR_FIND(0, ARRAYLENGTH(sd->subskill), i, sd->subskill[i].id == skill_id);
-	
+
 	if (i < ARRAYLENGTH(sd->subskill))
 		bonus = sd->subskill[i].val;
 
@@ -8337,7 +8337,7 @@ static int pc_dead(struct map_session_data *sd, struct block_list *src)
 			ssd->status.manner -= 5;
 
 			if (ssd->status.manner < 0)
-				sc_start(NULL, src, SC_NOCHAT, 100, 0, 0);
+				sc_start(NULL, src, SC_NOCHAT, 100, 0, 0, 0);
 
 #if 0
 			// PK/Karma system code (not enabled yet) [celest]
@@ -8395,7 +8395,7 @@ static int pc_dead(struct map_session_data *sd, struct block_list *src)
 			if (battle_config.pc_invincible_time != 0)
 				pc->setinvincibletimer(sd, battle_config.pc_invincible_time);
 
-			sc_start(NULL, &sd->bl, skill->get_sc_type(MO_STEELBODY), 100, 1, skill->get_time(MO_STEELBODY, 1));
+			sc_start(NULL, &sd->bl, skill->get_sc_type(MO_STEELBODY), 100, 1, skill->get_time(MO_STEELBODY, 1), MO_STEELBODY);
 
 			if (map_flag_gvg2(sd->bl.m))
 				pc->respawn_timer(INVALID_TIMER, timer->gettick(), sd->bl.id, 0);
@@ -8891,7 +8891,7 @@ static int pc_setparam(struct map_session_data *sd, int type, int64 val)
 	case SP_MANNER:
 		sd->status.manner = (int)val;
 		if( val < 0 )
-			sc_start(NULL, &sd->bl, SC_NOCHAT, 100, 0, 0);
+			sc_start(NULL, &sd->bl, SC_NOCHAT, 100, 0, 0, 0);
 		else {
 			status_change_end(&sd->bl, SC_NOCHAT, INVALID_TIMER);
 			clif->manner_message(sd, 5);
@@ -9033,7 +9033,7 @@ static int pc_itemheal(struct map_session_data *sd, int itemid, int hp, int sp)
 		if (sd->sc.data[SC_BITESCAR]) {
 			hp = 0;
 		}
-		
+
 		if (sd->sc.data[SC_NO_RECOVER_STATE]) {
 			hp = 0;
 			sp = 0;
@@ -9599,7 +9599,7 @@ static int pc_setcart(struct map_session_data *sd, int type)
 			if( !sd->sc.data[SC_PUSH_CART] ) /* first time, so fill cart data */
 				clif->cartList(sd);
 			clif->updatestatus(sd, SP_CARTINFO);
-			sc_start(NULL,&sd->bl, SC_PUSH_CART, 100, type, 0);
+		        sc_start(NULL, &sd->bl, SC_PUSH_CART, 100, type, 0, MC_PUSHCART);
 			clif->sc_load(&sd->bl, sd->bl.id, AREA, status->get_sc_icon(SC_ON_PUSH_CART), type, 0, 0);
 			if( sd->sc.data[SC_PUSH_CART] )/* forcefully update */
 				sd->sc.data[SC_PUSH_CART]->val1 = type;
@@ -9678,7 +9678,7 @@ static void pc_setmadogear(struct map_session_data *sd, bool flag, enum mado_typ
 		if ((sd->job & MAPID_THIRDMASK) == MAPID_MECHANIC) {
 			pc->setoption(sd, sd->sc.option|OPTION_MADOGEAR);
 #if PACKETVER_MAIN_NUM >= 20191120 || PACKETVER_RE_NUM >= 20191106
-			sc_start(&sd->bl, &sd->bl, SC_MADOGEAR, 100, (int)mtype, INFINITE_DURATION);
+			sc_start(&sd->bl, &sd->bl, SC_MADOGEAR, 100, (int)mtype, INFINITE_DURATION, 0);
 #endif
 		}
 	} else if (pc_ismadogear(sd)) {
@@ -11359,9 +11359,9 @@ static void pc_overheat(struct map_session_data *sd, int val)
 
 	heat = max(0,heat); // Avoid negative HEAT
 	if( heat >= limit[skill_lv] )
-		sc_start(NULL,&sd->bl,SC_OVERHEAT,100,0,1000);
+		sc_start(NULL, &sd->bl, SC_OVERHEAT, 100, 0, 1000, 0);
 	else
-		sc_start(NULL,&sd->bl,SC_OVERHEAT_LIMITPOINT,100,heat,30000);
+		sc_start(NULL, &sd->bl, SC_OVERHEAT_LIMITPOINT, 100, heat, 30000, 0);
 
 	return;
 }
@@ -12015,7 +12015,7 @@ static bool pc_read_attr_fix_db(void)
 				battle->attr_fix_table[i][j][k] = 100;
 		}
 	}
-	
+
 	char filepath[256];
 	libconfig->format_db_path(DBPATH"attr_fix.conf", filepath, sizeof(filepath));
 
@@ -12055,7 +12055,7 @@ static bool pc_read_attr_fix_db(void)
 #endif // ENABLE_CASE_CHECK
 
 	libconfig->destroy(&attr_fix_conf);
-	
+
 	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
 	return true;
 }
@@ -12101,7 +12101,7 @@ static int pc_readdb(void)
 	// reset then read statspoint
 	memset(pc->statp,0,sizeof(pc->statp));
 	int i = 1;
-	
+
 	char line[24000];
 	sprintf(line, "%s/"DBPATH"statpoint.txt", map->db_path);
 	FILE *fp = fopen(line, "r");
@@ -12717,7 +12717,7 @@ static void pc_check_supernovice_call(struct map_session_data *sd, const char *m
 				sd->state.snovice_call_flag = 3;
 			break;
 		case 3:
-			sc_start(NULL, &sd->bl, skill->get_sc_type(MO_EXPLOSIONSPIRITS), 100, 17, skill->get_time(MO_EXPLOSIONSPIRITS, 5)); //Lv17-> +50 critical (noted by Poki) [Skotlex]
+			sc_start(NULL, &sd->bl, skill->get_sc_type(MO_EXPLOSIONSPIRITS), 100, 17, skill->get_time(MO_EXPLOSIONSPIRITS, 5), MO_EXPLOSIONSPIRITS); // Lv17-> +50 critical (noted by Poki) [Skotlex]
 			clif->skill_nodamage(&sd->bl, &sd->bl, MO_EXPLOSIONSPIRITS, 5, 1);  // prayer always shows successful Lv5 cast and disregards noskill restrictions
 			sd->state.snovice_call_flag = 0;
 			break;

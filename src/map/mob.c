@@ -553,7 +553,7 @@ static bool mob_ksprotected(struct block_list *src, struct block_list *target)
 	} while(0);
 
 	status->change_start(NULL, target, SC_KSPROTECTED, 10000, sd->bl.id, sd->state.noks,
-	                     sd->status.party_id, sd->status.guild_id, battle_config.ksprotection, SCFLAG_NONE);
+	                     sd->status.party_id, sd->status.guild_id, battle_config.ksprotection, SCFLAG_NONE, 0);
 
 	return false;
 }
@@ -682,7 +682,7 @@ static int mob_once_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y
 			/// Behold Aegis' masterful decisions yet again...
 			/// "I understand the "Aggressive" part, but the "Can Move" and "Can Attack" is just stupid" [Poki]
 			sc_start4(NULL, &md->bl, SC_MODECHANGE, 100, 1, 0, MD_AGGRESSIVE|MD_CANATTACK|MD_CANMOVE|MD_ANGRY,
-				  0, 60000);
+				  0, 60000, 0);
 		}
 	}
 
@@ -3386,19 +3386,19 @@ static int mob_summonslave(struct mob_data *md2, int *value, int amount, uint16 
 			switch (battle_config.slaves_inherit_mode) {
 			case 1: /// Always aggressive.
 				if ((md->status.mode & MD_AGGRESSIVE) == 0)
-					sc_start4(NULL, &md->bl, SC_MODECHANGE, 100, 1, 0, MD_AGGRESSIVE, 0, 0);
+					sc_start4(NULL, &md->bl, SC_MODECHANGE, 100, 1, 0, MD_AGGRESSIVE, 0, 0, 0);
 
 				break;
 			case 2: /// Always passive.
 				if ((md->status.mode & MD_AGGRESSIVE) == MD_AGGRESSIVE)
-					sc_start4(NULL, &md->bl, SC_MODECHANGE, 100, 1, 0, 0, MD_AGGRESSIVE, 0);
+					sc_start4(NULL, &md->bl, SC_MODECHANGE, 100, 1, 0, 0, MD_AGGRESSIVE, 0, 0);
 
 				break;
 			default: /// Copy master.
 				if ((md2->status.mode & MD_AGGRESSIVE) == MD_AGGRESSIVE)
-					sc_start4(NULL, &md->bl, SC_MODECHANGE, 100, 1, 0, MD_AGGRESSIVE, 0, 0);
+					sc_start4(NULL, &md->bl, SC_MODECHANGE, 100, 1, 0, MD_AGGRESSIVE, 0, 0, 0);
 				else
-					sc_start4(NULL, &md->bl, SC_MODECHANGE, 100, 1, 0, 0, MD_AGGRESSIVE, 0);
+					sc_start4(NULL, &md->bl, SC_MODECHANGE, 100, 1, 0, 0, MD_AGGRESSIVE, 0, 0);
 				break;
 			}
 		}

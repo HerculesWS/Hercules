@@ -215,7 +215,7 @@ static bool clan_join(struct map_session_data *sd, int clan_id)
 	sd->status.clan_id = c->clan_id;
 	sd->clan = c;
 
-	sc_start2(NULL, &sd->bl, SC_CLAN_INFO, 10000, 0, c->clan_id, INFINITE_DURATION);
+	sc_start2(NULL, &sd->bl, SC_CLAN_INFO, 10000, 0, c->clan_id, INFINITE_DURATION, 0);
 	status_calc_pc(sd, SCO_FORCE);
 
 	chrif->save(sd, 0);
@@ -315,7 +315,7 @@ static void clan_member_online(struct map_session_data *sd, bool first)
 	sd->clan = c;
 	c->connect_member++;
 
-	sc_start2(NULL, &sd->bl, SC_CLAN_INFO, 10000, 0, c->clan_id, INFINITE_DURATION);
+	sc_start2(NULL, &sd->bl, SC_CLAN_INFO, 10000, 0, c->clan_id, INFINITE_DURATION, 0);
 
 	if (!first) {
 		// When first called from pc.c we don't need to do status_calc

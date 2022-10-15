@@ -185,8 +185,8 @@ static void macro_detector_process_answer(struct map_session_data *sd, const cha
 		SET_MACRO_BLOCK_ACTIONS(sd, 0);
 
 		// Grant a small buff
-		sc_start(NULL, &sd->bl, skill->get_sc_type(AL_INCAGI), 100, 10, 600000);
-		sc_start(NULL, &sd->bl, skill->get_sc_type(AL_BLESSING), 100, 10, 600000);
+		sc_start(NULL, &sd->bl, skill->get_sc_type(AL_INCAGI), 100, 10, 600000, 0); // skill_ids are set to 0 so GTB doesn't block for this check.
+		sc_start(NULL, &sd->bl, skill->get_sc_type(AL_BLESSING), 100, 10, 600000, 0); // skill_ids are set to 0 so GTB doesn't block for this check.
 
 		// Notify the client
 		clif->macro_detector_status(sd, MCD_GOOD);

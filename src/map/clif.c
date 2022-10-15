@@ -3545,7 +3545,7 @@ static int clif_hpmeter_sub(struct block_list *bl, va_list ap)
 	if( !pc_has_permission(tsd, PC_PERM_VIEW_HPMETER) )
 		return 0;
 
-	clif->hpmeter_single(tsd->fd, sd->status.account_id, sd->battle_status.hp, sd->battle_status.max_hp, sd->battle_status.sp, sd->battle_status.max_sp); 
+	clif->hpmeter_single(tsd->fd, sd->status.account_id, sd->battle_status.hp, sd->battle_status.max_hp, sd->battle_status.sp, sd->battle_status.max_sp);
 	return 0;
 }
 
@@ -8084,7 +8084,7 @@ static void clif_devotion(struct block_list *src, struct map_session_data *tsd)
 }
 
  /**
-  * Server tells clients nearby 'sd' (and itself) to display spirits spheres 
+  * Server tells clients nearby 'sd' (and itself) to display spirits spheres
   * Notifies clients in an area or self of an object's spirits.
   * 01d0 <id>.L <amount>.W (ZC_SPIRITS)
   * 01e1 <id>.L <amount>.W (ZC_SPIRITS2)
@@ -9672,7 +9672,7 @@ static void clif_refresh(struct map_session_data *sd)
 	clif->updatestatus(sd,SP_INT);
 	clif->updatestatus(sd,SP_DEX);
 	clif->updatestatus(sd,SP_LUK);
-	
+
 	// Resume some options that are still ticking after refreshed e.g: SC_BLIND [KeiKun]
 	if (sd->sc.opt2 != 0)
 		clif->changeoption(&sd->bl);
@@ -11337,7 +11337,7 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 		}
 
 		if (sd->status.manner < 0)
-			sc_start(NULL, &sd->bl, SC_NOCHAT, 100, 0, 0);
+			sc_start(NULL, &sd->bl, SC_NOCHAT, 100, 0, 0, 0);
 
 		int lv = pc->checkskill(sd,SG_KNOWLEDGE);
 
@@ -11345,7 +11345,7 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 		if (lv > 0) {
 			for (int i = 0; i < MAX_PC_FEELHATE; i++) {
 				if (sd->bl.m == sd->feel_map[i].m) {
-					sc_start(NULL, &sd->bl, SC_KNOWLEDGE, 100, lv, skill->get_time(SG_KNOWLEDGE, lv));
+					sc_start(NULL, &sd->bl, SC_KNOWLEDGE, 100, lv, skill->get_time(SG_KNOWLEDGE, lv), SG_KNOWLEDGE);
 					break;
 				}
 			}
@@ -16362,8 +16362,7 @@ static void clif_parse_GMReqNoChat(int fd, struct map_session_data *sd)
 
 		if (dstsd->status.manner < value) {
 			dstsd->status.manner -= value;
-			sc_start(NULL,&dstsd->bl,SC_NOCHAT,100,0,0);
-
+			sc_start(NULL, &dstsd->bl, SC_NOCHAT, 100, 0, 0, 0);
 		} else {
 			dstsd->status.manner = 0;
 			status_change_end(&dstsd->bl, SC_NOCHAT, INVALID_TIMER);
@@ -16606,7 +16605,7 @@ static void clif_parse_NoviceExplosionSpirits(int fd, struct map_session_data *s
 			int percent = (int)( ( (float)sd->status.base_exp/(float)next )*1000. );
 
 			if( percent && ( percent%100 ) == 0 ) {// 10.0%, 20.0%, ..., 90.0%
-				sc_start(NULL,&sd->bl, skill->get_sc_type(MO_EXPLOSIONSPIRITS), 100, 17, skill->get_time(MO_EXPLOSIONSPIRITS, 5)); //Lv17-> +50 critical (noted by Poki) [Skotlex]
+				sc_start(NULL, &sd->bl, skill->get_sc_type(MO_EXPLOSIONSPIRITS), 100, 17, skill->get_time(MO_EXPLOSIONSPIRITS, 5), MO_EXPLOSIONSPIRITS); // Lv17-> +50 critical (noted by Poki) [Skotlex]
 				clif->skill_nodamage(&sd->bl, &sd->bl, MO_EXPLOSIONSPIRITS, 5, 1);  // prayer always shows successful Lv5 cast and disregards noskill restrictions
 			}
 		}
@@ -18634,7 +18633,7 @@ static void clif_bossmapinfo(int fd, struct mob_data *md, enum bossmap_info_type
 
 	switch (flag) {
 	case BOSS_INFO_NONE:
-		break; 
+		break;
 	case BOSS_INFO_ALIVE:
 	case BOSS_INFO_ALIVE_WITHMSG:
 		if (md != NULL) {

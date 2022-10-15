@@ -3094,7 +3094,7 @@ static int64 battle_calc_damage(struct block_list *src, struct block_list *bl, s
 		{
 			clif->skill_nodamage(bl,src,GC_WEAPONBLOCKING,1,1);
 			d->dmg_lv = ATK_BLOCK;
-			sc_start2(src,bl,SC_COMBOATTACK,100,GC_WEAPONBLOCKING,src->id,2000);
+			sc_start2(src, bl, SC_COMBOATTACK, 100, GC_WEAPONBLOCKING, src->id, 2000, GC_WEAPONBLOCKING);
 			return 0;
 		}
 		if ((sce=sc->data[SC_AUTOGUARD]) && flag&BF_WEAPON && !(skill->get_nk(skill_id)&NK_NO_CARDFIX_ATK) && rnd()%100 < sce->val2) {
@@ -3142,7 +3142,7 @@ static int64 battle_calc_damage(struct block_list *src, struct block_list *bl, s
 			clif->skill_nodamage(bl, bl, RK_MILLENNIUMSHIELD, 1, 1);
 			sce->val3 -= (int)cap_value(damage,INT_MIN,INT_MAX); // absorb damage
 			d->dmg_lv = ATK_BLOCK;
-			sc_start(src,bl,SC_STUN,15,0,skill->get_time2(RK_MILLENNIUMSHIELD,sce->val1)); // There is a chance to be stunned when one shield is broken.
+			sc_start(src, bl, SC_STUN, 15, 0, skill->get_time2(RK_MILLENNIUMSHIELD, sce->val1), RK_MILLENNIUMSHIELD); // There is a chance to be stunned when one shield is broken.
 			if( sce->val3 <= 0 ) { // Shield Down
 				sce->val2--;
 				if( sce->val2 > 0 ) {
@@ -3166,7 +3166,7 @@ static int64 battle_calc_damage(struct block_list *src, struct block_list *bl, s
 			if (t_sd && pc_issit(t_sd)) pc->setstand(t_sd); //Stand it to dodge.
 			clif->skill_nodamage(bl,bl,TK_DODGE,1,1);
 			if (!sc->data[SC_COMBOATTACK])
-				sc_start4(src, bl, SC_COMBOATTACK, 100, TK_JUMPKICK, src->id, 1, 0, 2000);
+				sc_start4(src, bl, SC_COMBOATTACK, 100, TK_JUMPKICK, src->id, 1, 0, 2000, TK_JUMPKICK);
 			return 0;
 		}
 
@@ -3393,7 +3393,7 @@ static int64 battle_calc_damage(struct block_list *src, struct block_list *bl, s
 				skill->break_equip(src, EQP_WEAPON, 3000, BCT_SELF);
 			// 30% chance to reduce monster's ATK by 25% for 10 seconds.
 			if( src->type == BL_MOB )
-				sc_start(bl,src, SC_NOEQUIPWEAPON, 30, 0, skill->get_time2(RK_STONEHARDSKIN, sce->val1));
+				sc_start(bl,src, SC_NOEQUIPWEAPON, 30, 0, skill->get_time2(RK_STONEHARDSKIN, sce->val1), 0);
 			if( sce->val2 <= 0 )
 				status_change_end(bl, SC_STONEHARDSKIN, INVALID_TIMER);
 		}
@@ -3499,7 +3499,7 @@ static int64 battle_calc_damage(struct block_list *src, struct block_list *bl, s
 		}
 
 		if( sc->data[SC__DEADLYINFECT] && flag&BF_SHORT && damage > 0 && rnd()%100 < 30 + 10 * sc->data[SC__DEADLYINFECT]->val1 && !is_boss(src) )
-			status->change_spread(bl, src); // Deadly infect attacked side
+			status->change_spread(bl, src, skill_id); // Deadly infect attacked side
 
 		if (t_sd && damage > 0 && (sce = sc->data[SC_GENTLETOUCH_ENERGYGAIN]) != NULL) {
 			if ( rnd() % 100 < sce->val2 )
@@ -3539,11 +3539,11 @@ static int64 battle_calc_damage(struct block_list *src, struct block_list *bl, s
 				short rate = 100;
 				if ( s_sc->data[SC_POISONINGWEAPON]->val1 == 9 ) // Oblivion Curse gives a 2nd success chance after the 1st one passes which is reducible. [Rytech]
 					rate = 100 - tstatus->int_ * 4 / 5;
-				sc_start(src,bl,s_sc->data[SC_POISONINGWEAPON]->val2,rate,s_sc->data[SC_POISONINGWEAPON]->val1,skill->get_time2(GC_POISONINGWEAPON,1) - (tstatus->vit + tstatus->luk) / 2 * 1000);
+				sc_start(src, bl, s_sc->data[SC_POISONINGWEAPON]->val2, rate, s_sc->data[SC_POISONINGWEAPON]->val1, skill->get_time2(GC_POISONINGWEAPON, 1) - (tstatus->vit + tstatus->luk) / 2 * 1000, GC_POISONINGWEAPON);
 			}
 		}
 		if( s_sc->data[SC__DEADLYINFECT] && flag&BF_SHORT && damage > 0 && rnd()%100 < 30 + 10 * s_sc->data[SC__DEADLYINFECT]->val1 && !is_boss(src) )
-			status->change_spread(src, bl);
+			status->change_spread(src, bl, skill_id);
 		if (s_sc->data[SC_SHIELDSPELL_REF] && s_sc->data[SC_SHIELDSPELL_REF]->val1 == 1 && damage > 0)
 			skill->break_equip(bl,EQP_ARMOR,10000,BCT_ENEMY );
 		if (s_sc->data[SC_STYLE_CHANGE] && rnd()%2) {
@@ -4871,7 +4871,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 			wd.div_ = skill->get_num(GS_CHAINACTION, skill_lv);
 			wd.type = BDT_MULTIHIT;
 
-			sc_start(src, src, SC_QD_SHOT_READY, 100, target->id, skill->get_time(RL_QD_SHOT, 1));
+			sc_start(src, src, SC_QD_SHOT_READY, 100, target->id, skill->get_time(RL_QD_SHOT, 1), RL_QD_SHOT);
 		}
 		else if(sc && sc->data[SC_FEARBREEZE] && sd->weapontype1==W_BOW
 			&& (i = sd->equip_index[EQI_AMMO]) >= 0 && sd->inventory_data[i] && sd->status.inventory[i].amount > 1){
@@ -6561,11 +6561,11 @@ static enum damage_lv battle_weapon_attack(struct block_list *src, struct block_
 		uint16 skill_lv = tsc->data[SC_BLADESTOP_WAIT]->val1;
 		int duration = skill->get_time2(MO_BLADESTOP,skill_lv);
 		status_change_end(target, SC_BLADESTOP_WAIT, INVALID_TIMER);
-		if(sc_start4(target, src, SC_BLADESTOP, 100, sd?pc->checkskill(sd, MO_BLADESTOP):5, 0, 0, target->id, duration)) {
+		if (sc_start4(target, src, SC_BLADESTOP, 100, sd ? pc->checkskill(sd, MO_BLADESTOP) : 5, 0, 0, target->id, duration, MO_BLADESTOP)) {
 			//Target locked.
 			clif->damage(src, target, sstatus->amotion, 1, 0, 1, BDT_NORMAL, 0); //Display MISS.
 			clif->bladestop(target, src->id, 1);
-			sc_start4(target, target, SC_BLADESTOP, 100, skill_lv, 0, 0, src->id, duration);
+			sc_start4(target, target, SC_BLADESTOP, 100, skill_lv, 0, 0, src->id, duration, MO_BLADESTOP);
 			return ATK_BLOCK;
 		}
 	}
@@ -6610,7 +6610,7 @@ static enum damage_lv battle_weapon_attack(struct block_list *src, struct block_
 
 		if( tsc && tsc->data[SC_MTF_MLEATKED] && rnd()%100 < 20 )
 			clif->skill_nodamage(target, target, SM_ENDURE, 5,
-				sc_start(target,target, SC_ENDURE, 100, 5, skill->get_time(SM_ENDURE, 5)));
+				sc_start(target, target, SC_ENDURE, 100, 5, skill->get_time(SM_ENDURE, 5), SM_ENDURE));
 	}
 
 	if(tsc && tsc->data[SC_KAAHI] && tsc->data[SC_KAAHI]->val4 == INVALID_TIMER && tstatus->hp < tstatus->max_hp)

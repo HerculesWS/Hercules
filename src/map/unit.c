@@ -1328,10 +1328,10 @@ static int unit_resume_running(int tid, int64 tick, int id, intptr_t data)
 	nullpo_ret(ud);
 	if(sd && pc_isridingwug(sd))
 		clif->skill_nodamage(ud->bl,ud->bl,RA_WUGDASH,ud->skill_lv,
-		                     sc_start4(ud->bl,ud->bl,skill->get_sc_type(RA_WUGDASH),100,ud->skill_lv,unit->getdir(ud->bl),0,0,1));
+			sc_start4(ud->bl, ud->bl, skill->get_sc_type(RA_WUGDASH), 100, ud->skill_lv, unit->getdir(ud->bl), 0, 0, 1, RA_WUGDASH));
 	else
 		clif->skill_nodamage(ud->bl,ud->bl,TK_RUN,ud->skill_lv,
-		                     sc_start4(ud->bl,ud->bl,skill->get_sc_type(TK_RUN),100,ud->skill_lv,unit->getdir(ud->bl),0,0,0));
+			sc_start4(ud->bl, ud->bl, skill->get_sc_type(TK_RUN), 100, ud->skill_lv, unit->getdir(ud->bl), 0, 0, 0, TK_RUN));
 
 	if (sd) clif->walkok(sd);
 
