@@ -18889,7 +18889,7 @@ static void clif_quest_add(struct map_session_data *sd, struct quest *qd)
 	nullpo_retv(qd);
 
 	qi = quest->db(qd->quest_id);
-	Assert_retv(qi->objectives_count < MAX_QUEST_OBJECTIVES);
+	Assert_retv(qi->objectives_count <= MAX_QUEST_OBJECTIVES);
 
 	len = sizeof(struct packet_quest_add_header)
 	            + MAX_QUEST_OBJECTIVES * sizeof(struct packet_quest_hunt_sub); // >= than the actual length
@@ -18970,7 +18970,7 @@ static void clif_quest_update_objective(struct map_session_data *sd, struct ques
 	nullpo_retv(qd);
 
 	qi = quest->db(qd->quest_id);
-	Assert_retv(qi->objectives_count < MAX_QUEST_OBJECTIVES);
+	Assert_retv(qi->objectives_count <= MAX_QUEST_OBJECTIVES);
 
 	len = sizeof(struct packet_quest_update_header)
 	            + MAX_QUEST_OBJECTIVES * sizeof(struct packet_quest_update_hunt); // >= than the actual length
@@ -19016,7 +19016,7 @@ static void clif_quest_notify_objective(struct map_session_data *sd, struct ques
 	nullpo_retv(qd);
 
 	qi = quest->db(qd->quest_id);
-	Assert_retv(qi->objectives_count < MAX_QUEST_OBJECTIVES);
+	Assert_retv(qi->objectives_count <= MAX_QUEST_OBJECTIVES);
 
 	len = sizeof(struct packet_quest_hunt_info)
 	            + MAX_QUEST_OBJECTIVES * sizeof(struct packet_quest_hunt_info_sub); // >= than the actual length
