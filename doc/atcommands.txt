@@ -756,6 +756,17 @@ Deletes all items in cart, but does not remove the cart.
 
 ---------------------------------------
 
+@quest <action> <quest id>
+
+Changes player's quest log, performing "action" on "quest id".
+
+action:
+-- add or set: Includes "quest id" in player's quest log
+-- del or delete: Removes "quest id" from player's quest log
+-- complete: Marks "quest id" as complete in player's quest log (must have the quest)
+
+---------------------------------------
+
 @cleanarea
 @cleanmap
 

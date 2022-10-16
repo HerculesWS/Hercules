@@ -41,7 +41,7 @@ struct config_setting_t;
  * Defines
  **/
 #define ATCOMMAND_LENGTH 50
-#define MAX_MSG 1530
+#define MAX_MSG 1543
 #define msg_txt(idx) atcommand->msg(idx)
 #define msg_sd(sd,msg_number) atcommand->msgsd((sd),(msg_number))
 #define msg_fd(fd,msg_number) atcommand->msgfd((fd),(msg_number))
@@ -148,6 +148,7 @@ struct atcommand_interface {
 	int (*mutearea_sub) (struct block_list *bl,va_list ap);
 	void (*getring) (struct map_session_data* sd);
 	void (*channel_help) (int fd, const char *command, bool can_create);
+	void (*quest_help) (int fd);
 	/* */
 	void (*commands_sub) (struct map_session_data* sd, const int fd, AtCommandType type);
 	void (*cmd_db_clear) (void);
