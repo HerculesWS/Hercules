@@ -19028,10 +19028,19 @@ static void clif_quest_notify_objective(struct map_session_data *sd, struct ques
 	packet->PacketType = questUpdateType2;
 
 	for (i = 0; i < qi->objectives_count; i++) {
+		int mob_id = qi->objectives[i].mob;
+		if (mob_id == 0) {
+			if (quest_mobtypeisenabled(qi->objectives[i].mobtype)) {
+				mob_id = QUEST_MOBTYPE_ID;
+			} else if (qi->objectives[i].mapid >= 0) {
+				mob_id = QUEST_MAPWIDE_ID;
+			}
+		}
+
 		real_len += sizeof(packet->info[i]);
 
 		packet->info[i].questID = qd->quest_id;
-		packet->info[i].mob_id = qi->objectives[i].mob;
+		packet->info[i].mob_id = mob_id;
 		packet->info[i].maxCount = qi->objectives[i].count;
 		packet->info[i].count = qd->count[i];
 	}
