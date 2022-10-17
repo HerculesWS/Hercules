@@ -1,0 +1,702 @@
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2017  Hercules Dev Team
+//= Copyright (C) Ridley
+//= Copyright (C) Steph
+//= Copyright (C) AtlantisRO
+//= Copyright (C) Asheraf
+//= Copyright (C) Zarbony
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Horror Toy Factory Enchants
+//================= Description ===========================================
+//= Adds enchantments to many items in exchange for Bloody Coins.
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
+
+xmas,240,291,3	script	Billy The Golden Hands#1	4_F_05,{
+	if (checkweight(Knife, 1) == 0) {
+		mes("You have too many items in your inventory! Please remove some items before coming back.");
+		close();
+	}
+	if (MaxWeight - Weight < 10000) {
+		mes("Please reduce your inventory weight before coming back.");
+		close();
+	}
+	disable_items();
+	mes("[Billy The Golden Hands]");
+	mes("Did you bring those bloody coins? If you enough of them, I'll sell you some items!");
+	next();
+	setarray(.@xm_item[0], Closedmind_Box, Lush_Rose, C_Lush_Rose, C_SantaHairband, C_Red_Bonnet, Old_Parasol, Hot_Tee, Sweet_Canape, Holy_Water, Water_Of_Darkness);
+	setarray(.@xm_bill[0], 100, 500, 1000, 500, 500, 1000, 7, 5, 1, 1);
+	for (.@i = 0; .@i < getarraysize(.@xm_item); ++.@i)
+		.@menulist$ += sprintf(_$("%s (%d Coins):"), getitemname(.@xm_item[.@i]), .@xm_bill[.@i]);
+	.@choice = select("Cancel", .@menulist$) - 2;
+	if (.@choice == -1) {
+		mes("[Billy The Golden Hands]");
+		mes("I look forward to your visit next time.");
+		close();
+	}
+	if (countitem(Bloody_Coin) >= .@xm_bill[.@choice]) {
+		mes("[Billy The Golden Hands]");
+		mesf("^0000ff%s^000000 needs a total of ^0000ff%d^000000 bloody coins. Proceed?", getitemname(.@xm_item[.@choice]), .@xm_bill[.@choice]);
+		next();
+		if (select("Cancel", "Buy") == 1) {
+			mes("[Billy The Golden Hands]");
+			mes("You're a troublesome customer aren't you!? Come back once you've made up your mind!");
+			close();
+		}
+		if (countitem(Bloody_Coin) >= .@xm_bill[.@choice]) {
+			delitem(Bloody_Coin, .@xm_bill[.@choice]);
+			getitem(.@xm_item[.@choice], 1);
+			mes("[Billy The Golden Hands]");
+			mes("Thank you for your patronage.");
+			close();
+		} else {
+			mes("[Billy The Golden Hands]");
+			mesf("^0000ff%s^000000 needs a total of ^0000ff%d^000000 Bloody Coins. You do not have enough!", getitemname(.@xm_item[.@choice]), .@xm_bill[.@choice]);
+			close();
+		}
+	} else {
+		mes("[Billy The Golden Hands]");
+		mesf("^0000ff%s^000000 needs a total of ^0000ff%d^000000 Bloody Coins. You do not have enough!", getitemname(.@xm_item[.@choice]), .@xm_bill[.@choice]);
+		close();
+	}
+}
+
+xmas,240,297,3	script	Kain the Orphan#1	4_M_06,{
+	if (checkweight(Knife, 1) == 0) {
+		mes("You have too many items in your inventory! Please remove some items before coming back.");
+		close();
+	}
+	if (MaxWeight - Weight < 10000) {
+		mes("Please reduce your inventory weight before coming back.");
+		close();
+	}
+	disable_items();
+	mes("[Kain the Orphan]");
+	mes("I can make you some nice items if you bring me the required materials.");
+	next();
+	switch (select("I don't require them", "I want to make ^0000ffCeline's Ribbon^000000", "I want to make ^0000ffNoble Cross^000000", "I want to make ^0000ffEvil Spirit's Silk Glove^000000")) {
+	case 1:
+		mes("[Kain the Orphan]");
+		mes("You should've said so earlier. Come back if you need them!");
+		close();
+	case 2:
+		mes("[Kain the Orphan]");
+		mes("Woah, you sure have an eye for nice items.");
+		next();
+		mes("[Kain the Orphan]");
+		mes("^0000ffCeline's Ribbon^000000 requires a total of ^0000ff 1000 ^000000 Bloody Coins and ^0000ff Fresh Rose refined above Level 9 ^000000. Did you bring them?");
+		next();
+		if (select("I do not have them now.", "Proceed with the exchange.") == 1) {
+			mes("[Kain the Orphan]");
+			mes("I'll repeat what I need. Remember to bring them to me.");
+			next();
+			mes("[Kain the Orphan]");
+			mes("^0000ffCeline's Ribbon^000000requires a total of ^0000ff 1000 ^000000 Bloody Coins and ^0000ff Fresh Rose refined above Level 9^000000!");
+			close();
+		}
+		mes("[Kain the Orphan]");
+		mes("Do you wish to proceed? All current ^ff0000Refinement, Enchantments, Cards will be removed and there will not be a refund.^000000");
+		next();
+		if (select("Next time.", "Proceed with the exchange.") == 1) {
+			mes("[Kain the Orphan]");
+			mes("A stubborn person indeed. Come back next time if you need anything.");
+			close();
+		}
+		.@eq_num = EQI_HEAD_TOP;	// Official script sets value to EQI_HEAD_LOW, but gear is EQI_HEAD_TOP in db.
+		if (getequipisidentify(.@eq_num) == 0) {
+			mes("[Kain the Orphan]");
+			mes("You do not have anything equipped. Please equip the +9 Fresh Rose before coming back.");
+			close();
+		}
+		if (getequipid(.@eq_num) != Lush_Rose) {
+			mes("[Kain the Orphan]");
+			mes("What you have there is not a Fresh Rose! Make sure you have the right item!");
+			close();
+		}
+		if (getequiprefinerycnt(.@eq_num) < 9) {
+			mes("[Kain the Orphan]");
+			mes("The Fresh Rose equipped does not meet the Level 9 refinement requirement.");
+			close();
+		}
+		if (countitem(Bloody_Coin) > 999) {
+			delitem(Bloody_Coin, 1000);
+			delequip(.@eq_num);
+			getitem(Celines_Ribbon, 1);
+			mes("[Kain the Orphan]");
+			mes("Transaction Completed.");
+			close();
+		} else {
+			mes("[Kain the Orphan]");
+			mes("You do not have 1000 Bloody Coins. Please reconfirm the amounts.");
+			close();
+		}
+		break;
+	case 3:
+		mes("[Kain the Orphan]");
+		mes("Woah, you sure have an eye for nice items.");
+		next();
+		mes("[Kain the Orphan]");
+		mes("^0000ffNoble Cross^000000 requires a total of ^0000ff 2000 ^000000 Bloody Coins and ^0000ff Grand Cross (1)^000000. Did you bring them?");
+		next();
+		if (select("I do not have them now.", "Proceed with the exchange.") == 1) {
+			mes("[Kain the Orphan]");
+			mes("I'll repeat what I need. Remember to bring them to me.");
+			next();
+			mes("[Kain the Orphan]");
+			mes("^0000ffNoble Cross^000000 requires a total of ^0000ff 2000 ^000000 Bloody Coins and ^0000ff Grand Cross (1)^000000.");
+			close();
+		}
+		mes("[Kain the Orphan]");
+		mes("Do you wish to proceed? All current ^ff0000Refinement, Enchantments, Cards will be removed and there will not be a refund.^000000");
+		next();
+		if (select("Next time.", "Proceed with the exchange.") == 1) {
+			mes("[Kain the Orphan]");
+			mes("A stubborn person indeed. Come back next time if you need anything.");
+			close();
+		}
+		.@eq_num = EQI_HAND_R;
+		if (getequipisidentify(.@eq_num) == 0) {
+			mes("[Kain the Orphan]");
+			mes("You do not have anything equipped on your right hand! Please equip Grand Cross (1) before coming back.");
+			close();
+		}
+		if (getequipid(.@eq_num) != Grand_Cross_) {
+			mes("[Kain the Orphan]");
+			mes("What you're holding on your right hand is not Grand Cross (1), bring what I need before coming back.");
+			close();
+		}
+		if (countitem(Bloody_Coin) > 1999) {
+			delitem(Bloody_Coin, 2000);
+			delequip(.@eq_num);
+			getitem(Noble_Cross, 1);
+			mes("[Kain the Orphan]");
+			mes("Transaction Completed.");
+			close();
+		} else {
+			mes("[Kain the Orphan]");
+			mes("You do not have 2000 Bloody Coins. Please reconfirm the amounts.");
+			close();
+		}
+		break;
+	case 4:
+		mes("[Kain the Orphan]");
+		mes("Woah, you sure have an eye for nice items.");
+		next();
+		mes("[Kain the Orphan]");
+		mes("^0000ffEvil Spirit's Silk Glove^000000 requires a total of ^0000ff 1000 ^000000 Bloody Coins and ^0000ff 1 Broken Heart, 1 Kind Heart, and 1 Red Lantern^000000. Do you have them?");
+		next();
+		if (select("I do not have them now.", "Proceed with the exchange.") == 1) {
+			mes("[Kain the Orphan]");
+			mes("I'll repeat what I need. Remember to bring them to me.");
+			next();
+			mes("[Kain the Orphan]");
+			mes("^0000ffEvil Spirit's Silk Glove^000000 requires a total of ^0000ff 1000 ^000000 Bloody Coins and ^0000ff 1 Broken Heart, 1 Kind Heart, and 1 Red Lantern^000000.");
+			close();
+		}
+		mes("[Kain the Orphan]");
+		mes("Do you wish to proceed with the exchange? All current ^ff0000Refinement, Enchantments, Cards will be removed and there will not be a refund.^000000");
+		next();
+		if (select("Next time.", "Proceed with the exchange.") == 1) {
+			mes("[Kain the Orphan]");
+			mes("A stubborn person indeed. Come back next time if you need anything.");
+			close();
+		}
+		if (countitem(Bloody_Coin) > 999 && countitem(Hurt_Mind) > 0 && countitem(KindHeart) > 0 && countitem(Red_Lantern) > 0) {
+			delitem(Bloody_Coin, 1000);
+			delitem(Hurt_Mind, 1);
+			delitem(KindHeart, 1);
+			delitem(Red_Lantern, 1);
+			getitem(Evilspirit_Gloves, 1);
+			mes("[Kain the Orphan]");
+			mes("Transaction Completed.");
+			close();
+		} else {
+			mes("[Kain the Orphan]");
+			mes("You did not bring the required materials.");
+			next();
+			mes("[Kain the Orphan]");
+			mes("^0000ffEvil Spirit's Silk Glove^000000 requires a total of ^0000ff 1000 ^000000 Bloody Coins and ^0000ff 1 Broken Heart, 1 Kind Heart, and 1 Red Lantern^000000.");
+			close();
+		}
+	}
+}
+
+xmas,240,294,3	script	Bearded Joe#pa0829	4_M_05,{
+	if (checkweight(Knife, 1) == 0) {
+		mes("You have too many items in your inventory! Please remove some items before coming back.");
+		close();
+	}
+	if (MaxWeight - Weight < 10000) {
+		mes("Please reduce your inventory weight before coming back.");
+		close();
+	}
+	disable_items();
+	mes("[Bearded Joe]");
+	mes("There's no limit to greed in human nature.. What do you need today?");
+	next();
+	setarray(.@eq_num[0], EQI_ACC_L, EQI_HAND_R, EQI_HEAD_TOP, EQI_SHOES);
+	.@s = select("What can you do?", "Enchant ^0000ffAccessory^000000 obtained from Toy Factory", "Enchant ^0000ffWeapon^000000 obtained from Toy Factory", "Enchant ^0000ffHeadgear^000000 obtained from Toy Factory", "Enchant  ^0000ffShoes^000000 obtained from Toy Factory") - 2;
+	if (.@s == -1){
+		mes("[Bearded Joe]");
+		mes("Did you ask what I can do? It's pretty simple, just give me Bloody Coins and I will enchant your equipments obtained from the Toy Factory.");
+		next();
+		mes("[Bearded Joe]");
+		mes("Each enchant costs 15 Bloody coins. Every 15 coins will take up one slot and you can only enchant up to 3 times.");
+		next();
+		mes("[Bearded Joe]");
+		mes("As usual, the more you enchant, the higher the chances of breaking the equipment. I suggest enchanting only 1 or 2 times to be on the safe side. You have to learn how to be grateful with what you have.");
+		close();
+	}
+	if (getequipisidentify(.@eq_num[.@s]) == 0) {
+		mes("[Bearded Joe]");
+		mes("Did you unequip the equipment you want to enchant? Come back after you equip them.");
+		close();
+	}
+	if (getequipisidentify(.@eq_num[.@s]) == 0) {
+		mes("[Bearded Joe]");
+		mes("It will be very dangerous if you unequip the equipment in the process of enchantment.");
+		close();
+	}
+	.@enc_s_n = getequipid(.@eq_num[.@s]);
+	.@compo_num = getequiprefinerycnt(.@eq_num[.@s]);
+	setarray(.@equip_card[0], getequipcardid(.@eq_num[.@s], 0), getequipcardid(.@eq_num[.@s], 1), getequipcardid(.@eq_num[.@s], 2), getequipcardid(.@eq_num[.@s], 3));
+	switch (.@enc_s_n) {
+	case Shadow_Walk_:
+		.@enc_coin = 1;
+		.@sc_type = 2;
+		break;
+	case 2976:
+		.@enc_ts = Red_Lantern;
+		.@enc_coin = 1;
+		.@sc_type = 1;
+		break;
+	case 2977:
+		.@enc_ts = Hurt_Mind;
+		.@enc_coin = 1;
+		.@sc_type = 1;
+		break;
+	case 2978:
+		.@enc_ts = KindHeart;
+		.@enc_coin = 1;
+		.@sc_type = 1;
+		break;
+	case 2980:
+		.@enc_ts = Evilspirit_Gloves;
+		.@enc_coin = 1;
+		.@sc_type = 1;
+		break;
+	case 13442:
+		.@enc_ts = Old_Parasol;
+		.@enc_coin = 1;
+		.@sc_type = 3;
+		break;
+	case 16029:
+		mes("[Bearded Joe]");
+		mes("You have equipped ^0000ffNoble Cross^000000! This isn't something I can enchant.");
+		next();
+		mes("[Bearded Joe]");
+		mes("I've tried it countless times but I have not succeeded in enchanting it even once!");
+		next();
+		mes("[Bearded Joe]");
+		mes("If you'd really like to enchant it, ^0000ffMayo Mayo in Malangdo ^000000might have an idea what to do.");
+		close();
+	case 18848:
+		.@enc_ts = Lush_Rose;
+		.@enc_coin = 1;
+		.@sc_type = 2;
+		break;
+	case 18849:
+		.@enc_ts = Celines_Ribbon;
+		.@enc_coin = 1;
+		.@sc_type = 2;
+		break;
+	}
+	if (.@eq_num[.@s] == EQI_ACC_L) {
+		mes("[Bearded Joe]");
+		mes("There are 2 options for you to choose from. Both of them cost the same at 15 Bloody Coins each.");
+		next();
+		switch (select("Cancel", "Randomly pick one from STR/AGI/DEX", "Randomly pick one from INT/VIT/DEX")) {
+		case 1:
+			mes("[Bearded Joe]");
+			mes("Hmm.. Maybe next time then?");
+			close();
+		case 2:
+			.@sc_ec = 1;
+			break;
+		case 3:
+			.@sc_ec = 2;
+			break;
+		}
+		if (.@enc_coin < 1) {
+			mes("[Bearded Joe]");
+			mes("This equipment is definitely not from the Toy Factory! I only provide my services to items obtained within.");
+			close();
+		}
+		if (.@equip_card[3] == 0 && .@sc_type < 4) {
+			.@sc_num = 4;
+			mes("[Bearded Joe]");
+			mesf("Let's proceed with the first enchantment then. The success rate is 95%% on average, there's only a low chance of failing.");
+			next();
+			if (select("Maybe later", "Proceed") == 1) {
+				mes("[Bearded Joe]");
+				mes("Such an indecisive person! Come back to me when you've made up your mind!");
+				close();
+			}
+		} else if (.@equip_card[2] == 0 && .@sc_type < 3) {
+			.@sc_num = 3;
+			mes("[Bearded Joe]");
+			mesf("Is this the second time enchanting this piece of equipment? It's a little risky, the success rate is 70%% on average. Please note that if you fail, you'll lose the item.");
+			next();
+			if (select("Maybe later", "Proceed") == 1) {
+				mes("[Bearded Joe]");
+				mes("Such an indecisive person! Come back to me when you've made up your mind!");
+				close();
+			}
+		} else if (.@equip_card[1] == 0 && .@sc_type < 2) {
+			.@sc_num = 2;
+			mes("[Bearded Joe]");
+			mesf("This is the final enchantment. The success rate^ff0000 is less than 50%%^000000. Of course I'd like it to succeed in the enchantment, but I'd advise you to think again.");
+			next();
+			if (select("Maybe later", "Proceed") == 1) {
+				mes("[Bearded Joe]");
+				mes("A wise choice! You'd be drowning in greed if you had proceeded with the enchantment!");
+				close();
+			}
+		} else {
+			mes("[Bearded Joe]");
+			mes("You cannot enchant this equipment any further.");
+			close();
+		}
+	} else if (.@eq_num[.@s] == EQI_HAND_R) {
+		if (.@enc_coin < 1) {
+			mes("[Bearded Joe]");
+			mes("This equipment is definitely not from the Toy Factory! I only provide my services to items obtained within.");
+			close();
+		}
+		.@sc_num = 4;
+		.@sc_ec = 3;
+		mes("[Bearded Joe]");
+		mes("Weapons do not have any chances of destruction. Would you like to proceed?");
+		next();
+		if (select("Maybe later", "Proceed") == 1) {
+			mes("[Bearded Joe]");
+			mes("Such an indecisive person! Come back to me when you've made up your mind!");
+			close();
+		}
+	} else if (.@eq_num[.@s] == EQI_HEAD_TOP || .@eq_num[.@s] == EQI_SHOES) {
+		if (.@enc_coin < 1) {
+			mes("[Bearded Joe]");
+			mes("This equipment is definitely not from the Toy Factory! I only provide my services to items obtained within.");
+			close();
+		}
+		if (.@equip_card[3] == 0 && .@sc_type < 4) {
+			.@sc_num = 4;
+			.@sc_ec = 4;
+			mes("[Bearded Joe]");
+			mes("Let's start the first enchantment shall we? There is no chance of destruction this time!");
+			next();
+			if (select("Maybe later", "Proceed") == 1) {
+				mes("[Bearded Joe]");
+				mes("Such an indecisive person! Come back to me when you've made up your mind!");
+				close();
+			}
+		} else if (.@equip_card[2] == 0 && .@sc_type < 3) {
+			.@sc_num = 3;
+			.@sc_ec = 5;
+			mes("[Bearded Joe]");
+			mes("This is the second enchantment! There is still no chance of destruction and you can get one of the random enchantments!");
+			next();
+			if (select("Maybe later", "Proceed") == 1) {
+				mes("[Bearded Joe]");
+				mes("Such an indecisive person! Come back to me when you've made up your mind!");
+				close();
+			}
+		} else {
+			mes("[Bearded Joe]");
+			mes("You cannot enchant this equipment any further.");
+			close();
+		}
+	} else {
+		mes("[Bearded Joe]");
+		mes("I do not provide my services for these parts. Please visit another person.");
+		close();
+	}
+	if (.@sc_num == 4) {
+		.@en_brk1 = 550;
+		.@en_brk2 = 1050;
+	} else if (.@sc_num == 3) {
+		.@en_brk1 = 450;
+		.@en_brk2 = 1125;
+	} else if (.@sc_num == 2) {
+		.@en_brk1 = 1;
+		.@en_brk2 = 1161;
+	} else {
+		mes("[Bearded Joe]");
+		mes("There's an unknown problem, please come again later.");
+		close();
+	}
+	if (.@sc_ec == 1) {
+		.@ran_e_m = rand(.@en_brk1, .@en_brk2);
+		if (.@ran_e_m >= 1 && .@ran_e_m < 601)
+			.@en_name = 0;
+		else if (.@ran_e_m >= 601 && .@ran_e_m < 701)
+			.@en_name = Strength1;
+		else if (.@ran_e_m >= 701 && .@ran_e_m < 801)
+			.@en_name = Agility1;
+		else if (.@ran_e_m >= 801 && .@ran_e_m < 901)
+			.@en_name = Dexterity1;
+		else if (.@ran_e_m >= 901 && .@ran_e_m < 951)
+			.@en_name = Strength2;
+		else if (.@ran_e_m >= 951 && .@ran_e_m < 1001)
+			.@en_name = Agility2;
+		else if (.@ran_e_m >= 1001 && .@ran_e_m < 1051)
+			.@en_name = Dexterity2;
+		else if (.@ran_e_m >= 1051 && .@ran_e_m < 1076)
+			.@en_name = Strength3;
+		else if (.@ran_e_m >= 1076 && .@ran_e_m < 1101)
+			.@en_name = Agility3;
+		else if (.@ran_e_m >= 1101 && .@ran_e_m < 1126)
+			.@en_name = Dexterity3;
+		else if (.@ran_e_m >= 1126 && .@ran_e_m < 1138)
+			.@en_name = Strength4;
+		else if (.@ran_e_m >= 1138 && .@ran_e_m < 1150)
+			.@en_name = Agility4;
+		else if (.@ran_e_m >= 1150 && .@ran_e_m < 1162)
+			.@en_name = Dexterity4;
+		else
+			.@en_name = 9;
+	} else if (.@sc_ec == 2) {
+		.@ran_e_m = rand(.@en_brk1, .@en_brk2);
+		if (.@ran_e_m >= 1 && .@ran_e_m < 601)
+			.@en_name = 0;
+		else if (.@ran_e_m >= 601 && .@ran_e_m < 701)
+			.@en_name = Inteligence1;
+		else if (.@ran_e_m >= 701 && .@ran_e_m < 801)
+			.@en_name = Vitality1;
+		else if (.@ran_e_m >= 801 && .@ran_e_m < 901)
+			.@en_name = Dexterity1;
+		else if (.@ran_e_m >= 901 && .@ran_e_m < 951)
+			.@en_name = Inteligence2;
+		else if (.@ran_e_m >= 951 && .@ran_e_m < 1001)
+			.@en_name = Vitality2;
+		else if (.@ran_e_m >= 1001 && .@ran_e_m < 1051)
+			.@en_name = Dexterity2;
+		else if (.@ran_e_m >= 1051 && .@ran_e_m < 1076)
+			.@en_name = Inteligence3;
+		else if (.@ran_e_m >= 1076 && .@ran_e_m < 1101)
+			.@en_name = Vitality3;
+		else if (.@ran_e_m >= 1101 && .@ran_e_m < 1126)
+			.@en_name = Dexterity3;
+		else if (.@ran_e_m >= 1126 && .@ran_e_m < 1138)
+			.@en_name = Inteligence4;
+		else if (.@ran_e_m >= 1138 && .@ran_e_m < 1150)
+			.@en_name = Vitality4;
+		else if (.@ran_e_m >= 1150 && .@ran_e_m < 1162)
+			.@en_name = Dexterity4;
+		else
+			.@en_name = 9;
+	} else if (.@sc_ec == 3) {
+		.@ran_e_m = rand(1, 2555);
+		if (.@ran_e_m >= 1 && .@ran_e_m < 301)
+			.@en_name = Fighting_Spirit5;
+		else if (.@ran_e_m >= 301 && .@ran_e_m < 501)
+			.@en_name = Fighting_Spirit6;
+		else if (.@ran_e_m >= 501 && .@ran_e_m < 601)
+			.@en_name = Fighting_Spirit7;
+		else if (.@ran_e_m >= 601 && .@ran_e_m < 651)
+			.@en_name = Fighting_Spirit8;
+		else if (.@ran_e_m >= 651 && .@ran_e_m < 676)
+			.@en_name = Fighting_Spirit9;
+		else if (.@ran_e_m >= 676 && .@ran_e_m < 686)
+			.@en_name = Fighting_Spirit10;
+		else if (.@ran_e_m >= 686 && .@ran_e_m < 986)
+			.@en_name = Sharp3;
+		else if (.@ran_e_m >= 986 && .@ran_e_m < 1086)
+			.@en_name = Sharp4;
+		else if (.@ran_e_m >= 1086 && .@ran_e_m < 1096)
+			.@en_name = Sharp5;
+		else if (.@ran_e_m >= 1096 && .@ran_e_m < 1396)
+			.@en_name = Matk1;
+		else if (.@ran_e_m >= 1396 && .@ran_e_m < 1496)
+			.@en_name = Matk2;
+		else if (.@ran_e_m >= 1496 && .@ran_e_m < 1506)
+			.@en_name = Matk3;
+		else if (.@ran_e_m >= 1506 && .@ran_e_m < 1806)
+			.@en_name = Attack_Delay_2;
+		else if (.@ran_e_m >= 1806 && .@ran_e_m < 2006)
+			.@en_name = Attack_Delay_3;
+		else if (.@ran_e_m >= 2006 && .@ran_e_m < 2106)
+			.@en_name = Attack_Delay_4;
+		else if (.@ran_e_m >= 2106 && .@ran_e_m < 2116)
+			.@en_name = Atk_Speed1;
+		else if (.@ran_e_m >= 2116 && .@ran_e_m < 2416)
+			.@en_name = Spell6;
+		else if (.@ran_e_m >= 2416 && .@ran_e_m < 2516)
+			.@en_name = Spell7;
+		else if (.@ran_e_m >= 2516 && .@ran_e_m < 2546)
+			.@en_name = Spell8;
+		else if (.@ran_e_m >= 2546 && .@ran_e_m < 2556)
+			.@en_name = Spell9;
+		else
+			.@en_name = 9;
+	} else if (.@sc_ec == 4) {
+		.@ran_e_m = rand(1, 1950);
+		if (.@ran_e_m >= 1 && .@ran_e_m < 301)
+			.@en_name = Fighting_Spirit2;
+		else if (.@ran_e_m >= 301 && .@ran_e_m < 401)
+			.@en_name = Fighting_Spirit3;
+		else if (.@ran_e_m >= 401 && .@ran_e_m < 451)
+			.@en_name = Fighting_Spirit4;
+		else if (.@ran_e_m >= 451 && .@ran_e_m < 471)
+			.@en_name = Fighting_Spirit5;
+		else if (.@ran_e_m >= 471 && .@ran_e_m < 771)
+			.@en_name = Sharp1;
+		else if (.@ran_e_m >= 771 && .@ran_e_m < 871)
+			.@en_name = Sharp2;
+		else if (.@ran_e_m >= 871 && .@ran_e_m < 891)
+			.@en_name = Sharp3;
+		else if (.@ran_e_m >= 891 && .@ran_e_m < 991)
+			.@en_name = Matk1;
+		else if (.@ran_e_m >= 991 && .@ran_e_m < 1011)
+			.@en_name = Matk2;
+		else if (.@ran_e_m >= 1011 && .@ran_e_m < 1311)
+			.@en_name = Attack_Delay_1;
+		else if (.@ran_e_m >= 1311 && .@ran_e_m < 1411)
+			.@en_name = Attack_Delay_2;
+		else if (.@ran_e_m >= 1411 && .@ran_e_m < 1461)
+			.@en_name = Attack_Delay_3;
+		else if (.@ran_e_m >= 1461 && .@ran_e_m < 1481)
+			.@en_name = Attack_Delay_4;
+		else if (.@ran_e_m >= 1481 && .@ran_e_m < 1781)
+			.@en_name = Spell3;
+		else if (.@ran_e_m >= 1781 && .@ran_e_m < 1881)
+			.@en_name = Spell4;
+		else if (.@ran_e_m >= 1881 && .@ran_e_m < 1931)
+			.@en_name = Spell5;
+		else if (.@ran_e_m >= 1931 && .@ran_e_m < 1951)
+			.@en_name = Spell6;
+		else
+			.@en_name = 9;
+	} else if (.@sc_ec == 5) {
+		.@ran_e_m = rand(1, 1970);
+		if (.@ran_e_m >= 1 && .@ran_e_m < 301)
+			.@en_name = Strength1;
+		else if (.@ran_e_m >= 301 && .@ran_e_m < 401)
+			.@en_name = Strength2;
+		else if (.@ran_e_m >= 401 && .@ran_e_m < 451)
+			.@en_name = Strength3;
+		else if (.@ran_e_m >= 451 && .@ran_e_m < 471)
+			.@en_name = Agility1;
+		else if (.@ran_e_m >= 471 && .@ran_e_m < 771)
+			.@en_name = Agility2;
+		else if (.@ran_e_m >= 771 && .@ran_e_m < 871)
+			.@en_name = Agility3;
+		else if (.@ran_e_m >= 871 && .@ran_e_m < 891)
+			.@en_name = Inteligence1;
+		else if (.@ran_e_m >= 891 && .@ran_e_m < 991)
+			.@en_name = Inteligence2;
+		else if (.@ran_e_m >= 991 && .@ran_e_m < 1011)
+			.@en_name = Inteligence3;
+		else if (.@ran_e_m >= 1011 && .@ran_e_m < 1311)
+			.@en_name = Dexterity1;
+		else if (.@ran_e_m >= 1311 && .@ran_e_m < 1411)
+			.@en_name = Dexterity2;
+		else if (.@ran_e_m >= 1411 && .@ran_e_m < 1461)
+			.@en_name = Dexterity3;
+		else if (.@ran_e_m >= 1461 && .@ran_e_m < 1481)
+			.@en_name = Vitality1;
+		else if (.@ran_e_m >= 1481 && .@ran_e_m < 1781)
+			.@en_name = Vitality2;
+		else if (.@ran_e_m >= 1781 && .@ran_e_m < 1881)
+			.@en_name = Vitality3;
+		else if (.@ran_e_m >= 1881 && .@ran_e_m < 1931)
+			.@en_name = Luck1;
+		else if (.@ran_e_m >= 1931 && .@ran_e_m < 1951)
+			.@en_name = Luck2;
+		else if (.@ran_e_m >= 1951 && .@ran_e_m < 1971)
+			.@en_name = Luck3;
+		else
+			.@en_name = 9;
+	} else {
+		mes("[Bearded Joe]");
+		mes("There's an unknown problem, please come again later.");
+		close();
+	}
+	if (.@en_name == 9) {
+		mes("[Bearded Joe]");
+		mes("There's an unknown problem, please come again later.");
+		close();
+	}
+	if (.@equip_card[3] == 0 && .@sc_type < 4) {
+		.@equip_card[3] = .@en_name;
+	} else if (.@equip_card[2] == 0 && .@sc_type < 3) {
+		if (.@en_name == 0) {
+			.@equip_card[2] = .@en_name;
+			.@equip_card[3] = 0;
+		} else {
+			.@equip_card[2] = .@en_name;
+		}
+	} else if (.@equip_card[1] == 0 && .@sc_type < 2) {
+		if (.@en_name == 0) {
+			.@equip_card[1] = .@en_name;
+			.@equip_card[2] = 0;
+			.@equip_card[3] = 0;
+		} else {
+			.@equip_card[1] = .@en_name;
+		}
+	} else if (.@equip_card[0] == 0 && .@sc_type < 1) {
+		.@equip_card[0] = .@en_name;
+	} else {
+		mes("[Bearded Joe]");
+		mes("I'm unable to provide my services as I've never seen these items before.");
+		close();
+	}
+	if (countitem(Bloody_Coin) > 14) {
+		if (.@en_name == 0) {
+			delitem(Bloody_Coin, 15);
+			delequip(.@eq_num[.@s]);
+			mes("[Bearded Joe]");
+			mes("Tough luck eh? Your equipment just broke.");
+			close2();
+			specialeffect(EF_LORD);
+			end;
+		} else {
+			delitem(Bloody_Coin, 15);
+			delequip(.@eq_num[.@s]);
+			getitem2(.@enc_ts, 1, 1, .@compo_num, 0, .@equip_card[0], .@equip_card[1], .@equip_card[2], .@equip_card[3]);
+			mes("[Bearded Joe]");
+			mes("It's a success! Please verify the results!");
+			specialeffect(EF_REPAIRWEAPON);
+			close();
+		}
+	} else {
+		mes("[Bearded Joe]");
+		mes("Please check whether you have enough bloody coins to proceed.. It seems to me that you don't.");
+		close();
+	}
+}
