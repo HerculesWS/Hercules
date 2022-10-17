@@ -1045,6 +1045,23 @@ static bool quest_questinfo_validate_mercenary_class(struct map_session_data *sd
 	return true;
 }
 
+static enum quest_mobtype quest_mobsize2client(uint8 size)
+{
+	switch (size) {
+	case SZ_SMALL:
+		return QMT_SZ_SMALL;
+
+	case SZ_MEDIUM:
+		return QMT_SZ_MEDIUM;
+
+	case SZ_BIG:
+		return QMT_SZ_LARGE;
+
+	default:
+		return 0;
+	}
+}
+
 static enum quest_mobtype quest_mobele2client(uint8 type)
 {
 	switch (type) {
@@ -1176,6 +1193,7 @@ void quest_defaults(void)
 	quest->questinfo_validate_homunculus_type = quest_questinfo_validate_homunculus_type;
 	quest->questinfo_validate_quests = quest_questinfo_validate_quests;
 	quest->questinfo_validate_mercenary_class = quest_questinfo_validate_mercenary_class;
+	quest->mobsize2client = quest_mobsize2client;
 	quest->mobele2client = quest_mobele2client;
 	quest->mobrace2client = quest_mobrace2client;
 }
