@@ -234,6 +234,8 @@ typedef void (*HPMHOOK_pre_atcommand_getring) (struct map_session_data **sd);
 typedef void (*HPMHOOK_post_atcommand_getring) (struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_atcommand_channel_help) (int *fd, const char **command, bool *can_create);
 typedef void (*HPMHOOK_post_atcommand_channel_help) (int fd, const char *command, bool can_create);
+typedef void (*HPMHOOK_pre_atcommand_quest_help) (int *fd);
+typedef void (*HPMHOOK_post_atcommand_quest_help) (int fd);
 typedef void (*HPMHOOK_pre_atcommand_commands_sub) (struct map_session_data **sd, const int *fd, AtCommandType *type);
 typedef void (*HPMHOOK_post_atcommand_commands_sub) (struct map_session_data *sd, const int fd, AtCommandType type);
 typedef void (*HPMHOOK_pre_atcommand_cmd_db_clear) (void);
@@ -7002,6 +7004,8 @@ typedef bool (*HPMHOOK_pre_quest_questinfo_validate_quests) (struct map_session_
 typedef bool (*HPMHOOK_post_quest_questinfo_validate_quests) (bool retVal___, struct map_session_data *sd, struct questinfo *qi);
 typedef bool (*HPMHOOK_pre_quest_questinfo_validate_mercenary_class) (struct map_session_data **sd, struct questinfo **qi);
 typedef bool (*HPMHOOK_post_quest_questinfo_validate_mercenary_class) (bool retVal___, struct map_session_data *sd, struct questinfo *qi);
+typedef enum quest_mobtype (*HPMHOOK_pre_quest_mobsize2client) (uint8 *size);
+typedef enum quest_mobtype (*HPMHOOK_post_quest_mobsize2client) (enum quest_mobtype retVal___, uint8 size);
 typedef enum quest_mobtype (*HPMHOOK_pre_quest_mobele2client) (uint8 *type);
 typedef enum quest_mobtype (*HPMHOOK_post_quest_mobele2client) (enum quest_mobtype retVal___, uint8 type);
 typedef enum quest_mobtype (*HPMHOOK_pre_quest_mobrace2client) (uint8 *type);

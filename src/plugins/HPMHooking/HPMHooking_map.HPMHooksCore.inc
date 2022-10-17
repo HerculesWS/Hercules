@@ -190,6 +190,8 @@ struct {
 	struct HPMHookPoint *HP_atcommand_getring_post;
 	struct HPMHookPoint *HP_atcommand_channel_help_pre;
 	struct HPMHookPoint *HP_atcommand_channel_help_post;
+	struct HPMHookPoint *HP_atcommand_quest_help_pre;
+	struct HPMHookPoint *HP_atcommand_quest_help_post;
 	struct HPMHookPoint *HP_atcommand_commands_sub_pre;
 	struct HPMHookPoint *HP_atcommand_commands_sub_post;
 	struct HPMHookPoint *HP_atcommand_cmd_db_clear_pre;
@@ -5534,6 +5536,8 @@ struct {
 	struct HPMHookPoint *HP_quest_questinfo_validate_quests_post;
 	struct HPMHookPoint *HP_quest_questinfo_validate_mercenary_class_pre;
 	struct HPMHookPoint *HP_quest_questinfo_validate_mercenary_class_post;
+	struct HPMHookPoint *HP_quest_mobsize2client_pre;
+	struct HPMHookPoint *HP_quest_mobsize2client_post;
 	struct HPMHookPoint *HP_quest_mobele2client_pre;
 	struct HPMHookPoint *HP_quest_mobele2client_post;
 	struct HPMHookPoint *HP_quest_mobrace2client_pre;
@@ -7555,6 +7559,8 @@ struct {
 	int HP_atcommand_getring_post;
 	int HP_atcommand_channel_help_pre;
 	int HP_atcommand_channel_help_post;
+	int HP_atcommand_quest_help_pre;
+	int HP_atcommand_quest_help_post;
 	int HP_atcommand_commands_sub_pre;
 	int HP_atcommand_commands_sub_post;
 	int HP_atcommand_cmd_db_clear_pre;
@@ -12899,6 +12905,8 @@ struct {
 	int HP_quest_questinfo_validate_quests_post;
 	int HP_quest_questinfo_validate_mercenary_class_pre;
 	int HP_quest_questinfo_validate_mercenary_class_post;
+	int HP_quest_mobsize2client_pre;
+	int HP_quest_mobsize2client_post;
 	int HP_quest_mobele2client_pre;
 	int HP_quest_mobele2client_post;
 	int HP_quest_mobrace2client_pre;
