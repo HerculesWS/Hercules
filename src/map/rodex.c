@@ -445,6 +445,15 @@ static void rodex_getZenyAck(struct map_session_data *sd, int64 mail_id, int8 op
 		return;
 	}
 
+	// Updates the in-memory copy of this mail
+	// It should never be null, but if it ends up being, that would simply mean that this
+	// mail is gone from the user data, and that's fine, as the char-server did its work.
+	struct rodex_message *msg = rodex->get_mail(sd, mail_id);
+	if (msg != NULL) {
+		msg->type &= ~MAIL_TYPE_ZENY;
+		msg->zeny = 0;
+	}
+
 	if (pc->getzeny(sd, (int)zeny, LOG_TYPE_MAIL, NULL) != 0) {
 		clif->rodex_request_zeny(sd, opentype, mail_id, RODEX_GET_ZENY_FATAL_ERROR);
 		return;
@@ -472,8 +481,6 @@ static void rodex_get_zeny(struct map_session_data *sd, int8 opentype, int64 mai
 		return;
 	}
 
-	msg->type &= ~MAIL_TYPE_ZENY;
-	msg->zeny = 0;
 	intif->rodex_updatemail(sd, mail_id, opentype, 1);
 }
 

@@ -482,9 +482,11 @@ static bool inter_rodex_updatemail(int fd, int account_id, int char_id, int64 ma
 	case 1: // Get Zeny
 	{
 		const int64 zeny = inter_rodex->getzeny(mail_id);
-		if (SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `zeny` = 0, `type` = `type` & (~2) WHERE `mail_id` = '%"PRId64"'", rodex_db, mail_id)) {
-			Sql_ShowDebug(inter->sql_handle);
-			break;
+		if (zeny != -1) {
+			if (SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `zeny` = 0, `type` = `type` & (~2) WHERE `mail_id` = '%"PRId64"'", rodex_db, mail_id)) {
+				Sql_ShowDebug(inter->sql_handle);
+				break;
+			}
 		}
 		mapif->rodex_getzenyack(fd, char_id, mail_id, opentype, zeny);
 		break;
