@@ -220,7 +220,7 @@ static void *ers_obj_alloc_entry(ERS *self)
 		instance->Cache->ReuseList = instance->Cache->ReuseList->Next;
 	} else if (instance->Cache->Free > 0) {
 		instance->Cache->Free--;
-		ret = &instance->Cache->Blocks[instance->Cache->Used - 1][instance->Cache->Free * instance->Cache->ObjectSize + sizeof(struct ers_list)];
+		ret = &instance->Cache->Blocks[instance->Cache->Used - 1][instance->Cache->Free * (size_t)instance->Cache->ObjectSize + sizeof(struct ers_list)];
 	} else {
 		if (instance->Cache->Used == instance->Cache->Max) {
 			instance->Cache->Max = (instance->Cache->Max * 4) + 3;
@@ -231,7 +231,7 @@ static void *ers_obj_alloc_entry(ERS *self)
 		instance->Cache->Used++;
 
 		instance->Cache->Free = instance->Cache->ChunkSize -1;
-		ret = &instance->Cache->Blocks[instance->Cache->Used - 1][instance->Cache->Free * instance->Cache->ObjectSize + sizeof(struct ers_list)];
+		ret = &instance->Cache->Blocks[instance->Cache->Used - 1][instance->Cache->Free * (size_t)instance->Cache->ObjectSize + sizeof(struct ers_list)];
 	}
 
 	instance->Count++;
