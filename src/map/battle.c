@@ -4160,7 +4160,7 @@ static struct Damage battle_calc_magic_attack(struct block_list *src, struct blo
 static struct Damage battle_calc_misc_attack(struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, int mflag)
 {
 	int temp;
-	short i, nk;
+	short nk;
 	short s_ele;
 
 	struct map_session_data *sd, *tsd;
@@ -4448,9 +4448,9 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 
 	if (!(nk&NK_IGNORE_FLEE))
 	{
-		i = 0; //Temp for "hit or no hit"
+		bool hit = false;
 		if(tsc && tsc->opt1 && tsc->opt1 != OPT1_STONEWAIT && tsc->opt1 != OPT1_BURNING)
-			i = 1;
+			hit = true;
 		else {
 			short
 				flee = tstatus->flee,
@@ -4484,16 +4484,16 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 			hitrate = cap_value(hitrate, battle_config.min_hitrate, battle_config.max_hitrate);
 
 			if(rnd()%100 < hitrate)
-				i = 1;
+				hit = true;
 		}
-		if (!i) {
+		if (!hit) {
 			md.damage = 0;
 			md.dmg_lv=ATK_FLEE;
 		}
 	}
 #ifndef HMAP_ZONE_DAMAGE_CAP_TYPE
 	if (skill_id) {
-		for(i = 0; i < map->list[target->m].zone->capped_skills_count; i++) {
+		for(int i = 0; i < map->list[target->m].zone->capped_skills_count; i++) {
 			if( skill_id == map->list[target->m].zone->capped_skills[i]->nameid && (map->list[target->m].zone->capped_skills[i]->type & target->type) ) {
 				if (target->type == BL_MOB && map->list[target->m].zone->capped_skills[i]->subtype != MZS_NONE) {
 					const struct mob_data *t_md = BL_UCCAST(BL_MOB, target);
@@ -4513,6 +4513,7 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 #endif
 	md.damage = battle->calc_cardfix(BF_MISC, src, target, nk, s_ele, 0, md.damage, 0, md.flag);
 	md.damage = battle->calc_cardfix2(src, target, md.damage, s_ele, nk, md.flag);
+	int modifier = 0;
 	if(skill_id){
 		uint16 rskill;/* redirect skill id */
 		switch(skill_id){
@@ -4522,13 +4523,13 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 			default:
 				rskill = skill_id;
 		}
-		if (sd && (i = pc->skillatk_bonus(sd, rskill)) != 0)
-			md.damage += md.damage*i/100;
-		if (tsd && (i = pc->sub_skillatk_bonus(tsd, rskill)) != 0)
-			md.damage -= md.damage * i / 100;
+		if (sd != NULL && (modifier = pc->skillatk_bonus(sd, rskill)) != 0)
+			md.damage += md.damage * modifier / 100;
+		if (tsd != NULL && (modifier = pc->sub_skillatk_bonus(tsd, rskill)) != 0)
+			md.damage -= md.damage * modifier / 100;
 	}
-	if( (i = battle->adjust_skill_damage(src->m,skill_id)) )
-		md.damage = md.damage * i / 100;
+	if ((modifier = battle->adjust_skill_damage(src->m,skill_id)) != 0)
+		md.damage = md.damage * modifier / 100;
 
 	if(md.damage < 0)
 		md.damage = 0;
