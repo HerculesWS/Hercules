@@ -1148,6 +1148,29 @@ air_if
 1@jorchs
 1@jorlab
 1@whl
+prt_elib
+1@vrcas
+1@vrev
+1@vrgen
+1@dime
+memohall
+vr_bob
+1@vrpo
+hero_lb
+hero_out1
+hero_out2
+hero_out3
+hero_out4
+hero_ent1
+hero_ent2
+hero_ent3
+hero_in1
+hero_in2
+hero_in3
+hero_in4
+herosria
+hero_dun1
+hero_tra
 
 // Only add maps under this line if they are not standard maps!
 //======================================================================================
