@@ -901,6 +901,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->pTakeItem, HP_clif_pTakeItem) },
 	{ HP_POP(clif->pDropItem, HP_clif_pDropItem) },
 	{ HP_POP(clif->pUseItem, HP_clif_pUseItem) },
+	{ HP_POP(clif->pUsePackageItem, HP_clif_pUsePackageItem) },
 	{ HP_POP(clif->pEquipItem, HP_clif_pEquipItem) },
 	{ HP_POP(clif->pUnequipItem, HP_clif_pUnequipItem) },
 	{ HP_POP(clif->pUnequipAllItems, HP_clif_pUnequipAllItems) },

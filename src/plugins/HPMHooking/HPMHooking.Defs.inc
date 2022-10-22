@@ -2166,6 +2166,8 @@ typedef void (*HPMHOOK_pre_clif_pDropItem) (int *fd, struct map_session_data **s
 typedef void (*HPMHOOK_post_clif_pDropItem) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_pUseItem) (int *fd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_pUseItem) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_pUsePackageItem) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pUsePackageItem) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_pEquipItem) (int *fd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_pEquipItem) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_pUnequipItem) (int *fd, struct map_session_data **sd);

@@ -1754,6 +1754,8 @@ struct {
 	struct HPMHookPoint *HP_clif_pDropItem_post;
 	struct HPMHookPoint *HP_clif_pUseItem_pre;
 	struct HPMHookPoint *HP_clif_pUseItem_post;
+	struct HPMHookPoint *HP_clif_pUsePackageItem_pre;
+	struct HPMHookPoint *HP_clif_pUsePackageItem_post;
 	struct HPMHookPoint *HP_clif_pEquipItem_pre;
 	struct HPMHookPoint *HP_clif_pEquipItem_post;
 	struct HPMHookPoint *HP_clif_pUnequipItem_pre;
@@ -9119,6 +9121,8 @@ struct {
 	int HP_clif_pDropItem_post;
 	int HP_clif_pUseItem_pre;
 	int HP_clif_pUseItem_post;
+	int HP_clif_pUsePackageItem_pre;
+	int HP_clif_pUsePackageItem_post;
 	int HP_clif_pEquipItem_pre;
 	int HP_clif_pEquipItem_post;
 	int HP_clif_pUnequipItem_pre;

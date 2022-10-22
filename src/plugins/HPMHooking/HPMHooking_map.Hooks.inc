@@ -22873,6 +22873,32 @@ void HP_clif_pUseItem(int fd, struct map_session_data *sd) {
 	}
 	return;
 }
+void HP_clif_pUsePackageItem(int fd, struct map_session_data *sd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_pUsePackageItem_pre > 0) {
+		void (*preHookFunc) (int *fd, struct map_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pUsePackageItem_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_pUsePackageItem_pre[hIndex].func;
+			preHookFunc(&fd, &sd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.pUsePackageItem(fd, sd);
+	}
+	if (HPMHooks.count.HP_clif_pUsePackageItem_post > 0) {
+		void (*postHookFunc) (int fd, struct map_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pUsePackageItem_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_pUsePackageItem_post[hIndex].func;
+			postHookFunc(fd, sd);
+		}
+	}
+	return;
+}
 void HP_clif_pEquipItem(int fd, struct map_session_data *sd) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_pEquipItem_pre > 0) {
