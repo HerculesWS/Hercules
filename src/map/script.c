@@ -25013,43 +25013,6 @@ static BUILDIN(unbindatcmd)
 	return true;
 }
 
-static BUILDIN(useatcmd)
-{
-	struct map_session_data *sd = NULL;
-	struct map_session_data *dummy_sd = NULL;
-	int fd;
-	const char* cmd;
-
-	cmd = script_getstr(st,2);
-
-	if (st->rid != 0 && (sd = map->id2sd(st->rid)) != NULL) {
-		fd = sd->fd;
-	} else {
-		// Use a dummy character.
-		sd = dummy_sd = pc->get_dummy_sd();
-		fd = 0;
-
-		if( st->oid ) {
-			struct block_list* bl = map->id2bl(st->oid);
-			memcpy(&sd->bl, bl, sizeof(struct block_list));
-			if (bl->type == BL_NPC)
-				safestrncpy(sd->status.name, BL_UCAST(BL_NPC, bl)->name, NAME_LENGTH);
-		}
-	}
-
-	// compatibility with previous implementation (deprecated!)
-	if( cmd[0] != atcommand->at_symbol ) {
-		cmd += strlen(sd->status.name);
-		while( *cmd != atcommand->at_symbol && *cmd != 0 )
-			cmd++;
-	}
-
-	atcommand->exec(fd, sd, cmd, true);
-	if (dummy_sd)
-		aFree(dummy_sd);
-	return true;
-}
-
 static BUILDIN(has_permission)
 {
 	struct map_session_data *sd;
@@ -28779,7 +28742,6 @@ static void script_parse_builtin(void)
 		 **/
 		BUILDIN_DEF(bindatcmd, "ss???"),
 		BUILDIN_DEF(unbindatcmd, "s"),
-		BUILDIN_DEF_DEPRECATED(useatcmd, "s"),
 		BUILDIN_DEF(has_permission, "v?"),
 		BUILDIN_DEF(can_use_command, "s?"),
 		BUILDIN_DEF(add_group_command, "siii"),

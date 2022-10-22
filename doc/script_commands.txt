@@ -8607,23 +8607,6 @@ This command will unbind a NPC event label from an atcommand.
 
 ---------------------------------------
 
-*useatcmd("command")
-
-    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    @ /!\ This command is deprecated @
-    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-This command will execute an atcommand binding on the attached RID from a
-script. The three .@atcmd_***** variables will NOT be set when invoking
-scripts-atcommands this way.
-
-This command is deprecated and it should not be used in new scripts, as it is
-likely to be removed at a later time. Instead, you should directly call to the
-event label of the binding using timers or doevent(). For built-in commands,
-atcommand() should be used instead.
-
----------------------------------------
-
 *can_use_command("<command>"{, <account id>})
 
 Checks if the attached or specified player can use the specified
