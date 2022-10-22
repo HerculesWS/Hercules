@@ -3767,6 +3767,7 @@
 - `IT_PETARMOR`: 8
 - `IT_AMMO`: 10
 - `IT_DELAYCONSUME`: 11
+- `IT_SELECTPACKAGE`: 12
 - `IT_CASH`: 18
 
 ### queueopt
@@ -5168,6 +5169,7 @@
 - `ITEMINFO_ID`: 42
 - `ITEMINFO_AEGISNAME`: 43
 - `ITEMINFO_NAME`: 44
+- `ITEMINFO_FLAG_SELECT_PACKAGE`: 45
 
 ### getmercinfo options
 
@@ -19809,6 +19811,7 @@
 - `Crimson_Rose`: 32302
 - `Ein_1HGUN`: 32303
 - `Ein_1HSWORD`: 32352
+- `Select_Example1`: 101060
 - `Atker_Plate`: 450001
 - `Armor_Stone_3`: 1000436
 - `Ele_Robe`: 450002
