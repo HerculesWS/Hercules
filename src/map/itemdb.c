@@ -2052,7 +2052,6 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 	 * WeaponLv: Weapon Level
 	 * EquipLv: Equip required level or [min, max]
 	 * Refine: Refineable
-	 * View: View ID
 	 * BindOnEquip: (true or false)
 	 * BuyingStore: (true or false)
 	 * Delay: Delay to use item
@@ -2218,21 +2217,6 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 
 	if (map->setting_lookup_const(it, "ViewSprite", &i32) && i32 >= 0)
 		id.view_sprite = i32;
-
-	if (map->setting_lookup_const(it, "View", &i32) && i32 >= 0) { // TODO: Remove (Deprecated - 2016-09-04 [Haru])
-		if ((id.type == IT_WEAPON || id.type == IT_AMMO) && id.subtype == 0) {
-			ShowWarning("itemdb_readdb_libconfig_sub: The 'View' field is deprecated. Please rename it to 'Subtype' (or 'ViewSprite'). (Item #%d: %s)\n",
-					id.nameid, id.name);
-			id.subtype = i32;
-		} else if ((id.type != IT_WEAPON && id.type != IT_AMMO) && id.view_sprite == 0) {
-			ShowWarning("itemdb_readdb_libconfig_sub: The 'View' field is deprecated. Please rename it to 'ViewSprite' (or 'Subtype'). (Item #%d: %s)\n",
-					id.nameid, id.name);
-			id.view_sprite = i32;
-		} else {
-			ShowWarning("itemdb_readdb_libconfig_sub: The 'View' field is deprecated. Please rename it to 'Subtype' or 'ViewSprite'. (Item #%d: %s)\n",
-					id.nameid, id.name);
-		}
-	}
 
 	if( (t = libconfig->setting_get_member(it, "BindOnEquip")) )
 		id.flag.bindonequip = libconfig->setting_get_bool(t) ? 1 : 0;
