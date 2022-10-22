@@ -6438,7 +6438,7 @@ static int skill_castend_id(int tid, int64 tick, int id, intptr_t data)
 					break; // You can use Phantom Thurst on party members in normal maps too. [pakpil]
 			}
 
-			if( inf&BCT_ENEMY
+			if ((inf & BCT_ENEMY) != 0 && ud->skill_id != PF_SOULCHANGE // PF_SOULCHANGE is a friendly skill in Aegis under all circumstances.
 			 && (sc = status->get_sc(target)) != NULL && sc->data[SC_FOGWALL]
 			 && rnd() % 100 < 75
 			) {
@@ -9211,6 +9211,8 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 			{
 				unsigned int sp1 = 0, sp2 = 0;
 				if (dstmd) {
+					if ((dstmd->status.mode & MD_BOSS) != 0)
+						break; // [Aegis] can't use this on bosses
 					if (dstmd->state.soul_change_flag) {
 						if(sd) clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
 						break;
@@ -9220,6 +9222,9 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 					status->heal(src, 0, sp2, STATUS_HEAL_SHOWEFFECT);
 					clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
 					break;
+				} else if (dstsd != NULL) {
+					if (tsc != NULL && tsc->data[SC_BERSERK] != NULL)
+						break; // [Aegis] can't use on berserked players.
 				}
 				sp1 = sstatus->sp;
 				sp2 = tstatus->sp;
