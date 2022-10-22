@@ -397,6 +397,7 @@ static const char *itemdb_typename(enum item_types type)
 		case IT_PETARMOR:       return "Pet Accessory";
 		case IT_AMMO:           return "Arrow/Ammunition";
 		case IT_DELAYCONSUME:   return "Delay-Consume Usable";
+		case IT_SELECTPACKAGE:  return "Selection Package Usable";
 		case IT_CASH:           return "Cash Usable";
 		case IT_UNKNOWN2:
 		case IT_MAX:
@@ -711,6 +712,7 @@ static int itemdb_isequip(int nameid)
 		case IT_PETARMOR:
 		case IT_UNKNOWN2:
 		case IT_DELAYCONSUME:
+		case IT_SELECTPACKAGE:
 		case IT_CASH:
 		case IT_MAX:
 		default:
@@ -754,6 +756,7 @@ static int itemdb_isstackable(int nameid)
 		case IT_UNKNOWN2:
 		case IT_AMMO:
 		case IT_DELAYCONSUME:
+		case IT_SELECTPACKAGE:
 		case IT_CASH:
 		case IT_MAX:
 		default:
@@ -877,6 +880,7 @@ static int itemdb_isidentified(int nameid)
 		case IT_UNKNOWN2:
 		case IT_AMMO:
 		case IT_DELAYCONSUME:
+		case IT_SELECTPACKAGE:
 		case IT_CASH:
 		case IT_MAX:
 		default:
@@ -1829,7 +1833,7 @@ static int itemdb_validate_entry(struct item_data *entry, int n, const char *sou
 	}
 
 	if( entry->type < 0 || entry->type == IT_UNKNOWN || entry->type == IT_UNKNOWN2
-	 || (entry->type > IT_DELAYCONSUME && entry->type < IT_CASH ) || entry->type >= IT_MAX
+	 || (entry->type > IT_SELECTPACKAGE && entry->type < IT_CASH ) || entry->type >= IT_MAX
 	) {
 		// catch invalid item types
 		ShowWarning("itemdb_validate_entry: Invalid item type %d for item %d in '%s'. IT_ETC will be used.\n",
@@ -1839,6 +1843,9 @@ static int itemdb_validate_entry(struct item_data *entry, int n, const char *sou
 		//Items that are consumed only after target confirmation
 		entry->type = IT_USABLE;
 		entry->flag.delay_consume = 1;
+	} else if (entry->type == IT_SELECTPACKAGE) {
+		entry->type = IT_USABLE;
+		entry->flag.select_package = 1;
 	}
 
 	//When a particular price is not given, we should base it off the other one

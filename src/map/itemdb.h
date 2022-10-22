@@ -594,6 +594,7 @@ struct item_data {
 		unsigned showdropeffect: 1; // < Allow showing effect on item drop [Asheraf]
 		unsigned ignore_discount : 1; // [Jedzkie]
 		unsigned ignore_overcharge : 1; // [Jedzkie]
+		unsigned select_package : 1;
 	} flag;
 	struct {// item stacking limitation
 		unsigned short amount;

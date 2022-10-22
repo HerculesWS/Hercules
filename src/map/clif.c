@@ -118,6 +118,7 @@ static inline int itemtype(enum item_types type)
 		case IT_UNKNOWN2:
 		case IT_AMMO:
 		case IT_DELAYCONSUME:
+		case IT_SELECTPACKAGE:
 		case IT_CASH:
 		case IT_MAX:
 		default:
@@ -12510,8 +12511,46 @@ static void clif_parse_UseItem(int fd, struct map_session_data *sd)
 
 	if (n < 0 || n >= sd->status.inventorySize)
 		return;
+
+	// Package items should use CZ_USE_PACKAGEITEM instead
+	if (sd->inventory_data[n]->flag.select_package == 1)
+		return;
+
 	if (!pc->useitem(sd,n))
 		clif->useitemack(sd,n,0,false); //Send an empty ack packet or the client gets stuck.
+}
+
+static void clif_parse_UsePackageItem(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+static void clif_parse_UsePackageItem(int fd, struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20220216 || PACKETVER_ZERO_NUM >= 20220316
+	if (pc_isvending(sd))
+		return;
+
+	if (pc_isdead(sd)) {
+		clif->clearunit_area(&sd->bl, CLR_DEAD);
+		return;
+	}
+
+	if ((!sd->npc_id && pc_istrading(sd)) || sd->chat_id != 0)
+		return;
+
+	pc->update_idle_time(sd, BCIDLE_USEITEM);
+
+	const struct PACKET_CZ_USE_PACKAGEITEM *p = RP2PTR(fd);
+	const int n = p->index - 2;
+	if (n < 0 || n >= sd->status.inventorySize)
+		return;
+
+	// Ignore requests with non package items
+	if (sd->inventory_data[n]->flag.select_package == 0)
+		return;
+
+	pc->setreg(sd, script->add_variable("@selectpackage_itemid"), p->itemID);
+	pc->setreg(sd, script->add_variable("@selectpackage_boxidx"), p->BoxIndex);
+	if (!pc->useitem(sd, n))
+		clif->useitemack(sd, n, 0, false); //Send an empty ack packet or the client gets stuck.
+#endif  // PACKETVER_MAIN_NUM >= 20220216 || PACKETVER_ZERO_NUM >= 20220316
 }
 
 static void clif_parse_EquipItem(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
@@ -26455,6 +26494,7 @@ void clif_defaults(void)
 	clif->pTakeItem = clif_parse_TakeItem;
 	clif->pDropItem = clif_parse_DropItem;
 	clif->pUseItem = clif_parse_UseItem;
+	clif->pUsePackageItem = clif_parse_UsePackageItem;
 	clif->pEquipItem = clif_parse_EquipItem;
 	clif->pUnequipItem = clif_parse_UnequipItem;
 	clif->pUnequipAllItems = clif_parse_UnequipAllItems;

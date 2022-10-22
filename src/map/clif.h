@@ -1537,6 +1537,7 @@ struct clif_interface {
 	void (*pTakeItem) (int fd, struct map_session_data *sd);
 	void (*pDropItem) (int fd, struct map_session_data *sd);
 	void (*pUseItem) (int fd, struct map_session_data *sd);
+	void (*pUsePackageItem) (int fd, struct map_session_data *sd);
 	void (*pEquipItem) (int fd,struct map_session_data *sd);
 	void (*pUnequipItem) (int fd,struct map_session_data *sd);
 	void (*pUnequipAllItems) (int fd,struct map_session_data *sd);
