@@ -4091,21 +4091,19 @@ static void do_final_mapif(void)
 	mapif->server_destroy();
 }
 
-// Searches for the mapserver that has a given map (and optionally ip/port, if not -1).
-// If found, returns the server's index in the 'server' array (otherwise returns -1).
-static int char_search_mapserver(unsigned short map, uint32 ip, uint16 port)
+/**
+ * Returns whether the currently connected map server has the given map index.
+ */
+static bool char_mapserver_has_map(unsigned short map)
 {
-	if (chr->map_server.fd > 0
-	&& (ip == (uint32)-1 || chr->map_server.ip == ip)
-	&& (port == (uint16)-1 || chr->map_server.port == port)
-	) {
-		int j;
-		ARR_FIND(0, VECTOR_LENGTH(chr->map_server.maps), j, VECTOR_INDEX(chr->map_server.maps, j) == map);
-		if (j != VECTOR_LENGTH(chr->map_server.maps))
-			return 0;
-	}
+	if (chr->map_server.fd <= 0)
+		return false;
+	int j;
+	ARR_FIND(0, VECTOR_LENGTH(chr->map_server.maps), j, VECTOR_INDEX(chr->map_server.maps, j) == map);
+	if (j != VECTOR_LENGTH(chr->map_server.maps))
+		return true;
 
-	return -1;
+	return false;
 }
 
 // Initialization process (currently only initialization inter_mapif)
@@ -4444,7 +4442,7 @@ static void char_parse_char_connect(int fd, struct char_session_data *sd, uint32
 	}
 }
 
-static void char_send_map_info(int fd, int i, uint32 subnet_map_ip, struct mmo_charstatus *cd, char *dnsHost)
+static void char_send_map_info(int fd, uint32 subnet_map_ip, struct mmo_charstatus *cd, char *dnsHost)
 {
 #if PACKETVER < 20170329
 	const int cmd = 0x71;
@@ -4479,36 +4477,34 @@ static void char_send_wait_char_server(int fd)
 	WFIFOSET(fd, 24);
 }
 
-static int char_search_default_maps_mapserver(struct mmo_charstatus *cd)
+static bool char_find_available_map_fallback(struct mmo_charstatus *cd)
 {
-	int i;
-	int j;
 	nullpo_retr(-1, cd);
-	if ((i = chr->search_mapserver((j=mapindex->name2id(MAP_PRONTERA)),-1,-1)) >= 0) {
-		cd->last_point.x = 273;
-		cd->last_point.y = 354;
-	} else if ((i = chr->search_mapserver((j=mapindex->name2id(MAP_GEFFEN)),-1,-1)) >= 0) {
-		cd->last_point.x = 120;
-		cd->last_point.y = 100;
-	} else if ((i = chr->search_mapserver((j=mapindex->name2id(MAP_MORROC)),-1,-1)) >= 0) {
-		cd->last_point.x = 160;
-		cd->last_point.y = 94;
-	} else if ((i = chr->search_mapserver((j=mapindex->name2id(MAP_ALBERTA)),-1,-1)) >= 0) {
-		cd->last_point.x = 116;
-		cd->last_point.y = 57;
-	} else if ((i = chr->search_mapserver((j=mapindex->name2id(MAP_PAYON)),-1,-1)) >= 0) {
-		cd->last_point.x = 87;
-		cd->last_point.y = 117;
-	} else if ((i = chr->search_mapserver((j=mapindex->name2id(MAP_IZLUDE)),-1,-1)) >= 0) {
-		cd->last_point.x = 94;
-		cd->last_point.y = 103;
+
+	const struct {
+		const char *map;
+		int16 x;
+		int16 y;
+	} default_maps[] = {
+		{ MAP_PRONTERA, 273, 354, },
+		{ MAP_GEFFEN, 120, 100, },
+		{ MAP_MORROC, 160, 94, },
+		{ MAP_ALBERTA, 116, 57, },
+		{ MAP_PAYON, 87, 117, },
+		{ MAP_IZLUDE, 94, 103, },
+	};
+
+	for (int i = 0; i < ARRAYLENGTH(default_maps); i++) {
+		int map_id = mapindex->name2id(default_maps[i].map);
+		if (chr->mapserver_has_map(map_id)) {
+			ShowWarning("Unable to find map-server for '%s', sending to major city '%s'.\n", mapindex_id2name(cd->last_point.map), default_maps[i].map);
+			cd->last_point.map = map_id;
+			cd->last_point.x = default_maps[i].x;
+			cd->last_point.y = default_maps[i].y;
+			return true;
+		}
 	}
-	if (i >= 0)
-	{
-		cd->last_point.map = j;
-		ShowWarning("Unable to find map-server for '%s', sending to major city '%s'.\n", mapindex_id2name(cd->last_point.map), mapindex_id2name(j));
-	}
-	return i;
+	return false;
 }
 
 static void char_parse_char_select(int fd, struct char_session_data *sd, uint32 ipl) __attribute__((nonnull (2)));
@@ -4519,7 +4515,6 @@ static void char_parse_char_select(int fd, struct char_session_data *sd, uint32 
 	struct char_auth_node* node;
 	char* data;
 	int char_id;
-	int i;
 	int map_fd;
 	uint32 subnet_map_ip;
 	int slot = RFIFOB(fd,2);
@@ -4601,20 +4596,15 @@ static void char_parse_char_select(int fd, struct char_session_data *sd, uint32 
 	}
 	ShowInfo("Selected char: (Account %d: %d - %s)\n", sd->account_id, slot, char_dat.name);
 
-	// searching map server
-	i = chr->search_mapserver(cd->last_point.map, -1, -1);
-
 	// if map is not found, we check major cities
-	if (i < 0 || !cd->last_point.map) {
+	if (!chr->mapserver_has_map(cd->last_point.map) || cd->last_point.map == 0) {
 		//First check that there's actually a map server online.
 		if (chr->map_server.fd < 0 || VECTOR_LENGTH(chr->map_server.maps) == 0) {
 			ShowInfo("Connection Closed. No map servers available.\n");
 			chr->authfail_fd(fd, 1); // 1 = Server closed
 			return;
 		}
-		i = chr->search_default_maps_mapserver(cd);
-		if (i < 0)
-		{
+		if (!chr->find_available_map_fallback(cd)) {
 			ShowInfo("Connection Closed. No map server available that has a major city, and unable to find map-server for '%s'.\n", mapindex_id2name(cd->last_point.map));
 			chr->authfail_fd(fd, 1); // 1 = Server closed
 			return;
@@ -4625,7 +4615,7 @@ static void char_parse_char_select(int fd, struct char_session_data *sd, uint32 
 	//FIXME: is this case even possible? [ultramage]
 	if ((map_fd = chr->map_server.fd) < 1 || sockt->session[map_fd] == NULL)
 	{
-		ShowError("chr->parse_char: Attempting to write to invalid session %d! Map Server #%d disconnected.\n", map_fd, i);
+		ShowError("chr->parse_char: Attempting to write to invalid session %d! Map Server disconnected.\n", map_fd);
 		chr->map_server.fd = -1;
 		memset(&chr->map_server, 0, sizeof(struct mmo_map_server));
 		chr->authfail_fd(fd, 1); // 1 = Server closed
@@ -4634,7 +4624,7 @@ static void char_parse_char_select(int fd, struct char_session_data *sd, uint32 
 
 	subnet_map_ip = chr->lan_subnet_check(ipl);
 	//Send player to map
-	chr->send_map_info(fd, i, subnet_map_ip, cd, NULL);
+	chr->send_map_info(fd, subnet_map_ip, cd, NULL);
 
 	// create temporary auth entry
 	CREATE(node, struct char_auth_node, 1);
@@ -6499,7 +6489,7 @@ void char_defaults(void)
 	chr->parse_frommap_scdata_update = char_parse_frommap_scdata_update;
 	chr->parse_frommap_scdata_delete = char_parse_frommap_scdata_delete;
 	chr->parse_frommap = char_parse_frommap;
-	chr->search_mapserver = char_search_mapserver;
+	chr->mapserver_has_map = char_mapserver_has_map;
 	chr->mapif_init = char_mapif_init;
 	chr->lan_subnet_check = char_lan_subnet_check;
 	chr->delete2_ack = char_delete2_ack;
@@ -6513,7 +6503,7 @@ void char_defaults(void)
 	chr->parse_char_connect = char_parse_char_connect;
 	chr->send_map_info = char_send_map_info;
 	chr->send_wait_char_server = char_send_wait_char_server;
-	chr->search_default_maps_mapserver = char_search_default_maps_mapserver;
+	chr->find_available_map_fallback = char_find_available_map_fallback;
 	chr->parse_char_select = char_parse_char_select;
 	chr->creation_failed = char_creation_failed;
 	chr->creation_ok = char_creation_ok;

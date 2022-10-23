@@ -223,7 +223,7 @@ struct char_interface {
 	void (*parse_frommap_scdata_update) (int fd);
 	void (*parse_frommap_scdata_delete) (int fd);
 	int (*parse_frommap) (int fd);
-	int (*search_mapserver) (unsigned short map, uint32 ip, uint16 port);
+	bool (*mapserver_has_map) (unsigned short map);
 	int (*mapif_init) (int fd);
 	uint32 (*lan_subnet_check) (uint32 ip);
 	void (*delete2_ack) (int fd, int char_id, uint32 result, time_t delete_date);
@@ -235,9 +235,9 @@ struct char_interface {
 	void (*delete2_cancel) (int fd, struct char_session_data* sd);
 	void (*send_account_id) (int fd, int account_id);
 	void (*parse_char_connect) (int fd, struct char_session_data* sd, uint32 ipl);
-	void (*send_map_info) (int fd, int i, uint32 subnet_map_ip, struct mmo_charstatus *cd, char *dnsHost);
+	void (*send_map_info) (int fd, uint32 subnet_map_ip, struct mmo_charstatus *cd, char *dnsHost);
 	void (*send_wait_char_server) (int fd);
-	int (*search_default_maps_mapserver) (struct mmo_charstatus *cd);
+	bool (*find_available_map_fallback) (struct mmo_charstatus *cd);
 	void (*parse_char_select) (int fd, struct char_session_data* sd, uint32 ipl);
 	void (*creation_failed) (int fd, int result);
 	void (*creation_ok) (int fd, struct mmo_charstatus *char_dat);
