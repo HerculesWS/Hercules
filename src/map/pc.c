@@ -5915,7 +5915,7 @@ static int pc_steal_coin(struct map_session_data *sd, struct block_list *target,
  * @param clrtype The unit clear type, which should be used.
  * @retval 0 Success.
  * @retval 1 Invalid map index.
- * @retval 2 Map not in this map-server, and failed to locate alternative map-server.
+ * @retval 2 (unused) Map not in this map-server, and failed to locate alternative map-server.
  * @retval 3 No character data. (Parameter sd is a NULL pointer.)
  * @retval 4 Character is jailed.
  *
@@ -5930,6 +5930,7 @@ static int pc_setpos(struct map_session_data *sd, unsigned short map_index, int 
 		ShowDebug("pc_setpos: Passed mapindex %d is invalid!\n", map_index);
 		return 1;
 	}
+	Assert_retr(1, map_id >= 0);
 
 	if (pc_isdead(sd)) { // Revive dead character before warping.
 		pc->setstand(sd);
@@ -6003,6 +6004,7 @@ static int pc_setpos(struct map_session_data *sd, unsigned short map_index, int 
 				//stop = true; Uncomment when adding new checks.
 			}
 		}
+		Assert_retr(1, map_id >= 0);
 
 		// We hit an instance. If empty we populate the spawn data.
 		if (map->list[map_id].instance_id >= 0 && instance->list[map->list[map_id].instance_id].respawn.map == 0
@@ -6078,38 +6080,6 @@ static int pc_setpos(struct map_session_data *sd, unsigned short map_index, int 
 
 		if (sd->mapindex != 0 && map->list[sd->bl.m].channel != NULL) // Only if the character is already on a map.
 			channel->leave(map->list[sd->bl.m].channel, sd);
-	}
-
-	if (map_id < 0) {
-		uint32 ip;
-		uint16 port;
-
-		// If can't find any map-servers, just abort setting position.
-		if (sd->mapindex == 0 || map->mapname2ipport(map_index, &ip, &port) != 0)
-			return 2;
-
-		if (sd->npc_id != 0)
-			npc->event_dequeue(sd);
-
-		npc->script_event(sd, NPCE_LOGOUT);
-
-		// Remove from map, THEN change x/y coordinates.
-		unit->remove_map_pc(sd, clrtype);
-
-		if (battle_config.player_warp_keep_direction == 0)
-			sd->ud.dir = 0; /// Make character facing north.
-
-		sd->mapindex = map_index;
-		sd->bl.x= x;
-		sd->bl.y= y;
-		pc->clean_skilltree(sd);
-		chrif->save(sd, 2);
-		chrif->changemapserver(sd, ip, port);
-
-		// Free session data from this map server. [Kevin]
-		unit->free_pc(sd);
-
-		return 0;
 	}
 
 	if (x < 0 || x >= map->list[map_id].xs || y < 0 || y >= map->list[map_id].ys) { // Invalid coordinates. Randomize them.
