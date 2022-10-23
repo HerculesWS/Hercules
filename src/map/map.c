@@ -2919,16 +2919,7 @@ static int16 map_mapindex2mapid(unsigned short map_index)
  *------------------------------------------*/
 static int map_mapname2ipport(unsigned short name, uint32 *ip, uint16 *port)
 {
-	struct map_data_other_server *mdos;
-
-	nullpo_retr(-1, ip);
-	nullpo_retr(-1, port);
-	mdos = (struct map_data_other_server*)uidb_get(map->map_db,(unsigned int)name);
-	if(mdos==NULL || mdos->cell) //If gat isn't null, this is a local map.
-		return -1;
-	*ip=mdos->ip;
-	*port=mdos->port;
-	return 0;
+	return -1;
 }
 
 /**
@@ -3462,57 +3453,16 @@ static bool map_iwall_remove(const char *wall_name)
 }
 
 /**
- * @see DBCreateData
- */
-static struct DBData create_map_data_other_server(union DBKey key, va_list args)
-{
-	struct map_data_other_server *mdos;
-	unsigned short map_index = (unsigned short)key.ui;
-	mdos=(struct map_data_other_server *)aCalloc(1,sizeof(struct map_data_other_server));
-	mdos->index = map_index;
-	memcpy(mdos->name, mapindex_id2name(map_index), MAP_NAME_LENGTH);
-	return DB->ptr2data(mdos);
-}
-
-/*==========================================
- * Add mapindex to db of another map server
- *------------------------------------------*/
-static int map_setipport(unsigned short map_index, uint32 ip, uint16 port)
-{
-	struct map_data_other_server *mdos;
-
-	mdos= uidb_ensure(map->map_db,(unsigned int)map_index, map->create_map_data_other_server);
-
-	if(mdos->cell) //Local map,Do nothing. Give priority to our own local maps over ones from another server. [Skotlex]
-		return 0;
-	if(ip == clif->map_ip && port == clif->map_port) {
-		//That's odd, we received info that we are the ones with this map, but... we don't have it.
-		ShowFatalError("map_setipport : received info that this map-server SHOULD have map '%s', but it is not loaded.\n",mapindex_id2name(map_index));
-		exit(EXIT_FAILURE);
-	}
-	mdos->ip   = ip;
-	mdos->port = port;
-	return 1;
-}
-
-/**
  * Delete all the other maps server management
  * @see DBApply
  */
 static int map_eraseallipport_sub(union DBKey key, struct DBData *data, va_list va)
 {
-	struct map_data_other_server *mdos = DB->data2ptr(data);
-	nullpo_ret(mdos);
-	if(mdos->cell == NULL) {
-		db_remove(map->map_db,key);
-		aFree(mdos);
-	}
 	return 0;
 }
 
 static int map_eraseallipport(void)
 {
-	map->map_db->foreach(map->map_db,map->eraseallipport_sub);
 	return 1;
 }
 
@@ -3521,17 +3471,6 @@ static int map_eraseallipport(void)
  *------------------------------------------*/
 static int map_eraseipport(unsigned short map_index, uint32 ip, uint16 port)
 {
-	struct map_data_other_server *mdos;
-
-	mdos = (struct map_data_other_server*)uidb_get(map->map_db,(unsigned int)map_index);
-	if(!mdos || mdos->cell) //Map either does not exists or is a local map.
-		return 0;
-
-	if(mdos->ip==ip && mdos->port == port) {
-		uidb_remove(map->map_db,(unsigned int)map_index);
-		aFree(mdos);
-		return 1;
-	}
 	return 0;
 }
 
@@ -6461,11 +6400,6 @@ static bool map_remove_questinfo(int m, struct npc_data *nd)
  */
 static int map_db_final(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct map_data_other_server *mdos = DB->data2ptr(data);
-
-	if(mdos && iMalloc->verify_ptr(mdos) && mdos->cell == NULL)
-		aFree(mdos);
-
 	return 0;
 }
 
@@ -6625,8 +6559,6 @@ int do_final(void)
 	stylist->final();
 
 	HPM_map_do_final();
-
-	map->map_db->destroy(map->map_db, map->db_final);
 
 	mapindex->final();
 	if (map->enable_grf)
@@ -7087,7 +7019,6 @@ int do_init(int argc, char *argv[])
 	map->pc_db     = idb_alloc(DB_OPT_BASE); //Added for reliable map->id2sd() use. [Skotlex]
 	map->mobid_db  = idb_alloc(DB_OPT_BASE); //Added to lower the load of the lazy mob AI. [Skotlex]
 	map->bossid_db = idb_alloc(DB_OPT_BASE); // Used for Convex Mirror quick MVP search
-	map->map_db    = uidb_alloc(DB_OPT_BASE);
 	map->nick_db   = idb_alloc(DB_OPT_BASE);
 	map->charid_db = idb_alloc(DB_OPT_BASE);
 	map->regen_db  = idb_alloc(DB_OPT_BASE); // efficient status_natural_heal processing
@@ -7284,7 +7215,6 @@ void map_defaults(void)
 	map->pc_db = NULL;
 	map->mobid_db = NULL;
 	map->bossid_db = NULL;
-	map->map_db = NULL;
 	map->nick_db = NULL;
 	map->charid_db = NULL;
 	map->regen_db = NULL;
@@ -7412,7 +7342,6 @@ PRAGMA_GCC9(GCC diagnostic pop)
 	map->mapindex2mapid = map_mapindex2mapid;
 	map->mapname2mapid = map_mapname2mapid;
 	map->mapname2ipport = map_mapname2ipport;
-	map->setipport = map_setipport;
 	map->eraseipport = map_eraseipport;
 	map->eraseallipport = map_eraseallipport;
 	map->addiddb = map_addiddb;
@@ -7461,7 +7390,6 @@ PRAGMA_GCC9(GCC diagnostic pop)
 	map->sub_getcellp = map_sub_getcellp;
 	map->sub_setcell = map_sub_setcell;
 	map->iwall_nextxy = map_iwall_nextxy;
-	map->create_map_data_other_server = create_map_data_other_server;
 	map->eraseallipport_sub = map_eraseallipport_sub;
 	map->readfromcache = map_readfromcache;
 	map->readfromcache_v1 = map_readfromcache_v1;
