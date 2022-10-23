@@ -30,10 +30,10 @@ struct rodex_item;
  **/
 struct mapif_interface {
 	void (*ban) (int id, unsigned int flag, int status);
-	void (*server_init) (int id);
-	void (*server_destroy) (int id);
-	void (*server_reset) (int id);
-	void (*on_disconnect) (int id);
+	void (*server_init) (void);
+	void (*server_destroy) (void);
+	void (*server_reset) (void);
+	void (*on_disconnect) (void);
 	void (*on_parse_accinfo) (int account_id, int u_fd, int u_aid, int u_group, int map_fd);
 	void (*char_ban) (int char_id, time_t timestamp);
 	int (*sendall) (const unsigned char *buf, unsigned int len);

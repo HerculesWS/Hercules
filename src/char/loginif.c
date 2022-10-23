@@ -43,7 +43,7 @@ static void loginif_reset(void) __attribute__ ((noreturn));
 static void loginif_reset(void)
 {
 	// TODO kick everyone out and reset everything or wait for connect and try to reacquire locks [FlavioJS]
-	mapif->server_reset(0);
+	mapif->server_reset();
 	sockt->flush_fifos();
 	exit(EXIT_FAILURE);
 }

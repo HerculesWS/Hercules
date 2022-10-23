@@ -66,14 +66,14 @@ static void mapif_ban(int id, unsigned int flag, int status)
 }
 
 /// Initializes a server structure.
-static void mapif_server_init(int id)
+static void mapif_server_init(void)
 {
 	//memset(&chr->map_server, 0, sizeof(chr->map_server));
 	chr->map_server.fd = -1;
 }
 
 /// Destroys a server structure.
-static void mapif_server_destroy(int id)
+static void mapif_server_destroy(void)
 {
 	if (chr->map_server.fd == -1) {
 		sockt->close(chr->map_server.fd);
@@ -82,7 +82,7 @@ static void mapif_server_destroy(int id)
 }
 
 /// Resets all the data related to a server.
-static void mapif_server_reset(int id)
+static void mapif_server_reset(void)
 {
 	int i, j;
 	unsigned char buf[16384];
@@ -103,16 +103,16 @@ static void mapif_server_reset(int id)
 	}
 	if (SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `index`='%d'", ragsrvinfo_db, chr->map_server.fd))
 		Sql_ShowDebug(inter->sql_handle);
-	chr->online_char_db->foreach(chr->online_char_db, chr->db_setoffline, id); //Tag relevant chars as 'in disconnected' server.
-	mapif->server_destroy(id);
-	mapif->server_init(id);
+	chr->online_char_db->foreach(chr->online_char_db, chr->db_setoffline); //Tag relevant chars as 'in disconnected' server.
+	mapif->server_destroy();
+	mapif->server_init();
 }
 
 /// Called when the connection to a Map Server is disconnected.
-static void mapif_on_disconnect(int id)
+static void mapif_on_disconnect(void)
 {
-	ShowStatus("Map-server #%d has disconnected.\n", id);
-	mapif->server_reset(id);
+	ShowStatus("Map-server has disconnected.\n");
+	mapif->server_reset();
 }
 
 static void mapif_on_parse_accinfo(int account_id, int u_fd, int u_aid, int u_group, int map_fd)
