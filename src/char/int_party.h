@@ -68,7 +68,7 @@ struct inter_party_interface {
 	int (*CharOffline) (int char_id, int party_id);
 	struct party_data *(*create) (const char *name, int item, int item2, const struct party_member *leader);
 	bool (*add_member) (int party_id, const struct party_member *member);
-	bool (*change_option) (int party_id, int account_id, int exp, int item, int map_fd);
+	bool (*change_option) (int party_id, int account_id, int exp, int item);
 	bool (*change_map) (int party_id, int account_id, int char_id, unsigned short map, int online, int lv);
 	bool (*disband) (int party_id);
 	bool (*change_leader) (int party_id, int account_id, int char_id);

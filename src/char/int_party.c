@@ -66,7 +66,7 @@ static int inter_party_check_lv(struct party_data *p)
 
 	if (p->party.exp == 1 && inter_party->check_exp_share(p) == 0) {
 		p->party.exp = 0;
-		mapif->party_optionchanged(0, &p->party, 0, 0);
+		mapif->party_optionchanged(&p->party, 0, 0);
 		inter_party->tosql(&p->party, PS_BASIC, 0);
 		return 0;
 	}
@@ -518,14 +518,14 @@ static bool inter_party_add_member(int party_id, const struct party_member *memb
 	memcpy(&p->party.member[i], member, sizeof(struct party_member));
 	p->party.member[i].leader = 0;
 	inter_party->calc_state(p); /// Count online/offline members and check family state and even share range.
-	mapif->party_info(-1, &p->party, 0);
+	mapif->party_info(&p->party, 0);
 	inter_party->tosql(&p->party, PS_ADDMEMBER, i);
 
 	return true;
 }
 
 //Party setting change request
-static bool inter_party_change_option(int party_id, int account_id, int exp, int item, int map_fd)
+static bool inter_party_change_option(int party_id, int account_id, int exp, int item)
 {
 	struct party_data *p;
 	int flag = 0;
@@ -540,7 +540,7 @@ static bool inter_party_change_option(int party_id, int account_id, int exp, int
 		p->party.exp=0;
 	}
 	p->party.item = item&0x3; //Filter out invalid values.
-	mapif->party_optionchanged(map_fd, &p->party, account_id, flag);
+	mapif->party_optionchanged(&p->party, account_id, flag);
 	inter_party->tosql(&p->party, PS_BASIC, 0);
 	return true;
 }
@@ -583,7 +583,7 @@ static bool inter_party_leave(int party_id, int account_id, int char_id)
 	inter_party->calc_state(p); /// Count online/offline members and check family state and even share range.
 
 	if (inter_party->check_empty(p) == 0)
-		mapif->party_info(-1, &p->party, 0);
+		mapif->party_info(&p->party, 0);
 
 	return true;
 }

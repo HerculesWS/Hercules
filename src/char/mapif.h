@@ -62,8 +62,8 @@ struct mapif_interface {
 	void (*elemental_saved) (int fd, unsigned char flag);
 	void (*parse_elemental_save) (int fd, const struct s_elemental *ele);
 	int (*guild_created) (int fd, int account_id, struct guild *g);
-	int (*guild_noinfo) (int fd, int guild_id);
-	int (*guild_info) (int fd, struct guild *g);
+	int (*guild_noinfo) (int guild_id);
+	int (*guild_info) (const struct guild *g);
 	int (*guild_memberadded) (int fd, int guild_id, int account_id, int char_id, int flag);
 	int (*guild_withdraw) (int guild_id, int account_id, int char_id, int flag, const char *name, const char *mes);
 	int (*guild_memberinfoshort) (struct guild *g, int idx);
@@ -124,9 +124,9 @@ struct mapif_interface {
 	void (*parse_mercenary_save) (int fd, const struct s_mercenary *merc);
 	int (*party_created) (int fd, int account_id, int char_id, struct party *p);
 	void (*party_noinfo) (int fd, int party_id, int char_id);
-	void (*party_info) (int fd, struct party* p, int char_id);
+	void (*party_info) (const struct party *p, int char_id);
 	int (*party_memberadded) (int fd, int party_id, int account_id, int char_id, int flag);
-	int (*party_optionchanged) (int fd, struct party *p, int account_id, int flag);
+	int (*party_optionchanged) (const struct party *p, int account_id, int flag);
 	int (*party_withdraw) (int party_id,int account_id, int char_id);
 	int (*party_membermoved) (struct party *p, int idx);
 	int (*party_broken) (int party_id, int flag);

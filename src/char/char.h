@@ -182,7 +182,7 @@ struct char_interface {
 	void (*global_accreg_to_login_send) (void);
 	void (*global_accreg_to_login_add) (const char *key, unsigned int index, intptr_t val, bool is_string);
 	void (*read_fame_list) (void);
-	int (*send_fame_list) (int fd);
+	int (*send_fame_list) (void);
 	void (*update_fame_list) (int type, int index, int fame);
 	int (*loadName) (int char_id, char* name);
 	void (*parse_frommap_datasync) (int fd);

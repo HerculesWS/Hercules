@@ -1994,7 +1994,7 @@ static int char_delete_char_sql(int char_id)
 	else if( SQL->NumRows(inter->sql_handle) > 0 )
 		inter_guild->disband(guild_id);
 	else if( guild_id )
-		inter_guild->leave(guild_id, account_id, char_id, 0, "** Character Deleted **", -1);// Leave your guild.
+		inter_guild->leave(guild_id, account_id, char_id, 0, "** Character Deleted **");// Leave your guild.
 	return 0;
 }
 
@@ -3025,7 +3025,7 @@ static void char_read_fame_list(void)
 }
 
 // Send map-servers the fame ranking lists
-static int char_send_fame_list(int fd)
+static int char_send_fame_list(void)
 {
 	int i, len = 8;
 	unsigned char buf[32000];
@@ -3137,7 +3137,7 @@ static void char_parse_frommap_map_names(int fd)
 
 	// send name for wisp to player
 	chr->map_received_ok(fd);
-	chr->send_fame_list(fd); //Send fame list.
+	chr->send_fame_list(); //Send fame list.
 	RFIFOSKIP(fd,RFIFOW(fd,2));
 }
 
@@ -3691,7 +3691,7 @@ static void char_parse_frommap_fame_list(int fd)
 			ARR_MOVE(player_pos, fame_pos, list, struct fame_list);
 			list[fame_pos].fame = fame;
 		}
-		chr->send_fame_list(-1);
+		chr->send_fame_list();
 	}
 
 	RFIFOSKIP(fd,11);
@@ -3738,7 +3738,7 @@ static void char_parse_frommap_set_char_online(int fd)
 static void char_parse_frommap_build_fame_list(int fd)
 {
 	chr->read_fame_list();
-	chr->send_fame_list(-1);
+	chr->send_fame_list();
 	RFIFOSKIP(fd,2);
 }
 

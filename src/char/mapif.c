@@ -454,7 +454,7 @@ static int mapif_guild_created(int fd, int account_id, struct guild *g)
 }
 
 // Guild not found
-static int mapif_guild_noinfo(int fd, int guild_id)
+static int mapif_guild_noinfo(int guild_id)
 {
 	unsigned char buf[12];
 	WBUFW(buf, 0) = 0x3831;
@@ -466,7 +466,7 @@ static int mapif_guild_noinfo(int fd, int guild_id)
 }
 
 // Send guild info
-static int mapif_guild_info(int fd, struct guild *g)
+static int mapif_guild_info(const struct guild *g)
 {
 	unsigned char buf[8 + sizeof(struct guild)];
 	nullpo_ret(g);
@@ -689,7 +689,7 @@ static int mapif_parse_CreateGuild(int fd, int account_id, const char *name, con
 	// Report to client
 	mapif->guild_created(fd,account_id,g);
 	if (g != NULL) {
-		mapif->guild_info(fd,g);
+		mapif->guild_info(g);
 	}
 
 	return 0;
@@ -701,9 +701,9 @@ static int mapif_parse_GuildInfo(int fd, int guild_id)
 	struct guild * g = inter_guild->fromsql(guild_id); //We use this because on start-up the info of castle-owned guilds is required. [Skotlex]
 	if (g != NULL) {
 		if (!inter_guild->calcinfo(g))
-			mapif->guild_info(fd, g);
+			mapif->guild_info(g);
 	} else {
-		mapif->guild_noinfo(fd, guild_id); // Failed to load info
+		mapif->guild_noinfo(guild_id); // Failed to load info
 	}
 	return 0;
 }
@@ -720,7 +720,7 @@ static int mapif_parse_GuildAddMember(int fd, int guild_id, const struct guild_m
 // Delete member from guild
 static int mapif_parse_GuildLeave(int fd, int guild_id, int account_id, int char_id, int flag, const char *mes)
 {
-	inter_guild->leave(guild_id, account_id, char_id, flag, mes, fd);
+	inter_guild->leave(guild_id, account_id, char_id, flag, mes);
 	return 0;
 }
 
@@ -1151,7 +1151,7 @@ static void mapif_party_noinfo(int fd, int party_id, int char_id)
 }
 
 //Digest party information
-static void mapif_party_info(int fd, struct party* p, int char_id)
+static void mapif_party_info(const struct party *p, int char_id)
 {
 	unsigned char buf[8 + sizeof(struct party)];
 	nullpo_retv(p);
@@ -1177,7 +1177,7 @@ static int mapif_party_memberadded(int fd, int party_id, int account_id, int cha
 }
 
 // Party setting change notification
-static int mapif_party_optionchanged(int fd, struct party *p, int account_id, int flag)
+static int mapif_party_optionchanged(const struct party *p, int account_id, int flag)
 {
 	unsigned char buf[16];
 	nullpo_ret(p);
@@ -1249,7 +1249,7 @@ static int mapif_parse_CreateParty(int fd, const char *name, int item, int item2
 		return 0;
 	}
 
-	mapif->party_info(fd, &p->party, 0);
+	mapif->party_info(&p->party, 0);
 	mapif->party_created(fd, leader->account_id, leader->char_id, &p->party);
 
 	return 0;
@@ -1262,7 +1262,7 @@ static void mapif_parse_PartyInfo(int fd, int party_id, int char_id)
 	p = inter_party->fromsql(party_id);
 
 	if (p != NULL)
-		mapif->party_info(fd, &p->party, char_id);
+		mapif->party_info(&p->party, char_id);
 	else
 		mapif->party_noinfo(fd, party_id, char_id);
 }
@@ -1284,7 +1284,7 @@ static int mapif_parse_PartyAddMember(int fd, int party_id, const struct party_m
 //Party setting change request
 static int mapif_parse_PartyChangeOption(int fd, int party_id, int account_id, int exp, int item)
 {
-	inter_party->change_option(party_id, account_id, exp, item, fd);
+	inter_party->change_option(party_id, account_id, exp, item);
 	return 0;
 }
 
