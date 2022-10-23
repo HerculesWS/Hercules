@@ -9336,7 +9336,13 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 					map->freeblock_unlock();
 					return 0;
 				}
-				status_zap(src, 0, skill->get_sp(skill_id, skill_lv)); // consume sp only if succeeded [Inkfish]
+		                int sp;
+				if (sd != NULL)
+					sp = skill->get_requirement(sd, skill_id, skill_lv).sp;
+				else
+			                sp = skill->get_sp(skill_id, skill_lv);
+		                if (sp > 0)
+			                status_zap(src, 0, sp); // consume sp only if succeeded
 				do {
 					int eff = rnd() % 14;
 					if( eff == 5 )
@@ -10103,7 +10109,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 					break;
 
 				if( sd && sd->status.party_id != 0 )
-						count = party->foreachsamemap(party->sub_count, sd, 0);
+						count = party->foreachsamemap(party->sub_count, sd, 0, 0);
 
 				clif->skill_nodamage(bl, bl, skill_id, skill_lv,
 					sc_start4(src, bl, type, 100, skill_lv, 0, 0, count, skill->get_time(skill_id, skill_lv), skill_id));
@@ -10117,7 +10123,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 					int heal = skill->calc_heal(src, bl, AL_HEAL, lv, true);
 
 					if( sd->status.party_id ) {
-						int partycount = party->foreachsamemap(party->sub_count, sd, 0);
+						int partycount = party->foreachsamemap(party->sub_count, sd, 0, 0);
 						if (partycount > 1)
 							heal += ((heal / 100) * (partycount * 10) / 4);
 					}
@@ -15553,9 +15559,9 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 			if(!sc)
 				return 0;
 			if( sc && sc->data[SC_COMBOATTACK] ) {
-				if( sc->data[SC_COMBOATTACK]->val1 == CH_TIGERFIST )
+				if (sc->data[SC_COMBOATTACK]->val1 == CH_TIGERFIST || sc->data[SC_COMBOATTACK]->val1 == MO_COMBOFINISH)
 					break;
-				clif->skill_fail(sd, skill_id, USESKILL_FAIL_COMBOSKILL, CH_TIGERFIST, 0);
+				//clif->skill_fail(sd, skill_id, USESKILL_FAIL_COMBOSKILL, CH_TIGERFIST, 0);
 			}
 			return 0;
 		case MO_EXTREMITYFIST:
