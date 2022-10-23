@@ -42,10 +42,8 @@ struct loginif_interface *loginif;
 static void loginif_reset(void) __attribute__ ((noreturn));
 static void loginif_reset(void)
 {
-	int id;
 	// TODO kick everyone out and reset everything or wait for connect and try to reacquire locks [FlavioJS]
-	for( id = 0; id < ARRAYLENGTH(chr->server); ++id )
-		mapif->server_reset(id);
+	mapif->server_reset(0);
 	sockt->flush_fifos();
 	exit(EXIT_FAILURE);
 }
@@ -72,16 +70,13 @@ static void loginif_on_disconnect(void)
 /// Called when all the connection steps are completed.
 static void loginif_on_ready(void)
 {
-	int i;
-
 	loginif->check_shutdown();
 
 	//Send online accounts to login server.
 	chr->send_accounts_tologin(INVALID_TIMER, timer->gettick(), 0, 0);
 
 	// if no map-server already connected, display a message...
-	ARR_FIND(0, ARRAYLENGTH(chr->server), i, chr->server[i].fd > 0 && VECTOR_LENGTH(chr->server[i].maps));
-	if (i == ARRAYLENGTH(chr->server))
+	if (chr->map_server.fd <= 0 || VECTOR_LENGTH(chr->map_server.maps) == 0)
 		ShowStatus("Awaiting maps from map-server.\n");
 }
 

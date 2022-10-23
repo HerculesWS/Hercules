@@ -68,16 +68,16 @@ static void mapif_ban(int id, unsigned int flag, int status)
 /// Initializes a server structure.
 static void mapif_server_init(int id)
 {
-	//memset(&chr->server[id], 0, sizeof(server[id]));
-	chr->server[id].fd = -1;
+	//memset(&chr->map_server, 0, sizeof(chr->map_server));
+	chr->map_server.fd = -1;
 }
 
 /// Destroys a server structure.
 static void mapif_server_destroy(int id)
 {
-	if (chr->server[id].fd == -1) {
-		sockt->close(chr->server[id].fd);
-		chr->server[id].fd = -1;
+	if (chr->map_server.fd == -1) {
+		sockt->close(chr->map_server.fd);
+		chr->map_server.fd = -1;
 	}
 }
 
@@ -86,14 +86,14 @@ static void mapif_server_reset(int id)
 {
 	int i, j;
 	unsigned char buf[16384];
-	int fd = chr->server[id].fd;
+	int fd = chr->map_server.fd;
 	//Notify other map servers that this one is gone. [Skotlex]
 	WBUFW(buf, 0) = 0x2b20;
-	WBUFL(buf, 4) = htonl(chr->server[id].ip);
-	WBUFW(buf, 8) = htons(chr->server[id].port);
+	WBUFL(buf, 4) = htonl(chr->map_server.ip);
+	WBUFW(buf, 8) = htons(chr->map_server.port);
 	j = 0;
-	for (i = 0; i < VECTOR_LENGTH(chr->server[id].maps); i++) {
-		uint16 m = VECTOR_INDEX(chr->server[id].maps, i);
+	for (i = 0; i < VECTOR_LENGTH(chr->map_server.maps); i++) {
+		uint16 m = VECTOR_INDEX(chr->map_server.maps, i);
 		if (m != 0)
 			WBUFW(buf, 10 + (j++) * 4) = m;
 	}
@@ -101,7 +101,7 @@ static void mapif_server_reset(int id)
 		WBUFW(buf, 2) = j * 4 + 10;
 		mapif->sendallwos(fd, buf, WBUFW(buf, 2));
 	}
-	if (SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `index`='%d'", ragsrvinfo_db, chr->server[id].fd))
+	if (SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `index`='%d'", ragsrvinfo_db, chr->map_server.fd))
 		Sql_ShowDebug(inter->sql_handle);
 	chr->online_char_db->foreach(chr->online_char_db, chr->db_setoffline, id); //Tag relevant chars as 'in disconnected' server.
 	mapif->server_destroy(id);
@@ -140,50 +140,20 @@ static void mapif_char_ban(int char_id, time_t timestamp)
 
 static int mapif_sendall(const unsigned char *buf, unsigned int len)
 {
-	int i, c;
-
-	nullpo_ret(buf);
-	c = 0;
-	for (i = 0; i < ARRAYLENGTH(chr->server); i++) {
-		int fd;
-		if ((fd = chr->server[i].fd) > 0) {
-			WFIFOHEAD(fd, len);
-			memcpy(WFIFOP(fd, 0), buf, len);
-			WFIFOSET(fd, len);
-			c++;
-		}
-	}
-
-	return c;
+	return mapif->send(chr->map_server.fd, buf, len);
 }
 
 static int mapif_sendallwos(int sfd, unsigned char *buf, unsigned int len)
 {
-	int i, c;
-
-	nullpo_ret(buf);
-	c = 0;
-	for (i = 0; i < ARRAYLENGTH(chr->server); i++) {
-		int fd;
-		if ((fd = chr->server[i].fd) > 0 && fd != sfd) {
-			WFIFOHEAD(fd, len);
-			memcpy(WFIFOP(fd, 0), buf, len);
-			WFIFOSET(fd, len);
-			c++;
-		}
-	}
-
-	return c;
+	return 0;
 }
 
 
-static int mapif_send(int fd, unsigned char *buf, unsigned int len)
+static int mapif_send(int fd, const unsigned char *buf, unsigned int len)
 {
 	nullpo_ret(buf);
 	if (fd >= 0) {
-		int i;
-		ARR_FIND (0, ARRAYLENGTH(chr->server), i, fd == chr->server[i].fd);
-		if (i < ARRAYLENGTH(chr->server)) {
+		if (fd == chr->map_server.fd) {
 			WFIFOHEAD(fd, len);
 			memcpy(WFIFOP(fd, 0), buf, len);
 			WFIFOSET(fd, len);

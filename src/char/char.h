@@ -72,12 +72,6 @@ struct mmo_map_server {
 	VECTOR_DECL(uint16) maps;
 };
 
-/**
- * deprecated feature, multi map been a dangerous in-complete feature for so long and going to be removed.
- * USE IT AT YOUR OWN RISK!
- */
-#define MAX_MAP_SERVERS 1
-
 #define DEFAULT_AUTOSAVE_INTERVAL (300*1000)
 
 enum inventory_table_type {
@@ -103,7 +97,7 @@ struct char_auth_node {
  * char interface
  **/
 struct char_interface {
-	struct mmo_map_server server[MAX_MAP_SERVERS];
+	struct mmo_map_server map_server;
 	int login_fd;
 	int char_fd;
 	struct DBMap *online_char_db; // int account_id -> struct online_char_data*

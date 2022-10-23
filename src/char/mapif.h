@@ -38,7 +38,7 @@ struct mapif_interface {
 	void (*char_ban) (int char_id, time_t timestamp);
 	int (*sendall) (const unsigned char *buf, unsigned int len);
 	int (*sendallwos) (int sfd, unsigned char *buf, unsigned int len);
-	int (*send) (int fd, unsigned char *buf, unsigned int len);
+	int (*send) (int fd, const unsigned char *buf, unsigned int len);
 	void (*send_users_count) (int users);
 	void (*pLoadAchievements) (int fd);
 	void (*sAchievementsToMap) (int fd, int char_id, const struct char_achievements *p);
