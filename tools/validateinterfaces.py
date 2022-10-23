@@ -366,7 +366,7 @@ def reportMethods(tracker):
 
 def checkLostFile(tracker, cFile):
 #    print "Checking: " + cFile
-    methodRe = re.compile("^([\w0-9* _]*)([ ]|[*])(?P<ifname>[a-z_]+)_(?P<method>[\w_]+)(|[ ])[(]")
+    methodRe = re.compile("^([a-zA-Z0-9* _]*)([ ]|[*])(?P<ifname>[a-z_]+)_(?P<method>[\w_]+)(|[ ])[(]")
     with open(cFile, "r") as r:
         for line in r:
             if line.find("(") < 1 or len(line) < 3 or line[0] == "\t" or line[0] == " " or line.find("_defaults") > 0:

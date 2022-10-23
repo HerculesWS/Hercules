@@ -909,17 +909,17 @@ static int64 battle_calc_masteryfix(struct block_list *src, struct block_list *t
 	if( div < 0 ) // div fix
 		div = 1;
 	if( skill_id == MO_FINGEROFFENSIVE )//The finger offensive spheres on moment of attack do count. [Skotlex]
-		damage += div * sd->spiritball_old * 3;
+		damage += (int64)div * sd->spiritball_old * 3;
 	else
-		damage += div * sd->spiritball * 3;
+		damage += (int64)div * sd->spiritball * 3;
 	if( skill_id != CR_SHIELDBOOMERANG ) // Only Shield boomerang doesn't takes the Star Crumbs bonus.
-		damage += div * (left ? sd->left_weapon.star : sd->right_weapon.star);
+		damage += (int64)div * (left ? sd->left_weapon.star : sd->right_weapon.star);
 	if( skill_id != MC_CARTREVOLUTION && (skill2_lv=pc->checkskill(sd,BS_HILTBINDING)) > 0 )
 		damage += 4;
 
 	if(sd->status.party_id && (skill2_lv=pc->checkskill(sd,TK_POWER)) > 0) {
 		if ((i = party->foreachsamemap(party->sub_count, sd, 0, sd->status.char_id)) > 0)
-			damage += 2 * skill2_lv * i * (damage /*+ unknown value*/)  / 100 /*+ unknown value*/;
+			damage += (damage /*+ unknown value*/) * 2 * skill2_lv * i / 100 /*+ unknown value*/;
 	}
 #else
 	if( skill_id != ASC_BREAKER && weapon ) // Adv Katar Mastery is does not applies to ASC_BREAKER, but other masteries DO apply >_>
@@ -4160,7 +4160,7 @@ static struct Damage battle_calc_magic_attack(struct block_list *src, struct blo
 static struct Damage battle_calc_misc_attack(struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, int mflag)
 {
 	int temp;
-	short i, nk;
+	short nk;
 	short s_ele;
 
 	struct map_session_data *sd, *tsd;
@@ -4211,7 +4211,7 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 	case MA_LANDMINE:
 	case HT_BLASTMINE:
 	case HT_CLAYMORETRAP:
-		md.damage = skill_lv * sstatus->dex * (3+status->get_lv(src)/100) * (1+sstatus->int_/35);
+		md.damage = (int64)skill_lv * sstatus->dex * (3 + status->get_lv(src) / 100) * (1 + sstatus->int_ / 35);
 		md.damage += md.damage * (rnd()%20-10) / 100;
 		md.damage += 40 * (sd?pc->checkskill(sd,RA_RESEARCHTRAP):0);
 		break;
@@ -4283,7 +4283,7 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 			md.damage = matk + atk;
 			if( src->type == BL_MOB ){
 				totaldef = (tdef + tmdef) >> 1;
-				md.damage = 7 * targetVit * skill_lv * (atk + matk) / 100;
+				md.damage = (int64)7 * targetVit * skill_lv * (atk + matk) / 100;
 				/*
 				// Pending [malufett]
 				if( unknown condition ){
@@ -4390,7 +4390,7 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 
 		break;
 	case WM_SOUND_OF_DESTRUCTION:
-		md.damage = 1000 * (int64)skill_lv + sstatus->int_ * (sd ? pc->checkskill(sd,WM_LESSON) : 10);
+		md.damage = 1000 * skill_lv + (int64)sstatus->int_ * (sd ? pc->checkskill(sd,WM_LESSON) : 10);
 		md.damage += md.damage * 10 * battle->calc_chorusbonus(sd) / 100;
 		break;
 	/**
@@ -4403,7 +4403,7 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 #else
 			short totaldef = tstatus->def2 + (short)status->get_def(target);
 #endif
-			md.damage = ( (sd?pc->checkskill(sd,NC_MAINFRAME):10) + 8 ) * ( skill_lv + 1 ) * ( status_get_sp(src) + sstatus->vit );
+			md.damage = (int64)((sd ? pc->checkskill(sd,NC_MAINFRAME) : 10) + 8) * (skill_lv + 1) * (status_get_sp(src) + sstatus->vit);
 			RE_LVL_MDMOD(100);
 			md.damage += status_get_hp(src) - totaldef;
 		}
@@ -4448,9 +4448,9 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 
 	if (!(nk&NK_IGNORE_FLEE))
 	{
-		i = 0; //Temp for "hit or no hit"
+		bool hit = false;
 		if(tsc && tsc->opt1 && tsc->opt1 != OPT1_STONEWAIT && tsc->opt1 != OPT1_BURNING)
-			i = 1;
+			hit = true;
 		else {
 			short
 				flee = tstatus->flee,
@@ -4484,16 +4484,16 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 			hitrate = cap_value(hitrate, battle_config.min_hitrate, battle_config.max_hitrate);
 
 			if(rnd()%100 < hitrate)
-				i = 1;
+				hit = true;
 		}
-		if (!i) {
+		if (!hit) {
 			md.damage = 0;
 			md.dmg_lv=ATK_FLEE;
 		}
 	}
 #ifndef HMAP_ZONE_DAMAGE_CAP_TYPE
 	if (skill_id) {
-		for(i = 0; i < map->list[target->m].zone->capped_skills_count; i++) {
+		for(int i = 0; i < map->list[target->m].zone->capped_skills_count; i++) {
 			if( skill_id == map->list[target->m].zone->capped_skills[i]->nameid && (map->list[target->m].zone->capped_skills[i]->type & target->type) ) {
 				if (target->type == BL_MOB && map->list[target->m].zone->capped_skills[i]->subtype != MZS_NONE) {
 					const struct mob_data *t_md = BL_UCCAST(BL_MOB, target);
@@ -4513,6 +4513,7 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 #endif
 	md.damage = battle->calc_cardfix(BF_MISC, src, target, nk, s_ele, 0, md.damage, 0, md.flag);
 	md.damage = battle->calc_cardfix2(src, target, md.damage, s_ele, nk, md.flag);
+	int modifier = 0;
 	if(skill_id){
 		uint16 rskill;/* redirect skill id */
 		switch(skill_id){
@@ -4522,13 +4523,13 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 			default:
 				rskill = skill_id;
 		}
-		if (sd && (i = pc->skillatk_bonus(sd, rskill)) != 0)
-			md.damage += md.damage*i/100;
-		if (tsd && (i = pc->sub_skillatk_bonus(tsd, rskill)) != 0)
-			md.damage -= md.damage * i / 100;
+		if (sd != NULL && (modifier = pc->skillatk_bonus(sd, rskill)) != 0)
+			md.damage += md.damage * modifier / 100;
+		if (tsd != NULL && (modifier = pc->sub_skillatk_bonus(tsd, rskill)) != 0)
+			md.damage -= md.damage * modifier / 100;
 	}
-	if( (i = battle->adjust_skill_damage(src->m,skill_id)) )
-		md.damage = md.damage * i / 100;
+	if ((modifier = battle->adjust_skill_damage(src->m,skill_id)) != 0)
+		md.damage = md.damage * modifier / 100;
 
 	if(md.damage < 0)
 		md.damage = 0;
@@ -5166,7 +5167,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 					if( sc && sc->data[SC_NJ_BUNSINJYUTSU] && (i=sc->data[SC_NJ_BUNSINJYUTSU]->val2) > 0 )
 						wd.div_ = ~( i++ + 2 ) + 1;
 					if( wd.damage ){
-						wd.damage *= sstatus->hp * skill_lv;
+						wd.damage = wd.damage * sstatus->hp * skill_lv;
 						wd.damage = wd.damage / sstatus->max_hp + sstatus->hp + i * (wd.damage / sstatus->max_hp + sstatus->hp) / 5;
 					}
 					ATK_ADD(-totaldef);
@@ -5230,7 +5231,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 				break;
 			case RK_DRAGONBREATH:
 			case RK_DRAGONBREATH_WATER:
-				wd.damage = ((status_get_hp(src) / 50) + (status_get_max_sp(src) / 4)) * skill_lv;
+				wd.damage = (int64)((status_get_hp(src) / 50) + (status_get_max_sp(src) / 4)) * skill_lv;
 				wd.damage = wd.damage * status->get_lv(src) / 150;
 				if (sd != NULL)
 					wd.damage = wd.damage * (95 + 5 * pc->checkskill(sd, RK_DRAGONTRAINING)) / 100;
