@@ -168,8 +168,6 @@ struct {
 	struct HPMHookPoint *HP_chr_parse_frommap_skillid2idx_post;
 	struct HPMHookPoint *HP_chr_map_received_ok_pre;
 	struct HPMHookPoint *HP_chr_map_received_ok_post;
-	struct HPMHookPoint *HP_chr_send_maps_pre;
-	struct HPMHookPoint *HP_chr_send_maps_post;
 	struct HPMHookPoint *HP_chr_parse_frommap_map_names_pre;
 	struct HPMHookPoint *HP_chr_parse_frommap_map_names_post;
 	struct HPMHookPoint *HP_chr_send_scdata_pre;
@@ -188,10 +186,6 @@ struct {
 	struct HPMHookPoint *HP_chr_select_ack_post;
 	struct HPMHookPoint *HP_chr_parse_frommap_char_select_req_pre;
 	struct HPMHookPoint *HP_chr_parse_frommap_char_select_req_post;
-	struct HPMHookPoint *HP_chr_change_map_server_ack_pre;
-	struct HPMHookPoint *HP_chr_change_map_server_ack_post;
-	struct HPMHookPoint *HP_chr_parse_frommap_change_map_server_pre;
-	struct HPMHookPoint *HP_chr_parse_frommap_change_map_server_post;
 	struct HPMHookPoint *HP_chr_parse_frommap_remove_friend_pre;
 	struct HPMHookPoint *HP_chr_parse_frommap_remove_friend_post;
 	struct HPMHookPoint *HP_chr_char_name_ack_pre;
@@ -244,8 +238,8 @@ struct {
 	struct HPMHookPoint *HP_chr_parse_frommap_scdata_delete_post;
 	struct HPMHookPoint *HP_chr_parse_frommap_pre;
 	struct HPMHookPoint *HP_chr_parse_frommap_post;
-	struct HPMHookPoint *HP_chr_search_mapserver_pre;
-	struct HPMHookPoint *HP_chr_search_mapserver_post;
+	struct HPMHookPoint *HP_chr_mapserver_has_map_pre;
+	struct HPMHookPoint *HP_chr_mapserver_has_map_post;
 	struct HPMHookPoint *HP_chr_mapif_init_pre;
 	struct HPMHookPoint *HP_chr_mapif_init_post;
 	struct HPMHookPoint *HP_chr_lan_subnet_check_pre;
@@ -272,8 +266,8 @@ struct {
 	struct HPMHookPoint *HP_chr_send_map_info_post;
 	struct HPMHookPoint *HP_chr_send_wait_char_server_pre;
 	struct HPMHookPoint *HP_chr_send_wait_char_server_post;
-	struct HPMHookPoint *HP_chr_search_default_maps_mapserver_pre;
-	struct HPMHookPoint *HP_chr_search_default_maps_mapserver_post;
+	struct HPMHookPoint *HP_chr_find_available_map_fallback_pre;
+	struct HPMHookPoint *HP_chr_find_available_map_fallback_post;
 	struct HPMHookPoint *HP_chr_parse_char_select_pre;
 	struct HPMHookPoint *HP_chr_parse_char_select_post;
 	struct HPMHookPoint *HP_chr_creation_failed_pre;
@@ -964,10 +958,6 @@ struct {
 	struct HPMHookPoint *HP_mapif_on_parse_accinfo_post;
 	struct HPMHookPoint *HP_mapif_char_ban_pre;
 	struct HPMHookPoint *HP_mapif_char_ban_post;
-	struct HPMHookPoint *HP_mapif_sendall_pre;
-	struct HPMHookPoint *HP_mapif_sendall_post;
-	struct HPMHookPoint *HP_mapif_sendallwos_pre;
-	struct HPMHookPoint *HP_mapif_sendallwos_post;
 	struct HPMHookPoint *HP_mapif_send_pre;
 	struct HPMHookPoint *HP_mapif_send_post;
 	struct HPMHookPoint *HP_mapif_send_users_count_pre;
@@ -1817,8 +1807,6 @@ struct {
 	int HP_chr_parse_frommap_skillid2idx_post;
 	int HP_chr_map_received_ok_pre;
 	int HP_chr_map_received_ok_post;
-	int HP_chr_send_maps_pre;
-	int HP_chr_send_maps_post;
 	int HP_chr_parse_frommap_map_names_pre;
 	int HP_chr_parse_frommap_map_names_post;
 	int HP_chr_send_scdata_pre;
@@ -1837,10 +1825,6 @@ struct {
 	int HP_chr_select_ack_post;
 	int HP_chr_parse_frommap_char_select_req_pre;
 	int HP_chr_parse_frommap_char_select_req_post;
-	int HP_chr_change_map_server_ack_pre;
-	int HP_chr_change_map_server_ack_post;
-	int HP_chr_parse_frommap_change_map_server_pre;
-	int HP_chr_parse_frommap_change_map_server_post;
 	int HP_chr_parse_frommap_remove_friend_pre;
 	int HP_chr_parse_frommap_remove_friend_post;
 	int HP_chr_char_name_ack_pre;
@@ -1893,8 +1877,8 @@ struct {
 	int HP_chr_parse_frommap_scdata_delete_post;
 	int HP_chr_parse_frommap_pre;
 	int HP_chr_parse_frommap_post;
-	int HP_chr_search_mapserver_pre;
-	int HP_chr_search_mapserver_post;
+	int HP_chr_mapserver_has_map_pre;
+	int HP_chr_mapserver_has_map_post;
 	int HP_chr_mapif_init_pre;
 	int HP_chr_mapif_init_post;
 	int HP_chr_lan_subnet_check_pre;
@@ -1921,8 +1905,8 @@ struct {
 	int HP_chr_send_map_info_post;
 	int HP_chr_send_wait_char_server_pre;
 	int HP_chr_send_wait_char_server_post;
-	int HP_chr_search_default_maps_mapserver_pre;
-	int HP_chr_search_default_maps_mapserver_post;
+	int HP_chr_find_available_map_fallback_pre;
+	int HP_chr_find_available_map_fallback_post;
 	int HP_chr_parse_char_select_pre;
 	int HP_chr_parse_char_select_post;
 	int HP_chr_creation_failed_pre;
@@ -2613,10 +2597,6 @@ struct {
 	int HP_mapif_on_parse_accinfo_post;
 	int HP_mapif_char_ban_pre;
 	int HP_mapif_char_ban_post;
-	int HP_mapif_sendall_pre;
-	int HP_mapif_sendall_post;
-	int HP_mapif_sendallwos_pre;
-	int HP_mapif_sendallwos_post;
 	int HP_mapif_send_pre;
 	int HP_mapif_send_post;
 	int HP_mapif_send_users_count_pre;
