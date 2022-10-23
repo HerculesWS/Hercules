@@ -3137,22 +3137,6 @@ static void char_map_received_ok(int fd)
 	WFIFOSET(fd,3+NAME_LENGTH);
 }
 
-static void char_send_maps(int fd, int id, int j)
-{
-	if (j == 0) {
-		ShowWarning("Map-server %d has NO maps.\n", id);
-	} else {
-		unsigned char buf[16384];
-		// Transmitting maps information to the other map-servers
-		WBUFW(buf,0) = 0x2b04;
-		WBUFW(buf,2) = j * 4 + 10;
-		WBUFL(buf,4) = htonl(chr->map_server.ip);
-		WBUFW(buf,8) = htons(chr->map_server.port);
-		memcpy(WBUFP(buf,10), RFIFOP(fd,4), j * 4);
-		mapif->sendallwos(fd, buf, WBUFW(buf,2));
-	}
-}
-
 static void char_parse_frommap_map_names(int fd, int id)
 {
 	VECTOR_CLEAR(chr->map_server.maps);
@@ -3168,7 +3152,6 @@ static void char_parse_frommap_map_names(int fd, int id)
 	// send name for wisp to player
 	chr->map_received_ok(fd);
 	chr->send_fame_list(fd); //Send fame list.
-	chr->send_maps(fd, id, (int)VECTOR_LENGTH(chr->map_server.maps));
 	RFIFOSKIP(fd,RFIFOW(fd,2));
 }
 
@@ -6566,7 +6549,6 @@ void char_defaults(void)
 	chr->parse_frommap_datasync = char_parse_frommap_datasync;
 	chr->parse_frommap_skillid2idx = char_parse_frommap_skillid2idx;
 	chr->map_received_ok = char_map_received_ok;
-	chr->send_maps = char_send_maps;
 	chr->parse_frommap_map_names = char_parse_frommap_map_names;
 	chr->send_scdata = char_send_scdata;
 	chr->parse_frommap_request_scdata = char_parse_frommap_request_scdata;

@@ -70,7 +70,7 @@ struct chrif_interface *chrif;
 //2b01: Outgoing, chrif_save -> 'charsave of char XY account XY (complete struct)'
 //2b02: Outgoing, chrif_charselectreq -> 'player returns from ingame to charserver to select another char.., this packets includes sessid etc' ? (not 100% sure)
 //2b03: Incoming, clif_charselectok -> '' (i think its the packet after enterworld?) (not sure)
-//2b04: Incoming, chrif_recvmap -> 'getting maps from charserver of other mapserver's'
+//2b04: FREE
 //2b05: Outgoing, chrif_changemapserver -> 'Tell the charserver the mapchange / quest for ok...'
 //2b06: Incoming, chrif_changemapserverack -> 'answer of 2b05, ok/fail, data: dunno^^'
 //2b07: Outgoing, chrif_removefriend -> 'Tell charserver to remove friend_id from char_id friend list'
@@ -374,23 +374,6 @@ static void chrif_sendmap(int fd)
 		WFIFOW(fd,4+i*4) = map_id2index(i);
 	WFIFOW(fd,2) = 4 + i * 4;
 	WFIFOSET(fd,WFIFOW(fd,2));
-}
-
-// receive maps from some other map-server (relayed via char-server)
-static void chrif_recvmap(int fd)
-{
-	int i, j;
-	uint32 ip = ntohl(RFIFOL(fd,4));
-	uint16 port = ntohs(RFIFOW(fd,8));
-
-	for(i = 10, j = 0; i < RFIFOW(fd,2); i += 4, j++) {
-		map->setipport(RFIFOW(fd,i), ip, port);
-	}
-
-	if (battle_config.etc_log)
-		ShowStatus("Received maps from %u.%u.%u.%u:%u (%d maps)\n", CONVIP(ip), port, j);
-
-	chrif->other_mapserver_count++;
 }
 
 // remove specified maps (used when some other map-server disconnects)
@@ -1505,7 +1488,6 @@ static int chrif_parse(int fd)
 			case 0x2afd: chrif->authok(fd); break;
 			case 0x2b00: map->setusers(RFIFOL(fd,2)); chrif->keepalive(fd); break;
 			case 0x2b03: clif->charselectok(RFIFOL(fd,2), RFIFOB(fd,6)); break;
-			case 0x2b04: chrif->recvmap(fd); break;
 			case 0x2b06: chrif->changemapserverack(RFIFOL(fd,2), RFIFOL(fd,6), RFIFOL(fd,10), RFIFOL(fd,14), RFIFOW(fd,18), RFIFOW(fd,20), RFIFOW(fd,22), RFIFOL(fd,24), RFIFOW(fd,28)); break;
 			case 0x2b09: map->addnickdb(RFIFOL(fd,2), RFIFOP(fd,6)); break;
 			case 0x2b0a: sockt->datasync(fd, false); break;
@@ -1821,7 +1803,6 @@ void chrif_defaults(void)
 	chrif->connectack = chrif_connectack;
 	chrif->sendmap = chrif_sendmap;
 	chrif->sendmapack = chrif_sendmapack;
-	chrif->recvmap = chrif_recvmap;
 	chrif->changemapserverack = chrif_changemapserverack;
 	chrif->changedsex = chrif_changedsex;
 	chrif->divorceack = chrif_divorceack;

@@ -188,7 +188,6 @@ struct char_interface {
 	void (*parse_frommap_datasync) (int fd);
 	void (*parse_frommap_skillid2idx) (int fd);
 	void (*map_received_ok) (int fd);
-	void (*send_maps) (int fd, int id, int j);
 	void (*parse_frommap_map_names) (int fd, int id);
 	void (*send_scdata) (int fd, int aid, int cid);
 	void (*parse_frommap_request_scdata) (int fd);
