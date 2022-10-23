@@ -3335,59 +3335,6 @@ static void char_change_map_server_ack(int fd, const uint8 *data, bool ok)
 	WFIFOSET(fd,30);
 }
 
-static void char_parse_frommap_change_map_server(int fd)
-{
-	int map_id, map_fd = -1;
-	struct mmo_charstatus* char_data;
-
-	map_id = chr->search_mapserver(RFIFOW(fd,18), ntohl(RFIFOL(fd,24)), ntohs(RFIFOW(fd,28))); //Locate mapserver by ip and port.
-	if (map_id >= 0)
-		map_fd = chr->map_server.fd;
-	//Char should just had been saved before this packet, so this should be safe. [Skotlex]
-	char_data = (struct mmo_charstatus*)uidb_get(chr->char_db_,RFIFOL(fd,14));
-	if (char_data == NULL) {
-		//Really shouldn't happen.
-		struct mmo_charstatus char_dat;
-		chr->mmo_char_fromsql(RFIFOL(fd,14), &char_dat, true);
-		char_data = (struct mmo_charstatus*)uidb_get(chr->char_db_,RFIFOL(fd,14));
-	}
-
-	if (core->runflag == CHARSERVER_ST_RUNNING && sockt->session_is_active(map_fd) && char_data) {
-		//Send the map server the auth of this player.
-		struct online_char_data* data;
-		struct char_auth_node* node;
-
-		//Update the "last map" as this is where the player must be spawned on the new map server.
-		char_data->last_point.map = RFIFOW(fd,18);
-		char_data->last_point.x = RFIFOW(fd,20);
-		char_data->last_point.y = RFIFOW(fd,22);
-		char_data->sex = RFIFOB(fd,30);
-
-		// create temporary auth entry
-		CREATE(node, struct char_auth_node, 1);
-		node->account_id = RFIFOL(fd,2);
-		node->char_id = RFIFOL(fd,14);
-		node->login_id1 = RFIFOL(fd,6);
-		node->login_id2 = RFIFOL(fd,10);
-		node->sex = RFIFOB(fd,30);
-		node->expiration_time = 0; // FIXME (this thing isn't really supported we could as well purge it instead of fixing)
-		node->ip = ntohl(RFIFOL(fd,31));
-		node->group_id = RFIFOL(fd,35);
-		node->changing_mapservers = 1;
-		idb_put(auth_db, RFIFOL(fd,2), node);
-
-		data = idb_ensure(chr->online_char_db, RFIFOL(fd,2), chr->create_online_char_data);
-		data->char_id = char_data->char_id;
-		data->server = map_id; //Update server where char is.
-
-		//Reply with an ack.
-		chr->change_map_server_ack(fd, RFIFOP(fd,2), true);
-	} else { //Reply with nak
-		chr->change_map_server_ack(fd, RFIFOP(fd,2), false);
-	}
-	RFIFOSKIP(fd,39);
-}
-
 static void char_parse_frommap_remove_friend(int fd)
 {
 	int char_id = RFIFOL(fd,2);
@@ -4004,14 +3951,6 @@ static int char_parse_frommap(int fd)
 					return 0;
 			{
 				chr->parse_frommap_char_select_req(fd);
-			}
-			break;
-
-			case 0x2b05: // request "change map server"
-				if (RFIFOREST(fd) < 39)
-					return 0;
-			{
-				chr->parse_frommap_change_map_server(fd);
 			}
 			break;
 
@@ -6545,7 +6484,6 @@ void char_defaults(void)
 	chr->select_ack = char_select_ack;
 	chr->parse_frommap_char_select_req = char_parse_frommap_char_select_req;
 	chr->change_map_server_ack = char_change_map_server_ack;
-	chr->parse_frommap_change_map_server = char_parse_frommap_change_map_server;
 	chr->parse_frommap_remove_friend = char_parse_frommap_remove_friend;
 	chr->char_name_ack = char_char_name_ack;
 	chr->parse_frommap_char_name_request = char_parse_frommap_char_name_request;

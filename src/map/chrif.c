@@ -71,7 +71,7 @@ struct chrif_interface *chrif;
 //2b02: Outgoing, chrif_charselectreq -> 'player returns from ingame to charserver to select another char.., this packets includes sessid etc' ? (not 100% sure)
 //2b03: Incoming, clif_charselectok -> '' (i think its the packet after enterworld?) (not sure)
 //2b04: FREE
-//2b05: Outgoing, chrif_changemapserver -> 'Tell the charserver the mapchange / quest for ok...'
+//2b05: FREE
 //2b06: Incoming, chrif_changemapserverack -> 'answer of 2b05, ok/fail, data: dunno^^'
 //2b07: Outgoing, chrif_removefriend -> 'Tell charserver to remove friend_id from char_id friend list'
 //2b08: Outgoing, chrif_searchcharid -> '...'
