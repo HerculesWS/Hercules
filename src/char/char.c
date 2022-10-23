@@ -1825,7 +1825,7 @@ static int char_divorce_char_sql(int partner_id1, int partner_id2)
 	WBUFW(buf,0) = 0x2b12;
 	WBUFL(buf,2) = partner_id1;
 	WBUFL(buf,6) = partner_id2;
-	mapif->sendall(buf,10);
+	mapif->send(buf, 10);
 
 	return 0;
 }
@@ -1896,7 +1896,7 @@ static int char_delete_char_sql(int char_id)
 		WBUFL(buf,2) = father_id;
 		WBUFL(buf,6) = mother_id;
 		WBUFL(buf,10) = char_id; // Baby
-		mapif->sendall(buf,14);
+		mapif->send(buf, 14);
 	}
 
 	//Make the character leave the party [Skotlex]
@@ -2529,7 +2529,7 @@ static void char_changesex(int account_id, int sex)
 	WBUFW(buf,0) = 0x2b0d;
 	WBUFL(buf,2) = account_id;
 	WBUFB(buf,6) = sex;
-	mapif->sendall(buf, 7);
+	mapif->send(buf, 7);
 }
 
 /**
@@ -2660,7 +2660,7 @@ static int char_parse_fromlogin_changesex_reply(int fd)
 static void char_parse_fromlogin_account_reg2(int fd)
 {
 	//Receive account_reg2 registry, forward to map servers.
-	mapif->sendall(RFIFOP(fd, 0), RFIFOW(fd,2));
+	mapif->send(RFIFOP(fd, 0), RFIFOW(fd,2));
 	RFIFOSKIP(fd, RFIFOW(fd,2));
 }
 
@@ -2716,7 +2716,7 @@ static void char_parse_fromlogin_update_ip(int fd)
 	uint32 new_ip = 0;
 
 	WBUFW(buf,0) = 0x2b1e;
-	mapif->sendall(buf, 2);
+	mapif->send(buf, 2);
 
 	new_ip = sockt->host2ip(login_ip_str);
 	if (new_ip && new_ip != login_ip)
@@ -3053,10 +3053,7 @@ static int char_send_fame_list(int fd)
 	// add total packet length
 	WBUFW(buf, 2) = len;
 
-	if (fd != -1)
-		mapif->send(fd, buf, len);
-	else
-		mapif->sendall(buf, len);
+	mapif->send(buf, len);
 
 	return 0;
 }
@@ -3068,7 +3065,7 @@ static void char_update_fame_list(int type, int index, int fame)
 	WBUFB(buf,2) = type;
 	WBUFB(buf,3) = index;
 	WBUFL(buf,4) = fame;
-	mapif->sendall(buf, 8);
+	mapif->send(buf, 8);
 }
 
 //Loads a character's name and stores it in the buffer given (must be NAME_LENGTH in size) and not NULL

@@ -62,7 +62,7 @@ static void mapif_ban(int id, unsigned int flag, int status)
 	WBUFL(buf,2) = id;
 	WBUFB(buf,6) = flag; // 0: change of status, 1: ban
 	WBUFL(buf,7) = status; // status or final date of a banishment
-	mapif->sendall(buf, 11);
+	mapif->send(buf, 11);
 }
 
 /// Initializes a server structure.
@@ -118,32 +118,19 @@ static void mapif_char_ban(int char_id, time_t timestamp)
 	WBUFL(buf, 2) = char_id;
 	WBUFB(buf, 6) = 2;
 	WBUFL(buf, 7) = (unsigned int)timestamp;
-	mapif->sendall(buf, 11);
+	mapif->send(buf, 11);
 }
 
-static int mapif_sendall(const unsigned char *buf, unsigned int len)
-{
-	return mapif->send(chr->map_server.fd, buf, len);
-}
-
-static int mapif_sendallwos(int sfd, unsigned char *buf, unsigned int len)
-{
-	return 0;
-}
-
-
-static int mapif_send(int fd, const unsigned char *buf, unsigned int len)
+static int mapif_send(const unsigned char *buf, unsigned int len)
 {
 	nullpo_ret(buf);
-	if (fd >= 0) {
-		if (fd == chr->map_server.fd) {
-			WFIFOHEAD(fd, len);
-			memcpy(WFIFOP(fd, 0), buf, len);
-			WFIFOSET(fd, len);
-			return 1;
-		}
-	}
-	return 0;
+	int fd = chr->map_server.fd;
+	if (fd < 0)
+		return 0;
+	WFIFOHEAD(fd, len);
+	memcpy(WFIFOP(fd, 0), buf, len);
+	WFIFOSET(fd, len);
+	return 1;
 }
 
 static void mapif_send_users_count(int users)
@@ -152,7 +139,7 @@ static void mapif_send_users_count(int users)
 	// send number of players to all map-servers
 	WBUFW(buf, 0) = 0x2b00;
 	WBUFL(buf, 2) = users;
-	mapif->sendall(buf, 6);
+	mapif->send(buf, 6);
 }
 
 
@@ -163,7 +150,7 @@ static void mapif_auction_message(int char_id, unsigned char result)
 	WBUFW(buf, 0) = 0x3854;
 	WBUFL(buf, 2) = char_id;
 	WBUFL(buf, 6) = result;
-	mapif->sendall(buf, 7);
+	mapif->send(buf, 7);
 }
 
 static void mapif_auction_sendlist(int fd, int char_id, short count, short pages, unsigned char *buf)
@@ -465,10 +452,7 @@ static int mapif_guild_noinfo(int fd, int guild_id)
 	WBUFW(buf, 2) = 8;
 	WBUFL(buf, 4) = guild_id;
 	ShowWarning("int_guild: info not found %d\n", guild_id);
-	if (fd < 0)
-		mapif->sendall(buf, 8);
-	else
-		mapif->send(fd,buf, 8);
+	mapif->send(buf, 8);
 	return 0;
 }
 
@@ -480,10 +464,7 @@ static int mapif_guild_info(int fd, struct guild *g)
 	WBUFW(buf, 0) = 0x3831;
 	WBUFW(buf, 2) = 4 + sizeof(struct guild);
 	memcpy(buf + 4, g, sizeof(struct guild));
-	if (fd < 0)
-		mapif->sendall(buf, WBUFW(buf, 2));
-	else
-		mapif->send(fd, buf, WBUFW(buf, 2));
+	mapif->send(buf, WBUFW(buf, 2));
 	return 0;
 }
 
@@ -515,7 +496,7 @@ static int mapif_guild_withdraw(int guild_id, int account_id, int char_id, int f
 	WBUFB(buf, 14) = flag;
 	safestrncpy(WBUFP(buf, 15), mes, 40);
 	memcpy(WBUFP(buf, 55), name, NAME_LENGTH);
-	mapif->sendall(buf, 55 + NAME_LENGTH);
+	mapif->send(buf, 55 + NAME_LENGTH);
 	ShowInfo("int_guild: guild withdraw (%d - %d: %s - %s)\n", guild_id, account_id, name, mes);
 	return 0;
 }
@@ -534,7 +515,7 @@ static int mapif_guild_memberinfoshort(struct guild *g, int idx)
 	WBUFW(buf, 15) = g->member[idx].lv;
 	WBUFL(buf, 17) = g->member[idx].class;
 	WBUFL(buf, 21) = g->member[idx].last_login;
-	mapif->sendall(buf, 25);
+	mapif->send(buf, 25);
 	return 0;
 }
 
@@ -545,7 +526,7 @@ static int mapif_guild_broken(int guild_id, int flag)
 	WBUFW(buf, 0) = 0x3836;
 	WBUFL(buf, 2) = guild_id;
 	WBUFB(buf, 6) = flag;
-	mapif->sendall(buf, 7);
+	mapif->send(buf, 7);
 	ShowInfo("int_guild: Guild broken (%d)\n", guild_id);
 	return 0;
 }
@@ -562,7 +543,7 @@ static int mapif_guild_basicinfochanged(int guild_id, int type, const void *data
 	WBUFL(buf, 4) = guild_id;
 	WBUFW(buf, 8) = type;
 	memcpy(WBUFP(buf, 10), data, len);
-	mapif->sendall(buf, len + 10);
+	mapif->send(buf, len + 10);
 	return 0;
 }
 
@@ -580,7 +561,7 @@ static int mapif_guild_memberinfochanged(int guild_id, int account_id, int char_
 	WBUFL(buf, 12) = char_id;
 	WBUFW(buf, 16) = type;
 	memcpy(WBUFP(buf, 18), data, len);
-	mapif->sendall(buf, len + 18);
+	mapif->send(buf, len + 18);
 	return 0;
 }
 
@@ -592,7 +573,7 @@ static int mapif_guild_skillupack(int guild_id, uint16 skill_id, int account_id)
 	WBUFL(buf, 2) = guild_id;
 	WBUFL(buf, 6) = skill_id;
 	WBUFL(buf,10) = account_id;
-	mapif->sendall(buf, 14);
+	mapif->send(buf, 14);
 	return 0;
 }
 
@@ -610,7 +591,7 @@ static int mapif_guild_alliance(int guild_id1, int guild_id2, int account_id1, i
 	WBUFB(buf, 18) = flag;
 	memcpy(WBUFP(buf, 19), name1, NAME_LENGTH);
 	memcpy(WBUFP(buf, 19 + NAME_LENGTH), name2, NAME_LENGTH);
-	mapif->sendall(buf,19 + 2 * NAME_LENGTH);
+	mapif->send(buf,19 + 2 * NAME_LENGTH);
 	return 0;
 }
 
@@ -625,7 +606,7 @@ static int mapif_guild_position(struct guild *g, int idx)
 	WBUFL(buf, 4) = g->guild_id;
 	WBUFL(buf, 8) = idx;
 	memcpy(WBUFP(buf, 12), &g->position[idx], sizeof(struct guild_position));
-	mapif->sendall(buf, WBUFW(buf, 2));
+	mapif->send(buf, WBUFW(buf, 2));
 	return 0;
 }
 
@@ -638,7 +619,7 @@ static int mapif_guild_notice(struct guild *g)
 	WBUFL(buf, 2) = g->guild_id;
 	memcpy(WBUFP(buf, 6), g->mes1, MAX_GUILDMES1);
 	memcpy(WBUFP(buf, 66), g->mes2, MAX_GUILDMES2);
-	mapif->sendall(buf, 186);
+	mapif->send(buf, 186);
 	return 0;
 }
 
@@ -652,7 +633,7 @@ static int mapif_guild_emblem(struct guild *g)
 	WBUFL(buf, 4) = g->guild_id;
 	WBUFL(buf, 8) = g->emblem_id;
 	memcpy(WBUFP(buf, 12), g->emblem_data, g->emblem_len);
-	mapif->sendall(buf, WBUFW(buf, 2));
+	mapif->send(buf, WBUFW(buf, 2));
 	return 0;
 }
 
@@ -664,7 +645,7 @@ static int mapif_guild_master_changed(struct guild *g, int aid, int cid)
 	WBUFL(buf, 2) = g->guild_id;
 	WBUFL(buf, 6) = aid;
 	WBUFL(buf, 10) = cid;
-	mapif->sendall(buf, 14);
+	mapif->send(buf, 14);
 	return 0;
 }
 
@@ -1007,7 +988,7 @@ static void mapif_mail_new(struct mail_message *msg)
 	WBUFL(buf, 6) = msg->id;
 	memcpy(WBUFP(buf, 10), msg->send_name, NAME_LENGTH);
 	memcpy(WBUFP(buf, 34), msg->title, MAIL_TITLE_LENGTH);
-	mapif->sendall(buf, 74);
+	mapif->send(buf, 74);
 }
 
 /*==========================================
@@ -1169,11 +1150,7 @@ static void mapif_party_info(int fd, struct party* p, int char_id)
 	WBUFW(buf, 2) = 8 + sizeof(struct party);
 	WBUFL(buf, 4) = char_id;
 	memcpy(WBUFP(buf, 8), p, sizeof(struct party));
-
-	if (fd < 0)
-		mapif->sendall(buf, WBUFW(buf, 2));
-	else
-		mapif->send(fd, buf, WBUFW(buf, 2));
+	mapif->send(buf, WBUFW(buf, 2));
 }
 
 //Whether or not additional party members
@@ -1201,10 +1178,7 @@ static int mapif_party_optionchanged(int fd, struct party *p, int account_id, in
 	WBUFW(buf, 10) = p->exp;
 	WBUFW(buf, 12) = p->item;
 	WBUFB(buf, 14) = flag;
-	if (flag == 0)
-		mapif->sendall(buf, 15);
-	else
-		mapif->send(fd, buf, 15);
+	mapif->send(buf, 15);
 	return 0;
 }
 
@@ -1217,7 +1191,7 @@ static int mapif_party_withdraw(int party_id, int account_id, int char_id)
 	WBUFL(buf, 2) = party_id;
 	WBUFL(buf, 6) = account_id;
 	WBUFL(buf, 10) = char_id;
-	mapif->sendall(buf, 14);
+	mapif->send(buf, 14);
 	return 0;
 }
 
@@ -1235,7 +1209,7 @@ static int mapif_party_membermoved(struct party *p, int idx)
 	WBUFW(buf, 14) = p->member[idx].map;
 	WBUFB(buf, 16) = p->member[idx].online;
 	WBUFW(buf, 17) = p->member[idx].lv;
-	mapif->sendall(buf, 19);
+	mapif->send(buf, 19);
 	return 0;
 }
 
@@ -1246,7 +1220,7 @@ static int mapif_party_broken(int party_id, int flag)
 	WBUFW(buf, 0) = 0x3826;
 	WBUFL(buf, 2) = party_id;
 	WBUFB(buf, 6) = flag;
-	mapif->sendall(buf, 7);
+	mapif->send(buf, 7);
 	//printf("int_party: broken %d\n",party_id);
 	return 0;
 }
@@ -2018,16 +1992,6 @@ static void mapif_parse_accinfo(int fd)
 	inter->accinfo(u_fd, aid, castergroup, query, fd);
 }
 
-#if 0
-// Account registry transfer to map-server
-static void mapif_account_reg(int fd, unsigned char *src)
-{
-	nullpo_retv(src);
-	WBUFW(src, 0) = 0x3804; //NOTE: writing to RFIFO
-	mapif->sendallwos(fd, src, WBUFW(src, 2));
-}
-#endif // 0
-
 // Send the requested account_reg
 static int mapif_account_reg_reply(int fd,int account_id,int char_id, int type)
 {
@@ -2339,8 +2303,6 @@ void mapif_defaults(void)
 	mapif->on_disconnect = mapif_on_disconnect;
 	mapif->on_parse_accinfo = mapif_on_parse_accinfo;
 	mapif->char_ban = mapif_char_ban;
-	mapif->sendall = mapif_sendall;
-	mapif->sendallwos = mapif_sendallwos;
 	mapif->send = mapif_send;
 	mapif->send_users_count = mapif_send_users_count;
 	mapif->pLoadAchievements = mapif_parse_load_achievements;
@@ -2482,9 +2444,6 @@ void mapif_defaults(void)
 	mapif->parse_ItemBoundRetrieve = mapif_parse_ItemBoundRetrieve;
 	mapif->parse_accinfo = mapif_parse_accinfo;
 	mapif->account_reg_reply = mapif_account_reg_reply;
-#if 0
-	mapif->account_reg = mapif_account_reg;
-#endif
 	mapif->disconnectplayer = mapif_disconnectplayer;
 	mapif->parse_Registry = mapif_parse_Registry;
 	mapif->parse_RegistryRequest = mapif_parse_RegistryRequest;

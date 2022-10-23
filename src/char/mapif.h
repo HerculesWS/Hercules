@@ -36,9 +36,7 @@ struct mapif_interface {
 	void (*on_disconnect) (void);
 	void (*on_parse_accinfo) (int account_id, int u_fd, int u_aid, int u_group, int map_fd);
 	void (*char_ban) (int char_id, time_t timestamp);
-	int (*sendall) (const unsigned char *buf, unsigned int len);
-	int (*sendallwos) (int sfd, unsigned char *buf, unsigned int len);
-	int (*send) (int fd, const unsigned char *buf, unsigned int len);
+	int (*send) (const unsigned char *buf, unsigned int len);
 	void (*send_users_count) (int users);
 	void (*pLoadAchievements) (int fd);
 	void (*sAchievementsToMap) (int fd, int char_id, const struct char_achievements *p);
@@ -178,9 +176,6 @@ struct mapif_interface {
 	void (*parse_ItemBoundRetrieve) (int fd);
 	void (*parse_accinfo) (int fd);
 	int (*account_reg_reply) (int fd,int account_id,int char_id, int type);
-#if 0
-	void (*account_reg) (int fd, unsigned char *src);
-#endif
 	int (*disconnectplayer) (int fd, int account_id, int char_id, int reason);
 	int (*parse_Registry) (int fd);
 	int (*parse_RegistryRequest) (int fd);
