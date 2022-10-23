@@ -1781,14 +1781,15 @@ OnTouch:
 		mes "Oh crap!";
 		mes "Gotta scram!";
 		mes "Eat my dust, good guy!";
-		next;
 		if (rand(1,4) == 1) {
 			enablenpc "Suspicious Guy#lhz_03";
 			disablenpc "Suspicious Guy#lhz_01";
+			disablenpc("Suspicious Guy#lhz_02");
 		}
 		else {
 			enablenpc"Suspicious Guy#lhz_02";
 			disablenpc "Suspicious Guy#lhz_01";
+			disablenpc("Suspicious Guy#lhz_03");
 		}
 		close;
 	}
@@ -1857,10 +1858,12 @@ OnTouch:
 		if (rand(1,4) == 1) {
 			enablenpc "Suspicious Guy#lhz_03";
 			disablenpc "Suspicious Guy#lhz_02";
+			disablenpc("Suspicious Guy#lhz_01");
 		}
 		else {
 			enablenpc "Suspicious Guy#lhz_01";
 			disablenpc "Suspicious Guy#lhz_02";
+			disablenpc("Suspicious Guy#lhz_03");
 		}
 		close;
 	}
@@ -2039,10 +2042,12 @@ OnTouch:
 		if (rand(1,2) == 1) {
 			enablenpc "Suspicious Guy#lhz_01";
 			disablenpc "Suspicious Guy#lhz_03";
+			disablenpc("Suspicious Guy#lhz_02");
 		}
 		else {
 			enablenpc "Suspicious Guy#lhz_02";
 			disablenpc "Suspicious Guy#lhz_03";
+			disablenpc("Suspicious Guy#lhz_01");
 		}
 		close;
 	}
