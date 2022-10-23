@@ -386,32 +386,11 @@ static void chrif_save_ack(int fd)
 // request to move a character between mapservers
 static bool chrif_changemapserver(struct map_session_data *sd, uint32 ip, uint16 port)
 {
+	// TODO: Remove this
 	nullpo_ret(sd);
 
-	if (chrif->other_mapserver_count < 1) {//No other map servers are online!
-		clif->authfail_fd(sd->fd, 0);
-		return false;
-	}
-
-	chrif_check(false);
-
-	WFIFOHEAD(chrif->fd,35);
-	WFIFOW(chrif->fd, 0) = 0x2b05;
-	WFIFOL(chrif->fd, 2) = sd->bl.id;
-	WFIFOL(chrif->fd, 6) = sd->login_id1;
-	WFIFOL(chrif->fd,10) = sd->login_id2;
-	WFIFOL(chrif->fd,14) = sd->status.char_id;
-	WFIFOW(chrif->fd,18) = sd->mapindex;
-	WFIFOW(chrif->fd,20) = sd->bl.x;
-	WFIFOW(chrif->fd,22) = sd->bl.y;
-	WFIFOL(chrif->fd,24) = htonl(ip);
-	WFIFOW(chrif->fd,28) = htons(port);
-	WFIFOB(chrif->fd,30) = sd->status.sex;
-	WFIFOL(chrif->fd,31) = htonl(sockt->session[sd->fd]->client_addr);
-	WFIFOL(chrif->fd,35) = sd->group_id;
-	WFIFOSET(chrif->fd,39);
-
-	return true;
+	clif->authfail_fd(sd->fd, 0);
+	return false;
 }
 
 /// map-server change request acknowledgment (positive or negative)
@@ -1336,8 +1315,6 @@ static void chrif_on_disconnect(void)
 		ShowWarning("Connection to Char Server lost.\n\n");
 	chrif->connected = 0;
 
-	chrif->other_mapserver_count = 0; //Reset counter. We receive ALL maps from all map-servers on reconnect.
-
 	//Attempt to reconnect in a second. [Skotlex]
 	timer->add(timer->gettick() + 1000, chrif->check_connect_char_server, 0, 0);
 }
@@ -1706,7 +1683,6 @@ void chrif_defaults(void)
 
 	/* vars */
 	chrif->connected = 0;
-	chrif->other_mapserver_count = 0;
 
 	chrif->fd = -1;
 	chrif->srvinfo = 0;
