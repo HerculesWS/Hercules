@@ -72,7 +72,7 @@ struct chrif_interface *chrif;
 //2b03: Incoming, clif_charselectok -> '' (i think its the packet after enterworld?) (not sure)
 //2b04: FREE
 //2b05: FREE
-//2b06: Incoming, chrif_changemapserverack -> 'answer of 2b05, ok/fail, data: dunno^^'
+//2b06: FREE
 //2b07: Outgoing, chrif_removefriend -> 'Tell charserver to remove friend_id from char_id friend list'
 //2b08: Outgoing, chrif_searchcharid -> '...'
 //2b09: Incoming, map_addchariddb -> 'Adds a name to the nick db'
@@ -391,27 +391,6 @@ static bool chrif_changemapserver(struct map_session_data *sd, uint32 ip, uint16
 
 	clif->authfail_fd(sd->fd, 0);
 	return false;
-}
-
-/// map-server change request acknowledgment (positive or negative)
-/// R 2b06 <account_id>.L <login_id1>.L <login_id2>.L <char_id>.L <map_index>.W <x>.W <y>.W <ip>.L <port>.W
-static bool chrif_changemapserverack(int account_id, int login_id1, int login_id2, int char_id, short map_index, short x, short y, uint32 ip, uint16 port)
-{
-	struct auth_node *node;
-
-	if ( !( node = chrif->auth_check(account_id, char_id, ST_MAPCHANGE) ) )
-		return false;
-
-	if ( !login_id1 ) {
-		ShowError("chrif_changemapserverack: map server change failed.\n");
-		clif->authfail_fd(node->fd, 0); // Disconnected from server
-	} else
-		clif->changemapserver(node->sd, map_index, x, y, ntohl(ip), ntohs(port), NULL);
-
-	//Player has been saved already, remove him from memory. [Skotlex]
-	chrif->auth_delete(account_id, char_id, ST_MAPCHANGE);
-
-	return (!login_id1)?false:true; // Is this the best approach here?
 }
 
 /*==========================================
@@ -1444,7 +1423,6 @@ static int chrif_parse(int fd)
 			case 0x2afd: chrif->authok(fd); break;
 			case 0x2b00: map->setusers(RFIFOL(fd,2)); chrif->keepalive(fd); break;
 			case 0x2b03: clif->charselectok(RFIFOL(fd,2), RFIFOB(fd,6)); break;
-			case 0x2b06: chrif->changemapserverack(RFIFOL(fd,2), RFIFOL(fd,6), RFIFOL(fd,10), RFIFOL(fd,14), RFIFOW(fd,18), RFIFOW(fd,20), RFIFOW(fd,22), RFIFOL(fd,24), RFIFOW(fd,28)); break;
 			case 0x2b09: map->addnickdb(RFIFOL(fd,2), RFIFOP(fd,6)); break;
 			case 0x2b0a: sockt->datasync(fd, false); break;
 			case 0x2b0d: chrif->changedsex(fd); break;
@@ -1757,7 +1735,6 @@ void chrif_defaults(void)
 	chrif->connectack = chrif_connectack;
 	chrif->sendmap = chrif_sendmap;
 	chrif->sendmapack = chrif_sendmapack;
-	chrif->changemapserverack = chrif_changemapserverack;
 	chrif->changedsex = chrif_changedsex;
 	chrif->divorceack = chrif_divorceack;
 	chrif->idbanned = chrif_idbanned;

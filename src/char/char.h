@@ -197,7 +197,6 @@ struct char_interface {
 	void (*parse_frommap_save_character) (int fd);
 	void (*select_ack) (int fd, int account_id, uint8 flag);
 	void (*parse_frommap_char_select_req) (int fd);
-	void (*change_map_server_ack) (int fd, const uint8 *data, bool ok);
 	void (*parse_frommap_remove_friend) (int fd);
 	void (*char_name_ack) (int fd, int char_id);
 	void (*parse_frommap_char_name_request) (int fd);

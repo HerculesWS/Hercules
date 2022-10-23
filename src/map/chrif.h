@@ -139,7 +139,6 @@ struct chrif_interface {
 	void (*connectack) (int fd);
 	void (*sendmap) (int fd);
 	void (*sendmapack) (int fd);
-	bool (*changemapserverack) (int account_id, int login_id1, int login_id2, int char_id, short map_index, short x, short y, uint32 ip, uint16 port);
 	void (*changedsex) (int fd);
 	bool (*divorceack) (int char_id, int partner_id);
 	void (*idbanned) (int fd);

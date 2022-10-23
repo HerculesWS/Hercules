@@ -3325,16 +3325,6 @@ static void char_parse_frommap_char_select_req(int fd)
 	}
 }
 
-static void char_change_map_server_ack(int fd, const uint8 *data, bool ok)
-{
-	WFIFOHEAD(fd,30);
-	WFIFOW(fd,0) = 0x2b06;
-	memcpy(WFIFOP(fd,2), data, 28);
-	if (!ok)
-		WFIFOL(fd,6) = 0; //Set login1 to 0.
-	WFIFOSET(fd,30);
-}
-
 static void char_parse_frommap_remove_friend(int fd)
 {
 	int char_id = RFIFOL(fd,2);
@@ -6483,7 +6473,6 @@ void char_defaults(void)
 	chr->parse_frommap_save_character = char_parse_frommap_save_character;
 	chr->select_ack = char_select_ack;
 	chr->parse_frommap_char_select_req = char_parse_frommap_char_select_req;
-	chr->change_map_server_ack = char_change_map_server_ack;
 	chr->parse_frommap_remove_friend = char_parse_frommap_remove_friend;
 	chr->char_name_ack = char_char_name_ack;
 	chr->parse_frommap_char_name_request = char_parse_frommap_char_name_request;
