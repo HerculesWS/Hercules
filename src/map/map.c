@@ -2914,14 +2914,6 @@ static int16 map_mapindex2mapid(unsigned short map_index)
 	return map->index2mapid[map_index];
 }
 
-/*==========================================
- * Switching Ip, port ? (like changing map_server) get ip/port from map_name
- *------------------------------------------*/
-static int map_mapname2ipport(unsigned short name, uint32 *ip, uint16 *port)
-{
-	return -1;
-}
-
 /**
  * Checks if both dirs point in the same direction.
  * @param s_dir: direction source is facing
@@ -3450,28 +3442,6 @@ static bool map_iwall_remove(const char *wall_name)
 	map->list[iwall->m].iwall_num--;
 	strdb_remove(map->iwall_db, iwall->wall_name);
 	return true;
-}
-
-/**
- * Delete all the other maps server management
- * @see DBApply
- */
-static int map_eraseallipport_sub(union DBKey key, struct DBData *data, va_list va)
-{
-	return 0;
-}
-
-static int map_eraseallipport(void)
-{
-	return 1;
-}
-
-/*==========================================
- * Delete mapindex from db of another map server
- *------------------------------------------*/
-static int map_eraseipport(unsigned short map_index, uint32 ip, uint16 port)
-{
-	return 0;
 }
 
 /**
@@ -6398,14 +6368,6 @@ static bool map_remove_questinfo(int m, struct npc_data *nd)
 /**
  * @see DBApply
  */
-static int map_db_final(union DBKey key, struct DBData *data, va_list ap)
-{
-	return 0;
-}
-
-/**
- * @see DBApply
- */
 static int nick_db_final(union DBKey key, struct DBData *data, va_list args)
 {
 	struct charid2nick* p = DB->data2ptr(data);
@@ -7341,9 +7303,6 @@ PRAGMA_GCC9(GCC diagnostic pop)
 	map->blid_exists = map_blid_exists;
 	map->mapindex2mapid = map_mapindex2mapid;
 	map->mapname2mapid = map_mapname2mapid;
-	map->mapname2ipport = map_mapname2ipport;
-	map->eraseipport = map_eraseipport;
-	map->eraseallipport = map_eraseallipport;
 	map->addiddb = map_addiddb;
 	map->deliddb = map_deliddb;
 	/* */
@@ -7390,7 +7349,6 @@ PRAGMA_GCC9(GCC diagnostic pop)
 	map->sub_getcellp = map_sub_getcellp;
 	map->sub_setcell = map_sub_setcell;
 	map->iwall_nextxy = map_iwall_nextxy;
-	map->eraseallipport_sub = map_eraseallipport_sub;
 	map->readfromcache = map_readfromcache;
 	map->readfromcache_v1 = map_readfromcache_v1;
 	map->addmap = map_addmap;
@@ -7421,7 +7379,6 @@ PRAGMA_GCC9(GCC diagnostic pop)
 	map->zone_str2skillid = map_zone_str2skillid;
 	map->zone_bl_type = map_zone_bl_type;
 	map->read_zone_db = read_map_zone_db;
-	map->db_final = map_db_final;
 	map->nick_db_final = nick_db_final;
 	map->cleanup_db_sub = cleanup_db_sub;
 	map->abort_sub = map_abort_sub;

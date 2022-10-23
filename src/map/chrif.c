@@ -484,17 +484,13 @@ static int chrif_reconnect(union DBKey key, struct DBData *data, va_list ap)
 			//Re-send final save
 			chrif->save(node->sd, 1);
 			break;
-		case ST_MAPCHANGE: { //Re-send map-change request.
-			struct map_session_data *sd = node->sd;
-			uint32 ip;
-			uint16 port;
+		case ST_MAPCHANGE:
+			//Re-send map-change request.
 
-			if( map->mapname2ipport(sd->mapindex,&ip,&port) == 0 )
-				chrif->changemapserver(sd, ip, port);
-			else //too much lag/timeout is the closest explanation for this error.
-				clif->authfail_fd(sd->fd, 3); // timeout
+			// TODO: Remove this branch
+			// Multi-zone is not supported
+			clif->authfail_fd(node->sd->fd, 3); // timeout
 			break;
-			}
 	}
 	return 0;
 }
@@ -1341,7 +1337,6 @@ static void chrif_on_disconnect(void)
 	chrif->connected = 0;
 
 	chrif->other_mapserver_count = 0; //Reset counter. We receive ALL maps from all map-servers on reconnect.
-	map->eraseallipport();
 
 	//Attempt to reconnect in a second. [Skotlex]
 	timer->add(timer->gettick() + 1000, chrif->check_connect_char_server, 0, 0);
