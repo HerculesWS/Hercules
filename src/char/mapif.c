@@ -84,23 +84,6 @@ static void mapif_server_destroy(void)
 /// Resets all the data related to a server.
 static void mapif_server_reset(void)
 {
-	int i, j;
-	unsigned char buf[16384];
-	int fd = chr->map_server.fd;
-	//Notify other map servers that this one is gone. [Skotlex]
-	WBUFW(buf, 0) = 0x2b20;
-	WBUFL(buf, 4) = htonl(chr->map_server.ip);
-	WBUFW(buf, 8) = htons(chr->map_server.port);
-	j = 0;
-	for (i = 0; i < VECTOR_LENGTH(chr->map_server.maps); i++) {
-		uint16 m = VECTOR_INDEX(chr->map_server.maps, i);
-		if (m != 0)
-			WBUFW(buf, 10 + (j++) * 4) = m;
-	}
-	if (j > 0) {
-		WBUFW(buf, 2) = j * 4 + 10;
-		mapif->sendallwos(fd, buf, WBUFW(buf, 2));
-	}
 	if (SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `index`='%d'", ragsrvinfo_db, chr->map_server.fd))
 		Sql_ShowDebug(inter->sql_handle);
 	chr->online_char_db->foreach(chr->online_char_db, chr->db_setoffline); //Tag relevant chars as 'in disconnected' server.

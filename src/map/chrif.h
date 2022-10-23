@@ -148,7 +148,6 @@ struct chrif_interface {
 	bool (*load_scdata) (int fd);
 	void (*update_ip) (int fd);
 	int (*disconnectplayer) (int fd);
-	void (*removemap) (int fd);
 	int (*updatefamelist_ack) (int fd);
 	void (*keepalive)(int fd);
 	void (*keepalive_ack) (int fd);

@@ -98,7 +98,7 @@ struct chrif_interface *chrif;
 //2b1d: Incoming, chrif_load_scdata -> 'received sc_data of player for loading.'
 //2b1e: Incoming, chrif_update_ip -> 'Request forwarded from char-server for interserver IP sync.' [Lance]
 //2b1f: Incoming, chrif_disconnectplayer -> 'disconnects a player (aid X) with the message XY ... 0x81 ..' [Sirius]
-//2b20: Incoming, chrif_removemap -> 'remove maps of a server (sample: its going offline)' [Sirius]
+//2b20: FREE
 //2b21: Incoming, chrif_save_ack. Returned after a character has been "final saved" on the char-server. [Skotlex]
 //2b22: Incoming, chrif_updatefamelist_ack. Updated one position in the fame list.
 //2b23: Outgoing, chrif_keepalive. charserver ping.
@@ -374,22 +374,6 @@ static void chrif_sendmap(int fd)
 		WFIFOW(fd,4+i*4) = map_id2index(i);
 	WFIFOW(fd,2) = 4 + i * 4;
 	WFIFOSET(fd,WFIFOW(fd,2));
-}
-
-// remove specified maps (used when some other map-server disconnects)
-static void chrif_removemap(int fd)
-{
-	int i, j;
-	uint32 ip =  RFIFOL(fd,4);
-	uint16 port = RFIFOW(fd,8);
-
-	for(i = 10, j = 0; i < RFIFOW(fd, 2); i += 4, j++)
-		map->eraseipport(RFIFOW(fd, i), ip, port);
-
-	chrif->other_mapserver_count--;
-
-	if(battle_config.etc_log)
-		ShowStatus("remove map of server %u.%u.%u.%u:%u (%d maps)\n", CONVIP(ip), port, j);
 }
 
 // received after a character has been "final saved" on the char-server
@@ -1499,7 +1483,6 @@ static int chrif_parse(int fd)
 			case 0x2b1d: chrif->load_scdata(fd); break;
 			case 0x2b1e: chrif->update_ip(fd); break;
 			case 0x2b1f: chrif->disconnectplayer(fd); break;
-			case 0x2b20: chrif->removemap(fd); break;
 			case 0x2b21: chrif->save_ack(fd); break;
 			case 0x2b22: chrif->updatefamelist_ack(fd); break;
 			case 0x2b24: chrif->keepalive_ack(fd); break;
@@ -1811,7 +1794,6 @@ void chrif_defaults(void)
 	chrif->load_scdata = chrif_load_scdata;
 	chrif->update_ip = chrif_update_ip;
 	chrif->disconnectplayer = chrif_disconnectplayer;
-	chrif->removemap = chrif_removemap;
 	chrif->updatefamelist_ack = chrif_updatefamelist_ack;
 	chrif->keepalive = chrif_keepalive;
 	chrif->keepalive_ack = chrif_keepalive_ack;
