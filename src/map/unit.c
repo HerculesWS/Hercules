@@ -175,6 +175,9 @@ static int unit_walk_toxy_sub(struct block_list *bl)
 	if (ud == NULL)
 		return 2;
 
+	if (status->isdead(bl))
+		return 1;
+
 	struct walkpath_data wpd = {0};
 
 	if (!path->search(&wpd, bl, bl->m, bl->x, bl->y, ud->to_x, ud->to_y, ud->state.walk_easy, CELL_CHKNOPASS))
@@ -356,6 +359,9 @@ static int unit_walk_toxy_timer(int tid, int64 tick, int id, intptr_t data)
 		return 1;
 
 	if (ud->walkpath.path_pos >= ud->walkpath.path_len)
+		return 1;
+
+	if (status->isdead(bl)) // Should not be able to move
 		return 1;
 
 	enum unit_dir dir = ud->walkpath.path[ud->walkpath.path_pos];
