@@ -249,7 +249,7 @@ static void char_set_char_online(int map_id, int char_id, int account_id)
 	{
 		ShowNotice("chr->set_char_online: Character %d:%d marked in map server %d, but map server %d claims to have (%d:%d) online!\n",
 			character->account_id, character->char_id, character->server, map_id, account_id, char_id);
-		mapif->disconnectplayer(chr->map_server.fd, character->account_id, character->char_id, 2); // 2: Already connected to server
+		mapif->disconnectplayer(character->account_id, character->char_id, 2); // 2: Already connected to server
 	}
 
 	//Update state data
@@ -354,7 +354,7 @@ static int char_db_kickoffline(union DBKey key, struct DBData *data, va_list ap)
 
 	//Kick out any connected characters, and set them offline as appropriate.
 	if (character->server == 0)
-		mapif->disconnectplayer(chr->map_server.fd, character->account_id, character->char_id, 1); // 1: Server closed
+		mapif->disconnectplayer(character->account_id, character->char_id, 1); // 1: Server closed
 	else if (character->waiting_disconnect == INVALID_TIMER)
 		chr->set_char_offline(character->char_id, character->account_id);
 	else
@@ -2361,7 +2361,7 @@ static void char_auth_ok(int fd, struct char_session_data *sd)
 		// check if character is not online already. [Skotlex]
 		if (character->server > -1) {
 			//Character already online. KICK KICK KICK
-			mapif->disconnectplayer(chr->map_server.fd, character->account_id, character->char_id, 2); // 2: Already connected to server
+			mapif->disconnectplayer(character->account_id, character->char_id, 2); // 2: Already connected to server
 			if (character->waiting_disconnect == INVALID_TIMER)
 				character->waiting_disconnect = timer->add(timer->gettick()+20000, chr->waiting_disconnect, character->account_id, 0);
 			character->pincode_enable = -1;
@@ -2681,7 +2681,7 @@ static void char_parse_fromlogin_kick(int fd)
 	{// account is already marked as online!
 		if( character->server > -1 ) {
 			//Kick it from the map server it is on.
-			mapif->disconnectplayer(chr->map_server.fd, character->account_id, character->char_id, 2); // 2: Already connected to server
+			mapif->disconnectplayer(character->account_id, character->char_id, 2); // 2: Already connected to server
 			if (character->waiting_disconnect == INVALID_TIMER)
 				character->waiting_disconnect = timer->add(timer->gettick()+AUTH_TIMEOUT, chr->waiting_disconnect, character->account_id, 0);
 		}
@@ -3227,7 +3227,7 @@ static void char_parse_frommap_set_users(int fd)
 		if (character->server > -1 && character->server != 0) { // FIXME
 			ShowNotice("Set map user: Character (%d:%d) marked %d on map server, but map server claims to have (%d:%d) online!\n",
 				character->account_id, character->char_id, character->server, aid, cid);
-			mapif->disconnectplayer(chr->map_server.fd, character->account_id, character->char_id, 2); // 2: Already connected to server
+			mapif->disconnectplayer(character->account_id, character->char_id, 2); // 2: Already connected to server
 		}
 		character->server = 0; // FIXME
 		character->char_id = cid;

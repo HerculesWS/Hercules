@@ -36,7 +36,7 @@ struct inter_rodex_interface {
 	bool (*hasnew) (int char_id, int account_id);
 	bool (*checkname) (const char *name, int *target_char_id, int *target_class, int *target_level);
 	int64 (*savemessage) (struct rodex_message* msg);
-	bool (*updatemail) (int fd, int account_id, int char_id, int64 mail_id, uint8 opentype, int8 flag);
+	bool (*updatemail) (int account_id, int char_id, int64 mail_id, uint8 opentype, int8 flag);
 	int64 (*getzeny) (int64 mail_id);
 	int (*getitems) (int64 mail_id, struct rodex_item *items);
 };

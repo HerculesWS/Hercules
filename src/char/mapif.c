@@ -478,15 +478,15 @@ static int mapif_guild_info(const struct guild *g)
 }
 
 // ACK member add
-static int mapif_guild_memberadded(int fd, int guild_id, int account_id, int char_id, int flag)
+static int mapif_guild_memberadded(int guild_id, int account_id, int char_id, int flag)
 {
-	WFIFOHEAD(fd, 15);
-	WFIFOW(fd, 0) = 0x3832;
-	WFIFOL(fd, 2) = guild_id;
-	WFIFOL(fd, 6) = account_id;
-	WFIFOL(fd, 10) = char_id;
-	WFIFOB(fd, 14) = flag;
-	WFIFOSET(fd, 15);
+	unsigned char buf[15];
+	WBUFW(buf, 0) = 0x3832;
+	WBUFL(buf, 2) = guild_id;
+	WBUFL(buf, 6) = account_id;
+	WBUFL(buf, 10) = char_id;
+	WBUFB(buf, 14) = flag;
+	mapif->send(buf, 15);
 	return 0;
 }
 
@@ -713,7 +713,7 @@ static int mapif_parse_GuildAddMember(int fd, int guild_id, const struct guild_m
 {
 	nullpo_ret(m);
 
-	inter_guild->add_member(guild_id, m, fd);
+	inter_guild->add_member(guild_id, m);
 	return 0;
 }
 
@@ -1642,7 +1642,7 @@ static void mapif_parse_rodex_updatemail(int fd)
 	uint8 opentype = RFIFOB(fd, 18);
 	int8 flag = RFIFOB(fd, 19);
 
-	inter_rodex->updatemail(fd, account_id, char_id, mail_id, opentype, flag);
+	inter_rodex->updatemail(account_id, char_id, mail_id, opentype, flag);
 }
 
 /*==========================================
@@ -2009,17 +2009,13 @@ static int mapif_account_reg_reply(int fd,int account_id,int char_id, int type)
 }
 
 //Request to kick char from a certain map server. [Skotlex]
-static int mapif_disconnectplayer(int fd, int account_id, int char_id, int reason)
+static int mapif_disconnectplayer(int account_id, int char_id, int reason)
 {
-	if (fd < 0)
-		return -1;
-
-	WFIFOHEAD(fd, 7);
-	WFIFOW(fd, 0) = 0x2b1f;
-	WFIFOL(fd, 2) = account_id;
-	WFIFOB(fd, 6) = reason;
-	WFIFOSET(fd, 7);
-	return 0;
+	unsigned char buf[7];
+	WBUFW(buf, 0) = 0x2b1f;
+	WBUFL(buf, 2) = account_id;
+	WBUFB(buf, 6) = reason;
+	return mapif->send(buf, 7);
 }
 
 // Save account_reg into sql (type=2)
@@ -2278,27 +2274,27 @@ static void mapif_achievement_save(int char_id, struct char_achievements *p)
 		inter_achievement->tosql(char_id, cp, p);
 }
 
-static void mapif_rodex_getzenyack(int fd, int char_id, int64 mail_id, uint8 opentype, int64 zeny)
+static void mapif_rodex_getzenyack(int char_id, int64 mail_id, uint8 opentype, int64 zeny)
 {
-	WFIFOHEAD(fd, 23);
-	WFIFOW(fd, 0) = 0x3899;
-	WFIFOL(fd, 2) = char_id;
-	WFIFOQ(fd, 6) = zeny;
-	WFIFOQ(fd, 14) = mail_id;
-	WFIFOB(fd, 22) = opentype;
-	WFIFOSET(fd, 23);
+	unsigned char buf[23];
+	WBUFW(buf, 0) = 0x3899;
+	WBUFL(buf, 2) = char_id;
+	WBUFQ(buf, 6) = zeny;
+	WBUFQ(buf, 14) = mail_id;
+	WBUFB(buf, 22) = opentype;
+	mapif->send(buf, 23);
 }
 
-static void mapif_rodex_getitemsack(int fd, int char_id, int64 mail_id, uint8 opentype, int count, const struct rodex_item *items)
+static void mapif_rodex_getitemsack(int char_id, int64 mail_id, uint8 opentype, int count, const struct rodex_item *items)
 {
-	WFIFOHEAD(fd, 16 + sizeof(struct rodex_item) * RODEX_MAX_ITEM);
-	WFIFOW(fd, 0) = 0x389a;
-	WFIFOL(fd, 2) = char_id;
-	WFIFOQ(fd, 6) = mail_id;
-	WFIFOB(fd, 14) = opentype;
-	WFIFOB(fd, 15) = count;
-	memcpy(WFIFOP(fd, 16), items, sizeof(struct rodex_item) * RODEX_MAX_ITEM);
-	WFIFOSET(fd, 16 + sizeof(struct rodex_item) * RODEX_MAX_ITEM);
+	unsigned char buf[16 + sizeof(struct rodex_item) * RODEX_MAX_ITEM];
+	WBUFW(buf, 0) = 0x389a;
+	WBUFL(buf, 2) = char_id;
+	WBUFQ(buf, 6) = mail_id;
+	WBUFB(buf, 14) = opentype;
+	WBUFB(buf, 15) = count;
+	memcpy(WBUFP(buf, 16), items, sizeof(struct rodex_item) * RODEX_MAX_ITEM);
+	mapif->send(buf, 16 + sizeof(struct rodex_item) * RODEX_MAX_ITEM);
 }
 
 void mapif_defaults(void)

@@ -70,7 +70,7 @@ struct inter_guild_interface {
 	int (*parse_frommap) (int fd);
 	int (*broken) (int guild_id);
 	struct guild *(*create) (const char *name, const struct guild_member *master);
-	bool (*add_member) (int guild_id, const struct guild_member *member, int map_fd);
+	bool (*add_member) (int guild_id, const struct guild_member *member);
 	bool (*leave) (int guild_id, int account_id, int char_id, int flag, const char *mes);
 	bool (*update_member_info_short) (int guild_id, int account_id, int char_id, int online, int lv, int class);
 	bool (*update_member_info) (int guild_id, int account_id, int char_id, enum guild_member_info type, const char *data, int len);

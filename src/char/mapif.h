@@ -64,7 +64,7 @@ struct mapif_interface {
 	int (*guild_created) (int fd, int account_id, struct guild *g);
 	int (*guild_noinfo) (int guild_id);
 	int (*guild_info) (const struct guild *g);
-	int (*guild_memberadded) (int fd, int guild_id, int account_id, int char_id, int flag);
+	int (*guild_memberadded) (int guild_id, int account_id, int char_id, int flag);
 	int (*guild_withdraw) (int guild_id, int account_id, int char_id, int flag, const char *name, const char *mes);
 	int (*guild_memberinfoshort) (struct guild *g, int idx);
 	int (*guild_broken) (int guild_id, int flag);
@@ -162,8 +162,8 @@ struct mapif_interface {
 	void (*rodex_send) (int fd, int sender_id, int receiver_id, int receiver_accountid, bool result);
 	void (*parse_rodex_checkname) (int fd);
 	void (*rodex_checkname) (int fd, int reqchar_id, int target_char_id, int target_class, int target_level, char *name);
-	void (*rodex_getzenyack) (int fd, int char_id, int64 mail_id, uint8 opentype, int64 zeny);
-	void (*rodex_getitemsack) (int fd, int char_id, int64 mail_id, uint8 opentype, int count, const struct rodex_item *items);
+	void (*rodex_getzenyack) (int char_id, int64 mail_id, uint8 opentype, int64 zeny);
+	void (*rodex_getitemsack) (int char_id, int64 mail_id, uint8 opentype, int count, const struct rodex_item *items);
 	int (*load_guild_storage) (int fd, int account_id, int guild_id, char flag);
 	int (*save_guild_storage_ack) (int fd, int account_id, int guild_id, int fail);
 	int (*parse_LoadGuildStorage) (int fd);
@@ -176,7 +176,7 @@ struct mapif_interface {
 	void (*parse_ItemBoundRetrieve) (int fd);
 	void (*parse_accinfo) (int fd);
 	int (*account_reg_reply) (int fd,int account_id,int char_id, int type);
-	int (*disconnectplayer) (int fd, int account_id, int char_id, int reason);
+	int (*disconnectplayer) (int account_id, int char_id, int reason);
 	int (*parse_Registry) (int fd);
 	int (*parse_RegistryRequest) (int fd);
 	void (*namechange_ack) (int fd, int account_id, int char_id, int type, int flag, const char *name);
