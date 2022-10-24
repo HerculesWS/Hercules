@@ -2291,7 +2291,7 @@ static void mapif_rodex_getzenyack(int fd, int char_id, int64 mail_id, uint8 ope
 
 static void mapif_rodex_getitemsack(int fd, int char_id, int64 mail_id, uint8 opentype, int count, const struct rodex_item *items)
 {
-	WFIFOHEAD(fd, 15 + sizeof(struct rodex_item) * RODEX_MAX_ITEM);
+	WFIFOHEAD(fd, 16 + sizeof(struct rodex_item) * RODEX_MAX_ITEM);
 	WFIFOW(fd, 0) = 0x389a;
 	WFIFOL(fd, 2) = char_id;
 	WFIFOQ(fd, 6) = mail_id;
