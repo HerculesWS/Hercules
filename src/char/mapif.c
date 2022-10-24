@@ -121,16 +121,25 @@ static void mapif_char_ban(int char_id, time_t timestamp)
 	mapif->send(buf, 11);
 }
 
+/**
+ * Sends a packet to the map server
+ *
+ * @param buf The data to send
+ * @param len The data length
+ *
+ * @return 0 on success, or error code on error
+ * @retval -1 if the map server is not connected
+ */
 static int mapif_send(const unsigned char *buf, unsigned int len)
 {
 	nullpo_ret(buf);
 	int fd = chr->map_server.fd;
 	if (fd < 0)
-		return 0;
+		return -1;
 	WFIFOHEAD(fd, len);
 	memcpy(WFIFOP(fd, 0), buf, len);
 	WFIFOSET(fd, len);
-	return 1;
+	return 0;
 }
 
 static void mapif_send_users_count(int users)
