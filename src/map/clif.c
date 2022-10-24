@@ -23757,7 +23757,7 @@ static bool clif_attendancedb_libconfig_sub(struct config_setting_t *it, int n, 
 	nullpo_ret(it);
 	nullpo_ret(source);
 
-	if (!itemdb->lookup_const(it, "ItemID", &i32) || i32 < 0) {
+	if (!map->setting_lookup_const(it, "ItemID", &i32) || i32 < 0) {
 		ShowWarning("clif_attendancedb_libconfig_sub: unknown item %d, entry #%d, skipping.\n", i32, n);
 		return false;
 	}

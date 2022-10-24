@@ -612,15 +612,15 @@ static struct quest_db *quest_read_db_sub(struct config_setting_t *cs, int n, co
 					continue;
 				}
 
-				if (mob->lookup_const(mobt, "Size", &i32)) {
+				if (map->setting_lookup_const(mobt, "Size", &i32)) {
 					entry->objectives[entry->objectives_count - 1].mobtype.size = (uint8)i32;
 					entry->objectives[entry->objectives_count - 1].mobtype.size_enabled = true;
 				}
-				if (mob->lookup_const(mobt, "Race", &i32)) {
+				if (map->setting_lookup_const(mobt, "Race", &i32)) {
 					entry->objectives[entry->objectives_count - 1].mobtype.race = (uint8)i32;
 					entry->objectives[entry->objectives_count - 1].mobtype.race_enabled = true;
 				}
-				if (mob->lookup_const(mobt, "Element", &i32)) {
+				if (map->setting_lookup_const(mobt, "Element", &i32)) {
 					entry->objectives[entry->objectives_count - 1].mobtype.ele = (uint8)i32;
 					entry->objectives[entry->objectives_count - 1].mobtype.ele_enabled = true;
 				}

@@ -601,7 +601,6 @@ struct mob_interface {
 	bool (*read_optdrops_group) (struct config_setting_t *group, int n);
 	bool (*read_optdrops_db) (void);
 	void (*readdb) (void);
-	bool (*lookup_const) (const struct config_setting_t *it, const char *name, int *value);
 	bool (*get_const) (const struct config_setting_t *it, int *value);
 	int (*db_validate_entry) (struct mob_db *entry, int n, const char *source);
 	int (*read_libconfig) (const char *filename, bool ignore_missing);

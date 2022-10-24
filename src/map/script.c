@@ -29370,6 +29370,25 @@ static void script_hardcoded_constants(void)
 	script->set_constant("MST_AROUND4", MST_AROUND4, false, false);
 	script->set_constant("MST_AROUND", MST_AROUND , false, false);
 
+	script->constdb_comment("monster modes");
+	script->set_constant("MD_NONE", MD_NONE, false, false);
+	script->set_constant("MD_CANMOVE", MD_CANMOVE, false, false);
+	script->set_constant("MD_LOOTER", MD_LOOTER, false, false);
+	script->set_constant("MD_AGGRESSIVE", MD_AGGRESSIVE, false, false);
+	script->set_constant("MD_ASSIST", MD_ASSIST, false, false);
+	script->set_constant("MD_CASTSENSOR_IDLE", MD_CASTSENSOR_IDLE, false, false);
+	script->set_constant("MD_BOSS", MD_BOSS, false, false);
+	script->set_constant("MD_PLANT", MD_PLANT, false, false);
+	script->set_constant("MD_CANATTACK", MD_CANATTACK, false, false);
+	script->set_constant("MD_DETECTOR", MD_DETECTOR, false, false);
+	script->set_constant("MD_CASTSENSOR_CHASE", MD_CASTSENSOR_CHASE, false, false);
+	script->set_constant("MD_CHANGECHASE", MD_CHANGECHASE, false, false);
+	script->set_constant("MD_ANGRY", MD_ANGRY, false, false);
+	script->set_constant("MD_CHANGETARGET_MELEE", MD_CHANGETARGET_MELEE, false, false);
+	script->set_constant("MD_CHANGETARGET_CHASE", MD_CHANGETARGET_CHASE, false, false);
+	script->set_constant("MD_TARGETWEAK", MD_TARGETWEAK, false, false);
+	script->set_constant("MD_NOKNOCKBACK", MD_NOKNOCKBACK, false, false);
+
 	script->constdb_comment("Monster group constants");
 	script->set_constant("ALL_MOBS_NONBOSS", ALL_MOBS_NONBOSS, false, false);
 	script->set_constant("ALL_MOBS_BOSS", ALL_MOBS_BOSS, false, false);

@@ -4475,22 +4475,22 @@ static void mob_read_db_stats_sub(struct mob_db *entry, struct config_setting_t 
 {
 	int i32;
 	nullpo_retv(entry);
-	if (mob->lookup_const(t, "Str", &i32) && i32 >= 0) {
+	if (map->setting_lookup_const(t, "Str", &i32) && i32 >= 0) {
 		entry->status.str = mob_parse_dbrow_cap_value(entry->mob_id, UINT16_MIN, UINT16_MAX, i32);
 	}
-	if (mob->lookup_const(t, "Agi", &i32) && i32 >= 0) {
+	if (map->setting_lookup_const(t, "Agi", &i32) && i32 >= 0) {
 		entry->status.agi = mob_parse_dbrow_cap_value(entry->mob_id, UINT16_MIN, UINT16_MAX, i32);
 	}
-	if (mob->lookup_const(t, "Vit", &i32) && i32 >= 0) {
+	if (map->setting_lookup_const(t, "Vit", &i32) && i32 >= 0) {
 		entry->status.vit = mob_parse_dbrow_cap_value(entry->mob_id, UINT16_MIN, UINT16_MAX, i32);
 	}
-	if (mob->lookup_const(t, "Int", &i32) && i32 >= 0) {
+	if (map->setting_lookup_const(t, "Int", &i32) && i32 >= 0) {
 		entry->status.int_ = mob_parse_dbrow_cap_value(entry->mob_id, UINT16_MIN, UINT16_MAX, i32);
 	}
-	if (mob->lookup_const(t, "Dex", &i32) && i32 >= 0) {
+	if (map->setting_lookup_const(t, "Dex", &i32) && i32 >= 0) {
 		entry->status.dex = mob_parse_dbrow_cap_value(entry->mob_id, UINT16_MIN, UINT16_MAX, i32);
 	}
-	if (mob->lookup_const(t, "Luk", &i32) && i32 >= 0) {
+	if (map->setting_lookup_const(t, "Luk", &i32) && i32 >= 0) {
 		entry->status.luk = mob_parse_dbrow_cap_value(entry->mob_id, UINT16_MIN, UINT16_MAX, i32);
 	}
 }
@@ -4536,7 +4536,7 @@ static void mob_read_db_viewdata_sub(struct mob_db *entry, struct config_setting
 		entry->vd.hair_color = libconfig->setting_get_uint16(it);
 	if ((it = libconfig->setting_get_member(t, "BodyColorId")) != NULL)
 		entry->vd.cloth_color = libconfig->setting_get_uint16(it);
-	if (mob->lookup_const(t, "Gender", &i32) && i32 >= 0) {
+	if (map->setting_lookup_const(t, "Gender", &i32) && i32 >= 0) {
 		entry->vd.sex = (char)i32;
 	}
 	if ((it = libconfig->setting_get_member(t, "Options")) != NULL)
@@ -5085,13 +5085,13 @@ static int mob_read_db_sub(struct config_setting_t *mobt, int n, const char *sou
 		safestrncpy(md.jname, str, sizeof(md.jname));
 	}
 
-	if (mob->lookup_const(mobt, "Lv", &i32) && i32 >= 0) {
+	if (map->setting_lookup_const(mobt, "Lv", &i32) && i32 >= 0) {
 		md.lv = i32;
 	} else if (!inherit) {
 		md.lv = 1;
 	}
 
-	if (mob->lookup_const(mobt, "Hp", &i32) && i32 >= 0) {
+	if (map->setting_lookup_const(mobt, "Hp", &i32) && i32 >= 0) {
 		md.status.max_hp = i32;
 		maxhpUpdated = true; // battle_config modifiers to max_hp are applied below
 	} else if (!inherit) {
@@ -5099,23 +5099,23 @@ static int mob_read_db_sub(struct config_setting_t *mobt, int n, const char *sou
 		maxhpUpdated = true; // battle_config modifiers to max_hp are applied below
 	}
 
-	if (mob->lookup_const(mobt, "Sp", &i32) && i32 >= 0) {
+	if (map->setting_lookup_const(mobt, "Sp", &i32) && i32 >= 0) {
 		md.status.max_sp = i32;
 	} else if (!inherit) {
 		md.status.max_sp = 1;
 	}
 
-	if (mob->lookup_const(mobt, "Exp", &i32) && i32 >= 0) {
+	if (map->setting_lookup_const(mobt, "Exp", &i32) && i32 >= 0) {
 		int64 exp = apply_percentrate64(i32, battle_config.base_exp_rate, 100);
 		md.base_exp = (unsigned int)cap_value(exp, 0, UINT_MAX);
 	}
 
-	if (mob->lookup_const(mobt, "JExp", &i32) && i32 >= 0) {
+	if (map->setting_lookup_const(mobt, "JExp", &i32) && i32 >= 0) {
 		int64 exp = apply_percentrate64(i32, battle_config.job_exp_rate, 100);
 		md.job_exp = (unsigned int)cap_value(exp, 0, UINT_MAX);
 	}
 
-	if (mob->lookup_const(mobt, "AttackRange", &i32) && i32 >= 0) {
+	if (map->setting_lookup_const(mobt, "AttackRange", &i32) && i32 >= 0) {
 		md.status.rhw.range = i32;
 	} else if (!inherit) {
 		md.status.rhw.range = 1;
@@ -5127,29 +5127,29 @@ static int mob_read_db_sub(struct config_setting_t *mobt, int n, const char *sou
 				md.status.rhw.atk2 = libconfig->setting_get_int_elem(t, 1);
 			if (libconfig->setting_length(t) >= 1)
 				md.status.rhw.atk = libconfig->setting_get_int_elem(t, 0);
-		} else if (mob->lookup_const(mobt, "Attack", &i32) && i32 >= 0) {
+		} else if (map->setting_lookup_const(mobt, "Attack", &i32) && i32 >= 0) {
 			md.status.rhw.atk = i32;
 			md.status.rhw.atk2 = i32;
 		}
 	}
 
-	if (mob->lookup_const(mobt, "Def", &i32) && i32 >= 0) {
+	if (map->setting_lookup_const(mobt, "Def", &i32) && i32 >= 0) {
 		md.status.def = mob_parse_dbrow_cap_value(md.mob_id, DEFTYPE_MIN, DEFTYPE_MAX, i32);
 	}
-	if (mob->lookup_const(mobt, "Mdef", &i32) && i32 >= 0) {
+	if (map->setting_lookup_const(mobt, "Mdef", &i32) && i32 >= 0) {
 		md.status.mdef = mob_parse_dbrow_cap_value(md.mob_id, DEFTYPE_MIN, DEFTYPE_MAX, i32);
 	}
 
 	if ((t = libconfig->setting_get_member(mobt, "Stats"))) {
 		if (config_setting_is_group(t)) {
 			mob->read_db_stats_sub(&md, t);
-		} else if (mob->lookup_const(mobt, "Stats", &i32) && i32 >= 0) {
+		} else if (map->setting_lookup_const(mobt, "Stats", &i32) && i32 >= 0) {
 			md.status.str = md.status.agi = md.status.vit = md.status.int_ = md.status.dex = md.status.luk =
 				mob_parse_dbrow_cap_value(md.mob_id, UINT16_MIN, UINT16_MAX, i32);
 		}
 	}
 
-	if (mob->lookup_const(mobt, "ViewRange", &i32) && i32 >= 0) {
+	if (map->setting_lookup_const(mobt, "ViewRange", &i32) && i32 >= 0) {
 		if (battle_config.view_range_rate != 100) {
 			md.range2 = i32 * battle_config.view_range_rate / 100;
 		} else {
@@ -5159,7 +5159,7 @@ static int mob_read_db_sub(struct config_setting_t *mobt, int n, const char *sou
 		md.range2 = 1;
 	}
 
-	if (mob->lookup_const(mobt, "ChaseRange", &i32) && i32 >= 0) {
+	if (map->setting_lookup_const(mobt, "ChaseRange", &i32) && i32 >= 0) {
 		if (battle_config.chase_range_rate != 100) {
 			md.range3 = i32 * battle_config.chase_range_rate / 100;
 		} else {
@@ -5169,13 +5169,13 @@ static int mob_read_db_sub(struct config_setting_t *mobt, int n, const char *sou
 		md.range3 = 1;
 	}
 
-	if (mob->lookup_const(mobt, "Size", &i32) && i32 >= 0) {
+	if (map->setting_lookup_const(mobt, "Size", &i32) && i32 >= 0) {
 		md.status.size = i32;
 	} else if (!inherit) {
 		md.status.size = 0;
 	}
 
-	if (mob->lookup_const(mobt, "Race", &i32) && i32 >= 0) {
+	if (map->setting_lookup_const(mobt, "Race", &i32) && i32 >= 0) {
 		md.status.race = i32;
 	} else if (!inherit) {
 		md.status.race = 0;
@@ -5198,32 +5198,32 @@ static int mob_read_db_sub(struct config_setting_t *mobt, int n, const char *sou
 	if ((t = libconfig->setting_get_member(mobt, "Mode"))) {
 		if (config_setting_is_group(t)) {
 			md.status.mode = mob->read_db_mode_sub(&md, t);
-		} else if (mob->lookup_const(mobt, "Mode", &i32) && i32 >= 0) {
+		} else if (map->setting_lookup_const(mobt, "Mode", &i32) && i32 >= 0) {
 			md.status.mode = (uint32)i32 & MD_MASK;
 		}
 	}
 	if (!battle_config.monster_active_enable)
 		md.status.mode &= ~MD_AGGRESSIVE;
 
-	if (mob->lookup_const(mobt, "MoveSpeed", &i32) && i32 >= 0) {
+	if (map->setting_lookup_const(mobt, "MoveSpeed", &i32) && i32 >= 0) {
 		md.status.speed = i32;
 	}
 
 	md.status.aspd_rate = 1000;
 
-	if (mob->lookup_const(mobt, "AttackDelay", &i32) && i32 >= 0) {
+	if (map->setting_lookup_const(mobt, "AttackDelay", &i32) && i32 >= 0) {
 		md.status.adelay = cap_value(i32, battle_config.monster_max_aspd*2, 4000);
 	} else if (!inherit) {
 		md.status.adelay = 4000;
 	}
 
-	if (mob->lookup_const(mobt, "AttackMotion", &i32) && i32 >= 0) {
+	if (map->setting_lookup_const(mobt, "AttackMotion", &i32) && i32 >= 0) {
 		md.status.amotion = cap_value(i32, battle_config.monster_max_aspd, 2000);
 	} else if (!inherit) {
 		md.status.amotion = 2000;
 	}
 
-	if (mob->lookup_const(mobt, "DamageMotion", &i32) && i32 >= 0) {
+	if (map->setting_lookup_const(mobt, "DamageMotion", &i32) && i32 >= 0) {
 		if (battle_config.monster_damage_delay_rate != 100)
 			md.status.dmotion = i32 * battle_config.monster_damage_delay_rate / 100;
 		else
@@ -5231,7 +5231,7 @@ static int mob_read_db_sub(struct config_setting_t *mobt, int n, const char *sou
 	}
 
 	// MVP EXP Bonus: MEXP
-	if (mob->lookup_const(mobt, "MvpExp", &i32) && i32 >= 0) {
+	if (map->setting_lookup_const(mobt, "MvpExp", &i32) && i32 >= 0) {
 		// Some new MVP's MEXP multiple by high exp-rate cause overflow. [LuzZza]
 		int64 exp = apply_percentrate64(i32, battle_config.mvp_exp_rate, 100);
 		md.mexp = (unsigned int)cap_value(exp, 0, UINT_MAX);
@@ -5260,7 +5260,7 @@ static int mob_read_db_sub(struct config_setting_t *mobt, int n, const char *sou
 		}
 	}
 
-	if (mob->lookup_const(mobt, "DamageTakenRate", &i32) && i32 >= 0) {
+	if (map->setting_lookup_const(mobt, "DamageTakenRate", &i32) && i32 >= 0) {
 		md.dmg_taken_rate = cap_value(i32, 1, INT_MAX);
 	} else if (!inherit) {
 		md.dmg_taken_rate = 100;
@@ -5291,24 +5291,6 @@ static int mob_read_db_sub(struct config_setting_t *mobt, int n, const char *sou
 static void mob_read_db_additional_fields(struct mob_db *entry, struct config_setting_t *t, int n, const char *source)
 {
 	// do nothing. plugins can do own work
-}
-
-static bool mob_lookup_const(const struct config_setting_t *it, const char *name, int *value)
-{
-	if (libconfig->setting_lookup_int(it, name, value))
-	{
-		return true;
-	}
-	else
-	{
-		const char *str = NULL;
-		if (libconfig->setting_lookup_string(it, name, &str))
-		{
-			if (*str && script->get_constant(str, value))
-				return true;
-		}
-	}
-	return false;
 }
 
 static bool mob_get_const(const struct config_setting_t *it, int *value)
@@ -5763,7 +5745,7 @@ static bool mob_skill_db_libconfig_sub_skill(struct config_setting_t *it, int n,
 	ms->skill_id = skill_id;
 
 	int i32 = MSS_ANY;
-	if (mob->lookup_const(it, "SkillState", &i32) && (i32 < MSS_ANY || i32 > MSS_ANYTARGET)) {
+	if (map->setting_lookup_const(it, "SkillState", &i32) && (i32 < MSS_ANY || i32 > MSS_ANYTARGET)) {
 		ShowWarning("%s: Invalid skill state %d for skill %d (%s) in %s %s (%d), defaulting to MSS_ANY.\n",
 			    __func__, i32, skill_id, skill_name, mob_str, mob_sprite, mob_id);
 		i32 = MSS_ANY;
@@ -5801,7 +5783,7 @@ static bool mob_skill_db_libconfig_sub_skill(struct config_setting_t *it, int n,
 	ms->cancel = (res == CONFIG_FALSE) ? 0 : cap_value(i32, 0, 1);
 
 	i32 = MST_TARGET;
-	if (mob->lookup_const(it, "SkillTarget", &i32) && (i32 < MST_TARGET || i32 > MST_AROUND)) {
+	if (map->setting_lookup_const(it, "SkillTarget", &i32) && (i32 < MST_TARGET || i32 > MST_AROUND)) {
 		ShowWarning("%s: Invalid skill target %d for skill %d (%s) in %s %s (%d), defaulting to MST_TARGET.\n",
 			    __func__, i32, skill_id, skill_name, mob_str, mob_sprite, mob_id);
 		i32 = MST_TARGET;
@@ -5816,20 +5798,20 @@ static bool mob_skill_db_libconfig_sub_skill(struct config_setting_t *it, int n,
 	}
 
 	i32 = MSC_ALWAYS;
-	if (mob->lookup_const(it, "CastCondition", &i32) && (i32 < MSC_ALWAYS || i32 > MSC_MAGICATTACKED)) {
+	if (map->setting_lookup_const(it, "CastCondition", &i32) && (i32 < MSC_ALWAYS || i32 > MSC_MAGICATTACKED)) {
 		ShowWarning("%s: Invalid skill condition %d for skill id %d (%s) in %s %s (%d), defaulting to MSC_ALWAYS.\n",
 			    __func__, i32, skill_id, skill_name, mob_str, mob_sprite, mob_id);
 		i32 = MSC_ALWAYS;
 	}
 	ms->cond1 = i32;
 
-	ms->cond2 = !mob->lookup_const(it, "ConditionData", &i32) ? 0 : cap_value(i32, SHRT_MIN, SHRT_MAX);
+	ms->cond2 = !map->setting_lookup_const(it, "ConditionData", &i32) ? 0 : cap_value(i32, SHRT_MIN, SHRT_MAX);
 
 	for (int i = 0; i < 5; i++) {
 		char valname[16];
 		sprintf(valname, "val%1d", i);
 
-		if (libconfig->setting_lookup_int(it, valname, &i32) == CONFIG_TRUE)
+		if (map->setting_lookup_const_mask(it, valname, &i32))
 			ms->val[i] = i32;
 	}
 
@@ -5853,8 +5835,8 @@ static bool mob_skill_db_libconfig_sub_skill(struct config_setting_t *it, int n,
 		ms->val[1] = MD_NONE; // Do not "set" it.
 	}
 
-	res = libconfig->setting_lookup_int(it, "Emotion", &i32);
-	ms->emotion = (res == CONFIG_FALSE) ? -1 : cap_value(i32, -1, SHRT_MAX);
+	res = map->setting_lookup_const(it, "Emotion", &i32);
+	ms->emotion = res ? cap_value(i32, -1, SHRT_MAX) : -1;
 
 	if (libconfig->setting_lookup_int(it, "ChatMsgID", &i32) == CONFIG_TRUE) {
 		if (i32 <= 0 || i32 > MAX_MOB_CHAT || mob->chat_db[i32] == NULL) {
@@ -6312,7 +6294,6 @@ void mob_defaults(void)
 	mob->read_optdrops_optslot = mob_read_optdrops_optslot;
 	mob->read_optdrops_group = mob_read_optdrops_group;
 	mob->read_optdrops_db = mob_read_optdrops_db;
-	mob->lookup_const = mob_lookup_const;
 	mob->get_const = mob_get_const;
 	mob->db_validate_entry = mob_db_validate_entry;
 	mob->readdb = mob_readdb;

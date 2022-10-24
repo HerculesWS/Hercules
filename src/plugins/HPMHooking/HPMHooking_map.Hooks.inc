@@ -45660,60 +45660,6 @@ bool HP_itemdb_is_item_usable(struct item_data *item) {
 	}
 	return retVal___;
 }
-bool HP_itemdb_lookup_const(const struct config_setting_t *it, const char *name, int *value) {
-	int hIndex = 0;
-	bool retVal___ = false;
-	if (HPMHooks.count.HP_itemdb_lookup_const_pre > 0) {
-		bool (*preHookFunc) (const struct config_setting_t **it, const char **name, int **value);
-		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_lookup_const_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_itemdb_lookup_const_pre[hIndex].func;
-			retVal___ = preHookFunc(&it, &name, &value);
-		}
-		if (*HPMforce_return) {
-			*HPMforce_return = false;
-			return retVal___;
-		}
-	}
-	{
-		retVal___ = HPMHooks.source.itemdb.lookup_const(it, name, value);
-	}
-	if (HPMHooks.count.HP_itemdb_lookup_const_post > 0) {
-		bool (*postHookFunc) (bool retVal___, const struct config_setting_t *it, const char *name, int *value);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_lookup_const_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_itemdb_lookup_const_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, it, name, value);
-		}
-	}
-	return retVal___;
-}
-bool HP_itemdb_lookup_const_mask(const struct config_setting_t *it, const char *name, int *value) {
-	int hIndex = 0;
-	bool retVal___ = false;
-	if (HPMHooks.count.HP_itemdb_lookup_const_mask_pre > 0) {
-		bool (*preHookFunc) (const struct config_setting_t **it, const char **name, int **value);
-		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_lookup_const_mask_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_itemdb_lookup_const_mask_pre[hIndex].func;
-			retVal___ = preHookFunc(&it, &name, &value);
-		}
-		if (*HPMforce_return) {
-			*HPMforce_return = false;
-			return retVal___;
-		}
-	}
-	{
-		retVal___ = HPMHooks.source.itemdb.lookup_const_mask(it, name, value);
-	}
-	if (HPMHooks.count.HP_itemdb_lookup_const_mask_post > 0) {
-		bool (*postHookFunc) (bool retVal___, const struct config_setting_t *it, const char *name, int *value);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_lookup_const_mask_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_itemdb_lookup_const_mask_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, it, name, value);
-		}
-	}
-	return retVal___;
-}
 int HP_itemdb_addname_sub(union DBKey key, struct DBData *data, va_list ap) {
 	int hIndex = 0;
 	int retVal___ = 0;
@@ -52744,6 +52690,60 @@ bool HP_map_inter_config_read_connection(const char *filename, const struct conf
 	}
 	return retVal___;
 }
+bool HP_map_setting_lookup_const(const struct config_setting_t *setting, const char *name, int *value) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_map_setting_lookup_const_pre > 0) {
+		bool (*preHookFunc) (const struct config_setting_t **setting, const char **name, int **value);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_map_setting_lookup_const_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_map_setting_lookup_const_pre[hIndex].func;
+			retVal___ = preHookFunc(&setting, &name, &value);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.map.setting_lookup_const(setting, name, value);
+	}
+	if (HPMHooks.count.HP_map_setting_lookup_const_post > 0) {
+		bool (*postHookFunc) (bool retVal___, const struct config_setting_t *setting, const char *name, int *value);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_map_setting_lookup_const_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_map_setting_lookup_const_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, setting, name, value);
+		}
+	}
+	return retVal___;
+}
+bool HP_map_setting_lookup_const_mask(const struct config_setting_t *setting, const char *name, int *value) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_map_setting_lookup_const_mask_pre > 0) {
+		bool (*preHookFunc) (const struct config_setting_t **setting, const char **name, int **value);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_map_setting_lookup_const_mask_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_map_setting_lookup_const_mask_pre[hIndex].func;
+			retVal___ = preHookFunc(&setting, &name, &value);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.map.setting_lookup_const_mask(setting, name, value);
+	}
+	if (HPMHooks.count.HP_map_setting_lookup_const_mask_post > 0) {
+		bool (*postHookFunc) (bool retVal___, const struct config_setting_t *setting, const char *name, int *value);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_map_setting_lookup_const_mask_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_map_setting_lookup_const_mask_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, setting, name, value);
+		}
+	}
+	return retVal___;
+}
 int HP_map_sql_init(void) {
 	int hIndex = 0;
 	int retVal___ = 0;
@@ -57590,33 +57590,6 @@ void HP_mob_readdb(void) {
 		}
 	}
 	return;
-}
-bool HP_mob_lookup_const(const struct config_setting_t *it, const char *name, int *value) {
-	int hIndex = 0;
-	bool retVal___ = false;
-	if (HPMHooks.count.HP_mob_lookup_const_pre > 0) {
-		bool (*preHookFunc) (const struct config_setting_t **it, const char **name, int **value);
-		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_mob_lookup_const_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_mob_lookup_const_pre[hIndex].func;
-			retVal___ = preHookFunc(&it, &name, &value);
-		}
-		if (*HPMforce_return) {
-			*HPMforce_return = false;
-			return retVal___;
-		}
-	}
-	{
-		retVal___ = HPMHooks.source.mob.lookup_const(it, name, value);
-	}
-	if (HPMHooks.count.HP_mob_lookup_const_post > 0) {
-		bool (*postHookFunc) (bool retVal___, const struct config_setting_t *it, const char *name, int *value);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_mob_lookup_const_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_mob_lookup_const_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, it, name, value);
-		}
-	}
-	return retVal___;
 }
 bool HP_mob_get_const(const struct config_setting_t *it, int *value) {
 	int hIndex = 0;

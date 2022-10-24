@@ -13766,7 +13766,7 @@ static bool status_read_scdb_libconfig_sub(struct config_setting_t *it, int idx,
 	if (fg != NULL)
 		status->read_scdb_libconfig_sub_calcflag(fg, status_id, source);
 
-	if (itemdb->lookup_const(it, "Icon", &i32) && i32 >= 0)
+	if (map->setting_lookup_const(it, "Icon", &i32) && i32 >= 0)
 		status->dbs->IconChangeTable[status_id].id = i32;
 	else
 		status->dbs->IconChangeTable[status_id].id = SI_BLANK;
