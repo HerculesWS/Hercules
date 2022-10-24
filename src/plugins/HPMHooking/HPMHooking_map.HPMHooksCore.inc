@@ -510,8 +510,6 @@ struct {
 	struct HPMHookPoint *HP_chrif_save_post;
 	struct HPMHookPoint *HP_chrif_charselectreq_pre;
 	struct HPMHookPoint *HP_chrif_charselectreq_post;
-	struct HPMHookPoint *HP_chrif_changemapserver_pre;
-	struct HPMHookPoint *HP_chrif_changemapserver_post;
 	struct HPMHookPoint *HP_chrif_searchcharid_pre;
 	struct HPMHookPoint *HP_chrif_searchcharid_post;
 	struct HPMHookPoint *HP_chrif_changeemail_pre;
@@ -7855,8 +7853,6 @@ struct {
 	int HP_chrif_save_post;
 	int HP_chrif_charselectreq_pre;
 	int HP_chrif_charselectreq_post;
-	int HP_chrif_changemapserver_pre;
-	int HP_chrif_changemapserver_post;
 	int HP_chrif_searchcharid_pre;
 	int HP_chrif_searchcharid_post;
 	int HP_chrif_changeemail_pre;

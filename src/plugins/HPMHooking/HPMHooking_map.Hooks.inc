@@ -6552,33 +6552,6 @@ bool HP_chrif_charselectreq(struct map_session_data *sd, uint32 s_ip) {
 	}
 	return retVal___;
 }
-bool HP_chrif_changemapserver(struct map_session_data *sd, uint32 ip, uint16 port) {
-	int hIndex = 0;
-	bool retVal___ = false;
-	if (HPMHooks.count.HP_chrif_changemapserver_pre > 0) {
-		bool (*preHookFunc) (struct map_session_data **sd, uint32 *ip, uint16 *port);
-		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_chrif_changemapserver_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_chrif_changemapserver_pre[hIndex].func;
-			retVal___ = preHookFunc(&sd, &ip, &port);
-		}
-		if (*HPMforce_return) {
-			*HPMforce_return = false;
-			return retVal___;
-		}
-	}
-	{
-		retVal___ = HPMHooks.source.chrif.changemapserver(sd, ip, port);
-	}
-	if (HPMHooks.count.HP_chrif_changemapserver_post > 0) {
-		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, uint32 ip, uint16 port);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_chrif_changemapserver_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_chrif_changemapserver_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, sd, ip, port);
-		}
-	}
-	return retVal___;
-}
 bool HP_chrif_searchcharid(int char_id) {
 	int hIndex = 0;
 	bool retVal___ = false;

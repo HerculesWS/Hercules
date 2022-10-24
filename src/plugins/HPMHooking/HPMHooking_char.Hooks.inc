@@ -272,14 +272,14 @@ void HP_chr_set_char_charselect(int account_id) {
 	}
 	return;
 }
-void HP_chr_set_char_online(int map_id, int char_id, int account_id) {
+void HP_chr_set_char_online(bool is_initializing, int char_id, int account_id) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_chr_set_char_online_pre > 0) {
-		void (*preHookFunc) (int *map_id, int *char_id, int *account_id);
+		void (*preHookFunc) (bool *is_initializing, int *char_id, int *account_id);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_chr_set_char_online_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_chr_set_char_online_pre[hIndex].func;
-			preHookFunc(&map_id, &char_id, &account_id);
+			preHookFunc(&is_initializing, &char_id, &account_id);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -287,13 +287,13 @@ void HP_chr_set_char_online(int map_id, int char_id, int account_id) {
 		}
 	}
 	{
-		HPMHooks.source.chr.set_char_online(map_id, char_id, account_id);
+		HPMHooks.source.chr.set_char_online(is_initializing, char_id, account_id);
 	}
 	if (HPMHooks.count.HP_chr_set_char_online_post > 0) {
-		void (*postHookFunc) (int map_id, int char_id, int account_id);
+		void (*postHookFunc) (bool is_initializing, int char_id, int account_id);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_chr_set_char_online_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_chr_set_char_online_post[hIndex].func;
-			postHookFunc(map_id, char_id, account_id);
+			postHookFunc(is_initializing, char_id, account_id);
 		}
 	}
 	return;
@@ -6925,15 +6925,15 @@ struct guild * HP_inter_guild_create(const char *name, const struct guild_member
 	}
 	return retVal___;
 }
-bool HP_inter_guild_add_member(int guild_id, const struct guild_member *member, int map_fd) {
+bool HP_inter_guild_add_member(int guild_id, const struct guild_member *member) {
 	int hIndex = 0;
 	bool retVal___ = false;
 	if (HPMHooks.count.HP_inter_guild_add_member_pre > 0) {
-		bool (*preHookFunc) (int *guild_id, const struct guild_member **member, int *map_fd);
+		bool (*preHookFunc) (int *guild_id, const struct guild_member **member);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_guild_add_member_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_inter_guild_add_member_pre[hIndex].func;
-			retVal___ = preHookFunc(&guild_id, &member, &map_fd);
+			retVal___ = preHookFunc(&guild_id, &member);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -6941,13 +6941,13 @@ bool HP_inter_guild_add_member(int guild_id, const struct guild_member *member, 
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.inter_guild.add_member(guild_id, member, map_fd);
+		retVal___ = HPMHooks.source.inter_guild.add_member(guild_id, member);
 	}
 	if (HPMHooks.count.HP_inter_guild_add_member_post > 0) {
-		bool (*postHookFunc) (bool retVal___, int guild_id, const struct guild_member *member, int map_fd);
+		bool (*postHookFunc) (bool retVal___, int guild_id, const struct guild_member *member);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_guild_add_member_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_inter_guild_add_member_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, guild_id, member, map_fd);
+			retVal___ = postHookFunc(retVal___, guild_id, member);
 		}
 	}
 	return retVal___;
@@ -9766,15 +9766,15 @@ int64 HP_inter_rodex_savemessage(struct rodex_message *msg) {
 	}
 	return retVal___;
 }
-bool HP_inter_rodex_updatemail(int fd, int account_id, int char_id, int64 mail_id, uint8 opentype, int8 flag) {
+bool HP_inter_rodex_updatemail(int account_id, int char_id, int64 mail_id, uint8 opentype, int8 flag) {
 	int hIndex = 0;
 	bool retVal___ = false;
 	if (HPMHooks.count.HP_inter_rodex_updatemail_pre > 0) {
-		bool (*preHookFunc) (int *fd, int *account_id, int *char_id, int64 *mail_id, uint8 *opentype, int8 *flag);
+		bool (*preHookFunc) (int *account_id, int *char_id, int64 *mail_id, uint8 *opentype, int8 *flag);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_rodex_updatemail_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_inter_rodex_updatemail_pre[hIndex].func;
-			retVal___ = preHookFunc(&fd, &account_id, &char_id, &mail_id, &opentype, &flag);
+			retVal___ = preHookFunc(&account_id, &char_id, &mail_id, &opentype, &flag);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -9782,13 +9782,13 @@ bool HP_inter_rodex_updatemail(int fd, int account_id, int char_id, int64 mail_i
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.inter_rodex.updatemail(fd, account_id, char_id, mail_id, opentype, flag);
+		retVal___ = HPMHooks.source.inter_rodex.updatemail(account_id, char_id, mail_id, opentype, flag);
 	}
 	if (HPMHooks.count.HP_inter_rodex_updatemail_post > 0) {
-		bool (*postHookFunc) (bool retVal___, int fd, int account_id, int char_id, int64 mail_id, uint8 opentype, int8 flag);
+		bool (*postHookFunc) (bool retVal___, int account_id, int char_id, int64 mail_id, uint8 opentype, int8 flag);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_rodex_updatemail_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_inter_rodex_updatemail_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, fd, account_id, char_id, mail_id, opentype, flag);
+			retVal___ = postHookFunc(retVal___, account_id, char_id, mail_id, opentype, flag);
 		}
 	}
 	return retVal___;
@@ -13250,15 +13250,15 @@ int HP_mapif_guild_info(const struct guild *g) {
 	}
 	return retVal___;
 }
-int HP_mapif_guild_memberadded(int fd, int guild_id, int account_id, int char_id, int flag) {
+int HP_mapif_guild_memberadded(int guild_id, int account_id, int char_id, int flag) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_mapif_guild_memberadded_pre > 0) {
-		int (*preHookFunc) (int *fd, int *guild_id, int *account_id, int *char_id, int *flag);
+		int (*preHookFunc) (int *guild_id, int *account_id, int *char_id, int *flag);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_guild_memberadded_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_mapif_guild_memberadded_pre[hIndex].func;
-			retVal___ = preHookFunc(&fd, &guild_id, &account_id, &char_id, &flag);
+			retVal___ = preHookFunc(&guild_id, &account_id, &char_id, &flag);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -13266,13 +13266,13 @@ int HP_mapif_guild_memberadded(int fd, int guild_id, int account_id, int char_id
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.mapif.guild_memberadded(fd, guild_id, account_id, char_id, flag);
+		retVal___ = HPMHooks.source.mapif.guild_memberadded(guild_id, account_id, char_id, flag);
 	}
 	if (HPMHooks.count.HP_mapif_guild_memberadded_post > 0) {
-		int (*postHookFunc) (int retVal___, int fd, int guild_id, int account_id, int char_id, int flag);
+		int (*postHookFunc) (int retVal___, int guild_id, int account_id, int char_id, int flag);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_guild_memberadded_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_mapif_guild_memberadded_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, fd, guild_id, account_id, char_id, flag);
+			retVal___ = postHookFunc(retVal___, guild_id, account_id, char_id, flag);
 		}
 	}
 	return retVal___;
@@ -15853,14 +15853,14 @@ void HP_mapif_rodex_checkname(int fd, int reqchar_id, int target_char_id, int ta
 	}
 	return;
 }
-void HP_mapif_rodex_getzenyack(int fd, int char_id, int64 mail_id, uint8 opentype, int64 zeny) {
+void HP_mapif_rodex_getzenyack(int char_id, int64 mail_id, uint8 opentype, int64 zeny) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_mapif_rodex_getzenyack_pre > 0) {
-		void (*preHookFunc) (int *fd, int *char_id, int64 *mail_id, uint8 *opentype, int64 *zeny);
+		void (*preHookFunc) (int *char_id, int64 *mail_id, uint8 *opentype, int64 *zeny);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_rodex_getzenyack_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_mapif_rodex_getzenyack_pre[hIndex].func;
-			preHookFunc(&fd, &char_id, &mail_id, &opentype, &zeny);
+			preHookFunc(&char_id, &mail_id, &opentype, &zeny);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -15868,25 +15868,25 @@ void HP_mapif_rodex_getzenyack(int fd, int char_id, int64 mail_id, uint8 opentyp
 		}
 	}
 	{
-		HPMHooks.source.mapif.rodex_getzenyack(fd, char_id, mail_id, opentype, zeny);
+		HPMHooks.source.mapif.rodex_getzenyack(char_id, mail_id, opentype, zeny);
 	}
 	if (HPMHooks.count.HP_mapif_rodex_getzenyack_post > 0) {
-		void (*postHookFunc) (int fd, int char_id, int64 mail_id, uint8 opentype, int64 zeny);
+		void (*postHookFunc) (int char_id, int64 mail_id, uint8 opentype, int64 zeny);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_rodex_getzenyack_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_mapif_rodex_getzenyack_post[hIndex].func;
-			postHookFunc(fd, char_id, mail_id, opentype, zeny);
+			postHookFunc(char_id, mail_id, opentype, zeny);
 		}
 	}
 	return;
 }
-void HP_mapif_rodex_getitemsack(int fd, int char_id, int64 mail_id, uint8 opentype, int count, const struct rodex_item *items) {
+void HP_mapif_rodex_getitemsack(int char_id, int64 mail_id, uint8 opentype, int count, const struct rodex_item *items) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_mapif_rodex_getitemsack_pre > 0) {
-		void (*preHookFunc) (int *fd, int *char_id, int64 *mail_id, uint8 *opentype, int *count, const struct rodex_item **items);
+		void (*preHookFunc) (int *char_id, int64 *mail_id, uint8 *opentype, int *count, const struct rodex_item **items);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_rodex_getitemsack_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_mapif_rodex_getitemsack_pre[hIndex].func;
-			preHookFunc(&fd, &char_id, &mail_id, &opentype, &count, &items);
+			preHookFunc(&char_id, &mail_id, &opentype, &count, &items);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -15894,13 +15894,13 @@ void HP_mapif_rodex_getitemsack(int fd, int char_id, int64 mail_id, uint8 openty
 		}
 	}
 	{
-		HPMHooks.source.mapif.rodex_getitemsack(fd, char_id, mail_id, opentype, count, items);
+		HPMHooks.source.mapif.rodex_getitemsack(char_id, mail_id, opentype, count, items);
 	}
 	if (HPMHooks.count.HP_mapif_rodex_getitemsack_post > 0) {
-		void (*postHookFunc) (int fd, int char_id, int64 mail_id, uint8 opentype, int count, const struct rodex_item *items);
+		void (*postHookFunc) (int char_id, int64 mail_id, uint8 opentype, int count, const struct rodex_item *items);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_rodex_getitemsack_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_mapif_rodex_getitemsack_post[hIndex].func;
-			postHookFunc(fd, char_id, mail_id, opentype, count, items);
+			postHookFunc(char_id, mail_id, opentype, count, items);
 		}
 	}
 	return;
@@ -16226,15 +16226,15 @@ int HP_mapif_account_reg_reply(int fd, int account_id, int char_id, int type) {
 	}
 	return retVal___;
 }
-int HP_mapif_disconnectplayer(int fd, int account_id, int char_id, int reason) {
+int HP_mapif_disconnectplayer(int account_id, int char_id, int reason) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_mapif_disconnectplayer_pre > 0) {
-		int (*preHookFunc) (int *fd, int *account_id, int *char_id, int *reason);
+		int (*preHookFunc) (int *account_id, int *char_id, int *reason);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_disconnectplayer_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_mapif_disconnectplayer_pre[hIndex].func;
-			retVal___ = preHookFunc(&fd, &account_id, &char_id, &reason);
+			retVal___ = preHookFunc(&account_id, &char_id, &reason);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -16242,13 +16242,13 @@ int HP_mapif_disconnectplayer(int fd, int account_id, int char_id, int reason) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.mapif.disconnectplayer(fd, account_id, char_id, reason);
+		retVal___ = HPMHooks.source.mapif.disconnectplayer(account_id, char_id, reason);
 	}
 	if (HPMHooks.count.HP_mapif_disconnectplayer_post > 0) {
-		int (*postHookFunc) (int retVal___, int fd, int account_id, int char_id, int reason);
+		int (*postHookFunc) (int retVal___, int account_id, int char_id, int reason);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_disconnectplayer_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_mapif_disconnectplayer_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, fd, account_id, char_id, reason);
+			retVal___ = postHookFunc(retVal___, account_id, char_id, reason);
 		}
 	}
 	return retVal___;

@@ -277,7 +277,6 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(chrif->scdata_request, HP_chrif_scdata_request) },
 	{ HP_POP(chrif->save, HP_chrif_save) },
 	{ HP_POP(chrif->charselectreq, HP_chrif_charselectreq) },
-	{ HP_POP(chrif->changemapserver, HP_chrif_changemapserver) },
 	{ HP_POP(chrif->searchcharid, HP_chrif_searchcharid) },
 	{ HP_POP(chrif->changeemail, HP_chrif_changeemail) },
 	{ HP_POP(chrif->char_ask_name, HP_chrif_char_ask_name) },
