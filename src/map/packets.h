@@ -2032,7 +2032,7 @@ packet(0x96e,clif->ackmergeitems);
 	packet(0x0b5c, clif->pGradeEnchantClose);
 #endif // PACKETVER_MAIN_NUM >= 20191016 || PACKETVER_RE_NUM >= 20191016 || PACKETVER_ZERO_NUM >= 20191008
 
-#if PACKETVER_MAIN_NUM >= 20220216
+#if PACKETVER_MAIN_NUM >= 20220216 || PACKETVER_ZERO_NUM >= 20221024
 	packet(0x0bb0, clif->pGuildMembersNear);
 #endif  // PACKETVER_MAIN_NUM >= 20220216
 

@@ -15896,12 +15896,12 @@ static void clif_parse_GuildBreak(int fd, struct map_session_data *sd)
 static void clif_parse_GuildMembersNear(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
 static void clif_parse_GuildMembersNear(int fd, struct map_session_data *sd)
 {
-#if PACKETVER_MAIN_NUM >= 20220216
+#if PACKETVER_MAIN_NUM >= 20220216 || PACKETVER_ZERO_NUM >= 20221024
 	const struct PACKET_CZ_APPROXIMATE_ACTOR *packet = RP2PTR(fd);
 	if (packet->unused1 != 1 || packet->unused2 != 1) {
 		ShowWarning("Unknown flags in CZ_APPROXIMATE_ACTOR");
 	}
-#endif  // PACKETVER_MAIN_NUM >= 20220216
+#endif  // PACKETVER_MAIN_NUM >= 20220216 || PACKETVER_ZERO_NUM >= 20221024
 }
 
 /// Pet
