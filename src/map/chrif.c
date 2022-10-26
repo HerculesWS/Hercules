@@ -57,56 +57,6 @@
 static struct chrif_interface chrif_s;
 struct chrif_interface *chrif;
 
-//Used Packets:
-//2af8: Outgoing, chrif_connect -> 'connect to charserver / auth @ charserver'
-//2af9: Incoming, chrif_connectack -> 'answer of the 2af8 login(ok / fail)'
-//2afa: Outgoing, chrif_sendmap -> 'sending our maps'
-//2afb: Incoming, chrif_sendmapack -> 'Maps received successfully / or not ..'
-//2afc: Outgoing, chrif_scdata_request -> request sc_data for pc->authok'ed char. <- new command reuses previous one.
-//2afd: Incoming, chrif_authok -> 'client authentication ok'
-//2afe: Outgoing, send_usercount_tochar -> 'sends player count of this map server to charserver'
-//2aff: Outgoing, chrif_send_users_tochar -> 'sends all actual connected character ids to charserver'
-//2b00: Incoming, map_setusers -> 'set the actual usercount? PACKET.2B COUNT.L.. ?' (not sure)
-//2b01: Outgoing, chrif_save -> 'charsave of char XY account XY (complete struct)'
-//2b02: Outgoing, chrif_charselectreq -> 'player returns from ingame to charserver to select another char.., this packets includes sessid etc' ? (not 100% sure)
-//2b03: Incoming, clif_charselectok -> '' (i think its the packet after enterworld?) (not sure)
-//2b04: FREE
-//2b05: FREE
-//2b06: FREE
-//2b07: Outgoing, chrif_removefriend -> 'Tell charserver to remove friend_id from char_id friend list'
-//2b08: Outgoing, chrif_searchcharid -> '...'
-//2b09: Incoming, map_addchariddb -> 'Adds a name to the nick db'
-//2b0a: Incoming/Outgoing, socket_datasync()
-//2b0b: Outgoing, update charserv skillid2idx
-//2b0c: Outgoing, chrif_changeemail -> 'change mail address ...'
-//2b0d: Incoming, chrif_changedsex -> 'Change sex of acc XY' (or char)
-//2b0e: Outgoing, chrif_char_ask_name -> 'Do some operations (change sex, ban / unban etc)'
-//2b0f: Incoming, chrif_char_ask_name_answer -> 'answer of the 2b0e'
-//2b10: Outgoing, chrif_updatefamelist -> 'Update the fame ranking lists and send them'
-//2b11: Outgoing, chrif_divorce -> 'tell the charserver to do divorce'
-//2b12: Incoming, chrif_divorceack -> 'divorce chars
-//2b13: FREE
-//2b14: Incoming, chrif_accountban -> 'not sure: kick the player with message XY'
-//2b15: FREE
-//2b16: Outgoing, chrif_ragsrvinfo -> 'sends base / job / drop rates ....'
-//2b17: Outgoing, chrif_char_offline -> 'tell the charserver that the char is now offline'
-//2b18: Outgoing, chrif_char_reset_offline -> 'set all players OFF!'
-//2b19: Outgoing, chrif_char_online -> 'tell the charserver that the char .. is online'
-//2b1a: Outgoing, chrif_buildfamelist -> 'Build the fame ranking lists and send them'
-//2b1b: Incoming, chrif_recvfamelist -> 'Receive fame ranking lists'
-//2b1c: Outgoing, chrif_save_scdata -> 'Send sc_data of player for saving.'
-//2b1d: Incoming, chrif_load_scdata -> 'received sc_data of player for loading.'
-//2b1e: Incoming, chrif_update_ip -> 'Request forwarded from char-server for interserver IP sync.' [Lance]
-//2b1f: Incoming, chrif_disconnectplayer -> 'disconnects a player (aid X) with the message XY ... 0x81 ..' [Sirius]
-//2b20: FREE
-//2b21: Incoming, chrif_save_ack. Returned after a character has been "final saved" on the char-server. [Skotlex]
-//2b22: Incoming, chrif_updatefamelist_ack. Updated one position in the fame list.
-//2b23: Outgoing, chrif_keepalive. charserver ping.
-//2b24: Incoming, chrif_keepalive_ack. charserver ping reply.
-//2b25: Incoming, chrif_deadopt -> 'Removes baby from Father ID and Mother ID'
-//2b26: Outgoing, chrif_authreq -> 'client authentication request'
-//2b27: Incoming, chrif_authfail -> 'client authentication failed'
-
 //This define should spare writing the check in every function. [Skotlex]
 #define chrif_check(a) do { if(!chrif->isconnected()) return a; } while(0)
 
