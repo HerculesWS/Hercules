@@ -25522,7 +25522,7 @@ static void clif_set_npc_window_pos_percent(struct map_session_data *sd, int x, 
 
 static void clif_item_reform_open(struct map_session_data *sd, int itemId)
 {
-#if PACKETVER_MAIN_NUM >= 20201118 || PACKETVER_RE_NUM >= 20211103
+#if PACKETVER_MAIN_NUM >= 20201118 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 	nullpo_retv(sd);
 
 	const int fd = sd->fd;
@@ -25539,16 +25539,16 @@ static void clif_item_reform_open(struct map_session_data *sd, int itemId)
 static void clif_parse_item_reform_close(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
 static void clif_parse_item_reform_close(int fd, struct map_session_data *sd)
 {
-#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20211103
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 	// const struct PACKET_CZ_CLOSE_REFORM_UI *p = RP2PTR(fd);
 	sd->state.reform_ui = 0;
-#endif
+#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 }
 
 static void clif_parse_item_reform_ack(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
 static void clif_parse_item_reform_ack(int fd, struct map_session_data *sd)
 {
-#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20211103
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 	const struct PACKET_CZ_ITEM_REFORM *p = RP2PTR(fd);
 
 	if (sd->state.reform_ui == 0)
@@ -25568,12 +25568,12 @@ static void clif_parse_item_reform_ack(int fd, struct map_session_data *sd)
 	const struct item_reform *ir = itemdb->search_reform_baseitem(itd, sd->status.inventory[invidx].nameid);
 	if (ir != NULL)
 		itemdb->item_reform(sd, ir, invidx);
-#endif
+#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 }
 
 static void clif_item_reform_result(struct map_session_data *sd, int index, enum item_reform_status result)
 {
-#if PACKETVER_MAIN_NUM >= 20201118 || PACKETVER_RE_NUM >= 20211103
+#if PACKETVER_MAIN_NUM >= 20201118 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 	nullpo_retv(sd);
 
 	const int fd = sd->fd;
@@ -25583,7 +25583,7 @@ static void clif_item_reform_result(struct map_session_data *sd, int index, enum
 	p->index = index + 2;
 	p->result = result;
 	WFIFOSET(fd, sizeof(struct PACKET_ZC_ITEM_REFORM_ACK));
-#endif
+#endif // PACKETVER_MAIN_NUM >= 20201118 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 }
 
 static void clif_enchantui_open(struct map_session_data *sd, int64 enchant_group)

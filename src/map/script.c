@@ -27974,7 +27974,7 @@ static BUILDIN(calldynamicnpc)
 
 static BUILDIN(openreformui)
 {
-#if PACKETVER_MAIN_NUM >= 20201118 || PACKETVER_RE_NUM >= 20211103
+#if PACKETVER_MAIN_NUM >= 20201118 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 	struct map_session_data *sd = script_rid2sd(st);
 
 	if (sd == NULL) {

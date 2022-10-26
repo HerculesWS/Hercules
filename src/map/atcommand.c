@@ -10482,7 +10482,7 @@ ACMD(reloadgradedb)
 
 ACMD(itemreform)
 {
-#if PACKETVER_MAIN_NUM >= 20201118 || PACKETVER_RE_NUM >= 20211103
+#if PACKETVER_MAIN_NUM >= 20201118 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 	struct item_data *item_data;
 
 	if ((item_data = itemdb->search_name(message)) == NULL &&
