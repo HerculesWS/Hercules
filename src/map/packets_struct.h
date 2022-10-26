@@ -1333,7 +1333,7 @@ struct packet_unequipitem_ack {
 	uint8 result;
 } __attribute__((packed));
 
-#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 struct PACKET_ZC_EQUIPWIN_MICROSCOPE {
 	int16 PacketType;
 	int16 PacketLength;
