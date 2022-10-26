@@ -3727,7 +3727,7 @@ static void clif_updatestatus(struct map_session_data *sd, enum status_point_typ
 			WFIFOL(fd, 4) = (uint32)pc->nextjobexp(sd);
 			break;
 #endif
-#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 		case SP_POW:
 			packetId = HEADER_ZC_PAR_4JOB_CHANGE;
 			WFIFOB(fd, 4) = 1;
