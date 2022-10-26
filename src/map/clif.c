@@ -12675,12 +12675,12 @@ static void clif_parse_UnequipAllItems(int fd, struct map_session_data *sd)
 
 static void clif_unequipAllItemsAck(struct map_session_data *sd, enum unequip_all result)
 {
-#if PACKETVER_MAIN_NUM >= 20210818 || PACKETVER_RE_NUM >= 20211103
+#if PACKETVER_MAIN_NUM >= 20210818 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 	struct PACKET_ZC_ACK_TAKEOFF_EQUIP_ALL packet = {0};
 	packet.PacketType = HEADER_ZC_ACK_TAKEOFF_EQUIP_ALL;
 	packet.result = result;
 	clif->send(&packet, sizeof(struct PACKET_ZC_ACK_TAKEOFF_EQUIP_ALL), &sd->bl, SELF);
-#endif  // PACKETVER_MAIN_NUM >= 20210818 || PACKETVER_RE_NUM >= 20211103
+#endif  // PACKETVER_MAIN_NUM >= 20210818 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 }
 
 static void clif_parse_NpcClicked(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
