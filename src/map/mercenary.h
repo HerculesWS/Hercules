@@ -27,7 +27,7 @@
 
 struct map_session_data;
 
-#define MAX_MERCENARY_CLASS 61
+#define MAX_MERCENARY_CLASS 62
 // number of cells that a mercenary can walk to from it's master before being warped
 #define MAX_MER_DISTANCE 15
 

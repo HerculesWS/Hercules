@@ -1,0 +1,2115 @@
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2013-2022 Hercules Dev Team
+//= Copyright (C) KirieZ
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Quest NPCs related to the reconstruction of Morroc.
+//================= Description ===========================================
+//= The reconstruction of Morroc was a temporary set of quests around
+//= helping Morroc to be restored.
+//=
+//= This was active during Episode 14.3 and removed afterwards, leaving
+//= only the contribution board and reward machine active
+//= re/quests/rebuilding_morroc_rewards.txt
+//=
+//= Note: This file expects MocReContribute from rewards file to be active.
+//=
+//= (Play/Walk through conversion)
+//================= Variables Used ========================================
+//= @re_site , @re_questId
+//= Stores the construction site ID and questID
+//= for the last worker transport NPC talked to.
+//=
+//= re_wood
+//= - Number of wood gathered (when gathering wood)
+//= - Number of wood delivered (when delivering wood)
+//=
+//= re_rope
+//= - Number of ropes delivered (when delivering rope)
+//=
+//= re_brick
+//= - Number of bricks gathered (when making bricks)
+//= - Number of bricks delivered (when delivering bricks)
+//=
+//= re_transport
+//= - Expected deliver site (when doing worker transport quest)
+//=
+//= $mocre_wood
+//= - Quantity of wood in the woodpiles (0 .. 1000)
+//=
+//= $mocre_rope
+//= - Quantity of rope in the rope piles (0 .. 1000)
+//=
+//= $mocre_brick
+//= - Quantity of brick in the brick piles (0 .. 1000)
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
+
+//== Making Wood :: re_wood ==========
+morocc, 285, 70, 4	script	Wood Supply Team Chief	2_M_OLDBLSMITH,{
+	if (!checkweight(MoroccMerit, 1)) {
+		mes("[Wood Supply Team Chief]");
+		mes(" - You're carrying too many items. Please make some room in your bag first. - ");
+		close();
+	}
+
+	if (questprogress(5251) == 1) {
+		mes("[Wood Supply Team Chief]");
+		mes("How can I help you?");
+		next();
+		switch (select("I brought some wood.", "Where can I get a Hatchet?", "End conversation.")) {
+		case 1:
+			.@count = countitem(Wood_);
+			if (.@count == 0) {
+				mes("[Wood Supply Team Chief]");
+				mes("You don't have any wood.");
+				next();
+				mes("[Wood Supply Team Chief]");
+				mes("Don't push yourself too hard. You don't have to bring all 10 wood at once.");
+				close();
+			}
+
+			delitem(Wood_, .@count);
+			re_wood += .@count;
+
+			if (re_wood < 10) {
+				mes("[Wood Supply Team Chief]");
+				mesf("You brought %d pieces of wood. Now you only need to bring %d more. Keep up with the good job.", .@count, (10 - re_wood));
+				close();
+			}
+			
+			mes("[Wood Supply Team Chief]");
+			mes("Good job. Here is your reward.");
+			mes("Take this to the ^7D9BE3Morroc Restauration Comitee^000000, and you will be able to exchange it for something you want.");
+			changequest(5251, 5252);
+			getitem(MoroccMerit, 1);
+			"MocReContribute"::AddContribution();
+			re_wood = 0;
+			donpcevent("MocReMaterialController::OnAddWood");
+			close();
+
+		case 2:
+			mes("[Wood Supply Team Chief]");
+			mes("Oh, I didn't tell you? Sorry, I have been busy. You may ask one from the Carpenter Helper right there.");
+			close();
+
+		case 3:
+			mes("[Wood Supply Team Chief]");
+			mes("Keep up with the good job.");
+			close();
+		}
+		end;
+	}
+	
+	if (questprogress(5252, PLAYTIME) == 2) {
+		erasequest(5252);
+		mes("[Wood Supply Team Chief]");
+		mes("You're back. How can I help you?");
+	} else {
+		mes("[Wood Supply Team Chief]");
+		mes("Welcome to the Provision Departament of the Morroc Restauration Comitee, Wood Team. How can I help you?");
+	}
+	next();
+	switch (select("Morroc Restauration Comitee?", "I came to help.")) {
+	case 1:
+		mes("[Wood Supply Team Chief]");
+		mes("We, Morroc citizens, finally decided to do something regarding the damage done to our city by Satan Morroc.");
+		next();
+		mes("[Wood Supply Team Chief]");
+		mes("So we created the ^7D9BE3Morroc Restauration Comitee^000000.");
+		next();
+		mes("[Wood Supply Team Chief]");
+		mes("We have already finished the repairs for most of the city buildings, except for the symbol of our city, the ^7D9BE3Morroc Castle^000000.");
+		close();
+	
+	case 2:
+		if (BaseLevel < 80) {
+			mes("[Wood Supply Team Chief]");
+			mes("I appreciate your desire to help, but we are not desperate enough to ask help from an adventurer under training.");
+			mes("Please, raise your ^006400Level^000000 to ^ff000080^000000 first.");
+			close();
+		}
+
+		if (questprogress(5252, PLAYTIME) == 1) {
+			mes("[Wood Supply Team Chief]");
+			mes("Your rest time didn't finish yet. I understand your enthusiasm, but your well-being should come first.");
+			close();
+		}
+
+		if (questprogress(5253) == 1) {
+			mes("[Wood Supply Team Chief]");
+			mes("At this time, you are assigned\r"
+				"to another task.");
+			mes("You should first deliver those woods\r"
+				"before you go back to working in making more.");
+			close();
+		}
+
+		mes("[Wood Supply Team Chief]");
+		mes("Did you came from the HQ? You don't look strong enough to work in a construction site like this.");
+		next();
+		mes("[Wood Supply Team Chief]");
+		mes("Go out through the south gate and you will find trees that gives you the perfect wood for construction.");
+		next();
+		mes("[Wood Supply Team Chief]");
+		mes("Bring me 10 pieces of wood. You don't have to bring them all at once.");
+		next();
+		re_wood = 0;
+		setquest(5251);
+		mes("[Wood Supply Team Chief]");
+		mes("Oh, and don't forget to get you hatchet from the Carpenter Helper right there.");
+		close();
+	}
+}
+
+morocc, 278, 80, 3	script	Carpenter Helper	1_M_04,{
+	if (!checkweight(Hatchet, 1)) {
+		mes("[Carpenter Helper]");
+		mes(" - You're carrying too many items. Please make some room in your bag first. - ");
+		close();
+	}
+
+	if (questprogress(5251) == 1) {
+		mes("[Carpenter Helper]");
+		mes("Oh, you are a volunteer. Do you need an Hatchet?");
+		next();
+		if (select("Ask for an Hatchet.","End conversation.") == 2) {
+			mes("[Carpenter Helper]");
+			mes("Have a good day.");
+			close();
+		}
+
+		if (countitem(Hatchet) >= 1) {
+			mes("[Carpenter Helper]");
+			mes("Uhm? It looks like you already have an Hatchet.");
+			close();
+		}
+		mes("[Carpenter Helper]");
+		mes("Here is an Hatchet from the Morroc Restoration Comitte for you. Thanks for your help.");
+		getitem(Hatchet, 1);
+		next();
+		mes("[Carpenter Helper]");
+		mes("When you are done, you may simply sell it to the nearest merchant.");
+		close();
+	}
+
+	mes("[Carpenter Helper]");
+	mes("Welcome to the Provision Departament of the Morroc Restauration Comitee, Wood Team.");
+	close();
+}
+
+-	script	MocReTree	FAKE_NPC,{
+	mes("This tree seems to be strong enough for construction purposes.");
+	close();
+
+OnTouch:
+	if (questprogress(5251) == 0 || countitem(Hatchet) == 0)
+		end;
+
+	if (!checkweight(Wood_, 1)) {
+		mes("^FF0000 - You're carrying too many items. Please make some room in your bag first. - ^000000");
+		close();
+	}
+
+	specialeffect(EF_BASH);
+	if (rand(10000) > 2000) {
+		mes("You hit the tree vigorously using you hatchet.");
+		close();
+	}
+	
+	mes("You've got 1 Wood for construction.");
+	getitem(Wood_, 1);
+	close();
+}
+
+// Duplicates
+moc_fild12,  42, 369, 4	duplicate(MocReTree)	Tree#ep14.3_01	CLEAR_NPC,1,1
+moc_fild12,  55, 376, 4	duplicate(MocReTree)	Tree#ep14.3_02	CLEAR_NPC,1,1
+moc_fild12,  57, 347, 4	duplicate(MocReTree)	Tree#ep14.3_03	CLEAR_NPC,1,1
+moc_fild12,  83, 376, 4	duplicate(MocReTree)	Tree#ep14.3_04	CLEAR_NPC,1,1
+moc_fild12,  92, 345, 4	duplicate(MocReTree)	Tree#ep14.3_05	CLEAR_NPC,1,1
+moc_fild12, 113, 366, 4	duplicate(MocReTree)	Tree#ep14.3_06	CLEAR_NPC,1,1
+moc_fild12, 125, 374, 4	duplicate(MocReTree)	Tree#ep14.3_07	CLEAR_NPC,1,1
+moc_fild12, 136, 343, 4	duplicate(MocReTree)	Tree#ep14.3_08	CLEAR_NPC,1,1
+moc_fild12, 151, 372, 4	duplicate(MocReTree)	Tree#ep14.3_09	CLEAR_NPC,1,1
+moc_fild12, 166, 370, 4	duplicate(MocReTree)	Tree#ep14.3_10	CLEAR_NPC,1,1
+moc_fild12, 167, 315, 4	duplicate(MocReTree)	Tree#ep14.3_11	CLEAR_NPC,1,1
+moc_fild12, 168, 365, 4	duplicate(MocReTree)	Tree#ep14.3_12	CLEAR_NPC,1,1
+moc_fild12, 169, 351, 4	duplicate(MocReTree)	Tree#ep14.3_13	CLEAR_NPC,1,1
+moc_fild12, 186, 370, 4	duplicate(MocReTree)	Tree#ep14.3_14	CLEAR_NPC,1,1
+moc_fild12, 218, 375, 4	duplicate(MocReTree)	Tree#ep14.3_15	CLEAR_NPC,1,1
+moc_fild12, 218, 361, 4	duplicate(MocReTree)	Tree#ep14.3_16	CLEAR_NPC,1,1
+moc_fild12, 221, 322, 4	duplicate(MocReTree)	Tree#ep14.3_17	CLEAR_NPC,1,1
+moc_fild12, 229, 362, 4	duplicate(MocReTree)	Tree#ep14.3_18	CLEAR_NPC,1,1
+moc_fild12, 236, 352, 4	duplicate(MocReTree)	Tree#ep14.3_19	CLEAR_NPC,1,1
+moc_fild12, 264, 357, 4	duplicate(MocReTree)	Tree#ep14.3_20	CLEAR_NPC,1,1
+
+//== Making Rope =======================
+morocc, 282, 284, 4	script	Rope Team Chief#ep14	1_M_ORIENT01,{
+	if (!checkweight(MoroccMerit, 1)) {
+		mes("[Rope Team Chief]");
+		mes(" - You're carrying too many items. Please make some room in your bag first. - ");
+		close();
+	}
+
+	if (questprogress(5255) == 1) {
+		mes("[Rope Team Chief]");
+		mes("Do you have the materials? Already?");
+		next();
+		switch (select("Yes, I do.", "Sorry, can you repeat what you need?", "End conversation.")) {
+		case 1:
+			mes("[Rope Team Chief]");
+			mes("Thank you. Which materials you brought?");
+			next();
+			.@item1 = 0;
+			.@item2 = 0;
+			setarray(.@materialList, Pointed_Scale, Spiderweb, Tendon, Thin_Stem, Tough_Scalelike_Stem);
+			
+			.@menu$ = "";
+			for (.@i = 0; .@i < getarraysize(.@materialList); ++.@i) {
+				.@menu$ = sprintf("%s10 %s (%d):", .@menu$, getitemname(.@materialList[.@i]), countitem(.@materialList[.@i]));
+			}
+			while (.@item1 == 0 || .@item2 == 0) {
+				.@sel = select(.@menu$) - 1;
+				.@itemId = .@materialList[.@sel];
+
+				if (countitem(.@itemId) < 10) {
+					mes("[Rope Team Chief]");
+					mesf("You don't have 10 ^DC3D3D%s^000000. Do you have something else?", getitemname(.@itemId));
+					next();
+					continue;
+				}
+				
+				if (.@item1 == 0) {
+					.@item1 = .@itemId;
+					mes("[Rope Team Chief]");
+					mesf("You brought ^DC3D3D%s^000000. And what else?", getitemname(.@item1));
+					next();
+					continue;
+				}
+				
+				if (.@item1 == .@itemId) {
+					mes("[Rope Team Chief]");
+					mes("You have already said you have this one. What is the other material?");
+					next();
+					continue;
+				}
+
+				.@item2 = .@itemId;
+				mes("[Rope Team Chief]");
+				mesf("You brought ^DC3D3D%s^000000. Good job.", getitemname(.@item2));
+				next();
+			}
+
+			if (countitem(.@item1) < 10 || countitem(.@item2) < 10)
+				end; // exploit attempt
+			delitem(.@item1, 10);
+			delitem(.@item2, 10);
+			changequest(5255, 5256);
+			getitem(MoroccMerit, 1);
+			"MocReContribute"::AddContribution();
+			donpcevent("MocReMaterialController::OnAddRope");
+			mes("[Rope Team Chief]");
+			mes("Please, receive this small token of our gratitude.");
+			mes("Take this to the ^7D9BE3Morroc Restauration Comitee^000000, and you will be able to exchange it for something you want.");
+			close();
+		
+		case 2:
+			mes("[Rope Team Chief]");
+			mes("You didn't read the memo I gave you?");
+			mes("It's alright, it's not that much. Let me explain it to you.");
+			next();
+			mes("[Rope Team Chief]");
+			mes("The materials to produce rope are:");
+			mes("10 Pointed Scales, 10 Cobwebs, 10 Tendons, 10 Thin Trunk e 10 Though Scalelike Stems.");
+			next();
+			mes("[Rope Team Chief]");
+			mes("I would appreciate a lot if you could bring everything, but that would be asking too much. Can you bring two of those materials?");
+			next();
+			mes("[Rope Team Chief]");
+			mes("Please, remember, 10 units of two different, not 20 of the same.");
+			close();
+		
+		case 3:
+			mes("[Rope Team Chief]");
+			mes("Have a good day.");
+			close();
+		}
+	}
+
+	if (questprogress(5256, PLAYTIME) == 2) {
+		erasequest(5256);
+		mes("[Rope Team Chief]");
+		mes("Thanks for coming back in time, as always.");
+	} else {
+		mes("[Rope Team Chief]");
+		mes("Welcome to the Provision Departament of the Morroc Restauration Comitee, Rope Team. How can I help you?");
+	}
+	next();
+	switch (select("Morroc Restauration Comitee?", "I came to help.")) {
+	case 1:
+		mes("[Rope Team Chief]");
+		mes("After Satan Morroc left our city kinda destroyed, it took some time for us to start repairing it.");
+		next();
+		mes("[Rope Team Chief]");
+		mes("So far, we managed to restore most of the city, except for the Morroc Castle. The castle will need more labor and materials than all the other restauration in the city together.");
+		next();
+		mes("[Rope Team Chief]");
+		mes("It may take years for us to finish the castle restauration.");
+		close();
+
+	case 2:
+		if (BaseLevel < 80) {
+			mes("[Rope Team Chief]");
+			mes("You don't have enough experience to receive this task. Please, come back later.");
+			close();
+		}
+
+		if (questprogress(5257) == 1) {
+			mes("[Rope Team Chief]");
+			mes("You did not finish the rope delivery. Finish it first. The chief at the construction site is eagerly waiting for you.");
+			close();
+		}
+
+		if (questprogress(5256, PLAYTIME) == 1) {
+			mes("[Rope Team Chief]");
+			mes("I can se you are in a break. Why don't you fully enjoy your break? You deserve it.");
+			close();
+		}
+
+		mes("[Rope Team Chief]");
+		mes("Thanks for coming to help us. Given the size of this repair, rope is never enough.");
+		next();
+		mes("[Rope Team Chief]");
+		mes("We need help to make rope, but if they are made by inexperienced hands, they will have defects and may become a security risk.");
+		next();
+		mes("[Rope Team Chief]");
+		mes("If you can bring two kinds of materials, our specialists will take care of using them to make rope.");
+		next();
+		setquest(5255);
+		mes("[Rope Team Chief]");
+		mes("Please, check this memo with the list of materials that you may bring. Thanks for your help.");
+		close();
+	}
+}
+
+//== Making Bricks :: re_brick ========
+morocc, 42, 73, 6	script	Brick Team Chief#ep1	4_M_NFMAN,{
+	if (!checkweight(MoroccMerit, 1)) {
+		mes("[Brick Team Chief]");
+		mes(" - You're carrying too many items. Please make some room in your bag first. - ");
+		close();
+	}
+
+	if (questprogress(5259) == 0) {
+		mes("[Brick Team Chief]");
+		mes("Provision Department of the MRC, Brick Team. Say it.");
+		next();
+		switch (select("MRC?","I came to help make bricks.")) {
+		case 1:
+			mes("[Brick Team Chief]");
+			mes("You don't know? Hmpf, the HR imbeciles and the other team didn't tell you?");
+			next();
+			mes("[Brick Team Chief]");
+			mes("Bah, I hate to explain things, but I guess I can't help it.");
+			next();
+			mes("[Brick Team Chief]");
+			mes("The Morroc Restauration Comitee, or MRC, was formed to restore Morroc City after it was destroyed by Satan Morroc.");
+			next();
+			select("Is this it?");
+			mes("[Brick Team Chief]");
+			mes("...");
+			next();
+			mes("[Brick Team Chief]");
+			mes("Bah, you want me to explain more?");
+			next();
+			mes("[Brick Team Chief]");
+			mes("So far, we were able to restore most of the city, except for the Lord's Castle that is the symbol of our city.");
+			next();
+			mes("[Brick Team Chief]");
+			mes("The management is recruiting volunteers to make for the short budget for the repairs.");
+			next();
+			mes("[Brick Team Chief]");
+			mes("Did you come to help? Otherwise, forget it.");
+			close();
+
+		case 2:
+			if (BaseLevel < 80) {
+				mes("[Brick Team Chief]");
+				mes("Kid, you are too unexperienced for that. Go get more experience on fields and dungeons.");
+				close();
+			}
+
+			if (questprogress(5260, PLAYTIME) == 1) {
+				mes("[Brick Team Chief]");
+				mes("Your rest time didn't finish yet. I understand your enthusiasm, but your well-being should come first.");
+				close();
+			}
+
+			if (questprogress(5261) == 1) {
+				mes("[Brick Team Chief]");
+				mes("You did not finish your brick delivery yet. Finish it first. The bricklayers at the construction site are eagerly waiting for you.");
+				close();
+			}
+
+			mes("[Brick Team Chief]");
+			mes("You are here to work? Great.");
+			next();
+			mes("[Brick Team Chief]");
+			mesf("First, gather a %s and a %s around the city.", getitemname(Fine_Sand), getitemname(Grit));
+			next();
+			mes("[Brick Team Chief]");
+			mes("Afterwards, feed them to the Mimic right there, and it will give you a Brick in exchange.");
+			next();
+			mes("[Brick Team Chief]");
+			mes("Bring me 10 Bricks. But be warned, there is a chance that the brick making fails and the Mimic gives you nothing.");
+			next();
+			re_brick = 0;
+			setquest(5259);
+			mes("[Brick Team Chief]");
+			mes("Good luck.");
+			close();
+		}
+	} else if (questprogress(5259) == 1) {
+		mes("[Brick Team Chief]");
+		mes("Hey, how is the brick making going?");
+		next();
+		switch (select("I brought some bricks.", "How to make bricks?", "End conversation.")) {
+		case 1:
+			.@count = countitem(Brick);
+			if (.@count == 0) {
+				mes("[Brick Team Chief]");
+				mes("Where are the bricks that you mentioned?");
+				next();
+				mes("[Brick Team Chief]");
+				mes("Don't push yourself too hard, you don't have to bring all 10 bricks at once.");
+				close();
+			}
+			delitem(Brick, .@count);
+			re_brick += .@count;
+			if (re_brick < 10) {
+				mes("[Brick Team Chief]");
+				mesf("You brought %d bricks. Now you only need to bring %d more. Keep up with the good job.", .@count, (10 - re_brick));
+				close();
+			}
+
+			re_brick = 0;
+			changequest(5259, 5260);
+			getitem(MoroccMerit, 1);
+			"MocReContribute"::AddContribution();
+			mes("[Brick Team Chief]");
+			mes("Good job. Here is your reward.");
+			mes("Take this to the ^7D9BE3Morroc Restauration Comitee^000000, and you will be able to exchange it for something you want.");
+			donpcevent("MocReMaterialController::OnAddBrick");
+			close();
+
+		case 2:
+			mes("[Brick Team Chief]");
+			mes("I think I already told you that. Don't make me repeat myself.");
+			next();
+			mes("[Brick Team Chief]");
+			mesf("First, gather a %s and a %s around the city.", getitemname(Fine_Sand), getitemname(Grit));
+			next();
+			mes("[Brick Team Chief]");
+			mes("Afterwards, feed them to the Mimic right there, and it will give you a Brick in exchange.");
+			next();
+			mes("[Brick Team Chief]");
+			mes("But be careful:");
+			next();
+			mes("[Brick Team Chief]");
+			mes("Sometimes, the Mimic eats your materials and gives nothing back. I never had this problem, but lots of others had.");
+			close();
+
+		case 3:
+			mes("[Brick Team Chief]");
+			mes("We are very busy, so let's skip the formalities.");
+			close();
+		}
+	}
+	end;
+}
+
+morocc, 40, 72, 6	script	Annoyed Mimic#ep14_3	4_MIMIC,{
+	if (!checkweight(Brick, 1)) {
+		mes("^FF0000You're carrying too many items. Please make some room in your bag first.^000000");
+		close();
+	}
+	if (questprogress(5259) != 1) {
+		mes("This Mimic doesn't seem to be aggressive.");
+		close();
+	}
+	if (re_brick + countitem(Brick) >= 10) {
+		mes("You have made all the bricks that you need.");
+		close();
+	}
+	if (countitem(Fine_Sand) < 1 || countitem(Grit) < 1) {
+		mes("You don't have enough materials to make a brick.");
+		close();
+	}
+	mesf("You fed the Mimic with a %s and a %s.", getitemname(Fine_Sand), getitemname(Grit));
+	next();
+	progressbar("0xFFFF00", 1);
+	if (countitem(Fine_Sand) < 1 || countitem(Grit) < 1)
+		end; // Exploit attempt
+
+	if (rand(10000) > 3000) {
+		specialeffect(EF_PHARMACY_FAIL);
+		mes("You've failed to make a brick:");
+		switch (rand(3)) {
+		case 1:
+			mesf("the Mimic ate the %s.", getitemname(Grit));
+			delitem(Grit, 1);
+			break;
+
+		case 2:
+			mesf("the Mimic ate the %s.", getitemname(Fine_Sand));
+			delitem(Fine_Sand, 1);
+			break;
+		}
+		close();
+	}
+
+	specialeffect(EF_PHARMACY_OK);
+	mes("You successfully made a Brick.");
+	delitem(Fine_Sand, 1);
+	delitem(Grit, 1);
+	getitem(Brick, 1);
+	close();
+}
+
+//== Delivery quest base NPCs =========
+-	script	MocReDeliveryStart	FAKE_NPC,{
+	.@npc$ = sprintf("[%s]", strnpcinfo(NPC_NAME_VISIBLE));
+	if (BaseLevel < 80) {
+		mes(.@npc$);
+		mes("You don't have enough experience\r"
+			"for this job.");
+		mes("Please, raise your ^006400Level^000000 to ^ff000080^000000 first.");
+		close();
+	}
+
+	if (sscanf(strnpcinfo(NPC_NAME_HIDDEN), "ep14_3%c", .@npcType$) != 1)
+		end;
+
+	if (.@npcType$ == "w") {
+		.@makeQuestId = 5251;
+		.@questId = 5253;
+		.@cooldownQuestId = 5254;
+		
+		.@globalVar$ = "$mocre_wood";
+		.@charVar$ = "re_wood";
+		
+		.@materialName$ = _("wood");
+		.@unitName$ = _("pieces of wood");
+		.@pileName$ = _("woodpile");
+	} else if (.@npcType$ == "r") {
+		.@makeQuestId = 5255;
+		.@questId = 5257;
+		.@cooldownQuestId = 5258;
+		
+		.@globalVar$ = "$mocre_rope";
+		.@charVar$ = "re_rope";
+		
+		.@materialName$ = _("rope");
+		.@unitName$ = _("pieces of rope");
+		.@pileName$ = _("rope pile");
+	} else if (.@npcType$ == "b") {
+		.@makeQuestId = 5259;
+		.@questId = 5261;
+		.@cooldownQuestId = 5262;
+		
+		.@globalVar$ = "$mocre_brick";
+		.@charVar$ = "re_brick";
+		
+		.@materialName$ = _("brick");
+		.@unitName$ = _("bricks");
+		.@pileName$ = _("brick pile");
+	} else {
+		consolemes(CONSOLEMES_ERROR, "Invalid NPC Type for Delivery quest: '%s'", .@npcType$);
+		end;
+	}
+
+	mes(.@npc$);
+	mes("Good day.");
+	mesf("I am here to collect %s\r"
+		"and deliver it to the castle's construction site\r"
+		"in regular deliveries.", .@materialName$);
+	next();
+	mes(.@npc$);
+	mesf("I need help to deliver\r"
+		"100 %s everytime I receive and order from the construction site.", .@unitName$);
+	mes("Can you help me?");
+	next();
+	switch (select("Yes.", sprintf("Where is the %s?", .@materialName$), "End conversation.")) {
+	case 1:
+		if (questprogress(.@makeQuestId) == 1) {
+			mes(.@npc$);
+			mes("At this time, you are assigned\r"
+				"to another task.");
+			mesf("You should first finish making %s\r"
+				"before you can accept the delivery job.", .@materialName$);
+			close();
+		}
+		
+		if (questprogress(.@questId) == 1) {
+			mes(.@npc$);
+			mes("You are already working on this.");
+			mes("Aim to finishing the current job, ok?");
+			mes("Let's work hard\r"
+				"until the day the castle is complete.");
+			next();
+			if (select("Understood.", "I give up.") == 1) {
+				mes(.@npc$);
+				mes("Keep up with the good job.");
+				close();
+			}
+			mes(.@npc$);
+			mes("If you don't want to work, I won't force you.");
+			mes("You may leave now.");
+			close2();
+			setd(.@charVar$, 0);
+			erasequest(.@questId);
+			end;
+		}
+
+		mes(.@npc$);
+		mesf("Let me see\r"
+			"if I have received a new request for %s.", .@materialName$);
+		next();
+		if (questprogress(.@cooldownQuestId, PLAYTIME) == 1) {
+			mes(.@npc$);
+			mes("No,\r"
+				"not yet.");
+			mes("Why don't you come back later?");
+			mesf("The construction team needs other kinds of materials too,\r"
+				"not only %s. You may be able to help them.", .@materialName$);
+			close();
+		}
+		mes(.@npc$);
+		mes("Yes,\r"
+			"here it is.");
+		mes("Good,\r"
+			"your destination is\r"
+			"the central castle.");
+		next();
+		mes(.@npc$);
+		mesf("Grab as many %s\r"
+			"you can carry from that %s,\r"
+			"and take them to the construction site.", .@unitName$, .@pileName$);
+		mesf("It was requested to deliver ^ff0000100 %s^000000.", .@unitName$);
+		mes("You don't have to deliver them all at once,\r"
+			"if you can't.");
+		setd(.@charVar$, 0);
+		setquest(.@questId);
+		close();
+
+	case 2:
+		if (getd(.@globalVar$) <= 0) {
+			mes(.@npc$);
+			mesf("Ops, we are out\r"
+				"of %s.", .@materialName$);
+			mesf("I should talk to\r"
+				"the %s provision coordinator.", .@materialName$);
+			next();
+			mes(.@npc$);
+			mes("Just a minute.");
+			mesf("Someone should bring more %s soon.", .@materialName$);
+			mes("Stuff only materializes from the air\r"
+				"in fantasy worlds, and we are not in one.");
+			close();
+		}
+
+		mes(.@npc$);
+		mesf("Oh, I can see\r"
+			"a %s right there.", .@pileName$);
+		next();
+		mes(.@npc$);
+		mesf("Take as many %s\r"
+			"as you can carry from that pile.", .@unitName$);
+		close();
+
+	case 3:
+		mes(.@npc$);
+		mes("Go ahead.");
+		close();
+	}
+}
+
+-	script	MocReDeliveryPile	FAKE_NPC,{
+	end;
+
+OnTouch:
+	if (sscanf(strnpcinfo(NPC_NAME_HIDDEN), "%s", .@npcType$) != 1)
+		end;
+
+	if (.@npcType$ == "wood") {
+		.@questId = 5253;
+		.@item = Wood_;
+		.@charVar$ = "re_wood";
+		.@materialName$ = _("wood");
+		.@npc$ = _("[Woodworker]");
+	} else if (.@npcType$ == "rope") {
+		.@questId = 5257;
+		.@item = LongRopes;
+		.@charVar$ = "re_rope";
+		.@materialName$ = "rope";
+		.@npc$ = "[Artisan]";
+	} else if (.@npcType$ == "brick") {
+		.@questId = 5261;
+		.@item = Brick;
+		.@charVar$ = "re_brick";
+		.@materialName$ = _("brick");
+		.@npc$ = "[Bricklayer]";
+	} else {
+		consolemes(CONSOLEMES_ERROR, "Invalid NPC Type for Delivery quest: '%s'", .@npcType$);
+		end;
+	}
+
+	if (questprogress(.@questId) == 0 || countitem(.@item) == 0)
+		end;
+	
+	mes("- You may deliver the materials here. -");
+	next();
+	if (select(sprintf("Deliver %s.", .@materialName$), "Cancel.") == 2) {
+		mes(.@npc$);
+		mesf("Oh, you did not come\r"
+			"to deliver %s?", .@materialName$);
+		close();
+	}
+
+	.@count = countitem(.@item);
+	if (.@count == 0)
+		end;
+
+	mes(.@npc$);
+	mes("Oh, thank you for your hard work.");
+	mesf("Let me register the amount of %s\r"
+		"you have delivered...", .@materialName$);
+	mesf("This time it was %d, right?", .@count);
+	delitem(.@item, .@count);
+	setd(.@charVar$, getd(.@charVar$) + .@count);
+	next();
+	mes(.@npc$);
+	mes("When you reach your target,\r"
+		"you may talk to the\r"
+		"Reward Coordinator at the headquarters.");
+	mes("Good job.");
+	close();
+}
+
+-	script	MocReDeliveryInfo	FAKE_NPC,{
+	if (sscanf(strnpcinfo(NPC_NAME_HIDDEN), "%s", .@npcType$) != 1)
+		end;
+
+	if (.@npcType$ == "wood") {
+		.@questId = 5253;
+		.@item = Wood_;
+		.@charVar$ = "re_wood";
+		.@materialName$ = _("wood");
+		.@unitName$ = _("pieces of wood");
+		.@npc$ = _("[Woodworker]");
+		.@pileName$ = _("woodpile");
+	} else if (.@npcType$ == "rope") {
+		.@questId = 5257;
+		.@item = LongRopes;
+		.@charVar$ = "re_rope";
+		.@materialName$ = "rope";
+		.@unitName$ = _("pieces of rope");
+		.@npc$ = _("[Artisan]");
+		.@pileName$ = _("rope pile");
+	} else if (.@npcType$ == "brick") {
+		.@questId = 5261;
+		.@item = Brick;
+		.@charVar$ = "re_brick";
+		.@materialName$ = _("brick");
+		.@unitName$ = _("bricks");
+		.@npc$ = _("[Bricklayer]");
+	} else {
+		consolemes(CONSOLEMES_ERROR, "Invalid NPC Type for Delivery quest: '%s'", .@npcType$);
+		end;
+	}
+
+	mes(.@npc$);
+	mesf("I am here to check\r"
+		"the amount of %s\r"
+		"that was delivered in this place.", .@materialName$);
+	mes("How can I help you?");
+	next();
+	switch (select("Where can I get my reward?", sprintf("I brought some %s.", .@materialName$), "End conversation.")) {
+	case 1:
+		mes(.@npc$);
+		mes("To receive rewards for your services,\r"
+			"go to our headquarters\r"
+			"on the west part of Morroc city,\r"
+			"and talk to the Reward Coordinator.");
+		if (questprogress(.@questId) == 0)
+			close();
+		
+		next();
+		if (getd(.@charVar$) < 100) {
+			mes(.@npc$);
+			mesf("So far, you have delivered only\r"
+				"%d %s.", getd(.@charVar$), .@unitName$);
+			mes("Please, bring the remaining wood\r"
+				"and help us rebuild Morroc city.");
+			close();
+		}
+
+		mes(.@npc$);
+		mesf("I can see you have delivered\r"
+			"all the needed %s that was requested from you.", .@materialName$);
+		mes("You should go to our headquarters\r"
+			"and claim your reward.");
+		close();
+
+	case 2:
+		if (questprogress(.@questId) == 0) {
+			mes(.@npc$);
+			mes("Huh? I don't see your name\r"
+				"in the delivery list.");
+			if (countitem(.@item) > 0) {
+				mesf("Anyway, let me hold those %s for now.", .@unitName$);
+				delitem(.@item, countitem(.@item));
+			}
+			close();
+		}
+		mes(.@npc$);
+		mes("Welcome.");
+		mesf("Can you see\r"
+			"that %s right there?", .@pileName$);
+		mes("You may leave it beside it.");
+		close();
+	
+	case 3:
+		mes(.@npc$);
+		mes("Haha,\r"
+			"you're silly.");
+		close();
+	}
+}
+
+//== Wood Delivery :: re_wood ==========
+// Note: for those duplicates, the hidden name is relevant for code logic.
+
+morocc, 265, 74, 4	duplicate(MocReDeliveryStart)	Carpenter#ep14_3w	4_M_ORIENT01
+
+//morocc, 162, 109, 0	script	#wood_or	HIDDEN_WARP_NPC,2,2,{
+morocc, 162, 109, 5	duplicate(MocReDeliveryPile)	Woodpile#wood	4_WOODPILE,2,2
+
+morocc, 162, 112, 5	duplicate(MocReDeliveryInfo)	Woodworker#wood	4_M_ORIENT01
+
+//== Rope Delivery :: re_rope ==========
+// Note: for those duplicates, the hidden name is relevant for code logic.
+
+morocc, 266, 288, 5	duplicate(MocReDeliveryStart)	Artisan#ep14_3r	4_M_BARBER
+
+// morocc, 148, 109, 0	script	#rope_or	HIDDEN_WARP_NPC,2,2
+morocc, 148, 109, 5	duplicate(MocReDeliveryPile)	Rope Pile#rope	4_ROPEPILE,2,2
+
+morocc, 148, 112, 5	duplicate(MocReDeliveryInfo)	Artisan#rope	4_M_BARBER
+
+//== Brick Delivery :: re_brick ========
+// Note: for those duplicates, the hidden name is relevant for code logic.
+
+morocc, 55, 67, 4	duplicate(MocReDeliveryStart)	Bricklayer#ep14_3b	4_M_03
+
+// morocc, 155, 109, 0	script	#brick_or	HIDDEN_WARP_NPC,2,2
+morocc, 155, 109, 5	duplicate(MocReDeliveryPile)	Brick Pile#brick	4_BRICKPILE,2,2
+
+morocc, 155, 112, 5	duplicate(MocReDeliveryInfo)	Bricklayer#brick	4_M_03
+
+//== Wood Piles ========================
+-	script	MocReWoodpile	4_WOODPILE,{
+	if (questprogress(5253) == 0) {
+		mes("- A material used in the restauration of the castle and other buildings in Morroc. -");
+		close();
+	}
+
+	"MocReMaterialController"::pickMaterial(Wood_, re_wood, "$mocre_wood", "MocReMaterialController::OnGetWood");
+	end;
+}
+
+// Duplicates
+morocc, 270, 75, 5	duplicate(MocReWoodpile)	Woodpile#1	4_WOODPILE,
+morocc, 272, 75, 5	duplicate(MocReWoodpile)	Woodpile#2	4_WOODPILE
+morocc, 274, 75, 5	duplicate(MocReWoodpile)	Woodpile#3	4_WOODPILE
+morocc, 276, 75, 5	duplicate(MocReWoodpile)	Woodpile#4	4_WOODPILE
+morocc, 278, 75, 5	duplicate(MocReWoodpile)	Woodpile#5	4_WOODPILE
+morocc, 270, 73, 5	duplicate(MocReWoodpile)	Woodpile#6	4_WOODPILE
+morocc, 272, 73, 5	duplicate(MocReWoodpile)	Woodpile#7	4_WOODPILE
+morocc, 274, 73, 5	duplicate(MocReWoodpile)	Woodpile#8	4_WOODPILE
+morocc, 276, 73, 5	duplicate(MocReWoodpile)	Woodpile#9	4_WOODPILE
+morocc, 278, 73, 5	duplicate(MocReWoodpile)	Woodpile#10	4_WOODPILE
+
+//== Rope Piles ========================
+-	script	MocReRopePile	FAKE_NPC,{
+	if (questprogress(5257) == 0) {
+		mes("- A material used in the restauration of the castle and other buildings in Morroc. -");
+		close();
+	}
+
+	"MocReMaterialController"::pickMaterial(LongRopes, re_rope, "$mocre_rope", "MocReMaterialController::OnGetRope");
+	end;
+}
+
+morocc, 270, 287, 5	duplicate(MocReRopePile)	Rope Pile#1	4_ROPEPILE
+morocc, 272, 287, 5	duplicate(MocReRopePile)	Rope Pile#2	4_ROPEPILE
+morocc, 274, 287, 5	duplicate(MocReRopePile)	Rope Pile#3	4_ROPEPILE
+morocc, 276, 287, 5	duplicate(MocReRopePile)	Rope Pile#4	4_ROPEPILE
+morocc, 278, 287, 5	duplicate(MocReRopePile)	Rope Pile#5	4_ROPEPILE
+morocc, 270, 289, 5	duplicate(MocReRopePile)	Rope Pile#6	4_ROPEPILE
+morocc, 272, 289, 5	duplicate(MocReRopePile)	Rope Pile#7	4_ROPEPILE
+morocc, 274, 289, 5	duplicate(MocReRopePile)	Rope Pile#8	4_ROPEPILE
+morocc, 276, 289, 5	duplicate(MocReRopePile)	Rope Pile#9	4_ROPEPILE
+morocc, 278, 289, 5	duplicate(MocReRopePile)	Rope Pile#10	4_ROPEPILE
+
+//== Brick Piles =======================
+-	script	MocReBrickPile	FAKE_NPC,{
+	if (questprogress(5261) == 0) {
+		mes("- A material used in the restauration of the castle and other buildings in Morroc. -");
+		close();
+	}
+
+	"MocReMaterialController"::pickMaterial(Brick, re_brick, "$mocre_brick", "MocReMaterialController::OnGetBrick");
+	end;
+}
+
+morocc, 50, 67, 5	duplicate(MocReBrickPile)	Brick Pile#1	4_BRICKPILE
+morocc, 48, 67, 5	duplicate(MocReBrickPile)	Brick Pile#2	4_BRICKPILE
+morocc, 46, 67, 5	duplicate(MocReBrickPile)	Brick Pile#3	4_BRICKPILE
+morocc, 44, 67, 5	duplicate(MocReBrickPile)	Brick Pile#4	4_BRICKPILE
+morocc, 42, 67, 5	duplicate(MocReBrickPile)	Brick Pile#5	4_BRICKPILE
+morocc, 50, 65, 5	duplicate(MocReBrickPile)	Brick Pile#6	4_BRICKPILE
+morocc, 48, 65, 5	duplicate(MocReBrickPile)	Brick Pile#7	4_BRICKPILE
+morocc, 46, 65, 5	duplicate(MocReBrickPile)	Brick Pile#8	4_BRICKPILE
+morocc, 44, 65, 5	duplicate(MocReBrickPile)	Brick Pile#9	4_BRICKPILE
+morocc, 42, 65, 5	duplicate(MocReBrickPile)	Brick Pile#10	4_BRICKPILE
+
+//== Material Controller ===============
+// Controls the display/update of Wood, Brick and Ropes
+-	script	MocReMaterialController	FAKE_NPC,{
+	end;
+
+	/**
+	 * showPiles(materialQuantity, "NPC Name Base")
+	 * Show NPCs until the expected number of piles are displayed.
+	 * "NPC Name Base" should be the name before the pile number.
+	 * Example: "Woodpile#" for "Woodpile#1", "Woodpile#2",...
+	 */
+	function showPiles {
+		.@count = getarg(0) / 100;
+		.@npc$ = sprintf("%s%%d", getarg(1));
+		
+		for (.@i = 1; .@i <= .@count; ++.@i)
+			hideoffnpc(sprintf(.@npc$, .@i));
+
+		return;
+	}
+
+	/**
+	 * hidePiles(materialQuantity, "NPC Name Base")
+	 * Hide NPCs until the expected number of piles are displayed.
+	 * "NPC Name Base" should be the name before the pile number.
+	 * Example: "Woodpile#" for "Woodpile#1", "Woodpile#2",...
+	 */
+	function hidePiles {
+		.@count = 0;
+		if (getarg(0) >= 100)
+			.@count = ($mocre_wood / 100);
+		else if (getarg(0) > 0)
+			.@count = 1;
+		
+		.@npc$ = sprintf("%s%%d", getarg(1));
+		for (.@i = 10; .@i > .@count; --.@i)
+			hideonnpc(sprintf(.@npc$, .@i));
+
+		return;
+	}
+
+	/**
+	 * pickMaterial(itemId, deliveredAmount, "global control var", "getEvent")
+	 */
+	public function pickMaterial {
+		// There are no material left (player may have clicked in the second before the stack disappears)
+		if (getd(getarg(2)) <= 0)
+			return;
+
+		if (getarg(1) >= 100) {
+			mes("- You have delivered enough for now. -");
+			close2();
+			return;
+		}
+	
+		mes("- A material used in the restauration of the castle and other buildings in Morroc. -");
+		next();
+		mes("- How many units you want to pick? -");
+		next();
+		while (true) {
+			input(.@num);
+			if (.@num == 0) {
+				mes("- ^ff0000Action Canceled.^000000 -");
+				close2();
+				return;
+			}
+			
+			if (.@num < 0 || .@num > 10) {
+				mes("- You should only pick as many as you can carry. -");
+				close2();
+				return;
+			}
+	
+			if (!checkweight(getarg(0), .@num)) {
+				mes("^ff0000This is over your carry capacity.^000000");
+				next();
+				continue;
+			}
+			break;
+		}
+		// Note: Not checking if the amount is >= the quantity in the pile seems intended,
+		//       as the player won't be able to precisely tell how many is available nor
+		//       get too much extra items (since it is limited on 10 per time)
+		getitem(getarg(0), .@num);
+		setd(getarg(2), cap_value(getd(getarg(2)) - .@num, 0, 1000));
+		donpcevent(getarg(3));
+		next();
+		mes("- Now, deliver the materials to the construction site near the central castle. -");
+		close2();
+		return;
+	}
+
+// Someone has got some Wood from the piles update woodpiles
+// Note that $mocre_wood was already decremented by the NPC
+OnGetWood:
+	sleep(1000);
+	hidePiles($mocre_wood, "Woodpile#");
+	end;
+
+// Someone has got some Rope from the piles update rope piles
+// Note that $mocre_rope was already decremented by the NPC
+OnGetRope:
+	sleep(1000);
+	hidePiles($mocre_rope, "Rope Pile#");
+	end;
+
+// Someone has got some Bricks from the pile update brick piles
+// Note that $mocre_brick was already decremented by the NPC
+OnGetBrick:
+	sleep(1000);
+	hidePiles($mocre_rope, "Brick Pile#");
+	end;
+
+// Someone has delivered Wood, update global state
+OnAddWood:
+	$mocre_wood = cap_value($mocre_wood + 200, 0, 1000);
+	sleep(2000);
+	showPiles($mocre_wood, "Woodpile#");
+	end;
+
+// Someone has delivered Rope, update global state
+OnAddRope:
+	$mocre_rope = cap_value($mocre_rope + 200, 0, 1000);
+	sleep(2000);
+	showPiles($mocre_rope, "Rope Pile#");
+	end;
+
+// Someone has delivered Bricks, update global state
+OnAddBrick:
+	$mocre_brick = cap_value($mocre_brick + 200, 0, 1000);
+	sleep(2000);
+	showPiles($mocre_brick, "Brick Pile#");
+	end;
+
+OnInit:
+	hidePiles($mocre_wood, "Woodpile#");
+	hidePiles($mocre_rope, "Rope Pile#");
+	hidePiles($mocre_rope, "Brick Pile#");
+	end;
+}
+
+//== Reward Coordinator ================
+morocc, 54, 190, 5	script	Reward Coordinator	4_M_SAGE_C,{
+	if (!checkweight(MoroccMerit, 10)) {
+		mes("[Reward Coordinator]");
+		mes(" - You're carrying too many items. Please make some room in your bag first. - ");
+		close();
+	}
+
+	mes("[Reward Coordinator]");
+	mes("So, I... I...");
+	mes("I think they sent me here to\r"
+		"to... to... let me think...");
+	mes("Oh yes, to help in the Morroc restauration work.");
+	next();
+	while (true) {
+		mes("[Reward Coordinator]");
+		mes("How can I help you?");
+		next();
+		switch (select("I am here to receive the rewards for my work.", "How can I help?", "What can I do with Morroc Merits?", "End conversation.")) {
+		case 1:
+			mes("[Reward Coordinator]");
+			mes("Oh, you already did it.");
+			mes("So, how did you help us?");
+			next();
+			switch (select("Wood Delivery", "Brick Delivery", "Rope Delivery", "Worker Transport", "Purging the Land")) {
+			case 1:
+				callsub(S_DeliveryReward, _("Wood Team"), _("wood delivery"), _("pieces of wood"), "re_wood", 5253, 5254);
+				break;
+
+			case 2:
+				callsub(S_DeliveryReward, _("Brick Team"), _("brick delivery"), _("bricks"), "re_brick", 5261, 5262);
+				break;
+
+			case 3:
+				callsub(S_DeliveryReward, _("Rope Team"), _("rope delivery"), _("pieces of rope"), "re_rope", 5257, 5258);
+				break;
+
+			case 4:
+				if (re_transport != 5) {
+					mes("[Reward Coordinator]");
+					mes("That is weird.");
+					mes("I don't have\r"
+						"any report of your contribution.");
+					next();
+					mes("[Reward Coordinator]");
+					mes("It might be an error.");
+					mes("I recommend you to talk to\r"
+						"the one in charge for this task.");
+					close();
+				}
+
+				mes("[Reward Coordinator]");
+				mes("Ah, so you are telling me\r"
+					"that you brought a worker to a construction site\r"
+					"on your own. Right?");
+				next();
+				mes("[Reward Coordinator]");
+				mes("...");
+				next();
+				mes("[Reward Coordinator]");
+				mes("Oh my, that lazy imbecile.");
+				mes("I wish they had simply fired him...");
+				next();
+				mes("[Reward Coordinator]");
+				mes("...");
+				next();
+				mes("[Reward Coordinator]");
+				mes("Oh, right.");
+				mes("Let me give you a Morroc Merit\r"
+					"for helping with the workers transportation.");
+				mes("Thank you for your contribution.");
+				re_transport = 0;
+				@re_site = 0;
+				@re_questId = 0;
+				setquest(5275);
+				getitem(MoroccMerit, 1);
+				"MocReContribute"::AddContribution();
+				next();
+				break;
+
+			case 5:
+				if (questprogress(5265, HUNTING) != 2 || questprogress(5266, HUNTING) != 2 || questprogress(5267, HUNTING) != 2 || questprogress(5268, HUNTING) != 2) {
+					mes("[Reward Coordinator]");
+					mes("That is weird.");
+					mes("I don't have\r"
+						"any report that you have completed the purging job.");
+					next();
+					mes("[Reward Coordinator]");
+					mes("It might be an error.");
+					mes("I recommend you to talk to\r"
+						"the one in charge for this task.");
+					close();
+				}
+
+				mes("[Reward Coordinator]");
+				mes("Ah, so you helped purging the land from Morroc's presence.");
+				mes("Let me give you a Morroc Merit\r"
+					"for helping with the workers transportation.");
+				mes("Thank you for your contribution.");
+				setquest(5269);
+				erasequest(5265, 5269);
+				getitem(MoroccMerit, 4);
+				"MocReContribute"::AddContribution();
+				next();
+				break;
+			}
+			break;
+
+		case 2:
+			mes("[Reward Coordinator]");
+			mes("Oh, OK.");
+			mes("Let me think\r"
+				"about the places where the restauration work is taking place.");
+			mes("Yes, I need you thinking with me.");
+			next();
+			mes("[Reward Coordinator]");
+			mes("The major project\r"
+				"seems to be the central castle,\r"
+				"and we can use your help to gather materials.");
+			next();
+			mes("[Reward Coordinator]");
+			mes("Oh, and we also need someone\r"
+				"to help us prepare snacks\r"
+				"for the workers... No, nevermind - this may not be that important.");
+			next();
+			mes("[Reward Coordinator]");
+			mes("About the materials,\r"
+				"as they don't materialize from the air, someone needs to search for them");
+			next();
+			mes("[Reward Coordinator]");
+			mes("and deliver them to the construction site.");
+			next();
+			mes("[Reward Coordinator]");
+			mes("Oh, and we also need help to get rid\r"
+				"of the Morroc Incarnations that are wandering around the city...");
+			mes("Hmm, where was I?");
+			next();
+			mes("[Reward Coordinator]");
+			mes("...");
+			next();
+			mes("[Reward Coordinator]");
+			mes("One of my colleagues from Prontera\r"
+				"is assigned to select and dispatch\r"
+				"new workers to our working places based on their competencies,");
+			next();
+			mes("[Reward Coordinator]");
+			mes("and I think he may need help too.");
+			mes("Does it make sense?");
+			next();
+			break;
+
+		case 3:
+			mes("[Reward Coordinator]");
+			mes("Do you see that vending machine by my side?");
+			mes("You can use your Morroc Merits on it\r"
+				"to get some experience or several other itens.");
+			next();
+			mes("[Reward Coordinator]");
+			mes("For more information, it is better that you check the machine itself.");
+			next();
+			break;
+		
+		case 4:
+			mes("[Reward Coordinator]");
+			mes("Hmm, right...");
+			mes("But why\r"
+				"did you talk to me, if I may ask?");
+			next();
+			mes("[Reward Coordinator]");
+			mes("Aah, I hate this wind full of sand.");
+			mes("It gets my beautifull clothes\r"
+				"all nasty and dirty.");
+			close();
+		}
+	}
+	end;
+
+	// (0: "team name", 1: "delivery name", 2: "unit name", 3: "quantity var", 4: questId, 5: cooldownQuestId)
+	S_DeliveryReward:
+		if (questprogress(getarg(4)) == 0 || getd(getarg(3)) < 100) {
+			mes("[Reward Coordinator]");
+			mesf("Are you sure you have finished a %s?", getarg(1));
+			mesf("The %s has not authorized\r"
+				"your reward.", getarg(0));
+			next();
+			mes("[Reward Coordinator]");
+			mes("It might be an error.");
+			mes("I recommend you to talk to\r"
+				"the one in charge for this task.");
+			next();
+			return;
+		}
+		changequest(getarg(4), getarg(5));
+		setd(getarg(3), 0);
+		getitem(MoroccMerit, 1);
+		"MocReContribute"::AddContribution();
+		mes("[Reward Coordinator]");
+		mesf("According to these records, you have delivered\r"
+			"more than 100 %s.", getarg(2));
+		mes("Thank you for your contribution.");
+		next();
+		mes("[Reward Coordinator]");
+		mes("Keep up with the good job.");
+		next();
+		return;
+}
+
+// == Snack Order =====================
+morocc, 40, 190, 6	script	Snack Lady#ep14_3	4_F_CAVE1,{
+	if (!checkweight(MoroccMerit, 1)) {
+		mes(" - You're carrying too many items. Please make some room in your bag first. - ");
+		close();
+	}
+
+	if (questprogress(5263) == 0) {
+		if (questprogress(5264, PLAYTIME) == 2) {
+			mes("[Snack Lady]");
+			mes("It is time to prepare the next snack order.");
+		} else {
+			mes("[Snack Lady]");
+			mes("Sorry, I am busy. May you come back later?");
+		}
+		next();
+		switch (select("What do you do?", "What kind of dishes you need?")) {
+		case 1:
+			mes("[Snack Lady]");
+			mes("I am here to prepare snacks for the workers of the Morroc Restoration Comittee.");
+			next();
+			mes("[Snack Lady]");
+			mes("I am working a lot to feed a crowd of workers every day.");
+			next();
+			mes("[Snack Lady]");
+			mes("It would be very helpful if someone could help me by bringing some cooked food.");
+			close();
+
+		case 2:
+			if (BaseLevel < 80) {
+				mes("[Snack Lady]");
+				mes("Thanks for your concern, but I am not desperate enough to abuse of an unexperienced adventurer like you.");
+				close();
+			}
+
+			if (questprogress(5264, PLAYTIME) == 1) {
+				mes("[Snack Lady]");
+				mesf("I will take a break until the time for the next order comes. %s, you should rest too, while you can.", strcharinfo(PC_NAME));
+				close();
+			}
+
+			mes("[Snack Lady]");
+			mes("Ah, you want to help?");
+			mes("Phew, thanks. I can't express how grateful I am.");
+			next();
+			mes("[Snack Lady]");
+			mes("I don't want you to hurt your back carrying a lot of dishes. Let me give you a list of dishes, you just have to bring one of them.");
+			next();
+			setquest(5263);
+			mes("[Snack Lady]");
+			mes("You can always check the list using Alt + U. Thank you.");
+			close();
+		}
+	} else if (questprogress(5263) == 1) {
+		setarray(.@snackList[0], 
+			Str_Dish03, Str_Dish04, Str_Dish05, Str_Dish06,
+			Agi_Dish03, Agi_Dish04, Agi_Dish05, Agi_Dish06,
+			Vit_Dish03, Vit_Dish04, Vit_Dish05, Vit_Dish06,
+			Int_Dish03, Int_Dish04, Int_Dish05, Int_Dish06,
+			Dex_Dish03, Dex_Dish04, Dex_Dish05, Dex_Dish06,
+			Luk_Dish03, Luk_Dish04, Luk_Dish05, Luk_Dish06);
+
+		mes("[Snack Lady]");
+		mes("Oh, I am so busy! You are back. Did you bring the dish I asked?");
+		next();
+		switch (select("Yes.", "What kind of dish?", "End conversation.")) {
+		case 1:
+			mes("[Snack Lady]");
+			mes("Which dish you brought?");
+			next();
+			input(.@snack$);
+			.@i = 0;
+			while (.@i < getarraysize(.@snackList) && getitemname(.@snackList[.@i]) != .@snack$) {
+				++.@i;
+			}
+
+			if (.@i == getarraysize(.@snackList)) {
+				mes("[Snack Lady]");
+				mesf("%s? I did not ask for that. Please, check the memo I gave you.", .@snack$);
+				close();
+			}
+
+			if (countitem(.@snackList[.@i]) < 1) {
+				mes("[Snack Lady]");
+				mesf("%s... right, but where is it? I don't see any of it with you.", .@snack$);
+				close();
+			}
+
+			mes("[Snack Lady]");
+			mes("Thank you for you generous donation.");
+			mes("Please, take this small token of my gratitude.");
+			mes("Take this to the ^7D9BE3Morroc Restauration Comitee^000000, and you will be able to exchange it for something you want.");
+			mes("I have finished preparing the dishes for the next order. I will rest now.");
+			changequest(5263, 5264);
+			delitem(.@snackList[.@i], 1);
+			getitem(MoroccMerit, 1);
+			"MocReContribute"::AddContribution();
+			close();
+
+		case 2:
+			mes("[Snack Lady]");
+			mes("Did you not read the memo I gave you?");
+			next();
+			mes("[Snack Lady]");
+			mes("Bring me one of the following dishes:");
+			.@msg$ = "";
+			for (.@i = 0; .@i < getarraysize(.@snackList) - 2; .@i++) {
+				.@msg$ = sprintf("%s%s%s", .@msg$, getitemname(.@snackList[.@i]), (.@i % 4 == 3) ? ",\r" : ", ");
+			}
+			.@msg$ = sprintf("%s%s or %s.", .@msg$, getitemname(.@snackList[.@i]), getitemname(.@snackList[.@i + 1]));
+			mes(.@msg$);
+			next();
+			mes("[Snack Lady]");
+			mes("You can always check the list using Alt + U. Thank you.");
+			close();
+		
+		case 3:
+			mes("[Snack Lady]");
+			mes("Aah, I am so busy, I am losing my mind!");
+			close();
+		}
+	}
+	end;
+}
+
+// == Worker Transport : re_transport ======
+morocc, 57, 196, 5	script	HR Coordinator	4_M_ALCHE_A,{
+	if (BaseLevel < 80) {
+		mes("[HR Coordinator]");
+		mes("You don't have enough experience for this task.");
+		mes("Please, raise your ^006400Level^000000 to ^ff000080^000000 first.");
+		close();
+	}
+
+	if (questprogress(5270) == 1) {
+		mes("[HR Coordinator]");
+		mes("Please, take this worker to the construction site that best suits his competencies.");
+		close();
+	} else if (re_transport == 5) {
+		mes("[HR Coordinator]");
+		mes("Phew, you are my savior.");
+		mes("If it weren't for you, I would have been in a hard spot.");
+		mes("Thank you for\r"
+			"guiding the worker in time.");
+		next();
+		mes("[HR Coordinator]");
+		mes("Contrary to what you should be thinking,\r"
+			"I am not a lazy person.");
+		next();
+		mes("[HR Coordinator]");
+		mes("I sent a report detailing your contribution.");
+		mes("Go to the Reward Coordinator\r"
+			"to get your para Morroc Merit.");
+		mes("He is right there by my side.");
+		close();
+	} else if (questprogress(5271) == 1 || questprogress(5272) == 1 || questprogress(5273) == 1 || questprogress(5274) == 1) {
+		// Player is delivering to the NPC
+		mes("[HR Coordinator]");
+		mes("Oh,\r"
+			"why did you come back?");
+		mes("You should have talked to the HR Supervisor at the site.");
+		close();
+	} else if (questprogress(5275, PLAYTIME) == 1) {
+		mes("[HR Coordinator]");
+		mes("You've helped me dispatch a worker last time.");
+		next();
+		mes("[HR Coordinator]");
+		mes("Don't worry,\r"
+			"we don't have to dispatch any other workers for now.");
+		next();
+		mes("[HR Coordinator]");
+		mes("I was happy working on our office in Prontera,\r"
+			"but then my superiores sent me\r"
+			"to this dusty Morroc\r"
+			"to work with\r"
+			"construction workers.");
+		next();
+		mes("*Grumble Grumble*");
+		close();
+	} else if (questprogress(5275, PLAYTIME) == 2) {
+		mes("[HR Coordinator]");
+		mes("Oh, it's you.");
+		mes("Welcome back!");
+		mes("We have new workers\r"
+			"waiting to be dispatched.");
+		next();
+		mes("[HR Coordinator]");
+		mes("You are helping me again,\r"
+			"aren't you?");
+		mes("I've receied requests for some extra manpower\r"
+			"from several teams.");
+		next();
+		if (select("Accept", "Refuse") == 2) {
+			mes("[HR Coordinator]");
+			mes("Huh?");
+			mes("You are really leaving?");
+			mes("Please help just once more, please?");
+			close();
+		}
+		callsub(S_QuestStart);
+		end;
+	} else {
+		mes("[HR Coordinator]");
+		mes("Aah, what should I do?!");
+		mes("If I get blamed for that,\r"
+			"all my chances of promotion are gone.");
+		mes("Man, I can get fired because of that.");
+		next();
+		mes("[HR Coordinator]");
+		mes("Think, think...");
+		mes("I have to blame someone else for this...");
+		mes("If I can blame him for being late,\r"
+			"I'm saved.");
+		next();
+		if (select("Ask if he needs help.", "Ignore.") == 2) {
+			mes("(It is better to leave while I can.)");
+			next();
+			mes("[HR Coordinator]");
+			mes("Uh?");
+			mes("Are you really leaving?");
+			mes("Come on, this is not that hard.");
+			close();
+		}
+		mes("[HR Coordinator]");
+		mes("Thank god,\r"
+			"a helping hand showed up just when I needed!");
+		mes("You are my savior.");
+		emotion(e_gasp);
+		next();
+		mes("[HR Coordinator]");
+		mes("Well, let me tell you.");
+		mes("As you know,"
+			"a large-scale work is happening"
+			"to restore the central castle and nearby buildings.");
+		next();
+		mes("[HR Coordinator]");
+		mes("And it has been hard to hire new workers for it,"
+			"as the young people of today"
+			"avoids those kind of labor with all their will.");
+		mes("I was able\r"
+			"to get some potential workers from other cities.");
+		next();
+		mes("[HR Coordinator]");
+		mes("But to get them to the proper construction site\r"
+			"is revealing to be the hardest task of it all.");
+		mes("I am assigned to guide them\r"
+			"to the best construction site based on their competencies,\r"
+			"but I have no idea how to do that.");
+		next();
+		mes("[HR Coordinator]");
+		mes("Can you replace me in that work\r"
+			"and take the new workers\r"
+			"to the site that best suits their competencies?");
+		next();
+		mes("[HR Coordinator]");
+		mes("Prety much every construction site\r"
+			"is in need of manpower, and the teams are not happy with me\r"
+			"because I'm taking too long\r"
+			"to select and dispatch the workers for them.");
+		next();
+		if (select("Help.", "Refuse.") == 2) {
+			mes("[HR Coordinator]");
+			mes("Ah, come on, you heard my story.");
+			mes("You are not going back now.");
+			mes("Please, lend me a hand.");
+			close();
+		}
+		callsub(S_QuestStart);
+		end;
+	}
+	end;
+
+S_QuestStart:
+	// Captured data shows that it is possible that no NPC will accept this worker
+	// But it is unknown if this is intended or not, as there is no "quest progression"
+	// when this happens. Change this to 'false' to disable the chance of this happening.
+	.@includeNoJob = true;
+
+	if (getmercinfo(MERCINFO_ID) != 0) {
+		mes("[HR Coordinator]");
+		mes("Oh-oh,\r"
+			"you have a mercenary with you.");
+		mes("You can't have more than one\r"
+			"mercenary with you at the same time.");
+		mes("Please, dismiss your mercenary,\r"
+			"and then talk to me again.");
+		close();
+	}
+
+	if (questprogress(5275) == 0) {
+		// First time
+		mes("[HR Coordinator]");
+		mes("Ah, thank you very much!");
+		mes("Let me introduce you to\r"
+			"the new hires. Let me see...");
+		next();
+	} else {
+		erasequest(5275);
+		mes("[HR Coordinator]");
+		mes("Ah, thank you.");
+		mes("Now, please, take this worker with you.");
+		mes("Take him to the construction site that best suits his competencies,");
+		mes("and present him to the HR Supervisor in there.");
+		next();
+	}
+	setquest(5270);
+	mes("[HR Coordinator]");
+	mes("Workers are sent to 4 different places:\r"
+		"the castle at the center of the city\r"
+		"and the supply centers for wood, brick and rope.");
+	next();
+	mercenary_create(3025, 1_800_000); // 30 minutes
+	mes("[HR Coordinator]");
+	mes("We have a supervisor in each place\r"
+		"checking the workers.");
+	mes("When you reach one of the places with a worker, introduce yourself to the supervisor first,\r"
+		"if he accepts him, dismiss the Mercenary from your information window,\r"
+		"and confirm with the supervisor that the worker was properly assigned to the job.");
+	next();
+	mes("[HR Coordinator]");
+	mes("Let's see...");
+
+	// Weighted list of worker types, each line represents how many times this "woker type"
+	// should be repeated.
+	// Array index is the type and refers to a case when assigning a worker to the player.
+	// Each workerType has different acceptable construction sites, and this is handled by
+	// the assigning part on npc chat.
+	setarray(.@workerTypes,
+		1, // I Can't tell
+		1, // Would like to work with construction
+		1, // Is phisically strong
+		1, // Best choice for making ropes
+		1, // Used to work on construction
+		1, // Used to work with wood
+		4, // Is from Payon
+		4, // Used to be a sailor
+		4, // Most skilled to deal with wood
+		4, // Most skilled to bake bricks
+		4, // Used to treat the soil
+		5, // Can handle any task
+		7, // Good with this hands
+		7, // Doesn't have skills
+		8, // a junior worker
+	   10, // lots of areas
+	   10, // likes to create things
+	   20  // worked in contruction for a long time
+	);
+	.@type = callsub(S_RandomIndex, .@workerTypes);
+
+	// .@sites contains the weights of each site, in this order:
+	// setarray(.@sites[0], <no one>, <rope>, <brick>, <wood>, <center>)
+	switch (.@type) {
+	case 0: // I Can't tell
+		mes("This person... I can't tell. You'll have to find out by yourself.");
+		setarray(.@sites[0], /*none*/ 10, /*rope*/ 5, /*brick*/ 5, /*wood*/ 5, /*center*/ 5);
+		break;
+
+	case 1: // Would like to work with construction
+		mes("This person says he would like to work with construction.");
+		setarray(.@sites[0], /*none*/ 2, /*rope*/ 0, /*brick*/ 0, /*wood*/ 0, /*center*/ 10);
+		break;
+
+	case 2: // Is phisically strong
+		mes("This person says he is phisically strong.");
+		setarray(.@sites[0], /*none*/ 0, /*rope*/ 0, /*brick*/ 10, /*wood*/ 10, /*center*/ 0);
+		break;
+
+	case 3: // Best choice for making ropes
+		mes("This person seems to be the best choise for making ropes.");
+		setarray(.@sites[0], /*none*/ 0, /*rope*/ 1, /*brick*/ 0, /*wood*/0, /*center*/ 0);
+		break;
+
+	case 4: // Used to work on construction
+		mes("This person says he used to work on construction.");
+		setarray(.@sites[0], /*none*/ 2, /*rope*/ 0, /*brick*/ 0, /*wood*/ 0, /*center*/ 5);
+		break;
+
+	case 5: // Used to work with wood
+		mes("This person says he used to work with wood.");
+		setarray(.@sites[0], /*none*/ 2, /*rope*/ 0, /*brick*/ 0, /*wood*/ 5, /*center*/ 0);
+		break;
+
+	case 6: // Is from Payon
+		mes("This person says he came from Payon.");
+		setarray(.@sites[0], /*none*/ 0, /*rope*/ 0, /*brick*/ 0, /*wood*/ 1, /*center*/ 0);
+		break;
+
+	case 7: // Used to be a sailor
+		mes("This person says he used to be a Sailor.");
+		setarray(.@sites[0], /*none*/ 0, /*rope*/ 1, /*brick*/ 0, /*wood*/ 0, /*center*/ 0);
+		break;
+
+	case 8: // Most skilled to deal with wood
+		mes("This person seems to be the most skilled to deal with wood.");
+		setarray(.@sites[0], /*none*/ 0, /*rope*/ 0, /*brick*/ 0, /*wood*/ 1, /*center*/ 0);
+		break;
+
+	case 9: // Most skilled to bake bricks
+		mes("This person seems to be the most skilled to bake bricks.");
+		setarray(.@sites[0], /*none*/ 0, /*rope*/ 0, /*brick*/ 1, /*wood*/ 0, /*center*/ 0);
+		break;
+
+	case 10: // Used to treat the soil
+		mes("This person seems to be used to treat the soil.");
+		setarray(.@sites[0], /*none*/ 5, /*rope*/ 0, /*brick*/ 0, /*wood*/ 0, /*center*/ 10);
+		break;
+
+	case 11: // Can handle any task
+		mes("This person says he can handle any task.");
+		setarray(.@sites[0], /*none*/ 5, /*rope*/ 10, /*brick*/ 10, /*wood*/ 10, /*center*/ 10);
+		break;
+
+	case 12: // Good with this hands
+		mes("This person is small, but is good with his hands.");
+		setarray(.@sites[0], /*none*/ 0, /*rope*/ 10, /*brick*/ 10, /*wood*/ 0, /*center*/ 0);
+		break;
+
+	case 13: // Doesn't have skills
+		mes("This person doesn't seem to have any skills.");
+		setarray(.@sites[0], /*none*/ 6, /*rope*/ 0, /*brick*/ 0, /*wood*/ 3, /*center*/ 3);
+		break;
+
+	case 14: // a junior worker
+		mes("This person is a junior worker.");
+		setarray(.@sites[0], /*none*/ 10, /*rope*/ 20, /*brick*/ 0, /*wood*/ 20, /*center*/ 30);
+		break;
+
+	case 15: // lots of areas
+		mes("This person says he has experience in lots of areas.");
+		setarray(.@sites[0], /*none*/ 20, /*rope*/ 30, /*brick*/ 20, /*wood*/ 20, /*center*/ 20);
+		break;
+
+	case 16: // likes to create things
+		mes("This person says he likes to create things.");
+		setarray(.@sites[0], /*none*/ 20, /*rope*/ 20, /*brick*/ 20, /*wood*/ 0, /*center*/ 0);
+		break;
+
+	case 17: // worked in contruction for a long time
+		mes("This person says he works on constructions for a long time.");
+		setarray(.@sites[0], /*none*/ 20, /*rope*/ 20, /*brick*/ 0, /*wood*/ 0, /*center*/ 50);
+		break;
+	}
+
+	if (!.@includeNoJob)
+		.@sites[0] = 0;
+
+	re_transport = callsub(S_RandomIndex, .@sites);
+	mes("This is it.");
+	mes("Take the worker to the construction site that is most appropriate for their competencies.");
+	close();
+
+S_RandomIndex:
+	.@maxValue = 0;
+	for (.@i = 0; .@i < getarraysize(getarg(0)); ++.@i)
+		.@maxValue += getelementofarray(getarg(0), .@i);
+
+	.@value = rand(1, .@maxValue);
+	.@i = 0;
+	.@accumulated = 0;
+	while (.@i < getarraysize(getarg(0)) && (.@accumulated + getelementofarray(getarg(0), .@i) < .@value)) {
+		.@accumulated += getelementofarray(getarg(0), .@i);
+		++.@i;
+	}
+
+	return .@i;
+}
+
+-	script	HRSupervisor	FAKE_NPC,{
+	callsub(S_LoadSite);
+
+	if (re_transport == 5) {
+		mes("[HR Supervisor]");
+		mes("I sent a to the HQ.");
+		mes("You may go there to\r"
+			"ask for your reward.");
+		mes("Thank you for your hard work.");
+		close();
+	} else if (questprogress(@re_questId) == 1) {
+		if (getmercinfo(MERCINFO_ID) != 0) {
+			mes("[HR Supervisor]");
+			mes("I said\r"
+				"that I want to keep him,\r"
+				"so dismiss him from your care now.");
+			next();
+			mes("- ^ff0000Dismiss the worker using the Mercenary information window,\r"
+				"and talk to the ^006400HR Supervisor^ff0000 again.^000000 -");
+			close();
+		}
+
+		switch (@re_site) {
+		case 1: .@siteName$ = _("rope supply team"); break;
+		case 2: .@siteName$ = _("brick supply team"); break;
+		case 3: .@siteName$ = _("wood supply team"); break;
+		case 4: .@siteName$ = _("central castle construction site"); break;
+		}
+		
+		mes("[HR Supervisor]");
+		mesf("You have delivered\r"
+			"1 worker\r"
+			"to the %s.", .@siteName$);
+		next();
+		mes("[HR Supervisor]");
+		mes("I will report it to the HQ.");
+		mes("You may go there to\r"
+			"ask for your reward.");
+		mes("Thank you for your hard work.");
+		re_transport = 5;
+		erasequest(@re_questId);
+		close();
+	}
+
+	/* Fallthrough - Most messages are shared between click and touch */
+OnTouch:
+	callsub(S_LoadSite);
+	if (questprogress(5270) == 0) {
+		mes("[HR Supervisor]");
+		mes("Bureaucrats like him\r"
+			"have no idea\r"
+			"about the things that happens outside their cublicles.");
+		mes("Humpf.");
+		close();
+	} else if (questprogress(5270, PLAYTIME) == 2) {
+		mes("[HR Supervisor]");
+		mes("How long I still have to wait?");
+		mes("Why did you take so long?");
+		mes("Too late,\r"
+			"our schedule is a mess already.");
+		next();
+		mes("[HR Supervisor]");
+		mes("I don't need that worker anymore.");
+		mes("And tell that white collar from the HQ\r"
+			"that he may expect to have a word with me.");
+		@re_site = 0;
+		@re_questId = 0;
+		re_transport = 0;
+		changequest(5270, 5275);
+		close();
+	} else if (questprogress(5270) == 1) {
+		if (re_transport != @re_site) {
+			mes("[HR Supervisor]");
+			mes("How long I still have to wait\r"
+				"to get more workers?");
+			mes("Tsc, tsc.");
+			mes("That's why I don't trust that white collar from Prontera.");
+			next();
+			if (rand(2) == 1) {
+				mes("[HR Supervisor]");
+				mes("It doesn mather how much I try\r"
+					"I can't think of a job for this worker.");
+				next();
+				mes("[HR Supervisor]");
+				mes("That white collar from Prontera\r"
+					"doesn't have a good eye for people.");
+				mes("Hey, adventurer.");
+				mes("I can't use that worker here,\r"
+					"take him to some other site.");
+			} else {
+				mes("[HR Supervisor]");
+				mes("This worker that you brought\r"
+					"is not good for the work we do here.");
+				mes("Take him to another place.");
+				mes("Grr, what an incompetent idiot!");
+			}
+			close();
+		}
+
+		mes("[HR Supervisor]");
+		mes("I have been screaming for him\r"
+			"to bring more workers,\r"
+			"and he sent only one man. Oh, that's wonderful!");
+		next();
+		mes("[HR Supervisor]");
+		mes("Let me see...");
+		mes("Right,\r"
+			"looks like he will fit our work.");
+		mes("Thanks for bringing him here.");
+		next();
+		mes("[HR Supervisor]");
+		mes("I want to keep him,\r"
+			"you can dismiss him from your care.");
+		next();
+		mes("- ^ff0000Dismiss the worker using the Mercenary information window,\r"
+			"and talk to the ^006400HR Supervisor^ff0000 again.^000000 -");
+		changequest(5270, @re_questId);
+		close();
+	}
+	end;
+
+S_LoadSite:
+	.@name$ = strnpcinfo(NPC_NAME_HIDDEN);
+	if (.@name$ == "rope") {
+		@re_site = 1;
+		@re_questId = 5271;
+	} else if (.@name$ == "brick") {
+		@re_site = 2;
+		@re_questId = 5272;
+	} else if (.@name$ == "wood") {
+		@re_site = 3;
+		@re_questId = 5273;
+	} else if (.@name$ == "siro") { // center
+		@re_site = 4;
+		@re_questId = 5274;
+	} else {
+		end; /* Invalid site, should never happen */
+	}
+
+	return;
+}
+
+morocc, 50, 75, 5	duplicate(HRSupervisor)	HR Supervisor#brick	4_M_SEAMAN,4,4
+morocc, 161, 117, 5	duplicate(HRSupervisor)	HR Supervisor#siro	4_M_SEAMAN,4,4
+morocc, 270, 282, 5	duplicate(HRSupervisor)	HR Supervisor#rope	4_M_SEAMAN,4,4
+morocc, 275, 68, 5	duplicate(HRSupervisor)	HR Supervisor#wood	4_M_SEAMAN,4,4
+
+// == Purging the Land ================
+// Note: The NPC logic regarding the quest itself is totally based on online information.
+
+morocc, 47, 193, 6	script	HR Centurion#ep14_3	4_M_MOCASS1,{
+	if (questprogress(5265) == 0) {
+		mes("[Centurion Van]");
+		mes("I am Van, and I am in charge of purging the monsters around Morroc. What brings you here?");
+		next();
+		switch (select("Centurion?", "Dou you have a job for me?")) {
+		case 1:
+			mes("[Centurion Van]");
+			mes("Yes, because I lead 100 soldiers.");
+			next();
+			mes("[Centurion Van]");
+			mes("The Centurion rank is the highest rank a mercenary soldier may reach.");
+			close();
+
+		case 2:
+			if (BaseLevel < 120) {
+				mes("[Centurion Van]");
+				mes("Hmm, I am sorry, but you don't look strong enough to deal with the monsters in there. You must be at least on Level 120.");
+				close();
+			}
+
+			if (questprogress(5269, PLAYTIME) == 1) {
+				mes("[Centurion Van]");
+				mes("I understand your eagerness to continue fighting to make Morroc a better place.");
+				next();
+				mes("[Centurion Van]");
+				mes("But you should also take care of yourself and use your rest time to its fullness.");
+				mes("Please, come back later.");
+				close();
+			}
+
+			if (questprogress(5269, PLAYTIME) == 2) {
+				erasequest(5269);
+			} else {
+				mes("[Centurion Van]");
+				mes("Ah, yes, I do.");
+				mes("After Satan Morroc came back, it brought together lots of its underlyings.");
+				next();
+				mes("[Centurion Van]");
+				mes("Those are dangerous creatures that are near the city.");
+				mes("I am here with the task of purging those dangerous monsters to make Morroc area safe again.");
+				next();
+			}
+			mes("[Centurion Van]");
+			mes("Please, can you help us by defeating 10 of each of kind of those underlyings?");
+			mes("There are 4 kinds in total.");
+			next();
+			if (select("Accept", "Refuse") == 2) {
+				mes("[Centurion Van]");
+				mes("Oh, okay.");
+				mes("Well, this is the only job I really have right now.");
+				close();
+			}
+
+			mes("[Centurion Van]");
+			mes("Thank you!");
+			mes("You may find those creatures at the fields Notheast of Morroc.");
+			next();
+			mes("[Centurion Van]");
+			mes("After you defeat 10 of each, you may report directly to the Rewards Coordinator right there.");
+			setquest(5265);
+			setquest(5266);
+			setquest(5267);
+			setquest(5268);
+			close();
+		}
+	} else {
+		mes("[Centurion Van]");
+		mes("Please, defeat 10 of each kind of Satan Morroc's underlyings.");
+		mes("Once you are done, you may report directly to the Rewards Coordinator right there.");
+		next();
+		mes("[Centurion Van]");
+		mes("You may find those creatures at the fields Notheast of Morroc.");
+		mes("Good luck!");
+		close();
+	}
+}
+
+// == Other NPCs ======================
+morocc, 50, 188, 5	script	Architect#ep14	4_M_DOCTOR,{
+	switch (select("What do you do?", "Where can I get jobs?", "What does the HQ do?", "End conversation.")) {
+	case 1:
+		mes("[Architect]");
+		mes("Hum?");
+		next();
+		mes("[Architect]");
+		mes("I take care of everything related to the city restauration work.");
+		mes("Excuse me, I have work to do.");
+		close();
+
+	case 2:
+		mes("[Architect]");
+		mes("Hm,\r"
+			"ask one of my employees about that.");
+		mes("I am busy.");
+		close();
+
+	case 3:
+		mes("[Architect]");
+		mes("We take care of lots of tasks here at the Headquarters.");
+		mes("For more details, ask my employees.");
+		close();
+
+	case 4:
+		mes("[Architect]");
+		mes("Bye.");
+		close();
+	}
+}
+
+morocc, 50, 197, 6	script	Accountant#ep14_3	4_M_01,{
+	switch (rand(3)) {
+	case 0:
+		mes("[Accountant]");
+		mes("I think vending machines are the best thing ever invented in the entire Midgard Continent.");
+		next();
+		mes("[Accountant]");
+		mes("Before the invention of the vending machines, I would have to stay in place here the entire time just waiting for someone to come exchange certificates.");
+		next();
+		mes("[Accountant]");
+		mes("Now it is the machine doing all the work.");
+		next();
+		mes("[Accountant]");
+		mes("The world is way more convenient with techonlogy.");
+		close();
+
+	case 1:
+		mes("[Accountant]");
+		mes("You must be at least Level 80 to use this vending machine.");
+		next();
+		mes("[Accountant]");
+		mes("Why? No idea. It is just what I was told.");
+		close();
+
+	case 2:
+		mes("[Accountant]");
+		mes("I wonder how long it will take for Morroc to become beautiful again.");
+		close();
+	}
+}

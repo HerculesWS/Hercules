@@ -1,0 +1,214 @@
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2013-2022 Hercules Dev Team
+//= Copyright (C) KirieZ
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= NPCs related to the reconstruction of Morroc quest rewards.
+//================= Description ===========================================
+//= The reconstruction of Morroc was a temporary set of quests around
+//= helping Morroc to be restored.
+//=
+//= This file includes the reward machine and honors to the best contributor.
+//= And has been kept enabled from Episode 14.3 onwards.
+//= The quests itself were disabled after Episode 14.3, and they may be found
+//= at re/quests/rebuilding_morroc.txt
+//=
+//= (Play/Walk through conversion)
+//================= Variables Used ========================================
+//= re_contribution
+//= - Number of rebuilding quests made by this player (contributions)
+//=
+//= $mocre_highestnum
+//= $mocre_highestcontrib$
+//= - Information related to the highest contributor:
+//= -- num: How many contributions the highest contributor made
+//= -- contrib: The character name of the hightest contributor
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
+
+morocc, 43, 191, 5	script	Notice Board#moc_re::MocReContribute	4_BOARD3,{
+	if ($mocre_highestcontrib$ == "") {
+		mes("There is a blank notice board here.");
+		close();
+	}
+
+	mes("[Notice Board]");
+	mesf("Right now the biggest contributor to the Morroc restauration is\r"
+		"the Great Adventurer %s,\r"
+		"who, so far, made a total of %s contributions.", $mocre_highestcontrib$, $mocre_highestnum);
+	mes("I want to offer my gratitude to the adventurer in the name of the entire city.");
+	close();
+
+	public function AddContribution {
+		re_contribution++;
+		if (re_contribution > $mocre_highestnum) {
+			$mocre_highestnum = re_contribution;
+			$mocre_highestcontrib$ = strcharinfo(PC_NAME);
+		}
+
+		return;
+	}
+}
+
+morocc, 52, 197, 6	script	Morroc Merit Machine#re	2_VENDING_MACHINE1,{
+	if (MaxWeight - Weight < 80 || checkweight(Knife, 1) == 0) {
+		mes(" - You're carrying too many items. Please make some room in your bag first. - ");
+		close();
+	}
+	
+	if (BaseLevel < 80) {
+		mes("[Vending Machine Manager]");
+		mes("Wow, kid. Don't touch on this vending machine.");
+		close();
+	}
+
+	mes("[Morroc Merit Machine]");
+	mes("- Select your desired reward -");
+	mesf("Currently you have %d Morroc Merits", countitem(MoroccMerit));
+	next();
+	.@menu$ = _("Don't exchange");
+	.@count = 1;
+	for (.@i = 0; .@i < getarraysize(.rewards); .@i += 3) {
+		if (.rewards[.@i + 2] == 1)
+			.@reward$ = _("Base EXP");
+		else if (.rewards[.@i + 2] == 2)
+			.@reward$ = _("Job EXP");
+		else
+			.@reward$ = sprintf("%d %s", .rewards[.@i + 1], getitemname(.rewards[.@i + 2]));
+
+		.@menu$ += sprintf(":[%d] %s (%d)", .@count, .@reward$, .rewards[.@i]);
+		.@count++;
+	}
+	.@option = select(.@menu$) - 1;
+	if (.@option == 0)
+		close();
+
+	callsub(S_GetReward, .@option - 1);
+	mes("[Morroc Merit Machine]");
+	mes("Thank you for using the vending machine.");
+	close();
+
+// S_GetReward(index)
+S_GetReward:
+	.@cost = .rewards[getarg(0) * 3];
+	.@itemQt = .rewards[getarg(0) * 3 + 1];
+	.@itemId = .rewards[getarg(0) * 3 + 2];
+	
+	
+	switch (.@itemId) {
+	case 1:
+		.@reward$ = _("Base Experience");
+		break;
+
+	case 2:
+		.@reward$ = _("Job Experience");
+		break;
+
+	default:
+		.@reward$ = sprintf("%d %s", .@itemQt, getitemname(.@itemId));
+		break;
+	}
+	mes("[Morroc Merit Machine]");
+	mesf("Do you want %s?", .@reward$);
+	next();
+	while (select("Yes.", "No.") == 1) {
+		if (countitem(MoroccMerit) < .@cost) {
+			mes("[Morroc Merit Machine]");
+			mes("Insuficient merits.");
+			next();
+			return;
+		}
+
+		if (.@itemId > 2) {
+			if (!checkweight(.@itemId, .@itemQt)) {
+				mes(" - You're carrying too many items. Please make some room in your bag first. - ");
+				close();
+			}
+		}
+
+		delitem(MoroccMerit, .@cost);
+
+		// EXP Reward
+		if (.@itemId == 1 || .@itemId == 2) {
+			for (.@i = 0; .@i < getarraysize(.expTable); .@i += 4) {
+				if (BaseLevel < .expTable[.@i] || BaseLevel > .expTable[.@i + 1])
+					continue;
+
+				break;
+			}
+
+			// should never happen, but just in case.
+			if (.@i >= getarraysize(.expTable))
+				.@i = getarraysize(.expTable) - 4;
+
+			if (.@itemId == 1)
+				getexp(.expTable[.@i + 2], 0);
+			else
+				getexp(0, .expTable[.@i + 3]);
+		} else {
+			getitem(.@itemId, .@itemQt);
+		}
+
+		mes("[Morroc Merit Machine]");
+		mes("Do you want to exchange again?");
+		next();
+	}
+
+	return;
+
+OnInit:
+	setarray(.rewards,
+		// Merits, Item Qt, Item ID,
+		  1,  1, 1, // Experience
+		  1,  1, 2, // Job Experience
+		 10, 20, White_Slim_Potion,
+		 20, 10, Red_Gemstone,
+		 20, 10, Yellow_Gemstone,
+		 20,  1, Slapping_Herb,
+		 20,  1, Yggdrasil_Dust,
+		 20,  1, Snow_Flip,
+		 20,  1, Peony_Mommy,
+		 30,  1, Blue_Potion,
+		 50,  1, Great_Nature,
+		 50,  1, Rough_Wind,
+		 50,  1, Mistic_Frozen,
+		 50,  1, Flame_Heart,
+		100,  1, Seed_Of_Yggdrasil
+	);
+
+	setarray(.expTable,
+		// MinBaseLevel, MaxBaseLevel, BaseEXP, JobEXP,
+		 80,  90, 10_000, 10_000,
+		 91, 100, 15_000, 12_000,
+		101, 110, 20_000,  5_000,
+		111, 120, 25_000,  7_000,
+		121, 130, 30_000,  9_000,
+		131, 140, 35_000, 11_000,
+		141, 150, 40_000, 13_000,
+		150, 175, 45_000, 13_000
+	);
+	end;
+}
