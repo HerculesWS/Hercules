@@ -2222,7 +2222,7 @@ static void clif_buylist(struct map_session_data *sd, struct npc_data *nd)
 			p->items[c].discountPrice = pc->modifybuyvalue(sd, val, id->flag.ignore_discount);
 			p->items[c].itemType = itemtype(id->type);
 			p->items[c].itemId = (id->view_id > 0) ? id->view_id : id->nameid;
-#if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103
+#if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 			p->items[c].viewSprite = id->view_sprite;
 			p->items[c].location = pc->item_equippoint(sd, id);
 #endif // PACKETVER_MAIN_NUM >= 20210203
@@ -2870,9 +2870,9 @@ static void clif_additem(struct map_session_data *sd, int n, int amount, int fai
 		 */
 		p.bindOnEquipType = sd->status.inventory[n].bound && !itemdb->isstackable2(sd->inventory_data[n]) ? 2 : sd->inventory_data[n]->flag.bindonequip ? 1 : 0;
 #endif
-#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 		p.grade = sd->status.inventory[n].grade;
-#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 #if PACKETVER >= 20150226
 		clif->add_item_options(&p.option_data[0], &sd->status.inventory[n]);
 #endif
@@ -2992,9 +2992,9 @@ static void clif_item_equip(short idx, struct EQUIPITEM_INFO *p, struct item *it
 	p->IsDamaged = (it->attribute & ATTR_BROKEN) != 0 ? 1 : 0;
 #endif
 	p->RefiningLevel = it->refine;
-#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 	p->grade = it->grade;
-#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 
 	clif->addcards(&p->slot, it);
 
@@ -3758,7 +3758,7 @@ static void clif_updatestatus(struct map_session_data *sd, enum status_point_typ
 			WFIFOB(fd, 4) = 1;
 			WFIFOB(fd, 5) = sd->status.crt;
 			break;
-#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 
 		/**
 		 * SP_U<STAT> are used to update the amount of points necessary to increase that stat
@@ -4755,9 +4755,9 @@ static void clif_tradeadditem(struct map_session_data *sd, struct map_session_da
 		p->location = pc->equippoint(sd, index);
 		p->look = sd->inventory_data[index]->view_sprite;
 #endif  // PACKETVER_MAIN_NUM >= 20161102 || PACKETVER_RE_NUM >= 20161026 || defined(PACKETVER_ZERO)
-#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 		p->grade = sd->status.inventory[index].refine;
-#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 		clif->addcards(&p->slot, &sd->status.inventory[index]);
 #if PACKETVER >= 20150226
 		clif->add_item_options(&p->option_data[0], &sd->status.inventory[index]);
@@ -4889,9 +4889,9 @@ static void clif_storageitemadded(struct map_session_data *sd, struct item *i, i
 	p->identified = i->identify;
 	p->damaged = i->attribute;
 	p->refine = i->refine;
-#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 	p->grade = i->grade;
-#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 	clif->addcards(&p->slot, i);
 #if PACKETVER_MAIN_NUM >= 20140813 || PACKETVER_RE_NUM >= 20140402 || defined(PACKETVER_ZERO)
 	clif->add_item_options(&p->option_data[0], i);
@@ -6916,9 +6916,9 @@ static void clif_item_repair_list(struct map_session_data *sd, struct map_sessio
 			p->items[c].index = i;
 			p->items[c].itemId = nameid;
 			p->items[c].refine = dstsd->status.inventory[i].refine;
-#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 			p->items[c].grade = dstsd->status.inventory[i].grade;
-#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 			clif->addcards(&p->items[c].slot, &dstsd->status.inventory[i]);
 			c++;
 		}
@@ -7069,9 +7069,9 @@ static void clif_cart_additem(struct map_session_data *sd, int n, int amount, in
 	p->identified = sd->status.cart[n].identify;
 	p->damaged  = sd->status.cart[n].attribute;
 	p->refine = sd->status.cart[n].refine;
-#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 	p->grade = sd->status.cart[n].grade;
-#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 	clif->addcards(&p->slot, &sd->status.cart[n]);
 #if PACKETVER >= 20150226
 	clif->add_item_options(&p->option_data[0], &sd->status.cart[n]);
@@ -7195,9 +7195,9 @@ static void clif_vendinglist(struct map_session_data *sd, unsigned int id, struc
 		p->items[i].location = pc->item_equippoint(sd, data);
 		p->items[i].viewSprite = data->view_sprite;
 #endif
-#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 		p->items[i].grade = vsd->status.cart[index].grade;
-#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 	}
 	WFIFOSET(fd, len);
 }
@@ -7253,9 +7253,9 @@ static void clif_openvending(struct map_session_data *sd, int id, struct s_vendi
 		p->items[i].identified = sd->status.cart[index].identify;
 		p->items[i].damaged = sd->status.cart[index].attribute;
 		p->items[i].refine = sd->status.cart[index].refine;
-#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 		p->items[i].grade = sd->status.cart[index].grade;
-#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 		clif->addcards(&p->items[i].slot, &sd->status.cart[index]);
 #if PACKETVER >= 20150226
 		clif->add_item_options(&p->items[i].option_data[0], &sd->status.cart[index]);
@@ -19698,9 +19698,9 @@ static void clif_party_show_picker(struct map_session_data *sd, struct item *ite
 	clif->addcards(&p.slot, item_data);
 	p.location = id->equip; // equip location
 	p.itemType = itemtype(id->type); // item type
-#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 	p.grade = item_data->grade;
-#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 	clif->send(&p, sizeof(p), &sd->bl, PARTY_SAMEMAP_WOS);
 #endif
 }
@@ -20376,9 +20376,9 @@ static void clif_search_store_info_ack(struct map_session_data *sd)
 		p->items[i].amount = ssitem->amount;
 		p->items[i].refine = ssitem->refine;
 
-#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 		p->items[i].grade = ssitem->grade;
-#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 
 		// make-up an item for clif_addcards
 		memset(&it, 0, sizeof(it));
@@ -21918,9 +21918,9 @@ static void clif_npc_market_open(struct map_session_data *sd, struct npc_data *n
 			packet->list[c].qty    = shop[i].qty;
 			packet->list[c].type   = itemtype(id->type);
 			packet->list[c].weight = id->weight * 10;
-#if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103
+#if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 			packet->list[c].location = pc->item_equippoint(sd, id);
-#endif // PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103
+#endif // PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 			c++;
 		}
 	}
@@ -23090,9 +23090,9 @@ static void clif_rodex_add_item_result(struct map_session_data *sd, int16 idx, i
 	packet->weight = sd->rodex.tmp.weight / 10;
 	packet->favorite = sd->status.inventory[idx].favorite;
 	packet->location = pc->equippoint(sd, idx);
-#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 	packet->grade = sd->status.inventory[idx].grade;
-#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 	WFIFOSET(fd, sizeof(*packet));
 #endif  // PACKETVER >= 20141119
 }
@@ -23499,9 +23499,9 @@ static void clif_rodex_read_mail(struct map_session_data *sd, int8 opentype, str
 		item->location = pc->item_equippoint(sd, data);
 		item->viewSprite = data->view_sprite;
 		item->bindOnEquip = it->bound ? 2 : data->flag.bindonequip ? 1 : 0;
-#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 		item->grade = it->grade;
-#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 		clif->addcards(&item->slot, it);
 		clif->add_item_options(&item->option_data[0], it);
 		size += sizeof(struct PACKET_ZC_ACK_READ_RODEX_SUB);
@@ -23882,7 +23882,7 @@ static void clif_open_ui_send1(struct map_session_data *sd, enum zc_ui_types ui_
 #endif
 		break;
 #endif
-#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 	case ZC_GRADE_ENCHANT_UI:
 		sd->state.grade_ui = 1;
 		p.data = 0;
@@ -23956,7 +23956,7 @@ static void clif_open_ui_send(struct map_session_data *sd, enum zc_ui_types ui_t
 		clif->open_ui_send1(sd, ui_type);
 		break;
 #endif
-#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 	case ZC_GRADE_ENCHANT_UI:
 		clif->open_ui_send1(sd, ui_type);
 		break;
@@ -24339,9 +24339,9 @@ static void clif_item_preview(struct map_session_data *sd, int n)
 #if PACKETVER_MAIN_NUM >= 20181017 || PACKETVER_RE_NUM >= 20181017 || PACKETVER_ZERO_NUM >= 20181024
 	p.isDamaged = (sd->status.inventory[n].attribute & ATTR_BROKEN) != 0 ? 1 : 0;
 #endif
-#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 	p.grade = sd->status.inventory[n].grade;
-#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 	p.refiningLevel = sd->status.inventory[n].refine;
 	clif->addcards(&p.slot, &sd->status.inventory[n]);
 	clif->add_item_options(&p.option_data[0], &sd->status.inventory[n]);
@@ -24394,7 +24394,7 @@ static void clif_npc_barter_open(struct map_session_data *sd, struct npc_data *n
 			packet->list[c].currencyAmount = shop[i].value2;
 			packet->list[c].weight = id->weight * 10;
 			packet->list[c].index = i;
-#if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103
+#if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 			packet->list[c].viewSprite = id->view_sprite;
 			packet->list[c].location = pc->item_equippoint(sd, id);
 #endif  // PACKETVER_MAIN_NUM >= 20210203
@@ -24489,10 +24489,10 @@ static void clif_npc_expanded_barter_open(struct map_session_data *sd, struct np
 #endif  // PACKETVER >= 20191224
 			item->index  = i;
 			item->zeny   = shop[i].value;
-#if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103
+#if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 			item->viewSprite = id->view_sprite;
 			item->location = pc->item_equippoint(sd, id);
-#endif // PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103
+#endif // PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 			item->currency_count = 0;
 			buf_left -= ptr_size;
 			items_count ++;
@@ -25345,7 +25345,7 @@ static void clif_macro_reporter_status(struct map_session_data *sd, enum macro_r
 
 static void clif_sayDialogAlign(struct map_session_data *sd, int npcid, enum say_dialog_align align)
 {
-#if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103
+#if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 	nullpo_retv(sd);
 
 	const int fd = sd->fd;
@@ -25354,7 +25354,7 @@ static void clif_sayDialogAlign(struct map_session_data *sd, int npcid, enum say
 	p->PacketType = HEADER_ZC_DIALOG_TEXT_ALIGN;
 	p->align = align;
 	WFIFOSET(fd, sizeof(struct PACKET_ZC_DIALOG_TEXT_ALIGN));
-#endif  // PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103
+#endif  // PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 }
 
 static void clif_parse_grade_enchant_close(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
@@ -25367,7 +25367,7 @@ static void clif_parse_grade_enchant_close(int fd, struct map_session_data *sd)
 
 static void clif_grade_enchant_add_item_result_success(struct map_session_data *sd, int idx, const struct s_grade_info *gi)
 {
-#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 	nullpo_retv(sd);
 	nullpo_retv(gi);
 
@@ -25401,7 +25401,7 @@ static void clif_grade_enchant_add_item_result_success(struct map_session_data *
 
 static void clif_grade_enchant_add_item_result_fail(struct map_session_data *sd)
 {
-#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 	nullpo_retv(sd);
 
 	const int fd = sd->fd;
@@ -25446,7 +25446,7 @@ static void clif_parse_grade_enchant_start(int fd, struct map_session_data *sd)
 
 static void clif_grade_enchant_result(struct map_session_data *sd, int16 index, enum grade_level gl, enum grade_ui_result result)
 {
-#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 	nullpo_retv(sd);
 
 	const int fd = sd->fd;
@@ -25462,7 +25462,7 @@ static void clif_grade_enchant_result(struct map_session_data *sd, int16 index, 
 
 static void clif_announce_grade_status(struct map_session_data *sd, int item_id, enum grade_level gl, bool success, enum send_target target)
 {
-#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 	nullpo_retv(sd);
 
 	struct PACKET_ZC_GRADE_ENCHANT_BROADCAST_RESULT p;

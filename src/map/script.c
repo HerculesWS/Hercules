@@ -6118,7 +6118,7 @@ static void do_init_script(bool minimal)
 	script->declare_conditional_feature("PRERENEWAL", true);
 #endif
 	script->declare_conditional_feature("LOADGMSCRIPTS", script->config.load_gm_scripts);
-	script->declare_conditional_feature("LOADGRADESCRIPTS", (PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723));
+	script->declare_conditional_feature("LOADGRADESCRIPTS", (PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024));
 
 	if (minimal)
 		return;
@@ -27823,7 +27823,7 @@ static BUILDIN(setdialogalign)
 
 static BUILDIN(opengradeui)
 {
-#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 	struct map_session_data *sd = script_rid2sd(st);
 
 	if (sd == NULL) {
