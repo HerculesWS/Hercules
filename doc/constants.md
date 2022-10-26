@@ -13290,6 +13290,11 @@
 - `Daily_Coin`: 6674
 - `XMAS_Cookie`: 6681
 - `Bag_Of_Selling_Goods`: 6682
+- `MoroccMerit`: 6685
+- `Brick`: 6686
+- `LongRopes`: 6687
+- `Wood_`: 6688
+- `Hatchet`: 6698
 - `Cash_Hair_Coupon`: 6707
 - `Lovely_Stick`: 6712
 - `Steel_Article`: 6746
