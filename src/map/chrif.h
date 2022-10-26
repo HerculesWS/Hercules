@@ -101,7 +101,6 @@ struct chrif_interface {
 	bool (*scdata_request) (int account_id, int char_id);
 	bool (*save) (struct map_session_data* sd, int flag);
 	bool (*charselectreq) (struct map_session_data* sd, uint32 s_ip);
-	bool (*changemapserver) (struct map_session_data* sd, uint32 ip, uint16 port);
 
 	bool (*searchcharid) (int char_id);
 	bool (*changeemail) (int id, const char *actual_email, const char *new_email);

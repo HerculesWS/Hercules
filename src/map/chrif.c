@@ -333,16 +333,6 @@ static void chrif_save_ack(int fd)
 	chrif->check_shutdown();
 }
 
-// request to move a character between mapservers
-static bool chrif_changemapserver(struct map_session_data *sd, uint32 ip, uint16 port)
-{
-	// TODO: Remove this
-	nullpo_ret(sd);
-
-	clif->authfail_fd(sd->fd, 0);
-	return false;
-}
-
 /*==========================================
  *
  *------------------------------------------*/
@@ -1648,7 +1638,6 @@ void chrif_defaults(void)
 	chrif->scdata_request = chrif_scdata_request;
 	chrif->save = chrif_save;
 	chrif->charselectreq = chrif_charselectreq;
-	chrif->changemapserver = chrif_changemapserver;
 
 	chrif->searchcharid = chrif_searchcharid;
 	chrif->changeemail = chrif_changeemail;
