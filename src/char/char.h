@@ -135,7 +135,7 @@ struct char_interface {
 	void (*set_account_online) (int account_id);
 	void (*set_account_offline) (int account_id);
 	void (*set_char_charselect) (int account_id);
-	void (*set_char_online) (int map_id, int char_id, int account_id);
+	void (*set_char_online) (bool is_initializing, int char_id, int account_id);
 	void (*set_char_offline) (int char_id, int account_id);
 	int (*db_setoffline) (union DBKey key, struct DBData *data, va_list ap);
 	int (*db_kickoffline) (union DBKey key, struct DBData *data, va_list ap);

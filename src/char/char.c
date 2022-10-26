@@ -235,7 +235,7 @@ static void char_set_char_charselect(int account_id)
 		chr->set_account_online(account_id);
 }
 
-static void char_set_char_online(int map_id, int char_id, int account_id) // FIXME
+static void char_set_char_online(bool is_initializing, int char_id, int account_id)
 {
 	struct online_char_data* character;
 	struct mmo_charstatus *cp;
@@ -249,10 +249,8 @@ static void char_set_char_online(int map_id, int char_id, int account_id) // FIX
 
 	//Update state data
 	character->char_id = char_id;
-	if (map_id == -2)
+	if (is_initializing)
 		character->mapserver_connection = OCS_UNKNOWN;
-	else if (map_id == -1)
-		character->mapserver_connection = OCS_NOT_CONNECTED;
 	else
 		character->mapserver_connection = OCS_CONNECTED;
 
@@ -3260,7 +3258,7 @@ static void char_parse_frommap_save_character(int fd)
 	} else {
 		//This may be valid on char-server reconnection, when re-sending characters that already logged off.
 		ShowError("parse_from_map (save-char): Received data for non-existing/offline character (%d:%d).\n", aid, cid);
-		chr->set_char_online(0, cid, aid);
+		chr->set_char_online(false, cid, aid);
 	}
 
 	if (RFIFOB(fd,12)) {
@@ -3662,7 +3660,7 @@ static void char_parse_frommap_set_all_offline(int fd)
 
 static void char_parse_frommap_set_char_online(int fd)
 {
-	chr->set_char_online(0, RFIFOL(fd, 2), RFIFOL(fd, 6));
+	chr->set_char_online(false, RFIFOL(fd, 2), RFIFOL(fd, 6));
 	RFIFOSKIP(fd,10);
 }
 
@@ -3786,7 +3784,7 @@ static void char_parse_frommap_auth_request(int fd)
 		cd->sex = sex;
 
 		chr->map_auth_ok(fd, account_id, NULL, cd);
-		chr->set_char_online(0, char_id, account_id);
+		chr->set_char_online(false, char_id, account_id);
 		return;
 	}
 
@@ -3805,7 +3803,7 @@ static void char_parse_frommap_auth_request(int fd)
 		chr->map_auth_ok(fd, account_id, node, cd);
 		// only use the auth once and mark user online
 		idb_remove(auth_db, account_id);
-		chr->set_char_online(0, char_id, account_id);
+		chr->set_char_online(false, char_id, account_id);
 	}
 	else
 	{// auth failed
@@ -4554,7 +4552,7 @@ static void char_parse_char_select(int fd, struct char_session_data *sd, uint32 
 	}
 
 	/* set char as online prior to loading its data so 3rd party applications will realize the sql data is not reliable */
-	chr->set_char_online(-2,char_id,sd->account_id);
+	chr->set_char_online(true, char_id, sd->account_id);
 	if( !chr->mmo_char_fromsql(char_id, &char_dat, true) ) { /* failed? set it back offline */
 		chr->set_char_offline(char_id, sd->account_id);
 		/* failed to load something. REJECT! */
