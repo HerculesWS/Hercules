@@ -111,6 +111,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(atcommand->mutearea_sub, HP_atcommand_mutearea_sub) },
 	{ HP_POP(atcommand->getring, HP_atcommand_getring) },
 	{ HP_POP(atcommand->channel_help, HP_atcommand_channel_help) },
+	{ HP_POP(atcommand->quest_help, HP_atcommand_quest_help) },
 	{ HP_POP(atcommand->commands_sub, HP_atcommand_commands_sub) },
 	{ HP_POP(atcommand->cmd_db_clear, HP_atcommand_cmd_db_clear) },
 	{ HP_POP(atcommand->cmd_db_clear_sub, HP_atcommand_cmd_db_clear_sub) },
@@ -2830,6 +2831,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(quest->questinfo_validate_homunculus_type, HP_quest_questinfo_validate_homunculus_type) },
 	{ HP_POP(quest->questinfo_validate_quests, HP_quest_questinfo_validate_quests) },
 	{ HP_POP(quest->questinfo_validate_mercenary_class, HP_quest_questinfo_validate_mercenary_class) },
+	{ HP_POP(quest->mobsize2client, HP_quest_mobsize2client) },
 	{ HP_POP(quest->mobele2client, HP_quest_mobele2client) },
 	{ HP_POP(quest->mobrace2client, HP_quest_mobrace2client) },
 /* refine_interface */

@@ -2240,6 +2240,32 @@ void HP_atcommand_channel_help(int fd, const char *command, bool can_create) {
 	}
 	return;
 }
+void HP_atcommand_quest_help(int fd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_atcommand_quest_help_pre > 0) {
+		void (*preHookFunc) (int *fd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_atcommand_quest_help_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_atcommand_quest_help_pre[hIndex].func;
+			preHookFunc(&fd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.atcommand.quest_help(fd);
+	}
+	if (HPMHooks.count.HP_atcommand_quest_help_post > 0) {
+		void (*postHookFunc) (int fd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_atcommand_quest_help_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_atcommand_quest_help_post[hIndex].func;
+			postHookFunc(fd);
+		}
+	}
+	return;
+}
 void HP_atcommand_commands_sub(struct map_session_data *sd, const int fd, AtCommandType type) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_atcommand_commands_sub_pre > 0) {
@@ -73686,6 +73712,33 @@ bool HP_quest_questinfo_validate_mercenary_class(struct map_session_data *sd, st
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_quest_questinfo_validate_mercenary_class_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_quest_questinfo_validate_mercenary_class_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, sd, qi);
+		}
+	}
+	return retVal___;
+}
+enum quest_mobtype HP_quest_mobsize2client(uint8 size) {
+	int hIndex = 0;
+	enum quest_mobtype retVal___ = QMT_RC_DEMIHUMAN;
+	if (HPMHooks.count.HP_quest_mobsize2client_pre > 0) {
+		enum quest_mobtype (*preHookFunc) (uint8 *size);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_quest_mobsize2client_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_quest_mobsize2client_pre[hIndex].func;
+			retVal___ = preHookFunc(&size);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.quest.mobsize2client(size);
+	}
+	if (HPMHooks.count.HP_quest_mobsize2client_post > 0) {
+		enum quest_mobtype (*postHookFunc) (enum quest_mobtype retVal___, uint8 size);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_quest_mobsize2client_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_quest_mobsize2client_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, size);
 		}
 	}
 	return retVal___;

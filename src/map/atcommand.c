@@ -9312,6 +9312,86 @@ ACMD(set)
 	return true;
 }
 
+/**
+ * Sends @quest command help text to fd
+ * @param fd 
+ */
+static void atcommand_quest_help(int fd)
+{
+	clif->message(fd, msg_fd(fd, 1531));
+	clif->message(fd, msg_fd(fd, 1532));
+	clif->message(fd, msg_fd(fd, 1533));
+	clif->message(fd, msg_fd(fd, 1534));
+}
+
+ACMD(quest)
+{
+	char subcmd[20];
+	int quest_id;
+
+	// @quest add|set <quest id>
+	// @quest del|delete <quest id>
+	// @quest complete <quest id>
+	if (!*message || sscanf(message, "%19s %d", subcmd, &quest_id) < 2) {
+		atcommand->quest_help(fd);
+		return true;
+	}
+
+	struct quest_db *qi = quest->db(quest_id);
+	if (qi == &quest->dummy) {
+		clif->message(fd, msg_fd(fd, 1535));
+		return true;
+	}
+
+	if (strcmpi(subcmd, "add") == 0 || strcmpi(subcmd, "set") == 0) {
+		if (quest->check(sd, quest_id, HAVEQUEST) >= 0) {
+			clif->message(fd, msg_fd(fd, 1536));
+			return true;
+		}
+
+		if (quest->add(sd, quest_id, 0) != 0) {
+			clif->message(fd, msg_fd(fd, 1537));
+			return true;
+		}
+
+		clif->message(fd, msg_fd(fd, 1538));
+		return true;
+	}
+
+	if (strcmpi(subcmd, "del") == 0 || strcmpi(subcmd, "delete") == 0) {
+		if (quest->check(sd, quest_id, HAVEQUEST) == -1) {
+			clif->message(fd, msg_fd(fd, 1539));
+			return true;
+		}
+
+		if (quest->delete(sd, quest_id) != 0) {
+			clif->message(fd, msg_fd(fd, 1540));
+			return true;
+		}
+
+		clif->message(fd, msg_fd(fd, 1541));
+		return true;
+	}
+
+	if (strcmpi(subcmd, "complete") == 0) {
+		if (quest->check(sd, quest_id, HAVEQUEST) == -1) {
+			clif->message(fd, msg_fd(fd, 1539));
+			return true;
+		}
+
+		if (quest->update_status(sd, quest_id, Q_COMPLETE) != 0) {
+			clif->message(fd, msg_fd(fd, 1542));
+			return true;
+		}
+
+		clif->message(fd, msg_fd(fd, 1543));
+		return true;
+	}
+
+	atcommand->quest_help(fd);
+	return true;
+}
+
 ACMD(reloadquestdb)
 {
 	quest->reload();
@@ -10680,6 +10760,7 @@ static void atcommand_basecommands(void)
 		ACMD_DEF(font),
 		ACMD_DEF(accinfo),
 		ACMD_DEF(set),
+		ACMD_DEF(quest),
 		ACMD_DEF(reloadquestdb),
 		ACMD_DEF(undisguiseguild),
 		ACMD_DEF(disguiseguild),
@@ -11377,6 +11458,7 @@ void atcommand_defaults(void)
 	atcommand->commands_sub = atcommand_commands_sub;
 	atcommand->getring = atcommand_getring;
 	atcommand->channel_help = atcommand_channel_help;
+	atcommand->quest_help = atcommand_quest_help;
 	atcommand->cmd_db_clear = atcommand_db_clear;
 	atcommand->cmd_db_clear_sub = atcommand_db_clear_sub;
 	atcommand->doload = atcommand_doload;

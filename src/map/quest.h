@@ -35,14 +35,17 @@ struct mob_data;
 #define QUEST_MAPWIDE_ID 10363 // MobId handled by the client to display MapName
 #define QUEST_MOBTYPE_ID 31999 // MobId handled by the client to display Mob properties
 
-#define quest_mobtype2client(type) ((1 << (type).size) | quest->mobele2client((type).ele) | quest->mobrace2client((type).race))
+#define quest_mobtype2client(type) (\
+	((type).size_enabled ? quest->mobsize2client((type).size) : 0) \
+	| ((type).ele_enabled ? quest->mobele2client((type).ele) : 0) \
+	| ((type).race_enabled ? quest->mobrace2client((type).race) : 0))
 #define quest_mobtypeisenabled(type) ((type).size_enabled || (type).ele_enabled || (type).race_enabled)
 
 enum quest_mobtype {
 	// Monster Sizes
-	QMT_SZ_SMALL         = 0x01,
-	QMT_SZ_MEDIUM        = 0x02,
-	QMT_SZ_LARGE         = 0x04,
+	QMT_SZ_SMALL         = 0x10,
+	QMT_SZ_MEDIUM        = 0x20,
+	QMT_SZ_LARGE         = 0x40,
 
 	// Monster Races
 	QMT_RC_DEMIHUMAN     = 0x80,
@@ -178,6 +181,7 @@ struct quest_interface {
 	bool (*questinfo_validate_homunculus_type) (struct map_session_data *sd, struct questinfo *qi);
 	bool (*questinfo_validate_quests) (struct map_session_data *sd, struct questinfo *qi);
 	bool (*questinfo_validate_mercenary_class) (struct map_session_data *sd, struct questinfo *qi);
+	enum quest_mobtype (*mobsize2client) (uint8 size);
 	enum quest_mobtype (*mobele2client) (uint8 type);
 	enum quest_mobtype (*mobrace2client) (uint8 type);
 };
