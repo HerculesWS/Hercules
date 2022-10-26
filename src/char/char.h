@@ -36,6 +36,15 @@ enum E_CHARSERVER_ST {
 	CHARSERVER_ST_LAST
 };
 
+/* The unusual enum values were chosen to (temporarily) match the magic numbers
+ * encoded in an int in the previous implementation, to ease migration. In the
+ * future they may be remapped to less unusual values. */
+enum online_char_state {
+	OCS_UNKNOWN = -2,
+	OCS_NOT_CONNECTED = -1,
+	OCS_CONNECTED = 0,
+};
+
 struct char_session_data {
 	bool auth; // whether the session is authed or not
 	int account_id, login_id1, login_id2, sex;
@@ -60,7 +69,7 @@ struct online_char_data {
 	int char_id;
 	int fd;
 	int waiting_disconnect;
-	short server; // -2: unknown server, -1: not connected, 0+: id of server
+	enum online_char_state mapserver_connection;
 	int pincode_enable;
 };
 

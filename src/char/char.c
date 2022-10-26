@@ -187,7 +187,7 @@ static struct DBData char_create_online_char_data(union DBKey key, va_list args)
 	CREATE(character, struct online_char_data, 1);
 	character->account_id = key.i;
 	character->char_id = -1;
-	character->server = -1;
+	character->mapserver_connection = OCS_NOT_CONNECTED;
 	character->pincode_enable = -1;
 	character->fd = -1;
 	character->waiting_disconnect = INVALID_TIMER;
@@ -216,12 +216,13 @@ static void char_set_char_charselect(int account_id)
 
 	character = (struct online_char_data*)idb_ensure(chr->online_char_db, account_id, chr->create_online_char_data);
 
-	if( character->server > -1 )
+	if (character->mapserver_connection == OCS_NOT_CONNECTED) {
 		if (chr->map_server.users > 0) // Prevent this value from going negative.
 			chr->map_server.users--;
+	}
 
 	character->char_id = -1;
-	character->server = -1;
+	character->mapserver_connection = OCS_NOT_CONNECTED;
 	if(character->pincode_enable == -1)
 		character->pincode_enable = pincode->charselect + pincode->enabled;
 
@@ -234,7 +235,7 @@ static void char_set_char_charselect(int account_id)
 		chr->set_account_online(account_id);
 }
 
-static void char_set_char_online(int map_id, int char_id, int account_id)
+static void char_set_char_online(int map_id, int char_id, int account_id) // FIXME
 {
 	struct online_char_data* character;
 	struct mmo_charstatus *cp;
@@ -245,18 +246,17 @@ static void char_set_char_online(int map_id, int char_id, int account_id)
 
 	//Check to see for online conflicts
 	character = (struct online_char_data*)idb_ensure(chr->online_char_db, account_id, chr->create_online_char_data);
-	if( character->char_id != -1 && character->server > -1 && character->server != map_id )
-	{
-		ShowNotice("chr->set_char_online: Character %d:%d marked in map server %d, but map server %d claims to have (%d:%d) online!\n",
-			character->account_id, character->char_id, character->server, map_id, account_id, char_id);
-		mapif->disconnectplayer(character->account_id, character->char_id, 2); // 2: Already connected to server
-	}
 
 	//Update state data
 	character->char_id = char_id;
-	character->server = map_id;
+	if (map_id == -2)
+		character->mapserver_connection = OCS_UNKNOWN;
+	else if (map_id == -1)
+		character->mapserver_connection = OCS_NOT_CONNECTED;
+	else
+		character->mapserver_connection = OCS_CONNECTED;
 
-	if( character->server > -1 )
+	if (character->mapserver_connection == OCS_CONNECTED)
 		chr->map_server.users++;
 
 	//Get rid of disconnect timer
@@ -304,19 +304,19 @@ static void char_set_char_offline(int char_id, int account_id)
 
 	if ((character = (struct online_char_data*)idb_get(chr->online_char_db, account_id)) != NULL) {
 		//We don't free yet to avoid aCalloc/aFree spamming during char change. [Skotlex]
-		if( character->server > -1 )
+		if (character->mapserver_connection == OCS_CONNECTED) {
 			if (chr->map_server.users > 0) // Prevent this value from going negative.
 				chr->map_server.users--;
+		}
 
 		if(character->waiting_disconnect != INVALID_TIMER){
 			timer->delete(character->waiting_disconnect, chr->waiting_disconnect);
 			character->waiting_disconnect = INVALID_TIMER;
 		}
 
-		if(character->char_id == char_id)
-		{
+		if (character->char_id == char_id) {
 			character->char_id = -1;
-			character->server = -1;
+			character->mapserver_connection = OCS_NOT_CONNECTED;
 			character->pincode_enable = -1;
 		}
 
@@ -335,8 +335,8 @@ static int char_db_setoffline(union DBKey key, struct DBData *data, va_list ap)
 {
 	struct online_char_data* character = (struct online_char_data*)DB->data2ptr(data);
 	nullpo_ret(character);
-	if (character->server == 0 /* FIXME */)
-		character->server = -2; //In some map server that we aren't connected to.
+	if (character->mapserver_connection == OCS_CONNECTED)
+		character->mapserver_connection = OCS_UNKNOWN; //In some map server that we aren't connected to.
 	return 0;
 }
 
@@ -349,11 +349,11 @@ static int char_db_kickoffline(union DBKey key, struct DBData *data, va_list ap)
 	bool for_shutdown = (bool)va_arg(ap, int);
 	nullpo_ret(character);
 
-	if (!for_shutdown && character->server != 0 /* FIXME */)
+	if (!for_shutdown && character->mapserver_connection != OCS_CONNECTED)
 		return 0;
 
 	//Kick out any connected characters, and set them offline as appropriate.
-	if (character->server == 0)
+	if (character->mapserver_connection == OCS_CONNECTED)
 		mapif->disconnectplayer(character->account_id, character->char_id, 1); // 1: Server closed
 	else if (character->waiting_disconnect == INVALID_TIMER)
 		chr->set_char_offline(character->char_id, character->account_id);
@@ -2359,7 +2359,7 @@ static void char_auth_ok(int fd, struct char_session_data *sd)
 
 	if( (character = (struct online_char_data*)idb_get(chr->online_char_db, sd->account_id)) != NULL ) {
 		// check if character is not online already. [Skotlex]
-		if (character->server > -1) {
+		if (character->mapserver_connection == OCS_CONNECTED) {
 			//Character already online. KICK KICK KICK
 			mapif->disconnectplayer(character->account_id, character->char_id, 2); // 2: Already connected to server
 			if (character->waiting_disconnect == INVALID_TIMER)
@@ -2677,16 +2677,15 @@ static void char_parse_fromlogin_kick(int fd)
 	int aid = RFIFOL(fd,2);
 	struct online_char_data* character = (struct online_char_data*)idb_get(chr->online_char_db, aid);
 	RFIFOSKIP(fd,6);
-	if( character != NULL )
-	{// account is already marked as online!
-		if( character->server > -1 ) {
+	if (character != NULL) {
+		// account is already marked as online!
+		if (character->mapserver_connection == OCS_CONNECTED) {
 			//Kick it from the map server it is on.
 			mapif->disconnectplayer(character->account_id, character->char_id, 2); // 2: Already connected to server
 			if (character->waiting_disconnect == INVALID_TIMER)
 				character->waiting_disconnect = timer->add(timer->gettick()+AUTH_TIMEOUT, chr->waiting_disconnect, character->account_id, 0);
-		}
-		else
-		{// Manual kick from char server.
+		} else {
+			// Manual kick from char server.
 			struct char_session_data *tsd;
 			int i;
 			ARR_FIND( 0, sockt->fd_max, i, sockt->session[i] && (tsd = (struct char_session_data*)sockt->session[i]->session_data) && tsd->account_id == aid );
@@ -3224,12 +3223,7 @@ static void char_parse_frommap_set_users(int fd)
 		int aid = RFIFOL(fd,6+i*8);
 		int cid = RFIFOL(fd,6+i*8+4);
 		struct online_char_data *character = idb_ensure(chr->online_char_db, aid, chr->create_online_char_data);
-		if (character->server > -1 && character->server != 0) { // FIXME
-			ShowNotice("Set map user: Character (%d:%d) marked %d on map server, but map server claims to have (%d:%d) online!\n",
-				character->account_id, character->char_id, character->server, aid, cid);
-			mapif->disconnectplayer(character->account_id, character->char_id, 2); // 2: Already connected to server
-		}
-		character->server = 0; // FIXME
+		character->mapserver_connection = OCS_CONNECTED;
 		character->char_id = cid;
 	}
 	//If any chars remain in -2, they will be cleaned in the cleanup timer.
@@ -5055,7 +5049,7 @@ static int char_parse_char(int fd)
 			struct online_char_data* data = (struct online_char_data*)idb_get(chr->online_char_db, sd->account_id);
 			if( data != NULL && data->fd == fd)
 				data->fd = -1;
-			if( data == NULL || data->server == -1) //If it is not in any server, send it offline. [Skotlex]
+			if (data == NULL || data->mapserver_connection == OCS_NOT_CONNECTED) //If it is not in any server, send it offline. [Skotlex]
 				chr->set_char_offline(-1,sd->account_id);
 		}
 		sockt->close(fd);
@@ -5284,8 +5278,7 @@ static int char_send_accounts_tologin_sub(union DBKey key, struct DBData *data, 
 	int* i = va_arg(ap, int*);
 
 	nullpo_ret(character);
-	if(character->server > -1)
-	{
+	if (character->mapserver_connection == OCS_CONNECTED) {
 		WFIFOL(chr->login_fd,8+(*i)*4) = character->account_id;
 		(*i)++;
 		return 1;
@@ -5357,9 +5350,9 @@ static int char_online_data_cleanup_sub(union DBKey key, struct DBData *data, va
 	nullpo_ret(character);
 	if (character->fd != -1)
 		return 0; //Character still connected
-	if (character->server == -2) //Unknown server.. set them offline
+	if (character->mapserver_connection == OCS_UNKNOWN) //Unknown server.. set them offline
 		chr->set_char_offline(character->char_id, character->account_id);
-	if (character->server < 0)
+	if (character->mapserver_connection != OCS_CONNECTED)
 		//Free data from players that have not been online for a while.
 		db_remove(chr->online_char_db, key);
 	return 0;
