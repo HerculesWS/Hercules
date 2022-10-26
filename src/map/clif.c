@@ -8282,7 +8282,7 @@ static void clif_guild_belonginfo(struct map_session_data *sd, struct guild *g)
 	p->isMaster = (sd->state.gmaster_flag == 1);
 	p->interSid = 0;  // InterSID (unknown purpose)
 	memcpy(p->guildName, g->name, NAME_LENGTH);
-#if PACKETVER_MAIN_NUM >= 20220216
+#if PACKETVER_MAIN_NUM >= 20220216 || PACKETVER_ZERO_NUM >= 20221024
 	p->masterGID = g->member[0].char_id;
 #endif  // PACKETVER_MAIN_NUM >= 20220216
 	WFIFOSET(fd, sizeof(struct PACKET_ZC_UPDATE_GDID));
