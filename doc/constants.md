@@ -50,7 +50,6 @@
 - `Job_Monk`: 15
 - `Job_Sage`: 16
 - `Job_Rogue`: 17
-- `Job_Alchem`: 18 **(DEPRECATED)**
 - `Job_Alchemist`: 18
 - `Job_Bard`: 19
 - `Job_Dancer`: 20
@@ -101,7 +100,6 @@
 - `Job_Baby_Monk`: 4038
 - `Job_Baby_Sage`: 4039
 - `Job_Baby_Rogue`: 4040
-- `Job_Baby_Alchem`: 4041 **(DEPRECATED)**
 - `Job_Baby_Alchemist`: 4041
 - `Job_Baby_Bard`: 4042
 - `Job_Baby_Dancer`: 4043
@@ -3731,18 +3729,6 @@
 - `FW_BOLD`: 700
 - `FW_EXTRABOLD`: 800
 - `FW_HEAVY`: 900
-
-### old setlook (use LOOK_* constants instead)
-
-- `VAR_HEAD`: 1 **(DEPRECATED)**
-- `VAR_WEAPON`: 2 **(DEPRECATED)**
-- `VAR_HEAD_TOP`: 3 **(DEPRECATED)**
-- `VAR_HEAD_MID`: 4 **(DEPRECATED)**
-- `VAR_HEAD_BOTTOM`: 5 **(DEPRECATED)**
-- `VAR_HEADPALETTE`: 6 **(DEPRECATED)**
-- `VAR_BODYPALETTE`: 7 **(DEPRECATED)**
-- `VAR_SHIELD`: 8 **(DEPRECATED)**
-- `VAR_SHOES`: 9 **(DEPRECATED)**
 
 ### Directions
 
