@@ -2652,7 +2652,7 @@ static void intif_parse_RodexCheckName(int fd)
 static void intif_parse_GetZenyAck(int fd)
 {
 	int char_id = RFIFOL(fd, 2);
-	int64 zeny = RFIFOL(fd, 6);
+	int64 zeny = RFIFOQ(fd, 6);
 	int64 mail_id = RFIFOQ(fd, 14);
 	uint8 opentype = RFIFOB(fd, 22);
 	struct map_session_data *sd = map->charid2sd(char_id);
