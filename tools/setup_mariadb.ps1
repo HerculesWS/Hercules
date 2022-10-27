@@ -70,13 +70,16 @@ if ($lt -Lt 1) {
 }
 
 # step 4: finish up
-@"
+$utf8 = New-Object System.Text.UTF8Encoding $false
+$connectionFile = @"
 sql_connection: {
     db_username: "hercules"
     db_password: "$userpw"
     db_database: "hercules"
 }
-"@ | Out-File -Encoding UTF8 -LiteralPath "$PSScriptRoot\..\conf\global\sql_connection.conf"
+"@
+
+Set-Content -Value $utf8.GetBytes($connectionFile) -Encoding Byte -LiteralPath "$PSScriptRoot\..\conf\global\sql_connection.conf"
 Remove-Item -Force -errorAction SilentlyContinue "$PSScriptRoot\maria.out"
 & "$PSScriptRoot\install_mariadb.bat" # <= we need admin permissions, so we use an external script
 Write-Output "========= ALL DONE ========="
