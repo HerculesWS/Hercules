@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/// db/constants.conf -> doc/constants.md generator plugin
+/// db/constants.conf -> doc/constants_*.md generator plugin
 
 #include "common/hercules.h"
 #include "common/db.h"
@@ -39,7 +39,11 @@
 #include <time.h>
 #include <sys/stat.h>
 
-#define OUTPUTFILENAME "doc" PATHSEP_STR "constants.md"
+#ifdef RENEWAL
+#define OUTPUTFILENAME "doc" PATHSEP_STR "constants_re.md"
+#else
+#define OUTPUTFILENAME "doc" PATHSEP_STR "constants_pre-re.md"
+#endif
 
 HPExport struct hplugin_info pinfo = {
 	"constdb2doc",   // Plugin name
