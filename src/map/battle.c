@@ -7445,7 +7445,6 @@ static const struct battle_data {
 	{ "monster_active_enable",              &battle_config.monster_active_enable,           1,      0,      1,              },
 	{ "monster_damage_delay_rate",          &battle_config.monster_damage_delay_rate,       100,    0,      INT_MAX,        },
 	{ "monster_loot_type",                  &battle_config.monster_loot_type,               0,      0,      1,              },
-	//{ "mob_skill_use",                      &battle_config.mob_skill_use,                   1,      0,      1,              }, //Deprecated
 	{ "mob_skill_rate",                     &battle_config.mob_skill_rate,                  100,    0,      INT_MAX,        },
 	{ "mob_skill_delay",                    &battle_config.mob_skill_delay,                 100,    0,      INT_MAX,        },
 	{ "mob_count_rate",                     &battle_config.mob_count_rate,                  100,    0,      INT_MAX,        },

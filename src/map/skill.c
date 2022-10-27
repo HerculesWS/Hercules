@@ -1824,7 +1824,7 @@ static int skill_additional_effect(struct block_list *src, struct block_list *bl
 	#endif
 			break;
 
-		case BA_FROSTJOKER:
+		case BA_FROSTJOKE:
 			sc_start(src, bl, SC_FREEZE, (15 + 5 * skill_lv), skill_lv, skill->get_time2(skill_id, skill_lv), skill_id);
 			break;
 
@@ -4384,7 +4384,7 @@ static int skill_timerskill(int tid, int64 tick, int id, intptr_t data)
 							unit->warp(target, -1, x, y, CLR_TELEPORT);
 					}
 					break;
-				case BA_FROSTJOKER:
+				case BA_FROSTJOKE:
 				case DC_SCREAM:
 					range= skill->get_splash(skl->skill_id, skl->skill_lv);
 					map->foreachinarea(skill->frostjoke_scream,skl->map,skl->x-range,skl->y-range,
@@ -8043,7 +8043,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 			}
 			break;
 
-		case BA_FROSTJOKER:
+		case BA_FROSTJOKE:
 		case DC_SCREAM:
 			clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
 			skill->addtimerskill(src,tick+2000,bl->id,src->x,src->y,skill_id,skill_lv,0,flag);
