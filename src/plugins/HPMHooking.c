@@ -22,6 +22,7 @@
 
 #include "common/hercules.h"
 #include "common/db.h"
+#include "common/extraconf.h"
 #include "common/memmgr.h"
 #include "common/mmo.h"
 #include "common/socket.h"

@@ -468,7 +468,7 @@ static int mapif_guild_noinfo(int guild_id)
 	return 0;
 }
 
-static int mapif_guild_info(struct guild *g)
+static int mapif_guild_info(const struct guild *g)
 {
 	mapif->guild_info_emblem(g);
 	mapif->guild_info_basic(g);
@@ -476,9 +476,13 @@ static int mapif_guild_info(struct guild *g)
 }
 
 // Send emblem before guild info
-static int mapif_guild_info_emblem(int fd, struct guild *g)
+static int mapif_guild_info_emblem(const struct guild *g)
 {
 	nullpo_ret(g);
+
+	int fd = chr->map_server.fd;
+	if (fd < 0)
+		return -1;
 
 	WFIFO_CHUNKED_INIT(p, fd, HEADER_CHARMAP_GUILD_INFO_EMBLEM, PACKET_CHARMAP_GUILD_INFO_EMBLEM, g->emblem_data, g->emblem_len) {
 		WFIFO_CHUNKED_BLOCK_START(p);
@@ -494,7 +498,7 @@ static int mapif_guild_info_emblem(int fd, struct guild *g)
 }
 
 // Send guild info
-static int mapif_guild_info_basic(int fd, struct guild *g)
+static int mapif_guild_info_basic(const struct guild *g)
 {
 	nullpo_ret(g);
 
@@ -664,13 +668,11 @@ static int mapif_guild_notice(struct guild *g)
 // Send emblem data
 static int mapif_guild_emblem(struct guild *g)
 {
-	return mapif->sendall_func(mapif->guild_emblem_sub, g);
-}
-
-static int mapif_guild_emblem_sub(int fd, va_list args)
-{
-	struct guild *g = va_arg(args, struct guild*);
 	nullpo_ret(g);
+
+	int fd = chr->map_server.fd;
+	if (fd < 0)
+		return -1;
 
 	WFIFO_CHUNKED_INIT(p, fd, HEADER_CHARMAP_GUILD_EMBLEM, PACKET_CHARMAP_GUILD_EMBLEM, g->emblem_data, g->emblem_len) {
 		WFIFO_CHUNKED_BLOCK_START(p);
@@ -2421,7 +2423,6 @@ void mapif_defaults(void)
 	mapif->guild_position = mapif_guild_position;
 	mapif->guild_notice = mapif_guild_notice;
 	mapif->guild_emblem = mapif_guild_emblem;
-	mapif->guild_emblem_sub = mapif_guild_emblem_sub;
 	mapif->guild_master_changed = mapif_guild_master_changed;
 	mapif->guild_castle_dataload = mapif_guild_castle_dataload;
 	mapif->parse_CreateGuild = mapif_parse_CreateGuild;

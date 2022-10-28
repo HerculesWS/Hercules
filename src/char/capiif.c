@@ -60,7 +60,7 @@ static int capiif_parse_fromlogin_api_proxy(int fd)
 #endif  // DEBUG_PACKETS
 
 	if (PROXY_PACKET_FLAG(packet, proxy_flag_map)) {
-		mapif->send_first(packet, packet->packet_len);
+		mapif->send((const unsigned char *)packet, packet->packet_len);
 		RFIFOSKIP(fd, packet->packet_len);
 		return 0;
 	}
