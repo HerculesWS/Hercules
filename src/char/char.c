@@ -55,6 +55,7 @@
 #include "common/console.h"
 #include "common/core.h"
 #include "common/db.h"
+#include "common/extraconf.h"
 #include "common/memmgr.h"
 #include "common/mapindex.h"
 #include "common/mmo.h"
@@ -6252,6 +6253,7 @@ int do_init(int argc, char **argv)
 	memset(&skillid2idx, 0, sizeof(skillid2idx));
 
 	char_load_defaults();
+	extraconf_defaults();
 
 	chr->CHAR_CONF_NAME = aStrdup("conf/char/char-server.conf");
 	chr->NET_CONF_NAME = aStrdup("conf/network.conf");

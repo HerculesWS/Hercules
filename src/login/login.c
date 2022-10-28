@@ -35,6 +35,7 @@
 #include "common/conf.h"
 #include "common/core.h"
 #include "common/db.h"
+#include "common/extraconf.h"
 #include "common/memmgr.h"
 #include "common/md5calc.h"
 #include "common/nullpo.h"
@@ -2234,6 +2235,7 @@ int do_init(int argc, char **argv)
 {
 	account_defaults();
 	login_defaults();
+	extraconf_defaults();
 
 	// initialize engine (to accept config settings)
 	login->dbs->account_engine->constructor = account->db_sql;
