@@ -89,7 +89,7 @@ struct mmo_map_server {
 	VECTOR_DECL(uint16) maps;
 };
 
-#define DEFAULT_AUTOSAVE_INTERVAL (300*1000)
+#define DEFAULT_CHAR_AUTOSAVE_INTERVAL (300*1000)
 
 enum inventory_table_type {
 	TABLE_INVENTORY,
