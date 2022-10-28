@@ -585,7 +585,6 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "iwall_data", sizeof(struct iwall_data), SERVER_TYPE_MAP },
 		{ "map_cache_header", sizeof(struct map_cache_header), SERVER_TYPE_MAP },
 		{ "map_data", sizeof(struct map_data), SERVER_TYPE_MAP },
-		{ "map_data_other_server", sizeof(struct map_data_other_server), SERVER_TYPE_MAP },
 		{ "map_drop_list", sizeof(struct map_drop_list), SERVER_TYPE_MAP },
 		{ "map_interface", sizeof(struct map_interface), SERVER_TYPE_MAP },
 		{ "map_zone_data", sizeof(struct map_zone_data), SERVER_TYPE_MAP },

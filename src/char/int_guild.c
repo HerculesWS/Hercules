@@ -927,7 +927,7 @@ static int inter_guild_calcinfo(struct guild *g)
 	 || g->max_storage != before.max_storage
 	) {
 		g->save_flag |= GS_LEVEL;
-		mapif->guild_info(-1,g);
+		mapif->guild_info(g);
 		return 1;
 	}
 
@@ -1013,7 +1013,7 @@ static struct guild *inter_guild_create(const char *name, const struct guild_mem
 }
 
 // Add member to guild
-static bool inter_guild_add_member(int guild_id, const struct guild_member *member, int map_fd)
+static bool inter_guild_add_member(int guild_id, const struct guild_member *member)
 {
 	struct guild * g;
 	int i;
@@ -1021,7 +1021,7 @@ static bool inter_guild_add_member(int guild_id, const struct guild_member *memb
 
 	g = inter_guild->fromsql(guild_id);
 	if (g == NULL) {
-		mapif->guild_memberadded(map_fd, guild_id, member->account_id, member->char_id, 1); // 1: Failed to add
+		mapif->guild_memberadded(guild_id, member->account_id, member->char_id, 1); // 1: Failed to add
 		return false;
 	}
 
@@ -1030,9 +1030,9 @@ static bool inter_guild_add_member(int guild_id, const struct guild_member *memb
 		if (g->member[i].account_id == 0) {
 			g->member[i] = *member;
 			g->member[i].modified = (GS_MEMBER_NEW | GS_MEMBER_MODIFIED);
-			mapif->guild_memberadded(map_fd, guild_id, member->account_id, member->char_id, 0); // 0: success
+			mapif->guild_memberadded(guild_id, member->account_id, member->char_id, 0); // 0: success
 			if (!inter_guild->calcinfo(g)) //Send members if it was not invoked.
-				mapif->guild_info(-1, g);
+				mapif->guild_info(g);
 
 			g->save_flag |= GS_MEMBER;
 			if (g->save_flag&GS_REMOVE)
@@ -1041,12 +1041,12 @@ static bool inter_guild_add_member(int guild_id, const struct guild_member *memb
 		}
 	}
 
-	mapif->guild_memberadded(map_fd, guild_id, member->account_id, member->char_id, 1); // 1: Failed to add
+	mapif->guild_memberadded(guild_id, member->account_id, member->char_id, 1); // 1: Failed to add
 	return false;
 }
 
 // Delete member from guild
-static bool inter_guild_leave(int guild_id, int account_id, int char_id, int flag, const char *mes, int map_fd)
+static bool inter_guild_leave(int guild_id, int account_id, int char_id, int flag, const char *mes)
 {
 	int i;
 
@@ -1095,7 +1095,7 @@ static bool inter_guild_leave(int guild_id, int account_id, int char_id, int fla
 	} else {
 		//Update member info.
 		if (!inter_guild->calcinfo(g))
-			mapif->guild_info(map_fd,g);
+			mapif->guild_info(g);
 		g->save_flag |= GS_EXPULSION;
 	}
 
@@ -1244,7 +1244,7 @@ static bool inter_guild_update_basic_info(int guild_id, enum guild_basic_info ty
 			gd_skill = *((const struct guild_skill*)data);
 			memcpy(&(g->skill[(gd_skill.id - GD_SKILLBASE)]), &gd_skill, sizeof(gd_skill));
 			if( !inter_guild->calcinfo(g) )
-				mapif->guild_info(-1,g);
+				mapif->guild_info(g);
 			g->save_flag |= GS_SKILL;
 			mapif->guild_skillupack(g->guild_id, gd_skill.id, 0);
 			break;
@@ -1253,7 +1253,7 @@ static bool inter_guild_update_basic_info(int guild_id, enum guild_basic_info ty
 			ShowError("int_guild: GuildBasicInfoChange: Unknown type %u, see mmo.h::guild_basic_info for more information\n", type);
 			return false;
 	}
-	mapif->guild_info(-1,g);
+	mapif->guild_info(g);
 	g->save_flag |= GS_LEVEL;
 
 	return true;
@@ -1405,7 +1405,7 @@ static int inter_guild_charname_changed(int guild_id, int account_id, int char_i
 	if( !inter_guild->tosql(g, flag) )
 		return 0;
 
-	mapif->guild_info(-1,g);
+	mapif->guild_info(g);
 
 	return 0;
 }
@@ -1442,7 +1442,7 @@ static bool inter_guild_use_skill_point(int guild_id, uint16 skill_id, int accou
 		g->skill[idx].lv++;
 		g->skill_point--;
 		if (!inter_guild->calcinfo(g))
-			mapif->guild_info(-1,g);
+			mapif->guild_info(g);
 		mapif->guild_skillupack(guild_id,skill_id,account_id);
 		g->save_flag |= (GS_LEVEL|GS_SKILL); // Change guild & guild_skill
 	}

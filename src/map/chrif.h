@@ -66,7 +66,6 @@ struct chrif_interface {
 	/* vars */
 
 	int connected;
-	int other_mapserver_count; //Holds count of how many other map servers are online (apart of this instance) [Skotlex]
 
 	/* */
 	struct eri *auth_db_ers; //For re-utilizing player login structures.
@@ -102,7 +101,6 @@ struct chrif_interface {
 	bool (*scdata_request) (int account_id, int char_id);
 	bool (*save) (struct map_session_data* sd, int flag);
 	bool (*charselectreq) (struct map_session_data* sd, uint32 s_ip);
-	bool (*changemapserver) (struct map_session_data* sd, uint32 ip, uint16 port);
 
 	bool (*searchcharid) (int char_id);
 	bool (*changeemail) (int id, const char *actual_email, const char *new_email);
@@ -140,8 +138,6 @@ struct chrif_interface {
 	void (*connectack) (int fd);
 	void (*sendmap) (int fd);
 	void (*sendmapack) (int fd);
-	void (*recvmap) (int fd);
-	bool (*changemapserverack) (int account_id, int login_id1, int login_id2, int char_id, short map_index, short x, short y, uint32 ip, uint16 port);
 	void (*changedsex) (int fd);
 	bool (*divorceack) (int char_id, int partner_id);
 	void (*idbanned) (int fd);
@@ -149,7 +145,6 @@ struct chrif_interface {
 	bool (*load_scdata) (int fd);
 	void (*update_ip) (int fd);
 	int (*disconnectplayer) (int fd);
-	void (*removemap) (int fd);
 	int (*updatefamelist_ack) (int fd);
 	void (*keepalive)(int fd);
 	void (*keepalive_ack) (int fd);

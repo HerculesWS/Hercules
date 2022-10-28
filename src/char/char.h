@@ -36,6 +36,15 @@ enum E_CHARSERVER_ST {
 	CHARSERVER_ST_LAST
 };
 
+/* The unusual enum values were chosen to (temporarily) match the magic numbers
+ * encoded in an int in the previous implementation, to ease migration. In the
+ * future they may be remapped to less unusual values. */
+enum online_char_state {
+	OCS_UNKNOWN = -2,
+	OCS_NOT_CONNECTED = -1,
+	OCS_CONNECTED = 0,
+};
+
 struct char_session_data {
 	bool auth; // whether the session is authed or not
 	int account_id, login_id1, login_id2, sex;
@@ -60,7 +69,7 @@ struct online_char_data {
 	int char_id;
 	int fd;
 	int waiting_disconnect;
-	short server; // -2: unknown server, -1: not connected, 0+: id of server
+	enum online_char_state mapserver_connection;
 	int pincode_enable;
 };
 
@@ -71,12 +80,6 @@ struct mmo_map_server {
 	int users;
 	VECTOR_DECL(uint16) maps;
 };
-
-/**
- * deprecated feature, multi map been a dangerous in-complete feature for so long and going to be removed.
- * USE IT AT YOUR OWN RISK!
- */
-#define MAX_MAP_SERVERS 1
 
 #define DEFAULT_AUTOSAVE_INTERVAL (300*1000)
 
@@ -103,7 +106,7 @@ struct char_auth_node {
  * char interface
  **/
 struct char_interface {
-	struct mmo_map_server server[MAX_MAP_SERVERS];
+	struct mmo_map_server map_server;
 	int login_fd;
 	int char_fd;
 	struct DBMap *online_char_db; // int account_id -> struct online_char_data*
@@ -132,12 +135,12 @@ struct char_interface {
 	void (*set_account_online) (int account_id);
 	void (*set_account_offline) (int account_id);
 	void (*set_char_charselect) (int account_id);
-	void (*set_char_online) (int map_id, int char_id, int account_id);
+	void (*set_char_online) (bool is_initializing, int char_id, int account_id);
 	void (*set_char_offline) (int char_id, int account_id);
 	int (*db_setoffline) (union DBKey key, struct DBData *data, va_list ap);
 	int (*db_kickoffline) (union DBKey key, struct DBData *data, va_list ap);
 	void (*set_login_all_offline) (void);
-	void (*set_all_offline) (int id);
+	void (*set_all_offline) (bool for_shutdown);
 	void (*set_all_offline_sql) (void);
 	struct DBData (*create_charstatus) (union DBKey key, va_list args);
 	int (*mmo_char_tosql) (int char_id, struct mmo_charstatus* p);
@@ -188,24 +191,21 @@ struct char_interface {
 	void (*global_accreg_to_login_send) (void);
 	void (*global_accreg_to_login_add) (const char *key, unsigned int index, intptr_t val, bool is_string);
 	void (*read_fame_list) (void);
-	int (*send_fame_list) (int fd);
+	int (*send_fame_list) (void);
 	void (*update_fame_list) (int type, int index, int fame);
 	int (*loadName) (int char_id, char* name);
 	void (*parse_frommap_datasync) (int fd);
 	void (*parse_frommap_skillid2idx) (int fd);
 	void (*map_received_ok) (int fd);
-	void (*send_maps) (int fd, int id, int j);
-	void (*parse_frommap_map_names) (int fd, int id);
+	void (*parse_frommap_map_names) (int fd);
 	void (*send_scdata) (int fd, int aid, int cid);
 	void (*parse_frommap_request_scdata) (int fd);
-	void (*parse_frommap_set_users_count) (int fd, int id);
-	void (*parse_frommap_set_users) (int fd, int id);
+	void (*parse_frommap_set_users_count) (int fd);
+	void (*parse_frommap_set_users) (int fd);
 	void (*save_character_ack) (int fd, int aid, int cid);
-	void (*parse_frommap_save_character) (int fd, int id);
+	void (*parse_frommap_save_character) (int fd);
 	void (*select_ack) (int fd, int account_id, uint8 flag);
 	void (*parse_frommap_char_select_req) (int fd);
-	void (*change_map_server_ack) (int fd, const uint8 *data, bool ok);
-	void (*parse_frommap_change_map_server) (int fd);
 	void (*parse_frommap_remove_friend) (int fd);
 	void (*char_name_ack) (int fd, int char_id);
 	void (*parse_frommap_char_name_request) (int fd);
@@ -219,20 +219,20 @@ struct char_interface {
 	void (*parse_frommap_divorce_char) (int fd);
 	void (*parse_frommap_ragsrvinfo) (int fd);
 	void (*parse_frommap_set_char_offline) (int fd);
-	void (*parse_frommap_set_all_offline) (int fd, int id);
-	void (*parse_frommap_set_char_online) (int fd, int id);
+	void (*parse_frommap_set_all_offline) (int fd);
+	void (*parse_frommap_set_char_online) (int fd);
 	void (*parse_frommap_build_fame_list) (int fd);
 	void (*parse_frommap_save_status_change_data) (int fd);
 	void (*send_pong) (int fd);
 	void (*parse_frommap_ping) (int fd);
 	void (*map_auth_ok) (int fd, int account_id, struct char_auth_node* node, struct mmo_charstatus* cd);
 	void (*map_auth_failed) (int fd, int account_id, int char_id, int login_id1, char sex, uint32 ip);
-	void (*parse_frommap_auth_request) (int fd, int id);
-	void (*parse_frommap_update_ip) (int fd, int id);
+	void (*parse_frommap_auth_request) (int fd);
+	void (*parse_frommap_update_ip) (int fd);
 	void (*parse_frommap_scdata_update) (int fd);
 	void (*parse_frommap_scdata_delete) (int fd);
 	int (*parse_frommap) (int fd);
-	int (*search_mapserver) (unsigned short map, uint32 ip, uint16 port);
+	bool (*mapserver_has_map) (unsigned short map);
 	int (*mapif_init) (int fd);
 	uint32 (*lan_subnet_check) (uint32 ip);
 	void (*delete2_ack) (int fd, int char_id, uint32 result, time_t delete_date);
@@ -244,9 +244,9 @@ struct char_interface {
 	void (*delete2_cancel) (int fd, struct char_session_data* sd);
 	void (*send_account_id) (int fd, int account_id);
 	void (*parse_char_connect) (int fd, struct char_session_data* sd, uint32 ipl);
-	void (*send_map_info) (int fd, int i, uint32 subnet_map_ip, struct mmo_charstatus *cd, char *dnsHost);
+	void (*send_map_info) (int fd, uint32 subnet_map_ip, struct mmo_charstatus *cd, char *dnsHost);
 	void (*send_wait_char_server) (int fd);
-	int (*search_default_maps_mapserver) (struct mmo_charstatus *cd);
+	bool (*find_available_map_fallback) (struct mmo_charstatus *cd);
 	void (*parse_char_select) (int fd, struct char_session_data* sd, uint32 ipl);
 	void (*creation_failed) (int fd, int result);
 	void (*creation_ok) (int fd, struct mmo_charstatus *char_dat);
