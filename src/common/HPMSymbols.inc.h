@@ -101,6 +101,9 @@ struct elemental_interface *elemental;
 #ifdef MAP_ENCHANTUI_H /* enchantui */
 struct enchantui_interface *enchantui;
 #endif // MAP_ENCHANTUI_H
+#ifdef COMMON_EXTRACONF_H /* extraconf */
+struct extraconf_interface *extraconf;
+#endif // COMMON_EXTRACONF_H
 #ifdef CHAR_GEOIP_H /* geoip */
 struct geoip_interface *geoip;
 #endif // CHAR_GEOIP_H
@@ -466,6 +469,10 @@ HPExport const char *HPM_shared_symbols(int server_type)
 	if ((server_type&(SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("enchantui", enchantui))
 		return "enchantui";
 #endif // MAP_ENCHANTUI_H
+#ifdef COMMON_EXTRACONF_H /* extraconf */
+	if ((server_type&(SERVER_TYPE_ALL)) != 0 && !HPM_SYMBOL("extraconf", extraconf))
+		return "extraconf";
+#endif // COMMON_EXTRACONF_H
 #ifdef CHAR_GEOIP_H /* geoip */
 	if ((server_type&(SERVER_TYPE_CHAR)) != 0 && !HPM_SYMBOL("geoip", geoip))
 		return "geoip";

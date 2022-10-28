@@ -32,6 +32,7 @@ HPMHooks.source.console = *console;
 HPMHooks.source.core = *core;
 HPMHooks.source.DB = *DB;
 HPMHooks.source.des = *des;
+HPMHooks.source.extraconf = *extraconf;
 HPMHooks.source.ipban = *ipban;
 HPMHooks.source.lapiif = *lapiif;
 HPMHooks.source.lchrif = *lchrif;

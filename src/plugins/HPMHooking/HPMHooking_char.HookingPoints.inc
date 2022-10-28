@@ -263,6 +263,15 @@ struct HookingPointData HookingPoints[] = {
 /* des_interface */
 	{ HP_POP(des->decrypt_block, HP_des_decrypt_block) },
 	{ HP_POP(des->decrypt, HP_des_decrypt) },
+/* extraconf_interface */
+	{ HP_POP(extraconf->init, HP_extraconf_init) },
+	{ HP_POP(extraconf->final, HP_extraconf_final) },
+	{ HP_POP(extraconf->read_conf_file, HP_extraconf_read_conf_file) },
+	{ HP_POP(extraconf->read_conf, HP_extraconf_read_conf) },
+	{ HP_POP(extraconf->read_vars, HP_extraconf_read_vars) },
+	{ HP_POP(extraconf->set_var, HP_extraconf_set_var) },
+	{ HP_POP(extraconf->set_var_str, HP_extraconf_set_var_str) },
+	{ HP_POP(extraconf->read_emblems, HP_extraconf_read_emblems) },
 /* geoip_interface */
 	{ HP_POP(geoip->getcountry, HP_geoip_getcountry) },
 	{ HP_POP(geoip->final, HP_geoip_final) },
@@ -462,6 +471,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(inter_storage->parse_frommap, HP_inter_storage_parse_frommap) },
 	{ HP_POP(inter_storage->retrieve_bound_items, HP_inter_storage_retrieve_bound_items) },
 /* inter_userconfig_interface */
+	{ HP_POP(inter_userconfig->init, HP_inter_userconfig_init) },
+	{ HP_POP(inter_userconfig->config_read, HP_inter_userconfig_config_read) },
 	{ HP_POP(inter_userconfig->load_emotes, HP_inter_userconfig_load_emotes) },
 	{ HP_POP(inter_userconfig->save_emotes, HP_inter_userconfig_save_emotes) },
 	{ HP_POP(inter_userconfig->use_default_emotes, HP_inter_userconfig_use_default_emotes) },
@@ -557,6 +568,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(loginif->connect_to_server, HP_loginif_connect_to_server) },
 	{ HP_POP(loginif->set_char_online, HP_loginif_set_char_online) },
 /* mapif_interface */
+	{ HP_POP(mapif->final, HP_mapif_final) },
 	{ HP_POP(mapif->ban, HP_mapif_ban) },
 	{ HP_POP(mapif->server_init, HP_mapif_server_init) },
 	{ HP_POP(mapif->server_destroy, HP_mapif_server_destroy) },
@@ -605,7 +617,6 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(mapif->guild_position, HP_mapif_guild_position) },
 	{ HP_POP(mapif->guild_notice, HP_mapif_guild_notice) },
 	{ HP_POP(mapif->guild_emblem, HP_mapif_guild_emblem) },
-	{ HP_POP(mapif->guild_emblem_sub, HP_mapif_guild_emblem_sub) },
 	{ HP_POP(mapif->guild_master_changed, HP_mapif_guild_master_changed) },
 	{ HP_POP(mapif->guild_castle_dataload, HP_mapif_guild_castle_dataload) },
 	{ HP_POP(mapif->parse_CreateGuild, HP_mapif_parse_CreateGuild) },

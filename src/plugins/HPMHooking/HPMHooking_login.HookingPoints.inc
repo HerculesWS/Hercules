@@ -87,6 +87,15 @@ struct HookingPointData HookingPoints[] = {
 /* des_interface */
 	{ HP_POP(des->decrypt_block, HP_des_decrypt_block) },
 	{ HP_POP(des->decrypt, HP_des_decrypt) },
+/* extraconf_interface */
+	{ HP_POP(extraconf->init, HP_extraconf_init) },
+	{ HP_POP(extraconf->final, HP_extraconf_final) },
+	{ HP_POP(extraconf->read_conf_file, HP_extraconf_read_conf_file) },
+	{ HP_POP(extraconf->read_conf, HP_extraconf_read_conf) },
+	{ HP_POP(extraconf->read_vars, HP_extraconf_read_vars) },
+	{ HP_POP(extraconf->set_var, HP_extraconf_set_var) },
+	{ HP_POP(extraconf->set_var_str, HP_extraconf_set_var_str) },
+	{ HP_POP(extraconf->read_emblems, HP_extraconf_read_emblems) },
 /* ipban_interface */
 	{ HP_POP(ipban->init, HP_ipban_init) },
 	{ HP_POP(ipban->final, HP_ipban_final) },

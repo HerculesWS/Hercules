@@ -191,6 +191,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		#define CHAR_INT_STORAGE_H
 	#endif // CHAR_INT_STORAGE_H
 	#ifdef CHAR_INT_USERCONFIG_H
+		{ "inter_userconfig_dbs", sizeof(struct inter_userconfig_dbs), SERVER_TYPE_CHAR },
 		{ "inter_userconfig_interface", sizeof(struct inter_userconfig_interface), SERVER_TYPE_CHAR },
 	#else
 		#define CHAR_INT_USERCONFIG_H
@@ -293,6 +294,14 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#else
 		#define COMMON_ERS_H
 	#endif // COMMON_ERS_H
+	#ifdef COMMON_EXTRACONF_H
+		{ "config_data", sizeof(struct config_data), SERVER_TYPE_ALL },
+		{ "config_data_old", sizeof(struct config_data_old), SERVER_TYPE_ALL },
+		{ "emblems_config", sizeof(struct emblems_config), SERVER_TYPE_ALL },
+		{ "extraconf_interface", sizeof(struct extraconf_interface), SERVER_TYPE_ALL },
+	#else
+		#define COMMON_EXTRACONF_H
+	#endif // COMMON_EXTRACONF_H
 	#ifdef COMMON_GRFIO_H
 		{ "grfio_interface", sizeof(struct grfio_interface), SERVER_TYPE_MAP },
 	#else

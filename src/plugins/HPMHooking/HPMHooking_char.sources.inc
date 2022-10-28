@@ -33,6 +33,7 @@ HPMHooks.source.console = *console;
 HPMHooks.source.core = *core;
 HPMHooks.source.DB = *DB;
 HPMHooks.source.des = *des;
+HPMHooks.source.extraconf = *extraconf;
 HPMHooks.source.geoip = *geoip;
 HPMHooks.source.inter_achievement = *inter_achievement;
 HPMHooks.source.inter_adventurer_agency = *inter_adventurer_agency;

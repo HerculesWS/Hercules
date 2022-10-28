@@ -34,6 +34,7 @@ HPMHooks.source.console = *console;
 HPMHooks.source.core = *core;
 HPMHooks.source.DB = *DB;
 HPMHooks.source.des = *des;
+HPMHooks.source.extraconf = *extraconf;
 HPMHooks.source.handlers = *handlers;
 HPMHooks.source.httpparser = *httpparser;
 HPMHooks.source.httpsender = *httpsender;
