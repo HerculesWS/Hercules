@@ -589,6 +589,7 @@ struct Battle_Config {
 	int ping_time;
 
 	int option_drop_max_loop;
+	int enchant_ui_max_loop;
 
 	int drop_connection_on_quit;
 	int display_rate_messages;

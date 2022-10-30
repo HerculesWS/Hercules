@@ -227,6 +227,7 @@
     <ClInclude Include="..\src\map\trade.h" />
     <ClInclude Include="..\src\map\unit.h" />
     <ClInclude Include="..\src\map\vending.h" />
+    <ClInclude Include="..\src\map\enchantui.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\3rdparty\libconfig\grammar.c" />
@@ -305,6 +306,7 @@
     <ClCompile Include="..\src\map\trade.c" />
     <ClCompile Include="..\src\map\unit.c" />
     <ClCompile Include="..\src\map\vending.c" />
+    <ClCompile Include="..\src\map\enchantui.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

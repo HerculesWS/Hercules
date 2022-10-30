@@ -2039,7 +2039,15 @@ packet(0x96e,clif->ackmergeitems);
 #if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20211103
 	packet(0x0b90, clif->pItemReformClose);
 	packet(0x0b91, clif->pItemReformAck);
-#endif // PACKETVER_MAIN_NUM >= 20201118 || PACKETVER_RE_NUM >= 20211103
+#endif // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20211103
+
+#if PACKETVER_MAIN_NUM >= 20201118 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
+	packet(0x0b9b, clif->pEnchantUINormalRequest);
+	packet(0x0b9c, clif->pEnchantUIPerfectRequest);
+	packet(0x0b9d, clif->pEnchantUIUpgradeRequest);
+	packet(0x0b9e, clif->pEnchantUIResetRequest);
+	packet(0x0ba0, clif->pEnchantUIClose);
+#endif // PACKETVER_MAIN_NUM >= 20201118 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 
 #if PACKETVER_MAIN_NUM >= 20220216 || PACKETVER_ZERO_NUM >= 20220316
 	packet(0x0baf, clif->pUsePackageItem);
