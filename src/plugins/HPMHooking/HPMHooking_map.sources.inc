@@ -43,6 +43,7 @@ HPMHooks.source.DB = *DB;
 HPMHooks.source.des = *des;
 HPMHooks.source.duel = *duel;
 HPMHooks.source.elemental = *elemental;
+HPMHooks.source.enchantui = *enchantui;
 HPMHooks.source.grader = *grader;
 HPMHooks.source.grfio = *grfio;
 HPMHooks.source.guild = *guild;

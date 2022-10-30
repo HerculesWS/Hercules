@@ -2880,6 +2880,20 @@ typedef void (*HPMHOOK_pre_clif_pItemReformAck) (int *fd, struct map_session_dat
 typedef void (*HPMHOOK_post_clif_pItemReformAck) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_item_reform_result) (struct map_session_data **sd, int *index, enum item_reform_status *result);
 typedef void (*HPMHOOK_post_clif_item_reform_result) (struct map_session_data *sd, int index, enum item_reform_status result);
+typedef void (*HPMHOOK_pre_clif_enchantui_open) (struct map_session_data **sd, int64 *enchant_group);
+typedef void (*HPMHOOK_post_clif_enchantui_open) (struct map_session_data *sd, int64 enchant_group);
+typedef void (*HPMHOOK_pre_clif_enchantui_status) (struct map_session_data **sd, enum enchantui_status *result, int *itemId);
+typedef void (*HPMHOOK_post_clif_enchantui_status) (struct map_session_data *sd, enum enchantui_status result, int itemId);
+typedef void (*HPMHOOK_pre_clif_pEnchantUINormalRequest) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pEnchantUINormalRequest) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_pEnchantUIPerfectRequest) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pEnchantUIPerfectRequest) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_pEnchantUIUpgradeRequest) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pEnchantUIUpgradeRequest) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_pEnchantUIResetRequest) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pEnchantUIResetRequest) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_pEnchantUIClose) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pEnchantUIClose) (int fd, struct map_session_data *sd);
 #endif // MAP_CLIF_H
 #ifdef COMMON_CORE_H /* cmdline */
 typedef void (*HPMHOOK_pre_cmdline_init) (void);
@@ -3041,6 +3055,60 @@ typedef int (*HPMHOOK_post_elemental_ai_timer) (int retVal___, int tid, int64 ti
 typedef int (*HPMHOOK_pre_elemental_read_db) (void);
 typedef int (*HPMHOOK_post_elemental_read_db) (int retVal___);
 #endif // MAP_ELEMENTAL_H
+#ifdef MAP_ENCHANTUI_H /* enchantui */
+typedef int (*HPMHOOK_pre_enchantui_init) (bool *minimal);
+typedef int (*HPMHOOK_post_enchantui_init) (int retVal___, bool minimal);
+typedef void (*HPMHOOK_pre_enchantui_final) (void);
+typedef void (*HPMHOOK_post_enchantui_final) (void);
+typedef int (*HPMHOOK_pre_enchantui_db_final_sub) (union DBKey *key, struct DBData **data, va_list ap);
+typedef int (*HPMHOOK_post_enchantui_db_final_sub) (int retVal___, union DBKey key, struct DBData *data, va_list ap);
+typedef struct enchant_info* (*HPMHOOK_pre_enchantui_exists) (int64 *id);
+typedef struct enchant_info* (*HPMHOOK_post_enchantui_exists) (struct enchant_info* retVal___, int64 id);
+typedef void (*HPMHOOK_pre_enchantui_read_db_libconfig) (void);
+typedef void (*HPMHOOK_post_enchantui_read_db_libconfig) (void);
+typedef bool (*HPMHOOK_pre_enchantui_read_db_libconfig_sub) (const struct config_setting_t **it, int *n, const char **source);
+typedef bool (*HPMHOOK_post_enchantui_read_db_libconfig_sub) (bool retVal___, const struct config_setting_t *it, int n, const char *source);
+typedef bool (*HPMHOOK_pre_enchantui_read_db_libconfig_slot_order) (const struct config_setting_t **it, struct enchant_info **einfo, int *n, const char **source);
+typedef bool (*HPMHOOK_post_enchantui_read_db_libconfig_slot_order) (bool retVal___, const struct config_setting_t *it, struct enchant_info *einfo, int n, const char *source);
+typedef bool (*HPMHOOK_pre_enchantui_read_db_libconfig_target_items) (const struct config_setting_t **it, struct enchant_info **einfo, int *n, const char **source);
+typedef bool (*HPMHOOK_post_enchantui_read_db_libconfig_target_items) (bool retVal___, const struct config_setting_t *it, struct enchant_info *einfo, int n, const char *source);
+typedef bool (*HPMHOOK_pre_enchantui_read_db_libconfig_slot_info) (const struct config_setting_t **it, struct enchant_info **einfo, int *n, const char **source);
+typedef bool (*HPMHOOK_post_enchantui_read_db_libconfig_slot_info) (bool retVal___, const struct config_setting_t *it, struct enchant_info *einfo, int n, const char *source);
+typedef bool (*HPMHOOK_pre_enchantui_read_db_libconfig_slot_info_sub) (const struct config_setting_t **it, struct enchant_slot_info **sinfo, int *n, const char **source);
+typedef bool (*HPMHOOK_post_enchantui_read_db_libconfig_slot_info_sub) (bool retVal___, const struct config_setting_t *it, struct enchant_slot_info *sinfo, int n, const char *source);
+typedef bool (*HPMHOOK_pre_enchantui_read_db_libconfig_gradebonus) (const struct config_setting_t **it, struct enchant_slot_info **sinfo, int *n, const char **source);
+typedef bool (*HPMHOOK_post_enchantui_read_db_libconfig_gradebonus) (bool retVal___, const struct config_setting_t *it, struct enchant_slot_info *sinfo, int n, const char *source);
+typedef bool (*HPMHOOK_pre_enchantui_read_db_libconfig_normal_info) (const struct config_setting_t **it, struct enchant_info_normal **ninfo, int *n, const char **source);
+typedef bool (*HPMHOOK_post_enchantui_read_db_libconfig_normal_info) (bool retVal___, const struct config_setting_t *it, struct enchant_info_normal *ninfo, int n, const char *source);
+typedef bool (*HPMHOOK_pre_enchantui_read_db_libconfig_perfect_info) (const struct config_setting_t **it, struct enchant_info_perfect **pinfo, int *n, const char **source);
+typedef bool (*HPMHOOK_post_enchantui_read_db_libconfig_perfect_info) (bool retVal___, const struct config_setting_t *it, struct enchant_info_perfect *pinfo, int n, const char *source);
+typedef bool (*HPMHOOK_pre_enchantui_read_db_libconfig_upgrade_info) (const struct config_setting_t **it, struct enchant_info_upgrade **uinfo, int *n, const char **source);
+typedef bool (*HPMHOOK_post_enchantui_read_db_libconfig_upgrade_info) (bool retVal___, const struct config_setting_t *it, struct enchant_info_upgrade *uinfo, int n, const char *source);
+typedef bool (*HPMHOOK_pre_enchantui_read_db_libconfig_reset_info) (const struct config_setting_t **it, struct enchant_info_reset **rinfo, int *n, const char **source);
+typedef bool (*HPMHOOK_post_enchantui_read_db_libconfig_reset_info) (bool retVal___, const struct config_setting_t *it, struct enchant_info_reset *rinfo, int n, const char *source);
+typedef bool (*HPMHOOK_pre_enchantui_read_db_libconfig_materials_list) (const struct config_setting_t **it, struct itemlist **materials, int *n, const char **source);
+typedef bool (*HPMHOOK_post_enchantui_read_db_libconfig_materials_list) (bool retVal___, const struct config_setting_t *it, struct itemlist *materials, int n, const char *source);
+typedef bool (*HPMHOOK_pre_enchantui_read_db_libconfig_itemrate_list) (const struct config_setting_t **it, struct enchant_item_list **elist, int *n, const char **source);
+typedef bool (*HPMHOOK_post_enchantui_read_db_libconfig_itemrate_list) (bool retVal___, const struct config_setting_t *it, struct enchant_item_list *elist, int n, const char *source);
+typedef const struct enchant_info* (*HPMHOOK_pre_enchantui_validate_targetitem) (struct map_session_data **sd, int64 *enchant_group, int *index);
+typedef const struct enchant_info* (*HPMHOOK_post_enchantui_validate_targetitem) (const struct enchant_info* retVal___, struct map_session_data *sd, int64 enchant_group, int index);
+typedef int (*HPMHOOK_pre_enchantui_validate_slot_id) (struct map_session_data **sd, const struct enchant_info **ei, const struct item **it);
+typedef int (*HPMHOOK_post_enchantui_validate_slot_id) (int retVal___, struct map_session_data *sd, const struct enchant_info *ei, const struct item *it);
+typedef bool (*HPMHOOK_pre_enchantui_validate_requirements) (struct map_session_data **sd, const int *zeny, const struct itemlist **materials);
+typedef bool (*HPMHOOK_post_enchantui_validate_requirements) (bool retVal___, struct map_session_data *sd, const int zeny, const struct itemlist *materials);
+typedef bool (*HPMHOOK_pre_enchantui_validate_material_list) (struct map_session_data **sd, const struct itemlist **materials);
+typedef bool (*HPMHOOK_post_enchantui_validate_material_list) (bool retVal___, struct map_session_data *sd, const struct itemlist *materials);
+typedef bool (*HPMHOOK_pre_enchantui_consume_material_list) (struct map_session_data **sd, const struct itemlist **materials);
+typedef bool (*HPMHOOK_post_enchantui_consume_material_list) (bool retVal___, struct map_session_data *sd, const struct itemlist *materials);
+typedef void (*HPMHOOK_pre_enchantui_normal_request) (struct map_session_data **sd, int64 *enchant_group, int *index);
+typedef void (*HPMHOOK_post_enchantui_normal_request) (struct map_session_data *sd, int64 enchant_group, int index);
+typedef void (*HPMHOOK_pre_enchantui_perfect_request) (struct map_session_data **sd, int64 *enchant_group, int *index, int *itemid);
+typedef void (*HPMHOOK_post_enchantui_perfect_request) (struct map_session_data *sd, int64 enchant_group, int index, int itemid);
+typedef void (*HPMHOOK_pre_enchantui_upgrade_request) (struct map_session_data **sd, int64 *enchant_group, int *index, int *slot_id);
+typedef void (*HPMHOOK_post_enchantui_upgrade_request) (struct map_session_data *sd, int64 enchant_group, int index, int slot_id);
+typedef void (*HPMHOOK_pre_enchantui_reset_request) (struct map_session_data **sd, int64 *enchant_group, int *index);
+typedef void (*HPMHOOK_post_enchantui_reset_request) (struct map_session_data *sd, int64 enchant_group, int index);
+#endif // MAP_ENCHANTUI_H
 #ifdef CHAR_GEOIP_H /* geoip */
 typedef const char* (*HPMHOOK_pre_geoip_getcountry) (uint32 *ipnum);
 typedef const char* (*HPMHOOK_post_geoip_getcountry) (const char* retVal___, uint32 ipnum);

@@ -487,6 +487,21 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#else
 		#define MAP_ELEMENTAL_H
 	#endif // MAP_ELEMENTAL_H
+	#ifdef MAP_ENCHANTUI_H
+		{ "enchant_info", sizeof(struct enchant_info), SERVER_TYPE_MAP },
+		{ "enchant_info_normal", sizeof(struct enchant_info_normal), SERVER_TYPE_MAP },
+		{ "enchant_info_perfect", sizeof(struct enchant_info_perfect), SERVER_TYPE_MAP },
+		{ "enchant_info_perfect_entry", sizeof(struct enchant_info_perfect_entry), SERVER_TYPE_MAP },
+		{ "enchant_info_reset", sizeof(struct enchant_info_reset), SERVER_TYPE_MAP },
+		{ "enchant_info_upgrade", sizeof(struct enchant_info_upgrade), SERVER_TYPE_MAP },
+		{ "enchant_info_upgrade_entry", sizeof(struct enchant_info_upgrade_entry), SERVER_TYPE_MAP },
+		{ "enchant_item_list", sizeof(struct enchant_item_list), SERVER_TYPE_MAP },
+		{ "enchant_item_rate_entry", sizeof(struct enchant_item_rate_entry), SERVER_TYPE_MAP },
+		{ "enchant_slot_info", sizeof(struct enchant_slot_info), SERVER_TYPE_MAP },
+		{ "enchantui_interface", sizeof(struct enchantui_interface), SERVER_TYPE_MAP },
+	#else
+		#define MAP_ENCHANTUI_H
+	#endif // MAP_ENCHANTUI_H
 	#ifdef MAP_GRADER_H
 		{ "grade_blessing", sizeof(struct grade_blessing), SERVER_TYPE_MAP },
 		{ "grade_interface_dbs", sizeof(struct grade_interface_dbs), SERVER_TYPE_MAP },
