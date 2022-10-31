@@ -2358,6 +2358,8 @@ struct {
 	struct HPMHookPoint *HP_clif_pResetCooldown_post;
 	struct HPMHookPoint *HP_clif_loadConfirm_pre;
 	struct HPMHookPoint *HP_clif_loadConfirm_post;
+	struct HPMHookPoint *HP_clif_updateSpecialPopup_pre;
+	struct HPMHookPoint *HP_clif_updateSpecialPopup_post;
 	struct HPMHookPoint *HP_clif_send_selforarea_pre;
 	struct HPMHookPoint *HP_clif_send_selforarea_post;
 	struct HPMHookPoint *HP_clif_OpenRefineryUI_pre;
@@ -2488,6 +2490,8 @@ struct {
 	struct HPMHookPoint *HP_clif_pEnchantUIResetRequest_post;
 	struct HPMHookPoint *HP_clif_pEnchantUIClose_pre;
 	struct HPMHookPoint *HP_clif_pEnchantUIClose_post;
+	struct HPMHookPoint *HP_clif_special_popup_pre;
+	struct HPMHookPoint *HP_clif_special_popup_post;
 	struct HPMHookPoint *HP_cmdline_init_pre;
 	struct HPMHookPoint *HP_cmdline_init_post;
 	struct HPMHookPoint *HP_cmdline_final_pre;
@@ -9771,6 +9775,8 @@ struct {
 	int HP_clif_pResetCooldown_post;
 	int HP_clif_loadConfirm_pre;
 	int HP_clif_loadConfirm_post;
+	int HP_clif_updateSpecialPopup_pre;
+	int HP_clif_updateSpecialPopup_post;
 	int HP_clif_send_selforarea_pre;
 	int HP_clif_send_selforarea_post;
 	int HP_clif_OpenRefineryUI_pre;
@@ -9901,6 +9907,8 @@ struct {
 	int HP_clif_pEnchantUIResetRequest_post;
 	int HP_clif_pEnchantUIClose_pre;
 	int HP_clif_pEnchantUIClose_post;
+	int HP_clif_special_popup_pre;
+	int HP_clif_special_popup_post;
 	int HP_cmdline_init_pre;
 	int HP_cmdline_init_post;
 	int HP_cmdline_final_pre;
