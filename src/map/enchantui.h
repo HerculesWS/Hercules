@@ -104,7 +104,7 @@ struct enchantui_interface {
 	bool (*read_db_libconfig_slot_info_sub) (const struct config_setting_t *it, struct enchant_slot_info *sinfo, int n, const char *source);
 	bool (*read_db_libconfig_gradebonus) (const struct config_setting_t *it, struct enchant_slot_info *sinfo, int n, const char *source);
 	bool (*read_db_libconfig_normal_info) (const struct config_setting_t *it, struct enchant_info_normal *ninfo, int n, const char *source);
-	bool (*read_db_libconfig_perfect_info) (const struct config_setting_t *it, struct enchant_info_perfect *pinfo, int n, const char *source);
+	bool (*read_db_libconfig_perfect_info) (const struct config_setting_t *it, struct enchant_info_perfect *epinfo, int n, const char *source);
 	bool (*read_db_libconfig_upgrade_info) (const struct config_setting_t *it, struct enchant_info_upgrade *uinfo, int n, const char *source);
 	bool (*read_db_libconfig_reset_info) (const struct config_setting_t *it, struct enchant_info_reset *rinfo, int n, const char *source);
 	bool (*read_db_libconfig_materials_list) (const struct config_setting_t *it, struct itemlist *materials, int n, const char *source);
