@@ -7,7 +7,6 @@
 <equinox1991@gmail.com> <Equinox1991@gmail.com>
 <gauvain.dauchy@free.fr> <alige@users.noreply.github.com>
 <git@gumi.ca> <mekolat@users.noreply.github.com>
-<guilherme.menaldo@outlook.com> <guilherme-gm@users.noreply.github.com>
 <haru@dotalux.com> <haru@originsro.org>
 <ibrahem.h.basyone@gmail.com> <hemagx2@gmail.com>
 <ind@henn.et> <int@henn.et>
@@ -29,6 +28,9 @@ Emistry Haoyan <equinox1991@gmail.com>
 Evil Puncker <EPuncker@users.noreply.github.com>
 Evil Puncker <epuncker@gmail.com> <EPuncker@users.noreply.github.com>
 Evil Puncker <epuncker@gmail.com> <gm.perflex@gmail.com>
+Guilherme G. Menaldo <guilherme.menaldo@outlook.com>
+Guilherme G. Menaldo <guilherme.menaldo@outlook.com> <guilherme-gm@users.noreply.github.com>
+Guilherme G. Menaldo <guilherme.menaldo@outlook.com> <guilherme_kiriez@hotmail.com>
 Haru <haru@dotalux.com> Haruna <haru@dotalux.com>
 Jenkijo <jenkijo@hrzn.community> <phongtruongit@gmail.com>
 KeiKun <the.keikun@gmail.com> Kei <the.keikun@gmail.com>
@@ -37,21 +39,25 @@ Kenpachi <Kenpachi.Developer@gmx.de> Kenpachi Developer <Kenpachi.Developer@gmx.
 Kenpachi <Kenpachi.Developer@gmx.de> Kenpachi2k13 <3476227+Kenpachi2k13@users.noreply.github.com>
 Kenpachi <Kenpachi.Developer@gmx.de> Kenpachi2k13 <Kenpachi.Developer@gmx.de>
 Kenpachi <Kenpachi.Developer@gmx.de> kenpachi2k11 <Kenpachi.Developer@gmx.de>
+Mysteries <mysteriousragnarok@hotmail.com>
 Smokexyz <sagunkho@hotmail.com>
 Smokexyz <sagunkho@hotmail.com> <sagunxp@gmail.com>
 Smokexyz <sagunkho@hotmail.com> SagunKho <sagunkho@hotmail.com>
 Smokexyz <sagunkho@hotmail.com> sagunkho <sagunkho@hotmail.com>
 Smokexyz <sagunkho@hotmail.com> smokexyz <sagunkho@hotmail.com>
 Zopokx <zopokx@gmail.com>
+csnv <ctt@csnv.es>
+csnv <ctt@csnv.es> <jorgecsnova@gmail.com>
 euphyy <euphy@rathena.org>
 hwsapibot <dev@herc.ws> <Hercules@efficiently.awesome>
 hwsapibot <dev@herc.ws> Hercules.ws <dev@herc.ws>
+kisuka <kisuka@kisuka.com>
 skyleo <skyleo@skyleo.de> <leo-pflug@web.de>
 skyleo <skyleo@skyleo.de> Leo Pflug <skyleo@skyleo.de>
 
 # SVN -> git mailmap
 
-<kisuka@kisuka.com> <Kisuka@54d463be-8e91-2dee-dedb-b68131a5f0ec>
+kisuka <kisuka@kisuka.com> <Kisuka@54d463be-8e91-2dee-dedb-b68131a5f0ec>
 <euphy@rathena.org> <euphyy@54d463be-8e91-2dee-dedb-b68131a5f0ec>
 Lemongrass3110 <lemongrass@kstp.at> <lemongrass3110@54d463be-8e91-2dee-dedb-b68131a5f0ec>
 <trojal@gmail.com> <trojal@54d463be-8e91-2dee-dedb-b68131a5f0ec>
@@ -62,8 +68,8 @@ Kenpachi <Kenpachi.Developer@gmx.de> <kenpachi2k11@54d463be-8e91-2dee-dedb-b6813
 <ai4rei@users.noreply.github.com> <ai4rei@54d463be-8e91-2dee-dedb-b68131a5f0ec>
 <Kenji.Ito@gmx.de> <Playtester@54d463be-8e91-2dee-dedb-b68131a5f0ec>
 <masao@gmx.ch> <masao87@54d463be-8e91-2dee-dedb-b68131a5f0ec>
-<piotr.halaczkiewicz@gmail.com> <gepard1984@54d463be-8e91-2dee-dedb-b68131a5f0ec>
-<piotr.halaczkiewicz@gmail.com> <Gepard@54d463be-8e91-2dee-dedb-b68131a5f0ec>
+gepard1984 <piotr.halaczkiewicz@gmail.com> <gepard1984@54d463be-8e91-2dee-dedb-b68131a5f0ec>
+gepard1984 <piotr.halaczkiewicz@gmail.com> <Gepard@54d463be-8e91-2dee-dedb-b68131a5f0ec>
 <missxantara@gmail.com> <xantara@54d463be-8e91-2dee-dedb-b68131a5f0ec>
 <lightaisme@gmail.com> <glighta@54d463be-8e91-2dee-dedb-b68131a5f0ec>
 <brianluau@users.noreply.github.com> <brianluau@54d463be-8e91-2dee-dedb-b68131a5f0ec>
@@ -75,9 +81,9 @@ Paradox924X <paradox924x@gmail.com> <Paradox924x@54d463be-8e91-2dee-dedb-b68131a
 Paradox924X <paradox924x@gmail.com> <Paradox924X@54d463be-8e91-2dee-dedb-b68131a5f0ec>
 <yomanda@gmail.com> <Yommy@54d463be-8e91-2dee-dedb-b68131a5f0ec>
 <masterofmuppets89@gmail.com> <MasterOfMuppets@54d463be-8e91-2dee-dedb-b68131a5f0ec>
-<flaviojs2005@gmail.com> <flaviojs@54d463be-8e91-2dee-dedb-b68131a5f0ec>
-<flaviojs2005@gmail.com> <FlavioJS@54d463be-8e91-2dee-dedb-b68131a5f0ec>
-<flaviojs2005@gmail.com> <flaviojs2005@54d463be-8e91-2dee-dedb-b68131a5f0ec>
+flaviojs <flaviojs2005@gmail.com> <flaviojs@54d463be-8e91-2dee-dedb-b68131a5f0ec>
+flaviojs <flaviojs2005@gmail.com> <FlavioJS@54d463be-8e91-2dee-dedb-b68131a5f0ec>
+flaviojs <flaviojs2005@gmail.com> <flaviojs2005@54d463be-8e91-2dee-dedb-b68131a5f0ec>
 <macabu.matheus@gmail.com> <momacabu@54d463be-8e91-2dee-dedb-b68131a5f0ec>
 <Daegaladh@users.noreply.github.com> <daegaladh@54d463be-8e91-2dee-dedb-b68131a5f0ec>
 <greenboxal@gmail.com> <greenboxal2@54d463be-8e91-2dee-dedb-b68131a5f0ec>
