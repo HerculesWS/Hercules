@@ -22,6 +22,95 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
+
+## [v2022.11.02] `November 02 2022`
+
+### Added
+
+- Updated the map cache and map list with new maps. (#3156)
+- Updated the NPC ID constants and Hat effect constants with new IDs. (part of #3156)
+- Implemented the package item selection UI for recent clients that support it. (#3158)
+  - A new item type, `IT_SELECTPACKAGE` is defined for this purpose (see the `Select_Example1` item).
+- Added support for constants and bitmask arrays in `mob_skill_db.conf`, for the `ConditionData`, `val<n>` and `Emotion` fields. (#3164, issue #2768)
+- Exposed monster modes (`MD_*` constants) to the script engine. (part of #3164)
+- Implemented the `@quest` atcommand, to manipulate a character's quest log. (#3166)
+- Implemented the Rebuilding the Destroyed Morroc quests from episode 14.3. Note: the quests (except the reward NPCs) are disabled by default. (#3167)
+- Implemented the Enchant User Interface for clients that support it. (#3159)
+  - The enchantments are defined in the newly introduced `db/*/enchant_db.conf` database.
+
+### Changed
+
+- Refactored `status->get_sc_def()` and its call chain (including `status->change_start()` and the `sc_start*()` macros to include the skill ID, used for SC immunity checks. (part of #3155)
+- Updated the CodeQL GitHub workflow to follow the latest upstream templates. (part of #3169)
+- Removed duplication and consolidated the functions of the `itemdb->lookup_const()` / `mob->lookup_const()` functions as `map->setting_lookup_const()`. (part of #3164)
+- Moved the function `itemdb->lookup_const_mask()` into the map interface as `map->setting_lookup_const_mask()`. (part of #3164)
+- Renamed the `BA_FROSTJOKER` skill and related constant to the official name `BA_FROSTJOKE`. The old name is left behind as a deprecated constant, to ease migration of custom code. (#3170)
+- Split `constants.md` into `constants_re.md` and `constants_pre-re.md`, since there are large variations in the available constants and their values between modes. The generator plugin and related CI script have been updated accordingly. (#3171)
+- Refactored and simplified some code after the removal of the multi-zone leftovers. (part of #3173)
+  - Cheatsheet for updating custom code:
+    - `MAX_MAP_SERVERS` has been removed, and any code that used it in a loop needs to be refactored to remove the loop that is no longer necessary.
+    - `chr->server[]` has become `chr->map_server` (and it's a single object rather than an array of one element).
+    - packet `H->Z` 0x2b04 (`chrif->recvmap()`) has been removed without a replacement as it was never sent.
+    - many functions that took a `map_id` / `server_id` argument no longer need it (since it would be always zero). Code that used it likely needs to be refactored or removed.
+    - packet `H->Z` 0x2b20 (`chrif->removemap()`) has been removed without a replacement as it was never sent.
+    - `mapif->sendallwos()` has been removed without a replacement as it never sent anything since there couldn't be more than one map server connected at any given time.
+    - `mapif->sendall()` is replaced by `mapif->send()` (but mind the different return value).
+    - `mapif->send()` no longer requires a server id argument since there can only be one (and its return value changed).
+    - several pieces of code have been completely removed since they were not reachable through any code path: any custom code part of them was likely never called and can be safely removed.
+    - `map->map_db` and any related functions have been removed, as it could never get populated.
+    - `chrif->other_mapserver_count` and any related functions have been removed, as it could never become nonzero.
+    - packets `Z->H` 0x2b05 and `H->Z` 0x2b06 have been removed as they could never be sent.
+    - `chr->search_mapserver()` and `chr->search_default_maps_mapserver()` have been completely overhauled and their purpose is now fulfilled by `chr->mapserver_has_map()` and `chr->find_available_map_fallback()`, with different return values and arguments.
+    - the `map_fd` argument has been removed from several non-mapif functions that should have no business with it. The map server's fd can be retrieved through `chr->map_server.fd`, but in most cases it shouldn't be necessary and could be a code smell.
+    - the `chrif->changemapserver()` function has been removed with no replacement as it was never called.
+    - the `server` field of `struct online_char_data` has been replaced with an enum and renamed to `mapserver_connection`. It no longer encodes the server ID (since it could only be zero) but only the connection state. The old `-2` special value maps to `OCS_UNKNOWN`, `-1` to `OCS_NOT_CONNECTED` and `>= 0` to `OCS_CONNECTED`.
+- Moved the `chrif` packet documentation to `packets_chrif_len.h`, where the packet lengths are defined. (part of #3173)
+
+### Fixed
+
+- Fixed/implemented Official behavior for the Golden Thief Bug Card, blocking SCs caused by magic-type skills, regardless of the SC type. (#3155)
+  - Exceptions apply: Magnificat, Gloria and Angelus are blocked, even if they aren't magic-type skills.
+  - Some skills that would be broken now have temporary workarounds to apply the right behavior if it doesn't match what their type dictates.
+  - The `NoMagicBlocked` flag has been removed from skills that no longer require it.
+- Fixed the `AttackType` for many skills to match the official value. (part of #3155)
+- Fixed the zeny payments through the Stylist UI to be properly logged and count toward achievements. (#3157)
+  - This includes a potentially very long running database migration for the logs database (adding the picklog type '5').
+- Fixed `PF_SOULCHANGE` to match the official behavior, preventing its use against characters in the Berserk state and against boss monsters and allowing it to disregard `SC_FOGWALL`. (#3160)
+- Fixed a case of the Doctor Quest taking items and not rewarding in return, as well as some `delitem()` that aren't executed in the same run loop as `countitem()`. (#3162)
+- Fixed some possible exploits in the Pickocked Quest, allowing only one instance of the NPC to be available at any time. (#3162)
+- Fixed the Dual Monster Race logic to disregard the relative order of the winning monsters and simplified the script logic. (#3162)
+- Fixed Kihop wrongly counting the bearer Taekwon for the bonus calculation. (#3161)
+- Fixed the interaction of Lex Aetherna with Freeze and Stone Curse. (#3161)
+- Fixed the SP cost behavior for Tarot Card of Fate when under the effect of Service for You. (#3161)
+- Fixed the duration of Super Novice's Steel Body when dying at 99% experience. (#3161)
+- Fixed the cast time and after cast delay of Napalm Beat. (#3161)
+- Fixed `CH_CHAINCRUSH` not working after `MO_COMBOFINISH`. (#3161)
+- Fixed several security issues (including a number of false positives) reported by CodeQL (overflows, misleading implicit type conversions, ambiguous regular expressions, etc) and refactored some related code to reduce dangerous variable reuses. (#3169)
+- Fixed some cases of movement notifications sent to the client after a monster dies, causing visual glitches such as mobs not cleared and still standing or moving after their death. (#3163, issues #2047, #2109)
+- Fixed an integer overflow in the image size for the Macro interface. (#3165)
+- Fixed a failed assertion when a quest has 3 objectives. (#3166)
+- Fixed various quest related packets sent to the client. (#3166)
+  - Fixed the labelling for quests that use monster size, race or element as conditions.
+  - Fixed swapped values for the mob size.
+  - Fixed the mob ID not being sent for special cases (with map names, races, sizes or elements) and requiring a new log in to see the correct quest objectives.
+- Fixed the Zeny retrieval process from RoDEX, causing potential loss of Zeny. (#3168)
+- Fixed output character encoding in the `setup_mariadb.ps1` script. (#3172)
+- Fixed a buffer overflow in `mapif->rodex_getitemsack()`. (part of #3173)
+
+### Deprecated
+
+- Deprecated the `BA_FROSTJOKER` skill ID and constant, renamed to the official name `BA_FROSTJOKE`. (part of #3170)
+
+### Removed
+
+- Removed the `itemdb->lookup_const()` and `mob->lookup_const()` functions, replaced by `map->setting_lookup_const()`. (part of #3164)
+- Removed the `itemdb->lookup_const_mask()` function, replaced by `map->setting_lookup_const_mask()`. (part of #3164)
+- Removed support for the deprecated `View` field in the item DB, replaced in 2016 by `ViewSprite` and `SubType` with #1828. (#3170)
+- Removed the deprecated constants `Job_Alchem` and `Job_Baby_Alchem`, replaced in 2016 by `Job_Alchemist` and `Job_Baby_Alchemist` with #1088. (#3170)
+- Removed the old `VAR_*` setlook constants, deprecated since 2016 with #908. (#3170)
+- Removed the `useatcmd()` script command, deprecated in 2017 with #1841. (#3170)
+- Removed code (mostly dead code) related to the long unsupported and long broken multi-zone functionality. (#3173)
+
 ## [v2022.10.05] `October 05 2022`
 
 ### Added
@@ -48,8 +137,6 @@ If you are reading this in a text editor, simply ignore this section
 - Fixed text in old clients in packet `ZC_NOTIFY_CHAT_PARTY`. (#3149)
 - Code style fixes. (part of #3149)
 - Fixed an interaction issue between copied (Plagiarize/Reproduce) skills and ones already present in the character's skill list. (part of #2948, issue 2940)
-
-### Deprecated
 
 ### Removed
 
@@ -2497,6 +2584,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2022.11.02]: https://github.com/HerculesWS/Hercules/compare/v2022.10.05...v2022.11.02
 [v2022.10.05]: https://github.com/HerculesWS/Hercules/compare/v2022.06.01...v2022.10.05
 [v2022.06.01]: https://github.com/HerculesWS/Hercules/compare/v2022.04.07...v2022.06.01
 [v2022.04.07]: https://github.com/HerculesWS/Hercules/compare/v2022.03.02...v2022.04.07
