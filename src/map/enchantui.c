@@ -309,13 +309,13 @@ static bool enchantui_read_db_libconfig_normal_info(const struct config_setting_
 	return true;
 }
 
-static bool enchantui_read_db_libconfig_perfect_info(const struct config_setting_t *it, struct enchant_info_perfect *pinfo, int n, const char *source)
+static bool enchantui_read_db_libconfig_perfect_info(const struct config_setting_t *it, struct enchant_info_perfect *perfect_info, int n, const char *source)
 {
 	nullpo_retr(false, it);
-	nullpo_retr(false, pinfo);
+	nullpo_retr(false, perfect_info);
 	nullpo_retr(false, source);
 
-	VECTOR_INIT(*pinfo);
+	VECTOR_INIT(*perfect_info);
 
 	int i = 0;
 	struct config_setting_t *entry = NULL;
@@ -340,8 +340,8 @@ static bool enchantui_read_db_libconfig_perfect_info(const struct config_setting
 		if (materials != NULL && !enchantui->read_db_libconfig_materials_list(materials, &perfentry.Materials, n, source))
 			continue;
 
-		VECTOR_ENSURE(*pinfo, 1, 1);
-		VECTOR_PUSH(*pinfo, perfentry);
+		VECTOR_ENSURE(*perfect_info, 1, 1);
+		VECTOR_PUSH(*perfect_info, perfentry);
 	}
 
 	return true;
