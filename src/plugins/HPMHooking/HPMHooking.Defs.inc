@@ -3080,8 +3080,8 @@ typedef bool (*HPMHOOK_pre_enchantui_read_db_libconfig_gradebonus) (const struct
 typedef bool (*HPMHOOK_post_enchantui_read_db_libconfig_gradebonus) (bool retVal___, const struct config_setting_t *it, struct enchant_slot_info *sinfo, int n, const char *source);
 typedef bool (*HPMHOOK_pre_enchantui_read_db_libconfig_normal_info) (const struct config_setting_t **it, struct enchant_info_normal **ninfo, int *n, const char **source);
 typedef bool (*HPMHOOK_post_enchantui_read_db_libconfig_normal_info) (bool retVal___, const struct config_setting_t *it, struct enchant_info_normal *ninfo, int n, const char *source);
-typedef bool (*HPMHOOK_pre_enchantui_read_db_libconfig_perfect_info) (const struct config_setting_t **it, struct enchant_info_perfect **pinfo, int *n, const char **source);
-typedef bool (*HPMHOOK_post_enchantui_read_db_libconfig_perfect_info) (bool retVal___, const struct config_setting_t *it, struct enchant_info_perfect *pinfo, int n, const char *source);
+typedef bool (*HPMHOOK_pre_enchantui_read_db_libconfig_perfect_info) (const struct config_setting_t **it, struct enchant_info_perfect **perfect_info, int *n, const char **source);
+typedef bool (*HPMHOOK_post_enchantui_read_db_libconfig_perfect_info) (bool retVal___, const struct config_setting_t *it, struct enchant_info_perfect *perfect_info, int n, const char *source);
 typedef bool (*HPMHOOK_pre_enchantui_read_db_libconfig_upgrade_info) (const struct config_setting_t **it, struct enchant_info_upgrade **uinfo, int *n, const char **source);
 typedef bool (*HPMHOOK_post_enchantui_read_db_libconfig_upgrade_info) (bool retVal___, const struct config_setting_t *it, struct enchant_info_upgrade *uinfo, int n, const char *source);
 typedef bool (*HPMHOOK_pre_enchantui_read_db_libconfig_reset_info) (const struct config_setting_t **it, struct enchant_info_reset **rinfo, int *n, const char **source);

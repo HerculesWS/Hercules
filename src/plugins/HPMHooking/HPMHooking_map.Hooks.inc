@@ -34733,15 +34733,15 @@ bool HP_enchantui_read_db_libconfig_normal_info(const struct config_setting_t *i
 	}
 	return retVal___;
 }
-bool HP_enchantui_read_db_libconfig_perfect_info(const struct config_setting_t *it, struct enchant_info_perfect *pinfo, int n, const char *source) {
+bool HP_enchantui_read_db_libconfig_perfect_info(const struct config_setting_t *it, struct enchant_info_perfect *perfect_info, int n, const char *source) {
 	int hIndex = 0;
 	bool retVal___ = false;
 	if (HPMHooks.count.HP_enchantui_read_db_libconfig_perfect_info_pre > 0) {
-		bool (*preHookFunc) (const struct config_setting_t **it, struct enchant_info_perfect **pinfo, int *n, const char **source);
+		bool (*preHookFunc) (const struct config_setting_t **it, struct enchant_info_perfect **perfect_info, int *n, const char **source);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_enchantui_read_db_libconfig_perfect_info_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_enchantui_read_db_libconfig_perfect_info_pre[hIndex].func;
-			retVal___ = preHookFunc(&it, &pinfo, &n, &source);
+			retVal___ = preHookFunc(&it, &perfect_info, &n, &source);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -34749,13 +34749,13 @@ bool HP_enchantui_read_db_libconfig_perfect_info(const struct config_setting_t *
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.enchantui.read_db_libconfig_perfect_info(it, pinfo, n, source);
+		retVal___ = HPMHooks.source.enchantui.read_db_libconfig_perfect_info(it, perfect_info, n, source);
 	}
 	if (HPMHooks.count.HP_enchantui_read_db_libconfig_perfect_info_post > 0) {
-		bool (*postHookFunc) (bool retVal___, const struct config_setting_t *it, struct enchant_info_perfect *pinfo, int n, const char *source);
+		bool (*postHookFunc) (bool retVal___, const struct config_setting_t *it, struct enchant_info_perfect *perfect_info, int n, const char *source);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_enchantui_read_db_libconfig_perfect_info_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_enchantui_read_db_libconfig_perfect_info_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, it, pinfo, n, source);
+			retVal___ = postHookFunc(retVal___, it, perfect_info, n, source);
 		}
 	}
 	return retVal___;
