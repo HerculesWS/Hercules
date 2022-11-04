@@ -22,6 +22,28 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
+## [v2022.11.02+1] `November 02 2022` `PATCH 1`
+
+### Added
+
+- Added support for newer packetvers/encryption keys/client messages (up to 20221019). (#3174)
+- Added support for packet `ZC_SPECIALPOPUP` related to the Special Popup messages. (part of #3174)
+- Implemented script command `specialpopup()` to open a popup and/or show a chat text message from the `spopup.lub` file. An example script has been provided in `npc/custom/specialpopup.txt`. (#3174)
+- Implemented the `specialpopup` mapflag, to automatically show the popup text configured clientside. All GvG maps have been configured to show popup with type 1. (#3174)
+
+### Changed
+
+- Updated many packets with the correct Zero client packetver checks. (part of #3174)
+- Updated GitHub Actions workflows to use the latest packetver. (part of #3174)
+- Updated GitHub Actions workflow to include a gcc-12 build. (part of #3174)
+
+### Fixed
+
+- Fixed a conflicting variable name `pinfo`, causing warnings about shadowed variables when building plugins. (part of #3174)
+
+### Removed
+
+- Removed the unused value `vendinglistType` from `enum packet_headers`. (part of #3174)
 
 ## [v2022.11.02] `November 02 2022`
 
@@ -2584,6 +2606,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2022.11.02+1]: https://github.com/HerculesWS/Hercules/compare/v2022.11.02...v2022.11.02+1
 [v2022.11.02]: https://github.com/HerculesWS/Hercules/compare/v2022.10.05...v2022.11.02
 [v2022.10.05]: https://github.com/HerculesWS/Hercules/compare/v2022.06.01...v2022.10.05
 [v2022.06.01]: https://github.com/HerculesWS/Hercules/compare/v2022.04.07...v2022.06.01
