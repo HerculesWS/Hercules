@@ -4251,6 +4251,8 @@ ACMD(mapinfo)
 		strcat(atcmd_output, msg_fd(fd, 852)); // No Map Channel Auto Join |
 	if (map->list[m_id].flag.nopet != 0)
 		strcat(atcmd_output, msg_fd(fd, 853)); // NoPet |
+	if (map->list[m_id].flag.specialpopup != 0)
+		strcat(atcmd_output, msg_fd(fd, 1545)); // SpecialPopup |
 
 	clif->message(fd, atcmd_output);
 
@@ -8189,6 +8191,7 @@ ACMD(mapflag)
 		CHECKFLAG(nostorage);
 		CHECKFLAG(nogstorage);
 		CHECKFLAG(noviewid);
+		CHECKFLAG(specialpopup);
 
 		clif->message(sd->fd, " ");
 		clif->message(sd->fd, msg_fd(fd, 1312)); // Usage: "@mapflag monster_noteleport 1" (0=Off | 1=On)
@@ -8278,6 +8281,7 @@ ACMD(mapflag)
 	SETFLAG(nostorage);
 	SETFLAG(nogstorage);
 	SETFLAG(noviewid);
+	SETFLAG(specialpopup);
 
 	clif->message(sd->fd, msg_fd(fd, 1314)); // Invalid flag name or flag.
 	clif->message(sd->fd, msg_fd(fd, 1312)); // Usage: "@mapflag monster_noteleport 1" (0=Off | 1=On)
@@ -8290,7 +8294,7 @@ ACMD(mapflag)
 	clif->message(sd->fd, "fog, fireworks, sakura, leaves, nobaseexp, nojobexp, nomobloot, nomvploot,");
 	clif->message(sd->fd, "nightenabled, nodrop, novending, loadevent, nochat, partylock, guildlock,");
 	clif->message(sd->fd, "src4instance, reset, chsysnolocalaj, noknockback, notomb, nocashshop, noautoloot,");
-	clif->message(sd->fd, "pairship_startable, pairship_endable, nostorage, nogstorage, noviewid");
+	clif->message(sd->fd, "pairship_startable, pairship_endable, nostorage, nogstorage, noviewid, specialpopup");
 
 #undef CHECKFLAG
 #undef SETFLAG
@@ -10460,7 +10464,7 @@ ACMD(refineryui)
 
 ACMD(gradeui)
 {
-#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 	clif->open_ui_send(sd, ZC_GRADE_ENCHANT_UI);
 	return true;
 #else
@@ -10478,7 +10482,7 @@ ACMD(reloadgradedb)
 
 ACMD(itemreform)
 {
-#if PACKETVER_MAIN_NUM >= 20201118 || PACKETVER_RE_NUM >= 20211103
+#if PACKETVER_MAIN_NUM >= 20201118 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 	struct item_data *item_data;
 
 	if ((item_data = itemdb->search_name(message)) == NULL &&

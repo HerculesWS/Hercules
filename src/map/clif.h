@@ -638,7 +638,7 @@ enum zc_ui_types {
 	ZC_RENEWQUEST_UI = 6,
 	ZC_ATTENDANCE_UI = 7,
 #endif
-#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 	ZC_GRADE_ENCHANT_UI = 8,
 #endif
 #if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
@@ -646,7 +646,7 @@ enum zc_ui_types {
 	ZC_ENCHANT_UI = 10
 #else  // PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 	zc_ui_unused9 = 9  // for avoid compilation errors
-#endif  // PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103
+#endif  // PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 };
 
 /**
@@ -1863,6 +1863,7 @@ struct clif_interface {
 	int (*pingTimerSub) (struct map_session_data *sd, va_list ap);
 	void (*pResetCooldown) (int fd, struct map_session_data *sd);
 	void (*loadConfirm) (struct map_session_data *sd);
+	void (*updateSpecialPopup) (struct map_session_data *sd);
 	void (*send_selforarea) (int fd, struct block_list *bl, const void *buf, int len);
 	void (*OpenRefineryUI) (struct map_session_data *sd);
 	void (*pAddItemRefineryUI) (int fd, struct map_session_data *sd);
@@ -1953,6 +1954,8 @@ struct clif_interface {
 	void (*pEnchantUIUpgradeRequest) (int fd, struct map_session_data *sd);
 	void (*pEnchantUIResetRequest) (int fd, struct map_session_data *sd);
 	void (*pEnchantUIClose) (int fd, struct map_session_data *sd);
+
+	void (*special_popup) (struct map_session_data *sd, int popupId);
 };
 
 #ifdef HERCULES_CORE

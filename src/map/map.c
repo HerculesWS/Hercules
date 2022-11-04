@@ -5297,7 +5297,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 	} else if (strcmpi(flag, "bexp") == 0) {
 		if (state == 0) {
 			if (map->list[m].bexp != 100) {
-				sprintf(rflag, "bexp\t%d", map->list[m].jexp);
+				sprintf(rflag, "bexp\t%d", map->list[m].bexp);
 				map_zone_mf_cache_add(m, rflag);
 			}
 		}
@@ -5306,6 +5306,17 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 				sprintf(rflag, "bexp\t%s", params);
 				map_zone_mf_cache_add(m, rflag);
 			}
+		}
+	} else if (strcmpi(flag, "specialpopup") == 0) {
+		if (state != 0) {
+			if (sscanf(params, "%d", &state) == 1) {
+				if (state != map->list[m].flag.specialpopup) {
+					sprintf(rflag, "specialpopup\t%s", params);
+					map_zone_mf_cache_add(m, rflag);
+				}
+			}
+		} else {
+			map_zone_mf_cache_add(m, "specialpopup\toff");
 		}
 	} else if (strcmpi(flag, "novending") == 0) {
 		if (state != 0 && map->list[m].flag.novending != 0)

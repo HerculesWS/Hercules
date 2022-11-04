@@ -4875,5 +4875,15 @@ packetLen(0x0bbe, 6)
 packetLen(0x0bbe, 3)
 #endif
 
+// Packet: 0x0bbf
+#if PACKETVER >= 20220921
+packetLen(0x0bbf, 12)
+#endif
+
+// Packet: 0x0bc0
+#if PACKETVER >= 20221005
+packetLen(0x0bc0, 3)
+#endif
+
 
 #endif /* COMMON_PACKETS2022_LEN_MAIN_H */

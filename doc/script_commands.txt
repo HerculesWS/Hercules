@@ -10992,3 +10992,11 @@ returns true on success and false on failure
 
 Opens Item Reform user interface for the given item
 returns true on success and false on failure
+
+---------------------------------------
+*specialpopup(<popup id>)
+
+Open popup or/and show chat text by id from list configured in file spopup.lub
+Popup and text visible only if player warped from one map to another map with different name.
+
+Works from clients: main 20221005.

@@ -352,6 +352,7 @@ enum {
 	MF_NOKNOCKBACK,
 	MF_SRC4INSTANCE,
 	MF_CVC,
+	MF_SPECIALPOPUP,
 };
 
 enum navigation_service {

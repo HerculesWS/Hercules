@@ -1,0 +1,24 @@
+//===== Hercules Script ======================================
+//= soundeffect play demo
+//===== By: ==================================================
+//= 4144
+//===== Current Version: =====================================
+//= 1.0
+//===== Description: =========================================
+//= soundeffect player demo in prontera.
+//============================================================
+
+prontera,169,284,6	script	Special popup#prt	4_M_KID1,{
+	mes("Chat text only: specialpopup(1);");
+	specialpopup(1);
+	next();
+	mes("Popup text: specialpopup(2);");
+	specialpopup(2);
+	next();
+// 3 generate error because not added to lua
+//	mes("specialpopup(3);");
+//	specialpopup(3);
+//	next();
+
+	close;
+}

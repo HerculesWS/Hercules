@@ -1203,6 +1203,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->pingTimerSub, HP_clif_pingTimerSub) },
 	{ HP_POP(clif->pResetCooldown, HP_clif_pResetCooldown) },
 	{ HP_POP(clif->loadConfirm, HP_clif_loadConfirm) },
+	{ HP_POP(clif->updateSpecialPopup, HP_clif_updateSpecialPopup) },
 	{ HP_POP(clif->send_selforarea, HP_clif_send_selforarea) },
 	{ HP_POP(clif->OpenRefineryUI, HP_clif_OpenRefineryUI) },
 	{ HP_POP(clif->pAddItemRefineryUI, HP_clif_pAddItemRefineryUI) },
@@ -1268,6 +1269,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->pEnchantUIUpgradeRequest, HP_clif_pEnchantUIUpgradeRequest) },
 	{ HP_POP(clif->pEnchantUIResetRequest, HP_clif_pEnchantUIResetRequest) },
 	{ HP_POP(clif->pEnchantUIClose, HP_clif_pEnchantUIClose) },
+	{ HP_POP(clif->special_popup, HP_clif_special_popup) },
 /* cmdline_interface */
 	{ HP_POP(cmdline->init, HP_cmdline_init) },
 	{ HP_POP(cmdline->final, HP_cmdline_final) },

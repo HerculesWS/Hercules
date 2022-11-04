@@ -6118,7 +6118,7 @@ static void do_init_script(bool minimal)
 	script->declare_conditional_feature("PRERENEWAL", true);
 #endif
 	script->declare_conditional_feature("LOADGMSCRIPTS", script->config.load_gm_scripts);
-	script->declare_conditional_feature("LOADGRADESCRIPTS", (PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723));
+	script->declare_conditional_feature("LOADGRADESCRIPTS", (PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024));
 
 	if (minimal)
 		return;
@@ -14534,6 +14534,7 @@ static BUILDIN(getmapflag)
 		case MF_NOKNOCKBACK: script_pushint(st, map->list[m].flag.noknockback); break;
 		case MF_SRC4INSTANCE: script_pushint(st, map->list[m].flag.src4instance); break;
 		case MF_CVC: script_pushint(st, map->list[m].flag.cvc); break;
+		case MF_SPECIALPOPUP: script_pushint(st, map->list[m].flag.specialpopup); break;
 		}
 	}
 
@@ -14671,6 +14672,7 @@ static BUILDIN(setmapflag)
 		case MF_NOKNOCKBACK: map->list[m].flag.noknockback = 1; break;
 		case MF_SRC4INSTANCE: map->list[m].flag.src4instance = 1; break;
 		case MF_CVC: map->list[m].flag.cvc = 1; break;
+		case MF_SPECIALPOPUP: map->list[m].flag.specialpopup = val; break;
 		}
 	}
 
@@ -14766,6 +14768,7 @@ static BUILDIN(removemapflag)
 		case MF_NOKNOCKBACK: map->list[m].flag.noknockback = 0; break;
 		case MF_SRC4INSTANCE: map->list[m].flag.src4instance = 0; break;
 		case MF_CVC: map->list[m].flag.cvc = 0; break;
+		case MF_SPECIALPOPUP: map->list[m].flag.specialpopup = 0; break;
 		}
 	}
 
@@ -27820,7 +27823,7 @@ static BUILDIN(setdialogalign)
 
 static BUILDIN(opengradeui)
 {
-#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 	struct map_session_data *sd = script_rid2sd(st);
 
 	if (sd == NULL) {
@@ -27971,7 +27974,7 @@ static BUILDIN(calldynamicnpc)
 
 static BUILDIN(openreformui)
 {
-#if PACKETVER_MAIN_NUM >= 20201118 || PACKETVER_RE_NUM >= 20211103
+#if PACKETVER_MAIN_NUM >= 20201118 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 	struct map_session_data *sd = script_rid2sd(st);
 
 	if (sd == NULL) {
@@ -27996,6 +27999,19 @@ static BUILDIN(openreformui)
 	script_pushint(st, 0);
 	return false;
 #endif
+}
+
+static BUILDIN(specialpopup)
+{
+	struct map_session_data *sd = script_rid2sd(st);
+
+	if (sd == NULL) {
+		return false;
+	}
+
+	const int popup_id = script_getnum(st, 2);
+	clif->special_popup(sd, popup_id);
+	return true;
 }
 
 /**
@@ -28863,6 +28879,8 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(opengradeui, ""),
 		BUILDIN_DEF(calldynamicnpc, "v"),
 		BUILDIN_DEF(openreformui, "i"),
+
+		BUILDIN_DEF(specialpopup, "i"),
 	};
 	int i, len = ARRAYLENGTH(BUILDIN);
 	RECREATE(script->buildin, char *, script->buildin_count + len); // Pre-alloc to speed up
@@ -29609,6 +29627,7 @@ static void script_hardcoded_constants(void)
 	script->set_constant("MF_NOKNOCKBACK", MF_NOKNOCKBACK, false, false);
 	script->set_constant("MF_SRC4INSTANCE", MF_SRC4INSTANCE, false, false);
 	script->set_constant("MF_CVC", MF_CVC, false, false);
+	script->set_constant("MF_SPECIALPOPUP", MF_SPECIALPOPUP, false, false);
 
 	script->constdb_comment("Job masks / Job map_ids");
 
