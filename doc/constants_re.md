@@ -5571,6 +5571,7 @@
 - `MF_NOKNOCKBACK`: 63
 - `MF_SRC4INSTANCE`: 64
 - `MF_CVC`: 65
+- `MF_SPECIALPOPUP`: 66
 
 ### Job masks / Job map_ids
 
