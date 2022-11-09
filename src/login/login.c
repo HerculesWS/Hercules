@@ -2084,14 +2084,12 @@ static uint16 login_convert_users_to_colors(uint16 users)
 
 static void login_generate_token(unsigned char *token)
 {
-#if PACKETVER >= 20170315
 	nullpo_retv(token);
 	for (int f = 0; f < AUTH_TOKEN_SIZE; f ++) {
 		int val = 0;
 		while((val = (rnd() & 0x7f)) <= ' ' || val == '"' || val == '&');
 		token[f] = val;
 	}
-#endif
 }
 
 //--------------------------------------

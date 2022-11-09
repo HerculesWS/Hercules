@@ -68,9 +68,7 @@ struct PACKET_AC_REFUSE_LOGIN_R2 {
 	char block_date[20]; ///< Ban expiration date
 } __attribute__((packed));
 
-#if PACKETVER >= 20170315
 #define AUTH_TOKEN_SIZE 16
-#endif
 
 /**
  * Packet structure for AC_ACCEPT_LOGIN.

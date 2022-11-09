@@ -315,8 +315,14 @@ static bool lclif_send_server_list(struct login_session_data *sd)
 	packet->last_login_ip = 0; // Not used anymore
 	memset(packet->last_login_time, '\0', sizeof(packet->last_login_time)); // Not used anymore
 	packet->sex = sex_str2num(sd->sex);
+#if PACKETVER >= 20170315
 	login->generate_token(packet->auth_token);
 	lapiif->connect_user(sd, packet->auth_token);
+#else  // PACKETVER >= 20170315
+	unsigned char auth_token[AUTH_TOKEN_SIZE];
+	login->generate_token(auth_token);
+	lapiif->connect_user(sd, auth_token);
+#endif  // PACKETVER >= 20170315
 	for (i = 0, n = 0; i < ARRAYLENGTH(login->dbs->server); ++i) {
 		uint32 subnet_char_ip;
 
