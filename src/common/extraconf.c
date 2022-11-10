@@ -185,7 +185,7 @@ static bool extraconf_set_var_str(struct config_data *conf_var, const char *val)
 		return false;
 	}
 
-	const int len = strlen(val);
+	const int len = (int)strlen(val);
 	if ((conf_var->min != 0 && len < conf_var->min) || (conf_var->max != 0 && len > conf_var->max)) {
 		ShowWarning("Value for setting '%s': '%s' is invalid (min:%d max:%d)! Defaulting to '%s'...\n",
 				conf_var->str, val, conf_var->min, conf_var->max, conf_var->defval_str);

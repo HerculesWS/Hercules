@@ -362,7 +362,7 @@ static void testChunkedBuf2(char *data, int sz)
 static void testChunkedBuf(char *data, int sz)
 {
 	if (sz == 0)
-		sz = strlen(data);
+		sz = (int)strlen(data);
 	for (int f = 1; f < 30; f ++) {
 		fake_wchunk_size = f;
 		testChunkedBuf2(data, sz);

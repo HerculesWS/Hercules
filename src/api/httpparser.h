@@ -44,8 +44,8 @@ struct httpparser_interface {
 	int (*init) (bool minimal);
 	void (*final) (void);
 	bool (*parse) (int fd);
-	bool (*parse_real) (int fd, struct api_session_data *sd, const char *data, int data_size);
-	void (*add_to_temp_request) (int fd, struct api_session_data *sd, const char *data, int data_size);
+	bool (*parse_real) (int fd, struct api_session_data *sd, const char *data, size_t data_size);
+	void (*add_to_temp_request) (int fd, struct api_session_data *sd, const char *data, size_t data_size);
 	int (*search_request_line_end) (struct api_session_data *sd);
 	bool (*multi_parse) (int fd);
 	void (*init_parser) (int fd, struct api_session_data *sd);

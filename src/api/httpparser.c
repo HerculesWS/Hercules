@@ -350,7 +350,7 @@ static http_method httpparser_get_method(struct api_session_data *sd)
 	return sd->parser.method;
 }
 
-static bool httpparser_parse_real(int fd, struct api_session_data *sd, const char *data, int data_size)
+static bool httpparser_parse_real(int fd, struct api_session_data *sd, const char *data, size_t data_size)
 {
 	nullpo_ret(sd);
 	if (data_size == 0)
@@ -373,7 +373,7 @@ static bool httpparser_parse_real(int fd, struct api_session_data *sd, const cha
 	return false;
 }
 
-static void httpparser_add_to_temp_request(int fd, struct api_session_data *sd, const char *data, int data_size)
+static void httpparser_add_to_temp_request(int fd, struct api_session_data *sd, const char *data, size_t data_size)
 {
 	nullpo_retv(sd);
 	if (sd->request_temp == NULL) {
@@ -398,7 +398,7 @@ static int httpparser_search_request_line_end(struct api_session_data *sd)
 
 	int idx = -1;
 	const char *data = sd->request_temp;
-	const int data_size = sd->request_temp_size;
+	const int data_size = (int)sd->request_temp_size;
 	for (int i = 0; i < data_size - 1; i ++) {
 		if (data[i] == '\r' && data[i + 1] == '\n') {
 			idx = i;

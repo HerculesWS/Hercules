@@ -38,7 +38,7 @@
 	const int p ## _fixed_len = sizeof(struct pname); \
 	const int p ## _header_id = header; \
 	const char *p ## data = pdata; \
-	const int p ## data_len = pdata_len; \
+	const int p ## data_len = (int)pdata_len; \
 	const int p ## _full_chunks_count = p ## data_len / (chunk_size); \
 	for (int p ## _cnt = 0; p ## _cnt < p ## _full_chunks_count; p ## _cnt ++, p ## _offset += (chunk_size))
 

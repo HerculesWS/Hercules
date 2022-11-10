@@ -557,7 +557,7 @@ static void aclif_set_post_header_data(int fd, const char *value, size_t size)
 			aFree(sd->temp_mime_header->data);
 		sd->temp_mime_header->data = aMalloc(size + 1);
 		memcpy(sd->temp_mime_header->data, value, size);
-		sd->temp_mime_header->data_size = size;
+		sd->temp_mime_header->data_size = (uint32)size;
 		sd->flag.multi_part_begin = 0;
 	} else if (sd->temp_mime_header->data == NULL) {
 		ShowWarning("Post header data parsing error %d: %lu\n", fd, size);
@@ -565,7 +565,7 @@ static void aclif_set_post_header_data(int fd, const char *value, size_t size)
 		return;
 	} else {
 		// append header data
-		const uint32 newSize = sd->temp_mime_header->data_size + size;
+		const uint32 newSize = sd->temp_mime_header->data_size + (uint32)size;
 		sd->temp_mime_header->data = aRealloc(sd->temp_mime_header->data, newSize + 1);
 		memcpy(sd->temp_mime_header->data + sd->temp_mime_header->data_size, value, size);
 		sd->temp_mime_header->data_size = newSize;

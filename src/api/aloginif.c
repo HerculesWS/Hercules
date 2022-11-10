@@ -327,7 +327,7 @@ static void aloginif_send_to_server(int fd, struct api_session_data *sd, int msg
 	nullpo_retv(sd);
 	Assert_retv(aloginif->fd != -1);
 
-	const int len = sizeof(struct PACKET_API_PROXY) + data_len;
+	const int len = (int)sizeof(struct PACKET_API_PROXY) + (int)data_len;
 	WFIFOHEAD(aloginif->fd, len);
 	struct PACKET_API_PROXY *p = WFIFOP(aloginif->fd, 0);
 	p->packet_id = HEADER_API_PROXY_REQUEST;
