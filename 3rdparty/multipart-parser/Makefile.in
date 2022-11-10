@@ -52,4 +52,4 @@ Makefile: Makefile.in
 
 %.o: %.c $(MULTIPARTPARSER_H) Makefile
 	@echo "	CC	$<"
-	@$(CC) @CFLAGS@ @DEFS@ @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
+	@$(CC) @CFLAGS@ @DEFS@ @CPPFLAGS@ @FLAG_WNO_shorten_64_to_32@ -c $(OUTPUT_OPTION) $<

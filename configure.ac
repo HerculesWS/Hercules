@@ -1089,6 +1089,9 @@ AC_DEFUN([AC_CHECK_COMPILER_WFLAG],
 			[
 				AC_MSG_RESULT([yes])
 				CFLAGS="$OLD_CFLAGS -W$1"
+				if test "$1" == "shorten-64-to-32"; then
+					FLAG_WNO_shorten_64_to_32="-Wno-shorten-64-to-32"
+				fi
 				# Optionally, run a test
 				if test "x$2" != "x"; then
 					AC_MSG_CHECKING([whether $CC can actually use -W$1])
@@ -1098,10 +1101,16 @@ AC_DEFUN([AC_CHECK_COMPILER_WFLAG],
 						[
 							AC_MSG_RESULT([no])
 							CFLAGS="$OLD_CFLAGS"
+							if test "$1" == "shorten-64-to-32"; then
+								FLAG_WNO_shorten_64_to_32="-Wno-shorten-64-to-32"
+							fi
 						]
 						[
 							AC_MSG_RESULT([yes])
 							CFLAGS="$OLD_CFLAGS -W$1"
+							if test "$1" == "shorten-64-to-32"; then
+								FLAG_WNO_shorten_64_to_32="-Wno-shorten-64-to-32"
+							fi
 						],
 					)
 				fi
@@ -1109,6 +1118,9 @@ AC_DEFUN([AC_CHECK_COMPILER_WFLAG],
 			[
 				AC_MSG_RESULT([no])
 				CFLAGS="$OLD_CFLAGS"
+				if test "$1" == "shorten-64-to-32"; then
+					FLAG_WNO_shorten_64_to_32="-Wno-shorten-64-to-32"
+				fi
 			]
 		)
 	]
@@ -1403,6 +1415,7 @@ fi
 my_shared_test_flags=""
 AC_SUBST([WITH_PLUGINS])
 AC_SUBST([SOFLAGS])
+AC_SUBST([FLAG_WNO_shorten_64_to_32])
 
 
 #
