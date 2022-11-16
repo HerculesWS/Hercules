@@ -10599,17 +10599,20 @@ static void pc_unequipitem_pos(struct map_session_data *sd, int n, int pos)
 	}
 
 	if (pos & EQP_COSTUME_HEAD_TOP) {
-		sd->status.look.head_top = ( pc->checkequip(sd,EQP_HEAD_TOP) >= 0 ) ? sd->inventory_data[pc->checkequip(sd,EQP_HEAD_TOP)]->view_sprite : 0;
+		int equip = pc->checkequip(sd, EQP_HEAD_TOP);
+		sd->status.look.head_top = (equip >= 0 && sd->inventory_data[equip] != NULL) ? sd->inventory_data[equip]->view_sprite : 0;
 		clif->changelook(&sd->bl, LOOK_HEAD_TOP, sd->status.look.head_top);
 	}
 
 	if (pos & EQP_COSTUME_HEAD_MID) {
-		sd->status.look.head_mid = ( pc->checkequip(sd,EQP_HEAD_MID) >= 0 ) ? sd->inventory_data[pc->checkequip(sd,EQP_HEAD_MID)]->view_sprite : 0;
+		int equip = pc->checkequip(sd, EQP_HEAD_MID);
+		sd->status.look.head_mid = (equip >= 0 && sd->inventory_data[equip] != NULL) ? sd->inventory_data[equip]->view_sprite : 0;
 		clif->changelook(&sd->bl, LOOK_HEAD_MID, sd->status.look.head_mid);
 	}
 
 	if (pos & EQP_COSTUME_HEAD_LOW) {
-		sd->status.look.head_bottom = ( pc->checkequip(sd,EQP_HEAD_LOW) >= 0 ) ? sd->inventory_data[pc->checkequip(sd,EQP_HEAD_LOW)]->view_sprite : 0;
+		int equip = pc->checkequip(sd, EQP_HEAD_LOW);
+		sd->status.look.head_bottom = (equip >= 0 && sd->inventory_data[equip] != NULL) ? sd->inventory_data[equip]->view_sprite : 0;
 		clif->changelook(&sd->bl, LOOK_HEAD_BOTTOM, sd->status.look.head_bottom);
 	}
 
@@ -10622,7 +10625,8 @@ static void pc_unequipitem_pos(struct map_session_data *sd, int n, int pos)
 	}
 
 	if (pos & EQP_COSTUME_GARMENT) {
-		sd->status.look.robe = ( pc->checkequip(sd,EQP_GARMENT) >= 0 ) ? sd->inventory_data[pc->checkequip(sd,EQP_GARMENT)]->view_sprite : 0;
+		int equip = pc->checkequip(sd, EQP_GARMENT);
+		sd->status.look.robe = (equip >= 0 && sd->inventory_data[equip] != NULL) ? sd->inventory_data[equip]->view_sprite : 0;
 		clif->changelook(&sd->bl, LOOK_ROBE, sd->status.look.robe);
 	}
 }

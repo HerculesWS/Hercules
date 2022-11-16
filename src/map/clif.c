@@ -12514,7 +12514,7 @@ static void clif_parse_UseItem(int fd, struct map_session_data *sd)
 		return;
 
 	// Package items should use CZ_USE_PACKAGEITEM instead
-	if (sd->inventory_data[n]->flag.select_package == 1)
+	if (sd->inventory_data[n] != NULL && sd->inventory_data[n]->flag.select_package == 1)
 		return;
 
 	if (!pc->useitem(sd,n))
@@ -12544,7 +12544,7 @@ static void clif_parse_UsePackageItem(int fd, struct map_session_data *sd)
 		return;
 
 	// Ignore requests with non package items
-	if (sd->inventory_data[n]->flag.select_package == 0)
+	if (sd->inventory_data[n] != NULL && sd->inventory_data[n]->flag.select_package == 0)
 		return;
 
 	pc->setreg(sd, script->add_variable("@selectpackage_itemid"), p->itemID);
@@ -23057,7 +23057,7 @@ static void clif_rodex_add_item_result(struct map_session_data *sd, int16 idx, i
 	int fd, j;
 
 	nullpo_retv(sd);
-	if (idx < 0 || idx >= sd->status.inventorySize)
+	if (idx < 0 || idx >= sd->status.inventorySize || sd->inventory_data[idx] == NULL)
 		return;
 
 	fd = sd->fd;
