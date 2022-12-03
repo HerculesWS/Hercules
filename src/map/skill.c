@@ -11271,6 +11271,8 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 				int equip_idx = sd->equip_index[EQI_AMMO];
 				if( equip_idx <= 0 )
 					break; // No ammo.
+				if (sd->inventory_data[equip_idx] == NULL)
+					break;
 				ammo_id = sd->inventory_data[equip_idx]->nameid;
 				if( ammo_id <= 0 )
 					break;
@@ -17639,6 +17641,9 @@ static void skill_repairweapon(struct map_session_data *sd, int idx)
 		return;
 	}
 
+	if (target_sd->inventory_data[idx] == NULL)
+		return;
+
 	if ( target_sd->inventory_data[idx]->type == IT_WEAPON )
 		material = materials[ target_sd->inventory_data[idx]->wlv - 1 ]; // Lv1/2/3/4 weapons consume 1 Iron Ore/Iron/Steel/Rough Oridecon
 	else
@@ -17691,6 +17696,8 @@ static void skill_weaponrefine(struct map_session_data *sd, int idx)
 	if (idx >= 0 && idx < sd->status.inventorySize) {
 		struct item *item;
 		struct item_data *ditem = sd->inventory_data[idx];
+		if (ditem == NULL)
+			return;
 		item = &sd->status.inventory[idx];
 
 		if (item->nameid > 0 && ditem->type == IT_WEAPON) {

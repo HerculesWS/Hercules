@@ -80,7 +80,7 @@ static void rodex_add_item(struct map_session_data *sd, int16 idx, int16 amount)
 {
 	nullpo_retv(sd);
 
-	if (idx < 0 || idx >= sd->status.inventorySize) {
+	if (idx < 0 || idx >= sd->status.inventorySize || sd->inventory_data[idx] == NULL) {
 		clif->rodex_add_item_result(sd, idx, amount, RODEX_ADD_ITEM_FATAL_ERROR);
 		return;
 	}
