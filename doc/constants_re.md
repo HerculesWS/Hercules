@@ -5807,7 +5807,7 @@
 - `ModDeath`: [param]
 
 
-## Skills (db/re/skill_db.txt)
+## Skills (db/re/skill_db.conf)
 
 - `NPC_WIDESIREN`: 705
 - `NPC_WIDE_DEEP_SLEEP`: 704
@@ -6979,7 +6979,7 @@
 - `GD_KAFRACONTRACT`: 10001
 - `GD_APPROVAL`: 10000
 
-## Mobs (db/re/mob_db.txt)
+## Mobs (db/re/mob_db.conf)
 
 - `SCORPION`: 1001
 - `PORING`: 1002
