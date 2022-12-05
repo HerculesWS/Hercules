@@ -166,7 +166,7 @@ monster database (which contains an uppercase name used to summon the
 monster with a GM command).
 
 Amount is the amount of monsters that will be spawned when this command is
-executed, it is affected by spawn rates in 'conf/map/battle.conf'.
+executed, it is affected by spawn rates in 'conf/map/battle/monster.conf'.
 
 Delay1 and delay2 control monster respawn delays - the first one is the
 fixed base respawn time, and the second is random variance on top of the
