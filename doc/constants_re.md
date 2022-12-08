@@ -5572,6 +5572,7 @@
 - `MF_SRC4INSTANCE`: 64
 - `MF_CVC`: 65
 - `MF_SPECIALPOPUP`: 66
+- `MF_NOSENDMAIL`: 67
 
 ### Job masks / Job map_ids
 
