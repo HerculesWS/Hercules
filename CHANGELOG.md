@@ -22,6 +22,22 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
+## [v2022.12.07] `December 07 2022`
+
+### Added
+
+- Added the `nosendmail` mapflag, adding the ability to prevent players from sending emails (RODEX and classic) from a map. (#2962)
+- Added the `item_drop_bonus_max_threshold` configuration flag in `conf/map/battle/drops.conf`, making the item bonus rate cap configurable. (#3136)
+
+### Changed
+
+- Updated `script_commands.txt`, fixing typos and incorrect file names, adding documentation for missing `checkoption()` flags and updating some external URLs. (#3177)
+
+### Fixed
+
+- Added some missing checks for null in `sd->inventory_data` pointers to prevent crashes. (#3176)
+- Fixed the item bonus rate cap getting applied to the base item drop rates and the server's drop rate modifiers, making their real values different from what `@mi` shows. The cap now only applies to drop-time bonuses (cash shop SCs, race-specific drop rate modifiers, luk or size custom influence, renewal level modifiers, etc). (part of #3136)
+
 ## [v2022.11.02+1] `November 02 2022` `PATCH 1`
 
 ### Added
@@ -2606,6 +2622,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2022.12.07]: https://github.com/HerculesWS/Hercules/compare/v2022.11.02+1...v2022.12.07
 [v2022.11.02+1]: https://github.com/HerculesWS/Hercules/compare/v2022.11.02...v2022.11.02+1
 [v2022.11.02]: https://github.com/HerculesWS/Hercules/compare/v2022.10.05...v2022.11.02
 [v2022.10.05]: https://github.com/HerculesWS/Hercules/compare/v2022.06.01...v2022.10.05
