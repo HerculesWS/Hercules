@@ -2745,7 +2745,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 
 					// When PK Mode is enabled, increase item drop rate bonus of each items by 25% when there is a 20 level difference between the player and the monster.[KeiKun]
 					if (battle_config.pk_mode && (md->level - sd->status.base_level >= 20))
-						drop_rate_bonus += 25; // flat 25% bonus 
+						drop_rate_bonus += 25; // flat 25% bonus
 
 					drop_rate_bonus += sd->dropaddrace[md->status.race] + (is_boss(src) ? sd->dropaddrace[RC_BOSS] : sd->dropaddrace[RC_NONBOSS]); // bonus2 bDropAddRace[KeiKun]
 
@@ -2755,10 +2755,9 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 					if (sd->sc.data[SC_OVERLAPEXPUP] != NULL)
 						drop_rate_bonus += sd->sc.data[SC_OVERLAPEXPUP]->val2;
 
-					drop_rate = (int)(0.5 + drop_rate * drop_rate_bonus / 100.);
-
-					// Make sure drop rate does not go beyond 100% after the drop rate modifiers are applied
-					drop_rate = min(drop_rate, 10000);
+					if (drop_rate_bonus != 100) {
+						drop_rate = (int)(0.5 + drop_rate * drop_rate_bonus / 100.);
+					}
 				}
 			}
 
@@ -2779,6 +2778,9 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 				drop_rate = max(drop_rate, 0);
 			else
 				drop_rate = max(drop_rate, 1);
+
+			// Make sure the bonuses don't make the drop rate grow past the configured threshold (unless it already was)
+			drop_rate = min(drop_rate, max(md->db->dropitem[i].p, battle_config.item_drop_bonus_max_threshold));
 
 			// attempt to drop the item
 			if (rnd() % 10000 >= drop_rate)

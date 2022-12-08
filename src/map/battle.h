@@ -304,9 +304,21 @@ struct Battle_Config {
 	int party_show_share_picker;
 	int show_picker_item_type;
 	int attack_attr_none;
-	int item_rate_mvp, item_rate_common, item_rate_common_boss, item_rate_card, item_rate_card_boss,
-	item_rate_equip, item_rate_equip_boss, item_rate_heal, item_rate_heal_boss, item_rate_use,
-	item_rate_use_boss, item_rate_treasure, item_rate_adddrop, item_rate_add_chain;
+	int item_rate_mvp;
+	int item_rate_common;
+	int item_rate_common_boss;
+	int item_rate_card;
+	int item_rate_card_boss;
+	int item_rate_equip;
+	int item_rate_equip_boss;
+	int item_rate_heal;
+	int item_rate_heal_boss;
+	int item_rate_use;
+	int item_rate_use_boss;
+	int item_rate_treasure;
+	int item_rate_adddrop;
+	int item_rate_add_chain;
+	int item_drop_bonus_max_threshold;
 
 	int logarithmic_drops;
 	int item_drop_common_min,item_drop_common_max; // Added by TyrNemesis^
