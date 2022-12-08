@@ -14535,6 +14535,7 @@ static BUILDIN(getmapflag)
 		case MF_SRC4INSTANCE: script_pushint(st, map->list[m].flag.src4instance); break;
 		case MF_CVC: script_pushint(st, map->list[m].flag.cvc); break;
 		case MF_SPECIALPOPUP: script_pushint(st, map->list[m].flag.specialpopup); break;
+		case MF_NOSENDMAIL: script_pushint(st, map->list[m].flag.nosendmail); break;
 		}
 	}
 
@@ -14673,6 +14674,7 @@ static BUILDIN(setmapflag)
 		case MF_SRC4INSTANCE: map->list[m].flag.src4instance = 1; break;
 		case MF_CVC: map->list[m].flag.cvc = 1; break;
 		case MF_SPECIALPOPUP: map->list[m].flag.specialpopup = val; break;
+		case MF_NOSENDMAIL: map->list[m].flag.nosendmail = 1; break;
 		}
 	}
 
@@ -14769,6 +14771,7 @@ static BUILDIN(removemapflag)
 		case MF_SRC4INSTANCE: map->list[m].flag.src4instance = 0; break;
 		case MF_CVC: map->list[m].flag.cvc = 0; break;
 		case MF_SPECIALPOPUP: map->list[m].flag.specialpopup = 0; break;
+		case MF_NOSENDMAIL: map->list[m].flag.nosendmail = 0; break;
 		}
 	}
 
@@ -29628,6 +29631,7 @@ static void script_hardcoded_constants(void)
 	script->set_constant("MF_SRC4INSTANCE", MF_SRC4INSTANCE, false, false);
 	script->set_constant("MF_CVC", MF_CVC, false, false);
 	script->set_constant("MF_SPECIALPOPUP", MF_SPECIALPOPUP, false, false);
+	script->set_constant("MF_NOSENDMAIL", MF_NOSENDMAIL, false, false);
 
 	script->constdb_comment("Job masks / Job map_ids");
 

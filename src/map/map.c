@@ -5578,6 +5578,15 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 			else if (map->list[m].flag.nomobloot != 0)
 				map_zone_mf_cache_add(m, "noloot");
 		}
+	} else if (strcmpi(flag, "nosendmail") == 0) {
+		if (state != 0 && map->list[m].flag.nosendmail != 0)
+			;/* nothing to do */
+		else {
+			if (state != 0)
+				map_zone_mf_cache_add(m, "nosendmail\toff");
+			else if (map->list[m].flag.nosendmail != 0)
+				map_zone_mf_cache_add(m, "nosendmail");
+		}
 	}
 
 	// Map Zones

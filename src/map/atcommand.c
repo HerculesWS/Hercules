@@ -8192,6 +8192,7 @@ ACMD(mapflag)
 		CHECKFLAG(nogstorage);
 		CHECKFLAG(noviewid);
 		CHECKFLAG(specialpopup);
+		CHECKFLAG(nosendmail);
 
 		clif->message(sd->fd, " ");
 		clif->message(sd->fd, msg_fd(fd, 1312)); // Usage: "@mapflag monster_noteleport 1" (0=Off | 1=On)
@@ -8282,6 +8283,7 @@ ACMD(mapflag)
 	SETFLAG(nogstorage);
 	SETFLAG(noviewid);
 	SETFLAG(specialpopup);
+	SETFLAG(nosendmail);
 
 	clif->message(sd->fd, msg_fd(fd, 1314)); // Invalid flag name or flag.
 	clif->message(sd->fd, msg_fd(fd, 1312)); // Usage: "@mapflag monster_noteleport 1" (0=Off | 1=On)
@@ -8294,7 +8296,8 @@ ACMD(mapflag)
 	clif->message(sd->fd, "fog, fireworks, sakura, leaves, nobaseexp, nojobexp, nomobloot, nomvploot,");
 	clif->message(sd->fd, "nightenabled, nodrop, novending, loadevent, nochat, partylock, guildlock,");
 	clif->message(sd->fd, "src4instance, reset, chsysnolocalaj, noknockback, notomb, nocashshop, noautoloot,");
-	clif->message(sd->fd, "pairship_startable, pairship_endable, nostorage, nogstorage, noviewid, specialpopup");
+	clif->message(sd->fd, "pairship_startable, pairship_endable, nostorage, nogstorage, noviewid, specialpopup,");
+	clif->message(sd->fd, "nosendmail");
 
 #undef CHECKFLAG
 #undef SETFLAG

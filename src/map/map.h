@@ -1046,6 +1046,7 @@ struct map_data {
 		unsigned nostorage : 2;
 		unsigned nogstorage : 2;
 		unsigned nopet : 1;
+		unsigned nosendmail : 1;
 		uint32 noviewid; ///< noviewid (bitmask - @see enum equip_pos)
 		int32 specialpopup;
 	} flag;
