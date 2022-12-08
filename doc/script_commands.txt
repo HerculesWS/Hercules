@@ -158,7 +158,7 @@ move away from their specified spawn region.
 
 Monster name is the name the monsters will have on screen, and has no
 relation whatsoever to their names anywhere else. It's the mob id that
-counts, which identifies monster record in 'mob_db.txt' database of
+counts, which identifies monster record in 'db/(pre-)re/mob_db.conf' database of
 monsters. If the mob name is given as "--ja--", the 'japanese name' field
 from the monster database is used, (which, in Hercules, actually contains
 an English name) if it's "--en--", it's the 'english name' from the
@@ -166,7 +166,7 @@ monster database (which contains an uppercase name used to summon the
 monster with a GM command).
 
 Amount is the amount of monsters that will be spawned when this command is
-executed, it is affected by spawn rates in 'conf/map/battle.conf'.
+executed, it is affected by spawn rates in 'conf/map/battle/monster.conf'.
 
 Delay1 and delay2 control monster respawn delays - the first one is the
 fixed base respawn time, and the second is random variance on top of the
@@ -248,12 +248,12 @@ and to make it look southeast it's facing 5.)
 
 Sprite is the sprite identifier used to display this particular NPC. For a
 full list of sprite numbers see http://nn.ai4rei.net/dev/npclist/ as
-well as doc/constants.md.
+well as doc/constants_(pre-)re.md.
 You may also use a monster's ID constant instead to display a monster sprite
 for this NPC, in npcs that have view ids of mobs it's encouraged to use
 OnTouch events with a 2,2 range and with an 'end' after the header to avoid
 bugs (for more info on why see npc_click@map/npc.c). It is possible to use a job
-sprite as well, but you must first define it as a monster sprite in 'mob_avail.txt',
+sprite as well, but you must first define it as a monster sprite,
 a full description on how to do this is not in the scope of this manual.
 A 'FAKE_NPC' sprite will make the NPC invisible (and unclickable).
 A 'HIDDEN_NPC' sprite will make an NPC which does not have a sprite, but is
@@ -295,7 +295,7 @@ in shop NPCs and you can't change the prices otherwise than by editing the
 script itself (no variables even exist at this point of scripting, so
 don't even bother trying to use them).
 
-The item id is the number of item in the 'item_db.txt' database. If Price
+The item id is the number of item in the 'db/(pre-)re/item_db.conf' database. If Price
 is set to -1, the 'buy price' given in the item database will be used.
 Otherwise, the price you gave will be used for this item, which is how you
 create differing prices for items in different shops.
@@ -625,7 +625,7 @@ type variables have no such limitation.
 
 Some variables are special, that is, they are already defined for you by
 the scripting engine. You can see the full list somewhere in
-'doc/constants.md', which is a file you should read, since it also
+'doc/constants_(pre-)re.md', which is a file you should read, since it also
 allows you to replace lots of numbered arguments for many commands with
 easier to read text. The special variables most commonly used are all
 permanent character-based variables:
@@ -737,7 +737,7 @@ Strings
 -------
 
 Strings are enclosed in "double quotes". To include the literal double
-quote symbol (") in a string you need to escape it with a blackslash:
+quote symbol (") in a string you need to escape it with a backslash:
 
     .@string$ = "This string contains some \"double quote\" symbols";
 
@@ -788,7 +788,7 @@ Variable References
 Hard-coded constants
 --------------------
 Most of the constants defined by the scripting engine can be found in
-'doc/constants.md' and have the same value independently of settings
+'doc/constants_(pre-)re.md' and have the same value independently of settings
 that are core related, but there are constants that can be used to
 retrieve core information that's set when the server is compiled.
 
@@ -811,7 +811,7 @@ MOB_CLONE_START     - Clone ID start from this range
 MOB_CLONE_END       - Clone ID end with this range
 
 Send targets and status options are also hard-coded and can be found
-in 'doc/constants.md'.
+in 'doc/constants_(pre-)re.md'.
 
 Operators
 ---------
@@ -1169,7 +1169,7 @@ chosen once the triggering character leaves the area.
 OnUnTouch:
 
 This label will be executed if plater leave trigger area is defined for the NPC
-object it's in. If it isn't present, nothing will happend.
+object it's in. If it isn't present, nothing will happen.
 The RID of the triggering character object will be attached.
 
 OnPCLoginEvent:
@@ -1414,7 +1414,7 @@ Works only in zero clients starting from 20210721.
 *mes2("<string>"{, type})
 
 This command will displays a box on the screen for the invoking character.
-Work same as *mes* except positionting window with text at bottom.
+Work same as *mes* except positioning window with text at bottom.
 
 Works only on main client starting from 20220504.
 
@@ -1423,7 +1423,7 @@ Works only on main client starting from 20220504.
 *mes2f("<format>"{, <param>{, <param>{, ...{, type}}}})
 
 This command will displays a box on the screen for the invoking character.
-Works same as *mesf* except positionting window with text at bottom.
+Works same as *mesf* except positioning window with text at bottom.
 
 Works only on main client starting from 20220504.
 
@@ -2297,7 +2297,7 @@ Example 2:
 Example 3:
 
 	++@var1;
-	mes("[Forgetfull Man]");
+	mes("[Forgetful Man]");
 	if (@var == 1)
 		mes("This is the first time you have talked to me");
 	if (@var == 2)
@@ -2374,7 +2374,7 @@ Example 6:
 See strcharinfo() for explanation of what this function does.
 
 Remember that if you plan to do several actions upon the condition being
-false, and you forget to use the curly braces (the { } ), the second
+false, and you forget to use the curly braces (the { }), the second
 action will be executed regardless the output of the condition, unless of
 course, you stop the execution of the script if the condition is true
 (that is, in the first grouping using a return, and end or a close()).
@@ -2493,7 +2493,7 @@ script is looping too many times.
 
 Please note, once again, that this isn't a solution to all problems, and by
 disabling this protection your Hercules server may become laggy or
-unresponsive if the script it is used in is performing lenghty loop
+unresponsive if the script it is used in is performing lengthy loop
 operations.
 
 Example:
@@ -2642,7 +2642,7 @@ the attached player. If the player is not found, it will return
 If a character is not a member of any party or guild, an empty string will
 be returned when requesting that information.
 
-Note: Numbers can also be used in <type>, but their usage is disncouraged as
+Note: Numbers can also be used in <type>, but their usage is discouraged as
 using only numbers reduces script readability
 
 ---------------------------------------
@@ -2729,7 +2729,7 @@ arrays:
 
 This function will return the basic stats of an invoking character,
 referred to by the parameter number. Instead of a number, you can use a
-parameter name if it is defined in 'doc/constants.md'.
+parameter name if it is defined in 'doc/constants_(pre-)re.md'.
 
 Example parameters:
 
@@ -3289,7 +3289,7 @@ Examples:
 
 This function calculates and returns the percent value chance to
 successfully refine the item found in the specified equipment slot of the
-invoking character by +1. Refine rates are defined in the db/<re/pre-re>/refine_db.conf
+invoking character by +1. Refine rates are defined in the 'db/(pre-)re//refine_db.conf'
 files. For a list of equipment slots see getequipid().
 
 These values can be displayed for the player to see, or used to calculate
@@ -3354,7 +3354,7 @@ recreate these items perfectly if they are destroyed. Here's what you get:
 @inventorylist_attribute[]     - whether it is broken.
 @inventorylist_card1[]         - These four arrays contain card data for the items.
 @inventorylist_card2[]           These data slots are also used to store names inscribed
-@inventorylist_card3[]           on the items, so you can explicitly check if the character 
+@inventorylist_card3[]           on the items, so you can explicitly check if the character
 @inventorylist_card4[]           owns an item made by a specific craftsman.
 @inventorylist_expire[]        - expire time (Unix time stamp). 0 means never expires.
 @inventorylist_bound[]         - whether it is an account bounded item or not.
@@ -3528,9 +3528,9 @@ Valid types are:
 	ITEMINFO_FLAG_FORCE_SERIAL       - Force serial flag
 	ITEMINFO_FLAG_NO_OPTIONS         - No random item options flag
 	ITEMINFO_FLAG_DROP_ANNOUNCE      - Drop announce flag
-	ITEMINFO_FLAG_SHOWDROPEFFECT     - Shopw drop effect flag
+	ITEMINFO_FLAG_SHOWDROPEFFECT     - Show drop effect flag
 	ITEMINFO_STACK_AMOUNT            - Stack amount
-	ITEMINFO_STACK_FLAG              - Stack amount flag (1: inventory, 2:cart, 4:storage: 8:guildstorage)
+	ITEMINFO_STACK_FLAG              - Stack amount flag (1: inventory, 2: cart, 4: storage, 8: guild storage)
 	ITEMINFO_ITEM_USAGE_FLAG         - Item usage flag
 	ITEMINFO_ITEM_USAGE_OVERRIDE     - Item usage override
 	ITEMINFO_GM_LV_TRADE_OVERRIDE    - Min. GM level override trade restriction
@@ -3781,7 +3781,7 @@ If the player is not found, returns -1.
 *gettimetick(<type>)
 
 Valid types are :
-	0 - server's tick (milleseconds), unsigned int, loops every ~25 days
+	0 - server's tick (milliseconds), unsigned int, loops every ~25 days
 	1 - time since the start of the current day in seconds
 	2 - UNIX epoch time (number of seconds elapsed since 1st of January 1970)
 
@@ -3817,7 +3817,7 @@ Example :
 
 *getcalendartime(<hour>, <minute>{, <day of month>{, <day of week>}})
 
-This function returns the timestamp of the next ocurrence of a given time.
+This function returns the timestamp of the next occurrence of a given time.
 If this time is later today, it will stay in the same day, otherwise, it will adjust to a future
 day as needed.
 
@@ -3955,7 +3955,7 @@ Example:
 *getcastlename("<map name>")
 
 This function returns the name of the castle when given the map name for
-that castle. The data is read from 'db/castle_db.txt'.
+that castle. The data is read from 'db/castle_db.conf'.
 
 ---------------------------------------
 
@@ -3973,18 +3973,18 @@ Types of data correspond to `guild_castle` table columns:
  3 - `defense`    - Castle Defense score.
  4 - `triggerE`   - Number of times the economy was invested in today.
  5 - `triggerD`   - Number of times the defense was invested in today.
- 6 - `nextTime`   - unused
- 7 - `payTime`    - unused
- 8 - `createTime` - unused
- 9 - `visibleC`   - Is 1 if a Kafra was hired for this castle, 0 otherwise.
-10 - `visibleG0`  - Is 1 if the 1st guardian is present (Soldier Guardian)
-11 - `visibleG1`  - Is 1 if the 2nd guardian is present (Soldier Guardian)
-12 - `visibleG2`  - Is 1 if the 3rd guardian is present (Soldier Guardian)
-13 - `visibleG3`  - Is 1 if the 4th guardian is present (Archer Guardian)
-14 - `visibleG4`  - Is 1 if the 5th guardian is present (Archer Guardian)
-15 - `visibleG5`  - Is 1 if the 6th guardian is present (Knight Guardian)
-16 - `visibleG6`  - Is 1 if the 7th guardian is present (Knight Guardian)
-17 - `visibleG7`  - Is 1 if the 8th guardian is present (Knight Guardian)
+ 6 - `nextTime`   - Unused
+ 7 - `payTime`    - Unused
+ 8 - `createTime` - Unused
+ 9 - `visibleC`   - Returns 1 if a Kafra was hired for this castle, 0 otherwise.
+10 - `visibleG0`  - Returns 1 if the 1st guardian is present (Soldier Guardian)
+11 - `visibleG1`  - Returns 1 if the 2nd guardian is present (Soldier Guardian)
+12 - `visibleG2`  - Returns 1 if the 3rd guardian is present (Soldier Guardian)
+13 - `visibleG3`  - Returns 1 if the 4th guardian is present (Archer Guardian)
+14 - `visibleG4`  - Returns 1 if the 5th guardian is present (Archer Guardian)
+15 - `visibleG5`  - Returns 1 if the 6th guardian is present (Knight Guardian)
+16 - `visibleG6`  - Returns 1 if the 7th guardian is present (Knight Guardian)
+17 - `visibleG7`  - Returns 1 if the 8th guardian is present (Knight Guardian)
 
 All types of data have their meaning determined by War of Emperium
 scripts, with exception of:
@@ -4008,7 +4008,7 @@ This function returns the level of the skill <skill id> of the guild
 <guild id>.
 If the guild does not have that skill, 0 is returned.
 If the guild does not exist, -1 is returned.
-Refer to 'db/(pre-)re/skill_db.txt' for the full list of skills.
+Refer to 'db/(pre-)re/skill_db.conf' for the full list of skills.
 GD_* are guild skills
 
 ---------------------------------------
@@ -4086,7 +4086,7 @@ Valid <type> are:
 
 This function returns the level of the specified skill that the invoking
 character has. If they don't have the skill, 0 will be returned. The full
-list of character skills is available in 'db/(pre-)re/skill_db.txt'.
+list of character skills is available in 'db/(pre-)re/skill_db.conf'.
 
 There are two main uses for this function, it can check whether the
 character has a skill or not, and it can tell you if the level is high
@@ -4095,7 +4095,7 @@ enough.
 Example 1:
 
 	if (getskilllv(TF_THROWSTONE)) {
-		// TF_THROWSTONE is defined in skill_db.txt and its value is 152
+		// TF_THROWSTONE is defined in 'db/(pre-)re/skill_db.conf' and its value is 152
 		mes("You have got the skill Throw Stone");
 		close();
 	}
@@ -4165,7 +4165,7 @@ mob database and return the info set by TYPE argument.
 It will return -1 if there is no such monster (or the type value is
 invalid), or "null" if you requested the monster's name.
 
-Valid types are listed in doc/constants.md:
+Valid types are listed in doc/constants_(pre-)re.md:
 	MOB_NAME               0
 	MOB_LV                 1
 	MOB_MAXHP              2
@@ -4301,7 +4301,7 @@ Example:
 	if (skillpointcount() > 20)
 		mes("Wow, you have more then 20 Skill Points in total!");
 
-This command does not count skills which are set as flag 3 (permamently
+This command does not count skills which are set as flag 3 (permanently
 granted) (e.g. ALL_BUYING_STORE/ALL_INCCARRY).
 ---------------------------------------
 
@@ -4317,7 +4317,7 @@ effect being inflicted, in percent.
 	}
 
 You can see the full list of available effect types you can possibly
-inflict in 'doc/constants.md' under 'Status effects'.
+inflict in 'doc/constants_(pre-)re.md' under 'Status effects'.
 
 ---------------------------------------
 //=====================================
@@ -4411,44 +4411,67 @@ this player will be used instead of the invoking character.
 
 Option numbers valid for the first (option) version of this command are:
 
-0x000000 Option_Nothing   - No options
-0x000001 Option_Sight     - Sight in effect.
-0x000002 Option_Hide      - Hide in effect.
-0x000004 Option_Cloak     - Cloaking in effect.
-0x000008                  - Cart number 1 present.
-0x000010 Option_Falcon    - Falcon present.
-0x000020 Option_Riding    - Peco Peco present.
-0x000040 Option_Invisible - GM Perfect Hide in effect.
-0x000080                  - Cart number 2 present.
-0x000100                  - Cart number 3 present.
-0x000200                  - Cart number 4 present.
-0x000400                  - Cart number 5 present.
-0x000800 Option_Orcish    - Orc head present.
-0x001000 Option_Wedding   - The character is wearing a wedding sprite.
-0x002000                  - Ruwach is in effect.
-0x004000 Option_Chasewalk - Chasewalk in effect.
-0x008000 Option_Flying    - Flying or Xmas suit.
-0x010000                  - Sighttrasher.
-0x100000 Option_Wug       - Warg present.
-0x200000 Option_Wugrider  - The character is riding a warg.
+0x00000000 Option_Nothing      - No options
+0x00000001 Option_Sight        - Sight in effect
+0x00000002 Option_Hide         - Hide in effect
+0x00000004 Option_Cloak        - Cloaking in effect
+0x00000008                     - Cart 1
+0x00000010 Option_Falcon       - Falcon present
+0x00000020 Option_Riding       - Peco Peco present
+0x00000040 Option_Invisible    - GM Perfect Hide in effect
+0x00000080                     - Cart 2
+0x00000100                     - Cart 3
+0x00000200                     - Cart 4
+0x00000400                     - Cart 5
+0x00000800 Option_Orcish       - Orc head present
+0x00001000 Option_Wedding      - The character is wearing a wedding costume
+0x00002000 Option_Ruwach       - Ruwach is in effect
+0x00004000 Option_Chasewalk    - Chasewalk in effect
+0x00008000 Option_Flying       - Flying. // Note that clientside Flying and Xmas are 0x8000 for clients prior to 2007.
+0x00010000 Option_Xmas         - Xmas costume
+0x00020000 Option_Transform
+0x00040000 Option_Summer       - Summer costume
+0x00080000 Option_Dragon1      - Dragon 1
+0x00100000 Option_Wug          - Warg present
+0x00200000 Option_Wugrider     - The character is riding a Warg
+0x00400000 Option_Madogear     - The character is using Madogear
+0x00800000 Option_Dragon2      - Dragon 2
+0x01000000 Option_Dragon3      - Dragon 3
+0x02000000 Option_Dragon4      - Dragon 4
+0x04000000 Option_Dragon5      - Dragon 5
+0x08000000 Option_Hanbok       - Hanbok costume
+0x10000000 Option_Oktoberfest  - Oktoberfest costume
+0x20000000 Option_Summer2      - Summer 2 costume
+
+
+There are also compounds status option to check for dragon and costume:
+
+- Option_Dragon
+- Option_Costume
 
 Option numbers valid for the second version (opt1) of this command are:
 
-1 - Petrified.
-2 - Frozen.
-3 - Stunned.
-4 - Sleeping.
+1 - Petrified
+2 - Frozen
+3 - Stunned
+4 - Sleeping
 6 - Petrifying (the state where you can still walk)
+7 - Burning
+8 - Imprison
+9 - Crystalize
 
 Option numbers valid for the third version (opt2) of this command are:
 
-0x01 - Poisoned.
-0x02 - Cursed.
-0x04 - Silenced.
-0x08 - Signum Crucis (plays a howl-like sound effect, but otherwise no
-       visible effects are displayed)
-0x10 - Blinded.
-0x80 - Deadly poisoned.
+0x0001 - Poison
+0x0002 - Curse
+0x0004 - Silence
+0x0008 - Signum Crucis (plays a howl-like sound effect, but otherwise no
+		 visible effects are displayed)
+0x0010 - Blind
+0x0020 - Angelus
+0x0040 - Bleeding
+0x0080 - Deadly poison
+0x0100 - Fear
 
 Option numbers (except for opt1) are bit-masks - you can add them up to
 check for several states, but the functions will return true if at least
@@ -4459,10 +4482,6 @@ second and third versions of this command, so you can only change the
 values in the first list (cloak, cart, ruwach, etc). If flag is 1 (default
 when omitted), the option will be added to what the character currently
 has; if 0, the option is removed.
-
-This is definitely not a complete list of available option flag numbers.
-Ask a core developer (or read the source: src/map/status.h) for the full
-list.
 
 ---------------------------------------
 
@@ -4753,7 +4772,7 @@ if <color> field is left out.
 
 *showscript("<message>"{, <GID>{, <send_target>}})
 
-Makes the attached player or GID, display a message similiar to a chat,
+Makes the attached player or GID, display a message similar to a chat,
 this will be seen by everyone near the invoking character but will not
 be displayed in the chat window.
 send_target: (optional)
@@ -4786,7 +4805,7 @@ There are also three special 'map names' you can use:
 "Save" and "SavePoint" will warp the player back to their save point.
 
 If flag parameter is set to 0, after player warped will be not stopped
-currend running npc script. Running script after warp can be issue for
+current running npc script. Running script after warp can be issue for
 Gravity client if warp to other maps.
 
 ---------------------------------------
@@ -4996,7 +5015,7 @@ This command will change the job class of the invoking character.
 
 This command does work with numbers, but you can also use job names. The
 full list of job names and the numbers they correspond to can be found in
-'doc/constants.md'.
+'doc/constants_(pre-)re.md'.
 
 'upper flag' can alternatively be used to specify the type of job one
 changes to. For example, jobchange(Job_Swordman, 1); will change the
@@ -5144,7 +5163,7 @@ Is subject to EXP bonuses and to the `quest_exp_rate` config option.
 	getexp(10000, 5000);
 
 You can also assign directly to the parameters defined in
-'doc/constants.md':
+'doc/constants_(pre-)re.md':
 
 	BaseExp += 10000;
 	JobExp += 5000;
@@ -5223,7 +5242,7 @@ installation that you can look at: 'npc/custom/stylist.txt'
 This command will push the currently attached player to given direction by
 given amount of square cells. Direction is the same as used when declaring
 NPCs, and can be specified by using one of the DIR_* constants
-(doc/constants.md).
+(doc/constants_(pre-)re.md).
 
 The knock-back is not restricted by items or map flags, only obstacles are
 taken into account. If there is not enough space to perform the push (e.g.
@@ -5266,7 +5285,7 @@ If <account ID> is not specified, items will be created in the invoking
 character inventory instead.
 
 In the first and most commonly used version of this command, items are
-referred to by their database ID number found in 'db/(pre-)re/item_db.txt'.
+referred to by their database ID number found in 'db/(pre-)re/item_db.conf'.
 
 	getitem(Apple, 10); // The person will receive 10 apples
 	getitem(Old_Violet_Box, 1);  // The person will receive 1 Old Violet Box
@@ -5573,7 +5592,7 @@ will be used.
 *makeitem2("<item name>",<amount>,<identify>,<refine>,<attribute>,<card1>,<card2>,<card3>,<card4>,{"<map name>",<X>,<Y>,<range>})
 
 This script command work like 'makeitem', but it has additional parameters
-to expand the usage of the scritp command.
+to expand the usage of the script command.
 
 Parameter List:
 	itemid		- ID / Name of an item
@@ -5623,7 +5642,7 @@ performance reasons, the results array is limited to 10 items.
 
 This command will remove a specified amount of items from the invoking or
 target character. Like all the item commands, it uses the item ID found
-inside 'db/(pre-)re/item_db.txt'.
+inside 'db/(pre-)re/item_db.conf'.
 
 	delitem(Apple, 10); // The person will lose 10 apples
 	delitem(Old_Violet_Box, 1);  // The person will lose 1 Old Violet Box
@@ -5827,7 +5846,7 @@ Important: Items which use itemskill() should be of type IT_USABLE.
 // Instantaneously cast Level 10 Increase Agility on invoking character,
 // with checking/consuming skill requirements (15 HP).
 	itemskill(AL_INCAGI, 10, ISF_CHECKCONDITIONS | ISF_INSTANTCAST | ISF_CASTONSELF);
-// Instaed of using the constants, one could also do it like this:
+// Instead of using the constants, one could also do it like this:
 	itemskill(AL_INCAGI, 10, 7);
 
 ---------------------------------------
@@ -5877,7 +5896,7 @@ kind of dish level you can produce. You can see the full list of dishes
 that can be produced in 'db/produce_db.txt'.
 
 The window will be shown empty if the invoking character does not have
-enough of the required incredients to cook a dish.
+enough of the required ingredients to cook a dish.
 
 Valid dish levels are:
 
@@ -6202,7 +6221,7 @@ number of levels. This refers to the invoking character and will only work
 if the invoking character is a member of a guild AND it's guild master,
 otherwise no failure message will be given and no error will occur, but
 nothing will happen. The full list of guild skills is available in
-'db/(pre-)re/skill_db.txt', these are all the GD_ skills at the end.
+'db/(pre-)re/skill_db.conf', these are all the GD_ skills at the end.
 If a level higher than the maximum is given as parameter the skill will be
 leveled to the maximum and not above.
 
@@ -6285,10 +6304,10 @@ These commands will bestow a status effect on a character.
 
 The <effect type> determines which status is invoked. This can be either a number
 or constant, with the common statuses (mostly negative) found in
-'doc/constants.md' under 'Status Changes'. A full list is located in
+'doc/constants_(pre-)re.md' under 'Status Changes'. A full list is located in
 'src/map/status.h', though they are not currently documented.
 
-The duration of the status is given in <ticks>, or milleseconds.
+The duration of the status is given in <ticks>, or milliseconds.
 
 Certain status changes take an additional parameter <value 1>, which typically
 modifies player stats by the given number or percentage. This differs for each
@@ -6395,7 +6414,7 @@ map as the invoking character.
 
 This command will display special effect with the given number, centered
 on the specified NPCs coordinates, if any. For a full list of special
-effect numbers known see 'doc/effect_list.txt'. Some effect numbers are
+effect numbers known see 'doc/effect_list.md'. Some effect numbers are
 known not to work in some client releases. (Notably, rain is absent from
 any client executables released after April 2005.)
 
@@ -6571,9 +6590,9 @@ These commands will give the invoking character a specified skill. This is
 also used for item scripts.
 
 Level is obvious. Skill id is the ID number of the skill in question as
-per 'db/(pre-)re/skill_db.txt'. It is not known for certain whether this
+per 'db/(pre-)re/skill_db.conf'. It is not known for certain whether this
 can be used to give a character a monster's skill, but you're welcome to
-try with the numbers given in 'db/(pre-)re/mob_skill_db.txt'.
+try with the numbers given in 'db/(pre-)re/mob_skill_db.conf'.
 
 Flag is 0 if the skill is given permanently (will get written with the
 character data) or 1 if it is temporary (will be lost eventually, this is
@@ -6885,7 +6904,7 @@ result of this command.
 This command will kill all monsters on a specified map name, regardless of
 how they were spawned or what they are without triggering any event label
 attached to them, unless you specify 1 for type parameter. In this case,
-mob death labels will be allowed totrigger when there is no player. Any
+mob death labels will be allowed to trigger when there is no player. Any
 other number for this parameter won't be recognized.
 
 ---------------------------------------
@@ -6901,7 +6920,7 @@ event label.
 *strmobinfo(<type>, <monster id>)
 
 This function will return information about a monster record in the
-database, as per 'db/(pre-)re/mob_db.txt'. Type is the kind of information
+database, as per 'db/(pre-)re/mob_db.conf'. Type is the kind of information
 returned. Valid types are:
 
  1 - 'english name' field in the database, a string.
@@ -7051,7 +7070,7 @@ possess a Strange Embryo. The /swt emotion is shown upon failure.
 
 If the optional parameter <ID> is set, the invoking player's Homunculus
 will change into the specified Homunculus ID. Otherwise, a random Homunculus S
-will be chosen. See 'db/homunculus_db.txt' for a full list of IDs.
+will be chosen. See 'db/(pre-)re/homunculus_db.conf' for a full list of IDs.
 
 Returns true upon success and false for all failures.
 
@@ -7142,7 +7161,7 @@ prontera,155,185,5	script	Check Walking	1_F_MARIA,{
 *unitemote(<GID>, <Emote>)
 
 Okay, these commands should be fairly self explaining.
-For the emotions, you can look in 'doc/constants.md' under 'Emotes'
+For the emotions, you can look in 'doc/constants_(pre-)re.md' under 'Emotes'
 PS: unitwarp() supports a <GID> of zero, which causes the executor of the
 PS: unittalk() can receive 3 extra parameters:
 	show_name:
@@ -7593,7 +7612,7 @@ This command will broadcast a message to all or most players, similar to
 The region the broadcast is heard in (target), source of the broadcast and
 the color the message will come up as is determined by the flags.
 
-The flag values are coded as constants in doc/constants.md to make them
+The flag values are coded as constants in doc/constants_(pre-)re.md to make them
 easier to use.
 
 Target flags:
@@ -7702,7 +7721,7 @@ In the OnBuyItem, two arrays are filled (@bought_nameid and
 and the amount sold of it. Same goes for the OnSellItem label, only the
 variables are named different (@sold_nameid, @sold_quantity, @sold_refine,
 @sold_attribute, @sold_identify, @sold_card1, @sold_card2, @sold_card3,
-@sold_card4, @sold_opt_id1~5, @sold_opt_val1~5, @sold_opt_param1~5). 
+@sold_card4, @sold_opt_id1~5, @sold_opt_val1~5, @sold_opt_param1~5).
 An example on a shop comes with Hercules, and can be found
 in the doc/sample/npc_dynamic_shop.txt file.
 
@@ -7910,7 +7929,7 @@ Example 2:
 	// Kick the last player enter the waitingroom
 	.@num = getwaitingroomstate(0);
 	waitingroomkick(strnpcinfo(NPC_NAME), $@chatmembers[.@num - 1]);
-	
+
 ---------------------------------------
 
 *setmapflagnosave("<map name>", "<alternate map name>", <x>, <y>)
@@ -7929,7 +7948,7 @@ to the coordinates specified.
 
 This command marks a specified map with a map flag given. Map flags alter
 the behavior of the map, you can see the list of the available ones in
-'doc/constants.md' under 'Mapflags'.
+'doc/constants_(pre-)re.md' under 'Mapflags'.
 
 The map flags alter the behavior of the map regarding teleporting
 (mf_nomemo, mf_noteleport, mf_nowarp), storing location when
@@ -8143,7 +8162,7 @@ rather unnerving.
 Only a few NPC sprites have walking animations, and those that do, do not
 get the animation invoked when moving the NPC, due to the problem in the
 NPC walking code, which looks a bit silly. You might have better success
-by defining a job-sprite based sprite id in 'db/mob_avail.txt' with this.
+by defining a job-sprite based sprite id with this.
 
 ---------------------------------------
 
@@ -8384,7 +8403,7 @@ this command will make the pet catching cursor appear on the client
 connected to the invoking character, usable on the monsters with the
 specified pet ID number. It will still work outside an item script.
 
-A full list of pet IDs can be found inside 'db/pet_db.txt'
+A full list of pet IDs can be found inside 'db/(pre-)re/pet_db.conf'
 
 ---------------------------------------
 
@@ -8392,7 +8411,7 @@ A full list of pet IDs can be found inside 'db/pet_db.txt'
 
 This command makes an object display an emotion sprite above their own as
 if they were doing that emotion. For a full list of emotion numbers, see
-'doc/constants.md' under 'Emotes'. The not so obvious ones are 'e_what' (a
+'doc/constants_(pre-)re.md' under 'Emotes'. The not so obvious ones are 'e_what' (a
 question mark) and 'e_gasp' (the exclamation mark).
 
 The optional target parameter specifies who will get the emotion on top of
@@ -8447,7 +8466,7 @@ extension, but it's not required to specify the extension in the script.
 
 type set play type and can be:
 	PLAY_BGM_LOOP - play music in loop
-	PLAY_BGM_OMCE - play music once
+	PLAY_BGM_ONCE - play music once
 	PLAY_BGM_STOP - stop music
 
 Parameter type make sense only for clients main 20220504 and newer.
@@ -8705,7 +8724,7 @@ config, and will not work properly if the NPC has a mob sprite.
 *setnpcdistance(<distance>)
 
 This command can reduce distance from where npc can be clicked.
-Usefull to use from OnInit event.
+Useful to use from OnInit event.
 
 	// Set distance to one tile on server load
 	OnInit:
@@ -8792,10 +8811,12 @@ You can find more usage examples in the test script npc/custom/test.txt.
 
 Using regular expressions is high wizardry. But with this high wizardry
 comes unparalleled power of text manipulation. For an explanation of what
-a regular expression pattern is, see a few web pages:
+a regular expression pattern is, visit the website bellow:
 
-http://www.regular-expressions.info/
-http://www.weitz.de/regex-coach/
+https://www.regular-expressions.info/
+
+There is also a website where you can try regular expressions in real time:
+https://regexr.com/
 
 Additionally, the following temporary variables will be filled (unless the
 command is invoked as '~!'):
@@ -9192,7 +9213,7 @@ Example:
 
 Returns true if character at specified index of specified string is
 uppercase for charisupper() or lowercase for charislower(). Otherwise, false.
-Characters not of the alphabelt will return false.
+Characters not in the alphabet will return false.
 
 Example:
 
@@ -9237,7 +9258,7 @@ Example:
 *implode(<string_array>{, <glue>})
 
 Combines all substrings within the specified string array into a single
-string. If the glue parameter is specified, it will be inserted inbetween
+string. If the glue parameter is specified, it will be inserted in between
 each substring.
 
 Example:
@@ -9331,8 +9352,8 @@ Example:
 *sscanf(<string>, <format>{, param{, param{, ...}}})
 
 C style sscanf. All C format specifiers are supported.
-More info: sscanf @ www.cplusplus.com. The number of params is only
-limited by Hercules' script engine.
+More info: https://cplusplus.com/reference/cstdio/sscanf/
+The number of params is only limited by Hercules' script engine.
 
 Example:
 	sscanf("This is a test: 42 foobar", "This is a test: %d %s", .@num, .@str$);
@@ -9445,14 +9466,14 @@ same time.
 
 This command will make the pet give a bonus to the owner's stat (bonus
 type - bInt, bVit, bDex, bAgi, bLuk, bStr, bSpeedRate - for a full list, see the
-'doc/constants.md' under 'Bonuses / Parameter IDs').
+'doc/constants_(pre-)re.md' under 'Bonuses / Parameter IDs').
 
 *petrecovery(<status type>, <delay>)
 
 This command will make the pet cure a specified status condition. The
 curing actions will occur once every <delay> seconds. For a full list of
 status conditions that can be cured, see the list of 'Status Changes' status
-condition constants in 'doc/constants.md'
+condition constants in 'doc/constants_(pre-)re.md'
 
 *petloot(<max items>)
 
@@ -9466,7 +9487,7 @@ reached or when pet performance is activated.
 This will make the pet use a specified support skill on the owner whenever
 the HP and SP are below the given percent values, with a specified delay
 time between activations. The skill numbers are as per
-'db/(pre-)re/skill_db.txt'.
+'db/(pre-)re/skill_db.conf'.
 It's not quite certain who's stats will be used for the skills cast, the
 character's or the pets. Probably, Skotlex can answer that question.
 
@@ -9517,7 +9538,7 @@ This is still usable outside item scripts.
 
 This command will create a pet egg and put it in the invoking character's
 inventory. The kind of pet is specified by pet ID numbers listed in
-'db/pet_db.txt'. The egg is created exactly as if the character just
+'db/(pre-)re/pet_db.conf'. The egg is created exactly as if the character just
 successfully caught a pet in the normal way.
 
 	// This will make you a poring:
@@ -9547,7 +9568,7 @@ Each of these can be 'on' or 'off'. Together they define a cell's behavior.
 This command lets you alter these flags for all map cells in the specified
 (x1,y1)-(x2,y2) rectangle.
 'type' defines which flag to modify. Possible options include cell_walkable,
-cell_shootable, cell_basilica. For a full list, see 'doc/constants.md'.
+cell_shootable, cell_basilica. For a full list, see 'doc/constants_(pre-)re.md'.
 'flag' can be false (clear flat) or true (set flag).
 
 Example:
@@ -9584,7 +9605,7 @@ remove a nonwalkable row of cells after the barricade mobs.
 This command will return true or false, depending on whether the specified cell
 has the 'type' flag set or not. There are various types to check, all
 mimicking the server's cell_chk enumeration. The types can be found in
-'doc/constants.md' under 'Cell checks'.
+'doc/constants_(pre-)re.md' under 'Cell checks'.
 
 The meaning of the individual types can be confusing, so here's an
 overview:
@@ -9874,7 +9895,7 @@ that fails, the command returns an empty string instead.
 
 *questinfo(<Icon> {, <Map Mark Color>})
 
-This is esentially a showevent() that supports different conditions that can be set using setquestinfo().
+This is essentially a showevent() that supports different conditions that can be set using setquestinfo().
 Use this only in an OnInit label.
 For Icon, use one of the following:
 
@@ -10154,7 +10175,7 @@ Removes attached player from their Battle Group.
 
 ----------------------------------------
 
-*bg_destroy(<Batte Group>)
+*bg_destroy(<Battle Group>)
 
 As the name says, destroys the battle group created for that battle ground.
 
@@ -10216,11 +10237,11 @@ Command will return -1 if Player is not found, 0 if join is failed, 1 upon succe
 
 ----------------------------------------
 
-*bg_match_over("<Arena Name>"{, <Cancelled>})
+*bg_match_over("<Arena Name>"{, <canceled>})
 
 This command will end the battleground Arena
 (Arena Name as referred to, in conf/battlegrounds.conf)
-If Cancelled is not provided, it will set the join delay, as mentioned in conf/battlegrounds.conf
+If canceled is not provided, it will set the join delay, as mentioned in conf/battlegrounds.conf
 else, it will just destroy the Teams and queue's.
 
 Command will return 0 when successful, else it will return 1.
@@ -10308,7 +10329,7 @@ following:
 	MERCINFO_FAITH     - Mercenary faith value for this mercenary's guild, if any
 	MERCINFO_CALLS     - Mercenary calls value for this mercenary's guild, if any
 	MERCINFO_KILLCOUNT - Mercenary kill count
-	MERCINFO_LIFETIME  - Mercenary remaining life time in mili-second
+	MERCINFO_LIFETIME  - Mercenary remaining life time in millisecond
 	MERCINFO_LEVEL     - Mercenary Level
 	MERCINFO_GID       - Mercenary Game ID
 
@@ -10448,7 +10469,7 @@ when the optional NPC_Name param is used.
 *sellitem(<Item_ID>, <zeny>, <qty>{, <currency_id1>, <currency_amount1>{, <currency_refine1>}{, ...}})
 
 adds (or modifies) <Item_ID> data to the shop,
-when <price> is not provided (or when it is -1) itemdb default is used.
+when <price> is not provided (or when it is -1) item_db default is used.
 qty is only necessary for NST_MARKET trader types.
 
 when <Item_ID> is already in the shop,
@@ -10508,13 +10529,13 @@ to be used within a "OnCountFunds" event of a NST_CUSTOM trader type.
 
 *tradertype(<Type>)
 
-Modifies the npc trader type, item list is cleared upon modifiying the value.
+Modifies the npc trader type, item list is cleared upon modifying the value.
 By default, all npcs staart with tradertype(NST_ZENY);
 
 - NST_ZENY (0) Normal Zeny Shop
 - NST_CASH (1) Normal Cash Shop
 - NST_MARKET (2) Normal NPC Market Shop (where items have limited availability and need to be refurbished)
-- NST_CUSTOM (3) Custom Shop (any currency, item/var/etca, check sample)
+- NST_CUSTOM (3) Custom Shop (any currency, item/var/etc, check sample)
 
 ---------------------------------------
 
@@ -10548,9 +10569,9 @@ Applicable Data Types (available as constants) -
 	UDT_MASTERCID:            Master Char ID (for Summons)
 	UDT_SPEED:                Unit Speed.
 	UDT_MODE:                 Mode (Mobs only)
-	UDT_AI:                   Unit AI Type (see doc/constants.md for Unit AI Types)
-	UDT_SCOPTION:             Status Options. (see doc/constants.md for Unit Option Types)
-	UDT_SEX:                  Gender of the unit. (see doc/constants.md for Genders)
+	UDT_AI:                   Unit AI Type (see doc/constants_(pre-)re.md for Unit AI Types)
+	UDT_SCOPTION:             Status Options. (see doc/constants_(pre-)re.md for Unit Option Types)
+	UDT_SEX:                  Gender of the unit. (see doc/constants_(pre-)re.md for Genders)
 	UDT_CLASS:                Class of the unit. (Monster ID)
 	UDT_HAIRSTYLE:            Hair Style ID.
 	UDT_HAIRCOLOR:            Hair Color ID.
@@ -10614,9 +10635,9 @@ Applicable Data types (available as constants) -
 	UDT_MASTERCID:            Master Char ID (for Summons)
 	UDT_SPEED:                Unit Speed.
 	UDT_MODE:                 Mode (Mobs only)
-	UDT_AI:                   Unit AI Type (see doc/constants.md for Unit AI Types)
-	UDT_SCOPTION:             Status Options. (see doc/constants.md for Unit Option Types)
-	UDT_SEX:                  Gender of the unit. (see doc/constants.md for Genders)
+	UDT_AI:                   Unit AI Type (see doc/constants_(pre-)re.md for Unit AI Types)
+	UDT_SCOPTION:             Status Options. (see doc/constants_(pre-)re.md for Unit Option Types)
+	UDT_SEX:                  Gender of the unit. (see doc/constants_(pre-)re.md for Genders)
 	UDT_CLASS:                Class of the unit. (Monster ID)
 	UDT_HAIRSTYLE:            Hair Style ID.
 	UDT_HAIRCOLOR:            Hair Color ID.
@@ -10770,7 +10791,7 @@ aid         - achievement ID
 obj_idx     - achievement objective index.
 progress    - objective progress towards goal.
 incremental - (boolean) true to add the progress towards the goal,
-              false to use the progress only as a comparand.
+              false to use the progress only as a comparator.
 account_id  - (optional) AID to perform on (default to attached player).
 
 returns progress on success and false on failure
@@ -10880,7 +10901,7 @@ Works for 20180207 main clients, 20171129 re clients, 20171130 zero clients
 *setunittitle(<GID>, <title>)
 
 Set unit title string.
-Invisible for players, because current implimentation using title id only.
+Invisible for players, because current implementation using title id only.
 Works for 20180207 main clients, 20171129 re clients, 20171130 zero clients
 
 ---------------------------------------
