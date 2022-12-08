@@ -17979,6 +17979,12 @@ static void clif_parse_Mail_send(int fd, struct map_session_data *sd)
 		return;
 	}
 
+	if (map->list[sd->bl.m].flag.nosendmail != 0) {
+		clif->message(sd->fd, msg_sd(sd, 512)); // "You can't send mails from your current location."
+		clif->mail_send(fd, true); // fail
+		return;
+	}
+
 	if( DIFF_TICK(sd->cansendmail_tick, timer->gettick()) > 0 ) {
 		clif->message(sd->fd,msg_sd(sd,875)); //"Cannot send mails too fast!!."
 		clif->mail_send(fd, true); // fail
