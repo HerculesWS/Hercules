@@ -1344,6 +1344,19 @@ static int guild_change_emblem(struct map_session_data *sd, int len, const char 
 	return intif->guild_emblem(sd->status.guild_id,len,data);
 }
 
+static int guild_change_emblem_version(struct map_session_data* sd, uint32 version) {
+	struct guild* g;
+	nullpo_ret(sd);
+
+	if (battle_config.require_glory_guild &&
+		!((g = sd->guild) && guild->checkskill(g, GD_GLORYGUILD) > 0)) {
+		clif->skill_fail(sd, GD_GLORYGUILD, USESKILL_FAIL_LEVEL, 0, 0);
+		return 0;
+	}
+
+	return intif->guild_emblem_version(sd->status.guild_id, version);
+}
+
 /*====================================================
  * Notification of guild emblem changed
  *---------------------------------------------------*/
@@ -1352,11 +1365,12 @@ static int guild_emblem_changed(int len, int guild_id, int emblem_id, const char
 	int i;
 	struct map_session_data *sd;
 	struct guild *g=guild->search(guild_id);
-	nullpo_ret(data);
+;
 	if(g==NULL)
 		return 0;
 
-	memcpy(g->emblem_data,data,len);
+	if (data != NULL)
+		memcpy(g->emblem_data,data,len);
 	g->emblem_len=len;
 	g->emblem_id=emblem_id;
 
@@ -2568,6 +2582,7 @@ void guild_defaults(void)
 	guild->change_notice = guild_change_notice;
 	guild->notice_changed = guild_notice_changed;
 	guild->change_emblem = guild_change_emblem;
+	guild->change_emblem_version = guild_change_emblem_version;
 	guild->emblem_changed = guild_emblem_changed;
 	guild->send_message = guild_send_message;
 	guild->send_dot_remove = guild_send_dot_remove;

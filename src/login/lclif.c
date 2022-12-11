@@ -299,6 +299,9 @@ static bool lclif_send_server_list(struct login_session_data *sd)
 	packet->aid = sd->account_id;
 	packet->user_level = sd->login_id2;
 	packet->last_login_ip = 0; // Not used anymore
+#if PACKETVER >= 20170315
+	safestrncpy(packet->web_auth_token, sd->web_auth_token, 17);
+#endif
 	memset(packet->last_login_time, '\0', sizeof(packet->last_login_time)); // Not used anymore
 	packet->sex = sex_str2num(sd->sex);
 	for (i = 0, n = 0; i < ARRAYLENGTH(login->dbs->server); ++i) {

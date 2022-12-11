@@ -75,6 +75,7 @@ struct mapif_interface {
 	int (*guild_position) (struct guild *g, int idx);
 	int (*guild_notice) (struct guild *g);
 	int (*guild_emblem) (struct guild *g);
+	int (*guild_emblem_version) (struct guild* g);
 	int (*guild_master_changed) (struct guild *g, int aid, int cid);
 	int (*guild_castle_dataload) (int fd, int sz, const int *castle_ids);
 	int (*parse_CreateGuild) (int fd, int account_id, const char *name, const struct guild_member *master);
@@ -92,6 +93,7 @@ struct mapif_interface {
 	int (*parse_GuildEmblem) (int fd, int len, int guild_id, int dummy, const char *data);
 	int (*parse_GuildCastleDataLoad) (int fd, int len, const int *castle_ids);
 	int (*parse_GuildCastleDataSave) (int fd, int castle_id, int index, int value);
+	int (*parse_GuildEmblemVersion) (int fd, int guild_id, int version);
 	int (*parse_GuildMasterChange) (int fd, int guild_id, const char* name, int len);
 	void (*homunculus_created) (int fd, int account_id, const struct s_homunculus *sh, unsigned char flag);
 	void (*homunculus_deleted) (int fd, int flag);

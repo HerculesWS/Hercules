@@ -134,6 +134,7 @@ struct guild_interface {
 	int (*change_notice) (struct map_session_data *sd,int guild_id,const char *mes1,const char *mes2);
 	int (*notice_changed) (int guild_id,const char *mes1,const char *mes2);
 	int (*change_emblem) (struct map_session_data *sd,int len,const char *data);
+	int (*change_emblem_version) (struct map_session_data* sd, uint32 version);
 	int (*emblem_changed) (int len,int guild_id,int emblem_id,const char *data);
 	int (*send_message) (struct map_session_data *sd, const char *mes);
 	int (*send_dot_remove) (struct map_session_data *sd);

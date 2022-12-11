@@ -70,6 +70,8 @@ struct login_session_data {
 	uint8 clienttype;
 	uint32 version;
 
+	char web_auth_token[16];
+
 	uint8 client_hash[16];
 	int has_client_hash;
 

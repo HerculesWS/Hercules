@@ -15629,6 +15629,28 @@ static void clif_parse_GuildChangeEmblem(int fd, struct map_session_data *sd)
 	guild->change_emblem(sd, emblem_len, (const char*)emblem);
 }
 
+
+static void clif_parse_GuildChangeEmblem2(int fd, struct map_session_data* sd) __attribute__((nonnull(2)));
+/// Request to update the guild emblem id (version, according to Gravity)
+/// 0b46 <guild id>.L <version>.L
+static void clif_parse_GuildChangeEmblem2(int fd, struct map_session_data* sd)
+{
+#if PACKETVER >= 20190724
+	uint32 guild_id = RFIFOL(fd, 2);
+	struct guild *g = sd->guild;
+
+	if (g == NULL || g->guild_id != guild_id)
+		return;
+
+	if (!sd->state.gmaster_flag)
+		return;
+
+	uint32 version = RFIFOL(fd, 6);
+
+	guild->change_emblem_version(sd, version);
+#endif
+}
+
 static void clif_parse_GuildChangeNotice(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
 /// Guild notice update request (CZ_GUILD_NOTICE).
 /// 016e <guild id>.L <msg1>.60B <msg2>.120B
@@ -26727,6 +26749,7 @@ void clif_defaults(void)
 	clif->pGuildChangeMemberPosition = clif_parse_GuildChangeMemberPosition;
 	clif->pGuildRequestEmblem = clif_parse_GuildRequestEmblem;
 	clif->pGuildChangeEmblem = clif_parse_GuildChangeEmblem;
+	clif->pGuildChangeEmblem2 = clif_parse_GuildChangeEmblem2;
 	clif->pGuildChangeNotice = clif_parse_GuildChangeNotice;
 	clif->pGuildInvite = clif_parse_GuildInvite;
 	clif->pGuildReplyInvite = clif_parse_GuildReplyInvite;

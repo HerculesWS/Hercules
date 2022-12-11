@@ -83,8 +83,8 @@ struct PACKET_AC_ACCEPT_LOGIN {
 	char last_login_time[26]; ///< Last login timestamp
 	uint8 sex;                ///< Account sex
 #if PACKETVER >= 20170315
-	char twitter_auth_token[16];
-	uint8 twitter_flag;
+	char web_auth_token[16];
+	uint8 web_auth_token_flag;
 #endif
 	struct {
 		uint32 ip;        ///< Server IP address

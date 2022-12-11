@@ -84,6 +84,7 @@ struct intif_interface {
 	int (*guild_alliance) (int guild_id1, int guild_id2, int account_id1, int account_id2, int flag);
 	int (*guild_notice) (int guild_id, const char *mes1, const char *mes2);
 	int (*guild_emblem) (int guild_id, int len, const char *data);
+	int (*guild_emblem_version) (int guild_id, uint32 version);
 	int (*guild_castle_dataload) (int num, int *castle_ids);
 	int (*guild_castle_datasave) (int castle_id, int index, int value);
 	void (*itembound_req) (int char_id, int aid, int guild_id);
@@ -168,6 +169,7 @@ struct intif_interface {
 	void (*pGuildNotice) (int fd);
 	void (*pGuildEmblem) (int fd);
 	void (*pGuildCastleDataLoad) (int fd);
+	void (*pGuildEmblemVersionChanged) (int fd);
 	void (*pGuildMasterChanged) (int fd);
 	void (*pQuestLog) (int fd);
 	void (*pQuestSave) (int fd);

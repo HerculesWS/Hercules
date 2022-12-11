@@ -650,8 +650,11 @@ CREATE TABLE IF NOT EXISTS `login` (
   `character_slots` TINYINT UNSIGNED NOT NULL DEFAULT '0',
   `pincode` VARCHAR(4) NOT NULL DEFAULT '',
   `pincode_change` INT UNSIGNED NOT NULL DEFAULT '0',
+  `web_auth_token` varchar(17) null,
+  `web_auth_token_enabled` tinyint(2) NOT NULL default '0',
   PRIMARY KEY (`account_id`),
-  UNIQUE KEY `name` (`userid`)
+  UNIQUE KEY `name` (`userid`),
+  UNIQUE KEY `web_auth_token` (`web_auth_token`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2000000;
 
 -- added standard accounts for servers, VERY INSECURE!!!

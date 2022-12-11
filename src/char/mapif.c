@@ -646,6 +646,18 @@ static int mapif_guild_emblem(struct guild *g)
 	return 0;
 }
 
+// Send the guild emblem_id (version)
+int mapif_guild_emblem_version(struct guild *g)
+{
+	unsigned char buf[10];
+	WBUFW(buf, 0) = 0x3841;
+	WBUFL(buf, 2) = g->guild_id;
+	WBUFL(buf, 6) = g->emblem_id;
+	mapif->sendall(buf, 10);
+
+	return 0;
+}
+
 static int mapif_guild_master_changed(struct guild *g, int aid, int cid)
 {
 	unsigned char buf[14];
@@ -801,6 +813,22 @@ static int mapif_parse_GuildCastleDataSave(int fd, int castle_id, int index, int
 {
 	inter_guild->update_castle_data(castle_id, index, value);
 	return 0;
+}
+
+static int mapif_parse_GuildEmblemVersion(int fd, int guild_id, int version)
+{
+	struct guild *g = inter_guild->fromsql(guild_id);
+
+	if (g == NULL)
+		return 0;
+
+	g->emblem_len = 0;
+	g->emblem_id = version;
+	g->save_flag |= GS_EMBLEM;
+
+	mapif->guild_emblem_version(g);
+
+	return 1;
 }
 
 static int mapif_parse_GuildMasterChange(int fd, int guild_id, const char* name, int len)
@@ -2347,6 +2375,7 @@ void mapif_defaults(void)
 	mapif->guild_position = mapif_guild_position;
 	mapif->guild_notice = mapif_guild_notice;
 	mapif->guild_emblem = mapif_guild_emblem;
+	mapif->guild_emblem_version = mapif_guild_emblem_version;
 	mapif->guild_master_changed = mapif_guild_master_changed;
 	mapif->guild_castle_dataload = mapif_guild_castle_dataload;
 	mapif->parse_CreateGuild = mapif_parse_CreateGuild;
@@ -2364,6 +2393,7 @@ void mapif_defaults(void)
 	mapif->parse_GuildEmblem = mapif_parse_GuildEmblem;
 	mapif->parse_GuildCastleDataLoad = mapif_parse_GuildCastleDataLoad;
 	mapif->parse_GuildCastleDataSave = mapif_parse_GuildCastleDataSave;
+	mapif->parse_GuildEmblemVersion = mapif_parse_GuildEmblemVersion;
 	mapif->parse_GuildMasterChange = mapif_parse_GuildMasterChange;
 	mapif->homunculus_created = mapif_homunculus_created;
 	mapif->homunculus_deleted = mapif_homunculus_deleted;

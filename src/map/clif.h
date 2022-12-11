@@ -1347,6 +1347,7 @@ struct clif_interface {
 	void (*guild_expulsionlist) (struct map_session_data* sd);
 	void (*guild_set_position) (struct map_session_data *sd);
 	void (*guild_position_selected) (struct map_session_data *sd);
+	void (*guild_change_emblem2) (struct map_session_data* sd);
 #if 0
 	void (*guild_allianceadded) (struct guild *g, int idx);
 #endif
@@ -1638,6 +1639,7 @@ struct clif_interface {
 	void (*pGuildChangeMemberPosition) (int fd, struct map_session_data *sd);
 	void (*pGuildRequestEmblem) (int fd,struct map_session_data *sd);
 	void (*pGuildChangeEmblem) (int fd,struct map_session_data *sd);
+	void (*pGuildChangeEmblem2) (int fd, struct map_session_data* sd);
 	void (*pGuildChangeNotice) (int fd, struct map_session_data* sd);
 	void (*pGuildInvite) (int fd,struct map_session_data *sd);
 	void (*pGuildReplyInvite) (int fd,struct map_session_data *sd);
