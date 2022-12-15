@@ -1036,6 +1036,8 @@ struct {
 	struct HPMHookPoint *HP_mapif_guild_notice_post;
 	struct HPMHookPoint *HP_mapif_guild_emblem_pre;
 	struct HPMHookPoint *HP_mapif_guild_emblem_post;
+	struct HPMHookPoint *HP_mapif_guild_emblem_version_pre;
+	struct HPMHookPoint *HP_mapif_guild_emblem_version_post;
 	struct HPMHookPoint *HP_mapif_guild_master_changed_pre;
 	struct HPMHookPoint *HP_mapif_guild_master_changed_post;
 	struct HPMHookPoint *HP_mapif_guild_castle_dataload_pre;
@@ -1070,6 +1072,8 @@ struct {
 	struct HPMHookPoint *HP_mapif_parse_GuildCastleDataLoad_post;
 	struct HPMHookPoint *HP_mapif_parse_GuildCastleDataSave_pre;
 	struct HPMHookPoint *HP_mapif_parse_GuildCastleDataSave_post;
+	struct HPMHookPoint *HP_mapif_parse_GuildEmblemVersion_pre;
+	struct HPMHookPoint *HP_mapif_parse_GuildEmblemVersion_post;
 	struct HPMHookPoint *HP_mapif_parse_GuildMasterChange_pre;
 	struct HPMHookPoint *HP_mapif_parse_GuildMasterChange_post;
 	struct HPMHookPoint *HP_mapif_homunculus_created_pre;
@@ -1472,6 +1476,8 @@ struct {
 	struct HPMHookPoint *HP_SQL_ShowDebug__post;
 	struct HPMHookPoint *HP_SQL_Free_pre;
 	struct HPMHookPoint *HP_SQL_Free_post;
+	struct HPMHookPoint *HP_SQL_GetError_pre;
+	struct HPMHookPoint *HP_SQL_GetError_post;
 	struct HPMHookPoint *HP_SQL_Malloc_pre;
 	struct HPMHookPoint *HP_SQL_Malloc_post;
 	struct HPMHookPoint *HP_SQL_StmtMalloc_pre;
@@ -2675,6 +2681,8 @@ struct {
 	int HP_mapif_guild_notice_post;
 	int HP_mapif_guild_emblem_pre;
 	int HP_mapif_guild_emblem_post;
+	int HP_mapif_guild_emblem_version_pre;
+	int HP_mapif_guild_emblem_version_post;
 	int HP_mapif_guild_master_changed_pre;
 	int HP_mapif_guild_master_changed_post;
 	int HP_mapif_guild_castle_dataload_pre;
@@ -2709,6 +2717,8 @@ struct {
 	int HP_mapif_parse_GuildCastleDataLoad_post;
 	int HP_mapif_parse_GuildCastleDataSave_pre;
 	int HP_mapif_parse_GuildCastleDataSave_post;
+	int HP_mapif_parse_GuildEmblemVersion_pre;
+	int HP_mapif_parse_GuildEmblemVersion_post;
 	int HP_mapif_parse_GuildMasterChange_pre;
 	int HP_mapif_parse_GuildMasterChange_post;
 	int HP_mapif_homunculus_created_pre;
@@ -3111,6 +3121,8 @@ struct {
 	int HP_SQL_ShowDebug__post;
 	int HP_SQL_Free_pre;
 	int HP_SQL_Free_post;
+	int HP_SQL_GetError_pre;
+	int HP_SQL_GetError_post;
 	int HP_SQL_Malloc_pre;
 	int HP_SQL_Malloc_post;
 	int HP_SQL_StmtMalloc_pre;

@@ -1656,6 +1656,7 @@ static int inter_guild_parse_frommap(int fd)
 	case 0x303F: mapif->parse_GuildEmblem(fd, RFIFOW(fd,2)-12, RFIFOL(fd,4), RFIFOL(fd,8), RFIFOP(fd,12)); break;
 	case 0x3040: mapif->parse_GuildCastleDataLoad(fd, RFIFOW(fd,2), RFIFOP(fd,4)); break;
 	case 0x3041: mapif->parse_GuildCastleDataSave(fd,RFIFOW(fd,2),RFIFOB(fd,4),RFIFOL(fd,5)); break;
+	case 0x3042: mapif->parse_GuildEmblemVersion(fd, RFIFOL(fd, 2), RFIFOL(fd, 6)); break;
 
 	default:
 		return 0;

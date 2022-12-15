@@ -928,6 +928,22 @@ static int intif_guild_emblem(int guild_id, int len, const char *data)
 	return 0;
 }
 
+// Change guild emblem version
+static int intif_guild_emblem_version(int guild_id, uint32 version)
+{
+	if (intif->CheckForCharServer())
+		return 0;
+	if (guild_id <= 0)
+		return 0;
+	WFIFOHEAD(inter_fd, 10);
+	WFIFOW(inter_fd, 0) = 0x3042;
+	WFIFOL(inter_fd, 2) = guild_id;
+	WFIFOL(inter_fd, 6) = version;
+	WFIFOSET(inter_fd, 10);
+
+	return 0;
+}
+
 /**
  * Requests guild castles data from char-server.
  * @param num Number of castles, size of castle_ids array.
@@ -1418,6 +1434,12 @@ static void intif_parse_GuildEmblem(int fd)
 static void intif_parse_GuildCastleDataLoad(int fd)
 {
 	guild->castledataloadack(RFIFOW(fd,2), RFIFOP(fd,4));
+}
+
+// Guild emblem changed via web service
+void intif_parse_GuildEmblemVersionChanged(int fd)
+{
+	guild->emblem_changed(0, RFIFOL(fd, 2), RFIFOL(fd, 6), NULL); // Doesn't need emblem length and data
 }
 
 // ACK change of guildmaster
@@ -2731,6 +2753,7 @@ static int intif_parse(int fd)
 		case 0x383e: intif->pGuildNotice(fd); break;
 		case 0x383f: intif->pGuildEmblem(fd); break;
 		case 0x3840: intif->pGuildCastleDataLoad(fd); break;
+		case 0x3841: intif->pGuildEmblemVersionChanged(fd); break;
 		case 0x3843: intif->pGuildMasterChanged(fd); break;
 
 		//Quest system
@@ -2836,6 +2859,7 @@ void intif_defaults(void)
 	intif->guild_alliance = intif_guild_alliance;
 	intif->guild_notice = intif_guild_notice;
 	intif->guild_emblem = intif_guild_emblem;
+	intif->guild_emblem_version = intif_guild_emblem_version;
 	intif->guild_castle_dataload = intif_guild_castle_dataload;
 	intif->guild_castle_datasave = intif_guild_castle_datasave;
 	intif->request_petdata = intif_request_petdata;
@@ -2919,6 +2943,7 @@ void intif_defaults(void)
 	intif->pGuildNotice = intif_parse_GuildNotice;
 	intif->pGuildEmblem = intif_parse_GuildEmblem;
 	intif->pGuildCastleDataLoad = intif_parse_GuildCastleDataLoad;
+	intif->pGuildEmblemVersionChanged = intif_parse_GuildEmblemVersionChanged;
 	intif->pGuildMasterChanged = intif_parse_GuildMasterChanged;
 	intif->pQuestLog = intif_parse_QuestLog;
 	intif->pQuestSave = intif_parse_QuestSave;

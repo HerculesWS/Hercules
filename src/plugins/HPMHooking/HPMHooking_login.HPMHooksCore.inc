@@ -62,6 +62,14 @@ struct {
 	struct HPMHookPoint *HP_account_db_sql_load_num_post;
 	struct HPMHookPoint *HP_account_db_sql_load_str_pre;
 	struct HPMHookPoint *HP_account_db_sql_load_str_post;
+	struct HPMHookPoint *HP_account_db_sql_disable_webtoken_timer_pre;
+	struct HPMHookPoint *HP_account_db_sql_disable_webtoken_timer_post;
+	struct HPMHookPoint *HP_account_db_sql_enable_webtoken_pre;
+	struct HPMHookPoint *HP_account_db_sql_enable_webtoken_post;
+	struct HPMHookPoint *HP_account_db_sql_disable_webtoken_pre;
+	struct HPMHookPoint *HP_account_db_sql_disable_webtoken_post;
+	struct HPMHookPoint *HP_account_db_sql_remove_webtokens_pre;
+	struct HPMHookPoint *HP_account_db_sql_remove_webtokens_post;
 	struct HPMHookPoint *HP_account_db_sql_iterator_pre;
 	struct HPMHookPoint *HP_account_db_sql_iterator_post;
 	struct HPMHookPoint *HP_account_db_sql_iter_destroy_pre;
@@ -662,6 +670,8 @@ struct {
 	struct HPMHookPoint *HP_SQL_ShowDebug__post;
 	struct HPMHookPoint *HP_SQL_Free_pre;
 	struct HPMHookPoint *HP_SQL_Free_post;
+	struct HPMHookPoint *HP_SQL_GetError_pre;
+	struct HPMHookPoint *HP_SQL_GetError_post;
 	struct HPMHookPoint *HP_SQL_Malloc_pre;
 	struct HPMHookPoint *HP_SQL_Malloc_post;
 	struct HPMHookPoint *HP_SQL_StmtMalloc_pre;
@@ -891,6 +901,14 @@ struct {
 	int HP_account_db_sql_load_num_post;
 	int HP_account_db_sql_load_str_pre;
 	int HP_account_db_sql_load_str_post;
+	int HP_account_db_sql_disable_webtoken_timer_pre;
+	int HP_account_db_sql_disable_webtoken_timer_post;
+	int HP_account_db_sql_enable_webtoken_pre;
+	int HP_account_db_sql_enable_webtoken_post;
+	int HP_account_db_sql_disable_webtoken_pre;
+	int HP_account_db_sql_disable_webtoken_post;
+	int HP_account_db_sql_remove_webtokens_pre;
+	int HP_account_db_sql_remove_webtokens_post;
 	int HP_account_db_sql_iterator_pre;
 	int HP_account_db_sql_iterator_post;
 	int HP_account_db_sql_iter_destroy_pre;
@@ -1491,6 +1509,8 @@ struct {
 	int HP_SQL_ShowDebug__post;
 	int HP_SQL_Free_pre;
 	int HP_SQL_Free_post;
+	int HP_SQL_GetError_pre;
+	int HP_SQL_GetError_post;
 	int HP_SQL_Malloc_pre;
 	int HP_SQL_Malloc_post;
 	int HP_SQL_StmtMalloc_pre;

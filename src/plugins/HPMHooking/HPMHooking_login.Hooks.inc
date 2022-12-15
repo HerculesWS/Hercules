@@ -213,15 +213,15 @@ bool HP_account_mmo_auth_fromsql(AccountDB_SQL *db, struct mmo_account *acc, int
 	}
 	return retVal___;
 }
-bool HP_account_mmo_auth_tosql(AccountDB_SQL *db, const struct mmo_account *acc, bool is_new) {
+bool HP_account_mmo_auth_tosql(AccountDB_SQL *db, const struct mmo_account *acc, bool is_new, bool refresh_token) {
 	int hIndex = 0;
 	bool retVal___ = false;
 	if (HPMHooks.count.HP_account_mmo_auth_tosql_pre > 0) {
-		bool (*preHookFunc) (AccountDB_SQL **db, const struct mmo_account **acc, bool *is_new);
+		bool (*preHookFunc) (AccountDB_SQL **db, const struct mmo_account **acc, bool *is_new, bool *refresh_token);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_account_mmo_auth_tosql_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_account_mmo_auth_tosql_pre[hIndex].func;
-			retVal___ = preHookFunc(&db, &acc, &is_new);
+			retVal___ = preHookFunc(&db, &acc, &is_new, &refresh_token);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -229,13 +229,13 @@ bool HP_account_mmo_auth_tosql(AccountDB_SQL *db, const struct mmo_account *acc,
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.account.mmo_auth_tosql(db, acc, is_new);
+		retVal___ = HPMHooks.source.account.mmo_auth_tosql(db, acc, is_new, refresh_token);
 	}
 	if (HPMHooks.count.HP_account_mmo_auth_tosql_post > 0) {
-		bool (*postHookFunc) (bool retVal___, AccountDB_SQL *db, const struct mmo_account *acc, bool is_new);
+		bool (*postHookFunc) (bool retVal___, AccountDB_SQL *db, const struct mmo_account *acc, bool is_new, bool refresh_token);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_account_mmo_auth_tosql_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_account_mmo_auth_tosql_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, db, acc, is_new);
+			retVal___ = postHookFunc(retVal___, db, acc, is_new, refresh_token);
 		}
 	}
 	return retVal___;
@@ -428,15 +428,15 @@ bool HP_account_db_sql_remove(AccountDB *self, const int account_id) {
 	}
 	return retVal___;
 }
-bool HP_account_db_sql_save(AccountDB *self, const struct mmo_account *acc) {
+bool HP_account_db_sql_save(AccountDB *self, const struct mmo_account *acc, bool refresh_token) {
 	int hIndex = 0;
 	bool retVal___ = false;
 	if (HPMHooks.count.HP_account_db_sql_save_pre > 0) {
-		bool (*preHookFunc) (AccountDB **self, const struct mmo_account **acc);
+		bool (*preHookFunc) (AccountDB **self, const struct mmo_account **acc, bool *refresh_token);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_account_db_sql_save_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_account_db_sql_save_pre[hIndex].func;
-			retVal___ = preHookFunc(&self, &acc);
+			retVal___ = preHookFunc(&self, &acc, &refresh_token);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -444,13 +444,13 @@ bool HP_account_db_sql_save(AccountDB *self, const struct mmo_account *acc) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.account.db_sql_save(self, acc);
+		retVal___ = HPMHooks.source.account.db_sql_save(self, acc, refresh_token);
 	}
 	if (HPMHooks.count.HP_account_db_sql_save_post > 0) {
-		bool (*postHookFunc) (bool retVal___, AccountDB *self, const struct mmo_account *acc);
+		bool (*postHookFunc) (bool retVal___, AccountDB *self, const struct mmo_account *acc, bool refresh_token);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_account_db_sql_save_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_account_db_sql_save_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, self, acc);
+			retVal___ = postHookFunc(retVal___, self, acc, refresh_token);
 		}
 	}
 	return retVal___;
@@ -505,6 +505,114 @@ bool HP_account_db_sql_load_str(AccountDB *self, struct mmo_account *acc, const 
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_account_db_sql_load_str_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_account_db_sql_load_str_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, self, acc, userid);
+		}
+	}
+	return retVal___;
+}
+int HP_account_db_sql_disable_webtoken_timer(int tid, int64 tick, int id, intptr_t data) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_account_db_sql_disable_webtoken_timer_pre > 0) {
+		int (*preHookFunc) (int *tid, int64 *tick, int *id, intptr_t *data);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_account_db_sql_disable_webtoken_timer_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_account_db_sql_disable_webtoken_timer_pre[hIndex].func;
+			retVal___ = preHookFunc(&tid, &tick, &id, &data);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.account.db_sql_disable_webtoken_timer(tid, tick, id, data);
+	}
+	if (HPMHooks.count.HP_account_db_sql_disable_webtoken_timer_post > 0) {
+		int (*postHookFunc) (int retVal___, int tid, int64 tick, int id, intptr_t data);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_account_db_sql_disable_webtoken_timer_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_account_db_sql_disable_webtoken_timer_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, tid, tick, id, data);
+		}
+	}
+	return retVal___;
+}
+bool HP_account_db_sql_enable_webtoken(AccountDB *self, const uint32 account_id) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_account_db_sql_enable_webtoken_pre > 0) {
+		bool (*preHookFunc) (AccountDB **self, const uint32 *account_id);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_account_db_sql_enable_webtoken_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_account_db_sql_enable_webtoken_pre[hIndex].func;
+			retVal___ = preHookFunc(&self, &account_id);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.account.db_sql_enable_webtoken(self, account_id);
+	}
+	if (HPMHooks.count.HP_account_db_sql_enable_webtoken_post > 0) {
+		bool (*postHookFunc) (bool retVal___, AccountDB *self, const uint32 account_id);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_account_db_sql_enable_webtoken_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_account_db_sql_enable_webtoken_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, self, account_id);
+		}
+	}
+	return retVal___;
+}
+bool HP_account_db_sql_disable_webtoken(AccountDB *self, const uint32 account_id) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_account_db_sql_disable_webtoken_pre > 0) {
+		bool (*preHookFunc) (AccountDB **self, const uint32 *account_id);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_account_db_sql_disable_webtoken_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_account_db_sql_disable_webtoken_pre[hIndex].func;
+			retVal___ = preHookFunc(&self, &account_id);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.account.db_sql_disable_webtoken(self, account_id);
+	}
+	if (HPMHooks.count.HP_account_db_sql_disable_webtoken_post > 0) {
+		bool (*postHookFunc) (bool retVal___, AccountDB *self, const uint32 account_id);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_account_db_sql_disable_webtoken_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_account_db_sql_disable_webtoken_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, self, account_id);
+		}
+	}
+	return retVal___;
+}
+bool HP_account_db_sql_remove_webtokens(AccountDB *self) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_account_db_sql_remove_webtokens_pre > 0) {
+		bool (*preHookFunc) (AccountDB **self);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_account_db_sql_remove_webtokens_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_account_db_sql_remove_webtokens_pre[hIndex].func;
+			retVal___ = preHookFunc(&self);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.account.db_sql_remove_webtokens(self);
+	}
+	if (HPMHooks.count.HP_account_db_sql_remove_webtokens_post > 0) {
+		bool (*postHookFunc) (bool retVal___, AccountDB *self);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_account_db_sql_remove_webtokens_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_account_db_sql_remove_webtokens_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, self);
 		}
 	}
 	return retVal___;
@@ -8540,6 +8648,33 @@ void HP_SQL_Free(struct Sql *self) {
 		}
 	}
 	return;
+}
+unsigned int HP_SQL_GetError(struct Sql *self) {
+	int hIndex = 0;
+	unsigned int retVal___ = 0;
+	if (HPMHooks.count.HP_SQL_GetError_pre > 0) {
+		unsigned int (*preHookFunc) (struct Sql **self);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_SQL_GetError_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_SQL_GetError_pre[hIndex].func;
+			retVal___ = preHookFunc(&self);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.SQL.GetError(self);
+	}
+	if (HPMHooks.count.HP_SQL_GetError_post > 0) {
+		unsigned int (*postHookFunc) (unsigned int retVal___, struct Sql *self);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_SQL_GetError_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_SQL_GetError_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, self);
+		}
+	}
+	return retVal___;
 }
 struct Sql* HP_SQL_Malloc(void) {
 	int hIndex = 0;

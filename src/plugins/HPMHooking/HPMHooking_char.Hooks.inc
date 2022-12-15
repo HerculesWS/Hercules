@@ -13547,6 +13547,33 @@ int HP_mapif_guild_emblem(struct guild *g) {
 	}
 	return retVal___;
 }
+int HP_mapif_guild_emblem_version(struct guild *g) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_mapif_guild_emblem_version_pre > 0) {
+		int (*preHookFunc) (struct guild **g);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_guild_emblem_version_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_mapif_guild_emblem_version_pre[hIndex].func;
+			retVal___ = preHookFunc(&g);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.mapif.guild_emblem_version(g);
+	}
+	if (HPMHooks.count.HP_mapif_guild_emblem_version_post > 0) {
+		int (*postHookFunc) (int retVal___, struct guild *g);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_guild_emblem_version_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_mapif_guild_emblem_version_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, g);
+		}
+	}
+	return retVal___;
+}
 int HP_mapif_guild_master_changed(struct guild *g, int aid, int cid) {
 	int hIndex = 0;
 	int retVal___ = 0;
@@ -14002,6 +14029,33 @@ int HP_mapif_parse_GuildCastleDataSave(int fd, int castle_id, int index, int val
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_parse_GuildCastleDataSave_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_mapif_parse_GuildCastleDataSave_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, fd, castle_id, index, value);
+		}
+	}
+	return retVal___;
+}
+int HP_mapif_parse_GuildEmblemVersion(int fd, int guild_id, int version) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_mapif_parse_GuildEmblemVersion_pre > 0) {
+		int (*preHookFunc) (int *fd, int *guild_id, int *version);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_parse_GuildEmblemVersion_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_mapif_parse_GuildEmblemVersion_pre[hIndex].func;
+			retVal___ = preHookFunc(&fd, &guild_id, &version);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.mapif.parse_GuildEmblemVersion(fd, guild_id, version);
+	}
+	if (HPMHooks.count.HP_mapif_parse_GuildEmblemVersion_post > 0) {
+		int (*postHookFunc) (int retVal___, int fd, int guild_id, int version);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_parse_GuildEmblemVersion_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_mapif_parse_GuildEmblemVersion_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, fd, guild_id, version);
 		}
 	}
 	return retVal___;
@@ -19349,6 +19403,33 @@ void HP_SQL_Free(struct Sql *self) {
 		}
 	}
 	return;
+}
+unsigned int HP_SQL_GetError(struct Sql *self) {
+	int hIndex = 0;
+	unsigned int retVal___ = 0;
+	if (HPMHooks.count.HP_SQL_GetError_pre > 0) {
+		unsigned int (*preHookFunc) (struct Sql **self);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_SQL_GetError_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_SQL_GetError_pre[hIndex].func;
+			retVal___ = preHookFunc(&self);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.SQL.GetError(self);
+	}
+	if (HPMHooks.count.HP_SQL_GetError_post > 0) {
+		unsigned int (*postHookFunc) (unsigned int retVal___, struct Sql *self);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_SQL_GetError_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_SQL_GetError_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, self);
+		}
+	}
+	return retVal___;
 }
 struct Sql* HP_SQL_Malloc(void) {
 	int hIndex = 0;

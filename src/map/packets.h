@@ -1985,6 +1985,7 @@ packet(0x96e,clif->ackmergeitems);
 
 #if PACKETVER >= 20190724
 	packet(0x0b4c,clif->pCashShopLimitedReq);
+	packet(0x0b46, clif->pGuildChangeEmblem2);
 #endif
 
 #if PACKETVER_MAIN_NUM >= 20190904 || PACKETVER_RE_NUM >= 20190904 || PACKETVER_ZERO_NUM >= 20190828

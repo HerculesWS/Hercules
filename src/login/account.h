@@ -24,6 +24,10 @@
 #include "common/cbasetypes.h"
 #include "common/mmo.h" // ACCOUNT_REG2_NUM
 
+#ifndef WEB_AUTH_TOKEN_LENGTH
+	#define WEB_AUTH_TOKEN_LENGTH 16+1
+#endif
+
 /* Forward declarations */
 struct Sql; // common/sql.h
 
@@ -51,6 +55,7 @@ struct mmo_account
 	char lastlogin[24];         // date+time of last successful login
 	char last_ip[16];           // save of last IP of connection
 	char birthdate[10+1];       // assigned birth date (format: YYYY-MM-DD, default: 0000-00-00)
+	char web_auth_token[WEB_AUTH_TOKEN_LENGTH];// Web authentication token, randomized on every login
 };
 
 struct AccountDBIterator
@@ -128,8 +133,9 @@ struct AccountDB
 	///
 	/// @param self Database
 	/// @param acc Account data
+	/// @param refresh_token Refresh web_auth_token value
 	/// @return true if successful
-	bool (*save)(AccountDB* self, const struct mmo_account* acc);
+	bool (*save)(AccountDB* self, const struct mmo_account* acc, bool refresh_token);
 
 	/// Finds an account with account_id and copies it to acc.
 	///
@@ -146,6 +152,24 @@ struct AccountDB
 	/// @param userid Target username
 	/// @return true if successful
 	bool (*load_str)(AccountDB* self, struct mmo_account* acc, const char* userid);
+
+	/// Enable webtoken for a given account
+	///
+	/// @param self Database
+	/// @param account_id Target account id
+	bool (*enable_webtoken)(AccountDB* self, const uint32 account_id);
+
+	/// Timed function to disable webtoken for a given account
+	///
+	/// @param self Database
+	/// @param account_id Target account id
+	bool (*disable_webtoken)(AccountDB* self, const uint32 account_id);
+
+	/// Removes web_token_auth and flag for a given account
+	///
+	/// @param self Database
+	/// @param account_id Target account id
+	bool (*remove_webtokens)(AccountDB* self);
 
 	/// Returns a new forward iterator.
 	///
@@ -191,7 +215,7 @@ struct account_interface {
 	void (*mmo_send_accreg2) (AccountDB* self, int fd, int account_id, int char_id);
 	void (*mmo_save_accreg2) (AccountDB* self, int fd, int account_id, int char_id);
 	bool (*mmo_auth_fromsql) (AccountDB_SQL* db, struct mmo_account* acc, int account_id);
-	bool (*mmo_auth_tosql) (AccountDB_SQL* db, const struct mmo_account* acc, bool is_new);
+	bool (*mmo_auth_tosql) (AccountDB_SQL* db, const struct mmo_account* acc, bool is_new, bool refresh_token);
 
 	AccountDB* (*db_sql) (void);
 	bool (*db_sql_init) (AccountDB* self);
@@ -200,9 +224,13 @@ struct account_interface {
 	bool (*db_sql_set_property) (AccountDB* self, struct config_t *config, bool imported);
 	bool (*db_sql_create) (AccountDB* self, struct mmo_account* acc);
 	bool (*db_sql_remove) (AccountDB* self, const int account_id);
-	bool (*db_sql_save) (AccountDB* self, const struct mmo_account* acc);
+	bool (*db_sql_save) (AccountDB* self, const struct mmo_account* acc, bool refresh_token);
 	bool (*db_sql_load_num) (AccountDB* self, struct mmo_account* acc, const int account_id);
 	bool (*db_sql_load_str) (AccountDB* self, struct mmo_account* acc, const char* userid);
+	int (*db_sql_disable_webtoken_timer) (int tid, int64 tick, int id, intptr_t data);
+	bool (*db_sql_enable_webtoken)(AccountDB* self, const uint32 account_id);
+	bool (*db_sql_disable_webtoken)(AccountDB* self, const uint32 account_id);
+	bool (*db_sql_remove_webtokens)(AccountDB* self);
 	AccountDBIterator* (*db_sql_iterator) (AccountDB* self);
 	void (*db_sql_iter_destroy) (AccountDBIterator* self);
 	bool (*db_sql_iter_next) (AccountDBIterator* self, struct mmo_account* acc);

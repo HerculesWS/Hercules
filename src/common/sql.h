@@ -153,6 +153,9 @@ struct sql_interface {
 	void (*ShowDebug_) (struct Sql *self, const char *debug_file, const unsigned long debug_line);
 	/// Frees a Sql handle returned by Sql_Malloc.
 	void (*Free) (struct Sql *self);
+	/// Returns the last reported error of sql
+	unsigned int (*GetError)(struct Sql* self);
+
 	/// Allocates and initializes a new Sql handle.
 	struct Sql *(*Malloc) (void);
 

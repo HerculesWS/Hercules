@@ -25,6 +25,7 @@
 #include "common/core.h" // CORE_ST_LAST
 #include "common/db.h"
 #include "common/mmo.h" // NAME_LENGTH,SEX_*
+#include "account.h"
 
 /** @file
  * Login interface.
@@ -69,6 +70,8 @@ struct login_session_data {
 	uint8 group_id;
 	uint8 clienttype;
 	uint32 version;
+
+	char web_auth_token[WEB_AUTH_TOKEN_LENGTH];
 
 	uint8 client_hash[16];
 	int has_client_hash;

@@ -398,6 +398,11 @@ static void Sql_Free(struct Sql *self)
 	}
 }
 
+/* Returns last reported error of mysql */
+unsigned int Sql_GetError(struct Sql* self) {
+	return mysql_errno(&self->handle);
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 // Prepared Statements
 ///////////////////////////////////////////////////////////////////////////////
@@ -1121,6 +1126,7 @@ void sql_defaults(void)
 	SQL->ShowDebug_ = Sql_ShowDebug_;
 	SQL->Free = Sql_Free;
 	SQL->Malloc = Sql_Malloc;
+	SQL->GetError = Sql_GetError;
 
 	/* SqlStmt defaults [Susu] */
 	SQL->StmtBindColumn = SqlStmt_BindColumn;

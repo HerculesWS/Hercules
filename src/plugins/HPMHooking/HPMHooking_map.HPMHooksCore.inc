@@ -1940,6 +1940,8 @@ struct {
 	struct HPMHookPoint *HP_clif_pGuildRequestEmblem_post;
 	struct HPMHookPoint *HP_clif_pGuildChangeEmblem_pre;
 	struct HPMHookPoint *HP_clif_pGuildChangeEmblem_post;
+	struct HPMHookPoint *HP_clif_pGuildChangeEmblem2_pre;
+	struct HPMHookPoint *HP_clif_pGuildChangeEmblem2_post;
 	struct HPMHookPoint *HP_clif_pGuildChangeNotice_pre;
 	struct HPMHookPoint *HP_clif_pGuildChangeNotice_post;
 	struct HPMHookPoint *HP_clif_pGuildInvite_pre;
@@ -2828,6 +2830,8 @@ struct {
 	struct HPMHookPoint *HP_guild_notice_changed_post;
 	struct HPMHookPoint *HP_guild_change_emblem_pre;
 	struct HPMHookPoint *HP_guild_change_emblem_post;
+	struct HPMHookPoint *HP_guild_change_emblem_version_pre;
+	struct HPMHookPoint *HP_guild_change_emblem_version_post;
 	struct HPMHookPoint *HP_guild_emblem_changed_pre;
 	struct HPMHookPoint *HP_guild_emblem_changed_post;
 	struct HPMHookPoint *HP_guild_send_message_pre;
@@ -3150,6 +3154,8 @@ struct {
 	struct HPMHookPoint *HP_intif_guild_notice_post;
 	struct HPMHookPoint *HP_intif_guild_emblem_pre;
 	struct HPMHookPoint *HP_intif_guild_emblem_post;
+	struct HPMHookPoint *HP_intif_guild_emblem_version_pre;
+	struct HPMHookPoint *HP_intif_guild_emblem_version_post;
 	struct HPMHookPoint *HP_intif_guild_castle_dataload_pre;
 	struct HPMHookPoint *HP_intif_guild_castle_dataload_post;
 	struct HPMHookPoint *HP_intif_guild_castle_datasave_pre;
@@ -3296,6 +3302,8 @@ struct {
 	struct HPMHookPoint *HP_intif_pGuildEmblem_post;
 	struct HPMHookPoint *HP_intif_pGuildCastleDataLoad_pre;
 	struct HPMHookPoint *HP_intif_pGuildCastleDataLoad_post;
+	struct HPMHookPoint *HP_intif_pGuildEmblemVersionChanged_pre;
+	struct HPMHookPoint *HP_intif_pGuildEmblemVersionChanged_post;
 	struct HPMHookPoint *HP_intif_pGuildMasterChanged_pre;
 	struct HPMHookPoint *HP_intif_pGuildMasterChanged_post;
 	struct HPMHookPoint *HP_intif_pQuestLog_pre;
@@ -6792,6 +6800,8 @@ struct {
 	struct HPMHookPoint *HP_SQL_ShowDebug__post;
 	struct HPMHookPoint *HP_SQL_Free_pre;
 	struct HPMHookPoint *HP_SQL_Free_post;
+	struct HPMHookPoint *HP_SQL_GetError_pre;
+	struct HPMHookPoint *HP_SQL_GetError_post;
 	struct HPMHookPoint *HP_SQL_Malloc_pre;
 	struct HPMHookPoint *HP_SQL_Malloc_post;
 	struct HPMHookPoint *HP_SQL_StmtMalloc_pre;
@@ -9357,6 +9367,8 @@ struct {
 	int HP_clif_pGuildRequestEmblem_post;
 	int HP_clif_pGuildChangeEmblem_pre;
 	int HP_clif_pGuildChangeEmblem_post;
+	int HP_clif_pGuildChangeEmblem2_pre;
+	int HP_clif_pGuildChangeEmblem2_post;
 	int HP_clif_pGuildChangeNotice_pre;
 	int HP_clif_pGuildChangeNotice_post;
 	int HP_clif_pGuildInvite_pre;
@@ -10245,6 +10257,8 @@ struct {
 	int HP_guild_notice_changed_post;
 	int HP_guild_change_emblem_pre;
 	int HP_guild_change_emblem_post;
+	int HP_guild_change_emblem_version_pre;
+	int HP_guild_change_emblem_version_post;
 	int HP_guild_emblem_changed_pre;
 	int HP_guild_emblem_changed_post;
 	int HP_guild_send_message_pre;
@@ -10567,6 +10581,8 @@ struct {
 	int HP_intif_guild_notice_post;
 	int HP_intif_guild_emblem_pre;
 	int HP_intif_guild_emblem_post;
+	int HP_intif_guild_emblem_version_pre;
+	int HP_intif_guild_emblem_version_post;
 	int HP_intif_guild_castle_dataload_pre;
 	int HP_intif_guild_castle_dataload_post;
 	int HP_intif_guild_castle_datasave_pre;
@@ -10713,6 +10729,8 @@ struct {
 	int HP_intif_pGuildEmblem_post;
 	int HP_intif_pGuildCastleDataLoad_pre;
 	int HP_intif_pGuildCastleDataLoad_post;
+	int HP_intif_pGuildEmblemVersionChanged_pre;
+	int HP_intif_pGuildEmblemVersionChanged_post;
 	int HP_intif_pGuildMasterChanged_pre;
 	int HP_intif_pGuildMasterChanged_post;
 	int HP_intif_pQuestLog_pre;
@@ -14209,6 +14227,8 @@ struct {
 	int HP_SQL_ShowDebug__post;
 	int HP_SQL_Free_pre;
 	int HP_SQL_Free_post;
+	int HP_SQL_GetError_pre;
+	int HP_SQL_GetError_post;
 	int HP_SQL_Malloc_pre;
 	int HP_SQL_Malloc_post;
 	int HP_SQL_StmtMalloc_pre;

@@ -93,6 +93,9 @@ static struct online_login_data* login_add_online_user(int char_server, int acco
 		timer->delete(p->waiting_disconnect, login->waiting_disconnect_timer);
 		p->waiting_disconnect = INVALID_TIMER;
 	}
+
+	accounts->enable_webtoken(accounts, account_id);
+
 	return p;
 }
 
@@ -104,6 +107,8 @@ static void login_remove_online_user(int account_id)
 		return;
 	if( p->waiting_disconnect != INVALID_TIMER )
 		timer->delete(p->waiting_disconnect, login->waiting_disconnect_timer);
+
+	accounts->disable_webtoken(accounts, account_id);
 
 	idb_remove(login->online_db, account_id);
 }
@@ -377,7 +382,7 @@ static void login_fromchar_parse_request_change_email(int fd, int id, const char
 		memcpy(acc.email, email, sizeof(acc.email));
 		ShowNotice("Char-server '%s': Create an e-mail on an account with a default e-mail (account: %d, new e-mail: %s, ip: %s).\n", login->dbs->server[id].name, account_id, email, ip);
 		// Save
-		accounts->save(accounts, &acc);
+		accounts->save(accounts, &acc, false);
 	}
 }
 
@@ -484,7 +489,7 @@ static void login_fromchar_parse_change_email(int fd, int id, const char *const 
 		safestrncpy(acc.email, new_email, sizeof(acc.email));
 		ShowNotice("Char-server '%s': Modify an e-mail on an account (@email GM command) (account: %d (%s), new e-mail: %s, ip: %s).\n", login->dbs->server[id].name, account_id, acc.userid, new_email, ip);
 		// Save
-		accounts->save(accounts, &acc);
+		accounts->save(accounts, &acc, false);
 	}
 }
 
@@ -516,7 +521,7 @@ static void login_fromchar_parse_account_update(int fd, int id, const char *cons
 
 		acc.state = state;
 		// Save
-		accounts->save(accounts, &acc);
+		accounts->save(accounts, &acc, false);
 
 		// notify other servers
 		if (state != 0) {
@@ -578,7 +583,7 @@ static void login_fromchar_parse_ban(int fd, int id, const char *const ip)
 			acc.unban_time = timestamp;
 
 			// Save
-			accounts->save(accounts, &acc);
+			accounts->save(accounts, &acc, false);
 
 			login->fromchar_ban(account_id, timestamp);
 		}
@@ -614,7 +619,7 @@ static void login_fromchar_parse_change_sex(int fd, int id, const char *const ip
 
 		acc.sex = sex;
 		// Save
-		accounts->save(accounts, &acc);
+		accounts->save(accounts, &acc, false);
 
 		// announce to other servers
 		login->fromchar_change_sex_other(account_id, sex);
@@ -651,7 +656,7 @@ static void login_fromchar_parse_unban(int fd, int id, const char *const ip)
 	{
 		ShowNotice("Char-server '%s': Unban request (account: %d, ip: %s).\n", login->dbs->server[id].name, account_id, ip);
 		acc.unban_time = 0;
-		accounts->save(accounts, &acc);
+		accounts->save(accounts, &acc, false);
 	}
 }
 
@@ -714,7 +719,7 @@ static void login_fromchar_parse_change_pincode(int fd)
 	if (accounts->load_num(accounts, &acc, RFIFOL(fd,2))) {
 		safestrncpy(acc.pincode, RFIFOP(fd,6), sizeof(acc.pincode));
 		acc.pincode_change = ((unsigned int)time(NULL));
-		accounts->save(accounts, &acc);
+		accounts->save(accounts, &acc, false);
 	}
 	RFIFOSKIP(fd,11);
 }
@@ -1215,7 +1220,9 @@ static int login_mmo_auth(struct login_session_data *sd, bool isServer)
 	acc.unban_time = 0;
 	acc.logincount++;
 
-	accounts->save(accounts, &acc);
+	accounts->save(accounts, &acc, true);
+
+	safestrncpy(sd->web_auth_token, acc.web_auth_token, 17);
 
 	if( sd->sex != 'S' && sd->account_id < START_ACCOUNT_NUM )
 		ShowWarning("Account %s has account id %d! Account IDs must be over %d to work properly!\n", sd->userid, sd->account_id, START_ACCOUNT_NUM);

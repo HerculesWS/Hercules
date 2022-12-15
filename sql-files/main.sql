@@ -650,8 +650,11 @@ CREATE TABLE IF NOT EXISTS `login` (
   `character_slots` TINYINT UNSIGNED NOT NULL DEFAULT '0',
   `pincode` VARCHAR(4) NOT NULL DEFAULT '',
   `pincode_change` INT UNSIGNED NOT NULL DEFAULT '0',
+  `web_auth_token` varchar(17) null,
+  `web_auth_token_enabled` tinyint(2) NOT NULL default '0',
   PRIMARY KEY (`account_id`),
-  UNIQUE KEY `name` (`userid`)
+  UNIQUE KEY `name` (`userid`),
+  UNIQUE KEY `web_auth_token` (`web_auth_token`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2000000;
 
 -- added standard accounts for servers, VERY INSECURE!!!
@@ -963,6 +966,7 @@ INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1628121360); -- 2021-08-0
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1634838524); -- 2021-10-21--18-49.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1641405640); -- 2022-01-05--19-00.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1665257750); -- 2022-10-08--08-35.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1670806399); -- 2022-12-12--01-53.sql
 
 --
 -- Table structure for table `storage`
