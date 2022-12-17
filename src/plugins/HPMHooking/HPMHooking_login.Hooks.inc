@@ -5573,6 +5573,32 @@ void HP_login_auth_failed(struct login_session_data *sd, int result) {
 	}
 	return;
 }
+void HP_login_generate_token(struct login_session_data *sd, unsigned char *auth_token) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_login_generate_token_pre > 0) {
+		void (*preHookFunc) (struct login_session_data **sd, unsigned char **auth_token);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_login_generate_token_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_login_generate_token_pre[hIndex].func;
+			preHookFunc(&sd, &auth_token);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.login.generate_token(sd, auth_token);
+	}
+	if (HPMHooks.count.HP_login_generate_token_post > 0) {
+		void (*postHookFunc) (struct login_session_data *sd, unsigned char *auth_token);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_login_generate_token_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_login_generate_token_post[hIndex].func;
+			postHookFunc(sd, auth_token);
+		}
+	}
+	return;
+}
 bool HP_login_client_login(int fd, struct login_session_data *sd) {
 	int hIndex = 0;
 	bool retVal___ = false;
