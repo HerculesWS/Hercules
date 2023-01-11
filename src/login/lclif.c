@@ -293,6 +293,7 @@ static bool lclif_send_server_list(struct login_session_data *sd)
 	packet->packet_id = HEADER_AC_ACCEPT_LOGIN;
 #else
 	packet->packet_id = HEADER_AC_ACCEPT_LOGIN2;
+	login->generate_token(sd, packet->auth_token);
 #endif
 	packet->packet_len = length;
 	packet->auth_code = sd->login_id1;
