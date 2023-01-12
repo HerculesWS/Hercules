@@ -4,7 +4,7 @@
 # This file is part of Hercules.
 # http://herc.ws - http://github.com/HerculesWS/Hercules
 #
-# Copyright (C) 2012-2022 Hercules Dev Team
+# Copyright (C) 2012-2023 Hercules Dev Team
 # Copyright (C) Athena Dev Teams
 #
 # Hercules is free software: you can redistribute it and/or modify
@@ -392,7 +392,7 @@ AC_ARG_ENABLE(
 )
 
 #
-# RDTSC as Tick Source 
+# RDTSC as Tick Source
 #
 AC_ARG_ENABLE(
 	[rdtsc],

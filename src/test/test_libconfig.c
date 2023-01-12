@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2015-2022 Hercules Dev Team
+ * Copyright (C) 2015-2023 Hercules Dev Team
  * Copyright (C) 2015 Haru <haru@dotalux.com>
  *
  * Hercules is free software: you can redistribute it and/or modify
