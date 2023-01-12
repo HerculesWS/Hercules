@@ -7,7 +7,7 @@ env:
   MYSQL_USER: 'ragnarok'
   MYSQL_PASSWORD: 'ragnarok'
   MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
-  DEBIAN_COMMON_PACKAGES: php php-dom composer wget
+  DEBIAN_COMMON_PACKAGES: php php-xml composer wget
 
 jobs:
   build:
