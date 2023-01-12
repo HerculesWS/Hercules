@@ -20948,11 +20948,11 @@ static bool clif_show_monster_hp_bar(struct block_list *bl)
 
 	const struct mob_data *md = BL_UCCAST(BL_MOB, bl);
 	if (status_get_hp(bl) < status_get_max_hp(bl)) {
-		if ((battle->bc->show_monster_hp_bar & 1) != 0 && md->class_ != MOBID_EMPELIUM && (md->status.mode & MD_BOSS) == 0)
+		if ((battle->bc->show_monster_hp_bar & 1) != 0 && md->class_ != MOBID_EMPELIUM && (md->status.mode & MD_BOSS) == 0 && md->guardian_data == NULL)
 			return true;
-		if ((battle->bc->show_monster_hp_bar & 2) != 0 && md->class_ == MOBID_EMPELIUM)
+		if ((battle->bc->show_monster_hp_bar & 2) != 0 && (md->class_ == MOBID_EMPELIUM || md->guardian_data != NULL))
 			return true;
-		if ((battle->bc->show_monster_hp_bar & 4) != 0 && (md->status.mode & MD_BOSS) != 0 && md->class_ != MOBID_EMPELIUM)
+		if ((battle->bc->show_monster_hp_bar & 4) != 0 && (md->status.mode & MD_BOSS) != 0 && md->class_ != MOBID_EMPELIUM && md->guardian_data == NULL)
 			return true;
 	}
 	return false;
