@@ -22,6 +22,27 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
+## [v2023.01.11] `January 11 2023`
+
+### Added
+
+- Added a skeleton function for generating an auth token. This doesn't add actual token generation capabilities at this time, but allows plugins to hook into it to implement custom behavior. (#3183)
+- Added the missing effects of Fire Expansion level 3 and 4 (#2920)
+
+### Changed
+
+- Changed `validateinterfaces.py` to run on python3. (#3185)
+- Changed the CI builds to use python3 instead of python2, as it's getting removed by linux distributions including debian unstable. (part of #3185)
+- Changed the `show_monster_hp_bar` option to show the HP bar on WoE guardians when it's enabled for Emperium (flag '2', disabled by default) instead of when it's enabled for MvPs/bosses (flag '4', also disabled by default.) (#2931, related to #2008, #2912)
+
+### Fixed
+
+- Fixed a missing package `php-dom` in CI builds. (part of #3185)
+
+### Other
+
+- Updated copyright headers for year 2023.
+
 ## [v2022.12.07] `December 07 2022`
 
 ### Added
@@ -2622,6 +2643,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2023.01.11]: https://github.com/HerculesWS/Hercules/compare/v2022.12.07...v2023.01.11
 [v2022.12.07]: https://github.com/HerculesWS/Hercules/compare/v2022.11.02+1...v2022.12.07
 [v2022.11.02+1]: https://github.com/HerculesWS/Hercules/compare/v2022.11.02...v2022.11.02+1
 [v2022.11.02]: https://github.com/HerculesWS/Hercules/compare/v2022.10.05...v2022.11.02
