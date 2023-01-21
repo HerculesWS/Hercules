@@ -548,6 +548,7 @@ END_ZEROED_BLOCK;
 	struct {
 		struct rodex_message tmp;
 		struct rodex_maillist messages;
+		VECTOR_DECL(int64) claim_list;
 		int total;
 		bool new_mail;
 	} rodex;
