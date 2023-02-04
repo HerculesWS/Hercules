@@ -1368,12 +1368,6 @@ static void login_auth_failed(struct login_session_data *sd, int result)
 	lclif->auth_failed(fd, ban_time, result);
 }
 
-// Generates auth token for web service
-static void login_generate_token(struct login_session_data* sd, unsigned char *auth_token)
-{
-	// TODO
-}
-
 static bool login_client_login(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
 static bool login_client_login(int fd, struct login_session_data *sd)
 {
@@ -2318,7 +2312,7 @@ void login_defaults(void)
 	login->parse_request_connection = login_parse_request_connection;
 	login->auth_ok = login_auth_ok;
 	login->auth_failed = login_auth_failed;
-	login->generate_token = login_generate_token;
+	login->api_server_connection_status = login_api_server_connection_status;
 	login->char_server_connection_status = login_char_server_connection_status;
 	login->kick = login_kick;
 	login->check_client_version = login_check_client_version;

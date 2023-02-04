@@ -440,8 +440,6 @@ struct {
 	struct HPMHookPoint *HP_login_auth_ok_post;
 	struct HPMHookPoint *HP_login_auth_failed_pre;
 	struct HPMHookPoint *HP_login_auth_failed_post;
-	struct HPMHookPoint *HP_login_generate_token_pre;
-	struct HPMHookPoint *HP_login_generate_token_post;
 	struct HPMHookPoint *HP_login_client_login_pre;
 	struct HPMHookPoint *HP_login_client_login_post;
 	struct HPMHookPoint *HP_login_client_login_otp_pre;
@@ -1271,8 +1269,6 @@ struct {
 	int HP_login_auth_ok_post;
 	int HP_login_auth_failed_pre;
 	int HP_login_auth_failed_post;
-	int HP_login_generate_token_pre;
-	int HP_login_generate_token_post;
 	int HP_login_client_login_pre;
 	int HP_login_client_login_post;
 	int HP_login_client_login_otp_pre;

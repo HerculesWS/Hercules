@@ -219,7 +219,6 @@ struct login_interface {
 	void (*kick) (struct login_session_data* sd);
 	void (*auth_ok) (struct login_session_data* sd);
 	void (*auth_failed) (struct login_session_data* sd, int result);
-	void (*generate_token) (struct login_session_data* sd, unsigned char *auth_token);
 	bool (*client_login) (int fd, struct login_session_data *sd);
 	bool (*client_login_otp) (int fd, struct login_session_data *sd);
 	void (*client_login_mobile_otp_request) (int fd, struct login_session_data *sd);

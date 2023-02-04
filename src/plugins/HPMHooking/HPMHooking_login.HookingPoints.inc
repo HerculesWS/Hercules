@@ -246,7 +246,6 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(login->kick, HP_login_kick) },
 	{ HP_POP(login->auth_ok, HP_login_auth_ok) },
 	{ HP_POP(login->auth_failed, HP_login_auth_failed) },
-	{ HP_POP(login->generate_token, HP_login_generate_token) },
 	{ HP_POP(login->client_login, HP_login_client_login) },
 	{ HP_POP(login->client_login_otp, HP_login_client_login_otp) },
 	{ HP_POP(login->client_login_mobile_otp_request, HP_login_client_login_mobile_otp_request) },

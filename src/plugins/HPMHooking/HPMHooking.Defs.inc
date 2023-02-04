@@ -4768,8 +4768,6 @@ typedef void (*HPMHOOK_pre_login_auth_ok) (struct login_session_data **sd);
 typedef void (*HPMHOOK_post_login_auth_ok) (struct login_session_data *sd);
 typedef void (*HPMHOOK_pre_login_auth_failed) (struct login_session_data **sd, int *result);
 typedef void (*HPMHOOK_post_login_auth_failed) (struct login_session_data *sd, int result);
-typedef void (*HPMHOOK_pre_login_generate_token) (struct login_session_data **sd, unsigned char **auth_token);
-typedef void (*HPMHOOK_post_login_generate_token) (struct login_session_data *sd, unsigned char *auth_token);
 typedef bool (*HPMHOOK_pre_login_client_login) (int *fd, struct login_session_data **sd);
 typedef bool (*HPMHOOK_post_login_client_login) (bool retVal___, int fd, struct login_session_data *sd);
 typedef bool (*HPMHOOK_pre_login_client_login_otp) (int *fd, struct login_session_data **sd);
