@@ -64,7 +64,7 @@ Thumbs.db
 /cache/
 
 # /conf/
-/conf/import/*.conf
+/conf/import/**/*.conf
 /conf/import/msg_conf.txt
 
 # /log/
