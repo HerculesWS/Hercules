@@ -11021,3 +11021,20 @@ Open popup or/and show chat text by id from list configured in file spopup.lub
 Popup and text visible only if player warped from one map to another map with different name.
 
 Works from clients: main 20221005.
+
+---------------------------------------
+
+*dynamicnpccreateresult(<result>)
+
+Send DynamicNPC create request result.
+Normally this function should be called from script label
+dynamicnpc_create::OnRequest.
+
+Valid result values:
+- DYNAMICNPC_RESULT_SUCCESS - success (no message)
+- DYNAMICNPC_RESULT_UNKNOWN - shows error "dynamic npc create error (unknown)"
+- DYNAMICNPC_RESULT_NOT_EXIST - shows error "dynamic npc not found"
+- DYNAMICNPC_RESULT_DUPLICATED - shows error from message string MSG_DYNAMICNPC_FAIL_DUPLICATENAME
+    (message: "Is already in service. Please try again in a few minutes.")
+
+Works for clients 20140430 and newer (any type)

@@ -28017,6 +28017,23 @@ static BUILDIN(specialpopup)
 	return true;
 }
 
+// send result to DynamicNPC Create Request
+static BUILDIN(dynamicnpccreateresult)
+{
+	struct map_session_data *sd = script_rid2sd(st);
+	if (sd == NULL)
+		return false;
+
+	int flag = script_getnum(st, 2);
+	if (flag < DYNAMICNPC_RESULT_SUCCESS || flag > DYNAMICNPC_RESULT_DUPLICATED) {
+		ShowWarning("%s: invalid result %d has been given.", __func__, flag);
+		return false;
+	}
+
+	clif->dynamicnpc_create_result(sd, flag);
+	return true;
+}
+
 /**
  * Adds a built-in script function.
  *
@@ -28884,6 +28901,8 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(openreformui, "i"),
 
 		BUILDIN_DEF(specialpopup, "i"),
+
+		BUILDIN_DEF(dynamicnpccreateresult, "i"),
 	};
 	int i, len = ARRAYLENGTH(BUILDIN);
 	RECREATE(script->buildin, char *, script->buildin_count + len); // Pre-alloc to speed up
@@ -29406,6 +29425,12 @@ static void script_hardcoded_constants(void)
 	script->set_constant("P_AIRSHIP_INVALID_END_MAP", P_AIRSHIP_INVALID_END_MAP, false, false);
 	script->set_constant("P_AIRSHIP_ITEM_NOT_ENOUGH", P_AIRSHIP_ITEM_NOT_ENOUGH, false, false);
 	script->set_constant("P_AIRSHIP_ITEM_INVALID", P_AIRSHIP_ITEM_INVALID, false, false);
+
+	script->constdb_comment("dynamicnpc create results");
+	script->set_constant("DYNAMICNPC_RESULT_SUCCESS", DYNAMICNPC_RESULT_SUCCESS, false, false);
+	script->set_constant("DYNAMICNPC_RESULT_UNKNOWN", DYNAMICNPC_RESULT_UNKNOWN, false, false);
+	script->set_constant("DYNAMICNPC_RESULT_NOT_EXIST", DYNAMICNPC_RESULT_NOT_EXIST, false, false);
+	script->set_constant("DYNAMICNPC_RESULT_DUPLICATED", DYNAMICNPC_RESULT_DUPLICATED, false, false);
 
 	script->constdb_comment("player allowed actions when dead");
 	script->set_constant("PCALLOWACTION_NONE", PCALLOWACTION_NONE, false, false);

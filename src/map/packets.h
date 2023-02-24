@@ -1727,7 +1727,7 @@ packet(0x96e,clif->ackmergeitems);
 // 2014-04-30aRagexeRE
 #if PACKETVER >= 20140430
 // new packets
-	packet(0x0a16,clif->pDull/*,XXX*/); // CZ_DYNAMICNPC_CREATE_REQUEST
+	packet(0x0a16,clif->pDynamicnpcCreateRequest); // CZ_DYNAMICNPC_CREATE_REQUEST
 #endif
 
 /* Roulette System [Yommy/Hercules] */

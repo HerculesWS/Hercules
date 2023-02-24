@@ -907,6 +907,13 @@ enum enchantui_status {
 	ENCHANTUI_FAILURE,
 };
 
+enum dynamicnpc_create_result {
+	DYNAMICNPC_RESULT_SUCCESS = 0,
+	DYNAMICNPC_RESULT_UNKNOWN = 1,
+	DYNAMICNPC_RESULT_NOT_EXIST = 2,
+	DYNAMICNPC_RESULT_DUPLICATED = 3,
+};
+
 /**
  * Clif.c Interface
  **/
@@ -1956,6 +1963,9 @@ struct clif_interface {
 	void (*pEnchantUIClose) (int fd, struct map_session_data *sd);
 
 	void (*special_popup) (struct map_session_data *sd, int popupId);
+
+	void (*pDynamicnpcCreateRequest) (int fd, struct map_session_data *sd);
+	void (*dynamicnpc_create_result) (struct map_session_data *sd, enum dynamicnpc_create_result result);
 };
 
 #ifdef HERCULES_CORE

@@ -25700,6 +25700,43 @@ static void clif_special_popup(struct map_session_data *sd, int popupId)
 #endif  // 20221005
 }
 
+static void clif_parse_dynamicnpc_create_request(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
+static void clif_parse_dynamicnpc_create_request(int fd, struct map_session_data *sd)
+{
+#if PACKETVER >= 20140430
+	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
+		return;
+
+	char evname[EVENT_NAME_LENGTH];
+	struct event_data *ev = NULL;
+	const struct PACKET_CZ_DYNAMICNPC_CREATE_REQUEST *p = RFIFO2PTR(fd);
+
+	safestrncpy(evname, "dynamicnpc_create::OnRequest", EVENT_NAME_LENGTH);
+	if ((ev = strdb_get(npc->ev_db, evname))) {
+		pc->setregstr(sd, script->add_variable("@name$"), p->name);
+		script->run_npc(ev->nd->u.scr.script, ev->pos, sd->bl.id, ev->nd->bl.id);
+	} else {
+		ShowError("%s: event '%s' not found, operation failed.\n", __func__, evname);
+	}
+#else
+	ShowWarning("%s: Dynamic NPC Create is not supported in this client version, possible packet manipulation.\n", __func__);
+#endif // 20140430
+}
+
+static void clif_dynamicnpc_create_result(struct map_session_data *sd, enum dynamicnpc_create_result result)
+{
+#if PACKETVER >= 20140611
+	nullpo_retv(sd);
+
+	const int fd = sd->fd;
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_DYNAMICNPC_CREATE_RESULT));
+	struct PACKET_ZC_DYNAMICNPC_CREATE_RESULT *p = WFIFOP(fd, 0);
+	p->PacketType = HEADER_ZC_DYNAMICNPC_CREATE_RESULT;
+	p->result = result;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_DYNAMICNPC_CREATE_RESULT));
+#endif // 20140611
+}
+
 /*==========================================
  * Main client packet processing function
  *------------------------------------------*/
@@ -27044,4 +27081,7 @@ void clif_defaults(void)
 	clif->pEnchantUIClose = clif_parse_enchantui_close;
 
 	clif->special_popup = clif_special_popup;
+
+	clif->pDynamicnpcCreateRequest = clif_parse_dynamicnpc_create_request;
+	clif->dynamicnpc_create_result = clif_dynamicnpc_create_result;
 }
