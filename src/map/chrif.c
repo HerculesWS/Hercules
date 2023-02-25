@@ -59,6 +59,7 @@ struct chrif_interface *chrif;
 
 //This define should spare writing the check in every function. [Skotlex]
 #define chrif_check(a) do { if(!chrif->isconnected()) return a; } while(0)
+//#define DEBUG_LOG
 
 #if 0 // Unused
 /// Resets all the data.
@@ -1355,7 +1356,9 @@ static int chrif_parse(int fd)
 		if ((int)RFIFOREST(fd) < packet_len)
 			return 0;
 
-		//ShowDebug("Received packet 0x%4x (%d bytes) from char-server (connection %d)\n", RFIFOW(fd,0), packet_len, fd);
+#ifdef DEBUG_LOG
+		ShowDebug("Received packet 0x%4x (%d bytes) from char-server (connection %d)\n", RFIFOW(fd,0), packet_len, fd);
+#endif  // DEBUG_LOG
 
 		switch(cmd) {
 			case 0x2af9: chrif->connectack(fd); break;

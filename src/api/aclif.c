@@ -519,7 +519,7 @@ static void aclif_set_post_header_value(int fd, const char *value, size_t size)
 		if (ptr == NULL || ptr <= buf + 1) {
 			ShowError("Corrupted multi header value %d\n", fd);
 #ifdef DEBUG_LOG
-			ShowError("test '%s' %p, '%s' %p\n", buf, (void*)buf, ptr, (void*)ptr);
+			ShowError("buf '%s' %p, '%s' %p\n", buf, (void*)buf, ptr, (void*)ptr);
 #endif
 			aFree(buf0);
 			sockt->eof(fd);
@@ -881,7 +881,9 @@ static void aclif_show_request(int fd, struct api_session_data *sd, bool show_ht
 
 static void aclif_delete_online_player(int account_id)
 {
-	ShowInfo("test disconnect account: %d\n", account_id);
+#ifdef DEBUG_LOG
+	ShowInfo("disconnect account: %d\n", account_id);
+#endif
 	struct online_api_login_data *data = idb_get(aclif->online_db, account_id);
 	if (data != NULL) {
 		aclif->add_remove_timer(data);
@@ -890,15 +892,18 @@ static void aclif_delete_online_player(int account_id)
 
 static void aclif_real_delete_online_player(int account_id)
 {
-	ShowInfo("test real disconnect account: %d\n", account_id);
+#ifdef DEBUG_LOG
+	ShowInfo("real disconnect account: %d\n", account_id);
+#endif
 	idb_remove(aclif->online_db, account_id);
 }
 
 static void aclif_add_online_player(int account_id, const unsigned char *auth_token)
 {
-	ShowInfo("test connect account: %d\n", account_id);
-	ShowInfo("test token: %.*s\n", 16, auth_token);
-
+#ifdef DEBUG_LOG
+	ShowInfo("connect account: %d\n", account_id);
+//	ShowInfo("token: %.*s\n", 16, auth_token);
+#endif
 	struct online_api_login_data *user = idb_ensure(aclif->online_db, account_id, aclif->create_online_login_data);
 	if (user->remove_tick != 0)
 		aclif->remove_remove_timer(user);
@@ -915,7 +920,9 @@ static void aclif_add_online_char(int account_id, int char_id)
 	if (char_id == 0) {
 		// reconnect to char server after leave map server
 		if (user->char_id == 0) {
+#ifdef DEBUG_LOG
 			ShowError("Cant set char online. Char was not logged in: %d\n", account_id);
+#endif
 			return;
 		}
 	} else {
@@ -924,7 +931,9 @@ static void aclif_add_online_char(int account_id, int char_id)
 	}
 	if (user->remove_tick != 0)
 		aclif->remove_remove_timer(user);
-	ShowInfo("test connect char: %d, %d (%d)\n", account_id, char_id, user->char_id);
+#ifdef DEBUG_LOG
+	ShowInfo("add connect char: %d, %d (%d)\n", account_id, char_id, user->char_id);
+#endif
 }
 
 static struct DBData aclif_create_online_login_data(union DBKey key, va_list args)

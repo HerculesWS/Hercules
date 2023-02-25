@@ -78,7 +78,7 @@
 static struct handlers_interface handlers_s;
 struct handlers_interface *handlers;
 
-#define DEBUG_LOG
+//#define DEBUG_LOG
 
 const char *handlers_hotkeyTabIdToName(int tab_id)
 {

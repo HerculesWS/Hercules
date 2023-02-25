@@ -49,6 +49,8 @@
 static struct aloginif_interface aloginif_s;
 struct aloginif_interface *aloginif;
 
+//#define DEBUG_LOG
+
 #define INIT_PACKET_PROXY_FIELDS(p, sd, param) \
 	(p)->msg_id = msg_id; \
 	if ((param & (proxy_flag_char | proxy_flag_map)) != 0) { \
@@ -180,7 +182,9 @@ static int aloginif_parse(int fd)
 		if ((int)RFIFOREST(fd) < packet_len)
 			return 0;
 
+#ifdef DEBUG_LOG
 		ShowDebug("Received packet 0x%4x (%d bytes) from login-server (connection %d)\n", (uint32)cmd, packet_len, fd);
+#endif  // DEBUG_LOG
 
 		if (VECTOR_LENGTH(HPM->packets[hpParse_LoginApi]) > 0) {
 			int result = HPM->parse_packets(fd, cmd, hpParse_LoginApi);
@@ -271,7 +275,9 @@ static int aloginif_parse_char_servers_list(int fd)
 
 	int offset = 4;
 	const int count = (RFIFOW(fd, 2) - offset) / part_size;
+#ifdef DEBUG_LOG
 	ShowInfo("Got %d char servers.\n", count);
+#endif
 	for (int f = 0; f < count; f ++) {
 		aclif->add_char_server(RFIFOW(fd, offset), RFIFOP(fd, offset + 2));
 		offset += part_size;

@@ -37,6 +37,7 @@
 #include <string.h>
 
 //#define DEBUG_PACKETS
+//#define DEBUG_LOG
 
 static struct lapiif_interface lapiif_s;
 struct lapiif_interface *lapiif;
@@ -152,7 +153,9 @@ static int lapiif_parse(int fd)
 		if ((int)RFIFOREST(fd) < packet_len)
 			return 0;
 
+#ifdef DEBUG_LOG
 		ShowDebug("Received packet 0x%4x (%d bytes) from api-server (connection %d)\n", (uint32)cmd, packet_len, fd);
+#endif  // DEBUG_LOG
 
 		if (VECTOR_LENGTH(HPM->packets[hpParse_ApiLogin]) > 0) {
 			int result = HPM->parse_packets(fd, cmd, hpParse_ApiLogin);
