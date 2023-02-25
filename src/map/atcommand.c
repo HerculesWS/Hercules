@@ -32,6 +32,7 @@
 #include "map/clif.h"
 #include "map/duel.h"
 #include "map/elemental.h"
+#include "map/goldpc.h"
 #include "map/grader.h"
 #include "map/guild.h"
 #include "map/homunculus.h"
@@ -6048,6 +6049,7 @@ ACMD(autotrade)
 	}
 
 	channel->quit(sd);
+	goldpc->stop(sd);
 
 	clif->authfail_fd(sd->fd, 15);
 

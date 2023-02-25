@@ -7859,6 +7859,7 @@ static const struct battle_data {
 	{ "features/grader_max_used",           &battle_config.grader_max_used,                   0,    0,      MAX_ITEM_GRADE, },
 	{ "dynamic_npc_timeout",                &battle_config.dynamic_npc_timeout,               0,    0,      INT_MAX,        },
 	{ "dynamic_npc_range",                  &battle_config.dynamic_npc_range,                 0,    0,      INT_MAX,        },
+	{ "features/goldpc/enable",             &battle_config.feature_goldpc_enable,             0,    0,      1,              },
 };
 
 static bool battle_set_value_sub(int index, int value)
@@ -7993,6 +7994,13 @@ static void battle_adjust_conf(void)
 	if (battle_config.replace_refine_npcs == 1) {
 		ShowWarning("conf/map/battle/feature.conf replace refine npcs is enabled but it requires PACKETVER 2016-11-09 RagexeRE/2016-11-30 Ragexe or newer, disabling...\n");
 		battle_config.replace_refine_npcs = 0;
+	}
+#endif
+
+#if PACKETVER < 20140611
+	if (battle_config.feature_goldpc_enable == 1) {
+		ShowWarning("conf/map/battle/feature.conf goldpc is enabled but it requires PACKETVER 2014-06-11 Ragexe or newer, disabling...\n");
+		battle_config.feature_goldpc_enable = 0;
 	}
 #endif
 

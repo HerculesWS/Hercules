@@ -1966,6 +1966,7 @@ struct clif_interface {
 
 	void (*pDynamicnpcCreateRequest) (int fd, struct map_session_data *sd);
 	void (*dynamicnpc_create_result) (struct map_session_data *sd, enum dynamicnpc_create_result result);
+	void (*goldpc_info) (struct map_session_data *sd);
 };
 
 #ifdef HERCULES_CORE

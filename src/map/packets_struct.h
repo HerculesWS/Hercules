@@ -5817,6 +5817,18 @@ struct PACKET_ZC_SPECIALPOPUP {
 DEFINE_PACKET_HEADER(ZC_SPECIALPOPUP, 0x0bbe);
 #endif  // PACKETVER_MAIN_NUM >= 20221005
 
+#if PACKETVER >= 20140611
+struct PACKET_ZC_GOLDPCCAFE_POINT {
+	// Note: 2014-04-30 has 1 byte less, but those packets are only functional after 2014-06-11Ragexe
+	uint16 PacketType;
+	int8 isActive; //< 1 = yes, 0 = no
+	int8 mode;
+	int32 point;
+	int32 playedTime;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_GOLDPCCAFE_POINT , 0x0a15);
+#endif // PACKETVER >= 20140611
+
 #if PACKETVER >= 20140430
 struct PACKET_CZ_DYNAMICNPC_CREATE_REQUEST {
 	uint16 PacketType;
