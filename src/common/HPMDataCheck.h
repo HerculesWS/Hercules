@@ -502,6 +502,12 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#else
 		#define MAP_ENCHANTUI_H
 	#endif // MAP_ENCHANTUI_H
+	#ifdef MAP_GOLDPC_H
+		{ "goldpc_interface", sizeof(struct goldpc_interface), SERVER_TYPE_MAP },
+		{ "goldpc_mode", sizeof(struct goldpc_mode), SERVER_TYPE_MAP },
+	#else
+		#define MAP_GOLDPC_H
+	#endif // MAP_GOLDPC_H
 	#ifdef MAP_GRADER_H
 		{ "grade_blessing", sizeof(struct grade_blessing), SERVER_TYPE_MAP },
 		{ "grade_interface_dbs", sizeof(struct grade_interface_dbs), SERVER_TYPE_MAP },

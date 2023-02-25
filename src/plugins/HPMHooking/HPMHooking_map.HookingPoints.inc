@@ -1270,6 +1270,9 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->pEnchantUIResetRequest, HP_clif_pEnchantUIResetRequest) },
 	{ HP_POP(clif->pEnchantUIClose, HP_clif_pEnchantUIClose) },
 	{ HP_POP(clif->special_popup, HP_clif_special_popup) },
+	{ HP_POP(clif->pDynamicnpcCreateRequest, HP_clif_pDynamicnpcCreateRequest) },
+	{ HP_POP(clif->dynamicnpc_create_result, HP_clif_dynamicnpc_create_result) },
+	{ HP_POP(clif->goldpc_info, HP_clif_goldpc_info) },
 /* cmdline_interface */
 	{ HP_POP(cmdline->init, HP_cmdline_init) },
 	{ HP_POP(cmdline->final, HP_cmdline_final) },
@@ -1377,6 +1380,18 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(enchantui->perfect_request, HP_enchantui_perfect_request) },
 	{ HP_POP(enchantui->upgrade_request, HP_enchantui_upgrade_request) },
 	{ HP_POP(enchantui->reset_request, HP_enchantui_reset_request) },
+/* goldpc_interface */
+	{ HP_POP(goldpc->init, HP_goldpc_init) },
+	{ HP_POP(goldpc->final, HP_goldpc_final) },
+	{ HP_POP(goldpc->exists, HP_goldpc_exists) },
+	{ HP_POP(goldpc->read_db_libconfig, HP_goldpc_read_db_libconfig) },
+	{ HP_POP(goldpc->read_db_libconfig_sub, HP_goldpc_read_db_libconfig_sub) },
+	{ HP_POP(goldpc->read_db_validate, HP_goldpc_read_db_validate) },
+	{ HP_POP(goldpc->timeout, HP_goldpc_timeout) },
+	{ HP_POP(goldpc->addpoints, HP_goldpc_addpoints) },
+	{ HP_POP(goldpc->load, HP_goldpc_load) },
+	{ HP_POP(goldpc->start, HP_goldpc_start) },
+	{ HP_POP(goldpc->stop, HP_goldpc_stop) },
 /* grader_interface */
 	{ HP_POP(grader->init, HP_grader_init) },
 	{ HP_POP(grader->final, HP_grader_final) },
