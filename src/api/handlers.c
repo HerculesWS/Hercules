@@ -79,6 +79,7 @@ static struct handlers_interface handlers_s;
 struct handlers_interface *handlers;
 
 //#define DEBUG_LOG
+#define REQUEST_LOG
 
 const char *handlers_hotkeyTabIdToName(int tab_id)
 {
@@ -160,8 +161,9 @@ HTTP_URL(userconfig_load)
 #ifdef DEBUG_LOG
 	ShowInfo("userconfig_load called %d: %s\n", fd, httpparser->get_method_str(sd));
 #endif
+#ifdef REQUEST_LOG
 	aclif->show_request(fd, sd, false);
-
+#endif
 	SEND_CHAR_ASYNC_DATA_EMPTY(userconfig_load_emotes, NULL);
 	SEND_CHAR_ASYNC_DATA_EMPTY(userconfig_load_hotkeys, NULL);
 //	SEND_CHAR_ASYNC_DATA_EMPTY(userconfig_load, NULL);
@@ -194,9 +196,9 @@ HTTP_URL(userconfig_save)
 #ifdef DEBUG_LOG
 	ShowInfo("userconfig_save called %d: %s\n", fd, httpparser->get_method_str(sd));
 #endif
-
+#ifdef REQUEST_LOG
 	aclif->show_request(fd, sd, false);
-
+#endif
 	JsonP *json = NULL;
 	GET_JSON_HEADER(DATA, &json);
 	if (json == NULL) {
@@ -261,8 +263,9 @@ HTTP_URL(charconfig_load)
 #ifdef DEBUG_LOG
 	ShowInfo("charconfig_load called %d: %s\n", fd, httpparser->get_method_str(sd));
 #endif
+#ifdef REQUEST_LOG
 	aclif->show_request(fd, sd, false);
-
+#endif
 	SEND_CHAR_ASYNC_DATA_EMPTY(charconfig_load, NULL);
 
 	return true;
@@ -278,8 +281,9 @@ HTTP_URL(emblem_upload)
 #ifdef DEBUG_LOG
 	ShowInfo("emblem_upload called %d: %s\n", fd, httpparser->get_method_str(sd));
 #endif
+#ifdef REQUEST_LOG
 	aclif->show_request(fd, sd, false);
-
+#endif
 	char *imgType = NULL;
 	GET_STR_HEADER(IMG_TYPE, &imgType, NULL);
 	char *img = NULL;
@@ -339,8 +343,9 @@ HTTP_URL(emblem_download)
 #ifdef DEBUG_LOG
 	ShowInfo("emblem_download called %d: %s\n", fd, httpparser->get_method_str(sd));
 #endif
+#ifdef REQUEST_LOG
 	aclif->show_request(fd, sd, false);
-
+#endif
 	CREATE_HTTP_DATA(data, emblem_download);
 
 	data.guild_id = RET_INT_HEADER(GUILD_ID, 0);
@@ -393,8 +398,9 @@ HTTP_URL(party_list)
 #ifdef DEBUG_LOG
 	ShowInfo("party_list called %d: %s\n", fd, httpparser->get_method_str(sd));
 #endif
+#ifdef REQUEST_LOG
 	aclif->show_request(fd, sd, false);
-
+#endif
 	CREATE_HTTP_DATA(data, party_list);
 	data.page = RET_INT_HEADER(PAGE, 0);
 	SEND_CHAR_ASYNC_DATA(party_list, &data);
@@ -438,8 +444,9 @@ HTTP_URL(party_get)
 #ifdef DEBUG_LOG
 	ShowInfo("party_get called %d: %s\n", fd, httpparser->get_method_str(sd));
 #endif
+#ifdef REQUEST_LOG
 	aclif->show_request(fd, sd, false);
-
+#endif
 	SEND_CHAR_ASYNC_DATA_EMPTY(party_get, NULL);
 
 	return true;
@@ -467,8 +474,9 @@ HTTP_URL(party_add)
 #ifdef DEBUG_LOG
 	ShowInfo("party_add called %d: %s\n", fd, httpparser->get_method_str(sd));
 #endif
+#ifdef REQUEST_LOG
 	aclif->show_request(fd, sd, false);
-
+#endif
 	char *text = NULL;
 	CREATE_HTTP_DATA(data, party_add);
 
@@ -513,8 +521,9 @@ HTTP_URL(party_del)
 #ifdef DEBUG_LOG
 	ShowInfo("party_del called %d: %s\n", fd, httpparser->get_method_str(sd));
 #endif
+#ifdef REQUEST_LOG
 	aclif->show_request(fd, sd, false);
-
+#endif
 	CREATE_HTTP_DATA(data, party_del);
 	data.master_aid = RET_INT_HEADER(MASTER_AID, 0);
 	SEND_CHAR_ASYNC_DATA(party_del, &data);
@@ -543,8 +552,9 @@ HTTP_URL(party_info)
 #ifdef DEBUG_LOG
 	ShowInfo("party_info called %d: %s\n", fd, httpparser->get_method_str(sd));
 #endif
+#ifdef REQUEST_LOG
 	aclif->show_request(fd, sd, false);
-
+#endif
 	CREATE_HTTP_DATA(data, party_info);
 	data.account_id = sd->account_id;
 	data.master_aid = RET_INT_HEADER(QUERY_AID, 0);
