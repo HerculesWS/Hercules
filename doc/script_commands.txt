@@ -11038,3 +11038,20 @@ Valid result values:
     (message: "Is already in service. Please try again in a few minutes.")
 
 Works for clients 20140430 and newer (any type)
+
+---------------------------------------
+
+*setgoldpcmode(<mode>{, <played_time>})
+
+Changes attached player's current active GoldPC mode to <mode>.
+Optionally, forces the already played time to <played_time> seconds.
+
+<mode> may be any Id or Const defined in `db/goldpc_db.conf` or 0 to disabled GoldPC for this character.
+
+When <played_time> is not provided, it defaults to -1, and the current played time will be kept.
+
+    Note: GoldPC changes only applies for current play session, and in the next log in the player's GoldPC will
+          be changed back to the one defined in `goldpc/default_mode` feature config (`conf/features.conf`).
+          If keeping the GoldPC mode between sessions is desired, you may use OnPCLoginEvent.
+
+Check out some examples in `doc/sample/goldpc.txt`.

@@ -33,6 +33,7 @@
 #include "map/clif.h"
 #include "map/date.h"
 #include "map/elemental.h"
+#include "map/goldpc.h"
 #include "map/grader.h"
 #include "map/guild.h"
 #include "map/homunculus.h"
@@ -28034,6 +28035,39 @@ static BUILDIN(dynamicnpccreateresult)
 	return true;
 }
 
+// change user's running GoldPC mode
+static BUILDIN(setgoldpcmode)
+{
+	struct map_session_data *sd = script_rid2sd(st);
+	if (sd == NULL)
+		return false;
+
+	int mode_id = script_getnum(st, 2);
+	int playtime = script_hasdata(st, 3) ? script_getnum(st, 3) : -1;
+
+	if (playtime < -1) {
+		ShowError("%s: invalid playtime \"%d\" received. It must be a positive value or -1.\n", __func__, playtime);
+		return false;
+	}
+
+	playtime = cap_value(playtime, -1, GOLDPC_MAX_TIME);
+
+	struct goldpc_mode *mode = goldpc->exists(mode_id);
+	if (mode_id != 0 && mode == NULL) {
+		ShowError("%s: GoldPC mode \"%d\" doesn't exists.\n", __func__, mode_id);
+		return false;
+	}
+
+	goldpc->stop(sd); // Stop so it saves current state before changing
+
+	sd->goldpc.mode = mode;
+	if (playtime != -1)
+		sd->goldpc.play_time = playtime;
+
+	goldpc->start(sd);
+	return true;
+}
+
 /**
  * Adds a built-in script function.
  *
@@ -28903,6 +28937,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(specialpopup, "i"),
 
 		BUILDIN_DEF(dynamicnpccreateresult, "i"),
+		BUILDIN_DEF(setgoldpcmode, "i?"),
 	};
 	int i, len = ARRAYLENGTH(BUILDIN);
 	RECREATE(script->buildin, char *, script->buildin_count + len); // Pre-alloc to speed up

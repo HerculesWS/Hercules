@@ -50,9 +50,18 @@ struct goldpc_mode {
  * goldpc.c Interface
  **/
 struct goldpc_interface {
+	/* vars */
+	struct DBMap *db; // int mode_id -> struct goldpc_mode *
+
 	/* core */
 	int (*init) (bool minimal);
 	void (*final) (void);
+	struct goldpc_mode *(*exists) (int id);
+
+	/* database */
+	void (*read_db_libconfig) (void);
+	bool (*read_db_libconfig_sub) (const struct config_setting_t *it, int n, const char *source);
+	bool (*read_db_validate) (struct goldpc_mode *mode, const char *source);
 
 	/* process */
 	int (*timeout) (int tid, int64 tick, int id, intptr_t data);

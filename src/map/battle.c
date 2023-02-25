@@ -7860,6 +7860,7 @@ static const struct battle_data {
 	{ "dynamic_npc_timeout",                &battle_config.dynamic_npc_timeout,               0,    0,      INT_MAX,        },
 	{ "dynamic_npc_range",                  &battle_config.dynamic_npc_range,                 0,    0,      INT_MAX,        },
 	{ "features/goldpc/enable",             &battle_config.feature_goldpc_enable,             0,    0,      1,              },
+	{ "features/goldpc/default_mode",       &battle_config.feature_goldpc_default_mode,       1,    0,      INT_MAX,        },
 };
 
 static bool battle_set_value_sub(int index, int value)
