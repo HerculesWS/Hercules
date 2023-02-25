@@ -7,7 +7,7 @@ env:
   MYSQL_USER: 'ragnarok'
   MYSQL_PASSWORD: 'ragnarok'
   MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
-  DEBIAN_COMMON_PACKAGES: php php-xml composer wget
+  DEBIAN_COMMON_PACKAGES: php php-xml composer wget python3
 
 jobs:
   build:
@@ -32,7 +32,7 @@ jobs:
           mv composer.phar /usr/local/bin/composer
           chmod +x /usr/local/bin/composer
 
-      - name: check sql
+      - name: check sql syntax
         run: |
           cd tools/php-sqllint
           ../../tools/ci/retry.sh /usr/local/bin/composer update
@@ -41,3 +41,7 @@ jobs:
           ./tools/checksql.sh
 
           #./tools/ci/retry.sh composer self-update
+
+      - name: check sql updates
+        run: |
+          ./tools/checksql.py
