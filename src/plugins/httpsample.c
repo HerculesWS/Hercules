@@ -325,7 +325,7 @@ void sample_login_api_packet(int fd)
 	// define variable with received data from packet
 	RFIFO_API_DATA(sdata, sample_login_request);
 	ShowInfo("sample_login_api_packet called: %s, %d\n", sdata->text, sdata->flag);
-	// deine variable with sending packet
+	// define variable with sending packet
 	WFIFO_APILOGIN_PACKET_REPLY(fd, sample_login_response);
 	// store servers count into packet fields
 
@@ -353,7 +353,7 @@ void sample_char_api_packet(int fd)
 	// define variable with received data from packet
 	RFIFO_API_DATA(sdata, sample_char_request);
 	ShowInfo("sample_char_api_packet called: %s, %d\n", sdata->text, sdata->flag);
-	// deine variable with sending packet
+	// define variable with sending packet
 	WFIFO_APICHAR_PACKET_REPLY(sample_char_response);
 	// store user count into packet field
 	data->users_count = chr->count_users();
@@ -368,7 +368,7 @@ void sample_map_api_packet(int fd)
 	// define variable with received data from packet
 	RFIFO_API_DATA(sdata, sample_map_request);
 	ShowInfo("sample_map_api_packet called: %s, %d\n", sdata->text, sdata->flag);
-	// deine variable with sending packet
+	// define variable with sending packet
 	WFIFO_APIMAP_PACKET_REPLY(sample_map_response);
 	// store user count into packet field
 	data->users_count = map->getusers();
@@ -383,7 +383,7 @@ void sample_user_api_packet(int fd)
 	// define variable with received data from packet
 	RFIFO_API_DATA(sdata, sample_user_request);
 	ShowInfo("sample_user_api_packet called: %d\n", sdata->account_id);
-	// deine variable with sending packet
+	// define variable with sending packet
 	WFIFO_APIMAP_PACKET_REPLY(sample_user_response);
 	// find user by aid and store his dead/sit flag into sending packet
 	struct map_session_data *sd = map->id2sd(sdata->account_id);
