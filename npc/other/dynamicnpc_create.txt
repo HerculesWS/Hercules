@@ -36,6 +36,16 @@
 
 // @name$ contains the name sent by the client
 OnRequest:
+	if (strcmp(@name$, "GOLDPCCAFE") == 0) {
+		if (!calldynamicnpc("GoldPC_NPC")) {
+			dynamicnpccreateresult(DYNAMICNPC_RESULT_DUPLICATED);
+			end;
+		}
+
+		dynamicnpccreateresult(DYNAMICNPC_RESULT_SUCCESS);
+		end;
+	}
+
 	consolemes(CONSOLEMES_DEBUG, sprintf("dynamicnpc_create::OnRequest: Received unhandled name \"%s\"", @name$));
 	dynamicnpccreateresult(DYNAMICNPC_RESULT_UNKNOWN);
 	end;
