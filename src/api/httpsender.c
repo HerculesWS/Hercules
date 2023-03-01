@@ -70,6 +70,25 @@ static void do_final_httpsender(void)
 {
 }
 
+/**
+ * Sends a "100 (Continue)" response to fd.
+ * HTTP clients that has the expectation of a 100-Continue usually waits for some time
+ * expecting for a "100 (Continue)" (or rejection) response before they start transmitting data.
+ * Note that "100 (Continue)" doesn't should not close the connection.
+ * @param fd connection to send continue to
+ */
+static void httpsender_send_continue(int fd)
+{
+#ifdef DEBUG_LOG
+	ShowInfo("httpsender_send_continue\n");
+#endif  // DEBUG_LOG
+
+	safestrncpy(tmp_buffer, "HTTP/1.1 100 Continue\n\n", sizeof(tmp_buffer));
+	WFIFOHEAD(fd, strlen(tmp_buffer));
+	WFIFOADDSTR(fd, tmp_buffer);
+	sockt->flush(fd);
+}
+
 static bool httpsender_send_html(int fd, const char *data)
 {
 #ifdef DEBUG_LOG
@@ -172,6 +191,8 @@ void httpsender_defaults(void)
 
 	httpsender->init = do_init_httpsender;
 	httpsender->final = do_final_httpsender;
+
+	httpsender->send_continue = httpsender_send_continue;
 
 	httpsender->send_plain = httpsender_send_plain;
 	httpsender->send_html = httpsender_send_html;

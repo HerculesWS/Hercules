@@ -40,6 +40,7 @@
 #include "common/utils.h"
 #include "api/aclif.h"
 #include "api/apisessiondata.h"
+#include "api/httpsender.h"
 
 #include <multipart-parser/multipartparser.h>
 
@@ -90,8 +91,16 @@ static int handler_on_headers_complete(HTTP_PARSER *parser)
 	aclif->check_headers(fd, sd);
 
 #ifdef DEBUG_LOG
-	ShowInfo("***HEADERS COMPLETE***\n");
+	ShowInfo("***HEADERS COMPLETE (HTTP Version: %d.%d)***\n", parser->http_major, parser->http_minor);
 #endif
+
+	// Per RFC-9110, only HTTP 1.1 and newer should handle Expect: https://httpwg.org/specs/rfc9110.html#field.expect
+	if (parser->http_major >= 1 && parser->http_minor >= 1) {
+		const char *expect = strdb_get(sd->headers_db, "Expect");
+		if (expect != NULL && strcmp(expect, "100-continue") == 0)
+			httpsender->send_continue(fd);
+	}
+
 	return 0;
 }
 
