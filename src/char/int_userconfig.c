@@ -90,7 +90,7 @@ static void inter_userconfig_use_default_emotes(int account_id, struct userconfi
 	nullpo_retv(emotes);
 
 	for (int i = 0; i < MAX_EMOTES; i ++) {
-		safestrncpy(emotes->emote[0], inter_userconfig->dbs->default_emotes[i], EMOTE_SIZE);
+		safestrncpy(emotes->emote[i], inter_userconfig->dbs->default_emotes[i], EMOTE_SIZE);
 	}
 }
 
