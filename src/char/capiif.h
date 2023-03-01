@@ -49,6 +49,7 @@ struct capiif_interface {
 	void (*parse_party_del) (int fd);
 	int (*parse_fromlogin_api_proxy) (int fd);
 	void (*parse_proxy_api_from_map) (int fd);
+	void (*send_emblem_upload_result) (int fd, int result);
 };
 
 #ifdef HERCULES_CORE

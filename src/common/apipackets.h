@@ -238,10 +238,12 @@ struct PACKET_API_REPLY_userconfig_save {
 
 struct PACKET_API_REPLY_charconfig_load {
 } __attribute__((packed));
+*/
 
 struct PACKET_API_REPLY_emblem_upload {
+	int result; // 0 = error, 1 = success
 } __attribute__((packed));
-*/
+
 
 struct PACKET_API_REPLY_emblem_download {
 	uint8 flag;

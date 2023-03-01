@@ -161,6 +161,13 @@ void capiif_parse_charconfig_load(int fd)
 	WFIFOSET(chr->login_fd, WFIFO_APICHAR_SIZE);
 }
 
+static void capiif_send_emblem_upload_result(int fd, int result)
+{
+	WFIFO_APICHAR_PACKET_REPLY(emblem_upload);
+	data->result = result;
+	WFIFOSET(chr->login_fd, packet->packet_len);
+}
+
 void capiif_parse_emblem_upload_guild_id(int fd)
 {
 	RFIFO_API_PROXY_PACKET_CHUNKED(p);
@@ -174,6 +181,7 @@ void capiif_parse_emblem_upload_guild_id(int fd)
 		character->data->emblem_guild_id = 0;
 		fifo_chunk_buf_clear(character->data->emblem_data);
 		ShowError("Upload emblem guild id while emblem data transfer in progress.");
+		capiif->send_emblem_upload_result(fd, 0);
 		return;
 	}
 	character->data->emblem_guild_id = data->guild_id;
@@ -192,6 +200,7 @@ void capiif_parse_emblem_upload(int fd)
 	if (char_data->emblem_guild_id == 0) {
 		chr->clean_online_char_emblem_data(character);
 		ShowError("Upload emblem guild data while emblem guild id is not set.\n");
+		capiif->send_emblem_upload_result(fd, 0);
 		return;
 	}
 
@@ -200,15 +209,19 @@ void capiif_parse_emblem_upload(int fd)
 	RFIFO_CHUNKED_ERROR(p) {
 		ShowError("Wrong guild emblem packets order\n");
 		chr->clean_online_char_emblem_data(character);
+		capiif->send_emblem_upload_result(fd, 0);
 		return;
 	}
 
 	RFIFO_CHUNKED_COMPLETE(p) {
+		bool success = false;
 		if (inter_guild->is_guild_master(p->base.char_id, char_data->emblem_guild_id)) {
-			inter_guild->update_emblem(char_data->emblem_data.data_size,
+			success = inter_guild->update_emblem(char_data->emblem_data.data_size,
 				char_data->emblem_guild_id,
 				char_data->emblem_data.data);
 		}
+
+		capiif->send_emblem_upload_result(fd, (success ? 1 : 0));
 
 		chr->clean_online_char_emblem_data(character);
 	}
@@ -348,6 +361,7 @@ void capiif_defaults(void) {
 	capiif->parse_userconfig_load_emotes = capiif_parse_userconfig_load_emotes;
 	capiif->parse_userconfig_save_emotes = capiif_parse_userconfig_save_emotes;
 	capiif->parse_charconfig_load = capiif_parse_charconfig_load;
+	capiif->send_emblem_upload_result = capiif_send_emblem_upload_result;
 	capiif->parse_emblem_upload = capiif_parse_emblem_upload;
 	capiif->parse_emblem_upload_guild_id = capiif_parse_emblem_upload_guild_id;
 	capiif->parse_emblem_download = capiif_parse_emblem_download;

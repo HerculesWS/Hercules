@@ -273,6 +273,17 @@ HTTP_URL(charconfig_load)
 
 HTTP_DATA(emblem_upload)
 {
+#ifdef DEBUG_LOG
+	ShowInfo("emblem_upload data received\n");
+#endif
+
+	GET_HTTP_DATA(p, emblem_upload);
+
+	if (p->result == 1)
+		httpsender->send_json_text(fd, "{\"Type\":1}", HTTP_STATUS_OK);
+	else // Not sure if intentional, but kRO sends status 500
+		httpsender->send_json_text(fd, "{\"Type\":4}", HTTP_STATUS_INTERNAL_SERVER_ERROR);
+
 	aclif->terminate_connection(fd);
 }
 
@@ -290,19 +301,27 @@ HTTP_URL(emblem_upload)
 	uint32 img_size = 0;
 	bool is_gif = false;
 	GET_STR_HEADER(IMG, &img, &img_size);
+
+	bool has_error = false;
 	if (strcmp(imgType, "BMP") == 0) {
 		if (!imageparser->validate_bmp_emblem(img, img_size)) {
 			ShowError("wrong bmp image %d: %s\n", fd, sd->url);
-			return false;
+			has_error = true;
 		}
 	} else if (strcmp(imgType, "GIF") == 0) {
 		if (!imageparser->validate_gif_emblem(img, img_size)) {
 			ShowError("wrong gif image %d: %s\n", fd, sd->url);
-			return false;
+			has_error = true;
 		}
 		is_gif = true;
 	} else {
 		ShowError("unknown image type '%s'. %d: %s\n", imgType, fd, sd->url);
+		has_error = true;
+	}
+
+	if (has_error) {
+		// Not sure if intentional, but kRO sends status 500
+		httpsender->send_json_text(fd, "{\"Type\":4}", HTTP_STATUS_INTERNAL_SERVER_ERROR);
 		return false;
 	}
 
