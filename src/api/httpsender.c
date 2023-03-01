@@ -40,6 +40,7 @@
 #include "common/utils.h"
 #include "api/aclif.h"
 #include "api/apisessiondata.h"
+#include "api/http_include.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -68,6 +69,23 @@ static int do_init_httpsender(bool minimal)
 
 static void do_final_httpsender(void)
 {
+}
+
+/**
+ * Converts a HTTP Status code (HTTP_RES_*) into its HTTP Status text
+ * @param status status code
+ * @returns status text
+ */
+static const char *httpsender_http_status_name(enum http_status status)
+{
+	switch (status) {
+	#define XX(num, name, string) case HTTP_STATUS_##name: return #string;
+	HTTP_STATUS_MAP(XX)
+	#undef XX
+	default:
+		ShowWarning("%s: Invalid http status (%u) received.\n", __func__, status);
+		return "Unknown";
+	}
 }
 
 /**
@@ -135,6 +153,42 @@ static bool httpsender_send_json(int fd, const JsonW *json)
 	return true;
 }
 
+/**
+ * Sends "json" content to fd.
+ * 
+ * This is similar to httpsender->send_plain but uses the JSON Content-Type.
+ * It doesn't perform any validation over "json" to ensure it is correct.
+ * 
+ * @param fd connection
+ * @param json json text to be sent
+ * @param status response HTTP status
+ * @return true in case of success, false if something goes wrong
+ */
+static bool httpsender_send_json_text(int fd, const char *json, enum http_status status)
+{
+#ifdef DEBUG_LOG
+	ShowInfo("httpsender_send_json_text\n");
+#endif  // DEBUG_LOG
+
+	nullpo_retr(false, json);
+
+	const size_t sz = strlen(json);
+	size_t buf_sz = snprintf(tmp_buffer, sizeof(tmp_buffer),
+		"HTTP/1.1 %u %s\n"
+		"Server: %s\n"
+		"Content-Type: application/json; charset=utf-8\n"
+		"Content-Length: %lu\n"
+		"\n"
+		"%s",
+		status, httpsender->http_status_name(status),
+		httpsender->server_name, sz, json);
+	WFIFOHEAD(fd, buf_sz);
+	WFIFOADDSTR(fd, tmp_buffer);
+	sockt->flush(fd);
+
+	return true;
+}
+
 static bool httpsender_send_plain(int fd, const char *data)
 {
 #ifdef DEBUG_LOG
@@ -192,10 +246,13 @@ void httpsender_defaults(void)
 	httpsender->init = do_init_httpsender;
 	httpsender->final = do_final_httpsender;
 
+	httpsender->http_status_name = httpsender_http_status_name;
+
 	httpsender->send_continue = httpsender_send_continue;
 
 	httpsender->send_plain = httpsender_send_plain;
 	httpsender->send_html = httpsender_send_html;
 	httpsender->send_json = httpsender_send_json;
+	httpsender->send_json_text = httpsender_send_json_text;
 	httpsender->send_binary = httpsender_send_binary;
 }

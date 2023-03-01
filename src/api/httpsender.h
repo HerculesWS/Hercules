@@ -23,6 +23,7 @@
 
 #include "common/hercules.h"
 
+#include "api/http_include.h"
 #include "api/jsonwriter.h"
 
 #include <stdarg.h>
@@ -46,11 +47,14 @@ struct httpsender_interface {
 	int (*init) (bool minimal);
 	void (*final) (void);
 
+	const char * (*http_status_name) (enum http_status status);
+
 	void (*send_continue) (int fd);
 
 	bool (*send_plain) (int fd, const char *data);
 	bool (*send_html) (int fd, const char *data);
 	bool (*send_json) (int fd, const JsonW *json);
+	bool (*send_json_text) (int fd, const char *json, enum http_status status);
 	bool (*send_binary) (int fd, const char *data, const size_t data_len);
 };
 
