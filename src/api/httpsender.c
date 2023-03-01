@@ -123,7 +123,7 @@ static bool httpsender_send_json(int fd, const JsonW *json)
 	size_t buf_sz = snprintf(tmp_buffer, sizeof(tmp_buffer),
 		"HTTP/1.1 200 OK\n"
 		"Server: %s\n"
-		"Content-Type: text/plain; charset=utf-8\n"
+		"Content-Type: application/json; charset=utf-8\n"
 		"Content-Length: %lu\n"
 		"\n"
 		"%s",
