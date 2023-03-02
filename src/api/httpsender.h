@@ -31,6 +31,10 @@
 #define MAX_RESPONSE_SIZE 50000
 #endif
 
+#if MAX_RESPONSE_SIZE < 100
+#error MAX_RESPONSE_SIZE must be atleast 100 bytes
+#endif  // MAX_RESPONSE_SIZE < 100
+
 struct api_session_data;
 
 /**
