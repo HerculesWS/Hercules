@@ -220,6 +220,7 @@ struct PACKET_API_party_info {
 
 // char to api
 struct PACKET_API_REPLY_userconfig_load_emotes {
+	int result; // 0 = error, 1 = success
 	struct userconfig_emotes emotes;
 } __attribute__((packed));
 

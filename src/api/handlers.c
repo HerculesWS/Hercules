@@ -96,6 +96,15 @@ const char *handlers_hotkeyTabIdToName(int tab_id)
 
 HTTP_DATA(userconfig_load)
 {
+	if (sd->has_errors) {
+#ifdef DEBUG_LOG
+		ShowInfo("userconfig_load has errors. Sending error response\n");
+#endif
+		httpsender->send_json_text(fd, "{\"Type\":4}", HTTP_STATUS_OK);
+		aclif->terminate_connection(fd);
+		return;
+	}
+
 	JsonW *json = sd->json;
 	nullpo_retv(json);
 
@@ -112,6 +121,16 @@ HTTP_DATA(userconfig_load)
 
 HTTP_DATA(userconfig_load_emotes)
 {
+	GET_HTTP_DATA(p, userconfig_load_emotes);
+	if (p->result == 0) {
+#ifdef DEBUG_LOG
+		ShowInfo("userconfig_load_emotes data returned error\n");
+#endif
+		sd->has_errors = true;
+		// error is sent in HTTP_DATA(userconfig_load)
+		return;
+	}
+
 	// create initial json node and add emotionHotkey
 	JsonW *json = jsonwriter->create("{\"Type\":1}");
 	sd->json = json;
@@ -124,8 +143,6 @@ HTTP_DATA(userconfig_load_emotes)
 	// add empty UserHotkey_V2 for future usage
 	jsonwriter->add_new_object(dataNode, "UserHotkey_V2");
 
-	GET_HTTP_DATA(p, userconfig_load_emotes);
-
 	jsonwriter->add_new_strings_to_array(emotionHotkey,
 		p->emotes.emote[0], p->emotes.emote[1], p->emotes.emote[2], p->emotes.emote[3], p->emotes.emote[4],
 		p->emotes.emote[5], p->emotes.emote[6], p->emotes.emote[7], p->emotes.emote[8], p->emotes.emote[9],
@@ -134,6 +151,9 @@ HTTP_DATA(userconfig_load_emotes)
 
 HTTP_DATA(userconfig_load_hotkeys)
 {
+	if (sd->has_errors)
+		return;
+
 	JsonW *json = sd->json;
 	nullpo_retv(json);
 

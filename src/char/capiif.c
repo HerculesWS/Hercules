@@ -140,7 +140,8 @@ void capiif_parse_userconfig_load_emotes(int fd)
 	WFIFO_APICHAR_PACKET_REPLY(userconfig_load_emotes);
 	RFIFO_API_PROXY_PACKET(p);
 
-	inter_userconfig->load_emotes(p->account_id, &data->emotes);
+	bool load_res = inter_userconfig->load_emotes(p->account_id, &data->emotes);
+	data->result = (load_res ? 1 : 0);
 
 	WFIFOSET(chr->login_fd, packet->packet_len);
 }

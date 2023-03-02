@@ -48,16 +48,21 @@ static struct inter_userconfig_interface inter_userconfig_s;
 struct inter_userconfig_interface *inter_userconfig;
 static struct inter_userconfig_dbs inter_userconfigdbs;
 
-static int inter_userconfig_load_emotes(int account_id, struct userconfig_emotes *emotes)
+static bool inter_userconfig_load_emotes(int account_id, struct userconfig_emotes *emotes)
 {
-	nullpo_ret(emotes);
-	if (!inter_userconfig->emotes_from_sql(account_id, emotes))
+	nullpo_retr(false, emotes);
+
+	enum userconfig_from_sql_result sql_result = inter_userconfig->emotes_from_sql(account_id, emotes);
+	if (sql_result == USERCONFIG_FROM_SQL_ERROR)
+		return false;
+
+	if (sql_result == USERCONFIG_FROM_SQL_NOT_EXISTS)
 		inter_userconfig->use_default_emotes(account_id, emotes);
 
-	return 0;
+	return true;
 }
 
-static bool inter_userconfig_emotes_from_sql(int account_id, struct userconfig_emotes *emotes)
+static enum userconfig_from_sql_result inter_userconfig_emotes_from_sql(int account_id, struct userconfig_emotes *emotes)
 {
 	nullpo_ret(emotes);
 
@@ -68,10 +73,13 @@ static bool inter_userconfig_emotes_from_sql(int account_id, struct userconfig_e
 		StrBuf->Printf(&buf, ", `emote%d`", i);
 	StrBuf->Printf(&buf, " FROM `%s` WHERE `account_id` = '%d'", emotes_db, account_id);
 
-	if (SQL_SUCCESS != SQL->QueryStrFetch(inter->sql_handle, StrBuf->Value(&buf))) {
-		Sql_ShowDebug(inter->sql_handle);
+	int result = SQL->QueryStrFetch(inter->sql_handle, StrBuf->Value(&buf));
+	if (result != SQL_SUCCESS) {
+		if (result == SQL_ERROR)
+			Sql_ShowDebug(inter->sql_handle);
+		
 		StrBuf->Destroy(&buf);
-		return false;
+		return (result == SQL_NO_DATA ? USERCONFIG_FROM_SQL_NOT_EXISTS : USERCONFIG_FROM_SQL_ERROR);
 	}
 
 	char *data = NULL;
@@ -82,7 +90,7 @@ static bool inter_userconfig_emotes_from_sql(int account_id, struct userconfig_e
 
 	SQL->FreeResult(inter->sql_handle);
 	StrBuf->Destroy(&buf);
-	return true;
+	return USERCONFIG_FROM_SQL_SUCCESS;
 }
 
 static void inter_userconfig_use_default_emotes(int account_id, struct userconfig_emotes *emotes)
