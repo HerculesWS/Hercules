@@ -31,7 +31,7 @@
 
 #include <string.h>
 
-#define CONFIG_DEBUG
+//#define CONFIG_DEBUG
 
 // defines for vars
 #include "common/config/defc.h"
