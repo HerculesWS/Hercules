@@ -184,7 +184,7 @@ void inter_userconfig_hotkey_tab_clear(int account_id, int tab_id)
 	}
 }
 
-void inter_userconfig_hotkey_tab_fromsql(int account_id, struct userconfig_userhotkeys_v2 *hotkeys, int tab_id)
+bool inter_userconfig_hotkey_tab_fromsql(int account_id, struct userconfig_userhotkeys_v2 *hotkeys, int tab_id)
 {
 	hotkeys->tab = tab_id;
 
@@ -192,7 +192,7 @@ void inter_userconfig_hotkey_tab_fromsql(int account_id, struct userconfig_userh
 	    "SELECT `desc`, `index`, `key1`, `key2` FROM `%s` WHERE `account_id` = '%d' AND `tab` = '%d'",
 	    hotkeys_db, account_id, tab_id)) {
 		Sql_ShowDebug(inter->sql_handle);
-		return;
+		return false;
 	}
 
 	char *data = NULL;
@@ -211,6 +211,7 @@ void inter_userconfig_hotkey_tab_fromsql(int account_id, struct userconfig_userh
 	SQL->FreeResult(inter->sql_handle);
 
 	hotkeys->count = index;
+	return true;
 }
 
 static bool inter_userconfig_config_read(const char *filename, const struct config_t *config, bool imported)

@@ -100,6 +100,12 @@ HTTP_DATA(userconfig_load)
 #ifdef DEBUG_LOG
 		ShowInfo("userconfig_load has errors. Sending error response\n");
 #endif
+
+		if (sd->json != NULL) {
+			jsonwriter->delete(sd->json);
+			sd->json = NULL;
+		}
+
 		httpsender->send_json_text(fd, "{\"Type\":4}", HTTP_STATUS_OK);
 		aclif->terminate_connection(fd);
 		return;
@@ -158,6 +164,15 @@ HTTP_DATA(userconfig_load_hotkeys)
 	nullpo_retv(json);
 
 	GET_HTTP_DATA(p, userconfig_load_hotkeys_tab);
+
+	if (p->result != 1) {
+#ifdef DEBUG_LOG
+		ShowInfo("userconfig_load_hotkeys data returned error\n");
+#endif
+		sd->has_errors = true;
+		// error is sent in HTTP_DATA(userconfig_load)
+		return;
+	}
 
 	JsonW *dataNode = jsonwriter->get(json, "data");
 	JsonW *userHotkeyV2Node = jsonwriter->get(dataNode, "UserHotkey_V2");

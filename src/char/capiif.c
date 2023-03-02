@@ -287,7 +287,8 @@ void capiif_parse_userconfig_load_hotkeys(int fd)
 
 	for (int tab = 0; tab < UserHotKey_v2_max; tab ++) {
 		WFIFO_APICHAR_PACKET_REPLY(userconfig_load_hotkeys_tab);
-		inter_userconfig->hotkey_tab_fromsql(p->account_id, &data->hotkeys, tab);
+		bool load_res = inter_userconfig->hotkey_tab_fromsql(p->account_id, &data->hotkeys, tab);
+		data->result = (load_res ? 1 : 0);
 		WFIFOSET(chr->login_fd, packet->packet_len);
 	}
 	WFIFO_APICHAR_PACKET_REPLY_EMPTY()

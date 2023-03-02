@@ -225,6 +225,7 @@ struct PACKET_API_REPLY_userconfig_load_emotes {
 } __attribute__((packed));
 
 struct PACKET_API_REPLY_userconfig_load_hotkeys_tab {
+	int result; // 0 = error, 1 = success
 	struct userconfig_userhotkeys_v2 hotkeys;
 } __attribute__((packed));
 
