@@ -833,11 +833,13 @@ static bool aclif_decode_post_headers(int fd, struct api_session_data *sd)
 		if (handled_count > count) {
 			ShowError("Handled wrong number of post headers. Handled %d, requested %d :%d\n", handled_count, count, fd);
 			aclif->show_request(fd, sd, false);
+			return false;
 		}
 	} else {
 		if (handled_count != count) {
 			ShowError("Handled wrong number of post headers. Handled %d, requested %d :%d\n", handled_count, count, fd);
 			aclif->show_request(fd, sd, false);
+			return false;
 		}
 	}
 	return true;
