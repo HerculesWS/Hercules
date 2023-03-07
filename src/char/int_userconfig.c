@@ -42,7 +42,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define DEBUG_EMOTES
+//#define DEBUG_EMOTES
 
 static struct inter_userconfig_interface inter_userconfig_s;
 struct inter_userconfig_interface *inter_userconfig;
