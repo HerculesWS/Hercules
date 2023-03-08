@@ -1,0 +1,106 @@
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2023-2023 Hercules Dev Team
+//= Copyright (C) KirieZ
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= GoldPC-related NPCs
+//================= Description ===========================================
+//= This file contains NPCs related to the GoldPC system.
+//= Note: Custom implementation based on info available in the web.
+//=
+//= - Gold Point Manager
+//= NPC that shows your points and allow you to exchange them for gifts.
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
+
+prontera,0,0,0	script	Gold Point Manager::GoldPC_NPC	4_F_02,{
+	mes("[Gold Point Manager]");
+	mesf("You currently have ^3355FF%d^000000 GoldPC Points.", #GOLDPC_POINTS);
+	mes("Which kind of product you want?");
+	next();
+	
+	.@menu$ = "Check my current balance";
+	for (.@i = 0; .@i < getarraysize(.gifts); .@i += 2)
+		.@menu$ = sprintf("%s:%d points gift", .@menu$, .gifts[.@i + 1]);
+
+	.@menu = select(.@menu$);
+
+	if (.@menu == 1) {
+		mes("[Gold Point Manager]");
+		mesf("You currently have ^3355FF%d^000000 GoldPC Points.", #GOLDPC_POINTS);
+		close();
+	}
+
+	.@menu -= 2;
+
+	.@itemId = .gifts[.@menu * 2];
+	.@price = .gifts[.@menu * 2 + 1];
+
+	mes("[Gold Point Manager]");
+	mesf("So you want our ^3355FF%d^000000 Points gift?", .@price);
+	next();
+	if (select("Yes", "No") == 2)
+		close();
+
+	if (#GOLDPC_POINTS < .@price) {
+		mes("[Gold Point Manager]");
+		mes("You don't seem to have enough points for this gift.");
+		mes("Please save more points and talk to me again.");
+		close();
+	}
+
+	if (!checkweight(.@itemId, 1)) {
+		mes("[Gold Point Manager]");
+		mes("You are carrying too many items.");
+		mes("Please free up some space and talk to me again.");
+		close();
+	}
+
+	#GOLDPC_POINTS -= .@price;
+	getitem(.@itemId, 1);
+	mes("[Gold Point Manager]");
+	mes("This is your gift.");
+	mes("Thank you for your patronage and I hope you enjoy the gift!");
+	close();
+
+OnInit:
+	/* @TODO: Update note mentions those 4 items, but we don't have them yet.
+	// Format: <itemId>, <price>
+	setarray(.gifts,
+		"ID22781", 2,
+		"ID22782", 10,
+		"ID22783", 100,
+		"ID22784", 300
+	);
+	*/
+
+	// Format: <itemId>, <price>
+	setarray(.gifts,
+		Red_Potion, 250,
+		Green_Potion, 300
+	);
+	end;
+}

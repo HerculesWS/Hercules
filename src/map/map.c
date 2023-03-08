@@ -35,6 +35,7 @@
 #include "map/duel.h"
 #include "map/elemental.h"
 #include "map/enchantui.h"
+#include "map/goldpc.h"
 #include "map/grader.h"
 #include "map/guild.h"
 #include "map/homunculus.h"
@@ -2071,6 +2072,7 @@ static int map_quit(struct map_session_data *sd)
 
 	npc->script_event(sd, NPCE_LOGOUT);
 	rodex->clean(sd, 0);
+	goldpc->stop(sd);
 
 	//Unit_free handles clearing the player related data,
 	//map->quit handles extra specific data which is related to quitting normally
@@ -6541,6 +6543,7 @@ int do_final(void)
 	achievement->final();
 	stylist->final();
 	enchantui->final();
+	goldpc->final();
 
 	HPM_map_do_final();
 
@@ -6759,6 +6762,7 @@ static void map_load_defaults(void)
 	refine_defaults();
 	grader_defaults();
 	enchantui_defaults();
+	goldpc_defaults();
 }
 /**
  * --run-once handler
@@ -7079,6 +7083,7 @@ int do_init(int argc, char *argv[])
 	stylist->init(minimal);
 	macro->init(minimal);
 	enchantui->init(minimal);
+	goldpc->init(minimal);
 	npc->init(minimal);
 	unit->init(minimal);
 	bg->init(minimal);

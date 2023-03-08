@@ -2898,6 +2898,12 @@ typedef void (*HPMHOOK_pre_clif_pEnchantUIClose) (int *fd, struct map_session_da
 typedef void (*HPMHOOK_post_clif_pEnchantUIClose) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_special_popup) (struct map_session_data **sd, int *popupId);
 typedef void (*HPMHOOK_post_clif_special_popup) (struct map_session_data *sd, int popupId);
+typedef void (*HPMHOOK_pre_clif_pDynamicnpcCreateRequest) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pDynamicnpcCreateRequest) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_dynamicnpc_create_result) (struct map_session_data **sd, enum dynamicnpc_create_result *result);
+typedef void (*HPMHOOK_post_clif_dynamicnpc_create_result) (struct map_session_data *sd, enum dynamicnpc_create_result result);
+typedef void (*HPMHOOK_pre_clif_goldpc_info) (struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_goldpc_info) (struct map_session_data *sd);
 #endif // MAP_CLIF_H
 #ifdef COMMON_CORE_H /* cmdline */
 typedef void (*HPMHOOK_pre_cmdline_init) (void);
@@ -3121,6 +3127,30 @@ typedef void (*HPMHOOK_post_geoip_final) (bool shutdown);
 typedef void (*HPMHOOK_pre_geoip_init) (void);
 typedef void (*HPMHOOK_post_geoip_init) (void);
 #endif // CHAR_GEOIP_H
+#ifdef MAP_GOLDPC_H /* goldpc */
+typedef int (*HPMHOOK_pre_goldpc_init) (bool *minimal);
+typedef int (*HPMHOOK_post_goldpc_init) (int retVal___, bool minimal);
+typedef void (*HPMHOOK_pre_goldpc_final) (void);
+typedef void (*HPMHOOK_post_goldpc_final) (void);
+typedef struct goldpc_mode* (*HPMHOOK_pre_goldpc_exists) (int *id);
+typedef struct goldpc_mode* (*HPMHOOK_post_goldpc_exists) (struct goldpc_mode* retVal___, int id);
+typedef void (*HPMHOOK_pre_goldpc_read_db_libconfig) (void);
+typedef void (*HPMHOOK_post_goldpc_read_db_libconfig) (void);
+typedef bool (*HPMHOOK_pre_goldpc_read_db_libconfig_sub) (const struct config_setting_t **it, int *n, const char **source);
+typedef bool (*HPMHOOK_post_goldpc_read_db_libconfig_sub) (bool retVal___, const struct config_setting_t *it, int n, const char *source);
+typedef bool (*HPMHOOK_pre_goldpc_read_db_validate) (struct goldpc_mode **mode, const char **source);
+typedef bool (*HPMHOOK_post_goldpc_read_db_validate) (bool retVal___, struct goldpc_mode *mode, const char *source);
+typedef int (*HPMHOOK_pre_goldpc_timeout) (int *tid, int64 *tick, int *id, intptr_t *data);
+typedef int (*HPMHOOK_post_goldpc_timeout) (int retVal___, int tid, int64 tick, int id, intptr_t data);
+typedef void (*HPMHOOK_pre_goldpc_addpoints) (struct map_session_data **sd, int *points);
+typedef void (*HPMHOOK_post_goldpc_addpoints) (struct map_session_data *sd, int points);
+typedef void (*HPMHOOK_pre_goldpc_load) (struct map_session_data **sd);
+typedef void (*HPMHOOK_post_goldpc_load) (struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_goldpc_start) (struct map_session_data **sd);
+typedef void (*HPMHOOK_post_goldpc_start) (struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_goldpc_stop) (struct map_session_data **sd);
+typedef void (*HPMHOOK_post_goldpc_stop) (struct map_session_data *sd);
+#endif // MAP_GOLDPC_H
 #ifdef MAP_GRADER_H /* grader */
 typedef int (*HPMHOOK_pre_grader_init) (bool *minimal);
 typedef int (*HPMHOOK_post_grader_init) (int retVal___, bool minimal);

@@ -92,6 +92,9 @@ struct enchantui_interface *enchantui;
 #ifdef CHAR_GEOIP_H /* geoip */
 struct geoip_interface *geoip;
 #endif // CHAR_GEOIP_H
+#ifdef MAP_GOLDPC_H /* goldpc */
+struct goldpc_interface *goldpc;
+#endif // MAP_GOLDPC_H
 #ifdef MAP_GRADER_H /* grader */
 struct grader_interface *grader;
 #endif // MAP_GRADER_H
@@ -409,6 +412,10 @@ HPExport const char *HPM_shared_symbols(int server_type)
 	if ((server_type&(SERVER_TYPE_CHAR)) != 0 && !HPM_SYMBOL("geoip", geoip))
 		return "geoip";
 #endif // CHAR_GEOIP_H
+#ifdef MAP_GOLDPC_H /* goldpc */
+	if ((server_type&(SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("goldpc", goldpc))
+		return "goldpc";
+#endif // MAP_GOLDPC_H
 #ifdef MAP_GRADER_H /* grader */
 	if ((server_type&(SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("grader", grader))
 		return "grader";

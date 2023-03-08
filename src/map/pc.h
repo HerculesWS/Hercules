@@ -25,6 +25,7 @@
 #include "map/battleground.h" // enum bg_queue_types
 #include "map/buyingstore.h"  // struct s_buyingstore
 #include "map/itemdb.h" // MAX_ITEMDELAYS
+#include "map/goldpc.h" // goldpc_mode
 #include "map/log.h" // struct e_log_pick_type
 #include "map/macro.h" // struct macro_detect
 #include "map/map.h" // RC_MAX, ELE_MAX
@@ -678,6 +679,15 @@ END_ZEROED_BLOCK;
 	bool flicker; /// Check RL_FLICKER usage status [Cydh]
 
 	struct macro_detect macro_detect;
+
+	struct {
+		bool loaded; //< Has goldpc initialization finished?
+		struct goldpc_mode *mode; //< the mode this player is currently spending time for
+		int points; //< How many points the player currently have
+		int play_time; //< How many seconds has passed since the player started this unit (not updated in real time)
+		int tid; //< Timer to get points
+		int64 start_tick; //< tick when the timer started
+	} goldpc;
 };
 
 #define EQP_WEAPON EQP_HAND_R

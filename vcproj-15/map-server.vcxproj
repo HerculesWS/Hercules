@@ -184,6 +184,7 @@
     <ClInclude Include="..\src\map\elemental.h" />
     <ClInclude Include="..\src\map\grader.h" />
     <ClInclude Include="..\src\map\enchantui.h" />
+    <ClInclude Include="..\src\map\goldpc.h" />
     <ClInclude Include="..\src\map\guild.h" />
     <ClInclude Include="..\src\map\intif.h" />
     <ClInclude Include="..\src\map\irc-bot.h" />
@@ -274,6 +275,7 @@
     <ClCompile Include="..\src\map\elemental.c" />
     <ClCompile Include="..\src\map\grader.c" />
     <ClCompile Include="..\src\map\enchantui.c" />
+    <ClCompile Include="..\src\map\goldpc.c" />
     <ClCompile Include="..\src\map\guild.c" />
     <ClCompile Include="..\src\map\intif.c" />
     <ClCompile Include="..\src\map\irc-bot.c" />

@@ -1,0 +1,47 @@
+//===== Hercules Script =======================================
+//= Sample: NPC Trader
+//===== By: ==================================================
+//= KirieZ
+//===== Current Version: =====================================
+//= 20230225
+//===== Description: ========================================= 
+//= Demonstrates GoldPC System script commands.
+//============================================================
+
+prontera,150,150,4	script	GoldPC Tests	1_M_01,{
+	mes("Select the options below to change your GoldPC");
+	next();
+	switch (select("Disable GoldPC", "Set GOLDPC_NORMAL with 30 minutes played", "Set GOLDPC_DOUBLE keeping my Play Time", "Set GOLDPC_NORMAL resetting played time")) {
+	case 1:
+		setgoldpcmode(0);
+		break;
+
+	case 2:
+		// 30 * 60 seconds = 1800 seconds (30 minutes)
+		setgoldpcmode(GOLDPC_NORMAL, 30 * 60);
+		break;
+
+	case 3:
+		// setgoldpcmode(GOLDPC_DOUBLE, -1) would achieve the same result (-1 is the default value for the 2nd param)
+		setgoldpcmode(GOLDPC_DOUBLE);
+		break;
+
+	case 4:
+		setgoldpcmode(GOLDPC_NORMAL, 0);
+		break;
+	}
+
+	mes("Done");
+	close();
+}
+
+-	script	Login GoldPC	FAKE_NPC,{
+	end;
+
+OnPCLoginEvent:
+	// Give GOLDPC_DOUBLE for players below level 30, which will be kept this way until they log out.
+	// Once they log in being above level 30, they will get the default mode defined in features.conf.
+	if (BaseLevel < 30)
+		setgoldpcmode(GOLDPC_DOUBLE);
+	end;
+}

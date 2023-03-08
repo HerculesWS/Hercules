@@ -651,6 +651,9 @@ struct Battle_Config {
 	int grader_max_used;
 	int dynamic_npc_timeout;
 	int dynamic_npc_range;
+
+	int feature_goldpc_enable;
+	int feature_goldpc_default_mode;
 };
 
 /* criteria for battle_config.idletime_criteria */
