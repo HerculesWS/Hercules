@@ -7403,6 +7403,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 		switch(type) {
 			case SC_AUTOTRADE:
 			case SC_KSPROTECTED:
+			case SC__BLOODYLUST:
 				break; // Prevent calling status_change_start_unknown_sc().
 			case SC_ADORAMUS:
 				sc_start(src, bl, SC_BLIND, 100, val1, skill->get_time(status->sc2skill(type), val1), skill_id);
