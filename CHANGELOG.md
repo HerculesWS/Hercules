@@ -22,6 +22,28 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
+## [v2023.03.08] `March 08 2023`
+
+### Added
+
+- Added documentation for include overrides in configuration files (#3191)
+- Implemented the DynamicNPC Create request packets and the related script command `dynamicnpcresult()`. An example can be found in `npc/other/dynamicnpc_create.txt`. (#3192)
+- Implemented support for the GoldPC UI (a.k.a. Mileage), disabled by default, which can be enabled from `conf/map/battle/feature.conf` for packetver `20140611` and newer. (#3192)
+  - The initial implementation includes two modes (single and double), configurable in `db/goldpc_db.conf`, and selectable in `feature.conf`.
+  - An example NPC can be found in `doc/sample/goldpc.txt`, demonstrating the use of the GoldPC system script commands (`setgoldpcmode()`).
+  - A custom GoldNPC NPC is spawned by players upon clicking the GoldPC button, see `npc/other/goldpc.txt`.
+  - Further documentation of the system is available in `doc/goldpc.md`.
+
+### Changed
+
+- Added paths for include overrides to .gitignore so that they won't show up as untracked in git status or risk getting committed by accident. Those that wish to commit them to their fork are still free to do so by issuing a git add command. (#3191)
+
+### Fixed
+
+- Fixed the `RA_WUGBITE` immobile status (#2813)
+- Fixed the `SC_FEINTBOMB` cloak status not working (#2813)
+- Fixed an UnknownStatusChange error triggered by `SC__BLOODYLUST` (#2813)
+
 ## [v2023.01.11] `January 11 2023`
 
 ### Added
@@ -2643,6 +2665,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2023.01.11]: https://github.com/HerculesWS/Hercules/compare/v2022.01.11...v2023.03.08
 [v2023.01.11]: https://github.com/HerculesWS/Hercules/compare/v2022.12.07...v2023.01.11
 [v2022.12.07]: https://github.com/HerculesWS/Hercules/compare/v2022.11.02+1...v2022.12.07
 [v2022.11.02+1]: https://github.com/HerculesWS/Hercules/compare/v2022.11.02...v2022.11.02+1
