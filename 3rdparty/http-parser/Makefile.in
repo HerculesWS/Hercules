@@ -52,4 +52,4 @@ Makefile: Makefile.in
 
 %.o: %.c $(HTTPPARSER_H) Makefile
 	@echo "	CC	$<"
-	@$(CC) @CFLAGS@ @DEFS@ @CPPFLAGS@ -Wno-shadow -c $(OUTPUT_OPTION) $<
+	@$(CC) @CFLAGS@ @DEFS@ @CPPFLAGS@ -Wno-shadow -Wno-switch-enum -c $(OUTPUT_OPTION) $<
