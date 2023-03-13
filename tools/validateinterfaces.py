@@ -92,6 +92,7 @@ skipBeforeFix = (
     "lclif_parse_CA_REQ_HASH",
     "lclif_parse_CA_SSO_LOGIN_REQ",
     "lclif_parse_sub",
+    "lclif_parse_CA_APISERVERCONNECT",
     "log_atcommand_sub_sql",
     "log_branch_sub_sql",
     "log_chat_sub_sql",
