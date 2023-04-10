@@ -387,6 +387,7 @@ static void testChunked1(void)
 			buf[i] = '0' + (i % 10);
 		}
 		testChunkedBuf(buf, f);
+		fifo_chunk_buf_clear(fake_rbuf);
 		aFree(buf);
 	}
 }
