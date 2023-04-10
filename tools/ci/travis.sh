@@ -243,14 +243,22 @@ EOF
 		run_server ./login-server
 		run_server ./char-server
 		run_server ./map-server "$ARGS"
+		run_server ./api-server
 		echo "run all servers with HPM"
 		run_server ./login-server "$PLUGINS"
 		run_server ./char-server "$PLUGINS"
 		run_server ./map-server "$ARGS $PLUGINS"
+		run_server ./api-server "$PLUGINS"
 		echo "run all servers with sample plugin"
 		run_server ./login-server "$PLUGINS --load-plugin sample"
 		run_server ./char-server "$PLUGINS --load-plugin sample"
 		run_server ./map-server "$PLUGINS --load-plugin sample"
+		run_server ./api-server "$PLUGINS --load-plugin sample"
+		echo "run all servers with httpsample plugin"
+		run_server ./login-server "$PLUGINS --load-plugin httpsample"
+		run_server ./char-server "$PLUGINS --load-plugin httpsample"
+		run_server ./map-server "$PLUGINS --load-plugin httpsample"
+		run_server ./api-server "$PLUGINS --load-plugin httpsample"
 		echo "run all servers with constdb2doc"
 		run_server ./map-server "$PLUGINS --load-plugin constdb2doc --constdb2doc"
 		echo "run all servers with db2sql"
@@ -278,6 +286,7 @@ EOF
 		run_server ./login-server "$PLUGINS"
 		run_server ./char-server "$PLUGINS"
 		run_server ./map-server "$ARGS $PLUGINS"
+		run_server ./api-server "$PLUGINS"
 		;;
 	getplugins)
 		echo "Cloning plugins repository..."
