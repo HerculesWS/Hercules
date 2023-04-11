@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2013-2022 Hercules Dev Team
+ * Copyright (C) 2013-2023 Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -234,9 +234,12 @@ struct HookingPointData HookingPoints[] = {
 /* httpsender_interface */
 	{ HP_POP(httpsender->init, HP_httpsender_init) },
 	{ HP_POP(httpsender->final, HP_httpsender_final) },
+	{ HP_POP(httpsender->http_status_name, HP_httpsender_http_status_name) },
+	{ HP_POP(httpsender->send_continue, HP_httpsender_send_continue) },
 	{ HP_POP(httpsender->send_plain, HP_httpsender_send_plain) },
 	{ HP_POP(httpsender->send_html, HP_httpsender_send_html) },
 	{ HP_POP(httpsender->send_json, HP_httpsender_send_json) },
+	{ HP_POP(httpsender->send_json_text, HP_httpsender_send_json_text) },
 	{ HP_POP(httpsender->send_binary, HP_httpsender_send_binary) },
 /* imageparser_interface */
 	{ HP_POP(imageparser->init, HP_imageparser_init) },

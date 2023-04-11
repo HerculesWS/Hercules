@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2013-2022 Hercules Dev Team
+ * Copyright (C) 2013-2023 Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -416,12 +416,18 @@ struct {
 	struct HPMHookPoint *HP_httpsender_init_post;
 	struct HPMHookPoint *HP_httpsender_final_pre;
 	struct HPMHookPoint *HP_httpsender_final_post;
+	struct HPMHookPoint *HP_httpsender_http_status_name_pre;
+	struct HPMHookPoint *HP_httpsender_http_status_name_post;
+	struct HPMHookPoint *HP_httpsender_send_continue_pre;
+	struct HPMHookPoint *HP_httpsender_send_continue_post;
 	struct HPMHookPoint *HP_httpsender_send_plain_pre;
 	struct HPMHookPoint *HP_httpsender_send_plain_post;
 	struct HPMHookPoint *HP_httpsender_send_html_pre;
 	struct HPMHookPoint *HP_httpsender_send_html_post;
 	struct HPMHookPoint *HP_httpsender_send_json_pre;
 	struct HPMHookPoint *HP_httpsender_send_json_post;
+	struct HPMHookPoint *HP_httpsender_send_json_text_pre;
+	struct HPMHookPoint *HP_httpsender_send_json_text_post;
 	struct HPMHookPoint *HP_httpsender_send_binary_pre;
 	struct HPMHookPoint *HP_httpsender_send_binary_post;
 	struct HPMHookPoint *HP_imageparser_init_pre;
@@ -1419,12 +1425,18 @@ struct {
 	int HP_httpsender_init_post;
 	int HP_httpsender_final_pre;
 	int HP_httpsender_final_post;
+	int HP_httpsender_http_status_name_pre;
+	int HP_httpsender_http_status_name_post;
+	int HP_httpsender_send_continue_pre;
+	int HP_httpsender_send_continue_post;
 	int HP_httpsender_send_plain_pre;
 	int HP_httpsender_send_plain_post;
 	int HP_httpsender_send_html_pre;
 	int HP_httpsender_send_html_post;
 	int HP_httpsender_send_json_pre;
 	int HP_httpsender_send_json_post;
+	int HP_httpsender_send_json_text_pre;
+	int HP_httpsender_send_json_text_post;
 	int HP_httpsender_send_binary_pre;
 	int HP_httpsender_send_binary_post;
 	int HP_imageparser_init_pre;

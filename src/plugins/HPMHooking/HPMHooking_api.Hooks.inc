@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2013-2022 Hercules Dev Team
+ * Copyright (C) 2013-2023 Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -4391,11 +4391,11 @@ bool HP_httpparser_parse(int fd) {
 	}
 	return retVal___;
 }
-bool HP_httpparser_parse_real(int fd, struct api_session_data *sd, const char *data, int data_size) {
+bool HP_httpparser_parse_real(int fd, struct api_session_data *sd, const char *data, size_t data_size) {
 	int hIndex = 0;
 	bool retVal___ = false;
 	if (HPMHooks.count.HP_httpparser_parse_real_pre > 0) {
-		bool (*preHookFunc) (int *fd, struct api_session_data **sd, const char **data, int *data_size);
+		bool (*preHookFunc) (int *fd, struct api_session_data **sd, const char **data, size_t *data_size);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_httpparser_parse_real_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_httpparser_parse_real_pre[hIndex].func;
@@ -4410,7 +4410,7 @@ bool HP_httpparser_parse_real(int fd, struct api_session_data *sd, const char *d
 		retVal___ = HPMHooks.source.httpparser.parse_real(fd, sd, data, data_size);
 	}
 	if (HPMHooks.count.HP_httpparser_parse_real_post > 0) {
-		bool (*postHookFunc) (bool retVal___, int fd, struct api_session_data *sd, const char *data, int data_size);
+		bool (*postHookFunc) (bool retVal___, int fd, struct api_session_data *sd, const char *data, size_t data_size);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_httpparser_parse_real_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_httpparser_parse_real_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, fd, sd, data, data_size);
@@ -4418,10 +4418,10 @@ bool HP_httpparser_parse_real(int fd, struct api_session_data *sd, const char *d
 	}
 	return retVal___;
 }
-void HP_httpparser_add_to_temp_request(int fd, struct api_session_data *sd, const char *data, int data_size) {
+void HP_httpparser_add_to_temp_request(int fd, struct api_session_data *sd, const char *data, size_t data_size) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_httpparser_add_to_temp_request_pre > 0) {
-		void (*preHookFunc) (int *fd, struct api_session_data **sd, const char **data, int *data_size);
+		void (*preHookFunc) (int *fd, struct api_session_data **sd, const char **data, size_t *data_size);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_httpparser_add_to_temp_request_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_httpparser_add_to_temp_request_pre[hIndex].func;
@@ -4436,7 +4436,7 @@ void HP_httpparser_add_to_temp_request(int fd, struct api_session_data *sd, cons
 		HPMHooks.source.httpparser.add_to_temp_request(fd, sd, data, data_size);
 	}
 	if (HPMHooks.count.HP_httpparser_add_to_temp_request_post > 0) {
-		void (*postHookFunc) (int fd, struct api_session_data *sd, const char *data, int data_size);
+		void (*postHookFunc) (int fd, struct api_session_data *sd, const char *data, size_t data_size);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_httpparser_add_to_temp_request_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_httpparser_add_to_temp_request_post[hIndex].func;
 			postHookFunc(fd, sd, data, data_size);
@@ -5248,6 +5248,59 @@ void HP_httpsender_final(void) {
 	}
 	return;
 }
+const char * HP_httpsender_http_status_name(enum http_status status) {
+	int hIndex = 0;
+	const char * retVal___ = NULL;
+	if (HPMHooks.count.HP_httpsender_http_status_name_pre > 0) {
+		const char * (*preHookFunc) (enum http_status *status);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_httpsender_http_status_name_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_httpsender_http_status_name_pre[hIndex].func;
+			retVal___ = preHookFunc(&status);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.httpsender.http_status_name(status);
+	}
+	if (HPMHooks.count.HP_httpsender_http_status_name_post > 0) {
+		const char * (*postHookFunc) (const char * retVal___, enum http_status status);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_httpsender_http_status_name_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_httpsender_http_status_name_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, status);
+		}
+	}
+	return retVal___;
+}
+void HP_httpsender_send_continue(int fd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_httpsender_send_continue_pre > 0) {
+		void (*preHookFunc) (int *fd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_httpsender_send_continue_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_httpsender_send_continue_pre[hIndex].func;
+			preHookFunc(&fd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.httpsender.send_continue(fd);
+	}
+	if (HPMHooks.count.HP_httpsender_send_continue_post > 0) {
+		void (*postHookFunc) (int fd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_httpsender_send_continue_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_httpsender_send_continue_post[hIndex].func;
+			postHookFunc(fd);
+		}
+	}
+	return;
+}
 bool HP_httpsender_send_plain(int fd, const char *data) {
 	int hIndex = 0;
 	bool retVal___ = false;
@@ -5325,6 +5378,33 @@ bool HP_httpsender_send_json(int fd, const JsonW *json) {
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_httpsender_send_json_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_httpsender_send_json_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, fd, json);
+		}
+	}
+	return retVal___;
+}
+bool HP_httpsender_send_json_text(int fd, const char *json, enum http_status status) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_httpsender_send_json_text_pre > 0) {
+		bool (*preHookFunc) (int *fd, const char **json, enum http_status *status);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_httpsender_send_json_text_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_httpsender_send_json_text_pre[hIndex].func;
+			retVal___ = preHookFunc(&fd, &json, &status);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.httpsender.send_json_text(fd, json, status);
+	}
+	if (HPMHooks.count.HP_httpsender_send_json_text_post > 0) {
+		bool (*postHookFunc) (bool retVal___, int fd, const char *json, enum http_status status);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_httpsender_send_json_text_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_httpsender_send_json_text_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, fd, json, status);
 		}
 	}
 	return retVal___;

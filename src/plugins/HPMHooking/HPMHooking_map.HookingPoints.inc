@@ -1389,6 +1389,15 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(enchantui->perfect_request, HP_enchantui_perfect_request) },
 	{ HP_POP(enchantui->upgrade_request, HP_enchantui_upgrade_request) },
 	{ HP_POP(enchantui->reset_request, HP_enchantui_reset_request) },
+/* extraconf_interface */
+	{ HP_POP(extraconf->init, HP_extraconf_init) },
+	{ HP_POP(extraconf->final, HP_extraconf_final) },
+	{ HP_POP(extraconf->read_conf_file, HP_extraconf_read_conf_file) },
+	{ HP_POP(extraconf->read_conf, HP_extraconf_read_conf) },
+	{ HP_POP(extraconf->read_vars, HP_extraconf_read_vars) },
+	{ HP_POP(extraconf->set_var, HP_extraconf_set_var) },
+	{ HP_POP(extraconf->set_var_str, HP_extraconf_set_var_str) },
+	{ HP_POP(extraconf->read_emblems, HP_extraconf_read_emblems) },
 /* goldpc_interface */
 	{ HP_POP(goldpc->init, HP_goldpc_init) },
 	{ HP_POP(goldpc->final, HP_goldpc_final) },
@@ -1401,15 +1410,6 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(goldpc->load, HP_goldpc_load) },
 	{ HP_POP(goldpc->start, HP_goldpc_start) },
 	{ HP_POP(goldpc->stop, HP_goldpc_stop) },
-/* extraconf_interface */
-	{ HP_POP(extraconf->init, HP_extraconf_init) },
-	{ HP_POP(extraconf->final, HP_extraconf_final) },
-	{ HP_POP(extraconf->read_conf_file, HP_extraconf_read_conf_file) },
-	{ HP_POP(extraconf->read_conf, HP_extraconf_read_conf) },
-	{ HP_POP(extraconf->read_vars, HP_extraconf_read_vars) },
-	{ HP_POP(extraconf->set_var, HP_extraconf_set_var) },
-	{ HP_POP(extraconf->set_var_str, HP_extraconf_set_var_str) },
-	{ HP_POP(extraconf->read_emblems, HP_extraconf_read_emblems) },
 /* grader_interface */
 	{ HP_POP(grader->init, HP_grader_init) },
 	{ HP_POP(grader->final, HP_grader_final) },

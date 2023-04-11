@@ -577,6 +577,32 @@ void HP_capiif_parse_proxy_api_from_map(int fd) {
 	}
 	return;
 }
+void HP_capiif_send_emblem_upload_result(int fd, int result) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_capiif_send_emblem_upload_result_pre > 0) {
+		void (*preHookFunc) (int *fd, int *result);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_capiif_send_emblem_upload_result_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_capiif_send_emblem_upload_result_pre[hIndex].func;
+			preHookFunc(&fd, &result);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.capiif.send_emblem_upload_result(fd, result);
+	}
+	if (HPMHooks.count.HP_capiif_send_emblem_upload_result_post > 0) {
+		void (*postHookFunc) (int fd, int result);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_capiif_send_emblem_upload_result_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_capiif_send_emblem_upload_result_post[hIndex].func;
+			postHookFunc(fd, result);
+		}
+	}
+	return;
+}
 /* char_interface */
 int HP_chr_waiting_disconnect(int tid, int64 tick, int id, intptr_t data) {
 	int hIndex = 0;
@@ -11317,11 +11343,11 @@ bool HP_inter_userconfig_config_read(const char *filename, const struct config_t
 	}
 	return retVal___;
 }
-int HP_inter_userconfig_load_emotes(int account_id, struct userconfig_emotes *emotes) {
+bool HP_inter_userconfig_load_emotes(int account_id, struct userconfig_emotes *emotes) {
 	int hIndex = 0;
-	int retVal___ = 0;
+	bool retVal___ = false;
 	if (HPMHooks.count.HP_inter_userconfig_load_emotes_pre > 0) {
-		int (*preHookFunc) (int *account_id, struct userconfig_emotes **emotes);
+		bool (*preHookFunc) (int *account_id, struct userconfig_emotes **emotes);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_userconfig_load_emotes_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_inter_userconfig_load_emotes_pre[hIndex].func;
@@ -11336,7 +11362,7 @@ int HP_inter_userconfig_load_emotes(int account_id, struct userconfig_emotes *em
 		retVal___ = HPMHooks.source.inter_userconfig.load_emotes(account_id, emotes);
 	}
 	if (HPMHooks.count.HP_inter_userconfig_load_emotes_post > 0) {
-		int (*postHookFunc) (int retVal___, int account_id, struct userconfig_emotes *emotes);
+		bool (*postHookFunc) (bool retVal___, int account_id, struct userconfig_emotes *emotes);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_userconfig_load_emotes_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_inter_userconfig_load_emotes_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, account_id, emotes);
@@ -11397,11 +11423,12 @@ void HP_inter_userconfig_use_default_emotes(int account_id, struct userconfig_em
 	}
 	return;
 }
-bool HP_inter_userconfig_emotes_from_sql(int account_id, struct userconfig_emotes *emotes) {
+enum userconfig_from_sql_result HP_inter_userconfig_emotes_from_sql(int account_id, struct userconfig_emotes *emotes) {
+/* Unknown return type 'enum userconfig_from_sql_result'. Initializing to '0'. */
 	int hIndex = 0;
-	bool retVal___ = false;
+	enum userconfig_from_sql_result retVal___ = 0;
 	if (HPMHooks.count.HP_inter_userconfig_emotes_from_sql_pre > 0) {
-		bool (*preHookFunc) (int *account_id, struct userconfig_emotes **emotes);
+		enum userconfig_from_sql_result (*preHookFunc) (int *account_id, struct userconfig_emotes **emotes);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_userconfig_emotes_from_sql_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_inter_userconfig_emotes_from_sql_pre[hIndex].func;
@@ -11416,7 +11443,7 @@ bool HP_inter_userconfig_emotes_from_sql(int account_id, struct userconfig_emote
 		retVal___ = HPMHooks.source.inter_userconfig.emotes_from_sql(account_id, emotes);
 	}
 	if (HPMHooks.count.HP_inter_userconfig_emotes_from_sql_post > 0) {
-		bool (*postHookFunc) (bool retVal___, int account_id, struct userconfig_emotes *emotes);
+		enum userconfig_from_sql_result (*postHookFunc) (enum userconfig_from_sql_result retVal___, int account_id, struct userconfig_emotes *emotes);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_userconfig_emotes_from_sql_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_inter_userconfig_emotes_from_sql_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, account_id, emotes);
@@ -11503,31 +11530,32 @@ void HP_inter_userconfig_hotkey_tab_clear(int account_id, int tab_id) {
 	}
 	return;
 }
-void HP_inter_userconfig_hotkey_tab_fromsql(int account_id, struct userconfig_userhotkeys_v2 *hotkeys, int tab_id) {
+bool HP_inter_userconfig_hotkey_tab_fromsql(int account_id, struct userconfig_userhotkeys_v2 *hotkeys, int tab_id) {
 	int hIndex = 0;
+	bool retVal___ = false;
 	if (HPMHooks.count.HP_inter_userconfig_hotkey_tab_fromsql_pre > 0) {
-		void (*preHookFunc) (int *account_id, struct userconfig_userhotkeys_v2 **hotkeys, int *tab_id);
+		bool (*preHookFunc) (int *account_id, struct userconfig_userhotkeys_v2 **hotkeys, int *tab_id);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_userconfig_hotkey_tab_fromsql_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_inter_userconfig_hotkey_tab_fromsql_pre[hIndex].func;
-			preHookFunc(&account_id, &hotkeys, &tab_id);
+			retVal___ = preHookFunc(&account_id, &hotkeys, &tab_id);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
-			return;
+			return retVal___;
 		}
 	}
 	{
-		HPMHooks.source.inter_userconfig.hotkey_tab_fromsql(account_id, hotkeys, tab_id);
+		retVal___ = HPMHooks.source.inter_userconfig.hotkey_tab_fromsql(account_id, hotkeys, tab_id);
 	}
 	if (HPMHooks.count.HP_inter_userconfig_hotkey_tab_fromsql_post > 0) {
-		void (*postHookFunc) (int account_id, struct userconfig_userhotkeys_v2 *hotkeys, int tab_id);
+		bool (*postHookFunc) (bool retVal___, int account_id, struct userconfig_userhotkeys_v2 *hotkeys, int tab_id);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_userconfig_hotkey_tab_fromsql_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_inter_userconfig_hotkey_tab_fromsql_post[hIndex].func;
-			postHookFunc(account_id, hotkeys, tab_id);
+			retVal___ = postHookFunc(retVal___, account_id, hotkeys, tab_id);
 		}
 	}
-	return;
+	return retVal___;
 }
 /* libconfig_interface */
 void HP_libconfig_set_db_path(const char *db_path) {

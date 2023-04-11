@@ -216,6 +216,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "PACKET_API_PROXY0", sizeof(struct PACKET_API_PROXY0), SERVER_TYPE_ALL },
 		{ "PACKET_API_PROXY_CHUNKED", sizeof(struct PACKET_API_PROXY_CHUNKED), SERVER_TYPE_ALL },
 		{ "PACKET_API_REPLY_emblem_download", sizeof(struct PACKET_API_REPLY_emblem_download), SERVER_TYPE_ALL },
+		{ "PACKET_API_REPLY_emblem_upload", sizeof(struct PACKET_API_REPLY_emblem_upload), SERVER_TYPE_ALL },
 		{ "PACKET_API_REPLY_party_add", sizeof(struct PACKET_API_REPLY_party_add), SERVER_TYPE_ALL },
 		{ "PACKET_API_REPLY_party_del", sizeof(struct PACKET_API_REPLY_party_del), SERVER_TYPE_ALL },
 		{ "PACKET_API_REPLY_party_get", sizeof(struct PACKET_API_REPLY_party_get), SERVER_TYPE_ALL },
