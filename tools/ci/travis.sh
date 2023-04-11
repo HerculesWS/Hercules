@@ -234,7 +234,7 @@ EOF
 			echo "Disable leak dection on travis"
 			export ASAN_OPTIONS=detect_leaks=0:detect_stack_use_after_return=true:strict_init_order=true:detect_odr_violation=0
 		else
-			export ASAN_OPTIONS=detect_stack_use_after_return=true:strict_init_order=true:detect_odr_violation=0
+			export ASAN_OPTIONS=leak_check_at_exit=1:detect_stack_use_after_return=true:strict_init_order=true:detect_odr_violation=0
 		fi
 		# run_test spinlock # Not running the spinlock test for the time being (too time consuming)
 		run_test libconfig
@@ -279,7 +279,7 @@ EOF
 		run_server ./map-server "$PLUGINS --load-plugin script_mapquit"
 		;;
 	extratest)
-		export ASAN_OPTIONS=detect_stack_use_after_return=true:strict_init_order=true:detect_odr_violation=0
+		export ASAN_OPTIONS=leak_check_at_exit=1:detect_stack_use_after_return=true:strict_init_order=true:detect_odr_violation=0
 		PLUGINS="--load-plugin HPMHooking"
 		echo "run map server with uncommented old and custom scripts"
 		find ./npc -type f -name "*.conf" -exec ./tools/ci/uncomment.sh {} \;
