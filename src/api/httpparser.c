@@ -559,6 +559,7 @@ static int do_init_httpparser(bool minimal)
 static void do_final_httpparser(void)
 {
 	aFree(httpparser->settings);
+	aFree(httpparser->multi_settings);
 }
 
 void httpparser_defaults(void)

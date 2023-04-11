@@ -70,8 +70,10 @@ int do_final(void)
 	HPM->event(HPET_FINAL);
 
 	aclif->final();
+	httpparser->final();
 
 	HPM_api_do_final();
+	aFree(api->API_CONF_NAME);
 	aFree(api->NET_CONF_NAME);
 	extraconf->final();
 
