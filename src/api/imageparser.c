@@ -150,7 +150,7 @@ static bool imageparser_validate_gif_emblem(const char *emblem, uint64 emblem_le
 
 	if (emblem_len > extraconf->emblems->max_gif_guild_emblem_size) {
 #ifdef DEBUG_ERRORS
-		ShowError("Error: gif image file size too big: %lu\n", emblem_len);
+		ShowError("Error: gif image file size too big: %"PRIu64"\n", emblem_len);
 #endif
 		return false;
 	}
