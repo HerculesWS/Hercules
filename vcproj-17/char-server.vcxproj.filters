@@ -19,6 +19,9 @@
     <ClCompile Include="..\src\common\ers.c">
       <Filter>common</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\common\extraconf.c">
+      <Filter>common</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\common\grfio.c">
       <Filter>common</Filter>
     </ClCompile>
@@ -175,6 +178,9 @@
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="..\src\common\ers.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\extraconf.h">
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="..\src\common\grfio.h">

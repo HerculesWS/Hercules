@@ -168,6 +168,7 @@
     <ClInclude Include="..\src\common\console.h" />
     <ClInclude Include="..\src\common\db.h" />
     <ClInclude Include="..\src\common\ers.h" />
+    <ClInclude Include="..\src\common\extraconf.h" />
     <ClInclude Include="..\src\common\grfio.h" />
     <ClInclude Include="..\src\common\HPM.h" />
     <ClInclude Include="..\src\common\HPMi.h" />
@@ -206,6 +207,7 @@
     <ClCompile Include="..\src\common\console.c" />
     <ClCompile Include="..\src\common\db.c" />
     <ClCompile Include="..\src\common\ers.c" />
+    <ClCompile Include="..\src\common\extraconf.c" />
     <ClCompile Include="..\src\common\grfio.c" />
     <ClCompile Include="..\src\common\HPM.c" />
     <ClCompile Include="..\src\common\memmgr.c" />
