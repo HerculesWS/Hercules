@@ -73,6 +73,9 @@
     <ClCompile Include="..\src\map\map.c">
       <Filter>map</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\map\mapiif.c">
+      <Filter>map</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\map\mapreg_sql.c">
       <Filter>map</Filter>
     </ClCompile>
@@ -310,6 +313,9 @@
       <Filter>map</Filter>
     </ClInclude>
     <ClInclude Include="..\src\map\map.h">
+      <Filter>map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\map\mapiif.h">
       <Filter>map</Filter>
     </ClInclude>
     <ClInclude Include="..\src\map\mapreg.h">

@@ -19,6 +19,51 @@
     <ClCompile Include="..\3rdparty\libconfig\strbuf.c">
       <Filter>commom</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\api\aclif.c">
+      <Filter>api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\api\aloginif.c">
+      <Filter>api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\api\api.c">
+      <Filter>api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\api\handlers.c">
+      <Filter>api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\api\HPMapi.c">
+      <Filter>api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\api\httpparser.c">
+      <Filter>api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\api\httpsender.c">
+      <Filter>api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\api\jsonparser.c">
+      <Filter>api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\api\jsonwriter.c">
+      <Filter>api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\api\postheader.c">
+      <Filter>api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparty\cJSON\cJSON.c">
+      <Filter>3rdparty\cJSON</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparty\cJSON\cJSON_Utils.c">
+      <Filter>3rdparty\cJSON</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparty\http-parser\http_parser.c">
+      <Filter>3rdparty\http-parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparty\multipart-parser\multipartparser.c">
+      <Filter>3rdparty\multipart-parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\common\mapindex.c">
+      <Filter>commom</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\common\conf.c">
       <Filter>common</Filter>
     </ClCompile>
@@ -81,51 +126,6 @@
     </ClCompile>
     <ClCompile Include="..\src\common\utils.c">
       <Filter>common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\api\aclif.c">
-      <Filter>api</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\api\aloginif.c">
-      <Filter>api</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\api\api.c">
-      <Filter>api</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\api\handlers.c">
-      <Filter>api</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\api\HPMapi.c">
-      <Filter>api</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\api\httpparser.c">
-      <Filter>api</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\api\httpsender.c">
-      <Filter>api</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\api\jsonparser.c">
-      <Filter>api</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\api\jsonwriter.c">
-      <Filter>api</Filter>
-    </ClCompile>
-	<ClCompile Include="..\src\api\postheader.c">
-      <Filter>api</Filter>
-    </ClCompile>
-    <ClCompile Include="..\3rdparty\cJSON\cJSON.c">
-      <Filter>3rdparty\cJSON</Filter>
-    </ClCompile>
-    <ClCompile Include="..\3rdparty\cJSON\cJSON_Utils.c">
-      <Filter>3rdparty\cJSON</Filter>
-    </ClCompile>
-    <ClCompile Include="..\3rdparty\http-parser\http_parser.c">
-      <Filter>3rdparty\http-parser</Filter>
-    </ClCompile>
-    <ClCompile Include="..\3rdparty\multipart-parser\multipartparser.c">
-      <Filter>3rdparty\multipart-parser</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\common\mapindex.c">
-      <Filter>commom</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
