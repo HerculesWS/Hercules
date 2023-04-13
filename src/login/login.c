@@ -25,14 +25,17 @@
 #include "login/HPMlogin.h"
 #include "login/account.h"
 #include "login/ipban.h"
+#include "login/lapiif.h"
 #include "login/loginlog.h"
 #include "login/lclif.h"
 #include "login/packets_ac_struct.h"
 #include "common/HPM.h"
+#include "common/apipackets.h"
 #include "common/cbasetypes.h"
 #include "common/conf.h"
 #include "common/core.h"
 #include "common/db.h"
+#include "common/extraconf.h"
 #include "common/memmgr.h"
 #include "common/md5calc.h"
 #include "common/nullpo.h"
@@ -98,14 +101,15 @@ static struct online_login_data* login_add_online_user(int char_server, int acco
 
 static void login_remove_online_user(int account_id)
 {
-	struct online_login_data* p;
-	p = (struct online_login_data*)idb_get(login->online_db, account_id);
-	if( p == NULL )
+	struct online_login_data* p = (struct online_login_data*)idb_get(login->online_db, account_id);
+	if (p == NULL)
 		return;
-	if( p->waiting_disconnect != INVALID_TIMER )
+	if (p->waiting_disconnect != INVALID_TIMER)
 		timer->delete(p->waiting_disconnect, login->waiting_disconnect_timer);
 
 	idb_remove(login->online_db, account_id);
+
+	lapiif->disconnect_user(account_id);
 }
 
 static int login_waiting_disconnect_timer(int tid, int64 tick, int id, intptr_t data)
@@ -220,6 +224,7 @@ static void lchrif_on_disconnect(int id)
 	Assert_retv(id >= 0 && id < MAX_SERVERS);
 	ShowStatus("Char-server '%s' has disconnected.\n", login->dbs->server[id].name);
 	lchrif->server_reset(id);
+	lapiif->remove_char_server(id);
 }
 
 
@@ -658,7 +663,8 @@ static void login_fromchar_parse_unban(int fd, int id, const char *const ip)
 static void login_fromchar_parse_account_online(int fd, int id)
 {
 	login->add_online_user(id, RFIFOL(fd,2));
-	RFIFOSKIP(fd,6);
+	lapiif->connect_user_char(id, RFIFOL(fd, 2));
+	RFIFOSKIP(fd, 6);
 }
 
 static void login_fromchar_parse_account_offline(int fd)
@@ -791,6 +797,12 @@ static void login_fromchar_parse_accinfo(int fd)
 	RFIFOSKIP(fd,22);
 }
 
+static void login_fromchar_parse_set_char_online(int fd)
+{
+	lapiif->set_char_online(RFIFOL(fd, 2), RFIFOL(fd, 6));
+	RFIFOSKIP(fd, 10);
+}
+
 //--------------------------------
 // Packet parsing for char-servers
 //--------------------------------
@@ -872,6 +884,11 @@ static int login_parse_fromchar(int fd)
 			login->fromchar_parse_ping(fd);
 		break;
 
+		case 0x2721:  // char online notification
+			if (RFIFOREST(fd) < 10)
+				return 0;
+			login->fromchar_parse_set_char_online(fd);
+		break;
 		// Map server send information to change an email of an account via char-server
 		case 0x2722: // 0x2722 <account_id>.L <actual_e-mail>.40B <new_e-mail>.40B
 			if (RFIFOREST(fd) < 86)
@@ -984,6 +1001,14 @@ static int login_parse_fromchar(int fd)
 				login->fromchar_parse_accinfo(fd);
 			}
 		break;
+
+		case HEADER_API_PROXY_REPLY:
+			if (RFIFOREST(fd) < 4 || RFIFOREST(fd) < RFIFOW(fd, 2))
+				return 0;
+			lapiif->parse_proxy_api_from_char(fd);
+			RFIFOSKIP(fd, RFIFOW(fd, 2));
+		break;
+
 		default:
 			ShowError("login_parse_fromchar: Unknown packet 0x%x from a char-server! Disconnecting!\n", command);
 			sockt->eof(fd);
@@ -1368,12 +1393,6 @@ static void login_auth_failed(struct login_session_data *sd, int result)
 	lclif->auth_failed(fd, ban_time, result);
 }
 
-// Generates auth token for web service
-static void login_generate_token(struct login_session_data* sd, unsigned char *auth_token)
-{
-	// TODO
-}
-
 static bool login_client_login(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
 static bool login_client_login(int fd, struct login_session_data *sd)
 {
@@ -1443,6 +1462,15 @@ static void login_char_server_connection_status(int fd, struct login_session_dat
 	WFIFOSET2(fd, 3);
 }
 
+static void login_api_server_connection_status(int fd, struct login_session_data* sd, uint8 status) __attribute__((nonnull (2)));
+static void login_api_server_connection_status(int fd, struct login_session_data* sd, uint8 status)
+{
+	WFIFOHEAD(fd, 3);
+	WFIFOW(fd, 0) = 0x2811;
+	WFIFOB(fd, 2) = status;
+	WFIFOSET2(fd, 3);
+}
+
 // CA_CHARSERVERCONNECT
 static void login_parse_request_connection(int fd, struct login_session_data* sd, const char *const ip, uint32 ipl) __attribute__((nonnull (2, 3)));
 static void login_parse_request_connection(int fd, struct login_session_data* sd, const char *const ip, uint32 ipl)
@@ -1499,9 +1527,58 @@ static void login_parse_request_connection(int fd, struct login_session_data* sd
 
 		// send connection success
 		login->char_server_connection_status(fd, sd, 0);
+		lapiif->add_char_server(sd->account_id);
 	} else {
 		ShowNotice("Connection of the char-server '%s' REFUSED.\n", server_name);
 		login->char_server_connection_status(fd, sd, 1);
+	}
+}
+
+// CA_APISERVERCONNECT
+static void login_parse_request_api_connection(int fd, struct login_session_data* sd, const char *const ip, uint32 ipl) __attribute__((nonnull (2, 3)));
+static void login_parse_request_api_connection(int fd, struct login_session_data* sd, const char *const ip, uint32 ipl)
+{
+	char message[256];
+	uint32 server_ip = sockt->session[fd]->client_addr;
+	int result;
+
+	safestrncpy(sd->userid, RFIFOP(fd,2), NAME_LENGTH);
+	safestrncpy(sd->passwd, RFIFOP(fd,26), NAME_LENGTH);
+	if (login->config->use_md5_passwds)
+		md5->string(sd->passwd, sd->passwd);
+	sd->passwdenc = PWENC_NONE;
+	sd->version = login->config->client_version_to_connect; // hack to skip version check
+
+	ShowInfo("Connection request of the api-server %u.%u.%u.%u (account: '%s', pass: '%s', ip: '%s')\n", CONVIP(server_ip), sd->userid, sd->passwd, ip);
+	sprintf(message, "apiserver - %u.%u.%u.%u", CONVIP(server_ip));
+	loginlog->log(sockt->session[fd]->client_addr, sd->userid, 100, message);
+
+	result = login->mmo_auth(sd, true);
+
+	if (!sockt->allowed_ip_check(ipl)) {
+		ShowNotice("Connection of the api-server REFUSED (IP not allowed).\n");
+		login->api_server_connection_status(fd, sd, 2);
+	} else if (core->runflag == LOGINSERVER_ST_RUNNING &&
+		result == -1 &&
+		sd->sex == 'S' &&
+		sd->account_id >= 0 &&
+		sd->account_id < ARRAYLENGTH(login->dbs->api_server) &&
+		!sockt->session_is_valid(login->dbs->api_server[sd->account_id].fd))
+	{
+		ShowStatus("Connection of the api-server accepted.\n");
+		login->dbs->api_server[sd->account_id].fd = fd;
+
+		sockt->session[fd]->func_parse = lapiif->parse;
+		sockt->session[fd]->flag.server = 1;
+		sockt->session[fd]->flag.validate = 0;
+		sockt->realloc_fifo(fd, FIFOSIZE_SERVERLINK, FIFOSIZE_SERVERLINK);
+
+		// send connection success
+		login->api_server_connection_status(fd, sd, 0);
+		lapiif->send_char_servers(sd->account_id);
+	} else {
+		ShowNotice("Connection of the api-server REFUSED.\n");
+		login->api_server_connection_status(fd, sd, 1);
 	}
 }
 
@@ -1606,6 +1683,7 @@ static bool login_config_read_console(const char *filename, struct config_t *con
 			ShowInfo("Console Silent Setting: %d\n", showmsg->silent);
 	}
 	libconfig->setting_lookup_mutable_string(setting, "timestamp_format", showmsg->timestamp_format, sizeof(showmsg->timestamp_format));
+	libconfig->setting_lookup_int(setting, "console_msg_log", &showmsg->console_log);
 
 	return true;
 }
@@ -2004,13 +2082,21 @@ static uint16 login_convert_users_to_colors(uint16 users)
 #endif
 }
 
+static void login_generate_token(unsigned char *token)
+{
+	nullpo_retv(token);
+	for (int f = 0; f < AUTH_TOKEN_SIZE; f ++) {
+		int val = 0;
+		while((val = (rnd() & 0x7f)) <= ' ' || val == '"' || val == '&');
+		token[f] = val;
+	}
+}
+
 //--------------------------------------
 // Function called at exit of the server
 //--------------------------------------
 int do_final(void)
 {
-	int i;
-
 	ShowStatus("Terminating...\n");
 
 	HPM->event(HPET_FINAL);
@@ -2025,6 +2111,8 @@ int do_final(void)
 
 	ipban->final();
 
+	lapiif->final();
+
 	if (login->dbs->account_engine->db)
 	{// destroy account engine
 		login->dbs->account_engine->db->destroy(login->dbs->account_engine->db);
@@ -2035,8 +2123,11 @@ int do_final(void)
 	login->online_db->destroy(login->online_db, NULL);
 	login->auth_db->destroy(login->auth_db, NULL);
 
-	for (i = 0; i < ARRAYLENGTH(login->dbs->server); ++i)
+	for (int i = 0; i < ARRAYLENGTH(login->dbs->server); ++i)
 		lchrif->server_destroy(i);
+
+	for (int i = 0; i < ARRAYLENGTH(login->dbs->api_server); ++i)
+		lapiif->server_destroy(i);
 
 	if( login->fd != -1 )
 	{
@@ -2076,12 +2167,13 @@ static void do_shutdown_login(void)
 {
 	if( core->runflag != LOGINSERVER_ST_SHUTDOWN )
 	{
-		int id;
 		core->runflag = LOGINSERVER_ST_SHUTDOWN;
 		ShowStatus("Shutting down...\n");
 		// TODO proper shutdown procedure; kick all characters, wait for acks, ...  [FlavioJS]
-		for (id = 0; id < ARRAYLENGTH(login->dbs->server); ++id)
+		for (int id = 0; id < ARRAYLENGTH(login->dbs->server); ++id)
 			lchrif->server_reset(id);
+		for (int id = 0; id < ARRAYLENGTH(login->dbs->api_server); ++id)
+			lapiif->server_reset(id);
 		sockt->flush_fifos();
 		core->runflag = CORE_ST_STOP;
 	}
@@ -2139,10 +2231,9 @@ void cmdline_args_init_local(void)
 //------------------------------
 int do_init(int argc, char **argv)
 {
-	int i;
-
 	account_defaults();
 	login_defaults();
+	extraconf_defaults();
 
 	// initialize engine (to accept config settings)
 	login->dbs->account_engine->constructor = account->db_sql;
@@ -2158,6 +2249,7 @@ int do_init(int argc, char **argv)
 	lchrif_defaults();
 	lclif_defaults();
 	loginlog_defaults();
+	lapiif_defaults();
 
 	// read login-server configuration
 	login->config_set_defaults();
@@ -2196,8 +2288,11 @@ int do_init(int argc, char **argv)
 	login->config_read(login->LOGIN_CONF_NAME, false);
 	sockt->net_config_read(login->NET_CONF_NAME);
 
-	for (i = 0; i < ARRAYLENGTH(login->dbs->server); ++i)
+	for (int i = 0; i < ARRAYLENGTH(login->dbs->server); ++i)
 		lchrif->server_init(i);
+
+	for (int i = 0; i < ARRAYLENGTH(login->dbs->api_server); ++i)
+		lapiif->server_init(i);
 
 	// initialize logging
 	if (login->config->log_login)
@@ -2205,6 +2300,8 @@ int do_init(int argc, char **argv)
 
 	// initialize static and dynamic ipban system
 	ipban->init();
+
+	lapiif->init();
 
 	// Online user database init
 	login->online_db = idb_alloc(DB_OPT_RELEASE_DATA);
@@ -2310,18 +2407,21 @@ void login_defaults(void)
 	login->fromchar_parse_change_pincode = login_fromchar_parse_change_pincode;
 	login->fromchar_parse_wrong_pincode = login_fromchar_parse_wrong_pincode;
 	login->fromchar_parse_accinfo = login_fromchar_parse_accinfo;
+	login->fromchar_parse_set_char_online = login_fromchar_parse_set_char_online;
 
 	login->parse_fromchar = login_parse_fromchar;
 	login->client_login = login_client_login;
 	login->client_login_otp = login_client_login_otp;
 	login->client_login_mobile_otp_request = login_client_login_mobile_otp_request;
 	login->parse_request_connection = login_parse_request_connection;
+	login->parse_request_api_connection = login_parse_request_api_connection;
 	login->auth_ok = login_auth_ok;
 	login->auth_failed = login_auth_failed;
-	login->generate_token = login_generate_token;
+	login->api_server_connection_status = login_api_server_connection_status;
 	login->char_server_connection_status = login_char_server_connection_status;
 	login->kick = login_kick;
 	login->check_client_version = login_check_client_version;
+	login->generate_token = login_generate_token;
 
 	login->config_set_defaults = login_config_set_defaults;
 	login->config_read = login_config_read;

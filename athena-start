@@ -7,6 +7,7 @@ PATH=./:$PATH
 L_SRV=login-server
 C_SRV=char-server
 M_SRV=map-server
+A_SRV=api-server
 
 print_start() {
 #    more << EOF
@@ -23,7 +24,7 @@ echo "checking..."
 
 check_files() {
 
-    for i in ${L_SRV} ${C_SRV} ${M_SRV}
+    for i in ${L_SRV} ${C_SRV} ${M_SRV} ${A_SRV}
     do
         if [ ! -f ./$i ]; then
             echo "$i does not exist, or can't run."
@@ -50,11 +51,13 @@ case $1 in
 	echo $! > .${C_SRV}.pid
         exec ./${M_SRV}&
 	echo $! > .${M_SRV}.pid
+        exec ./${A_SRV}&
+	echo $! > .${A_SRV}.pid
 
         echo "Now Started Athena."
 ;;
     'stop')
-	for i in .${L_SRV}.pid .${C_SRV}.pid .${M_SRV}.pid
+	for i in .${L_SRV}.pid .${C_SRV}.pid .${M_SRV}.pid .${A_SRV}.pid
 	    do
 		if [ -e ./$i ]; then
 		    kill $(cat $i)

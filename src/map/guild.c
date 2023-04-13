@@ -595,7 +595,7 @@ static int guild_recv_noinfo(int guild_id)
 }
 
 //Get and display information for all member
-static int guild_recv_info(const struct guild *sg)
+static int guild_recv_info(const struct guild *sg, struct fifo_chunk_buf *emblem_buf)
 {
 	struct guild *g,before;
 	int i,bm,m;
@@ -685,6 +685,14 @@ static int guild_recv_info(const struct guild *sg)
 	g->channel = aChSysSave;
 	g->instance = instance_save;
 	g->instances = instances_save;
+
+	if (emblem_buf == NULL) {
+		g->emblem_data = NULL;
+		g->emblem_len = 0;
+	} else {
+		g->emblem_data = aMalloc(emblem_buf->data_size);
+		memcpy(g->emblem_data, emblem_buf->data, emblem_buf->data_size);
+	}
 
 	if(g->max_member > MAX_GUILD) {
 		ShowError("guild_recv_info: Received guild with %d members, but MAX_GUILD is only %d. Extra guild-members have been lost!\n", g->max_member, MAX_GUILD);
@@ -1356,16 +1364,18 @@ static int guild_emblem_changed(int len, int guild_id, int emblem_id, const char
 	if(g==NULL)
 		return 0;
 
-	memcpy(g->emblem_data,data,len);
-	g->emblem_len=len;
-	g->emblem_id=emblem_id;
+	if (len > g->emblem_len)
+		g->emblem_data = aReallocz(g->emblem_data, len);
+	memcpy(g->emblem_data, data, len);
+	g->emblem_len = len;
+	g->emblem_id = emblem_id;
 
 	for(i=0;i<g->max_member;i++){
 		if((sd=g->member[i].sd)!=NULL){
 			sd->guild_emblem_id=emblem_id;
 			clif->guild_belonginfo(sd,g);
 			clif->guild_emblem(sd,g);
-			clif->guild_emblem_area(&sd->bl);
+			clif->guild_emblem_id_area(&sd->bl);
 		}
 	}
 	{// update guardians (mobs)
@@ -1381,7 +1391,7 @@ static int guild_emblem_changed(int len, int guild_id, int emblem_id, const char
 				if( md == NULL || md->guardian_data == NULL )
 					continue;
 
-				clif->guild_emblem_area(&md->bl);
+				clif->guild_emblem_id_area(&md->bl);
 			}
 			// update temporary guardians
 			for( i = 0; i < gc->temp_guardians_max; ++i ) {
@@ -1389,7 +1399,7 @@ static int guild_emblem_changed(int len, int guild_id, int emblem_id, const char
 				if( md == NULL || md->guardian_data == NULL )
 					continue;
 
-				clif->guild_emblem_area(&md->bl);
+				clif->guild_emblem_id_area(&md->bl);
 			}
 		}
 		dbi_destroy(iter);
@@ -1397,7 +1407,7 @@ static int guild_emblem_changed(int len, int guild_id, int emblem_id, const char
 	{// update npcs (flags or other npcs that used flagemblem to attach to this guild)
 		for( i = 0; i < guild->flags_count; i++ ) {
 			if( guild->flags[i] && guild->flags[i]->u.scr.guild_id == guild_id ) {
-				clif->guild_emblem_area(&guild->flags[i]->bl);
+				clif->guild_emblem_id_area(&guild->flags[i]->bl);
 			}
 		}
 	}
@@ -1964,6 +1974,7 @@ static int guild_broken(int guild_id, int flag)
 
 	HPM->data_store_destroy(&g->hdata);
 
+	aFree(g->emblem_data);
 	idb_remove(guild->db,guild_id);
 	return 0;
 }
@@ -2439,6 +2450,13 @@ static int guild_castle_db_final(union DBKey key, struct DBData *data, va_list a
 	return 0;
 }
 
+static int guild_db_final(union DBKey key, struct DBData *data, va_list ap)
+{
+	struct guild* g = DB->data2ptr(data);
+	aFree(g->emblem_data);
+	return 0;
+}
+
 /* called when scripts are reloaded/unloaded */
 static void guild_flags_clear(void)
 {
@@ -2488,7 +2506,7 @@ static void do_final_guild(void)
 
 	dbi_destroy(iter);
 
-	db_destroy(guild->db);
+	guild->db->destroy(guild->db, guild->guild_db_final);
 	guild->castle_db->destroy(guild->castle_db,guild->castle_db_final);
 	guild->expcache_db->destroy(guild->expcache_db,guild->expcache_db_final);
 	guild->infoevent_db->destroy(guild->infoevent_db,guild->eventlist_db_final);
@@ -2606,6 +2624,7 @@ void guild_defaults(void)
 	guild->eventlist_db_final = eventlist_db_final;
 	guild->expcache_db_final = guild_expcache_db_final;
 	guild->castle_db_final = guild_castle_db_final;
+	guild->guild_db_final = guild_db_final;
 	guild->broken_sub = guild_broken_sub;
 	guild->castle_broken_sub = castle_guild_broken_sub;
 	guild->makemember = guild_makemember;

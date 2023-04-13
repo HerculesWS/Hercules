@@ -19,6 +19,9 @@
     <ClCompile Include="..\src\common\ers.c">
       <Filter>common</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\common\extraconf.c">
+      <Filter>common</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\common\grfio.c">
       <Filter>common</Filter>
     </ClCompile>
@@ -148,6 +151,15 @@
     <ClCompile Include="..\src\char\int_rodex.c">
       <Filter>char</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\char\capiif.c">
+      <Filter>char</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\char\int_adventurer_agency.c">
+      <Filter>char</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\char\int_userconfig.c">
+      <Filter>char</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\common\cbasetypes.h">
@@ -166,6 +178,9 @@
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="..\src\common\ers.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\extraconf.h">
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="..\src\common\grfio.h">
@@ -344,6 +359,15 @@
     </ClInclude>
     <ClInclude Include="..\src\common\packets_struct.h">
       <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\char\capiif.h">
+      <Filter>char</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\char\int_adventurer_agency.h">
+      <Filter>char</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\char\int_userconfig.h">
+      <Filter>char</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

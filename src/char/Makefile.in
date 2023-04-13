@@ -53,13 +53,14 @@ MT19937AR_D = $(THIRDPARTY_D)/mt19937ar
 MT19937AR_OBJ = $(MT19937AR_D)/mt19937ar.o
 MT19937AR_H = $(MT19937AR_D)/mt19937ar.h
 
-CHAR_C = char.c HPMchar.c loginif.c mapif.c geoip.c inter.c int_achievement.c int_auction.c int_clan.c int_elemental.c \
-         int_guild.c int_homun.c int_mail.c int_mercenary.c int_party.c int_pet.c \
-         int_quest.c int_rodex.c int_storage.c pincode.c
+CHAR_C = char.c HPMchar.c loginif.c mapif.c geoip.c inter.c int_achievement.c int_adventurer_agency.c \
+         int_auction.c int_clan.c int_elemental.c int_guild.c int_homun.c int_mail.c int_mercenary.c \
+         int_party.c int_pet.c int_quest.c int_rodex.c int_storage.c int_userconfig.c pincode.c capiif.c
 CHAR_OBJ = $(addprefix obj_sql/, $(patsubst %.c,%.o,$(CHAR_C)))
-CHAR_H = char.h HPMchar.h loginif.h mapif.h geoip.h inter.h int_achievement.h int_auction.h int_clan.h int_elemental.h \
-         int_guild.h int_homun.h int_mail.h int_mercenary.h int_party.h int_pet.h \
-         int_quest.h int_rodex.h int_storage.h pincode.h packets_hc_struct.h
+CHAR_H = char.h HPMchar.h apipackets.h loginif.h mapif.h geoip.h inter.h int_achievement.h \
+         int_adventurer_agency.h int_auction.h int_clan.h int_elemental.h int_guild.h int_homun.h \
+         int_mail.h int_mercenary.h int_party.h int_pet.h int_quest.h int_rodex.h int_storage.h \
+         int_userconfig.h pincode.h packets_hc_struct.h capiif.h
 CHAR_PH =
 
 HAVE_MYSQL=@HAVE_MYSQL@

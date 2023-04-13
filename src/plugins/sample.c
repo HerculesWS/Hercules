@@ -60,7 +60,7 @@
 
 HPExport struct hplugin_info pinfo = {
 	"Sample",    // Plugin name
-	SERVER_TYPE_CHAR|SERVER_TYPE_LOGIN|SERVER_TYPE_MAP,// Which server types this plugin works with?
+	SERVER_TYPE_CHAR|SERVER_TYPE_LOGIN|SERVER_TYPE_MAP|SERVER_TYPE_API,// Which server types this plugin works with?
 	"0.1",       // Plugin version
 	HPM_VERSION, // HPM Version (don't change, macro is automatically updated)
 };
@@ -203,6 +203,7 @@ HPExport void plugin_init (void) {
 		case SERVER_TYPE_LOGIN: printf("Login Server\n"); break;
 		case SERVER_TYPE_CHAR: printf("Char Server\n"); break;
 		case SERVER_TYPE_MAP: printf ("Map Server\n"); break;
+		case SERVER_TYPE_API: printf ("Api Server\n"); break;
 		case SERVER_TYPE_UNKNOWN: printf ("Unknown Server\n"); break;
 	}
 
@@ -255,6 +256,7 @@ HPExport void plugin_init (void) {
 		 **/
 		addHookPrePriv(lclif, parse_CA_CONNECT_INFO_CHANGED, my_lclif_parse_CA_CONNECT_INFO_CHANGED_pre);
 	}
+
 }
 /* triggered when server starts loading, before any server-specific data is set */
 HPExport void server_preinit(void)
@@ -264,9 +266,12 @@ HPExport void server_preinit(void)
 	 * however for battle config to be returned to our script engine we need it to be number (int) so keep use it as int only */
 	addBattleConf("my_setting", parse_my_setting, return_my_setting, false);
 }
+
 /* run when server is ready (online) */
-HPExport void server_online (void) {
+HPExport void server_online (void)
+{
 }
+
 /* run when server is shutting down */
 HPExport void plugin_final (void) {
 	ShowInfo ("%s says ~Bye world\n",pinfo.name);

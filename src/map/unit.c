@@ -2991,6 +2991,7 @@ static int unit_free(struct block_list *bl, enum clr_type clrtype)
 			VECTOR_CLEAR(sd->storage.item);
 			VECTOR_CLEAR(sd->hatEffectId);
 			VECTOR_CLEAR(sd->title_ids); // Title [Dastgir/Hercules]
+			VECTOR_CLEAR(sd->agency_requests);
 			sd->storage.received = false;
 			if( sd->quest_log != NULL ) {
 				aFree(sd->quest_log);

@@ -657,6 +657,7 @@ static int party_member_withdraw(int party_id, int account_id, int char_id)
 					intif->party_leaderchange(p->party.party_id, p->party.member[k].account_id, p->party.member[k].char_id);
 					clif->party_info(p, NULL);
 				}
+				VECTOR_CLEAR(sd->agency_requests);
 			}
 		}
 	}
@@ -803,6 +804,7 @@ static bool party_changeleader(struct map_session_data *sd, struct map_session_d
 	//Update info.
 	intif->party_leaderchange(p->party.party_id,p->party.member[tmi].account_id,p->party.member[tmi].char_id);
 	clif->party_info(p,NULL);
+	VECTOR_CLEAR(sd->agency_requests);
 	return true;
 }
 
@@ -1491,6 +1493,64 @@ static bool party_booking_delete(struct map_session_data *sd)
 	}
 	return true;
 }
+
+static bool party_is_leader(struct map_session_data *sd, const struct party_data *p)
+{
+	nullpo_retr(false, sd);
+	nullpo_retr(false, p);
+
+	int i;
+	ARR_FIND(0, MAX_PARTY, i, p->data[i].sd == sd);
+
+	if (i == MAX_PARTY || p->party.member[i].leader == 0)
+		return false;
+
+	return true;
+}
+
+void party_agency_request_join(struct map_session_data *sd, struct map_session_data *tsd)
+{
+	nullpo_retv(sd);
+
+	if (sd->status.party_id != 0) {
+		clif->adventurerAgencyResult(sd, AGENCY_PLAYER_ALREADY_IN_PARTY, sd->status.name, "");
+		return;
+	}
+
+	if (sd->party_invite_account != 0) {
+		clif->adventurerAgencyResult(sd, AGENCY_UNKNOWN_ERROR, "", "");
+		return;
+	}
+
+	if (tsd == NULL) {
+		clif->adventurerAgencyResult(sd, AGENCY_MASTER_UNABLE_ACCEPT_REQUEST, "", "");
+		return;
+	}
+
+	const struct party_data *p = party->search(tsd->status.party_id);
+	if (p == NULL) {
+		clif->adventurerAgencyResult(sd, AGENCY_PARTY_NOT_FOUND, "", "");
+		return;
+	}
+
+	// party is full: AGENCY_PARTY_NUMBER_EXCEEDED
+
+	if (!party->is_leader(tsd, p)) {
+		clif->adventurerAgencyResult(sd, AGENCY_CANT_FIND_PARTY_LEADER_DELAYED, "", "");
+		return;
+	}
+
+	int i;
+	ARR_FIND(0, VECTOR_LENGTH(tsd->agency_requests), i, VECTOR_INDEX(tsd->agency_requests, i) == sd->bl.id);
+	if (i != VECTOR_LENGTH(tsd->agency_requests)) {
+		return;
+	}
+
+	VECTOR_ENSURE(tsd->agency_requests, 1, 1);
+	VECTOR_PUSH(tsd->agency_requests, sd->bl.id);
+	clif->adventurerAgencyJoinReq(sd, tsd);
+}
+
 static void do_final_party(void)
 {
 	party->db->destroy(party->db,party->db_final);
@@ -1573,4 +1633,6 @@ void party_defaults(void)
 	party->check_state = party_check_state;
 	party->create_booking_data = create_party_booking_data;
 	party->db_final = party_db_final;
+	party->is_leader = party_is_leader;
+	party->agency_request_join = party_agency_request_join;
 }

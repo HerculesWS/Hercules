@@ -264,6 +264,10 @@ sub parse($$) {
 		      or $x eq 'time_t'
 		) { # Numeric variables
 			$rtinit = ' = 0';
+		} elsif ($x eq 'JsonWBool') { # bool
+			$rtinit = ' = cJSON_False';
+		} elsif ($x eq 'http_method') {
+			$rtinit = ' = HTTP_GET';
 		} else { # Anything else
 			$notes .= "\n/* Unknown return type '$rt'. Initializing to '0'. */";
 			print "Unknown return type '$rt'. Initializing to '0'.\n";
@@ -290,6 +294,7 @@ my %keys = (
 	login => [ ],
 	char => [ ],
 	map => [ ],
+	api => [ ],
 	all => [ ],
 );
 my %fileguards = ( );
@@ -300,7 +305,7 @@ foreach my $file (@files) { # Loop through the xml files
 
 	my $filekey = (keys %{ $data->{compounddef} })[0];
 	my $loc = $data->{compounddef}->{$filekey}->{location}->[0];
-	next unless $loc->{file} =~ /src\/(map|char|login|common)\//;
+	next unless $loc->{file} =~ /src\/(api|map|char|login|common)\//;
 	next if $loc->{file} =~ /\/HPM.*\.h/; # Don't allow hooking into the HPM itself
 	next if $loc->{file} =~ /\/memmgr\.h/; # Don't allow hooking into the memory manager
 	my $servertype = $1;
@@ -318,12 +323,13 @@ foreach my $file (@files) { # Loop through the xml files
 		push @servertypes, ("map"); # Currently not used by the login and char servers
 		$servermask = 'SERVER_TYPE_MAP';
 	} else {
-		push @servertypes, ("map", "char", "login");
+		push @servertypes, ("api", "map", "char", "login");
 		$servermask = 'SERVER_TYPE_ALL';
 	}
 	my @filepath = split(/[\/\\]/, $loc->{file});
 	my $foldername = uc($filepath[-2]);
-	my $filename = uc($filepath[-1]); $filename =~ s/[.-]/_/g; $filename =~ s/\.[^.]*$//;
+	my $filename = uc($filepath[-1]); $filename =~ s/[.-]/_/g; $filename =~ s/\.[^.]*$//; $filename =~ s/_H_DOX$/_H/;
+
 	my $guardname = "${foldername}_${filename}";
 	my $private = $key =~ /_interface_private$/ ? 1 : 0;
 

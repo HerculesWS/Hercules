@@ -42,6 +42,7 @@ struct loginif_interface {
 	void (*auth) (int fd, struct char_session_data* sd, uint32 ipl);
 	void (*send_users_count) (int users);
 	void (*connect_to_server) (void);
+	void (*set_char_online) (int char_id, int account_id);
 };
 
 #ifdef HERCULES_CORE

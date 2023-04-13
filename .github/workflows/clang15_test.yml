@@ -17,6 +17,7 @@ jobs:
         CC: [clang-15]
         RENEWAL: ["", "--disable-renewal"]
         CLIENT_TYPE: ["", "--enable-packetver-re", "--enable-packetver-zero"]
+        HTTPLIB: ["", "--with-http_parser=llhttp"]
         SANITIZER: ["--disable-manager", "--disable-manager --enable-sanitize=full"]
         PACKET_VERSION: ["--enable-packetver=20221024", "--enable-packetver=20130724"]
         exclude:
@@ -39,7 +40,7 @@ jobs:
       INSTALL_PACKAGES: ${{ matrix.CC }} mariadb-client libmariadbclient-dev-compat
       SQLHOST: mariadb
       CC: ${{ matrix.CC }}
-      CONFIGURE_FLAGS: CC=${{ matrix.CC }} --enable-debug --enable-Werror --enable-buildbot ${{ matrix.RENEWAL }} ${{ matrix.CLIENT_TYPE }} ${{ matrix.SANITIZER }} ${{ matrix.PACKET_VERSION }}
+      CONFIGURE_FLAGS: CC=${{ matrix.CC }} --enable-debug --enable-Werror --enable-buildbot ${{ matrix.RENEWAL }} ${{ matrix.HTTPLIB }} ${{ matrix.CLIENT_TYPE }} ${{ matrix.SANITIZER }} ${{ matrix.PACKET_VERSION }}
       PACKET_VERSION: ${{ matrix.PACKET_VERSION }}
     steps:
       - uses: actions/checkout@v1

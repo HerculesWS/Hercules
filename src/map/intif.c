@@ -34,6 +34,7 @@
 #include "map/log.h"
 #include "map/mail.h"
 #include "map/map.h"
+#include "map/mapiif.h"
 #include "map/mercenary.h"
 #include "map/party.h"
 #include "map/pc.h"
@@ -43,6 +44,9 @@
 #include "map/storage.h"
 #include "map/achievement.h"
 
+#include "common/apipackets.h"
+#include "common/charmappackets.h"
+#include "common/mapcharpackets.h"
 #include "common/memmgr.h"
 #include "common/nullpo.h"
 #include "common/packets_struct.h"
@@ -51,6 +55,7 @@
 #include "common/strlib.h"
 #include "common/timer.h"
 #include "common/packets.h"
+#include "common/chunked/wfifo.h"
 
 #include <fcntl.h>
 #include <signal.h>
@@ -910,21 +915,26 @@ static int intif_guild_notice(int guild_id, const char *mes1, const char *mes2)
 }
 
 // Request to change guild emblem
-static int intif_guild_emblem(int guild_id, int len, const char *data)
+static int intif_guild_emblem(int guild_id, int data_len, const char *data)
 {
+	nullpo_ret(data);
+
 	if (intif->CheckForCharServer())
 		return 0;
-	if(guild_id<=0 || len<0 || len>2000)
+	if (guild_id <= 0 || data_len < 0)
 		return 0;
-	nullpo_ret(data);
-	Assert_ret(len >= 0 && len < 32000);
-	WFIFOHEAD(inter_fd,len + 12);
-	WFIFOW(inter_fd,0)=0x303f;
-	WFIFOW(inter_fd,2)=len+12;
-	WFIFOL(inter_fd,4)=guild_id;
-	WFIFOL(inter_fd,8)=0;
-	memcpy(WFIFOP(inter_fd,12),data,len);
-	WFIFOSET(inter_fd,len+12);
+
+	WFIFO_CHUNKED_INIT(p, inter_fd, HEADER_MAPCHAR_GUILD_EMBLEM, PACKET_MAPCHAR_GUILD_EMBLEM, data, data_len) {
+		WFIFO_CHUNKED_BLOCK_START(p);
+		p->guild_id = guild_id;
+		p->unused = 0;
+		WFIFO_CHUNKED_BLOCK_END();
+	}
+	WFIFO_CHUNKED_FINAL_START(p);
+	p->guild_id = guild_id;
+	p->unused = 0;
+	WFIFO_CHUNKED_FINAL_END();
+
 	return 0;
 }
 
@@ -1272,17 +1282,51 @@ static void intif_parse_GuildCreated(int fd)
 }
 
 // ACK guild infos
-static void intif_parse_GuildInfo(int fd)
+static void intif_parse_GuildInfoEmblem(int fd)
 {
-	if (RFIFOW(fd,2) == 8) {
-		ShowWarning("intif: guild noinfo %u\n", RFIFOL(fd,4));
-		guild->recv_noinfo(RFIFOL(fd,4));
+	struct PACKET_CHARMAP_GUILD_INFO_EMBLEM *p = RFIFOP(fd, 0);
+
+	RFIFO_CHUNKED_INIT(p, p->packetLength - sizeof(struct PACKET_CHARMAP_GUILD_INFO_EMBLEM), intif->emblem_tmp);
+
+	RFIFO_CHUNKED_ERROR(p) {
+		intif->emblem_tmp_done = false;
+		intif->emblem_tmp_guild_id = 0;
+		intif->emblem_tmp_emblem_id = 0;
+		fifo_chunk_buf_clear(intif->emblem_tmp);
 		return;
 	}
-	if (RFIFOW(fd,2)!=sizeof(struct guild)+4)
-		ShowError("intif: guild info: data size mismatch - Gid: %u recv size: %d Expected size: %"PRIuS"\n",
-		          RFIFOL(fd,4), RFIFOW(fd,2), sizeof(struct guild)+4);
-	guild->recv_info(RFIFOP(fd,4));
+
+	RFIFO_CHUNKED_COMPLETE(p) {
+		intif->emblem_tmp_done = true;
+		intif->emblem_tmp_guild_id = p->guild_id;
+		intif->emblem_tmp_emblem_id = p->emblem_id;
+	}
+}
+
+// ACK guild infos
+static void intif_parse_GuildInfo(int fd)
+{
+	if (RFIFOW(fd, 2) == sizeof(struct PACKET_CHARMAP_GUILD_INFO_EMPTY)) {
+		struct PACKET_CHARMAP_GUILD_INFO_EMPTY *empty = RFIFOP(fd, 0);
+		ShowWarning("intif: guild noinfo %d\n", empty->guild_id);
+		guild->recv_noinfo(empty->guild_id);
+		return;
+	}
+	struct PACKET_CHARMAP_GUILD_INFO *p = RFIFOP(fd, 0);
+	if (p->packetLength != sizeof(struct PACKET_CHARMAP_GUILD_INFO))
+		ShowError("intif: guild info: data size mismatch - Gid: %d recv size: %d Expected size: %"PRIuS"\n",
+		          p->g.guild_id, p->packetLength, sizeof(struct PACKET_CHARMAP_GUILD_INFO));
+	if (intif->emblem_tmp_done == false ||
+	    intif->emblem_tmp_guild_id != p->g.guild_id ||
+	    intif->emblem_tmp_emblem_id != p->g.emblem_id) {
+		guild->recv_info(&p->g, NULL);
+	} else {
+		guild->recv_info(&p->g, &intif->emblem_tmp);
+	}
+	intif->emblem_tmp_done = false;
+	intif->emblem_tmp_guild_id = 0;
+	intif->emblem_tmp_emblem_id = 0;
+	fifo_chunk_buf_clear(intif->emblem_tmp);
 }
 
 // ACK adding guild member
@@ -1411,7 +1455,27 @@ static void intif_parse_GuildNotice(int fd)
 // ACK change of guild emblem
 static void intif_parse_GuildEmblem(int fd)
 {
-	guild->emblem_changed(RFIFOW(fd,2)-12, RFIFOL(fd,4), RFIFOL(fd,8), RFIFOP(fd,12));
+	struct PACKET_CHARMAP_GUILD_EMBLEM *p = RFIFOP(fd, 0);
+
+	// reset tmp emblem fields always for avoid reuse emblem buffer for other things [4144]
+	intif->emblem_tmp_done = false;
+	intif->emblem_tmp_guild_id = 0;
+	intif->emblem_tmp_emblem_id = 0;
+
+	RFIFO_CHUNKED_INIT(p, p->packetLength - sizeof(struct PACKET_CHARMAP_GUILD_EMBLEM), intif->emblem_tmp);
+
+	RFIFO_CHUNKED_ERROR(p) {
+		fifo_chunk_buf_clear(intif->emblem_tmp);
+		return;
+	}
+
+	RFIFO_CHUNKED_COMPLETE(p) {
+		guild->emblem_changed(intif->emblem_tmp.data_size,
+			p->guild_id,
+			p->emblem_id,
+			intif->emblem_tmp.data);
+		fifo_chunk_buf_clear(intif->emblem_tmp);
+	}
 }
 
 // Reply guild castle data request
@@ -2678,6 +2742,27 @@ static void intif_parse_GetItemsAck(int fd)
 	rodex->getItemsAck(sd, mail_id, opentype, count, &items[0]);
 }
 
+static void intif_request_agency_join_party(int char_id, int party_id, int map_index)
+{
+	WFIFOHEAD(inter_fd, sizeof(struct PACKET_MAPCHAR_AGENCY_JOIN_PARTY_REQ));
+	struct PACKET_MAPCHAR_AGENCY_JOIN_PARTY_REQ *p = WFIFOP(inter_fd, 0);
+	p->packetType = 0x3084;
+	p->char_id = char_id;
+	p->party_id = party_id;
+	p->map_index = map_index;
+	WFIFOSET(inter_fd, sizeof(struct PACKET_MAPCHAR_AGENCY_JOIN_PARTY_REQ));
+}
+
+static void intif_parse_agency_joinResult(int fd)
+{
+	const struct PACKET_CHARMAP_AGENCY_JOIN_PARTY *p = RFIFOP(fd, 0);
+	const int char_id = p->char_id;
+	const int result = p->result;
+	struct map_session_data *sd = map->charid2sd(char_id);
+	if (sd != NULL)
+		clif->adventurerAgencyResult(sd, result, "", "");
+}
+
 //-----------------------------------------------------------------
 // Communication from the inter server
 // Return a 0 (false) if there were any errors.
@@ -2686,6 +2771,10 @@ static int intif_parse(int fd)
 {
 	int packet_len, cmd;
 	cmd = RFIFOW(fd,0);
+
+	if (cmd == HEADER_API_PROXY_REQUEST)
+		return mapiif->parse_fromchar_api_proxy(fd);
+
 	// Verify ID of the packet
 	if (cmd < MIN_INTIF_PACKET_DB || cmd >= MAX_INTIF_PACKET_DB || packets->intif_db[cmd - MIN_INTIF_PACKET_DB] == 0) {
 		return 0;
@@ -2718,7 +2807,8 @@ static int intif_parse(int fd)
 		case 0x3825: intif->pPartyMove(fd); break;
 		case 0x3826: intif->pPartyBroken(fd); break;
 		case 0x3830: intif->pGuildCreated(fd); break;
-		case 0x3831: intif->pGuildInfo(fd); break;
+		case HEADER_CHARMAP_GUILD_INFO: intif->pGuildInfo(fd); break;
+		case HEADER_CHARMAP_GUILD_INFO_EMBLEM: intif->pGuildInfoEmblem(fd); break;
 		case 0x3832: intif->pGuildMemberAdded(fd); break;
 		case 0x3834: intif->pGuildMemberWithdraw(fd); break;
 		case 0x3835: intif->pGuildMemberInfoShort(fd); break;
@@ -2729,7 +2819,7 @@ static int intif_parse(int fd)
 		case 0x383c: intif->pGuildSkillUp(fd); break;
 		case 0x383d: intif->pGuildAlliance(fd); break;
 		case 0x383e: intif->pGuildNotice(fd); break;
-		case 0x383f: intif->pGuildEmblem(fd); break;
+		case HEADER_CHARMAP_GUILD_EMBLEM: intif->pGuildEmblem(fd); break;
 		case 0x3840: intif->pGuildCastleDataLoad(fd); break;
 		case 0x3843: intif->pGuildMasterChanged(fd); break;
 
@@ -2785,8 +2875,11 @@ static int intif_parse(int fd)
 		case 0x3899: intif->pGetZenyAck(fd); break;
 		case 0x389a: intif->pGetItemsAck(fd); break;
 
+		case 0x389b: intif->pAgencyJoinResult(fd); break;
+
 		// Clan System
 		case 0x3858: intif->pRecvClanMemberAction(fd); break;
+
 	default:
 		ShowError("intif_parse : unknown packet %d %x\n",fd,RFIFOW(fd,0));
 		return 0;
@@ -2794,6 +2887,11 @@ static int intif_parse(int fd)
 	// Skip packet
 	RFIFOSKIP(fd,packet_len);
 	return 1;
+}
+
+void intif_final(void)
+{
+	fifo_chunk_buf_clear(intif->emblem_tmp);
 }
 
 /*=====================================
@@ -2804,6 +2902,11 @@ static int intif_parse(int fd)
 void intif_defaults(void)
 {
 	intif = &intif_s;
+
+	fifo_chunk_buf_init(intif->emblem_tmp);
+	intif->emblem_tmp_done = false;
+	intif->emblem_tmp_guild_id = 0;
+	intif->emblem_tmp_emblem_id = 0;
 
 	/* funcs */
 	intif->parse = intif_parse;
@@ -2907,6 +3010,7 @@ void intif_defaults(void)
 	intif->pPartyBroken = intif_parse_PartyBroken;
 	intif->pGuildCreated = intif_parse_GuildCreated;
 	intif->pGuildInfo = intif_parse_GuildInfo;
+	intif->pGuildInfoEmblem = intif_parse_GuildInfoEmblem;
 	intif->pGuildMemberAdded = intif_parse_GuildMemberAdded;
 	intif->pGuildMemberWithdraw = intif_parse_GuildMemberWithdraw;
 	intif->pGuildMemberInfoShort = intif_parse_GuildMemberInfoShort;
@@ -2960,4 +3064,9 @@ void intif_defaults(void)
 	intif->pRecvClanMemberAction = intif_parse_RecvClanMemberAction;
 	/* Achievement System */
 	intif->pAchievementsLoad = intif_parse_achievements_load;
+	intif->request_agency_join_party = intif_request_agency_join_party;
+
+	intif->pAgencyJoinResult = intif_parse_agency_joinResult;
+
+	intif->final = intif_final;
 }

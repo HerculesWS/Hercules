@@ -22,6 +22,7 @@
 
 #include "common/hercules.h"
 #include "common/db.h"
+#include "common/extraconf.h"
 #include "common/memmgr.h"
 #include "common/mmo.h"
 #include "common/socket.h"
@@ -30,7 +31,27 @@
 PRAGMA_GCC5(GCC diagnostic push)
 PRAGMA_GCC5(GCC diagnostic ignored "-Wdiscarded-qualifiers")
 PRAGMA_GCC5(GCC diagnostic ignored "-Wsuggest-attribute=format")
-#if defined (HPMHOOKING_LOGIN)
+#if defined (HPMHOOKING_API)
+#define HPM_SERVER_TYPE SERVER_TYPE_API
+#define HPM_CORE_INCLUDE "HPMHooking/HPMHooking_api.HPMHooksCore.inc"
+#define HPM_HOOKS_INCLUDE "HPMHooking/HPMHooking_api.Hooks.inc"
+#define HPM_POINTS_INCLUDE "HPMHooking/HPMHooking_api.HookingPoints.inc"
+#define HPM_SOURCES_INCLUDE "HPMHooking/HPMHooking_api.sources.inc"
+#include "api/aclif.h"
+#include "api/aloginif.h"
+#include "api/api.h"
+#include "api/apisessiondata.h"
+#include "api/handlerfunc.h"
+#include "api/handlers.h"
+#include "api/httphandler.h"
+#include "api/httpparsehandler.h"
+#include "api/httpparser.h"
+#include "api/httpsender.h"
+#include "api/imageparser.h"
+#include "api/jsonparser.h"
+#include "api/jsonwriter.h"
+#include "api/mimepart.h"
+#elif defined (HPMHOOKING_LOGIN)
 #define HPM_SERVER_TYPE SERVER_TYPE_LOGIN
 #define HPM_CORE_INCLUDE "HPMHooking/HPMHooking_login.HPMHooksCore.inc"
 #define HPM_HOOKS_INCLUDE "HPMHooking/HPMHooking_login.Hooks.inc"
@@ -38,6 +59,7 @@ PRAGMA_GCC5(GCC diagnostic ignored "-Wsuggest-attribute=format")
 #define HPM_SOURCES_INCLUDE "HPMHooking/HPMHooking_login.sources.inc"
 #include "login/account.h"
 #include "login/ipban.h"
+#include "login/lapiif.h"
 #include "login/lclif.h"
 #include "login/lclif.p.h"
 #include "login/login.h"
@@ -50,9 +72,11 @@ PRAGMA_GCC5(GCC diagnostic ignored "-Wsuggest-attribute=format")
 #define HPM_HOOKS_INCLUDE "HPMHooking/HPMHooking_char.Hooks.inc"
 #define HPM_POINTS_INCLUDE "HPMHooking/HPMHooking_char.HookingPoints.inc"
 #define HPM_SOURCES_INCLUDE "HPMHooking/HPMHooking_char.sources.inc"
+#include "char/capiif.h"
 #include "char/char.h"
 #include "char/geoip.h"
 #include "char/int_achievement.h"
+#include "char/int_adventurer_agency.h"
 #include "char/int_auction.h"
 #include "char/int_clan.h"
 #include "char/int_elemental.h"
@@ -65,6 +89,7 @@ PRAGMA_GCC5(GCC diagnostic ignored "-Wsuggest-attribute=format")
 #include "char/int_quest.h"
 #include "char/int_rodex.h"
 #include "char/int_storage.h"
+#include "char/int_userconfig.h"
 #include "char/inter.h"
 #include "char/loginif.h"
 #include "char/mapif.h"
@@ -99,6 +124,7 @@ PRAGMA_GCC5(GCC diagnostic ignored "-Wsuggest-attribute=format")
 #include "map/log.h"
 #include "map/mail.h"
 #include "map/map.h"
+#include "map/mapiif.h"
 #include "map/mapreg.h"
 #include "map/mercenary.h"
 #include "map/messages.h"

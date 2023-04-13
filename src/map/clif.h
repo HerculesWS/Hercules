@@ -1338,7 +1338,10 @@ struct clif_interface {
 	void (*guild_positionchanged) (struct guild *g,int idx);
 	void (*guild_memberpositionchanged) (struct guild *g,int idx);
 	void (*guild_emblem) (struct map_session_data *sd,struct guild *g);
-	void (*guild_emblem_area) (struct block_list* bl);
+	void (*guild_emblem_clear) (struct map_session_data *sd,struct guild *g);
+	void (*guild_emblem_complete) (struct map_session_data *sd,struct guild *g);
+	void (*guild_emblem_body) (struct map_session_data *sd,struct guild *g);
+	void (*guild_emblem_id_area) (struct block_list* bl);
 	void (*guild_notice) (struct map_session_data* sd, struct guild* g);
 	void (*guild_message) (struct guild *g,int account_id,const char *mes,int len);
 	void (*guild_reqalliance) (struct map_session_data *sd,int account_id,const char *name);
@@ -1643,7 +1646,9 @@ struct clif_interface {
 	void (*pGuildRequestInfo) (int fd, struct map_session_data *sd);
 	void (*pGuildChangePositionInfo) (int fd, struct map_session_data *sd);
 	void (*pGuildChangeMemberPosition) (int fd, struct map_session_data *sd);
-	void (*pGuildRequestEmblem) (int fd,struct map_session_data *sd);
+	void (*pGuildRequestEmblem1) (int fd,struct map_session_data *sd);
+	void (*pGuildRequestEmblem2) (int fd,struct map_session_data *sd);
+	void (*pGuildRequestEmblem3) (int fd,struct map_session_data *sd);
 	void (*pGuildChangeEmblem) (int fd,struct map_session_data *sd);
 	void (*pGuildChangeNotice) (int fd, struct map_session_data* sd);
 	void (*pGuildInvite) (int fd,struct map_session_data *sd);
@@ -1967,6 +1972,11 @@ struct clif_interface {
 	void (*pDynamicnpcCreateRequest) (int fd, struct map_session_data *sd);
 	void (*dynamicnpc_create_result) (struct map_session_data *sd, enum dynamicnpc_create_result result);
 	void (*goldpc_info) (struct map_session_data *sd);
+
+	void (*pAdventuterAgencyJoinReq) (int fd, struct map_session_data *sd);
+	void (*adventurerAgencyResult) (struct map_session_data *sd, enum adventurer_agency_result result, const char *player_name, const char *party_name);
+	void (*adventurerAgencyJoinReq) (struct map_session_data *sd, struct map_session_data *tsd);
+	void (*pAdventuterAgencyJoinResult) (int fd, struct map_session_data *sd);
 };
 
 #ifdef HERCULES_CORE

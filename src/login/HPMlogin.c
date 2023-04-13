@@ -26,6 +26,7 @@
 
 #include "login/account.h"
 #include "login/ipban.h"
+#include "login/lapiif.h"
 #include "login/lclif.h"
 #include "login/lclif.p.h"
 #include "login/login.h"
@@ -39,6 +40,7 @@
 #include "common/db.h"
 #include "common/des.h"
 #include "common/ers.h"
+#include "common/extraconf.h"
 #include "common/md5calc.h"
 #include "common/memmgr.h"
 #include "common/mutex.h"

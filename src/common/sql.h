@@ -125,6 +125,12 @@ struct sql_interface {
 	///
 	/// @return SQL_SUCCESS or SQL_ERROR
 	int (*QueryStr) (struct Sql *self, const char *query);
+	/// Executes a query and fetch row.
+	/// Any previous result is freed.
+	/// The query is used directly.
+	///
+	/// @return SQL_SUCCESS or SQL_ERROR
+	int (*QueryStrFetch) (struct Sql *self, const char *query);
 	/// Returns the number of the AUTO_INCREMENT column of the last INSERT/UPDATE query.
 	///
 	/// @return Value of the auto-increment column

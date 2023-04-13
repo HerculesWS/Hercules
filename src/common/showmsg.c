@@ -618,8 +618,8 @@ static int vShowMessage_(enum msg_type flag, const char *string, va_list ap)
 		( flag == MSG_WARNING && showmsg->console_log&1 ) ||
 		( ( flag == MSG_ERROR || flag == MSG_SQL ) && showmsg->console_log&2 ) ||
 		( flag == MSG_DEBUG && showmsg->console_log&4 ) ) {//[Ind]
-		FILE *log = NULL;
-		if( (log = fopen(SERVER_TYPE == SERVER_TYPE_MAP ? "./log/map-msg_log.log" : "./log/unknown.log","a+")) ) {
+		FILE *log = fopen(showmsg->getLogFileName(), "a+");
+		if (log != NULL) {
 			char timestring[255];
 			time_t curtime;
 			time(&curtime);
@@ -846,6 +846,23 @@ static void showmsg_showFatalError(const char *string, ...)
 	va_end(ap);
 }
 
+static const char *showmsg_getLogFileName(void)
+{
+	switch (SERVER_TYPE) {
+		case SERVER_TYPE_LOGIN:
+			return "./log/login-msg_log.log";
+		case SERVER_TYPE_CHAR:
+			return "./log/char-msg_log.log";
+		case SERVER_TYPE_MAP:
+			return "./log/map-msg_log.log";
+		case SERVER_TYPE_API:
+			return "./log/api-msg_log.log";
+		case SERVER_TYPE_UNKNOWN:
+		default:
+			return "./log/unknown.log";
+	}
+}
+
 static void showmsg_init(void)
 {
 }
@@ -887,4 +904,5 @@ void showmsg_defaults(void)
 	showmsg->showError = showmsg_showError;
 	showmsg->showFatalError = showmsg_showFatalError;
 	showmsg->showConfigWarning = showmsg_showConfigWarning;
+	showmsg->getLogFileName = showmsg_getLogFileName;
 }

@@ -73,6 +73,9 @@
     <ClCompile Include="..\src\map\map.c">
       <Filter>map</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\map\mapiif.c">
+      <Filter>map</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\map\mapreg_sql.c">
       <Filter>map</Filter>
     </ClCompile>
@@ -146,6 +149,9 @@
       <Filter>common</Filter>
     </ClCompile>
     <ClCompile Include="..\src\common\ers.c">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\common\extraconf.c">
       <Filter>common</Filter>
     </ClCompile>
     <ClCompile Include="..\src\common\grfio.c">
@@ -309,6 +315,9 @@
     <ClInclude Include="..\src\map\map.h">
       <Filter>map</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\map\mapiif.h">
+      <Filter>map</Filter>
+    </ClInclude>
     <ClInclude Include="..\src\map\mapreg.h">
       <Filter>map</Filter>
     </ClInclude>
@@ -397,6 +406,9 @@
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="..\src\common\ers.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\extraconf.h">
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="..\src\common\grfio.h">

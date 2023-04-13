@@ -151,6 +151,9 @@ struct party_interface {
 	void (*check_state) (struct party_data *p);
 	struct party_booking_ad_info* (*create_booking_data) (void);
 	int (*db_final) (union DBKey key, struct DBData *data, va_list ap);
+
+	bool (*is_leader) (struct map_session_data *sd, const struct party_data *p);
+	void (*agency_request_join)(struct map_session_data *sd, struct map_session_data *tsd);
 };
 
 #ifdef HERCULES_CORE

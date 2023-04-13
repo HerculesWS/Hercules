@@ -22,13 +22,19 @@
 
 #include "common/hercules.h"
 #include "common/mmo.h"
+#include "common/chunked/rfifo.h"
 
 struct rodex_item;
+enum adventurer_agency_result;
+
+typedef int (*SendAll_func)(int fd, va_list args);
 
 /**
  * mapif interface
  **/
 struct mapif_interface {
+	struct fifo_chunk_buf emblem_tmp;
+	void (*final) (void);
 	void (*ban) (int id, unsigned int flag, int status);
 	void (*server_init) (void);
 	void (*server_destroy) (void);
@@ -64,6 +70,8 @@ struct mapif_interface {
 	int (*guild_created) (int fd, int account_id, struct guild *g);
 	int (*guild_noinfo) (int guild_id);
 	int (*guild_info) (const struct guild *g);
+	int (*guild_info_basic) (const struct guild *g);
+	int (*guild_info_emblem) (const struct guild *g);
 	int (*guild_memberadded) (int guild_id, int account_id, int char_id, int flag);
 	int (*guild_withdraw) (int guild_id, int account_id, int char_id, int flag, const char *name, const char *mes);
 	int (*guild_memberinfoshort) (struct guild *g, int idx);
@@ -89,7 +97,7 @@ struct mapif_interface {
 	int (*parse_GuildSkillUp) (int fd, int guild_id, uint16 skill_id, int account_id, int max);
 	int (*parse_GuildAlliance) (int fd, int guild_id1, int guild_id2, int account_id1, int account_id2, int flag);
 	int (*parse_GuildNotice) (int fd, int guild_id, const char *mes1, const char *mes2);
-	int (*parse_GuildEmblem) (int fd, int len, int guild_id, int dummy, const char *data);
+	int (*parse_GuildEmblem) (int fd);
 	int (*parse_GuildCastleDataLoad) (int fd, int len, const int *castle_ids);
 	int (*parse_GuildCastleDataSave) (int fd, int castle_id, int index, int value);
 	int (*parse_GuildMasterChange) (int fd, int guild_id, const char* name, int len);
@@ -184,6 +192,7 @@ struct mapif_interface {
 	// Clan System
 	int (*parse_ClanMemberKick) (int fd, int clan_id, int kick_interval);
 	int (*parse_ClanMemberCount) (int fd, int clan_id, int kick_interval);
+	void (*agency_joinPartyResult) (int fd, int char_id, enum adventurer_agency_result result);
 };
 
 #ifdef HERCULES_CORE

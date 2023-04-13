@@ -795,6 +795,20 @@ static int inter_party_CharOffline(int char_id, int party_id)
 	return 1;
 }
 
+static int inter_party_is_leader(struct party_data *p, int char_id)
+{
+	nullpo_ret(p);
+
+	for (int i = 0; i < MAX_PARTY; i++) {
+		if (p->party.member[i].char_id != char_id)
+			continue;
+
+		return p->party.member[i].leader;
+	}
+
+	return -1;
+}
+
 void inter_party_defaults(void)
 {
 	inter_party = &inter_party_s;
@@ -824,4 +838,5 @@ void inter_party_defaults(void)
 	inter_party->change_map = inter_party_change_map;
 	inter_party->disband = inter_party_disband;
 	inter_party->change_leader = inter_party_change_leader;
+	inter_party->is_leader = inter_party_is_leader;
 }

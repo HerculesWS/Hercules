@@ -45,6 +45,7 @@
 #include "map/itemdb.h"
 #include "map/log.h"
 #include "map/macro.h"
+#include "map/mapiif.h"
 #include "map/mail.h"
 #include "map/mapreg.h"
 #include "map/mercenary.h"
@@ -71,6 +72,7 @@
 #include "common/console.h"
 #include "common/core.h"
 #include "common/ers.h"
+#include "common/extraconf.h"
 #include "common/grfio.h"
 #include "common/md5calc.h"
 #include "common/memmgr.h"
@@ -4190,7 +4192,7 @@ static bool map_config_read_database(const char *filename, struct config_t *conf
 
 	if (libconfig->setting_lookup_int(setting, "autosave_time", &map->autosave_interval) == CONFIG_TRUE) {
 		if (map->autosave_interval < 1) // Revert to default saving
-			map->autosave_interval = DEFAULT_AUTOSAVE_INTERVAL;
+			map->autosave_interval = DEFAULT_MAP_AUTOSAVE_INTERVAL;
 		else
 			map->autosave_interval *= 1000; // Pass from s to ms
 	}
@@ -6544,6 +6546,9 @@ int do_final(void)
 	stylist->final();
 	enchantui->final();
 	goldpc->final();
+	mapiif->final();
+	intif->final();
+	extraconf->final();
 
 	HPM_map_do_final();
 
@@ -6712,6 +6717,7 @@ static void map_cp_defaults(void)
 
 static void map_load_defaults(void)
 {
+	extraconf_defaults();
 	mapindex_defaults();
 	map_defaults();
 	mapit_defaults();
@@ -6763,6 +6769,7 @@ static void map_load_defaults(void)
 	grader_defaults();
 	enchantui_defaults();
 	goldpc_defaults();
+	mapiif_defaults();
 }
 /**
  * --run-once handler
@@ -6925,6 +6932,7 @@ int do_init(int argc, char *argv[])
 #endif
 
 	map_load_defaults();
+	extraconf->init();
 
 	map->INTER_CONF_NAME         = aStrdup("conf/common/inter-server.conf");
 	map->LOG_CONF_NAME           = aStrdup("conf/map/logs.conf");
@@ -6995,6 +7003,7 @@ int do_init(int argc, char *argv[])
 				chrif->setip(ip_str);
 		}
 
+		extraconf->read_emblems();
 		battle->config_read(map->BATTLE_CONF_FILENAME, false);
 		atcommand->msg_read(map->MSG_CONF_NAME, false);
 		map->inter_config_read(map->INTER_CONF_NAME, false);
@@ -7090,6 +7099,7 @@ int do_init(int argc, char *argv[])
 	duel->init(minimal);
 	vending->init(minimal);
 	rodex->init(minimal);
+	mapiif->init(minimal);
 
 	if (map->scriptcheck) {
 		bool failed = map->extra_scripts_count > 0 ? false : true;
@@ -7166,7 +7176,7 @@ void map_defaults(void)
 
 	sprintf(map->wisp_server_name ,"Server"); // can be modified in char-server configuration file
 
-	map->autosave_interval = DEFAULT_AUTOSAVE_INTERVAL;
+	map->autosave_interval = DEFAULT_MAP_AUTOSAVE_INTERVAL;
 	map->minsave_interval = 100;
 	map->save_settings = 0xFFFF;
 	map->agit_flag = 0;

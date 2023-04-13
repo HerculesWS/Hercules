@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="..\src\map\achievement.c">
@@ -68,6 +68,9 @@
       <Filter>map</Filter>
     </ClCompile>
     <ClCompile Include="..\src\map\map.c">
+      <Filter>map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\map\mapiif.c">
       <Filter>map</Filter>
     </ClCompile>
     <ClCompile Include="..\src\map\mapreg_sql.c">
@@ -143,6 +146,9 @@
       <Filter>common</Filter>
     </ClCompile>
     <ClCompile Include="..\src\common\ers.c">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\common\extraconf.c">
       <Filter>common</Filter>
     </ClCompile>
     <ClCompile Include="..\src\common\grfio.c">
@@ -396,6 +402,9 @@
     <ClInclude Include="..\src\common\ers.h">
       <Filter>common</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\common\extraconf.h">
+      <Filter>common</Filter>
+    </ClInclude>
     <ClInclude Include="..\src\common\grfio.h">
       <Filter>common</Filter>
     </ClInclude>
@@ -535,6 +544,33 @@
       <Filter>map</Filter>
     </ClInclude>
     <ClInclude Include="..\src\map\goldpc.h">
+      <Filter>map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\map\mapdefines.h">
+      <Filter>map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\map\messages.h">
+      <Filter>map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\map\messages_ad.h">
+      <Filter>map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\map\messages_main.h">
+      <Filter>map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\map\messages_re.h">
+      <Filter>map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\map\messages_sak.h">
+      <Filter>map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\map\messages_zero.h">
+      <Filter>map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\map\packets_shuffle_re.h">
+      <Filter>map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\map\unitdefines.h">
       <Filter>map</Filter>
     </ClInclude>
   </ItemGroup>

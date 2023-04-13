@@ -28,6 +28,7 @@
 #include "char/mapif.h"
 #include "common/cbasetypes.h"
 #include "common/db.h"
+#include "common/mapcharpackets.h"
 #include "common/memmgr.h"
 #include "common/mmo.h"
 #include "common/nullpo.h"
@@ -181,7 +182,7 @@ static bool inter_guild_tosql(struct guild *g, int flag)
 
 		if (flag & GS_EMBLEM)
 		{
-			char emblem_data[sizeof(g->emblem_data)*2+1];
+			char *emblem_data = aMalloc(g->emblem_len * 2 + 1);
 			char* pData = emblem_data;
 
 			strcat(t_info, " emblem");
@@ -193,6 +194,7 @@ static bool inter_guild_tosql(struct guild *g, int flag)
 			}
 			*pData = 0;
 			StrBuf->Printf(&buf, "`emblem_len`=%d, `emblem_id`=%d, `emblem_data`='%s'", g->emblem_len, g->emblem_id, emblem_data);
+			aFree(emblem_data);
 			add_comma = true;
 		}
 		if (flag & GS_BASIC)
@@ -412,6 +414,9 @@ static struct guild *inter_guild_fromsql(int guild_id)
 	SQL->GetData(inter->sql_handle, 12, &data, &len); g->emblem_len = atoi(data);
 	SQL->GetData(inter->sql_handle, 13, &data, &len); g->emblem_id = atoi(data);
 	SQL->GetData(inter->sql_handle, 14, &data, &len);
+
+	g->emblem_data = aMalloc(g->emblem_len);
+
 	// convert emblem data from hexadecimal to binary
 	//TODO: why not store it in the db as binary directly? [ultramage]
 	for( i = 0, p = g->emblem_data; i < g->emblem_len; ++i, ++p )
@@ -439,6 +444,7 @@ static struct guild *inter_guild_fromsql(int guild_id)
 		"FROM `%s` g LEFT JOIN `%s` c ON c.`char_id` = g.`char_id` WHERE g.`guild_id`='%d' ORDER BY `position`", guild_member_db, char_db, guild_id) )
 	{
 		Sql_ShowDebug(inter->sql_handle);
+		aFree(g->emblem_data);
 		aFree(g);
 		return NULL;
 	}
@@ -476,6 +482,7 @@ static struct guild *inter_guild_fromsql(int guild_id)
 	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `position`,`name`,`mode`,`exp_mode` FROM `%s` WHERE `guild_id`='%d'", guild_position_db, guild_id) )
 	{
 		Sql_ShowDebug(inter->sql_handle);
+		aFree(g->emblem_data);
 		aFree(g);
 		return NULL;
 	}
@@ -498,6 +505,7 @@ static struct guild *inter_guild_fromsql(int guild_id)
 	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `opposition`,`alliance_id`,`name` FROM `%s` WHERE `guild_id`='%d'", guild_alliance_db, guild_id) )
 	{
 		Sql_ShowDebug(inter->sql_handle);
+		aFree(g->emblem_data);
 		aFree(g);
 		return NULL;
 	}
@@ -514,6 +522,7 @@ static struct guild *inter_guild_fromsql(int guild_id)
 	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `account_id`,`char_id`,`name`,`mes` FROM `%s` WHERE `guild_id`='%d'", guild_expulsion_db, guild_id) )
 	{
 		Sql_ShowDebug(inter->sql_handle);
+		aFree(g->emblem_data);
 		aFree(g);
 		return NULL;
 	}
@@ -531,6 +540,7 @@ static struct guild *inter_guild_fromsql(int guild_id)
 	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `id`,`lv` FROM `%s` WHERE `guild_id`='%d' ORDER BY `id`", guild_skill_db, guild_id) )
 	{
 		Sql_ShowDebug(inter->sql_handle);
+		aFree(g->emblem_data);
 		aFree(g);
 		return NULL;
 	}
@@ -778,10 +788,12 @@ static int inter_guild_db_final(union DBKey key, struct DBData *data, va_list ap
 {
 	struct guild *g = DB->data2ptr(data);
 	nullpo_ret(g);
-	if (g->save_flag&GS_MASK) {
-		inter_guild->tosql(g, g->save_flag&GS_MASK);
+	if (g->save_flag & GS_MASK) {
+		inter_guild->tosql(g, g->save_flag & GS_MASK);
+		aFree(g->emblem_data);
 		return 1;
 	}
+	aFree(g->emblem_data);
 	return 0;
 }
 
@@ -1540,11 +1552,10 @@ static bool inter_guild_update_emblem(int len, int guild_id, const char *data)
 	if(g==NULL)
 		return false;
 
-	if (len > sizeof(g->emblem_data))
-		len = sizeof(g->emblem_data);
-
-	memcpy(g->emblem_data,data,len);
-	g->emblem_len=len;
+	if (len > g->emblem_len)
+		g->emblem_data = aReallocz(g->emblem_data, len);
+	memcpy(g->emblem_data, data, len);
+	g->emblem_len = len;
 	g->emblem_id++;
 	g->save_flag |= GS_EMBLEM; //Change guild
 	mapif->guild_emblem(g);
@@ -1629,6 +1640,23 @@ static bool inter_guild_change_leader(int guild_id, const char *name, int len)
 	return true;
 }
 
+static bool inter_guild_is_guild_master(int char_id, int guild_id)
+{
+	if (SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT g.* FROM `%s` g LEFT JOIN `%s` c ON g.`char_id` = c.`char_id` "
+		"WHERE c.char_id = '%d' AND g.guild_id = '%d' AND g.`master` = c.`name`",
+		guild_db, char_db, char_id, guild_id))
+	{
+		Sql_ShowDebug(inter->sql_handle);
+		return false;
+	}
+
+	if (SQL_SUCCESS != SQL->NextRow(inter->sql_handle))
+		return false;
+
+	SQL->FreeResult(inter->sql_handle);
+	return true;
+}
+
 // Communication from the map server
 // - Can analyzed only one by one packet
 // Data packet length that you set to inter.c
@@ -1653,7 +1681,9 @@ static int inter_guild_parse_frommap(int fd)
 	case 0x303C: mapif->parse_GuildSkillUp(fd,RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOL(fd,14)); break;
 	case 0x303D: mapif->parse_GuildAlliance(fd,RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOL(fd,14),RFIFOB(fd,18)); break;
 	case 0x303E: mapif->parse_GuildNotice(fd, RFIFOL(fd,2), RFIFOP(fd,6), RFIFOP(fd,66)); break;
-	case 0x303F: mapif->parse_GuildEmblem(fd, RFIFOW(fd,2)-12, RFIFOL(fd,4), RFIFOL(fd,8), RFIFOP(fd,12)); break;
+	case HEADER_MAPCHAR_GUILD_EMBLEM:
+		mapif->parse_GuildEmblem(fd);
+		break;
 	case 0x3040: mapif->parse_GuildCastleDataLoad(fd, RFIFOW(fd,2), RFIFOP(fd,4)); break;
 	case 0x3041: mapif->parse_GuildCastleDataSave(fd,RFIFOW(fd,2),RFIFOB(fd,4),RFIFOL(fd,5)); break;
 
@@ -1713,4 +1743,5 @@ void inter_guild_defaults(void)
 	inter_guild->update_emblem = inter_guild_update_emblem;
 	inter_guild->update_castle_data = inter_guild_update_castle_data;
 	inter_guild->change_leader = inter_guild_change_leader;
+	inter_guild->is_guild_master = inter_guild_is_guild_master;
 }

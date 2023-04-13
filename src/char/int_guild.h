@@ -84,6 +84,7 @@ struct inter_guild_interface {
 	bool (*update_emblem) (int len, int guild_id, const char *data);
 	bool (*update_castle_data) (int castle_id, int index, int value);
 	bool (*change_leader) (int guild_id, const char *name, int len);
+	bool (*is_guild_master) (int char_id, int guild_id);
 };
 
 #ifdef HERCULES_CORE

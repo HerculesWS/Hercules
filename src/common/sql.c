@@ -306,6 +306,41 @@ static int Sql_QueryStr(struct Sql *self, const char *query)
 	return SQL_SUCCESS;
 }
 
+static int Sql_QueryStrFetch(struct Sql *self, const char *query)
+{
+	if( self == NULL )
+		return SQL_ERROR;
+
+	SQL->FreeResult(self);
+	StrBuf->Clear(&self->buf);
+	StrBuf->AppendStr(&self->buf, query);
+	if( mysql_real_query(&self->handle, StrBuf->Value(&self->buf), (unsigned long)StrBuf->Length(&self->buf)) )
+	{
+		ShowSQL("DB error - %s\n", mysql_error(&self->handle));
+		hercules_mysql_error_handler(mysql_errno(&self->handle));
+		return SQL_ERROR;
+	}
+	self->result = mysql_store_result(&self->handle);
+	if( mysql_errno(&self->handle) != 0 )
+	{
+		ShowSQL("DB error - %s\n", mysql_error(&self->handle));
+		hercules_mysql_error_handler(mysql_errno(&self->handle));
+		return SQL_ERROR;
+	}
+
+	if (self->result != NULL) {
+		self->row = mysql_fetch_row(self->result);
+		if (self->row) {
+			self->lengths = mysql_fetch_lengths(self->result);
+			return SQL_SUCCESS;
+		}
+		self->lengths = NULL;
+		if (mysql_errno(&self->handle) == 0)
+			return SQL_NO_DATA;
+	}
+	return SQL_ERROR;
+}
+
 /// Returns the number of the AUTO_INCREMENT column of the last INSERT/UPDATE query.
 static uint64 Sql_LastInsertId(struct Sql *self)
 {
@@ -1112,6 +1147,7 @@ void sql_defaults(void)
 	SQL->Query = Sql_Query;
 	SQL->QueryV = Sql_QueryV;
 	SQL->QueryStr = Sql_QueryStr;
+	SQL->QueryStrFetch = Sql_QueryStrFetch;
 	SQL->LastInsertId = Sql_LastInsertId;
 	SQL->NumColumns = Sql_NumColumns;
 	SQL->NumRows = Sql_NumRows;

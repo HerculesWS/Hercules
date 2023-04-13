@@ -39,6 +39,8 @@
 #include "char/int_storage.h"
 #include "char/inter.h"
 #include "common/cbasetypes.h"
+#include "common/charmappackets.h"
+#include "common/mapcharpackets.h"
 #include "common/memmgr.h"
 #include "common/mmo.h"
 #include "common/nullpo.h"
@@ -48,6 +50,7 @@
 #include "common/socket.h"
 #include "common/sql.h"
 #include "common/strlib.h"
+#include "common/chunked/wfifo.h"
 
 #include <stdlib.h>
 
@@ -456,24 +459,54 @@ static int mapif_guild_created(int fd, int account_id, struct guild *g)
 // Guild not found
 static int mapif_guild_noinfo(int guild_id)
 {
-	unsigned char buf[12];
-	WBUFW(buf, 0) = 0x3831;
-	WBUFW(buf, 2) = 8;
-	WBUFL(buf, 4) = guild_id;
+	struct PACKET_CHARMAP_GUILD_INFO_EMPTY p;
+	p.packetType = HEADER_CHARMAP_GUILD_INFO;
+	p.packetLength = sizeof(struct PACKET_CHARMAP_GUILD_INFO_EMPTY);
+	p.guild_id = guild_id;
 	ShowWarning("int_guild: info not found %d\n", guild_id);
-	mapif->send(buf, 8);
+	mapif->send((const unsigned char *)&p, p.packetLength);
+	return 0;
+}
+
+static int mapif_guild_info(const struct guild *g)
+{
+	mapif->guild_info_emblem(g);
+	mapif->guild_info_basic(g);
+	return 0;
+}
+
+// Send emblem before guild info
+static int mapif_guild_info_emblem(const struct guild *g)
+{
+	nullpo_ret(g);
+
+	int fd = chr->map_server.fd;
+	if (fd < 0)
+		return -1;
+
+	WFIFO_CHUNKED_INIT(p, fd, HEADER_CHARMAP_GUILD_INFO_EMBLEM, PACKET_CHARMAP_GUILD_INFO_EMBLEM, g->emblem_data, g->emblem_len) {
+		WFIFO_CHUNKED_BLOCK_START(p);
+		p->guild_id = g->guild_id;
+		p->emblem_id = g->emblem_id;
+		WFIFO_CHUNKED_BLOCK_END();
+	}
+	WFIFO_CHUNKED_FINAL_START(p);
+	p->guild_id = g->guild_id;
+	p->emblem_id = g->emblem_id;
+	WFIFO_CHUNKED_FINAL_END();
 	return 0;
 }
 
 // Send guild info
-static int mapif_guild_info(const struct guild *g)
+static int mapif_guild_info_basic(const struct guild *g)
 {
-	unsigned char buf[8 + sizeof(struct guild)];
 	nullpo_ret(g);
-	WBUFW(buf, 0) = 0x3831;
-	WBUFW(buf, 2) = 4 + sizeof(struct guild);
-	memcpy(buf + 4, g, sizeof(struct guild));
-	mapif->send(buf, WBUFW(buf, 2));
+
+	struct PACKET_CHARMAP_GUILD_INFO p;
+	p.packetType = HEADER_CHARMAP_GUILD_INFO;
+	p.packetLength = sizeof(struct PACKET_CHARMAP_GUILD_INFO);
+	memcpy(&p.g, g, sizeof(struct guild));
+	mapif->send((const unsigned char *)&p, p.packetLength);
 	return 0;
 }
 
@@ -635,14 +668,22 @@ static int mapif_guild_notice(struct guild *g)
 // Send emblem data
 static int mapif_guild_emblem(struct guild *g)
 {
-	unsigned char buf[12 + sizeof(g->emblem_data)];
 	nullpo_ret(g);
-	WBUFW(buf, 0) = 0x383f;
-	WBUFW(buf, 2) = g->emblem_len+12;
-	WBUFL(buf, 4) = g->guild_id;
-	WBUFL(buf, 8) = g->emblem_id;
-	memcpy(WBUFP(buf, 12), g->emblem_data, g->emblem_len);
-	mapif->send(buf, WBUFW(buf, 2));
+
+	int fd = chr->map_server.fd;
+	if (fd < 0)
+		return -1;
+
+	WFIFO_CHUNKED_INIT(p, fd, HEADER_CHARMAP_GUILD_EMBLEM, PACKET_CHARMAP_GUILD_EMBLEM, g->emblem_data, g->emblem_len) {
+		WFIFO_CHUNKED_BLOCK_START(p);
+		p->guild_id = g->guild_id;
+		p->emblem_id = g->emblem_id;
+		WFIFO_CHUNKED_BLOCK_END();
+	}
+	WFIFO_CHUNKED_FINAL_START(p);
+	p->guild_id = g->guild_id;
+	p->emblem_id = g->emblem_id;
+	WFIFO_CHUNKED_FINAL_END();
 	return 0;
 }
 
@@ -786,9 +827,23 @@ static int mapif_parse_GuildNotice(int fd, int guild_id, const char *mes1, const
 	return 0;
 }
 
-static int mapif_parse_GuildEmblem(int fd, int len, int guild_id, int dummy, const char *data)
+static int mapif_parse_GuildEmblem(int fd)
 {
-	inter_guild->update_emblem(len, guild_id, data);
+	struct PACKET_MAPCHAR_GUILD_EMBLEM *p = RFIFOP(fd, 0);
+	RFIFO_CHUNKED_INIT(p, p->packetLength - sizeof(struct PACKET_MAPCHAR_GUILD_EMBLEM), mapif->emblem_tmp);
+
+	RFIFO_CHUNKED_ERROR(p) {
+		fifo_chunk_buf_clear(mapif->emblem_tmp);
+		return 0;
+	}
+
+	RFIFO_CHUNKED_COMPLETE(p) {
+		inter_guild->update_emblem(mapif->emblem_tmp.data_size,
+			p->guild_id,
+			p->data);
+		fifo_chunk_buf_clear(mapif->emblem_tmp);
+	}
+
 	return 0;
 }
 
@@ -2297,10 +2352,29 @@ static void mapif_rodex_getitemsack(int char_id, int64 mail_id, uint8 opentype, 
 	mapif->send(buf, 16 + sizeof(struct rodex_item) * RODEX_MAX_ITEM);
 }
 
+static void mapif_agency_joinPartyResult(int fd, int char_id, enum adventurer_agency_result result)
+{
+	WFIFOHEAD(fd, sizeof(struct PACKET_CHARMAP_AGENCY_JOIN_PARTY));
+	struct PACKET_CHARMAP_AGENCY_JOIN_PARTY *p = WFIFOP(fd, 0);
+
+	p->packetType = 0x389b;
+	p->char_id = char_id;
+	p->result = result;
+	WFIFOSET(fd, sizeof(struct PACKET_CHARMAP_AGENCY_JOIN_PARTY));
+}
+
+void mapif_final(void)
+{
+	fifo_chunk_buf_clear(mapif->emblem_tmp);
+}
+
 void mapif_defaults(void)
 {
 	mapif = &mapif_s;
 
+	fifo_chunk_buf_init(mapif->emblem_tmp);
+
+	mapif->final = mapif_final;
 	mapif->ban = mapif_ban;
 	mapif->server_init = mapif_server_init;
 	mapif->server_destroy = mapif_server_destroy;
@@ -2336,6 +2410,8 @@ void mapif_defaults(void)
 	mapif->guild_created = mapif_guild_created;
 	mapif->guild_noinfo = mapif_guild_noinfo;
 	mapif->guild_info = mapif_guild_info;
+	mapif->guild_info_basic = mapif_guild_info_basic;
+	mapif->guild_info_emblem = mapif_guild_info_emblem;
 	mapif->guild_memberadded = mapif_guild_memberadded;
 	mapif->guild_withdraw = mapif_guild_withdraw;
 	mapif->guild_memberinfoshort = mapif_guild_memberinfoshort;
@@ -2457,4 +2533,5 @@ void mapif_defaults(void)
 	/* Clan System */
 	mapif->parse_ClanMemberKick = mapif_parse_ClanMemberKick;
 	mapif->parse_ClanMemberCount = mapif_parse_ClanMemberCount;
+	mapif->agency_joinPartyResult = mapif_agency_joinPartyResult;
 }

@@ -400,7 +400,7 @@ CREATE TABLE IF NOT EXISTS `guild` (
   `mes2` VARCHAR(120) NOT NULL DEFAULT '',
   `emblem_len` INT UNSIGNED NOT NULL DEFAULT '0',
   `emblem_id` INT UNSIGNED NOT NULL DEFAULT '0',
-  `emblem_data` blob,
+  `emblem_data` mediumblob,
   PRIMARY KEY (`guild_id`,`char_id`),
   UNIQUE KEY `guild_id` (`guild_id`),
   KEY `char_id` (`char_id`)
@@ -963,6 +963,10 @@ INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1628121360); -- 2021-08-0
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1634838524); -- 2021-10-21--18-49.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1641405640); -- 2022-01-05--19-00.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1665257750); -- 2022-10-08--08-35.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1599908598); -- 2020-09-12--14-02.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1613840320); -- 2021-02-20--19-57.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1618058468); -- 2021-04-10--15-36.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1653155461); -- 2022-05-21--29-49.sql
 
 --
 -- Table structure for table `storage`
@@ -1105,3 +1109,45 @@ CREATE TABLE IF NOT EXISTS `npc_expanded_barter_data` (
     `currencyId4`, `currencyAmount4`, `currencyRefine4`
 )
 ) ENGINE=MyISAM;
+
+-- char server db, but with account_id only
+CREATE TABLE IF NOT EXISTS `emotes` (
+  `account_id` INT UNSIGNED NOT NULL DEFAULT '0',
+  `emote0` VARCHAR(50) NOT NULL DEFAULT '',
+  `emote1` VARCHAR(50) NOT NULL DEFAULT '',
+  `emote2` VARCHAR(50) NOT NULL DEFAULT '',
+  `emote3` VARCHAR(50) NOT NULL DEFAULT '',
+  `emote4` VARCHAR(50) NOT NULL DEFAULT '',
+  `emote5` VARCHAR(50) NOT NULL DEFAULT '',
+  `emote6` VARCHAR(50) NOT NULL DEFAULT '',
+  `emote7` VARCHAR(50) NOT NULL DEFAULT '',
+  `emote8` VARCHAR(50) NOT NULL DEFAULT '',
+  `emote9` VARCHAR(50) NOT NULL DEFAULT '',
+  PRIMARY KEY (`account_id`),
+  KEY `account_id` (`account_id`)
+) CHARACTER SET utf8mb4 ENGINE=MyISAM;
+
+-- char server db, but with account_id only
+CREATE TABLE IF NOT EXISTS `hotkeys` (
+  `account_id` INT UNSIGNED NOT NULL DEFAULT '0',
+  `tab` INT UNSIGNED NOT NULL DEFAULT 0,
+  `desc` VARCHAR(116) NOT NULL DEFAULT '',
+  `index` INT UNSIGNED NOT NULL DEFAULT 0,
+  `key1` INT UNSIGNED NOT NULL DEFAULT 0,
+  `key2` INT UNSIGNED NOT NULL DEFAULT 0,
+  PRIMARY KEY (`account_id`, `tab`, `index`, `key1`, `key2`),
+  KEY `key` (`account_id`, `tab`)
+) CHARACTER SET utf8mb4 ENGINE=MyISAM;
+
+CREATE TABLE IF NOT EXISTS `adventurer_agency` (
+  `char_id` INT UNSIGNED NOT NULL DEFAULT '0',
+  `char_name` VARCHAR(24) NOT NULL DEFAULT '',
+  `party_id` INT UNSIGNED NOT NULL DEFAULT '0',
+  `min_level` INT UNSIGNED NOT NULL DEFAULT 0,
+  `max_level` INT UNSIGNED NOT NULL DEFAULT 0,
+  `type` INT UNSIGNED NOT NULL DEFAULT 0,
+  `flags` INT UNSIGNED NOT NULL DEFAULT 0,
+  `message` VARCHAR(24) NOT NULL DEFAULT '',
+  PRIMARY KEY (`char_id`),
+  UNIQUE KEY `party` (`party_id`)
+) CHARACTER SET utf8mb4 ENGINE=MyISAM;

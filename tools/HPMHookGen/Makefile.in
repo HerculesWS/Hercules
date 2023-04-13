@@ -22,20 +22,23 @@
 @SET_MAKE@
 
 COMMON_D = ../../src/common
+API_D = ../../src/api
 MAP_D = ../../src/map
 CHAR_D = ../../src/char
 LOGIN_D = ../../src/login
 PLUGIN_D = ../../src/plugins
 COMMON_C = $(wildcard $(COMMON_D)/*.c)
 COMMON_H = $(filter-out $(COMMON_D)/HPMDataCheck.%,$(wildcard $(COMMON_D)/*.h))
+API_C = $(wildcard $(API_D)/*.c)
+API_H = $(wildcard $(API_D)/*.h)
 MAP_C = $(wildcard $(MAP_D)/*.c)
 MAP_H = $(wildcard $(MAP_D)/*.h)
 CHAR_C = $(wildcard $(CHAR_D)/*.c)
 CHAR_H = $(wildcard $(CHAR_D)/*.h)
 LOGIN_C = $(wildcard $(LOGIN_D)/*.c)
 LOGIN_H = $(wildcard $(LOGIN_D)/*.h)
-ALL_C = $(COMMON_C) $(MAP_C) $(CHAR_C) $(LOGIN_C)
-ALL_H = $(COMMON_H) $(MAP_H) $(CHAR_H) $(LOGIN_H)
+ALL_C = $(COMMON_C) $(API_C) $(MAP_C) $(CHAR_C) $(LOGIN_C)
+ALL_H = $(COMMON_H) $(API_H) $(MAP_H) $(CHAR_H) $(LOGIN_H)
 
 HOOK_INC = $(addprefix $(PLUGIN_D)/HPMHooking., \
            $(addsuffix .inc, HookingPoints sources GetSymbol HPMHooksCore Hooks)) \
@@ -56,7 +59,7 @@ else
 endif
 
 #####################################################################
-.PHONY: hooks clean buildclean generate
+.PHONY: hooks clean buildclean generate preprocess preprocessclean
 
 all: $(ALL_DEPENDS)
 
@@ -75,13 +78,21 @@ hooks: $(HOOK_INC)
 
 $(HOOK_INC): generate
 
-generate: doxyoutput
+generate: doxyoutput preprocessclean
 	@echo "	Regenerating HPM Hook definitions..."
 	@perl HPMHookGen.pl
 	@echo "	Regenerating HPM Data Check definitions..."
 	@perl HPMDataCheckGen.pl
 
-doxyoutput: $(ALL_C) $(ALL_H) doxygen.conf
+preprocess:
+	@echo "	Preprocessing files"
+	@./preprocess.py $(API_D)/handlers.h "api/urlhandlers.h" >$(API_D)/handlers.h.dox
+
+preprocessclean: doxyoutput
+	@echo "	Removing temp preprocessed files"
+	@rm $(API_D)/handlers.h.dox
+
+doxyoutput: preprocess $(ALL_C) $(ALL_H) doxygen.conf
 	@echo "	Extracting functions information..."
 	@doxygen doxygen.conf
 

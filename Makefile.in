@@ -23,12 +23,13 @@
 
 HAVE_MYSQL=@HAVE_MYSQL@
 ifeq ($(HAVE_MYSQL),yes)
-	ALL_DEPENDS=common_sql login_sql char_sql map_sql sysinfo | import
-	SQL_DEPENDS=common_sql login_sql char_sql map_sql sysinfo | import
+	ALL_DEPENDS=common_sql login_sql char_sql map_sql api_sql sysinfo | import
+	SQL_DEPENDS=common_sql login_sql char_sql map_sql api_sql sysinfo | import
 	COMMON_SQL_DEPENDS=mt19937ar libconfig libbacktrace sysinfo
 	LOGIN_SQL_DEPENDS=mt19937ar libconfig libbacktrace common_sql sysinfo
 	CHAR_SQL_DEPENDS=mt19937ar libconfig libbacktrace common_sql sysinfo
 	MAP_SQL_DEPENDS=mt19937ar libconfig libbacktrace common_sql sysinfo
+	API_SQL_DEPENDS=mt19937ar libconfig libbacktrace common_sql sysinfo
 	TOOLS_DEPENDS=mt19937ar libconfig libbacktrace common_sql sysinfo
 else
 	ALL_DEPENDS=needs_mysql
@@ -37,6 +38,7 @@ else
 	LOGIN_SQL_DEPENDS=needs_mysql
 	CHAR_SQL_DEPENDS=needs_mysql
 	MAP_SQL_DEPENDS=needs_mysql
+	API_SQL_DEPENDS=needs_mysql
 	TOOLS_DEPENDS=needs_mysql
 endif
 
@@ -52,8 +54,16 @@ HAVE_PERL=@HAVE_PERL@
 HAVE_DOXYGEN=@HAVE_DOXYGEN@
 
 MF_TARGETS = Makefile $(addsuffix /Makefile, src/common 3rdparty/mt19937ar \
-             3rdparty/libconfig 3rdparty/libbacktrace src/char src/login src/map src/plugins \
+             3rdparty/libconfig 3rdparty/libbacktrace 3rdparty/multipart-parser \
+             3rdparty/cJSON 3rdparty/libgif \
+             src/char src/login src/map src/api src/plugins \
              src/test tools/HPMHookGen tools/doxygen)
+
+ifeq ($(USE_HTTP_PARSER),yes)
+MF_TARGETS+=$(addsuffix /Makefile, 3rdparty/http-parser)
+else
+MF_TARGETS+=$(addsuffix /Makefile, 3rdparty/llhttp)
+endif
 
 CC = @CC@
 export CC
@@ -65,6 +75,7 @@ export CC
 	login_sql \
 	char_sql \
 	map_sql \
+	api_sql \
 	plugins \
 	import \
 	test \
@@ -111,6 +122,26 @@ libbacktrace: 3rdparty/libbacktrace/Makefile
 	@echo "	MAKE	$@"
 	@$(MAKE) -C 3rdparty/libbacktrace
 
+http-parser: 3rdparty/http-parser/Makefile
+	@echo "	MAKE	$@"
+	@$(MAKE) -C 3rdparty/http-parser
+
+llhttp: 3rdparty/llhttp/Makefile
+	@echo "	MAKE	$@"
+	@$(MAKE) -C 3rdparty/llhttp
+
+cJSON: 3rdparty/cJSON/Makefile
+	@echo "	MAKE	$@"
+	@$(MAKE) -C 3rdparty/cJSON
+
+multipart-parser: 3rdparty/multipart-parser/Makefile
+	@echo "	MAKE	$@"
+	@$(MAKE) -C 3rdparty/multipart-parser
+
+libgif: 3rdparty/libgif/Makefile
+	@echo "	MAKE	$@"
+	@$(MAKE) -C 3rdparty/libgif
+
 login_sql: $(LOGIN_SQL_DEPENDS) src/login/Makefile
 	@echo "	MAKE	$@"
 	@$(MAKE) -C src/login sql
@@ -122,6 +153,10 @@ char_sql: $(CHAR_SQL_DEPENDS) src/char/Makefile
 map_sql: $(MAP_SQL_DEPENDS) src/map/Makefile
 	@echo "	MAKE	$@"
 	@$(MAKE) -C src/map sql
+
+api_sql: $(API_SQL_DEPENDS) src/api/Makefile
+	@echo "	MAKE	$@"
+	@$(MAKE) -C src/api sql
 
 test: src/test/Makefile
 	@echo "	MAKE	$@"
@@ -152,12 +187,18 @@ import: Makefile
 
 clean buildclean: $(MF_TARGETS)
 	@$(MAKE) -C src/common $@
+	@$(MAKE) -C 3rdparty/cJSON $@
 	@$(MAKE) -C 3rdparty/mt19937ar $@
 	@$(MAKE) -C 3rdparty/libconfig $@
 	@$(MAKE) -C 3rdparty/libbacktrace $@
+	@$(MAKE) -C 3rdparty/libgif $@
+	@$(MAKE) -C 3rdparty/http-parser $@
+	@$(MAKE) -C 3rdparty/llhttp $@
+	@$(MAKE) -C 3rdparty/multipart-parser $@
 	@$(MAKE) -C src/login $@
 	@$(MAKE) -C src/char $@
 	@$(MAKE) -C src/map $@
+	@$(MAKE) -C src/api $@
 	@$(MAKE) -C src/plugins $@
 	@$(MAKE) -C src/test $@
 	@$(MAKE) -C tools/HPMHookGen $@
@@ -171,7 +212,7 @@ sysinfo: config.status
 	@if cmp -s src/common/sysinfo.inc src/common/sysinfo_new.inc; then \
 		rm src/common/sysinfo_new.inc ; \
 	else \
-		mv src/common/sysinfo_new.inc src/common/sysinfo.inc ; \
+		mv src/common/sysinfo_new.inc src/common/sysinfo.inc || true ; \
 	fi
 
 config.status: configure
@@ -182,16 +223,22 @@ help: Makefile
 	@echo "most common targets are 'all' 'sql' 'clean' 'plugins' 'help'"
 	@echo "possible targets are:"
 	@echo "'common_sql'   - builds object files used in SQL servers"
+	@echo "'cJSON'        - builds object files of cJSON"
 	@echo "'mt19937ar'    - builds object file of Mersenne Twister MT19937"
 	@echo "'libconfig'    - builds object files of libconfig"
 	@echo "'libbacktrace' - builds object files of libbacktrace"
+	@echo "'libgif'       - builds object files of libgif"
+	@echo "'http-parser'  - builds object files of http-parser"
+	@echo "'llhttp'       - builds object files of llhttp"
+	@echo "'multipart-parser' - builds object files of multipart-parser"
 	@echo "'login_sql'    - builds login server"
 	@echo "'char_sql'     - builds char server"
 	@echo "'map_sql'      - builds map server"
+	@echo "'api_sql'      - builds api server"
 	@echo "'import'       - builds conf/import folder from the template conf/import-tmpl"
 	@echo "'all'          - builds all the above targets"
 	@echo "'sql'          - builds sql servers (targets 'common_sql' 'login_sql' 'char_sql'"
-	@echo "                 'map_sql' and 'import')"
+	@echo "                 'map_sql' and 'api_sql' and 'import')"
 	@echo "'plugins'      - builds all available plugins"
 	@echo "'plugin.Name'  - builds plugin named 'Name'"
 	@echo "'test'         - builds tests"

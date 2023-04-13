@@ -1,21 +1,6 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="..\src\login\account.c">
-      <Filter>login</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\login\HPMlogin.c">
-      <Filter>login</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\login\ipban.c">
-      <Filter>login</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\login\login.c">
-      <Filter>login</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\login\loginlog.c">
-      <Filter>login</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\common\conf.c">
       <Filter>common</Filter>
     </ClCompile>
@@ -32,6 +17,9 @@
       <Filter>common</Filter>
     </ClCompile>
     <ClCompile Include="..\src\common\ers.c">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\common\extraconf.c">
       <Filter>common</Filter>
     </ClCompile>
     <ClCompile Include="..\src\common\grfio.c">
@@ -100,26 +88,29 @@
     <ClCompile Include="..\src\common\des.c">
       <Filter>common</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\login\account.c">
+      <Filter>login</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\login\HPMlogin.c">
+      <Filter>login</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\login\ipban.c">
+      <Filter>login</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\login\lclif.c">
+      <Filter>login</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\login\login.c">
+      <Filter>login</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\login\loginlog.c">
+      <Filter>login</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\login\lapiif.c">
       <Filter>login</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\login\account.h">
-      <Filter>login</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\login\HPMlogin.h">
-      <Filter>login</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\login\ipban.h">
-      <Filter>login</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\login\loginlog.h">
-      <Filter>login</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\login\login.h">
-      <Filter>login</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\common\cbasetypes.h">
       <Filter>common</Filter>
     </ClInclude>
@@ -136,6 +127,9 @@
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="..\src\common\ers.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\extraconf.h">
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="..\src\common\grfio.h">
@@ -249,10 +243,34 @@
     <ClInclude Include="..\src\config\classes\general.h">
       <Filter>config</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\login\account.h">
+      <Filter>login</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\login\HPMlogin.h">
+      <Filter>login</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\login\ipban.h">
+      <Filter>login</Filter>
+    </ClInclude>
     <ClInclude Include="..\src\login\lclif.h">
       <Filter>login</Filter>
     </ClInclude>
     <ClInclude Include="..\src\login\lclif.p.h">
+      <Filter>login</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\login\login.h">
+      <Filter>login</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\login\loginlog.h">
+      <Filter>login</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\login\lapiif.h">
+      <Filter>login</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\login\packets_ac_struct.h">
+      <Filter>login</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\login\packets_ca_struct.h">
       <Filter>login</Filter>
     </ClInclude>
   </ItemGroup>

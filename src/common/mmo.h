@@ -980,7 +980,7 @@ struct guild {
 	char mes2[MAX_GUILDMES2];                             ///< Guild message (second line)
 	int emblem_id;                                        ///< Sequential ID of the current emblem
 	int emblem_len;                                       ///< Guild emblem data length
-	char emblem_data[2048];                               ///< Guild emblem data
+	char *emblem_data;                                   ///< Guild emblem data
 	struct guild_alliance alliance[MAX_GUILDALLIANCE];    ///< Guild alliances data
 	struct guild_expulsion expulsion[MAX_GUILDEXPULSION]; ///< Guild expulsion records
 	struct guild_skill skill[MAX_GUILDSKILL];             ///< Guild skills data
@@ -1351,6 +1351,25 @@ enum e_pet_intimacy_level {
 	PET_INTIMACY_MAX = 1000
 };
 
+
+// enum from packet ZC_ADVENTURER_AGENCY_JOIN_RESULT (0x0afa)
+enum adventurer_agency_result {
+	AGENCY_JOIN_ACCEPTED = 0,
+	AGENCY_JOIN_REJECTED = 1,
+	AGENCY_PARTY_NUMBER_EXCEEDED = 2,
+	AGENCY_MASTER_UNABLE_ACCEPT_REQUEST = 3,
+	AGENCY_PARTY_JOIN_BLOCKED_BY_MAP = 4,
+	AGENCY_CHAR_CANT_BE_FOUND = 5,
+	AGENCY_CHAR_CANT_BE_FOUND2 = 6,
+	AGENCY_PLAYER_ALREADY_IN_PARTY = 7,
+	AGENCY_REQUEST_CANT_BE_RECEIVED = 8,
+	AGENCY_CANT_FIND_PARTY_LEADER_DELAYED = 9,
+	AGENCY_PARTY_NOT_FOUND = 10,
+	AGENCY_JOB_LEVEL_TOO_LOW = 11,
+	AGENCY_CHAR_IN_SAME_ACCOUNT_ALREADY_JOINED = 12,
+	AGENCY_UNKNOWN_ERROR = 13
+};
+
 /* packet size constant for itemlist */
 #if MAX_INVENTORY > MAX_STORAGE && MAX_INVENTORY > MAX_CART
 #define MAX_ITEMLIST MAX_INVENTORY
@@ -1379,6 +1398,11 @@ enum e_pet_intimacy_level {
 
 #if MAX_REFINE_REQUIREMENTS > 4
 #error MAX_REFINE_REQUIREMENTS is bigger than allowed, this is a hardcoded limit in the client
+#endif
+
+// do not change. related on packet fields
+#ifndef MAX_CHARSERVER_NAME_SIZE
+#define MAX_CHARSERVER_NAME_SIZE 20
 #endif
 
 #endif /* COMMON_MMO_H */

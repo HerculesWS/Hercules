@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\3rdparty\mt19937ar\mt19937ar.c">
+      <Filter>3rdparty\mt19937ar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparty\libconfig\grammar.c">
+      <Filter>3rdparty\libconfig</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparty\libconfig\libconfig.c">
+      <Filter>3rdparty\libconfig</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparty\libconfig\scanctx.c">
+      <Filter>3rdparty\libconfig</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparty\libconfig\scanner.c">
+      <Filter>3rdparty\libconfig</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparty\libconfig\strbuf.c">
+      <Filter>commom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\api\aclif.c">
+      <Filter>api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\api\aloginif.c">
+      <Filter>api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\api\api.c">
+      <Filter>api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\api\handlers.c">
+      <Filter>api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\api\HPMapi.c">
+      <Filter>api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\api\httpparser.c">
+      <Filter>api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\api\httpsender.c">
+      <Filter>api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\api\jsonparser.c">
+      <Filter>api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\api\jsonwriter.c">
+      <Filter>api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\api\postheader.c">
+      <Filter>api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparty\cJSON\cJSON.c">
+      <Filter>3rdparty\cJSON</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparty\cJSON\cJSON_Utils.c">
+      <Filter>3rdparty\cJSON</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparty\http-parser\http_parser.c">
+      <Filter>3rdparty\http-parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparty\multipart-parser\multipartparser.c">
+      <Filter>3rdparty\multipart-parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\common\mapindex.c">
+      <Filter>commom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\common\conf.c" />
+    <ClCompile Include="..\src\common\core.c" />
+    <ClCompile Include="..\src\common\des.c" />
+    <ClCompile Include="..\src\common\mapindex.c" />
+    <ClCompile Include="..\src\common\mutex.c" />
+    <ClCompile Include="..\src\common\thread.c" />
+    <ClCompile Include="..\src\common\packets.c" />
+    <ClCompile Include="..\src\common\console.c" />
+    <ClCompile Include="..\src\common\db.c" />
+    <ClCompile Include="..\src\common\ers.c" />
+    <ClCompile Include="..\src\common\extraconf.c" />
+    <ClCompile Include="..\src\common\grfio.c" />
+    <ClCompile Include="..\src\common\HPM.c" />
+    <ClCompile Include="..\src\common\memmgr.c" />
+    <ClCompile Include="..\src\common\md5calc.c" />
+    <ClCompile Include="..\src\common\nullpo.c" />
+    <ClCompile Include="..\src\common\random.c" />
+    <ClCompile Include="..\src\common\showmsg.c" />
+    <ClCompile Include="..\src\common\socket.c" />
+    <ClCompile Include="..\src\common\sql.c" />
+    <ClCompile Include="..\src\common\strlib.c" />
+    <ClCompile Include="..\src\common\sysinfo.c" />
+    <ClCompile Include="..\src\common\timer.c" />
+    <ClCompile Include="..\src\common\utils.c" />
+    <ClCompile Include="..\src\api\imageparser.c">
+      <Filter>api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparty\libgif\dgif_lib.c">
+      <Filter>3rdparty\libgif</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparty\libgif\egif_lib.c">
+      <Filter>3rdparty\libgif</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparty\libgif\gifalloc.c">
+      <Filter>3rdparty\libgif</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparty\libgif\gif_err.c">
+      <Filter>3rdparty\libgif</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparty\libgif\gif_font.c">
+      <Filter>3rdparty\libgif</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparty\libgif\gif_hash.c">
+      <Filter>3rdparty\libgif</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparty\libgif\openbsd-reallocarray.c">
+      <Filter>3rdparty\libgif</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\3rdparty\mt19937ar\mt19937ar.h">
+      <Filter>3rdparty\mt19937ar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparty\libconfig\grammar.h">
+      <Filter>3rdparty\libconfig</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparty\libconfig\libconfig.h">
+      <Filter>3rdparty\libconfig</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparty\libconfig\scanctx.h">
+      <Filter>3rdparty\libconfig</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparty\libconfig\scanner.h">
+      <Filter>3rdparty\libconfig</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\atomic.h">
+      <Filter>commom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\cbasetypes.h">
+      <Filter>commom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\conf.h">
+      <Filter>commom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\console.h">
+      <Filter>commom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\config\const.h">
+      <Filter>commom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\core.h">
+      <Filter>commom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\config\core.h">
+      <Filter>commom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\db.h">
+      <Filter>commom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\des.h">
+      <Filter>commom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\ers.h">
+      <Filter>commom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\extraconf.h">
+      <Filter>commom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\config\classes\general.h">
+      <Filter>commom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\grfio.h">
+      <Filter>commom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\hercules.h">
+      <Filter>commom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\HPM.h">
+      <Filter>commom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\HPMDataCheck.h">
+      <Filter>commom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\HPMi.h">
+      <Filter>commom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\HPMSymbols.inc.h">
+      <Filter>commom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\md5calc.h">
+      <Filter>commom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\memmgr.h">
+      <Filter>commom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\mmo.h">
+      <Filter>commom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\mutex.h">
+      <Filter>commom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\nullpo.h">
+      <Filter>commom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparty\libconfig\parsectx.h">
+      <Filter>commom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\random.h">
+      <Filter>commom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\config\renewal.h">
+      <Filter>commom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\config\secure.h">
+      <Filter>commom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\showmsg.h">
+      <Filter>commom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\socket.h">
+      <Filter>commom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\spinlock.h">
+      <Filter>commom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\sql.h">
+      <Filter>commom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparty\libconfig\strbuf.h">
+      <Filter>commom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\strlib.h">
+      <Filter>commom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\sysinfo.h">
+      <Filter>commom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\thread.h">
+      <Filter>commom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\timer.h">
+      <Filter>commom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\utils.h">
+      <Filter>commom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\winapi.h">
+      <Filter>commom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparty\libconfig\wincompat.h">
+      <Filter>commom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\api\aclif.h">
+      <Filter>api</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\api\aloginif.h">
+      <Filter>api</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\api\api.h">
+      <Filter>api</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\api\apisessiondata.h">
+      <Filter>api</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\api\handlerfunc.h">
+      <Filter>api</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\api\handlers.h">
+      <Filter>api</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\api\HPMapi.h">
+      <Filter>api</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\api\http_include.h">
+      <Filter>api</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\api\httphandler.h">
+      <Filter>api</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\api\httpparsehandler.h">
+      <Filter>api</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\api\httpparser.h">
+      <Filter>api</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\api\httpsender.h">
+      <Filter>api</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\api\jsonparser.h">
+      <Filter>api</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\api\jsonwriter.h">
+      <Filter>api</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\api\mimepart.h">
+      <Filter>api</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\api\urlhandlers.h">
+      <Filter>api</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparty\cJSON\cJSON.h">
+      <Filter>3rdparty\cJSON</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparty\cJSON\cJSON_Utils.h">
+      <Filter>3rdparty\cJSON</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparty\http-parser\http_parser.h">
+      <Filter>3rdparty\http-parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparty\multipart-parser\multipartparser.h">
+      <Filter>3rdparty\multipart-parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\mapindex.h">
+      <Filter>commom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\api\postheader.h">
+      <Filter>api</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\api\imageparser.h">
+      <Filter>api</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparty\libgif\gif_hash.h">
+      <Filter>3rdparty\libgif</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparty\libgif\gif_lib.h">
+      <Filter>3rdparty\libgif</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparty\libgif\gif_lib_private.h">
+      <Filter>3rdparty\libgif</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="3rdparty">
+      <UniqueIdentifier>{f9b907f8-9f2a-499c-99af-278cc0c7c970}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdparty\mt19937ar">
+      <UniqueIdentifier>{58098aa7-fdb6-417d-a158-7b31bfafea85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdparty\libconfig">
+      <UniqueIdentifier>{800e539d-fba2-4bfd-b23d-f7322eec39ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="commom">
+      <UniqueIdentifier>{6ed4e6c6-2e04-4d5e-b76b-2a3238673dab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="api">
+      <UniqueIdentifier>{05cd1019-ee8d-43b9-9e9d-3d6dd5adead6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdparty\cJSON">
+      <UniqueIdentifier>{c94f2e69-c4fb-431f-9878-8084c5c1e73f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdparty\http-parser">
+      <UniqueIdentifier>{043e4098-4d08-4a8b-9eaf-c6aa2fe07999}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdparty\multipart-parser">
+      <UniqueIdentifier>{7d241991-b832-4445-ac48-8d1fa9693f33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdparty\libgif">
+      <UniqueIdentifier>{83a2192a-8174-4bf9-a54b-04862a01d8f6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

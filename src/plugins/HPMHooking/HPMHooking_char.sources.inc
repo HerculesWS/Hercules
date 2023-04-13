@@ -26,14 +26,17 @@
 /* GENERATED FILE DO NOT EDIT */
 
 HPMHooks.source.HCache = *HCache;
+HPMHooks.source.capiif = *capiif;
 HPMHooks.source.chr = *chr;
 HPMHooks.source.cmdline = *cmdline;
 HPMHooks.source.console = *console;
 HPMHooks.source.core = *core;
 HPMHooks.source.DB = *DB;
 HPMHooks.source.des = *des;
+HPMHooks.source.extraconf = *extraconf;
 HPMHooks.source.geoip = *geoip;
 HPMHooks.source.inter_achievement = *inter_achievement;
+HPMHooks.source.inter_adventurer_agency = *inter_adventurer_agency;
 HPMHooks.source.inter_auction = *inter_auction;
 HPMHooks.source.inter_clan = *inter_clan;
 HPMHooks.source.inter_elemental = *inter_elemental;
@@ -47,6 +50,7 @@ HPMHooks.source.inter_pet = *inter_pet;
 HPMHooks.source.inter_quest = *inter_quest;
 HPMHooks.source.inter_rodex = *inter_rodex;
 HPMHooks.source.inter_storage = *inter_storage;
+HPMHooks.source.inter_userconfig = *inter_userconfig;
 HPMHooks.source.libconfig = *libconfig;
 HPMHooks.source.loginif = *loginif;
 HPMHooks.source.mapif = *mapif;

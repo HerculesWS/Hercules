@@ -33,8 +33,10 @@ Thumbs.db
 /login-server
 /Makefile
 /Makefile.cache
+/api-server
 /map-server
 /mapcache
+*.pyc
 
 # /plugins -- everything
 /plugins/
@@ -55,6 +57,21 @@ Thumbs.db
 /3rdparty/libbacktrace/Makefile
 /3rdparty/libbacktrace/*.o
 /3rdparty/libbacktrace/backtrace-supported.h
+
+# /3rdparty/http-parser/
+/3rdparty/http-parser/Makefile
+
+# /3rdparty/llhttp/
+/3rdparty/llhttp/Makefile
+
+# /3rdparty/multipart-parser/
+/3rdparty/multipart-parser/Makefile
+
+# /3rdparty/cJSON/
+/3rdparty/cJSON/Makefile
+
+# /3rdparty/libgif/
+/3rdparty/libgif/Makefile
 
 # /3rdparty/mt19937ar/
 /3rdparty/mt19937ar/Makefile
@@ -90,6 +107,11 @@ Thumbs.db
 /src/map/obj_sql
 /src/map/pcre.h
 
+# /src/api/
+/src/api/Makefile
+/src/api/obj_sql
+/src/api/handlers.h.dox
+
 # /src/test/
 /src/test/Makefile
 /src/test/obj
@@ -117,5 +139,9 @@ Thumbs.db
 /vcproj-*/char-server
 /vcproj-*/login-server
 /vcproj-*/map-server
+/vcproj-*/api-server
 /vcproj-*/mapcache
 /vcproj-*/plugin-*/
+
+# ccache
+/.ccache/

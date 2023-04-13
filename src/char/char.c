@@ -24,7 +24,9 @@
 #include "char/char.h"
 
 #include "char/HPMchar.h"
+#include "char/capiif.h"
 #include "char/geoip.h"
+#include "char/int_adventurer_agency.h"
 #include "char/int_auction.h"
 #include "char/int_clan.h"
 #include "char/int_elemental.h"
@@ -38,6 +40,7 @@
 #include "char/int_rodex.h"
 #include "char/int_storage.h"
 #include "char/int_achievement.h"
+#include "char/int_userconfig.h"
 #include "char/inter.h"
 #include "char/loginif.h"
 #include "char/mapif.h"
@@ -45,11 +48,14 @@
 #include "char/pincode.h"
 
 #include "common/HPM.h"
+#include "common/apipackets.h"
 #include "common/cbasetypes.h"
+#include "common/chunked.h"
 #include "common/conf.h"
 #include "common/console.h"
 #include "common/core.h"
 #include "common/db.h"
+#include "common/extraconf.h"
 #include "common/memmgr.h"
 #include "common/mapindex.h"
 #include "common/mmo.h"
@@ -107,6 +113,9 @@ char acc_reg_str_db[32] = "acc_reg_str_db";
 char char_reg_str_db[32] = "char_reg_str_db";
 char char_reg_num_db[32] = "char_reg_num_db";
 char char_achievement_db[256] = "char_achievements";
+char emotes_db[256] = "emotes";
+char hotkeys_db[256] = "hotkeys";
+char adventurer_agency_db[256] = "adventurer_agency";
 
 static struct char_interface char_s;
 struct char_interface *chr;
@@ -134,7 +143,7 @@ static bool char_aegis_rename = false; // whether or not the player can be renam
 
 static int max_connect_user = -1;
 static int gm_allow_group = -1;
-int autosave_interval = DEFAULT_AUTOSAVE_INTERVAL;
+int autosave_interval = DEFAULT_CHAR_AUTOSAVE_INTERVAL;
 static int start_zeny = 0;
 
 /// Start items for new characters
@@ -223,6 +232,7 @@ static void char_set_char_charselect(int account_id)
 
 	character->char_id = -1;
 	character->mapserver_connection = OCS_NOT_CONNECTED;
+
 	if(character->pincode_enable == -1)
 		character->pincode_enable = pincode->charselect + pincode->enabled;
 
@@ -2867,6 +2877,12 @@ static int char_parse_fromlogin(int fd)
 				chr->parse_fromlogin_accinfo2_ok(fd);
 			break;
 
+			case HEADER_API_PROXY_REQUEST:
+				if (RFIFOREST(fd) < 4 || RFIFOREST(fd) < RFIFOW(fd, 2))
+					return 0;
+				capiif->parse_fromlogin_api_proxy(fd);
+			break;
+
 			default:
 				ShowError("Unknown packet 0x%04x received from login-server, disconnecting.\n", command);
 				sockt->eof(fd);
@@ -4055,6 +4071,13 @@ static int char_parse_frommap(int fd)
 				}
 				break;
 
+			case HEADER_API_PROXY_REPLY:
+				if (RFIFOREST(fd) < 4 || RFIFOREST(fd) < RFIFOW(fd, 2))
+					return 2;
+				capiif->parse_proxy_api_from_map(fd);
+				RFIFOSKIP(fd, RFIFOW(fd, 2));
+				break;
+
 			default:
 			{
 				// inter server - packet
@@ -4553,7 +4576,8 @@ static void char_parse_char_select(int fd, struct char_session_data *sd, uint32 
 
 	/* set char as online prior to loading its data so 3rd party applications will realize the sql data is not reliable */
 	chr->set_char_online(true, char_id, sd->account_id);
-	if( !chr->mmo_char_fromsql(char_id, &char_dat, true) ) { /* failed? set it back offline */
+	loginif->set_char_online(char_id, sd->account_id);
+	if (!chr->mmo_char_fromsql(char_id, &char_dat, true)) { /* failed? set it back offline */
 		chr->set_char_offline(char_id, sd->account_id);
 		/* failed to load something. REJECT! */
 		chr->auth_error(fd, 0); // rejected from server
@@ -5350,9 +5374,11 @@ static int char_online_data_cleanup_sub(union DBKey key, struct DBData *data, va
 		return 0; //Character still connected
 	if (character->mapserver_connection == OCS_UNKNOWN) //Unknown server.. set them offline
 		chr->set_char_offline(character->char_id, character->account_id);
-	if (character->mapserver_connection != OCS_CONNECTED)
+	if (character->mapserver_connection != OCS_CONNECTED) {
 		//Free data from players that have not been online for a while.
+		chr->online_char_destroy(character);
 		db_remove(chr->online_char_db, key);
+	}
 	return 0;
 }
 
@@ -5492,6 +5518,8 @@ static bool char_sql_config_read_pc(const char *filename, const struct config_t 
 	libconfig->setting_lookup_mutable_string(setting, "mercenary_owner_db", mercenary_owner_db, sizeof(mercenary_owner_db));
 	libconfig->setting_lookup_mutable_string(setting, "elemental_db", elemental_db, sizeof(elemental_db));
 	libconfig->setting_lookup_mutable_string(setting, "account_data_db", account_data_db, sizeof(account_data_db));
+	libconfig->setting_lookup_mutable_string(setting, "emotes_db", emotes_db, sizeof(emotes_db));
+	libconfig->setting_lookup_mutable_string(setting, "hotkeys_db", hotkeys_db, sizeof(hotkeys_db));
 
 	return true;
 }
@@ -5565,6 +5593,8 @@ static bool char_config_read(const char *filename, bool imported)
 	if (!inter->config_read_connection(filename, &config, imported))
 		retval = false;
 	if (!pincode->config_read(filename, &config, imported))
+		retval = false;
+	if (!inter_userconfig->config_read(filename, &config, imported))
 		retval = false;
 
 	if (!HPM->parse_conf(&config, filename, HPCT_CHAR, imported))
@@ -5699,7 +5729,7 @@ static bool char_config_read_database(const char *filename, const struct config_
 	if (libconfig->setting_lookup_int(setting, "autosave_time", &autosave_interval) == CONFIG_TRUE) {
 		autosave_interval *= 1000;
 		if (autosave_interval <= 0)
-			autosave_interval = DEFAULT_AUTOSAVE_INTERVAL;
+			autosave_interval = DEFAULT_CHAR_AUTOSAVE_INTERVAL;
 	}
 	libconfig->setting_lookup_mutable_string(setting, "db_path", chr->db_path, sizeof(chr->db_path));
 	libconfig->set_db_path(chr->db_path);
@@ -5736,6 +5766,7 @@ static bool char_config_read_console(const char *filename, const struct config_t
 			ShowInfo("Console Silent Setting: %d\n", showmsg->silent);
 	}
 	libconfig->setting_lookup_mutable_string(setting, "timestamp_format", showmsg->timestamp_format, sizeof(showmsg->timestamp_format));
+	libconfig->setting_lookup_int(setting, "console_msg_log", &showmsg->console_log);
 
 	return true;
 }
@@ -6044,6 +6075,40 @@ static bool char_config_set_ip(const char *type, const char *value, uint32 *out_
 	return true;
 }
 
+static void char_online_char_destroy(struct online_char_data *character)
+{
+	nullpo_retv(character);
+	if (character->data) {
+		aFree(character->data->emblem_data.data);
+		aFree(character->data);
+	}
+}
+
+static int char_online_char_destroy_sub(union DBKey key, struct DBData *data, va_list ap)
+{
+	struct online_char_data *character = DB->data2ptr(data);
+	nullpo_ret(character);
+	chr->online_char_destroy(character);
+	return 0;
+}
+
+static void char_ensure_online_char_data(struct online_char_data *character)
+{
+	nullpo_retv(character);
+	if (character->data == NULL) {
+		character->data = aCalloc(sizeof(struct online_char_data2), 1);
+	}
+}
+
+static void char_clean_online_char_emblem_data(struct online_char_data *character)
+{
+	nullpo_retv(character);
+	if (character->data == NULL)
+		return;
+	fifo_chunk_buf_clear(character->data->emblem_data);
+	character->data->emblem_guild_id = 0;
+}
+
 int do_final(void)
 {
 	ShowStatus("Terminating...\n");
@@ -6053,19 +6118,21 @@ int do_final(void)
 	chr->set_all_offline(true);
 	chr->set_all_offline_sql();
 
+	mapif->final();
 	inter->final();
 
 	sockt->flush_fifos();
 
 	do_final_mapif();
 	loginif->final();
+	capiif->final();
 	pincode->final();
 
 	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s`", ragsrvinfo_db) )
 		Sql_ShowDebug(inter->sql_handle);
 
 	chr->char_db_->destroy(chr->char_db_, NULL);
-	chr->online_char_db->destroy(chr->online_char_db, NULL);
+	chr->online_char_db->destroy(chr->online_char_db, chr->online_char_destroy_sub);
 	auth_db->destroy(auth_db, NULL);
 
 	if( chr->char_fd != -1 ) {
@@ -6186,6 +6253,7 @@ int do_init(int argc, char **argv)
 	memset(&skillid2idx, 0, sizeof(skillid2idx));
 
 	char_load_defaults();
+	extraconf_defaults();
 
 	chr->CHAR_CONF_NAME = aStrdup("conf/char/char-server.conf");
 	chr->NET_CONF_NAME = aStrdup("conf/network.conf");
@@ -6204,6 +6272,7 @@ int do_init(int argc, char **argv)
 	//Read map indexes
 	mapindex->init();
 	pincode->init();
+	inter_userconfig->init();
 
 	#ifdef RENEWAL
 		start_point.map = mapindex->name2id("iz_int");
@@ -6276,6 +6345,7 @@ int do_init(int argc, char **argv)
 	}
 
 	loginif->init();
+	capiif->init();
 	do_init_mapif();
 
 	// periodically update the overall user count on all mapservers + login server
@@ -6334,6 +6404,7 @@ void char_load_defaults(void)
 	pincode_defaults();
 	char_defaults();
 	loginif_defaults();
+	capiif_defaults();
 	mapif_defaults();
 	inter_auction_defaults();
 	inter_clan_defaults();
@@ -6348,6 +6419,8 @@ void char_load_defaults(void)
 	inter_storage_defaults();
 	inter_rodex_defaults();
 	inter_achievement_defaults();
+	inter_userconfig_defaults();
+	inter_adventurer_agency_defaults();
 	inter_defaults();
 	geoip_defaults();
 }
@@ -6532,6 +6605,10 @@ void char_defaults(void)
 	chr->online_data_cleanup_sub = char_online_data_cleanup_sub;
 	chr->online_data_cleanup = char_online_data_cleanup;
 	chr->change_sex_sub = char_change_sex_sub;
+	chr->online_char_destroy = char_online_char_destroy;
+	chr->online_char_destroy_sub = char_online_char_destroy_sub;
+	chr->ensure_online_char_data = char_ensure_online_char_data;
+	chr->clean_online_char_emblem_data = char_clean_online_char_emblem_data;
 	chr->sql_config_read = char_sql_config_read;
 	chr->sql_config_read_registry = char_sql_config_read_registry;
 	chr->sql_config_read_pc = char_sql_config_read_pc;

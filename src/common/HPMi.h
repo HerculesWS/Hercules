@@ -21,6 +21,7 @@
 #define COMMON_HPMI_H
 
 #include "common/hercules.h"
+#include "common/apipackets.h"
 #include "common/console.h"
 #include "common/core.h"
 #include "common/showmsg.h"
@@ -49,7 +50,7 @@ struct s_HPMDataCheck {
 	int type;
 };
 
-#define SERVER_TYPE_ALL (SERVER_TYPE_LOGIN|SERVER_TYPE_CHAR|SERVER_TYPE_MAP)
+#define SERVER_TYPE_ALL (SERVER_TYPE_LOGIN|SERVER_TYPE_CHAR|SERVER_TYPE_MAP|SERVER_TYPE_API)
 
 enum hp_event_types {
 	HPET_INIT,/* server starts */
@@ -68,6 +69,11 @@ enum HPluginPacketHookingPoints {
 	hpParse_Char,      ///< char-server (client-char)
 	hpParse_FromChar,  ///< login-server (char-login)
 	hpParse_Login,     ///< login-server (client-login)
+	hpParse_ApiLogin,  ///< login-server (api-login)
+	hpParse_LoginApi,  ///< api-server (login-api)
+	hpProxy_ApiLogin,  ///< login-server (api-login)
+	hpProxy_ApiChar,   ///< char-server (api-char)
+	hpProxy_ApiMap,    ///< map-server (api-map)
 	/* */
 	hpPHP_MAX,
 };
@@ -209,6 +215,8 @@ enum HPluginConfType {
 
 /* HPMi->addPCGPermission */
 #define addGroupPermission(pcgname,maskptr) HPMi->addPCGPermission(HPMi->pid,pcgname,&maskptr)
+
+#define addProxyPacket(cmd, structname, receive, point) addPacket(cmd, WFIFO_APICHAR_SIZE + sizeof(struct PACKET_API_ ## structname ## _data), receive, point)
 
 /* Hercules Plugin Mananger Include Interface */
 struct HPMi_interface {

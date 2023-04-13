@@ -72,6 +72,7 @@ struct inter_party_interface {
 	bool (*change_map) (int party_id, int account_id, int char_id, unsigned short map, int online, int lv);
 	bool (*disband) (int party_id);
 	bool (*change_leader) (int party_id, int account_id, int char_id);
+	int (*is_leader) (struct party_data *p, int char_id);
 };
 
 #ifdef HERCULES_CORE

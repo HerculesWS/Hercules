@@ -80,13 +80,17 @@ struct login_session_data {
 
 struct mmo_char_server {
 
-	char name[20];
+	char name[MAX_CHARSERVER_NAME_SIZE];
 	int fd;
 	uint32 ip;
 	uint16 port;
 	uint16 users; ///< user count on this server
 	uint16 type;  ///< 0=normal, 1=maintenance, 2=over 18, 3=paying, 4=P2P (@see e_char_server_type in mmo.h)
 	uint16 new_;  ///< should display as 'new'?
+};
+
+struct mmo_api_server {
+	int fd;
 };
 
 struct client_hash_node {
@@ -161,6 +165,7 @@ struct online_login_data {
 
 struct s_login_dbs {
 	struct mmo_char_server server[MAX_SERVERS];
+	struct mmo_api_server api_server[MAX_SERVERS];
 	struct Account_engine *account_engine;
 };
 
@@ -215,16 +220,18 @@ struct login_interface {
 	void (*fromchar_parse_change_pincode) (int fd);
 	bool (*fromchar_parse_wrong_pincode) (int fd);
 	void (*fromchar_parse_accinfo) (int fd);
+	void (*fromchar_parse_set_char_online) (int fd);
 	int (*parse_fromchar) (int fd);
 	void (*kick) (struct login_session_data* sd);
 	void (*auth_ok) (struct login_session_data* sd);
 	void (*auth_failed) (struct login_session_data* sd, int result);
-	void (*generate_token) (struct login_session_data* sd, unsigned char *auth_token);
 	bool (*client_login) (int fd, struct login_session_data *sd);
 	bool (*client_login_otp) (int fd, struct login_session_data *sd);
 	void (*client_login_mobile_otp_request) (int fd, struct login_session_data *sd);
+	void (*api_server_connection_status) (int fd, struct login_session_data* sd, uint8 status);
 	void (*char_server_connection_status) (int fd, struct login_session_data* sd, uint8 status);
 	void (*parse_request_connection) (int fd, struct login_session_data* sd, const char *ip, uint32 ipl);
+	void (*parse_request_api_connection) (int fd, struct login_session_data* sd, const char *ip, uint32 ipl);
 	void (*config_set_defaults) (void);
 	bool (*config_read) (const char *filename, bool included);
 	bool (*config_read_inter) (const char *filename, struct config_t *config, bool imported);
@@ -241,6 +248,7 @@ struct login_interface {
 	void (*config_set_md5hash) (struct config_setting_t *setting);
 	uint16 (*convert_users_to_colors) (uint16 users);
 	int (*check_client_version) (struct login_session_data *sd);
+	void (*generate_token) (unsigned char *token);
 	char *LOGIN_CONF_NAME;
 	char *NET_CONF_NAME; ///< Network configuration filename
 };

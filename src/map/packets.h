@@ -108,7 +108,7 @@ packet(0x0146,clif->pNpcCloseClicked,2);
 packet(0x0149,clif->pGMReqNoChat,2,6,7);
 packet(0x014d,clif->pGuildCheckMaster,0);
 packet(0x014f,clif->pGuildRequestInfo,2);
-packet(0x0151,clif->pGuildRequestEmblem,2);
+packet(0x0151,clif->pGuildRequestEmblem1);
 packet(0x0153,clif->pGuildChangeEmblem,2,4);
 packet(0x0155,clif->pGuildChangeMemberPosition,2);
 packet(0x0159,clif->pGuildLeave,2,6,10,14);
@@ -1965,6 +1965,10 @@ packet(0x96e,clif->ackmergeitems);
 	packet(0x0b1c,clif->pPing);
 #endif
 
+#if PACKETVER_MAIN_NUM >= 20190227 || PACKETVER_RE_NUM >= 20190227 || PACKETVER_ZERO_NUM >= 20190313
+	packet(0x0b1e,clif->pGuildRequestEmblem2);
+#endif
+
 #if PACKETVER_MAIN_NUM >= 20190522 || PACKETVER_RE_NUM >= 20190508 || PACKETVER_ZERO_NUM >= 20190605
 	packet(0x0b21,clif->pHotkey2);
 	packet(0x0b22,clif->pHotkeyRowShift2); // CZ_SHORTCUTKEYBAR_ROTATE
@@ -1984,6 +1988,7 @@ packet(0x96e,clif->ackmergeitems);
 #endif
 
 #if PACKETVER >= 20190724
+	packet(0x0b46,clif->pGuildRequestEmblem3);
 	packet(0x0b4c,clif->pCashShopLimitedReq);
 #endif
 
@@ -2008,6 +2013,11 @@ packet(0x96e,clif->ackmergeitems);
 #endif
 #if PACKETVER >= 20160330
 	packet(0x0a6c,clif->pMacroReporterSelect);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20171213 || PACKETVER_RE_NUM >= 20171213 || PACKETVER_ZERO_NUM >= 20171214
+	packet(0x0ae6,clif->pAdventuterAgencyJoinReq);
+	packet(0x0af8, clif->pAdventuterAgencyJoinResult);
 #endif
 
 #if PACKETVER >= 20191224

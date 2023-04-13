@@ -67,6 +67,7 @@
 #include "common/cbasetypes.h"
 #include "common/conf.h"
 #include "common/ers.h"
+#include "common/extraconf.h"
 #include "common/grfio.h"
 #include "common/memmgr.h"
 #include "common/mmo.h" // NEW_CARTS, char_achievements
@@ -78,6 +79,7 @@
 #include "common/strlib.h"
 #include "common/timer.h"
 #include "common/utils.h"
+#include "common/chunked/wfifo.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -8664,42 +8666,105 @@ static void clif_guild_memberpositionchanged(struct guild *g, int idx)
 		clif->send(buf,WBUFW(buf,2),&sd->bl,GUILD);
 }
 
-/// Sends emblems bitmap data to the client that requested it (ZC_GUILD_EMBLEM_IMG).
-/// 0152 <packet len>.W <guild id>.L <emblem id>.L <emblem data>.?B
 static void clif_guild_emblem(struct map_session_data *sd, struct guild *g)
 {
-	int fd;
+	nullpo_retv(g);
+	if (g->emblem_len <= 0)
+		return;
+
+	clif->guild_emblem_clear(sd, g);
+	clif->guild_emblem_body(sd, g);
+	clif->guild_emblem_complete(sd, g);
+}
+
+static void clif_guild_emblem_clear(struct map_session_data *sd, struct guild *g)
+{
+#if PACKETVER_MAIN_NUM >= 20190821 || PACKETVER_RE_NUM >= 20190807 || PACKETVER_ZERO_NUM >= 20190710
 	nullpo_retv(sd);
 	nullpo_retv(g);
 
-	fd = sd->fd;
-	if( g->emblem_len <= 0 )
-		return;
+	const int fd = sd->fd;
+	const int len = sizeof(struct PACKET_ZC_GUILD_EMBLEM_IMG);
+	WFIFOHEAD(fd, len);
+	struct PACKET_ZC_GUILD_EMBLEM_IMG *p = WFIFOP(fd, 0);
+	p->packetType = HEADER_ZC_GUILD_EMBLEM_IMG;
+	p->packetLength = len;
+	p->guild_id = g->guild_id;
+	p->emblem_id = g->emblem_id;
+	p->result = ZC_GUILD_EMBLEM_TYPE_CLEAR;
+	WFIFOSET(fd, len);
+#endif  // PACKETVER_MAIN_NUM >= 20190821 || PACKETVER_RE_NUM >= 20190807 || PACKETVER_ZERO_NUM >= 20190710
+}
 
-	WFIFOHEAD(fd,g->emblem_len+12);
-	WFIFOW(fd,0)=0x152;
-	WFIFOW(fd,2)=g->emblem_len+12;
-	WFIFOL(fd,4)=g->guild_id;
-	WFIFOL(fd,8)=g->emblem_id;
-	memcpy(WFIFOP(fd,12),g->emblem_data,g->emblem_len);
-	WFIFOSET(fd,WFIFOW(fd,2));
+static void clif_guild_emblem_complete(struct map_session_data *sd, struct guild *g)
+{
+#if PACKETVER_MAIN_NUM >= 20190821 || PACKETVER_RE_NUM >= 20190807 || PACKETVER_ZERO_NUM >= 20190710
+	nullpo_retv(sd);
+	nullpo_retv(g);
+
+	const int fd = sd->fd;
+	const int len = sizeof(struct PACKET_ZC_GUILD_EMBLEM_IMG);
+	WFIFOHEAD(fd, len);
+	struct PACKET_ZC_GUILD_EMBLEM_IMG *p = WFIFOP(fd, 0);
+	p->packetType = HEADER_ZC_GUILD_EMBLEM_IMG;
+	p->packetLength = len;
+	p->guild_id = g->guild_id;
+	p->emblem_id = g->emblem_id;
+	p->result = ZC_GUILD_EMBLEM_TYPE_COMPLETE;
+	WFIFOSET(fd, len);
+#endif  // PACKETVER_MAIN_NUM >= 20190821 || PACKETVER_RE_NUM >= 20190807 || PACKETVER_ZERO_NUM >= 20190710
+}
+
+/// Sends emblems bitmap data to the client that requested it (ZC_GUILD_EMBLEM_IMG).
+/// 0152 <packet len>.W <guild id>.L <emblem id>.L <emblem data>.?B
+static void clif_guild_emblem_body(struct map_session_data *sd, struct guild *g)
+{
+	nullpo_retv(sd);
+	nullpo_retv(g);
+
+	const int fd = sd->fd;
+
+#if PACKETVER_MAIN_NUM >= 20190821 || PACKETVER_RE_NUM >= 20190807 || PACKETVER_ZERO_NUM >= 20190710
+	WFIFO_CLIENT_CHUNKED_INIT(p, fd, HEADER_ZC_GUILD_EMBLEM_IMG, PACKET_ZC_GUILD_EMBLEM_IMG, g->emblem_data, g->emblem_len) {
+		WFIFO_CLIENT_CHUNKED_BLOCK_START(p, emblem_data);
+		p->guild_id = g->guild_id;
+		p->emblem_id = g->emblem_id;
+		p->result = ZC_GUILD_EMBLEM_TYPE_ADD;
+		WFIFO_CLIENT_CHUNKED_BLOCK_END();
+	}
+	WFIFO_CLIENT_CHUNKED_FINAL_START(p, emblem_data);
+	p->guild_id = g->guild_id;
+	p->emblem_id = g->emblem_id;
+	p->result = ZC_GUILD_EMBLEM_TYPE_ADD;
+	WFIFO_CLIENT_CHUNKED_FINAL_END();
+#else  // PACKETVER_MAIN_NUM >= 20190821 || PACKETVER_RE_NUM >= 20190807 || PACKETVER_ZERO_NUM >= 20190710
+	const int len = g->emblem_len + sizeof(struct PACKET_ZC_GUILD_EMBLEM_IMG);
+	WFIFOHEAD(fd, len);
+	struct PACKET_ZC_GUILD_EMBLEM_IMG *p = WFIFOP(fd, 0);
+	p->packetType = HEADER_ZC_GUILD_EMBLEM_IMG;
+	p->packetLength = len;
+	p->guild_id = g->guild_id;
+	p->emblem_id = g->emblem_id;
+	memcpy(p->emblem_data, g->emblem_data, g->emblem_len);
+	WFIFOSET(fd, len);
+#endif  // PACKETVER_MAIN_NUM >= 20190821 || PACKETVER_RE_NUM >= 20190807 || PACKETVER_ZERO_NUM >= 20190710
 }
 
 /// Sends update of the guild id/emblem id to everyone in the area (ZC_CHANGE_GUILD).
 /// 01b4 <id>.L <guild id>.L <emblem id>.W
-static void clif_guild_emblem_area(struct block_list *bl)
+static void clif_guild_emblem_id_area(struct block_list *bl)
 {
-	uint8 buf[12];
-
 	nullpo_retv(bl);
+
+	struct PACKET_ZC_CHANGE_GUILD p = {0};
 
 	// TODO this packet doesn't force the update of ui components that have the emblem visible
 	//      (emblem in the flag npcs and emblem over the head in agit maps) [FlavioJS]
-	WBUFW(buf,0) = 0x1b4;
-	WBUFL(buf,2) = bl->id;
-	WBUFL(buf,6) = status->get_guild_id(bl);
-	WBUFW(buf,10) = status->get_emblem_id(bl);
-	clif->send(buf, 12, bl, AREA_WOS);
+	p.packetType = HEADER_ZC_CHANGE_GUILD;
+	p.AID =  bl->id;
+	p.guild_id = status->get_guild_id(bl);
+	p.emblem_id = status->get_emblem_id(bl);
+	clif->send(&p, sizeof(p), bl, AREA_WOS);
 }
 
 /// Sends guild skills (ZC_GUILD_SKILLINFO).
@@ -15471,16 +15536,39 @@ static void clif_parse_GuildChangeMemberPosition(int fd, struct map_session_data
 	}
 }
 
-static void clif_parse_GuildRequestEmblem(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+static void clif_parse_GuildRequestEmblem1(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
 /// Request for guild emblem data (CZ_REQ_GUILD_EMBLEM_IMG).
 /// 0151 <guild id>.L
-static void clif_parse_GuildRequestEmblem(int fd, struct map_session_data *sd)
+static void clif_parse_GuildRequestEmblem1(int fd, struct map_session_data *sd)
 {
-	struct guild* g;
-	int guild_id = RFIFOL(fd,2);
+	const struct PACKET_CZ_REQ_GUILD_EMBLEM_IMG1 *p = RFIFOP(fd, 0);
+	struct guild* g = guild->search(p->guild_id);
+	if (g != NULL)
+		clif->guild_emblem(sd, g);
+}
 
-	if( (g = guild->search(guild_id)) != NULL )
-		clif->guild_emblem(sd,g);
+static void clif_parse_GuildRequestEmblem2(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+/// Request for guild emblem data (CZ_REQ_GUILD_EMBLEM_IMG2).
+static void clif_parse_GuildRequestEmblem2(int fd, struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20190227 || PACKETVER_RE_NUM >= 20190227 || PACKETVER_ZERO_NUM >= 20190313
+	const struct PACKET_CZ_REQ_GUILD_EMBLEM_IMG2 *p = RFIFOP(fd, 0);
+	struct guild* g = guild->search(p->guild_id);
+	if (g != NULL)
+		clif->guild_emblem(sd, g);
+#endif  // PACKETVER_MAIN_NUM >= 20190227 || PACKETVER_RE_NUM >= 20190227 || PACKETVER_ZERO_NUM >= 20190313
+}
+
+static void clif_parse_GuildRequestEmblem3(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+/// Request for guild emblem data (CZ_REQ_GUILD_EMBLEM_IMG3).
+static void clif_parse_GuildRequestEmblem3(int fd, struct map_session_data *sd)
+{
+#if PACKETVER >= 20190724
+	const struct PACKET_CZ_REQ_GUILD_EMBLEM_IMG3 *p = RFIFOP(fd, 0);
+	struct guild* g = guild->search(p->guild_id);
+	if (g != NULL)
+		clif->guild_emblem(sd, g);
+#endif  // 20190724
 }
 
 /// Validates data of a guild emblem (compressed bitmap)
@@ -15491,8 +15579,6 @@ static bool clif_validate_emblem(const uint8 *emblem, unsigned long emblem_len)
 		RGBQUAD_SIZE = 4,           // sizeof(RGBQUAD)
 		BITMAPFILEHEADER_SIZE = 14, // sizeof(BITMAPFILEHEADER)
 		BITMAPINFOHEADER_SIZE = 40, // sizeof(BITMAPINFOHEADER)
-		BITMAP_WIDTH = 24,
-		BITMAP_HEIGHT = 24,
 	};
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(push, 1)
@@ -15513,11 +15599,12 @@ static bool clif_validate_emblem(const uint8 *emblem, unsigned long emblem_len)
 	nullpo_retr(false, emblem);
 	if (grfio->decode_zip(buf, &buf_len, emblem, emblem_len) != 0
 	 || buf_len < BITMAPFILEHEADER_SIZE + BITMAPINFOHEADER_SIZE
+	 || buf_len > extraconf->emblems->max_bmp_guild_emblem_size
 	 || RBUFW(buf,0) != 0x4d42 // BITMAPFILEHEADER.bfType (signature)
 	 || RBUFL(buf,2) != buf_len // BITMAPFILEHEADER.bfSize (file size)
 	 || RBUFL(buf,14) != BITMAPINFOHEADER_SIZE // BITMAPINFOHEADER.biSize (other headers are not supported)
-	 || RBUFL(buf,18) != BITMAP_WIDTH // BITMAPINFOHEADER.biWidth
-	 || RBUFL(buf,22) != BITMAP_HEIGHT // BITMAPINFOHEADER.biHeight (top-down bitmaps (-24) are not supported)
+	 || RBUFL(buf,18) != extraconf->emblems->guild_emblem_width // BITMAPINFOHEADER.biWidth
+	 || RBUFL(buf,22) != extraconf->emblems->guild_emblem_height // BITMAPINFOHEADER.biHeight (top-down bitmaps (-24) are not supported)
 	 || RBUFL(buf,30) != 0 // BITMAPINFOHEADER.biCompression == BI_RGB (compression not supported)
 	 ) {
 		// Invalid data
@@ -15534,11 +15621,11 @@ static bool clif_validate_emblem(const uint8 *emblem, unsigned long emblem_len)
 			else if( palettesize > 256 )
 				return false;
 			header = BITMAPFILEHEADER_SIZE + BITMAPINFOHEADER_SIZE + RGBQUAD_SIZE * palettesize; // headers + palette
-			bitmap = BITMAP_WIDTH * BITMAP_HEIGHT;
+			bitmap = extraconf->emblems->guild_emblem_width * extraconf->emblems->guild_emblem_height;
 			break;
 		case 24:
 			header = BITMAPFILEHEADER_SIZE + BITMAPINFOHEADER_SIZE;
-			bitmap = BITMAP_WIDTH * BITMAP_HEIGHT * RGBTRIPLE_SIZE;
+			bitmap = extraconf->emblems->guild_emblem_width * extraconf->emblems->guild_emblem_height * RGBTRIPLE_SIZE;
 			break;
 		default:
 			return false;
@@ -15554,7 +15641,7 @@ static bool clif_validate_emblem(const uint8 *emblem, unsigned long emblem_len)
 	}
 
 	if( battle_config.client_emblem_max_blank_percent < 100 ) {
-		int required_pixels = BITMAP_WIDTH * BITMAP_HEIGHT * (100 - battle_config.client_emblem_max_blank_percent) / 100;
+		int required_pixels = extraconf->emblems->guild_emblem_width * extraconf->emblems->guild_emblem_height * (100 - battle_config.client_emblem_max_blank_percent) / 100;
 		int found_pixels = 0;
 		int i;
 		/// Checks what percentage of a guild emblem is blank. A blank emblem
@@ -15571,7 +15658,7 @@ static bool clif_validate_emblem(const uint8 *emblem, unsigned long emblem_len)
 				const uint8 *indexes = RBUFP(buf,offbits);
 				const uint32 *palette = RBUFP(buf,BITMAPFILEHEADER_SIZE + BITMAPINFOHEADER_SIZE);
 
-				for (i = 0; i < BITMAP_WIDTH * BITMAP_HEIGHT; i++) {
+				for (i = 0; i < extraconf->emblems->guild_emblem_width * extraconf->emblems->guild_emblem_height; i++) {
 					if( indexes[i] >= palettesize ) // Invalid color
 						return false;
 
@@ -15589,7 +15676,7 @@ static bool clif_validate_emblem(const uint8 *emblem, unsigned long emblem_len)
 			{
 				const struct s_bitmaptripple *pixels = RBUFP(buf,offbits);
 
-				for (i = 0; i < BITMAP_WIDTH * BITMAP_HEIGHT; i++) {
+				for (i = 0; i < extraconf->emblems->guild_emblem_width * extraconf->emblems->guild_emblem_height; i++) {
 					// if( pixels[i].r < 0xF8 || pixels[i].g > 0x07 || pixels[i].b < 0xF8 )
 					if( ( pixels[i].rgb&0xF8F8F8 ) != 0xF800F8 ) {
 						if( ++found_pixels >= required_pixels ) {
@@ -16707,7 +16794,7 @@ static void clif_friendslist_send(struct map_session_data *sd)
 {
 	int i = 0, n, fd = sd->fd;
 
-#if (PACKETVER_MAIN_NUM >= 20180307 || PACKETVER_RE_NUM >= 20180221 || PACKETVER_ZERO_NUM >= 20180328) && PACKETVER < 20200902
+#if (PACKETVER_MAIN_NUM >= 20180307 && PACKETVER_MAIN_NUM < 20200902) || (PACKETVER_RE_NUM >= 20180221 && PACKETVER_RE_NUM < 20200902) || (PACKETVER_ZERO_NUM >= 20180328 && PACKETVER_ZERO_NUM < 20200902)
 	const int offset = 8;
 #else
 	const int offset = 32;
@@ -16719,7 +16806,7 @@ static void clif_friendslist_send(struct map_session_data *sd)
 	for(i = 0; i < MAX_FRIENDS && sd->status.friends[i].char_id; i++) {
 		WFIFOL(fd, 4 + offset * i + 0) = sd->status.friends[i].account_id;
 		WFIFOL(fd, 4 + offset * i + 4) = sd->status.friends[i].char_id;
-#if !(PACKETVER_MAIN_NUM >= 20180307 || PACKETVER_RE_NUM >= 20180221 || PACKETVER_ZERO_NUM >= 20180328) || PACKETVER >= 20200902
+#if !((PACKETVER_MAIN_NUM >= 20180307 && PACKETVER_MAIN_NUM < 20200902) || (PACKETVER_RE_NUM >= 20180221 && PACKETVER_RE_NUM < 20200902) || (PACKETVER_ZERO_NUM >= 20180328 && PACKETVER_ZERO_NUM < 20200902))
 		memcpy(WFIFOP(fd, 4 + offset * i + 8), &sd->status.friends[i].name, NAME_LENGTH);
 #endif
 	}
@@ -25765,6 +25852,96 @@ static void clif_goldpc_info(struct map_session_data *sd)
 #endif // 20140611
 }
 
+static void clif_parse_adventuterAgencyJoinReq(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+static void clif_parse_adventuterAgencyJoinReq(int fd, struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20171213 || PACKETVER_RE_NUM >= 20171213 || PACKETVER_ZERO_NUM >= 20171214
+	const struct PACKET_CZ_ADVENTURER_AGENCY_JOIN_REQ *p = RP2PTR(fd);
+	party->agency_request_join(sd, map->charid2sd(p->GID));
+#endif
+}
+
+static void clif_adventurerAgencyResult(struct map_session_data *sd, enum adventurer_agency_result result, const char *player_name, const char *party_name)
+{
+#if PACKETVER_MAIN_NUM >= 20191218 || PACKETVER_RE_NUM >= 20191211 || PACKETVER_ZERO_NUM >= 20191224
+	nullpo_retv(sd);
+	nullpo_retv(player_name);
+	nullpo_retv(party_name);
+	struct PACKET_ZC_ADVENTURER_AGENCY_JOIN_RESULT p = { 0 };
+	p.packetType = HEADER_ZC_ADVENTURER_AGENCY_JOIN_RESULT;
+	p.result = result;
+	safestrncpy(p.player_name, player_name, NAME_LENGTH);
+	safestrncpy(p.party_name, party_name, NAME_LENGTH);
+	clif->send(&p, sizeof(p), &sd->bl, SELF);
+#endif
+}
+
+static void clif_adventurerAgencyJoinReq(struct map_session_data *sd, struct map_session_data *tsd)
+{
+#if PACKETVER_MAIN_NUM >= 20191218 || PACKETVER_RE_NUM >= 20191211 || PACKETVER_ZERO_NUM >= 20191224
+	nullpo_retv(sd);
+	nullpo_retv(tsd);
+
+	const int fd = tsd->fd;
+	const struct party_data *p = party->search(tsd->status.party_id);
+
+	if (p == NULL)
+		return;
+
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_ADVENTURER_AGENCY_JOIN_REQ));
+	struct PACKET_ZC_ADVENTURER_AGENCY_JOIN_REQ *packet = WFIFOP(fd, 0);
+	packet->packetType = HEADER_ZC_ADVENTURER_AGENCY_JOIN_REQ;
+	packet->GRID = p->party.party_id;
+	packet->AID = sd->bl.id;
+	safestrncpy(packet->groupName, p->party.name, NAME_LENGTH);
+	packet->level = sd->status.base_level;
+	packet->job = sd->status.class;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_ADVENTURER_AGENCY_JOIN_REQ));
+#endif
+}
+
+static void clif_parse_adventuterAgencyJoinResult(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
+static void clif_parse_adventuterAgencyJoinResult(int fd, struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20191218 || PACKETVER_RE_NUM >= 20191211 || PACKETVER_ZERO_NUM >= 20191224
+	const struct PACKET_CZ_ADVENTURER_AGENCY_JOIN_RESULT *packet = RP2PTR(fd);
+
+	if (sd->status.party_id == 0 || packet->GRID != sd->status.party_id)
+		return;
+
+	const struct party_data *p = party->search(sd->status.party_id);
+	if (p == NULL || !party->is_leader(sd, p))
+		return;
+
+	struct map_session_data *tsd = map->id2sd(packet->AID);
+	if (tsd == NULL)
+		return;
+
+	int i;
+	ARR_FIND(0, VECTOR_LENGTH(sd->agency_requests), i, VECTOR_INDEX(sd->agency_requests, i) == tsd->bl.id);
+	if (i == VECTOR_LENGTH(sd->agency_requests)) {
+		return;
+	}
+	VECTOR_ERASE(sd->agency_requests, i);
+
+	if (packet->result == 0) {
+		clif->adventurerAgencyResult(tsd, AGENCY_JOIN_REJECTED, "", "");
+		return;
+	}
+
+	// Set party invite info
+	tsd->party_joining = true;
+	tsd->party_invite = sd->status.party_id;
+	tsd->party_invite_account = sd->status.account_id;
+
+	// Call char server for adding
+	struct party_member member;
+	party->fill_member(&member, tsd, 0);
+	intif->party_addmember(p->party.party_id, &member);
+	clif->adventurerAgencyResult(tsd, AGENCY_JOIN_ACCEPTED, "", "");
+#endif
+}
+
 /*==========================================
  * Main client packet processing function
  *------------------------------------------*/
@@ -26479,7 +26656,10 @@ void clif_defaults(void)
 	clif->guild_positionchanged = clif_guild_positionchanged;
 	clif->guild_memberpositionchanged = clif_guild_memberpositionchanged;
 	clif->guild_emblem = clif_guild_emblem;
-	clif->guild_emblem_area = clif_guild_emblem_area;
+	clif->guild_emblem_clear = clif_guild_emblem_clear;
+	clif->guild_emblem_complete = clif_guild_emblem_complete;
+	clif->guild_emblem_body = clif_guild_emblem_body;
+	clif->guild_emblem_id_area = clif_guild_emblem_id_area;
 	clif->guild_notice = clif_guild_notice;
 	clif->guild_message = clif_guild_message;
 	clif->guild_reqalliance = clif_guild_reqalliance;
@@ -26790,7 +26970,9 @@ void clif_defaults(void)
 	clif->pGuildRequestInfo = clif_parse_GuildRequestInfo;
 	clif->pGuildChangePositionInfo = clif_parse_GuildChangePositionInfo;
 	clif->pGuildChangeMemberPosition = clif_parse_GuildChangeMemberPosition;
-	clif->pGuildRequestEmblem = clif_parse_GuildRequestEmblem;
+	clif->pGuildRequestEmblem1 = clif_parse_GuildRequestEmblem1;
+	clif->pGuildRequestEmblem2 = clif_parse_GuildRequestEmblem2;
+	clif->pGuildRequestEmblem3 = clif_parse_GuildRequestEmblem3;
 	clif->pGuildChangeEmblem = clif_parse_GuildChangeEmblem;
 	clif->pGuildChangeNotice = clif_parse_GuildChangeNotice;
 	clif->pGuildInvite = clif_parse_GuildInvite;
@@ -27114,4 +27296,9 @@ void clif_defaults(void)
 	clif->dynamicnpc_create_result = clif_dynamicnpc_create_result;
 
 	clif->goldpc_info = clif_goldpc_info;
+
+	clif->pAdventuterAgencyJoinReq = clif_parse_adventuterAgencyJoinReq;
+	clif->adventurerAgencyResult = clif_adventurerAgencyResult;
+	clif->adventurerAgencyJoinReq = clif_adventurerAgencyJoinReq;
+	clif->pAdventuterAgencyJoinResult = clif_parse_adventuterAgencyJoinResult;
 }

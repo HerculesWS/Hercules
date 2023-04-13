@@ -22,6 +22,7 @@
 #include "lclif.p.h"
 
 #include "login/ipban.h"
+#include "login/lapiif.h"
 #include "login/login.h"
 #include "login/loginlog.h"
 #include "login/packets_ac_struct.h"
@@ -268,6 +269,19 @@ static enum parsefunc_rcode lclif_parse_CA_CHARSERVERCONNECT(int fd, struct logi
 	return PACKET_STOPPARSE;
 }
 
+/// @copydoc lclif_interface_private::parse_CA_APISERVERCONNECT()
+static enum parsefunc_rcode lclif_parse_CA_APISERVERCONNECT(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
+static enum parsefunc_rcode lclif_parse_CA_APISERVERCONNECT(int fd, struct login_session_data *sd)
+{
+	char ip[16];
+	uint32 ipl = sockt->session[fd]->client_addr;
+	sockt->ip2str(ipl, ip);
+
+	login->parse_request_api_connection(fd, sd, ip, ipl);
+
+	return PACKET_STOPPARSE;
+}
+
 /// @copydoc lclif_interface::server_list()
 static bool lclif_send_server_list(struct login_session_data *sd)
 {
@@ -293,7 +307,6 @@ static bool lclif_send_server_list(struct login_session_data *sd)
 	packet->packet_id = HEADER_AC_ACCEPT_LOGIN;
 #else
 	packet->packet_id = HEADER_AC_ACCEPT_LOGIN2;
-	login->generate_token(sd, packet->auth_token);
 #endif
 	packet->packet_len = length;
 	packet->auth_code = sd->login_id1;
@@ -302,6 +315,14 @@ static bool lclif_send_server_list(struct login_session_data *sd)
 	packet->last_login_ip = 0; // Not used anymore
 	memset(packet->last_login_time, '\0', sizeof(packet->last_login_time)); // Not used anymore
 	packet->sex = sex_str2num(sd->sex);
+#if PACKETVER >= 20170315
+	login->generate_token(packet->auth_token);
+	lapiif->connect_user(sd, packet->auth_token);
+#else  // PACKETVER >= 20170315
+	unsigned char auth_token[AUTH_TOKEN_SIZE];
+	login->generate_token(auth_token);
+	lapiif->connect_user(sd, auth_token);
+#endif  // PACKETVER >= 20170315
 	for (i = 0, n = 0; i < ARRAYLENGTH(login->dbs->server); ++i) {
 		uint32 subnet_char_ip;
 
@@ -498,6 +519,8 @@ static const struct login_packet_db *lclif_packet(int16 packet_id)
 {
 	if (packet_id == HEADER_CA_CHARSERVERCONNECT)
 		return &lclif->p->dbs->packet_db[0];
+	else if (packet_id == HEADER_CA_APISERVERCONNECT)
+		return &lclif->p->dbs->packet_db[1];
 
 	if (packet_id > MAX_PACKET_LOGIN_DB || packet_id < MIN_PACKET_DB)
 		return NULL;
@@ -559,6 +582,9 @@ static void packetdb_loaddb(void)
 	//Explict case, we will save character login packet in position 0 which is unused and not valid by normal
 	lclif->p->dbs->packet_db[0].len = sizeof(struct PACKET_CA_CHARSERVERCONNECT);
 	lclif->p->dbs->packet_db[0].pFunc = &lclif->p->parse_CA_CHARSERVERCONNECT;
+
+	lclif->p->dbs->packet_db[1].len = sizeof(struct PACKET_CA_APISERVERCONNECT);
+	lclif->p->dbs->packet_db[1].pFunc = &lclif->p->parse_CA_APISERVERCONNECT;
 }
 
 /// @copydoc lclif_interface::init()
@@ -609,4 +635,5 @@ void lclif_defaults(void)
 	lclif->p->parse_CA_OTP_CODE             = lclif_parse_CA_OTP_CODE;
 	lclif->p->parse_CA_REQ_HASH             = lclif_parse_CA_REQ_HASH;
 	lclif->p->parse_CA_CHARSERVERCONNECT    = lclif_parse_CA_CHARSERVERCONNECT;
+	lclif->p->parse_CA_APISERVERCONNECT     = lclif_parse_CA_APISERVERCONNECT;
 }

@@ -17,6 +17,7 @@ jobs:
         CC: [gcc]
         RENEWAL: [""]
         CLIENT_TYPE: [""]
+        HTTPLIB: ["", "--with-http_parser=llhttp"]
         SANITIZER: ["--disable-manager", "--enable-sanitize=full"]
         PACKET_VERSION: ["--enable-packetver=20221024"]
         MYSQL: ["10.2", "latest"]
@@ -37,7 +38,7 @@ jobs:
       INSTALL_PACKAGES: ${{ matrix.CC }} mariadb-client libmariadbclient-dev-compat
       SQLHOST: mysql
       CC: ${{ matrix.CC }}
-      CONFIGURE_FLAGS: CC=${{ matrix.CC }} --enable-debug --enable-Werror --enable-buildbot ${{ matrix.RENEWAL }} ${{ matrix.CLIENT_TYPE }} ${{ matrix.SANITIZER }} ${{ matrix.PACKET_VERSION }}
+      CONFIGURE_FLAGS: CC=${{ matrix.CC }} --enable-debug --enable-Werror --enable-buildbot ${{ matrix.RENEWAL }} ${{ matrix.HTTPLIB }} ${{ matrix.CLIENT_TYPE }} ${{ matrix.SANITIZER }} ${{ matrix.PACKET_VERSION }}
       PACKET_VERSION: ${{ matrix.PACKET_VERSION }}
     steps:
       - uses: actions/checkout@v1

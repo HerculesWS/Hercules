@@ -5845,6 +5845,135 @@ struct PACKET_ZC_DYNAMICNPC_CREATE_RESULT {
 DEFINE_PACKET_HEADER(ZC_DYNAMICNPC_CREATE_RESULT , 0x0a17);
 #endif // PACKETVER >= 20140611
 
+struct PACKET_CZ_REQ_GUILD_EMBLEM_IMG1 {
+	int16 packetType;
+	int32 guild_id;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_REQ_GUILD_EMBLEM_IMG1, 0x0151);
+
+#if PACKETVER >= 20190724
+struct PACKET_CZ_REQ_GUILD_EMBLEM_IMG3 {
+	int16 packetType;
+	int32 guild_id;
+	int32 emblem_id;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_REQ_GUILD_EMBLEM_IMG3, 0x0b46);
+#endif  // PACKETVER >= 20190724
+
+#if PACKETVER_MAIN_NUM >= 20190619 || PACKETVER_RE_NUM >= 20190605 || PACKETVER_ZERO_NUM >= 20190626
+struct PACKET_CZ_REQ_GUILD_EMBLEM_IMG2 {
+	int16 packetType;
+	int32 guild_id;
+	int32 emblem_id;
+	int32 unused;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_REQ_GUILD_EMBLEM_IMG2, 0x0b1e);
+#elif PACKETVER_MAIN_NUM >= 20190227 || PACKETVER_RE_NUM >= 20190227 || PACKETVER_ZERO_NUM >= 20190313
+struct PACKET_CZ_REQ_GUILD_EMBLEM_IMG2 {
+	int16 packetType;
+	int32 guild_id;
+	int32 emblem_id;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_REQ_GUILD_EMBLEM_IMG2, 0x0b1e);
+#endif  // PACKETVER_MAIN_NUM >= 20190619 || PACKETVER_RE_NUM >= 20190605 || PACKETVER_ZERO_NUM >= 20190626
+
+#if PACKETVER_MAIN_NUM >= 20190807 || PACKETVER_RE_NUM >= 20190731 || PACKETVER_ZERO_NUM >= 20190814
+struct PACKET_ZC_CHANGE_GUILD {
+	int16 packetType;
+	int32 guild_id;
+	uint32 emblem_id;
+	uint32 AID;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_CHANGE_GUILD, 0x0b47);
+// 20190619 main exists in first versions, then removed
+// 20190605 re first versions with other packet size
+#elif PACKETVER_MAIN_NUM >= 20190703 || PACKETVER_RE_NUM >= 20190605 || PACKETVER_ZERO_NUM >= 20190709
+struct PACKET_ZC_CHANGE_GUILD {
+	int16 packetType;
+	int32 guild_id;
+	uint32 emblem_id;
+	uint32 AID;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_CHANGE_GUILD, 0x0b1f);
+#else  // PACKETVER_MAIN_NUM >= 20190807 || PACKETVER_RE_NUM >= 20190731 || PACKETVER_ZERO_NUM >= 20190814
+struct PACKET_ZC_CHANGE_GUILD {
+	int16 packetType;
+	uint32 AID;
+	int32 guild_id;
+	uint16 emblem_id;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_CHANGE_GUILD, 0x01b4);
+#endif  // PACKETVER_MAIN_NUM >= 20190807 || PACKETVER_RE_NUM >= 20190731 || PACKETVER_ZERO_NUM >= 20190814
+
+#if PACKETVER_MAIN_NUM >= 20190821 || PACKETVER_RE_NUM >= 20190807 || PACKETVER_ZERO_NUM >= 20190710
+enum ZC_GUILD_EMBLEM_TYPE {
+	ZC_GUILD_EMBLEM_TYPE_CLEAR = 0,
+	ZC_GUILD_EMBLEM_TYPE_ADD = 1,
+	ZC_GUILD_EMBLEM_TYPE_COMPLETE = 2,
+};
+
+struct PACKET_ZC_GUILD_EMBLEM_IMG {
+	int16 packetType;
+	int16 packetLength;
+	uint16 result;
+	int32 guild_id;
+	uint32 emblem_id;
+	char emblem_data[];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_GUILD_EMBLEM_IMG, 0x0b36);
+#else  // PACKETVER_MAIN_NUM >= 20190821 || PACKETVER_RE_NUM >= 20190807 || PACKETVER_ZERO_NUM >= 20190710
+struct PACKET_ZC_GUILD_EMBLEM_IMG {
+	int16 packetType;
+	int16 packetLength;
+	int32 guild_id;
+	uint32 emblem_id;
+	char emblem_data[];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_GUILD_EMBLEM_IMG, 0x0152);
+#endif  // PACKETVER_MAIN_NUM >= 20190821 || PACKETVER_RE_NUM >= 20190807 || PACKETVER_ZERO_NUM >= 20190710
+
+#if PACKETVER_MAIN_NUM >= 20171213 || PACKETVER_RE_NUM >= 20171213 || PACKETVER_ZERO_NUM >= 20171214
+struct PACKET_CZ_ADVENTURER_AGENCY_JOIN_REQ {
+	int16 packetType;
+	int GID;
+	int AID;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_ADVENTURER_AGENCY_JOIN_REQ, 0x0ae6);
+#endif  // PACKETVER_MAIN_NUM >= 20171213 || PACKETVER_RE_NUM >= 20171213 || PACKETVER_ZERO_NUM >= 20171214
+
+#if PACKETVER_MAIN_NUM >= 20191218 || PACKETVER_RE_NUM >= 20191211 || PACKETVER_ZERO_NUM >= 20191224
+struct PACKET_ZC_ADVENTURER_AGENCY_JOIN_RESULT {
+	int16 packetType;
+	char player_name[NAME_LENGTH];
+	char party_name[NAME_LENGTH];
+	int AID;
+	int result;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_ADVENTURER_AGENCY_JOIN_RESULT, 0x0afa);
+#endif  // PACKETVER_MAIN_NUM >= 20191218 || PACKETVER_RE_NUM >= 20191211 || PACKETVER_ZERO_NUM >= 20191224
+
+#if PACKETVER_MAIN_NUM >= 20191218 || PACKETVER_RE_NUM >= 20191211 || PACKETVER_ZERO_NUM >= 20191224
+struct PACKET_ZC_ADVENTURER_AGENCY_JOIN_REQ {
+	int16 packetType;
+	int GRID;
+	int AID;
+	char groupName[NAME_LENGTH];
+	int16 level;
+	int16 job;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_ADVENTURER_AGENCY_JOIN_REQ, 0x0ae7);
+#endif  // PACKETVER_MAIN_NUM >= 20191218 || PACKETVER_RE_NUM >= 20191211 || PACKETVER_ZERO_NUM >= 20191224
+
+#if PACKETVER_MAIN_NUM >= 20191218 || PACKETVER_RE_NUM >= 20191211 || PACKETVER_ZERO_NUM >= 20191224
+struct PACKET_CZ_ADVENTURER_AGENCY_JOIN_RESULT {
+	int16 packetType;
+	int GRID;
+	int AID;
+	int8 result;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_ADVENTURER_AGENCY_JOIN_RESULT, 0x0af8);
+#endif  // PACKETVER_MAIN_NUM >= 20191218 || PACKETVER_RE_NUM >= 20191211 || PACKETVER_ZERO_NUM >= 20191224
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris

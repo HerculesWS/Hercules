@@ -25,6 +25,7 @@
 #include "common/core.h" // CORE_ST_LAST
 #include "common/db.h"
 #include "common/mmo.h"
+#include "common/chunked/rfifo.h"
 
 /* Forward Declarations */
 struct config_setting_t; // common/conf.h
@@ -71,6 +72,13 @@ struct online_char_data {
 	int waiting_disconnect;
 	enum online_char_state mapserver_connection;
 	int pincode_enable;
+	struct online_char_data2 *data;
+};
+
+struct online_char_data2 {
+	int emblem_guild_id;
+	bool emblem_gif;
+	struct fifo_chunk_buf emblem_data;
 };
 
 struct mmo_map_server {
@@ -81,7 +89,7 @@ struct mmo_map_server {
 	VECTOR_DECL(uint16) maps;
 };
 
-#define DEFAULT_AUTOSAVE_INTERVAL (300*1000)
+#define DEFAULT_CHAR_AUTOSAVE_INTERVAL (300*1000)
 
 enum inventory_table_type {
 	TABLE_INVENTORY,
@@ -284,6 +292,10 @@ struct char_interface {
 	int (*online_data_cleanup_sub) (union DBKey key, struct DBData *data, va_list ap);
 	int (*online_data_cleanup) (int tid, int64 tick, int id, intptr_t data);
 	void (*change_sex_sub) (int sex, int acc, int char_id, int class, int guild_id);
+	void (*online_char_destroy) (struct online_char_data *character);
+	int (*online_char_destroy_sub) (union DBKey key, struct DBData *data, va_list ap);
+	void (*ensure_online_char_data) (struct online_char_data *character);
+	void (*clean_online_char_emblem_data) (struct online_char_data *character);
 
 	bool (*sql_config_read) (const char *filename, bool imported);
 	bool (*sql_config_read_registry) (const char *filename, const struct config_t *config, bool imported);
@@ -345,6 +357,9 @@ extern char acc_reg_str_db[32];
 extern char char_reg_str_db[32];
 extern char char_reg_num_db[32];
 extern char char_achievement_db[256];
+extern char emotes_db[256];
+extern char hotkeys_db[256];
+extern char adventurer_agency_db[256];
 
 extern int guild_exp_rate;
 

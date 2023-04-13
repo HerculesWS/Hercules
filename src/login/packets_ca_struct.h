@@ -40,6 +40,7 @@ enum login_packet_ca_id {
 	HEADER_CA_LOGIN_OTP            = 0x0acf,
 	HEADER_CA_REQ_HASH             = 0x01db,
 	HEADER_CA_CHARSERVERCONNECT    = 0x2710, // Custom Hercules Packet
+	HEADER_CA_APISERVERCONNECT     = 0x2720, // Custom Hercules Packet
 	//HEADER_CA_SSO_LOGIN_REQa       = 0x825a, /* unused */
 };
 
@@ -226,10 +227,21 @@ struct PACKET_CA_CHARSERVERCONNECT {
 	int32 unknown;
 	int32 ip;          ///< Charserver IP
 	int16 port;        ///< Charserver port
-	char name[20];     ///< Charserver name
+	char name[MAX_CHARSERVER_NAME_SIZE];  ///< Charserver name
 	int16 unknown2;
 	int16 type;        ///< Charserver type
 	int16 new;         ///< Whether charserver is to be marked as new
+} __attribute__((packed));
+
+/**
+ * Packet structure for CA_APISERVERCONNECT.
+ *
+ * This packet is used internally, to signal a api-server connection.
+ */
+struct PACKET_CA_APISERVERCONNECT {
+	int16 packet_id;   ///< Packet ID (#HEADER_CA_APISERVERCONNECT)
+	char userid[24];   ///< Username
+	char password[24]; ///< Password
 } __attribute__((packed));
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
