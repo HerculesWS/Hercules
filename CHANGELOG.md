@@ -22,6 +22,75 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
+## [v2023.04.12] `April 12 2023`
+
+Note: everything included in this release is part of PR #3198 which consists of 301 commits. To avoid extreme redundancy the PR link will not be repeated for each line of the changelog.
+
+### Added
+
+- Added a brand new fourth server (api-server) to support HTTP-based client features as well as, potentially, third party tools
+  - The api-server listens by default on port 7121.
+  - The server is a separate process and can be started in the same way as login, char and map servers.
+  - Configuration can be found in `conf/api/` and supports the same import mechanism as the other servers.
+  - HPM plugins are supported in the same way as login, char and map servers and sample plugins are included.
+  - The api-server can be customized (i.e. through HPM plugins) to provide an easily accessible HTTP API for use by third party tools that want to communicate with the Hercules server.
+  - The server offers some built-in basic protection (limiting connections by IP, limiting request and headers size, trusted IPs, etc.), but as with any externally exposed service, caution is recommended, and a system administrator should decide whether it is necessary to use additional forms of filtering (such as a judiciously configured reverse proxy or web application firewall) for public deployments.
+  - The connection interfaces are as follows:
+    - client - api-server (`aclif`)
+    - login-server (`lapiif`) - api-server (`aloginif`)
+    - char-server (`capiif`) - api-server
+    - map-server (`mapiif`) - api-server
+  - The http parser library can be switched at compile time to llhttp (`--with-http_parser=llhttp`) and defaults to `http-parser` (`--with-http_parser=http-parser`)
+  - Visual Studio solutions have been updated (as a best-effort approach, those files are unmaintainable and are looking to be replaced by a generator such as CMake in order to avoid repetition and desynchronization). Xcode project has not been updated at the current time.
+  - Some parameters can be edited at compile time to alter various behaviors. See `src/api/aclif.h`, `src/api/httpsender.h`, `src/api/mimepart.h`, `common/apipackets.h` for a list of macros that can be redefined (undocumented and may have unexpected side-effects, edit after familiarizing with the code that uses them).
+- Added support for user configuration in clients that support the HTTP API at the `/userconfig/load` and `/userconfig/save` endpoints
+  - emotes are persisted by the char server into the `emotes` table (SQL migration is included), default emotes can be edited in `conf/emotes.conf`
+  - hotkeys (v1) are currently not supported
+  - hotkeys (v2) are persisted by the char server into the `hotkeys` table (SQL migration is included)
+- Added support for character settings in clients that support the HTTP API at the `/charconfig/load` endpoint
+- Added support for guild emblems in clients that support the HTTP API at the `/emblem/upload` and `/emblem/download` endpoints
+  - Supports BMP (static) and GIF (static or animated) emblems
+  - The `emblem_data` field in the `guild` table has been changed to a `mediumblob` (SQL migration is included)
+  - Validation parameters can be changed in `conf/common/emblems.conf`
+- Added support for party/adventurer agency functions in clients that support the HTTP API at the `/party/list`, `/party/get`, `/party/add`, `/party/del` endpoints
+  - Search is currently not supported
+  - Adventurer agency data is persisted by the char server into the `adventurer_agency` table (SQL migration is included)
+  - A new module (`int_adventurer_agency`) has been added to the char server
+- Added the following third party libraries, used by the api-server:
+  - http-handler from the node-js http-parser (`3rdparty/http-parser`)
+  - multipart-parser (`3rdparty/multipart-parser`)
+  - cJSON (`3rdparty/cJSON`)
+  - llhttp (`3rdparty/llhttp`)
+  - GIFLIB (`3rdparty/libgif`)
+- Extended the SQL interface with the `SQL->QueryStrFetch()` method, to execute a query and fetch a row.
+- Added support for sending/receiving chunked packets (for sending and receiving packets that would exceed the maximum packet size)
+  - See related macros in `src/common/chunked/rfifo.h` and `src/common/chunked/wfifo.h`
+  - Tests are included, in `src/test/test_chunked.c`
+  - Chunked packets are usable for both server-server and client-server communication
+- Added `extraconf` interface (currently supporting `conf/common/emblems.conf`) for configuration files used by multiple servers
+
+### Changed
+
+- The `create_session()` function is now part of the socket interface and adds support for configurable connection and termination handlers.
+- The `delete_session()` function is now part of the socket interface.
+- Updated token generation in the login server to support communication with the API server.
+- Updated gitignore with temporary files from python and ccache.
+- Updated handling of packet `CZ_REQ_GUILD_EMBLEM_IMG` (now `PACKET_CZ_REQ_GUILD_EMBLEM_IMG1`) to use the struct format and added the `PACKET_CZ_REQ_GUILD_EMBLEM_IMG2` and `CZ_REQ_GUILD_EMBLEM_IMG3` variants.
+- Updated handling of packets `ZC_CHANGE_GUILD`, `ZC_GUILD_EMBLEM_IMG`, `CHARMAP_GUILD_EMBLEM`, `CHARMAP_GUILD_INFO`, `CHARMAP_GUILD_INFO_EMPTY`, `MAPCHAR_GUILD_EMBLEM` to use the struct format.
+- Updated packets `ZC_CHANGE_GUILD`, `ZC_GUILD_EMBLEM_IMG`.
+- Renamed `clif->guild_emblem_area()` into `clif->guild_emblem_id_area()`.
+- Renamed `DEFAULT_AUTOSAVE_INTERVAL` to `DEFAULT_CHAR_AUTOSAVE_INTERVAL` and `DEFAULT_MAP_AUTOSAVE_INTERVAL` to avoid conflicting definitions of the same macro.
+- Extended the `console.console_msg_log` (`conf/global/console.conf`) setting to work on all servers instead of just the map server.
+  - Log filenames will be named accordingly: `log/login-msg_log.log`, `log/char-msg_log.log`, `log/map-msg_log.log`, `log/api-msg_log.log`.
+- Changed `emblem_data` in `struct guild` to be a pointer instead of a fixed size array (this may require updates to any custom code copying or allocating/deallocating the struct).
+- Switched to python3 for all the debian/ubuntu jobs in Gitlab-CI
+- Enabled memory leak on exit checks to the address sanitizer configuration for CI builds
+
+### Fixed
+
+- Fixed a compilation error with ccache.
+- Fixed packetvers in `clif_friendslist_send()`.
+
 ## [v2023.03.08] `March 08 2023`
 
 ### Added
