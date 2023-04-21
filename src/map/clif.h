@@ -1839,7 +1839,7 @@ struct clif_interface {
 	bool (*attendance_timediff) (struct map_session_data *sd);
 	time_t (*attendance_getendtime) (void);
 	void (*pOpenUIRequest) (int fd, struct map_session_data *sd);
-	void (*open_ui_send1) (struct map_session_data *sd, enum zc_ui_types ui_type);
+	void (*open_ui_send1) (struct map_session_data *sd, enum zc_ui_types ui_type, int32 data);
 	void (*open_ui_send2) (struct map_session_data *sd, enum zc_ui_types ui_type, uint64 data);
 	void (*open_ui_send) (struct map_session_data *sd, enum zc_ui_types ui_type);
 	void (*open_ui) (struct map_session_data *sd, enum cz_ui_types uiType);

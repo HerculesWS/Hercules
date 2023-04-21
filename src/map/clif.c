@@ -23927,9 +23927,10 @@ static void clif_parse_open_ui_request(int fd, struct map_session_data *sd)
  *
  * @param sd The character who opens the UI.
  * @param ui_type The UI which should be opened.
+ * @param data The data to trigger specific behavior in this UI (ui_type dependent)
  *
  **/
-static void clif_open_ui_send1(struct map_session_data *sd, enum zc_ui_types ui_type)
+static void clif_open_ui_send1(struct map_session_data *sd, enum zc_ui_types ui_type, int32 data)
 {
 	nullpo_retv(sd);
 #if PACKETVER >= 20151202
@@ -23944,34 +23945,17 @@ static void clif_open_ui_send1(struct map_session_data *sd, enum zc_ui_types ui_
 	case ZC_CAPTCHA_UI:
 	case ZC_MACRO_UI:
 #if PACKETVER >= 20171122
-		p.data = 0;
+		p.data = data;
 #endif
 		break;
 #if PACKETVER >= 20171122
-	case ZC_TIPBOX_UI:
-	case ZC_RENEWQUEST_UI:
-		p.data = 0;
+	case ZC_TIPBOX_UI: // data is the TipBox ID (0 for random)
+	case ZC_RENEWQUEST_UI: // data is the Quest ID (0 for none)
+		p.data = data;
 		break;
 	case ZC_ATTENDANCE_UI:
-		if (battle_config.feature_enable_attendance_system == 0)
-			return;
-
-		if (clif->attendance_getendtime() < time(NULL)) {
-#if PACKETVER >= 20180207
-			clif->msgtable_color(sd, MSG_CHECK_ATTENDANCE_NOT_EVENT, COLOR_RED);
-#endif
-			return;
-		}
-
 #if PACKETVER_RE_NUM >= 20180307 || PACKETVER_MAIN_NUM >= 20180404 || PACKETVER_ZERO_NUM >= 20180411
-		int claimed = 0;
-
-		if (!clif->attendance_timediff(sd))
-			++claimed;
-		else if (sd->status.attendance_count >= VECTOR_LENGTH(clif->attendance_data))
-			sd->status.attendance_count = 0;
-
-		p.data = sd->status.attendance_count * 10 + claimed;
+		p.data = data;
 #else
 		ShowWarning("Attendance System available only for PACKETVER_RE_NUM >= 20180307 || PACKETVER_MAIN_NUM >= 20180404 || PACKETVER_ZERO_NUM >= 20180411.\n");
 		return;
@@ -23981,7 +23965,7 @@ static void clif_open_ui_send1(struct map_session_data *sd, enum zc_ui_types ui_
 #if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 	case ZC_GRADE_ENCHANT_UI:
 		sd->state.grade_ui = 1;
-		p.data = 0;
+		p.data = data;
 		break;
 #endif
 #if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
@@ -24041,20 +24025,44 @@ static void clif_open_ui_send(struct map_session_data *sd, enum zc_ui_types ui_t
 	case ZC_STYLIST_UI:
 	case ZC_CAPTCHA_UI:
 	case ZC_MACRO_UI:
-		clif->open_ui_send1(sd, ui_type);
+		clif->open_ui_send1(sd, ui_type, 0);
 		break;
 #if PACKETVER >= 20171122
 	case ZC_TIPBOX_UI:
 	case ZC_RENEWQUEST_UI:
-		clif->open_ui_send1(sd, ui_type);
+		clif->open_ui_send1(sd, ui_type, 0);
 		break;
 	case ZC_ATTENDANCE_UI:
-		clif->open_ui_send1(sd, ui_type);
+	{
+		if (battle_config.feature_enable_attendance_system == 0)
+			return;
+
+		if (clif->attendance_getendtime() < time(NULL)) {
+#if PACKETVER >= 20180207
+			clif->msgtable_color(sd, MSG_CHECK_ATTENDANCE_NOT_EVENT, COLOR_RED);
+#endif
+			return;
+		}
+
+#if PACKETVER_RE_NUM >= 20180307 || PACKETVER_MAIN_NUM >= 20180404 || PACKETVER_ZERO_NUM >= 20180411
+		int claimed = 0;
+
+		if (!clif->attendance_timediff(sd))
+			++claimed;
+		else if (sd->status.attendance_count >= VECTOR_LENGTH(clif->attendance_data))
+			sd->status.attendance_count = 0;
+
+		clif->open_ui_send1(sd, ui_type, sd->status.attendance_count * 10 + claimed);
+#else
+		ShowWarning("Attendance System available only for PACKETVER_RE_NUM >= 20180307 || PACKETVER_MAIN_NUM >= 20180404 || PACKETVER_ZERO_NUM >= 20180411.\n");
+		return;
+#endif
 		break;
+	}
 #endif
 #if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 	case ZC_GRADE_ENCHANT_UI:
-		clif->open_ui_send1(sd, ui_type);
+		clif->open_ui_send1(sd, ui_type, 0);
 		break;
 #endif
 #if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
