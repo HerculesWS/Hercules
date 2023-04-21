@@ -1192,6 +1192,7 @@ static int mob_spawn(struct mob_data *md)
 		memset(md->lootitem, 0, sizeof(*md->lootitem));
 
 	md->lootitem_count = 0;
+	md->dmg_taken_rate = md->db->dmg_taken_rate;
 
 	if(md->db->option)
 		// Added for carts, falcons and pecos for cloned monsters. [Valaris]

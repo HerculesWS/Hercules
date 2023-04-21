@@ -5647,7 +5647,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 				&& skill_id != NPC_GRANDDARKNESS
 				&& skill_id != PA_SHIELDCHAIN
 				&& skill_id != KO_HAPPOKUNAI
-#ifndef RENEWAL			
+#ifndef RENEWAL
 				&& !flag.cri
 #endif
 			) {
@@ -6641,11 +6641,11 @@ static enum damage_lv battle_weapon_attack(struct block_list *src, struct block_
 	if (target->type == BL_MOB) {
 		struct mob_data *md = BL_CAST(BL_MOB, target);
 		if (md != NULL) {
-			if (md->db->dmg_taken_rate != 100) {
+			if (md->dmg_taken_rate != 100) {
 				if (wd.damage > 0)
-					wd.damage = apply_percentrate64(wd.damage, md->db->dmg_taken_rate, 100);
+					wd.damage = apply_percentrate64(wd.damage, md->dmg_taken_rate, 100);
 				if (wd.damage2 > 0)
-					wd.damage2 = apply_percentrate64(wd.damage2, md->db->dmg_taken_rate, 100);
+					wd.damage2 = apply_percentrate64(wd.damage2, md->dmg_taken_rate, 100);
 			}
 		}
 	}
