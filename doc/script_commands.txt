@@ -10753,6 +10753,12 @@ Opens the styling shop on client
 
 ---------------------------------------
 
+*openbank()
+
+Opens the Bank UI on client.
+
+---------------------------------------
+
 *openquestui({<quest_id>})
 
 Opens the Quest UI on client with the most recent added quest in this playing session selected.
