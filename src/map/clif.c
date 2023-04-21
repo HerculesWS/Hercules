@@ -8013,6 +8013,26 @@ static void clif_autospell(struct map_session_data *sd, uint16 skill_lv)
 	p->packetType = HEADER_ZC_AUTOSPELLLIST;
 	int index = 0;
 
+#ifdef RENEWAL
+	if (skill_lv > 0 && pc->checkskill(sd, MG_COLDBOLT) > 0)
+		p->skills[index++] = MG_COLDBOLT;
+	if (skill_lv > 0 && pc->checkskill(sd, MG_FIREBOLT) > 0)
+		p->skills[index++] = MG_FIREBOLT;
+	if (skill_lv > 0 && pc->checkskill(sd, MG_LIGHTNINGBOLT) > 0)
+		p->skills[index++] = MG_LIGHTNINGBOLT;
+	if (skill_lv > 3 && pc->checkskill(sd, MG_SOULSTRIKE) > 0)
+		p->skills[index++] = MG_SOULSTRIKE;
+	if (skill_lv > 3 && pc->checkskill(sd, MG_FIREBALL) > 0)
+		p->skills[index++] = MG_FIREBALL;
+	if (skill_lv > 6 && pc->checkskill(sd, MG_FROSTDIVER) > 0)
+		p->skills[index++] = MG_FROSTDIVER;
+	if (skill_lv > 6 && pc->checkskill(sd, WZ_EARTHSPIKE) > 0)
+		p->skills[index++] = WZ_EARTHSPIKE;
+	if (skill_lv > 9 && pc->checkskill(sd, MG_THUNDERSTORM) > 0)
+		p->skills[index++] = MG_THUNDERSTORM;
+	if (skill_lv > 9 && pc->checkskill(sd, WZ_HEAVENDRIVE) > 0)
+		p->skills[index++] = WZ_HEAVENDRIVE;
+#else
 	if (skill_lv > 0 && pc->checkskill(sd, MG_NAPALMBEAT) > 0)
 		p->skills[index++] = MG_NAPALMBEAT;
 	if (skill_lv > 1 && pc->checkskill(sd, MG_COLDBOLT) > 0)
@@ -8027,6 +8047,7 @@ static void clif_autospell(struct map_session_data *sd, uint16 skill_lv)
 		p->skills[index++] = MG_FIREBALL;
 	if (skill_lv > 9 && pc->checkskill(sd, MG_FROSTDIVER) > 0)
 		p->skills[index++] = MG_FROSTDIVER;
+#endif
 
 #if PACKETVER_MAIN_NUM >= 20181128 || PACKETVER_RE_NUM >= 20181031
 	const int len = sizeof(struct PACKET_ZC_AUTOSPELLLIST) + index * 4;

@@ -521,7 +521,7 @@ static int64 battle_calc_weapon_damage(struct block_list *src, struct block_list
 	}
 
 #ifdef RENEWAL_EDP
-	if ( sc && sc->data[SC_EDP] && skill_id != AS_GRIMTOOTH && skill_id != AS_VENOMKNIFE && skill_id != ASC_BREAKER ) {
+	if ( sc && sc->data[SC_EDP] && skill_id != AS_GRIMTOOTH && skill_id != AS_VENOMKNIFE && skill_id != ASC_METEORASSAULT ) { //SOUL DESTROYER gets benefit from EDP, but Meteor Assault doesnt
 		struct status_data *tstatus;
 		tstatus = status->get_status_data(bl);
 		eatk += damage * 0x19 * battle->attr_fix_table[tstatus->ele_lv - 1][ELE_POISON][tstatus->def_ele] / 10000;
@@ -1676,11 +1676,46 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					skillratio += 30 * skill_lv;
 					break;
 				case WZ_STORMGUST:
+#ifdef RENEWAL
+					skillratio -= 30; // Offset only once
+					skillratio += 50 * skill_lv;
+#else
 					skillratio += 40 * skill_lv;
+#endif
 					break;
+				case WZ_VERMILION: 
+#ifdef RENEWAL			
+					skillratio += 300 + skill_lv * 100; //technically monsters should be using the old one, but w/e
+#else
+					skillratio += 20*skill_lv-20;
+#endif
+					break;
+#ifdef RENEWAL
+				case WZ_HEAVENDRIVE:
+				case WZ_METEOR:
+					skillratio += 25;
+					break;
+				case WZ_EARTHSPIKE:
+					skillratio += 100;
+					break;
+				case PR_MAGNUS:
+					if(battle->check_undead(tst->race,tst->def_ele) || tst->race==RC_DEMON)
+					skillratio += 30;
+					break;	
+				case HW_GRAVITATION:
+					skillratio += -100 + 100 * skill_lv;
+					RE_LVL_DMOD(100);
+					break;
+				case BA_DISSONANCE:
+						skillratio += skill_lv * 10;
+							if((skill_lv = pc->checkskill(sd,BA_MUSICALLESSON)) > 0)
+							skillratio += (skill_lv * 3);	
+					break;
+#endif	
 				case HW_NAPALMVULCAN:
-					skillratio += 10 * skill_lv - 30;
-					break;
+					skillratio += 70 * skill_lv - 100;
+					RE_LVL_DMOD(100);
+					break;				
 				case SL_STIN:
 					skillratio += (tst->size!=SZ_SMALL?-99:10*skill_lv); //target size must be small (0) for full damage.
 					break;
@@ -1713,6 +1748,11 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					if (sd && sd->charm_type == CHARM_TYPE_WATER && sd->charm_count > 0)
 						skillratio += 5 * sd->charm_count;
 					break;
+				case NJ_HUUJIN:
+					skillratio += 50;
+					if (sd && sd->charm_type == CHARM_TYPE_WIND && sd->charm_count > 0)
+						skillratio += 20 * sd->charm_count;
+					break;
 #endif
 				case NJ_HYOUSYOURAKU:
 					skillratio += 50 * skill_lv;
@@ -1730,34 +1770,7 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					/* Fall through */
 				case NPC_ENERGYDRAIN:
 					skillratio += 100 * skill_lv;
-					break;
-			#ifdef RENEWAL
-				case WZ_HEAVENDRIVE:
-				case WZ_METEOR:
-					skillratio += 25;
-					break;
-				case WZ_VERMILION:
-				{
-					int interval = 0, per = interval, ratio = per;
-					while( (per++) < skill_lv ){
-						ratio += interval;
-						if(per%3==0) interval += 20;
-					}
-					if( skill_lv > 9 )
-						ratio -= 10;
-					skillratio += ratio;
-				}
-					break;
-				case NJ_HUUJIN:
-					skillratio += 50;
-					if (sd && sd->charm_type == CHARM_TYPE_WIND && sd->charm_count > 0)
-						skillratio += 20 * sd->charm_count;
-					break;
-			#else
-				case WZ_VERMILION:
-					skillratio += 20*skill_lv-20;
-					break;
-			#endif
+					break;		
 				/**
 				 * Summoner
 				 **/
@@ -2082,31 +2095,44 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 				case KN_SPEARBOOMERANG:
 					skillratio += 50*skill_lv;
 					break;
+#ifdef RENEWAL
 				case KN_BRANDISHSPEAR:
-				case ML_BRANDISH:
-				{
-					int ratio = 100 + 20 * skill_lv;
-					skillratio += ratio - 100;
-					if(skill_lv>3 && flag==1) skillratio += ratio / 2;
-					if(skill_lv>6 && flag==1) skillratio += ratio / 4;
-					if(skill_lv>9 && flag==1) skillratio += ratio / 8;
-					if(skill_lv>6 && flag==2) skillratio += ratio / 2;
-					if(skill_lv>9 && flag==2) skillratio += ratio / 4;
-					if(skill_lv>9 && flag==3) skillratio += ratio / 2;
+					skillratio += -100 + 400 + 100 * skill_lv + st->str * 5; //rathena is using * 3 here, but IRO and other sites say it's str*5.
 					break;
-				}
+#else
+				case KN_BRANDISHSPEAR:
+#endif
+				case ML_BRANDISH:
+					{
+						int ratio = 100 + 20 * skill_lv;
+						skillratio += ratio - 100;
+						if(skill_lv>3 && flag==1) skillratio += ratio / 2;
+						if(skill_lv>6 && flag==1) skillratio += ratio / 4;
+						if(skill_lv>9 && flag==1) skillratio += ratio / 8;
+						if(skill_lv>6 && flag==2) skillratio += ratio / 2;
+						if(skill_lv>9 && flag==2) skillratio += ratio / 4;
+						if(skill_lv>9 && flag==3) skillratio += ratio / 2;
+					}
+					break;
 				case KN_BOWLINGBASH:
 				case MS_BOWLINGBASH:
-					skillratio+= 40 * skill_lv;
+					skillratio += 40 * skill_lv;
 					break;
 				case AS_GRIMTOOTH:
 					skillratio += 20 * skill_lv;
 					break;
 				case AS_POISONREACT:
 					skillratio += 30 * skill_lv;
-					break;
+					break;				
 				case AS_SONICBLOW:
+#ifdef RENEWAL
+
+					skillratio += 100 + 100 * skill_lv;
+					if (tst->hp < (tst->max_hp / 2))
+					skillratio += skillratio / 2;
+#else
 					skillratio += 300 + 40 * skill_lv;
+#endif
 					break;
 				case TF_SPRINKLESAND:
 					skillratio += 30;
@@ -2150,7 +2176,11 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 						skillratio += 200 + 40 * skill_lv;
 					break;
 				case RG_RAID:
+#ifdef RENEWAL
+					skillratio += -50 + 150 * skill_lv;
+#else
 					skillratio += 40 * skill_lv;
+#endif
 					break;
 				case RG_INTIMIDATE:
 					skillratio += 30 * skill_lv;
@@ -2159,7 +2189,11 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					skillratio += 20 * skill_lv;
 					break;
 				case CR_SHIELDBOOMERANG:
+#ifdef RENEWAL		
+					skillratio += -100 + 80 * skill_lv;
+#else
 					skillratio += 30 * skill_lv;
+#endif
 					break;
 				case NPC_DARKCROSS:
 				case CR_HOLYCROSS:
@@ -2173,23 +2207,44 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					break;
 				}
 				case AM_DEMONSTRATION:
+#ifdef RENEWAL
+					skillratio += -100 + 60 * skill_lv;
+						if(sd)
+						skillratio += 20 * pc->checkskill(sd,AM_LEARNINGPOTION);
+					break;
+#else			
 					skillratio += 20 * skill_lv;
+#endif
 					break;
 				case AM_ACIDTERROR:
 #ifdef RENEWAL
-					skillratio += 80 * skill_lv + 100;
+					skillratio += -100 + 200 * skill_lv;
+					if(sd)
+						skillratio += 20 * pc->checkskill(sd,AM_LEARNINGPOTION);
 #else
 					skillratio += 40 * skill_lv;
 #endif
 					break;
 				case MO_FINGEROFFENSIVE:
+#ifdef RENEWAL
+					skillratio+= 500 + 200 * skill_lv;
+						if( tsc && tsc->data[SC_BLADESTOP] ) // +50% on targets under Root skill
+						skillratio += skillratio/2;
+#else
 					skillratio+= 50 * skill_lv;
+#endif
 					break;
 				case MO_INVESTIGATE:
+#ifdef RENEWAL
+					skillratio += -100 + 100 * skill_lv;
+						if( tsc && tsc->data[SC_BLADESTOP] ) // +50% on targets under Root skill
+						skillratio += skillratio/2;
+#else
 					skillratio += 75 * skill_lv;
+#endif
 					break;
 				case MO_EXTREMITYFIST:
-	#ifndef RENEWAL
+#ifndef RENEWAL
 					{
 						//Overflow check. [Skotlex]
 						unsigned int ratio = skillratio + 100*(8 + st->sp/10);
@@ -2203,23 +2258,52 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					skillratio += 20 * skill_lv;
 					break;
 				case MO_CHAINCOMBO:
-					skillratio += 50 + 50 * skill_lv;
+#ifdef RENEWAL			
+					skillratio += 150 + 50 * skill_lv;	
+						if (sd != NULL && sd->weapontype == W_KNUCKLE)
+						skillratio *= 2; ///TODO: should display the damage as 6 hits and the sp cost should be reduce to 6.
+#else
+					skillratio += 50 + 50 * skill_lv;	
+#endif
 					break;
 				case MO_COMBOFINISH:
+#ifdef RENEWAL
+					skillratio += 500 + 150 * skill_lv + (5 * st->str);
+#else
 					skillratio += 140 + 60 * skill_lv;
+#endif
 					break;
 				case BA_MUSICALSTRIKE:
 				case DC_THROWARROW:
+#ifdef RENEWAL
+					skillratio += 10 + 40 * skill_lv;
+#else
 					skillratio += 25 + 25 * skill_lv;
+#endif
 					break;
 				case CH_TIGERFIST:
-					skillratio += 100 * skill_lv - 60;
+#ifdef RENEWAL
+					skillratio += 150 * skill_lv + 400;
+					RE_LVL_DMOD(100);
+#else
+					skillratio += 100 * skill_lv -60;
+#endif
 					break;
 				case CH_CHAINCRUSH:
+#ifdef RENEWAL
+					skillratio += -100 + 200 * skill_lv;
+					RE_LVL_DMOD(100);
+#else
 					skillratio += 300 + 100 * skill_lv;
+#endif
 					break;
 				case CH_PALMSTRIKE:
+#ifdef RENEWAL
+					skillratio += 100 + 100 * skill_lv + 5 * st->str;
+					RE_LVL_DMOD(100);
+#else
 					skillratio += 100 + 100 * skill_lv;
+#endif
 					break;
 				case LK_HEADCRUSH:
 					skillratio += 40 * skill_lv;
@@ -2231,35 +2315,66 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					skillratio += i;
 					break;
 				case ASC_METEORASSAULT:
+#ifdef RENEWAL
+					skillratio += 100 + 120 * skill_lv + 5 * st->str;
+					RE_LVL_DMOD(100);
+#else
 					skillratio += 40 * skill_lv - 60;
+#endif
 					break;
 				case SN_SHARPSHOOTING:
 				case MA_SHARPSHOOTING:
+#ifdef RENEWAL
+					skillratio += 200 + 300 * skill_lv;
+					RE_LVL_DMOD(100);
+#else
 					skillratio += 100 + 50 * skill_lv;
 					break;
+#endif
 				case CG_ARROWVULCAN:
+#ifdef RENEWAL
+					skillratio += 400 + 100 * skill_lv;
+					RE_LVL_DMOD(100);
+#else
 					skillratio += 100 + 100 * skill_lv;
+#endif
 					break;
 				case AS_SPLASHER:
+#ifdef RENEWAL
+					skillratio += -100 + 400 + 100 * skill_lv;
+#else
 					skillratio += 400 + 50 * skill_lv;
 					if(sd)
 						skillratio += 20 * pc->checkskill(sd,AS_POISONREACT);
+#endif
 					break;
-	#ifndef RENEWAL
+#ifndef RENEWAL
 				case ASC_BREAKER:
 					skillratio += 100*skill_lv-100;
-	#else
+#else
 				case LK_SPIRALPIERCE:
 				case ML_SPIRALPIERCE:
-					skillratio += 50 * skill_lv;
-	#endif
+					skillratio += 50 + 50 * skill_lv;
+					RE_LVL_DMOD(100);
+#endif
 					break;
 				case PA_SACRIFICE:
 					skillratio += 10 * skill_lv - 10;
 					break;
 				case PA_SHIELDCHAIN:
+#ifdef RENEWAL
+					skillratio += 200 + 200 * skill_lv;
+					RE_LVL_DMOD(100);
+#else
 					skillratio += 30 * skill_lv;
+#endif
 					break;
+#ifdef RENEWAL					
+				case PA_PRESSURE:
+						skillratio += +400 + 150 * skill_lv;
+						RE_LVL_DMOD(100);
+					break;
+#endif
 				case WS_CARTTERMINATION:
 					i = 10 * (16 - skill_lv);
 					if (i < 1) i = 1;
@@ -2364,8 +2479,8 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					skillratio += ((skill_lv-1)%5+1) * 100;
 					break;
 				case RK_SONICWAVE:
-					skillratio = (skill_lv + 5) * 100;
-					skillratio = skillratio * (100 + (status->get_lv(src)-100) / 2) / 100;
+					skillratio += 950 + skill_lv * 150; //2022 update, got this from rathena and decided to update it
+					RE_LVL_DMOD(100);
 					break;
 				case RK_HUNDREDSPEAR:
 						skillratio += 500 + (80 * skill_lv);
@@ -2902,14 +3017,6 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 			}
 			//Skill damage modifiers that stack linearly
 			if(sc && skill_id != PA_SACRIFICE){
-#ifdef RENEWAL_EDP
-				if( sc->data[SC_EDP] ){
-					if( skill_id == AS_SONICBLOW ||
-						skill_id == GC_COUNTERSLASH ||
-						skill_id == GC_CROSSIMPACT )
-							skillratio >>= 1;
-				}
-#endif
 				if(sc->data[SC_OVERTHRUST])
 					skillratio += sc->data[SC_OVERTHRUST]->val3;
 				if(sc->data[SC_OVERTHRUSTMAX])
@@ -2999,7 +3106,9 @@ static int64 battle_calc_damage(struct block_list *src, struct block_list *bl, s
 		return 1;
 
 	switch(skill_id) {
+#ifndef RENEWAL
 	case PA_PRESSURE:
+#endif
 	case SP_SOULEXPLOSION:
 		return damage; //This skill bypass everything else.
 	}
@@ -3780,7 +3889,11 @@ static int battle_range_type(struct block_list *src, struct block_list *target, 
 		else
 			return BF_LONG;
 	}
-
+	// Renewal changes to ranged physical damage
+#ifdef RENEWAL
+	if (skill_id == KN_BRANDISHSPEAR)
+		return BF_SHORT;
+#endif
 	//based on used skill's range
 	if (skill->get_range2(src, skill_id, skill_lv) < 5)
 		return BF_SHORT;
@@ -4233,14 +4346,18 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 		//Blitz-beat Damage.
 		if(!sd || (temp = pc->checkskill(sd,HT_STEELCROW)) <= 0)
 			temp=0;
+#ifdef RENEWAL
+		md.damage=(sstatus->dex/10+sstatus->agi/2+temp*3+10*pc->checkskill(sd,HT_BLITZBEAT))*2;
+#else
 		md.damage=(sstatus->dex/10+sstatus->int_/2+temp*3+40)*2;
 		if(mflag > 1) //Autocasted Blitz.
 			nk|=NK_SPLASHSPLIT;
-
+#endif
 		if (skill_id == SN_FALCONASSAULT) {
 			//Div fix of Blitzbeat
-			temp = skill->get_num(HT_BLITZBEAT, 5);
-			damage_div_fix(md.damage, temp);
+			int temp2;
+			temp2 = skill->get_num(HT_BLITZBEAT, 5);
+			damage_div_fix(md.damage, temp2);
 
 			//Falcon Assault Modifier
 			md.damage=md.damage*(150+70*skill_lv)/100;
@@ -4249,11 +4366,16 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 	case TF_THROWSTONE:
 		md.damage=50;
 		break;
+#ifndef RENEWAL  //This skills no longer do flat damage on renewal
 	case BA_DISSONANCE:
 		md.damage=30+skill_lv*10;
 		if (sd)
 			md.damage+= 3*pc->checkskill(sd,BA_MUSICALLESSON);
 		break;
+	case PA_PRESSURE:
+		md.damage=500+300*skill_lv;
+		break;
+#endif
 	case NPC_SELFDESTRUCTION:
 		md.damage = sstatus->hp;
 		break;
@@ -4263,9 +4385,6 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 	case NPC_DARKBREATH:
 		md.damage = 500 + (skill_lv-1)*1000 + rnd()%1000;
 		if(md.damage > 9999) md.damage = 9999;
-		break;
-	case PA_PRESSURE:
-		md.damage=500+300*skill_lv;
 		break;
 	case PA_GOSPEL:
 		md.damage = 1+rnd()%9999;
@@ -4355,19 +4474,18 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 		int64 matk = battle->calc_magic_attack(src, target, skill_id, skill_lv, mflag).damage;
 		short totaldef = status->get_total_def(target) + status->get_total_mdef(target);
 		int64 atk = battle->calc_base_damage(src, target, skill_id, skill_lv, nk, false, s_ele, ELE_NEUTRAL, EQI_HAND_R, (sc && sc->data[SC_MAXIMIZEPOWER] ? 1 : 0) | (sc && sc->data[SC_WEAPONPERFECT] ? 8 : 0), md.flag);
-#ifdef RENEWAL_EDP
-		if( sc && sc->data[SC_EDP] )
-			ratio >>= 1;
-#endif
+
 		md.damage = (matk + atk) * ratio / 100;
 		md.damage -= totaldef;
 #endif
 		}
 		break;
+#ifndef RENEWAL
 	case HW_GRAVITATION:
 		md.damage = 200+200*skill_lv;
 		md.dmotion = 0; //No flinch animation.
 		break;
+#endif
 	case NPC_EVILLAND:
 		md.damage = skill->calc_heal(src,target,skill_id,skill_lv,false);
 		break;
@@ -4691,7 +4809,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 					if (battle_config.finger_offensive_type)
 						wd.div_ = 1;
 					else
-						wd.div_ = sd->spiritball_old;
+						wd.div_ = sd->spiritball_old; ///This increases the number of hits per spiritball? if so shoud be removed from Renewal code
 				}
 				break;
 			case HT_PHANTASMIC:
@@ -4719,13 +4837,28 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 
 			case GS_GROUNDDRIFT:
 			case KN_SPEARSTAB:
-			case KN_BOWLINGBASH:
+#ifndef RENEWAL
+			case KN_BOWLINGBASH:	
 			case MS_BOWLINGBASH:
+#endif	
 			case MO_BALKYOUNG:
 			case TK_TURNKICK:
 				wd.blewcount=0;
 				break;
-
+#ifdef RENEWAL
+			case KN_BOWLINGBASH:
+				if (sd != NULL && sd->weapontype == W_2HSWORD) { //2handed swords deal more hits damage if there are more than 2 enemies in area
+					//if (wflag >= 2 && wflag <= 3)       // NOT WORKING ATM, keeping 4 hits for 2hswords on any target
+					//	wd.div_ = 3;
+					//else if (wflag >= 4)
+						wd.div_ = 4;
+				}
+				break;
+			case RG_BACKSTAP:
+				if (sd != NULL && sd->weapontype == W_DAGGER)
+					wd.div_ = 2;
+				break;
+#endif
 			case KN_AUTOCOUNTER:
 				wd.flag=(wd.flag&~BF_SKILLMASK)|BF_NORMAL;
 				break;
@@ -4964,7 +5097,11 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 				break;
 			case SN_SHARPSHOOTING:
 			case MA_SHARPSHOOTING:
+#ifdef RENEWAL
+				cri += 500;
+#else
 				cri += 200;
+#endif
 				break;
 			case NJ_KIRIKAGE:
 				cri += 250 + 50*skill_lv;
@@ -5093,6 +5230,11 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 			case LG_BANISHINGPOINT:
 				hitrate += 3 * skill_lv;
 				break;
+#ifdef RENEWAL
+			case RG_BACKSTAP:
+				hitrate += skill_lv * 4; //Renewal buff: added hitrate on Back Stab
+				break;
+#endif
 			case RL_SLUGSHOT:
 				{
 					int dist = distance_bl(src, target);
@@ -5377,7 +5519,10 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 				short totaldef = status->get_total_def(target);
 				GET_NORMAL_ATTACK((sc && sc->data[SC_MAXIMIZEPOWER] ? 1 : 0) | 8, skill_id);
 				if ( wd.damage ) {
-					ATK_ADD(250 * (skill_lv + 1) + (10 * (status_get_sp(src) + 1) * wd.damage / 100) + (8 * wd.damage));
+					if (sd->spiritball > 5)
+						ATK_ADD(2*(250 + (150 * skill_lv) + (10 * (status_get_sp(src) + 1) * wd.damage / 100) + (8 * wd.damage))); //pretty sure the bonus damage was slightly off				
+					else					
+						ATK_ADD(250 + (150 * skill_lv) + (10 * (status_get_sp(src) + 1) * wd.damage / 100) + (8 * wd.damage));
 					ATK_ADD(-totaldef);
 				}
 			}
@@ -5393,9 +5538,11 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 					ATK_ADD(sstatus->rhw.atk2); //Else use Atk2
 				ATK_RATE(battle->calc_skillratio(BF_WEAPON, src, target, skill_id, skill_lv, skillratio, wflag));
 				break;
-			case AM_DEMONSTRATION:
+
+			case AM_DEMONSTRATION: 
 			case AM_ACIDTERROR: // [malufett/Hercules]
 			{
+		#ifndef RENEWAL  //on renewal this nonsense of using both atk and matk was removed, both skills use ATK
 				int64 matk;
 				int totaldef = status->get_total_def(target) + status->get_total_mdef(target);
 				matk = battle->calc_cardfix(BF_MAGIC, src, target, nk, s_ele, 0, status->get_matk(src, 2), 0, wd.flag);
@@ -5405,6 +5552,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 				ATK_RATE(battle->calc_skillratio(BF_WEAPON, src, target, skill_id, skill_lv, skillratio, wflag));
 				ATK_ADD(matk);
 				ATK_ADD(-totaldef);
+		#endif
 				if ( skill_id == AM_ACIDTERROR && is_boss(target) )
 					ATK_RATE(50);
 				if ( skill_id == AM_DEMONSTRATION )
@@ -5436,11 +5584,11 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 						ATK_ADD(sd->inventory_data[index]->weight * 7 / 100);
 
 					switch (tstatus->size) {
-						case SZ_SMALL: //Small: 115%
-							ATK_RATE(115);
+						case SZ_SMALL: //Small: 115% >>> changed to 125% on update
+							ATK_RATE(125);
 							break;
-						case SZ_BIG: //Large: 85%
-							ATK_RATE(85);
+						case SZ_BIG: //Large: 85% >>> changed to 75% in update
+							ATK_RATE(75);
 					}
 					wd.damage = battle->calc_masteryfix(src, target, skill_id, skill_lv, wd.damage, wd.div_, 0, flag.weapon);
 					wd.damage = battle->calc_cardfix2(src, target, wd.damage, s_ele, nk, wd.flag);
@@ -5751,8 +5899,10 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 				int lv = sc->data[SC_AURABLADE]->val1;
 #ifdef RENEWAL
 				lv *= ((skill_id == LK_SPIRALPIERCE || skill_id == ML_SPIRALPIERCE)?wd.div_:1); // +100 per hit in lv 5
-#endif
+				ATK_ADD(sd->status.base_level * (lv+3)); //damage increased quite a lot
+#else
 				ATK_ADD(20*lv);
+#endif
 			}
 
 			if( !skill_id ) {
@@ -6573,7 +6723,11 @@ static enum damage_lv battle_weapon_attack(struct block_list *src, struct block_
 	}
 
 	if(sd && (skillv = pc->checkskill(sd,MO_TRIPLEATTACK)) > 0) {
+#ifdef RENEWAL
+		int triple_rate= 30; //Base Rate
+#else
 		int triple_rate= 30 - skillv; //Base Rate
+#endif
 		if (sc && sc->data[SC_SKILLRATE_UP] && sc->data[SC_SKILLRATE_UP]->val1 == MO_TRIPLEATTACK) {
 			triple_rate+= triple_rate*(sc->data[SC_SKILLRATE_UP]->val2)/100;
 			status_change_end(src, SC_SKILLRATE_UP, INVALID_TIMER);
@@ -6722,12 +6876,14 @@ static enum damage_lv battle_weapon_attack(struct block_list *src, struct block_
 		int sp = 0;
 		uint16 skill_id = sc->data[SC_AUTOSPELL]->val2;
 		uint16 skill_lv = sc->data[SC_AUTOSPELL]->val3;
+#ifndef RENEWAL
 		int i = rnd()%100;
 		if (sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_SAGE)
 			i = 0; //Max chance, no skill_lv reduction. [Skotlex]
 		if (i >= 50) skill_lv -= 2;
 		else if (i >= 15) skill_lv--;
 		if (skill_lv < 1) skill_lv = 1;
+#endif
 		sp = skill->get_sp(skill_id,skill_lv) * 2 / 3;
 
 		if (status->charge(src, 0, sp)) {
@@ -7372,8 +7528,13 @@ static bool battle_check_range(struct block_list *src, struct block_list *bl, in
 	return path->search_long(NULL,src,src->m,src->x,src->y,bl->x,bl->y,CELL_CHKWALL);
 }
 
-// can be converted in future into macroses from common/config
-static const struct config_data_old battle_data[] = {
+static const struct battle_data {
+	const char* str;
+	int* val;
+	int defval;
+	int min;
+	int max;
+} battle_data[] = {
 	{ "warp_point_debug",                   &battle_config.warp_point_debug,                0,      0,      1,              },
 	{ "enable_critical",                    &battle_config.enable_critical,                 BL_PC,  BL_NUL, BL_ALL,         },
 	{ "mob_critical_rate",                  &battle_config.mob_critical_rate,               100,    0,      INT_MAX,        },
