@@ -1,0 +1,690 @@
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2025-2025 Hercules Dev Team
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Merchant Skills Quests - Renewal-only
+//================= Description ===========================================
+//= Quests for skills: Cart Decoration (Episode 16.2)
+//=
+//= (Play/Walk through conversion)
+//================= Variables Used ========================================
+//= sk_decorate
+//= Main quest progress (0 .. 4) -- kept after completion
+//= 0 - None / quest not started / quest completed
+//= 1 - Gift Box cart selected
+//= 2 - Poring Family cart selected
+//= 3 - Angeling cart selected
+//= 4 - Quest completed (MC_CARTDECORATE learned)
+//=
+//= sk_decorate2
+//= Progress in retrieving the item from Lutie (0 .. 3) -- zeroed on completion
+//= 0 - Not started
+//= 1 - Started
+//= 2 - Retrieved
+//= 3 - Delivered
+//=
+//= sk_decorate_box
+//= Gift box that user has to check in Lutie (0 .. 5) -- zeroed on completion
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
+
+aldebaran,72,240,5	script	Changewagon#checa21	4_M_REPAIR,{
+	if (BaseClass != Job_Merchant || JobLevel < 35) {
+		mes("[Changewagon]");
+		mes("Ah!! There is nothing like spending the day thinking in new ideas for carts.");
+		close();
+	}
+
+	switch (sk_decorate) {
+	case 0: // Quest not started
+		mes("[Changewagon]");
+		mes("Hey, you are a job partner! How are you?");
+		next();
+		switch (select("...Who are you?", "I'm fine!")) {
+		case 1:
+			mes("[Changewagon]");
+			mes("Err.. You are to right to be asking who I am. Let me introduce myself!");
+			next();
+			break;
+
+		case 2:
+			mes("[Changewagon]");
+			emotion(e_heh);
+			mes("Hey, it is great to see someone with a lot of energy!");
+			mes("Ok! Let me vigorously introduce myself!");
+			next();
+			break;
+		}
+
+		mes("[Changewagon]");
+		mes("I am Changewagon, the Cart Artist!");
+		mes("I came from Izlude to research new ways to make your cart even prettier!");
+		next();
+		mes("[Changewagon]");
+		mes("What do you think, do you want to learn ^4d4dffCart Decoration^000000 to beautify your cart?");
+		next();
+		switch (select("What is Cart Decoration?", "Learn Cart Decoration.", "I'm not interested...")) {
+		case 1:
+			mes("[Changewagon]");
+			mes("This is the only solution to satisfy your desire to decorate your cart, as Change Cart is no longer enough!");
+			next();
+			mes("[Changewagon]");
+			mes("You are also a merchant, do you know what Change Cart is?");
+			next();
+			switch (select("Technology to transform a cart into a robot", "The art of changing cart looks", "The art of making the cart carry me")) {
+			case 1:
+				mes("[Changewagon]");
+				emotion(e_omg);
+				mes("What... man, that would be cool...");
+				mes("But sorry, this is not the answer!");
+				next();
+				break;
+
+			case 2:
+				mes("[Changewagon]");
+				mes("That's it! You are right. You know stuff.");
+				next();
+				break;
+
+			case 3:
+				mes("[Changewagon]");
+				emotion(e_omg);
+				mes("What... man, that would be so comfortable...");
+				mes("But sorry, this is not the answer!");
+				next();
+				break;
+			}
+
+			mes("[Changewagon]");
+			mes("Change Cart is a technique that allows you to change the looks of your cart to another one that you wish, and that is the start of the cart customization art.");
+			next();
+			mes("[Changewagon]");
+			mes("But don't you also think this is not enough? don't you want a cart that is even more beautiful?");
+			next();
+			mes("[Changewagon]");
+			mes("Cart Decoration is a technique created by cart artists for merchants who have this uncontrollable desire.");
+			next();
+			mes("[Changewagon]");
+			mes("As long as you master this skill, you will also be able to change your cart with our meticulously selected designs.");
+			next();
+			mes("[Changewagon]");
+			mes("Each design change costs you a bit of SP, but it is a great skill that's worth it.");
+			next();
+			mes("[Changewagon]");
+			mes("What do you say, do you want to learn it too?");
+			next();
+			if (select("Let's learn it!", "I am not interested at all!") == 2) {
+				mes("[Changewagon]");
+				emotion(e_omg);
+				mes("Don't say that as if you are that sure!");
+				next();
+				mes("[Changewagon]");
+				emotion(e_sob);
+				mes("Ah... this is a great technique... the cart becomes so beautiful...");
+				next();
+				mes("[Changewagon]");
+				mes("But! If you don't want to learn it, there is nothing I can do.");
+				mes("Leave me alone.");
+				close();
+			}
+			break; // Continues to common dialog
+
+		case 2:
+			break; // Continues to common dialog
+
+		case 3:
+			mes("[Changewagon]");
+			emotion(e_omg);
+			mes("Uhhhhhhh...");
+			mes("You don't see to want to dive into the world of cart customization...");
+			next();
+			mes("[Changewagon]");
+			mes("So, leave me alone.");
+			close();
+		}
+
+		if (getskilllv(MC_CHANGECART) < 1) {
+			mes("[Changewagon]");
+			mes("Ah, but you need to learn Change Cart first! You need to get the basic ideas of cart peronslization first.");
+			next();
+			mes("[Changewagon]");
+			mes("Come back when you've learned Change Cart.");
+			close();
+		}
+
+		mes("[Changewagon]");
+		mes("Ok! This is a nice decision. Teaching you Cart Decoration will be a pleasure.");
+		next();
+		mes("[Changewagon]");
+		mes("Well... after you learn the technique, you will be able to easily change the design of your cart, but let's do it together in the first time.");
+		mes("It is the best way to learn it, isn't it?");
+		next();
+		mes("[Changewagon]");
+		mes("So, first, let's pick the cart design that you want. I will explain you each one.");
+		next();
+		mes("[Changewagon]");
+		mes("The first one is a ^4d4dffGift Box Cart^000000, with a colored ribbon tied around it! It is literally a gift box cart. It looks like there is a nice gift inside it.");
+		next();
+		mes("[Changewagon]");
+		mes("The second one is clearly the ^4d4dffPoring Family Cart^000000! With several members of the Poring family inside it, it looks very cute. Of course, they are only a decoration and you can still put everything you want inside your cart.");
+		next();
+		mes("[Changewagon]");
+		mes("The third one is an adorable ^4d4dffAngeling Cart^000000! It is a cart modeled after an Angeling with cute wings. For some reason, it looks like there is an infinity of items inside the cart.");
+		next();
+		mes("[Changewagon]");
+		mes("Now, close your eyes and imagine. Then pick one. Which of those carts would you choose?");
+		next();
+		switch (select("Gift Box Cart", "Poring Family Cart", "Angeling Cart")) {
+		case 1:
+			mes("[Changewagon]");
+			mes("Ok, let me tell you what I need to build it. To manually gather the materials is the first step.");
+			next();
+			mes("[Changewagon]");
+			mesf("First, if you want to build a gift box, the toughest the box, the better. For that, Mimics are perfect. ^4d4dff%s^000000 will be enough.", F_GetMobNaviList(MIMIC, 50));
+			next();
+			mes("[Changewagon]");
+			mesf("And also, we will need to put a ribbon over the gift box... ^4d4dffYou can get a %s in Lutie^000000.", getitemname(Gift_Wrapping_Ribbon));
+			mes("If you ask Shiida, the Santa helper, she will be happy to give you one.");
+			next();
+			mes("[Changewagon]");
+			mesf("In short, you need ^4d4dff%s and 1 %s^000000. Come back when you have everything.", F_GetMobNaviList(MIMIC, 50), F_MesItemInfo(Gift_Wrapping_Ribbon));
+			setquest(16000);
+			sk_decorate = 1;
+			close2();
+			openquestui();
+			end;
+
+		case 2:
+			mes("[Changewagon]");
+			mes("Ok, let me tell you what I need to build it. To manually gather the materials is the first step.");
+			next();
+			mes("[Changewagon]");
+			mes("We will need several members of the Poring family! To represent their diversity, we will need several of each type.");
+			next();
+			mes("[Changewagon]");
+			mesf("So, go ahead and get ^4d4dff%s^000000.", F_GetMobNaviList(PORING, 50, DROPS, 50, POPORING, 50, MARIN, 50));
+			sk_decorate = 2;
+			setquest(16001);
+			setquest(16002);
+			close2();
+			openquestui();
+			end;
+
+		case 3:
+			mes("[Changewagon]");
+			mes("Ok, let me tell you what I need to build it. To manually gather the materials is the first step.");
+			next();
+			mes("[Changewagon]");
+			mes("Well... Angelings would be the ideal decoration, but getting them is a bit... hard, right? ^4d4dffWe will use a Mastering.^000000.");
+			next();
+			mes("[Changewagon]");
+			mesf("But we also need some angelical wings to give it the final touch. The ^4d4dff%s^000000 are perfect.", getitemname(Gift_Wrapping_Wing));
+			mes("If you ask Shiida, the Santa helper, she will be happy to give you one.");
+			next();
+			mes("[Changewagon]");
+			mesf("In short, you need ^4d4dff %s and 1 %s^000000. Come back when you have everything.", F_GetMobNaviList(MASTERING, 1), F_MesItemInfo(Gift_Wrapping_Wing));
+			sk_decorate = 3;
+			setquest(16003);
+			close2();
+			openquestui();
+			end;
+		}
+		end;
+
+	case 1: // Gift Box Cart : 50 Mimic + Gift_Wrapping_Ribbon
+		if (questprogress(16000, HUNTING) == 1 || countitem(Gift_Wrapping_Ribbon) < 1) {
+			mes("[Changewagon]");
+			mesf("Did you forget the materials? You need ^4d4dff%s and 1 %s^000000.", F_GetMobNaviList(MIMIC, 50), F_MesItemInfo(Gift_Wrapping_Ribbon));
+			next();
+			mes("[Changewagon]");
+			mes("The ribbon may be obtained with the Santa helper in Lutie!");
+			next();
+			setarray(.@questIds, 16000, 16004, 16006);
+			setarray(.@itemIds, Gift_Wrapping_Ribbon);
+			callsub(S_CancelOrContinue, "Gift Box cart", .@questIds, .@itemIds);
+			close();
+		}
+
+		mes("[Changewagon]");
+		mes("Let's see... Mimics and the ribbon... Ok! You have everything.");
+		next();
+		mes("[Changewagon]");
+		mes("Now I will show you how to build it, pay attention.");
+		mes("First, we cut those parts of the mimics and them we glue them together to build a bigger box... after that, we tie it with the ribbon.");
+		next();
+		mes("[Changewagon]");
+		mes("Now it is your turn! Ah, if you forget and put the box in your cart before the glue dries, you will have a problem.");
+		next();
+		callsub(S_Learn);
+		close();
+
+	case 2: // Poring family cart : 50 poring, drops, poporing, marins
+		if (questprogress(16001, HUNTING) == 1 || questprogress(16002, HUNTING) == 1) {
+			mes("[Changewagon]");
+			mesf("Did you forget the materials? You need ^4d4dff%s^000000.", F_GetMobNaviList(PORING, 50, DROPS, 50, POPORING, 50, MARIN, 50));
+			next();
+			setarray(.@questIds, 16001, 16002);
+			callsub(S_CancelOrContinue, "Poring Familiy cart", .@questIds);
+			close();
+		}
+
+		mes("[Changewagon]");
+		mes("Let's see... Poring, Poporing ... Marin and Drops... Three, four... Twenty... Ok! You have everything.");
+		next();
+		mes("[Changewagon]");
+		mes("Now I will show you how to build it, pay attention.");
+		mes("First, we open up the front of the cart... now we can put the Porings inside... lock it very well at this part so they don't fall over when you make a sharp turn.");
+		next();
+		mes("[Changewagon]");
+		mes("Now it is your turn. Ah, if you forget to sand the cart before putting the Porings, you will have problems.");
+		next();
+		callsub(S_Learn);
+		close();
+
+	case 3: // Angeling Cart : 1 Mastering, 1 Gift_Wrapping_Wing
+		if (questprogress(16003, HUNTING) == 1 || countitem(Gift_Wrapping_Wing) < 1) {
+			mes("[Changewagon]");
+			mesf("Did you forget the materials? You need ^4d4dff%s and 1 %s^000000.", F_GetMobNaviList(MASTERING, 1), F_MesItemInfo(Gift_Wrapping_Wing));
+			next();
+			mes("[Changewagon]");
+			mes("The wings may be obtained with the Santa helper in Lutie!");
+			next();
+			setarray(.@questIds, 16003, 16005, 16007);
+			setarray(.@itemIds, Gift_Wrapping_Wing);
+			callsub(S_CancelOrContinue, "Angeling cart", .@questIds, .@itemIds);
+			close();
+		}
+
+		mes("[Changewagon]");
+		mes("Let's see... Matering and the wings... Ok! You have everything.");
+		next();
+		mes("[Changewagon]");
+		mes("Now I will show you how to build it, pay attention.");
+		mes("Fist, we modify the cart's base to be able to tie the Mastering in it... then we tie the wings in a way that resembles an Angeling.");
+		next();
+		mes("[Changewagon]");
+		mes("Now it is you turn! Ah, and if you don't tie the Matering to the cart's base very well, you will have problems when you make a attack using your cart.");
+		next();
+		callsub(S_Learn);
+		close();
+
+	case 4: // Quest completed / Skill learned once
+		mes("[Changewagon]");
+		mes("What did you think about the new look of your cart? Was the skill I had taught you worh it?");
+		next();
+		switch(select("It's great! Thanks Changewagon!", "I forgot how to use Cart Decoration...")) {
+		case 1:
+			mes("[Changewagon]");
+			message(getcharid(CHAR_ID_ACCOUNT), sprintf(_$("% s: Thanks, Changewagon!"), strcharinfo(PC_NAME)));
+			emotion(e_heh);
+			mes("Hahaha, I am glad that it was useful to you.");
+			next();
+			mes("[Changewagon]");
+			mes("This makes me very happy.");
+			close();
+
+		case 2:
+			mes("[Changewagon]");
+			mes("What? You forgot? How...");
+			next();
+			if (getskilllv(MC_CARTDECORATE) == 0)
+				skill(MC_CARTDECORATE, 1, 0);
+			mes("[Changewagon]");
+			mes("Hahaha if you use it frequently, you will be able to remember for a long time and will be able to use it with ease.");
+			next();
+			mes("[Changewagon]");
+			mes("This is the secret that allows me to continue being a great cart decoration artist. It is not easy, but it is the best way.");
+			close();
+		}
+	}
+	end;
+
+	// Asks whether the player is ok to continue in the quest or wants to stop
+	// and if they want to stop, does the cleanup.
+	//
+	// NOTE: It will return after the messages, closing the chat is the caller responsability.
+	//
+	// arg0: cart name
+	// arg1: quests to delete (array)
+	// arg2: items to delete (array) (optional)
+	S_CancelOrContinue:
+		if (select("OK!", "It is too hard... I give up.") == 1) {
+			mes("[Changewagon]");
+			mes("I like your vigorous answer! Now go!");
+			return;
+		}
+
+
+		mes("[Changewagon]");
+		mes("Uh, huh? Too hard? Ummm... This is an issue.");
+		mes("Don't give up... let's try decorate a different cart.");
+		next();
+		mes("[Changewagon]");
+		mesf("I will cancel the creation of the %s, so let's try another cart!", getarg(0));
+
+		for (.@i = 0; .@i < getarraysize(getarg(1)); .@i++) {
+			.@questId = getelementofarray(getarg(1), .@i);
+			if (questprogress(.@questId) > 0)
+				erasequest(.@questId);
+		}
+
+		if (getargcount() >= 3) {
+			for (.@i = 0; .@i < getarraysize(getarg(2)); .@i++) {
+				.@itemId = getelementofarray(getarg(2), .@i);
+				if (countitem(.@itemId) > 0)
+					delitem(.@itemId, countitem(.@itemId));
+			}
+		}
+
+		sk_decorate = 0;
+		sk_decorate2 = 0;
+		sk_decorate_box = 0;
+		return;
+
+	// Learns the new skill, completing the quest.
+	// NOTE: It will return after the messages, closing the chat is the caller responsability.
+	S_Learn:
+		mes("[Changewagon]");
+		mes("Even if it is a bit hard, this is just the beginning. You will soon get used to it.");
+		next();
+		if (select("I have learned how to do it!", "Ok... I am almost there...") == 1) {
+			mes("[Changewagon]");
+			mes("What? Did you learn it already? Haha, there is no way this would be true. But I can see you are doing well in customizing your cart.");
+			next();
+			mes("[Changewagon]");
+			mes("And it is good to be confident in it! If you continue to practice, you will get used to it quickly.");
+			next();
+		} else {
+			mes("[Changewagon]");
+			mes("Don't worry, you are doing fine. With a bit more of practice you will get used to it.");
+			next();
+		}
+		mes("[Changewagon]");
+		emotion(e_heh);
+		mes("And with that, I believe you are ready!");
+		mes("I, Changewagon, am proud to certify you to use Cart Decoration.");
+		next();
+		mes("[Changewagon]");
+		mes("Now close your eyes.... and think about the cart you want, the most beautiful one...");
+		next();
+		mes("[Changewagon]");
+		mes("Yaab!");
+		specialeffect(EF_TELEPORTATION, SELF, getcharid(CHAR_ID_ACCOUNT));
+		if (questprogress(16000) > 0) erasequest(16000);
+		if (questprogress(16001) > 0) erasequest(16001);
+		if (questprogress(16002) > 0) erasequest(16002);
+		if (questprogress(16003) > 0) erasequest(16003);
+		if (questprogress(16004) > 0) erasequest(16004);
+		if (questprogress(16005) > 0) erasequest(16005);
+		if (questprogress(16006) > 0) erasequest(16006);
+		if (questprogress(16007) > 0) erasequest(16007);
+		if (countitem(Gift_Wrapping_Wing) > 0) delitem(Gift_Wrapping_Wing, countitem(Gift_Wrapping_Wing));
+		if (countitem(Gift_Wrapping_Ribbon) > 0) delitem(Gift_Wrapping_Ribbon, countitem(Gift_Wrapping_Ribbon));
+		skill(MC_CARTDECORATE, 1, 0);
+		sk_decorate = 4;
+		sk_decorate2 = 0;
+		sk_decorate_box = 0;
+		next();
+		mes("[Changewagon]");
+		mes("Ok! Now you are also a great cart artist. With a bit of SP, you can change your cart's design to any one of the available options.");
+		next();
+		mes("[Changewagon]");
+		mes("Have fun with your new carts.");
+		mes("See you!");
+		return;
+}
+
+xmas,170,138,3	script	Santa Helper#checa21	4_F_06,{
+	if (sk_decorate != 1 && sk_decorate != 3) {
+		mes("[Santa Helper]");
+		mes("Welcome to the christmas city, Lutie!");
+		mes("I hope you leave with awesome memories and wonderful gifts.");
+		close();
+	}
+
+	.@isRibbon = (sk_decorate == 1);
+	.@itemName$ = (.@isRibbon ? "wrapping ribbon" : "pair of decorative wings");
+	.@itemId = (.@isRibbon ? Gift_Wrapping_Ribbon : Gift_Wrapping_Wing);
+
+	switch (sk_decorate2) {
+	case 0:
+		mes("[Santa Helper]");
+		emotion(e_sob);
+		mes("AAh, this is an issue... What should I do... I am afraid to enter the gift shop...");
+		next();
+		switch(select("Oh, it is the Santa!", "Why are you afraid?")) {
+		case 1:
+			mes("[Santa Helper]");
+			mes("Ah, no. I am not the Santa yet, I am only a Santa Helper...");
+			next();
+			mes("[Santa Helper]");
+			mes("By the way... you are a traveler! The fact that you are in our village... Are you thinking about buying a gift?!");
+			next();
+			mes("[Santa Helper]");
+			mes("Help me! It is not hard, just give me a hand for a few minutes!");
+			next();
+			switch (select("What happened?", "No, I'm busy.", "If I help you, can we go in a date later?")) {
+			case 1:
+				break; // normal dialogue
+
+			case 2:
+				mes("[Santa Helper]");
+				mes("Ah... really!?");
+				mes("I understand... that's ok.");
+				emotion(e_sob);
+				close();
+
+			case 3:
+				mes("[Santa Helper]");
+				mes("Uh sorry?!? what did you say?");
+				emotion(e_wah);
+				close();
+			}
+			break;
+
+		case 2:
+			mes("[Santa Helper]");
+			mes("Actually... I am a bit embarrassed to explain... as a Santa Helper...");
+			next();
+			mes("[Santa Helper]");
+			mes("You are not from Lutie, right? So I guess it is ok if I tell you...");
+			next();
+			mes("[Santa Helper]");
+			mes("It is ok if you can't, but if you not busy, can you help me? It is fast.");
+			next();
+			if (select("Ok, I will help you.", "I am a bit busy now. I come back later.") == 2) {
+				mes("[Santa Helper]");
+				mes("... Thank you very much!");
+				mes("If you have some time later, I will be waiting for your help...");
+				close();
+			}
+			break;
+		}
+
+		mes("[Santa Helper]");
+		mes("Actually... I am helping the Santa manage the materials to wrap gifts for the next Christmas.");
+		next();
+		mes("[Santa Helper]");
+		mesf("But while I was verifying our stock of %s, I accidentally dropped a few to the ground, and they have their own minds and flew away.", .@itemName$);
+		next();
+		mes("[Santa Helper]");
+		mes("This is a common occurrence, so I knew where they would fly of to, so I quickly caught the other ones... But, one of them ended up here in the gift shop.");
+		mes("There are lots of gift boxes inside there, so I think it is hidden in one of them.");
+		next();
+		mes("[Santa Helper]");
+		mes("But... I can't get in there...");
+		mes("I have no issues with the shop owner, but...");
+		next();
+		mes("[Santa Helper]");
+		emotion(e_wah);
+		mes("She has a giant Clown doll.. I have a big fear of it, and I can't even get inside the gift shop!");
+		next();
+		mes("[Santa Helper]");
+		mes("It is a giant doll, right in the center of the gift shop... Just looking to it gets me terrified and I can't move...");
+		next();
+		mes("[Santa Helper]");
+		mesf("Traveler! Could you go to the ^4d4dffgift shop^000000 and get the ^4d4dff%s^000000 for me?", .@itemName$);
+		next();
+		mes("[Santa Helper]");
+		mes("If you get close to the gift boxes you will surely hear the noise of them moving inside it. After that, just carefully open the box to pick it when it tries to flee.");
+		next();
+		mes("[Santa Helper]");
+		mes("Even if you don't get it in the first try, I am sure it will simply flee to another box, so you just have to start searching again.");
+		next();
+		mes("[Santa Helper]");
+		mes("So, you will help me? Thank you very much! I will be waiting here!");
+		sk_decorate_box = rand(1, 5);
+		.@quest = (.@isRibbon ? 16004 : 16005);
+		sk_decorate2 = 1;
+		setquest(.@quest);
+		close2();
+		openquestui();
+		end;
+
+	case 1:
+		mes("[Santa Helper]");
+		mes("Please. If you get into the store and open a gift box, it will be there.");
+		next();
+		mes("[Santa Helper]");
+		mesf("It is made of %s, so even a small movement will make an audible sound, so it won't be hard to find it.", (.@isRibbon ? "cloth" : "feathers"));
+		close();
+
+	case 2:
+		mes("[Santa Helper]");
+		mesf("You managed to find the %s!", .@itemName$);
+		next();
+		mes("[Santa Helper]");
+		mes("Thank you. I am afraid of making visual contact with the Clown doll, even through the window...");
+		next();
+		mes("[Santa Helper]");
+		mesf("I always have extra %s, but it is an issue to let them flying around. Thank you very much for retrieving it.", .@itemName$);
+		next();
+		select(sprintf("Can you give me a %s?", .@itemName$));
+		mes("[Santa Helper]");
+		mesf("Do you need a %s for making gifts?", .@itemName$);
+		next();
+		mes("[Santa Helper]");
+		mes("I have it! We would have had issues if it was flying around, it is a good reward.");
+		next();
+		if (!checkweight(.@itemId, 1)) {
+			mes("[Santa Helper]");
+			mes("But, adventurer, your inventory is full.");
+			mesf("Even if I give you a %s, you won't have anywhere to put it.\r"
+			    "If you come back after organizing your inventory, I'll surely give it to you!",
+			    .@itemName$);
+			close();
+		}
+
+		mes("[Santa Helper]");
+		mes("If you need more, just let me know.");
+		getitem(.@itemId, 1);
+		erasequest(.@isRibbon ? 16006 : 16007);
+		sk_decorate2 = 3;
+		close();
+
+	case 3:
+		mes("[Santa Helper]");
+		mes("Thank you for your help, kind traveler.");
+		mes("I hope you can get the best from the Christmas atmosphere of our village!");
+		if (countitem(.@itemId) > 0)
+			close();
+		next();
+		select(sprintf("Actually, I need another %s...", .@itemName$));
+		if (!checkweight(.@itemId, 1)) {
+			mes("[Santa Helper]");
+			mes("But, adventurer, your inventory is full.");
+			mesf("Even if I give you a %s, you won't have anywhere to put it.\r"
+			    "If you come back after organizing your inventory, I'll surely give it to you!",
+			    .@itemName$);
+			close();
+		}
+
+		mes("[Santa Helper]");
+		mes("Ah, you need another one? No problem! Here it is!");
+		getitem(.@itemId, 1);
+		close();
+	}
+	end;
+}
+
+-	script	checa_giftbox	FAKE_NPC,{
+	if (sk_decorate2 != 1)
+		end;
+
+	.@id = callsub(S_BoxId);
+	if (.@id != sk_decorate_box)
+		end;
+
+	mes("- You hear a small noise, as if something was moving inside the box -");
+	next();
+	mes("- Open the box? -");
+	next();
+	.@failed = (select("Carefully open the box!", "Swiftly open the box!") == 2);
+	if (sk_decorate == 1)
+		mes("- A gift wrapping ribbon flew of from inside the box! -");
+	else
+		mes("- A gift decoration pair of wings flew of from inside the box! -");
+	next();
+	if (.@failed) {
+		mes("- It is probably hidding in another box -");
+		while (sk_decorate_box == .@id)
+			sk_decorate_box = rand(1, 5);
+
+		// Official servers seems to use a "hideoff" equivalent, but the NPCs stay visible...
+		// using specialeffect reproduces the same result
+		specialeffect(EF_SPRINKLESAND, SELF, "Gift Box#ccb" + sk_decorate_box, getcharid(CHAR_ID_ACCOUNT));
+		close();
+	}
+
+	mes("- I quickly caught it as soon as it started to fly! -");
+	next();
+	mes("- Let's give it back to ^4d4dffSanta Helper^000000");
+	sk_decorate2 = 2;
+	sk_decorate_box = 0;
+	if (sk_decorate == 1)
+		changequest(16004, 16006);
+	else
+		changequest(16005, 16007);
+	close();
+
+	S_BoxId:
+		sscanf(strnpcinfo(NPC_NAME_HIDDEN), "ccb%d", .@id);
+		return .@id;
+
+	OnTouch:
+		if (sk_decorate2 != 1)
+			end;
+
+		if (callsub(S_BoxId) == sk_decorate_box)
+			unittalk(getnpcid(), _("Tsch Tsch..."), false, SELF, getcharid(CHAR_ID_ACCOUNT));
+		end;
+}
+
+xmas_in,156,35,3	duplicate(checa_giftbox)	Gift Box#ccb1	HIDDEN_NPC,2,2
+xmas_in,163,27,3	duplicate(checa_giftbox)	Gift Box#ccb2	HIDDEN_NPC,2,2
+xmas_in,172,22,3	duplicate(checa_giftbox)	Gift Box#ccb3	HIDDEN_NPC,2,2
+xmas_in,170,29,3	duplicate(checa_giftbox)	Gift Box#ccb4	HIDDEN_NPC,2,2
+xmas_in,177,30,3	duplicate(checa_giftbox)	Gift Box#ccb5	HIDDEN_NPC,2,2

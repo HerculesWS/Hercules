@@ -214,6 +214,11 @@ function	script	F_Load1Skills	{
 		if(ADV_QSK|(2 ** .@i) == ADV_QSK) skill 144+.@i,1,0;
 	}
 	ADV_QSK = 0; //Clear var
+
+	// @TODO: Needs confirmation whether MC_CARTDECORATE skill is restored
+	// Hazy Forest says it is not given automatically on reborn
+	if (sk_decorate == 4)
+		skill(MC_CARTDECORATE, 1, 0);
 	return;
 }
 
