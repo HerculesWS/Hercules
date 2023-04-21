@@ -27412,6 +27412,39 @@ static BUILDIN(openbank)
 	return true;
 }
 
+static BUILDIN(openquestui)
+{
+	struct map_session_data *sd = script_rid2sd(st);
+
+	if (sd == NULL)
+		return false;
+
+	int quest_id = script_hasdata(st, 2) ? script_getnum(st, 2) : sd->last_added_quest_id;
+	if (quest_id != 0 && quest->check(sd, quest_id, HAVEQUEST) == -1) {
+		ShowWarning("openquestui: Trying to show quest that is not in players' quest log (QuestID: %d)\n", quest_id);
+		return false;
+	}
+
+#if PACKETVER >= 20171122
+	clif->open_ui_send1(sd, ZC_RENEWQUEST_UI, quest_id);
+#endif
+	return true;
+}
+
+static BUILDIN(opentipboxui)
+{
+	struct map_session_data *sd = script_rid2sd(st);
+
+	if (sd == NULL)
+		return false;
+
+#if PACKETVER >= 20171122
+	int tip_id = script_hasdata(st, 2) ? script_getnum(st, 2) : 0;
+	clif->open_ui_send1(sd, ZC_TIPBOX_UI, tip_id);
+#endif
+	return true;
+}
+
 static BUILDIN(msgtable)
 {
 	struct map_session_data *sd = script_rid2sd(st);
@@ -28898,6 +28931,8 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(airship_respond, "i"),
 		BUILDIN_DEF(openstylist,""),
 		BUILDIN_DEF(openbank, ""),
+		BUILDIN_DEF(openquestui, "?"),
+		BUILDIN_DEF(opentipboxui, "?"),
 		BUILDIN_DEF(_,"s"),
 		BUILDIN_DEF2(_, "_$", "s"),
 

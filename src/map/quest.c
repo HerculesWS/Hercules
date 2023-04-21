@@ -149,6 +149,7 @@ static int quest_add(struct map_session_data *sd, int quest_id, unsigned int tim
 	sd->quest_log[n].state = Q_ACTIVE;
 
 	sd->save_quest = true;
+	sd->last_added_quest_id = qi->id;
 
 	clif->quest_add(sd, &sd->quest_log[n]);
 #if PACKETVER >= 20150513
@@ -1005,7 +1006,7 @@ static bool quest_questinfo_validate_quests(struct map_session_data *sd, struct 
 
 	nullpo_retr(false, sd);
 	nullpo_retr(false, qi);
-	
+
 	for (i = 0; i < VECTOR_LENGTH(qi->quest_requirement); i++) {
 		struct questinfo_qreq *quest_requirement = &VECTOR_INDEX(qi->quest_requirement, i);
 		int quest_progress = quest->check(sd, quest_requirement->id, HAVEQUEST);

@@ -10753,6 +10753,23 @@ Opens the styling shop on client
 
 ---------------------------------------
 
+*openquestui({<quest_id>})
+
+Opens the Quest UI on client with the most recent added quest in this playing session selected.
+- If <quest_id> is set, shows this quest instead.
+- If the player did not receive new quests in this playing session, or <quest_id> is 0,
+  the Quest UI is open with no selected quest.
+
+---------------------------------------
+
+*opentipboxui({<tip_id = 0>})
+
+Opens the TipBox UI on client.
+- If <tip_id> is set, shows this specific tip.
+- If <tip_id> is not set or 0, shows a random tip.
+
+---------------------------------------
+
 *msgtable(<message_id>{, <color>})
 
 Show in client message by <message_id> from msg string table

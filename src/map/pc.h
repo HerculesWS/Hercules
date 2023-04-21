@@ -690,6 +690,8 @@ END_ZEROED_BLOCK;
 	} goldpc;
 
 	VECTOR_DECL(int) agency_requests;
+
+	int last_added_quest_id; ///< Most recent quest id added to quest log in this play session
 };
 
 #define EQP_WEAPON EQP_HAND_R
