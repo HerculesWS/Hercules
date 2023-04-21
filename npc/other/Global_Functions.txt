@@ -401,7 +401,7 @@ function	script	Time2Str	{
 //== Function F_ShuffleNumbers =============================
 // Generate a set of numbers in random order that the numbers are not repeated
 //    callfunc "F_ShuffleNumbers",<start num>,<last num>,<output array>{,<count>};
-// Examples: 
+// Examples:
 //    callfunc("F_ShuffleNumbers", 0, 5, .@output)      // possible output 4,1,3,2,0,5
 //    callfunc("F_ShuffleNumbers", -5, 1, .@output)     // possible output -3,-5,-4,-2,-1,1,0
 //    callfunc("F_ShuffleNumbers", 0, 100, .@output, 5) // possible output 9,55,27,84,33
@@ -481,4 +481,54 @@ function	script	F_MesItemInfo	{
 		return sprintf("<ITEMLINK>%s<INFO>%d</INFO></ITEMLINK>", .@itemname$, .@item);
 	else
 		return .@itemname$;
+}
+
+//== Function F_GetMobNaviList =======================================
+// F_GetMobNaviList(idQuantityArray);
+// F_GetMobNaviList(id1, quantity1, id2, quantity2, ...);
+//
+// Display a list of monsters with quantity for each. Monsters will have NAVI in their names.
+//
+// Examples:
+//     // displays "Targets: 10 [Poring] and 20 [Drops]"
+//     // where [Poring] and [Drops] are clickable for Navi
+//     setarray(.@targets, PORING, 10, DROPS, 20);
+//     mesf("Targets: %s", F_GetMobNaviList(.@targets));
+//
+//     // displays "Targets: 10 [Poring] and 20 [Drops]"
+//     // where [Poring] and [Drops] are clickable for Navi
+//     mesf("Targets: %s", F_GetMobNaviList(PORING, 10, DROPS, 20));
+function	script	F_GetMobNaviList	{
+	.@str$ = "";
+
+	if (getargcount() == 1) {
+		for (.@i = 0; .@i < getarraysize(getarg(0)) - 2; .@i += 2) {
+			if (.@i > 0)
+				.@str$ += _(", ");
+
+			.@str$ += sprintf("%d %s", getelementofarray(getarg(0), .@i + 1), mesmobspawn(getelementofarray(getarg(0), .@i)));
+		}
+
+		if (.@i > 0)
+			.@str$ += _(" and ");
+
+		.@str$ += sprintf(_$("%d %s"), getelementofarray(getarg(0), .@i + 1), mesmobspawn(getelementofarray(getarg(0), .@i)));
+	} else if (getargcount() % 2 == 0) {
+		for (.@i = 0; .@i < getargcount() - 2; .@i += 2) {
+			if (.@i > 0)
+				.@str$ += _(", ");
+
+			.@str$ += sprintf(_$("%d %s"), getarg(.@i + 1), mesmobspawn(getarg(.@i)));
+		}
+
+		if (.@i > 0)
+			.@str$ += _(" and ");
+
+		.@str$ += sprintf(_$("%d %s"), getarg(.@i + 1), mesmobspawn(getarg(.@i)));
+	} else {
+		consolemes(CONSOLEMES_ERROR, "F_MesMobList: Invalid argument count (%d).", getargcount());
+		end;
+	}
+
+	return .@str$;
 }
