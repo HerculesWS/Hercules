@@ -2103,6 +2103,10 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 		}
 	}
 
+	if (itemdb->exists(id.nameid) && inherit == false) {
+		ShowWarning("itemdb_readdb_libconfig_sub: Duplicated item %d found in \"%s\".\n", id.nameid, source);
+	}
+
 	if( !libconfig->setting_lookup_string(it, "AegisName", &str) || !*str ) {
 		if( !inherit ) {
 			ShowWarning("itemdb_readdb_libconfig_sub: Missing AegisName in item %d of \"%s\", skipping.\n", id.nameid, source);
