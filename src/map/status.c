@@ -7520,7 +7520,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				val2 = val1 + 2; //Chance to Poison enemies.
 				val3 = 50 * (val1 + 1); //Damage increase (+50 +50*lv%)
 #endif
-				if( sd && pc->checkskill(sd,GC_RESEARCHNEWPOISON) > 0)//[Ind] - iROwiki says each level increases its duration by 3 seconds >[gbasso] updated in 2022 to researchlvl*15 + 30sec
+				if (sd && pc->checkskill(sd,GC_RESEARCHNEWPOISON) > 0) //[Ind] - iROwiki says each level increases its duration by 3 seconds >[gbasso] updated in 2022 to researchlvl*15 + 30sec
 					total_tick += 30000 + pc->checkskill(sd,GC_RESEARCHNEWPOISON)*15000;
 				break;
 			case SC_POISONREACT:
