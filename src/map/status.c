@@ -1927,7 +1927,6 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 		bstatus->max_hp = battle_config.max_hp;
 	else if(!bstatus->max_hp)
 		bstatus->max_hp = 1;
-	
 	// ----- SP MAX CALCULATION -----
 
 	// Basic MaxSP value
