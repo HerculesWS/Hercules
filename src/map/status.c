@@ -3677,7 +3677,7 @@ static int status_base_amotion_pc(struct map_session_data *sd, struct status_dat
 #ifdef RENEWAL
 	if ((skill_lv = pc->checkskill(sd, BA_MUSICALLESSON)) > 0)
 		val += skill_lv;
-	if ((skill_lv = pc->checkskill(sd,RG_PLAGIARISM)) > 0)
+	if ((skill_lv = pc->checkskill(sd, RG_PLAGIARISM)) > 0)
 		val += skill_lv;
 #endif
 	
