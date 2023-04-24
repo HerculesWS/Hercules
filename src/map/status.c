@@ -1915,7 +1915,6 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 
 	if ((pc->checkskill(sd,SU_SPRITEMABLE)) > 0)
 		bstatus->max_hp += 1000;
-	
 	// Apply relative modifiers from equipment
 	if(sd->hprate < 0)
 		sd->hprate = 0;
