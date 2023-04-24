@@ -5636,7 +5636,7 @@ static short status_calc_aspd_rate(struct block_list *bl, struct status_change *
 		aspd_rate -= 10 * sc->data[SC_STARSTANCE]->val2;
 #ifdef RENEWAL //just in case people want to use classic aspd with renewal. Not going to add the other buffed skills because they are already very strong in classic.
 	if (sc->data[SC_INC_AGI])
-		aspd_rate -= sc->data[SC_INC_AGI]->val1*10;
+		aspd_rate -= sc->data[SC_INC_AGI]->val1 * 10;
 #endif
 	return (short)cap_value(aspd_rate,0,SHRT_MAX);
 }
