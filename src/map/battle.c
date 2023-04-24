@@ -2237,7 +2237,7 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 				case MO_INVESTIGATE:
 #ifdef RENEWAL
 					skillratio += -100 + 100 * skill_lv;
-						if( tsc && tsc->data[SC_BLADESTOP] ) // +50% on targets under Root skill
+						if (tsc && tsc->data[SC_BLADESTOP]) // +50% on targets under Root skill
 						skillratio += skillratio/2;
 #else
 					skillratio += 75 * skill_lv;
