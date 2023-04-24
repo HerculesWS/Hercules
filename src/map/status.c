@@ -4573,7 +4573,7 @@ static int status_calc_matk(struct block_list *bl, struct status_change *sc, int
 		matk += sc->data[SC_MTF_MATK]->val1;
 	if (sc->data[SC_MYSTICSCROLL])
 		matk += matk * sc->data[SC_MYSTICSCROLL]->val1 / 100;
-	if(sc->data[SC_VOLCANO])
+	if (sc->data[SC_VOLCANO])
 		matk += sc->data[SC_VOLCANO]->val2; //renewal buff
 	
 	// Eden Crystal Synthesis
