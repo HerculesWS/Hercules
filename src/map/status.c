@@ -1949,7 +1949,7 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 	if ((pc->checkskill(sd,SU_SPRITEMABLE)) > 0)
 		bstatus->max_sp += 100;
 #ifdef RENEWAL
-	if((skill_lv = pc->checkskill(sd,BA_MUSICALLESSON)) > 0)
+	if ((skill_lv = pc->checkskill(sd, BA_MUSICALLESSON)) > 0)
 		bstatus->max_sp += (int64)bstatus->max_sp * skill_lv/100;
 	if((skill_lv = pc->checkskill(sd,DC_DANCINGLESSON)) > 0)
 		bstatus->max_sp += (int64)bstatus->max_sp * skill_lv/100;
