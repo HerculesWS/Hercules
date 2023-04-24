@@ -1707,7 +1707,7 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					RE_LVL_DMOD(100);
 					break;
 				case BA_DISSONANCE:
-						skillratio += skill_lv * 10;
+					skillratio += skill_lv * 10;
 							if((skill_lv = pc->checkskill(sd,BA_MUSICALLESSON)) > 0)
 							skillratio += (skill_lv * 3);	
 					break;
