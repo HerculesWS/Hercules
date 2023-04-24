@@ -1687,7 +1687,7 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 #ifdef RENEWAL			
 					skillratio += 300 + skill_lv * 100; //technically monsters should be using the old one, but w/e
 #else
-					skillratio += 20*skill_lv-20;
+					skillratio += 20 * skill_lv - 20;
 #endif
 					break;
 #ifdef RENEWAL
