@@ -1699,7 +1699,7 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					skillratio += 100;
 					break;
 				case PR_MAGNUS:
-					if(battle->check_undead(tst->race,tst->def_ele) || tst->race==RC_DEMON)
+					if (battle->check_undead(tst->race,tst->def_ele) || tst->race == RC_DEMON)
 					skillratio += 30;
 					break;	
 				case HW_GRAVITATION:
