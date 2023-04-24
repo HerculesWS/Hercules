@@ -2372,7 +2372,7 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 #ifdef RENEWAL					
 				case PA_PRESSURE:
 					skillratio += +400 + 150 * skill_lv;
-						RE_LVL_DMOD(100);
+					RE_LVL_DMOD(100);
 					break;
 #endif
 				case WS_CARTTERMINATION:
