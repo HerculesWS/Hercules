@@ -2209,7 +2209,7 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 				case AM_DEMONSTRATION:
 #ifdef RENEWAL
 					skillratio += -100 + 60 * skill_lv;
-						if(sd)
+						if (sd)
 						skillratio += 20 * pc->checkskill(sd,AM_LEARNINGPOTION);
 					break;
 #else			
