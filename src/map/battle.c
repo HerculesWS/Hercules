@@ -2106,7 +2106,7 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					{
 						int ratio = 100 + 20 * skill_lv;
 						skillratio += ratio - 100;
-						if(skill_lv>3 && flag==1) skillratio += ratio / 2;
+						if (skill_lv>3 && flag == 1) skillratio += ratio / 2;
 						if(skill_lv>6 && flag==1) skillratio += ratio / 4;
 						if(skill_lv>9 && flag==1) skillratio += ratio / 8;
 						if(skill_lv>6 && flag==2) skillratio += ratio / 2;
