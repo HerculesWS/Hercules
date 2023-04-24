@@ -2012,7 +2012,6 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 	
 	if (pc->checkskill(sd, SU_POWEROFLIFE) > 0)
 		bstatus->cri += 20;
-	
 	if(sd->flee2_rate < 0)
 		sd->flee2_rate = 0;
 	if(sd->flee2_rate != 100)
