@@ -4629,7 +4629,7 @@ static int status_calc_critical(struct block_list *bl, struct status_change *sc,
 #ifdef RENEWAL
 	if (sc->data[SC_SPEARQUICKEN])
 		critical += 3*sc->data[SC_SPEARQUICKEN]->val1 * 10;
-	if(sc->data[SC_TWOHANDQUICKEN])
+	if (sc->data[SC_TWOHANDQUICKEN])
 		critical += sc->data[SC_TWOHANDQUICKEN]->val4 * 10;
 #endif
 	if (sc->data[SC__INVISIBILITY])
