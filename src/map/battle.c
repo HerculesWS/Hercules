@@ -2123,7 +2123,7 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					break;
 				case AS_POISONREACT:
 					skillratio += 30 * skill_lv;
-					break;				
+					break;
 				case AS_SONICBLOW:
 #ifdef RENEWAL
 
