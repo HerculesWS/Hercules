@@ -5454,7 +5454,7 @@ static short status_calc_aspd(struct block_list *bl, struct status_change *sc, s
 	#ifdef RENEWAL
 		if (sc->data[SC_INC_AGI])
 			bonus += sc->data[SC_INC_AGI]->val1;
-		if(sc->data[SC_TWOHANDQUICKEN])
+		if (sc->data[SC_TWOHANDQUICKEN])
 			bonus += sc->data[SC_TWOHANDQUICKEN]->val3;
 		if(sc->data[SC_ADRENALINE])
 			bonus += sc->data[SC_ADRENALINE]->val4;
