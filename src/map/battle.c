@@ -2228,7 +2228,7 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 				case MO_FINGEROFFENSIVE:
 #ifdef RENEWAL
 					skillratio+= 500 + 200 * skill_lv;
-						if( tsc && tsc->data[SC_BLADESTOP] ) // +50% on targets under Root skill
+						if (tsc && tsc->data[SC_BLADESTOP]) // +50% on targets under Root skill
 						skillratio += skillratio/2;
 #else
 					skillratio+= 50 * skill_lv;
