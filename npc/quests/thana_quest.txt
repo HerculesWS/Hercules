@@ -30,7 +30,7 @@
 //================= Description ===========================================
 //= Episode 13.1 Thanatos Tower quest.
 //================= Current Version =======================================
-//= 1.1
+//= 1.2
 //=========================================================================
 
 hu_fild01,140,163,5	script	Tower Keeper	4_M_EIN_SOLDIER,3,3,{
@@ -532,6 +532,8 @@ tha_t01,140,78,4	script	Guide#reward	4_F_ZONDAGIRL,{
 }
 
 tha_t02,231,161,5	script	Entrance Guide	4_M_ZONDAMAN,{
+	// Require to have 5 players near the NPC before moving to 3rd floor?
+	.@requireGroup = (!RENEWAL);
 	mes "[Burled]";
 	if (thana_tower == 0) {
 		mes "You are in front of the entrance to the 3rd Floor. Only contracted";
@@ -552,30 +554,32 @@ tha_t02,231,161,5	script	Entrance Guide	4_M_ZONDAMAN,{
 		mes "on our temp list. Hmmm...";
 		mes "Ah, you're "+strcharinfo(PC_NAME)+", right?";
 		next;
-		mes "[Burled]";
-		if (getareausers("tha_t02",226,156,236,166) < 5) {
-			mes "First, we need to wait until";
-			mes "at least 5 temps are gathered";
-			mes "to form a work group. Right";
-			mes "now, there are a total of";
-			mes getareausers("tha_t02",226,156,236,166)+ " temp workers waiting to";
-			mes "enter the 3rd Floor.";
-			next;
-			mes "[Burled]";
-			mes "If you can, try to get";
-			mes "your friends to help you";
-			mes "by coming near me. Please";
-			mes "understand that we have this";
-			mes "temp worker group requirement";
-			mes "for various safety reasons.";
-			close;
+		if (.@requireGroup) {
+			mes("[Burled]");
+			if (getareausers("tha_t02",226,156,236,166) < 5) {
+				mesf("First, we need to wait until\r"
+					"at least 5 temps are gathered\r"
+					"to form a work group. Right\r"
+					"now, there are a total of\r"
+					"%d temp workers waiting to\r"
+					"enter the 3rd Floor.", getareausers("tha_t02",226,156,236,166));
+				next();
+				mes("[Burled]");
+				mes("If you can, try to get\r"
+					"your friends to help you\r"
+					"by coming near me. Please\r"
+					"understand that we have this\r"
+					"temp worker group requirement\r"
+					"for various safety reasons.");
+				close();
+			}
+			mes("Great, you're just\r"
+				"in time. We just met\r"
+				"the minimum 5 temp group\r"
+				"requirement, so we'll open\r"
+				"the gate to the 3rd Floor soon.");
+			next();
 		}
-		mes "Great, you're just";
-		mes "in time. We just met";
-		mes "the minimum 5 temp group";
-		mes "requirement, so we'll open";
-		mes "the gate to the 3rd Floor soon.";
-		next;
 		mes "[Burled]";
 		mes "The gate to the 3rd Floor";
 		mes "will close shortly, so enter it";
@@ -589,7 +593,10 @@ tha_t02,231,161,5	script	Entrance Guide	4_M_ZONDAMAN,{
 			mes "I nod, then watch him open the gate.^000000";
 		}
 		close2;
-		donpcevent "3rdf_warp#tt::OnEnable";
+		if (.@requireGroup)
+			donpcevent("3rdf_warp#tt::OnEnable");
+		else
+			warp("tha_t03",219,159);
 		end;
 	case 2:
 		mes "[Burled]";
@@ -618,15 +625,17 @@ tha_t02,231,161,5	script	Entrance Guide	4_M_ZONDAMAN,{
 		mes "and the monsters grow more powerful";
 		mes "as you ascend the tower.";
 		mes "The geographical features also change considerably.";
-		next;
-		mes "[Burled]";
-		mes "Because the higher levels are";
-		mes "too dangerous, we only open the";
-		mes "3rd Floor Gate when 5 or more";
-		mes "are gathered here. Therefore,";
-		mes "you may need to wait if less";
-		mes "than 5 temps have gathered.";
-		close;
+		if (.@requireGroup) {
+			next();
+			mes("[Burled]");
+			mes("Because the higher levels are\r"
+				"too dangerous, we only open the\r"
+				"3rd Floor Gate when 5 or more\r"
+				"are gathered here. Therefore,\r"
+				"you may need to wait if less\r"
+				"than 5 temps have gathered.");
+		}
+		close();
 	case 3:
 		if (thana_tower < 3) {
 			mes "[Burled]";
@@ -832,7 +841,10 @@ tha_t02,231,161,5	script	Entrance Guide	4_M_ZONDAMAN,{
 			mes "as well as a little EXP.^000000";
 			thana_tower = 10;
 			completequest 7053;
-			getexp 120000,10000;
+			if (RENEWAL_EXP)
+				getexp(1_200_000, 1_000_000);
+			else
+				getexp(120_000, 10_000);
 			getitem Old_Violet_Box,1;
 			close;
 		}
@@ -849,6 +861,14 @@ tha_t02,231,161,5	script	Entrance Guide	4_M_ZONDAMAN,{
 	}
 
 L_Request:
+	if (RENEWAL && BaseLevel < 91) { // Custom Check Place/Dialog - TODO: Needs confirmation
+		mes("[Burled]");
+		mes("Ah... now that I'm taking a better look at you,\r"
+			"I don't think you are strong enough to take my request..."
+		);
+		close();
+	}
+
 	mes "[Burled]";
 	mes "Ah, it's not that difficult.";
 	mes "After you explore the tower, let me know in detail anything you learn.";
@@ -933,7 +953,7 @@ tha_t03,67,70,0	script	Rune Device#tt1	HIDDEN_NPC,4,4,{
 				mes "gentle ''pzzzzzh'' sound.^000000";
 				next;
 			}
-			else if (getequipweaponlv(4) == 4) {
+			else if (getequipweaponlv(EQI_HAND_R) == 4 || (RENEWAL && getequipweaponlv(EQI_HAND_R) == 3)) {
 				mes "^3355FFWith your "+getequipname(4)+" in";
 				mes "hand, you smash the energy";
 				mes "field with all of your strength. After absorbing the impact, the";
@@ -2320,7 +2340,19 @@ tha_t06,119,120,0	script	to 7th Floor	WARPNPC,1,1,{
 OnTouch:
 	if (checkhiding())
 		end;
-	if (eaclass()&(EAJL_2|EAJL_UPPER) || eaclass()&EAJL_THIRD || ((Class == Job_SuperNovice || Class == Job_Taekwon || Class == Job_Star_Gladiator || Class == Job_Soul_Linker || BaseClass == Job_Ninja || Class == Job_Gunslinger) && BaseLevel > 94)) {
+
+	if (!RENEWAL) {
+		.@isReborn = eaclass() & (EAJL_2 | EAJL_UPPER);
+		.@isThird = eaclass() & EAJL_THIRD;
+		.@isExpandedClass = (Class == Job_SuperNovice || Class == Job_Taekwon || Class == Job_Star_Gladiator
+			|| Class == Job_Soul_Linker || BaseClass == Job_Ninja || Class == Job_Gunslinger);
+
+		.@canEnter = (.@isReborn || .@isThird || (.@isExpandedClass && BaseLevel > 94));
+	} else {
+		.@canEnter = (BaseLevel > 94);
+	}
+
+	if (.@canEnter) {
 		if (countitem(Key_Black) > 0) {
 			mes "The shadow of a Black Key is gleaming in the center of the portal.";
 			mes "To pass this way, looks like I need something.";
