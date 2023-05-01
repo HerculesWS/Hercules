@@ -740,10 +740,10 @@ struct itemdb_interface {
 	int (*gendercheck) (struct item_data *id);
 	int (*validate_entry) (struct item_data *entry, int n, const char *source);
 	void (*readdb_options_additional_fields) (struct itemdb_option *ito, struct config_setting_t *t, const char *source);
-	void (*readdb_additional_fields) (int itemid, struct config_setting_t *it, int n, const char *source);
+	void (*readdb_additional_fields) (int itemid, struct config_setting_t *it, int n, const char *source, struct DBMap *itemconst_db);
 	void (*readdb_job_sub) (struct item_data *id, struct config_setting_t *t);
-	int (*readdb_libconfig_sub) (struct config_setting_t *it, int n, const char *source);
-	int (*readdb_libconfig) (const char *filename);
+	int (*readdb_libconfig_sub) (struct config_setting_t *it, int n, const char *source, struct DBMap *itemconst_db);
+	int (*readdb_libconfig) (const char *filename, struct DBMap *itemconst_db);
 	uint64 (*unique_id) (struct map_session_data *sd);
 	void (*read) (bool minimal);
 	void (*destroy_item_data) (struct item_data *self, int free_self);

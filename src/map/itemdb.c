@@ -1970,7 +1970,7 @@ static int itemdb_validate_entry(struct item_data *entry, int n, const char *sou
 	return item->nameid;
 }
 
-static void itemdb_readdb_additional_fields(int itemid, struct config_setting_t *it, int n, const char *source)
+static void itemdb_readdb_additional_fields(int itemid, struct config_setting_t *it, int n, const char *source, struct DBMap *itemconst_db)
 {
 	// do nothing. plugins can do own work
 }
@@ -2021,7 +2021,7 @@ static void itemdb_readdb_job_sub(struct item_data *id, struct config_setting_t 
  *               validation errors.
  * @return Nameid of the validated entry, or 0 in case of failure.
  */
-static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const char *source)
+static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const char *source, struct DBMap *itemconst_db)
 {
 	struct item_data id = { 0 };
 	struct config_setting_t *t = NULL;
@@ -2030,6 +2030,7 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 	bool inherit = false;
 
 	nullpo_ret(it);
+	nullpo_ret(itemconst_db);
 	/*
 	 * // Mandatory fields
 	 * Id: ID
@@ -2105,7 +2106,19 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 
 	bool clone = false;
 	if ((t = libconfig->setting_get_member(it, "CloneItem")) != NULL) {
-		int clone_id = libconfig->setting_get_int(t);
+		int clone_id;
+
+		if (t->type == CONFIG_TYPE_STRING) {
+			const char *clone_name = libconfig->setting_get_string(t);
+			clone_id = strdb_iget(itemconst_db, clone_name);
+
+			if (clone_id == 0) {
+				ShowWarning("%s: Could not find item \"%s\" to clone in item %d of \"%s\". Skipping.\n", __func__, clone_name, id.nameid, source);
+				return 0;
+			}
+		} else {
+			clone_id = libconfig->setting_get_int(t);
+		}
 
 		struct item_data *base_entry = itemdb->exists(clone_id);
 		if (base_entry == NULL) {
@@ -2403,7 +2416,7 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
  * @param filename File name, relative to the database path.
  * @return The number of found entries.
  */
-static int itemdb_readdb_libconfig(const char *filename)
+static int itemdb_readdb_libconfig(const char *filename, struct DBMap *itemconst_db)
 {
 	bool duplicate[MAX_ITEMDB];
 	struct DBMap *duplicate_db;
@@ -2413,6 +2426,7 @@ static int itemdb_readdb_libconfig(const char *filename)
 	int i = 0, count = 0;
 
 	nullpo_ret(filename);
+	nullpo_ret(itemconst_db);
 
 	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, filename);
 	if (!libconfig->load_file(&item_db_conf, filepath))
@@ -2428,13 +2442,15 @@ static int itemdb_readdb_libconfig(const char *filename)
 	duplicate_db = idb_alloc(DB_OPT_BASE);
 
 	while( (it = libconfig->setting_get_elem(itdb,i++)) ) {
-		int nameid = itemdb->readdb_libconfig_sub(it, i-1, filename);
+		int nameid = itemdb->readdb_libconfig_sub(it, i-1, filename, itemconst_db);
 
 		if (nameid <= 0 || nameid > MAX_ITEM_ID)
 			continue;
 
-		itemdb->readdb_additional_fields(nameid, it, i - 1, filename);
+		itemdb->readdb_additional_fields(nameid, it, i - 1, filename, itemconst_db);
 		count++;
+
+		strdb_iput(itemconst_db, itemdb_name(nameid), nameid);
 
 		if (nameid < MAX_ITEMDB) {
 			if (duplicate[nameid]) {
@@ -2962,8 +2978,14 @@ static void itemdb_read(bool minimal)
 		DBPATH"item_db.conf",
 		"item_db2.conf",
 	};
+
+	// temporary itemconst db for item cloning because it happens before itemdb->name_constants()
+	struct DBMap *itemconst_db = strdb_alloc(DB_OPT_BASE, ITEM_NAME_LENGTH);
+
 	for (i = 0; i < ARRAYLENGTH(filename); i++)
-		itemdb->readdb_libconfig(filename[i]);
+		itemdb->readdb_libconfig(filename[i], itemconst_db);
+
+	db_destroy(itemconst_db);
 
 	// TODO check duplicate names also in itemdb->other
 	for( i = 0; i < ARRAYLENGTH(itemdb->array); ++i ) {
