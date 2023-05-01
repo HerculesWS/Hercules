@@ -2103,8 +2103,30 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 		}
 	}
 
-	if( !libconfig->setting_lookup_string(it, "AegisName", &str) || !*str ) {
-		if( !inherit ) {
+	bool clone = false;
+	if ((t = libconfig->setting_get_member(it, "CloneItem")) != NULL) {
+		int clone_id = libconfig->setting_get_int(t);
+
+		struct item_data *base_entry = itemdb->exists(clone_id);
+		if (base_entry == NULL) {
+			ShowWarning("%s: Trying to clone nonexistent item %d in item %d of \"%s\". Skipping.\n", __func__, clone_id, id.nameid, source);
+			return 0;
+		}
+
+		int new_id = id.nameid;
+		char existing_name[ITEM_NAME_LENGTH];
+		strncpy(existing_name, id.name, sizeof(existing_name));
+
+		clone = true;
+		memcpy(&id, base_entry, sizeof(id));
+
+		// Restore fields that cloning shouldn't replace. ID and AegisName are unique fields, so should not be cloned.
+		id.nameid = new_id;
+		strncpy(id.name, existing_name, sizeof(id.name));
+	}
+
+	if (!libconfig->setting_lookup_string(it, "AegisName", &str) || !*str) {
+		if (!inherit) {
 			ShowWarning("itemdb_readdb_libconfig_sub: Missing AegisName in item %d of \"%s\", skipping.\n", id.nameid, source);
 			return 0;
 		}
@@ -2113,7 +2135,7 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 	}
 
 	if( !libconfig->setting_lookup_string(it, "Name", &str) || !*str ) {
-		if( !inherit ) {
+		if (!inherit && !clone) {
 			ShowWarning("itemdb_readdb_libconfig_sub: Missing Name in item %d of \"%s\", skipping.\n", id.nameid, source);
 			return 0;
 		}
@@ -2123,7 +2145,7 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 
 	if (map->setting_lookup_const(it, "Type", &i32))
 		id.type = i32;
-	else if (!inherit)
+	else if (!inherit && !clone)
 		id.type = IT_ETC;
 
 	if (map->setting_lookup_const(it, "Subtype", &i32) && i32 >= 0) {
@@ -2136,11 +2158,11 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 
 	if (map->setting_lookup_const(it, "Buy", &i32))
 		id.value_buy = i32;
-	else if (!inherit)
+	else if (!inherit && !clone)
 		id.value_buy = -1;
 	if (map->setting_lookup_const(it, "Sell", &i32))
 		id.value_sell = i32;
-	else if (!inherit)
+	else if (!inherit && !clone)
 		id.value_sell = -1;
 
 	if (map->setting_lookup_const(it, "Weight", &i32) && i32 >= 0)
@@ -2166,7 +2188,7 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 			itemdb->readdb_job_sub(&id, t);
 		} else if (map->setting_lookup_const(it, "Job", &i32)) { // This is an unsigned value, do not check for >= 0
 			itemdb->jobmask2mapid(id.class_base, (uint64)i32);
-		} else if (!inherit) {
+		} else if (!inherit && !clone) {
 			itemdb->jobmask2mapid(id.class_base, UINT64_MAX);
 		}
 	} else if (!inherit) {
@@ -2175,12 +2197,12 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 
 	if (map->setting_lookup_const_mask(it, "Upper", &i32) && i32 >= 0)
 		id.class_upper = (unsigned int)i32;
-	else if( !inherit )
+	else if (!inherit && !clone)
 		id.class_upper = ITEMUPPER_ALL;
 
 	if (map->setting_lookup_const(it, "Gender", &i32) && i32 >= 0)
 		id.sex = i32;
-	else if (!inherit)
+	else if (!inherit && !clone)
 		id.sex = 2;
 
 	if (map->setting_lookup_const_mask(it, "Loc", &i32) && i32 >= 0)
@@ -2346,20 +2368,30 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 		id.view_id = i32;
 	}
 
-	if( libconfig->setting_lookup_string(it, "Script", &str) )
+	if (libconfig->setting_lookup_string(it, "Script", &str))
 		id.script = *str ? script->parse(str, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
+	else if (clone && id.script != NULL)
+		id.script = script->clone_script(id.script);
 
-	if( libconfig->setting_lookup_string(it, "OnEquipScript", &str) )
+	if (libconfig->setting_lookup_string(it, "OnEquipScript", &str))
 		id.equip_script = *str ? script->parse(str, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
+	else if (clone && id.equip_script != NULL)
+		id.equip_script = script->clone_script(id.equip_script);
 
-	if( libconfig->setting_lookup_string(it, "OnUnequipScript", &str) )
+	if (libconfig->setting_lookup_string(it, "OnUnequipScript", &str))
 		id.unequip_script = *str ? script->parse(str, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
+	else if (clone && id.unequip_script != NULL)
+		id.unequip_script = script->clone_script(id.unequip_script);
 
 	if (libconfig->setting_lookup_string(it, "OnRentalStartScript", &str) != CONFIG_FALSE)
 		id.rental_start_script = (*str != '\0') ? script->parse(str, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
+	else if (clone && id.rental_start_script != NULL)
+		id.rental_start_script = script->clone_script(id.rental_start_script);
 
 	if (libconfig->setting_lookup_string(it, "OnRentalEndScript", &str) != CONFIG_FALSE)
 		id.rental_end_script = (*str != '\0') ? script->parse(str, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
+	else if (clone && id.rental_end_script != NULL)
+		id.rental_end_script = script->clone_script(id.rental_end_script);
 
 	return itemdb->validate_entry(&id, n, source);
 }

@@ -3,7 +3,7 @@
 //===== By: ==================================================
 //= Hercules Dev Team
 //===== Current Version: =====================================
-//= 20211111
+//= 20230501
 //===== Description: =========================================
 //= Explanation of the item_db.conf file and structure.
 //============================================================
@@ -15,6 +15,9 @@ item_db: (
 	AegisName: "Aegis_Name"       (string, optional if Inherit: true)
 	Name: "Item Name"             (string, optional if Inherit: true)
 	// =================== Optional fields ================================
+	CloneItem: ID                 (int, if specified, copies fields from
+	                                the other item and overrides with the values
+	                                specified in this one)
 	Type: Item Type               (string, defaults to "IT_ETC")
 	Buy: Buy Price                (int, defaults to Sell * 2)
 	Sell: Sell Price              (int, defaults to Buy / 2)
@@ -119,6 +122,17 @@ AegisName: Server name to reference the item in scripts and lookups.
            Allowed characters: [A-Za-z0-9_]
 
 Name: Name in English for displaying as output for @ and script commands.
+
+CloneItem: Clones the definition of another item into this, then override the fields defined in this entry.
+           The following fields are not cloned: ID and AegisName
+
+        Note: You can only clone items that were loaded before the item using CloneItem
+              field, otherwise an "inexistent item" warning will be shown.
+              Items are loaded in the same order as they are declared in item_db files, and item_db is loaded
+              before item_db2.
+
+        Note 2: If combined with "Inherit" (item_db2 only), Inherit comes first
+              (and all fields except for ID and AegisName are replaced by CloneItem)
 
 Type:
 	IT_HEALING:			Healing Item

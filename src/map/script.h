@@ -933,6 +933,7 @@ struct script_interface {
 	void (*error) (const char* src, const char* file, int start_line, const char* error_msg, const char* error_pos);
 	void (*warning) (const char* src, const char* file, int start_line, const char* error_msg, const char* error_pos);
 	/* */
+	struct script_code* (*clone_script) (struct script_code* original);
 	bool (*addScript) (char *name, char *args, bool (*func)(struct script_state *st), bool isDeprecated);
 	int (*conv_num) (struct script_state *st,struct script_data *data);
 	const char* (*conv_str) (struct script_state *st,struct script_data *data);
