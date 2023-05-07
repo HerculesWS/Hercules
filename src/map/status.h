@@ -1283,11 +1283,18 @@ struct status_change {
 #define status_calc_elemental(ed, opt)  (status->calc_bl_(&(ed)->bl, SCB_ALL, (opt)))
 #define status_calc_npc(nd, opt)        (status->calc_bl_(&(nd)->bl, SCB_ALL, (opt)))
 
+struct s_unit_params {
+	char name[SCRIPT_VARNAME_LENGTH]; ///< group name as defined in conf
+
+	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
+};
+
 struct s_status_dbs {
 BEGIN_ZEROED_BLOCK; /* Everything within this block will be memset to 0 when status_defaults() is executed */
 	int max_weight_base[CLASS_COUNT];
 	int HP_table[CLASS_COUNT][MAX_LEVEL + 1];
 	int SP_table[CLASS_COUNT][MAX_LEVEL + 1];
+	struct s_unit_params *unit_params[CLASS_COUNT];
 	int aspd_base[CLASS_COUNT][MAX_SINGLE_WEAPON_TYPE+1]; // +1 for RENEWAL_ASPD
 	struct {
 		int id;
@@ -1316,9 +1323,11 @@ struct status_interface {
 	int current_equip_option_index;
 
 	struct s_status_dbs *dbs;
+	VECTOR_DECL(struct s_unit_params) unit_params_groups;
 
 	struct eri *data_ers; //For sc_data entries
 	struct status_data dummy;
+	struct s_unit_params dummy_unit_params;
 	int64 natural_heal_prev_tick;
 	unsigned int natural_heal_diff_tick;
 	/* */
@@ -1462,6 +1471,10 @@ struct status_interface {
 	bool (*read_scdb_libconfig_sub_skill) (struct config_setting_t *it, int type, const char *source);
 	void (*read_job_db) (void);
 	void (*read_job_db_sub) (int idx, const char *name, struct config_setting_t *jdb);
+	void (*read_unit_params_db) (void);
+	bool (*read_unit_params_db_sub) (const char *name, struct config_setting_t *group, const char *source);
+	bool (*read_unit_params_db_additional) (struct s_unit_params *entry, struct s_unit_params *inherited, struct config_setting_t *group, const char *source);
+	void (*unit_params_destroy) (struct s_unit_params *entry);
 	void (*copy) (struct status_data *a, const struct status_data *b);
 	int (*base_matk_min) (const struct status_data *st);
 	int (*base_matk_max) (const struct status_data *st);

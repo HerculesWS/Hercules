@@ -235,6 +235,7 @@ static bool hplugin_data_store_validate(enum HPluginDataTypes type, struct hplug
 		case HPDT_BGDATA:
 		case HPDT_AUTOTRADE_VEND:
 		case HPDT_CLAN:
+		case HPDT_UNIT_PARAMETER:
 		default:
 			if (HPM->data_store_validate_sub == NULL) {
 				ShowError("HPM:validateHPData failed, type %u needs sub-handler!\n", type);

@@ -171,6 +171,9 @@ static void initDummyData(void)
 	status->dummy.dmotion = 2000;
 	status->dummy.ele_lv = 1; //Min elemental level.
 	status->dummy.mode = MD_CANMOVE;
+
+	memset(&status->dummy_unit_params, 0, sizeof(status->dummy_unit_params));
+	strcpy(status->dummy_unit_params.name, "");
 }
 
 //For copying a status_data structure from b to a, without overwriting current Hp and Sp
@@ -13510,6 +13513,8 @@ static void status_read_job_db_sub(int idx, const char *name, struct config_sett
 			status->dbs->max_weight_base[idx] = status->dbs->max_weight_base[iidx];
 			memcpy(&status->dbs->aspd_base[idx], &status->dbs->aspd_base[iidx], sizeof(status->dbs->aspd_base[iidx]));
 
+			status->dbs->unit_params[idx] = status->dbs->unit_params[iidx];
+
 			for (i = 1; i <= MAX_LEVEL && status->dbs->HP_table[iidx][i]; i++) {
 				status->dbs->HP_table[idx][i] = status->dbs->HP_table[iidx][i];
 			}
@@ -13541,6 +13546,25 @@ static void status_read_job_db_sub(int idx, const char *name, struct config_sett
 			}
 		}
 	}
+
+	if (libconfig->setting_lookup_string(jdb, "ParametersGroup", &str) != 0) {
+		int i = 0;
+		ARR_FIND(0, VECTOR_LENGTH(status->unit_params_groups), i, strcmp(str, VECTOR_INDEX(status->unit_params_groups, i).name) == 0);
+
+		struct s_unit_params *params = NULL;
+		if (i < VECTOR_LENGTH(status->unit_params_groups)) {
+			params = &VECTOR_INDEX(status->unit_params_groups, i);
+		} else {
+			ShowError("%s: Unknown Parameters Group '%s' provided for entry '%s', using dummy data...\n", __func__, str, name);
+			params = &status->dummy_unit_params;
+		}
+
+		status->dbs->unit_params[idx] = params;
+	} else if (status->dbs->unit_params[idx] == NULL || status->dbs->unit_params[idx] == &status->dummy_unit_params) {
+		ShowError("%s: ParametersGroup setting not found for entry '%s', using dummy data...\n", __func__, name);
+		status->dbs->unit_params[idx] = &status->dummy_unit_params;
+	}
+
 	if ((temp = libconfig->setting_get_member(jdb, "InheritHP"))) {
 		int nidx = 0;
 		const char *iname;
@@ -13965,11 +13989,115 @@ static bool status_read_scdb_libconfig_sub_skill(struct config_setting_t *it, in
 }
 
 /**
+ * For plugins, reads additional data from a single group entry from unit parameters database
+ *
+ * @param entry unit parameter entry being created (already filled by original loading function)
+ * @param inherited unit parameter this entry is inheriting from
+ * @param group libconfig's group entry
+ * @param source source file name
+ * @return true if data was successfuly read, false otherwise.
+ *         false will prevent this entry from being loaded into the db and alert about errors.
+ */
+static bool status_read_unit_params_db_additional(struct s_unit_params *entry, struct s_unit_params *inherited, struct config_setting_t *group, const char *source)
+{
+	// to be used by plugins
+	return true;
+}
+
+/**
+ * Reads a single group entry from unit parameters database
+ *
+ * @param name group name
+ * @param group libconfig's group entry
+ * @param source source file name
+ * @return true if data was successfuly read, false otherwise
+ */
+static bool status_read_unit_params_db_sub(const char *name, struct config_setting_t *group, const char *source)
+{
+	nullpo_retr(false, name);
+	nullpo_retr(false, group);
+
+	struct s_unit_params entry = { 0 };
+
+	const char *str = NULL;
+	struct s_unit_params *inherited = NULL;
+
+	if (libconfig->setting_lookup_string(group, "Inherit", &str)) {
+		int i = 0;
+		ARR_FIND(0, VECTOR_LENGTH(status->unit_params_groups), i, strcmp(str, VECTOR_INDEX(status->unit_params_groups, i).name) == 0);
+
+		if (i == VECTOR_LENGTH(status->unit_params_groups)) {
+			ShowError("%s: Could not find group '%s' to inherit from in entry '%s'. Skipping entry...\n", __func__, str, name);
+			return false;
+		}
+
+		inherited = &VECTOR_INDEX(status->unit_params_groups, i);
+		memcpy(&entry, inherited, sizeof(entry));
+	}
+
+	// Set name after inherit or it will be overriden
+	safestrncpy(entry.name, name, sizeof(entry.name));
+
+	// TODO: Read more fields
+
+	if (!status->read_unit_params_db_additional(&entry, inherited, group, source)) {
+		status->unit_params_destroy(&entry);
+		return false;
+	}
+
+	VECTOR_ENSURE(status->unit_params_groups, 1, 1);
+	VECTOR_PUSH(status->unit_params_groups, entry);
+
+	return true;
+}
+
+/**
+ * Reads unit parameters database
+ */
+static void status_read_unit_params_db(void)
+{
+	VECTOR_INIT(status->unit_params_groups);
+
+	char config_filename[256];
+	libconfig->format_db_path(DBPATH"unit_parameters_db.conf", config_filename, sizeof(config_filename));
+
+	struct config_t param_db_conf;
+	if (!libconfig->load_file(&param_db_conf, config_filename))
+		return;
+
+	int i = 0;
+	struct config_setting_t *group = NULL;
+	bool result = true;
+	while ((group = libconfig->setting_get_elem(param_db_conf.root, i++))) {
+		const char *name = config_setting_name(group);
+
+		if (!status->read_unit_params_db_sub(name, group, config_filename))
+			result = false;
+	}
+
+	if (!result)
+		ShowWarning("There were errors while reading '"CL_WHITE"%s"CL_RESET"'. Some entries may have been skipped. The logs above this line should have more information.\n", config_filename);
+
+	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", i, config_filename);
+	libconfig->destroy(&param_db_conf);
+}
+
+/**
+ * Perform the required cleanup inside a unit parameters db entry.
+ * @param entry the entry to have its internal content cleared
+ */
+static void status_unit_params_destroy(struct s_unit_params *entry)
+{
+	nullpo_retv(entry);
+}
+
+/**
  * Read status db
  * job1.txt
  * job2.txt
  * size_fixe.txt
  * refine_db.txt
+ * unit_parameters_db.conf
  **/
 static int status_readdb(void)
 {
@@ -14003,6 +14131,7 @@ static int status_readdb(void)
 	sv->readdb(map->db_path, "job_db2.txt",         ',', 1,                 1+MAX_LEVEL,       -1,                       status->readdb_job2);
 	sv->readdb(map->db_path, DBPATH"size_fix.txt", ',', MAX_SINGLE_WEAPON_TYPE, MAX_SINGLE_WEAPON_TYPE, ARRAYLENGTH(status->dbs->atkmods), status->readdb_sizefix);
 	status->read_scdb_libconfig();
+	status->read_unit_params_db();
 	status->read_job_db();
 
 	pc->validate_levels();
@@ -14033,6 +14162,12 @@ static int do_init_status(bool minimal)
 static void do_final_status(void)
 {
 	ers_destroy(status->data_ers);
+
+	status->unit_params_destroy(&status->dummy_unit_params);
+	for (int i = 0; i < VECTOR_LENGTH(status->unit_params_groups); ++i)
+		status->unit_params_destroy(&VECTOR_INDEX(status->unit_params_groups, i));
+
+	VECTOR_CLEAR(status->unit_params_groups);
 }
 
 /*=====================================
@@ -14056,6 +14191,7 @@ void status_defaults(void)
 
 	status->data_ers = NULL;
 	memset(&status->dummy, 0, sizeof(status->dummy));
+	memset(&status->dummy_unit_params, 0, sizeof(status->dummy_unit_params));
 	status->natural_heal_prev_tick = 0;
 	status->natural_heal_diff_tick = 0;
 	/* funcs */
@@ -14210,6 +14346,10 @@ void status_defaults(void)
 	status->read_scdb_libconfig_sub_skill = status_read_scdb_libconfig_sub_skill;
 	status->read_job_db = status_read_job_db;
 	status->read_job_db_sub = status_read_job_db_sub;
+	status->read_unit_params_db = status_read_unit_params_db;
+	status->read_unit_params_db_sub = status_read_unit_params_db_sub;
+	status->read_unit_params_db_additional = status_read_unit_params_db_additional;
+	status->unit_params_destroy = status_unit_params_destroy;
 	status->copy = status_copy;
 	status->base_matk_min = status_base_matk_min;
 	status->base_matk_max = status_base_matk_max;

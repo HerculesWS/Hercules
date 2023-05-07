@@ -96,6 +96,7 @@ enum HPluginDataTypes {
 	HPDT_BGDATA,         ///< For struct battleground_data.
 	HPDT_AUTOTRADE_VEND, ///< For struct autotrade_vending.
 	HPDT_CLAN,           ///< For struct clan.
+	HPDT_UNIT_PARAMETER, ///< For struct unit_parameters_db.
 };
 
 /* used in macros and conf storage */
@@ -164,6 +165,10 @@ enum HPluginConfType {
 #define addtoCLAN(ptr,data,classid,autofree) (HPMi->addToHPData(HPDT_CLAN,HPMi->pid,&(ptr)->hdata,(data),(classid),(autofree)))
 #define getfromCLAN(ptr,classid) (HPMi->getFromHPData(HPDT_CLAN,HPMi->pid,(ptr)->hdata,(classid)))
 #define removefromCLAN(ptr,classid) (HPMi->removeFromHPData(HPDT_CLAN,HPMi->pid,(ptr)->hdata,(classid)))
+/* unit parameters */
+#define addToUnitParam(ptr,data,classid,autofree) (HPMi->addToHPData(HPDT_UNIT_PARAMETER,HPMi->pid,&(ptr)->hdata,(data),(classid),(autofree)))
+#define getfromUnitParam(ptr,classid) (HPMi->getFromHPData(HPDT_UNIT_PARAMETER,HPMi->pid,(ptr)->hdata,(classid)))
+#define removefromUnitParam(ptr,classid) (HPMi->removeFromHPData(HPDT_UNIT_PARAMETER,HPMi->pid,(ptr)->hdata,(classid)))
 
 /// HPMi->addCommand
 #define addAtcommand(cname,funcname) do { \

@@ -1206,7 +1206,9 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#ifdef MAP_STATUS_H
 		{ "regen_data", sizeof(struct regen_data), SERVER_TYPE_MAP },
 		{ "regen_data_sub", sizeof(struct regen_data_sub), SERVER_TYPE_MAP },
+		{ "s_maxhp_entry", sizeof(struct s_maxhp_entry), SERVER_TYPE_MAP },
 		{ "s_status_dbs", sizeof(struct s_status_dbs), SERVER_TYPE_MAP },
+		{ "s_unit_params", sizeof(struct s_unit_params), SERVER_TYPE_MAP },
 		{ "sc_display_entry", sizeof(struct sc_display_entry), SERVER_TYPE_MAP },
 		{ "status_change", sizeof(struct status_change), SERVER_TYPE_MAP },
 		{ "status_change_entry", sizeof(struct status_change_entry), SERVER_TYPE_MAP },
