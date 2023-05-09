@@ -744,6 +744,7 @@ END_ZEROED_BLOCK;
 #define pc_isinvisible(sd)    ( (sd)->sc.option&OPTION_INVISIBLE )
 #define pc_is50overweight(sd) ( (sd)->weight*100 >= (sd)->max_weight*battle->bc->natural_heal_weight_rate )
 #define pc_is90overweight(sd) ( (sd)->weight*10 >= (sd)->max_weight*9 )
+#define pc_maxhp_cap(sd) ( status->get_maxhp_cap_entry(pc->class2idx((sd)->status.class), (sd)->status.base_level)->value )
 #define pc_maxparameter(sd)   ( \
 	((sd)->job & MAPID_BASEMASK) == MAPID_SUMMONER ? battle->bc->max_summoner_parameter : \
 	( ((sd)->job & MAPID_UPPERMASK) == MAPID_KAGEROUOBORO \

@@ -8819,7 +8819,7 @@ static int pc_setparam(struct map_session_data *sd, int type, int64 val)
 		sd->battle_status.hp = cap_value((int32)val, 1, (int)sd->battle_status.max_hp);
 		break;
 	case SP_MAXHP:
-		sd->battle_status.max_hp = cap_value((int32)val, 1, battle_config.max_hp);
+		sd->battle_status.max_hp = cap_value((int32)val, 1, pc_maxhp_cap(sd));
 
 		if( sd->battle_status.max_hp < sd->battle_status.hp )
 		{

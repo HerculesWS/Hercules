@@ -7104,6 +7104,8 @@ struct {
 	struct HPMHookPoint *HP_status_base_atk_post;
 	struct HPMHookPoint *HP_status_get_base_maxhp_pre;
 	struct HPMHookPoint *HP_status_get_base_maxhp_post;
+	struct HPMHookPoint *HP_status_get_maxhp_cap_entry_pre;
+	struct HPMHookPoint *HP_status_get_maxhp_cap_entry_post;
 	struct HPMHookPoint *HP_status_get_base_maxsp_pre;
 	struct HPMHookPoint *HP_status_get_base_maxsp_post;
 	struct HPMHookPoint *HP_status_get_restart_hp_pre;
@@ -7194,6 +7196,10 @@ struct {
 	struct HPMHookPoint *HP_status_read_unit_params_db_post;
 	struct HPMHookPoint *HP_status_read_unit_params_db_sub_pre;
 	struct HPMHookPoint *HP_status_read_unit_params_db_sub_post;
+	struct HPMHookPoint *HP_status_read_unit_params_db_maxhp_pre;
+	struct HPMHookPoint *HP_status_read_unit_params_db_maxhp_post;
+	struct HPMHookPoint *HP_status_maxhp_entry_compare_pre;
+	struct HPMHookPoint *HP_status_maxhp_entry_compare_post;
 	struct HPMHookPoint *HP_status_read_unit_params_db_additional_pre;
 	struct HPMHookPoint *HP_status_read_unit_params_db_additional_post;
 	struct HPMHookPoint *HP_status_unit_params_destroy_pre;
@@ -14627,6 +14633,8 @@ struct {
 	int HP_status_base_atk_post;
 	int HP_status_get_base_maxhp_pre;
 	int HP_status_get_base_maxhp_post;
+	int HP_status_get_maxhp_cap_entry_pre;
+	int HP_status_get_maxhp_cap_entry_post;
 	int HP_status_get_base_maxsp_pre;
 	int HP_status_get_base_maxsp_post;
 	int HP_status_get_restart_hp_pre;
@@ -14717,6 +14725,10 @@ struct {
 	int HP_status_read_unit_params_db_post;
 	int HP_status_read_unit_params_db_sub_pre;
 	int HP_status_read_unit_params_db_sub_post;
+	int HP_status_read_unit_params_db_maxhp_pre;
+	int HP_status_read_unit_params_db_maxhp_post;
+	int HP_status_maxhp_entry_compare_pre;
+	int HP_status_maxhp_entry_compare_post;
 	int HP_status_read_unit_params_db_additional_pre;
 	int HP_status_read_unit_params_db_additional_post;
 	int HP_status_unit_params_destroy_pre;

@@ -174,6 +174,11 @@ static void initDummyData(void)
 
 	memset(&status->dummy_unit_params, 0, sizeof(status->dummy_unit_params));
 	strcpy(status->dummy_unit_params.name, "");
+
+	CREATE(status->dummy_unit_params.maxhp, struct s_maxhp_entry, 1);
+	status->dummy_unit_params.maxhp[0].max_level = MAX_LEVEL;
+	status->dummy_unit_params.maxhp[0].value = 1;
+	status->dummy_unit_params.maxhp_size = 1;
 }
 
 //For copying a status_data structure from b to a, without overwriting current Hp and Sp
@@ -1365,6 +1370,21 @@ static unsigned int status_get_base_maxhp(const struct map_session_data *sd, con
 	return (unsigned int)cap_value(val,0,UINT_MAX);
 }
 
+static struct s_maxhp_entry *status_get_maxhp_cap_entry(int class_idx, int level)
+{
+	struct s_unit_params *params = status->dbs->unit_params[class_idx];
+
+	int i;
+	ARR_FIND(0, params->maxhp_size, i, (level <= params->maxhp[i].max_level));
+	// Not finding a value would mean that the table did not get expanded (Which would be a bug)
+	Assert_retr(
+		(params->maxhp_size > 0 ? &(params->maxhp[params->maxhp_size - 1]) : &(status->dummy_unit_params.maxhp[0])),
+		i < params->maxhp_size
+	);
+
+	return &(params->maxhp[i]);
+}
+
 /**
  * Calculates the HP that a character will have after death, on respawn.
  *
@@ -1925,8 +1945,9 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 	if(battle_config.hp_rate != 100)
 		bstatus->max_hp = APPLY_RATE(bstatus->max_hp, battle_config.hp_rate);
 
-	if(bstatus->max_hp > (unsigned int)battle_config.max_hp)
-		bstatus->max_hp = battle_config.max_hp;
+	int maxhp_cap = pc_maxhp_cap(sd);
+	if(bstatus->max_hp > (unsigned int) maxhp_cap)
+		bstatus->max_hp = maxhp_cap;
 	else if(!bstatus->max_hp)
 		bstatus->max_hp = 1;
 
@@ -3212,8 +3233,9 @@ static void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag
 
 			st->max_hp = status->calc_maxhp(bl, sc, st->max_hp);
 
-			if( st->max_hp > (unsigned int)battle_config.max_hp )
-				st->max_hp = (unsigned int)battle_config.max_hp;
+			int maxhp_cap = pc_maxhp_cap(sd);
+			if (st->max_hp > (unsigned int)maxhp_cap)
+				st->max_hp = (unsigned int)maxhp_cap;
 		} else {
 			st->max_hp = status->calc_maxhp(bl, sc, bst->max_hp);
 		}
@@ -13526,8 +13548,13 @@ static void status_read_job_db_sub(int idx, const char *name, struct config_sett
 			} else {
 				avg_increment = 5;
 			}
+
+			struct s_maxhp_entry *maxhp = status->get_maxhp_cap_entry(idx, 1);
 			for ( ; i <= pc->dbs->class_exp_table[idx][CLASS_EXP_TABLE_BASE]->max_level; i++) {
-				status->dbs->HP_table[idx][i] = min(base + avg_increment * i, battle_config.max_hp);
+				if (i > maxhp->max_level)
+					maxhp = status->get_maxhp_cap_entry(idx, i);
+
+				status->dbs->HP_table[idx][i] = min(base + avg_increment * i, maxhp->value);
 			}
 
 			for (i = 1; i <= MAX_LEVEL && status->dbs->SP_table[iidx][i]; i++) {
@@ -13586,8 +13613,13 @@ static void status_read_job_db_sub(int idx, const char *name, struct config_sett
 			} else {
 				avg_increment = 5;
 			}
+
+			struct s_maxhp_entry *maxhp = status->get_maxhp_cap_entry(idx, 1);
 			for ( ; i <= pc->dbs->class_exp_table[idx][CLASS_EXP_TABLE_BASE]->max_level; i++) {
-				status->dbs->HP_table[idx][i] = min(base + avg_increment * i, battle_config.max_hp);
+				if (i > maxhp->max_level)
+					maxhp = status->get_maxhp_cap_entry(idx, i);
+
+				status->dbs->HP_table[idx][i] = min(base + avg_increment * i, maxhp->value);
 			}
 		}
 	}
@@ -13642,9 +13674,14 @@ static void status_read_job_db_sub(int idx, const char *name, struct config_sett
 	if ((temp = libconfig->setting_get_member(jdb, "HPTable"))) {
 		int level = 0, avg_increment, base;
 		struct config_setting_t *hp = NULL;
+		struct s_maxhp_entry *maxhp = status->get_maxhp_cap_entry(idx, 1);
+
 		while (level <= MAX_LEVEL && (hp = libconfig->setting_get_elem(temp, level)) != NULL) {
+			if (level > maxhp->max_level)
+				maxhp = status->get_maxhp_cap_entry(idx, level);
+
 			i32 = libconfig->setting_get_int(hp);
-			status->dbs->HP_table[idx][++level] = min(i32, battle_config.max_hp);
+			status->dbs->HP_table[idx][++level] = min(i32, maxhp->value);
 		}
 		base = (level > 0 ? status->dbs->HP_table[idx][1] : 35); // Safe value if none are specified
 		if (level > 2) {
@@ -13655,7 +13692,10 @@ static void status_read_job_db_sub(int idx, const char *name, struct config_sett
 			avg_increment = 5;
 		}
 		for (++level; level <= pc->dbs->class_exp_table[idx][CLASS_EXP_TABLE_BASE]->max_level; ++level) { /* limit only to possible maximum level of the given class */
-			status->dbs->HP_table[idx][level] = min(base + avg_increment * level, battle_config.max_hp); /* some are still empty? then let's use the average increase */
+			if (level > maxhp->max_level)
+				maxhp = status->get_maxhp_cap_entry(idx, level);
+
+			status->dbs->HP_table[idx][level] = min(base + avg_increment * level, maxhp->value); /* some are still empty? then let's use the average increase */
 		}
 	}
 
@@ -14004,6 +14044,95 @@ static bool status_read_unit_params_db_additional(struct s_unit_params *entry, s
 	return true;
 }
 
+static int status_maxhp_entry_compare(const void *entry1, const void *entry2)
+{
+	nullpo_ret(entry1);
+	nullpo_ret(entry2);
+
+	struct s_maxhp_entry *entry1_ = (struct s_maxhp_entry *) entry1;
+	struct s_maxhp_entry *entry2_ = (struct s_maxhp_entry *) entry2;
+
+	return entry1_->max_level - entry2_->max_level;
+}
+
+/**
+ * Reads unit parameters database MaxHP field
+ *
+ * @param entry unit parameter entry being created (already filled by original loading function)
+ * @param inherited unit parameter this entry is inheriting from
+ * @param group libconfig's group entry
+ * @param source source file name
+ * @return true if data was successfuly read, false otherwise.
+ */
+static bool status_read_unit_params_db_maxhp(struct s_unit_params *entry, struct s_unit_params *inherited, struct config_setting_t *group, const char *source)
+{
+	nullpo_retr(false, entry);
+	nullpo_retr(false, group);
+	nullpo_retr(false, source);
+
+	int i32 = 0;
+	struct config_setting_t *conf;
+
+	if (libconfig->setting_lookup_int(group, "MaxHP", &i32) == CONFIG_TRUE) {
+		entry->maxhp_size = 1;
+		CREATE(entry->maxhp, struct s_maxhp_entry, 1);
+		entry->maxhp[0].max_level = MAX_LEVEL;
+		entry->maxhp[0].value = i32;
+	} else if ((conf = libconfig->setting_get_member(group, "MaxHP")) != NULL && config_setting_is_group(conf)) {
+		int max_lv = 0, max_lv_idx = -1;
+
+		struct config_setting_t *lv_conf = NULL;
+		int i = 0;
+		while ((lv_conf = libconfig->setting_get_elem(conf, i++)) != NULL) {
+			const char *lv_str = config_setting_name(lv_conf);
+			int lv;
+
+			if (sscanf(lv_str, "%*2s%3d", &lv) != 1) {
+				ShowError("%s: Could not read config MaxHP '%s' in entry '%s' in file '%s'. Is it in Lv[number] format? Skipping level...\n",
+					__func__, lv_str, entry->name, source);
+				continue;
+			}
+
+			RECREATE(entry->maxhp, struct s_maxhp_entry, ++entry->maxhp_size);
+
+			int new_idx = entry->maxhp_size - 1;
+			entry->maxhp[new_idx].max_level = lv;
+			entry->maxhp[new_idx].value = libconfig->setting_get_int(lv_conf);
+
+			if (max_lv < lv) {
+				max_lv = lv;
+				max_lv_idx = new_idx;
+			}
+		}
+
+		if (max_lv_idx == -1) {
+			ShowError("%s: MaxHP setting has no level ranges for entry '%s' in file '%s', skipping...\n", __func__, entry->name, source);
+			return false;
+		}
+
+		if (max_lv < MAX_LEVEL)
+			entry->maxhp[max_lv_idx].max_level = MAX_LEVEL; // 'extend' highest level all the way to cap
+
+		qsort(entry->maxhp, entry->maxhp_size, sizeof(struct s_maxhp_entry), status->maxhp_entry_compare);
+	} else if (inherited != NULL) {
+		CREATE(entry->maxhp, struct s_maxhp_entry, inherited->maxhp_size);
+		memcpy(entry->maxhp, inherited->maxhp, sizeof(struct s_maxhp_entry) * inherited->maxhp_size);
+		entry->maxhp_size = inherited->maxhp_size;
+	} else {
+		ShowError("%s: MaxHP setting not found for entry '%s' in file '%s', skipping...\n", __func__, entry->name, source);
+		return false;
+	}
+
+	for (int i = 0; i < entry->maxhp_size - 1; ++i) {
+		if (entry->maxhp[i].max_level == entry->maxhp[i + 1].max_level) {
+			ShowWarning("%s: There are multiple entries for MaxHP for Lv '%d' in entry '%s' in file '%s'. Only one will be used.\n",
+				__func__, entry->maxhp[i].max_level, entry->name, source);
+		}
+	}
+
+	return true;
+}
+
 /**
  * Reads a single group entry from unit parameters database
  *
@@ -14033,10 +14162,17 @@ static bool status_read_unit_params_db_sub(const char *name, struct config_setti
 
 		inherited = &VECTOR_INDEX(status->unit_params_groups, i);
 		memcpy(&entry, inherited, sizeof(entry));
+		entry.maxhp = NULL;
+		entry.maxhp_size = 0;
 	}
 
 	// Set name after inherit or it will be overriden
 	safestrncpy(entry.name, name, sizeof(entry.name));
+
+	if (!status->read_unit_params_db_maxhp(&entry, inherited, group, source)) {
+		status->unit_params_destroy(&entry);
+		return false;
+	}
 
 	// TODO: Read more fields
 
@@ -14089,6 +14225,12 @@ static void status_read_unit_params_db(void)
 static void status_unit_params_destroy(struct s_unit_params *entry)
 {
 	nullpo_retv(entry);
+
+	if (entry->maxhp != NULL) {
+		aFree(entry->maxhp);
+		entry->maxhp = NULL;
+		entry->maxhp_size = 0;
+	}
 }
 
 /**
@@ -14301,6 +14443,7 @@ void status_defaults(void)
 	status->base_amotion_pc = status_base_amotion_pc;
 	status->base_atk = status_base_atk;
 	status->get_base_maxhp = status_get_base_maxhp;
+	status->get_maxhp_cap_entry = status_get_maxhp_cap_entry;
 	status->get_base_maxsp = status_get_base_maxsp;
 	status->get_restart_hp = status_get_restart_hp;
 	status->get_restart_sp = status_get_restart_sp;
@@ -14348,6 +14491,8 @@ void status_defaults(void)
 	status->read_job_db_sub = status_read_job_db_sub;
 	status->read_unit_params_db = status_read_unit_params_db;
 	status->read_unit_params_db_sub = status_read_unit_params_db_sub;
+	status->maxhp_entry_compare = status_maxhp_entry_compare;
+	status->read_unit_params_db_maxhp = status_read_unit_params_db_maxhp;
 	status->read_unit_params_db_additional = status_read_unit_params_db_additional;
 	status->unit_params_destroy = status_unit_params_destroy;
 	status->copy = status_copy;

@@ -1283,8 +1283,16 @@ struct status_change {
 #define status_calc_elemental(ed, opt)  (status->calc_bl_(&(ed)->bl, SCB_ALL, (opt)))
 #define status_calc_npc(nd, opt)        (status->calc_bl_(&(nd)->bl, SCB_ALL, (opt)))
 
+struct s_maxhp_entry {
+	int max_level; ///< Highest level which this entry still applies to
+	int value; ///< The actual max hp value
+};
+
 struct s_unit_params {
 	char name[SCRIPT_VARNAME_LENGTH]; ///< group name as defined in conf
+
+	struct s_maxhp_entry *maxhp; ///< list of s_maxhp_entry entries
+	int maxhp_size; ///< size of maxhp
 
 	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
 };
@@ -1428,6 +1436,7 @@ struct status_interface {
 	int (*base_amotion_pc) (struct map_session_data *sd, struct status_data *st);
 	int (*base_atk) (const struct block_list *bl, const struct status_data *st);
 	unsigned int (*get_base_maxhp) (const struct map_session_data *sd, const struct status_data *st);
+	struct s_maxhp_entry * (*get_maxhp_cap_entry) (int classidx, int level);
 	unsigned int (*get_base_maxsp) (const struct map_session_data *sd, const struct status_data *st);
 	unsigned int (*get_restart_hp) (const struct map_session_data *sd, const struct status_data *st);
 	unsigned int (*get_restart_sp) (const struct map_session_data *sd, const struct status_data *st);
@@ -1473,6 +1482,8 @@ struct status_interface {
 	void (*read_job_db_sub) (int idx, const char *name, struct config_setting_t *jdb);
 	void (*read_unit_params_db) (void);
 	bool (*read_unit_params_db_sub) (const char *name, struct config_setting_t *group, const char *source);
+	bool (*read_unit_params_db_maxhp) (struct s_unit_params *entry, struct s_unit_params *inherited, struct config_setting_t *group, const char *source);
+	int (*maxhp_entry_compare) (const void *entry1, const void *entry2);
 	bool (*read_unit_params_db_additional) (struct s_unit_params *entry, struct s_unit_params *inherited, struct config_setting_t *group, const char *source);
 	void (*unit_params_destroy) (struct s_unit_params *entry);
 	void (*copy) (struct status_data *a, const struct status_data *b);

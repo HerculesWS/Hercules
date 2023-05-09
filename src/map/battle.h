@@ -256,7 +256,6 @@ struct Battle_Config {
 	int arrow_decrement;
 	int max_aspd;
 	int max_walk_speed; //Maximum walking speed after buffs [Skotlex]
-	int max_hp;
 	int max_sp;
 	int max_lv, aura_lv;
 	int max_parameter, max_baby_parameter;
