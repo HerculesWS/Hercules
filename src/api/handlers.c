@@ -375,6 +375,14 @@ HTTP_DATA(emblem_download)
 	ShowError("emblem_download data called\n");
 #endif
 
+	if (data_size < CHUNKED_FLAG_SIZE)
+	{
+		// response size smaller than flag field size
+		// Can be missing icon
+		aclif->terminate_connection(fd);
+		return;
+	}
+
 	GET_HTTP_DATA(p, emblem_download);
 	const size_t src_emblem_size = data_size - CHUNKED_FLAG_SIZE;
 
