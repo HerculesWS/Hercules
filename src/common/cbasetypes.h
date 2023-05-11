@@ -364,7 +364,6 @@ typedef uintptr_t uintptr;
 #endif // ! defined(__GNUC__) && (GCC_VERSION >= 70000)
 
 // boolean types for C
-#if !defined(__MINGW32__) && !defined(MINGW)
 #if !defined(_MSC_VER) || _MSC_VER >= 1800
 // MSVC doesn't have stdbool.h yet as of Visual Studio 2012 (MSVC version 17.00)
 // but it will support it in Visual Studio 2013 (MSVC version 18.00)
@@ -372,7 +371,6 @@ typedef uintptr_t uintptr;
 // GCC and Clang are assumed to be C99 compliant
 #include <stdbool.h> // bool, true, false, __bool_true_false_are_defined
 #endif // ! defined(_MSC_VER) || _MSC_VER >= 1800
-#endif  // !defined(__MINGW32__) && !defined(MINGW)
 
 #ifndef __bool_true_false_are_defined
 // If stdbool.h is not available or does not define this

@@ -1231,6 +1231,7 @@ AC_CHECK_COMPILER_WFLAG(string-compare)
 AC_CHECK_COMPILER_WFLAG(zero-length-bounds)
 AC_CHECK_COMPILER_WFLAG(absolute-value)
 AC_CHECK_COMPILER_WFLAG(shift-overflow=2)
+AC_CHECK_COMPILER_WFLAG(enum-int-mismatch)
 #AC_CHECK_COMPILER_WFLAG(unreachable-code)
 #AC_CHECK_COMPILER_WFLAG(unused-const-variable=2)
 #AC_CHECK_COMPILER_WFLAG(write-strings)
@@ -1916,7 +1917,12 @@ Darwin*)
 	DLLEXT=".dylib"
 	;;
 esac
-AC_SUBST([DLLEXT])
+
+case "${host}" in
+	*-*-mingw*)
+		DLLEXT=".dll"
+		;;
+esac
 
 AC_MSG_CHECKING([for MinGW])
 if test -n "`$CC --version 2>/dev/null | grep -i mingw`" ; then
@@ -1926,10 +1932,12 @@ if test -n "`$CC --version 2>/dev/null | grep -i mingw`" ; then
 		CPPFLAGS="$CPPFLAGS -DFD_SETSIZE=4096"
 	fi
 	LIBS="$LIBS -lws2_32"
+	DLLEXT=".dll"
 else
 	AC_MSG_RESULT([no])
 fi
 
+AC_SUBST([DLLEXT])
 
 
 #
