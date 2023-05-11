@@ -5778,6 +5778,8 @@ struct {
 	struct HPMHookPoint *HP_script_error_post;
 	struct HPMHookPoint *HP_script_warning_pre;
 	struct HPMHookPoint *HP_script_warning_post;
+	struct HPMHookPoint *HP_script_clone_script_pre;
+	struct HPMHookPoint *HP_script_clone_script_post;
 	struct HPMHookPoint *HP_script_addScript_pre;
 	struct HPMHookPoint *HP_script_addScript_post;
 	struct HPMHookPoint *HP_script_conv_num_pre;
@@ -13291,6 +13293,8 @@ struct {
 	int HP_script_error_post;
 	int HP_script_warning_pre;
 	int HP_script_warning_post;
+	int HP_script_clone_script_pre;
+	int HP_script_clone_script_post;
 	int HP_script_addScript_pre;
 	int HP_script_addScript_post;
 	int HP_script_conv_num_pre;

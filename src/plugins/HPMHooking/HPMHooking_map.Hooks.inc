@@ -47109,14 +47109,14 @@ void HP_itemdb_readdb_options_additional_fields(struct itemdb_option *ito, struc
 	}
 	return;
 }
-void HP_itemdb_readdb_additional_fields(int itemid, struct config_setting_t *it, int n, const char *source) {
+void HP_itemdb_readdb_additional_fields(int itemid, struct config_setting_t *it, int n, const char *source, struct DBMap *itemconst_db) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_itemdb_readdb_additional_fields_pre > 0) {
-		void (*preHookFunc) (int *itemid, struct config_setting_t **it, int *n, const char **source);
+		void (*preHookFunc) (int *itemid, struct config_setting_t **it, int *n, const char **source, struct DBMap **itemconst_db);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_readdb_additional_fields_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_itemdb_readdb_additional_fields_pre[hIndex].func;
-			preHookFunc(&itemid, &it, &n, &source);
+			preHookFunc(&itemid, &it, &n, &source, &itemconst_db);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -47124,13 +47124,13 @@ void HP_itemdb_readdb_additional_fields(int itemid, struct config_setting_t *it,
 		}
 	}
 	{
-		HPMHooks.source.itemdb.readdb_additional_fields(itemid, it, n, source);
+		HPMHooks.source.itemdb.readdb_additional_fields(itemid, it, n, source, itemconst_db);
 	}
 	if (HPMHooks.count.HP_itemdb_readdb_additional_fields_post > 0) {
-		void (*postHookFunc) (int itemid, struct config_setting_t *it, int n, const char *source);
+		void (*postHookFunc) (int itemid, struct config_setting_t *it, int n, const char *source, struct DBMap *itemconst_db);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_readdb_additional_fields_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_itemdb_readdb_additional_fields_post[hIndex].func;
-			postHookFunc(itemid, it, n, source);
+			postHookFunc(itemid, it, n, source, itemconst_db);
 		}
 	}
 	return;
@@ -47161,15 +47161,15 @@ void HP_itemdb_readdb_job_sub(struct item_data *id, struct config_setting_t *t) 
 	}
 	return;
 }
-int HP_itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const char *source) {
+int HP_itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const char *source, struct DBMap *itemconst_db) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_itemdb_readdb_libconfig_sub_pre > 0) {
-		int (*preHookFunc) (struct config_setting_t **it, int *n, const char **source);
+		int (*preHookFunc) (struct config_setting_t **it, int *n, const char **source, struct DBMap **itemconst_db);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_readdb_libconfig_sub_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_itemdb_readdb_libconfig_sub_pre[hIndex].func;
-			retVal___ = preHookFunc(&it, &n, &source);
+			retVal___ = preHookFunc(&it, &n, &source, &itemconst_db);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -47177,26 +47177,26 @@ int HP_itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const cha
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.itemdb.readdb_libconfig_sub(it, n, source);
+		retVal___ = HPMHooks.source.itemdb.readdb_libconfig_sub(it, n, source, itemconst_db);
 	}
 	if (HPMHooks.count.HP_itemdb_readdb_libconfig_sub_post > 0) {
-		int (*postHookFunc) (int retVal___, struct config_setting_t *it, int n, const char *source);
+		int (*postHookFunc) (int retVal___, struct config_setting_t *it, int n, const char *source, struct DBMap *itemconst_db);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_readdb_libconfig_sub_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_itemdb_readdb_libconfig_sub_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, it, n, source);
+			retVal___ = postHookFunc(retVal___, it, n, source, itemconst_db);
 		}
 	}
 	return retVal___;
 }
-int HP_itemdb_readdb_libconfig(const char *filename) {
+int HP_itemdb_readdb_libconfig(const char *filename, struct DBMap *itemconst_db) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_itemdb_readdb_libconfig_pre > 0) {
-		int (*preHookFunc) (const char **filename);
+		int (*preHookFunc) (const char **filename, struct DBMap **itemconst_db);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_readdb_libconfig_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_itemdb_readdb_libconfig_pre[hIndex].func;
-			retVal___ = preHookFunc(&filename);
+			retVal___ = preHookFunc(&filename, &itemconst_db);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -47204,13 +47204,13 @@ int HP_itemdb_readdb_libconfig(const char *filename) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.itemdb.readdb_libconfig(filename);
+		retVal___ = HPMHooks.source.itemdb.readdb_libconfig(filename, itemconst_db);
 	}
 	if (HPMHooks.count.HP_itemdb_readdb_libconfig_post > 0) {
-		int (*postHookFunc) (int retVal___, const char *filename);
+		int (*postHookFunc) (int retVal___, const char *filename, struct DBMap *itemconst_db);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_readdb_libconfig_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_itemdb_readdb_libconfig_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, filename);
+			retVal___ = postHookFunc(retVal___, filename, itemconst_db);
 		}
 	}
 	return retVal___;
@@ -76917,6 +76917,33 @@ void HP_script_warning(const char *src, const char *file, int start_line, const 
 		}
 	}
 	return;
+}
+struct script_code* HP_script_clone_script(struct script_code *original) {
+	int hIndex = 0;
+	struct script_code* retVal___ = NULL;
+	if (HPMHooks.count.HP_script_clone_script_pre > 0) {
+		struct script_code* (*preHookFunc) (struct script_code **original);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_script_clone_script_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_script_clone_script_pre[hIndex].func;
+			retVal___ = preHookFunc(&original);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.script.clone_script(original);
+	}
+	if (HPMHooks.count.HP_script_clone_script_post > 0) {
+		struct script_code* (*postHookFunc) (struct script_code* retVal___, struct script_code *original);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_script_clone_script_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_script_clone_script_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, original);
+		}
+	}
+	return retVal___;
 }
 bool HP_script_addScript(char *name, char *args, bool ( *func ) (struct script_state *st), bool isDeprecated) {
 	int hIndex = 0;

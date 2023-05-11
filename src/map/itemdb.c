@@ -1970,7 +1970,7 @@ static int itemdb_validate_entry(struct item_data *entry, int n, const char *sou
 	return item->nameid;
 }
 
-static void itemdb_readdb_additional_fields(int itemid, struct config_setting_t *it, int n, const char *source)
+static void itemdb_readdb_additional_fields(int itemid, struct config_setting_t *it, int n, const char *source, struct DBMap *itemconst_db)
 {
 	// do nothing. plugins can do own work
 }
@@ -2021,7 +2021,7 @@ static void itemdb_readdb_job_sub(struct item_data *id, struct config_setting_t 
  *               validation errors.
  * @return Nameid of the validated entry, or 0 in case of failure.
  */
-static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const char *source)
+static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const char *source, struct DBMap *itemconst_db)
 {
 	struct item_data id = { 0 };
 	struct config_setting_t *t = NULL;
@@ -2030,6 +2030,7 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 	bool inherit = false;
 
 	nullpo_ret(it);
+	nullpo_ret(itemconst_db);
 	/*
 	 * // Mandatory fields
 	 * Id: ID
@@ -2103,8 +2104,42 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 		}
 	}
 
-	if( !libconfig->setting_lookup_string(it, "AegisName", &str) || !*str ) {
-		if( !inherit ) {
+	bool clone = false;
+	if ((t = libconfig->setting_get_member(it, "CloneItem")) != NULL) {
+		int clone_id;
+
+		if (t->type == CONFIG_TYPE_STRING) {
+			const char *clone_name = libconfig->setting_get_string(t);
+			clone_id = strdb_iget(itemconst_db, clone_name);
+
+			if (clone_id == 0) {
+				ShowWarning("%s: Could not find item \"%s\" to clone in item %d of \"%s\". Skipping.\n", __func__, clone_name, id.nameid, source);
+				return 0;
+			}
+		} else {
+			clone_id = libconfig->setting_get_int(t);
+		}
+
+		struct item_data *base_entry = itemdb->exists(clone_id);
+		if (base_entry == NULL) {
+			ShowWarning("%s: Trying to clone nonexistent item %d in item %d of \"%s\". Skipping.\n", __func__, clone_id, id.nameid, source);
+			return 0;
+		}
+
+		int new_id = id.nameid;
+		char existing_name[ITEM_NAME_LENGTH];
+		strncpy(existing_name, id.name, sizeof(existing_name));
+
+		clone = true;
+		memcpy(&id, base_entry, sizeof(id));
+
+		// Restore fields that cloning shouldn't replace. ID and AegisName are unique fields, so should not be cloned.
+		id.nameid = new_id;
+		strncpy(id.name, existing_name, sizeof(id.name));
+	}
+
+	if (!libconfig->setting_lookup_string(it, "AegisName", &str) || !*str) {
+		if (!inherit) {
 			ShowWarning("itemdb_readdb_libconfig_sub: Missing AegisName in item %d of \"%s\", skipping.\n", id.nameid, source);
 			return 0;
 		}
@@ -2113,7 +2148,7 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 	}
 
 	if( !libconfig->setting_lookup_string(it, "Name", &str) || !*str ) {
-		if( !inherit ) {
+		if (!inherit && !clone) {
 			ShowWarning("itemdb_readdb_libconfig_sub: Missing Name in item %d of \"%s\", skipping.\n", id.nameid, source);
 			return 0;
 		}
@@ -2123,7 +2158,7 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 
 	if (map->setting_lookup_const(it, "Type", &i32))
 		id.type = i32;
-	else if (!inherit)
+	else if (!inherit && !clone)
 		id.type = IT_ETC;
 
 	if (map->setting_lookup_const(it, "Subtype", &i32) && i32 >= 0) {
@@ -2136,11 +2171,11 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 
 	if (map->setting_lookup_const(it, "Buy", &i32))
 		id.value_buy = i32;
-	else if (!inherit)
+	else if (!inherit && !clone)
 		id.value_buy = -1;
 	if (map->setting_lookup_const(it, "Sell", &i32))
 		id.value_sell = i32;
-	else if (!inherit)
+	else if (!inherit && !clone)
 		id.value_sell = -1;
 
 	if (map->setting_lookup_const(it, "Weight", &i32) && i32 >= 0)
@@ -2166,7 +2201,7 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 			itemdb->readdb_job_sub(&id, t);
 		} else if (map->setting_lookup_const(it, "Job", &i32)) { // This is an unsigned value, do not check for >= 0
 			itemdb->jobmask2mapid(id.class_base, (uint64)i32);
-		} else if (!inherit) {
+		} else if (!inherit && !clone) {
 			itemdb->jobmask2mapid(id.class_base, UINT64_MAX);
 		}
 	} else if (!inherit) {
@@ -2175,12 +2210,12 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 
 	if (map->setting_lookup_const_mask(it, "Upper", &i32) && i32 >= 0)
 		id.class_upper = (unsigned int)i32;
-	else if( !inherit )
+	else if (!inherit && !clone)
 		id.class_upper = ITEMUPPER_ALL;
 
 	if (map->setting_lookup_const(it, "Gender", &i32) && i32 >= 0)
 		id.sex = i32;
-	else if (!inherit)
+	else if (!inherit && !clone)
 		id.sex = 2;
 
 	if (map->setting_lookup_const_mask(it, "Loc", &i32) && i32 >= 0)
@@ -2346,20 +2381,30 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 		id.view_id = i32;
 	}
 
-	if( libconfig->setting_lookup_string(it, "Script", &str) )
+	if (libconfig->setting_lookup_string(it, "Script", &str))
 		id.script = *str ? script->parse(str, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
+	else if (clone && id.script != NULL)
+		id.script = script->clone_script(id.script);
 
-	if( libconfig->setting_lookup_string(it, "OnEquipScript", &str) )
+	if (libconfig->setting_lookup_string(it, "OnEquipScript", &str))
 		id.equip_script = *str ? script->parse(str, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
+	else if (clone && id.equip_script != NULL)
+		id.equip_script = script->clone_script(id.equip_script);
 
-	if( libconfig->setting_lookup_string(it, "OnUnequipScript", &str) )
+	if (libconfig->setting_lookup_string(it, "OnUnequipScript", &str))
 		id.unequip_script = *str ? script->parse(str, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
+	else if (clone && id.unequip_script != NULL)
+		id.unequip_script = script->clone_script(id.unequip_script);
 
 	if (libconfig->setting_lookup_string(it, "OnRentalStartScript", &str) != CONFIG_FALSE)
 		id.rental_start_script = (*str != '\0') ? script->parse(str, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
+	else if (clone && id.rental_start_script != NULL)
+		id.rental_start_script = script->clone_script(id.rental_start_script);
 
 	if (libconfig->setting_lookup_string(it, "OnRentalEndScript", &str) != CONFIG_FALSE)
 		id.rental_end_script = (*str != '\0') ? script->parse(str, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
+	else if (clone && id.rental_end_script != NULL)
+		id.rental_end_script = script->clone_script(id.rental_end_script);
 
 	return itemdb->validate_entry(&id, n, source);
 }
@@ -2371,7 +2416,7 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
  * @param filename File name, relative to the database path.
  * @return The number of found entries.
  */
-static int itemdb_readdb_libconfig(const char *filename)
+static int itemdb_readdb_libconfig(const char *filename, struct DBMap *itemconst_db)
 {
 	bool duplicate[MAX_ITEMDB];
 	struct DBMap *duplicate_db;
@@ -2381,6 +2426,7 @@ static int itemdb_readdb_libconfig(const char *filename)
 	int i = 0, count = 0;
 
 	nullpo_ret(filename);
+	nullpo_ret(itemconst_db);
 
 	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, filename);
 	if (!libconfig->load_file(&item_db_conf, filepath))
@@ -2396,13 +2442,15 @@ static int itemdb_readdb_libconfig(const char *filename)
 	duplicate_db = idb_alloc(DB_OPT_BASE);
 
 	while( (it = libconfig->setting_get_elem(itdb,i++)) ) {
-		int nameid = itemdb->readdb_libconfig_sub(it, i-1, filename);
+		int nameid = itemdb->readdb_libconfig_sub(it, i-1, filename, itemconst_db);
 
 		if (nameid <= 0 || nameid > MAX_ITEM_ID)
 			continue;
 
-		itemdb->readdb_additional_fields(nameid, it, i - 1, filename);
+		itemdb->readdb_additional_fields(nameid, it, i - 1, filename, itemconst_db);
 		count++;
+
+		strdb_iput(itemconst_db, itemdb_name(nameid), nameid);
 
 		if (nameid < MAX_ITEMDB) {
 			if (duplicate[nameid]) {
@@ -2930,8 +2978,14 @@ static void itemdb_read(bool minimal)
 		DBPATH"item_db.conf",
 		"item_db2.conf",
 	};
+
+	// temporary itemconst db for item cloning because it happens before itemdb->name_constants()
+	struct DBMap *itemconst_db = strdb_alloc(DB_OPT_BASE, ITEM_NAME_LENGTH);
+
 	for (i = 0; i < ARRAYLENGTH(filename); i++)
-		itemdb->readdb_libconfig(filename[i]);
+		itemdb->readdb_libconfig(filename[i], itemconst_db);
+
+	db_destroy(itemconst_db);
 
 	// TODO check duplicate names also in itemdb->other
 	for( i = 0; i < ARRAYLENGTH(itemdb->array); ++i ) {

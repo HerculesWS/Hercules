@@ -3094,6 +3094,28 @@ static struct script_code *parse_script(const char *src, const char *file, int l
 	return code;
 }
 
+/**
+ * Creates a new script_code instance from an existing one.
+ * @param original the script code to copy from
+ * @retval the new script code
+ */
+static struct script_code *script_clone_script(struct script_code* original)
+{
+	nullpo_retr(NULL, original);
+	struct script_code* code = NULL;
+
+	CREATE(code,struct script_code,1);
+	VECTOR_INIT(code->script_buf);
+
+	VECTOR_ENSURE(code->script_buf, VECTOR_LENGTH(original->script_buf), 1);
+	VECTOR_PUSHARRAY(code->script_buf, VECTOR_DATA(original->script_buf), VECTOR_LENGTH(original->script_buf));
+
+	code->local.vars = NULL;
+	code->local.arrays = NULL;
+
+	return code;
+}
+
 /// Returns the player attached to this script, identified by the rid.
 /// If there is no player attached, the script is terminated.
 static struct map_session_data *script_rid2sd(struct script_state *st)
@@ -30024,6 +30046,7 @@ void script_defaults(void)
 	script->warning = script_warning;
 	script->parse_subexpr = script_parse_subexpr;
 
+	script->clone_script = script_clone_script;
 	script->addScript = script_hp_add;
 	script->conv_num = conv_num;
 	script->conv_str = conv_str;
