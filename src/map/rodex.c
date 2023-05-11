@@ -30,6 +30,7 @@
 #include "common/nullpo.h"
 #include "common/sql.h"
 #include "common/memmgr.h"
+#include "common/showmsg.h"
 
 
 // NOTE : These values are hardcoded into the client
@@ -495,6 +496,16 @@ static void rodex_getItemsAck(struct map_session_data *sd, int64 mail_id, int8 o
 	nullpo_retv(sd);
 	nullpo_retv(items);
 
+	if (VECTOR_LENGTH(sd->rodex.claim_list) < 1) {
+		ShowError("rodex_getItemsAck: No mail ID queued for claiming.\n");
+		return;
+	}
+
+	if (VECTOR_INDEX(sd->rodex.claim_list, 0) != mail_id) {
+		ShowError("rodex_getItemsAck: Mail ID mismatch. Expected %"PRId64", got %"PRId64"\n", VECTOR_INDEX(sd->rodex.claim_list, 0), mail_id);
+		return;
+	}
+
 	for (int i = 0; i < count; ++i) {
 		const struct item *it = &items[i].item;
 
@@ -504,11 +515,19 @@ static void rodex_getItemsAck(struct map_session_data *sd, int64 mail_id, int8 o
 
 		if (pc->additem(sd, it, it->amount, LOG_TYPE_MAIL) != 0) {
 			clif->rodex_request_items(sd, opentype, mail_id, RODEX_GET_ITEM_FULL_ERROR);
+			VECTOR_ERASE(sd->rodex.claim_list, 0);
 			return;
 		}
 	}
 
 	clif->rodex_request_items(sd, opentype, mail_id, RODEX_GET_ITEMS_SUCCESS);
+
+	// Remove the mail ID from the queue
+	VECTOR_ERASE(sd->rodex.claim_list, 0);
+
+	// Claim the next mail if there is one
+	if (VECTOR_LENGTH(sd->rodex.claim_list) > 0)
+		rodex->get_items(sd, opentype, VECTOR_INDEX(sd->rodex.claim_list, 0));
 }
 
 /// Gets attached item
@@ -570,6 +589,18 @@ static void rodex_get_items(struct map_session_data *sd, int8 opentype, int64 ma
 		return;
 	}
 
+	// Queue the mail ID to be claimed
+	int i = 0;
+	ARR_FIND(0, VECTOR_LENGTH(sd->rodex.claim_list), i, VECTOR_INDEX(sd->rodex.claim_list, i) == mail_id);
+	if (i == VECTOR_LENGTH(sd->rodex.claim_list)) {
+		VECTOR_ENSURE(sd->rodex.claim_list, 1, 1);
+		VECTOR_PUSH(sd->rodex.claim_list, mail_id);
+	}
+
+	// If another mail is being claimed, wait for it to finish
+	if (VECTOR_LENGTH(sd->rodex.claim_list) > 1 && VECTOR_INDEX(sd->rodex.claim_list, 0) != mail_id)
+		return;
+
 	msg->type &= ~MAIL_TYPE_ITEM;
 	msg->items_count = 0;
 	intif->rodex_updatemail(sd, mail_id, opentype, 2);
@@ -585,9 +616,10 @@ static void rodex_clean(struct map_session_data *sd, int8 flag)
 {
 	nullpo_retv(sd);
 
-	if (flag == 0)
+	if (flag == 0) {
 		VECTOR_CLEAR(sd->rodex.messages);
-
+		VECTOR_CLEAR(sd->rodex.claim_list);
+	}
 	sd->state.workinprogress &= ~2;
 	memset(&sd->rodex.tmp, 0x0, sizeof(sd->rodex.tmp));
 

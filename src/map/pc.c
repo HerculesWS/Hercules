@@ -1222,6 +1222,7 @@ static bool pc_authok(struct map_session_data *sd, int login_id2, time_t expirat
 	memcpy(&sd->status, st, sizeof(*st));
 	memset(&sd->rodex, 0x0, sizeof(sd->rodex));
 	VECTOR_INIT(sd->rodex.messages);
+	VECTOR_INIT(sd->rodex.claim_list);
 
 	if (st->sex != sd->status.sex) {
 		clif->authfail_fd(sd->fd, 0);
