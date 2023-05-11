@@ -1803,6 +1803,8 @@ ama_in02,200,176,4	script	Lord of Palace#ama	8_M_JPNMASTER,{
 			next;
 			event_amatsu = 2;
 			changequest 8131,8132;
+			if (RENEWAL_EXP)
+				getexp(50000, 50000); // Renewal: reward 1/4
 			mes "[Ishida Yoshinaga]";
 			mes "I beg you...Please.";
 			mes "My mother is living in a house outside of the palace.";
@@ -1863,6 +1865,10 @@ ama_in02,200,176,4	script	Lord of Palace#ama	8_M_JPNMASTER,{
 			completequest 8135;
 			delitem Fox_Tail,1;
 			getitem Lords_Passable_Ticket,1;
+			if (RENEWAL_EXP)
+				getexp(50000, 50000); // Renewal: reward 4/4
+			else
+				getexp(200000, 120000); // Pre-Renewal: full reward is given at the end.
 			mes "[Ishida Yoshinaga]";
 			mes "This isn't a big reward but";
 			mes "someday it will be useful for you.";
@@ -1948,6 +1954,8 @@ ama_in01,22,111,0	script	Grandma#ama2	4_F_JPNOBA,{
 			event_amatsu = 5;
 			changequest 8134,8135;
 			getitem Fox_Tail,1;
+			if (RENEWAL_EXP)
+				getexp(50000, 50000); // Renewal: reward 3/4
 			mes "[....]";
 			mes "^FF6060Everything that";
 			mes "Yoshinaga does will cause you";
@@ -2172,6 +2180,8 @@ ama_in01,180,173,3	script	Kitsune Mask#ama	4_M_JPN2,{
 		mes "energy to the fox several times.";
 		mes "Sooner or later, you'll be successful.";
 		changequest 8133,8134;
+		if (RENEWAL_EXP)
+			getexp(50000, 50000); // Renewal: reward 2/4
 		close;
 	}
 	else if (event_amatsu == 4) {
