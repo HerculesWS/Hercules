@@ -22,6 +22,45 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
+## [v2023.05.10] `May 10 2023`
+
+### Added
+
+- Added support to clone the definition of an item in the `item_db`. A cloned item inherits all the fields (except item ID and AegisName) of its original, allowing a compact definition with only the fields that differ. See the definition of `CloneItem` in `doc/item_db.txt` for details. (#3206)
+- Added the script commands `openquestui()` and `opentipboxui()`. (#3201)
+
+### Changed
+
+- Updated the Thanatos Tower with its Renewal changes (only affecting Renewal mode), based on the official patch notes, until before the revamp update. (#3204)
+  - Changes from 2012.04.04 kRO Patch:
+    - It is no longer required to have several players near the NPC to move to the 3rd floor
+  - Changes from 2016.06.29 kRO Patch:
+    - Burled Request quest exp reward updated:
+      - Base EXP: 120,000 -> 1,200,000
+      - Job EXP : 100,000 -> 1,000,000
+    - Burled Request quest required level changed
+      - No level requirement -> Level 91 or higher required
+    - Changed weapon level required to progress Burled Request quest
+      - Level 4 Weapon -> Level 3 or 4 Weapon
+    - Changed restrictions to enter upper floors of the tower with a Black Key
+      - Before: Reborn, 3rd classes or Expanded jobs level 95 or above
+      - Now: Any character level 95 or above
+  - Edited lines were also updated to current Hercules' standards and HULD
+- Disabled full request logging in the api server. (#3203)
+- Added the warning flag `-Wenum-int-mismatch` to the build settings. (#3203)
+- Extended the `ZC_OPEN_UI` packet functions to allow passing the `data` field as a parameter. (part of #3201)
+
+### Fixed
+
+- Added the missing EXP rewards for the Amatsu Dungeon quest. (#3205)
+- Fixed errors in the MinGW builds (#3203)
+  - Added a missing stdbool.h include.
+  - Fixed the plugin file extension.
+- Added a check for an empty char server response in the API handler `emblem_download` (i.e. when requesting the emblem of a nonexistent guild). (#3203)
+- Fixed the unit-specific `dmg_taken_rate` getting ignored in favor of the database-defined value (mostly when using `setunitdata(UDT_DAMAGE_TAKEN_RATE, ...)`. (#3202)
+- Added the missing documentation for the `openbank()` script command. (#3201)
+- Fixed handling of multiple RoDEX item claim requests (such as when retrieving multiple attachments at once) by queuing up the requests. (#3189, issues #3186, 3009)
+
 ## [v2023.04.12] `April 12 2023`
 
 Note: everything included in this release is part of PR #3198 which consists of 301 commits. To avoid extreme redundancy the PR link will not be repeated for each line of the changelog.
@@ -2734,7 +2773,9 @@ Note: everything included in this release is part of PR #3198 which consists of 
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
-[v2023.01.11]: https://github.com/HerculesWS/Hercules/compare/v2022.01.11...v2023.03.08
+[v2023.05.10]: https://github.com/HerculesWS/Hercules/compare/v2022.04.12...v2023.05.10
+[v2023.04.12]: https://github.com/HerculesWS/Hercules/compare/v2022.03.08...v2023.04.12
+[v2023.03.08]: https://github.com/HerculesWS/Hercules/compare/v2022.01.11...v2023.03.08
 [v2023.01.11]: https://github.com/HerculesWS/Hercules/compare/v2022.12.07...v2023.01.11
 [v2022.12.07]: https://github.com/HerculesWS/Hercules/compare/v2022.11.02+1...v2022.12.07
 [v2022.11.02+1]: https://github.com/HerculesWS/Hercules/compare/v2022.11.02...v2022.11.02+1
