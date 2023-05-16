@@ -5620,15 +5620,17 @@ static int npc_parsesrcfile(const char *filepath, bool runOnInit)
 
 static int npc_script_event(struct map_session_data *sd, enum npce_event type)
 {
-	int i;
 	if (type == NPCE_MAX)
 		return 0;
+	Assert_ret(type >= 0 && type < NPCE_MAX);
 	if (!sd) {
 		ShowError("npc_script_event: NULL sd. Event Type %u\n", type);
 		return 0;
 	}
+
+	int i;
 	for (i = 0; i<script_event[type].event_count; i++)
-		npc->event_sub(sd,script_event[type].event[i],script_event[type].event_name[i]);
+		npc->event_sub(sd, script_event[type].event[i], script_event[type].event_name[i]);
 	return i;
 }
 
