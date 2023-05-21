@@ -56,6 +56,7 @@
 static struct aclif_interface aclif_s;
 struct aclif_interface *aclif;
 
+//#define DEBUG_ONLINEDB_LOG
 //#define DEBUG_LOG
 
 #ifdef DEBUG_LOG
@@ -883,7 +884,7 @@ static void aclif_show_request(int fd, struct api_session_data *sd, bool show_ht
 
 static void aclif_delete_online_player(int account_id)
 {
-#ifdef DEBUG_LOG
+#ifdef DEBUG_ONLINEDB_LOG
 	ShowInfo("disconnect account: %d\n", account_id);
 #endif
 	struct online_api_login_data *data = idb_get(aclif->online_db, account_id);
@@ -894,7 +895,7 @@ static void aclif_delete_online_player(int account_id)
 
 static void aclif_real_delete_online_player(int account_id)
 {
-#ifdef DEBUG_LOG
+#ifdef DEBUG_ONLINEDB_LOG
 	ShowInfo("real disconnect account: %d\n", account_id);
 #endif
 	idb_remove(aclif->online_db, account_id);
@@ -902,7 +903,7 @@ static void aclif_real_delete_online_player(int account_id)
 
 static void aclif_add_online_player(int account_id, const unsigned char *auth_token)
 {
-#ifdef DEBUG_LOG
+#ifdef DEBUG_ONLINEDB_LOG
 	ShowInfo("connect account: %d\n", account_id);
 //	ShowInfo("token: %.*s\n", 16, auth_token);
 #endif
@@ -933,7 +934,7 @@ static void aclif_add_online_char(int account_id, int char_id)
 	}
 	if (user->remove_tick != 0)
 		aclif->remove_remove_timer(user);
-#ifdef DEBUG_LOG
+#ifdef DEBUG_ONLINEDB_LOG
 	ShowInfo("add connect char: %d, %d (%d)\n", account_id, char_id, user->char_id);
 #endif
 }
