@@ -16453,15 +16453,15 @@ static BUILDIN(getinventorylist)
 			pc->setreg(sd, reference_uid(script->add_variable("@inventorylist_identify"), j), sd->status.inventory[i].identify);
 			pc->setreg(sd, reference_uid(script->add_variable("@inventorylist_attribute"), j), sd->status.inventory[i].attribute);
 			for (k = 0; k < MAX_SLOTS; k++) {
-				sprintf(script_var, "@inventorylist_card%d", k + 1);
+				snprintf(script_var, sizeof(script_var), "@inventorylist_card%d", k + 1);
 				pc->setreg(sd, reference_uid(script->add_variable(script_var), j), sd->status.inventory[i].card[k]);
 			}
 			for (k = 0; k < MAX_ITEM_OPTIONS; k++) {
-				sprintf(script_var, "@inventorylist_opt_id%d", k + 1);
+				snprintf(script_var, sizeof(script_var), "@inventorylist_opt_id%d", k + 1);
 				pc->setreg(sd, reference_uid(script->add_variable(script_var), j), sd->status.inventory[i].option[k].index);
-				sprintf(script_var, "@inventorylist_opt_val%d", k + 1);
+				snprintf(script_var, sizeof(script_var), "@inventorylist_opt_val%d", k + 1);
 				pc->setreg(sd, reference_uid(script->add_variable(script_var), j), sd->status.inventory[i].option[k].value);
-				sprintf(script_var, "@inventorylist_opt_param%d", k + 1);
+				snprintf(script_var, sizeof(script_var), "@inventorylist_opt_param%d", k + 1);
 				pc->setreg(sd, reference_uid(script->add_variable(script_var), j), sd->status.inventory[i].option[k].param);
 			}
 			pc->setreg(sd, reference_uid(script->add_variable("@inventorylist_expire"), j), sd->status.inventory[i].expire_time);
@@ -16493,15 +16493,15 @@ static BUILDIN(getcartinventorylist)
 			pc->setreg(sd,reference_uid(script->add_variable("@cartinventorylist_identify"), j),sd->status.cart[i].identify);
 			pc->setreg(sd,reference_uid(script->add_variable("@cartinventorylist_attribute"), j),sd->status.cart[i].attribute);
 			for (k = 0; k < MAX_SLOTS; k++) {
-				sprintf(card_var, "@cartinventorylist_card%d",k+1);
+				snprintf(card_var, sizeof(card_var), "@cartinventorylist_card%d",k+1);
 				pc->setreg(sd,reference_uid(script->add_variable(card_var), j),sd->status.cart[i].card[k]);
 			}
 			for (k = 0; k < MAX_ITEM_OPTIONS; k++) {
-				sprintf(card_var, "@cartinventorylist_opt_id%d", k + 1);
+				snprintf(card_var, sizeof(card_var), "@cartinventorylist_opt_id%d", k + 1);
 				pc->setreg(sd, reference_uid(script->add_variable(card_var), j), sd->status.cart[i].option[k].index);
-				sprintf(card_var, "@cartinventorylist_opt_val%d", k + 1);
+				snprintf(card_var, sizeof(card_var), "@cartinventorylist_opt_val%d", k + 1);
 				pc->setreg(sd, reference_uid(script->add_variable(card_var), j), sd->status.cart[i].option[k].value);
-				sprintf(card_var, "@cartinventorylist_opt_param%d", k + 1);
+				snprintf(card_var, sizeof(card_var), "@cartinventorylist_opt_param%d", k + 1);
 				pc->setreg(sd, reference_uid(script->add_variable(card_var), j), sd->status.cart[i].option[k].param);
 			}
 			pc->setreg(sd,reference_uid(script->add_variable("@cartinventorylist_expire"), j),sd->status.cart[i].expire_time);
