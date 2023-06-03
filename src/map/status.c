@@ -180,6 +180,8 @@ static void initDummyData(void)
 	status->dummy_unit_params.maxhp[0].max_level = MAX_LEVEL;
 	status->dummy_unit_params.maxhp[0].value = 1;
 	status->dummy_unit_params.maxhp_size = 1;
+
+	status->dummy_unit_params.max_stats = 99;
 }
 
 //For copying a status_data structure from b to a, without overwriting current Hp and Sp
@@ -14192,6 +14194,22 @@ static bool status_read_unit_params_db_sub(const char *name, struct config_setti
 	} else {
 		ShowWarning("%s: MaxASPD setting not found for entry '%s' in file '%s', defaulting to %d...\n", __func__, entry.name, source, fallback_aspd);
 		entry.max_aspd = battle_config.max_aspd;
+	}
+
+	if (libconfig->setting_lookup_int(group, "MaxStats", &i32) == CONFIG_TRUE) {
+		int final_stats = cap_value(i32, 10, 10000);
+
+		if (final_stats != i32) {
+			ShowError("%s: Invalid MaxStats setting found for entry '%s' in file '%s'. MaxStats must be between 10 and 10,000, '%d' found. Changing to 99...\n", __func__, entry.name, source, i32);
+			final_stats = 99;
+		}
+
+		entry.max_stats = final_stats;
+	} else if (inherited != NULL) {
+		entry.max_stats = inherited->max_stats;
+	} else {
+		ShowWarning("%s: MaxStats setting not found for entry '%s' in file '%s', defaulting to 99...\n", __func__, entry.name, source);
+		entry.max_stats = 99;
 	}
 
 	if (!status->read_unit_params_db_additional(&entry, inherited, group, source)) {

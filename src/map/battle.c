@@ -7508,7 +7508,6 @@ static const struct config_data_old battle_data[] = {
 	{ "max_sp",                             &battle_config.max_sp,                          1000000, 100,   21474836,       },
 	{ "max_cart_weight",                    &battle_config.max_cart_weight,                 8000,   100,    1000000,        },
 	{ "max_parameter",                      &battle_config.max_parameter,                   99,     10,     10000,          },
-	{ "max_baby_parameter",                 &battle_config.max_baby_parameter,              80,     10,     10000,          },
 	{ "max_def",                            &battle_config.max_def,                         99,     0,      INT_MAX,        },
 	{ "over_def_bonus",                     &battle_config.over_def_bonus,                  0,      0,      1000,           },
 	{ "skill_log",                          &battle_config.skill_log,                       BL_NUL, BL_NUL, BL_ALL,         },
@@ -7736,8 +7735,6 @@ static const struct config_data_old battle_data[] = {
 	 * rAthena
 	 **/
 	{ "max_third_parameter",                &battle_config.max_third_parameter,             130,    10,     10000,          },
-	{ "max_baby_third_parameter",           &battle_config.max_baby_third_parameter,        117,    10,     10000,          },
-	{ "max_extended_parameter",             &battle_config.max_extended_parameter,          125,    10,     10000,          },
 	{ "atcommand_max_stat_bypass",          &battle_config.atcommand_max_stat_bypass,       0,      0,      100,            },
 	{ "skill_amotion_leniency",             &battle_config.skill_amotion_leniency,          90,     0,      300             },
 	{ "mvp_tomb_enabled",                   &battle_config.mvp_tomb_enabled,                1,      0,      1               },
@@ -7788,7 +7785,6 @@ static const struct config_data_old battle_data[] = {
 	{ "player_warp_keep_direction",         &battle_config.player_warp_keep_direction,      0,      0,      1,              },
 	{ "atcommand_levelup_events",           &battle_config.atcommand_levelup_events,        0,      0,      1,              },
 	{ "bow_unequip_arrow",                  &battle_config.bow_unequip_arrow,               1,      0,      1,              },
-	{ "max_summoner_parameter",             &battle_config.max_summoner_parameter,          120,    10,     10000,          },
 	{ "mvp_exp_reward_message",             &battle_config.mvp_exp_reward_message,          0,      0,      1,              },
 	{ "monster_eye_range_bonus",            &battle_config.mob_eye_range_bonus,             0,      0,      10,             },
 	{ "prevent_logout_trigger",             &battle_config.prevent_logout_trigger,          0xE,    0,      0xF,            },
@@ -8021,6 +8017,10 @@ static void battle_config_check_deprecated(const char *filename, struct config_t
 	const char *unit_params_keys[] = {
 		"max_hp",
 		"max_third_aspd",
+		"max_extended_parameter",
+		"max_summoner_parameter",
+		"max_baby_parameter",
+		"max_baby_third_parameter"
 	};
 	for (int i = 0; i < ARRAYLENGTH(unit_params_keys); ++i) {
 		char conf_name[100];

@@ -2702,7 +2702,7 @@ ACMD(param)
 	if( battle_config.atcommand_max_stat_bypass )
 		max = SHRT_MAX;
 	else
-		max = pc_maxparameter(sd);
+		max = pc_maxstats(sd);
 
 	if(value < 0 && *stats[i] <= -value) {
 		new_value = 1;
@@ -2747,13 +2747,13 @@ ACMD(stat_all)
 	stats[5] = &sd->status.luk;
 
 	if (!*message || sscanf(message, "%d", &value) < 1 || value == 0) {
-		value = pc_maxparameter(sd);
-		max = pc_maxparameter(sd);
+		value = pc_maxstats(sd);
+		max = pc_maxstats(sd);
 	} else {
 		if( battle_config.atcommand_max_stat_bypass )
 			max = SHRT_MAX;
 		else
-			max = pc_maxparameter(sd);
+			max = pc_maxstats(sd);
 	}
 
 	count = 0;
@@ -9323,7 +9323,7 @@ ACMD(set)
 
 /**
  * Sends @quest command help text to fd
- * @param fd 
+ * @param fd
  */
 static void atcommand_quest_help(int fd)
 {

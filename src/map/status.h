@@ -1294,6 +1294,7 @@ struct s_unit_params {
 	int max_aspd;
 	struct s_maxhp_entry *maxhp; ///< list of s_maxhp_entry entries
 	int maxhp_size; ///< size of maxhp
+	int max_stats;
 
 	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
 };

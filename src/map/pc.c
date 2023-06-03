@@ -7383,7 +7383,7 @@ static int pc_need_status_point(struct map_session_data *sd, int type, int val)
 
 	low = pc->getstat(sd,type);
 
-	if ( low >= pc_maxparameter(sd) && val > 0 )
+	if ( low >= pc_maxstats(sd) && val > 0 )
 		return 0; // Official servers show '0' when max is reached
 
 	high = low + val;
@@ -7415,7 +7415,7 @@ static int pc_maxparameterincrease(struct map_session_data *sd, int type)
 
 	base = final = pc->getstat(sd, type);
 
-	while (final <= pc_maxparameter(sd) && status_points >= 0) {
+	while (final <= pc_maxstats(sd) && status_points >= 0) {
 #ifdef RENEWAL // renewal status point cost formula
 		status_points -= (final < 100) ? (2 + (final - 1) / 10) : (16 + 4 * ((final - 100) / 5));
 #else
@@ -7431,7 +7431,7 @@ static int pc_maxparameterincrease(struct map_session_data *sd, int type)
 /**
  * Raises a stat by the specified amount.
  *
- * Obeys max_parameter limits.
+ * Obeys MaxStats limits.
  * Subtracts status points according to the cost of the increased stat points.
  *
  * @param sd       The target character.
@@ -7455,7 +7455,7 @@ static bool pc_statusup(struct map_session_data *sd, int type, int increase)
 	int current = pc->getstat(sd, type);
 	int max_increase = pc->maxparameterincrease(sd, type);
 	realIncrease = cap_value(realIncrease, 0, max_increase); // cap to the maximum status points available
-	if (realIncrease <= 0 || current + realIncrease > pc_maxparameter(sd)) {
+	if (realIncrease <= 0 || current + realIncrease > pc_maxstats(sd)) {
 		clif->statusupack(sd, type, 0, increase);
 		return false;
 	}
@@ -7490,7 +7490,7 @@ static bool pc_statusup(struct map_session_data *sd, int type, int increase)
 /**
  * Raises a stat by the specified amount.
  *
- * Obeys max_parameter limits.
+ * Obeys MaxStats limits.
  * Does not subtract status points for the cost of the modified stat points.
  *
  * @param sd   The target character.
@@ -7513,7 +7513,7 @@ static int pc_statusup2(struct map_session_data *sd, int type, int val)
 	need = pc->need_status_point(sd,type,1);
 
 	// set new value
-	max = pc_maxparameter(sd);
+	max = pc_maxstats(sd);
 	val = pc->setstat(sd, type, cap_value(pc->getstat(sd,type) + val, 1, max));
 
 	status_calc_pc(sd,SCO_NONE);
@@ -8840,22 +8840,22 @@ static int pc_setparam(struct map_session_data *sd, int type, int64 val)
 		}
 		break;
 	case SP_STR:
-		sd->status.str = cap_value((int)val, 1, pc_maxparameter(sd));
+		sd->status.str = cap_value((int)val, 1, pc_maxstats(sd));
 		break;
 	case SP_AGI:
-		sd->status.agi = cap_value((int)val, 1, pc_maxparameter(sd));
+		sd->status.agi = cap_value((int)val, 1, pc_maxstats(sd));
 		break;
 	case SP_VIT:
-		sd->status.vit = cap_value((int)val, 1, pc_maxparameter(sd));
+		sd->status.vit = cap_value((int)val, 1, pc_maxstats(sd));
 		break;
 	case SP_INT:
-		sd->status.int_ = cap_value((int)val, 1, pc_maxparameter(sd));
+		sd->status.int_ = cap_value((int)val, 1, pc_maxstats(sd));
 		break;
 	case SP_DEX:
-		sd->status.dex = cap_value((int)val, 1, pc_maxparameter(sd));
+		sd->status.dex = cap_value((int)val, 1, pc_maxstats(sd));
 		break;
 	case SP_LUK:
-		sd->status.luk = cap_value((int)val, 1, pc_maxparameter(sd));
+		sd->status.luk = cap_value((int)val, 1, pc_maxstats(sd));
 		break;
 	case SP_KARMA:
 		sd->status.karma = (int)val;

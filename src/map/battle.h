@@ -258,7 +258,7 @@ struct Battle_Config {
 	int max_walk_speed; //Maximum walking speed after buffs [Skotlex]
 	int max_sp;
 	int max_lv, aura_lv;
-	int max_parameter, max_baby_parameter;
+	int max_parameter;
 	int max_cart_weight;
 	int skill_log;
 	int battle_log;
@@ -496,8 +496,6 @@ struct Battle_Config {
 
 	// rAthena
 	int max_third_parameter;
-	int max_baby_third_parameter;
-	int max_extended_parameter;
 	int atcommand_max_stat_bypass;
 	int vcast_stat_scale;
 
@@ -565,7 +563,6 @@ struct Battle_Config {
 
 	int bow_unequip_arrow;
 
-	int max_summoner_parameter; // Summoner Max Stats
 	int mvp_exp_reward_message;
 
 	int mob_eye_range_bonus; //Vulture's Eye and Snake's Eye range bonus
