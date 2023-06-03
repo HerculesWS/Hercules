@@ -174,6 +174,7 @@ static void initDummyData(void)
 
 	memset(&status->dummy_unit_params, 0, sizeof(status->dummy_unit_params));
 	strcpy(status->dummy_unit_params.name, "");
+	status->dummy_unit_params.max_aspd = battle_config.max_aspd;
 
 	CREATE(status->dummy_unit_params.maxhp, struct s_maxhp_entry, 1);
 	status->dummy_unit_params.maxhp[0].max_level = MAX_LEVEL;
@@ -2116,7 +2117,7 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 
 	// Basic ASPD value
 	i = status->base_amotion_pc(sd,bstatus);
-	bstatus->amotion = cap_value(i,((sd->job & JOBL_THIRD) != 0 ? battle_config.max_third_aspd : battle_config.max_aspd),2000);
+	bstatus->amotion = cap_value(i, pc_max_aspd(sd), 2000);
 
 	// Relative modifiers from passive skills
 #ifndef RENEWAL_ASPD
@@ -3339,7 +3340,7 @@ static void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag
 #endif
 			amotion = status->calc_fix_aspd(bl, sc, amotion);
 			if (sd != NULL) {
-				st->amotion = cap_value(amotion, ((sd->job & JOBL_THIRD) != 0 ? battle_config.max_third_aspd : battle_config.max_aspd), 2000);
+				st->amotion = cap_value(amotion, pc_max_aspd(sd), 2000);
 			} else {
 				st->amotion = cap_value(amotion, battle_config.max_aspd, 2000);
 			}
@@ -14149,6 +14150,7 @@ static bool status_read_unit_params_db_sub(const char *name, struct config_setti
 	struct s_unit_params entry = { 0 };
 
 	const char *str = NULL;
+	int i32 = 0;
 	struct s_unit_params *inherited = NULL;
 
 	if (libconfig->setting_lookup_string(group, "Inherit", &str)) {
@@ -14174,7 +14176,23 @@ static bool status_read_unit_params_db_sub(const char *name, struct config_setti
 		return false;
 	}
 
-	// TODO: Read more fields
+	// battle_config.max_aspd is already a motion value (e.g. aspd = 190 -> amotion = 100), so we revert it for display purposes.
+	int fallback_aspd = (2000 - battle_config.max_aspd) / 10;
+	if (libconfig->setting_lookup_int(group, "MaxASPD", &i32) == CONFIG_TRUE) {
+		int final_aspd = cap_value(i32, 100, 199);
+
+		if (final_aspd != i32) {
+			ShowError("%s: Invalid MaxASPD setting found for entry '%s' in file '%s'. MaxASPD must be between 100 and 199, '%d' found. Changing to %d...\n", __func__, entry.name, source, i32, fallback_aspd);
+			final_aspd = fallback_aspd;
+		}
+
+		entry.max_aspd = 2000 - final_aspd * 10;
+	} else if (inherited != NULL) {
+		entry.max_aspd = inherited->max_aspd;
+	} else {
+		ShowWarning("%s: MaxASPD setting not found for entry '%s' in file '%s', defaulting to %d...\n", __func__, entry.name, source, fallback_aspd);
+		entry.max_aspd = battle_config.max_aspd;
+	}
 
 	if (!status->read_unit_params_db_additional(&entry, inherited, group, source)) {
 		status->unit_params_destroy(&entry);

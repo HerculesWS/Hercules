@@ -7502,7 +7502,6 @@ static const struct config_data_old battle_data[] = {
 	{ "natural_heal_weight_rate",           &battle_config.natural_heal_weight_rate,        50,     50,     101             },
 	{ "arrow_decrement",                    &battle_config.arrow_decrement,                 1,      0,      2,              },
 	{ "max_aspd",                           &battle_config.max_aspd,                        190,    100,    199,            },
-	{ "max_third_aspd",                     &battle_config.max_third_aspd,                  193,    100,    199,            },
 	{ "max_walk_speed",                     &battle_config.max_walk_speed,                  300,    100,    100*DEFAULT_WALK_SPEED, },
 	{ "max_lv",                             &battle_config.max_lv,                          99,     0,      MAX_LEVEL,      },
 	{ "aura_lv",                            &battle_config.aura_lv,                         99,     0,      INT_MAX,        },
@@ -7920,7 +7919,6 @@ static void battle_adjust_conf(void)
 {
 	battle_config.monster_max_aspd = 2000 - battle_config.monster_max_aspd*10;
 	battle_config.max_aspd = 2000 - battle_config.max_aspd*10;
-	battle_config.max_third_aspd = 2000 - battle_config.max_third_aspd*10;
 	battle_config.max_walk_speed = 100*DEFAULT_WALK_SPEED/battle_config.max_walk_speed;
 	battle_config.max_cart_weight *= 10;
 
@@ -8022,6 +8020,7 @@ static void battle_config_check_deprecated(const char *filename, struct config_t
 
 	const char *unit_params_keys[] = {
 		"max_hp",
+		"max_third_aspd",
 	};
 	for (int i = 0; i < ARRAYLENGTH(unit_params_keys); ++i) {
 		char conf_name[100];

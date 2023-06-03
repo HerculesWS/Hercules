@@ -1291,6 +1291,7 @@ struct s_maxhp_entry {
 struct s_unit_params {
 	char name[SCRIPT_VARNAME_LENGTH]; ///< group name as defined in conf
 
+	int max_aspd;
 	struct s_maxhp_entry *maxhp; ///< list of s_maxhp_entry entries
 	int maxhp_size; ///< size of maxhp
 

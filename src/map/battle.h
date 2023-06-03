@@ -499,7 +499,6 @@ struct Battle_Config {
 	int max_baby_third_parameter;
 	int max_extended_parameter;
 	int atcommand_max_stat_bypass;
-	int max_third_aspd;
 	int vcast_stat_scale;
 
 	int mvp_tomb_enabled;
