@@ -24329,7 +24329,7 @@ static void clif_overweight_percent(struct map_session_data *sd)
 	nullpo_retv(sd);
 
 	p.packetType = 0xade;
-	p.percent = battle_config.natural_heal_weight_rate;
+	p.percent = pc_overhealweightrate(sd);
 	clif->send(&p, sizeof(p), &sd->bl, SELF);
 #endif
 }

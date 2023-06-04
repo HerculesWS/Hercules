@@ -174,6 +174,7 @@ static void initDummyData(void)
 
 	memset(&status->dummy_unit_params, 0, sizeof(status->dummy_unit_params));
 	strcpy(status->dummy_unit_params.name, "");
+	status->dummy_unit_params.natural_heal_weight_rate = 50;
 	status->dummy_unit_params.max_aspd = battle_config.max_aspd;
 
 	CREATE(status->dummy_unit_params.maxhp, struct s_maxhp_entry, 1);
@@ -14176,6 +14177,22 @@ static bool status_read_unit_params_db_sub(const char *name, struct config_setti
 	if (!status->read_unit_params_db_maxhp(&entry, inherited, group, source)) {
 		status->unit_params_destroy(&entry);
 		return false;
+	}
+
+	if (libconfig->setting_lookup_int(group, "NaturalHealWeightRate", &i32) == CONFIG_TRUE) {
+		int final_rate = cap_value(i32, 1, 101);
+
+		if (final_rate != i32) {
+			ShowError("%s: Invalid NaturalHealWeightRate setting found for entry '%s' in file '%s'. NaturalHealWeightRate must be between 1 and 101, '%d' found. Changing to 50...\n", __func__, entry.name, source, i32);
+			final_rate = 50;
+		}
+
+		entry.natural_heal_weight_rate = final_rate;
+	} else if (inherited != NULL) {
+		entry.natural_heal_weight_rate = inherited->natural_heal_weight_rate;
+	} else {
+		ShowWarning("%s: NaturalHealWeightRate setting not found for entry '%s' in file '%s', defaulting to 50...\n", __func__, entry.name, source);
+		entry.natural_heal_weight_rate = 50;
 	}
 
 	// battle_config.max_aspd is already a motion value (e.g. aspd = 190 -> amotion = 100), so we revert it for display purposes.

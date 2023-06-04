@@ -7499,7 +7499,6 @@ static const struct config_data_old battle_data[] = {
 	{ "natural_healsp_interval",            &battle_config.natural_healsp_interval,         8000,   NATURAL_HEAL_INTERVAL, INT_MAX, },
 	{ "natural_heal_cap",                   &battle_config.natural_heal_cap,                1000,   1,      INT_MAX,        },
 	{ "natural_heal_skill_interval",        &battle_config.natural_heal_skill_interval,     10000,  NATURAL_HEAL_INTERVAL, INT_MAX, },
-	{ "natural_heal_weight_rate",           &battle_config.natural_heal_weight_rate,        50,     50,     101             },
 	{ "arrow_decrement",                    &battle_config.arrow_decrement,                 1,      0,      2,              },
 	{ "max_aspd",                           &battle_config.max_aspd,                        190,    100,    199,            },
 	{ "max_walk_speed",                     &battle_config.max_walk_speed,                  300,    100,    100*DEFAULT_WALK_SPEED, },
@@ -8020,7 +8019,8 @@ static void battle_config_check_deprecated(const char *filename, struct config_t
 		"max_extended_parameter",
 		"max_summoner_parameter",
 		"max_baby_parameter",
-		"max_baby_third_parameter"
+		"max_baby_third_parameter",
+		"natural_heal_weight_rate"
 	};
 	for (int i = 0; i < ARRAYLENGTH(unit_params_keys); ++i) {
 		char conf_name[100];

@@ -742,7 +742,8 @@ END_ZEROED_BLOCK;
 
 #define pc_isfalcon(sd)       ( (sd)->sc.option&OPTION_FALCON )
 #define pc_isinvisible(sd)    ( (sd)->sc.option&OPTION_INVISIBLE )
-#define pc_is50overweight(sd) ( (sd)->weight*100 >= (sd)->max_weight*battle->bc->natural_heal_weight_rate )
+#define pc_overhealweightrate(sd) ( status->dbs->unit_params[pc->class2idx((sd)->status.class)]->natural_heal_weight_rate )
+#define pc_isoverhealweight(sd) ( (sd)->weight * 100 >= (sd)->max_weight * status->dbs->unit_params[pc->class2idx((sd)->status.class)]->natural_heal_weight_rate )
 #define pc_is90overweight(sd) ( (sd)->weight*10 >= (sd)->max_weight*9 )
 #define pc_maxhp_cap(sd) ( status->get_maxhp_cap_entry(pc->class2idx((sd)->status.class), (sd)->status.base_level)->value )
 #define pc_max_aspd(sd) ( status->dbs->unit_params[pc->class2idx((sd)->status.class)]->max_aspd )

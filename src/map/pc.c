@@ -1998,7 +1998,7 @@ static int pc_updateweightstatus(struct map_session_data *sd)
 	nullpo_retr(1, sd);
 
 	old_overweight = (sd->sc.data[SC_WEIGHTOVER90]) ? 2 : (sd->sc.data[SC_WEIGHTOVER50]) ? 1 : 0;
-	new_overweight = (pc_is90overweight(sd)) ? 2 : (pc_is50overweight(sd)) ? 1 : 0;
+	new_overweight = (pc_is90overweight(sd)) ? 2 : (pc_isoverhealweight(sd)) ? 1 : 0;
 
 	if( old_overweight == new_overweight )
 		return 0; // no change
@@ -9103,6 +9103,7 @@ static int pc_jobchange(struct map_session_data *sd, int class, int upper)
 	if ((uint16)job == sd->job)
 		return 1; //Nothing to change.
 
+	int old_overhealweightrate = pc_overhealweightrate(sd);
 	if ((job & JOBL_2) != 0 && (sd->job & JOBL_2) == 0 && (job & MAPID_UPPERMASK) != MAPID_SUPER_NOVICE) {
 		// changing from 1st to 2nd job
 		sd->change_level_2nd = sd->status.job_level;
@@ -9207,6 +9208,9 @@ static int pc_jobchange(struct map_session_data *sd, int class, int upper)
 	//Update skill tree.
 	pc->calc_skilltree(sd);
 	clif->skillinfoblock(sd);
+
+	if (old_overhealweightrate != pc_overhealweightrate(sd))
+		clif->overweight_percent(sd);
 
 	if (sd->ed)
 		elemental->delete(sd->ed, 0);
