@@ -540,6 +540,8 @@ typedef int (*HPMHOOK_pre_battle_calc_drain) (int64 *damage, int *rate, int *per
 typedef int (*HPMHOOK_post_battle_calc_drain) (int retVal___, int64 damage, int rate, int per);
 typedef bool (*HPMHOOK_pre_battle_config_read) (const char **filename, bool *imported);
 typedef bool (*HPMHOOK_post_battle_config_read) (bool retVal___, const char *filename, bool imported);
+typedef void (*HPMHOOK_pre_battle_config_check_deprecated) (const char **filename, struct config_t **config);
+typedef void (*HPMHOOK_post_battle_config_check_deprecated) (const char *filename, struct config_t *config);
 typedef void (*HPMHOOK_pre_battle_config_set_defaults) (void);
 typedef void (*HPMHOOK_post_battle_config_set_defaults) (void);
 typedef bool (*HPMHOOK_pre_battle_config_set_value_sub) (int *index, int *value);

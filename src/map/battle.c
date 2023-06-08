@@ -8008,6 +8008,21 @@ static void battle_adjust_conf(void)
 }
 
 /**
+ * Checks for deprecated/removed battle configuration and warns user.
+ *
+ * @param filename Path to configuration file
+ * @param config Pointer to config structure
+ */
+static void battle_config_check_deprecated(const char *filename, struct config_t *config)
+{
+	nullpo_retv(filename);
+
+	if (libconfig->lookup(config, "battle_configuration/traps_setting") != NULL) {
+		ShowError("The `traps_setting` battle conf option has been replaced by `trap_visibility`. Please see conf/map/battle/skill.conf.\n");
+	}
+}
+
+/**
  * Dynamically reads battle configuration and initializes required variables.
  *
  * @param filename Path to configuration file.
@@ -8030,9 +8045,7 @@ static bool battle_config_read(const char *filename, bool imported)
 	if (!imported)
 		battle->config_set_defaults();
 
-	if (libconfig->lookup(&config, "battle_configuration/traps_setting") != NULL) {
-		ShowError("The `traps_setting` battle conf option has been replaced by `trap_visibility`. Please see conf/map/battle/skill.conf.\n");
-	}
+	battle->config_check_deprecated(filename, &config);
 
 	for (i = 0; i < ARRAYLENGTH(battle_data); i++) {
 		int type, val;
@@ -8160,6 +8173,7 @@ void battle_defaults(void)
 	battle->add_mastery = battle_addmastery;
 	battle->calc_drain = battle_calc_drain;
 	battle->config_read = battle_config_read;
+	battle->config_check_deprecated = battle_config_check_deprecated;
 	battle->config_set_defaults = battle_set_defaults;
 	battle->config_set_value_sub = battle_set_value_sub;
 	battle->config_set_value = battle_set_value;

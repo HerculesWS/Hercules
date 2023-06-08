@@ -778,6 +778,7 @@ struct battle_interface {
 	int (*calc_drain) (int64 damage, int rate, int per);
 	/* battle_config */
 	bool (*config_read) (const char *filename, bool imported);
+	void (*config_check_deprecated) (const char *filename, struct config_t *config);
 	void (*config_set_defaults) (void);
 	bool (*config_set_value_sub) (int index, int value);
 	bool (*config_set_value) (const char *param, const char *value);

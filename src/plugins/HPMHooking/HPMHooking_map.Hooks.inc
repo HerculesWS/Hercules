@@ -3846,6 +3846,32 @@ bool HP_battle_config_read(const char *filename, bool imported) {
 	}
 	return retVal___;
 }
+void HP_battle_config_check_deprecated(const char *filename, struct config_t *config) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_battle_config_check_deprecated_pre > 0) {
+		void (*preHookFunc) (const char **filename, struct config_t **config);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_battle_config_check_deprecated_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_battle_config_check_deprecated_pre[hIndex].func;
+			preHookFunc(&filename, &config);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.battle.config_check_deprecated(filename, config);
+	}
+	if (HPMHooks.count.HP_battle_config_check_deprecated_post > 0) {
+		void (*postHookFunc) (const char *filename, struct config_t *config);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_battle_config_check_deprecated_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_battle_config_check_deprecated_post[hIndex].func;
+			postHookFunc(filename, config);
+		}
+	}
+	return;
+}
 void HP_battle_config_set_defaults(void) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_battle_config_set_defaults_pre > 0) {

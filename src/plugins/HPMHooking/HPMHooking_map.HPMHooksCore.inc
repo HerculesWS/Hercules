@@ -308,6 +308,8 @@ struct {
 	struct HPMHookPoint *HP_battle_calc_drain_post;
 	struct HPMHookPoint *HP_battle_config_read_pre;
 	struct HPMHookPoint *HP_battle_config_read_post;
+	struct HPMHookPoint *HP_battle_config_check_deprecated_pre;
+	struct HPMHookPoint *HP_battle_config_check_deprecated_post;
 	struct HPMHookPoint *HP_battle_config_set_defaults_pre;
 	struct HPMHookPoint *HP_battle_config_set_defaults_post;
 	struct HPMHookPoint *HP_battle_config_set_value_sub_pre;
@@ -7821,6 +7823,8 @@ struct {
 	int HP_battle_calc_drain_post;
 	int HP_battle_config_read_pre;
 	int HP_battle_config_read_post;
+	int HP_battle_config_check_deprecated_pre;
+	int HP_battle_config_check_deprecated_post;
 	int HP_battle_config_set_defaults_pre;
 	int HP_battle_config_set_defaults_post;
 	int HP_battle_config_set_value_sub_pre;
