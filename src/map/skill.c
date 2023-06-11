@@ -7708,24 +7708,28 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 		case MO_ABSORBSPIRITS:
 		{
 			int sp = 0;
-			if (dstsd != NULL && dstsd->spiritball != 0
-			 && (sd == dstsd || map_flag_vs(src->m) || (sd && sd->duel_group && sd->duel_group == dstsd->duel_group))
-			 && (dstsd->job & MAPID_BASEMASK) != MAPID_GUNSLINGER
-			 ) {
+			bool success = false;
+			if (dstsd != NULL && dstsd->spiritball != 0 && (dstsd->job & MAPID_BASEMASK) != MAPID_GUNSLINGER) {
 				// split the if for readability, and included gunslingers in the check so that their coins cannot be removed [Reddozen]
 				sp = dstsd->spiritball * 7;
 				pc->delspiritball(dstsd, dstsd->spiritball, 0);
+				success = true;
 			} else if ( dstmd && !(tstatus->mode&MD_BOSS) && rnd() % 100 < 20 ) {
 				// check if target is a monster and not a Boss, for the 20% chance to absorb 2 SP per monster's level [Reddozen]
 				sp = 2 * dstmd->level;
 				mob->target(dstmd,src,0);
+				success = true;
 			}
 			if (dstsd && dstsd->charm_type != CHARM_TYPE_NONE && dstsd->charm_count > 0) {
 				pc->del_charm(dstsd, dstsd->charm_count, dstsd->charm_type);
 			}
 			if (sp != 0)
 				status->heal(src, 0, sp, STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT);
-			clif->skill_nodamage(src,bl,skill_id,skill_lv,sp?1:0);
+
+			if (success)
+				clif->skill_nodamage(src, bl, skill_id, skill_lv, sp ? 1 : 0);
+			else if (sd != NULL)
+				clif->skill_fail(sd, skill_id, USESKILL_FAIL, 0, 0);
 		}
 			break;
 
@@ -16576,6 +16580,23 @@ static int skill_check_condition_castend(struct map_session_data *sd, uint16 ski
 		case MO_KITRANSLATION: {
 			struct map_session_data *tgtsd = BL_CAST(BL_PC, target);
 			if (tgtsd == NULL || tgtsd->spiritball >= 5 || (tgtsd->job & MAPID_BASEMASK) == MAPID_GUNSLINGER) {
+				clif->skill_fail(sd, skill_id, USESKILL_FAIL, 0, 0);
+				return 0;
+			}
+			break;
+		}
+
+		case MO_ABSORBSPIRITS: {
+			struct map_session_data *tgtsd = BL_CAST(BL_PC, target);
+			if (tgtsd == NULL)
+				break;
+
+			if (tgtsd->spiritball == 0 || (tgtsd->job & MAPID_BASEMASK) == MAPID_GUNSLINGER) {
+				clif->skill_fail(sd, skill_id, USESKILL_FAIL, 0, 0);
+				return 0;
+			}
+
+			if (sd != tgtsd && battle->check_target(&sd->bl, &tgtsd->bl, BCT_NOENEMY) == 1) {
 				clif->skill_fail(sd, skill_id, USESKILL_FAIL, 0, 0);
 				return 0;
 			}
