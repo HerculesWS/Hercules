@@ -84882,15 +84882,15 @@ bool HP_skill_items_required(struct map_session_data *sd, int skill_id, int skil
 	}
 	return retVal___;
 }
-int HP_skill_check_condition_castend(struct map_session_data *sd, uint16 skill_id, uint16 skill_lv) {
+int HP_skill_check_condition_castend(struct map_session_data *sd, uint16 skill_id, uint16 skill_lv, struct block_list *target) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_skill_check_condition_castend_pre > 0) {
-		int (*preHookFunc) (struct map_session_data **sd, uint16 *skill_id, uint16 *skill_lv);
+		int (*preHookFunc) (struct map_session_data **sd, uint16 *skill_id, uint16 *skill_lv, struct block_list **target);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_check_condition_castend_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_skill_check_condition_castend_pre[hIndex].func;
-			retVal___ = preHookFunc(&sd, &skill_id, &skill_lv);
+			retVal___ = preHookFunc(&sd, &skill_id, &skill_lv, &target);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -84898,13 +84898,13 @@ int HP_skill_check_condition_castend(struct map_session_data *sd, uint16 skill_i
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.skill.check_condition_castend(sd, skill_id, skill_lv);
+		retVal___ = HPMHooks.source.skill.check_condition_castend(sd, skill_id, skill_lv, target);
 	}
 	if (HPMHooks.count.HP_skill_check_condition_castend_post > 0) {
-		int (*postHookFunc) (int retVal___, struct map_session_data *sd, uint16 skill_id, uint16 skill_lv);
+		int (*postHookFunc) (int retVal___, struct map_session_data *sd, uint16 skill_id, uint16 skill_lv, struct block_list *target);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_check_condition_castend_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_skill_check_condition_castend_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, sd, skill_id, skill_lv);
+			retVal___ = postHookFunc(retVal___, sd, skill_id, skill_lv, target);
 		}
 	}
 	return retVal___;
@@ -90452,15 +90452,15 @@ int HP_skill_check_condition_castbegin_unknown(struct status_change *sc, uint16 
 	}
 	return retVal___;
 }
-bool HP_skill_check_condition_castend_unknown(struct map_session_data *sd, uint16 *skill_id, uint16 *skill_lv) {
+bool HP_skill_check_condition_castend_unknown(struct map_session_data *sd, uint16 *skill_id, uint16 *skill_lv, struct block_list *target) {
 	int hIndex = 0;
 	bool retVal___ = false;
 	if (HPMHooks.count.HP_skill_check_condition_castend_unknown_pre > 0) {
-		bool (*preHookFunc) (struct map_session_data **sd, uint16 **skill_id, uint16 **skill_lv);
+		bool (*preHookFunc) (struct map_session_data **sd, uint16 **skill_id, uint16 **skill_lv, struct block_list **target);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_check_condition_castend_unknown_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_skill_check_condition_castend_unknown_pre[hIndex].func;
-			retVal___ = preHookFunc(&sd, &skill_id, &skill_lv);
+			retVal___ = preHookFunc(&sd, &skill_id, &skill_lv, &target);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -90468,13 +90468,13 @@ bool HP_skill_check_condition_castend_unknown(struct map_session_data *sd, uint1
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.skill.check_condition_castend_unknown(sd, skill_id, skill_lv);
+		retVal___ = HPMHooks.source.skill.check_condition_castend_unknown(sd, skill_id, skill_lv, target);
 	}
 	if (HPMHooks.count.HP_skill_check_condition_castend_unknown_post > 0) {
-		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, uint16 *skill_id, uint16 *skill_lv);
+		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, uint16 *skill_id, uint16 *skill_lv, struct block_list *target);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_check_condition_castend_unknown_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_skill_check_condition_castend_unknown_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, sd, skill_id, skill_lv);
+			retVal___ = postHookFunc(retVal___, sd, skill_id, skill_lv, target);
 		}
 	}
 	return retVal___;

@@ -6471,7 +6471,7 @@ static int skill_castend_id(int tid, int64 tick, int id, intptr_t data)
 
 		if( sd )
 		{
-			if( !skill->check_condition_castend(sd, ud->skill_id, ud->skill_lv) )
+			if (!skill->check_condition_castend(sd, ud->skill_id, ud->skill_lv, target))
 				break;
 			else
 				skill->consume_requirement(sd,ud->skill_id,ud->skill_lv,1);
@@ -11843,7 +11843,7 @@ static int skill_castend_pos(int tid, int64 tick, int id, intptr_t data)
 
 		if( sd )
 		{
-			if( ud->skill_id != AL_WARP && !skill->check_condition_castend(sd, ud->skill_id, ud->skill_lv) ) {
+			if (ud->skill_id != AL_WARP && !skill->check_condition_castend(sd, ud->skill_id, ud->skill_lv, NULL)) {
 				if( ud->skill_id == SA_LANDPROTECTOR )
 					clif->skill_poseffect(&sd->bl,ud->skill_id,ud->skill_lv,sd->bl.x,sd->bl.y,tick);
 				break;
@@ -12065,7 +12065,7 @@ static int skill_castend_map(struct map_session_data *sd, uint16 skill_id, const
 					return 0;
 				}
 
-				if(!skill->check_condition_castend(sd, sd->menuskill_id, lv)) { // This checks versus skill_id/skill_lv...
+				if (!skill->check_condition_castend(sd, sd->menuskill_id, lv, NULL)) { // This checks versus skill_id/skill_lv...
 					skill_failed(sd);
 					return 0;
 				}
@@ -16475,7 +16475,16 @@ static bool skill_items_required(struct map_session_data *sd, int skill_id, int 
 	return false;
 }
 
-static int skill_check_condition_castend(struct map_session_data *sd, uint16 skill_id, uint16 skill_lv)
+/**
+ * Checks conditions for a skill to be executed. This check happens after the cast time was completed.
+ * 
+ * @param sd The character who cast the skill.
+ * @param skill_id The skill's ID.
+ * @param skill_lv The skill's level.
+ * @param target The unit who was targeted by this skill (MAY BE NULL, if there is no target)
+ * @return 1 if conditions were satisfied. 0 otherwise (errors are also sent to client)
+ */
+static int skill_check_condition_castend(struct map_session_data *sd, uint16 skill_id, uint16 skill_lv, struct block_list *target)
 {
 	struct skill_condition require;
 	struct status_data *st;
@@ -16593,7 +16602,7 @@ static int skill_check_condition_castend(struct map_session_data *sd, uint16 ski
 			}
 			break;
 		default:
-			if (!skill->check_condition_castend_unknown(sd, &skill_id, &skill_lv))
+			if (!skill->check_condition_castend_unknown(sd, &skill_id, &skill_lv, target))
 				break;
 			return 0;
 	}
@@ -16642,7 +16651,16 @@ static int skill_check_condition_castend(struct map_session_data *sd, uint16 ski
 	return 1;
 }
 
-static bool skill_check_condition_castend_unknown(struct map_session_data *sd, uint16 *skill_id, uint16 *skill_lv)
+/**
+ * Checks conditions for a skill to be executed. This check happens after the cast time was completed.
+ * 
+ * @param sd The character who cast the skill.
+ * @param skill_id The skill's ID.
+ * @param skill_lv The skill's level.
+ * @param target The unit who was targeted by this skill (MAY BE NULL, if there is no target)
+ * @return 1 if conditions were satisfied. 0 otherwise (errors are also sent to client)
+ */
+static bool skill_check_condition_castend_unknown(struct map_session_data *sd, uint16 *skill_id, uint16 *skill_lv, struct block_list *target)
 {
 	return false;
 }
