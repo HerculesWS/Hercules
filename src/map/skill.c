@@ -16572,6 +16572,16 @@ static int skill_check_condition_castend(struct map_session_data *sd, uint16 ski
 			}
 			break;
 		}
+
+		case MO_KITRANSLATION: {
+			struct map_session_data *tgtsd = BL_CAST(BL_PC, target);
+			if (tgtsd == NULL || tgtsd->spiritball >= 5 || (tgtsd->job & MAPID_BASEMASK) == MAPID_GUNSLINGER) {
+				clif->skill_fail(sd, skill_id, USESKILL_FAIL, 0, 0);
+				return 0;
+			}
+			break;
+		}
+
 		case NC_SILVERSNIPER:
 		case NC_MAGICDECOY: {
 				int c = 0;
