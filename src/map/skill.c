@@ -16325,8 +16325,14 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 			break;
 		default:
 			if (sd->spiritball < require.spiritball) {
-				clif->skill_fail(sd, skill_id, USESKILL_FAIL_SPIRITS, require.spiritball, 0);
-			return 0;
+				if ((sd->job & MAPID_BASEMASK) == MAPID_GUNSLINGER) {
+					// For some reason, the client only shows the singular message when it bType is 0 (instead of 1).
+					int btype = (require.spiritball == 1 ? 0 : require.spiritball);
+					clif->skill_fail(sd, skill_id, USESKILL_FAIL_COINS, btype, 0);
+				} else {
+					clif->skill_fail(sd, skill_id, USESKILL_FAIL_SPIRITS, require.spiritball, 0);
+				}
+				return 0;
 			}
 			break;
 		}
