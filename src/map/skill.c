@@ -11807,7 +11807,11 @@ static int skill_castend_pos(int tid, int64 tick, int id, intptr_t data)
 			skill->check_unit_range(src,ud->skillx,ud->skilly,ud->skill_id,ud->skill_lv)
 		  )
 		{
-			if (sd) clif->skill_fail(sd, ud->skill_id, USESKILL_FAIL_LEVEL, 0, 0);
+			if (sd) {
+				// WM_POEMOFNETHERWORLD is the only one that shows USESKILL_FAIL_POS, as far as I know
+				int cause = (ud->skill_id == WM_POEMOFNETHERWORLD) ? USESKILL_FAIL_POS : USESKILL_FAIL_LEVEL;
+				clif->skill_fail(sd, ud->skill_id, cause, 0, 0);
+			}
 			break;
 		}
 		if( src->type&battle_config.skill_nofootset &&
