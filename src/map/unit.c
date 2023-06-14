@@ -1830,7 +1830,7 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 		ud->state.skillcastcancel = 0;
 
 	if (sd == NULL || sd->auto_cast_current.type < AUTOCAST_ABRA || skill->get_cast(skill_id, skill_lv) != 0)
-		ud->canact_tick = tick + casttime + 100;
+		ud->canact_tick = tick + max(casttime, max(status_get_amotion(src), battle_config.min_skill_delay_limit));
 	if( sd )
 	{
 		switch( skill_id )
@@ -1970,7 +1970,7 @@ static int unit_skilluse_pos2(struct block_list *src, short skill_x, short skill
 
 	ud->state.skillcastcancel = castcancel&&casttime>0?1:0;
 	if (sd == NULL || sd->auto_cast_current.type < AUTOCAST_ABRA || skill->get_cast(skill_id, skill_lv) != 0)
-		ud->canact_tick  = tick + casttime + 100;
+		ud->canact_tick = tick + max(casttime, max(status_get_amotion(src), battle_config.min_skill_delay_limit));
 #if 0
 	if (sd) {
 		switch (skill_id) {

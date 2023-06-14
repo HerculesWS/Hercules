@@ -6779,7 +6779,7 @@ static enum damage_lv battle_weapon_attack(struct block_list *src, struct block_
 				skill->consume_requirement(sd,r_skill,r_lv,3);
 				skill->castend_type(type, src, target, r_skill, r_lv, tick, flag);
 				sd->auto_cast_current.type = AUTOCAST_NONE;
-				sd->ud.canact_tick = tick + skill->delay_fix(src, r_skill, r_lv);
+				sd->ud.canact_tick = max(tick + skill->delay_fix(src, r_skill, r_lv), sd->ud.canact_tick);
 				clif->status_change(src, status->get_sc_icon(SC_POSTDELAY), status->get_sc_relevant_bl_types(SC_POSTDELAY), 1, skill->delay_fix(src, r_skill, r_lv), 0, 0, 1);
 			}
 		}
@@ -7741,7 +7741,7 @@ static const struct config_data_old battle_data[] = {
 	{ "max_baby_third_parameter",           &battle_config.max_baby_third_parameter,        117,    10,     10000,          },
 	{ "max_extended_parameter",             &battle_config.max_extended_parameter,          125,    10,     10000,          },
 	{ "atcommand_max_stat_bypass",          &battle_config.atcommand_max_stat_bypass,       0,      0,      100,            },
-	{ "skill_amotion_leniency",             &battle_config.skill_amotion_leniency,          90,     0,      300             },
+	{ "skill_amotion_leniency",             &battle_config.skill_amotion_leniency,          0,      0,      300             },
 	{ "mvp_tomb_enabled",                   &battle_config.mvp_tomb_enabled,                1,      0,      1               },
 	{ "mvp_tomb_spawn_delay",               &battle_config.mvp_tomb_spawn_delay,            10000,  0,      INT_MAX         },
 	{ "features/atcommand_suggestions",     &battle_config.atcommand_suggestions_enabled,   0,      0,      1               },

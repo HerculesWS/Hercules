@@ -2427,7 +2427,7 @@ static int skill_additional_effect(struct block_list *src, struct block_list *bl
 			if (ud) {
 				rate = skill->delay_fix(src, temp, skill_lv);
 				if (DIFF_TICK(ud->canact_tick, tick + rate) < 0){
-					ud->canact_tick = tick+rate;
+					ud->canact_tick = max(tick + rate, ud->canact_tick);
 					if ( battle_config.display_status_timers )
 						clif->status_change(src, status->get_sc_icon(SC_POSTDELAY), status->get_sc_relevant_bl_types(SC_POSTDELAY), 1, rate, 0, 0, 0);
 				}
@@ -2514,7 +2514,7 @@ static int skill_additional_effect(struct block_list *src, struct block_list *bl
 			if (ud) {
 				rate = skill->delay_fix(src, temp, auto_skill_lv);
 				if (DIFF_TICK(ud->canact_tick, tick + rate) < 0){
-					ud->canact_tick = tick+rate;
+					ud->canact_tick = max(tick + rate, ud->canact_tick);
 					if (battle_config.display_status_timers)
 						clif->status_change(src, status->get_sc_icon(SC_POSTDELAY), status->get_sc_relevant_bl_types(SC_POSTDELAY), 1, rate, 0, 0, 0);
 				}
@@ -2872,7 +2872,7 @@ static int skill_counter_additional_effect(struct block_list *src, struct block_
 			if (ud) {
 				rate = skill->delay_fix(bl, auto_skill_id, auto_skill_lv);
 				if (DIFF_TICK(ud->canact_tick, tick + rate) < 0){
-					ud->canact_tick = tick+rate;
+					ud->canact_tick = max(tick + rate, ud->canact_tick);
 					if (battle_config.display_status_timers)
 						clif->status_change(bl, status->get_sc_icon(SC_POSTDELAY), status->get_sc_relevant_bl_types(SC_POSTDELAY), 1, rate, 0, 0, 0);
 				}
@@ -5748,7 +5748,7 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 						break;
 
 					skill->castend_type(skill->get_casttype(spell_skill_id), src, bl, spell_skill_id, spell_skill_lv, tick, 0);
-					sd->ud.canact_tick = tick + skill->delay_fix(src, spell_skill_id, spell_skill_lv);
+					sd->ud.canact_tick = max(tick + skill->delay_fix(src, spell_skill_id, spell_skill_lv), sd->ud.canact_tick);
 					clif->status_change(src, status->get_sc_icon(SC_POSTDELAY), status->get_sc_relevant_bl_types(SC_POSTDELAY), 1, skill->delay_fix(src, spell_skill_id, spell_skill_lv), 0, 0, 0);
 
 					cooldown = pc->get_skill_cooldown(sd, spell_skill_id, spell_skill_lv);
@@ -6493,7 +6493,7 @@ static int skill_castend_id(int tid, int64 tick, int id, intptr_t data)
 			unit->stop_walking(src, STOPWALKING_FLAG_FIXPOS);
 
 		if (sd == NULL || sd->auto_cast_current.skill_id != ud->skill_id || skill->get_delay(ud->skill_id, ud->skill_lv) != 0)
-			ud->canact_tick = tick + skill->delay_fix(src, ud->skill_id, ud->skill_lv); // Tests show wings don't overwrite the delay but skill scrolls do. [Inkfish]
+			ud->canact_tick = max(tick + skill->delay_fix(src, ud->skill_id, ud->skill_lv), ud->canact_tick); // Tests show wings don't overwrite the delay but skill scrolls do. [Inkfish]
 		if (sd != NULL) { // Cooldown application
 			int cooldown = pc->get_skill_cooldown(sd, ud->skill_id, ud->skill_lv);
 			if (cooldown != 0)
@@ -11868,7 +11868,7 @@ static int skill_castend_pos(int tid, int64 tick, int id, intptr_t data)
 			unit->stop_walking(src, STOPWALKING_FLAG_FIXPOS);
 
 		if (sd == NULL || sd->auto_cast_current.skill_id != ud->skill_id || skill->get_delay(ud->skill_id, ud->skill_lv) != 0)
-			ud->canact_tick = tick + skill->delay_fix(src, ud->skill_id, ud->skill_lv);
+			ud->canact_tick = max(tick + skill->delay_fix(src, ud->skill_id, ud->skill_lv), ud->canact_tick);
 		if (sd != NULL) { //Cooldown application
 			int cooldown = pc->get_skill_cooldown(sd, ud->skill_id, ud->skill_lv);
 			if (cooldown != 0)
@@ -17432,10 +17432,8 @@ static int skill_delay_fix(struct block_list *bl, uint16 skill_id, uint16 skill_
 		time = time * battle_config.delay_rate / 100;
 
 	//min delay
-	time = max(time, status_get_amotion(bl)); // Delay can never be below amotion [Playtester]
-	time = max(time, battle_config.min_skill_delay_limit);
+	time = max(time, 0);
 
-//        ShowInfo("Delay delayfix = %d\n",time);
 	return time;
 }
 
