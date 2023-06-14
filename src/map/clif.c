@@ -20939,7 +20939,7 @@ static void clif_cashshop_db(void)
 			struct config_setting_t *cat;
 			char entry_name[15];
 
-			sprintf(entry_name,"cat_%d",i);
+			snprintf(entry_name, sizeof(entry_name), "cat_%d", i);
 
 			if( (cat = libconfig->setting_get_member(cats, entry_name)) != NULL ) {
 				int k, item_count = libconfig->setting_length(cat);
