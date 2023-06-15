@@ -22,11 +22,50 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
+## [v2023.06.14] `June 14 2023`
+
+### Added
+
+- Implemented the Unit Parameters DB, to allow splitting some battle configs into separate pre-renewal and renewal databases and fine tune them in configuration groups associated to each job. (#3214)
+  - The new database is in [db/pre-re/unit_parameters_db.conf](db/pre-re/unit_parameters_db.conf) / [db/re/unit_parameters_db.conf](db/re/unit_parameters_db.conf) and it is referenced by the job db through the new `ParametersGroup` field.
+  - Support for plugins to extend the DB is provided, through `addToUnitParam()`, `getfromUnitParam()`, `removefromUnitParam()`.
+  - The following fields are available, with the respective macros to access them from the source:
+    - `MaxHP` (replaces `battle_configuration/max_hp`) - `pc_maxhp_cap(sd)`
+    - `MaxASPD` (extends `battle_configuration/max_aspd` and supersedes `battle_configuration/max_third_aspd`) - `pc_max_aspd(sd)`
+    - `MaxStats` (extends `battle_configuration/max_parameter` and `battle_configuration/max_third_parameter`, supersedes `battle_configuration/max_extended_parameter`, `battle_configuration/max_summoner_parameter`, `battle_configuration/max_baby_parameter`, `battle_configuration/max_baby_third_parameter`) - `pc_maxstats(sd)` (replaces `pc_maxparameter(sd)`)
+    - `NaturalHealWeightRate` (replaces `battle_configuration/natural_heal_weight_rate`) - `pc_overhealweightrate(sd)` and the helper `pc_isoverhealweight(sd)` (replaces `pc_is50overweight(sd)`)
+  - The `MaxHP` field supports defining level ranges to make the parameter vary based on the character's level.
+  - Detailed documentation is available in [doc/unit_parameters_db.md](doc/unit_parameters_db.md)
+  - Additional upgrade notes including an upgrade cheatsheet can be reviewed in the pull request description at https://github.com/HerculesWS/Hercules/pull/3214
+
+### Changed
+
+- Changed the animation delay to be applied at castbegin instead of castend, to match official behavior. `skill_amotion_leniency` now defaults to 0 which offers a more accurate official behavior. Users that wish to block more speedhacks may still increase it. (#3187, issue #2703)
+- Changed the player's maximum HP to be capped differently based on the player's level (Renewal, episode 15.1). (part of #3214, related to issue #243)
+
+### Fixed
+
+- Fixed some (false positive) `sprintf()` overflow warnings. (#3212)
+
+### Removed
+
+- Removed the deprecated `LGTM` badge from the main README. (#3211)
+- Removed the following battle configuration settings, superseded by the unit parameters db - see above for details: (part of #3214)
+  - `battle_configuration/max_hp`
+  - `battle_configuration/max_third_aspd`
+  - Note: `battle_configuration/max_aspd` still exists but is only used for Homunculus and as a fallback for players whose job can't be determined
+  - `battle_configuration/max_extended_parameter`
+  - `battle_configuration/max_summoner_parameter`
+  - `battle_configuration/max_baby_parameter`
+  - `battle_configuration/max_baby_third_parameter`
+  - Note: `battle_configuration/max_parameter` and `battle_configuration/max_third_parameter` are retained since some logic still depends on them
+  - `battle_configuration/natural_heal_weight_rate`
+
 ## [v2023.05.10] `May 10 2023`
 
 ### Added
 
-- Added support to clone the definition of an item in the `item_db`. A cloned item inherits all the fields (except item ID and AegisName) of its original, allowing a compact definition with only the fields that differ. See the definition of `CloneItem` in `doc/item_db.txt` for details. (#3206)
+- Added support to clone the definition of an item in the `item_db`. A cloned item inherits all the fields (except item ID and AegisName) of its original, allowing a compact definition with only the fields that differ. See the definition of `CloneItem` in [doc/item_db.txt](doc/item_db.txt) for details. (#3206)
 - Added the script commands `openquestui()` and `opentipboxui()`. (#3201)
 
 ### Changed
@@ -138,9 +177,9 @@ Note: everything included in this release is part of PR #3198 which consists of 
 - Implemented the DynamicNPC Create request packets and the related script command `dynamicnpcresult()`. An example can be found in `npc/other/dynamicnpc_create.txt`. (#3192)
 - Implemented support for the GoldPC UI (a.k.a. Mileage), disabled by default, which can be enabled from `conf/map/battle/feature.conf` for packetver `20140611` and newer. (#3192)
   - The initial implementation includes two modes (single and double), configurable in `db/goldpc_db.conf`, and selectable in `feature.conf`.
-  - An example NPC can be found in `doc/sample/goldpc.txt`, demonstrating the use of the GoldPC system script commands (`setgoldpcmode()`).
+  - An example NPC can be found in [doc/sample/goldpc.txt](doc/sample/goldpc.txt), demonstrating the use of the GoldPC system script commands (`setgoldpcmode()`).
   - A custom GoldNPC NPC is spawned by players upon clicking the GoldPC button, see `npc/other/goldpc.txt`.
-  - Further documentation of the system is available in `doc/goldpc.md`.
+  - Further documentation of the system is available in [doc/goldpc.md](doc/goldpc.md).
 
 ### Changed
 
@@ -678,10 +717,10 @@ Note: everything included in this release is part of PR #3198 which consists of 
 
 ### Added
 
-- Implemented support for conditional comments in the script engine's parser, allowing to exclude blocks of code (including top-level commands) from parsing based on a condition, in a similar fashion to ifdef directives in the C preprocessor. See `doc/script_commands.txt` and the pull request description for detailed information on their use. (#3080)
+- Implemented support for conditional comments in the script engine's parser, allowing to exclude blocks of code (including top-level commands) from parsing based on a condition, in a similar fashion to ifdef directives in the C preprocessor. See [doc/script_commands.txt](doc/script_commands.txt) and the pull request description for detailed information on their use. (#3080)
 - Added a setting to prevent the GM administration NPCs from loading (leveraging conditional comments). (part of #3080)
   - See `script_configuration.load_gm_scripts` in `conf/map/script.conf`.
-  - The provided administrative NPCs have been updated to support this setting and third party scripters that want to do the same can put their administrative NPCs behind conditional comments controlled by the `LOADGMSCRIPTS` feature (see `doc/script_commands.txt` for details.
+  - The provided administrative NPCs have been updated to support this setting and third party scripters that want to do the same can put their administrative NPCs behind conditional comments controlled by the `LOADGMSCRIPTS` feature (see [doc/script_commands.txt](doc/script_commands.txt) for details.
 - Implemented the `bSubSkill` item bonus, reducing damage in percentage from the specified skill. (#2970)
 - Implemented the `bDropAddRace` item bonus, increasing item drop rate in percentage when killing monsters of the specified race. (part of #2970)
 - Implemented the Star Emperor and the Soul Reaper job classes and their respective skills. (#3030)
@@ -691,7 +730,7 @@ Note: everything included in this release is part of PR #3198 which consists of 
 - Implemented support for loading captcha images on server startup (#3064)
 - Implemented the Lapine Upgrade user interface. (#3068)
 - Exposed the former `rodex_sendmail_sub()` function as part of the script interface, as `script->buildin_rodex_sendmail_sub()`. (part of #3071)
-- Implemented a `checkhiding()` script command, returning true if a character is hidden (Hiding, Cloaking or Chase Walking but not GM Perfect Hide). See `doc/script_commands.txt` for details. (part of #3081)
+- Implemented a `checkhiding()` script command, returning true if a character is hidden (Hiding, Cloaking or Chase Walking but not GM Perfect Hide). See [doc/script_commands.txt](doc/script_commands.txt) for details. (part of #3081)
 
 ### Changed
 
@@ -1430,7 +1469,7 @@ Note: everything included in this release is part of PR #3198 which consists of 
 - Added the new pets (including the jRO exclusive ones) and their related items/monsters to the renewal database. (#2689)
 - Added constants `ALL_MOBS_NONBOSS`, `ALL_MOBS_BOSS`, `ALL_MOBS` for the special mob IDs for global skill assignment in the mob skill database. (part of #2691)
 - Added support for `__func__` on Windows, since it's now available in every supported compiler. (part of #2691)
-- Added documentation for the mob skill database. See `doc/mob_skill_db.conf`. (#2680)
+- Added documentation for the mob skill database. See [doc/mob_skill_db.md](doc/mob_skill_db.md). (#2680)
 - Added missing functions for the name ack packets for `BL_ITEM` and `BL_SKILL`. (part of #2695)
 - Added/updated packets and encryption keys for clients up to 2020-04-14. (#2695)
 - Added support for packets `ZC_LAPINEUPGRADE_OPEN`, `CZ_LAPINEUPGRADE_CLOSE` and `ZC_LAPINEUPGRADE_RESULT` and a placeholder for `CZ_LAPINEUPGRADE_MAKE_ITEM`. (part of #2695)
@@ -1491,7 +1530,7 @@ Note: everything included in this release is part of PR #3198 which consists of 
   - Added new field `Intimacy.StarvingDelay` to pet DB.
   - Added new field `Intimacy.StarvingDecrement` to pet DB.
   - Increased `MAX_MOB_DB` to 22000.
-  - Added pet DB documentation file. (`doc/pet_db.txt`)
+  - Added pet DB documentation file. ([doc/pet_db.txt](doc/pet_db.txt))
   - Removed fields from pet DB where default values can be used.
   - Added intimacy validation to pet DB `EquipScript` fields. This replaces the `pet_equip_min_friendly` battle config setting.
   - Adjusted `inter_pet_tosql()` and `inter_pet_fromsql()` functions to use prepared statements.
@@ -2125,7 +2164,7 @@ Note: everything included in this release is part of PR #3198 which consists of 
 ### Added
 
 - Added/updated packets, encryption keys and message tables for clients up to 2019-01-09. (#2339)
-- Added support for the barter type shops. See `sellitem()`, `NST_BARTER` and the demo scripts in `doc/sample/npc_trader_sample.txt` and `npc/custom/bartershop.txt`. (part of #2339)
+- Added support for the barter type shops. See `sellitem()`, `NST_BARTER` and the demo scripts in [doc/sample/npc_trader_sample.txt](doc/sample/npc_trader_sample.txt) and [npc/custom/bartershop.txt](npc/custom/bartershop.txt). (part of #2339)
 - Added the `countnameditem()` script command. (#2307)
 - Added/updated packets, encryption keys and message tables for clients up to 2019-01-30. (#2353)
 
@@ -2210,12 +2249,12 @@ Note: everything included in this release is part of PR #3198 which consists of 
 ### Changed
 
 - Made `getunits()` stop unnecessarily iterating when the maximum specified amount of units is reached. (#2105)
-- Updated the item bonus documentation, converted to the Markdown format in `doc/item_bonus.md`. (#2259)
+- Updated the item bonus documentation, converted to the Markdown format in [doc/item_bonus.md](doc/item_bonus.md). (#2259)
 - Improved the channel delay message to include the remaining time before a new message can be sent. (#2286)
 - Removed the unused `type` argument from `getnpcid()`. All the shipped scripts have been updated. (#2289)
 - Improved the `charlog` to include the stats, class, hair color and style whenever available. This affects the character selection and rename log entries, that had most fields zeroed before. (#2320)
-- Updated the quest variables documentation, converted to the Markdown format in `doc/quest_variables.md`. (#2256)
-- Updated the monster modes documentation, converted to the Markdown format in `doc/mob_db_mode_list.md`. (#2255)
+- Updated the quest variables documentation, converted to the Markdown format in [doc/quest_variables.md](doc/quest_variables.md). (#2256)
+- Updated the monster modes documentation, converted to the Markdown format in [doc/mob_db_mode_list.md](doc/mob_db_mode_list.md). (#2255)
 - Documented `flag` of the `status->heal()` function through the `enum status_heal_flag`. (part of #1215)
 - Added packet versions for all server types to the socket datasync validation. (part of #2321)
 
@@ -2773,6 +2812,7 @@ Note: everything included in this release is part of PR #3198 which consists of 
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2023.06.14]: https://github.com/HerculesWS/Hercules/compare/v2022.05.10...v2023.06.14
 [v2023.05.10]: https://github.com/HerculesWS/Hercules/compare/v2022.04.12...v2023.05.10
 [v2023.04.12]: https://github.com/HerculesWS/Hercules/compare/v2022.03.08...v2023.04.12
 [v2023.03.08]: https://github.com/HerculesWS/Hercules/compare/v2022.01.11...v2023.03.08
