@@ -3846,6 +3846,32 @@ bool HP_battle_config_read(const char *filename, bool imported) {
 	}
 	return retVal___;
 }
+void HP_battle_config_check_deprecated(const char *filename, struct config_t *config) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_battle_config_check_deprecated_pre > 0) {
+		void (*preHookFunc) (const char **filename, struct config_t **config);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_battle_config_check_deprecated_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_battle_config_check_deprecated_pre[hIndex].func;
+			preHookFunc(&filename, &config);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.battle.config_check_deprecated(filename, config);
+	}
+	if (HPMHooks.count.HP_battle_config_check_deprecated_post > 0) {
+		void (*postHookFunc) (const char *filename, struct config_t *config);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_battle_config_check_deprecated_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_battle_config_check_deprecated_post[hIndex].func;
+			postHookFunc(filename, config);
+		}
+	}
+	return;
+}
 void HP_battle_config_set_defaults(void) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_battle_config_set_defaults_pre > 0) {
@@ -94951,6 +94977,33 @@ unsigned int HP_status_get_base_maxhp(const struct map_session_data *sd, const s
 	}
 	return retVal___;
 }
+struct s_maxhp_entry* HP_status_get_maxhp_cap_entry(int classidx, int level) {
+	int hIndex = 0;
+	struct s_maxhp_entry* retVal___ = NULL;
+	if (HPMHooks.count.HP_status_get_maxhp_cap_entry_pre > 0) {
+		struct s_maxhp_entry* (*preHookFunc) (int *classidx, int *level);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_get_maxhp_cap_entry_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_status_get_maxhp_cap_entry_pre[hIndex].func;
+			retVal___ = preHookFunc(&classidx, &level);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.status.get_maxhp_cap_entry(classidx, level);
+	}
+	if (HPMHooks.count.HP_status_get_maxhp_cap_entry_post > 0) {
+		struct s_maxhp_entry* (*postHookFunc) (struct s_maxhp_entry* retVal___, int classidx, int level);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_get_maxhp_cap_entry_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_status_get_maxhp_cap_entry_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, classidx, level);
+		}
+	}
+	return retVal___;
+}
 unsigned int HP_status_get_base_maxsp(const struct map_session_data *sd, const struct status_data *st) {
 	int hIndex = 0;
 	unsigned int retVal___ = 0;
@@ -96109,6 +96162,166 @@ void HP_status_read_job_db_sub(int idx, const char *name, struct config_setting_
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_read_job_db_sub_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_status_read_job_db_sub_post[hIndex].func;
 			postHookFunc(idx, name, jdb);
+		}
+	}
+	return;
+}
+void HP_status_read_unit_params_db(void) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_status_read_unit_params_db_pre > 0) {
+		void (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_read_unit_params_db_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_status_read_unit_params_db_pre[hIndex].func;
+			preHookFunc();
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.status.read_unit_params_db();
+	}
+	if (HPMHooks.count.HP_status_read_unit_params_db_post > 0) {
+		void (*postHookFunc) (void);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_read_unit_params_db_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_status_read_unit_params_db_post[hIndex].func;
+			postHookFunc();
+		}
+	}
+	return;
+}
+bool HP_status_read_unit_params_db_sub(const char *name, struct config_setting_t *group, const char *source) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_status_read_unit_params_db_sub_pre > 0) {
+		bool (*preHookFunc) (const char **name, struct config_setting_t **group, const char **source);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_read_unit_params_db_sub_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_status_read_unit_params_db_sub_pre[hIndex].func;
+			retVal___ = preHookFunc(&name, &group, &source);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.status.read_unit_params_db_sub(name, group, source);
+	}
+	if (HPMHooks.count.HP_status_read_unit_params_db_sub_post > 0) {
+		bool (*postHookFunc) (bool retVal___, const char *name, struct config_setting_t *group, const char *source);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_read_unit_params_db_sub_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_status_read_unit_params_db_sub_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, name, group, source);
+		}
+	}
+	return retVal___;
+}
+bool HP_status_read_unit_params_db_maxhp(struct s_unit_params *entry, struct s_unit_params *inherited, struct config_setting_t *group, const char *source) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_status_read_unit_params_db_maxhp_pre > 0) {
+		bool (*preHookFunc) (struct s_unit_params **entry, struct s_unit_params **inherited, struct config_setting_t **group, const char **source);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_read_unit_params_db_maxhp_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_status_read_unit_params_db_maxhp_pre[hIndex].func;
+			retVal___ = preHookFunc(&entry, &inherited, &group, &source);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.status.read_unit_params_db_maxhp(entry, inherited, group, source);
+	}
+	if (HPMHooks.count.HP_status_read_unit_params_db_maxhp_post > 0) {
+		bool (*postHookFunc) (bool retVal___, struct s_unit_params *entry, struct s_unit_params *inherited, struct config_setting_t *group, const char *source);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_read_unit_params_db_maxhp_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_status_read_unit_params_db_maxhp_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, entry, inherited, group, source);
+		}
+	}
+	return retVal___;
+}
+int HP_status_maxhp_entry_compare(const void *entry1, const void *entry2) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_status_maxhp_entry_compare_pre > 0) {
+		int (*preHookFunc) (const void **entry1, const void **entry2);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_maxhp_entry_compare_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_status_maxhp_entry_compare_pre[hIndex].func;
+			retVal___ = preHookFunc(&entry1, &entry2);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.status.maxhp_entry_compare(entry1, entry2);
+	}
+	if (HPMHooks.count.HP_status_maxhp_entry_compare_post > 0) {
+		int (*postHookFunc) (int retVal___, const void *entry1, const void *entry2);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_maxhp_entry_compare_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_status_maxhp_entry_compare_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, entry1, entry2);
+		}
+	}
+	return retVal___;
+}
+bool HP_status_read_unit_params_db_additional(struct s_unit_params *entry, struct s_unit_params *inherited, struct config_setting_t *group, const char *source) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_status_read_unit_params_db_additional_pre > 0) {
+		bool (*preHookFunc) (struct s_unit_params **entry, struct s_unit_params **inherited, struct config_setting_t **group, const char **source);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_read_unit_params_db_additional_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_status_read_unit_params_db_additional_pre[hIndex].func;
+			retVal___ = preHookFunc(&entry, &inherited, &group, &source);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.status.read_unit_params_db_additional(entry, inherited, group, source);
+	}
+	if (HPMHooks.count.HP_status_read_unit_params_db_additional_post > 0) {
+		bool (*postHookFunc) (bool retVal___, struct s_unit_params *entry, struct s_unit_params *inherited, struct config_setting_t *group, const char *source);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_read_unit_params_db_additional_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_status_read_unit_params_db_additional_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, entry, inherited, group, source);
+		}
+	}
+	return retVal___;
+}
+void HP_status_unit_params_destroy(struct s_unit_params *entry) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_status_unit_params_destroy_pre > 0) {
+		void (*preHookFunc) (struct s_unit_params **entry);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_unit_params_destroy_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_status_unit_params_destroy_pre[hIndex].func;
+			preHookFunc(&entry);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.status.unit_params_destroy(entry);
+	}
+	if (HPMHooks.count.HP_status_unit_params_destroy_post > 0) {
+		void (*postHookFunc) (struct s_unit_params *entry);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_unit_params_destroy_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_status_unit_params_destroy_post[hIndex].func;
+			postHookFunc(entry);
 		}
 	}
 	return;

@@ -745,17 +745,12 @@ END_ZEROED_BLOCK;
 
 #define pc_isfalcon(sd)       ( (sd)->sc.option&OPTION_FALCON )
 #define pc_isinvisible(sd)    ( (sd)->sc.option&OPTION_INVISIBLE )
-#define pc_is50overweight(sd) ( (sd)->weight*100 >= (sd)->max_weight*battle->bc->natural_heal_weight_rate )
+#define pc_overhealweightrate(sd) ( status->dbs->unit_params[pc->class2idx((sd)->status.class)]->natural_heal_weight_rate )
+#define pc_isoverhealweight(sd) ( (sd)->weight * 100 >= (sd)->max_weight * status->dbs->unit_params[pc->class2idx((sd)->status.class)]->natural_heal_weight_rate )
 #define pc_is90overweight(sd) ( (sd)->weight*10 >= (sd)->max_weight*9 )
-#define pc_maxparameter(sd)   ( \
-	((sd)->job & MAPID_BASEMASK) == MAPID_SUMMONER ? battle->bc->max_summoner_parameter : \
-	( ((sd)->job & MAPID_UPPERMASK) == MAPID_KAGEROUOBORO \
-	 || ((sd)->job & MAPID_UPPERMASK) == MAPID_REBELLION \
-	 || ((sd)->job & MAPID_THIRDMASK) == MAPID_SUPER_NOVICE_E \
-	) ? battle->bc->max_extended_parameter : ((sd)->job & JOBL_THIRD) ? \
-	    (((sd)->job & JOBL_BABY) ? battle->bc->max_baby_third_parameter : battle->bc->max_third_parameter ) : \
-	    (((sd)->job & JOBL_BABY) ? battle->bc->max_baby_parameter : battle->bc->max_parameter) \
-	)
+#define pc_maxhp_cap(sd) ( status->get_maxhp_cap_entry(pc->class2idx((sd)->status.class), (sd)->status.base_level)->value )
+#define pc_max_aspd(sd) ( status->dbs->unit_params[pc->class2idx((sd)->status.class)]->max_aspd )
+#define pc_maxstats(sd)   ( status->dbs->unit_params[pc->class2idx((sd)->status.class)]->max_stats )
 /// Generic check for mounts
 #define pc_hasmount(sd)       ( (sd)->sc.option&(OPTION_RIDING|OPTION_WUGRIDER|OPTION_DRAGON|OPTION_MADOGEAR) )
 /// Knight classes Peco / Gryphon

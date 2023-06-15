@@ -171,6 +171,18 @@ static void initDummyData(void)
 	status->dummy.dmotion = 2000;
 	status->dummy.ele_lv = 1; //Min elemental level.
 	status->dummy.mode = MD_CANMOVE;
+
+	memset(&status->dummy_unit_params, 0, sizeof(status->dummy_unit_params));
+	strcpy(status->dummy_unit_params.name, "");
+	status->dummy_unit_params.natural_heal_weight_rate = 50;
+	status->dummy_unit_params.max_aspd = battle_config.max_aspd;
+
+	CREATE(status->dummy_unit_params.maxhp, struct s_maxhp_entry, 1);
+	status->dummy_unit_params.maxhp[0].max_level = MAX_LEVEL;
+	status->dummy_unit_params.maxhp[0].value = 1;
+	status->dummy_unit_params.maxhp_size = 1;
+
+	status->dummy_unit_params.max_stats = 99;
 }
 
 //For copying a status_data structure from b to a, without overwriting current Hp and Sp
@@ -1362,6 +1374,21 @@ static unsigned int status_get_base_maxhp(const struct map_session_data *sd, con
 	return (unsigned int)cap_value(val,0,UINT_MAX);
 }
 
+static struct s_maxhp_entry *status_get_maxhp_cap_entry(int class_idx, int level)
+{
+	struct s_unit_params *params = status->dbs->unit_params[class_idx];
+
+	int i;
+	ARR_FIND(0, params->maxhp_size, i, (level <= params->maxhp[i].max_level));
+	// Not finding a value would mean that the table did not get expanded (Which would be a bug)
+	Assert_retr(
+		(params->maxhp_size > 0 ? &(params->maxhp[params->maxhp_size - 1]) : &(status->dummy_unit_params.maxhp[0])),
+		i < params->maxhp_size
+	);
+
+	return &(params->maxhp[i]);
+}
+
 /**
  * Calculates the HP that a character will have after death, on respawn.
  *
@@ -1922,8 +1949,9 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 	if(battle_config.hp_rate != 100)
 		bstatus->max_hp = APPLY_RATE(bstatus->max_hp, battle_config.hp_rate);
 
-	if(bstatus->max_hp > (unsigned int)battle_config.max_hp)
-		bstatus->max_hp = battle_config.max_hp;
+	int maxhp_cap = pc_maxhp_cap(sd);
+	if(bstatus->max_hp > (unsigned int) maxhp_cap)
+		bstatus->max_hp = maxhp_cap;
 	else if(!bstatus->max_hp)
 		bstatus->max_hp = 1;
 
@@ -2092,7 +2120,7 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 
 	// Basic ASPD value
 	i = status->base_amotion_pc(sd,bstatus);
-	bstatus->amotion = cap_value(i,((sd->job & JOBL_THIRD) != 0 ? battle_config.max_third_aspd : battle_config.max_aspd),2000);
+	bstatus->amotion = cap_value(i, pc_max_aspd(sd), 2000);
 
 	// Relative modifiers from passive skills
 #ifndef RENEWAL_ASPD
@@ -3209,8 +3237,9 @@ static void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag
 
 			st->max_hp = status->calc_maxhp(bl, sc, st->max_hp);
 
-			if( st->max_hp > (unsigned int)battle_config.max_hp )
-				st->max_hp = (unsigned int)battle_config.max_hp;
+			int maxhp_cap = pc_maxhp_cap(sd);
+			if (st->max_hp > (unsigned int)maxhp_cap)
+				st->max_hp = (unsigned int)maxhp_cap;
 		} else {
 			st->max_hp = status->calc_maxhp(bl, sc, bst->max_hp);
 		}
@@ -3314,7 +3343,7 @@ static void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag
 #endif
 			amotion = status->calc_fix_aspd(bl, sc, amotion);
 			if (sd != NULL) {
-				st->amotion = cap_value(amotion, ((sd->job & JOBL_THIRD) != 0 ? battle_config.max_third_aspd : battle_config.max_aspd), 2000);
+				st->amotion = cap_value(amotion, pc_max_aspd(sd), 2000);
 			} else {
 				st->amotion = cap_value(amotion, battle_config.max_aspd, 2000);
 			}
@@ -13510,6 +13539,8 @@ static void status_read_job_db_sub(int idx, const char *name, struct config_sett
 			status->dbs->max_weight_base[idx] = status->dbs->max_weight_base[iidx];
 			memcpy(&status->dbs->aspd_base[idx], &status->dbs->aspd_base[iidx], sizeof(status->dbs->aspd_base[iidx]));
 
+			status->dbs->unit_params[idx] = status->dbs->unit_params[iidx];
+
 			for (i = 1; i <= MAX_LEVEL && status->dbs->HP_table[iidx][i]; i++) {
 				status->dbs->HP_table[idx][i] = status->dbs->HP_table[iidx][i];
 			}
@@ -13521,8 +13552,13 @@ static void status_read_job_db_sub(int idx, const char *name, struct config_sett
 			} else {
 				avg_increment = 5;
 			}
+
+			struct s_maxhp_entry *maxhp = status->get_maxhp_cap_entry(idx, 1);
 			for ( ; i <= pc->dbs->class_exp_table[idx][CLASS_EXP_TABLE_BASE]->max_level; i++) {
-				status->dbs->HP_table[idx][i] = min(base + avg_increment * i, battle_config.max_hp);
+				if (i > maxhp->max_level)
+					maxhp = status->get_maxhp_cap_entry(idx, i);
+
+				status->dbs->HP_table[idx][i] = min(base + avg_increment * i, maxhp->value);
 			}
 
 			for (i = 1; i <= MAX_LEVEL && status->dbs->SP_table[iidx][i]; i++) {
@@ -13541,6 +13577,25 @@ static void status_read_job_db_sub(int idx, const char *name, struct config_sett
 			}
 		}
 	}
+
+	if (libconfig->setting_lookup_string(jdb, "ParametersGroup", &str) != 0) {
+		int i = 0;
+		ARR_FIND(0, VECTOR_LENGTH(status->unit_params_groups), i, strcmp(str, VECTOR_INDEX(status->unit_params_groups, i).name) == 0);
+
+		struct s_unit_params *params = NULL;
+		if (i < VECTOR_LENGTH(status->unit_params_groups)) {
+			params = &VECTOR_INDEX(status->unit_params_groups, i);
+		} else {
+			ShowError("%s: Unknown Parameters Group '%s' provided for entry '%s', using dummy data...\n", __func__, str, name);
+			params = &status->dummy_unit_params;
+		}
+
+		status->dbs->unit_params[idx] = params;
+	} else if (status->dbs->unit_params[idx] == NULL || status->dbs->unit_params[idx] == &status->dummy_unit_params) {
+		ShowError("%s: ParametersGroup setting not found for entry '%s', using dummy data...\n", __func__, name);
+		status->dbs->unit_params[idx] = &status->dummy_unit_params;
+	}
+
 	if ((temp = libconfig->setting_get_member(jdb, "InheritHP"))) {
 		int nidx = 0;
 		const char *iname;
@@ -13562,8 +13617,13 @@ static void status_read_job_db_sub(int idx, const char *name, struct config_sett
 			} else {
 				avg_increment = 5;
 			}
+
+			struct s_maxhp_entry *maxhp = status->get_maxhp_cap_entry(idx, 1);
 			for ( ; i <= pc->dbs->class_exp_table[idx][CLASS_EXP_TABLE_BASE]->max_level; i++) {
-				status->dbs->HP_table[idx][i] = min(base + avg_increment * i, battle_config.max_hp);
+				if (i > maxhp->max_level)
+					maxhp = status->get_maxhp_cap_entry(idx, i);
+
+				status->dbs->HP_table[idx][i] = min(base + avg_increment * i, maxhp->value);
 			}
 		}
 	}
@@ -13618,9 +13678,14 @@ static void status_read_job_db_sub(int idx, const char *name, struct config_sett
 	if ((temp = libconfig->setting_get_member(jdb, "HPTable"))) {
 		int level = 0, avg_increment, base;
 		struct config_setting_t *hp = NULL;
+		struct s_maxhp_entry *maxhp = status->get_maxhp_cap_entry(idx, 1);
+
 		while (level <= MAX_LEVEL && (hp = libconfig->setting_get_elem(temp, level)) != NULL) {
+			if (level > maxhp->max_level)
+				maxhp = status->get_maxhp_cap_entry(idx, level);
+
 			i32 = libconfig->setting_get_int(hp);
-			status->dbs->HP_table[idx][++level] = min(i32, battle_config.max_hp);
+			status->dbs->HP_table[idx][++level] = min(i32, maxhp->value);
 		}
 		base = (level > 0 ? status->dbs->HP_table[idx][1] : 35); // Safe value if none are specified
 		if (level > 2) {
@@ -13631,7 +13696,10 @@ static void status_read_job_db_sub(int idx, const char *name, struct config_sett
 			avg_increment = 5;
 		}
 		for (++level; level <= pc->dbs->class_exp_table[idx][CLASS_EXP_TABLE_BASE]->max_level; ++level) { /* limit only to possible maximum level of the given class */
-			status->dbs->HP_table[idx][level] = min(base + avg_increment * level, battle_config.max_hp); /* some are still empty? then let's use the average increase */
+			if (level > maxhp->max_level)
+				maxhp = status->get_maxhp_cap_entry(idx, level);
+
+			status->dbs->HP_table[idx][level] = min(base + avg_increment * level, maxhp->value); /* some are still empty? then let's use the average increase */
 		}
 	}
 
@@ -13965,11 +14033,266 @@ static bool status_read_scdb_libconfig_sub_skill(struct config_setting_t *it, in
 }
 
 /**
+ * For plugins, reads additional data from a single group entry from unit parameters database
+ *
+ * @param entry unit parameter entry being created (already filled by original loading function)
+ * @param inherited unit parameter this entry is inheriting from
+ * @param group libconfig's group entry
+ * @param source source file name
+ * @return true if data was successfuly read, false otherwise.
+ *         false will prevent this entry from being loaded into the db and alert about errors.
+ */
+static bool status_read_unit_params_db_additional(struct s_unit_params *entry, struct s_unit_params *inherited, struct config_setting_t *group, const char *source)
+{
+	// to be used by plugins
+	return true;
+}
+
+static int status_maxhp_entry_compare(const void *entry1, const void *entry2)
+{
+	nullpo_ret(entry1);
+	nullpo_ret(entry2);
+
+	struct s_maxhp_entry *entry1_ = (struct s_maxhp_entry *) entry1;
+	struct s_maxhp_entry *entry2_ = (struct s_maxhp_entry *) entry2;
+
+	return entry1_->max_level - entry2_->max_level;
+}
+
+/**
+ * Reads unit parameters database MaxHP field
+ *
+ * @param entry unit parameter entry being created (already filled by original loading function)
+ * @param inherited unit parameter this entry is inheriting from
+ * @param group libconfig's group entry
+ * @param source source file name
+ * @return true if data was successfuly read, false otherwise.
+ */
+static bool status_read_unit_params_db_maxhp(struct s_unit_params *entry, struct s_unit_params *inherited, struct config_setting_t *group, const char *source)
+{
+	nullpo_retr(false, entry);
+	nullpo_retr(false, group);
+	nullpo_retr(false, source);
+
+	int i32 = 0;
+	struct config_setting_t *conf;
+
+	if (libconfig->setting_lookup_int(group, "MaxHP", &i32) == CONFIG_TRUE) {
+		entry->maxhp_size = 1;
+		CREATE(entry->maxhp, struct s_maxhp_entry, 1);
+		entry->maxhp[0].max_level = MAX_LEVEL;
+		entry->maxhp[0].value = i32;
+	} else if ((conf = libconfig->setting_get_member(group, "MaxHP")) != NULL && config_setting_is_group(conf)) {
+		int max_lv = 0, max_lv_idx = -1;
+
+		struct config_setting_t *lv_conf = NULL;
+		int i = 0;
+		while ((lv_conf = libconfig->setting_get_elem(conf, i++)) != NULL) {
+			const char *lv_str = config_setting_name(lv_conf);
+			int lv;
+
+			if (sscanf(lv_str, "%*2s%3d", &lv) != 1) {
+				ShowError("%s: Could not read config MaxHP '%s' in entry '%s' in file '%s'. Is it in Lv[number] format? Skipping level...\n",
+					__func__, lv_str, entry->name, source);
+				continue;
+			}
+
+			RECREATE(entry->maxhp, struct s_maxhp_entry, ++entry->maxhp_size);
+
+			int new_idx = entry->maxhp_size - 1;
+			entry->maxhp[new_idx].max_level = lv;
+			entry->maxhp[new_idx].value = libconfig->setting_get_int(lv_conf);
+
+			if (max_lv < lv) {
+				max_lv = lv;
+				max_lv_idx = new_idx;
+			}
+		}
+
+		if (max_lv_idx == -1) {
+			ShowError("%s: MaxHP setting has no level ranges for entry '%s' in file '%s', skipping...\n", __func__, entry->name, source);
+			return false;
+		}
+
+		if (max_lv < MAX_LEVEL)
+			entry->maxhp[max_lv_idx].max_level = MAX_LEVEL; // 'extend' highest level all the way to cap
+
+		qsort(entry->maxhp, entry->maxhp_size, sizeof(struct s_maxhp_entry), status->maxhp_entry_compare);
+	} else if (inherited != NULL) {
+		CREATE(entry->maxhp, struct s_maxhp_entry, inherited->maxhp_size);
+		memcpy(entry->maxhp, inherited->maxhp, sizeof(struct s_maxhp_entry) * inherited->maxhp_size);
+		entry->maxhp_size = inherited->maxhp_size;
+	} else {
+		ShowError("%s: MaxHP setting not found for entry '%s' in file '%s', skipping...\n", __func__, entry->name, source);
+		return false;
+	}
+
+	for (int i = 0; i < entry->maxhp_size - 1; ++i) {
+		if (entry->maxhp[i].max_level == entry->maxhp[i + 1].max_level) {
+			ShowWarning("%s: There are multiple entries for MaxHP for Lv '%d' in entry '%s' in file '%s'. Only one will be used.\n",
+				__func__, entry->maxhp[i].max_level, entry->name, source);
+		}
+	}
+
+	return true;
+}
+
+/**
+ * Reads a single group entry from unit parameters database
+ *
+ * @param name group name
+ * @param group libconfig's group entry
+ * @param source source file name
+ * @return true if data was successfuly read, false otherwise
+ */
+static bool status_read_unit_params_db_sub(const char *name, struct config_setting_t *group, const char *source)
+{
+	nullpo_retr(false, name);
+	nullpo_retr(false, group);
+
+	struct s_unit_params entry = { 0 };
+
+	const char *str = NULL;
+	int i32 = 0;
+	struct s_unit_params *inherited = NULL;
+
+	if (libconfig->setting_lookup_string(group, "Inherit", &str)) {
+		int i = 0;
+		ARR_FIND(0, VECTOR_LENGTH(status->unit_params_groups), i, strcmp(str, VECTOR_INDEX(status->unit_params_groups, i).name) == 0);
+
+		if (i == VECTOR_LENGTH(status->unit_params_groups)) {
+			ShowError("%s: Could not find group '%s' to inherit from in entry '%s'. Skipping entry...\n", __func__, str, name);
+			return false;
+		}
+
+		inherited = &VECTOR_INDEX(status->unit_params_groups, i);
+		memcpy(&entry, inherited, sizeof(entry));
+		entry.maxhp = NULL;
+		entry.maxhp_size = 0;
+	}
+
+	// Set name after inherit or it will be overriden
+	safestrncpy(entry.name, name, sizeof(entry.name));
+
+	if (!status->read_unit_params_db_maxhp(&entry, inherited, group, source)) {
+		status->unit_params_destroy(&entry);
+		return false;
+	}
+
+	if (libconfig->setting_lookup_int(group, "NaturalHealWeightRate", &i32) == CONFIG_TRUE) {
+		int final_rate = cap_value(i32, 1, 101);
+
+		if (final_rate != i32) {
+			ShowError("%s: Invalid NaturalHealWeightRate setting found for entry '%s' in file '%s'. NaturalHealWeightRate must be between 1 and 101, '%d' found. Changing to 50...\n", __func__, entry.name, source, i32);
+			final_rate = 50;
+		}
+
+		entry.natural_heal_weight_rate = final_rate;
+	} else if (inherited != NULL) {
+		entry.natural_heal_weight_rate = inherited->natural_heal_weight_rate;
+	} else {
+		ShowWarning("%s: NaturalHealWeightRate setting not found for entry '%s' in file '%s', defaulting to 50...\n", __func__, entry.name, source);
+		entry.natural_heal_weight_rate = 50;
+	}
+
+	// battle_config.max_aspd is already a motion value (e.g. aspd = 190 -> amotion = 100), so we revert it for display purposes.
+	int fallback_aspd = (2000 - battle_config.max_aspd) / 10;
+	if (libconfig->setting_lookup_int(group, "MaxASPD", &i32) == CONFIG_TRUE) {
+		int final_aspd = cap_value(i32, 100, 199);
+
+		if (final_aspd != i32) {
+			ShowError("%s: Invalid MaxASPD setting found for entry '%s' in file '%s'. MaxASPD must be between 100 and 199, '%d' found. Changing to %d...\n", __func__, entry.name, source, i32, fallback_aspd);
+			final_aspd = fallback_aspd;
+		}
+
+		entry.max_aspd = 2000 - final_aspd * 10;
+	} else if (inherited != NULL) {
+		entry.max_aspd = inherited->max_aspd;
+	} else {
+		ShowWarning("%s: MaxASPD setting not found for entry '%s' in file '%s', defaulting to %d...\n", __func__, entry.name, source, fallback_aspd);
+		entry.max_aspd = battle_config.max_aspd;
+	}
+
+	if (libconfig->setting_lookup_int(group, "MaxStats", &i32) == CONFIG_TRUE) {
+		int final_stats = cap_value(i32, 10, 10000);
+
+		if (final_stats != i32) {
+			ShowError("%s: Invalid MaxStats setting found for entry '%s' in file '%s'. MaxStats must be between 10 and 10,000, '%d' found. Changing to 99...\n", __func__, entry.name, source, i32);
+			final_stats = 99;
+		}
+
+		entry.max_stats = final_stats;
+	} else if (inherited != NULL) {
+		entry.max_stats = inherited->max_stats;
+	} else {
+		ShowWarning("%s: MaxStats setting not found for entry '%s' in file '%s', defaulting to 99...\n", __func__, entry.name, source);
+		entry.max_stats = 99;
+	}
+
+	if (!status->read_unit_params_db_additional(&entry, inherited, group, source)) {
+		status->unit_params_destroy(&entry);
+		return false;
+	}
+
+	VECTOR_ENSURE(status->unit_params_groups, 1, 1);
+	VECTOR_PUSH(status->unit_params_groups, entry);
+
+	return true;
+}
+
+/**
+ * Reads unit parameters database
+ */
+static void status_read_unit_params_db(void)
+{
+	VECTOR_INIT(status->unit_params_groups);
+
+	char config_filename[256];
+	libconfig->format_db_path(DBPATH"unit_parameters_db.conf", config_filename, sizeof(config_filename));
+
+	struct config_t param_db_conf;
+	if (!libconfig->load_file(&param_db_conf, config_filename))
+		return;
+
+	int i = 0;
+	struct config_setting_t *group = NULL;
+	bool result = true;
+	while ((group = libconfig->setting_get_elem(param_db_conf.root, i++))) {
+		const char *name = config_setting_name(group);
+
+		if (!status->read_unit_params_db_sub(name, group, config_filename))
+			result = false;
+	}
+
+	if (!result)
+		ShowWarning("There were errors while reading '"CL_WHITE"%s"CL_RESET"'. Some entries may have been skipped. The logs above this line should have more information.\n", config_filename);
+
+	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", i, config_filename);
+	libconfig->destroy(&param_db_conf);
+}
+
+/**
+ * Perform the required cleanup inside a unit parameters db entry.
+ * @param entry the entry to have its internal content cleared
+ */
+static void status_unit_params_destroy(struct s_unit_params *entry)
+{
+	nullpo_retv(entry);
+
+	if (entry->maxhp != NULL) {
+		aFree(entry->maxhp);
+		entry->maxhp = NULL;
+		entry->maxhp_size = 0;
+	}
+}
+
+/**
  * Read status db
  * job1.txt
  * job2.txt
  * size_fixe.txt
  * refine_db.txt
+ * unit_parameters_db.conf
  **/
 static int status_readdb(void)
 {
@@ -14003,6 +14326,7 @@ static int status_readdb(void)
 	sv->readdb(map->db_path, "job_db2.txt",         ',', 1,                 1+MAX_LEVEL,       -1,                       status->readdb_job2);
 	sv->readdb(map->db_path, DBPATH"size_fix.txt", ',', MAX_SINGLE_WEAPON_TYPE, MAX_SINGLE_WEAPON_TYPE, ARRAYLENGTH(status->dbs->atkmods), status->readdb_sizefix);
 	status->read_scdb_libconfig();
+	status->read_unit_params_db();
 	status->read_job_db();
 
 	pc->validate_levels();
@@ -14033,6 +14357,12 @@ static int do_init_status(bool minimal)
 static void do_final_status(void)
 {
 	ers_destroy(status->data_ers);
+
+	status->unit_params_destroy(&status->dummy_unit_params);
+	for (int i = 0; i < VECTOR_LENGTH(status->unit_params_groups); ++i)
+		status->unit_params_destroy(&VECTOR_INDEX(status->unit_params_groups, i));
+
+	VECTOR_CLEAR(status->unit_params_groups);
 }
 
 /*=====================================
@@ -14056,6 +14386,7 @@ void status_defaults(void)
 
 	status->data_ers = NULL;
 	memset(&status->dummy, 0, sizeof(status->dummy));
+	memset(&status->dummy_unit_params, 0, sizeof(status->dummy_unit_params));
 	status->natural_heal_prev_tick = 0;
 	status->natural_heal_diff_tick = 0;
 	/* funcs */
@@ -14165,6 +14496,7 @@ void status_defaults(void)
 	status->base_amotion_pc = status_base_amotion_pc;
 	status->base_atk = status_base_atk;
 	status->get_base_maxhp = status_get_base_maxhp;
+	status->get_maxhp_cap_entry = status_get_maxhp_cap_entry;
 	status->get_base_maxsp = status_get_base_maxsp;
 	status->get_restart_hp = status_get_restart_hp;
 	status->get_restart_sp = status_get_restart_sp;
@@ -14210,6 +14542,12 @@ void status_defaults(void)
 	status->read_scdb_libconfig_sub_skill = status_read_scdb_libconfig_sub_skill;
 	status->read_job_db = status_read_job_db;
 	status->read_job_db_sub = status_read_job_db_sub;
+	status->read_unit_params_db = status_read_unit_params_db;
+	status->read_unit_params_db_sub = status_read_unit_params_db_sub;
+	status->maxhp_entry_compare = status_maxhp_entry_compare;
+	status->read_unit_params_db_maxhp = status_read_unit_params_db_maxhp;
+	status->read_unit_params_db_additional = status_read_unit_params_db_additional;
+	status->unit_params_destroy = status_unit_params_destroy;
 	status->copy = status_copy;
 	status->base_matk_min = status_base_matk_min;
 	status->base_matk_max = status_base_matk_max;

@@ -16155,7 +16155,7 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 			}
 			break;
 		case ST_RECOV_WEIGHT_RATE:
-			if(battle_config.natural_heal_weight_rate <= 100 && sd->weight*100/sd->max_weight >= (unsigned int)battle_config.natural_heal_weight_rate) {
+			if (pc_overhealweightrate(sd) <= 100 && sd->weight * 100 / sd->max_weight >= pc_overhealweightrate(sd)) {
 				clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
 				return 0;
 			}
@@ -22907,11 +22907,11 @@ static void skill_validate_hp_cost(struct config_setting_t *conf, struct s_skill
 			int hp_cost;
 
 			if (libconfig->setting_lookup_int(t, lv, &hp_cost) == CONFIG_TRUE) {
-				if (hp_cost >= 0 && hp_cost <= battle_config.max_hp)
+				if (hp_cost >= 0)
 					sk->hp[i] = hp_cost;
 				else
-					ShowWarning("%s: Invalid HP cost %d specified in level %d for skill ID %d in %s! Minimum is 0, maximum is %d. Defaulting to 0...\n",
-						    __func__, hp_cost, i + 1, sk->nameid, conf->file, battle_config.max_hp);
+					ShowWarning("%s: Invalid HP cost %d specified in level %d for skill ID %d in %s! Minimum is 0. Defaulting to 0...\n",
+						    __func__, hp_cost, i + 1, sk->nameid, conf->file);
 			}
 		}
 
@@ -22921,11 +22921,11 @@ static void skill_validate_hp_cost(struct config_setting_t *conf, struct s_skill
 	int hp_cost;
 
 	if (libconfig->setting_lookup_int(conf, "HPCost", &hp_cost) == CONFIG_TRUE) {
-		if (hp_cost >= 0 && hp_cost <= battle_config.max_hp)
+		if (hp_cost >= 0)
 			skill->level_set_value(sk->hp, hp_cost);
 		else
-			ShowWarning("%s: Invalid HP cost %d specified for skill ID %d in %s! Minimum is 0, maximum is %d. Defaulting to 0...\n",
-				    __func__, hp_cost, sk->nameid, conf->file, battle_config.max_hp);
+			ShowWarning("%s: Invalid HP cost %d specified for skill ID %d in %s! Minimum is 0. Defaulting to 0...\n",
+				    __func__, hp_cost, sk->nameid, conf->file);
 	}
 }
 

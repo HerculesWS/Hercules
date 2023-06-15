@@ -252,14 +252,12 @@ struct Battle_Config {
 	int natural_healsp_interval;
 	int natural_heal_cap;
 	int natural_heal_skill_interval;
-	int natural_heal_weight_rate;
 	int arrow_decrement;
 	int max_aspd;
 	int max_walk_speed; //Maximum walking speed after buffs [Skotlex]
-	int max_hp;
 	int max_sp;
 	int max_lv, aura_lv;
-	int max_parameter, max_baby_parameter;
+	int max_parameter;
 	int max_cart_weight;
 	int skill_log;
 	int battle_log;
@@ -497,10 +495,7 @@ struct Battle_Config {
 
 	// rAthena
 	int max_third_parameter;
-	int max_baby_third_parameter;
-	int max_extended_parameter;
 	int atcommand_max_stat_bypass;
-	int max_third_aspd;
 	int vcast_stat_scale;
 
 	int mvp_tomb_enabled;
@@ -567,7 +562,6 @@ struct Battle_Config {
 
 	int bow_unequip_arrow;
 
-	int max_summoner_parameter; // Summoner Max Stats
 	int mvp_exp_reward_message;
 
 	int mob_eye_range_bonus; //Vulture's Eye and Snake's Eye range bonus
@@ -778,6 +772,7 @@ struct battle_interface {
 	int (*calc_drain) (int64 damage, int rate, int per);
 	/* battle_config */
 	bool (*config_read) (const char *filename, bool imported);
+	void (*config_check_deprecated) (const char *filename, struct config_t *config);
 	void (*config_set_defaults) (void);
 	bool (*config_set_value_sub) (int index, int value);
 	bool (*config_set_value) (const char *param, const char *value);
