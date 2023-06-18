@@ -24327,80 +24327,35 @@ static int skill_validate_unit_flag_sub(const char *type, bool on, struct s_skil
 	nullpo_retr(1, type);
 	nullpo_retr(1, sk);
 
-	if (strcmpi(type, "UF_DEFNOTENEMY") == 0) {
-		if (on)
-			sk->unit_flag |= UF_DEFNOTENEMY;
-		else
-			sk->unit_flag &= ~UF_DEFNOTENEMY;
-	} else if (strcmpi(type, "UF_NOREITERATION") == 0) {
-		if (on)
-			sk->unit_flag |= UF_NOREITERATION;
-		else
-			sk->unit_flag &= ~UF_NOREITERATION;
-	} else if (strcmpi(type, "UF_NOFOOTSET") == 0) {
-		if (on)
-			sk->unit_flag |= UF_NOFOOTSET;
-		else
-			sk->unit_flag &= ~UF_NOFOOTSET;
-	} else if (strcmpi(type, "UF_NOOVERLAP") == 0) {
-		if (on)
-			sk->unit_flag |= UF_NOOVERLAP;
-		else
-			sk->unit_flag &= ~UF_NOOVERLAP;
-	} else if (strcmpi(type, "UF_PATHCHECK") == 0) {
-		if (on)
-			sk->unit_flag |= UF_PATHCHECK;
-		else
-			sk->unit_flag &= ~UF_PATHCHECK;
-	} else if (strcmpi(type, "UF_NOPC") == 0) {
-		if (on)
-			sk->unit_flag |= UF_NOPC;
-		else
-			sk->unit_flag &= ~UF_NOPC;
-	} else if (strcmpi(type, "UF_NOMOB") == 0) {
-		if (on)
-			sk->unit_flag |= UF_NOMOB;
-		else
-			sk->unit_flag &= ~UF_NOMOB;
-	} else if (strcmpi(type, "UF_SKILL") == 0) {
-		if (on)
-			sk->unit_flag |= UF_SKILL;
-		else
-			sk->unit_flag &= ~UF_SKILL;
-	} else if (strcmpi(type, "UF_DANCE") == 0) {
-		if (on)
-			sk->unit_flag |= UF_DANCE;
-		else
-			sk->unit_flag &= ~UF_DANCE;
-	} else if (strcmpi(type, "UF_ENSEMBLE") == 0) {
-		if (on)
-			sk->unit_flag |= UF_ENSEMBLE;
-		else
-			sk->unit_flag &= ~UF_ENSEMBLE;
-	} else if (strcmpi(type, "UF_SONG") == 0) {
-		if (on)
-			sk->unit_flag |= UF_SONG;
-		else
-			sk->unit_flag &= ~UF_SONG;
-	} else if (strcmpi(type, "UF_DUALMODE") == 0) {
-		if (on)
-			sk->unit_flag |= UF_DUALMODE;
-		else
-			sk->unit_flag &= ~UF_DUALMODE;
-	} else if (strcmpi(type, "UF_RANGEDSINGLEUNIT") == 0) {
-		if (on)
-			sk->unit_flag |= UF_RANGEDSINGLEUNIT;
-		else
-			sk->unit_flag &= ~UF_RANGEDSINGLEUNIT;
-	}
-	else if (strcmpi(type, "UF_REMOVEDBYFIRERAIN") == 0) {
-		if (on)
-			sk->unit_flag |= UF_REMOVEDBYFIRERAIN;
-		else
-			sk->unit_flag &= ~UF_REMOVEDBYFIRERAIN;
-	} else {
+	struct {
+		const char *name;
+		int id;
+	} flag_list[] = {
+		{ "UF_DEFNOTENEMY", UF_DEFNOTENEMY },
+		{ "UF_NOREITERATION", UF_NOREITERATION },
+		{ "UF_NOFOOTSET", UF_NOFOOTSET },
+		{ "UF_NOOVERLAP", UF_NOOVERLAP },
+		{ "UF_PATHCHECK", UF_PATHCHECK },
+		{ "UF_NOPC", UF_NOPC },
+		{ "UF_NOMOB", UF_NOMOB },
+		{ "UF_SKILL", UF_SKILL },
+		{ "UF_DANCE", UF_DANCE },
+		{ "UF_ENSEMBLE", UF_ENSEMBLE },
+		{ "UF_SONG", UF_SONG },
+		{ "UF_DUALMODE", UF_DUALMODE },
+		{ "UF_RANGEDSINGLEUNIT", UF_RANGEDSINGLEUNIT },
+		{ "UF_REMOVEDBYFIRERAIN", UF_REMOVEDBYFIRERAIN },
+	};
+
+	int i = 0;
+	ARR_FIND(0, ARRAYLENGTH(flag_list), i, strcmp(type, flag_list[i].name) == 0);
+	if (i == ARRAYLENGTH(flag_list))
 		return 1;
-	}
+
+	if (on)
+		sk->unit_flag |= flag_list[i].id;
+	else
+		sk->unit_flag &= ~flag_list[i].id;
 
 	return 0;
 }
