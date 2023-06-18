@@ -21927,159 +21927,58 @@ static void skill_validate_skillinfo(struct config_setting_t *conf, struct s_ski
 		struct config_setting_t *tt;
 		int i = 0;
 
+		struct {
+			const char *name;
+			int id;
+		} info_list[] = {
+			{ "None", INF2_NONE },
+			{ "Quest", INF2_QUEST_SKILL },
+			{ "NPC", INF2_NPC_SKILL },
+			{ "Wedding", INF2_WEDDING_SKILL },
+			{ "Spirit", INF2_SPIRIT_SKILL },
+			{ "Guild", INF2_GUILD_SKILL },
+			{ "Song", INF2_SONG_DANCE },
+			{ "Ensemble", INF2_ENSEMBLE_SKILL },
+			{ "Trap", INF2_TRAP },
+			{ "TargetSelf", INF2_TARGET_SELF },
+			{ "NoCastSelf", INF2_NO_TARGET_SELF },
+			{ "PartyOnly", INF2_PARTY_ONLY },
+			{ "GuildOnly", INF2_GUILD_ONLY },
+			{ "NoEnemy", INF2_NO_ENEMY },
+			{ "IgnoreLandProtector", INF2_NOLP },
+			{ "Chorus", INF2_CHORUS_SKILL },
+			{ "FreeCastNormal", INF2_FREE_CAST_NORMAL },
+			{ "FreeCastReduced", INF2_FREE_CAST_REDUCED },
+			{ "ShowSkillScale", INF2_SHOW_SKILL_SCALE },
+			{ "AllowReproduce", INF2_ALLOW_REPRODUCE },
+			{ "HiddenTrap", INF2_HIDDEN_TRAP },
+			{ "IsCombo", INF2_IS_COMBO_SKILL },
+			{ "BlockedByStasis", INF2_NO_STASIS },
+			{ "BlockedByKagehumi", INF2_NO_KAGEHUMI },
+			{ "RangeModByVulture", INF2_RANGE_VULTURE },
+			{ "RangeModBySnakeEye", INF2_RANGE_SNAKEEYE },
+			{ "RangeModByShadowJump", INF2_RANGE_SHADOWJUMP },
+			{ "RangeModByRadius", INF2_RANGE_RADIUS },
+			{ "RangeModByResearchTrap", INF2_RANGE_RESEARCHTRAP },
+			{ "AllowPlagiarism", INF2_ALLOW_PLAGIARIZE },
+		};
+		
 		while ((tt = libconfig->setting_get_elem(t, i++)) != NULL) {
 			const char *skill_info = config_setting_name(tt);
 			bool on = libconfig->setting_get_bool_real(tt);
 
-			if (strcmpi(skill_info, "Quest") == 0) {
-				if (on)
-					sk->inf2 |= INF2_QUEST_SKILL;
-				else
-					sk->inf2 &= ~INF2_QUEST_SKILL;
-			} else if (strcmpi(skill_info, "NPC") == 0) {
-				if (on)
-					sk->inf2 |= INF2_NPC_SKILL;
-				else
-					sk->inf2 &= ~INF2_NPC_SKILL;
-			} else if (strcmpi(skill_info, "Wedding") == 0) {
-				if (on)
-					sk->inf2 |= INF2_WEDDING_SKILL;
-				else
-					sk->inf2 &= ~INF2_WEDDING_SKILL;
-			} else if (strcmpi(skill_info, "Spirit") == 0) {
-				if (on)
-					sk->inf2 |= INF2_SPIRIT_SKILL;
-				else
-					sk->inf2 &= ~INF2_SPIRIT_SKILL;
-			} else if (strcmpi(skill_info, "Guild") == 0) {
-				if (on)
-					sk->inf2 |= INF2_GUILD_SKILL;
-				else
-					sk->inf2 &= ~INF2_GUILD_SKILL;
-			} else if (strcmpi(skill_info, "Song") == 0) {
-				if (on)
-					sk->inf2 |= INF2_SONG_DANCE;
-				else
-					sk->inf2 &= ~INF2_SONG_DANCE;
-			} else if (strcmpi(skill_info, "Ensemble") == 0) {
-				if (on)
-					sk->inf2 |= INF2_ENSEMBLE_SKILL;
-				else
-					sk->inf2 &= ~INF2_ENSEMBLE_SKILL;
-			} else if (strcmpi(skill_info, "Trap") == 0) {
-				if (on)
-					sk->inf2 |= INF2_TRAP;
-				else
-					sk->inf2 &= ~INF2_TRAP;
-			} else if (strcmpi(skill_info, "TargetSelf") == 0) {
-				if (on)
-					sk->inf2 |= INF2_TARGET_SELF;
-				else
-					sk->inf2 &= ~INF2_TARGET_SELF;
-			} else if (strcmpi(skill_info, "NoCastSelf") == 0) {
-				if (on)
-					sk->inf2 |= INF2_NO_TARGET_SELF;
-				else
-					sk->inf2 &= ~INF2_NO_TARGET_SELF;
-			} else if (strcmpi(skill_info, "PartyOnly") == 0) {
-				if (on)
-					sk->inf2 |= INF2_PARTY_ONLY;
-				else
-					sk->inf2 &= ~INF2_PARTY_ONLY;
-			} else if (strcmpi(skill_info, "GuildOnly") == 0) {
-				if (on)
-					sk->inf2 |= INF2_GUILD_ONLY;
-				else
-					sk->inf2 &= ~INF2_GUILD_ONLY;
-			} else if (strcmpi(skill_info, "NoEnemy") == 0) {
-				if (on)
-					sk->inf2 |= INF2_NO_ENEMY;
-				else
-					sk->inf2 &= ~INF2_NO_ENEMY;
-			} else if (strcmpi(skill_info, "IgnoreLandProtector") == 0) {
-				if (on)
-					sk->inf2 |= INF2_NOLP;
-				else
-					sk->inf2 &= ~INF2_NOLP;
-			} else if (strcmpi(skill_info, "Chorus") == 0) {
-				if (on)
-					sk->inf2 |= INF2_CHORUS_SKILL;
-				else
-					sk->inf2 &= ~INF2_CHORUS_SKILL;
-			} else if (strcmpi(skill_info, "FreeCastNormal") == 0) {
-				if (on)
-					sk->inf2 |= INF2_FREE_CAST_NORMAL;
-				else
-					sk->inf2 &= ~INF2_FREE_CAST_NORMAL;
-			} else if (strcmpi(skill_info, "FreeCastReduced") == 0) {
-				if (on)
-					sk->inf2 |= INF2_FREE_CAST_REDUCED;
-				else
-					sk->inf2 &= ~INF2_FREE_CAST_REDUCED;
-			} else if (strcmpi(skill_info, "ShowSkillScale") == 0) {
-				if (on)
-					sk->inf2 |= INF2_SHOW_SKILL_SCALE;
-				else
-					sk->inf2 &= ~INF2_SHOW_SKILL_SCALE;
-			} else if (strcmpi(skill_info, "AllowReproduce") == 0) {
-				if (on)
-					sk->inf2 |= INF2_ALLOW_REPRODUCE;
-				else
-					sk->inf2 &= ~INF2_ALLOW_REPRODUCE;
-			} else if (strcmpi(skill_info, "HiddenTrap") == 0) {
-				if (on)
-					sk->inf2 |= INF2_HIDDEN_TRAP;
-				else
-					sk->inf2 &= ~INF2_HIDDEN_TRAP;
-			} else if (strcmpi(skill_info, "IsCombo") == 0) {
-				if (on)
-					sk->inf2 |= INF2_IS_COMBO_SKILL;
-				else
-					sk->inf2 &= ~INF2_IS_COMBO_SKILL;
-			} else if (strcmpi(skill_info, "BlockedByStasis") == 0) {
-				if (on)
-					sk->inf2 |= INF2_NO_STASIS;
-				else
-					sk->inf2 &= ~INF2_NO_STASIS;
-			} else if (strcmpi(skill_info, "BlockedByKagehumi") == 0) {
-				if (on)
-					sk->inf2 |= INF2_NO_KAGEHUMI;
-				else
-					sk->inf2 &= ~INF2_NO_KAGEHUMI;
-			} else if (strcmpi(skill_info, "RangeModByVulture") == 0) {
-				if (on)
-					sk->inf2 |= INF2_RANGE_VULTURE;
-				else
-					sk->inf2 &= ~INF2_RANGE_VULTURE;
-			} else if (strcmpi(skill_info, "RangeModBySnakeEye") == 0) {
-				if (on)
-					sk->inf2 |= INF2_RANGE_SNAKEEYE;
-				else
-					sk->inf2 &= ~INF2_RANGE_SNAKEEYE;
-			} else if (strcmpi(skill_info, "RangeModByShadowJump") == 0) {
-				if (on)
-					sk->inf2 |= INF2_RANGE_SHADOWJUMP;
-				else
-					sk->inf2 &= ~INF2_RANGE_SHADOWJUMP;
-			} else if (strcmpi(skill_info, "RangeModByRadius") == 0) {
-				if (on)
-					sk->inf2 |= INF2_RANGE_RADIUS;
-				else
-					sk->inf2 &= ~INF2_RANGE_RADIUS;
-			} else if (strcmpi(skill_info, "RangeModByResearchTrap") == 0) {
-				if (on)
-					sk->inf2 |= INF2_RANGE_RESEARCHTRAP;
-				else
-					sk->inf2 &= ~INF2_RANGE_RESEARCHTRAP;
-			} else if (strcmpi(skill_info, "AllowPlagiarism") == 0) {
-				if (on)
-					sk->inf2 |= INF2_ALLOW_PLAGIARIZE;
-				else
-					sk->inf2 &= ~INF2_ALLOW_PLAGIARIZE;
-			} else if (strcmpi(skill_info, "None") != 0) {
-				ShowWarning("%s: Invalid sub-type %s specified for skill ID %d in %s! Skipping sub-type...\n",
+			int j = 0;
+			ARR_FIND(0, ARRAYLENGTH(info_list), j, strcmp(skill_info, info_list[j].name) == 0);
+			if (j == ARRAYLENGTH(info_list)) {
+				ShowWarning("%s: Invalid SkillInfo '%s' specified for skill ID %d in %s! Skipping SkillInfo...\n",
 					    __func__, skill_info, sk->nameid, conf->file);
+				continue;
 			}
+
+			if (on)
+				sk->inf2 |= info_list[j].id;
+			else
+				sk->inf2 &= ~info_list[j].id;
 		}
 	}
 }
