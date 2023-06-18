@@ -23459,68 +23459,47 @@ static int skill_validate_state_sub(const char *state)
 {
 	nullpo_retr(-1, state);
 
-	int ret_val = ST_NONE;
+	struct {
+		const char *name;
+		int id;
+	} state_list[] = {
+		{ "None", ST_NONE },
+		{ "Hiding", ST_HIDING },
+		{ "Cloaking", ST_CLOAKING },
+		{ "Hidden", ST_HIDDEN },
+		{ "Riding", ST_RIDING },
+		{ "Falcon", ST_FALCON },
+		{ "Cart", ST_CART },
+		{ "Shield", ST_SHIELD },
+		{ "Sight", ST_SIGHT },
+		{ "ExplosionSpirits", ST_EXPLOSIONSPIRITS },
+		{ "CartBoost", ST_CARTBOOST },
+		{ "NotOverWeight", ST_RECOV_WEIGHT_RATE },
+		{ "Moveable", ST_MOVE_ENABLE },
+		{ "InWater", ST_WATER },
+		{ "Dragon", ST_RIDINGDRAGON },
+		{ "Warg", ST_WUG },
+		{ "RidingWarg", ST_RIDINGWUG },
+		{ "MadoGear", ST_MADO },
+		{ "ElementalSpirit", ST_ELEMENTALSPIRIT },
+		{ "PoisonWeapon", ST_POISONINGWEAPON },
+		{ "RollingCutter", ST_ROLLINGCUTTER },
+		{ "MH_Fighting", ST_MH_FIGHTING },
+		{ "MH_Grappling", ST_MH_GRAPPLING },
+		{ "Peco", ST_PECO },
+		{ "QD_Shot_Ready", ST_QD_SHOT_READY },
+		{ "SunStance", ST_SUNSTANCE },
+		{ "MoonStance", ST_MOONSTANCE },
+		{ "StarStance", ST_STARSTANCE },
+		{ "UniverseStance", ST_UNIVERSESTANCE },
+	};
 
-	if (strcmpi(state, "Hiding") == 0)
-		ret_val = ST_HIDING;
-	else if (strcmpi(state, "Cloaking") == 0)
-		ret_val = ST_CLOAKING;
-	else if (strcmpi(state, "Hidden") == 0)
-		ret_val = ST_HIDDEN;
-	else if (strcmpi(state, "Riding") == 0)
-		ret_val = ST_RIDING;
-	else if (strcmpi(state, "Falcon") == 0)
-		ret_val = ST_FALCON;
-	else if (strcmpi(state, "Cart") == 0)
-		ret_val = ST_CART;
-	else if (strcmpi(state, "Shield") == 0)
-		ret_val = ST_SHIELD;
-	else if (strcmpi(state, "Sight") == 0)
-		ret_val = ST_SIGHT;
-	else if (strcmpi(state, "ExplosionSpirits") == 0)
-		ret_val = ST_EXPLOSIONSPIRITS;
-	else if (strcmpi(state, "CartBoost") == 0)
-		ret_val = ST_CARTBOOST;
-	else if (strcmpi(state, "NotOverWeight") == 0)
-		ret_val = ST_RECOV_WEIGHT_RATE;
-	else if (strcmpi(state, "Moveable") == 0)
-		ret_val = ST_MOVE_ENABLE;
-	else if (strcmpi(state, "InWater") == 0)
-		ret_val = ST_WATER;
-	else if (strcmpi(state, "Dragon") == 0)
-		ret_val = ST_RIDINGDRAGON;
-	else if (strcmpi(state, "Warg") == 0)
-		ret_val = ST_WUG;
-	else if (strcmpi(state, "RidingWarg") == 0)
-		ret_val = ST_RIDINGWUG;
-	else if (strcmpi(state, "MadoGear") == 0)
-		ret_val = ST_MADO;
-	else if (strcmpi(state, "ElementalSpirit") == 0)
-		ret_val = ST_ELEMENTALSPIRIT;
-	else if (strcmpi(state, "PoisonWeapon") == 0)
-		ret_val = ST_POISONINGWEAPON;
-	else if (strcmpi(state, "RollingCutter") == 0)
-		ret_val = ST_ROLLINGCUTTER;
-	else if (strcmpi(state, "MH_Fighting") == 0)
-		ret_val = ST_MH_FIGHTING;
-	else if (strcmpi(state, "MH_Grappling") == 0)
-		ret_val = ST_MH_GRAPPLING;
-	else if (strcmpi(state, "Peco") == 0)
-		ret_val = ST_PECO;
-	else if (strcmpi(state, "QD_Shot_Ready") == 0)
-		ret_val = ST_QD_SHOT_READY;
-	else if (strcmpi(state, "SunStance") == 0)
-		ret_val = ST_SUNSTANCE;
-	else if (strcmpi(state, "MoonStance") == 0)
-		ret_val = ST_MOONSTANCE;
-	else if (strcmpi(state, "StarStance") == 0)
-		ret_val = ST_STARSTANCE;
-	else if (strcmpi(state, "UniverseStance") == 0)
-		ret_val = ST_UNIVERSESTANCE;
-	else if (strcmpi(state, "None") != 0)
-		ret_val = -1;
+	int i = 0;
+	ARR_FIND(0, ARRAYLENGTH(state_list), i, strcmp(state, state_list[i].name) == 0);
+	if (i == ARRAYLENGTH(state_list))
+		return -1;
 
-	return ret_val;
+	return state_list[i].id;
 }
 
 /**
