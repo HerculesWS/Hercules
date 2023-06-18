@@ -23210,162 +23210,57 @@ static int skill_validate_weapontype_sub(const char *type, bool on, struct s_ski
 	nullpo_retr(1, type);
 	nullpo_retr(1, sk);
 
-	if (strcmpi(type, "NoWeapon") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_FIST);
-		else
-			sk->weapon &= ~(1 << W_FIST);
-	} else if (strcmpi(type, "Daggers") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_DAGGER);
-		else
-			sk->weapon &= ~(1 << W_DAGGER);
-	} else if (strcmpi(type, "1HSwords") == 0) {
-
-		if (on)
-			sk->weapon |= (1 << W_1HSWORD);
-		else
-			sk->weapon &= ~(1 << W_1HSWORD);
-	} else if (strcmpi(type, "2HSwords") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_2HSWORD);
-		else
-			sk->weapon &= ~(1 << W_2HSWORD);
-	} else if (strcmpi(type, "1HSpears") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_1HSPEAR);
-		else
-			sk->weapon &= ~(1 << W_1HSPEAR);
-	} else if (strcmpi(type, "2HSpears") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_2HSPEAR);
-		else
-			sk->weapon &= ~(1 << W_2HSPEAR);
-	} else if (strcmpi(type, "1HAxes") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_1HAXE);
-		else
-			sk->weapon &= ~(1 << W_1HAXE);
-	} else if (strcmpi(type, "2HAxes") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_2HAXE);
-		else
-			sk->weapon &= ~(1 << W_2HAXE);
-	} else if (strcmpi(type, "Maces") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_MACE);
-		else
-			sk->weapon &= ~(1 << W_MACE);
-	} else if (strcmpi(type, "2HMaces") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_2HMACE);
-		else
-			sk->weapon &= ~(1 << W_2HMACE);
-	} else if (strcmpi(type, "Staves") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_STAFF);
-		else
-			sk->weapon &= ~(1 << W_STAFF);
-	} else if (strcmpi(type, "Bows") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_BOW);
-		else
-			sk->weapon &= ~(1 << W_BOW);
-	} else if (strcmpi(type, "Knuckles") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_KNUCKLE);
-		else
-			sk->weapon &= ~(1 << W_KNUCKLE);
-	} else if (strcmpi(type, "Instruments") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_MUSICAL);
-		else
-			sk->weapon &= ~(1 << W_MUSICAL);
-	} else if (strcmpi(type, "Whips") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_WHIP);
-		else
-			sk->weapon &= ~(1 << W_WHIP);
-	} else if (strcmpi(type, "Books") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_BOOK);
-		else
-			sk->weapon &= ~(1 << W_BOOK);
-	} else if (strcmpi(type, "Katars") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_KATAR);
-		else
-			sk->weapon &= ~(1 << W_KATAR);
-	} else if (strcmpi(type, "Revolvers") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_REVOLVER);
-		else
-			sk->weapon &= ~(1 << W_REVOLVER);
-	} else if (strcmpi(type, "Rifles") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_RIFLE);
-		else
-			sk->weapon &= ~(1 << W_RIFLE);
-	} else if (strcmpi(type, "GatlingGuns") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_GATLING);
-		else
-			sk->weapon &= ~(1 << W_GATLING);
-	} else if (strcmpi(type, "Shotguns") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_SHOTGUN);
-		else
-			sk->weapon &= ~(1 << W_SHOTGUN);
-	} else if (strcmpi(type, "GrenadeLaunchers") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_GRENADE);
-		else
-			sk->weapon &= ~(1 << W_GRENADE);
-	} else if (strcmpi(type, "FuumaShurikens") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_HUUMA);
-		else
-			sk->weapon &= ~(1 << W_HUUMA);
-	} else if (strcmpi(type, "2HStaves") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_2HSTAFF);
-		else
-			sk->weapon &= ~(1 << W_2HSTAFF);
-	} else if (strcmpi(type, "DWDaggers") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_DOUBLE_DD);
-		else
-			sk->weapon &= ~(1 << W_DOUBLE_DD);
-	} else if (strcmpi(type, "DWSwords") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_DOUBLE_SS);
-		else
-			sk->weapon &= ~(1 << W_DOUBLE_SS);
-	} else if (strcmpi(type, "DWAxes") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_DOUBLE_AA);
-		else
-			sk->weapon &= ~(1 << W_DOUBLE_AA);
-	} else if (strcmpi(type, "DWDaggerSword") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_DOUBLE_DS);
-		else
-			sk->weapon &= ~(1 << W_DOUBLE_DS);
-	} else if (strcmpi(type, "DWDaggerAxe") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_DOUBLE_DA);
-		else
-			sk->weapon &= ~(1 << W_DOUBLE_DA);
-	} else if (strcmpi(type, "DWSwordAxe") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_DOUBLE_SA);
-		else
-			sk->weapon &= ~(1 << W_DOUBLE_SA);
-	} else if (strcmpi(type, "All") == 0) {
+	if (strcmp(type, "All") == 0) {
 		sk->weapon = 0;
-	} else {
-		return 1;
+		return 0;
 	}
+
+	struct {
+		const char *name;
+		int id;
+	} type_list[] = {
+		// { "All", 0 }, // It is = 0 instead of a flag, so we don't check here
+		{ "NoWeapon", W_FIST },
+		{ "Daggers", W_DAGGER },
+		{ "1HSwords", W_1HSWORD },
+		{ "2HSwords", W_2HSWORD },
+		{ "1HSpears", W_1HSPEAR },
+		{ "2HSpears", W_2HSPEAR },
+		{ "1HAxes", W_1HAXE },
+		{ "2HAxes", W_2HAXE },
+		{ "Maces", W_MACE },
+		{ "2HMaces", W_2HMACE },
+		{ "Staves", W_STAFF },
+		{ "Bows", W_BOW },
+		{ "Knuckles", W_KNUCKLE },
+		{ "Instruments", W_MUSICAL },
+		{ "Whips", W_WHIP },
+		{ "Books", W_BOOK },
+		{ "Katars", W_KATAR },
+		{ "Revolvers", W_REVOLVER },
+		{ "Rifles", W_RIFLE },
+		{ "GatlingGuns", W_GATLING },
+		{ "Shotguns", W_SHOTGUN },
+		{ "GrenadeLaunchers", W_GRENADE },
+		{ "FuumaShurikens", W_HUUMA },
+		{ "2HStaves", W_2HSTAFF },
+		{ "DWDaggers", W_DOUBLE_DD },
+		{ "DWSwords", W_DOUBLE_SS },
+		{ "DWAxes", W_DOUBLE_AA },
+		{ "DWDaggerSword", W_DOUBLE_DS },
+		{ "DWDaggerAxe", W_DOUBLE_DA },
+		{ "DWSwordAxe", W_DOUBLE_SA },
+	};
+
+	int j;
+	ARR_FIND(0, ARRAYLENGTH(type_list), j, strcmp(type, type_list[j].name) == 0);
+	if (j == ARRAYLENGTH(type_list))
+		return 1;
+
+	if (on)
+		sk->weapon |= (1 << type_list[j].id);
+	else
+		sk->weapon &= ~(1 << type_list[j].id);
 
 	return 0;
 }
