@@ -21858,6 +21858,19 @@ static void skill_validate_skilltype(struct config_setting_t *conf, struct s_ski
 	struct config_setting_t *t = libconfig->setting_get_member(conf, "SkillType");
 
 	if (t != NULL && config_setting_is_group(t)) {
+		struct {
+			const char *name;
+			int id;
+		} type_list[] = {
+			{ "Passive", INF_NONE },
+			{ "Enemy", INF_ATTACK_SKILL },
+			{ "Place", INF_GROUND_SKILL },
+			{ "Self", INF_SELF_SKILL },
+			{ "Friend", INF_SUPPORT_SKILL },
+			{ "Trap", INF_TARGET_TRAP },
+			{ "Item", INF_ITEM_SKILL },
+		};
+
 		struct config_setting_t *tt;
 		int i = 0;
 
@@ -21865,40 +21878,18 @@ static void skill_validate_skilltype(struct config_setting_t *conf, struct s_ski
 			const char *skill_type = config_setting_name(tt);
 			bool on = libconfig->setting_get_bool_real(tt);
 
-			if (strcmpi(skill_type, "Enemy") == 0) {
-				if (on)
-					sk->inf |= INF_ATTACK_SKILL;
-				else
-					sk->inf &= ~INF_ATTACK_SKILL;
-			} else if (strcmpi(skill_type, "Place") == 0) {
-				if (on)
-					sk->inf |= INF_GROUND_SKILL;
-				else
-					sk->inf &= ~INF_GROUND_SKILL;
-			} else if (strcmpi(skill_type, "Self") == 0) {
-				if (on)
-					sk->inf |= INF_SELF_SKILL;
-				else
-					sk->inf &= ~INF_SELF_SKILL;
-			} else if (strcmpi(skill_type, "Friend") == 0) {
-				if (on)
-					sk->inf |= INF_SUPPORT_SKILL;
-				else
-					sk->inf &= ~INF_SUPPORT_SKILL;
-			} else if (strcmpi(skill_type, "Trap") == 0) {
-				if (on)
-					sk->inf |= INF_TARGET_TRAP;
-				else
-					sk->inf &= ~INF_TARGET_TRAP;
-			} else if (strcmpi(skill_type, "Item") == 0) {
-				if (on)
-					sk->inf |= INF_ITEM_SKILL;
-				else
-					sk->inf &= ~INF_ITEM_SKILL;
-			} else if (strcmpi(skill_type, "Passive") != 0) {
-				ShowWarning("%s: Invalid skill type %s specified for skill ID %d in %s! Skipping type...\n",
+			int j = 0;
+			ARR_FIND(0, ARRAYLENGTH(type_list), j, strcmp(skill_type, type_list[j].name) == 0);
+			if (j == ARRAYLENGTH(type_list)) {
+				ShowWarning("%s: Invalid SkillType '%s' specified for skill ID %d in %s! Skipping type...\n",
 					    __func__, skill_type, sk->nameid, conf->file);
+				continue;
 			}
+
+			if (on)
+				sk->inf |= type_list[j].id;
+			else
+				sk->inf &= ~type_list[j].id;
 		}
 	}
 }
