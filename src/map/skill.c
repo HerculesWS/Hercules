@@ -22121,6 +22121,20 @@ static void skill_validate_damagetype(struct config_setting_t *conf, struct s_sk
 	struct config_setting_t *t = libconfig->setting_get_member(conf, "DamageType");
 
 	if (t != NULL && config_setting_is_group(t)) {
+		struct {
+			const char *name;
+			int id;
+		} type_list[] = {
+			{ "NoDamage", NK_NO_DAMAGE },
+			{ "SplashArea", NK_SPLASH_ONLY },
+			{ "SplitDamage", NK_SPLASHSPLIT },
+			{ "IgnoreCards", NK_NO_CARDFIX_ATK },
+			{ "IgnoreElement", NK_NO_ELEFIX },
+			{ "IgnoreDefense", NK_IGNORE_DEF },
+			{ "IgnoreFlee", NK_IGNORE_FLEE },
+			{ "IgnoreDefCards", NK_NO_CARDFIX_DEF },
+		};
+
 		struct config_setting_t *tt;
 		int i = 0;
 
@@ -22128,50 +22142,18 @@ static void skill_validate_damagetype(struct config_setting_t *conf, struct s_sk
 			const char *damage_type = config_setting_name(tt);
 			bool on = libconfig->setting_get_bool_real(tt);
 
-			if (strcmpi(damage_type, "NoDamage") == 0) {
-				if (on)
-					sk->nk |= NK_NO_DAMAGE;
-				else
-					sk->nk &= ~NK_NO_DAMAGE;
-			} else if (strcmpi(damage_type, "SplashArea") == 0) {
-				if (on)
-					sk->nk |= NK_SPLASH_ONLY;
-				else
-					sk->nk &= ~NK_SPLASH_ONLY;
-			} else if (strcmpi(damage_type, "SplitDamage") == 0) {
-				if (on)
-					sk->nk |= NK_SPLASHSPLIT;
-				else
-					sk->nk &= ~NK_SPLASHSPLIT;
-			} else if (strcmpi(damage_type, "IgnoreCards") == 0) {
-				if (on)
-					sk->nk |= NK_NO_CARDFIX_ATK;
-				else
-					sk->nk &= ~NK_NO_CARDFIX_ATK;
-			} else if (strcmpi(damage_type, "IgnoreElement") == 0) {
-				if (on)
-					sk->nk |= NK_NO_ELEFIX;
-				else
-					sk->nk &= ~NK_NO_ELEFIX;
-			} else if (strcmpi(damage_type, "IgnoreDefense") == 0) {
-				if (on)
-					sk->nk |= NK_IGNORE_DEF;
-				else
-					sk->nk &= ~NK_IGNORE_DEF;
-			} else if (strcmpi(damage_type, "IgnoreFlee") == 0) {
-				if (on)
-					sk->nk |= NK_IGNORE_FLEE;
-				else
-					sk->nk &= ~NK_IGNORE_FLEE;
-			} else if (strcmpi(damage_type, "IgnoreDefCards") == 0) {
-				if (on)
-					sk->nk |= NK_NO_CARDFIX_DEF;
-				else
-					sk->nk &= ~NK_NO_CARDFIX_DEF;
-			} else {
-				ShowWarning("%s: Invalid damage type %s specified for skill ID %d in %s! Skipping damage type...\n",
+			int j = 0;
+			ARR_FIND(0, ARRAYLENGTH(type_list), j, strcmp(damage_type, type_list[j].name) == 0);
+			if (j == ARRAYLENGTH(type_list)) {
+				ShowWarning("%s: Invalid DamageType '%s' specified for skill ID %d in %s! Skipping damage type...\n",
 					    __func__, damage_type, sk->nameid, conf->file);
+				continue;
 			}
+
+			if (on)
+				sk->nk |= type_list[j].id;
+			else
+				sk->nk &= ~type_list[j].id;
 		}
 	}
 }
