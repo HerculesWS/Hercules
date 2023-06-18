@@ -23323,59 +23323,36 @@ static int skill_validate_ammotype_sub(const char *type, bool on, struct s_skill
 	nullpo_retr(1, type);
 	nullpo_retr(1, sk);
 
-	if (strcmpi(type, "A_ARROW") == 0) {
-		if (on)
-			sk->ammo |= (1 << A_ARROW);
-		else
-			sk->ammo &= ~(1 << A_ARROW);
-	} else if (strcmpi(type, "A_DAGGER") == 0) {
-		if (on)
-			sk->ammo |= (1 << A_DAGGER);
-		else
-			sk->ammo &= ~(1 << A_DAGGER);
-	} else if (strcmpi(type, "A_BULLET") == 0) {
-		if (on)
-			sk->ammo |= (1 << A_BULLET);
-		else
-			sk->ammo &= ~(1 << A_BULLET);
-	} else if (strcmpi(type, "A_SHELL") == 0) {
-		if (on)
-			sk->ammo |= (1 << A_SHELL);
-		else
-			sk->ammo &= ~(1 << A_SHELL);
-	} else if (strcmpi(type, "A_GRENADE") == 0) {
-		if (on)
-			sk->ammo |= (1 << A_GRENADE);
-		else
-			sk->ammo &= ~(1 << A_GRENADE);
-	} else if (strcmpi(type, "A_SHURIKEN") == 0) {
-		if (on)
-			sk->ammo |= (1 << A_SHURIKEN);
-		else
-			sk->ammo &= ~(1 << A_SHURIKEN);
-	} else if (strcmpi(type, "A_KUNAI") == 0) {
-		if (on)
-			sk->ammo |= (1 << A_KUNAI);
-		else
-			sk->ammo &= ~(1 << A_KUNAI);
-	} else if (strcmpi(type, "A_CANNONBALL") == 0) {
-		if (on)
-			sk->ammo |= (1 << A_CANNONBALL);
-		else
-			sk->ammo &= ~(1 << A_CANNONBALL);
-	} else if (strcmpi(type, "A_THROWWEAPON") == 0) {
-		if (on)
-			sk->ammo |= (1 << A_THROWWEAPON);
-		else
-			sk->ammo &= ~(1 << A_THROWWEAPON);
-	} else if (strcmpi(type, "All") == 0) {
-		if (on)
-			sk->ammo = 0xFFFFFFFF;
-		else
-			sk->ammo = 0;
-	} else {
-		return 1;
+	if (strcmp(type, "All") == 0) {
+		sk->ammo = on ? 0xFFFFFFFF : 0;
+		return 0;
 	}
+
+	struct {
+		const char *name;
+		int id;
+	} type_list[] = {
+		{ "A_ARROW", A_ARROW },
+		{ "A_DAGGER", A_DAGGER },
+		{ "A_BULLET", A_BULLET },
+		{ "A_SHELL", A_SHELL },
+		{ "A_GRENADE", A_GRENADE },
+		{ "A_SHURIKEN", A_SHURIKEN },
+		{ "A_KUNAI", A_KUNAI },
+		{ "A_CANNONBALL", A_CANNONBALL },
+		{ "A_THROWWEAPON", A_THROWWEAPON },
+		// { "All", 0xFFFFFFFF }, // "All" is not treated as flag and was handled above
+	};
+
+	int i = 0;
+	ARR_FIND(0, ARRAYLENGTH(type_list), i, strcmp(type, type_list[i].name) == 0);
+	if (i == ARRAYLENGTH(type_list))
+		return 1;
+
+	if (on)
+		sk->ammo |= (1 << type_list[i].id);
+	else
+		sk->ammo &= ~(1 << type_list[i].id);
 
 	return 0;
 }
