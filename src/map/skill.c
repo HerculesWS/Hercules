@@ -21584,12 +21584,14 @@ static void skill_level_set_value(int *arr, int value)
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the ID should be set it.
  * @param conf_index The 1-based index of the currently processed libconfig settings block.
+ * @param loaded_ids_db map of the IDs that were already loaded from conf (for duplicate detection in same file)
  *
  **/
-static void skill_validate_id(struct config_setting_t *conf, struct s_skill_db *sk, int conf_index)
+static void skill_validate_id(struct config_setting_t *conf, struct s_skill_db *sk, int conf_index, struct DBMap *loaded_ids_db)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+	nullpo_retv(loaded_ids_db);
 
 	sk->nameid = 0;
 
@@ -21604,7 +21606,7 @@ static void skill_validate_id(struct config_setting_t *conf, struct s_skill_db *
 	else if(skill->get_index(id) == 0)
 		ShowError("%s: Skill ID %d in entry %d in %s is out of range, or within a reserved range (for guild, homunculus, mercenary or elemental skills)! Skipping skill...\n",
 			  __func__, id, conf_index, conf->file);
-	else if (*skill->get_name(id) != '\0')
+	else if (idb_exists(loaded_ids_db, id))
 		ShowError("%s: Duplicate skill ID %d in entry %d in %s! Skipping skill...\n",
 			  __func__, id, conf_index, conf->file);
 	else if (id >= MAX_SKILL_ID)
@@ -21639,12 +21641,16 @@ static bool skill_name_contains_invalid_character(const char *name)
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the name should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_name(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_name(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "Name") == NULL)
+		return;
 
 	*sk->name = '\0';
 
@@ -21659,9 +21665,6 @@ static void skill_validate_name(struct config_setting_t *conf, struct s_skill_db
 	else if (skill->name_contains_invalid_character(name))
 		ShowError("%s: Specified name %s for skill ID %d in %s contains invalid characters! Allowed characters are letters, numbers and underscores. Skipping skill...\n",
 			  __func__, name, sk->nameid, conf->file);
-	else if (skill->name2id(name) != 0)
-		ShowError("%s: Duplicate name %s for skill ID %d in %s! Skipping skill...\n",
-			  __func__, name, sk->nameid, conf->file);
 	else
 		safestrncpy(sk->name, name, sizeof(sk->name));
 }
@@ -21672,12 +21675,16 @@ static void skill_validate_name(struct config_setting_t *conf, struct s_skill_db
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the maximum level should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_max_level(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_max_level(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "MaxLevel") == NULL)
+		return;
 
 	sk->max = 0;
 
@@ -21698,12 +21705,16 @@ static void skill_validate_max_level(struct config_setting_t *conf, struct s_ski
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the description should be set it.
- *
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
+ * 
  **/
-static void skill_validate_description(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_description(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "Description") == NULL)
+		return;
 
 	*sk->desc = '\0';
 
@@ -21723,12 +21734,16 @@ static void skill_validate_description(struct config_setting_t *conf, struct s_s
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the range should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_range(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_range(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "Range") == NULL)
+		return;
 
 	skill->level_set_value(sk->range, 0);
 
@@ -21768,12 +21783,16 @@ static void skill_validate_range(struct config_setting_t *conf, struct s_skill_d
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the hit type should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_hittype(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_hittype(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "Hit") == NULL)
+		return;
 
 	skill->level_set_value(sk->hit, BDT_NORMAL);
 
@@ -21823,12 +21842,16 @@ static void skill_validate_hittype(struct config_setting_t *conf, struct s_skill
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the types should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_skilltype(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_skilltype(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "SkillType") == NULL)
+		return;
 
 	sk->inf = INF_NONE;
 
@@ -21885,12 +21908,16 @@ static void skill_validate_skilltype(struct config_setting_t *conf, struct s_ski
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the sub-types should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_skillinfo(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_skillinfo(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "SkillInfo") == NULL)
+		return;
 
 	sk->inf2 = INF2_NONE;
 
@@ -22062,12 +22089,16 @@ static void skill_validate_skillinfo(struct config_setting_t *conf, struct s_ski
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the attack type should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_attacktype(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_attacktype(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "AttackType") == NULL)
+		return;
 
 	skill->level_set_value(sk->skill_type, BF_NONE);
 
@@ -22121,12 +22152,16 @@ static void skill_validate_attacktype(struct config_setting_t *conf, struct s_sk
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the element should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_element(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_element(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "Element") == NULL)
+		return;
 
 	skill->level_set_value(sk->element, ELE_NEUTRAL);
 
@@ -22180,12 +22215,16 @@ static void skill_validate_element(struct config_setting_t *conf, struct s_skill
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the damage types should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_damagetype(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_damagetype(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "DamageType") == NULL)
+		return;
 
 	sk->nk = NK_NONE;
 
@@ -22252,12 +22291,16 @@ static void skill_validate_damagetype(struct config_setting_t *conf, struct s_sk
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the splash range should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_splash_range(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_splash_range(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "SplashRange") == NULL)
+		return;
 
 	skill->level_set_value(sk->splash, 0);
 
@@ -22297,12 +22340,16 @@ static void skill_validate_splash_range(struct config_setting_t *conf, struct s_
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the number of hits should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_number_of_hits(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_number_of_hits(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "NumberOfHits") == NULL)
+		return;
 
 	skill->level_set_value(sk->num, 1);
 
@@ -22342,12 +22389,16 @@ static void skill_validate_number_of_hits(struct config_setting_t *conf, struct 
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the cast interruptibility should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_interrupt_cast(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_interrupt_cast(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "InterruptCast") == NULL)
+		return;
 
 	skill->level_set_value(sk->castcancel, 0);
 
@@ -22379,12 +22430,16 @@ static void skill_validate_interrupt_cast(struct config_setting_t *conf, struct 
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the cast defence rate should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_cast_def_rate(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_cast_def_rate(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "CastDefRate") == NULL)
+		return;
 
 	skill->level_set_value(sk->cast_def_rate, 0);
 
@@ -22424,12 +22479,16 @@ static void skill_validate_cast_def_rate(struct config_setting_t *conf, struct s
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the number of instances should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_number_of_instances(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_number_of_instances(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "SkillInstances") == NULL)
+		return;
 
 	skill->level_set_value(sk->maxcount, 0);
 
@@ -22469,12 +22528,16 @@ static void skill_validate_number_of_instances(struct config_setting_t *conf, st
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the number of knock back tiles should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_knock_back_tiles(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_knock_back_tiles(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "KnockBackTiles") == NULL)
+		return;
 
 	skill->level_set_value(sk->blewcount, 0);
 
@@ -22514,12 +22577,16 @@ static void skill_validate_knock_back_tiles(struct config_setting_t *conf, struc
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the cast time should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_cast_time(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_cast_time(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "CastTime") == NULL)
+		return;
 
 	skill->level_set_value(sk->cast, 0);
 
@@ -22559,12 +22626,16 @@ static void skill_validate_cast_time(struct config_setting_t *conf, struct s_ski
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the after cast act delay should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_act_delay(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_act_delay(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "AfterCastActDelay") == NULL)
+		return;
 
 	skill->level_set_value(sk->delay, 0);
 
@@ -22604,12 +22675,16 @@ static void skill_validate_act_delay(struct config_setting_t *conf, struct s_ski
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the after cast walk delay should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_walk_delay(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_walk_delay(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "AfterCastWalkDelay") == NULL)
+		return;
 
 	skill->level_set_value(sk->walkdelay, 0);
 
@@ -22649,12 +22724,16 @@ static void skill_validate_walk_delay(struct config_setting_t *conf, struct s_sk
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the stay duration should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_skill_data1(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_skill_data1(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "SkillData1") == NULL)
+		return;
 
 	skill->level_set_value(sk->upkeep_time, 0);
 
@@ -22694,12 +22773,16 @@ static void skill_validate_skill_data1(struct config_setting_t *conf, struct s_s
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the effect duration should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_skill_data2(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_skill_data2(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "SkillData2") == NULL)
+		return;
 
 	skill->level_set_value(sk->upkeep_time2, 0);
 
@@ -22739,12 +22822,16 @@ static void skill_validate_skill_data2(struct config_setting_t *conf, struct s_s
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the cooldown should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_cooldown(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_cooldown(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "CoolDown") == NULL)
+		return;
 
 	skill->level_set_value(sk->cooldown, 0);
 
@@ -22785,12 +22872,16 @@ static void skill_validate_cooldown(struct config_setting_t *conf, struct s_skil
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the fixed cast time should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_fixed_cast_time(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_fixed_cast_time(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "FixedCastTime") == NULL)
+		return;
 
 #ifdef RENEWAL_CAST
 	skill->level_set_value(sk->fixed_cast, 0);
@@ -22838,12 +22929,16 @@ static void skill_validate_fixed_cast_time(struct config_setting_t *conf, struct
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the cast time or delay options should be set it.
  * @param delay If true, the skill's delay options are validated, otherwise its cast time options.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_castnodex(struct config_setting_t *conf, struct s_skill_db *sk, bool delay)
+static void skill_validate_castnodex(struct config_setting_t *conf, struct s_skill_db *sk, bool delay, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, delay ? "SkillDelayOptions" : "CastTimeOptions") == NULL)
+		return;
 
 	skill->level_set_value(delay ? sk->delaynodex : sk->castnodex, 0);
 
@@ -22889,12 +22984,16 @@ static void skill_validate_castnodex(struct config_setting_t *conf, struct s_ski
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the HP cost should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_hp_cost(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_hp_cost(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "HPCost") == NULL)
+		return;
 
 	skill->level_set_value(sk->hp, 0);
 
@@ -22934,12 +23033,17 @@ static void skill_validate_hp_cost(struct config_setting_t *conf, struct s_skill
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the SP cost should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_sp_cost(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_sp_cost(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "SPCost") == NULL)
+		return;
+
 
 	skill->level_set_value(sk->sp, 0);
 
@@ -22979,12 +23083,17 @@ static void skill_validate_sp_cost(struct config_setting_t *conf, struct s_skill
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the HP rate cost should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_hp_rate_cost(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_hp_rate_cost(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "HPRateCost") == NULL)
+		return;
+
 
 	skill->level_set_value(sk->hp_rate, 0);
 
@@ -23024,12 +23133,16 @@ static void skill_validate_hp_rate_cost(struct config_setting_t *conf, struct s_
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the SP rate cost should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_sp_rate_cost(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_sp_rate_cost(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "SPRateCost") == NULL)
+		return;
 
 	skill->level_set_value(sk->sp_rate, 0);
 
@@ -23069,12 +23182,16 @@ static void skill_validate_sp_rate_cost(struct config_setting_t *conf, struct s_
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the maximum HP trigger should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_max_hp_trigger(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_max_hp_trigger(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "MaxHPTrigger") == NULL)
+		return;
 
 	skill->level_set_value(sk->mhp, 0);
 
@@ -23114,12 +23231,16 @@ static void skill_validate_max_hp_trigger(struct config_setting_t *conf, struct 
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the maximum SP trigger should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_max_sp_trigger(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_max_sp_trigger(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "MaxSPTrigger") == NULL)
+		return;
 
 	skill->level_set_value(sk->msp, 0);
 
@@ -23159,12 +23280,16 @@ static void skill_validate_max_sp_trigger(struct config_setting_t *conf, struct 
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the Zeny cost should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_zeny_cost(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_zeny_cost(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "ZenyCost") == NULL)
+		return;
 
 	skill->level_set_value(sk->zeny, 0);
 
@@ -23378,12 +23503,16 @@ static int skill_validate_weapontype_sub(const char *type, bool on, struct s_ski
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the required weapon types should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_weapontype(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_weapontype(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "WeaponTypes") == NULL)
+		return;
 
 	sk->weapon = 0;
 
@@ -23489,12 +23618,16 @@ static int skill_validate_ammotype_sub(const char *type, bool on, struct s_skill
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the required ammunition types should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_ammotype(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_ammotype(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "AmmoTypes") == NULL)
+		return;
 
 	sk->ammo = 0;
 
@@ -23527,12 +23660,16 @@ static void skill_validate_ammotype(struct config_setting_t *conf, struct s_skil
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the required ammunition amount should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_ammo_amount(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_ammo_amount(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "AmmoAmount") == NULL)
+		return;
 
 	skill->level_set_value(sk->ammo_qty, 0);
 
@@ -23647,12 +23784,16 @@ static int skill_validate_state_sub(const char *state)
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the required states should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_state(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_state(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "State") == NULL)
+		return;
 
 	skill->level_set_value(sk->state, ST_NONE);
 
@@ -23696,12 +23837,16 @@ static void skill_validate_state(struct config_setting_t *conf, struct s_skill_d
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the Spirit Sphere cost should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_spirit_sphere_cost(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_spirit_sphere_cost(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "SpiritSphereCost") == NULL)
+		return;
 
 	skill->level_set_value(sk->spiritball, 0);
 
@@ -24103,9 +24248,10 @@ static int skill_validate_requirements_item_name(const char *name)
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the requirements should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_requirements(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_requirements(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
@@ -24113,18 +24259,18 @@ static void skill_validate_requirements(struct config_setting_t *conf, struct s_
 	struct config_setting_t *t = libconfig->setting_get_member(conf, "Requirements");
 
 	if (t != NULL && config_setting_is_group(t)) {
-		skill->validate_hp_cost(t, sk);
-		skill->validate_sp_cost(t, sk);
-		skill->validate_hp_rate_cost(t, sk);
-		skill->validate_sp_rate_cost(t, sk);
-		skill->validate_max_hp_trigger(t, sk);
-		skill->validate_max_sp_trigger(t, sk);
-		skill->validate_zeny_cost(t, sk);
-		skill->validate_weapontype(t, sk);
-		skill->validate_ammotype(t, sk);
-		skill->validate_ammo_amount(t, sk);
-		skill->validate_state(t, sk);
-		skill->validate_spirit_sphere_cost(t, sk);
+		skill->validate_hp_cost(t, sk, inherited);
+		skill->validate_sp_cost(t, sk, inherited);
+		skill->validate_hp_rate_cost(t, sk, inherited);
+		skill->validate_sp_rate_cost(t, sk, inherited);
+		skill->validate_max_hp_trigger(t, sk, inherited);
+		skill->validate_max_sp_trigger(t, sk, inherited);
+		skill->validate_zeny_cost(t, sk, inherited);
+		skill->validate_weapontype(t, sk, inherited);
+		skill->validate_ammotype(t, sk, inherited);
+		skill->validate_ammo_amount(t, sk, inherited);
+		skill->validate_state(t, sk, inherited);
+		skill->validate_spirit_sphere_cost(t, sk, inherited);
 		skill->validate_item_requirements(t, sk);
 		skill->validate_equip_requirements(t, sk);
 	}
@@ -24680,12 +24826,16 @@ static void skill_validate_unit_target(struct config_setting_t *conf, struct s_s
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the unit data should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_status_change(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_status_change(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "StatusChange") == NULL)
+		return;
 
 	int status_id = SC_NONE;
 	const char *name = NULL;
@@ -24727,9 +24877,10 @@ static void skill_validate_unit(struct config_setting_t *conf, struct s_skill_db
  * when parsing skill_db.conf
  * @param   conf    struct, pointer to the skill configuration
  * @param   sk      struct, struct, pointer to s_skill_db
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  * @return  (void)
  */
-static void skill_validate_additional_fields(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_additional_fields(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	// Does nothing like a boss. *cough* plugins *cough*
 }
@@ -24771,59 +24922,75 @@ static bool skill_read_skilldb(const char *filename)
 	int index = 0;
 	int count = 0;
 
+	// Map int -> bool
+	struct DBMap *loaded_ids_db = idb_alloc(DB_OPT_BASE);
+
 	while ((conf = libconfig->setting_get_elem(sk, index++)) != NULL) {
 		struct s_skill_db tmp_db = {0};
 
 		/** Validate mandatory fields. **/
-		skill->validate_id(conf, &tmp_db, index);
+		skill->validate_id(conf, &tmp_db, index, loaded_ids_db);
 		if (tmp_db.nameid == 0)
 			continue;
 
-		skill->validate_name(conf, &tmp_db);
+		int i32;
+		bool inherited = false;
+		if (libconfig->setting_lookup_bool(conf, "Inherit", &i32) == CONFIG_TRUE && i32 != 0) {
+			if (skill->dbs->db[skill->get_index(tmp_db.nameid)].nameid == tmp_db.nameid) {
+				tmp_db = skill->dbs->db[skill->get_index(tmp_db.nameid)];
+				inherited = true;
+			} else {
+				ShowWarning("%s: Could not inherit Skill ID %d in %s. Original skill not found. Continuing with default values...\n",
+					__func__, tmp_db.nameid, conf->file);
+			}
+		}
+
+		skill->validate_name(conf, &tmp_db, inherited);
 		if (*tmp_db.name == '\0')
 			continue;
 
-		skill->validate_max_level(conf, &tmp_db);
+		skill->validate_max_level(conf, &tmp_db, inherited);
 		if (tmp_db.max == 0)
 			continue;
 
 		/** Validate optional fields. **/
-		skill->validate_description(conf, &tmp_db);
-		skill->validate_range(conf, &tmp_db);
-		skill->validate_hittype(conf, &tmp_db);
-		skill->validate_skilltype(conf, &tmp_db);
-		skill->validate_skillinfo(conf, &tmp_db);
-		skill->validate_attacktype(conf, &tmp_db);
-		skill->validate_element(conf, &tmp_db);
-		skill->validate_damagetype(conf, &tmp_db);
-		skill->validate_splash_range(conf, &tmp_db);
-		skill->validate_number_of_hits(conf, &tmp_db);
-		skill->validate_interrupt_cast(conf, &tmp_db);
-		skill->validate_cast_def_rate(conf, &tmp_db);
-		skill->validate_number_of_instances(conf, &tmp_db);
-		skill->validate_knock_back_tiles(conf, &tmp_db);
-		skill->validate_cast_time(conf, &tmp_db);
-		skill->validate_act_delay(conf, &tmp_db);
-		skill->validate_walk_delay(conf, &tmp_db);
-		skill->validate_skill_data1(conf, &tmp_db);
-		skill->validate_skill_data2(conf, &tmp_db);
-		skill->validate_cooldown(conf, &tmp_db);
-		skill->validate_fixed_cast_time(conf, &tmp_db);
-		skill->validate_castnodex(conf, &tmp_db, false);
-		skill->validate_castnodex(conf, &tmp_db, true);
-		skill->validate_requirements(conf, &tmp_db);
+		skill->validate_description(conf, &tmp_db, inherited);
+		skill->validate_range(conf, &tmp_db, inherited);
+		skill->validate_hittype(conf, &tmp_db, inherited);
+		skill->validate_skilltype(conf, &tmp_db, inherited);
+		skill->validate_skillinfo(conf, &tmp_db, inherited);
+		skill->validate_attacktype(conf, &tmp_db, inherited);
+		skill->validate_element(conf, &tmp_db, inherited);
+		skill->validate_damagetype(conf, &tmp_db, inherited);
+		skill->validate_splash_range(conf, &tmp_db, inherited);
+		skill->validate_number_of_hits(conf, &tmp_db, inherited);
+		skill->validate_interrupt_cast(conf, &tmp_db, inherited);
+		skill->validate_cast_def_rate(conf, &tmp_db, inherited);
+		skill->validate_number_of_instances(conf, &tmp_db, inherited);
+		skill->validate_knock_back_tiles(conf, &tmp_db, inherited);
+		skill->validate_cast_time(conf, &tmp_db, inherited);
+		skill->validate_act_delay(conf, &tmp_db, inherited);
+		skill->validate_walk_delay(conf, &tmp_db, inherited);
+		skill->validate_skill_data1(conf, &tmp_db, inherited);
+		skill->validate_skill_data2(conf, &tmp_db, inherited);
+		skill->validate_cooldown(conf, &tmp_db, inherited);
+		skill->validate_fixed_cast_time(conf, &tmp_db, inherited);
+		skill->validate_castnodex(conf, &tmp_db, false, inherited);
+		skill->validate_castnodex(conf, &tmp_db, true, inherited);
+		skill->validate_requirements(conf, &tmp_db, inherited);
 		skill->validate_unit(conf, &tmp_db);
-		skill->validate_status_change(conf, &tmp_db);
+		skill->validate_status_change(conf, &tmp_db, inherited);
 
 		/** Validate additional fields for plugins. **/
-		skill->validate_additional_fields(conf, &tmp_db);
+		skill->validate_additional_fields(conf, &tmp_db, inherited);
 
 		/** Add the skill. **/
 		skill->dbs->db[skill->get_index(tmp_db.nameid)] = tmp_db;
-		strdb_iput(skill->name2id_db, tmp_db.name, tmp_db.nameid);
-		script->set_constant2(tmp_db.name, tmp_db.nameid, false, false);
+		idb_iput(loaded_ids_db, tmp_db.nameid, true);
 		count++;
 	}
+	
+	db_destroy(loaded_ids_db);
 
 	libconfig->destroy(&skilldb);
 	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
@@ -24852,13 +25019,36 @@ static void skill_readdb(bool minimal)
 
 	itemdb->name_constants(); // refresh ItemDB constants before loading of skills
 
+	const char *filenames[] = {
+		DBPATH"skill_db.conf",
+		"skill_db2.conf",
+	};
+
+	for (int i = 0; i < ARRAYLENGTH(filenames); ++i) {
 #ifdef ENABLE_CASE_CHECK
-	script->parser_current_file = DBPATH"skill_db.conf";
+		script->parser_current_file = filenames[i];
 #endif // ENABLE_CASE_CHECK
-	skill->read_skilldb(DBPATH"skill_db.conf");
+		skill->read_skilldb(filenames[i]);
 #ifdef ENABLE_CASE_CHECK
-	script->parser_current_file = NULL;
+		script->parser_current_file = NULL;
 #endif // ENABLE_CASE_CHECK
+	}
+
+	// 0 is for unknown skill above, valid skills starts at 1
+	for (int i = 1; i < MAX_SKILL_DB; ++i) {
+		struct s_skill_db *db = &skill->dbs->db[i];
+		if (db->nameid == 0)
+			continue;
+		
+		if (skill->name2id(db->name) != 0) {
+			ShowError("%s: Duplicated skill name %s found for Skill ID %d (Other Skill ID: %d). Skipping name...",
+				__func__, db->name, db->nameid, skill->name2id(db->name));
+			continue;
+		}
+
+		strdb_iput(skill->name2id_db, db->name, db->nameid);
+		script->set_constant2(db->name, db->nameid, false, false);
+	}
 
 	if (minimal)
 		return;
