@@ -24401,38 +24401,32 @@ static int skill_validate_unit_target_sub(const char *target)
 {
 	nullpo_retr(-1, target);
 
-	int ret_val = BCT_NOONE;
+	struct {
+		const char *name;
+		int id;
+	} target_list[] = {
+		{ "None", BCT_NOONE },
+		{ "NotEnemy", BCT_NOENEMY },
+		{ "NotParty", BCT_NOPARTY },
+		{ "NotGuild", BCT_NOGUILD },
+		{ "Friend", BCT_NOENEMY },
+		{ "Party", BCT_PARTY },
+		{ "Ally", BCT_PARTY | BCT_GUILD },
+		{ "Guild", BCT_GUILD },
+		{ "All", BCT_ALL },
+		{ "Enemy", BCT_ENEMY },
+		{ "Self", BCT_SELF },
+		{ "SameGuild", BCT_SAMEGUILD },
+		{ "GuildAlly", BCT_GUILDALLY },
+		{ "Neutral", BCT_NEUTRAL },
+	};
 
-	if (strcmpi(target, "NotEnemy") == 0)
-		ret_val = BCT_NOENEMY;
-	else if (strcmpi(target, "NotParty") == 0)
-		ret_val = BCT_NOPARTY;
-	else if (strcmpi(target, "NotGuild") == 0)
-		ret_val = BCT_NOGUILD;
-	else if (strcmpi(target, "Friend") == 0)
-		ret_val = BCT_NOENEMY;
-	else if (strcmpi(target, "Party") == 0)
-		ret_val = BCT_PARTY;
-	else if (strcmpi(target, "Ally") == 0)
-		ret_val = BCT_PARTY|BCT_GUILD;
-	else if (strcmpi(target, "Guild") == 0)
-		ret_val = BCT_GUILD;
-	else if (strcmpi(target, "All") == 0)
-		ret_val = BCT_ALL;
-	else if (strcmpi(target, "Enemy") == 0)
-		ret_val = BCT_ENEMY;
-	else if (strcmpi(target, "Self") == 0)
-		ret_val = BCT_SELF;
-	else if (strcmpi(target, "SameGuild") == 0)
-		ret_val = BCT_SAMEGUILD;
-	else if (strcmpi(target, "GuildAlly") == 0)
-		ret_val = BCT_GUILDALLY;
-	else if (strcmpi(target, "Neutral") == 0)
-		ret_val = BCT_NEUTRAL;
-	else if (strcmpi(target, "None") != 0)
-		ret_val = -1;
+	int i = 0;
+	ARR_FIND(0, ARRAYLENGTH(target_list), i, strcmp(target, target_list[i].name) == 0);
+	if (i == ARRAYLENGTH(target_list))
+		return -1;
 
-	return ret_val;
+	return target_list[i].id;
 }
 
 /**
