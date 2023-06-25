@@ -3079,14 +3079,20 @@ static void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag
 			;
 	}
 
-	if(flag&SCB_BATK && bst->batk) {
-		st->batk = status->base_atk(bl,st);
-		temp = bst->batk - status->base_atk(bl,bst);
-		if (temp) {
-			temp += st->batk;
-			st->batk = cap_value(temp, battle_config.batk_min, battle_config.batk_max);
+	if (flag & SCB_BATK) {
+		if (bst->batk != 0) {
+			st->batk = status->base_atk(bl,st);
+			temp = bst->batk - status->base_atk(bl,bst);
+			if (temp != 0) {
+				temp += st->batk;
+				st->batk = cap_value(temp, battle_config.batk_min, battle_config.batk_max);
+			}
+			st->batk = status->calc_batk(bl, sc, st->batk, true);
 		}
-		st->batk = status->calc_batk(bl, sc, st->batk, true);
+
+#ifdef RENEWAL
+		st->buff_extra_batk = status->calc_buff_extra_batk(bl, sc);
+#endif
 	}
 
 	if(flag&SCB_WATK) {
@@ -3534,7 +3540,7 @@ static void status_calc_bl_(struct block_list *bl, enum scb_flag flag, enum e_st
 		if(bst.sp != st->sp)
 			clif->updatestatus(sd,SP_SP);
 #ifdef RENEWAL
-		if(bst.equip_atk != st->equip_atk)
+		if(bst.equip_atk != st->equip_atk || bst.buff_extra_batk != st->buff_extra_batk)
 			clif->updatestatus(sd,SP_ATK2);
 #endif
 	} else if( bl->type == BL_HOM ) {
@@ -3943,8 +3949,8 @@ static unsigned short status_calc_str(struct block_list *bl, struct status_chang
 		str += 5;
 	if(sc->data[SC_LEADERSHIP])
 		str += sc->data[SC_LEADERSHIP]->val1;
-	if(sc->data[SC_SHOUT])
-		str += 4;
+	if (sc->data[SC_SHOUT] != NULL)
+		str += sc->data[SC_SHOUT]->val1;
 	if(sc->data[SC_TRUESIGHT])
 		str += 5;
 	if(sc->data[SC_STRUP])
@@ -4396,6 +4402,36 @@ static int status_calc_batk(struct block_list *bl, struct status_change *sc, int
 		batk += batk * sc->data[SC_SUNSTANCE]->val2 / 100;
 
 	return cap_value(batk, battle_config.batk_min, battle_config.batk_max);
+}
+
+/**
+ * Calculates bl's Extra ATK gains from Buffs.
+ * 
+ * These are very specific bonus from SCs where:
+ * - They show in status window ATK right side (after the + sign)
+ * - They are given by SCs, but they work like equipment's ATK bonus
+ * - They are not linked to the weapon attack value
+ * 
+ * @param bl unit whose status is being calculated
+ * @param sc unit's SC list
+ * @returns Value of Extra ATK conceded by buffs
+ */
+static int status_calc_buff_extra_batk(struct block_list *bl, struct status_change *sc)
+{
+	nullpo_ret(bl);
+
+	if(sc == NULL || sc->count == 0)
+		return 0;
+
+	int batk = 0;
+
+#ifdef RENEWAL
+	// In-game Tests (and iRO wiki) suggests SC_SHOUT ATK bonus is counted as Extra ATK
+	if (sc->data[SC_SHOUT] != NULL)
+		batk += sc->data[SC_SHOUT]->val2;
+#endif
+
+	return cap_value(batk, 0, battle_config.batk_max);
 }
 
 static int status_calc_watk(struct block_list *bl, struct status_change *sc, int watk, bool viewable)
@@ -8133,6 +8169,12 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			case SC_TRICKDEAD:
 				if (vd) vd->dead_sit = 1;
 				total_tick = INFINITE_DURATION;
+				break;
+			case SC_SHOUT:
+				val1 = 4;  // STR bonus
+#ifdef RENEWAL
+				val2 = 30; // Extra ATK bonus
+#endif
 				break;
 			case SC_CONCENTRATION:
 				val2 = 2 + val1;
@@ -14527,6 +14569,7 @@ void status_defaults(void)
 	status->calc_mdef = status_calc_mdef;
 	status->calc_mdef2 = status_calc_mdef2;
 	status->calc_batk = status_calc_batk;
+	status->calc_buff_extra_batk = status_calc_buff_extra_batk;
 	status->base_matk = status_base_matk;
 	status->get_weapon_atk = status_get_weapon_atk;
 	status->get_total_mdef = status_get_total_mdef;
