@@ -4740,6 +4740,10 @@ static int status_calc_hit(struct block_list *bl, struct status_change *sc, int 
 		hit -= sc->data[SC_HEAT_BARREL]->val4;
 	if (sc->data[SC_SOULFALCON] != NULL)
 		hit += sc->data[SC_SOULFALCON]->val3;
+#ifdef RENEWAL
+	if (sc->data[SC_BLESSING] != NULL)
+		hit += sc->data[SC_BLESSING]->val3;
+#endif
 
 	return cap_value(hit, battle_config.hit_min, battle_config.hit_max);
 }
@@ -8175,10 +8179,14 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				if (skill_id == AB_CLEMENTIA && srcsd != NULL)
 					bonus += srcsd->status.job_level / 10;
 
-				if ((!undead_flag && st->race!=RC_DEMON) || bl->type == BL_PC)
+				if ((!undead_flag && st->race != RC_DEMON) || bl->type == BL_PC) {
 					val2 = val1 + bonus; // STR, DEX, INT increase
-				else
+#ifdef RENEWAL
+					val3 = val1 * 2 + bonus; // HIT increase
+#endif
+				} else {
 					val2 = 0; //0 means that STR, DEX and INT should be halved
+				}
 				
 				val1 += bonus; // Officially, val1 is incremented (for us, this doesn't make a difference)
 				break;
