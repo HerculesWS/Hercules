@@ -7521,9 +7521,17 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				// Fall through to SC_INC_AGI
 				FALLTHROUGH
 			case SC_DEC_AGI:
-			case SC_INC_AGI:
 				val2 = 2 + val1; //Agi change
 				break;
+			case SC_INC_AGI:
+			{
+				struct map_session_data *srcsd = BL_CAST(BL_PC, src);
+				if (skill_id == AB_CANTO && srcsd != NULL)
+					val1 += srcsd->status.job_level / 10;
+
+				val2 = 2 + val1; //Agi change
+				break;
+			}
 			case SC_ENDURE:
 				val2 = 7; // Hit-count [Celest]
 				if( !(flag&SCFLAG_NOAVOID) && (bl->type&(BL_PC|BL_MER)) && !map_flag_gvg(bl->m) && !map->list[bl->m].flag.battleground && !val4 ) {
@@ -8161,11 +8169,20 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				val4 = INVALID_TIMER; //Kaahi Timer.
 				break;
 			case SC_BLESSING:
+			{
+				int bonus = 0;
+				struct map_session_data *srcsd = BL_CAST(BL_PC, src);
+				if (skill_id == AB_CLEMENTIA && srcsd != NULL)
+					bonus += srcsd->status.job_level / 10;
+
 				if ((!undead_flag && st->race!=RC_DEMON) || bl->type == BL_PC)
-					val2 = val1;
+					val2 = val1 + bonus; // STR, DEX, INT increase
 				else
-					val2 = 0; //0 -> Half stat.
+					val2 = 0; //0 means that STR, DEX and INT should be halved
+				
+				val1 += bonus; // Officially, val1 is incremented (for us, this doesn't make a difference)
 				break;
+			}
 			case SC_TRICKDEAD:
 				if (vd) vd->dead_sit = 1;
 				total_tick = INFINITE_DURATION;

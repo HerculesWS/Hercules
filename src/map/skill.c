@@ -10070,12 +10070,13 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 		case AB_CANTO:
 		{
 			int level = 0;
-			if( sd )
-				level = skill_id == AB_CLEMENTIA ? pc->checkskill(sd,AL_BLESSING) : pc->checkskill(sd,AL_INCAGI);
-			if( sd == NULL || sd->status.party_id == 0 || flag&1 )
-				clif->skill_nodamage(bl, bl, skill_id, skill_lv, sc_start(src, bl, type, 100, level + (sd ? (sd->status.job_level / 10) : 0), skill->get_time(skill_id, skill_lv), skill_id));
-			else if( sd ) {
-				if( !level )
+			if (sd != NULL)
+				level = skill_id == AB_CLEMENTIA ? pc->checkskill(sd, AL_BLESSING) : pc->checkskill(sd, AL_INCAGI);
+			
+			if (sd == NULL || sd->status.party_id == 0 || flag & 1) {
+				clif->skill_nodamage(bl, bl, skill_id, skill_lv, sc_start(src, bl, type, 100, level, skill->get_time(skill_id, skill_lv), skill_id));
+			} else if (sd != NULL) {
+				if (level == 0)
 					clif->skill_fail(sd, skill_id, USESKILL_FAIL, 0, 0);
 				else
 					party->foreachsamemap(skill->area_sub, sd, skill->get_splash(skill_id, skill_lv), src, skill_id, skill_lv, tick, flag|BCT_PARTY|1, skill->castend_nodamage_id);
