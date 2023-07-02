@@ -5766,6 +5766,10 @@ static unsigned int status_calc_maxhp(struct block_list *bl, struct status_chang
 		maxhp -= maxhp * sc->data[SC_GM_BATTLE2]->val1 / 100;
 	if (sc->data[SC_LUNARSTANCE] != NULL)
 		maxhp += maxhp * sc->data[SC_LUNARSTANCE]->val2 / 100;
+#ifdef RENEWAL
+	if (sc->data[SC_ANGELUS] != NULL)
+		maxhp += sc->data[SC_ANGELUS]->val3;
+#endif
 
 	return (unsigned int)cap_value(maxhp, 1, UINT_MAX);
 }
@@ -8238,7 +8242,10 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				sc_start(src, bl, SC_ENDURE, 100, 1, total_tick, skill_id); // Endure effect
 				break;
 			case SC_ANGELUS:
-				val2 = 5*val1; //def increase
+				val2 = 5 * val1; // def increase
+#ifdef RENEWAL
+				val3 = 50 * val1; // MaxHP increase
+#endif
 				break;
 			case SC_IMPOSITIO:
 				val2 = 5*val1; //watk increase

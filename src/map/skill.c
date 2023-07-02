@@ -7897,8 +7897,23 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 		case WM_FRIGG_SONG:
 			if (sd == NULL || sd->status.party_id == 0 || (flag & 1) != 0) {
 				// Aegis: special handling, even though they aren't of magic skilltype.
-				if (status->isimmune(bl) == 0 || src == bl || (skill_id != AL_ANGELUS && skill_id != PR_MAGNIFICAT && skill_id != PR_GLORIA))
-					clif->skill_nodamage(bl, bl, skill_id, skill_lv, sc_start(src, bl, type, 100, skill_lv, skill->get_time(skill_id, skill_lv), skill_id));
+				if (status->isimmune(bl) == 0 || src == bl || (skill_id != AL_ANGELUS && skill_id != PR_MAGNIFICAT && skill_id != PR_GLORIA)) {
+					int sc_result = sc_start(src, bl, type, 100, skill_lv, skill->get_time(skill_id, skill_lv), skill_id);
+					clif->skill_nodamage(bl, bl, skill_id, skill_lv, sc_result);
+
+#ifdef RENEWAL
+					if (skill_id == AL_ANGELUS && sc_result == 1) {
+						struct status_change *sc = status->get_sc(bl);
+
+						// Angelus should only heal when the SC is actually set in the player (starts now or was reapplied).
+						// Angelus may "succeed" (sc_result = 1) and not start the SC when you have the effect of a greater level.
+						// When this happen, we should not heal.
+						// Comparing val1 to skill_lv will ensure us that it has succeeded and uses the current skill_lv
+						if (sc->data[SC_ANGELUS] != NULL && sc->data[SC_ANGELUS]->val1 == skill_lv)
+							status->heal(bl, sc->data[SC_ANGELUS]->val3, 0, STATUS_HEAL_DEFAULT);
+					}
+#endif
+				}
 			} else if (sd != NULL) {
 				party->foreachsamemap(skill->area_sub, sd, skill->get_splash(skill_id, skill_lv), src, skill_id, skill_lv, tick, flag|BCT_PARTY|1, skill->castend_nodamage_id);
 			}
