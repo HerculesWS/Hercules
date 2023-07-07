@@ -4723,12 +4723,28 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 
 			case GS_GROUNDDRIFT:
 			case KN_SPEARSTAB:
+#ifndef RENEWAL
 			case KN_BOWLINGBASH:
+#endif
 			case MS_BOWLINGBASH:
 			case MO_BALKYOUNG:
 			case TK_TURNKICK:
 				wd.blewcount=0;
 				break;
+
+#ifdef RENEWAL
+			case KN_BOWLINGBASH:
+				wd.div_ = 2;
+				
+				// wflag stores the number of affected targets
+				if (sd != NULL && sd->weapontype == W_2HSWORD) {
+					if (wflag >= 2 && wflag < 4)
+						wd.div_ = 3;
+					else if (wflag >= 4)
+						wd.div_ = 4;
+				}
+				break;
+#endif
 
 			case KN_AUTOCOUNTER:
 				wd.flag=(wd.flag&~BF_SKILLMASK)|BF_NORMAL;
