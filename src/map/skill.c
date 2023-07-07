@@ -5281,7 +5281,23 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 				skill->attack(skill->get_type(skill_id, skill_lv), src, src, bl, skill_id, skill_lv, tick, flag);
 			break;
 
+#ifdef RENEWAL
 		case KN_BOWLINGBASH:
+			// skill->area_temp[0] holds the number of targets affected
+			if (flag & 1) {
+				int sflag = skill->area_temp[0] | SD_ANIMATION;
+				skill->attack(skill->get_type(skill_id, skill_lv), src, src, bl, skill_id, skill_lv, tick, sflag);
+			} else {
+				sc_start(src, src, SC_NO_SWITCH_WEAPON, 100, 1, skill->get_time(skill_id, skill_lv), skill_id);
+				skill->area_temp[0] = map->foreachinrange(skill->area_sub, bl, skill->get_splash(skill_id, skill_lv), BL_CHAR, src, skill_id, skill_lv, tick, BCT_ENEMY, skill->area_sub_count);
+				
+				// recursive invocation of skill->castend_damage_id() with flag|1
+				map->foreachinrange(skill->area_sub, bl, skill->get_splash(skill_id, skill_lv), skill->splash_target(src), src, skill_id, skill_lv, tick, flag | BCT_ENEMY | SD_SPLASH | 1, skill->castend_damage_id);
+			}
+			break;
+#else // !RENEWAL
+		case KN_BOWLINGBASH:
+#endif
 		case MS_BOWLINGBASH:
 			{
 				int min_x,max_x,min_y,max_y,i,c,dir,tx,ty;
