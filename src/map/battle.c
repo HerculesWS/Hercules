@@ -2117,7 +2117,16 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					skillratio += 30 * skill_lv;
 					break;
 				case AS_SONICBLOW:
+				{
+#ifndef RENEWAL
 					skillratio += 300 + 40 * skill_lv;
+#else
+					int ratio = 200 + 100 * skill_lv - 100;
+					skillratio += ratio - 100;
+					if (status_get_hp(target) < status_get_max_hp(target) / 2)
+						skillratio += (ratio / 2);
+#endif
+				}
 					break;
 				case TF_SPRINKLESAND:
 					skillratio += 30;
@@ -2915,8 +2924,10 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 			if(sc && skill_id != PA_SACRIFICE){
 #ifdef RENEWAL_EDP
 				if( sc->data[SC_EDP] ){
-					if( skill_id == AS_SONICBLOW ||
-						skill_id == GC_COUNTERSLASH ||
+					if( skill_id == GC_COUNTERSLASH ||
+#ifndef RENEWAL
+						skill_id == AS_SONICBLOW ||
+#endif
 						skill_id == GC_CROSSIMPACT )
 							skillratio >>= 1;
 				}
