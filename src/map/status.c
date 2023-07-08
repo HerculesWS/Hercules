@@ -4669,6 +4669,8 @@ static int status_calc_critical(struct block_list *bl, struct status_change *sc,
 #ifdef RENEWAL
 	if (sc->data[SC_SPEARQUICKEN])
 		critical += 3*sc->data[SC_SPEARQUICKEN]->val1 * 10;
+	if (sc->data[SC_TWOHANDQUICKEN] != NULL)
+		critical += 20 + sc->data[SC_TWOHANDQUICKEN]->val1 * 10;
 #endif
 
 	if (sc->data[SC__INVISIBILITY])
@@ -4743,6 +4745,8 @@ static int status_calc_hit(struct block_list *bl, struct status_change *sc, int 
 #ifdef RENEWAL
 	if (sc->data[SC_BLESSING] != NULL)
 		hit += sc->data[SC_BLESSING]->val3;
+	if (sc->data[SC_TWOHANDQUICKEN] != NULL)
+		hit += 2 * sc->data[SC_TWOHANDQUICKEN]->val1;
 #endif
 
 	return cap_value(hit, battle_config.hit_min, battle_config.hit_max);
@@ -5490,6 +5494,8 @@ static short status_calc_aspd(struct block_list *bl, struct status_change *sc, s
 #ifdef RENEWAL
 		if (sc->data[SC_INC_AGI] != NULL)
 			bonus += sc->data[SC_INC_AGI]->val1; // + SkillLevel%
+		if (sc->data[SC_TWOHANDQUICKEN] != NULL)
+			bonus += 10;
 #endif
 	}
 
