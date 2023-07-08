@@ -4747,6 +4747,8 @@ static int status_calc_hit(struct block_list *bl, struct status_change *sc, int 
 		hit += sc->data[SC_BLESSING]->val3;
 	if (sc->data[SC_TWOHANDQUICKEN] != NULL)
 		hit += 2 * sc->data[SC_TWOHANDQUICKEN]->val1;
+	if (sc->data[SC_ADRENALINE] != NULL)
+		hit += sc->data[SC_ADRENALINE]->val4;
 #endif
 
 	return cap_value(hit, battle_config.hit_min, battle_config.hit_max);
@@ -5495,6 +5497,8 @@ static short status_calc_aspd(struct block_list *bl, struct status_change *sc, s
 		if (sc->data[SC_INC_AGI] != NULL)
 			bonus += sc->data[SC_INC_AGI]->val1; // + SkillLevel%
 		if (sc->data[SC_TWOHANDQUICKEN] != NULL)
+			bonus += 10;
+		if (sc->data[SC_ADRENALINE] != NULL)
 			bonus += 10;
 #endif
 	}
@@ -8233,8 +8237,12 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				if(sd && pc->checkskill(sd,BS_HILTBINDING)>0)
 					total_tick += total_tick / 10;
 				break;
-			case SC_ADRENALINE2:
 			case SC_ADRENALINE:
+#ifdef RENEWAL
+				val4 = 5 + 3 * val1; // HIT increase
+				FALLTHROUGH
+#endif
+			case SC_ADRENALINE2:
 				val3 = (val2) ? 300 : 200; // aspd increase
 				FALLTHROUGH
 			case SC_WEAPONPERFECT:
