@@ -5273,6 +5273,10 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 			break;
 
 		case KN_BRANDISHSPEAR:
+#ifdef RENEWAL
+			sc_start(src, src, SC_NO_SWITCH_WEAPON, 100, 1, skill->get_time(skill_id, skill_lv), skill_id);
+			FALLTHROUGH
+#endif
 		case ML_BRANDISH:
 			//Coded apart for it needs the flag passed to the damage calculation.
 			if (skill->area_temp[1] != bl->id)

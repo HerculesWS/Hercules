@@ -2087,7 +2087,13 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 				case KN_SPEARBOOMERANG:
 					skillratio += 50*skill_lv;
 					break;
+#ifdef RENEWAL
 				case KN_BRANDISHSPEAR:
+					skillratio += 300 + 100 * skill_lv + status_get_str(src);
+					break;
+#else
+				case KN_BRANDISHSPEAR:
+#endif
 				case ML_BRANDISH:
 				{
 					int ratio = 100 + 20 * skill_lv;
@@ -3783,6 +3789,11 @@ static int battle_range_type(struct block_list *src, struct block_list *target, 
 		else
 			return BF_LONG;
 	}
+
+#ifdef RENEWAL
+	if (skill_id == KN_BRANDISHSPEAR)
+		return BF_LONG;
+#endif
 
 	//based on used skill's range
 	if (skill->get_range2(src, skill_id, skill_lv) < 5)
