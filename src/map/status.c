@@ -8232,8 +8232,14 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				val2 = 20*val1; //Power increase
 				break;
 			case SC_OVERTHRUST:
-				//val2 holds if it was casted on self, or is bonus received from others
-				val3 = 5*val1; //Power increase
+				// val2 holds if it was casted on self (1), or is bonus received from others (0)
+#ifndef RENEWAL
+				val3 = 5 * val1; //Power increase
+#else
+				// owner: 5, 10, 15, 20, 25
+				// party: 5,  5, 10, 10, 15
+				val3 = (val2 == 1 ? (5 * val1) : (5 + (val1 / 2) * 5)); // Power increase
+#endif
 				if(sd && pc->checkskill(sd,BS_HILTBINDING)>0)
 					total_tick += total_tick / 10;
 				break;
