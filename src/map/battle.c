@@ -1681,7 +1681,11 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					skillratio += 30 * skill_lv;
 					break;
 				case WZ_STORMGUST:
+#ifndef RENEWAL
 					skillratio += 40 * skill_lv;
+#else
+					skillratio += -30 + 50 * skill_lv;
+#endif
 					break;
 				case HW_NAPALMVULCAN:
 					skillratio += 10 * skill_lv - 30;
