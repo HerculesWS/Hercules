@@ -1742,16 +1742,7 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					skillratio += 25;
 					break;
 				case WZ_VERMILION:
-				{
-					int interval = 0, per = interval, ratio = per;
-					while( (per++) < skill_lv ){
-						ratio += interval;
-						if(per%3==0) interval += 20;
-					}
-					if( skill_lv > 9 )
-						ratio -= 10;
-					skillratio += ratio;
-				}
+					skillratio += -100 + 400 + skill_lv * 100;
 					break;
 				case NJ_HUUJIN:
 					skillratio += 50;
