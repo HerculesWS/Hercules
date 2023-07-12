@@ -327,7 +327,9 @@
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
   <Target Name="AfterBuild">
+    <Copy SourceFiles="..\conf\import-tmpl\api-server.conf" DestinationFolder="..\conf\import\" ContinueOnError="true" Condition="!Exists('..\conf\import\api-server.conf')" />
     <Copy SourceFiles="..\conf\import-tmpl\battle.conf" DestinationFolder="..\conf\import\" ContinueOnError="true" Condition="!Exists('..\conf\import\battle.conf')" />
+    <Copy SourceFiles="..\conf\import-tmpl\emblems.conf" DestinationFolder="..\conf\import\" ContinueOnError="true" Condition="!Exists('..\conf\import\emblems.conf')" />
     <Copy SourceFiles="..\conf\import-tmpl\char-server.conf" DestinationFolder="..\conf\import\" ContinueOnError="true" Condition="!Exists('..\conf\import\char-server.conf')" />
     <Copy SourceFiles="..\conf\import-tmpl\inter-server.conf" DestinationFolder="..\conf\import\" ContinueOnError="true" Condition="!Exists('..\conf\import\inter-server.conf')" />
     <Copy SourceFiles="..\conf\import-tmpl\logs.conf" DestinationFolder="..\conf\import\" ContinueOnError="true" Condition="!Exists('..\conf\import\logs.conf')" />

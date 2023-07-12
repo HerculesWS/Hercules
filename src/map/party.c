@@ -657,7 +657,8 @@ static int party_member_withdraw(int party_id, int account_id, int char_id)
 					intif->party_leaderchange(p->party.party_id, p->party.member[k].account_id, p->party.member[k].char_id);
 					clif->party_info(p, NULL);
 				}
-				VECTOR_CLEAR(sd->agency_requests);
+				if (sd != NULL)
+					VECTOR_CLEAR(sd->agency_requests);
 			}
 		}
 	}

@@ -859,6 +859,7 @@ static int npc_settimerevent_tick(struct npc_data *nd, int newtimer)
 static int npc_event_sub(struct map_session_data *sd, struct event_data *ev, const char *eventname)
 {
 	nullpo_retr(2, sd);
+	nullpo_retr(2, ev);
 	nullpo_retr(2, eventname);
 	if ( sd->npc_id != 0 )
 	{
@@ -874,7 +875,8 @@ static int npc_event_sub(struct map_session_data *sd, struct event_data *ev, con
 		ShowWarning("npc_event: player's event queue is full, can't add event '%s' !\n", eventname);
 		return 1;
 	}
-	if( ev->nd->option&OPTION_INVISIBLE )
+	nullpo_retr(2, ev->nd);
+	if (ev->nd->option & OPTION_INVISIBLE)
 	{
 		//Disabled npc, shouldn't trigger event.
 		npc->event_dequeue(sd);
@@ -1322,6 +1324,7 @@ static void run_tomb(struct map_session_data *sd, struct npc_data *nd)
 	char buffer[200];
 	char time[10];
 
+	nullpo_retv(sd);
 	nullpo_retv(nd);
 
 	sd->npc_id = nd->bl.id;
@@ -1827,6 +1830,7 @@ static void npc_barter_tosql(struct npc_data *nd, int index)
  */
 static void npc_barter_delfromsql_sub(const char *npcname, int itemId, int itemId2, int amount2)
 {
+	nullpo_retv(npcname);
 	if (itemId == INT_MAX) {
 		if (SQL_ERROR == SQL->Query(map->mysql_handle, "DELETE FROM `%s` WHERE `name`='%s'", map->npc_barter_data_db, npcname))
 			Sql_ShowDebug(map->mysql_handle);
@@ -1980,10 +1984,12 @@ static void npc_expanded_barter_tosql(struct npc_data *nd, int index)
  */
 static void npc_expanded_barter_delfromsql_sub(const char *npcname, int itemId, int zeny, int currencyCount, struct npc_barter_currency* currency)
 {
+	nullpo_retv(npcname);
 	if (itemId == INT_MAX) {
 		if (SQL_ERROR == SQL->Query(map->mysql_handle, "DELETE FROM `%s` WHERE `name`='%s'", map->npc_expanded_barter_data_db, npcname))
 			Sql_ShowDebug(map->mysql_handle);
 	} else {
+		nullpo_retv(currency);
 		StringBuf buf;
 
 		StrBuf->Init(&buf);
@@ -5614,15 +5620,17 @@ static int npc_parsesrcfile(const char *filepath, bool runOnInit)
 
 static int npc_script_event(struct map_session_data *sd, enum npce_event type)
 {
-	int i;
 	if (type == NPCE_MAX)
 		return 0;
+	Assert_ret(type >= 0 && type < NPCE_MAX);
 	if (!sd) {
 		ShowError("npc_script_event: NULL sd. Event Type %u\n", type);
 		return 0;
 	}
+
+	int i;
 	for (i = 0; i<script_event[type].event_count; i++)
-		npc->event_sub(sd,script_event[type].event[i],script_event[type].event_name[i]);
+		npc->event_sub(sd, script_event[type].event[i], script_event[type].event_name[i]);
 	return i;
 }
 
