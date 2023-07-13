@@ -12,6 +12,7 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     strategy:
       matrix:
         CC: [clang-15]
@@ -35,7 +36,11 @@ jobs:
           MYSQL_USER: 'ragnarok'
           MYSQL_PASSWORD: 'ragnarok'
           MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
-        options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=5s
+          --health-timeout=2s
+          --health-retries=3
     env:
       INSTALL_PACKAGES: ${{ matrix.CC }} mariadb-client libmariadbclient-dev-compat
       SQLHOST: mariadb
