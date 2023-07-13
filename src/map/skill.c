@@ -21584,12 +21584,14 @@ static void skill_level_set_value(int *arr, int value)
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the ID should be set it.
  * @param conf_index The 1-based index of the currently processed libconfig settings block.
+ * @param loaded_ids_db map of the IDs that were already loaded from conf (for duplicate detection in same file)
  *
  **/
-static void skill_validate_id(struct config_setting_t *conf, struct s_skill_db *sk, int conf_index)
+static void skill_validate_id(struct config_setting_t *conf, struct s_skill_db *sk, int conf_index, struct DBMap *loaded_ids_db)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+	nullpo_retv(loaded_ids_db);
 
 	sk->nameid = 0;
 
@@ -21604,7 +21606,7 @@ static void skill_validate_id(struct config_setting_t *conf, struct s_skill_db *
 	else if(skill->get_index(id) == 0)
 		ShowError("%s: Skill ID %d in entry %d in %s is out of range, or within a reserved range (for guild, homunculus, mercenary or elemental skills)! Skipping skill...\n",
 			  __func__, id, conf_index, conf->file);
-	else if (*skill->get_name(id) != '\0')
+	else if (idb_exists(loaded_ids_db, id))
 		ShowError("%s: Duplicate skill ID %d in entry %d in %s! Skipping skill...\n",
 			  __func__, id, conf_index, conf->file);
 	else if (id >= MAX_SKILL_ID)
@@ -21639,12 +21641,16 @@ static bool skill_name_contains_invalid_character(const char *name)
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the name should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_name(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_name(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "Name") == NULL)
+		return;
 
 	*sk->name = '\0';
 
@@ -21659,9 +21665,6 @@ static void skill_validate_name(struct config_setting_t *conf, struct s_skill_db
 	else if (skill->name_contains_invalid_character(name))
 		ShowError("%s: Specified name %s for skill ID %d in %s contains invalid characters! Allowed characters are letters, numbers and underscores. Skipping skill...\n",
 			  __func__, name, sk->nameid, conf->file);
-	else if (skill->name2id(name) != 0)
-		ShowError("%s: Duplicate name %s for skill ID %d in %s! Skipping skill...\n",
-			  __func__, name, sk->nameid, conf->file);
 	else
 		safestrncpy(sk->name, name, sizeof(sk->name));
 }
@@ -21672,12 +21675,16 @@ static void skill_validate_name(struct config_setting_t *conf, struct s_skill_db
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the maximum level should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_max_level(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_max_level(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "MaxLevel") == NULL)
+		return;
 
 	sk->max = 0;
 
@@ -21698,12 +21705,16 @@ static void skill_validate_max_level(struct config_setting_t *conf, struct s_ski
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the description should be set it.
- *
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
+ * 
  **/
-static void skill_validate_description(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_description(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "Description") == NULL)
+		return;
 
 	*sk->desc = '\0';
 
@@ -21723,12 +21734,16 @@ static void skill_validate_description(struct config_setting_t *conf, struct s_s
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the range should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_range(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_range(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "Range") == NULL)
+		return;
 
 	skill->level_set_value(sk->range, 0);
 
@@ -21768,12 +21783,16 @@ static void skill_validate_range(struct config_setting_t *conf, struct s_skill_d
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the hit type should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_hittype(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_hittype(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "Hit") == NULL)
+		return;
 
 	skill->level_set_value(sk->hit, BDT_NORMAL);
 
@@ -21823,18 +21842,35 @@ static void skill_validate_hittype(struct config_setting_t *conf, struct s_skill
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the types should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_skilltype(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_skilltype(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "SkillType") == NULL)
+		return;
 
 	sk->inf = INF_NONE;
 
 	struct config_setting_t *t = libconfig->setting_get_member(conf, "SkillType");
 
 	if (t != NULL && config_setting_is_group(t)) {
+		struct {
+			const char *name;
+			int id;
+		} type_list[] = {
+			{ "Passive", INF_NONE },
+			{ "Enemy", INF_ATTACK_SKILL },
+			{ "Place", INF_GROUND_SKILL },
+			{ "Self", INF_SELF_SKILL },
+			{ "Friend", INF_SUPPORT_SKILL },
+			{ "Trap", INF_TARGET_TRAP },
+			{ "Item", INF_ITEM_SKILL },
+		};
+
 		struct config_setting_t *tt;
 		int i = 0;
 
@@ -21842,40 +21878,18 @@ static void skill_validate_skilltype(struct config_setting_t *conf, struct s_ski
 			const char *skill_type = config_setting_name(tt);
 			bool on = libconfig->setting_get_bool_real(tt);
 
-			if (strcmpi(skill_type, "Enemy") == 0) {
-				if (on)
-					sk->inf |= INF_ATTACK_SKILL;
-				else
-					sk->inf &= ~INF_ATTACK_SKILL;
-			} else if (strcmpi(skill_type, "Place") == 0) {
-				if (on)
-					sk->inf |= INF_GROUND_SKILL;
-				else
-					sk->inf &= ~INF_GROUND_SKILL;
-			} else if (strcmpi(skill_type, "Self") == 0) {
-				if (on)
-					sk->inf |= INF_SELF_SKILL;
-				else
-					sk->inf &= ~INF_SELF_SKILL;
-			} else if (strcmpi(skill_type, "Friend") == 0) {
-				if (on)
-					sk->inf |= INF_SUPPORT_SKILL;
-				else
-					sk->inf &= ~INF_SUPPORT_SKILL;
-			} else if (strcmpi(skill_type, "Trap") == 0) {
-				if (on)
-					sk->inf |= INF_TARGET_TRAP;
-				else
-					sk->inf &= ~INF_TARGET_TRAP;
-			} else if (strcmpi(skill_type, "Item") == 0) {
-				if (on)
-					sk->inf |= INF_ITEM_SKILL;
-				else
-					sk->inf &= ~INF_ITEM_SKILL;
-			} else if (strcmpi(skill_type, "Passive") != 0) {
-				ShowWarning("%s: Invalid skill type %s specified for skill ID %d in %s! Skipping type...\n",
+			int j = 0;
+			ARR_FIND(0, ARRAYLENGTH(type_list), j, strcmp(skill_type, type_list[j].name) == 0);
+			if (j == ARRAYLENGTH(type_list)) {
+				ShowWarning("%s: Invalid SkillType '%s' specified for skill ID %d in %s! Skipping type...\n",
 					    __func__, skill_type, sk->nameid, conf->file);
+				continue;
 			}
+
+			if (on)
+				sk->inf |= type_list[j].id;
+			else
+				sk->inf &= ~type_list[j].id;
 		}
 	}
 }
@@ -21885,12 +21899,16 @@ static void skill_validate_skilltype(struct config_setting_t *conf, struct s_ski
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the sub-types should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_skillinfo(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_skillinfo(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "SkillInfo") == NULL)
+		return;
 
 	sk->inf2 = INF2_NONE;
 
@@ -21900,159 +21918,58 @@ static void skill_validate_skillinfo(struct config_setting_t *conf, struct s_ski
 		struct config_setting_t *tt;
 		int i = 0;
 
+		struct {
+			const char *name;
+			int id;
+		} info_list[] = {
+			{ "None", INF2_NONE },
+			{ "Quest", INF2_QUEST_SKILL },
+			{ "NPC", INF2_NPC_SKILL },
+			{ "Wedding", INF2_WEDDING_SKILL },
+			{ "Spirit", INF2_SPIRIT_SKILL },
+			{ "Guild", INF2_GUILD_SKILL },
+			{ "Song", INF2_SONG_DANCE },
+			{ "Ensemble", INF2_ENSEMBLE_SKILL },
+			{ "Trap", INF2_TRAP },
+			{ "TargetSelf", INF2_TARGET_SELF },
+			{ "NoCastSelf", INF2_NO_TARGET_SELF },
+			{ "PartyOnly", INF2_PARTY_ONLY },
+			{ "GuildOnly", INF2_GUILD_ONLY },
+			{ "NoEnemy", INF2_NO_ENEMY },
+			{ "IgnoreLandProtector", INF2_NOLP },
+			{ "Chorus", INF2_CHORUS_SKILL },
+			{ "FreeCastNormal", INF2_FREE_CAST_NORMAL },
+			{ "FreeCastReduced", INF2_FREE_CAST_REDUCED },
+			{ "ShowSkillScale", INF2_SHOW_SKILL_SCALE },
+			{ "AllowReproduce", INF2_ALLOW_REPRODUCE },
+			{ "HiddenTrap", INF2_HIDDEN_TRAP },
+			{ "IsCombo", INF2_IS_COMBO_SKILL },
+			{ "BlockedByStasis", INF2_NO_STASIS },
+			{ "BlockedByKagehumi", INF2_NO_KAGEHUMI },
+			{ "RangeModByVulture", INF2_RANGE_VULTURE },
+			{ "RangeModBySnakeEye", INF2_RANGE_SNAKEEYE },
+			{ "RangeModByShadowJump", INF2_RANGE_SHADOWJUMP },
+			{ "RangeModByRadius", INF2_RANGE_RADIUS },
+			{ "RangeModByResearchTrap", INF2_RANGE_RESEARCHTRAP },
+			{ "AllowPlagiarism", INF2_ALLOW_PLAGIARIZE },
+		};
+		
 		while ((tt = libconfig->setting_get_elem(t, i++)) != NULL) {
 			const char *skill_info = config_setting_name(tt);
 			bool on = libconfig->setting_get_bool_real(tt);
 
-			if (strcmpi(skill_info, "Quest") == 0) {
-				if (on)
-					sk->inf2 |= INF2_QUEST_SKILL;
-				else
-					sk->inf2 &= ~INF2_QUEST_SKILL;
-			} else if (strcmpi(skill_info, "NPC") == 0) {
-				if (on)
-					sk->inf2 |= INF2_NPC_SKILL;
-				else
-					sk->inf2 &= ~INF2_NPC_SKILL;
-			} else if (strcmpi(skill_info, "Wedding") == 0) {
-				if (on)
-					sk->inf2 |= INF2_WEDDING_SKILL;
-				else
-					sk->inf2 &= ~INF2_WEDDING_SKILL;
-			} else if (strcmpi(skill_info, "Spirit") == 0) {
-				if (on)
-					sk->inf2 |= INF2_SPIRIT_SKILL;
-				else
-					sk->inf2 &= ~INF2_SPIRIT_SKILL;
-			} else if (strcmpi(skill_info, "Guild") == 0) {
-				if (on)
-					sk->inf2 |= INF2_GUILD_SKILL;
-				else
-					sk->inf2 &= ~INF2_GUILD_SKILL;
-			} else if (strcmpi(skill_info, "Song") == 0) {
-				if (on)
-					sk->inf2 |= INF2_SONG_DANCE;
-				else
-					sk->inf2 &= ~INF2_SONG_DANCE;
-			} else if (strcmpi(skill_info, "Ensemble") == 0) {
-				if (on)
-					sk->inf2 |= INF2_ENSEMBLE_SKILL;
-				else
-					sk->inf2 &= ~INF2_ENSEMBLE_SKILL;
-			} else if (strcmpi(skill_info, "Trap") == 0) {
-				if (on)
-					sk->inf2 |= INF2_TRAP;
-				else
-					sk->inf2 &= ~INF2_TRAP;
-			} else if (strcmpi(skill_info, "TargetSelf") == 0) {
-				if (on)
-					sk->inf2 |= INF2_TARGET_SELF;
-				else
-					sk->inf2 &= ~INF2_TARGET_SELF;
-			} else if (strcmpi(skill_info, "NoCastSelf") == 0) {
-				if (on)
-					sk->inf2 |= INF2_NO_TARGET_SELF;
-				else
-					sk->inf2 &= ~INF2_NO_TARGET_SELF;
-			} else if (strcmpi(skill_info, "PartyOnly") == 0) {
-				if (on)
-					sk->inf2 |= INF2_PARTY_ONLY;
-				else
-					sk->inf2 &= ~INF2_PARTY_ONLY;
-			} else if (strcmpi(skill_info, "GuildOnly") == 0) {
-				if (on)
-					sk->inf2 |= INF2_GUILD_ONLY;
-				else
-					sk->inf2 &= ~INF2_GUILD_ONLY;
-			} else if (strcmpi(skill_info, "NoEnemy") == 0) {
-				if (on)
-					sk->inf2 |= INF2_NO_ENEMY;
-				else
-					sk->inf2 &= ~INF2_NO_ENEMY;
-			} else if (strcmpi(skill_info, "IgnoreLandProtector") == 0) {
-				if (on)
-					sk->inf2 |= INF2_NOLP;
-				else
-					sk->inf2 &= ~INF2_NOLP;
-			} else if (strcmpi(skill_info, "Chorus") == 0) {
-				if (on)
-					sk->inf2 |= INF2_CHORUS_SKILL;
-				else
-					sk->inf2 &= ~INF2_CHORUS_SKILL;
-			} else if (strcmpi(skill_info, "FreeCastNormal") == 0) {
-				if (on)
-					sk->inf2 |= INF2_FREE_CAST_NORMAL;
-				else
-					sk->inf2 &= ~INF2_FREE_CAST_NORMAL;
-			} else if (strcmpi(skill_info, "FreeCastReduced") == 0) {
-				if (on)
-					sk->inf2 |= INF2_FREE_CAST_REDUCED;
-				else
-					sk->inf2 &= ~INF2_FREE_CAST_REDUCED;
-			} else if (strcmpi(skill_info, "ShowSkillScale") == 0) {
-				if (on)
-					sk->inf2 |= INF2_SHOW_SKILL_SCALE;
-				else
-					sk->inf2 &= ~INF2_SHOW_SKILL_SCALE;
-			} else if (strcmpi(skill_info, "AllowReproduce") == 0) {
-				if (on)
-					sk->inf2 |= INF2_ALLOW_REPRODUCE;
-				else
-					sk->inf2 &= ~INF2_ALLOW_REPRODUCE;
-			} else if (strcmpi(skill_info, "HiddenTrap") == 0) {
-				if (on)
-					sk->inf2 |= INF2_HIDDEN_TRAP;
-				else
-					sk->inf2 &= ~INF2_HIDDEN_TRAP;
-			} else if (strcmpi(skill_info, "IsCombo") == 0) {
-				if (on)
-					sk->inf2 |= INF2_IS_COMBO_SKILL;
-				else
-					sk->inf2 &= ~INF2_IS_COMBO_SKILL;
-			} else if (strcmpi(skill_info, "BlockedByStasis") == 0) {
-				if (on)
-					sk->inf2 |= INF2_NO_STASIS;
-				else
-					sk->inf2 &= ~INF2_NO_STASIS;
-			} else if (strcmpi(skill_info, "BlockedByKagehumi") == 0) {
-				if (on)
-					sk->inf2 |= INF2_NO_KAGEHUMI;
-				else
-					sk->inf2 &= ~INF2_NO_KAGEHUMI;
-			} else if (strcmpi(skill_info, "RangeModByVulture") == 0) {
-				if (on)
-					sk->inf2 |= INF2_RANGE_VULTURE;
-				else
-					sk->inf2 &= ~INF2_RANGE_VULTURE;
-			} else if (strcmpi(skill_info, "RangeModBySnakeEye") == 0) {
-				if (on)
-					sk->inf2 |= INF2_RANGE_SNAKEEYE;
-				else
-					sk->inf2 &= ~INF2_RANGE_SNAKEEYE;
-			} else if (strcmpi(skill_info, "RangeModByShadowJump") == 0) {
-				if (on)
-					sk->inf2 |= INF2_RANGE_SHADOWJUMP;
-				else
-					sk->inf2 &= ~INF2_RANGE_SHADOWJUMP;
-			} else if (strcmpi(skill_info, "RangeModByRadius") == 0) {
-				if (on)
-					sk->inf2 |= INF2_RANGE_RADIUS;
-				else
-					sk->inf2 &= ~INF2_RANGE_RADIUS;
-			} else if (strcmpi(skill_info, "RangeModByResearchTrap") == 0) {
-				if (on)
-					sk->inf2 |= INF2_RANGE_RESEARCHTRAP;
-				else
-					sk->inf2 &= ~INF2_RANGE_RESEARCHTRAP;
-			} else if (strcmpi(skill_info, "AllowPlagiarism") == 0) {
-				if (on)
-					sk->inf2 |= INF2_ALLOW_PLAGIARIZE;
-				else
-					sk->inf2 &= ~INF2_ALLOW_PLAGIARIZE;
-			} else if (strcmpi(skill_info, "None") != 0) {
-				ShowWarning("%s: Invalid sub-type %s specified for skill ID %d in %s! Skipping sub-type...\n",
+			int j = 0;
+			ARR_FIND(0, ARRAYLENGTH(info_list), j, strcmp(skill_info, info_list[j].name) == 0);
+			if (j == ARRAYLENGTH(info_list)) {
+				ShowWarning("%s: Invalid SkillInfo '%s' specified for skill ID %d in %s! Skipping SkillInfo...\n",
 					    __func__, skill_info, sk->nameid, conf->file);
+				continue;
 			}
+
+			if (on)
+				sk->inf2 |= info_list[j].id;
+			else
+				sk->inf2 &= ~info_list[j].id;
 		}
 	}
 }
@@ -22062,12 +21979,16 @@ static void skill_validate_skillinfo(struct config_setting_t *conf, struct s_ski
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the attack type should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_attacktype(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_attacktype(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "AttackType") == NULL)
+		return;
 
 	skill->level_set_value(sk->skill_type, BF_NONE);
 
@@ -22121,12 +22042,16 @@ static void skill_validate_attacktype(struct config_setting_t *conf, struct s_sk
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the element should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_element(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_element(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "Element") == NULL)
+		return;
 
 	skill->level_set_value(sk->element, ELE_NEUTRAL);
 
@@ -22180,18 +22105,36 @@ static void skill_validate_element(struct config_setting_t *conf, struct s_skill
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the damage types should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_damagetype(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_damagetype(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "DamageType") == NULL)
+		return;
 
 	sk->nk = NK_NONE;
 
 	struct config_setting_t *t = libconfig->setting_get_member(conf, "DamageType");
 
 	if (t != NULL && config_setting_is_group(t)) {
+		struct {
+			const char *name;
+			int id;
+		} type_list[] = {
+			{ "NoDamage", NK_NO_DAMAGE },
+			{ "SplashArea", NK_SPLASH_ONLY },
+			{ "SplitDamage", NK_SPLASHSPLIT },
+			{ "IgnoreCards", NK_NO_CARDFIX_ATK },
+			{ "IgnoreElement", NK_NO_ELEFIX },
+			{ "IgnoreDefense", NK_IGNORE_DEF },
+			{ "IgnoreFlee", NK_IGNORE_FLEE },
+			{ "IgnoreDefCards", NK_NO_CARDFIX_DEF },
+		};
+
 		struct config_setting_t *tt;
 		int i = 0;
 
@@ -22199,50 +22142,18 @@ static void skill_validate_damagetype(struct config_setting_t *conf, struct s_sk
 			const char *damage_type = config_setting_name(tt);
 			bool on = libconfig->setting_get_bool_real(tt);
 
-			if (strcmpi(damage_type, "NoDamage") == 0) {
-				if (on)
-					sk->nk |= NK_NO_DAMAGE;
-				else
-					sk->nk &= ~NK_NO_DAMAGE;
-			} else if (strcmpi(damage_type, "SplashArea") == 0) {
-				if (on)
-					sk->nk |= NK_SPLASH_ONLY;
-				else
-					sk->nk &= ~NK_SPLASH_ONLY;
-			} else if (strcmpi(damage_type, "SplitDamage") == 0) {
-				if (on)
-					sk->nk |= NK_SPLASHSPLIT;
-				else
-					sk->nk &= ~NK_SPLASHSPLIT;
-			} else if (strcmpi(damage_type, "IgnoreCards") == 0) {
-				if (on)
-					sk->nk |= NK_NO_CARDFIX_ATK;
-				else
-					sk->nk &= ~NK_NO_CARDFIX_ATK;
-			} else if (strcmpi(damage_type, "IgnoreElement") == 0) {
-				if (on)
-					sk->nk |= NK_NO_ELEFIX;
-				else
-					sk->nk &= ~NK_NO_ELEFIX;
-			} else if (strcmpi(damage_type, "IgnoreDefense") == 0) {
-				if (on)
-					sk->nk |= NK_IGNORE_DEF;
-				else
-					sk->nk &= ~NK_IGNORE_DEF;
-			} else if (strcmpi(damage_type, "IgnoreFlee") == 0) {
-				if (on)
-					sk->nk |= NK_IGNORE_FLEE;
-				else
-					sk->nk &= ~NK_IGNORE_FLEE;
-			} else if (strcmpi(damage_type, "IgnoreDefCards") == 0) {
-				if (on)
-					sk->nk |= NK_NO_CARDFIX_DEF;
-				else
-					sk->nk &= ~NK_NO_CARDFIX_DEF;
-			} else {
-				ShowWarning("%s: Invalid damage type %s specified for skill ID %d in %s! Skipping damage type...\n",
+			int j = 0;
+			ARR_FIND(0, ARRAYLENGTH(type_list), j, strcmp(damage_type, type_list[j].name) == 0);
+			if (j == ARRAYLENGTH(type_list)) {
+				ShowWarning("%s: Invalid DamageType '%s' specified for skill ID %d in %s! Skipping damage type...\n",
 					    __func__, damage_type, sk->nameid, conf->file);
+				continue;
 			}
+
+			if (on)
+				sk->nk |= type_list[j].id;
+			else
+				sk->nk &= ~type_list[j].id;
 		}
 	}
 }
@@ -22252,12 +22163,16 @@ static void skill_validate_damagetype(struct config_setting_t *conf, struct s_sk
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the splash range should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_splash_range(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_splash_range(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "SplashRange") == NULL)
+		return;
 
 	skill->level_set_value(sk->splash, 0);
 
@@ -22297,12 +22212,16 @@ static void skill_validate_splash_range(struct config_setting_t *conf, struct s_
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the number of hits should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_number_of_hits(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_number_of_hits(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "NumberOfHits") == NULL)
+		return;
 
 	skill->level_set_value(sk->num, 1);
 
@@ -22342,12 +22261,16 @@ static void skill_validate_number_of_hits(struct config_setting_t *conf, struct 
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the cast interruptibility should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_interrupt_cast(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_interrupt_cast(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "InterruptCast") == NULL)
+		return;
 
 	skill->level_set_value(sk->castcancel, 0);
 
@@ -22379,12 +22302,16 @@ static void skill_validate_interrupt_cast(struct config_setting_t *conf, struct 
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the cast defence rate should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_cast_def_rate(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_cast_def_rate(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "CastDefRate") == NULL)
+		return;
 
 	skill->level_set_value(sk->cast_def_rate, 0);
 
@@ -22424,12 +22351,16 @@ static void skill_validate_cast_def_rate(struct config_setting_t *conf, struct s
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the number of instances should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_number_of_instances(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_number_of_instances(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "SkillInstances") == NULL)
+		return;
 
 	skill->level_set_value(sk->maxcount, 0);
 
@@ -22469,12 +22400,16 @@ static void skill_validate_number_of_instances(struct config_setting_t *conf, st
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the number of knock back tiles should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_knock_back_tiles(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_knock_back_tiles(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "KnockBackTiles") == NULL)
+		return;
 
 	skill->level_set_value(sk->blewcount, 0);
 
@@ -22514,12 +22449,16 @@ static void skill_validate_knock_back_tiles(struct config_setting_t *conf, struc
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the cast time should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_cast_time(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_cast_time(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "CastTime") == NULL)
+		return;
 
 	skill->level_set_value(sk->cast, 0);
 
@@ -22559,12 +22498,16 @@ static void skill_validate_cast_time(struct config_setting_t *conf, struct s_ski
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the after cast act delay should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_act_delay(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_act_delay(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "AfterCastActDelay") == NULL)
+		return;
 
 	skill->level_set_value(sk->delay, 0);
 
@@ -22604,12 +22547,16 @@ static void skill_validate_act_delay(struct config_setting_t *conf, struct s_ski
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the after cast walk delay should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_walk_delay(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_walk_delay(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "AfterCastWalkDelay") == NULL)
+		return;
 
 	skill->level_set_value(sk->walkdelay, 0);
 
@@ -22649,12 +22596,16 @@ static void skill_validate_walk_delay(struct config_setting_t *conf, struct s_sk
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the stay duration should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_skill_data1(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_skill_data1(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "SkillData1") == NULL)
+		return;
 
 	skill->level_set_value(sk->upkeep_time, 0);
 
@@ -22694,12 +22645,16 @@ static void skill_validate_skill_data1(struct config_setting_t *conf, struct s_s
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the effect duration should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_skill_data2(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_skill_data2(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "SkillData2") == NULL)
+		return;
 
 	skill->level_set_value(sk->upkeep_time2, 0);
 
@@ -22739,12 +22694,16 @@ static void skill_validate_skill_data2(struct config_setting_t *conf, struct s_s
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the cooldown should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_cooldown(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_cooldown(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "CoolDown") == NULL)
+		return;
 
 	skill->level_set_value(sk->cooldown, 0);
 
@@ -22785,12 +22744,16 @@ static void skill_validate_cooldown(struct config_setting_t *conf, struct s_skil
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the fixed cast time should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_fixed_cast_time(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_fixed_cast_time(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "FixedCastTime") == NULL)
+		return;
 
 #ifdef RENEWAL_CAST
 	skill->level_set_value(sk->fixed_cast, 0);
@@ -22838,12 +22801,16 @@ static void skill_validate_fixed_cast_time(struct config_setting_t *conf, struct
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the cast time or delay options should be set it.
  * @param delay If true, the skill's delay options are validated, otherwise its cast time options.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_castnodex(struct config_setting_t *conf, struct s_skill_db *sk, bool delay)
+static void skill_validate_castnodex(struct config_setting_t *conf, struct s_skill_db *sk, bool delay, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, delay ? "SkillDelayOptions" : "CastTimeOptions") == NULL)
+		return;
 
 	skill->level_set_value(delay ? sk->delaynodex : sk->castnodex, 0);
 
@@ -22889,12 +22856,16 @@ static void skill_validate_castnodex(struct config_setting_t *conf, struct s_ski
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the HP cost should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_hp_cost(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_hp_cost(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "HPCost") == NULL)
+		return;
 
 	skill->level_set_value(sk->hp, 0);
 
@@ -22934,12 +22905,17 @@ static void skill_validate_hp_cost(struct config_setting_t *conf, struct s_skill
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the SP cost should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_sp_cost(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_sp_cost(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "SPCost") == NULL)
+		return;
+
 
 	skill->level_set_value(sk->sp, 0);
 
@@ -22979,12 +22955,17 @@ static void skill_validate_sp_cost(struct config_setting_t *conf, struct s_skill
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the HP rate cost should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_hp_rate_cost(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_hp_rate_cost(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "HPRateCost") == NULL)
+		return;
+
 
 	skill->level_set_value(sk->hp_rate, 0);
 
@@ -23024,12 +23005,16 @@ static void skill_validate_hp_rate_cost(struct config_setting_t *conf, struct s_
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the SP rate cost should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_sp_rate_cost(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_sp_rate_cost(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "SPRateCost") == NULL)
+		return;
 
 	skill->level_set_value(sk->sp_rate, 0);
 
@@ -23069,12 +23054,16 @@ static void skill_validate_sp_rate_cost(struct config_setting_t *conf, struct s_
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the maximum HP trigger should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_max_hp_trigger(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_max_hp_trigger(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "MaxHPTrigger") == NULL)
+		return;
 
 	skill->level_set_value(sk->mhp, 0);
 
@@ -23114,12 +23103,16 @@ static void skill_validate_max_hp_trigger(struct config_setting_t *conf, struct 
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the maximum SP trigger should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_max_sp_trigger(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_max_sp_trigger(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "MaxSPTrigger") == NULL)
+		return;
 
 	skill->level_set_value(sk->msp, 0);
 
@@ -23159,12 +23152,16 @@ static void skill_validate_max_sp_trigger(struct config_setting_t *conf, struct 
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the Zeny cost should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_zeny_cost(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_zeny_cost(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "ZenyCost") == NULL)
+		return;
 
 	skill->level_set_value(sk->zeny, 0);
 
@@ -23213,162 +23210,57 @@ static int skill_validate_weapontype_sub(const char *type, bool on, struct s_ski
 	nullpo_retr(1, type);
 	nullpo_retr(1, sk);
 
-	if (strcmpi(type, "NoWeapon") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_FIST);
-		else
-			sk->weapon &= ~(1 << W_FIST);
-	} else if (strcmpi(type, "Daggers") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_DAGGER);
-		else
-			sk->weapon &= ~(1 << W_DAGGER);
-	} else if (strcmpi(type, "1HSwords") == 0) {
-
-		if (on)
-			sk->weapon |= (1 << W_1HSWORD);
-		else
-			sk->weapon &= ~(1 << W_1HSWORD);
-	} else if (strcmpi(type, "2HSwords") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_2HSWORD);
-		else
-			sk->weapon &= ~(1 << W_2HSWORD);
-	} else if (strcmpi(type, "1HSpears") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_1HSPEAR);
-		else
-			sk->weapon &= ~(1 << W_1HSPEAR);
-	} else if (strcmpi(type, "2HSpears") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_2HSPEAR);
-		else
-			sk->weapon &= ~(1 << W_2HSPEAR);
-	} else if (strcmpi(type, "1HAxes") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_1HAXE);
-		else
-			sk->weapon &= ~(1 << W_1HAXE);
-	} else if (strcmpi(type, "2HAxes") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_2HAXE);
-		else
-			sk->weapon &= ~(1 << W_2HAXE);
-	} else if (strcmpi(type, "Maces") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_MACE);
-		else
-			sk->weapon &= ~(1 << W_MACE);
-	} else if (strcmpi(type, "2HMaces") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_2HMACE);
-		else
-			sk->weapon &= ~(1 << W_2HMACE);
-	} else if (strcmpi(type, "Staves") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_STAFF);
-		else
-			sk->weapon &= ~(1 << W_STAFF);
-	} else if (strcmpi(type, "Bows") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_BOW);
-		else
-			sk->weapon &= ~(1 << W_BOW);
-	} else if (strcmpi(type, "Knuckles") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_KNUCKLE);
-		else
-			sk->weapon &= ~(1 << W_KNUCKLE);
-	} else if (strcmpi(type, "Instruments") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_MUSICAL);
-		else
-			sk->weapon &= ~(1 << W_MUSICAL);
-	} else if (strcmpi(type, "Whips") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_WHIP);
-		else
-			sk->weapon &= ~(1 << W_WHIP);
-	} else if (strcmpi(type, "Books") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_BOOK);
-		else
-			sk->weapon &= ~(1 << W_BOOK);
-	} else if (strcmpi(type, "Katars") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_KATAR);
-		else
-			sk->weapon &= ~(1 << W_KATAR);
-	} else if (strcmpi(type, "Revolvers") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_REVOLVER);
-		else
-			sk->weapon &= ~(1 << W_REVOLVER);
-	} else if (strcmpi(type, "Rifles") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_RIFLE);
-		else
-			sk->weapon &= ~(1 << W_RIFLE);
-	} else if (strcmpi(type, "GatlingGuns") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_GATLING);
-		else
-			sk->weapon &= ~(1 << W_GATLING);
-	} else if (strcmpi(type, "Shotguns") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_SHOTGUN);
-		else
-			sk->weapon &= ~(1 << W_SHOTGUN);
-	} else if (strcmpi(type, "GrenadeLaunchers") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_GRENADE);
-		else
-			sk->weapon &= ~(1 << W_GRENADE);
-	} else if (strcmpi(type, "FuumaShurikens") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_HUUMA);
-		else
-			sk->weapon &= ~(1 << W_HUUMA);
-	} else if (strcmpi(type, "2HStaves") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_2HSTAFF);
-		else
-			sk->weapon &= ~(1 << W_2HSTAFF);
-	} else if (strcmpi(type, "DWDaggers") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_DOUBLE_DD);
-		else
-			sk->weapon &= ~(1 << W_DOUBLE_DD);
-	} else if (strcmpi(type, "DWSwords") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_DOUBLE_SS);
-		else
-			sk->weapon &= ~(1 << W_DOUBLE_SS);
-	} else if (strcmpi(type, "DWAxes") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_DOUBLE_AA);
-		else
-			sk->weapon &= ~(1 << W_DOUBLE_AA);
-	} else if (strcmpi(type, "DWDaggerSword") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_DOUBLE_DS);
-		else
-			sk->weapon &= ~(1 << W_DOUBLE_DS);
-	} else if (strcmpi(type, "DWDaggerAxe") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_DOUBLE_DA);
-		else
-			sk->weapon &= ~(1 << W_DOUBLE_DA);
-	} else if (strcmpi(type, "DWSwordAxe") == 0) {
-		if (on)
-			sk->weapon |= (1 << W_DOUBLE_SA);
-		else
-			sk->weapon &= ~(1 << W_DOUBLE_SA);
-	} else if (strcmpi(type, "All") == 0) {
+	if (strcmp(type, "All") == 0) {
 		sk->weapon = 0;
-	} else {
-		return 1;
+		return 0;
 	}
+
+	struct {
+		const char *name;
+		int id;
+	} type_list[] = {
+		// { "All", 0 }, // It is = 0 instead of a flag, so we don't check here
+		{ "NoWeapon", W_FIST },
+		{ "Daggers", W_DAGGER },
+		{ "1HSwords", W_1HSWORD },
+		{ "2HSwords", W_2HSWORD },
+		{ "1HSpears", W_1HSPEAR },
+		{ "2HSpears", W_2HSPEAR },
+		{ "1HAxes", W_1HAXE },
+		{ "2HAxes", W_2HAXE },
+		{ "Maces", W_MACE },
+		{ "2HMaces", W_2HMACE },
+		{ "Staves", W_STAFF },
+		{ "Bows", W_BOW },
+		{ "Knuckles", W_KNUCKLE },
+		{ "Instruments", W_MUSICAL },
+		{ "Whips", W_WHIP },
+		{ "Books", W_BOOK },
+		{ "Katars", W_KATAR },
+		{ "Revolvers", W_REVOLVER },
+		{ "Rifles", W_RIFLE },
+		{ "GatlingGuns", W_GATLING },
+		{ "Shotguns", W_SHOTGUN },
+		{ "GrenadeLaunchers", W_GRENADE },
+		{ "FuumaShurikens", W_HUUMA },
+		{ "2HStaves", W_2HSTAFF },
+		{ "DWDaggers", W_DOUBLE_DD },
+		{ "DWSwords", W_DOUBLE_SS },
+		{ "DWAxes", W_DOUBLE_AA },
+		{ "DWDaggerSword", W_DOUBLE_DS },
+		{ "DWDaggerAxe", W_DOUBLE_DA },
+		{ "DWSwordAxe", W_DOUBLE_SA },
+	};
+
+	int j;
+	ARR_FIND(0, ARRAYLENGTH(type_list), j, strcmp(type, type_list[j].name) == 0);
+	if (j == ARRAYLENGTH(type_list))
+		return 1;
+
+	if (on)
+		sk->weapon |= (1 << type_list[j].id);
+	else
+		sk->weapon &= ~(1 << type_list[j].id);
 
 	return 0;
 }
@@ -23378,12 +23270,16 @@ static int skill_validate_weapontype_sub(const char *type, bool on, struct s_ski
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the required weapon types should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_weapontype(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_weapontype(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "WeaponTypes") == NULL)
+		return;
 
 	sk->weapon = 0;
 
@@ -23427,59 +23323,36 @@ static int skill_validate_ammotype_sub(const char *type, bool on, struct s_skill
 	nullpo_retr(1, type);
 	nullpo_retr(1, sk);
 
-	if (strcmpi(type, "A_ARROW") == 0) {
-		if (on)
-			sk->ammo |= (1 << A_ARROW);
-		else
-			sk->ammo &= ~(1 << A_ARROW);
-	} else if (strcmpi(type, "A_DAGGER") == 0) {
-		if (on)
-			sk->ammo |= (1 << A_DAGGER);
-		else
-			sk->ammo &= ~(1 << A_DAGGER);
-	} else if (strcmpi(type, "A_BULLET") == 0) {
-		if (on)
-			sk->ammo |= (1 << A_BULLET);
-		else
-			sk->ammo &= ~(1 << A_BULLET);
-	} else if (strcmpi(type, "A_SHELL") == 0) {
-		if (on)
-			sk->ammo |= (1 << A_SHELL);
-		else
-			sk->ammo &= ~(1 << A_SHELL);
-	} else if (strcmpi(type, "A_GRENADE") == 0) {
-		if (on)
-			sk->ammo |= (1 << A_GRENADE);
-		else
-			sk->ammo &= ~(1 << A_GRENADE);
-	} else if (strcmpi(type, "A_SHURIKEN") == 0) {
-		if (on)
-			sk->ammo |= (1 << A_SHURIKEN);
-		else
-			sk->ammo &= ~(1 << A_SHURIKEN);
-	} else if (strcmpi(type, "A_KUNAI") == 0) {
-		if (on)
-			sk->ammo |= (1 << A_KUNAI);
-		else
-			sk->ammo &= ~(1 << A_KUNAI);
-	} else if (strcmpi(type, "A_CANNONBALL") == 0) {
-		if (on)
-			sk->ammo |= (1 << A_CANNONBALL);
-		else
-			sk->ammo &= ~(1 << A_CANNONBALL);
-	} else if (strcmpi(type, "A_THROWWEAPON") == 0) {
-		if (on)
-			sk->ammo |= (1 << A_THROWWEAPON);
-		else
-			sk->ammo &= ~(1 << A_THROWWEAPON);
-	} else if (strcmpi(type, "All") == 0) {
-		if (on)
-			sk->ammo = 0xFFFFFFFF;
-		else
-			sk->ammo = 0;
-	} else {
-		return 1;
+	if (strcmp(type, "All") == 0) {
+		sk->ammo = on ? 0xFFFFFFFF : 0;
+		return 0;
 	}
+
+	struct {
+		const char *name;
+		int id;
+	} type_list[] = {
+		{ "A_ARROW", A_ARROW },
+		{ "A_DAGGER", A_DAGGER },
+		{ "A_BULLET", A_BULLET },
+		{ "A_SHELL", A_SHELL },
+		{ "A_GRENADE", A_GRENADE },
+		{ "A_SHURIKEN", A_SHURIKEN },
+		{ "A_KUNAI", A_KUNAI },
+		{ "A_CANNONBALL", A_CANNONBALL },
+		{ "A_THROWWEAPON", A_THROWWEAPON },
+		// { "All", 0xFFFFFFFF }, // "All" is not treated as flag and was handled above
+	};
+
+	int i = 0;
+	ARR_FIND(0, ARRAYLENGTH(type_list), i, strcmp(type, type_list[i].name) == 0);
+	if (i == ARRAYLENGTH(type_list))
+		return 1;
+
+	if (on)
+		sk->ammo |= (1 << type_list[i].id);
+	else
+		sk->ammo &= ~(1 << type_list[i].id);
 
 	return 0;
 }
@@ -23489,12 +23362,16 @@ static int skill_validate_ammotype_sub(const char *type, bool on, struct s_skill
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the required ammunition types should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_ammotype(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_ammotype(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "AmmoTypes") == NULL)
+		return;
 
 	sk->ammo = 0;
 
@@ -23527,12 +23404,16 @@ static void skill_validate_ammotype(struct config_setting_t *conf, struct s_skil
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the required ammunition amount should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_ammo_amount(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_ammo_amount(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "AmmoAmount") == NULL)
+		return;
 
 	skill->level_set_value(sk->ammo_qty, 0);
 
@@ -23578,68 +23459,47 @@ static int skill_validate_state_sub(const char *state)
 {
 	nullpo_retr(-1, state);
 
-	int ret_val = ST_NONE;
+	struct {
+		const char *name;
+		int id;
+	} state_list[] = {
+		{ "None", ST_NONE },
+		{ "Hiding", ST_HIDING },
+		{ "Cloaking", ST_CLOAKING },
+		{ "Hidden", ST_HIDDEN },
+		{ "Riding", ST_RIDING },
+		{ "Falcon", ST_FALCON },
+		{ "Cart", ST_CART },
+		{ "Shield", ST_SHIELD },
+		{ "Sight", ST_SIGHT },
+		{ "ExplosionSpirits", ST_EXPLOSIONSPIRITS },
+		{ "CartBoost", ST_CARTBOOST },
+		{ "NotOverWeight", ST_RECOV_WEIGHT_RATE },
+		{ "Moveable", ST_MOVE_ENABLE },
+		{ "InWater", ST_WATER },
+		{ "Dragon", ST_RIDINGDRAGON },
+		{ "Warg", ST_WUG },
+		{ "RidingWarg", ST_RIDINGWUG },
+		{ "MadoGear", ST_MADO },
+		{ "ElementalSpirit", ST_ELEMENTALSPIRIT },
+		{ "PoisonWeapon", ST_POISONINGWEAPON },
+		{ "RollingCutter", ST_ROLLINGCUTTER },
+		{ "MH_Fighting", ST_MH_FIGHTING },
+		{ "MH_Grappling", ST_MH_GRAPPLING },
+		{ "Peco", ST_PECO },
+		{ "QD_Shot_Ready", ST_QD_SHOT_READY },
+		{ "SunStance", ST_SUNSTANCE },
+		{ "MoonStance", ST_MOONSTANCE },
+		{ "StarStance", ST_STARSTANCE },
+		{ "UniverseStance", ST_UNIVERSESTANCE },
+	};
 
-	if (strcmpi(state, "Hiding") == 0)
-		ret_val = ST_HIDING;
-	else if (strcmpi(state, "Cloaking") == 0)
-		ret_val = ST_CLOAKING;
-	else if (strcmpi(state, "Hidden") == 0)
-		ret_val = ST_HIDDEN;
-	else if (strcmpi(state, "Riding") == 0)
-		ret_val = ST_RIDING;
-	else if (strcmpi(state, "Falcon") == 0)
-		ret_val = ST_FALCON;
-	else if (strcmpi(state, "Cart") == 0)
-		ret_val = ST_CART;
-	else if (strcmpi(state, "Shield") == 0)
-		ret_val = ST_SHIELD;
-	else if (strcmpi(state, "Sight") == 0)
-		ret_val = ST_SIGHT;
-	else if (strcmpi(state, "ExplosionSpirits") == 0)
-		ret_val = ST_EXPLOSIONSPIRITS;
-	else if (strcmpi(state, "CartBoost") == 0)
-		ret_val = ST_CARTBOOST;
-	else if (strcmpi(state, "NotOverWeight") == 0)
-		ret_val = ST_RECOV_WEIGHT_RATE;
-	else if (strcmpi(state, "Moveable") == 0)
-		ret_val = ST_MOVE_ENABLE;
-	else if (strcmpi(state, "InWater") == 0)
-		ret_val = ST_WATER;
-	else if (strcmpi(state, "Dragon") == 0)
-		ret_val = ST_RIDINGDRAGON;
-	else if (strcmpi(state, "Warg") == 0)
-		ret_val = ST_WUG;
-	else if (strcmpi(state, "RidingWarg") == 0)
-		ret_val = ST_RIDINGWUG;
-	else if (strcmpi(state, "MadoGear") == 0)
-		ret_val = ST_MADO;
-	else if (strcmpi(state, "ElementalSpirit") == 0)
-		ret_val = ST_ELEMENTALSPIRIT;
-	else if (strcmpi(state, "PoisonWeapon") == 0)
-		ret_val = ST_POISONINGWEAPON;
-	else if (strcmpi(state, "RollingCutter") == 0)
-		ret_val = ST_ROLLINGCUTTER;
-	else if (strcmpi(state, "MH_Fighting") == 0)
-		ret_val = ST_MH_FIGHTING;
-	else if (strcmpi(state, "MH_Grappling") == 0)
-		ret_val = ST_MH_GRAPPLING;
-	else if (strcmpi(state, "Peco") == 0)
-		ret_val = ST_PECO;
-	else if (strcmpi(state, "QD_Shot_Ready") == 0)
-		ret_val = ST_QD_SHOT_READY;
-	else if (strcmpi(state, "SunStance") == 0)
-		ret_val = ST_SUNSTANCE;
-	else if (strcmpi(state, "MoonStance") == 0)
-		ret_val = ST_MOONSTANCE;
-	else if (strcmpi(state, "StarStance") == 0)
-		ret_val = ST_STARSTANCE;
-	else if (strcmpi(state, "UniverseStance") == 0)
-		ret_val = ST_UNIVERSESTANCE;
-	else if (strcmpi(state, "None") != 0)
-		ret_val = -1;
+	int i = 0;
+	ARR_FIND(0, ARRAYLENGTH(state_list), i, strcmp(state, state_list[i].name) == 0);
+	if (i == ARRAYLENGTH(state_list))
+		return -1;
 
-	return ret_val;
+	return state_list[i].id;
 }
 
 /**
@@ -23647,12 +23507,16 @@ static int skill_validate_state_sub(const char *state)
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the required states should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_state(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_state(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "State") == NULL)
+		return;
 
 	skill->level_set_value(sk->state, ST_NONE);
 
@@ -23696,12 +23560,16 @@ static void skill_validate_state(struct config_setting_t *conf, struct s_skill_d
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the Spirit Sphere cost should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_spirit_sphere_cost(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_spirit_sphere_cost(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "SpiritSphereCost") == NULL)
+		return;
 
 	skill->level_set_value(sk->spiritball, 0);
 
@@ -24103,9 +23971,10 @@ static int skill_validate_requirements_item_name(const char *name)
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the requirements should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_requirements(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_requirements(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
@@ -24113,18 +23982,18 @@ static void skill_validate_requirements(struct config_setting_t *conf, struct s_
 	struct config_setting_t *t = libconfig->setting_get_member(conf, "Requirements");
 
 	if (t != NULL && config_setting_is_group(t)) {
-		skill->validate_hp_cost(t, sk);
-		skill->validate_sp_cost(t, sk);
-		skill->validate_hp_rate_cost(t, sk);
-		skill->validate_sp_rate_cost(t, sk);
-		skill->validate_max_hp_trigger(t, sk);
-		skill->validate_max_sp_trigger(t, sk);
-		skill->validate_zeny_cost(t, sk);
-		skill->validate_weapontype(t, sk);
-		skill->validate_ammotype(t, sk);
-		skill->validate_ammo_amount(t, sk);
-		skill->validate_state(t, sk);
-		skill->validate_spirit_sphere_cost(t, sk);
+		skill->validate_hp_cost(t, sk, inherited);
+		skill->validate_sp_cost(t, sk, inherited);
+		skill->validate_hp_rate_cost(t, sk, inherited);
+		skill->validate_sp_rate_cost(t, sk, inherited);
+		skill->validate_max_hp_trigger(t, sk, inherited);
+		skill->validate_max_sp_trigger(t, sk, inherited);
+		skill->validate_zeny_cost(t, sk, inherited);
+		skill->validate_weapontype(t, sk, inherited);
+		skill->validate_ammotype(t, sk, inherited);
+		skill->validate_ammo_amount(t, sk, inherited);
+		skill->validate_state(t, sk, inherited);
+		skill->validate_spirit_sphere_cost(t, sk, inherited);
 		skill->validate_item_requirements(t, sk);
 		skill->validate_equip_requirements(t, sk);
 	}
@@ -24458,80 +24327,35 @@ static int skill_validate_unit_flag_sub(const char *type, bool on, struct s_skil
 	nullpo_retr(1, type);
 	nullpo_retr(1, sk);
 
-	if (strcmpi(type, "UF_DEFNOTENEMY") == 0) {
-		if (on)
-			sk->unit_flag |= UF_DEFNOTENEMY;
-		else
-			sk->unit_flag &= ~UF_DEFNOTENEMY;
-	} else if (strcmpi(type, "UF_NOREITERATION") == 0) {
-		if (on)
-			sk->unit_flag |= UF_NOREITERATION;
-		else
-			sk->unit_flag &= ~UF_NOREITERATION;
-	} else if (strcmpi(type, "UF_NOFOOTSET") == 0) {
-		if (on)
-			sk->unit_flag |= UF_NOFOOTSET;
-		else
-			sk->unit_flag &= ~UF_NOFOOTSET;
-	} else if (strcmpi(type, "UF_NOOVERLAP") == 0) {
-		if (on)
-			sk->unit_flag |= UF_NOOVERLAP;
-		else
-			sk->unit_flag &= ~UF_NOOVERLAP;
-	} else if (strcmpi(type, "UF_PATHCHECK") == 0) {
-		if (on)
-			sk->unit_flag |= UF_PATHCHECK;
-		else
-			sk->unit_flag &= ~UF_PATHCHECK;
-	} else if (strcmpi(type, "UF_NOPC") == 0) {
-		if (on)
-			sk->unit_flag |= UF_NOPC;
-		else
-			sk->unit_flag &= ~UF_NOPC;
-	} else if (strcmpi(type, "UF_NOMOB") == 0) {
-		if (on)
-			sk->unit_flag |= UF_NOMOB;
-		else
-			sk->unit_flag &= ~UF_NOMOB;
-	} else if (strcmpi(type, "UF_SKILL") == 0) {
-		if (on)
-			sk->unit_flag |= UF_SKILL;
-		else
-			sk->unit_flag &= ~UF_SKILL;
-	} else if (strcmpi(type, "UF_DANCE") == 0) {
-		if (on)
-			sk->unit_flag |= UF_DANCE;
-		else
-			sk->unit_flag &= ~UF_DANCE;
-	} else if (strcmpi(type, "UF_ENSEMBLE") == 0) {
-		if (on)
-			sk->unit_flag |= UF_ENSEMBLE;
-		else
-			sk->unit_flag &= ~UF_ENSEMBLE;
-	} else if (strcmpi(type, "UF_SONG") == 0) {
-		if (on)
-			sk->unit_flag |= UF_SONG;
-		else
-			sk->unit_flag &= ~UF_SONG;
-	} else if (strcmpi(type, "UF_DUALMODE") == 0) {
-		if (on)
-			sk->unit_flag |= UF_DUALMODE;
-		else
-			sk->unit_flag &= ~UF_DUALMODE;
-	} else if (strcmpi(type, "UF_RANGEDSINGLEUNIT") == 0) {
-		if (on)
-			sk->unit_flag |= UF_RANGEDSINGLEUNIT;
-		else
-			sk->unit_flag &= ~UF_RANGEDSINGLEUNIT;
-	}
-	else if (strcmpi(type, "UF_REMOVEDBYFIRERAIN") == 0) {
-		if (on)
-			sk->unit_flag |= UF_REMOVEDBYFIRERAIN;
-		else
-			sk->unit_flag &= ~UF_REMOVEDBYFIRERAIN;
-	} else {
+	struct {
+		const char *name;
+		int id;
+	} flag_list[] = {
+		{ "UF_DEFNOTENEMY", UF_DEFNOTENEMY },
+		{ "UF_NOREITERATION", UF_NOREITERATION },
+		{ "UF_NOFOOTSET", UF_NOFOOTSET },
+		{ "UF_NOOVERLAP", UF_NOOVERLAP },
+		{ "UF_PATHCHECK", UF_PATHCHECK },
+		{ "UF_NOPC", UF_NOPC },
+		{ "UF_NOMOB", UF_NOMOB },
+		{ "UF_SKILL", UF_SKILL },
+		{ "UF_DANCE", UF_DANCE },
+		{ "UF_ENSEMBLE", UF_ENSEMBLE },
+		{ "UF_SONG", UF_SONG },
+		{ "UF_DUALMODE", UF_DUALMODE },
+		{ "UF_RANGEDSINGLEUNIT", UF_RANGEDSINGLEUNIT },
+		{ "UF_REMOVEDBYFIRERAIN", UF_REMOVEDBYFIRERAIN },
+	};
+
+	int i = 0;
+	ARR_FIND(0, ARRAYLENGTH(flag_list), i, strcmp(type, flag_list[i].name) == 0);
+	if (i == ARRAYLENGTH(flag_list))
 		return 1;
-	}
+
+	if (on)
+		sk->unit_flag |= flag_list[i].id;
+	else
+		sk->unit_flag &= ~flag_list[i].id;
 
 	return 0;
 }
@@ -24577,38 +24401,32 @@ static int skill_validate_unit_target_sub(const char *target)
 {
 	nullpo_retr(-1, target);
 
-	int ret_val = BCT_NOONE;
+	struct {
+		const char *name;
+		int id;
+	} target_list[] = {
+		{ "None", BCT_NOONE },
+		{ "NotEnemy", BCT_NOENEMY },
+		{ "NotParty", BCT_NOPARTY },
+		{ "NotGuild", BCT_NOGUILD },
+		{ "Friend", BCT_NOENEMY },
+		{ "Party", BCT_PARTY },
+		{ "Ally", BCT_PARTY | BCT_GUILD },
+		{ "Guild", BCT_GUILD },
+		{ "All", BCT_ALL },
+		{ "Enemy", BCT_ENEMY },
+		{ "Self", BCT_SELF },
+		{ "SameGuild", BCT_SAMEGUILD },
+		{ "GuildAlly", BCT_GUILDALLY },
+		{ "Neutral", BCT_NEUTRAL },
+	};
 
-	if (strcmpi(target, "NotEnemy") == 0)
-		ret_val = BCT_NOENEMY;
-	else if (strcmpi(target, "NotParty") == 0)
-		ret_val = BCT_NOPARTY;
-	else if (strcmpi(target, "NotGuild") == 0)
-		ret_val = BCT_NOGUILD;
-	else if (strcmpi(target, "Friend") == 0)
-		ret_val = BCT_NOENEMY;
-	else if (strcmpi(target, "Party") == 0)
-		ret_val = BCT_PARTY;
-	else if (strcmpi(target, "Ally") == 0)
-		ret_val = BCT_PARTY|BCT_GUILD;
-	else if (strcmpi(target, "Guild") == 0)
-		ret_val = BCT_GUILD;
-	else if (strcmpi(target, "All") == 0)
-		ret_val = BCT_ALL;
-	else if (strcmpi(target, "Enemy") == 0)
-		ret_val = BCT_ENEMY;
-	else if (strcmpi(target, "Self") == 0)
-		ret_val = BCT_SELF;
-	else if (strcmpi(target, "SameGuild") == 0)
-		ret_val = BCT_SAMEGUILD;
-	else if (strcmpi(target, "GuildAlly") == 0)
-		ret_val = BCT_GUILDALLY;
-	else if (strcmpi(target, "Neutral") == 0)
-		ret_val = BCT_NEUTRAL;
-	else if (strcmpi(target, "None") != 0)
-		ret_val = -1;
+	int i = 0;
+	ARR_FIND(0, ARRAYLENGTH(target_list), i, strcmp(target, target_list[i].name) == 0);
+	if (i == ARRAYLENGTH(target_list))
+		return -1;
 
-	return ret_val;
+	return target_list[i].id;
 }
 
 /**
@@ -24680,12 +24498,16 @@ static void skill_validate_unit_target(struct config_setting_t *conf, struct s_s
  *
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the unit data should be set it.
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  *
  **/
-static void skill_validate_status_change(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_status_change(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	nullpo_retv(conf);
 	nullpo_retv(sk);
+
+	if (inherited && libconfig->setting_lookup(conf, "StatusChange") == NULL)
+		return;
 
 	int status_id = SC_NONE;
 	const char *name = NULL;
@@ -24727,9 +24549,10 @@ static void skill_validate_unit(struct config_setting_t *conf, struct s_skill_db
  * when parsing skill_db.conf
  * @param   conf    struct, pointer to the skill configuration
  * @param   sk      struct, struct, pointer to s_skill_db
+ * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
  * @return  (void)
  */
-static void skill_validate_additional_fields(struct config_setting_t *conf, struct s_skill_db *sk)
+static void skill_validate_additional_fields(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
 	// Does nothing like a boss. *cough* plugins *cough*
 }
@@ -24771,59 +24594,75 @@ static bool skill_read_skilldb(const char *filename)
 	int index = 0;
 	int count = 0;
 
+	// Map int -> bool
+	struct DBMap *loaded_ids_db = idb_alloc(DB_OPT_BASE);
+
 	while ((conf = libconfig->setting_get_elem(sk, index++)) != NULL) {
 		struct s_skill_db tmp_db = {0};
 
 		/** Validate mandatory fields. **/
-		skill->validate_id(conf, &tmp_db, index);
+		skill->validate_id(conf, &tmp_db, index, loaded_ids_db);
 		if (tmp_db.nameid == 0)
 			continue;
 
-		skill->validate_name(conf, &tmp_db);
+		int i32;
+		bool inherited = false;
+		if (libconfig->setting_lookup_bool(conf, "Inherit", &i32) == CONFIG_TRUE && i32 != 0) {
+			if (skill->dbs->db[skill->get_index(tmp_db.nameid)].nameid == tmp_db.nameid) {
+				tmp_db = skill->dbs->db[skill->get_index(tmp_db.nameid)];
+				inherited = true;
+			} else {
+				ShowWarning("%s: Could not inherit Skill ID %d in %s. Original skill not found. Continuing with default values...\n",
+					__func__, tmp_db.nameid, conf->file);
+			}
+		}
+
+		skill->validate_name(conf, &tmp_db, inherited);
 		if (*tmp_db.name == '\0')
 			continue;
 
-		skill->validate_max_level(conf, &tmp_db);
+		skill->validate_max_level(conf, &tmp_db, inherited);
 		if (tmp_db.max == 0)
 			continue;
 
 		/** Validate optional fields. **/
-		skill->validate_description(conf, &tmp_db);
-		skill->validate_range(conf, &tmp_db);
-		skill->validate_hittype(conf, &tmp_db);
-		skill->validate_skilltype(conf, &tmp_db);
-		skill->validate_skillinfo(conf, &tmp_db);
-		skill->validate_attacktype(conf, &tmp_db);
-		skill->validate_element(conf, &tmp_db);
-		skill->validate_damagetype(conf, &tmp_db);
-		skill->validate_splash_range(conf, &tmp_db);
-		skill->validate_number_of_hits(conf, &tmp_db);
-		skill->validate_interrupt_cast(conf, &tmp_db);
-		skill->validate_cast_def_rate(conf, &tmp_db);
-		skill->validate_number_of_instances(conf, &tmp_db);
-		skill->validate_knock_back_tiles(conf, &tmp_db);
-		skill->validate_cast_time(conf, &tmp_db);
-		skill->validate_act_delay(conf, &tmp_db);
-		skill->validate_walk_delay(conf, &tmp_db);
-		skill->validate_skill_data1(conf, &tmp_db);
-		skill->validate_skill_data2(conf, &tmp_db);
-		skill->validate_cooldown(conf, &tmp_db);
-		skill->validate_fixed_cast_time(conf, &tmp_db);
-		skill->validate_castnodex(conf, &tmp_db, false);
-		skill->validate_castnodex(conf, &tmp_db, true);
-		skill->validate_requirements(conf, &tmp_db);
+		skill->validate_description(conf, &tmp_db, inherited);
+		skill->validate_range(conf, &tmp_db, inherited);
+		skill->validate_hittype(conf, &tmp_db, inherited);
+		skill->validate_skilltype(conf, &tmp_db, inherited);
+		skill->validate_skillinfo(conf, &tmp_db, inherited);
+		skill->validate_attacktype(conf, &tmp_db, inherited);
+		skill->validate_element(conf, &tmp_db, inherited);
+		skill->validate_damagetype(conf, &tmp_db, inherited);
+		skill->validate_splash_range(conf, &tmp_db, inherited);
+		skill->validate_number_of_hits(conf, &tmp_db, inherited);
+		skill->validate_interrupt_cast(conf, &tmp_db, inherited);
+		skill->validate_cast_def_rate(conf, &tmp_db, inherited);
+		skill->validate_number_of_instances(conf, &tmp_db, inherited);
+		skill->validate_knock_back_tiles(conf, &tmp_db, inherited);
+		skill->validate_cast_time(conf, &tmp_db, inherited);
+		skill->validate_act_delay(conf, &tmp_db, inherited);
+		skill->validate_walk_delay(conf, &tmp_db, inherited);
+		skill->validate_skill_data1(conf, &tmp_db, inherited);
+		skill->validate_skill_data2(conf, &tmp_db, inherited);
+		skill->validate_cooldown(conf, &tmp_db, inherited);
+		skill->validate_fixed_cast_time(conf, &tmp_db, inherited);
+		skill->validate_castnodex(conf, &tmp_db, false, inherited);
+		skill->validate_castnodex(conf, &tmp_db, true, inherited);
+		skill->validate_requirements(conf, &tmp_db, inherited);
 		skill->validate_unit(conf, &tmp_db);
-		skill->validate_status_change(conf, &tmp_db);
+		skill->validate_status_change(conf, &tmp_db, inherited);
 
 		/** Validate additional fields for plugins. **/
-		skill->validate_additional_fields(conf, &tmp_db);
+		skill->validate_additional_fields(conf, &tmp_db, inherited);
 
 		/** Add the skill. **/
 		skill->dbs->db[skill->get_index(tmp_db.nameid)] = tmp_db;
-		strdb_iput(skill->name2id_db, tmp_db.name, tmp_db.nameid);
-		script->set_constant2(tmp_db.name, tmp_db.nameid, false, false);
+		idb_iput(loaded_ids_db, tmp_db.nameid, true);
 		count++;
 	}
+	
+	db_destroy(loaded_ids_db);
 
 	libconfig->destroy(&skilldb);
 	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
@@ -24852,13 +24691,36 @@ static void skill_readdb(bool minimal)
 
 	itemdb->name_constants(); // refresh ItemDB constants before loading of skills
 
+	const char *filenames[] = {
+		DBPATH"skill_db.conf",
+		"skill_db2.conf",
+	};
+
+	for (int i = 0; i < ARRAYLENGTH(filenames); ++i) {
 #ifdef ENABLE_CASE_CHECK
-	script->parser_current_file = DBPATH"skill_db.conf";
+		script->parser_current_file = filenames[i];
 #endif // ENABLE_CASE_CHECK
-	skill->read_skilldb(DBPATH"skill_db.conf");
+		skill->read_skilldb(filenames[i]);
 #ifdef ENABLE_CASE_CHECK
-	script->parser_current_file = NULL;
+		script->parser_current_file = NULL;
 #endif // ENABLE_CASE_CHECK
+	}
+
+	// 0 is for unknown skill above, valid skills starts at 1
+	for (int i = 1; i < MAX_SKILL_DB; ++i) {
+		struct s_skill_db *db = &skill->dbs->db[i];
+		if (db->nameid == 0)
+			continue;
+		
+		if (skill->name2id(db->name) != 0) {
+			ShowError("%s: Duplicated skill name %s found for Skill ID %d (Other Skill ID: %d). Skipping name...",
+				__func__, db->name, db->nameid, skill->name2id(db->name));
+			continue;
+		}
+
+		strdb_iput(skill->name2id_db, db->name, db->nameid);
+		script->set_constant2(db->name, db->nameid, false, false);
+	}
 
 	if (minimal)
 		return;
