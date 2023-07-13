@@ -2141,7 +2141,7 @@ struct skill_interface {
 	int (*check_condition_castbegin) (struct map_session_data *sd, uint16 skill_id, uint16 skill_lv);
 	int (*check_condition_required_items) (struct map_session_data *sd, int skill_id, int skill_lv);
 	bool (*items_required) (struct map_session_data *sd, int skill_id, int skill_lv);
-	int (*check_condition_castend) (struct map_session_data *sd, uint16 skill_id, uint16 skill_lv);
+	int (*check_condition_castend) (struct map_session_data *sd, uint16 skill_id, uint16 skill_lv, struct block_list *target);
 	int (*get_any_item_index) (struct map_session_data *sd, int skill_id, int skill_lv);
 	int (*consume_requirement) (struct map_session_data *sd, uint16 skill_id, uint16 skill_lv, short type);
 	struct skill_condition (*get_requirement) (struct map_session_data *sd, uint16 skill_id, uint16 skill_lv);
@@ -2351,7 +2351,7 @@ struct skill_interface {
 	int (*check_condition_castbegin_mount_unknown) (struct status_change *sc, uint16 *skill_id);
 	int (*check_condition_castbegin_madogear_unknown) (struct status_change *sc, uint16 *skill_id);
 	int (*check_condition_castbegin_unknown) (struct status_change *sc, uint16 *skill_id);
-	bool (*check_condition_castend_unknown) (struct map_session_data* sd, uint16 *skill_id, uint16 *skill_lv);
+	bool (*check_condition_castend_unknown) (struct map_session_data* sd, uint16 *skill_id, uint16 *skill_lv, struct block_list *target);
 	bool (*get_requirement_off_unknown) (struct status_change *sc, uint16 *skill_id);
 	bool (*get_requirement_item_unknown) (struct status_change *sc, struct map_session_data* sd, uint16 *skill_id, uint16 *skill_lv, uint16 *idx, int *i);
 	void (*get_requirement_unknown) (struct status_change *sc, struct map_session_data* sd, uint16 *skill_id, uint16 *skill_lv, struct skill_condition *req);

@@ -8438,8 +8438,8 @@ typedef int (*HPMHOOK_pre_skill_check_condition_required_items) (struct map_sess
 typedef int (*HPMHOOK_post_skill_check_condition_required_items) (int retVal___, struct map_session_data *sd, int skill_id, int skill_lv);
 typedef bool (*HPMHOOK_pre_skill_items_required) (struct map_session_data **sd, int *skill_id, int *skill_lv);
 typedef bool (*HPMHOOK_post_skill_items_required) (bool retVal___, struct map_session_data *sd, int skill_id, int skill_lv);
-typedef int (*HPMHOOK_pre_skill_check_condition_castend) (struct map_session_data **sd, uint16 *skill_id, uint16 *skill_lv);
-typedef int (*HPMHOOK_post_skill_check_condition_castend) (int retVal___, struct map_session_data *sd, uint16 skill_id, uint16 skill_lv);
+typedef int (*HPMHOOK_pre_skill_check_condition_castend) (struct map_session_data **sd, uint16 *skill_id, uint16 *skill_lv, struct block_list **target);
+typedef int (*HPMHOOK_post_skill_check_condition_castend) (int retVal___, struct map_session_data *sd, uint16 skill_id, uint16 skill_lv, struct block_list *target);
 typedef int (*HPMHOOK_pre_skill_get_any_item_index) (struct map_session_data **sd, int *skill_id, int *skill_lv);
 typedef int (*HPMHOOK_post_skill_get_any_item_index) (int retVal___, struct map_session_data *sd, int skill_id, int skill_lv);
 typedef int (*HPMHOOK_pre_skill_consume_requirement) (struct map_session_data **sd, uint16 *skill_id, uint16 *skill_lv, short *type);
@@ -8846,8 +8846,8 @@ typedef int (*HPMHOOK_pre_skill_check_condition_castbegin_madogear_unknown) (str
 typedef int (*HPMHOOK_post_skill_check_condition_castbegin_madogear_unknown) (int retVal___, struct status_change *sc, uint16 *skill_id);
 typedef int (*HPMHOOK_pre_skill_check_condition_castbegin_unknown) (struct status_change **sc, uint16 **skill_id);
 typedef int (*HPMHOOK_post_skill_check_condition_castbegin_unknown) (int retVal___, struct status_change *sc, uint16 *skill_id);
-typedef bool (*HPMHOOK_pre_skill_check_condition_castend_unknown) (struct map_session_data **sd, uint16 **skill_id, uint16 **skill_lv);
-typedef bool (*HPMHOOK_post_skill_check_condition_castend_unknown) (bool retVal___, struct map_session_data *sd, uint16 *skill_id, uint16 *skill_lv);
+typedef bool (*HPMHOOK_pre_skill_check_condition_castend_unknown) (struct map_session_data **sd, uint16 **skill_id, uint16 **skill_lv, struct block_list **target);
+typedef bool (*HPMHOOK_post_skill_check_condition_castend_unknown) (bool retVal___, struct map_session_data *sd, uint16 *skill_id, uint16 *skill_lv, struct block_list *target);
 typedef bool (*HPMHOOK_pre_skill_get_requirement_off_unknown) (struct status_change **sc, uint16 **skill_id);
 typedef bool (*HPMHOOK_post_skill_get_requirement_off_unknown) (bool retVal___, struct status_change *sc, uint16 *skill_id);
 typedef bool (*HPMHOOK_pre_skill_get_requirement_item_unknown) (struct status_change **sc, struct map_session_data **sd, uint16 **skill_id, uint16 **skill_lv, uint16 **idx, int **i);

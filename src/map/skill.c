@@ -6471,7 +6471,7 @@ static int skill_castend_id(int tid, int64 tick, int id, intptr_t data)
 
 		if( sd )
 		{
-			if( !skill->check_condition_castend(sd, ud->skill_id, ud->skill_lv) )
+			if (!skill->check_condition_castend(sd, ud->skill_id, ud->skill_lv, target))
 				break;
 			else
 				skill->consume_requirement(sd,ud->skill_id,ud->skill_lv,1);
@@ -7708,24 +7708,28 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 		case MO_ABSORBSPIRITS:
 		{
 			int sp = 0;
-			if (dstsd != NULL && dstsd->spiritball != 0
-			 && (sd == dstsd || map_flag_vs(src->m) || (sd && sd->duel_group && sd->duel_group == dstsd->duel_group))
-			 && (dstsd->job & MAPID_BASEMASK) != MAPID_GUNSLINGER
-			 ) {
+			bool success = false;
+			if (dstsd != NULL && dstsd->spiritball != 0 && (dstsd->job & MAPID_BASEMASK) != MAPID_GUNSLINGER) {
 				// split the if for readability, and included gunslingers in the check so that their coins cannot be removed [Reddozen]
 				sp = dstsd->spiritball * 7;
 				pc->delspiritball(dstsd, dstsd->spiritball, 0);
+				success = true;
 			} else if ( dstmd && !(tstatus->mode&MD_BOSS) && rnd() % 100 < 20 ) {
 				// check if target is a monster and not a Boss, for the 20% chance to absorb 2 SP per monster's level [Reddozen]
 				sp = 2 * dstmd->level;
 				mob->target(dstmd,src,0);
+				success = true;
 			}
 			if (dstsd && dstsd->charm_type != CHARM_TYPE_NONE && dstsd->charm_count > 0) {
 				pc->del_charm(dstsd, dstsd->charm_count, dstsd->charm_type);
 			}
 			if (sp != 0)
 				status->heal(src, 0, sp, STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT);
-			clif->skill_nodamage(src,bl,skill_id,skill_lv,sp?1:0);
+
+			if (success)
+				clif->skill_nodamage(src, bl, skill_id, skill_lv, sp ? 1 : 0);
+			else if (sd != NULL)
+				clif->skill_fail(sd, skill_id, USESKILL_FAIL, 0, 0);
 		}
 			break;
 
@@ -11803,7 +11807,11 @@ static int skill_castend_pos(int tid, int64 tick, int id, intptr_t data)
 			skill->check_unit_range(src,ud->skillx,ud->skilly,ud->skill_id,ud->skill_lv)
 		  )
 		{
-			if (sd) clif->skill_fail(sd, ud->skill_id, USESKILL_FAIL_LEVEL, 0, 0);
+			if (sd) {
+				// WM_POEMOFNETHERWORLD is the only one that shows USESKILL_FAIL_POS, as far as I know
+				int cause = (ud->skill_id == WM_POEMOFNETHERWORLD) ? USESKILL_FAIL_POS : USESKILL_FAIL_LEVEL;
+				clif->skill_fail(sd, ud->skill_id, cause, 0, 0);
+			}
 			break;
 		}
 		if( src->type&battle_config.skill_nofootset &&
@@ -11843,7 +11851,7 @@ static int skill_castend_pos(int tid, int64 tick, int id, intptr_t data)
 
 		if( sd )
 		{
-			if( ud->skill_id != AL_WARP && !skill->check_condition_castend(sd, ud->skill_id, ud->skill_lv) ) {
+			if (ud->skill_id != AL_WARP && !skill->check_condition_castend(sd, ud->skill_id, ud->skill_lv, NULL)) {
 				if( ud->skill_id == SA_LANDPROTECTOR )
 					clif->skill_poseffect(&sd->bl,ud->skill_id,ud->skill_lv,sd->bl.x,sd->bl.y,tick);
 				break;
@@ -12065,7 +12073,7 @@ static int skill_castend_map(struct map_session_data *sd, uint16 skill_id, const
 					return 0;
 				}
 
-				if(!skill->check_condition_castend(sd, sd->menuskill_id, lv)) { // This checks versus skill_id/skill_lv...
+				if (!skill->check_condition_castend(sd, sd->menuskill_id, lv, NULL)) { // This checks versus skill_id/skill_lv...
 					skill_failed(sd);
 					return 0;
 				}
@@ -16321,8 +16329,14 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 			break;
 		default:
 			if (sd->spiritball < require.spiritball) {
-				clif->skill_fail(sd, skill_id, USESKILL_FAIL_SPIRITS, require.spiritball, 0);
-			return 0;
+				if ((sd->job & MAPID_BASEMASK) == MAPID_GUNSLINGER) {
+					// For some reason, the client only shows the singular message when it bType is 0 (instead of 1).
+					int btype = (require.spiritball == 1 ? 0 : require.spiritball);
+					clif->skill_fail(sd, skill_id, USESKILL_FAIL_COINS, btype, 0);
+				} else {
+					clif->skill_fail(sd, skill_id, USESKILL_FAIL_SPIRITS, require.spiritball, 0);
+				}
+				return 0;
 			}
 			break;
 		}
@@ -16475,7 +16489,16 @@ static bool skill_items_required(struct map_session_data *sd, int skill_id, int 
 	return false;
 }
 
-static int skill_check_condition_castend(struct map_session_data *sd, uint16 skill_id, uint16 skill_lv)
+/**
+ * Checks conditions for a skill to be executed. This check happens after the cast time was completed.
+ * 
+ * @param sd The character who cast the skill.
+ * @param skill_id The skill's ID.
+ * @param skill_lv The skill's level.
+ * @param target The unit who was targeted by this skill (MAY BE NULL, if there is no target)
+ * @return 1 if conditions were satisfied. 0 otherwise (errors are also sent to client)
+ */
+static int skill_check_condition_castend(struct map_session_data *sd, uint16 skill_id, uint16 skill_lv, struct block_list *target)
 {
 	struct skill_condition require;
 	struct status_data *st;
@@ -16563,6 +16586,33 @@ static int skill_check_condition_castend(struct map_session_data *sd, uint16 ski
 			}
 			break;
 		}
+
+		case MO_KITRANSLATION: {
+			struct map_session_data *tgtsd = BL_CAST(BL_PC, target);
+			if (tgtsd == NULL || tgtsd->spiritball >= 5 || (tgtsd->job & MAPID_BASEMASK) == MAPID_GUNSLINGER) {
+				clif->skill_fail(sd, skill_id, USESKILL_FAIL, 0, 0);
+				return 0;
+			}
+			break;
+		}
+
+		case MO_ABSORBSPIRITS: {
+			struct map_session_data *tgtsd = BL_CAST(BL_PC, target);
+			if (tgtsd == NULL)
+				break;
+
+			if (tgtsd->spiritball == 0 || (tgtsd->job & MAPID_BASEMASK) == MAPID_GUNSLINGER) {
+				clif->skill_fail(sd, skill_id, USESKILL_FAIL, 0, 0);
+				return 0;
+			}
+
+			if (sd != tgtsd && battle->check_target(&sd->bl, &tgtsd->bl, BCT_NOENEMY) == 1) {
+				clif->skill_fail(sd, skill_id, USESKILL_FAIL, 0, 0);
+				return 0;
+			}
+			break;
+		}
+
 		case NC_SILVERSNIPER:
 		case NC_MAGICDECOY: {
 				int c = 0;
@@ -16593,7 +16643,7 @@ static int skill_check_condition_castend(struct map_session_data *sd, uint16 ski
 			}
 			break;
 		default:
-			if (!skill->check_condition_castend_unknown(sd, &skill_id, &skill_lv))
+			if (!skill->check_condition_castend_unknown(sd, &skill_id, &skill_lv, target))
 				break;
 			return 0;
 	}
@@ -16642,7 +16692,16 @@ static int skill_check_condition_castend(struct map_session_data *sd, uint16 ski
 	return 1;
 }
 
-static bool skill_check_condition_castend_unknown(struct map_session_data *sd, uint16 *skill_id, uint16 *skill_lv)
+/**
+ * Checks conditions for a skill to be executed. This check happens after the cast time was completed.
+ * 
+ * @param sd The character who cast the skill.
+ * @param skill_id The skill's ID.
+ * @param skill_lv The skill's level.
+ * @param target The unit who was targeted by this skill (MAY BE NULL, if there is no target)
+ * @return 1 if conditions were satisfied. 0 otherwise (errors are also sent to client)
+ */
+static bool skill_check_condition_castend_unknown(struct map_session_data *sd, uint16 *skill_id, uint16 *skill_lv, struct block_list *target)
 {
 	return false;
 }
