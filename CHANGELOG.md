@@ -22,6 +22,56 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
+## [v2023.07.12] `July 12 2023`
+
+### Added
+
+- Added a macro to toggle the logging of login/logout events in the API server. Disabled by default, uncomment the `DEBUG_ONLINEDB_LOG` definition in `aclif.c` to enable it. (#3207)
+- Added support for `skill_db2.conf` to extend/override the skill DB. Just like the item and mob databases, it supports the `Inherit` field to allow overriding part of a skill's entry without having to copy the rest. (#3216)
+
+### Changed
+
+- Increased the default value of the API server setting `remove_disconnected_delay` from 5000 to 50000. (#3207)
+- Reduced the timeout in the GitHub Actions CI scripts to 60 minutes, to avoid stuck jobs preventing further builds from starting for 6 hours and wasting a large amount of runner minutes. (part of #3217)
+- Replaced some lengthy pieces of repeated code in the skill DB parser with a loop. (part of #3216)
+- Changed case-insensitive checks to case-sensitive for many database fields: (#3216)
+  - `SkillInfo` flag names
+  - `SkillType` flag names
+  - `DamageType` flags names
+  - `Requirements/WeaponTypes` flags names
+  - `Requirements/AmmoTypes` flags names
+  - `Requirements/State` values
+  - `Unit/Flag` flag names
+  - `Unit/Target` values
+    - NOTE: the `SameGuild` value was previously incorrectly listed as `Sameguild` in the examples and documentation. The correct version is `SameGuild`.
+  - For debugging purposes, a piece of code similar to https://github.com/HerculesWS/Hercules/files/11782956/compare_skills.diff.txt can be used to print the values before and after applying this patch, to check the differences and ensure that no unintended changes were introduced in the parsing of one's custom entries.
+- Added a `target` argument to `skill->check_condition_castend()` to allow additional checks that require information about the skill's target. (part of #3215)
+
+### Fixed
+
+- Added some missing null pointer checks and assertions. (part of #3207)
+- Added API-server related configs into the copy actions of the VS projects. (part of #3207)
+- Fixed an unreliable health check in the CI builds based on MariaDB containers. (#3217)
+- Fixed some interactions of `MO_KITRANSLATION`. (#3215)
+  - It should fail with a skill failure message and not consume requirements when: (#3215)
+    - being cast on Gunslinger class
+    - being cast on a player that already has 5 spheres
+    - being cast on friendly non-player units (e.g. Mercenary)
+- Fixed some interactions of `MO_ABSORBSPIRITS`. (#3215)
+  - It should fail and not consume SP when:
+    - the target player doesn't have spheres
+    - the target player is of Gunslinger class (due to teh game implementation not allowing them to have spheres)
+    - the target player is friendly
+  - It should fail and consume SP when:
+    - used on a BOSS monster
+    - used on a non-boss monster, but failing the 20% check
+    - used on non-player units (like mercenaries)
+  - moved the target check to condition cast end
+- Fixed the error message when a gunslinger is attempting to use a skill that requires coins without having the necessary amount. (#3215)
+- Fixed the stacking of `WM_POEMOFNETHERWORLD` to match the behavior described in the 2012.08.22 official patch notes: (#3215)
+  - it cannot be placed over another instance of the skill
+  - when trying to do so, it should show a position error to client
+
 ## [v2023.06.14] `June 14 2023`
 
 ### Added
@@ -2812,6 +2862,7 @@ Note: everything included in this release is part of PR #3198 which consists of 
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2023.07.12]: https://github.com/HerculesWS/Hercules/compare/v2022.06.14...v2023.07.12
 [v2023.06.14]: https://github.com/HerculesWS/Hercules/compare/v2022.05.10...v2023.06.14
 [v2023.05.10]: https://github.com/HerculesWS/Hercules/compare/v2022.04.12...v2023.05.10
 [v2023.04.12]: https://github.com/HerculesWS/Hercules/compare/v2022.03.08...v2023.04.12
