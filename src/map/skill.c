@@ -14055,8 +14055,10 @@ static int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *b
 			break;
 
 		case UNT_MAGNUS:
-			if (!battle->check_undead(tstatus->race,tstatus->def_ele) && tstatus->race!=RC_DEMON)
+#ifndef RENEWAL
+			if (!battle->check_undead(tstatus->race, tstatus->def_ele) && tstatus->race != RC_DEMON)
 				break;
+#endif
 			skill->attack(BF_MAGIC,ss,&src->bl,bl,sg->skill_id,sg->skill_lv,tick,0);
 			break;
 
