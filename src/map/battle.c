@@ -1670,6 +1670,22 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 				case AL_RUWACH:
 					skillratio += 45;
 					break;
+				/**
+				 * Priest
+				 **/
+#ifdef RENEWAL
+				case PR_MAGNUS:
+					// officially checks for both race and def for undead,
+					// don't use battle_check_undead here because by default it is element-only
+					if (tst->race == RC_UNDEAD || tst->def_ele == ELE_UNDEAD || tst->race == RC_DEMON
+					    || tst->def_ele == ELE_DARK) {
+						skillratio += 30;
+					}
+					break;
+#endif
+				/**
+				 * Wizard
+				 **/
 				case WZ_FROSTNOVA:
 					skillratio += (100+skill_lv*10) * 2 / 3 - 100;
 					break;
