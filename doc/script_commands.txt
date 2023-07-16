@@ -6313,7 +6313,7 @@ Certain status changes take an additional parameter <value 1>, which typically
 modifies player stats by the given number or percentage. This differs for each
 status, and is sometimes zero.
 
-Optional value <rate> is the chance that the status will be invoked (10000 = 1%).
+Optional value <rate> is the chance that the status will be invoked (100 = 1%).
 This is used primarily in item scripts. When used in an NPC script, a flag MUST
 be defined for the rate to work.
 
