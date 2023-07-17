@@ -3878,11 +3878,8 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 			case GC_VENOMPRESSURE:
 			{
 				struct status_change *ssc = status->get_sc(src);
-				if( ssc && ssc->data[SC_POISONINGWEAPON] && rnd()%100 < 70 + 5*skill_lv ) {
-					short rate = 100;
-					if ( ssc->data[SC_POISONINGWEAPON]->val1 == 9 )// Oblivion Curse gives a 2nd success chance after the 1st one passes which is reducible. [Rytech]
-						rate = 100 - tstatus->int_ * 4 / 5;
-					sc_start(src, bl, ssc->data[SC_POISONINGWEAPON]->val2, rate, ssc->data[SC_POISONINGWEAPON]->val1, skill->get_time2(GC_POISONINGWEAPON, 1) - (tstatus->vit + tstatus->luk) / 2 * 1000, skill_id);
+				if (ssc != NULL && ssc->data[SC_POISONINGWEAPON] != NULL && rnd() % 100 < 70 + 5 * skill_lv) {
+					sc_start(src, bl, ssc->data[SC_POISONINGWEAPON]->val2, 100, ssc->data[SC_POISONINGWEAPON]->val1, skill->get_time2(GC_POISONINGWEAPON, 1), skill_id);
 					status_change_end(src, SC_POISONINGWEAPON, INVALID_TIMER);
 					clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
 				}
@@ -14426,11 +14423,9 @@ static int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *b
 		 * 3rd stuff
 		 **/
 		case UNT_POISONSMOKE:
-			if( battle->check_target(ss,bl,BCT_ENEMY) > 0 && !(tsc && tsc->data[sg->val2]) && rnd()%100 < 50 ) {
-				short rate = 100;
-				if ( sg->val1 == 9 )//Oblivion Curse gives a 2nd success chance after the 1st one passes which is reducible. [Rytech]
-					rate = 100 - tstatus->int_ * 4 / 5 ;
-				sc_start(ss, bl, sg->val2, rate, sg->val1, skill->get_time2(GC_POISONINGWEAPON, 1) - (tstatus->vit + tstatus->luk) / 2 * 1000, skill_id);
+			if (battle->check_target(ss,bl,BCT_ENEMY) > 0 && !(tsc != NULL && tsc->data[sg->val2] != NULL)
+			    && rnd() % 100 < 50) {
+				sc_start(ss, bl, sg->val2, 100, sg->val1, skill->get_time2(GC_POISONINGWEAPON, 1), skill_id);
 			}
 			break;
 
