@@ -5110,7 +5110,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 			// Weaponry Research hidden bonus
 			if ((temp = pc->checkskill(sd,BS_WEAPONRESEARCH)) > 0)
 				hitrate += hitrate * ( 2 * temp ) / 100;
-#endif
+
 			if ((sd->weapontype == W_1HSWORD || sd->weapontype == W_DAGGER) && (temp = pc->checkskill(sd, GN_TRAINING_SWORD)) > 0)
 				hitrate += 3 * temp;
 		}
