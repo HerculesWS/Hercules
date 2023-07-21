@@ -2044,7 +2044,7 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 
 	// Absolute modifiers from passive skills
 #ifndef RENEWAL
-	if((skill_lv=pc->checkskill(sd,BS_WEAPONRESEARCH))>0) // is this correct in pre? there is already hitrate bonus in battle.c
+	if((skill_lv=pc->checkskill(sd,BS_WEAPONRESEARCH))>0)
 		bstatus->hit += skill_lv*2;
 #endif
 	if((skill_lv=pc->checkskill(sd,AC_VULTURE))>0) {
