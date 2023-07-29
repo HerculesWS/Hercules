@@ -20323,25 +20323,31 @@ static int skill_poisoningweapon(struct map_session_data *sd, int nameid)
 		clif->skill_fail(sd, GC_POISONINGWEAPON, USESKILL_FAIL_LEVEL, 0, 0);
 		return 0;
 	}
-	switch( nameid )
-	{ // t_lv used to take duration from skill->get_time2
-		case ITEMID_POISON_PARALYSIS:     type = SC_PARALYSE;      break;
-		case ITEMID_POISON_FEVER:         type = SC_PYREXIA;       break;
-		case ITEMID_POISON_CONTAMINATION: type = SC_DEATHHURT;     break;
-		case ITEMID_POISON_LEECH:         type = SC_LEECHESEND;    break;
-		case ITEMID_POISON_FATIGUE:       type = SC_VENOMBLEED;    break;
-		case ITEMID_POISON_NUMB:          type = SC_TOXIN;         break;
-		case ITEMID_POISON_LAUGHING:      type = SC_MAGICMUSHROOM; break;
-		case ITEMID_POISON_OBLIVION:      type = SC_OBLIVIONCURSE; break;
-		default:
-			clif->skill_fail(sd, GC_POISONINGWEAPON, USESKILL_FAIL_LEVEL, 0, 0);
-			return 0;
+
+	int msg = 0;
+	switch (nameid) {
+	case ITEMID_POISON_PARALYSIS:     msg = MSG_PARALYZE;      type = SC_PARALYSE;      break;
+	case ITEMID_POISON_FEVER:         msg = MSG_PHYREXIA;      type = SC_PYREXIA;       break;
+	case ITEMID_POISON_CONTAMINATION: msg = MSG_DEATHHURT;     type = SC_DEATHHURT;     break;
+	case ITEMID_POISON_LEECH:         msg = MSG_RICHEND;       type = SC_LEECHESEND;    break;
+	case ITEMID_POISON_FATIGUE:       msg = MSG_VENOMBLEED;    type = SC_VENOMBLEED;    break;
+	case ITEMID_POISON_NUMB:          msg = MSG_TOXIN;         type = SC_TOXIN;         break;
+	case ITEMID_POISON_LAUGHING:      msg = MSG_MAGICMUSHROOM; type = SC_MAGICMUSHROOM; break;
+	case ITEMID_POISON_OBLIVION:      msg = MSG_OBLIANCURSE;   type = SC_OBLIVIONCURSE; break;
+	default:
+		clif->skill_fail(sd, GC_POISONINGWEAPON, USESKILL_FAIL_LEVEL, 0, 0);
+		return 0;
 	}
 
 	status_change_end(&sd->bl, SC_POISONINGWEAPON, INVALID_TIMER); // Status must be forced to end so that a new poison will be applied if a player decides to change poisons. [Rytech]
 	chance = 2 + 2 * sd->menuskill_val; // 2 + 2 * skill_lv
 	sc_start4(&sd->bl, &sd->bl, SC_POISONINGWEAPON, 100, pc->checkskill(sd, GC_RESEARCHNEWPOISON), //in Aegis it store the level of GC_RESEARCHNEWPOISON in val1
 		type, chance, 0, skill->get_time(GC_POISONINGWEAPON, sd->menuskill_val), GC_POISONINGWEAPON);
+
+#if PACKETVER >= 20090304
+	if (msg > 0)
+		clif->msgtable(sd, msg);
+#endif
 
 	return 0;
 }
