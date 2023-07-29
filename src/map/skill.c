@@ -3879,9 +3879,11 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 			{
 				struct status_change *ssc = status->get_sc(src);
 				if (ssc != NULL && ssc->data[SC_POISONINGWEAPON] != NULL && rnd() % 100 < 70 + 5 * skill_lv) {
-					sc_start(src, bl, ssc->data[SC_POISONINGWEAPON]->val2, 100, ssc->data[SC_POISONINGWEAPON]->val1, skill->get_time2(GC_POISONINGWEAPON, 1), skill_id);
+					sc_type poison_sc = ssc->data[SC_POISONINGWEAPON]->val2;
+					int duration = skill->get_time2(GC_POISONINGWEAPON, (poison_sc == SC_VENOMBLEED ? 1 : 2));
+					sc_start(src, bl, poison_sc, 100, ssc->data[SC_POISONINGWEAPON]->val1, duration, skill_id);
 					status_change_end(src, SC_POISONINGWEAPON, INVALID_TIMER);
-					clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
+					clif->skill_nodamage(src, bl, skill_id, skill_lv, 1);
 				}
 			}
 				break;
@@ -14423,9 +14425,10 @@ static int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *b
 		 * 3rd stuff
 		 **/
 		case UNT_POISONSMOKE:
-			if (battle->check_target(ss,bl,BCT_ENEMY) > 0 && !(tsc != NULL && tsc->data[sg->val2] != NULL)
+			if (battle->check_target(ss, bl, BCT_ENEMY) > 0 && !(tsc != NULL && tsc->data[sg->val2] != NULL)
 			    && rnd() % 100 < 50) {
-				sc_start(ss, bl, sg->val2, 100, sg->val1, skill->get_time2(GC_POISONINGWEAPON, 1), skill_id);
+				int duration = skill->get_time2(GC_POISONINGWEAPON, (sg->val2 == SC_VENOMBLEED ? 1 : 2));
+				sc_start(ss, bl, sg->val2, 100, sg->val1, duration, skill_id);
 			}
 			break;
 
