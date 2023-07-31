@@ -2038,6 +2038,11 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 	if (pc->checkskill(sd, SU_POWEROFLIFE) > 0)
 		bstatus->cri += 20;
 
+#ifdef RENEWAL
+	if ((skill_lv = pc->checkskill(sd, PR_MACEMASTERY)) > 0 && (sd->weapontype == W_MACE || sd->weapontype == W_2HMACE))
+		bstatus->cri += skill_lv * 10;
+#endif
+
 	if(sd->flee2_rate < 0)
 		sd->flee2_rate = 0;
 	if(sd->flee2_rate != 100)
