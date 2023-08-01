@@ -8439,7 +8439,11 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				val2 = val1*10; //Actual boost (since 100% = 1000)
 				break;
 			case SC_SUFFRAGIUM:
-				val2 = 15 * val1; //Speed cast decrease
+#ifndef RENEWAL
+				val2 = 15 * val1; // Cast speed decrease
+#else
+				val2 = 5 + 5 * val1; // Variable cast speed decrease
+#endif
 				break;
 			case SC_HEALPLUS:
 				if (val1 < 1)
