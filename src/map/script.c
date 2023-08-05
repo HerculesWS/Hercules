@@ -11706,20 +11706,35 @@ static BUILDIN(gettimetick)
 	}
 	return true;
 }
+
+/**
+ * gettime types.
+ */
+enum script_gettime_types {
+	GETTIME_SECOND = 1,
+	GETTIME_MINUTE,
+	GETTIME_HOUR,
+	GETTIME_WEEKDAY,
+	GETTIME_DAYOFMONTH,
+	GETTIME_MONTH,
+	GETTIME_YEAR,
+	GETTIME_DAYOFYEAR,
+};
+
 /**
  * Returns the specified field of the time.
  *
  * gettime(<type>{, <is_localtime>});
  *
  * Values for type:
- * - 1 - Second (0~60)
- * - 2 - Minute (0~59)
- * - 3 - Hour (0~23)
- * - 4 - Day of the week (0~6)
- * - 5 - Day of the month (1~31)
- * - 6 - Month (1~12)
- * - 7 - Year (20xx)
- * - 8 - Day of the year (1~366)
+ * - GETTIME_SECOND     - Second (0~60)
+ * - GETTIME_MINUTE     - Minute (0~59)
+ * - GETTIME_HOUR       - Hour (0~23)
+ * - GETTIME_WEEKDAY    - Day of the week (0~6)
+ * - GETTIME_DAYOFMONTH - Day of the month (1~31)
+ * - GETTIME_MONTH      - Month (1~12)
+ * - GETTIME_YEAR       - Year (20xx)
+ * - GETTIME_DAYOFYEAR  - Day of the year (1~366)
  */
 static BUILDIN(gettime)
 {
@@ -11739,28 +11754,28 @@ static BUILDIN(gettime)
 	}
 
 	switch(type) {
-	case 1: // GETTIME_SECOND: Sec(0~59)
+	case GETTIME_SECOND:
 		script_pushint(st, t->tm_sec);
 		break;
-	case 2: // GETTIME_MINUTE: Min(0~59)
+	case GETTIME_MINUTE:
 		script_pushint(st, t->tm_min);
 		break;
-	case 3: // GETTIME_HOUR: Hour(0~23)
+	case GETTIME_HOUR:
 		script_pushint(st, t->tm_hour);
 		break;
-	case 4: // GETTIME_WEEKDAY: WeekDay(0~6)
+	case GETTIME_WEEKDAY:
 		script_pushint(st, t->tm_wday);
 		break;
-	case 5: // GETTIME_DAYOFMONTH: MonthDay(01~31)
+	case GETTIME_DAYOFMONTH:
 		script_pushint(st, t->tm_mday);
 		break;
-	case 6: // GETTIME_MONTH: Month(01~12)
+	case GETTIME_MONTH:
 		script_pushint(st, t->tm_mon + 1);
 		break;
-	case 7: // GETTIME_YEAR: Year(20xx)
+	case GETTIME_YEAR:
 		script_pushint(st, t->tm_year + 1900);
 		break;
-	case 8: // GETTIME_DAYOFYEAR: Year Day(01~366)
+	case GETTIME_DAYOFYEAR:
 		script_pushint(st, t->tm_yday + 1);
 		break;
 	default: // (format error)
@@ -29555,6 +29570,16 @@ static void script_hardcoded_constants(void)
 	script->set_constant("QINFO_HOMUN_TYPE", QINFO_HOMUN_TYPE, false, false);
 	script->set_constant("QINFO_QUEST", QINFO_QUEST, false, false);
 	script->set_constant("QINFO_MERCENARY_CLASS", QINFO_MERCENARY_CLASS, false, false);
+
+	script->constdb_comment("Gettime Types");
+	script->set_constant("GETTIME_SECOND", GETTIME_SECOND, false, false);
+	script->set_constant("GETTIME_MINUTE", GETTIME_MINUTE, false, false);
+	script->set_constant("GETTIME_HOUR", GETTIME_HOUR, false, false);
+	script->set_constant("GETTIME_WEEKDAY", GETTIME_WEEKDAY, false, false);
+	script->set_constant("GETTIME_DAYOFMONTH", GETTIME_DAYOFMONTH, false, false);
+	script->set_constant("GETTIME_MONTH", GETTIME_MONTH, false, false);
+	script->set_constant("GETTIME_YEAR", GETTIME_YEAR, false, false);
+	script->set_constant("GETTIME_DAYOFYEAR", GETTIME_DAYOFYEAR, false, false);
 
 	script->constdb_comment("function types");
 	script->set_constant("FUNCTION_IS_COMMAND", FUNCTION_IS_COMMAND, false, false);
