@@ -11706,52 +11706,66 @@ static BUILDIN(gettimetick)
 	}
 	return true;
 }
-/*==========================================
- * GetTime(Type);
- * 1: Sec     2: Min     3: Hour
- * 4: WeekDay     5: MonthDay     6: Month
- * 7: Year
- *------------------------------------------*/
-/* Asgard Version */
+/**
+ * Returns the specified field of the time.
+ *
+ * gettime(<type>{, <is_localtime>});
+ *
+ * Values for type:
+ * - 1 - Second (0~60)
+ * - 2 - Minute (0~59)
+ * - 3 - Hour (0~23)
+ * - 4 - Day of the week (0~6)
+ * - 5 - Day of the month (1~31)
+ * - 6 - Month (1~12)
+ * - 7 - Year (20xx)
+ * - 8 - Day of the year (1~366)
+ */
 static BUILDIN(gettime)
 {
-	int type;
+	int type = script_getnum(st, 2);
+	bool use_localtime = true;
+	if (script_hasdata(st, 3) && script_getnum(st, 3) == 0) {
+		use_localtime = false;
+	}
+
 	time_t clock;
-	struct tm *t;
-
-	type=script_getnum(st,2);
-
 	time(&clock);
-	t=localtime(&clock);
+	struct tm *t = NULL;
+	if (use_localtime) {
+		t = localtime(&clock);
+	} else {
+		t = gmtime(&clock);
+	}
 
 	switch(type) {
-		case 1://Sec(0~59)
-			script_pushint(st,t->tm_sec);
-			break;
-		case 2://Min(0~59)
-			script_pushint(st,t->tm_min);
-			break;
-		case 3://Hour(0~23)
-			script_pushint(st,t->tm_hour);
-			break;
-		case 4://WeekDay(0~6)
-			script_pushint(st,t->tm_wday);
-			break;
-		case 5://MonthDay(01~31)
-			script_pushint(st,t->tm_mday);
-			break;
-		case 6://Month(01~12)
-			script_pushint(st,t->tm_mon+1);
-			break;
-		case 7://Year(20xx)
-			script_pushint(st,t->tm_year+1900);
-			break;
-		case 8://Year Day(01~366)
-			script_pushint(st,t->tm_yday+1);
-			break;
-		default://(format error)
-			script_pushint(st,-1);
-			break;
+	case 1: // GETTIME_SECOND: Sec(0~59)
+		script_pushint(st, t->tm_sec);
+		break;
+	case 2: // GETTIME_MINUTE: Min(0~59)
+		script_pushint(st, t->tm_min);
+		break;
+	case 3: // GETTIME_HOUR: Hour(0~23)
+		script_pushint(st, t->tm_hour);
+		break;
+	case 4: // GETTIME_WEEKDAY: WeekDay(0~6)
+		script_pushint(st, t->tm_wday);
+		break;
+	case 5: // GETTIME_DAYOFMONTH: MonthDay(01~31)
+		script_pushint(st, t->tm_mday);
+		break;
+	case 6: // GETTIME_MONTH: Month(01~12)
+		script_pushint(st, t->tm_mon + 1);
+		break;
+	case 7: // GETTIME_YEAR: Year(20xx)
+		script_pushint(st, t->tm_year + 1900);
+		break;
+	case 8: // GETTIME_DAYOFYEAR: Year Day(01~366)
+		script_pushint(st, t->tm_yday + 1);
+		break;
+	default: // (format error)
+		script_pushint(st, -1);
+		break;
 	}
 	return true;
 }
@@ -28484,7 +28498,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(checkwug,""),
 		BUILDIN_DEF(savepoint,"sii"),
 		BUILDIN_DEF(gettimetick,"i"),
-		BUILDIN_DEF(gettime,"i"),
+		BUILDIN_DEF(gettime,"i?"),
 		BUILDIN_DEF(gettimestr, "si?"),
 		BUILDIN_DEF(openstorage,""),
 		BUILDIN_DEF(guildopenstorage,""),

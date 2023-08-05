@@ -3787,7 +3787,7 @@ Valid types are :
 
 ---------------------------------------
 
-*gettime(<type>)
+*gettime(<type>{, <is_localtime>})
 
 This function returns specified information about the current system time.
 
@@ -3802,6 +3802,9 @@ Valid types:
 	                       - Additional: JANUARY, FEBRUARY, MARCH, APRIL, MAY, JUNE, JULY, AUGUST, SEPTEMBER, OCTOBER, NOVEMBER, DECEMBER
 	7 - GETTIME_YEAR       - Year
 	8 - GETTIME_DAYOFYEAR  - Day of the year.
+
+If <is_localtime> is true (or omitted), the output refers to the current timezone and daylight savings.
+Otherwise it is in UTC.
 
 It will only return numbers based on types.
 Example :
