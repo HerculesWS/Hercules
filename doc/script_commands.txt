@@ -3818,7 +3818,7 @@ Example :
 
 ---------------------------------------
 
-*getcalendartime(<hour>, <minute>{, <day of month>{, <day of week>}})
+*getcalendartime(<hour>, <minute>{, <day of month>{, <day of week>{, <input_is_localtime>}}})
 
 This function returns the timestamp of the next occurrence of a given time.
 If this time is later today, it will stay in the same day, otherwise, it will adjust to a future
@@ -3837,10 +3837,14 @@ Day of Week specifies a day in the week and its valid values are:
 In order to use Day of Week, you must use Day of Month as -1.
 If for some reason the command fails, it'll return -1.
 
+If <input_is_localtime> is true (or omitted), then the hour and minute are interpreted according to the current timezone
+and daylight savings. Otherwise they're treated as UTC.
+
 Examples :
 	getcalendartime(19, 00); // Next 7 pm
 	getcalendartime(19, 00, 6); // Next day 6 of the month, at 7pm
 	getcalendartime(19, 10, -1, 1); // Next Monday, at 7:10pm
+	getcalendartime(19, 00, -1, -1, false); // Next 7 pm UTC
 
 Note: If supplied with the current hour and minute, you will get the timestamp for the same
 hour and minute in the next day. For example, if is now August 1st 7:00pm and you use:

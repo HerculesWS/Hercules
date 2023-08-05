@@ -26799,21 +26799,35 @@ static BUILDIN(mergeitem)
 	return true;
 }
 
-// getcalendartime(<day of month>, <day of week>{, <hour>{, <minute>}});
-// Returns the UNIX Timestamp of next ocurrency of given time
+/**
+ * Returns the UNIX Timestamp of next ocurrency of given time.
+ *
+ * getcalendartime(<hour>, <minute>{, <day of month>{, <day of week>{, <input_is_localtime>}}})
+ */
 static BUILDIN(getcalendartime)
 {
-	struct tm info = { 0 };
 	int day_of_month = script_hasdata(st, 4) ? script_getnum(st, 4) : -1;
 	int day_of_week = script_hasdata(st, 5) ? script_getnum(st, 5) : -1;
-	int year = date_get_year();
-	int month = date_get_month();
-	int day = date_get_day();
-	int cur_hour = date_get_hour();
-	int cur_min = date_get_min();
 	int hour = script_getnum(st, 2);
 	int minute = script_getnum(st, 3);
+	bool input_is_localtime = script_hasdata(st, 6) ? script_getnum(st, 6) != 0 : true;
 
+	struct tm *tm = NULL;
+	{
+		time_t t = time(NULL);
+		if (input_is_localtime) {
+			tm = localtime(&t);
+		} else {
+			tm = gmtime(&t);
+		}
+	}
+	int year = tm->tm_year + 1900;
+	int month = tm->tm_mon + 1;
+	int day = tm->tm_mday;
+	int cur_hour = tm->tm_hour;
+	int cur_min = tm->tm_min;
+
+	struct tm info = { 0 };
 	info.tm_sec = 0;
 	info.tm_min = minute;
 	info.tm_hour = hour;
@@ -26863,11 +26877,14 @@ static BUILDIN(getcalendartime)
 
 		// Loops until month has finding a month that has day_of_month
 		do {
-			time_t t;
-			struct tm *lt;
 			info.tm_mday = day_of_month;
-			t = mktime(&info);
-			lt = localtime(&t);
+			time_t t = mktime(&info);
+			struct tm *lt = NULL;
+			if (input_is_localtime) {
+				lt = localtime(&t);
+			} else {
+				lt = gmtime(&t);
+			}
 			info = *lt;
 		} while (info.tm_mday != day_of_month);
 	} else if (day_of_week > -1) {
@@ -26888,7 +26905,17 @@ static BUILDIN(getcalendartime)
 		}
 	}
 
-	script_pushint(st, mktime(&info));
+	time_t out_time = 0;
+	if (input_is_localtime) {
+		out_time = mktime(&info);
+	} else {
+#ifdef WIN32
+		out_time = _mkgmtime(&info);
+#else
+		out_time = timegm(&info);
+#endif
+	}
+	script_pushint(st, out_time);
 
 	return true;
 }
@@ -28974,7 +29001,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(removechannelhandler, "ss"),
 		BUILDIN_DEF(showscript, "s??"),
 		BUILDIN_DEF(mergeitem,""),
-		BUILDIN_DEF(getcalendartime, "ii??"),
+		BUILDIN_DEF(getcalendartime, "ii???"),
 
 		// -- RoDEX
 		BUILDIN_DEF(rodex_sendmail, "isss???????????"),
