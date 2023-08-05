@@ -4273,12 +4273,16 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 #endif
 	case HT_BLITZBEAT:
 	case SN_FALCONASSAULT:
-		//Blitz-beat Damage.
-		if(!sd || (temp = pc->checkskill(sd,HT_STEELCROW)) <= 0)
-			temp=0;
-		md.damage=(sstatus->dex/10+sstatus->int_/2+temp*3+40)*2;
-		if(mflag > 1) //Autocasted Blitz.
-			nk|=NK_SPLASHSPLIT;
+		// Blitz-beat Damage.
+		if (sd == NULL || (temp = pc->checkskill(sd,HT_STEELCROW)) <= 0)
+			temp = 0;
+#ifndef RENEWAL
+		md.damage = (sstatus->dex / 10 + sstatus->int_ / 2 + temp * 3 + 40) * 2;
+		if (mflag > 1) //Autocasted Blitz.
+			nk |= NK_SPLASHSPLIT;
+#else
+		md.damage= skill_lv * 20 + temp * 6 + (sstatus->dex / 10 + sstatus->agi / 2) * 2;
+#endif
 
 		if (skill_id == SN_FALCONASSAULT) {
 			//Div fix of Blitzbeat
