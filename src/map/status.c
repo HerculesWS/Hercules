@@ -4434,6 +4434,8 @@ static int status_calc_buff_extra_batk(struct block_list *bl, struct status_chan
 	// In-game Tests (and iRO wiki) suggests SC_SHOUT ATK bonus is counted as Extra ATK
 	if (sc->data[SC_SHOUT] != NULL)
 		batk += sc->data[SC_SHOUT]->val2;
+	if (sc->data[SC_IMPOSITIO] != NULL)
+		batk += sc->data[SC_IMPOSITIO]->val2;
 #endif
 
 	return cap_value(batk, 0, battle_config.batk_max);
@@ -4605,6 +4607,9 @@ static int status_calc_matk(struct block_list *bl, struct status_change *sc, int
 		matk += 40 + 30 * sc->data[SC_ODINS_POWER]->val1; //70 lvl1, 100lvl2
 	if (sc->data[SC_IZAYOI])
 		matk += 25 * sc->data[SC_IZAYOI]->val1;
+#else // RENEWAL
+	if (sc->data[SC_IMPOSITIO])
+		matk += sc->data[SC_IMPOSITIO]->val2;
 #endif
 	if (sc->data[SC_ZANGETSU])
 		matk += sc->data[SC_ZANGETSU]->val3;
@@ -8273,7 +8278,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 #endif
 				break;
 			case SC_IMPOSITIO:
-				val2 = 5*val1; //watk increase
+				val2 = 5 * val1; // (Pre-RE) watk increase / (RE) Extra ATK / MATK increase
 				break;
 			case SC_MELTDOWN:
 				val2 = 100*val1; //Chance to break weapon
@@ -10603,8 +10608,15 @@ static bool status_end_sc_before_start(struct block_list *bl, struct status_data
 		status_change_end(bl, SC_INVINCIBLE, INVALID_TIMER);
 		break;
 	case SC_MAGICPOWER:
-	case SC_IMPOSITIO:
 		status_change_end(bl, type, INVALID_TIMER);
+		break;
+	case SC_IMPOSITIO:
+#ifndef RENEWAL
+		status_change_end(bl, type, INVALID_TIMER);
+#else
+		if (sc->data[type] == NULL || val1 >= sc->data[type]->val1)
+			status_change_end(bl, type, INVALID_TIMER);
+#endif
 		break;
 	case SC_SUNSTANCE:
 	case SC_LUNARSTANCE:
