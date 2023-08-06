@@ -23905,6 +23905,7 @@ static time_t clif_attendance_getendtime(void)
 	tmtime.tm_year = year - 1900;
 	tmtime.tm_mon = month - 1;
 	tmtime.tm_mday = day;
+	tmtime.tm_isdst = -1;
 
 	timestamp = mktime(&tmtime);
 
