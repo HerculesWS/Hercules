@@ -11694,24 +11694,26 @@ static BUILDIN(gettimetick)
 	int type = script_getnum(st, 2);
 
 	switch(type) {
-		case GETTIMETICK_UNIXTIME:
-			// Get the number of seconds elapsed since 00:00 hours, Jan 1, 1970 UTC from the system clock.
-			script_pushint(st,(int)time(NULL));
-			break;
-		case GETTIMETICK_HOUROFDAY_S: {
-			// Second Ticks: 0-86399, 00:00:00-23:59:59
-			time_t clock;
-			time(&clock);
-			struct tm *t = localtime(&clock);
-			script_pushint(st, t->tm_hour * 3600 + t->tm_min * 60 + t->tm_sec);
-		}
-			break;
-		case GETTIMETICK_SYSTEM_MS:
-		default:
-			// System Ticks
-			// Conjunction with INT_MAX is done to prevent overflow. (Script variables are signed integers.)
-			script_pushint(st, timer->gettick() & INT_MAX); // TODO: change this to int64 when we'll support 64 bit script values
-			break;
+	case GETTIMETICK_SYSTEM_MS:
+		// System Ticks
+		// Conjunction with INT_MAX is done to prevent overflow. (Script variables are signed integers.)
+		script_pushint(st, timer->gettick() & INT_MAX); // TODO: change this to int64 when we'll support 64 bit script values
+		break;
+	case GETTIMETICK_HOUROFDAY_S: {
+		// Second Ticks: 0-86399, 00:00:00-23:59:59
+		time_t clock;
+		time(&clock);
+		struct tm *t = localtime(&clock);
+		script_pushint(st, t->tm_hour * 3600 + t->tm_min * 60 + t->tm_sec);
+	}
+		break;
+	case GETTIMETICK_UNIXTIME:
+		// Get the number of seconds elapsed since 00:00 hours, Jan 1, 1970 UTC from the system clock.
+		script_pushint(st, (int)time(NULL));
+		break;
+	default:
+		script_pushint(st, -1);
+		break;
 	}
 	return true;
 }
