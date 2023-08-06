@@ -18,7 +18,9 @@
 	.@Buffs = 0;	// Also buff players? (1: yes / 0: no)
 	.@Delay = 0;	// Heal delay, in seconds
 
-	if (@HD > gettimetick(2)) end;
+	if (@HD > gettimetick(GETTIMETICK_UNIXTIME)) {
+		end;
+	}
 	if (.@price) {
 		message strcharinfo(PC_NAME),"Healing costs "+.@price+" Zeny.";
 		if (Zeny < .@price) end;
@@ -30,7 +32,9 @@
 		specialeffect(EF_INCAGILITY, AREA, playerattached()); sc_start SC_INC_AGI,240000,10;
 		specialeffect(EF_BLESSING, AREA, playerattached()); sc_start SC_BLESSING,240000,10;
 	}
-	if (.@Delay) @HD = gettimetick(2)+.@Delay;
+	if (.@Delay) {
+		@HD = gettimetick(GETTIMETICK_UNIXTIME) + .@Delay;
+	}
 	end;
 }
 

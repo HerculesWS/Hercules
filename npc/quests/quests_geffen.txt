@@ -300,7 +300,7 @@ geffen,122,77,4	script	Nia#yagu	8_F_GIRL,{
 	// The official time calculation is based on ServerTime,
 	// an int HHMMSS equivalent to atoi(gettimestr("%H%M%S",7)).
 	// UNIX time is really a better way to do this.
-	.@start_time = gettimetick(2);
+	.@start_time = gettimetick(GETTIMETICK_UNIXTIME);
 
 	while(1) {
 
@@ -367,7 +367,7 @@ geffen,122,77,4	script	Nia#yagu	8_F_GIRL,{
 			} else {
 
 				// Calculate final time and check against the previous record.
-				.@end_time = gettimetick(2);
+				.@end_time = gettimetick(GETTIMETICK_UNIXTIME);
 				if (.@end_time < .@start_time)
 					.@end_time += 3600;
 				.@total_time = .@end_time - .@start_time;

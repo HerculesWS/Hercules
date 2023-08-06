@@ -133,8 +133,8 @@ OnReset_09:
 
 -	script	Trocco#aco1	FAKE_NPC,{
 OnEnable:
-	initnpctimer;
-	$@arn_1 = gettimetick(2);
+	initnpctimer();
+	$@arn_1 = gettimetick(GETTIMETICK_UNIXTIME);
 	end;
 
 OnTimer2000:
@@ -503,7 +503,7 @@ OnReset:
 OnMyMobDead:
 	if (mobcount("force_5-1","force_09mob#aco::OnMyMobDead") < 1) {
 		donpcevent "Trocco#aco1::On09_End";
-		$@arn_2 = gettimetick(2);
+		$@arn_2 = gettimetick(GETTIMETICK_UNIXTIME);
 		donpcevent "arena_aco1::OnReset_09";
 	}
 	end;
@@ -561,8 +561,8 @@ OnReset_09:
 
 -	script	Trocco#aco2	FAKE_NPC,{
 OnEnable:
-	initnpctimer;
-	$@arn_1 = gettimetick(2);
+	initnpctimer();
+	$@arn_1 = gettimetick(GETTIMETICK_UNIXTIME);
 	end;
 
 OnTimer2000:
@@ -1039,7 +1039,7 @@ OnReset:
 OnMyMobDead:
 	if (mobcount("force_5-1","force_09mob#pri::OnMyMobDead") < 1) {
 		donpcevent "Trocco#aco2::On09_End";
-		$@arn_2 = gettimetick(2);
+		$@arn_2 = gettimetick(GETTIMETICK_UNIXTIME);
 		donpcevent "arena_aco2::OnReset_09";
 	}
 	end;

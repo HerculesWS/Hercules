@@ -285,7 +285,9 @@ OnTimer23000:
 	mapannounce strnpcinfo(NPC_MAP),"Now! The race has begun! Go Go Go!!",bc_map,"0x33FF66";
 	disablenpc "No_Unfair_Start#"+.@w$+"-1";
 	disablenpc "No_Unfair_Start#"+.@w$+"-2";
-	if (strnpcinfo(NPC_MAP) == "turbo_n_1") $@start_time = gettimetick(0);
+	if (strnpcinfo(NPC_MAP) == "turbo_n_1") {
+		$@start_time = gettimetick(GETTIMETICK_SYSTEM_MS);
+	}
 	end;
 
 OnTimer30000:
@@ -1954,7 +1956,9 @@ OnTouch:
 	if (checkhiding())
 		end;
 	.@w$ = callfunc("F_tt");
-	if (.@w$ == "n1") $@end_time = gettimetick(0);
+	if (.@w$ == "n1") {
+		$@end_time = gettimetick(GETTIMETICK_SYSTEM_MS);
+	}
 	mapannounce strnpcinfo(NPC_MAP),strcharinfo(PC_NAME) +" has just arrived at the Finish Line! Congratulations!",bc_map,"0xFFFF00";
 	if (.@w$ != "n1") {
 		setd "$ttnames$["+GetNumber(.@w$)+"]",strcharinfo(PC_NAME);

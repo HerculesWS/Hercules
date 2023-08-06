@@ -9,17 +9,17 @@
 //============================================================
 
 prontera,157,181,6	script	Time Sample	8W_SOLDIER,{
-	mes "[Time Sample]";
-	mes "       System Tick : " + gettimetick(0);
-	mes "         Time Tick : " + gettimetick(1);
-	mes "    GETTIME_SECOND : " + gettime(GETTIME_SECOND)     + " (Sec)";
-	mes "    GETTIME_MINUTE : " + gettime(GETTIME_MINUTE)     + " (Min)";
-	mes "      GETTIME_HOUR : " + gettime(GETTIME_HOUR)       + " (Hour)";
-	mes "   GETTIME_WEEKDAY : " + gettime(GETTIME_WEEKDAY)    + " (WeekDay)";
-	mes "GETTIME_DAYOFMONTH : " + gettime(GETTIME_DAYOFMONTH) + " (MonthDay)";
-	mes "     GETTIME_MONTH : " + gettime(GETTIME_MONTH)      + " (Month)";
-	mes "      GETTIME_YEAR : " + gettime(GETTIME_YEAR)       + " (Year)";
-	mes " GETTIME_DAYOFYEAR : " + gettime(GETTIME_DAYOFYEAR)  + " (Day of Year)";
-	mes "        gettimestr : " + gettimestr("%Y-%m/%d %H:%M:%S",19);
-	close;
+	mes("[Time Sample]");
+	mesf("       System Tick : %d", gettimetick(GETTIMETICK_SYSTEM_MS));
+	mesf("         Time Tick : %d", gettimetick(GETTIMETICK_HOUROFDAY_S));
+	mesf("    GETTIME_SECOND : %d (Sec)", gettime(GETTIME_SECOND));
+	mesf("    GETTIME_MINUTE : %d (Min)", gettime(GETTIME_MINUTE));
+	mesf("      GETTIME_HOUR : %d (Hour)", gettime(GETTIME_HOUR));
+	mesf("   GETTIME_WEEKDAY : %d (WeekDay)", gettime(GETTIME_WEEKDAY));
+	mesf("GETTIME_DAYOFMONTH : %d (MonthDay)", gettime(GETTIME_DAYOFMONTH));
+	mesf("     GETTIME_MONTH : %d (Month)", gettime(GETTIME_MONTH));
+	mesf("      GETTIME_YEAR : %d (Year)", gettime(GETTIME_YEAR));
+	mesf(" GETTIME_DAYOFYEAR : %d (Day of Year)", gettime(GETTIME_DAYOFYEAR));
+	mesf("        gettimestr : %s", gettimestr("%Y-%m/%d %H:%M:%S",19));
+	close();
 }

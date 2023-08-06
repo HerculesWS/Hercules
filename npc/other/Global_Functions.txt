@@ -365,7 +365,7 @@ function	script	F_GetArmorType	{
 //== Function Time2Str =====================================
 // Time calculation Function
 function	script	Time2Str	{
-	.@time_left = getarg(0) - gettimetick(2);
+	.@time_left = getarg(0) - gettimetick(GETTIMETICK_UNIXTIME);
 
 	.@Days = .@time_left / 86400;
 	.@time_left -= (.@Days * 86400);

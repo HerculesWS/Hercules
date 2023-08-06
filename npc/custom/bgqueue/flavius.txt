@@ -181,7 +181,7 @@ OnGuillaumeQuit:
 
 L_OnPlayerQuit:
 	bg_leave;
-	setd $@bg_delay_var$,gettimetick(2);
+	setd($@bg_delay_var$, gettimetick(GETTIMETICK_UNIXTIME));
 	if( queuesize($@Guill_QueueBG1) == 0 || queuesize($@Croix_QueueBG1) == 0 ) /* todo check score and decide a winner if anyone left */
 		callsub OnMatchOver;
 	end;

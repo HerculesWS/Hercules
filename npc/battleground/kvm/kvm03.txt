@@ -154,7 +154,7 @@ OnCroixJoin:
 	end;
 
 OnGuillaumeQuit:
-	//BG_Delay_Tick = gettimetick(2) + 1200;
+	//BG_Delay_Tick = gettimetick(GETTIMETICK_UNIXTIME) + 1200;
 OnGuillaumeDie:
 	if ($@KvM03BG == 2) {
 		--.Guillaume_Count;
@@ -168,7 +168,7 @@ OnGuillaumeDie:
 	end;
 
 OnCroixQuit:
-	//BG_Delay_Tick = gettimetick(2) + 1200;
+	//BG_Delay_Tick = gettimetick(GETTIMETICK_UNIXTIME) + 1200;
 OnCroixDie:
 	if ($@KvM03BG == 2) {
 		--.Croix_Count;

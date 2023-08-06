@@ -159,7 +159,7 @@ function	script	F_TestCalendarNextTime	{
 	.@utc_min = gettime(GETTIME_MINUTE, false);
 	.@result_fromutc = getcalendartime(.@utc_hour, .@utc_min, -1, -1, false);
 
-	.@expected = gettimetick(2) + 24 * 60 * 60;
+	.@expected = gettimetick(GETTIMETICK_UNIXTIME) + 24 * 60 * 60;
 
 	// We give it a range of 70 seconds more or less in the result because:
 	// 1. getcalendartime doesn't take seconds into account, so we may have differing seconds;

@@ -9639,7 +9639,7 @@ lhz_in01,187,31,0	script	#Sneak	HIDDEN_NPC,4,3,{
 OnTouch:
 	if((lhz_boss > 27) && (lhz_boss < 35))
 	{
-		@sneaktime = gettimetick(0) % 100;
+		@sneaktime = gettimetick(GETTIMETICK_SYSTEM_MS) % 100;
 		if((@sneaktime > 10 && @sneaktime < 59) || (@sneaktime < -10 && @sneaktime > -59))
 		{
 			mes "^3355FFAs you approach";

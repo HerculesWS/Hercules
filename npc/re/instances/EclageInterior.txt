@@ -63,7 +63,7 @@ ecl_hub01,132,12,3	script	Chief of Staff#tl01::EclInstance	4_F_FAIRY,{
 					instance_destroy(.@instance);
 					close();
 				}
-				ecl_interior_time = gettimetick(2) + 20 * 60;
+				ecl_interior_time = gettimetick(GETTIMETICK_UNIXTIME) + 20 * 60;
 				instance_set_timeout(1200, 1200, .@instance);
 				instance_init(.@instance);
 			}
@@ -104,7 +104,7 @@ ecl_hub01,130,15,0	script	It is closed shut.	CLEAR_NPC,{
 					mes("Only the party leader will enter. Please create your party.");
 					close();
 				}
-				if (gettimetick(2) >= ecl_interior_time) {
+				if (gettimetick(GETTIMETICK_UNIXTIME) >= ecl_interior_time) {
 					mes("[Shenime]");
 					mes("Looks like the soldiers inside are really tense.");
 					mes("It is pretty difficult to guide an outsider like you.");

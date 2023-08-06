@@ -84,8 +84,8 @@ L_questmenu:
 			set .@collectmenu$, .@collectmenu$ + "[" + getd("." +(.@i+1)+"_collectionmin") + " - " + getd("." +(.@i+1)+"_collectionmax") + "] " + getd("." + (.@i+1) + "_collectionname$");
 		}
 		set .@selection,select(.@collectmenu$);
-		if(gettimetick(2) < getd(.@selection + "_collection_delay")){
-			set .@time_left, getd(.@selection + "_collection_delay")-gettimetick(2);
+		if (gettimetick(GETTIMETICK_UNIXTIME) < getd(.@selection + "_collection_delay")) {
+			.@time_left = getd(.@selection + "_collection_delay") - gettimetick(GETTIMETICK_UNIXTIME);
 			mes "[^FF7700Questboard^000000]";
 			if(.@time_left < 60) mes "You have to wait ^0000FF"+.@time_left+" seconds^000000 to do this quest again.";
 			if(.@time_left < 3600) mes "You have to wait ^0000FF"+.@time_left/60+" minutes^000000 to do this quest again.";
@@ -131,8 +131,8 @@ L_questmenu:
 			set .@huntmenu$, .@huntmenu$ + "[" + getd("." +(.@i+1)+"_huntingmin") + " - " + getd("." +(.@i+1)+"_huntingmax") + "] " + getd("." + (.@i+1) + "_huntingname$");
 		}
 		set .@selection,select(.@huntmenu$);
-		if(gettimetick(2) < getd(.@selection + "_hunting_delay")){
-			set .@time_left, getd(.@selection + "_hunting_delay")-gettimetick(2);
+		if (gettimetick(GETTIMETICK_UNIXTIME) < getd(.@selection + "_hunting_delay")) {
+			.@time_left = getd(.@selection + "_hunting_delay") - gettimetick(GETTIMETICK_UNIXTIME);
 			mes "[^FF7700Questboard^000000]";
 			if(.@time_left < 60) mes "You have to wait ^0000FF"+.@time_left+" seconds^000000 to do this quest again.";
 			if(.@time_left < 3600) mes "You have to wait ^0000FF"+.@time_left/60+" minutes^000000 to do this quest again.";
@@ -193,7 +193,7 @@ L_checkitems:
 	if(getd("." +currentquest$+"_collectionprize")!=0) getitem(getd("." +currentquest$+"_collectionprize"),getd("." +currentquest$+"_collectionamount"));
 	Zeny += getd("." +currentquest$+"_collectionzeny");
 	getexp getd("." +currentquest$+"_collectionexp["+0+"]"),getd("." +currentquest$+"_collectionexp["+1+"]");
-	setd(currentquest$ + "_collection_delay"),gettimetick(2)+.quest_delay;
+	setd(currentquest$ + "_collection_delay", gettimetick(GETTIMETICK_UNIXTIME) + .quest_delay);
 	set currentquest$, "";
 	set c_run, 0;
 	close;
@@ -227,7 +227,7 @@ L_checkmobs2:
 	if(getd("." +currentquest$+"_huntingprize")!=0) getitem(getd("." +currentquest$+"_huntingprize"),getd("." +currentquest$+"_huntingamount"));
 	Zeny += getd("." +currentquest$+"_huntingzeny");
 	getexp getd("." +currentquest$+"_huntingexp["+0+"]"),getd("." +currentquest$+"_huntingexp["+1+"]");
-	setd(currentquest$ + "_hunting_delay"),gettimetick(2)+.quest_delay;
+	setd(currentquest$ + "_hunting_delay", gettimetick(GETTIMETICK_UNIXTIME) + .quest_delay);
 	set currentquest$, "";
 	set h_run, 0;
 	close;
