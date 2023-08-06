@@ -26834,6 +26834,7 @@ static BUILDIN(getcalendartime)
 	info.tm_mday = day;
 	info.tm_mon = month - 1;
 	info.tm_year = year - 1900;
+	info.tm_isdst = -1;
 
 	if (day_of_month > -1 && day_of_week > -1) {
 		ShowError("script:getcalendartime: You must only specify a day_of_week or a day_of_month, not both\n");
