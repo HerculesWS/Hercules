@@ -2193,7 +2193,20 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					skillratio += 20 * skill_lv;
 					break;
 				case CR_SHIELDBOOMERANG:
+#ifndef RENEWAL
 					skillratio += 30 * skill_lv;
+#else
+					skillratio += -100 + 80 * skill_lv;
+					if (sd != NULL) {
+						short shield_index = sd->equip_index[EQI_HAND_L];
+
+						if (shield_index >= 0 && sd->inventory_data[shield_index] != NULL
+						    && sd->inventory_data[shield_index]->type == IT_ARMOR) {
+							skillratio += sd->inventory_data[shield_index]->weight / 10; // + <Shield Weight>%
+							skillratio += sd->status.inventory[shield_index].refine * 4; // + <Shield Upgrade x 4>%
+						}
+					}
+#endif
 					break;
 				case NPC_DARKCROSS:
 				case CR_HOLYCROSS:
@@ -4779,7 +4792,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 #ifdef RENEWAL
 			case KN_BOWLINGBASH:
 				wd.div_ = 2;
-				
+
 				// wflag stores the number of affected targets
 				if (sd != NULL && sd->weapontype == W_2HSWORD) {
 					if (wflag >= 2 && wflag < 4)
@@ -5280,17 +5293,29 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 			case PA_SHIELDCHAIN:
 #endif
 			case CR_SHIELDBOOMERANG:
+#ifndef RENEWAL
 				wd.damage = sstatus->batk;
-				if (sd) {
+				if (sd != NULL) {
 					int damagevalue = 0;
 					short index = sd->equip_index[EQI_HAND_L];
 
-					if( index >= 0 && sd->inventory_data[index] && sd->inventory_data[index]->type == IT_ARMOR )
+					if (index >= 0 && sd->inventory_data[index] != NULL && sd->inventory_data[index]->type == IT_ARMOR)
 						damagevalue = sd->inventory_data[index]->weight/10;
 					ATK_ADD(damagevalue);
-				} else
+				} else {
 					ATK_ADD(sstatus->rhw.atk2); //Else use Atk2
+				}
+#else // RENEWAL
+				if (sd != NULL) {
+					GET_NORMAL_ATTACK(0, skill_id);
+				} else {
+					// @TODO: Does this still applies for Renewal after rebalance?
+					wd.damage = sstatus->batk;
+					ATK_ADD(sstatus->rhw.atk2); //Else use Atk2
+				}
+#endif
 				break;
+
 			case HFLI_SBR44: //[orn]
 				if (src->type == BL_HOM) {
 					const struct homun_data *hd = BL_UCCAST(BL_HOM, src);
