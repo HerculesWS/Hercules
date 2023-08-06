@@ -11673,33 +11673,42 @@ static BUILDIN(savepoint)
 	return true;
 }
 
-/*==========================================
- * GetTimeTick(0: System Tick, 1: Time Second Tick)
- *------------------------------------------*/
-/* Asgard Version */
+/**
+ * gettimetick types.
+ */
+enum script_gettimetick_types {
+	GETTIMETICK_SYSTEM_MS = 0,
+	GETTIMETICK_HOUROFDAY_S,
+	GETTIMETICK_UNIXTIME,
+};
+
+/**
+ * Returns the current time in one of the following representations.
+ *
+ * GETTIMETICK_SYSTEM_MS   - System tick in milliseconds.
+ * GETTIMETICK_HOUROFDAY_S - Seconds from the start of the day (disregarding DST changes).
+ * GETTIMETICK_UNIXTIME    - UNIX timestamp, in seconds.
+ */
 static BUILDIN(gettimetick)
 {
-	int type;
-	time_t clock;
-	struct tm *t;
-
-	type=script_getnum(st,2);
+	int type = script_getnum(st, 2);
 
 	switch(type) {
-		case 2:
-			//type 2:(Get the number of seconds elapsed since 00:00 hours, Jan 1, 1970 UTC
-			//        from the system clock.)
+		case GETTIMETICK_UNIXTIME:
+			// Get the number of seconds elapsed since 00:00 hours, Jan 1, 1970 UTC from the system clock.
 			script_pushint(st,(int)time(NULL));
 			break;
-		case 1:
-			//type 1:(Second Ticks: 0-86399, 00:00:00-23:59:59)
+		case GETTIMETICK_HOUROFDAY_S: {
+			// Second Ticks: 0-86399, 00:00:00-23:59:59
+			time_t clock;
 			time(&clock);
-			t=localtime(&clock);
-			script_pushint(st,((t->tm_hour)*3600+(t->tm_min)*60+t->tm_sec));
+			struct tm *t = localtime(&clock);
+			script_pushint(st, t->tm_hour * 3600 + t->tm_min * 60 + t->tm_sec);
+		}
 			break;
-		case 0:
+		case GETTIMETICK_SYSTEM_MS:
 		default:
-			//type 0:(System Ticks)
+			// System Ticks
 			// Conjunction with INT_MAX is done to prevent overflow. (Script variables are signed integers.)
 			script_pushint(st, timer->gettick() & INT_MAX); // TODO: change this to int64 when we'll support 64 bit script values
 			break;
@@ -29608,6 +29617,11 @@ static void script_hardcoded_constants(void)
 	script->set_constant("GETTIME_MONTH", GETTIME_MONTH, false, false);
 	script->set_constant("GETTIME_YEAR", GETTIME_YEAR, false, false);
 	script->set_constant("GETTIME_DAYOFYEAR", GETTIME_DAYOFYEAR, false, false);
+
+	script->constdb_comment("Gettimetick Types");
+	script->set_constant("GETTIMETICK_SYSTEM_MS", GETTIMETICK_SYSTEM_MS, false, false);
+	script->set_constant("GETTIMETICK_HOUROFDAY_S", GETTIMETICK_HOUROFDAY_S, false, false);
+	script->set_constant("GETTIMETICK_UNIXTIME", GETTIMETICK_UNIXTIME, false, false);
 
 	script->constdb_comment("function types");
 	script->set_constant("FUNCTION_IS_COMMAND", FUNCTION_IS_COMMAND, false, false);

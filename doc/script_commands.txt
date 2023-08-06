@@ -3781,9 +3781,11 @@ If the player is not found, returns -1.
 *gettimetick(<type>)
 
 Valid types are :
-	0 - server's tick (milliseconds), unsigned int, loops every ~25 days
-	1 - time since the start of the current day in seconds
-	2 - UNIX epoch time (number of seconds elapsed since 1st of January 1970)
+	0 - GETTIMETICK_SYSTEM_MS   - server's tick (milliseconds), unsigned int, loops every ~25 days
+	1 - GETTIMETICK_HOUROFDAY_S - time since the start of the current day in seconds
+                                    - Note: this only considers the value of the current hour and disregards daylight savings.
+                                    -       On the day DST starts and ends, this value will have discontinuties.
+	2 - GETTIMETICK_UNIXTIME    - UNIX epoch time (number of seconds elapsed since 1st of January 1970)
 
 ---------------------------------------
 
