@@ -5510,6 +5510,8 @@ static short status_calc_aspd(struct block_list *bl, struct status_change *sc, s
 			bonus += 10;
 		if (sc->data[SC_ADRENALINE] != NULL)
 			bonus += 10;
+		if (sc->data[SC_SPEARQUICKEN] != NULL)
+			bonus += 10;
 #endif
 	}
 
