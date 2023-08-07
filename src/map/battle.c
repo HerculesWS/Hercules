@@ -2220,7 +2220,13 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					break;
 				}
 				case AM_DEMONSTRATION:
+#ifndef RENEWAL
 					skillratio += 20 * skill_lv;
+#else
+					skillratio += -100 + 60 * skill_lv;
+					if (sd != NULL)
+						skillratio += 10 * pc->checkskill(sd, AM_LEARNINGPOTION);
+#endif
 					break;
 				case AM_ACIDTERROR:
 #ifdef RENEWAL
@@ -4843,7 +4849,6 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 			case MO_EXTREMITYFIST:
 			case GS_PIERCINGSHOT:
 			case AM_ACIDTERROR:
-			case AM_DEMONSTRATION:
 			case NJ_ISSEN:
 			case PA_SACRIFICE:
 			case KO_HAPPOKUNAI:
@@ -5486,7 +5491,6 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 					ATK_ADD(sstatus->rhw.atk2); //Else use Atk2
 				ATK_RATE(battle->calc_skillratio(BF_WEAPON, src, target, skill_id, skill_lv, skillratio, wflag));
 				break;
-			case AM_DEMONSTRATION:
 			case AM_ACIDTERROR: // [malufett/Hercules]
 			{
 				int64 matk;
