@@ -1805,7 +1805,7 @@ static int skill_additional_effect(struct block_list *src, struct block_list *bl
 			break;
 
 		case AM_DEMONSTRATION:
-			skill->break_equip(bl, EQP_WEAPON, 100*skill_lv, BCT_ENEMY);
+			skill->break_equip(bl, EQP_WEAPON, skill->get_time2(skill_id, skill_lv), BCT_ENEMY);
 			break;
 
 		case CR_SHIELDCHARGE:
