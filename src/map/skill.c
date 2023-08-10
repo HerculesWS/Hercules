@@ -3878,13 +3878,12 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 			case GC_VENOMPRESSURE:
 			{
 				struct status_change *ssc = status->get_sc(src);
-				if( ssc && ssc->data[SC_POISONINGWEAPON] && rnd()%100 < 70 + 5*skill_lv ) {
-					short rate = 100;
-					if ( ssc->data[SC_POISONINGWEAPON]->val1 == 9 )// Oblivion Curse gives a 2nd success chance after the 1st one passes which is reducible. [Rytech]
-						rate = 100 - tstatus->int_ * 4 / 5;
-					sc_start(src, bl, ssc->data[SC_POISONINGWEAPON]->val2, rate, ssc->data[SC_POISONINGWEAPON]->val1, skill->get_time2(GC_POISONINGWEAPON, 1) - (tstatus->vit + tstatus->luk) / 2 * 1000, skill_id);
+				if (ssc != NULL && ssc->data[SC_POISONINGWEAPON] != NULL && rnd() % 100 < 70 + 5 * skill_lv) {
+					sc_type poison_sc = ssc->data[SC_POISONINGWEAPON]->val2;
+					int duration = skill->get_time2(GC_POISONINGWEAPON, (poison_sc == SC_VENOMBLEED ? 1 : 2));
+					sc_start(src, bl, poison_sc, 100, ssc->data[SC_POISONINGWEAPON]->val1, duration, skill_id);
 					status_change_end(src, SC_POISONINGWEAPON, INVALID_TIMER);
-					clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
+					clif->skill_nodamage(src, bl, skill_id, skill_lv, 1);
 				}
 			}
 				break;
@@ -14426,11 +14425,10 @@ static int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *b
 		 * 3rd stuff
 		 **/
 		case UNT_POISONSMOKE:
-			if( battle->check_target(ss,bl,BCT_ENEMY) > 0 && !(tsc && tsc->data[sg->val2]) && rnd()%100 < 50 ) {
-				short rate = 100;
-				if ( sg->val1 == 9 )//Oblivion Curse gives a 2nd success chance after the 1st one passes which is reducible. [Rytech]
-					rate = 100 - tstatus->int_ * 4 / 5 ;
-				sc_start(ss, bl, sg->val2, rate, sg->val1, skill->get_time2(GC_POISONINGWEAPON, 1) - (tstatus->vit + tstatus->luk) / 2 * 1000, skill_id);
+			if (battle->check_target(ss, bl, BCT_ENEMY) > 0 && !(tsc != NULL && tsc->data[sg->val2] != NULL)
+			    && rnd() % 100 < 50) {
+				int duration = skill->get_time2(GC_POISONINGWEAPON, (sg->val2 == SC_VENOMBLEED ? 1 : 2));
+				sc_start(ss, bl, sg->val2, 100, sg->val1, duration, skill_id);
 			}
 			break;
 
@@ -20325,25 +20323,31 @@ static int skill_poisoningweapon(struct map_session_data *sd, int nameid)
 		clif->skill_fail(sd, GC_POISONINGWEAPON, USESKILL_FAIL_LEVEL, 0, 0);
 		return 0;
 	}
-	switch( nameid )
-	{ // t_lv used to take duration from skill->get_time2
-		case ITEMID_POISON_PARALYSIS:     type = SC_PARALYSE;      break;
-		case ITEMID_POISON_FEVER:         type = SC_PYREXIA;       break;
-		case ITEMID_POISON_CONTAMINATION: type = SC_DEATHHURT;     break;
-		case ITEMID_POISON_LEECH:         type = SC_LEECHESEND;    break;
-		case ITEMID_POISON_FATIGUE:       type = SC_VENOMBLEED;    break;
-		case ITEMID_POISON_NUMB:          type = SC_TOXIN;         break;
-		case ITEMID_POISON_LAUGHING:      type = SC_MAGICMUSHROOM; break;
-		case ITEMID_POISON_OBLIVION:      type = SC_OBLIVIONCURSE; break;
-		default:
-			clif->skill_fail(sd, GC_POISONINGWEAPON, USESKILL_FAIL_LEVEL, 0, 0);
-			return 0;
+
+	int msg = 0;
+	switch (nameid) {
+	case ITEMID_POISON_PARALYSIS:     msg = MSG_PARALYZE;      type = SC_PARALYSE;      break;
+	case ITEMID_POISON_FEVER:         msg = MSG_PHYREXIA;      type = SC_PYREXIA;       break;
+	case ITEMID_POISON_CONTAMINATION: msg = MSG_DEATHHURT;     type = SC_DEATHHURT;     break;
+	case ITEMID_POISON_LEECH:         msg = MSG_RICHEND;       type = SC_LEECHESEND;    break;
+	case ITEMID_POISON_FATIGUE:       msg = MSG_VENOMBLEED;    type = SC_VENOMBLEED;    break;
+	case ITEMID_POISON_NUMB:          msg = MSG_TOXIN;         type = SC_TOXIN;         break;
+	case ITEMID_POISON_LAUGHING:      msg = MSG_MAGICMUSHROOM; type = SC_MAGICMUSHROOM; break;
+	case ITEMID_POISON_OBLIVION:      msg = MSG_OBLIANCURSE;   type = SC_OBLIVIONCURSE; break;
+	default:
+		clif->skill_fail(sd, GC_POISONINGWEAPON, USESKILL_FAIL_LEVEL, 0, 0);
+		return 0;
 	}
 
 	status_change_end(&sd->bl, SC_POISONINGWEAPON, INVALID_TIMER); // Status must be forced to end so that a new poison will be applied if a player decides to change poisons. [Rytech]
 	chance = 2 + 2 * sd->menuskill_val; // 2 + 2 * skill_lv
 	sc_start4(&sd->bl, &sd->bl, SC_POISONINGWEAPON, 100, pc->checkskill(sd, GC_RESEARCHNEWPOISON), //in Aegis it store the level of GC_RESEARCHNEWPOISON in val1
 		type, chance, 0, skill->get_time(GC_POISONINGWEAPON, sd->menuskill_val), GC_POISONINGWEAPON);
+
+#if PACKETVER >= 20090304
+	if (msg > 0)
+		clif->msgtable(sd, msg);
+#endif
 
 	return 0;
 }
