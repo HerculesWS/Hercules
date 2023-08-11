@@ -19,6 +19,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "plugin-HPMHooking_login", "
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "api-server", "vcproj-17\api-server.vcxproj", "{4960B7C9-D943-4EB6-A5ED-9A38ED1F437C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "plugin-HPMHooking_api", "vcproj-17\plugin-HPMHooking_api.vcxproj", "{69D5A06C-67C9-4EB1-BA5A-A001AE69838B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -57,6 +59,10 @@ Global
 		{4960B7C9-D943-4EB6-A5ED-9A38ED1F437C}.Debug|Win32.Build.0 = Debug|Win32
 		{4960B7C9-D943-4EB6-A5ED-9A38ED1F437C}.Release|Win32.ActiveCfg = Release|Win32
 		{4960B7C9-D943-4EB6-A5ED-9A38ED1F437C}.Release|Win32.Build.0 = Release|Win32
+		{69D5A06C-67C9-4EB1-BA5A-A001AE69838B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{69D5A06C-67C9-4EB1-BA5A-A001AE69838B}.Debug|Win32.Build.0 = Debug|Win32
+		{69D5A06C-67C9-4EB1-BA5A-A001AE69838B}.Release|Win32.ActiveCfg = Release|Win32
+		{69D5A06C-67C9-4EB1-BA5A-A001AE69838B}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
