@@ -4599,6 +4599,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 	short s_ele, s_ele_;
 	int i, nk;
 	bool n_ele = false; // non-elemental
+	short hitpercbonus = 0;
 
 	struct map_session_data *sd, *tsd;
 	struct Damage wd;
@@ -4851,17 +4852,18 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 			flag.lh=1;
 	}
 
-	if (sd && !skill_id) {
+	if (sd != NULL && skill_id == 0) {
 		//Check for double attack.
-		if (( (skill_lv=pc->checkskill(sd,TF_DOUBLE)) > 0 && sd->weapontype1 == W_DAGGER )
-		 || ( sd->bonus.double_rate > 0 && sd->weapontype1 != W_FIST ) //Will fail bare-handed
-		 || ( sc && sc->data[SC_KAGEMUSYA] && sd->weapontype1 != W_FIST ) // Need confirmation
+		if (((skill_lv = pc->checkskill(sd, TF_DOUBLE)) > 0 && sd->weapontype1 == W_DAGGER)
+		 || (sd->bonus.double_rate > 0 && sd->weapontype1 != W_FIST) //Will fail bare-handed
+		 || (sc != NULL && sc->data[SC_KAGEMUSYA] != NULL && sd->weapontype1 != W_FIST) // Need confirmation
 		) {
-			//Success chance is not added, the higher one is used [Skotlex]
-			if( rnd()%100 < ( 5*skill_lv > sd->bonus.double_rate ? 5*skill_lv : sc && sc->data[SC_KAGEMUSYA]?sc->data[SC_KAGEMUSYA]->val1*3:sd->bonus.double_rate ) )
+			// Success chance is not added, the higher one is used [Skotlex]
+			if (rnd() % 100 < (5 * skill_lv > sd->bonus.double_rate ? 5 * skill_lv : sc != NULL && sc->data[SC_KAGEMUSYA] != NULL ? sc->data[SC_KAGEMUSYA]->val1 * 3 : sd->bonus.double_rate))
 			{
-				wd.div_ = skill->get_num(TF_DOUBLE,skill_lv?skill_lv:1);
+				wd.div_ = skill->get_num(TF_DOUBLE, skill_lv != 0 ? skill_lv : 1);
 				wd.type = BDT_MULTIHIT;
+				hitpercbonus += skill_lv;
 			}
 		}
 		else if (((sd->weapontype1 == W_REVOLVER && (skill_lv = pc->checkskill(sd, GS_CHAINACTION)) > 0)
@@ -5042,11 +5044,11 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 			//It is proven that bonus is applied on final hitrate, not hit.
 			case SM_BASH:
 			case MS_BASH:
-				hitrate += hitrate * 5 * skill_lv / 100;
+				hitpercbonus += 5 * skill_lv;
 				break;
 			case MS_MAGNUM:
 			case SM_MAGNUM:
-				hitrate += hitrate * 10 * skill_lv / 100;
+				hitpercbonus += 10 * skill_lv;
 				break;
 			case KN_AUTOCOUNTER:
 			case PA_SHIELDCHAIN:
@@ -5066,20 +5068,20 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 			case NPC_THUNDERBREATH:
 			case NPC_ACIDBREATH:
 			case NPC_DARKNESSBREATH:
-				hitrate += hitrate * 20 / 100;
+				hitpercbonus += 20;
 				break;
 			case KN_PIERCE:
 			case ML_PIERCE:
-				hitrate += hitrate * 5 * skill_lv / 100;
+				hitpercbonus += 5 * skill_lv;
 				break;
 			case AS_SONICBLOW:
-				if(sd && pc->checkskill(sd,AS_SONICACCEL)>0)
-					hitrate += hitrate * 50 / 100;
+				if (sd != NULL && pc->checkskill(sd, AS_SONICACCEL) > 0)
+					hitpercbonus += 50;
 				break;
 			case MC_CARTREVOLUTION:
 			case GN_CART_TORNADO:
 			case GN_CARTCANNON:
-				if( sd && pc->checkskill(sd, GN_REMODELING_CART) )
+				if (sd != NULL && pc->checkskill(sd, GN_REMODELING_CART))
 					hitrate += pc->checkskill(sd, GN_REMODELING_CART) * 4;
 				break;
 			case GC_VENOMPRESSURE:
@@ -5104,14 +5106,17 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 				break;
 		}
 
-		if( sd ) {
+		if (sd != NULL) {
 			// Weaponry Research hidden bonus
-			if ((temp = pc->checkskill(sd,BS_WEAPONRESEARCH)) > 0)
-				hitrate += hitrate * ( 2 * temp ) / 100;
+			if ((temp = pc->checkskill(sd, BS_WEAPONRESEARCH)) > 0)
+				hitpercbonus += 2 * temp;
 
 			if ((sd->weapontype == W_1HSWORD || sd->weapontype == W_DAGGER) && (temp = pc->checkskill(sd, GN_TRAINING_SWORD)) > 0)
 				hitrate += 3 * temp;
 		}
+
+		if (hitpercbonus != 0)
+			hitrate += hitrate * hitpercbonus / 100;
 
 		hitrate = cap_value(hitrate, battle_config.min_hitrate, battle_config.max_hitrate);
 #ifdef RENEWAL
