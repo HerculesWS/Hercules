@@ -7280,6 +7280,16 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			}
 			if (total_tick == 1) return 1; //Minimal duration: Only strip without causing the SC
 			break;
+
+#ifdef RENEWAL
+		case SC_RAID:
+			if (bl->type == BL_MOB && is_boss(bl))
+				val2 = 15; // Receives 15% more damage
+			else
+				val2 = 30; // Receives 30% more damage
+			break;
+#endif
+
 		case SC_MER_FLEE:
 		case SC_MER_ATK:
 		case SC_MER_HP:
