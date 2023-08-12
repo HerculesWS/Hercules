@@ -5433,7 +5433,6 @@ static int npc_parsesrcfile(const char *filepath, bool runOnInit)
 {
 	int success = EXIT_SUCCESS;
 	int16 m, x, y;
-	int lines = 0;
 	FILE* fp;
 	size_t len;
 	char* buffer;
@@ -5477,7 +5476,6 @@ static int npc_parsesrcfile(const char *filepath, bool runOnInit)
 		int pos[9];
 		char w1[2048], w2[2048], w3[2048], w4[2048];
 		int i, count;
-		lines++;
 
 		// w1<TAB>w2<TAB>w3<TAB>w4
 		count = sv->parse(p, (int)(len+buffer-p), 0, '\t', pos, ARRAYLENGTH(pos), (e_svopt)(SV_TERMINATE_LF|SV_TERMINATE_CRLF));

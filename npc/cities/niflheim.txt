@@ -207,10 +207,10 @@ niflheim,350,258,1	script	Cursed Spirit#nif	4_NFWISP,{
 	next;
 	switch(select("Touch the first book.", "Touch the second book.", "Touch the third book.", "Okay, I am leaving.")) {
 	case 1:
-		if (.last_mob_summon + 60 < gettimetick(2)) { // only spawn every 60 seconds, to prevent farming exploits
+		if (.last_mob_summon + 60 < gettimetick(GETTIMETICK_UNIXTIME)) { // only spawn every 60 seconds, to prevent farming exploits
 			.@label$ = sprintf("%s::OnMyMobDead", strnpcinfo(NPC_NAME_UNIQUE));
 			killmonster("niflheim", .@label$);
-			.last_mob_summon = gettimetick(2);
+			.last_mob_summon = gettimetick(GETTIMETICK_UNIXTIME);
 			monster("niflheim", 349, 259, "--ja--", G_RIDEWORD, 1, .@label$);
 		}
 		mes "[Ashe Bruce]";
@@ -343,10 +343,10 @@ niflheim,350,258,1	script	Cursed Spirit#nif	4_NFWISP,{
 				close;
 			}
 		}
-		if (.last_mob_summon + 60 < gettimetick(2)) { // only spawn every 60 seconds, to prevent farming exploits
+		if (.last_mob_summon + 60 < gettimetick(GETTIMETICK_UNIXTIME)) { // only spawn every 60 seconds, to prevent farming exploits
 			.@label$ = sprintf("%s::OnMyMobDead", strnpcinfo(NPC_NAME_UNIQUE));
 			killmonster("niflheim", .@label$);
-			.last_mob_summon = gettimetick(2);
+			.last_mob_summon = gettimetick(GETTIMETICK_UNIXTIME);
 			monster("niflheim", 345, 259, "--ja--", G_ORC_SKELETON, 1, .@label$);
 			monster("niflheim", 347, 261, "--ja--", G_ORC_SKELETON, 1, .@label$);
 			monster("niflheim", 344, 253, "--ja--", G_ORC_SKELETON, 1, .@label$);

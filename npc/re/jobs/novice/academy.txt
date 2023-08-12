@@ -103,9 +103,9 @@ OnInit:
 	end;
 
 OnTouch_:
-	if (@cd + 15 > gettimetick(2))
+	if (@cd + 15 > gettimetick(GETTIMETICK_UNIXTIME))
 		end;
-	@cd = gettimetick(2);
+	@cd = gettimetick(GETTIMETICK_UNIXTIME);
 	npctalk(_("Urgh... please... help me..."));
 	sleep(7000);
 	npctalk(_("In order to talk with me.. click my body.."));

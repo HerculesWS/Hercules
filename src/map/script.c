@@ -11673,85 +11673,125 @@ static BUILDIN(savepoint)
 	return true;
 }
 
-/*==========================================
- * GetTimeTick(0: System Tick, 1: Time Second Tick)
- *------------------------------------------*/
-/* Asgard Version */
+/**
+ * gettimetick types.
+ */
+enum script_gettimetick_types {
+	GETTIMETICK_SYSTEM_MS = 0,
+	GETTIMETICK_HOUROFDAY_S,
+	GETTIMETICK_UNIXTIME,
+};
+
+/**
+ * Returns the current time in one of the following representations.
+ *
+ * GETTIMETICK_SYSTEM_MS   - System tick in milliseconds.
+ * GETTIMETICK_HOUROFDAY_S - Seconds from the start of the day (disregarding DST changes).
+ * GETTIMETICK_UNIXTIME    - UNIX timestamp, in seconds.
+ */
 static BUILDIN(gettimetick)
 {
-	int type;
-	time_t clock;
-	struct tm *t;
-
-	type=script_getnum(st,2);
+	int type = script_getnum(st, 2);
 
 	switch(type) {
-		case 2:
-			//type 2:(Get the number of seconds elapsed since 00:00 hours, Jan 1, 1970 UTC
-			//        from the system clock.)
-			script_pushint(st,(int)time(NULL));
-			break;
-		case 1:
-			//type 1:(Second Ticks: 0-86399, 00:00:00-23:59:59)
-			time(&clock);
-			t=localtime(&clock);
-			script_pushint(st,((t->tm_hour)*3600+(t->tm_min)*60+t->tm_sec));
-			break;
-		case 0:
-		default:
-			//type 0:(System Ticks)
-			// Conjunction with INT_MAX is done to prevent overflow. (Script variables are signed integers.)
-			script_pushint(st, timer->gettick() & INT_MAX); // TODO: change this to int64 when we'll support 64 bit script values
-			break;
+	case GETTIMETICK_SYSTEM_MS:
+		// System Ticks
+		// Conjunction with INT_MAX is done to prevent overflow. (Script variables are signed integers.)
+		script_pushint(st, timer->gettick() & INT_MAX); // TODO: change this to int64 when we'll support 64 bit script values
+		break;
+	case GETTIMETICK_HOUROFDAY_S: {
+		// Second Ticks: 0-86399, 00:00:00-23:59:59
+		time_t clock;
+		time(&clock);
+		struct tm *t = localtime(&clock);
+		script_pushint(st, t->tm_hour * 3600 + t->tm_min * 60 + t->tm_sec);
+	}
+		break;
+	case GETTIMETICK_UNIXTIME:
+		// Get the number of seconds elapsed since 00:00 hours, Jan 1, 1970 UTC from the system clock.
+		script_pushint(st, (int)time(NULL));
+		break;
+	default:
+		script_pushint(st, -1);
+		break;
 	}
 	return true;
 }
-/*==========================================
- * GetTime(Type);
- * 1: Sec     2: Min     3: Hour
- * 4: WeekDay     5: MonthDay     6: Month
- * 7: Year
- *------------------------------------------*/
-/* Asgard Version */
+
+/**
+ * gettime types.
+ */
+enum script_gettime_types {
+	GETTIME_SECOND = 1,
+	GETTIME_MINUTE,
+	GETTIME_HOUR,
+	GETTIME_WEEKDAY,
+	GETTIME_DAYOFMONTH,
+	GETTIME_MONTH,
+	GETTIME_YEAR,
+	GETTIME_DAYOFYEAR,
+};
+
+/**
+ * Returns the specified field of the time.
+ *
+ * gettime(<type>{, <is_localtime>});
+ *
+ * Values for type:
+ * - GETTIME_SECOND     - Second (0~60)
+ * - GETTIME_MINUTE     - Minute (0~59)
+ * - GETTIME_HOUR       - Hour (0~23)
+ * - GETTIME_WEEKDAY    - Day of the week (0~6)
+ * - GETTIME_DAYOFMONTH - Day of the month (1~31)
+ * - GETTIME_MONTH      - Month (1~12)
+ * - GETTIME_YEAR       - Year (20xx)
+ * - GETTIME_DAYOFYEAR  - Day of the year (1~366)
+ */
 static BUILDIN(gettime)
 {
-	int type;
+	int type = script_getnum(st, 2);
+	bool use_localtime = true;
+	if (script_hasdata(st, 3) && script_getnum(st, 3) == 0) {
+		use_localtime = false;
+	}
+
 	time_t clock;
-	struct tm *t;
-
-	type=script_getnum(st,2);
-
 	time(&clock);
-	t=localtime(&clock);
+	struct tm *t = NULL;
+	if (use_localtime) {
+		t = localtime(&clock);
+	} else {
+		t = gmtime(&clock);
+	}
 
 	switch(type) {
-		case 1://Sec(0~59)
-			script_pushint(st,t->tm_sec);
-			break;
-		case 2://Min(0~59)
-			script_pushint(st,t->tm_min);
-			break;
-		case 3://Hour(0~23)
-			script_pushint(st,t->tm_hour);
-			break;
-		case 4://WeekDay(0~6)
-			script_pushint(st,t->tm_wday);
-			break;
-		case 5://MonthDay(01~31)
-			script_pushint(st,t->tm_mday);
-			break;
-		case 6://Month(01~12)
-			script_pushint(st,t->tm_mon+1);
-			break;
-		case 7://Year(20xx)
-			script_pushint(st,t->tm_year+1900);
-			break;
-		case 8://Year Day(01~366)
-			script_pushint(st,t->tm_yday+1);
-			break;
-		default://(format error)
-			script_pushint(st,-1);
-			break;
+	case GETTIME_SECOND:
+		script_pushint(st, t->tm_sec);
+		break;
+	case GETTIME_MINUTE:
+		script_pushint(st, t->tm_min);
+		break;
+	case GETTIME_HOUR:
+		script_pushint(st, t->tm_hour);
+		break;
+	case GETTIME_WEEKDAY:
+		script_pushint(st, t->tm_wday);
+		break;
+	case GETTIME_DAYOFMONTH:
+		script_pushint(st, t->tm_mday);
+		break;
+	case GETTIME_MONTH:
+		script_pushint(st, t->tm_mon + 1);
+		break;
+	case GETTIME_YEAR:
+		script_pushint(st, t->tm_year + 1900);
+		break;
+	case GETTIME_DAYOFYEAR:
+		script_pushint(st, t->tm_yday + 1);
+		break;
+	default: // (format error)
+		script_pushint(st, -1);
+		break;
 	}
 	return true;
 }
@@ -26770,27 +26810,42 @@ static BUILDIN(mergeitem)
 	return true;
 }
 
-// getcalendartime(<day of month>, <day of week>{, <hour>{, <minute>}});
-// Returns the UNIX Timestamp of next ocurrency of given time
+/**
+ * Returns the UNIX Timestamp of next ocurrency of given time.
+ *
+ * getcalendartime(<hour>, <minute>{, <day of month>{, <day of week>{, <input_is_localtime>}}})
+ */
 static BUILDIN(getcalendartime)
 {
-	struct tm info = { 0 };
 	int day_of_month = script_hasdata(st, 4) ? script_getnum(st, 4) : -1;
 	int day_of_week = script_hasdata(st, 5) ? script_getnum(st, 5) : -1;
-	int year = date_get_year();
-	int month = date_get_month();
-	int day = date_get_day();
-	int cur_hour = date_get_hour();
-	int cur_min = date_get_min();
 	int hour = script_getnum(st, 2);
 	int minute = script_getnum(st, 3);
+	bool input_is_localtime = script_hasdata(st, 6) ? script_getnum(st, 6) != 0 : true;
 
+	struct tm *tm = NULL;
+	{
+		time_t t = time(NULL);
+		if (input_is_localtime) {
+			tm = localtime(&t);
+		} else {
+			tm = gmtime(&t);
+		}
+	}
+	int year = tm->tm_year + 1900;
+	int month = tm->tm_mon + 1;
+	int day = tm->tm_mday;
+	int cur_hour = tm->tm_hour;
+	int cur_min = tm->tm_min;
+
+	struct tm info = { 0 };
 	info.tm_sec = 0;
 	info.tm_min = minute;
 	info.tm_hour = hour;
 	info.tm_mday = day;
 	info.tm_mon = month - 1;
 	info.tm_year = year - 1900;
+	info.tm_isdst = -1;
 
 	if (day_of_month > -1 && day_of_week > -1) {
 		ShowError("script:getcalendartime: You must only specify a day_of_week or a day_of_month, not both\n");
@@ -26834,11 +26889,14 @@ static BUILDIN(getcalendartime)
 
 		// Loops until month has finding a month that has day_of_month
 		do {
-			time_t t;
-			struct tm *lt;
 			info.tm_mday = day_of_month;
-			t = mktime(&info);
-			lt = localtime(&t);
+			time_t t = mktime(&info);
+			struct tm *lt = NULL;
+			if (input_is_localtime) {
+				lt = localtime(&t);
+			} else {
+				lt = gmtime(&t);
+			}
 			info = *lt;
 		} while (info.tm_mday != day_of_month);
 	} else if (day_of_week > -1) {
@@ -26859,7 +26917,17 @@ static BUILDIN(getcalendartime)
 		}
 	}
 
-	script_pushint(st, mktime(&info));
+	time_t out_time = 0;
+	if (input_is_localtime) {
+		out_time = mktime(&info);
+	} else {
+#ifdef WIN32
+		out_time = _mkgmtime(&info);
+#else
+		out_time = timegm(&info);
+#endif
+	}
+	script_pushint(st, out_time);
 
 	return true;
 }
@@ -28484,7 +28552,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(checkwug,""),
 		BUILDIN_DEF(savepoint,"sii"),
 		BUILDIN_DEF(gettimetick,"i"),
-		BUILDIN_DEF(gettime,"i"),
+		BUILDIN_DEF(gettime,"i?"),
 		BUILDIN_DEF(gettimestr, "si?"),
 		BUILDIN_DEF(openstorage,""),
 		BUILDIN_DEF(guildopenstorage,""),
@@ -28945,7 +29013,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(removechannelhandler, "ss"),
 		BUILDIN_DEF(showscript, "s??"),
 		BUILDIN_DEF(mergeitem,""),
-		BUILDIN_DEF(getcalendartime, "ii??"),
+		BUILDIN_DEF(getcalendartime, "ii???"),
 
 		// -- RoDEX
 		BUILDIN_DEF(rodex_sendmail, "isss???????????"),
@@ -29541,6 +29609,21 @@ static void script_hardcoded_constants(void)
 	script->set_constant("QINFO_HOMUN_TYPE", QINFO_HOMUN_TYPE, false, false);
 	script->set_constant("QINFO_QUEST", QINFO_QUEST, false, false);
 	script->set_constant("QINFO_MERCENARY_CLASS", QINFO_MERCENARY_CLASS, false, false);
+
+	script->constdb_comment("Gettime Types");
+	script->set_constant("GETTIME_SECOND", GETTIME_SECOND, false, false);
+	script->set_constant("GETTIME_MINUTE", GETTIME_MINUTE, false, false);
+	script->set_constant("GETTIME_HOUR", GETTIME_HOUR, false, false);
+	script->set_constant("GETTIME_WEEKDAY", GETTIME_WEEKDAY, false, false);
+	script->set_constant("GETTIME_DAYOFMONTH", GETTIME_DAYOFMONTH, false, false);
+	script->set_constant("GETTIME_MONTH", GETTIME_MONTH, false, false);
+	script->set_constant("GETTIME_YEAR", GETTIME_YEAR, false, false);
+	script->set_constant("GETTIME_DAYOFYEAR", GETTIME_DAYOFYEAR, false, false);
+
+	script->constdb_comment("Gettimetick Types");
+	script->set_constant("GETTIMETICK_SYSTEM_MS", GETTIMETICK_SYSTEM_MS, false, false);
+	script->set_constant("GETTIMETICK_HOUROFDAY_S", GETTIMETICK_HOUROFDAY_S, false, false);
+	script->set_constant("GETTIMETICK_UNIXTIME", GETTIMETICK_UNIXTIME, false, false);
 
 	script->constdb_comment("function types");
 	script->set_constant("FUNCTION_IS_COMMAND", FUNCTION_IS_COMMAND, false, false);

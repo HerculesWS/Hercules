@@ -63,8 +63,8 @@ function Chk; function Cm;
 			}
 			close;
 		}
-		if (#Mission_Delay > gettimetick(2) && .Delay) {
-			set .@i, #Mission_Delay-gettimetick(2);
+		if (#Mission_Delay > gettimetick(GETTIMETICK_UNIXTIME) && .Delay) {
+			.@i = #Mission_Delay - gettimetick(GETTIMETICK_UNIXTIME);
 			if (.@i > 3600) set .@j$, (.@i/3600)+" hour"+(((.@i/3600) == 1)?"":"s");
 			else if (.@i > 60) set .@j$, (.@i/60)+" minute"+(((.@i/60) == 1)?"":"s");
 			else set .@j$, (.@i)+" second"+((.@i == 1)?"":"s");
@@ -121,7 +121,9 @@ function Chk; function Cm;
 				setd "Mission"+.@i+"_",0;
 			}
 			set #Mission_Count,0;
-			if (.Reset < 0 && .Delay) set #Mission_Delay, gettimetick(2)+(.Delay*3600);
+			if (.Reset < 0 && .Delay) {
+				#Mission_Delay = gettimetick(GETTIMETICK_UNIXTIME) + .Delay * 3600;
+			}
 			close;
 		case 2:
 			mes "[Hunting Missions]";
@@ -196,7 +198,9 @@ Mission_Status:
 		setd "Mission"+.@i+"_",0;
 	}
 	set #Mission_Count,0;
-	if (.Delay) set #Mission_Delay, gettimetick(2)+(.Delay*3600);
+	if (.Delay) {
+		#Mission_Delay = gettimetick(GETTIMETICK_UNIXTIME) + .Delay * 3600;
+	}
 	set Mission_Total, Mission_Total+1;
 	if (Mission_Total == 1) query_sql("INSERT INTO `char_reg_num_db` (`char_id`,`key`,`index`,`value`) VALUES ("+getcharid(CHAR_ID_CHAR)+",'Mission_Total','0',1)");
 	else query_sql("UPDATE `char_reg_num_db` SET `value` = "+Mission_Total+" WHERE `char_id` = "+getcharid(CHAR_ID_CHAR)+" AND `key` = 'Mission_Total'");

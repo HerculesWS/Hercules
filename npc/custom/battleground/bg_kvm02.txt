@@ -69,7 +69,7 @@ OnCroixJoin:
 	end;
 
 OnGuillaumeQuit:
-	set BG_Delay_Tick, gettimetick(2) + 1200;
+	BG_Delay_Tick = gettimetick(GETTIMETICK_UNIXTIME) + 1200;
 OnGuillaumeDie:
 	if( $@KvM02BG == 2 )
 	{
@@ -81,7 +81,7 @@ OnGuillaumeDie:
 	end;
 
 OnCroixQuit:
-	set BG_Delay_Tick, gettimetick(2) + 1200;
+	BG_Delay_Tick = gettimetick(GETTIMETICK_UNIXTIME) + 1200;
 OnCroixDie:
 	if( $@KvM02BG == 2 )
 	{
@@ -98,15 +98,13 @@ OnReadyCheck:
 	set .@Guillaume, getwaitingroomstate(0,"KvM02R_Guillaume#custom");
 	set .@Croix, getwaitingroomstate(0,"KvM02R_Croix#custom");
 
-	if( .@Guillaume < 5 || .@Croix < 5 )
-	{
-		if( .@Guillaume > 3 && .@Croix > 3 && !agitcheck() && !agitcheck2() && $@KvM_Flood < gettimetick(2) )
-		{
+	if (.@Guillaume < 5 || .@Croix < 5) {
+		if (.@Guillaume > 3 && .@Croix > 3 && !agitcheck() && !agitcheck2() && $@KvM_Flood < gettimetick(GETTIMETICK_UNIXTIME)) {
 			announce "Battleground -- Kreiger Von Midgard [60-79] G: " + .@Guillaume + "/5, C: " + .@Croix + "/5",0,0x808080;
-			set $@KvM_Flood, gettimetick(2) + 15;
-		}
-		else
+			$@KvM_Flood = gettimetick(GETTIMETICK_UNIXTIME) + 15;
+		} else {
 			mapannounce "bat_room","Battleground -- Kreiger Von Midgard [60-79] G: " + .@Guillaume + "/5, C: " + .@Croix + "/5",1,0x808080;
+		}
 		end;
 	}
 

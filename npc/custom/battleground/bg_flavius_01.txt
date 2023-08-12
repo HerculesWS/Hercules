@@ -40,7 +40,7 @@ OnInit:
 
 OnGuillaumeQuit:
 OnCroixQuit:
-	set BG_Delay_Tick, gettimetick(2) + 1200;
+	BG_Delay_Tick = gettimetick(GETTIMETICK_UNIXTIME) + 1200;
 	end;
 
 OnGuillaumeJoin:

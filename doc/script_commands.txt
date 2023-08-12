@@ -3781,13 +3781,15 @@ If the player is not found, returns -1.
 *gettimetick(<type>)
 
 Valid types are :
-	0 - server's tick (milliseconds), unsigned int, loops every ~25 days
-	1 - time since the start of the current day in seconds
-	2 - UNIX epoch time (number of seconds elapsed since 1st of January 1970)
+	0 - GETTIMETICK_SYSTEM_MS   - server's tick (milliseconds), unsigned int, loops every ~25 days
+	1 - GETTIMETICK_HOUROFDAY_S - time since the start of the current day in seconds
+                                    - Note: this only considers the value of the current hour and disregards daylight savings.
+                                    -       On the day DST starts and ends, this value will have discontinuties.
+	2 - GETTIMETICK_UNIXTIME    - UNIX epoch time (number of seconds elapsed since 1st of January 1970)
 
 ---------------------------------------
 
-*gettime(<type>)
+*gettime(<type>{, <is_localtime>})
 
 This function returns specified information about the current system time.
 
@@ -3803,6 +3805,9 @@ Valid types:
 	7 - GETTIME_YEAR       - Year
 	8 - GETTIME_DAYOFYEAR  - Day of the year.
 
+If <is_localtime> is true (or omitted), the output refers to the current timezone and daylight savings.
+Otherwise it is in UTC.
+
 It will only return numbers based on types.
 Example :
 	if (gettime(GETTIME_WEEKDAY) == SATURDAY) {
@@ -3815,7 +3820,7 @@ Example :
 
 ---------------------------------------
 
-*getcalendartime(<hour>, <minute>{, <day of month>{, <day of week>}})
+*getcalendartime(<hour>, <minute>{, <day of month>{, <day of week>{, <input_is_localtime>}}})
 
 This function returns the timestamp of the next occurrence of a given time.
 If this time is later today, it will stay in the same day, otherwise, it will adjust to a future
@@ -3834,10 +3839,14 @@ Day of Week specifies a day in the week and its valid values are:
 In order to use Day of Week, you must use Day of Month as -1.
 If for some reason the command fails, it'll return -1.
 
+If <input_is_localtime> is true (or omitted), then the hour and minute are interpreted according to the current timezone
+and daylight savings. Otherwise they're treated as UTC.
+
 Examples :
 	getcalendartime(19, 00); // Next 7 pm
 	getcalendartime(19, 00, 6); // Next day 6 of the month, at 7pm
 	getcalendartime(19, 10, -1, 1); // Next Monday, at 7:10pm
+	getcalendartime(19, 00, -1, -1, false); // Next 7 pm UTC
 
 Note: If supplied with the current hour and minute, you will get the timestamp for the same
 hour and minute in the next day. For example, if is now August 1st 7:00pm and you use:

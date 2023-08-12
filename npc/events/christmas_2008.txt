@@ -523,7 +523,7 @@ prontera,226,306,4	script	Caroller#iROxmas08	1_F_PRIEST,{
 			mes "I will stay here throughout the Christmas season, just visit me when you change your mind.";
 			close;
 		}
-		if (gettimetick(2) < SantaCardTime) {
+		if (gettimetick(GETTIMETICK_UNIXTIME) < SantaCardTime) {
 			mes "[Santa Claus]";
 			mes "Um... You've played the game recently haven't you?";
 			next;
@@ -686,7 +686,7 @@ prontera,226,306,4	script	Caroller#iROxmas08	1_F_PRIEST,{
 			else if (.@SantaCardPrize == 12) {
 				getitem 594,3;
 			}
-			SantaCardTime = gettimetick(2)+3600;
+			SantaCardTime = gettimetick(GETTIMETICK_UNIXTIME) + 3600;
 			mes "[Santa Claus]";
 			mes "Good job! Thanks for playing the card game with me!";
 			mes "Merry Christmas!";

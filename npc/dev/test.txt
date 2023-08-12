@@ -151,21 +151,26 @@ function	script	F_TestVarOfAnotherNPC	{
 }
 
 function	script	F_TestCalendarNextTime	{
-	.@hour = gettime(GETTIME_HOUR);
-	.@min = gettime(GETTIME_MINUTE);
-	
-	.@result = getcalendartime(.@hour, .@min);
-	.@expected = gettimetick(2) + 24 * 60 * 60;
-	
+	.@local_hour = gettime(GETTIME_HOUR, true);
+	.@local_min = gettime(GETTIME_MINUTE, true);
+	.@result_fromlocal = getcalendartime(.@local_hour, .@local_min, -1, -1, true);
+
+	.@utc_hour = gettime(GETTIME_HOUR, false);
+	.@utc_min = gettime(GETTIME_MINUTE, false);
+	.@result_fromutc = getcalendartime(.@utc_hour, .@utc_min, -1, -1, false);
+
+	.@expected = gettimetick(GETTIMETICK_UNIXTIME) + 24 * 60 * 60;
+
 	// We give it a range of 70 seconds more or less in the result because:
 	// 1. getcalendartime doesn't take seconds into account, so we may have differing seconds;
 	// 2. We can't mock time, the second may change during the commands execution,
 	//    so we give it a few seconds to spare.
 	// This still gives a good test, because we are looking for 24 hours into the future,
 	// ~3 minutes aren't really an issue for correcteness here.
-	.@check = (.@result >= .@expected - 70 && .@result <= .@expected + 70);
-	
-	return .@check;
+	.@local_check = (.@result_fromlocal >= .@expected - 70 && .@result_fromlocal <= .@expected + 70);
+	.@utc_check = (.@result_fromutc >= .@expected - 70 && .@result_fromutc <= .@expected + 70);
+
+	return .@local_check && .@utc_check;
 }
 
 function	script	HerculesSelfTestHelper	{

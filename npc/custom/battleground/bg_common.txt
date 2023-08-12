@@ -174,8 +174,7 @@ bat_room,156,178,5	script	Tierra Valley Officer#1	4_M_KY_KNT,{
 		close;
 
 	mes "[Tierra Officer]";
-	if( BG_Delay_Tick >= gettimetick(2) )
-	{
+	if (BG_Delay_Tick >= gettimetick(GETTIMETICK_UNIXTIME)) {
 		mes "You are a Deserter!!";
 		mes "Because of running away, you need to wait ^0000FF" + callfunc("Time2Str",BG_Delay_Tick) + "^000000 to join again a BattleGround.";
 		close;
@@ -244,8 +243,7 @@ bat_room,156,121,1	script	Tierra Valley Officer#2	4_M_CRU_KNT,{
 		close;
 
 	mes "[Tierra Officer]";
-	if( BG_Delay_Tick >= gettimetick(2) )
-	{
+	if (BG_Delay_Tick >= gettimetick(GETTIMETICK_UNIXTIME)) {
 		mes "You are a Deserter!!";
 		mes "Because of running away, you need to wait ^0000FF" + callfunc("Time2Str",BG_Delay_Tick) + "^000000 to join again a BattleGround.";
 		close;
@@ -314,8 +312,7 @@ bat_room,164,178,5	script	Tierra Valley Officer#3	4_M_KY_KNT,{
 		close;
 
 	mes "[Tierra Officer]";
-	if( BG_Delay_Tick >= gettimetick(2) )
-	{
+	if (BG_Delay_Tick >= gettimetick(GETTIMETICK_UNIXTIME)) {
 		mes "You are a Deserter!!";
 		mes "Because of running away, you need to wait ^0000FF" + callfunc("Time2Str",BG_Delay_Tick) + "^000000 to join again a BattleGround.";
 		close;
@@ -384,8 +381,7 @@ bat_room,164,121,1	script	Tierra Valley Officer#4	4_M_CRU_KNT,{
 		close;
 
 	mes "[Tierra Officer]";
-	if( BG_Delay_Tick >= gettimetick(2) )
-	{
+	if (BG_Delay_Tick >= gettimetick(GETTIMETICK_UNIXTIME)) {
 		mes "You are a Deserter!!";
 		mes "Because of running away, you need to wait ^0000FF" + callfunc("Time2Str",BG_Delay_Tick) + "^000000 to join again a BattleGround.";
 		close;
@@ -455,8 +451,7 @@ bat_room,172,178,5	script	Flavius Officer#1	4_M_KY_KNT,{
 		close;
 
 	mes "[Flavius Officer]";
-	if( BG_Delay_Tick >= gettimetick(2) )
-	{
+	if (BG_Delay_Tick >= gettimetick(GETTIMETICK_UNIXTIME)) {
 		mes "You are a Deserter!!";
 		mes "Because of running away, you need to wait ^0000FF" + callfunc("Time2Str",BG_Delay_Tick) + "^000000 to join again a BattleGround.";
 		close;
@@ -526,8 +521,7 @@ bat_room,172,121,1	script	Flavius Officer#2	4_M_CRU_KNT,{
 		close;
 
 	mes "[Flavius Officer]";
-	if( BG_Delay_Tick >= gettimetick(2) )
-	{
+	if (BG_Delay_Tick >= gettimetick(GETTIMETICK_UNIXTIME)) {
 		mes "You are a Deserter!!";
 		mes "Because of running away, you need to wait ^0000FF" + callfunc("Time2Str",BG_Delay_Tick) + "^000000 to join again a BattleGround.";
 		close;
@@ -597,8 +591,7 @@ bat_room,148,178,5	script	Flavius Officer#3	4_M_KY_KNT,{
 		close;
 
 	mes "[Flavius Officer]";
-	if( BG_Delay_Tick >= gettimetick(2) )
-	{
+	if (BG_Delay_Tick >= gettimetick(GETTIMETICK_UNIXTIME)) {
 		mes "You are a Deserter!!";
 		mes "Because of running away, you need to wait ^0000FF" + callfunc("Time2Str",BG_Delay_Tick) + "^000000 to join again a BattleGround.";
 		close;
@@ -668,8 +661,7 @@ bat_room,148,121,1	script	Flavius Officer#4	4_M_CRU_KNT,{
 		close;
 
 	mes "[Flavius Officer]";
-	if( BG_Delay_Tick >= gettimetick(2) )
-	{
+	if (BG_Delay_Tick >= gettimetick(GETTIMETICK_UNIXTIME)) {
 		mes "You are a Deserter!!";
 		mes "Because of running away, you need to wait ^0000FF" + callfunc("Time2Str",BG_Delay_Tick) + "^000000 to join again a BattleGround.";
 		close;
@@ -736,8 +728,7 @@ bat_room,140,178,5	script	KVM [80-99] Officer#1	4_M_KY_KNT,{
 		close;
 
 	mes "[KVM Officer]";
-	if( BG_Delay_Tick >= gettimetick(2) )
-	{
+	if (BG_Delay_Tick >= gettimetick(GETTIMETICK_UNIXTIME)) {
 		mes "You are a Deserter!!";
 		mes "Because of running away, you need to wait ^0000FF" + callfunc("Time2Str",BG_Delay_Tick) + "^000000 to join again a BattleGround.";
 		close;
@@ -804,8 +795,7 @@ bat_room,140,121,1	script	KVM [80-99] Officer#2	4_M_CRU_KNT,{
 		close;
 
 	mes "[KVM Officer]";
-	if( BG_Delay_Tick >= gettimetick(2) )
-	{
+	if (BG_Delay_Tick >= gettimetick(GETTIMETICK_UNIXTIME)) {
 		mes "You are a Deserter!!";
 		mes "Because of running away, you need to wait ^0000FF" + callfunc("Time2Str",BG_Delay_Tick) + "^000000 to join again a BattleGround.";
 		close;
@@ -872,8 +862,7 @@ bat_room,132,178,5	script	KVM [60-79] Officer#1	4_M_KY_KNT,{
 		close;
 
 	mes "[KVM Officer]";
-	if( BG_Delay_Tick >= gettimetick(2) )
-	{
+	if (BG_Delay_Tick >= gettimetick(GETTIMETICK_UNIXTIME)) {
 		mes "You are a Deserter!!";
 		mes "Because of running away, you need to wait ^0000FF" + callfunc("Time2Str",BG_Delay_Tick) + "^000000 to join again a BattleGround.";
 		close;
@@ -940,8 +929,7 @@ bat_room,132,121,1	script	KVM [60-79] Officer#2	4_M_CRU_KNT,{
 		close;
 
 	mes "[KVM Officer]";
-	if( BG_Delay_Tick >= gettimetick(2) )
-	{
+	if (BG_Delay_Tick >= gettimetick(GETTIMETICK_UNIXTIME)) {
 		mes "You are a Deserter!!";
 		mes "Because of running away, you need to wait ^0000FF" + callfunc("Time2Str",BG_Delay_Tick) + "^000000 to join again a BattleGround.";
 		close;
@@ -1008,8 +996,7 @@ bat_room,124,178,5	script	KVM [1-59] Officer#1	4_M_KY_KNT,{
 		close;
 
 	mes "[KVM Officer]";
-	if( BG_Delay_Tick >= gettimetick(2) )
-	{
+	if (BG_Delay_Tick >= gettimetick(GETTIMETICK_UNIXTIME)) {
 		mes "You are a Deserter!!";
 		mes "Because of running away, you need to wait ^0000FF" + callfunc("Time2Str",BG_Delay_Tick) + "^000000 to join again a BattleGround.";
 		close;
@@ -1076,8 +1063,7 @@ bat_room,124,121,1	script	KVM [1-59] Officer#2	4_M_CRU_KNT,{
 		close;
 
 	mes "[KVM Officer]";
-	if( BG_Delay_Tick >= gettimetick(2) )
-	{
+	if (BG_Delay_Tick >= gettimetick(GETTIMETICK_UNIXTIME)) {
 		mes "You are a Deserter!!";
 		mes "Because of running away, you need to wait ^0000FF" + callfunc("Time2Str",BG_Delay_Tick) + "^000000 to join again a BattleGround.";
 		close;
@@ -1127,7 +1113,7 @@ bat_room,161,158,3	duplicate(bat_aid)	General Guillaume's Aid::bat_aid4	4_M_KY_H
 OnTouch:
 	if (checkhiding())
 		end;
-	set BG_Delay_Tick, gettimetick(2) + 30;
+	BG_Delay_Tick = gettimetick(GETTIMETICK_UNIXTIME) + 30;
 	warp "bat_room",154,149;
 	end;
 }
