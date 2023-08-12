@@ -1798,7 +1798,7 @@ static int skill_additional_effect(struct block_list *src, struct block_list *bl
 
 		case AM_ACIDTERROR:
 			sc_start2(src, bl, SC_BLOODING, (skill_lv * 3), skill_lv, src->id, skill->get_time2(skill_id, skill_lv), skill_id);
-			if ( bl->type == BL_PC && rnd() % 1000 < 10 * skill->get_time(skill_id, skill_lv) ) {
+			if (bl->type == BL_PC && (rnd() % 1000) < (10 * skill->get_time(skill_id, skill_lv))) {
 				skill->break_equip(bl, EQP_ARMOR, 10000, BCT_ENEMY);
 				clif->emotion(bl, E_OMG); // emote icon still shows even there is no armor equip.
 			}

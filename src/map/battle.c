@@ -2230,7 +2230,10 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					break;
 				case AM_ACIDTERROR:
 #ifdef RENEWAL
-					skillratio += 80 * skill_lv + 100;
+					skillratio += -100 + 200 * skill_lv;
+
+					if (sd != NULL)
+						skillratio += 100 * pc->checkskill(sd, AM_LEARNINGPOTION);
 #else
 					skillratio += 40 * skill_lv;
 #endif
@@ -4848,8 +4851,8 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 #ifdef RENEWAL
 			case MO_EXTREMITYFIST:
 			case GS_PIERCINGSHOT:
-			case AM_ACIDTERROR:
 #ifndef RENEWAL
+			case AM_ACIDTERROR:
 			case AM_DEMONSTRATION:
 #endif
 			case NJ_ISSEN:
@@ -5495,7 +5498,6 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 				break;
 #ifndef RENEWAL
 			case AM_DEMONSTRATION:
-#endif
 			case AM_ACIDTERROR: // [malufett/Hercules]
 			{
 				int64 matk;
@@ -5513,6 +5515,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 					wd.damage = max(wd.damage, 1);
 			}
 				break;
+#endif
 			case GN_CARTCANNON:
 				GET_NORMAL_ATTACK((sc && sc->data[SC_MAXIMIZEPOWER] ? 1 : 0) | (sc && sc->data[SC_WEAPONPERFECT] ? 8 : 0), skill_id);
 				ATK_ADD(sd ? sd->bonus.arrow_atk : 0);
