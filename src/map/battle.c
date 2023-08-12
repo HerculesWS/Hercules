@@ -2230,7 +2230,10 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					break;
 				case AM_ACIDTERROR:
 #ifdef RENEWAL
-					skillratio += 80 * skill_lv + 100;
+					skillratio += -100 + 200 * skill_lv;
+
+					if (sd != NULL)
+						skillratio += 100 * pc->checkskill(sd, AM_LEARNINGPOTION);
 #else
 					skillratio += 40 * skill_lv;
 #endif
@@ -4848,7 +4851,6 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 #ifdef RENEWAL
 			case MO_EXTREMITYFIST:
 			case GS_PIERCINGSHOT:
-			case AM_ACIDTERROR:
 			case NJ_ISSEN:
 			case PA_SACRIFICE:
 			case KO_HAPPOKUNAI:
@@ -5490,23 +5492,6 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 				} else
 					ATK_ADD(sstatus->rhw.atk2); //Else use Atk2
 				ATK_RATE(battle->calc_skillratio(BF_WEAPON, src, target, skill_id, skill_lv, skillratio, wflag));
-				break;
-			case AM_ACIDTERROR: // [malufett/Hercules]
-			{
-				int64 matk;
-				int totaldef = status->get_total_def(target) + status->get_total_mdef(target);
-				matk = battle->calc_cardfix(BF_MAGIC, src, target, nk, s_ele, 0, status->get_matk(src, 2), 0, wd.flag);
-				matk = battle->attr_fix(src, target, matk, ELE_NEUTRAL, tstatus->def_ele, tstatus->ele_lv);
-				matk = matk * battle->calc_skillratio(BF_WEAPON, src, target, skill_id, skill_lv, skillratio, wflag) / 100;
-				GET_NORMAL_ATTACK((sc && sc->data[SC_MAXIMIZEPOWER] ? 1 : 0) | (sc && sc->data[SC_WEAPONPERFECT] ? 8 : 0), 0);
-				ATK_RATE(battle->calc_skillratio(BF_WEAPON, src, target, skill_id, skill_lv, skillratio, wflag));
-				ATK_ADD(matk);
-				ATK_ADD(-totaldef);
-				if ( skill_id == AM_ACIDTERROR && is_boss(target) )
-					ATK_RATE(50);
-				if ( skill_id == AM_DEMONSTRATION )
-					wd.damage = max(wd.damage, 1);
-			}
 				break;
 			case GN_CARTCANNON:
 				GET_NORMAL_ATTACK((sc && sc->data[SC_MAXIMIZEPOWER] ? 1 : 0) | (sc && sc->data[SC_WEAPONPERFECT] ? 8 : 0), skill_id);
