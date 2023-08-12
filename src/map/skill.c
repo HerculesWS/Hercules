@@ -1820,14 +1820,16 @@ static int skill_additional_effect(struct block_list *src, struct block_list *bl
 			sc_start(src, bl, SC_STUN, (10 + 3 * skill_lv), skill_lv, skill->get_time(skill_id, skill_lv), skill_id);
 			sc_start(src, bl, SC_BLIND, (10 + 3 * skill_lv), skill_lv, skill->get_time2(skill_id, skill_lv), skill_id);
 
-	#ifdef RENEWAL
-			sc_start(src, bl, SC_RAID, 100, 7, 5000, skill_id);
+#ifdef RENEWAL
+			sc_start(src, bl, SC_RAID, 100, 7, 10000, skill_id);
+#endif
 			break;
 
+#ifdef RENEWAL
 		case RG_BACKSTAP:
 			sc_start(src, bl, SC_STUN, (5 + 2 * skill_lv), skill_lv, skill->get_time(skill_id, skill_lv), skill_id);
-	#endif
 			break;
+#endif
 
 		case BA_FROSTJOKE:
 			sc_start(src, bl, SC_FREEZE, (15 + 5 * skill_lv), skill_lv, skill->get_time2(skill_id, skill_lv), skill_id);

@@ -2184,7 +2184,11 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 						skillratio += 200 + 40 * skill_lv;
 					break;
 				case RG_RAID:
+#ifndef RENEWAL
 					skillratio += 40 * skill_lv;
+#else
+					skillratio += -50 + 150 * skill_lv;
+#endif
 					break;
 				case RG_INTIMIDATE:
 					skillratio += 30 * skill_lv;
@@ -3294,12 +3298,8 @@ static int64 battle_calc_damage(struct block_list *src, struct block_list *bl, s
 		}
 
 #ifdef RENEWAL
-		if( sc->data[SC_RAID] ) {
-			damage += damage * 20 / 100;
-
-			if (--sc->data[SC_RAID]->val1 == 0)
-				status_change_end(bl, SC_RAID, INVALID_TIMER);
-		}
+		if (sc->data[SC_RAID] != NULL)
+			damage += damage * sc->data[SC_RAID]->val2 / 100;
 #endif
 
 		if( damage ) {
