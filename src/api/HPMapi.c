@@ -40,6 +40,7 @@
 #include "common/mapindex.h"
 #include "common/mmo.h"
 #include "common/nullpo.h"
+#include "common/packets_struct.h"
 #include "common/packets.h"
 #include "common/random.h"
 #include "common/showmsg.h"
