@@ -648,6 +648,8 @@ struct Battle_Config {
 
 	int feature_goldpc_enable;
 	int feature_goldpc_default_mode;
+
+	int venom_dust_exp; // Enable exp given by venom dust
 };
 
 /* criteria for battle_config.idletime_criteria */
