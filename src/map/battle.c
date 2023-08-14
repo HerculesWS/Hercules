@@ -4799,6 +4799,11 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 				break;
 
 #ifdef RENEWAL
+			case RG_BACKSTAP:
+				if (sd != NULL && sd->weapontype == W_DAGGER)
+					wd.div_ = 2;
+				break;
+
 			case KN_BOWLINGBASH:
 				wd.div_ = 2;
 
@@ -5163,6 +5168,11 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 				if (sd != NULL && pc->checkskill(sd, AS_SONICACCEL) > 0)
 					hitpercbonus += 50;
 				break;
+#ifdef RENEWAL
+			case RG_BACKSTAP:
+				hitrate += 4 * skill_lv;
+				break;
+#endif
 			case MC_CARTREVOLUTION:
 			case GN_CART_TORNADO:
 			case GN_CARTCANNON:

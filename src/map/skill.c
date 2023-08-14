@@ -4996,20 +4996,40 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 			status_change_end(src, SC_BLADESTOP, INVALID_TIMER);
 			break;
 
-		case RG_BACKSTAP:
-			{
-				enum unit_dir dir = map->calc_dir(src, bl->x, bl->y);
-				enum unit_dir t_dir = unit->getdir(bl);
-				if ((!check_distance_bl(src, bl, 0) && map->check_dir(dir, t_dir) == 0) || bl->type == BL_SKILL) {
-					status_change_end(src, SC_HIDING, INVALID_TIMER);
-					skill->attack(BF_WEAPON, src, src, bl, skill_id, skill_lv, tick, flag);
-					dir = unit_get_opposite_dir(dir); // change direction [Celest]
-					unit->set_dir(bl, dir);
-				}
-				else if (sd)
-					clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
+		case RG_BACKSTAP: {
+#ifndef RENEWAL
+			enum unit_dir dir = map->calc_dir(src, bl->x, bl->y);
+			enum unit_dir t_dir = unit->getdir(bl);
+			if ((!check_distance_bl(src, bl, 0) && map->check_dir(dir, t_dir) == 0) || bl->type == BL_SKILL) {
+				status_change_end(src, SC_HIDING, INVALID_TIMER);
+				skill->attack(BF_WEAPON, src, src, bl, skill_id, skill_lv, tick, flag);
+				dir = unit_get_opposite_dir(dir); // change direction [Celest]
+				unit->set_dir(bl, dir);
 			}
+			else if (sd)
+				clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
+#else
+			// Finds out where the unit will be after using the skill
+			enum unit_dir dir = map->calc_dir(src, bl->x, bl->y);
+			if (Assert_chk(dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX)) {
+				map->freeblock_unlock(); // unblock before assert-returning
+				return 0;
+			}
+
+			short x = bl->x + dirx[dir];
+			short y = bl->y + diry[dir];
+			if (unit->move_pos(src, x, y, 1, true) != 0) {
+				clif->skill_fail(sd, skill_id, USESKILL_FAIL_POS, 0, 0);
+				break;
+			}
+
+			clif->slide(src, x, y);
+			clif->fixpos(src);
+
+			skill->attack(BF_WEAPON, src, src, bl, skill_id, skill_lv, tick, flag);
+#endif
 			break;
+		}
 
 		case MO_FINGEROFFENSIVE:
 			skill->attack(BF_WEAPON,src,src,bl,skill_id,skill_lv,tick,flag);
@@ -5302,7 +5322,7 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 			} else {
 				sc_start(src, src, SC_NO_SWITCH_WEAPON, 100, 1, skill->get_time(skill_id, skill_lv), skill_id);
 				skill->area_temp[0] = map->foreachinrange(skill->area_sub, bl, skill->get_splash(skill_id, skill_lv), BL_CHAR, src, skill_id, skill_lv, tick, BCT_ENEMY, skill->area_sub_count);
-				
+
 				// recursive invocation of skill->castend_damage_id() with flag|1
 				map->foreachinrange(skill->area_sub, bl, skill->get_splash(skill_id, skill_lv), skill->splash_target(src), src, skill_id, skill_lv, tick, flag | BCT_ENEMY | SD_SPLASH | 1, skill->castend_damage_id);
 			}
@@ -6407,13 +6427,15 @@ static int skill_castend_id(int tid, int64 tick, int id, intptr_t data)
 				break;
 		}
 
-		if(ud->skill_id == RG_BACKSTAP) {
+#ifndef RENEWAL
+		if (ud->skill_id == RG_BACKSTAP) {
 			enum unit_dir dir = map->calc_dir(src, target->x, target->y);
 			enum unit_dir t_dir = unit->getdir(target);
 			if (check_distance_bl(src, target, 0) || map->check_dir(dir, t_dir) != 0) {
 				break;
 			}
 		}
+#endif
 
 		if( ud->skill_id == PR_TURNUNDEAD ) {
 			struct status_data *tstatus = status->get_status_data(target);
@@ -10119,7 +10141,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 			int level = 0;
 			if (sd != NULL)
 				level = skill_id == AB_CLEMENTIA ? pc->checkskill(sd, AL_BLESSING) : pc->checkskill(sd, AL_INCAGI);
-			
+
 			if (sd == NULL || sd->status.party_id == 0 || flag & 1) {
 				clif->skill_nodamage(bl, bl, skill_id, skill_lv, sc_start(src, bl, type, 100, level, skill->get_time(skill_id, skill_lv), skill_id));
 			} else if (sd != NULL) {
