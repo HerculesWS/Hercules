@@ -4996,6 +4996,7 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 			status_change_end(src, SC_BLADESTOP, INVALID_TIMER);
 			break;
 
+#ifndef RENEWAL
 		case RG_BACKSTAP:
 			{
 				enum unit_dir dir = map->calc_dir(src, bl->x, bl->y);
@@ -5010,6 +5011,29 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 					clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
 			}
 			break;
+#else
+		case RG_BACKSTAP: {
+			// Finds out where the unit will be after using the skill
+			enum unit_dir dir = map->calc_dir(src, bl->x, bl->y);
+			if (Assert_chk(dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX)) {
+				map->freeblock_unlock(); // unblock before assert-returning
+				return 0;
+			}
+
+			short x = bl->x + dirx[dir];
+			short y = bl->y + diry[dir];
+			if (unit->move_pos(src, x, y, 1, true) != 0) {
+				clif->skill_fail(sd, skill_id, USESKILL_FAIL_POS, 0, 0);
+				break;
+			}
+
+			clif->slide(src, x, y);
+			clif->fixpos(src);
+
+			skill->attack(BF_WEAPON, src, src, bl, skill_id, skill_lv, tick, flag);
+		}
+			break;
+#endif
 
 		case MO_FINGEROFFENSIVE:
 			skill->attack(BF_WEAPON,src,src,bl,skill_id,skill_lv,tick,flag);
@@ -6407,13 +6431,15 @@ static int skill_castend_id(int tid, int64 tick, int id, intptr_t data)
 				break;
 		}
 
-		if(ud->skill_id == RG_BACKSTAP) {
+#ifndef RENEWAL
+		if (ud->skill_id == RG_BACKSTAP) {
 			enum unit_dir dir = map->calc_dir(src, target->x, target->y);
 			enum unit_dir t_dir = unit->getdir(target);
 			if (check_distance_bl(src, target, 0) || map->check_dir(dir, t_dir) != 0) {
 				break;
 			}
 		}
+#endif
 
 		if( ud->skill_id == PR_TURNUNDEAD ) {
 			struct status_data *tstatus = status->get_status_data(target);
