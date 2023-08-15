@@ -3661,7 +3661,7 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 					tsd->status.skill[idx].id = 0;
 					tsd->status.skill[idx].lv = 0;
 					tsd->status.skill[idx].flag = 0;
-					clif->deleteskill(tsd, tsd->cloneskill_id);
+					clif->deleteskill(tsd, tsd->cloneskill_id, false);
 				}
 			}
 
@@ -3686,7 +3686,7 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 					tsd->status.skill[idx].id = 0;
 					tsd->status.skill[idx].lv = 0;
 					tsd->status.skill[idx].flag = 0;
-					clif->deleteskill(tsd, tsd->reproduceskill_id);
+					clif->deleteskill(tsd, tsd->reproduceskill_id, false);
 				}
 			}
 			lv = min(lv, skill->get_max(copy_skill));

@@ -3475,7 +3475,7 @@ ACMD(lostskill)
 
 	sd->status.skill[index].lv = 0;
 	sd->status.skill[index].flag = 0;
-	clif->deleteskill(sd,skill_id);
+	clif->deleteskill(sd, skill_id, false);
 	clif->message(fd, msg_fd(fd,71)); // You have forgotten the skill.
 
 	return true;

@@ -4323,7 +4323,7 @@ static int pc_skill(struct map_session_data *sd, int id, int level, int flag)
 			sd->status.skill[index].flag = SKILL_FLAG_PERMANENT;
 			if( level == 0 ) { //Remove skill.
 				sd->status.skill[index].id = 0;
-				clif->deleteskill(sd,id);
+				clif->deleteskill(sd, id, false);
 			} else
 				clif->addskill(sd,id);
 			if( !skill->dbs->db[index].inf ) //Only recalculate for passive skills.
@@ -4357,7 +4357,7 @@ static int pc_skill(struct map_session_data *sd, int id, int level, int flag)
 			sd->status.skill[index].flag = SKILL_FLAG_PERM_GRANTED;
 			if( level == 0 ) { //Remove skill.
 				sd->status.skill[index].id = 0;
-				clif->deleteskill(sd,id);
+				clif->deleteskill(sd, id, false);
 			} else
 				clif->addskill(sd,id);
 			if( !skill->dbs->db[index].inf ) //Only recalculate for passive skills.
@@ -9121,7 +9121,7 @@ static int pc_jobchange(struct map_session_data *sd, int class, int upper)
 			sd->status.skill[idx].id = 0;
 			sd->status.skill[idx].lv = 0;
 			sd->status.skill[idx].flag = 0;
-			clif->deleteskill(sd,sd->cloneskill_id);
+			clif->deleteskill(sd, sd->cloneskill_id, false);
 		}
 		sd->cloneskill_id = 0;
 		pc_setglobalreg(sd, script->add_variable("CLONE_SKILL"), 0);
@@ -9134,7 +9134,7 @@ static int pc_jobchange(struct map_session_data *sd, int class, int upper)
 			sd->status.skill[idx].id = 0;
 			sd->status.skill[idx].lv = 0;
 			sd->status.skill[idx].flag = 0;
-			clif->deleteskill(sd,sd->reproduceskill_id);
+			clif->deleteskill(sd, sd->reproduceskill_id, false);
 		}
 		sd->reproduceskill_id = 0;
 		pc_setglobalreg(sd, script->add_variable("REPRODUCE_SKILL"),0);
@@ -9205,10 +9205,6 @@ static int pc_jobchange(struct map_session_data *sd, int class, int upper)
 		clif->changelook(&sd->bl,LOOK_CLOTHES_COLOR,sd->vd.cloth_color);
 	if (sd->vd.body_style)
 		clif->changelook(&sd->bl,LOOK_BODY2,sd->vd.body_style);
-
-	//Update skill tree.
-	pc->calc_skilltree(sd);
-	clif->skillinfoblock(sd);
 
 	if (old_overhealweightrate != pc_overhealweightrate(sd))
 		clif->overweight_percent(sd);

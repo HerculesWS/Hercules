@@ -1300,7 +1300,7 @@ struct clif_interface {
 	void (*skillup) (struct map_session_data *sd, uint16 skill_id, int skill_lv, int flag);
 	void (*skillinfo) (struct map_session_data *sd,int skill_id, int inf);
 	void (*addskill) (struct map_session_data *sd, int id);
-	void (*deleteskill) (struct map_session_data *sd, int id);
+	void (*deleteskill) (struct map_session_data *sd, int id, bool skip_infoblock);
 	void (*playerSkillToPacket) (struct map_session_data *sd, struct SKILLDATA *skillData, int skillId, int idx, bool newSkill);
 	/* party-specific */
 	void (*party_created) (struct map_session_data *sd,int result);
