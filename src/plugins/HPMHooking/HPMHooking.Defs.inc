@@ -1964,8 +1964,8 @@ typedef void (*HPMHOOK_pre_clif_skillinfo) (struct map_session_data **sd, int *s
 typedef void (*HPMHOOK_post_clif_skillinfo) (struct map_session_data *sd, int skill_id, int inf);
 typedef void (*HPMHOOK_pre_clif_addskill) (struct map_session_data **sd, int *id);
 typedef void (*HPMHOOK_post_clif_addskill) (struct map_session_data *sd, int id);
-typedef void (*HPMHOOK_pre_clif_deleteskill) (struct map_session_data **sd, int *id);
-typedef void (*HPMHOOK_post_clif_deleteskill) (struct map_session_data *sd, int id);
+typedef void (*HPMHOOK_pre_clif_deleteskill) (struct map_session_data **sd, int *id, bool *skip_infoblock);
+typedef void (*HPMHOOK_post_clif_deleteskill) (struct map_session_data *sd, int id, bool skip_infoblock);
 typedef void (*HPMHOOK_pre_clif_playerSkillToPacket) (struct map_session_data **sd, struct SKILLDATA **skillData, int *skillId, int *idx, bool *newSkill);
 typedef void (*HPMHOOK_post_clif_playerSkillToPacket) (struct map_session_data *sd, struct SKILLDATA *skillData, int skillId, int idx, bool newSkill);
 typedef void (*HPMHOOK_pre_clif_party_created) (struct map_session_data **sd, int *result);

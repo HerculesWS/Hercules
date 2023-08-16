@@ -17265,14 +17265,14 @@ void HP_clif_addskill(struct map_session_data *sd, int id) {
 	}
 	return;
 }
-void HP_clif_deleteskill(struct map_session_data *sd, int id) {
+void HP_clif_deleteskill(struct map_session_data *sd, int id, bool skip_infoblock) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_deleteskill_pre > 0) {
-		void (*preHookFunc) (struct map_session_data **sd, int *id);
+		void (*preHookFunc) (struct map_session_data **sd, int *id, bool *skip_infoblock);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_deleteskill_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_clif_deleteskill_pre[hIndex].func;
-			preHookFunc(&sd, &id);
+			preHookFunc(&sd, &id, &skip_infoblock);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -17280,13 +17280,13 @@ void HP_clif_deleteskill(struct map_session_data *sd, int id) {
 		}
 	}
 	{
-		HPMHooks.source.clif.deleteskill(sd, id);
+		HPMHooks.source.clif.deleteskill(sd, id, skip_infoblock);
 	}
 	if (HPMHooks.count.HP_clif_deleteskill_post > 0) {
-		void (*postHookFunc) (struct map_session_data *sd, int id);
+		void (*postHookFunc) (struct map_session_data *sd, int id, bool skip_infoblock);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_deleteskill_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_deleteskill_post[hIndex].func;
-			postHookFunc(sd, id);
+			postHookFunc(sd, id, skip_infoblock);
 		}
 	}
 	return;
