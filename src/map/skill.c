@@ -14157,8 +14157,8 @@ static int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *b
 			break;
 
 		case UNT_VENOMDUST:
-			if(tsc && !tsc->data[type])
-				status->change_start(ss, bl, type, 10000, sg->skill_lv, sg->group_id, 0, 0, skill->get_time2(sg->skill_id, sg->skill_lv), SCFLAG_NONE, skill_id);
+			if (tsc != NULL && tsc->data[type] == NULL)
+				status->change_start(ss, bl, type, 10000, sg->skill_lv, battle_config.venom_dust_exp != 0 ? sg->src_id : sg->group_id, 0, 0, skill->get_time2(sg->skill_id, sg->skill_lv), SCFLAG_NONE, skill_id);
 			break;
 
 		case UNT_MAGENTATRAP:
