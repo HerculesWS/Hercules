@@ -3699,8 +3699,10 @@ static int status_base_amotion_pc(struct map_session_data *sd, struct status_dat
 	temp = (float)(sqrt(temp) * 0.25f) + 0xc4;
 	if (sd->weapontype == W_BOOK && (skill_lv = pc->checkskill(sd, SA_ADVANCEDBOOK)) > 0)
 		val += (skill_lv - 1) / 2 + 1;
-	if ( (skill_lv = pc->checkskill(sd, GS_SINGLEACTION)) > 0 )
+	if ((skill_lv = pc->checkskill(sd, GS_SINGLEACTION)) > 0)
 		val += ((skill_lv + 1) / 2);
+	if ((skill_lv = pc->checkskill(sd, RG_PLAGIARISM)) > 0)
+		val += skill_lv;
 	amotion = ((int)(temp + ((float)(status->calc_aspd(&sd->bl, &sd->sc, 1) + val) * st->agi / 200)) - min(amotion, 200));
 #else
 	// base weapon delay
