@@ -4743,6 +4743,9 @@ static int status_calc_matk(struct block_list *bl, struct status_change *sc, int
 #else // RENEWAL
 	if (sc->data[SC_IMPOSITIO])
 		matk += sc->data[SC_IMPOSITIO]->val2;
+	// FIXME: This (and SC_IMPOSITIO) should have their effects shown in status window.
+	if (sc->data[SC_VOLCANO] != NULL)
+		matk += sc->data[SC_VOLCANO]->val2;
 #endif
 	if (sc->data[SC_ZANGETSU])
 		matk += sc->data[SC_ZANGETSU]->val3;
@@ -7868,11 +7871,14 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				val4 = 5 + val1*2; //Chance of casting
 				break;
 			case SC_VOLCANO:
-				val2 = val1*10; //Watk increase
-	#ifndef RENEWAL
+#ifndef RENEWAL
+				val2 = val1 * 10; // Watk increase
+				
 				if (st->def_ele != ELE_FIRE)
 					val2 = 0;
-	#endif
+#else
+				val2 = 5 + val1 * 5; // Watk/Matk increase
+#endif
 				break;
 			case SC_VIOLENTGALE:
 				val2 = val1*3; //Flee increase
