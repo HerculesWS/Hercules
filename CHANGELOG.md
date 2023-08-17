@@ -22,6 +22,37 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
+## [v2023.08] `August 2023`
+
+> Note: with this release the versioning scheme has slightly changed: the release day is no longer included in the release tag and is set to `00` in the `HERCULES_VERSION` constant. Hotfix releases will take the form `v2023.08.001` ~ `v2023.08.999` (and will set `HERCULES_VERSION` to `202308001` ~ `202308999`). Releases will still happen around the second wednesday of each month when possible.
+
+### Added
+
+- Added support for choosing between localtime and UTC output in the script command `gettime()` (defaults to localtime for backward compatibility). (#3224)
+- Added support for choosing between localtime and UTC input in the script command `getcalendartime()` (defaults to localtime for backward compatibility). (#3224)
+- Added the `GETTIMETICK_*` constants to be used with the `gettimetick()` script commands. It's recommended to update custom scripts to use the constants instead of numbers, as there is no guarantee that the values will not change in the future. (#3224)
+- Added an option to allow Venom Dust to give experience points. See `venom_dust_exp` in `conf/battle/battle.conf`. (#3226, issue #3188)
+- Added the missing `common/packets_struct.h` include to `HPMapi.c` and `HPMlogin.c`. (#3228)
+
+### Changed
+
+- Changed Poisoning Weapon to show the type of poison used when applied. (#3219)
+- Moved the `GETTIME_*` constants to source. (#3224)
+- Documented a quirk of `gettimetick(GETTIMETICK_HOUROFDAY_S)` (formerly known as type 1) when the server is running with a local timezone on the day daylight savings begin or end. (#3224)
+- Changed `gettimetick()` to reject unknown types instead of defaulting to type 0. (#3224)
+
+### Fixed
+
+- Fixed a typo in the `sc_start()` rate description in the command documentation. (#3219)
+- Fixed the duration and rate of Poisoning Weapon getting reduced more than they were supposed to be. (#3219)
+- Fixed the duration of the Venom Bleed poison effect. (#3219)
+- Fixed a missing VS 2022 solution for the HPMHooking API plugin. (#3222)
+- Fixed `TF_DOUBLE` not granting the Hit bonus when triggered. (#3225)
+- Fixed the command `getcalendartime()` returning the wrong timestamp when fed with a localtime input while daylight savings are in effect. (#3224)
+- Fixed a warning about an unused variable in `npc.c` with some compilers. (#3224)
+- Fixed the attendance system returning the wrong timestamp when the server is running on a local timezone and daylight savings are in effect. (#3224)
+- Fixed temporary skills not getting cleared from the skill tree on recent clients when the item granting them is unequipped. (#3227, issue #3209)
+
 ## [v2023.07.12] `July 12 2023`
 
 ### Added
