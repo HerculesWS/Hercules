@@ -7289,7 +7289,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 		case SA_FLAMELAUNCHER: // added failure chance and chance to break weapon if turned on [Valaris]
 		case SA_FROSTWEAPON:
 		case SA_LIGHTNINGLOADER:
-		case SA_SEISMICWEAPON:
+		case SA_SEISMICWEAPON: {
 			if (dstsd) {
 				if (dstsd->weapontype == W_FIST ||
 					(dstsd->sc.count && !dstsd->sc.data[type] &&
@@ -7308,13 +7308,22 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 					break;
 				}
 			}
+#ifndef RENEWAL
 			// 100% success rate at lv4 & 5, but lasts longer at lv5
-			if (!clif->skill_nodamage(src, bl, skill_id, skill_lv, sc_start(src, bl, type, (60 + skill_lv * 10), skill_lv, skill->get_time(skill_id, skill_lv), skill_id))) {
-				if (sd)
+			int sc_chance = (60 + skill_lv * 10);
+#else
+			int sc_chance = 100;
+#endif
+			int sc_result = sc_start(src, bl, type, sc_chance, skill_lv, skill->get_time(skill_id, skill_lv), skill_id);
+			if (clif->skill_nodamage(src, bl, skill_id, skill_lv, sc_result) == 0) {
+				if (sd != NULL)
 					clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
-				if (skill->break_equip(bl, EQP_WEAPON, 10000, BCT_PARTY) && sd && sd != dstsd)
+#ifndef RENEWAL
+				if (skill->break_equip(bl, EQP_WEAPON, 10000, BCT_PARTY) != 0 && sd != NULL && sd != dstsd)
 					clif->message(sd->fd, msg_sd(sd, MSGTBL_BROKEN_TARGET_WEAPON)); // "You broke the target's weapon."
+#endif
 			}
+		}
 			break;
 
 		case PR_ASPERSIO:

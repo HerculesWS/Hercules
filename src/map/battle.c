@@ -4093,6 +4093,7 @@ static struct Damage battle_calc_magic_attack(struct block_list *src, struct blo
 				}
 			}
 		}
+
 #ifndef HMAP_ZONE_DAMAGE_CAP_TYPE
 		if (skill_id) {
 			for(i = 0; i < map->list[target->m].zone->capped_skills_count; i++) {

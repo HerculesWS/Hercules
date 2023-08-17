@@ -2329,6 +2329,17 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 		if (sc->data[SC_EARTH_INSIGNIA] && sc->data[SC_EARTH_INSIGNIA]->val1 == 3)
 			sd->magic_addele[ELE_EARTH] += 25;
 
+#ifdef RENEWAL
+		if (sc->data[SC_PROPERTYFIRE] != NULL)
+			sd->magic_atk_ele[ELE_FIRE] += sc->data[SC_PROPERTYFIRE]->val1;
+		if (sc->data[SC_PROPERTYWATER] != NULL)
+			sd->magic_atk_ele[ELE_WATER] += sc->data[SC_PROPERTYWATER]->val1;
+		if (sc->data[SC_PROPERTYWIND] != NULL)
+			sd->magic_atk_ele[ELE_WIND] += sc->data[SC_PROPERTYWIND]->val1;
+		if (sc->data[SC_PROPERTYGROUND] != NULL)
+			sd->magic_atk_ele[ELE_EARTH] += sc->data[SC_PROPERTYGROUND]->val1;
+#endif
+
 		// Geffen Scrolls
 		if (sc->data[SC_SKELSCROLL]) {
 #ifdef RENEWAL
