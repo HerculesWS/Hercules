@@ -12125,14 +12125,14 @@ void HP_clif_cooking_list(struct map_session_data *sd, int trigger, uint16 skill
 	}
 	return;
 }
-void HP_clif_autospell(struct map_session_data *sd, uint16 skill_lv) {
+void HP_clif_autospell(struct map_session_data *sd, uint16 skill_lv, int *skill_ids_list, int list_len) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_autospell_pre > 0) {
-		void (*preHookFunc) (struct map_session_data **sd, uint16 *skill_lv);
+		void (*preHookFunc) (struct map_session_data **sd, uint16 *skill_lv, int **skill_ids_list, int *list_len);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_autospell_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_clif_autospell_pre[hIndex].func;
-			preHookFunc(&sd, &skill_lv);
+			preHookFunc(&sd, &skill_lv, &skill_ids_list, &list_len);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -12140,13 +12140,13 @@ void HP_clif_autospell(struct map_session_data *sd, uint16 skill_lv) {
 		}
 	}
 	{
-		HPMHooks.source.clif.autospell(sd, skill_lv);
+		HPMHooks.source.clif.autospell(sd, skill_lv, skill_ids_list, list_len);
 	}
 	if (HPMHooks.count.HP_clif_autospell_post > 0) {
-		void (*postHookFunc) (struct map_session_data *sd, uint16 skill_lv);
+		void (*postHookFunc) (struct map_session_data *sd, uint16 skill_lv, int *skill_ids_list, int list_len);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_autospell_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_autospell_post[hIndex].func;
-			postHookFunc(sd, skill_lv);
+			postHookFunc(sd, skill_lv, skill_ids_list, list_len);
 		}
 	}
 	return;
@@ -85333,6 +85333,58 @@ void HP_skill_weaponrefine(struct map_session_data *sd, int idx) {
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_weaponrefine_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_skill_weaponrefine_post[hIndex].func;
 			postHookFunc(sd, idx);
+		}
+	}
+	return;
+}
+void HP_skill_autospell_select_spell(struct block_list *bl, int skill_lv) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_skill_autospell_select_spell_pre > 0) {
+		void (*preHookFunc) (struct block_list **bl, int *skill_lv);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_autospell_select_spell_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_skill_autospell_select_spell_pre[hIndex].func;
+			preHookFunc(&bl, &skill_lv);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.skill.autospell_select_spell(bl, skill_lv);
+	}
+	if (HPMHooks.count.HP_skill_autospell_select_spell_post > 0) {
+		void (*postHookFunc) (struct block_list *bl, int skill_lv);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_autospell_select_spell_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_skill_autospell_select_spell_post[hIndex].func;
+			postHookFunc(bl, skill_lv);
+		}
+	}
+	return;
+}
+void HP_skill_autospell_select_spell_pc(struct map_session_data *sd, int skill_lv) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_skill_autospell_select_spell_pc_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, int *skill_lv);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_autospell_select_spell_pc_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_skill_autospell_select_spell_pc_pre[hIndex].func;
+			preHookFunc(&sd, &skill_lv);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.skill.autospell_select_spell_pc(sd, skill_lv);
+	}
+	if (HPMHooks.count.HP_skill_autospell_select_spell_pc_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, int skill_lv);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_autospell_select_spell_pc_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_skill_autospell_select_spell_pc_post[hIndex].func;
+			postHookFunc(sd, skill_lv);
 		}
 	}
 	return;

@@ -3274,6 +3274,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(skill->repairweapon, HP_skill_repairweapon) },
 	{ HP_POP(skill->identify, HP_skill_identify) },
 	{ HP_POP(skill->weaponrefine, HP_skill_weaponrefine) },
+	{ HP_POP(skill->autospell_select_spell, HP_skill_autospell_select_spell) },
+	{ HP_POP(skill->autospell_select_spell_pc, HP_skill_autospell_select_spell_pc) },
 	{ HP_POP(skill->autospell, HP_skill_autospell) },
 	{ HP_POP(skill->calc_heal, HP_skill_calc_heal) },
 	{ HP_POP(skill->check_cloaking, HP_skill_check_cloaking) },
