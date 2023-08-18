@@ -6867,12 +6867,21 @@ static enum damage_lv battle_weapon_attack(struct block_list *src, struct block_
 		int sp = 0;
 		uint16 skill_id = sc->data[SC_AUTOSPELL]->val2;
 		uint16 skill_lv = sc->data[SC_AUTOSPELL]->val3;
-		int i = rnd()%100;
-		if (sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_SAGE)
+#ifndef RENEWAL
+		int i = rnd() % 100;
+		if (sc->data[SC_SOULLINK] != NULL && sc->data[SC_SOULLINK]->val2 == SL_SAGE)
 			i = 0; //Max chance, no skill_lv reduction. [Skotlex]
-		if (i >= 50) skill_lv -= 2;
-		else if (i >= 15) skill_lv--;
-		if (skill_lv < 1) skill_lv = 1;
+
+		if (i >= 50)
+			skill_lv -= 2;
+		else if (i >= 15)
+			skill_lv--;
+		if (skill_lv < 1)
+			skill_lv = 1;
+#else
+		if (sd != NULL && skill_lv > pc->checkskill(sd, skill_id))
+			skill_lv = pc->checkskill(sd, skill_id);
+#endif
 		sp = skill->get_sp(skill_id,skill_lv) * 2 / 3;
 
 		if (status->charge(src, 0, sp)) {

@@ -7878,8 +7878,12 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			case SC_AUTOSPELL:
 				//Val1 Skill LV of Autospell
 				//Val2 Skill ID to cast
-				//Val3 Max Lv to cast
-				val4 = 5 + val1*2; //Chance of casting
+				//Val3 Max Lv to cast (pre-re) / Lv to cast (zero)
+#ifndef RENEWAL
+				val4 = 5 + val1 * 2; // Chance of casting
+#else
+				val4 = 2 * val1; // Chance of casting
+#endif
 				break;
 			case SC_VOLCANO:
 #ifndef RENEWAL
