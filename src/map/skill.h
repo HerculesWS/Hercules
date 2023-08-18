@@ -2170,7 +2170,7 @@ struct skill_interface {
 	void (*weaponrefine) (struct map_session_data *sd,int idx);
 	void (*autospell_select_spell) (struct block_list *bl, int skill_lv);
 	void (*autospell_select_spell_pc) (struct map_session_data *sd, int skill_lv);
-	int (*autospell) (struct map_session_data *md,uint16 skill_id);
+	int (*autospell_spell_selected) (struct map_session_data *md, uint16 skill_id);
 	int (*calc_heal) (struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, bool heal);
 	bool (*check_cloaking) (struct block_list *bl, struct status_change_entry *sce);
 	int (*check_cloaking_end) (struct block_list *bl, va_list ap);

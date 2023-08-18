@@ -14196,7 +14196,7 @@ static void clif_parse_AutoSpell(int fd, struct map_session_data *sd)
 	if( !skill_id )
 		return;
 
-	skill->autospell(sd, skill_id);
+	skill->autospell_spell_selected(sd, skill_id);
 	clif_menuskill_clear(sd);
 }
 

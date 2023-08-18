@@ -8478,8 +8478,8 @@ typedef void (*HPMHOOK_pre_skill_autospell_select_spell) (struct block_list **bl
 typedef void (*HPMHOOK_post_skill_autospell_select_spell) (struct block_list *bl, int skill_lv);
 typedef void (*HPMHOOK_pre_skill_autospell_select_spell_pc) (struct map_session_data **sd, int *skill_lv);
 typedef void (*HPMHOOK_post_skill_autospell_select_spell_pc) (struct map_session_data *sd, int skill_lv);
-typedef int (*HPMHOOK_pre_skill_autospell) (struct map_session_data **md, uint16 *skill_id);
-typedef int (*HPMHOOK_post_skill_autospell) (int retVal___, struct map_session_data *md, uint16 skill_id);
+typedef int (*HPMHOOK_pre_skill_autospell_spell_selected) (struct map_session_data **md, uint16 *skill_id);
+typedef int (*HPMHOOK_post_skill_autospell_spell_selected) (int retVal___, struct map_session_data *md, uint16 skill_id);
 typedef int (*HPMHOOK_pre_skill_calc_heal) (struct block_list **src, struct block_list **target, uint16 *skill_id, uint16 *skill_lv, bool *heal);
 typedef int (*HPMHOOK_post_skill_calc_heal) (int retVal___, struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, bool heal);
 typedef bool (*HPMHOOK_pre_skill_check_cloaking) (struct block_list **bl, struct status_change_entry **sce);

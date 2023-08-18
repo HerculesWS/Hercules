@@ -85389,14 +85389,14 @@ void HP_skill_autospell_select_spell_pc(struct map_session_data *sd, int skill_l
 	}
 	return;
 }
-int HP_skill_autospell(struct map_session_data *md, uint16 skill_id) {
+int HP_skill_autospell_spell_selected(struct map_session_data *md, uint16 skill_id) {
 	int hIndex = 0;
 	int retVal___ = 0;
-	if (HPMHooks.count.HP_skill_autospell_pre > 0) {
+	if (HPMHooks.count.HP_skill_autospell_spell_selected_pre > 0) {
 		int (*preHookFunc) (struct map_session_data **md, uint16 *skill_id);
 		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_autospell_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_skill_autospell_pre[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_autospell_spell_selected_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_skill_autospell_spell_selected_pre[hIndex].func;
 			retVal___ = preHookFunc(&md, &skill_id);
 		}
 		if (*HPMforce_return) {
@@ -85405,12 +85405,12 @@ int HP_skill_autospell(struct map_session_data *md, uint16 skill_id) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.skill.autospell(md, skill_id);
+		retVal___ = HPMHooks.source.skill.autospell_spell_selected(md, skill_id);
 	}
-	if (HPMHooks.count.HP_skill_autospell_post > 0) {
+	if (HPMHooks.count.HP_skill_autospell_spell_selected_post > 0) {
 		int (*postHookFunc) (int retVal___, struct map_session_data *md, uint16 skill_id);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_autospell_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_skill_autospell_post[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_autospell_spell_selected_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_skill_autospell_spell_selected_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, md, skill_id);
 		}
 	}
