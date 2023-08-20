@@ -6640,8 +6640,10 @@ static bool battle_should_bladestop_attacker(struct block_list *attacker, struct
 	if (tsc == NULL || tsc->data[SC_BLADESTOP_WAIT] == NULL)
 		return false; // Target is not in BladeStop wait mode
 
+#ifndef RENEWAL
 	if (is_boss(attacker))
 		return false; // Boss monsters are not affected
+#endif
 
 #ifndef RENEWAL
 	if (attacker->type == BL_PC)
@@ -6724,8 +6726,14 @@ static enum damage_lv battle_weapon_attack(struct block_list *src, struct block_
 	}
 	if (tsc != NULL && battle->should_bladestop_attacker(src, target)) {
 		uint16 skill_lv = tsc->data[SC_BLADESTOP_WAIT]->val1;
-		int duration = skill->get_time2(MO_BLADESTOP,skill_lv);
 		status_change_end(target, SC_BLADESTOP_WAIT, INVALID_TIMER);
+
+#ifndef RENEWAL
+		int duration = skill->get_time2(MO_BLADESTOP, skill_lv);
+#else
+		int duration = skill->get_time2(MO_BLADESTOP, is_boss(src) ? 1 : 2);
+#endif
+
 		if (sc_start4(target, src, SC_BLADESTOP, 100, sd ? pc->checkskill(sd, MO_BLADESTOP) : 5, 0, 0, target->id, duration, MO_BLADESTOP)) {
 			//Target locked.
 			clif->damage(src, target, sstatus->amotion, 1, 0, 1, BDT_NORMAL, 0); //Display MISS.
