@@ -464,6 +464,8 @@ typedef int64 (*HPMHOOK_pre_battle_calc_bg_damage) (struct block_list **src, str
 typedef int64 (*HPMHOOK_post_battle_calc_bg_damage) (int64 retVal___, struct block_list *src, struct block_list *bl, int64 damage, int div_, uint16 skill_id, uint16 skill_lv, int flag);
 typedef enum damage_lv (*HPMHOOK_pre_battle_weapon_attack) (struct block_list **bl, struct block_list **target, int64 *tick, int *flag);
 typedef enum damage_lv (*HPMHOOK_post_battle_weapon_attack) (enum damage_lv retVal___, struct block_list *bl, struct block_list *target, int64 tick, int flag);
+typedef bool (*HPMHOOK_pre_battle_should_bladestop_attacker) (struct block_list **src, struct block_list **target);
+typedef bool (*HPMHOOK_post_battle_should_bladestop_attacker) (bool retVal___, struct block_list *src, struct block_list *target);
 typedef bool (*HPMHOOK_pre_battle_check_arrows) (struct map_session_data **sd);
 typedef bool (*HPMHOOK_post_battle_check_arrows) (bool retVal___, struct map_session_data *sd);
 typedef struct Damage (*HPMHOOK_pre_battle_calc_weapon_attack) (struct block_list **src, struct block_list **target, uint16 *skill_id, uint16 *skill_lv, int *wflag);

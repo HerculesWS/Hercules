@@ -2780,6 +2780,33 @@ enum damage_lv HP_battle_weapon_attack(struct block_list *bl, struct block_list 
 	}
 	return retVal___;
 }
+bool HP_battle_should_bladestop_attacker(struct block_list *src, struct block_list *target) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_battle_should_bladestop_attacker_pre > 0) {
+		bool (*preHookFunc) (struct block_list **src, struct block_list **target);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_battle_should_bladestop_attacker_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_battle_should_bladestop_attacker_pre[hIndex].func;
+			retVal___ = preHookFunc(&src, &target);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.battle.should_bladestop_attacker(src, target);
+	}
+	if (HPMHooks.count.HP_battle_should_bladestop_attacker_post > 0) {
+		bool (*postHookFunc) (bool retVal___, struct block_list *src, struct block_list *target);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_battle_should_bladestop_attacker_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_battle_should_bladestop_attacker_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, src, target);
+		}
+	}
+	return retVal___;
+}
 bool HP_battle_check_arrows(struct map_session_data *sd) {
 	int hIndex = 0;
 	bool retVal___ = false;
