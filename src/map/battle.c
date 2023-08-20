@@ -2252,8 +2252,20 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					skillratio += 40 * skill_lv;
 #endif
 					break;
-				case MO_FINGEROFFENSIVE:
-					skillratio+= 50 * skill_lv;
+				case MO_FINGEROFFENSIVE: {
+#ifndef RENEWAL
+					skillratio += 50 * skill_lv;
+#else
+					int ratio = 600 + 200 * skill_lv;
+
+					// Cast and Target must be locked in BladeStop.
+					// In other words: A third player won't do extra damage from hitting another Monk's blade stop
+					if (tsc != NULL && tsc->data[SC_BLADESTOP] != NULL && sc->data[SC_BLADESTOP] != NULL)
+						ratio += ratio * 50 / 100;
+
+					skillratio += - 100 + ratio;
+#endif
+				}
 					break;
 				case MO_INVESTIGATE: {
 #ifndef RENEWAL
@@ -4793,6 +4805,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 	if(skill_id) {
 		wd.flag |= battle->range_type(src, target, skill_id, skill_lv);
 		switch(skill_id) {
+#ifndef RENEWAL
 			case MO_FINGEROFFENSIVE:
 				if(sd) {
 					if (battle_config.finger_offensive_type)
@@ -4801,6 +4814,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 						wd.div_ = sd->spiritball_old;
 				}
 				break;
+#endif
 			case HT_PHANTASMIC:
 				//Since these do not consume ammo, they need to be explicitly set as arrow attacks.
 				flag.arrow = 1;
