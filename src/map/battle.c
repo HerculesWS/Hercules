@@ -2245,8 +2245,20 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 				case MO_FINGEROFFENSIVE:
 					skillratio+= 50 * skill_lv;
 					break;
-				case MO_INVESTIGATE:
+				case MO_INVESTIGATE: {
+#ifndef RENEWAL
 					skillratio += 75 * skill_lv;
+#else
+					int ratio = skill_lv * 100;
+
+					// Cast and Target must be locked in BladeStop.
+					// In other words: A third player won't do extra damage from hitting another Monk's blade stop
+					if (tsc != NULL && tsc->data[SC_BLADESTOP] != NULL && sc->data[SC_BLADESTOP] != NULL)
+						ratio += ratio * 50 / 100;
+
+					skillratio += - 100 + ratio;
+#endif
+				}
 					break;
 				case MO_EXTREMITYFIST:
 					{
