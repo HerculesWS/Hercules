@@ -25127,6 +25127,9 @@ static bool skill_read_autospell_db(const char *filename)
 	if (count > 7) {
 		ShowWarning("%s: Your current packet version only supports up to 7 autospell skills, but your autospell db contains \"%d\" skills. Some skills may not be shown.\n", __func__, count);
 		ShowWarning("%s:    Update your packet version or reduce the number of skills to fix this warning.\n", __func__);
+#ifdef RENEWAL
+		ShowWarning("%s:    You may also enable CLASSIC_AUTOSPELL_LIST in general.h for an alternative skill list (Read the comment on it for details!!)\n", __func__);
+#endif
 	}
 #endif
 
@@ -25206,7 +25209,12 @@ static void skill_readdb(bool minimal)
 	sv->readdb(map->db_path, "magicmushroom_db.txt",         ',',   1,                        1, MAX_SKILL_MAGICMUSHROOM_DB, skill->parse_row_magicmushroomdb);
 	sv->readdb(map->db_path, "skill_improvise_db.txt",       ',',   2,                        2,     MAX_SKILL_IMPROVISE_DB, skill->parse_row_improvisedb);
 	sv->readdb(map->db_path, "skill_changematerial_db.txt",  ',',   4,                    4+2*5,       MAX_SKILL_PRODUCE_DB, skill->parse_row_changematerialdb);
+#ifdef CLASSIC_AUTOSPELL_LIST // Force usage of pre-re autospell_db
+	skill->read_autospell_db(DBPATH_PRE "autospell_db.conf");
+#else
 	skill->read_autospell_db(DBPATH "autospell_db.conf");
+#endif
+
 }
 
 static void skill_reload(void)
