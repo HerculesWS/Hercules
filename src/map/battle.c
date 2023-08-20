@@ -2266,7 +2266,14 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					skillratio += 20 * skill_lv;
 					break;
 				case MO_CHAINCOMBO:
+#ifndef RENEWAL
 					skillratio += 50 + 50 * skill_lv;
+#else
+					if (sd != NULL && sd->weapontype == W_KNUCKLE)
+						skillratio += -100 + (250 + 50 * skill_lv) * 2;
+					else
+						skillratio += 150 + 50 * skill_lv;
+#endif
 					break;
 				case MO_COMBOFINISH:
 					skillratio += 140 + 60 * skill_lv;
@@ -4821,6 +4828,11 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 					else if (wflag >= 4)
 						wd.div_ = 4;
 				}
+				break;
+
+			case MO_CHAINCOMBO:
+				if (sd != NULL && sd->weapontype == W_KNUCKLE)
+					wd.div_ = -6;
 				break;
 #endif
 
