@@ -129,6 +129,7 @@ struct unit_interface {
 	int (*is_walking) (struct block_list *bl);
 	int (*can_move) (struct block_list *bl);
 	int (*resume_running) (int tid, int64 tick, int id, intptr_t data);
+	int (*set_walkdelay_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*set_walkdelay) (struct block_list *bl, int64 tick, int delay, int type);
 	int (*skilluse_id2) (struct block_list *src, int target_id, uint16 skill_id, uint16 skill_lv, int casttime, int castcancel);
 	int (*skilluse_pos) (struct block_list *src, short skill_x, short skill_y, uint16 skill_id, uint16 skill_lv);

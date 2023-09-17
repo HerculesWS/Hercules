@@ -9596,6 +9596,8 @@ typedef int (*HPMHOOK_pre_unit_can_move) (struct block_list **bl);
 typedef int (*HPMHOOK_post_unit_can_move) (int retVal___, struct block_list *bl);
 typedef int (*HPMHOOK_pre_unit_resume_running) (int *tid, int64 *tick, int *id, intptr_t *data);
 typedef int (*HPMHOOK_post_unit_resume_running) (int retVal___, int tid, int64 tick, int id, intptr_t data);
+typedef int (*HPMHOOK_pre_unit_set_walkdelay_timer) (int *tid, int64 *tick, int *id, intptr_t *data);
+typedef int (*HPMHOOK_post_unit_set_walkdelay_timer) (int retVal___, int tid, int64 tick, int id, intptr_t data);
 typedef int (*HPMHOOK_pre_unit_set_walkdelay) (struct block_list **bl, int64 *tick, int *delay, int *type);
 typedef int (*HPMHOOK_post_unit_set_walkdelay) (int retVal___, struct block_list *bl, int64 tick, int delay, int type);
 typedef int (*HPMHOOK_pre_unit_skilluse_id2) (struct block_list **src, int *target_id, uint16 *skill_id, uint16 *skill_lv, int *casttime, int *castcancel);

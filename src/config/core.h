@@ -100,6 +100,10 @@
 /// Uncomment for use with Nemo patch ExtendOldCashShopPreview
 //#define ENABLE_OLD_CASHSHOP_PREVIEW_PATCH
 
+/// Uncomment to allow flinch animation and walk delay to be synced
+/// Reduces positional lag when getting hit
+//#define WALKDELAY_SYNC
+
 /**
  * No settings past this point
  **/

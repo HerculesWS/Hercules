@@ -1345,6 +1345,18 @@ static int unit_resume_running(int tid, int64 tick, int id, intptr_t data)
 
 }
 
+/*==========================================
+ * Apply walk delay timer
+ *------------------------------------------*/
+static int unit_set_walkdelay_timer(int tid, int64 tick, int id, intptr_t data)
+{
+	struct block_list* bl = map->id2bl(id);
+	if (bl == NULL)
+		return 1;
+
+	unit->set_walkdelay(bl, tick, (int)data, 0);
+	return 0;
+}
 
 /*==========================================
  * Applies walk delay to character, considering that
@@ -3236,6 +3248,7 @@ void unit_defaults(void)
 	unit->is_walking = unit_is_walking;
 	unit->can_move = unit_can_move;
 	unit->resume_running = unit_resume_running;
+	unit->set_walkdelay_timer = unit_set_walkdelay_timer;
 	unit->set_walkdelay = unit_set_walkdelay;
 	unit->skilluse_id2 = unit_skilluse_id2;
 	unit->skilluse_pos = unit_skilluse_pos;
