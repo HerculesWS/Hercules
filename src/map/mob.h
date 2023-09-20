@@ -574,6 +574,7 @@ struct mob_interface {
 	void (*log_damage) (struct mob_data *md, struct block_list *src, int damage);
 	void (*damage) (struct mob_data *md, struct block_list *src, int damage);
 	int (*dead) (struct mob_data *md, struct block_list *src, int type);
+	int (*drop_bonus_from_sc) (struct map_session_data *sd);
 	void (*revive) (struct mob_data *md, unsigned int hp);
 	int (*guardian_guildchange) (struct mob_data *md);
 	int (*random_class) (int *value, size_t count);

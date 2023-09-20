@@ -2750,12 +2750,8 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 
 					drop_rate_bonus += sd->dropaddrace[md->status.race] + (is_boss(src) ? sd->dropaddrace[RC_BOSS] : sd->dropaddrace[RC_NONBOSS]); // bonus2 bDropAddRace[KeiKun]
 
-					if (sd->sc.data[SC_CASH_RECEIVEITEM] != NULL) // Increase drop rate if user has SC_CASH_RECEIVEITEM
-						drop_rate_bonus += sd->sc.data[SC_CASH_RECEIVEITEM]->val1;
-
-					if (sd->sc.data[SC_OVERLAPEXPUP] != NULL)
-						drop_rate_bonus += sd->sc.data[SC_OVERLAPEXPUP]->val2;
-
+					drop_rate_bonus += mob_drop_bonus_from_sc(sd);
+					
 					if (drop_rate_bonus != 100) {
 						drop_rate = (int)(0.5 + drop_rate * drop_rate_bonus / 100.);
 					}
@@ -3057,6 +3053,24 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 		mob->setdelayspawn(md); //Set respawning.
 	}
 	return 3; //Remove from map.
+}
+
+/*==========================================
+ * additonal drop rate.
+ * for HPM hooking :)
+ *------------------------------------------*/
+static int mob_drop_bonus_from_sc(struct map_session_data *sd)
+{
+	nullpo_retr(0, sd);
+
+	int drop_rate_bonus = 0;
+	if (sd->sc.data[SC_CASH_RECEIVEITEM] != NULL) // Increase drop rate if user has SC_CASH_RECEIVEITEM
+		drop_rate_bonus += sd->sc.data[SC_CASH_RECEIVEITEM]->val1;
+
+	if (sd->sc.data[SC_OVERLAPEXPUP] != NULL)
+		drop_rate_bonus += sd->sc.data[SC_OVERLAPEXPUP]->val2;
+
+	return drop_rate_bonus;
 }
 
 static void mob_revive(struct mob_data *md, unsigned int hp)
@@ -6271,6 +6285,7 @@ void mob_defaults(void)
 	mob->log_damage = mob_log_damage;
 	mob->damage = mob_damage;
 	mob->dead = mob_dead;
+	mob->drop_bonus_from_sc = mob_drop_bonus_from_sc;
 	mob->revive = mob_revive;
 	mob->guardian_guildchange = mob_guardian_guildchange;
 	mob->random_class = mob_random_class;

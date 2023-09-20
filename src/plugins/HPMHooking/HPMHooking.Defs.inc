@@ -6422,6 +6422,8 @@ typedef void (*HPMHOOK_pre_mob_damage) (struct mob_data **md, struct block_list 
 typedef void (*HPMHOOK_post_mob_damage) (struct mob_data *md, struct block_list *src, int damage);
 typedef int (*HPMHOOK_pre_mob_dead) (struct mob_data **md, struct block_list **src, int *type);
 typedef int (*HPMHOOK_post_mob_dead) (int retVal___, struct mob_data *md, struct block_list *src, int type);
+typedef int (*HPMHOOK_pre_mob_drop_bonus_from_sc) (struct map_session_data **sd);
+typedef int (*HPMHOOK_post_mob_drop_bonus_from_sc) (int retVal___, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_mob_revive) (struct mob_data **md, unsigned int *hp);
 typedef void (*HPMHOOK_post_mob_revive) (struct mob_data *md, unsigned int hp);
 typedef int (*HPMHOOK_pre_mob_guardian_guildchange) (struct mob_data **md);
