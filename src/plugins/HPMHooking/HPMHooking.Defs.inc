@@ -443,6 +443,10 @@ typedef const char* (*HPMHOOK_post_atcommand_msgfd) (const char* retVal___, int 
 typedef const char* (*HPMHOOK_pre_atcommand_msgsd) (struct map_session_data **sd, int *msg_number);
 typedef const char* (*HPMHOOK_post_atcommand_msgsd) (const char* retVal___, struct map_session_data *sd, int msg_number);
 #endif // MAP_ATCOMMAND_H
+#ifdef COMMON_BASE62_H /* base62 */
+typedef bool (*HPMHOOK_pre_base62_encode_int_padded) (int *value, char **buf, int *min_len, int *buf_len);
+typedef bool (*HPMHOOK_post_base62_encode_int_padded) (bool retVal___, int value, char *buf, int min_len, int buf_len);
+#endif // COMMON_BASE62_H
 #ifdef MAP_BATTLE_H /* battle */
 typedef void (*HPMHOOK_pre_battle_init) (bool *minimal);
 typedef void (*HPMHOOK_post_battle_init) (bool minimal);

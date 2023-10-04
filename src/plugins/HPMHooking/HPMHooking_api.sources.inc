@@ -29,6 +29,7 @@ HPMHooks.source.HCache = *HCache;
 HPMHooks.source.aclif = *aclif;
 HPMHooks.source.aloginif = *aloginif;
 HPMHooks.source.api = *api;
+HPMHooks.source.base62 = *base62;
 HPMHooks.source.cmdline = *cmdline;
 HPMHooks.source.console = *console;
 HPMHooks.source.core = *core;

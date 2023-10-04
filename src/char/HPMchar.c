@@ -48,6 +48,7 @@
 #include "char/pincode.h"
 
 #include "common/HPMi.h"
+#include "common/base62.h"
 #include "common/conf.h"
 #include "common/console.h"
 #include "common/core.h"

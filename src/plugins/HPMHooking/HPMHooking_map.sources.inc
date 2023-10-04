@@ -28,6 +28,7 @@
 HPMHooks.source.HCache = *HCache;
 HPMHooks.source.achievement = *achievement;
 HPMHooks.source.atcommand = *atcommand;
+HPMHooks.source.base62 = *base62;
 HPMHooks.source.battle = *battle;
 HPMHooks.source.bg = *bg;
 HPMHooks.source.buyingstore = *buyingstore;

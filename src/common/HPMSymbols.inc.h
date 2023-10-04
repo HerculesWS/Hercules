@@ -47,6 +47,9 @@ struct api_interface *api;
 #ifdef MAP_ATCOMMAND_H /* atcommand */
 struct atcommand_interface *atcommand;
 #endif // MAP_ATCOMMAND_H
+#ifdef COMMON_BASE62_H /* base62 */
+struct base62_interface *base62;
+#endif // COMMON_BASE62_H
 #ifdef MAP_BATTLE_H /* battle */
 struct battle_interface *battle;
 #endif // MAP_BATTLE_H
@@ -397,6 +400,10 @@ HPExport const char *HPM_shared_symbols(int server_type)
 	if ((server_type&(SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("atcommand", atcommand))
 		return "atcommand";
 #endif // MAP_ATCOMMAND_H
+#ifdef COMMON_BASE62_H /* base62 */
+	if ((server_type&(SERVER_TYPE_ALL)) != 0 && !HPM_SYMBOL("base62", base62))
+		return "base62";
+#endif // COMMON_BASE62_H
 #ifdef MAP_BATTLE_H /* battle */
 	if ((server_type&(SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("battle", battle))
 		return "battle";

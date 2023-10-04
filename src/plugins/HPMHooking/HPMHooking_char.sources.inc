@@ -26,6 +26,7 @@
 /* GENERATED FILE DO NOT EDIT */
 
 HPMHooks.source.HCache = *HCache;
+HPMHooks.source.base62 = *base62;
 HPMHooks.source.capiif = *capiif;
 HPMHooks.source.chr = *chr;
 HPMHooks.source.cmdline = *cmdline;

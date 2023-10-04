@@ -122,6 +122,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(atcommand->expand_message_table, HP_atcommand_expand_message_table) },
 	{ HP_POP(atcommand->msgfd, HP_atcommand_msgfd) },
 	{ HP_POP(atcommand->msgsd, HP_atcommand_msgsd) },
+/* base62_interface */
+	{ HP_POP(base62->encode_int_padded, HP_base62_encode_int_padded) },
 /* battle_interface */
 	{ HP_POP(battle->init, HP_battle_init) },
 	{ HP_POP(battle->final, HP_battle_final) },

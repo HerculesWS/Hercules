@@ -34,6 +34,7 @@
 #include "login/packets_ac_struct.h"
 #include "login/packets_ca_struct.h"
 #include "common/HPMi.h"
+#include "common/base62.h"
 #include "common/conf.h"
 #include "common/console.h"
 #include "common/core.h"

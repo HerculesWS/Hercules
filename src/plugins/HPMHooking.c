@@ -156,6 +156,7 @@ PRAGMA_GCC5(GCC diagnostic ignored "-Wsuggest-attribute=format")
 #error HPMHooking plugin needs to be compiled for a specific server type. Please make sure your Makefiles are up to date.
 #endif
 PRAGMA_GCC5(GCC diagnostic pop)
+#include "common/base62.h"
 #include "common/conf.h"
 #include "common/console.h"
 #include "common/db.h"

@@ -2537,6 +2537,34 @@ const char* HP_atcommand_msgsd(struct map_session_data *sd, int msg_number) {
 	}
 	return retVal___;
 }
+/* base62_interface */
+bool HP_base62_encode_int_padded(int value, char *buf, int min_len, int buf_len) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_base62_encode_int_padded_pre > 0) {
+		bool (*preHookFunc) (int *value, char **buf, int *min_len, int *buf_len);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_base62_encode_int_padded_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_base62_encode_int_padded_pre[hIndex].func;
+			retVal___ = preHookFunc(&value, &buf, &min_len, &buf_len);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.base62.encode_int_padded(value, buf, min_len, buf_len);
+	}
+	if (HPMHooks.count.HP_base62_encode_int_padded_post > 0) {
+		bool (*postHookFunc) (bool retVal___, int value, char *buf, int min_len, int buf_len);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_base62_encode_int_padded_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_base62_encode_int_padded_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, value, buf, min_len, buf_len);
+		}
+	}
+	return retVal___;
+}
 /* battle_interface */
 void HP_battle_init(bool minimal) {
 	int hIndex = 0;

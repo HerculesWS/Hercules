@@ -50,6 +50,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(account->db_sql_iter_destroy, HP_account_db_sql_iter_destroy) },
 	{ HP_POP(account->db_sql_iter_next, HP_account_db_sql_iter_next) },
 	{ HP_POP(account->db_read_inter, HP_account_db_read_inter) },
+/* base62_interface */
+	{ HP_POP(base62->encode_int_padded, HP_base62_encode_int_padded) },
 /* cmdline_interface */
 	{ HP_POP(cmdline->init, HP_cmdline_init) },
 	{ HP_POP(cmdline->final, HP_cmdline_final) },

@@ -70,6 +70,8 @@ struct {
 	struct HPMHookPoint *HP_account_db_sql_iter_next_post;
 	struct HPMHookPoint *HP_account_db_read_inter_pre;
 	struct HPMHookPoint *HP_account_db_read_inter_post;
+	struct HPMHookPoint *HP_base62_encode_int_padded_pre;
+	struct HPMHookPoint *HP_base62_encode_int_padded_post;
 	struct HPMHookPoint *HP_cmdline_init_pre;
 	struct HPMHookPoint *HP_cmdline_init_post;
 	struct HPMHookPoint *HP_cmdline_final_pre;
@@ -981,6 +983,8 @@ struct {
 	int HP_account_db_sql_iter_next_post;
 	int HP_account_db_read_inter_pre;
 	int HP_account_db_read_inter_post;
+	int HP_base62_encode_int_padded_pre;
+	int HP_base62_encode_int_padded_post;
 	int HP_cmdline_init_pre;
 	int HP_cmdline_init_post;
 	int HP_cmdline_final_pre;
@@ -1850,6 +1854,7 @@ struct {
 struct {
 	struct HCache_interface HCache;
 	struct account_interface account;
+	struct base62_interface base62;
 	struct cmdline_interface cmdline;
 	struct console_interface console;
 	struct core_interface core;

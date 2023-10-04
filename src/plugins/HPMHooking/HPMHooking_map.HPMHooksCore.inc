@@ -212,6 +212,8 @@ struct {
 	struct HPMHookPoint *HP_atcommand_msgfd_post;
 	struct HPMHookPoint *HP_atcommand_msgsd_pre;
 	struct HPMHookPoint *HP_atcommand_msgsd_post;
+	struct HPMHookPoint *HP_base62_encode_int_padded_pre;
+	struct HPMHookPoint *HP_base62_encode_int_padded_post;
 	struct HPMHookPoint *HP_battle_init_pre;
 	struct HPMHookPoint *HP_battle_init_post;
 	struct HPMHookPoint *HP_battle_final_pre;
@@ -7743,6 +7745,8 @@ struct {
 	int HP_atcommand_msgfd_post;
 	int HP_atcommand_msgsd_pre;
 	int HP_atcommand_msgsd_post;
+	int HP_base62_encode_int_padded_pre;
+	int HP_base62_encode_int_padded_post;
 	int HP_battle_init_pre;
 	int HP_battle_init_post;
 	int HP_battle_final_pre;
@@ -15091,6 +15095,7 @@ struct {
 	struct HCache_interface HCache;
 	struct achievement_interface achievement;
 	struct atcommand_interface atcommand;
+	struct base62_interface base62;
 	struct battle_interface battle;
 	struct battleground_interface bg;
 	struct buyingstore_interface buyingstore;
