@@ -690,6 +690,8 @@ struct {
 	struct HPMHookPoint *HP_clif_parse_cmd_post;
 	struct HPMHookPoint *HP_clif_decrypt_cmd_pre;
 	struct HPMHookPoint *HP_clif_decrypt_cmd_post;
+	struct HPMHookPoint *HP_clif_format_itemlink_pre;
+	struct HPMHookPoint *HP_clif_format_itemlink_post;
 	struct HPMHookPoint *HP_clif_authok_pre;
 	struct HPMHookPoint *HP_clif_authok_post;
 	struct HPMHookPoint *HP_clif_auth_error_pre;
@@ -8223,6 +8225,8 @@ struct {
 	int HP_clif_parse_cmd_post;
 	int HP_clif_decrypt_cmd_pre;
 	int HP_clif_decrypt_cmd_post;
+	int HP_clif_format_itemlink_pre;
+	int HP_clif_format_itemlink_post;
 	int HP_clif_authok_pre;
 	int HP_clif_authok_post;
 	int HP_clif_auth_error_pre;

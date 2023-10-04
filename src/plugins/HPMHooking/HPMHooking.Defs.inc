@@ -1332,6 +1332,8 @@ typedef unsigned short (*HPMHOOK_pre_clif_parse_cmd) (int *fd, struct map_sessio
 typedef unsigned short (*HPMHOOK_post_clif_parse_cmd) (unsigned short retVal___, int fd, struct map_session_data *sd);
 typedef unsigned short (*HPMHOOK_pre_clif_decrypt_cmd) (int *cmd, struct map_session_data **sd);
 typedef unsigned short (*HPMHOOK_post_clif_decrypt_cmd) (unsigned short retVal___, int cmd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_format_itemlink) (struct StringBuf **buf, const struct item **it);
+typedef void (*HPMHOOK_post_clif_format_itemlink) (struct StringBuf *buf, const struct item *it);
 typedef void (*HPMHOOK_pre_clif_authok) (struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_authok) (struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_auth_error) (int *fd, int *errorCode);

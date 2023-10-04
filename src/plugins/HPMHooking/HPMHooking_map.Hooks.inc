@@ -8980,6 +8980,32 @@ unsigned short HP_clif_decrypt_cmd(int cmd, struct map_session_data *sd) {
 	}
 	return retVal___;
 }
+void HP_clif_format_itemlink(struct StringBuf *buf, const struct item *it) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_format_itemlink_pre > 0) {
+		void (*preHookFunc) (struct StringBuf **buf, const struct item **it);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_format_itemlink_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_format_itemlink_pre[hIndex].func;
+			preHookFunc(&buf, &it);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.format_itemlink(buf, it);
+	}
+	if (HPMHooks.count.HP_clif_format_itemlink_post > 0) {
+		void (*postHookFunc) (struct StringBuf *buf, const struct item *it);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_format_itemlink_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_format_itemlink_post[hIndex].func;
+			postHookFunc(buf, it);
+		}
+	}
+	return;
+}
 void HP_clif_authok(struct map_session_data *sd) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_authok_pre > 0) {

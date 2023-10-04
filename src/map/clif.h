@@ -31,6 +31,7 @@
 /**
  * Declarations
  **/
+struct StringBuf;
 struct battleground_data;
 struct channel_data;
 struct chat_data;
@@ -960,6 +961,8 @@ struct clif_interface {
 	const struct s_packet_db *(*packet) (int packet_id);
 	unsigned short (*parse_cmd) ( int fd, struct map_session_data *sd );
 	unsigned short (*decrypt_cmd) ( int cmd, struct map_session_data *sd );
+	/* client-specific logic */
+	void (*format_itemlink) (struct StringBuf *buf, const struct item *it);
 	/* auth */
 	void (*authok) (struct map_session_data *sd);
 	void (*auth_error) (int fd, int errorCode);
