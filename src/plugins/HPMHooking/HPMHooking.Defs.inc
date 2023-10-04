@@ -8166,6 +8166,8 @@ typedef void (*HPMHOOK_pre_script_array_remove_member) (struct reg_db **src, str
 typedef void (*HPMHOOK_post_script_array_remove_member) (struct reg_db *src, struct script_array *sa, unsigned int idx);
 typedef void (*HPMHOOK_pre_script_array_add_member) (struct script_array **sa, unsigned int *idx);
 typedef void (*HPMHOOK_post_script_array_add_member) (struct script_array *sa, unsigned int idx);
+typedef int32 (*HPMHOOK_pre_script_array_get_num_member) (struct script_state **st, struct script_data **array_data, int *index);
+typedef int32 (*HPMHOOK_post_script_array_get_num_member) (int32 retVal___, struct script_state *st, struct script_data *array_data, int index);
 typedef unsigned int (*HPMHOOK_pre_script_array_size) (struct script_state **st, struct map_session_data **sd, const char **name, struct reg_db **ref);
 typedef unsigned int (*HPMHOOK_post_script_array_size) (unsigned int retVal___, struct script_state *st, struct map_session_data *sd, const char *name, struct reg_db *ref);
 typedef unsigned int (*HPMHOOK_pre_script_array_highest_key) (struct script_state **st, struct map_session_data **sd, const char **name, struct reg_db **ref);

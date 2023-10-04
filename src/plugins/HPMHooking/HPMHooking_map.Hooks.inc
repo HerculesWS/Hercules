@@ -81263,6 +81263,33 @@ void HP_script_array_add_member(struct script_array *sa, unsigned int idx) {
 	}
 	return;
 }
+int32 HP_script_array_get_num_member(struct script_state *st, struct script_data *array_data, int index) {
+	int hIndex = 0;
+	int32 retVal___ = 0;
+	if (HPMHooks.count.HP_script_array_get_num_member_pre > 0) {
+		int32 (*preHookFunc) (struct script_state **st, struct script_data **array_data, int *index);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_script_array_get_num_member_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_script_array_get_num_member_pre[hIndex].func;
+			retVal___ = preHookFunc(&st, &array_data, &index);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.script.array_get_num_member(st, array_data, index);
+	}
+	if (HPMHooks.count.HP_script_array_get_num_member_post > 0) {
+		int32 (*postHookFunc) (int32 retVal___, struct script_state *st, struct script_data *array_data, int index);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_script_array_get_num_member_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_script_array_get_num_member_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, st, array_data, index);
+		}
+	}
+	return retVal___;
+}
 unsigned int HP_script_array_size(struct script_state *st, struct map_session_data *sd, const char *name, struct reg_db *ref) {
 	int hIndex = 0;
 	unsigned int retVal___ = 0;

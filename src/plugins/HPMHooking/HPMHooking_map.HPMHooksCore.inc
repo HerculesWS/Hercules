@@ -6094,6 +6094,8 @@ struct {
 	struct HPMHookPoint *HP_script_array_remove_member_post;
 	struct HPMHookPoint *HP_script_array_add_member_pre;
 	struct HPMHookPoint *HP_script_array_add_member_post;
+	struct HPMHookPoint *HP_script_array_get_num_member_pre;
+	struct HPMHookPoint *HP_script_array_get_num_member_post;
 	struct HPMHookPoint *HP_script_array_size_pre;
 	struct HPMHookPoint *HP_script_array_size_post;
 	struct HPMHookPoint *HP_script_array_highest_key_pre;
@@ -13629,6 +13631,8 @@ struct {
 	int HP_script_array_remove_member_post;
 	int HP_script_array_add_member_pre;
 	int HP_script_array_add_member_post;
+	int HP_script_array_get_num_member_pre;
+	int HP_script_array_get_num_member_post;
 	int HP_script_array_size_pre;
 	int HP_script_array_size_post;
 	int HP_script_array_highest_key_pre;

@@ -3641,6 +3641,24 @@ static void script_array_update(struct reg_db *src, int64 num, bool empty)
 	}
 }
 
+/**
+ * Given the array array_data, fetches the number value at index.
+ * 
+ * @param st executing script state
+ * @param array_data script_data containing the array paramter to have an index fetched from
+ * @param index index to be fetched
+ * @returns the value in this index. if the index is not set, 0 is returned (like in the script engine)
+ */
+static int32 script_array_get_num_member(struct script_state *st, struct script_data *array_data, int index)
+{
+	uint32 id = reference_getid(array_data);
+	
+	int32 value = (int32) h64BPTRSIZE(script->get_val2(st, reference_uid(id, index), reference_getref(array_data)));
+	script_removetop(st, -1, 0);
+
+	return value;
+}
+
 static void set_reg_npcscope_str(struct script_state *st, struct reg_db *n, int64 num, const char *name, const char *str)
 {
 	if (n)
@@ -30368,6 +30386,7 @@ void script_defaults(void)
 	script->array_src = script_array_src;
 	script->array_update = script_array_update;
 	script->array_add_member = script_array_add_member;
+	script->array_get_num_member = script_array_get_num_member;
 	script->array_remove_member = script_array_remove_member;
 	script->array_delete = script_array_delete;
 	script->array_size = script_array_size;
