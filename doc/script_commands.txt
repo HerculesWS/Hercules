@@ -3547,6 +3547,50 @@ Example:
 
 ---------------------------------------
 
+*getitemlink(<item_id>{, <refine = 0>{, <cards_array = 0>{, <options_array = 0>{, <grade = 0>}}}})
+*getitemlink("<item_name>"{, <refine = 0>{, <cards_array = 0>{, <options_array = 0>{, <grade = 0>}}}})
+
+Get specially formatted client string that represents an item with the given properties.
+
+Parameters:
+- item_id: Item DB id. May be the constant (e.g.: 4001 or Poring_Card)
+- item_name: Item DB name.
+- refine: Item refine amount (optional, defaults to 0)
+- cards_array: An array containing the cards item IDs. (optional, defaults to 0 / no cards)
+- options_array: An array containing option information. (optional, defaults to 0 / no options)
+	Structure: <idx1>, <val1>, <param1>, <idx2>, <val2>, <param2>, ... <idx5>, <val5>, <param5>
+- grade: Item grade (optional, defaults to 0)
+
+
+Example:
+
+	setarray(.@cards, Fabre_Card, 0, 0, Agility1);
+	setarray(.@options,
+		VAR_MAXHPAMOUNT, 10, 0, // option 1
+		VAR_MAXSPAMOUNT, 20, 0  // option 2
+	);
+
+	// In a recent client, shows something like:
+	// Here is my very dangerous item: <+10 Vital Knife [Agi +1]>
+	//
+	// The text between <> is made by the client and is clickable, showing the item options and grade too.
+	dispbottom(sprintf("Here is my very dangerous item: %s", getitemlink(Knife, 10, .@cards, .@options, 3)));
+	end;
+
+
+Client support:
+- PACKETVER_MAIN_NUM < 20150923 and PACKETVER_RE_NUM < 20150819
+	Only item name is returned. As pure string.
+- PACKETVER_MAIN_NUM < 20200916, PACKETVER_RE_NUM < 20200723, PACKETVER_ZERO
+	Grade is ignored. Returns a clickable text.
+- PACKETVER_MAIN_NUM >= 20200916, PACKETVER_RE_NUM >= 20200723
+	Grade is also supported. Returns a clickable text.
+
+Note: The clickable text also depends on where it is used. For example, a "mes" will properly format the item name,
+    but it won't be clickable. While a "dispbottom" shows it formatted and clickable. This is client-defined.
+
+---------------------------------------
+
 *getequipisenableopt(<equipment slot>)
 
 This function checks if the equipped item allows the use of bonus options.

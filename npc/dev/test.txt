@@ -173,6 +173,94 @@ function	script	F_TestCalendarNextTime	{
 	return .@local_check && .@utc_check;
 }
 
+function	script	F_TestGetItemLink_Etc	{
+	.@str$ = getitemlink(Jellopy, 0, 0, 0, 0);
+	.@str2$ = getitemlink(Jellopy);
+
+	// Sanity check, optional parameters should not affect result
+	if (.@str$ != .@str2$) {
+		return false;
+	}
+
+	.@pass = false;
+	if (PACKETVER < 20150923) {
+		.@pass = (.@str$ == getiteminfo(Jellopy, ITEMINFO_NAME));
+	} else if (PACKETVER < 20161116) {
+		.@pass = (.@str$ == "<ITEM>000000eF'00'00'00'00</ITEM>");
+	} else if (PACKETVER < 20200916) {
+		.@pass = (.@str$ == "<ITEML>000000eF&00(00(00(00(00</ITEML>");
+	} else {
+		.@pass = (.@str$ == "<ITEML>000000eF&00'00)00)00)00)00</ITEML>");
+	}
+
+	return .@pass;
+}
+
+function	script	F_TestGetItemLink_Headgear	{
+	.@str$ = getitemlink(Hat, 0, 0, 0, 0);
+	.@str2$ = getitemlink(Hat);
+
+	// Sanity check, optional parameters should not affect result
+	if (.@str$ != .@str2$) {
+		return false;
+	}
+
+	.@pass = false;
+	if (PACKETVER < 20150923) {
+		.@pass = (.@str$ == getiteminfo(Hat, ITEMINFO_NAME));
+	} else if (PACKETVER < 20161116) {
+		.@pass = (.@str$ == "<ITEM>000481zO'00'00'00'00</ITEM>");
+	} else if (PACKETVER < 20200916) {
+		.@pass = (.@str$ == "<ITEML>000481zO&0g(00(00(00(00</ITEML>");
+	} else {
+		.@pass = (.@str$ == "<ITEML>000481zO&0g'00)00)00)00)00</ITEML>");
+	}
+
+	return .@pass;
+}
+
+function	script	F_TestGetItemLink_BaseWeapon	{
+	.@str$ = getitemlink(Knife, 0, 0, 0, 0);
+	.@str2$ = getitemlink(Knife);
+
+	// Sanity check, optional parameters should not affect result
+	if (.@str$ != .@str2$) {
+		return false;
+	}
+
+	.@pass = false;
+	if (PACKETVER < 20150923) {
+		.@pass = (.@str$ == getiteminfo(Knife, ITEMINFO_NAME));
+	} else if (PACKETVER < 20161116) {
+		.@pass = (.@str$ == "<ITEM>000021jn'00'00'00'00</ITEM>");
+	} else if (PACKETVER < 20200916) {
+		.@pass = (.@str$ == "<ITEML>000021jn&00(00(00(00(00</ITEML>");
+	} else {
+		.@pass = (.@str$ == "<ITEML>000021jn&00'00)00)00)00)00</ITEML>");
+	}
+
+	return .@pass;
+}
+
+function	script	F_TestGetItemLink_FullWeapon	{
+	setarray(.@cards[0], Fabre_Card, Captain_Felock_Card, 0, Agility1);
+	setarray(.@options[0], WEAPON_ATTR_GROUND, 1, 0, VAR_MAXHPAMOUNT, 10, 0);
+	.@str$ = getitemlink(Knife, 10, .@cards, .@options, 2);
+
+	.@pass = false;
+	if (PACKETVER < 20150923) {
+		.@pass = (.@str$ == getiteminfo(Knife, ITEMINFO_NAME));
+	} else if (PACKETVER < 20161116) {
+		.@pass = (.@str$ == "<ITEM>000021jn%0a'12y'74q'00'1ei)2R*00+01)01*00+0a</ITEM>");
+	} else if (PACKETVER < 20200916) {
+		.@pass = (.@str$ == "<ITEML>000021jn%0a&00(12y(74q(00(1ei*2R+00,01*01+00,0a</ITEML>");
+	} else {
+		.@pass = (.@str$ == "<ITEML>000021jn%0a&00'02)12y)74q)00)1ei+2R,00-01+01,00-0a</ITEML>");
+	}
+
+	return .@pass;
+}
+
 function	script	HerculesSelfTestHelper	{
 	if (.once > 0)
 		return .errors;
@@ -884,6 +972,11 @@ function	script	HerculesSelfTestHelper	{
 	callsub(OnCheck, "programatic public local call",            callfunctionofnpc("export test", "RefTest", .@refTest = 1), 1337);
 
 	callsub(OnCheck, "getcalendartime: next occurence of current Hour/Minute", F_TestCalendarNextTime(), true);
+
+	callsub(OnCheck, "getitemlink: etc tag", F_TestGetItemLink_Etc(), true);
+	callsub(OnCheck, "getitemlink: headgear tag", F_TestGetItemLink_Headgear(), true);
+	callsub(OnCheck, "getitemlink: basic weapon tag", F_TestGetItemLink_BaseWeapon(), true);
+	callsub(OnCheck, "getitemlink: complete weapon tag", F_TestGetItemLink_FullWeapon(), true);
 
 	if (.errors) {
 		consolemes(CONSOLEMES_DEBUG, "Script engine self-test   [ \033[0;31mFAILED\033[0m ]");
