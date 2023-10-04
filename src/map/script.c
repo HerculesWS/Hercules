@@ -3450,6 +3450,9 @@ static void script_array_ensure_zero(struct script_state *st, struct map_session
 }
 /**
  * Returns array size by ID
+ * @remarks
+ *   "size" here refers to allocated indexes, where non-zero values are set.
+ *   For the highest used index, see script_array_highest_key
  **/
 static unsigned int script_array_size(struct script_state *st, struct map_session_data *sd, const char *name, struct reg_db *ref)
 {
