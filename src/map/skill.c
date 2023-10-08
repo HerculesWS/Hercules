@@ -21645,7 +21645,7 @@ static void skill_config_set_level(struct config_setting_t *conf, int *arr)
 	if (config_setting_is_group(conf)) {
 		for (i=0; i<MAX_SKILL_LEVEL; i++) {
 			char level[6]; // enough to contain "Lv100" in case of custom MAX_SKILL_LEVEL
-			sprintf(level, "Lv%d", i+1);
+			snprintf(level, sizeof(level), "Lv%d", i + 1);
 			libconfig->setting_lookup_int(conf, level, &arr[i]);
 		}
 	} else if (config_setting_is_array(conf)) {
