@@ -1185,6 +1185,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		#define MAP_SEARCHSTORE_H
 	#endif // MAP_SEARCHSTORE_H
 	#ifdef MAP_SKILL_H
+		{ "s_autospell_db", sizeof(struct s_autospell_db), SERVER_TYPE_MAP },
 		{ "s_skill_abra_db", sizeof(struct s_skill_abra_db), SERVER_TYPE_MAP },
 		{ "s_skill_arrow_db", sizeof(struct s_skill_arrow_db), SERVER_TYPE_MAP },
 		{ "s_skill_changematerial_db", sizeof(struct s_skill_changematerial_db), SERVER_TYPE_MAP },

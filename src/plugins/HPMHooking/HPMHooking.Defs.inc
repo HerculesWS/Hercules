@@ -8748,6 +8748,16 @@ typedef void (*HPMHOOK_pre_skill_validate_additional_fields) (struct config_sett
 typedef void (*HPMHOOK_post_skill_validate_additional_fields) (struct config_setting_t *conf, struct s_skill_db *sk, bool inherited);
 typedef bool (*HPMHOOK_pre_skill_read_skilldb) (const char **filename);
 typedef bool (*HPMHOOK_post_skill_read_skilldb) (bool retVal___, const char *filename);
+typedef void (*HPMHOOK_pre_skill_read_autospell_skill_id) (struct config_setting_t **conf, struct s_autospell_db **sk, int *index);
+typedef void (*HPMHOOK_post_skill_read_autospell_skill_id) (struct config_setting_t *conf, struct s_autospell_db *sk, int index);
+typedef void (*HPMHOOK_pre_skill_read_autospell_skill_level) (struct config_setting_t **conf, struct s_autospell_db **sk);
+typedef void (*HPMHOOK_post_skill_read_autospell_skill_level) (struct config_setting_t *conf, struct s_autospell_db *sk);
+typedef void (*HPMHOOK_pre_skill_read_autospell_additional_fields) (struct config_setting_t **conf, struct s_autospell_db **sk);
+typedef void (*HPMHOOK_post_skill_read_autospell_additional_fields) (struct config_setting_t *conf, struct s_autospell_db *sk);
+typedef int (*HPMHOOK_pre_skill_autospell_db_entry_compare) (const void **entry1, const void **entry2);
+typedef int (*HPMHOOK_post_skill_autospell_db_entry_compare) (int retVal___, const void *entry1, const void *entry2);
+typedef bool (*HPMHOOK_pre_skill_read_autospell_db) (const char **filename);
+typedef bool (*HPMHOOK_post_skill_read_autospell_db) (bool retVal___, const char *filename);
 typedef void (*HPMHOOK_pre_skill_config_set_level) (struct config_setting_t **conf, int **arr);
 typedef void (*HPMHOOK_post_skill_config_set_level) (struct config_setting_t *conf, int *arr);
 typedef void (*HPMHOOK_pre_skill_level_set_value) (int **arr, int *value);

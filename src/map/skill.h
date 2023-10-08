@@ -77,6 +77,7 @@ struct status_change_entry;
 
 #define MAX_SKILL_SPELLBOOK_DB     17
 #define MAX_SKILL_MAGICMUSHROOM_DB 23
+#define MAX_AUTOSPELL_DB           7
 
 //Walk intervals at which chase-skills are attempted to be triggered.
 #define WALK_SKILL_INTERVAL 5
@@ -1810,6 +1811,14 @@ enum skill_enabled_npc_flags {
  * Structures
  **/
 
+/** Information about a possible skill for AutoSpell */
+struct s_autospell_db {
+	int autospell_level; //< Minimum AutoSpell level to show this skill
+	int skill_id; //< Skill Id
+	int skill_lv[MAX_SKILL_LEVEL]; //< Maximum usable skill level at each AutoSpell level
+	bool spirit_boost; //< Whether Sage's Spirit boosts this skill to maximum level
+};
+
 /** A container holding all required items. **/
 struct skill_required_item_data {
 	struct {
@@ -2016,6 +2025,10 @@ BEGIN_ZEROED_BLOCK; // This block will be zeroed in skill_defaults() as well as 
 	struct s_skill_improvise_db improvise_db[MAX_SKILL_IMPROVISE_DB];
 	struct s_skill_changematerial_db changematerial_db[MAX_SKILL_PRODUCE_DB];
 	struct s_skill_spellbook_db spellbook_db[MAX_SKILL_SPELLBOOK_DB];
+	/**
+	 * Skills for AutoSpell. entries with autospell_level = 0 are unused (and always at the end)
+	 */
+	struct s_autospell_db autospell_db[MAX_AUTOSPELL_DB];
 END_ZEROED_BLOCK;
 	struct s_skill_unit_layout unit_layout[MAX_SKILL_UNIT_LAYOUT];
 };
@@ -2292,6 +2305,11 @@ struct skill_interface {
 	void (*validate_status_change) (struct config_setting_t *conf, struct s_skill_db *sk, bool inherited);
 	void (*validate_additional_fields) (struct config_setting_t *conf, struct s_skill_db *sk, bool inherited);
 	bool (*read_skilldb) (const char *filename);
+	void (*read_autospell_skill_id) (struct config_setting_t *conf, struct s_autospell_db *sk, int index);
+	void (*read_autospell_skill_level) (struct config_setting_t *conf, struct s_autospell_db *sk);
+	void (*read_autospell_additional_fields) (struct config_setting_t *conf, struct s_autospell_db *sk);
+	int (*autospell_db_entry_compare) (const void *entry1, const void *entry2);
+	bool (*read_autospell_db) (const char *filename);
 	void (*config_set_level) (struct config_setting_t *conf, int *arr);
 	void (*level_set_value) (int *arr, int value);
 	bool (*parse_row_producedb) (char* split[], int columns, int current);

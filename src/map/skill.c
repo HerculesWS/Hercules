@@ -16489,7 +16489,7 @@ static bool skill_items_required(struct map_session_data *sd, int skill_id, int 
 
 /**
  * Checks conditions for a skill to be executed. This check happens after the cast time was completed.
- * 
+ *
  * @param sd The character who cast the skill.
  * @param skill_id The skill's ID.
  * @param skill_lv The skill's level.
@@ -16692,7 +16692,7 @@ static int skill_check_condition_castend(struct map_session_data *sd, uint16 ski
 
 /**
  * Checks conditions for a skill to be executed. This check happens after the cast time was completed.
- * 
+ *
  * @param sd The character who cast the skill.
  * @param skill_id The skill's ID.
  * @param skill_lv The skill's level.
@@ -21769,7 +21769,7 @@ static void skill_validate_max_level(struct config_setting_t *conf, struct s_ski
  * @param conf The libconfig settings block which contains the skill's data.
  * @param sk The s_skill_db struct where the description should be set it.
  * @param inherited Whether this record is an inherited entry (thus sk already has a valid value)
- * 
+ *
  **/
 static void skill_validate_description(struct config_setting_t *conf, struct s_skill_db *sk, bool inherited)
 {
@@ -22016,7 +22016,7 @@ static void skill_validate_skillinfo(struct config_setting_t *conf, struct s_ski
 			{ "RangeModByResearchTrap", INF2_RANGE_RESEARCHTRAP },
 			{ "AllowPlagiarism", INF2_ALLOW_PLAGIARIZE },
 		};
-		
+
 		while ((tt = libconfig->setting_get_elem(t, i++)) != NULL) {
 			const char *skill_info = config_setting_name(tt);
 			bool on = libconfig->setting_get_bool_real(tt);
@@ -24724,11 +24724,228 @@ static bool skill_read_skilldb(const char *filename)
 		idb_iput(loaded_ids_db, tmp_db.nameid, true);
 		count++;
 	}
-	
+
 	db_destroy(loaded_ids_db);
 
 	libconfig->destroy(&skilldb);
 	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	return true;
+}
+
+/**
+ * Reads a AutoSpell skill's Id (SkillId) when reading the autospell DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The autospell_skill struct where the id should be set.
+ */
+static void skill_read_autospell_skill_id(struct config_setting_t *conf, struct s_autospell_db *sk, int index)
+{
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	sk->skill_id = 0;
+
+	const char *skill_name = NULL;
+	int skill_id = 0;
+
+	if (libconfig->setting_lookup_int(conf, "SkillId", &skill_id) == CONFIG_FALSE) {
+		if (libconfig->setting_lookup_string(conf, "SkillId", &skill_name) == CONFIG_FALSE) {
+			ShowError("%s: Invalid AutoSpell db entry \"%d\". SkillId is required. Skipping...\n", __func__, index);
+			return;
+		}
+
+		skill_id = skill->name2id(skill_name);
+	}
+
+	if (skill_id == 0) {
+		if (skill_name != NULL)
+			ShowError("%s: Invalid AutoSpell db entry \"%d\". SkillId \"%s\" doesn't exists. Skipping...\n", __func__, index, skill_name);
+		else
+			ShowError("%s: Invalid AutoSpell db entry \"%d\". SkillId \"%d\" doesn't exists. Skipping...\n", __func__, index, skill_id);
+		return;
+	}
+
+	sk->skill_id = skill_id;
+}
+
+/**
+ * Reads a AutoSpell skill's usable levels (SkillLevel) when reading the autospell DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The autospell_skill struct where the level should be set.
+ */
+static void skill_read_autospell_skill_level(struct config_setting_t *conf, struct s_autospell_db *sk)
+{
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	skill->level_set_value(sk->skill_lv, 0);
+
+	struct config_setting_t *t = libconfig->setting_get_member(conf, "SkillLevel");
+
+	if (t != NULL && config_setting_is_group(t)) {
+		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
+			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
+			snprintf(lv, sizeof(lv), "Lv%d", i + 1);
+
+			int level;
+			if (libconfig->setting_lookup_int(t, lv, &level) == CONFIG_TRUE) {
+				if (level >= 0 && level <= MAX_SKILL_LEVEL)
+					sk->skill_lv[i] = level;
+				else
+					ShowWarning("%s: Invalid SkillLevel %d specified in level %d for skill ID %d in %s! Minimum is 0, maximum is %d. Defaulting to 0...\n",
+						    __func__, level, i + 1, sk->skill_id, conf->file, MAX_SKILL_LEVEL);
+			}
+		}
+
+		return;
+	}
+
+	int level;
+	if (libconfig->setting_lookup_int(conf, "SkillLevel", &level) == CONFIG_TRUE) {
+		if (level >= 0 && level <= MAX_SKILL_LEVEL)
+			skill->level_set_value(sk->skill_lv, level);
+		else
+			ShowWarning("%s: Invalid SkillLevel %d specified for skill ID %d in %s! Minimum is 0, maximum is %d. Defaulting to 0...\n",
+				    __func__, level, sk->skill_id, conf->file, MAX_SKILL_LEVEL);
+	}
+}
+
+/**
+ * Reads additional field settings via plugins when parsing autospell_db.conf
+ * @param   conf    struct, pointer to the entry configuration
+ * @param   sk      struct, struct, pointer to s_autospell_db
+ */
+static void skill_read_autospell_additional_fields(struct config_setting_t *conf, struct s_autospell_db *sk)
+{
+	// Does nothing like a boss. *cough* plugins *cough*
+}
+
+/**
+ * Compares two autospell db entries and sort it as the database expects:
+ * 1. autospell_level = 0 (blank entries) goes to the end
+ * 2. entries are sorted by autospell_level in ascending order
+ *
+ * @param entry1 first entry to compare
+ * @param entry2 second entry to compare
+ * @returns
+ * - < 0 if entry1 should go before entry2 ;
+ * - 0 if entry1 and entry2 are equivalent in sorting ;
+ * - > 0 if entry2 should go before entry1
+ */
+static int skill_autospell_db_entry_compare(const void *entry1, const void *entry2)
+{
+	nullpo_ret(entry1);
+	nullpo_ret(entry2);
+
+	struct s_autospell_db *entry1_ = (struct s_autospell_db *) entry1;
+	struct s_autospell_db *entry2_ = (struct s_autospell_db *) entry2;
+
+	// autospell_level == 0 is always at the end of the list, because they are unused entries
+	if (entry1_->autospell_level == 0 && entry2_->autospell_level != 0)
+		return 1;
+
+	if (entry2_->autospell_level == 0 && entry1_->autospell_level != 0)
+		return -1;
+
+	return entry1_->autospell_level - entry2_->autospell_level;
+}
+
+/**
+ * Reads autospell_db.conf into skill->dbs->autospell_db
+ * @param filename file to be loaded
+ * @returns true if the configuration was read (even if with some errors), false otherwise
+ */
+static bool skill_read_autospell_db(const char *filename)
+{
+	nullpo_retr(false, filename);
+
+	char filepath[256];
+
+	libconfig->format_db_path(filename, filepath, sizeof(filepath));
+
+	if (!exists(filepath)) {
+		ShowError("%s: Can't find file %s! Abort reading AutoSpell skills...\n", __func__, filepath);
+		return false;
+	}
+
+	struct config_t autospelldb;
+
+	if (libconfig->load_file(&autospelldb, filepath) == 0)
+		return false; // Libconfig error report.
+
+	struct config_setting_t *sk = libconfig->setting_get_member(autospelldb.root, "autospell_db");
+	if (sk == NULL) {
+		ShowError("%s: AutoSpell DB could not be loaded! Please check %s.\n", __func__, filepath);
+		libconfig->destroy(&autospelldb);
+		return false;
+	}
+
+	struct config_setting_t *conf;
+	int index = 0;
+	int count = 0;
+
+	// Map int -> bool
+	struct DBMap *loaded_skills_db = idb_alloc(DB_OPT_BASE);
+
+	while ((conf = libconfig->setting_get_elem(sk, index++)) != NULL) {
+		struct s_autospell_db tmp_db = {0};
+
+		skill->read_autospell_skill_id(conf, &tmp_db, index);
+		if (tmp_db.skill_id == 0)
+			continue;
+
+		const char *skill_name = skill->dbs->db[skill->get_index(tmp_db.skill_id)].name;
+
+		if (idb_exists(loaded_skills_db, tmp_db.skill_id)) {
+			ShowError("%s: Invalid AutoSpell db entry \"%d\". Skill \"%s\" (id: %d) duplicated. Skipping...\n", __func__, index, skill_name, tmp_db.skill_id);
+			continue;
+		}
+
+		skill->read_autospell_skill_level(conf, &tmp_db);
+
+		tmp_db.spirit_boost = false;
+		if (libconfig->setting_lookup_bool_real(conf, "SpiritBoost", &tmp_db.spirit_boost) == CONFIG_FALSE)
+			tmp_db.spirit_boost = false;
+
+		skill->read_autospell_additional_fields(conf, &tmp_db);
+
+		int min_level = 0;
+		ARR_FIND(0, MAX_SKILL_LEVEL, min_level, (tmp_db.skill_lv[min_level] != 0));
+		if (min_level == MAX_SKILL_LEVEL) {
+			ShowError("%s: Invalid AutoSpell db entry \"%d\". Skill \"%s\" (id: %d) is never usable (SkillLevel is always 0). Skipping...\n",
+			    __func__, index, skill_name, tmp_db.skill_id);
+			continue;
+		}
+
+		tmp_db.autospell_level = min_level + 1;
+
+		if (count >= MAX_AUTOSPELL_DB) {
+			ShowWarning("%s: Could not add skill \"%s\" (Id: \"%d\") to AutoSpell DB. Limit reached (see MAX_AUTOSPELL_DB). Skipping...\n",
+			    __func__, skill_name, tmp_db.skill_id);
+			continue;
+		}
+
+		skill->dbs->autospell_db[count] = tmp_db;
+		idb_iput(loaded_skills_db, tmp_db.skill_id, true);
+
+		count++;
+	}
+
+#if PACKETVER_MAIN_NUM < 20181128 && PACKETVER_RE_NUM < 20181031
+	if (count > 7) {
+		ShowWarning("%s: Your current packet version only supports up to 7 autospell skills, but your autospell db contains \"%d\" skills. Some skills may not be shown.\n", __func__, count);
+		ShowWarning("%s:    Update your packet version or reduce the number of skills to fix this warning.\n", __func__);
+	}
+#endif
+
+	db_destroy(loaded_skills_db);
+	libconfig->destroy(&autospelldb);
+
+	qsort(skill->dbs->autospell_db, MAX_AUTOSPELL_DB, sizeof(struct s_autospell_db), skill->autospell_db_entry_compare);
+
+	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+
 	return true;
 }
 
@@ -24774,7 +24991,7 @@ static void skill_readdb(bool minimal)
 		struct s_skill_db *db = &skill->dbs->db[i];
 		if (db->nameid == 0)
 			continue;
-		
+
 		if (skill->name2id(db->name) != 0) {
 			ShowError("%s: Duplicated skill name %s found for Skill ID %d (Other Skill ID: %d). Skipping name...",
 				__func__, db->name, db->nameid, skill->name2id(db->name));
@@ -24798,6 +25015,7 @@ static void skill_readdb(bool minimal)
 	sv->readdb(map->db_path, "magicmushroom_db.txt",         ',',   1,                        1, MAX_SKILL_MAGICMUSHROOM_DB, skill->parse_row_magicmushroomdb);
 	sv->readdb(map->db_path, "skill_improvise_db.txt",       ',',   2,                        2,     MAX_SKILL_IMPROVISE_DB, skill->parse_row_improvisedb);
 	sv->readdb(map->db_path, "skill_changematerial_db.txt",  ',',   4,                    4+2*5,       MAX_SKILL_PRODUCE_DB, skill->parse_row_changematerialdb);
+	skill->read_autospell_db(DBPATH "autospell_db.conf");
 }
 
 static void skill_reload(void)
@@ -25161,6 +25379,13 @@ void skill_defaults(void)
 	skill->validate_status_change = skill_validate_status_change;
 	skill->validate_additional_fields = skill_validate_additional_fields;
 	skill->read_skilldb = skill_read_skilldb;
+	/* AutoSpell DB Libconfig */
+	skill->read_autospell_skill_id = skill_read_autospell_skill_id;
+	skill->read_autospell_skill_level = skill_read_autospell_skill_level;
+	skill->read_autospell_additional_fields = skill_read_autospell_additional_fields;
+	skill->autospell_db_entry_compare = skill_autospell_db_entry_compare;
+	skill->read_autospell_db = skill_read_autospell_db;
+	/* db reading helpers */
 	skill->config_set_level = skill_config_set_level;
 	skill->level_set_value = skill_level_set_value;
 	/* */
