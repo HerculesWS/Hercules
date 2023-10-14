@@ -3338,11 +3338,11 @@ static void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag
 				amotion = amotion * st->aspd_rate / 1000;
 			if (sd && sd->ud.skilltimer != INVALID_TIMER) {
 				if (pc->checkskill(sd, SA_FREECAST) > 0) {
-					amotion = amotion * 5 * (pc->checkskill(sd, SA_FREECAST) + 10) / 100;
+					amotion = amotion * (150 - 5 * pc->checkskill(sd, SA_FREECAST)) / 100;
 				} else {
 					struct unit_data *ud = unit->bl2ud(bl);
 					if (ud && (skill->get_inf2(ud->skill_id) & INF2_FREE_CAST_REDUCED) != 0) {
-						amotion = amotion * 5 * (ud->skill_lv + 10) / 100;
+						amotion = amotion * (150 - 5 * ud->skill_lv) / 100;
 					}
 				}
 			}
