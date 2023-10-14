@@ -1469,15 +1469,17 @@ static int64 battle_calc_defense(int attack_type, struct block_list *src, struct
 						def2 -= penalty;
 					}
 				}
-#ifndef RENEWAL
-				if (skill_id == AM_ACIDTERROR)
-					def1 = 0; // Acid Terror ignores only armor defense. [Skotlex]
-#endif
-				if (def1 < 0)
-					def1 = 0;
-				if (def2 < 1)
-					def2 = 1;
 			}
+
+#ifndef RENEWAL
+			if (skill_id == AM_ACIDTERROR)
+				def1 = 0; // Acid Terror ignores only armor defense. [Skotlex]
+#endif
+			if (def1 < 0)
+				def1 = 0;
+			if (def2 < 1)
+				def2 = 1;
+			
 			//Vitality reduction from rodatazone: http://rodatazone.simgaming.net/mechanics/substats.php#def
 			if (tsd) {
 				//Sd vit-eq
