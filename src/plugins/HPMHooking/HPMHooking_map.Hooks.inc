@@ -100199,6 +100199,33 @@ int HP_unit_resume_running(int tid, int64 tick, int id, intptr_t data) {
 	}
 	return retVal___;
 }
+int HP_unit_set_walkdelay_timer(int tid, int64 tick, int id, intptr_t data) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_unit_set_walkdelay_timer_pre > 0) {
+		int (*preHookFunc) (int *tid, int64 *tick, int *id, intptr_t *data);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_unit_set_walkdelay_timer_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_unit_set_walkdelay_timer_pre[hIndex].func;
+			retVal___ = preHookFunc(&tid, &tick, &id, &data);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.unit.set_walkdelay_timer(tid, tick, id, data);
+	}
+	if (HPMHooks.count.HP_unit_set_walkdelay_timer_post > 0) {
+		int (*postHookFunc) (int retVal___, int tid, int64 tick, int id, intptr_t data);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_unit_set_walkdelay_timer_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_unit_set_walkdelay_timer_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, tid, tick, id, data);
+		}
+	}
+	return retVal___;
+}
 int HP_unit_set_walkdelay(struct block_list *bl, int64 tick, int delay, int type) {
 	int hIndex = 0;
 	int retVal___ = 0;

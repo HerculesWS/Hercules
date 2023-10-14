@@ -408,8 +408,10 @@ static int status_damage(struct block_list *src, struct block_list *target, int6
 
 	if (st->hp || (flag&8)) {
 		//Still lives or has been dead before this damage.
+#ifndef WALKDELAY_SYNC
 		if (walkdelay)
 			unit->set_walkdelay(target, timer->gettick(), walkdelay, 0);
+#endif
 		return (int)(hp+sp);
 	}
 

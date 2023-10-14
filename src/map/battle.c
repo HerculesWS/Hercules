@@ -350,7 +350,9 @@ static int battle_delay_damage(int64 tick, int amotion, struct block_list *src, 
 	if (src->type == BL_PC) {
 		BL_UCAST(BL_PC, src)->delayed_damage++;
 	}
-
+#ifdef WALKDELAY_SYNC
+	timer->add(tick + ddelay, unit->set_walkdelay_timer, target->id, ddelay);
+#endif
 	timer->add(tick+amotion, battle->delay_damage_sub, 0, (intptr_t)dat);
 
 	return 0;

@@ -5146,6 +5146,10 @@ static int clif_damage(struct block_list *src, struct block_list *dst, int sdela
 #endif
 
 	type = clif_calc_delay(type,div,damage+damage2,ddelay);
+#ifdef WALKDELAY_SYNC
+	// Send adjusted delay to client
+	ddelay = clif->calc_walkdelay(dst, ddelay, type, damage + damage2, div);
+#endif
 
 	p.PacketType = damageType;
 	p.GID = src->id;
@@ -5191,7 +5195,11 @@ static int clif_damage(struct block_list *src, struct block_list *dst, int sdela
 	}
 
 	//Return adjusted can't walk delay for further processing.
-	return clif->calc_walkdelay(dst,ddelay,type,damage+damage2,div);
+#ifdef WALKDELAY_SYNC
+	return ddelay;
+#else
+	return clif->calc_walkdelay(dst, ddelay, type, damage + damage2, div);
+#endif
 }
 
 /*==========================================

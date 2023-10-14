@@ -3835,6 +3835,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(unit->is_walking, HP_unit_is_walking) },
 	{ HP_POP(unit->can_move, HP_unit_can_move) },
 	{ HP_POP(unit->resume_running, HP_unit_resume_running) },
+	{ HP_POP(unit->set_walkdelay_timer, HP_unit_set_walkdelay_timer) },
 	{ HP_POP(unit->set_walkdelay, HP_unit_set_walkdelay) },
 	{ HP_POP(unit->skilluse_id2, HP_unit_skilluse_id2) },
 	{ HP_POP(unit->skilluse_pos, HP_unit_skilluse_pos) },
