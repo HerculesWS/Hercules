@@ -25,6 +25,8 @@
 #include "common/nullpo.h"
 #include "common/utils.h"
 
+#include <string.h>
+
 static struct base62_interface base62_s;
 struct base62_interface *base62;
 
@@ -57,12 +59,13 @@ static char base62tbl[62] = {
 static bool base62_encode_int_padded(int value, char *buf, int min_len, int buf_len)
 {
 	nullpo_retr(false, buf);
+
+	// if caller ignores an error, at least it gets a NULL-terminated string
+	memset(buf, '\0', buf_len);
+
 	Assert_retr(false, min_len < buf_len);
 	Assert_retr(false, buf_len >= 2);
 	
-	// if caller ignores an error, at least it gets a NULL-terminated string
-	buf[0] = '\0';
-
 	char temp_buf[BASE62_INT_BUFFER_LEN] = { 0 };
 	int max_idx = cap_value(buf_len - 2, 0, BASE62_INT_BUFFER_LEN - 2);
 
@@ -76,7 +79,7 @@ static bool base62_encode_int_padded(int value, char *buf, int min_len, int buf_
 	Assert_retr(false, (value == 0));
 
 	int final_buf_idx = 0;
-	
+
 	if (idx < min_len) {
 		int pad_size = min_len - idx;
 		for (int i = 0; i < pad_size; ++i) {

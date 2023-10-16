@@ -59,9 +59,9 @@
 } while (false)
 
 #define expect_int(message, actual, expected, ...) \
-	expect("%d", (actual == expected), message, actual, expected, ##__VA_ARGS__)
+	expect("%d", ((actual) == (expected)), message, (actual), (expected), ##__VA_ARGS__)
 #define expect_str(message, actual, expected, ...) \
-	expect("%s", (strcmp(actual, expected) == 0), message, actual, expected, ##__VA_ARGS__)
+	expect("%s", (strcmp((actual), (expected)) == 0), message, (actual), (expected), ##__VA_ARGS__)
 
 static bool test_base62_encode_int_padded(void)
 {
@@ -100,7 +100,7 @@ static bool test_base62_encode_int_padded(void)
 		// This will show an assert error to alert server owners that the used buffer is too small
 		bool res = base62->encode_int_padded(INT_MAX - 1, output, 5, sizeof(output));
 		expect_int("To fail the encoding", res, false);
-		expect_int("To have a NULL-terminated buffer", output[6], '\0');
+		expect_int("To have a NULL-terminated buffer", output[5], '\0');
 	}
 
 	return passed;
