@@ -32,6 +32,8 @@ struct {
 	struct HPMHookPoint *HP_HCache_check_post;
 	struct HPMHookPoint *HP_HCache_open_pre;
 	struct HPMHookPoint *HP_HCache_open_post;
+	struct HPMHookPoint *HP_base62_encode_int_padded_pre;
+	struct HPMHookPoint *HP_base62_encode_int_padded_post;
 	struct HPMHookPoint *HP_capiif_init_pre;
 	struct HPMHookPoint *HP_capiif_init_post;
 	struct HPMHookPoint *HP_capiif_final_pre;
@@ -1801,6 +1803,8 @@ struct {
 	int HP_HCache_check_post;
 	int HP_HCache_open_pre;
 	int HP_HCache_open_post;
+	int HP_base62_encode_int_padded_pre;
+	int HP_base62_encode_int_padded_post;
 	int HP_capiif_init_pre;
 	int HP_capiif_init_post;
 	int HP_capiif_final_pre;
@@ -3565,6 +3569,7 @@ struct {
 
 struct {
 	struct HCache_interface HCache;
+	struct base62_interface base62;
 	struct capiif_interface capiif;
 	struct char_interface chr;
 	struct cmdline_interface cmdline;

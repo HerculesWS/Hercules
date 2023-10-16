@@ -122,6 +122,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(atcommand->expand_message_table, HP_atcommand_expand_message_table) },
 	{ HP_POP(atcommand->msgfd, HP_atcommand_msgfd) },
 	{ HP_POP(atcommand->msgsd, HP_atcommand_msgsd) },
+/* base62_interface */
+	{ HP_POP(base62->encode_int_padded, HP_base62_encode_int_padded) },
 /* battle_interface */
 	{ HP_POP(battle->init, HP_battle_init) },
 	{ HP_POP(battle->final, HP_battle_final) },
@@ -368,6 +370,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->packet, HP_clif_packet) },
 	{ HP_POP(clif->parse_cmd, HP_clif_parse_cmd) },
 	{ HP_POP(clif->decrypt_cmd, HP_clif_decrypt_cmd) },
+	{ HP_POP(clif->format_itemlink, HP_clif_format_itemlink) },
 	{ HP_POP(clif->authok, HP_clif_authok) },
 	{ HP_POP(clif->auth_error, HP_clif_auth_error) },
 	{ HP_POP(clif->authrefuse, HP_clif_authrefuse) },
@@ -3117,6 +3120,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(script->array_delete, HP_script_array_delete) },
 	{ HP_POP(script->array_remove_member, HP_script_array_remove_member) },
 	{ HP_POP(script->array_add_member, HP_script_array_add_member) },
+	{ HP_POP(script->array_get_num_member, HP_script_array_get_num_member) },
 	{ HP_POP(script->array_size, HP_script_array_size) },
 	{ HP_POP(script->array_highest_key, HP_script_array_highest_key) },
 	{ HP_POP(script->array_free_db, HP_script_array_free_db) },

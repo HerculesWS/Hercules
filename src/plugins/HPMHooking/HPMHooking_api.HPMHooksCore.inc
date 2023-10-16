@@ -212,6 +212,8 @@ struct {
 	struct HPMHookPoint *HP_api_check_connect_login_server_post;
 	struct HPMHookPoint *HP_api_do_shutdown_pre;
 	struct HPMHookPoint *HP_api_do_shutdown_post;
+	struct HPMHookPoint *HP_base62_encode_int_padded_pre;
+	struct HPMHookPoint *HP_base62_encode_int_padded_post;
 	struct HPMHookPoint *HP_cmdline_init_pre;
 	struct HPMHookPoint *HP_cmdline_init_post;
 	struct HPMHookPoint *HP_cmdline_final_pre;
@@ -1221,6 +1223,8 @@ struct {
 	int HP_api_check_connect_login_server_post;
 	int HP_api_do_shutdown_pre;
 	int HP_api_do_shutdown_post;
+	int HP_base62_encode_int_padded_pre;
+	int HP_base62_encode_int_padded_post;
 	int HP_cmdline_init_pre;
 	int HP_cmdline_init_post;
 	int HP_cmdline_final_pre;
@@ -2048,6 +2052,7 @@ struct {
 	struct aclif_interface aclif;
 	struct aloginif_interface aloginif;
 	struct api_interface api;
+	struct base62_interface base62;
 	struct cmdline_interface cmdline;
 	struct console_interface console;
 	struct core_interface core;

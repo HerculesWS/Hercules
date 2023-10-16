@@ -249,6 +249,11 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#else
 		#define COMMON_APIPACKETS_H
 	#endif // COMMON_APIPACKETS_H
+	#ifdef COMMON_BASE62_H
+		{ "base62_interface", sizeof(struct base62_interface), SERVER_TYPE_ALL },
+	#else
+		#define COMMON_BASE62_H
+	#endif // COMMON_BASE62_H
 	#ifdef COMMON_CHARMAPPACKETS_H
 		{ "PACKET_CHARMAP_AGENCY_JOIN_PARTY", sizeof(struct PACKET_CHARMAP_AGENCY_JOIN_PARTY), SERVER_TYPE_ALL },
 		{ "PACKET_CHARMAP_GUILD_EMBLEM", sizeof(struct PACKET_CHARMAP_GUILD_EMBLEM), SERVER_TYPE_ALL },

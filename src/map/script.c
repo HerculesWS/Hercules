@@ -3450,6 +3450,9 @@ static void script_array_ensure_zero(struct script_state *st, struct map_session
 }
 /**
  * Returns array size by ID
+ * @remarks
+ *   "size" here refers to allocated indexes, where non-zero values are set.
+ *   For the highest used index, see script_array_highest_key
  **/
 static unsigned int script_array_size(struct script_state *st, struct map_session_data *sd, const char *name, struct reg_db *ref)
 {
@@ -3639,6 +3642,24 @@ static void script_array_update(struct reg_db *src, int64 num, bool empty)
 		script->array_add_member(sa,index);
 		idb_put(src->arrays, id, sa);
 	}
+}
+
+/**
+ * Given the array array_data, fetches the number value at index.
+ *
+ * @param st executing script state
+ * @param array_data script_data containing the array paramter to have an index fetched from
+ * @param index index to be fetched
+ * @returns the value in this index. if the index is not set, 0 is returned (like in the script engine)
+ */
+static int32 script_array_get_num_member(struct script_state *st, struct script_data *array_data, int index)
+{
+	uint32 id = reference_getid(array_data);
+
+	int32 value = (int32) h64BPTRSIZE(script->get_val2(st, reference_uid(id, index), reference_getref(array_data)));
+	script_removetop(st, -1, 0);
+
+	return value;
 }
 
 static void set_reg_npcscope_str(struct script_state *st, struct reg_db *n, int64 num, const char *name, const char *str)
@@ -11903,7 +11924,7 @@ static BUILDIN(itemskill)
 	int flag = script_hasdata(st, 4) ? script_getnum(st, 4) : ISF_NONE;
 
 	sd->auto_cast_current.itemskill_check_conditions = ((flag & ISF_CHECKCONDITIONS) == ISF_CHECKCONDITIONS);
-	
+
 	bool cast_on_self = ((flag & ISF_CASTONSELF) == ISF_CASTONSELF);
 	struct block_list *target = cast_on_self ? &sd->bl : NULL;
 	if (sd->auto_cast_current.itemskill_check_conditions) {
@@ -16372,6 +16393,108 @@ static BUILDIN(setiteminfo)
 		return false;
 	}
 	script_pushint(st,value);
+	return true;
+}
+
+/**
+ * Creates a Item Link tag for the given item info.
+ *
+ * getitemlink(<item_id>{, <refine = 0>{, <cards_array = 0>{, <options_array = 0>{, <grade = 0>}}}})
+ * getitemlink("<item_name>"{, <refine = 0>{, <cards_array = 0>{, <options_array = 0>{, <grade = 0>}}}})
+ */
+static BUILDIN(getitemlink)
+{
+	struct item_data *itd;
+
+	if (script_isstringtype(st, 2)) { /// Item name.
+		const char *name = script_getstr(st, 2);
+		itd = itemdb->search_name(name);
+
+		if (itd == NULL)
+			ShowError("%s: Non-existent item name \"%s\".\n", __func__, name);
+	} else { /// Item ID.
+		itd = itemdb->exists(script_getnum(st, 2));
+
+		if (itd == NULL)
+			ShowError("%s: Non-existent item id \"%d\".\n", __func__, script_getnum(st, 2));
+	}
+
+	if (itd == NULL) {
+		script_pushconststr(st, "");
+		return false;
+	}
+
+	struct item link_item = { 0 };
+	link_item.nameid = itd->nameid;
+	link_item.refine = script_hasdata(st, 3) ? script_getnum(st, 3) : 0;
+
+	// Cards
+	if (script_hasdata(st, 4)) {
+		struct script_data *data = script_getdata(st, 4);
+		const char *name = reference_getname(data);
+
+		struct map_session_data *sd = NULL;
+		if (data_isreference(data) && is_int_variable(name)) {
+			if (not_server_variable(*name)) {
+				sd = script->rid2sd(st);
+				if (sd == NULL)
+					return true; // no player attached
+			}
+
+			int array_size = script->array_highest_key(st, sd, name, reference_getref(data));
+			array_size = cap_value(array_size, 0, MAX_SLOTS);
+
+			for (int i = 0; i < array_size; ++i)
+				link_item.card[i] = script->array_get_num_member(st, data, i);
+		} else if (!data_isint(data) || script_getnum(st, 4) != 0) {
+			ShowError("%s: Invalid card list received. Card list must be 0 or an array of card IDs (number)\n", __func__);
+			script->reportdata(data);
+			script_pushconststr(st, "");
+			return true;
+		}
+	}
+
+	// Options
+	if (script_hasdata(st, 5)) {
+		struct script_data *data = script_getdata(st, 5);
+		const char *name = reference_getname(data);
+
+		if (data_isreference(data) && is_int_variable(name)) {
+			struct map_session_data *sd = NULL;
+			if (not_server_variable(*name)) {
+				sd = script->rid2sd(st);
+				if (sd == NULL)
+					return true; // no player attached
+			}
+
+			int array_size = script->array_highest_key(st, sd, reference_getname(data), reference_getref(data));
+			array_size = cap_value(array_size, 0, MAX_ITEM_OPTIONS * 3);
+
+			// arrays ending with 0 will have arraysize not divisible by 3, but acessing those indexes will result in 0
+			for (int i = 0, j = 0; i < array_size; i += 3, ++j) {
+				link_item.option[j].index = script->array_get_num_member(st, data, i);
+				link_item.option[j].value = script->array_get_num_member(st, data, i + 1);
+				link_item.option[j].param = script->array_get_num_member(st, data, i + 2);
+			}
+		} else if (!data_isint(data) || script_getnum(st, 5) != 0) {
+			ShowError("%s: Invalid options list received. Option list must be 0 or an array of option data (number, number, number)\n", __func__);
+			script->reportdata(data);
+			script_pushconststr(st, "");
+			return false;
+		}
+	}
+
+	if (script_hasdata(st, 6))
+		link_item.grade = script_getnum(st, 6);
+
+	StringBuf buf;
+	StrBuf->Init(&buf);
+
+	clif->format_itemlink(&buf, &link_item);
+	script_pushstrcopy(st, StrBuf->Value(&buf));
+
+	StrBuf->Destroy(&buf);
+
 	return true;
 }
 
@@ -28761,6 +28884,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(strcmp,"ss"),
 		BUILDIN_DEF(getiteminfo,"vi"), //[Lupus] returns Items Buy / sell Price, etc info
 		BUILDIN_DEF(setiteminfo,"iii"), //[Lupus] set Items Buy / sell Price, etc info
+		BUILDIN_DEF(getitemlink, "v????"),
 		BUILDIN_DEF(getequipcardid,"ii"), //[Lupus] returns CARD ID or other info from CARD slot N of equipped item
 		BUILDIN_DEF(getequippedoptioninfo, "i"),
 		BUILDIN_DEF(getequipoption, "iii"),
@@ -30368,6 +30492,7 @@ void script_defaults(void)
 	script->array_src = script_array_src;
 	script->array_update = script_array_update;
 	script->array_add_member = script_array_add_member;
+	script->array_get_num_member = script_array_get_num_member;
 	script->array_remove_member = script_array_remove_member;
 	script->array_delete = script_array_delete;
 	script->array_size = script_array_size;

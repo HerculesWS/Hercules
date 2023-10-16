@@ -176,6 +176,7 @@ struct item_data;
 #define script_getvaridx(var) ( (uint32)(int64)((var >> 32) & 0xFFFFFFFF) )
 
 #define not_server_variable(prefix) ( (prefix) != '$' && (prefix) != '.' && (prefix) != '\'')
+#define is_int_variable(name) ( (name)[strlen(name) - 1] != '$' )
 #define is_string_variable(name) ( (name)[strlen(name) - 1] == '$' )
 
 #define BUILDIN(x) bool buildin_ ## x (struct script_state* st)
@@ -1097,6 +1098,7 @@ struct script_interface {
 	void (*array_delete) (struct reg_db *src, struct script_array *sa);
 	void (*array_remove_member) (struct reg_db *src, struct script_array *sa, unsigned int idx);
 	void (*array_add_member) (struct script_array *sa, unsigned int idx);
+	int32 (*array_get_num_member) (struct script_state *st, struct script_data *array_data, int index);
 	unsigned int (*array_size) (struct script_state *st, struct map_session_data *sd, const char *name, struct reg_db *ref);
 	unsigned int (*array_highest_key) (struct script_state *st, struct map_session_data *sd, const char *name, struct reg_db *ref);
 	int (*array_free_db) (union DBKey key, struct DBData *data, va_list ap);

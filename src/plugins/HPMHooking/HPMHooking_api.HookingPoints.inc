@@ -123,6 +123,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(api->config_read_inter, HP_api_config_read_inter) },
 	{ HP_POP(api->check_connect_login_server, HP_api_check_connect_login_server) },
 	{ HP_POP(api->do_shutdown, HP_api_do_shutdown) },
+/* base62_interface */
+	{ HP_POP(base62->encode_int_padded, HP_base62_encode_int_padded) },
 /* cmdline_interface */
 	{ HP_POP(cmdline->init, HP_cmdline_init) },
 	{ HP_POP(cmdline->final, HP_cmdline_final) },

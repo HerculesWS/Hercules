@@ -443,6 +443,10 @@ typedef const char* (*HPMHOOK_post_atcommand_msgfd) (const char* retVal___, int 
 typedef const char* (*HPMHOOK_pre_atcommand_msgsd) (struct map_session_data **sd, int *msg_number);
 typedef const char* (*HPMHOOK_post_atcommand_msgsd) (const char* retVal___, struct map_session_data *sd, int msg_number);
 #endif // MAP_ATCOMMAND_H
+#ifdef COMMON_BASE62_H /* base62 */
+typedef bool (*HPMHOOK_pre_base62_encode_int_padded) (int *value, char **buf, int *min_len, int *buf_len);
+typedef bool (*HPMHOOK_post_base62_encode_int_padded) (bool retVal___, int value, char *buf, int min_len, int buf_len);
+#endif // COMMON_BASE62_H
 #ifdef MAP_BATTLE_H /* battle */
 typedef void (*HPMHOOK_pre_battle_init) (bool *minimal);
 typedef void (*HPMHOOK_post_battle_init) (bool minimal);
@@ -1328,6 +1332,8 @@ typedef unsigned short (*HPMHOOK_pre_clif_parse_cmd) (int *fd, struct map_sessio
 typedef unsigned short (*HPMHOOK_post_clif_parse_cmd) (unsigned short retVal___, int fd, struct map_session_data *sd);
 typedef unsigned short (*HPMHOOK_pre_clif_decrypt_cmd) (int *cmd, struct map_session_data **sd);
 typedef unsigned short (*HPMHOOK_post_clif_decrypt_cmd) (unsigned short retVal___, int cmd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_format_itemlink) (struct StringBuf **buf, const struct item **it);
+typedef void (*HPMHOOK_post_clif_format_itemlink) (struct StringBuf *buf, const struct item *it);
 typedef void (*HPMHOOK_pre_clif_authok) (struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_authok) (struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_auth_error) (int *fd, int *errorCode);
@@ -8160,6 +8166,8 @@ typedef void (*HPMHOOK_pre_script_array_remove_member) (struct reg_db **src, str
 typedef void (*HPMHOOK_post_script_array_remove_member) (struct reg_db *src, struct script_array *sa, unsigned int idx);
 typedef void (*HPMHOOK_pre_script_array_add_member) (struct script_array **sa, unsigned int *idx);
 typedef void (*HPMHOOK_post_script_array_add_member) (struct script_array *sa, unsigned int idx);
+typedef int32 (*HPMHOOK_pre_script_array_get_num_member) (struct script_state **st, struct script_data **array_data, int *index);
+typedef int32 (*HPMHOOK_post_script_array_get_num_member) (int32 retVal___, struct script_state *st, struct script_data *array_data, int index);
 typedef unsigned int (*HPMHOOK_pre_script_array_size) (struct script_state **st, struct map_session_data **sd, const char **name, struct reg_db **ref);
 typedef unsigned int (*HPMHOOK_post_script_array_size) (unsigned int retVal___, struct script_state *st, struct map_session_data *sd, const char *name, struct reg_db *ref);
 typedef unsigned int (*HPMHOOK_pre_script_array_highest_key) (struct script_state **st, struct map_session_data **sd, const char **name, struct reg_db **ref);

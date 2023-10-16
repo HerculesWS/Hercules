@@ -24,6 +24,7 @@
 #include "core.h"
 
 #include "common/HPM.h"
+#include "common/base62.h"
 #include "common/cbasetypes.h"
 #include "common/conf.h"
 #include "common/console.h"
@@ -266,6 +267,7 @@ static void core_defaults(void)
 	rnd_defaults();
 	md5_defaults();
 	thread_defaults();
+	base62_defaults();
 }
 
 /**

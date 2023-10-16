@@ -25,6 +25,7 @@
 #include "common/cbasetypes.h"
 
 #include "common/HPMi.h"
+#include "common/base62.h"
 #include "common/chunked/rfifo.h"
 #include "common/conf.h"
 #include "common/console.h"

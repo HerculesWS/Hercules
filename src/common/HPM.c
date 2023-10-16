@@ -22,6 +22,7 @@
 #include "config/core.h" // CONSOLE_INPUT
 #include "HPM.h"
 
+#include "common/base62.h"
 #include "common/cbasetypes.h"
 #include "common/conf.h"
 #include "common/console.h"

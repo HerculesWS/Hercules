@@ -212,6 +212,8 @@ struct {
 	struct HPMHookPoint *HP_atcommand_msgfd_post;
 	struct HPMHookPoint *HP_atcommand_msgsd_pre;
 	struct HPMHookPoint *HP_atcommand_msgsd_post;
+	struct HPMHookPoint *HP_base62_encode_int_padded_pre;
+	struct HPMHookPoint *HP_base62_encode_int_padded_post;
 	struct HPMHookPoint *HP_battle_init_pre;
 	struct HPMHookPoint *HP_battle_init_post;
 	struct HPMHookPoint *HP_battle_final_pre;
@@ -688,6 +690,8 @@ struct {
 	struct HPMHookPoint *HP_clif_parse_cmd_post;
 	struct HPMHookPoint *HP_clif_decrypt_cmd_pre;
 	struct HPMHookPoint *HP_clif_decrypt_cmd_post;
+	struct HPMHookPoint *HP_clif_format_itemlink_pre;
+	struct HPMHookPoint *HP_clif_format_itemlink_post;
 	struct HPMHookPoint *HP_clif_authok_pre;
 	struct HPMHookPoint *HP_clif_authok_post;
 	struct HPMHookPoint *HP_clif_auth_error_pre;
@@ -6090,6 +6094,8 @@ struct {
 	struct HPMHookPoint *HP_script_array_remove_member_post;
 	struct HPMHookPoint *HP_script_array_add_member_pre;
 	struct HPMHookPoint *HP_script_array_add_member_post;
+	struct HPMHookPoint *HP_script_array_get_num_member_pre;
+	struct HPMHookPoint *HP_script_array_get_num_member_post;
 	struct HPMHookPoint *HP_script_array_size_pre;
 	struct HPMHookPoint *HP_script_array_size_post;
 	struct HPMHookPoint *HP_script_array_highest_key_pre;
@@ -7745,6 +7751,8 @@ struct {
 	int HP_atcommand_msgfd_post;
 	int HP_atcommand_msgsd_pre;
 	int HP_atcommand_msgsd_post;
+	int HP_base62_encode_int_padded_pre;
+	int HP_base62_encode_int_padded_post;
 	int HP_battle_init_pre;
 	int HP_battle_init_post;
 	int HP_battle_final_pre;
@@ -8221,6 +8229,8 @@ struct {
 	int HP_clif_parse_cmd_post;
 	int HP_clif_decrypt_cmd_pre;
 	int HP_clif_decrypt_cmd_post;
+	int HP_clif_format_itemlink_pre;
+	int HP_clif_format_itemlink_post;
 	int HP_clif_authok_pre;
 	int HP_clif_authok_post;
 	int HP_clif_auth_error_pre;
@@ -13623,6 +13633,8 @@ struct {
 	int HP_script_array_remove_member_post;
 	int HP_script_array_add_member_pre;
 	int HP_script_array_add_member_post;
+	int HP_script_array_get_num_member_pre;
+	int HP_script_array_get_num_member_post;
 	int HP_script_array_size_pre;
 	int HP_script_array_size_post;
 	int HP_script_array_highest_key_pre;
@@ -15095,6 +15107,7 @@ struct {
 	struct HCache_interface HCache;
 	struct achievement_interface achievement;
 	struct atcommand_interface atcommand;
+	struct base62_interface base62;
 	struct battle_interface battle;
 	struct battleground_interface bg;
 	struct buyingstore_interface buyingstore;

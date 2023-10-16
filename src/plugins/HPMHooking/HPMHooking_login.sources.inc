@@ -27,6 +27,7 @@
 
 HPMHooks.source.HCache = *HCache;
 HPMHooks.source.account = *account;
+HPMHooks.source.base62 = *base62;
 HPMHooks.source.cmdline = *cmdline;
 HPMHooks.source.console = *console;
 HPMHooks.source.core = *core;

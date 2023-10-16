@@ -30,6 +30,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(HCache->init, HP_HCache_init) },
 	{ HP_POP(HCache->check, HP_HCache_check) },
 	{ HP_POP(HCache->open, HP_HCache_open) },
+/* base62_interface */
+	{ HP_POP(base62->encode_int_padded, HP_base62_encode_int_padded) },
 /* capiif_interface */
 	{ HP_POP(capiif->init, HP_capiif_init) },
 	{ HP_POP(capiif->final, HP_capiif_final) },

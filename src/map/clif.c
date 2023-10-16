@@ -64,6 +64,7 @@
 #include "map/vending.h"
 #include "map/achievement.h"
 #include "common/HPM.h"
+#include "common/base62.h"
 #include "common/cbasetypes.h"
 #include "common/conf.h"
 #include "common/ers.h"
@@ -25963,6 +25964,109 @@ static void clif_parse_adventuterAgencyJoinResult(int fd, struct map_session_dat
 #endif
 }
 
+/**
+ * Creates a "item link" tag (<ITEML>) string representing item "it" into buf.
+ * The resulting format and feature support is client-specific (newer clients supports more).
+ *
+ * @param buf buffer where the string will be written to
+ * @param it item data to be formatted
+ */
+static void clif_format_itemlink(StringBuf *buf, const struct item *it)
+{
+	nullpo_retv(buf);
+	nullpo_retv(it);
+
+	struct item_data *itd = itemdb->search(it->nameid);
+	if (itd == &itemdb->dummy) {
+		StrBuf->Printf(buf, "%s", itd->jname);
+		return;
+	}
+
+#if PACKETVER_MAIN_NUM < 20150923 && PACKETVER_RE_NUM < 20150819 && !defined(PACKETVER_ZERO)
+	// Client-versions that doesn't support <ITEML>, return the item name and ends.
+	StrBuf->Printf(buf, "%s", itd->jname);
+	return;
+#endif // PACKETVER_MAIN_NUM < 20150923 && PACKETVER_RE_NUM < 20150819 && !defined(PACKETVER_ZERO)
+
+	// Separators that didn't change along the time
+	static const char ref_sep = '%';
+#if PACKETVER >= 20161116
+	static const char view_sep = '&';
+#endif
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+	static const char grade_sep = '\'';
+#endif
+
+	// Separators that were updated along the time
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+	static const char *tag_name = "ITEML";
+	static const char card_sep = ')';
+	static const char optid_sep  = '+';
+	static const char optpar_sep = ',';
+	static const char optval_sep = '-';
+#elif PACKETVER_MAIN_NUM >= 20161116 || PACKETVER_RE_NUM >= 20161116 || defined(PACKETVER_ZERO)
+	static const char *tag_name = "ITEML";
+	static const char card_sep = '(';
+	static const char optid_sep  = '*';
+	static const char optpar_sep = '+';
+	static const char optval_sep = ',';
+#else // PACKETVER_MAIN_NUM >= 20150923 || PACKETVER_RE_NUM >= 20150819 || defined(PACKETVER_ZERO)
+	static const char *tag_name = "ITEM";
+	static const char card_sep = '\'';
+	static const char optid_sep  = ')';
+	static const char optpar_sep = '*';
+	static const char optval_sep = '+';
+#endif
+
+	const bool isequip = itemdb->isequip2(itd);
+
+	char output[BASE62_INT_BUFFER_LEN];
+
+	/**
+	 * To make it easier to read the string building below. This takes care of getting a base62 str and
+	 * returning an empty string in case something goes wrong.
+	 * @param value value to encode
+	 * @param min_len the minimum length the string should have. Shorter encoded-strings will be padded.
+	 */
+	#define get_padded_value(value, min_len) \
+		(base62->encode_int_padded(value, output, min_len, sizeof(output)) ? output : "")
+
+	StrBuf->Printf(buf, "<%s>", tag_name);
+
+	StrBuf->Printf(buf, "%s", get_padded_value(itd->equip, 5));
+	StrBuf->Printf(buf, "%s", get_padded_value((isequip ? 1 : 0), 1));
+	StrBuf->Printf(buf, "%s", get_padded_value(it->nameid, 0));
+	if (it->refine > 0)
+		StrBuf->Printf(buf, "%c%s", ref_sep, get_padded_value(it->refine, 2));
+
+#if PACKETVER >= 20161116
+	StrBuf->Printf(buf, "%c%s", view_sep, get_padded_value(itd->view_sprite, 2));
+#endif // PACKETVER >= 20161116
+
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+	StrBuf->Printf(buf, "%c%s", grade_sep, get_padded_value(it->grade, 2));
+#endif // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+
+	// From tests, when client is writting, it writes only the real slots (e.g. a Knife[3] would write 3 cards)
+	// but if there are 0 slots or there is a stats gem in "non-slot" positions, it writes all 4 slots.
+	// Also from tests, always sending the 4 slots works fine.
+	for (int i = 0; i < MAX_SLOTS; i++)
+		StrBuf->Printf(buf, "%c%s", card_sep, get_padded_value(it->card[i], 2));
+
+	for (int i = 0; i < MAX_ITEM_OPTIONS; i++) {
+		if (it->option[i].index == 0)
+			continue;
+
+		StrBuf->Printf(buf, "%c%s", optid_sep, get_padded_value(it->option[i].index, 2));
+		StrBuf->Printf(buf, "%c%s", optpar_sep, get_padded_value(it->option[i].param, 2));
+		StrBuf->Printf(buf, "%c%s", optval_sep, get_padded_value(it->option[i].value, 2));
+	}
+
+	StrBuf->Printf(buf, "</%s>", tag_name);
+
+	#undef get_padded_value
+}
+
 /*==========================================
  * Main client packet processing function
  *------------------------------------------*/
@@ -27322,4 +27426,6 @@ void clif_defaults(void)
 	clif->adventurerAgencyResult = clif_adventurerAgencyResult;
 	clif->adventurerAgencyJoinReq = clif_adventurerAgencyJoinReq;
 	clif->pAdventuterAgencyJoinResult = clif_parse_adventuterAgencyJoinResult;
+
+	clif->format_itemlink = clif_format_itemlink;
 }
