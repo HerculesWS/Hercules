@@ -16,7 +16,7 @@ environment:
     HerculesProject: Hercules-16.sln
   - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
     HerculesProject: Hercules-17.sln
-services: mysql56
+services: mysql
 build_script:
 - cmd: MSBuild %HerculesProject% /t:map-server,char-server,login-server
 test: off
