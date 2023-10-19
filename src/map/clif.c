@@ -8007,46 +8007,43 @@ static void clif_pet_food(struct map_session_data *sd, int foodid, int fail)
 	WFIFOSET(fd, sizeof(struct PACKET_ZC_FEED_PET));
 }
 
-/// Presents a list of skills that can be auto-spelled (ZC_AUTOSPELLLIST).
-/// 01cd { <skill id>.L }*7
-static void clif_autospell(struct map_session_data *sd, uint16 skill_lv)
+/**
+ * Presents a list of skills that can be auto-spelled (ZC_AUTOSPELLLIST).
+ *
+ * 01cd { <skill id>.L }*7
+ * 0afb <packet len>.W { <skills>.L }*
+ *
+ * @param sd player who will receive the list
+ * @param skill_lv autospell skill level
+ * @param skill_ids_list list of available skills to choose from
+ * @param list_len length of skill_ids_list
+ */
+static void clif_autospell(struct map_session_data *sd, uint16 skill_lv, int *skill_ids_list, int list_len)
 {
 #if PACKETVER_MAIN_NUM >= 20090406 || defined(PACKETVER_RE) || defined(PACKETVER_ZERO) || PACKETVER_SAK_NUM >= 20080618
 	nullpo_retv(sd);
 
-	int fd = sd->fd;
 #if PACKETVER_MAIN_NUM >= 20181128 || PACKETVER_RE_NUM >= 20181031
-	// reserve space for 7 skills
-	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_AUTOSPELLLIST) + 4 * 7);
-#else
-	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_AUTOSPELLLIST));
-#endif
-	struct PACKET_ZC_AUTOSPELLLIST *p = WFIFOP(fd, 0);
-	memset(p, 0, sizeof(struct PACKET_ZC_AUTOSPELLLIST));
-	p->packetType = HEADER_ZC_AUTOSPELLLIST;
-	int index = 0;
-
-	if (skill_lv > 0 && pc->checkskill(sd, MG_NAPALMBEAT) > 0)
-		p->skills[index++] = MG_NAPALMBEAT;
-	if (skill_lv > 1 && pc->checkskill(sd, MG_COLDBOLT) > 0)
-		p->skills[index++] = MG_COLDBOLT;
-	if (skill_lv > 1 && pc->checkskill(sd, MG_FIREBOLT) > 0)
-		p->skills[index++] = MG_FIREBOLT;
-	if (skill_lv > 1 && pc->checkskill(sd, MG_LIGHTNINGBOLT) > 0)
-		p->skills[index++] = MG_LIGHTNINGBOLT;
-	if (skill_lv > 4 && pc->checkskill(sd, MG_SOULSTRIKE) > 0)
-		p->skills[index++] = MG_SOULSTRIKE;
-	if (skill_lv > 7 && pc->checkskill(sd, MG_FIREBALL) > 0)
-		p->skills[index++] = MG_FIREBALL;
-	if (skill_lv > 9 && pc->checkskill(sd, MG_FROSTDIVER) > 0)
-		p->skills[index++] = MG_FROSTDIVER;
-
-#if PACKETVER_MAIN_NUM >= 20181128 || PACKETVER_RE_NUM >= 20181031
-	const int len = sizeof(struct PACKET_ZC_AUTOSPELLLIST) + index * 4;
-	p->packetLength = len;
+	const int len = sizeof(struct PACKET_ZC_AUTOSPELLLIST) + sizeof(int) * list_len;
 #else
 	const int len = sizeof(struct PACKET_ZC_AUTOSPELLLIST);
+	if (list_len > 7) {
+		ShowError("%s: AutoSpell list too big for current client. Limit: %d, received: %d. Truncating list...\n", __func__, 7, list_len);
+		list_len = 7;
+	}
 #endif
+
+	int fd = sd->fd;
+	WFIFOHEAD(fd, len);
+
+	struct PACKET_ZC_AUTOSPELLLIST *p = WFIFOP(fd, 0);
+	memset(p, 0, sizeof(struct PACKET_ZC_AUTOSPELLLIST));
+
+	p->packetType = HEADER_ZC_AUTOSPELLLIST;
+#if PACKETVER_MAIN_NUM >= 20181128 || PACKETVER_RE_NUM >= 20181031
+	p->packetLength = len;
+#endif
+	memcpy(p->skills, skill_ids_list, sizeof(int) * list_len);
 	WFIFOSET(fd, len);
 
 	sd->menuskill_id = SA_AUTOSPELL;
@@ -14199,7 +14196,7 @@ static void clif_parse_AutoSpell(int fd, struct map_session_data *sd)
 	if( !skill_id )
 		return;
 
-	skill->autospell(sd, skill_id);
+	skill->autospell_spell_selected(sd, skill_id);
 	clif_menuskill_clear(sd);
 }
 
