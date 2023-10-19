@@ -16,6 +16,9 @@
     <ClCompile Include="..\src\login\loginlog.c">
       <Filter>login</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\common\base62.c">
+      <Filter>common</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\common\conf.c">
       <Filter>common</Filter>
     </ClCompile>
@@ -124,6 +127,9 @@
       <Filter>login</Filter>
     </ClInclude>
     <ClInclude Include="..\src\common\cbasetypes.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\base62.h">
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="..\src\common\conf.h">
