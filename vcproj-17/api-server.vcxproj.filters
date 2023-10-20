@@ -64,6 +64,7 @@
     <ClCompile Include="..\src\common\mapindex.c">
       <Filter>commom</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\common\base62.c" />
     <ClCompile Include="..\src\common\conf.c" />
     <ClCompile Include="..\src\common\core.c" />
     <ClCompile Include="..\src\common\des.c" />
@@ -133,6 +134,9 @@
       <Filter>commom</Filter>
     </ClInclude>
     <ClInclude Include="..\src\common\cbasetypes.h">
+      <Filter>commom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\base62.h">
       <Filter>commom</Filter>
     </ClInclude>
     <ClInclude Include="..\src\common\conf.h">

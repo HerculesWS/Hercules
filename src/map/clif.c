@@ -25990,12 +25990,12 @@ static void clif_format_itemlink(StringBuf *buf, const struct item *it)
 #if PACKETVER >= 20161116
 	static const char view_sep = '&';
 #endif
-#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 	static const char grade_sep = '\'';
 #endif
 
 	// Separators that were updated along the time
-#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 	static const char *tag_name = "ITEML";
 	static const char card_sep = ')';
 	static const char optid_sep  = '+';
@@ -26040,7 +26040,7 @@ static void clif_format_itemlink(StringBuf *buf, const struct item *it)
 	StrBuf->Printf(buf, "%c%s", view_sep, get_padded_value(itd->view_sprite, 2));
 #endif // PACKETVER >= 20161116
 
-#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 	StrBuf->Printf(buf, "%c%s", grade_sep, get_padded_value(it->grade, 2));
 #endif // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723
 

@@ -359,10 +359,12 @@ static void testChunkedBuf2(char *data, int sz)
 	fake_rflags = NULL;
 }
 
+#define MAX_TEST_BUFFER 10000
+
 static void testChunkedBuf(char *data, int sz)
 {
 	if (sz == 0)
-		sz = (int)strlen(data);
+		sz = (int) strnlen(data, MAX_TEST_BUFFER);
 	for (int f = 1; f < 30; f ++) {
 		fake_wchunk_size = f;
 		testChunkedBuf2(data, sz);
@@ -380,7 +382,7 @@ static void testChunked1(void)
 	testChunkedBuf("", 0);
 	show_success = false;
 	ShowStatus("Test long chunked\n");
-	for (int f = 0; f < 10000; f += 100) {
+	for (int f = 0; f < MAX_TEST_BUFFER; f += 100) {
 		// reallocate buffer always for detect overflow
 		char *buf = aCalloc(1, f);
 		for (int i = 0; i < f; i ++) {

@@ -243,7 +243,7 @@ function	script	F_TestGetItemLink_BaseWeapon	{
 }
 
 function	script	F_TestGetItemLink_FullWeapon	{
-	setarray(.@cards[0], Fabre_Card, Captain_Felock_Card, 0, Agility1);
+	setarray(.@cards[0], Fabre_Card, Necromancer_Card, 0, Agility1);
 	setarray(.@options[0], WEAPON_ATTR_GROUND, 1, 0, VAR_MAXHPAMOUNT, 10, 0);
 	.@str$ = getitemlink(Knife, 10, .@cards, .@options, 2);
 
@@ -251,11 +251,11 @@ function	script	F_TestGetItemLink_FullWeapon	{
 	if (PACKETVER < 20150923) {
 		.@pass = (.@str$ == getiteminfo(Knife, ITEMINFO_NAME));
 	} else if (PACKETVER < 20161116) {
-		.@pass = (.@str$ == "<ITEM>000021jn%0a'12y'74q'00'1ei)2R*00+01)01*00+0a</ITEM>");
+		.@pass = (.@str$ == "<ITEM>000021jn%0a'12y'19C'00'1ei)2R*00+01)01*00+0a</ITEM>");
 	} else if (PACKETVER < 20200916) {
-		.@pass = (.@str$ == "<ITEML>000021jn%0a&00(12y(74q(00(1ei*2R+00,01*01+00,0a</ITEML>");
+		.@pass = (.@str$ == "<ITEML>000021jn%0a&00(12y(19C(00(1ei*2R+00,01*01+00,0a</ITEML>");
 	} else {
-		.@pass = (.@str$ == "<ITEML>000021jn%0a&00'02)12y)74q)00)1ei+2R,00-01+01,00-0a</ITEML>");
+		.@pass = (.@str$ == "<ITEML>000021jn%0a&00'02)12y)19C)00)1ei+2R,00-01+01,00-0a</ITEML>");
 	}
 
 	return .@pass;

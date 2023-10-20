@@ -169,6 +169,7 @@
     <ClInclude Include="..\src\api\urlhandlers.h" />
     <ClInclude Include="..\src\common\atomic.h" />
     <ClInclude Include="..\src\common\cbasetypes.h" />
+    <ClInclude Include="..\src\common\base62.h" />
     <ClInclude Include="..\src\common\conf.h" />
     <ClInclude Include="..\src\common\console.h" />
     <ClInclude Include="..\src\common\core.h" />
@@ -234,6 +235,7 @@
     <ClCompile Include="..\src\api\jsonparser.c" />
     <ClCompile Include="..\src\api\jsonwriter.c" />
     <ClCompile Include="..\src\api\postheader.c" />
+    <ClCompile Include="..\src\common\base62.c" />
     <ClCompile Include="..\src\common\conf.c" />
     <ClCompile Include="..\src\common\console.c" />
     <ClCompile Include="..\src\common\core.c" />

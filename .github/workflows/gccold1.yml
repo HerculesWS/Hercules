@@ -25,6 +25,13 @@ jobs:
         exclude:
           - PACKET_VERSION: "--enable-packetver=20100105"
             CLIENT_TYPE: "--enable-packetver-zero"
+
+    # github.head_ref will stop previous runs in the same PR (if in a PR)
+    # github.run_id is a fallback when outside a PR (e.g. every merge in master will run, and previous won't stop)
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}-${{ matrix.CC }}-${{ matrix.RENEWAL }}-${{ matrix.CLIENT_TYPE }}-${{ matrix.HTTPLIB }}-${{ matrix.SANITIZER }}-${{ matrix.PACKET_VERSION}}-${{ matrix.LTO }}
+      cancel-in-progress: true
+
     container:
       image: ubuntu:22.04
     services:
