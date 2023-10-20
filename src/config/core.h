@@ -21,8 +21,8 @@
 #ifndef CONFIG_CORE_H
 #define CONFIG_CORE_H
 
-// from tag vXXXXXXXX.Y -> XXXXXXXXY
-#define HERCULES_VERSION 202308000
+/// Hercules version. From tag vYYYY.MM(+PPP) -> YYYYMMPPP
+#define HERCULES_VERSION 202310000
 
 /// Max number of items on @autolootid list
 #define AUTOLOOTITEM_SIZE 10

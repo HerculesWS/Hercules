@@ -9,7 +9,7 @@ and this project does not adhere to [Semantic Versioning](http://semver.org/spec
 <!--
 If you are reading this in a text editor, simply ignore this section
 
-## [vYYYY.MM.DD] `MMMM DD YYYY`
+## [vYYYY.MM] `MMMM YYYY`
 
 ### Added
 
@@ -21,6 +21,32 @@ If you are reading this in a text editor, simply ignore this section
 
 ### Removed
 -->
+
+# [v2023.10] `October 2023`
+
+### Added
+
+- Added an option to synchronize the flinch animation with walk delay, improving positional lag. The option is disabled by default, uncomment the `WALKDELAY_SYNC` definition in `src/config/core.h` to enable it. (#3232)
+- Implemented logic to generate "item links" serverside and the related script command `getitemlink()`, including various core functionalities this relies on. (#3236, #3238)
+  - This also adds basic support for the `base62` encoding used by the client.
+
+### Changed
+
+- Refactored Auto Spell (Hindsight) and moved its configuration to a libconfig table. (#3237)
+  - The configuration is available in the `{re,pre-re}/autospell_db.conf` file, see the documentation in the file header.
+  - The separation between game logic (in `skill.c`) and client/display logic (in `clif.c`) has been improved.
+  - Cast end logic has been separated from the large skill castend function into smaller dedicated functions.
+  - The function `skill->autospell()` has been renamed to `skill->autospell_spell_selected()` to make its purpose clearer.
+  - This refactoring will simplify some of the upcoming rebalance changes.
+- Added concurrency settings to the GitHub CI workflows to cancel old ongoing builds when a new commit is pushed, speeding up testing the up to date version. (#3238)
+
+### Fixed
+
+- Fixed the HPMHooking API plugin builds in VS 17.x (#3231)
+- Fixed `AM_ACIDTERROR` not ignoring defense on units other than those defined in `battle_config.vit_penalty_target` (i.e. players). (#3234)
+- Fixed Sage's free case increasing ASPD instead of decreasing it when the skill level is lower than 10. (#3235)
+- Fixed the `clang-13` build in the GitHub CI, failing due to a removed package in debian unstable. (#3238)
+- Fixed AppVeyor CI builds, failing due to a missing `mysql56` image. (#3238)
 
 ## [v2023.08] `August 2023`
 
