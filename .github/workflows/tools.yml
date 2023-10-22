@@ -16,7 +16,7 @@ jobs:
     # github.head_ref will stop previous runs in the same PR (if in a PR)
     # github.run_id is a fallback when outside a PR (e.g. every merge in master will run, and previous won't stop)
     concurrency:
-      group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+      group: tools-${{ github.head_ref || github.run_id }}
       cancel-in-progress: true
 
     container:
