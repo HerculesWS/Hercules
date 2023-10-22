@@ -1,6 +1,6 @@
 name: mariadb
 
-on: [workflow_call, pull_request]
+on: workflow_call
 
 env:
   MYSQL_DATABASE: 'ragnarok'

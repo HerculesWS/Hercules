@@ -1,7 +1,6 @@
 name: controller
 
-on:
-  push:
+on: [push, pull_request]
 
 jobs:
   hwsapibot:
