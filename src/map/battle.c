@@ -269,11 +269,10 @@ static int battle_delay_damage_sub(int tid, int64 tick, int id, intptr_t data)
 		if (target != NULL && !status->isdead(target)) {
 			//Check to see if you haven't teleported. [Skotlex]
 			if (src != NULL && (
-			    battle_config.fix_warp_hit_delay_abuse ?
-			    (dat->skill_id == MO_EXTREMITYFIST || target->m != src->m || check_distance_bl(src, target, dat->distance))
-			    :
-			    ((target->type != BL_PC || BL_UCAST(BL_PC, target)->invincible_timer == INVALID_TIMER)
-			    && (dat->skill_id == MO_EXTREMITYFIST || (target->m == src->m && check_distance_bl(src, target, dat->distance))))
+				(dat->skill_id == MO_EXTREMITYFIST && (target->m != src->m || !battle_config.snap_dodge)) // Extremity fist always hits
+				|| (battle_config.fix_warp_hit_delay_abuse && target->m != src->m)
+				|| ((target->type != BL_PC || BL_UCAST(BL_PC, target)->invincible_timer == INVALID_TIMER)
+					&& (target->m == src->m && check_distance_bl(src, target, dat->distance)))
 			)) {
 				map->freeblock_lock();
 				status_fix_damage(src, target, dat->damage, dat->delay);
