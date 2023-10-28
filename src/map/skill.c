@@ -25123,7 +25123,7 @@ static bool skill_read_autospell_db(const char *filename)
 		count++;
 	}
 
-#if PACKETVER_MAIN_NUM < 20181128 && PACKETVER_RE_NUM < 20181031
+#if PACKETVER_MAIN_NUM < 20181128 && PACKETVER_RE_NUM < 20181031 && PACKETVER_ZERO_NUM < 20180523
 	if (count > 7) {
 		ShowWarning("%s: Your current packet version only supports up to 7 autospell skills, but your autospell db contains \"%d\" skills. Some skills may not be shown.\n", __func__, count);
 		ShowWarning("%s:    Update your packet version or reduce the number of skills to fix this warning.\n", __func__);
