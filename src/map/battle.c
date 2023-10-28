@@ -6582,11 +6582,11 @@ static enum damage_lv battle_weapon_attack(struct block_list *src, struct block_
 	if(sd && (skillv = pc->checkskill(sd,MO_TRIPLEATTACK)) > 0) {
 		int triple_rate= 30 - skillv; //Base Rate
 		if (sc && sc->data[SC_SKILLRATE_UP] && sc->data[SC_SKILLRATE_UP]->val1 == MO_TRIPLEATTACK) {
-			triple_rate+= triple_rate*(sc->data[SC_SKILLRATE_UP]->val2)/100;
+			triple_rate += triple_rate * (sc->data[SC_SKILLRATE_UP]->val2) /100;
 			status_change_end(src, SC_SKILLRATE_UP, INVALID_TIMER);
 		}
-		if (rnd()%100 < triple_rate) {
-			if( skill->attack(BF_WEAPON,src,src,target,MO_TRIPLEATTACK,skillv,tick,0) )
+		if (rnd() % 100 < triple_rate) {
+			if (skill->attack(BF_WEAPON, src, src, target, MO_TRIPLEATTACK, skillv, tick, 0))
 				return ATK_DEF;
 			return ATK_MISS;
 		}

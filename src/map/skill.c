@@ -3392,6 +3392,11 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 			case MO_TRIPLEATTACK:
 				if (pc->checkskill(sd, MO_CHAINCOMBO) > 0 || pc->checkskill(sd, SR_DRAGONCOMBO) > 0)
 					combo=1;
+				// Contrary to other MO combos, triple doesn't get delayed through skill_castend_id
+				// A little delay (amotion) is required for the animation to display properly
+				// even if next combo isn't possible
+				int delay = combo ? skill->delay_fix(src, MO_TRIPLEATTACK, skill_lv) : status_get_amotion(src);
+				sd->ud.canact_tick = max(tick + delay, sd->ud.canact_tick);
 				break;
 			case MO_CHAINCOMBO:
 				if(pc->checkskill(sd, MO_COMBOFINISH) > 0 && sd->spiritball > 0)
@@ -3457,7 +3462,7 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 				break;
 		} //Switch End
 		if (combo) { //Possible to chain
-			combo = max(status_get_amotion(src), DIFF_TICK32(sd->ud.canact_tick, tick));
+			combo = (int)max(status_get_amotion(src), DIFF_TICK(sd->ud.canact_tick, tick));
 			sc_start2(NULL, src, SC_COMBOATTACK, 100, skill_id, bl->id, combo, skill_id);
 			clif->combo_delay(src, combo);
 		}
@@ -17395,7 +17400,7 @@ static int skill_delay_fix(struct block_list *bl, uint16 skill_id, uint16 skill_
 		case SR_DRAGONCOMBO:
 		case SR_FALLENEMPIRE:
 		case SJ_PROMINENCEKICK:
-			time -= 4*status_get_agi(bl) - 2*status_get_dex(bl);
+			time -= (4 * status_get_agi(bl) + 2 * status_get_dex(bl));
 			break;
 		case HP_BASILICA:
 			if( sc && !sc->data[SC_BASILICA] )
