@@ -11831,9 +11831,14 @@ static void clif_parse_WalkToXY(int fd, struct map_session_data *sd)
 	if(sd->sc.data[SC_RUN] || sd->sc.data[SC_WUGDASH])
 		return;
 
-	pc->delinvincibletimer(sd);
+	RFIFOPOS(fd, packet_db[RFIFOW(fd, 0)].pos[0], &x, &y, NULL);
 
-	RFIFOPOS(fd, packet_db[RFIFOW(fd,0)].pos[0], &x, &y, NULL);
+	// Do not allow one cell move commands if the target cell is not free
+	if (battle_config.official_cell_stack_limit > 0
+		&& check_distance_blxy(&sd->bl, x, y, 1) && map->count_oncell(sd->bl.m, x, y, BL_CHAR | BL_NPC, 1))
+		return;
+
+	pc->delinvincibletimer(sd);
 
 	//Set last idle time... [Skotlex]
 	pc->update_idle_time(sd, BCIDLE_WALK);
