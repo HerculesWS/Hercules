@@ -1749,7 +1749,7 @@ static int map_search_free_cell(struct block_list *src, int16 m, int16 *x, int16
  *------------------------------------------*/
 static bool map_closest_freecell(int16 m, const struct block_list *bl, int16 *x, int16 *y, int type, int flag)
 {
-	enum unit_dir dir = UNIT_DIR_EAST;
+	enum unit_dir dir = battle_config.keep_dir_free_cell ? unit->getdir(bl) : UNIT_DIR_EAST;
 	int16 tx;
 	int16 ty;
 	int costrange = 10;

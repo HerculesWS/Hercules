@@ -359,6 +359,7 @@ struct Battle_Config {
 	int bone_drop;
 	int buyer_name;
 	int dancing_weaponswitch_fix;
+	int keep_dir_free_cell;
 
 	// eAthena additions
 	int night_at_start; // added by [Yor]
