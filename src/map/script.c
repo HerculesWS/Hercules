@@ -14418,15 +14418,21 @@ static void script_detach_rid(struct script_state *st)
 static BUILDIN(attachrid)
 {
 	int rid = script_getnum(st,2);
+	struct map_session_data *sd = map->id2sd(rid);
 
-	if (map->id2sd(rid) != NULL) {
+	if (sd != NULL) {
+		if (sd->state.autotrade) {
+			ShowError("buildin_attachrid: Cannot attach script to character in autotrade\n");
+			script_pushint(st, 0);
+			return false;
+		}
 		script->detach_rid(st);
 
 		st->rid = rid;
 		script->attach_state(st);
-		script_pushint(st,1);
+		script_pushint(st, 1);
 	} else
-		script_pushint(st,0);
+		script_pushint(st, 0);
 	return true;
 }
 /*==========================================
