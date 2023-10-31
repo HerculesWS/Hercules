@@ -3242,14 +3242,18 @@ static int map_getcellp(struct map_data *m, const struct block_list *bl, int16 x
 		// special checks
 	case CELL_CHKPASS:
 #ifdef CELL_NOSTACK
-		if (cell.cell_bl >= battle_config.custom_cell_stack_limit) return 0;
+		if (cell.cell_bl >= battle_config.custom_cell_stack_limit)
+			return 0;
+		FALLTHROUGH
 #endif
 	case CELL_CHKREACH:
 		return (cell.walkable);
 
 	case CELL_CHKNOPASS:
 #ifdef CELL_NOSTACK
-		if (cell.cell_bl >= battle_config.custom_cell_stack_limit) return 1;
+		if (cell.cell_bl >= battle_config.custom_cell_stack_limit)
+			return 1;
+		FALLTHROUGH
 #endif
 	case CELL_CHKNOREACH:
 		return (!cell.walkable);

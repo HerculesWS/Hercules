@@ -1327,7 +1327,14 @@ static int mob_ai_sub_hard_activesearch(struct block_list *bl, va_list ap)
 #ifdef ACTIVEPATHSEARCH
 				struct walkpath_data wpd;
 				bool is_standing = (md->ud.walktimer == INVALID_TIMER);
+#ifdef CELL_NOSTACK
+				// Do not count target's cell
+				short x, y;
+				if ((unit->can_reach_bl(&md->bl, bl, distance_bl(&md->bl, bl) + 1, 1, &x, &y)
+					&& !path->search(&wpd, &md->bl, md->bl.m, md->bl.x, md->bl.y, x, y, 0, CELL_CHKNOPASS)) // Count walk path cells
+#else
 				if (!path->search(&wpd, &md->bl, md->bl.m, md->bl.x, md->bl.y, bl->x, bl->y, 0, CELL_CHKNOPASS) // Count walk path cells
+#endif
 				    || (is_standing && wpd.path_len > md->db->range2) //Standing monsters use range2, walking monsters use range3
 				    || (!is_standing && wpd.path_len > md->db->range3)) {
 					if (!check_distance_bl(&md->bl, bl, md->status.rhw.range)
