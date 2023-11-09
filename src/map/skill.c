@@ -8619,8 +8619,9 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 			int splash;
 			if (flag&1 || (splash = skill->get_splash(skill_id, skill_lv)) < 1) {
 				int i;
-				if( sd && dstsd && !map_flag_vs(sd->bl.m)
-					&& (sd->status.party_id == 0 || sd->status.party_id != dstsd->status.party_id) ) {
+				if (sd != NULL && dstsd != NULL && !map_flag_vs(sd->bl.m)
+					&& (sd->status.party_id == 0 || sd->status.party_id != dstsd->status.party_id)
+					&& (sd->duel_group != 0 && sd->duel_group != dstsd->duel_group)) {
 					// Outside PvP it should only affect party members and no skill fail message.
 					break;
 				}
