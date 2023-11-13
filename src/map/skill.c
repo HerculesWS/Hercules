@@ -14923,6 +14923,7 @@ static int skill_unit_onleft(uint16 skill_id, struct block_list *bl, int64 tick)
  * flag values:
  * flag&1: Invoke onplace function (otherwise invoke onout)
  * flag&4: Invoke a onleft call (the unit might be scheduled for deletion)
+ * flag&8: Skip initial check for dissonance
  *------------------------------------------*/
 static int skill_unit_effect(struct block_list *bl, va_list ap)
 {
@@ -14931,7 +14932,7 @@ static int skill_unit_effect(struct block_list *bl, va_list ap)
 	int64 tick = va_arg(ap,int64);
 	unsigned int flag = va_arg(ap,unsigned int);
 	uint16 skill_id;
-	bool dissonance;
+	bool dissonance = false;
 
 	nullpo_ret(bl);
 	nullpo_ret(su);
@@ -14942,7 +14943,8 @@ static int skill_unit_effect(struct block_list *bl, va_list ap)
 
 	nullpo_ret(group);
 
-	dissonance = skill->dance_switch(su, 0);
+	if ((flag & 8) == 0)
+		dissonance = skill->dance_switch(su, 0);
 
 	//Necessary in case the group is deleted after calling on_place/on_out [Skotlex]
 	skill_id = group->skill_id;
@@ -14960,7 +14962,11 @@ static int skill_unit_effect(struct block_list *bl, va_list ap)
 			skill->unit_onleft(skill_id, bl, tick);
 	}
 
-	if( dissonance ) skill->dance_switch(su, 1);
+	if (dissonance) {
+		skill->dance_switch(su, 1);
+		// su was changed to dissonance, trigger songs being terminated
+		map->foreachincell(skill->unit_effect, su->bl.m, su->bl.x, su->bl.y, group->bl_flag, &su->bl, timer->gettick(), 4 | 8);
+	}
 
 	return 0;
 }
@@ -19407,7 +19413,10 @@ static int skill_unit_move_sub(struct block_list *bl, va_list ap)
 
 	if( su->group->interval != -1 && !(skill->get_unit_flag(skill_id)&UF_DUALMODE) && skill_id != BD_LULLABY ) { //Lullaby is the exception, bugreport:411
 		//Non-dualmode unit skills with a timer don't trigger when walking, so just return
-		if( dissonance ) skill->dance_switch(su, 1);
+		if (dissonance) {
+			skill->dance_switch(su, 1);
+			skill->unit_onleft(skill->unit_onout(su, target, tick), target, tick); // su was changed to dissonance, trigger songs being terminated
+		}
 		return 0;
 	}
 
