@@ -3201,7 +3201,9 @@ static void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag
 		if (st->luk == bst->luk) {
 			st->cri = status->calc_critical(bl, sc, bst->cri, true);
 		} else {
-			st->cri = status->calc_critical(bl, sc, bst->cri + 3*(st->luk - bst->luk), true);
+			// supposedly for Renewal some say it might be 0.3 crit per luk instead of 0.33 crit per luk as here.
+			// The behavior here is also identical to episode 14.0, can't verify this for later versions of Aegis.
+			st->cri = status->calc_critical(bl, sc, bst->cri - (bst->luk * 10 / 3) + (st->luk * 10 / 3), true);
 		}
 		if (battle_config.show_katar_crit_bonus && bl->type == BL_PC && BL_UCAST(BL_PC, bl)->weapontype == W_KATAR) {
 			st->cri *= 2;
@@ -3860,7 +3862,7 @@ static void status_calc_misc(struct block_list *bl, struct status_data *st, int 
 #endif // RENEWAL
 
 	if ( bl->type&battle_config.enable_critical )
-		st->cri += 10 + (st->luk * 10 / 3); //(every 1 luk = +0.3 critical)
+		st->cri += 10 + (st->luk * 10 / 3); // (every 1 luk = +0.33 critical -> 3 luk = +1 critical)
 	else
 		st->cri = 0;
 
