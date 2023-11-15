@@ -1479,7 +1479,7 @@ static int64 battle_calc_defense(int attack_type, struct block_list *src, struct
 				def1 = 0;
 			if (def2 < 1)
 				def2 = 1;
-			
+
 			//Vitality reduction from rodatazone: http://rodatazone.simgaming.net/mechanics/substats.php#def
 			if (tsd) {
 				//Sd vit-eq
@@ -6518,19 +6518,18 @@ static bool battle_should_bladestop_attacker(struct block_list *attacker, struct
 	if (is_boss(attacker))
 		return false; // Boss monsters are not affected
 
-	// CHECKME: Is that right?
+#ifndef RENEWAL
 	if (attacker->type == BL_PC)
-		return true; // Player gets into BladeStop regardless of distance
+		return true; // In Pre-RE (Ep 11.2), player attackers are BladeStopped regardless of the distance
+#endif
 
-	struct map_session_data *tsd = BL_CAST(BL_PC, target);
-	if (tsd != NULL) {
-		int max_distance = tsd->weapontype == W_FIST ? 1 : 2;
-		return distance_bl(attacker, target) <= max_distance;
+	if (target->type != BL_PC) {
+		// Non-player targets causes BladeStop regardless of distance (Hercules-custom).
+		// Officially, non-player units does not use Blade Stop.
+		return true;
 	}
 
-	// CHECKME: Is that right?
-	// Target is not a player. BladeStop starts regardless of distance
-	return true;
+	return (distance_bl(attacker, target) <= 2);
 }
 
 /*==========================================
