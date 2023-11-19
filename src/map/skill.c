@@ -1158,15 +1158,13 @@ static int skill_calc_heal(struct block_list *src, struct block_list *target, ui
 		case SU_TUNABELLY:
 			hp = status_get_max_hp(target) * ((20 * skill_lv) - 10) / 100;
 			break;
+#ifndef RENEWAL
 		case BA_APPLEIDUN:
-#ifdef RENEWAL
-			hp = 100+5*skill_lv+5*(status_get_vit(src)/10); // HP recovery
-#else // not RENEWAL
-			hp = 30+5*skill_lv+5*(status_get_vit(src)/10); // HP recovery
+			hp = 30 + 5 * skill_lv + 5 * (status_get_vit(src) / 10); // HP recovery
 			if (sd != NULL)
 				hp += 5 * pc->checkskill(sd, BA_MUSICALLESSON);
-#endif // RENEWAL
 			break;
+#endif // not RENEWAL
 		case PR_SANCTUARY:
 			hp = (skill_lv>6)?777:skill_lv*100;
 			break;
@@ -1240,6 +1238,10 @@ static int skill_calc_heal(struct block_list *src, struct block_list *target, ui
 		default:
 			hp += status->get_matk(src, 3);
 	}
+
+	// In-game tests suggests that this effect applies AFTER the MATK bonus is calculated
+	if (sc->data[SC_APPLEIDUN] != NULL)
+		hp += hp * sc->data[SC_APPLEIDUN]->val3 / 100;
 #endif // RENEWAL
 	return hp;
 }
@@ -7981,6 +7983,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 #ifdef RENEWAL
 		case BA_ASSASSINCROSS:
 		case BA_POEMBRAGI:
+		case BA_APPLEIDUN:
 			skill->castend_nodamage_id_sc_song(src, bl, skill_id, skill_lv, tick, flag | BCT_PARTY);
 			break;
 #endif
@@ -12431,9 +12434,9 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 #ifndef RENEWAL
 		case BA_ASSASSINCROSS:
 		case BA_POEMBRAGI:
+		case BA_APPLEIDUN:
 #endif
 		case BA_WHISTLE:
-		case BA_APPLEIDUN:
 		case DC_UGLYDANCE:
 		case DC_HUMMING:
 		case DC_DONTFORGETME:
@@ -13449,14 +13452,15 @@ static struct skill_unit_group *skill_unitsetting(struct block_list *src, uint16
 			}
 #endif
 			break;
+#ifndef RENEWAL
 		case BA_APPLEIDUN:
 			val1 = 5 + 2 * skill_lv + st->vit / 10; // MaxHP percent increase
-#ifndef RENEWAL
+
 			if (sd != NULL) {
 				val1 += pc->checkskill(sd, BA_MUSICALLESSON);
 			}
-#endif
 			break;
+#endif
 		case DC_SERVICEFORYOU:
 			val1 = 15 + skill_lv + (st->int_ / 10); // MaxSP percent increase
 			val2 = 20 + 3 * skill_lv + (st->int_ / 10); // SP cost reduction

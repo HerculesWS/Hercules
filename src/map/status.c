@@ -2889,6 +2889,11 @@ static void status_calc_regen_rate_pc(struct map_session_data *sd, struct regen_
 		}
 	}
 
+#ifdef RENEWAL
+	if (sc->data[SC_APPLEIDUN] != NULL)
+		regen->hp += regen->hp * sc->data[SC_APPLEIDUN]->val3 / 100;
+#endif
+
 	if (sc->data[SC_CATNIPPOWDER] != NULL) {
 		regen->rate.hp *= 2;
 		regen->rate.sp *= 2;
@@ -7971,6 +7976,13 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				val2 = val1 * 2; // Cast time reduction
 				val3 = val1 * 3; // After-cast delay reduction
 				break;
+
+			case SC_APPLEIDUN:
+				// - val1: Skill Lv
+				val2 = (val1 < 10 ? (9 + val1) : 20); // MaxHP %
+				val3 = 2 * val1; // Recovery Boost %
+				break;
+
 #endif
 
 			case SC_LONGING:
@@ -12401,13 +12413,11 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 				case DC_SERVICEFORYOU:
 					s=5;
 					break;
+#ifndef RENEWAL
 				case BA_APPLEIDUN:
-	#ifdef RENEWAL
-					s=5;
-	#else
-					s=6;
-	#endif
+					s = 6;
 					break;
+#endif
 				case CG_MOONLIT:
 					//Moonlit's cost is 4sp*skill_lv [Skotlex]
 					sp= 4*(sce->val1>>16);
