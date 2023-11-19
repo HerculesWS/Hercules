@@ -4817,7 +4817,9 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 		case AM_ACIDTERROR:
 		case BA_MUSICALSTRIKE:
 		case DC_THROWARROW:
+#ifndef RENEWAL
 		case BA_DISSONANCE:
+#endif
 		case CR_HOLYCROSS:
 		case NPC_DARKCROSS:
 		case CR_SHIELDCHARGE:
@@ -4917,6 +4919,12 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 		case RL_SLUGSHOT:
 			skill->attack(BF_WEAPON,src,src,bl,skill_id,skill_lv,tick,flag);
 		break;
+
+#ifdef RENEWAL
+		case BA_DISSONANCE:
+			skill->attack(BF_MAGIC, src, src, bl, skill_id, skill_lv, tick, flag);
+			break;
+#endif
 
 		/**
 		 * Mechanic (MADO GEAR)
@@ -8016,6 +8024,19 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 					clif->skill_nodamage(src, &mer->master->bl, skill_id, skill_lv, sc_start(src, bl, type, 100, skill_lv, skill->get_time(skill_id, skill_lv), skill_id));
 			}
 			break;
+
+#ifdef RENEWAL
+		case BA_DISSONANCE:
+			if (sd != NULL) {
+				sd->skill_id_dance = skill_id;
+				sd->skill_lv_dance = skill_lv;
+			}
+
+			clif->skill_nodamage(src, src, skill_id, skill_lv, 1);
+			map->foreachinrange(skill->area_sub, src, skill->get_splash(skill_id, skill_lv), BL_CHAR,
+			                    src, skill_id, skill_lv, tick, flag | BCT_ENEMY | 1, skill->castend_damage_id);
+			break;
+#endif
 
 		case BS_ADRENALINE:
 		case BS_ADRENALINE2:

@@ -1679,6 +1679,19 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					skillratio += 45;
 					break;
 				/**
+				 * Bard
+				 */
+#ifdef RENEWAL
+				case BA_DISSONANCE:
+					// @TODO: Confirm this formula. I have made it by combining some info from bRO Wiki
+					// with the skill description and some tweaking from my head.
+					// It is quite close, but I have no source for it.
+					// Skill description says 100 + 10 * skill_lv (110 / 120 / 130 / 140 / 150)
+					// But to match the real damage, we have to add an extra 10 * skill_lv (thus, 20 * skill_lv)
+					skillratio = ((100 + 20 * skill_lv) * sd->status.job_level) / 10;
+					break;
+#endif
+				/**
 				 * Priest
 				 **/
 #ifdef RENEWAL
@@ -4372,13 +4385,14 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 	case TF_THROWSTONE:
 		md.damage=50;
 		break;
-	case BA_DISSONANCE:
-		md.damage=30+skill_lv*10;
 #ifndef RENEWAL
+	case BA_DISSONANCE:
+		md.damage = 30 + skill_lv * 10;
+
 		if (sd != NULL)
 			md.damage += 3 * pc->checkskill(sd, BA_MUSICALLESSON);
-#endif
 		break;
+#endif
 	case NPC_SELFDESTRUCTION:
 		md.damage = sstatus->hp;
 		break;

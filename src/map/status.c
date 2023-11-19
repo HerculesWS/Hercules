@@ -12361,7 +12361,9 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 				case BD_DRUMBATTLEFIELD:
 				case BD_RINGNIBELUNGEN:
 				case BD_SIEGFRIED:
+#ifndef RENEWAL
 				case BA_DISSONANCE:
+#endif
 				case BA_ASSASSINCROSS:
 				case DC_UGLYDANCE:
 					s=3;
