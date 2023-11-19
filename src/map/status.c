@@ -8045,6 +8045,12 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				val2 = rnd() % RINGNBL_EFF_MAX;
 				break;
 
+			case SC_SIEGFRIED:
+				// - val1: Skill Lv
+				val2 = val1 * 3; // Elemental Resistance
+				val3 = val1 * 5; // Status ailment resistance
+				break;
+
 			case SC_WHISTLE:
 				// val1: Skill Lv
 				val2 = (val1 < 10 ? (18 + val1 * 2) : 40); // Flee Increase
@@ -12505,8 +12511,8 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 					break;
 				switch(sce->val1&0xFFFF){
 				case BD_DRUMBATTLEFIELD:
-				case BD_SIEGFRIED:
 #ifndef RENEWAL
+				case BD_SIEGFRIED:
 				case BD_RICHMANKIM:
 				case BD_RINGNIBELUNGEN:
 				case BA_DISSONANCE:

@@ -7986,6 +7986,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 #ifdef RENEWAL
 		case BD_RICHMANKIM:
 		case BD_RINGNIBELUNGEN:
+		case BD_SIEGFRIED:
 		case BA_WHISTLE:
 		case BA_ASSASSINCROSS:
 		case BA_POEMBRAGI:
@@ -12491,11 +12492,11 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 		case BD_DRUMBATTLEFIELD:
 		case BD_ROKISWEIL:
 		case BD_INTOABYSS:
-		case BD_SIEGFRIED:
 		case BA_DISSONANCE:
 #ifndef RENEWAL
 		case BD_RICHMANKIM:
 		case BD_RINGNIBELUNGEN:
+		case BD_SIEGFRIED:
 		case BA_WHISTLE:
 		case BA_ASSASSINCROSS:
 		case BA_POEMBRAGI:
@@ -13562,11 +13563,12 @@ static struct skill_unit_group *skill_unitsetting(struct block_list *src, uint16
 		case BD_RICHMANKIM:
 			val1 = 25 + 11 * skill_lv; //Exp increase bonus.
 			break;
-#endif
+
 		case BD_SIEGFRIED:
-			val1 = 55 + skill_lv*5; //Elemental Resistance
-			val2 = skill_lv*10; //Status ailment resistance
+			val1 = 55 + skill_lv * 5; // Elemental Resistance
+			val2 = skill_lv * 10; // Status ailment resistance
 			break;
+#endif
 		case WE_CALLPARTNER:
 			if (sd) val1 = sd->status.partner_id;
 			break;
