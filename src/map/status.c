@@ -5129,6 +5129,11 @@ static defType status_calc_def(struct block_list *bl, struct status_change *sc, 
 		return (defType)cap_value(def,DEFTYPE_MIN,DEFTYPE_MAX);
 	}
 
+#ifdef RENEWAL
+	if (sc->data[SC_ETERNALCHAOS] != NULL)
+		return 0;
+#endif
+
 	if (sc->data[SC_BERSERK])
 		return 0;
 	if (sc->data[SC_SKA])
@@ -12522,9 +12527,9 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 					s = 3;
 					break;
 				case BD_LULLABY:
-				case BD_ETERNALCHAOS:
 				case BD_ROKISWEIL:
 #ifndef RENEWAL
+				case BD_ETERNALCHAOS:
 				case DC_FORTUNEKISS:
 #endif
 					s = 4;
