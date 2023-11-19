@@ -1970,6 +1970,8 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 #ifdef RENEWAL
 	if((skill_lv = pc->checkskill(sd, BA_MUSICALLESSON)) > 0)
 		bstatus->max_sp += (int64) bstatus->max_sp * skill_lv / 100;
+	if((skill_lv = pc->checkskill(sd, DC_DANCINGLESSON)) > 0)
+		bstatus->max_sp += (int64) bstatus->max_sp * skill_lv / 100;
 #endif
 
 	// Apply relative modifiers from equipment
@@ -2032,6 +2034,8 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 
 #ifdef RENEWAL
 	if ((skill_lv = pc->checkskill(sd, PR_MACEMASTERY)) > 0 && (sd->weapontype == W_MACE || sd->weapontype == W_2HMACE))
+		bstatus->cri += skill_lv * 10;
+	if ((skill_lv = pc->checkskill(sd, DC_DANCINGLESSON)) > 0 && sd->weapontype == W_WHIP)
 		bstatus->cri += skill_lv * 10;
 #endif
 
