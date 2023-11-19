@@ -5482,6 +5482,10 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 						ATK_ADDRATE(sd->bonus.crit_atk_rate);
 					if(flag.cri && sc && sc->data[SC_MTF_CRIDAMAGE])
 						ATK_ADDRATE(sc->data[SC_MTF_CRIDAMAGE]->val1);// temporary it should be 'bonus.crit_atk_rate'
+#ifdef RENEWAL
+					if (flag.cri && sc != NULL && sc->data[SC_FORTUNE] != NULL)
+						ATK_ADDRATE(sc->data[SC_FORTUNE]->val3);
+#endif
 #ifndef RENEWAL
 
 					if(sd->status.party_id && (temp=pc->checkskill(sd,TK_POWER)) > 0){
