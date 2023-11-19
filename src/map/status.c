@@ -8001,6 +8001,12 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				}
 				break;
 			}
+
+			case SC_SERVICEFORYOU:
+				// - val1: Skill Lv
+				val2 = (val1 < 10 ? (9 + val1) : 20); // MaxSP percent increase
+				val3 = val1 + 5; // SP cost reduction
+				break;
 #endif
 
 			case SC_LONGING:
@@ -12427,9 +12433,9 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 #ifndef RENEWAL
 				case BA_WHISTLE:
 				case BA_POEMBRAGI:
-#endif
 				case DC_SERVICEFORYOU:
-					s=5;
+#endif
+					s = 5;
 					break;
 #ifndef RENEWAL
 				case BA_APPLEIDUN:

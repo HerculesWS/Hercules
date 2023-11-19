@@ -7987,6 +7987,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 		case BA_ASSASSINCROSS:
 		case BA_POEMBRAGI:
 		case BA_APPLEIDUN:
+		case DC_SERVICEFORYOU:
 			skill->castend_nodamage_id_sc_song(src, bl, skill_id, skill_lv, tick, flag | BCT_PARTY);
 			break;
 
@@ -12491,13 +12492,13 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 		case BA_POEMBRAGI:
 		case BA_APPLEIDUN:
 		case DC_UGLYDANCE:
+		case DC_SERVICEFORYOU:
 #endif
 		case DC_HUMMING:
 #ifndef RENEWAL
 		case DC_DONTFORGETME:
 #endif
 		case DC_FORTUNEKISS:
-		case DC_SERVICEFORYOU:
 		case CG_MOONLIT:
 		case GS_DESPERADO:
 		case NJ_KAENSIN:
@@ -13514,19 +13515,17 @@ static struct skill_unit_group *skill_unitsetting(struct block_list *src, uint16
 				val1 += pc->checkskill(sd, BA_MUSICALLESSON);
 			}
 			break;
-#endif
+
 		case DC_SERVICEFORYOU:
 			val1 = 15 + skill_lv + (st->int_ / 10); // MaxSP percent increase
 			val2 = 20 + 3 * skill_lv + (st->int_ / 10); // SP cost reduction
 
-#ifndef RENEWAL
 			if (sd != NULL) {
 				val1 += pc->checkskill(sd, DC_DANCINGLESSON) / 2;
 				val2 += pc->checkskill(sd, DC_DANCINGLESSON) / 2;
 			}
-#endif
 			break;
-#ifndef RENEWAL
+
 		case BA_ASSASSINCROSS:
 			if (sd != NULL)
 				val1 = pc->checkskill(sd, BA_MUSICALLESSON) / 2;
