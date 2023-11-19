@@ -4831,7 +4831,7 @@ static int status_calc_critical(struct block_list *bl, struct status_change *sc,
 		critical += sc->data[SC_FOOD_CRITICALSUCCESSVALUE]->val1;
 	if (sc->data[SC_EXPLOSIONSPIRITS])
 		critical += sc->data[SC_EXPLOSIONSPIRITS]->val2;
-	if (sc->data[SC_FORTUNE])
+	if (sc->data[SC_FORTUNE] != NULL)
 		critical += sc->data[SC_FORTUNE]->val2;
 	if (sc->data[SC_TRUESIGHT])
 		critical += sc->data[SC_TRUESIGHT]->val2;
@@ -8001,6 +8001,12 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				}
 				break;
 			}
+
+			case SC_FORTUNE:
+				// - val1: Skill Lv
+				val2 = val1 * 10; // Critical increase (10 = +1)
+				val3 = val1 * 2; // Critical Damage Increase
+				break;
 
 			case SC_SERVICEFORYOU:
 				// - val1: Skill Lv
@@ -12424,8 +12430,10 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 				case BD_LULLABY:
 				case BD_ETERNALCHAOS:
 				case BD_ROKISWEIL:
+#ifndef RENEWAL
 				case DC_FORTUNEKISS:
-					s=4;
+#endif
+					s = 4;
 					break;
 				case CG_HERMODE:
 				case BD_INTOABYSS:
