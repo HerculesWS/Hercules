@@ -12399,9 +12399,9 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 #ifndef RENEWAL
 				case BA_DISSONANCE:
 				case BA_ASSASSINCROSS:
-#endif
 				case DC_UGLYDANCE:
-					s=3;
+#endif
+					s = 3;
 					break;
 				case BD_LULLABY:
 				case BD_ETERNALCHAOS:

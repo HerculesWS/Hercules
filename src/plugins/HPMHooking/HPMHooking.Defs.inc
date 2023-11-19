@@ -8526,6 +8526,8 @@ typedef int (*HPMHOOK_pre_skill_castend_nodamage_id) (struct block_list **src, s
 typedef int (*HPMHOOK_post_skill_castend_nodamage_id) (int retVal___, struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag);
 typedef void (*HPMHOOK_pre_skill_castend_nodamage_id_sc_song) (struct block_list **src, struct block_list **bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag);
 typedef void (*HPMHOOK_post_skill_castend_nodamage_id_sc_song) (struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag);
+typedef void (*HPMHOOK_pre_skill_castend_nodamage_id_ugly_dance) (struct block_list **src, struct block_list **bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag);
+typedef void (*HPMHOOK_post_skill_castend_nodamage_id_ugly_dance) (struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag);
 typedef int (*HPMHOOK_pre_skill_castend_damage_id) (struct block_list **src, struct block_list **bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag);
 typedef int (*HPMHOOK_post_skill_castend_damage_id) (int retVal___, struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag);
 typedef int (*HPMHOOK_pre_skill_castend_pos2) (struct block_list **src, int *x, int *y, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag);

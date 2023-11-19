@@ -3300,6 +3300,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(skill->castend_type, HP_skill_castend_type) },
 	{ HP_POP(skill->castend_nodamage_id, HP_skill_castend_nodamage_id) },
 	{ HP_POP(skill->castend_nodamage_id_sc_song, HP_skill_castend_nodamage_id_sc_song) },
+	{ HP_POP(skill->castend_nodamage_id_ugly_dance, HP_skill_castend_nodamage_id_ugly_dance) },
 	{ HP_POP(skill->castend_damage_id, HP_skill_castend_damage_id) },
 	{ HP_POP(skill->castend_pos2, HP_skill_castend_pos2) },
 	{ HP_POP(skill->blockpc_start, HP_skill_blockpc_start) },

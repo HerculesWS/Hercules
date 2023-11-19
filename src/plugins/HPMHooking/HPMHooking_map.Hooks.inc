@@ -86045,6 +86045,32 @@ void HP_skill_castend_nodamage_id_sc_song(struct block_list *src, struct block_l
 	}
 	return;
 }
+void HP_skill_castend_nodamage_id_ugly_dance(struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_skill_castend_nodamage_id_ugly_dance_pre > 0) {
+		void (*preHookFunc) (struct block_list **src, struct block_list **bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_castend_nodamage_id_ugly_dance_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_skill_castend_nodamage_id_ugly_dance_pre[hIndex].func;
+			preHookFunc(&src, &bl, &skill_id, &skill_lv, &tick, &flag);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.skill.castend_nodamage_id_ugly_dance(src, bl, skill_id, skill_lv, tick, flag);
+	}
+	if (HPMHooks.count.HP_skill_castend_nodamage_id_ugly_dance_post > 0) {
+		void (*postHookFunc) (struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_castend_nodamage_id_ugly_dance_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_skill_castend_nodamage_id_ugly_dance_post[hIndex].func;
+			postHookFunc(src, bl, skill_id, skill_lv, tick, flag);
+		}
+	}
+	return;
+}
 int HP_skill_castend_damage_id(struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag) {
 	int hIndex = 0;
 	int retVal___ = 0;

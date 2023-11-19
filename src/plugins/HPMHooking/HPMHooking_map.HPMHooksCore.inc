@@ -6448,6 +6448,8 @@ struct {
 	struct HPMHookPoint *HP_skill_castend_nodamage_id_post;
 	struct HPMHookPoint *HP_skill_castend_nodamage_id_sc_song_pre;
 	struct HPMHookPoint *HP_skill_castend_nodamage_id_sc_song_post;
+	struct HPMHookPoint *HP_skill_castend_nodamage_id_ugly_dance_pre;
+	struct HPMHookPoint *HP_skill_castend_nodamage_id_ugly_dance_post;
 	struct HPMHookPoint *HP_skill_castend_damage_id_pre;
 	struct HPMHookPoint *HP_skill_castend_damage_id_post;
 	struct HPMHookPoint *HP_skill_castend_pos2_pre;
@@ -14029,6 +14031,8 @@ struct {
 	int HP_skill_castend_nodamage_id_post;
 	int HP_skill_castend_nodamage_id_sc_song_pre;
 	int HP_skill_castend_nodamage_id_sc_song_post;
+	int HP_skill_castend_nodamage_id_ugly_dance_pre;
+	int HP_skill_castend_nodamage_id_ugly_dance_post;
 	int HP_skill_castend_damage_id_pre;
 	int HP_skill_castend_damage_id_post;
 	int HP_skill_castend_pos2_pre;

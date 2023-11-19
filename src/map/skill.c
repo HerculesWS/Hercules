@@ -1868,14 +1868,16 @@ static int skill_additional_effect(struct block_list *src, struct block_list *bl
 			sc_start(src, bl, SC_SLEEP, 15, skill_lv, skill->get_time2(skill_id, skill_lv), skill_id);
 			break;
 
+#ifndef RENEWAL
 		case DC_UGLYDANCE:
 			rate = 5+5*skill_lv;
-#ifndef RENEWAL
+
 			if (sd != NULL && (temp = pc->checkskill(sd, DC_DANCINGLESSON)) > 0)
 				rate += 5 + temp;
-#endif
 			status_zap(bl, 0, rate);
 			break;
+#endif
+
 		case SL_STUN:
 			if (tstatus->size==SZ_MEDIUM) //Only stuns mid-sized mobs.
 				sc_start(src, bl, SC_STUN, (30 + 10 * skill_lv), skill_lv, skill->get_time(skill_id, skill_lv), skill_id);
@@ -7987,6 +7989,10 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 		case BA_APPLEIDUN:
 			skill->castend_nodamage_id_sc_song(src, bl, skill_id, skill_lv, tick, flag | BCT_PARTY);
 			break;
+
+		case DC_UGLYDANCE:
+			skill->castend_nodamage_id_ugly_dance(src, bl, skill_id, skill_lv, tick, flag);
+			break;
 #endif
 
 #ifdef RENEWAL
@@ -11901,6 +11907,49 @@ static void skill_castend_nodamage_id_sc_song(struct block_list *src, struct blo
 #endif
 }
 
+/**
+ * Castend handler for Ugly Dance (RE-only)
+ * @param src Unit who cast the skill
+ * @param bl Unit being targeted by the skill
+ * @param skill_id skill being cast
+ * @param skill_lv level of the skill being cast
+ * @param tick
+ * @param flag castend flags
+ * - flag & 1 :
+ *     when not set: it is the initial skill cast,
+ *     when set: it is in the reiteration over targets to get affected
+ */
+static void skill_castend_nodamage_id_ugly_dance(struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag)
+{
+#ifdef RENEWAL
+	nullpo_retv(src);
+	nullpo_retv(bl);
+
+	if ((flag & 1) == 0) {
+		struct map_session_data *sd = BL_CAST(BL_PC, src);
+		if (sd != NULL) {
+			sd->skill_id_dance = skill_id;
+			sd->skill_lv_dance = skill_lv;
+
+			clif->skill_nodamage(src, src, skill_id, skill_lv, 1);
+		}
+
+		int splash_range = skill->get_splash(skill_id, skill_lv);
+		int flags = flag | 1; // &1 will tell when we are iterating over the "execution" phase
+		map->foreachinrange(skill->area_sub, src, splash_range, BL_CHAR, src, skill_id, skill_lv, tick, flags | BCT_ENEMY, skill->castend_nodamage_id);
+	} else {
+		int chance = skill->get_time2(skill_id, skill_lv);
+
+		if (rnd() % 100 < chance) {
+			int drain_rate = skill->get_time(skill_id, skill_lv);
+			int drain_amount = status_get_max_sp(bl) * drain_rate / 100;
+
+			status_zap(bl, 0, drain_amount);
+		}
+	}
+#endif
+}
+
 static bool skill_castend_nodamage_id_dead_unknown(struct block_list *src, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag)
 {
 	return true;
@@ -12437,8 +12486,8 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 		case BA_ASSASSINCROSS:
 		case BA_POEMBRAGI:
 		case BA_APPLEIDUN:
-#endif
 		case DC_UGLYDANCE:
+#endif
 		case DC_HUMMING:
 		case DC_DONTFORGETME:
 		case DC_FORTUNEKISS:
@@ -25569,6 +25618,7 @@ void skill_defaults(void)
 	skill->arrow_create = skill_arrow_create;
 	skill->castend_nodamage_id = skill_castend_nodamage_id;
 	skill->castend_nodamage_id_sc_song = skill_castend_nodamage_id_sc_song;
+	skill->castend_nodamage_id_ugly_dance = skill_castend_nodamage_id_ugly_dance;
 	skill->castend_damage_id = skill_castend_damage_id;
 	skill->castend_pos2 = skill_castend_pos2;
 	skill->blockpc_start = skill_blockpc_start_;
