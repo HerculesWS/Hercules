@@ -7573,6 +7573,7 @@ static const struct config_data_old battle_data[] = {
 	{ "official_cell_stack_limit",          &battle_config.official_cell_stack_limit,       1,      0,      255,            },
 	{ "custom_cell_stack_limit",            &battle_config.custom_cell_stack_limit,         1,      1,      255,            },
 	{ "dancing_weaponswitch_fix",           &battle_config.dancing_weaponswitch_fix,        1,      0,      1,              },
+	{ "keep_dir_free_cell",                 &battle_config.keep_dir_free_cell,              0,      0,      1,              },
 	{ "check_occupied_cells",               &battle_config.check_occupied_cells,            1,      0,      1,              },
 
 // eAthena additions
