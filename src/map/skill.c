@@ -7987,6 +7987,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 		case BA_ASSASSINCROSS:
 		case BA_POEMBRAGI:
 		case BA_APPLEIDUN:
+		case DC_HUMMING:
 		case DC_FORTUNEKISS:
 		case DC_SERVICEFORYOU:
 			skill->castend_nodamage_id_sc_song(src, bl, skill_id, skill_lv, tick, flag | BCT_PARTY);
@@ -12495,9 +12496,7 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 		case DC_UGLYDANCE:
 		case DC_FORTUNEKISS:
 		case DC_SERVICEFORYOU:
-#endif
 		case DC_HUMMING:
-#ifndef RENEWAL
 		case DC_DONTFORGETME:
 #endif
 		case CG_MOONLIT:
@@ -13476,18 +13475,14 @@ static struct skill_unit_group *skill_unitsetting(struct block_list *src, uint16
 				val2 += pc->checkskill(sd, BA_MUSICALLESSON);
 			}
 			break;
-#endif
 
 		case DC_HUMMING:
-			val1 = 2*skill_lv+st->dex/10; // Hit increase
-#ifdef RENEWAL
-			val1 *= 2;
-#else
+			val1 = 2 * skill_lv + st->dex / 10; // Hit increase
+
 			if (sd != NULL)
 				val1 += pc->checkskill(sd, DC_DANCINGLESSON);
-#endif
 			break;
-#ifndef RENEWAL
+
 		case BA_POEMBRAGI:
 			val1 = 3 * skill_lv + st->dex / 10; // Casting time reduction
 			//For some reason at level 10 the base delay reduction is 50%.

@@ -7989,6 +7989,12 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				val3 = 2 * val1; // Recovery Boost %
 				break;
 
+			case SC_HUMMING:
+				// Official servers uses "val1" for the bonus, but using val2 aligns with pre-re buff
+				// - val1: Skill Lv
+				val2 = 4 * val1; // Hit increase
+				break;
+
 			case SC_DONTFORGETME: {
 				// - val1: Skill Lv
 				val2 = 3 * val1; // Base ASPD decrease
@@ -12437,8 +12443,8 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 					break;
 				case CG_HERMODE:
 				case BD_INTOABYSS:
-				case DC_HUMMING:
 #ifndef RENEWAL
+				case DC_HUMMING:
 				case BA_WHISTLE:
 				case BA_POEMBRAGI:
 				case DC_SERVICEFORYOU:
