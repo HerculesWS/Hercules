@@ -928,6 +928,7 @@ static int status_check_skilluse(struct block_list *src, struct block_list *targ
 		if (skill_id != 0 /* Do not block item-casted skills.*/ && (src->type != BL_PC || sd->auto_cast_current.type != AUTOCAST_ITEM)) {
 			//Skills blocked through status changes...
 			if (!flag && ( //Blocked only from using the skill (stuff like autospell may still go through
+				sc->data[SC_ENSEMBLEFATIGUE] ||
 				sc->data[SC_SILENCE] ||
 				sc->data[SC_STEELBODY] ||
 				sc->data[SC_BERSERK] ||
@@ -5427,6 +5428,8 @@ static unsigned short status_calc_speed(struct block_list *bl, struct status_cha
 					}
 					if (sc->data[SC_CATNIPPOWDER])
 						val = max(val, sc->data[SC_CATNIPPOWDER]->val3);
+					if (sc->data[SC_ENSEMBLEFATIGUE] != NULL)
+						val = max(val, 30); // 30% MoveSpeed reduction
 					if (sc->data[SC_BIND_TRAP])
 						val = max(val, sc->data[SC_BIND_TRAP]->val3);
 					if (sc->data[SC_CREATINGSTAR] != NULL)
@@ -5580,6 +5583,8 @@ static short status_calc_aspd(struct block_list *bl, struct status_change *sc, s
 		// ASPD percentage values
 		if (sc->data[SC_DONTFORGETME])
 			bonus -= sc->data[SC_DONTFORGETME]->val2;
+		if (sc->data[SC_ENSEMBLEFATIGUE] != NULL)
+			bonus -= 30; // 30% Attack Speed reduction
 		if (sc->data[SC_LONGING])
 			bonus -= sc->data[SC_LONGING]->val2;
 		if (sc->data[SC_STEELBODY])
@@ -7667,6 +7672,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			case SC_FLASHKICK:
 			case SC_SOULUNITY:
 			case SC__AUTOSHADOWSPELL: // otherwise you can't change your shadow spell to a lower skill_id
+			case SC_ENSEMBLEFATIGUE:
 				break;
 			case SC_GOSPEL:
 				//Must not override a casting gospel char.

@@ -921,6 +921,9 @@ typedef enum sc_type {
 
 	SC_NO_SWITCH_WEAPON,
 
+	// More SCs for bard/dancer
+	SC_ENSEMBLEFATIGUE,
+
 #ifndef SC_MAX
 	SC_MAX, //Automatically updated max, used in for's to check we are within bounds.
 #endif

@@ -12198,6 +12198,7 @@ static int skill_castend_map(struct map_session_data *sd, uint16 skill_id, const
 		return 0;
 	}
 	if(sd->sc.count && (
+		sd->sc.data[SC_ENSEMBLEFATIGUE] ||
 		sd->sc.data[SC_SILENCE] ||
 		sd->sc.data[SC_ROKISWEIL] ||
 		sd->sc.data[SC_AUTOCOUNTER] ||
@@ -15267,7 +15268,7 @@ static int skill_check_condition_char_sub(struct block_list *bl, va_list ap)
 	if(pc_isdead(tsd))
 		return 0;
 
-	if (tsd->sc.data[SC_SILENCE] || ( tsd->sc.opt1 && tsd->sc.opt1 != OPT1_BURNING ))
+	if (tsd->sc.data[SC_SILENCE] || tsd->sc.data[SC_ENSEMBLEFATIGUE] || ( tsd->sc.opt1 && tsd->sc.opt1 != OPT1_BURNING ))
 		return 0;
 
 	if( skill->get_inf2(skill_id)&INF2_CHORUS_SKILL ) {
@@ -15303,12 +15304,18 @@ static int skill_check_condition_char_sub(struct block_list *bl, va_list ap)
 				return 1;
 			default: //Warning: Assuming Ensemble Dance/Songs for code speed. [Skotlex]
 				{
-					uint16 skill_lv;
 					if(pc_issit(tsd) || !unit->can_move(&tsd->bl))
 						return 0;
+
+					uint16 skill_lv = pc->checkskill(tsd, skill_id);
+#ifdef RENEWAL // In Renewal, partner also gets the requirements consumed, so we must check it
+					if (skill->check_condition_castbegin(tsd, skill_id, skill_lv) == 0)
+						return 0;
+#endif
+
 					if (sd->status.sex != tsd->status.sex &&
 							(tsd->job & MAPID_UPPERMASK) == MAPID_BARDDANCER &&
-							(skill_lv = pc->checkskill(tsd, skill_id)) > 0 &&
+							skill_lv > 0 &&
 							(tsd->weapontype1==W_MUSICAL || tsd->weapontype1==W_WHIP) &&
 							sd->status.party_id && tsd->status.party_id &&
 							sd->status.party_id == tsd->status.party_id &&
@@ -15362,6 +15369,7 @@ static int skill_check_pc_partner(struct map_session_data *sd, uint16 skill_id, 
 			default: //Warning: Assuming Ensemble skills here (for speed)
 				if( is_chorus )
 					break;//Chorus skills are not to be parsed as ensambles
+#ifndef RENEWAL
 				if (c > 0 && sd->sc.data[SC_DANCING] && (tsd = map->id2sd(p_sd[0])) != NULL) {
 					sd->sc.data[SC_DANCING]->val4 = tsd->bl.id;
 					sc_start4(&tsd->bl, &tsd->bl, SC_DANCING, 100, skill_id, sd->sc.data[SC_DANCING]->val2, *skill_lv, sd->bl.id, skill->get_time(skill_id, *skill_lv) + 1000, skill_id);
@@ -15369,6 +15377,17 @@ static int skill_check_pc_partner(struct map_session_data *sd, uint16 skill_id, 
 					tsd->skill_id_dance = skill_id;
 					tsd->skill_lv_dance = *skill_lv;
 				}
+#else
+				if (c > 0 && (tsd = map->id2sd(p_sd[0])) != NULL) {
+					skill->consume_requirement(tsd, skill_id, *skill_lv, 1);
+					clif->skill_nodamage(&tsd->bl, &sd->bl, skill_id, *skill_lv, 1);
+					sc_start(&sd->bl, &sd->bl, SC_ENSEMBLEFATIGUE, 100, skill_id, 10000, skill_id);
+					sc_start(&tsd->bl, &tsd->bl, SC_ENSEMBLEFATIGUE, 100, skill_id, 10000, skill_id);
+
+					tsd->skill_id_dance = skill_id;
+					tsd->skill_lv_dance = *skill_lv;
+				}
+#endif
 				return c;
 		}
 	}
