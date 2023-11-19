@@ -7989,6 +7989,18 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				val3 = 2 * val1; // Recovery Boost %
 				break;
 
+			case SC_DONTFORGETME: {
+				// - val1: Skill Lv
+				val2 = 3 * val1; // Base ASPD decrease
+				val3 = 2 * val1; // Base Movement speed adjustment.
+
+				struct status_data *srcst;
+				if (src != NULL && (srcst = status->get_status_data(src)) != NULL) {
+					val2 += srcst->dex / 15; // Stats-based ASPD decrease
+					val3 += srcst->agi / 20; // Stats-based Movement speed adjustment.
+				}
+				break;
+			}
 #endif
 
 			case SC_LONGING:
@@ -12423,14 +12435,15 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 				case BA_APPLEIDUN:
 					s = 6;
 					break;
+
+				case DC_DONTFORGETME:
+					s = 10;
+					break;
 #endif
 				case CG_MOONLIT:
-					//Moonlit's cost is 4sp*skill_lv [Skotlex]
-					sp= 4*(sce->val1>>16);
-					//Upkeep is also every 10 secs.
-					FALLTHROUGH
-				case DC_DONTFORGETME:
-					s=10;
+					// Moonlit's cost is 4sp * skill_lv [Skotlex]
+					sp = 4*(sce->val1>>16);
+					s = 10;
 					break;
 				}
 				if( s != 0 && sce->val3 % s == 0 ) {

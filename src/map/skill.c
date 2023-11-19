@@ -7990,6 +7990,10 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 			skill->castend_nodamage_id_sc_song(src, bl, skill_id, skill_lv, tick, flag | BCT_PARTY);
 			break;
 
+		case DC_DONTFORGETME:
+			skill->castend_nodamage_id_sc_song(src, bl, skill_id, skill_lv, tick, flag | BCT_ENEMY);
+			break;
+
 		case DC_UGLYDANCE:
 			skill->castend_nodamage_id_ugly_dance(src, bl, skill_id, skill_lv, tick, flag);
 			break;
@@ -12489,7 +12493,9 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 		case DC_UGLYDANCE:
 #endif
 		case DC_HUMMING:
+#ifndef RENEWAL
 		case DC_DONTFORGETME:
+#endif
 		case DC_FORTUNEKISS:
 		case DC_SERVICEFORYOU:
 		case CG_MOONLIT:
@@ -13490,12 +13496,8 @@ static struct skill_unit_group *skill_unitsetting(struct block_list *src, uint16
 				val2 += 2 * pc->checkskill(sd, BA_MUSICALLESSON);
 			}
 			break;
-#endif
+
 		case DC_DONTFORGETME:
-#ifdef RENEWAL
-			val1 = st->dex/10 + 3*skill_lv; // ASPD decrease
-			val2 = st->agi/10 + 2*skill_lv; // Movement speed adjustment.
-#else
 			val1 = st->dex/10 + 3*skill_lv + 5; // ASPD decrease
 			val2 = st->agi/10 + 3*skill_lv + 5; // Movement speed adjustment.
 
@@ -13503,9 +13505,8 @@ static struct skill_unit_group *skill_unitsetting(struct block_list *src, uint16
 				val1 += pc->checkskill(sd, DC_DANCINGLESSON);
 				val2 += pc->checkskill(sd, DC_DANCINGLESSON);
 			}
-#endif
 			break;
-#ifndef RENEWAL
+
 		case BA_APPLEIDUN:
 			val1 = 5 + 2 * skill_lv + st->vit / 10; // MaxHP percent increase
 
