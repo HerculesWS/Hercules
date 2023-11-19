@@ -4664,6 +4664,8 @@ static int status_calc_buff_extra_batk(struct block_list *bl, struct status_chan
 		batk += sc->data[SC_SHOUT]->val2;
 	if (sc->data[SC_IMPOSITIO] != NULL)
 		batk += sc->data[SC_IMPOSITIO]->val2;
+	if (sc->data[SC_DRUMBATTLE] != NULL)
+		batk += sc->data[SC_DRUMBATTLE]->val2;
 #endif
 
 	return cap_value(batk, 0, battle_config.batk_max);
@@ -8047,6 +8049,12 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 #ifdef RENEWAL
 			case SC_RICHMANKIM:
 				val1 = 10 + 10 * val1; // EXP increase (%)
+				break;
+
+			case SC_DRUMBATTLE:
+				// - val1: Skill Lv
+				val2 = 15 + val1 * 5; // ATK increase
+				val3 = val1 * 15; // Def increase
 				break;
 
 			case SC_NIBELUNGEN:
@@ -12526,18 +12534,16 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 				if (--sce->val3 <= 0)
 					break;
 				switch(sce->val1&0xFFFF){
-				case BD_DRUMBATTLEFIELD:
 #ifndef RENEWAL
+				case BD_DRUMBATTLEFIELD:
 				case BD_SIEGFRIED:
 				case BD_RICHMANKIM:
 				case BD_RINGNIBELUNGEN:
 				case BA_DISSONANCE:
 				case BA_ASSASSINCROSS:
 				case DC_UGLYDANCE:
-#endif
 					s = 3;
 					break;
-#ifndef RENEWAL
 				case BD_LULLABY:
 				case BD_ROKISWEIL:
 				case BD_ETERNALCHAOS:

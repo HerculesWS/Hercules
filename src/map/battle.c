@@ -885,13 +885,6 @@ static int64 battle_calc_masteryfix(struct block_list *src, struct block_list *t
 		if(sc->data[SC_CAMOUFLAGE])
 			damage += 30 * ( 10 - sc->data[SC_CAMOUFLAGE]->val4 );
 #ifdef RENEWAL
-		if(sc->data[SC_DRUMBATTLE]){
-			if(tstatus->size == SZ_SMALL)
-				damage += sc->data[SC_DRUMBATTLE]->val2;
-			else if(tstatus->size == SZ_MEDIUM)
-				damage += 10 * sc->data[SC_DRUMBATTLE]->val1;
-			//else no bonus for large target
-		}
 		if(sc->data[SC_GS_MADNESSCANCEL])
 			damage += 100;
 		if(sc->data[SC_GS_GATLINGFEVER]){

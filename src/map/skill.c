@@ -7985,6 +7985,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 
 #ifdef RENEWAL
 		case BD_RICHMANKIM:
+		case BD_DRUMBATTLEFIELD:
 		case BD_RINGNIBELUNGEN:
 		case BD_INTOABYSS:
 		case BD_SIEGFRIED:
@@ -12495,12 +12496,12 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 		case AC_SHOWER: //Ground-placed skill implementation.
 		case MA_SHOWER:
 		case SA_LANDPROTECTOR:
-		case BD_DRUMBATTLEFIELD:
 		case BA_DISSONANCE:
 #ifndef RENEWAL
 		case BD_LULLABY:
 		case BD_RICHMANKIM:
 		case BD_ETERNALCHAOS:
+		case BD_DRUMBATTLEFIELD:
 		case BD_RINGNIBELUNGEN:
 		case BD_ROKISWEIL:
 		case BD_INTOABYSS:
@@ -13553,17 +13554,12 @@ static struct skill_unit_group *skill_unitsetting(struct block_list *src, uint16
 
 			val1 *= 10; //Because every 10 crit is an actual cri point.
 			break;
-#endif
+
 		case BD_DRUMBATTLEFIELD:
-		#ifdef RENEWAL
-			val1 = (skill_lv+5)*25; //Watk increase
-			val2 = skill_lv*10; //Def increase
-		#else
-			val1 = (skill_lv+1)*25; //Watk increase
-			val2 = (skill_lv+1)*2; //Def increase
-		#endif
+			val1 = (skill_lv + 1) * 25; // Watk increase
+			val2 = (skill_lv + 1) * 2; // Def increase
 			break;
-#ifndef RENEWAL
+
 		case BD_RINGNIBELUNGEN:
 			val1 = (skill_lv + 2) * 25; // Watk increase
 			break;
