@@ -7958,6 +7958,14 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				break;
 
 #ifdef RENEWAL
+			case SC_ASSNCROS:
+				// val1 = skill lv
+				if (val1 < 10)
+					val2 = 1 + (val1 - 1) * 2; // ASPD increase
+				else
+					val2 = 20; // ASPD increase
+				break;
+
 			case SC_POEMBRAGI:
 				// val1 = skill lv
 				val2 = val1 * 2; // Cast time reduction
@@ -12372,8 +12380,8 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 				case BD_SIEGFRIED:
 #ifndef RENEWAL
 				case BA_DISSONANCE:
-#endif
 				case BA_ASSASSINCROSS:
+#endif
 				case DC_UGLYDANCE:
 					s=3;
 					break;

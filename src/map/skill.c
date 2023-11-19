@@ -7979,6 +7979,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 			break;
 
 #ifdef RENEWAL
+		case BA_ASSASSINCROSS:
 		case BA_POEMBRAGI:
 			skill->castend_nodamage_id_sc_song(src, bl, skill_id, skill_lv, tick, flag | BCT_PARTY);
 			break;
@@ -12428,10 +12429,10 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 		case BD_SIEGFRIED:
 		case BA_DISSONANCE:
 #ifndef RENEWAL
+		case BA_ASSASSINCROSS:
 		case BA_POEMBRAGI:
 #endif
 		case BA_WHISTLE:
-		case BA_ASSASSINCROSS:
 		case BA_APPLEIDUN:
 		case DC_UGLYDANCE:
 		case DC_HUMMING:
@@ -13467,20 +13468,15 @@ static struct skill_unit_group *skill_unitsetting(struct block_list *src, uint16
 			}
 #endif
 			break;
+#ifndef RENEWAL
 		case BA_ASSASSINCROSS:
-#ifdef RENEWAL
-			// This formula was taken from a RE calculator
-			// and the changes published on irowiki
-			// Luckily, official tests show it's the right one
-			val1 = skill_lv + (st->agi / 20);
-#else
 			if (sd != NULL)
 				val1 = pc->checkskill(sd, BA_MUSICALLESSON) / 2;
 
 			val1 += 10 + skill_lv + (st->agi/10); // ASPD increase
 			val1 *= 10; // ASPD works with 1000 as 100%
-#endif
 			break;
+#endif
 		case DC_FORTUNEKISS:
 			val1 = 10 + skill_lv + (st->luk / 10); // Critical increase
 #ifndef RENEWAL
