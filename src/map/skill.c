@@ -1845,8 +1845,10 @@ static int skill_additional_effect(struct block_list *src, struct block_list *bl
 
 		case DC_UGLYDANCE:
 			rate = 5+5*skill_lv;
-			if (sd && (temp=pc->checkskill(sd,DC_DANCINGLESSON)) > 0)
-				rate += 5+temp;
+#ifndef RENEWAL
+			if (sd != NULL && (temp = pc->checkskill(sd, DC_DANCINGLESSON)) > 0)
+				rate += 5 + temp;
+#endif
 			status_zap(bl, 0, rate);
 			break;
 		case SL_STUN:
@@ -13314,11 +13316,12 @@ static struct skill_unit_group *skill_unitsetting(struct block_list *src, uint16
 			break;
 		case DC_HUMMING:
 			val1 = 2*skill_lv+st->dex/10; // Hit increase
-			#ifdef RENEWAL
-				val1 *= 2;
-			#endif
-			if(sd)
-				val1 += pc->checkskill(sd,DC_DANCINGLESSON);
+#ifdef RENEWAL
+			val1 *= 2;
+#else
+			if (sd != NULL)
+				val1 += pc->checkskill(sd, DC_DANCINGLESSON);
+#endif
 			break;
 		case BA_POEMBRAGI:
 			val1 = 3 * skill_lv + st->dex / 10; // Casting time reduction
@@ -13338,11 +13341,12 @@ static struct skill_unit_group *skill_unitsetting(struct block_list *src, uint16
 #else
 			val1 = st->dex/10 + 3*skill_lv + 5; // ASPD decrease
 			val2 = st->agi/10 + 3*skill_lv + 5; // Movement speed adjustment.
-#endif
-			if(sd){
-				val1 += pc->checkskill(sd,DC_DANCINGLESSON);
-				val2 += pc->checkskill(sd,DC_DANCINGLESSON);
+
+			if (sd != NULL) {
+				val1 += pc->checkskill(sd, DC_DANCINGLESSON);
+				val2 += pc->checkskill(sd, DC_DANCINGLESSON);
 			}
+#endif
 			break;
 		case BA_APPLEIDUN:
 			val1 = 5 + 2 * skill_lv + st->vit / 10; // MaxHP percent increase
@@ -13353,12 +13357,15 @@ static struct skill_unit_group *skill_unitsetting(struct block_list *src, uint16
 #endif
 			break;
 		case DC_SERVICEFORYOU:
-			val1 = 15+skill_lv+(st->int_/10); // MaxSP percent increase
-			val2 = 20+3*skill_lv+(st->int_/10); // SP cost reduction
-			if(sd){
-				val1 += pc->checkskill(sd,DC_DANCINGLESSON) / 2;
-				val2 += pc->checkskill(sd,DC_DANCINGLESSON) / 2;
+			val1 = 15 + skill_lv + (st->int_ / 10); // MaxSP percent increase
+			val2 = 20 + 3 * skill_lv + (st->int_ / 10); // SP cost reduction
+
+#ifndef RENEWAL
+			if (sd != NULL) {
+				val1 += pc->checkskill(sd, DC_DANCINGLESSON) / 2;
+				val2 += pc->checkskill(sd, DC_DANCINGLESSON) / 2;
 			}
+#endif
 			break;
 		case BA_ASSASSINCROSS:
 #ifdef RENEWAL
@@ -13375,10 +13382,12 @@ static struct skill_unit_group *skill_unitsetting(struct block_list *src, uint16
 #endif
 			break;
 		case DC_FORTUNEKISS:
-			val1 = 10+skill_lv+(st->luk/10); // Critical increase
-			if(sd)
-				val1 += pc->checkskill(sd,DC_DANCINGLESSON);
-			val1*=10; //Because every 10 crit is an actual cri point.
+			val1 = 10 + skill_lv + (st->luk / 10); // Critical increase
+#ifndef RENEWAL
+			if (sd != NULL)
+				val1 += pc->checkskill(sd, DC_DANCINGLESSON);
+#endif
+			val1 *= 10; //Because every 10 crit is an actual cri point.
 			break;
 		case BD_DRUMBATTLEFIELD:
 		#ifdef RENEWAL
