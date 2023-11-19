@@ -1124,6 +1124,26 @@ enum e_status_calc_opt {
 	SCO_FORCE = 0x2, /* only relevant to BL_PC types, ensures call bypasses the queue caused by delayed damage */
 };
 
+/**
+ * Possible bonuses given by Ring Nimbelung (Harmonic Lick) in RE
+ * (SC_NIBELUNGEN val2)
+ */
+enum e_ringnibelungen_effect {
+	RINGNBL_EFF_ASPD = 0,       //< Increases attack speed (reduces delay after attack by 20%)
+	RINGNBL_EFF_ATK,            //< Atk + 20%
+	RINGNBL_EFF_MATK,           //< Matk + 20%
+	RINGNBL_EFF_MAXHP,          //< MaxHP + 30%
+	RINGNBL_EFF_MAXSP,          //< MaxSP + 30%
+	RINGNBL_EFF_ALLSTATS,       //< All Stat + 15
+	RINGNBL_EFF_HIT,            //< Hit + 50
+	RINGNBL_EFF_FLEE,           //< Flee + 50
+	RINGNBL_EFF_SP_CONSUMPTION, //< Reduces SP consumption of skills by 30%
+	RINGNBL_EFF_HP_RECOVERY,    //< Increases HP recovery by 100%
+	RINGNBL_EFF_SP_RECOVERY,    //< Increases SP recovery by 100%
+	// Must always be the last one
+	RINGNBL_EFF_MAX,
+};
+
 //Define to determine who gets HP/SP consumed on doing skills/etc. [Skotlex]
 #define BL_CONSUME (BL_PC|BL_HOM|BL_MER|BL_ELEM)
 //Define to determine who has regen

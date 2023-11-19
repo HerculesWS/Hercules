@@ -7985,6 +7985,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 
 #ifdef RENEWAL
 		case BD_RICHMANKIM:
+		case BD_RINGNIBELUNGEN:
 		case BA_WHISTLE:
 		case BA_ASSASSINCROSS:
 		case BA_POEMBRAGI:
@@ -12488,13 +12489,13 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 		case BD_LULLABY:
 		case BD_ETERNALCHAOS:
 		case BD_DRUMBATTLEFIELD:
-		case BD_RINGNIBELUNGEN:
 		case BD_ROKISWEIL:
 		case BD_INTOABYSS:
 		case BD_SIEGFRIED:
 		case BA_DISSONANCE:
 #ifndef RENEWAL
 		case BD_RICHMANKIM:
+		case BD_RINGNIBELUNGEN:
 		case BA_WHISTLE:
 		case BA_ASSASSINCROSS:
 		case BA_POEMBRAGI:
@@ -13553,10 +13554,11 @@ static struct skill_unit_group *skill_unitsetting(struct block_list *src, uint16
 			val2 = (skill_lv+1)*2; //Def increase
 		#endif
 			break;
-		case BD_RINGNIBELUNGEN:
-			val1 = (skill_lv+2)*25; //Watk increase
-			break;
 #ifndef RENEWAL
+		case BD_RINGNIBELUNGEN:
+			val1 = (skill_lv + 2) * 25; // Watk increase
+			break;
+
 		case BD_RICHMANKIM:
 			val1 = 25 + 11 * skill_lv; //Exp increase bonus.
 			break;

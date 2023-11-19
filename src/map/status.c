@@ -2187,6 +2187,11 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 	if(sc->data[SC_ATKER_BLOOD])
 		sd->dsprate -= sc->data[SC_ATKER_BLOOD]->val1;
 
+#ifdef RENEWAL
+	if (sc->data[SC_NIBELUNGEN] != NULL && sc->data[SC_NIBELUNGEN]->val2 == RINGNBL_EFF_SP_CONSUMPTION)
+		sd->dsprate -= 30;
+#endif
+
 	//Underflow protections.
 	if(sd->dsprate < 0)
 		sd->dsprate = 0;
@@ -2908,6 +2913,13 @@ static void status_calc_regen_rate_pc(struct map_session_data *sd, struct regen_
 		regen->rate.hp *= 3;
 		regen->skill->rate.hp *= 3;
 	}
+
+#ifdef RENEWAL
+	if (sc->data[SC_NIBELUNGEN] != NULL && sc->data[SC_NIBELUNGEN]->val2 == RINGNBL_EFF_HP_RECOVERY)
+		regen->rate.hp += 100;
+	if (sc->data[SC_NIBELUNGEN] != NULL && sc->data[SC_NIBELUNGEN]->val2 == RINGNBL_EFF_SP_RECOVERY)
+		regen->rate.sp += 100;
+#endif
 }
 
 static void status_calc_regen_rate_elemental(struct elemental_data *md, struct regen_data *regen)
@@ -4032,6 +4044,11 @@ static unsigned short status_calc_str(struct block_list *bl, struct status_chang
 	if (sc->data[SC_UNIVERSESTANCE] != NULL)
 		str += sc->data[SC_UNIVERSESTANCE]->val2;
 
+#ifdef RENEWAL
+	if (sc->data[SC_NIBELUNGEN] != NULL && sc->data[SC_NIBELUNGEN]->val2 == RINGNBL_EFF_ALLSTATS)
+		str += 15;
+#endif
+
 	return (unsigned short)cap_value(str,0,USHRT_MAX);
 }
 
@@ -4097,6 +4114,11 @@ static unsigned short status_calc_agi(struct block_list *bl, struct status_chang
 	if (sc->data[SC_UNIVERSESTANCE] != NULL)
 		agi += sc->data[SC_UNIVERSESTANCE]->val2;
 
+#ifdef RENEWAL
+	if (sc->data[SC_NIBELUNGEN] != NULL && sc->data[SC_NIBELUNGEN]->val2 == RINGNBL_EFF_ALLSTATS)
+		agi += 15;
+#endif
+
 	return (unsigned short)cap_value(agi,0,USHRT_MAX);
 }
 
@@ -4149,6 +4171,11 @@ static unsigned short status_calc_vit(struct block_list *bl, struct status_chang
 		vit += sc->data[SC_2011RWC]->val1;
 	if (sc->data[SC_UNIVERSESTANCE] != NULL)
 		vit += sc->data[SC_UNIVERSESTANCE]->val2;
+
+#ifdef RENEWAL
+	if (sc->data[SC_NIBELUNGEN] != NULL && sc->data[SC_NIBELUNGEN]->val2 == RINGNBL_EFF_ALLSTATS)
+		vit += 15;
+#endif
 
 	return (unsigned short)cap_value(vit,0,USHRT_MAX);
 }
@@ -4219,6 +4246,11 @@ static unsigned short status_calc_int(struct block_list *bl, struct status_chang
 	if (sc->data[SC_UNIVERSESTANCE] != NULL)
 		int_ += sc->data[SC_UNIVERSESTANCE]->val2;
 
+#ifdef RENEWAL
+	if (sc->data[SC_NIBELUNGEN] != NULL && sc->data[SC_NIBELUNGEN]->val2 == RINGNBL_EFF_ALLSTATS)
+		int_ += 15;
+#endif
+
 	return (unsigned short)cap_value(int_,0,USHRT_MAX);
 }
 
@@ -4284,6 +4316,11 @@ static unsigned short status_calc_dex(struct block_list *bl, struct status_chang
 	if (sc->data[SC_UNIVERSESTANCE] != NULL)
 		dex += sc->data[SC_UNIVERSESTANCE]->val2;
 
+#ifdef RENEWAL
+	if (sc->data[SC_NIBELUNGEN] != NULL && sc->data[SC_NIBELUNGEN]->val2 == RINGNBL_EFF_ALLSTATS)
+		dex += 15;
+#endif
+
 	return (unsigned short)cap_value(dex,0,USHRT_MAX);
 }
 
@@ -4340,6 +4377,11 @@ static unsigned short status_calc_luk(struct block_list *bl, struct status_chang
 		luk += sc->data[SC_MYSTICPOWDER]->val2;
 	if (sc->data[SC_UNIVERSESTANCE] != NULL)
 		luk += sc->data[SC_UNIVERSESTANCE]->val2;
+
+#ifdef RENEWAL
+	if (sc->data[SC_NIBELUNGEN] != NULL && sc->data[SC_NIBELUNGEN]->val2 == RINGNBL_EFF_ALLSTATS)
+		luk += 15;
+#endif
 
 	return (unsigned short)cap_value(luk, 0, USHRT_MAX);
 }
@@ -4583,6 +4625,11 @@ static int status_calc_batk(struct block_list *bl, struct status_change *sc, int
 	if (sc->data[SC_SUNSTANCE] != NULL)
 		batk += batk * sc->data[SC_SUNSTANCE]->val2 / 100;
 
+#ifdef RENEWAL
+	if (sc->data[SC_NIBELUNGEN] != NULL && sc->data[SC_NIBELUNGEN]->val2 == RINGNBL_EFF_ATK)
+		batk += batk * 20/100;
+#endif
+
 	return cap_value(batk, battle_config.batk_min, battle_config.batk_max);
 }
 
@@ -4698,6 +4745,11 @@ static int status_calc_watk(struct block_list *bl, struct status_change *sc, int
 	if (sc->data[SC_SOULFALCON] != NULL)
 		watk += sc->data[SC_SOULFALCON]->val2;
 
+#ifdef RENEWAL
+	if (sc->data[SC_NIBELUNGEN] != NULL && sc->data[SC_NIBELUNGEN]->val2 == SC_INCATKRATE)
+		watk += watk * 20/100;
+#endif
+
 	return cap_value(watk, battle_config.watk_min, battle_config.watk_max);
 }
 
@@ -4774,6 +4826,8 @@ static int status_calc_matk(struct block_list *bl, struct status_change *sc, int
 	// FIXME: This (and SC_IMPOSITIO) should have their effects shown in status window.
 	if (sc->data[SC_VOLCANO] != NULL)
 		matk += sc->data[SC_VOLCANO]->val2;
+	if (sc->data[SC_NIBELUNGEN] != NULL && sc->data[SC_NIBELUNGEN]->val2 == RINGNBL_EFF_MATK)
+		matk += matk * 20/100;
 #endif
 	if (sc->data[SC_ZANGETSU])
 		matk += sc->data[SC_ZANGETSU]->val3;
@@ -4923,6 +4977,8 @@ static int status_calc_hit(struct block_list *bl, struct status_change *sc, int 
 		hit += 2 * sc->data[SC_TWOHANDQUICKEN]->val1;
 	if (sc->data[SC_ADRENALINE] != NULL)
 		hit += sc->data[SC_ADRENALINE]->val4;
+	if (sc->data[SC_NIBELUNGEN] != NULL && sc->data[SC_NIBELUNGEN]->val2 == RINGNBL_EFF_HIT)
+		hit += 50;
 #endif
 
 	return cap_value(hit, battle_config.hit_min, battle_config.hit_max);
@@ -4982,6 +5038,8 @@ static int status_calc_flee(struct block_list *bl, struct status_change *sc, int
 #ifdef RENEWAL
 	if (sc->data[SC_SPEARQUICKEN])
 		flee += sc->data[SC_SPEARQUICKEN]->val1 * 2;
+	if (sc->data[SC_NIBELUNGEN] != NULL && sc->data[SC_NIBELUNGEN]->val2 == RINGNBL_EFF_FLEE)
+		flee += 50;
 #endif
 	if (sc->data[SC_INCFLEERATE])
 		flee += flee * sc->data[SC_INCFLEERATE]->val1 / 100;
@@ -5657,6 +5715,8 @@ static short status_calc_aspd(struct block_list *bl, struct status_change *sc, s
 			bonus += 10;
 		if (sc->data[SC_SPEARQUICKEN] != NULL)
 			bonus += 10;
+		if (sc->data[SC_NIBELUNGEN] != NULL && sc->data[SC_NIBELUNGEN]->val2 == RINGNBL_EFF_ASPD)
+			bonus += 20;
 #endif
 	}
 
@@ -5936,6 +5996,8 @@ static unsigned int status_calc_maxhp(struct block_list *bl, struct status_chang
 #ifdef RENEWAL
 	if (sc->data[SC_ANGELUS] != NULL)
 		maxhp += sc->data[SC_ANGELUS]->val3;
+	if (sc->data[SC_NIBELUNGEN] != NULL && sc->data[SC_NIBELUNGEN]->val2 == RINGNBL_EFF_MAXHP)
+		maxhp += maxhp * 30 / 100;
 #endif
 
 	return (unsigned int)cap_value(maxhp, 1, UINT_MAX);
@@ -5976,6 +6038,11 @@ static unsigned int status_calc_maxsp(struct block_list *bl, struct status_chang
 		maxsp -= maxsp * sc->data[SC_GM_BATTLE]->val1 / 100;
 	if (sc->data[SC_GM_BATTLE2])
 		maxsp -= maxsp * sc->data[SC_GM_BATTLE2]->val1 / 100;
+
+#ifdef RENEWAL
+	if (sc->data[SC_NIBELUNGEN] != NULL && sc->data[SC_NIBELUNGEN]->val2 == RINGNBL_EFF_MAXSP)
+		maxsp += maxsp * 30 / 100;
+#endif
 
 	return cap_value(maxsp, 1, UINT_MAX);
 }
@@ -7910,7 +7977,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			case SC_VOLCANO:
 #ifndef RENEWAL
 				val2 = val1 * 10; // Watk increase
-				
+
 				if (st->def_ele != ELE_FIRE)
 					val2 = 0;
 #else
@@ -7971,6 +8038,11 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 #ifdef RENEWAL
 			case SC_RICHMANKIM:
 				val1 = 10 + 10 * val1; // EXP increase (%)
+				break;
+
+			case SC_NIBELUNGEN:
+				// val1 = skill lv
+				val2 = rnd() % RINGNBL_EFF_MAX;
 				break;
 
 			case SC_WHISTLE:
@@ -12433,10 +12505,10 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 					break;
 				switch(sce->val1&0xFFFF){
 				case BD_DRUMBATTLEFIELD:
-				case BD_RINGNIBELUNGEN:
 				case BD_SIEGFRIED:
 #ifndef RENEWAL
 				case BD_RICHMANKIM:
+				case BD_RINGNIBELUNGEN:
 				case BA_DISSONANCE:
 				case BA_ASSASSINCROSS:
 				case DC_UGLYDANCE:

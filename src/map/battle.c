@@ -885,8 +885,6 @@ static int64 battle_calc_masteryfix(struct block_list *src, struct block_list *t
 		if(sc->data[SC_CAMOUFLAGE])
 			damage += 30 * ( 10 - sc->data[SC_CAMOUFLAGE]->val4 );
 #ifdef RENEWAL
-		if(sc->data[SC_NIBELUNGEN] && weapon)
-			damage += sc->data[SC_NIBELUNGEN]->val2;
 		if(sc->data[SC_DRUMBATTLE]){
 			if(tstatus->size == SZ_SMALL)
 				damage += sc->data[SC_DRUMBATTLE]->val2;
