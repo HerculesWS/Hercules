@@ -52,7 +52,7 @@ function run_server {
 	rm -rf core* || true
 	CRASH_PLEASE=1 $1 --run-once $2 2>runlog.txt
 	export errcode=$?
-	export teststr=$(head -c 10000 runlog.txt)
+	export teststr=$(head -c 10000 runlog.txt|grep -v "WARNING: MYSQL_OPT_RECONNECT is deprecated and will be removed in a future version.")
 	if [[ -n "${teststr}" ]]; then
 		echo "Errors found in running server $1."
 		head -c 10000 runlog.txt

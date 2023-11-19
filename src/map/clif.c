@@ -26159,8 +26159,17 @@ static int clif_parse(int fd)
 			}
 		}
 
-		if ((int)RFIFOREST(fd) < packet_len)
+		if ((int)RFIFOREST(fd) < packet_len) {
+			if (sd == NULL) {
+				if (packet_db[cmd].func != clif->pWantToConnection) {
+					ShowWarning("clif_parse: Received first unsupported packet (packet 0x%04x (0x%04x), %"PRIuS" bytes received), disconnecting session #%d.\n",
+				            (unsigned int)cmd, RFIFOW(fd, 0), RFIFOREST(fd), fd);
+					sockt->eof(fd);
+				}
+			}
+
 			return 0; // not enough data received to form the packet
+		}
 
 		if( battle_config.packet_obfuscation == 2 || cmd != RFIFOW(fd, 0) || (sd && sd->parse_cmd_func == clif->parse_cmd_decrypt) ) {
 			// Note: Overriding const qualifier to re-inject the decoded packet ID.
