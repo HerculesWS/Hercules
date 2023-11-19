@@ -4571,12 +4571,12 @@ static int status_calc_batk(struct block_list *bl, struct status_change *sc, int
 
 /**
  * Calculates bl's Extra ATK gains from Buffs.
- * 
+ *
  * These are very specific bonus from SCs where:
  * - They show in status window ATK right side (after the + sign)
  * - They are given by SCs, but they work like equipment's ATK bonus
  * - They are not linked to the weapon attack value
- * 
+ *
  * @param bl unit whose status is being calculated
  * @param sc unit's SC list
  * @returns Value of Extra ATK conceded by buffs
@@ -8395,7 +8395,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				} else {
 					val2 = 0; //0 means that STR, DEX and INT should be halved
 				}
-				
+
 				val1 += bonus; // Officially, val1 is incremented (for us, this doesn't make a difference)
 				break;
 			}
@@ -10536,6 +10536,11 @@ static bool status_end_sc_before_start(struct block_list *bl, struct status_data
 		status_change_end(bl, SC_ONEHANDQUICKEN, INVALID_TIMER);
 		status_change_end(bl, SC_MER_QUICKEN, INVALID_TIMER);
 		status_change_end(bl, SC_ACCELERATION, INVALID_TIMER);
+#ifdef RENEWAL // Dancer performance buffs (don't overlap)
+		status_change_end(bl, SC_HUMMING, INVALID_TIMER);
+		status_change_end(bl, SC_FORTUNE, INVALID_TIMER);
+		status_change_end(bl, SC_SERVICEFORYOU, INVALID_TIMER);
+#endif
 		break;
 	case SC_ONEHANDQUICKEN:
 		// Removes the Aspd potion effect, as reported by Vicious. [Skotlex]
@@ -10687,6 +10692,57 @@ static bool status_end_sc_before_start(struct block_list *bl, struct status_data
 		status_change_end(bl, SC_ATTHASTE_POTION3, INVALID_TIMER);
 		status_change_end(bl, SC_ATTHASTE_INFINITY, INVALID_TIMER);
 		break;
+
+#ifdef RENEWAL
+	// Bard-only songs Group (doesn't overlap)
+	case SC_WHISTLE:
+	case SC_ASSNCROS:
+	case SC_POEMBRAGI:
+	case SC_APPLEIDUN: {
+		int group_scs[] = { SC_WHISTLE, SC_ASSNCROS, SC_POEMBRAGI, SC_APPLEIDUN };
+
+		for (int i = 0; i < ARRAYLENGTH(group_scs); ++i) {
+			if (type != group_scs[i])
+				status_change_end(bl, group_scs[i], INVALID_TIMER);
+		}
+		break;
+	}
+
+	// Dancer-only songs Group (doesn't overlap)
+	case SC_HUMMING:
+	case SC_FORTUNE:
+	// case SC_DONTFORGETME: // Independently checked above
+	case SC_SERVICEFORYOU: {
+		int group_scs[] = { SC_HUMMING, SC_FORTUNE, SC_SERVICEFORYOU, SC_DONTFORGETME };
+
+		for (int i = 0; i < ARRAYLENGTH(group_scs); ++i) {
+			if (type != group_scs[i])
+				status_change_end(bl, group_scs[i], INVALID_TIMER);
+		}
+		break;
+	}
+
+	// Ensemble songs Group (doesn't overlap)
+	case SC_ROKISWEIL:
+	case SC_ETERNALCHAOS:
+	case SC_SIEGFRIED:
+	case SC_DRUMBATTLE:
+	case SC_NIBELUNGEN:
+	case SC_RICHMANKIM:
+	case SC_INTOABYSS: {
+		int group_scs[] = {
+			SC_ROKISWEIL, SC_ETERNALCHAOS, SC_SIEGFRIED, SC_DRUMBATTLE,
+			SC_NIBELUNGEN, SC_RICHMANKIM, SC_INTOABYSS,
+		};
+
+		for (int i = 0; i < ARRAYLENGTH(group_scs); ++i) {
+			if (type != group_scs[i])
+				status_change_end(bl, group_scs[i], INVALID_TIMER);
+		}
+		break;
+	}
+#endif
+
 	// Group A Status (doesn't overlap)
 	case SC_SWING:
 	case SC_SYMPHONY_LOVE:
