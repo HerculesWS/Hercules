@@ -12530,8 +12530,8 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 					s = 4;
 					break;
 				case CG_HERMODE:
-				case BD_INTOABYSS:
 #ifndef RENEWAL
+				case BD_INTOABYSS:
 				case DC_HUMMING:
 				case BA_WHISTLE:
 				case BA_POEMBRAGI:
