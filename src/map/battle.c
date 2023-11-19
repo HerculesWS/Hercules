@@ -4374,8 +4374,10 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 		break;
 	case BA_DISSONANCE:
 		md.damage=30+skill_lv*10;
-		if (sd)
-			md.damage+= 3*pc->checkskill(sd,BA_MUSICALLESSON);
+#ifndef RENEWAL
+		if (sd != NULL)
+			md.damage += 3 * pc->checkskill(sd, BA_MUSICALLESSON);
+#endif
 		break;
 	case NPC_SELFDESTRUCTION:
 		md.damage = sstatus->hp;

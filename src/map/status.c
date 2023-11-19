@@ -1967,6 +1967,10 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 		bstatus->max_sp += 30 * skill_lv;
 	if ((pc->checkskill(sd,SU_SPRITEMABLE)) > 0)
 		bstatus->max_sp += 100;
+#ifdef RENEWAL
+	if((skill_lv = pc->checkskill(sd, BA_MUSICALLESSON)) > 0)
+		bstatus->max_sp += (int64) bstatus->max_sp * skill_lv / 100;
+#endif
 
 	// Apply relative modifiers from equipment
 	if(sd->sprate < 0)
@@ -3718,6 +3722,9 @@ static int status_base_amotion_pc(struct map_session_data *sd, struct status_dat
 		val += ((skill_lv + 1) / 2);
 	if ((skill_lv = pc->checkskill(sd, RG_PLAGIARISM)) > 0)
 		val += skill_lv;
+	if (sd->weapontype == W_MUSICAL && (skill_lv = pc->checkskill(sd, BA_MUSICALLESSON)) > 0)
+		val += skill_lv;
+
 	amotion = ((int)(temp + ((float)(status->calc_aspd(&sd->bl, &sd->sc, 1) + val) * st->agi / 200)) - min(amotion, 200));
 #else
 	// base weapon delay

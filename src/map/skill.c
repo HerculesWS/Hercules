@@ -1163,9 +1163,9 @@ static int skill_calc_heal(struct block_list *src, struct block_list *target, ui
 			hp = 100+5*skill_lv+5*(status_get_vit(src)/10); // HP recovery
 #else // not RENEWAL
 			hp = 30+5*skill_lv+5*(status_get_vit(src)/10); // HP recovery
+			if (sd != NULL)
+				hp += 5 * pc->checkskill(sd, BA_MUSICALLESSON);
 #endif // RENEWAL
-			if( sd )
-				hp += 5*pc->checkskill(sd,BA_MUSICALLESSON);
 			break;
 		case PR_SANCTUARY:
 			hp = (skill_lv>6)?777:skill_lv*100;
@@ -13328,10 +13328,12 @@ static struct skill_unit_group *skill_unitsetting(struct block_list *src, uint16
 		case BA_WHISTLE:
 			val1 = skill_lv +st->agi/10; // Flee increase
 			val2 = ((skill_lv+1)/2)+st->luk/10; // Perfect dodge increase
-			if(sd){
-				val1 += pc->checkskill(sd,BA_MUSICALLESSON);
-				val2 += pc->checkskill(sd,BA_MUSICALLESSON);
+#ifndef RENEWAL
+			if (sd != NULL) {
+				val1 += pc->checkskill(sd, BA_MUSICALLESSON);
+				val2 += pc->checkskill(sd, BA_MUSICALLESSON);
 			}
+#endif
 			break;
 		case DC_HUMMING:
 			val1 = 2*skill_lv+st->dex/10; // Hit increase
@@ -13342,13 +13344,15 @@ static struct skill_unit_group *skill_unitsetting(struct block_list *src, uint16
 				val1 += pc->checkskill(sd,DC_DANCINGLESSON);
 			break;
 		case BA_POEMBRAGI:
-			val1 = 3*skill_lv+st->dex/10; // Casting time reduction
+			val1 = 3 * skill_lv + st->dex / 10; // Casting time reduction
 			//For some reason at level 10 the base delay reduction is 50%.
-			val2 = (skill_lv<10?3*skill_lv:50)+st->int_/5; // After-cast delay reduction
-			if(sd){
-				val1 += 2*pc->checkskill(sd,BA_MUSICALLESSON);
-				val2 += 2*pc->checkskill(sd,BA_MUSICALLESSON);
+			val2 = (skill_lv < 10 ? 3 * skill_lv : 50) + st->int_ / 5; // After-cast delay reduction
+#ifndef RENEWAL
+			if (sd != NULL) {
+				val1 += 2 * pc->checkskill(sd, BA_MUSICALLESSON);
+				val2 += 2 * pc->checkskill(sd, BA_MUSICALLESSON);
 			}
+#endif
 			break;
 		case DC_DONTFORGETME:
 #ifdef RENEWAL
@@ -13364,9 +13368,12 @@ static struct skill_unit_group *skill_unitsetting(struct block_list *src, uint16
 			}
 			break;
 		case BA_APPLEIDUN:
-			val1 = 5+2*skill_lv+st->vit/10; // MaxHP percent increase
-			if(sd)
-				val1 += pc->checkskill(sd,BA_MUSICALLESSON);
+			val1 = 5 + 2 * skill_lv + st->vit / 10; // MaxHP percent increase
+#ifndef RENEWAL
+			if (sd != NULL) {
+				val1 += pc->checkskill(sd, BA_MUSICALLESSON);
+			}
+#endif
 			break;
 		case DC_SERVICEFORYOU:
 			val1 = 15+skill_lv+(st->int_/10); // MaxSP percent increase
@@ -13377,14 +13384,15 @@ static struct skill_unit_group *skill_unitsetting(struct block_list *src, uint16
 			}
 			break;
 		case BA_ASSASSINCROSS:
-			if(sd)
-				val1 = pc->checkskill(sd,BA_MUSICALLESSON) / 2;
 #ifdef RENEWAL
 			// This formula was taken from a RE calculator
 			// and the changes published on irowiki
 			// Luckily, official tests show it's the right one
-			val1 += skill_lv + (st->agi/20);
+			val1 = skill_lv + (st->agi / 20);
 #else
+			if (sd != NULL)
+				val1 = pc->checkskill(sd, BA_MUSICALLESSON) / 2;
+
 			val1 += 10 + skill_lv + (st->agi/10); // ASPD increase
 			val1 *= 10; // ASPD works with 1000 as 100%
 #endif
