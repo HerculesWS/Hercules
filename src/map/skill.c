@@ -7984,6 +7984,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 			break;
 
 #ifdef RENEWAL
+		case BD_RICHMANKIM:
 		case BA_WHISTLE:
 		case BA_ASSASSINCROSS:
 		case BA_POEMBRAGI:
@@ -11899,6 +11900,9 @@ static void skill_castend_nodamage_id_sc_song(struct block_list *src, struct blo
 		sd->skill_id_dance = skill_id;
 		sd->skill_lv_dance = skill_lv;
 
+		if ((skill->get_inf2(skill_id) & INF2_ENSEMBLE_SKILL) != 0)
+			skill->check_pc_partner(sd, skill_id, &skill_lv, 1, 1);
+
 		clif->skill_nodamage(src, src, skill_id, skill_lv, 1);
 
 		int splash_range = skill->get_splash(skill_id, skill_lv);
@@ -12482,7 +12486,6 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 		case MA_SHOWER:
 		case SA_LANDPROTECTOR:
 		case BD_LULLABY:
-		case BD_RICHMANKIM:
 		case BD_ETERNALCHAOS:
 		case BD_DRUMBATTLEFIELD:
 		case BD_RINGNIBELUNGEN:
@@ -12491,6 +12494,7 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 		case BD_SIEGFRIED:
 		case BA_DISSONANCE:
 #ifndef RENEWAL
+		case BD_RICHMANKIM:
 		case BA_WHISTLE:
 		case BA_ASSASSINCROSS:
 		case BA_POEMBRAGI:
@@ -13552,9 +13556,11 @@ static struct skill_unit_group *skill_unitsetting(struct block_list *src, uint16
 		case BD_RINGNIBELUNGEN:
 			val1 = (skill_lv+2)*25; //Watk increase
 			break;
+#ifndef RENEWAL
 		case BD_RICHMANKIM:
-			val1 = 25 + 11*skill_lv; //Exp increase bonus.
+			val1 = 25 + 11 * skill_lv; //Exp increase bonus.
 			break;
+#endif
 		case BD_SIEGFRIED:
 			val1 = 55 + skill_lv*5; //Elemental Resistance
 			val2 = skill_lv*10; //Status ailment resistance

@@ -2580,8 +2580,12 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 	) { //Experience calculation.
 		int bonus = 100; //Bonus on top of your share (common to all attackers).
 		int pnum = 0;
-		if (md->sc.data[SC_RICHMANKIM])
+
+#ifndef RENEWAL
+		if (md->sc.data[SC_RICHMANKIM] != NULL)
 			bonus += md->sc.data[SC_RICHMANKIM]->val2;
+#endif
+
 		if(sd) {
 			temp = status->get_class(&md->bl);
 			if(sd->sc.data[SC_MIRACLE]) i = 2; //All mobs are Star Targets
@@ -2903,7 +2907,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 
 		clif->mvp_effect(mvp_sd);
 		clif->mvp_exp(mvp_sd,mexp);
-		pc->gainexp(mvp_sd, &md->bl, mexp, 0, EXP_FLAG_NONE);
+		pc->gainexp(mvp_sd, &md->bl, mexp, 0, EXP_FLAG_MVP);
 		log_mvp[1] = mexp;
 
 		if (!(map->list[m].flag.nomvploot || type&1)) {

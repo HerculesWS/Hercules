@@ -7969,6 +7969,10 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				break;
 
 #ifdef RENEWAL
+			case SC_RICHMANKIM:
+				val1 = 10 + 10 * val1; // EXP increase (%)
+				break;
+
 			case SC_WHISTLE:
 				// val1: Skill Lv
 				val2 = (val1 < 10 ? (18 + val1 * 2) : 40); // Flee Increase
@@ -12428,11 +12432,11 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 				if (--sce->val3 <= 0)
 					break;
 				switch(sce->val1&0xFFFF){
-				case BD_RICHMANKIM:
 				case BD_DRUMBATTLEFIELD:
 				case BD_RINGNIBELUNGEN:
 				case BD_SIEGFRIED:
 #ifndef RENEWAL
+				case BD_RICHMANKIM:
 				case BA_DISSONANCE:
 				case BA_ASSASSINCROSS:
 				case DC_UGLYDANCE:

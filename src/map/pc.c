@@ -6806,7 +6806,7 @@ static int pc_checkjoblevelup(struct map_session_data *sd)
 /**
  * Alters EXP based on self bonuses that do not get shared with the party
  **/
-static void pc_calcexp(struct map_session_data *sd, uint64 *base_exp, uint64 *job_exp, struct block_list *src)
+static void pc_calcexp(struct map_session_data *sd, uint64 *base_exp, uint64 *job_exp, struct block_list *src, enum gainexp_flags flags)
 {
 	int buff_ratio = 0, buff_job_ratio = 0, race_ratio = 0, pk_ratio = 0;
 	int64 jexp, bexp;
@@ -6828,6 +6828,16 @@ static void pc_calcexp(struct map_session_data *sd, uint64 *base_exp, uint64 *jo
 			re_mod = pc->level_penalty_mod(md->level - sd->status.base_level, md->status.race, md->status.mode, 1);
 			jexp = apply_percentrate64(jexp, re_mod, 100);
 			bexp = apply_percentrate64(bexp, re_mod, 100);
+		}
+#endif
+
+#ifdef RENEWAL
+		// after rebalance, boss monsters does give more EXP, but "MVP" exp is not increased
+		if (sd->sc.data[SC_RICHMANKIM] != NULL && src->type == BL_MOB && (flags & EXP_FLAG_MVP) == 0) {
+			buff_ratio += sd->sc.data[SC_RICHMANKIM]->val1;
+			// jexp is boosted by both buff_ration AND buff_job_ratio, so we should not use buff_job_ratio here
+			// or we will give the bonus twice for jexp
+			// buff_job_ratio += sd->sc.data[SC_RICHMANKIM]->val1;
 		}
 #endif
 
@@ -6898,7 +6908,7 @@ static bool pc_gainexp(struct map_session_data *sd, struct block_list *src, uint
 		return false;
 
 	if (src)
-		pc->calcexp(sd, &base_exp, &job_exp, src);
+		pc->calcexp(sd, &base_exp, &job_exp, src, flags);
 
 	if (sd->status.guild_id > 0)
 		base_exp -= guild->payexp(sd, base_exp);
