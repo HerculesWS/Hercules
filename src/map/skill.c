@@ -1864,11 +1864,11 @@ static int skill_additional_effect(struct block_list *src, struct block_list *bl
 			sc_start(src, bl, SC_STUN, (25 + 5 * skill_lv), skill_lv, skill->get_time2(skill_id, skill_lv), skill_id);
 			break;
 
+#ifndef RENEWAL
 		case BD_LULLABY:
 			sc_start(src, bl, SC_SLEEP, 15, skill_lv, skill->get_time2(skill_id, skill_lv), skill_id);
 			break;
 
-#ifndef RENEWAL
 		case DC_UGLYDANCE:
 			rate = 5+5*skill_lv;
 
@@ -7998,6 +7998,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 			skill->castend_nodamage_id_sc_song(src, bl, skill_id, skill_lv, tick, flag | BCT_PARTY);
 			break;
 
+		case BD_LULLABY:
 		case BD_ETERNALCHAOS:
 		case BD_ROKISWEIL:
 		case DC_DONTFORGETME:
@@ -11918,8 +11919,12 @@ static void skill_castend_nodamage_id_sc_song(struct block_list *src, struct blo
 		else
 			map->foreachinrange(skill->area_sub, src, splash_range, BL_CHAR, src, skill_id, skill_lv, tick, flags, skill->castend_nodamage_id);
 	} else {
+		int chance = 100;
+		if (skill_id == BD_LULLABY)
+			chance = 15; // @TODO: Did chance of sleep changed in RE rebalance?
+
 		enum sc_type sc = skill->get_sc_type(skill_id);
-		sc_start(src, bl, sc, 100, skill_lv, skill->get_time(skill_id, skill_lv), skill_id);
+		sc_start(src, bl, sc, chance, skill_lv, skill->get_time(skill_id, skill_lv), skill_id);
 	}
 #endif
 }
@@ -12490,10 +12495,10 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 		case AC_SHOWER: //Ground-placed skill implementation.
 		case MA_SHOWER:
 		case SA_LANDPROTECTOR:
-		case BD_LULLABY:
 		case BD_DRUMBATTLEFIELD:
 		case BA_DISSONANCE:
 #ifndef RENEWAL
+		case BD_LULLABY:
 		case BD_RICHMANKIM:
 		case BD_ETERNALCHAOS:
 		case BD_RINGNIBELUNGEN:

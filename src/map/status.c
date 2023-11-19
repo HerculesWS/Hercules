@@ -12537,14 +12537,14 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 #endif
 					s = 3;
 					break;
-				case BD_LULLABY:
 #ifndef RENEWAL
+				case BD_LULLABY:
 				case BD_ROKISWEIL:
 				case BD_ETERNALCHAOS:
 				case DC_FORTUNEKISS:
-#endif
 					s = 4;
 					break;
+#endif
 				case CG_HERMODE:
 #ifndef RENEWAL
 				case BD_INTOABYSS:
