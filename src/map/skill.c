@@ -15915,25 +15915,27 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 				return 0;
 			}
 			break; //Combo ready.
-		case BD_ADAPTATION:
-			{
-				int time;
-				if(!(sc && sc->data[SC_DANCING]))
-				{
-					clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
-					return 0;
-				}
-				time = 1000*(sc->data[SC_DANCING]->val3>>16);
-				if (skill->get_time(
-					(sc->data[SC_DANCING]->val1&0xFFFF), //Dance Skill ID
-					(sc->data[SC_DANCING]->val1>>16)) //Dance Skill LV
-					- time < skill->get_time2(skill_id,skill_lv))
-				{
-					clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
-					return 0;
-				}
+
+		case BD_ADAPTATION: {
+			if (sc == NULL || sc->data[SC_DANCING] == NULL) {
+				clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
+				return 0;
+			}
+
+			int time = 1000 * (sc->data[SC_DANCING]->val3 >> 16);
+
+			int dance_skill_id = (sc->data[SC_DANCING]->val1 & 0xFFFF);
+			int dance_skill_lv = (sc->data[SC_DANCING]->val1 >> 16);
+			int dance_duration = skill->get_time(dance_skill_id, dance_skill_lv);
+
+			int interrupt_ticks = skill->get_time2(skill_id, skill_lv);
+
+			if (dance_duration - time < interrupt_ticks) {
+				clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
+				return 0;
 			}
 			break;
+		}
 
 		case PR_BENEDICTIO:
 			if (skill->check_pc_partner(sd, skill_id, &skill_lv, 1, 0) < 2)
