@@ -86019,6 +86019,32 @@ int HP_skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, 
 	}
 	return retVal___;
 }
+void HP_skill_castend_nodamage_id_sc_song(struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_skill_castend_nodamage_id_sc_song_pre > 0) {
+		void (*preHookFunc) (struct block_list **src, struct block_list **bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_castend_nodamage_id_sc_song_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_skill_castend_nodamage_id_sc_song_pre[hIndex].func;
+			preHookFunc(&src, &bl, &skill_id, &skill_lv, &tick, &flag);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.skill.castend_nodamage_id_sc_song(src, bl, skill_id, skill_lv, tick, flag);
+	}
+	if (HPMHooks.count.HP_skill_castend_nodamage_id_sc_song_post > 0) {
+		void (*postHookFunc) (struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_castend_nodamage_id_sc_song_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_skill_castend_nodamage_id_sc_song_post[hIndex].func;
+			postHookFunc(src, bl, skill_id, skill_lv, tick, flag);
+		}
+	}
+	return;
+}
 int HP_skill_castend_damage_id(struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag) {
 	int hIndex = 0;
 	int retVal___ = 0;
@@ -95078,6 +95104,33 @@ int HP_status_calc_batk(struct block_list *bl, struct status_change *sc, int bat
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_batk_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_status_calc_batk_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, bl, sc, batk, viewable);
+		}
+	}
+	return retVal___;
+}
+int HP_status_calc_buff_extra_batk(struct block_list *bl, struct status_change *sc) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_status_calc_buff_extra_batk_pre > 0) {
+		int (*preHookFunc) (struct block_list **bl, struct status_change **sc);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_buff_extra_batk_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_status_calc_buff_extra_batk_pre[hIndex].func;
+			retVal___ = preHookFunc(&bl, &sc);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.status.calc_buff_extra_batk(bl, sc);
+	}
+	if (HPMHooks.count.HP_status_calc_buff_extra_batk_post > 0) {
+		int (*postHookFunc) (int retVal___, struct block_list *bl, struct status_change *sc);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_buff_extra_batk_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_status_calc_buff_extra_batk_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, bl, sc);
 		}
 	}
 	return retVal___;

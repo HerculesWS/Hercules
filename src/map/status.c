@@ -7956,6 +7956,15 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				val3 = total_tick/1000; //Tick duration
 				tick_time = 1000; // [GodLesZ] tick time
 				break;
+
+#ifdef RENEWAL
+			case SC_POEMBRAGI:
+				// val1 = skill lv
+				val2 = val1 * 2; // Cast time reduction
+				val3 = val1 * 3; // After-cast delay reduction
+				break;
+#endif
+
 			case SC_LONGING:
 	#ifdef RENEWAL
 				val2 = 50 + 10 * val1;
@@ -12378,7 +12387,9 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 				case BD_INTOABYSS:
 				case BA_WHISTLE:
 				case DC_HUMMING:
+#ifndef RENEWAL
 				case BA_POEMBRAGI:
+#endif
 				case DC_SERVICEFORYOU:
 					s=5;
 					break;

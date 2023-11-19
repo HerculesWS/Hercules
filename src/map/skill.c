@@ -7979,6 +7979,12 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 			break;
 
 #ifdef RENEWAL
+		case BA_POEMBRAGI:
+			skill->castend_nodamage_id_sc_song(src, bl, skill_id, skill_lv, tick, flag | BCT_PARTY);
+			break;
+#endif
+
+#ifdef RENEWAL
 		case MC_LOUD:
 		case PR_IMPOSITIO:
 		case PR_SUFFRAGIUM:
@@ -11843,6 +11849,53 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 	return 0;
 }
 
+/**
+ * Castend handler for Song/Dance skills that simply cause SCs (RE-only)
+ * @param src Unit who cast the skill
+ * @param bl Unit being targeted by the skill
+ * @param skill_id skill being cast
+ * @param skill_lv level of the skill being cast
+ * @param tick
+ * @param flag castend flags
+ * - flag & 1 :
+ *     when not set: it is the initial skill cast,
+ *     when set: it is in the reiteration over targets to get buffed.
+ * - enum e_battle_check_target flags: defines who will be affected by the reiteration. examples:
+ *     flag | BCT_PARTY -- affects party members (e.g. apply SC to all party members)
+ *     flag | BCT_ENEMY -- affects enemies (e.g. apply SC to all enemies)
+ *
+ * - @TODO: Document other possible flag values
+ */
+static void skill_castend_nodamage_id_sc_song(struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag)
+{
+#ifdef RENEWAL
+	nullpo_retv(src);
+	nullpo_retv(bl);
+
+	if ((flag & 1) == 0) {
+		struct map_session_data *sd = BL_CAST(BL_PC, src);
+		if (sd == NULL)
+			return;
+
+		sd->skill_id_dance = skill_id;
+		sd->skill_lv_dance = skill_lv;
+
+		clif->skill_nodamage(src, src, skill_id, skill_lv, 1);
+
+		int splash_range = skill->get_splash(skill_id, skill_lv);
+		int flags = flag | 1; // &1 will tell when we are iterating over the "execution" phase
+
+		if ((flags & BCT_PARTY) != 0)
+			party->foreachsamemap(skill->area_sub, sd, splash_range, src, skill_id, skill_lv, tick, flags, skill->castend_nodamage_id);
+		else
+			map->foreachinrange(skill->area_sub, src, splash_range, BL_CHAR, src, skill_id, skill_lv, tick, flags, skill->castend_nodamage_id);
+	} else {
+		enum sc_type sc = skill->get_sc_type(skill_id);
+		sc_start(src, bl, sc, 100, skill_lv, skill->get_time(skill_id, skill_lv), skill_id);
+	}
+#endif
+}
+
 static bool skill_castend_nodamage_id_dead_unknown(struct block_list *src, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag)
 {
 	return true;
@@ -12374,7 +12427,9 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 		case BD_INTOABYSS:
 		case BD_SIEGFRIED:
 		case BA_DISSONANCE:
+#ifndef RENEWAL
 		case BA_POEMBRAGI:
+#endif
 		case BA_WHISTLE:
 		case BA_ASSASSINCROSS:
 		case BA_APPLEIDUN:
@@ -13367,17 +13422,18 @@ static struct skill_unit_group *skill_unitsetting(struct block_list *src, uint16
 				val1 += pc->checkskill(sd, DC_DANCINGLESSON);
 #endif
 			break;
+#ifndef RENEWAL
 		case BA_POEMBRAGI:
 			val1 = 3 * skill_lv + st->dex / 10; // Casting time reduction
 			//For some reason at level 10 the base delay reduction is 50%.
 			val2 = (skill_lv < 10 ? 3 * skill_lv : 50) + st->int_ / 5; // After-cast delay reduction
-#ifndef RENEWAL
+
 			if (sd != NULL) {
 				val1 += 2 * pc->checkskill(sd, BA_MUSICALLESSON);
 				val2 += 2 * pc->checkskill(sd, BA_MUSICALLESSON);
 			}
-#endif
 			break;
+#endif
 		case DC_DONTFORGETME:
 #ifdef RENEWAL
 			val1 = st->dex/10 + 3*skill_lv; // ASPD decrease
@@ -25508,6 +25564,7 @@ void skill_defaults(void)
 	skill->produce_mix = skill_produce_mix;
 	skill->arrow_create = skill_arrow_create;
 	skill->castend_nodamage_id = skill_castend_nodamage_id;
+	skill->castend_nodamage_id_sc_song = skill_castend_nodamage_id_sc_song;
 	skill->castend_damage_id = skill_castend_damage_id;
 	skill->castend_pos2 = skill_castend_pos2;
 	skill->blockpc_start = skill_blockpc_start_;
