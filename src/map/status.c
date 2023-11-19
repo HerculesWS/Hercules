@@ -912,7 +912,9 @@ static int status_check_skilluse(struct block_list *src, struct block_list *targ
 					return 0;
 			} else {
 				switch (skill_id) {
+#ifndef RENEWAL
 				case BD_ADAPTATION:
+#endif
 				case CG_LONGINGFREEDOM:
 				case BA_MUSICALSTRIKE:
 				case DC_THROWARROW:
@@ -921,8 +923,10 @@ static int status_check_skilluse(struct block_list *src, struct block_list *targ
 					return 0;
 				}
 			}
-			if ((sc->data[SC_DANCING]->val1&0xFFFF) == CG_HERMODE && skill_id == BD_ADAPTATION)
+#ifndef RENEWAL
+			if ((sc->data[SC_DANCING]->val1 & 0xFFFF) == CG_HERMODE && skill_id == BD_ADAPTATION)
 				return 0; //Can't amp out of Wand of Hermode :/ [Skotlex]
+#endif
 		}
 
 		if (skill_id != 0 /* Do not block item-casted skills.*/ && (src->type != BL_PC || sd->auto_cast_current.type != AUTOCAST_ITEM)) {
@@ -8130,6 +8134,10 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				// - val1: Skill Lv
 				val2 = (val1 < 10 ? (9 + val1) : 20); // MaxSP percent increase
 				val3 = val1 + 5; // SP cost reduction
+				break;
+
+			case SC_ADAPTATION:
+				val2 = 20; // 20% SP cost reduction
 				break;
 #endif
 

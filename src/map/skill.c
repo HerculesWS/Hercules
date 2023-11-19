@@ -6645,8 +6645,10 @@ static int skill_castend_id(int tid, int64 tick, int id, intptr_t data)
 			)
 				sc->data[SC_SOULLINK]->val3 = 0; //Clear bounced spell check.
 
-			if( sc->data[SC_DANCING] && skill->get_inf2(ud->skill_id)&INF2_SONG_DANCE && sd )
+#ifndef RENEWAL
+			if (sc->data[SC_DANCING] != NULL && (skill->get_inf2(ud->skill_id) & INF2_SONG_DANCE) != 0 && sd != NULL)
 				skill->blockpc_start(sd,BD_ADAPTATION,3000);
+#endif
 		}
 
 		if (sd != NULL && ud->skill_id != SA_ABRACADABRA && ud->skill_id != WM_RANDOMIZESPELL
@@ -7501,6 +7503,9 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 		case SJ_LIGHTOFSUN:
 		case SJ_BOOKOFDIMENSION:
 		case SP_SOULREAPER:
+#ifdef RENEWAL
+		case BD_ADAPTATION:
+#endif
 			clif->skill_nodamage(src,bl,skill_id,skill_lv,
 				sc_start(src, bl, type, 100, skill_lv, skill->get_time(skill_id, skill_lv), skill_id));
 			break;
@@ -8209,12 +8214,14 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 			}
 			break;
 
+#ifndef RENEWAL
 		case BD_ADAPTATION:
-			if(tsc && tsc->data[SC_DANCING]){
+			if (tsc != NULL && tsc->data[SC_DANCING] != NULL) {
 				clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
 				status_change_end(bl, SC_DANCING, INVALID_TIMER);
 			}
 			break;
+#endif
 
 		case BA_FROSTJOKE:
 		case DC_SCREAM:
@@ -15916,6 +15923,7 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 			}
 			break; //Combo ready.
 
+#ifndef RENEWAL
 		case BD_ADAPTATION: {
 			if (sc == NULL || sc->data[SC_DANCING] == NULL) {
 				clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
@@ -15936,6 +15944,7 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 			}
 			break;
 		}
+#endif
 
 		case PR_BENEDICTIO:
 			if (skill->check_pc_partner(sd, skill_id, &skill_lv, 1, 0) < 2)
@@ -17242,6 +17251,10 @@ static struct skill_condition skill_get_requirement(struct map_session_data *sd,
 			req.sp -= req.sp * sc->data[SC_TARGET_ASPD]->val1 / 100;
 		if (sc->data[SC_MVPCARD_MISTRESS])
 			req.sp -= req.sp * sc->data[SC_MVPCARD_MISTRESS]->val1 / 100;
+#ifdef RENEWAL
+		if (sc->data[SC_ADAPTATION] && (skill->get_inf2(skill_id) & (INF2_SONG_DANCE | INF2_ENSEMBLE_SKILL)) != 0)
+			req.sp -= req.sp * sc->data[SC_ADAPTATION]->val2 / 100;
+#endif
 	}
 
 	req.zeny = skill->dbs->db[idx].zeny[skill_lv-1];
