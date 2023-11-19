@@ -7981,6 +7981,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 			break;
 
 #ifdef RENEWAL
+		case BA_WHISTLE:
 		case BA_ASSASSINCROSS:
 		case BA_POEMBRAGI:
 		case BA_APPLEIDUN:
@@ -12432,11 +12433,11 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 		case BD_SIEGFRIED:
 		case BA_DISSONANCE:
 #ifndef RENEWAL
+		case BA_WHISTLE:
 		case BA_ASSASSINCROSS:
 		case BA_POEMBRAGI:
 		case BA_APPLEIDUN:
 #endif
-		case BA_WHISTLE:
 		case DC_UGLYDANCE:
 		case DC_HUMMING:
 		case DC_DONTFORGETME:
@@ -13407,16 +13408,19 @@ static struct skill_unit_group *skill_unitsetting(struct block_list *src, uint16
 		case DC_UGLYDANCE:
 			val1 = 10; //FIXME: This value is not used anywhere, what is it for? [Skotlex]
 			break;
-		case BA_WHISTLE:
-			val1 = skill_lv +st->agi/10; // Flee increase
-			val2 = ((skill_lv+1)/2)+st->luk/10; // Perfect dodge increase
+
 #ifndef RENEWAL
+		case BA_WHISTLE:
+			val1 = skill_lv + st->agi / 10; // Flee increase
+			val2 = ((skill_lv + 1) / 2) + st->luk / 10; // Perfect dodge increase
+
 			if (sd != NULL) {
 				val1 += pc->checkskill(sd, BA_MUSICALLESSON);
 				val2 += pc->checkskill(sd, BA_MUSICALLESSON);
 			}
-#endif
 			break;
+#endif
+
 		case DC_HUMMING:
 			val1 = 2*skill_lv+st->dex/10; // Hit increase
 #ifdef RENEWAL

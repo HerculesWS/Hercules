@@ -7963,6 +7963,12 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				break;
 
 #ifdef RENEWAL
+			case SC_WHISTLE:
+				// val1: Skill Lv
+				val2 = (val1 < 10 ? (18 + val1 * 2) : 40); // Flee Increase
+				val3 = (val1 + 1) / 2; // Perfect Dodge increase
+				break;
+
 			case SC_ASSNCROS:
 				// val1 = skill lv
 				if (val1 < 10)
@@ -12405,9 +12411,9 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 					break;
 				case CG_HERMODE:
 				case BD_INTOABYSS:
-				case BA_WHISTLE:
 				case DC_HUMMING:
 #ifndef RENEWAL
+				case BA_WHISTLE:
 				case BA_POEMBRAGI:
 #endif
 				case DC_SERVICEFORYOU:
