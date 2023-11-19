@@ -8716,6 +8716,11 @@ static int pc_itemheal(struct map_session_data *sd, int itemid, int hp, int sp)
 		// Activation Potion
 		if (sd->sc.data[SC_VITALIZE_POTION] != NULL)
 			hp += hp * sd->sc.data[SC_VITALIZE_POTION]->val3 / 100;
+
+#ifdef RENEWAL
+		if (sd->sc.data[SC_APPLEIDUN] != NULL)
+			hp += hp * sd->sc.data[SC_APPLEIDUN]->val3 / 100;
+#endif
 	}
 	if(sp) {
 		bonus = 100 + (sd->battle_status.int_<<1)
