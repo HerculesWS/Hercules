@@ -81,6 +81,8 @@ extern float GetFloat(const unsigned char* buf);
 
 size_t hread(void * ptr, size_t size, size_t count, FILE * stream);
 size_t hwrite(const void * ptr, size_t size, size_t count, FILE * stream);
+int64 htell(FILE *stream);
+int hseek(FILE *stream, int64 offset, int origin);
 #endif // HERCULES_CORE
 
 #ifdef WIN32

@@ -584,6 +584,24 @@ size_t hwrite(const void *ptr, size_t size, size_t count, FILE *stream)
 	return fwrite(ptr, size, count, stream);
 }
 
+int64 htell(FILE *stream)
+{
+#ifdef WIN32
+	return _ftelli64(stream);
+#else
+	return ftell(stream);
+#endif
+}
+
+int hseek(FILE *stream, int64 offset, int origin)
+{
+#ifdef WIN32
+	return _fseeki64(stream, offset, origin);
+#else
+	return fseek(stream, offset, origin);
+#endif
+}
+
 void HCache_defaults(void)
 {
 	HCache = &HCache_s;
