@@ -133,6 +133,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(battle->calc_gvg_damage, HP_battle_calc_gvg_damage) },
 	{ HP_POP(battle->calc_bg_damage, HP_battle_calc_bg_damage) },
 	{ HP_POP(battle->weapon_attack, HP_battle_weapon_attack) },
+	{ HP_POP(battle->should_bladestop_attacker, HP_battle_should_bladestop_attacker) },
 	{ HP_POP(battle->check_arrows, HP_battle_check_arrows) },
 	{ HP_POP(battle->calc_weapon_attack, HP_battle_calc_weapon_attack) },
 	{ HP_POP(battle->delay_damage, HP_battle_delay_damage) },

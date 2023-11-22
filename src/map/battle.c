@@ -1479,7 +1479,7 @@ static int64 battle_calc_defense(int attack_type, struct block_list *src, struct
 				def1 = 0;
 			if (def2 < 1)
 				def2 = 1;
-			
+
 			//Vitality reduction from rodatazone: http://rodatazone.simgaming.net/mechanics/substats.php#def
 			if (tsd) {
 				//Sd vit-eq
@@ -6500,6 +6500,38 @@ static bool battle_check_arrows(struct map_session_data *sd)
 	return true;
 }
 
+/**
+ * Check whether an attack from "attacker" unit to "target" unit should cause Blade Stop to start.
+ * @param attacker the unit performing the attack
+ * @param target the unit being attacked
+ * @returns true if Blade Stop should start, false otherwise
+ */
+static bool battle_should_bladestop_attacker(struct block_list *attacker, struct block_list *target)
+{
+	nullpo_retr(false, attacker);
+	nullpo_retr(false, target);
+
+	struct status_change *tsc = status->get_sc(target);
+	if (tsc == NULL || tsc->data[SC_BLADESTOP_WAIT] == NULL)
+		return false; // Target is not in BladeStop wait mode
+
+	if (is_boss(attacker))
+		return false; // Boss monsters are not affected
+
+#ifndef RENEWAL
+	if (attacker->type == BL_PC)
+		return true; // In Pre-RE (Ep 11.2), player attackers are BladeStopped regardless of the distance
+#endif
+
+	if (target->type != BL_PC) {
+		// Non-player targets causes BladeStop regardless of distance (Hercules-custom).
+		// Officially, non-player units does not use Blade Stop.
+		return true;
+	}
+
+	return (distance_bl(attacker, target) <= 2);
+}
+
 /*==========================================
  * Do a basic physical attack (call trough unit_attack_timer)
  *------------------------------------------*/
@@ -6565,8 +6597,7 @@ static enum damage_lv battle_weapon_attack(struct block_list *src, struct block_
 			return ATK_BLOCK;
 		}
 	}
-	if( tsc && tsc->data[SC_BLADESTOP_WAIT] && !is_boss(src) && (src->type == BL_PC || tsd == NULL || distance_bl(src, target) <= (tsd->weapontype == W_FIST ? 1 : 2)) )
-	{
+	if (tsc != NULL && battle->should_bladestop_attacker(src, target)) {
 		uint16 skill_lv = tsc->data[SC_BLADESTOP_WAIT]->val1;
 		int duration = skill->get_time2(MO_BLADESTOP,skill_lv);
 		status_change_end(target, SC_BLADESTOP_WAIT, INVALID_TIMER);
@@ -8151,6 +8182,7 @@ void battle_defaults(void)
 	battle->calc_gvg_damage = battle_calc_gvg_damage;
 	battle->calc_bg_damage = battle_calc_bg_damage;
 	battle->weapon_attack = battle_weapon_attack;
+	battle->should_bladestop_attacker = battle_should_bladestop_attacker;
 	battle->check_arrows = battle_check_arrows;
 	battle->calc_weapon_attack = battle_calc_weapon_attack;
 	battle->delay_damage = battle_delay_damage;

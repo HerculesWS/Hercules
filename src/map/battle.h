@@ -708,6 +708,8 @@ struct battle_interface {
 	int64 (*calc_bg_damage) (struct block_list *src, struct block_list *bl, int64 damage, int div_, uint16 skill_id, uint16 skill_lv, int flag);
 	/* normal weapon attack */
 	enum damage_lv (*weapon_attack) (struct block_list *bl, struct block_list *target, int64 tick, int flag);
+	/* returns whether bladestop should start for attacker/target */
+	bool (*should_bladestop_attacker) (struct block_list *src, struct block_list *target);
 	/* check is equipped ammo and this ammo allowed */
 	bool (*check_arrows) (struct map_session_data *sd);
 	/* calculate weapon attack */
