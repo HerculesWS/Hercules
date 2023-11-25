@@ -12260,14 +12260,19 @@ static void pc_scdata_received(struct map_session_data *sd)
 		pc->expire_check(sd);
 	}
 
-	if( sd->state.standalone ) {
-		clif->pLoadEndAck(0,sd);
-		pc->autotrade_populate(sd);
-		pc->autotrade_start(sd);
-	}
 
 	if (sd->sc.data[SC_SOULENERGY] != NULL)
 		sd->soulball = sd->sc.data[SC_SOULENERGY]->val1;
+
+	sd->state.scloaded = 1;
+	if (sd->state.standalone) {
+		clif->pLoadEndAck(0,sd);
+		pc->autotrade_populate(sd);
+		pc->autotrade_start(sd);
+	} else {
+		clif->pLoadEndAck(sd->fd, sd);
+	}
+	
 }
 static int pc_expiration_timer(int tid, int64 tick, int id, intptr_t data)
 {

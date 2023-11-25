@@ -11161,6 +11161,10 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 		return;
 	}
 
+	if (sd->state.scloaded == 0) { // SC data was not received yet. pc->scdata_received will reinvoke
+		return;
+	}
+
 	if (sd->state.rewarp != 0) { // Rewarp character.
 		sd->state.rewarp = 0;
 		clif->changemap(sd, sd->bl.m, sd->bl.x, sd->bl.y);
