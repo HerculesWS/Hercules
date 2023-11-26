@@ -13568,7 +13568,7 @@ static void clif_useSkillToIdReal(int fd, struct map_session_data *sd, int skill
 		}
 	}
 
-	if (sd->sc.option & OPTION_COSTUME)
+	if (sd->sc.option & OPTION_COSTUME && sd->auto_cast_current.type != AUTOCAST_ITEM) // Item skills can be used with costumes
 		return;
 
 	if (sd->sc.data[SC_BASILICA] && (skill_id != HP_BASILICA || sd->sc.data[SC_BASILICA]->val4 != sd->bl.id))
