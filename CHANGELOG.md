@@ -22,6 +22,44 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
+## [v2023.11] `November 2023`
+
+### Added
+
+- Added an option to use an unit's current facing direction to search for free cells, instead of defaulting to east. (#3242)
+  - The option, currently disabled by default, can be turned on by setting `keep_dir_free_cell` (`conf/map/battle/misc.conf`) to true.
+  - Advantages:
+    - Improves distribution of mobs when dispersing after being grouped. This setting allows monsters to spread in a circular fashion instead of forming a long horizontal line.
+    - Allows characters to move more naturally if they came from the east, instead of walking back.
+    - In some instances, fixes characters walking in a loop unable to pick up an item. (#1241)
+
+### Changed
+
+- Changed the map server's behavior when receiving invalid connections with unknown protocols to terminate the connection after receiving the second byte. (#3247)
+- Disabled the possibility of attaching a script to a character in autotrade mode through `attachrid()`. This solves a number of issues with many script commands assuming a client to be attached. (#3243, issue #568)
+- Updated map list, mapcache, NPC and hateffect constant databases. (#3249)
+- Extracted the Blade Stop (Root) trigger conditions to a separate function for better readability and maintainability. (#3254)
+
+### Fixed
+
+- Fixed some job concurrency conflicts in the GitHub Actions workflows causing some tests to be skipped for pushes to the master branch. (#3239)
+- Consolidated the GitHub Actions workflow entry point to always be the 'controller' regardless of the trigger condition. (#3239)
+- Fixed `MO_TRIPLEATTACK` not applying the same motion delay as the client in the case the next combo is not possible, causing visual glitches. (#3240)
+- Fixed the `MO_TRIPLEATTACK` delay formula increasing delay with dex instead of decreasing it. (#3240)
+- Fixed an issue causing characters to be stuck in a walk loop while trying to pick up an unreachable item on the ground. (#3242, issue #1241)
+- Fixed a deprecation warning issued by MariaDB causing CI test failures. (#3247)
+- Fixed range and cast time for `ASC_BREAKER`. (#3245, issue #1104)
+- Fixed `SA_DISPEL` not working in duels. (#3246, issue #640)
+- Added support for GRF files larger than 2 GiB on Windows, fixing failures in mapcache generation. (#3248, issue #2935)
+- Fixed songs not triggering their onleft or onout events when overlapping and turning into dissonance. (#3251, issue #1501)
+- Fixed the range checks of Blade Stop/Root: (#3254)
+  - Fixed the target's (as in triggering attack target, and Blade Stop caster) equipped weapon wrongly affecting the skill's working range.
+  - Success range is changed to 2, to match the official behavior.
+  - In pre-re, changed it to always succeed against player attackers regardless of range.
+  - Changed it to always succeed for non-player casters regardless of range (custom Hercules behavior, officially only players may cast Blade Stop).
+- Fixed `CELL_NOSTACK` making mob ai not being able to reach target under certain conditions. (#3244, issue #574)
+- Fixed the critical bonus calculation from status effects getting truncated to 0.3 CRIT per point of LUK instead of 1/3. (#3252, issue #3094)
+
 # [v2023.10] `October 2023`
 
 ### Added
@@ -2919,6 +2957,9 @@ Note: everything included in this release is part of PR #3198 which consists of 
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2023.11]: https://github.com/HerculesWS/Hercules/compare/v2023.10...v2023.11
+[v2023.10]: https://github.com/HerculesWS/Hercules/compare/v2023.08...v2023.10
+[v2023.08]: https://github.com/HerculesWS/Hercules/compare/v2023.07.12...v2023.08
 [v2023.07.12]: https://github.com/HerculesWS/Hercules/compare/v2022.06.14...v2023.07.12
 [v2023.06.14]: https://github.com/HerculesWS/Hercules/compare/v2022.05.10...v2023.06.14
 [v2023.05.10]: https://github.com/HerculesWS/Hercules/compare/v2022.04.12...v2023.05.10
