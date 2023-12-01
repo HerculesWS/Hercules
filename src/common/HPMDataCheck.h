@@ -167,6 +167,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#endif // CHAR_INT_MERCENARY_H
 	#ifdef CHAR_INT_PARTY_H
 		{ "inter_party_interface", sizeof(struct inter_party_interface), SERVER_TYPE_CHAR },
+		{ "party_data", sizeof(struct party_data), SERVER_TYPE_CHAR },
 	#else
 		#define CHAR_INT_PARTY_H
 	#endif // CHAR_INT_PARTY_H
@@ -1030,7 +1031,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "packet_item_drop_announce", sizeof(struct packet_item_drop_announce), SERVER_TYPE_MAP },
 		{ "packet_itemlist_equip", sizeof(struct packet_itemlist_equip), SERVER_TYPE_MAP },
 		{ "packet_itemlist_normal", sizeof(struct packet_itemlist_normal), SERVER_TYPE_MAP },
-		{ "packet_maptypeproperty2", sizeof(struct packet_maptypeproperty2), SERVER_TYPE_MAP },
+		{ "packet_maptypeproperty", sizeof(struct packet_maptypeproperty), SERVER_TYPE_MAP },
 		{ "packet_mission_info_sub", sizeof(struct packet_mission_info_sub), SERVER_TYPE_MAP },
 		{ "packet_monster_hp", sizeof(struct packet_monster_hp), SERVER_TYPE_MAP },
 		{ "packet_notify_bounditem", sizeof(struct packet_notify_bounditem), SERVER_TYPE_MAP },
@@ -1069,7 +1070,6 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#ifdef MAP_PARTY_H
 		{ "party_booking_ad_info", sizeof(struct party_booking_ad_info), SERVER_TYPE_MAP },
 		{ "party_booking_detail", sizeof(struct party_booking_detail), SERVER_TYPE_MAP },
-		{ "party_data", sizeof(struct party_data), SERVER_TYPE_MAP },
 		{ "party_interface", sizeof(struct party_interface), SERVER_TYPE_MAP },
 		{ "party_member_data", sizeof(struct party_member_data), SERVER_TYPE_MAP },
 	#else

@@ -830,8 +830,6 @@ struct {
 	struct HPMHookPoint *HP_clif_bossmapinfo_post;
 	struct HPMHookPoint *HP_clif_map_type_pre;
 	struct HPMHookPoint *HP_clif_map_type_post;
-	struct HPMHookPoint *HP_clif_maptypeproperty2_pre;
-	struct HPMHookPoint *HP_clif_maptypeproperty2_post;
 	struct HPMHookPoint *HP_clif_crimson_marker_pre;
 	struct HPMHookPoint *HP_clif_crimson_marker_post;
 	struct HPMHookPoint *HP_clif_changemapserver_pre;
@@ -8385,8 +8383,6 @@ struct {
 	int HP_clif_bossmapinfo_post;
 	int HP_clif_map_type_pre;
 	int HP_clif_map_type_post;
-	int HP_clif_maptypeproperty2_pre;
-	int HP_clif_maptypeproperty2_post;
 	int HP_clif_crimson_marker_pre;
 	int HP_clif_crimson_marker_post;
 	int HP_clif_changemapserver_pre;
