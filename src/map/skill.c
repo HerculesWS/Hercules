@@ -3390,13 +3390,13 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 		}
 		switch(skill_id) {
 			case MO_TRIPLEATTACK:
-				if (pc->checkskill(sd, MO_CHAINCOMBO) > 0 || pc->checkskill(sd, SR_DRAGONCOMBO) > 0)
-					combo=1;
 				// Contrary to other MO combos, triple doesn't get delayed through skill_castend_id
-				// A little delay (amotion) is required for the animation to display properly
-				// even if next combo isn't possible
-				int delay = combo ? skill->delay_fix(src, MO_TRIPLEATTACK, skill_lv) : status_get_amotion(src);
-				sd->ud.canact_tick = max(tick + delay, sd->ud.canact_tick);
+				// Send adelay (which matches aspd) to correctly display animation when there's no next combo
+				if (pc->checkskill(sd, MO_CHAINCOMBO) > 0 || pc->checkskill(sd, SR_DRAGONCOMBO) > 0) {
+					combo = 1;
+					sd->ud.canact_tick = max(tick + skill->delay_fix(src, MO_TRIPLEATTACK, skill_lv), sd->ud.canact_tick);
+				} else
+					clif->combo_delay(src, status_get_adelay(src));
 				break;
 			case MO_CHAINCOMBO:
 				if(pc->checkskill(sd, MO_COMBOFINISH) > 0 && sd->spiritball > 0)
