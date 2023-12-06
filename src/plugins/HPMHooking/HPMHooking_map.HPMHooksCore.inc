@@ -1818,6 +1818,8 @@ struct {
 	struct HPMHookPoint *HP_clif_pSkillUp_post;
 	struct HPMHookPoint *HP_clif_useSkillToIdReal_pre;
 	struct HPMHookPoint *HP_clif_useSkillToIdReal_post;
+	struct HPMHookPoint *HP_clif_combo_delay_timer_pre;
+	struct HPMHookPoint *HP_clif_combo_delay_timer_post;
 	struct HPMHookPoint *HP_clif_pUseSkillToId_pre;
 	struct HPMHookPoint *HP_clif_pUseSkillToId_post;
 	struct HPMHookPoint *HP_clif_pStartUseSkillToId_pre;
@@ -9373,6 +9375,8 @@ struct {
 	int HP_clif_pSkillUp_post;
 	int HP_clif_useSkillToIdReal_pre;
 	int HP_clif_useSkillToIdReal_post;
+	int HP_clif_combo_delay_timer_pre;
+	int HP_clif_combo_delay_timer_post;
 	int HP_clif_pUseSkillToId_pre;
 	int HP_clif_pUseSkillToId_post;
 	int HP_clif_pStartUseSkillToId_pre;

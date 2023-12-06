@@ -1582,7 +1582,8 @@ struct clif_interface {
 	void (*pChangeCart) (int fd,struct map_session_data *sd);
 	void (*pStatusUp) (int fd,struct map_session_data *sd);
 	void (*pSkillUp) (int fd,struct map_session_data *sd);
-	void (*useSkillToIdReal) (int fd, struct map_session_data *sd, int skill_id, int skill_lv, int target_id);
+	void (*useSkillToIdReal) (int fd, struct map_session_data *sd, int skill_id, int skill_lv, int target_id, bool skip_combo_check);
+	int (*combo_delay_timer)(int tid, int64 tick, int id, intptr_t data);
 	void (*pUseSkillToId) (int fd, struct map_session_data *sd);
 	void (*pStartUseSkillToId) (int fd, struct map_session_data *sd);
 	void (*pStopUseSkillToId) (int fd, struct map_session_data *sd);

@@ -2458,8 +2458,10 @@ typedef void (*HPMHOOK_pre_clif_pStatusUp) (int *fd, struct map_session_data **s
 typedef void (*HPMHOOK_post_clif_pStatusUp) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_pSkillUp) (int *fd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_pSkillUp) (int fd, struct map_session_data *sd);
-typedef void (*HPMHOOK_pre_clif_useSkillToIdReal) (int *fd, struct map_session_data **sd, int *skill_id, int *skill_lv, int *target_id);
-typedef void (*HPMHOOK_post_clif_useSkillToIdReal) (int fd, struct map_session_data *sd, int skill_id, int skill_lv, int target_id);
+typedef void (*HPMHOOK_pre_clif_useSkillToIdReal) (int *fd, struct map_session_data **sd, int *skill_id, int *skill_lv, int *target_id, bool *skip_combo_check);
+typedef void (*HPMHOOK_post_clif_useSkillToIdReal) (int fd, struct map_session_data *sd, int skill_id, int skill_lv, int target_id, bool skip_combo_check);
+typedef int (*HPMHOOK_pre_clif_combo_delay_timer) (int *tid, int64 *tick, int *id, intptr_t *data);
+typedef int (*HPMHOOK_post_clif_combo_delay_timer) (int retVal___, int tid, int64 tick, int id, intptr_t data);
 typedef void (*HPMHOOK_pre_clif_pUseSkillToId) (int *fd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_pUseSkillToId) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_pStartUseSkillToId) (int *fd, struct map_session_data **sd);

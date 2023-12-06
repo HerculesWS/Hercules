@@ -13490,8 +13490,8 @@ static void clif_parse_UseSkillToPos_mercenary(struct mercenary_data *md, struct
 		unit->skilluse_pos(&md->bl, x, y, skill_id, skill_lv);
 }
 
-static void clif_useSkillToIdReal(int fd, struct map_session_data *sd, int skill_id, int skill_lv, int target_id) __attribute__((nonnull (2)));
-static void clif_useSkillToIdReal(int fd, struct map_session_data *sd, int skill_id, int skill_lv, int target_id)
+static void clif_useSkillToIdReal(int fd, struct map_session_data *sd, int skill_id, int skill_lv, int target_id, bool skip_combo_check) __attribute__((nonnull (2)));
+static void clif_useSkillToIdReal(int fd, struct map_session_data *sd, int skill_id, int skill_lv, int target_id, bool skip_combo_check)
 {
 	int64 tick = timer->gettick();
 
@@ -13562,6 +13562,18 @@ static void clif_useSkillToIdReal(int fd, struct map_session_data *sd, int skill
 		if (skill_id != SA_CASTCANCEL && skill_id != SO_SPELLFIST && sd->auto_cast_current.type == AUTOCAST_NONE)
 			return;
 	} else if (DIFF_TICK(tick, sd->ud.canact_tick) < 0) {
+		// Cannot perform skill yet, delay execution until canact_tick allows it
+		// Only for combo skills with implicit delays, otherwise we create a speedhack that bypasses client's animation delay		
+		if (battle_config.combo_cache_skill
+			&& !skip_combo_check
+			&& sd->sc.data[SC_COMBOATTACK] != NULL
+			&& skill->is_combo(skill_id)
+			&& skill->get_delaynodex(skill_id, skill_lv) != 0
+		) {
+			timer->add(sd->ud.canact_tick, clif->combo_delay_timer, sd->bl.id, (intptr_t)MakeDWord((uint16)skill_id, (uint16)skill_lv));
+			return;
+		}
+
 		if (sd->auto_cast_current.type == AUTOCAST_NONE) {
 			clif->skill_fail(sd, skill_id, USESKILL_FAIL_SKILLINTERVAL, 0, 0);
 			return;
@@ -13608,6 +13620,21 @@ static void clif_useSkillToIdReal(int fd, struct map_session_data *sd, int skill
 		unit->skilluse_id(&sd->bl, target_id, skill_id, skill_lv);
 }
 
+/// Trigger next combo skill as previously requested by client
+static int clif_combo_delay_timer(int tid, int64 tick, int id, intptr_t data) {
+	struct map_session_data* sd = map->id2sd(id);
+
+	if (sd == NULL)
+		return 0;
+
+	int skill_id = (int)GetWord((uint32)data, 0);
+	int skill_lv = (int)GetWord((uint32)data, 1);
+
+	clif->useSkillToIdReal(0, sd, skill_id, skill_lv, battle->get_target(&sd->bl), true);
+
+	return 0;
+}
+
 static void clif_parse_UseSkillToId(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
 /// Request to use a targeted skill.
 /// 0113 <skill lv>.W <skill id>.W <target id>.L (CZ_USE_SKILL)
@@ -13619,7 +13646,8 @@ static void clif_parse_UseSkillToId(int fd, struct map_session_data *sd)
 		sd,
 		RFIFOW(fd, packet_db[RFIFOW(fd, 0)].pos[1]),
 		RFIFOW(fd, packet_db[RFIFOW(fd, 0)].pos[0]),
-		RFIFOL(fd, packet_db[RFIFOW(fd, 0)].pos[2]));
+		RFIFOL(fd, packet_db[RFIFOW(fd, 0)].pos[2]),
+		false);
 }
 
 static void clif_parse_startUseSkillToId(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
@@ -13627,7 +13655,7 @@ static void clif_parse_startUseSkillToId(int fd, struct map_session_data *sd)
 {
 #if PACKETVER_MAIN_NUM >= 20181002 || PACKETVER_RE_NUM >= 20181002 || PACKETVER_ZERO_NUM >= 20181010
 	const struct PACKET_CZ_USE_SKILL_START *p = RFIFOP(fd, 0);
-	clif->useSkillToIdReal(fd, sd, p->skillId, p->skillLv, p->targetId);
+	clif->useSkillToIdReal(fd, sd, p->skillId, p->skillLv, p->targetId, false);
 #endif
 }
 
@@ -27288,6 +27316,7 @@ void clif_defaults(void)
 	clif->clan_leave = clif_clan_leave;
 	clif->clan_message = clif_clan_message;
 	clif->pClanMessage = clif_parse_ClanMessage;
+	clif->combo_delay_timer = clif_combo_delay_timer;
 	// -- Hat Effect
 	clif->hat_effect = clif_hat_effect;
 	clif->hat_effect_single = clif_hat_effect_single;

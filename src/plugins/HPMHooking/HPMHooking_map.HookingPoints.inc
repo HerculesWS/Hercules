@@ -934,6 +934,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->pStatusUp, HP_clif_pStatusUp) },
 	{ HP_POP(clif->pSkillUp, HP_clif_pSkillUp) },
 	{ HP_POP(clif->useSkillToIdReal, HP_clif_useSkillToIdReal) },
+	{ HP_POP(clif->combo_delay_timer, HP_clif_combo_delay_timer) },
 	{ HP_POP(clif->pUseSkillToId, HP_clif_pUseSkillToId) },
 	{ HP_POP(clif->pStartUseSkillToId, HP_clif_pStartUseSkillToId) },
 	{ HP_POP(clif->pStopUseSkillToId, HP_clif_pStopUseSkillToId) },
