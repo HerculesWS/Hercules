@@ -64,6 +64,7 @@
 #include "common/core.h"
 #include "common/memmgr.h"
 #include "common/mmo.h" // MAX_CARTS
+#include "common/msgtable.h"
 #include "common/nullpo.h"
 #include "common/packets.h"
 #include "common/random.h"
@@ -101,7 +102,7 @@ static struct atcmd_binding_data *get_atcommandbind_byname(const char *name)
 
 static const char *atcommand_msgsd(struct map_session_data *sd, int msg_number)
 {
-	Assert_retr("??", msg_number >= 0 && msg_number < MAX_MSG && atcommand->msg_table[0][msg_number] != NULL);
+	Assert_retr("??", msg_number >= 0 && msg_number < MSGTBL_MAX && atcommand->msg_table[0][msg_number] != NULL);
 	if (!sd || sd->lang_id >= atcommand->max_message_table || !atcommand->msg_table[sd->lang_id][msg_number])
 		return atcommand->msg_table[0][msg_number];
 	return atcommand->msg_table[sd->lang_id][msg_number];
@@ -110,7 +111,7 @@ static const char *atcommand_msgsd(struct map_session_data *sd, int msg_number)
 static const char *atcommand_msgfd(int fd, int msg_number)
 {
 	struct map_session_data *sd = sockt->session_is_valid(fd) ? sockt->session[fd]->session_data : NULL;
-	Assert_retr("??", msg_number >= 0 && msg_number < MAX_MSG && atcommand->msg_table[0][msg_number] != NULL);
+	Assert_retr("??", msg_number >= 0 && msg_number < MSGTBL_MAX && atcommand->msg_table[0][msg_number] != NULL);
 	if (!sd || sd->lang_id >= atcommand->max_message_table || !atcommand->msg_table[sd->lang_id][msg_number])
 		return atcommand->msg_table[0][msg_number];
 	return atcommand->msg_table[sd->lang_id][msg_number];
@@ -121,7 +122,7 @@ static const char *atcommand_msgfd(int fd, int msg_number)
 //-----------------------------------------------------------
 static const char *atcommand_msg(int msg_number)
 {
-	Assert_retr("??", msg_number >= 0 && msg_number < MAX_MSG);
+	Assert_retr("??", msg_number >= 0 && msg_number < MSGTBL_MAX);
 	if (atcommand->msg_table[map->default_lang_id][msg_number] != NULL && atcommand->msg_table[map->default_lang_id][msg_number][0] != '\0')
 		return atcommand->msg_table[map->default_lang_id][msg_number];
 
@@ -165,7 +166,7 @@ static bool msg_config_read(const char *cfg_name, bool allow_override)
 			atcommand->msg_read(w2, true);
 		} else {
 			msg_number = atoi(w1);
-			if (msg_number >= 0 && msg_number < MAX_MSG) {
+			if (msg_number >= 0 && msg_number < MSGTBL_MAX) {
 				if (atcommand->msg_table[0][msg_number] != NULL) {
 					if (!allow_override) {
 						ShowError("Duplicate message: ID '%d' was already used for '%s'. Message '%s' will be ignored.\n",
@@ -193,7 +194,7 @@ static void do_final_msg(void)
 	int i, j;
 
 	for(i = 0; i < atcommand->max_message_table; i++) {
-		for (j = 0; j < MAX_MSG; j++) {
+		for (j = 0; j < MSGTBL_MAX; j++) {
 			if( atcommand->msg_table[i][j] )
 				aFree(atcommand->msg_table[i][j]);
 		}
@@ -11428,7 +11429,7 @@ static void atcommand_doload(void)
 static void atcommand_expand_message_table(void)
 {
 	RECREATE(atcommand->msg_table, char **, ++atcommand->max_message_table);
-	CREATE(atcommand->msg_table[atcommand->max_message_table - 1], char *, MAX_MSG);
+	CREATE(atcommand->msg_table[atcommand->max_message_table - 1], char *, MSGTBL_MAX);
 }
 
 static void do_init_atcommand(bool minimal)
