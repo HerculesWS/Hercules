@@ -6421,12 +6421,12 @@ static int pc_jobid2mapid(int class)
 		case JOB_WANDERER_T:            return MAPID_MINSTRELWANDERER_T;
 		case JOB_BABY_MINSTREL:
 		case JOB_BABY_WANDERER:         return MAPID_BABY_MINSTRELWANDERER;
-#define ENUM_VALUE(name, id) case JOB_ ## name: return MAPID_ ## name;
+#define JOB_ENUM_VALUE(name, id, msgtbl) case JOB_ ## name: return MAPID_ ## name;
 #include "common/class.h"
-#undef ENUM_VALUE
-#define ENUM_VALUE(name, id) case JOB_ ## name: return -1;
+#undef JOB_ENUM_VALUE
+#define JOB_ENUM_VALUE(name, id, msgtbl) case JOB_ ## name: return -1;
 #include "common/class_hidden.h"
-#undef ENUM_VALUE
+#undef JOB_ENUM_VALUE
 		default:
 			return -1;
 	}
@@ -6444,9 +6444,9 @@ static int pc_mapid2jobid(unsigned int class, int sex)
 		case MAPID_MINSTRELWANDERER:      return sex ? JOB_MINSTREL : JOB_WANDERER;
 		case MAPID_MINSTRELWANDERER_T:    return sex ? JOB_MINSTREL_T : JOB_WANDERER_T;
 		case MAPID_BABY_MINSTRELWANDERER: return sex ? JOB_BABY_MINSTREL : JOB_BABY_WANDERER;
-#define ENUM_VALUE(name, id) case MAPID_ ## name: return JOB_ ## name;
+#define JOB_ENUM_VALUE(name, id, msgtbl) case MAPID_ ## name: return JOB_ ## name;
 #include "common/class.h"
-#undef ENUM_VALUE
+#undef JOB_ENUM_VALUE
 		default:
 			return -1;
 	}
@@ -6458,268 +6458,14 @@ static int pc_mapid2jobid(unsigned int class, int sex)
 static const char *pc_job_name(int class)
 {
 	switch (class) {
-	case JOB_NOVICE:   // 550
-	case JOB_SWORDMAN: // 551
-	case JOB_MAGE:     // 552
-	case JOB_ARCHER:   // 553
-	case JOB_ACOLYTE:  // 554
-	case JOB_MERCHANT: // 555
-	case JOB_THIEF:    // 556
-		return msg_txt(550 - JOB_NOVICE + class);
+#define JOB_ENUM_VALUE(name, id, msgtbl) case JOB_ ## name: return msg_txt(MSGTBL_ ## msgtbl);
+#include "common/class.h"
+#include "common/class_hidden.h"
+#include "common/class_special.h"
+#undef JOB_ENUM_VALUE
 
-	case JOB_KNIGHT:     // 557
-	case JOB_PRIEST:     // 558
-	case JOB_WIZARD:     // 559
-	case JOB_BLACKSMITH: // 560
-	case JOB_HUNTER:     // 561
-	case JOB_ASSASSIN:   // 562
-		return msg_txt(557 - JOB_KNIGHT + class);
-
-	case JOB_KNIGHT2:
-		return msg_txt(557);
-
-	case JOB_CRUSADER:  // 563
-	case JOB_MONK:      // 564
-	case JOB_SAGE:      // 565
-	case JOB_ROGUE:     // 566
-	case JOB_ALCHEMIST: // 567
-	case JOB_BARD:      // 568
-	case JOB_DANCER:    // 569
-		return msg_txt(563 - JOB_CRUSADER + class);
-
-	case JOB_CRUSADER2:
-		return msg_txt(563);
-
-	case JOB_WEDDING:      // 570
-	case JOB_SUPER_NOVICE: // 571
-	case JOB_GUNSLINGER:   // 572
-	case JOB_NINJA:        // 573
-	case JOB_XMAS:         // 574
-		return msg_txt(570 - JOB_WEDDING + class);
-
-	case JOB_SUMMER:
-		return msg_txt(621);
-
-	case JOB_NOVICE_HIGH:   // 575
-	case JOB_SWORDMAN_HIGH: // 576
-	case JOB_MAGE_HIGH:     // 577
-	case JOB_ARCHER_HIGH:   // 578
-	case JOB_ACOLYTE_HIGH:  // 579
-	case JOB_MERCHANT_HIGH: // 580
-	case JOB_THIEF_HIGH:    // 581
-		return msg_txt(575 - JOB_NOVICE_HIGH + class);
-
-	case JOB_LORD_KNIGHT:    // 582
-	case JOB_HIGH_PRIEST:    // 583
-	case JOB_HIGH_WIZARD:    // 584
-	case JOB_WHITESMITH:     // 585
-	case JOB_SNIPER:         // 586
-	case JOB_ASSASSIN_CROSS: // 587
-		return msg_txt(582 - JOB_LORD_KNIGHT + class);
-
-	case JOB_LORD_KNIGHT2:
-		return msg_txt(582);
-
-	case JOB_PALADIN:   // 588
-	case JOB_CHAMPION:  // 589
-	case JOB_PROFESSOR: // 590
-	case JOB_STALKER:   // 591
-	case JOB_CREATOR:   // 592
-	case JOB_CLOWN:     // 593
-	case JOB_GYPSY:     // 594
-		return msg_txt(588 - JOB_PALADIN + class);
-
-	case JOB_PALADIN2:
-		return msg_txt(588);
-
-	case JOB_BABY:          // 595
-	case JOB_BABY_SWORDMAN: // 596
-	case JOB_BABY_MAGE:     // 597
-	case JOB_BABY_ARCHER:   // 598
-	case JOB_BABY_ACOLYTE:  // 599
-	case JOB_BABY_MERCHANT: // 600
-	case JOB_BABY_THIEF:    // 601
-		return msg_txt(595 - JOB_BABY + class);
-
-	case JOB_BABY_KNIGHT:     // 602
-	case JOB_BABY_PRIEST:     // 603
-	case JOB_BABY_WIZARD:     // 604
-	case JOB_BABY_BLACKSMITH: // 605
-	case JOB_BABY_HUNTER:     // 606
-	case JOB_BABY_ASSASSIN:   // 607
-		return msg_txt(602 - JOB_BABY_KNIGHT + class);
-
-	case JOB_BABY_KNIGHT2:
-		return msg_txt(602);
-
-	case JOB_BABY_CRUSADER:  // 608
-	case JOB_BABY_MONK:      // 609
-	case JOB_BABY_SAGE:      // 610
-	case JOB_BABY_ROGUE:     // 611
-	case JOB_BABY_ALCHEMIST: // 612
-	case JOB_BABY_BARD:      // 613
-	case JOB_BABY_DANCER:    // 614
-		return msg_txt(608 - JOB_BABY_CRUSADER + class);
-
-	case JOB_BABY_CRUSADER2:
-		return msg_txt(608);
-
-	case JOB_SUPER_BABY:
-		return msg_txt(615);
-
-	case JOB_TAEKWON:
-		return msg_txt(616);
-	case JOB_STAR_GLADIATOR:
-	case JOB_STAR_GLADIATOR2:
-		return msg_txt(617);
-	case JOB_SOUL_LINKER:
-		return msg_txt(618);
-
-	case JOB_GANGSI:         // 622
-	case JOB_DEATH_KNIGHT:   // 623
-	case JOB_DARK_COLLECTOR: // 624
-		return msg_txt(622 - JOB_GANGSI + class);
-
-	case JOB_RUNE_KNIGHT:      // 625
-	case JOB_WARLOCK:          // 626
-	case JOB_RANGER:           // 627
-	case JOB_ARCH_BISHOP:      // 628
-	case JOB_MECHANIC:         // 629
-	case JOB_GUILLOTINE_CROSS: // 630
-		return msg_txt(625 - JOB_RUNE_KNIGHT + class);
-
-	case JOB_RUNE_KNIGHT_T:      // 656
-	case JOB_WARLOCK_T:          // 657
-	case JOB_RANGER_T:           // 658
-	case JOB_ARCH_BISHOP_T:      // 659
-	case JOB_MECHANIC_T:         // 660
-	case JOB_GUILLOTINE_CROSS_T: // 661
-		return msg_txt(656 - JOB_RUNE_KNIGHT_T + class);
-
-	case JOB_ROYAL_GUARD:   // 631
-	case JOB_SORCERER:      // 632
-	case JOB_MINSTREL:      // 633
-	case JOB_WANDERER:      // 634
-	case JOB_SURA:          // 635
-	case JOB_GENETIC:       // 636
-	case JOB_SHADOW_CHASER: // 637
-		return msg_txt(631 - JOB_ROYAL_GUARD + class);
-
-	case JOB_ROYAL_GUARD_T:   // 662
-	case JOB_SORCERER_T:      // 663
-	case JOB_MINSTREL_T:      // 664
-	case JOB_WANDERER_T:      // 665
-	case JOB_SURA_T:          // 666
-	case JOB_GENETIC_T:       // 667
-	case JOB_SHADOW_CHASER_T: // 668
-		return msg_txt(662 - JOB_ROYAL_GUARD_T + class);
-
-	case JOB_RUNE_KNIGHT2:
-		return msg_txt(625);
-
-	case JOB_RUNE_KNIGHT_T2:
-		return msg_txt(656);
-
-	case JOB_ROYAL_GUARD2:
-		return msg_txt(631);
-
-	case JOB_ROYAL_GUARD_T2:
-		return msg_txt(662);
-
-	case JOB_RANGER2:
-		return msg_txt(627);
-
-	case JOB_RANGER_T2:
-		return msg_txt(658);
-
-	case JOB_MECHANIC2:
-		return msg_txt(629);
-
-	case JOB_MECHANIC_T2:
-		return msg_txt(660);
-
-	case JOB_BABY_RUNE:     // 638
-	case JOB_BABY_WARLOCK:  // 639
-	case JOB_BABY_RANGER:   // 640
-	case JOB_BABY_BISHOP:   // 641
-	case JOB_BABY_MECHANIC: // 642
-	case JOB_BABY_CROSS:    // 643
-	case JOB_BABY_GUARD:    // 644
-	case JOB_BABY_SORCERER: // 645
-	case JOB_BABY_MINSTREL: // 646
-	case JOB_BABY_WANDERER: // 647
-	case JOB_BABY_SURA:     // 648
-	case JOB_BABY_GENETIC:  // 649
-	case JOB_BABY_CHASER:   // 650
-		return msg_txt(638 - JOB_BABY_RUNE + class);
-
-	case JOB_BABY_RUNE2:
-		return msg_txt(638);
-
-	case JOB_BABY_GUARD2:
-		return msg_txt(644);
-
-	case JOB_BABY_RANGER2:
-		return msg_txt(640);
-
-	case JOB_BABY_MECHANIC2:
-		return msg_txt(642);
-
-	case JOB_SUPER_NOVICE_E: // 651
-	case JOB_SUPER_BABY_E:   // 652
-		return msg_txt(651 - JOB_SUPER_NOVICE_E + class);
-
-	case JOB_KAGEROU: // 653
-	case JOB_OBORO:   // 654
-		return msg_txt(653 - JOB_KAGEROU + class);
-
-	case JOB_REBELLION:
-		return msg_txt(655);
-
-	case JOB_SUMMONER:
-		return msg_txt(669);
-
-	case JOB_BABY_SUMMONER:
-		return msg_txt(670);
-
-	case JOB_BABY_NINJA:
-		return msg_txt(671);
-
-	case JOB_BABY_KAGEROU:
-	case JOB_BABY_OBORO:
-		return msg_txt(672 - JOB_BABY_KAGEROU + class);
-
-	case JOB_BABY_TAEKWON:
-		return msg_txt(674);
-
-	case JOB_BABY_STAR_GLADIATOR:
-	case JOB_BABY_STAR_GLADIATOR2:
-		return msg_txt(675);
-
-	case JOB_BABY_SOUL_LINKER:
-		return msg_txt(676);
-
-	case JOB_BABY_GUNSLINGER:
-		return msg_txt(677);
-
-	case JOB_BABY_REBELLION:
-		return msg_txt(678);
-
-	case JOB_STAR_EMPEROR:
-		return msg_txt(679);
-
-	case JOB_BABY_STAR_EMPEROR:
-		return msg_txt(680);
-
-	case JOB_SOUL_REAPER:
-		return msg_txt(681);
-
-	case JOB_BABY_SOUL_REAPER:
-		return msg_txt(682);
-
-
-	default:
-		return msg_txt(620); // "Unknown Job"
+		default:
+			return msg_txt(MSGTBL_UNKNOWN_JOB);
 	}
 }
 
