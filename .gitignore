@@ -134,14 +134,14 @@ Thumbs.db
 /tools/doxygen/Makefile
 /tools/doxygen/docs
 
-# /vcproj-*
-/vcproj-*/*.user
-/vcproj-*/char-server
-/vcproj-*/login-server
-/vcproj-*/map-server
-/vcproj-*/api-server
-/vcproj-*/mapcache
-/vcproj-*/plugin-*/
+# /vcproj
+/vcproj/*.user
+/vcproj/char-server
+/vcproj/login-server
+/vcproj/map-server
+/vcproj/api-server
+/vcproj/mapcache
+/vcproj/plugin-*
 
 # ccache
 /.ccache/
