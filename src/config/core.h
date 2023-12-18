@@ -100,6 +100,10 @@
 /// Uncomment for use with Nemo patch ExtendOldCashShopPreview
 //#define ENABLE_OLD_CASHSHOP_PREVIEW_PATCH
 
+/// Uncomment to allow RE clients to enable RoDEX "Account Mail".
+/// RE clients requires Nemo patch for RoDEX Account Mail to work.
+//#define ENABLE_RODEX_ACCOUNT_MAIL_RE_PATCH
+
 /// Uncomment to allow flinch animation and walk delay to be synced
 /// Reduces positional lag when getting hit
 //#define WALKDELAY_SYNC
