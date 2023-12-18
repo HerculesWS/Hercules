@@ -1504,11 +1504,14 @@ static void login_parse_request_connection(int fd, struct login_session_data* sd
 	if (!sockt->allowed_ip_check(ipl)) {
 		ShowNotice("Connection of the char-server '%s' REFUSED (IP not allowed).\n", server_name);
 		login->char_server_connection_status(fd, sd, 2);
+	} else if (sd->sex != 'S') {
+		ShowNotice("Connection of the char-server '%s' REFUSED (Account sex must be 'S').\n", server_name);
+		login->char_server_connection_status(fd, sd, 1);
+	} else if (sd->account_id < 0 || sd->account_id >= ARRAYLENGTH(login->dbs->server)) {
+		ShowNotice("Connection of the char-server '%s' REFUSED (Account ID must be between 0 and %d).\n", server_name, ARRAYLENGTH(login->dbs->server) - 1);
+		login->char_server_connection_status(fd, sd, 1);
 	} else if (core->runflag == LOGINSERVER_ST_RUNNING &&
 		result == -1 &&
-		sd->sex == 'S' &&
-		sd->account_id >= 0 &&
-		sd->account_id < ARRAYLENGTH(login->dbs->server) &&
 		!sockt->session_is_valid(login->dbs->server[sd->account_id].fd))
 	{
 		ShowStatus("Connection of the char-server '%s' accepted.\n", server_name);
