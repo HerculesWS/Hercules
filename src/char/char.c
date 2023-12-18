@@ -6096,7 +6096,7 @@ static void char_ensure_online_char_data(struct online_char_data *character)
 {
 	nullpo_retv(character);
 	if (character->data == NULL) {
-		character->data = aCalloc(sizeof(struct online_char_data2), 1);
+		character->data = aCalloc(1, sizeof(struct online_char_data2));
 	}
 }
 
