@@ -48,6 +48,7 @@
 #include "common/charmappackets.h"
 #include "common/mapcharpackets.h"
 #include "common/memmgr.h"
+#include "common/msgtable.h"
 #include "common/nullpo.h"
 #include "common/packets_struct.h"
 #include "common/showmsg.h"
@@ -467,7 +468,7 @@ static int intif_request_guild_storage(int account_id, int guild_id)
  *
  * @param[in] account_id The account ID of the character who initiated saving the guild storage information.
  * @param[in] gstor Pointer to the guild storage data containing the information to save.
- * @return Always 0. 
+ * @return Always 0.
  *
  */
 static int intif_send_guild_storage(int account_id, struct guild_storage *gstor)
@@ -1841,7 +1842,7 @@ static void intif_parse_MailInboxReceived(int fd)
 		clif->mail_refreshinbox(sd);
 	else if( battle_config.mail_show_status && ( battle_config.mail_show_status == 1 || sd->mail.inbox.unread ) ) {
 		char output[128];
-		sprintf(output, msg_sd(sd,510), sd->mail.inbox.unchecked, sd->mail.inbox.unread + sd->mail.inbox.unchecked);
+		sprintf(output, msg_sd(sd, MSGTBL_MAIL_COUNT), sd->mail.inbox.unchecked, sd->mail.inbox.unread + sd->mail.inbox.unchecked);
 		clif_disp_onlyself(sd, output);
 	}
 }

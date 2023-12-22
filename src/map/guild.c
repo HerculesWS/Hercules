@@ -42,6 +42,7 @@
 #include "common/ers.h"
 #include "common/memmgr.h"
 #include "common/mapindex.h"
+#include "common/msgtable.h"
 #include "common/nullpo.h"
 #include "common/showmsg.h"
 #include "common/strlib.h"
@@ -472,7 +473,7 @@ static int guild_create(struct map_session_data *sd, const char *name)
 	nullpo_ret(name);
 
 	if (sd->clan != NULL) {
-		clif->messagecolor_self(sd->fd, COLOR_RED, msg_sd(sd, 477)); // "You cannot create a guild because you are in a clan."
+		clif->messagecolor_self(sd->fd, COLOR_RED, msg_sd(sd, MSGTBL_CANT_CREATE_GUILD_WHILE_IN_CLAN)); // "You cannot create a guild because you are in a clan."
 		return 0;
 	}
 
@@ -1626,7 +1627,7 @@ static int guild_reqalliance(struct map_session_data *sd, struct map_session_dat
 
 	if(map->agit_flag || map->agit2_flag) {
 		// Disable alliance creation during woe [Valaris]
-		clif->message(sd->fd,msg_sd(sd,876)); //"Alliances cannot be made during Guild Wars!"
+		clif->message(sd->fd,msg_sd(sd, MSGTBL_NOT_MAKE_ALLIANCE_DURING_GW)); //"Alliances cannot be made during Guild Wars!"
 		return 0;
 	}
 
@@ -1743,7 +1744,7 @@ static int guild_delalliance(struct map_session_data *sd, int guild_id, int flag
 
 	if(map->agit_flag || map->agit2_flag) {
 		// Disable alliance breaking during woe [Valaris]
-		clif->message(sd->fd,msg_sd(sd,877)); //"Alliances cannot be broken during Guild Wars!"
+		clif->message(sd->fd,msg_sd(sd, MSGTBL_NOT_BREAK_ALLIANCE_DURING_GW)); //"Alliances cannot be broken during Guild Wars!"
 		return 0;
 	}
 
@@ -2033,13 +2034,13 @@ static int guild_gm_changed(int guild_id, int account_id, int char_id)
 	strcpy(g->master, g->member[0].name);
 
 	if (g->member[pos].sd && g->member[pos].sd->fd) {
-		clif->message(g->member[pos].sd->fd, msg_sd(g->member[pos].sd,878)); //"You no longer are the Guild Master."
+		clif->message(g->member[pos].sd->fd, msg_sd(g->member[pos].sd, MSGTBL_NOT_GUILD_MASTER)); //"You no longer are the Guild Master."
 		g->member[pos].sd->state.gmaster_flag = 0;
 		clif->blname_ack(0, &g->member[pos].sd->bl);
 	}
 
 	if (g->member[0].sd && g->member[0].sd->fd) {
-		clif->message(g->member[0].sd->fd, msg_sd(g->member[0].sd,879)); //"You have become the Guild Master!"
+		clif->message(g->member[0].sd->fd, msg_sd(g->member[0].sd, MSGTBL_BECOME_GUILD_MASTER)); //"You have become the Guild Master!"
 		g->member[0].sd->state.gmaster_flag = 1;
 		//Block his skills for 5 minutes to prevent abuse.
 		guild->block_skill(g->member[0].sd, 300000);

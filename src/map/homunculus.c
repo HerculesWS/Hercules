@@ -47,6 +47,7 @@
 #include "common/conf.h"
 #include "common/memmgr.h"
 #include "common/mmo.h"
+#include "common/msgtable.h"
 #include "common/nullpo.h"
 #include "common/random.h"
 #include "common/showmsg.h"
@@ -413,7 +414,7 @@ static bool homunculus_levelup(struct homun_data *hd)
 	if ( battle_config.homunculus_show_growth ) {
 		char output[256] ;
 		sprintf(output,
-			msg_sd(hd->master, 892), // Growth: hp:%d sp:%d str(%.2f) agi(%.2f) vit(%.2f) int(%.2f) dex(%.2f) luk(%.2f) 
+			msg_sd(hd->master, MSGTBL_GROWTH_STATS), // Growth: hp:%d sp:%d str(%.2f) agi(%.2f) vit(%.2f) int(%.2f) dex(%.2f) luk(%.2f)
 			growth_max_hp, growth_max_sp,
 			growth_str/10.0, growth_agi/10.0, growth_vit/10.0,
 			growth_int/10.0, growth_dex/10.0, growth_luk/10.0);
@@ -546,7 +547,7 @@ static int homunculus_gainexp_real(struct homun_data *hd, unsigned int exp)
 
 	if (hd->master->state.showexp && hd->exp_next > 0) {
 		char output[256];
-		sprintf(output, msg_fd(hd->master->fd, 449), exp, ((float)exp / (float)hd->exp_next * (float)100));
+		sprintf(output, msg_fd(hd->master->fd, MSGTBL_HOMUN_EXP_GAINED), exp, ((float)exp / (float)hd->exp_next * (float)100));
 		clif_disp_onlyself(hd->master, output);
 	}
 	return 1;
@@ -791,7 +792,7 @@ static bool homunculus_change_name_ack(struct map_session_data *sd, const char *
 	normalize_name(newname, " ");//bugreport:3032 // FIXME[Haru]: This should be normalized by the inter-server (so that it's const here)
 
 	if (flag == 0 || strlen(newname) == 0) {
-		clif->message(sd->fd, msg_sd(sd,280)); // You cannot use this name
+		clif->message(sd->fd, msg_sd(sd, MSGTBL_BAD_HOMPET_NAME)); // You cannot use this name
 		aFree(newname);
 		return false;
 	}

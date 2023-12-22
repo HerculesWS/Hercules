@@ -25467,12 +25467,12 @@ static BUILDIN(montransform)
 			return false;
 
 		if (battle_config.mon_trans_disable_in_gvg && map_flag_gvg2(sd->bl.m)) {
-			clif->message(sd->fd, msg_sd(sd, 1488)); // Transforming into monster is not allowed in Guild Wars.
+			clif->message(sd->fd, msg_sd(sd, MSGTBL_TRANSFORM_NOT_ALLOWED_GW)); // Transforming into monster is not allowed in Guild Wars.
 			return true;
 		}
 
 		if (sd->disguise != -1) {
-			clif->message(sd->fd, msg_sd(sd, 1486)); // Cannot transform into monster while in disguise.
+			clif->message(sd->fd, msg_sd(sd, MSGTBL_NOT_TRANSFORM_WHILE_DISGUISED)); // Cannot transform into monster while in disguise.
 			return true;
 		}
 

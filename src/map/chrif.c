@@ -43,6 +43,7 @@
 #include "common/cbasetypes.h"
 #include "common/ers.h"
 #include "common/memmgr.h"
+#include "common/msgtable.h"
 #include "common/nullpo.h"
 #include "common/showmsg.h"
 #include "common/socket.h"
@@ -739,7 +740,7 @@ static bool chrif_changesex(struct map_session_data *sd, bool change_account)
 		WFIFOB(chrif->fd,32) = sd->status.sex == SEX_MALE ? SEX_FEMALE : SEX_MALE;
 	WFIFOSET(chrif->fd,44);
 
-	clif->message(sd->fd, msg_sd(sd,408)); //"Disconnecting to perform change-sex request..."
+	clif->message(sd->fd, msg_sd(sd, MSGTBL_CHANGESEX_DISCONNECT)); //"Disconnecting to perform change-sex request..."
 
 	if (sd->fd)
 		clif->authfail_fd(sd->fd, 15);
@@ -774,15 +775,19 @@ static bool chrif_char_ask_name_answer(int acc, const char *player_name, uint16 
 	if( type == CHAR_ASK_NAME_CHARUNBAN ) type = CHAR_ASK_NAME_UNBAN;
 
 	if( type >= CHAR_ASK_NAME_BLOCK && type <= CHAR_ASK_NAME_CHANGESEX )
-		snprintf(action,25,"%s",msg_sd(sd,427+type)); //block|ban|unblock|unban|change the sex of
+		snprintf(action, 25, "%s", msg_sd(sd, MSGTBL_CHRIF_LOGIN_SERVER_OFFLINE + type)); //block|ban|unblock|unban|change the sex of
 	else
 		snprintf(action,25,"???");
 
 	switch( answer ) {
-		case CHAR_ASK_NAME_ANS_DONE:     sprintf(output, msg_sd(sd,charsrv?434:424), action, NAME_LENGTH, player_name); break;
-		case CHAR_ASK_NAME_ANS_NOTFOUND: sprintf(output, msg_sd(sd,425), NAME_LENGTH, player_name); break;
-		case CHAR_ASK_NAME_ANS_GMLOW:    sprintf(output, msg_sd(sd,426), action, NAME_LENGTH, player_name); break;
-		case CHAR_ASK_NAME_ANS_OFFLINE:  sprintf(output, msg_sd(sd,427), action, NAME_LENGTH, player_name); break;
+		case CHAR_ASK_NAME_ANS_DONE: {
+			enum msgtable_messages msg_id = charsrv ? MSGTBL_CHRIF_CHAR_REQUEST : MSGTBL_CHRIF_LOGIN_REQUEST;
+			sprintf(output, msg_sd(sd, msg_id), action, NAME_LENGTH, player_name);
+			break;
+		}
+		case CHAR_ASK_NAME_ANS_NOTFOUND: sprintf(output, msg_sd(sd, MSGTBL_CHRIF_PLAYER_NOT_FOUND), NAME_LENGTH, player_name); break;
+		case CHAR_ASK_NAME_ANS_GMLOW:    sprintf(output, msg_sd(sd, MSGTBL_CHRIF_GM_UNAUTHORIZED), action, NAME_LENGTH, player_name); break;
+		case CHAR_ASK_NAME_ANS_OFFLINE:  sprintf(output, msg_sd(sd, MSGTBL_CHRIF_LOGIN_SERVER_OFFLINE), action, NAME_LENGTH, player_name); break;
 		default: output[0] = '\0'; break;
 	}
 
@@ -907,23 +912,23 @@ static void chrif_idbanned(int fd)
 	if (RFIFOB(fd,6) == 0) { // 0: change of status
 		int ret_status = RFIFOL(fd,7); // status or final date of a banishment
 		if(0<ret_status && ret_status<=9)
-			clif->message(sd->fd, msg_sd(sd,411+ret_status)); // Message IDs (for search convenience): 412, 413, 414, 415, 416, 417, 418, 419, 420
+			clif->message(sd->fd, msg_sd(sd, (MSGTBL_CHRIF_ACCOUNT_UNREGISTERED - 1) + ret_status)); // Message IDs (for search convenience): 412, 413, 414, 415, 416, 417, 418, 419, 420
 		else if(ret_status==100)
-			clif->message(sd->fd, msg_sd(sd,421)); // Your account has been totally erased.
+			clif->message(sd->fd, msg_sd(sd, MSGTBL_CHRIF_ACCOUNT_ERASED)); // Your account has been totally erased.
 		else
-			clif->message(sd->fd, msg_sd(sd,420)); //"Your account is not longer authorized."
+			clif->message(sd->fd, msg_sd(sd, MSGTBL_CHRIF_ACCOUNT_UNAUTHORIZED)); //"Your account is not longer authorized."
 	} else if (RFIFOB(fd,6) == 1) { // 1: ban
 		time_t timestamp;
 		char tmpstr[2048];
 		timestamp = (time_t)RFIFOL(fd,7); // status or final date of a banishment
-		safestrncpy(tmpstr, msg_sd(sd,423), sizeof(tmpstr)); //"Your account has been banished until "
+		safestrncpy(tmpstr, msg_sd(sd, MSGTBL_CHRIF_ACCOUNT_BANNED), sizeof(tmpstr)); //"Your account has been banished until "
 		strftime(tmpstr + strlen(tmpstr), 24, "%d-%m-%Y %H:%M:%S", localtime(&timestamp));
 		clif->message(sd->fd, tmpstr);
 	} else if (RFIFOB(fd,6) == 2) { // 2: change of status for character
 		time_t timestamp;
 		char tmpstr[2048];
 		timestamp = (time_t)RFIFOL(fd,7); // status or final date of a banishment
-		safestrncpy(tmpstr, msg_sd(sd,433), sizeof(tmpstr)); //"This character has been banned until  "
+		safestrncpy(tmpstr, msg_sd(sd, MSGTBL_CHRIF_CHAR_BANNED_UNTIL), sizeof(tmpstr)); //"This character has been banned until  "
 		strftime(tmpstr + strlen(tmpstr), 24, "%d-%m-%Y %H:%M:%S", localtime(&timestamp));
 		clif->message(sd->fd, tmpstr);
 	}

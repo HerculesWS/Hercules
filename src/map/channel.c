@@ -32,6 +32,7 @@
 #include "common/conf.h"
 #include "common/db.h"
 #include "common/memmgr.h"
+#include "common/msgtable.h"
 #include "common/nullpo.h"
 #include "common/random.h"
 #include "common/showmsg.h"
@@ -277,7 +278,7 @@ static void channel_send(struct channel_data *chan, struct map_session_data *sd,
 	 && DIFF_TICK(sd->hchsysch_tick + chan->msg_delay*1000, timer->gettick()) > 0
 	 && !pc_has_permission(sd, PC_PERM_HCHSYS_ADMIN)) {
 		char output[CHAT_SIZE_MAX];
-		sprintf(output, msg_sd(sd, 1455), DIFF_TICK(sd->hchsysch_tick + chan->msg_delay * 1000, timer->gettick()) / 1000); // "You cannot send a message to this channel for another %d seconds."
+		sprintf(output, msg_sd(sd, MSGTBL_CHANNEL_COOLDOWN), DIFF_TICK(sd->hchsysch_tick + chan->msg_delay * 1000, timer->gettick()) / 1000); // "You cannot send a message to this channel for another %d seconds."
 		clif->messagecolor_self(sd->fd, COLOR_RED, output);
 		return;
 	} else if (sd) {
@@ -324,7 +325,7 @@ static void channel_join_sub(struct channel_data *chan, struct map_session_data 
 
 	if (!stealth && (chan->options&HCS_OPT_ANNOUNCE_JOIN)) {
 		char message[60];
-		sprintf(message, msg_txt(897), chan->name, sd->status.name); // #%s '%s' joined
+		sprintf(message, msg_txt(MSGTBL_PLAYER_JOINED), chan->name, sd->status.name); // #%s '%s' joined
 		clif->channel_msg(chan,sd,message);
 	}
 
@@ -378,9 +379,9 @@ static enum channel_operation_status channel_join(struct channel_data *chan, str
 	if (!silent && !(chan->options&HCS_OPT_ANNOUNCE_JOIN)) {
 		char output[CHAT_SIZE_MAX];
 		if (chan->type == HCS_TYPE_MAP) {
-			sprintf(output, msg_sd(sd,1435), chan->name, map->list[chan->m].name); // You're now in the '#%s' channel for '%s'
+			sprintf(output, msg_sd(sd, MSGTBL_HERC_CHAT_JOIN_SUCCESS), chan->name, map->list[chan->m].name); // You're now in the '#%s' channel for '%s'
 		} else {
-			sprintf(output, msg_sd(sd,1403), chan->name); // You're now in the '%s' channel
+			sprintf(output, msg_sd(sd, MSGTBL_JOIN_CHANNEL_SUCCESS), chan->name); // You're now in the '%s' channel
 		}
 		clif->messagecolor_self(sd->fd, COLOR_DEFAULT, output);
 	}
@@ -442,7 +443,7 @@ static void channel_leave(struct channel_data *chan, struct map_session_data *sd
 		channel->delete(chan);
 	} else if (!channel->config->closing && (chan->options & HCS_OPT_ANNOUNCE_JOIN)) {
 		char message[60];
-		sprintf(message, msg_txt(898), chan->name, sd->status.name); // #%s '%s' left
+		sprintf(message, msg_txt(MSGTBL_PLAYER_LEFT), chan->name, sd->status.name); // #%s '%s' left
 		clif->channel_msg(chan,sd,message);
 	}
 

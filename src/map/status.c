@@ -47,6 +47,7 @@
 #include "common/cbasetypes.h"
 #include "common/ers.h"
 #include "common/memmgr.h"
+#include "common/msgtable.h"
 #include "common/nullpo.h"
 #include "common/random.h"
 #include "common/showmsg.h"
@@ -780,7 +781,7 @@ static bool status_check_skilluse_mapzone(struct block_list *src, struct status_
 #if PACKETVER >= 20080311
 				clif->skill_mapinfomessage(sd, 2);
 #else
-				clif->messagecolor_self(sd->fd, COLOR_CYAN, msg_sd(sd, 50));
+				clif->messagecolor_self(sd->fd, COLOR_CYAN, msg_sd(sd, MSGTBL_SKILL_DISABLED_IN_AREA));
 #endif
 			} else if (src->type == BL_MOB && zone_subtype != MZS_NONE) {
 				if ((st->mode & MD_BOSS) != 0) { /* is boss */
