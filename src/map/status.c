@@ -8066,9 +8066,8 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				//val4: TK: Combo time
 				struct unit_data *ud = unit->bl2ud(bl);
 				if( ud && (!val3 || val3 == 2) ) {
-					total_tick += 300 * battle_config.combo_delay_rate/100;
-					ud->attackabletime = timer->gettick()+total_tick;
-					if( !val3 )
+					ud->attackabletime = timer->gettick() + total_tick;
+					if (!val3)
 						unit->set_walkdelay(bl, timer->gettick(), total_tick, 1);
 				}
 				val3 = 0;

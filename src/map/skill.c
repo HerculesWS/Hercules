@@ -3464,7 +3464,7 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 				break;
 		} //Switch End
 		if (combo) { //Possible to chain
-			combo = (int)max(status_get_amotion(src), DIFF_TICK(sd->ud.canact_tick, tick));
+			combo = (int)max(status_get_amotion(src), DIFF_TICK(sd->ud.canact_tick, tick)) + 300 * battle_config.combo_delay_rate / 100;
 			sc_start2(NULL, src, SC_COMBOATTACK, 100, skill_id, 0, combo, skill_id);
 			clif->combo_delay(src, combo);
 		}
