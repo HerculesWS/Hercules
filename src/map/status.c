@@ -10629,7 +10629,19 @@ static int status_change_clear(struct block_list *bl, int type)
 
 	sc = status->get_sc(bl);
 
-	if (!sc || !sc->count)
+	if (sc == NULL)
+		return 0;
+
+	sc->opt1 = 0;
+	sc->opt2 = 0;
+	sc->opt3 = 0;
+	sc->bs_counter = 0;
+	sc->fv_counter = 0;
+#ifndef RENEWAL
+	sc->sg_counter = 0;
+#endif
+
+	if (sc->count == 0)
 		return 0;
 
 	for(i = 0; i < SC_MAX; i++) {
@@ -10662,15 +10674,6 @@ static int status_change_clear(struct block_list *bl, int type)
 			sc->data[i] = NULL;
 		}
 	}
-
-	sc->opt1 = 0;
-	sc->opt2 = 0;
-	sc->opt3 = 0;
-	sc->bs_counter = 0;
-	sc->fv_counter = 0;
-#ifndef RENEWAL
-	sc->sg_counter = 0;
-#endif
 
 	if( type == 0 || type == 2 )
 		clif->changeoption(bl);
