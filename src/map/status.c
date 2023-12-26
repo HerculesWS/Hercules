@@ -7217,28 +7217,59 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			if( bl->type != BL_MER )
 				return 0; // Stats only for Mercenaries
 			break;
+		// Normal foods can't overwrite cash foods, and cash foods only overwrite those of equal or lower level
 		case SC_FOOD_STR:
-			if (sc->data[SC_FOOD_STR_CASH] && sc->data[SC_FOOD_STR_CASH]->val1 > val1)
+			if (sc->data[SC_FOOD_STR_CASH] != NULL)
+				return 0;
+			FALLTHROUGH
+		case SC_FOOD_STR_CASH:
+			if ((sc->data[SC_FOOD_STR_CASH] != NULL && sc->data[SC_FOOD_STR_CASH]->val1 > val1)
+				|| (sc->data[SC_FOOD_STR] != NULL && sc->data[SC_FOOD_STR]->val1 > val1))
 				return 0;
 			break;
 		case SC_FOOD_AGI:
-			if (sc->data[SC_FOOD_AGI_CASH] && sc->data[SC_FOOD_AGI_CASH]->val1 > val1)
+			if (sc->data[SC_FOOD_AGI_CASH] != NULL)
+				return 0;
+			FALLTHROUGH
+		case SC_FOOD_AGI_CASH:
+			if ((sc->data[SC_FOOD_AGI_CASH] != NULL && sc->data[SC_FOOD_AGI_CASH]->val1 > val1)
+				|| (sc->data[SC_FOOD_AGI] != NULL && sc->data[SC_FOOD_AGI]->val1 > val1))
 				return 0;
 			break;
 		case SC_FOOD_VIT:
-			if (sc->data[SC_FOOD_VIT_CASH] && sc->data[SC_FOOD_VIT_CASH]->val1 > val1)
+			if (sc->data[SC_FOOD_VIT_CASH] != NULL)
+				return 0;
+			FALLTHROUGH
+		case SC_FOOD_VIT_CASH:
+			if ((sc->data[SC_FOOD_VIT_CASH] != NULL && sc->data[SC_FOOD_VIT_CASH]->val1 > val1)
+				|| (sc->data[SC_FOOD_VIT] != NULL && sc->data[SC_FOOD_VIT]->val1 > val1))
 				return 0;
 			break;
 		case SC_FOOD_INT:
-			if (sc->data[SC_FOOD_INT_CASH] && sc->data[SC_FOOD_INT_CASH]->val1 > val1)
+			if (sc->data[SC_FOOD_INT_CASH] != NULL)
+				return 0;
+			FALLTHROUGH
+		case SC_FOOD_INT_CASH:
+			if ((sc->data[SC_FOOD_INT_CASH] != NULL && sc->data[SC_FOOD_INT_CASH]->val1 > val1)
+				|| (sc->data[SC_FOOD_INT] != NULL && sc->data[SC_FOOD_INT]->val1 > val1))
 				return 0;
 			break;
 		case SC_FOOD_DEX:
-			if (sc->data[SC_FOOD_DEX_CASH] && sc->data[SC_FOOD_DEX_CASH]->val1 > val1)
+			if (sc->data[SC_FOOD_DEX_CASH] != NULL)
+				return 0;
+			FALLTHROUGH
+		case SC_FOOD_DEX_CASH:
+			if ((sc->data[SC_FOOD_DEX_CASH] != NULL && sc->data[SC_FOOD_DEX_CASH]->val1 > val1)
+				|| (sc->data[SC_FOOD_DEX] != NULL && sc->data[SC_FOOD_DEX]->val1 > val1))
 				return 0;
 			break;
 		case SC_FOOD_LUK:
-			if (sc->data[SC_FOOD_LUK_CASH] && sc->data[SC_FOOD_LUK_CASH]->val1 > val1)
+			if (sc->data[SC_FOOD_LUK_CASH] != NULL)
+				return 0;
+			FALLTHROUGH
+		case SC_FOOD_LUK_CASH:
+			if ((sc->data[SC_FOOD_LUK_CASH] != NULL && sc->data[SC_FOOD_LUK_CASH]->val1 > val1)
+				|| (sc->data[SC_FOOD_LUK] != NULL && sc->data[SC_FOOD_LUK]->val1 > val1))
 				return 0;
 			break;
 		case SC_CAMOUFLAGE:
