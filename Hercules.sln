@@ -1,23 +1,25 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27703.2026
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "char-server", "vcproj-15\char-server.vcxproj", "{D356871D-58E1-450B-967A-E4E9646175AF}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "char-server", "vcproj\char-server.vcxproj", "{D356871D-58E1-450B-967A-E4E9646175AF}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "login-server", "vcproj-15\login-server.vcxproj", "{D356871D-58E1-450B-967A-E5E9646175AF}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "login-server", "vcproj\login-server.vcxproj", "{D356871D-58E1-450B-967A-E5E9646175AF}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "map-server", "vcproj-15\map-server.vcxproj", "{D356871D-58E1-450B-967A-E6E9646175AF}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "map-server", "vcproj\map-server.vcxproj", "{D356871D-58E1-450B-967A-E6E9646175AF}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "plugin-sample", "vcproj-15\plugin-sample.vcxproj", "{E64C56D3-CDFB-483B-900B-A62D216B6D2F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "plugin-sample", "vcproj\plugin-sample.vcxproj", "{E64C56D3-CDFB-483B-900B-A62D216B6D2F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "plugin-HPMHooking_map", "vcproj-15\plugin-HPMHooking_map.vcxproj", "{745D4A8C-6A68-4721-A43A-D81BF59860A1}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "plugin-HPMHooking_map", "vcproj\plugin-HPMHooking_map.vcxproj", "{745D4A8C-6A68-4721-A43A-D81BF59860A1}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "plugin-HPMHooking_char", "vcproj-15\plugin-HPMHooking_char.vcxproj", "{D495824D-24D3-4623-A28C-4CA506084A09}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "plugin-HPMHooking_char", "vcproj\plugin-HPMHooking_char.vcxproj", "{D495824D-24D3-4623-A28C-4CA506084A09}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "plugin-HPMHooking_login", "vcproj-15\plugin-HPMHooking_login.vcxproj", "{544AD8E8-0309-49DE-9F8D-F9FEA24D92F1}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "plugin-HPMHooking_login", "vcproj\plugin-HPMHooking_login.vcxproj", "{544AD8E8-0309-49DE-9F8D-F9FEA24D92F1}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "api-server", "vcproj-15\char-server.vcxproj", "{4960b7c9-d943-4eb6-a5ed-9a38ed1f437c}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "api-server", "vcproj\api-server.vcxproj", "{4960B7C9-D943-4EB6-A5ED-9A38ED1F437C}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "plugin-HPMHooking_api", "vcproj\plugin-HPMHooking_api.vcxproj", "{69D5A06C-67C9-4EB1-BA5A-A001AE69838B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,10 +55,14 @@ Global
 		{544AD8E8-0309-49DE-9F8D-F9FEA24D92F1}.Debug|Win32.Build.0 = Debug|Win32
 		{544AD8E8-0309-49DE-9F8D-F9FEA24D92F1}.Release|Win32.ActiveCfg = Release|Win32
 		{544AD8E8-0309-49DE-9F8D-F9FEA24D92F1}.Release|Win32.Build.0 = Release|Win32
-		{4960b7c9-d943-4eb6-a5ed-9a38ed1f437c}.Debug|Win32.ActiveCfg = Debug|Win32
-		{4960b7c9-d943-4eb6-a5ed-9a38ed1f437c}.Debug|Win32.Build.0 = Debug|Win32
-		{4960b7c9-d943-4eb6-a5ed-9a38ed1f437c}.Release|Win32.ActiveCfg = Release|Win32
-		{4960b7c9-d943-4eb6-a5ed-9a38ed1f437c}.Release|Win32.Build.0 = Release|Win32
+		{4960B7C9-D943-4EB6-A5ED-9A38ED1F437C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4960B7C9-D943-4EB6-A5ED-9A38ED1F437C}.Debug|Win32.Build.0 = Debug|Win32
+		{4960B7C9-D943-4EB6-A5ED-9A38ED1F437C}.Release|Win32.ActiveCfg = Release|Win32
+		{4960B7C9-D943-4EB6-A5ED-9A38ED1F437C}.Release|Win32.Build.0 = Release|Win32
+		{69D5A06C-67C9-4EB1-BA5A-A001AE69838B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{69D5A06C-67C9-4EB1-BA5A-A001AE69838B}.Debug|Win32.Build.0 = Debug|Win32
+		{69D5A06C-67C9-4EB1-BA5A-A001AE69838B}.Release|Win32.ActiveCfg = Release|Win32
+		{69D5A06C-67C9-4EB1-BA5A-A001AE69838B}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
