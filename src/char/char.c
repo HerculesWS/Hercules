@@ -2414,7 +2414,7 @@ static int char_parse_fromlogin_connection_state(int fd)
 	case 1: // Invalid username/password
 		ShowError("Can not connect to login-server.\n");
 		ShowError("The server communication passwords (default s1/p1) are probably invalid.\n");
-		ShowError("Also, please make sure your login db has the correct communication username/passwords and the gender of the account is S.\n");
+		ShowError("Also, please make sure your login db has the correct communication username/passwords, the gender of the account is S and its id is between 0 and (MAX_SERVERS - 1).\n");
 		ShowError("The communication passwords are set in /conf/map/map-server.conf and /conf/char/char-server.conf\n");
 		sockt->eof(fd);
 		return 1;
@@ -6096,7 +6096,7 @@ static void char_ensure_online_char_data(struct online_char_data *character)
 {
 	nullpo_retv(character);
 	if (character->data == NULL) {
-		character->data = aCalloc(sizeof(struct online_char_data2), 1);
+		character->data = aCalloc(1, sizeof(struct online_char_data2));
 	}
 }
 
