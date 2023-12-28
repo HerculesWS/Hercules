@@ -239,6 +239,7 @@ struct Battle_Config {
 	int resurrection_exp;
 	int shop_exp;
 	int combo_delay_rate;
+	int combo_cache_skill;
 	int item_check;
 	int item_use_interval; //[Skotlex]
 	int wedding_modifydisplay;

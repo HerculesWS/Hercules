@@ -23680,14 +23680,14 @@ void HP_clif_pSkillUp(int fd, struct map_session_data *sd) {
 	}
 	return;
 }
-void HP_clif_useSkillToIdReal(int fd, struct map_session_data *sd, int skill_id, int skill_lv, int target_id) {
+void HP_clif_useSkillToIdReal(int fd, struct map_session_data *sd, int skill_id, int skill_lv, int target_id, bool skip_combo_check) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_useSkillToIdReal_pre > 0) {
-		void (*preHookFunc) (int *fd, struct map_session_data **sd, int *skill_id, int *skill_lv, int *target_id);
+		void (*preHookFunc) (int *fd, struct map_session_data **sd, int *skill_id, int *skill_lv, int *target_id, bool *skip_combo_check);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_useSkillToIdReal_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_clif_useSkillToIdReal_pre[hIndex].func;
-			preHookFunc(&fd, &sd, &skill_id, &skill_lv, &target_id);
+			preHookFunc(&fd, &sd, &skill_id, &skill_lv, &target_id, &skip_combo_check);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -23695,16 +23695,43 @@ void HP_clif_useSkillToIdReal(int fd, struct map_session_data *sd, int skill_id,
 		}
 	}
 	{
-		HPMHooks.source.clif.useSkillToIdReal(fd, sd, skill_id, skill_lv, target_id);
+		HPMHooks.source.clif.useSkillToIdReal(fd, sd, skill_id, skill_lv, target_id, skip_combo_check);
 	}
 	if (HPMHooks.count.HP_clif_useSkillToIdReal_post > 0) {
-		void (*postHookFunc) (int fd, struct map_session_data *sd, int skill_id, int skill_lv, int target_id);
+		void (*postHookFunc) (int fd, struct map_session_data *sd, int skill_id, int skill_lv, int target_id, bool skip_combo_check);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_useSkillToIdReal_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_useSkillToIdReal_post[hIndex].func;
-			postHookFunc(fd, sd, skill_id, skill_lv, target_id);
+			postHookFunc(fd, sd, skill_id, skill_lv, target_id, skip_combo_check);
 		}
 	}
 	return;
+}
+int HP_clif_combo_delay_timer(int tid, int64 tick, int id, intptr_t data) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_clif_combo_delay_timer_pre > 0) {
+		int (*preHookFunc) (int *tid, int64 *tick, int *id, intptr_t *data);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_combo_delay_timer_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_combo_delay_timer_pre[hIndex].func;
+			retVal___ = preHookFunc(&tid, &tick, &id, &data);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.clif.combo_delay_timer(tid, tick, id, data);
+	}
+	if (HPMHooks.count.HP_clif_combo_delay_timer_post > 0) {
+		int (*postHookFunc) (int retVal___, int tid, int64 tick, int id, intptr_t data);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_combo_delay_timer_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_combo_delay_timer_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, tid, tick, id, data);
+		}
+	}
+	return retVal___;
 }
 void HP_clif_pUseSkillToId(int fd, struct map_session_data *sd) {
 	int hIndex = 0;
