@@ -209,6 +209,7 @@ struct map_session_data {
 	//status_calc_pc, while special_state is recalculated in each call. [Skotlex]
 	struct {
 		unsigned int active : 1; //Marks active player (not active is logging in/out, or changing map servers)
+		unsigned int scloaded : 1; // Marks sc related data has been loaded for player
 		unsigned int menu_or_input : 1;// if a script is waiting for feedback from the player
 		unsigned int dead_sit : 2;
 		unsigned int lr_flag : 3;//1: left h. weapon; 2: arrow; 3: shield
