@@ -8013,6 +8013,18 @@ static void battle_adjust_conf(void)
 	}
 #endif
 
+#if !(PACKETVER_MAIN_NUM >= 20160323 || (PACKETVER_RE_NUM >= 20160316 && defined(ENABLE_RODEX_ACCOUNT_MAIL_RE_PATCH)) || defined(PACKETVER_ZERO))
+	if (battle_config.feature_rodex_use_accountmail == 1) {
+#ifndef BUILDBOT /* Don't show these warnings to CI */
+		ShowWarning("conf/map/battle/feature.conf:features/rodex_use_accountmail RoDEX account mail is enabled but it requires 2016-03-16 RagexeRE / 2016-03-23 Ragexe or newer, disabling...\n");
+#ifdef PACKETVER_RE
+		ShowWarning("conf/map/battle/feature.conf:features/rodex_use_accountmail For RE clients, you should also enable ENABLE_RODEX_ACCOUNT_MAIL_RE_PATCH\n");
+#endif // PACKETVER_RE
+#endif // !BUILDBOT
+		battle_config.feature_rodex_use_accountmail = 0;
+	}
+#endif // date check
+
 #if !(PACKETVER_MAIN_NUM >= 20161130 || PACKETVER_RE_NUM >= 20161109 || defined(PACKETVER_ZERO))
 	if (battle_config.enable_refinery_ui == 1) {
 		ShowWarning("conf/map/battle/feature.conf refinery ui is enabled but it requires PACKETVER 2016-11-09 RagexeRE/2016-11-30 Ragexe or newer, disabling...\n");

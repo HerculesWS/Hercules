@@ -27269,6 +27269,9 @@ static bool buildin_rodex_sendmail_sub(struct script_state *st, struct rodex_mes
 	int receiver_id = script_getnum(st, 2);
 
 	if (strcmp(func_name, "rodex_sendmail_acc") == 0 || strcmp(func_name, "rodex_sendmail_acc2") == 0) {
+		if (battle_config.feature_rodex_use_accountmail == 0)
+			ShowWarning("script:rodex_sendmail_acc: You are sending an account mail while \"feature_rodex_use_accountmail\" is disabled. Players may not be able to view it.\n");
+
 		if (receiver_id < START_ACCOUNT_NUM || receiver_id > END_ACCOUNT_NUM) {
 			ShowError("script:rodex_sendmail: Invalid receiver account ID %d passed!\n", receiver_id);
 			return false;

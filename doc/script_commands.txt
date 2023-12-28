@@ -9718,6 +9718,9 @@ For examples of usage, see /doc/sample/npc_rodex.txt
 rodex_sendmail2 and rodex_sendmail_acc2 are more flexible versions.
 Check getitem2 command for more information of the extra parameters.
 
+Important: rodex_sendmail_acc (and rodex_sendmail_acc2) requires clients from 2016-03-23 or newer.
+  Additionally, it requires enabling "rodex_use_accountmail" on conf/map/battle/feature.conf.
+
 ---------------------------------------
 //=====================================
 7 - Instance-Related Commands
