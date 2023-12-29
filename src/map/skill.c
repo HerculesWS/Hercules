@@ -3364,9 +3364,10 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 		flag|=SD_ANIMATION;
 	}
 
-	if(sd) {
+	if (sd != NULL) {
 		int combo = 0; //Used to signal if this skill can be combo'ed later on.
 		struct status_change_entry *sce;
+
 		if ((sce = sd->sc.data[SC_COMBOATTACK])) {//End combo state after skill is invoked. [Skotlex]
 			switch (skill_id) {
 			case TK_TURNKICK:
@@ -3390,31 +3391,32 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 		}
 		switch(skill_id) {
 			case MO_TRIPLEATTACK:
-				if (pc->checkskill(sd, MO_CHAINCOMBO) > 0 || pc->checkskill(sd, SR_DRAGONCOMBO) > 0)
-					combo=1;
 				// Contrary to other MO combos, triple doesn't get delayed through skill_castend_id
-				// A little delay (amotion) is required for the animation to display properly
-				// even if next combo isn't possible
-				int delay = combo ? skill->delay_fix(src, MO_TRIPLEATTACK, skill_lv) : status_get_amotion(src);
-				sd->ud.canact_tick = max(tick + delay, sd->ud.canact_tick);
+				// Send adelay (which matches aspd) to correctly display animation when there's no next combo
+				if (pc->checkskill(sd, MO_CHAINCOMBO) > 0 || pc->checkskill(sd, SR_DRAGONCOMBO) > 0) {
+					combo = 1;
+					sd->ud.canact_tick = max(tick + skill->delay_fix(src, MO_TRIPLEATTACK, skill_lv), sd->ud.canact_tick);
+				} else
+					clif->combo_delay(src, status_get_adelay(src));
 				break;
 			case MO_CHAINCOMBO:
-				if(pc->checkskill(sd, MO_COMBOFINISH) > 0 && sd->spiritball > 0)
-					combo=1;
+				if (pc->checkskill(sd, MO_COMBOFINISH) > 0 && sd->spiritball > 0)
+					combo = 1;
 				break;
 			case MO_COMBOFINISH:
-				if (sd->status.party_id>0) //bonus from SG_FRIEND [Komurka]
+				if (sd->status.party_id > 0) //bonus from SG_FRIEND [Komurka]
 					party->skill_check(sd, sd->status.party_id, MO_COMBOFINISH, skill_lv);
+
 				if (pc->checkskill(sd, CH_TIGERFIST) > 0 && sd->spiritball > 0)
-					combo=1;
-			/* Fall through */
+					combo = 1;
+				FALLTHROUGH
 			case CH_TIGERFIST:
 				if (!combo && pc->checkskill(sd, CH_CHAINCRUSH) > 0 && sd->spiritball > 1)
-					combo=1;
-			/* Fall through */
+					combo = 1;
+				FALLTHROUGH
 			case CH_CHAINCRUSH:
 				if (!combo && pc->checkskill(sd, MO_EXTREMITYFIST) > 0 && sd->spiritball > 0 && sd->sc.data[SC_EXPLOSIONSPIRITS])
-					combo=1;
+					combo = 1;
 				break;
 			case AC_DOUBLE:
 				// AC_DOUBLE can start the combo with other monster types, but the
@@ -3442,15 +3444,15 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 				sd->ud.attackabletime = sd->canuseitem_tick = sd->ud.canact_tick;
 				break;
 			case TK_DODGE:
-				if( pc->checkskill(sd, TK_JUMPKICK) > 0 )
+				if (pc->checkskill(sd, TK_JUMPKICK) > 0)
 					combo = 1;
 				break;
 			case SR_DRAGONCOMBO:
-				if( pc->checkskill(sd, SR_FALLENEMPIRE) > 0 )
+				if (pc->checkskill(sd, SR_FALLENEMPIRE) > 0)
 					combo = 1;
 				break;
 			case SR_FALLENEMPIRE:
-				if( pc->checkskill(sd, SR_TIGERCANNON) > 0 || pc->checkskill(sd, SR_GATEOFHELL) > 0 )
+				if (pc->checkskill(sd, SR_TIGERCANNON) > 0 || pc->checkskill(sd, SR_GATEOFHELL) > 0)
 					combo = 1;
 				break;
 			case SJ_PROMINENCEKICK:
@@ -3462,8 +3464,8 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 				break;
 		} //Switch End
 		if (combo) { //Possible to chain
-			combo = (int)max(status_get_amotion(src), DIFF_TICK(sd->ud.canact_tick, tick));
-			sc_start2(NULL, src, SC_COMBOATTACK, 100, skill_id, bl->id, combo, skill_id);
+			combo = (int)max(status_get_amotion(src), DIFF_TICK(sd->ud.canact_tick, tick)) + 300 * battle_config.combo_delay_rate / 100;
+			sc_start2(NULL, src, SC_COMBOATTACK, 100, skill_id, 0, combo, skill_id);
 			clif->combo_delay(src, combo);
 		}
 	}

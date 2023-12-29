@@ -1431,18 +1431,19 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 		sc = NULL; //Unneeded
 
 	//temp: used to signal combo-skills right now.
-	if (sc && sc->data[SC_COMBOATTACK]
+	if (sc != NULL
 	&& skill->is_combo(skill_id)
+	&& sc->data[SC_COMBOATTACK] != NULL
 	&& (sc->data[SC_COMBOATTACK]->val1 == skill_id
-		|| ( sd?skill->check_condition_castbegin(sd,skill_id,skill_lv):0 )
+		|| (sd != NULL && skill->check_condition_castbegin(sd, skill_id, skill_lv))
 		)
 	) {
 		if (sc->data[SC_COMBOATTACK]->val2)
 			target_id = sc->data[SC_COMBOATTACK]->val2;
-		else if( skill->get_inf(skill_id) != 1 ) // Only non-targetable skills should use auto target
+		else if (src->id == target_id || ud->target > 0)
 			target_id = ud->target;
 
-		if( skill->get_inf(skill_id)&INF_SELF_SKILL && skill->get_nk(skill_id)&NK_NO_DAMAGE )// exploit fix
+		if (skill->get_inf(skill_id)&INF_SELF_SKILL && skill->get_nk(skill_id)&NK_NO_DAMAGE)// exploit fix
 			target_id = src->id;
 		temp = 1;
 	} else if ( target_id == src->id &&
@@ -2469,7 +2470,7 @@ static int unit_attack_timer_sub(struct block_list *src, int tid, int64 tick)
 			return 1;
 		}
 
-		ud->attackabletime = tick + sstatus->adelay;
+		ud->attackabletime = max(tick + sstatus->adelay, ud->attackabletime);
 		// You can't move if you can't attack neither.
 		if (src->type&battle_config.attack_walk_delay)
 			unit->set_walkdelay(src, tick, sstatus->amotion, 1);
