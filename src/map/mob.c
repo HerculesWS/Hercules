@@ -51,6 +51,7 @@
 #include "common/db.h"
 #include "common/ers.h"
 #include "common/memmgr.h"
+#include "common/msgtable.h"
 #include "common/nullpo.h"
 #include "common/random.h"
 #include "common/showmsg.h"
@@ -207,7 +208,7 @@ static void mvptomb_create(struct mob_data *md, char *killer, time_t time)
 	nd = npc->create_npc(TOMB, md->bl.m, md->bl.x, md->bl.y, md->ud.dir, MOB_TOMB);
 	md->tomb_nid = nd->bl.id;
 
-	safestrncpy(nd->name, msg_txt(856), sizeof(nd->name)); // "Tomb"
+	safestrncpy(nd->name, msg_txt(MSGTBL_TOMB), sizeof(nd->name)); // "Tomb"
 
 	nd->u.tomb.md = md;
 	nd->u.tomb.kill_time = time;
@@ -534,7 +535,7 @@ static bool mob_ksprotected(struct block_list *src, struct block_list *target)
 		// Message to KS
 		if( DIFF_TICK(sd->ks_floodprotect_tick, tick) <= 0 )
 		{
-			sprintf(output, msg_sd(sd, 890), pl_sd->status.name); // [KS Warning!! - Owner : %s]
+			sprintf(output, msg_sd(sd, MSGTBL_KS_WARNING_OWNER), pl_sd->status.name); // [KS Warning!! - Owner : %s]
 			clif_disp_onlyself(sd, output);
 
 			sd->ks_floodprotect_tick = tick + 2000;
@@ -543,7 +544,7 @@ static bool mob_ksprotected(struct block_list *src, struct block_list *target)
 		// Message to Owner
 		if( DIFF_TICK(pl_sd->ks_floodprotect_tick, tick) <= 0 )
 		{
-			sprintf(output, msg_sd(pl_sd, 891), sd->status.name); // [Watch out! %s is trying to KS you!]
+			sprintf(output, msg_sd(pl_sd, MSGTBL_KS_WARNING_PLAYER), sd->status.name); // [Watch out! %s is trying to KS you!]
 			clif_disp_onlyself(pl_sd, output);
 
 			pl_sd->ks_floodprotect_tick = tick + 2000;

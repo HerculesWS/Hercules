@@ -33,6 +33,7 @@
 #include "map/map.h"
 #include "map/messages.h"
 #include "map/mob.h" // struct mob_data
+#include "common/msgtable.h"
 #include "map/pc.h"
 #include "map/skill.h"
 #include "map/status.h"
@@ -385,7 +386,7 @@ static int party_invite(struct map_session_data *sd, struct map_session_data *ts
 	ARR_FIND(0, MAX_PARTY, i, p->data[i].sd == sd);
 
 	if( i == MAX_PARTY || !p->party.member[i].leader ) {
-		clif->message(sd->fd, msg_sd(sd,282)); // You need to be a party leader to use this command.
+		clif->message(sd->fd, msg_sd(sd, MSGTBL_MUST_BE_PARTY_LEADER)); // You need to be a party leader to use this command.
 		return 0;
 	}
 
@@ -399,7 +400,7 @@ static int party_invite(struct map_session_data *sd, struct map_session_data *ts
 
 	// confirm whether the account has the ability to invite before checking the player
 	if( !pc_has_permission(sd, PC_PERM_PARTY) || (tsd && !pc_has_permission(tsd, PC_PERM_PARTY)) ) {
-		clif->message(sd->fd, msg_sd(sd,81)); // "Your GM level doesn't authorize you to preform this action on the specified player."
+		clif->message(sd->fd, msg_sd(sd, MSGTBL_GM_LEVEL_UNAUTHORIZED)); // "Your GM level doesn't authorize you to preform this action on the specified player."
 		return 0;
 	}
 
@@ -763,7 +764,7 @@ static bool party_changeleader(struct map_session_data *sd, struct map_session_d
 		return false;
 
 	if (!tsd || tsd->status.party_id != sd->status.party_id) {
-		clif->message(sd->fd, msg_sd(sd,283)); // Target character must be online and in your current party.
+		clif->message(sd->fd, msg_sd(sd, MSGTBL_REQUIRE_ONLINE_PARTY_MEMBER)); // Target character must be online and in your current party.
 		return false;
 	}
 
@@ -775,7 +776,7 @@ static bool party_changeleader(struct map_session_data *sd, struct map_session_d
 	}
 
 	if( map->list[sd->bl.m].flag.partylock ) {
-		clif->message(sd->fd, msg_sd(sd,287)); // You cannot change party leaders in this map.
+		clif->message(sd->fd, msg_sd(sd, MSGTBL_CANT_CHANGE_PARTY_LEADER_IN_MAP)); // You cannot change party leaders in this map.
 		return false;
 	}
 
@@ -787,7 +788,7 @@ static bool party_changeleader(struct map_session_data *sd, struct map_session_d
 		return false; //Shouldn't happen
 
 	if (!p->party.member[mi].leader) {
-		clif->message(sd->fd, msg_sd(sd,282)); // You need to be a party leader to use this command.
+		clif->message(sd->fd, msg_sd(sd, MSGTBL_MUST_BE_PARTY_LEADER)); // You need to be a party leader to use this command.
 		return false;
 	}
 
@@ -829,7 +830,7 @@ static int party_recv_movemap(int party_id, int account_id, int char_id, unsigne
 		ShowError("party_recv_movemap: char %d/%d not found in party %s (id:%d)",account_id,char_id,p->party.name,party_id);
 		return 0;
 	}
-	
+
 	p->state.member_level_changed = 0;
 	m = &p->party.member[i];
 	m->map = mapid;

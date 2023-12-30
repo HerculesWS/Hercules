@@ -22,6 +22,7 @@
 #include "common/hercules.h"
 #include "common/cbasetypes.h"
 #include "common/memmgr.h"
+#include "common/msgtable.h"
 #include "common/nullpo.h"
 #include "common/showmsg.h"
 #include "common/strlib.h"
@@ -337,7 +338,7 @@ bool msg_config_read_posthook(bool retVal, const char *cfg_name, bool allow_over
 		return retVal;
 
 	if (retVal) {
-		for (i = 0; i < MAX_MSG; i++) {
+		for (i = 0; i < MSGTBL_MAX; i++) {
 			if (atcommand->msg_table[0][i] == NULL)
 				continue;
 			fprintf(lang_export_fp, "\n#: conf/messages.conf\n"

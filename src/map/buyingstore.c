@@ -30,6 +30,7 @@
 #include "map/pc.h" // struct map_session_data
 #include "common/cbasetypes.h"
 #include "common/db.h" // ARR_FIND
+#include "common/msgtable.h"
 #include "common/nullpo.h" // nullpo_*
 #include "common/showmsg.h" // ShowWarning
 #include "common/socket.h" // RBUF*
@@ -59,13 +60,13 @@ static bool buyingstore_setup(struct map_session_data *sd, unsigned char slots)
 
 	if( map->list[sd->bl.m].flag.novending ) {
 		// custom: no vending maps
-		clif->message(sd->fd, msg_sd(sd,276)); // "You can't open a shop on this map"
+		clif->message(sd->fd, msg_sd(sd, MSGTBL_CANT_OPEN_SHOP_IN_MAP)); // "You can't open a shop on this map"
 		return false;
 	}
 
 	if (map->getcell(sd->bl.m, &sd->bl, sd->bl.x, sd->bl.y, CELL_CHKNOVENDING)) {
 		// custom: no vending cells
-		clif->message(sd->fd, msg_sd(sd,204)); // "You can't open a shop on this cell."
+		clif->message(sd->fd, msg_sd(sd, MSGTBL_CANT_OPEN_SHOP_IN_CELL)); // "You can't open a shop on this cell."
 		return false;
 	}
 
@@ -102,7 +103,7 @@ static void buyingstore_create(struct map_session_data *sd, int zenylimit, unsig
 	if( !pc_can_give_items(sd) )
 	{// custom: GM is not allowed to buy (give zeny)
 		sd->buyingstore.slots = 0;
-		clif->message(sd->fd, msg_sd(sd,246)); // Your GM level doesn't authorize you to perform this action.
+		clif->message(sd->fd, msg_sd(sd, MSGTBL_CANT_GIVE_ITEMS)); // Your GM level doesn't authorize you to perform this action.
 		clif->buyingstore_open_failed(sd, BUYINGSTORE_CREATE, 0);
 		return;
 	}
@@ -114,13 +115,13 @@ static void buyingstore_create(struct map_session_data *sd, int zenylimit, unsig
 
 	if( map->list[sd->bl.m].flag.novending ) {
 		// custom: no vending maps
-		clif->message(sd->fd, msg_sd(sd,276)); // "You can't open a shop on this map"
+		clif->message(sd->fd, msg_sd(sd, MSGTBL_CANT_OPEN_SHOP_IN_MAP)); // "You can't open a shop on this map"
 		return;
 	}
 
 	if (map->getcell(sd->bl.m, &sd->bl, sd->bl.x, sd->bl.y, CELL_CHKNOVENDING)) {
 		// custom: no vending cells
-		clif->message(sd->fd, msg_sd(sd,204)); // "You can't open a shop on this cell."
+		clif->message(sd->fd, msg_sd(sd, MSGTBL_CANT_OPEN_SHOP_IN_CELL)); // "You can't open a shop on this cell."
 		return;
 	}
 
@@ -226,7 +227,7 @@ static void buyingstore_open(struct map_session_data *sd, int account_id)
 
 	if( !pc_can_give_items(sd) )
 	{// custom: GM is not allowed to sell
-		clif->message(sd->fd, msg_sd(sd,246)); // Your GM level doesn't authorize you to perform this action.
+		clif->message(sd->fd, msg_sd(sd, MSGTBL_CANT_GIVE_ITEMS)); // Your GM level doesn't authorize you to perform this action.
 		return;
 	}
 
@@ -264,7 +265,7 @@ static void buyingstore_trade(struct map_session_data* sd, int account_id, unsig
 
 	if( !pc_can_give_items(sd) )
 	{// custom: GM is not allowed to sell
-		clif->message(sd->fd, msg_sd(sd,246)); // Your GM level doesn't authorize you to perform this action.
+		clif->message(sd->fd, msg_sd(sd, MSGTBL_CANT_GIVE_ITEMS)); // Your GM level doesn't authorize you to perform this action.
 		clif->buyingstore_trade_failed_seller(sd, BUYINGSTORE_TRADE_SELLER_FAILED, 0);
 		return;
 	}

@@ -30,6 +30,7 @@
 #include "common/nullpo.h"
 #include "common/sql.h"
 #include "common/memmgr.h"
+#include "common/msgtable.h"
 #include "common/showmsg.h"
 
 
@@ -113,7 +114,7 @@ static void rodex_add_item(struct map_session_data *sd, int16 idx, int16 amount)
 			}
 		}
 	}
-	
+
 	// item is not attached yet, find a new slot
 	if (is_new) {
 		if (sd->rodex.tmp.items_count < RODEX_MAX_ITEM)
@@ -363,7 +364,7 @@ static void rodex_send_mail_result(struct map_session_data *ssd, struct map_sess
 
 	if (rsd != NULL) {
 		clif->rodex_icon(rsd->fd, true);
-		clif_disp_onlyself(rsd, msg_sd(rsd, 236)); // "You've got a new mail!"
+		clif_disp_onlyself(rsd, msg_sd(rsd, MSGTBL_NEW_MAIL)); // "You've got a new mail!"
 	}
 	return;
 }

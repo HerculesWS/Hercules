@@ -35,6 +35,7 @@
 #include "common/cbasetypes.h"
 #include "common/db.h"
 #include "common/memmgr.h"
+#include "common/msgtable.h"
 #include "common/nullpo.h"
 
 #include <stdio.h>
@@ -108,13 +109,13 @@ static int storage_storageopen(struct map_session_data *sd)
 		return 1; //Already open?
 
 	if (sd->storage.received == false) {
-		clif->message(sd->fd, msg_sd(sd, 27)); // Storage has not been loaded yet.
+		clif->message(sd->fd, msg_sd(sd, MSGTBL_STORAGE_NOT_LOADED)); // Storage has not been loaded yet.
 		return 1;
 	}
 
 	if( !pc_can_give_items(sd) ) {
 		//check is this GM level is allowed to put items to storage
-		clif->message(sd->fd, msg_sd(sd,246)); // Your GM level doesn't authorize you to perform this action.
+		clif->message(sd->fd, msg_sd(sd, MSGTBL_CANT_GIVE_ITEMS)); // Your GM level doesn't authorize you to perform this action.
 		return 1;
 	}
 
@@ -176,12 +177,12 @@ static int storage_additem(struct map_session_data *sd, struct item *item_data, 
 
 	if (!itemdb_canstore(item_data, pc_get_group_level(sd))) {
 		//Check if item is storable. [Skotlex]
-		clif->message (sd->fd, msg_sd(sd, 264)); // This item cannot be stored.
+		clif->message (sd->fd, msg_sd(sd, MSGTBL_CANT_STORE_ITEM)); // This item cannot be stored.
 		return 1;
 	}
 
 	if (item_data->bound > IBT_ACCOUNT && !pc_can_give_bound_items(sd)) {
-		clif->message(sd->fd, msg_sd(sd, 294)); // This bound item cannot be stored there.
+		clif->message(sd->fd, msg_sd(sd, MSGTBL_BOUND_CANT_STORE)); // This bound item cannot be stored there.
 		return 1;
 	}
 
@@ -501,8 +502,8 @@ static void guild_storage_delete(int guild_id)
  * @retval 0 success (open or req to create a new one).
  * @retval 1 storage is already open (storage_flag).
  * @retval 2 sd has no guild / guild information hasn't arrived yet.
- * @retval 3 sd's guild doesn't have GD_GUILD_STORAGE (msg_txt(335)) (if OFFICIAL_GUILD_STORAGE / PACKETVER >= 20131223)
- * @retval 4 sd doesn't have permission to use storage (msg_txt(336)) (PACKETVER >= 20140205)
+ * @retval 3 sd's guild doesn't have GD_GUILD_STORAGE (msg_txt(MSGTBL_GUILD_DOES_NOT_HAVE_STORAGE)) (if OFFICIAL_GUILD_STORAGE / PACKETVER >= 20131223)
+ * @retval 4 sd doesn't have permission to use storage (msg_txt(MSGTBL_NOT_AUTHORIZED_TO_USE_GSTORAGE)) (PACKETVER >= 20140205)
  */
 static int storage_guild_storageopen(struct map_session_data *sd)
 {
@@ -530,7 +531,7 @@ static int storage_guild_storageopen(struct map_session_data *sd)
 #endif // PACKETVER >= 20140205
 
 	if (!pc_can_give_items(sd)) { // check if this GM level can open guild storage and store items [Lupus]
-		clif->message(sd->fd, msg_sd(sd,246)); // Your GM level doesn't authorize you to perform this action.
+		clif->message(sd->fd, msg_sd(sd, MSGTBL_CANT_GIVE_ITEMS)); // Your GM level doesn't authorize you to perform this action.
 		return 1;
 	}
 
@@ -581,12 +582,12 @@ static int guild_storage_additem(struct map_session_data *sd, struct guild_stora
 
 	if (!itemdb_canguildstore(item_data, pc_get_group_level(sd)) || item_data->expire_time) {
 		//Check if item is storable. [Skotlex]
-		clif->message (sd->fd, msg_sd(sd,264)); // This item cannot be stored.
+		clif->message (sd->fd, msg_sd(sd, MSGTBL_CANT_STORE_ITEM)); // This item cannot be stored.
 		return 1;
 	}
 
 	if( item_data->bound && item_data->bound != IBT_GUILD && !pc_can_give_bound_items(sd) ) {
-		clif->message(sd->fd, msg_sd(sd,294)); // This bound item cannot be stored there.
+		clif->message(sd->fd, msg_sd(sd, MSGTBL_BOUND_CANT_STORE)); // This bound item cannot be stored there.
 		return 1;
 	}
 

@@ -24,6 +24,7 @@
 #include "common/conf.h"
 #include "common/db.h"
 #include "common/memmgr.h"
+#include "common/msgtable.h"
 #include "common/nullpo.h"
 #include "common/showmsg.h"
 
@@ -148,9 +149,9 @@ static void stylist_send_rodexitem(struct map_session_data *sd, int itemid)
 	msg.items[0].item.identify = 1;
 	msg.type = MAIL_TYPE_NPC | MAIL_TYPE_ITEM;
 
-	safestrncpy(msg.sender_name, msg_txt(366), NAME_LENGTH);
-	safestrncpy(msg.title, msg_txt(367), RODEX_TITLE_LENGTH);
-	safestrncpy(msg.body, msg_txt(368), MAIL_BODY_LENGTH);
+	safestrncpy(msg.sender_name, msg_txt(MSGTBL_STYLESHOP_MAIL_SENDER), NAME_LENGTH);
+	safestrncpy(msg.title, msg_txt(MSGTBL_STYLESHOP_MAIL_TITLE), RODEX_TITLE_LENGTH);
+	safestrncpy(msg.body, msg_txt(MSGTBL_STYLESHOP_MAIL_BODY), MAIL_BODY_LENGTH);
 	msg.send_date = (int)time(NULL);
 	msg.expire_date = (int)time(NULL) + RODEX_EXPIRE;
 
