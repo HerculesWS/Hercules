@@ -7,18 +7,24 @@ branches:
   - coverity_scan
 skip_tags: true
 skip_branch_with_pr: true
-image: Visual Studio 2017
+image: Visual Studio 2022
 clone_depth: 5
 environment:
+  HerculesProject: Hercules.sln
+
   matrix:
-  - HerculesProject: Hercules-15.sln
+  - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    PlatformToolset: v141
+    WindowsTargetPlatformVersion: 10.0.14393.0
   - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
-    HerculesProject: Hercules-16.sln
+    PlatformToolset: v142
+    WindowsTargetPlatformVersion: 10.0.17763.0
   - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
-    HerculesProject: Hercules-17.sln
+    PlatformToolset: v143
+    WindowsTargetPlatformVersion: 10.0
 services: mysql
 build_script:
-- cmd: MSBuild %HerculesProject% /t:map-server,char-server,login-server
+- cmd: MSBuild %HerculesProject% /p:PlatformToolset=%PlatformToolset% /p:WindowsTargetPlatformVersion=%WindowsTargetPlatformVersion% /t:map-server,char-server,login-server
 test: off
 deploy: off
 notifications:
