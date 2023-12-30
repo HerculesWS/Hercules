@@ -13568,13 +13568,13 @@ static void clif_useSkillToIdReal(int fd, struct map_session_data *sd, int skill
 		if (skill_id != SA_CASTCANCEL && skill_id != SO_SPELLFIST && sd->auto_cast_current.type == AUTOCAST_NONE)
 			return;
 	} else if (DIFF_TICK(tick, sd->ud.canact_tick) < 0) {
-		// Cannot perform skill yet, delay execution until canact_tick allows it
-		// Only for combo skills with implicit delays, otherwise we create a speedhack that bypasses client's animation delay		
+		// Delay execution of combo skill until canact_tick allows it
+		// Only for combo skills whose prerequisite induced delay
 		if (battle_config.combo_cache_skill
 			&& !skip_combo_check
 			&& sd->sc.data[SC_COMBOATTACK] != NULL
 			&& skill->is_combo(skill_id)
-			&& skill->get_delaynodex(skill_id, skill_lv) != 0
+			&& skill->delay_fix(&sd->bl, sd->sc.data[SC_COMBOATTACK]->val1, pc->checkskill(sd, sd->sc.data[SC_COMBOATTACK]->val1)) > 0
 		) {
 			timer->add(sd->ud.canact_tick, clif->combo_delay_timer, sd->bl.id, (intptr_t)MakeDWord((uint16)skill_id, (uint16)skill_lv));
 			return;
