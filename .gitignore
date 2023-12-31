@@ -141,7 +141,7 @@ Thumbs.db
 /vcproj/map-server
 /vcproj/api-server
 /vcproj/mapcache
-/vcproj/plugin-*
+/vcproj/plugin-*/
 
 # ccache
 /.ccache/
