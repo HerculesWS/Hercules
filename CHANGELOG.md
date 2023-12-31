@@ -22,6 +22,40 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
+## [v2023.12] `December 2023`
+
+### Added
+
+- Added a warning when enabling the RoDEX account box on unsupported client packetvers. To continue using this feature with patched RE clients it is necessary to uncomment the `ENABLE_RODEX_ACCOUNT_MAIL_RE_PATCH` macro in `core.h`. (#3263)
+- Added a warning when a script sends account mails when the feature is disabled on the server. (#3263)
+- Added an option to allow combo skills requested during previous skill's delay to be accepted (and queued up for execution), making them easier to trigger especially by players with high latency. The option can be enabled by setting `combo_cache_skill` to `true` in `conf/map/battle/skill.conf`. (#3260, #3266)
+- Added constants for all `messages.conf` messages replacing a large amount of magic numbers. The maximum number of messages is now defined in `common/msgtable.h` as `MSGTBL_MAX`. See the related pull request description for a conversion tool that may be used to migrate custom constants. (#3265)
+
+### Changed
+
+- Enabled the RoDEX account box by default since the default packetver supports it. (#3263)
+- Improved the error messages, providing additional useful details, when a char server's connection request to the login server is rejected. (#3264)
+- Cleaned up some repetition from the job name switches, replaced with X macro using the `class*.h` files. See the pull request description for migration details in case of custom jobs. (#3265, related to #165)
+
+### Fixed
+
+- Fixed the `snap_dodge` setting not working with `MO_EXTREMITYFIST`. (#3241, issue #638)
+- Fixed stat food and cash stat food being stacked on top of each others. Cash food of higher level is able to overwrite buffs from normal food, while normal food won't overwrite buffs from cash food. (#3250, issue #2489)
+- Fixed some SC counters (including Storm Gust) not getting reset to 0 when a unit dies. (#3255, issue #3196)
+- Fixed costumes blocking itemskill execution, even when items are being consumed. (#3257, related to issue #2925)
+- Fixed a race condition that may cause SC statuses to be received after the character status calculations are done, when the server is under heavy load. (#3256)
+- Fixed a compiler warning caused by swapped aCalloc arguments. (#3264)
+- Fixed the `MO_TRIPLEATTACK` animation not workingn when there's no possible chainable combo skill. (#3259)
+- Removed an incorrect `afterCastActDelay` from `PA_SACRIFICE` in pre-renewal. (#3259)
+- Removed the fixed target from some combo skills. Monk skills act on the current target even if the last skill was used on a different enemy. (#3259)
+- Fixed `MO_TRIPLEATTACK` overwriting `attackabletime`. (#3259)
+- Fixed combo delays applying to all `SC_COMBOATTACK` based skills and not sending the proper time to the client. (#3259)
+- Fixed one cell movement not ignoring hidden objects (such as GMs) in its stack limit calculation. (#3259)
+
+### Removed
+
+- Removed nearly identical redundant Visual Studio solutions for different versions. Only one version is kept, compatible with all the supported VS versions. The AppVeyor CI configuration is updated accordingly. (#3262, #3267, #3268)
+
 ## [v2023.11] `November 2023`
 
 ### Added
@@ -2957,6 +2991,7 @@ Note: everything included in this release is part of PR #3198 which consists of 
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2023.12]: https://github.com/HerculesWS/Hercules/compare/v2023.11...v2023.12
 [v2023.11]: https://github.com/HerculesWS/Hercules/compare/v2023.10...v2023.11
 [v2023.10]: https://github.com/HerculesWS/Hercules/compare/v2023.08...v2023.10
 [v2023.08]: https://github.com/HerculesWS/Hercules/compare/v2023.07.12...v2023.08
