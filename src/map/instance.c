@@ -259,8 +259,8 @@ static int instance_add_map(const char *name, int instance_id, bool usebasename,
 	}
 
 	size = map->list[im].bxs * map->list[im].bys * sizeof(struct block_list*);
-	map->list[im].block = (struct block_list**)aCalloc(size, 1);
-	map->list[im].block_mob = (struct block_list**)aCalloc(size, 1);
+	map->list[im].block = (struct block_list**)aCalloc(1, size);
+	map->list[im].block_mob = (struct block_list**)aCalloc(1, size);
 
 	memset(map->list[im].npc, 0x00, sizeof(map->list[i].npc));
 	map->list[im].npc_num = 0;
