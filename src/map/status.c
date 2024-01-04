@@ -4626,8 +4626,6 @@ static int status_calc_critical(struct block_list *bl, struct status_change *sc,
 		critical += sc->data[SC_FORTUNE]->val2;
 	if (sc->data[SC_TRUESIGHT])
 		critical += sc->data[SC_TRUESIGHT]->val2;
-	if (sc->data[SC_CLOAKING])
-		critical += critical;
 	if (sc->data[SC_STRIKING])
 		critical += sc->data[SC_STRIKING]->val1;
 #ifdef RENEWAL
