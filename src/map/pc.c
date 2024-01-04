@@ -2002,6 +2002,9 @@ static int pc_updateweightstatus(struct map_session_data *sd)
 	old_overweight = (sd->sc.data[SC_WEIGHTOVER90]) ? 2 : (sd->sc.data[SC_WEIGHTOVER50]) ? 1 : 0;
 	new_overweight = (pc_is90overweight(sd)) ? 2 : (pc_isoverhealweight(sd)) ? 1 : 0;
 
+	// update overweight status
+	sd->regen.state.overweight = new_overweight;
+
 	if( old_overweight == new_overweight )
 		return 0; // no change
 
@@ -2016,9 +2019,6 @@ static int pc_updateweightstatus(struct map_session_data *sd)
 		sc_start(NULL, &sd->bl, SC_WEIGHTOVER50, 100, 0, 0, 0);
 	else if( new_overweight == 2 )
 		sc_start(NULL, &sd->bl, SC_WEIGHTOVER90, 100, 0, 0, 0);
-
-	// update overweight status
-	sd->regen.state.overweight = new_overweight;
 
 	return 0;
 }
