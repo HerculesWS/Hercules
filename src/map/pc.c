@@ -12565,7 +12565,7 @@ static bool pc_expandInventory(struct map_session_data *sd, int adjustSize)
 {
 	nullpo_retr(false, sd);
 	const int invSize = sd->status.inventorySize;
-	if (adjustSize > MAX_INVENTORY || invSize + adjustSize <= FIXED_INVENTORY_SIZE || invSize + adjustSize > MAX_INVENTORY) {
+	if (adjustSize > MAX_INVENTORY || invSize + adjustSize < FIXED_INVENTORY_SIZE || invSize + adjustSize > MAX_INVENTORY) {
 		clif->inventoryExpandResult(sd, EXPAND_INVENTORY_RESULT_MAX_SIZE);
 		return false;
 	}
