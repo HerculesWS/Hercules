@@ -10997,13 +10997,13 @@ Opens refinery user interface for the player
 returns true on success and false on failure
 
 ---------------------------------------
-*openlapineddukddakboxui(<item_id>)
+*openlapineddukddakboxui({<item_id>})
 
 Opens lapine ddukddak user interface for the player
 returns true on success and false on failure
 
 ---------------------------------------
-*openlapineupgradeui(<item_id>)
+*openlapineupgradeui({<item_id>})
 
 Opens lapine ddukddak upgrade user interface for the player
 returns true on success and false on failure

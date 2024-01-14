@@ -27941,7 +27941,7 @@ static BUILDIN(openlapineddukddakboxui)
 	struct map_session_data *sd = script_rid2sd(st);
 	if (sd == NULL)
 		return false;
-	const int item_id = script_getnum(st, 2);
+	const int item_id = (script_getnum(st, 2) == 0) ? sd->itemid : script_getnum(st, 2);
 	struct item_data *it = itemdb->exists(item_id);
 	if (it == NULL) {
 		ShowError("buildin_openlapineddukddakboxui: Item %d is not valid\n", item_id);
@@ -27962,7 +27962,8 @@ static BUILDIN(openlapineupgradeui)
 	if (sd == NULL)
 		return false;
 
-	const int item_id = script_getnum(st, 2);
+	const int item_id = (script_getnum(st, 2) == 0) ? sd->itemid : script_getnum(st, 2);
+
 	struct item_data *it = itemdb->exists(item_id);
 	if (it == NULL || it->lapineupgrade == NULL) {
 		ShowError("buildin_openlapineupgradeui: Item %d is not valid\n", item_id);
@@ -29183,8 +29184,8 @@ static void script_parse_builtin(void)
 
 		BUILDIN_DEF(identify, "i"),
 		BUILDIN_DEF(identifyidx, "i"),
-		BUILDIN_DEF(openlapineddukddakboxui, "i"),
-		BUILDIN_DEF(openlapineupgradeui, "i"),
+		BUILDIN_DEF(openlapineddukddakboxui, "?"),
+		BUILDIN_DEF(openlapineupgradeui, "?"),
 
 		BUILDIN_DEF(callfunctionofnpc, "vs*"),
 
