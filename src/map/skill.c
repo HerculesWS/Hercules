@@ -7999,6 +7999,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 			break;
 
 		case BD_ETERNALCHAOS:
+		case BD_ROKISWEIL:
 		case DC_DONTFORGETME:
 			skill->castend_nodamage_id_sc_song(src, bl, skill_id, skill_lv, tick, flag | BCT_ENEMY);
 			break;
@@ -12491,12 +12492,12 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 		case SA_LANDPROTECTOR:
 		case BD_LULLABY:
 		case BD_DRUMBATTLEFIELD:
-		case BD_ROKISWEIL:
 		case BA_DISSONANCE:
 #ifndef RENEWAL
 		case BD_RICHMANKIM:
 		case BD_ETERNALCHAOS:
 		case BD_RINGNIBELUNGEN:
+		case BD_ROKISWEIL:
 		case BD_INTOABYSS:
 		case BD_SIEGFRIED:
 		case BA_WHISTLE:

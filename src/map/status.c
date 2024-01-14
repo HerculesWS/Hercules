@@ -953,7 +953,11 @@ static int status_check_skilluse(struct block_list *src, struct block_list *targ
 			//Skill blocking.
 			if (
 				(sc->data[SC_VOLCANO] && skill_id == WZ_ICEWALL) ||
-				(sc->data[SC_ROKISWEIL] && skill_id != BD_ADAPTATION) ||
+#ifndef RENEWAL
+				(sc->data[SC_ROKISWEIL] != NULL && skill_id != BD_ADAPTATION) ||
+#else
+				sc->data[SC_ROKISWEIL] != NULL ||
+#endif
 				(sc->data[SC_HERMODE] && skill->get_inf(skill_id) & INF_SUPPORT_SKILL) ||
 				pc_ismuted(sc, MANNER_NOSKILL)
 				)
@@ -8050,6 +8054,13 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				val2 = rnd() % RINGNBL_EFF_MAX;
 				break;
 
+			case SC_ROKISWEIL:
+				// val1 = skill lv
+				// TODO: needs more info. It is correct to cause confusion Health State,
+				//       but I am not 100% sure about rate and time
+				sc_start(src, bl, SC_CONFUSION, 100, 1, 20000, skill_id);
+				break;
+
 			case SC_SIEGFRIED:
 				// - val1: Skill Lv
 				val2 = val1 * 3; // Elemental Resistance
@@ -12527,8 +12538,8 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 					s = 3;
 					break;
 				case BD_LULLABY:
-				case BD_ROKISWEIL:
 #ifndef RENEWAL
+				case BD_ROKISWEIL:
 				case BD_ETERNALCHAOS:
 				case DC_FORTUNEKISS:
 #endif
