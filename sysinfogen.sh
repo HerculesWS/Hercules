@@ -238,7 +238,7 @@ cat >> "$OUTFILE" << EOF
 #define SYSINFO_CPU "$( cleanstring "${HERC_CPU}" )"
 
 // CPU Cores (Platform-dependent)
-#define SYSINFO_CPUCORES ( $( cleanstring "${HERC_CORES}" ) )
+#define SYSINFO_CPUCORES ( "$( cleanstring "${HERC_CORES}" )" )
 
 EOF
 [ $? -eq 0 ] || do_fail
@@ -290,4 +290,3 @@ cat >> "$OUTFILE" << EOF
 
 EOF
 [ $? -eq 0 ] || do_fail
-
