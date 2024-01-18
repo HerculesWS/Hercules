@@ -27941,16 +27941,37 @@ static BUILDIN(openlapineddukddakboxui)
 	struct map_session_data *sd = script_rid2sd(st);
 	if (sd == NULL)
 		return false;
-	const int item_id = (script_getnum(st, 2) == 0) ? sd->itemid : script_getnum(st, 2);
-	struct item_data *it = itemdb->exists(item_id);
-	if (it == NULL) {
-		ShowError("buildin_openlapineddukddakboxui: Item %d is not valid\n", item_id);
+
+	struct item_data *it = NULL;
+	if (script_hasdata(st, 2)) {
+		if (script_isstring(st, 2)) {
+			const char *item_name = script_getstr(st, 2);
+			it = itemdb->search_name(item_name);
+			if (it == NULL) {
+				ShowError("buildin_openlapineddukddakboxui: Item %s is not valid\n", item_name);
+				script->reportfunc(st);
+				script->reportsrc(st);
+				script_pushint(st, false);
+				return true;
+			}
+		} else {
+			it = itemdb->exists(script_getnum(st, 2));
+		}
+	} else {
+		if (sd->itemid > 0) {
+			it = itemdb->exists(sd->itemid);
+		}
+	}
+
+	if (it == NULL || it->lapineddukddak == NULL) {
+		ShowError("buildin_openlapineddukddakboxui: Item Id %d is not valid\n", it->nameid);
 		script->reportfunc(st);
 		script->reportsrc(st);
 		script_pushint(st, false);
 		return true;
 	}
-	clif->lapineDdukDdak_open(sd, item_id);
+
+	clif->lapineDdukDdak_open(sd, it->nameid);
 	script_pushint(st, true);
 	return true;
 }
@@ -27962,18 +27983,36 @@ static BUILDIN(openlapineupgradeui)
 	if (sd == NULL)
 		return false;
 
-	const int item_id = (script_getnum(st, 2) == 0) ? sd->itemid : script_getnum(st, 2);
+	struct item_data *it = NULL;
+	if (script_hasdata(st, 2)) {
+		if (script_isstring(st, 2)) {
+			const char *item_name = script_getstr(st, 2);
+			it = itemdb->search_name(item_name);
+			if (it == NULL) {
+				ShowError("buildin_openlapineupgradeui: Item %s is not valid\n", item_name);
+				script->reportfunc(st);
+				script->reportsrc(st);
+				script_pushint(st, false);
+				return true;
+			}
+		} else {
+			it = itemdb->exists(script_getnum(st, 2));
+		}
+	} else {
+		if (sd->itemid > 0) {
+			it = itemdb->exists(sd->itemid);
+		}
+	}
 
-	struct item_data *it = itemdb->exists(item_id);
 	if (it == NULL || it->lapineupgrade == NULL) {
-		ShowError("buildin_openlapineupgradeui: Item %d is not valid\n", item_id);
+		ShowError("buildin_openlapineupgradeui: Item Id %d is not valid\n", it->nameid);
 		script->reportfunc(st);
 		script->reportsrc(st);
 		script_pushint(st, false);
 		return true;
 	}
 
-	clif->lapineUpgrade_open(sd, item_id);
+	clif->lapineUpgrade_open(sd, it->nameid);
 	script_pushint(st, true);
 	return true;
 }
