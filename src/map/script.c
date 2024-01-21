@@ -9134,6 +9134,92 @@ static BUILDIN(grouprandomitem)
 }
 
 /*==========================================
+ * utils for item group
+ *------------------------------------------*/
+static bool utils_itemgroup_remove_duplicate(struct item_group *group)
+{
+	int n = group->qty;
+	int *arr = group->nameid;
+	int i, j, k;
+
+	// Remove duplicates
+	for (i = 0; i < n; i++) {
+		for (j = i + 1; j < n; j++) {
+			if (arr[i] == arr[j]) {
+				// Shift elements to the left
+				for (k = j; k < n - 1; k++) {
+					arr[k] = arr[k + 1];
+				}
+				n--;
+				j--;
+			}
+		}
+	}
+
+	// Create a new array without duplicates
+	int *newArr = malloc(n * sizeof(int));
+	if (newArr == NULL) {
+		// Handle memory allocation error
+		return false;
+	}
+
+	for (i = 0; i < n; i++) {
+		newArr[i] = arr[i];
+	}
+
+	group->qty = n;
+	group->nameid = newArr;
+
+	return true;
+}
+
+/*==========================================
+ * getitemgroupitems <reference array of item_id>, <item_group_id>;
+ *------------------------------------------*/
+static BUILDIN(getitemgroupitems)
+{
+	struct script_data* data = script_getdata(st, 2);
+
+	if (!data_isreference(data)) {
+		ShowError("buildin_getitemgroupitems: not a variable\n");
+		script->reportdata(data);
+		script_pushnil(st);
+		st->state = END;
+		return false;// not a variable
+	}
+
+	struct item_data *item = itemdb->name2id(script_getstr(st, 3));
+	if (!item) {
+		ShowError("buildin_getitemgroupitems: invalid item name [%s]\n", script_getstr(st, 2));
+		script_pushnil(st);
+		return false;
+	}
+
+	struct item_group group;
+	bool finded_group = itemdb->search_group(&group, item->nameid);
+	if (!finded_group) {
+		ShowWarning("buildin_getitemgroupitems: any group find\n");
+		return false;
+	}
+
+	if(!utils_itemgroup_remove_duplicate(&group)) {
+		ShowError("buildin_getitemgroupitems: fail to remove duplicates\n");
+		return false;
+	}
+
+	int32 idata = reference_getindex(data);
+	int32 dataid = reference_getid(data);
+	const char *data_name = reference_getname(data);
+	
+	for (int i = 0; i < group.qty; i++) {
+		int id = group.nameid[i];
+		script->set_reg(st, NULL, reference_uid(dataid, idata + i), data_name, (const void *)h64BPTRSIZE(id), (data)->ref);
+	}
+
+	return true;
+}
+
+/*==========================================
  * makeitem <item_id>, <amount>, "<map name>", <X>, <Y> {, <showdropeffect>}};
  *------------------------------------------*/
 static BUILDIN(makeitem)
@@ -28652,6 +28738,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(getitem2,"viiiiiiii?"),
 		BUILDIN_DEF(getnameditem,"vv"),
 		BUILDIN_DEF2(grouprandomitem,"groupranditem","i"),
+		BUILDIN_DEF(getitemgroupitems, "rs"),
 		BUILDIN_DEF(makeitem,"visii?"),
 		BUILDIN_DEF(makeitem2,"viiiiiiii?????"),
 		BUILDIN_DEF(delitem,"vi?"),
