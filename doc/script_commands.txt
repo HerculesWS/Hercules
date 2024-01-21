@@ -11149,7 +11149,7 @@ Will allocate Without duplicated item at <item_id_array> with all itens in <item
 
 Example:
 
-	getitemlistbygroup(.@item_list[0], "Old_Card_Album");
+	getitemgroupitems(.@item_list[0], "Old_Card_Album");
 	for ( .@i = 0; .@i < getarraysize(.@item_list); .@i++ ) {
 		mes "^1E56BD\t"+getitemname(.@item_list[.@i])+" ^000000";
 	}
