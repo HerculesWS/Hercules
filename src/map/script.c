@@ -9202,7 +9202,7 @@ static BUILDIN(getitemgroupitems)
 		return false;
 	}
 
-	if(!utils_itemgroup_remove_duplicate(&group)) {
+	if (!utils_itemgroup_remove_duplicate(&group)) {
 		ShowError("buildin_getitemgroupitems: fail to remove duplicates\n");
 		return false;
 	}
