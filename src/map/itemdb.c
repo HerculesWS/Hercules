@@ -358,7 +358,7 @@ static bool itemdb_search_group(struct item_group *group, int nameid)
 	for (int i = 0; i < itemdb->group_count; i++) {
 		struct item_group g = itemdb->groups[i];
 		
-		if( g.id == nameid ) {
+		if (g.id == nameid) {
 			*group = g;
 			return true;
 		}
