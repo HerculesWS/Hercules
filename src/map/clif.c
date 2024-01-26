@@ -11163,6 +11163,7 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 	}
 
 	if (sd->state.scloaded == 0) { // SC data was not received yet. pc->scdata_received will reinvoke
+		sd->state.loadendack_before_scloaded = 1;
 		return;
 	}
 

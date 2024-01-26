@@ -12016,10 +12016,10 @@ static void pc_scdata_received(struct map_session_data *sd)
 		clif->pLoadEndAck(0,sd);
 		pc->autotrade_populate(sd);
 		pc->autotrade_start(sd);
-	} else {
+	} else if (sd->state.loadendack_before_scloaded != 0) {
 		clif->pLoadEndAck(sd->fd, sd);
+		sd->state.loadendack_before_scloaded = 0;
 	}
-	
 }
 static int pc_expiration_timer(int tid, int64 tick, int id, intptr_t data)
 {
