@@ -89,6 +89,7 @@ static int inter_guild_save_timer(int tid, int64 tick, int id, intptr_t data)
 			// Nothing to save, guild is ready for removal.
 			if (chr->show_save_log)
 				ShowInfo("Guild Unloaded (%d - %s)\n", g->guild_id, g->name);
+			aFree(g->emblem_data);
 			db_remove(inter_guild->guild_db, key);
 		}
 	}
@@ -1207,6 +1208,7 @@ static bool inter_guild_disband(int guild_id)
 		inter->log("guild %s (id=%d) broken\n", g->name, guild_id);
 
 	//Remove the guild from memory. [Skotlex]
+	aFree(g->emblem_data);
 	idb_remove(inter_guild->guild_db, guild_id);
 
 	return true;
