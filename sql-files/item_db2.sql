@@ -77,3 +77,4 @@ CREATE TABLE `item_db2` (
   `rental_end_script` text,
  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM;
+
