@@ -5,7 +5,7 @@
 > This file is part of Hercules.
 > http://herc.ws - http://github.com/HerculesWS/Hercules
 > 
-> Copyright (C) 2012-2023 Hercules Dev Team
+> Copyright (C) 2012-2024 Hercules Dev Team
 > Copyright (C) Athena Dev Teams
 > 
 > Hercules is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -259,4 +259,3 @@ Basically the cycle repeat every 32th quests, unless the limit has been lifted i
  29 |   2 ^ 28    |  268435456 |   536870911
  30 |   2 ^ 29    |  536870912 |  1073741823
  31 |   2 ^ 30    | 1073741824 |  2147483647 
-

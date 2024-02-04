@@ -5,7 +5,7 @@
 > This file is part of Hercules.
 > http://herc.ws - http://github.com/HerculesWS/Hercules
 > 
-> Copyright (C) 2012-2023 Hercules Dev Team
+> Copyright (C) 2012-2024 Hercules Dev Team
 > Copyright (C) Athena Dev Teams
 > 
 > Hercules is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -438,4 +438,3 @@ bonus bIntravision,`n`;                | Always see Hiding and Cloaking players/
 bonus2 bAddSkillBlow,`sk`,`n`;         | Knockbacks the target by `n` cells when using skill `sk`
 bonus bNoKnockback,`n`;                | Character is no longer knocked back by enemy skills with such effect (`n` is meaningless)
 bonus bPerfectHide,`n`;                | Hidden/cloaked character is no longer detected by monsters with 'detector' mode (`n` is meaningless).
-

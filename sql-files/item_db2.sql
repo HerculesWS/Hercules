@@ -1,7 +1,7 @@
 -- This file is part of Hercules.
 -- http://herc.ws - http://github.com/HerculesWS/Hercules
 --
--- Copyright (C) 2013-2023 Hercules Dev Team
+-- Copyright (C) 2013-2024 Hercules Dev Team
 --
 -- Hercules is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -77,4 +77,3 @@ CREATE TABLE `item_db2` (
   `rental_end_script` text,
  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM;
-

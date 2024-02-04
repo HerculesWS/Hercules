@@ -5,7 +5,7 @@
 > This file is part of Hercules.
 > http://herc.ws - http://github.com/HerculesWS/Hercules
 > 
-> Copyright (C) 2012-2023 Hercules Dev Team
+> Copyright (C) 2012-2024 Hercules Dev Team
 > Copyright (C) Athena Dev Teams
 > 
 > Hercules is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -69,4 +69,3 @@ No. | Bits   | Mob Type | Aegis/eA Description
  27 | 0x8084 | Any      | aggressive, immobile, random target
 
 - Note that the detector bit due to being Insect/Demon, Plant and Boss mode bits need to be added independently of this list.
-

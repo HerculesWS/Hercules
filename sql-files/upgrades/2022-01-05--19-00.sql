@@ -3,7 +3,7 @@
 -- This file is part of Hercules.
 -- http://herc.ws - http://github.com/HerculesWS/Hercules
 --
--- Copyright (C) 2022-2023 Hercules Dev Team
+-- Copyright (C) 2022-2024 Hercules Dev Team
 --
 -- Hercules is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -22,4 +22,3 @@ ALTER TABLE `picklog` MODIFY `type` ENUM('M', 'P', 'L', 'T', 'V', 'S', 'N', 'C',
 ALTER TABLE `zenylog` MODIFY `type` ENUM('T','V','P','M','S','N','D','C','A','E','I','B','K','4') NOT NULL DEFAULT 'S';
 
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1641405640);
-
