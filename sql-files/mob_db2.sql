@@ -88,3 +88,4 @@ CREATE TABLE `mob_db2` (
   `DropCardper` smallint UNSIGNED NOT NULL DEFAULT '0',
   PRIMARY KEY (`ID`)
 ) ENGINE=MyISAM;
+

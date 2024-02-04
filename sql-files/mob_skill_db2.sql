@@ -49,3 +49,4 @@ CREATE TABLE `mob_skill_db2` (
   `EMOTION` TEXT,
   `CHAT` TEXT
 ) ENGINE=MyISAM;
+
