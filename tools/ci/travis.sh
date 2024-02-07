@@ -160,10 +160,12 @@ case "$MODE" in
 		mysql $DBUSER_ARG $DBPASS_ARG $DBHOST_ARG --execute="CREATE USER '$NEWUSER'@'$DBHOST' IDENTIFIED BY '$NEWPASS';" || true
 		mysql $DBUSER_ARG $DBPASS_ARG $DBHOST_ARG --execute="GRANT SELECT,INSERT,UPDATE,DELETE ON $DBNAME.* TO '$NEWUSER'@'$DBHOST';" || true
 		mysql $DBUSER_ARG $DBPASS_ARG $DBHOST_ARG --execute="ALTER USER '$NEWUSER'@'$DBHOST' IDENTIFIED BY '$NEWPASS';" || true
-		mysql --defaults-file=/etc/mysql/debian.cnf $DBPASS_ARG $DBHOST_ARG --execute="CREATE USER '$NEWUSER'@'$DBHOST' IDENTIFIED BY '$NEWPASS';" || true
-		mysql --defaults-file=/etc/mysql/debian.cnf $DBPASS_ARG $DBHOST_ARG --execute="GRANT SELECT,INSERT,UPDATE,DELETE ON $DBNAME.* TO '$NEWUSER'@'$DBHOST';" || true
-		mysql --defaults-file=/etc/mysql/debian.cnf $DBPASS_ARG $DBHOST_ARG --execute="ALTER USER '$NEWUSER'@'$DBHOST' IDENTIFIED BY '$NEWPASS';" || true
 
+		if [[ -n "$(uname -a | grep -i linux)" ]]; then
+			mysql --defaults-file=/etc/mysql/debian.cnf $DBPASS_ARG $DBHOST_ARG --execute="CREATE USER '$NEWUSER'@'$DBHOST' IDENTIFIED BY '$NEWPASS';" || true
+			mysql --defaults-file=/etc/mysql/debian.cnf $DBPASS_ARG $DBHOST_ARG --execute="GRANT SELECT,INSERT,UPDATE,DELETE ON $DBNAME.* TO '$NEWUSER'@'$DBHOST';" || true
+			mysql --defaults-file=/etc/mysql/debian.cnf $DBPASS_ARG $DBHOST_ARG --execute="ALTER USER '$NEWUSER'@'$DBHOST' IDENTIFIED BY '$NEWPASS';" || true
+		fi
 		;;
 	build)
 		if [[ -z "${SKIP_VALIDATE_INTERFACES}" ]]; then

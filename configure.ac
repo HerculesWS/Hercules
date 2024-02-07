@@ -20,9 +20,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-AC_INIT(Hercules)
+AC_INIT
+AC_CONFIG_SRCDIR([Hercules])
 AC_REVISION([m4_esyscmd_s([type git >/dev/null 2>&1 && git describe --always 2>/dev/null || echo '(unknown version)'])])
-AC_PREREQ([2.69])
+AC_PREREQ([2.71])
 AC_CONFIG_SRCDIR([src/common/cbasetypes.h])
 AC_CONFIG_FILES([Makefile src/common/Makefile])
 AC_CONFIG_FILES([3rdparty/mt19937ar/Makefile 3rdparty/libconfig/Makefile 3rdparty/libbacktrace/Makefile 3rdparty/libbacktrace/backtrace-supported.h])
@@ -34,10 +35,10 @@ AC_CONFIG_FILES([src/test/Makefile])
 AC_CONFIG_FILES([tools/HPMHookGen/Makefile])
 AC_CONFIG_FILES([tools/doxygen/Makefile])
 
-dnl AC_USE_SYSTEM_EXTENSIONS requires autoconf 2.60 or newer. Fall back to AC_GNU_SOURCE otherwise.
+dnl AC_USE_SYSTEM_EXTENSIONS requires autoconf 2.60 or newer. Fall back to AC_USE_SYSTEM_EXTENSIONS otherwise.
 m4_ifdef([AC_USE_SYSTEM_EXTENSIONS],
 	[AC_USE_SYSTEM_EXTENSIONS],
-	[AC_GNU_SOURCE]
+	[AC_USE_SYSTEM_EXTENSIONS]
 )
 
 AC_MSG_CHECKING([host OS])
@@ -144,10 +145,8 @@ AC_ARG_ENABLE(
 #
 AC_ARG_ENABLE(
 	[old-cashshop-preview-patch],
-	AC_HELP_STRING(
-		[--enable-old-cashshop-preview-patch],
-		[Enable Nemo patch ExtendOldCashShopPreview.]
-	),
+	AS_HELP_STRING([--enable-old-cashshop-preview-patch],[Enable Nemo patch ExtendOldCashShopPreview.
+	]),
 	[enable_old_cashshop_preview_patch=1],
 	[enable_old_cashshop_preview_patch=0]
 )
@@ -672,10 +671,8 @@ AC_ARG_WITH(
 # Select http parser
 AC_ARG_WITH(
 	[http_parser],
-	AC_HELP_STRING(
-		[--with-http_parser=ARG],
-		[select http parser. Allowed values: http-parser, llhttp)]
-	),
+	AS_HELP_STRING([--with-http_parser=ARG],[select http parser. Allowed values: http-parser, llhttp)
+	]),
 	[
 		case $withval in
 		http-parser* )
@@ -1246,6 +1243,12 @@ AC_CHECK_COMPILER_WNOFLAG(discarded-qualifiers)
 AC_CHECK_COMPILER_WNOFLAG(deprecated-non-prototype)
 # issue in clang-15 in libconfig
 AC_CHECK_COMPILER_WNOFLAG(unused-but-set-variable)
+
+case $host_os in
+Darwin*)
+	AC_CHECK_COMPILER_WNOFLAG(deprecated-declarations)
+	;;
+esac
 
 # Certain versions of gcc make -Wshadow completely useless by making it flood
 # you with unnecessary warnings <https://lkml.org/lkml/2006/11/28/239>
