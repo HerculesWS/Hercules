@@ -7180,8 +7180,8 @@ typedef void (*HPMHOOK_pre_pc_checkbaselevelup_sc) (struct map_session_data **sd
 typedef void (*HPMHOOK_post_pc_checkbaselevelup_sc) (struct map_session_data *sd);
 typedef int (*HPMHOOK_pre_pc_checkjoblevelup) (struct map_session_data **sd);
 typedef int (*HPMHOOK_post_pc_checkjoblevelup) (int retVal___, struct map_session_data *sd);
-typedef bool (*HPMHOOK_pre_pc_gainexp) (struct map_session_data **sd, struct block_list **src, uint64 *base_exp, uint64 *job_exp, bool *is_quest);
-typedef bool (*HPMHOOK_post_pc_gainexp) (bool retVal___, struct map_session_data *sd, struct block_list *src, uint64 base_exp, uint64 job_exp, bool is_quest);
+typedef bool (*HPMHOOK_pre_pc_gainexp) (struct map_session_data **sd, struct block_list **src, uint64 *base_exp, uint64 *job_exp, enum gainexp_flags *flags);
+typedef bool (*HPMHOOK_post_pc_gainexp) (bool retVal___, struct map_session_data *sd, struct block_list *src, uint64 base_exp, uint64 job_exp, enum gainexp_flags flags);
 typedef uint64 (*HPMHOOK_pre_pc_nextbaseexp) (const struct map_session_data **sd);
 typedef uint64 (*HPMHOOK_post_pc_nextbaseexp) (uint64 retVal___, const struct map_session_data *sd);
 typedef uint64 (*HPMHOOK_pre_pc_thisbaseexp) (const struct map_session_data **sd);

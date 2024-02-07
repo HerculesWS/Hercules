@@ -12093,7 +12093,7 @@ static BUILDIN(getexp)
 	base = cap_value(apply_percentrate(base, battle_config.quest_exp_rate, 100), 0, INT_MAX);
 	job = cap_value(apply_percentrate(job, battle_config.quest_exp_rate, 100), 0, INT_MAX);
 
-	pc->gainexp(sd, &sd->bl, base, job, true);
+	pc->gainexp(sd, &sd->bl, base, job, EXP_FLAG_QUEST);
 
 	return true;
 }

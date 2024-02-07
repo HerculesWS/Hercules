@@ -179,6 +179,11 @@ enum npc_timeout_type {
 	NPCT_WAIT  = 2,
 };
 
+enum gainexp_flags {
+	EXP_FLAG_NONE = 0, //< Normal EXP, no special flags
+	EXP_FLAG_QUEST = 0x01, //< EXP given by quests/NPCs (e.g. scripts getexp)
+};
+
 struct pc_combos {
 	struct script_code *bonus;/* the script of the combo */
 	int id; /* this combo id */
@@ -1067,7 +1072,7 @@ END_ZEROED_BLOCK; /* End */
 	int (*checkbaselevelup) (struct map_session_data *sd);
 	void (*checkbaselevelup_sc) (struct map_session_data *sd);
 	int (*checkjoblevelup) (struct map_session_data *sd);
-	bool (*gainexp) (struct map_session_data *sd, struct block_list *src, uint64 base_exp, uint64 job_exp, bool is_quest);
+	bool (*gainexp) (struct map_session_data *sd, struct block_list *src, uint64 base_exp, uint64 job_exp, enum gainexp_flags flags);
 	uint64 (*nextbaseexp) (const struct map_session_data *sd);
 	uint64 (*thisbaseexp) (const struct map_session_data *sd);
 	uint64 (*nextjobexp) (const struct map_session_data *sd);

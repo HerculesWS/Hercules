@@ -2406,7 +2406,7 @@ static int npc_buylist(struct map_session_data *sd, struct itemlist *item_list)
 			if (z < 1)
 				z = 1;
 
-			pc->gainexp(sd, NULL, 0, (int)z, false);
+			pc->gainexp(sd, NULL, 0, (int) z, EXP_FLAG_NONE);
 		}
 	}
 
@@ -2987,7 +2987,7 @@ static int npc_selllist(struct map_session_data *sd, struct itemlist *item_list)
 			if (z < 1)
 				z = 1;
 
-			pc->gainexp(sd, NULL, 0, (int)z, false);
+			pc->gainexp(sd, NULL, 0, (int) z, EXP_FLAG_NONE);
 		}
 	}
 

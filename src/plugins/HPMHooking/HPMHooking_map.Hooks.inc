@@ -68572,15 +68572,15 @@ int HP_pc_checkjoblevelup(struct map_session_data *sd) {
 	}
 	return retVal___;
 }
-bool HP_pc_gainexp(struct map_session_data *sd, struct block_list *src, uint64 base_exp, uint64 job_exp, bool is_quest) {
+bool HP_pc_gainexp(struct map_session_data *sd, struct block_list *src, uint64 base_exp, uint64 job_exp, enum gainexp_flags flags) {
 	int hIndex = 0;
 	bool retVal___ = false;
 	if (HPMHooks.count.HP_pc_gainexp_pre > 0) {
-		bool (*preHookFunc) (struct map_session_data **sd, struct block_list **src, uint64 *base_exp, uint64 *job_exp, bool *is_quest);
+		bool (*preHookFunc) (struct map_session_data **sd, struct block_list **src, uint64 *base_exp, uint64 *job_exp, enum gainexp_flags *flags);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_gainexp_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_pc_gainexp_pre[hIndex].func;
-			retVal___ = preHookFunc(&sd, &src, &base_exp, &job_exp, &is_quest);
+			retVal___ = preHookFunc(&sd, &src, &base_exp, &job_exp, &flags);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -68588,13 +68588,13 @@ bool HP_pc_gainexp(struct map_session_data *sd, struct block_list *src, uint64 b
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.pc.gainexp(sd, src, base_exp, job_exp, is_quest);
+		retVal___ = HPMHooks.source.pc.gainexp(sd, src, base_exp, job_exp, flags);
 	}
 	if (HPMHooks.count.HP_pc_gainexp_post > 0) {
-		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, struct block_list *src, uint64 base_exp, uint64 job_exp, bool is_quest);
+		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, struct block_list *src, uint64 base_exp, uint64 job_exp, enum gainexp_flags flags);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_gainexp_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_pc_gainexp_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, sd, src, base_exp, job_exp, is_quest);
+			retVal___ = postHookFunc(retVal___, sd, src, base_exp, job_exp, flags);
 		}
 	}
 	return retVal___;

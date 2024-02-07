@@ -1073,7 +1073,7 @@ static int party_exp_share(struct party_data *p, struct block_list *src, unsigne
 	}
 
 	for (i = 0; i < c; i++) {
-		pc->gainexp(sd[i], src, base_exp, job_exp, false);
+		pc->gainexp(sd[i], src, base_exp, job_exp, EXP_FLAG_NONE);
 
 		if (zeny) // zeny from mobs [Valaris]
 			pc->getzeny(sd[i],zeny,LOG_TYPE_PICKDROP_MONSTER,NULL);
