@@ -2684,7 +2684,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 		if(flag) {
 			if(base_exp || job_exp) {
 				if( md->dmglog[i].flag != MDLF_PET || battle_config.pet_attack_exp_to_master ) {
-					pc->gainexp(tmpsd[i], &md->bl, base_exp, job_exp, false);
+					pc->gainexp(tmpsd[i], &md->bl, base_exp, job_exp, EXP_FLAG_NONE);
 				}
 			}
 			if(zeny) // zeny from mobs [Valaris]
@@ -2903,7 +2903,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 
 		clif->mvp_effect(mvp_sd);
 		clif->mvp_exp(mvp_sd,mexp);
-		pc->gainexp(mvp_sd, &md->bl, mexp,0, false);
+		pc->gainexp(mvp_sd, &md->bl, mexp, 0, EXP_FLAG_NONE);
 		log_mvp[1] = mexp;
 
 		if (!(map->list[m].flag.nomvploot || type&1)) {

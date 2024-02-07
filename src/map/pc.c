@@ -6879,10 +6879,10 @@ static void pc_calcexp(struct map_session_data *sd, uint64 *base_exp, uint64 *jo
 /**
  * Gives a determined EXP amount to sd and calculates remaining EXP for next level
  * @param src if is NULL no bonuses are taken into account
- * @param is_quest Used to let client know that the EXP was from a quest (clif->displayexp) PACKETVER >= 20091027
+ * @param flags Used to give more info about where the exp is coming from
  * @retval true success
  **/
-static bool pc_gainexp(struct map_session_data *sd, struct block_list *src, uint64 base_exp, uint64 job_exp, bool is_quest)
+static bool pc_gainexp(struct map_session_data *sd, struct block_list *src, uint64 base_exp, uint64 job_exp, enum gainexp_flags flags)
 {
 	float nextbp = 0, nextjp = 0;
 	uint64 nextb = 0, nextj = 0;
@@ -6951,6 +6951,7 @@ static bool pc_gainexp(struct map_session_data *sd, struct block_list *src, uint
 	}
 
 #if PACKETVER >= 20091027
+	bool is_quest = ((flags & EXP_FLAG_QUEST) != 0);
 	if(base_exp)
 		clif->displayexp(sd, base_exp, SP_BASEEXP, is_quest);
 	if(job_exp)
