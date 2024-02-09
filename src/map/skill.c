@@ -8822,6 +8822,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 							continue;
 					}
 					switch (i) {
+#ifndef RENEWAL
 						/**
 						 * bugreport:4888 these songs may only be dispelled if you're not in their song area anymore
 						 **/
@@ -8833,9 +8834,11 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 						case SC_DONTFORGETME:
 						case SC_FORTUNE:
 						case SC_SERVICEFORYOU:
-							if( tsc->data[i]->val4 ) //val4 = out-of-song-area
+							if (tsc->data[i]->val4 != 0) // val4 = out-of-song-area
 								continue;
 							break;
+#endif
+
 						case SC_ASSUMPTIO:
 							if( bl->type == BL_MOB )
 								continue;
