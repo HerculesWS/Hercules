@@ -118,7 +118,7 @@ static struct pcrematch_set *lookup_pcreset(struct npc_data *nd, int setid)
 	nullpo_retr(NULL, nd);
 	npcParse = nd->chatdb;
 	if (npcParse == NULL)
-		nd->chatdb = npcParse = (struct npc_parse *)aCalloc(sizeof(struct npc_parse), 1);
+		nd->chatdb = npcParse = (struct npc_parse *) aCalloc(1, sizeof(struct npc_parse));
 
 	pcreset = npcParse->active;
 
@@ -137,7 +137,7 @@ static struct pcrematch_set *lookup_pcreset(struct npc_data *nd, int setid)
 	}
 
 	if (pcreset == NULL) {
-		pcreset = (struct pcrematch_set *)aCalloc(sizeof(struct pcrematch_set), 1);
+		pcreset = (struct pcrematch_set *) aCalloc(1, sizeof(struct pcrematch_set));
 		pcreset->next = npcParse->inactive;
 		if (pcreset->next != NULL)
 			pcreset->next->prev = pcreset;
@@ -284,7 +284,7 @@ static struct pcrematch_entry *create_pcrematch_entry(struct pcrematch_set *set)
 	struct pcrematch_entry *last;
 
 	nullpo_retr(NULL, set);
-	e = (struct pcrematch_entry *)aCalloc(sizeof(struct pcrematch_entry), 1);
+	e = (struct pcrematch_entry *) aCalloc(1, sizeof(struct pcrematch_entry));
 	last = set->head;
 
 	// Normally we would have just stuck it at the end of the list but

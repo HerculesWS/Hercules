@@ -4377,7 +4377,7 @@ static bool mob_read_optdrops_optslot(struct config_setting_t *optslot, int n, i
 	}
 
 	struct optdrop_group_optslot *entry = &(mob->opt_drop_groups[group_id].optslot[n]);
-	entry->options = aCalloc(sizeof(struct optdrop_group_option), count);
+	entry->options = aCalloc(count, sizeof(struct optdrop_group_option));
 
 	int idx = 0;
 	int i = 0;
@@ -4458,7 +4458,7 @@ static bool mob_read_optdrops_db(void)
 	int i = 0;
 	if (its != NULL && (groups = libconfig->setting_get_elem(its, 0)) != NULL) {
 		int count = libconfig->setting_length(groups);
-		mob->opt_drop_groups = aCalloc(sizeof(struct optdrop_group), count);
+		mob->opt_drop_groups = aCalloc(count, sizeof(struct optdrop_group));
 		mob->opt_drop_groups_count = count; // maximum size (used by assertions)
 
 		struct config_setting_t *group = NULL;

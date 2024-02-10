@@ -206,7 +206,7 @@ static int inter_pet_fromsql(int pet_id, struct s_pet *p)
 static int inter_pet_sql_init(void)
 {
 	//memory alloc
-	inter_pet->pt = (struct s_pet*)aCalloc(sizeof(struct s_pet), 1);
+	inter_pet->pt = (struct s_pet*)aCalloc(1, sizeof(struct s_pet));
 	return 0;
 }
 
