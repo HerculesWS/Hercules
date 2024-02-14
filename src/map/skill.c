@@ -17922,7 +17922,7 @@ static int skill_autospell_spell_selected(struct map_session_data *sd, uint16 sk
 	if (max_lv > skill_lv)
 		max_lv = skill_lv;
 
-	sc_start4(&sd->bl, &sd->bl, SC_AUTOSPELL, 100, skill_lv, skill_id, max_lv, 0,
+	sc_start4(&sd->bl, &sd->bl, SC_AUTOSPELL, 100, autospell_lv, skill_id, max_lv, 0,
 		skill->get_time(SA_AUTOSPELL, skill_lv), SA_AUTOSPELL);
 	return 0;
 }
