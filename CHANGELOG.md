@@ -22,6 +22,32 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
+## [v2024.02] `February 2024`
+
+### Added
+
+- Added GitHub Actions CI builds on macOS (Intel and ARM). (#3281)
+
+### Changed
+
+- Renamed the arguments of the `aMalloc()`, `aCalloc()`, `aStrndup()`, `aRealloc()`, `aReallocz()` macros to make it harder to accidentally swap their order. (#3280)
+
+### Fixed
+
+- Fixed `expandinventory()` not allowing to return to the initial minimum inventory size. (#3270)
+- Fixed a race condition allowing for a call to `clif->pLoadEndAck()` before the client's loadendack is received. (#3277)
+- Fixed a memory leak of emblem data when guilds are unloaded or disbanded. (#3278)
+- Fixed several instances of swapped arguments in `aCalloc()` calls, causing warnings in gcc-14. (#3280)
+- Fixed a regression causing AutoSpell not to replace the selected skill when the new skill has lower level than the previous one. (#3282)
+
+### Deprecated
+
+### Removed
+
+### Other
+
+- Updated copyright headers for year 2024.
+
 ## [v2023.12] `December 2023`
 
 ### Added
@@ -2991,6 +3017,7 @@ Note: everything included in this release is part of PR #3198 which consists of 
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2024.02]: https://github.com/HerculesWS/Hercules/compare/v2023.12...v2024.02
 [v2023.12]: https://github.com/HerculesWS/Hercules/compare/v2023.11...v2023.12
 [v2023.11]: https://github.com/HerculesWS/Hercules/compare/v2023.10...v2023.11
 [v2023.10]: https://github.com/HerculesWS/Hercules/compare/v2023.08...v2023.10
