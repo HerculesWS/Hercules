@@ -1,0 +1,81 @@
+name: macos_latest
+
+on: workflow_call
+
+env:
+  MYSQL_DATABASE: 'ragnarok'
+  MYSQL_USER: 'ragnarok'
+  MYSQL_PASSWORD: 'ragnarok'
+  MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+  MACOS_COMMON_PACKAGES: make zlib pcre mysql mysql-client mysql-connector-c
+  SQLHOST: 'localhost'
+
+jobs:
+  build:
+    runs-on: macos-latest
+    timeout-minutes: 60
+    strategy:
+      matrix:
+        CC: [clang]
+        RENEWAL: ["", "--disable-renewal"]
+        CLIENT_TYPE: ["", "--enable-packetver-re", "--enable-packetver-zero"]
+        HTTPLIB: ["", "--with-http_parser=llhttp"]
+        SANITIZER: ["--disable-manager", "--disable-manager --enable-sanitize=full"]
+        PACKET_VERSION: ["--enable-packetver=20221024", "--enable-packetver=20130724"]
+        exclude:
+          - PACKET_VERSION: "--enable-packetver=20130724"
+            CLIENT_TYPE: "--enable-packetver-zero"
+
+    # github.head_ref will stop previous runs in the same PR (if in a PR)
+    # github.run_id is a fallback when outside a PR (e.g. every merge in master will run, and previous won't stop)
+    concurrency:
+      group: macos-x64-${{ github.head_ref || github.run_id }}_${{ matrix.CC }}_${{ matrix.RENEWAL }}_${{ matrix.CLIENT_TYPE }}_${{ matrix.HTTPLIB }}_${{ matrix.SANITIZER }}_${{ matrix.PACKET_VERSION}}
+      cancel-in-progress: true
+
+    env:
+      CC: ${{ matrix.CC }}
+      CONFIGURE_FLAGS: CC=${{ matrix.CC }} --enable-debug --enable-Werror --enable-buildbot ${{ matrix.RENEWAL }} ${{ matrix.HTTPLIB }} ${{ matrix.CLIENT_TYPE }} ${{ matrix.SANITIZER }} ${{ matrix.PACKET_VERSION }}
+      PACKET_VERSION: ${{ matrix.PACKET_VERSION }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: info
+        run: |
+          uname -a
+
+      - name: prepare the build environment
+        run: |
+          echo "CPPFLAGS=-I$(brew --prefix)/include" >> $GITHUB_ENV
+          echo "LDFLAGS=-L$(brew --prefix)/lib" >> $GITHUB_ENV
+
+      - name: install packages
+        run: |
+          brew update || true
+          ./tools/ci/retry.sh brew install $MACOS_COMMON_PACKAGES
+
+      - name: setup mysql server
+        run: |
+          brew services start mysql
+          ./tools/ci/retry.sh mysqladmin ping --silent
+          ./tools/ci/travis.sh createdb $MYSQL_DATABASE root
+          ./tools/ci/travis.sh adduser $MYSQL_DATABASE $MYSQL_USER $MYSQL_PASSWORD root '' $SQLHOST
+          ./tools/ci/travis.sh importdb $MYSQL_DATABASE root
+
+      - name: get plugins
+        run: |
+          ./tools/ci/travis.sh getplugins || true
+
+      - name: build
+        run: |
+          ./tools/ci/travis.sh build $CONFIGURE_FLAGS --with-mysql=$(brew --prefix mysql)/bin/mysql_config
+
+      - name: test
+        run: |
+          ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
+
+      - name: extra test
+        if: env.PACKET_VERSION != '--enable-packetver=20130724'
+        run: |
+          ./tools/ci/travis.sh extratest
