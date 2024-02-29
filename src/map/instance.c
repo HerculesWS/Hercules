@@ -259,8 +259,8 @@ static int instance_add_map(const char *name, int instance_id, bool usebasename,
 	}
 
 	size = map->list[im].bxs * map->list[im].bys * sizeof(struct block_list*);
-	map->list[im].block = (struct block_list**)aCalloc(size, 1);
-	map->list[im].block_mob = (struct block_list**)aCalloc(size, 1);
+	map->list[im].block = (struct block_list**)aCalloc(1, size);
+	map->list[im].block_mob = (struct block_list**)aCalloc(1, size);
 
 	memset(map->list[im].npc, 0x00, sizeof(map->list[i].npc));
 	map->list[im].npc_num = 0;
@@ -670,7 +670,7 @@ static void instance_check_idle(int instance_id)
 		timer->delete(instance->list[instance_id].idle_timer, instance->destroy_timer);
 		instance->list[instance_id].idle_timer = INVALID_TIMER;
 		instance->list[instance_id].idle_timeout = 0;
-		
+
 		// Notify instance users normal instance expiration
 		clif->instance(instance_id, INSTANCE_WND_INFO_PROGRESS_TIME, 0);
 	} else if (instance->list[instance_id].idle_timer == INVALID_TIMER && idle) {
@@ -678,7 +678,7 @@ static void instance_check_idle(int instance_id)
 		int64 destroy_tick = timer->gettick() + instance->list[instance_id].idle_timeoutval * 1000;
 		instance->list[instance_id].idle_timeout = now + instance->list[instance_id].idle_timeoutval;
 		instance->list[instance_id].idle_timer = timer->add(destroy_tick, instance->destroy_timer, instance_id, 0);
-		
+
 		// Notify instance users it will be destroyed if no user join it again in "X" time
 		clif->instance(instance_id, INSTANCE_WND_INFO_IDLE_TIME, 0);
 	}

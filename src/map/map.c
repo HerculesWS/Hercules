@@ -4031,8 +4031,8 @@ static int map_readallmaps(void)
 		map->list[i].bys = (map->list[i].ys + BLOCK_SIZE - 1) / BLOCK_SIZE;
 
 		size = map->list[i].bxs * map->list[i].bys * sizeof(struct block_list*);
-		map->list[i].block = (struct block_list**)aCalloc(size, 1);
-		map->list[i].block_mob = (struct block_list**)aCalloc(size, 1);
+		map->list[i].block = (struct block_list**)aCalloc(1, size);
+		map->list[i].block_mob = (struct block_list**)aCalloc(1, size);
 
 		map->list[i].getcellp = map->sub_getcellp;
 		map->list[i].setcell  = map->sub_setcell;
@@ -4585,7 +4585,7 @@ static bool inter_config_read_database_names(const char *filename, const struct 
 
 /**
  * Looks up configuration "name" which is expect to have a final value of int, but may be specified by a string constant.
- * 
+ *
  * If the config is a string, it will be looked up using script->get_constant function to find the actual integer value.
  *
  * @param[in]  setting        The setting to read.
@@ -4616,7 +4616,7 @@ static bool map_setting_lookup_const(const struct config_setting_t *setting, con
 /**
  * Looks up configuration "name" which is expect to have a final value of int,
  * but may be specified by a string constant or an array of bitflag constants.
- * 
+ *
  * If the config is a string, it will be looked up using script->get_constant function to find the actual integer value.
  * If the config is an array, each value will be read and added to the final bitmask.
  *

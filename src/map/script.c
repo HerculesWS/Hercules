@@ -7050,7 +7050,7 @@ static BUILDIN(callfunc)
 		return false;
 	}
 
-	ref = (struct reg_db *)aCalloc(sizeof(struct reg_db), 2);
+	ref = (struct reg_db *)aCalloc(2, sizeof(struct reg_db));
 	ref[0].vars = st->stack->scope.vars;
 	if (!st->stack->scope.arrays)
 		st->stack->scope.arrays = idb_alloc(DB_OPT_BASE); // TODO: Can this happen? when?
@@ -7145,7 +7145,7 @@ static BUILDIN(callfunctionofnpc) {
 	}
 
 	// alloc a reg_db reference of the current scope for the new scope
-	struct reg_db *ref = (struct reg_db *)aCalloc(sizeof(struct reg_db), 2);
+	struct reg_db *ref = (struct reg_db *)aCalloc(2, sizeof(struct reg_db));
 	// scope variables (.@var)
 	ref[0].vars = st->stack->scope.vars;
 	ref[0].arrays = st->stack->scope.arrays;
@@ -7214,7 +7214,7 @@ static BUILDIN(callsub)
 		return false;
 	}
 
-	ref = (struct reg_db *)aCalloc(sizeof(struct reg_db), 1);
+	ref = (struct reg_db *) aCalloc(1, sizeof(struct reg_db));
 	ref[0].vars = st->stack->scope.vars;
 	if (!st->stack->scope.arrays)
 		st->stack->scope.arrays = idb_alloc(DB_OPT_BASE); // TODO: Can this happen? when?
@@ -7312,7 +7312,7 @@ static BUILDIN(return)
 				// npc variable
 				if( !data->ref ) {
 					// npc variable without a reference set, link to current script
-					data->ref = (struct reg_db *)aCalloc(sizeof(struct reg_db), 1);
+					data->ref = (struct reg_db *) aCalloc(1, sizeof(struct reg_db));
 					script->add_pending_ref(st, data->ref);
 					data->ref->vars = st->script->local.vars;
 					if( !st->script->local.arrays )

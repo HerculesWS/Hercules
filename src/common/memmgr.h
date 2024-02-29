@@ -42,13 +42,13 @@
 // Enable memory manager logging by default
 #define LOG_MEMMGR
 
-#define aMalloc(n)    (malloc_proxy((n), ALC_MARK))
-#define aCalloc(m, n) (calloc_proxy((m), (n),ALC_MARK))
-#define aFree(p)      (free_proxy((p), ALC_MARK))
-#define aStrdup(p)    (strdup_proxy((p),ALC_MARK))
-#define aStrndup(p,n) (strndup_proxy((p),(n),ALC_MARK))
-#define aRealloc(p,n) (iMalloc->realloc((p),(n),ALC_MARK))
-#define aReallocz(p,n) (iMalloc->reallocz((p),(n),ALC_MARK))
+#define aMalloc(size)      (malloc_proxy((size), ALC_MARK))
+#define aCalloc(num, size) (calloc_proxy((num), (size), ALC_MARK))
+#define aFree(p)           (free_proxy((p), ALC_MARK))
+#define aStrdup(p)         (strdup_proxy((p), ALC_MARK))
+#define aStrndup(p, size)  (strndup_proxy((p), (size), ALC_MARK))
+#define aRealloc(p, size)  (iMalloc->realloc((p), (size), ALC_MARK))
+#define aReallocz(p, size) (iMalloc->reallocz((p), (size), ALC_MARK))
 
 /////////////// Buffer Creation /////////////////
 // Full credit for this goes to Shinomori [Ajarn]
