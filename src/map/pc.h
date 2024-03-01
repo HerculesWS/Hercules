@@ -783,7 +783,7 @@ END_ZEROED_BLOCK;
 // clientside display macros (values to the left/right of the "+")
 #ifdef RENEWAL
 	#define pc_leftside_atk(sd) ((sd)->battle_status.batk)
-	#define pc_rightside_atk(sd) ((sd)->battle_status.rhw.atk + (sd)->battle_status.lhw.atk + (sd)->battle_status.rhw.atk2 + (sd)->battle_status.lhw.atk2 + (sd)->battle_status.equip_atk )
+	#define pc_rightside_atk(sd) ((sd)->battle_status.rhw.atk + (sd)->battle_status.lhw.atk + (sd)->battle_status.rhw.atk2 + (sd)->battle_status.lhw.atk2 + (sd)->battle_status.equip_atk + (sd)->battle_status.buff_extra_batk)
 	#define pc_leftside_def(sd) ((sd)->battle_status.def2)
 	#define pc_rightside_def(sd) ((sd)->battle_status.def)
 	#define pc_leftside_mdef(sd) ((sd)->battle_status.mdef2)

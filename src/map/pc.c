@@ -1129,8 +1129,10 @@ static int pc_isequip(struct map_session_data *sd, int n)
 	}
 
 	if (sd->sc.count != 0) {
-		if ((item->equip & EQP_ARMS) != 0 && item->type == IT_WEAPON && sd->sc.data[SC_NOEQUIPWEAPON] != NULL) // Also works with left-hand weapons. [DracoRPG]
+		if ((item->equip & EQP_ARMS) != 0 && item->type == IT_WEAPON
+		    && (sd->sc.data[SC_NOEQUIPWEAPON] != NULL || sd->sc.data[SC_NO_SWITCH_WEAPON] != NULL)) { // Also works with left-hand weapons. [DracoRPG]
 			return 0;
+		}
 
 		if ((item->equip & EQP_SHIELD) != 0 && item->type == IT_ARMOR && sd->sc.data[SC_NOEQUIPSHIELD] != NULL)
 			return 0;
