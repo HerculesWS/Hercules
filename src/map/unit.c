@@ -1656,10 +1656,12 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 		} else if (!status->isdead(target))
 			return 0; //Can't cast on non-dead characters.
 	break;
+#ifndef RENEWAL
 	case MO_FINGEROFFENSIVE:
 		if(sd)
 			casttime += casttime * min(skill_lv, sd->spiritball);
 	break;
+#endif
 	case MO_EXTREMITYFIST:
 		if (sc && sc->data[SC_COMBOATTACK] &&
 		   (sc->data[SC_COMBOATTACK]->val1 == MO_COMBOFINISH ||

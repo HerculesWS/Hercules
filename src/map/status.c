@@ -989,7 +989,9 @@ static int status_check_skilluse(struct block_list *src, struct block_list *targ
 			switch (skill_id) { //Usable skills while hiding.
 				case TF_HIDING:
 				case AS_GRIMTOOTH:
+#ifndef RENEWAL
 				case RG_BACKSTAP:
+#endif
 				case RG_RAID:
 				case NJ_SHADOWJUMP:
 				case NJ_KIRIKAGE:
@@ -2038,6 +2040,11 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 	if (pc->checkskill(sd, SU_POWEROFLIFE) > 0)
 		bstatus->cri += 20;
 
+#ifdef RENEWAL
+	if ((skill_lv = pc->checkskill(sd, PR_MACEMASTERY)) > 0 && (sd->weapontype == W_MACE || sd->weapontype == W_2HMACE))
+		bstatus->cri += skill_lv * 10;
+#endif
+
 	if(sd->flee2_rate < 0)
 		sd->flee2_rate = 0;
 	if(sd->flee2_rate != 100)
@@ -2335,6 +2342,17 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 			sd->magic_addele[ELE_WIND] += 25;
 		if (sc->data[SC_EARTH_INSIGNIA] && sc->data[SC_EARTH_INSIGNIA]->val1 == 3)
 			sd->magic_addele[ELE_EARTH] += 25;
+
+#ifdef RENEWAL
+		if (sc->data[SC_PROPERTYFIRE] != NULL)
+			sd->magic_atk_ele[ELE_FIRE] += sc->data[SC_PROPERTYFIRE]->val1;
+		if (sc->data[SC_PROPERTYWATER] != NULL)
+			sd->magic_atk_ele[ELE_WATER] += sc->data[SC_PROPERTYWATER]->val1;
+		if (sc->data[SC_PROPERTYWIND] != NULL)
+			sd->magic_atk_ele[ELE_WIND] += sc->data[SC_PROPERTYWIND]->val1;
+		if (sc->data[SC_PROPERTYGROUND] != NULL)
+			sd->magic_atk_ele[ELE_EARTH] += sc->data[SC_PROPERTYGROUND]->val1;
+#endif
 
 		// Geffen Scrolls
 		if (sc->data[SC_SKELSCROLL]) {
@@ -3079,14 +3097,20 @@ static void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag
 			;
 	}
 
-	if(flag&SCB_BATK && bst->batk) {
-		st->batk = status->base_atk(bl,st);
-		temp = bst->batk - status->base_atk(bl,bst);
-		if (temp) {
-			temp += st->batk;
-			st->batk = cap_value(temp, battle_config.batk_min, battle_config.batk_max);
+	if (flag & SCB_BATK) {
+		if (bst->batk != 0) {
+			st->batk = status->base_atk(bl,st);
+			temp = bst->batk - status->base_atk(bl,bst);
+			if (temp != 0) {
+				temp += st->batk;
+				st->batk = cap_value(temp, battle_config.batk_min, battle_config.batk_max);
+			}
+			st->batk = status->calc_batk(bl, sc, st->batk, true);
 		}
-		st->batk = status->calc_batk(bl, sc, st->batk, true);
+
+#ifdef RENEWAL
+		st->buff_extra_batk = status->calc_buff_extra_batk(bl, sc);
+#endif
 	}
 
 	if(flag&SCB_WATK) {
@@ -3534,7 +3558,7 @@ static void status_calc_bl_(struct block_list *bl, enum scb_flag flag, enum e_st
 		if(bst.sp != st->sp)
 			clif->updatestatus(sd,SP_SP);
 #ifdef RENEWAL
-		if(bst.equip_atk != st->equip_atk)
+		if(bst.equip_atk != st->equip_atk || bst.buff_extra_batk != st->buff_extra_batk)
 			clif->updatestatus(sd,SP_ATK2);
 #endif
 	} else if( bl->type == BL_HOM ) {
@@ -3686,8 +3710,10 @@ static int status_base_amotion_pc(struct map_session_data *sd, struct status_dat
 	temp = (float)(sqrt(temp) * 0.25f) + 0xc4;
 	if (sd->weapontype == W_BOOK && (skill_lv = pc->checkskill(sd, SA_ADVANCEDBOOK)) > 0)
 		val += (skill_lv - 1) / 2 + 1;
-	if ( (skill_lv = pc->checkskill(sd, GS_SINGLEACTION)) > 0 )
+	if ((skill_lv = pc->checkskill(sd, GS_SINGLEACTION)) > 0)
 		val += ((skill_lv + 1) / 2);
+	if ((skill_lv = pc->checkskill(sd, RG_PLAGIARISM)) > 0)
+		val += skill_lv;
 	amotion = ((int)(temp + ((float)(status->calc_aspd(&sd->bl, &sd->sc, 1) + val) * st->agi / 200)) - min(amotion, 200));
 #else
 	// base weapon delay
@@ -3943,8 +3969,8 @@ static unsigned short status_calc_str(struct block_list *bl, struct status_chang
 		str += 5;
 	if(sc->data[SC_LEADERSHIP])
 		str += sc->data[SC_LEADERSHIP]->val1;
-	if(sc->data[SC_SHOUT])
-		str += 4;
+	if (sc->data[SC_SHOUT] != NULL)
+		str += sc->data[SC_SHOUT]->val1;
 	if(sc->data[SC_TRUESIGHT])
 		str += 5;
 	if(sc->data[SC_STRUP])
@@ -4398,6 +4424,38 @@ static int status_calc_batk(struct block_list *bl, struct status_change *sc, int
 	return cap_value(batk, battle_config.batk_min, battle_config.batk_max);
 }
 
+/**
+ * Calculates bl's Extra ATK gains from Buffs.
+ * 
+ * These are very specific bonus from SCs where:
+ * - They show in status window ATK right side (after the + sign)
+ * - They are given by SCs, but they work like equipment's ATK bonus
+ * - They are not linked to the weapon attack value
+ * 
+ * @param bl unit whose status is being calculated
+ * @param sc unit's SC list
+ * @returns Value of Extra ATK conceded by buffs
+ */
+static int status_calc_buff_extra_batk(struct block_list *bl, struct status_change *sc)
+{
+	nullpo_ret(bl);
+
+	if(sc == NULL || sc->count == 0)
+		return 0;
+
+	int batk = 0;
+
+#ifdef RENEWAL
+	// In-game Tests (and iRO wiki) suggests SC_SHOUT ATK bonus is counted as Extra ATK
+	if (sc->data[SC_SHOUT] != NULL)
+		batk += sc->data[SC_SHOUT]->val2;
+	if (sc->data[SC_IMPOSITIO] != NULL)
+		batk += sc->data[SC_IMPOSITIO]->val2;
+#endif
+
+	return cap_value(batk, 0, battle_config.batk_max);
+}
+
 static int status_calc_watk(struct block_list *bl, struct status_change *sc, int watk, bool viewable)
 {
 	nullpo_ret(bl);
@@ -4564,6 +4622,12 @@ static int status_calc_matk(struct block_list *bl, struct status_change *sc, int
 		matk += 40 + 30 * sc->data[SC_ODINS_POWER]->val1; //70 lvl1, 100lvl2
 	if (sc->data[SC_IZAYOI])
 		matk += 25 * sc->data[SC_IZAYOI]->val1;
+#else // RENEWAL
+	if (sc->data[SC_IMPOSITIO])
+		matk += sc->data[SC_IMPOSITIO]->val2;
+	// FIXME: This (and SC_IMPOSITIO) should have their effects shown in status window.
+	if (sc->data[SC_VOLCANO] != NULL)
+		matk += sc->data[SC_VOLCANO]->val2;
 #endif
 	if (sc->data[SC_ZANGETSU])
 		matk += sc->data[SC_ZANGETSU]->val3;
@@ -4633,6 +4697,8 @@ static int status_calc_critical(struct block_list *bl, struct status_change *sc,
 #ifdef RENEWAL
 	if (sc->data[SC_SPEARQUICKEN])
 		critical += 3*sc->data[SC_SPEARQUICKEN]->val1 * 10;
+	if (sc->data[SC_TWOHANDQUICKEN] != NULL)
+		critical += 20 + sc->data[SC_TWOHANDQUICKEN]->val1 * 10;
 #endif
 
 	if (sc->data[SC__INVISIBILITY])
@@ -4704,6 +4770,14 @@ static int status_calc_hit(struct block_list *bl, struct status_change *sc, int 
 		hit -= sc->data[SC_HEAT_BARREL]->val4;
 	if (sc->data[SC_SOULFALCON] != NULL)
 		hit += sc->data[SC_SOULFALCON]->val3;
+#ifdef RENEWAL
+	if (sc->data[SC_BLESSING] != NULL)
+		hit += sc->data[SC_BLESSING]->val3;
+	if (sc->data[SC_TWOHANDQUICKEN] != NULL)
+		hit += 2 * sc->data[SC_TWOHANDQUICKEN]->val1;
+	if (sc->data[SC_ADRENALINE] != NULL)
+		hit += sc->data[SC_ADRENALINE]->val4;
+#endif
 
 	return cap_value(hit, battle_config.hit_min, battle_config.hit_max);
 }
@@ -5447,6 +5521,16 @@ static short status_calc_aspd(struct block_list *bl, struct status_change *sc, s
 			bonus += sc->data[SC_STEAMPACK]->val2;
 		if (sc->data[SC_SKF_ASPD] != NULL)
 			bonus += sc->data[SC_SKF_ASPD]->val1;
+#ifdef RENEWAL
+		if (sc->data[SC_INC_AGI] != NULL)
+			bonus += sc->data[SC_INC_AGI]->val1; // + SkillLevel%
+		if (sc->data[SC_TWOHANDQUICKEN] != NULL)
+			bonus += 10;
+		if (sc->data[SC_ADRENALINE] != NULL)
+			bonus += 10;
+		if (sc->data[SC_SPEARQUICKEN] != NULL)
+			bonus += 10;
+#endif
 	}
 
 	return (bonus + pots);
@@ -5722,6 +5806,10 @@ static unsigned int status_calc_maxhp(struct block_list *bl, struct status_chang
 		maxhp -= maxhp * sc->data[SC_GM_BATTLE2]->val1 / 100;
 	if (sc->data[SC_LUNARSTANCE] != NULL)
 		maxhp += maxhp * sc->data[SC_LUNARSTANCE]->val2 / 100;
+#ifdef RENEWAL
+	if (sc->data[SC_ANGELUS] != NULL)
+		maxhp += sc->data[SC_ANGELUS]->val3;
+#endif
 
 	return (unsigned int)cap_value(maxhp, 1, UINT_MAX);
 }
@@ -7210,6 +7298,16 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			}
 			if (total_tick == 1) return 1; //Minimal duration: Only strip without causing the SC
 			break;
+
+#ifdef RENEWAL
+		case SC_RAID:
+			if (bl->type == BL_MOB && is_boss(bl))
+				val2 = 15; // Receives 15% more damage
+			else
+				val2 = 30; // Receives 30% more damage
+			break;
+#endif
+
 		case SC_MER_FLEE:
 		case SC_MER_ATK:
 		case SC_MER_HP:
@@ -7485,9 +7583,17 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				// Fall through to SC_INC_AGI
 				FALLTHROUGH
 			case SC_DEC_AGI:
-			case SC_INC_AGI:
 				val2 = 2 + val1; //Agi change
 				break;
+			case SC_INC_AGI:
+			{
+				struct map_session_data *srcsd = BL_CAST(BL_PC, src);
+				if (skill_id == AB_CANTO && srcsd != NULL)
+					val1 += srcsd->status.job_level / 10;
+
+				val2 = 2 + val1; //Agi change
+				break;
+			}
 			case SC_ENDURE:
 				val2 = 7; // Hit-count [Celest]
 				if( !(flag&SCFLAG_NOAVOID) && (bl->type&(BL_PC|BL_MER)) && !map_flag_gvg(bl->m) && !map->list[bl->m].flag.battleground && !val4 ) {
@@ -7629,15 +7735,22 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			case SC_AUTOSPELL:
 				//Val1 Skill LV of Autospell
 				//Val2 Skill ID to cast
-				//Val3 Max Lv to cast
-				val4 = 5 + val1*2; //Chance of casting
+				//Val3 Max Lv to cast (pre-re) / Lv to cast (zero)
+#ifndef RENEWAL
+				val4 = 5 + val1 * 2; // Chance of casting
+#else
+				val4 = 2 * val1; // Chance of casting
+#endif
 				break;
 			case SC_VOLCANO:
-				val2 = val1*10; //Watk increase
-	#ifndef RENEWAL
+#ifndef RENEWAL
+				val2 = val1 * 10; // Watk increase
+				
 				if (st->def_ele != ELE_FIRE)
 					val2 = 0;
-	#endif
+#else
+				val2 = 5 + val1 * 5; // Watk/Matk increase
+#endif
 				break;
 			case SC_VIOLENTGALE:
 				val2 = val1*3; //Flee increase
@@ -8125,14 +8238,33 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				val4 = INVALID_TIMER; //Kaahi Timer.
 				break;
 			case SC_BLESSING:
-				if ((!undead_flag && st->race!=RC_DEMON) || bl->type == BL_PC)
-					val2 = val1;
-				else
-					val2 = 0; //0 -> Half stat.
+			{
+				int bonus = 0;
+				struct map_session_data *srcsd = BL_CAST(BL_PC, src);
+				if (skill_id == AB_CLEMENTIA && srcsd != NULL)
+					bonus += srcsd->status.job_level / 10;
+
+				if ((!undead_flag && st->race != RC_DEMON) || bl->type == BL_PC) {
+					val2 = val1 + bonus; // STR, DEX, INT increase
+#ifdef RENEWAL
+					val3 = val1 * 2 + bonus; // HIT increase
+#endif
+				} else {
+					val2 = 0; //0 means that STR, DEX and INT should be halved
+				}
+				
+				val1 += bonus; // Officially, val1 is incremented (for us, this doesn't make a difference)
 				break;
+			}
 			case SC_TRICKDEAD:
 				if (vd) vd->dead_sit = 1;
 				total_tick = INFINITE_DURATION;
+				break;
+			case SC_SHOUT:
+				val1 = 4;  // STR bonus
+#ifdef RENEWAL
+				val2 = 30; // Extra ATK bonus
+#endif
 				break;
 			case SC_CONCENTRATION:
 				val2 = 2 + val1;
@@ -8147,13 +8279,23 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				val2 = 20*val1; //Power increase
 				break;
 			case SC_OVERTHRUST:
-				//val2 holds if it was casted on self, or is bonus received from others
-				val3 = 5*val1; //Power increase
+				// val2 holds if it was casted on self (1), or is bonus received from others (0)
+#ifndef RENEWAL
+				val3 = 5 * val1; //Power increase
+#else
+				// owner: 5, 10, 15, 20, 25
+				// party: 5,  5, 10, 10, 15
+				val3 = (val2 == 1 ? (5 * val1) : (5 + (val1 / 2) * 5)); // Power increase
+#endif
 				if(sd && pc->checkskill(sd,BS_HILTBINDING)>0)
 					total_tick += total_tick / 10;
 				break;
-			case SC_ADRENALINE2:
 			case SC_ADRENALINE:
+#ifdef RENEWAL
+				val4 = 5 + 3 * val1; // HIT increase
+				FALLTHROUGH
+#endif
+			case SC_ADRENALINE2:
 				val3 = (val2) ? 300 : 200; // aspd increase
 				FALLTHROUGH
 			case SC_WEAPONPERFECT:
@@ -8167,10 +8309,13 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				sc_start(src, bl, SC_ENDURE, 100, 1, total_tick, skill_id); // Endure effect
 				break;
 			case SC_ANGELUS:
-				val2 = 5*val1; //def increase
+				val2 = 5 * val1; // def increase
+#ifdef RENEWAL
+				val3 = 50 * val1; // MaxHP increase
+#endif
 				break;
 			case SC_IMPOSITIO:
-				val2 = 5*val1; //watk increase
+				val2 = 5 * val1; // (Pre-RE) watk increase / (RE) Extra ATK / MATK increase
 				break;
 			case SC_MELTDOWN:
 				val2 = 100*val1; //Chance to break weapon
@@ -8336,7 +8481,11 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				val2 = val1*10; //Actual boost (since 100% = 1000)
 				break;
 			case SC_SUFFRAGIUM:
-				val2 = 15 * val1; //Speed cast decrease
+#ifndef RENEWAL
+				val2 = 15 * val1; // Cast speed decrease
+#else
+				val2 = 5 + 5 * val1; // Variable cast speed decrease
+#endif
 				break;
 			case SC_HEALPLUS:
 				if (val1 < 1)
@@ -10496,8 +10645,15 @@ static bool status_end_sc_before_start(struct block_list *bl, struct status_data
 		status_change_end(bl, SC_INVINCIBLE, INVALID_TIMER);
 		break;
 	case SC_MAGICPOWER:
-	case SC_IMPOSITIO:
 		status_change_end(bl, type, INVALID_TIMER);
+		break;
+	case SC_IMPOSITIO:
+#ifndef RENEWAL
+		status_change_end(bl, type, INVALID_TIMER);
+#else
+		if (sc->data[type] == NULL || val1 >= sc->data[type]->val1)
+			status_change_end(bl, type, INVALID_TIMER);
+#endif
 		break;
 	case SC_SUNSTANCE:
 	case SC_LUNARSTANCE:
@@ -14527,6 +14683,7 @@ void status_defaults(void)
 	status->calc_mdef = status_calc_mdef;
 	status->calc_mdef2 = status_calc_mdef2;
 	status->calc_batk = status_calc_batk;
+	status->calc_buff_extra_batk = status_calc_buff_extra_batk;
 	status->base_matk = status_base_matk;
 	status->get_weapon_atk = status_get_weapon_atk;
 	status->get_total_mdef = status_get_total_mdef;

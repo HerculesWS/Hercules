@@ -77,13 +77,16 @@ struct status_change_entry;
 
 #define MAX_SKILL_SPELLBOOK_DB     17
 #define MAX_SKILL_MAGICMUSHROOM_DB 23
-#define MAX_AUTOSPELL_DB           7
+#define MAX_AUTOSPELL_DB           9
 
 //Walk intervals at which chase-skills are attempted to be triggered.
 #define WALK_SKILL_INTERVAL 5
 
 // Max Crimson Marker targets (RL_C_MARKER)
 #define MAX_SKILL_CRIMSON_MARKER 3
+
+// Autospell db special level/constant for "use half of casted level"
+#define HALF_AUTOSPELL_LEVEL -1
 
 /**
  * Enumerations
@@ -143,7 +146,7 @@ enum e_skill_inf2 {
 	INF2_HIDDEN_TRAP        = 0x00080000, ///< Traps that are hidden (based on trap_visiblity battle conf)
 	INF2_IS_COMBO_SKILL     = 0x00100000, ///< Sets whether a skill can be used in combos or not
 	INF2_NO_STASIS          = 0x00200000,
-	INF2_NO_KAGEHUMI        = 0x00400000, 
+	INF2_NO_KAGEHUMI        = 0x00400000,
 	INF2_RANGE_VULTURE      = 0x00800000, ///< Range is modified by AC_VULTURE
 	INF2_RANGE_SNAKEEYE     = 0x01000000, ///< Range is modified by GS_SNAKEEYE
 	INF2_RANGE_SHADOWJUMP   = 0x02000000, ///< Range is modified by NJ_SHADOWJUMP
@@ -1815,7 +1818,7 @@ enum skill_enabled_npc_flags {
 struct s_autospell_db {
 	int autospell_level; //< Minimum AutoSpell level to show this skill
 	int skill_id; //< Skill Id
-	int skill_lv[MAX_SKILL_LEVEL]; //< Maximum usable skill level at each AutoSpell level
+	int skill_lv[MAX_SKILL_LEVEL]; //< Maximum usable skill level at each AutoSpell level (also accepts HALF_AUTOSPELL_LEVEL as level)
 	bool spirit_boost; //< Whether Sage's Spirit boosts this skill to maximum level
 };
 
