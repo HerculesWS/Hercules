@@ -6440,6 +6440,10 @@ struct {
 	struct HPMHookPoint *HP_skill_castend_type_post;
 	struct HPMHookPoint *HP_skill_castend_nodamage_id_pre;
 	struct HPMHookPoint *HP_skill_castend_nodamage_id_post;
+	struct HPMHookPoint *HP_skill_castend_nodamage_id_sc_song_pre;
+	struct HPMHookPoint *HP_skill_castend_nodamage_id_sc_song_post;
+	struct HPMHookPoint *HP_skill_castend_nodamage_id_ugly_dance_pre;
+	struct HPMHookPoint *HP_skill_castend_nodamage_id_ugly_dance_post;
 	struct HPMHookPoint *HP_skill_castend_damage_id_pre;
 	struct HPMHookPoint *HP_skill_castend_damage_id_post;
 	struct HPMHookPoint *HP_skill_castend_pos2_pre;
@@ -7106,6 +7110,8 @@ struct {
 	struct HPMHookPoint *HP_status_calc_mdef2_post;
 	struct HPMHookPoint *HP_status_calc_batk_pre;
 	struct HPMHookPoint *HP_status_calc_batk_post;
+	struct HPMHookPoint *HP_status_calc_buff_extra_batk_pre;
+	struct HPMHookPoint *HP_status_calc_buff_extra_batk_post;
 	struct HPMHookPoint *HP_status_base_matk_pre;
 	struct HPMHookPoint *HP_status_base_matk_post;
 	struct HPMHookPoint *HP_status_get_weapon_atk_pre;
@@ -13997,6 +14003,10 @@ struct {
 	int HP_skill_castend_type_post;
 	int HP_skill_castend_nodamage_id_pre;
 	int HP_skill_castend_nodamage_id_post;
+	int HP_skill_castend_nodamage_id_sc_song_pre;
+	int HP_skill_castend_nodamage_id_sc_song_post;
+	int HP_skill_castend_nodamage_id_ugly_dance_pre;
+	int HP_skill_castend_nodamage_id_ugly_dance_post;
 	int HP_skill_castend_damage_id_pre;
 	int HP_skill_castend_damage_id_post;
 	int HP_skill_castend_pos2_pre;
@@ -14663,6 +14673,8 @@ struct {
 	int HP_status_calc_mdef2_post;
 	int HP_status_calc_batk_pre;
 	int HP_status_calc_batk_post;
+	int HP_status_calc_buff_extra_batk_pre;
+	int HP_status_calc_buff_extra_batk_post;
 	int HP_status_base_matk_pre;
 	int HP_status_base_matk_post;
 	int HP_status_get_weapon_atk_pre;

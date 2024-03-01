@@ -914,6 +914,12 @@ typedef enum sc_type {
 
 	SC_FIRE_EXPANSION_TEAR_GAS_SOB,
 
+	SC_NO_SWITCH_WEAPON,
+
+	// More SCs for bard/dancer
+	SC_ENSEMBLEFATIGUE,
+	SC_ADAPTATION,
+
 #ifndef SC_MAX
 	SC_MAX, //Automatically updated max, used in for's to check we are within bounds.
 #endif
@@ -1087,6 +1093,26 @@ enum e_status_calc_opt {
 	SCO_FORCE = 0x2, /* only relevant to BL_PC types, ensures call bypasses the queue caused by delayed damage */
 };
 
+/**
+ * Possible bonuses given by Ring Nimbelung (Harmonic Lick) in RE
+ * (SC_NIBELUNGEN val2)
+ */
+enum e_ringnibelungen_effect {
+	RINGNBL_EFF_ASPD = 0,       //< Increases attack speed (reduces delay after attack by 20%)
+	RINGNBL_EFF_ATK,            //< Atk + 20%
+	RINGNBL_EFF_MATK,           //< Matk + 20%
+	RINGNBL_EFF_MAXHP,          //< MaxHP + 30%
+	RINGNBL_EFF_MAXSP,          //< MaxSP + 30%
+	RINGNBL_EFF_ALLSTATS,       //< All Stat + 15
+	RINGNBL_EFF_HIT,            //< Hit + 50
+	RINGNBL_EFF_FLEE,           //< Flee + 50
+	RINGNBL_EFF_SP_CONSUMPTION, //< Reduces SP consumption of skills by 30%
+	RINGNBL_EFF_HP_RECOVERY,    //< Increases HP recovery by 100%
+	RINGNBL_EFF_SP_RECOVERY,    //< Increases SP recovery by 100%
+	// Must always be the last one
+	RINGNBL_EFF_MAX,
+};
+
 //Define to determine who gets HP/SP consumed on doing skills/etc. [Skotlex]
 #define BL_CONSUME (BL_PC|BL_HOM|BL_MER|BL_ELEM)
 //Define to determine who has regen
@@ -1137,6 +1163,7 @@ struct status_data {
 	struct weapon_atk rhw, lhw; //Right Hand/Left Hand Weapon.
 #ifdef RENEWAL
 	int equip_atk;
+	int buff_extra_batk; // Extra Base ATK granted by buffs
 #endif
 };
 
@@ -1426,6 +1453,7 @@ struct status_interface {
 	defType (*calc_mdef) (struct block_list *bl, struct status_change *sc, int mdef, bool viewable);
 	short (*calc_mdef2) (struct block_list *bl, struct status_change *sc, int mdef2, bool viewable);
 	int (*calc_batk)(struct block_list *bl, struct status_change *sc, int batk, bool viewable);
+	int (*calc_buff_extra_batk)(struct block_list *bl, struct status_change *sc);
 	int (*base_matk) (struct block_list *bl, const struct status_data *st, int level);
 	int (*get_weapon_atk) (struct block_list *src, struct weapon_atk *watk, int flag);
 	int (*get_total_mdef) (struct block_list *src);
