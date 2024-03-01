@@ -1745,7 +1745,11 @@ static int skill_additional_effect(struct block_list *src, struct block_list *bl
 			break;
 
 		case WZ_VERMILION:
+#ifndef RENEWAL
 			sc_start(src, bl, SC_BLIND, 4 * skill_lv, skill_lv, skill->get_time2(skill_id, skill_lv), skill_id);
+#else
+			sc_start(src, bl, SC_BLIND, 10 + 5 * skill_lv, skill_lv, skill->get_time2(skill_id, skill_lv), skill_id);
+#endif
 			break;
 
 		case HT_FREEZINGTRAP:
@@ -1794,14 +1798,14 @@ static int skill_additional_effect(struct block_list *src, struct block_list *bl
 
 		case AM_ACIDTERROR:
 			sc_start2(src, bl, SC_BLOODING, (skill_lv * 3), skill_lv, src->id, skill->get_time2(skill_id, skill_lv), skill_id);
-			if ( bl->type == BL_PC && rnd() % 1000 < 10 * skill->get_time(skill_id, skill_lv) ) {
+			if (bl->type == BL_PC && (rnd() % 1000) < (10 * skill->get_time(skill_id, skill_lv))) {
 				skill->break_equip(bl, EQP_ARMOR, 10000, BCT_ENEMY);
 				clif->emotion(bl, E_OMG); // emote icon still shows even there is no armor equip.
 			}
 			break;
 
 		case AM_DEMONSTRATION:
-			skill->break_equip(bl, EQP_WEAPON, 100*skill_lv, BCT_ENEMY);
+			skill->break_equip(bl, EQP_WEAPON, skill->get_time2(skill_id, skill_lv), BCT_ENEMY);
 			break;
 
 		case CR_SHIELDCHARGE:
@@ -1816,14 +1820,16 @@ static int skill_additional_effect(struct block_list *src, struct block_list *bl
 			sc_start(src, bl, SC_STUN, (10 + 3 * skill_lv), skill_lv, skill->get_time(skill_id, skill_lv), skill_id);
 			sc_start(src, bl, SC_BLIND, (10 + 3 * skill_lv), skill_lv, skill->get_time2(skill_id, skill_lv), skill_id);
 
-	#ifdef RENEWAL
-			sc_start(src, bl, SC_RAID, 100, 7, 5000, skill_id);
+#ifdef RENEWAL
+			sc_start(src, bl, SC_RAID, 100, 7, 10000, skill_id);
+#endif
 			break;
 
+#ifdef RENEWAL
 		case RG_BACKSTAP:
 			sc_start(src, bl, SC_STUN, (5 + 2 * skill_lv), skill_lv, skill->get_time(skill_id, skill_lv), skill_id);
-	#endif
 			break;
+#endif
 
 		case BA_FROSTJOKE:
 			sc_start(src, bl, SC_FREEZE, (15 + 5 * skill_lv), skill_lv, skill->get_time2(skill_id, skill_lv), skill_id);
@@ -2367,8 +2373,10 @@ static int skill_additional_effect(struct block_list *src, struct block_list *bl
 			{
 				if(sc->data[SC_GIANTGROWTH])
 					rate += 10;
+#ifndef RENEWAL
 				if(sc->data[SC_OVERTHRUST])
 					rate += 10;
+#endif
 				if(sc->data[SC_OVERTHRUSTMAX])
 					rate += 10;
 			}
@@ -4988,6 +4996,7 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 			status_change_end(src, SC_BLADESTOP, INVALID_TIMER);
 			break;
 
+#ifndef RENEWAL
 		case RG_BACKSTAP:
 			{
 				enum unit_dir dir = map->calc_dir(src, bl->x, bl->y);
@@ -5002,6 +5011,29 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 					clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
 			}
 			break;
+#else
+		case RG_BACKSTAP: {
+			// Finds out where the unit will be after using the skill
+			enum unit_dir dir = map->calc_dir(src, bl->x, bl->y);
+			if (Assert_chk(dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX)) {
+				map->freeblock_unlock(); // unblock before assert-returning
+				return 0;
+			}
+
+			short x = bl->x + dirx[dir];
+			short y = bl->y + diry[dir];
+			if (unit->move_pos(src, x, y, 1, true) != 0) {
+				clif->skill_fail(sd, skill_id, USESKILL_FAIL_POS, 0, 0);
+				break;
+			}
+
+			clif->slide(src, x, y);
+			clif->fixpos(src);
+
+			skill->attack(BF_WEAPON, src, src, bl, skill_id, skill_lv, tick, flag);
+		}
+			break;
+#endif
 
 		case MO_FINGEROFFENSIVE:
 			skill->attack(BF_WEAPON,src,src,bl,skill_id,skill_lv,tick,flag);
@@ -5273,6 +5305,10 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 			break;
 
 		case KN_BRANDISHSPEAR:
+#ifdef RENEWAL
+			sc_start(src, src, SC_NO_SWITCH_WEAPON, 100, 1, skill->get_time(skill_id, skill_lv), skill_id);
+			FALLTHROUGH
+#endif
 		case ML_BRANDISH:
 			//Coded apart for it needs the flag passed to the damage calculation.
 			if (skill->area_temp[1] != bl->id)
@@ -5281,7 +5317,23 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 				skill->attack(skill->get_type(skill_id, skill_lv), src, src, bl, skill_id, skill_lv, tick, flag);
 			break;
 
+#ifdef RENEWAL
 		case KN_BOWLINGBASH:
+			// skill->area_temp[0] holds the number of targets affected
+			if (flag & 1) {
+				int sflag = skill->area_temp[0] | SD_ANIMATION;
+				skill->attack(skill->get_type(skill_id, skill_lv), src, src, bl, skill_id, skill_lv, tick, sflag);
+			} else {
+				sc_start(src, src, SC_NO_SWITCH_WEAPON, 100, 1, skill->get_time(skill_id, skill_lv), skill_id);
+				skill->area_temp[0] = map->foreachinrange(skill->area_sub, bl, skill->get_splash(skill_id, skill_lv), BL_CHAR, src, skill_id, skill_lv, tick, BCT_ENEMY, skill->area_sub_count);
+
+				// recursive invocation of skill->castend_damage_id() with flag|1
+				map->foreachinrange(skill->area_sub, bl, skill->get_splash(skill_id, skill_lv), skill->splash_target(src), src, skill_id, skill_lv, tick, flag | BCT_ENEMY | SD_SPLASH | 1, skill->castend_damage_id);
+			}
+			break;
+#else // !RENEWAL
+		case KN_BOWLINGBASH:
+#endif
 		case MS_BOWLINGBASH:
 			{
 				int min_x,max_x,min_y,max_y,i,c,dir,tx,ty;
@@ -6379,13 +6431,15 @@ static int skill_castend_id(int tid, int64 tick, int id, intptr_t data)
 				break;
 		}
 
-		if(ud->skill_id == RG_BACKSTAP) {
+#ifndef RENEWAL
+		if (ud->skill_id == RG_BACKSTAP) {
 			enum unit_dir dir = map->calc_dir(src, target->x, target->y);
 			enum unit_dir t_dir = unit->getdir(target);
 			if (check_distance_bl(src, target, 0) || map->check_dir(dir, t_dir) != 0) {
 				break;
 			}
 		}
+#endif
 
 		if( ud->skill_id == PR_TURNUNDEAD ) {
 			struct status_data *tstatus = status->get_status_data(target);
@@ -7216,7 +7270,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 		case SA_FLAMELAUNCHER: // added failure chance and chance to break weapon if turned on [Valaris]
 		case SA_FROSTWEAPON:
 		case SA_LIGHTNINGLOADER:
-		case SA_SEISMICWEAPON:
+		case SA_SEISMICWEAPON: {
 			if (dstsd) {
 				if (dstsd->weapontype == W_FIST ||
 					(dstsd->sc.count && !dstsd->sc.data[type] &&
@@ -7235,13 +7289,22 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 					break;
 				}
 			}
+#ifndef RENEWAL
 			// 100% success rate at lv4 & 5, but lasts longer at lv5
-			if (!clif->skill_nodamage(src, bl, skill_id, skill_lv, sc_start(src, bl, type, (60 + skill_lv * 10), skill_lv, skill->get_time(skill_id, skill_lv), skill_id))) {
-				if (sd)
+			int sc_chance = (60 + skill_lv * 10);
+#else
+			int sc_chance = 100;
+#endif
+			int sc_result = sc_start(src, bl, type, sc_chance, skill_lv, skill->get_time(skill_id, skill_lv), skill_id);
+			if (clif->skill_nodamage(src, bl, skill_id, skill_lv, sc_result) == 0) {
+				if (sd != NULL)
 					clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
-				if (skill->break_equip(bl, EQP_WEAPON, 10000, BCT_PARTY) && sd && sd != dstsd)
+#ifndef RENEWAL
+				if (skill->break_equip(bl, EQP_WEAPON, 10000, BCT_PARTY) != 0 && sd != NULL && sd != dstsd)
 					clif->message(sd->fd, msg_sd(sd, MSGTBL_BROKEN_TARGET_WEAPON)); // "You broke the target's weapon."
+#endif
 			}
+		}
 			break;
 
 		case PR_ASPERSIO:
@@ -7314,9 +7377,10 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 				break;
 			}
 		case PR_SLOWPOISON:
+#ifndef RENEWAL
 		case PR_IMPOSITIO:
+#endif
 		case PR_LEXAETERNA:
-		case PR_SUFFRAGIUM:
 		case PR_BENEDICTIO:
 		case LK_BERSERK:
 		case MS_BERSERK:
@@ -7327,7 +7391,10 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 		case CR_REFLECTSHIELD:
 		case MS_REFLECTSHIELD:
 		case AS_POISONREACT:
+#ifndef RENEWAL
 		case MC_LOUD:
+		case PR_SUFFRAGIUM:
+#endif
 		case MG_ENERGYCOAT:
 		case MO_EXPLOSIONSPIRITS:
 		case MO_STEELBODY:
@@ -7882,6 +7949,11 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 		}
 			break;
 
+#ifdef RENEWAL
+		case MC_LOUD:
+		case PR_IMPOSITIO:
+		case PR_SUFFRAGIUM:
+#endif
 		case AL_ANGELUS:
 		case PR_MAGNIFICAT:
 		case PR_GLORIA:
@@ -7892,8 +7964,23 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 		case WM_FRIGG_SONG:
 			if (sd == NULL || sd->status.party_id == 0 || (flag & 1) != 0) {
 				// Aegis: special handling, even though they aren't of magic skilltype.
-				if (status->isimmune(bl) == 0 || src == bl || (skill_id != AL_ANGELUS && skill_id != PR_MAGNIFICAT && skill_id != PR_GLORIA))
-					clif->skill_nodamage(bl, bl, skill_id, skill_lv, sc_start(src, bl, type, 100, skill_lv, skill->get_time(skill_id, skill_lv), skill_id));
+				if (status->isimmune(bl) == 0 || src == bl || (skill_id != AL_ANGELUS && skill_id != PR_MAGNIFICAT && skill_id != PR_GLORIA)) {
+					int sc_result = sc_start(src, bl, type, 100, skill_lv, skill->get_time(skill_id, skill_lv), skill_id);
+					clif->skill_nodamage(bl, bl, skill_id, skill_lv, sc_result);
+
+#ifdef RENEWAL
+					if (skill_id == AL_ANGELUS && sc_result == 1) {
+						struct status_change *sc = status->get_sc(bl);
+
+						// Angelus should only heal when the SC is actually set in the player (starts now or was reapplied).
+						// Angelus may "succeed" (sc_result = 1) and not start the SC when you have the effect of a greater level.
+						// When this happen, we should not heal.
+						// Comparing val1 to skill_lv will ensure us that it has succeeded and uses the current skill_lv
+						if (sc->data[SC_ANGELUS] != NULL && sc->data[SC_ANGELUS]->val1 == skill_lv)
+							status->heal(bl, sc->data[SC_ANGELUS]->val3, 0, STATUS_HEAL_DEFAULT);
+					}
+#endif
+				}
 			} else if (sd != NULL) {
 				party->foreachsamemap(skill->area_sub, sd, skill->get_splash(skill_id, skill_lv), src, skill_id, skill_lv, tick, flag|BCT_PARTY|1, skill->castend_nodamage_id);
 			}
@@ -10065,12 +10152,13 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 		case AB_CANTO:
 		{
 			int level = 0;
-			if( sd )
-				level = skill_id == AB_CLEMENTIA ? pc->checkskill(sd,AL_BLESSING) : pc->checkskill(sd,AL_INCAGI);
-			if( sd == NULL || sd->status.party_id == 0 || flag&1 )
-				clif->skill_nodamage(bl, bl, skill_id, skill_lv, sc_start(src, bl, type, 100, level + (sd ? (sd->status.job_level / 10) : 0), skill->get_time(skill_id, skill_lv), skill_id));
-			else if( sd ) {
-				if( !level )
+			if (sd != NULL)
+				level = skill_id == AB_CLEMENTIA ? pc->checkskill(sd, AL_BLESSING) : pc->checkskill(sd, AL_INCAGI);
+
+			if (sd == NULL || sd->status.party_id == 0 || flag & 1) {
+				clif->skill_nodamage(bl, bl, skill_id, skill_lv, sc_start(src, bl, type, 100, level, skill->get_time(skill_id, skill_lv), skill_id));
+			} else if (sd != NULL) {
+				if (level == 0)
 					clif->skill_fail(sd, skill_id, USESKILL_FAIL, 0, 0);
 				else
 					party->foreachsamemap(skill->area_sub, sd, skill->get_splash(skill_id, skill_lv), src, skill_id, skill_lv, tick, flag|BCT_PARTY|1, skill->castend_nodamage_id);
@@ -14008,8 +14096,10 @@ static int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *b
 			break;
 
 		case UNT_MAGNUS:
-			if (!battle->check_undead(tstatus->race,tstatus->def_ele) && tstatus->race!=RC_DEMON)
+#ifndef RENEWAL
+			if (!battle->check_undead(tstatus->race, tstatus->def_ele) && tstatus->race != RC_DEMON)
 				break;
+#endif
 			skill->attack(BF_MAGIC,ss,&src->bl,bl,sg->skill_id,sg->skill_lv,tick,0);
 			break;
 
@@ -17211,7 +17301,9 @@ static int skill_castfix_sc(struct block_list *bl, int time)
 			time += sc->data[SC_NEEDLE_OF_PARALYZE]->val3;
 		if (sc->data[SC_SUFFRAGIUM]) {
 			time -= time * sc->data[SC_SUFFRAGIUM]->val2 / 100;
+#ifndef RENEWAL
 			status_change_end(bl, SC_SUFFRAGIUM, INVALID_TIMER);
+#endif
 		}
 		if (sc->data[SC_MEMORIZE]) {
 			time>>=1;
@@ -17291,7 +17383,9 @@ static int skill_vfcastfix(struct block_list *bl, double time, uint16 skill_id, 
 		// Variable cast reduction bonuses
 		if (sc->data[SC_SUFFRAGIUM]) {
 			VARCAST_REDUCTION(sc->data[SC_SUFFRAGIUM]->val2);
+#ifndef RENEWAL
 			status_change_end(bl, SC_SUFFRAGIUM, INVALID_TIMER);
+#endif
 		}
 		if (sc->data[SC_MEMORIZE]) {
 			VARCAST_REDUCTION(50);
@@ -17883,8 +17977,17 @@ static void skill_autospell_select_spell(struct block_list *bl, int skill_lv)
 	if ((upper_idx - lower_idx) > 1)
 		skill_idx += rnd() % (upper_idx - lower_idx);
 
+	// @TODO: Is this how AutoSpell works for non-players after rebalance? I made it the same as the player one...
 	const struct s_autospell_db *sk = &skill->dbs->autospell_db[skill_idx];
-	sc_start4(bl, bl, SC_AUTOSPELL, 100, skill_lv, sk->skill_id, sk->skill_lv[skill_lv - 1], 0,
+	int spell_level = sk->skill_lv[skill_lv - 1];
+	if (spell_level == HALF_AUTOSPELL_LEVEL) {
+		spell_level = skill_lv / 2;
+
+		if (spell_level == 0)
+			spell_level = 1;
+	}
+
+	sc_start4(bl, bl, SC_AUTOSPELL, 100, skill_lv, sk->skill_id, spell_level, 0,
 		skill->get_time(SA_AUTOSPELL, skill_lv), SA_AUTOSPELL);
 }
 
@@ -17916,6 +18019,14 @@ static int skill_autospell_spell_selected(struct map_session_data *sd, uint16 sk
 		return 0; // Don't have enough level to use
 
 	int max_lv = sk->skill_lv[autospell_lv - 1];
+
+	if (max_lv == HALF_AUTOSPELL_LEVEL) {
+		max_lv = autospell_lv / 2;
+
+		if (max_lv == 0)
+			max_lv = 1;
+	}
+
 	if (sk->spirit_boost && sd->sc.data[SC_SOULLINK] != NULL && sd->sc.data[SC_SOULLINK]->val2 == SL_SAGE)
 		max_lv = skill->dbs->db[skill->get_index(skill_id)].max; // Soul Linker bonus. [Skotlex]
 
@@ -24843,8 +24954,8 @@ static void skill_read_autospell_skill_level(struct config_setting_t *conf, stru
 			snprintf(lv, sizeof(lv), "Lv%d", i + 1);
 
 			int level;
-			if (libconfig->setting_lookup_int(t, lv, &level) == CONFIG_TRUE) {
-				if (level >= 0 && level <= MAX_SKILL_LEVEL)
+			if (map->setting_lookup_const(t, lv, &level) == CONFIG_TRUE) {
+				if ((level >= 0 && level <= MAX_SKILL_LEVEL) || level == HALF_AUTOSPELL_LEVEL)
 					sk->skill_lv[i] = level;
 				else
 					ShowWarning("%s: Invalid SkillLevel %d specified in level %d for skill ID %d in %s! Minimum is 0, maximum is %d. Defaulting to 0...\n",
@@ -24856,8 +24967,8 @@ static void skill_read_autospell_skill_level(struct config_setting_t *conf, stru
 	}
 
 	int level;
-	if (libconfig->setting_lookup_int(conf, "SkillLevel", &level) == CONFIG_TRUE) {
-		if (level >= 0 && level <= MAX_SKILL_LEVEL)
+	if (map->setting_lookup_const(conf, "SkillLevel", &level) == CONFIG_TRUE) {
+		if ((level >= 0 && level <= MAX_SKILL_LEVEL) || level == HALF_AUTOSPELL_LEVEL)
 			skill->level_set_value(sk->skill_lv, level);
 		else
 			ShowWarning("%s: Invalid SkillLevel %d specified for skill ID %d in %s! Minimum is 0, maximum is %d. Defaulting to 0...\n",
@@ -24986,10 +25097,13 @@ static bool skill_read_autospell_db(const char *filename)
 		count++;
 	}
 
-#if PACKETVER_MAIN_NUM < 20181128 && PACKETVER_RE_NUM < 20181031
+#if PACKETVER_MAIN_NUM < 20181128 && PACKETVER_RE_NUM < 20181031 && PACKETVER_ZERO_NUM < 20180523
 	if (count > 7) {
 		ShowWarning("%s: Your current packet version only supports up to 7 autospell skills, but your autospell db contains \"%d\" skills. Some skills may not be shown.\n", __func__, count);
 		ShowWarning("%s:    Update your packet version or reduce the number of skills to fix this warning.\n", __func__);
+#ifdef RENEWAL
+		ShowWarning("%s:    You may also enable CLASSIC_AUTOSPELL_LIST in general.h for an alternative skill list (Read the comment on it for details!!)\n", __func__);
+#endif
 	}
 #endif
 
@@ -25069,7 +25183,12 @@ static void skill_readdb(bool minimal)
 	sv->readdb(map->db_path, "magicmushroom_db.txt",         ',',   1,                        1, MAX_SKILL_MAGICMUSHROOM_DB, skill->parse_row_magicmushroomdb);
 	sv->readdb(map->db_path, "skill_improvise_db.txt",       ',',   2,                        2,     MAX_SKILL_IMPROVISE_DB, skill->parse_row_improvisedb);
 	sv->readdb(map->db_path, "skill_changematerial_db.txt",  ',',   4,                    4+2*5,       MAX_SKILL_PRODUCE_DB, skill->parse_row_changematerialdb);
+#ifdef CLASSIC_AUTOSPELL_LIST // Force usage of pre-re autospell_db
+	skill->read_autospell_db(DBPATH_PRE "autospell_db.conf");
+#else
 	skill->read_autospell_db(DBPATH "autospell_db.conf");
+#endif
+
 }
 
 static void skill_reload(void)
