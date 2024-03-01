@@ -3079,14 +3079,20 @@ static void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag
 			;
 	}
 
-	if(flag&SCB_BATK && bst->batk) {
-		st->batk = status->base_atk(bl,st);
-		temp = bst->batk - status->base_atk(bl,bst);
-		if (temp) {
-			temp += st->batk;
-			st->batk = cap_value(temp, battle_config.batk_min, battle_config.batk_max);
+	if (flag & SCB_BATK) {
+		if (bst->batk != 0) {
+			st->batk = status->base_atk(bl,st);
+			temp = bst->batk - status->base_atk(bl,bst);
+			if (temp != 0) {
+				temp += st->batk;
+				st->batk = cap_value(temp, battle_config.batk_min, battle_config.batk_max);
+			}
+			st->batk = status->calc_batk(bl, sc, st->batk, true);
 		}
-		st->batk = status->calc_batk(bl, sc, st->batk, true);
+
+#ifdef RENEWAL
+		st->buff_extra_batk = status->calc_buff_extra_batk(bl, sc);
+#endif
 	}
 
 	if(flag&SCB_WATK) {
@@ -3534,7 +3540,7 @@ static void status_calc_bl_(struct block_list *bl, enum scb_flag flag, enum e_st
 		if(bst.sp != st->sp)
 			clif->updatestatus(sd,SP_SP);
 #ifdef RENEWAL
-		if(bst.equip_atk != st->equip_atk)
+		if(bst.equip_atk != st->equip_atk || bst.buff_extra_batk != st->buff_extra_batk)
 			clif->updatestatus(sd,SP_ATK2);
 #endif
 	} else if( bl->type == BL_HOM ) {
@@ -3943,8 +3949,8 @@ static unsigned short status_calc_str(struct block_list *bl, struct status_chang
 		str += 5;
 	if(sc->data[SC_LEADERSHIP])
 		str += sc->data[SC_LEADERSHIP]->val1;
-	if(sc->data[SC_SHOUT])
-		str += 4;
+	if (sc->data[SC_SHOUT] != NULL)
+		str += sc->data[SC_SHOUT]->val1;
 	if(sc->data[SC_TRUESIGHT])
 		str += 5;
 	if(sc->data[SC_STRUP])
@@ -4398,6 +4404,36 @@ static int status_calc_batk(struct block_list *bl, struct status_change *sc, int
 	return cap_value(batk, battle_config.batk_min, battle_config.batk_max);
 }
 
+/**
+ * Calculates bl's Extra ATK gains from Buffs.
+ * 
+ * These are very specific bonus from SCs where:
+ * - They show in status window ATK right side (after the + sign)
+ * - They are given by SCs, but they work like equipment's ATK bonus
+ * - They are not linked to the weapon attack value
+ * 
+ * @param bl unit whose status is being calculated
+ * @param sc unit's SC list
+ * @returns Value of Extra ATK conceded by buffs
+ */
+static int status_calc_buff_extra_batk(struct block_list *bl, struct status_change *sc)
+{
+	nullpo_ret(bl);
+
+	if(sc == NULL || sc->count == 0)
+		return 0;
+
+	int batk = 0;
+
+#ifdef RENEWAL
+	// In-game Tests (and iRO wiki) suggests SC_SHOUT ATK bonus is counted as Extra ATK
+	if (sc->data[SC_SHOUT] != NULL)
+		batk += sc->data[SC_SHOUT]->val2;
+#endif
+
+	return cap_value(batk, 0, battle_config.batk_max);
+}
+
 static int status_calc_watk(struct block_list *bl, struct status_change *sc, int watk, bool viewable)
 {
 	nullpo_ret(bl);
@@ -4704,6 +4740,10 @@ static int status_calc_hit(struct block_list *bl, struct status_change *sc, int 
 		hit -= sc->data[SC_HEAT_BARREL]->val4;
 	if (sc->data[SC_SOULFALCON] != NULL)
 		hit += sc->data[SC_SOULFALCON]->val3;
+#ifdef RENEWAL
+	if (sc->data[SC_BLESSING] != NULL)
+		hit += sc->data[SC_BLESSING]->val3;
+#endif
 
 	return cap_value(hit, battle_config.hit_min, battle_config.hit_max);
 }
@@ -5447,6 +5487,10 @@ static short status_calc_aspd(struct block_list *bl, struct status_change *sc, s
 			bonus += sc->data[SC_STEAMPACK]->val2;
 		if (sc->data[SC_SKF_ASPD] != NULL)
 			bonus += sc->data[SC_SKF_ASPD]->val1;
+#ifdef RENEWAL
+		if (sc->data[SC_INC_AGI] != NULL)
+			bonus += sc->data[SC_INC_AGI]->val1; // + SkillLevel%
+#endif
 	}
 
 	return (bonus + pots);
@@ -5722,6 +5766,10 @@ static unsigned int status_calc_maxhp(struct block_list *bl, struct status_chang
 		maxhp -= maxhp * sc->data[SC_GM_BATTLE2]->val1 / 100;
 	if (sc->data[SC_LUNARSTANCE] != NULL)
 		maxhp += maxhp * sc->data[SC_LUNARSTANCE]->val2 / 100;
+#ifdef RENEWAL
+	if (sc->data[SC_ANGELUS] != NULL)
+		maxhp += sc->data[SC_ANGELUS]->val3;
+#endif
 
 	return (unsigned int)cap_value(maxhp, 1, UINT_MAX);
 }
@@ -7485,9 +7533,17 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				// Fall through to SC_INC_AGI
 				FALLTHROUGH
 			case SC_DEC_AGI:
-			case SC_INC_AGI:
 				val2 = 2 + val1; //Agi change
 				break;
+			case SC_INC_AGI:
+			{
+				struct map_session_data *srcsd = BL_CAST(BL_PC, src);
+				if (skill_id == AB_CANTO && srcsd != NULL)
+					val1 += srcsd->status.job_level / 10;
+
+				val2 = 2 + val1; //Agi change
+				break;
+			}
 			case SC_ENDURE:
 				val2 = 7; // Hit-count [Celest]
 				if( !(flag&SCFLAG_NOAVOID) && (bl->type&(BL_PC|BL_MER)) && !map_flag_gvg(bl->m) && !map->list[bl->m].flag.battleground && !val4 ) {
@@ -8125,14 +8181,33 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				val4 = INVALID_TIMER; //Kaahi Timer.
 				break;
 			case SC_BLESSING:
-				if ((!undead_flag && st->race!=RC_DEMON) || bl->type == BL_PC)
-					val2 = val1;
-				else
-					val2 = 0; //0 -> Half stat.
+			{
+				int bonus = 0;
+				struct map_session_data *srcsd = BL_CAST(BL_PC, src);
+				if (skill_id == AB_CLEMENTIA && srcsd != NULL)
+					bonus += srcsd->status.job_level / 10;
+
+				if ((!undead_flag && st->race != RC_DEMON) || bl->type == BL_PC) {
+					val2 = val1 + bonus; // STR, DEX, INT increase
+#ifdef RENEWAL
+					val3 = val1 * 2 + bonus; // HIT increase
+#endif
+				} else {
+					val2 = 0; //0 means that STR, DEX and INT should be halved
+				}
+				
+				val1 += bonus; // Officially, val1 is incremented (for us, this doesn't make a difference)
 				break;
+			}
 			case SC_TRICKDEAD:
 				if (vd) vd->dead_sit = 1;
 				total_tick = INFINITE_DURATION;
+				break;
+			case SC_SHOUT:
+				val1 = 4;  // STR bonus
+#ifdef RENEWAL
+				val2 = 30; // Extra ATK bonus
+#endif
 				break;
 			case SC_CONCENTRATION:
 				val2 = 2 + val1;
@@ -8167,7 +8242,10 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				sc_start(src, bl, SC_ENDURE, 100, 1, total_tick, skill_id); // Endure effect
 				break;
 			case SC_ANGELUS:
-				val2 = 5*val1; //def increase
+				val2 = 5 * val1; // def increase
+#ifdef RENEWAL
+				val3 = 50 * val1; // MaxHP increase
+#endif
 				break;
 			case SC_IMPOSITIO:
 				val2 = 5*val1; //watk increase
@@ -14527,6 +14605,7 @@ void status_defaults(void)
 	status->calc_mdef = status_calc_mdef;
 	status->calc_mdef2 = status_calc_mdef2;
 	status->calc_batk = status_calc_batk;
+	status->calc_buff_extra_batk = status_calc_buff_extra_batk;
 	status->base_matk = status_base_matk;
 	status->get_weapon_atk = status_get_weapon_atk;
 	status->get_total_mdef = status_get_total_mdef;
