@@ -4915,7 +4915,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 
 	//Check for critical
 #ifdef RENEWAL
-	if((battle_config.feature_enable_multi_crit == 1 || !(wd.type&BDT_MULTIHIT)) && sstatus->cri &&
+	if ((battle_config.feature_enable_multi_crit == 1 || !(wd.type&BDT_MULTIHIT)) && sstatus->cri &&
 		(!skill_id ||
 		skill_id == KN_AUTOCOUNTER ||
 		skill_id == SN_SHARPSHOOTING || skill_id == MA_SHARPSHOOTING ||
