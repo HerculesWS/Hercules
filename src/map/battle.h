@@ -114,6 +114,7 @@ enum battle_dmg_type {
 	BDT_CRIT        = 10, // Critical hit
 	BDT_PDODGE      = 11, // Lucky dodge
 	//BDT_TOUCH       = 12, // (touch skill?)
+	BDT_MULTICRIT   = 13, ///< Multi-hit with critical
 };
 
 /**
@@ -606,6 +607,8 @@ struct Battle_Config {
 	int show_tip_window;
 	int enable_refinery_ui;
 	int replace_refine_npcs;
+
+	int feature_enable_multi_crit;
 
 	int batk_min;
 	int batk_max;

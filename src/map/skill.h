@@ -115,6 +115,7 @@ enum e_skill_nk {
 	NK_IGNORE_DEF     = 0x20,
 	NK_IGNORE_FLEE    = 0x40,
 	NK_NO_CARDFIX_DEF = 0x80,
+	NK_CRITICAL       = 0x100,
 };
 
 /// A skill with 3 would be no damage + splash: area of effect.

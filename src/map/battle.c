@@ -4604,8 +4604,9 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 	bool n_ele = false; // non-elemental
 	short hitpercbonus = 0;
 
-	struct map_session_data *sd, *tsd;
 	struct Damage wd;
+	struct map_session_data *sd = BL_CAST(BL_PC, src);
+	struct map_session_data *tsd = BL_CAST(BL_PC, target);
 	struct status_change *sc = status->get_sc(src);
 	struct status_change *tsc = status->get_sc(target);
 	struct status_data *sstatus = status->get_status_data(src);
@@ -4672,9 +4673,6 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 	if (tsc && !tsc->count)
 		tsc = NULL; //Skip checking as there are no status changes active.
 
-	sd = BL_CAST(BL_PC, src);
-	tsd = BL_CAST(BL_PC, target);
-
 	if(sd)
 		wd.blewcount += battle->blewcount_bonus(sd, skill_id);
 
@@ -4685,7 +4683,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 	)
 		flag.arrow = 1;
 
-	if(skill_id) {
+	if(skill_id || (skill->get_nk(skill_id) & NK_CRITICAL) == 0) {
 		wd.flag |= battle->range_type(src, target, skill_id, skill_lv);
 		switch(skill_id) {
 			case MO_FINGEROFFENSIVE:
@@ -4729,7 +4727,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 				break;
 
 			case KN_AUTOCOUNTER:
-				wd.flag=(wd.flag&~BF_SKILLMASK)|BF_NORMAL;
+				wd.flag = (wd.flag&~BF_SKILLMASK)|BF_NORMAL;
 				break;
 
 			case NPC_CRITICALSLASH:
@@ -4916,11 +4914,19 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 	}
 
 	//Check for critical
+#ifdef RENEWAL
+	if((battle_config.feature_enable_multi_crit == 1 || !(wd.type&BDT_MULTIHIT)) && sstatus->cri &&
+		(!skill_id ||
+		skill_id == KN_AUTOCOUNTER ||
+		skill_id == SN_SHARPSHOOTING || skill_id == MA_SHARPSHOOTING ||
+		skill_id == NJ_KIRIKAGE))
+#else
 	if( !flag.cri && wd.type != BDT_MULTIHIT && sstatus->cri &&
 		(!skill_id ||
 		skill_id == KN_AUTOCOUNTER ||
 		skill_id == SN_SHARPSHOOTING || skill_id == MA_SHARPSHOOTING ||
 		skill_id == NJ_KIRIKAGE))
+#endif
 	{
 		short cri = sstatus->cri;
 		if (sd != NULL) {
@@ -4979,7 +4985,10 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 			flag.cri = 1;
 	}
 	if (flag.cri) {
-		wd.type = BDT_CRIT;
+		if (battle_config.feature_enable_multi_crit == 1)
+			wd.type = (!(wd.type&BDT_MULTIHIT) ? BDT_CRIT : BDT_MULTICRIT);
+		else
+			wd.type = BDT_CRIT;
 #ifndef RENEWAL
 		flag.idef = flag.idef2 =
 #endif
@@ -7890,6 +7899,7 @@ static const struct config_data_old battle_data[] = {
 	{ "features/goldpc/enable",             &battle_config.feature_goldpc_enable,           0,      0,      1,              },
 	{ "features/goldpc/default_mode",       &battle_config.feature_goldpc_default_mode,     1,      0,      INT_MAX,        },
 	{ "venom_dust_exp",                     &battle_config.venom_dust_exp,                  0,      0,      1,              },
+	{ "features/enable_multi_critical",     &battle_config.feature_enable_multi_crit,       1,      0,      1,              },
 };
 
 static bool battle_set_value_sub(int index, int value)
@@ -8042,6 +8052,13 @@ static void battle_adjust_conf(void)
 	if (battle_config.feature_goldpc_enable == 1) {
 		ShowWarning("conf/map/battle/feature.conf goldpc is enabled but it requires PACKETVER 2014-06-11 Ragexe or newer, disabling...\n");
 		battle_config.feature_goldpc_enable = 0;
+	}
+#endif
+
+#if PACKETVER < 20161207
+	if (battle_config.feature_enable_multi_crit) {
+		ShowWarning("conf/map/battle/feature.conf feature_enable_multi_crit is enabled but it requires PACKETVER 2016-12-07 or newer, disabling...\n");
+		battle_config.feature_enable_multi_crit = 0;
 	}
 #endif
 
