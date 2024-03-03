@@ -4683,7 +4683,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 	)
 		flag.arrow = 1;
 
-	if(skill_id || (skill->get_nk(skill_id) & NK_CRITICAL) == 0) {
+	if (skill_id || (skill->get_nk(skill_id) & NK_CRITICAL) == 0) {
 		wd.flag |= battle->range_type(src, target, skill_id, skill_lv);
 		switch(skill_id) {
 			case MO_FINGEROFFENSIVE:
