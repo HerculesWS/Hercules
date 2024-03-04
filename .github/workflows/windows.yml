@@ -1,0 +1,63 @@
+name: windows
+
+on: workflow_call
+
+env:
+  MYSQL_DATABASE: 'ragnarok'
+  MYSQL_USER: 'ragnarok'
+  MYSQL_PASSWORD: 'ragnarok'
+  MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 60
+    strategy:
+      matrix:
+        CC: [msbuild]
+        RENEWAL: ["", "DISABLE_RENEWAL"]
+        CLIENT_TYPE: ["", "ENABLE_PACKETVER_RE", "ENABLE_PACKETVER_ZERO"]
+        PACKET_VERSION: ["PACKETVER=20221024", "PACKETVER=20130724"]
+        exclude:
+          - PACKET_VERSION: "PACKETVER=20130724"
+            CLIENT_TYPE: "ENABLE_PACKETVER_ZERO"
+
+    # github.head_ref will stop previous runs in the same PR (if in a PR)
+    # github.run_id is a fallback when outside a PR (e.g. every merge in master will run, and previous won't stop)
+    concurrency:
+      group: msbuild-${{ github.head_ref || github.run_id }}_${{ matrix.CC }}_${{ matrix.RENEWAL }}_${{ matrix.CLIENT_TYPE }}_${{ matrix.PACKET_VERSION}}
+      cancel-in-progress: true
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v2
+
+      - uses: shogo82148/actions-setup-mysql@v1
+        with:
+          distribution: "mariadb"
+          mysql-version: "11.1"
+
+      - name: init database
+        run: |
+          mysql -u root -e "CREATE DATABASE IF NOT EXISTS ${{ env.MYSQL_DATABASE }};"
+          mysql -u root -e "CREATE USER IF NOT EXISTS '${{ env.MYSQL_USER }}'@'localhost' IDENTIFIED BY '${{ env.MYSQL_PASSWORD }}';"
+          mysql -u root -e "GRANT SELECT,INSERT,UPDATE,DELETE ON ${{ env.MYSQL_DATABASE }}.* TO '${{ env.MYSQL_USER }}'@'localhost';"
+          Get-Content sql-files/main.sql | mysql -u root ${{ env.MYSQL_DATABASE }}
+          Get-Content sql-files/logs.sql | mysql -u root ${{ env.MYSQL_DATABASE }}
+
+      - name: build
+        run: |
+          .\tools\ci\windows.ps1 build ${{ matrix.CLIENT_TYPE }} ${{ matrix.PACKET_VERSION}} ${{ matrix.RENEWAL }}
+
+      - name: run
+        run: |
+          .\tools\ci\windows.ps1 run
+
+      - name: test
+        if: matrix.PACKET_VERSION != 'PACKETVER=20130724'
+        run: |
+          .\tools\ci\windows.ps1 test
