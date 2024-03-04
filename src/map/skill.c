@@ -3488,6 +3488,7 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 		case TF_DOUBLE:
 		case GS_CHAINACTION:
 #ifdef RENEWAL
+		//Focused Arrow Strike and Shadow Slash now shows a critical bubble display.
 		case SN_SHARPSHOOTING:
 		case MA_SHARPSHOOTING:
 		case NJ_KIRIKAGE:
