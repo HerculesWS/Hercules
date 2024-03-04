@@ -4605,8 +4605,6 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 	short hitpercbonus = 0;
 
 	struct Damage wd;
-	struct map_session_data *sd = BL_CAST(BL_PC, src);
-	struct map_session_data *tsd = BL_CAST(BL_PC, target);
 	struct status_change *sc = status->get_sc(src);
 	struct status_change *tsc = status->get_sc(target);
 	struct status_data *sstatus = status->get_status_data(src);
@@ -4672,6 +4670,9 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 		sc = NULL; //Skip checking as there are no status changes active.
 	if (tsc && !tsc->count)
 		tsc = NULL; //Skip checking as there are no status changes active.
+
+	struct map_session_data *sd = BL_CAST(BL_PC, src);
+	struct map_session_data *tsd = BL_CAST(BL_PC, target);
 
 	if(sd)
 		wd.blewcount += battle->blewcount_bonus(sd, skill_id);
