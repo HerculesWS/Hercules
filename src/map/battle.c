@@ -4728,7 +4728,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 				break;
 
 			case KN_AUTOCOUNTER:
-				wd.flag = (wd.flag&~BF_SKILLMASK)|BF_NORMAL;
+				wd.flag = (wd.flag & ~BF_SKILLMASK) | BF_NORMAL;
 				break;
 
 			case NPC_CRITICALSLASH:
