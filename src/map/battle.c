@@ -4915,19 +4915,17 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 	}
 
 	//Check for critical
+	if (
 #ifdef RENEWAL
-	if ((battle_config.feature_enable_multi_crit == 1 || !(wd.type&BDT_MULTIHIT)) && sstatus->cri &&
-		(!skill_id ||
-		skill_id == KN_AUTOCOUNTER ||
-		skill_id == SN_SHARPSHOOTING || skill_id == MA_SHARPSHOOTING ||
-		skill_id == NJ_KIRIKAGE))
+		(battle_config.feature_enable_multi_crit == 1 || (wd.type & BDT_MULTIHIT) != 0) &&
 #else
-	if( !flag.cri && wd.type != BDT_MULTIHIT && sstatus->cri &&
+		!flag.cri && wd.type != BDT_MULTIHIT &&
+#endif
+		sstatus->cri &&
 		(!skill_id ||
 		skill_id == KN_AUTOCOUNTER ||
 		skill_id == SN_SHARPSHOOTING || skill_id == MA_SHARPSHOOTING ||
 		skill_id == NJ_KIRIKAGE))
-#endif
 	{
 		short cri = sstatus->cri;
 		if (sd != NULL) {
@@ -4986,10 +4984,11 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 			flag.cri = 1;
 	}
 	if (flag.cri) {
-		if (battle_config.feature_enable_multi_crit == 1)
-			wd.type = (!(wd.type&BDT_MULTIHIT) ? BDT_CRIT : BDT_MULTICRIT);
+		if (battle_config.feature_enable_multi_crit == 1 && (wd.type & BDT_MULTIHIT) != 0)
+			wd.type = BDT_MULTICRIT;
 		else
 			wd.type = BDT_CRIT;
+
 #ifndef RENEWAL
 		flag.idef = flag.idef2 =
 #endif
