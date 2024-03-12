@@ -27964,7 +27964,11 @@ static BUILDIN(openlapineddukddakboxui)
 	}
 
 	if (it == NULL || it->lapineddukddak == NULL) {
-		ShowError("buildin_openlapineddukddakboxui: Item Id %d is not valid\n", it->nameid);
+		if (it != NULL) {
+			ShowError("buildin_openlapineddukddakboxui: Item Id %d is not valid\n", it->nameid);
+		} else {
+			ShowError("buildin_openlapineddukddakboxui: Item is NULL\n");
+		}
 		script->reportfunc(st);
 		script->reportsrc(st);
 		script_pushint(st, false);
@@ -28005,7 +28009,11 @@ static BUILDIN(openlapineupgradeui)
 	}
 
 	if (it == NULL || it->lapineupgrade == NULL) {
-		ShowError("buildin_openlapineupgradeui: Item Id %d is not valid\n", it->nameid);
+		if (it != NULL) {
+			ShowError("buildin_openlapineddukddakboxui: Item Id %d is not valid\n", it->nameid);
+		} else {
+			ShowError("buildin_openlapineddukddakboxui: Item is NULL\n");
+		}
 		script->reportfunc(st);
 		script->reportsrc(st);
 		script_pushint(st, false);
