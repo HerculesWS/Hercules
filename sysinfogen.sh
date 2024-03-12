@@ -190,7 +190,7 @@ case $HERC_PLATFORM in
 			HWDATA="$( system_profiler SPHardwareDataType )"
 			HWDATA_CPU="$( echo "$HWDATA" | grep "Processor Name:" | cut -d: -f2- )"
 			HWDATA_CPUSPEED="$( cleanstring "$( echo "$HWDATA" | grep "Processor Speed:" | cut -d: -f2- )" )"
-			HERC_CORES="$( echo "$HWDATA" | grep "Total Number of Cores:" | cut -d: -f2- )"
+			HERC_CORES="$( echo "$HWDATA" | grep "Total Number of Cores:" | cut -d: -f2- | sed -E 's/ *([0-9]+).*/\1/')"
 			HERC_CPU="${HWDATA_CPU} (${HWDATA_CPUSPEED})"
 		fi
 		;;
@@ -238,7 +238,7 @@ cat >> "$OUTFILE" << EOF
 #define SYSINFO_CPU "$( cleanstring "${HERC_CPU}" )"
 
 // CPU Cores (Platform-dependent)
-#define SYSINFO_CPUCORES ( "$( cleanstring "${HERC_CORES}" )" )
+#define SYSINFO_CPUCORES ( $( cleanstring "${HERC_CORES}" ) )
 
 EOF
 [ $? -eq 0 ] || do_fail
