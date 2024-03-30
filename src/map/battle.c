@@ -504,6 +504,8 @@ static int64 battle_calc_weapon_damage(struct block_list *src, struct block_list
 		if ( sd->battle_status.equip_atk != 0 )
 			eatk = sd->base_status.equip_atk;
 
+		eatk += sd->battle_status.buff_extra_batk;
+
 		if ( sd->bonus.atk_rate )
 			damage += damage * sd->bonus.atk_rate / 100;
 	}

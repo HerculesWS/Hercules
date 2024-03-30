@@ -1137,6 +1137,7 @@ struct status_data {
 	struct weapon_atk rhw, lhw; //Right Hand/Left Hand Weapon.
 #ifdef RENEWAL
 	int equip_atk;
+	int buff_extra_batk; // Extra Base ATK granted by buffs
 #endif
 };
 
@@ -1426,6 +1427,7 @@ struct status_interface {
 	defType (*calc_mdef) (struct block_list *bl, struct status_change *sc, int mdef, bool viewable);
 	short (*calc_mdef2) (struct block_list *bl, struct status_change *sc, int mdef2, bool viewable);
 	int (*calc_batk)(struct block_list *bl, struct status_change *sc, int batk, bool viewable);
+	int (*calc_buff_extra_batk)(struct block_list *bl, struct status_change *sc);
 	int (*base_matk) (struct block_list *bl, const struct status_data *st, int level);
 	int (*get_weapon_atk) (struct block_list *src, struct weapon_atk *watk, int flag);
 	int (*get_total_mdef) (struct block_list *src);
