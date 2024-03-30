@@ -4761,7 +4761,7 @@ static void clif_tradeadditem(struct map_session_data *sd, struct map_session_da
 		p->look = sd->inventory_data[index]->view_sprite;
 #endif  // PACKETVER_MAIN_NUM >= 20161102 || PACKETVER_RE_NUM >= 20161026 || defined(PACKETVER_ZERO)
 #if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
-		p->grade = sd->status.inventory[index].refine;
+		p->grade = sd->status.inventory[index].grade;
 #endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 		clif->addcards(&p->slot, &sd->status.inventory[index]);
 #if PACKETVER >= 20150226
