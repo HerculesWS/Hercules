@@ -22,6 +22,108 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
+### Rebalance changes
+
+All these changes only affect Renewal. Pre-renewal is unchanged.
+
+#### First classes
+
+- Changes from the 2018.10.31 patch (#3218, issue #2725)
+
+##### Swordsman
+
+- Rebalance of `SM_MAGNUM` (Magnum Break)
+  - After skill delay reduced (2 seconds -> 0.5 seconds)
+  - (already implemented) Added 2 seconds of Cooldown
+
+##### Merchant
+
+- Rebalance of `MC_LOUD` (Crazy Uproar)
+  - Change affected players (Caster-only -> All party members in screen range)
+  - Effect changed:
+    - Str +4 (kept as is)
+    - Extra ATK +30 (new effect)
+  - CastTime: None -> 1 second
+  - FixedCastTime: None -> 0.5 seconds
+  - CoolDown: None -> 30 seconds
+
+##### Magician
+
+- Rebalance of `MG_FIREBOLT` (Fire Bolt)
+  - Fixed casting time changed.
+    - Old: `(0.4 + (Skill Level × 0.4)) x 0.2` seconds.
+    - New: `0.2 + (Skill Level × 0.1)` seconds
+  - Variable casting time changed.
+    - Old: `(0.4 + (Skill Level × 0.4)) x 0.8` seconds.
+    - New: `0.2 + (Skill Level × 0.3)` seconds
+  - Global delay of skills changed.
+    - Old: `0.8 + (Skill Level × 0.2)` seconds
+    - New: `1.4` seconds at all skill levels.
+  - Values based on iRO Wiki
+- Rebalance of `MG_COLDBOLT` (Cold Bolt)
+  - Fixed casting time changed.
+    - Old: `(0.4 + (Skill Level × 0.4)) x 0.2` seconds.
+    - New: `0.2 + (Skill Level × 0.1)` seconds
+  - Variable casting time changed.
+    - Old: `(0.4 + (Skill Level × 0.4)) x 0.8` seconds.
+    - New: `0.2 + (Skill Level × 0.3)` seconds
+  - Global delay of skills changed.
+    - Old: `0.8 + (Skill Level × 0.2)` seconds
+    - New: `1.4` seconds at all skill levels.
+  - Values based on iRO Wiki
+- Rebalance of `MG_LIGHTNINGBOLT` (Lightning Bolt)
+  - Fixed casting time changed.
+    - Old: `(0.4 + (Skill Level × 0.4)) x 0.2` seconds.
+    - New: `0.2 + (Skill Level × 0.1)` seconds
+  - Variable casting time changed.
+    - Old: `(0.4 + (Skill Level × 0.4)) x 0.8` seconds.
+    - New: `0.2 + (Skill Level × 0.3)` seconds
+  - Global delay of skills changed.
+    - Old: `0.8 + (Skill Level × 0.2)` seconds
+    - New: `1.4` seconds at all skill levels.
+  - Values based on iRO Wiki
+- Rebalance of `MG_THUNDERSTORM` (Thunder Storm)
+  - Fixed casting time changed.
+    - Old: `(Skill Level × 0.8) x 0.2` seconds.
+    - New: `1.5` seconds at all skill levels.
+  - Variable casting time changed.
+    - Old: `(Skill Level × 0.8) x 0.8` seconds.
+    - New: `2.5 + (Skill Level × 0.2)` seconds
+  - Values based on iRO Wiki
+- Rebalance of MG_FIREBALL (Fire Ball)
+  - Fixed casting time changed.
+    - Old: `0.3` seconds at skill level 1-5, `0.2` seconds at skill level 6-10.
+    - New: `0.2` seconds at all skill levels.
+  - Variable casting time changed.
+    - Old: `1.2` seconds at skill level 1-5, `0.8` seconds at skill level 6-10.
+    - New: `0.8` seconds at all skill levels.
+  - Global delay of skills changed.
+    - Old: `1.5` seconds at skill level 1-5, `1.0` seconds at skill level 6-10.
+    - New: `0.7` seconds at all skill levels.
+- Rebalance of `MG_SOULSTRIKE` (Soul Strike)
+  - Global delay of skills changed.
+    - Old: `1.2` - `2.7` seconds at skill level 1-10.
+    - New: `1.4` seconds at all skill levels.
+- Rebalance of `MG_FROSTDIVER` (Frost Diver)
+  - Global delay of skill changed: `1.5` s -> `0.5` s
+
+##### Acolyte
+
+- Moved bonus calculation of `AB_CLEMENTIA` and `AB_CANTO` to the `sc_start` logic.
+- Rebalance of `AL_BLESSING` (Blessing)
+  - Also increases HIT +2 per skill level
+  - Clementia also gives additional HIT +1 for each 10 job levels
+- Rebalance of `AL_INCAGI` (Increase Agility)
+  - Also increases ASPD +1% per skill level
+  - Canto Candidus also gives additional ASPD +1% for each 10 job levels
+- Rebalance of AL_ANGELUS (Angelus)
+  - Now increases +50 MaxHP per SkillLevel
+  - The increased HP also gets healed
+  - 30s cooldown added
+- Rebalance of `AL_HOLYLIGHT` (Holy Light)
+  - Fixed casting time changed: `0.4` s -> `0.2` s
+  - Variable casting time changed: `1.6` s -> `0.8` s
+
 ## [v2024.03] `March 2024`
 
 ### Added
