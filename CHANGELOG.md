@@ -22,6 +22,28 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
+## [v2024.03] `March 2024`
+
+### Added
+
+- Created a `rebalance` branch to collect all the rebalance-related PRs as there will be inconsistencies in the game until they are all merged.
+  - The code merged into this branch is already production-grade and would have been merged to master other than for consistency reasons.
+  - Those that wish to preview the changes before they are complete are free to use this branch (see its CHANGELOG.md for details of the merged changes so far).
+  - It will be eventually merged into master and will be treated the same way as master (no force-pushes, no history rewrites).
+- Migrated the Hercules GitHub wiki to a new platform (MkDocs) at the URL https://docs.herc.ws/
+  - Contributions are very welcome on the associated repository https://github.com/HerculesWS/hercules-docs
+  - For a syntax reference, see https://squidfunk.github.io/mkdocs-material/reference/
+- Added GitHub Actions CI workflows targeting Visual Studio on Windows. (#3284)
+
+### Changed
+
+- Changed `openlapineupgradeui()` and `openlapineddukddakboxui()` to allow calls without an item id when used in item scripts. (#3272)
+
+### Fixed
+
+- Fixed a regression in the item trade packet (2020+) causing an incorrect item grade to be sent. (#3287, since v2021.12.01)
+- Fixed a build error on Mac computers with different types of cores, such as the 'performance' and 'efficiency' cores of the M series CPUs. (#3271)
+
 ## [v2024.02] `February 2024`
 
 ### Added
@@ -39,10 +61,6 @@ If you are reading this in a text editor, simply ignore this section
 - Fixed a memory leak of emblem data when guilds are unloaded or disbanded. (#3278)
 - Fixed several instances of swapped arguments in `aCalloc()` calls, causing warnings in gcc-14. (#3280)
 - Fixed a regression causing AutoSpell not to replace the selected skill when the new skill has lower level than the previous one. (#3282)
-
-### Deprecated
-
-### Removed
 
 ### Other
 
@@ -3017,6 +3035,7 @@ Note: everything included in this release is part of PR #3198 which consists of 
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2024.03]: https://github.com/HerculesWS/Hercules/compare/v2024.02...v2024.03
 [v2024.02]: https://github.com/HerculesWS/Hercules/compare/v2023.12...v2024.02
 [v2023.12]: https://github.com/HerculesWS/Hercules/compare/v2023.11...v2023.12
 [v2023.11]: https://github.com/HerculesWS/Hercules/compare/v2023.10...v2023.11
