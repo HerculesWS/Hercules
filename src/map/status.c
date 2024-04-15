@@ -3079,14 +3079,22 @@ static void status_calc_bl_main(struct block_list *bl, enum scb_flag flag)
 			;
 	}
 
-	if ((flag & SCB_ATK_PERC) != 0)
+	if ((flag & SCB_ATK_PERC) != 0) {
+		int prev_atk_percent = st->atk_percent;
 		st->atk_percent = status->calc_atk_percent(bl, sc);
+		if (prev_atk_percent != st->atk_percent)
+			clif->updatestatus(sd, SP_ATK1);
+	}
 
 	if ((flag & SCB_MATK_PERC) != 0)
 		st->matk_percent = status->calc_matk_percent(bl, sc);
 
-	if ((flag & SCB_DEF_PERC) != 0)
+	if ((flag & SCB_DEF_PERC) != 0) {
+		int prev_def_percent = st->def_percent;
 		st->def_percent = status->calc_def_percent(bl, sc);
+		if (prev_def_percent != st->def_percent)
+			clif->updatestatus(sd, SP_DEF2);
+	}
 
 	if ((flag & SCB_MDEF_PERC) != 0)
 		st->mdef_percent = status->calc_mdef_percent(bl, sc);
