@@ -92907,11 +92907,11 @@ int HP_status_sc2skill(sc_type sc) {
 	}
 	return retVal___;
 }
-unsigned int HP_status_sc2scb_flag(sc_type sc) {
+enum scb_flag HP_status_sc2scb_flag(sc_type sc) {
 	int hIndex = 0;
-	unsigned int retVal___ = 0;
+	enum scb_flag retVal___ = SCB_NONE;
 	if (HPMHooks.count.HP_status_sc2scb_flag_pre > 0) {
-		unsigned int (*preHookFunc) (sc_type *sc);
+		enum scb_flag (*preHookFunc) (sc_type *sc);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_sc2scb_flag_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_status_sc2scb_flag_pre[hIndex].func;
@@ -92926,7 +92926,7 @@ unsigned int HP_status_sc2scb_flag(sc_type sc) {
 		retVal___ = HPMHooks.source.status.sc2scb_flag(sc);
 	}
 	if (HPMHooks.count.HP_status_sc2scb_flag_post > 0) {
-		unsigned int (*postHookFunc) (unsigned int retVal___, sc_type sc);
+		enum scb_flag (*postHookFunc) (enum scb_flag retVal___, sc_type sc);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_sc2scb_flag_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_status_sc2scb_flag_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, sc);
@@ -94064,11 +94064,11 @@ void HP_status_change_start_display(struct map_session_data *sd, enum sc_type ty
 	}
 	return;
 }
-bool HP_status_change_start_unknown_sc(struct block_list *src, struct block_list *bl, enum sc_type type, int calc_flag, int rate, int val1, int val2, int val3, int val4, int total_tick, int flag) {
+bool HP_status_change_start_unknown_sc(struct block_list *src, struct block_list *bl, enum sc_type type, enum scb_flag calc_flag, int rate, int val1, int val2, int val3, int val4, int total_tick, int flag) {
 	int hIndex = 0;
 	bool retVal___ = false;
 	if (HPMHooks.count.HP_status_change_start_unknown_sc_pre > 0) {
-		bool (*preHookFunc) (struct block_list **src, struct block_list **bl, enum sc_type *type, int *calc_flag, int *rate, int *val1, int *val2, int *val3, int *val4, int *total_tick, int *flag);
+		bool (*preHookFunc) (struct block_list **src, struct block_list **bl, enum sc_type *type, enum scb_flag *calc_flag, int *rate, int *val1, int *val2, int *val3, int *val4, int *total_tick, int *flag);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_change_start_unknown_sc_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_status_change_start_unknown_sc_pre[hIndex].func;
@@ -94083,7 +94083,7 @@ bool HP_status_change_start_unknown_sc(struct block_list *src, struct block_list
 		retVal___ = HPMHooks.source.status.change_start_unknown_sc(src, bl, type, calc_flag, rate, val1, val2, val3, val4, total_tick, flag);
 	}
 	if (HPMHooks.count.HP_status_change_start_unknown_sc_post > 0) {
-		bool (*postHookFunc) (bool retVal___, struct block_list *src, struct block_list *bl, enum sc_type type, int calc_flag, int rate, int val1, int val2, int val3, int val4, int total_tick, int flag);
+		bool (*postHookFunc) (bool retVal___, struct block_list *src, struct block_list *bl, enum sc_type type, enum scb_flag calc_flag, int rate, int val1, int val2, int val3, int val4, int total_tick, int flag);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_change_start_unknown_sc_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_status_change_start_unknown_sc_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, src, bl, type, calc_flag, rate, val1, val2, val3, val4, total_tick, flag);
@@ -95593,6 +95593,114 @@ unsigned short HP_status_calc_luk(struct block_list *bl, struct status_change *s
 	}
 	return retVal___;
 }
+int HP_status_calc_atk_percent(struct block_list *bl, struct status_change *sc) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_status_calc_atk_percent_pre > 0) {
+		int (*preHookFunc) (struct block_list **bl, struct status_change **sc);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_atk_percent_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_status_calc_atk_percent_pre[hIndex].func;
+			retVal___ = preHookFunc(&bl, &sc);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.status.calc_atk_percent(bl, sc);
+	}
+	if (HPMHooks.count.HP_status_calc_atk_percent_post > 0) {
+		int (*postHookFunc) (int retVal___, struct block_list *bl, struct status_change *sc);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_atk_percent_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_status_calc_atk_percent_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, bl, sc);
+		}
+	}
+	return retVal___;
+}
+int HP_status_calc_matk_percent(struct block_list *bl, struct status_change *sc) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_status_calc_matk_percent_pre > 0) {
+		int (*preHookFunc) (struct block_list **bl, struct status_change **sc);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_matk_percent_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_status_calc_matk_percent_pre[hIndex].func;
+			retVal___ = preHookFunc(&bl, &sc);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.status.calc_matk_percent(bl, sc);
+	}
+	if (HPMHooks.count.HP_status_calc_matk_percent_post > 0) {
+		int (*postHookFunc) (int retVal___, struct block_list *bl, struct status_change *sc);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_matk_percent_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_status_calc_matk_percent_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, bl, sc);
+		}
+	}
+	return retVal___;
+}
+int HP_status_calc_def_percent(struct block_list *bl, struct status_change *sc) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_status_calc_def_percent_pre > 0) {
+		int (*preHookFunc) (struct block_list **bl, struct status_change **sc);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_def_percent_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_status_calc_def_percent_pre[hIndex].func;
+			retVal___ = preHookFunc(&bl, &sc);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.status.calc_def_percent(bl, sc);
+	}
+	if (HPMHooks.count.HP_status_calc_def_percent_post > 0) {
+		int (*postHookFunc) (int retVal___, struct block_list *bl, struct status_change *sc);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_def_percent_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_status_calc_def_percent_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, bl, sc);
+		}
+	}
+	return retVal___;
+}
+int HP_status_calc_mdef_percent(struct block_list *bl, struct status_change *sc) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_status_calc_mdef_percent_pre > 0) {
+		int (*preHookFunc) (struct block_list **bl, struct status_change **sc);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_mdef_percent_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_status_calc_mdef_percent_pre[hIndex].func;
+			retVal___ = preHookFunc(&bl, &sc);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.status.calc_mdef_percent(bl, sc);
+	}
+	if (HPMHooks.count.HP_status_calc_mdef_percent_post > 0) {
+		int (*postHookFunc) (int retVal___, struct block_list *bl, struct status_change *sc);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_mdef_percent_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_status_calc_mdef_percent_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, bl, sc);
+		}
+	}
+	return retVal___;
+}
 int HP_status_calc_watk(struct block_list *bl, struct status_change *sc, int watk, bool viewable) {
 	int hIndex = 0;
 	int retVal___ = 0;
@@ -96052,10 +96160,10 @@ int HP_status_calc_ematk(struct block_list *bl, struct status_change *sc, int ma
 	}
 	return retVal___;
 }
-void HP_status_calc_bl_main(struct block_list *bl, int flag) {
+void HP_status_calc_bl_main(struct block_list *bl, enum scb_flag flag) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_status_calc_bl_main_pre > 0) {
-		void (*preHookFunc) (struct block_list **bl, int *flag);
+		void (*preHookFunc) (struct block_list **bl, enum scb_flag *flag);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_bl_main_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_status_calc_bl_main_pre[hIndex].func;
@@ -96070,7 +96178,7 @@ void HP_status_calc_bl_main(struct block_list *bl, int flag) {
 		HPMHooks.source.status.calc_bl_main(bl, flag);
 	}
 	if (HPMHooks.count.HP_status_calc_bl_main_post > 0) {
-		void (*postHookFunc) (struct block_list *bl, int flag);
+		void (*postHookFunc) (struct block_list *bl, enum scb_flag flag);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_bl_main_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_status_calc_bl_main_post[hIndex].func;
 			postHookFunc(bl, flag);
