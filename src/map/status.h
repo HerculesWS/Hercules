@@ -1034,58 +1034,75 @@ enum manner_flags
 	MANNER_NOROOM    = 0x10,
 };
 
-//Define flags for the status_calc_bl function. [Skotlex]
-enum scb_flag
-{
-	SCB_NONE    = 0x00000000,
-	SCB_BASE    = 0x00000001,
-	SCB_MAXHP   = 0x00000002,
-	SCB_MAXSP   = 0x00000004,
-	SCB_STR     = 0x00000008,
-	SCB_AGI     = 0x00000010,
-	SCB_VIT     = 0x00000020,
-	SCB_INT     = 0x00000040,
-	SCB_DEX     = 0x00000080,
-	SCB_LUK     = 0x00000100,
-	SCB_BATK    = 0x00000200,
-	SCB_WATK    = 0x00000400,
-	SCB_MATK    = 0x00000800,
-	SCB_HIT     = 0x00001000,
-	SCB_FLEE    = 0x00002000,
-	SCB_DEF     = 0x00004000,
-	SCB_DEF2    = 0x00008000,
-	SCB_MDEF    = 0x00010000,
-	SCB_MDEF2   = 0x00020000,
-	SCB_SPEED   = 0x00040000,
-	SCB_ASPD    = 0x00080000,
-	SCB_DSPD    = 0x00100000,
-	SCB_CRI     = 0x00200000,
-	SCB_FLEE2   = 0x00400000,
-	SCB_ATK_ELE = 0x00800000,
-	SCB_DEF_ELE = 0x01000000,
-	SCB_MODE    = 0x02000000,
-	SCB_SIZE    = 0x04000000,
-	SCB_RACE    = 0x08000000,
-	SCB_RANGE   = 0x10000000,
-	SCB_REGEN   = 0x20000000,
-	SCB_DYE     = 0x40000000, // force cloth-dye change to 0 to avoid client crashes.
-#if 0 // Currently No SC use it. Also, when this will be implemented, there will be need to change to 64bit variable
-	SCB_BODY    = 0x80000000, // Force bodysStyle change to 0
+#ifndef _MSC_VER
+#define CONST_OR_ENUMVAL(_const_, _val_) _const_ = _val_,
+#else
+#define CONST_OR_ENUMVAL(_const_, _val_) static const uint64_t _const_ = _val_;
 #endif
-	SCB_ATK_PERC  = 0x100000000,
-	SCB_MATK_PERC = 0x200000000,
-	SCB_DEF_PERC  = 0x400000000,
-	SCB_MDEF_PERC = 0x800000000,
 
-	SCB_BATTLE  = 0xF3FFFFFFE,
-	SCB_ALL     = 0xF3FFFFFFF
+#ifndef _MSC_VER
+//Define flags for the status_calc_bl function. [Skotlex]
+enum _scb_flag
+{
+#endif
+	CONST_OR_ENUMVAL(SCB_NONE,    0x00000000)
+	CONST_OR_ENUMVAL(SCB_BASE,    0x00000001)
+	CONST_OR_ENUMVAL(SCB_MAXHP,   0x00000002)
+	CONST_OR_ENUMVAL(SCB_MAXSP,   0x00000004)
+	CONST_OR_ENUMVAL(SCB_STR,     0x00000008)
+	CONST_OR_ENUMVAL(SCB_AGI,     0x00000010)
+	CONST_OR_ENUMVAL(SCB_VIT,     0x00000020)
+	CONST_OR_ENUMVAL(SCB_INT,     0x00000040)
+	CONST_OR_ENUMVAL(SCB_DEX,     0x00000080)
+	CONST_OR_ENUMVAL(SCB_LUK,     0x00000100)
+	CONST_OR_ENUMVAL(SCB_BATK,    0x00000200)
+	CONST_OR_ENUMVAL(SCB_WATK,    0x00000400)
+	CONST_OR_ENUMVAL(SCB_MATK,    0x00000800)
+	CONST_OR_ENUMVAL(SCB_HIT,     0x00001000)
+	CONST_OR_ENUMVAL(SCB_FLEE,    0x00002000)
+	CONST_OR_ENUMVAL(SCB_DEF,     0x00004000)
+	CONST_OR_ENUMVAL(SCB_DEF2,    0x00008000)
+	CONST_OR_ENUMVAL(SCB_MDEF,    0x00010000)
+	CONST_OR_ENUMVAL(SCB_MDEF2,   0x00020000)
+	CONST_OR_ENUMVAL(SCB_SPEED,   0x00040000)
+	CONST_OR_ENUMVAL(SCB_ASPD,    0x00080000)
+	CONST_OR_ENUMVAL(SCB_DSPD,    0x00100000)
+	CONST_OR_ENUMVAL(SCB_CRI,     0x00200000)
+	CONST_OR_ENUMVAL(SCB_FLEE2,   0x00400000)
+	CONST_OR_ENUMVAL(SCB_ATK_ELE, 0x00800000)
+	CONST_OR_ENUMVAL(SCB_DEF_ELE, 0x01000000)
+	CONST_OR_ENUMVAL(SCB_MODE,    0x02000000)
+	CONST_OR_ENUMVAL(SCB_SIZE,    0x04000000)
+	CONST_OR_ENUMVAL(SCB_RACE,    0x08000000)
+	CONST_OR_ENUMVAL(SCB_RANGE,   0x10000000)
+	CONST_OR_ENUMVAL(SCB_REGEN,   0x20000000)
+	CONST_OR_ENUMVAL(SCB_DYE,     0x40000000) // force cloth-dye change to 0 to avoid client crashes.
+#if 0 // Currently No SC use it. Also, when this will be implemented, there will be need to change to 64bit variable
+	CONST_OR_ENUMVAL(SCB_BODY,    0x80000000) // Force bodysStyle change to 0
+#endif
+	CONST_OR_ENUMVAL(SCB_ATK_PERC,  0x100000000)
+	CONST_OR_ENUMVAL(SCB_MATK_PERC, 0x200000000)
+	CONST_OR_ENUMVAL(SCB_DEF_PERC,  0x400000000)
+	CONST_OR_ENUMVAL(SCB_MDEF_PERC, 0x800000000)
+
+	CONST_OR_ENUMVAL(SCB_BATTLE,    0xF3FFFFFFE)
+	CONST_OR_ENUMVAL(SCB_ALL,       0xF3FFFFFFF)
+#ifndef _MSC_VER
 };
+#endif
 
-STATIC_ASSERT(sizeof(enum scb_flag) > 4, "The compiler doesn't support enums larger than 32 bits");
-STATIC_ASSERT(sizeof(SCB_ATK_PERC) > 4, "The compiler doesn't support enums larger than 32 bits");
-STATIC_ASSERT(sizeof(SCB_MATK_PERC) > 4, "The compiler doesn't support enums larger than 32 bits");
-STATIC_ASSERT(sizeof(SCB_DEF_PERC) > 4, "The compiler doesn't support enums larger than 32 bits");
-STATIC_ASSERT(sizeof(SCB_MDEF_PERC) > 4, "The compiler doesn't support enums larger than 32 bits");
+#ifndef _MSC_VER
+	typedef enum _scb_flag e_scb_flag;
+#else
+	typedef uint64_t e_scb_flag;
+#endif
+#undef CONST_OR_ENUMVAL
+
+STATIC_ASSERT(sizeof(e_scb_flag) > 4, "e_scb_flag values need to be larger than 32 bits.");
+STATIC_ASSERT(sizeof(SCB_ATK_PERC) > 4, "e_scb_flag values need to be larger than 32 bits.");
+STATIC_ASSERT(sizeof(SCB_MATK_PERC) > 4, "e_scb_flag values need to be larger than 32 bits.");
+STATIC_ASSERT(sizeof(SCB_DEF_PERC) > 4, "e_scb_flag values need to be larger than 32 bits.");
+STATIC_ASSERT(sizeof(SCB_MDEF_PERC) > 4, "e_scb_flag values need to be larger than 32 bits.");
 
 //Regen related flags.
 enum e_regen {
@@ -1292,7 +1309,7 @@ struct status_change {
 
 #define status_change_end(bl,type,tid) (status->change_end_((bl),(type),(tid)))
 
-#define status_calc_bl(bl, flag)        (status->calc_bl_((bl), (enum scb_flag)(flag), SCO_NONE))
+#define status_calc_bl(bl, flag)        (status->calc_bl_((bl), (e_scb_flag)(flag), SCO_NONE))
 #define status_calc_mob(md, opt)        (status->calc_bl_(&(md)->bl, SCB_ALL, (opt)))
 #define status_calc_pet(pd, opt)        (status->calc_bl_(&(pd)->bl, SCB_ALL, (opt)))
 #define status_calc_pc(sd, opt)         (status->calc_bl_(&(sd)->bl, SCB_ALL, (opt)))
@@ -1329,7 +1346,7 @@ BEGIN_ZEROED_BLOCK; /* Everything within this block will be memset to 0 when sta
 		int id;
 		int relevant_bl_types;
 	} IconChangeTable[SC_MAX];
-	enum scb_flag ChangeFlagTable[SC_MAX]; // status -> flags
+	e_scb_flag ChangeFlagTable[SC_MAX]; // status -> flags
 	int SkillChangeTable[SC_MAX];         // status -> skill
 	bool DisplayType[SC_MAX];
 	/* */
@@ -1365,7 +1382,7 @@ struct status_interface {
 	/* funcs */
 	// for looking up associated data
 	int (*sc2skill) (sc_type sc);
-	enum scb_flag (*sc2scb_flag) (sc_type sc);
+	e_scb_flag (*sc2scb_flag) (sc_type sc);
 	int (*get_sc_relevant_bl_types) (sc_type type);
 	int (*get_sc_type) (sc_type idx);
 	int (*get_sc_icon) (sc_type type);
@@ -1410,13 +1427,13 @@ struct status_interface {
 	int (*change_start_set_option) (struct block_list *bl, struct status_change* sc, enum sc_type type, int val1, int val2, int val3, int val4);
 	int (*get_val_flag) (enum sc_type type);
 	void (*change_start_display) (struct map_session_data *sd, enum sc_type type, int val1, int val2, int val3, int val4);
-	bool (*change_start_unknown_sc) (struct block_list *src, struct block_list *bl, enum sc_type type, enum scb_flag calc_flag, int rate, int val1, int val2, int val3, int val4, int total_tick, int flag);
+	bool (*change_start_unknown_sc) (struct block_list *src, struct block_list *bl, enum sc_type type, e_scb_flag calc_flag, int rate, int val1, int val2, int val3, int val4, int total_tick, int flag);
 	int (*kaahi_heal_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*change_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*change_timer_sub) (struct block_list* bl, va_list ap);
 	int (*change_clear) (struct block_list* bl, int type);
 	int (*change_clear_buffs) (struct block_list* bl, int type);
-	void (*calc_bl_) (struct block_list *bl, enum scb_flag flag, enum e_status_calc_opt opt);
+	void (*calc_bl_) (struct block_list *bl, e_scb_flag flag, enum e_status_calc_opt opt);
 	int (*calc_mob_) (struct mob_data* md, enum e_status_calc_opt opt);
 	int (*calc_pet_) (struct pet_data* pd, enum e_status_calc_opt opt);
 	int (*calc_pc_) (struct map_session_data* sd, enum e_status_calc_opt opt);
@@ -1489,7 +1506,7 @@ struct status_interface {
 	unsigned char (*calc_element_lv) (struct block_list *bl, struct status_change *sc, int lv);
 	uint32 (*calc_mode) (const struct block_list *bl, const struct status_change *sc, uint32 mode);
 	int (*calc_ematk) (struct block_list *bl, struct status_change *sc, int matk);
-	void (*calc_bl_main) (struct block_list *bl, enum scb_flag flag);
+	void (*calc_bl_main) (struct block_list *bl, e_scb_flag flag);
 	void (*display_add) (struct map_session_data *sd, enum sc_type type, int dval1, int dval2, int dval3);
 	void (*display_remove) (struct map_session_data *sd, enum sc_type type);
 	int (*natural_heal) (struct block_list *bl, va_list args);

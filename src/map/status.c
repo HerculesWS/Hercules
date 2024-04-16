@@ -87,9 +87,9 @@ static int status_sc2skill(sc_type sc)
 /**
  * Returns the status calculation flag associated with a given status change.
  * @param sc The status to look up
- * @return The scb_flag registered for this status (see enum scb_flag)
+ * @return The scb_flag registered for this status (see e_scb_flag)
  */
-static enum scb_flag status_sc2scb_flag(sc_type sc)
+static e_scb_flag status_sc2scb_flag(sc_type sc)
 {
 	if( sc < 0 || sc >= SC_MAX ) {
 		ShowError("status_sc2scb_flag: Unsupported status change id %d\n", sc);
@@ -2987,8 +2987,8 @@ static void status_calc_regen_rate(struct block_list *bl, struct regen_data *reg
 #define status_get_homluk(st, hd) ((st)->luk + (hd)->homunculus.luk_value)
 
 /// Recalculates parts of an object's battle status according to the specified flags.
-/// @param flag bitfield of values from enum scb_flag
-static void status_calc_bl_main(struct block_list *bl, enum scb_flag flag)
+/// @param flag bitfield of values from e_scb_flag
+static void status_calc_bl_main(struct block_list *bl, e_scb_flag flag)
 {
 	const struct status_data *bst = status->get_base_status(bl);
 	struct status_data *st = status->get_status_data(bl);
@@ -3410,9 +3410,9 @@ static void status_calc_bl_main(struct block_list *bl, enum scb_flag flag)
 
 /// Recalculates parts of an object's base status and battle status according to the specified flags.
 /// Also sends updates to the client wherever applicable.
-/// @param flag bitfield of values from enum scb_flag
+/// @param flag bitfield of values from e_scb_flag
 /// @param first if true, will cause status_calc_* functions to run their base status initialization code
-static void status_calc_bl_(struct block_list *bl, enum scb_flag flag, enum e_status_calc_opt opt)
+static void status_calc_bl_(struct block_list *bl, e_scb_flag flag, enum e_status_calc_opt opt)
 {
 	struct status_data bst; // previous battle status
 	struct status_data *st; // pointer to current battle status
@@ -7092,7 +7092,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 	struct status_data *st;
 	struct view_data *vd;
 	int opt_flag, undead_flag, val_flag = 0, tick_time = 0;
-	enum scb_flag calc_flag = SCB_NONE;
+	e_scb_flag calc_flag = SCB_NONE;
 
 	nullpo_ret(bl);
 	sc = status->get_sc(bl);
@@ -9790,7 +9790,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 	return 1;
 }
 
-static bool status_change_start_unknown_sc(struct block_list *src, struct block_list *bl, enum sc_type type, enum scb_flag calc_flag, int rate, int val1, int val2, int val3, int val4, int total_tick, int flag)
+static bool status_change_start_unknown_sc(struct block_list *src, struct block_list *bl, enum sc_type type, e_scb_flag calc_flag, int rate, int val1, int val2, int val3, int val4, int total_tick, int flag)
 {
 	Assert_retr(false, type >= SC_NONE && type < SC_MAX);
 	if (calc_flag == SCB_NONE && status->dbs->SkillChangeTable[type] == 0 && status->get_sc_icon(type) == SI_BLANK) {
@@ -10819,7 +10819,7 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 	struct view_data *vd;
 	int opt_flag=0;
 	bool invisible = false;
-	enum scb_flag calc_flag = SCB_NONE;
+	e_scb_flag calc_flag = SCB_NONE;
 
 	nullpo_ret(bl);
 
@@ -14121,7 +14121,7 @@ static bool status_read_scdb_libconfig_sub_calcflag(struct config_setting_t *it,
 
 		struct {
 			const char *name;
-			enum scb_flag value;
+			e_scb_flag value;
 		} flags[] = {
 			{ "None", SCB_NONE },
 			{ "Base", SCB_BASE },

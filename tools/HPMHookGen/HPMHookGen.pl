@@ -250,7 +250,7 @@ sub parse($$) {
 			$rtinit = ' = UNIT_DIR_UNDEFINED';
 		} elsif ($x =~ /^enum\s+quest_mobtype$/) { # Known enum quest_mobtype
 			$rtinit = ' = QMT_RC_DEMIHUMAN';
-		} elsif ($x =~ /^enum\s+scb_flag$/) { # Known enum scb_flag
+		} elsif ($x =~ /^e_scb_flag$/) { # Known typedef e_scb_flag
 			$rtinit = ' = SCB_NONE';
 		} elsif ($x eq 'DBComparator' or $x eq 'DBHasher' or $x eq 'DBReleaser') { # DB function pointers
 			$rtinit = ' = NULL';
