@@ -5532,6 +5532,18 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 				}
 			}
 				break;
+
+			case MO_INVESTIGATE: {
+				// Based on in-game tests, RENEWAL Occult Impact has its base ATK increased by 50% of target's hard def
+				// In other words: (ATK + (Target_HardDef / 2)) * SkillRatio
+				defType hardDef = status->get_def(target);
+				hardDef = status->calc_def2(target, tsc, hardDef, false);
+
+				ATK_ADD(hardDef / 2);
+				ATK_RATE(battle->calc_skillratio(BF_WEAPON, src, target, skill_id, skill_lv, skillratio, wflag));
+				break;
+			}
+
 			case PA_SHIELDCHAIN:
 				GET_NORMAL_ATTACK((sc && sc->data[SC_MAXIMIZEPOWER] ? 1 : 0) | (sc && sc->data[SC_WEAPONPERFECT] ? 8 : 0), skill_id);
 				if ( sd ) {
