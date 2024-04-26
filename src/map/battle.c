@@ -826,6 +826,13 @@ static int64 battle_calc_masteryfix(struct block_list *src, struct block_list *t
 	nullpo_ret(src);
 	nullpo_ret(target);
 
+#ifdef RENEWAL
+	// In renewal, Occult Impact doesn't get extra damage by any mastery, not even weapon ones
+	if (skill_id == MO_INVESTIGATE)
+		return damage;
+#endif
+
+
 	sc = status->get_sc(src);
 	sd = BL_CAST(BL_PC, src);
 	tstatus = status->get_status_data(target);
@@ -2248,8 +2255,20 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 				case MO_FINGEROFFENSIVE:
 					skillratio+= 50 * skill_lv;
 					break;
-				case MO_INVESTIGATE:
+				case MO_INVESTIGATE: {
+#ifndef RENEWAL
 					skillratio += 75 * skill_lv;
+#else
+					int ratio = skill_lv * 100;
+
+					// Cast and Target must be locked in BladeStop.
+					// In other words: A third player won't do extra damage from hitting another Monk's blade stop
+					if (tsc != NULL && tsc->data[SC_BLADESTOP] != NULL && sc->data[SC_BLADESTOP] != NULL)
+						ratio += ratio * 50 / 100;
+
+					skillratio += - 100 + ratio;
+#endif
+				}
 					break;
 				case MO_EXTREMITYFIST:
 	#ifndef RENEWAL
