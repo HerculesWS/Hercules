@@ -8103,6 +8103,7 @@ static void clif_devotion(struct block_list *src, struct map_session_data *tsd)
  * Server tells clients nearby 'sd' (and itself) to display soulballs.
  * Notifies clients in an area or self of an object's soulballs.
  * 01d0 <id>.L <amount>.W (ZC_SPIRITS)
+ * 0b73 <id>.L <amount>.W (ZC_SOULENERGY)
  *
  * @param bl        Source block list.
  * @param soulballs amount of soulballs
@@ -8112,12 +8113,17 @@ static void clif_soulball(struct block_list *bl, int soulballs, enum send_target
 {
 	nullpo_retv(bl);
 
+#if PACKETVER_MAIN_NUM >= 20200414 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20200506
+	struct PACKET_ZC_SOULENERGY p = { 0 };
+	p.PacketType = HEADER_ZC_SOULENERGY;
+#else
 	struct PACKET_ZC_SPIRITS p = { 0 };
-
 	p.PacketType = HEADER_ZC_SPIRITS;
+#endif
+
 	p.AID = bl->id;
 	p.num = soulballs;
-	clif->send(&p, sizeof(struct PACKET_ZC_SPIRITS), bl, target);
+	clif->send(&p, sizeof(p), bl, target);
 }
 
 /**
