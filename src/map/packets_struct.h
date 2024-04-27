@@ -5558,6 +5558,13 @@ struct PACKET_ZC_SPIRITS {
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(ZC_SPIRITS, 0x01d0)
 
+struct PACKET_ZC_SPIRITS2 {
+	int16 PacketType;
+	uint32 AID;
+	int16 num;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_SPIRITS2, 0x01e1)
+
 #if PACKETVER_MAIN_NUM >= 20200414 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20200506
 struct PACKET_ZC_SOULENERGY {
 	int16 PacketType;

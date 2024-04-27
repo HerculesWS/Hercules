@@ -1503,11 +1503,13 @@ static void clif_class_change(struct block_list *bl, int class_, int type, struc
 static void clif_spiritball_single(int fd, struct map_session_data *sd)
 {
 	nullpo_retv(sd);
-	WFIFOHEAD(fd, packet_len(0x1e1));
-	WFIFOW(fd,0)=0x1e1;
-	WFIFOL(fd,2)=sd->bl.id;
-	WFIFOW(fd,6)=sd->spiritball;
-	WFIFOSET(fd, packet_len(0x1e1));
+
+	struct PACKET_ZC_SPIRITS2 p = { 0 };
+
+	p.PacketType = HEADER_ZC_SPIRITS2;
+	p.AID = sd->bl.id;
+	p.num = sd->spiritball;
+	clif->send(&p, sizeof(p), &sd->bl, SELF);
 }
 
 /*==========================================
