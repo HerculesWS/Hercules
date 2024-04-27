@@ -5962,6 +5962,33 @@ static int status_get_lv(const struct block_list *bl)
 	return 1;
 }
 
+/**
+ * Get the number of spirit balls of bl
+ * @param bl unit to get spirit balls from
+ * @returns number of spirit balls. block_list that doesn't hold spirit balls always returns 0.
+ */
+static int status_get_spiritballs(const struct block_list *bl)
+{
+	nullpo_ret(bl);
+
+	switch (bl->type) {
+		case BL_PC:  return BL_UCCAST(BL_PC, bl)->spiritball;
+		case BL_HOM: return BL_UCCAST(BL_HOM, bl)->homunculus.spiritball;
+		case BL_MOB:
+		case BL_PET:
+		case BL_MER:
+		case BL_ELEM:
+		case BL_NPC:
+		case BL_NUL:
+		case BL_CHAT:
+		case BL_SKILL:
+		case BL_ITEM:
+		case BL_ALL:
+			break;
+	}
+	return 0;
+}
+
 static struct regen_data *status_get_regen_data(struct block_list *bl)
 {
 	nullpo_retr(NULL, bl);
@@ -14461,6 +14488,7 @@ void status_defaults(void)
 	status->get_name = status_get_name;
 	status->get_class = status_get_class;
 	status->get_lv = status_get_lv;
+	status->get_spiritballs = status_get_spiritballs;
 	status->get_def = status_get_def;
 	status->get_speed = status_get_speed;
 	status->calc_attack_element = status_calc_attack_element;

@@ -15108,14 +15108,14 @@ void HP_clif_devotion(struct block_list *src, struct map_session_data *tsd) {
 	}
 	return;
 }
-void HP_clif_spiritball(struct block_list *bl, enum spirit_ball_types spirit, enum send_target target) {
+void HP_clif_soulballs(struct block_list *bl, int soulballs, enum send_target target) {
 	int hIndex = 0;
-	if (HPMHooks.count.HP_clif_spiritball_pre > 0) {
-		void (*preHookFunc) (struct block_list **bl, enum spirit_ball_types *spirit, enum send_target *target);
+	if (HPMHooks.count.HP_clif_soulballs_pre > 0) {
+		void (*preHookFunc) (struct block_list **bl, int *soulballs, enum send_target *target);
 		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_spiritball_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_clif_spiritball_pre[hIndex].func;
-			preHookFunc(&bl, &spirit, &target);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_soulballs_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_soulballs_pre[hIndex].func;
+			preHookFunc(&bl, &soulballs, &target);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -15123,13 +15123,39 @@ void HP_clif_spiritball(struct block_list *bl, enum spirit_ball_types spirit, en
 		}
 	}
 	{
-		HPMHooks.source.clif.spiritball(bl, spirit, target);
+		HPMHooks.source.clif.soulballs(bl, soulballs, target);
 	}
-	if (HPMHooks.count.HP_clif_spiritball_post > 0) {
-		void (*postHookFunc) (struct block_list *bl, enum spirit_ball_types spirit, enum send_target target);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_spiritball_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_clif_spiritball_post[hIndex].func;
-			postHookFunc(bl, spirit, target);
+	if (HPMHooks.count.HP_clif_soulballs_post > 0) {
+		void (*postHookFunc) (struct block_list *bl, int soulballs, enum send_target target);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_soulballs_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_soulballs_post[hIndex].func;
+			postHookFunc(bl, soulballs, target);
+		}
+	}
+	return;
+}
+void HP_clif_spiritballs(struct block_list *bl, int spiritballs, enum send_target target) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_spiritballs_pre > 0) {
+		void (*preHookFunc) (struct block_list **bl, int *spiritballs, enum send_target *target);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_spiritballs_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_spiritballs_pre[hIndex].func;
+			preHookFunc(&bl, &spiritballs, &target);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.spiritballs(bl, spiritballs, target);
+	}
+	if (HPMHooks.count.HP_clif_spiritballs_post > 0) {
+		void (*postHookFunc) (struct block_list *bl, int spiritballs, enum send_target target);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_spiritballs_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_spiritballs_post[hIndex].func;
+			postHookFunc(bl, spiritballs, target);
 		}
 	}
 	return;
@@ -93388,6 +93414,33 @@ int HP_status_get_lv(const struct block_list *bl) {
 		int (*postHookFunc) (int retVal___, const struct block_list *bl);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_get_lv_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_status_get_lv_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, bl);
+		}
+	}
+	return retVal___;
+}
+int HP_status_get_spiritballs(const struct block_list *bl) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_status_get_spiritballs_pre > 0) {
+		int (*preHookFunc) (const struct block_list **bl);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_get_spiritballs_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_status_get_spiritballs_pre[hIndex].func;
+			retVal___ = preHookFunc(&bl);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.status.get_spiritballs(bl);
+	}
+	if (HPMHooks.count.HP_status_get_spiritballs_post > 0) {
+		int (*postHookFunc) (int retVal___, const struct block_list *bl);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_get_spiritballs_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_status_get_spiritballs_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, bl);
 		}
 	}

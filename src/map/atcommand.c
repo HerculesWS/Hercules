@@ -3503,7 +3503,7 @@ ACMD(spiritball)
 	if( sd->spiritball > 0 )
 		pc->delspiritball(sd, sd->spiritball, 1);
 	sd->spiritball = number;
-	clif->spiritball(&sd->bl, BALL_TYPE_SPIRIT, AREA);
+	clif->spiritballs(&sd->bl, sd->spiritball, AREA);
 	// no message, player can look the difference
 
 	return true;

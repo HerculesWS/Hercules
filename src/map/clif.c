@@ -1607,9 +1607,9 @@ static bool clif_spawn(struct block_list *bl)
 			struct map_session_data *sd = BL_UCAST(BL_PC, bl);
 			int i;
 			if (sd->spiritball > 0)
-				clif->spiritball(&sd->bl, BALL_TYPE_SPIRIT, AREA);
+				clif->spiritballs(&sd->bl, sd->spiritball, AREA);
 			if (sd->soulball > 0)
-				clif->spiritball(&sd->bl, BALL_TYPE_SOUL, AREA);
+				clif->soulballs(&sd->bl, sd->soulball, AREA);
 			if (sd->state.size == SZ_BIG) // tiny/big players [Valaris]
 				clif->specialeffect(bl,423,AREA);
 			else if (sd->state.size == SZ_MEDIUM)
@@ -4959,7 +4959,7 @@ static void clif_getareachar_pc(struct map_session_data *sd, struct map_session_
 	if (dstsd->charm_type != CHARM_TYPE_NONE && dstsd->charm_count > 0)
 		clif->charm_single(sd->fd, dstsd);
 	if (dstsd->soulball > 0)
-		clif->spiritball(&sd->bl, BALL_TYPE_SOUL, AREA);
+		clif->soulballs(&sd->bl, sd->soulball, AREA);
 	for( i = 0; i < dstsd->sc_display_count; i++ ) {
 		clif->sc_continue(&sd->bl, dstsd->bl.id, SELF, status->get_sc_icon(dstsd->sc_display[i]->type), dstsd->sc_display[i]->val1, dstsd->sc_display[i]->val2, dstsd->sc_display[i]->val3);
 	}
@@ -8099,17 +8099,16 @@ static void clif_devotion(struct block_list *src, struct map_session_data *tsd)
 		clif->send(buf, packet_len(0x1cf), src, AREA);
 }
 
- /**
-  * Server tells clients nearby 'sd' (and itself) to display spirits spheres
-  * Notifies clients in an area or self of an object's spirits.
-  * 01d0 <id>.L <amount>.W (ZC_SPIRITS)
-  * 01e1 <id>.L <amount>.W (ZC_SPIRITS2)
-  *
-  * @param bl     Source block list.
-  * @param spirit Type of spirit data from sd.
-  * @param target Either target is AREA or SELF.
-  */
-static void clif_spiritball(struct block_list *bl, enum spirit_ball_types spirit, enum send_target target)
+/**
+ * Server tells clients nearby 'sd' (and itself) to display soulballs.
+ * Notifies clients in an area or self of an object's soulballs.
+ * 01d0 <id>.L <amount>.W (ZC_SPIRITS)
+ *
+ * @param bl        Source block list.
+ * @param soulballs amount of soulballs
+ * @param target    Either target is AREA or SELF.
+ */
+static void clif_soulball(struct block_list *bl, int soulballs, enum send_target target)
 {
 	nullpo_retv(bl);
 
@@ -8117,47 +8116,30 @@ static void clif_spiritball(struct block_list *bl, enum spirit_ball_types spirit
 
 	p.PacketType = HEADER_ZC_SPIRITS;
 	p.AID = bl->id;
-	p.num = 0;
-	switch (bl->type) {
-	case BL_PC:
-	{
-		struct map_session_data *sd = BL_CAST(BL_PC, bl);
-		nullpo_retv(sd);
+	p.num = soulballs;
+	clif->send(&p, sizeof(struct PACKET_ZC_SPIRITS), bl, target);
+}
 
-		switch (spirit) {
-		case BALL_TYPE_SPIRIT:
-			p.num = sd->spiritball;
-			break;
-		case BALL_TYPE_SOUL:
-			p.AID = sd->bl.id;
-			p.num = sd->soulball;
-			break;
-		case BALL_TYPE_NONE:
-			break;
-		}
-		clif->send(&p, sizeof(struct PACKET_ZC_SPIRITS), ((bl == NULL && spirit == BALL_TYPE_SOUL) ? &sd->bl : bl), (spirit == BALL_TYPE_SPIRIT ? AREA : target));
-		break;
-	}
-	case BL_HOM:
-	{
-		struct homun_data *hd = BL_CAST(BL_HOM, bl);
-		nullpo_retv(hd);
-		p.num = hd->homunculus.spiritball;
-	}
-	FALLTHROUGH
-	case BL_NUL:
-	case BL_ITEM:
-	case BL_NPC:
-	case BL_ELEM:
-	case BL_SKILL:
-	case BL_CHAT:
-	case BL_MOB:
-	case BL_PET:
-	case BL_MER:
-	case BL_ALL:
-		clif->send(&p, sizeof(struct PACKET_ZC_SPIRITS), bl, AREA);
-		break;
-	}
+/**
+ * Server tells clients nearby 'sd' (and itself) to display spirits spheres
+ * Notifies clients in an area or self of an object's spirits.
+ * 01d0 <id>.L <amount>.W (ZC_SPIRITS)
+ * 01e1 <id>.L <amount>.W (ZC_SPIRITS2)
+ *
+ * @param bl          Source block list.
+ * @param spiritballs Number of spirit spheres
+ * @param target      Either target is AREA or SELF.
+ */
+static void clif_spiritballs(struct block_list *bl, int spiritballs, enum send_target target)
+{
+	nullpo_retv(bl);
+
+	struct PACKET_ZC_SPIRITS p = { 0 };
+
+	p.PacketType = HEADER_ZC_SPIRITS;
+	p.AID = bl->id;
+	p.num = spiritballs;
+	clif->send(&p, sizeof(struct PACKET_ZC_SPIRITS), bl, target);
 }
 
 /// Notifies clients in area of a character's combo delay (ZC_COMBODELAY).
@@ -9761,7 +9743,7 @@ static void clif_refresh(struct map_session_data *sd)
 	if (sd->charm_type != CHARM_TYPE_NONE && sd->charm_count > 0)
 		clif->charm_single(sd->fd, sd);
 	if (sd->soulball > 0)
-		clif->spiritball(&sd->bl, BALL_TYPE_SOUL, SELF);
+		clif->soulballs(&sd->bl, sd->soulball, SELF);
 
 	if (sd->vd.cloth_color)
 		clif->refreshlook(&sd->bl,sd->bl.id,LOOK_CLOTHES_COLOR,sd->vd.cloth_color,SELF);
@@ -26696,7 +26678,8 @@ void clif_defaults(void)
 	clif->useskill = clif_useskill;
 	clif->produce_effect = clif_produceeffect;
 	clif->devotion = clif_devotion;
-	clif->spiritball = clif_spiritball;
+	clif->soulballs = clif_soulball;
+	clif->spiritballs = clif_spiritballs;
 	clif->spiritball_single = clif_spiritball_single;
 	clif->bladestop = clif_bladestop;
 	clif->mvp_effect = clif_mvp_effect;
