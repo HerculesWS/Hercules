@@ -7418,6 +7418,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			case SC_RESIST_PROPERTY_WIND:
 			case SC_FLASHKICK:
 			case SC_SOULUNITY:
+			case SC__AUTOSHADOWSPELL: // otherwise you can't change your shadow spell to a lower skill_id
 				break;
 			case SC_GOSPEL:
 				//Must not override a casting gospel char.
