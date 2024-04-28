@@ -20928,7 +20928,8 @@ static void clif_parse_SkillSelectMenu(int fd, struct map_session_data *sd)
 		return;
 	}
 
-	skill->select_menu(sd,RFIFOW(fd,6));
+	const struct PACKET_CZ_SKILL_SELECT_RESPONSE *p = RP2PTR(fd);
+	skill->select_menu(sd, p->selectedSkillId);
 
 	clif_menuskill_clear(sd);
 }
