@@ -143,7 +143,7 @@ enum e_skill_inf2 {
 	INF2_HIDDEN_TRAP        = 0x00080000, ///< Traps that are hidden (based on trap_visiblity battle conf)
 	INF2_IS_COMBO_SKILL     = 0x00100000, ///< Sets whether a skill can be used in combos or not
 	INF2_NO_STASIS          = 0x00200000,
-	INF2_NO_KAGEHUMI        = 0x00400000, 
+	INF2_NO_KAGEHUMI        = 0x00400000,
 	INF2_RANGE_VULTURE      = 0x00800000, ///< Range is modified by AC_VULTURE
 	INF2_RANGE_SNAKEEYE     = 0x01000000, ///< Range is modified by GS_SNAKEEYE
 	INF2_RANGE_SHADOWJUMP   = 0x02000000, ///< Range is modified by NJ_SHADOWJUMP
@@ -2067,6 +2067,7 @@ struct skill_interface {
 	int unit_group_newid;
 	/* accesssors */
 	int (*get_index) (int skill_id);
+	int (*get_index_sub) (int skill_id, bool report_errors);
 	int (*get_type) (int skill_id, int skill_lv);
 	int (*get_hit) (int skill_id, int skill_lv);
 	int (*get_inf) (int skill_id);
