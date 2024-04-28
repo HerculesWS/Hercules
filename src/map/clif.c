@@ -20929,6 +20929,19 @@ static void clif_parse_SkillSelectMenu(int fd, struct map_session_data *sd)
 	}
 
 	const struct PACKET_CZ_SKILL_SELECT_RESPONSE *p = RP2PTR(fd);
+
+	/* selectedSkillId is 0 when cancel is clicked.
+	 *
+	 * Some clients (observed in PACKETVER < 2020) sends random skill ids if you click "ok"
+	 * without selecting a skill. This check prevents the skill logic from running and generating bad reports.
+	 */
+	if (p->selectedSkillId == 0 || skill->get_index_sub(p->selectedSkillId, false) == 0) {
+		status_change_end(&sd->bl, SC_STOP, INVALID_TIMER);
+		clif->skill_fail(sd, sd->ud.skill_id, 0, 0, 0);
+		clif_menuskill_clear(sd);
+		return;
+	}
+
 	skill->select_menu(sd, p->selectedSkillId);
 
 	clif_menuskill_clear(sd);
