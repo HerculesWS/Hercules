@@ -20868,7 +20868,7 @@ static int clif_autoshadowspell_list(struct map_session_data *sd)
 
 		len = c * sizeof(*p->skillIds) + sizeof(*p);
 		p->packetLength = len;
-		p->flag = c;
+		p->flag = 1; // 1 = auto shadow spell
 
 		WFIFOSET(fd, len);
 	} else {
