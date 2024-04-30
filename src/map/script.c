@@ -9134,6 +9134,74 @@ static BUILDIN(grouprandomitem)
 }
 
 /*==========================================
+ * getitemgroupitems <reference array of item_id>, <item_group_id>;
+ *------------------------------------------*/
+static BUILDIN(getitemgroupitems)
+{
+	struct script_data* data = script_getdata(st, 2);
+
+	if (!data_isreference(data)) {
+		ShowError("buildin_getitemgroupitems: not a variable\n");
+		script->reportdata(data);
+		script_pushnil(st);
+		st->state = END;
+		return false;// not a variable
+	}
+
+	int32 idata = reference_getindex(data);
+	int32 dataid = reference_getid(data);
+	const char *data_name = reference_getname(data);
+
+	if (not_server_variable(*data_name)) {
+		if (script->rid2sd(st) == NULL) {
+			// no player attached
+			script_pushint(st, 0);
+			return false;
+		}
+	}
+
+	if (is_string_variable(data_name)) {
+		// string array
+		ShowError("buildin_getitemgroupitems: not an integer array reference\n");
+		script->reportdata(data);
+		st->state = END;
+		return false;
+	}
+
+	int nameid = script_getnum(st, 3);
+	struct item_data *item = itemdb->exists(nameid);
+	if (item == NULL) {
+		ShowError("buildin_getitemgroupitems: invalid item %d\n", nameid);
+		script_pushint(st, 0);
+		return false;
+	}
+
+	const struct item_group *group = itemdb->search_group(item->nameid);
+	if (group == NULL) {
+		ShowWarning("buildin_getitemgroupitems: item group not found\n");
+		script_pushint(st, 0);
+		return false;
+	}
+
+	int count = 0;
+	for (int i = 0; i < group->qty; i++) {
+		int id = group->nameid[i];
+		int j = 0;
+		ARR_FIND(0, i, j, group->nameid[i] == group->nameid[j]);
+		if (i != j) {
+			// Already encountered - skip duplicates
+			continue;
+		}
+		const void *v = (const void *)h64BPTRSIZE(id);
+		script->set_reg(st, NULL, reference_uid(dataid, idata + count), data_name, v, reference_getref(data));
+		count++;
+	}
+
+	script_pushint(st, count);
+	return true;
+}
+
+/*==========================================
  * makeitem <item_id>, <amount>, "<map name>", <X>, <Y> {, <showdropeffect>}};
  *------------------------------------------*/
 static BUILDIN(makeitem)
@@ -28652,6 +28720,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(getitem2,"viiiiiiii?"),
 		BUILDIN_DEF(getnameditem,"vv"),
 		BUILDIN_DEF2(grouprandomitem,"groupranditem","i"),
+		BUILDIN_DEF(getitemgroupitems, "ri"),
 		BUILDIN_DEF(makeitem,"visii?"),
 		BUILDIN_DEF(makeitem2,"viiiiiiii?????"),
 		BUILDIN_DEF(delitem,"vi?"),

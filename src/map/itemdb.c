@@ -347,6 +347,22 @@ static bool itemdb_in_group(struct item_group *group, int nameid)
 	return false;
 }
 
+/**
+ * Search for an item group.
+ *
+ * @param nameid item group id to search
+ * @return A pointer to the group
+ * @retval NULL if the group was not found
+ */
+static const struct item_group *itemdb_search_group(int nameid)
+{
+	int i;
+	ARR_FIND(0, itemdb->group_count, i, itemdb->groups[i].id == nameid);
+	if (i != itemdb->group_count)
+		return &itemdb->groups[i];
+	return NULL;
+}
+
 /// Searches for the item_data.
 /// Returns the item_data or NULL if it does not exist.
 static struct item_data *itemdb_exists(int nameid)
@@ -3357,6 +3373,7 @@ void itemdb_defaults(void)
 	itemdb->option_exists = itemdb_option_exists;
 	itemdb->reform_exists = itemdb_reform_exists;
 	itemdb->in_group = itemdb_in_group;
+	itemdb->search_group = itemdb_search_group;
 	itemdb->group_item = itemdb_searchrandomid;
 	itemdb->chain_item = itemdb_chain_item;
 	itemdb->package_item = itemdb_package_item;
