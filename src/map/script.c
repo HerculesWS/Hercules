@@ -9188,22 +9188,24 @@ static BUILDIN(getitemgroupitems)
 		return false;// not a variable
 	}
 
-	struct item_data *item = itemdb->name2id(script_getstr(st, 3));
-	if (!item) {
-		ShowError("buildin_getitemgroupitems: invalid item name [%s]\n", script_getstr(st, 2));
-		script_pushnil(st);
+	int nameid = script_getnum(st, 3);
+	struct item_data *item = itemdb->exists(nameid);
+	if (item == NULL) {
+		ShowError("buildin_getitemgroupitems: invalid item %d\n", nameid);
+		script_pushint(st, 0);
 		return false;
 	}
 
 	struct item_group group;
-	bool finded_group = itemdb->search_group(&group, item->nameid);
-	if (!finded_group) {
-		ShowWarning("buildin_getitemgroupitems: any group find\n");
+	if (itemdb->search_group(&group, item->nameid) == false) {
+		ShowWarning("buildin_getitemgroupitems: item group not found\n");
+		script_pushint(st, 0);
 		return false;
 	}
 
 	if (!utils_itemgroup_remove_duplicate(&group)) {
-		ShowError("buildin_getitemgroupitems: fail to remove duplicates\n");
+		ShowError("buildin_getitemgroupitems: failed to remove duplicates\n");
+		script_pushint(st, 0);
 		return false;
 	}
 
@@ -9211,11 +9213,15 @@ static BUILDIN(getitemgroupitems)
 	int32 dataid = reference_getid(data);
 	const char *data_name = reference_getname(data);
 	
+	int count = 0;
 	for (int i = 0; i < group.qty; i++) {
 		int id = group.nameid[i];
-		script->set_reg(st, NULL, reference_uid(dataid, idata + i), data_name, (const void *)h64BPTRSIZE(id), (data)->ref);
+		const void *v = (const void *)h64BPTRSIZE(id);
+		script->set_reg(st, NULL, reference_uid(dataid, idata + i), data_name, v, reference_getref(data));
+		count++;
 	}
 
+	script_pushint(st, count);
 	return true;
 }
 
@@ -28738,7 +28744,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(getitem2,"viiiiiiii?"),
 		BUILDIN_DEF(getnameditem,"vv"),
 		BUILDIN_DEF2(grouprandomitem,"groupranditem","i"),
-		BUILDIN_DEF(getitemgroupitems, "rs"),
+		BUILDIN_DEF(getitemgroupitems, "ri"),
 		BUILDIN_DEF(makeitem,"visii?"),
 		BUILDIN_DEF(makeitem2,"viiiiiiii?????"),
 		BUILDIN_DEF(delitem,"vi?"),

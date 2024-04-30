@@ -11142,14 +11142,17 @@ Check out some examples in `doc/sample/goldpc.txt`.
 
 *getitemgroupitems(<item_id_array>, <item_group_id>)
 
-Return boolean if success otherwise false.
-Will allocate Without duplicated item at <item_id_array> with all items in <item_group_id>.
+Fills the array <item_id_array> with the IDs of the items from the <item_group_id> item group, without duplicates.
 
-<item_group_id> can be defined on `db/(pre-)re/item_group_db.conf`
+Returns the amount of items inserted into the array.
+
+Note: The array will not be automatically cleared. It's recommended to use the returned value to loop over the array instead of relying on getarraysize.
+
+The possible values for <item_group_id> can be found in `db/(pre-)re/item_group.conf`
 
 Example:
 
-	getitemgroupitems(.@item_list[0], "Old_Card_Album");
-	for (.@i = 0; .@i < getarraysize(.@item_list); .@i++) {
-		mes "^1E56BD\t"+getitemname(.@item_list[.@i])+" ^000000";
+	.@count = getitemgroupitems(.@item_list[0], Old_Card_Album);
+	for (.@i = 0; .@i < .@count; ++.@i) {
+		mesf("^1E56BD\t%s^000000", getitemname(.@item_list[.@i]));
 	}
