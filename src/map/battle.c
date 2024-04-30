@@ -1489,6 +1489,7 @@ static int64 battle_calc_defense(int attack_type, struct block_list *src, struct
 #else
 				vit_def = def2;
 #endif
+				vit_def = (vit_def * tstatus->def_percent) / 100;
 				if((battle->check_undead(sstatus->race,sstatus->def_ele) || sstatus->race==RC_DEMON) && //This bonus already doesn't work vs players
 					src->type == BL_MOB && (i=pc->checkskill(tsd,AL_DP)) > 0)
 					vit_def += i*(int)(3 +(tsd->status.base_level+1)*0.04);   // [orn]
@@ -1504,6 +1505,8 @@ static int64 battle_calc_defense(int attack_type, struct block_list *src, struct
 #else
 				vit_def = def2;
 #endif
+				vit_def = (vit_def * tstatus->def_percent) / 100;
+				def1 = (def1 * tstatus->def_percent) / 100;
 			}
 
 			if (battle_config.weapon_defense_type) {
@@ -4012,6 +4015,10 @@ static struct Damage battle_calc_magic_attack(struct block_list *src, struct blo
 					default:
 						MATK_RATE(battle->calc_skillratio(BF_MAGIC, src, target, skill_id, skill_lv, skillratio, mflag));
 				}
+
+				// Aegis: It seems like most percentual matk bonuses, besides matk_percent, are used additively.
+				MATK_RATE(sstatus->matk_percent);
+
 				//Constant/misc additions from skills
 				if (skill_id == WZ_FIREPILLAR)
 					MATK_ADD(100+50*skill_lv);
@@ -5303,6 +5310,20 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 						ShowError("0 enemies targeted by %d:%s, divide per 0 avoided!\n", skill_id, skill->get_name(skill_id));
 				}
 
+				bool skip_atk_rate_bonus;
+				switch (skill_id) {
+				case MO_EXTREMITYFIST:
+					skip_atk_rate_bonus = true;
+					break;
+				default:
+					skip_atk_rate_bonus = false;
+					break;
+				}
+
+				if (skip_atk_rate_bonus)
+					break;
+
+				int temp_atk_rate = sstatus->atk_percent;
 				//Add any bonuses that modify the base baseatk+watk (pre-skills)
 				if(sd) {
 #ifndef RENEWAL
@@ -5314,13 +5335,13 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 					if(flag.cri && sc && sc->data[SC_MTF_CRIDAMAGE])
 						ATK_ADDRATE(sc->data[SC_MTF_CRIDAMAGE]->val1);// temporary it should be 'bonus.crit_atk_rate'
 #ifndef RENEWAL
-
 					if(sd->status.party_id && (temp=pc->checkskill(sd,TK_POWER)) > 0){
 						if ((i = party->foreachsamemap(party->sub_count, sd, 0, sd->status.char_id)) > 0)
-							ATK_ADDRATE(2*temp*i);
+							temp_atk_rate += 2 * temp * i;
 					}
 #endif
 				}
+				ATK_RATE(temp_atk_rate);
 				break;
 			} //End default case
 		} //End switch(skill_id)
