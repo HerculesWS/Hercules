@@ -124,16 +124,23 @@ static int skill_name2id(const char *name)
 	return strdb_iget(skill->name2id_db, name);
 }
 
-/// Maps skill ids to skill db offsets.
-/// Returns the skill's array index, or 0 (Unknown Skill).
-static int skill_get_index(int skill_id)
+/**
+ * Maps skill ids to skill db offsets.
+ *
+ * @param  skill_id      skill to search
+ * @param  report_errors if the skill is not found, report an error to help solving it?
+ * @return Returns the skill's array index, or 0 (Unknown Skill).
+ */
+static int skill_get_index_sub(int skill_id, bool report_errors)
 {
 	int length = ARRAYLENGTH(skill_idx_ranges);
 
 
 	if (skill_id < skill_idx_ranges[0].start || skill_id > skill_idx_ranges[length - 1].end) {
-		ShowWarning("skill_get_index: skill id '%d' is not being handled!\n", skill_id);
-		Assert_report(0);
+		if (report_errors) {
+			ShowWarning("skill_get_index: skill id '%d' is not being handled!\n", skill_id);
+			Assert_report(0);
+		}
 		return 0;
 	}
 
@@ -152,17 +159,33 @@ static int skill_get_index(int skill_id)
 	}
 
 	if (!found) {
-		ShowWarning("skill_get_index: skill id '%d' (idx: %d) is not handled as it lies outside the defined ranges!\n", skill_id, skill_idx);
-		Assert_report(0);
+		if (report_errors) {
+			ShowWarning("skill_get_index: skill id '%d' (idx: %d) is not handled as it lies outside the defined ranges!\n", skill_id, skill_idx);
+			Assert_report(0);
+		}
 		return 0;
 	}
 	if (skill_idx >= MAX_SKILL_DB) {
-		ShowWarning("skill_get_index: skill id '%d'(idx: %d) is not being handled as it exceeds MAX_SKILL_DB!\n", skill_id, skill_idx);
-		Assert_report(0);
+		if (report_errors) {
+			ShowWarning("skill_get_index: skill id '%d'(idx: %d) is not being handled as it exceeds MAX_SKILL_DB!\n", skill_id, skill_idx);
+			Assert_report(0);
+		}
 		return 0;
 	}
 
 	return skill_idx;
+}
+
+/**
+ * Maps skill ids to skill db offsets.
+ * If something goes wrong, errors will be reported to console.
+ *
+ * @param  skill_id      skill to search not found, report an error to help solving it?
+ * @return Returns the skill's array index, or 0 (Unknown Skill).
+ */
+static int skill_get_index(int skill_id)
+{
+	return skill->get_index_sub(skill_id, true);
 }
 
 static const char *skill_get_name(int skill_id)
@@ -10445,15 +10468,19 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 			}
 			break;
 		case SC_AUTOSHADOWSPELL:
-			if( sd ) {
-				int idx1 = skill->get_index(sd->reproduceskill_id), idx2 = skill->get_index(sd->cloneskill_id);
-				if( sd->status.skill[idx1].id || sd->status.skill[idx2].id ) {
+			if (sd != NULL) {
+				int reproduceIdx = sd->reproduceskill_id > 0 ? skill->get_index(sd->reproduceskill_id) : -1;
+				int cloneIdx = sd->cloneskill_id > 0 ? skill->get_index(sd->cloneskill_id) : -1;
+
+				bool hasReproduceSkill = reproduceIdx >= 0 && sd->status.skill[reproduceIdx].id != 0;
+				bool hasCloneSkill = cloneIdx >= 0 && sd->status.skill[cloneIdx].id != 0;
+				if (hasReproduceSkill || hasCloneSkill) {
 					sc_start(src, src, SC_STOP, 100, skill_lv, INFINITE_DURATION, skill_id); // The skill_lv is stored in val1 used in skill_select_menu to determine the used skill lvl [Xazax]
 					clif->autoshadowspell_list(sd);
-					clif->skill_nodamage(src,bl,skill_id,1,1);
-				}
-				else
+					clif->skill_nodamage(src, bl, skill_id, 1, 1);
+				} else {
 					clif->skill_fail(sd, skill_id, USESKILL_FAIL_IMITATION_SKILL_NONE, 0, 0);
+				}
 			}
 			break;
 
@@ -25195,6 +25222,7 @@ void skill_defaults(void)
 	skill->unit_group_newid = 0;
 	/* accessors */
 	skill->get_index = skill_get_index;
+	skill->get_index_sub = skill_get_index_sub;
 	skill->get_type = skill_get_type;
 	skill->get_hit = skill_get_hit;
 	skill->get_inf = skill_get_inf;

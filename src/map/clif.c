@@ -20828,32 +20828,49 @@ static int clif_poison_list(struct map_session_data *sd, uint16 skill_lv)
 
 	return 1;
 }
+
 static int clif_autoshadowspell_list(struct map_session_data *sd)
 {
-	int fd, i, c;
 	nullpo_ret(sd);
-	fd = sd->fd;
-	if( !fd ) return 0;
 
-	if( sd->menuskill_id == SC_AUTOSHADOWSPELL )
+	int fd = sd->fd;
+	if (fd == 0)
 		return 0;
 
-	WFIFOHEAD(fd, 2 * 6 + 4);
-	WFIFOW(fd,0) = 0x442;
-	for (i = 0, c = 0; i < MAX_SKILL_DB; i++)
+	if (sd->menuskill_id == SC_AUTOSHADOWSPELL)
+		return 0;
+
+	// Max number of skills shown. This number should never go above 2, but let's leave some space for customization.
+	const int max_count = 10;
+
+	struct PACKET_ZC_SKILL_SELECT_REQUEST *p;
+	int len = max_count * sizeof(*p->skillIds);
+	WFIFOHEAD(fd, len);
+	p = WFIFOP(fd, 0);
+	p->packetType = HEADER_ZC_SKILL_SELECT_REQUEST;
+
+	int c = 0;
+	for (int i = 0; i < MAX_SKILL_DB && c < max_count; i++) {
 		if (sd->status.skill[i].flag == SKILL_FLAG_PLAGIARIZED && sd->status.skill[i].id > 0 && sd->status.skill[i].id < GS_GLITTERING
 		    && skill->get_type(sd->status.skill[i].id, sd->status.skill[i].lv) == BF_MAGIC) {
 			// Can't auto cast both Extended class and 3rd class skills.
-			WFIFOW(fd,8+c*2) = sd->status.skill[i].id;
+			p->skillIds[c] = sd->status.skill[i].id;
 			c++;
 		}
+	}
 
-	if( c > 0 ) {
-		WFIFOW(fd,2) = 8 + c * 2;
-		WFIFOL(fd,4) = c;
-		WFIFOSET(fd,WFIFOW(fd,2));
+	if (c == max_count)
+		ShowError("%s: max_count shadow spells was reached, some skills may not be shown.\n", __func__);
+
+	if (c > 0) {
 		sd->menuskill_id = SC_AUTOSHADOWSPELL;
 		sd->menuskill_val = c;
+
+		len = c * sizeof(*p->skillIds) + sizeof(*p);
+		p->packetLength = len;
+		p->flag = 1; // 1 = auto shadow spell
+
+		WFIFOSET(fd, len);
 	} else {
 		status_change_end(&sd->bl,SC_STOP,INVALID_TIMER);
 		clif->skill_fail(sd, SC_AUTOSHADOWSPELL, USESKILL_FAIL_IMITATION_SKILL_NONE, 0, 0);
@@ -20861,6 +20878,7 @@ static int clif_autoshadowspell_list(struct map_session_data *sd)
 
 	return 1;
 }
+
 /*===========================================
  * Skill list for Four Elemental Analysis
  * and Change Material skills.
@@ -20910,7 +20928,21 @@ static void clif_parse_SkillSelectMenu(int fd, struct map_session_data *sd)
 		return;
 	}
 
-	skill->select_menu(sd,RFIFOW(fd,6));
+	const struct PACKET_CZ_SKILL_SELECT_RESPONSE *p = RP2PTR(fd);
+
+	/* selectedSkillId is 0 when cancel is clicked.
+	 *
+	 * Some clients (observed in PACKETVER < 2020) sends random skill ids if you click "ok"
+	 * without selecting a skill. This check prevents the skill logic from running and generating bad reports.
+	 */
+	if (p->selectedSkillId == 0 || skill->get_index_sub(p->selectedSkillId, false) == 0) {
+		status_change_end(&sd->bl, SC_STOP, INVALID_TIMER);
+		clif->skill_fail(sd, sd->ud.skill_id, 0, 0, 0);
+		clif_menuskill_clear(sd);
+		return;
+	}
+
+	skill->select_menu(sd, p->selectedSkillId);
 
 	clif_menuskill_clear(sd);
 }
