@@ -9212,6 +9212,22 @@ static BUILDIN(getitemgroupitems)
 	int32 idata = reference_getindex(data);
 	int32 dataid = reference_getid(data);
 	const char *data_name = reference_getname(data);
+
+	if (not_server_variable(*data_name)) {
+		if (script->rid2sd(st) == NULL) {
+			// no player attached
+			script_pushint(st, 0);
+			return false;
+		}
+	}
+
+	if (is_string_variable(data_name)) {
+		// string array
+		ShowError("buildin_getitemgroupitems: not an integer array reference\n");
+		script->reportdata(data);
+		st->state = END;
+		return false;
+	}
 	
 	int count = 0;
 	for (int i = 0; i < group.qty; i++) {
