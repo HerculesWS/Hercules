@@ -1745,7 +1745,11 @@ static int skill_additional_effect(struct block_list *src, struct block_list *bl
 			break;
 
 		case WZ_VERMILION:
+#ifndef RENEWAL
 			sc_start(src, bl, SC_BLIND, 4 * skill_lv, skill_lv, skill->get_time2(skill_id, skill_lv), skill_id);
+#else
+			sc_start(src, bl, SC_BLIND, 10 + 5 * skill_lv, skill_lv, skill->get_time2(skill_id, skill_lv), skill_id);
+#endif
 			break;
 
 		case HT_FREEZINGTRAP:
@@ -2367,8 +2371,10 @@ static int skill_additional_effect(struct block_list *src, struct block_list *bl
 			{
 				if(sc->data[SC_GIANTGROWTH])
 					rate += 10;
+#ifndef RENEWAL
 				if(sc->data[SC_OVERTHRUST])
 					rate += 10;
+#endif
 				if(sc->data[SC_OVERTHRUSTMAX])
 					rate += 10;
 			}
@@ -5273,6 +5279,10 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 			break;
 
 		case KN_BRANDISHSPEAR:
+#ifdef RENEWAL
+			sc_start(src, src, SC_NO_SWITCH_WEAPON, 100, 1, skill->get_time(skill_id, skill_lv), skill_id);
+			FALLTHROUGH
+#endif
 		case ML_BRANDISH:
 			//Coded apart for it needs the flag passed to the damage calculation.
 			if (skill->area_temp[1] != bl->id)
@@ -5281,7 +5291,23 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 				skill->attack(skill->get_type(skill_id, skill_lv), src, src, bl, skill_id, skill_lv, tick, flag);
 			break;
 
+#ifdef RENEWAL
 		case KN_BOWLINGBASH:
+			// skill->area_temp[0] holds the number of targets affected
+			if (flag & 1) {
+				int sflag = skill->area_temp[0] | SD_ANIMATION;
+				skill->attack(skill->get_type(skill_id, skill_lv), src, src, bl, skill_id, skill_lv, tick, sflag);
+			} else {
+				sc_start(src, src, SC_NO_SWITCH_WEAPON, 100, 1, skill->get_time(skill_id, skill_lv), skill_id);
+				skill->area_temp[0] = map->foreachinrange(skill->area_sub, bl, skill->get_splash(skill_id, skill_lv), BL_CHAR, src, skill_id, skill_lv, tick, BCT_ENEMY, skill->area_sub_count);
+				
+				// recursive invocation of skill->castend_damage_id() with flag|1
+				map->foreachinrange(skill->area_sub, bl, skill->get_splash(skill_id, skill_lv), skill->splash_target(src), src, skill_id, skill_lv, tick, flag | BCT_ENEMY | SD_SPLASH | 1, skill->castend_damage_id);
+			}
+			break;
+#else // !RENEWAL
+		case KN_BOWLINGBASH:
+#endif
 		case MS_BOWLINGBASH:
 			{
 				int min_x,max_x,min_y,max_y,i,c,dir,tx,ty;
@@ -7314,9 +7340,10 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 				break;
 			}
 		case PR_SLOWPOISON:
+#ifndef RENEWAL
 		case PR_IMPOSITIO:
+#endif
 		case PR_LEXAETERNA:
-		case PR_SUFFRAGIUM:
 		case PR_BENEDICTIO:
 		case LK_BERSERK:
 		case MS_BERSERK:
@@ -7329,6 +7356,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 		case AS_POISONREACT:
 #ifndef RENEWAL
 		case MC_LOUD:
+		case PR_SUFFRAGIUM:
 #endif
 		case MG_ENERGYCOAT:
 		case MO_EXPLOSIONSPIRITS:
@@ -7886,6 +7914,8 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 
 #ifdef RENEWAL
 		case MC_LOUD:
+		case PR_IMPOSITIO:
+		case PR_SUFFRAGIUM:
 #endif
 		case AL_ANGELUS:
 		case PR_MAGNIFICAT:
@@ -14029,8 +14059,10 @@ static int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *b
 			break;
 
 		case UNT_MAGNUS:
-			if (!battle->check_undead(tstatus->race,tstatus->def_ele) && tstatus->race!=RC_DEMON)
+#ifndef RENEWAL
+			if (!battle->check_undead(tstatus->race, tstatus->def_ele) && tstatus->race != RC_DEMON)
 				break;
+#endif
 			skill->attack(BF_MAGIC,ss,&src->bl,bl,sg->skill_id,sg->skill_lv,tick,0);
 			break;
 
@@ -17232,7 +17264,9 @@ static int skill_castfix_sc(struct block_list *bl, int time)
 			time += sc->data[SC_NEEDLE_OF_PARALYZE]->val3;
 		if (sc->data[SC_SUFFRAGIUM]) {
 			time -= time * sc->data[SC_SUFFRAGIUM]->val2 / 100;
+#ifndef RENEWAL
 			status_change_end(bl, SC_SUFFRAGIUM, INVALID_TIMER);
+#endif
 		}
 		if (sc->data[SC_MEMORIZE]) {
 			time>>=1;
@@ -17312,7 +17346,9 @@ static int skill_vfcastfix(struct block_list *bl, double time, uint16 skill_id, 
 		// Variable cast reduction bonuses
 		if (sc->data[SC_SUFFRAGIUM]) {
 			VARCAST_REDUCTION(sc->data[SC_SUFFRAGIUM]->val2);
+#ifndef RENEWAL
 			status_change_end(bl, SC_SUFFRAGIUM, INVALID_TIMER);
+#endif
 		}
 		if (sc->data[SC_MEMORIZE]) {
 			VARCAST_REDUCTION(50);

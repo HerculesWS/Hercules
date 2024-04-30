@@ -2038,6 +2038,11 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 	if (pc->checkskill(sd, SU_POWEROFLIFE) > 0)
 		bstatus->cri += 20;
 
+#ifdef RENEWAL
+	if ((skill_lv = pc->checkskill(sd, PR_MACEMASTERY)) > 0 && (sd->weapontype == W_MACE || sd->weapontype == W_2HMACE))
+		bstatus->cri += skill_lv * 10;
+#endif
+
 	if(sd->flee2_rate < 0)
 		sd->flee2_rate = 0;
 	if(sd->flee2_rate != 100)
@@ -4429,6 +4434,8 @@ static int status_calc_buff_extra_batk(struct block_list *bl, struct status_chan
 	// In-game Tests (and iRO wiki) suggests SC_SHOUT ATK bonus is counted as Extra ATK
 	if (sc->data[SC_SHOUT] != NULL)
 		batk += sc->data[SC_SHOUT]->val2;
+	if (sc->data[SC_IMPOSITIO] != NULL)
+		batk += sc->data[SC_IMPOSITIO]->val2;
 #endif
 
 	return cap_value(batk, 0, battle_config.batk_max);
@@ -4600,6 +4607,9 @@ static int status_calc_matk(struct block_list *bl, struct status_change *sc, int
 		matk += 40 + 30 * sc->data[SC_ODINS_POWER]->val1; //70 lvl1, 100lvl2
 	if (sc->data[SC_IZAYOI])
 		matk += 25 * sc->data[SC_IZAYOI]->val1;
+#else // RENEWAL
+	if (sc->data[SC_IMPOSITIO])
+		matk += sc->data[SC_IMPOSITIO]->val2;
 #endif
 	if (sc->data[SC_ZANGETSU])
 		matk += sc->data[SC_ZANGETSU]->val3;
@@ -4669,6 +4679,8 @@ static int status_calc_critical(struct block_list *bl, struct status_change *sc,
 #ifdef RENEWAL
 	if (sc->data[SC_SPEARQUICKEN])
 		critical += 3*sc->data[SC_SPEARQUICKEN]->val1 * 10;
+	if (sc->data[SC_TWOHANDQUICKEN] != NULL)
+		critical += 20 + sc->data[SC_TWOHANDQUICKEN]->val1 * 10;
 #endif
 
 	if (sc->data[SC__INVISIBILITY])
@@ -4743,6 +4755,10 @@ static int status_calc_hit(struct block_list *bl, struct status_change *sc, int 
 #ifdef RENEWAL
 	if (sc->data[SC_BLESSING] != NULL)
 		hit += sc->data[SC_BLESSING]->val3;
+	if (sc->data[SC_TWOHANDQUICKEN] != NULL)
+		hit += 2 * sc->data[SC_TWOHANDQUICKEN]->val1;
+	if (sc->data[SC_ADRENALINE] != NULL)
+		hit += sc->data[SC_ADRENALINE]->val4;
 #endif
 
 	return cap_value(hit, battle_config.hit_min, battle_config.hit_max);
@@ -5490,6 +5506,10 @@ static short status_calc_aspd(struct block_list *bl, struct status_change *sc, s
 #ifdef RENEWAL
 		if (sc->data[SC_INC_AGI] != NULL)
 			bonus += sc->data[SC_INC_AGI]->val1; // + SkillLevel%
+		if (sc->data[SC_TWOHANDQUICKEN] != NULL)
+			bonus += 10;
+		if (sc->data[SC_ADRENALINE] != NULL)
+			bonus += 10;
 #endif
 	}
 
@@ -8222,13 +8242,23 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				val2 = 20*val1; //Power increase
 				break;
 			case SC_OVERTHRUST:
-				//val2 holds if it was casted on self, or is bonus received from others
-				val3 = 5*val1; //Power increase
+				// val2 holds if it was casted on self (1), or is bonus received from others (0)
+#ifndef RENEWAL
+				val3 = 5 * val1; //Power increase
+#else
+				// owner: 5, 10, 15, 20, 25
+				// party: 5,  5, 10, 10, 15
+				val3 = (val2 == 1 ? (5 * val1) : (5 + (val1 / 2) * 5)); // Power increase
+#endif
 				if(sd && pc->checkskill(sd,BS_HILTBINDING)>0)
 					total_tick += total_tick / 10;
 				break;
-			case SC_ADRENALINE2:
 			case SC_ADRENALINE:
+#ifdef RENEWAL
+				val4 = 5 + 3 * val1; // HIT increase
+				FALLTHROUGH
+#endif
+			case SC_ADRENALINE2:
 				val3 = (val2) ? 300 : 200; // aspd increase
 				FALLTHROUGH
 			case SC_WEAPONPERFECT:
@@ -8248,7 +8278,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 #endif
 				break;
 			case SC_IMPOSITIO:
-				val2 = 5*val1; //watk increase
+				val2 = 5 * val1; // (Pre-RE) watk increase / (RE) Extra ATK / MATK increase
 				break;
 			case SC_MELTDOWN:
 				val2 = 100*val1; //Chance to break weapon
@@ -8414,7 +8444,11 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				val2 = val1*10; //Actual boost (since 100% = 1000)
 				break;
 			case SC_SUFFRAGIUM:
-				val2 = 15 * val1; //Speed cast decrease
+#ifndef RENEWAL
+				val2 = 15 * val1; // Cast speed decrease
+#else
+				val2 = 5 + 5 * val1; // Variable cast speed decrease
+#endif
 				break;
 			case SC_HEALPLUS:
 				if (val1 < 1)
@@ -10574,8 +10608,15 @@ static bool status_end_sc_before_start(struct block_list *bl, struct status_data
 		status_change_end(bl, SC_INVINCIBLE, INVALID_TIMER);
 		break;
 	case SC_MAGICPOWER:
-	case SC_IMPOSITIO:
 		status_change_end(bl, type, INVALID_TIMER);
+		break;
+	case SC_IMPOSITIO:
+#ifndef RENEWAL
+		status_change_end(bl, type, INVALID_TIMER);
+#else
+		if (sc->data[type] == NULL || val1 >= sc->data[type]->val1)
+			status_change_end(bl, type, INVALID_TIMER);
+#endif
 		break;
 	case SC_SUNSTANCE:
 	case SC_LUNARSTANCE:
