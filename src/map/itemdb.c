@@ -348,23 +348,19 @@ static bool itemdb_in_group(struct item_group *group, int nameid)
 }
 
 /**
- * Search for a group of item
- * @param group return information about group
+ * Search for an item group.
+ *
  * @param nameid item group id to search
- * @return bool true if found, false otherwise
+ * @return A pointer to the group
+ * @retval NULL if the group was not found
  */
-static bool itemdb_search_group(struct item_group *group, int nameid)
+static const struct item_group *itemdb_search_group(int nameid)
 {
-	for (int i = 0; i < itemdb->group_count; i++) {
-		struct item_group g = itemdb->groups[i];
-		
-		if (g.id == nameid) {
-			*group = g;
-			return true;
-		}
-	}
-
-	return false;
+	int i;
+	ARR_FIND(0, itemdb->group_count, i, itemdb->groups[i].id == nameid);
+	if (i != itemdb->group_count)
+		return &itemdb->groups[i];
+	return NULL;
 }
 
 /// Searches for the item_data.

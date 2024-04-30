@@ -9134,46 +9134,6 @@ static BUILDIN(grouprandomitem)
 }
 
 /*==========================================
- * utils for item group
- *------------------------------------------*/
-static bool utils_itemgroup_remove_duplicate(struct item_group *group)
-{
-	int n = group->qty;
-	int *arr = group->nameid;
-	int i, j, k;
-
-	// Remove duplicates
-	for (i = 0; i < n; i++) {
-		for (j = i + 1; j < n; j++) {
-			if (arr[i] == arr[j]) {
-				// Shift elements to the left
-				for (k = j; k < n - 1; k++) {
-					arr[k] = arr[k + 1];
-				}
-				n--;
-				j--;
-			}
-		}
-	}
-
-	// Create a new array without duplicates
-	int *newArr = malloc(n * sizeof(int));
-	if (newArr == NULL) {
-		// Handle memory allocation error
-		return false;
-	}
-
-	for (i = 0; i < n; i++) {
-		newArr[i] = arr[i];
-	}
-
-	group->qty = n;
-	group->nameid = newArr;
-
-	return true;
-}
-
-/*==========================================
  * getitemgroupitems <reference array of item_id>, <item_group_id>;
  *------------------------------------------*/
 static BUILDIN(getitemgroupitems)
@@ -9186,27 +9146,6 @@ static BUILDIN(getitemgroupitems)
 		script_pushnil(st);
 		st->state = END;
 		return false;// not a variable
-	}
-
-	int nameid = script_getnum(st, 3);
-	struct item_data *item = itemdb->exists(nameid);
-	if (item == NULL) {
-		ShowError("buildin_getitemgroupitems: invalid item %d\n", nameid);
-		script_pushint(st, 0);
-		return false;
-	}
-
-	struct item_group group;
-	if (itemdb->search_group(&group, item->nameid) == false) {
-		ShowWarning("buildin_getitemgroupitems: item group not found\n");
-		script_pushint(st, 0);
-		return false;
-	}
-
-	if (!utils_itemgroup_remove_duplicate(&group)) {
-		ShowError("buildin_getitemgroupitems: failed to remove duplicates\n");
-		script_pushint(st, 0);
-		return false;
 	}
 
 	int32 idata = reference_getindex(data);
@@ -9228,12 +9167,33 @@ static BUILDIN(getitemgroupitems)
 		st->state = END;
 		return false;
 	}
-	
+
+	int nameid = script_getnum(st, 3);
+	struct item_data *item = itemdb->exists(nameid);
+	if (item == NULL) {
+		ShowError("buildin_getitemgroupitems: invalid item %d\n", nameid);
+		script_pushint(st, 0);
+		return false;
+	}
+
+	const struct item_group *group = itemdb->search_group(item->nameid);
+	if (group == NULL) {
+		ShowWarning("buildin_getitemgroupitems: item group not found\n");
+		script_pushint(st, 0);
+		return false;
+	}
+
 	int count = 0;
-	for (int i = 0; i < group.qty; i++) {
-		int id = group.nameid[i];
+	for (int i = 0; i < group->qty; i++) {
+		int id = group->nameid[i];
+		int j = 0;
+		ARR_FIND(0, i, j, group->nameid[i] == group->nameid[j]);
+		if (i != j) {
+			// Already encountered - skip duplicates
+			continue;
+		}
 		const void *v = (const void *)h64BPTRSIZE(id);
-		script->set_reg(st, NULL, reference_uid(dataid, idata + i), data_name, v, reference_getref(data));
+		script->set_reg(st, NULL, reference_uid(dataid, idata + count), data_name, v, reference_getref(data));
 		count++;
 	}
 
