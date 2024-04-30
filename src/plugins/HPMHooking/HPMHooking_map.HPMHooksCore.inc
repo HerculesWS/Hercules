@@ -6200,6 +6200,8 @@ struct {
 	struct HPMHookPoint *HP_skill_read_db_post;
 	struct HPMHookPoint *HP_skill_get_index_pre;
 	struct HPMHookPoint *HP_skill_get_index_post;
+	struct HPMHookPoint *HP_skill_get_index_sub_pre;
+	struct HPMHookPoint *HP_skill_get_index_sub_post;
 	struct HPMHookPoint *HP_skill_get_type_pre;
 	struct HPMHookPoint *HP_skill_get_type_post;
 	struct HPMHookPoint *HP_skill_get_hit_pre;
@@ -13759,6 +13761,8 @@ struct {
 	int HP_skill_read_db_post;
 	int HP_skill_get_index_pre;
 	int HP_skill_get_index_post;
+	int HP_skill_get_index_sub_pre;
+	int HP_skill_get_index_sub_post;
 	int HP_skill_get_type_pre;
 	int HP_skill_get_type_post;
 	int HP_skill_get_hit_pre;

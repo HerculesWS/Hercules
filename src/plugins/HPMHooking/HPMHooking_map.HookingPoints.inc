@@ -3176,6 +3176,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(skill->reload, HP_skill_reload) },
 	{ HP_POP(skill->read_db, HP_skill_read_db) },
 	{ HP_POP(skill->get_index, HP_skill_get_index) },
+	{ HP_POP(skill->get_index_sub, HP_skill_get_index_sub) },
 	{ HP_POP(skill->get_type, HP_skill_get_type) },
 	{ HP_POP(skill->get_hit, HP_skill_get_hit) },
 	{ HP_POP(skill->get_inf, HP_skill_get_inf) },

@@ -8278,6 +8278,8 @@ typedef void (*HPMHOOK_pre_skill_read_db) (bool *minimal);
 typedef void (*HPMHOOK_post_skill_read_db) (bool minimal);
 typedef int (*HPMHOOK_pre_skill_get_index) (int *skill_id);
 typedef int (*HPMHOOK_post_skill_get_index) (int retVal___, int skill_id);
+typedef int (*HPMHOOK_pre_skill_get_index_sub) (int *skill_id, bool *report_errors);
+typedef int (*HPMHOOK_post_skill_get_index_sub) (int retVal___, int skill_id, bool report_errors);
 typedef int (*HPMHOOK_pre_skill_get_type) (int *skill_id, int *skill_lv);
 typedef int (*HPMHOOK_post_skill_get_type) (int retVal___, int skill_id, int skill_lv);
 typedef int (*HPMHOOK_pre_skill_get_hit) (int *skill_id, int *skill_lv);

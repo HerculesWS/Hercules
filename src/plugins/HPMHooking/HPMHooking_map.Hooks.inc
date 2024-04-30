@@ -82695,6 +82695,33 @@ int HP_skill_get_index(int skill_id) {
 	}
 	return retVal___;
 }
+int HP_skill_get_index_sub(int skill_id, bool report_errors) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_skill_get_index_sub_pre > 0) {
+		int (*preHookFunc) (int *skill_id, bool *report_errors);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_index_sub_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_skill_get_index_sub_pre[hIndex].func;
+			retVal___ = preHookFunc(&skill_id, &report_errors);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.skill.get_index_sub(skill_id, report_errors);
+	}
+	if (HPMHooks.count.HP_skill_get_index_sub_post > 0) {
+		int (*postHookFunc) (int retVal___, int skill_id, bool report_errors);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_index_sub_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_skill_get_index_sub_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, skill_id, report_errors);
+		}
+	}
+	return retVal___;
+}
 int HP_skill_get_type(int skill_id, int skill_lv) {
 	int hIndex = 0;
 	int retVal___ = 0;
