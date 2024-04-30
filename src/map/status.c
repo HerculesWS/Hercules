@@ -14223,7 +14223,7 @@ static bool status_read_unit_params_db_sub(const char *name, struct config_setti
 	safestrncpy(entry.name, name, sizeof(entry.name));
 
 	if (!status->read_unit_params_db_maxhp(&entry, inherited, group, source)) {
-		status->unit_params_destroy(&entry);
+		status->unit_params_destroy_entry(&entry);
 		return false;
 	}
 
@@ -14278,7 +14278,7 @@ static bool status_read_unit_params_db_sub(const char *name, struct config_setti
 	}
 
 	if (!status->read_unit_params_db_additional(&entry, inherited, group, source)) {
-		status->unit_params_destroy(&entry);
+		status->unit_params_destroy_entry(&entry);
 		return false;
 	}
 
@@ -14293,8 +14293,6 @@ static bool status_read_unit_params_db_sub(const char *name, struct config_setti
  */
 static void status_read_unit_params_db(void)
 {
-	VECTOR_INIT(status->unit_params_groups);
-
 	char config_filename[256];
 	libconfig->format_db_path(DBPATH"unit_parameters_db.conf", config_filename, sizeof(config_filename));
 
@@ -14323,7 +14321,7 @@ static void status_read_unit_params_db(void)
  * Perform the required cleanup inside a unit parameters db entry.
  * @param entry the entry to have its internal content cleared
  */
-static void status_unit_params_destroy(struct s_unit_params *entry)
+static void status_unit_params_destroy_entry(struct s_unit_params *entry)
 {
 	nullpo_retv(entry);
 
@@ -14332,6 +14330,17 @@ static void status_unit_params_destroy(struct s_unit_params *entry)
 		entry->maxhp = NULL;
 		entry->maxhp_size = 0;
 	}
+}
+
+/**
+ * Perform the required cleanup of the unit parameters db
+ */
+static void status_unit_params_clear_db(void)
+{
+	for (int i = 0; i < VECTOR_LENGTH(status->unit_params_groups); ++i)
+		status->unit_params_destroy_entry(&VECTOR_INDEX(status->unit_params_groups, i));
+
+	VECTOR_CLEAR(status->unit_params_groups);
 }
 
 /**
@@ -14355,6 +14364,8 @@ static int status_readdb(void)
 		memset(status->dbs->SP_table, 0, sizeof(status->dbs->SP_table));
 		// reset job_db2.txt data
 		memset(status->dbs->job_bonus,0,sizeof(status->dbs->job_bonus)); // Job-specific stats bonus
+		// resets unit_params_db.conf data
+		status->unit_params_clear_db();
 	}
 	for ( i = 0; i < CLASS_COUNT; i++ ) {
 		for ( j = 0; j < MAX_SINGLE_WEAPON_TYPE; j++ )
@@ -14390,6 +14401,8 @@ static int do_init_status(bool minimal)
 	if (minimal)
 		return 0;
 
+	VECTOR_INIT(status->unit_params_groups);
+
 	timer->add_func_list(status->change_timer,"status_change_timer");
 	timer->add_func_list(status->kaahi_heal_timer,"status_kaahi_heal_timer");
 	timer->add_func_list(status->natural_heal_timer,"status_natural_heal_timer");
@@ -14406,11 +14419,8 @@ static void do_final_status(void)
 {
 	ers_destroy(status->data_ers);
 
-	status->unit_params_destroy(&status->dummy_unit_params);
-	for (int i = 0; i < VECTOR_LENGTH(status->unit_params_groups); ++i)
-		status->unit_params_destroy(&VECTOR_INDEX(status->unit_params_groups, i));
-
-	VECTOR_CLEAR(status->unit_params_groups);
+	status->unit_params_destroy_entry(&status->dummy_unit_params);
+	status->unit_params_clear_db();
 }
 
 /*=====================================
@@ -14595,7 +14605,8 @@ void status_defaults(void)
 	status->maxhp_entry_compare = status_maxhp_entry_compare;
 	status->read_unit_params_db_maxhp = status_read_unit_params_db_maxhp;
 	status->read_unit_params_db_additional = status_read_unit_params_db_additional;
-	status->unit_params_destroy = status_unit_params_destroy;
+	status->unit_params_destroy_entry = status_unit_params_destroy_entry;
+	status->unit_params_clear_db = status_unit_params_clear_db;
 	status->copy = status_copy;
 	status->base_matk_min = status_base_matk_min;
 	status->base_matk_max = status_base_matk_max;

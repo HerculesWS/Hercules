@@ -7228,8 +7228,10 @@ struct {
 	struct HPMHookPoint *HP_status_maxhp_entry_compare_post;
 	struct HPMHookPoint *HP_status_read_unit_params_db_additional_pre;
 	struct HPMHookPoint *HP_status_read_unit_params_db_additional_post;
-	struct HPMHookPoint *HP_status_unit_params_destroy_pre;
-	struct HPMHookPoint *HP_status_unit_params_destroy_post;
+	struct HPMHookPoint *HP_status_unit_params_destroy_entry_pre;
+	struct HPMHookPoint *HP_status_unit_params_destroy_entry_post;
+	struct HPMHookPoint *HP_status_unit_params_clear_db_pre;
+	struct HPMHookPoint *HP_status_unit_params_clear_db_post;
 	struct HPMHookPoint *HP_status_copy_pre;
 	struct HPMHookPoint *HP_status_copy_post;
 	struct HPMHookPoint *HP_status_base_matk_min_pre;
@@ -14785,8 +14787,10 @@ struct {
 	int HP_status_maxhp_entry_compare_post;
 	int HP_status_read_unit_params_db_additional_pre;
 	int HP_status_read_unit_params_db_additional_post;
-	int HP_status_unit_params_destroy_pre;
-	int HP_status_unit_params_destroy_post;
+	int HP_status_unit_params_destroy_entry_pre;
+	int HP_status_unit_params_destroy_entry_post;
+	int HP_status_unit_params_clear_db_pre;
+	int HP_status_unit_params_clear_db_post;
 	int HP_status_copy_pre;
 	int HP_status_copy_post;
 	int HP_status_base_matk_min_pre;

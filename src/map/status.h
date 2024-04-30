@@ -1488,7 +1488,8 @@ struct status_interface {
 	bool (*read_unit_params_db_maxhp) (struct s_unit_params *entry, struct s_unit_params *inherited, struct config_setting_t *group, const char *source);
 	int (*maxhp_entry_compare) (const void *entry1, const void *entry2);
 	bool (*read_unit_params_db_additional) (struct s_unit_params *entry, struct s_unit_params *inherited, struct config_setting_t *group, const char *source);
-	void (*unit_params_destroy) (struct s_unit_params *entry);
+	void (*unit_params_destroy_entry) (struct s_unit_params *entry);
+	void (*unit_params_clear_db) (void);
 	void (*copy) (struct status_data *a, const struct status_data *b);
 	int (*base_matk_min) (const struct status_data *st);
 	int (*base_matk_max) (const struct status_data *st);

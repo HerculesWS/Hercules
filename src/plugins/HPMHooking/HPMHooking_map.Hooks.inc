@@ -96619,13 +96619,13 @@ bool HP_status_read_unit_params_db_additional(struct s_unit_params *entry, struc
 	}
 	return retVal___;
 }
-void HP_status_unit_params_destroy(struct s_unit_params *entry) {
+void HP_status_unit_params_destroy_entry(struct s_unit_params *entry) {
 	int hIndex = 0;
-	if (HPMHooks.count.HP_status_unit_params_destroy_pre > 0) {
+	if (HPMHooks.count.HP_status_unit_params_destroy_entry_pre > 0) {
 		void (*preHookFunc) (struct s_unit_params **entry);
 		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_unit_params_destroy_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_status_unit_params_destroy_pre[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_unit_params_destroy_entry_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_status_unit_params_destroy_entry_pre[hIndex].func;
 			preHookFunc(&entry);
 		}
 		if (*HPMforce_return) {
@@ -96634,13 +96634,39 @@ void HP_status_unit_params_destroy(struct s_unit_params *entry) {
 		}
 	}
 	{
-		HPMHooks.source.status.unit_params_destroy(entry);
+		HPMHooks.source.status.unit_params_destroy_entry(entry);
 	}
-	if (HPMHooks.count.HP_status_unit_params_destroy_post > 0) {
+	if (HPMHooks.count.HP_status_unit_params_destroy_entry_post > 0) {
 		void (*postHookFunc) (struct s_unit_params *entry);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_unit_params_destroy_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_status_unit_params_destroy_post[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_unit_params_destroy_entry_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_status_unit_params_destroy_entry_post[hIndex].func;
 			postHookFunc(entry);
+		}
+	}
+	return;
+}
+void HP_status_unit_params_clear_db(void) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_status_unit_params_clear_db_pre > 0) {
+		void (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_unit_params_clear_db_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_status_unit_params_clear_db_pre[hIndex].func;
+			preHookFunc();
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.status.unit_params_clear_db();
+	}
+	if (HPMHooks.count.HP_status_unit_params_clear_db_post > 0) {
+		void (*postHookFunc) (void);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_unit_params_clear_db_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_status_unit_params_clear_db_post[hIndex].func;
+			postHookFunc();
 		}
 	}
 	return;

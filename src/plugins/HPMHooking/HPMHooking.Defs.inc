@@ -9312,8 +9312,10 @@ typedef int (*HPMHOOK_pre_status_maxhp_entry_compare) (const void **entry1, cons
 typedef int (*HPMHOOK_post_status_maxhp_entry_compare) (int retVal___, const void *entry1, const void *entry2);
 typedef bool (*HPMHOOK_pre_status_read_unit_params_db_additional) (struct s_unit_params **entry, struct s_unit_params **inherited, struct config_setting_t **group, const char **source);
 typedef bool (*HPMHOOK_post_status_read_unit_params_db_additional) (bool retVal___, struct s_unit_params *entry, struct s_unit_params *inherited, struct config_setting_t *group, const char *source);
-typedef void (*HPMHOOK_pre_status_unit_params_destroy) (struct s_unit_params **entry);
-typedef void (*HPMHOOK_post_status_unit_params_destroy) (struct s_unit_params *entry);
+typedef void (*HPMHOOK_pre_status_unit_params_destroy_entry) (struct s_unit_params **entry);
+typedef void (*HPMHOOK_post_status_unit_params_destroy_entry) (struct s_unit_params *entry);
+typedef void (*HPMHOOK_pre_status_unit_params_clear_db) (void);
+typedef void (*HPMHOOK_post_status_unit_params_clear_db) (void);
 typedef void (*HPMHOOK_pre_status_copy) (struct status_data **a, const struct status_data **b);
 typedef void (*HPMHOOK_post_status_copy) (struct status_data *a, const struct status_data *b);
 typedef int (*HPMHOOK_pre_status_base_matk_min) (const struct status_data **st);
