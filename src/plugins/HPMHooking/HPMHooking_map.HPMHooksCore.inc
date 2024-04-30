@@ -3526,6 +3526,8 @@ struct {
 	struct HPMHookPoint *HP_itemdb_reform_exists_post;
 	struct HPMHookPoint *HP_itemdb_in_group_pre;
 	struct HPMHookPoint *HP_itemdb_in_group_post;
+	struct HPMHookPoint *HP_itemdb_search_group_pre;
+	struct HPMHookPoint *HP_itemdb_search_group_post;
 	struct HPMHookPoint *HP_itemdb_group_item_pre;
 	struct HPMHookPoint *HP_itemdb_group_item_post;
 	struct HPMHookPoint *HP_itemdb_chain_item_pre;
@@ -11095,6 +11097,8 @@ struct {
 	int HP_itemdb_reform_exists_post;
 	int HP_itemdb_in_group_pre;
 	int HP_itemdb_in_group_post;
+	int HP_itemdb_search_group_pre;
+	int HP_itemdb_search_group_post;
 	int HP_itemdb_group_item_pre;
 	int HP_itemdb_group_item_post;
 	int HP_itemdb_chain_item_pre;

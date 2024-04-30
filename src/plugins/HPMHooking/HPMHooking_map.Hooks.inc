@@ -46372,6 +46372,33 @@ bool HP_itemdb_in_group(struct item_group *group, int nameid) {
 	}
 	return retVal___;
 }
+const struct item_group* HP_itemdb_search_group(int nameid) {
+	int hIndex = 0;
+	const struct item_group* retVal___ = NULL;
+	if (HPMHooks.count.HP_itemdb_search_group_pre > 0) {
+		const struct item_group* (*preHookFunc) (int *nameid);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_search_group_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_itemdb_search_group_pre[hIndex].func;
+			retVal___ = preHookFunc(&nameid);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.itemdb.search_group(nameid);
+	}
+	if (HPMHooks.count.HP_itemdb_search_group_post > 0) {
+		const struct item_group* (*postHookFunc) (const struct item_group* retVal___, int nameid);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_search_group_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_itemdb_search_group_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, nameid);
+		}
+	}
+	return retVal___;
+}
 int HP_itemdb_group_item(struct item_group *group) {
 	int hIndex = 0;
 	int retVal___ = 0;

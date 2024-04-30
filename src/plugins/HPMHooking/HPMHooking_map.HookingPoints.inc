@@ -1807,6 +1807,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(itemdb->option_exists, HP_itemdb_option_exists) },
 	{ HP_POP(itemdb->reform_exists, HP_itemdb_reform_exists) },
 	{ HP_POP(itemdb->in_group, HP_itemdb_in_group) },
+	{ HP_POP(itemdb->search_group, HP_itemdb_search_group) },
 	{ HP_POP(itemdb->group_item, HP_itemdb_group_item) },
 	{ HP_POP(itemdb->chain_item, HP_itemdb_chain_item) },
 	{ HP_POP(itemdb->package_item, HP_itemdb_package_item) },

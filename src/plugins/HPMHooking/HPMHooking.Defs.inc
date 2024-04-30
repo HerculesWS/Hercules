@@ -4800,6 +4800,8 @@ typedef struct item_reform* (*HPMHOOK_pre_itemdb_reform_exists) (int *idx);
 typedef struct item_reform* (*HPMHOOK_post_itemdb_reform_exists) (struct item_reform* retVal___, int idx);
 typedef bool (*HPMHOOK_pre_itemdb_in_group) (struct item_group **group, int *nameid);
 typedef bool (*HPMHOOK_post_itemdb_in_group) (bool retVal___, struct item_group *group, int nameid);
+typedef const struct item_group* (*HPMHOOK_pre_itemdb_search_group) (int *nameid);
+typedef const struct item_group* (*HPMHOOK_post_itemdb_search_group) (const struct item_group* retVal___, int nameid);
 typedef int (*HPMHOOK_pre_itemdb_group_item) (struct item_group **group);
 typedef int (*HPMHOOK_post_itemdb_group_item) (int retVal___, struct item_group *group);
 typedef int (*HPMHOOK_pre_itemdb_chain_item) (unsigned short *chain_id, int **rate);
