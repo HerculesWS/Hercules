@@ -124,16 +124,23 @@ static int skill_name2id(const char *name)
 	return strdb_iget(skill->name2id_db, name);
 }
 
-/// Maps skill ids to skill db offsets.
-/// Returns the skill's array index, or 0 (Unknown Skill).
-static int skill_get_index(int skill_id)
+/**
+ * Maps skill ids to skill db offsets.
+ *
+ * @param  skill_id      skill to search
+ * @param  report_errors if the skill is not found, report an error to help solving it?
+ * @return Returns the skill's array index, or 0 (Unknown Skill).
+ */
+static int skill_get_index_sub(int skill_id, bool report_errors)
 {
 	int length = ARRAYLENGTH(skill_idx_ranges);
 
 
 	if (skill_id < skill_idx_ranges[0].start || skill_id > skill_idx_ranges[length - 1].end) {
-		ShowWarning("skill_get_index: skill id '%d' is not being handled!\n", skill_id);
-		Assert_report(0);
+		if (report_errors) {
+			ShowWarning("skill_get_index: skill id '%d' is not being handled!\n", skill_id);
+			Assert_report(0);
+		}
 		return 0;
 	}
 
@@ -152,17 +159,33 @@ static int skill_get_index(int skill_id)
 	}
 
 	if (!found) {
-		ShowWarning("skill_get_index: skill id '%d' (idx: %d) is not handled as it lies outside the defined ranges!\n", skill_id, skill_idx);
-		Assert_report(0);
+		if (report_errors) {
+			ShowWarning("skill_get_index: skill id '%d' (idx: %d) is not handled as it lies outside the defined ranges!\n", skill_id, skill_idx);
+			Assert_report(0);
+		}
 		return 0;
 	}
 	if (skill_idx >= MAX_SKILL_DB) {
-		ShowWarning("skill_get_index: skill id '%d'(idx: %d) is not being handled as it exceeds MAX_SKILL_DB!\n", skill_id, skill_idx);
-		Assert_report(0);
+		if (report_errors) {
+			ShowWarning("skill_get_index: skill id '%d'(idx: %d) is not being handled as it exceeds MAX_SKILL_DB!\n", skill_id, skill_idx);
+			Assert_report(0);
+		}
 		return 0;
 	}
 
 	return skill_idx;
+}
+
+/**
+ * Maps skill ids to skill db offsets.
+ * If something goes wrong, errors will be reported to console.
+ *
+ * @param  skill_id      skill to search not found, report an error to help solving it?
+ * @return Returns the skill's array index, or 0 (Unknown Skill).
+ */
+static int skill_get_index(int skill_id)
+{
+	return skill->get_index_sub(skill_id, true);
 }
 
 static const char *skill_get_name(int skill_id)
@@ -5069,7 +5092,7 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 					}
 					clif->slide(src, src->x, src->y);
 					clif->fixpos(src);
-					clif->spiritball(src, BALL_TYPE_SPIRIT, AREA);
+					clif->spiritballs(src, status->get_spiritballs(src), AREA);
 				}
 			}
 			break;
@@ -6633,7 +6656,7 @@ static int skill_castend_id(int tid, int64 tick, int id, intptr_t data)
 			if (unit->move_pos(src, src->x + x, src->y + y, 1, true) == 0) {
 				//Display movement + animation.
 				clif->slide(src, src->x, src->y);
-				clif->spiritball(src, BALL_TYPE_SPIRIT, AREA);
+				clif->spiritballs(src, status->get_spiritballs(src), AREA);
 			}
 			// "Skill Failed" message was already shown when checking that target is invalid
 			//clif->skill_fail(sd, ud->skill_id, USESKILL_FAIL_LEVEL, 0, 0);
@@ -9382,7 +9405,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 						status_percent_damage(src, bl, 0, 100, false);
 						break;
 					case 1: // matk halved
-						sc_start(src, bl, SC_INCMATKRATE, 100, -50, skill->get_time2(skill_id, skill_lv), skill_id);
+						sc_start(src, bl, SC_TAROTCARD_MATK_PERC, 100, -50, skill->get_time2(skill_id, skill_lv), skill_id);
 						break;
 					case 2: // all buffs removed
 						status->change_clear_buffs(bl,1);
@@ -9398,7 +9421,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 						}
 						break;
 					case 4: // atk halved
-						sc_start(src, bl, SC_INCATKRATE, 100, -50, skill->get_time2(skill_id, skill_lv), skill_id);
+						sc_start(src, bl, SC_TAROTCARD_ATK_PERC, 100, -50, skill->get_time2(skill_id, skill_lv), skill_id);
 						break;
 					case 5: // 2000HP heal, random teleported
 						status->heal(src, 2000, 0, STATUS_HEAL_DEFAULT);
@@ -9428,8 +9451,8 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 					case 10: // 6666 damage, atk matk halved, cursed
 						status_fix_damage(src, bl, 6666, 0);
 						clif->damage(src,bl,0,0,6666,0,BDT_NORMAL,0);
-						sc_start(src, bl, SC_INCATKRATE, 100, -50, skill->get_time2(skill_id, skill_lv), skill_id);
-						sc_start(src, bl, SC_INCMATKRATE, 100, -50, skill->get_time2(skill_id, skill_lv), skill_id);
+						sc_start(src, bl, SC_TAROTCARD_ATK_PERC, 100, -50, skill->get_time2(skill_id, skill_lv), skill_id);
+						sc_start(src, bl, SC_TAROTCARD_MATK_PERC, 100, -50, skill->get_time2(skill_id, skill_lv), skill_id);
 						sc_start(src, bl, SC_CURSE, skill_lv, 100, skill->get_time2(skill_id, skill_lv), skill_id);
 						break;
 					case 11: // 4444 damage
@@ -9440,11 +9463,11 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 						sc_start(src, bl, SC_STUN, 100, skill_lv, 5000, skill_id);
 						break;
 					case 13: // atk,matk,hit,flee,def reduced
-						sc_start(src, bl, SC_INCATKRATE, 100, -20, skill->get_time2(skill_id, skill_lv), skill_id);
-						sc_start(src, bl, SC_INCMATKRATE, 100, -20, skill->get_time2(skill_id, skill_lv), skill_id);
+						sc_start(src, bl, SC_TAROTCARD_ATK_PERC, 100, -20, skill->get_time2(skill_id, skill_lv), skill_id);
+						sc_start(src, bl, SC_TAROTCARD_MATK_PERC, 100, -20, skill->get_time2(skill_id, skill_lv), skill_id);
 						sc_start(src, bl, SC_INCHITRATE, 100, -20, skill->get_time2(skill_id, skill_lv), skill_id);
 						sc_start(src, bl, SC_INCFLEERATE, 100, -20, skill->get_time2(skill_id, skill_lv), skill_id);
-						sc_start(src, bl, SC_INCDEFRATE, 100, -20, skill->get_time2(skill_id, skill_lv), skill_id);
+						sc_start(src, bl, SC_TAROTCARD_DEF_PERC, 100, -20, skill->get_time2(skill_id, skill_lv), skill_id);
 						sc_start(src, bl, type, 100, skill_lv, skill->get_time2(skill_id, skill_lv), skill_id);
 						break;
 					default:
@@ -10496,15 +10519,19 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 			}
 			break;
 		case SC_AUTOSHADOWSPELL:
-			if( sd ) {
-				int idx1 = skill->get_index(sd->reproduceskill_id), idx2 = skill->get_index(sd->cloneskill_id);
-				if( sd->status.skill[idx1].id || sd->status.skill[idx2].id ) {
+			if (sd != NULL) {
+				int reproduceIdx = sd->reproduceskill_id > 0 ? skill->get_index(sd->reproduceskill_id) : -1;
+				int cloneIdx = sd->cloneskill_id > 0 ? skill->get_index(sd->cloneskill_id) : -1;
+
+				bool hasReproduceSkill = reproduceIdx >= 0 && sd->status.skill[reproduceIdx].id != 0;
+				bool hasCloneSkill = cloneIdx >= 0 && sd->status.skill[cloneIdx].id != 0;
+				if (hasReproduceSkill || hasCloneSkill) {
 					sc_start(src, src, SC_STOP, 100, skill_lv, INFINITE_DURATION, skill_id); // The skill_lv is stored in val1 used in skill_select_menu to determine the used skill lvl [Xazax]
 					clif->autoshadowspell_list(sd);
-					clif->skill_nodamage(src,bl,skill_id,1,1);
-				}
-				else
+					clif->skill_nodamage(src, bl, skill_id, 1, 1);
+				} else {
 					clif->skill_fail(sd, skill_id, USESKILL_FAIL_IMITATION_SKILL_NONE, 0, 0);
+				}
 			}
 			break;
 
@@ -14367,7 +14394,7 @@ static int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *b
 						if (tsd) clif->gospel_info(tsd, 0x1e);
 						break;
 					case 11: // ATK +100%
-						sc_start(ss, bl, SC_INCATKRATE, 100, 100, time, skill_id);
+						sc_start(ss, bl, SC_GOSPEL_ATK_PERC, 100, 100, time, skill_id);
 						if (tsd) clif->gospel_info(tsd, 0x1f);
 						break;
 					case 12: // HIT/Flee +50
@@ -14396,13 +14423,16 @@ static int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *b
 						sc_start(ss, bl, SC_POISON, 100, 1, time, skill_id);
 						break;
 					case 4: // Level 10 Provoke
+						// TODO: [Aegis] while this does apply the status effect of provoke, it manually sets the atk / def percentage changes...
+						// this means you could be affected by gospel provoke as well as normal provoke, since provoke also manually applies the atk / def changes in Aegis.
+						// We're not doing that here.
 						sc_start(ss, bl, SC_PROVOKE, 100, 10, time, skill_id);
 						break;
 					case 5: // DEF -100%
 				                sc_start(ss, bl, SC_INCDEFRATE, 100, -100, time, skill_id);
 						break;
 					case 6: // ATK -100%
-				                sc_start(ss, bl, SC_INCATKRATE, 100, -100, time, skill_id);
+						sc_start(ss, bl, SC_GOSPEL_ATK_PERC, 100, -100, time, skill_id);
 						break;
 					case 7: // Flee -100%
 				                sc_start(ss, bl, SC_INCFLEERATE, 100, -100, time, skill_id);
@@ -25252,6 +25282,7 @@ void skill_defaults(void)
 	skill->unit_group_newid = 0;
 	/* accessors */
 	skill->get_index = skill_get_index;
+	skill->get_index_sub = skill_get_index_sub;
 	skill->get_type = skill_get_type;
 	skill->get_hit = skill_get_hit;
 	skill->get_inf = skill_get_inf;

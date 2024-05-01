@@ -22,7 +22,7 @@
 #define CONFIG_CORE_H
 
 /// Hercules version. From tag vYYYY.MM(+PPP) -> YYYYMMPPP
-#define HERCULES_VERSION 202403000
+#define HERCULES_VERSION 202404000
 
 /// Max number of items on @autolootid list
 #define AUTOLOOTITEM_SIZE 10

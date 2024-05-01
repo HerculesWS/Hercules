@@ -708,6 +708,7 @@ struct itemdb_interface {
 	struct itemdb_option* (*option_exists) (int idx);
 	struct item_reform* (*reform_exists) (int idx);
 	bool (*in_group) (struct item_group *group, int nameid);
+	const struct item_group *(*search_group) (int nameid);
 	int (*group_item) (struct item_group *group);
 	int (*chain_item) (unsigned short chain_id, int *rate);
 	void (*package_item) (struct map_session_data *sd, struct item_package *package);
