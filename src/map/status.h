@@ -1402,6 +1402,7 @@ struct status_interface {
 	const char *(*get_name) (const struct block_list *bl);
 	int (*get_class) (const struct block_list *bl);
 	int (*get_lv) (const struct block_list *bl);
+	int (*get_spiritballs) (const struct block_list *bl);
 	defType (*get_def) (struct block_list *bl);
 	unsigned short (*get_speed) (struct block_list *bl);
 	unsigned char (*calc_attack_element) (struct block_list *bl, struct status_change *sc, int element);

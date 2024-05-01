@@ -5086,7 +5086,7 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 					}
 					clif->slide(src, src->x, src->y);
 					clif->fixpos(src);
-					clif->spiritball(src, BALL_TYPE_SPIRIT, AREA);
+					clif->spiritballs(src, status->get_spiritballs(src), AREA);
 				}
 			}
 			break;
@@ -6630,7 +6630,7 @@ static int skill_castend_id(int tid, int64 tick, int id, intptr_t data)
 			if (unit->move_pos(src, src->x + x, src->y + y, 1, true) == 0) {
 				//Display movement + animation.
 				clif->slide(src, src->x, src->y);
-				clif->spiritball(src, BALL_TYPE_SPIRIT, AREA);
+				clif->spiritballs(src, status->get_spiritballs(src), AREA);
 			}
 			// "Skill Failed" message was already shown when checking that target is invalid
 			//clif->skill_fail(sd, ud->skill_id, USESKILL_FAIL_LEVEL, 0, 0);

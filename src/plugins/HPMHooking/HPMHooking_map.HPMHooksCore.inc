@@ -1158,8 +1158,10 @@ struct {
 	struct HPMHookPoint *HP_clif_produce_effect_post;
 	struct HPMHookPoint *HP_clif_devotion_pre;
 	struct HPMHookPoint *HP_clif_devotion_post;
-	struct HPMHookPoint *HP_clif_spiritball_pre;
-	struct HPMHookPoint *HP_clif_spiritball_post;
+	struct HPMHookPoint *HP_clif_soulballs_pre;
+	struct HPMHookPoint *HP_clif_soulballs_post;
+	struct HPMHookPoint *HP_clif_spiritballs_pre;
+	struct HPMHookPoint *HP_clif_spiritballs_post;
 	struct HPMHookPoint *HP_clif_spiritball_single_pre;
 	struct HPMHookPoint *HP_clif_spiritball_single_post;
 	struct HPMHookPoint *HP_clif_bladestop_pre;
@@ -6992,6 +6994,8 @@ struct {
 	struct HPMHookPoint *HP_status_get_class_post;
 	struct HPMHookPoint *HP_status_get_lv_pre;
 	struct HPMHookPoint *HP_status_get_lv_post;
+	struct HPMHookPoint *HP_status_get_spiritballs_pre;
+	struct HPMHookPoint *HP_status_get_spiritballs_post;
 	struct HPMHookPoint *HP_status_get_def_pre;
 	struct HPMHookPoint *HP_status_get_def_post;
 	struct HPMHookPoint *HP_status_get_speed_pre;
@@ -8729,8 +8733,10 @@ struct {
 	int HP_clif_produce_effect_post;
 	int HP_clif_devotion_pre;
 	int HP_clif_devotion_post;
-	int HP_clif_spiritball_pre;
-	int HP_clif_spiritball_post;
+	int HP_clif_soulballs_pre;
+	int HP_clif_soulballs_post;
+	int HP_clif_spiritballs_pre;
+	int HP_clif_spiritballs_post;
 	int HP_clif_spiritball_single_pre;
 	int HP_clif_spiritball_single_post;
 	int HP_clif_bladestop_pre;
@@ -14563,6 +14569,8 @@ struct {
 	int HP_status_get_class_post;
 	int HP_status_get_lv_pre;
 	int HP_status_get_lv_post;
+	int HP_status_get_spiritballs_pre;
+	int HP_status_get_spiritballs_post;
 	int HP_status_get_def_pre;
 	int HP_status_get_def_post;
 	int HP_status_get_speed_pre;
