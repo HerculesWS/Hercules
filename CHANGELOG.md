@@ -124,6 +124,185 @@ All these changes only affect Renewal. Pre-renewal is unchanged.
   - Fixed casting time changed: `0.4` s -> `0.2` s
   - Variable casting time changed: `1.6` s -> `0.8` s
 
+#### 2-1 Classes
+
+- Rebalance of the 2-1 job skills, implementation based on kRO and kRO zero patch notes from 2018-10-31, iRO Wiki, rAthena and divine pride info, along with some in-game testing. (#3223, part of issue #2727)
+
+##### Knight
+
+- Rebalance of `KN_BOWLINGBASH` (Bowling Bash)
+  - Area of effect: `3x3` -> `5x5` centered on target
+  - Number of hits changed
+    - 2-handed weapons: number of hits depend on number of targets
+      - 1 target: 2 hits
+      - 2 ~ 3 targets: 3 hits
+      - 4 or more targets: 4 hits
+    - other weapons: 2 hits
+  - Variable cast time removed
+  - Knockback increased: 1 cell -> 5 cells
+  - 1 second cooldown added
+  - After using the skill, caster can't switch weapons for 1 second
+  - Gutterline feature removed
+- Rebalance of `KN_BRANDISHSPEAR` (Brandish Spear)
+  - Changed damage type: Short range physical -> Long range physical
+  - Damage formula changed
+  - Removed variable cast time
+  - Added `0.5` s delay after skill
+  - Added `1` s cooldown.
+  - SP consumption increased: 12 -> 24.
+  - After using the skill, caster can't switch weapons for 1 second
+- Rebalance of `KN_TWOHANDQUICKEN` (Two-Hand Quicken)
+  - Gives additional `10%` of ASPD (as equipment ASPD)
+  - Now gives HIT `+(2 * SkillLevel)`
+  - Now gives CRIT `+(2 + SkillLevel)`
+-  Rebalance of `KN_CHARGEATK` (Charge Attack)
+  - Fixed and variable casttime removed
+  - Added Cooldown of `0.5` s
+
+##### Blacksmith
+- Rebalance of `BS_ADRENALINE` (Adrenaline Rush)
+  - Gives additional ASPD `+10%` to caster and party members (as Equip ASPD)
+  - Added HIT `+(5 + 3 * SkillLevel)` effect to caster and party members
+- Rebalance of `BS_OVERTHRUST` (Over Thrust)
+  - Weapon destruction chance removed
+  - Party members bonus changed based on skill level: `5%` / `5%` / `10%` / `10%` / `15%`
+
+##### Assassin
+- Rebalance of `AS_SONICBLOW` (Sonic Blow)
+  - Attack motion removed
+  - Damage formula changed
+  - Skill now does `50%` more damage if target has less than `50%` HP
+  - Skill modifier is no longer halved when Enchant Deadly Poison is active
+  - Global delay reduced: `2` s -> `0.5` s
+  - `1` s cooldown added
+- Rebalance of `AS_SPLASHER` (Venom Splasher)
+  - Damage formula changed
+  - Explosion delay changed
+  - Cooldown changed
+  - Red Gemstone requirement removed
+  - Explosion damage no longer splits between targets
+
+##### Wizard
+- Rebalance of `WZ_VERMILION` (Lord of Vermilion)
+  - Damage formula changed
+    - Old: `(100 ~ 330)% x 4 waves` (10 hits each)
+    - New: `[400 + (Skill Level x 100)]% x 1 wave` (20 hits)
+  - Fixed casting time changed
+    - Old: `[2.48 - (Skill Level × 0.08)]` s
+    - New: `1.5` s at all skill levels
+  - Variable casting time changed
+    - Old: `[9.92 - (Skill Level × 0.32)]` s
+    - New: `[6.5 - (Skill Level × 0.2)]` s
+  - Global delay of skills reduced
+    - Old: `5` s at all skill levels
+    - New: `1` s at all skill levels
+  - `5` s cooldown added
+  - Chance of causing blind effect increased
+- Rebalance of `WZ_METEOR` (Meteor Storm)
+  - Fixed casting time reduced
+    - Old: `2.4` s at all skill levels
+    - New: `1.5` s at all skill levels
+  - Variable casting time reduced
+    - Old: `9.6` s at all skill levels
+    - New: `6.3` s at all skill levels
+  - Global delay of skills reduced
+    - Old: `2` ~ `7` s
+    - New: `1` s at all skill levels
+  - Cooldown added: `[2 + (Skill Level x 0.5)]` s
+- Rebalance of `WZ_STORMGUST` (Storm Gust)
+  - Fixed casting time changed
+    - Old: `[0.8 + (Skill Level * 0.16)]` s
+    - New: `1.5` s at all skill levels
+  - Variable casting time changed
+    - Old: `[3.2 + (Skill Level * 0.64)]` s
+    - New: `[4.3 + (Skill Level * 0.2)]` s
+  - Global delay of skills reduced
+    - Old: `5` s at all skill levels
+    - New: `1` s at all skill levels
+  - `6` s cooldown added
+  - Damage formula changed
+    - Old: `(100 + 40 * Skill Level)%` MATK
+    - New: `(70 + 50 * Skill Level)%` MATK
+- Rebalance of `WZ_JUPITEL` (Jupitel Thunder)
+  - Fixed casting time changed
+    - Old: `[0.32 + (Skill Level × 0.08)]` s
+    - New: `0.5` s at all skill levels
+  - Variable casting time changed
+    - Old: `[1.28 + (Skill Level × 0.32)]` s
+    - New: `[1.8 + (Skill Level × 0.2)]` s
+- Rebalance of `WZ_EARTHSPIKE` (Earth Spike)
+  - Damage formula changed
+    - Old: `100%` per hit
+    - New: `200%` per hit
+  - Fixed casting time changed
+    - Old: `(Skill Level x 0.112)` s
+    - New: `0.2 + (Skill Level x 0.2)` s
+  - Variable casting time changed
+    - Old: `(Skill Level x 0.448)` s
+    - New: `0.7 + (Skill Level x 0.5)` s
+  - Global delay of skills reduced
+    - Old: `0.8 + (Skill Level x 0.2)` s
+    - New: `0.9 + (Skill Level x 0.1)` s
+- Rebalance of `WZ_HEAVENDRIVE` (Heaven's Drive)
+  - Fixed casting time changed
+    - Old: `(Skill Level x 0.16)` s
+    - New: `0.8` s at all skill levels
+  - Variable casting time changed
+    - Old: `(Skill Level x 0.64)` s
+    - New: `0.9 + (Skill Level x 0.2)` s
+  - Global delay of skills reduced
+    - Old: `1` s at all skill levels
+    - New: `0.5` s at all skill levels
+
+##### Priest
+- Rebalance of `PR_MAGNUS` (Magnus Exorcismus)
+  - Fixed casting time reduced: `3` s -> `1` s
+  - Variable casting time reduced: `12` s -> `4` s
+  - Global delay of skills reduced: `4` s -> `1` s
+  - Cooldown added: `6` s
+  - Skill now deals damage to monsters of all race monsters (instead of only Undead property and Demon race monsters)
+  - Skill now deals additional `30%` damage per hits to monsters with:
+    - Demon race
+    - Shadow property
+    - Undead race or property
+- Rebalance of `PR_MACEMASTERY` (Mace Mastery)
+  - Also gives CRI `+(SkillLevel)` when equipped with Maces
+- Rebalance of `PR_SUFFRAGIUM` (Suffragium)
+  - Now affects all nearby party members (Range: `18` cells)
+  - Now casts on Self instead of Target
+  - Effect reduced: `15%` / `30%` / `45%` -> `10%` / `15%` / `20%` cast time reduction
+  - Duration changed:
+     - Old: `30` s / `20` s / `10` s or when you cast a skill
+     - New: `60` s (no longer ends when you cast a skill)
+  - SP cost increased: `8` SP -> `45` / `57` / `69` SP
+  - `0.5` s fixed casting time added
+  -  `1` s variable casting time added
+  - Global delay of skills reduced: `2` s -> `1` s
+  - `30` s cooldown added
+- Rebalance of `PR_IMPOSITIO` (Impositio Manus)
+  - Now affects all nearby party members (Range: `18` cells)
+  - Now casts on Self instead of Target
+  - Effect changed:
+    - Old: ATK `+(5 x SkillLevel)`
+    - New: ATK/MATK `+(5 x SkillLevel)`
+  - Lower level buffs does not replace an active, higher level, one
+  - SP cost increased:
+    - Old: `10 + (Skill Level x 3)`
+    - New: `56 + (Skill Level x 3)`
+  - Duration increased: `60` s -> `120` s
+  - Fixed casting time added: `0.5` s
+  - Variable casting time added: `1` s
+  - Global delay reduced: `3` s -> `1` s
+  - Cooldown added: `30` s
+
+##### Hunter
+- Rebalance of `HT_LANDMINE` (Land Mine), `HT_CLAYMORE` (Claymore Trap) and `HT_BLASTMINE` (Blast Mine)
+  - Fixed casting time reduced: `1` s -> `0.3` s
+  - Variable casting time added: `0.5` s
+- Rebalance of `HT_BLITZBEAT` (Blitz Beat)
+  - Damage formula changed
+  - Auto Blitz Beat no longer splits the damage among multiple targets
+
 ## [v2024.04] `April 2024`
 
 ### Added
