@@ -3079,22 +3079,14 @@ static void status_calc_bl_main(struct block_list *bl, e_scb_flag flag)
 			;
 	}
 
-	if ((flag & SCB_ATK_PERC) != 0) {
-		int prev_atk_percent = st->atk_percent;
+	if ((flag & SCB_ATK_PERC) != 0)
 		st->atk_percent = status->calc_atk_percent(bl, sc);
-		if (prev_atk_percent != st->atk_percent)
-			clif->updatestatus(sd, SP_ATK1);
-	}
 
 	if ((flag & SCB_MATK_PERC) != 0)
 		st->matk_percent = status->calc_matk_percent(bl, sc);
 
-	if ((flag & SCB_DEF_PERC) != 0) {
-		int prev_def_percent = st->def_percent;
+	if ((flag & SCB_DEF_PERC) != 0)
 		st->def_percent = status->calc_def_percent(bl, sc);
-		if (prev_def_percent != st->def_percent)
-			clif->updatestatus(sd, SP_DEF2);
-	}
 
 	if ((flag & SCB_MDEF_PERC) != 0) {
 		st->mdef_percent = status->calc_mdef_percent(bl, sc);
@@ -3497,6 +3489,8 @@ static void status_calc_bl_(struct block_list *bl, e_scb_flag flag, enum e_statu
 #endif
 		)
 			clif->updatestatus(sd,SP_ATK1);
+		else if (bst.atk_percent != st->atk_percent)
+			clif->updatestatus(sd, SP_ATK1);
 
 		if(bst.def != st->def) {
 			clif->updatestatus(sd,SP_DEF1);
@@ -3517,7 +3511,10 @@ static void status_calc_bl_(struct block_list *bl, e_scb_flag flag, enum e_statu
 #ifdef RENEWAL
 			clif->updatestatus(sd,SP_DEF1);
 #endif
+		} else if (bst.def_percent != st->def_percent) {
+			clif->updatestatus(sd,SP_DEF2);
 		}
+
 		if(bst.flee2 != st->flee2)
 			clif->updatestatus(sd,SP_FLEE2);
 		if(bst.cri != st->cri)
