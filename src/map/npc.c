@@ -313,7 +313,8 @@ static int npc_rr_secure_timeout_timer(int tid, int64 tick, int id, intptr_t dat
 		case NPCT_MENU:
 			timeout = NPC_SECURE_TIMEOUT_MENU;
 			break;
-		//case NPCT_WAIT: var starts with this value
+		case NPCT_WAIT: //var starts with this value
+			break;
 	}
 
 	if( DIFF_TICK(tick,sd->npc_idle_tick) > (timeout*1000) ) {
