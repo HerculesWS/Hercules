@@ -1512,6 +1512,7 @@ struct status_interface {
 	void (*display_remove) (struct map_session_data *sd, enum sc_type type);
 	int (*natural_heal) (struct block_list *bl, va_list args);
 	int (*natural_heal_timer) (int tid, int64 tick, int id, intptr_t data);
+	void (*load_sc_type) (void);
 	bool (*readdb_job2) (char *fields[], int columns, int current);
 	bool (*readdb_sizefix) (char *fields[], int columns, int current);
 	bool (*read_scdb_libconfig) (void);

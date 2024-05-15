@@ -134,22 +134,8 @@ static void initChangeTables(void)
 	memset(status->dbs->ChangeFlagTable, 0, sizeof(status->dbs->ChangeFlagTable));
 	memset(status->dbs->DisplayType, 0, sizeof(status->dbs->DisplayType));
 
-	// Storing the target job rather than simply SC_SOULLINK simplifies code later on.
-	skill->dbs->db[skill->get_index(SL_ALCHEMIST)].status_type   = (sc_type)MAPID_ALCHEMIST;
-	skill->dbs->db[skill->get_index(SL_MONK)].status_type        = (sc_type)MAPID_MONK;
-	skill->dbs->db[skill->get_index(SL_STAR)].status_type        = (sc_type)MAPID_STAR_GLADIATOR;
-	skill->dbs->db[skill->get_index(SL_SAGE)].status_type        = (sc_type)MAPID_SAGE;
-	skill->dbs->db[skill->get_index(SL_CRUSADER)].status_type    = (sc_type)MAPID_CRUSADER;
-	skill->dbs->db[skill->get_index(SL_SUPERNOVICE)].status_type = (sc_type)MAPID_SUPER_NOVICE;
-	skill->dbs->db[skill->get_index(SL_KNIGHT)].status_type      = (sc_type)MAPID_KNIGHT;
-	skill->dbs->db[skill->get_index(SL_WIZARD)].status_type      = (sc_type)MAPID_WIZARD;
-	skill->dbs->db[skill->get_index(SL_PRIEST)].status_type      = (sc_type)MAPID_PRIEST;
-	skill->dbs->db[skill->get_index(SL_BARDDANCER)].status_type  = (sc_type)MAPID_BARDDANCER;
-	skill->dbs->db[skill->get_index(SL_ROGUE)].status_type       = (sc_type)MAPID_ROGUE;
-	skill->dbs->db[skill->get_index(SL_ASSASIN)].status_type     = (sc_type)MAPID_ASSASSIN;
-	skill->dbs->db[skill->get_index(SL_BLACKSMITH)].status_type  = (sc_type)MAPID_BLACKSMITH;
-	skill->dbs->db[skill->get_index(SL_HUNTER)].status_type      = (sc_type)MAPID_HUNTER;
-	skill->dbs->db[skill->get_index(SL_SOULLINKER)].status_type  = (sc_type)MAPID_SOUL_LINKER;
+	status->load_sc_type();
+
 #undef set_sc_with_vfx
 }
 
@@ -13985,6 +13971,26 @@ static void status_check_job_bonus(int idx, const char *name, int class)
 	}
 }
 
+static void status_load_sc_type(void)
+{
+	// Storing the target job rather than simply SC_SOULLINK simplifies code later on.
+	skill->dbs->db[skill->get_index(SL_ALCHEMIST)].status_type   = (sc_type)MAPID_ALCHEMIST;
+	skill->dbs->db[skill->get_index(SL_MONK)].status_type        = (sc_type)MAPID_MONK;
+	skill->dbs->db[skill->get_index(SL_STAR)].status_type        = (sc_type)MAPID_STAR_GLADIATOR;
+	skill->dbs->db[skill->get_index(SL_SAGE)].status_type        = (sc_type)MAPID_SAGE;
+	skill->dbs->db[skill->get_index(SL_CRUSADER)].status_type    = (sc_type)MAPID_CRUSADER;
+	skill->dbs->db[skill->get_index(SL_SUPERNOVICE)].status_type = (sc_type)MAPID_SUPER_NOVICE;
+	skill->dbs->db[skill->get_index(SL_KNIGHT)].status_type      = (sc_type)MAPID_KNIGHT;
+	skill->dbs->db[skill->get_index(SL_WIZARD)].status_type      = (sc_type)MAPID_WIZARD;
+	skill->dbs->db[skill->get_index(SL_PRIEST)].status_type      = (sc_type)MAPID_PRIEST;
+	skill->dbs->db[skill->get_index(SL_BARDDANCER)].status_type  = (sc_type)MAPID_BARDDANCER;
+	skill->dbs->db[skill->get_index(SL_ROGUE)].status_type       = (sc_type)MAPID_ROGUE;
+	skill->dbs->db[skill->get_index(SL_ASSASIN)].status_type     = (sc_type)MAPID_ASSASSIN;
+	skill->dbs->db[skill->get_index(SL_BLACKSMITH)].status_type  = (sc_type)MAPID_BLACKSMITH;
+	skill->dbs->db[skill->get_index(SL_HUNTER)].status_type      = (sc_type)MAPID_HUNTER;
+	skill->dbs->db[skill->get_index(SL_SOULLINKER)].status_type  = (sc_type)MAPID_SOUL_LINKER;
+}
+
 static bool status_readdb_job2(char *fields[], int columns, int current)
 {
 	int idx, class, i;
@@ -14750,6 +14756,7 @@ void status_defaults(void)
 	status->change_start_unknown_sc = status_change_start_unknown_sc;
 	status->display_remove = status_display_remove;
 	status->natural_heal = status_natural_heal;
+	status->load_sc_type = status_load_sc_type;
 	status->natural_heal_timer = status_natural_heal_timer;
 	status->readdb_job2 = status_readdb_job2;
 	status->readdb_sizefix = status_readdb_sizefix;
