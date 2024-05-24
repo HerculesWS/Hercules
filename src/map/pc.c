@@ -8870,18 +8870,7 @@ static int pc_jobchange(struct map_session_data *sd, int class, int upper)
 		pc_setglobalreg(sd, script->add_variable("jobchange_level_3rd"), sd->change_level_3rd);
 	}
 
-	if(sd->cloneskill_id) {
-		idx = skill->get_index(sd->cloneskill_id);
-		if( sd->status.skill[idx].flag == SKILL_FLAG_PLAGIARIZED ) {
-			sd->status.skill[idx].id = 0;
-			sd->status.skill[idx].lv = 0;
-			sd->status.skill[idx].flag = 0;
-			clif->deleteskill(sd, sd->cloneskill_id, false);
-		}
-		sd->cloneskill_id = 0;
-		pc_setglobalreg(sd, script->add_variable("CLONE_SKILL"), 0);
-		pc_setglobalreg(sd, script->add_variable("CLONE_SKILL_LV"), 0);
-	}
+	pc->clear_existing_cloneskill(sd, true);
 
 	if(sd->reproduceskill_id) {
 		idx = skill->get_index(sd->reproduceskill_id);
