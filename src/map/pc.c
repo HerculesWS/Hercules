@@ -8831,7 +8831,7 @@ static int jobchange_killclone(struct block_list *bl, va_list ap)
 static int pc_jobchange(struct map_session_data *sd, int class, int upper)
 {
 	int i, fame_flag=0;
-	int job, idx = 0;
+	int job = 0;
 
 	nullpo_ret(sd);
 
@@ -8872,18 +8872,7 @@ static int pc_jobchange(struct map_session_data *sd, int class, int upper)
 
 	pc->clear_existing_cloneskill(sd, true);
 
-	if(sd->reproduceskill_id) {
-		idx = skill->get_index(sd->reproduceskill_id);
-		if( sd->status.skill[idx].flag == SKILL_FLAG_PLAGIARIZED ) {
-			sd->status.skill[idx].id = 0;
-			sd->status.skill[idx].lv = 0;
-			sd->status.skill[idx].flag = 0;
-			clif->deleteskill(sd, sd->reproduceskill_id, false);
-		}
-		sd->reproduceskill_id = 0;
-		pc_setglobalreg(sd, script->add_variable("REPRODUCE_SKILL"),0);
-		pc_setglobalreg(sd, script->add_variable("REPRODUCE_SKILL_LV"),0);
-	}
+	pc->clear_existing_reproduceskill(sd, true);
 
 	if ((job & MAPID_UPPERMASK) != (sd->job & MAPID_UPPERMASK)) { //Things to remove when changing class tree.
 		const int class_idx = pc->class2idx(sd->status.class);
@@ -12664,6 +12653,33 @@ static void pc_clear_existing_cloneskill(struct map_session_data *sd, bool clear
 	}
 }
 
+/**
+ * Clears / removes the existing reproduced skill from SC_REPRODUCE
+ *
+ * @param sd The player to clear the reproduced skill from.
+ * @param clear_vars If true, the remembered reproduced skill level and ID will be cleared, otherwise it will not be touched.
+ */
+static void pc_clear_existing_reproduceskill(struct map_session_data *sd, bool clear_vars)
+{
+	nullpo_retv(sd);
+
+	if (sd->reproduceskill_id != 0) {
+		int idx = skill->get_index(sd->reproduceskill_id);
+		if (sd->status.skill[idx].flag == SKILL_FLAG_PLAGIARIZED) {
+			sd->status.skill[idx].id = 0;
+			sd->status.skill[idx].lv = 0;
+			sd->status.skill[idx].flag = 0;
+			clif->deleteskill(sd, sd->reproduceskill_id, false);
+		}
+	}
+
+	if (clear_vars) {
+		sd->reproduceskill_id = 0;
+		pc_setglobalreg(sd, script->add_variable("REPRODUCE_SKILL"), 0);
+		pc_setglobalreg(sd, script->add_variable("REPRODUCE_SKILL_LV"), 0);
+	}
+}
+
 static void do_final_pc(void)
 {
 
@@ -13093,4 +13109,5 @@ void pc_defaults(void)
 
 	pc->is_own_skill = pc_is_own_skill;
 	pc->clear_existing_cloneskill = pc_clear_existing_cloneskill;
+	pc->clear_existing_reproduceskill = pc_clear_existing_reproduceskill;
 }

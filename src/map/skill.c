@@ -3681,7 +3681,7 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 				break;
 		}
 
-		int cidx, idx, lv = 0;
+		int cidx, lv = 0;
 		cidx = skill->get_index(copy_skill);
 		switch(can_copy(tsd, copy_skill)) {
 		case 1: // Plagiarism
@@ -3710,15 +3710,7 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 		case 2: // Reproduce
 		{
 			lv = sc ? sc->data[SC__REPRODUCE]->val1 : 1;
-			if (tsd->reproduceskill_id) {
-				idx = skill->get_index(tsd->reproduceskill_id);
-				if (tsd->status.skill[idx].flag == SKILL_FLAG_PLAGIARIZED) {
-					tsd->status.skill[idx].id = 0;
-					tsd->status.skill[idx].lv = 0;
-					tsd->status.skill[idx].flag = 0;
-					clif->deleteskill(tsd, tsd->reproduceskill_id, false);
-				}
-			}
+			pc->clear_existing_reproduceskill(tsd, false);
 			lv = min(lv, skill->get_max(copy_skill));
 
 			tsd->reproduceskill_id = copy_skill;

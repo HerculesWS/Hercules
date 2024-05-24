@@ -1286,6 +1286,7 @@ END_ZEROED_BLOCK; /* End */
 
 	bool (*is_own_skill) (struct map_session_data *sd, uint16 skill_id);
 	void (*clear_existing_cloneskill) (struct map_session_data *sd, bool clear_vars);
+	void (*clear_existing_reproduceskill) (struct map_session_data *sd, bool clear_vars);
 };
 
 #ifdef HERCULES_CORE
