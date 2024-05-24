@@ -96405,6 +96405,32 @@ int HP_status_natural_heal_timer(int tid, int64 tick, int id, intptr_t data) {
 	}
 	return retVal___;
 }
+void HP_status_load_sc_type(void) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_status_load_sc_type_pre > 0) {
+		void (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_load_sc_type_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_status_load_sc_type_pre[hIndex].func;
+			preHookFunc();
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.status.load_sc_type();
+	}
+	if (HPMHooks.count.HP_status_load_sc_type_post > 0) {
+		void (*postHookFunc) (void);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_load_sc_type_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_status_load_sc_type_post[hIndex].func;
+			postHookFunc();
+		}
+	}
+	return;
+}
 bool HP_status_readdb_job2(char *fields[], int columns, int current) {
 	int hIndex = 0;
 	bool retVal___ = false;

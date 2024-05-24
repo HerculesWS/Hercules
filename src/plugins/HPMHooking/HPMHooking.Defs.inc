@@ -9296,6 +9296,8 @@ typedef int (*HPMHOOK_pre_status_natural_heal) (struct block_list **bl, va_list 
 typedef int (*HPMHOOK_post_status_natural_heal) (int retVal___, struct block_list *bl, va_list args);
 typedef int (*HPMHOOK_pre_status_natural_heal_timer) (int *tid, int64 *tick, int *id, intptr_t *data);
 typedef int (*HPMHOOK_post_status_natural_heal_timer) (int retVal___, int tid, int64 tick, int id, intptr_t data);
+typedef void (*HPMHOOK_pre_status_load_sc_type) (void);
+typedef void (*HPMHOOK_post_status_load_sc_type) (void);
 typedef bool (*HPMHOOK_pre_status_readdb_job2) (char **fields[], int *columns, int *current);
 typedef bool (*HPMHOOK_post_status_readdb_job2) (bool retVal___, char *fields[], int columns, int current);
 typedef bool (*HPMHOOK_pre_status_readdb_sizefix) (char **fields[], int *columns, int *current);
