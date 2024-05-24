@@ -3903,6 +3903,7 @@ ACMD(reloadmobdb)
 ACMD(reloadskilldb)
 {
 	skill->reload();
+	status->load_sc_type();
 	homun->reload_skill();
 	elemental->reload_skilldb();
 	mercenary->read_skilldb();
