@@ -3683,12 +3683,12 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 
 		int cidx, lv = 0;
 		cidx = skill->get_index(copy_skill);
+		int learned_lv = tsd->status.skill[cidx].lv;
+		bool copying_own_skill = pc->is_own_skill(tsd, copy_skill);
 		switch(can_copy(tsd, copy_skill)) {
 		case 1: // Plagiarism
 		{
 			pc->clear_existing_cloneskill(tsd, false);
-			int learned_lv = tsd->status.skill[cidx].lv;
-			bool copying_own_skill = pc->is_own_skill(tsd, copy_skill);
 
 			lv = min(skill_lv, pc->checkskill(tsd, RG_PLAGIARISM));
 			if (learned_lv > lv)
@@ -3711,7 +3711,10 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 		{
 			lv = sc ? sc->data[SC__REPRODUCE]->val1 : 1;
 			pc->clear_existing_reproduceskill(tsd, false);
+
 			lv = min(lv, skill->get_max(copy_skill));
+			if (learned_lv > lv)
+				break; // unconfirmed, but probably the same behavior as for RG_PLAGIARISM
 
 			tsd->reproduceskill_id = copy_skill;
 			pc_setglobalreg(tsd, script->add_variable("REPRODUCE_SKILL"), copy_skill);
@@ -3719,7 +3722,10 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 
 			tsd->status.skill[cidx].id = copy_skill;
 			tsd->status.skill[cidx].lv = lv;
-			tsd->status.skill[cidx].flag = SKILL_FLAG_PLAGIARIZED;
+			if (copying_own_skill)
+				tsd->status.skill[cidx].flag = learned_lv + SKILL_FLAG_REPLACED_LV_0;
+			else
+				tsd->status.skill[cidx].flag = SKILL_FLAG_PLAGIARIZED;
 			clif->addskill(tsd, copy_skill);
 		}
 		break;
