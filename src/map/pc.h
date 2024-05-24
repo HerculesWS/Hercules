@@ -1285,6 +1285,7 @@ END_ZEROED_BLOCK; /* End */
 	void (*crimson_marker_clear) (struct map_session_data *sd);
 
 	bool (*is_own_skill) (struct map_session_data *sd, uint16 skill_id);
+	void (*clear_existing_cloneskill) (struct map_session_data *sd, bool clear_vars);
 };
 
 #ifdef HERCULES_CORE

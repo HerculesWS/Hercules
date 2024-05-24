@@ -3686,20 +3686,7 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 		switch(can_copy(tsd, copy_skill)) {
 		case 1: // Plagiarism
 		{
-			if (tsd->cloneskill_id) {
-				idx = skill->get_index(tsd->cloneskill_id);
-				if (tsd->status.skill[idx].flag == SKILL_FLAG_PLAGIARIZED) {
-					tsd->status.skill[idx].id = 0;
-					tsd->status.skill[idx].lv = 0;
-					tsd->status.skill[idx].flag = 0;
-					clif->deleteskill(tsd, tsd->cloneskill_id, false);
-				} else if (tsd->status.skill[idx].flag >= SKILL_FLAG_REPLACED_LV_0) {
-					tsd->status.skill[idx].lv = tsd->status.skill[idx].flag - SKILL_FLAG_REPLACED_LV_0;
-					tsd->status.skill[idx].flag = SKILL_FLAG_PERMANENT;
-					// CAREFUL! This assumes you will only ever use SKILL_FLAG_REPLACED_LV_0 logic when copying SKILL_FLAG_PERMANENT skills!!!
-					clif->addskill(tsd, tsd->cloneskill_id);
-				}
-			}
+			pc->clear_existing_cloneskill(tsd, false);
 			int learned_lv = tsd->status.skill[cidx].lv;
 			bool copying_own_skill = pc->is_own_skill(tsd, copy_skill);
 
