@@ -1520,11 +1520,17 @@ static int pc_reg_received(struct map_session_data *sd)
 	if ((i = pc->checkskill(sd,RG_PLAGIARISM)) > 0) {
 		sd->cloneskill_id = pc_readglobalreg(sd,script->add_variable("CLONE_SKILL"));
 		if (sd->cloneskill_id > 0 && (idx = skill->get_index(sd->cloneskill_id)) > 0) {
+			int learned_lv = sd->status.skill[idx].lv;
+			bool is_own_skill = pc->is_own_skill(sd, sd->cloneskill_id);
 			sd->status.skill[idx].id = sd->cloneskill_id;
 			sd->status.skill[idx].lv = pc_readglobalreg(sd,script->add_variable("CLONE_SKILL_LV"));
 			if (sd->status.skill[idx].lv > i)
 				sd->status.skill[idx].lv = i;
-			sd->status.skill[idx].flag = SKILL_FLAG_PLAGIARIZED;
+
+			if (is_own_skill)
+				sd->status.skill[idx].flag = learned_lv + SKILL_FLAG_REPLACED_LV_0;
+			else
+				sd->status.skill[idx].flag = SKILL_FLAG_PLAGIARIZED;
 		}
 	}
 	if ((i = pc->checkskill(sd,SC_REPRODUCE)) > 0) {
@@ -1644,7 +1650,8 @@ static void pc_calc_skilltree_clear(struct map_session_data *sd)
 	nullpo_retv(sd);
 
 	for (i = 0; i < MAX_SKILL_DB; i++) {
-		if (sd->status.skill[i].flag != SKILL_FLAG_PLAGIARIZED && sd->status.skill[i].flag != SKILL_FLAG_PERM_GRANTED) //Don't touch these
+		if (sd->status.skill[i].flag != SKILL_FLAG_PLAGIARIZED && sd->status.skill[i].flag != SKILL_FLAG_PERM_GRANTED
+		    && sd->status.skill[i].id != sd->cloneskill_id) //Don't touch these
 			sd->status.skill[i].id = 0; //First clear skills.
 		/* permanent skills that must be re-checked */
 		if (sd->status.skill[i].flag == SKILL_FLAG_PERMANENT) {
@@ -1679,7 +1686,8 @@ static int pc_calc_skilltree(struct map_session_data *sd)
 	pc->calc_skilltree_clear(sd);
 
 	for (int i = 0; i < MAX_SKILL_DB; i++) {
-		if (sd->status.skill[i].flag == SKILL_FLAG_TEMPORARY || sd->status.skill[i].flag >= SKILL_FLAG_REPLACED_LV_0) {
+		if ((sd->status.skill[i].flag >= SKILL_FLAG_REPLACED_LV_0 && sd->status.skill[i].id != sd->cloneskill_id)
+		    || sd->status.skill[i].flag == SKILL_FLAG_TEMPORARY) {
 			// Restore original level of skills after deleting earned skills.
 			sd->status.skill[i].lv = (sd->status.skill[i].flag == SKILL_FLAG_TEMPORARY) ? 0 : sd->status.skill[i].flag - SKILL_FLAG_REPLACED_LV_0;
 			sd->status.skill[i].flag = SKILL_FLAG_PERMANENT;

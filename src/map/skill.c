@@ -3693,10 +3693,19 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 					tsd->status.skill[idx].lv = 0;
 					tsd->status.skill[idx].flag = 0;
 					clif->deleteskill(tsd, tsd->cloneskill_id, false);
+				} else if (tsd->status.skill[idx].flag >= SKILL_FLAG_REPLACED_LV_0) {
+					tsd->status.skill[idx].lv = tsd->status.skill[idx].flag - SKILL_FLAG_REPLACED_LV_0;
+					tsd->status.skill[idx].flag = SKILL_FLAG_PERMANENT;
+					// CAREFUL! This assumes you will only ever use SKILL_FLAG_REPLACED_LV_0 logic when copying SKILL_FLAG_PERMANENT skills!!!
+					clif->addskill(tsd, tsd->cloneskill_id);
 				}
 			}
+			int learned_lv = tsd->status.skill[cidx].lv;
+			bool copying_own_skill = pc->is_own_skill(tsd, copy_skill);
 
 			lv = min(skill_lv, pc->checkskill(tsd, RG_PLAGIARISM));
+			if (learned_lv > lv)
+				break; // [Aegis] can't overwrite skill of higher level, but will still remove previously copied skill.
 
 			tsd->cloneskill_id = copy_skill;
 			pc_setglobalreg(tsd, script->add_variable("CLONE_SKILL"), copy_skill);
@@ -3704,7 +3713,10 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 
 			tsd->status.skill[cidx].id = copy_skill;
 			tsd->status.skill[cidx].lv = lv;
-			tsd->status.skill[cidx].flag = SKILL_FLAG_PLAGIARIZED;
+			if (copying_own_skill)
+				tsd->status.skill[cidx].flag = learned_lv + SKILL_FLAG_REPLACED_LV_0;
+			else
+				tsd->status.skill[cidx].flag = SKILL_FLAG_PLAGIARIZED;
 			clif->addskill(tsd, copy_skill);
 		}
 		break;
