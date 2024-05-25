@@ -22,6 +22,19 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
+## [v2024.05] `May 2024`
+
+### Changed
+
+- Implemented official ATK % calculation for `BS_OVERTHRUST` in pre-renewal. Party members only receive 5% ATK bonus. (#3293)
+
+### Fixed
+
+- Fixed a missing initialization of the (m)atk/(m)def modifiers, resulting into 0 or 1 damage. (#3293, related to #3290)
+- Fixed an incorrect call of `clif->updatestatus()` to non-player objects in relation to atk/def percent bonuses. (#3294, related to #3290)
+- Fixed a failure on SCs from skills that don't have a `StatusChange` entry in their skill db entries after a `@reloadskilldb`, such as the spirit skills. (#3296, issue #3295)
+- Fixed a compiler warning due to a missing case label when `SECURE_NPCTIMEOUT` is enabled. (#3297, issue #3197)
+
 ## [v2024.04] `April 2024`
 
 ### Added
