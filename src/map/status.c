@@ -989,7 +989,9 @@ static int status_check_skilluse(struct block_list *src, struct block_list *targ
 			switch (skill_id) { //Usable skills while hiding.
 				case TF_HIDING:
 				case AS_GRIMTOOTH:
+#ifndef RENEWAL
 				case RG_BACKSTAP:
+#endif
 				case RG_RAID:
 				case NJ_SHADOWJUMP:
 				case NJ_KIRIKAGE:
@@ -3718,8 +3720,10 @@ static int status_base_amotion_pc(struct map_session_data *sd, struct status_dat
 	temp = (float)(sqrt(temp) * 0.25f) + 0xc4;
 	if (sd->weapontype == W_BOOK && (skill_lv = pc->checkskill(sd, SA_ADVANCEDBOOK)) > 0)
 		val += (skill_lv - 1) / 2 + 1;
-	if ( (skill_lv = pc->checkskill(sd, GS_SINGLEACTION)) > 0 )
+	if ((skill_lv = pc->checkskill(sd, GS_SINGLEACTION)) > 0)
 		val += ((skill_lv + 1) / 2);
+	if ((skill_lv = pc->checkskill(sd, RG_PLAGIARISM)) > 0)
+		val += skill_lv;
 	amotion = ((int)(temp + ((float)(status->calc_aspd(&sd->bl, &sd->sc, 1) + val) * st->agi / 200)) - min(amotion, 200));
 #else
 	// base weapon delay
@@ -5628,6 +5632,8 @@ static short status_calc_aspd(struct block_list *bl, struct status_change *sc, s
 			bonus += 10;
 		if (sc->data[SC_ADRENALINE] != NULL)
 			bonus += 10;
+		if (sc->data[SC_SPEARQUICKEN] != NULL)
+			bonus += 10;
 #endif
 	}
 
@@ -7424,6 +7430,16 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			}
 			if (total_tick == 1) return 1; //Minimal duration: Only strip without causing the SC
 			break;
+
+#ifdef RENEWAL
+		case SC_RAID:
+			if (bl->type == BL_MOB && is_boss(bl))
+				val2 = 15; // Receives 15% more damage
+			else
+				val2 = 30; // Receives 30% more damage
+			break;
+#endif
+
 		case SC_MER_FLEE:
 		case SC_MER_ATK:
 		case SC_MER_HP:
