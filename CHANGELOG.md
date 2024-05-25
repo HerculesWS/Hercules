@@ -303,6 +303,72 @@ All these changes only affect Renewal. Pre-renewal is unchanged.
   - Damage formula changed
   - Auto Blitz Beat no longer splits the damage among multiple targets
 
+#### 2-2 Classes
+
+- Rebalance of the 2-2 job skills, implementation based on kRO and kRO zero patch notes from 2018-10-31, iRO Wiki, rAthena and divine pride info, along with some in-game testing. (#3229, part of issue #2727)
+
+##### Crusader
+
+- Rebalance of `CR_GRANDCROSS` (Grand Cross)
+  - Fixed casting time changed: `1.5` s -> `0.5` s
+  - Variable casting time changed: `1.5` s -> `1` s
+  - Global delay changed: `1.5` s -> `0.5` s
+  - `1` s cooldown added
+  - Self damage is removed
+- Rebalance of `CR_SHIELDBOOMERANG` (Shield Boomerang)
+  - Damage formula changed
+    - Old: ATK `(100 + 30 x SkillLevel)%` (Shield weight gives extra flat damage)
+    - Now: ATK `(80 x SkillLevel + Shield Weight + Shield Upgrade x 4)%`
+- Rebalance of `CR_SPEARQUICKEN` (Spear Quicken)
+  - Additionally gives `+10%` of Equipment ASPD
+
+##### Alchemist
+
+- Rebalance of `AM_DEMONSTRATION` (Bomb)
+  - Chance of breaking target weapon increased
+    - Old: `SkillLevel %`
+    - New: `(3 x SkillLevel)%`
+  - It now uses basic/default melee damage calculation (instead of special formula)
+  - Damage formula changed:
+    - Old: `[100% + (Skill Level x 20)]%` (ATK + MATK)
+    - New: `[(Skill Level x 60) + (Potion_Research_Lv x 10)]%` ATK
+  - Note: the skill code was refactored to move the chance to break the enemy weapon to the `SkillData2` field of the skill DB (affecting both renewal and pre-renewal)
+- Rebalance of `AM_ACIDTERROR` (Acid Terror)
+  - Chance of breaking target armor increased
+    - Old: `3` / `7` / `10` / `12` / `13` %
+    - New: `5` / `15` / `25` / `35` / `45` %
+  - It now uses basic/default ranged physical damage calculation (instead of special formula)
+  - Damage formula changed:
+    - Old: `[200% + (Skill Level x 80)]%` (ATK + MATK)
+    - New: `[(Skill Level x 200) + (Potion_Research_Lv x 100)]%` ATK
+  - The damage effect has been corrected (renewal only) and it is now applied in a bundle of 5 hits instead of a single damage
+
+##### Rogue
+
+- Rebalance of `RG_RAID` (Sightless Mind)
+  - SP cost reduced: `20` -> `15`
+  - Damage increased
+    - Old: `[100 + (Skill Level x 40)]%`
+    - New: `[50 + (Skill Level x 150)]%`
+  - Damage debuff changed
+    - Old: `20%` more damage for `5` seconds or `7` hits
+    - New: `30%` more damage (`15%` on boss monsters) for `10` seconds
+- Rebalance of RG_BACKSTAP (Back Stab)
+  - Skill mechanics changed
+    - No longer needs to be behind the target to use skill
+    - No longer ignores accuracy check
+    - No longer usable from Hiding state
+    - Now increases skill Hit by 4 per skill level
+    - Number of hits changed:
+      - Old: `1` hit
+      - New: `2` hits with Dagger, `1` hit with other weapons
+  - SP cost reduced: `16` -> `12`
+  - Cooldown added: `0.5` s
+  - Number of hits changed
+  - The bow damage formula has been corrected (affecting both renewal and pre-renewal). Incorrectly, only part of the skillratio value was getting halved when using bows, disregarding the base 100% value.
+- Rebalance of `RG_PLAGIARISM` (Intimidate)
+  - Also increases Attack Speed by `1%` per Skill Level
+
 ## [v2024.05] `May 2024`
 
 ### Changed
