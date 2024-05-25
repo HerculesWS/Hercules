@@ -1263,7 +1263,8 @@ static int can_copy(struct map_session_data *sd, uint16 skill_id)
 		return 0;
 
 	if (sd->status.skill[cidx].id != 0 && (sd->status.skill[cidx].flag >= SKILL_FLAG_REPLACED_LV_0
-	                                       || sd->status.skill[cidx].flag == SKILL_FLAG_PLAGIARIZED))
+	                                       || sd->status.skill[cidx].flag == SKILL_FLAG_PLAGIARIZED
+	                                       || sd->status.skill[cidx].flag == SKILL_FLAG_PERM_GRANTED))
 		return 0;
 
 	// Checks if preserve is active and if skill can be copied by Plagiarism
