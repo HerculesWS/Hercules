@@ -7212,6 +7212,8 @@ struct {
 	struct HPMHookPoint *HP_status_natural_heal_post;
 	struct HPMHookPoint *HP_status_natural_heal_timer_pre;
 	struct HPMHookPoint *HP_status_natural_heal_timer_post;
+	struct HPMHookPoint *HP_status_load_sc_type_pre;
+	struct HPMHookPoint *HP_status_load_sc_type_post;
 	struct HPMHookPoint *HP_status_readdb_job2_pre;
 	struct HPMHookPoint *HP_status_readdb_job2_post;
 	struct HPMHookPoint *HP_status_readdb_sizefix_pre;
@@ -14787,6 +14789,8 @@ struct {
 	int HP_status_natural_heal_post;
 	int HP_status_natural_heal_timer_pre;
 	int HP_status_natural_heal_timer_post;
+	int HP_status_load_sc_type_pre;
+	int HP_status_load_sc_type_post;
 	int HP_status_readdb_job2_pre;
 	int HP_status_readdb_job2_post;
 	int HP_status_readdb_sizefix_pre;

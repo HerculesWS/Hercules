@@ -134,22 +134,8 @@ static void initChangeTables(void)
 	memset(status->dbs->ChangeFlagTable, 0, sizeof(status->dbs->ChangeFlagTable));
 	memset(status->dbs->DisplayType, 0, sizeof(status->dbs->DisplayType));
 
-	// Storing the target job rather than simply SC_SOULLINK simplifies code later on.
-	skill->dbs->db[skill->get_index(SL_ALCHEMIST)].status_type   = (sc_type)MAPID_ALCHEMIST;
-	skill->dbs->db[skill->get_index(SL_MONK)].status_type        = (sc_type)MAPID_MONK;
-	skill->dbs->db[skill->get_index(SL_STAR)].status_type        = (sc_type)MAPID_STAR_GLADIATOR;
-	skill->dbs->db[skill->get_index(SL_SAGE)].status_type        = (sc_type)MAPID_SAGE;
-	skill->dbs->db[skill->get_index(SL_CRUSADER)].status_type    = (sc_type)MAPID_CRUSADER;
-	skill->dbs->db[skill->get_index(SL_SUPERNOVICE)].status_type = (sc_type)MAPID_SUPER_NOVICE;
-	skill->dbs->db[skill->get_index(SL_KNIGHT)].status_type      = (sc_type)MAPID_KNIGHT;
-	skill->dbs->db[skill->get_index(SL_WIZARD)].status_type      = (sc_type)MAPID_WIZARD;
-	skill->dbs->db[skill->get_index(SL_PRIEST)].status_type      = (sc_type)MAPID_PRIEST;
-	skill->dbs->db[skill->get_index(SL_BARDDANCER)].status_type  = (sc_type)MAPID_BARDDANCER;
-	skill->dbs->db[skill->get_index(SL_ROGUE)].status_type       = (sc_type)MAPID_ROGUE;
-	skill->dbs->db[skill->get_index(SL_ASSASIN)].status_type     = (sc_type)MAPID_ASSASSIN;
-	skill->dbs->db[skill->get_index(SL_BLACKSMITH)].status_type  = (sc_type)MAPID_BLACKSMITH;
-	skill->dbs->db[skill->get_index(SL_HUNTER)].status_type      = (sc_type)MAPID_HUNTER;
-	skill->dbs->db[skill->get_index(SL_SOULLINKER)].status_type  = (sc_type)MAPID_SOUL_LINKER;
+	status->load_sc_type();
+
 #undef set_sc_with_vfx
 }
 
@@ -3086,22 +3072,14 @@ static void status_calc_bl_main(struct block_list *bl, e_scb_flag flag)
 			;
 	}
 
-	if ((flag & SCB_ATK_PERC) != 0) {
-		int prev_atk_percent = st->atk_percent;
+	if ((flag & SCB_ATK_PERC) != 0)
 		st->atk_percent = status->calc_atk_percent(bl, sc);
-		if (prev_atk_percent != st->atk_percent)
-			clif->updatestatus(sd, SP_ATK1);
-	}
 
 	if ((flag & SCB_MATK_PERC) != 0)
 		st->matk_percent = status->calc_matk_percent(bl, sc);
 
-	if ((flag & SCB_DEF_PERC) != 0) {
-		int prev_def_percent = st->def_percent;
+	if ((flag & SCB_DEF_PERC) != 0)
 		st->def_percent = status->calc_def_percent(bl, sc);
-		if (prev_def_percent != st->def_percent)
-			clif->updatestatus(sd, SP_DEF2);
-	}
 
 	if ((flag & SCB_MDEF_PERC) != 0) {
 		st->mdef_percent = status->calc_mdef_percent(bl, sc);
@@ -3509,6 +3487,8 @@ static void status_calc_bl_(struct block_list *bl, e_scb_flag flag, enum e_statu
 #endif
 		)
 			clif->updatestatus(sd,SP_ATK1);
+		else if (bst.atk_percent != st->atk_percent)
+			clif->updatestatus(sd, SP_ATK1);
 
 		if(bst.def != st->def) {
 			clif->updatestatus(sd,SP_DEF1);
@@ -3529,7 +3509,10 @@ static void status_calc_bl_(struct block_list *bl, e_scb_flag flag, enum e_statu
 #ifdef RENEWAL
 			clif->updatestatus(sd,SP_DEF1);
 #endif
+		} else if (bst.def_percent != st->def_percent) {
+			clif->updatestatus(sd,SP_DEF2);
 		}
+
 		if(bst.flee2 != st->flee2)
 			clif->updatestatus(sd,SP_FLEE2);
 		if(bst.cri != st->cri)
@@ -3897,6 +3880,11 @@ static void status_calc_misc(struct block_list *bl, struct status_data *st, int 
 	st->def2 += st->vit;
 	st->mdef2 += st->int_ + (st->vit >> 1);
 #endif // RENEWAL
+
+	st->atk_percent = 100;
+	st->matk_percent = 100;
+	st->def_percent = 100;
+	st->mdef_percent = 100;
 
 	if ( bl->type&battle_config.enable_critical )
 		st->cri += 10 + (st->luk * 10 / 3); // (every 1 luk = +0.33 critical -> 3 luk = +1 critical)
@@ -8413,13 +8401,18 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				val2 = 20*val1; //Power increase
 				break;
 			case SC_OVERTHRUST:
-				// val2 holds if it was casted on self (1), or is bonus received from others (0)
 #ifndef RENEWAL
-				val3 = 5 * val1; //Power increase
+				if (val2 == 1) // cast on self
+					val3 = 5 * val1; //Power increase
+				else // received cast
+					val3 = 5;
 #else
 				// owner: 5, 10, 15, 20, 25
 				// party: 5,  5, 10, 10, 15
-				val3 = (val2 == 1 ? (5 * val1) : (5 + (val1 / 2) * 5)); // Power increase
+				if (val2 == 1) // cast on self
+					val3 = 5 * val1; // Power increase
+				else // received cast
+					val3 = 5 + (val1 / 2) * 5; // Power increase
 #endif
 				if(sd && pc->checkskill(sd,BS_HILTBINDING)>0)
 					total_tick += total_tick / 10;
@@ -14119,6 +14112,26 @@ static void status_check_job_bonus(int idx, const char *name, int class)
 	}
 }
 
+static void status_load_sc_type(void)
+{
+	// Storing the target job rather than simply SC_SOULLINK simplifies code later on.
+	skill->dbs->db[skill->get_index(SL_ALCHEMIST)].status_type   = (sc_type)MAPID_ALCHEMIST;
+	skill->dbs->db[skill->get_index(SL_MONK)].status_type        = (sc_type)MAPID_MONK;
+	skill->dbs->db[skill->get_index(SL_STAR)].status_type        = (sc_type)MAPID_STAR_GLADIATOR;
+	skill->dbs->db[skill->get_index(SL_SAGE)].status_type        = (sc_type)MAPID_SAGE;
+	skill->dbs->db[skill->get_index(SL_CRUSADER)].status_type    = (sc_type)MAPID_CRUSADER;
+	skill->dbs->db[skill->get_index(SL_SUPERNOVICE)].status_type = (sc_type)MAPID_SUPER_NOVICE;
+	skill->dbs->db[skill->get_index(SL_KNIGHT)].status_type      = (sc_type)MAPID_KNIGHT;
+	skill->dbs->db[skill->get_index(SL_WIZARD)].status_type      = (sc_type)MAPID_WIZARD;
+	skill->dbs->db[skill->get_index(SL_PRIEST)].status_type      = (sc_type)MAPID_PRIEST;
+	skill->dbs->db[skill->get_index(SL_BARDDANCER)].status_type  = (sc_type)MAPID_BARDDANCER;
+	skill->dbs->db[skill->get_index(SL_ROGUE)].status_type       = (sc_type)MAPID_ROGUE;
+	skill->dbs->db[skill->get_index(SL_ASSASIN)].status_type     = (sc_type)MAPID_ASSASSIN;
+	skill->dbs->db[skill->get_index(SL_BLACKSMITH)].status_type  = (sc_type)MAPID_BLACKSMITH;
+	skill->dbs->db[skill->get_index(SL_HUNTER)].status_type      = (sc_type)MAPID_HUNTER;
+	skill->dbs->db[skill->get_index(SL_SOULLINKER)].status_type  = (sc_type)MAPID_SOUL_LINKER;
+}
+
 static bool status_readdb_job2(char *fields[], int columns, int current)
 {
 	int idx, class, i;
@@ -14885,6 +14898,7 @@ void status_defaults(void)
 	status->change_start_unknown_sc = status_change_start_unknown_sc;
 	status->display_remove = status_display_remove;
 	status->natural_heal = status_natural_heal;
+	status->load_sc_type = status_load_sc_type;
 	status->natural_heal_timer = status_natural_heal_timer;
 	status->readdb_job2 = status_readdb_job2;
 	status->readdb_sizefix = status_readdb_sizefix;

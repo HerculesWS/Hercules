@@ -3685,6 +3685,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(status->display_remove, HP_status_display_remove) },
 	{ HP_POP(status->natural_heal, HP_status_natural_heal) },
 	{ HP_POP(status->natural_heal_timer, HP_status_natural_heal_timer) },
+	{ HP_POP(status->load_sc_type, HP_status_load_sc_type) },
 	{ HP_POP(status->readdb_job2, HP_status_readdb_job2) },
 	{ HP_POP(status->readdb_sizefix, HP_status_readdb_sizefix) },
 	{ HP_POP(status->read_scdb_libconfig, HP_status_read_scdb_libconfig) },
