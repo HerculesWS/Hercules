@@ -4,12 +4,21 @@
 # See the LICENSE file
 # Base Author: Haru @ http://hercules.ws
 # Im only rescuing this file from the vault, it works great
+# Added API server variable
+# Enhance process checking for better portability using pgrep
+# Ensure the logs directory exists
+# Redirect output to log files
+# Include API server in the stop function
+# Include API server in the status function
+# Add API server to the main case statement
 # It won't let you run ./athena-start start if a session is already running
 # Thanks a lot Haru <3
 
 L_SRV=login-server
 C_SRV=char-server
 M_SRV=map-server
+A_SRV=api-server
+
 
 case "$TERM" in
 	*color)
@@ -95,107 +104,110 @@ show_info() {
 }
 
 function isrunning() {
-	if [ ! -f ".$1.pid" ]; then
-		return 1
-	fi
-	if ! kill -0 $(< ".$1.pid" ) >/dev/null 2>&1; then
-		return 1
-	fi
-	if ! ps aux | grep "^$(whoami)\\s*$(< ".$1.pid" )" | grep "$1" >/dev/null 2>&1; then
-		return 1
-	fi
-	return 0
+    if [ ! -f ".$1.pid" ]; then
+        return 1
+    fi
+    if ! kill -0 $(< ".$1.pid" ) >/dev/null 2>&1; then
+        return 1
+    fi
+    if ! pgrep -F ".$1.pid" >/dev/null 2>&1; then
+        return 1
+    fi
+    return 0
 }
 
 do_start() {
-	echo "Checking executables..."
-	for i in "$@"; do
-		printf "%-32s" "$i"
-		if [ ! -x "./$i" ]; then
-			printf "${echo_error}\n"
-			echo "Error: $i does not exist, or can't be executed. Please check your Hercules setup."
-			exit 1
-		fi
-		if isrunning "$i"; then
-			printf "${echo_running}\n"
-			echo "Error: $i is already running. Please terminate it first."
-			exit 1
-		elif [ -f ".$i.pid" ]; then
-			rm -f ".$i.pid" >/dev/null 2>&1
-		fi
-		printf "${echo_ok}\n"
-	done
-	echo "Check completed."
+    # Ensure the logs directory exists
+    if [ ! -d "./logs" ]; then
+        mkdir -p "./logs"
+        chmod 755 "./logs"
+    fi
 
+    echo "Checking executables..."
+    for i in "$@"; do
+        printf "%-32s" "$i"
+        if [ ! -x "./$i" ]; then
+            printf "${echo_error}\n"
+            echo "Error: $i does not exist, or can't be executed. Please check your Hercules setup."
+            exit 1
+        fi
+        if isrunning "$i"; then
+            printf "${echo_running}\n"
+            echo "Error: $i is already running. Please terminate it first."
+            exit 1
+        elif [ -f ".$i.pid" ]; then
+            rm -f ".$i.pid" >/dev/null 2>&1
+        fi
+        printf "${echo_ok}\n"
+    done
+    echo "Check completed."
 
-	for i in "$@"; do
-		# - Show server output
-		#"./$i" >/dev/null &
-		# - Hide server output (default)
-		"./$i" >/dev/null &
-		echo $! > ".${i}.pid"
-	done
+    for i in "$@"; do
+        # Redirect output to log files
+        "./$i" > "./logs/${i}.log" 2>&1 &
+        echo $! > ".${i}.pid"
+    done
 
-	echo "Hercules startup completed."
+    echo "Hercules startup completed."
 }
 
 do_stop() {
-	echo "Terminating processes..."
-	for i in "$@"; do
-		printf "%-32s" "$i"
-		if isrunning "$i"; then
-			k=0
-			kill $(< ".$i.pid" )
-			while isrunning "$i" && [ $k -lt 10 ]; do
-				(( k++ ))
-				sleep 1
-			done
-			if isrunning "$i"; then
-				printf "${echo_error}\n"
-				echo "Unable to terminate $i (PID $(< ".$i.pid" )). Please check and terminate it manually."
-				continue
-			fi
-			printf "${echo_ok}\n"
-		else
-			printf "${echo_stopped}\n"
-		fi
-		rm -f ".$i.pid" >/dev/null 2>&1
-	done
+    echo "Terminating processes..."
+    for i in "$@"; do
+        printf "%-32s" "$i"
+        if isrunning "$i"; then
+            k=0
+            kill $(< ".$i.pid" )
+            while isrunning "$i" && [ $k -lt 10 ]; do
+                (( k++ ))
+                sleep 1
+            done
+            if isrunning "$i"; then
+                printf "${echo_error}\n"
+                echo "Unable to terminate $i (PID $(< ".$i.pid" )). Please check and terminate it manually."
+                continue
+            fi
+            printf "${echo_ok}\n"
+        else
+            printf "${echo_stopped}\n"
+        fi
+        rm -f ".$i.pid" >/dev/null 2>&1
+    done
 }
 
 do_status() {
-	echo "Hercules status:"
-	for i in "$@"; do
-		printf "%-32s" "$i"
-		if [ -x "$i" ]; then
-			if isrunning "$i"; then
-				printf "${echo_running}\n"
-			else
-				printf "${echo_stopped}\n"
-			fi
-		else
-			printf "${echo_missing}\n"
-		fi
-	done
+    echo "Hercules status:"
+    for i in "$@"; do
+        printf "%-32s" "$i"
+        if [ -x "./$i" ]; then
+            if isrunning "$i"; then
+                printf "${echo_running}\n"
+            else
+                printf "${echo_stopped}\n"
+            fi
+        else
+            printf "${echo_missing}\n"
+        fi
+    done
 }
 
 show_info
 case $1 in
-	'start')
-		do_start "${L_SRV}" "${C_SRV}" "${M_SRV}"
-		;;
+    'start')
+        do_start "${L_SRV}" "${C_SRV}" "${M_SRV}" "${A_SRV}"
+        ;;
 
-	'stop')
-		do_stop "${L_SRV}" "${C_SRV}" "${M_SRV}"
-		;;
-	'restart')
-		do_stop "${L_SRV}" "${C_SRV}" "${M_SRV}"
-		do_start "${L_SRV}" "${C_SRV}" "${M_SRV}"
-		;;
-	'status')
-		do_status "${L_SRV}" "${C_SRV}" "${M_SRV}"
-		;;
-	*)
-		echo "Usage: athena-start { start | stop | restart | status }"
-		;;
+    'stop')
+        do_stop "${L_SRV}" "${C_SRV}" "${M_SRV}" "${A_SRV}"
+        ;;
+    'restart')
+        do_stop "${L_SRV}" "${C_SRV}" "${M_SRV}" "${A_SRV}"
+        do_start "${L_SRV}" "${C_SRV}" "${M_SRV}" "${A_SRV}"
+        ;;
+    'status')
+        do_status "${L_SRV}" "${C_SRV}" "${M_SRV}" "${A_SRV}"
+        ;;
+    *)
+        echo "Usage: athena-start { start | stop | restart | status }"
+        ;;
 esac
