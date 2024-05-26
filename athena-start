@@ -4,6 +4,7 @@
 # See the LICENSE file
 # Base Author: Haru @ http://hercules.ws
 # Im only rescuing this file from the vault, it works great
+# Some modifications made by ~Tararais:
 # Added API server variable
 # Enhance process checking for better portability using pgrep
 # Ensure the logs directory exists
