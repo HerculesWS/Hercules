@@ -1,75 +1,201 @@
-#!/bin/sh
-# athena starting script by rowla
-# modified by shazeya@syafi.com (NL101541)
+#!/bin/bash
 
-PATH=./:$PATH
+# Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+# See the LICENSE file
+# Base Author: Haru @ http://hercules.ws
+# Im only rescuing this file from the vault, it works great
+# It won't let you run ./athena-start start if a session is already running
+# Thanks a lot Haru <3
 
 L_SRV=login-server
 C_SRV=char-server
 M_SRV=map-server
-A_SRV=api-server
 
-print_start() {
-#    more << EOF
-echo "Athena Starting..."
-echo "            (c) 2003 Athena Project"
-echo "              modified by shazeya@syafi.com"
-echo ""
-#echo "Debug informations will appear,"
-#echo "since this is a test release."
-#echo ""
-echo "checking..."
-#EOF
+case "$TERM" in
+	*color)
+		__echoprefix="\033["
+		__echosuffix="m"
+		__reset="0"
+		__bold="1"
+		__fgbright=9
+		__fg=3
+		__bg="4"
+		__sep=";"
+		__black=0
+		__red=1
+		__green=2
+		__yellow=3
+		__blue=4
+		__magenta=5
+		__cyan=6
+		__white=7
+		;;
+	*)
+		__echoprefix=
+		__echosuffix=
+		__reset=
+		__bold=
+		__fgbright=
+		__fg=
+		__bg=
+		__sep=
+		__black=
+		__red=
+		__green=
+		__yellow=
+		__blue=
+		__magenta=
+		__cyan=
+		__white=
+		;;
+esac
+
+echo_black="${__echoprefix}${__reset}${__sep}${__fg}${__black}${__echosuffix}"
+echo_red="${__echoprefix}${__reset}${__sep}${__fg}${__red}${__echosuffix}"
+echo_green="${__echoprefix}${__reset}${__sep}${__fg}${__green}${__echosuffix}"
+echo_yellow="${__echoprefix}${__reset}${__sep}${__fg}${__yellow}${__echosuffix}"
+echo_blue="${__echoprefix}${__reset}${__sep}${__fg}${__blue}${__echosuffix}"
+echo_purple="${__echoprefix}${__reset}${__sep}${__fg}${__magenta}${__echosuffix}"
+echo_cyan="${__echoprefix}${__reset}${__sep}${__fg}${__cyan}${__echosuffix}"
+echo_white="${__echoprefix}${__reset}${__sep}${__fg}${__white}${__echosuffix}"
+
+echo_bold="${__echoprefix}${__bold}${__echosuffix}"
+
+echo_herculeslogo="${__echoprefix}${__reset}${__sep}${__fg}${__white}${__sep}${__bg}${__red}${__echosuffix}"
+
+echo_normal="${__echoprefix}${__reset}${__echosuffix}"
+
+echo_error="[${echo_red}  Error  ${echo_normal}]"
+echo_running="[${echo_green} Running ${echo_normal}]"
+echo_stopped="[${echo_yellow} Stopped ${echo_normal}]"
+echo_ok="[${echo_green}   OK    ${echo_normal}]"
+echo_missing="[${echo_red} Missing ${echo_normal}]"
+
+unset __reset; unset __bold; unset __fgbright; unset __fg; unset __bg; unset __echoprefix; unset __echosuffix;
+unset __black; unset __red; unset __green; unset __yellow; unset __blue; unset __magenta; unset __cyan; unset __white;
+
+show_info() {
+	printf "${echo_herculeslogo}%-70s${echo_normal}\n" ""
+	printf "${echo_herculeslogo}%-70s${echo_normal}\n" "                 Hercules Development Team presents"
+	printf "${echo_herculeslogo}%-70s${echo_normal}\n" "                _   _                     _"
+	printf "${echo_herculeslogo}%-70s${echo_normal}\n" "               | | | |                   | |"
+	printf "${echo_herculeslogo}%-70s${echo_normal}\n" "               | |_| | ___ _ __ ___ _   _| | ___  ___"
+	printf "${echo_herculeslogo}%-70s${echo_normal}\n" "               |  _  |/ _ \\ '__/ __| | | | |/ _ \\/ __|"
+	printf "${echo_herculeslogo}%-70s${echo_normal}\n" "               | | | |  __/ | | (__| |_| | |  __/\\__ \\"
+	printf "${echo_herculeslogo}%-70s${echo_normal}\n" "               \\_| |_/\\___|_|  \\___|\\__,_|_|\\___||___/"
+	printf "${echo_herculeslogo}%-70s${echo_normal}\n" ""
+	printf "${echo_herculeslogo}%-70s${echo_normal}\n" "                    http://hercules.ws/board/"
+	printf "${echo_herculeslogo}%-70s${echo_normal}\n" ""
+	if [ -d .git ] && type git >/dev/null 2>&1; then
+		printf "%-15s '${echo_bold}%s${echo_normal}'\n" "Git Hash:" "$(git rev-parse HEAD)"
+	fi
+	printf "${echo_bold_green}%-15s${echo_normal} ${echo_bold}http://hercules.ws/${echo_normal}\n" "Website/Forum:"
+	printf "${echo_bold_green}%-15s${echo_normal} ${echo_bold}irc://irc.rizon.net/#Hercules${echo_normal}\n" "IRC Channel:"
+	printf "Open ${echo_bold}readme.txt${echo_normal} for more information.\n\n"
 }
 
-check_files() {
-
-    for i in ${L_SRV} ${C_SRV} ${M_SRV} ${A_SRV}
-    do
-        if [ ! -f ./$i ]; then
-            echo "$i does not exist, or can't run."
-            echo "Stop. Check your compile."
-            exit 1;
-        fi
-    done
-
-#    more << EOF
-echo "Check complete."
-echo "Looks good, a nice Athena!"
-#EOF
+function isrunning() {
+	if [ ! -f ".$1.pid" ]; then
+		return 1
+	fi
+	if ! kill -0 $(< ".$1.pid" ) >/dev/null 2>&1; then
+		return 1
+	fi
+	if ! ps aux | grep "^$(whoami)\\s*$(< ".$1.pid" )" | grep "$1" >/dev/null 2>&1; then
+		return 1
+	fi
+	return 0
 }
 
-
-case $1 in
-    'start')
-        print_start
-        check_files
-
-        exec ./${L_SRV}&
-	echo $! > .${L_SRV}.pid
-        exec ./${C_SRV}&
-	echo $! > .${C_SRV}.pid
-        exec ./${M_SRV}&
-	echo $! > .${M_SRV}.pid
-        exec ./${A_SRV}&
-	echo $! > .${A_SRV}.pid
-
-        echo "Now Started Athena."
-;;
-    'stop')
-	for i in .${L_SRV}.pid .${C_SRV}.pid .${M_SRV}.pid .${A_SRV}.pid
-	    do
-		if [ -e ./$i ]; then
-		    kill $(cat $i)
-		    rm $i
+do_start() {
+	echo "Checking executables..."
+	for i in "$@"; do
+		printf "%-32s" "$i"
+		if [ ! -x "./$i" ]; then
+			printf "${echo_error}\n"
+			echo "Error: $i does not exist, or can't be executed. Please check your Hercules setup."
+			exit 1
 		fi
-	    done
-;;
-    'restart')
-        $0 stop
-        $0 start
-;;
-    *)
-        echo "Usage: athena-start { start | stop | restart }"
-;;
+		if isrunning "$i"; then
+			printf "${echo_running}\n"
+			echo "Error: $i is already running. Please terminate it first."
+			exit 1
+		elif [ -f ".$i.pid" ]; then
+			rm -f ".$i.pid" >/dev/null 2>&1
+		fi
+		printf "${echo_ok}\n"
+	done
+	echo "Check completed."
+
+
+	for i in "$@"; do
+		# - Show server output
+		#"./$i" >/dev/null &
+		# - Hide server output (default)
+		"./$i" >/dev/null &
+		echo $! > ".${i}.pid"
+	done
+
+	echo "Hercules startup completed."
+}
+
+do_stop() {
+	echo "Terminating processes..."
+	for i in "$@"; do
+		printf "%-32s" "$i"
+		if isrunning "$i"; then
+			k=0
+			kill $(< ".$i.pid" )
+			while isrunning "$i" && [ $k -lt 10 ]; do
+				(( k++ ))
+				sleep 1
+			done
+			if isrunning "$i"; then
+				printf "${echo_error}\n"
+				echo "Unable to terminate $i (PID $(< ".$i.pid" )). Please check and terminate it manually."
+				continue
+			fi
+			printf "${echo_ok}\n"
+		else
+			printf "${echo_stopped}\n"
+		fi
+		rm -f ".$i.pid" >/dev/null 2>&1
+	done
+}
+
+do_status() {
+	echo "Hercules status:"
+	for i in "$@"; do
+		printf "%-32s" "$i"
+		if [ -x "$i" ]; then
+			if isrunning "$i"; then
+				printf "${echo_running}\n"
+			else
+				printf "${echo_stopped}\n"
+			fi
+		else
+			printf "${echo_missing}\n"
+		fi
+	done
+}
+
+show_info
+case $1 in
+	'start')
+		do_start "${L_SRV}" "${C_SRV}" "${M_SRV}"
+		;;
+
+	'stop')
+		do_stop "${L_SRV}" "${C_SRV}" "${M_SRV}"
+		;;
+	'restart')
+		do_stop "${L_SRV}" "${C_SRV}" "${M_SRV}"
+		do_start "${L_SRV}" "${C_SRV}" "${M_SRV}"
+		;;
+	'status')
+		do_status "${L_SRV}" "${C_SRV}" "${M_SRV}"
+		;;
+	*)
+		echo "Usage: athena-start { start | stop | restart | status }"
+		;;
 esac
