@@ -94,12 +94,13 @@ show_info() {
 	printf "${echo_herculeslogo}%-70s${echo_normal}\n" "               | | | |  __/ | | (__| |_| | |  __/\\__ \\"
 	printf "${echo_herculeslogo}%-70s${echo_normal}\n" "               \\_| |_/\\___|_|  \\___|\\__,_|_|\\___||___/"
 	printf "${echo_herculeslogo}%-70s${echo_normal}\n" ""
-	printf "${echo_herculeslogo}%-70s${echo_normal}\n" "                    http://hercules.ws/board/"
+	printf "${echo_herculeslogo}%-70s${echo_normal}\n" "                    https://board.herc.ws/"
 	printf "${echo_herculeslogo}%-70s${echo_normal}\n" ""
 	if [ -d .git ] && type git >/dev/null 2>&1; then
 		printf "%-15s '${echo_bold}%s${echo_normal}'\n" "Git Hash:" "$(git rev-parse HEAD)"
 	fi
-	printf "${echo_bold_green}%-15s${echo_normal} ${echo_bold}http://hercules.ws/${echo_normal}\n" "Website/Forum:"
+	printf "${echo_bold_green}%-15s${echo_normal} ${echo_bold}https://board.herc.ws/${echo_normal}\n" "Website/Forum:"
+	printf "${echo_bold_green}%-15s${echo_normal} ${echo_bold}https://discord.gg/ZUzbRSp${echo_normal}\n" "Join our Discord:"
 	printf "${echo_bold_green}%-15s${echo_normal} ${echo_bold}irc://irc.rizon.net/#Hercules${echo_normal}\n" "IRC Channel:"
 	printf "Open ${echo_bold}readme.txt${echo_normal} for more information.\n\n"
 }
