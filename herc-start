@@ -12,13 +12,31 @@
 # Include API server in the stop function
 # Include API server in the status function
 # Add API server to the main case statement
-# It won't let you run ./athena-start start if a session is already running
+# It won't let you run ./herc-start start if a session is already running
+# Accepts arguments to turn ON/OFF error display 
 # Thanks a lot Haru <3
+
 
 L_SRV=login-server
 C_SRV=char-server
 M_SRV=map-server
 A_SRV=api-server
+DISPLAY_ERRORS="on"
+
+
+# this function to set display errors on or off
+set_display_errors() {
+    if [ "$1" == "on" ]; then
+        DISPLAY_ERRORS="on"
+        echo "Error display is turned ON"
+    elif [ "$1" == "off" ]; then
+        DISPLAY_ERRORS="off"
+        echo "Error display is turned OFF"
+    else
+        echo "Invalid option. Use '--display-error-on' or '--display-error-off'."
+        exit 1
+    fi
+}
 
 
 case "$TERM" in
@@ -101,7 +119,7 @@ show_info() {
 	fi
 	printf "${echo_bold_green}%-15s${echo_normal} ${echo_bold}https://board.herc.ws/${echo_normal}\n" "Website/Forum:"
 	printf "${echo_bold_green}%-15s${echo_normal} ${echo_bold}https://discord.gg/ZUzbRSp${echo_normal}\n" "Join our Discord:"
-	printf "${echo_bold_green}%-15s${echo_normal} ${echo_bold}irc://irc.rizon.net/#Hercules${echo_normal}\n" "IRC Channel:"
+	printf "${echo_bold_green}%-15s${echo_normal} ${echo_bold}https://board.herc.ws/page/irc.html{echo_normal}\n" "IRC Channel:"
 	printf "Open ${echo_bold}readme.txt${echo_normal} for more information.\n\n"
 }
 
@@ -119,10 +137,10 @@ function isrunning() {
 }
 
 do_start() {
-    # Ensure the logs directory exists
-    if [ ! -d "./logs" ]; then
-        mkdir -p "./logs"
-        chmod 755 "./logs"
+    # Ensure the Hercules log directory exists
+    if [ ! -d "../log" ]; then
+        mkdir -p "../log"
+        chmod 755 "../log"
     fi
 
     echo "Checking executables..."
@@ -130,12 +148,18 @@ do_start() {
         printf "%-32s" "$i"
         if [ ! -x "./$i" ]; then
             printf "${echo_error}\n"
-            echo "Error: $i does not exist, or can't be executed. Please check your Hercules setup."
+            echo "Error: $i does not exist, or can't be executed. Please check your Hercules setup." >> "../log/${i}.log"
+            if [ "$DISPLAY_ERRORS" == "on" ]; then
+                echo "Error: $i does not exist, or can't be executed. Please check your Hercules setup."
+            fi
             exit 1
         fi
         if isrunning "$i"; then
             printf "${echo_running}\n"
-            echo "Error: $i is already running. Please terminate it first."
+            echo "Error: $i is already running. Please terminate it first." >> "../log/${i}.log"
+            if [ "$DISPLAY_ERRORS" == "on" ]; then
+                echo "Error: $i is already running. Please terminate it first."
+            fi
             exit 1
         elif [ -f ".$i.pid" ]; then
             rm -f ".$i.pid" >/dev/null 2>&1
@@ -146,7 +170,7 @@ do_start() {
 
     for i in "$@"; do
         # Redirect output to log files
-        "./$i" > "./logs/${i}.log" 2>&1 &
+        "./$i" > "../log/${i}.log" 2>&1 &
         echo $! > ".${i}.pid"
     done
 
@@ -166,14 +190,17 @@ do_stop() {
             done
             if isrunning "$i"; then
                 printf "${echo_error}\n"
-                echo "Unable to terminate $i (PID $(< ".$i.pid" )). Please check and terminate it manually."
-                continue
+                echo "Unable to terminate $i (PID $(< ".$i.pid" )). Please check and terminate it manually." >> "../log/${i}.log"
+                if [ "$DISPLAY_ERRORS" == "on" ]; then
+                    echo "Unable to terminate $i (PID $(< ".$i.pid" )). Please check and terminate it manually."
+                fi
+            else
+                printf "${echo_ok}\n"
+                rm -f ".$i.pid" >/dev/null 2>&1
             fi
-            printf "${echo_ok}\n"
         else
             printf "${echo_stopped}\n"
         fi
-        rm -f ".$i.pid" >/dev/null 2>&1
     done
 }
 
@@ -194,11 +221,38 @@ do_status() {
 }
 
 show_info
+
+# Parse arguments
+DISPLAY_ERRORS_ARGUMENT="on"
+POSITIONAL_ARGS=()
+
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --display-error-off)
+      DISPLAY_ERRORS_ARGUMENT="off"
+      shift # past argument
+      ;;
+    --display-error-on)
+      DISPLAY_ERRORS_ARGUMENT="on"
+      shift # past argument
+      ;;
+    *)
+      POSITIONAL_ARGS+=("$1") # save positional arg
+      shift # past argument
+      ;;
+  esac
+done
+
+# Restore positional parameters
+set -- "${POSITIONAL_ARGS[@]}"
+
+# Set the error display mode based on argument
+set_display_errors "$DISPLAY_ERRORS_ARGUMENT"
+
 case $1 in
     'start')
         do_start "${L_SRV}" "${C_SRV}" "${M_SRV}" "${A_SRV}"
         ;;
-
     'stop')
         do_stop "${L_SRV}" "${C_SRV}" "${M_SRV}" "${A_SRV}"
         ;;
@@ -210,6 +264,6 @@ case $1 in
         do_status "${L_SRV}" "${C_SRV}" "${M_SRV}" "${A_SRV}"
         ;;
     *)
-        echo "Usage: athena-start { start | stop | restart | status }"
+        echo "Usage: herc-start { start | stop | restart | status } [ --display-error-off | --display-error-on ]"
         ;;
 esac
