@@ -12609,6 +12609,32 @@ void pc_crimson_marker_clear(struct map_session_data *sd)
 	}
 }
 
+/**
+ * Checks if a skill is a permanent skill that one has prerequisites for or has learned.
+ *
+ * NOTE: Unfortunately even uninitialized skills have the flag SKILL_FLAG_PERMANENT, so we have to distinguish by id as well.
+ *       Ideally a more saner zero value should be used for e_skill_flag.
+ * WARNING: This function relies on the skill tree being already calculated / filled.
+ *
+ * @param sd The player to check for.
+ * @param skill_id The skill to check for.
+ * @return True if the player meets the skill prerequisites or has it, false otherwise.
+ */
+static bool pc_is_own_skill(struct map_session_data *sd, uint16 skill_id)
+{
+	nullpo_retr(false, sd);
+
+	int idx = skill->get_index(skill_id);
+	if (idx <= 0)
+		return false; // skill not found
+	if (sd->status.skill[idx].id != skill_id)
+		return false; // not meeting pre-requisites for skill or skill id to index mapping faulty.
+	if (sd->status.skill[idx].flag != SKILL_FLAG_PERMANENT)
+		return false; // script granted or temporary.
+
+	return true;
+}
+
 static void do_final_pc(void)
 {
 
@@ -13035,4 +13061,6 @@ void pc_defaults(void)
 	pc->auto_exp_insurance = pc_auto_exp_insurance;
 
 	pc->crimson_marker_clear = pc_crimson_marker_clear;
+
+	pc->is_own_skill = pc_is_own_skill;
 }

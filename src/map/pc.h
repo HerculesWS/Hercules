@@ -1283,6 +1283,8 @@ END_ZEROED_BLOCK; /* End */
 	bool (*auto_exp_insurance) (struct map_session_data *sd);
 
 	void (*crimson_marker_clear) (struct map_session_data *sd);
+
+	bool (*is_own_skill) (struct map_session_data *sd, uint16 skill_id);
 };
 
 #ifdef HERCULES_CORE
