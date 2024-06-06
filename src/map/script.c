@@ -27384,6 +27384,31 @@ static BUILDIN(mesnavigation)
 	return script->format_navigation(st, label, mapname, x, y, mode, services, showWindow, monster_id);
 }
 
+/**
+ * Generates a <NAVI> tag to link to the list of spawns of <monster_id>.
+ * If the client doesn't support it, returns the label as plain text.
+ *
+ * mesmobspawn(monster_id{, "label"});
+ */
+static BUILDIN(mesmobspawn)
+{
+	int monster_id = script_getnum(st, 2);
+	const char *label = script_hasdata(st, 3) ? script_getstr(st, 3) : NULL;
+
+	struct mob_db *monster = mob->db(monster_id);
+	if (monster == NULL) {
+		ShowError("buildin_mesmobspawn: Non-existent monster id %d.\n", monster_id);
+		script_pushconststr(st, "null");
+		return false;
+	}
+
+	if (label == NULL) {
+		label = monster->name;
+	}
+
+	return script->format_navigation(st, label, monster->sprite, 0, 0, NAV_MODE_MOB, NAV_WINDOW_SEARCH, true, 0);
+}
+
 static bool buildin_rodex_sendmail_sub(struct script_state *st, struct rodex_message *msg)
 {
 	const char *sender_name, *title, *body;
@@ -29307,6 +29332,7 @@ static void script_parse_builtin(void)
 		/* Navigation */
 		BUILDIN_DEF(navigateto, "s??????"),
 		BUILDIN_DEF(mesnavigation, "ss??????"),
+		BUILDIN_DEF(mesmobspawn, "i?"),
 
 		/* Clan System */
 		BUILDIN_DEF(clan_join,"i?"),

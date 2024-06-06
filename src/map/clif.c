@@ -26146,6 +26146,18 @@ static void clif_format_navigation(StringBuf *buf, const char *label, const char
 	nullpo_retv(label);
 	nullpo_retv(mapname);
 
+	// services_flag == NAV_WINDOW_SEARCH makes a search in <mode> category using the input as "$$DB <mapname>"
+	// It is only known to work for monsters and "mapname" becomes the sprite name
+	if (services_flag == NAV_WINDOW_SEARCH) {
+#if PACKETVER >= 20130800 // Exact date unknown, > 2013-07-10 <= 2013-12-18
+		StrBuf->Printf(buf, "<NAVI>%s<INFO>%s,%d,%d,%d,%d</INFO></NAVI>", label, mapname, x, y, (int) mode, (int) services_flag);
+#else
+		// Unsupported feature, fallback to a basic text
+		StrBuf->Printf(buf, "%s", label);
+#endif
+		return;
+	}
+
 #if PACKETVER >= 20111010
 	StrBuf->Printf(buf, "<NAVI>%s<INFO>%s,%d,%d,", label, mapname, x, y);
 

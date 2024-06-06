@@ -2681,9 +2681,27 @@ Parameters:
 		with the special keyword "$$DB".
 		It is only known to work together with mode = NAV_MODE_MOB and using monster Sprite Name
 		as "map".
+		When using NAV_WINDOW_SEARCH, prefer using mesmobspawn instead.
 
 - monster_id: (int, optional, defaults to 0)
 	To be used with mode = NAV_MODE_MOB. The ID of the monster being looked for.
+
+---------------------------------------
+
+*mesmobspawn(<monster_id>{, "<label>"})
+
+Generates and returns a <NAVI> tag that opens the Navigation UI listing the places where <monster_id> monster spawns.
+
+This will only work if your client navigation files are properly configured with the <monster_id> spawns.
+
+If the current client doesn't support this feature, returns the value of <label>.
+
+Parameters:
+- monster_id: (int, required)
+	The ID of the monster being looked for.
+
+- label: (string, optional, defaults to <monster_id> name)
+	The visible and clickable text. (example: "Target monster")
 
 ---------------------------------------
 //=====================================

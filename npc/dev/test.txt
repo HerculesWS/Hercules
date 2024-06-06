@@ -287,6 +287,45 @@ function	script	F_TestMesNavigation_Complete	{
 	return .@pass;
 }
 
+function	script	F_TestMesNavigation_Search	{
+	.@str$ = mesnavigation("Some Monster", "PORING", 0, 0, true, NAV_MODE_MOB, NAV_WINDOW_SEARCH);
+
+	.@pass = false;
+	if (PACKETVER < 20130800) {
+		.@pass = (.@str$ == "Some Monster");
+	} else {
+		.@pass = (.@str$ == "<NAVI>Some Monster<INFO>PORING,0,0,3,-222</INFO></NAVI>");
+	}
+
+	return .@pass;
+}
+
+function	script	F_TestMesMobSpawn_Basic	{
+	.@str$ = mesmobspawn(PORING);
+
+	.@pass = false;
+	if (PACKETVER < 20130800) {
+		.@pass = (.@str$ == "Poring");
+	} else {
+		.@pass = (.@str$ == "<NAVI>Poring<INFO>PORING,0,0,3,-222</INFO></NAVI>");
+	}
+
+	return .@pass;
+}
+
+function	script	F_TestMesMobSpawn_WithLabel	{
+	.@str$ = mesmobspawn(PORING, "Target");
+
+	.@pass = false;
+	if (PACKETVER < 20130800) {
+		.@pass = (.@str$ == "Target");
+	} else {
+		.@pass = (.@str$ == "<NAVI>Target<INFO>PORING,0,0,3,-222</INFO></NAVI>");
+	}
+
+	return .@pass;
+}
+
 function	script	HerculesSelfTestHelper	{
 	if (.once > 0)
 		return .errors;
@@ -1006,6 +1045,10 @@ function	script	HerculesSelfTestHelper	{
 
 	callsub(OnCheck, "mesnavigation: basic destination", F_TestMesNavigation_Basic(), true);
 	callsub(OnCheck, "mesnavigation: all params", F_TestMesNavigation_Complete(), true);
+	callsub(OnCheck, "mesnavigation: monster spawn search", F_TestMesNavigation_Search(), true);
+
+	callsub(OnCheck, "mesmobspawn: basic usage", F_TestMesMobSpawn_Basic(), true);
+	callsub(OnCheck, "mesmobspawn: with label", F_TestMesMobSpawn_WithLabel(), true);
 
 	if (.errors) {
 		consolemes(CONSOLEMES_DEBUG, "Script engine self-test   [ \033[0;31mFAILED\033[0m ]");
