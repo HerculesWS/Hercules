@@ -261,6 +261,32 @@ function	script	F_TestGetItemLink_FullWeapon	{
 	return .@pass;
 }
 
+function	script	F_TestMesNavigation_Basic	{
+	.@str$ = mesnavigation("Somewhere", "prt_fild08", 100, 105);
+
+	.@pass = false;
+	if (PACKETVER < 20111010) {
+		.@pass = (.@str$ == "Somewhere (prt_fild08 100, 105)");
+	} else {
+		.@pass = (.@str$ == "<NAVI>Somewhere<INFO>prt_fild08,100,105,</INFO></NAVI>");
+	}
+
+	return .@pass;
+}
+
+function	script	F_TestMesNavigation_Complete	{
+	.@str$ = mesnavigation("Some NPC", "prt_fild08", 175, 370, true, NAV_MODE_ALL, NAV_NONE);
+
+	.@pass = false;
+	if (PACKETVER < 20111010) {
+		.@pass = (.@str$ == "Some NPC (prt_fild08 175, 370)");
+	} else {
+		.@pass = (.@str$ == "<NAVI>Some NPC<INFO>prt_fild08,175,370,0,0,1,0</INFO></NAVI>");
+	}
+
+	return .@pass;
+}
+
 function	script	HerculesSelfTestHelper	{
 	if (.once > 0)
 		return .errors;
@@ -977,6 +1003,9 @@ function	script	HerculesSelfTestHelper	{
 	callsub(OnCheck, "getitemlink: headgear tag", F_TestGetItemLink_Headgear(), true);
 	callsub(OnCheck, "getitemlink: basic weapon tag", F_TestGetItemLink_BaseWeapon(), true);
 	callsub(OnCheck, "getitemlink: complete weapon tag", F_TestGetItemLink_FullWeapon(), true);
+
+	callsub(OnCheck, "mesnavigation: basic destination", F_TestMesNavigation_Basic(), true);
+	callsub(OnCheck, "mesnavigation: all params", F_TestMesNavigation_Complete(), true);
 
 	if (.errors) {
 		consolemes(CONSOLEMES_DEBUG, "Script engine self-test   [ \033[0;31mFAILED\033[0m ]");

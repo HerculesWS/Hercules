@@ -26126,6 +26126,41 @@ static void clif_format_itemlink(StringBuf *buf, const struct item *it)
 	#undef get_padded_value
 }
 
+/**
+ * Creates a "navigation" tag (<NAVI>) string into buf based on the given parameters.
+ * The resulting format and feature support is client-specific (newer clients supports more).
+ *
+ * @param buf buffer where the string will be written to
+ * @param label label of the navigation
+ * @param mapname name of the map
+ * @param x x coordinate
+ * @param y y coordinate
+ * @param mode navigation mode
+ * @param services_flag navigation services flag
+ * @param show_window show window flag
+ * @param monster_id monster id
+ */
+static void clif_format_navigation(StringBuf *buf, const char *label, const char *mapname, int x, int y, enum navigation_mode mode, enum navigation_service services_flag, bool show_window, int monster_id)
+{
+	nullpo_retv(buf);
+	nullpo_retv(label);
+	nullpo_retv(mapname);
+
+#if PACKETVER >= 20111010
+	StrBuf->Printf(buf, "<NAVI>%s<INFO>%s,%d,%d,", label, mapname, x, y);
+
+	if (mode == 0 && services_flag == NAV_KAFRA_AND_AIRSHIP && !show_window && monster_id == 0) {
+		StrBuf->Printf(buf, "</INFO></NAVI>");
+		return;
+	}
+
+	StrBuf->Printf(buf, "%d,%d,%d,%d</INFO></NAVI>", (int) mode, (int) services_flag, show_window ? 1 : 0, monster_id);
+#else
+	// Unsupported feature, fallback to a basic text
+	StrBuf->Printf(buf, "%s (%s %d, %d)", label, mapname, x, y);
+#endif
+}
+
 /*==========================================
  * Main client packet processing function
  *------------------------------------------*/
@@ -27498,4 +27533,5 @@ void clif_defaults(void)
 	clif->pAdventuterAgencyJoinResult = clif_parse_adventuterAgencyJoinResult;
 
 	clif->format_itemlink = clif_format_itemlink;
+	clif->format_navigation = clif_format_navigation;
 }

@@ -27331,6 +27331,59 @@ static BUILDIN(navigateto)
 #endif
 }
 
+/**
+ * Common function for script commands that generates NAVI tags.
+ */
+static bool script_format_navigation(struct script_state *st, const char *label, const char *mapname, int x, int y, enum navigation_mode mode, enum navigation_service services_flag, bool show_window, int monster_id)
+{
+	nullpo_retr(false, st);
+	nullpo_retr(false, label);
+	nullpo_retr(false, mapname);
+
+	const char *command_name = script->getfuncname(st);
+
+	if (mode < NAV_MODE_ALL || mode >= NAV_MODE_MAX) {
+		ShowError("script:%s: unknown mode (%u). See valid values for NAV_MODE_* constants\n", command_name, mode);
+		script_pushconststr(st, "");
+		return false;
+	}
+
+	if (monster_id != 0 && mob->db(monster_id) == NULL) {
+		ShowError("script:%s: unknown monster id (%d).\n", command_name, monster_id);
+		script_pushconststr(st, "");
+		return false;
+	}
+
+	StringBuf buf;
+	StrBuf->Init(&buf);
+
+	clif->format_navigation(&buf, label, mapname, x, y, mode, services_flag, show_window, monster_id);
+	script_pushstrcopy(st, StrBuf->Value(&buf));
+
+	StrBuf->Destroy(&buf);
+	return true;
+}
+
+/**
+ * Generates a <NAVI> tag with the given parameters (if supported by the client).
+ * If unsupported, returns a fall back text.
+ *
+ * mesnavigation("<label>", "<map>"{, <x>{, <y>{, <show_window>{, <mode>{, <services_flag>{, <monster_id>}}}}}})
+ */
+static BUILDIN(mesnavigation)
+{
+	const char *label = script_getstr(st, 2);
+	const char *mapname = script_getstr(st, 3);
+	int x = script_hasdata(st, 4) ? script_getnum(st, 4) : 0;
+	int y = script_hasdata(st, 5) ? script_getnum(st, 5) : 0;
+	bool showWindow = script_hasdata(st, 6) ? (script_getnum(st, 6) == 1) : false;
+	enum navigation_mode mode = script_hasdata(st, 7) ? script_getnum(st, 7) : NAV_MODE_ALL;
+	enum navigation_service services = script_hasdata(st, 8) ? script_getnum(st, 8) : NAV_KAFRA_AND_AIRSHIP;
+	int monster_id = script_hasdata(st, 9) ? script_getnum(st, 9) : 0;
+
+	return script->format_navigation(st, label, mapname, x, y, mode, services, showWindow, monster_id);
+}
+
 static bool buildin_rodex_sendmail_sub(struct script_state *st, struct rodex_message *msg)
 {
 	const char *sender_name, *title, *body;
@@ -29253,6 +29306,7 @@ static void script_parse_builtin(void)
 
 		/* Navigation */
 		BUILDIN_DEF(navigateto, "s??????"),
+		BUILDIN_DEF(mesnavigation, "ss??????"),
 
 		/* Clan System */
 		BUILDIN_DEF(clan_join,"i?"),
@@ -29494,6 +29548,12 @@ static void script_hardcoded_constants(void)
 	script->constdb_comment("Maximum Item Options");
 	script->set_constant("MAX_ITEM_OPTIONS", MAX_ITEM_OPTIONS, false, false);
 
+	script->constdb_comment("Navigation mode constants, use with *mesnavigation*");
+	script->set_constant("NAV_MODE_ALL", NAV_MODE_ALL, false, false);
+	script->set_constant("NAV_MODE_MAP", NAV_MODE_MAP, false, false);
+	script->set_constant("NAV_MODE_NPC", NAV_MODE_NPC, false, false);
+	script->set_constant("NAV_MODE_MOB", NAV_MODE_MOB, false, false);
+
 	script->constdb_comment("Navigation constants, use with *navigateto*");
 	script->set_constant("NAV_NONE", NAV_NONE, false, false);
 	script->set_constant("NAV_AIRSHIP_ONLY", NAV_AIRSHIP_ONLY, false, false);
@@ -29503,6 +29563,7 @@ static void script_hardcoded_constants(void)
 	script->set_constant("NAV_KAFRA_AND_AIRSHIP", NAV_KAFRA_AND_AIRSHIP, false, false);
 	script->set_constant("NAV_KAFRA_AND_SCROLL", NAV_KAFRA_AND_SCROLL, false, false);
 	script->set_constant("NAV_ALL", NAV_ALL, false, false);
+	script->set_constant("NAV_WINDOW_SEARCH", NAV_WINDOW_SEARCH, false, false);
 
 	script->constdb_comment("BL types");
 	script->set_constant("BL_PC",BL_PC,false, false);
@@ -30565,6 +30626,7 @@ void script_defaults(void)
 	script->buildin_query_sql_sub = buildin_query_sql_sub;
 	script->buildin_instance_warpall_sub = buildin_instance_warpall_sub;
 	script->buildin_mobuseskill_sub = buildin_mobuseskill_sub;
+	script->format_navigation = script_format_navigation;
 	script->buildin_rodex_sendmail_sub = buildin_rodex_sendmail_sub;
 	script->cleanfloor_sub = script_cleanfloor_sub;
 	script->run_func = run_func;

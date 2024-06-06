@@ -9033,6 +9033,32 @@ void HP_clif_format_itemlink(struct StringBuf *buf, const struct item *it) {
 	}
 	return;
 }
+void HP_clif_format_navigation(struct StringBuf *buf, const char *label, const char *mapname, int x, int y, enum navigation_mode mode, enum navigation_service services_flag, bool show_window, int monster_id) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_format_navigation_pre > 0) {
+		void (*preHookFunc) (struct StringBuf **buf, const char **label, const char **mapname, int *x, int *y, enum navigation_mode *mode, enum navigation_service *services_flag, bool *show_window, int *monster_id);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_format_navigation_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_format_navigation_pre[hIndex].func;
+			preHookFunc(&buf, &label, &mapname, &x, &y, &mode, &services_flag, &show_window, &monster_id);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.format_navigation(buf, label, mapname, x, y, mode, services_flag, show_window, monster_id);
+	}
+	if (HPMHooks.count.HP_clif_format_navigation_post > 0) {
+		void (*postHookFunc) (struct StringBuf *buf, const char *label, const char *mapname, int x, int y, enum navigation_mode mode, enum navigation_service services_flag, bool show_window, int monster_id);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_format_navigation_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_format_navigation_post[hIndex].func;
+			postHookFunc(buf, label, mapname, x, y, mode, services_flag, show_window, monster_id);
+		}
+	}
+	return;
+}
 void HP_clif_authok(struct map_session_data *sd) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_authok_pre > 0) {
@@ -81067,6 +81093,33 @@ int HP_script_buildin_mobuseskill_sub(struct block_list *bl, va_list ap) {
 			postHookFunc = HPMHooks.list.HP_script_buildin_mobuseskill_sub_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, bl, ap___copy);
 			va_end(ap___copy);
+		}
+	}
+	return retVal___;
+}
+bool HP_script_format_navigation(struct script_state *st, const char *label, const char *mapname, int x, int y, enum navigation_mode mode, enum navigation_service services_flag, bool show_window, int monster_id) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_script_format_navigation_pre > 0) {
+		bool (*preHookFunc) (struct script_state **st, const char **label, const char **mapname, int *x, int *y, enum navigation_mode *mode, enum navigation_service *services_flag, bool *show_window, int *monster_id);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_script_format_navigation_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_script_format_navigation_pre[hIndex].func;
+			retVal___ = preHookFunc(&st, &label, &mapname, &x, &y, &mode, &services_flag, &show_window, &monster_id);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.script.format_navigation(st, label, mapname, x, y, mode, services_flag, show_window, monster_id);
+	}
+	if (HPMHooks.count.HP_script_format_navigation_post > 0) {
+		bool (*postHookFunc) (bool retVal___, struct script_state *st, const char *label, const char *mapname, int x, int y, enum navigation_mode mode, enum navigation_service services_flag, bool show_window, int monster_id);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_script_format_navigation_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_script_format_navigation_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, st, label, mapname, x, y, mode, services_flag, show_window, monster_id);
 		}
 	}
 	return retVal___;

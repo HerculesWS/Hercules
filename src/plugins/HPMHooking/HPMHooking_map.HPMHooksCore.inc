@@ -694,6 +694,8 @@ struct {
 	struct HPMHookPoint *HP_clif_decrypt_cmd_post;
 	struct HPMHookPoint *HP_clif_format_itemlink_pre;
 	struct HPMHookPoint *HP_clif_format_itemlink_post;
+	struct HPMHookPoint *HP_clif_format_navigation_pre;
+	struct HPMHookPoint *HP_clif_format_navigation_post;
 	struct HPMHookPoint *HP_clif_authok_pre;
 	struct HPMHookPoint *HP_clif_authok_post;
 	struct HPMHookPoint *HP_clif_auth_error_pre;
@@ -6080,6 +6082,8 @@ struct {
 	struct HPMHookPoint *HP_script_buildin_instance_warpall_sub_post;
 	struct HPMHookPoint *HP_script_buildin_mobuseskill_sub_pre;
 	struct HPMHookPoint *HP_script_buildin_mobuseskill_sub_post;
+	struct HPMHookPoint *HP_script_format_navigation_pre;
+	struct HPMHookPoint *HP_script_format_navigation_post;
 	struct HPMHookPoint *HP_script_buildin_rodex_sendmail_sub_pre;
 	struct HPMHookPoint *HP_script_buildin_rodex_sendmail_sub_post;
 	struct HPMHookPoint *HP_script_cleanfloor_sub_pre;
@@ -8271,6 +8275,8 @@ struct {
 	int HP_clif_decrypt_cmd_post;
 	int HP_clif_format_itemlink_pre;
 	int HP_clif_format_itemlink_post;
+	int HP_clif_format_navigation_pre;
+	int HP_clif_format_navigation_post;
 	int HP_clif_authok_pre;
 	int HP_clif_authok_post;
 	int HP_clif_auth_error_pre;
@@ -13657,6 +13663,8 @@ struct {
 	int HP_script_buildin_instance_warpall_sub_post;
 	int HP_script_buildin_mobuseskill_sub_pre;
 	int HP_script_buildin_mobuseskill_sub_post;
+	int HP_script_format_navigation_pre;
+	int HP_script_format_navigation_post;
 	int HP_script_buildin_rodex_sendmail_sub_pre;
 	int HP_script_buildin_rodex_sendmail_sub_post;
 	int HP_script_cleanfloor_sub_pre;

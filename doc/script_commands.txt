@@ -2614,6 +2614,79 @@ deleted.
 
 ---------------------------------------
 //=====================================
+1.1 - Message formatting commands (tags)
+//=====================================
+---------------------------------------
+
+*mesnavigation("<label>", "<map>"{, <x>{, <y>{, <show_window>{, <mode>{, <services_flag>{, <monster_id>}}}}}});
+
+Generates and returns a <NAVI> tag with the given parameters. A <NAVI> tag when written to certain windows,
+such as the one from "mes" command, will create a highlighted and clickable text, which when clicked,
+starts the navigation system for the specified values.
+
+It is important to note that for most "<modes>" values, it is expected that your client has proper navigation
+files which includes the target NPC/monster, or they will fail.
+
+If the current client doesn't support NAVI tags, returns a fall back text which generally looks like:
+	<label> (<map_name> <x>, <y>)
+
+Parameters:
+- label: (string, required)
+	The visible and clickable text. (example: "Hat maker")
+
+- map: (string, required)
+	Target map name. (example: "prontera")
+	Note: when service_flag is NAV_WINDOW_SEARCH (-222) this becomes the search string.
+
+- x: (int, optional, defaults to 0)
+	Target map X position
+	Note: does nothing when used with modes NAV_MODE_MAP or NAV_MODE_MOB
+
+- y: (int, optional, defaults to 0)
+	Target map Y position
+	Note: does nothing when used with modes NAV_MODE_MAP or NAV_MODE_MOB
+
+- show_window: (bool, optional, defaults to false)
+	Whether to open the navigation UI (true) or not (false) when clicking the label.
+
+- mode: (int, optional, defaults to NAV_MODE_ALL (0))
+	The kind of navigation being performed. This mainly affects the messages shown by the client when you reach the map.
+	- NAV_MODE_ALL (0): "You have reached your destination"
+	- NAV_MODE_MAP (1): "You have reached the target map"
+	- NAV_MODE_NPC (2): "You have reached the map the NPC is at" / "You have reached the target NPC"
+	- NAV_MODE_MOB (3): "You have reached the map where the monster appears"
+
+	Notes:
+	- NAV_MODE_NPC requires client navigation files to have a NPC in the exact position or an error is shown
+	- NAV_MODE_MOB requires client navigation files to have <monster_id> spawn in the given map or an error is shown.
+
+- services_flag: (int, optional, defaults to NAV_KAFRA_AND_AIRSHIP (101))
+	The kinds of services that may be used when calculating the route.
+
+	The following values may be summed up:
+	- NAV_AIRSHIP_ONLY (1): Include airships
+	- NAV_SCROLL_ONLY (10): Include scrolls
+	- NAV_KAFRA_ONLY (100): Include kafras
+
+	Summed values:
+	- NAV_AIRSHIP_AND_SCROLL (11)
+	- NAV_KAFRA_AND_AIRSHIP (101)
+	- NAV_KAFRA_AND_SCROLL (110)
+	- NAV_ALL (111)
+
+	Special values:
+	- NAV_WINDOW_SEARCH (-222)
+		This is a special value that can't be summed with others and when used,
+		"map" becomes a search string in the navigation UI. And client performs a search
+		with the special keyword "$$DB".
+		It is only known to work together with mode = NAV_MODE_MOB and using monster Sprite Name
+		as "map".
+
+- monster_id: (int, optional, defaults to 0)
+	To be used with mode = NAV_MODE_MOB. The ID of the monster being looked for.
+
+---------------------------------------
+//=====================================
 1 - End of Basic-Related Commands
 //=====================================
 ---------------------------------------

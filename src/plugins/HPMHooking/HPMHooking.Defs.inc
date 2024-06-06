@@ -1336,6 +1336,8 @@ typedef unsigned short (*HPMHOOK_pre_clif_decrypt_cmd) (int *cmd, struct map_ses
 typedef unsigned short (*HPMHOOK_post_clif_decrypt_cmd) (unsigned short retVal___, int cmd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_format_itemlink) (struct StringBuf **buf, const struct item **it);
 typedef void (*HPMHOOK_post_clif_format_itemlink) (struct StringBuf *buf, const struct item *it);
+typedef void (*HPMHOOK_pre_clif_format_navigation) (struct StringBuf **buf, const char **label, const char **mapname, int *x, int *y, enum navigation_mode *mode, enum navigation_service *services_flag, bool *show_window, int *monster_id);
+typedef void (*HPMHOOK_post_clif_format_navigation) (struct StringBuf *buf, const char *label, const char *mapname, int x, int y, enum navigation_mode mode, enum navigation_service services_flag, bool show_window, int monster_id);
 typedef void (*HPMHOOK_pre_clif_authok) (struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_authok) (struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_auth_error) (int *fd, int *errorCode);
@@ -8152,6 +8154,8 @@ typedef int (*HPMHOOK_pre_script_buildin_instance_warpall_sub) (struct block_lis
 typedef int (*HPMHOOK_post_script_buildin_instance_warpall_sub) (int retVal___, struct block_list *bl, va_list ap);
 typedef int (*HPMHOOK_pre_script_buildin_mobuseskill_sub) (struct block_list **bl, va_list ap);
 typedef int (*HPMHOOK_post_script_buildin_mobuseskill_sub) (int retVal___, struct block_list *bl, va_list ap);
+typedef bool (*HPMHOOK_pre_script_format_navigation) (struct script_state **st, const char **label, const char **mapname, int *x, int *y, enum navigation_mode *mode, enum navigation_service *services_flag, bool *show_window, int *monster_id);
+typedef bool (*HPMHOOK_post_script_format_navigation) (bool retVal___, struct script_state *st, const char *label, const char *mapname, int x, int y, enum navigation_mode mode, enum navigation_service services_flag, bool show_window, int monster_id);
 typedef bool (*HPMHOOK_pre_script_buildin_rodex_sendmail_sub) (struct script_state **st, struct rodex_message **msg);
 typedef bool (*HPMHOOK_post_script_buildin_rodex_sendmail_sub) (bool retVal___, struct script_state *st, struct rodex_message *msg);
 typedef int (*HPMHOOK_pre_script_cleanfloor_sub) (struct block_list **bl, va_list ap);

@@ -72,6 +72,8 @@ enum macro_report_status;
 enum grade_level;
 enum grade_ui_result;
 enum item_reform_status;
+enum navigation_mode;
+enum navigation_service;
 
 /**
  * Defines
@@ -963,6 +965,7 @@ struct clif_interface {
 	unsigned short (*decrypt_cmd) ( int cmd, struct map_session_data *sd );
 	/* client-specific logic */
 	void (*format_itemlink) (struct StringBuf *buf, const struct item *it);
+	void (*format_navigation) (struct StringBuf *buf, const char *label, const char *mapname, int x, int y, enum navigation_mode mode, enum navigation_service services_flag, bool show_window, int monster_id);
 	/* auth */
 	void (*authok) (struct map_session_data *sd);
 	void (*auth_error) (int fd, int errorCode);
