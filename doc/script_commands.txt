@@ -2704,6 +2704,33 @@ Parameters:
 	The visible and clickable text. (example: "Target monster")
 
 ---------------------------------------
+
+*mesurl("<label>", "url"{, <width>, <height>})
+
+Generates and returns a <URL> tag. When presented in certain places (like with "mes" and "mesf"),
+this will display a clickable text (<label>) which when clicked, opens <url> in the in-game browser
+or default browser (depending on client version).
+
+If the current client doesn't support this feature, returns a basic string in the following format:
+	<label> (<url>)
+
+Parameters:
+- label: (string, required)
+	The visible and clickable text. (example: "My site")
+
+- url: (string, required)
+	The site that will open when <label> is clicked
+
+- width: (int, optional, defaults to -1)
+	The width of the browser window (when using in-game browser).
+	When not provided (or -1), width/height is not specified.
+
+- height: (int, optional, defaults to -1)
+	The height of the browser window (when using in-game browser).
+	When not provided (or -1), width/height is not specified.
+
+
+---------------------------------------
 //=====================================
 1 - End of Basic-Related Commands
 //=====================================

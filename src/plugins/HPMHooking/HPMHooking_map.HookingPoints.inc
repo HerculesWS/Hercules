@@ -373,6 +373,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->decrypt_cmd, HP_clif_decrypt_cmd) },
 	{ HP_POP(clif->format_itemlink, HP_clif_format_itemlink) },
 	{ HP_POP(clif->format_navigation, HP_clif_format_navigation) },
+	{ HP_POP(clif->format_url, HP_clif_format_url) },
 	{ HP_POP(clif->authok, HP_clif_authok) },
 	{ HP_POP(clif->auth_error, HP_clif_auth_error) },
 	{ HP_POP(clif->authrefuse, HP_clif_authrefuse) },

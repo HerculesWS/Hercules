@@ -326,6 +326,35 @@ function	script	F_TestMesMobSpawn_WithLabel	{
 	return .@pass;
 }
 
+function	script	F_TestMesUrl_Basic	{
+	.@str$ = mesurl("Herc", "https://herc.ws/");
+
+	.@pass = false;
+	if (PACKETVER < 20111010) {
+		.@pass = (.@str$ == "Herc (URL: https://herc.ws/)");
+	} else {
+		.@pass = (.@str$ == "<URL>Herc<INFO>https://herc.ws/</INFO></URL>");
+	}
+
+	return .@pass;
+}
+
+function	script	F_TestMesUrl_Dimensions	{
+	.@str$ = mesurl("Herc", "https://herc.ws/", 800, 600);
+
+	.@pass = false;
+	if (PACKETVER < 20111010) {
+		.@pass = (.@str$ == "Herc (URL: https://herc.ws/)");
+	} else if (PACKETVER < 20181024) {
+		.@pass = (.@str$ == "<URL>Herc<INFO>https://herc.ws/,800,600</INFO></URL>");
+	} else {
+		// dimensions are no longer supported since it now uses users' default browser.
+		.@pass = (.@str$ == "<URL>Herc<INFO>https://herc.ws/</INFO></URL>");
+	}
+
+	return .@pass;
+}
+
 function	script	HerculesSelfTestHelper	{
 	if (.once > 0)
 		return .errors;
@@ -1049,6 +1078,9 @@ function	script	HerculesSelfTestHelper	{
 
 	callsub(OnCheck, "mesmobspawn: basic usage", F_TestMesMobSpawn_Basic(), true);
 	callsub(OnCheck, "mesmobspawn: with label", F_TestMesMobSpawn_WithLabel(), true);
+
+	callsub(OnCheck, "mesurl: basic usage", F_TestMesUrl_Basic(), true);
+	callsub(OnCheck, "mesurl: with dimensions", F_TestMesUrl_Dimensions(), true);
 
 	if (.errors) {
 		consolemes(CONSOLEMES_DEBUG, "Script engine self-test   [ \033[0;31mFAILED\033[0m ]");

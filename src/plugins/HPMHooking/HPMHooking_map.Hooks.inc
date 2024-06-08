@@ -9059,6 +9059,32 @@ void HP_clif_format_navigation(struct StringBuf *buf, const char *label, const c
 	}
 	return;
 }
+void HP_clif_format_url(struct StringBuf *buf, const char *label, const char *url, int width, int height) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_format_url_pre > 0) {
+		void (*preHookFunc) (struct StringBuf **buf, const char **label, const char **url, int *width, int *height);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_format_url_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_format_url_pre[hIndex].func;
+			preHookFunc(&buf, &label, &url, &width, &height);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.format_url(buf, label, url, width, height);
+	}
+	if (HPMHooks.count.HP_clif_format_url_post > 0) {
+		void (*postHookFunc) (struct StringBuf *buf, const char *label, const char *url, int width, int height);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_format_url_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_format_url_post[hIndex].func;
+			postHookFunc(buf, label, url, width, height);
+		}
+	}
+	return;
+}
 void HP_clif_authok(struct map_session_data *sd) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_authok_pre > 0) {

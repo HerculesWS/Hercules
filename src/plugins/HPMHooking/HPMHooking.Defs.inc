@@ -1338,6 +1338,8 @@ typedef void (*HPMHOOK_pre_clif_format_itemlink) (struct StringBuf **buf, const 
 typedef void (*HPMHOOK_post_clif_format_itemlink) (struct StringBuf *buf, const struct item *it);
 typedef void (*HPMHOOK_pre_clif_format_navigation) (struct StringBuf **buf, const char **label, const char **mapname, int *x, int *y, enum navigation_mode *mode, enum navigation_service *services_flag, bool *show_window, int *monster_id);
 typedef void (*HPMHOOK_post_clif_format_navigation) (struct StringBuf *buf, const char *label, const char *mapname, int x, int y, enum navigation_mode mode, enum navigation_service services_flag, bool show_window, int monster_id);
+typedef void (*HPMHOOK_pre_clif_format_url) (struct StringBuf **buf, const char **label, const char **url, int *width, int *height);
+typedef void (*HPMHOOK_post_clif_format_url) (struct StringBuf *buf, const char *label, const char *url, int width, int height);
 typedef void (*HPMHOOK_pre_clif_authok) (struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_authok) (struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_auth_error) (int *fd, int *errorCode);

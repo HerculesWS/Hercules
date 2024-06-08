@@ -28521,6 +28521,28 @@ static BUILDIN(setgoldpcmode)
 }
 
 /**
+ * create a <URL> tag
+ *
+ * mesurl("<label>", "url"{, <width>, <height>})
+ */
+static BUILDIN(mesurl)
+{
+	const char *label = script_getstr(st, 2);
+	const char *url = script_getstr(st, 3);
+	int width = script_hasdata(st, 4) ? script_getnum(st, 4) : -1;
+	int height = script_hasdata(st, 5) ? script_getnum(st, 5) : -1;
+
+	StringBuf buf;
+	StrBuf->Init(&buf);
+
+	clif->format_url(&buf, label, url, width, height);
+	script_pushstrcopy(st, StrBuf->Value(&buf));
+
+	StrBuf->Destroy(&buf);
+	return true;
+}
+
+/**
  * Adds a built-in script function.
  *
  * @param buildin Script function data
@@ -29396,6 +29418,8 @@ static void script_parse_builtin(void)
 
 		BUILDIN_DEF(dynamicnpccreateresult, "i"),
 		BUILDIN_DEF(setgoldpcmode, "i?"),
+
+		BUILDIN_DEF(mesurl, "ss??"),
 	};
 	int i, len = ARRAYLENGTH(BUILDIN);
 	RECREATE(script->buildin, char *, script->buildin_count + len); // Pre-alloc to speed up
