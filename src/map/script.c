@@ -28543,6 +28543,26 @@ static BUILDIN(mesurl)
 }
 
 /**
+ * create a <TIPBOX> tag
+ *
+ * mestipbox("<label>", <tip_id>)
+ */
+static BUILDIN(mestipbox)
+{
+	const char *label = script_getstr(st, 2);
+	int tip_id = script_getnum(st, 3);
+
+	StringBuf buf;
+	StrBuf->Init(&buf);
+
+	clif->format_tipbox(&buf, label, tip_id);
+	script_pushstrcopy(st, StrBuf->Value(&buf));
+
+	StrBuf->Destroy(&buf);
+	return true;
+}
+
+/**
  * Adds a built-in script function.
  *
  * @param buildin Script function data
@@ -29420,6 +29440,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(setgoldpcmode, "i?"),
 
 		BUILDIN_DEF(mesurl, "ss??"),
+		BUILDIN_DEF(mestipbox, "si"),
 	};
 	int i, len = ARRAYLENGTH(BUILDIN);
 	RECREATE(script->buildin, char *, script->buildin_count + len); // Pre-alloc to speed up

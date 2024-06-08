@@ -698,6 +698,8 @@ struct {
 	struct HPMHookPoint *HP_clif_format_navigation_post;
 	struct HPMHookPoint *HP_clif_format_url_pre;
 	struct HPMHookPoint *HP_clif_format_url_post;
+	struct HPMHookPoint *HP_clif_format_tipbox_pre;
+	struct HPMHookPoint *HP_clif_format_tipbox_post;
 	struct HPMHookPoint *HP_clif_authok_pre;
 	struct HPMHookPoint *HP_clif_authok_post;
 	struct HPMHookPoint *HP_clif_auth_error_pre;
@@ -8281,6 +8283,8 @@ struct {
 	int HP_clif_format_navigation_post;
 	int HP_clif_format_url_pre;
 	int HP_clif_format_url_post;
+	int HP_clif_format_tipbox_pre;
+	int HP_clif_format_tipbox_post;
 	int HP_clif_authok_pre;
 	int HP_clif_authok_post;
 	int HP_clif_auth_error_pre;

@@ -2729,6 +2729,22 @@ Parameters:
 	The height of the browser window (when using in-game browser).
 	When not provided (or -1), width/height is not specified.
 
+---------------------------------------
+
+*mestipbox("<label>", <tip_id>)
+
+Generates and returns a <TIPBOX> tag. When presented in certain places (like with "mes" and "mesf"),
+this will display a clickable text (<label>) which when clicked, opens the TipBox UI with the given <tip_id>.
+
+If the current client doesn't support this feature, returns a simple string with "<label>"
+
+Parameters:
+- label: (string, required)
+	The visible and clickable text. (example: "Super Tip")
+
+- tip_id: (int, required)
+	The tip ID (as set in TipBox lua file)
+	If 0, it shows a random tipbox
 
 ---------------------------------------
 //=====================================

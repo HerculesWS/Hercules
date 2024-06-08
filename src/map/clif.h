@@ -967,6 +967,7 @@ struct clif_interface {
 	void (*format_itemlink) (struct StringBuf *buf, const struct item *it);
 	void (*format_navigation) (struct StringBuf *buf, const char *label, const char *mapname, int x, int y, enum navigation_mode mode, enum navigation_service services_flag, bool show_window, int monster_id);
 	void (*format_url) (struct StringBuf *buf, const char *label, const char *url, int width, int height);
+	void (*format_tipbox) (struct StringBuf *buf, const char *label, int tip_id);
 	/* auth */
 	void (*authok) (struct map_session_data *sd);
 	void (*auth_error) (int fd, int errorCode);

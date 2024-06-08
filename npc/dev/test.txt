@@ -355,6 +355,19 @@ function	script	F_TestMesUrl_Dimensions	{
 	return .@pass;
 }
 
+function	script	F_TestMesTipBox	{
+	.@str$ = mestipbox("Some tip", 1);
+
+	.@pass = false;
+	if (PACKETVER < 20170712) {
+		.@pass = (.@str$ == "Some tip");
+	} else {
+		.@pass = (.@str$ == "<TIPBOX>Some tip<INFO>1</INFO></TIPBOX>");
+	}
+
+	return .@pass;
+}
+
 function	script	HerculesSelfTestHelper	{
 	if (.once > 0)
 		return .errors;
@@ -1081,6 +1094,8 @@ function	script	HerculesSelfTestHelper	{
 
 	callsub(OnCheck, "mesurl: basic usage", F_TestMesUrl_Basic(), true);
 	callsub(OnCheck, "mesurl: with dimensions", F_TestMesUrl_Dimensions(), true);
+
+	callsub(OnCheck, "mestipbox", F_TestMesTipBox(), true);
 
 	if (.errors) {
 		consolemes(CONSOLEMES_DEBUG, "Script engine self-test   [ \033[0;31mFAILED\033[0m ]");
