@@ -1522,21 +1522,33 @@ static int pc_reg_received(struct map_session_data *sd)
 	if ((i = pc->checkskill(sd,RG_PLAGIARISM)) > 0) {
 		sd->cloneskill_id = pc_readglobalreg(sd,script->add_variable("CLONE_SKILL"));
 		if (sd->cloneskill_id > 0 && (idx = skill->get_index(sd->cloneskill_id)) > 0) {
+			int learned_lv = sd->status.skill[idx].lv;
+			bool is_own_skill = pc->is_own_skill(sd, sd->cloneskill_id);
 			sd->status.skill[idx].id = sd->cloneskill_id;
 			sd->status.skill[idx].lv = pc_readglobalreg(sd,script->add_variable("CLONE_SKILL_LV"));
 			if (sd->status.skill[idx].lv > i)
 				sd->status.skill[idx].lv = i;
-			sd->status.skill[idx].flag = SKILL_FLAG_PLAGIARIZED;
+
+			if (is_own_skill)
+				sd->status.skill[idx].flag = learned_lv + SKILL_FLAG_REPLACED_LV_0;
+			else
+				sd->status.skill[idx].flag = SKILL_FLAG_PLAGIARIZED;
 		}
 	}
 	if ((i = pc->checkskill(sd,SC_REPRODUCE)) > 0) {
 		sd->reproduceskill_id = pc_readglobalreg(sd,script->add_variable("REPRODUCE_SKILL"));
 		if( sd->reproduceskill_id > 0 && (idx = skill->get_index(sd->reproduceskill_id)) > 0) {
+			int learned_lv = sd->status.skill[idx].lv;
+			bool is_own_skill = pc->is_own_skill(sd, sd->reproduceskill_id);
 			sd->status.skill[idx].id = sd->reproduceskill_id;
 			sd->status.skill[idx].lv = pc_readglobalreg(sd,script->add_variable("REPRODUCE_SKILL_LV"));
 			if( i < sd->status.skill[idx].lv)
 				sd->status.skill[idx].lv = i;
-			sd->status.skill[idx].flag = SKILL_FLAG_PLAGIARIZED;
+
+			if (is_own_skill)
+				sd->status.skill[idx].flag = learned_lv + SKILL_FLAG_REPLACED_LV_0;
+			else
+				sd->status.skill[idx].flag = SKILL_FLAG_PLAGIARIZED;
 		}
 	}
 
@@ -1646,8 +1658,10 @@ static void pc_calc_skilltree_clear(struct map_session_data *sd)
 	nullpo_retv(sd);
 
 	for (i = 0; i < MAX_SKILL_DB; i++) {
-		if (sd->status.skill[i].flag != SKILL_FLAG_PLAGIARIZED && sd->status.skill[i].flag != SKILL_FLAG_PERM_GRANTED) //Don't touch these
-			sd->status.skill[i].id = 0; //First clear skills.
+		if (sd->status.skill[i].flag == SKILL_FLAG_PLAGIARIZED || sd->status.skill[i].flag == SKILL_FLAG_PERM_GRANTED
+		    || sd->status.skill[i].id == sd->cloneskill_id || sd->status.skill[i].id == sd->reproduceskill_id) //Don't touch these
+			continue;
+		sd->status.skill[i].id = 0; //First clear skills.
 		/* permanent skills that must be re-checked */
 		if (sd->status.skill[i].flag == SKILL_FLAG_PERMANENT) {
 			switch (skill->dbs->db[i].nameid) {
@@ -1681,7 +1695,8 @@ static int pc_calc_skilltree(struct map_session_data *sd)
 	pc->calc_skilltree_clear(sd);
 
 	for (int i = 0; i < MAX_SKILL_DB; i++) {
-		if (sd->status.skill[i].flag == SKILL_FLAG_TEMPORARY || sd->status.skill[i].flag >= SKILL_FLAG_REPLACED_LV_0) {
+		if ((sd->status.skill[i].flag >= SKILL_FLAG_REPLACED_LV_0 && sd->status.skill[i].id != sd->cloneskill_id && sd->status.skill[i].id != sd->reproduceskill_id)
+		    || sd->status.skill[i].flag == SKILL_FLAG_TEMPORARY) {
 			// Restore original level of skills after deleting earned skills.
 			sd->status.skill[i].lv = (sd->status.skill[i].flag == SKILL_FLAG_TEMPORARY) ? 0 : sd->status.skill[i].flag - SKILL_FLAG_REPLACED_LV_0;
 			sd->status.skill[i].flag = SKILL_FLAG_PERMANENT;
@@ -8841,7 +8856,7 @@ static int jobchange_killclone(struct block_list *bl, va_list ap)
 static int pc_jobchange(struct map_session_data *sd, int class, int upper)
 {
 	int i, fame_flag=0;
-	int job, idx = 0;
+	int job = 0;
 
 	nullpo_ret(sd);
 
@@ -8880,31 +8895,8 @@ static int pc_jobchange(struct map_session_data *sd, int class, int upper)
 		pc_setglobalreg(sd, script->add_variable("jobchange_level_3rd"), sd->change_level_3rd);
 	}
 
-	if(sd->cloneskill_id) {
-		idx = skill->get_index(sd->cloneskill_id);
-		if( sd->status.skill[idx].flag == SKILL_FLAG_PLAGIARIZED ) {
-			sd->status.skill[idx].id = 0;
-			sd->status.skill[idx].lv = 0;
-			sd->status.skill[idx].flag = 0;
-			clif->deleteskill(sd, sd->cloneskill_id, false);
-		}
-		sd->cloneskill_id = 0;
-		pc_setglobalreg(sd, script->add_variable("CLONE_SKILL"), 0);
-		pc_setglobalreg(sd, script->add_variable("CLONE_SKILL_LV"), 0);
-	}
-
-	if(sd->reproduceskill_id) {
-		idx = skill->get_index(sd->reproduceskill_id);
-		if( sd->status.skill[idx].flag == SKILL_FLAG_PLAGIARIZED ) {
-			sd->status.skill[idx].id = 0;
-			sd->status.skill[idx].lv = 0;
-			sd->status.skill[idx].flag = 0;
-			clif->deleteskill(sd, sd->reproduceskill_id, false);
-		}
-		sd->reproduceskill_id = 0;
-		pc_setglobalreg(sd, script->add_variable("REPRODUCE_SKILL"),0);
-		pc_setglobalreg(sd, script->add_variable("REPRODUCE_SKILL_LV"),0);
-	}
+	pc->clear_existing_cloneskill(sd, true);
+	pc->clear_existing_reproduceskill(sd, true);
 
 	if ((job & MAPID_UPPERMASK) != (sd->job & MAPID_UPPERMASK)) { //Things to remove when changing class tree.
 		const int class_idx = pc->class2idx(sd->status.class);
@@ -12627,6 +12619,96 @@ void pc_crimson_marker_clear(struct map_session_data *sd)
 	}
 }
 
+/**
+ * Checks if a skill is a permanent skill that one has prerequisites for or has learned.
+ *
+ * NOTE: Unfortunately even uninitialized skills have the flag SKILL_FLAG_PERMANENT, so we have to distinguish by id as well.
+ *       Ideally a more saner zero value should be used for e_skill_flag.
+ * WARNING: This function relies on the skill tree being already calculated / filled.
+ *
+ * @param sd The player to check for.
+ * @param skill_id The skill to check for.
+ * @return True if the player meets the skill prerequisites or has it, false otherwise.
+ */
+static bool pc_is_own_skill(struct map_session_data *sd, uint16 skill_id)
+{
+	nullpo_retr(false, sd);
+
+	int idx = skill->get_index(skill_id);
+	if (idx <= 0)
+		return false; // skill not found
+	if (sd->status.skill[idx].id != skill_id)
+		return false; // not meeting pre-requisites for skill or skill id to index mapping faulty.
+	if (sd->status.skill[idx].flag != SKILL_FLAG_PERMANENT)
+		return false; // script granted or temporary.
+
+	return true;
+}
+
+/**
+ * Clears / removes the existing cloned skill from RG_PLAGIARISM
+ *
+ * @param sd The player to clear the cloned skill from.
+ * @param clear_vars If true, the remembered clone_skill level and ID will be cleared, otherwise it will not be touched.
+ */
+static void pc_clear_existing_cloneskill(struct map_session_data *sd, bool clear_vars)
+{
+	nullpo_retv(sd);
+
+	if (sd->cloneskill_id != 0) {
+		int idx = skill->get_index(sd->cloneskill_id);
+		if (sd->status.skill[idx].flag == SKILL_FLAG_PLAGIARIZED) {
+			sd->status.skill[idx].id = 0;
+			sd->status.skill[idx].lv = 0;
+			sd->status.skill[idx].flag = 0;
+			clif->deleteskill(sd, sd->cloneskill_id, false);
+		} else if (sd->status.skill[idx].flag >= SKILL_FLAG_REPLACED_LV_0) {
+			sd->status.skill[idx].lv = sd->status.skill[idx].flag - SKILL_FLAG_REPLACED_LV_0;
+			sd->status.skill[idx].flag = SKILL_FLAG_PERMANENT;
+			// CAREFUL! This assumes you will only ever use SKILL_FLAG_REPLACED_LV_0 logic when copying SKILL_FLAG_PERMANENT skills!!!
+			clif->addskill(sd, sd->cloneskill_id);
+		}
+	}
+
+	if (clear_vars) {
+		sd->cloneskill_id = 0;
+		pc_setglobalreg(sd, script->add_variable("CLONE_SKILL"), 0);
+		pc_setglobalreg(sd, script->add_variable("CLONE_SKILL_LV"), 0);
+	}
+}
+
+/**
+ * Clears / removes the existing reproduced skill from SC_REPRODUCE
+ *
+ * @param sd The player to clear the reproduced skill from.
+ * @param clear_vars If true, the remembered reproduced skill level and ID will be cleared, otherwise it will not be touched.
+ */
+static void pc_clear_existing_reproduceskill(struct map_session_data *sd, bool clear_vars)
+{
+	nullpo_retv(sd);
+
+	if (sd->reproduceskill_id != 0) {
+		int idx = skill->get_index(sd->reproduceskill_id);
+		if (sd->status.skill[idx].flag == SKILL_FLAG_PLAGIARIZED) {
+			sd->status.skill[idx].id = 0;
+			sd->status.skill[idx].lv = 0;
+			sd->status.skill[idx].flag = 0;
+			clif->deleteskill(sd, sd->reproduceskill_id, false);
+		} else if (sd->status.skill[idx].flag >= SKILL_FLAG_REPLACED_LV_0) {
+			sd->status.skill[idx].lv = sd->status.skill[idx].flag - SKILL_FLAG_REPLACED_LV_0;
+			sd->status.skill[idx].flag = SKILL_FLAG_PERMANENT;
+			// CAREFUL! This assumes you will only ever use SKILL_FLAG_REPLACED_LV_0 logic when copying SKILL_FLAG_PERMANENT skills!!!
+			clif->addskill(sd, sd->reproduceskill_id);
+		}
+	}
+
+	if (clear_vars) {
+		sd->reproduceskill_id = 0;
+		pc_setglobalreg(sd, script->add_variable("REPRODUCE_SKILL"), 0);
+		pc_setglobalreg(sd, script->add_variable("REPRODUCE_SKILL_LV"), 0);
+	}
+}
+
 static void do_final_pc(void)
 {
 
@@ -13053,4 +13135,8 @@ void pc_defaults(void)
 	pc->auto_exp_insurance = pc_auto_exp_insurance;
 
 	pc->crimson_marker_clear = pc_crimson_marker_clear;
+
+	pc->is_own_skill = pc_is_own_skill;
+	pc->clear_existing_cloneskill = pc_clear_existing_cloneskill;
+	pc->clear_existing_reproduceskill = pc_clear_existing_reproduceskill;
 }

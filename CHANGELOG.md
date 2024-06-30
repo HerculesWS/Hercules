@@ -369,6 +369,24 @@ All these changes only affect Renewal. Pre-renewal is unchanged.
 - Rebalance of `RG_PLAGIARISM` (Intimidate)
   - Also increases Attack Speed by `1%` per Skill Level
 
+## [v2024.06] `June 2024`
+
+### Added
+
+- Added the `mesnavigation()` script command, to generate navi tags valid for the current packetver. (#3300)
+- Added the `mesmobspawn()` script command, to generate navi tags valid for the current packetver. (#3300)
+- Added the `mesurl()` script command, to generate clickable URL tags valid for the current packetver. (#3300)
+- Added the `mestipbox()` script command, to generate tipbox tags valid for the current packetver. (#3300)
+
+### Changed
+
+- Refactored the Plagiarism/Reproduce skill tracking logic and removed some code duplication. (part of #3298)
+- Replaced the use of hardcoded `<NAVI>` tags in scripts with `mesnavigation()` calls. (#3300)
+
+### Fixed
+
+- Fixed the copy of one's own skills via Plagiarim or Reproduce causing the skill and its requirements to be deleted. (#3298, issue #3289)
+
 ## [v2024.05] `May 2024`
 
 ### Changed
@@ -3450,6 +3468,8 @@ Note: everything included in this release is part of PR #3198 which consists of 
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2024.06]: https://github.com/HerculesWS/Hercules/compare/v2024.05...v2024.06
+[v2024.05]: https://github.com/HerculesWS/Hercules/compare/v2024.04...v2024.05
 [v2024.04]: https://github.com/HerculesWS/Hercules/compare/v2024.03...v2024.04
 [v2024.03]: https://github.com/HerculesWS/Hercules/compare/v2024.02...v2024.03
 [v2024.02]: https://github.com/HerculesWS/Hercules/compare/v2023.12...v2024.02

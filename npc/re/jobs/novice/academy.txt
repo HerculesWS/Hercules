@@ -466,11 +466,11 @@ izlude,198,213,3	script	Captain Carocc#iz	4_M_REINDEER,5,5,{
 						next();
 						cutin("", 255);
 						mes("[Carocc]");
-						mes("If you need more help with the map, press <NAVI>[Hun]<INFO>izlude,122,207</INFO></NAVI>here");
+						mesf("If you need more help with the map, press %s here", mesnavigation("[Hun]", "izlude", 122, 207));
 						mes("Yes, the part that says 'Hun'.");
 						next();
 						mes("!- Information -!");
-						mes("^4d4dffThe icon during talk <NAVI>[Hun]<INFO>izlude,122,207</INFO></NAVI> means a link to navigation directions.");
+						mesf("^4d4dffThe icon during talk %s means a link to navigation directions.", mesnavigation("[Hun]", "izlude", 122, 207));
 						cutin("navi01", 4);
 						next();
 						mes("!- Information -!");
@@ -499,11 +499,11 @@ izlude,198,213,3	script	Captain Carocc#iz	4_M_REINDEER,5,5,{
 						mes("You can zoom in with +, zoom out with -. The waypoint from the NPC will be marked on it. ^000000");
 						next();
 						mes("[Carocc]");
-						mes("If you need more help with the map, press <NAVI>[Hun]<INFO>izlude,122,207</INFO></NAVI> here");
+						mesf("If you need more help with the map, press %s here", mesnavigation("[Hun]", "izlude", 122, 207));
 						mes("Yes, the part that says [Hun].");
 						next();
 						mes("!- Information -!");
-						mes("^4d4dff the icon during talk <NAVI>[Hun]<INFO>izlude,122,207</INFO></NAVI> means");
+						mesf("^4d4dff the icon during talk %s means", mesnavigation("[Hun]", "izlude", 122, 207));
 						mes("a link to navigation directions.");
 						cutin("navi01", 4);
 						next();
@@ -533,11 +533,11 @@ izlude,198,213,3	script	Captain Carocc#iz	4_M_REINDEER,5,5,{
 					viewpoint 1, 122, 207, 0, 0x4d4dff;
 					next();
 					mes("[Carocc]");
-					mes("If you need more help with the map, press <NAVI>[Hun]<INFO>izlude,122,207</INFO></NAVI>here");
+					mesf("If you need more help with the map, press %s here", mesnavigation("[Hun]", "izlude", 122, 207));
 					mes("Yes, the part that says ''Hun''.");
 					next();
 					mes("!- Information -!");
-					mes("^4d4dff the icon during talk <NAVI>[Hun]<INFO>izlude,122,207</INFO></NAVI> means");
+					mesf("^4d4dff the icon during talk %s means", mesnavigation("[Hun]", "izlude", 122, 207));
 					mes("a link to navigation directions.");
 					cutin("navi01", 4);
 					next();
@@ -617,11 +617,11 @@ izlude,198,213,3	script	Captain Carocc#iz	4_M_REINDEER,5,5,{
 							mes("Quest window can be opened by pressing the ^4d4dffAlt + u^000000 key.");
 							next();
 							mes("[Carocc]");
-							mes("If you need more help with the map, press <NAVI>[Hun]<INFO>izlude,122,207</INFO></NAVI> here");
+							mesf("If you need more help with the map, press %s here", mesnavigation("[Hun]", "izlude", 122, 207));
 							mes("Yes, the part that says [Hun].");
 							next();
 							mes("!- Information -!");
-							mes("^4d4dff the icon during talk <NAVI>[Hun]<INFO>izlude,122,207</INFO></NAVI> means");
+							mesf("^4d4dff the icon during talk %s means", mesnavigation("[Hun]", "izlude", 122, 207));
 							mes("a link to navigation directions.");
 							cutin("navi01", 4);
 							next();
@@ -651,11 +651,11 @@ izlude,198,213,3	script	Captain Carocc#iz	4_M_REINDEER,5,5,{
 							mes("You can zoom in with +, zoom out with -. The waypoint from the NPC will be marked on it. ^000000");
 							next();
 							mes("[Carocc]");
-							mes("If you need more help with the map, press <NAVI>[Hun]<INFO>izlude,122,207</INFO></NAVI> here");
+							mesf("If you need more help with the map, press %s here", mesnavigation("[Hun]", "izlude", 122, 207));
 							mes("Yes, the part that says [Hun].");
 							next();
 							mes("!- Information -!");
-							mes("^4d4dff the icon during talk <NAVI>[Hun]<INFO>izlude,122,207</INFO></NAVI> means");
+							mesf("^4d4dff the icon during talk %s means", mesnavigation("[Hun]", "izlude", 122, 207));
 							mes("a link to navigation directions.");
 							cutin("navi01", 4);
 							next();
@@ -691,7 +691,7 @@ izlude,198,213,3	script	Captain Carocc#iz	4_M_REINDEER,5,5,{
 					mes("The Academy has people you could make into lifetime companions.");
 					next();
 					mes("[Carocc]");
-					mes("My friend <NAVI>[Hun]<INFO>izlude,122,207</INFO></NAVI> will be around the academy entrance.");
+					mesf("My friend %s will be around the academy entrance.", mesnavigation("[Hun]", "izlude", 122, 207));
 					mes("If you don't know the way I'll point it out to you again.");
 					viewpoint 1, 122, 207, 1, 0x4d4dff;
 					next();
@@ -961,7 +961,7 @@ izlude,122,207,3	script	Criatura Academy Staff#0	4_M_KHKYEL,3,3,{
 							next();
 							mes("[Hun]");
 							mes("If you follow this road up to north, you can see");
-							mes("<NAVI>[the Academy building]<INFO>iz_ac01,100,39</INFO></NAVI>.");
+							mesf("%s.", mesnavigation("[the Academy building]", "iz_ac01", 100, 39));
 							mes("Anybody can enroll, so take advantage of it.");
 							next();
 							emotion(e_gasp, 0, "Information Staff#"+strnpcinfo(NPC_NAME_HIDDEN));
@@ -980,7 +980,7 @@ izlude,122,207,3	script	Criatura Academy Staff#0	4_M_KHKYEL,3,3,{
 							mes("[Hun]");
 							mes("There's no requirement or payment to enroll so it would be a great help to you.");
 							mes("When you go through this way to the north, you'll find");
-							mes("<NAVI>[the academy building]<INFO>iz_ac01,100,39</INFO></NAVI>.");
+							mesf("%s.", mesnavigation("[the academy building]", "iz_ac01", 100, 39));
 							next();
 							mes("[Hun]");
 							mes("If there are more adventurers like you, the future will be brighter.");
@@ -1002,7 +1002,7 @@ izlude,122,207,3	script	Criatura Academy Staff#0	4_M_KHKYEL,3,3,{
 							next();
 							mes("[Hun]");
 							mes("When you go through this way to the north, you'll find");
-							mes("<NAVI>[the academy building]<INFO>iz_ac01,100,39</INFO></NAVI>.");
+							mesf("%s.", mesnavigation("[the academy building]", "iz_ac01", 100, 39));
 							mes("What is well, is well- isn't it?");
 							next();
 							emotion(e_gasp, 0, "Information Staff#"+strnpcinfo(NPC_NAME_HIDDEN));
@@ -1037,7 +1037,7 @@ izlude,122,207,3	script	Criatura Academy Staff#0	4_M_KHKYEL,3,3,{
 						next();
 						mes("[Hun]");
 						mes("If you follow this road up to north, you can see");
-						mes("<NAVI>[the Academy building]<INFO>iz_ac01,100,39</INFO></NAVI>.");
+						mesf("%s.", mesnavigation("[the Academy building]", "iz_ac01", 100, 39));
 						mes("Anybody can enroll, so take advantage of it.");
 						next();
 						emotion(e_gasp, 0, "Information Staff#"+strnpcinfo(NPC_NAME_HIDDEN));
@@ -1056,7 +1056,7 @@ izlude,122,207,3	script	Criatura Academy Staff#0	4_M_KHKYEL,3,3,{
 						mes("[Hun]");
 						mes("There's no requirement or payment to enroll so it would be a great help to you.");
 						mes("When you go through this way to the north, you'll find");
-						mes("<NAVI>[the academy building]<INFO>iz_ac01,100,39</INFO></NAVI>.");
+						mesf("%s.", mesnavigation("[the academy building]", "iz_ac01", 100, 39));
 						next();
 						mes("[Hun]");
 						mes("If there are more adventurers like you, the future will be brighter.");
@@ -1078,7 +1078,7 @@ izlude,122,207,3	script	Criatura Academy Staff#0	4_M_KHKYEL,3,3,{
 						next();
 						mes("[Hun]");
 						mes("When you go through this way to the north, you'll find");
-						mes("<NAVI>[the academy building]<INFO>iz_ac01,100,39</INFO></NAVI>.");
+						mesf("%s.", mesnavigation("[the academy building]", "iz_ac01", 100, 39));
 						mes("What is well, is well- isn't it?");
 						next();
 						emotion(e_gasp, 0, "Information Staff#"+strnpcinfo(NPC_NAME_HIDDEN));
@@ -1199,7 +1199,7 @@ izlude,120,207,4	script	Information Staff#0	8W_SOLDIER,{
 					case 1:
 						mes("[Information Staff]");
 						mes("If you are the first time adventurer,");
-						mes("<NAVI>[Criatura Academy]<INFO>iz_ac01,100,39,</INFO></NAVI>");
+						mesf("%s", mesnavigation("[Criatura Academy]", "iz_ac01", 100, 39));
 						mes("can offer a lot of info and help.");
 						mes("Do you need additonal directions?");
 						viewpoint 1, 128, 260, 0, 0xFFD269;
@@ -1207,7 +1207,7 @@ izlude,120,207,4	script	Information Staff#0	8W_SOLDIER,{
 						continue;
 					case 2:
 						mes("[Information Staff]");
-						mes("Through the <NAVI>[Wharf]<INFO>izlude,197,205,</INFO></NAVI> in the north east,");
+						mesf("Through the %s in the north east,", mesnavigation("[Wharf]", "izlude", 197, 205));
 						mes("^8B4513Alberta^000000 or ^8B4513the Byalan Island^000000 can be visted.");
 						mes("you can go.");
 						next();
@@ -1220,7 +1220,7 @@ izlude,120,207,4	script	Information Staff#0	8W_SOLDIER,{
 						continue;
 					case 3:
 						mes("[Information Staff]");
-						mes("To the southeast, the <NAVI>[Airship]<INFO>izlude,206,75,</INFO></NAVI>");
+						mesf("To the southeast, the %s", mesnavigation("[Airship]", "izlude", 206, 75));
 						mes("will be connected with the Capital of the republic of Schwarzwald -^8B4513 Yuno^000000, and");
 						mes("The capital of the Arunapeltsdom -^8B4513 Rachel ^000000.");
 						mes("Do you need additional directions?");
@@ -1229,7 +1229,7 @@ izlude,120,207,4	script	Information Staff#0	8W_SOLDIER,{
 						continue;
 					case 4:
 						mes("[Information Staff]");
-						mes("The <NAVI>[Arena]<INFO>izlude,213,161,</INFO></NAVI> located in the east");
+						mesf("The %s located in the east", mesnavigation("[Arena]", "izlude", 213, 161));
 						mes("is for testing your battle ability.");
 						mes("It's an excellent place.");
 						mes("I will mark the location on the mini map.");
@@ -1240,7 +1240,7 @@ izlude,120,207,4	script	Information Staff#0	8W_SOLDIER,{
 					case 5:
 						mes("[Information Staff]");
 						mes("I will mark the location of the");
-						mes("<NAVI>[Shop]<INFO>izlude,110,182,</INFO></NAVI>");
+						mesf("%s", mesnavigation("[Shop]", "izlude", 110, 182));
 						mes("on the mini map.");
 						mes("Do you need additional directions?");
 						viewpoint 1, 108, 179, 4, 0xFFAAFF;
@@ -1248,7 +1248,7 @@ izlude,120,207,4	script	Information Staff#0	8W_SOLDIER,{
 						continue;
 					case 6:
 						mes("[Information Staff]");
-						mes("<NAVI>[Swordman guild]<INFO>izlude,51,172,</INFO></NAVI> is the place to manage the job transfer to a swordman.");
+						mesf("%s is the place to manage the job transfer to a swordman.", mesnavigation("[Swordman guild]", "izlude", 51, 172));
 						mes("I will mark the location of the swordman guild on the mini map.");
 						mes("Do you need additional directions?");
 						viewpoint 1, 52, 172, 5, 0xFFDA70;
@@ -1257,7 +1257,7 @@ izlude,120,207,4	script	Information Staff#0	8W_SOLDIER,{
 					case 7:
 						mes("[Information Staff]");
 						mes("I will mark the location of the");
-						mes("<NAVI>[Enchant Association]<INFO>izlude,97,125,</INFO></NAVI>");
+						mesf("%s", mesnavigation("[Enchant Association]", "izlude", 97, 125));
 						mes("on the mini map.");
 						mes("Do you need additional directions?");
 						viewpoint 1, 97, 125, 6, 0xFFDA70;
@@ -1266,7 +1266,7 @@ izlude,120,207,4	script	Information Staff#0	8W_SOLDIER,{
 					case 8:
 						mes("[Information Staff]");
 						mes("I will mark the location of the");
-						mes("<NAVI>[Blacksmith's Workshop]<INFO>izlude,153,126,</INFO></NAVI>");
+						mesf("%s", mesnavigation("[Blacksmith's Workshop]", "izlude", 153, 126));
 						mes("on the mini map.");
 						mes("Do you need additional directions?");
 						viewpoint 1, 153, 126, 7, 0xFFAAFF;
@@ -1284,7 +1284,7 @@ izlude,120,207,4	script	Information Staff#0	8W_SOLDIER,{
 					case 1:
 						mes("[Information Staff]");
 						mes("For now, I will mark the location of the");
-						mes("<NAVI>[Eden Group Teleporter]<INFO>izlude,131,148,</INFO></NAVI>");
+						mesf("%s", mesnavigation("[Eden Group Teleporter]", "izlude", 131, 148));
 						mes("on the mini map.");
 						mes("Do you need additional directions?");
 						viewpoint 1, 131, 148, 8, 0xFF0A82;
@@ -1293,7 +1293,7 @@ izlude,120,207,4	script	Information Staff#0	8W_SOLDIER,{
 					case 2:
 						mes("[Information Staff]");
 						mes("I will mark the location of the");
-						mes("<NAVI>[Kafra Employee]<INFO>izlude,128,148,</INFO></NAVI>");
+						mesf("%s", mesnavigation("[Kafra Employee]", "izlude", 128, 148));
 						mes("on the mini map.");
 						mes("Do you need additional directions?");
 						viewpoint 1, 128, 148, 9, 0xFFFF54;
@@ -1302,7 +1302,7 @@ izlude,120,207,4	script	Information Staff#0	8W_SOLDIER,{
 					case 3:
 						mes("[Information Staff]");
 						mes("I will mark the location of the");
-						mes("<NAVI>[Mesmerizer]<INFO>izlude,124,127,</INFO></NAVI>");
+						mesf("%s", mesnavigation("[Mesmerizer]", "izlude", 124, 127));
 						mes("on the mini map.");
 						mes("Do you need additional directions?");
 						viewpoint 1, 125, 127, 10, 0xFF0064;
@@ -1311,7 +1311,7 @@ izlude,120,207,4	script	Information Staff#0	8W_SOLDIER,{
 					case 4:
 						mes("[Information Staff]");
 						mes("If you want to visit ^8B4513Jawaii^000000 - the resort place for a couple,");
-						mes("talk to the <NAVI>[Wedding Secretary]<INFO>izlude,180,224,</INFO></NAVI>.");
+						mesf("talk to the %s.", mesnavigation("[Wedding Secretary]", "izlude", 180, 224));
 						mes("Just ask the question about it.");
 						mes("Do you need additional directions?");
 						viewpoint 1, 180, 224, 11, 0xFFFF00;
@@ -1320,7 +1320,7 @@ izlude,120,207,4	script	Information Staff#0	8W_SOLDIER,{
 					case 5:
 						mes("[Information Staff]");
 						mes("If you need to know about the Mercenary Guild, go west and speak to the");
-						mes("<NAVI>[Mercenary Guild Official]<INFO>izlude,47,170,</INFO></NAVI>.");
+						mesf("%s.", mesnavigation("[Mercenary Guild Official]", "izlude", 47, 170));
 						mes("Do you need additional directions?");
 						viewpoint 1, 47, 170, 12, 0xFFDA70;
 						next();
@@ -1328,7 +1328,7 @@ izlude,120,207,4	script	Information Staff#0	8W_SOLDIER,{
 					case 6:
 						mes("[Information Staff]");
 						mes("I will mark the location of the");
-						mes("<NAVI>[Taming Merchant]<INFO>izlude,118,163,</INFO></NAVI>");
+						mesf("%s", mesnavigation("[Taming Merchant]", "izlude", 118, 163));
 						mes("on the mini map.");
 						mes("Do you need additional directions?");
 						viewpoint 1, 118, 163, 13, 0xFF0064;
@@ -1466,7 +1466,7 @@ izlude,120,207,4	script	Information Staff#0	8W_SOLDIER,{
 					case 1:
 						mes("[Information Staff]");
 						mes("If you are the first time adventurer,");
-						mes("<NAVI>[Criatura Academy]<INFO>iz_ac01,100,39,</INFO></NAVI>");
+						mesf("%s", mesnavigation("[Criatura Academy]", "iz_ac01", 100, 39));
 						mes("can offer a lot of info and help.");
 						mes("Do you need additonal directions?");
 						viewpoint 1, 128, 260, 0, 0xFFD269;
@@ -1474,7 +1474,7 @@ izlude,120,207,4	script	Information Staff#0	8W_SOLDIER,{
 						continue;
 					case 2:
 						mes("[Information Staff]");
-						mes("Through the <NAVI>[Wharf]<INFO>izlude,197,205,</INFO></NAVI> in the north east,");
+						mesf("Through the %s in the north east,", mesnavigation("[Wharf]", "izlude", 197, 205));
 						mes("^8B4513Alberta^000000 or ^8B4513the Byalan Island^000000 can be visted.");
 						mes("you can go.");
 						next();
@@ -1487,7 +1487,7 @@ izlude,120,207,4	script	Information Staff#0	8W_SOLDIER,{
 						continue;
 					case 3:
 						mes("[Information Staff]");
-						mes("To the southeast, the <NAVI>[Airship]<INFO>izlude,206,75,</INFO></NAVI>");
+						mesf("To the southeast, the %s", mesnavigation("[Airship]", "izlude", 206, 75));
 						mes("will be connected with the Capital of the republic of Schwarzwald -^8B4513 Yuno^000000, and");
 						mes("The capital of the Arunapeltsdom -^8B4513 Rachel ^000000.");
 						mes("Do you need additional directions?");
@@ -1496,7 +1496,7 @@ izlude,120,207,4	script	Information Staff#0	8W_SOLDIER,{
 						continue;
 					case 4:
 						mes("[Information Staff]");
-						mes("The <NAVI>[Arena]<INFO>izlude,213,161,</INFO></NAVI> located in the east");
+						mesf("The %s located in the east", mesnavigation("[Arena]", "izlude", 213, 161));
 						mes("is for testing your battle ability.");
 						mes("It's an excellent place.");
 						mes("I will mark the location on the mini map.");
@@ -1507,7 +1507,7 @@ izlude,120,207,4	script	Information Staff#0	8W_SOLDIER,{
 					case 5:
 						mes("[Information Staff]");
 						mes("I will mark the location of the");
-						mes("<NAVI>[Shop]<INFO>izlude,110,182,</INFO></NAVI>");
+						mesf("%s", mesnavigation("[Shop]", "izlude", 110, 182));
 						mes("on the mini map.");
 						mes("Do you need additional directions?");
 						viewpoint 1, 108, 179, 4, 0xFFAAFF;
@@ -1515,7 +1515,7 @@ izlude,120,207,4	script	Information Staff#0	8W_SOLDIER,{
 						continue;
 					case 6:
 						mes("[Information Staff]");
-						mes("<NAVI>[Swordman guild]<INFO>izlude,51,172,</INFO></NAVI> is the place to manage the job transfer to a swordman.");
+						mesf("%s is the place to manage the job transfer to a swordman.", mesnavigation("[Swordman guild]", "izlude", 51, 172));
 						mes("I will mark the location of the swordman guild on the mini map.");
 						mes("Do you need additional directions?");
 						viewpoint 1, 52, 172, 5, 0xFFDA70;
@@ -1524,7 +1524,7 @@ izlude,120,207,4	script	Information Staff#0	8W_SOLDIER,{
 					case 7:
 						mes("[Information Staff]");
 						mes("I will mark the location of the");
-						mes("<NAVI>[Enchant Association]<INFO>izlude,97,125,</INFO></NAVI>");
+						mesf("%s", mesnavigation("[Enchant Association]", "izlude", 97, 125));
 						mes("on the mini map.");
 						mes("Do you need additional directions?");
 						viewpoint 1, 97, 125, 6, 0xFFDA70;
@@ -1533,7 +1533,7 @@ izlude,120,207,4	script	Information Staff#0	8W_SOLDIER,{
 					case 8:
 						mes("[Information Staff]");
 						mes("I will mark the location of the");
-						mes("<NAVI>[Blacksmith's Workshop]<INFO>izlude,153,126,</INFO></NAVI>");
+						mesf("%s", mesnavigation("[Blacksmith's Workshop]", "izlude", 153, 126));
 						mes("on the mini map.");
 						mes("Do you need additional directions?");
 						viewpoint 1, 153, 126, 7, 0xFFAAFF;
@@ -1551,7 +1551,7 @@ izlude,120,207,4	script	Information Staff#0	8W_SOLDIER,{
 					case 1:
 						mes("[Information Staff]");
 						mes("For now, I will mark the location of the");
-						mes("<NAVI>[Eden Group Teleporter]<INFO>izlude,131,148,</INFO></NAVI>");
+						mesf("%s", mesnavigation("[Eden Group Teleporter]", "izlude", 131, 148));
 						mes("on the mini map.");
 						mes("Do you need additional directions?");
 						viewpoint 1, 131, 148, 8, 0xFF0A82;
@@ -1560,7 +1560,7 @@ izlude,120,207,4	script	Information Staff#0	8W_SOLDIER,{
 					case 2:
 						mes("[Information Staff]");
 						mes("I will mark the location of the");
-						mes("<NAVI>[Kafra Employee]<INFO>izlude,128,148,</INFO></NAVI>");
+						mesf("%s", mesnavigation("[Kafra Employee]", "izlude", 128, 148));
 						mes("on the mini map.");
 						mes("Do you need additional directions?");
 						viewpoint 1, 128, 148, 9, 0xFFFF54;
@@ -1569,7 +1569,7 @@ izlude,120,207,4	script	Information Staff#0	8W_SOLDIER,{
 					case 3:
 						mes("[Information Staff]");
 						mes("I will mark the location of the");
-						mes("<NAVI>[Mesmerizer]<INFO>izlude,124,127,</INFO></NAVI>");
+						mesf("%s", mesnavigation("[Mesmerizer]", "izlude", 124, 127));
 						mes("on the mini map.");
 						mes("Do you need additional directions?");
 						viewpoint 1, 125, 127, 10, 0xFF0064;
@@ -1578,7 +1578,7 @@ izlude,120,207,4	script	Information Staff#0	8W_SOLDIER,{
 					case 4:
 						mes("[Information Staff]");
 						mes("If you want to visit ^8B4513Jawaii^000000 - the resort place for a couple,");
-						mes("talk to the <NAVI>[Wedding Secretary]<INFO>izlude,180,224,</INFO></NAVI>.");
+						mesf("talk to the %s.", mesnavigation("[Wedding Secretary]", "izlude", 180, 224));
 						mes("Just ask the question about it.");
 						mes("Do you need additional directions?");
 						viewpoint 1, 180, 224, 11, 0xFFFF00;
@@ -1587,7 +1587,7 @@ izlude,120,207,4	script	Information Staff#0	8W_SOLDIER,{
 					case 5:
 						mes("[Information Staff]");
 						mes("If you need to know about the Mercenary Guild, go west and speak to the");
-						mes("<NAVI>[Mercenary Guild Official]<INFO>izlude,47,170,</INFO></NAVI>.");
+						mesf("%s.", mesnavigation("[Mercenary Guild Official]", "izlude", 47, 170));
 						mes("Do you need additional directions?");
 						viewpoint 1, 47, 170, 12, 0xFFDA70;
 						next();
@@ -1595,7 +1595,7 @@ izlude,120,207,4	script	Information Staff#0	8W_SOLDIER,{
 					case 6:
 						mes("[Information Staff]");
 						mes("I will mark the location of the");
-						mes("<NAVI>[Taming Merchant]<INFO>izlude,118,163,</INFO></NAVI>");
+						mesf("%s", mesnavigation("[Taming Merchant]", "izlude", 118, 163));
 						mes("on the mini map.");
 						mes("Do you need additional directions?");
 						viewpoint 1, 118, 163, 13, 0xFF0064;
@@ -2726,13 +2726,13 @@ iz_ac01,100,39,5	script	Academy Receptionist#1	4_F_01,{
 					mes("[Receptionist]");
 					mes("Left-Click your mouse on the name of the trainer you are looking for and I will give guide you to them.");
 					next();
-					mes("<NAVI>[Therapist]<INFO>iz_ac01,59,43</INFO></NAVI>, status recovery trainer");
-					mes("<NAVI>[Subino]<INFO>iz_ac01,59,83</INFO></NAVI>, battle trainer");
-					mes("<NAVI>[Mainz]<INFO>iz_ac01,134,47</INFO></NAVI>, abnormal stats trainer");
-					mes("<NAVI>[Dakuwazu]<INFO>iz_ac01,147,47</INFO></NAVI>, Cooking Trainer.");
-					mes("<NAVI>[Han]<INFO>izlude,153,126</INFO></NAVI>, Refining Trainer.");
-					mes("<NAVI>[Mounds]<INFO>izlude,96,125</INFO></NAVI> Enchanting Trainer.");
-					mes("<NAVI>[Cream Puff]<INFO>iz_ac02,143,55</INFO></NAVI>, Class Aptitude Test.");
+					mesf("%s, status recovery trainer", mesnavigation("[Therapist]", "iz_ac01", 59, 43));
+					mesf("%s, battle trainer", mesnavigation("[Subino]", "iz_ac01", 59, 83));
+					mesf("%s, abnormal stats trainer", mesnavigation("[Mainz]", "iz_ac01", 134, 47));
+					mesf("%s, Cooking Trainer.", mesnavigation("[Dakuwazu]", "iz_ac01", 147, 47));
+					mesf("%s, Refining Trainer.", mesnavigation("[Han]", "izlude", 153, 126));
+					mesf("%s Enchanting Trainer.", mesnavigation("[Mounds]", "izlude", 96, 125));
+					mesf("%s, Class Aptitude Test.", mesnavigation("[Cream Puff]", "iz_ac02", 143, 55));
 					next();
 					mes("[Receptionist]");
 					mes("Is that helpful?");
@@ -2756,15 +2756,15 @@ iz_ac01,100,39,5	script	Academy Receptionist#1	4_F_01,{
 					mes("[Receptionist]");
 					mes("Left-Click your mouse on the name of the trainer you are looking for and I will give guide you to them.");
 					next();
-					mes("Swordman Instructor <NAVI>[Adric]<INFO>iz_ac02,62,51</INFO></NAVI>");
-					mes("Acolyte Instructor <NAVI>[Alice]<INFO>iz_ac02,156,169</INFO></NAVI>");
-					mes("Archer Instructor <NAVI>[Marlbron]<INFO>iz_ac02,65,109</INFO></NAVI>");
-					mes("Mage Instructor <NAVI>[Chuck]<INFO>iz_ac02,148,110</INFO></NAVI> ");
-					mes("Thief Instructor <NAVI>[Mayssel]<INFO>iz_ac02,52,136</INFO></NAVI>");
-					mes("Merchant Instructor <NAVI>[Salim]<INFO>iz_ac02,50,169</INFO></NAVI>");
-					mes("Ninja Instructor <NAVI>[Ninja Guide]<INFO>iz_ac02,140,139</INFO></NAVI>");
-					mes("Gunslinger Instructor<NAVI>[Lusa]<INFO>iz_ac02,142,85</INFO></NAVI>");
-					mes("Taekwon Instructor <NAVI>[Arang]<INFO>iz_ac02,70,85</INFO></NAVI>");
+					mesf("Swordman Instructor %s", mesnavigation("[Adric]", "iz_ac02", 62, 51));
+					mesf("Acolyte Instructor %s", mesnavigation("[Alice]", "iz_ac02", 156, 169));
+					mesf("Archer Instructor %s", mesnavigation("[Marlbron]", "iz_ac02", 65, 109));
+					mesf("Mage Instructor %s", mesnavigation("[Chuck]", "iz_ac02", 148, 110));
+					mesf("Thief Instructor %s", mesnavigation("[Mayssel]", "iz_ac02", 52, 136));
+					mesf("Merchant Instructor %s", mesnavigation("[Salim]", "iz_ac02", 50, 169));
+					mesf("Ninja Instructor %s", mesnavigation("[Ninja Guide]", "iz_ac02", 140, 139));
+					mesf("Gunslinger Instructor%s", mesnavigation("[Lusa]", "iz_ac02", 142, 85));
+					mesf("Taekwon Instructor %s", mesnavigation("[Arang]", "iz_ac02", 70, 85));
 					next();
 					mes("[Receptionist]");
 					mes("Is that helpful?");
@@ -7437,7 +7437,7 @@ iz_ac02,142,85,6	script	Lusa#ac	4_F_GUNSLINGER,{
 			}
 			next();
 			mes("[Lusa]");
-			mes("If you need the battle training, visit <NAVI>[Subino]<INFO>iz_ac01,59,83</INFO></NAVI>.");
+			mesf("If you need the battle training, visit %s.", mesnavigation("[Subino]", "iz_ac01", 59, 83));
 			close2();
 			//ConsumespecialItem Inspector_Certificate_
 			cutin("", 255);
@@ -8743,7 +8743,7 @@ iz_ac02,65,109,5	script	Archer Teacher#ac	4_M_ARCHER,{
 						next();
 						mes("[Marlbron]");
 						mes("But he may train you with a lot of useful hunting skills for you.");
-						mes("<NAVI>^4D4DFF[Battle Trainer Subino]^000000<INFO>iz_ac01,59,83,</INFO></NAVI>");
+						mesf("%s", mesnavigation("^4D4DFF[Battle Trainer Subino]^000000", "iz_ac01", 59, 83));
 						mes("You may visit him.");
 						next();
 						if (questprogress(14158) != 2) {
@@ -8833,7 +8833,7 @@ iz_ac02,65,109,5	script	Archer Teacher#ac	4_M_ARCHER,{
 							mes("Are you coming back after more training?");
 							next();
 							mes("[Marlbron]");
-							mes("Visit <NAVI>^4D4DFF[Battle Trainer Subino]^000000<INFO>iz_ac01,59,83,</INFO></NAVI>");
+							mesf("Visit %s", mesnavigation("^4D4DFF[Battle Trainer Subino]^000000", "iz_ac01", 59, 83));
 							mes("at Armory on the 1st floor.");
 							close2();
 							cutin("", 255);
@@ -9583,7 +9583,7 @@ gef_fild07,90,208,6	script	#acmageguide	HIDDEN_NPC,7,7,{
 			next();
 			mes("[Magician's Guild Guide]");
 			mes("Once there,");
-			mes("You should find our <NAVI>^4D4DFF[Magician's Guild Guide]^000000<INFO>geffen,43,123,</INFO></NAVI>.");
+			mesf("You should find our %s.", mesnavigation("^4D4DFF[Magician's Guild Guide]^000000", "geffen", 43, 123));
 			mes("Speak to him, he will continue to guide you to the Magician's Guild!");
 			nov_3_magician = 2;
 			completequest(9264);
@@ -9603,7 +9603,7 @@ gef_fild07,89,208,6	script	Magician's Guild Guide#1	2_F_MAGICMASTER,{
 		next();
 		mes("[Magician's Guild Guide]");
 		mes("Once there,");
-		mes("You should find our <NAVI>^4D4DFF[Magician's Guild Guide]^000000<INFO>geffen,43,123,</INFO></NAVI>.");
+		mesf("You should find our %s.", mesnavigation("^4D4DFF[Magician's Guild Guide]^000000", "geffen", 43, 123));
 		mes("Speak to him, he will continue to guide you to the Magician's Guild!");
 	} else {
 		mes("[Magician's Guild Guide]");
@@ -9635,7 +9635,7 @@ geffen,43,123,6	script	Magician's Guild Guide#2	2_F_MAGICMASTER,{
 		next();
 		mes("[Magician's Guild Guide]");
 		mes("Just go inside, and upstairs a little to find the");
-		mes("<NAVI>^4D4DFF[Mage Guildsman]^000000<INFO>geffen_in,164,124,</INFO></NAVI>");
+		mesf("%s", mesnavigation("^4D4DFF[Mage Guildsman]^000000", "geffen_in", 164, 124));
 		mes("From there, he will assist you in becoming a Mage.");
 		completequest(9265);
 		erasequest(9265);
@@ -9647,7 +9647,7 @@ geffen,43,123,6	script	Magician's Guild Guide#2	2_F_MAGICMASTER,{
 		next();
 		mes("[Magician's Guild Guide]");
 		mes("Just go inside, and upstairs a little to find the");
-		mes("<NAVI>^4D4DFF[Mage Guildsman]^000000<INFO>geffen_in,164,124,</INFO></NAVI>");
+		mesf("%s", mesnavigation("^4D4DFF[Mage Guildsman]^000000", "geffen_in", 164, 124));
 		mes("From there, he will assist you in becoming a Mage.");
 	} else {
 		mes("[Magician's Guild Guide]");
@@ -9718,7 +9718,7 @@ iz_ac02,50,169,3	script	Salim Hamid#ac	1_M_MERCHANT,{
 		next();
 		mes("[Salim Hamid]");
 		mes("Do not go elsewhere, immediately enter the town.");
-		mes("Find the <NAVI>[Forge]<INFO>alberta_in,75 48</INFO></NAVI>.");
+		mesf("Find the %s.", mesnavigation("[Forge]", "alberta_in", 75, 48));
 		next();
 		if (select("Not yet ready.", "I'm Ready!") == 1) {
 			mes("[Salim Hamid]");
@@ -9742,7 +9742,7 @@ iz_ac02,50,169,3	script	Salim Hamid#ac	1_M_MERCHANT,{
 		next();
 		mes("[Salim Hamid]");
 		mes("When you want to test the other battle skills in the Merchant's Manual,");
-		mes("visit <NAVI>[Battle Trainer Subino]<INFO>iz_ac01,59,83</INFO></NAVI> on the 1st floor.");
+		mesf("visit %s on the 1st floor.", mesnavigation("[Battle Trainer Subino]", "iz_ac01", 59, 83));
 		next();
 		mes("[Salim Hamid]");
 		mes("You can fully experience the battle related practice through him.");
@@ -10436,7 +10436,7 @@ iz_ac02,52,136,3	script	Guest Lecturer Mayssel#0	4_F_MAYSEL,{
 					mes("If you want to use the skill like double attack, visit ^4d4dffMr. Subino on the 1st floor^000000.");
 					next();
 					mes("[Mayssel]");
-					mes("<NAVI>[Battle Trainer Subino]<INFO>iz_ac01,59,83</INFO></NAVI> will give you several battle missions.");
+					mesf("%s will give you several battle missions.", mesnavigation("[Battle Trainer Subino]", "iz_ac01", 59, 83));
 					next();
 					mes("[Mayssel]");
 					mes("I hope you experience other skills with battle Quests.");
@@ -10507,7 +10507,7 @@ iz_ac02,52,136,3	script	Guest Lecturer Mayssel#0	4_F_MAYSEL,{
 				cutin("gc_mayssel01", 1);
 				mes("[Mayssel]");
 				mes("What are you curious about?");
-				mes("If you want to know about battle, visit <NAVI>[Battle Trainer Subino]<INFO>iz_ac01_c,59,83</INFO></NAVI>.");
+				mesf("If you want to know about battle, visit %s.", mesnavigation("[Battle Trainer Subino]", "iz_ac01_c", 59, 83));
 				next();
 				switch(select("Change job to Thief.", "Thief Stat Explanation", "Thief Skill Explanation", "Not curious about it.")) {
 				case 1:

@@ -261,6 +261,113 @@ function	script	F_TestGetItemLink_FullWeapon	{
 	return .@pass;
 }
 
+function	script	F_TestMesNavigation_Basic	{
+	.@str$ = mesnavigation("Somewhere", "prt_fild08", 100, 105);
+
+	.@pass = false;
+	if (PACKETVER < 20111010) {
+		.@pass = (.@str$ == "Somewhere (prt_fild08 100, 105)");
+	} else {
+		.@pass = (.@str$ == "<NAVI>Somewhere<INFO>prt_fild08,100,105,</INFO></NAVI>");
+	}
+
+	return .@pass;
+}
+
+function	script	F_TestMesNavigation_Complete	{
+	.@str$ = mesnavigation("Some NPC", "prt_fild08", 175, 370, true, NAV_MODE_ALL, NAV_NONE);
+
+	.@pass = false;
+	if (PACKETVER < 20111010) {
+		.@pass = (.@str$ == "Some NPC (prt_fild08 175, 370)");
+	} else {
+		.@pass = (.@str$ == "<NAVI>Some NPC<INFO>prt_fild08,175,370,0,0,1,0</INFO></NAVI>");
+	}
+
+	return .@pass;
+}
+
+function	script	F_TestMesNavigation_Search	{
+	.@str$ = mesnavigation("Some Monster", "PORING", 0, 0, true, NAV_MODE_MOB, NAV_WINDOW_SEARCH);
+
+	.@pass = false;
+	if (PACKETVER < 20130800) {
+		.@pass = (.@str$ == "Some Monster");
+	} else {
+		.@pass = (.@str$ == "<NAVI>Some Monster<INFO>PORING,0,0,3,-222</INFO></NAVI>");
+	}
+
+	return .@pass;
+}
+
+function	script	F_TestMesMobSpawn_Basic	{
+	.@str$ = mesmobspawn(PORING);
+
+	.@pass = false;
+	if (PACKETVER < 20130800) {
+		.@pass = (.@str$ == "Poring");
+	} else {
+		.@pass = (.@str$ == "<NAVI>Poring<INFO>PORING,0,0,3,-222</INFO></NAVI>");
+	}
+
+	return .@pass;
+}
+
+function	script	F_TestMesMobSpawn_WithLabel	{
+	.@str$ = mesmobspawn(PORING, "Target");
+
+	.@pass = false;
+	if (PACKETVER < 20130800) {
+		.@pass = (.@str$ == "Target");
+	} else {
+		.@pass = (.@str$ == "<NAVI>Target<INFO>PORING,0,0,3,-222</INFO></NAVI>");
+	}
+
+	return .@pass;
+}
+
+function	script	F_TestMesUrl_Basic	{
+	.@str$ = mesurl("Herc", "https://herc.ws/");
+
+	.@pass = false;
+	if (PACKETVER < 20111010) {
+		.@pass = (.@str$ == "Herc (URL: https://herc.ws/)");
+	} else {
+		.@pass = (.@str$ == "<URL>Herc<INFO>https://herc.ws/</INFO></URL>");
+	}
+
+	return .@pass;
+}
+
+function	script	F_TestMesUrl_Dimensions	{
+	.@str$ = mesurl("Herc", "https://herc.ws/", 800, 600);
+
+	.@pass = false;
+	if (PACKETVER < 20111010) {
+		.@pass = (.@str$ == "Herc (URL: https://herc.ws/)");
+	} else if (PACKETVER < 20181024) {
+		.@pass = (.@str$ == "<URL>Herc<INFO>https://herc.ws/,800,600</INFO></URL>");
+	} else {
+		// dimensions are no longer supported since it now uses users' default browser.
+		.@pass = (.@str$ == "<URL>Herc<INFO>https://herc.ws/</INFO></URL>");
+	}
+
+	return .@pass;
+}
+
+function	script	F_TestMesTipBox	{
+	.@str$ = mestipbox("Some tip", 1);
+
+	.@pass = false;
+	if (PACKETVER < 20170712) {
+		.@pass = (.@str$ == "Some tip");
+	} else {
+		.@pass = (.@str$ == "<TIPBOX>Some tip<INFO>1</INFO></TIPBOX>");
+	}
+
+	return .@pass;
+}
+
 function	script	HerculesSelfTestHelper	{
 	if (.once > 0)
 		return .errors;
@@ -977,6 +1084,18 @@ function	script	HerculesSelfTestHelper	{
 	callsub(OnCheck, "getitemlink: headgear tag", F_TestGetItemLink_Headgear(), true);
 	callsub(OnCheck, "getitemlink: basic weapon tag", F_TestGetItemLink_BaseWeapon(), true);
 	callsub(OnCheck, "getitemlink: complete weapon tag", F_TestGetItemLink_FullWeapon(), true);
+
+	callsub(OnCheck, "mesnavigation: basic destination", F_TestMesNavigation_Basic(), true);
+	callsub(OnCheck, "mesnavigation: all params", F_TestMesNavigation_Complete(), true);
+	callsub(OnCheck, "mesnavigation: monster spawn search", F_TestMesNavigation_Search(), true);
+
+	callsub(OnCheck, "mesmobspawn: basic usage", F_TestMesMobSpawn_Basic(), true);
+	callsub(OnCheck, "mesmobspawn: with label", F_TestMesMobSpawn_WithLabel(), true);
+
+	callsub(OnCheck, "mesurl: basic usage", F_TestMesUrl_Basic(), true);
+	callsub(OnCheck, "mesurl: with dimensions", F_TestMesUrl_Dimensions(), true);
+
+	callsub(OnCheck, "mestipbox", F_TestMesTipBox(), true);
 
 	if (.errors) {
 		consolemes(CONSOLEMES_DEBUG, "Script engine self-test   [ \033[0;31mFAILED\033[0m ]");
