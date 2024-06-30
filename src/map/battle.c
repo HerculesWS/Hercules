@@ -885,15 +885,6 @@ static int64 battle_calc_masteryfix(struct block_list *src, struct block_list *t
 		if(sc->data[SC_CAMOUFLAGE])
 			damage += 30 * ( 10 - sc->data[SC_CAMOUFLAGE]->val4 );
 #ifdef RENEWAL
-		if(sc->data[SC_NIBELUNGEN] && weapon)
-			damage += sc->data[SC_NIBELUNGEN]->val2;
-		if(sc->data[SC_DRUMBATTLE]){
-			if(tstatus->size == SZ_SMALL)
-				damage += sc->data[SC_DRUMBATTLE]->val2;
-			else if(tstatus->size == SZ_MEDIUM)
-				damage += 10 * sc->data[SC_DRUMBATTLE]->val1;
-			//else no bonus for large target
-		}
 		if(sc->data[SC_GS_MADNESSCANCEL])
 			damage += 100;
 		if(sc->data[SC_GS_GATLINGFEVER]){
@@ -1679,6 +1670,19 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					skillratio += 45;
 					break;
 				/**
+				 * Bard
+				 */
+#ifdef RENEWAL
+				case BA_DISSONANCE:
+					// @TODO: Confirm this formula. I have made it by combining some info from bRO Wiki
+					// with the skill description and some tweaking from my head.
+					// It is quite close, but I have no source for it.
+					// Skill description says 100 + 10 * skill_lv (110 / 120 / 130 / 140 / 150)
+					// But to match the real damage, we have to add an extra 10 * skill_lv (thus, 20 * skill_lv)
+					skillratio = ((100 + 20 * skill_lv) * sd->status.job_level) / 10;
+					break;
+#endif
+				/**
 				 * Priest
 				 **/
 #ifdef RENEWAL
@@ -2315,7 +2319,11 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					break;
 				case BA_MUSICALSTRIKE:
 				case DC_THROWARROW:
+#ifndef RENEWAL
 					skillratio += 25 + 25 * skill_lv;
+#else
+					skillratio += 10 + 40 * skill_lv;
+#endif
 					break;
 				case CH_TIGERFIST:
 					skillratio += 100 * skill_lv - 60;
@@ -4368,11 +4376,14 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 	case TF_THROWSTONE:
 		md.damage=50;
 		break;
+#ifndef RENEWAL
 	case BA_DISSONANCE:
-		md.damage=30+skill_lv*10;
-		if (sd)
-			md.damage+= 3*pc->checkskill(sd,BA_MUSICALLESSON);
+		md.damage = 30 + skill_lv * 10;
+
+		if (sd != NULL)
+			md.damage += 3 * pc->checkskill(sd, BA_MUSICALLESSON);
 		break;
+#endif
 	case NPC_SELFDESTRUCTION:
 		md.damage = sstatus->hp;
 		break;
@@ -5488,6 +5499,10 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 						ATK_ADDRATE(sd->bonus.crit_atk_rate);
 					if(flag.cri && sc && sc->data[SC_MTF_CRIDAMAGE])
 						ATK_ADDRATE(sc->data[SC_MTF_CRIDAMAGE]->val1);// temporary it should be 'bonus.crit_atk_rate'
+#ifdef RENEWAL
+					if (flag.cri && sc != NULL && sc->data[SC_FORTUNE] != NULL)
+						ATK_ADDRATE(sc->data[SC_FORTUNE]->val3);
+#endif
 #ifndef RENEWAL
 					if(sd->status.party_id && (temp=pc->checkskill(sd,TK_POWER)) > 0){
 						if ((i = party->foreachsamemap(party->sub_count, sd, 0, sd->status.char_id)) > 0)

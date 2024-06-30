@@ -68572,15 +68572,15 @@ int HP_pc_checkjoblevelup(struct map_session_data *sd) {
 	}
 	return retVal___;
 }
-bool HP_pc_gainexp(struct map_session_data *sd, struct block_list *src, uint64 base_exp, uint64 job_exp, bool is_quest) {
+bool HP_pc_gainexp(struct map_session_data *sd, struct block_list *src, uint64 base_exp, uint64 job_exp, enum gainexp_flags flags) {
 	int hIndex = 0;
 	bool retVal___ = false;
 	if (HPMHooks.count.HP_pc_gainexp_pre > 0) {
-		bool (*preHookFunc) (struct map_session_data **sd, struct block_list **src, uint64 *base_exp, uint64 *job_exp, bool *is_quest);
+		bool (*preHookFunc) (struct map_session_data **sd, struct block_list **src, uint64 *base_exp, uint64 *job_exp, enum gainexp_flags *flags);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_gainexp_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_pc_gainexp_pre[hIndex].func;
-			retVal___ = preHookFunc(&sd, &src, &base_exp, &job_exp, &is_quest);
+			retVal___ = preHookFunc(&sd, &src, &base_exp, &job_exp, &flags);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -68588,13 +68588,13 @@ bool HP_pc_gainexp(struct map_session_data *sd, struct block_list *src, uint64 b
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.pc.gainexp(sd, src, base_exp, job_exp, is_quest);
+		retVal___ = HPMHooks.source.pc.gainexp(sd, src, base_exp, job_exp, flags);
 	}
 	if (HPMHooks.count.HP_pc_gainexp_post > 0) {
-		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, struct block_list *src, uint64 base_exp, uint64 job_exp, bool is_quest);
+		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, struct block_list *src, uint64 base_exp, uint64 job_exp, enum gainexp_flags flags);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_gainexp_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_pc_gainexp_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, sd, src, base_exp, job_exp, is_quest);
+			retVal___ = postHookFunc(retVal___, sd, src, base_exp, job_exp, flags);
 		}
 	}
 	return retVal___;
@@ -71979,14 +71979,14 @@ int HP_pc_bonus_item_drop(struct s_add_drop *drop, const short max, int id, bool
 	}
 	return retVal___;
 }
-void HP_pc_calcexp(struct map_session_data *sd, uint64 *base_exp, uint64 *job_exp, struct block_list *src) {
+void HP_pc_calcexp(struct map_session_data *sd, uint64 *base_exp, uint64 *job_exp, struct block_list *src, enum gainexp_flags flags) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_pc_calcexp_pre > 0) {
-		void (*preHookFunc) (struct map_session_data **sd, uint64 **base_exp, uint64 **job_exp, struct block_list **src);
+		void (*preHookFunc) (struct map_session_data **sd, uint64 **base_exp, uint64 **job_exp, struct block_list **src, enum gainexp_flags *flags);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_calcexp_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_pc_calcexp_pre[hIndex].func;
-			preHookFunc(&sd, &base_exp, &job_exp, &src);
+			preHookFunc(&sd, &base_exp, &job_exp, &src, &flags);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -71994,13 +71994,13 @@ void HP_pc_calcexp(struct map_session_data *sd, uint64 *base_exp, uint64 *job_ex
 		}
 	}
 	{
-		HPMHooks.source.pc.calcexp(sd, base_exp, job_exp, src);
+		HPMHooks.source.pc.calcexp(sd, base_exp, job_exp, src, flags);
 	}
 	if (HPMHooks.count.HP_pc_calcexp_post > 0) {
-		void (*postHookFunc) (struct map_session_data *sd, uint64 *base_exp, uint64 *job_exp, struct block_list *src);
+		void (*postHookFunc) (struct map_session_data *sd, uint64 *base_exp, uint64 *job_exp, struct block_list *src, enum gainexp_flags flags);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_calcexp_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_pc_calcexp_post[hIndex].func;
-			postHookFunc(sd, base_exp, job_exp, src);
+			postHookFunc(sd, base_exp, job_exp, src, flags);
 		}
 	}
 	return;
@@ -86019,6 +86019,58 @@ int HP_skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, 
 	}
 	return retVal___;
 }
+void HP_skill_castend_nodamage_id_sc_song(struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_skill_castend_nodamage_id_sc_song_pre > 0) {
+		void (*preHookFunc) (struct block_list **src, struct block_list **bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_castend_nodamage_id_sc_song_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_skill_castend_nodamage_id_sc_song_pre[hIndex].func;
+			preHookFunc(&src, &bl, &skill_id, &skill_lv, &tick, &flag);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.skill.castend_nodamage_id_sc_song(src, bl, skill_id, skill_lv, tick, flag);
+	}
+	if (HPMHooks.count.HP_skill_castend_nodamage_id_sc_song_post > 0) {
+		void (*postHookFunc) (struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_castend_nodamage_id_sc_song_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_skill_castend_nodamage_id_sc_song_post[hIndex].func;
+			postHookFunc(src, bl, skill_id, skill_lv, tick, flag);
+		}
+	}
+	return;
+}
+void HP_skill_castend_nodamage_id_ugly_dance(struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_skill_castend_nodamage_id_ugly_dance_pre > 0) {
+		void (*preHookFunc) (struct block_list **src, struct block_list **bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_castend_nodamage_id_ugly_dance_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_skill_castend_nodamage_id_ugly_dance_pre[hIndex].func;
+			preHookFunc(&src, &bl, &skill_id, &skill_lv, &tick, &flag);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.skill.castend_nodamage_id_ugly_dance(src, bl, skill_id, skill_lv, tick, flag);
+	}
+	if (HPMHooks.count.HP_skill_castend_nodamage_id_ugly_dance_post > 0) {
+		void (*postHookFunc) (struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_castend_nodamage_id_ugly_dance_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_skill_castend_nodamage_id_ugly_dance_post[hIndex].func;
+			postHookFunc(src, bl, skill_id, skill_lv, tick, flag);
+		}
+	}
+	return;
+}
 int HP_skill_castend_damage_id(struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag) {
 	int hIndex = 0;
 	int retVal___ = 0;
@@ -95078,6 +95130,33 @@ int HP_status_calc_batk(struct block_list *bl, struct status_change *sc, int bat
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_batk_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_status_calc_batk_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, bl, sc, batk, viewable);
+		}
+	}
+	return retVal___;
+}
+int HP_status_calc_buff_extra_batk(struct block_list *bl, struct status_change *sc) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_status_calc_buff_extra_batk_pre > 0) {
+		int (*preHookFunc) (struct block_list **bl, struct status_change **sc);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_buff_extra_batk_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_status_calc_buff_extra_batk_pre[hIndex].func;
+			retVal___ = preHookFunc(&bl, &sc);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.status.calc_buff_extra_batk(bl, sc);
+	}
+	if (HPMHooks.count.HP_status_calc_buff_extra_batk_post > 0) {
+		int (*postHookFunc) (int retVal___, struct block_list *bl, struct status_change *sc);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_buff_extra_batk_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_status_calc_buff_extra_batk_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, bl, sc);
 		}
 	}
 	return retVal___;

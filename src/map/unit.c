@@ -1558,8 +1558,12 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 	tstatus = status->get_status_data(target);
 	// Record the status of the previous skill)
 	if (sd) {
-
-		if ((skill->get_inf2(skill_id)&INF2_ENSEMBLE_SKILL) && skill->check_pc_partner(sd, skill_id, &skill_lv, 1, 0) < 1) {
+#ifdef RENEWAL
+		static const int ensemble_range = 4;
+#else
+		static const int ensemble_range = 1;
+#endif
+		if ((skill->get_inf2(skill_id)&INF2_ENSEMBLE_SKILL) && skill->check_pc_partner(sd, skill_id, &skill_lv, ensemble_range, 0) < 1) {
 			clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
 			return 0;
 		}

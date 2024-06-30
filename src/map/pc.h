@@ -179,6 +179,12 @@ enum npc_timeout_type {
 	NPCT_WAIT  = 2,
 };
 
+enum gainexp_flags {
+	EXP_FLAG_NONE  = 0,    //< Normal EXP, no special flags
+	EXP_FLAG_QUEST = 0x01, //< EXP given by quests/NPCs (e.g. scripts getexp)
+	EXP_FLAG_MVP   = 0x02, //< EXP given to the "MVP" player (when killing bosses)
+};
+
 struct pc_combos {
 	struct script_code *bonus;/* the script of the combo */
 	int id; /* this combo id */
@@ -1067,7 +1073,7 @@ END_ZEROED_BLOCK; /* End */
 	int (*checkbaselevelup) (struct map_session_data *sd);
 	void (*checkbaselevelup_sc) (struct map_session_data *sd);
 	int (*checkjoblevelup) (struct map_session_data *sd);
-	bool (*gainexp) (struct map_session_data *sd, struct block_list *src, uint64 base_exp, uint64 job_exp, bool is_quest);
+	bool (*gainexp) (struct map_session_data *sd, struct block_list *src, uint64 base_exp, uint64 job_exp, enum gainexp_flags flags);
 	uint64 (*nextbaseexp) (const struct map_session_data *sd);
 	uint64 (*thisbaseexp) (const struct map_session_data *sd);
 	uint64 (*nextjobexp) (const struct map_session_data *sd);
@@ -1216,7 +1222,7 @@ END_ZEROED_BLOCK; /* End */
 	int (*bonus_addeff) (struct s_addeffect* effect, int max, enum sc_type id, int16 rate, int16 arrow_rate, uint8 flag, uint16 duration);
 	int (*bonus_addeff_onskill) (struct s_addeffectonskill* effect, int max, enum sc_type id, short rate, short skill_id, unsigned char target);
 	int (*bonus_item_drop) (struct s_add_drop *drop, const short max, int id, bool is_group, int race, int rate);
-	void (*calcexp) (struct map_session_data *sd, uint64 *base_exp, uint64 *job_exp, struct block_list *src);
+	void (*calcexp) (struct map_session_data *sd, uint64 *base_exp, uint64 *job_exp, struct block_list *src, enum gainexp_flags flags);
 	int (*respawn_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*jobchange_killclone) (struct block_list *bl, va_list ap);
 	int (*getstat) (struct map_session_data* sd, int type);

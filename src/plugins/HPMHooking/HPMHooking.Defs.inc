@@ -7180,8 +7180,8 @@ typedef void (*HPMHOOK_pre_pc_checkbaselevelup_sc) (struct map_session_data **sd
 typedef void (*HPMHOOK_post_pc_checkbaselevelup_sc) (struct map_session_data *sd);
 typedef int (*HPMHOOK_pre_pc_checkjoblevelup) (struct map_session_data **sd);
 typedef int (*HPMHOOK_post_pc_checkjoblevelup) (int retVal___, struct map_session_data *sd);
-typedef bool (*HPMHOOK_pre_pc_gainexp) (struct map_session_data **sd, struct block_list **src, uint64 *base_exp, uint64 *job_exp, bool *is_quest);
-typedef bool (*HPMHOOK_post_pc_gainexp) (bool retVal___, struct map_session_data *sd, struct block_list *src, uint64 base_exp, uint64 job_exp, bool is_quest);
+typedef bool (*HPMHOOK_pre_pc_gainexp) (struct map_session_data **sd, struct block_list **src, uint64 *base_exp, uint64 *job_exp, enum gainexp_flags *flags);
+typedef bool (*HPMHOOK_post_pc_gainexp) (bool retVal___, struct map_session_data *sd, struct block_list *src, uint64 base_exp, uint64 job_exp, enum gainexp_flags flags);
 typedef uint64 (*HPMHOOK_pre_pc_nextbaseexp) (const struct map_session_data **sd);
 typedef uint64 (*HPMHOOK_post_pc_nextbaseexp) (uint64 retVal___, const struct map_session_data *sd);
 typedef uint64 (*HPMHOOK_pre_pc_thisbaseexp) (const struct map_session_data **sd);
@@ -7434,8 +7434,8 @@ typedef int (*HPMHOOK_pre_pc_bonus_addeff_onskill) (struct s_addeffectonskill **
 typedef int (*HPMHOOK_post_pc_bonus_addeff_onskill) (int retVal___, struct s_addeffectonskill *effect, int max, enum sc_type id, short rate, short skill_id, unsigned char target);
 typedef int (*HPMHOOK_pre_pc_bonus_item_drop) (struct s_add_drop **drop, const short *max, int *id, bool *is_group, int *race, int *rate);
 typedef int (*HPMHOOK_post_pc_bonus_item_drop) (int retVal___, struct s_add_drop *drop, const short max, int id, bool is_group, int race, int rate);
-typedef void (*HPMHOOK_pre_pc_calcexp) (struct map_session_data **sd, uint64 **base_exp, uint64 **job_exp, struct block_list **src);
-typedef void (*HPMHOOK_post_pc_calcexp) (struct map_session_data *sd, uint64 *base_exp, uint64 *job_exp, struct block_list *src);
+typedef void (*HPMHOOK_pre_pc_calcexp) (struct map_session_data **sd, uint64 **base_exp, uint64 **job_exp, struct block_list **src, enum gainexp_flags *flags);
+typedef void (*HPMHOOK_post_pc_calcexp) (struct map_session_data *sd, uint64 *base_exp, uint64 *job_exp, struct block_list *src, enum gainexp_flags flags);
 typedef int (*HPMHOOK_pre_pc_respawn_timer) (int *tid, int64 *tick, int *id, intptr_t *data);
 typedef int (*HPMHOOK_post_pc_respawn_timer) (int retVal___, int tid, int64 tick, int id, intptr_t data);
 typedef int (*HPMHOOK_pre_pc_jobchange_killclone) (struct block_list **bl, va_list ap);
@@ -8524,6 +8524,10 @@ typedef void (*HPMHOOK_pre_skill_castend_type) (enum cast_enum *type, struct blo
 typedef void (*HPMHOOK_post_skill_castend_type) (enum cast_enum type, struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag);
 typedef int (*HPMHOOK_pre_skill_castend_nodamage_id) (struct block_list **src, struct block_list **bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag);
 typedef int (*HPMHOOK_post_skill_castend_nodamage_id) (int retVal___, struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag);
+typedef void (*HPMHOOK_pre_skill_castend_nodamage_id_sc_song) (struct block_list **src, struct block_list **bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag);
+typedef void (*HPMHOOK_post_skill_castend_nodamage_id_sc_song) (struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag);
+typedef void (*HPMHOOK_pre_skill_castend_nodamage_id_ugly_dance) (struct block_list **src, struct block_list **bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag);
+typedef void (*HPMHOOK_post_skill_castend_nodamage_id_ugly_dance) (struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag);
 typedef int (*HPMHOOK_pre_skill_castend_damage_id) (struct block_list **src, struct block_list **bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag);
 typedef int (*HPMHOOK_post_skill_castend_damage_id) (int retVal___, struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag);
 typedef int (*HPMHOOK_pre_skill_castend_pos2) (struct block_list **src, int *x, int *y, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag);
@@ -9198,6 +9202,8 @@ typedef short (*HPMHOOK_pre_status_calc_mdef2) (struct block_list **bl, struct s
 typedef short (*HPMHOOK_post_status_calc_mdef2) (short retVal___, struct block_list *bl, struct status_change *sc, int mdef2, bool viewable);
 typedef int (*HPMHOOK_pre_status_calc_batk) (struct block_list **bl, struct status_change **sc, int *batk, bool *viewable);
 typedef int (*HPMHOOK_post_status_calc_batk) (int retVal___, struct block_list *bl, struct status_change *sc, int batk, bool viewable);
+typedef int (*HPMHOOK_pre_status_calc_buff_extra_batk) (struct block_list **bl, struct status_change **sc);
+typedef int (*HPMHOOK_post_status_calc_buff_extra_batk) (int retVal___, struct block_list *bl, struct status_change *sc);
 typedef int (*HPMHOOK_pre_status_base_matk) (struct block_list **bl, const struct status_data **st, int *level);
 typedef int (*HPMHOOK_post_status_base_matk) (int retVal___, struct block_list *bl, const struct status_data *st, int level);
 typedef int (*HPMHOOK_pre_status_get_weapon_atk) (struct block_list **src, struct weapon_atk **watk, int *flag);
