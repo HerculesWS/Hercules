@@ -967,6 +967,7 @@ INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1599908598); -- 2020-09-1
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1613840320); -- 2021-02-20--19-57.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1618058468); -- 2021-04-10--15-36.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1653155461); -- 2022-05-21--29-49.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1718685120); -- 2024-06-18--12-32.sql
 
 --
 -- Table structure for table `storage`
@@ -975,6 +976,7 @@ INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1653155461); -- 2022-05-2
 CREATE TABLE IF NOT EXISTS `storage` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `account_id` INT UNSIGNED NOT NULL DEFAULT '0',
+  `storage_id` INT UNSIGNED NOT NULL DEFAULT '1',
   `nameid` INT UNSIGNED NOT NULL DEFAULT '0',
   `amount` SMALLINT UNSIGNED NOT NULL DEFAULT '0',
   `equip` INT UNSIGNED NOT NULL DEFAULT '0',

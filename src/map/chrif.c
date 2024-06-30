@@ -245,6 +245,8 @@ static int chrif_isconnected(void)
 // TODO: Flag enum
 static bool chrif_save(struct map_session_data *sd, int flag)
 {
+	int i = 0;
+
 	nullpo_ret(sd);
 
 	pc->makesavestatus(sd);
@@ -263,8 +265,12 @@ static bool chrif_save(struct map_session_data *sd, int flag)
 	if (sd->state.storage_flag == STORAGE_FLAG_GUILD)
 		gstorage->save(sd->status.account_id, sd->status.guild_id, flag);
 
-	if (flag)
-		sd->state.storage_flag = STORAGE_FLAG_CLOSED; //Force close it.
+	if (flag != 0 && sd->state.storage_flag != STORAGE_FLAG_CLOSED) {
+		if (sd->state.storage_flag == STORAGE_FLAG_NORMAL)
+			storage->close(sd);
+		else if (sd->state.storage_flag == STORAGE_FLAG_GUILD)
+			gstorage->close(sd);
+	}
 
 	//Saving of registry values.
 	if (sd->vars_dirty)
@@ -292,8 +298,9 @@ static bool chrif_save(struct map_session_data *sd, int flag)
 	if (VECTOR_LENGTH(sd->achievement) > 0)
 		intif->achievements_save(sd);
 
-	if (sd->storage.received == true && sd->storage.save == true)
-		intif->send_account_storage(sd);
+	for (int i = 0; i < VECTOR_LENGTH(sd->storage.list); i++)
+		if (VECTOR_INDEX(sd->storage.list, i).received && VECTOR_INDEX(sd->storage.list, i).save)
+			intif->send_account_storage(sd, VECTOR_INDEX(sd->storage.list, i).uid);
 
 	return true;
 }
