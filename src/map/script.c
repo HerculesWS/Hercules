@@ -30282,6 +30282,9 @@ static void script_hardcoded_constants(void)
 	script->set_constant("HOMINFO_RENAME", HOMINFO_RENAME, false, false);
 	script->set_constant("HOMINFO_LEVEL", HOMINFO_LEVEL, false, false);
 
+	script->constdb_comment("autospell db constants");
+	script->set_constant2("HALF_AUTOSPELL_LEVEL", HALF_AUTOSPELL_LEVEL, false, false);
+
 	script->constdb_comment("Renewal");
 #ifdef RENEWAL
 	script->set_constant("RENEWAL", 1, false, false);

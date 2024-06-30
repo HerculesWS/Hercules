@@ -2329,6 +2329,17 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 		if (sc->data[SC_EARTH_INSIGNIA] && sc->data[SC_EARTH_INSIGNIA]->val1 == 3)
 			sd->magic_addele[ELE_EARTH] += 25;
 
+#ifdef RENEWAL
+		if (sc->data[SC_PROPERTYFIRE] != NULL)
+			sd->magic_atk_ele[ELE_FIRE] += sc->data[SC_PROPERTYFIRE]->val1;
+		if (sc->data[SC_PROPERTYWATER] != NULL)
+			sd->magic_atk_ele[ELE_WATER] += sc->data[SC_PROPERTYWATER]->val1;
+		if (sc->data[SC_PROPERTYWIND] != NULL)
+			sd->magic_atk_ele[ELE_WIND] += sc->data[SC_PROPERTYWIND]->val1;
+		if (sc->data[SC_PROPERTYGROUND] != NULL)
+			sd->magic_atk_ele[ELE_EARTH] += sc->data[SC_PROPERTYGROUND]->val1;
+#endif
+
 		// Geffen Scrolls
 		if (sc->data[SC_SKELSCROLL]) {
 #ifdef RENEWAL
@@ -4743,6 +4754,9 @@ static int status_calc_matk(struct block_list *bl, struct status_change *sc, int
 #else // RENEWAL
 	if (sc->data[SC_IMPOSITIO])
 		matk += sc->data[SC_IMPOSITIO]->val2;
+	// FIXME: This (and SC_IMPOSITIO) should have their effects shown in status window.
+	if (sc->data[SC_VOLCANO] != NULL)
+		matk += sc->data[SC_VOLCANO]->val2;
 #endif
 	if (sc->data[SC_ZANGETSU])
 		matk += sc->data[SC_ZANGETSU]->val3;
@@ -7864,15 +7878,22 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			case SC_AUTOSPELL:
 				//Val1 Skill LV of Autospell
 				//Val2 Skill ID to cast
-				//Val3 Max Lv to cast
-				val4 = 5 + val1*2; //Chance of casting
+				//Val3 Max Lv to cast (pre-re) / Lv to cast (zero)
+#ifndef RENEWAL
+				val4 = 5 + val1 * 2; // Chance of casting
+#else
+				val4 = 2 * val1; // Chance of casting
+#endif
 				break;
 			case SC_VOLCANO:
-				val2 = val1*10; //Watk increase
-	#ifndef RENEWAL
+#ifndef RENEWAL
+				val2 = val1 * 10; // Watk increase
+				
 				if (st->def_ele != ELE_FIRE)
 					val2 = 0;
-	#endif
+#else
+				val2 = 5 + val1 * 5; // Watk/Matk increase
+#endif
 				break;
 			case SC_VIOLENTGALE:
 				val2 = val1*3; //Flee increase

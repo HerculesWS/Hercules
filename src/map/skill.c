@@ -7289,7 +7289,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 		case SA_FLAMELAUNCHER: // added failure chance and chance to break weapon if turned on [Valaris]
 		case SA_FROSTWEAPON:
 		case SA_LIGHTNINGLOADER:
-		case SA_SEISMICWEAPON:
+		case SA_SEISMICWEAPON: {
 			if (dstsd) {
 				if (dstsd->weapontype == W_FIST ||
 					(dstsd->sc.count && !dstsd->sc.data[type] &&
@@ -7308,13 +7308,22 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 					break;
 				}
 			}
+#ifndef RENEWAL
 			// 100% success rate at lv4 & 5, but lasts longer at lv5
-			if (!clif->skill_nodamage(src, bl, skill_id, skill_lv, sc_start(src, bl, type, (60 + skill_lv * 10), skill_lv, skill->get_time(skill_id, skill_lv), skill_id))) {
-				if (sd)
+			int sc_chance = (60 + skill_lv * 10);
+#else
+			int sc_chance = 100;
+#endif
+			int sc_result = sc_start(src, bl, type, sc_chance, skill_lv, skill->get_time(skill_id, skill_lv), skill_id);
+			if (clif->skill_nodamage(src, bl, skill_id, skill_lv, sc_result) == 0) {
+				if (sd != NULL)
 					clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
-				if (skill->break_equip(bl, EQP_WEAPON, 10000, BCT_PARTY) && sd && sd != dstsd)
+#ifndef RENEWAL
+				if (skill->break_equip(bl, EQP_WEAPON, 10000, BCT_PARTY) != 0 && sd != NULL && sd != dstsd)
 					clif->message(sd->fd, msg_sd(sd, MSGTBL_BROKEN_TARGET_WEAPON)); // "You broke the target's weapon."
+#endif
 			}
+		}
 			break;
 
 		case PR_ASPERSIO:
@@ -17994,8 +18003,17 @@ static void skill_autospell_select_spell(struct block_list *bl, int skill_lv)
 	if ((upper_idx - lower_idx) > 1)
 		skill_idx += rnd() % (upper_idx - lower_idx);
 
+	// @TODO: Is this how AutoSpell works for non-players after rebalance? I made it the same as the player one...
 	const struct s_autospell_db *sk = &skill->dbs->autospell_db[skill_idx];
-	sc_start4(bl, bl, SC_AUTOSPELL, 100, skill_lv, sk->skill_id, sk->skill_lv[skill_lv - 1], 0,
+	int spell_level = sk->skill_lv[skill_lv - 1];
+	if (spell_level == HALF_AUTOSPELL_LEVEL) {
+		spell_level = skill_lv / 2;
+
+		if (spell_level == 0)
+			spell_level = 1;
+	}
+
+	sc_start4(bl, bl, SC_AUTOSPELL, 100, skill_lv, sk->skill_id, spell_level, 0,
 		skill->get_time(SA_AUTOSPELL, skill_lv), SA_AUTOSPELL);
 }
 
@@ -18027,6 +18045,14 @@ static int skill_autospell_spell_selected(struct map_session_data *sd, uint16 sk
 		return 0; // Don't have enough level to use
 
 	int max_lv = sk->skill_lv[autospell_lv - 1];
+
+	if (max_lv == HALF_AUTOSPELL_LEVEL) {
+		max_lv = autospell_lv / 2;
+
+		if (max_lv == 0)
+			max_lv = 1;
+	}
+
 	if (sk->spirit_boost && sd->sc.data[SC_SOULLINK] != NULL && sd->sc.data[SC_SOULLINK]->val2 == SL_SAGE)
 		max_lv = skill->dbs->db[skill->get_index(skill_id)].max; // Soul Linker bonus. [Skotlex]
 
@@ -24954,8 +24980,8 @@ static void skill_read_autospell_skill_level(struct config_setting_t *conf, stru
 			snprintf(lv, sizeof(lv), "Lv%d", i + 1);
 
 			int level;
-			if (libconfig->setting_lookup_int(t, lv, &level) == CONFIG_TRUE) {
-				if (level >= 0 && level <= MAX_SKILL_LEVEL)
+			if (map->setting_lookup_const(t, lv, &level) == CONFIG_TRUE) {
+				if ((level >= 0 && level <= MAX_SKILL_LEVEL) || level == HALF_AUTOSPELL_LEVEL)
 					sk->skill_lv[i] = level;
 				else
 					ShowWarning("%s: Invalid SkillLevel %d specified in level %d for skill ID %d in %s! Minimum is 0, maximum is %d. Defaulting to 0...\n",
@@ -24967,8 +24993,8 @@ static void skill_read_autospell_skill_level(struct config_setting_t *conf, stru
 	}
 
 	int level;
-	if (libconfig->setting_lookup_int(conf, "SkillLevel", &level) == CONFIG_TRUE) {
-		if (level >= 0 && level <= MAX_SKILL_LEVEL)
+	if (map->setting_lookup_const(conf, "SkillLevel", &level) == CONFIG_TRUE) {
+		if ((level >= 0 && level <= MAX_SKILL_LEVEL) || level == HALF_AUTOSPELL_LEVEL)
 			skill->level_set_value(sk->skill_lv, level);
 		else
 			ShowWarning("%s: Invalid SkillLevel %d specified for skill ID %d in %s! Minimum is 0, maximum is %d. Defaulting to 0...\n",
@@ -25097,10 +25123,13 @@ static bool skill_read_autospell_db(const char *filename)
 		count++;
 	}
 
-#if PACKETVER_MAIN_NUM < 20181128 && PACKETVER_RE_NUM < 20181031
+#if PACKETVER_MAIN_NUM < 20181128 && PACKETVER_RE_NUM < 20181031 && PACKETVER_ZERO_NUM < 20180523
 	if (count > 7) {
 		ShowWarning("%s: Your current packet version only supports up to 7 autospell skills, but your autospell db contains \"%d\" skills. Some skills may not be shown.\n", __func__, count);
 		ShowWarning("%s:    Update your packet version or reduce the number of skills to fix this warning.\n", __func__);
+#ifdef RENEWAL
+		ShowWarning("%s:    You may also enable CLASSIC_AUTOSPELL_LIST in general.h for an alternative skill list (Read the comment on it for details!!)\n", __func__);
+#endif
 	}
 #endif
 
@@ -25180,7 +25209,12 @@ static void skill_readdb(bool minimal)
 	sv->readdb(map->db_path, "magicmushroom_db.txt",         ',',   1,                        1, MAX_SKILL_MAGICMUSHROOM_DB, skill->parse_row_magicmushroomdb);
 	sv->readdb(map->db_path, "skill_improvise_db.txt",       ',',   2,                        2,     MAX_SKILL_IMPROVISE_DB, skill->parse_row_improvisedb);
 	sv->readdb(map->db_path, "skill_changematerial_db.txt",  ',',   4,                    4+2*5,       MAX_SKILL_PRODUCE_DB, skill->parse_row_changematerialdb);
+#ifdef CLASSIC_AUTOSPELL_LIST // Force usage of pre-re autospell_db
+	skill->read_autospell_db(DBPATH_PRE "autospell_db.conf");
+#else
 	skill->read_autospell_db(DBPATH "autospell_db.conf");
+#endif
+
 }
 
 static void skill_reload(void)
