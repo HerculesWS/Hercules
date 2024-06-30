@@ -15674,6 +15674,9 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 			if(sc && sc->data[SC_EXTREMITYFIST])
 				return 0;
 #endif // 0
+#ifdef RENEWAL
+			sd->spiritball_old = sd->spiritball;
+#endif
 			if (sc && (sc->data[SC_BLADESTOP] || sc->data[SC_CURSEDCIRCLE_ATKER]))
 				break;
 			if (sc && sc->data[SC_COMBOATTACK]) {
@@ -17190,16 +17193,21 @@ static struct skill_condition skill_get_requirement(struct map_session_data *sd,
 				req.spiritball = 0;
 			break;
 		case MO_EXTREMITYFIST:
-			if( sc )
-			{
-				if( sc->data[SC_BLADESTOP] )
+			if (sc != NULL) {
+				if (sc->data[SC_BLADESTOP] != NULL) {
+#ifndef RENEWAL
 					req.spiritball--;
-				else if( sc->data[SC_COMBOATTACK] )
-				{
-					switch( sc->data[SC_COMBOATTACK]->val1 )
-					{
+#else
+					req.spiritball = 1;
+#endif
+				} else if (sc->data[SC_COMBOATTACK] != NULL) {
+					switch (sc->data[SC_COMBOATTACK]->val1) {
 						case MO_COMBOFINISH:
+#ifndef RENEWAL
 							req.spiritball = 4;
+#else
+							req.spiritball = 1;
+#endif
 							break;
 						case CH_TIGERFIST:
 							req.spiritball = 3;
@@ -17208,8 +17216,9 @@ static struct skill_condition skill_get_requirement(struct map_session_data *sd,
 							req.spiritball = sd->spiritball?sd->spiritball:1;
 							break;
 					}
-				}else if( sc->data[SC_RAISINGDRAGON] && sd->spiritball > 5)
+				} else if (sc->data[SC_RAISINGDRAGON] != NULL && sd->spiritball > 5) {
 					req.spiritball = sd->spiritball; // must consume all regardless of the amount required
+				}
 			}
 			break;
 		case SR_RAMPAGEBLASTER:

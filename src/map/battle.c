@@ -826,6 +826,13 @@ static int64 battle_calc_masteryfix(struct block_list *src, struct block_list *t
 	nullpo_ret(src);
 	nullpo_ret(target);
 
+#ifdef RENEWAL
+	// In renewal, Occult Impact doesn't get extra damage by any mastery, not even weapon ones
+	if (skill_id == MO_INVESTIGATE)
+		return damage;
+#endif
+
+
 	sc = status->get_sc(src);
 	sd = BL_CAST(BL_PC, src);
 	tstatus = status->get_status_data(target);
@@ -2245,11 +2252,35 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					skillratio += 40 * skill_lv;
 #endif
 					break;
-				case MO_FINGEROFFENSIVE:
-					skillratio+= 50 * skill_lv;
+				case MO_FINGEROFFENSIVE: {
+#ifndef RENEWAL
+					skillratio += 50 * skill_lv;
+#else
+					int ratio = 600 + 200 * skill_lv;
+
+					// Cast and Target must be locked in BladeStop.
+					// In other words: A third player won't do extra damage from hitting another Monk's blade stop
+					if (tsc != NULL && tsc->data[SC_BLADESTOP] != NULL && sc->data[SC_BLADESTOP] != NULL)
+						ratio += ratio * 50 / 100;
+
+					skillratio += - 100 + ratio;
+#endif
+				}
 					break;
-				case MO_INVESTIGATE:
+				case MO_INVESTIGATE: {
+#ifndef RENEWAL
 					skillratio += 75 * skill_lv;
+#else
+					int ratio = skill_lv * 100;
+
+					// Cast and Target must be locked in BladeStop.
+					// In other words: A third player won't do extra damage from hitting another Monk's blade stop
+					if (tsc != NULL && tsc->data[SC_BLADESTOP] != NULL && sc->data[SC_BLADESTOP] != NULL)
+						ratio += ratio * 50 / 100;
+
+					skillratio += - 100 + ratio;
+#endif
+				}
 					break;
 				case MO_EXTREMITYFIST:
 	#ifndef RENEWAL
@@ -2266,10 +2297,21 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					skillratio += 20 * skill_lv;
 					break;
 				case MO_CHAINCOMBO:
+#ifndef RENEWAL
 					skillratio += 50 + 50 * skill_lv;
+#else
+					if (sd != NULL && sd->weapontype == W_KNUCKLE)
+						skillratio += -100 + (250 + 50 * skill_lv) * 2;
+					else
+						skillratio += 150 + 50 * skill_lv;
+#endif
 					break;
 				case MO_COMBOFINISH:
+#ifndef RENEWAL
 					skillratio += 140 + 60 * skill_lv;
+#else
+					skillratio += 350 + 150 * skill_lv + status_get_str(src) * 5;
+#endif
 					break;
 				case BA_MUSICALSTRIKE:
 				case DC_THROWARROW:
@@ -4764,6 +4806,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 	if(skill_id) {
 		wd.flag |= battle->range_type(src, target, skill_id, skill_lv);
 		switch(skill_id) {
+#ifndef RENEWAL
 			case MO_FINGEROFFENSIVE:
 				if(sd) {
 					if (battle_config.finger_offensive_type)
@@ -4772,6 +4815,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 						wd.div_ = sd->spiritball_old;
 				}
 				break;
+#endif
 			case HT_PHANTASMIC:
 				//Since these do not consume ammo, they need to be explicitly set as arrow attacks.
 				flag.arrow = 1;
@@ -4822,6 +4866,11 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 					else if (wflag >= 4)
 						wd.div_ = 4;
 				}
+				break;
+
+			case MO_CHAINCOMBO:
+				if (sd != NULL && sd->weapontype == W_KNUCKLE)
+					wd.div_ = -6;
 				break;
 #endif
 
@@ -5507,13 +5556,28 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 			case MO_EXTREMITYFIST: // [malufett]
 			{
 				short totaldef = status->get_total_def(target);
-				GET_NORMAL_ATTACK((sc && sc->data[SC_MAXIMIZEPOWER] ? 1 : 0) | 8, skill_id);
-				if ( wd.damage ) {
+				GET_NORMAL_ATTACK((sc != NULL && sc->data[SC_MAXIMIZEPOWER] != NULL ? 1 : 0) | 8, skill_id);
+				if (wd.damage != 0) {
 					ATK_ADD(250 * (skill_lv + 1) + (10 * (status_get_sp(src) + 1) * wd.damage / 100) + (8 * wd.damage));
 					ATK_ADD(-totaldef);
+
+					if (sd != NULL && sd->spiritball_old >= 6)
+						ATK_ADDRATE(100); // +100% damage = doubles the damage
 				}
 			}
 				break;
+
+			case MO_INVESTIGATE: {
+				// Based on in-game tests, RENEWAL Occult Impact has its base ATK increased by 50% of target's hard def
+				// In other words: (ATK + (Target_HardDef / 2)) * SkillRatio
+				defType hardDef = status->get_def(target);
+				hardDef = status->calc_def2(target, tsc, hardDef, false);
+
+				ATK_ADD(hardDef / 2);
+				ATK_RATE(battle->calc_skillratio(BF_WEAPON, src, target, skill_id, skill_lv, skillratio, wflag));
+				break;
+			}
+
 			case PA_SHIELDCHAIN:
 				GET_NORMAL_ATTACK((sc && sc->data[SC_MAXIMIZEPOWER] ? 1 : 0) | (sc && sc->data[SC_WEAPONPERFECT] ? 8 : 0), skill_id);
 				if ( sd ) {
@@ -6622,8 +6686,10 @@ static bool battle_should_bladestop_attacker(struct block_list *attacker, struct
 	if (tsc == NULL || tsc->data[SC_BLADESTOP_WAIT] == NULL)
 		return false; // Target is not in BladeStop wait mode
 
+#ifndef RENEWAL
 	if (is_boss(attacker))
 		return false; // Boss monsters are not affected
+#endif
 
 #ifndef RENEWAL
 	if (attacker->type == BL_PC)
@@ -6706,8 +6772,14 @@ static enum damage_lv battle_weapon_attack(struct block_list *src, struct block_
 	}
 	if (tsc != NULL && battle->should_bladestop_attacker(src, target)) {
 		uint16 skill_lv = tsc->data[SC_BLADESTOP_WAIT]->val1;
-		int duration = skill->get_time2(MO_BLADESTOP,skill_lv);
 		status_change_end(target, SC_BLADESTOP_WAIT, INVALID_TIMER);
+
+#ifndef RENEWAL
+		int duration = skill->get_time2(MO_BLADESTOP, skill_lv);
+#else
+		int duration = skill->get_time2(MO_BLADESTOP, is_boss(src) ? 1 : 2);
+#endif
+
 		if (sc_start4(target, src, SC_BLADESTOP, 100, sd ? pc->checkskill(sd, MO_BLADESTOP) : 5, 0, 0, target->id, duration, MO_BLADESTOP)) {
 			//Target locked.
 			clif->damage(src, target, sstatus->amotion, 1, 0, 1, BDT_NORMAL, 0); //Display MISS.
@@ -6718,13 +6790,17 @@ static enum damage_lv battle_weapon_attack(struct block_list *src, struct block_
 	}
 
 	if(sd && (skillv = pc->checkskill(sd,MO_TRIPLEATTACK)) > 0) {
-		int triple_rate= 30 - skillv; //Base Rate
-		if (sc && sc->data[SC_SKILLRATE_UP] && sc->data[SC_SKILLRATE_UP]->val1 == MO_TRIPLEATTACK) {
-			triple_rate += triple_rate * (sc->data[SC_SKILLRATE_UP]->val2) /100;
+#ifndef RENEWAL
+		int triple_rate = 30 - skillv; // Base Rate
+#else
+		int triple_rate = 30; // Base Rate
+#endif
+		if (sc != NULL && sc->data[SC_SKILLRATE_UP] != NULL && sc->data[SC_SKILLRATE_UP]->val1 == MO_TRIPLEATTACK) {
+			triple_rate += triple_rate * (sc->data[SC_SKILLRATE_UP]->val2) / 100;
 			status_change_end(src, SC_SKILLRATE_UP, INVALID_TIMER);
 		}
 		if (rnd() % 100 < triple_rate) {
-			if (skill->attack(BF_WEAPON, src, src, target, MO_TRIPLEATTACK, skillv, tick, 0))
+			if (skill->attack(BF_WEAPON, src, src, target, MO_TRIPLEATTACK, skillv, tick, 0) != 0)
 				return ATK_DEF;
 			return ATK_MISS;
 		}
