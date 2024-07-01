@@ -305,7 +305,7 @@ All these changes only affect Renewal. Pre-renewal is unchanged.
 
 #### 2-2 Classes
 
-- Rebalance of the 2-2 job skills, implementation based on kRO and kRO zero patch notes from 2018-10-31, iRO Wiki, rAthena and divine pride info, along with some in-game testing. (#3229, part of issue #2727)
+- Rebalance of the 2-2 job skills, implementation based on kRO and kRO zero patch notes from 2018-10-31, iRO Wiki, rAthena and divine pride info, along with some in-game testing. (#3229, #3230, #3253, #3279, part of issue #2727)
 
 ##### Crusader
 
@@ -368,6 +368,429 @@ All these changes only affect Renewal. Pre-renewal is unchanged.
   - The bow damage formula has been corrected (affecting both renewal and pre-renewal). Incorrectly, only part of the skillratio value was getting halved when using bows, disregarding the base 100% value.
 - Rebalance of `RG_PLAGIARISM` (Intimidate)
   - Also increases Attack Speed by `1%` per Skill Level
+
+##### Sage
+
+- Rebalance of `SA_VOLCANO` (Volcano)
+  - Requirement changed: Yellow Gemstone -> Blue Gemstone
+  - Effect changed:
+    - Old: ATK `+(SkillLevel x 10)`
+    - New: ATK/MATK `+(5 + (Skill Level x 5))`
+- Rebalance of `SA_DELUGE` (Deluge)
+  - Requirement changed: Yellow Gemstone -> Blue Gemstone
+- Rebalance of `SA_VIOLENTGALE` (Whirlwind)
+  - Requirement changed: Yellow Gemstone -> Blue Gemstone
+- Rebalance of `SA_FLAMELAUNCHER` (Endow Blaze)
+  - Fixed casting time reduced: `3` s -> `1` s
+  - Variable casting time added: `1` s
+  - Requirement changed to Scarlet Point
+  - Now increases corresponding element magical damage by `1%` per skill level
+  - Removed skill failure chance
+  - Changed duration
+    - Old: `20` minutes (Level 1 ~ 4), `30` minutes (Level 5)
+    - New: `5 x (Skill Level + 1)` minutes
+- Rebalance of `SA_FROSTWEAPON` (Endow Tsunami)
+  - Fixed casting time reduced: `3` s -> `1` s
+  - Variable casting time added: 1s
+  - Requirement changed to Indigo Point
+  - Now increases corresponding element magical damage by `1%` per skill level
+  - Removed skill failure chance
+  - Changed duration
+    - Old: `20` minutes (Level 1 ~ 4), `30` minutes (Level 5)
+    - New: `5 x (Skill Level + 1)` minutes
+- Rebalance of `SA_LIGHTNINGLOADER` (Endow Tornado)
+  - Fixed casting time reduced: `3` s -> `1` s
+  - Variable casting time added: `1` s
+  - Requirement changed to Yellow Wish Point
+  - Now increases corresponding element magical damage by `1%` per skill level
+  - Removed skill failure chance
+  - Changed duration
+    - Old: `20` minutes (Level 1 ~ 4), `30` minutes (Level 5)
+    - New: `5 x (Skill Level + 1)` minutes
+- Rebalance of `SA_SEISMICWEAPON` (Endow Quake)
+  - Fixed casting time reduced: `3` s -> `1` s
+  - Variable casting time added: `1` s
+  - Requirement changed to Lime Green Point
+  - Now increases corresponding element magical damage by `1%` per skill level
+  - Removed skill failure chance
+  - Changed duration
+    - Old: `20` minutes (Level 1 ~ 4), `30` minutes (Level 5)
+    - New: `5 x (Skill Level + 1)` minutes
+- Rebalance of `SA_AUTOSPELL` (Hindsight)
+  - Autocast level changed
+    - Old: The Bolt skills will vary in level from level 1 to 3
+      - The level 1 version will occur `50%` of the time, level 2 `35%`, and level 3 at `15%`
+    - New: Levels of autocasted spells is the half of Hindsight level.
+      - If autocasted spells has lower level than half of Hindsight levels, actual skill level will be autocasted instead.
+  - Autocast chance changed
+    - Old: `7%` - `25%`
+    - New: `(Skill Level x 2)%`
+  - Usable skills changed
+    - Old: Napalm Beat, Fire Bolt, Cold Bolt, Lightning Bolt, Soul Strike, Fire Ball, Frost Diver
+    - New: Fire Bolt, Cold Bolt, Lightning Bolt, Soul Strike, Fire Ball, Earth Spike, Frost Diver, Thunderstorm, Heaven's Drive
+  - Note: for compatibility with older clients that don't support more than 7 skills at once, the pre-renewal `autospell_db` will be loaded instead, when such packetvers are in use. This behavior can be enforced by defining the `CLASSIC_AUTOSPELL_LIST` preprocessor macro (see `src/config/classes/general.h`).
+
+##### Monk
+
+- Weapon modifier changes
+  - Changed the size penalty for Knuckles
+    - Small: 100% -> 100%
+    - Medium: 75% -> 100%
+    - Large:  50% ->  75%
+- Rebalance of `MO_TRIPLEATTACK` (Raging Trifecta Blow)
+  - Chance of activation changed:
+    - Old: `30%` for level 1, less chance for each level above
+    - New: Always `30%`
+- Rebalance of `MO_CHAINCOMBO` (Raging Quadruple Blow)
+  - SP cost reduced by `6` in every level
+  - When used with Knuckle class weapon:
+    - Skill damage is doubled
+    - Number of hits increased to `6` (visual only)
+      Example:
+         - Non Knuckle: `4` hits of `100` (Total = `400`)
+         - Knuckle: `6` hits of `133` (Total = `800`)
+- Rebalance of `MO_COMBOFINISH` (Raging Thrust)
+  - Damage formula changed
+    - Old: `(240 + SkillLevel * 60)%`
+    - New: `(450 + SkillLevel * 150 + STR * 5)%`
+  - SP Consumption reduced
+    - Old: `SkillLevel + 10`
+    - New: `SkillLevel + 2`
+- Rebalance of `MO_EXTREMITYFIST` (Asura Strike)
+  - Change required spheres when used after Raging Thrust or Root
+    - Old: `4` spheres were required
+    - New: `1` sphere is required
+  - Doubles damage when there are `6` or more spirit spheres on cast
+  - SP recovery penalty duration reduced: `10` s -> `3` s
+- Rebalance of `MO_BLADESTOP` (Root)
+  - Cooldown added: `3` s
+  - Boss monsters are now affected
+  - Duration changed:
+    - Old: `10 + (SkillLevel * 10)` seconds
+    - New: `10` seconds (`2` seconds on boss monsters)
+- Rebalance of `MO_INVESTIGATE` (Occult Impact)
+  - Damage formula changed
+    - Old: `100 + (SkillLevel * 75)%`
+    - New: `(SkillLevel * 100)%`
+    - When used on target in Root state, deals `50%` more damage
+    - ATK Mastery no longer increases its damage (Not sure if this was added by the Rebalance, but this info only appeared in iRO Wiki after rebalance, so it is assumed it was an undocumented change)
+    - A fix for the base ATK (before skill ratio) is included: `(ATK + (HardDef/2))`
+- Rebalance of `MO_FINGEROFFENSIVE` (Throw Spirit Sphere)
+  - Damage formula changed
+    - Old: `(Spirit Spheres x 350)%`
+    - New: `[600 + (Skill Level x 200)]%`
+  - Casting time changed
+    - Old: `(Spirit Spheres + 1)` seconds
+    - New: `0.5` seconds fixed casting time + `0.5` seconds variable casting time
+  - `1` second cooldown added
+  - SP cost increased
+    - Old: `10` at all skill levels
+    - New: `8 + (Skill Level x 4)`
+  - Spirit sphere usage changed
+    - Old: `(Skill Level)` spheres
+    - New: `1` sphere at all skill levels
+  - Skill will deal `50%` more damage on target caught with Root
+  - The damage is delivered as a bundle of `5` hits `(TotalDMG / 5)`
+- Rebalance of `MO_ABSORBSPIRITS` (Absorb Spirit Sphere)
+  - Reduced fixed casting time: `1` s -> `0.5` s
+  - Removed variable casting time
+
+##### Bard / Dancer
+
+- Added song groups for Bard/Dancer songs
+  - Song effects are now grouped and songs of the same group doesn't overlap with each other. Activating a new effect of the same group ends other existing effects.
+  - There are 3 groups:
+    1. Bard songs -- song buffs exclusive to bards
+    2. Dancer songs -- song buffs exclusive to dancers
+    3. Ensemble songs -- song buffs exclusive to ensemble
+- Rebalance of `BA_MUSICALSTRIKE` (Melody Strike) and `DC_THROWARROW` (Slinging Arrow)
+  - Damage formula changed
+    - New: `[110 + (Skill Level x 40)]%` x `2` hits
+  - SP cost changed
+    - Old: `(Skill Level × 2) - 1`
+    - New: `12` at all skill levels
+  - Casting time reduced: `1.5` s -> `0.5` s (Based on DivinePride data - see details in the PR and commit messages)
+      - Fixed Cast Time of `0.3` s remains untouched
+      - Variable Cast Time reduced `1.2` s -> `0.2` s
+  - Global skill delay added: `0.3` s
+- Rebalance of `BA_MUSICALLESSON` (Music Lessons)
+  - Add effect: Attack Speed `+(Skill_Lv)%` with Musical Instruments
+  - Add effect: Max SP `+(Skill_Lv)%`
+  - No longer gives bonuses to song effects
+- Rebalance of `DC_DANCINGLESSON` (Dance Lessons)
+  - Add effect: Max SP `+(Skill_Lv)%`
+  - Add effect: When using Whips, CRI `+(Skill_Lv)`
+  - No longer gives bonuses to dance effects
+- Rebalance of `BA_FROSTJOKE` (Unbarring Octave)
+  - Global skill delay reduced: `4` s -> `0.3` s
+  - `4` s Cooldown added
+- Rebalance of `BD_ENCORE` (Encore)
+  - Added `0.3` s of global skill delay
+  - Added `10` s of cooldown
+- Rebalance of `BA_DISSONANCE` (Unchained Serenade)
+  - Skill reworked.
+    - Now causes Neutral Magical damage in a `9x9` area
+    - Can only be used in PvP areas
+  - `0.3` s of global delay added
+  - `5` s of cooldown added
+  - SP cost changed
+    - Old: `15 + (SkillLv) x 3`
+    - New: `32 + (SkillLv) x 3`
+- Rebalance of `BA_POEMBRAGI` (Magic Strings)
+  - Skill reworked:
+    - It is now a screen-wide skill (`31x31`) that gives the SC to all party members
+    - It no longer uses ground units nor keeps the "performance running"
+  - Effect formula changed:
+    - Variable cast reduction: `(SkillLv)%`
+    - Cast delay reduction: `(SkillLv x 3)%`
+    - Caster stats and Music Lessons no longer affects the formula
+  - Effect duration changed: `180` s -> `60` s
+  - SP Cost changed:
+    - Old: `35 + (SkillLv x 5)`
+    - New: `60 + (SkillLv x 5)`
+  - `1` s casting time added
+  - `0.5` s global delay added
+  - `20` s cooldown added
+- Rebalance of `BA_ASSASSINCROSS` (Impressive Riff)
+  - Skill reworked:
+    - It is now a screen-wide skill (`31x31`) that gives the SC to all party members
+    - It no longer uses ground units nor keeps the "performance running"
+  - Effect formula changed:
+    - ASPD:
+      - when SkillLv < 10: `+(1 + ((SkillLv - 1) x 2))%`
+      - when SkillLv = 10: `+20%`
+      - Caster stats and Music Lessons no longer affects the formula
+  - Effect duration changed: `180` s -> `60` s
+  - SP Cost changed:
+    - Old: `35 + (SkillLv x 5)`
+    - New: `60 + (SkillLv x 5)`
+  - `1` s casting time added
+  - `0.5` s global delay added
+  - `20` s cooldown added
+- Rebalance of `BA_APPLEIDUN` (Song of Lutie)
+  - Skill reworked:
+    - It is now a screen-wide skill (`31x31`) that gives the SC to all party members
+    - It no longer uses ground units nor keeps the "performance running"
+  - Effect changes:
+     - MaxHP increase formula changed:
+        - SkillLv < 10: `(SkillLv + 9)%`
+        - SkillLv = 10: `20%`
+     - Removed HP Recovery effect
+     - Added effect: HP Regen Rate increase by `(SkillLv x 2)%`
+     - Caster stats and Music Lessons no longer affects the formula
+  - Effect duration changed: `180` s -> `60` s
+  - SP Cost changed:
+     - Old: `35 + (SkillLv x 5)`
+     - New: `60 + (SkillLv x 5)`
+  - `1` s casting time added
+  - `0.5` s global delay added
+  - `20` s cooldown added
+- Rebalance of `BA_WHISTLE` (Perfect Tablature)
+  - Skill reworked:
+    - It is now a screen-wide skill (`31x31`) that gives the SC to all party members
+    - It no longer uses ground units nor keeps the "performance running"
+  - Effect formula changed:
+     - Flee increase:
+       - when SkillLv < 10: `+(18 + SkillLv x 2)`
+       - when SkillLv = 10: `+40`
+     - Perfect Dodge increase: `(SkillLv + 1) / 2`
+     - Caster stats and Music Lessons no longer affects the formula
+  - Effect duration changed: `180` s -> `60` s
+  - SP Cost changed:
+     - Old: `20 + (SkillLv x 4)`
+     - New: `20 + (SkillLv x 2)`
+  - `1` s casting time added
+  - `0.5` s global delay added
+  - `20` s cooldown added
+- Rebalance of `DC_UGLYDANCE` (Hip Shaker)
+  - Skill reworked:
+    - It is now a single AoE effect
+    - It no longer keeps the "performance running"
+  - SP drain amount changed: `(10 + 2 * (SkillLv))%`
+  - SP Cost changed:
+     - Old: `20 + (SkillLv x 3)`
+     - New: `32 + (SkillLv x 3)`
+  - `0.3` s global delay added
+  - `5` s cooldown added
+- Rebalance of `DC_DONTFORGETME` (Slow Grace)
+  - Skill reworked:
+    - It is now a single AoE effect which causes a SC on enemies
+    - It no longer keeps the "performance running"
+  - Effect formula changed:
+    - Attack Speed reduction: `((SkillLv x 3) + DEX / 15)%`
+    - Move Speed reduction: `((SkillLv x 2) + AGI / 20)%`
+    - Note: According to rA, dividing by `15` and `20` was already the right values for RE. And this does seem to match the rebalance formula (at least, is close enough)
+  - Can only be used in PvP areas
+  - `0.5` s of global delay added
+  - `1` s casting time added
+  - `20` s of cooldown added
+  - SP cost changed
+     - Old: `25 + (SkillLv) x 3`
+     - New: `35 + (SkillLv) x 3`
+  - Area of Effect increased: `7x7` -> `9x9`
+- Rebalance of `DC_SERVICEFORYOU` (Gypsy's Kiss)
+  - Skill reworked:
+    - It is now a screen-wide skill (`31x31`) that gives the SC to all party members
+    - It no longer uses ground units nor keeps the "performance running"
+  - Effect formula changed:
+    - Max SP Boost:
+       - SkillLv < 10: `(9 + SkillLv)%`
+       - SkillLv = 10: `20%`
+    - SP Cost reduction: `(SkillLv + 5)%`
+    - Caster stats and Dance Lessons no longer boosts the effects
+  - SP Cost changed:
+     - Old: `35 + (SkillLv x 5)`
+     - New: `57 + (SkillLv x 3)`
+  - `1` s casting time added
+  - `0.5` s global delay added
+  - `20` s cooldown added
+- Rebalance of `DC_FORTUNEKISS` (Lady Luck)
+  - Skill reworked:
+    - It is now a screen-wide skill (`31x31`) that gives the SC to all party members
+    - It no longer uses ground units nor keeps the "performance running"
+  - Effect changed:
+    - Crit boost formula changed: `+(SkillLv)%`
+    - Added effect: Crit damage `+(SkillLv x 2)%`
+    - Caster stats and Dance Lessons no longer boosts the effects
+  - SP Cost changed:
+     - Old: `40 + (SkillLv x 3)`
+     - New: `35 + (SkillLv x 5)`
+  - `1` s casting time added
+  - `0.5` s global delay added
+  - `20` s cooldown added
+- Rebalance of `DC_HUMMING` (Focus Ballet)
+  - Skill reworked:
+    - It is now a screen-wide skill (`31x31`) that gives the SC to all party members
+    - It no longer uses ground units nor keeps the "performance running"
+  - Effect formula changed:
+    - HIT boost: `+(SkillLv x 4)`
+    - Caster stats and Dance Lessons no longer boosts the effects
+  - SP Cost changed:
+     - Old: `20 + (SkillLv x 2)`
+     - New: `30 + (SkillLv x 3)`
+  - `1` s casting time added
+  - `0.5` s global delay added
+  - `20` s cooldown added
+- Changed the general effect of performing ensembles
+  - Added the `SC_ENSEMBLEFATIGUE` effect after ensemble skills. After using an ensemble skill, ensemble fatigue starts on both performers.
+  - Ensemble skills now consumes requirements from partner too
+- Rebalance of `BD_RICHMANKIM` (Mental Sensing)
+  - Skill reworked:
+    - It is now a screen-wide skill (`31x31`) that gives the SC to all party members
+    - It no longer uses ground units nor keeps the "performance running"
+  - EXP Boost formula changed:
+    - Old: `+(25 + SkillLv x 11)%`
+    - New: `+(10 + SkillLv x 10)%`
+  - `1` s casting time added
+  - `0.3` s global delay added
+  - `20` s cooldown added
+- Rebalance of `BD_RINGNIBELUNGEN` (Harmonic Lick)
+  - Skill reworked:
+    - It is now a screen-wide skill (`31x31`) that gives the SC to all party members
+    - It no longer uses ground units nor keeps the "performance running"
+  - Effect changed. Now gives a random buff to user and party members:
+    - ASPD `+20%`
+    - ATK `+20%`
+    - MATK `+20%`
+    - MaxHP `+30%`
+    - MaxSP `+30%`
+    - All Stats `+15`
+    - Hit `+50`
+    - Flee `+50`
+    - Reduce SP consumption of skills by `30%`
+    - Increase HP Recovery by `100%`
+    - Increase SP Recovery by `100%`
+  - SP Cost changed:
+     - Old: `35 + (SkillLv x 3)`
+     - New: `68 - (SkillLv x 4)`
+  - `1` s casting time added
+  - `0.3` s global delay added
+  - `20` s cooldown added
+- Rebalance of BD_SIEGFRIED (Acoustic Rhythm)
+  - Skill reworked:
+    - It is now a screen-wide skill (`31x31`) that gives the SC to all party members
+    - It no longer uses ground units nor keeps the "performance running"
+  - Effect formula changed:
+    - Old:
+      - Elemental Resistance: `(30 + SkillLv x 10)%`
+      - Status Effect Resistance: `(SkillLv x 10)%`
+    - New:
+      - Elemental Resistance: `(SkillLv x 3)%`
+      - Status Effect Resistance: `(SkillLv x 5)%`
+  - SP Cost changed:
+     - Old: `20` on all skill levels
+     - New: `36 + (SkillLv x 4)`
+  - `1` s casting time added
+  - `0.3` s global delay added
+  - `20` s cooldown added
+- Rebalance of `BD_INTOABYSS` (Power Chord)
+  - Skill reworked:
+    - It is now a screen-wide skill (`31x31`) that gives the SC to all party members
+    - It no longer uses ground units nor keeps the "performance running"
+  - SP Cost increased: `10` -> `70`
+  - `1` s casting time added
+  - `0.3` s global delay added
+  - `20` s cooldown added
+- Rebalance of `BD_ETERNALCHAOS` (Down Tempo)
+  - Skill reworked:
+    - It now casts a single AoE effect in a `9x9` area
+    - It no longer uses ground units nor keeps the "performance running"
+  - SP Cost increased: `30` -> `120`
+  - `1` s casting time added
+  - `0.3` s global delay added
+  - `60` s cooldown added
+- Rebalance of `BD_ROKISWEIL` (Classical Pluck)
+  - Skill reworked:
+    - It is now a single AoE effect
+    - It no longer keeps the "performance running"
+  - Effect changed: Inflicts confusion and blocks use of skill in all entities (Except performers)
+  - Can only be used in PvP areas
+  - `0.3` s of global delay added
+  - `1` s casting time added
+  - `20` s of cooldown added
+  - SP cost increased: `15` -> `180`
+  - Area of Effect increased: `7x7` -> `9x9`
+- Rebalance of `BD_LULLABY` (Lullaby)
+  - Skill reworked:
+    - It is now a single AoE effect
+    - It no longer keeps the "performance running"
+  - Effect changed:
+    - Inflicts sleep in enemies around user
+    - INT no longer affects the chance
+  - `0.3` s of global delay added
+  - `1` s casting time added
+  - `20` s of cooldown added
+  - SP cost increased: `20` -> `40`
+  - Area of Effect increased: `7x7` -> `9x9`
+- Rebalance of `BD_DRUMBATTLEFIELD` (Battle Theme)
+  - Skill reworked:
+    - It is now a screen-wide skill (`31x31`) that gives the SC to all party members
+    - It no longer uses ground units nor keeps the "performance running"
+  - Effect formula changed:
+    - Old:
+      - Damage Boost: `125 + (SkillLv x 25)` (depending on size)
+      - DEF  Boost: `SkillLv x 10`
+    - New:
+      - ATK Boost: `15 + (SkillLv x 5)` (ATK2 / I am making it as BATK / equip atk)
+      - DEF  Boost: `SkillLv x 15`
+  - SP Cost increased:
+     - Old: `35 + (SkillLv x 3)`
+     - New: `46 + (SkillLv x 4)`
+  - `1` s casting time added
+  - `0.3` s global delay added
+  - `20` s cooldown added
+- Rebalance of `BD_ADAPTATION` (Amp)
+  - Skill reworked.
+    - It now concedes an SC (`SC_ADAPTATION`) which reduces the SP consumption of performance skills by `20%`.
+   - `300` s cooldown added
+   - `0.3` s of global skill delay added
+   - SP cost increased: `1` -> `10`
+- Ensemble skills range is expanded to `4` cells
+- The dispell logic for songs has been removed, since "song areas" no longer exist
+
+### Other changes
+
+- The `is_quest` argument to `pc->gainexp()` has been changed to a `flags` bitmask enum, in order to allow expansion to different flags. (#3279)
 
 ## [v2024.06] `June 2024`
 
