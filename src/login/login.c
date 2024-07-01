@@ -679,7 +679,7 @@ static void login_fromchar_parse_online_accounts(int fd, int id)
 	login->online_db->foreach(login->online_db, login->online_db_setoffline, id); //Set all chars from this char-server offline first
 	users = RFIFOW(fd,4);
 	for (i = 0; i < users; i++) {
-		int aid = RFIFOL(fd,6+i*4);
+		int aid = RFIFOL(fd, 8 + i * 4);
 		struct online_login_data *p = idb_ensure(login->online_db, aid, login->create_online_user);
 		p->char_server = id;
 		if (p->waiting_disconnect != INVALID_TIMER)
