@@ -619,6 +619,12 @@ enum script_hominfo_types {
 	HOMINFO_MAX
 };
 
+enum partymember_type {
+	PT_MEMBER_NAME,
+	PT_MEMBER_CHARID,
+	PT_MEMBER_ACCID,
+};
+
 /**
  * Structures
  **/
