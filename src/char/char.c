@@ -50,6 +50,7 @@
 #include "common/HPM.h"
 #include "common/apipackets.h"
 #include "common/cbasetypes.h"
+#include "common/charloginpackets.h"
 #include "common/chunked.h"
 #include "common/conf.h"
 #include "common/console.h"
@@ -5298,10 +5299,11 @@ static int char_send_accounts_tologin_sub(union DBKey key, struct DBData *data, 
 {
 	struct online_char_data* character = DB->data2ptr(data);
 	int* i = va_arg(ap, int*);
+	int* accounts = va_arg(ap, int *);
 
 	nullpo_ret(character);
 	if (character->mapserver_connection == OCS_CONNECTED) {
-		WFIFOL(chr->login_fd,8+(*i)*4) = character->account_id;
+		accounts[*i] = character->account_id;
 		(*i)++;
 		return 1;
 	}
@@ -5310,18 +5312,24 @@ static int char_send_accounts_tologin_sub(union DBKey key, struct DBData *data, 
 
 static int char_send_accounts_tologin(int tid, int64 tick, int id, intptr_t data)
 {
-	if (chr->login_fd > 0 && sockt->session[chr->login_fd])
-	{
+	if (chr->login_fd > 0 && sockt->session[chr->login_fd] != NULL) {
 		// send account list to login server
 		int users = chr->online_char_db->size(chr->online_char_db);
 		int i = 0;
 
-		WFIFOHEAD(chr->login_fd,8+users*4);
-		WFIFOW(chr->login_fd,0) = 0x272d;
-		chr->online_char_db->foreach(chr->online_char_db, chr->send_accounts_tologin_sub, &i, users);
-		WFIFOW(chr->login_fd,2) = 8+ i*4;
-		WFIFOL(chr->login_fd,4) = i;
-		WFIFOSET(chr->login_fd,WFIFOW(chr->login_fd,2));
+		struct PACKET_CHARLOGIN_ONLINE_ACCOUNTS *p;
+		int len = sizeof(struct PACKET_CHARLOGIN_ONLINE_ACCOUNTS) + sizeof(*p->accounts) * users;
+
+		WFIFOHEAD(chr->login_fd, len);
+		p = WFIFOP(chr->login_fd, 0);
+		p->packetType = HEADER_CHARLOGIN_ONLINE_ACCOUNTS;
+
+		chr->online_char_db->foreach(chr->online_char_db, chr->send_accounts_tologin_sub, &i, p->accounts);
+
+		p->packetLength = sizeof(struct PACKET_CHARLOGIN_ONLINE_ACCOUNTS) + sizeof(*p->accounts) * i;
+		p->list_length = i;
+
+		WFIFOSET(chr->login_fd, len);
 	}
 	return 0;
 }

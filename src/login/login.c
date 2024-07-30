@@ -32,6 +32,7 @@
 #include "common/HPM.h"
 #include "common/apipackets.h"
 #include "common/cbasetypes.h"
+#include "common/charloginpackets.h"
 #include "common/conf.h"
 #include "common/core.h"
 #include "common/db.h"
@@ -675,17 +676,17 @@ static void login_fromchar_parse_account_offline(int fd)
 
 static void login_fromchar_parse_online_accounts(int fd, int id)
 {
-	uint32 i, users;
 	login->online_db->foreach(login->online_db, login->online_db_setoffline, id); //Set all chars from this char-server offline first
-	users = RFIFOW(fd,4);
-	for (i = 0; i < users; i++) {
-		int aid = RFIFOL(fd,6+i*4);
-		struct online_login_data *p = idb_ensure(login->online_db, aid, login->create_online_user);
-		p->char_server = id;
-		if (p->waiting_disconnect != INVALID_TIMER)
-		{
-			timer->delete(p->waiting_disconnect, login->waiting_disconnect_timer);
-			p->waiting_disconnect = INVALID_TIMER;
+
+	const struct PACKET_CHARLOGIN_ONLINE_ACCOUNTS *p = RFIFOP(fd, 0);
+	for (uint32 i = 0; i < p->list_length; i++) {
+		int aid = p->accounts[i];
+		struct online_login_data *login_data = idb_ensure(login->online_db, aid, login->create_online_user);
+		login_data->char_server = id;
+
+		if (login_data->waiting_disconnect != INVALID_TIMER) {
+			timer->delete(login_data->waiting_disconnect, login->waiting_disconnect_timer);
+			login_data->waiting_disconnect = INVALID_TIMER;
 		}
 	}
 }
@@ -950,7 +951,7 @@ static int login_parse_fromchar(int fd)
 			login->fromchar_parse_account_offline(fd);
 		break;
 
-		case 0x272d: // Receive list of all online accounts. [Skotlex]
+		case HEADER_CHARLOGIN_ONLINE_ACCOUNTS: // Receive list of all online accounts. [Skotlex]
 			if (RFIFOREST(fd) < 4 || RFIFOREST(fd) < RFIFOW(fd,2))
 				return 0;
 			{
