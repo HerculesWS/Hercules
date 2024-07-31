@@ -9971,7 +9971,7 @@ static BUILDIN(getpartymember)
 
 	if (p != NULL) {
 		for (int i = 0; i < MAX_PARTY; i++) {
-			if (p->party.member[i].account_id) {
+			if (p->party.member[i].account_id != 0) {
 				switch (type) {
 				case PT_MEMBER_NAME:
 					script->set_reg(st, sd, reference_uid(id, num), varname, (const void *)h64BPTRSIZE(p->party.member[i].name), reference_getref(data));
