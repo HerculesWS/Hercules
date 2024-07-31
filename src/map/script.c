@@ -9969,7 +9969,7 @@ static BUILDIN(getpartymember)
 		}
 	}
 
-	if (p) {
+	if (p != NULL) {
 		for (int i = 0; i < MAX_PARTY; i++) {
 			if (p->party.member[i].account_id) {
 				switch (type) {
