@@ -9938,6 +9938,13 @@ static BUILDIN(getpartymember)
 		st->state = END;
 		return false;
 	}
+
+	if (type < PT_MEMBER_NAME || type > PT_MEMBER_ACCID) {
+		ShowError("buildin_getpartymember: Invalid type argument\n");
+		script->reportdata(data);
+		st->state = END;
+		return false;
+	}
 	
 	if (!is_int_variable(varname) && (type == PT_MEMBER_CHARID || type == PT_MEMBER_ACCID)) {
 		ShowError("buildin_getpartymember: Target argument is not an int variable\n");
