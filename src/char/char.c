@@ -207,10 +207,13 @@ static struct DBData char_create_online_char_data(union DBKey key, va_list args)
 
 static void char_set_account_online(int account_id)
 {
-	WFIFOHEAD(chr->login_fd,6);
-	WFIFOW(chr->login_fd,0) = 0x272b;
-	WFIFOL(chr->login_fd,2) = account_id;
-	WFIFOSET(chr->login_fd,6);
+	WFIFOHEAD(chr->login_fd, sizeof(struct PACKET_CHARLOGIN_SET_ACCOUNT_ONLINE));
+	
+	struct PACKET_CHARLOGIN_SET_ACCOUNT_ONLINE *p = WFIFOP(chr->login_fd, 0);
+	p->packetType = HEADER_CHARLOGIN_SET_ACCOUNT_ONLINE;
+	p->account_id = account_id;
+	
+	WFIFOSET(chr->login_fd, sizeof(*p));
 }
 
 static void char_set_account_offline(int account_id)

@@ -24,11 +24,18 @@
 // Packets sent by Char-Server to Login-Server
 
 #include "common/hercules.h"
+#include "common/packetsmacro.h"
 
 /* Packets Structs */
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(push, 1)
 #endif // not NetBSD < 6 / Solaris
+
+struct PACKET_CHARLOGIN_SET_ACCOUNT_ONLINE {
+	int16 packetType;
+	int account_id;
+} __attribute__((packed));
+DEFINE_PACKET_ID(CHARLOGIN_SET_ACCOUNT_ONLINE, 0x272b)
 
 struct PACKET_CHARLOGIN_ONLINE_ACCOUNTS {
 	int16 packetType;
