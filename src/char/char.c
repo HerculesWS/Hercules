@@ -51,6 +51,7 @@
 #include "common/apipackets.h"
 #include "common/cbasetypes.h"
 #include "common/charloginpackets.h"
+#include "common/mapcharpackets.h"
 #include "common/chunked.h"
 #include "common/conf.h"
 #include "common/console.h"
@@ -3781,13 +3782,16 @@ static void char_parse_frommap_auth_request(int fd)
 	struct char_auth_node* node;
 	struct mmo_charstatus* cd;
 
-	int account_id  = RFIFOL(fd,2);
-	int char_id     = RFIFOL(fd,6);
-	int login_id1   = RFIFOL(fd,10);
-	char sex        = RFIFOB(fd,14);
-	uint32 ip       = ntohl(RFIFOL(fd,15));
-	char standalone = RFIFOB(fd, 19);
-	RFIFOSKIP(fd,20);
+	const struct PACKET_MAPCHAR_AUTH_REQ *p = RFIFOP(fd, 0);
+
+	int account_id  = p->account_id;
+	int char_id     = p->char_id;
+	int login_id1   = p->login_id1;
+	char sex        = p->sex;
+	uint32 ip       = ntohl(p->client_addr);
+	char standalone = p->standalone;
+
+	RFIFOSKIP(fd, sizeof(struct PACKET_MAPCHAR_AUTH_REQ));
 
 	node = (struct char_auth_node*)idb_get(auth_db, account_id);
 	cd = (struct mmo_charstatus*)uidb_get(chr->char_db_,char_id);
@@ -4040,8 +4044,8 @@ static int char_parse_frommap(int fd)
 				chr->parse_frommap_ping(fd);
 			break;
 
-			case 0x2b26: // auth request from map-server
-				if (RFIFOREST(fd) < 20)
+			case HEADER_MAPCHAR_AUTH_REQ: // auth request from map-server
+				if (RFIFOREST(fd) < sizeof(struct PACKET_MAPCHAR_AUTH_REQ))
 					return 0;
 
 			{

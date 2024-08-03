@@ -42,6 +42,7 @@
 #include "common/HPM.h"
 #include "common/cbasetypes.h"
 #include "common/ers.h"
+#include "common/mapcharpackets.h"
 #include "common/memmgr.h"
 #include "common/msgtable.h"
 #include "common/nullpo.h"
@@ -470,15 +471,17 @@ static void chrif_authreq(struct map_session_data *sd, bool hstandalone)
 		return;
 	}
 
-	WFIFOHEAD(chrif->fd,20);
-	WFIFOW(chrif->fd,0) = 0x2b26;
-	WFIFOL(chrif->fd,2) = sd->status.account_id;
-	WFIFOL(chrif->fd,6) = sd->status.char_id;
-	WFIFOL(chrif->fd,10) = sd->login_id1;
-	WFIFOB(chrif->fd,14) = sd->status.sex;
-	WFIFOL(chrif->fd,15) = htonl(sockt->session[sd->fd]->client_addr);
-	WFIFOB(chrif->fd,19) = hstandalone ? 1 : 0;
-	WFIFOSET(chrif->fd,20);
+	WFIFOHEAD(chrif->fd, sizeof(struct PACKET_MAPCHAR_AUTH_REQ));
+	struct PACKET_MAPCHAR_AUTH_REQ *p = WFIFOP(chrif->fd, 0);
+	p->packetType = HEADER_MAPCHAR_AUTH_REQ;
+	p->account_id = sd->status.account_id;
+	p->char_id = sd->status.char_id;
+	p->login_id1 = sd->login_id1;
+	p->sex = sd->status.sex;
+	p->client_addr = htonl(sockt->session[sd->fd]->client_addr);
+	p->standalone = hstandalone ? 1 : 0;
+	WFIFOSET(chrif->fd, sizeof(struct PACKET_MAPCHAR_AUTH_REQ));
+
 	chrif->sd_to_auth(sd, ST_LOGIN);
 }
 
