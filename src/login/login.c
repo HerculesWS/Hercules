@@ -666,7 +666,11 @@ static void login_fromchar_parse_account_online(int fd, int id)
 	const struct PACKET_CHARLOGIN_SET_ACCOUNT_ONLINE *p = RFIFOP(fd, 0);
 
 	login->add_online_user(id, p->account_id);
-	lapiif->connect_user_char(id, p->account_id);
+
+	// "standalone" players (such as autotraders) does not exists in API server, so we should not send data about them
+	// or we will get errors from API server
+	if (p->standalone == 0)
+		lapiif->connect_user_char(id, p->account_id);
 
 	RFIFOSKIP(fd, sizeof(*p));
 }

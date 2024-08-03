@@ -34,6 +34,7 @@
 struct PACKET_CHARLOGIN_SET_ACCOUNT_ONLINE {
 	int16 packetType;
 	int account_id;
+	uint8 standalone; // 0 - real player (false) / 1 - standalone/server generated (true)
 } __attribute__((packed));
 DEFINE_PACKET_ID(CHARLOGIN_SET_ACCOUNT_ONLINE, 0x272b)
 
