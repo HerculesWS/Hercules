@@ -4220,33 +4220,23 @@ Example:
 
 ---------------------------------------
 
-*getguildmember(<guild id>{, <type>});
+*getguildmember(<guild id>, <type>, <array>);
 
-This command will find all members of a specified guild and returns their names
-(or character id or account id depending on the value of "type") into an array
-of temporary global variables.
+This command will find all members of a specified <guild_id>, copy their
+names (or character id or account id) depending on the <type> into <array>
+and returns the number of guild members that were found.
 
-Upon executing this,
+Valid <type> are:
 
-$@guildmembername$[] is a global temporary string array which contains all the
-                     names of these guild members.
-                     (only set when type is 0 or not specified)
-
-$@guildmembercid[]   is a global temporary number array which contains the
-                     character id of these guild members.
-                     (only set when type is 1)
-
-$@guildmemberaid[]   is a global temporary number array which contains the
-                     account id of these guild members.
-                     (only set when type is 2)
-
-$@guildmembercount   is the number of guild members that were found.
+	GD_MEMBER_NAME		- Guild member names
+	GD_MEMBER_CHARID	- Guild member character ID
+	GD_MEMBER_ACCID		- Guild member account ID
 
 The guild members will be found regardless of whether they are online or offline.
-Note that the names come in no particular order.
+Note that the results come in no particular order.
 
-Be sure to use $@guildmembercount to go through this array, and not
-getarraysize(), because it is not cleared between runs of getguildmember().
+Make sure to use string variable for GD_MEMBER_NAME and
+int variable for GD_MEMBER_CHARID and GD_MEMBER_ACCID
 
 For usage examples, see getpartymember().
 
