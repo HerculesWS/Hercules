@@ -2318,7 +2318,8 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 	#else
 				case LK_SPIRALPIERCE:
 				case ML_SPIRALPIERCE:
-					skillratio += 50 * skill_lv;
+					skillratio += -100 + 150 + 50 * skill_lv;
+					RE_LVL_DMOD(100);
 	#endif
 					break;
 				case PA_SACRIFICE:
@@ -5551,11 +5552,13 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 					ATK_ADD(sd->inventory_data[index]->weight * 7 / 100);
 
 				switch (tstatus->size) {
-					case SZ_SMALL: //Small: 115%
+					case SZ_SMALL: // Small: 130%
+						ATK_RATE(130);
+						break;
+
+					case SZ_MEDIUM: // Medium: 115%
 						ATK_RATE(115);
 						break;
-					case SZ_BIG: //Large: 85%
-						ATK_RATE(85);
 				}
 				wd.damage = battle->calc_masteryfix(src, target, skill_id, skill_lv, wd.damage, wd.div_, 0, flag.weapon);
 				wd.damage = battle->calc_cardfix2(src, target, wd.damage, s_ele, nk, wd.flag);
