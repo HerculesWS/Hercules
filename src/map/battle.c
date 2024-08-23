@@ -5532,36 +5532,41 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 				if ( sd && s_ele != sd->bonus.arrow_ele )
 					s_ele = sd->bonus.arrow_ele;
 				break;
+
 			case NJ_TATAMIGAESHI:
-					ATK_RATE(200);
-				/* Fall through */
+				ATK_RATE(200);
+				ATK_RATE(battle->calc_skillratio(BF_WEAPON, src, target, skill_id, skill_lv, skillratio, wflag));
+				break;
+
 			case LK_SPIRALPIERCE:
-			case ML_SPIRALPIERCE: // [malufett]
-				if( skill_id != NJ_TATAMIGAESHI ){
-					short index = sd?sd->equip_index[EQI_HAND_R]:0;
-					GET_NORMAL_ATTACK( (sc && sc->data[SC_MAXIMIZEPOWER]?1:0)|(sc && sc->data[SC_WEAPONPERFECT]?8:0), 0);
-					wd.damage = wd.damage * 70 / 100;
-					//n_ele = true; // FIXME: This is has no effect if it's after GET_NORMAL_ATTACK (was this intended, or was it supposed to be put above?)
+			case ML_SPIRALPIERCE: { // [malufett]
+				short index = sd?sd->equip_index[EQI_HAND_R]:0;
+				GET_NORMAL_ATTACK( (sc && sc->data[SC_MAXIMIZEPOWER]?1:0)|(sc && sc->data[SC_WEAPONPERFECT]?8:0), 0);
+				wd.damage = wd.damage * 70 / 100;
+				//n_ele = true; // FIXME: This is has no effect if it's after GET_NORMAL_ATTACK (was this intended, or was it supposed to be put above?)
 
-					if (sd && index >= 0 &&
-						sd->inventory_data[index] &&
-						sd->inventory_data[index]->type == IT_WEAPON)
-						ATK_ADD(sd->inventory_data[index]->weight * 7 / 100);
+				if (sd && index >= 0 &&
+					sd->inventory_data[index] &&
+					sd->inventory_data[index]->type == IT_WEAPON)
+					ATK_ADD(sd->inventory_data[index]->weight * 7 / 100);
 
-					switch (tstatus->size) {
-						case SZ_SMALL: //Small: 115%
-							ATK_RATE(115);
-							break;
-						case SZ_BIG: //Large: 85%
-							ATK_RATE(85);
-					}
-					wd.damage = battle->calc_masteryfix(src, target, skill_id, skill_lv, wd.damage, wd.div_, 0, flag.weapon);
-					wd.damage = battle->calc_cardfix2(src, target, wd.damage, s_ele, nk, wd.flag);
+				switch (tstatus->size) {
+					case SZ_SMALL: //Small: 115%
+						ATK_RATE(115);
+						break;
+					case SZ_BIG: //Large: 85%
+						ATK_RATE(85);
 				}
-				FALLTHROUGH
+				wd.damage = battle->calc_masteryfix(src, target, skill_id, skill_lv, wd.damage, wd.div_, 0, flag.weapon);
+				wd.damage = battle->calc_cardfix2(src, target, wd.damage, s_ele, nk, wd.flag);
+				ATK_RATE(battle->calc_skillratio(BF_WEAPON, src, target, skill_id, skill_lv, skillratio, wflag));
+			}
+				break;
+
 	#endif
 			default:
 				ATK_RATE(battle->calc_skillratio(BF_WEAPON, src, target, skill_id, skill_lv, skillratio, wflag));
+				break;
 		}
 
 			//Constant/misc additions from skills
