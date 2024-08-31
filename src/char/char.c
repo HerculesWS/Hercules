@@ -5329,7 +5329,7 @@ static int char_send_accounts_tologin(int tid, int64 tick, int id, intptr_t data
 		p->packetLength = sizeof(struct PACKET_CHARLOGIN_ONLINE_ACCOUNTS) + sizeof(*p->accounts) * i;
 		p->list_length = i;
 
-		WFIFOSET(chr->login_fd, len);
+		WFIFOSET(chr->login_fd, p->packetLength);
 	}
 	return 0;
 }
