@@ -22,7 +22,7 @@ jobs:
     container:
       image: debian:unstable
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
