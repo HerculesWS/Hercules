@@ -577,8 +577,7 @@ prt_church,100,128,4	script	Bishop#w	1_M_PASTOR,{
 	if (!getpartnerid()) {
 		if (!$@wedding) {
 			if (wedding_sign == 1) {
-				getpartymember(getcharid(CHAR_ID_PARTY));
-				.@partymembercount = $@partymembercount;
+				.@partymembercount = getpartymember(getcharid(CHAR_ID_PARTY), PT_MEMBER_ACCID, .@temp);
 				if (.@partymembercount == 2) {
 					if (Sex == SEX_MALE) {
 						$@wedding = 1;
@@ -648,8 +647,7 @@ prt_church,100,128,4	script	Bishop#w	1_M_PASTOR,{
 		}
 		else if ($@wedding == 1) {
 			if (wedding_sign == 1) {
-				getpartymember(getcharid(CHAR_ID_PARTY));
-				.@partymembercount = $@partymembercount;
+				.@partymembercount = getpartymember(getcharid(CHAR_ID_PARTY), PT_MEMBER_ACCID, .@temp);
 				if (.@partymembercount == 2) {
 					if (Sex == SEX_FEMALE) {
 						if (strcharinfo(PC_NAME) == $@wed_bride$) {
