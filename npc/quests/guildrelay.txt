@@ -2527,8 +2527,7 @@
 					close;
 				}
 			}
-			getpartymember(getcharid(CHAR_ID_PARTY));
-			.@partymembercount = $@partymembercount;
+			.@partymembercount = getpartymember(getcharid(CHAR_ID_PARTY), PT_MEMBER_ACCID, .@temp);
 			.@partyleader = getpartyleader(getcharid(CHAR_ID_PARTY),2);
 			if (guildrelay_q == 91) {
 				if (.@partymembercount == 6) {

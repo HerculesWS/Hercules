@@ -946,9 +946,7 @@ moc_fild20,354,183,3	script	Continental Guard#01::MocConGuard	4_M_MOC_SOLDIER,3,
 			close;
 		case 2:
 			if ($@re_moc < 3) {
-				getpartymember(getcharid(CHAR_ID_PARTY));
-				.@partymembercount = $@partymembercount;
-				copyarray .@partymembername$[0],$@partymembername$[0],.@partymembercount;
+				.@partymembercount = getpartymember(getcharid(CHAR_ID_PARTY), PT_MEMBER_NAME, .@partymembername$);
 				while (.@partymembercount >= 0) {
 					.@name$ = .@partymembername$[.@partymembercount];
 					if (isloggedin(getcharid(CHAR_ID_ACCOUNT,.@name$))) {
@@ -1009,9 +1007,7 @@ moc_fild20,354,183,3	script	Continental Guard#01::MocConGuard	4_M_MOC_SOLDIER,3,
 		mes "[Continental Guard]";
 		mes "Ah, you're an adventurer working for the Continental Guard. Nice to meet you. Feel free to ask me if you need my assistance.";
 		next;
-		getpartymember(getcharid(CHAR_ID_PARTY));
-		.@partymembercount = $@partymembercount;
-		copyarray .@partymembername$[0],$@partymembername$[0],.@partymembercount;
+		.@partymembercount = getpartymember(getcharid(CHAR_ID_PARTY), PT_MEMBER_NAME, .@partymembername$);
 		while (.@partymembercount >= 0) {
 			.@name$ = .@partymembername$[.@partymembercount];
 			if (isloggedin(getcharid(CHAR_ID_ACCOUNT,.@name$))) {

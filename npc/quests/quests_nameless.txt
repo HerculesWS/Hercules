@@ -10177,8 +10177,7 @@ moc_fild18,108,116,0	script	#treasure	CLEAR_NPC,{
 		mes "protection to get the treasure.^000000";
 		next;
 		input(.@input$);
-		getpartymember(getcharid(CHAR_ID_PARTY));
-		.@partymembercount = $@partymembercount;
+		.@partymembercount = getpartymember(getcharid(CHAR_ID_PARTY), PT_MEMBER_ACCID, .@temp);
 		if (.@partymembercount > 1) {
 			if ((.@input$ == "OpenSesame" && treasure_nd == 9) || (.@input$ == "UnlockTreasure" && treasure_nd == 10)) {
 				mes "^3355FFThe Z Gang must have split";
