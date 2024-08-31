@@ -10128,44 +10128,76 @@ static BUILDIN(getguildinfo)
 
 /*==========================================
  * Get the information of the members of a guild by type.
- * getguildmember <guild_id>{,<type>};
- * @param guild_id: ID of guild
- * @param type:
- * 0 : name (default)
- * 1 : character ID
- * 2 : account ID
+ * getguildmember(<guild_id>, <type>, <array>);
  *------------------------------------------*/
 static BUILDIN(getguildmember)
 {
-	struct guild *g = NULL;
-	int j = 0;
+	struct map_session_data *sd = NULL;
+	struct guild *g = guild->search(script_getnum(st, 2));
+	enum guildmember_type type = script_getnum(st, 3);
+	struct script_data *data = script_getdata(st, 4);
+	const char *varname = reference_getname(data);
+	int id = reference_getid(data);
+	int num = 0;
 
-	g = guild->search(script_getnum(st,2));
+	if (!data_isreference(data) || reference_toconstant(data)) {
+		ShowError("buildin_getguildmember: Target argument is not a variable\n");
+		script->reportdata(data);
+		st->state = END;
+		return false;
+	}
+	
+	if (type < GD_MEMBER_NAME || type > GD_MEMBER_ACCID) {
+		ShowError("buildin_getguildmember: Invalid type argument\n");
+		script->reportdata(data);
+		st->state = END;
+		return false;
+	}
 
-	if (g) {
-		int i, type = 0;
+	if (!is_int_variable(varname) && (type == GD_MEMBER_CHARID || type == GD_MEMBER_ACCID)) {
+		ShowError("buildin_getguildmember: Target argument is not an int variable\n");
+		script->reportdata(data);
+		st->state = END;
+		return false;
+	}
 
-		if (script_hasdata(st,3))
-			type = script_getnum(st,3);
+	if (!is_string_variable(varname) && type == GD_MEMBER_NAME) {
+		ShowError("buildin_getguildmember: Target argument is not a string variable\n");
+		script->reportdata(data);
+		st->state = END;
+		return false;
+	}
 
-		for ( i = 0; i < MAX_GUILD; i++ ) {
-			if ( g->member[i].account_id ) {
+	if (not_server_variable(*varname)) {
+		sd = script->rid2sd(st);
+
+		if (sd == NULL) {
+			script_pushint(st, 0);
+			return true; // player variable but no player attached
+		}
+	}
+
+	if (g != NULL) {
+		for (int i = 0; i < MAX_GUILD; i++) {
+			if (g->member[i].account_id != 0) {
 				switch (type) {
-				case 2:
-					mapreg->setreg(reference_uid(script->add_variable("$@guildmemberaid"), j),g->member[i].account_id);
+				case GD_MEMBER_NAME:
+					script->set_reg(st, sd, reference_uid(id, num), varname, (const void *)h64BPTRSIZE(g->member[i].name), reference_getref(data));
 					break;
-				case 1:
-					mapreg->setreg(reference_uid(script->add_variable("$@guildmembercid"), j), g->member[i].char_id);
+				case GD_MEMBER_CHARID:
+					script->set_reg(st, sd, reference_uid(id, num), varname, (const void *)h64BPTRSIZE(g->member[i].char_id), reference_getref(data));
 					break;
-				default:
-					mapreg->setregstr(reference_uid(script->add_variable("$@guildmembername$"), j), g->member[i].name);
+				case GD_MEMBER_ACCID:
+					script->set_reg(st, sd, reference_uid(id, num), varname, (const void *)h64BPTRSIZE(g->member[i].account_id), reference_getref(data));
 					break;
 				}
-				j++;
+				num++;
 			}
 		}
 	}
-	mapreg->setreg(script->add_variable("$@guildmembercount"), j);
+
+	script_pushint(st, num);
+
 	return true;
 }
 
@@ -28903,7 +28935,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(getpartyname,"i"),
 		BUILDIN_DEF(getpartymember,"iir"),
 		BUILDIN_DEF(getpartyleader,"i?"),
-		BUILDIN_DEF(getguildmember,"i?"),
+		BUILDIN_DEF(getguildmember,"iir"),
 		BUILDIN_DEF(getguildinfo,"i?"),
 		BUILDIN_DEF(getguildonline, "i?"),
 		BUILDIN_DEF(strcharinfo,"i??"),
@@ -30155,7 +30187,12 @@ static void script_hardcoded_constants(void)
 	script->set_constant("SIEGE_TYPE_SE", SIEGE_TYPE_SE, false, false);
 	script->set_constant("SIEGE_TYPE_TE", SIEGE_TYPE_TE, false, false);
 
-	script->constdb_comment("partymember types");
+	script->constdb_comment("guildmember types");
+	script->set_constant("GD_MEMBER_NAME", GD_MEMBER_NAME, false, false);
+	script->set_constant("GD_MEMBER_CHARID", GD_MEMBER_CHARID, false, false);
+	script->set_constant("GD_MEMBER_ACCID", GD_MEMBER_ACCID, false, false);
+
+  script->constdb_comment("partymember types");
 	script->set_constant("PT_MEMBER_NAME", PT_MEMBER_NAME, false, false);
 	script->set_constant("PT_MEMBER_CHARID", PT_MEMBER_CHARID, false, false);
 	script->set_constant("PT_MEMBER_ACCID", PT_MEMBER_ACCID, false, false);
