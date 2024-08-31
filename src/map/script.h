@@ -619,6 +619,18 @@ enum script_hominfo_types {
 	HOMINFO_MAX
 };
 
+enum guildmember_type {
+	GD_MEMBER_NAME,
+	GD_MEMBER_CHARID,
+	GD_MEMBER_ACCID,
+};
+
+enum partymember_type {
+	PT_MEMBER_NAME,
+	PT_MEMBER_CHARID,
+	PT_MEMBER_ACCID,
+};
+
 /**
  * Structures
  **/

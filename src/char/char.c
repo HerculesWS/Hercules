@@ -50,6 +50,8 @@
 #include "common/HPM.h"
 #include "common/apipackets.h"
 #include "common/cbasetypes.h"
+#include "common/charloginpackets.h"
+#include "common/mapcharpackets.h"
 #include "common/chunked.h"
 #include "common/conf.h"
 #include "common/console.h"
@@ -203,12 +205,16 @@ static struct DBData char_create_online_char_data(union DBKey key, va_list args)
 	return DB->ptr2data(character);
 }
 
-static void char_set_account_online(int account_id)
+static void char_set_account_online(int account_id, bool standalone)
 {
-	WFIFOHEAD(chr->login_fd,6);
-	WFIFOW(chr->login_fd,0) = 0x272b;
-	WFIFOL(chr->login_fd,2) = account_id;
-	WFIFOSET(chr->login_fd,6);
+	WFIFOHEAD(chr->login_fd, sizeof(struct PACKET_CHARLOGIN_SET_ACCOUNT_ONLINE));
+	
+	struct PACKET_CHARLOGIN_SET_ACCOUNT_ONLINE *p = WFIFOP(chr->login_fd, 0);
+	p->packetType = HEADER_CHARLOGIN_SET_ACCOUNT_ONLINE;
+	p->account_id = account_id;
+	p->standalone = standalone ? 1 : 0;
+	
+	WFIFOSET(chr->login_fd, sizeof(*p));
 }
 
 static void char_set_account_offline(int account_id)
@@ -242,10 +248,10 @@ static void char_set_char_charselect(int account_id)
 	}
 
 	if (chr->login_fd > 0 && !sockt->session[chr->login_fd]->flag.eof)
-		chr->set_account_online(account_id);
+		chr->set_account_online(account_id, false);
 }
 
-static void char_set_char_online(bool is_initializing, int char_id, int account_id)
+static void char_set_char_online(bool is_initializing, int char_id, int account_id, bool standalone)
 {
 	struct online_char_data* character;
 	struct mmo_charstatus *cp;
@@ -279,7 +285,7 @@ static void char_set_char_online(bool is_initializing, int char_id, int account_
 
 	//Notify login server
 	if (chr->login_fd > 0 && !sockt->session[chr->login_fd]->flag.eof)
-		chr->set_account_online(account_id);
+		chr->set_account_online(account_id, standalone);
 }
 
 static void char_set_char_offline(int char_id, int account_id)
@@ -3274,7 +3280,7 @@ static void char_parse_frommap_save_character(int fd)
 	} else {
 		//This may be valid on char-server reconnection, when re-sending characters that already logged off.
 		ShowError("parse_from_map (save-char): Received data for non-existing/offline character (%d:%d).\n", aid, cid);
-		chr->set_char_online(false, cid, aid);
+		chr->set_char_online(false, cid, aid, false);
 	}
 
 	if (RFIFOB(fd,12)) {
@@ -3676,7 +3682,7 @@ static void char_parse_frommap_set_all_offline(int fd)
 
 static void char_parse_frommap_set_char_online(int fd)
 {
-	chr->set_char_online(false, RFIFOL(fd, 2), RFIFOL(fd, 6));
+	chr->set_char_online(false, RFIFOL(fd, 2), RFIFOL(fd, 6), false);
 	RFIFOSKIP(fd,10);
 }
 
@@ -3780,13 +3786,16 @@ static void char_parse_frommap_auth_request(int fd)
 	struct char_auth_node* node;
 	struct mmo_charstatus* cd;
 
-	int account_id  = RFIFOL(fd,2);
-	int char_id     = RFIFOL(fd,6);
-	int login_id1   = RFIFOL(fd,10);
-	char sex        = RFIFOB(fd,14);
-	uint32 ip       = ntohl(RFIFOL(fd,15));
-	char standalone = RFIFOB(fd, 19);
-	RFIFOSKIP(fd,20);
+	const struct PACKET_MAPCHAR_AUTH_REQ *p = RFIFOP(fd, 0);
+
+	int account_id   = p->account_id;
+	int char_id      = p->char_id;
+	int login_id1    = p->login_id1;
+	char sex         = p->sex;
+	uint32 ip        = ntohl(p->client_addr);
+	uint8 standalone = p->standalone;
+
+	RFIFOSKIP(fd, sizeof(struct PACKET_MAPCHAR_AUTH_REQ));
 
 	node = (struct char_auth_node*)idb_get(auth_db, account_id);
 	cd = (struct mmo_charstatus*)uidb_get(chr->char_db_,char_id);
@@ -3796,11 +3805,11 @@ static void char_parse_frommap_auth_request(int fd)
 		cd = (struct mmo_charstatus*)uidb_get(chr->char_db_,char_id);
 	}
 
-	if( core->runflag == CHARSERVER_ST_RUNNING && cd && standalone ) {
+	if (core->runflag == CHARSERVER_ST_RUNNING && cd != NULL && standalone != 0) {
 		cd->sex = sex;
 
 		chr->map_auth_ok(fd, account_id, NULL, cd);
-		chr->set_char_online(false, char_id, account_id);
+		chr->set_char_online(false, char_id, account_id, true);
 		return;
 	}
 
@@ -3819,7 +3828,7 @@ static void char_parse_frommap_auth_request(int fd)
 		chr->map_auth_ok(fd, account_id, node, cd);
 		// only use the auth once and mark user online
 		idb_remove(auth_db, account_id);
-		chr->set_char_online(false, char_id, account_id);
+		chr->set_char_online(false, char_id, account_id, (standalone != 0));
 	}
 	else
 	{// auth failed
@@ -4039,8 +4048,8 @@ static int char_parse_frommap(int fd)
 				chr->parse_frommap_ping(fd);
 			break;
 
-			case 0x2b26: // auth request from map-server
-				if (RFIFOREST(fd) < 20)
+			case HEADER_MAPCHAR_AUTH_REQ: // auth request from map-server
+				if (RFIFOREST(fd) < sizeof(struct PACKET_MAPCHAR_AUTH_REQ))
 					return 0;
 
 			{
@@ -4575,7 +4584,7 @@ static void char_parse_char_select(int fd, struct char_session_data *sd, uint32 
 	}
 
 	/* set char as online prior to loading its data so 3rd party applications will realize the sql data is not reliable */
-	chr->set_char_online(true, char_id, sd->account_id);
+	chr->set_char_online(true, char_id, sd->account_id, false);
 	loginif->set_char_online(char_id, sd->account_id);
 	if (!chr->mmo_char_fromsql(char_id, &char_dat, true)) { /* failed? set it back offline */
 		chr->set_char_offline(char_id, sd->account_id);
@@ -5298,10 +5307,11 @@ static int char_send_accounts_tologin_sub(union DBKey key, struct DBData *data, 
 {
 	struct online_char_data* character = DB->data2ptr(data);
 	int* i = va_arg(ap, int*);
+	int* accounts = va_arg(ap, int *);
 
 	nullpo_ret(character);
 	if (character->mapserver_connection == OCS_CONNECTED) {
-		WFIFOL(chr->login_fd,8+(*i)*4) = character->account_id;
+		accounts[*i] = character->account_id;
 		(*i)++;
 		return 1;
 	}
@@ -5310,18 +5320,24 @@ static int char_send_accounts_tologin_sub(union DBKey key, struct DBData *data, 
 
 static int char_send_accounts_tologin(int tid, int64 tick, int id, intptr_t data)
 {
-	if (chr->login_fd > 0 && sockt->session[chr->login_fd])
-	{
+	if (chr->login_fd > 0 && sockt->session[chr->login_fd] != NULL) {
 		// send account list to login server
 		int users = chr->online_char_db->size(chr->online_char_db);
 		int i = 0;
 
-		WFIFOHEAD(chr->login_fd,8+users*4);
-		WFIFOW(chr->login_fd,0) = 0x272d;
-		chr->online_char_db->foreach(chr->online_char_db, chr->send_accounts_tologin_sub, &i, users);
-		WFIFOW(chr->login_fd,2) = 8+ i*4;
-		WFIFOL(chr->login_fd,4) = i;
-		WFIFOSET(chr->login_fd,WFIFOW(chr->login_fd,2));
+		struct PACKET_CHARLOGIN_ONLINE_ACCOUNTS *p;
+		int len = sizeof(struct PACKET_CHARLOGIN_ONLINE_ACCOUNTS) + sizeof(*p->accounts) * users;
+
+		WFIFOHEAD(chr->login_fd, len);
+		p = WFIFOP(chr->login_fd, 0);
+		p->packetType = HEADER_CHARLOGIN_ONLINE_ACCOUNTS;
+
+		chr->online_char_db->foreach(chr->online_char_db, chr->send_accounts_tologin_sub, &i, p->accounts);
+
+		p->packetLength = sizeof(struct PACKET_CHARLOGIN_ONLINE_ACCOUNTS) + sizeof(*p->accounts) * i;
+		p->list_length = i;
+
+		WFIFOSET(chr->login_fd, p->packetLength);
 	}
 	return 0;
 }

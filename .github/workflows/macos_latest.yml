@@ -7,13 +7,13 @@ env:
   MYSQL_USER: 'ragnarok'
   MYSQL_PASSWORD: 'ragnarok'
   MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
-  MACOS_COMMON_PACKAGES: make zlib pcre mysql mysql-client mysql-connector-c
+  MACOS_COMMON_PACKAGES: make zlib pcre mysql mysql-client
   SQLHOST: 'localhost'
 
 jobs:
   build:
     runs-on: macos-latest
-    timeout-minutes: 60
+    timeout-minutes: 30
     strategy:
       matrix:
         CC: [clang]

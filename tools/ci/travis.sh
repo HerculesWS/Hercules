@@ -144,27 +144,32 @@ case "$MODE" in
 		;;
 esac
 
+SSL_ARG=""
+if [[ $(mysql --version) =~ "MariaDB" ]]; then
+	SSL_ARG="--ssl=0"
+fi
+
 case "$MODE" in
 	createdb)
 		echo "Creating database $DBNAME as $DBUSER..."
-		mysql $DBUSER_ARG $DBPASS_ARG $DBHOST_ARG --execute="CREATE DATABASE $DBNAME;" || aborterror "Unable to create database."
+		mysql $DBUSER_ARG $DBPASS_ARG $DBHOST_ARG $SSL_ARG --execute="CREATE DATABASE $DBNAME;" || aborterror "Unable to create database."
 		;;
 	importdb)
 		echo "Importing tables into $DBNAME as $DBUSER..."
-		mysql $DBUSER_ARG $DBPASS_ARG $DBHOST_ARG --database=$DBNAME < sql-files/main.sql || aborterror "Unable to import main database."
-		mysql $DBUSER_ARG $DBPASS_ARG $DBHOST_ARG --database=$DBNAME < sql-files/logs.sql || aborterror "Unable to import logs database."
+		mysql $DBUSER_ARG $DBPASS_ARG $DBHOST_ARG $SSL_ARG --database=$DBNAME < sql-files/main.sql || aborterror "Unable to import main database."
+		mysql $DBUSER_ARG $DBPASS_ARG $DBHOST_ARG $SSL_ARG --database=$DBNAME < sql-files/logs.sql || aborterror "Unable to import logs database."
 		;;
 	adduser)
 		echo "Adding user $NEWUSER as $DBUSER, with access to database $DBNAME..."
-		mysql $DBUSER_ARG $DBPASS_ARG $DBHOST_ARG --execute="GRANT SELECT,INSERT,UPDATE,DELETE ON $DBNAME.* TO '$NEWUSER'@'$DBHOST' IDENTIFIED BY '$NEWPASS';" || true
-		mysql $DBUSER_ARG $DBPASS_ARG $DBHOST_ARG --execute="CREATE USER '$NEWUSER'@'$DBHOST' IDENTIFIED BY '$NEWPASS';" || true
-		mysql $DBUSER_ARG $DBPASS_ARG $DBHOST_ARG --execute="GRANT SELECT,INSERT,UPDATE,DELETE ON $DBNAME.* TO '$NEWUSER'@'$DBHOST';" || true
-		mysql $DBUSER_ARG $DBPASS_ARG $DBHOST_ARG --execute="ALTER USER '$NEWUSER'@'$DBHOST' IDENTIFIED BY '$NEWPASS';" || true
+		mysql $DBUSER_ARG $DBPASS_ARG $DBHOST_ARG $SSL_ARG --execute="GRANT SELECT,INSERT,UPDATE,DELETE ON $DBNAME.* TO '$NEWUSER'@'$DBHOST' IDENTIFIED BY '$NEWPASS';" || true
+		mysql $DBUSER_ARG $DBPASS_ARG $DBHOST_ARG $SSL_ARG --execute="CREATE USER '$NEWUSER'@'$DBHOST' IDENTIFIED BY '$NEWPASS';" || true
+		mysql $DBUSER_ARG $DBPASS_ARG $DBHOST_ARG $SSL_ARG --execute="GRANT SELECT,INSERT,UPDATE,DELETE ON $DBNAME.* TO '$NEWUSER'@'$DBHOST';" || true
+		mysql $DBUSER_ARG $DBPASS_ARG $DBHOST_ARG $SSL_ARG --execute="ALTER USER '$NEWUSER'@'$DBHOST' IDENTIFIED BY '$NEWPASS';" || true
 
 		if [[ -n "$(uname -a | grep -i linux)" ]]; then
-			mysql --defaults-file=/etc/mysql/debian.cnf $DBPASS_ARG $DBHOST_ARG --execute="CREATE USER '$NEWUSER'@'$DBHOST' IDENTIFIED BY '$NEWPASS';" || true
-			mysql --defaults-file=/etc/mysql/debian.cnf $DBPASS_ARG $DBHOST_ARG --execute="GRANT SELECT,INSERT,UPDATE,DELETE ON $DBNAME.* TO '$NEWUSER'@'$DBHOST';" || true
-			mysql --defaults-file=/etc/mysql/debian.cnf $DBPASS_ARG $DBHOST_ARG --execute="ALTER USER '$NEWUSER'@'$DBHOST' IDENTIFIED BY '$NEWPASS';" || true
+			mysql --defaults-file=/etc/mysql/debian.cnf $DBPASS_ARG $DBHOST_ARG $SSL_ARG --execute="CREATE USER '$NEWUSER'@'$DBHOST' IDENTIFIED BY '$NEWPASS';" || true
+			mysql --defaults-file=/etc/mysql/debian.cnf $DBPASS_ARG $DBHOST_ARG $SSL_ARG --execute="GRANT SELECT,INSERT,UPDATE,DELETE ON $DBNAME.* TO '$NEWUSER'@'$DBHOST';" || true
+			mysql --defaults-file=/etc/mysql/debian.cnf $DBPASS_ARG $DBHOST_ARG $SSL_ARG --execute="ALTER USER '$NEWUSER'@'$DBHOST' IDENTIFIED BY '$NEWPASS';" || true
 		fi
 		;;
 	build)

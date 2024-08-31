@@ -5524,6 +5524,12 @@ struct {
 	struct HPMHookPoint *HP_pc_auto_exp_insurance_post;
 	struct HPMHookPoint *HP_pc_crimson_marker_clear_pre;
 	struct HPMHookPoint *HP_pc_crimson_marker_clear_post;
+	struct HPMHookPoint *HP_pc_is_own_skill_pre;
+	struct HPMHookPoint *HP_pc_is_own_skill_post;
+	struct HPMHookPoint *HP_pc_clear_existing_cloneskill_pre;
+	struct HPMHookPoint *HP_pc_clear_existing_cloneskill_post;
+	struct HPMHookPoint *HP_pc_clear_existing_reproduceskill_pre;
+	struct HPMHookPoint *HP_pc_clear_existing_reproduceskill_post;
 	struct HPMHookPoint *HP_libpcre_compile_pre;
 	struct HPMHookPoint *HP_libpcre_compile_post;
 	struct HPMHookPoint *HP_libpcre_study_pre;
@@ -13115,6 +13121,12 @@ struct {
 	int HP_pc_auto_exp_insurance_post;
 	int HP_pc_crimson_marker_clear_pre;
 	int HP_pc_crimson_marker_clear_post;
+	int HP_pc_is_own_skill_pre;
+	int HP_pc_is_own_skill_post;
+	int HP_pc_clear_existing_cloneskill_pre;
+	int HP_pc_clear_existing_cloneskill_post;
+	int HP_pc_clear_existing_reproduceskill_pre;
+	int HP_pc_clear_existing_reproduceskill_post;
 	int HP_libpcre_compile_pre;
 	int HP_libpcre_compile_post;
 	int HP_libpcre_study_pre;

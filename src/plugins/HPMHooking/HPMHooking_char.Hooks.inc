@@ -719,14 +719,14 @@ struct DBData HP_chr_create_online_char_data(union DBKey key, va_list args) {
 	}
 	return retVal___;
 }
-void HP_chr_set_account_online(int account_id) {
+void HP_chr_set_account_online(int account_id, bool standalone) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_chr_set_account_online_pre > 0) {
-		void (*preHookFunc) (int *account_id);
+		void (*preHookFunc) (int *account_id, bool *standalone);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_chr_set_account_online_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_chr_set_account_online_pre[hIndex].func;
-			preHookFunc(&account_id);
+			preHookFunc(&account_id, &standalone);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -734,13 +734,13 @@ void HP_chr_set_account_online(int account_id) {
 		}
 	}
 	{
-		HPMHooks.source.chr.set_account_online(account_id);
+		HPMHooks.source.chr.set_account_online(account_id, standalone);
 	}
 	if (HPMHooks.count.HP_chr_set_account_online_post > 0) {
-		void (*postHookFunc) (int account_id);
+		void (*postHookFunc) (int account_id, bool standalone);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_chr_set_account_online_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_chr_set_account_online_post[hIndex].func;
-			postHookFunc(account_id);
+			postHookFunc(account_id, standalone);
 		}
 	}
 	return;
@@ -797,14 +797,14 @@ void HP_chr_set_char_charselect(int account_id) {
 	}
 	return;
 }
-void HP_chr_set_char_online(bool is_initializing, int char_id, int account_id) {
+void HP_chr_set_char_online(bool is_initializing, int char_id, int account_id, bool standalone) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_chr_set_char_online_pre > 0) {
-		void (*preHookFunc) (bool *is_initializing, int *char_id, int *account_id);
+		void (*preHookFunc) (bool *is_initializing, int *char_id, int *account_id, bool *standalone);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_chr_set_char_online_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_chr_set_char_online_pre[hIndex].func;
-			preHookFunc(&is_initializing, &char_id, &account_id);
+			preHookFunc(&is_initializing, &char_id, &account_id, &standalone);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -812,13 +812,13 @@ void HP_chr_set_char_online(bool is_initializing, int char_id, int account_id) {
 		}
 	}
 	{
-		HPMHooks.source.chr.set_char_online(is_initializing, char_id, account_id);
+		HPMHooks.source.chr.set_char_online(is_initializing, char_id, account_id, standalone);
 	}
 	if (HPMHooks.count.HP_chr_set_char_online_post > 0) {
-		void (*postHookFunc) (bool is_initializing, int char_id, int account_id);
+		void (*postHookFunc) (bool is_initializing, int char_id, int account_id, bool standalone);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_chr_set_char_online_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_chr_set_char_online_post[hIndex].func;
-			postHookFunc(is_initializing, char_id, account_id);
+			postHookFunc(is_initializing, char_id, account_id, standalone);
 		}
 	}
 	return;

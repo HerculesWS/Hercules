@@ -3000,56 +3000,25 @@ Lets say the ID of a party was saved as a global variable:
 
 ---------------------------------------
 
-*getpartymember(<party id>{, <type>})
+*getpartymember(<party_id>, <type>, <array>)
 
-This command will find all members of a specified party and returns their
-names (or character id or account id depending on the value of "type")
-into an array of temporary global variables. There's actually quite a few
-commands like this which will fill a special variable with data upon
-execution and not do anything else.
+This command will find all members of a specified <party_id>, copy their
+names (or character id or account id) depending on the <type> into <array>
+and returns the number of party members that were found.
 
-Upon executing this,
+Valid <type> are:
 
-$@partymembername$[] is a global temporary string array which contains all
-                     the names of these party members.
-                     (only set when type is 0 or not specified)
+	PT_MEMBER_NAME		- Party member names
+	PT_MEMBER_CHARID	- Party member character ID
+	PT_MEMBER_ACCID		- Party member account ID
 
-$@partymembercid[]   is a global temporary number array which contains the
-                     character id of these party members.
-                     (only set when type is 1)
+Make sure to use string variable for PT_MEMBER_NAME and
+int variable for PT_MEMBER_CHARID and PT_MEMBER_ACCID
 
-$@partymemberaid[]   is a global temporary number array which contains the
-                     account id of these party members.
-                     (only set when type is 2)
-
-$@partymembercount   is the number of party members that were found.
-
-The party members will (apparently) be found regardless of whether they
-are online or offline. Note that the names come in no particular order.
-
-Be sure to use $@partymembercount to go through this array, and not
-'getarraysize', because it is not cleared between runs of 'getpartymember'.
-If someone with 7 party members invokes this script, the array would have
-7 elements. But if another person calls up the NPC, and he has a party of
-5, the server will not clear the array for you, overwriting the values
-instead. So in addition to returning the 5 member names, the 6th and 7th
-elements from the last call remain, and you will get 5+2 members, of which
-the last 2 don't belong to the new guy's party. $@partymembercount will
-always contain the correct number, (5) unlike 'getarraysize()' which will
-return 7 in this case.
-
-Example 1: list party member names
+Example 1: Listing party member names
 
 	// get the party member names
-	getpartymember(getcharid(CHAR_ID_PARTY), 0);
-
-	// It's a good idea to copy the global temporary $@partymember*****
-	// variables to your own scope variables because if you have pauses in
-	// this script (sleep, sleep2, next, close2, input, menu, select, or
-	// prompt), another player could click this NPC, trigger
-	// 'getpartymember', and overwrite the $@partymember***** variables.
-	.@count = $@partymembercount;
-	copyarray(.@name$[0], $@partymembername$[0], $@partymembercount);
+	.@count = getpartymember(getcharid(CHAR_ID_PARTY), PT_MEMBER_NAME, .@name$);
 
 	// list the party member names
 	for (.@i = 0; .@i < .@count; ++.@i) {
@@ -3057,61 +3026,19 @@ Example 1: list party member names
 	}
 	close();
 
-
-Example 2: check party count (with a next() pause), before warping to event
-
-	.register_num = 5; // How many party members are required?
+Example 2: Get online count
 
 	// get the charID and accountID of character's party members
-	getpartymember(getcharid(CHAR_ID_PARTY), 1);
-	getpartymember(getcharid(CHAR_ID_PARTY), 2);
+	// we only need to count the member once so we assign that
+	// to the our second command call
+	getpartymember(getcharid(CHAR_ID_PARTY), PT_MEMBER_CHARID, .@charid);
+	.@count = getpartymember(getcharid(CHAR_ID_PARTY), PT_MEMBER_ACCID, .@accid);
 
-	if ($@partymembercount != .register_num) {
-		mes("Please form a party of "+ .register_num +" to continue");
-		close();
-	}
-
-	// loop through both and use 'isloggedin' to count online party members
-	for (.@i = 0; .@i < $@partymembercount; ++.@i)
-		if (isloggedin($@partymemberaid[.@i], $@partymembercid[.@i]))
+	for (.@i = 0; .@i < .@count; ++.@i) {
+		if (isloggedin(.@accid[.@i], .@charid[.@i]))
 			.@count_online++;
-	// We search accountID & charID because a single party can have
-	// multiple characters from the same account. Without searching
-	// through the charID, if a player has 2 characters from the same
-	// account inside the party but only 1 char online, it would count
-	// their online char twice.
-
-	if (.@count_online != .register_num) {
-		mes("All your party members must be online to continue");
-		close();
 	}
-
-	// copy the array to prevent players cheating the system
-	copyarray(.@partymembercid, $@partymembercid, .register_num);
-
-	mes("Are you ready?");
-	next(); // careful here
-	select("Yes");
-
-	// When a script hits a next, menu, sleep or input that pauses the
-	// script, players can invite or /leave and make changes in their
-	// party. To prevent this, we call getpartymember again and compare
-	// with the original values.
-
-	getpartymember(getcharid(CHAR_ID_PARTY), 1);
-	if ($@partymembercount != .register_num) {
-		mes("You've made changes to your party !");
-		close();
-	}
-	for (.@i = 0; .@i < $@partymembercount; ++.@i) {
-		if (.@partymembercid[.@i] != $@partymembercid[.@i]) {
-			mes("You've made changes to your party !");
-			close();
-		}
-	}
-
-	// Finally, it's safe to start the event!
-	warpparty("event_map", 0, 0, getcharid(CHAR_ID_PARTY), true);
+	end;
 
 ---------------------------------------
 
@@ -4220,33 +4147,23 @@ Example:
 
 ---------------------------------------
 
-*getguildmember(<guild id>{, <type>});
+*getguildmember(<guild id>, <type>, <array>);
 
-This command will find all members of a specified guild and returns their names
-(or character id or account id depending on the value of "type") into an array
-of temporary global variables.
+This command will find all members of a specified <guild_id>, copy their
+names (or character id or account id) depending on the <type> into <array>
+and returns the number of guild members that were found.
 
-Upon executing this,
+Valid <type> are:
 
-$@guildmembername$[] is a global temporary string array which contains all the
-                     names of these guild members.
-                     (only set when type is 0 or not specified)
-
-$@guildmembercid[]   is a global temporary number array which contains the
-                     character id of these guild members.
-                     (only set when type is 1)
-
-$@guildmemberaid[]   is a global temporary number array which contains the
-                     account id of these guild members.
-                     (only set when type is 2)
-
-$@guildmembercount   is the number of guild members that were found.
+	GD_MEMBER_NAME		- Guild member names
+	GD_MEMBER_CHARID	- Guild member character ID
+	GD_MEMBER_ACCID		- Guild member account ID
 
 The guild members will be found regardless of whether they are online or offline.
-Note that the names come in no particular order.
+Note that the results come in no particular order.
 
-Be sure to use $@guildmembercount to go through this array, and not
-getarraysize(), because it is not cleared between runs of getguildmember().
+Make sure to use string variable for GD_MEMBER_NAME and
+int variable for GD_MEMBER_CHARID and GD_MEMBER_ACCID
 
 For usage examples, see getpartymember().
 

@@ -34,8 +34,7 @@
 //=========================================================================
 
 payon,103,113,3	script	Ledrion#payon::RelayLedrion	4_M_MANAGER,{
-	getpartymember(getcharid(CHAR_ID_PARTY));
-	.@partymembercount = $@partymembercount;
+	.@partymembercount = getpartymember(getcharid(CHAR_ID_PARTY), PT_MEMBER_ACCID, .@temp);
 	.@partyleader = getpartyleader(getcharid(CHAR_ID_PARTY),2);
 	if (checkweight(Resin,300) == 0) {
 		mes "^3355FFWait a minute! You're";
@@ -402,8 +401,7 @@ payon,103,113,3	script	Ledrion#payon::RelayLedrion	4_M_MANAGER,{
 }
 
 payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
-	getpartymember(getcharid(CHAR_ID_PARTY));
-	.@partymembercount = $@partymembercount;
+	.@partymembercount = getpartymember(getcharid(CHAR_ID_PARTY), PT_MEMBER_ACCID, .@temp);
 	.@partyleader = getpartyleader(getcharid(CHAR_ID_PARTY),2);
 	if (checkweight(Resin,300) == 0) {
 		mes "^3355FFWait a minute! You're";
@@ -1837,8 +1835,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 }
 
 payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
-	getpartymember(getcharid(CHAR_ID_PARTY));
-	.@partymembercount = $@partymembercount;
+	.@partymembercount = getpartymember(getcharid(CHAR_ID_PARTY), PT_MEMBER_ACCID, .@temp);
 	.@partyleader = getpartyleader(getcharid(CHAR_ID_PARTY),2);
 	if (checkweight(Resin,300) == 0) {
 		mes "^3355FFWait a minute! You're";
@@ -2470,8 +2467,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 }
 
 payon,168,314,3	script	Lospii#payon::RelayLospii	4_M_KID1,{
-	getpartymember(getcharid(CHAR_ID_PARTY));
-	.@partymembercount = $@partymembercount;
+	.@partymembercount = getpartymember(getcharid(CHAR_ID_PARTY), PT_MEMBER_ACCID, .@temp);
 	.@partyleader = getpartyleader(getcharid(CHAR_ID_PARTY),2);
 	if (checkweight(Resin,300) == 0) {
 		mes "^3355FFWait a minute! You're";

@@ -3,7 +3,6 @@
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
  * Copyright (C) 2012-2024 Hercules Dev Team
- * Copyright (C) 2020-2022 Andrei Karas (4144)
  * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -19,8 +18,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef COMMON_CHARMAPPACKETS_H
-#define COMMON_CHARMAPPACKETS_H
+#ifndef COMMON_CHARLOGINPACKETS_H
+#define COMMON_CHARLOGINPACKETS_H
+
+// Packets sent by Char-Server to Login-Server
 
 #include "common/hercules.h"
 #include "common/packetsmacro.h"
@@ -30,46 +31,23 @@
 #pragma pack(push, 1)
 #endif // not NetBSD < 6 / Solaris
 
-struct PACKET_CHARMAP_AGENCY_JOIN_PARTY {
+struct PACKET_CHARLOGIN_SET_ACCOUNT_ONLINE {
 	int16 packetType;
-	int char_id;
-	int result;
+	int account_id;
+	uint8 standalone; // 0 - real player (false) / 1 - standalone/server generated (true)
 } __attribute__((packed));
+DEFINE_PACKET_ID(CHARLOGIN_SET_ACCOUNT_ONLINE, 0x272b)
 
-struct PACKET_CHARMAP_GUILD_EMBLEM {
+struct PACKET_CHARLOGIN_ONLINE_ACCOUNTS {
 	int16 packetType;
 	uint16 packetLength;
-	int guild_id;
-	int emblem_id;
-	uint8 flag;
-	char data[];
+	uint32 list_length;
+	int accounts[];
 } __attribute__((packed));
-DEFINE_PACKET_ID(CHARMAP_GUILD_EMBLEM, 0x383f)
-
-struct PACKET_CHARMAP_GUILD_INFO_EMPTY {
-	int16 packetType;
-	uint16 packetLength;
-	int guild_id;
-} __attribute__((packed));
-struct PACKET_CHARMAP_GUILD_INFO {
-	int16 packetType;
-	uint16 packetLength;
-	struct guild g;
-};
-DEFINE_PACKET_ID(CHARMAP_GUILD_INFO, 0x3831)
-
-struct PACKET_CHARMAP_GUILD_INFO_EMBLEM {
-	int16 packetType;
-	uint16 packetLength;
-	int guild_id;
-	int emblem_id;
-	uint8 flag;
-	char data[];
-} __attribute__((packed));
-DEFINE_PACKET_ID(CHARMAP_GUILD_INFO_EMBLEM, 0x389c)
+DEFINE_PACKET_ID(CHARLOGIN_ONLINE_ACCOUNTS, 0x272d)
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
 
-#endif /* COMMON_CHARMAPPACKETS_H */
+#endif /* COMMON_CHARLOGINPACKETS_H */

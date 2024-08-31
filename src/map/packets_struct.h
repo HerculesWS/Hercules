@@ -26,6 +26,7 @@
 #include "common/cbasetypes.h"
 #include "common/mmo.h"
 #include "common/packetsstatic_len.h"
+#include "common/packetsmacro.h"
 
 // Packet DB
 #define MAX_PACKET_POS 20
