@@ -12,7 +12,7 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 30
     strategy:
       matrix:
         # gcc, clang-8, clang-9 removed for reduce number of jobs
@@ -58,7 +58,7 @@ jobs:
       CC: ${{ matrix.CC }}
       CONFIGURE_FLAGS: CC=${{ matrix.CC }} --enable-debug --enable-Werror --enable-buildbot ${{ matrix.RENEWAL }} ${{ matrix.HTTPLIB }} ${{ matrix.CLIENT_TYPE }} ${{ matrix.SANITIZER }} ${{ matrix.PACKET_VERSION }} --enable-epoll
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
