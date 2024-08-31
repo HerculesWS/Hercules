@@ -11,7 +11,7 @@ env:
 jobs:
   build:
     runs-on: windows-latest
-    timeout-minutes: 60
+    timeout-minutes: 30
     strategy:
       matrix:
         CC: [msbuild]
