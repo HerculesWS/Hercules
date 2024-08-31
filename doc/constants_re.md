@@ -5025,6 +5025,13 @@
 
 - `MAX_ITEM_OPTIONS`: 5
 
+### Navigation mode constants, use with *mesnavigation*
+
+- `NAV_MODE_ALL`: 0
+- `NAV_MODE_MAP`: 1
+- `NAV_MODE_NPC`: 2
+- `NAV_MODE_MOB`: 3
+
 ### Navigation constants, use with *navigateto*
 
 - `NAV_NONE`: 0
@@ -5035,6 +5042,7 @@
 - `NAV_KAFRA_AND_AIRSHIP`: 101
 - `NAV_KAFRA_AND_SCROLL`: 110
 - `NAV_ALL`: 111
+- `NAV_WINDOW_SEARCH`: -222
 
 ### BL types
 
