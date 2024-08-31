@@ -5568,6 +5568,12 @@
 - `SIEGE_TYPE_SE`: 1
 - `SIEGE_TYPE_TE`: 2
 
+### guildmember types
+
+- `GD_MEMBER_NAME`: 0
+- `GD_MEMBER_CHARID`: 1
+- `GD_MEMBER_ACCID`: 2
+
 ### partymember types
 
 - `PT_MEMBER_NAME`: 0
