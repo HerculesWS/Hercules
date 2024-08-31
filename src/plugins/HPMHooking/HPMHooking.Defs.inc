@@ -7546,6 +7546,12 @@ typedef bool (*HPMHOOK_pre_pc_auto_exp_insurance) (struct map_session_data **sd)
 typedef bool (*HPMHOOK_post_pc_auto_exp_insurance) (bool retVal___, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_pc_crimson_marker_clear) (struct map_session_data **sd);
 typedef void (*HPMHOOK_post_pc_crimson_marker_clear) (struct map_session_data *sd);
+typedef bool (*HPMHOOK_pre_pc_is_own_skill) (struct map_session_data **sd, uint16 *skill_id);
+typedef bool (*HPMHOOK_post_pc_is_own_skill) (bool retVal___, struct map_session_data *sd, uint16 skill_id);
+typedef void (*HPMHOOK_pre_pc_clear_existing_cloneskill) (struct map_session_data **sd, bool *clear_vars);
+typedef void (*HPMHOOK_post_pc_clear_existing_cloneskill) (struct map_session_data *sd, bool clear_vars);
+typedef void (*HPMHOOK_pre_pc_clear_existing_reproduceskill) (struct map_session_data **sd, bool *clear_vars);
+typedef void (*HPMHOOK_post_pc_clear_existing_reproduceskill) (struct map_session_data *sd, bool clear_vars);
 #endif // MAP_PC_H
 #ifdef MAP_NPC_H /* libpcre */
 typedef pcre* (*HPMHOOK_pre_libpcre_compile) (const char **pattern, int *options, const char ***errptr, int **erroffset, const unsigned char **tableptr);
