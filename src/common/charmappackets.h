@@ -23,6 +23,7 @@
 #define COMMON_CHARMAPPACKETS_H
 
 #include "common/hercules.h"
+#include "common/packetsmacro.h"
 
 /* Packets Structs */
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
