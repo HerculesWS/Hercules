@@ -22,6 +22,45 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
+## [v2024.08] `August 2024`
+
+### Added
+
+### Changed
+
+- Converted packets `CHARLOGIN_ONLINE_ACCOUNTS`, `MAPCHAR_AUTH_REQ`, `CHARLOGIN_SET_ACCOUNT_ONLINE` to the struct format. (#3304, #3312, #3314)
+- Excluded the standalone (i.e. autotrader) characters from those sent to the API server. (#3314, issue #3306)
+- Changed the `getpartymember()` script command to avoid the use of global temporary variables. (#3305, #3307, #3308, #3315)
+  - The caller now specifies an array that will be filled with the requested data.
+  - The amount of filled entries will be returned as the command's return value. The caller should only read up to that amount of entries from the array, as it may contain previous leftover values past that point.
+  - Added constants for specifying the requested data: `PT_MEMBER_NAME`, `PT_MEMBER_CHARID`, `PT_MEMBER_ACCID`.
+  - See the script_commands documentation for further details.
+  - The included scripts have been updated with the new syntax.
+- Changed the `getguildmember()` script command to avoid the use of global temporary variables. (#3310, #3311, #3318)
+  - The caller now specifies an array that will be filled with the requested data.
+  - The amount of filled entries will be returned as the command's return value. The caller should only read up to that amount of entries from the array, as it may contain previous leftover values past that point.
+  - Added constants for specifying the requested data: `GD_MEMBER_NAME`, `GD_MEMBER_CHARID`, `GD_MEMBER_ACCID`.
+  - See the script_commands documentation for further details.
+- Reduced timeout for the GitHub Actions CI builds to 30 minutes, to prevent stuck jobs from stalling the entire pipeline for too many hours. (#3317)
+
+### Fixed
+
+- Fixed a packet reading error causing the list of online characters on char and login server to desynchronize and invalidate the API server tokens. (#3304)
+- Fixed CI builds failing due to the MariaDB client attempting to connect to the server with SSL. (#3313)
+- Fixed the hwsapi commits failing because of an expired GPG key.
+- Fixed HPMDataCheck containing incomplete data because of a missing include in the headers that use the `DEFINE_PACKET_ID` macro. (#3314)
+- Updated the mapcache entry for `iz_ac02` (renewal-only content) to a 2012 version compatible with the included scripts. (#3316, issue #2809)
+- Fixed deprecation warnings in the GitHub Actions CI builds caused by the use of unsupported nodejs v16 actions. The actions have been upgraded to their nodejs v20 versions as recommended by GitHub. (#3317)
+- Fixed a deprecation warning in the GitHub Actions macOS CI builds due to a packet that was renamed. (#3317)
+
+### Deprecated
+
+- Deprecated building on GCC versions older than 7. This has been the case for at least 4 months according to the Supported Platforms rules, but this is the official deprecation warning. Support macros and workarounds will be dropped from the code at some point in the future. (#3317)
+
+### Removed
+
+- Removed GitHub Actions workflows that don't support nodejs v20. This includes the test builds for gcc-4.8, gcc-5 and gcc-6, which have been unsupported by Hercules for at least 4 months. (#3317)
+
 ## [v2024.06] `June 2024`
 
 ### Added
@@ -3121,6 +3160,7 @@ Note: everything included in this release is part of PR #3198 which consists of 
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2024.08]: https://github.com/HerculesWS/Hercules/compare/v2024.06...v2024.08
 [v2024.06]: https://github.com/HerculesWS/Hercules/compare/v2024.05...v2024.06
 [v2024.05]: https://github.com/HerculesWS/Hercules/compare/v2024.04...v2024.05
 [v2024.04]: https://github.com/HerculesWS/Hercules/compare/v2024.03...v2024.04
