@@ -275,11 +275,11 @@ OnNPCKillEvent:
 	} else if (.Party) {
 		set .@mob, killedrid;
 		getmapxy(.@map1$, .@x1, .@y1, UNITTYPE_PC);
-		getpartymember getcharid(CHAR_ID_PARTY),1;
-		getpartymember getcharid(CHAR_ID_PARTY),2;
-		for(set .@i,0; .@i<$@partymembercount; set .@i,.@i+1) {
-			if (isloggedin($@partymemberaid[.@i], $@partymembercid[.@i])) {
-				attachrid $@partymemberaid[.@i];
+		getpartymember(getcharid(CHAR_ID_PARTY), PT_MEMBER_ACCID, .@accid);
+		.@count = getpartymember(getcharid(CHAR_ID_PARTY), PT_MEMBER_CHARID, .@charid);
+		for (.@i = 0; .@i < .@count; .@i++) {
+			if (isloggedin(.@accid[.@i], .@charid[.@i])) {
+				attachrid(.@accid[.@i]);
 				if (#Mission_Count && Mission0 && Hp > 0) {
 					getmapxy(.@map2$, .@x2, .@y2, UNITTYPE_PC);
 					if ((.@map1$ == .@map2$ || .Party == 1) && (distance(.@x1,.@y1,.@x2,.@y2) <= 30 || .Party < 3)) {
