@@ -5871,9 +5871,13 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 			){
 				int lv = sc->data[SC_AURABLADE]->val1;
 #ifdef RENEWAL
-				lv *= ((skill_id == LK_SPIRALPIERCE || skill_id == ML_SPIRALPIERCE)?wd.div_:1); // +100 per hit in lv 5
-#endif
+				if (skill_id == LK_SPIRALPIERCE || skill_id == ML_SPIRALPIERCE)
+					lv *= wd.div_; // +100 per hit in lv 5
+
+				ATK_ADD(sd->status.base_level * (lv + 3));
+#else
 				ATK_ADD(20*lv);
+#endif
 			}
 
 			if( !skill_id ) {
