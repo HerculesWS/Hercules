@@ -12284,36 +12284,87 @@ static BUILDIN(monster)
  *------------------------------------------*/
 static BUILDIN(getmobdrops)
 {
-	int class_ = script_getnum(st,2);
-	int i, j = 0;
-	struct mob_db *monster;
+	struct map_session_data *sd = NULL;
+	int mob_id = script_getnum(st, 2);
+	struct mob_db *monster = NULL;
+	struct script_data *data1 = script_getdata(st, 3);
+	struct script_data *data2 = NULL;
+	const char *varname1 = NULL;
+	const char *varname2 = NULL;
+	int varid1 = 0;
+	int varid2 = 0;
+	int num = 0;
 
-	if( !mob->db_checkid(class_) )
-	{
+	if (!data_isreference(data1) || reference_toconstant(data1)) {
+		ShowError("buildin_getmobdrops: Target argument must be a variable\n");
+		script->reportdata(data1);
+		st->state = END;
+		return false;
+	}
+
+	varname1 = reference_getname(data1);
+	varid1 = reference_getid(data1);
+
+	if (!is_int_variable(varname1)) {
+		ShowError("buildin_getmobdrops: Target argument must be an integer variable\n");
+		script->reportdata(data1);
+		st->state = END;
+		return false;
+	}
+
+	if (script_hasdata(st, 4)) {
+		data2 = script_getdata(st, 4);
+
+		if (!data_isreference(data2) || reference_toconstant(data2)) {
+			ShowError("buildin_getmobdrops: Target argument must be a variable\n");
+			script->reportdata(data1);
+			st->state = END;
+			return false;
+		}
+		
+		varname2 = reference_getname(data2);
+		varid2 = reference_getid(data2);
+
+		if (data2 == NULL || !is_int_variable(varname2)) {
+			ShowError("buildin_getmobdrops: 2nd target argument must be an integer variable\n");
+			script->reportdata(data2);
+			st->state = END;
+			return false;
+		}
+	}
+	
+	if (not_server_variable(*varname1) || (data2 != NULL && not_server_variable(*varname2))) {
+		sd = script->rid2sd(st);
+		if (sd == NULL) {
+			script_pushint(st, 0);
+			return true; // player variable but no player attached
+		}
+	}
+
+	monster = mob->db(mob_id);
+
+	if (!mob->db_checkid(mob_id) || monster == NULL) {
 		script_pushint(st, 0);
 		return true;
 	}
 
-	monster = mob->db(class_);
-
-	for( i = 0; i < MAX_MOB_DROP; i++ )
-	{
-		if( monster->dropitem[i].nameid < 1 )
+	for (int i = 0; i < MAX_MOB_DROP; i++) {
+		if (monster->dropitem[i].nameid < 1)
 			continue;
-		if( itemdb->exists(monster->dropitem[i].nameid) == NULL )
+		if (itemdb->exists(monster->dropitem[i].nameid) == NULL)
 			continue;
 
-		mapreg->setreg(reference_uid(script->add_variable("$@MobDrop_item"), j), monster->dropitem[i].nameid);
-		mapreg->setreg(reference_uid(script->add_variable("$@MobDrop_rate"), j), monster->dropitem[i].p);
-
-		j++;
+		script->set_reg(st, sd, reference_uid(varid1, num), varname1, (const void *)h64BPTRSIZE(monster->dropitem[i].nameid), reference_getref(data1));
+		if (data2 != NULL)
+			script->set_reg(st, sd, reference_uid(varid2, num), varname2, (const void *)h64BPTRSIZE(monster->dropitem[i].p), reference_getref(data2));
+		num++;
 	}
 
-	mapreg->setreg(script->add_variable("$@MobDrop_count"), j);
-	script_pushint(st, 1);
+	script_pushint(st, num);
 
 	return true;
 }
+
 /*==========================================
  * Same as monster but randomize location in x0,x1,y0,y1 area
  *------------------------------------------*/
@@ -28996,7 +29047,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(produce,"i"),
 		BUILDIN_DEF(cooking,"i"),
 		BUILDIN_DEF(monster,"siisii???"),
-		BUILDIN_DEF(getmobdrops,"i"),
+		BUILDIN_DEF(getmobdrops,"ii?"),
 		BUILDIN_DEF(areamonster,"siiiisii???"),
 		BUILDIN_DEF(killmonster,"ss?"),
 		BUILDIN_DEF(killmonsterall,"s?"),
