@@ -1657,7 +1657,8 @@ static void pc_calc_skilltree_clear(struct map_session_data *sd)
 
 	for (i = 0; i < MAX_SKILL_DB; i++) {
 		if (sd->status.skill[i].flag == SKILL_FLAG_PLAGIARIZED || sd->status.skill[i].flag == SKILL_FLAG_PERM_GRANTED
-		    || sd->status.skill[i].id == sd->cloneskill_id || sd->status.skill[i].id == sd->reproduceskill_id) //Don't touch these
+		    || (sd->cloneskill_id != 0 && sd->status.skill[i].id == sd->cloneskill_id)
+			|| (sd->reproduceskill_id != 0 && sd->status.skill[i].id == sd->reproduceskill_id)) //Don't touch these
 			continue;
 		sd->status.skill[i].id = 0; //First clear skills.
 		/* permanent skills that must be re-checked */
@@ -1693,10 +1694,17 @@ static int pc_calc_skilltree(struct map_session_data *sd)
 	pc->calc_skilltree_clear(sd);
 
 	for (int i = 0; i < MAX_SKILL_DB; i++) {
-		if ((sd->status.skill[i].flag >= SKILL_FLAG_REPLACED_LV_0 && sd->status.skill[i].id != sd->cloneskill_id && sd->status.skill[i].id != sd->reproduceskill_id)
-		    || sd->status.skill[i].flag == SKILL_FLAG_TEMPORARY) {
+		if (sd->status.skill[i].flag >= SKILL_FLAG_REPLACED_LV_0) {
+			bool is_cloneskill = sd->cloneskill_id != 0 && sd->status.skill[i].id == sd->cloneskill_id;
+			bool is_reproduceskill = sd->reproduceskill_id != 0 && sd->status.skill[i].id == sd->reproduceskill_id;
+			if (is_cloneskill || is_reproduceskill)
+				continue; // Plagiarized and Reproduce Skills are kept.
+
 			// Restore original level of skills after deleting earned skills.
-			sd->status.skill[i].lv = (sd->status.skill[i].flag == SKILL_FLAG_TEMPORARY) ? 0 : sd->status.skill[i].flag - SKILL_FLAG_REPLACED_LV_0;
+			sd->status.skill[i].lv = sd->status.skill[i].flag - SKILL_FLAG_REPLACED_LV_0;
+			sd->status.skill[i].flag = SKILL_FLAG_PERMANENT;
+		} else if (sd->status.skill[i].flag == SKILL_FLAG_TEMPORARY) {
+			sd->status.skill[i].lv = 0;
 			sd->status.skill[i].flag = SKILL_FLAG_PERMANENT;
 		}
 	}
