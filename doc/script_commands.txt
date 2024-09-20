@@ -3101,6 +3101,37 @@ Examples:
 
 ---------------------------------------
 
+*getunitparam(<param type>{, <class>{, <maxlv array>, <value array>}})
+
+Thi will return the requested parameter's value or fill the required arrays in
+the case of UNIT_PARAM_MAX_HP.
+
+<param type>:
+- UNIT_PARAM_NAME                       ^= name of unit_parameters_db.conf entry used by class.
+- UNIT_PARAM_NATHEAL_WEIGHT_RATE        ^= NaturalHealWeightRate value
+- UNIT_PARAM_MAX_ASPD                   ^= MaxASPD
+- UNIT_PARAM_MAX_HP                     ^= MaxHP
+- UNIT_PARAM_MAX_STATS                  ^= MaxStats
+
+<class> can be -1 if attached players class is desired, such as in the case of UNIT_PARAM_MAX_HP,
+where <class> is mandatory.
+
+Examples:
+
+// Outputs the possible maximum ASPD of attached player.
+	mesf("MAX_ASPD: %d", getunitparam(UNIT_PARAM_MAX_ASPD));
+
+// Outputs the possible maximum stats of Job_Baby.
+	mesf("MAX_STATS: %d", getunitparam(UNIT_PARAM_MAX_STATS, Job_Baby));
+
+// Saves the entries for MAXHP per level ranges of JOB_SUPER_NOVICE into the given arrays and prints them.
+	.@count = getunitparam(UNIT_PARAM_MAX_ASPD, JOB_SUPER_NOVICE, .@max_lv, .@max_hp);
+	for (.@i = 0; .@i < .@count; ++.@i) {
+		mesf("max_lv: %d, max_hp: %d", .@max_lv[.@i], .@max_hp[.@i]);
+	}
+
+---------------------------------------
+
 *sit({"<character name>"})
 *stand({"<character name>"})
 
