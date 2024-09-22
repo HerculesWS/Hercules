@@ -451,6 +451,11 @@ static bool hplugins_addconf(unsigned int pluginID, enum HPluginConfType type, c
 		return false;
 	}
 
+	if (strnlen(name, HPM_ADDCONF_LENGTH) >= HPM_ADDCONF_LENGTH) {
+		ShowError("HPM->addConf:%s: config '%s' name/path is too long. Maximum is %d characters (see #define HPM_ADDCONF_LENGTH). Skipping it.\n", HPM->pid2name(pluginID), name, HPM_ADDCONF_LENGTH - 1);
+		return false;
+	}
+
 	ARR_FIND(0, VECTOR_LENGTH(HPM->config_listeners[type]), i, strcmpi(name, VECTOR_INDEX(HPM->config_listeners[type], i).key) == 0);
 	if (i != VECTOR_LENGTH(HPM->config_listeners[type])) {
 		ShowError("HPM->addConf:%s: duplicate '%s', already in use by '%s'!",
