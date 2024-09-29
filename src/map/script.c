@@ -28628,6 +28628,120 @@ static BUILDIN(mestipbox)
 	return true;
 }
 
+
+/**
+ * Returns a units <parameter>'s values
+ *
+ * NOTE: UNIT_PARAM_MAX_HP needs two arrays.
+ *
+ * getunitparam(<param>{, <class id>{, <maxlv array>, <value array>}})
+ */
+static BUILDIN(getunitparam)
+{
+	int class = -1;
+	if (script_hasdata(st, 3)) {
+		class = script_getnum(st, 3);
+		if (class != -1) {
+			if (!pc->db_checkid(class)) {
+				ShowError("buildin_getunitparam: invalid class (%d)\n", class);
+				st->state = END;
+				return false;
+			}
+			class = pc->class2idx(class);
+		}
+	}
+
+	struct map_session_data *sd = NULL;
+	if (class == -1) {
+		sd = script_rid2sd(st);
+		if (sd == NULL) {
+			ShowError("buildin_getunitparam: No player attached, but class == -1.\n");
+			return false;
+		}
+		class = pc->class2idx(sd->status.class);
+	}
+
+	struct s_unit_params *entry = status->dbs->unit_params[class];
+	int param = script_getnum(st, 2);
+	switch (param) {
+	case UNIT_PARAM_NAME:
+		script_pushconststr(st, entry->name);
+		break;
+	case UNIT_PARAM_NATHEAL_WEIGHT_RATE:
+		script_pushint(st, entry->natural_heal_weight_rate);
+		break;
+	case UNIT_PARAM_MAX_ASPD:
+		script_pushint(st, (2000 - entry->max_aspd) / 10); // max_aspd is actually min_amotion :)
+		break;
+	case UNIT_PARAM_MAX_HP: {
+		if (!script_hasdata(st, 4) || !script_hasdata(st, 5)) {
+			ShowError("buildin_getunitparam: UNIT_PARAM_MAXP_HP requires 4 parameters: <param>, <class id>, <maxlv array>, <value array>\n");
+			st->state = END;
+			return false;
+		}
+
+		struct script_data *maxhp_maxlvls = script_getdata(st, 4);
+		struct script_data *maxhp_values = script_getdata(st, 5);
+		if (!data_isreference(maxhp_maxlvls) || reference_toconstant(maxhp_maxlvls)) {
+			ShowError("buildin_getunitparam: <maxlv array> argument must be reference and not a reference to constant\n");
+			script->reportdata(maxhp_maxlvls);
+			st->state = END;
+			return false;
+		}
+		if (!data_isreference(maxhp_values) || reference_toconstant(maxhp_values)) {
+			ShowError("buildin_getunitparam: <value array> argument must be reference and not a reference to constant\n");
+			script->reportdata(maxhp_values);
+			st->state = END;
+			return false;
+		}
+
+		const char *maxhp_maxlvls_varname = reference_getname(maxhp_maxlvls);
+		const char *maxhp_values_varname = reference_getname(maxhp_values);
+		if (!is_int_variable(maxhp_maxlvls_varname)) {
+			ShowError("buildin_getunitparam: <maxlv array> argument must be of integer type\n");
+			script->reportdata(maxhp_maxlvls);
+			st->state = END;
+			return false;
+		}
+		if (!is_int_variable(maxhp_values_varname)) {
+			ShowError("buildin_getunitparam: <value array> argument must be of integer type\n");
+			script->reportdata(maxhp_values);
+			st->state = END;
+			return false;
+		}
+
+		if (not_server_variable(*maxhp_maxlvls_varname) || not_server_variable(*maxhp_values_varname)) {
+			if (sd == NULL) {
+				sd = script->rid2sd(st);
+				if (sd == NULL)
+					return false; // player variable but no player attached
+			}
+		}
+
+		int varid1 = reference_getid(maxhp_maxlvls);
+		int varid2 = reference_getid(maxhp_values);
+		int count = entry->maxhp_size;
+		for (int i = 0; i < count; i++) {
+			script->set_reg(st, sd, reference_uid(varid1, i), maxhp_maxlvls_varname, (const void *)h64BPTRSIZE(entry->maxhp[i].max_level),
+			                reference_getref(maxhp_maxlvls));
+			script->set_reg(st, sd, reference_uid(varid2, i), maxhp_values_varname, (const void *)h64BPTRSIZE(entry->maxhp[i].value),
+			                reference_getref(maxhp_values));
+		}
+		script_pushint(st, count);
+		break;
+	}
+	case UNIT_PARAM_MAX_STATS:
+		script_pushint(st, entry->max_stats);
+		break;
+	default:
+		ShowError("buildin_getunitparam: Received invalid param: %d\n", param);
+		st->state = END;
+		return false;
+	}
+
+	return true;
+}
+
 /**
  * Adds a built-in script function.
  *
@@ -29507,6 +29621,7 @@ static void script_parse_builtin(void)
 
 		BUILDIN_DEF(mesurl, "ss??"),
 		BUILDIN_DEF(mestipbox, "si"),
+		BUILDIN_DEF(getunitparam, "i???"),
 	};
 	int i, len = ARRAYLENGTH(BUILDIN);
 	RECREATE(script->buildin, char *, script->buildin_count + len); // Pre-alloc to speed up
@@ -30489,6 +30604,13 @@ static void script_hardcoded_constants(void)
 	script->set_constant("HOMINFO_HUNGRY", HOMINFO_HUNGRY, false, false);
 	script->set_constant("HOMINFO_RENAME", HOMINFO_RENAME, false, false);
 	script->set_constant("HOMINFO_LEVEL", HOMINFO_LEVEL, false, false);
+
+	script->constdb_comment("getunitparam param-types");
+	script->set_constant("UNIT_PARAM_NAME", UNIT_PARAM_NAME, false, false);
+	script->set_constant("UNIT_PARAM_NATHEAL_WEIGHT_RATE", UNIT_PARAM_NATHEAL_WEIGHT_RATE, false, false);
+	script->set_constant("UNIT_PARAM_MAX_ASPD", UNIT_PARAM_MAX_ASPD, false, false);
+	script->set_constant("UNIT_PARAM_MAX_HP", UNIT_PARAM_MAX_HP, false, false);
+	script->set_constant("UNIT_PARAM_MAX_STATS", UNIT_PARAM_MAX_STATS, false, false);
 
 	script->constdb_comment("Renewal");
 #ifdef RENEWAL
