@@ -5868,6 +5868,14 @@
 - `HOMINFO_RENAME`: 5
 - `HOMINFO_LEVEL`: 6
 
+### getunitparam param-types
+
+- `UNIT_PARAM_NAME`: 0
+- `UNIT_PARAM_NATHEAL_WEIGHT_RATE`: 1
+- `UNIT_PARAM_MAX_ASPD`: 2
+- `UNIT_PARAM_MAX_HP`: 3
+- `UNIT_PARAM_MAX_STATS`: 4
+
 ### Renewal
 
 - `RENEWAL`: 1
