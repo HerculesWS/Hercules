@@ -22,9 +22,19 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
-## [v2024.08] `August 2024`
+## [v2024.09] `September 2024`
 
 ### Added
+
+- Implemented the script command `getunitparam()` to query values defined in `unit_parameters_db.conf`, and the related `UNIT_PARAM_*` constants. See the `script_commands.txt` documentation for usage details. (#3323)
+- Added validation of the name length for configuration entries added through the HPM `addBattleConf()`, `addLoginConf()`, `addCharConf()`, `addCharInterConf()`, `addLogConf()`, `addScriptConf()` methods, to prevent silent truncation. (#3324)
+
+### Fixed
+
+- Fixed an issue causing item-granted skills that were overriding an existing skill level, not to be correctly cleared when unequipping the item. (#3322)
+- Fixed previously plagiarized skills re-appearing on subsequent logins due to the related script variables not getting cleared properly. (#3325)
+
+## [v2024.08] `August 2024`
 
 ### Changed
 
@@ -3160,6 +3170,7 @@ Note: everything included in this release is part of PR #3198 which consists of 
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2024.09]: https://github.com/HerculesWS/Hercules/compare/v2024.08...v2024.09
 [v2024.08]: https://github.com/HerculesWS/Hercules/compare/v2024.06...v2024.08
 [v2024.06]: https://github.com/HerculesWS/Hercules/compare/v2024.05...v2024.06
 [v2024.05]: https://github.com/HerculesWS/Hercules/compare/v2024.04...v2024.05
