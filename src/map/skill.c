@@ -3704,12 +3704,13 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 		switch(can_copy(tsd, copy_skill)) {
 		case 1: // Plagiarism
 		{
-			pc->clear_existing_cloneskill(tsd, false);
-
 			lv = min(skill_lv, pc->checkskill(tsd, RG_PLAGIARISM));
-			if (learned_lv > lv)
+			if (learned_lv > lv) {
+				pc->clear_existing_cloneskill(tsd, true);
 				break; // [Aegis] can't overwrite skill of higher level, but will still remove previously copied skill.
+			}
 
+			pc->clear_existing_cloneskill(tsd, false);
 			tsd->cloneskill_id = copy_skill;
 			pc_setglobalreg(tsd, script->add_variable("CLONE_SKILL"), copy_skill);
 			pc_setglobalreg(tsd, script->add_variable("CLONE_SKILL_LV"), lv);
@@ -3726,12 +3727,13 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 		case 2: // Reproduce
 		{
 			lv = sc ? sc->data[SC__REPRODUCE]->val1 : 1;
-			pc->clear_existing_reproduceskill(tsd, false);
-
 			lv = min(lv, skill->get_max(copy_skill));
-			if (learned_lv > lv)
+			if (learned_lv > lv) {
+				pc->clear_existing_reproduceskill(tsd, true);
 				break; // unconfirmed, but probably the same behavior as for RG_PLAGIARISM
+			}
 
+			pc->clear_existing_reproduceskill(tsd, false);
 			tsd->reproduceskill_id = copy_skill;
 			pc_setglobalreg(tsd, script->add_variable("REPRODUCE_SKILL"), copy_skill);
 			pc_setglobalreg(tsd, script->add_variable("REPRODUCE_SKILL_LV"), lv);

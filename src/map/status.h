@@ -1351,6 +1351,14 @@ struct s_maxhp_entry {
 	int value; ///< The actual max hp value
 };
 
+enum e_unit_params {
+	UNIT_PARAM_NAME,
+	UNIT_PARAM_NATHEAL_WEIGHT_RATE,
+	UNIT_PARAM_MAX_ASPD,
+	UNIT_PARAM_MAX_HP,
+	UNIT_PARAM_MAX_STATS,
+};
+
 struct s_unit_params {
 	char name[SCRIPT_VARNAME_LENGTH]; ///< group name as defined in conf
 

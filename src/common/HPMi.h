@@ -35,6 +35,8 @@ struct map_session_data;
 struct hplugin_data_store;
 
 #define HPM_VERSION "1.2"
+
+// Maximum length of the configuration path for configs added with add*Conf
 #define HPM_ADDCONF_LENGTH 40
 
 struct hplugin_info {
