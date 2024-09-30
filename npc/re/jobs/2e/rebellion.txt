@@ -987,7 +987,7 @@ job_gun,216,138,4	script	Butler Karlex	1_M_01,{
 	mes("Thank you for using the service.");
 	close2();
 	if (.@select == 2) {
-		openstorage();
+		openstorage(STORAGE_TYPE_MAIN);
 	}
 	end;
 }

@@ -292,7 +292,11 @@ struct map_session_data {
 
 	struct mmo_charstatus status;
 	struct item_data *inventory_data[MAX_INVENTORY]; // direct pointers to itemdb entries (faster than doing item_id lookups)
-	struct storage_data storage; ///< Account Storage
+	struct {
+		int current;                           ///< Marker for the current storage ID in use.
+		enum storage_access_modes access;      ///< Access level for the user.
+		VECTOR_DECL(struct storage_data) list; ///< Account Storage
+	} storage;
 	enum pc_checkitem_types itemcheck;
 	short equip_index[EQI_MAX];
 	unsigned int weight,max_weight;
