@@ -792,6 +792,17 @@ All these changes only affect Renewal. Pre-renewal is unchanged.
 
 - The `is_quest` argument to `pc->gainexp()` has been changed to a `flags` bitmask enum, in order to allow expansion to different flags. (#3279)
 
+## [v2024.10] `October 2024`
+
+### Changed
+
+- Changed the `getmobdrops()` script command to avoid the use of global temporary variables. (#3319)
+  - The caller now specifies an array that will be filled with the requested data.
+  - The amount of filled entries will be returned as the command's return value. The caller should only read up to that amount of entries from the array, as it may contain previous leftover values past that point.
+  - See the script_commands documentation for further details.
+- Improved the output of the `@mobinfo` atcommand to include item links for the mob drops, on clients that support it. Unsupported clients will gracefully fall back to just printing the names. #3328
+- Improved the output of the `@iteminfo` atcommand to include item links, on clients that support it. Unsupported clients will gracefully fall back to just printing the names. #3329
+
 ## [v2024.09] `September 2024`
 
 ### Added
@@ -3940,6 +3951,7 @@ Note: everything included in this release is part of PR #3198 which consists of 
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2024.10]: https://github.com/HerculesWS/Hercules/compare/v2024.09...v2024.10
 [v2024.09]: https://github.com/HerculesWS/Hercules/compare/v2024.08...v2024.09
 [v2024.08]: https://github.com/HerculesWS/Hercules/compare/v2024.06...v2024.08
 [v2024.06]: https://github.com/HerculesWS/Hercules/compare/v2024.05...v2024.06

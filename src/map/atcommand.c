@@ -7156,14 +7156,14 @@ ACMD(mobinfo)
 	unsigned char msize[3][7] = {"Small", "Medium", "Large"};
 	unsigned char mrace[12][11] = {"Formless", "Undead", "Beast", "Plant", "Insect", "Fish", "Demon", "Demi-Human", "Angel", "Dragon", "Boss", "Non-Boss"};
 	unsigned char melement[10][8] = {"Neutral", "Water", "Earth", "Fire", "Wind", "Poison", "Holy", "Dark", "Ghost", "Undead"};
-	char atcmd_output2[CHAT_SIZE_MAX];
+	StringBuf buf;
 	struct item_data *item_data;
 	struct mob_db *monster, *mob_array[MAX_SEARCH];
 	int count;
 	int i, k;
 
 	memset(atcmd_output, '\0', sizeof(atcmd_output));
-	memset(atcmd_output2, '\0', sizeof(atcmd_output2));
+	StrBuf->Init(&buf);
 
 	if (!*message) {
 		clif->message(fd, msg_fd(fd, MSGTBL_MOBINFO_USAGE)); // Please enter a monster name/ID (usage: @mobinfo <monster_name_or_monster_ID>).
@@ -7253,23 +7253,22 @@ ACMD(mobinfo)
 			}
 #endif
 
-			if (item_data->slot)
-				snprintf(atcmd_output2, sizeof(atcmd_output2), " - %s[%d]  %02.02f%%", item_data->jname, item_data->slot, (float)droprate / 100);
-			else
-				snprintf(atcmd_output2, sizeof(atcmd_output2), " - %s  %02.02f%%", item_data->jname, (float)droprate / 100);
-
-			strcat(atcmd_output, atcmd_output2);
-
+			struct item link_item = { 0 };
+			link_item.nameid = monster->dropitem[i].nameid;
+			StrBuf->AppendStr(&buf, " - ");
+			clif->format_itemlink(&buf, &link_item);
+			StrBuf->Printf(&buf, " %02.02f%%", (float)droprate / 100);
 			if (++j % 3 == 0) {
-				clif->message(fd, atcmd_output);
-				strcpy(atcmd_output, " ");
+				clif->message(fd, StrBuf->Value(&buf));
+				StrBuf->Clear(&buf);
 			}
 		}
 
 		if (j == 0)
 			clif->message(fd, msg_fd(fd, MSGTBL_MOBINFO_NO_DROPS)); // This monster has no drops.
 		else if (j % 3 != 0)
-			clif->message(fd, atcmd_output);
+			clif->message(fd, StrBuf->Value(&buf));
+		StrBuf->Clear(&buf);
 		// mvp
 		if (monster->mexp) {
 			snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_MOBINFO_MVP_BONUS_EXP), monster->mexp); //  MVP Bonus EXP:%u
@@ -7282,19 +7281,21 @@ ACMD(mobinfo)
 					continue;
 				if (monster->mvpitem[i].p > 0) {
 					j++;
-					if(item_data->slot)
-						snprintf(atcmd_output2, sizeof(atcmd_output2), " %s%s[%d]  %02.02f%%", j != 1 ? "- " : "", item_data->jname, item_data->slot, (float)monster->mvpitem[i].p / 100);
-					else
-						snprintf(atcmd_output2, sizeof(atcmd_output2), " %s%s  %02.02f%%", j != 1 ? "- " : "", item_data->jname, (float)monster->mvpitem[i].p / 100);
-					strcat(atcmd_output, atcmd_output2);
+					struct item link_item = { 0 };
+					link_item.nameid = monster->mvpitem[i].nameid;
+					StrBuf->AppendStr(&buf, j != 1 ? " - " : "");
+					clif->format_itemlink(&buf, &link_item);
+					StrBuf->Printf(&buf, " %02.02f%%", (float)monster->mvpitem[i].p / 100);
 				}
 			}
+			
 			if (j == 0)
 				clif->message(fd, msg_fd(fd, MSGTBL_MOBINFO_NO_MVP_PRIZES)); // This monster has no MVP prizes.
 			else
-				clif->message(fd, atcmd_output);
+				clif->message(fd, StrBuf->Value(&buf));
 		}
 	}
+	StrBuf->Destroy(&buf);
 	return true;
 }
 
@@ -7717,14 +7718,22 @@ ACMD(iteminfo)
 		clif->message(fd, atcmd_output);
 		count = MAX_SEARCH;
 	}
+	StringBuf buf;
+	StrBuf->Init(&buf);
 	for (i = 0; i < count; i++) {
 		struct item_data *item_data = item_array[i];
 		if (item_data != NULL) {
-			snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ITEMINFO_DETAILS), // Item: '%s'/'%s'[%d] (%d) Type: %s | Extra Effect: %s
-				item_data->name, item_data->jname, item_data->slot, item_data->nameid,
+
+			struct item link_item = { 0 };
+			link_item.nameid = item_data->nameid;
+			clif->format_itemlink(&buf, &link_item);
+
+			snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ITEMINFO_DETAILS), // Item: '%s'/'%s' (%d) Type: %s | Extra Effect: %s
+				item_data->name, StrBuf->Value(&buf), item_data->nameid,
 				itemdb->typename(item_data->type),
 				(item_data->script == NULL) ? msg_fd(fd, MSGTBL_ITEMINFO_NONE) : msg_fd(fd, MSGTBL_ITEMINFO_WITH_SCRIPT) // None / With script
 			);
+			StrBuf->Clear(&buf);
 			clif->message(fd, atcmd_output);
 
 			snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ITEMINFO_NPC_DETAILS), item_data->value_buy, item_data->value_sell, item_data->weight / 10.); // NPC Buy:%dz, Sell:%dz | Weight: %.1f
@@ -7741,6 +7750,7 @@ ACMD(iteminfo)
 			clif->message(fd, atcmd_output);
 		}
 	}
+	StrBuf->Destroy(&buf);
 	return true;
 }
 
