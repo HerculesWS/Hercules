@@ -7718,14 +7718,22 @@ ACMD(iteminfo)
 		clif->message(fd, atcmd_output);
 		count = MAX_SEARCH;
 	}
+	StringBuf buf;
+	StrBuf->Init(&buf);
 	for (i = 0; i < count; i++) {
 		struct item_data *item_data = item_array[i];
 		if (item_data != NULL) {
-			snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ITEMINFO_DETAILS), // Item: '%s'/'%s'[%d] (%d) Type: %s | Extra Effect: %s
-				item_data->name, item_data->jname, item_data->slot, item_data->nameid,
+
+			struct item link_item = { 0 };
+			link_item.nameid = item_data->nameid;
+			clif->format_itemlink(&buf, &link_item);
+
+			snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ITEMINFO_DETAILS), // Item: '%s'/'%s' (%d) Type: %s | Extra Effect: %s
+				item_data->name, StrBuf->Value(&buf), item_data->nameid,
 				itemdb->typename(item_data->type),
 				(item_data->script == NULL) ? msg_fd(fd, MSGTBL_ITEMINFO_NONE) : msg_fd(fd, MSGTBL_ITEMINFO_WITH_SCRIPT) // None / With script
 			);
+			StrBuf->Clear(&buf);
 			clif->message(fd, atcmd_output);
 
 			snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ITEMINFO_NPC_DETAILS), item_data->value_buy, item_data->value_sell, item_data->weight / 10.); // NPC Buy:%dz, Sell:%dz | Weight: %.1f
@@ -7742,6 +7750,7 @@ ACMD(iteminfo)
 			clif->message(fd, atcmd_output);
 		}
 	}
+	StrBuf->Destroy(&buf);
 	return true;
 }
 
