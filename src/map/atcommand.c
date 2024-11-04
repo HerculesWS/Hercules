@@ -880,17 +880,17 @@ ACMD(storage)
 
 	if (*message != '\0' && sscanf(message, "%12d", &intval) == 1) {
 		if ((stst = storage->get_settings(intval)) == NULL) {
-			clif->message(fd, msg_fd(fd, 68));
+			clif->message(fd, msg_fd(fd, MSGTBL_STORAGE_INVALID));
 			return false;
 		}
 		storage_id = intval;
 	} else if (*message != '\0' && sscanf(message, "%23s", storage_name) == 1) {
 		if ((storage_id = storage->get_id_by_name(storage_name)) == 0) {
-			clif->message(fd, msg_fd(fd, 68));
+			clif->message(fd, msg_fd(fd, MSGTBL_STORAGE_INVALID));
 			return false;
 		}
 	} else {
-		clif->message(fd, msg_fd(fd, 67));
+		clif->message(fd, msg_fd(fd, MSGTBL_STORAGE_SPECIFY_INVALID));
 		return false;
 	}
 
@@ -5677,17 +5677,17 @@ ACMD(storeall)
 
 	if (*message != '\0' && sscanf(message, "%12d", &intval) == 1) {
 		if ((stst = storage->get_settings(intval)) == NULL) {
-			clif->message(fd, msg_fd(fd, 68)); // Invalid storage name or ID.
+			clif->message(fd, msg_fd(fd, MSGTBL_STORAGE_INVALID));
 			return false;
 		}
 		storage_id = intval;
 	} else if (*message != '\0' && sscanf(message, "%23s", storage_name) == 1) {
 		if ((storage_id = storage->get_id_by_name(storage_name)) == 0) {
-			clif->message(fd, msg_fd(fd, 68)); // Invalid storage name or ID.
+			clif->message(fd, msg_fd(fd, MSGTBL_STORAGE_INVALID));
 			return false;
 		}
 	} else {
-		clif->message(fd, msg_fd(fd, 65)); // Please specify a storage ID or name. (usage: @storeall <storage name/ID>).
+		clif->message(fd, msg_fd(fd, MSGTBL_STORAGE_SPECIFY_STOREALL)); // Please specify a storage ID or name. (usage: @storeall <storage name/ID>).
 		return false;
 	}
 
@@ -5737,17 +5737,17 @@ ACMD(clearstorage)
 
 	if (*message != '\0' && sscanf(message, "%12d", &intval) == 1) {
 		if ((stst = storage->get_settings(intval)) == NULL) {
-			clif->message(fd, msg_fd(fd, 68));
+			clif->message(fd, msg_fd(fd, MSGTBL_STORAGE_INVALID));
 			return false;
 		}
 		storage_id = intval;
 	} else if (*message != '\0' && sscanf(message, "%23s", storage_name) == 1) {
 		if ((storage_id = storage->get_id_by_name(storage_name)) == 0) {
-			clif->message(fd, msg_fd(fd, 68));
+			clif->message(fd, msg_fd(fd, MSGTBL_STORAGE_INVALID));
 			return false;
 		}
 	} else {
-		clif->message(fd, msg_fd(fd, 66));
+		clif->message(fd, msg_fd(fd, MSGTBL_STORAGE_SPECIFY_CLEARSTORAGE));
 		return false;
 	}
 

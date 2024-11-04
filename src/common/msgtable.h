@@ -131,7 +131,15 @@ enum msgtable_messages {
 	MSGTBL_MERCY_SHOWN = 63,
 	/** Mercy has been granted. */
 	MSGTBL_MERCY_GRANTED = 64,
-	//65-69 FREE
+	/** Please specify a storage ID or name. (usage: @storeall <storage name/ID>). */
+	MSGTBL_STORAGE_SPECIFY_STOREALL = 65,
+	/** Please specify a storage ID or name. (usage: @clearstorage <storage name/ID>). */
+	MSGTBL_STORAGE_SPECIFY_CLEARSTORAGE = 66,
+	/** Please specify a storage ID or name. (usage: @storage <storage name/ID>). */
+	MSGTBL_STORAGE_SPECIFY_INVALID = 67,
+	/** Invalid storage name or ID */
+	MSGTBL_STORAGE_INVALID = 68,
+	//69 FREE
 	/** You have learned the skill. */
 	MSGTBL_LEARNED_SKILL = 70,
 	/** You have forgotten the skill. */
@@ -1429,7 +1437,7 @@ enum msgtable_messages {
 	MSGTBL_ENTER_SPEED_VALUE = 918,
 
 	// @storage
-	/** Storage opened. */
+	/** %s opened. */
 	MSGTBL_STORAGE_OPENED = 919,
 
 	// @guildstorage
@@ -2577,7 +2585,7 @@ enum msgtable_messages {
 	MSGTBL_IS_ATCOMMAND_DEAD = 1393,
 
 	// @clearstorage
-	/** Your storage was cleaned. */
+	/** Your %s has now been cleaned. */
 	MSGTBL_CLEARSTORAGE_SUCCESS = 1394,
 	/** Your guild storage was cleaned. */
 	MSGTBL_CLEARGUILDSTORAGE_SUCCESS = 1395,
