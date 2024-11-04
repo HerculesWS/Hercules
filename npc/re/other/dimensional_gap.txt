@@ -137,7 +137,7 @@ dali,112,95,4	script	Logistics Manager	4_M_MERCAT2,{
 		mes("You need at least 200 zeny to use the Storage.");
 	} else {
 		Zeny -= 200;
-		openstorage();
+		openstorage(STORAGE_TYPE_MAIN);
 	}
 	close();
 }
