@@ -34,6 +34,7 @@
 #include "map/pc.h"
 #include "common/db.h"
 #include "common/cbasetypes.h"
+#include "common/conf.h"
 #include "common/memmgr.h"
 #include "common/mmo.h"
 #include "common/msgtable.h"
@@ -992,6 +993,142 @@ static int storage_guild_storage_quit(struct map_session_data *sd, int flag)
 	return 0;
 }
 
+/**
+ * Read additional storage configuration fields for plugins.
+ * 
+ * @param t          [in]    pointer to the config element being parsed.
+ * @param s_conf     [in]    pointer to the config struct being written to.
+ * @param filename   [in]    pointer to the filename string.
+ */
+static void storage_config_read_additional_fields(struct config_setting_t* t, struct storage_settings* s_conf, const char* filename)
+{
+	// plugins do their own thing.
+}
+
+/**
+ * Dynamically reads storage configuration and initializes required variables.
+ *
+ * @param filename Path to configuration file.
+ * @param imported Whether the current config is imported from another file.
+ * @retval false in case of error.
+ */
+bool storage_config_read(const char* filename, bool imported)
+{
+	nullpo_retr(false, filename);
+
+	if (!imported)
+		VECTOR_INIT(storage->configuration);
+
+	struct config_t stor_libconf;
+	if (libconfig->load_file(&stor_libconf, filename) == CONFIG_FALSE)
+		return false; // Error message is already shown by libconfig->load_file()
+
+	const struct config_setting_t* setting = NULL;
+	if ((setting = libconfig->setting_get_member(stor_libconf.root, "storage_conf")) == NULL && !imported) {
+		ShowError("storage_config_read: Error in reading file '%s'\n", filename);
+		libconfig->destroy(&stor_libconf);
+		return false;
+	}
+
+	struct config_setting_t* t = NULL;
+	int i = 0;
+	while ((t = libconfig->setting_get_elem(setting, i++)) != NULL) {
+		struct storage_settings s_conf = { 0 };
+		const char *constant = NULL;
+
+		/* Id */
+		if (libconfig->setting_lookup_int(t, "Id", &s_conf.uid) == CONFIG_FALSE) {
+			ShowError("storage_config_read: Id field not found for storage configuration in '%s'. Skipping...\n", filename);
+			continue;
+		}
+
+		// Duplicate ID search and report...
+		int d = 0;
+		ARR_FIND(0, VECTOR_LENGTH(storage->configuration), d, VECTOR_INDEX(storage->configuration, d).uid == s_conf.uid);
+		if (d < VECTOR_LENGTH(storage->configuration)) {
+			ShowError("storage_config_read: Duplicate ID %d for storage. Skipping...\n", s_conf.uid);
+			continue;
+		}
+
+		// Check for an invalid ID...
+		if (s_conf.uid <= 0) {
+			ShowError("storage_config_read: ID for storage cannot be less than or equal to zero. Skipping...\n");
+			continue;
+		}
+
+		/* Name */
+		if (libconfig->setting_lookup_mutable_string(t, "Name", s_conf.name, NAME_LENGTH) == CONFIG_FALSE) {
+			ShowError("storage_config_read: Name field not found for storage configuration (Id: %d) in '%s'. Skipping...\n", s_conf.uid, filename);
+			continue;
+		}
+
+		if (libconfig->setting_lookup_string(t, "Constant", &constant) == CONFIG_FALSE) {
+			ShowError("storage_config_read: Constant field not found for storage configuration (Id: %d) in '%s'. Skipping...\n", s_conf.uid, filename);
+			continue;
+		} else {
+			script->set_constant(constant, s_conf.uid, false, false);
+		}
+
+		/* Capacity */
+		if (libconfig->setting_lookup_int(t, "Capacity", &s_conf.capacity) == CONFIG_FALSE) {
+			ShowError("storage_config_read: Capacity field not found for storage configuration (Id: %d)  in '%s'. Skipping...\n", s_conf.uid, filename);
+			continue;
+		}
+
+		s_conf.capacity = min(s_conf.capacity, MAX_STORAGE);
+
+		/* Additional Fields */
+		storage->config_read_additional_fields(t, &s_conf, filename);
+
+		if (imported) {
+			ARR_FIND(0, VECTOR_LENGTH(storage->configuration), i, VECTOR_INDEX(storage->configuration, i).uid == s_conf.uid);
+			if (i < VECTOR_LENGTH(storage->configuration))
+				VECTOR_ERASE(storage->configuration, i);
+		}
+
+		VECTOR_ENSURE(storage->configuration, 1, 1);
+		VECTOR_PUSH(storage->configuration, s_conf);
+	}
+
+	// import should overwrite any previous configuration, so it should be called last
+	const char* import = NULL;
+	if (libconfig->lookup_string(&stor_libconf, "import", &import) == CONFIG_TRUE) {
+		if (strcmp(import, filename) == 0 || strcmp(import, map->STORAGE_CONF_FILENAME) == 0) {
+			ShowWarning("battle_config_read: Loop detected! Skipping 'import'...\n");
+			libconfig->destroy(&stor_libconf);
+			return false;
+		} else if (storage->config_read(import, true) == false) {
+			libconfig->destroy(&stor_libconf);
+			return false;
+		}
+	}
+
+	libconfig->destroy(&stor_libconf);
+
+	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", VECTOR_LENGTH(storage->configuration), map->STORAGE_CONF_FILENAME);
+
+	return true;
+}
+
+/**
+* This function initializes storage.
+*/
+static void do_init_storage(bool minimal)
+{
+	if (minimal)
+		return;
+}
+
+/**
+ * Finalizes the storage by clearing the storage configuration vector.
+ */
+static void do_final_storage(void)
+{
+	// Clear storage configuration vector.
+	if (VECTOR_LENGTH(storage->configuration) > 0)
+		VECTOR_CLEAR(storage->configuration);
+}
+
 static void do_init_gstorage(bool minimal)
 {
 	if (minimal)
@@ -1023,8 +1160,12 @@ void storage_defaults(void)
 {
 	storage = &storage_s;
 
+	storage->init = do_init_storage;
+	storage->final = do_final_storage;
 	/* */
 	storage->reconnect = do_reconnect_storage;
+	storage->config_read = storage_config_read;
+	storage->config_read_additional_fields = storage_config_read_additional_fields;
 	/* */
 	storage->get_id_by_name = storage_get_id_by_name;
 	storage->ensure = storage_ensure;
