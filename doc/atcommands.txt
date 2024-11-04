@@ -560,9 +560,9 @@ Using the command without a message will enable or disable main chat.
 
 ---------------------------------------
 
-@storage
+@storage <storage name/id>
 
-Opens your Kafra storage.
+Opens your specified Kafra storage.
 
 ---------------------------------------
 
@@ -731,9 +731,9 @@ Valid item types:
 
 ---------------------------------------
 
-@storeall
+@storeall <storage name/id>
 
-Places all inventory and equipped items directly into your Kafra Storage.
+Places all inventory and equipped items directly into your specified storage.
 
 ---------------------------------------
 
@@ -743,10 +743,15 @@ Deletes all inventory items (not equipped items).
 
 ---------------------------------------
 
-@clearstorage
+@clearstorage <storage name/id>
+
+Deletes all items in specified storage.
+
+---------------------------------------
+
 @cleargstorage
 
-Deletes all items in storage (or guild storage).
+Deletes all items in guild storage.
 
 ---------------------------------------
 

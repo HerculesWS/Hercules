@@ -6217,19 +6217,32 @@ has no gear, script will be terminated with an error.
 //=====================================
 ---------------------------------------
 
-*openstorage()
+*openstorage(<storage_constant>{, <storage_mode>});
 
-This will open character's Kafra storage window on the client connected to
-the invoking character. It can be used from any kind of NPC or item
-script, not just limited to Kafra Staff.
+This command opens the specified storage window <storage_id> on the client
+connected to the invoking character. It can be used from any kind of NPC or
+item script and is not limited to Kafra Staff interactions.
 
-The storage window opens regardless of whether there are open NPC dialogs
-or not, but it is preferred to close the dialog before displaying the
-storage window, to avoid any disruption when both windows overlap.
+The storage window will open regardless of whether there are open NPC dialogs,
+but it is recommended to close any dialogs before displaying the storage window
+to avoid overlapping interface elements, which could disrupt the user experience.
 
+Parameters:
+	<storage_constant>:	Specifies which storage to open (e.g., STORAGE_TYPE_MAIN).
+						Constants are declared in conf/storage.conf
+	<storage_mode> (optional): Defines the access permissions for the storage window.
+
+Storage Modes (bitmask):
+	STORAGE_ACCESS_VIEW:	View storage only.
+	STORAGE_ACCESS_GET:		Allow retrieving items from storage.
+	STORAGE_ACCESS_PUT:		Allow depositing items into storage.
+	STORAGE_ACCESS_ALL:		(Default mode) Full access for viewing, retrieving,
+							and depositing items.
+
+Example Usage:
 	mes("I will now open your stash for you");
 	close2();
-	openstorage();
+	openstorage(STORAGE_TYPE_MAIN);
 	end;
 
 The mapflag 'nostorage' when set to type '2' (or 3), will not open the
