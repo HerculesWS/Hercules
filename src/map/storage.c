@@ -1075,7 +1075,10 @@ bool storage_config_read(const char* filename, bool imported)
 			continue;
 		}
 
-		s_conf.capacity = min(s_conf.capacity, MAX_STORAGE);
+		if (s_conf.capacity > MAX_STORAGE) {
+			ShowWarning("storage_config_read: Capacity for Storage #%d ('%s') is over MAX_STORAGE. Capping to %d.\n", s_conf.uid, s_conf.name, MAX_STORAGE);
+			s_conf.capacity = min(s_conf.capacity, MAX_STORAGE);
+		}
 
 		/* Additional Fields */
 		storage->config_read_additional_fields(t, &s_conf, filename);
