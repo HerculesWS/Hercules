@@ -447,8 +447,8 @@ static int storage_storageaddfromcart(struct map_session_data *sd, struct storag
 	nullpo_ret(stst = storage->get_settings(stor->uid));
 
 	if ((sd->storage.access & STORAGE_ACCESS_PUT) == 0) {
-		clif->delitem(sd, index, amount, DELITEM_NORMAL);
-		clif->additem(sd, index, amount, 0);
+		clif->cart_delitem(sd, index, amount);
+		clif->cart_additem(sd, index, amount, 0);
 		return 0;
 	}
 
