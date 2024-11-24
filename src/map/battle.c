@@ -2991,8 +2991,10 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					skillratio += 200;
 				if( sc->data[SC_TRUESIGHT] )
 					skillratio += 2*sc->data[SC_TRUESIGHT]->val1;
+#ifndef RENEWAL
 				if( sc->data[SC_LKCONCENTRATION] )
 					skillratio += sc->data[SC_LKCONCENTRATION]->val2;
+#endif
 				if (sd != NULL && sd->weapontype == W_KATAR && (i=pc->checkskill(sd,ASC_KATAR)) > 0)
 					skillratio += skillratio * (10 + 2 * i) / 100;
 #endif
