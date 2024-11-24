@@ -2106,7 +2106,7 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					break;
 #ifdef RENEWAL
 				case KN_BRANDISHSPEAR:
-					skillratio += 300 + 100 * skill_lv + status_get_str(src);
+					skillratio += 300 + 100 * skill_lv + status_get_str(src) * 5;
 					break;
 #else
 				case KN_BRANDISHSPEAR:
