@@ -2405,11 +2405,11 @@ static int skill_additional_effect(struct block_list *src, struct block_list *bl
 				if(sc->data[SC_GIANTGROWTH])
 					rate += 10;
 #ifndef RENEWAL
-				if(sc->data[SC_OVERTHRUST])
+				if(sc->data[SC_OVERTHRUST] != NULL)
+					rate += 10;
+				if(sc->data[SC_OVERTHRUSTMAX] != NULL)
 					rate += 10;
 #endif
-				if(sc->data[SC_OVERTHRUSTMAX])
-					rate += 10;
 			}
 			if( rate )
 				skill->break_equip(src, EQP_WEAPON, rate, BCT_SELF);
