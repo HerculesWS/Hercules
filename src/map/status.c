@@ -4419,8 +4419,10 @@ static int status_calc_atk_percent(struct block_list *bl, struct status_change *
 	if (sc->data[SC_PROVOKE] != NULL)
 		atk_percent += sc->data[SC_PROVOKE]->val3;
 
+#ifndef RENEWAL
 	if (sc->data[SC_LKCONCENTRATION] != NULL)
 		atk_percent += sc->data[SC_LKCONCENTRATION]->val2;
+#endif
 
 	if (sc->data[SC_HAMI_BLOODLUST] != NULL)
 		atk_percent += sc->data[SC_HAMI_BLOODLUST]->val2;
@@ -4687,6 +4689,12 @@ static int status_calc_watk(struct block_list *bl, struct status_change *sc, int
 			watk -= sc->data[SC_WATER_BARRIER]->val3;
 		if(sc->data[SC_GENTLETOUCH_CHANGE] && sc->data[SC_GENTLETOUCH_CHANGE]->val2)
 			watk += sc->data[SC_GENTLETOUCH_CHANGE]->val2;
+
+#ifdef RENEWAL
+		if (sc->data[SC_LKCONCENTRATION] != NULL)
+			watk += watk * sc->data[SC_LKCONCENTRATION]->val2 / 100;
+#endif
+
 		return cap_value(watk, battle_config.watk_min, battle_config.watk_max);
 	}
 #ifndef RENEWAL
@@ -8647,9 +8655,14 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 					total_tick += total_tick / 10;
 				break;
 			case SC_LKCONCENTRATION:
-				val2 = 5 * val1; // ATK% Increase
 				val3 = 10*val1; //Hit Increase
+#ifdef RENEWAL
+				val2 = 5 + 2 * val1; // ATK% increase
+				val4 = 5 + 2 * val1; // Def% reduction
+#else
+				val2 = 5 * val1; // ATK% Increase
 				val4 = 5 * val1; // Def% reduction
+#endif
 				sc_start(src, bl, SC_ENDURE, 100, 1, total_tick, skill_id); // Endure effect
 				break;
 			case SC_ANGELUS:

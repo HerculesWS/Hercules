@@ -2117,7 +2117,7 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					break;
 #ifdef RENEWAL
 				case KN_BRANDISHSPEAR:
-					skillratio += 300 + 100 * skill_lv + status_get_str(src);
+					skillratio += 300 + 100 * skill_lv + status_get_str(src) * 5;
 					break;
 #else
 				case KN_BRANDISHSPEAR:
@@ -2368,7 +2368,8 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 	#else
 				case LK_SPIRALPIERCE:
 				case ML_SPIRALPIERCE:
-					skillratio += 50 * skill_lv;
+					skillratio += -100 + 150 + 50 * skill_lv;
+					RE_LVL_DMOD(100);
 	#endif
 					break;
 				case PA_SACRIFICE:
@@ -3040,8 +3041,10 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					skillratio += 200;
 				if( sc->data[SC_TRUESIGHT] )
 					skillratio += 2*sc->data[SC_TRUESIGHT]->val1;
+#ifndef RENEWAL
 				if( sc->data[SC_LKCONCENTRATION] )
 					skillratio += sc->data[SC_LKCONCENTRATION]->val2;
+#endif
 				if (sd != NULL && sd->weapontype == W_KATAR && (i=pc->checkskill(sd,ASC_KATAR)) > 0)
 					skillratio += skillratio * (10 + 2 * i) / 100;
 #endif
@@ -5612,36 +5615,43 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 				if ( sd && s_ele != sd->bonus.arrow_ele )
 					s_ele = sd->bonus.arrow_ele;
 				break;
+
 			case NJ_TATAMIGAESHI:
-					ATK_RATE(200);
-				/* Fall through */
+				ATK_RATE(200);
+				ATK_RATE(battle->calc_skillratio(BF_WEAPON, src, target, skill_id, skill_lv, skillratio, wflag));
+				break;
+
 			case LK_SPIRALPIERCE:
-			case ML_SPIRALPIERCE: // [malufett]
-				if( skill_id != NJ_TATAMIGAESHI ){
-					short index = sd?sd->equip_index[EQI_HAND_R]:0;
-					GET_NORMAL_ATTACK( (sc && sc->data[SC_MAXIMIZEPOWER]?1:0)|(sc && sc->data[SC_WEAPONPERFECT]?8:0), 0);
-					wd.damage = wd.damage * 70 / 100;
-					//n_ele = true; // FIXME: This is has no effect if it's after GET_NORMAL_ATTACK (was this intended, or was it supposed to be put above?)
+			case ML_SPIRALPIERCE: { // [malufett]
+				short index = sd?sd->equip_index[EQI_HAND_R]:0;
+				GET_NORMAL_ATTACK( (sc && sc->data[SC_MAXIMIZEPOWER]?1:0)|(sc && sc->data[SC_WEAPONPERFECT]?8:0), 0);
+				wd.damage = wd.damage * 70 / 100;
+				//n_ele = true; // FIXME: This is has no effect if it's after GET_NORMAL_ATTACK (was this intended, or was it supposed to be put above?)
 
-					if (sd && index >= 0 &&
-						sd->inventory_data[index] &&
-						sd->inventory_data[index]->type == IT_WEAPON)
-						ATK_ADD(sd->inventory_data[index]->weight * 7 / 100);
+				if (sd && index >= 0 &&
+					sd->inventory_data[index] &&
+					sd->inventory_data[index]->type == IT_WEAPON)
+					ATK_ADD(sd->inventory_data[index]->weight * 7 / 100);
 
-					switch (tstatus->size) {
-						case SZ_SMALL: //Small: 115%
-							ATK_RATE(115);
-							break;
-						case SZ_BIG: //Large: 85%
-							ATK_RATE(85);
-					}
-					wd.damage = battle->calc_masteryfix(src, target, skill_id, skill_lv, wd.damage, wd.div_, 0, flag.weapon);
-					wd.damage = battle->calc_cardfix2(src, target, wd.damage, s_ele, nk, wd.flag);
+				switch (tstatus->size) {
+					case SZ_SMALL: // Small: 130%
+						ATK_RATE(130);
+						break;
+
+					case SZ_MEDIUM: // Medium: 115%
+						ATK_RATE(115);
+						break;
 				}
-				FALLTHROUGH
+				wd.damage = battle->calc_masteryfix(src, target, skill_id, skill_lv, wd.damage, wd.div_, 0, flag.weapon);
+				wd.damage = battle->calc_cardfix2(src, target, wd.damage, s_ele, nk, wd.flag);
+				ATK_RATE(battle->calc_skillratio(BF_WEAPON, src, target, skill_id, skill_lv, skillratio, wflag));
+			}
+				break;
+
 	#endif
 			default:
 				ATK_RATE(battle->calc_skillratio(BF_WEAPON, src, target, skill_id, skill_lv, skillratio, wflag));
+				break;
 		}
 
 			//Constant/misc additions from skills
@@ -5943,9 +5953,13 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 			){
 				int lv = sc->data[SC_AURABLADE]->val1;
 #ifdef RENEWAL
-				lv *= ((skill_id == LK_SPIRALPIERCE || skill_id == ML_SPIRALPIERCE)?wd.div_:1); // +100 per hit in lv 5
-#endif
+				if (skill_id == LK_SPIRALPIERCE || skill_id == ML_SPIRALPIERCE)
+					lv *= wd.div_; // +100 per hit in lv 5
+
+				ATK_ADD(sd->status.base_level * (lv + 3));
+#else
 				ATK_ADD(20*lv);
+#endif
 			}
 
 			if( !skill_id ) {
