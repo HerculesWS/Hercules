@@ -32,7 +32,7 @@ jobs:
       cancel-in-progress: true
 
     container:
-      image: debian:unstable
+      image: debian:stable
     services:
       mariadb:
         image: mariadb:latest
