@@ -6961,7 +6961,7 @@ int do_init(int argc, char *argv[])
 	map->SCRIPT_CONF_NAME        = aStrdup("conf/map/script.conf");
 	map->MSG_CONF_NAME           = aStrdup("conf/messages.conf");
 	map->GRF_PATH_FILENAME       = aStrdup("conf/grf-files.txt");
-	map->STORAGE_CONF_FILENAME	 = aStrdup("conf/storage.conf");
+	map->STORAGE_CONF_FILENAME   = aStrdup("conf/storage.conf");
 
 	HPM_map_do_init();
 	cmdline->exec(argc, argv, CMDLINE_OPT_PREINIT);
