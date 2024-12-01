@@ -788,9 +788,56 @@ All these changes only affect Renewal. Pre-renewal is unchanged.
 - Ensemble skills range is expanded to `4` cells
 - The dispell logic for songs has been removed, since "song areas" no longer exist
 
+#### 2-1 Transcendent Classes
+
+- Rebalance of the 2-1 transcendent job skills, implementation based on kRO and kRO zero patch notes from 2018-10-31, iRO Wiki, rAthena and divine pride info, along with some in-game testing. (#3331, #3332, part of issue #2735)
+
+##### Lord Knight
+
+- Rebalance of `LK_SPIRALPIERCE` (Spiral Pierce)
+  - Changed variable cast time
+    - Old: `0.15 / 0.25 / 0.35 / 0.45 / 0.5` s
+    - New: `0.25` s in all skill levels
+  - Changed fixed cast time
+    - Old: `0.15 / 0.25 / 0.35 / 0.45 / 0.5` s
+    - New: `0.3` s in all skill levels
+  - Changed global delay
+    - Old: `1.2 / 1.4 / 1.6 / 1.8 / 2` s
+    - New: `1` s in all skill levels
+  - Changed damage formula
+    - `BaseATK` increased by 50%
+      - Old: `150 / 200 / 250 / 300 / 350`
+      - New: `200 / 250 / 300 / 350 / 400`
+    - Size modifier changed
+      - Small: `125%` -> `130%`
+      - Medium: `100%` -> `115%`
+      - Large: `75%` -> `100%`
+    - Now deals more damage depending on user's base level
+- Rebalance of `LK_AURABLADE` (Aura Blade)
+  - Changed damage bonus formula
+    - Old: `SkillLv x 20`
+    - New: `BaseLv x (SkillLv + 3)`
+- Rebalance of `LK_CONCENTRATION` (Concentration)
+  - ATK Bonus changed
+    - Old: `(SkillLv x 5) %` flat
+    - New: `(5 + SkillLv x 2) %` ATK %
+  - Def reduction % changed
+    - Old: `(SkillLv x 5) %`
+    - New: `(5 + SkillLv x 2) %`
+  - Duration changed
+    - Old: `25 / 30 / 35 / 40 / 45 / 50 / 55 / 60 / 65 / 70` s
+    - New: `60` s at all skill levels
+  - The effect no longer gets removed when changing/removing weapon
+
+##### Mastersmith / Whitesmith
+
+- Rebalance of `WS_OVERTHRUSTMAX` (Maximum Power Thrust)
+  - Removed chance of weapon destruction
+
 ### Other changes
 
 - The `is_quest` argument to `pc->gainexp()` has been changed to a `flags` bitmask enum, in order to allow expansion to different flags. (#3279)
+- Fixed the damage increase by STR of `KN_BRANDISHSPEAR` it should increase the ratio by 5 for each STR point, not 1. (#3331)
 
 ## [v2024.11] `November 2024`
 
