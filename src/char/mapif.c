@@ -1846,7 +1846,7 @@ static int mapif_account_storage_load(int fd, int account_id, int storage_id, in
 	Assert_ret(account_id > 0);
 
 	VECTOR_INIT(stor.item);
-	count = inter_storage->fromsql(account_id, storage_id, &stor, storage_size);
+	count = inter_storage->fromsql(account_id, storage_id, &stor);
 
 	len = 10 + count * sizeof(struct item);
 
