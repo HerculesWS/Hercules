@@ -177,15 +177,13 @@ const struct storage_settings* storage_get_settings(int storage_id)
  * 0 - success
  * 1 - fail
  *------------------------------------------*/
-static int storage_storageopen(struct map_session_data *sd, struct storage_data* stor)
+static int storage_storageopen(struct map_session_data *sd, struct storage_data *stor, enum storage_access_modes mode)
 {
 	nullpo_retr(1, sd);
 	nullpo_retr(1, stor);
-	Assert_retr(1, stor->received); // Assert the availability of data.
 
-	const struct storage_settings* stst = NULL;
-
-	nullpo_retr(1, stst = storage->get_settings(stor->uid));
+	const struct storage_settings *stst = storage->get_settings(stor->uid);
+	nullpo_retr(1, stst);
 
 	if (sd->state.storage_flag != STORAGE_FLAG_CLOSED)
 		return 1; // Storage is already open.
@@ -199,6 +197,7 @@ static int storage_storageopen(struct map_session_data *sd, struct storage_data*
 
 	sd->state.storage_flag = STORAGE_FLAG_NORMAL; // Set the storage use state.
 	sd->storage.current = stor->uid; // Set current storage ID used.
+	sd->storage.access = mode;
 
 	/* Send item list to client if available. */
 	if (stor->aggregate > 0) {

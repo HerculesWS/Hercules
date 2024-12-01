@@ -12035,7 +12035,7 @@ static BUILDIN(openstorage)
 
 	sd->storage.access = storage_access; // Set storage access level. [Smokexyz/Hercules]
 
-	if (storage->open(sd, stor) == 0) {
+	if (storage->open(sd, stor, storage_access) == 0) {
 		script_pushint(st, 1); // success
 	} else {
 		script_pushint(st, 0);

@@ -68,7 +68,7 @@ struct storage_interface {
 	struct storage_data* (*ensure) (struct map_session_data* sd, int storage_id);
 	const struct storage_settings* (*get_settings) (int storage_id);
 	int (*delitem) (struct map_session_data* sd, struct storage_data* stor, int n, int amount);
-	int (*open) (struct map_session_data* sd, struct storage_data* stor);
+	int (*open) (struct map_session_data* sd, struct storage_data* stor, enum storage_access_modes mode);
 	int (*add) (struct map_session_data* sd, struct storage_data* stor, int index, int amount);
 	int (*get) (struct map_session_data* sd, struct storage_data* stor, int index, int amount);
 	int (*additem) (struct map_session_data* sd, struct storage_data* stor, struct item* item_data, int amount);
