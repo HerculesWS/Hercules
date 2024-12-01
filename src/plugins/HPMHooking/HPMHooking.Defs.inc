@@ -4380,8 +4380,8 @@ typedef int (*HPMHOOK_post_inter_rodex_getitems) (int retVal___, int64 mail_id, 
 #ifdef CHAR_INT_STORAGE_H /* inter_storage */
 typedef int (*HPMHOOK_pre_inter_storage_tosql) (int *account_id, int *storage_id, const struct storage_data **p);
 typedef int (*HPMHOOK_post_inter_storage_tosql) (int retVal___, int account_id, int storage_id, const struct storage_data *p);
-typedef int (*HPMHOOK_pre_inter_storage_fromsql) (int *account_id, int *storage_id, struct storage_data **p, int *storage_size);
-typedef int (*HPMHOOK_post_inter_storage_fromsql) (int retVal___, int account_id, int storage_id, struct storage_data *p, int storage_size);
+typedef int (*HPMHOOK_pre_inter_storage_fromsql) (int *account_id, int *storage_id, struct storage_data **p);
+typedef int (*HPMHOOK_post_inter_storage_fromsql) (int retVal___, int account_id, int storage_id, struct storage_data *p);
 typedef bool (*HPMHOOK_pre_inter_storage_guild_storage_tosql) (int *guild_id, const struct guild_storage **gstor);
 typedef bool (*HPMHOOK_post_inter_storage_guild_storage_tosql) (bool retVal___, int guild_id, const struct guild_storage *gstor);
 typedef int (*HPMHOOK_pre_inter_storage_guild_storage_fromsql) (int *guild_id, struct guild_storage **gstor);
@@ -9376,8 +9376,8 @@ typedef const struct storage_settings * (*HPMHOOK_pre_storage_get_settings) (int
 typedef const struct storage_settings * (*HPMHOOK_post_storage_get_settings) (const struct storage_settings * retVal___, int storage_id);
 typedef int (*HPMHOOK_pre_storage_delitem) (struct map_session_data **sd, struct storage_data **stor, int *n, int *amount);
 typedef int (*HPMHOOK_post_storage_delitem) (int retVal___, struct map_session_data *sd, struct storage_data *stor, int n, int amount);
-typedef int (*HPMHOOK_pre_storage_open) (struct map_session_data **sd, struct storage_data **stor);
-typedef int (*HPMHOOK_post_storage_open) (int retVal___, struct map_session_data *sd, struct storage_data *stor);
+typedef int (*HPMHOOK_pre_storage_open) (struct map_session_data **sd, struct storage_data **stor, enum storage_access_modes *mode);
+typedef int (*HPMHOOK_post_storage_open) (int retVal___, struct map_session_data *sd, struct storage_data *stor, enum storage_access_modes mode);
 typedef int (*HPMHOOK_pre_storage_add) (struct map_session_data **sd, struct storage_data **stor, int *index, int *amount);
 typedef int (*HPMHOOK_post_storage_add) (int retVal___, struct map_session_data *sd, struct storage_data *stor, int index, int amount);
 typedef int (*HPMHOOK_pre_storage_get) (struct map_session_data **sd, struct storage_data **stor, int *index, int *amount);

@@ -11075,15 +11075,15 @@ int HP_inter_storage_tosql(int account_id, int storage_id, const struct storage_
 	}
 	return retVal___;
 }
-int HP_inter_storage_fromsql(int account_id, int storage_id, struct storage_data *p, int storage_size) {
+int HP_inter_storage_fromsql(int account_id, int storage_id, struct storage_data *p) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_inter_storage_fromsql_pre > 0) {
-		int (*preHookFunc) (int *account_id, int *storage_id, struct storage_data **p, int *storage_size);
+		int (*preHookFunc) (int *account_id, int *storage_id, struct storage_data **p);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_storage_fromsql_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_inter_storage_fromsql_pre[hIndex].func;
-			retVal___ = preHookFunc(&account_id, &storage_id, &p, &storage_size);
+			retVal___ = preHookFunc(&account_id, &storage_id, &p);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -11091,13 +11091,13 @@ int HP_inter_storage_fromsql(int account_id, int storage_id, struct storage_data
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.inter_storage.fromsql(account_id, storage_id, p, storage_size);
+		retVal___ = HPMHooks.source.inter_storage.fromsql(account_id, storage_id, p);
 	}
 	if (HPMHooks.count.HP_inter_storage_fromsql_post > 0) {
-		int (*postHookFunc) (int retVal___, int account_id, int storage_id, struct storage_data *p, int storage_size);
+		int (*postHookFunc) (int retVal___, int account_id, int storage_id, struct storage_data *p);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_storage_fromsql_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_inter_storage_fromsql_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, account_id, storage_id, p, storage_size);
+			retVal___ = postHookFunc(retVal___, account_id, storage_id, p);
 		}
 	}
 	return retVal___;

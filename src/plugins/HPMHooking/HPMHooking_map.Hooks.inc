@@ -97442,15 +97442,15 @@ int HP_storage_delitem(struct map_session_data *sd, struct storage_data *stor, i
 	}
 	return retVal___;
 }
-int HP_storage_open(struct map_session_data *sd, struct storage_data *stor) {
+int HP_storage_open(struct map_session_data *sd, struct storage_data *stor, enum storage_access_modes mode) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_storage_open_pre > 0) {
-		int (*preHookFunc) (struct map_session_data **sd, struct storage_data **stor);
+		int (*preHookFunc) (struct map_session_data **sd, struct storage_data **stor, enum storage_access_modes *mode);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_storage_open_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_storage_open_pre[hIndex].func;
-			retVal___ = preHookFunc(&sd, &stor);
+			retVal___ = preHookFunc(&sd, &stor, &mode);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -97458,13 +97458,13 @@ int HP_storage_open(struct map_session_data *sd, struct storage_data *stor) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.storage.open(sd, stor);
+		retVal___ = HPMHooks.source.storage.open(sd, stor, mode);
 	}
 	if (HPMHooks.count.HP_storage_open_post > 0) {
-		int (*postHookFunc) (int retVal___, struct map_session_data *sd, struct storage_data *stor);
+		int (*postHookFunc) (int retVal___, struct map_session_data *sd, struct storage_data *stor, enum storage_access_modes mode);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_storage_open_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_storage_open_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, sd, stor);
+			retVal___ = postHookFunc(retVal___, sd, stor, mode);
 		}
 	}
 	return retVal___;
