@@ -43,24 +43,21 @@ struct inter_storage_interface *inter_storage;
 /// Save storage data to sql
 static int inter_storage_tosql(int account_id, int storage_id, const struct storage_data *p)
 {
+	int i = 0, j = 0;
+	bool matched_p[MAX_STORAGE] = { false };
+	int delete[MAX_STORAGE] = { 0 };
+	int total_deletes = 0, total_updates = 0, total_inserts = 0;
+	struct storage_data cp = { 0 };
+	StringBuf buf;
+
 	nullpo_ret(p);
 
-	struct storage_data cp = { 0 };
 	VECTOR_INIT(cp.item);
-	
-	int cp_size = inter_storage->fromsql(account_id, storage_id, &cp, 0);
+	inter_storage->fromsql(account_id, storage_id, &cp);
 
-	bool* matched_p = aCalloc(VECTOR_LENGTH(p->item), sizeof(bool));
-
-	StringBuf buf;
 	StrBuf->Init(&buf);
 
-	int total_deletes = 0, total_updates = 0, total_inserts = 0;
-	int i = 0, j = 0;
 	if (VECTOR_LENGTH(cp.item) > 0) {
-
-		int *delete = aCalloc(cp_size, sizeof(int));
-
 		/**
 		 * Compare and update items, if any.
 		 */
@@ -89,7 +86,7 @@ static int inter_storage_tosql(int account_id, int storage_id, const struct stor
 					}
 
 					StrBuf->Printf(&buf, "%s('%d', '%d', '%d', '%d', '%d', '%u', '%d', '%d', '%d', '%d'",
-								   total_updates > 0 ? ", " : "", cp_it->id, account_id, storage_id, p_it->nameid, p_it->amount, p_it->equip, p_it->identify, p_it->refine, p_it->grade, p_it->attribute);
+									total_updates > 0 ? ", " : "", cp_it->id, account_id, storage_id, p_it->nameid, p_it->amount, p_it->equip, p_it->identify, p_it->refine, p_it->grade, p_it->attribute);
 					for (k = 0; k < MAX_SLOTS; k++)
 						StrBuf->Printf(&buf, ", '%d'", p_it->card[k]);
 					for (k = 0; k < MAX_ITEM_OPTIONS; ++k)
@@ -121,8 +118,6 @@ static int inter_storage_tosql(int account_id, int storage_id, const struct stor
 			if (SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf)))
 				Sql_ShowDebug(inter->sql_handle);
 		}
-
-		aFree(delete);
 	}
 
 	/**
@@ -163,35 +158,29 @@ static int inter_storage_tosql(int account_id, int storage_id, const struct stor
 	StrBuf->Destroy(&buf);
 	VECTOR_CLEAR(cp.item);
 
-	aFree(matched_p);
-
 	ShowInfo("Storage #%d save complete - id: %d (replace: %d, insert: %d, delete: %d)\n", storage_id, account_id, total_updates, total_inserts, total_deletes);
 
 	return total_inserts + total_updates + total_deletes;
 }
 
 /// Load storage data to mem
-static int inter_storage_fromsql(int account_id, int storage_id, struct storage_data* p, int storage_size)
+static int inter_storage_fromsql(int account_id, int storage_id, struct storage_data *p)
 {
 	StringBuf buf;
-	char* data;
+	char *data;
 	int i;
-	int j;
-	int num_rows = 0;
 
 	nullpo_ret(p);
-	Assert_ret(storage_size >= 0);
 
-	if (VECTOR_LENGTH(p->item) > 0)
-		VECTOR_CLEAR(p->item);
+	VECTOR_CLEAR(p->item);
 
-	// storage {`account_id`/`id`/`nameid`/`amount`/`equip`/`identify`/`refine`/`grade`/`attribute`/`card0`/`card1`/`card2`/`card3`}
+	// storage {`account_id`/`storage_id`/`id`/`nameid`/`amount`/`equip`/`identify`/`refine`/`grade`/`attribute`/`card0`/`card1`/`card2`/`card3`}
 	StrBuf->Init(&buf);
 	StrBuf->AppendStr(&buf, "SELECT `id`,`nameid`,`amount`,`equip`,`identify`,`refine`,`grade`,`attribute`,`expire_time`,`bound`,`unique_id`");
-	for (j = 0; j < MAX_SLOTS; ++j)
-		StrBuf->Printf(&buf, ",`card%d`", j);
-	for (j = 0; j < MAX_ITEM_OPTIONS; ++j)
-		StrBuf->Printf(&buf, ",`opt_idx%d`,`opt_val%d`", j, j);
+	for (i = 0; i < MAX_SLOTS; ++i)
+		StrBuf->Printf(&buf, ",`card%d`", i);
+	for (i = 0; i < MAX_ITEM_OPTIONS; ++i)
+		StrBuf->Printf(&buf, ",`opt_idx%d`,`opt_val%d`", i, i);
 	StrBuf->Printf(&buf, " FROM `%s` WHERE `account_id`='%d' AND `storage_id`='%d' ORDER BY `nameid`", storage_db, account_id, storage_id);
 
 	if (SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf)))
@@ -199,16 +188,11 @@ static int inter_storage_fromsql(int account_id, int storage_id, struct storage_
 
 	StrBuf->Destroy(&buf);
 
-	if ((num_rows = (int)SQL->NumRows(inter->sql_handle)) != 0) {
+	if (SQL->NumRows(inter->sql_handle) > 0) {
+		VECTOR_ENSURE(p->item, MAX_STORAGE, 1);
 
-		VECTOR_ENSURE(p->item, storage_size > 0 ? min(num_rows, storage_size) : num_rows, 1);
-
-		for (i = 0; SQL_SUCCESS == SQL->NextRow(inter->sql_handle); ++i) {
+		for (int j = 0; j < MAX_STORAGE && SQL_SUCCESS == SQL->NextRow(inter->sql_handle); ++j) {
 			struct item item = { 0 };
-
-			if (storage_size > 0 && i > storage_size)
-				break;
-
 			SQL->GetData(inter->sql_handle, 0, &data, NULL); item.id = atoi(data);
 			SQL->GetData(inter->sql_handle, 1, &data, NULL); item.nameid = atoi(data);
 			SQL->GetData(inter->sql_handle, 2, &data, NULL); item.amount = atoi(data);
@@ -222,17 +206,17 @@ static int inter_storage_fromsql(int account_id, int storage_id, struct storage_
 			SQL->GetData(inter->sql_handle, 10, &data, NULL); item.unique_id = strtoull(data, NULL, 10);
 
 			/* Card Slots */
-			for (j = 0; j < MAX_SLOTS; ++j) {
-				SQL->GetData(inter->sql_handle, 11 + j, &data, NULL);
-				item.card[j] = atoi(data);
+			for (i = 0; i < MAX_SLOTS; ++i) {
+				SQL->GetData(inter->sql_handle, 11 + i, &data, NULL);
+				item.card[i] = atoi(data);
 			}
 
 			/* Item Options */
-			for (j = 0; j < MAX_ITEM_OPTIONS; ++j) {
-				SQL->GetData(inter->sql_handle, 11 + MAX_SLOTS + j * 2, &data, NULL);
-				item.option[j].index = atoi(data);
-				SQL->GetData(inter->sql_handle, 12 + MAX_SLOTS + j * 2, &data, NULL);
-				item.option[j].value = atoi(data);
+			for (i = 0; i < MAX_ITEM_OPTIONS; ++i) {
+				SQL->GetData(inter->sql_handle, 11 + MAX_SLOTS + i * 2, &data, NULL);
+				item.option[i].index = atoi(data);
+				SQL->GetData(inter->sql_handle, 12 + MAX_SLOTS + i * 2, &data, NULL);
+				item.option[i].value = atoi(data);
 			}
 
 			VECTOR_PUSH(p->item, item);
