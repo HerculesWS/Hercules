@@ -9714,7 +9714,7 @@ static void clif_refresh_storagewindow(struct map_session_data *sd)
 
 		clif->storageList(sd, VECTOR_DATA(stor->item), VECTOR_LENGTH(stor->item));
 
-		clif->updatestorageamount(sd, stor->aggregate, MAX_STORAGE);
+		clif->updatestorageamount(sd, stor->aggregate, stst->capacity);
 	}
 
 	// Notify the client that the gstorage is open otherwise it will
