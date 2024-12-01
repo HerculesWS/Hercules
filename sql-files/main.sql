@@ -1002,7 +1002,8 @@ CREATE TABLE IF NOT EXISTS `storage` (
   `bound` TINYINT UNSIGNED NOT NULL DEFAULT '0',
   `unique_id` BIGINT UNSIGNED NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
-  KEY `account_id` (`account_id`)
+  KEY `account_id` (`account_id`),
+  KEY `storage_id` (`storage_id`)
 ) ENGINE=MyISAM;
 
 CREATE TABLE IF NOT EXISTS `rodex_items` (
