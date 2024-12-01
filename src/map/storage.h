@@ -23,13 +23,20 @@
 
 #include "common/hercules.h"
 #include "common/db.h"
+#include "common/mmo.h"
 
 struct config_setting_t;
 struct guild_storage;
 struct item;
 struct map_session_data;
-struct storage_settings;
 struct storage_data;
+
+// Hercules Ultimate Storage System [Smokexyz/Hercules]
+struct storage_settings {
+	int uid;                       ///< Storage Identifier.
+	char name[NAME_LENGTH];        ///< Storage Name
+	int capacity;                  ///< Item Capacity.
+};
 
 /**
  * Acceptable values for map_session_data.state.storage_flag
