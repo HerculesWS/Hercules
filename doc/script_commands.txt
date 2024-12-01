@@ -6219,7 +6219,7 @@ has no gear, script will be terminated with an error.
 
 *openstorage(<storage_constant>{, <storage_mode>});
 
-This command opens the specified storage window <storage_id> on the client
+This command opens the specified <storage_constant> storage window on the client
 connected to the invoking character. It can be used from any kind of NPC or
 item script and is not limited to Kafra Staff interactions.
 
