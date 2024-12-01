@@ -3311,7 +3311,7 @@ static void clif_storageItems(struct map_session_data *sd, enum inventory_type t
 		storelist_equip.invType = type;
 #endif
 #if PACKETVER >= 20120925 && PACKETVER_RE_NUM < 20180829 && PACKETVER_ZERO_NUM < 20180919 && PACKETVER_MAIN_NUM < 20181002
-		safestrncpy(storelist_equip.name, "Storage", NAME_LENGTH);
+		safestrncpy(storelist_equip.name, name, NAME_LENGTH);
 #endif
 
 		clif->send(&storelist_equip, storelist_equip.PacketLength, &sd->bl, SELF);
