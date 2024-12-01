@@ -58,7 +58,7 @@ enum msgtable_messages {
 	MSGTBL_JOB_LEVEL_LOWERED = 25,
 	/** [%d] seconds left until you can use */
 	MSGTBL_SECONDS_UNTIL_USE = 26,
-	/** Storage has been not loaded yet. */
+	/** %s has not been loaded yet. */
 	MSGTBL_STORAGE_NOT_LOADED = 27,
 	/** No player found. */
 	MSGTBL_NO_PLAYER_FOUND = 28,
@@ -137,9 +137,10 @@ enum msgtable_messages {
 	MSGTBL_STORAGE_SPECIFY_CLEARSTORAGE = 66,
 	/** Please specify a storage ID or name. (usage: @storage <storage name/ID>). */
 	MSGTBL_STORAGE_SPECIFY_INVALID = 67,
+	/** Please specify a storage ID or name. (usage: @storagelist <storage name/ID>). */
+	MSGTBL_STORAGE_SPECIFY_STORAGELIST = 68,
 	/** Invalid storage name or ID */
-	MSGTBL_STORAGE_INVALID = 68,
-	//69 FREE
+	MSGTBL_STORAGE_INVALID = 69,
 	/** You have learned the skill. */
 	MSGTBL_LEARNED_SKILL = 70,
 	/** You have forgotten the skill. */
