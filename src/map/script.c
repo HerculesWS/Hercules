@@ -11998,9 +11998,9 @@ static BUILDIN(openstorage)
 {
 	struct map_session_data *sd = script->rid2sd(st);
 	int storage_id = script_getnum(st, 2);
-	const struct storage_settings* stst = NULL;
+	const struct storage_settings* stst = storage->get_settings(storage_id);
 
-	if ((stst = storage->get_settings(storage_id)) == NULL) {
+	if (stst == NULL) {
 		script_pushint(st, 0);
 		ShowWarning("buildin_openstorage: Storage with ID %d was not found!\n", storage_id);
 		return false;
@@ -12013,15 +12013,15 @@ static BUILDIN(openstorage)
 	}
 
 	enum storage_access_modes storage_access = script_hasdata(st, 3) ? script_getnum(st, 3) : STORAGE_ACCESS_ALL;
-	struct storage_data* stor = NULL;
 
-	if ((stor = storage->ensure(sd, storage_id)) == NULL) {
+	struct storage_data* stor = storage->ensure(sd, storage_id);
+	if (stor == NULL) {
 		script_pushint(st, 0);
 		ShowError("buildin_openstorage: Error ensuring storage for player aid %d, storage id %d.\n", sd->bl.id, storage_id);
 		return false;
 	}
 
-	if (stor == NULL || !stor->received) {
+	if (stor->received == false) {
 		script_pushint(st, 0);
 		ShowWarning("buildin_openstorage: Storage data for AID %d has not been loaded.\n", sd->bl.id);
 		return false;

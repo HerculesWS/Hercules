@@ -349,8 +349,8 @@ static void intif_parse_account_storage(int fd)
 		return;
 	}
 
-	struct storage_data* stor = NULL;
-	if ((stor = storage->ensure(sd, RFIFOW(fd, 8))) == NULL)
+	struct storage_data* stor = storage->ensure(sd, RFIFOW(fd, 8));
+	if (stor == NULL)
 		return;
 
 	if (stor->received == true) {
@@ -398,8 +398,8 @@ static void intif_send_account_storage(struct map_session_data *sd, int storage_
 
 	nullpo_retv(sd);
 
-	struct storage_data* stor = NULL;
-	if ((stor = storage->ensure(sd, storage_id)) == NULL)
+	struct storage_data* stor = storage->ensure(sd, storage_id);
+	if (stor == NULL)
 		return;
 
 	// Assert that at this point in the code, both flags are true.
@@ -448,12 +448,12 @@ static void intif_parse_account_storage_save_ack(int fd)
 	Assert_retv(fd > 0);
 	Assert_retv(storage_id > 0);
 
-	struct map_session_data* sd = NULL;
-	if ((sd = map->id2sd(account_id)) == NULL)
+	struct map_session_data* sd = map->id2sd(account_id);
+	if (sd == NULL)
 		return; // character is most probably offline.
 
-	struct storage_data* stor = NULL;
-	if ((stor = storage->ensure(sd, storage_id)) == NULL)
+	struct storage_data *stor = storage->ensure(sd, storage_id);
+	if (stor == NULL)
 		return;
 
 	if (saved == 0) {
