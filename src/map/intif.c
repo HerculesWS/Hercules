@@ -446,7 +446,7 @@ static void intif_parse_account_storage_save_ack(int fd)
 
 	Assert_retv(account_id > 0);
 	Assert_retv(fd > 0);
-	Assert_retv(storage_id >= 0);
+	Assert_retv(storage_id > 0);
 
 	struct map_session_data* sd = NULL;
 	if ((sd = map->id2sd(account_id)) == NULL)
