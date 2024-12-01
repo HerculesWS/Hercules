@@ -372,9 +372,6 @@ static int storage_add_from_inventory(struct map_session_data *sd, struct storag
 		return 0;
 	}
 
-	if (stor->aggregate >= stst->capacity)
-		return 0; // storage full
-
 	if (index < 0 || index >= sd->status.inventorySize)
 		return 0;
 
@@ -450,9 +447,6 @@ static int storage_storageaddfromcart(struct map_session_data *sd, struct storag
 		clif->cart_additem(sd, index, amount, 0);
 		return 0;
 	}
-
-	if (stor->aggregate >= stst->capacity)
-		return 0; // storage full / storage closed
 
 	if (index < 0 || index >= MAX_CART)
 		return 0;
