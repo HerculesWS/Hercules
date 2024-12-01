@@ -9706,9 +9706,8 @@ static void clif_refresh_storagewindow(struct map_session_data *sd)
 		const struct storage_settings* stst = storage->get_settings(sd->storage.current);
 		nullpo_retv(stst);
 
-		struct storage_data* stor = NULL;
-		if ((stor = storage->ensure(sd, sd->storage.current)) == NULL)
-			return;
+		struct storage_data* stor = storage->ensure(sd, sd->storage.current);
+		nullpo_retv(stor);
 
 		if (stor->aggregate > 0)
 			storage->sortitem(VECTOR_DATA(stor->item), VECTOR_LENGTH(stor->item));

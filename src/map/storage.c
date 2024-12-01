@@ -241,15 +241,15 @@ static int storage_additem(struct map_session_data *sd, struct storage_data* sto
 {
 	nullpo_retr(1, sd);
 	nullpo_retr(1, stor);                   // Assert Storage
-	Assert_retr(1, stor->received); // Assert the availability of the storage.
+	Assert_retr(1, stor->received);         // Assert the availability of the storage.
 	nullpo_retr(1, item_data);              // Assert availability of item data.
 	Assert_retr(1, item_data->nameid > 0);  // Assert existence of item in the database.
 	Assert_retr(1, amount > 0);             // Assert quantity of item.
 
-	const struct storage_settings* stst = NULL;
-	nullpo_retr(1, (stst = storage->get_settings(stor->uid))); // Assert existence of storage configuration.
+	const struct storage_settings *stst = storage->get_settings(stor->uid);
+	nullpo_retr(1, stst);                   // Assert existence of storage configuration.
 
-	struct item_data* data = itemdb->search(item_data->nameid);
+	struct item_data *data = itemdb->search(item_data->nameid);
 
 	if (data->stack.storage && amount > data->stack.amount) // item stack limitation
 		return 1;
@@ -325,8 +325,8 @@ static int storage_delitem(struct map_session_data *sd, struct storage_data* sto
 	nullpo_retr(1, stor);
 	Assert_retr(1, stor->received);
 
-	const struct storage_settings* stst = NULL;
-	nullpo_retr(1, (stst = storage->get_settings(stor->uid)));
+	const struct storage_settings *stst = storage->get_settings(stor->uid);
+	nullpo_retr(1, stst);
 
 	Assert_retr(1, n >= 0 && n < VECTOR_LENGTH(stor->item));
 
@@ -359,12 +359,12 @@ static int storage_delitem(struct map_session_data *sd, struct storage_data* sto
  *------------------------------------------*/
 static int storage_add_from_inventory(struct map_session_data *sd, struct storage_data* stor, int index, int amount)
 {
-	nullpo_retr(0, sd);
-	nullpo_retr(0, stor);
-	Assert_retr(0, stor->received);
+	nullpo_ret(sd);
+	nullpo_ret(stor);
+	Assert_ret(stor->received);
 
-	const struct storage_settings* stst = NULL;
-	nullpo_retr(0, (stst = storage->get_settings(stor->uid)));
+	const struct storage_settings *stst = storage->get_settings(stor->uid);
+	nullpo_ret(stst);
 
 	if ((sd->storage.access & STORAGE_ACCESS_PUT) == 0) {
 		clif->delitem(sd, index, amount, DELITEM_NORMAL);
@@ -442,8 +442,8 @@ static int storage_storageaddfromcart(struct map_session_data *sd, struct storag
 	nullpo_ret(stor);
 	Assert_ret(stor->received);
 
-	const struct storage_settings* stst = NULL;
-	nullpo_ret(stst = storage->get_settings(stor->uid));
+	const struct storage_settings *stst = storage->get_settings(stor->uid);
+	nullpo_ret(stst);
 
 	if ((sd->storage.access & STORAGE_ACCESS_PUT) == 0) {
 		clif->cart_delitem(sd, index, amount);
@@ -518,9 +518,8 @@ static void storage_storageclose(struct map_session_data *sd)
 	nullpo_retv(sd);
 	Assert_retv(sd->storage.current > 0);
 
-	struct storage_data* curr_stor = NULL;
-	if ((curr_stor = storage->ensure(sd, sd->storage.current)) == NULL)
-		return;
+	struct storage_data *curr_stor = storage->ensure(sd, sd->storage.current);
+	nullpo_retv(curr_stor);
 
 	clif->storageclose(sd);
 
