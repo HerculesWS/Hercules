@@ -894,8 +894,6 @@ ACMD(storage)
 		return false;
 	}
 
-	sd->storage.access = STORAGE_ACCESS_ALL; // Default storage access for atcommands.
-
 	struct storage_data *stor = NULL;
 	if ((stor = storage->ensure(sd, storage_id)) == NULL) {
 		ShowError("atcommand_storage: Error ensuring storage for player %d, storage_id %d\n", sd->bl.id, storage_id);
@@ -916,7 +914,7 @@ ACMD(storage)
 		return false;
 	}
 
-	if (storage->open(sd, stor) == 1) { //Already open.
+	if (storage->open(sd, stor, STORAGE_ACCESS_ALL) == 1) { //Already open.
 		clif->message(fd, msg_fd(fd, MSGTBL_STORAGE_ALREADY_OPEN)); // You have already opened your storage. Close it first.
 		return false;
 	}
@@ -5690,9 +5688,6 @@ ACMD(storeall)
 		clif->message(fd, msg_fd(fd, MSGTBL_STORAGE_SPECIFY_STOREALL)); // Please specify a storage ID or name. (usage: @storeall <storage name/ID>).
 		return false;
 	}
-
-	sd->storage.access = STORAGE_ACCESS_ALL; // Default storage access for atcommands.
-
 	struct storage_data *stor = NULL;
 	if ((stor = storage->ensure(sd, storage_id)) == NULL) {
 		ShowError("atcommand_storeall: Error ensuring storage for player %d, storage_id %d\n", sd->bl.id, storage_id);
@@ -5701,7 +5696,7 @@ ACMD(storeall)
 
 	if (sd->state.storage_flag != STORAGE_FLAG_NORMAL) {
 		//Open storage.
-		if (storage->open(sd, stor) == 1) {
+		if (storage->open(sd, stor, STORAGE_ACCESS_ALL) == 1) {
 			clif->message(fd, msg_fd(fd, MSGTBL_CANNOT_OPEN_STORAGE)); // You currently cannot open your storage.
 			return false;
 		}
@@ -5755,8 +5750,6 @@ ACMD(clearstorage)
 		clif->message(fd, msg_fd(fd, MSGTBL_STORAGE_ALREADY_OPEN));
 		return false;
 	}
-
-	sd->storage.access = STORAGE_ACCESS_ALL; // Default storage access for atcommands.
 
 	struct storage_data *stor = NULL;
 	if ((stor = storage->ensure(sd, storage_id)) == NULL) {
