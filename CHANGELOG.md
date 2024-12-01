@@ -22,6 +22,17 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
+## [v2024.11] `November 2024`
+
+### Changed
+
+- Updated mob_db2 documentation to include the `Inherit` mechanism. (#3327)
+
+### Fixed
+
+- Fixed a code comment containing misleading information. (#3327)
+- Fixed the `clang-13` build in the GitHub CI, failing due to a removed package in debian unstable. (#3333)
+
 ## [v2024.10] `October 2024`
 
 ### Changed
@@ -3181,6 +3192,7 @@ Note: everything included in this release is part of PR #3198 which consists of 
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2024.11]: https://github.com/HerculesWS/Hercules/compare/v2024.10...v2024.11
 [v2024.10]: https://github.com/HerculesWS/Hercules/compare/v2024.09...v2024.10
 [v2024.09]: https://github.com/HerculesWS/Hercules/compare/v2024.08...v2024.09
 [v2024.08]: https://github.com/HerculesWS/Hercules/compare/v2024.06...v2024.08
