@@ -8896,7 +8896,7 @@ ACMD(itemlist)
 				return false;
 			}
 		} else {
-			clif->message(fd, msg_fd(fd, 68));
+			clif->message(fd, msg_fd(fd, MSGTBL_STORAGE_SPECIFY_STORAGELIST));
 			return false;
 		}
 
