@@ -190,6 +190,9 @@ static bool hplugins_addpacket(unsigned short cmd, unsigned short length, void (
 
 	if (cmd <= MAX_PACKET_DB && cmd >= MIN_PACKET_DB) {
 		packets->db[cmd] = length;
+	} else {
+		ShowError("HPM->addPacket:%s: packet 0x%04x is out of range! Packet ID must be between 0x%04x (MIN_PACKET_DB) and 0x%04x (MAX_PACKET_DB). Ignoring it...\n",
+		    HPM->pid2name(pluginID), cmd, (unsigned int) MIN_PACKET_DB, (unsigned int) MAX_PACKET_DB);
 	}
 
 	return true;
