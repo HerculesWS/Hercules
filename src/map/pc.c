@@ -10602,17 +10602,20 @@ static int pc_checkitem(struct map_session_data *sd)
 
 		if ((sd->itemcheck & PCCHECKITEM_STORAGE) != 0) {
 			for (i = 0; i < VECTOR_LENGTH(sd->storage.list); i++) {
-				struct storage_data* stor = &VECTOR_INDEX(sd->storage.list, i);
+				struct storage_data *stor = &VECTOR_INDEX(sd->storage.list, i);
+				
+				if (stor == NULL || stor->received == false)
+					continue;
 
-				for (int j = 0; j < VECTOR_LENGTH(sd->storage.list); j++) {
-					struct item* it = &VECTOR_INDEX(stor->item, j);
+				for (int j = 0; j < VECTOR_LENGTH(stor->item); j++) {
+					struct item *it = &VECTOR_INDEX(stor->item, j);
 
 					if ((id = it->nameid) == 0)
 						continue;
 
-					if (itemdb_available(id) == 0) {
+					if (!itemdb_available(id)) {
 						ShowWarning("pc_checkitem: Removed invalid/disabled item id %d from storage %d (amount=%d, char_id=%d).\n", id, stor->uid, it->amount, sd->status.char_id);
-						storage->delitem(sd, stor, i, it->amount);
+						storage->delitem(sd, stor, j, it->amount);
 						continue;
 					}
 
