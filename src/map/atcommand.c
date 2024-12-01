@@ -875,15 +875,10 @@ ACMD(speed)
 ACMD(storage)
 {
 	char storage_name[NAME_LENGTH] = "";
-	int storage_id = 0, intval = 0;
-	struct storage_settings *stst = NULL;
+	int storage_id = 0;
 
-	if (*message != '\0' && sscanf(message, "%12d", &intval) == 1) {
-		if ((stst = storage->get_settings(intval)) == NULL) {
-			clif->message(fd, msg_fd(fd, MSGTBL_STORAGE_INVALID));
-			return false;
-		}
-		storage_id = intval;
+	if (*message != '\0' && sscanf(message, "%12d", &storage_id) == 1) {
+		// Proceed
 	} else if (*message != '\0' && sscanf(message, "%23s", storage_name) == 1) {
 		if ((storage_id = storage->get_id_by_name(storage_name)) == 0) {
 			clif->message(fd, msg_fd(fd, MSGTBL_STORAGE_INVALID));
@@ -894,15 +889,21 @@ ACMD(storage)
 		return false;
 	}
 
-	struct storage_data *stor = NULL;
-	if ((stor = storage->ensure(sd, storage_id)) == NULL) {
+	struct storage_settings *stst = storage->get_settings(storage_id);
+	if (stst == NULL) {
+		clif->message(fd, msg_fd(fd, MSGTBL_STORAGE_INVALID));
+		return false;
+	}
+
+	struct storage_data *stor = storage->ensure(sd, storage_id);
+	if (stor == NULL) {
 		ShowError("atcommand_storage: Error ensuring storage for player %d, storage_id %d\n", sd->bl.id, storage_id);
 		return false;
 	}
 
 	if (!stor->received) {
 		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_STORAGE_NOT_LOADED), stst->name);
-		clif->message(fd, atcmd_output); // %s has not been loaded yet.
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -910,16 +911,16 @@ ACMD(storage)
 		return false;
 
 	if (!pc_has_permission(sd, PC_PERM_BYPASS_NOSTORAGE) && (map->list[sd->bl.m].flag.nostorage & 1)) { // mapflag nostorage already defined? can't open :c
-		clif->message(fd, msg_fd(fd, MSGTBL_CANNOT_OPEN_STORAGE)); // You currently cannot open your storage.
+		clif->message(fd, msg_fd(fd, MSGTBL_CANNOT_OPEN_STORAGE));
 		return false;
 	}
 
 	if (storage->open(sd, stor, STORAGE_ACCESS_ALL) == 1) { //Already open.
-		clif->message(fd, msg_fd(fd, MSGTBL_STORAGE_ALREADY_OPEN)); // You have already opened your storage. Close it first.
+		clif->message(fd, msg_fd(fd, MSGTBL_STORAGE_ALREADY_OPEN));
 		return false;
 	}
 
-	snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_STORAGE_OPENED), stst->name);  // %s opened.
+	snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_STORAGE_OPENED), stst->name);
 
 	clif->message(fd, atcmd_output);
 
@@ -5670,45 +5671,52 @@ ACMD(dropall)
 ACMD(storeall)
 {
 	char storage_name[NAME_LENGTH] = "";
-	int storage_id = 0, intval = 0;
-	struct storage_settings *stst = NULL;
+	int storage_id = 0;
 
-	if (*message != '\0' && sscanf(message, "%12d", &intval) == 1) {
-		if ((stst = storage->get_settings(intval)) == NULL) {
-			clif->message(fd, msg_fd(fd, MSGTBL_STORAGE_INVALID));
-			return false;
-		}
-		storage_id = intval;
+	if (*message != '\0' && sscanf(message, "%12d", &storage_id) == 1) {
+		// Proceed
 	} else if (*message != '\0' && sscanf(message, "%23s", storage_name) == 1) {
 		if ((storage_id = storage->get_id_by_name(storage_name)) == 0) {
 			clif->message(fd, msg_fd(fd, MSGTBL_STORAGE_INVALID));
 			return false;
 		}
 	} else {
-		clif->message(fd, msg_fd(fd, MSGTBL_STORAGE_SPECIFY_STOREALL)); // Please specify a storage ID or name. (usage: @storeall <storage name/ID>).
+		clif->message(fd, msg_fd(fd, MSGTBL_STORAGE_SPECIFY_STOREALL));
 		return false;
 	}
-	struct storage_data *stor = NULL;
-	if ((stor = storage->ensure(sd, storage_id)) == NULL) {
+
+	struct storage_settings *stst = storage->get_settings(storage_id);
+	if (stst == NULL) {
+		clif->message(fd, msg_fd(fd, MSGTBL_STORAGE_INVALID));
+		return false;
+	}
+
+	struct storage_data *stor = storage->ensure(sd, storage_id);
+	if (stor == NULL) {
 		ShowError("atcommand_storeall: Error ensuring storage for player %d, storage_id %d\n", sd->bl.id, storage_id);
 		return false;
 	}
 
-	if (sd->state.storage_flag != STORAGE_FLAG_NORMAL) {
-		//Open storage.
-		if (storage->open(sd, stor, STORAGE_ACCESS_ALL) == 1) {
-			clif->message(fd, msg_fd(fd, MSGTBL_CANNOT_OPEN_STORAGE)); // You currently cannot open your storage.
+	if (sd->state.storage_flag == STORAGE_FLAG_NORMAL) {
+		clif->message(fd, msg_fd(fd, MSGTBL_STORAGE_ALREADY_OPEN));
+		return false;
+	} else {
+		if (storage->open(sd, stor, STORAGE_ACCESS_ALL) == 1) { // Open storage.
+			clif->message(fd, msg_fd(fd, MSGTBL_CANNOT_OPEN_STORAGE));
 			return false;
 		}
 	}
 
-	if (stor->received == false) {
-		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_STORAGE_NOT_LOADED), stst->name);
-		clif->message(fd, atcmd_output); // %s has not been loaded yet.
+	if (sd->storage.current != storage_id) {
+		ShowError("atcommand_storeall: Storage id mismatch for player %d, current storage id: %d, storage_id: %d\n", sd->bl.id, sd->storage.current, storage_id);
 		return false;
 	}
 
-	sd->storage.current = storage_id;
+	if (stor->received == false) {
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_STORAGE_NOT_LOADED), stst->name);
+		clif->message(fd, atcmd_output);
+		return false;
+	}
 
 	for (int i = 0; i < sd->status.inventorySize; i++) {
 		if (sd->status.inventory[i].amount) {
@@ -5719,7 +5727,7 @@ ACMD(storeall)
 	}
 	storage->close(sd);
 
-	clif->message(fd, msg_fd(fd, MSGTBL_ALL_ITEMS_STORED)); // All items stored.
+	clif->message(fd, msg_fd(fd, MSGTBL_ALL_ITEMS_STORED));
 	return true;
 }
 
@@ -5727,15 +5735,10 @@ ACMD(clearstorage)
 {
 	int i = 0;
 	char storage_name[NAME_LENGTH] = "";
-	int storage_id = 0, intval = 0;
-	struct storage_settings *stst = NULL;
+	int storage_id = 0;
 
-	if (*message != '\0' && sscanf(message, "%12d", &intval) == 1) {
-		if ((stst = storage->get_settings(intval)) == NULL) {
-			clif->message(fd, msg_fd(fd, MSGTBL_STORAGE_INVALID));
-			return false;
-		}
-		storage_id = intval;
+	if (*message != '\0' && sscanf(message, "%12d", &storage_id) == 1) {
+		// Proceed
 	} else if (*message != '\0' && sscanf(message, "%23s", storage_name) == 1) {
 		if ((storage_id = storage->get_id_by_name(storage_name)) == 0) {
 			clif->message(fd, msg_fd(fd, MSGTBL_STORAGE_INVALID));
@@ -5746,24 +5749,38 @@ ACMD(clearstorage)
 		return false;
 	}
 
-	if (sd->state.storage_flag == STORAGE_FLAG_NORMAL) {
-		clif->message(fd, msg_fd(fd, MSGTBL_STORAGE_ALREADY_OPEN));
+	struct storage_settings *stst = storage->get_settings(storage_id);
+	if (stst == NULL) {
+		clif->message(fd, msg_fd(fd, MSGTBL_STORAGE_INVALID));
 		return false;
 	}
 
-	struct storage_data *stor = NULL;
-	if ((stor = storage->ensure(sd, storage_id)) == NULL) {
+	struct storage_data *stor = storage->ensure(sd, storage_id);
+	if (stor == NULL) {
 		ShowError("atcommand_clearstorage: Error ensuring storage for player %d, storage_id %d\n", sd->bl.id, storage_id);
+		return false;
+	}
+
+	if (sd->state.storage_flag == STORAGE_FLAG_NORMAL) {
+		clif->message(fd, msg_fd(fd, MSGTBL_STORAGE_ALREADY_OPEN));
+		return false;
+	} else {
+		if (storage->open(sd, stor, STORAGE_ACCESS_ALL) == 1) { // Open storage.
+			clif->message(fd, msg_fd(fd, MSGTBL_CANNOT_OPEN_STORAGE));
+			return false;
+		}
+	}
+
+	if (sd->storage.current != storage_id) {
+		ShowError("atcommand_clearstorage: Storage id mismatch for player %d, current storage id: %d, storage_id: %d\n", sd->bl.id, sd->storage.current, storage_id);
 		return false;
 	}
 
 	if (stor->received == false) {
 		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_STORAGE_NOT_LOADED), stst->name);
-		clif->message(fd, atcmd_output); //  %s has not been loaded yet.
+		clif->message(fd, atcmd_output);
 		return false;
 	}
-
-	sd->storage.current = storage_id;
 
 	for (i = 0; i < VECTOR_LENGTH(stor->item); ++i) {
 		if (VECTOR_INDEX(stor->item, i).nameid == 0)
@@ -5775,7 +5792,7 @@ ACMD(clearstorage)
 	storage->close(sd);
 
 	snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_CLEARSTORAGE_SUCCESS), stst->name);
-	clif->message(fd, atcmd_output); // Your %s has now been cleaned.
+	clif->message(fd, atcmd_output);
 	return true;
 }
 
@@ -8868,13 +8885,33 @@ ACMD(itemlist)
 
 	if( strcmpi(info->command, "storagelist") == 0 ) {
 		location = "storage";
-		struct storage_data *stor = NULL;
-		// Only lists Main Storage for now [jsn]
-		// TODO: Separate storagelist command
-		if ((stor = storage->ensure(sd, 1)) == NULL) { 
-			ShowError("atcommand_itemlist: storage_id 1 not found for player %d\n", sd->bl.id);
+		char storage_name[NAME_LENGTH] = "";
+		int storage_id = 0;
+
+		if (*message != '\0' && sscanf(message, "%12d", &storage_id) == 1) {
+			// Proceed
+		} else if (*message != '\0' && sscanf(message, "%23s", storage_name) == 1) {
+			if ((storage_id = storage->get_id_by_name(storage_name)) == 0) {
+				clif->message(fd, msg_fd(fd, MSGTBL_STORAGE_INVALID));
+				return false;
+			}
+		} else {
+			clif->message(fd, msg_fd(fd, 68));
 			return false;
 		}
+
+		struct storage_settings *stst = storage->get_settings(storage_id);
+		if (stst == NULL) {
+			clif->message(fd, msg_fd(fd, MSGTBL_STORAGE_INVALID));
+			return false;
+		}
+
+		struct storage_data *stor = storage->ensure(sd, storage_id);
+		if (stor == NULL) {
+			ShowError("atcommand_storagelist: Error ensuring storage for player %d, storage_id %d\n", sd->bl.id, storage_id);
+			return false;
+		}
+
 		items = VECTOR_DATA(stor->item);
 		size = VECTOR_LENGTH(stor->item);
 	} else if( strcmpi(info->command, "cartlist") == 0 ) {
