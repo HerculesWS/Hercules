@@ -61,23 +61,23 @@ struct storage_interface {
 	void (*final) (void);
 	/* */
 	void (*reconnect) (void);
-	bool (*config_read) (const char* filename, bool imported);
-	void (*config_read_additional_fields) (struct config_setting_t* t, struct storage_settings* s_conf, const char* filename);
+	bool (*config_read) (const char *filename, bool imported);
+	void (*config_read_additional_fields) (struct config_setting_t *t, struct storage_settings *s_conf, const char *filename);
 	/* */
-	int (*get_id_by_name) (const char* storage_name);
-	struct storage_data* (*ensure) (struct map_session_data* sd, int storage_id);
+	int (*get_id_by_name) (const char *storage_name);
+	struct storage_data* (*ensure) (struct map_session_data *sd, int storage_id);
 	const struct storage_settings* (*get_settings) (int storage_id);
-	int (*delitem) (struct map_session_data* sd, struct storage_data* stor, int n, int amount);
-	int (*open) (struct map_session_data* sd, struct storage_data* stor, enum storage_access_modes mode);
-	int (*add) (struct map_session_data* sd, struct storage_data* stor, int index, int amount);
-	int (*get) (struct map_session_data* sd, struct storage_data* stor, int index, int amount);
-	int (*additem) (struct map_session_data* sd, struct storage_data* stor, struct item* item_data, int amount);
-	int (*addfromcart) (struct map_session_data* sd, struct storage_data* stor, int index, int amount);
-	int (*gettocart) (struct map_session_data* sd, struct storage_data* stor, int index, int amount);
+	int (*delitem) (struct map_session_data *sd, struct storage_data *stor, int n, int amount);
+	int (*open) (struct map_session_data *sd, struct storage_data *stor, enum storage_access_modes mode);
+	int (*add) (struct map_session_data *sd, struct storage_data *stor, int index, int amount);
+	int (*get) (struct map_session_data *sd, struct storage_data *stor, int index, int amount);
+	int (*additem) (struct map_session_data *sd, struct storage_data *stor, struct item *item_data, int amount);
+	int (*addfromcart) (struct map_session_data *sd, struct storage_data *stor, int index, int amount);
+	int (*gettocart) (struct map_session_data *sd, struct storage_data *stor, int index, int amount);
 	void (*close) (struct map_session_data *sd);
 	void (*pc_quit) (struct map_session_data *sd, int flag);
 	int (*comp_item) (const void *i1_, const void *i2_);
-	void (*sortitem) (struct item* items, unsigned int size);
+	void (*sortitem) (struct item *items, unsigned int size);
 	int (*reconnect_sub) (union DBKey key, struct DBData *data, va_list ap);
 };
 
