@@ -1004,7 +1004,7 @@ static void storage_config_read_additional_fields(struct config_setting_t* t, st
  * @param imported Whether the current config is imported from another file.
  * @retval false in case of error.
  */
-bool storage_config_read(const char* filename, bool imported)
+bool storage_config_read(const char *filename, bool imported)
 {
 	nullpo_retr(false, filename);
 
@@ -1054,16 +1054,14 @@ bool storage_config_read(const char* filename, bool imported)
 			continue;
 		}
 
-		if (libconfig->setting_lookup_string(t, "Constant", &constant) == CONFIG_FALSE) {
-			ShowError("storage_config_read: Constant field not found for storage configuration (Id: %d) in '%s'. Skipping...\n", s_conf.uid, filename);
-			continue;
-		} else {
-			script->set_constant(constant, s_conf.uid, false, false);
-		}
-
 		/* Capacity */
 		if (libconfig->setting_lookup_int(t, "Capacity", &s_conf.capacity) == CONFIG_FALSE) {
 			ShowError("storage_config_read: Capacity field not found for storage configuration (Id: %d)  in '%s'. Skipping...\n", s_conf.uid, filename);
+			continue;
+		}
+
+		if (s_conf.capacity < 1) {
+			ShowWarning("storage_config_read: Invalid capacity for Storage #%d ('%s'). Skipping...\n", s_conf.uid, s_conf.name);
 			continue;
 		}
 
@@ -1071,6 +1069,13 @@ bool storage_config_read(const char* filename, bool imported)
 			ShowWarning("storage_config_read: Capacity for Storage #%d ('%s') is over MAX_STORAGE. Capping to %d.\n", s_conf.uid, s_conf.name, MAX_STORAGE);
 			s_conf.capacity = min(s_conf.capacity, MAX_STORAGE);
 		}
+
+		if (libconfig->setting_lookup_string(t, "Constant", &constant) == CONFIG_FALSE) {
+			ShowError("storage_config_read: Constant field not found for storage configuration (Id: %d) in '%s'. Skipping...\n", s_conf.uid, filename);
+			continue;
+		}
+		
+		script->set_constant(constant, s_conf.uid, false, false);
 
 		/* Additional Fields */
 		storage->config_read_additional_fields(t, &s_conf, filename);
@@ -1089,7 +1094,7 @@ bool storage_config_read(const char* filename, bool imported)
 	const char* import = NULL;
 	if (libconfig->lookup_string(&stor_libconf, "import", &import) == CONFIG_TRUE) {
 		if (strcmp(import, filename) == 0 || strcmp(import, map->STORAGE_CONF_FILENAME) == 0) {
-			ShowWarning("battle_config_read: Loop detected! Skipping 'import'...\n");
+			ShowWarning("storage_config_read: Loop detected! Skipping 'import'...\n");
 			libconfig->destroy(&stor_libconf);
 			return false;
 		} else if (storage->config_read(import, true) == false) {
