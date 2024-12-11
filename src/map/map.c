@@ -7028,7 +7028,6 @@ int do_init(int argc, char *argv[])
 		atcommand->msg_read(map->MSG_CONF_NAME, false);
 		map->inter_config_read(map->INTER_CONF_NAME, false);
 		logs->config_read(map->LOG_CONF_NAME, false);
-		storage->config_read(map->STORAGE_CONF_FILENAME, false);
 	} else {
 		battle->config_read(map->BATTLE_CONF_FILENAME, false);
 	}
