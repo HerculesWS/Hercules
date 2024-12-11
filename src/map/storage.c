@@ -1009,7 +1009,7 @@ bool storage_config_read(const char *filename, bool imported)
 	nullpo_retr(false, filename);
 
 	if (!imported)
-		VECTOR_INIT(storage->configuration);
+		VECTOR_CLEAR(storage->configuration);
 
 	struct config_t stor_libconf;
 	if (libconfig->load_file(&stor_libconf, filename) == CONFIG_FALSE)
@@ -1035,11 +1035,13 @@ bool storage_config_read(const char *filename, bool imported)
 		}
 
 		// Duplicate ID search and report...
-		int d = 0;
-		ARR_FIND(0, VECTOR_LENGTH(storage->configuration), d, VECTOR_INDEX(storage->configuration, d).uid == s_conf.uid);
-		if (d < VECTOR_LENGTH(storage->configuration)) {
-			ShowError("storage_config_read: Duplicate ID %d for storage. Skipping...\n", s_conf.uid);
-			continue;
+		if (!imported) {
+			int d = 0;
+			ARR_FIND(0, VECTOR_LENGTH(storage->configuration), d, VECTOR_INDEX(storage->configuration, d).uid == s_conf.uid);
+			if (d < VECTOR_LENGTH(storage->configuration)) {
+				ShowError("storage_config_read: Duplicate ID %d for storage. Skipping...\n", s_conf.uid);
+				continue;
+			}
 		}
 
 		// Check for an invalid ID...
@@ -1117,6 +1119,8 @@ static void do_init_storage(bool minimal)
 {
 	if (minimal)
 		return;
+	VECTOR_INIT(storage->configuration);
+	storage->config_read(map->STORAGE_CONF_FILENAME, false);
 }
 
 /**
