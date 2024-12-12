@@ -281,6 +281,68 @@ OnInit:
 	sellitem RepairC;
 }
 
+lhz_in02,31,145,4	trader	Tool Dealer#lhz	4_F_01,{
+OnInit:
+	sellitem Spectacles;
+	sellitem Yellow_Potion;
+	sellitem White_Potion;
+	sellitem Berserk_Potion;
+	sellitem Awakening_Potion;
+	sellitem Empty_Bottle;
+	sellitem Wing_Of_Fly;
+	sellitem Wing_Of_Butterfly;
+	sellitem Booby_Trap;
+	sellitem Leaf_Of_Yggdrasil;
+	sellitem Iron_Arrow;
+}
+
+lhz_in02,87,208,3	trader	Toy Supplier#lhz	4_M_PIERROT,{
+OnInit:
+	sellitem One_Eyed_Glass;
+	sellitem Sunglasses;
+	sellitem Spinning_Eyes;
+	sellitem Eye_Bandage;
+	sellitem Luxury_Sunglasses;
+	sellitem Granpa_Beard;
+}
+
+lhz_in03,239,106,5	trader	Tool Dealer#lhz2	4_F_EINWOMAN,{
+OnInit:
+	sellitem Red_Potion;
+	sellitem Orange_Potion;
+	sellitem Center_Potion;
+	sellitem Awakening_Potion;
+	sellitem Empty_Bottle;
+	sellitem Wing_Of_Fly;
+	sellitem Wing_Of_Butterfly;
+	sellitem Booby_Trap;
+	sellitem Spectacles;
+}
+
+lighthalzen,222,191,4	trader	Pet Groomer#lhz	4_M_TELEPORTER,{
+OnInit:
+	sellitem Pet_Food;
+	sellitem Pet_Incubator;
+	sellitem Backpack;
+	sellitem Rocker_Glasses;
+	sellitem Vital_Flower_;
+	sellitem Flame_Gemstone;
+	sellitem Bun_;
+	sellitem Vital_Flower;
+	sellitem Damp_Darkness;
+	sellitem Small_Snow_Flower;
+	sellitem Fresh_Plant;
+	sellitem Big_Cell;
+	sellitem Apple_Pudding;
+	sellitem Mystic_Stone;
+	sellitem Flavored_Alcohol;
+	sellitem Spirit_Liquor;
+	sellitem Pumpkin_Pie_;
+	sellitem Sunset_On_The_Rock;
+	sellitem Morning_Dew;
+	sellitem Grilled_Rice_Cake;
+}
+
 s_atelier,15,65,5	trader	Part-Timer#sc_lgt	4_M_ORIENT02,{
 OnInit:
 	sellitem Surface_Paint;
@@ -349,13 +411,6 @@ OnInit:
 	sellitem RepairA;
 	sellitem RepairB;
 	sellitem RepairC;
-}
-
-//== Payon =================================================
-payon,123,109,4	trader	Trap Specialist#pay	1_F_01,{
-OnInit:
-	sellitem Special_Alloy_Trap;
-	sellitem Special_Alloy_Trap_Box;
 }
 
 //== Port Malaya ===========================================
@@ -623,7 +678,7 @@ OnInit:
 	sellitem Booby_Trap;
 }
 
-morocc,147,103,6	trader	Tool Dealer#moc3	4W_M_03,{
+morocc,146,103,6	trader	Tool Dealer#moc3	4W_M_03,{
 OnInit:
 	sellitem Arrow;
 	sellitem Spectacles;
@@ -916,6 +971,43 @@ OnInit:
 	sellitem Booby_Trap;
 }
 
+payon,123,109,4	trader	Trap Specialist#pay	1_F_01,{
+OnInit:
+	sellitem Special_Alloy_Trap;
+	sellitem Special_Alloy_Trap_Box;
+}
+
+//== Al De Baran ===========================================
+aldeba_in,94,56,5	trader	Tool Dealer#alde	4_M_01,{
+OnInit:
+	sellitem Red_Potion;
+	sellitem Orange_Potion;
+	sellitem Yellow_Potion;
+	sellitem White_Potion;
+	sellitem Center_Potion;
+	sellitem Awakening_Potion;
+	sellitem Empty_Bottle;
+	sellitem Wing_Of_Fly;
+	sellitem Wing_Of_Butterfly;
+	sellitem Spectacles;
+	sellitem Leaf_Of_Yggdrasil;
+	sellitem Arrow;
+}
+
+alde_alche,38,184,3	trader	Material Seller#alche	4_M_SAGE_C,{
+OnInit:
+	sellitem Life_Force_Pot;
+	sellitem Yggdrasilberry_Dew;
+	sellitem Seed_Of_Life;
+	sellitem Melange_Pot;
+	sellitem Cooking_Skewer;
+	sellitem Black_Charcoal;
+	sellitem Large_Cookpot;
+	sellitem Fine_Noodle;
+	sellitem Cool_Gravy;
+	sellitem Bottle_To_Throw;
+}
+
 //== Rachel ================================================
 ra_in01,263,281,4	trader	Trap Specialist#ra	1_F_01,{
 OnInit:
@@ -1038,6 +1130,44 @@ OnInit:
 }
 
 payon,206,119,5	trader	Chef Assistant#pay	4_M_ORIENT02,{
+OnInit:
+	sellitem Combination_Kit;
+	sellitem Mushroom;
+	sellitem Pot;
+	sellitem Bread;
+	sellitem Grain;
+	sellitem Cooking_Oil;
+	sellitem Plain_Sauce;
+	sellitem Hot_Sauce;
+	sellitem Sweet_Sauce;
+	sellitem Red_Spice;
+	sellitem Yellow_Spice;
+	sellitem Delicious_Fish;
+	sellitem Outdoor_Cooking_Kits;
+	sellitem Indoor_Cooking_Kits;
+	sellitem High_end_Cooking_Kits;
+}
+
+aldebaran,165,107,2	trader	Chef Assistant#alde	4W_M_01,{
+OnInit:
+	sellitem Combination_Kit;
+	sellitem Mushroom;
+	sellitem Pot;
+	sellitem Bread;
+	sellitem Grain;
+	sellitem Cooking_Oil;
+	sellitem Plain_Sauce;
+	sellitem Hot_Sauce;
+	sellitem Sweet_Sauce;
+	sellitem Red_Spice;
+	sellitem Yellow_Spice;
+	sellitem Delicious_Fish;
+	sellitem Outdoor_Cooking_Kits;
+	sellitem Indoor_Cooking_Kits;
+	sellitem High_end_Cooking_Kits;
+}
+
+lighthalzen,126,126,3	trader	Chef Assistant#lhz	4_M_01,{
 OnInit:
 	sellitem Combination_Kit;
 	sellitem Mushroom;
