@@ -3004,6 +3004,9 @@ static int unit_free(struct block_list *bl, enum clr_type clrtype)
 			VECTOR_CLEAR(sd->hatEffectId);
 			VECTOR_CLEAR(sd->title_ids); // Title [Dastgir/Hercules]
 			VECTOR_CLEAR(sd->agency_requests);
+
+			for (int i = 0; i < VECTOR_LENGTH(sd->storage.list); i++)
+				VECTOR_CLEAR(VECTOR_INDEX(sd->storage.list, i).item);
 			VECTOR_CLEAR(sd->storage.list);
 			
 			if( sd->quest_log != NULL ) {
