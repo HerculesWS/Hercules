@@ -188,10 +188,12 @@ static int inter_storage_fromsql(int account_id, int storage_id, struct storage_
 
 	StrBuf->Destroy(&buf);
 
-	if (SQL->NumRows(inter->sql_handle) > 0) {
-		VECTOR_ENSURE(p->item, MAX_STORAGE, 1);
+	int num_rows = SQL->NumRows(inter->sql_handle) > MAX_STORAGE ? MAX_STORAGE : (int)SQL->NumRows(inter->sql_handle);
 
-		for (int j = 0; j < MAX_STORAGE && SQL_SUCCESS == SQL->NextRow(inter->sql_handle); ++j) {
+	if (num_rows > 0) {
+		VECTOR_ENSURE(p->item, num_rows, 1);
+
+		for (int j = 0; j < num_rows && SQL_SUCCESS == SQL->NextRow(inter->sql_handle); ++j) {
 			struct item item = { 0 };
 			SQL->GetData(inter->sql_handle, 0, &data, NULL); item.id = atoi(data);
 			SQL->GetData(inter->sql_handle, 1, &data, NULL); item.nameid = atoi(data);
