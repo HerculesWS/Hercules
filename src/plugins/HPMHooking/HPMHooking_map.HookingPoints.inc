@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2013-2024 Hercules Dev Team
+ * Copyright (C) 2013-2025 Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -661,6 +661,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->messageln, HP_clif_messageln) },
 	{ HP_POP(clif->process_chat_message, HP_clif_process_chat_message) },
 	{ HP_POP(clif->process_whisper_message, HP_clif_process_whisper_message) },
+	{ HP_POP(clif->validate_message, HP_clif_validate_message) },
 	{ HP_POP(clif->wisexin, HP_clif_wisexin) },
 	{ HP_POP(clif->wisall, HP_clif_wisall) },
 	{ HP_POP(clif->PMIgnoreList, HP_clif_PMIgnoreList) },

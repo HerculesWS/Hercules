@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2013-2024 Hercules Dev Team
+ * Copyright (C) 2013-2025 Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1272,6 +1272,8 @@ struct {
 	struct HPMHookPoint *HP_clif_process_chat_message_post;
 	struct HPMHookPoint *HP_clif_process_whisper_message_pre;
 	struct HPMHookPoint *HP_clif_process_whisper_message_post;
+	struct HPMHookPoint *HP_clif_validate_message_pre;
+	struct HPMHookPoint *HP_clif_validate_message_post;
 	struct HPMHookPoint *HP_clif_wisexin_pre;
 	struct HPMHookPoint *HP_clif_wisexin_post;
 	struct HPMHookPoint *HP_clif_wisall_pre;
@@ -8863,6 +8865,8 @@ struct {
 	int HP_clif_process_chat_message_post;
 	int HP_clif_process_whisper_message_pre;
 	int HP_clif_process_whisper_message_post;
+	int HP_clif_validate_message_pre;
+	int HP_clif_validate_message_post;
 	int HP_clif_wisexin_pre;
 	int HP_clif_wisexin_post;
 	int HP_clif_wisall_pre;
