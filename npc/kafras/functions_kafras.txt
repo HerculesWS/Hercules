@@ -293,7 +293,7 @@ function	script	F_KafStor	{
 	}
 	callfunc("F_CheckKafCode"); //check your storage password, if set
 	close2;
-	openstorage;
+	openstorage(STORAGE_TYPE_MAIN);
 	cutin "", 255;
 	end;
 }
