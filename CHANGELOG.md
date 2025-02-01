@@ -22,6 +22,12 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
+## [v2025.01] `January 2025`
+
+### Added
+
+- Added some validation checks for unusual/suspicious whitespace in incoming chat messages. (#3335)
+
 ## [v2024.11] `November 2024`
 
 ### Changed
@@ -3192,6 +3198,7 @@ Note: everything included in this release is part of PR #3198 which consists of 
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2025.01]: https://github.com/HerculesWS/Hercules/compare/v2024.11...v2025.01
 [v2024.11]: https://github.com/HerculesWS/Hercules/compare/v2024.10...v2024.11
 [v2024.10]: https://github.com/HerculesWS/Hercules/compare/v2024.09...v2024.10
 [v2024.09]: https://github.com/HerculesWS/Hercules/compare/v2024.08...v2024.09
