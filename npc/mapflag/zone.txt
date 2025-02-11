@@ -75,6 +75,14 @@ prt_are_in	mapflag	zone	Izlude Battle Arena
 1@nyd	mapflag	zone	Memorial Dungeon
 2@nyd	mapflag	zone	Memorial Dungeon
 
+
+
+
+
+
+// Morse Cave ======
+1@rev	mapflag	zone	Memorial Dungeon
+
 //Towns
 alberta	mapflag	zone	Towns
 aldebaran	mapflag	zone	Towns
