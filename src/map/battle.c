@@ -1813,6 +1813,7 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					RE_LVL_DMOD(100);
 					break;
 				case WL_JACKFROST:
+				case NPC_JACKFROST:
 					if( tsc && tsc->data[SC_FROSTMISTY] ){
 						skillratio += 900 + 300 * skill_lv;
 						RE_LVL_DMOD(100);

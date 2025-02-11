@@ -79,6 +79,7 @@ static const struct {
 	int end;
 } skill_idx_ranges[] = {
 	{ NV_BASIC, NPC_LEX_AETERNA },
+	{ NPC_CHEAL, NPC_VENOMIMPRESS },
 	{ KN_CHARGEATK, SA_ELEMENTWIND },
 	{ RK_ENCHANTBLADE, AB_SILENTIUM },
 	{ WL_WHITEIMPRISON, SC_FEINTBOMB },
@@ -2061,6 +2062,7 @@ static int skill_additional_effect(struct block_list *src, struct block_list *bl
 			}
 			break;
 		case WL_JACKFROST:
+		case NPC_JACKFROST:
 			sc_start(src, bl, SC_FREEZE, 100, skill_lv, skill->get_time(skill_id, skill_lv), skill_id);
 			break;
 		case WL_FROSTMISTY:
@@ -5128,6 +5130,7 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 		case NPC_PULSESTRIKE:
 		case NPC_HELLJUDGEMENT:
 		case NPC_VAMPIRE_GIFT:
+		case NPC_JACKFROST:
 		case RK_IGNITIONBREAK:
 		case AB_JUDEX:
 		case WL_SOULEXPANSION:
@@ -10282,6 +10285,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 			break;
 
 		case WL_JACKFROST:
+		case NPC_JACKFROST:
 			if( tsc && (tsc->option&(OPTION_HIDE|OPTION_CLOAK|OPTION_CHASEWALK)))
 				break; // Do not hit invisible enemy
 			clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
