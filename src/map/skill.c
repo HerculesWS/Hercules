@@ -13372,7 +13372,7 @@ static struct skill_unit_group *skill_unitsetting(struct block_list *src, uint16
 			limit = 1000000;//it doesn't matter
 			break;
 		case WL_COMET:
-		case NPC_COMET
+		case NPC_COMET:
 			if( sc ) {
 				sc->comet_x = x;
 				sc->comet_y = y;
