@@ -67,6 +67,9 @@
 // Sara's Memory Instance ===========
 1@sara	mapflag	zone	Memorial Dungeon
 
+// Faceworm Nest ===========
+1@face	mapflag	zone	Memorial Dungeon
+
 // WoE:TE
 te_prt_gld	mapflag	zone	WoE TE
 te_prtcas01	mapflag	zone	WoE TE
