@@ -3588,6 +3588,7 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 			if ((flag & SD_ANIMATION) == 0)
 				clif->skill_nodamage(dsrc, bl, skill_id, skill_lv, 1);
 			FALLTHROUGH
+		case NPC_REVERBERATION_ATK:
 		case WM_REVERBERATION_MELEE:
 		case WM_REVERBERATION_MAGIC:
 			dmg.dmotion = clif->skill_damage(src,bl,tick,dmg.amotion,dmg.dmotion,damage,dmg.div_,WM_REVERBERATION,-2,BDT_SKILL);
@@ -4105,6 +4106,7 @@ static int skill_check_unit_range_sub(struct block_list *bl, va_list ap)
 		case RA_ICEBOUNDTRAP:
 		case SC_DIMENSIONDOOR:
 		case SC_BLOODYLUST:
+		case NPC_REVERBERATION:
 		case SC_CHAOSPANIC:
 		case GN_HELLS_PLANT:
 		case RL_B_TRAP:
@@ -4698,7 +4700,7 @@ static int skill_activate_reverberation(struct block_list *bl, va_list ap)
 		return 0;
 	su = BL_UCAST(BL_SKILL, bl);
 
-	if( su->alive && (sg = su->group) != NULL && sg->skill_id == WM_REVERBERATION && sg->unit_id == UNT_REVERBERATION ) {
+	if (su->alive && (((sg = su->group) != NULL && sg->skill_id == WM_REVERBERATION && sg->unit_id == UNT_REVERBERATION) || (sg != NULL && sg->skill_id == NPC_REVERBERATION))) {
 		int64 tick = timer->gettick();
 		clif->changetraplook(bl,UNT_USED_TRAPS);
 		skill->trap_do_splash(bl, sg->skill_id, sg->skill_lv, sg->bl_flag, tick);
@@ -5127,6 +5129,7 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 		case GS_SPREADATTACK:
 		case NPC_PULSESTRIKE:
 		case NPC_HELLJUDGEMENT:
+		case NPC_REVERBERATION_ATK:		
 		case NPC_VAMPIRE_GIFT:
 		case RK_IGNITIONBREAK:
 		case AB_JUDEX:
@@ -12189,7 +12192,11 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 			map->foreachinarea(skill->area_sub, src->m, x-r, y-r, x+r, y+r, BL_CHAR,
 			                   src, skill_id, skill_lv, tick, flag|BCT_ENEMY|1, skill->castend_damage_id);
 			break;
-
+		case NPC_LEX_AETERNA:
+			r = skill->get_splash(skill_id, skill_lv);
+			map->foreachinarea(skill->area_sub, src->m, x-r, y-r, x+r, y+r, BL_CHAR,
+			                   src, PR_LEXAETERNA, 1, tick, flag|BCT_ENEMY|1, skill->castend_nodamage_id);
+			break;
 		case SA_VOLCANO:
 		case SA_DELUGE:
 		case SA_VIOLENTGALE:
@@ -12291,6 +12298,7 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 		case NPC_EARTHQUAKE:
 		case NPC_EVILLAND:
 		case WL_COMET:
+		case NPC_REVERBERATION:
 		case RA_ELECTRICSHOCKER:
 		case RA_CLUSTERBOMB:
 		case RA_MAGENTATRAP:
@@ -18541,6 +18549,8 @@ static int skill_trap_splash(struct block_list *bl, va_list ap)
 			if( battle->check_target(src,bl,BCT_ENEMY) > 0 ) {
 				skill->attack(BF_WEAPON,ss,src,bl,WM_REVERBERATION_MELEE,sg->skill_lv,tick,0);
 				skill->addtimerskill(ss,tick+200,bl->id,0,0,WM_REVERBERATION_MAGIC,sg->skill_lv,BF_MAGIC,SD_LEVEL);
+			} else {
+				skill->addtimerskill(ss,tick+ 0,bl->id,0,0,NPC_REVERBERATION_ATK,sg->skill_lv,BF_WEAPON, 0);
 			}
 			break;
 		case UNT_FIRINGTRAP:
