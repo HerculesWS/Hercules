@@ -78,8 +78,7 @@ static const struct {
 	int start;
 	int end;
 } skill_idx_ranges[] = {
-	{ NV_BASIC, NPC_LEX_AETERNA },
-	{ NPC_CHEAL, NPC_VENOMIMPRESS },
+	{ NV_BASIC, NPC_KILLING_AURA },
 	{ KN_CHARGEATK, SA_ELEMENTWIND },
 	{ RK_ENCHANTBLADE, AB_SILENTIUM },
 	{ WL_WHITEIMPRISON, SC_FEINTBOMB },
