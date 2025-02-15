@@ -23,10 +23,20 @@
 
 #include "common/hercules.h"
 #include "common/db.h"
+#include "common/mmo.h"
 
+struct config_setting_t;
 struct guild_storage;
 struct item;
 struct map_session_data;
+struct storage_data;
+
+// Hercules Ultimate Storage System [Smokexyz/Hercules]
+struct storage_settings {
+	int uid;                       ///< Storage Identifier.
+	char name[NAME_LENGTH];        ///< Storage Name
+	int capacity;                  ///< Item Capacity.
+};
 
 /**
  * Acceptable values for map_session_data.state.storage_flag
@@ -37,21 +47,37 @@ enum storage_flag {
 	STORAGE_FLAG_GUILD  = 2, // Guild Storage open
 };
 
+// Storage Access Modes [Smokexyz/Hercules]
+enum storage_access_modes {
+	STORAGE_ACCESS_VIEW = 0x0,
+	STORAGE_ACCESS_GET = 0x1,
+	STORAGE_ACCESS_PUT = 0x2,
+	STORAGE_ACCESS_ALL = STORAGE_ACCESS_VIEW | STORAGE_ACCESS_GET | STORAGE_ACCESS_PUT
+};
+
 struct storage_interface {
+	VECTOR_DECL(struct storage_settings) configuration;
+	void (*init) (bool minimal);
+	void (*final) (void);
 	/* */
 	void (*reconnect) (void);
+	bool (*config_read) (const char *filename, bool imported);
+	void (*config_read_additional_fields) (struct config_setting_t *t, struct storage_settings *s_conf, const char *filename);
 	/* */
-	int (*delitem) (struct map_session_data* sd, int n, int amount);
-	int (*open) (struct map_session_data *sd);
-	int (*add) (struct map_session_data *sd,int index,int amount);
-	int (*get) (struct map_session_data *sd,int index,int amount);
-	int (*additem) (struct map_session_data* sd, struct item* item_data, int amount);
-	int (*addfromcart) (struct map_session_data *sd,int index,int amount);
-	int (*gettocart) (struct map_session_data *sd,int index,int amount);
+	int (*get_id_by_name) (const char *storage_name);
+	struct storage_data* (*ensure) (struct map_session_data *sd, int storage_id);
+	const struct storage_settings* (*get_settings) (int storage_id);
+	int (*delitem) (struct map_session_data *sd, struct storage_data *stor, int n, int amount);
+	int (*open) (struct map_session_data *sd, struct storage_data *stor, enum storage_access_modes mode);
+	int (*add) (struct map_session_data *sd, struct storage_data *stor, int index, int amount);
+	int (*get) (struct map_session_data *sd, struct storage_data *stor, int index, int amount);
+	int (*additem) (struct map_session_data *sd, struct storage_data *stor, struct item *item_data, int amount);
+	int (*addfromcart) (struct map_session_data *sd, struct storage_data *stor, int index, int amount);
+	int (*gettocart) (struct map_session_data *sd, struct storage_data *stor, int index, int amount);
 	void (*close) (struct map_session_data *sd);
 	void (*pc_quit) (struct map_session_data *sd, int flag);
 	int (*comp_item) (const void *i1_, const void *i2_);
-	void (*sortitem) (struct item* items, unsigned int size);
+	void (*sortitem) (struct item *items, unsigned int size);
 	int (*reconnect_sub) (union DBKey key, struct DBData *data, va_list ap);
 };
 
