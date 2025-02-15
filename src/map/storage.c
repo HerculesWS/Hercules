@@ -181,6 +181,7 @@ static int storage_storageopen(struct map_session_data *sd, struct storage_data 
 {
 	nullpo_retr(1, sd);
 	nullpo_retr(1, stor);
+	Assert_retr(1, stor->received);
 
 	const struct storage_settings *stst = storage->get_settings(stor->uid);
 	nullpo_retr(1, stst);
