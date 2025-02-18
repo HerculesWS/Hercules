@@ -1,0 +1,19 @@
+//===== rAthena Script =======================================
+//= Flame Basin Monster Spawn Script
+//===== Description: =========================================
+//= Spawns monsters on Flame Basin.
+//===== Additional Comments: =================================
+//= 1.0 First version. [Capuche]
+//============================================================
+
+moro_vol,0,0,0,0	monster	Angry Mimic	3061,5,5000,0,0
+moro_vol,0,0,0,0	monster	Sonia	3028,30,5000,0,0
+moro_vol,0,0,0,0	monster	Incarnation of Morocc	1918,15,5000,0,0
+moro_vol,0,0,0,0	monster	Incarnation of Morocc	1919,15,5000,0,0
+moro_vol,0,0,0,0	monster	Incarnation of Morocc	1920,15,5000,0,0
+moro_vol,0,0,0,0	monster	Incarnation of Morocc	1921,15,5000,0,0
+moro_vol,0,0,0,0	monster	Fire Condor	3020,30,5000,0,0
+moro_vol,0,0,0,0	monster	Fire Sandman	3021,30,5000,0,0
+moro_vol,0,0,0,0	monster	Fire Frilldora	3022,30,5000,0,0
+moro_vol,0,0,0,0	monster	Fire Golem	3023,30,5000,0,0
+moro_vol,0,0,0,0	monster	Fire Pit	3026,10,5000,0,0
