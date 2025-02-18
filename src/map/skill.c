@@ -7385,6 +7385,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 		case ST_PRESERVE:
 		case NPC_INVINCIBLE:
 		case NPC_INVINCIBLEOFF:
+		case MER_INVINCIBLEOFF2:
 		case RK_DEATHBOUND:
 		case AB_RENOVATIO:
 		case AB_EXPIATIO:
@@ -12291,6 +12292,8 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 		case NPC_EARTHQUAKE:
 		case NPC_EVILLAND:
 		case WL_COMET:
+		case NPC_ICEMINE:
+		case NPC_FLAMECROSS:
 		case RA_ELECTRICSHOCKER:
 		case RA_CLUSTERBOMB:
 		case RA_MAGENTATRAP:
@@ -14413,6 +14416,8 @@ static int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *b
 		case UNT_PSYCHIC_WAVE:
 		case UNT_MAGMA_ERUPTION:
 		case UNT_MAKIBISHI:
+		case UNT_ICEMINE:
+		case UNT_FLAMECROSS:
 			skill->attack(skill->get_type(sg->skill_id, sg->skill_lv), ss, &src->bl, bl, sg->skill_id, sg->skill_lv, tick, 0);
 			break;
 
@@ -21206,6 +21211,14 @@ static void skill_init_unit_layout(void)
 				memcpy(skill->dbs->unit_layout[pos].dy,dy,sizeof(dy));
 				}
 				break;
+			case NPC_FLAMECROSS: {
+				static const int dx[] = { -2,-1, 1, 2, 0, 0, 0, 0 };
+				static const int dy[] = { 0, 0, 0, 0,-2,-1, 1, 2 };
+				skill->dbs->unit_layout[pos].count = 8;
+				memcpy(skill->dbs->unit_layout[pos].dx, dx, sizeof(dx));
+				memcpy(skill->dbs->unit_layout[pos].dy, dy, sizeof(dy));
+			}
+				break;				
 			default:
 				skill->init_unit_layout_unknown(i, pos);
 				break;
