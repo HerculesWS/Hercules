@@ -378,7 +378,7 @@ STATIC_ASSERT(MAX_ACHIEVEMENT_RANKS <= 255, "This value is limited by the client
 #define MC_SKILLBASE 8201
 #endif
 #ifndef MAX_MERCSKILL
-#define MAX_MERCSKILL 40
+#define MAX_MERCSKILL 41
 #endif
 
 // Elemental System

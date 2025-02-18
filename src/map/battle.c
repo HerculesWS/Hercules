@@ -3981,6 +3981,10 @@ static struct Damage battle_calc_magic_attack(struct block_list *src, struct blo
 				//Damage calculation from iRO wiki. [Jobbie]
 				ad.damage = status->get_lv(src) * 10 + sstatus->int_;
 				break;
+			case NPC_ICEMINE:
+			case NPC_FLAMECROSS:
+				ad.damage = sstatus->rhw.atk * 20 * skill_lv;
+				break;				
 			/**
 			 * Summoner
 			 */
