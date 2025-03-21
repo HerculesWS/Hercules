@@ -18221,18 +18221,18 @@ static BUILDIN(getsavepoint)
 }
 
 /*==========================================
- *     bitcount(<number>)
- *     Return number of set bits in an integer [maqc]
+ *	bitcount(<number>)
+ *	Return number of set bits in an integer [maqc]
  *------------------------------------------*/
 static BUILDIN(bitcount)
 {
-    unsigned int count = 0;
+	unsigned int count = 0;
 	unsigned int value = script_getnum(st,2);
-    while(value > 0) {
-        if((value & 1) == 1)
-            count++;
-        value >>= 1;
-    }
+	while(value > 0) {
+		if((value & 1) == 1)
+			count++;
+		value >>= 1;
+	}
 	script_pushint(st,count);
 	return true;
 }
@@ -29318,7 +29318,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(mobcount,"ss"),
 		BUILDIN_DEF(getlook,"i"),
 		BUILDIN_DEF(getsavepoint,"i"),
-        BUILDIN_DEF(bitcount,"i"), // [maqc]
+		BUILDIN_DEF(bitcount,"i"), // [maqc]
 		BUILDIN_DEF(npcspeed,"i"), // [Valaris]
 		BUILDIN_DEF(npcwalkto,"ii"), // [Valaris]
 		BUILDIN_DEF(npcstop,""), // [Valaris]
