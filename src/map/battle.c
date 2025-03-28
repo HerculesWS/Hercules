@@ -2345,7 +2345,12 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					skillratio += i;
 					break;
 				case ASC_METEORASSAULT:
+#ifdef RENEWAL
+					skillratio += 100 + 120 * skill_lv + 5 * st->str;
+					RE_LVL_DMOD(100);
+#else
 					skillratio += 40 * skill_lv - 60;
+#endif
 					break;
 				case SN_SHARPSHOOTING:
 				case MA_SHARPSHOOTING:
