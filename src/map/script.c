@@ -18220,6 +18220,24 @@ static BUILDIN(getsavepoint)
 	return true;
 }
 
+/**
+ * Returns the number of set bits in integer <number>
+ *
+ * bitcount(<number>)
+ */
+static BUILDIN(bitcount)
+{
+	unsigned int count = 0;
+	unsigned int value = script_getnum(st, 2);
+	while (value > 0) {
+		if ((value & 1) == 1)
+			count++;
+		value >>= 1;
+	}
+	script_pushint(st, count);
+	return true;
+}
+
 /*==========================================
  * Get position for  char/npc/pet/mob objects. Added by Lorky
  *
@@ -29301,6 +29319,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(mobcount,"ss"),
 		BUILDIN_DEF(getlook,"i"),
 		BUILDIN_DEF(getsavepoint,"i"),
+		BUILDIN_DEF(bitcount, "i"), // [maqc]
 		BUILDIN_DEF(npcspeed,"i"), // [Valaris]
 		BUILDIN_DEF(npcwalkto,"ii"), // [Valaris]
 		BUILDIN_DEF(npcstop,""), // [Valaris]
