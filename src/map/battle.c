@@ -3026,16 +3026,6 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 			}
 			//Skill damage modifiers that stack linearly
 			if(sc && skill_id != PA_SACRIFICE){
-#ifdef RENEWAL_EDP
-				if( sc->data[SC_EDP] ){
-					if( skill_id == GC_COUNTERSLASH ||
-#ifndef RENEWAL
-						skill_id == AS_SONICBLOW ||
-#endif
-						skill_id == GC_CROSSIMPACT )
-							skillratio >>= 1;
-				}
-#endif
 				if(sc->data[SC_OVERTHRUST])
 					skillratio += sc->data[SC_OVERTHRUST]->val3;
 				if(sc->data[SC_OVERTHRUSTMAX])
@@ -4494,10 +4484,7 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 		int64 matk = battle->calc_magic_attack(src, target, skill_id, skill_lv, mflag).damage;
 		short totaldef = status->get_total_def(target) + status->get_total_mdef(target);
 		int64 atk = battle->calc_base_damage(src, target, skill_id, skill_lv, nk, false, s_ele, ELE_NEUTRAL, EQI_HAND_R, (sc && sc->data[SC_MAXIMIZEPOWER] ? 1 : 0) | (sc && sc->data[SC_WEAPONPERFECT] ? 8 : 0), md.flag);
-#ifdef RENEWAL_EDP
-		if( sc && sc->data[SC_EDP] )
-			ratio >>= 1;
-#endif
+
 		md.damage = (matk + atk) * ratio / 100;
 		md.damage -= totaldef;
 #endif
