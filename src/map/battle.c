@@ -1721,7 +1721,12 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 #endif
 					break;
 				case HW_NAPALMVULCAN:
+#ifndef RENEWAL
 					skillratio += 10 * skill_lv - 30;
+#else
+					skillratio += -100 + 70 * skill_lv;
+					RE_LVL_DMOD(100);
+#endif
 					break;
 
 #ifdef RENEWAL
