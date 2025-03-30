@@ -45,41 +45,75 @@ struct log_interface *logs;
 /// obtain log type character for item/zeny logs
 static char log_picktype2char(e_log_pick_type type)
 {
-	switch( type ) {
-		case LOG_TYPE_TRADE:            return 'T';  // (T)rade
-		case LOG_TYPE_VENDING:          return 'V';  // (V)ending
-		case LOG_TYPE_PICKDROP_PLAYER:  return 'P';  // (P)layer
-		case LOG_TYPE_PICKDROP_MONSTER: return 'M';  // (M)onster
-		case LOG_TYPE_NPC:              return 'S';  // NPC (S)hop
-		case LOG_TYPE_SCRIPT:           return 'N';  // (N)PC Script
-		case LOG_TYPE_STEAL:            return 'D';  // Steal/Snatcher
-		case LOG_TYPE_CONSUME:          return 'C';  // (C)onsumed
-		case LOG_TYPE_PRODUCE:          return 'O';  // Pr(O)duced/Ingredients
-		case LOG_TYPE_MVP:              return 'U';  // MVP Rewards
-		case LOG_TYPE_COMMAND:          return 'A';  // (A)dmin command
-		case LOG_TYPE_STORAGE:          return 'R';  // Sto(R)age
-		case LOG_TYPE_GSTORAGE:         return 'G';  // (G)uild storage
-		case LOG_TYPE_MAIL:             return 'E';  // (E)mail attachment
-		case LOG_TYPE_AUCTION:          return 'I';  // Auct(I)on
-		case LOG_TYPE_BUYING_STORE:     return 'B';  // (B)uying Store
-		case LOG_TYPE_LOOT:             return 'L';  // (L)oot (consumed monster pick/drop)
-		case LOG_TYPE_BANK:             return 'K';  // Ban(K) Transactions
-		case LOG_TYPE_DIVORCE:          return 'Y';  // Divorce
-		case LOG_TYPE_ROULETTE:         return 'Z';  // Roulette
-		case LOG_TYPE_RENTAL:           return 'W';  // Rental
-		case LOG_TYPE_CARD:             return 'Q';  // Card
-		case LOG_TYPE_INV_INVALID:      return 'J';  // Invalid in inventory
-		case LOG_TYPE_CART_INVALID:     return 'H';  // Invalid in cart
-		case LOG_TYPE_EGG:              return '@';  // Egg
-		case LOG_TYPE_QUEST:            return '0';  // Quest
-		case LOG_TYPE_SKILL:            return '1';  // Skill
-		case LOG_TYPE_REFINE:           return '2';  // Refine
-		case LOG_TYPE_OTHER:            return 'X';  // Other
-		case LOG_TYPE_ACHIEVEMENT:      return '3';  // Achievement
-		case LOG_TYPE_GRADE:            return '4';  // Grade Enchant
-		case LOG_TYPE_STYLIST:          return '5';  // Stylist UI
-		case LOG_TYPE_NONE:             break;
-		case LOG_TYPE_ALL:              break;
+	switch (type) {
+		case LOG_TYPE_TRADE:
+			return 'T'; // (T)rade
+		case LOG_TYPE_VENDING:
+			return 'V'; // (V)ending
+		case LOG_TYPE_PICKDROP_PLAYER:
+			return 'P'; // (P)layer
+		case LOG_TYPE_PICKDROP_MONSTER:
+			return 'M'; // (M)onster
+		case LOG_TYPE_NPC:
+			return 'S'; // NPC (S)hop
+		case LOG_TYPE_SCRIPT:
+			return 'N'; // (N)PC Script
+		case LOG_TYPE_STEAL:
+			return 'D'; // Steal/Snatcher
+		case LOG_TYPE_CONSUME:
+			return 'C'; // (C)onsumed
+		case LOG_TYPE_PRODUCE:
+			return 'O'; // Pr(O)duced/Ingredients
+		case LOG_TYPE_MVP:
+			return 'U'; // MVP Rewards
+		case LOG_TYPE_COMMAND:
+			return 'A'; // (A)dmin command
+		case LOG_TYPE_STORAGE:
+			return 'R'; // Sto(R)age
+		case LOG_TYPE_GSTORAGE:
+			return 'G'; // (G)uild storage
+		case LOG_TYPE_MAIL:
+			return 'E'; // (E)mail attachment
+		case LOG_TYPE_AUCTION:
+			return 'I'; // Auct(I)on
+		case LOG_TYPE_BUYING_STORE:
+			return 'B'; // (B)uying Store
+		case LOG_TYPE_LOOT:
+			return 'L'; // (L)oot (consumed monster pick/drop)
+		case LOG_TYPE_BANK:
+			return 'K'; // Ban(K) Transactions
+		case LOG_TYPE_DIVORCE:
+			return 'Y'; // Divorce
+		case LOG_TYPE_ROULETTE:
+			return 'Z'; // Roulette
+		case LOG_TYPE_RENTAL:
+			return 'W'; // Rental
+		case LOG_TYPE_CARD:
+			return 'Q'; // Card
+		case LOG_TYPE_INV_INVALID:
+			return 'J'; // Invalid in inventory
+		case LOG_TYPE_CART_INVALID:
+			return 'H'; // Invalid in cart
+		case LOG_TYPE_EGG:
+			return '@'; // Egg
+		case LOG_TYPE_QUEST:
+			return '0'; // Quest
+		case LOG_TYPE_SKILL:
+			return '1'; // Skill
+		case LOG_TYPE_REFINE:
+			return '2'; // Refine
+		case LOG_TYPE_OTHER:
+			return 'X'; // Other
+		case LOG_TYPE_ACHIEVEMENT:
+			return '3'; // Achievement
+		case LOG_TYPE_GRADE:
+			return '4'; // Grade Enchant
+		case LOG_TYPE_STYLIST:
+			return '5'; // Stylist UI
+		case LOG_TYPE_NONE:
+			break;
+		case LOG_TYPE_ALL:
+			break;
 	}
 
 	// should not get here, fallback
@@ -91,20 +125,20 @@ static char log_picktype2char(e_log_pick_type type)
 static char log_chattype2char(e_log_chat_type type)
 {
 	switch (type) {
-	case LOG_CHAT_GLOBAL:
-		return 'O';  // Gl(O)bal
-	case LOG_CHAT_WHISPER:
-		return 'W';  // (W)hisper
-	case LOG_CHAT_PARTY:
-		return 'P';  // (P)arty
-	case LOG_CHAT_GUILD:
-		return 'G';  // (G)uild
-	case LOG_CHAT_MAINCHAT:
-		return 'M';  // (M)ain chat
-	case LOG_CHAT_CLAN:
-		return 'C';  // (C)lan
-	case LOG_CHAT_ALL:
-		break;
+		case LOG_CHAT_GLOBAL:
+			return 'O'; // Gl(O)bal
+		case LOG_CHAT_WHISPER:
+			return 'W'; // (W)hisper
+		case LOG_CHAT_PARTY:
+			return 'P'; // (P)arty
+		case LOG_CHAT_GUILD:
+			return 'G'; // (G)uild
+		case LOG_CHAT_MAINCHAT:
+			return 'M'; // (M)ain chat
+		case LOG_CHAT_CLAN:
+			return 'C'; // (C)lan
+		case LOG_CHAT_ALL:
+			break;
 	}
 
 	// should not get here, fallback
@@ -117,22 +151,10 @@ static bool should_log_item(int nameid, int amount, int refine_level, struct ite
 {
 	int filter = logs->config.filter;
 
-	if( id == NULL )
+	if (id == NULL)
 		return false;
 
-	if( ( filter&LOG_FILTER_ALL ) ||
-		( filter&LOG_FILTER_HEALING && id->type == IT_HEALING ) ||
-		( filter&LOG_FILTER_ETC_AMMO && ( id->type == IT_ETC || id->type == IT_AMMO ) ) ||
-		( filter&LOG_FILTER_USABLE && ( id->type == IT_USABLE || id->type == IT_CASH ) ) ||
-		( filter&LOG_FILTER_WEAPON && id->type == IT_WEAPON ) ||
-		( filter&LOG_FILTER_ARMOR && id->type == IT_ARMOR ) ||
-		( filter&LOG_FILTER_CARD && id->type == IT_CARD ) ||
-		( filter&LOG_FILTER_PETITEM && ( id->type == IT_PETEGG || id->type == IT_PETARMOR ) ) ||
-		( filter&LOG_FILTER_PRICE && id->value_buy >= logs->config.price_items_log ) ||
-		( filter&LOG_FILTER_AMOUNT && abs(amount) >= logs->config.amount_items_log ) ||
-		( filter&LOG_FILTER_REFINE && refine_level >= logs->config.refine_items_log ) ||
-		( filter&LOG_FILTER_CHANCE && ( ( id->maxchance != -1 && id->maxchance <= logs->config.rare_items_log ) || id->nameid == ITEMID_EMPERIUM ) )
-	)
+	if ((filter & LOG_FILTER_ALL) || (filter & LOG_FILTER_HEALING && id->type == IT_HEALING) || (filter & LOG_FILTER_ETC_AMMO && (id->type == IT_ETC || id->type == IT_AMMO)) || (filter & LOG_FILTER_USABLE && (id->type == IT_USABLE || id->type == IT_CASH)) || (filter & LOG_FILTER_WEAPON && id->type == IT_WEAPON) || (filter & LOG_FILTER_ARMOR && id->type == IT_ARMOR) || (filter & LOG_FILTER_CARD && id->type == IT_CARD) || (filter & LOG_FILTER_PETITEM && (id->type == IT_PETEGG || id->type == IT_PETARMOR)) || (filter & LOG_FILTER_PRICE && id->value_buy >= logs->config.price_items_log) || (filter & LOG_FILTER_AMOUNT && abs(amount) >= logs->config.amount_items_log) || (filter & LOG_FILTER_REFINE && refine_level >= logs->config.refine_items_log) || (filter & LOG_FILTER_CHANCE && ((id->maxchance != -1 && id->maxchance <= logs->config.rare_items_log) || id->nameid == ITEMID_EMPERIUM)))
 		return true;
 
 	return false;
@@ -143,10 +165,7 @@ static void log_branch_sub_sql(struct map_session_data *sd)
 
 	nullpo_retv(sd);
 	stmt = SQL->StmtMalloc(logs->mysql_handle);
-	if( SQL_SUCCESS != SQL->StmtPrepare(stmt, LOG_QUERY " INTO `%s` (`branch_date`, `account_id`, `char_id`, `char_name`, `map`) VALUES (NOW(), '%d', '%d', ?, '%s')", logs->config.log_branch, sd->status.account_id, sd->status.char_id, mapindex_id2name(sd->mapindex) )
-	   ||  SQL_SUCCESS != SQL->StmtBindParam(stmt, 0, SQLDT_STRING, sd->status.name, strnlen(sd->status.name, NAME_LENGTH))
-	   ||  SQL_SUCCESS != SQL->StmtExecute(stmt) )
-	{
+	if (SQL_SUCCESS != SQL->StmtPrepare(stmt, LOG_QUERY " INTO `%s` (`branch_date`, `account_id`, `char_id`, `char_name`, `map`) VALUES (NOW(), '%d', '%d', ?, '%s')", logs->config.log_branch, sd->status.account_id, sd->status.char_id, mapindex_id2name(sd->mapindex)) || SQL_SUCCESS != SQL->StmtBindParam(stmt, 0, SQLDT_STRING, sd->status.name, strnlen(sd->status.name, NAME_LENGTH)) || SQL_SUCCESS != SQL->StmtExecute(stmt)) {
 		SqlStmt_ShowDebug(stmt);
 		SQL->StmtFree(stmt);
 		return;
@@ -157,14 +176,14 @@ static void log_branch_sub_txt(struct map_session_data *sd)
 {
 	char timestring[255];
 	time_t curtime;
-	FILE* logfp;
+	FILE *logfp;
 
 	nullpo_retv(sd);
-	if( ( logfp = fopen(logs->config.log_branch, "a") ) == NULL )
+	if ((logfp = fopen(logs->config.log_branch, "a")) == NULL)
 		return;
 	time(&curtime);
 	strftime(timestring, sizeof(timestring), "%m/%d/%Y %H:%M:%S", localtime(&curtime));
-	fprintf(logfp,"%s - %s[%d:%d]\t%s\n", timestring, sd->status.name, sd->status.account_id, sd->status.char_id, mapindex_id2name(sd->mapindex));
+	fprintf(logfp, "%s - %s[%d:%d]\t%s\n", timestring, sd->status.name, sd->status.account_id, sd->status.char_id, mapindex_id2name(sd->mapindex));
 	fclose(logfp);
 }
 
@@ -173,7 +192,7 @@ static void log_branch(struct map_session_data *sd)
 {
 	nullpo_retv(sd);
 
-	if( !logs->config.branch )
+	if (!logs->config.branch)
 		return;
 
 	logs->branch_sub(sd);
@@ -182,14 +201,10 @@ static void log_pick_sub_sql(int id, int16 m, e_log_pick_type type, int amount, 
 {
 	nullpo_retv(itm);
 	if (SQL_ERROR == SQL->Query(logs->mysql_handle,
-	    LOG_QUERY " INTO `%s` (`time`, `char_id`, `type`, `nameid`, `amount`, `refine`, `grade`, `card0`, `card1`, `card2`, `card3`, "
-		"`opt_idx0`, `opt_val0`, `opt_idx1`, `opt_val1`, `opt_idx2`, `opt_val2`, `opt_idx3`, `opt_val3`, `opt_idx4`, `opt_val4`, `map`, `unique_id`) "
-	    "VALUES (NOW(), '%d', '%c', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%s', '%"PRIu64"')",
-	    logs->config.log_pick, id, logs->picktype2char(type), itm->nameid, amount, itm->refine, itm->grade, itm->card[0], itm->card[1], itm->card[2], itm->card[3],
-		itm->option[0].index, itm->option[0].value, itm->option[1].index, itm->option[1].value, itm->option[2].index, itm->option[2].value,
-		itm->option[3].index, itm->option[3].value, itm->option[4].index, itm->option[4].value,
-	    map->list[m].name, itm->unique_id))
-	{
+	                            LOG_QUERY " INTO `%s` (`time`, `char_id`, `type`, `nameid`, `amount`, `refine`, `grade`, `card0`, `card1`, `card2`, `card3`, "
+	                                      "`opt_idx0`, `opt_val0`, `opt_idx1`, `opt_val1`, `opt_idx2`, `opt_val2`, `opt_idx3`, `opt_val3`, `opt_idx4`, `opt_val4`, `map`, `unique_id`) "
+	                                      "VALUES (NOW(), '%d', '%c', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%s', '%" PRIu64 "')",
+	                            logs->config.log_pick, id, logs->picktype2char(type), itm->nameid, amount, itm->refine, itm->grade, itm->card[0], itm->card[1], itm->card[2], itm->card[3], itm->option[0].index, itm->option[0].value, itm->option[1].index, itm->option[1].value, itm->option[2].index, itm->option[2].value, itm->option[3].index, itm->option[3].value, itm->option[4].index, itm->option[4].value, map->list[m].name, itm->unique_id)) {
 		Sql_ShowDebug(logs->mysql_handle);
 		return;
 	}
@@ -198,30 +213,28 @@ static void log_pick_sub_txt(int id, int16 m, e_log_pick_type type, int amount, 
 {
 	char timestring[255];
 	time_t curtime;
-	FILE* logfp;
+	FILE *logfp;
 
 	nullpo_retv(itm);
-	if( ( logfp = fopen(logs->config.log_pick, "a") ) == NULL )
+	if ((logfp = fopen(logs->config.log_pick, "a")) == NULL)
 		return;
 	time(&curtime);
 	strftime(timestring, sizeof(timestring), "%m/%d/%Y %H:%M:%S", localtime(&curtime));
-	fprintf(logfp,"%s - %d\t%c\t%d,%d,%d,%d,%d,%d,%d,%s,'%"PRIu64"'\n",
-	        timestring, id, logs->picktype2char(type), itm->nameid, amount, itm->refine, itm->card[0], itm->card[1], itm->card[2], itm->card[3],
-		map->list[m].name, itm->unique_id);
+	fprintf(logfp, "%s - %d\t%c\t%d,%d,%d,%d,%d,%d,%d,%s,'%" PRIu64 "'\n", timestring, id, logs->picktype2char(type), itm->nameid, amount, itm->refine, itm->card[0], itm->card[1], itm->card[2], itm->card[3], map->list[m].name, itm->unique_id);
 	fclose(logfp);
 }
 /// logs item transactions (generic)
 static void log_pick(int id, int16 m, e_log_pick_type type, int amount, struct item *itm, struct item_data *data)
 {
 	nullpo_retv(itm);
-	if( ( logs->config.enable_logs&type ) == 0 ) {// disabled
+	if ((logs->config.enable_logs & type) == 0) { // disabled
 		return;
 	}
 
-	if( !logs->should_log_item(itm->nameid, amount, itm->refine, data) )
-		return; //we skip logging this item set - it doesn't meet our logging conditions [Lupus]
+	if (!logs->should_log_item(itm->nameid, amount, itm->refine, data))
+		return; // we skip logging this item set - it doesn't meet our logging conditions [Lupus]
 
-	logs->pick_sub(id,m,type,amount,itm,data);
+	logs->pick_sub(id, m, type, amount, itm, data);
 }
 
 /// logs item transactions (players)
@@ -243,9 +256,7 @@ static void log_zeny_sub_sql(struct map_session_data *sd, e_log_pick_type type, 
 {
 	nullpo_retv(sd);
 	nullpo_retv(src_sd);
-	if( SQL_ERROR == SQL->Query(logs->mysql_handle, LOG_QUERY " INTO `%s` (`time`, `char_id`, `src_id`, `type`, `amount`, `map`) VALUES (NOW(), '%d', '%d', '%c', '%d', '%s')",
-							   logs->config.log_zeny, sd->status.char_id, src_sd->status.char_id, logs->picktype2char(type), amount, mapindex_id2name(sd->mapindex)) )
-	{
+	if (SQL_ERROR == SQL->Query(logs->mysql_handle, LOG_QUERY " INTO `%s` (`time`, `char_id`, `src_id`, `type`, `amount`, `map`) VALUES (NOW(), '%d', '%d', '%c', '%d', '%s')", logs->config.log_zeny, sd->status.char_id, src_sd->status.char_id, logs->picktype2char(type), amount, mapindex_id2name(sd->mapindex))) {
 		Sql_ShowDebug(logs->mysql_handle);
 		return;
 	}
@@ -254,11 +265,11 @@ static void log_zeny_sub_txt(struct map_session_data *sd, e_log_pick_type type, 
 {
 	char timestring[255];
 	time_t curtime;
-	FILE* logfp;
+	FILE *logfp;
 
 	nullpo_retv(sd);
 	nullpo_retv(src_sd);
-	if( ( logfp = fopen(logs->config.log_zeny, "a") ) == NULL )
+	if ((logfp = fopen(logs->config.log_zeny, "a")) == NULL)
 		return;
 	time(&curtime);
 	strftime(timestring, sizeof(timestring), "%m/%d/%Y %H:%M:%S", localtime(&curtime));
@@ -270,18 +281,16 @@ static void log_zeny(struct map_session_data *sd, e_log_pick_type type, struct m
 {
 	nullpo_retv(sd);
 
-	if( !logs->config.zeny || ( logs->config.zeny != 1 && abs(amount) < logs->config.zeny ) )
+	if (!logs->config.zeny || (logs->config.zeny != 1 && abs(amount) < logs->config.zeny))
 		return;
 
-	logs->zeny_sub(sd,type,src_sd,amount);
+	logs->zeny_sub(sd, type, src_sd, amount);
 }
 static void log_mvpdrop_sub_sql(struct map_session_data *sd, int monster_id, int *log_mvp)
 {
 	nullpo_retv(sd);
 	nullpo_retv(log_mvp);
-	if( SQL_ERROR == SQL->Query(logs->mysql_handle, LOG_QUERY " INTO `%s` (`mvp_date`, `kill_char_id`, `monster_id`, `prize`, `mvpexp`, `map`) VALUES (NOW(), '%d', '%d', '%d', '%d', '%s') ",
-							   logs->config.log_mvpdrop, sd->status.char_id, monster_id, log_mvp[0], log_mvp[1], mapindex_id2name(sd->mapindex)) )
-	{
+	if (SQL_ERROR == SQL->Query(logs->mysql_handle, LOG_QUERY " INTO `%s` (`mvp_date`, `kill_char_id`, `monster_id`, `prize`, `mvpexp`, `map`) VALUES (NOW(), '%d', '%d', '%d', '%d', '%s') ", logs->config.log_mvpdrop, sd->status.char_id, monster_id, log_mvp[0], log_mvp[1], mapindex_id2name(sd->mapindex))) {
 		Sql_ShowDebug(logs->mysql_handle);
 		return;
 	}
@@ -290,15 +299,15 @@ static void log_mvpdrop_sub_txt(struct map_session_data *sd, int monster_id, int
 {
 	char timestring[255];
 	time_t curtime;
-	FILE* logfp;
+	FILE *logfp;
 
 	nullpo_retv(sd);
 	nullpo_retv(log_mvp);
-	if( ( logfp = fopen(logs->config.log_mvpdrop,"a") ) == NULL )
+	if ((logfp = fopen(logs->config.log_mvpdrop, "a")) == NULL)
 		return;
 	time(&curtime);
 	strftime(timestring, sizeof(timestring), "%m/%d/%Y %H:%M:%S", localtime(&curtime));
-	fprintf(logfp,"%s - %s[%d:%d]\t%d\t%d,%d\n", timestring, sd->status.name, sd->status.account_id, sd->status.char_id, monster_id, log_mvp[0], log_mvp[1]);
+	fprintf(logfp, "%s - %s[%d:%d]\t%d\t%d,%d\n", timestring, sd->status.name, sd->status.account_id, sd->status.char_id, monster_id, log_mvp[0], log_mvp[1]);
 	fclose(logfp);
 }
 /// logs MVP monster rewards
@@ -306,10 +315,10 @@ static void log_mvpdrop(struct map_session_data *sd, int monster_id, int *log_mv
 {
 	nullpo_retv(sd);
 
-	if( !logs->config.mvpdrop )
+	if (!logs->config.mvpdrop)
 		return;
 
-	logs->mvpdrop_sub(sd,monster_id,log_mvp);
+	logs->mvpdrop_sub(sd, monster_id, log_mvp);
 }
 
 static void log_atcommand_sub_sql(struct map_session_data *sd, const char *message)
@@ -319,11 +328,7 @@ static void log_atcommand_sub_sql(struct map_session_data *sd, const char *messa
 	nullpo_retv(sd);
 	nullpo_retv(message);
 	stmt = SQL->StmtMalloc(logs->mysql_handle);
-	if( SQL_SUCCESS != SQL->StmtPrepare(stmt, LOG_QUERY " INTO `%s` (`atcommand_date`, `account_id`, `char_id`, `char_name`, `map`, `command`) VALUES (NOW(), '%d', '%d', ?, '%s', ?)", logs->config.log_gm, sd->status.account_id, sd->status.char_id, mapindex_id2name(sd->mapindex) )
-	   ||  SQL_SUCCESS != SQL->StmtBindParam(stmt, 0, SQLDT_STRING, sd->status.name, strnlen(sd->status.name, NAME_LENGTH))
-	   ||  SQL_SUCCESS != SQL->StmtBindParam(stmt, 1, SQLDT_STRING, message, safestrnlen(message, 255))
-	   ||  SQL_SUCCESS != SQL->StmtExecute(stmt) )
-	{
+	if (SQL_SUCCESS != SQL->StmtPrepare(stmt, LOG_QUERY " INTO `%s` (`atcommand_date`, `account_id`, `char_id`, `char_name`, `map`, `command`) VALUES (NOW(), '%d', '%d', ?, '%s', ?)", logs->config.log_gm, sd->status.account_id, sd->status.char_id, mapindex_id2name(sd->mapindex)) || SQL_SUCCESS != SQL->StmtBindParam(stmt, 0, SQLDT_STRING, sd->status.name, strnlen(sd->status.name, NAME_LENGTH)) || SQL_SUCCESS != SQL->StmtBindParam(stmt, 1, SQLDT_STRING, message, safestrnlen(message, 255)) || SQL_SUCCESS != SQL->StmtExecute(stmt)) {
 		SqlStmt_ShowDebug(stmt);
 		SQL->StmtFree(stmt);
 		return;
@@ -334,11 +339,11 @@ static void log_atcommand_sub_txt(struct map_session_data *sd, const char *messa
 {
 	char timestring[255];
 	time_t curtime;
-	FILE* logfp;
+	FILE *logfp;
 
 	nullpo_retv(sd);
 	nullpo_retv(message);
-	if( ( logfp = fopen(logs->config.log_gm, "a") ) == NULL )
+	if ((logfp = fopen(logs->config.log_gm, "a")) == NULL)
 		return;
 	time(&curtime);
 	strftime(timestring, sizeof(timestring), "%m/%d/%Y %H:%M:%S", localtime(&curtime));
@@ -350,11 +355,10 @@ static void log_atcommand(struct map_session_data *sd, const char *message)
 {
 	nullpo_retv(sd);
 
-	if( !logs->config.commands ||
-	    !pc->should_log_commands(sd) )
+	if (!logs->config.commands || !pc->should_log_commands(sd))
 		return;
 
-	logs->atcommand_sub(sd,message);
+	logs->atcommand_sub(sd, message);
 }
 
 static void log_npc_sub_sql(struct map_session_data *sd, const char *message)
@@ -364,11 +368,7 @@ static void log_npc_sub_sql(struct map_session_data *sd, const char *message)
 	nullpo_retv(sd);
 	nullpo_retv(message);
 	stmt = SQL->StmtMalloc(logs->mysql_handle);
-	if (SQL_SUCCESS != SQL->StmtPrepare(stmt, LOG_QUERY " INTO `%s` (`npc_date`, `account_id`, `char_id`, `char_name`, `map`, `mes`) VALUES (NOW(), '%d', '%d', ?, '%s', ?)", logs->config.log_npc, sd->status.account_id, sd->status.char_id, mapindex_id2name(sd->mapindex) )
-	 || SQL_SUCCESS != SQL->StmtBindParam(stmt, 0, SQLDT_STRING, sd->status.name, strnlen(sd->status.name, NAME_LENGTH))
-	 || SQL_SUCCESS != SQL->StmtBindParam(stmt, 1, SQLDT_STRING, message, safestrnlen(message, 255))
-	 || SQL_SUCCESS != SQL->StmtExecute(stmt)
-	) {
+	if (SQL_SUCCESS != SQL->StmtPrepare(stmt, LOG_QUERY " INTO `%s` (`npc_date`, `account_id`, `char_id`, `char_name`, `map`, `mes`) VALUES (NOW(), '%d', '%d', ?, '%s', ?)", logs->config.log_npc, sd->status.account_id, sd->status.char_id, mapindex_id2name(sd->mapindex)) || SQL_SUCCESS != SQL->StmtBindParam(stmt, 0, SQLDT_STRING, sd->status.name, strnlen(sd->status.name, NAME_LENGTH)) || SQL_SUCCESS != SQL->StmtBindParam(stmt, 1, SQLDT_STRING, message, safestrnlen(message, 255)) || SQL_SUCCESS != SQL->StmtExecute(stmt)) {
 		SqlStmt_ShowDebug(stmt);
 		SQL->StmtFree(stmt);
 		return;
@@ -379,11 +379,11 @@ static void log_npc_sub_txt(struct map_session_data *sd, const char *message)
 {
 	char timestring[255];
 	time_t curtime;
-	FILE* logfp;
+	FILE *logfp;
 
 	nullpo_retv(sd);
 	nullpo_retv(message);
-	if( ( logfp = fopen(logs->config.log_npc, "a") ) == NULL )
+	if ((logfp = fopen(logs->config.log_npc, "a")) == NULL)
 		return;
 	time(&curtime);
 	strftime(timestring, sizeof(timestring), "%m/%d/%Y %H:%M:%S", localtime(&curtime));
@@ -395,10 +395,10 @@ static void log_npc(struct map_session_data *sd, const char *message)
 {
 	nullpo_retv(sd);
 
-	if( !logs->config.npc )
+	if (!logs->config.npc)
 		return;
 
-	logs->npc_sub(sd,message);
+	logs->npc_sub(sd, message);
 }
 
 /**
@@ -416,16 +416,12 @@ static void log_npc(struct map_session_data *sd, const char *message)
  */
 static void log_chat_sub_sql(e_log_chat_type type, int type_id, int src_charid, int src_accid, const char *mapname, int x, int y, const char *dst_charname, const char *message)
 {
-	struct SqlStmt* stmt;
+	struct SqlStmt *stmt;
 
 	nullpo_retv(dst_charname);
 	nullpo_retv(message);
 	stmt = SQL->StmtMalloc(logs->mysql_handle);
-	if( SQL_SUCCESS != SQL->StmtPrepare(stmt, LOG_QUERY " INTO `%s` (`time`, `type`, `type_id`, `src_charid`, `src_accountid`, `src_map`, `src_map_x`, `src_map_y`, `dst_charname`, `message`) VALUES (NOW(), '%c', '%d', '%d', '%d', '%s', '%d', '%d', ?, ?)", logs->config.log_chat, logs->chattype2char(type), type_id, src_charid, src_accid, mapname, x, y)
-	 || SQL_SUCCESS != SQL->StmtBindParam(stmt, 0, SQLDT_STRING, dst_charname, safestrnlen(dst_charname, NAME_LENGTH))
-	 || SQL_SUCCESS != SQL->StmtBindParam(stmt, 1, SQLDT_STRING, message, safestrnlen(message, CHAT_SIZE_MAX))
-	 || SQL_SUCCESS != SQL->StmtExecute(stmt)
-	) {
+	if (SQL_SUCCESS != SQL->StmtPrepare(stmt, LOG_QUERY " INTO `%s` (`time`, `type`, `type_id`, `src_charid`, `src_accountid`, `src_map`, `src_map_x`, `src_map_y`, `dst_charname`, `message`) VALUES (NOW(), '%c', '%d', '%d', '%d', '%s', '%d', '%d', ?, ?)", logs->config.log_chat, logs->chattype2char(type), type_id, src_charid, src_accid, mapname, x, y) || SQL_SUCCESS != SQL->StmtBindParam(stmt, 0, SQLDT_STRING, dst_charname, safestrnlen(dst_charname, NAME_LENGTH)) || SQL_SUCCESS != SQL->StmtBindParam(stmt, 1, SQLDT_STRING, message, safestrnlen(message, CHAT_SIZE_MAX)) || SQL_SUCCESS != SQL->StmtExecute(stmt)) {
 		SqlStmt_ShowDebug(stmt);
 		SQL->StmtFree(stmt);
 		return;
@@ -450,12 +446,12 @@ static void log_chat_sub_txt(e_log_chat_type type, int type_id, int src_charid, 
 {
 	char timestring[255];
 	time_t curtime;
-	FILE* logfp;
+	FILE *logfp;
 
 	nullpo_retv(mapname);
 	nullpo_retv(dst_charname);
 	nullpo_retv(message);
-	if( ( logfp = fopen(logs->config.log_chat, "a") ) == NULL )
+	if ((logfp = fopen(logs->config.log_chat, "a")) == NULL)
 		return;
 	time(&curtime);
 	strftime(timestring, sizeof(timestring), "%m/%d/%Y %H:%M:%S", localtime(&curtime));
@@ -478,7 +474,7 @@ static void log_chat_sub_txt(e_log_chat_type type, int type_id, int src_charid, 
  */
 static void log_chat(e_log_chat_type type, int type_id, int src_charid, int src_accid, const char *mapname, int x, int y, const char *dst_charname, const char *message)
 {
-	if ((logs->config.chat&type) == 0) {
+	if ((logs->config.chat & type) == 0) {
 		// disabled
 		return;
 	}
@@ -491,7 +487,7 @@ static void log_chat(e_log_chat_type type, int type_id, int src_charid, int src_
 	if (dst_charname == NULL)
 		dst_charname = "";
 
-	logs->chat_sub(type,type_id,src_charid,src_accid,mapname,x,y,dst_charname,message);
+	logs->chat_sub(type, type_id, src_charid, src_accid, mapname, x, y, dst_charname, message);
 }
 
 static void log_sql_init(void)
@@ -499,13 +495,13 @@ static void log_sql_init(void)
 	// log db connection
 	logs->mysql_handle = SQL->Malloc();
 
-	ShowInfo(""CL_WHITE"[SQL]"CL_RESET": Connecting to the Log Database "CL_WHITE"%s"CL_RESET" At "CL_WHITE"%s"CL_RESET"...\n",logs->db_name,logs->db_ip);
-	if ( SQL_ERROR == SQL->Connect(logs->mysql_handle, logs->db_id, logs->db_pw, logs->db_ip, logs->db_port, logs->db_name) )
+	ShowInfo("" CL_WHITE "[SQL]" CL_RESET ": Connecting to the Log Database " CL_WHITE "%s" CL_RESET " At " CL_WHITE "%s" CL_RESET "...\n", logs->db_name, logs->db_ip);
+	if (SQL_ERROR == SQL->Connect(logs->mysql_handle, logs->db_id, logs->db_pw, logs->db_ip, logs->db_port, logs->db_name))
 		exit(EXIT_FAILURE);
-	ShowStatus(""CL_WHITE"[SQL]"CL_RESET": Successfully '"CL_GREEN"connected"CL_RESET"' to Database '"CL_WHITE"%s"CL_RESET"'.\n", logs->db_name);
+	ShowStatus("" CL_WHITE "[SQL]" CL_RESET ": Successfully '" CL_GREEN "connected" CL_RESET "' to Database '" CL_WHITE "%s" CL_RESET "'.\n", logs->db_name);
 
 	if (map->default_codepage[0] != '\0')
-		if ( SQL_ERROR == SQL->SetEncoding(logs->mysql_handle, map->default_codepage) )
+		if (SQL_ERROR == SQL->SetEncoding(logs->mysql_handle, map->default_codepage))
 			Sql_ShowDebug(logs->mysql_handle);
 }
 static void log_sql_final(void)
@@ -522,19 +518,19 @@ static void log_set_defaults(void)
 {
 	memset(&logs->config, 0, sizeof(logs->config));
 
-	//map_log default values
+	// map_log default values
 	logs->config.enable_logs = 0xFFFFF;
 	logs->config.commands = true;
 
-	//map_log/database default values
+	// map_log/database default values
 	logs->config.sql_logs = true;
 	// file/table names defaults are defined inside log_config_read_database
 
-	//map_log/filter/item default values
-	logs->config.filter = 1;              // logs any item
-	logs->config.refine_items_log = 5;    // log refined items, with refine >= +5
-	logs->config.rare_items_log   = 100;  // log rare items. drop chance <= 1%
-	logs->config.price_items_log  = 1000; // 1000z
+	// map_log/filter/item default values
+	logs->config.filter = 1;             // logs any item
+	logs->config.refine_items_log = 5;   // log refined items, with refine >= +5
+	logs->config.rare_items_log = 100;   // log rare items. drop chance <= 1%
+	logs->config.price_items_log = 1000; // 1000z
 	logs->config.amount_items_log = 100;
 }
 
@@ -563,32 +559,25 @@ static bool log_config_read_database(const char *filename, struct config_t *conf
 	libconfig->setting_lookup_bool_real(setting, "use_sql", &logs->config.sql_logs);
 
 	// map_log.database defaults are defined in order to not make unecessary calls to safestrncpy [Panikon]
-	if (libconfig->setting_lookup_mutable_string(setting, "log_branch_db",
-				logs->config.log_branch, sizeof(logs->config.log_branch)) == CONFIG_FALSE)
+	if (libconfig->setting_lookup_mutable_string(setting, "log_branch_db", logs->config.log_branch, sizeof(logs->config.log_branch)) == CONFIG_FALSE)
 		safestrncpy(logs->config.log_branch, "branchlog", sizeof(logs->config.log_branch));
 
-	if (libconfig->setting_lookup_mutable_string(setting, "log_pick_db",
-				logs->config.log_pick, sizeof(logs->config.log_pick)) == CONFIG_FALSE)
+	if (libconfig->setting_lookup_mutable_string(setting, "log_pick_db", logs->config.log_pick, sizeof(logs->config.log_pick)) == CONFIG_FALSE)
 		safestrncpy(logs->config.log_pick, "picklog", sizeof(logs->config.log_pick));
 
-	if (libconfig->setting_lookup_mutable_string(setting, "log_zeny_db",
-				logs->config.log_zeny, sizeof(logs->config.log_zeny)) == CONFIG_FALSE)
+	if (libconfig->setting_lookup_mutable_string(setting, "log_zeny_db", logs->config.log_zeny, sizeof(logs->config.log_zeny)) == CONFIG_FALSE)
 		safestrncpy(logs->config.log_zeny, "zenylog", sizeof(logs->config.log_zeny));
 
-	if (libconfig->setting_lookup_mutable_string(setting, "log_mvpdrop_db",
-				logs->config.log_mvpdrop, sizeof(logs->config.log_mvpdrop)) == CONFIG_FALSE)
+	if (libconfig->setting_lookup_mutable_string(setting, "log_mvpdrop_db", logs->config.log_mvpdrop, sizeof(logs->config.log_mvpdrop)) == CONFIG_FALSE)
 		safestrncpy(logs->config.log_mvpdrop, "mvplog", sizeof(logs->config.log_mvpdrop));
 
-	if (libconfig->setting_lookup_mutable_string(setting, "log_gm_db",
-				logs->config.log_gm, sizeof(logs->config.log_gm)) == CONFIG_FALSE)
+	if (libconfig->setting_lookup_mutable_string(setting, "log_gm_db", logs->config.log_gm, sizeof(logs->config.log_gm)) == CONFIG_FALSE)
 		safestrncpy(logs->config.log_gm, "atcommandlog", sizeof(logs->config.log_gm));
 
-	if (libconfig->setting_lookup_mutable_string(setting, "log_npc_db",
-				logs->config.log_npc, sizeof(logs->config.log_npc)) == CONFIG_FALSE)
+	if (libconfig->setting_lookup_mutable_string(setting, "log_npc_db", logs->config.log_npc, sizeof(logs->config.log_npc)) == CONFIG_FALSE)
 		safestrncpy(logs->config.log_npc, "npclog", sizeof(logs->config.log_npc));
 
-	if (libconfig->setting_lookup_mutable_string(setting, "log_chat_db",
-				logs->config.log_chat, sizeof(logs->config.log_chat)) == CONFIG_FALSE)
+	if (libconfig->setting_lookup_mutable_string(setting, "log_chat_db", logs->config.log_chat, sizeof(logs->config.log_chat)) == CONFIG_FALSE)
 		safestrncpy(logs->config.log_chat, "chatlog", sizeof(logs->config.log_chat));
 
 	return true;
@@ -707,7 +696,7 @@ static bool log_config_read(const char *filename, bool imported)
 	}
 
 	if (libconfig->setting_lookup_int(setting, "enable", &temp) == CONFIG_TRUE) {
-		logs->config.enable_logs = temp&LOG_TYPE_ALL; // e_log_pick_type
+		logs->config.enable_logs = temp & LOG_TYPE_ALL; // e_log_pick_type
 	}
 	libconfig->setting_lookup_int(setting, "log_zeny", &logs->config.zeny);
 	libconfig->setting_lookup_bool_real(setting, "log_branch", &logs->config.branch);
@@ -764,7 +753,7 @@ static bool log_config_read(const char *filename, bool imported)
 
 static void log_config_complete(void)
 {
-	if( logs->config.sql_logs ) {
+	if (logs->config.sql_logs) {
 		logs->pick_sub = log_pick_sub_sql;
 		logs->zeny_sub = log_zeny_sub_sql;
 		logs->npc_sub = log_npc_sub_sql;
@@ -782,10 +771,10 @@ void log_defaults(void)
 {
 	logs = &log_s;
 
-	sprintf(logs->db_ip,"127.0.0.1");
-	sprintf(logs->db_id,"ragnarok");
-	sprintf(logs->db_pw,"ragnarok");
-	sprintf(logs->db_name,"log");
+	sprintf(logs->db_ip, "127.0.0.1");
+	sprintf(logs->db_id, "ragnarok");
+	sprintf(logs->db_pw, "ragnarok");
+	sprintf(logs->db_name, "log");
 
 	logs->db_port = 3306;
 	logs->mysql_handle = NULL;

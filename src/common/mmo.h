@@ -67,29 +67,29 @@
 	#define PACKETVER 20190530
 #endif // PACKETVER
 
-//Uncomment the following line if your client is ragexeRE instead of ragexe (required because of conflicting packets in ragexe vs ragexeRE).
-//#define ENABLE_PACKETVER_RE
+// Uncomment the following line if your client is ragexeRE instead of ragexe (required because of conflicting packets in ragexe vs ragexeRE).
+// #define ENABLE_PACKETVER_RE
 #ifdef ENABLE_PACKETVER_RE
 	#define PACKETVER_RE
 	#undef ENABLE_PACKETVER_RE
 #endif // DISABLE_PACKETVER_RE
 
-//Uncomment the following line if your client is zero ragexe instead of normal kro clients
-//#define ENABLE_PACKETVER_ZERO
+// Uncomment the following line if your client is zero ragexe instead of normal kro clients
+// #define ENABLE_PACKETVER_ZERO
 #ifdef ENABLE_PACKETVER_ZERO
 	#define PACKETVER_ZERO
 	#undef ENABLE_PACKETVER_ZERO
 #endif // DISABLE_PACKETVER_ZERO
 
-//Uncomment the following line if your client is sakexe
-//#define ENABLE_PACKETVER_SAK
+// Uncomment the following line if your client is sakexe
+// #define ENABLE_PACKETVER_SAK
 #ifdef ENABLE_PACKETVER_SAK
 	#define PACKETVER_SAK
 	#undef ENABLE_PACKETVER_SAK
 #endif // DISABLE_PACKETVER_SAK
 
-//Uncomment the following line if your client is ragexeAD
-//#define ENABLE_PACKETVER_AD
+// Uncomment the following line if your client is ragexeAD
+// #define ENABLE_PACKETVER_AD
 #ifdef ENABLE_PACKETVER_AD
 	#define PACKETVER_AD
 	#undef ENABLE_PACKETVER_AD
@@ -127,41 +127,41 @@
 #endif
 
 // Client support for experimental RagexeRE UI present in 2012-04-10 and 2012-04-18
-#if defined(PACKETVER_RE) && ( PACKETVER == 20120410 || PACKETVER == 20120418 )
-#define PARTY_RECRUIT
+#if defined(PACKETVER_RE) && (PACKETVER == 20120410 || PACKETVER == 20120418)
+	#define PARTY_RECRUIT
 #endif // PACKETVER_RE && (PACKETVER == 20120410 || PACKETVER == 10120418)
 
 // Comment the following line to disable sc_data saving. [Skotlex]
 #ifndef ENABLE_SC_SAVING
-#define ENABLE_SC_SAVING
+	#define ENABLE_SC_SAVING
 #endif
 
 #if PACKETVER_MAIN_NUM >= 20070711 || PACKETVER_RE_NUM >= 20080827 || PACKETVER_AD_NUM >= 20070711 || PACKETVER_SAK_NUM >= 20070628 || defined(PACKETVER_ZERO)
-// Comment the following like to disable server-side hot-key saving support. [Skotlex]
-// Note that newer clients no longer save hotkeys in the registry!
-#define HOTKEY_SAVING
+	// Comment the following like to disable server-side hot-key saving support. [Skotlex]
+	// Note that newer clients no longer save hotkeys in the registry!
+	#define HOTKEY_SAVING
+
+	#if PACKETVER_MAIN_NUM >= 20190522 || PACKETVER_RE_NUM >= 20190508 || PACKETVER_ZERO_NUM >= 20190605
+		#define MAX_HOTKEYS 38
+	#elif PACKETVER_MAIN_NUM >= 20141022 || PACKETVER_RE_NUM >= 20141015 || defined(PACKETVER_ZERO)
+		// (38 = 9 skills x 4 bars & 2 Quickslots)(0x07d9,268)
+		#define MAX_HOTKEYS 38
+	#elif PACKETVER_MAIN_NUM >= 20090617 || PACKETVER_RE_NUM >= 20090617 || PACKETVER_SAK_NUM >= 20090617
+		// (38 = 9 skills x 4 bars & 2 Quickslots)(0x07d9,268)
+		#define MAX_HOTKEYS 38
+	#elif PACKETVER_MAIN_NUM >= 20090603 || PACKETVER_RE_NUM >= 20090603 || PACKETVER_SAK_NUM >= 20090603
+		// (36 = 9 skills x 4 bars)               (0x07d9,254)
+		#define MAX_HOTKEYS 36
+	#elif PACKETVER_MAIN_NUM >= 20070711 || PACKETVER_RE_NUM >= 20080827 || PACKETVER_AD_NUM >= 20070711 || PACKETVER_SAK_NUM >= 20070628
+		// (27 = 9 skills x 3 bars)               (0x02b9,191)
+		#define MAX_HOTKEYS 27
+	#endif
+#endif // PACKETVER_MAIN_NUM >= 20070711 || PACKETVER_RE_NUM >= 20080827 || PACKETVER_AD_NUM >= 20070711 || PACKETVER_SAK_NUM >= 20070628 || defined(PACKETVER_ZERO)
 
 #if PACKETVER_MAIN_NUM >= 20190522 || PACKETVER_RE_NUM >= 20190508 || PACKETVER_ZERO_NUM >= 20190605
-#define MAX_HOTKEYS 38
-#elif PACKETVER_MAIN_NUM >= 20141022 || PACKETVER_RE_NUM >= 20141015 || defined(PACKETVER_ZERO)
-// (38 = 9 skills x 4 bars & 2 Quickslots)(0x07d9,268)
-#define MAX_HOTKEYS 38
-#elif PACKETVER_MAIN_NUM >= 20090617 || PACKETVER_RE_NUM >= 20090617 || PACKETVER_SAK_NUM >= 20090617
-// (38 = 9 skills x 4 bars & 2 Quickslots)(0x07d9,268)
-#define MAX_HOTKEYS 38
-#elif PACKETVER_MAIN_NUM >= 20090603 || PACKETVER_RE_NUM >= 20090603 || PACKETVER_SAK_NUM >= 20090603
-// (36 = 9 skills x 4 bars)               (0x07d9,254)
-#define MAX_HOTKEYS 36
-#elif PACKETVER_MAIN_NUM >= 20070711 || PACKETVER_RE_NUM >= 20080827 || PACKETVER_AD_NUM >= 20070711 || PACKETVER_SAK_NUM >= 20070628
-// (27 = 9 skills x 3 bars)               (0x02b9,191)
-#define MAX_HOTKEYS 27
-#endif
-#endif  // PACKETVER_MAIN_NUM >= 20070711 || PACKETVER_RE_NUM >= 20080827 || PACKETVER_AD_NUM >= 20070711 || PACKETVER_SAK_NUM >= 20070628 || defined(PACKETVER_ZERO)
-
-#if PACKETVER_MAIN_NUM >= 20190522 || PACKETVER_RE_NUM >= 20190508 || PACKETVER_ZERO_NUM >= 20190605
-#define MAX_HOTKEYS_DB ((MAX_HOTKEYS) * 2)
+	#define MAX_HOTKEYS_DB ((MAX_HOTKEYS) * 2)
 #else
-#define MAX_HOTKEYS_DB MAX_HOTKEYS
+	#define MAX_HOTKEYS_DB MAX_HOTKEYS
 #endif
 
 #if PACKETVER >= 20150805 /* Cart Decoration */
@@ -177,23 +177,23 @@
 	#define MAX_BASE_CARTS 5
 #endif
 #ifndef MAX_CARTS
-#define MAX_CARTS (MAX_BASE_CARTS + MAX_CARTDECORATION_CARTS)
+	#define MAX_CARTS (MAX_BASE_CARTS + MAX_CARTDECORATION_CARTS)
 #endif
 
 #ifndef MAX_INVENTORY
-#if PACKETVER_MAIN_NUM >= 20181219 || PACKETVER_RE_NUM >= 20181219 || PACKETVER_ZERO_NUM >= 20181212
-#define MAX_INVENTORY 200
-#else
-#define MAX_INVENTORY 100
-#endif  // PACKETVER_MAIN_NUM >= 20181219 || PACKETVER_RE_NUM >= 20181219 || PACKETVER_ZERO_NUM >= 20181212
-#endif  // MAX_INVENTORY
+	#if PACKETVER_MAIN_NUM >= 20181219 || PACKETVER_RE_NUM >= 20181219 || PACKETVER_ZERO_NUM >= 20181212
+		#define MAX_INVENTORY 200
+	#else
+		#define MAX_INVENTORY 100
+	#endif // PACKETVER_MAIN_NUM >= 20181219 || PACKETVER_RE_NUM >= 20181219 || PACKETVER_ZERO_NUM >= 20181212
+#endif     // MAX_INVENTORY
 
 #ifndef FIXED_INVENTORY_SIZE
-#define FIXED_INVENTORY_SIZE 100
+	#define FIXED_INVENTORY_SIZE 100
 #endif
 
 #if FIXED_INVENTORY_SIZE > MAX_INVENTORY
-#error FIXED_INVENTORY_SIZE must be same or smaller than MAX_INVENTORY
+	#error FIXED_INVENTORY_SIZE must be same or smaller than MAX_INVENTORY
 #endif
 
 #if PACKETVER >= 20131223
@@ -207,73 +207,73 @@
 	#error The current PACKETVER does not support the official guild storage system.
 #endif // PACKETVER >= 20131223
 
-//Max number of characters per account. Note that changing this setting alone is not enough if the client is not hexed to support more characters as well.
+// Max number of characters per account. Note that changing this setting alone is not enough if the client is not hexed to support more characters as well.
 #if PACKETVER >= 20100413
-#ifndef MAX_CHARS
-	#define MAX_CHARS 12
-#endif
+	#ifndef MAX_CHARS
+		#define MAX_CHARS 12
+	#endif
 #else
-#ifndef MAX_CHARS
-	#define MAX_CHARS 9
+	#ifndef MAX_CHARS
+		#define MAX_CHARS 9
+	#endif
 #endif
-#endif
-//Number of slots carded equipment can have. Never set to less than 4 as they are also used to keep the data of forged items/equipment. [Skotlex]
-//Note: The client seems unable to receive data for more than 4 slots due to all related packets having a fixed size.
+// Number of slots carded equipment can have. Never set to less than 4 as they are also used to keep the data of forged items/equipment. [Skotlex]
+// Note: The client seems unable to receive data for more than 4 slots due to all related packets having a fixed size.
 #ifndef MAX_SLOTS
-#define MAX_SLOTS 4
+	#define MAX_SLOTS 4
 #endif
-//Max amount of a single stacked item
+// Max amount of a single stacked item
 #ifndef MAX_AMOUNT
-#define MAX_AMOUNT 30000
+	#define MAX_AMOUNT 30000
 #endif
 #ifndef MAX_ZENY
-#define MAX_ZENY INT_MAX
+	#define MAX_ZENY INT_MAX
 #endif
 
-//Official Limit: 2.1b ( the var that stores the money doesn't go much higher than this by default )
+// Official Limit: 2.1b ( the var that stores the money doesn't go much higher than this by default )
 #ifndef MAX_BANK_ZENY
-#define MAX_BANK_ZENY INT_MAX
+	#define MAX_BANK_ZENY INT_MAX
 #endif
 
 #ifndef MAX_LEVEL
-#define MAX_LEVEL 175
+	#define MAX_LEVEL 175
 #endif
 #ifndef MAX_FAME
-#define MAX_FAME 1000000000
+	#define MAX_FAME 1000000000
 #endif
 #ifndef MAX_CART
-#define MAX_CART 100
+	#define MAX_CART 100
 #endif
 #ifndef MAX_SKILL_DB
-#define MAX_SKILL_DB 1355 ///< Maximum number of skills in the skill DB (compacted array size)
+	#define MAX_SKILL_DB 1355 ///< Maximum number of skills in the skill DB (compacted array size)
 #endif
 #ifndef MAX_SKILL_ID
-#define MAX_SKILL_ID 10020   // [Ind/Hercules] max used skill ID
+	#define MAX_SKILL_ID 10020 // [Ind/Hercules] max used skill ID
 #endif
 #ifndef MAX_SKILL_TREE
-// Update this max as necessary. 86 is the value needed for Expanded Super Novice.
-#define MAX_SKILL_TREE 86
+	// Update this max as necessary. 86 is the value needed for Expanded Super Novice.
+	#define MAX_SKILL_TREE 86
 #endif
 #ifndef DEFAULT_WALK_SPEED
-#define DEFAULT_WALK_SPEED 150
+	#define DEFAULT_WALK_SPEED 150
 #endif
 #ifndef MIN_WALK_SPEED
-#define MIN_WALK_SPEED 20 /* below 20 clips animation */
+	#define MIN_WALK_SPEED 20 /* below 20 clips animation */
 #endif
 #ifndef MAX_WALK_SPEED
-#define MAX_WALK_SPEED 1000
+	#define MAX_WALK_SPEED 1000
 #endif
 #ifndef MAX_STORAGE
-#define MAX_STORAGE 600
+	#define MAX_STORAGE 600
 #endif
 #ifndef OFFICIAL_GUILD_STORAGE
 	#ifndef MAX_GUILD_STORAGE
-	#define MAX_GUILD_STORAGE 600
+		#define MAX_GUILD_STORAGE 600
 	#endif
 	#undef GUILD_STORAGE_EXPANSION_STEP
 #else // ! OFFICIAL_GUILD_STORAGE
 	#ifdef MAX_GUILD_STORAGE
-	#error You cannot redefine MAX_GUILD_STORAGE when using the official guild storage system.
+		#error You cannot redefine MAX_GUILD_STORAGE when using the official guild storage system.
 	#endif
 	#ifndef GUILD_STORAGE_EXPANSION_STEP
 		#define GUILD_STORAGE_EXPANSION_STEP 100
@@ -282,44 +282,44 @@
 	#define MAX_GUILD_STORAGE (GUILD_STORAGE_EXPANSION_STEP * 5)
 #endif // OFFICIAL_GUILD_STORAGE
 #ifndef MAX_PARTY
-#define MAX_PARTY 12
+	#define MAX_PARTY 12
 #endif
 #ifndef BASE_GUILD_SIZE
-#define BASE_GUILD_SIZE 16               // Base guild members (without GD_EXTENSION)
+	#define BASE_GUILD_SIZE 16 // Base guild members (without GD_EXTENSION)
 #endif
 #ifndef MAX_GUILD
-#define MAX_GUILD (BASE_GUILD_SIZE+10*6) // Increased max guild members +6 per 1 extension levels [Lupus]
+	#define MAX_GUILD (BASE_GUILD_SIZE + 10 * 6) // Increased max guild members +6 per 1 extension levels [Lupus]
 #endif
 #ifndef MAX_GUILDPOSITION
-#define MAX_GUILDPOSITION 20             // Increased max guild positions to accomodate for all members [Valaris] (removed) [PoW]
+	#define MAX_GUILDPOSITION 20 // Increased max guild positions to accomodate for all members [Valaris] (removed) [PoW]
 #endif
 #ifndef MAX_GUILDEXPULSION
-#define MAX_GUILDEXPULSION 32
+	#define MAX_GUILDEXPULSION 32
 #endif
 #ifndef MAX_GUILDALLIANCE
-#define MAX_GUILDALLIANCE 16
+	#define MAX_GUILDALLIANCE 16
 #endif
 #ifndef MAX_GUILDSKILL
-#define MAX_GUILDSKILL 17                // Increased max guild skills because of new skills [Sara-chan]
+	#define MAX_GUILDSKILL 17 // Increased max guild skills because of new skills [Sara-chan]
 #endif
 #ifndef MAX_GUILDLEVEL
-#define MAX_GUILDLEVEL 50
+	#define MAX_GUILDLEVEL 50
 #endif
 #ifndef MAX_GUARDIANS
-#define MAX_GUARDIANS 8                  // Local max per castle. [Skotlex]
+	#define MAX_GUARDIANS 8 // Local max per castle. [Skotlex]
 #endif
 #ifndef MAX_QUEST_OBJECTIVES
-#define MAX_QUEST_OBJECTIVES 3           // Max quest objectives for a quest
+	#define MAX_QUEST_OBJECTIVES 3 // Max quest objectives for a quest
 #endif
 
 // Achievements [Smokexyz/Hercules]
 #ifndef MAX_ACHIEVEMENT_DB
-#define MAX_ACHIEVEMENT_DB 360          // Maximum number of achievements
-#define MAX_ACHIEVEMENT_OBJECTIVES 10   // Maximum number of achievement objectives
+	#define MAX_ACHIEVEMENT_DB 360        // Maximum number of achievements
+	#define MAX_ACHIEVEMENT_OBJECTIVES 10 // Maximum number of achievement objectives
 STATIC_ASSERT(MAX_ACHIEVEMENT_OBJECTIVES <= 10, "This value is limited by the client and database layout and should only be increased if you know the consequences.");
-#define MAX_ACHIEVEMENT_RANKS 20 // Achievement Ranks
+	#define MAX_ACHIEVEMENT_RANKS 20 // Achievement Ranks
 STATIC_ASSERT(MAX_ACHIEVEMENT_RANKS <= 255, "This value is limited by the client and database layout and should only be increased if you know the consequences.");
-#define MAX_ACHIEVEMENT_ITEM_REWARDS 10 // Achievement Rewards
+	#define MAX_ACHIEVEMENT_ITEM_REWARDS 10 // Achievement Rewards
 #endif
 
 // for produce
@@ -334,17 +334,17 @@ STATIC_ASSERT(MAX_ACHIEVEMENT_RANKS <= 255, "This value is limited by the client
 #define WEDDING_RING_M 2634
 #define WEDDING_RING_F 2635
 
-//For character names, title names, guilds, maps, etc.
-//Includes null-terminator as it is the length of the array.
+// For character names, title names, guilds, maps, etc.
+// Includes null-terminator as it is the length of the array.
 #define NAME_LENGTH (23 + 1)
-//For item names, which tend to have much longer names.
+// For item names, which tend to have much longer names.
 #define ITEM_NAME_LENGTH 50
-//For Map Names, which the client considers to be 16 in length including the .gat extension.
+// For Map Names, which the client considers to be 16 in length including the .gat extension.
 #define MAP_NAME_LENGTH (11 + 1)
 #define MAP_NAME_LENGTH_EXT (MAP_NAME_LENGTH + 4)
 
 #ifndef MAX_FRIENDS
-#define MAX_FRIENDS 40
+	#define MAX_FRIENDS 40
 #endif
 #define MAX_MEMOPOINTS 3
 
@@ -362,10 +362,10 @@ STATIC_ASSERT(MAX_ACHIEVEMENT_RANKS <= 255, "This value is limited by the client
 
 // Base Homun skill.
 #ifndef HM_SKILLBASE
-#define HM_SKILLBASE 8001
+	#define HM_SKILLBASE 8001
 #endif
 #ifndef MAX_HOMUNSKILL
-#define MAX_HOMUNSKILL 43
+	#define MAX_HOMUNSKILL 43
 #endif
 
 // Mail System
@@ -375,26 +375,26 @@ STATIC_ASSERT(MAX_ACHIEVEMENT_RANKS <= 255, "This value is limited by the client
 
 // Mercenary System
 #ifndef MC_SKILLBASE
-#define MC_SKILLBASE 8201
+	#define MC_SKILLBASE 8201
 #endif
 #ifndef MAX_MERCSKILL
-#define MAX_MERCSKILL 40
+	#define MAX_MERCSKILL 40
 #endif
 
 // Elemental System
 #ifndef MAX_ELEMENTALSKILL
-#define MAX_ELEMENTALSKILL 42
+	#define MAX_ELEMENTALSKILL 42
 #endif
 #ifndef EL_SKILLBASE
-#define EL_SKILLBASE 8401
+	#define EL_SKILLBASE 8401
 #endif
 #ifndef MAX_ELESKILLTREE
-#define MAX_ELESKILLTREE 3
+	#define MAX_ELESKILLTREE 3
 #endif
 
 // Maximum item options [Smokexyz]
 #ifndef MAX_ITEM_OPTIONS
-#define MAX_ITEM_OPTIONS 5
+	#define MAX_ITEM_OPTIONS 5
 #endif
 STATIC_ASSERT(MAX_ITEM_OPTIONS <= 5, "This value is limited by the client and database layout and should only be increased if you know the consequences.");
 
@@ -404,23 +404,23 @@ STATIC_ASSERT(MAX_ITEM_OPTIONS <= 5, "This value is limited by the client and da
 #define RODEX_MAX_ITEM (5)
 #define RODEX_EXPIRE (1 * 15 * 24 * 60 * 60)
 #if PACKETVER >= 20170419
-#define RODEX_MAIL_PER_PAGE 32
+	#define RODEX_MAIL_PER_PAGE 32
 #else
-#define RODEX_MAIL_PER_PAGE 7
+	#define RODEX_MAIL_PER_PAGE 7
 #endif
 
 #ifndef MAX_GRADE_MATERIALS
-#define MAX_GRADE_MATERIALS 3
+	#define MAX_GRADE_MATERIALS 3
 #endif
 
 // The following system marks a different job ID system used by the map server,
 // which makes a lot more sense than the normal one. [Skotlex]
 // These marks the "level" of the job.
-#define JOBL_2_1   0x0100
-#define JOBL_2_2   0x0200
-#define JOBL_2     0x0300 // JOBL_2_1 | JOBL_2_2
+#define JOBL_2_1 0x0100
+#define JOBL_2_2 0x0200
+#define JOBL_2 0x0300 // JOBL_2_1 | JOBL_2_2
 #define JOBL_UPPER 0x1000
-#define JOBL_BABY  0x2000
+#define JOBL_BABY 0x2000
 #define JOBL_THIRD 0x4000
 
 #define SCRIPT_VARNAME_LENGTH 32 ///< Maximum length of a script variable's name including affixes and excluding NULL-terminator.
@@ -435,18 +435,18 @@ struct script_code;
 
 enum item_types {
 	IT_HEALING = 0,
-	IT_UNKNOWN, //1
-	IT_USABLE,  //2
-	IT_ETC,     //3
-	IT_WEAPON,  //4
-	IT_ARMOR,   //5
-	IT_CARD,    //6
-	IT_PETEGG,  //7
-	IT_PETARMOR,//8
-	IT_UNKNOWN2,//9
-	IT_AMMO,    //10
-	IT_DELAYCONSUME,//11
-	IT_SELECTPACKAGE,//12
+	IT_UNKNOWN,       // 1
+	IT_USABLE,        // 2
+	IT_ETC,           // 3
+	IT_WEAPON,        // 4
+	IT_ARMOR,         // 5
+	IT_CARD,          // 6
+	IT_PETEGG,        // 7
+	IT_PETARMOR,      // 8
+	IT_UNKNOWN2,      // 9
+	IT_AMMO,          // 10
+	IT_DELAYCONSUME,  // 11
+	IT_SELECTPACKAGE, // 12
 	IT_CASH = 18,
 #ifndef IT_MAX
 	IT_MAX
@@ -471,7 +471,7 @@ struct quest {
 };
 
 enum attribute_flag {
-	ATTR_NONE   = 0,
+	ATTR_NONE = 0,
 	ATTR_BROKEN = 1,
 };
 
@@ -511,31 +511,31 @@ struct item {
  **/
 STATIC_ASSERT(MAX_STORAGE * sizeof(struct item) + 8 <= 0xFFFF, "The maximum amount of item slots per account storage is limited by the inter-server communication layout. Use a smaller value!");
 
-//Equip position constants
+// Equip position constants
 enum equip_pos {
-	EQP_NONE               = 0x000000,
-	EQP_HEAD_LOW           = 0x000001,
-	EQP_HEAD_MID           = 0x000200, //512
-	EQP_HEAD_TOP           = 0x000100, //256
-	EQP_HAND_R             = 0x000002, //2
-	EQP_HAND_L             = 0x000020, //32
-	EQP_ARMOR              = 0x000010, //16
-	EQP_SHOES              = 0x000040, //64
-	EQP_GARMENT            = 0x000004, //4
-	EQP_ACC_L              = 0x000008, //8
-	EQP_ACC_R              = 0x000080, //128
-	EQP_COSTUME_HEAD_TOP   = 0x000400, //1024
-	EQP_COSTUME_HEAD_MID   = 0x000800, //2048
-	EQP_COSTUME_HEAD_LOW   = 0x001000, //4096
-	EQP_COSTUME_GARMENT    = 0x002000, //8192
-	//UNUSED_COSTUME_FLOOR = 0x004000, //16384
-	EQP_AMMO               = 0x008000, //32768
-	EQP_SHADOW_ARMOR       = 0x010000, //65536
-	EQP_SHADOW_WEAPON      = 0x020000, //131072
-	EQP_SHADOW_SHIELD      = 0x040000, //262144
-	EQP_SHADOW_SHOES       = 0x080000, //524288
-	EQP_SHADOW_ACC_R       = 0x100000, //1048576
-	EQP_SHADOW_ACC_L       = 0x200000, //2097152
+	EQP_NONE = 0x000000,
+	EQP_HEAD_LOW = 0x000001,
+	EQP_HEAD_MID = 0x000200,         // 512
+	EQP_HEAD_TOP = 0x000100,         // 256
+	EQP_HAND_R = 0x000002,           // 2
+	EQP_HAND_L = 0x000020,           // 32
+	EQP_ARMOR = 0x000010,            // 16
+	EQP_SHOES = 0x000040,            // 64
+	EQP_GARMENT = 0x000004,          // 4
+	EQP_ACC_L = 0x000008,            // 8
+	EQP_ACC_R = 0x000080,            // 128
+	EQP_COSTUME_HEAD_TOP = 0x000400, // 1024
+	EQP_COSTUME_HEAD_MID = 0x000800, // 2048
+	EQP_COSTUME_HEAD_LOW = 0x001000, // 4096
+	EQP_COSTUME_GARMENT = 0x002000,  // 8192
+	// UNUSED_COSTUME_FLOOR = 0x004000, //16384
+	EQP_AMMO = 0x008000,          // 32768
+	EQP_SHADOW_ARMOR = 0x010000,  // 65536
+	EQP_SHADOW_WEAPON = 0x020000, // 131072
+	EQP_SHADOW_SHIELD = 0x040000, // 262144
+	EQP_SHADOW_SHOES = 0x080000,  // 524288
+	EQP_SHADOW_ACC_R = 0x100000,  // 1048576
+	EQP_SHADOW_ACC_L = 0x200000,  // 2097152
 };
 
 struct point {
@@ -543,8 +543,7 @@ struct point {
 	int16 x, y;
 };
 
-enum e_skill_flag
-{
+enum e_skill_flag {
 	SKILL_FLAG_PERMANENT,
 	SKILL_FLAG_TEMPORARY,
 	SKILL_FLAG_PLAGIARIZED,
@@ -552,67 +551,67 @@ enum e_skill_flag
 	SKILL_FLAG_PERM_GRANTED, ///< Permanent, granted through someway (e.g. script).
 	/* */
 	/* MUST be the last, because with it the flag value stores a dynamic value (flag+lv) */
-	SKILL_FLAG_REPLACED_LV_0,   // Temporary skill overshadowing permanent skill of level 'N - SKILL_FLAG_REPLACED_LV_0',
+	SKILL_FLAG_REPLACED_LV_0, // Temporary skill overshadowing permanent skill of level 'N - SKILL_FLAG_REPLACED_LV_0',
 };
 
 enum e_mmo_charstatus_opt {
-	OPT_NONE        = 0x0,
-	OPT_SHOW_EQUIP  = 0x1,
+	OPT_NONE = 0x0,
+	OPT_SHOW_EQUIP = 0x1,
 	OPT_ALLOW_PARTY = 0x2,
-	OPT_ALLOW_CALL  = 0x4,
+	OPT_ALLOW_CALL = 0x4,
 };
 
 enum e_item_bound_type {
-	IBT_NONE      = 0x0,
-	IBT_MIN       = 0x1,
-	IBT_ACCOUNT   = 0x1,
-	IBT_GUILD     = 0x2,
-	IBT_PARTY     = 0x3,
+	IBT_NONE = 0x0,
+	IBT_MIN = 0x1,
+	IBT_ACCOUNT = 0x1,
+	IBT_GUILD = 0x2,
+	IBT_PARTY = 0x3,
 	IBT_CHARACTER = 0x4,
 #ifndef IBT_MAX
-	IBT_MAX       = 0x4,
+	IBT_MAX = 0x4,
 #endif
 };
 
 enum e_option {
-	OPTION_NOTHING      = 0x00000000,
-	OPTION_SIGHT        = 0x00000001,
-	OPTION_HIDE         = 0x00000002,
-	OPTION_CLOAK        = 0x00000004,
-	OPTION_FALCON       = 0x00000010,
-	OPTION_RIDING       = 0x00000020,
-	OPTION_INVISIBLE    = 0x00000040,
-	OPTION_ORCISH       = 0x00000800,
-	OPTION_WEDDING      = 0x00001000,
-	OPTION_RUWACH       = 0x00002000,
-	OPTION_CHASEWALK    = 0x00004000,
-	OPTION_FLYING       = 0x00008000, //Note that clientside Flying and Xmas are 0x8000 for clients prior to 2007.
-	OPTION_XMAS         = 0x00010000,
-	OPTION_TRANSFORM    = 0x00020000,
-	OPTION_SUMMER       = 0x00040000,
-	OPTION_DRAGON1      = 0x00080000,
-	OPTION_WUG          = 0x00100000,
-	OPTION_WUGRIDER     = 0x00200000,
-	OPTION_MADOGEAR     = 0x00400000,
-	OPTION_DRAGON2      = 0x00800000,
-	OPTION_DRAGON3      = 0x01000000,
-	OPTION_DRAGON4      = 0x02000000,
-	OPTION_DRAGON5      = 0x04000000,
-	OPTION_HANBOK       = 0x08000000,
-	OPTION_OKTOBERFEST  = 0x10000000,
-	OPTION_SUMMER2      = 0x20000000,
+	OPTION_NOTHING = 0x00000000,
+	OPTION_SIGHT = 0x00000001,
+	OPTION_HIDE = 0x00000002,
+	OPTION_CLOAK = 0x00000004,
+	OPTION_FALCON = 0x00000010,
+	OPTION_RIDING = 0x00000020,
+	OPTION_INVISIBLE = 0x00000040,
+	OPTION_ORCISH = 0x00000800,
+	OPTION_WEDDING = 0x00001000,
+	OPTION_RUWACH = 0x00002000,
+	OPTION_CHASEWALK = 0x00004000,
+	OPTION_FLYING = 0x00008000, // Note that clientside Flying and Xmas are 0x8000 for clients prior to 2007.
+	OPTION_XMAS = 0x00010000,
+	OPTION_TRANSFORM = 0x00020000,
+	OPTION_SUMMER = 0x00040000,
+	OPTION_DRAGON1 = 0x00080000,
+	OPTION_WUG = 0x00100000,
+	OPTION_WUGRIDER = 0x00200000,
+	OPTION_MADOGEAR = 0x00400000,
+	OPTION_DRAGON2 = 0x00800000,
+	OPTION_DRAGON3 = 0x01000000,
+	OPTION_DRAGON4 = 0x02000000,
+	OPTION_DRAGON5 = 0x04000000,
+	OPTION_HANBOK = 0x08000000,
+	OPTION_OKTOBERFEST = 0x10000000,
+	OPTION_SUMMER2 = 0x20000000,
 #ifndef NEW_CARTS
-	OPTION_CART1     = 0x00000008,
-	OPTION_CART2     = 0x00000080,
-	OPTION_CART3     = 0x00000100,
-	OPTION_CART4     = 0x00000200,
-	OPTION_CART5     = 0x00000400,
+	OPTION_CART1 = 0x00000008,
+	OPTION_CART2 = 0x00000080,
+	OPTION_CART3 = 0x00000100,
+	OPTION_CART4 = 0x00000200,
+	OPTION_CART5 = 0x00000400,
 	/*  compound constant for older carts */
-	OPTION_CART      = OPTION_CART1|OPTION_CART2|OPTION_CART3|OPTION_CART4|OPTION_CART5,
+	OPTION_CART = OPTION_CART1 | OPTION_CART2 | OPTION_CART3 | OPTION_CART4 | OPTION_CART5,
 #endif
 	// compound constants
-	OPTION_DRAGON    = OPTION_DRAGON1|OPTION_DRAGON2|OPTION_DRAGON3|OPTION_DRAGON4|OPTION_DRAGON5,
-	OPTION_COSTUME   = OPTION_WEDDING | OPTION_XMAS | OPTION_SUMMER | OPTION_HANBOK | OPTION_OKTOBERFEST | OPTION_SUMMER2,
+	OPTION_DRAGON = OPTION_DRAGON1 | OPTION_DRAGON2 | OPTION_DRAGON3 | OPTION_DRAGON4 | OPTION_DRAGON5,
+	OPTION_COSTUME = OPTION_WEDDING | OPTION_XMAS | OPTION_SUMMER | OPTION_HANBOK | OPTION_OKTOBERFEST | OPTION_SUMMER2,
 };
 
 struct s_skill {
@@ -622,8 +621,8 @@ struct s_skill {
 };
 
 struct script_reg_state {
-	unsigned int type   : 1;/* because I'm a memory hoarder and having them in the same struct would be a 8-byte/instance waste while ints outnumber str on a 10000-to-1 ratio. */
-	unsigned int update : 1;/* whether it needs to be sent to char server for insertion/update/delete */
+	unsigned int type : 1;   /* because I'm a memory hoarder and having them in the same struct would be a 8-byte/instance waste while ints outnumber str on a 10000-to-1 ratio. */
+	unsigned int update : 1; /* whether it needs to be sent to char server for insertion/update/delete */
 };
 
 struct script_reg_num {
@@ -660,7 +659,7 @@ struct guild_storage {
 		int amount;        ///< Currently stored items (Note: the array is not compacted!)
 		int capacity;      ///< Current size of the data array
 		struct item *data; ///< Data array
-	} items;      ///< Items
+	} items;               ///< Items
 };
 
 /**
@@ -682,10 +681,10 @@ struct s_pet {
 	int pet_id;
 	int class_;
 	short level;
-	int egg_id;//pet egg id
-	int equip;//pet equip name_id
-	short intimate;//pet friendly
-	short hungry;//pet hungry
+	int egg_id;     // pet egg id
+	int equip;      // pet equip name_id
+	short intimate; // pet friendly
+	short hungry;   // pet hungry
 	char name[NAME_LENGTH];
 	char rename_flag;
 	char incubate;
@@ -698,15 +697,15 @@ struct s_homunculus { //[orn]
 	int char_id;
 	int class_;
 	int prev_class;
-	int hp,max_hp,sp,max_sp;
+	int hp, max_hp, sp, max_sp;
 	unsigned int intimacy;
 	short hunger;
-	struct s_skill hskill[MAX_HOMUNSKILL]; //albator
+	struct s_skill hskill[MAX_HOMUNSKILL]; // albator
 	short skillpts;
 	short level;
 	uint64 exp;
 	short rename_flag;
-	short vaporize; //albator
+	short vaporize; // albator
 	int str;
 	int agi;
 	int vit;
@@ -721,7 +720,7 @@ struct s_homunculus { //[orn]
 	int dex_value;
 	int luk_value;
 
-	int8 spiritball; //for homun S [lighta]
+	int8 spiritball; // for homun S [lighta]
 	int autofeed;
 };
 
@@ -755,7 +754,7 @@ struct hotkey {
 	unsigned int id;
 	unsigned short lv;
 	unsigned char type; // 0: item, 1: skill
-#else // not HOTKEY_SAVING
+#else                   // not HOTKEY_SAVING
 	UNAVAILABLE_STRUCT;
 #endif
 };
@@ -782,13 +781,13 @@ struct mmo_charstatus {
 
 	int class;
 	int status_point, skill_point;
-	int hp,max_hp,sp,max_sp;
+	int hp, max_hp, sp, max_sp;
 	unsigned int option;
 	short manner; // Defines how many minutes a char will be muted, each negative point is equivalent to a minute.
 	unsigned char karma;
 	short hair, hair_color, clothes_color;
 	int body;
-	int party_id,guild_id,clan_id,pet_id,hom_id,mer_id,ele_id;
+	int party_id, guild_id, clan_id, pet_id, hom_id, mer_id, ele_id;
 	int fame;
 
 	// 4th job basic stats. client using only char but here we save as int [4144]
@@ -815,19 +814,19 @@ struct mmo_charstatus {
 
 	char name[NAME_LENGTH];
 	int base_level, job_level;
-	short str,agi,vit,int_,dex,luk;
-	unsigned char slot,sex;
+	short str, agi, vit, int_, dex, luk;
+	unsigned char slot, sex;
 
 	uint32 mapip;
 	uint16 mapport;
 
 	int64 last_login;
-	struct point last_point,save_point,memo_point[MAX_MEMOPOINTS];
+	struct point last_point, save_point, memo_point[MAX_MEMOPOINTS];
 	int inventorySize;
-	struct item inventory[MAX_INVENTORY],cart[MAX_CART];
+	struct item inventory[MAX_INVENTORY], cart[MAX_CART];
 	struct s_skill skill[MAX_SKILL_DB];
 
-	struct s_friend friends[MAX_FRIENDS]; //New friend system [Skotlex]
+	struct s_friend friends[MAX_FRIENDS]; // New friend system [Skotlex]
 #ifdef HOTKEY_SAVING
 	struct hotkey hotkeys[MAX_HOTKEYS_DB];
 #endif
@@ -840,7 +839,7 @@ struct mmo_charstatus {
 	time_t delete_date;
 
 	/* `account_data` modifiers */
-	unsigned short mod_exp,mod_drop,mod_death;
+	unsigned short mod_exp, mod_drop, mod_death;
 
 	unsigned char font;
 
@@ -909,28 +908,27 @@ struct party_member {
 	int class;
 	int lv;
 	unsigned short map;
-	unsigned leader : 1,
-	         online : 1;
+	unsigned leader : 1, online : 1;
 };
 
 struct party {
 	int party_id;
 	char name[NAME_LENGTH];
-	unsigned char count; //Count of online characters.
+	unsigned char count; // Count of online characters.
 	unsigned exp : 1,
-				item : 2; //&1: Party-Share (round-robin), &2: pickup style: shared.
+	    item : 2; //&1: Party-Share (round-robin), &2: pickup style: shared.
 	struct party_member member[MAX_PARTY];
 };
 
 struct map_session_data;
 struct guild_member {
 	int account_id, char_id;
-	short hair,hair_color,gender;
+	short hair, hair_color, gender;
 	int class;
 	short lv;
 	uint64 exp;
 	int exp_payper;
-	short online,position;
+	short online, position;
 	char name[NAME_LENGTH];
 	struct map_session_data *sd;
 	unsigned char modified;
@@ -958,7 +956,7 @@ struct guild_expulsion {
 };
 
 struct guild_skill {
-	int id,lv;
+	int id, lv;
 };
 
 struct channel_data;
@@ -980,18 +978,18 @@ struct guild {
 	char mes2[MAX_GUILDMES2];                             ///< Guild message (second line)
 	int emblem_id;                                        ///< Sequential ID of the current emblem
 	int emblem_len;                                       ///< Guild emblem data length
-	char *emblem_data;                                   ///< Guild emblem data
+	char *emblem_data;                                    ///< Guild emblem data
 	struct guild_alliance alliance[MAX_GUILDALLIANCE];    ///< Guild alliances data
 	struct guild_expulsion expulsion[MAX_GUILDEXPULSION]; ///< Guild expulsion records
 	struct guild_skill skill[MAX_GUILDSKILL];             ///< Guild skills data
 
 	unsigned short save_flag; ///< Flag used in char.c to state what kind of data is being saved/processed
 
-	short *instance;                                      ///< Array of instances
-	unsigned short instances;                             ///< Amount of instances
+	short *instance;          ///< Array of instances
+	unsigned short instances; ///< Amount of instances
 
-	struct channel_data *channel;                         ///< Guild's `#ally` channel
-	struct hplugin_data_store *hdata;                     ///< HPM Plugin Data Store
+	struct channel_data *channel;     ///< Guild's `#ally` channel
+	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
 };
 
 struct guild_castle {
@@ -1020,7 +1018,7 @@ struct guild_castle {
 		unsigned visible : 1;
 		int id; // object id
 	} guardian[MAX_GUARDIANS];
-	int* temp_guardians; // ids of temporary guardians (mobs)
+	int *temp_guardians; // ids of temporary guardians (mobs)
 	int temp_guardians_max;
 };
 
@@ -1028,9 +1026,9 @@ struct guild_castle {
  * Clan Member Struct
  */
 struct clan_member {
-	int char_id; ///< Char Id of member
-	short online; ///< Flag to know if the player is online or not
-	int64 last_login; ///< Last login of this member, used to kick if inactive for long time
+	int char_id;                 ///< Char Id of member
+	short online;                ///< Flag to know if the player is online or not
+	int64 last_login;            ///< Last login of this member, used to kick if inactive for long time
 	struct map_session_data *sd; ///< Player data of member
 };
 
@@ -1038,7 +1036,7 @@ struct clan_member {
  * Clan Buff Struct
  */
 struct clan_buff {
-	int icon; ///< Status Icon to be shown in client (Use one of the 'SI_' constants)
+	int icon;                   ///< Status Icon to be shown in client (Use one of the 'SI_' constants)
 	struct script_code *script; ///< The script to be executed as CLan Buff
 };
 
@@ -1047,32 +1045,32 @@ struct clan_buff {
  */
 struct clan_relationship {
 	char constant[NAME_LENGTH]; ///< Unique name of the related clan
-	int clan_id; ///< Id of the related clan
+	int clan_id;                ///< Id of the related clan
 };
 
 /**
  * Clan Struct
  */
 struct clan {
-	int clan_id; ///< CLan's Id
-	char constant[NAME_LENGTH]; ///< Clan's Unique Name
-	char name[NAME_LENGTH]; ///< Clan's Name
-	char master[NAME_LENGTH]; ///< Name of the clan's master (used for clan information on client)
-	char map[MAP_NAME_LENGTH_EXT]; ///< The map of that clan (used for clan information on client)
-	struct clan_buff buff; ///< The buff for a clan when a member joins it
-	short max_member; ///< Limit of Members
-	short member_count; ///< Holds the amount of members in this clan, online and offline
-	short connect_member; ///< Members that are Online
-	VECTOR_DECL(struct clan_member) members; ///< Vector of Members
-	VECTOR_DECL(struct clan_relationship) allies; ///< Vector of Allies
+	int clan_id;                                       ///< CLan's Id
+	char constant[NAME_LENGTH];                        ///< Clan's Unique Name
+	char name[NAME_LENGTH];                            ///< Clan's Name
+	char master[NAME_LENGTH];                          ///< Name of the clan's master (used for clan information on client)
+	char map[MAP_NAME_LENGTH_EXT];                     ///< The map of that clan (used for clan information on client)
+	struct clan_buff buff;                             ///< The buff for a clan when a member joins it
+	short max_member;                                  ///< Limit of Members
+	short member_count;                                ///< Holds the amount of members in this clan, online and offline
+	short connect_member;                              ///< Members that are Online
+	VECTOR_DECL(struct clan_member) members;           ///< Vector of Members
+	VECTOR_DECL(struct clan_relationship) allies;      ///< Vector of Allies
 	VECTOR_DECL(struct clan_relationship) antagonists; ///< Vector of Antagonists
-	int kick_time; /// Needed inactive time to be kicked
-	int check_time; ///< Interval to check for inactive players
-	int tid; ///< Timer ID for inactivity kick
-	bool received; ///< Whether or not the requested data was received
-	int req_state; ///< Flag for knowing what to do after receiving the data from inter server
-	int req_count_tid; ///< Timer ID for the timer that handles the timeout of requests for interserver to count members
-	int req_kick_tid; ///< Timer ID for the timer that handles the timeout of requests for interserver to kick inactive members
+	int kick_time;                                     /// Needed inactive time to be kicked
+	int check_time;                                    ///< Interval to check for inactive players
+	int tid;                                           ///< Timer ID for inactivity kick
+	bool received;                                     ///< Whether or not the requested data was received
+	int req_state;                                     ///< Flag for knowing what to do after receiving the data from inter server
+	int req_count_tid;                                 ///< Timer ID for the timer that handles the timeout of requests for interserver to count members
+	int req_kick_tid;                                  ///< Timer ID for the timer that handles the timeout of requests for interserver to kick inactive members
 
 	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
 };
@@ -1084,11 +1082,11 @@ struct fame_list {
 };
 
 enum fame_list_type {
-	RANKTYPE_UNKNOWN    = -1,
+	RANKTYPE_UNKNOWN = -1,
 	RANKTYPE_BLACKSMITH = 0,
-	RANKTYPE_ALCHEMIST  = 1,
-	RANKTYPE_TAEKWON    = 2,
-	RANKTYPE_PK         = 3, //Not supported yet
+	RANKTYPE_ALCHEMIST = 1,
+	RANKTYPE_TAEKWON = 2,
+	RANKTYPE_PK = 3, // Not supported yet
 };
 
 struct rodex_item {
@@ -1128,12 +1126,7 @@ enum rodex_opentype {
 	RODEX_OPENTYPE_UNSET = 3,
 };
 
-enum MAIL_TYPE {
-	MAIL_TYPE_TEXT = 0x0,
-	MAIL_TYPE_ZENY = 0x2,
-	MAIL_TYPE_ITEM = 0x4,
-	MAIL_TYPE_NPC = 0x8
-};
+enum MAIL_TYPE { MAIL_TYPE_TEXT = 0x0, MAIL_TYPE_ZENY = 0x2, MAIL_TYPE_ITEM = 0x4, MAIL_TYPE_NPC = 0x8 };
 
 /**
  * Guild Basic Information
@@ -1149,10 +1142,10 @@ enum guild_basic_info {
 	 * Changes a skill level, struct guild_skill should be sent.
 	 * All checks regarding max skill level should be done in _map-server_
 	 **/
-	GBI_SKILLLV,    ///< Guild skill_lv
+	GBI_SKILLLV, ///< Guild skill_lv
 };
 
-enum guild_member_info { //Change Member Infos
+enum guild_member_info { // Change Member Infos
 	GMI_POSITION = 0,
 	GMI_EXP,
 	GMI_HAIR,
@@ -1163,35 +1156,35 @@ enum guild_member_info { //Change Member Infos
 };
 
 enum guild_permission { // Guild permissions
-	GPERM_INVITE  = 0x001,
-	GPERM_EXPEL   = 0x010,
+	GPERM_INVITE = 0x001,
+	GPERM_EXPEL = 0x010,
 #if PACKETVER >= 20140205
 	GPERM_STORAGE = 0x100,
-	GPERM_ALL     = GPERM_INVITE|GPERM_EXPEL|GPERM_STORAGE,
+	GPERM_ALL = GPERM_INVITE | GPERM_EXPEL | GPERM_STORAGE,
 #else
-	GPERM_ALL     = GPERM_INVITE|GPERM_EXPEL,
+	GPERM_ALL = GPERM_INVITE | GPERM_EXPEL,
 #endif
-	GPERM_MASK    = GPERM_ALL,
+	GPERM_MASK = GPERM_ALL,
 	GPERM_DEFAULT = GPERM_ALL,
 };
 
 enum {
-	GD_SKILLBASE=10000,
-	GD_APPROVAL=10000,
-	GD_KAFRACONTRACT=10001,
-	GD_GUARDRESEARCH=10002,
-	GD_GUARDUP=10003,
-	GD_EXTENSION=10004,
-	GD_GLORYGUILD=10005,
-	GD_LEADERSHIP=10006,
-	GD_GLORYWOUNDS=10007,
-	GD_SOULCOLD=10008,
-	GD_HAWKEYES=10009,
-	GD_BATTLEORDER=10010,
-	GD_REGENERATION=10011,
-	GD_RESTORE=10012,
-	GD_EMERGENCYCALL=10013,
-	GD_DEVELOPMENT=10014,
+	GD_SKILLBASE = 10000,
+	GD_APPROVAL = 10000,
+	GD_KAFRACONTRACT = 10001,
+	GD_GUARDRESEARCH = 10002,
+	GD_GUARDUP = 10003,
+	GD_EXTENSION = 10004,
+	GD_GLORYGUILD = 10005,
+	GD_LEADERSHIP = 10006,
+	GD_GLORYWOUNDS = 10007,
+	GD_SOULCOLD = 10008,
+	GD_HAWKEYES = 10009,
+	GD_BATTLEORDER = 10010,
+	GD_REGENERATION = 10011,
+	GD_RESTORE = 10012,
+	GD_EMERGENCYCALL = 10013,
+	GD_DEVELOPMENT = 10014,
 	GD_ITEMEMERGENCYCALL = 10015,
 	GD_GUILD_STORAGE = 10016,
 #ifndef GD_MAX
@@ -1199,8 +1192,8 @@ enum {
 #endif
 };
 
-#define JOB_ENUM_VALUE(name, id, msgtbl) JOB_ ## name = id,
-//These mark the ID of the jobs, as expected by the client. [Skotlex]
+#define JOB_ENUM_VALUE(name, id, msgtbl) JOB_##name = id,
+// These mark the ID of the jobs, as expected by the client. [Skotlex]
 enum e_class {
 #include "common/class_hidden.h"
 #include "common/class_special.h"
@@ -1211,41 +1204,36 @@ enum e_class {
 };
 #undef JOB_ENUM_VALUE
 
-
-//Total number of classes (for data storage)
+// Total number of classes (for data storage)
 #define CLASS_COUNT (JOB_MAX - JOB_NOVICE_HIGH + JOB_MAX_BASIC)
 
-enum {
-	SEX_FEMALE = 0,
-	SEX_MALE,
-	SEX_SERVER
-};
+enum { SEX_FEMALE = 0, SEX_MALE, SEX_SERVER };
 
 enum weapon_type {
-	W_FIST,      ///< Bare hands
-	W_DAGGER,    //1
-	W_1HSWORD,   //2
-	W_2HSWORD,   //3
-	W_1HSPEAR,   //4
-	W_2HSPEAR,   //5
-	W_1HAXE,     //6
-	W_2HAXE,     //7
-	W_MACE,      //8
-	W_2HMACE,    //9 (unused)
-	W_STAFF,     //10
-	W_BOW,       //11
-	W_KNUCKLE,   //12
-	W_MUSICAL,   //13
-	W_WHIP,      //14
-	W_BOOK,      //15
-	W_KATAR,     //16
-	W_REVOLVER,  //17
-	W_RIFLE,     //18
-	W_GATLING,   //19
-	W_SHOTGUN,   //20
-	W_GRENADE,   //21
-	W_HUUMA,     //22
-	W_2HSTAFF,   //23
+	W_FIST,     ///< Bare hands
+	W_DAGGER,   // 1
+	W_1HSWORD,  // 2
+	W_2HSWORD,  // 3
+	W_1HSPEAR,  // 4
+	W_2HSPEAR,  // 5
+	W_1HAXE,    // 6
+	W_2HAXE,    // 7
+	W_MACE,     // 8
+	W_2HMACE,   // 9 (unused)
+	W_STAFF,    // 10
+	W_BOW,      // 11
+	W_KNUCKLE,  // 12
+	W_MUSICAL,  // 13
+	W_WHIP,     // 14
+	W_BOOK,     // 15
+	W_KATAR,    // 16
+	W_REVOLVER, // 17
+	W_RIFLE,    // 18
+	W_GATLING,  // 19
+	W_SHOTGUN,  // 20
+	W_GRENADE,  // 21
+	W_HUUMA,    // 22
+	W_2HSTAFF,  // 23
 #ifndef MAX_SINGLE_WEAPON_TYPE
 	MAX_SINGLE_WEAPON_TYPE,
 #endif
@@ -1262,46 +1250,46 @@ enum weapon_type {
 };
 
 enum ammo_type {
-	A_ARROW        = 1,
-	A_DAGGER,      //2
-	A_BULLET,      //3
-	A_SHELL,       //4
-	A_GRENADE,     //5
-	A_SHURIKEN,    //6
-	A_KUNAI,       //7
-	A_CANNONBALL,  //8
-	A_THROWWEAPON, //9
+	A_ARROW = 1,
+	A_DAGGER,      // 2
+	A_BULLET,      // 3
+	A_SHELL,       // 4
+	A_GRENADE,     // 5
+	A_SHURIKEN,    // 6
+	A_KUNAI,       // 7
+	A_CANNONBALL,  // 8
+	A_THROWWEAPON, // 9
 	MAX_AMMO_TYPE
 };
 
 enum e_char_server_type {
-	CST_NORMAL      = 0,
+	CST_NORMAL = 0,
 	CST_MAINTENANCE = 1,
-	CST_OVER18      = 2,
-	CST_PAYING      = 3,
-	CST_F2P         = 4,
+	CST_OVER18 = 2,
+	CST_PAYING = 3,
+	CST_F2P = 4,
 	CST_MAX,
 };
 
 enum e_pc_reg_loading {
 	PRL_NONE = 0x0,
 	PRL_CHAR = 0x1,
-	PRL_ACCL = 0x2,/* local */
-	PRL_ACCG = 0x4,/* global */
-	PRL_ALL  = 0xFF,
+	PRL_ACCL = 0x2, /* local */
+	PRL_ACCG = 0x4, /* global */
+	PRL_ALL = 0xFF,
 };
 
 /**
  * Values to be used as operation_type in chrif_char_ask_name
  */
 enum zh_char_ask_name_type {
-	CHAR_ASK_NAME_BLOCK         = 1, // account block
-	CHAR_ASK_NAME_BAN           = 2, // account ban
-	CHAR_ASK_NAME_UNBLOCK       = 3, // account unblock
-	CHAR_ASK_NAME_UNBAN         = 4, // account unban
-	CHAR_ASK_NAME_CHANGESEX     = 5, // change sex
-	CHAR_ASK_NAME_CHARBAN       = 6, // character ban
-	CHAR_ASK_NAME_CHARUNBAN     = 7, // character unban
+	CHAR_ASK_NAME_BLOCK = 1,         // account block
+	CHAR_ASK_NAME_BAN = 2,           // account ban
+	CHAR_ASK_NAME_UNBLOCK = 3,       // account unblock
+	CHAR_ASK_NAME_UNBAN = 4,         // account unban
+	CHAR_ASK_NAME_CHANGESEX = 5,     // change sex
+	CHAR_ASK_NAME_CHARBAN = 6,       // character ban
+	CHAR_ASK_NAME_CHARUNBAN = 7,     // character unban
 	CHAR_ASK_NAME_CHANGECHARSEX = 8, // change character sex
 };
 
@@ -1309,74 +1297,33 @@ enum zh_char_ask_name_type {
  * Values to be used as answer in chrig_char_ask_name_answer
  */
 enum hz_char_ask_name_answer {
-	CHAR_ASK_NAME_ANS_DONE     = 0, // login-server request done
+	CHAR_ASK_NAME_ANS_DONE = 0,     // login-server request done
 	CHAR_ASK_NAME_ANS_NOTFOUND = 1, // player not found
-	CHAR_ASK_NAME_ANS_GMLOW    = 2, // gm level too low
-	CHAR_ASK_NAME_ANS_OFFLINE  = 3, // login-server offline
+	CHAR_ASK_NAME_ANS_GMLOW = 2,    // gm level too low
+	CHAR_ASK_NAME_ANS_OFFLINE = 3,  // login-server offline
 };
 
 /**
  * Quest Info Types
  */
-enum questinfo_type {
-	QINFO_JOB,
-	QINFO_SEX,
-	QINFO_BASE_LEVEL,
-	QINFO_JOB_LEVEL,
-	QINFO_ITEM,
-	QINFO_HOMUN_LEVEL,
-	QINFO_HOMUN_TYPE,
-	QINFO_QUEST,
-	QINFO_MERCENARY_CLASS
-};
+enum questinfo_type { QINFO_JOB, QINFO_SEX, QINFO_BASE_LEVEL, QINFO_JOB_LEVEL, QINFO_ITEM, QINFO_HOMUN_LEVEL, QINFO_HOMUN_TYPE, QINFO_QUEST, QINFO_MERCENARY_CLASS };
 
 /** Pet hunger level **/
-enum e_pet_hunger_level {
-	PET_HUNGER_STARVING = 0,
-	PET_HUNGER_VERY_HUNGRY = 10,
-	PET_HUNGER_HUNGRY = 25,
-	PET_HUNGER_NEUTRAL = 75,
-	PET_HUNGER_SATISFIED = 90,
-	PET_HUNGER_STUFFED = 100
-};
+enum e_pet_hunger_level { PET_HUNGER_STARVING = 0, PET_HUNGER_VERY_HUNGRY = 10, PET_HUNGER_HUNGRY = 25, PET_HUNGER_NEUTRAL = 75, PET_HUNGER_SATISFIED = 90, PET_HUNGER_STUFFED = 100 };
 
 /** Pet intimacy level **/
-enum e_pet_intimacy_level {
-	PET_INTIMACY_NONE = 0,
-	PET_INTIMACY_AWKWARD = 1,
-	PET_INTIMACY_SHY = 100,
-	PET_INTIMACY_NEUTRAL = 250,
-	PET_INTIMACY_CORDIAL = 750,
-	PET_INTIMACY_LOYAL = 900,
-	PET_INTIMACY_MAX = 1000
-};
-
+enum e_pet_intimacy_level { PET_INTIMACY_NONE = 0, PET_INTIMACY_AWKWARD = 1, PET_INTIMACY_SHY = 100, PET_INTIMACY_NEUTRAL = 250, PET_INTIMACY_CORDIAL = 750, PET_INTIMACY_LOYAL = 900, PET_INTIMACY_MAX = 1000 };
 
 // enum from packet ZC_ADVENTURER_AGENCY_JOIN_RESULT (0x0afa)
-enum adventurer_agency_result {
-	AGENCY_JOIN_ACCEPTED = 0,
-	AGENCY_JOIN_REJECTED = 1,
-	AGENCY_PARTY_NUMBER_EXCEEDED = 2,
-	AGENCY_MASTER_UNABLE_ACCEPT_REQUEST = 3,
-	AGENCY_PARTY_JOIN_BLOCKED_BY_MAP = 4,
-	AGENCY_CHAR_CANT_BE_FOUND = 5,
-	AGENCY_CHAR_CANT_BE_FOUND2 = 6,
-	AGENCY_PLAYER_ALREADY_IN_PARTY = 7,
-	AGENCY_REQUEST_CANT_BE_RECEIVED = 8,
-	AGENCY_CANT_FIND_PARTY_LEADER_DELAYED = 9,
-	AGENCY_PARTY_NOT_FOUND = 10,
-	AGENCY_JOB_LEVEL_TOO_LOW = 11,
-	AGENCY_CHAR_IN_SAME_ACCOUNT_ALREADY_JOINED = 12,
-	AGENCY_UNKNOWN_ERROR = 13
-};
+enum adventurer_agency_result { AGENCY_JOIN_ACCEPTED = 0, AGENCY_JOIN_REJECTED = 1, AGENCY_PARTY_NUMBER_EXCEEDED = 2, AGENCY_MASTER_UNABLE_ACCEPT_REQUEST = 3, AGENCY_PARTY_JOIN_BLOCKED_BY_MAP = 4, AGENCY_CHAR_CANT_BE_FOUND = 5, AGENCY_CHAR_CANT_BE_FOUND2 = 6, AGENCY_PLAYER_ALREADY_IN_PARTY = 7, AGENCY_REQUEST_CANT_BE_RECEIVED = 8, AGENCY_CANT_FIND_PARTY_LEADER_DELAYED = 9, AGENCY_PARTY_NOT_FOUND = 10, AGENCY_JOB_LEVEL_TOO_LOW = 11, AGENCY_CHAR_IN_SAME_ACCOUNT_ALREADY_JOINED = 12, AGENCY_UNKNOWN_ERROR = 13 };
 
 /* packet size constant for itemlist */
 #if MAX_INVENTORY > MAX_STORAGE && MAX_INVENTORY > MAX_CART
-#define MAX_ITEMLIST MAX_INVENTORY
+	#define MAX_ITEMLIST MAX_INVENTORY
 #elif MAX_CART > MAX_INVENTORY && MAX_CART > MAX_STORAGE
-#define MAX_ITEMLIST MAX_CART
+	#define MAX_ITEMLIST MAX_CART
 #else
-#define MAX_ITEMLIST MAX_STORAGE
+	#define MAX_ITEMLIST MAX_STORAGE
 #endif
 
 #ifndef MAX_REFINE_REQUIREMENTS
@@ -1385,24 +1332,24 @@ enum adventurer_agency_result {
 
 // sanity checks...
 #if MAX_ZENY > INT_MAX
-#error MAX_ZENY is too big
+	#error MAX_ZENY is too big
 #endif
 
 #if MAX_SLOTS < 4
-#error MAX_SLOTS it too small
+	#error MAX_SLOTS it too small
 #endif
 
 #ifdef MAX_SKILL
-#error MAX_SKILL has been replaced by MAX_SKILL_DB. Please update your custom definitions.
+	#error MAX_SKILL has been replaced by MAX_SKILL_DB. Please update your custom definitions.
 #endif
 
 #if MAX_REFINE_REQUIREMENTS > 4
-#error MAX_REFINE_REQUIREMENTS is bigger than allowed, this is a hardcoded limit in the client
+	#error MAX_REFINE_REQUIREMENTS is bigger than allowed, this is a hardcoded limit in the client
 #endif
 
 // do not change. related on packet fields
 #ifndef MAX_CHARSERVER_NAME_SIZE
-#define MAX_CHARSERVER_NAME_SIZE 20
+	#define MAX_CHARSERVER_NAME_SIZE 20
 #endif
 
 #endif /* COMMON_MMO_H */

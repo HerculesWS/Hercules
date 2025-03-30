@@ -30,10 +30,10 @@ struct PACKET_API_PROXY;
  * mapiif interface
  **/
 struct mapiif_interface {
-	void (*init) (bool minimal);
-	void (*final) (void);
-	int (*parse_fromchar_api_proxy) (int fd);
-	void (*parse_adventurer_agency_info) (int fd);
+	void (*init)(bool minimal);
+	void (*final)(void);
+	int (*parse_fromchar_api_proxy)(int fd);
+	void (*parse_adventurer_agency_info)(int fd);
 };
 
 #ifdef HERCULES_CORE

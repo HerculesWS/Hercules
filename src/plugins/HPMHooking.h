@@ -28,51 +28,39 @@ enum HPluginHookType {
 };
 
 struct HPMHooking_interface {
-	bool (*AddHook) (enum HPluginHookType type, const char *target, void *hook, unsigned int pID);
-	void (*HookStop) (const char *func, unsigned int pID);
-	bool (*HookStopped) (void);
+	bool (*AddHook)(enum HPluginHookType type, const char *target, void *hook, unsigned int pID);
+	void (*HookStop)(const char *func, unsigned int pID);
+	bool (*HookStopped)(void);
 };
 
 #ifdef HERCULES_CORE
 struct HPMHooking_core_interface {
 	bool enabled;
 	bool force_return;
-	bool (*addhook_sub) (enum HPluginHookType type, const char *target, void *hook, unsigned int pID);
+	bool (*addhook_sub)(enum HPluginHookType type, const char *target, void *hook, unsigned int pID);
 	const char *(*Hooked)(bool *fr);
 };
 #else // ! HERCULES_CORE
-#ifdef HERCULES_CORE_HPMI_SKIP
+	#ifdef HERCULES_CORE_HPMI_SKIP
 extern struct HPMHooking_interface HPMHooking_s;
-#else
+	#else
 HPExport struct HPMHooking_interface HPMHooking_s;
-#endif
+	#endif
 
-#include "HPMHooking/HPMHooking.Defs.inc"
+	#include "HPMHooking/HPMHooking.Defs.inc"
 
-#define addHookPre(ifname, funcname, hook) ( \
-		(void)((HPMHOOK_pre_ ## ifname ## _ ## funcname)0 == (hook)), \
-		HPMi->hooking->AddHook(HOOK_TYPE_PRE, #ifname "->" #funcname, (hook), HPMi->pid) \
-		)
+	#define addHookPre(ifname, funcname, hook) ((void)((HPMHOOK_pre_##ifname##_##funcname)0 == (hook)), HPMi->hooking->AddHook(HOOK_TYPE_PRE, #ifname "->" #funcname, (hook), HPMi->pid))
 
-#define addHookPrePriv(ifname, funcname, hook) ( \
-		(void)((HPMHOOK_pre_PRIV__ ## ifname ## _ ## funcname)0 == (hook)), \
-		HPMi->hooking->AddHook(HOOK_TYPE_PRE, #ifname "->p->" #funcname, (hook), HPMi->pid) \
-		)
+	#define addHookPrePriv(ifname, funcname, hook) ((void)((HPMHOOK_pre_PRIV__##ifname##_##funcname)0 == (hook)), HPMi->hooking->AddHook(HOOK_TYPE_PRE, #ifname "->p->" #funcname, (hook), HPMi->pid))
 
-#define addHookPost(ifname, funcname, hook) ( \
-		(void)((HPMHOOK_post_ ## ifname ## _ ## funcname)0 == (hook)), \
-		HPMi->hooking->AddHook(HOOK_TYPE_POST, #ifname "->" #funcname, (hook), HPMi->pid) \
-		)
+	#define addHookPost(ifname, funcname, hook) ((void)((HPMHOOK_post_##ifname##_##funcname)0 == (hook)), HPMi->hooking->AddHook(HOOK_TYPE_POST, #ifname "->" #funcname, (hook), HPMi->pid))
 
-#define addHookPostPriv(ifname, funcname, hook) ( \
-		(void)((HPMHOOK_post_PRIV__ ## ifname ## _ ## funcname)0 == (hook)), \
-		HPMi->hooking->AddHook(HOOK_TYPE_POST, #ifname "->p->" #funcname, (hook), HPMi->pid) \
-		)
+	#define addHookPostPriv(ifname, funcname, hook) ((void)((HPMHOOK_post_PRIV__##ifname##_##funcname)0 == (hook)), HPMi->hooking->AddHook(HOOK_TYPE_POST, #ifname "->p->" #funcname, (hook), HPMi->pid))
 
-/* need better names ;/ */
-/* will not run the original function after pre-hook processing is complete (other hooks will run) */
-#define hookStop() (HPMi->hooking->HookStop(__func__,HPMi->pid))
-#define hookStopped() (HPMi->hooking->HookStopped())
+	/* need better names ;/ */
+	/* will not run the original function after pre-hook processing is complete (other hooks will run) */
+	#define hookStop() (HPMi->hooking->HookStop(__func__, HPMi->pid))
+	#define hookStopped() (HPMi->hooking->HookStopped())
 
 #endif // ! HERCULES_CORE
 

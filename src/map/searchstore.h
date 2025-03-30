@@ -36,22 +36,18 @@
  * Enumerations
  **/
 enum e_searchstore_searchtype {
-	SEARCHTYPE_VENDING      = 0,
+	SEARCHTYPE_VENDING = 0,
 	SEARCHTYPE_BUYING_STORE = 1,
 };
 
-enum e_searchstore_effecttype {
-	EFFECTTYPE_NORMAL = 0,
-	EFFECTTYPE_CASH   = 1,
-	EFFECTTYPE_MAX
-};
+enum e_searchstore_effecttype { EFFECTTYPE_NORMAL = 0, EFFECTTYPE_CASH = 1, EFFECTTYPE_MAX };
 /// failure constants for clif functions
 enum e_searchstore_failure {
-	SSI_FAILED_NOTHING_SEARCH_ITEM         = 0,  // "No matching stores were found."
-	SSI_FAILED_OVER_MAXCOUNT               = 1,  // "There are too many results. Please enter more detailed search term."
-	SSI_FAILED_SEARCH_CNT                  = 2,  // "You cannot search anymore."
-	SSI_FAILED_LIMIT_SEARCH_TIME           = 3,  // "You cannot search yet."
-	SSI_FAILED_SSILIST_CLICK_TO_OPEN_STORE = 4,  // "No sale (purchase) information available."
+	SSI_FAILED_NOTHING_SEARCH_ITEM = 0,         // "No matching stores were found."
+	SSI_FAILED_OVER_MAXCOUNT = 1,               // "There are too many results. Please enter more detailed search term."
+	SSI_FAILED_SEARCH_CNT = 2,                  // "You cannot search anymore."
+	SSI_FAILED_LIMIT_SEARCH_TIME = 3,           // "You cannot search yet."
+	SSI_FAILED_SSILIST_CLICK_TO_OPEN_STORE = 4, // "No sale (purchase) information available."
 };
 
 /**
@@ -59,9 +55,9 @@ enum e_searchstore_failure {
  **/
 /// information about the search being performed
 struct s_search_store_search {
-	struct map_session_data* search_sd;  // sd of the searching player
-	const uint32* itemlist;
-	const uint32* cardlist;
+	struct map_session_data *search_sd; // sd of the searching player
+	const uint32 *itemlist;
+	const uint32 *cardlist;
 	unsigned int item_count;
 	unsigned int card_count;
 	unsigned int min_price;
@@ -83,34 +79,34 @@ struct s_search_store_info_item {
 
 struct s_search_store_info {
 	unsigned int count;
-	struct s_search_store_info_item* items;
-	unsigned int pages;  // amount of pages already sent to client
+	struct s_search_store_info_item *items;
+	unsigned int pages; // amount of pages already sent to client
 	unsigned int uses;
 	int remote_id;
 	time_t nextquerytime;
-	unsigned short effect;  // 0 = Normal (display coords), 1 = Cash (remote open store)
-	unsigned char type;  // 0 = Vending, 1 = Buying Store
+	unsigned short effect; // 0 = Normal (display coords), 1 = Cash (remote open store)
+	unsigned char type;    // 0 = Vending, 1 = Buying Store
 	bool open;
 };
 
 /// type for shop search function
-typedef bool (*searchstore_search_t)(struct map_session_data* sd, int nameid);
-typedef bool (*searchstore_searchall_t)(struct map_session_data* sd, const struct s_search_store_search* s);
+typedef bool (*searchstore_search_t)(struct map_session_data *sd, int nameid);
+typedef bool (*searchstore_searchall_t)(struct map_session_data *sd, const struct s_search_store_search *s);
 
 /**
  * Interface
  **/
 struct searchstore_interface {
-	bool (*open) (struct map_session_data* sd, unsigned int uses, unsigned short effect);
-	void (*query) (struct map_session_data* sd, unsigned char type, unsigned int min_price, unsigned int max_price, const uint32* itemlist, unsigned int item_count, const uint32* cardlist, unsigned int card_count);
-	bool (*querynext) (struct map_session_data* sd);
-	void (*next) (struct map_session_data* sd);
-	void (*clear) (struct map_session_data* sd);
-	void (*close) (struct map_session_data* sd);
-	void (*click) (struct map_session_data* sd, int account_id, int store_id, int nameid);
-	bool (*queryremote) (struct map_session_data* sd, int account_id);
-	void (*clearremote) (struct map_session_data* sd);
-	bool (*result) (struct map_session_data* sd, unsigned int store_id, int account_id, const char* store_name, int nameid, unsigned short amount, unsigned int price, const int* card, unsigned char refine_level, unsigned char grade_level, const struct item_option *option);
+	bool (*open)(struct map_session_data *sd, unsigned int uses, unsigned short effect);
+	void (*query)(struct map_session_data *sd, unsigned char type, unsigned int min_price, unsigned int max_price, const uint32 *itemlist, unsigned int item_count, const uint32 *cardlist, unsigned int card_count);
+	bool (*querynext)(struct map_session_data *sd);
+	void (*next)(struct map_session_data *sd);
+	void (*clear)(struct map_session_data *sd);
+	void (*close)(struct map_session_data *sd);
+	void (*click)(struct map_session_data *sd, int account_id, int store_id, int nameid);
+	bool (*queryremote)(struct map_session_data *sd, int account_id);
+	void (*clearremote)(struct map_session_data *sd);
+	bool (*result)(struct map_session_data *sd, unsigned int store_id, int account_id, const char *store_name, int nameid, unsigned short amount, unsigned int price, const int *card, unsigned char refine_level, unsigned char grade_level, const struct item_option *option);
 };
 
 #ifdef HERCULES_CORE

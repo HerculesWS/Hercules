@@ -47,9 +47,7 @@ static void macro_captcha_register(struct map_session_data *sd, const int image_
 {
 	nullpo_retv(sd);
 
-	if (captcha_answer == NULL || strlen(captcha_answer) < 4
-		|| (image_size < 0 || image_size > CAPTCHA_BMP_SIZE)
-		|| VECTOR_LENGTH(macro->captcha_registery) >= CAPTCHA_REGISTERY_MAX_SIZE) {
+	if (captcha_answer == NULL || strlen(captcha_answer) < 4 || (image_size < 0 || image_size > CAPTCHA_BMP_SIZE) || VECTOR_LENGTH(macro->captcha_registery) >= CAPTCHA_REGISTERY_MAX_SIZE) {
 		clif->captcha_upload_request(sd, "", 1); // Notify client of failure.
 		return;
 	}
@@ -57,7 +55,7 @@ static void macro_captcha_register(struct map_session_data *sd, const int image_
 	// Allocate a new captcha entry
 	VECTOR_ENSURE(macro->captcha_registery, 1, 1);
 
-	struct captcha_data cd = { 0 };
+	struct captcha_data cd = {0};
 	cd.upload_size = 0;
 	cd.image_size = image_size;
 	safestrncpy(cd.captcha_answer, captcha_answer, sizeof(cd.captcha_answer));
@@ -111,8 +109,7 @@ static void macro_captcha_preview(struct map_session_data *sd, const int captcha
 	clif->captcha_preview_request_init(sd, cd->captcha_key, cd->image_size, 0);
 
 	// Send the image data in chunks.
-	const int chunks = (cd->image_size / MAX_CAPTCHA_CHUNK_SIZE) +
-						(cd->image_size % MAX_CAPTCHA_CHUNK_SIZE != 0);
+	const int chunks = (cd->image_size / MAX_CAPTCHA_CHUNK_SIZE) + (cd->image_size % MAX_CAPTCHA_CHUNK_SIZE != 0);
 	for (int i = 0, offset = 0; i < chunks; i++) {
 		const int chunk_size = min(cd->image_size - offset, MAX_CAPTCHA_CHUNK_SIZE);
 		clif->captcha_preview_request_download(sd, cd->captcha_key, chunk_size, &cd->image_data[offset]);
@@ -131,8 +128,7 @@ static void macro_detector_request(struct map_session_data *sd)
 	clif->macro_detector_request_init(sd, cd->captcha_key, cd->image_size);
 
 	// Send the image data in chunks.
-	const int chunks = (cd->image_size / MAX_CAPTCHA_CHUNK_SIZE) +
-						(cd->image_size % MAX_CAPTCHA_CHUNK_SIZE != 0);
+	const int chunks = (cd->image_size / MAX_CAPTCHA_CHUNK_SIZE) + (cd->image_size % MAX_CAPTCHA_CHUNK_SIZE != 0);
 	for (int i = 0, offset = 0; i < chunks; i++) {
 		const int chunk_size = min(cd->image_size - offset, MAX_CAPTCHA_CHUNK_SIZE);
 		clif->macro_detector_request_download(sd, cd->captcha_key, chunk_size, &cd->image_data[offset]);
@@ -160,8 +156,7 @@ static int macro_detector_timeout(int tid, int64 tick, int id, intptr_t data)
 		clif->macro_detector_request_show(sd);
 
 		// Start a new timer
-		sd->macro_detect.timer = timer->add(timer->gettick() + battle->bc->macro_detect_timeout,
-			macro->detector_timeout, sd->bl.id, 0);
+		sd->macro_detect.timer = timer->add(timer->gettick() + battle->bc->macro_detect_timeout, macro->detector_timeout, sd->bl.id, 0);
 	}
 	return 0;
 }
@@ -185,7 +180,7 @@ static void macro_detector_process_answer(struct map_session_data *sd, const cha
 		SET_MACRO_BLOCK_ACTIONS(sd, 0);
 
 		// Grant a small buff
-		sc_start(NULL, &sd->bl, skill->get_sc_type(AL_INCAGI), 100, 10, 600000, 0); // skill_ids are set to 0 so GTB doesn't block for this check.
+		sc_start(NULL, &sd->bl, skill->get_sc_type(AL_INCAGI), 100, 10, 600000, 0);   // skill_ids are set to 0 so GTB doesn't block for this check.
 		sc_start(NULL, &sd->bl, skill->get_sc_type(AL_BLESSING), 100, 10, 600000, 0); // skill_ids are set to 0 so GTB doesn't block for this check.
 
 		// Notify the client
@@ -232,9 +227,7 @@ static void macro_reporter_area_select(struct map_session_data *sd, const int16 
 	struct macroaidlist aid_list;
 	VECTOR_INIT(aid_list);
 
-	map->foreachinarea(macro->reporter_area_select_sub, sd->bl.m,
-					x - radius, y - radius, x + radius, y + radius,
-					BL_PC, &aid_list);
+	map->foreachinarea(macro->reporter_area_select_sub, sd->bl.m, x - radius, y - radius, x + radius, y + radius, BL_PC, &aid_list);
 
 	clif->macro_reporter_select(sd, &aid_list);
 	VECTOR_CLEAR(aid_list);
@@ -274,8 +267,7 @@ static void macro_reporter_process(struct map_session_data *ssd, struct map_sess
 	macro->detector_request(tsd);
 
 	// start the timeout timer.
-	tsd->macro_detect.timer = timer->add(timer->gettick() + battle->bc->macro_detect_timeout,
-										macro->detector_timeout, tsd->bl.id, 0);
+	tsd->macro_detect.timer = timer->add(timer->gettick() + battle->bc->macro_detect_timeout, macro->detector_timeout, tsd->bl.id, 0);
 }
 
 static bool macro_read_captcha_db_libconfig(void)
@@ -300,7 +292,7 @@ static bool macro_read_captcha_db_libconfig(void)
 	}
 
 	libconfig->destroy(&captcha_db_conf);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 	return true;
 }
 
@@ -344,7 +336,7 @@ static bool macro_read_captcha_db_libconfig_sub(const struct config_setting_t *i
 		}
 	}
 
-	struct captcha_data cd = { 0 };
+	struct captcha_data cd = {0};
 	if (!macro->read_captcha_db_libconfig_sub_loadbmp(filepath, &cd))
 		return false;
 

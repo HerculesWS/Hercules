@@ -64,13 +64,13 @@ static int mapiif_parse_fromchar_api_proxy(int fd)
 	}
 
 	switch (msg) {
-	case API_MSG_party_info:
-		mapiif->parse_adventurer_agency_info(fd);
-		break;
-	default:
-		ShowError("Unknown proxy packet 0x%04x received from char-server, disconnecting.\n", msg);
-		sockt->eof(fd);
-		return 0;
+		case API_MSG_party_info:
+			mapiif->parse_adventurer_agency_info(fd);
+			break;
+		default:
+			ShowError("Unknown proxy packet 0x%04x received from char-server, disconnecting.\n", msg);
+			sockt->eof(fd);
+			return 0;
 	}
 
 	RFIFOSKIP(fd, packet->packet_len);
@@ -89,15 +89,12 @@ void mapiif_parse_adventurer_agency_info(int fd)
 	WFIFOSET(chrif->fd, packet->packet_len);
 }
 
-static void do_init_mapiif(bool minimal)
-{
-}
+static void do_init_mapiif(bool minimal) {}
 
-static void do_final_mapiif(void)
-{
-}
+static void do_final_mapiif(void) {}
 
-void mapiif_defaults(void) {
+void mapiif_defaults(void)
+{
 	mapiif = &mapiif_s;
 
 	mapiif->init = do_init_mapiif;

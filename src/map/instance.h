@@ -29,12 +29,12 @@ struct hplugin_data_store;
 struct block_list;
 struct map_session_data;
 
-#define INSTANCE_NAME_LENGTH (60+1)
+#define INSTANCE_NAME_LENGTH (60 + 1)
 
 /**
  * true if instance is in an active/playable state.
  * In other words, if a player can interact with it.
- * 
+ *
  * @param inst instance_data to be checked
  */
 #define instance_is_active(inst) ((inst).state == INSTANCE_IDLE || (inst).state == INSTANCE_BUSY)
@@ -95,37 +95,37 @@ struct instance_data {
 
 	unsigned int original_progress_timeout;
 
-	struct point respawn; ///< reload spawn
+	struct point respawn;             ///< reload spawn
 	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
 };
 
 struct instance_interface {
-	void (*init) (bool minimal);
-	void (*final) (void);
-	void (*reload) (void);
+	void (*init)(bool minimal);
+	void (*final)(void);
+	void (*reload)(void);
 	/* start point */
 	unsigned short start_id;
-	unsigned short instances;/* count */
+	unsigned short instances; /* count */
 	/* */
-	struct instance_data *list;/* pointer to a chunk of consecutive memory, access via instance->list[0]..etc */
+	struct instance_data *list; /* pointer to a chunk of consecutive memory, access via instance->list[0]..etc */
 	/* */
-	int (*create) (int party_id, const char *name, enum instance_owner_type type);
-	int (*add_map) (const char *name, int instance_id, bool usebasename, const char *map_name);
-	void (*del_map) (int16 m);
-	int (*map2imap) (int16 m, int instance_id);
-	int (*mapid2imapid) (int16 m, int instance_id);
-	int (*mapname2imap) (const char *map_name, int instance_id);
-	int (*map_npcsub) (struct block_list* bl, va_list args);
-	int (*init_npc) (struct block_list* bl, va_list args);
-	void (*destroy) (int instance_id);
-	void (*start) (int instance_id);
-	void (*check_idle) (int instance_id);
-	void (*check_kick) (struct map_session_data *sd);
-	void (*set_timeout) (int instance_id, unsigned int progress_timeout, unsigned int idle_timeout);
-	bool (*valid) (int instance_id);
-	int (*destroy_timer) (int tid, int64 tick, int id, intptr_t data);
-	void (*force_destroy) (struct map_session_data *sd);
-	void (*reload_map_flags) (int instance_id);
+	int (*create)(int party_id, const char *name, enum instance_owner_type type);
+	int (*add_map)(const char *name, int instance_id, bool usebasename, const char *map_name);
+	void (*del_map)(int16 m);
+	int (*map2imap)(int16 m, int instance_id);
+	int (*mapid2imapid)(int16 m, int instance_id);
+	int (*mapname2imap)(const char *map_name, int instance_id);
+	int (*map_npcsub)(struct block_list *bl, va_list args);
+	int (*init_npc)(struct block_list *bl, va_list args);
+	void (*destroy)(int instance_id);
+	void (*start)(int instance_id);
+	void (*check_idle)(int instance_id);
+	void (*check_kick)(struct map_session_data *sd);
+	void (*set_timeout)(int instance_id, unsigned int progress_timeout, unsigned int idle_timeout);
+	bool (*valid)(int instance_id);
+	int (*destroy_timer)(int tid, int64 tick, int id, intptr_t data);
+	void (*force_destroy)(struct map_session_data *sd);
+	void (*reload_map_flags)(int instance_id);
 };
 
 #ifdef HERCULES_CORE

@@ -1,22 +1,22 @@
 /**
-* This file is part of Hercules.
-* http://herc.ws - http://github.com/HerculesWS/Hercules
-*
-* Copyright (C) 2019-2025 Hercules Dev Team
-*
-* Hercules is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2019-2025 Hercules Dev Team
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #define HERCULES_CORE
 
@@ -37,8 +37,8 @@
 #include <string.h>
 
 /** @file
-* Implementation of the refine interface.
-*/
+ * Implementation of the refine interface.
+ */
 
 static struct refine_interface refine_s;
 static struct refine_interface_private refine_p;
@@ -117,22 +117,22 @@ static void refine_refinery_refine_request(struct map_session_data *sd, int item
 
 		int failure_behabior = (use_blacksmith_blessing) ? REFINE_FAILURE_BEHAVIOR_KEEP : req->req[i].failure_behavior;
 		switch (failure_behabior) {
-		case REFINE_FAILURE_BEHAVIOR_KEEP:
-			clif->refine(sd->fd, 1, 0, sd->status.inventory[item_index].refine);
-			refine->refinery_add_item(sd, item_index);
-			break;
-		case REFINE_FAILURE_BEHAVIOR_DOWNGRADE:
-			sd->status.inventory[item_index].refine -= 1;
-			sd->status.inventory[item_index].refine = cap_value(sd->status.inventory[item_index].refine, 0, MAX_REFINE);
-			clif->refine(sd->fd, 2, item_index, sd->status.inventory[item_index].refine);
-			logs->pick_pc(sd, LOG_TYPE_REFINE, 1, &sd->status.inventory[item_index], sd->inventory_data[item_index]);
-			refine->refinery_add_item(sd, item_index);
-			break;
-		case REFINE_FAILURE_BEHAVIOR_DESTROY:
-		default:
-			clif->refine(sd->fd, 1, item_index, sd->status.inventory[item_index].refine);
-			pc->delitem(sd, item_index, 1, 0, DELITEM_FAILREFINE, LOG_TYPE_REFINE);
-			break;
+			case REFINE_FAILURE_BEHAVIOR_KEEP:
+				clif->refine(sd->fd, 1, 0, sd->status.inventory[item_index].refine);
+				refine->refinery_add_item(sd, item_index);
+				break;
+			case REFINE_FAILURE_BEHAVIOR_DOWNGRADE:
+				sd->status.inventory[item_index].refine -= 1;
+				sd->status.inventory[item_index].refine = cap_value(sd->status.inventory[item_index].refine, 0, MAX_REFINE);
+				clif->refine(sd->fd, 2, item_index, sd->status.inventory[item_index].refine);
+				logs->pick_pc(sd, LOG_TYPE_REFINE, 1, &sd->status.inventory[item_index], sd->inventory_data[item_index]);
+				refine->refinery_add_item(sd, item_index);
+				break;
+			case REFINE_FAILURE_BEHAVIOR_DESTROY:
+			default:
+				clif->refine(sd->fd, 1, item_index, sd->status.inventory[item_index].refine);
+				pc->delitem(sd, item_index, 1, 0, DELITEM_FAILREFINE, LOG_TYPE_REFINE);
+				break;
 		}
 	} else {
 		sd->status.inventory[item_index].refine += 1;
@@ -158,7 +158,7 @@ static void refine_refinery_add_item(struct map_session_data *sd, int item_index
 
 	if (!refine->p->is_refinable(sd, item_index))
 		return;
-	
+
 	int weapon_level = itemdb_wlv(sd->status.inventory[item_index].nameid);
 	int refine_level = sd->status.inventory[item_index].refine;
 	clif->AddItemRefineryUIAck(sd, item_index, &refine->p->dbs->refine_info[weapon_level].refine_requirements[refine_level]);
@@ -362,8 +362,7 @@ static bool refine_readdb_refinery_ui_settings_sub(const struct config_setting_t
 
 		int levels_range[2];
 		const struct config_setting_t *level_entry = NULL;
-		int i = 0,
-			k = 0;
+		int i = 0, k = 0;
 		while ((level_entry = libconfig->setting_get_elem(level_t, i++)) != NULL) {
 			if (!config_setting_is_number(level_entry)) {
 				ShowWarning("refine_readdb_requirements_sub: expected 'Level' array field to be an integer '%s' in \"%s\" skipping...\n", name, source);
@@ -481,7 +480,7 @@ static int refine_readdb_refine_libconfig_sub(struct config_setting_t *r, const 
 
 	if (strncmp(name, "Armors", 6) == 0) {
 		type = REFINE_TYPE_ARMOR;
-	} else if (strncmp(name, "WeaponLevel", 11) != 0 || !strspn(&name[strlen(name)-1], "0123456789") || (type = atoi(strncpy(lv, name+11, 2))) == REFINE_TYPE_ARMOR) {
+	} else if (strncmp(name, "WeaponLevel", 11) != 0 || !strspn(&name[strlen(name) - 1], "0123456789") || (type = atoi(strncpy(lv, name + 11, 2))) == REFINE_TYPE_ARMOR) {
 		ShowError("status_readdb_refine_libconfig_sub: Invalid key name for entry '%s' in \"%s\", skipping.\n", name, source);
 		return 0;
 	}
@@ -514,7 +513,7 @@ static int refine_readdb_refine_libconfig_sub(struct config_setting_t *r, const 
 		return 0;
 	}
 
-	if ((rate=libconfig->setting_get_member(r, "Rates")) != NULL && config_setting_is_group(rate)) {
+	if ((rate = libconfig->setting_get_member(r, "Rates")) != NULL && config_setting_is_group(rate)) {
 		bool duplicate[MAX_REFINE];
 		int bonus[MAX_REFINE], rnd_bonus[MAX_REFINE];
 		int chance[REFINE_CHANCE_TYPE_MAX][MAX_REFINE];
@@ -611,7 +610,7 @@ static int refine_readdb_refine_libconfig(const char *filename)
 
 	memset(&duplicate, 0, sizeof(duplicate));
 
-	while((r = libconfig->setting_get_elem(refine_db_conf.root, i++))) {
+	while ((r = libconfig->setting_get_elem(refine_db_conf.root, i++))) {
 		char *name = config_setting_name(r);
 		int type = refine->p->readdb_refine_libconfig_sub(r, name, filename);
 		if (type != 0) {
@@ -624,7 +623,7 @@ static int refine_readdb_refine_libconfig(const char *filename)
 		}
 	}
 	libconfig->destroy(&refine_db_conf);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 
 	return count;
 }
@@ -635,14 +634,12 @@ static int refine_init(bool minimal)
 	if (minimal)
 		return 0;
 
-	refine->p->readdb_refine_libconfig(DBPATH"refine_db.conf");
+	refine->p->readdb_refine_libconfig(DBPATH "refine_db.conf");
 	return 0;
 }
 
 /// @copydoc refine_interface::final()
-static void refine_final(void)
-{
-}
+static void refine_final(void) {}
 
 void refine_defaults(void)
 {

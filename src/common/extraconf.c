@@ -31,7 +31,7 @@
 
 #include <string.h>
 
-//#define CONFIG_DEBUG
+// #define CONFIG_DEBUG
 
 // defines for vars
 #include "common/config/defc.h"
@@ -124,20 +124,20 @@ static bool extraconf_read_vars(const char *filename, bool imported, struct conf
 		int val = 0;
 		const char *valStr = NULL;
 		switch (type) {
-		case CONFIG_TYPE_INT:
-			val = libconfig->setting_get_int(setting);
-			break;
-		case CONFIG_TYPE_BOOL:
-			val = libconfig->setting_get_bool(setting);
-			break;
-		case CONFIG_TYPE_STRING:
-			valStr = libconfig->setting_get_string(setting);
-			break;
-		default: // Unsupported type
-			ShowWarning("Setting %s has unsupported type %d, ignoring...\n", config_name, type);
-			retval = false;
-			i++;
-			continue;
+			case CONFIG_TYPE_INT:
+				val = libconfig->setting_get_int(setting);
+				break;
+			case CONFIG_TYPE_BOOL:
+				val = libconfig->setting_get_bool(setting);
+				break;
+			case CONFIG_TYPE_STRING:
+				valStr = libconfig->setting_get_string(setting);
+				break;
+			default: // Unsupported type
+				ShowWarning("Setting %s has unsupported type %d, ignoring...\n", config_name, type);
+				retval = false;
+				i++;
+				continue;
 		}
 
 		if (type == CONFIG_TYPE_STRING) {
@@ -163,8 +163,7 @@ static bool extraconf_set_var(struct config_data *conf_var, int value)
 	}
 
 	if (value < conf_var->min || value > conf_var->max) {
-		ShowWarning("Value for setting '%s': %d is invalid (min:%d max:%d)! Defaulting to %d...\n",
-				conf_var->str, value, conf_var->min, conf_var->max, conf_var->defval);
+		ShowWarning("Value for setting '%s': %d is invalid (min:%d max:%d)! Defaulting to %d...\n", conf_var->str, value, conf_var->min, conf_var->max, conf_var->defval);
 		value = conf_var->defval;
 	}
 #ifdef CONFIG_DEBUG
@@ -187,8 +186,7 @@ static bool extraconf_set_var_str(struct config_data *conf_var, const char *val)
 
 	const int len = (int)strlen(val);
 	if ((conf_var->min != 0 && len < conf_var->min) || (conf_var->max != 0 && len > conf_var->max)) {
-		ShowWarning("Value for setting '%s': '%s' is invalid (min:%d max:%d)! Defaulting to '%s'...\n",
-				conf_var->str, val, conf_var->min, conf_var->max, conf_var->defval_str);
+		ShowWarning("Value for setting '%s': '%s' is invalid (min:%d max:%d)! Defaulting to '%s'...\n", conf_var->str, val, conf_var->min, conf_var->max, conf_var->defval_str);
 		val = conf_var->defval_str;
 	}
 #ifdef CONFIG_DEBUG
@@ -200,10 +198,7 @@ static bool extraconf_set_var_str(struct config_data *conf_var, const char *val)
 
 static bool extraconf_read_emblems(void)
 {
-	return extraconf->read_conf_file(extraconf->EMBLEMS_CONF_NAME,
-		false,
-		"emblem_configuration",
-		emblems_data);
+	return extraconf->read_conf_file(extraconf->EMBLEMS_CONF_NAME, false, "emblem_configuration", emblems_data);
 }
 
 static void extraconf_init(void)
@@ -216,7 +211,8 @@ static void extraconf_final(void)
 	aFree(extraconf->EMBLEMS_CONF_NAME);
 }
 
-void extraconf_defaults(void) {
+void extraconf_defaults(void)
+{
 	extraconf = &extraconf_s;
 
 	extraconf->emblems = &emblems_vars;

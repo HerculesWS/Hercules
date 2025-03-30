@@ -85,14 +85,14 @@ static int quest_pc_login(struct map_session_data *sd)
 #endif
 
 	nullpo_retr(1, sd);
-	if(sd->avail_quests == 0)
+	if (sd->avail_quests == 0)
 		return 1;
 
 	clif->quest_send_list(sd);
 
 #if PACKETVER < 20141022
 	clif->quest_send_mission(sd);
-	for( i = 0; i < sd->avail_quests; i++ ) {
+	for (i = 0; i < sd->avail_quests; i++) {
 		// TODO[Haru]: is this necessary? Does quest_send_mission not take care of this?
 		clif->quest_update_objective(sd, &sd->quest_log[i]);
 	}
@@ -136,7 +136,7 @@ static int quest_add(struct map_session_data *sd, int quest_id, unsigned int tim
 
 	if (sd->avail_quests != sd->num_quests) {
 		// The character has some completed quests, make room before them so that they will stay at the end of the array
-		memmove(&sd->quest_log[n+1], &sd->quest_log[n], sizeof(struct quest)*(sd->num_quests-sd->avail_quests));
+		memmove(&sd->quest_log[n + 1], &sd->quest_log[n], sizeof(struct quest) * (sd->num_quests - sd->avail_quests));
 	}
 
 	memset(&sd->quest_log[n], 0, sizeof(struct quest));
@@ -179,30 +179,30 @@ static int quest_change(struct map_session_data *sd, int qid1, int qid2)
 	struct quest_db *qi = quest->db(qid2);
 
 	nullpo_retr(-1, sd);
-	if( qi == &quest->dummy ) {
+	if (qi == &quest->dummy) {
 		ShowError("quest_change: quest %d not found in DB.\n", qid2);
 		return -1;
 	}
 
-	if( quest->check(sd, qid2, HAVEQUEST) >= 0 ) {
+	if (quest->check(sd, qid2, HAVEQUEST) >= 0) {
 		ShowError("quest_change: Character %d already has quest %d.\n", sd->status.char_id, qid2);
 		return -1;
 	}
 
-	if( quest->check(sd, qid1, HAVEQUEST) < 0 ) {
+	if (quest->check(sd, qid1, HAVEQUEST) < 0) {
 		ShowError("quest_change: Character %d doesn't have quest %d.\n", sd->status.char_id, qid1);
 		return -1;
 	}
 
 	ARR_FIND(0, sd->avail_quests, i, sd->quest_log[i].quest_id == qid1);
-	if( i == sd->avail_quests ) {
+	if (i == sd->avail_quests) {
 		ShowError("quest_change: Character %d has completed quest %d.\n", sd->status.char_id, qid1);
 		return -1;
 	}
 
 	memset(&sd->quest_log[i], 0, sizeof(struct quest));
 	sd->quest_log[i].quest_id = qi->id;
-	if( qi->time )
+	if (qi->time)
 		sd->quest_log[i].time = (unsigned int)(time(NULL) + qi->time);
 	sd->quest_log[i].state = Q_ACTIVE;
 
@@ -217,8 +217,8 @@ static int quest_change(struct map_session_data *sd, int qid1, int qid2)
 #endif
 	quest->questinfo_refresh(sd);
 
-	if( map->save_settings&64 )
-		chrif->save(sd,0);
+	if (map->save_settings & 64)
+		chrif->save(sd, 0);
 	return 0;
 }
 
@@ -234,22 +234,22 @@ static int quest_delete(struct map_session_data *sd, int quest_id)
 	int i;
 
 	nullpo_retr(-1, sd);
-	//Search for quest
+	// Search for quest
 	ARR_FIND(0, sd->num_quests, i, sd->quest_log[i].quest_id == quest_id);
 
-	if(i == sd->num_quests) {
+	if (i == sd->num_quests) {
 		ShowError("quest_delete: Character %d doesn't have quest %d.\n", sd->status.char_id, quest_id);
 		return -1;
 	}
 
-	if( sd->quest_log[i].state != Q_COMPLETE )
+	if (sd->quest_log[i].state != Q_COMPLETE)
 		sd->avail_quests--;
 
-	if( i < --sd->num_quests ) {
+	if (i < --sd->num_quests) {
 		// Compact the array
-		memmove(&sd->quest_log[i], &sd->quest_log[i+1], sizeof(struct quest)*(sd->num_quests-i));
+		memmove(&sd->quest_log[i], &sd->quest_log[i + 1], sizeof(struct quest) * (sd->num_quests - i));
 	}
-	if( sd->num_quests == 0 ) {
+	if (sd->num_quests == 0) {
 		aFree(sd->quest_log);
 		sd->quest_log = NULL;
 	} else {
@@ -260,8 +260,8 @@ static int quest_delete(struct map_session_data *sd, int quest_id)
 	clif->quest_delete(sd, quest_id);
 	quest->questinfo_refresh(sd);
 
-	if( map->save_settings&64 )
-		chrif->save(sd,0);
+	if (map->save_settings & 64)
+		chrif->save(sd, 0);
 
 	return 0;
 }
@@ -285,16 +285,15 @@ static int quest_update_objective_sub(struct block_list *bl, va_list ap)
 	Assert_ret(bl->type == BL_PC);
 	sd = BL_UCAST(BL_PC, bl);
 
-	if( !sd->avail_quests )
+	if (!sd->avail_quests)
 		return 0;
-	if( sd->status.party_id != party_id )
+	if (sd->status.party_id != party_id)
 		return 0;
 
 	quest->update_objective(sd, md);
 
 	return 1;
 }
-
 
 /**
  * Updates the quest objectives for a character after killing a monster, including the handling of quest-granted drops.
@@ -304,7 +303,7 @@ static int quest_update_objective_sub(struct block_list *bl, va_list ap)
  */
 static void quest_update_objective(struct map_session_data *sd, const struct mob_data *md)
 {
-	int i,j;
+	int i, j;
 
 	nullpo_retv(sd);
 	nullpo_retv(md);
@@ -318,17 +317,10 @@ static void quest_update_objective(struct map_session_data *sd, const struct mob
 		qi = quest->db(sd->quest_log[i].quest_id);
 
 		for (j = 0; j < qi->objectives_count; j++) {
-			if ((qi->objectives[j].mob == 0 || qi->objectives[j].mob == md->class_) &&
-				sd->quest_log[i].count[j] < qi->objectives[j].count &&
-				(qi->objectives[j].level.min == 0 || qi->objectives[j].level.min <= md->level) &&
-				(qi->objectives[j].level.max == 0 || qi->objectives[j].level.max >= md->level) &&
-				(qi->objectives[j].mapid < 0 || qi->objectives[j].mapid == md->bl.m) &&
-				(qi->objectives[j].mobtype.size_enabled == false  || qi->objectives[j].mobtype.size == md->status.size) &&
-				(qi->objectives[j].mobtype.race_enabled == false || qi->objectives[j].mobtype.race == md->status.race) &&
-				(qi->objectives[j].mobtype.ele_enabled == false || qi->objectives[j].mobtype.ele == md->status.def_ele)) {
-					sd->quest_log[i].count[j]++;
-					sd->save_quest = true;
-					clif->quest_update_objective(sd, &sd->quest_log[i]);
+			if ((qi->objectives[j].mob == 0 || qi->objectives[j].mob == md->class_) && sd->quest_log[i].count[j] < qi->objectives[j].count && (qi->objectives[j].level.min == 0 || qi->objectives[j].level.min <= md->level) && (qi->objectives[j].level.max == 0 || qi->objectives[j].level.max >= md->level) && (qi->objectives[j].mapid < 0 || qi->objectives[j].mapid == md->bl.m) && (qi->objectives[j].mobtype.size_enabled == false || qi->objectives[j].mobtype.size == md->status.size) && (qi->objectives[j].mobtype.race_enabled == false || qi->objectives[j].mobtype.race == md->status.race) && (qi->objectives[j].mobtype.ele_enabled == false || qi->objectives[j].mobtype.ele == md->status.def_ele)) {
+				sd->quest_log[i].count[j]++;
+				sd->save_quest = true;
+				clif->quest_update_objective(sd, &sd->quest_log[i]);
 			}
 		}
 
@@ -341,15 +333,15 @@ static void quest_update_objective(struct map_session_data *sd, const struct mob
 			if (dropitem->mob_id != 0 && dropitem->mob_id != md->class_)
 				continue;
 			// TODO: Should this be affected by server rates?
-			if (rnd()%10000 >= dropitem->rate)
+			if (rnd() % 10000 >= dropitem->rate)
 				continue;
 			if (!(data = itemdb->exists(dropitem->nameid)))
 				continue;
-			memset(&item,0,sizeof(item));
+			memset(&item, 0, sizeof(item));
 			item.nameid = dropitem->nameid;
 			item.identify = itemdb->isidentified2(data);
 			item.amount = 1;
-			if((temp = pc->additem(sd, &item, 1, LOG_TYPE_QUEST)) != 0) { // TODO: We might want a new log type here?
+			if ((temp = pc->additem(sd, &item, 1, LOG_TYPE_QUEST)) != 0) { // TODO: We might want a new log type here?
 				// Failed to obtain the item
 				clif->additem(sd, 0, 0, temp);
 			}
@@ -373,7 +365,7 @@ static int quest_update_status(struct map_session_data *sd, int quest_id, enum q
 
 	nullpo_retr(-1, sd);
 	ARR_FIND(0, sd->avail_quests, i, sd->quest_log[i].quest_id == quest_id);
-	if( i == sd->avail_quests ) {
+	if (i == sd->avail_quests) {
 		ShowError("quest_update_status: Character %d doesn't have quest %d.\n", sd->status.char_id, quest_id);
 		return -1;
 	}
@@ -381,25 +373,25 @@ static int quest_update_status(struct map_session_data *sd, int quest_id, enum q
 	sd->quest_log[i].state = qs;
 	sd->save_quest = true;
 
-	if( qs < Q_COMPLETE ) {
+	if (qs < Q_COMPLETE) {
 		clif->quest_update_status(sd, quest_id, qs == Q_ACTIVE ? true : false);
 		return 0;
 	}
 
 	// The quest is complete, so it needs to be moved to the completed quests block at the end of the array.
 
-	if( i < (--sd->avail_quests) ) {
+	if (i < (--sd->avail_quests)) {
 		struct quest tmp_quest;
-		memcpy(&tmp_quest, &sd->quest_log[i],sizeof(struct quest));
-		memcpy(&sd->quest_log[i], &sd->quest_log[sd->avail_quests],sizeof(struct quest));
-		memcpy(&sd->quest_log[sd->avail_quests], &tmp_quest,sizeof(struct quest));
+		memcpy(&tmp_quest, &sd->quest_log[i], sizeof(struct quest));
+		memcpy(&sd->quest_log[i], &sd->quest_log[sd->avail_quests], sizeof(struct quest));
+		memcpy(&sd->quest_log[sd->avail_quests], &tmp_quest, sizeof(struct quest));
 	}
 
 	clif->quest_delete(sd, quest_id);
 	quest->questinfo_refresh(sd);
 
-	if( map->save_settings&64 )
-		chrif->save(sd,0);
+	if (map->save_settings & 64)
+		chrif->save(sd, 0);
 
 	return 0;
 }
@@ -434,7 +426,7 @@ static int quest_check(struct map_session_data *sd, int quest_id, enum quest_che
 		case PLAYTIME:
 			return (sd->quest_log[i].time < (unsigned int)time(NULL) ? 2 : sd->quest_log[i].state == Q_COMPLETE ? 1 : 0);
 		case HUNTING:
-			if( sd->quest_log[i].state == Q_INACTIVE || sd->quest_log[i].state == Q_ACTIVE ) {
+			if (sd->quest_log[i].state == Q_INACTIVE || sd->quest_log[i].state == Q_ACTIVE) {
 				int j;
 				struct quest_db *qi = quest->db(sd->quest_log[i].quest_id);
 				ARR_FIND(0, qi->objectives_count, j, sd->quest_log[i].count[j] < qi->objectives[j].count);
@@ -541,12 +533,12 @@ static struct quest_db *quest_read_db_sub(struct config_setting_t *cs, int n, co
 
 	CREATE(entry, struct quest_db, 1);
 	entry->id = quest_id;
-	//safestrncpy(entry->name, str, sizeof(entry->name));
+	// safestrncpy(entry->name, str, sizeof(entry->name));
 
 	if (libconfig->setting_lookup_int(cs, "TimeLimit", &i32)) // This is an unsigned value, do not check for >= 0
 		entry->time = (unsigned int)i32;
 
-	if ((t=libconfig->setting_get_member(cs, "Targets")) && config_setting_is_list(t)) {
+	if ((t = libconfig->setting_get_member(cs, "Targets")) && config_setting_is_list(t)) {
 		int i, len = libconfig->setting_length(t);
 		for (i = 0; i < len && entry->objectives_count < MAX_QUEST_OBJECTIVES; i++) {
 			// Note: We ensure that objectives_count < MAX_QUEST_OBJECTIVES because
@@ -568,8 +560,8 @@ static struct quest_db *quest_read_db_sub(struct config_setting_t *cs, int n, co
 				continue;
 			}
 			RECREATE(entry->objectives, struct quest_objective, ++entry->objectives_count);
-			entry->objectives[entry->objectives_count-1].mob = mob_id;
-			entry->objectives[entry->objectives_count-1].count = count;
+			entry->objectives[entry->objectives_count - 1].mob = mob_id;
+			entry->objectives[entry->objectives_count - 1].count = count;
 
 			const struct config_setting_t *lvt = libconfig->setting_get_member(tt, "Level");
 			if (lvt != NULL) {
@@ -626,11 +618,10 @@ static struct quest_db *quest_read_db_sub(struct config_setting_t *cs, int n, co
 					entry->objectives[entry->objectives_count - 1].mobtype.ele_enabled = true;
 				}
 			}
-
 		}
 	}
 
-	if ((t=libconfig->setting_get_member(cs, "Drops")) && config_setting_is_list(t)) {
+	if ((t = libconfig->setting_get_member(cs, "Drops")) && config_setting_is_list(t)) {
 		int i, len = libconfig->setting_length(t);
 		for (i = 0; i < len; i++) {
 			struct config_setting_t *tt = libconfig->setting_get_elem(t, i);
@@ -656,9 +647,9 @@ static struct quest_db *quest_read_db_sub(struct config_setting_t *cs, int n, co
 				continue;
 			}
 			RECREATE(entry->dropitem, struct quest_dropitem, ++entry->dropitem_count);
-			entry->dropitem[entry->dropitem_count-1].mob_id = mob_id;
-			entry->dropitem[entry->dropitem_count-1].nameid = nameid;
-			entry->dropitem[entry->dropitem_count-1].rate = rate;
+			entry->dropitem[entry->dropitem_count - 1].mob_id = mob_id;
+			entry->dropitem[entry->dropitem_count - 1].nameid = nameid;
+			entry->dropitem[entry->dropitem_count - 1].rate = rate;
 		}
 	}
 	return entry;
@@ -687,7 +678,7 @@ static int quest_read_db(void)
 	}
 
 	while ((q = libconfig->setting_get_elem(qdb, i++))) {
-		struct quest_db *entry = quest->read_db_sub(q, i-1, filepath);
+		struct quest_db *entry = quest->read_db_sub(q, i - 1, filepath);
 		if (!entry)
 			continue;
 
@@ -704,7 +695,7 @@ static int quest_read_db(void)
 		count++;
 	}
 	libconfig->destroy(&quest_db_conf);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 	return count;
 }
 
@@ -725,7 +716,7 @@ static int quest_reload_check_sub(struct map_session_data *sd, va_list ap)
 	j = 0;
 	for (i = 0; i < sd->num_quests; i++) {
 		struct quest_db *qi = quest->db(sd->quest_log[i].quest_id);
-		if (qi == &quest->dummy) { // Remove no longer existing entries
+		if (qi == &quest->dummy) {                    // Remove no longer existing entries
 			if (sd->quest_log[i].state != Q_COMPLETE) // And inform the client if necessary
 				clif->quest_delete(sd, sd->quest_log[i].quest_id);
 			continue;
@@ -763,8 +754,8 @@ static void quest_clear_db(void)
 }
 
 /*
-* Limit the questinfo icon id to avoid client problems
-*/
+ * Limit the questinfo icon id to avoid client problems
+ */
 static int quest_questinfo_validate_icon(int icon)
 {
 #if PACKETVER >= 20170315
@@ -1049,73 +1040,73 @@ static bool quest_questinfo_validate_mercenary_class(struct map_session_data *sd
 static enum quest_mobtype quest_mobsize2client(uint8 size)
 {
 	switch (size) {
-	case SZ_SMALL:
-		return QMT_SZ_SMALL;
+		case SZ_SMALL:
+			return QMT_SZ_SMALL;
 
-	case SZ_MEDIUM:
-		return QMT_SZ_MEDIUM;
+		case SZ_MEDIUM:
+			return QMT_SZ_MEDIUM;
 
-	case SZ_BIG:
-		return QMT_SZ_LARGE;
+		case SZ_BIG:
+			return QMT_SZ_LARGE;
 
-	default:
-		return 0;
+		default:
+			return 0;
 	}
 }
 
 static enum quest_mobtype quest_mobele2client(uint8 type)
 {
 	switch (type) {
-	case ELE_WATER:
-		return QMT_ELE_WATER;
-	case ELE_WIND:
-		return QMT_ELE_WIND;
-	case ELE_EARTH:
-		return QMT_ELE_EARTH;
-	case ELE_FIRE:
-		return QMT_ELE_FIRE;
-	case ELE_DARK:
-		return QMT_ELE_DARK;
-	case ELE_HOLY:
-		return QMT_ELE_HOLY;
-	case ELE_POISON:
-		return QMT_ELE_POISON;
-	case ELE_GHOST:
-		return QMT_ELE_GHOST;
-	case ELE_NEUTRAL:
-		return QMT_ELE_NEUTRAL;
-	case ELE_UNDEAD:
-		return QMT_ELE_UNDEAD;
-	default:
-		return 0;
+		case ELE_WATER:
+			return QMT_ELE_WATER;
+		case ELE_WIND:
+			return QMT_ELE_WIND;
+		case ELE_EARTH:
+			return QMT_ELE_EARTH;
+		case ELE_FIRE:
+			return QMT_ELE_FIRE;
+		case ELE_DARK:
+			return QMT_ELE_DARK;
+		case ELE_HOLY:
+			return QMT_ELE_HOLY;
+		case ELE_POISON:
+			return QMT_ELE_POISON;
+		case ELE_GHOST:
+			return QMT_ELE_GHOST;
+		case ELE_NEUTRAL:
+			return QMT_ELE_NEUTRAL;
+		case ELE_UNDEAD:
+			return QMT_ELE_UNDEAD;
+		default:
+			return 0;
 	}
 }
 
 static enum quest_mobtype quest_mobrace2client(uint8 type)
 {
 	switch (type) {
-	case RC_DEMIHUMAN:
-		return QMT_RC_DEMIHUMAN;
-	case RC_BRUTE:
-		return QMT_RC_BRUTE;
-	case RC_INSECT:
-		return QMT_RC_INSECT;
-	case RC_FISH:
-		return QMT_RC_FISH;
-	case RC_PLANT:
-		return QMT_RC_PLANT;
-	case RC_DEMON:
-		return QMT_RC_DEMON;
-	case RC_ANGEL:
-		return QMT_RC_ANGEL;
-	case RC_UNDEAD:
-		return QMT_RC_UNDEAD;
-	case RC_FORMLESS:
-		return QMT_RC_FORMLESS;
-	case RC_DRAGON:
-		return QMT_RC_DRAGON;
-	default:
-		return 0;
+		case RC_DEMIHUMAN:
+			return QMT_RC_DEMIHUMAN;
+		case RC_BRUTE:
+			return QMT_RC_BRUTE;
+		case RC_INSECT:
+			return QMT_RC_INSECT;
+		case RC_FISH:
+			return QMT_RC_FISH;
+		case RC_PLANT:
+			return QMT_RC_PLANT;
+		case RC_DEMON:
+			return QMT_RC_DEMON;
+		case RC_ANGEL:
+			return QMT_RC_ANGEL;
+		case RC_UNDEAD:
+			return QMT_RC_UNDEAD;
+		case RC_FORMLESS:
+			return QMT_RC_FORMLESS;
+		case RC_DRAGON:
+			return QMT_RC_DRAGON;
+		default:
+			return 0;
 	}
 }
 

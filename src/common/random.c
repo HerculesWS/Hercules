@@ -30,10 +30,10 @@
 #include <stdlib.h>
 
 #if defined(WIN32)
-#	include "common/winapi.h"
+	#include "common/winapi.h"
 #elif defined(HAVE_GETPID) || defined(HAVE_GETTID)
-#	include <sys/types.h>
-#	include <unistd.h>
+	#include <sys/types.h>
+	#include <unistd.h>
 #endif
 
 /** @file
@@ -52,12 +52,12 @@ static void rnd_init(void)
 	seed += (unsigned long)GetCurrentProcessId();
 	seed += (unsigned long)GetCurrentThreadId();
 #else
-#if defined(HAVE_GETPID)
+	#if defined(HAVE_GETPID)
 	seed += (unsigned long)getpid();
-#endif // HAVE_GETPID
-#if defined(HAVE_GETTID)
+	#endif // HAVE_GETPID
+	#if defined(HAVE_GETTID)
 	seed += (unsigned long)gettid();
-#endif // HAVE_GETTID
+	#endif // HAVE_GETTID
 #endif
 	init_genrand(seed);
 
@@ -66,9 +66,7 @@ static void rnd_init(void)
 }
 
 /// @copydoc rnd_interface::final()
-static void rnd_final(void)
-{
-}
+static void rnd_final(void) {}
 
 /// @copydoc rnd_interface::seed()
 static void rnd_seed(uint32 seed)
@@ -85,7 +83,7 @@ static int32 rnd_random(void)
 /// @copydoc rnd_interface::roll()
 static uint32 rnd_roll(uint32 dice_faces)
 {
-	return (uint32)(rnd->uniform()*dice_faces);
+	return (uint32)(rnd->uniform() * dice_faces);
 }
 
 /// @copydoc rnd_interface::value()
@@ -93,13 +91,13 @@ static int32 rnd_value(int32 min, int32 max)
 {
 	if (min >= max)
 		return min;
-	return min + (int32)(rnd->uniform()*(max-min+1));
+	return min + (int32)(rnd->uniform() * (max - min + 1));
 }
 
 /// @copydoc rnd_interface::uniform()
 static double rnd_uniform(void)
 {
-	return ((uint32)genrand_int32())*(1.0/4294967296.0);// divided by 2^32
+	return ((uint32)genrand_int32()) * (1.0 / 4294967296.0); // divided by 2^32
 }
 
 /// @copydoc rnd_interface::uniform53()

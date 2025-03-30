@@ -36,8 +36,8 @@
 
 #include <string.h>
 
-//#define DEBUG_PACKETS
-//#define DEBUG_LOG
+// #define DEBUG_PACKETS
+// #define DEBUG_LOG
 
 static struct lapiif_interface lapiif_s;
 struct lapiif_interface *lapiif;
@@ -55,7 +55,7 @@ static void lapiif_disconnect_user(int account_id)
 	}
 }
 
-static void lapiif_connect_user(struct login_session_data *sd, const unsigned char* auth_token)
+static void lapiif_connect_user(struct login_session_data *sd, const unsigned char *auth_token)
 {
 	nullpo_retv(sd);
 	nullpo_retv(auth_token);
@@ -85,18 +85,15 @@ static void lapiif_server_init(int id)
 	login->dbs->api_server[id].fd = -1;
 }
 
-
 /// Destroys a server structure.
 static void lapiif_server_destroy(int id)
 {
 	Assert_retv(id >= 0 && id < MAX_SERVERS);
-	if (login->dbs->api_server[id].fd != -1)
-	{
+	if (login->dbs->api_server[id].fd != -1) {
 		sockt->close(login->dbs->api_server[id].fd);
 		login->dbs->api_server[id].fd = -1;
 	}
 }
-
 
 /// Resets all the data related to a server.
 static void lapiif_server_reset(int id)
@@ -104,7 +101,6 @@ static void lapiif_server_reset(int id)
 	lapiif->server_destroy(id);
 	lapiif->server_init(id);
 }
-
 
 /// Called when the connection to Char Server is disconnected.
 static void lapiif_on_disconnect(int id)
@@ -118,8 +114,7 @@ static int lapiif_parse(int fd)
 {
 	int id;
 	ARR_FIND(0, ARRAYLENGTH(login->dbs->api_server), id, login->dbs->api_server[id].fd == fd);
-	if (id == ARRAYLENGTH(login->dbs->api_server))
-	{  // not an api server
+	if (id == ARRAYLENGTH(login->dbs->api_server)) { // not an api server
 		ShowDebug("lapiif_parse: Disconnecting invalid session #%d (is not a api-server)\n", fd);
 		sockt->eof(fd);
 		sockt->close(fd);
@@ -155,7 +150,7 @@ static int lapiif_parse(int fd)
 
 #ifdef DEBUG_LOG
 		ShowDebug("Received packet 0x%4x (%d bytes) from api-server (connection %d)\n", (uint32)cmd, packet_len, fd);
-#endif  // DEBUG_LOG
+#endif // DEBUG_LOG
 
 		if (VECTOR_LENGTH(HPM->packets[hpParse_ApiLogin]) > 0) {
 			int result = HPM->parse_packets(fd, cmd, hpParse_ApiLogin);
@@ -195,7 +190,7 @@ static int lapiif_parse_fromapi_api_proxy(int fd)
 
 #ifdef DEBUG_PACKETS
 	ShowInfo("lapiif_parse_fromapi_api_proxy: msg: %u, flags: %u\n", msg, packet->flags);
-#endif  // DEBUG_PACKETS
+#endif // DEBUG_PACKETS
 
 	if (PROXY_PACKET_FLAG(packet, proxy_flag_char | proxy_flag_map)) {
 		lapiif->parse_proxy_api_to_char(fd);
@@ -369,20 +364,16 @@ static void lapiif_set_char_online_to(int account_id, int char_id, int api_serve
 	WFIFOSET(fd, 10);
 }
 
-static void lapiif_init(void)
-{
-}
+static void lapiif_init(void) {}
 
-static void lapiif_final(void)
-{
-}
+static void lapiif_final(void) {}
 
 void lapiif_defaults(void)
 {
 	lapiif = &lapiif_s;
 
 	const int packet_len_table[LAPIIF_PACKET_LEN_TABLE_SIZE] = {
-		0,  2, -1,  0,  0,  0,  0,  0 // 0x2840 - 0x2847
+	    0, 2, -1, 0, 0, 0, 0, 0 // 0x2840 - 0x2847
 	};
 
 	memcpy(lapiif->packet_len_table, &packet_len_table, sizeof(lapiif->packet_len_table));

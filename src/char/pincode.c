@@ -42,11 +42,11 @@ struct pincode_interface *pincode;
 
 static void pincode_handle(int fd, struct char_session_data *sd)
 {
-	struct online_char_data* character;
+	struct online_char_data *character;
 
 	nullpo_retv(sd);
 
-	character = (struct online_char_data*)idb_get(chr->online_char_db, sd->account_id);
+	character = (struct online_char_data *)idb_get(chr->online_char_db, sd->account_id);
 
 	if (character && character->pincode_enable > pincode->charselect) {
 		character->pincode_enable = pincode->charselect * 2;
@@ -90,8 +90,8 @@ static void pincode_check(int fd, struct char_session_data *sd)
 	}
 
 	if (pincode->compare(fd, sd, pin)) {
-		struct online_char_data* character;
-		if ((character = (struct online_char_data*)idb_get(chr->online_char_db, sd->account_id)))
+		struct online_char_data *character;
+		if ((character = (struct online_char_data *)idb_get(chr->online_char_db, sd->account_id)))
 			character->pincode_enable = pincode->charselect * 2;
 		pincode->loginstate(fd, sd, PINCODE_LOGIN_OK);
 	} else {
@@ -304,7 +304,7 @@ static void pincode_decrypt(unsigned int userSeed, char *pin)
 {
 	nullpo_retv(pin);
 
-	unsigned char tab[10] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+	unsigned char tab[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 
 	for (int i = 1; i < 10; i++) {
 		int pos;
@@ -365,7 +365,7 @@ static bool pincode_config_read(const char *filename, const struct config_t *con
 
 	if (libconfig->setting_lookup_int(setting, "max_tries", &pincode->maxtry) == CONFIG_TRUE) {
 		if (pincode->maxtry > 3) {
-			ShowWarning("pincode_maxtry is too high (%d); Maximum allowed: 3! Capping to 3...\n",pincode->maxtry);
+			ShowWarning("pincode_maxtry is too high (%d); Maximum allowed: 3! Capping to 3...\n", pincode->maxtry);
 			pincode->maxtry = 3;
 		}
 	}

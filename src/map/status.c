@@ -76,7 +76,7 @@ struct status_interface *status;
  */
 static int status_sc2skill(sc_type sc)
 {
-	if( sc < 0 || sc >= SC_MAX ) {
+	if (sc < 0 || sc >= SC_MAX) {
 		ShowError("status_sc2skill: Unsupported status change id %d\n", sc);
 		return 0;
 	}
@@ -91,7 +91,7 @@ static int status_sc2skill(sc_type sc)
  */
 static e_scb_flag status_sc2scb_flag(sc_type sc)
 {
-	if( sc < 0 || sc >= SC_MAX ) {
+	if (sc < 0 || sc >= SC_MAX) {
 		ShowError("status_sc2scb_flag: Unsupported status change id %d\n", sc);
 		return SCB_NONE;
 	}
@@ -142,21 +142,12 @@ static void initChangeTables(void)
 static void initDummyData(void)
 {
 	memset(&status->dummy, 0, sizeof(status->dummy));
-	status->dummy.hp =
-		status->dummy.max_hp =
-		status->dummy.max_sp =
-		status->dummy.str =
-		status->dummy.agi =
-		status->dummy.vit =
-		status->dummy.int_ =
-		status->dummy.dex =
-		status->dummy.luk =
-		status->dummy.hit = 1;
+	status->dummy.hp = status->dummy.max_hp = status->dummy.max_sp = status->dummy.str = status->dummy.agi = status->dummy.vit = status->dummy.int_ = status->dummy.dex = status->dummy.luk = status->dummy.hit = 1;
 	status->dummy.speed = 2000;
 	status->dummy.adelay = 4000;
 	status->dummy.amotion = 2000;
 	status->dummy.dmotion = 2000;
-	status->dummy.ele_lv = 1; //Min elemental level.
+	status->dummy.ele_lv = 1; // Min elemental level.
 	status->dummy.mode = MD_CANMOVE;
 
 	memset(&status->dummy_unit_params, 0, sizeof(status->dummy_unit_params));
@@ -172,12 +163,12 @@ static void initDummyData(void)
 	status->dummy_unit_params.max_stats = 99;
 }
 
-//For copying a status_data structure from b to a, without overwriting current Hp and Sp
+// For copying a status_data structure from b to a, without overwriting current Hp and Sp
 static void status_copy(struct status_data *a, const struct status_data *b)
 {
 	nullpo_retv(a);
 	nullpo_retv(b);
-	memcpy((void*)&a->max_hp, (const void*)&b->max_hp, sizeof(struct status_data)-(sizeof(a->hp)+sizeof(a->sp)));
+	memcpy((void *)&a->max_hp, (const void *)&b->max_hp, sizeof(struct status_data) - (sizeof(a->hp) + sizeof(a->sp)));
 }
 
 /**
@@ -191,13 +182,16 @@ static void status_copy(struct status_data *a, const struct status_data *b)
 static int status_set_hp(struct block_list *bl, unsigned int hp, enum status_heal_flag flag)
 {
 	struct status_data *st;
-	if (hp < 1) return 0;
+	if (hp < 1)
+		return 0;
 	st = status->get_status_data(bl);
 	if (st == &status->dummy)
 		return 0;
 
-	if (hp > st->max_hp) hp = st->max_hp;
-	if (hp == st->hp) return 0;
+	if (hp > st->max_hp)
+		hp = st->max_hp;
+	if (hp == st->hp)
+		return 0;
 	if (hp > st->hp)
 		return status->heal(bl, hp - st->hp, 0, STATUS_HEAL_FORCED | flag);
 	return status_zap(bl, st->hp - hp, 0);
@@ -219,8 +213,10 @@ static int status_set_sp(struct block_list *bl, unsigned int sp, enum status_hea
 	if (st == &status->dummy)
 		return 0;
 
-	if (sp > st->max_sp) sp = st->max_sp;
-	if (sp == st->sp) return 0;
+	if (sp > st->max_sp)
+		sp = st->max_sp;
+	if (sp == st->sp)
+		return 0;
 	if (sp > st->sp)
 		return status->heal(bl, 0, sp - st->sp, STATUS_HEAL_FORCED | flag);
 	return status_zap(bl, 0, st->sp - sp);
@@ -229,31 +225,31 @@ static int status_set_sp(struct block_list *bl, unsigned int sp, enum status_hea
 static int status_charge(struct block_list *bl, int64 hp, int64 sp)
 {
 	nullpo_retr((int)(hp + sp), bl);
-	if(!(bl->type&BL_CONSUME))
-		return (int)(hp+sp); //Assume all was charged so there are no 'not enough' fails.
+	if (!(bl->type & BL_CONSUME))
+		return (int)(hp + sp); // Assume all was charged so there are no 'not enough' fails.
 	return status->damage(NULL, bl, hp, sp, 0, 3);
 }
 
-//Inflicts damage on the target with the according walkdelay.
-//If flag&1, damage is passive and does not triggers canceling status changes.
-//If flag&2, fail if target does not has enough to subtract.
-//If flag&4, if killed, mob must not give exp/loot.
-//flag will be set to &8 when damaging sp of a dead character
+// Inflicts damage on the target with the according walkdelay.
+// If flag&1, damage is passive and does not triggers canceling status changes.
+// If flag&2, fail if target does not has enough to subtract.
+// If flag&4, if killed, mob must not give exp/loot.
+// flag will be set to &8 when damaging sp of a dead character
 static int status_damage(struct block_list *src, struct block_list *target, int64 in_hp, int64 in_sp, int walkdelay, int flag)
 {
 	struct status_data *st;
 	struct status_change *sc;
-	int hp,sp;
+	int hp, sp;
 
 	nullpo_ret(target);
 	/* From here onwards, we consider it a 32-type as the client does not support higher and the value doesn't get through percentage modifiers */
-	hp = (int)cap_value(in_hp,INT_MIN,INT_MAX);
-	sp = (int)cap_value(in_sp,INT_MIN,INT_MAX);
+	hp = (int)cap_value(in_hp, INT_MIN, INT_MAX);
+	sp = (int)cap_value(in_sp, INT_MIN, INT_MAX);
 
-	if(sp && !(target->type&BL_CONSUME))
-		sp = 0; //Not a valid SP target.
+	if (sp && !(target->type & BL_CONSUME))
+		sp = 0; // Not a valid SP target.
 
-	if (hp < 0) { //Assume absorbed damage.
+	if (hp < 0) { // Assume absorbed damage.
 		status->heal(target, -hp, 0, STATUS_HEAL_FORCED);
 		hp = 0;
 	}
@@ -267,23 +263,25 @@ static int status_damage(struct block_list *src, struct block_list *target, int6
 		return skill->unit_ondamaged(BL_UCAST(BL_SKILL, target), src, hp, timer->gettick());
 
 	st = status->get_status_data(target);
-	if( st == &status->dummy )
+	if (st == &status->dummy)
 		return 0;
 
 	if ((unsigned int)hp >= st->hp) {
-		if (flag&2) return 0;
+		if (flag & 2)
+			return 0;
 		hp = st->hp;
 	}
 
 	if ((unsigned int)sp > st->sp) {
-		if (flag&2) return 0;
+		if (flag & 2)
+			return 0;
 		sp = st->sp;
 	}
 
 	if (!hp && !sp)
 		return 0;
 
-	if( !st->hp )
+	if (!st->hp)
 		flag |= 8;
 
 #if 0
@@ -294,11 +292,11 @@ static int status_damage(struct block_list *src, struct block_list *target, int6
 #endif // 0
 
 	sc = status->get_sc(target);
-	if( hp && battle_config.invincible_nodamage && src && sc && sc->data[SC_INVINCIBLE] && !sc->data[SC_INVINCIBLEOFF] )
+	if (hp && battle_config.invincible_nodamage && src && sc && sc->data[SC_INVINCIBLE] && !sc->data[SC_INVINCIBLEOFF])
 		hp = 1;
 
-	if( hp && !(flag&1) ) {
-		if( sc ) {
+	if (hp && !(flag & 1)) {
+		if (sc) {
 			struct status_change_entry *sce;
 
 #ifdef DEVOTION_REFLECT_DAMAGE
@@ -307,11 +305,7 @@ static int status_damage(struct block_list *src, struct block_list *target, int6
 				struct mercenary_data *d_md = BL_CAST(BL_MER, d_bl);
 				struct map_session_data *d_sd = BL_CAST(BL_PC, d_bl);
 
-				if (d_bl != NULL
-				 && ((d_md != NULL && d_md->master != NULL && d_md->master->bl.id == target->id)
-				  || (d_sd != NULL && d_sd->devotion[sce->val2] == target->id))
-				 && check_distance_bl(target, d_bl, sce->val3)
-				) {
+				if (d_bl != NULL && ((d_md != NULL && d_md->master != NULL && d_md->master->bl.id == target->id) || (d_sd != NULL && d_sd->devotion[sce->val2] == target->id)) && check_distance_bl(target, d_bl, sce->val3)) {
 					clif->damage(d_bl, d_bl, 0, 0, hp, 0, BDT_NORMAL, 0);
 					status_fix_damage(NULL, d_bl, hp, 0);
 					return 0;
@@ -332,52 +326,60 @@ static int status_damage(struct block_list *src, struct block_list *target, int6
 			status_change_end(target, SC_CAMOUFLAGE, INVALID_TIMER);
 			status_change_end(target, SC_SUHIDE, INVALID_TIMER);
 			status_change_end(target, SC_NEWMOON, INVALID_TIMER);
-			if ((sce=sc->data[SC_ENDURE]) && !sce->val4 && !sc->data[SC_LKCONCENTRATION]) {
-				//Endure count is only reduced by non-players on non-gvg maps.
-				//val4 signals infinite endure. [Skotlex]
+			if ((sce = sc->data[SC_ENDURE]) && !sce->val4 && !sc->data[SC_LKCONCENTRATION]) {
+				// Endure count is only reduced by non-players on non-gvg maps.
+				// val4 signals infinite endure. [Skotlex]
 				if (src && src->type != BL_PC && !map_flag_gvg2(target->m) && !map->list[target->m].flag.battleground && --(sce->val2) < 0)
 					status_change_end(target, SC_ENDURE, INVALID_TIMER);
 			}
-			if ((sce=sc->data[SC_GRAVITATION]) && sce->val3 == BCT_SELF) {
-				struct skill_unit_group* sg = skill->id2group(sce->val4);
+			if ((sce = sc->data[SC_GRAVITATION]) && sce->val3 == BCT_SELF) {
+				struct skill_unit_group *sg = skill->id2group(sce->val4);
 				if (sg) {
 					skill->del_unitgroup(sg);
 					sce->val4 = 0;
 					status_change_end(target, SC_GRAVITATION, INVALID_TIMER);
 				}
 			}
-			if(sc->data[SC_DANCING] && (unsigned int)hp > st->max_hp>>2)
+			if (sc->data[SC_DANCING] && (unsigned int)hp > st->max_hp >> 2)
 				status_change_end(target, SC_DANCING, INVALID_TIMER);
-			if(sc->data[SC_CLOAKINGEXCEED] && --(sc->data[SC_CLOAKINGEXCEED]->val2) <= 0)
+			if (sc->data[SC_CLOAKINGEXCEED] && --(sc->data[SC_CLOAKINGEXCEED]->val2) <= 0)
 				status_change_end(target, SC_CLOAKINGEXCEED, INVALID_TIMER);
-			if(sc->data[SC_KAGEMUSYA] && --(sc->data[SC_KAGEMUSYA]->val3) <= 0)
+			if (sc->data[SC_KAGEMUSYA] && --(sc->data[SC_KAGEMUSYA]->val3) <= 0)
 				status_change_end(target, SC_KAGEMUSYA, INVALID_TIMER);
 		}
 		unit->skillcastcancel(target, 2);
 	}
 
-	st->hp-= hp;
-	st->sp-= sp;
+	st->hp -= hp;
+	st->sp -= sp;
 
 	if (sc && hp && st->hp) {
-		if (sc->data[SC_AUTOBERSERK] &&
-			(!sc->data[SC_PROVOKE] || !sc->data[SC_PROVOKE]->val2) &&
-			st->hp < st->max_hp>>2)
+		if (sc->data[SC_AUTOBERSERK] && (!sc->data[SC_PROVOKE] || !sc->data[SC_PROVOKE]->val2) && st->hp < st->max_hp >> 2)
 			sc_start4(src, target, SC_PROVOKE, 100, 10, 1, 0, 0, 0, SM_AUTOBERSERK);
 		if (sc->data[SC_BERSERK] && st->hp <= 100)
 			status_change_end(target, SC_BERSERK, INVALID_TIMER);
-		if( sc->data[SC_RAISINGDRAGON] && st->hp <= 1000 )
+		if (sc->data[SC_RAISINGDRAGON] && st->hp <= 1000)
 			status_change_end(target, SC_RAISINGDRAGON, INVALID_TIMER);
 		if (sc->data[SC_SATURDAY_NIGHT_FEVER] && st->hp <= 100)
 			status_change_end(target, SC_SATURDAY_NIGHT_FEVER, INVALID_TIMER);
 	}
 
 	switch (target->type) {
-		case BL_PC:  pc->damage(BL_UCAST(BL_PC, target), src, hp, sp); break;
-		case BL_MOB: mob->damage(BL_UCAST(BL_MOB, target), src, hp); break;
-		case BL_HOM: homun->damaged(BL_UCAST(BL_HOM, target)); break;
-		case BL_MER: mercenary->heal(BL_UCAST(BL_MER, target), hp, sp); break;
-		case BL_ELEM: elemental->heal(BL_UCAST(BL_ELEM, target), hp, sp); break;
+		case BL_PC:
+			pc->damage(BL_UCAST(BL_PC, target), src, hp, sp);
+			break;
+		case BL_MOB:
+			mob->damage(BL_UCAST(BL_MOB, target), src, hp);
+			break;
+		case BL_HOM:
+			homun->damaged(BL_UCAST(BL_HOM, target));
+			break;
+		case BL_MER:
+			mercenary->heal(BL_UCAST(BL_MER, target), hp, sp);
+			break;
+		case BL_ELEM:
+			elemental->heal(BL_UCAST(BL_ELEM, target), hp, sp);
+			break;
 		case BL_NUL:
 		case BL_PET:
 		case BL_ITEM:
@@ -393,27 +395,37 @@ static int status_damage(struct block_list *src, struct block_list *target, int6
 		unit->stop_walking(target, STOPWALKING_FLAG_FIXPOS);
 	}
 
-	if (st->hp || (flag&8)) {
-		//Still lives or has been dead before this damage.
+	if (st->hp || (flag & 8)) {
+		// Still lives or has been dead before this damage.
 #ifndef WALKDELAY_SYNC
 		if (walkdelay)
 			unit->set_walkdelay(target, timer->gettick(), walkdelay, 0);
 #endif
-		return (int)(hp+sp);
+		return (int)(hp + sp);
 	}
 
-	st->hp = 1; //To let the dead function cast skills and all that.
-	//NOTE: These dead functions should return: [Skotlex]
-	//0: Death canceled, auto-revived.
-	//Non-zero: Standard death. Clear status, cancel move/attack, etc
+	st->hp = 1; // To let the dead function cast skills and all that.
+	// NOTE: These dead functions should return: [Skotlex]
+	// 0: Death canceled, auto-revived.
+	// Non-zero: Standard death. Clear status, cancel move/attack, etc
 	//&2: Also remove object from map.
 	//&4: Also delete object from memory.
 	switch (target->type) {
-		case BL_PC:  flag = pc->dead(BL_UCAST(BL_PC, target), src); break;
-		case BL_MOB: flag = mob->dead(BL_UCAST(BL_MOB, target), src, (flag&4) ? 3 : 0); break;
-		case BL_HOM: flag = homun->dead(BL_UCAST(BL_HOM, target)); break;
-		case BL_MER: flag = mercenary->dead(BL_UCAST(BL_MER, target)); break;
-		case BL_ELEM: flag = elemental->dead(BL_UCAST(BL_ELEM, target)); break;
+		case BL_PC:
+			flag = pc->dead(BL_UCAST(BL_PC, target), src);
+			break;
+		case BL_MOB:
+			flag = mob->dead(BL_UCAST(BL_MOB, target), src, (flag & 4) ? 3 : 0);
+			break;
+		case BL_HOM:
+			flag = homun->dead(BL_UCAST(BL_HOM, target));
+			break;
+		case BL_MER:
+			flag = mercenary->dead(BL_UCAST(BL_MER, target));
+			break;
+		case BL_ELEM:
+			flag = elemental->dead(BL_UCAST(BL_ELEM, target));
+			break;
 		case BL_NUL:
 		case BL_PET:
 		case BL_ITEM:
@@ -421,22 +433,21 @@ static int status_damage(struct block_list *src, struct block_list *target, int6
 		case BL_NPC:
 		case BL_CHAT:
 		case BL_ALL:
-		default: //Unhandled case, do nothing to object.
+		default: // Unhandled case, do nothing to object.
 			flag = 0;
 			break;
 	}
 
-	if(!flag) //Death canceled.
-		return (int)(hp+sp);
+	if (!flag) // Death canceled.
+		return (int)(hp + sp);
 
-	//Normal death
+	// Normal death
 	st->hp = 0;
-	if (battle_config.clear_unit_ondeath &&
-		battle_config.clear_unit_ondeath&target->type)
+	if (battle_config.clear_unit_ondeath && battle_config.clear_unit_ondeath & target->type)
 		skill->clear_unitgroup(target);
 
-	if(target->type&BL_REGEN) {
-		//Reset regen ticks.
+	if (target->type & BL_REGEN) {
+		// Reset regen ticks.
 		struct regen_data *regen = status->get_regen_data(target);
 		if (regen != NULL) {
 			memset(&regen->tick, 0, sizeof(regen->tick));
@@ -447,22 +458,22 @@ static int status_damage(struct block_list *src, struct block_list *target, int6
 		}
 	}
 
-	if( sc && sc->data[SC_KAIZEL] && !map_flag_gvg2(target->m) ) {
-		//flag&8 = disable Kaizel
-		int time = skill->get_time2(SL_KAIZEL,sc->data[SC_KAIZEL]->val1);
-		//Look for Osiris Card's bonus effect on the character and revive 100% or revive normally
-		if ( target->type == BL_PC && BL_CAST(BL_PC,target)->special_state.restart_full_recover )
+	if (sc && sc->data[SC_KAIZEL] && !map_flag_gvg2(target->m)) {
+		// flag&8 = disable Kaizel
+		int time = skill->get_time2(SL_KAIZEL, sc->data[SC_KAIZEL]->val1);
+		// Look for Osiris Card's bonus effect on the character and revive 100% or revive normally
+		if (target->type == BL_PC && BL_CAST(BL_PC, target)->special_state.restart_full_recover)
 			status->revive(target, 100, 100);
 		else
 			status->revive(target, sc->data[SC_KAIZEL]->val2, 0);
-		status->change_clear(target,0);
-		clif->skill_nodamage(target,target,ALL_RESURRECTION,1,1);
+		status->change_clear(target, 0);
+		clif->skill_nodamage(target, target, ALL_RESURRECTION, 1, 1);
 		sc_start(target, target, skill->get_sc_type(PR_KYRIE), 100, 10, time, PR_KYRIE);
 
-		if( target->type == BL_MOB )
+		if (target->type == BL_MOB)
 			BL_UCAST(BL_MOB, target)->state.rebirth = 1;
 
-		return (int)(hp+sp);
+		return (int)(hp + sp);
 	}
 
 	if (target->type == BL_MOB && sc != NULL && sc->data[SC_REBIRTH] != NULL) {
@@ -470,29 +481,29 @@ static int status_damage(struct block_list *src, struct block_list *target, int6
 		if (!t_md->state.rebirth) {
 			// Ensure the monster has not already reborn before doing so.
 			status->revive(target, sc->data[SC_REBIRTH]->val2, 0);
-			status->change_clear(target,0);
+			status->change_clear(target, 0);
 			t_md->state.rebirth = 1;
 
-			return (int)(hp+sp);
+			return (int)(hp + sp);
 		}
 	}
 
-	status->change_clear(target,0);
+	status->change_clear(target, 0);
 
-	if(flag&4) //Delete from memory. (also invokes map removal code)
-		unit->free(target,CLR_DEAD);
-	else if(flag&2) //remove from map
-		unit->remove_map(target,CLR_DEAD,ALC_MARK);
-	else { //Some death states that would normally be handled by unit_remove_map
+	if (flag & 4) // Delete from memory. (also invokes map removal code)
+		unit->free(target, CLR_DEAD);
+	else if (flag & 2) // remove from map
+		unit->remove_map(target, CLR_DEAD, ALC_MARK);
+	else { // Some death states that would normally be handled by unit_remove_map
 		unit->stop_attack(target);
 		unit->stop_walking(target, STOPWALKING_FLAG_FIXPOS);
-		unit->skillcastcancel(target,0);
-		clif->clearunit_area(target,CLR_DEAD);
-		skill->unit_move(target,timer->gettick(),4);
+		unit->skillcastcancel(target, 0);
+		clif->clearunit_area(target, CLR_DEAD);
+		skill->unit_move(target, timer->gettick(), 4);
 		skill->cleartimerskill(target);
 	}
 
-	return (int)(hp+sp);
+	return (int)(hp + sp);
 }
 
 /**
@@ -508,7 +519,7 @@ static int status_heal(struct block_list *bl, int64 in_hp, int64 in_sp, enum sta
 {
 	struct status_data *st;
 	struct status_change *sc;
-	int hp,sp;
+	int hp, sp;
 
 	nullpo_ret(bl);
 	st = status->get_status_data(bl);
@@ -519,15 +530,16 @@ static int status_heal(struct block_list *bl, int64 in_hp, int64 in_sp, enum sta
 		return 0;
 
 	/* From here onwards, we consider it a 32-type as the client does not support higher and the value doesn't get through percentage modifiers */
-	hp = (int)cap_value(in_hp,INT_MIN,INT_MAX);
-	sp = (int)cap_value(in_sp,INT_MIN,INT_MAX);
+	hp = (int)cap_value(in_hp, INT_MIN, INT_MAX);
+	sp = (int)cap_value(in_sp, INT_MIN, INT_MAX);
 
 	sc = status->get_sc(bl);
 	if (sc && !sc->count)
 		sc = NULL;
 
 	if (hp < 0) {
-		if (hp == INT_MIN) hp++; //-INT_MIN == INT_MIN in some architectures!
+		if (hp == INT_MIN)
+			hp++; //-INT_MIN == INT_MIN in some architectures!
 		status->damage(NULL, bl, -hp, 0, 0, 1);
 		hp = 0;
 	}
@@ -540,41 +552,48 @@ static int status_heal(struct block_list *bl, int64 in_hp, int64 in_sp, enum sta
 				hp = 0;
 		}
 
-		if((unsigned int)hp > st->max_hp - st->hp)
+		if ((unsigned int)hp > st->max_hp - st->hp)
 			hp = st->max_hp - st->hp;
 	}
 
-	if(sp < 0) {
-		if (sp==INT_MIN) sp++;
+	if (sp < 0) {
+		if (sp == INT_MIN)
+			sp++;
 		status->damage(NULL, bl, 0, -sp, 0, 1);
 		sp = 0;
 	}
 
-	if(sp) {
-		if((unsigned int)sp > st->max_sp - st->sp)
+	if (sp) {
+		if ((unsigned int)sp > st->max_sp - st->sp)
 			sp = st->max_sp - st->sp;
 	}
 
-	if(!sp && !hp) return 0;
+	if (!sp && !hp)
+		return 0;
 
-	st->hp+= hp;
-	st->sp+= sp;
+	st->hp += hp;
+	st->sp += sp;
 
-	if( hp && sc
-	    && sc->data[SC_AUTOBERSERK]
-	    && sc->data[SC_PROVOKE]
-	    && sc->data[SC_PROVOKE]->val2==1
-	    && st->hp>=st->max_hp>>2
-	 ) //End auto berserk.
+	if (hp && sc && sc->data[SC_AUTOBERSERK] && sc->data[SC_PROVOKE] && sc->data[SC_PROVOKE]->val2 == 1 && st->hp >= st->max_hp >> 2) // End auto berserk.
 		status_change_end(bl, SC_PROVOKE, INVALID_TIMER);
 
 	// send hp update to client
-	switch(bl->type) {
-		case BL_PC:  pc->heal(BL_UCAST(BL_PC, bl), hp, sp, (flag & STATUS_HEAL_SHOWEFFECT) != 0 ? 1 : 0); break;
-		case BL_MOB: mob->heal(BL_UCAST(BL_MOB, bl), hp); break;
-		case BL_HOM: homun->healed(BL_UCAST(BL_HOM, bl)); break;
-		case BL_MER: mercenary->heal(BL_UCAST(BL_MER, bl), hp, sp); break;
-		case BL_ELEM: elemental->heal(BL_UCAST(BL_ELEM, bl), hp, sp); break;
+	switch (bl->type) {
+		case BL_PC:
+			pc->heal(BL_UCAST(BL_PC, bl), hp, sp, (flag & STATUS_HEAL_SHOWEFFECT) != 0 ? 1 : 0);
+			break;
+		case BL_MOB:
+			mob->heal(BL_UCAST(BL_MOB, bl), hp);
+			break;
+		case BL_HOM:
+			homun->healed(BL_UCAST(BL_HOM, bl));
+			break;
+		case BL_MER:
+			mercenary->heal(BL_UCAST(BL_MER, bl), hp, sp);
+			break;
+		case BL_ELEM:
+			elemental->heal(BL_UCAST(BL_ELEM, bl), hp, sp);
+			break;
 		case BL_NUL:
 		case BL_PET:
 		case BL_ITEM:
@@ -585,15 +604,15 @@ static int status_heal(struct block_list *bl, int64 in_hp, int64 in_sp, enum sta
 			break;
 	}
 
-	return (int)(hp+sp);
+	return (int)(hp + sp);
 }
 
-//Does percentual non-flinching damage/heal. If mob is killed this way,
-//no exp/drops will be awarded if there is no src (or src is target)
-//If rates are > 0, percent is of current HP/SP
-//If rates are < 0, percent is of max HP/SP
-//If !flag, this is heal, otherwise it is damage.
-//Furthermore, if flag==2, then the target must not die from the subtraction.
+// Does percentual non-flinching damage/heal. If mob is killed this way,
+// no exp/drops will be awarded if there is no src (or src is target)
+// If rates are > 0, percent is of current HP/SP
+// If rates are < 0, percent is of max HP/SP
+// If !flag, this is heal, otherwise it is damage.
+// Furthermore, if flag==2, then the target must not die from the subtraction.
 static int status_percent_change(struct block_list *src, struct block_list *target, signed char hp_rate, signed char sp_rate, int flag)
 {
 	struct status_data *st;
@@ -613,7 +632,7 @@ static int status_percent_change(struct block_list *src, struct block_list *targ
 		hp = 1;
 
 	if (flag == 2 && hp >= st->hp)
-		hp = st->hp-1; //Must not kill target.
+		hp = st->hp - 1; // Must not kill target.
 
 	if (sp_rate > 100)
 		sp_rate = 100;
@@ -626,24 +645,24 @@ static int status_percent_change(struct block_list *src, struct block_list *targ
 	if (sp_rate && !sp)
 		sp = 1;
 
-	//Ugly check in case damage dealt is too much for the received args of
-	//status->heal / status->damage. [Skotlex]
+	// Ugly check in case damage dealt is too much for the received args of
+	// status->heal / status->damage. [Skotlex]
 	if (hp > INT_MAX) {
 		hp -= INT_MAX;
 		if (flag)
-			status->damage(src, target, INT_MAX, 0, 0, (!src||src==target?5:1));
+			status->damage(src, target, INT_MAX, 0, 0, (!src || src == target ? 5 : 1));
 		else
 			status->heal(target, INT_MAX, 0, STATUS_HEAL_DEFAULT);
 	}
 	if (sp > INT_MAX) {
 		sp -= INT_MAX;
 		if (flag)
-			status->damage(src, target, 0, INT_MAX, 0, (!src||src==target?5:1));
+			status->damage(src, target, 0, INT_MAX, 0, (!src || src == target ? 5 : 1));
 		else
 			status->heal(target, 0, INT_MAX, STATUS_HEAL_DEFAULT);
 	}
 	if (flag)
-		return status->damage(src, target, hp, sp, 0, (!src||src==target?5:1));
+		return status->damage(src, target, hp, sp, 0, (!src || src == target ? 5 : 1));
 	return status->heal(target, hp, sp, STATUS_HEAL_DEFAULT);
 }
 
@@ -653,21 +672,22 @@ static int status_revive(struct block_list *bl, unsigned char per_hp, unsigned c
 	unsigned int hp, sp;
 
 	nullpo_ret(bl);
-	if (!status->isdead(bl)) return 0;
+	if (!status->isdead(bl))
+		return 0;
 
 	st = status->get_status_data(bl);
 	if (st == &status->dummy)
-		return 0; //Invalid target.
+		return 0; // Invalid target.
 
 	hp = APPLY_RATE(st->max_hp, per_hp);
 	sp = APPLY_RATE(st->max_sp, per_sp);
 
-	if(hp > st->max_hp - st->hp)
+	if (hp > st->max_hp - st->hp)
 		hp = st->max_hp - st->hp;
 	else if (per_hp && !hp)
 		hp = 1;
 
-	if(sp > st->max_sp - st->sp)
+	if (sp > st->max_sp - st->sp)
 		sp = st->max_sp - st->sp;
 	else if (per_sp && !sp)
 		sp = 1;
@@ -675,13 +695,19 @@ static int status_revive(struct block_list *bl, unsigned char per_hp, unsigned c
 	st->hp += hp;
 	st->sp += sp;
 
-	if (bl->prev) //Animation only if character is already on a map.
+	if (bl->prev) // Animation only if character is already on a map.
 		clif->resurrection(bl, 1);
 
 	switch (bl->type) {
-		case BL_PC:  pc->revive(BL_UCAST(BL_PC, bl), hp, sp); break;
-		case BL_MOB: mob->revive(BL_UCAST(BL_MOB, bl), hp); break;
-		case BL_HOM: homun->revive(BL_UCAST(BL_HOM, bl), hp, sp); break;
+		case BL_PC:
+			pc->revive(BL_UCAST(BL_PC, bl), hp, sp);
+			break;
+		case BL_MOB:
+			mob->revive(BL_UCAST(BL_MOB, bl), hp);
+			break;
+		case BL_HOM:
+			homun->revive(BL_UCAST(BL_HOM, bl), hp, sp);
+			break;
 		case BL_NUL:
 		case BL_PET:
 		case BL_MER:
@@ -700,22 +726,23 @@ static int status_fixed_revive(struct block_list *bl, unsigned int per_hp, unsig
 {
 	struct status_data *st;
 	unsigned int hp, sp;
-	if (!status->isdead(bl)) return 0;
+	if (!status->isdead(bl))
+		return 0;
 
 	nullpo_ret(bl);
 	st = status->get_status_data(bl);
 	if (st == &status->dummy)
-		return 0; //Invalid target.
+		return 0; // Invalid target.
 
 	hp = per_hp;
 	sp = per_sp;
 
-	if(hp > st->max_hp - st->hp)
+	if (hp > st->max_hp - st->hp)
 		hp = st->max_hp - st->hp;
 	else if (!hp)
 		hp = 1;
 
-	if(sp > st->max_sp - st->sp)
+	if (sp > st->max_sp - st->sp)
 		sp = st->max_sp - st->sp;
 	else if (!sp)
 		sp = 1;
@@ -723,12 +750,18 @@ static int status_fixed_revive(struct block_list *bl, unsigned int per_hp, unsig
 	st->hp += hp;
 	st->sp += sp;
 
-	if (bl->prev) //Animation only if character is already on a map.
+	if (bl->prev) // Animation only if character is already on a map.
 		clif->resurrection(bl, 1);
 	switch (bl->type) {
-		case BL_PC:  pc->revive(BL_UCAST(BL_PC, bl), hp, sp); break;
-		case BL_MOB: mob->revive(BL_UCAST(BL_MOB, bl), hp); break;
-		case BL_HOM: homun->revive(BL_UCAST(BL_HOM, bl), hp, sp); break;
+		case BL_PC:
+			pc->revive(BL_UCAST(BL_PC, bl), hp, sp);
+			break;
+		case BL_MOB:
+			mob->revive(BL_UCAST(BL_MOB, bl), hp);
+			break;
+		case BL_HOM:
+			homun->revive(BL_UCAST(BL_HOM, bl), hp, sp);
+			break;
 		case BL_NUL:
 		case BL_PET:
 		case BL_MER:
@@ -798,7 +831,7 @@ static bool status_check_skilluse_mapzone(struct block_list *src, struct status_
 static int status_check_skilluse(struct block_list *src, struct block_list *target, uint16 skill_id, int flag)
 {
 	struct status_data *st;
-	struct status_change *sc=NULL, *tsc;
+	struct status_change *sc = NULL, *tsc;
 	int hide_flag;
 	struct map_session_data *sd = BL_CAST(BL_PC, src);
 
@@ -810,43 +843,40 @@ static int status_check_skilluse(struct block_list *src, struct block_list *targ
 	if (sd != NULL && sd->block_action.skill && skill_id) // *pcblock script command
 		return 0;
 
-	if (!skill_id) { //Normal attack checks.
-		if (!(st->mode&MD_CANATTACK))
-			return 0; //This mode is only needed for melee attacking.
-		//Dead state is not checked for skills as some skills can be used
-		//on dead characters, said checks are left to skill.c [Skotlex]
+	if (!skill_id) { // Normal attack checks.
+		if (!(st->mode & MD_CANATTACK))
+			return 0; // This mode is only needed for melee attacking.
+		// Dead state is not checked for skills as some skills can be used
+		// on dead characters, said checks are left to skill.c [Skotlex]
 		if (target && status->isdead(target))
 			return 0;
-		if( src && (sc = status->get_sc(src)) != NULL && sc->data[SC_COLD] && src->type != BL_MOB)
+		if (src && (sc = status->get_sc(src)) != NULL && sc->data[SC_COLD] && src->type != BL_MOB)
 			return 0;
 	}
 
-	if( skill_id ) {
+	if (skill_id) {
 		if (src != NULL && (sd == NULL || sd->auto_cast_current.type != AUTOCAST_ITEM)) {
 			// Items that cast skills using 'itemskill' will not be handled by map_zone_db.
 			if (!status->check_skilluse_mapzone(src, st, skill_id))
 				return 0;
 		}
 
-		switch( skill_id ) {
+		switch (skill_id) {
 			case PA_PRESSURE:
-				if( flag && target ) {
-					//Gloria Avoids pretty much everything....
+				if (flag && target) {
+					// Gloria Avoids pretty much everything....
 					tsc = status->get_sc(target);
-					if(tsc && tsc->option&OPTION_HIDE)
+					if (tsc && tsc->option & OPTION_HIDE)
 						return 0;
 				}
 				break;
 			case GN_WALLOFTHORN:
-				if( target && status->isdead(target) )
+				if (target && status->isdead(target))
 					return 0;
 				break;
 			case AL_TELEPORT:
-				//Should fail when used on top of Land Protector [Skotlex]
-				if (src != NULL
-				 && map->getcell(src->m, src, src->x, src->y, CELL_CHKLANDPROTECTOR)
-				 && !(st->mode&MD_BOSS)
-				 && (src->type != BL_PC || sd->auto_cast_current.type != AUTOCAST_ITEM))
+				// Should fail when used on top of Land Protector [Skotlex]
+				if (src != NULL && map->getcell(src->m, src, src->x, src->y, CELL_CHKLANDPROTECTOR) && !(st->mode & MD_BOSS) && (src->type != BL_PC || sd->auto_cast_current.type != AUTOCAST_ITEM))
 					return 0;
 				break;
 			default:
@@ -854,26 +884,22 @@ static int status_check_skilluse(struct block_list *src, struct block_list *targ
 		}
 	}
 
-	if ( src ) sc = status->get_sc(src);
+	if (src)
+		sc = status->get_sc(src);
 
-	if( sc && sc->count ) {
+	if (sc && sc->count) {
 
-		if (skill_id != RK_REFRESH && sc->opt1 >0 && !(sc->opt1 == OPT1_CRYSTALIZE && src->type == BL_MOB) && sc->opt1 != OPT1_BURNING && skill_id != SR_GENTLETOUCH_CURE) { //Stunned/Frozen/etc
-			if (flag != 1) //Can't cast, casted stuff can't damage.
+		if (skill_id != RK_REFRESH && sc->opt1 > 0 && !(sc->opt1 == OPT1_CRYSTALIZE && src->type == BL_MOB) && sc->opt1 != OPT1_BURNING && skill_id != SR_GENTLETOUCH_CURE) { // Stunned/Frozen/etc
+			if (flag != 1)                                                                                                                                                    // Can't cast, casted stuff can't damage.
 				return 0;
-			if (!(skill->get_inf(skill_id)&INF_GROUND_SKILL))
-				return 0; //Targeted spells can't come off.
+			if (!(skill->get_inf(skill_id) & INF_GROUND_SKILL))
+				return 0; // Targeted spells can't come off.
 		}
 
-		if (
-			(sc->data[SC_TRICKDEAD] && skill_id != NV_TRICKDEAD)
-			|| (sc->data[SC_AUTOCOUNTER] && !flag && skill_id)
-			|| (sc->data[SC_GOSPEL] && sc->data[SC_GOSPEL]->val4 == BCT_SELF && skill_id != PA_GOSPEL)
-			|| (sc->data[SC_SUHIDE] && skill_id != SU_HIDE)
-			)
+		if ((sc->data[SC_TRICKDEAD] && skill_id != NV_TRICKDEAD) || (sc->data[SC_AUTOCOUNTER] && !flag && skill_id) || (sc->data[SC_GOSPEL] && sc->data[SC_GOSPEL]->val4 == BCT_SELF && skill_id != PA_GOSPEL) || (sc->data[SC_SUHIDE] && skill_id != SU_HIDE))
 			return 0;
 
-		if (sc->data[SC_DC_WINKCHARM] && target && !flag) { //Prevents skill usage
+		if (sc->data[SC_DC_WINKCHARM] && target && !flag) { // Prevents skill usage
 			struct block_list *winkcharm_target = map->id2bl(sc->data[SC_DC_WINKCHARM]->val2);
 			if (winkcharm_target != NULL) {
 				if (unit->bl2ud(src) && (unit->bl2ud(src))->walktimer == INVALID_TIMER)
@@ -886,93 +912,79 @@ static int status_check_skilluse(struct block_list *src, struct block_list *targ
 		}
 
 		if (sc->data[SC_BLADESTOP]) {
-			switch (sc->data[SC_BLADESTOP]->val1)
-			{
-			case 5: if (skill_id == MO_EXTREMITYFIST) break;
-				FALLTHROUGH
-			case 4: if (skill_id == MO_CHAINCOMBO) break;
-				FALLTHROUGH
-			case 3: if (skill_id == MO_INVESTIGATE) break;
-				FALLTHROUGH
-			case 2: if (skill_id == MO_FINGEROFFENSIVE) break;
-				FALLTHROUGH
-			default: return 0;
+			switch (sc->data[SC_BLADESTOP]->val1) {
+				case 5:
+					if (skill_id == MO_EXTREMITYFIST)
+						break;
+					FALLTHROUGH
+				case 4:
+					if (skill_id == MO_CHAINCOMBO)
+						break;
+					FALLTHROUGH
+				case 3:
+					if (skill_id == MO_INVESTIGATE)
+						break;
+					FALLTHROUGH
+				case 2:
+					if (skill_id == MO_FINGEROFFENSIVE)
+						break;
+					FALLTHROUGH
+				default:
+					return 0;
 			}
 		}
 
-		if (sc->data[SC_DANCING] && flag!=2) {
+		if (sc->data[SC_DANCING] && flag != 2) {
 			if (src->type == BL_PC && skill_id >= WA_SWING_DANCE && skill_id <= WM_UNLIMITED_HUMMING_VOICE) {
 				// Lvl 5 Lesson or higher allow you use 3rd job skills while dancing.v
 				if (pc->checkskill(sd, WM_LESSON) < 5)
 					return 0;
-			} else if(sc->data[SC_LONGING]) { //Allow everything except dancing/re-dancing. [Skotlex]
-				if (skill_id == BD_ENCORE ||
-					skill->get_inf2(skill_id)&(INF2_SONG_DANCE|INF2_ENSEMBLE_SKILL)
-					)
+			} else if (sc->data[SC_LONGING]) { // Allow everything except dancing/re-dancing. [Skotlex]
+				if (skill_id == BD_ENCORE || skill->get_inf2(skill_id) & (INF2_SONG_DANCE | INF2_ENSEMBLE_SKILL))
 					return 0;
 			} else {
 				switch (skill_id) {
-				case BD_ADAPTATION:
-				case CG_LONGINGFREEDOM:
-				case BA_MUSICALSTRIKE:
-				case DC_THROWARROW:
-					break;
-				default:
-					return 0;
+					case BD_ADAPTATION:
+					case CG_LONGINGFREEDOM:
+					case BA_MUSICALSTRIKE:
+					case DC_THROWARROW:
+						break;
+					default:
+						return 0;
 				}
 			}
-			if ((sc->data[SC_DANCING]->val1&0xFFFF) == CG_HERMODE && skill_id == BD_ADAPTATION)
-				return 0; //Can't amp out of Wand of Hermode :/ [Skotlex]
+			if ((sc->data[SC_DANCING]->val1 & 0xFFFF) == CG_HERMODE && skill_id == BD_ADAPTATION)
+				return 0; // Can't amp out of Wand of Hermode :/ [Skotlex]
 		}
 
 		if (skill_id != 0 /* Do not block item-casted skills.*/ && (src->type != BL_PC || sd->auto_cast_current.type != AUTOCAST_ITEM)) {
-			//Skills blocked through status changes...
-			if (!flag && ( //Blocked only from using the skill (stuff like autospell may still go through
-				sc->data[SC_SILENCE] ||
-				sc->data[SC_STEELBODY] ||
-				sc->data[SC_BERSERK] ||
-				sc->data[SC_OBLIVIONCURSE] ||
-				sc->data[SC_WHITEIMPRISON] ||
-				sc->data[SC__INVISIBILITY] ||
-				(sc->data[SC_COLD] && src->type != BL_MOB) ||
-				sc->data[SC__IGNORANCE] ||
-				sc->data[SC_DEEP_SLEEP] ||
-				sc->data[SC_SATURDAY_NIGHT_FEVER] ||
-				sc->data[SC_CURSEDCIRCLE_TARGET] ||
-				(sc->data[SC_MARIONETTE_MASTER] && skill_id != CG_MARIONETTE) || //Only skill you can use is marionette again to cancel it
-				(sc->data[SC_MARIONETTE] && skill_id == CG_MARIONETTE) || //Cannot use marionette if you are being buffed by another
-				(sc->data[SC_STASIS] && skill->block_check(src, SC_STASIS, skill_id)) ||
-				(sc->data[SC_KG_KAGEHUMI] && skill->block_check(src, SC_KG_KAGEHUMI, skill_id)) ||
-				(sc->data[SC_NOVAEXPLOSING] && skill->block_check(src, SC_NOVAEXPLOSING, skill_id)) ||
-				(sc->data[SC_GRAVITYCONTROL] && skill->block_check(src, SC_GRAVITYCONTROL, skill_id)) ||
-				sc->data[SC_ALL_RIDING] != NULL // New mounts can't attack nor use skills in the client; this check makes it cheat-safe. [Ind]
-				))
+			// Skills blocked through status changes...
+			if (!flag && (                                                                                                                                                                                                                                                                                                                                                                                                                     // Blocked only from using the skill (stuff like autospell may still go through
+			                 sc->data[SC_SILENCE] || sc->data[SC_STEELBODY] || sc->data[SC_BERSERK] || sc->data[SC_OBLIVIONCURSE] || sc->data[SC_WHITEIMPRISON] || sc->data[SC__INVISIBILITY] || (sc->data[SC_COLD] && src->type != BL_MOB) || sc->data[SC__IGNORANCE] || sc->data[SC_DEEP_SLEEP] || sc->data[SC_SATURDAY_NIGHT_FEVER] || sc->data[SC_CURSEDCIRCLE_TARGET] || (sc->data[SC_MARIONETTE_MASTER] && skill_id != CG_MARIONETTE) || // Only skill you can use is marionette again to cancel it
+			                 (sc->data[SC_MARIONETTE] && skill_id == CG_MARIONETTE) ||                                                                                                                                                                                                                                                                                                                                                         // Cannot use marionette if you are being buffed by another
+			                 (sc->data[SC_STASIS] && skill->block_check(src, SC_STASIS, skill_id)) || (sc->data[SC_KG_KAGEHUMI] && skill->block_check(src, SC_KG_KAGEHUMI, skill_id)) || (sc->data[SC_NOVAEXPLOSING] && skill->block_check(src, SC_NOVAEXPLOSING, skill_id)) || (sc->data[SC_GRAVITYCONTROL] && skill->block_check(src, SC_GRAVITYCONTROL, skill_id)) || sc->data[SC_ALL_RIDING] != NULL                                       // New mounts can't attack nor use skills in the client; this check makes it cheat-safe. [Ind]
+			                 ))
 				return 0;
 
-			//Skill blocking.
-			if (
-				(sc->data[SC_VOLCANO] && skill_id == WZ_ICEWALL) ||
-				(sc->data[SC_ROKISWEIL] && skill_id != BD_ADAPTATION) ||
-				(sc->data[SC_HERMODE] && skill->get_inf(skill_id) & INF_SUPPORT_SKILL) ||
-				pc_ismuted(sc, MANNER_NOSKILL)
-				)
+			// Skill blocking.
+			if ((sc->data[SC_VOLCANO] && skill_id == WZ_ICEWALL) || (sc->data[SC_ROKISWEIL] && skill_id != BD_ADAPTATION) || (sc->data[SC_HERMODE] && skill->get_inf(skill_id) & INF_SUPPORT_SKILL) || pc_ismuted(sc, MANNER_NOSKILL))
 				return 0;
 
-			if( sc->data[SC__MANHOLE] || ((tsc = status->get_sc(target)) && tsc->data[SC__MANHOLE]) ) {
-				switch(skill_id) {//##TODO## make this a flag in skill_db?
-					// Skills that can be used even under Man Hole effects.
-				case SC_SHADOWFORM:
-					break;
-				default:
-					return 0;
+			if (sc->data[SC__MANHOLE] || ((tsc = status->get_sc(target)) && tsc->data[SC__MANHOLE])) {
+				switch (skill_id) { // ##TODO## make this a flag in skill_db?
+					                // Skills that can be used even under Man Hole effects.
+					case SC_SHADOWFORM:
+						break;
+					default:
+						return 0;
 				}
 			}
 		}
 	}
 
 	if (sc && sc->option) {
-		if (sc->option&OPTION_HIDE) {
-			switch (skill_id) { //Usable skills while hiding.
+		if (sc->option & OPTION_HIDE) {
+			switch (skill_id) { // Usable skills while hiding.
 				case TF_HIDING:
 				case AS_GRIMTOOTH:
 				case RG_BACKSTAP:
@@ -982,82 +994,76 @@ static int status_check_skilluse(struct block_list *src, struct block_list *targ
 				case KO_YAMIKUMO:
 					break;
 				default:
-					//Non players can use all skills while hidden.
+					// Non players can use all skills while hidden.
 					if (!skill_id || src->type == BL_PC)
 						return 0;
 			}
 		}
-		if ( sc->option&OPTION_CHASEWALK ) {
-			if ( sc->data[SC__INVISIBILITY] ) {
-				if ( skill_id != 0 && skill_id != SC_INVISIBILITY )
+		if (sc->option & OPTION_CHASEWALK) {
+			if (sc->data[SC__INVISIBILITY]) {
+				if (skill_id != 0 && skill_id != SC_INVISIBILITY)
 					return 0;
-			} else if ( skill_id != ST_CHASEWALK )
+			} else if (skill_id != ST_CHASEWALK)
 				return 0;
 		}
 	}
 
-	if (target == NULL || target == src) //No further checking needed.
+	if (target == NULL || target == src) // No further checking needed.
 		return 1;
 
 	tsc = status->get_sc(target);
 
-	if(tsc && tsc->count) {
+	if (tsc && tsc->count) {
 		/* attacks in invincible are capped to 1 damage and handled in batte.c; allow spell break and eske for sealed shrine GDB when in INVINCIBLE state. */
-		if( tsc->data[SC_INVINCIBLE] && !tsc->data[SC_INVINCIBLEOFF] && skill_id && !(skill_id&(SA_SPELLBREAKER|SL_SKE)) )
+		if (tsc->data[SC_INVINCIBLE] && !tsc->data[SC_INVINCIBLEOFF] && skill_id && !(skill_id & (SA_SPELLBREAKER | SL_SKE)))
 			return 0;
-		if(!skill_id && tsc->data[SC_TRICKDEAD])
+		if (!skill_id && tsc->data[SC_TRICKDEAD])
 			return 0;
-		if((skill_id == WZ_STORMGUST || skill_id == WZ_FROSTNOVA || skill_id == NJ_HYOUSYOURAKU)
-			&& tsc->data[SC_FREEZE])
+		if ((skill_id == WZ_STORMGUST || skill_id == WZ_FROSTNOVA || skill_id == NJ_HYOUSYOURAKU) && tsc->data[SC_FREEZE])
 			return 0;
-		if(skill_id == PR_LEXAETERNA && (tsc->data[SC_FREEZE] || (tsc->data[SC_STONE] && tsc->opt1 == OPT1_STONE)))
+		if (skill_id == PR_LEXAETERNA && (tsc->data[SC_FREEZE] || (tsc->data[SC_STONE] && tsc->opt1 == OPT1_STONE)))
 			return 0;
-		if( ( tsc->data[SC_STEALTHFIELD] || tsc->data[SC_CAMOUFLAGE] ) && !(st->mode&(MD_BOSS|MD_DETECTOR)) && flag == 4 )
+		if ((tsc->data[SC_STEALTHFIELD] || tsc->data[SC_CAMOUFLAGE]) && !(st->mode & (MD_BOSS | MD_DETECTOR)) && flag == 4)
 			return 0;
 	}
-	//If targeting, cloak+hide protect you, otherwise only hiding does.
-	hide_flag = flag?OPTION_HIDE:(OPTION_HIDE|OPTION_CLOAK|OPTION_CHASEWALK);
+	// If targeting, cloak+hide protect you, otherwise only hiding does.
+	hide_flag = flag ? OPTION_HIDE : (OPTION_HIDE | OPTION_CLOAK | OPTION_CHASEWALK);
 
 	// Applies even if the target hides
-	if ((skill->get_ele(skill_id,1) == ELE_EARTH && skill_id != MG_STONECURSE) // Ground type
-	  || (flag&1 && skill->get_nk(skill_id)&NK_NO_DAMAGE && skill_id != ALL_RESURRECTION)) // Buff/debuff skills started before hiding
+	if ((skill->get_ele(skill_id, 1) == ELE_EARTH && skill_id != MG_STONECURSE)                  // Ground type
+	    || (flag & 1 && skill->get_nk(skill_id) & NK_NO_DAMAGE && skill_id != ALL_RESURRECTION)) // Buff/debuff skills started before hiding
 		hide_flag &= ~OPTION_HIDE;
 
-	switch( target->type ) {
-		case BL_PC:
-		{
+	switch (target->type) {
+		case BL_PC: {
 			const struct map_session_data *tsd = BL_UCCAST(BL_PC, target);
-			bool is_boss = (st->mode&MD_BOSS);
-			bool is_detect = ((st->mode&MD_DETECTOR)?true:false);//god-knows-why gcc doesn't shut up until this happens
+			bool is_boss = (st->mode & MD_BOSS);
+			bool is_detect = ((st->mode & MD_DETECTOR) ? true : false); // god-knows-why gcc doesn't shut up until this happens
 			if (pc_isinvisible(tsd))
 				return 0;
 			if (tsc != NULL) {
-				if (tsc->option&hide_flag
-					&& !is_boss
-					&& (tsd->special_state.perfect_hiding || !is_detect || tsc->data[SC_CLOAKINGEXCEED] != NULL || tsc->data[SC_NEWMOON] != NULL)
-				)
+				if (tsc->option & hide_flag && !is_boss && (tsd->special_state.perfect_hiding || !is_detect || tsc->data[SC_CLOAKINGEXCEED] != NULL || tsc->data[SC_NEWMOON] != NULL))
 					return 0;
 				if (tsc->data[SC_CAMOUFLAGE] && !(is_boss || is_detect) && flag == 0)
 					return 0;
 				if (tsc->data[SC_STEALTHFIELD] && !is_boss)
 					return 0;
 			}
-		}
-			break;
+		} break;
 		case BL_ITEM:
-			//Allow targeting of items to pick'em up (or in the case of mobs, to loot them).
-			//TODO: Would be nice if this could be used to judge whether the player can or not pick up the item it targets. [Skotlex]
-			if (st->mode&MD_LOOTER)
+			// Allow targeting of items to pick'em up (or in the case of mobs, to loot them).
+			// TODO: Would be nice if this could be used to judge whether the player can or not pick up the item it targets. [Skotlex]
+			if (st->mode & MD_LOOTER)
 				return 1;
 			return 0;
 		case BL_HOM:
 		case BL_MER:
 		case BL_ELEM:
-			if( target->type == BL_HOM && skill_id && battle_config.hom_setting&0x1 && skill->get_inf(skill_id)&INF_SUPPORT_SKILL && battle->get_master(target) != src )
+			if (target->type == BL_HOM && skill_id && battle_config.hom_setting & 0x1 && skill->get_inf(skill_id) & INF_SUPPORT_SKILL && battle->get_master(target) != src)
 				return 0; // Can't use support skills on Homunculus (only Master/Self)
-			if( target->type == BL_MER && (skill_id == PR_ASPERSIO || (skill_id >= SA_FLAMELAUNCHER && skill_id <= SA_SEISMICWEAPON)) && battle->get_master(target) != src )
+			if (target->type == BL_MER && (skill_id == PR_ASPERSIO || (skill_id >= SA_FLAMELAUNCHER && skill_id <= SA_SEISMICWEAPON)) && battle->get_master(target) != src)
 				return 0; // Can't use Weapon endow skills on Mercenary (only Master)
-			if( skill_id == AM_POTIONPITCHER && ( target->type == BL_MER || target->type == BL_ELEM) )
+			if (skill_id == AM_POTIONPITCHER && (target->type == BL_MER || target->type == BL_ELEM))
 				return 0; // Can't use Potion Pitcher on Mercenaries
 			FALLTHROUGH
 		case BL_NUL:
@@ -1068,11 +1074,11 @@ static int status_check_skilluse(struct block_list *src, struct block_list *targ
 		case BL_MOB:
 		case BL_ALL:
 		default:
-			//Check for chase-walk/hiding/cloaking opponents.
-			if( tsc ) {
-				if( tsc->option&hide_flag && !(st->mode&(MD_BOSS|MD_DETECTOR)))
+			// Check for chase-walk/hiding/cloaking opponents.
+			if (tsc) {
+				if (tsc->option & hide_flag && !(st->mode & (MD_BOSS | MD_DETECTOR)))
 					return 0;
-				if( tsc->data[SC_STEALTHFIELD] && !(st->mode&MD_BOSS) )
+				if (tsc->data[SC_STEALTHFIELD] && !(st->mode & MD_BOSS))
 					return 0;
 			}
 	}
@@ -1080,47 +1086,45 @@ static int status_check_skilluse(struct block_list *src, struct block_list *targ
 	return 1;
 }
 
-//Skotlex: Calculates the initial status for the given mob
-//first will only be false when the mob leveled up or got a GuardUp level.
+// Skotlex: Calculates the initial status for the given mob
+// first will only be false when the mob leveled up or got a GuardUp level.
 static int status_calc_mob_(struct mob_data *md, enum e_status_calc_opt opt)
 {
 	struct status_data *mstatus;
 	struct block_list *mbl = NULL;
-	int flag=0;
+	int flag = 0;
 	int guardup_lv = 0;
 
 	nullpo_retr(1, md);
-	if(opt&SCO_FIRST) { //Set basic level on respawn.
+	if (opt & SCO_FIRST) { // Set basic level on respawn.
 		if (md->level > 0 && md->level <= MAX_LEVEL && md->level != md->db->lv)
 			;
 		else
 			md->level = md->db->lv;
 	}
 
-	//Check if we need custom base-status
+	// Check if we need custom base-status
 	if (battle_config.mobs_level_up && md->level > md->db->lv)
-		flag|=1;
+		flag |= 1;
 
 	if (md->special_state.size)
-		flag|=2;
+		flag |= 2;
 
-	if (md->guardian_data && md->guardian_data->g
-	 && (guardup_lv = guild->checkskill(md->guardian_data->g,GD_GUARDUP)) > 0)
-		flag|=4;
+	if (md->guardian_data && md->guardian_data->g && (guardup_lv = guild->checkskill(md->guardian_data->g, GD_GUARDUP)) > 0)
+		flag |= 4;
 
 	if (battle_config.slaves_inherit_speed && md->master_id)
-		flag|=8;
+		flag |= 8;
 
 	if (md->master_id && md->special_state.ai > AI_ATTACK)
-		flag|=16;
+		flag |= 16;
 
-	if (!flag)
-	{ //No special status required.
+	if (!flag) { // No special status required.
 		if (md->base_status) {
 			aFree(md->base_status);
 			md->base_status = NULL;
 		}
-		if(opt&SCO_FIRST)
+		if (opt & SCO_FIRST)
 			memcpy(&md->status, &md->db->status, sizeof(struct status_data));
 		return 0;
 	}
@@ -1130,139 +1134,146 @@ static int status_calc_mob_(struct mob_data *md, enum e_status_calc_opt opt)
 	mstatus = md->base_status;
 	memcpy(mstatus, &md->db->status, sizeof(struct status_data));
 
-	if (flag&(8|16))
+	if (flag & (8 | 16))
 		mbl = map->id2bl(md->master_id);
 
-	if (flag&8 && mbl) {
+	if (flag & 8 && mbl) {
 		struct status_data *masterstatus = status->get_base_status(mbl);
-		if ( masterstatus ) {
-			if (battle_config.slaves_inherit_speed&((masterstatus->mode&MD_CANMOVE) ? 1 : 2))
+		if (masterstatus) {
+			if (battle_config.slaves_inherit_speed & ((masterstatus->mode & MD_CANMOVE) ? 1 : 2))
 				mstatus->speed = masterstatus->speed;
 			if (mstatus->speed < 2) /* minimum for the unit to function properly */
 				mstatus->speed = 2;
 		}
 	}
 
-	if (flag&16 && mbl) {
-		//Max HP setting from Summon Flora/marine Sphere
+	if (flag & 16 && mbl) {
+		// Max HP setting from Summon Flora/marine Sphere
 		struct unit_data *ud = unit->bl2ud(mbl);
-		//Remove special AI when this is used by regular mobs.
+		// Remove special AI when this is used by regular mobs.
 		if (mbl->type == BL_MOB && BL_UCAST(BL_MOB, mbl)->special_state.ai == AI_NONE)
 			md->special_state.ai = AI_NONE;
 		if (ud) {
 			// different levels of HP according to skill level
 			if (ud->skill_id == AM_SPHEREMINE) {
-				mstatus->max_hp = 2000 + 400*ud->skill_lv;
-			} else if(ud->skill_id == KO_ZANZOU) {
+				mstatus->max_hp = 2000 + 400 * ud->skill_lv;
+			} else if (ud->skill_id == KO_ZANZOU) {
 				mstatus->max_hp = 3000 + 3000 * ud->skill_lv + status_get_max_sp(battle->get_master(mbl));
-			} else { //AM_CANNIBALIZE
-				mstatus->max_hp = 1500 + 200*ud->skill_lv + 10*status->get_lv(mbl);
-				mstatus->mode |= MD_CANATTACK|MD_AGGRESSIVE;
+			} else { // AM_CANNIBALIZE
+				mstatus->max_hp = 1500 + 200 * ud->skill_lv + 10 * status->get_lv(mbl);
+				mstatus->mode |= MD_CANATTACK | MD_AGGRESSIVE;
 			}
 			mstatus->hp = mstatus->max_hp;
-			if( ud->skill_id == NC_SILVERSNIPER )
+			if (ud->skill_id == NC_SILVERSNIPER)
 				mstatus->rhw.atk = mstatus->rhw.atk2 = 200 * ud->skill_lv;
 		}
 	}
 
-	if (flag&1) {
+	if (flag & 1) {
 		// increase from mobs leveling up [Valaris]
 		int diff = md->level - md->db->lv;
-		mstatus->str+= diff;
-		mstatus->agi+= diff;
-		mstatus->vit+= diff;
-		mstatus->int_+= diff;
-		mstatus->dex+= diff;
-		mstatus->luk+= diff;
-		mstatus->max_hp += diff*mstatus->vit;
-		mstatus->max_sp += diff*mstatus->int_;
+		mstatus->str += diff;
+		mstatus->agi += diff;
+		mstatus->vit += diff;
+		mstatus->int_ += diff;
+		mstatus->dex += diff;
+		mstatus->luk += diff;
+		mstatus->max_hp += diff * mstatus->vit;
+		mstatus->max_sp += diff * mstatus->int_;
 		mstatus->hp = mstatus->max_hp;
 		mstatus->sp = mstatus->max_sp;
 		mstatus->speed -= cap_value(diff, 0, mstatus->speed - 10);
 	}
 
-	if (flag&2 && battle_config.mob_size_influence) {
+	if (flag & 2 && battle_config.mob_size_influence) {
 		// change for sized monsters [Valaris]
-		if (md->special_state.size==SZ_MEDIUM) {
-			mstatus->max_hp>>=1;
-			mstatus->max_sp>>=1;
-			if (!mstatus->max_hp) mstatus->max_hp = 1;
-			if (!mstatus->max_sp) mstatus->max_sp = 1;
-			mstatus->hp=mstatus->max_hp;
-			mstatus->sp=mstatus->max_sp;
-			mstatus->str>>=1;
-			mstatus->agi>>=1;
-			mstatus->vit>>=1;
-			mstatus->int_>>=1;
-			mstatus->dex>>=1;
-			mstatus->luk>>=1;
-			if (!mstatus->str) mstatus->str = 1;
-			if (!mstatus->agi) mstatus->agi = 1;
-			if (!mstatus->vit) mstatus->vit = 1;
-			if (!mstatus->int_) mstatus->int_ = 1;
-			if (!mstatus->dex) mstatus->dex = 1;
-			if (!mstatus->luk) mstatus->luk = 1;
-		} else if (md->special_state.size==SZ_BIG) {
-			mstatus->max_hp<<=1;
-			mstatus->max_sp<<=1;
-			mstatus->hp=mstatus->max_hp;
-			mstatus->sp=mstatus->max_sp;
-			mstatus->str<<=1;
-			mstatus->agi<<=1;
-			mstatus->vit<<=1;
-			mstatus->int_<<=1;
-			mstatus->dex<<=1;
-			mstatus->luk<<=1;
+		if (md->special_state.size == SZ_MEDIUM) {
+			mstatus->max_hp >>= 1;
+			mstatus->max_sp >>= 1;
+			if (!mstatus->max_hp)
+				mstatus->max_hp = 1;
+			if (!mstatus->max_sp)
+				mstatus->max_sp = 1;
+			mstatus->hp = mstatus->max_hp;
+			mstatus->sp = mstatus->max_sp;
+			mstatus->str >>= 1;
+			mstatus->agi >>= 1;
+			mstatus->vit >>= 1;
+			mstatus->int_ >>= 1;
+			mstatus->dex >>= 1;
+			mstatus->luk >>= 1;
+			if (!mstatus->str)
+				mstatus->str = 1;
+			if (!mstatus->agi)
+				mstatus->agi = 1;
+			if (!mstatus->vit)
+				mstatus->vit = 1;
+			if (!mstatus->int_)
+				mstatus->int_ = 1;
+			if (!mstatus->dex)
+				mstatus->dex = 1;
+			if (!mstatus->luk)
+				mstatus->luk = 1;
+		} else if (md->special_state.size == SZ_BIG) {
+			mstatus->max_hp <<= 1;
+			mstatus->max_sp <<= 1;
+			mstatus->hp = mstatus->max_hp;
+			mstatus->sp = mstatus->max_sp;
+			mstatus->str <<= 1;
+			mstatus->agi <<= 1;
+			mstatus->vit <<= 1;
+			mstatus->int_ <<= 1;
+			mstatus->dex <<= 1;
+			mstatus->luk <<= 1;
 		}
 	}
 
 	status->calc_misc(&md->bl, mstatus, md->level);
 
-	if (flag&4) {
+	if (flag & 4) {
 		// Strengthen Guardians - custom value +10% / lv
 		struct guild_castle *gc;
-		gc=guild->mapname2gc(map->list[md->bl.m].name);
+		gc = guild->mapname2gc(map->list[md->bl.m].name);
 		if (!gc)
 			ShowError("status_calc_mob: No castle set at map %s\n", map->list[md->bl.m].name);
-		else
-			if (gc->siege_type == SIEGE_TYPE_FE || gc->siege_type == SIEGE_TYPE_TE || md->class_ == MOBID_EMPELIUM) {
+		else if (gc->siege_type == SIEGE_TYPE_FE || gc->siege_type == SIEGE_TYPE_TE || md->class_ == MOBID_EMPELIUM) {
 #ifdef RENEWAL
-				mstatus->max_hp += 50 * gc->defense;
-				mstatus->max_sp += 70 * gc->defense;
+			mstatus->max_hp += 50 * gc->defense;
+			mstatus->max_sp += 70 * gc->defense;
 #else
-				mstatus->max_hp += 1000 * gc->defense;
-				mstatus->max_sp += 200 * gc->defense;
+			mstatus->max_hp += 1000 * gc->defense;
+			mstatus->max_sp += 200 * gc->defense;
 #endif
-				mstatus->hp = mstatus->max_hp;
-				mstatus->sp = mstatus->max_sp;
-				mstatus->def += (gc->defense+2)/3;
-				mstatus->mdef += (gc->defense+2)/3;
-			}
-			if (md->class_ != MOBID_EMPELIUM) {
-				mstatus->batk += mstatus->batk * 10*guardup_lv/100;
-				mstatus->rhw.atk += mstatus->rhw.atk * 10*guardup_lv/100;
-				mstatus->rhw.atk2 += mstatus->rhw.atk2 * 10*guardup_lv/100;
-				mstatus->aspd_rate -= 100*guardup_lv;
-			}
+			mstatus->hp = mstatus->max_hp;
+			mstatus->sp = mstatus->max_sp;
+			mstatus->def += (gc->defense + 2) / 3;
+			mstatus->mdef += (gc->defense + 2) / 3;
+		}
+		if (md->class_ != MOBID_EMPELIUM) {
+			mstatus->batk += mstatus->batk * 10 * guardup_lv / 100;
+			mstatus->rhw.atk += mstatus->rhw.atk * 10 * guardup_lv / 100;
+			mstatus->rhw.atk2 += mstatus->rhw.atk2 * 10 * guardup_lv / 100;
+			mstatus->aspd_rate -= 100 * guardup_lv;
+		}
 	}
 
-	if( opt&SCO_FIRST ) //Initial battle status
+	if (opt & SCO_FIRST) // Initial battle status
 		memcpy(&md->status, mstatus, sizeof(struct status_data));
 
 	return 1;
 }
 
-//Skotlex: Calculates the stats of the given pet.
+// Skotlex: Calculates the stats of the given pet.
 static int status_calc_pet_(struct pet_data *pd, enum e_status_calc_opt opt)
 {
 	nullpo_ret(pd);
 
-	if (opt&SCO_FIRST) {
+	if (opt & SCO_FIRST) {
 		memcpy(&pd->status, &pd->db->status, sizeof(struct status_data));
 		pd->status.mode = MD_CANMOVE; // pets discard all modes, except walking
 		pd->status.speed = pd->petDB->speed;
 
-		if(battle_config.pet_attack_support || battle_config.pet_damage_support) {
+		if (battle_config.pet_attack_support || battle_config.pet_damage_support) {
 			// attack support requires the pet to be able to attack
 			pd->status.mode |= MD_CANATTACK;
 		}
@@ -1273,44 +1284,44 @@ static int status_calc_pet_(struct pet_data *pd, enum e_status_calc_opt opt)
 		int lv = sd->status.base_level * battle_config.pet_lv_rate / 100;
 		if (lv < 0)
 			lv = 1;
-		if (lv != pd->pet.level || opt&SCO_FIRST) {
+		if (lv != pd->pet.level || opt & SCO_FIRST) {
 			struct status_data *bstat = &pd->db->status, *pstatus = &pd->status;
 			pd->pet.level = lv;
-			if (! (opt&SCO_FIRST) ) //Lv Up animation
+			if (!(opt & SCO_FIRST)) // Lv Up animation
 				clif->misceffect(&pd->bl, 0);
-			pstatus->rhw.atk = (bstat->rhw.atk*lv)/pd->db->lv;
-			pstatus->rhw.atk2 = (bstat->rhw.atk2*lv)/pd->db->lv;
-			pstatus->str = (bstat->str*lv)/pd->db->lv;
-			pstatus->agi = (bstat->agi*lv)/pd->db->lv;
-			pstatus->vit = (bstat->vit*lv)/pd->db->lv;
-			pstatus->int_ = (bstat->int_*lv)/pd->db->lv;
-			pstatus->dex = (bstat->dex*lv)/pd->db->lv;
-			pstatus->luk = (bstat->luk*lv)/pd->db->lv;
+			pstatus->rhw.atk = (bstat->rhw.atk * lv) / pd->db->lv;
+			pstatus->rhw.atk2 = (bstat->rhw.atk2 * lv) / pd->db->lv;
+			pstatus->str = (bstat->str * lv) / pd->db->lv;
+			pstatus->agi = (bstat->agi * lv) / pd->db->lv;
+			pstatus->vit = (bstat->vit * lv) / pd->db->lv;
+			pstatus->int_ = (bstat->int_ * lv) / pd->db->lv;
+			pstatus->dex = (bstat->dex * lv) / pd->db->lv;
+			pstatus->luk = (bstat->luk * lv) / pd->db->lv;
 
 			pstatus->rhw.atk = cap_value(pstatus->rhw.atk, 1, battle_config.pet_max_atk1);
 			pstatus->rhw.atk2 = cap_value(pstatus->rhw.atk2, 2, battle_config.pet_max_atk2);
-			pstatus->str = cap_value(pstatus->str,1,battle_config.pet_max_stats);
-			pstatus->agi = cap_value(pstatus->agi,1,battle_config.pet_max_stats);
-			pstatus->vit = cap_value(pstatus->vit,1,battle_config.pet_max_stats);
-			pstatus->int_= cap_value(pstatus->int_,1,battle_config.pet_max_stats);
-			pstatus->dex = cap_value(pstatus->dex,1,battle_config.pet_max_stats);
-			pstatus->luk = cap_value(pstatus->luk,1,battle_config.pet_max_stats);
+			pstatus->str = cap_value(pstatus->str, 1, battle_config.pet_max_stats);
+			pstatus->agi = cap_value(pstatus->agi, 1, battle_config.pet_max_stats);
+			pstatus->vit = cap_value(pstatus->vit, 1, battle_config.pet_max_stats);
+			pstatus->int_ = cap_value(pstatus->int_, 1, battle_config.pet_max_stats);
+			pstatus->dex = cap_value(pstatus->dex, 1, battle_config.pet_max_stats);
+			pstatus->luk = cap_value(pstatus->luk, 1, battle_config.pet_max_stats);
 
 			status->calc_misc(&pd->bl, &pd->status, lv);
 
-			if (! (opt&SCO_FIRST) ) //Not done the first time because the pet is not visible yet
+			if (!(opt & SCO_FIRST)) // Not done the first time because the pet is not visible yet
 				clif->send_petstatus(sd);
 		}
-	} else if ( opt&SCO_FIRST ) {
+	} else if (opt & SCO_FIRST) {
 		status->calc_misc(&pd->bl, &pd->status, pd->db->lv);
 		if (!battle_config.pet_lv_rate && pd->pet.level != pd->db->lv)
 			pd->pet.level = pd->db->lv;
 	}
 
-	//Support rate modifier (1000 = 100%)
-	pd->rate_fix = 1000*(pd->pet.intimate - battle_config.pet_support_min_friendly)/(1000- battle_config.pet_support_min_friendly) +500;
-	if(battle_config.pet_support_rate != 100)
-		pd->rate_fix = pd->rate_fix*battle_config.pet_support_rate/100;
+	// Support rate modifier (1000 = 100%)
+	pd->rate_fix = 1000 * (pd->pet.intimate - battle_config.pet_support_min_friendly) / (1000 - battle_config.pet_support_min_friendly) + 500;
+	if (battle_config.pet_support_rate != 100)
+		pd->rate_fix = pd->rate_fix * battle_config.pet_support_rate / 100;
 
 	return 1;
 }
@@ -1329,7 +1340,7 @@ static unsigned int status_get_base_maxsp(const struct map_session_data *sd, con
 	else if ((sd->job & JOBL_BABY) != 0)
 		val = val * 70 / 100;
 	if ((sd->job & MAPID_UPPERMASK) == MAPID_TAEKWON && sd->status.base_level >= 90 && pc->fame_rank(sd->status.char_id, RANKTYPE_TAEKWON) > 0)
-		val *= 3; //Triple max SP for top ranking Taekwons over level 90.
+		val *= 3; // Triple max SP for top ranking Taekwons over level 90.
 
 	val += val * st->int_ / 100;
 
@@ -1346,21 +1357,21 @@ static unsigned int status_get_base_maxhp(const struct map_session_data *sd, con
 	val = status->dbs->HP_table[val][sd->status.base_level];
 
 	if ((sd->job & MAPID_UPPERMASK) == MAPID_SUPER_NOVICE && sd->status.base_level >= 99)
-		val += 2000; //Supernovice lvl99 hp bonus.
+		val += 2000; // Supernovice lvl99 hp bonus.
 	if ((sd->job & MAPID_THIRDMASK) == MAPID_SUPER_NOVICE_E && sd->status.base_level >= 150)
-		val += 2000; //Extented Supernovice lvl150 hp bonus.
+		val += 2000; // Extented Supernovice lvl150 hp bonus.
 
 	if ((sd->job & JOBL_UPPER) != 0)
-		val += val * 25 / 100; //Trans classes get a 25% hp bonus
+		val += val * 25 / 100; // Trans classes get a 25% hp bonus
 	else if ((sd->job & JOBL_BABY) != 0)
-		val = val * 70 / 100; //Baby classes get a 30% hp penalty
+		val = val * 70 / 100; // Baby classes get a 30% hp penalty
 
 	if ((sd->job & MAPID_UPPERMASK) == MAPID_TAEKWON && sd->status.base_level >= 90 && pc->fame_rank(sd->status.char_id, RANKTYPE_TAEKWON))
-		val *= 3; //Triple max HP for top ranking Taekwons over level 90.
+		val *= 3; // Triple max HP for top ranking Taekwons over level 90.
 
 	val += val * st->vit / 100; // +1% per each point of VIT
 
-	return (unsigned int)cap_value(val,0,UINT_MAX);
+	return (unsigned int)cap_value(val, 0, UINT_MAX);
 }
 
 static struct s_maxhp_entry *status_get_maxhp_cap_entry(int class_idx, int level)
@@ -1370,10 +1381,7 @@ static struct s_maxhp_entry *status_get_maxhp_cap_entry(int class_idx, int level
 	int i;
 	ARR_FIND(0, params->maxhp_size, i, (level <= params->maxhp[i].max_level));
 	// Not finding a value would mean that the table did not get expanded (Which would be a bug)
-	Assert_retr(
-		(params->maxhp_size > 0 ? &(params->maxhp[params->maxhp_size - 1]) : &(status->dummy_unit_params.maxhp[0])),
-		i < params->maxhp_size
-	);
+	Assert_retr((params->maxhp_size > 0 ? &(params->maxhp[params->maxhp_size - 1]) : &(status->dummy_unit_params.maxhp[0])), i < params->maxhp_size);
 
 	return &(params->maxhp[i]);
 }
@@ -1434,28 +1442,27 @@ static void status_calc_pc_recover_hp(struct map_session_data *sd, struct status
 	nullpo_retv(sd);
 	nullpo_retv(bstatus);
 
-	if ((sd->job & MAPID_BASEMASK) == MAPID_NOVICE && (sd->job & JOBL_2) == 0
-		&& battle_config.restart_hp_rate < 50)
-		bstatus->hp = bstatus->max_hp>>1;
+	if ((sd->job & MAPID_BASEMASK) == MAPID_NOVICE && (sd->job & JOBL_2) == 0 && battle_config.restart_hp_rate < 50)
+		bstatus->hp = bstatus->max_hp >> 1;
 	else
 		bstatus->hp = APPLY_RATE(bstatus->max_hp, battle_config.restart_hp_rate);
 }
 
-//Calculates player data from scratch without counting SC adjustments.
-//Should be invoked whenever players raise stats, learn passive skills or change equipment.
+// Calculates player data from scratch without counting SC adjustments.
+// Should be invoked whenever players raise stats, learn passive skills or change equipment.
 static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt opt)
 {
-	static int calculating = 0; //Check for recursive call preemption. [Skotlex]
+	static int calculating = 0;  // Check for recursive call preemption. [Skotlex]
 	struct status_data *bstatus; // pointer to the player's base status
 	const struct status_change *sc;
-	struct s_skill b_skill[MAX_SKILL_DB]; // previous skill tree
+	struct s_skill b_skill[MAX_SKILL_DB];          // previous skill tree
 	int b_weight, b_max_weight, b_cart_weight_max, // previous weight
-		i, k, index, skill_lv,refinedef=0;
+	    i, k, index, skill_lv, refinedef = 0;
 	int64 i64;
 
 	nullpo_retr(-1, sd);
 	sc = &sd->sc;
-	if (++calculating > 10) //Too many recursive calls!
+	if (++calculating > 10) // Too many recursive calls!
 		return -1;
 
 	// remember player-specific values that are currently being shown to the client (for refresh purposes)
@@ -1466,37 +1473,37 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 
 	pc->calc_skilltree(sd); // SkillTree calculation
 
-	sd->max_weight = status->dbs->max_weight_base[pc->class2idx(sd->status.class)]+sd->status.str*300;
+	sd->max_weight = status->dbs->max_weight_base[pc->class2idx(sd->status.class)] + sd->status.str * 300;
 
-	if(opt&SCO_FIRST) {
-		//Load Hp/SP from char-received data.
+	if (opt & SCO_FIRST) {
+		// Load Hp/SP from char-received data.
 		sd->battle_status.hp = sd->status.hp;
 		sd->battle_status.sp = sd->status.sp;
 		sd->regen.skill = &sd->skill_regen;
 		sd->regen.sitting = &sd->sitting_regen;
-		sd->weight=0;
+		sd->weight = 0;
 		for (i = 0; i < sd->status.inventorySize; i++) {
-			if(sd->status.inventory[i].nameid==0 || sd->inventory_data[i] == NULL)
+			if (sd->status.inventory[i].nameid == 0 || sd->inventory_data[i] == NULL)
 				continue;
-			sd->weight += sd->inventory_data[i]->weight*sd->status.inventory[i].amount;
+			sd->weight += sd->inventory_data[i]->weight * sd->status.inventory[i].amount;
 		}
-		sd->cart_weight=0;
-		sd->cart_num=0;
-		for(i=0;i<MAX_CART;i++){
-			if(sd->status.cart[i].nameid==0)
+		sd->cart_weight = 0;
+		sd->cart_num = 0;
+		for (i = 0; i < MAX_CART; i++) {
+			if (sd->status.cart[i].nameid == 0)
 				continue;
-			sd->cart_weight+=itemdb_weight(sd->status.cart[i].nameid)*sd->status.cart[i].amount;
+			sd->cart_weight += itemdb_weight(sd->status.cart[i].nameid) * sd->status.cart[i].amount;
 			sd->cart_num++;
 		}
 	}
 
 	bstatus = &sd->base_status;
 	// these are not zeroed. [zzo]
-	sd->hprate=100;
-	sd->sprate=100;
-	sd->castrate=100;
-	sd->delayrate=100;
-	sd->dsprate=100;
+	sd->hprate = 100;
+	sd->sprate = 100;
+	sd->castrate = 100;
+	sd->delayrate = 100;
+	sd->dsprate = 100;
 	sd->hprecov_rate = 100;
 	sd->sprecov_rate = 100;
 	sd->matk_rate = 100;
@@ -1510,75 +1517,76 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 	memset(ZEROED_BLOCK_POS(&(sd->right_weapon)), 0, ZEROED_BLOCK_SIZE(&(sd->right_weapon)));
 	memset(ZEROED_BLOCK_POS(&(sd->left_weapon)), 0, ZEROED_BLOCK_SIZE(&(sd->left_weapon)));
 
-	if (sd->special_state.intravision && !sd->sc.data[SC_CLAIRVOYANCE]) //Clear intravision as long as nothing else is using it
+	if (sd->special_state.intravision && !sd->sc.data[SC_CLAIRVOYANCE]) // Clear intravision as long as nothing else is using it
 		clif->sc_end(&sd->bl, sd->bl.id, SELF, status->get_sc_icon(SC_CLAIRVOYANCE));
 
-	memset(&sd->special_state,0,sizeof(sd->special_state));
+	memset(&sd->special_state, 0, sizeof(sd->special_state));
 
 	if (!sd->state.permanent_speed) {
-		memset(&bstatus->max_hp, 0, sizeof(struct status_data)-(sizeof(bstatus->hp)+sizeof(bstatus->sp)));
+		memset(&bstatus->max_hp, 0, sizeof(struct status_data) - (sizeof(bstatus->hp) + sizeof(bstatus->sp)));
 		bstatus->speed = DEFAULT_WALK_SPEED;
 	} else {
 		int pSpeed = bstatus->speed;
-		memset(&bstatus->max_hp, 0, sizeof(struct status_data)-(sizeof(bstatus->hp)+sizeof(bstatus->sp)));
+		memset(&bstatus->max_hp, 0, sizeof(struct status_data) - (sizeof(bstatus->hp) + sizeof(bstatus->sp)));
 		bstatus->speed = pSpeed;
 	}
 
 	// FIXME: Most of these stuff should be calculated once, but how do I fix the memset above to do that? [Skotlex]
 	// Give them all modes except these (useful for clones)
-	bstatus->mode = MD_MASK&~(MD_BOSS|MD_PLANT|MD_DETECTOR|MD_ANGRY|MD_TARGETWEAK);
+	bstatus->mode = MD_MASK & ~(MD_BOSS | MD_PLANT | MD_DETECTOR | MD_ANGRY | MD_TARGETWEAK);
 
-	bstatus->size = ((sd->job & JOBL_BABY) != 0 || (sd->job & MAPID_BASEMASK) == MAPID_SUMMONER)?SZ_SMALL:SZ_MEDIUM;
+	bstatus->size = ((sd->job & JOBL_BABY) != 0 || (sd->job & MAPID_BASEMASK) == MAPID_SUMMONER) ? SZ_SMALL : SZ_MEDIUM;
 	if (battle_config.character_size && (pc_isridingpeco(sd) || pc_isridingdragon(sd))) { //[Lupus]
 		if ((sd->job & JOBL_BABY) != 0) {
-			if (battle_config.character_size&SZ_BIG)
+			if (battle_config.character_size & SZ_BIG)
 				bstatus->size++;
 		} else {
-			if(battle_config.character_size&SZ_MEDIUM)
+			if (battle_config.character_size & SZ_MEDIUM)
 				bstatus->size++;
 		}
 	}
 	bstatus->aspd_rate = 1000;
 	bstatus->ele_lv = 1;
-	bstatus->race = ((sd->job & MAPID_BASEMASK) == MAPID_SUMMONER)?RC_BRUTE:RC_PLAYER;
+	bstatus->race = ((sd->job & MAPID_BASEMASK) == MAPID_SUMMONER) ? RC_BRUTE : RC_PLAYER;
 
 	// Autobonus
-	pc->delautobonus(sd,sd->autobonus,ARRAYLENGTH(sd->autobonus),true);
-	pc->delautobonus(sd,sd->autobonus2,ARRAYLENGTH(sd->autobonus2),true);
-	pc->delautobonus(sd,sd->autobonus3,ARRAYLENGTH(sd->autobonus3),true);
+	pc->delautobonus(sd, sd->autobonus, ARRAYLENGTH(sd->autobonus), true);
+	pc->delautobonus(sd, sd->autobonus2, ARRAYLENGTH(sd->autobonus2), true);
+	pc->delautobonus(sd, sd->autobonus3, ARRAYLENGTH(sd->autobonus3), true);
 
 	// Parse equipment.
-	for(i=0;i<EQI_MAX;i++) {
-		status->current_equip_item_index = index = sd->equip_index[i]; //We pass INDEX to status->current_equip_item_index - for EQUIP_SCRIPT (new cards solution) [Lupus]
-		if(index < 0)
+	for (i = 0; i < EQI_MAX; i++) {
+		status->current_equip_item_index = index = sd->equip_index[i]; // We pass INDEX to status->current_equip_item_index - for EQUIP_SCRIPT (new cards solution) [Lupus]
+		if (index < 0)
 			continue;
-		if(i == EQI_AMMO) continue;/* ammo has special handler down there */
-		if(i == EQI_HAND_R && sd->equip_index[EQI_HAND_L] == index)
+		if (i == EQI_AMMO)
+			continue; /* ammo has special handler down there */
+		if (i == EQI_HAND_R && sd->equip_index[EQI_HAND_L] == index)
 			continue;
-		if(i == EQI_HEAD_MID && sd->equip_index[EQI_HEAD_LOW] == index)
+		if (i == EQI_HEAD_MID && sd->equip_index[EQI_HEAD_LOW] == index)
 			continue;
-		if(i == EQI_HEAD_TOP && (sd->equip_index[EQI_HEAD_MID] == index || sd->equip_index[EQI_HEAD_LOW] == index))
+		if (i == EQI_HEAD_TOP && (sd->equip_index[EQI_HEAD_MID] == index || sd->equip_index[EQI_HEAD_LOW] == index))
 			continue;
-		if(i == EQI_COSTUME_MID && sd->equip_index[EQI_COSTUME_LOW] == index)
+		if (i == EQI_COSTUME_MID && sd->equip_index[EQI_COSTUME_LOW] == index)
 			continue;
-		if(i == EQI_COSTUME_TOP && (sd->equip_index[EQI_COSTUME_MID] == index || sd->equip_index[EQI_COSTUME_LOW] == index))
+		if (i == EQI_COSTUME_TOP && (sd->equip_index[EQI_COSTUME_MID] == index || sd->equip_index[EQI_COSTUME_LOW] == index))
 			continue;
-		if(!sd->inventory_data[index])
+		if (!sd->inventory_data[index])
 			continue;
 
-		for(k = 0; k < map->list[sd->bl.m].zone->disabled_items_count; k++) {
-			if( map->list[sd->bl.m].zone->disabled_items[k] == sd->inventory_data[index]->nameid ) {
+		for (k = 0; k < map->list[sd->bl.m].zone->disabled_items_count; k++) {
+			if (map->list[sd->bl.m].zone->disabled_items[k] == sd->inventory_data[index]->nameid) {
 				break;
 			}
 		}
 
-		if( k < map->list[sd->bl.m].zone->disabled_items_count )
+		if (k < map->list[sd->bl.m].zone->disabled_items_count)
 			continue;
 
 		bstatus->def += sd->inventory_data[index]->def;
 
-		if (opt&SCO_FIRST && sd->inventory_data[index]->equip_script) {
-			//Execute equip-script on login
+		if (opt & SCO_FIRST && sd->inventory_data[index]->equip_script) {
+			// Execute equip-script on login
 			script->run_item_equip_script(sd, sd->inventory_data[index], 0);
 			if (!calculating)
 				return 1;
@@ -1588,13 +1596,13 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 		if (sd->status.inventory[index].refine > MAX_REFINE)
 			sd->status.inventory[index].refine = MAX_REFINE;
 
-		if(sd->inventory_data[index]->type == IT_WEAPON) {
-			int r = sd->status.inventory[index].refine,wlv = sd->inventory_data[index]->wlv;
+		if (sd->inventory_data[index]->type == IT_WEAPON) {
+			int r = sd->status.inventory[index].refine, wlv = sd->inventory_data[index]->wlv;
 			struct weapon_data *wd;
 			struct weapon_atk *wa;
 			if (wlv >= REFINE_TYPE_MAX)
 				wlv = REFINE_TYPE_MAX - 1;
-			if(i == EQI_HAND_L && sd->status.inventory[index].equip == EQP_HAND_L) {
+			if (i == EQI_HAND_L && sd->status.inventory[index].equip == EQP_HAND_L) {
 				wd = &sd->left_weapon; // Left-hand weapon
 				wa = &bstatus->lhw;
 			} else {
@@ -1602,7 +1610,7 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 				wa = &bstatus->rhw;
 			}
 			wa->atk += sd->inventory_data[index]->atk;
-			if ( !battle_config.shadow_refine_atk && itemdb_is_shadowequip(sd->inventory_data[index]->equip) )
+			if (!battle_config.shadow_refine_atk && itemdb_is_shadowequip(sd->inventory_data[index]->equip))
 				r = 0;
 
 			if (r)
@@ -1611,161 +1619,159 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 #ifdef RENEWAL
 			wa->matk += sd->inventory_data[index]->matk;
 			wa->wlv = wlv;
-			if( r && sd->weapontype1 != W_BOW ) // renewal magic attack refine bonus
+			if (r && sd->weapontype1 != W_BOW) // renewal magic attack refine bonus
 				wa->matk += refine->get_bonus(wlv, r) / 100;
 #endif
 
-			//Overrefined bonus.
+			// Overrefined bonus.
 			if (r)
 				wd->overrefine = refine->get_randombonus_max(wlv, r) / 100;
 
 			wa->range += sd->inventory_data[index]->range;
-			if(sd->inventory_data[index]->script) {
+			if (sd->inventory_data[index]->script) {
 				if (wd == &sd->left_weapon) {
 					sd->state.lr_flag = 1;
 					script->run_use_script(sd, sd->inventory_data[index], 0);
 					sd->state.lr_flag = 0;
 				} else
 					script->run_use_script(sd, sd->inventory_data[index], 0);
-				if (!calculating) //Abort, script->run retriggered this. [Skotlex]
+				if (!calculating) // Abort, script->run retriggered this. [Skotlex]
 					return 1;
 			}
 
-			if (sd->status.inventory[index].card[0]==CARD0_FORGE) {
+			if (sd->status.inventory[index].card[0] == CARD0_FORGE) {
 				// Forged weapon
-				wd->star += (sd->status.inventory[index].card[1]>>8);
+				wd->star += (sd->status.inventory[index].card[1] >> 8);
 				if (wd->star >= 15)
 					wd->star = 40; // 3 Star Crumbs now give +40 dmg
-				if (pc->fame_rank(MakeDWord(sd->status.inventory[index].card[2],sd->status.inventory[index].card[3]), RANKTYPE_BLACKSMITH) > 0)
+				if (pc->fame_rank(MakeDWord(sd->status.inventory[index].card[2], sd->status.inventory[index].card[3]), RANKTYPE_BLACKSMITH) > 0)
 					wd->star += 10;
 
-				if (!wa->ele) //Do not overwrite element from previous bonuses.
-					wa->ele = (sd->status.inventory[index].card[1]&0x0f);
+				if (!wa->ele) // Do not overwrite element from previous bonuses.
+					wa->ele = (sd->status.inventory[index].card[1] & 0x0f);
 			}
-		}
-		else if(sd->inventory_data[index]->type == IT_ARMOR) {
+		} else if (sd->inventory_data[index]->type == IT_ARMOR) {
 			int r = sd->status.inventory[index].refine;
 
-			if ( (!battle_config.costume_refine_def && itemdb_is_costumeequip(sd->inventory_data[index]->equip)) ||
-				 (!battle_config.shadow_refine_def && itemdb_is_shadowequip(sd->inventory_data[index]->equip))
-				)
+			if ((!battle_config.costume_refine_def && itemdb_is_costumeequip(sd->inventory_data[index]->equip)) || (!battle_config.shadow_refine_def && itemdb_is_shadowequip(sd->inventory_data[index]->equip)))
 				r = 0;
 
 			if (r)
 				refinedef += refine->get_bonus(REFINE_TYPE_ARMOR, r);
 
-			if(sd->inventory_data[index]->script) {
-				if( i == EQI_HAND_L ) //Shield
+			if (sd->inventory_data[index]->script) {
+				if (i == EQI_HAND_L) // Shield
 					sd->state.lr_flag = 3;
 				script->run_use_script(sd, sd->inventory_data[index], 0);
-				if( i == EQI_HAND_L ) //Shield
+				if (i == EQI_HAND_L) // Shield
 					sd->state.lr_flag = 0;
-				if (!calculating) //Abort, script->run retriggered this. [Skotlex]
+				if (!calculating) // Abort, script->run retriggered this. [Skotlex]
 					return 1;
 			}
 		}
 	}
 
-	if(sd->equip_index[EQI_AMMO] >= 0){
+	if (sd->equip_index[EQI_AMMO] >= 0) {
 		index = sd->equip_index[EQI_AMMO];
 		if (sd->inventory_data[index]) {
 			// Arrows
 			sd->bonus.arrow_atk += sd->inventory_data[index]->atk;
 			sd->state.lr_flag = 2;
-			if( !itemdb_is_GNthrowable(sd->inventory_data[index]->nameid) ) //don't run scripts on throwable items
+			if (!itemdb_is_GNthrowable(sd->inventory_data[index]->nameid)) // don't run scripts on throwable items
 				script->run_use_script(sd, sd->inventory_data[index], 0);
 			sd->state.lr_flag = 0;
-			if (!calculating) //Abort, script->run retriggered status_calc_pc. [Skotlex]
+			if (!calculating) // Abort, script->run retriggered status_calc_pc. [Skotlex]
 				return 1;
 		}
 	}
 
 	/* we've got combos to process */
-	for( i = 0; i < sd->combo_count; i++ ) {
+	for (i = 0; i < sd->combo_count; i++) {
 		struct item_combo *combo = itemdb->id2combo(sd->combos[i].id);
 		unsigned char j;
 
 		/**
 		 * ensure combo usage is allowed at this location
 		 **/
-		for(j = 0; j < combo->count; j++) {
-			for(k = 0; k < map->list[sd->bl.m].zone->disabled_items_count; k++) {
-				if( map->list[sd->bl.m].zone->disabled_items[k] == combo->nameid[j] ) {
+		for (j = 0; j < combo->count; j++) {
+			for (k = 0; k < map->list[sd->bl.m].zone->disabled_items_count; k++) {
+				if (map->list[sd->bl.m].zone->disabled_items[k] == combo->nameid[j]) {
 					break;
 				}
 			}
-			if( k != map->list[sd->bl.m].zone->disabled_items_count )
+			if (k != map->list[sd->bl.m].zone->disabled_items_count)
 				break;
 		}
 
-		if( j != combo->count )
+		if (j != combo->count)
 			continue;
 
-		script->run(sd->combos[i].bonus,0,sd->bl.id,0);
-		if (!calculating) //Abort, script->run retriggered this.
+		script->run(sd->combos[i].bonus, 0, sd->bl.id, 0);
+		if (!calculating) // Abort, script->run retriggered this.
 			return 1;
 	}
 
-	//Store equipment script bonuses
-	memcpy(sd->param_equip,sd->param_bonus,sizeof(sd->param_equip));
+	// Store equipment script bonuses
+	memcpy(sd->param_equip, sd->param_bonus, sizeof(sd->param_equip));
 	memset(sd->param_bonus, 0, sizeof(sd->param_bonus));
 
-	bstatus->def += (refinedef+50)/100;
+	bstatus->def += (refinedef + 50) / 100;
 
-	//Parse Cards
-	for(i=0;i<EQI_MAX;i++) {
-		status->current_equip_item_index = index = sd->equip_index[i]; //We pass INDEX to status->current_equip_item_index - for EQUIP_SCRIPT (new cards solution) [Lupus]
-		if(index < 0)
+	// Parse Cards
+	for (i = 0; i < EQI_MAX; i++) {
+		status->current_equip_item_index = index = sd->equip_index[i]; // We pass INDEX to status->current_equip_item_index - for EQUIP_SCRIPT (new cards solution) [Lupus]
+		if (index < 0)
 			continue;
-		if(i == EQI_AMMO) continue;/* ammo doesn't have cards */
-		if(i == EQI_HAND_R && sd->equip_index[EQI_HAND_L] == index)
+		if (i == EQI_AMMO)
+			continue; /* ammo doesn't have cards */
+		if (i == EQI_HAND_R && sd->equip_index[EQI_HAND_L] == index)
 			continue;
-		if(i == EQI_HEAD_MID && sd->equip_index[EQI_HEAD_LOW] == index)
+		if (i == EQI_HEAD_MID && sd->equip_index[EQI_HEAD_LOW] == index)
 			continue;
-		if(i == EQI_HEAD_TOP && (sd->equip_index[EQI_HEAD_MID] == index || sd->equip_index[EQI_HEAD_LOW] == index))
+		if (i == EQI_HEAD_TOP && (sd->equip_index[EQI_HEAD_MID] == index || sd->equip_index[EQI_HEAD_LOW] == index))
 			continue;
 
 		if (sd->inventory_data[index]) {
 			int j;
 			struct item_data *data;
 
-			//Card script execution.
+			// Card script execution.
 			if (itemdb_isspecial(sd->status.inventory[index].card[0]))
 				continue;
 			for (j = 0; j < MAX_SLOTS; j++) {
 				// Uses MAX_SLOTS to support Soul Bound system [Inkfish]
 				int c = status->current_equip_card_id = sd->status.inventory[index].card[j];
-				if(!c)
+				if (!c)
 					continue;
 				data = itemdb->exists(c);
-				if(!data)
+				if (!data)
 					continue;
 
-				for(k = 0; k < map->list[sd->bl.m].zone->disabled_items_count; k++) {
-					if( map->list[sd->bl.m].zone->disabled_items[k] == data->nameid ) {
+				for (k = 0; k < map->list[sd->bl.m].zone->disabled_items_count; k++) {
+					if (map->list[sd->bl.m].zone->disabled_items[k] == data->nameid) {
 						break;
 					}
 				}
 
-				if( k < map->list[sd->bl.m].zone->disabled_items_count )
+				if (k < map->list[sd->bl.m].zone->disabled_items_count)
 					continue;
 
-				if(opt&SCO_FIRST && data->equip_script) {//Execute equip-script on login
+				if (opt & SCO_FIRST && data->equip_script) { // Execute equip-script on login
 					script->run_item_equip_script(sd, data, 0);
 					if (!calculating)
 						return 1;
 				}
 
-				if(!data->script)
+				if (!data->script)
 					continue;
 
-				if(i == EQI_HAND_L && sd->status.inventory[index].equip == EQP_HAND_L) { //Left hand status.
+				if (i == EQI_HAND_L && sd->status.inventory[index].equip == EQP_HAND_L) { // Left hand status.
 					sd->state.lr_flag = 1;
 					script->run_use_script(sd, data, 0);
 					sd->state.lr_flag = 0;
 				} else
 					script->run_use_script(sd, data, 0);
-				if (!calculating) //Abort, script->run his function. [Skotlex]
+				if (!calculating) // Abort, script->run his function. [Skotlex]
 					return 1;
 			}
 		}
@@ -1795,7 +1801,7 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 				status->current_equip_option_index = j;
 				script->run(ito->script, 0, sd->bl.id, 0);
 
-				if (calculating == 0) //Abort, script->run his function. [Skotlex]
+				if (calculating == 0) // Abort, script->run his function. [Skotlex]
 					return 1;
 			}
 		}
@@ -1818,16 +1824,17 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 		if (pd->petDB != NULL && pd->petDB->equip_script != NULL)
 			script->run(pd->petDB->equip_script, 0, sd->bl.id, 0);
 
-		if (pd->pet.intimate > PET_INTIMACY_NONE && pd->state.skillbonus == 1 && pd->bonus != NULL
-		    && (battle_config.pet_equip_required == 0 || pd->pet.equip > 0)) {
+		if (pd->pet.intimate > PET_INTIMACY_NONE && pd->state.skillbonus == 1 && pd->bonus != NULL && (battle_config.pet_equip_required == 0 || pd->pet.equip > 0)) {
 			pc->bonus(sd, pd->bonus->type, pd->bonus->val);
 		}
 	}
 
-	//param_bonus now holds card bonuses.
-	if(bstatus->rhw.range < 1) bstatus->rhw.range = 1;
-	if(bstatus->lhw.range < 1) bstatus->lhw.range = 1;
-	if(bstatus->rhw.range < bstatus->lhw.range)
+	// param_bonus now holds card bonuses.
+	if (bstatus->rhw.range < 1)
+		bstatus->rhw.range = 1;
+	if (bstatus->lhw.range < 1)
+		bstatus->lhw.range = 1;
+	if (bstatus->rhw.range < bstatus->lhw.range)
 		bstatus->rhw.range = bstatus->lhw.range;
 
 	sd->bonus.double_rate += sd->bonus.double_add_rate;
@@ -1843,8 +1850,8 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 	sd->left_weapon.atkmods[2] = status->dbs->atkmods[2][sd->weapontype2];
 
 	if ((pc_isridingpeco(sd) || pc_isridingdragon(sd)) && (sd->weapontype == W_1HSPEAR || sd->weapontype == W_2HSPEAR)) {
-		//When Riding with spear, damage modifier to mid-class becomes
-		//same as versus large size.
+		// When Riding with spear, damage modifier to mid-class becomes
+		// same as versus large size.
 		sd->right_weapon.atkmods[1] = sd->right_weapon.atkmods[2];
 		sd->left_weapon.atkmods[1] = sd->left_weapon.atkmods[2];
 	}
@@ -1854,15 +1861,27 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 	// Job bonuses
 	index = pc->class2idx(sd->status.class);
 	for (i = 0; i < sd->status.job_level && i < MAX_LEVEL; i++) {
-		if(!status->dbs->job_bonus[index][i])
+		if (!status->dbs->job_bonus[index][i])
 			continue;
-		switch(status->dbs->job_bonus[index][i]) {
-			case 1: bstatus->str++; break;
-			case 2: bstatus->agi++; break;
-			case 3: bstatus->vit++; break;
-			case 4: bstatus->int_++; break;
-			case 5: bstatus->dex++; break;
-			case 6: bstatus->luk++; break;
+		switch (status->dbs->job_bonus[index][i]) {
+			case 1:
+				bstatus->str++;
+				break;
+			case 2:
+				bstatus->agi++;
+				break;
+			case 3:
+				bstatus->vit++;
+				break;
+			case 4:
+				bstatus->int_++;
+				break;
+			case 5:
+				bstatus->dex++;
+				break;
+			case 6:
+				bstatus->luk++;
+				break;
 		}
 	}
 
@@ -1871,36 +1890,36 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 		bstatus->str += 10;
 		bstatus->agi += 10;
 		bstatus->vit += 10;
-		bstatus->int_+= 10;
+		bstatus->int_ += 10;
 		bstatus->dex += 10;
 		bstatus->luk += 10;
 	}
 
 	// Absolute modifiers from passive skills
-	if(pc->checkskill(sd,BS_HILTBINDING)>0)
+	if (pc->checkskill(sd, BS_HILTBINDING) > 0)
 		bstatus->str++;
-	if((skill_lv=pc->checkskill(sd,SA_DRAGONOLOGY))>0)
-		bstatus->int_ += (skill_lv+1)/2; // +1 INT / 2 lv
-	if((skill_lv=pc->checkskill(sd,AC_OWL))>0)
+	if ((skill_lv = pc->checkskill(sd, SA_DRAGONOLOGY)) > 0)
+		bstatus->int_ += (skill_lv + 1) / 2; // +1 INT / 2 lv
+	if ((skill_lv = pc->checkskill(sd, AC_OWL)) > 0)
 		bstatus->dex += skill_lv;
-	if((skill_lv = pc->checkskill(sd,RA_RESEARCHTRAP))>0)
+	if ((skill_lv = pc->checkskill(sd, RA_RESEARCHTRAP)) > 0)
 		bstatus->int_ += skill_lv;
-	if ((pc->checkskill(sd,SU_POWEROFLAND)) > 0)
+	if ((pc->checkskill(sd, SU_POWEROFLAND)) > 0)
 		bstatus->int_ += 20;
 
 	// Bonuses from cards and equipment as well as base stat, remember to avoid overflows.
 	i = bstatus->str + sd->status.str + sd->param_bonus[0] + sd->param_equip[0];
-	bstatus->str = cap_value(i,0,USHRT_MAX);
+	bstatus->str = cap_value(i, 0, USHRT_MAX);
 	i = bstatus->agi + sd->status.agi + sd->param_bonus[1] + sd->param_equip[1];
-	bstatus->agi = cap_value(i,0,USHRT_MAX);
+	bstatus->agi = cap_value(i, 0, USHRT_MAX);
 	i = bstatus->vit + sd->status.vit + sd->param_bonus[2] + sd->param_equip[2];
-	bstatus->vit = cap_value(i,0,USHRT_MAX);
-	i = bstatus->int_+ sd->status.int_+ sd->param_bonus[3] + sd->param_equip[3];
-	bstatus->int_ = cap_value(i,0,USHRT_MAX);
+	bstatus->vit = cap_value(i, 0, USHRT_MAX);
+	i = bstatus->int_ + sd->status.int_ + sd->param_bonus[3] + sd->param_equip[3];
+	bstatus->int_ = cap_value(i, 0, USHRT_MAX);
 	i = bstatus->dex + sd->status.dex + sd->param_bonus[4] + sd->param_equip[4];
-	bstatus->dex = cap_value(i,0,USHRT_MAX);
+	bstatus->dex = cap_value(i, 0, USHRT_MAX);
 	i = bstatus->luk + sd->status.luk + sd->param_bonus[5] + sd->param_equip[5];
-	bstatus->luk = cap_value(i,0,USHRT_MAX);
+	bstatus->luk = cap_value(i, 0, USHRT_MAX);
 
 	// ------ BASE ATTACK CALCULATION ------
 
@@ -1910,133 +1929,133 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 		bstatus->batk += sd->weapon_atk[sd->weapontype];
 	// Absolute modifiers from passive skills
 #ifndef RENEWAL
-	if((skill_lv=pc->checkskill(sd,BS_HILTBINDING))>0) // it doesn't work in RE.
+	if ((skill_lv = pc->checkskill(sd, BS_HILTBINDING)) > 0) // it doesn't work in RE.
 		bstatus->batk += 4;
 #endif
 
 	// ----- HP MAX CALCULATION -----
 
 	// Basic MaxHP value
-	//We hold the standard Max HP here to make it faster to recalculate on vit changes.
-	sd->status.max_hp = status->get_base_maxhp(sd,bstatus);
-	//This is done to handle underflows from negative Max HP bonuses
+	// We hold the standard Max HP here to make it faster to recalculate on vit changes.
+	sd->status.max_hp = status->get_base_maxhp(sd, bstatus);
+	// This is done to handle underflows from negative Max HP bonuses
 	i64 = sd->status.max_hp + (int)bstatus->max_hp;
 	bstatus->max_hp = (unsigned int)cap_value(i64, 0, INT_MAX);
 
 	// Absolute modifiers from passive skills
-	if ((skill_lv=pc->checkskill(sd,CR_TRUST)) > 0)
-		bstatus->max_hp += skill_lv*200;
+	if ((skill_lv = pc->checkskill(sd, CR_TRUST)) > 0)
+		bstatus->max_hp += skill_lv * 200;
 
-	if ((pc->checkskill(sd,SU_SPRITEMABLE)) > 0)
+	if ((pc->checkskill(sd, SU_SPRITEMABLE)) > 0)
 		bstatus->max_hp += 1000;
 
 	// Apply relative modifiers from equipment
-	if(sd->hprate < 0)
+	if (sd->hprate < 0)
 		sd->hprate = 0;
-	if(sd->hprate!=100)
+	if (sd->hprate != 100)
 		bstatus->max_hp = APPLY_RATE(bstatus->max_hp, sd->hprate);
-	if(battle_config.hp_rate != 100)
+	if (battle_config.hp_rate != 100)
 		bstatus->max_hp = APPLY_RATE(bstatus->max_hp, battle_config.hp_rate);
 
 	int maxhp_cap = pc_maxhp_cap(sd);
-	if(bstatus->max_hp > (unsigned int) maxhp_cap)
+	if (bstatus->max_hp > (unsigned int)maxhp_cap)
 		bstatus->max_hp = maxhp_cap;
-	else if(!bstatus->max_hp)
+	else if (!bstatus->max_hp)
 		bstatus->max_hp = 1;
 
 	// ----- SP MAX CALCULATION -----
 
 	// Basic MaxSP value
-	sd->status.max_sp = status->get_base_maxsp(sd,bstatus);
-	//This is done to handle underflows from negative Max SP bonuses
+	sd->status.max_sp = status->get_base_maxsp(sd, bstatus);
+	// This is done to handle underflows from negative Max SP bonuses
 	i64 = sd->status.max_sp + (int)bstatus->max_sp;
 	bstatus->max_sp = (unsigned int)cap_value(i64, 0, INT_MAX);
 
 	// Absolute modifiers from passive skills
-	if((skill_lv=pc->checkskill(sd,SL_KAINA))>0)
-		bstatus->max_sp += 30*skill_lv;
-	if((skill_lv=pc->checkskill(sd,HP_MEDITATIO))>0)
-		bstatus->max_sp += (int64)bstatus->max_sp * skill_lv/100;
-	if((skill_lv=pc->checkskill(sd,HW_SOULDRAIN))>0)
-		bstatus->max_sp += (int64)bstatus->max_sp * 2*skill_lv/100;
-	if( (skill_lv = pc->checkskill(sd,RA_RESEARCHTRAP)) > 0 )
-		bstatus->max_sp += 200 + 20 * skill_lv;
-	if( (skill_lv = pc->checkskill(sd,WM_LESSON)) > 0 )
+	if ((skill_lv = pc->checkskill(sd, SL_KAINA)) > 0)
 		bstatus->max_sp += 30 * skill_lv;
-	if ((pc->checkskill(sd,SU_SPRITEMABLE)) > 0)
+	if ((skill_lv = pc->checkskill(sd, HP_MEDITATIO)) > 0)
+		bstatus->max_sp += (int64)bstatus->max_sp * skill_lv / 100;
+	if ((skill_lv = pc->checkskill(sd, HW_SOULDRAIN)) > 0)
+		bstatus->max_sp += (int64)bstatus->max_sp * 2 * skill_lv / 100;
+	if ((skill_lv = pc->checkskill(sd, RA_RESEARCHTRAP)) > 0)
+		bstatus->max_sp += 200 + 20 * skill_lv;
+	if ((skill_lv = pc->checkskill(sd, WM_LESSON)) > 0)
+		bstatus->max_sp += 30 * skill_lv;
+	if ((pc->checkskill(sd, SU_SPRITEMABLE)) > 0)
 		bstatus->max_sp += 100;
 
 	// Apply relative modifiers from equipment
-	if(sd->sprate < 0)
+	if (sd->sprate < 0)
 		sd->sprate = 0;
-	if(sd->sprate!=100)
+	if (sd->sprate != 100)
 		bstatus->max_sp = APPLY_RATE(bstatus->max_sp, sd->sprate);
-	if(battle_config.sp_rate != 100)
+	if (battle_config.sp_rate != 100)
 		bstatus->max_sp = APPLY_RATE(bstatus->max_sp, battle_config.sp_rate);
 
-	if(bstatus->max_sp > (unsigned int)battle_config.max_sp)
+	if (bstatus->max_sp > (unsigned int)battle_config.max_sp)
 		bstatus->max_sp = battle_config.max_sp;
-	else if(!bstatus->max_sp)
+	else if (!bstatus->max_sp)
 		bstatus->max_sp = 1;
 
 	// ----- RESPAWN HP/SP -----
 	//
-	//Calc respawn hp and store it on base_status
+	// Calc respawn hp and store it on base_status
 	bstatus->hp = status->get_restart_hp(sd, bstatus);
 	bstatus->sp = status->get_restart_sp(sd, bstatus);
 
 	// ----- MISC CALCULATION -----
 	status->calc_misc(&sd->bl, bstatus, sd->status.base_level);
 
-	//Equipment modifiers for misc settings
-	if(sd->matk_rate < 0)
+	// Equipment modifiers for misc settings
+	if (sd->matk_rate < 0)
 		sd->matk_rate = 0;
 
-	if(sd->matk_rate != 100){
-		bstatus->matk_max = bstatus->matk_max * sd->matk_rate/100;
-		bstatus->matk_min = bstatus->matk_min * sd->matk_rate/100;
+	if (sd->matk_rate != 100) {
+		bstatus->matk_max = bstatus->matk_max * sd->matk_rate / 100;
+		bstatus->matk_min = bstatus->matk_min * sd->matk_rate / 100;
 	}
 
-	if(sd->hit_rate < 0)
+	if (sd->hit_rate < 0)
 		sd->hit_rate = 0;
-	if(sd->hit_rate != 100)
-		bstatus->hit = bstatus->hit * sd->hit_rate/100;
+	if (sd->hit_rate != 100)
+		bstatus->hit = bstatus->hit * sd->hit_rate / 100;
 
-	if(sd->flee_rate < 0)
+	if (sd->flee_rate < 0)
 		sd->flee_rate = 0;
-	if(sd->flee_rate != 100)
-		bstatus->flee = bstatus->flee * sd->flee_rate/100;
+	if (sd->flee_rate != 100)
+		bstatus->flee = bstatus->flee * sd->flee_rate / 100;
 
-	if(sd->def2_rate < 0)
+	if (sd->def2_rate < 0)
 		sd->def2_rate = 0;
-	if(sd->def2_rate != 100)
-		bstatus->def2 = bstatus->def2 * sd->def2_rate/100;
+	if (sd->def2_rate != 100)
+		bstatus->def2 = bstatus->def2 * sd->def2_rate / 100;
 
-	if(sd->mdef2_rate < 0)
+	if (sd->mdef2_rate < 0)
 		sd->mdef2_rate = 0;
-	if(sd->mdef2_rate != 100)
-		bstatus->mdef2 = bstatus->mdef2 * sd->mdef2_rate/100;
+	if (sd->mdef2_rate != 100)
+		bstatus->mdef2 = bstatus->mdef2 * sd->mdef2_rate / 100;
 
-	if(sd->critical_rate < 0)
+	if (sd->critical_rate < 0)
 		sd->critical_rate = 0;
-	if(sd->critical_rate != 100)
-		bstatus->cri = bstatus->cri * sd->critical_rate/100;
+	if (sd->critical_rate != 100)
+		bstatus->cri = bstatus->cri * sd->critical_rate / 100;
 	if (pc->checkskill(sd, SU_POWEROFLIFE) > 0)
 		bstatus->cri += 20;
 
-	if(sd->flee2_rate < 0)
+	if (sd->flee2_rate < 0)
 		sd->flee2_rate = 0;
-	if(sd->flee2_rate != 100)
-		bstatus->flee2 = bstatus->flee2 * sd->flee2_rate/100;
+	if (sd->flee2_rate != 100)
+		bstatus->flee2 = bstatus->flee2 * sd->flee2_rate / 100;
 
 	// ----- HIT CALCULATION -----
 
 	// Absolute modifiers from passive skills
 #ifndef RENEWAL
-	if((skill_lv=pc->checkskill(sd,BS_WEAPONRESEARCH))>0) // is this correct in pre? there is already hitrate bonus in battle.c
-		bstatus->hit += skill_lv*2;
+	if ((skill_lv = pc->checkskill(sd, BS_WEAPONRESEARCH)) > 0) // is this correct in pre? there is already hitrate bonus in battle.c
+		bstatus->hit += skill_lv * 2;
 #endif
-	if((skill_lv=pc->checkskill(sd,AC_VULTURE))>0) {
+	if ((skill_lv = pc->checkskill(sd, AC_VULTURE)) > 0) {
 #ifndef RENEWAL
 		bstatus->hit += skill_lv;
 #endif
@@ -2044,45 +2063,45 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 			bstatus->rhw.range += skill_lv;
 	}
 	if (sd->weapontype >= W_REVOLVER && sd->weapontype <= W_GRENADE) {
-		if((skill_lv=pc->checkskill(sd,GS_SINGLEACTION))>0)
-			bstatus->hit += 2*skill_lv;
-		if((skill_lv=pc->checkskill(sd,GS_SNAKEEYE))>0) {
+		if ((skill_lv = pc->checkskill(sd, GS_SINGLEACTION)) > 0)
+			bstatus->hit += 2 * skill_lv;
+		if ((skill_lv = pc->checkskill(sd, GS_SNAKEEYE)) > 0) {
 			bstatus->hit += skill_lv;
 			bstatus->rhw.range += skill_lv;
 		}
 	}
-	if ((sd->weapontype == W_1HAXE || sd->weapontype == W_2HAXE) && (skill_lv = pc->checkskill(sd,NC_TRAININGAXE)) > 0)
-		bstatus->hit += 3*skill_lv;
-	if ((sd->weapontype == W_MACE || sd->weapontype == W_2HMACE) && (skill_lv = pc->checkskill(sd,NC_TRAININGAXE)) > 0)
-		bstatus->hit += 2*skill_lv;
+	if ((sd->weapontype == W_1HAXE || sd->weapontype == W_2HAXE) && (skill_lv = pc->checkskill(sd, NC_TRAININGAXE)) > 0)
+		bstatus->hit += 3 * skill_lv;
+	if ((sd->weapontype == W_MACE || sd->weapontype == W_2HMACE) && (skill_lv = pc->checkskill(sd, NC_TRAININGAXE)) > 0)
+		bstatus->hit += 2 * skill_lv;
 	if (pc->checkskill(sd, SU_POWEROFLIFE) > 0)
 		bstatus->hit += 20;
 
 	// ----- FLEE CALCULATION -----
 
 	// Absolute modifiers from passive skills
-	if((skill_lv=pc->checkskill(sd,TF_MISS))>0)
-		bstatus->flee += skill_lv*((sd->job & JOBL_2) != 0 && (sd->job & MAPID_BASEMASK) == MAPID_THIEF? 4 : 3);
-	if((skill_lv=pc->checkskill(sd,MO_DODGE))>0)
-		bstatus->flee += (skill_lv*3)>>1;
+	if ((skill_lv = pc->checkskill(sd, TF_MISS)) > 0)
+		bstatus->flee += skill_lv * ((sd->job & JOBL_2) != 0 && (sd->job & MAPID_BASEMASK) == MAPID_THIEF ? 4 : 3);
+	if ((skill_lv = pc->checkskill(sd, MO_DODGE)) > 0)
+		bstatus->flee += (skill_lv * 3) >> 1;
 	if (pc->checkskill(sd, SU_POWEROFLIFE) > 0)
 		bstatus->flee += 20;
 	// ----- EQUIPMENT-DEF CALCULATION -----
 
 	// Apply relative modifiers from equipment
-	if(sd->def_rate < 0)
+	if (sd->def_rate < 0)
 		sd->def_rate = 0;
-	if(sd->def_rate != 100) {
-		i =  bstatus->def * sd->def_rate/100;
+	if (sd->def_rate != 100) {
+		i = bstatus->def * sd->def_rate / 100;
 		bstatus->def = cap_value(i, DEFTYPE_MIN, DEFTYPE_MAX);
 	}
 
-	if( pc_ismadogear(sd) && (skill_lv = pc->checkskill(sd,NC_MAINFRAME)) > 0 )
+	if (pc_ismadogear(sd) && (skill_lv = pc->checkskill(sd, NC_MAINFRAME)) > 0)
 		bstatus->def += 20 + 20 * skill_lv;
 
 #ifndef RENEWAL
 	if (!battle_config.weapon_defense_type && bstatus->def > battle_config.max_def) {
-		bstatus->def2 += battle_config.over_def_bonus*(bstatus->def -battle_config.max_def);
+		bstatus->def2 += battle_config.over_def_bonus * (bstatus->def - battle_config.max_def);
 		bstatus->def = (unsigned char)battle_config.max_def;
 	}
 #endif
@@ -2090,16 +2109,16 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 	// ----- EQUIPMENT-MDEF CALCULATION -----
 
 	// Apply relative modifiers from equipment
-	if(sd->mdef_rate < 0)
+	if (sd->mdef_rate < 0)
 		sd->mdef_rate = 0;
-	if(sd->mdef_rate != 100) {
-		i =  bstatus->mdef * sd->mdef_rate/100;
+	if (sd->mdef_rate != 100) {
+		i = bstatus->mdef * sd->mdef_rate / 100;
 		bstatus->mdef = cap_value(i, DEFTYPE_MIN, DEFTYPE_MAX);
 	}
 
 #ifndef RENEWAL
 	if (!battle_config.magic_defense_type && bstatus->mdef > battle_config.max_def) {
-		bstatus->mdef2 += battle_config.over_def_bonus*(bstatus->mdef -battle_config.max_def);
+		bstatus->mdef2 += battle_config.over_def_bonus * (bstatus->mdef - battle_config.max_def);
 		bstatus->mdef = (signed char)battle_config.max_def;
 	}
 #endif
@@ -2108,79 +2127,79 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 	// Unlike other stats, ASPD rate modifiers from skills/SCs/items/etc are first all added together, then the final modifier is applied
 
 	// Basic ASPD value
-	i = status->base_amotion_pc(sd,bstatus);
+	i = status->base_amotion_pc(sd, bstatus);
 	bstatus->amotion = cap_value(i, pc_max_aspd(sd), 2000);
 
 	// Relative modifiers from passive skills
 #ifndef RENEWAL_ASPD
-	if (sd->weapontype == W_BOOK && (skill_lv=pc->checkskill(sd,SA_ADVANCEDBOOK)) > 0)
-		bstatus->aspd_rate -= 5*skill_lv;
-	if((skill_lv = pc->checkskill(sd,SG_DEVIL)) > 0 && !pc->nextjobexp(sd))
-		bstatus->aspd_rate -= 30*skill_lv;
-	if (sd->weapontype >= W_REVOLVER && sd->weapontype <= W_GRENADE && (skill_lv=pc->checkskill(sd,GS_SINGLEACTION)) > 0)
-		bstatus->aspd_rate -= ((skill_lv+1)/2) * 10;
+	if (sd->weapontype == W_BOOK && (skill_lv = pc->checkskill(sd, SA_ADVANCEDBOOK)) > 0)
+		bstatus->aspd_rate -= 5 * skill_lv;
+	if ((skill_lv = pc->checkskill(sd, SG_DEVIL)) > 0 && !pc->nextjobexp(sd))
+		bstatus->aspd_rate -= 30 * skill_lv;
+	if (sd->weapontype >= W_REVOLVER && sd->weapontype <= W_GRENADE && (skill_lv = pc->checkskill(sd, GS_SINGLEACTION)) > 0)
+		bstatus->aspd_rate -= ((skill_lv + 1) / 2) * 10;
 	if (pc_isridingpeco(sd))
-		bstatus->aspd_rate += 500-100*pc->checkskill(sd,KN_CAVALIERMASTERY);
+		bstatus->aspd_rate += 500 - 100 * pc->checkskill(sd, KN_CAVALIERMASTERY);
 	else if (pc_isridingdragon(sd))
-		bstatus->aspd_rate += 250-50*pc->checkskill(sd,RK_DRAGONTRAINING);
+		bstatus->aspd_rate += 250 - 50 * pc->checkskill(sd, RK_DRAGONTRAINING);
 #else // needs more info
-	if ( (skill_lv = pc->checkskill(sd, SG_DEVIL)) > 0 && !pc->nextjobexp(sd) )
+	if ((skill_lv = pc->checkskill(sd, SG_DEVIL)) > 0 && !pc->nextjobexp(sd))
 		bstatus->aspd_rate += 30 * skill_lv;
-	if ( pc_isridingpeco(sd) )
+	if (pc_isridingpeco(sd))
 		bstatus->aspd_rate -= 500 - 100 * pc->checkskill(sd, KN_CAVALIERMASTERY);
-	else if ( pc_isridingdragon(sd) )
+	else if (pc_isridingdragon(sd))
 		bstatus->aspd_rate -= 250 - 50 * pc->checkskill(sd, RK_DRAGONTRAINING);
 #endif
-	bstatus->adelay = 2*bstatus->amotion;
+	bstatus->adelay = 2 * bstatus->amotion;
 
 	// ----- DMOTION -----
 	//
-	i =  800-bstatus->agi*4;
+	i = 800 - bstatus->agi * 4;
 	bstatus->dmotion = cap_value(i, 400, 800);
-	if(battle_config.pc_damage_delay_rate != 100)
-		bstatus->dmotion = bstatus->dmotion*battle_config.pc_damage_delay_rate/100;
+	if (battle_config.pc_damage_delay_rate != 100)
+		bstatus->dmotion = bstatus->dmotion * battle_config.pc_damage_delay_rate / 100;
 
 	// ----- MISC CALCULATIONS -----
 
 	// Weight
-	if((skill_lv=pc->checkskill(sd,MC_INCCARRY))>0)
-		sd->max_weight += 2000*skill_lv;
-	if (pc_isridingpeco(sd) && pc->checkskill(sd,KN_RIDING) > 0)
+	if ((skill_lv = pc->checkskill(sd, MC_INCCARRY)) > 0)
+		sd->max_weight += 2000 * skill_lv;
+	if (pc_isridingpeco(sd) && pc->checkskill(sd, KN_RIDING) > 0)
 		sd->max_weight += 10000;
-	else if(pc_isridingdragon(sd))
-		sd->max_weight += 5000+2000*pc->checkskill(sd,RK_DRAGONTRAINING);
-	if(sc->data[SC_KNOWLEDGE])
-		sd->max_weight += sd->max_weight*sc->data[SC_KNOWLEDGE]->val1/10;
-	if((skill_lv=pc->checkskill(sd,ALL_INCCARRY))>0)
-		sd->max_weight += 2000*skill_lv;
+	else if (pc_isridingdragon(sd))
+		sd->max_weight += 5000 + 2000 * pc->checkskill(sd, RK_DRAGONTRAINING);
+	if (sc->data[SC_KNOWLEDGE])
+		sd->max_weight += sd->max_weight * sc->data[SC_KNOWLEDGE]->val1 / 10;
+	if ((skill_lv = pc->checkskill(sd, ALL_INCCARRY)) > 0)
+		sd->max_weight += 2000 * skill_lv;
 
-	sd->cart_weight_max = battle_config.max_cart_weight + (pc->checkskill(sd, GN_REMODELING_CART)*5000);
+	sd->cart_weight_max = battle_config.max_cart_weight + (pc->checkskill(sd, GN_REMODELING_CART) * 5000);
 
-	if (pc->checkskill(sd,SM_MOVINGRECOVERY)>0)
+	if (pc->checkskill(sd, SM_MOVINGRECOVERY) > 0)
 		sd->regen.state.walk = 1;
 	else
 		sd->regen.state.walk = 0;
 
 	// Skill SP cost
-	if((skill_lv=pc->checkskill(sd,HP_MANARECHARGE))>0 )
-		sd->dsprate -= 4*skill_lv;
+	if ((skill_lv = pc->checkskill(sd, HP_MANARECHARGE)) > 0)
+		sd->dsprate -= 4 * skill_lv;
 
-	if(sc->data[SC_SERVICEFORYOU])
+	if (sc->data[SC_SERVICEFORYOU])
 		sd->dsprate -= sc->data[SC_SERVICEFORYOU]->val3;
 
-	if(sc->data[SC_ATKER_BLOOD])
+	if (sc->data[SC_ATKER_BLOOD])
 		sd->dsprate -= sc->data[SC_ATKER_BLOOD]->val1;
 
-	//Underflow protections.
-	if(sd->dsprate < 0)
+	// Underflow protections.
+	if (sd->dsprate < 0)
 		sd->dsprate = 0;
-	if(sd->castrate < 0)
+	if (sd->castrate < 0)
 		sd->castrate = 0;
-	if(sd->delayrate < 0)
+	if (sd->delayrate < 0)
 		sd->delayrate = 0;
-	if(sd->hprecov_rate < 0)
+	if (sd->hprecov_rate < 0)
 		sd->hprecov_rate = 0;
-	if(sd->sprecov_rate < 0)
+	if (sd->sprecov_rate < 0)
 		sd->sprecov_rate = 0;
 
 	// Anti-element and anti-race
@@ -2188,7 +2207,7 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 		sd->subele[ELE_HOLY] += skill_lv * 5;
 	if ((skill_lv = pc->checkskill(sd, BS_SKINTEMPER)) > 0) {
 		sd->subele[ELE_NEUTRAL] += skill_lv;
-		sd->subele[ELE_FIRE] += skill_lv*4;
+		sd->subele[ELE_FIRE] += skill_lv * 4;
 	}
 	if ((skill_lv = pc->checkskill(sd, NC_RESEARCHFE)) > 0) {
 		sd->subele[ELE_EARTH] += skill_lv * 10;
@@ -2226,11 +2245,11 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 	}
 
 	if (sc->count) {
-		if (sc->data[SC_CONCENTRATION]) { // Update the card-bonus data
+		if (sc->data[SC_CONCENTRATION]) {                          // Update the card-bonus data
 			sc->data[SC_CONCENTRATION]->val3 = sd->param_bonus[1]; // Agi
 			sc->data[SC_CONCENTRATION]->val4 = sd->param_bonus[4]; // Dex
 		}
-		if (sc->data[SC_SIEGFRIED]){
+		if (sc->data[SC_SIEGFRIED]) {
 			i = sc->data[SC_SIEGFRIED]->val2;
 			sd->subele[ELE_WATER] += i;
 			sd->subele[ELE_EARTH] += i;
@@ -2242,7 +2261,7 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 			sd->subele[ELE_GHOST] += i;
 			sd->subele[ELE_UNDEAD] += i;
 		}
-		if (sc->data[SC_PROVIDENCE]){
+		if (sc->data[SC_PROVIDENCE]) {
 			sd->subele[ELE_HOLY] += sc->data[SC_PROVIDENCE]->val2;
 #ifdef RENEWAL
 			sd->race_tolerance[RC_DEMON] += sc->data[SC_PROVIDENCE]->val2;
@@ -2251,7 +2270,7 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 #endif
 		}
 		if (sc->data[SC_ARMORPROPERTY]) {
-			//This status change should grant card-type elemental resist.
+			// This status change should grant card-type elemental resist.
 			sd->subele[ELE_WATER] += sc->data[SC_ARMORPROPERTY]->val1;
 			sd->subele[ELE_EARTH] += sc->data[SC_ARMORPROPERTY]->val2;
 			sd->subele[ELE_FIRE] += sc->data[SC_ARMORPROPERTY]->val3;
@@ -2372,8 +2391,8 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 	status->copy(&sd->battle_status, bstatus);
 
 	// ----- CLIENT-SIDE REFRESH -----
-	if(!sd->bl.prev) {
-		//Will update on LoadEndAck
+	if (!sd->bl.prev) {
+		// Will update on LoadEndAck
 		calculating = 0;
 		return 0;
 	}
@@ -2389,14 +2408,14 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 #endif
 		clif->skillinfoblock(sd);
 	}
-	if(b_weight != sd->weight)
-		clif->updatestatus(sd,SP_WEIGHT);
-	if(b_max_weight != sd->max_weight) {
-		clif->updatestatus(sd,SP_MAXWEIGHT);
+	if (b_weight != sd->weight)
+		clif->updatestatus(sd, SP_WEIGHT);
+	if (b_max_weight != sd->max_weight) {
+		clif->updatestatus(sd, SP_MAXWEIGHT);
 		pc->updateweightstatus(sd);
 	}
-	if( b_cart_weight_max != sd->cart_weight_max ) {
-		clif->updatestatus(sd,SP_CARTINFO);
+	if (b_cart_weight_max != sd->cart_weight_max) {
+		clif->updatestatus(sd, SP_CARTINFO);
 	}
 
 	// Spirit Marble status activates automatically for a infinite
@@ -2418,9 +2437,9 @@ static int status_calc_mercenary_(struct mercenary_data *md, enum e_status_calc_
 	nullpo_ret(md);
 	mstatus = &md->base_status;
 	merc = &md->mercenary;
-	if( opt&SCO_FIRST ) {
+	if (opt & SCO_FIRST) {
 		memcpy(mstatus, &md->db->status, sizeof(struct status_data));
-		mstatus->mode = MD_CANMOVE|MD_CANATTACK;
+		mstatus->mode = MD_CANMOVE | MD_CANATTACK;
 		mstatus->hp = mstatus->max_hp;
 		mstatus->sp = mstatus->max_sp;
 		md->battle_status.hp = merc->hp;
@@ -2446,7 +2465,7 @@ static int status_calc_elemental_(struct elemental_data *ed, enum e_status_calc_
 	if (sd == NULL)
 		return 0;
 
-	if ( opt&SCO_FIRST ) {
+	if (opt & SCO_FIRST) {
 		memcpy(estatus, &ed->db->status, sizeof(struct status_data));
 		if (ele->mode == MD_NONE)
 			estatus->mode = EL_MODE_PASSIVE;
@@ -2486,7 +2505,7 @@ static int status_calc_npc_(struct npc_data *nd, enum e_status_calc_opt opt)
 
 	nstatus = &nd->status;
 
-	if ( opt&SCO_FIRST ) {
+	if (opt & SCO_FIRST) {
 		nstatus->hp = 1;
 		nstatus->sp = 1;
 		nstatus->max_hp = 1;
@@ -2497,14 +2516,14 @@ static int status_calc_npc_(struct npc_data *nd, enum e_status_calc_opt opt)
 		nstatus->race = RC_PLAYER;
 		nstatus->size = nd->size;
 		nstatus->rhw.range = 1 + nstatus->size;
-		nstatus->mode = (MD_CANMOVE|MD_CANATTACK);
+		nstatus->mode = (MD_CANMOVE | MD_CANATTACK);
 		nstatus->speed = nd->speed;
 	}
 
 	nstatus->str = nd->stat_point;
 	nstatus->agi = nd->stat_point;
 	nstatus->vit = nd->stat_point;
-	nstatus->int_= nd->stat_point;
+	nstatus->int_ = nd->stat_point;
 	nstatus->dex = nd->stat_point;
 	nstatus->luk = nd->stat_point;
 
@@ -2533,7 +2552,7 @@ static int status_calc_homunculus_(struct homun_data *hd, enum e_status_calc_opt
 
 	APPLY_HOMUN_LEVEL_STATWEIGHT();
 
-	if ( opt&SCO_FIRST ) { //[orn]
+	if (opt & SCO_FIRST) { //[orn]
 		const struct s_homunculus_db *db = hd->homunculusDB;
 		hstatus->def_ele = db->element;
 		hstatus->ele_lv = 1;
@@ -2542,7 +2561,7 @@ static int status_calc_homunculus_(struct homun_data *hd, enum e_status_calc_opt
 		hstatus->rhw.range = 1 + hstatus->size;
 		hstatus->mode = MD_CANMOVE | MD_CANATTACK;
 		hstatus->speed = DEFAULT_WALK_SPEED;
-		if ( battle_config.hom_setting & 0x8 && hd->master )
+		if (battle_config.hom_setting & 0x8 && hd->master)
 			hstatus->speed = status->get_speed(&hd->master->bl);
 
 		hstatus->hp = 1;
@@ -2566,28 +2585,28 @@ static int status_calc_homunculus_(struct homun_data *hd, enum e_status_calc_opt
 #endif
 
 	hstatus->amotion = cap_value(amotion, battle_config.max_aspd, 2000);
-	hstatus->adelay = hstatus->amotion; //It seems adelay = amotion for Homunculus.
+	hstatus->adelay = hstatus->amotion; // It seems adelay = amotion for Homunculus.
 
 	hstatus->max_hp = hom->max_hp;
 	hstatus->max_sp = hom->max_sp;
 
 	homun->calc_skilltree(hd, 0);
 
-	if ( (skill_lv = homun->checkskill(hd, HAMI_SKIN)) > 0 )
+	if ((skill_lv = homun->checkskill(hd, HAMI_SKIN)) > 0)
 		hstatus->def += skill_lv * 4;
 
-	if ( (skill_lv = homun->checkskill(hd, HVAN_INSTRUCT)) > 0 ) {
+	if ((skill_lv = homun->checkskill(hd, HVAN_INSTRUCT)) > 0) {
 		hstatus->int_ += 1 + skill_lv / 2 + skill_lv / 4 + skill_lv / 5;
 		hstatus->str += 1 + skill_lv / 3 + skill_lv / 3 + skill_lv / 4;
 	}
 
-	if ( (skill_lv = homun->checkskill(hd, HAMI_SKIN)) > 0 )
+	if ((skill_lv = homun->checkskill(hd, HAMI_SKIN)) > 0)
 		hstatus->max_hp += skill_lv * 2 * hstatus->max_hp / 100;
 
-	if ( (skill_lv = homun->checkskill(hd, HLIF_BRAIN)) > 0 )
+	if ((skill_lv = homun->checkskill(hd, HLIF_BRAIN)) > 0)
 		hstatus->max_sp += (1 + skill_lv / 2 - skill_lv / 4 + skill_lv / 5) * hstatus->max_sp / 100;
 
-	if ( opt&SCO_FIRST ) {
+	if (opt & SCO_FIRST) {
 		hd->battle_status.hp = hom->hp;
 		hd->battle_status.sp = hom->sp;
 	}
@@ -2613,37 +2632,17 @@ static void status_calc_regen_pc(struct map_session_data *sd, struct status_data
 
 	struct status_change *sc = &sd->sc;
 
-	if ((sc->data[SC_POISON] != NULL && sc->data[SC_SLOWPOISON] == NULL)
-		|| (sc->data[SC_DPOISON] != NULL && sc->data[SC_SLOWPOISON] == NULL)
-		|| sc->data[SC_BERSERK] != NULL
-		|| sc->data[SC_TRICKDEAD] != NULL
-		|| sc->data[SC_BLOODING] != NULL
-		|| sc->data[SC_MAGICMUSHROOM] != NULL
-		|| sc->data[SC_RAISINGDRAGON] != NULL
-		|| sc->data[SC_SATURDAY_NIGHT_FEVER] != NULL
-		) {
+	if ((sc->data[SC_POISON] != NULL && sc->data[SC_SLOWPOISON] == NULL) || (sc->data[SC_DPOISON] != NULL && sc->data[SC_SLOWPOISON] == NULL) || sc->data[SC_BERSERK] != NULL || sc->data[SC_TRICKDEAD] != NULL || sc->data[SC_BLOODING] != NULL || sc->data[SC_MAGICMUSHROOM] != NULL || sc->data[SC_RAISINGDRAGON] != NULL || sc->data[SC_SATURDAY_NIGHT_FEVER] != NULL) {
 		regen->flag = 0;
 		return; // Don't bother going on as no regen under those status.
 	}
 
-	if (sc->data[SC_DANCING] != NULL
-		|| sc->data[SC_OBLIVIONCURSE] != NULL
-		|| sc->data[SC_MAXIMIZEPOWER] != NULL
-		|| sc->data[SC_REBOUND] != NULL
-		|| sc->data[SC_VITALITYACTIVATION] != NULL
-		|| ((sd->job & MAPID_UPPERMASK) == MAPID_MONK
-			&& (sc->data[SC_EXTREMITYFIST] != NULL
-				|| (sc->data[SC_EXPLOSIONSPIRITS] != NULL
-					&& (sc->data[SC_SOULLINK] == NULL || sc->data[SC_SOULLINK]->val2 != SL_MONK)
-					)
-				)
-			)
-		) {
-		regen->flag &= ~RGN_SP; //No natural SP regen
+	if (sc->data[SC_DANCING] != NULL || sc->data[SC_OBLIVIONCURSE] != NULL || sc->data[SC_MAXIMIZEPOWER] != NULL || sc->data[SC_REBOUND] != NULL || sc->data[SC_VITALITYACTIVATION] != NULL || ((sd->job & MAPID_UPPERMASK) == MAPID_MONK && (sc->data[SC_EXTREMITYFIST] != NULL || (sc->data[SC_EXPLOSIONSPIRITS] != NULL && (sc->data[SC_SOULLINK] == NULL || sc->data[SC_SOULLINK]->val2 != SL_MONK))))) {
+		regen->flag &= ~RGN_SP; // No natural SP regen
 	}
 
 	if (sc->data[SC_GDSKILL_REGENERATION] != NULL && sc->data[SC_GDSKILL_REGENERATION]->val4 != 0) {
-			regen->flag &= ~sc->data[SC_GDSKILL_REGENERATION]->val4; //Remove regen as specified by val4
+		regen->flag &= ~sc->data[SC_GDSKILL_REGENERATION]->val4; // Remove regen as specified by val4
 	}
 
 	// Base HP/SP restore values formual
@@ -2710,7 +2709,7 @@ static void status_calc_regen_pc(struct map_session_data *sd, struct status_data
 
 	if ((skill_lv = pc->checkskill(sd, TK_SPTIME)) > 0 && sd->state.rest != 0) {
 		sitting_regen->sp += skill_lv * 3 + skill_lv * st->max_sp / 500;
-		if ((skill_lv = pc->checkskill(sd, SL_KAINA)) > 0) //Power up Enjoyable Rest
+		if ((skill_lv = pc->checkskill(sd, SL_KAINA)) > 0) // Power up Enjoyable Rest
 			sitting_regen->sp += sitting_regen->sp * (30 + 10 * skill_lv) / 100;
 	}
 	if ((skill_lv = pc->checkskill(sd, MO_SPIRITSRECOVERY)) > 0)
@@ -2725,10 +2724,7 @@ static void status_calc_regen_homunculus(struct homun_data *hd, struct status_da
 
 	struct status_change *sc = &hd->sc;
 
-	if ((sc->data[SC_POISON] != NULL && sc->data[SC_SLOWPOISON] == NULL)
-		|| (sc->data[SC_DPOISON] != NULL && sc->data[SC_SLOWPOISON] == NULL)
-		|| sc->data[SC_BLOODING] != NULL
-		) {
+	if ((sc->data[SC_POISON] != NULL && sc->data[SC_SLOWPOISON] == NULL) || (sc->data[SC_DPOISON] != NULL && sc->data[SC_SLOWPOISON] == NULL) || sc->data[SC_BLOODING] != NULL) {
 		regen->flag = 0;
 		return; // Don't bother going on as no regen under those status.
 	}
@@ -2748,10 +2744,7 @@ static void status_calc_regen_mercenary(struct mercenary_data *md, struct status
 
 	struct status_change *sc = &md->sc;
 
-	if ((sc->data[SC_POISON] != NULL && sc->data[SC_SLOWPOISON] == NULL)
-		|| (sc->data[SC_DPOISON] != NULL && sc->data[SC_SLOWPOISON] == NULL)
-		|| sc->data[SC_BLOODING] != NULL
-		) {
+	if ((sc->data[SC_POISON] != NULL && sc->data[SC_SLOWPOISON] == NULL) || (sc->data[SC_DPOISON] != NULL && sc->data[SC_SLOWPOISON] == NULL) || sc->data[SC_BLOODING] != NULL) {
 		regen->flag = 0;
 		return; // Don't bother going on as no regen under those status.
 	}
@@ -2769,10 +2762,7 @@ static void status_calc_regen_elemental(struct elemental_data *md, struct status
 
 	struct status_change *sc = &md->sc;
 
-	if ((sc->data[SC_POISON] != NULL && sc->data[SC_SLOWPOISON] == NULL)
-		|| (sc->data[SC_DPOISON] != NULL && sc->data[SC_SLOWPOISON] == NULL)
-		|| sc->data[SC_BLOODING] != NULL
-		) {
+	if ((sc->data[SC_POISON] != NULL && sc->data[SC_SLOWPOISON] == NULL) || (sc->data[SC_DPOISON] != NULL && sc->data[SC_SLOWPOISON] == NULL) || sc->data[SC_BLOODING] != NULL) {
 		regen->flag = 0;
 		return; // Don't bother going on as no regen under those status.
 	}
@@ -2782,7 +2772,7 @@ static void status_calc_regen_elemental(struct elemental_data *md, struct status
 	regen->sp = (st->max_sp * (st->int_ + 10) / 750) + 1;
 }
 
-//Calculates base regen values.
+// Calculates base regen values.
 static void status_calc_regen(struct block_list *bl, struct status_data *st, struct regen_data *regen)
 {
 	nullpo_retv(bl);
@@ -2798,29 +2788,29 @@ static void status_calc_regen(struct block_list *bl, struct status_data *st, str
 		regen->flag |= RGN_SHP | RGN_SSP;
 
 	switch (bl->type) {
-	case BL_PC:
-		status->calc_regen_pc(BL_UCAST(BL_PC, bl), st, regen);
-		break;
-	case BL_HOM:
-		status->calc_regen_homunculus(BL_UCAST(BL_HOM, bl), st, regen);
-		break;
-	case BL_MER:
-		status->calc_regen_mercenary(BL_UCAST(BL_MER, bl), st, regen);
-		break;
-	case BL_ELEM:
-		status->calc_regen_elemental(BL_UCAST(BL_ELEM, bl), st, regen);
-		break;
-	case BL_NUL:
-	case BL_PET:
-	case BL_SKILL:
-	case BL_NPC:
-	case BL_CHAT:
-	case BL_MOB:
-	case BL_ITEM:
-	case BL_ALL:
-	default:
-		Assert(0);
-		break;
+		case BL_PC:
+			status->calc_regen_pc(BL_UCAST(BL_PC, bl), st, regen);
+			break;
+		case BL_HOM:
+			status->calc_regen_homunculus(BL_UCAST(BL_HOM, bl), st, regen);
+			break;
+		case BL_MER:
+			status->calc_regen_mercenary(BL_UCAST(BL_MER, bl), st, regen);
+			break;
+		case BL_ELEM:
+			status->calc_regen_elemental(BL_UCAST(BL_ELEM, bl), st, regen);
+			break;
+		case BL_NUL:
+		case BL_PET:
+		case BL_SKILL:
+		case BL_NPC:
+		case BL_CHAT:
+		case BL_MOB:
+		case BL_ITEM:
+		case BL_ALL:
+		default:
+			Assert(0);
+			break;
 	}
 
 	regen->hp = cap_value(regen->hp, 0, INT16_MAX);
@@ -2885,10 +2875,7 @@ static void status_calc_regen_rate_elemental(struct elemental_data *md, struct r
 
 	struct status_change *sc = &md->sc;
 
-	if ((sc->data[SC_FIRE_INSIGNIA] != NULL && sc->data[SC_FIRE_INSIGNIA]->val1 == 1)
-		|| (sc->data[SC_WATER_INSIGNIA] != NULL && sc->data[SC_WATER_INSIGNIA]->val1 == 1)
-		|| (sc->data[SC_EARTH_INSIGNIA] != NULL && sc->data[SC_EARTH_INSIGNIA]->val1 == 1)
-		|| (sc->data[SC_WIND_INSIGNIA] != NULL && sc->data[SC_WIND_INSIGNIA]->val1 == 1))
+	if ((sc->data[SC_FIRE_INSIGNIA] != NULL && sc->data[SC_FIRE_INSIGNIA]->val1 == 1) || (sc->data[SC_WATER_INSIGNIA] != NULL && sc->data[SC_WATER_INSIGNIA]->val1 == 1) || (sc->data[SC_EARTH_INSIGNIA] != NULL && sc->data[SC_EARTH_INSIGNIA]->val1 == 1) || (sc->data[SC_WIND_INSIGNIA] != NULL && sc->data[SC_WIND_INSIGNIA]->val1 == 1))
 		regen->rate.hp *= 2;
 }
 
@@ -2906,7 +2893,7 @@ static void status_calc_regen_rate_homunculus(struct homun_data *hd, struct rege
 		regen->rate.hp = regen->rate.hp * (100 + 5 * skill_lv) / 100;
 }
 
-//Calculates SC related regen rates.
+// Calculates SC related regen rates.
 static void status_calc_regen_rate(struct block_list *bl, struct regen_data *regen)
 {
 	nullpo_retv(bl);
@@ -2930,25 +2917,25 @@ static void status_calc_regen_rate(struct block_list *bl, struct regen_data *reg
 	}
 
 	switch (bl->type) {
-	case BL_PC:
-		status->calc_regen_rate_pc(BL_UCAST(BL_PC, bl), regen);
-		break;
-	case BL_ELEM:
-		status->calc_regen_rate_elemental(BL_UCAST(BL_ELEM, bl), regen);
-		break;
-	case BL_HOM:
-		status->calc_regen_rate_homunculus(BL_UCAST(BL_HOM, bl), regen);
-		break;
-	case BL_NUL:
-	case BL_PET:
-	case BL_SKILL:
-	case BL_NPC:
-	case BL_CHAT:
-	case BL_MOB:
-	case BL_MER:
-	case BL_ITEM:
-	case BL_ALL:
-		break;
+		case BL_PC:
+			status->calc_regen_rate_pc(BL_UCAST(BL_PC, bl), regen);
+			break;
+		case BL_ELEM:
+			status->calc_regen_rate_elemental(BL_UCAST(BL_ELEM, bl), regen);
+			break;
+		case BL_HOM:
+			status->calc_regen_rate_homunculus(BL_UCAST(BL_HOM, bl), regen);
+			break;
+		case BL_NUL:
+		case BL_PET:
+		case BL_SKILL:
+		case BL_NPC:
+		case BL_CHAT:
+		case BL_MOB:
+		case BL_MER:
+		case BL_ITEM:
+		case BL_ALL:
+			break;
 	}
 
 	regen->rate.hp = cap_value(regen->rate.hp, 0, INT16_MAX);
@@ -2979,7 +2966,7 @@ static void status_calc_bl_main(struct block_list *bl, e_scb_flag flag)
 	const struct status_data *bst = status->get_base_status(bl);
 	struct status_data *st = status->get_status_data(bl);
 	struct status_change *sc = status->get_sc(bl);
-	struct map_session_data *sd = BL_CAST(BL_PC,bl);
+	struct map_session_data *sd = BL_CAST(BL_PC, bl);
 	int temp;
 
 	nullpo_retv(bl);
@@ -2988,81 +2975,81 @@ static void status_calc_bl_main(struct block_list *bl, e_scb_flag flag)
 		return;
 
 	/** [Playtester]
-	* This needs to be done even if there is currently no status change active, because
-	* we need to update the speed on the client when the last status change ends.
-	**/
-	if(flag&SCB_SPEED) {
+	 * This needs to be done even if there is currently no status change active, because
+	 * we need to update the speed on the client when the last status change ends.
+	 **/
+	if (flag & SCB_SPEED) {
 		struct unit_data *ud = unit->bl2ud(bl);
 		/** [Skotlex]
-		* Re-walk to adjust speed (we do not check if walktimer != INVALID_TIMER
-		* because if you step on something while walking, the moment this
-		* piece of code triggers the walk-timer is set on INVALID_TIMER)
-		**/
+		 * Re-walk to adjust speed (we do not check if walktimer != INVALID_TIMER
+		 * because if you step on something while walking, the moment this
+		 * piece of code triggers the walk-timer is set on INVALID_TIMER)
+		 **/
 		if (ud)
 			ud->state.change_walk_target = ud->state.speed_changed = 1;
 	}
 
-	if((!(bl->type&BL_REGEN)) && (!sc || !sc->count)) { //No difference.
+	if ((!(bl->type & BL_REGEN)) && (!sc || !sc->count)) { // No difference.
 		status->copy(st, bst);
 		return;
 	}
 
-	if(flag&SCB_STR) {
+	if (flag & SCB_STR) {
 		st->str = status->calc_str(bl, sc, bst->str);
-		flag|=SCB_BATK;
-		if( bl->type&BL_HOM )
+		flag |= SCB_BATK;
+		if (bl->type & BL_HOM)
 			flag |= SCB_WATK;
 	}
 
-	if(flag&SCB_AGI) {
+	if (flag & SCB_AGI) {
 		st->agi = status->calc_agi(bl, sc, bst->agi);
-		flag|=SCB_FLEE
+		flag |= SCB_FLEE
 #ifdef RENEWAL
-			|SCB_DEF2
+		        | SCB_DEF2
 #endif
-			;
-		if( bl->type&(BL_PC|BL_HOM) )
-			flag |= SCB_ASPD|SCB_DSPD;
+		    ;
+		if (bl->type & (BL_PC | BL_HOM))
+			flag |= SCB_ASPD | SCB_DSPD;
 	}
 
-	if(flag&SCB_VIT) {
+	if (flag & SCB_VIT) {
 		st->vit = status->calc_vit(bl, sc, bst->vit);
-		flag|=SCB_DEF2|SCB_MDEF2;
-		if( bl->type&(BL_PC|BL_HOM|BL_MER|BL_ELEM) )
+		flag |= SCB_DEF2 | SCB_MDEF2;
+		if (bl->type & (BL_PC | BL_HOM | BL_MER | BL_ELEM))
 			flag |= SCB_MAXHP;
-		if( bl->type&BL_HOM )
+		if (bl->type & BL_HOM)
 			flag |= SCB_DEF;
 	}
 
-	if(flag&SCB_INT) {
+	if (flag & SCB_INT) {
 		st->int_ = status->calc_int(bl, sc, bst->int_);
-		flag|=SCB_MATK|SCB_MDEF2;
-		if( bl->type&(BL_PC|BL_HOM|BL_MER|BL_ELEM) )
+		flag |= SCB_MATK | SCB_MDEF2;
+		if (bl->type & (BL_PC | BL_HOM | BL_MER | BL_ELEM))
 			flag |= SCB_MAXSP;
-		if( bl->type&BL_HOM )
+		if (bl->type & BL_HOM)
 			flag |= SCB_MDEF;
 	}
 
-	if(flag&SCB_DEX) {
+	if (flag & SCB_DEX) {
 		st->dex = status->calc_dex(bl, sc, bst->dex);
-		flag|=SCB_BATK|SCB_HIT
+		flag |= SCB_BATK | SCB_HIT
 #ifdef RENEWAL
-			|SCB_MATK|SCB_MDEF2
+		        | SCB_MATK | SCB_MDEF2
 #endif
-			;
-		if( bl->type&(BL_PC|BL_HOM) )
+		    ;
+		if (bl->type & (BL_PC | BL_HOM))
 			flag |= SCB_ASPD;
-		if( bl->type&BL_HOM )
+		if (bl->type & BL_HOM)
 			flag |= SCB_WATK;
 	}
 
-	if(flag&SCB_LUK) {
+	if (flag & SCB_LUK) {
 		st->luk = status->calc_luk(bl, sc, bst->luk);
-		flag|=SCB_BATK|SCB_CRI|SCB_FLEE2
+		flag |= SCB_BATK | SCB_CRI | SCB_FLEE2
 #ifdef RENEWAL
-			|SCB_MATK|SCB_HIT|SCB_FLEE
+		        | SCB_MATK | SCB_HIT | SCB_FLEE
 #endif
-			;
+		    ;
 	}
 
 	if ((flag & SCB_ATK_PERC) != 0)
@@ -3079,9 +3066,9 @@ static void status_calc_bl_main(struct block_list *bl, e_scb_flag flag)
 		flag |= SCB_MDEF;
 	}
 
-	if(flag&SCB_BATK && bst->batk) {
-		st->batk = status->base_atk(bl,st);
-		temp = bst->batk - status->base_atk(bl,bst);
+	if (flag & SCB_BATK && bst->batk) {
+		st->batk = status->base_atk(bl, st);
+		temp = bst->batk - status->base_atk(bl, bst);
 		if (temp) {
 			temp += st->batk;
 			st->batk = cap_value(temp, battle_config.batk_min, battle_config.batk_max);
@@ -3089,12 +3076,12 @@ static void status_calc_bl_main(struct block_list *bl, e_scb_flag flag)
 		st->batk = status->calc_batk(bl, sc, st->batk, true);
 	}
 
-	if(flag&SCB_WATK) {
+	if (flag & SCB_WATK) {
 		st->rhw.atk = status->calc_watk(bl, sc, bst->rhw.atk, true);
-		if (!sd) //Should not affect weapon refine bonus
+		if (!sd) // Should not affect weapon refine bonus
 			st->rhw.atk2 = status->calc_watk(bl, sc, bst->rhw.atk2, true);
 
-		if(bst->lhw.atk) {
+		if (bst->lhw.atk) {
 			if (sd) {
 				sd->state.lr_flag = 1;
 				st->lhw.atk = status->calc_watk(bl, sc, bst->lhw.atk, true);
@@ -3106,99 +3093,107 @@ static void status_calc_bl_main(struct block_list *bl, e_scb_flag flag)
 		}
 	}
 
-	if(flag&SCB_HIT) {
+	if (flag & SCB_HIT) {
 		if (st->dex == bst->dex
 #ifdef RENEWAL
-			&& st->luk == bst->luk
+		    && st->luk == bst->luk
 #endif
-			)
+		)
 			st->hit = status->calc_hit(bl, sc, bst->hit, true);
 		else
-			st->hit = status->calc_hit(bl, sc, bst->hit + (st->dex - bst->dex)
+			st->hit = status->calc_hit(bl, sc,
+			                           bst->hit + (st->dex - bst->dex)
 #ifdef RENEWAL
-			+ (st->luk/3 - bst->luk/3)
+			                               + (st->luk / 3 - bst->luk / 3)
 #endif
-			, true);
+			                               ,
+			                           true);
 	}
 
-	if(flag&SCB_FLEE) {
+	if (flag & SCB_FLEE) {
 		if (st->agi == bst->agi
 #ifdef RENEWAL
-			&& st->luk == bst->luk
+		    && st->luk == bst->luk
 #endif
-			)
+		)
 			st->flee = status->calc_flee(bl, sc, bst->flee, true);
 		else
-			st->flee = status->calc_flee(bl, sc, bst->flee +(st->agi - bst->agi)
+			st->flee = status->calc_flee(bl, sc,
+			                             bst->flee + (st->agi - bst->agi)
 #ifdef RENEWAL
-			+ (st->luk/5 - bst->luk/5)
+			                                 + (st->luk / 5 - bst->luk / 5)
 #endif
-			, true);
+			                                 ,
+			                             true);
 	}
 
-	if(flag&SCB_DEF) {
+	if (flag & SCB_DEF) {
 		st->def = status->calc_def(bl, sc, bst->def, true);
 
-		if( bl->type&BL_HOM )
-			st->def += (st->vit/5 - bst->vit/5);
+		if (bl->type & BL_HOM)
+			st->def += (st->vit / 5 - bst->vit / 5);
 	}
 
-	if(flag&SCB_DEF2) {
+	if (flag & SCB_DEF2) {
 		if (st->vit == bst->vit
 #ifdef RENEWAL
-			&& st->agi == bst->agi
+		    && st->agi == bst->agi
 #endif
-			)
+		)
 			st->def2 = status->calc_def2(bl, sc, bst->def2, true);
 		else
-			st->def2 = status->calc_def2(bl, sc, bst->def2
+			st->def2 = status->calc_def2(bl, sc,
+			                             bst->def2
 #ifdef RENEWAL
-			+ (int)( ((float)st->vit/2 - (float)bst->vit/2) + ((float)st->agi/5 - (float)bst->agi/5) )
+			                                 + (int)(((float)st->vit / 2 - (float)bst->vit / 2) + ((float)st->agi / 5 - (float)bst->agi / 5))
 #else
-			+ (st->vit - bst->vit)
+			                                 + (st->vit - bst->vit)
 #endif
-			, true);
+			                                 ,
+			                             true);
 	}
 
-	if(flag&SCB_MDEF) {
+	if (flag & SCB_MDEF) {
 		st->mdef = status->calc_mdef(bl, sc, bst->mdef, true);
 
-		if( bl->type&BL_HOM )
-			st->mdef += (st->int_/5 - bst->int_/5);
+		if (bl->type & BL_HOM)
+			st->mdef += (st->int_ / 5 - bst->int_ / 5);
 	}
 
-	if(flag&SCB_MDEF2) {
+	if (flag & SCB_MDEF2) {
 		if (st->int_ == bst->int_ && st->vit == bst->vit
 #ifdef RENEWAL
-			&& st->dex == bst->dex
+		    && st->dex == bst->dex
 #endif
-			)
+		)
 			st->mdef2 = status->calc_mdef2(bl, sc, bst->mdef2, true);
 		else
-			st->mdef2 = status->calc_mdef2(bl, sc, bst->mdef2 +(st->int_ - bst->int_)
+			st->mdef2 = status->calc_mdef2(bl, sc,
+			                               bst->mdef2 + (st->int_ - bst->int_)
 #ifdef RENEWAL
-			+ (int)( ((float)st->dex/5 - (float)bst->dex/5) + ((float)st->vit/5 - (float)bst->vit/5) )
+			                                   + (int)(((float)st->dex / 5 - (float)bst->dex / 5) + ((float)st->vit / 5 - (float)bst->vit / 5))
 #else
-			+ ((st->vit - bst->vit)>>1)
+			                                   + ((st->vit - bst->vit) >> 1)
 #endif
-			, true);
+			                                   ,
+			                               true);
 	}
 
-	if(flag&SCB_SPEED) {
+	if (flag & SCB_SPEED) {
 
 		st->speed = status->calc_speed(bl, sc, bst->speed);
 
-		if( bl->type&BL_PC && !(sd && sd->state.permanent_speed) && st->speed < battle_config.max_walk_speed )
+		if (bl->type & BL_PC && !(sd && sd->state.permanent_speed) && st->speed < battle_config.max_walk_speed)
 			st->speed = battle_config.max_walk_speed;
 
-		if (bl->type&BL_HOM && battle_config.hom_setting&0x8) {
+		if (bl->type & BL_HOM && battle_config.hom_setting & 0x8) {
 			struct homun_data *hd = BL_UCAST(BL_HOM, bl);
 			if (hd->master != NULL)
 				st->speed = status->get_speed(&hd->master->bl);
 		}
 	}
 
-	if(flag&SCB_CRI && bst->cri) {
+	if (flag & SCB_CRI && bst->cri) {
 		if (st->luk == bst->luk) {
 			st->cri = status->calc_critical(bl, sc, bst->cri, true);
 		} else {
@@ -3211,42 +3206,44 @@ static void status_calc_bl_main(struct block_list *bl, e_scb_flag flag)
 		}
 	}
 
-	if(flag&SCB_FLEE2 && bst->flee2) {
+	if (flag & SCB_FLEE2 && bst->flee2) {
 		if (st->luk == bst->luk)
 			st->flee2 = status->calc_flee2(bl, sc, bst->flee2, true);
 		else
-			st->flee2 = status->calc_flee2(bl, sc, bst->flee2 +(st->luk - bst->luk), true);
+			st->flee2 = status->calc_flee2(bl, sc, bst->flee2 + (st->luk - bst->luk), true);
 	}
 
-	if(flag&SCB_ATK_ELE) {
+	if (flag & SCB_ATK_ELE) {
 		st->rhw.ele = status->calc_attack_element(bl, sc, bst->rhw.ele);
-		if (sd) sd->state.lr_flag = 1;
+		if (sd)
+			sd->state.lr_flag = 1;
 		st->lhw.ele = status->calc_attack_element(bl, sc, bst->lhw.ele);
-		if (sd) sd->state.lr_flag = 0;
+		if (sd)
+			sd->state.lr_flag = 0;
 	}
 
-	if(flag&SCB_DEF_ELE) {
+	if (flag & SCB_DEF_ELE) {
 		st->def_ele = status->calc_element(bl, sc, bst->def_ele);
 		st->ele_lv = status->calc_element_lv(bl, sc, bst->ele_lv);
 	}
 
-	if(flag&SCB_MODE) {
+	if (flag & SCB_MODE) {
 		st->mode = status->calc_mode(bl, sc, bst->mode);
-		//Since mode changed, reset their state.
-		if (!(st->mode&MD_CANATTACK))
+		// Since mode changed, reset their state.
+		if (!(st->mode & MD_CANATTACK))
 			unit->stop_attack(bl);
-		if (!(st->mode&MD_CANMOVE))
+		if (!(st->mode & MD_CANMOVE))
 			unit->stop_walking(bl, STOPWALKING_FLAG_FIXPOS);
 	}
 
 	// No status changes alter these yet.
-	//if(flag&SCB_SIZE)
-	//if(flag&SCB_RACE)
-	//if(flag&SCB_RANGE)
+	// if(flag&SCB_SIZE)
+	// if(flag&SCB_RACE)
+	// if(flag&SCB_RANGE)
 
-	if(flag&SCB_MAXHP) {
-		if( bl->type&BL_PC ) {
-			st->max_hp = status->get_base_maxhp(sd,st);
+	if (flag & SCB_MAXHP) {
+		if (bl->type & BL_PC) {
+			st->max_hp = status->get_base_maxhp(sd, st);
 			if (sd)
 				st->max_hp += bst->max_hp - sd->status.max_hp;
 
@@ -3259,51 +3256,53 @@ static void status_calc_bl_main(struct block_list *bl, e_scb_flag flag)
 			st->max_hp = status->calc_maxhp(bl, sc, bst->max_hp);
 		}
 
-		if( st->hp > st->max_hp ) {
-			//FIXME: Should perhaps a status_zap should be issued?
+		if (st->hp > st->max_hp) {
+			// FIXME: Should perhaps a status_zap should be issued?
 			st->hp = st->max_hp;
-			if( sd ) clif->updatestatus(sd,SP_HP);
+			if (sd)
+				clif->updatestatus(sd, SP_HP);
 		}
 	}
 
-	if(flag&SCB_MAXSP) {
-		if( bl->type&BL_PC ) {
-			st->max_sp = status->get_base_maxsp(sd,st);
+	if (flag & SCB_MAXSP) {
+		if (bl->type & BL_PC) {
+			st->max_sp = status->get_base_maxsp(sd, st);
 			if (sd != NULL) {
 				st->max_sp += bst->max_sp - sd->status.max_sp;
 				st->max_sp = status->calc_maxsp(&sd->bl, &sd->sc, st->max_sp);
 			}
 
-			if( st->max_sp > (unsigned int)battle_config.max_sp )
+			if (st->max_sp > (unsigned int)battle_config.max_sp)
 				st->max_sp = (unsigned int)battle_config.max_sp;
 		} else {
 			st->max_sp = status->calc_maxsp(bl, sc, bst->max_sp);
 		}
 
-		if( st->sp > st->max_sp ) {
+		if (st->sp > st->max_sp) {
 			st->sp = st->max_sp;
-			if( sd ) clif->updatestatus(sd,SP_SP);
+			if (sd)
+				clif->updatestatus(sd, SP_SP);
 		}
 	}
 
-	if(flag&SCB_MATK) {
+	if (flag & SCB_MATK) {
 		status->update_matk(bl);
 	}
 
-	if ( flag&SCB_DSPD ) {
+	if (flag & SCB_DSPD) {
 		int dmotion;
-		if ( bl->type&BL_PC ) {
+		if (bl->type & BL_PC) {
 			if (bst->agi == st->agi)
 				st->dmotion = status->calc_dmotion(bl, sc, bst->dmotion);
 			else {
-				dmotion = 800-st->agi*4;
+				dmotion = 800 - st->agi * 4;
 				st->dmotion = cap_value(dmotion, 400, 800);
-				if ( battle_config.pc_damage_delay_rate != 100 )
-					st->dmotion = st->dmotion*battle_config.pc_damage_delay_rate / 100;
-				//It's safe to ignore bst->dmotion since no bonus affects it.
+				if (battle_config.pc_damage_delay_rate != 100)
+					st->dmotion = st->dmotion * battle_config.pc_damage_delay_rate / 100;
+				// It's safe to ignore bst->dmotion since no bonus affects it.
 				st->dmotion = status->calc_dmotion(bl, sc, st->dmotion);
 			}
-		} else if ( bl->type&BL_HOM ) {
+		} else if (bl->type & BL_HOM) {
 			dmotion = 800 - st->agi * 4;
 			st->dmotion = cap_value(dmotion, 400, 800);
 			st->dmotion = status->calc_dmotion(bl, sc, bst->dmotion);
@@ -3312,9 +3311,9 @@ static void status_calc_bl_main(struct block_list *bl, e_scb_flag flag)
 		}
 	}
 
-	if(flag&SCB_ASPD) {
+	if (flag & SCB_ASPD) {
 		int amotion;
-		if ( bl->type&BL_HOM ) {
+		if (bl->type & BL_HOM) {
 			const struct homun_data *hd = BL_UCCAST(BL_HOM, bl);
 #ifdef RENEWAL
 			amotion = hd->homunculusDB->baseASPD;
@@ -3325,19 +3324,19 @@ static void status_calc_bl_main(struct block_list *bl, e_scb_flag flag)
 
 			amotion = status->calc_aspd_rate(bl, sc, amotion);
 
-			if ( st->aspd_rate != 1000 )
-				amotion = amotion*st->aspd_rate / 1000;
+			if (st->aspd_rate != 1000)
+				amotion = amotion * st->aspd_rate / 1000;
 #endif
 			amotion = status->calc_fix_aspd(bl, sc, amotion);
 			st->amotion = cap_value(amotion, battle_config.max_aspd, 2000);
 
 			st->adelay = st->amotion;
-		} else if ( bl->type&BL_PC ) {
+		} else if (bl->type & BL_PC) {
 			amotion = status->base_amotion_pc(sd, st);
 #ifndef RENEWAL_ASPD
 			st->aspd_rate = status->calc_aspd_rate(bl, sc, bst->aspd_rate);
 #endif
-			if ( st->aspd_rate != 1000 ) // absolute percentage modifier
+			if (st->aspd_rate != 1000) // absolute percentage modifier
 				amotion = amotion * st->aspd_rate / 1000;
 			if (sd && sd->ud.skilltimer != INVALID_TIMER) {
 				if (pc->checkskill(sd, SA_FREECAST) > 0) {
@@ -3368,21 +3367,21 @@ static void status_calc_bl_main(struct block_list *bl, e_scb_flag flag)
 			amotion = bst->amotion;
 			st->aspd_rate = status->calc_aspd_rate(bl, sc, bst->aspd_rate);
 
-			if ( st->aspd_rate != 1000 )
-				amotion = amotion*st->aspd_rate / 1000;
+			if (st->aspd_rate != 1000)
+				amotion = amotion * st->aspd_rate / 1000;
 
 			amotion = status->calc_fix_aspd(bl, sc, amotion);
 			st->amotion = cap_value(amotion, battle_config.monster_max_aspd, 2000);
 
-			temp = bst->adelay*st->aspd_rate / 1000;
+			temp = bst->adelay * st->aspd_rate / 1000;
 			st->adelay = cap_value(temp, battle_config.monster_max_aspd * 2, 4000);
 		}
 	}
 
-	if(flag&(SCB_VIT|SCB_MAXHP|SCB_INT|SCB_MAXSP|SCB_REGEN) && bl->type&BL_REGEN)
+	if (flag & (SCB_VIT | SCB_MAXHP | SCB_INT | SCB_MAXSP | SCB_REGEN) && bl->type & BL_REGEN)
 		status->calc_regen(bl, st, status->get_regen_data(bl));
 
-	if(flag&SCB_REGEN && bl->type&BL_REGEN)
+	if (flag & SCB_REGEN && bl->type & BL_REGEN)
 		status->calc_regen_rate(bl, status->get_regen_data(bl));
 }
 
@@ -3399,10 +3398,10 @@ static void status_calc_bl_(struct block_list *bl, e_scb_flag flag, enum e_statu
 	if (bl->type == BL_PC) {
 		struct map_session_data *sd = BL_UCAST(BL_PC, bl);
 		if (sd->delayed_damage != 0) {
-			if (opt&SCO_FORCE) {
-				sd->state.hold_recalc = 0;/* clear and move on */
+			if (opt & SCO_FORCE) {
+				sd->state.hold_recalc = 0; /* clear and move on */
 			} else {
-				sd->state.hold_recalc = 1;/* flag and stop */
+				sd->state.hold_recalc = 1; /* flag and stop */
 				return;
 			}
 		}
@@ -3412,15 +3411,29 @@ static void status_calc_bl_(struct block_list *bl, e_scb_flag flag, enum e_statu
 	st = status->get_status_data(bl);
 	memcpy(&bst, st, sizeof(struct status_data));
 
-	if( flag&SCB_BASE ) {// calculate the object's base status too
-		switch( bl->type ) {
-			case BL_PC:   status->calc_pc_(BL_CAST(BL_PC,bl), opt);          break;
-			case BL_MOB:  status->calc_mob_(BL_CAST(BL_MOB,bl), opt);        break;
-			case BL_PET:  status->calc_pet_(BL_CAST(BL_PET,bl), opt);        break;
-			case BL_HOM:  status->calc_homunculus_(BL_CAST(BL_HOM,bl), opt); break;
-			case BL_MER:  status->calc_mercenary_(BL_CAST(BL_MER,bl), opt);  break;
-			case BL_ELEM: status->calc_elemental_(BL_CAST(BL_ELEM,bl), opt); break;
-			case BL_NPC:  status->calc_npc_(BL_CAST(BL_NPC,bl), opt);        break;
+	if (flag & SCB_BASE) { // calculate the object's base status too
+		switch (bl->type) {
+			case BL_PC:
+				status->calc_pc_(BL_CAST(BL_PC, bl), opt);
+				break;
+			case BL_MOB:
+				status->calc_mob_(BL_CAST(BL_MOB, bl), opt);
+				break;
+			case BL_PET:
+				status->calc_pet_(BL_CAST(BL_PET, bl), opt);
+				break;
+			case BL_HOM:
+				status->calc_homunculus_(BL_CAST(BL_HOM, bl), opt);
+				break;
+			case BL_MER:
+				status->calc_mercenary_(BL_CAST(BL_MER, bl), opt);
+				break;
+			case BL_ELEM:
+				status->calc_elemental_(BL_CAST(BL_ELEM, bl), opt);
+				break;
+			case BL_NPC:
+				status->calc_npc_(BL_CAST(BL_NPC, bl), opt);
+				break;
 			case BL_NUL:
 			case BL_SKILL:
 			case BL_CHAT:
@@ -3430,10 +3443,10 @@ static void status_calc_bl_(struct block_list *bl, e_scb_flag flag, enum e_statu
 		}
 	}
 
-	if( bl->type == BL_PET )
+	if (bl->type == BL_PET)
 		return; // pets are not affected by statuses
 
-	if( opt&SCO_FIRST && bl->type == BL_MOB ) {
+	if (opt & SCO_FIRST && bl->type == BL_MOB) {
 #ifdef RENEWAL
 		status->update_matk(bl); // Otherwise, the mob will spawn with lower MATK values
 #endif
@@ -3442,150 +3455,150 @@ static void status_calc_bl_(struct block_list *bl, e_scb_flag flag, enum e_statu
 
 	status->calc_bl_main(bl, flag);
 
-	if( opt&SCO_FIRST && bl->type == BL_HOM )
+	if (opt & SCO_FIRST && bl->type == BL_HOM)
 		return; // client update handled by caller
 
 	// compare against new values and send client updates
-	if( bl->type == BL_PC ) {
+	if (bl->type == BL_PC) {
 		struct map_session_data *sd = BL_CAST(BL_PC, bl);
-		if(bst.str != st->str)
-			clif->updatestatus(sd,SP_STR);
-		if(bst.agi != st->agi)
-			clif->updatestatus(sd,SP_AGI);
-		if(bst.vit != st->vit)
-			clif->updatestatus(sd,SP_VIT);
-		if(bst.int_ != st->int_)
-			clif->updatestatus(sd,SP_INT);
-		if(bst.dex != st->dex)
-			clif->updatestatus(sd,SP_DEX);
-		if(bst.luk != st->luk)
-			clif->updatestatus(sd,SP_LUK);
-		if(bst.hit != st->hit)
-			clif->updatestatus(sd,SP_HIT);
-		if(bst.flee != st->flee)
-			clif->updatestatus(sd,SP_FLEE1);
-		if(bst.amotion != st->amotion)
-			clif->updatestatus(sd,SP_ASPD);
-		if(bst.speed != st->speed)
-			clif->updatestatus(sd,SP_SPEED);
+		if (bst.str != st->str)
+			clif->updatestatus(sd, SP_STR);
+		if (bst.agi != st->agi)
+			clif->updatestatus(sd, SP_AGI);
+		if (bst.vit != st->vit)
+			clif->updatestatus(sd, SP_VIT);
+		if (bst.int_ != st->int_)
+			clif->updatestatus(sd, SP_INT);
+		if (bst.dex != st->dex)
+			clif->updatestatus(sd, SP_DEX);
+		if (bst.luk != st->luk)
+			clif->updatestatus(sd, SP_LUK);
+		if (bst.hit != st->hit)
+			clif->updatestatus(sd, SP_HIT);
+		if (bst.flee != st->flee)
+			clif->updatestatus(sd, SP_FLEE1);
+		if (bst.amotion != st->amotion)
+			clif->updatestatus(sd, SP_ASPD);
+		if (bst.speed != st->speed)
+			clif->updatestatus(sd, SP_SPEED);
 
-		if(bst.batk != st->batk
+		if (bst.batk != st->batk
 #ifndef RENEWAL
-		   || bst.rhw.atk != st->rhw.atk || bst.lhw.atk != st->lhw.atk || bst.atk_percent != st->atk_percent
+		    || bst.rhw.atk != st->rhw.atk || bst.lhw.atk != st->lhw.atk || bst.atk_percent != st->atk_percent
 #endif
 		)
-			clif->updatestatus(sd,SP_ATK1);
+			clif->updatestatus(sd, SP_ATK1);
 		else if (bst.atk_percent != st->atk_percent)
 			clif->updatestatus(sd, SP_ATK1);
 
-		if(bst.def != st->def) {
-			clif->updatestatus(sd,SP_DEF1);
+		if (bst.def != st->def) {
+			clif->updatestatus(sd, SP_DEF1);
 #ifdef RENEWAL
-			clif->updatestatus(sd,SP_DEF2);
+			clif->updatestatus(sd, SP_DEF2);
 #endif
 		}
 
-		if(bst.rhw.atk2 != st->rhw.atk2 || bst.lhw.atk2 != st->lhw.atk2
+		if (bst.rhw.atk2 != st->rhw.atk2 || bst.lhw.atk2 != st->lhw.atk2
 #ifdef RENEWAL
-			|| bst.rhw.atk != st->rhw.atk || bst.lhw.atk != st->lhw.atk
+		    || bst.rhw.atk != st->rhw.atk || bst.lhw.atk != st->lhw.atk
 #endif
-			)
-			clif->updatestatus(sd,SP_ATK2);
+		)
+			clif->updatestatus(sd, SP_ATK2);
 
-		if(bst.def2 != st->def2){
-			clif->updatestatus(sd,SP_DEF2);
+		if (bst.def2 != st->def2) {
+			clif->updatestatus(sd, SP_DEF2);
 #ifdef RENEWAL
-			clif->updatestatus(sd,SP_DEF1);
+			clif->updatestatus(sd, SP_DEF1);
 #endif
 		} else if (bst.def_percent != st->def_percent) {
-			clif->updatestatus(sd,SP_DEF2);
+			clif->updatestatus(sd, SP_DEF2);
 		}
 
-		if(bst.flee2 != st->flee2)
-			clif->updatestatus(sd,SP_FLEE2);
-		if(bst.cri != st->cri)
-			clif->updatestatus(sd,SP_CRITICAL);
+		if (bst.flee2 != st->flee2)
+			clif->updatestatus(sd, SP_FLEE2);
+		if (bst.cri != st->cri)
+			clif->updatestatus(sd, SP_CRITICAL);
 #ifndef RENEWAL
-		if(bst.matk_max != st->matk_max)
-			clif->updatestatus(sd,SP_MATK1);
-		if(bst.matk_min != st->matk_min)
-			clif->updatestatus(sd,SP_MATK2);
+		if (bst.matk_max != st->matk_max)
+			clif->updatestatus(sd, SP_MATK1);
+		if (bst.matk_min != st->matk_min)
+			clif->updatestatus(sd, SP_MATK2);
 #else
-		if(bst.matk_max != st->matk_max || bst.matk_min != st->matk_min){
-			clif->updatestatus(sd,SP_MATK2);
-			clif->updatestatus(sd,SP_MATK1);
+		if (bst.matk_max != st->matk_max || bst.matk_min != st->matk_min) {
+			clif->updatestatus(sd, SP_MATK2);
+			clif->updatestatus(sd, SP_MATK1);
 		}
 #endif
-		if(bst.mdef != st->mdef) {
-			clif->updatestatus(sd,SP_MDEF1);
+		if (bst.mdef != st->mdef) {
+			clif->updatestatus(sd, SP_MDEF1);
 #ifdef RENEWAL
-			clif->updatestatus(sd,SP_MDEF2);
+			clif->updatestatus(sd, SP_MDEF2);
 #endif
 		}
-		if(bst.mdef2 != st->mdef2) {
-			clif->updatestatus(sd,SP_MDEF2);
+		if (bst.mdef2 != st->mdef2) {
+			clif->updatestatus(sd, SP_MDEF2);
 #ifdef RENEWAL
-			clif->updatestatus(sd,SP_MDEF1);
+			clif->updatestatus(sd, SP_MDEF1);
 #endif
 		}
-		if(bst.rhw.range != st->rhw.range)
-			clif->updatestatus(sd,SP_ATTACKRANGE);
-		if(bst.max_hp != st->max_hp)
-			clif->updatestatus(sd,SP_MAXHP);
-		if(bst.max_sp != st->max_sp)
-			clif->updatestatus(sd,SP_MAXSP);
-		if(bst.hp != st->hp)
-			clif->updatestatus(sd,SP_HP);
-		if(bst.sp != st->sp)
-			clif->updatestatus(sd,SP_SP);
+		if (bst.rhw.range != st->rhw.range)
+			clif->updatestatus(sd, SP_ATTACKRANGE);
+		if (bst.max_hp != st->max_hp)
+			clif->updatestatus(sd, SP_MAXHP);
+		if (bst.max_sp != st->max_sp)
+			clif->updatestatus(sd, SP_MAXSP);
+		if (bst.hp != st->hp)
+			clif->updatestatus(sd, SP_HP);
+		if (bst.sp != st->sp)
+			clif->updatestatus(sd, SP_SP);
 #ifdef RENEWAL
-		if(bst.equip_atk != st->equip_atk)
-			clif->updatestatus(sd,SP_ATK2);
+		if (bst.equip_atk != st->equip_atk)
+			clif->updatestatus(sd, SP_ATK2);
 #endif
-	} else if( bl->type == BL_HOM ) {
+	} else if (bl->type == BL_HOM) {
 		struct homun_data *hd = BL_CAST(BL_HOM, bl);
 		if (hd->master != NULL && memcmp(&bst, st, sizeof(struct status_data)) != 0)
-			clif->hominfo(hd->master,hd,0);
-	} else if( bl->type == BL_MER ) {
+			clif->hominfo(hd->master, hd, 0);
+	} else if (bl->type == BL_MER) {
 		struct mercenary_data *md = BL_CAST(BL_MER, bl);
-		if( bst.rhw.atk != st->rhw.atk || bst.rhw.atk2 != st->rhw.atk2 )
+		if (bst.rhw.atk != st->rhw.atk || bst.rhw.atk2 != st->rhw.atk2)
 			clif->mercenary_updatestatus(md->master, SP_ATK1);
-		if( bst.matk_max != st->matk_max )
+		if (bst.matk_max != st->matk_max)
 			clif->mercenary_updatestatus(md->master, SP_MATK1);
-		if( bst.hit != st->hit )
+		if (bst.hit != st->hit)
 			clif->mercenary_updatestatus(md->master, SP_HIT);
-		if( bst.cri != st->cri )
+		if (bst.cri != st->cri)
 			clif->mercenary_updatestatus(md->master, SP_CRITICAL);
-		if( bst.def != st->def )
+		if (bst.def != st->def)
 			clif->mercenary_updatestatus(md->master, SP_DEF1);
-		if( bst.mdef != st->mdef )
+		if (bst.mdef != st->mdef)
 			clif->mercenary_updatestatus(md->master, SP_MDEF1);
-		if( bst.flee != st->flee )
+		if (bst.flee != st->flee)
 			clif->mercenary_updatestatus(md->master, SP_MERCFLEE);
-		if( bst.amotion != st->amotion )
+		if (bst.amotion != st->amotion)
 			clif->mercenary_updatestatus(md->master, SP_ASPD);
-		if( bst.max_hp != st->max_hp )
+		if (bst.max_hp != st->max_hp)
 			clif->mercenary_updatestatus(md->master, SP_MAXHP);
-		if( bst.max_sp != st->max_sp )
+		if (bst.max_sp != st->max_sp)
 			clif->mercenary_updatestatus(md->master, SP_MAXSP);
-		if( bst.hp != st->hp )
+		if (bst.hp != st->hp)
 			clif->mercenary_updatestatus(md->master, SP_HP);
-		if( bst.sp != st->sp )
+		if (bst.sp != st->sp)
 			clif->mercenary_updatestatus(md->master, SP_SP);
-	} else if( bl->type == BL_ELEM ) {
+	} else if (bl->type == BL_ELEM) {
 		struct elemental_data *ed = BL_CAST(BL_ELEM, bl);
-		if( bst.max_hp != st->max_hp )
+		if (bst.max_hp != st->max_hp)
 			clif->elemental_updatestatus(ed->master, SP_MAXHP);
-		if( bst.max_sp != st->max_sp )
+		if (bst.max_sp != st->max_sp)
 			clif->elemental_updatestatus(ed->master, SP_MAXSP);
-		if( bst.hp != st->hp )
+		if (bst.hp != st->hp)
 			clif->elemental_updatestatus(ed->master, SP_HP);
-		if( bst.sp != st->sp )
+		if (bst.sp != st->sp)
 			clif->mercenary_updatestatus(ed->master, SP_SP);
 	}
 }
 
-//Checks whether the source can see and chase target.
+// Checks whether the source can see and chase target.
 static int status_check_visibility(struct block_list *src, struct block_list *target)
 {
 	int view_range;
@@ -3594,48 +3607,12 @@ static int status_check_visibility(struct block_list *src, struct block_list *ta
 	nullpo_ret(src);
 	nullpo_ret(target);
 
-	switch ( src->type ) {
-	case BL_MOB:
-		view_range = BL_UCCAST(BL_MOB, src)->min_chase;
-		break;
-	case BL_PET:
-		view_range = BL_UCCAST(BL_PET, src)->db->range2;
-		break;
-	case BL_NUL:
-	case BL_HOM:
-	case BL_SKILL:
-	case BL_NPC:
-	case BL_CHAT:
-	case BL_MER:
-	case BL_PC:
-	case BL_ITEM:
-	case BL_ELEM:
-	case BL_ALL:
-	default:
-		view_range = AREA_SIZE;
-	}
-
-	if ( src->m != target->m || !check_distance_bl(src, target, view_range) )
-		return 0;
-
-	if ( src->type == BL_NPC ) /* NPCs don't care for the rest */
-		return 1;
-
-	if ( (tsc = status->get_sc(target)) ) {
-		struct status_data *st = status->get_status_data(src);
-
-		switch ( target->type ) { //Check for chase-walk/hiding/cloaking opponents.
-		case BL_PC:
-			if ((tsc->data[SC_CLOAKINGEXCEED] != NULL || tsc->data[SC_NEWMOON] != NULL) && !(st->mode & MD_BOSS))
-				return 0;
-			if ((tsc->option&(OPTION_HIDE | OPTION_CLOAK | OPTION_CHASEWALK)
-			  || tsc->data[SC_STEALTHFIELD] != NULL
-			  || tsc->data[SC__INVISIBILITY] != NULL
-			  || tsc->data[SC_CAMOUFLAGE] != NULL
-			    )
-			 && !(st->mode&MD_BOSS)
-			 && (BL_UCCAST(BL_PC, target)->special_state.perfect_hiding || !(st->mode&MD_DETECTOR)))
-				return 0;
+	switch (src->type) {
+		case BL_MOB:
+			view_range = BL_UCCAST(BL_MOB, src)->min_chase;
+			break;
+		case BL_PET:
+			view_range = BL_UCCAST(BL_PET, src)->db->range2;
 			break;
 		case BL_NUL:
 		case BL_HOM:
@@ -3643,15 +3620,44 @@ static int status_check_visibility(struct block_list *src, struct block_list *ta
 		case BL_NPC:
 		case BL_CHAT:
 		case BL_MER:
-		case BL_ELEM:
-		case BL_MOB:
+		case BL_PC:
 		case BL_ITEM:
-		case BL_PET:
+		case BL_ELEM:
 		case BL_ALL:
 		default:
-			if ( (tsc->option&(OPTION_HIDE | OPTION_CLOAK | OPTION_CHASEWALK) || tsc->data[SC_CAMOUFLAGE]) && !(st->mode&(MD_BOSS | MD_DETECTOR)) )
-				return 0;
+			view_range = AREA_SIZE;
+	}
 
+	if (src->m != target->m || !check_distance_bl(src, target, view_range))
+		return 0;
+
+	if (src->type == BL_NPC) /* NPCs don't care for the rest */
+		return 1;
+
+	if ((tsc = status->get_sc(target))) {
+		struct status_data *st = status->get_status_data(src);
+
+		switch (target->type) { // Check for chase-walk/hiding/cloaking opponents.
+			case BL_PC:
+				if ((tsc->data[SC_CLOAKINGEXCEED] != NULL || tsc->data[SC_NEWMOON] != NULL) && !(st->mode & MD_BOSS))
+					return 0;
+				if ((tsc->option & (OPTION_HIDE | OPTION_CLOAK | OPTION_CHASEWALK) || tsc->data[SC_STEALTHFIELD] != NULL || tsc->data[SC__INVISIBILITY] != NULL || tsc->data[SC_CAMOUFLAGE] != NULL) && !(st->mode & MD_BOSS) && (BL_UCCAST(BL_PC, target)->special_state.perfect_hiding || !(st->mode & MD_DETECTOR)))
+					return 0;
+				break;
+			case BL_NUL:
+			case BL_HOM:
+			case BL_SKILL:
+			case BL_NPC:
+			case BL_CHAT:
+			case BL_MER:
+			case BL_ELEM:
+			case BL_MOB:
+			case BL_ITEM:
+			case BL_PET:
+			case BL_ALL:
+			default:
+				if ((tsc->option & (OPTION_HIDE | OPTION_CLOAK | OPTION_CHASEWALK) || tsc->data[SC_CAMOUFLAGE]) && !(st->mode & (MD_BOSS | MD_DETECTOR)))
+					return 0;
 		}
 	}
 
@@ -3691,14 +3697,13 @@ static int status_base_amotion_pc(struct map_session_data *sd, struct status_dat
 	temp = (float)(sqrt(temp) * 0.25f) + 0xc4;
 	if (sd->weapontype == W_BOOK && (skill_lv = pc->checkskill(sd, SA_ADVANCEDBOOK)) > 0)
 		val += (skill_lv - 1) / 2 + 1;
-	if ( (skill_lv = pc->checkskill(sd, GS_SINGLEACTION)) > 0 )
+	if ((skill_lv = pc->checkskill(sd, GS_SINGLEACTION)) > 0)
 		val += ((skill_lv + 1) / 2);
 	amotion = ((int)(temp + ((float)(status->calc_aspd(&sd->bl, &sd->sc, 1) + val) * st->agi / 200)) - min(amotion, 200));
 #else
 	// base weapon delay
-	amotion = (sd->weapontype < MAX_SINGLE_WEAPON_TYPE)
-		? (status->dbs->aspd_base[pc->class2idx(sd->status.class)][sd->weapontype]) // single weapon
-		: (status->dbs->aspd_base[pc->class2idx(sd->status.class)][sd->weapontype1] + status->dbs->aspd_base[pc->class2idx(sd->status.class)][sd->weapontype2]) * 7 / 10; // dual-wield
+	amotion = (sd->weapontype < MAX_SINGLE_WEAPON_TYPE) ? (status->dbs->aspd_base[pc->class2idx(sd->status.class)][sd->weapontype])                                                                                       // single weapon
+	                                                    : (status->dbs->aspd_base[pc->class2idx(sd->status.class)][sd->weapontype1] + status->dbs->aspd_base[pc->class2idx(sd->status.class)][sd->weapontype2]) * 7 / 10; // dual-wield
 
 	// percentual delay reduction from stats
 	amotion -= amotion * (4 * st->agi + st->dex) / 1000;
@@ -3707,7 +3712,7 @@ static int status_base_amotion_pc(struct map_session_data *sd, struct status_dat
 	amotion += sd->bonus.aspd_add;
 
 	/* angra manyu disregards aspd_base and similar */
-	if ( sd->equip_index[EQI_HAND_R] >= 0 && sd->status.inventory[sd->equip_index[EQI_HAND_R]].nameid == ITEMID_ANGRA_MANYU )
+	if (sd->equip_index[EQI_HAND_R] >= 0 && sd->status.inventory[sd->equip_index[EQI_HAND_R]].nameid == ITEMID_ANGRA_MANYU)
 		return 0;
 #endif
 
@@ -3720,23 +3725,23 @@ static int status_base_atk(const struct block_list *bl, const struct status_data
 
 	nullpo_ret(bl);
 	nullpo_ret(st);
-	if ( !(bl->type&battle_config.enable_baseatk) )
+	if (!(bl->type & battle_config.enable_baseatk))
 		return 0;
 
 	if (bl->type == BL_PC) {
 		switch (BL_UCCAST(BL_PC, bl)->weapontype) {
-		case W_BOW:
-		case W_MUSICAL:
-		case W_WHIP:
-		case W_REVOLVER:
-		case W_RIFLE:
-		case W_GATLING:
-		case W_SHOTGUN:
-		case W_GRENADE:
-			flag = 1;
+			case W_BOW:
+			case W_MUSICAL:
+			case W_WHIP:
+			case W_REVOLVER:
+			case W_RIFLE:
+			case W_GATLING:
+			case W_SHOTGUN:
+			case W_GRENADE:
+				flag = 1;
 		}
 	}
-	if ( flag ) {
+	if (flag) {
 		str = st->dex;
 		dex = st->str;
 	} else {
@@ -3744,11 +3749,11 @@ static int status_base_atk(const struct block_list *bl, const struct status_data
 		dex = st->dex;
 	}
 #ifdef RENEWAL
-		dstr = str;
+	dstr = str;
 #endif
-	//Normally only players have base-atk, but homunc have a different batk
-	// equation, hinting that perhaps non-players should use this for batk.
-	// [Skotlex]
+	// Normally only players have base-atk, but homunc have a different batk
+	//  equation, hinting that perhaps non-players should use this for batk.
+	//  [Skotlex]
 #ifdef RENEWAL
 	if (bl->type == BL_HOM) {
 		const struct homun_data *hd = BL_UCCAST(BL_HOM, bl);
@@ -3756,21 +3761,21 @@ static int status_base_atk(const struct block_list *bl, const struct status_data
 	}
 #else
 	dstr = str / 10;
-	str += dstr*dstr;
+	str += dstr * dstr;
 #endif
 #ifdef RENEWAL
 	if (bl->type == BL_PC)
 		str = (int)(dstr + (float)dex / 5 + (float)st->luk / 3 + (float)BL_UCCAST(BL_PC, bl)->status.base_level / 4);
 	else if (bl->type == BL_MOB)
 		str = dstr + BL_UCCAST(BL_MOB, bl)->level;
-#if 0
+	#if 0
 	else if (bl->type == BL_MER) // FIXME: What should go here?
 		str = dstr + BL_UCCAST(BL_MER, bl)->level;
-#endif // 0
-#else // ! RENEWAL
+	#endif // 0
+#else      // ! RENEWAL
 	if (bl->type == BL_PC)
 		str += dex / 5 + st->luk / 5;
-#endif // RENEWAL
+#endif     // RENEWAL
 	return cap_value(str, battle_config.batk_min, battle_config.batk_max);
 }
 
@@ -3780,7 +3785,7 @@ static int status_base_matk_min(const struct status_data *st)
 #ifdef RENEWAL
 	Assert_ret(0);
 	return 0;
-#else // not RENEWAL
+#else  // not RENEWAL
 	int matk = st->int_ + (st->int_ / 7) * (st->int_ / 7);
 	return cap_value(matk, battle_config.matk_min, battle_config.matk_max);
 #endif // RENEWAL
@@ -3829,20 +3834,17 @@ static int status_base_matk(struct block_list *bl, const struct status_data *st,
 #endif
 }
 
-//Fills in the misc data that can be calculated from the other status info (except for level)
+// Fills in the misc data that can be calculated from the other status info (except for level)
 static void status_calc_misc(struct block_list *bl, struct status_data *st, int level)
 {
 	nullpo_retv(bl);
 	nullpo_retv(st);
-	//Non players get the value set, players need to stack with previous bonuses.
-	if ( bl->type != BL_PC )
-		st->batk =
-		st->hit = st->flee =
-		st->def2 = st->mdef2 =
-		st->cri = st->flee2 = 0;
+	// Non players get the value set, players need to stack with previous bonuses.
+	if (bl->type != BL_PC)
+		st->batk = st->hit = st->flee = st->def2 = st->mdef2 = st->cri = st->flee2 = 0;
 
 #ifdef RENEWAL // renewal formulas
-	if ( bl->type == BL_HOM ) {
+	if (bl->type == BL_HOM) {
 		const struct homun_data *hd = BL_UCCAST(BL_HOM, bl);
 		st->def2 = status_get_homvit(st, hd) + status_get_homagi(st, hd) / 2;
 		st->mdef2 = (status_get_homvit(st, hd) + status_get_homint(st, hd)) / 2;
@@ -3853,12 +3855,12 @@ static void status_calc_misc(struct block_list *bl, struct status_data *st, int 
 		st->rhw.atk = (status_get_homstr(st, hd) + status_get_homdex(st, hd)) / 5;
 		st->rhw.atk2 = (status_get_homluk(st, hd) + status_get_homstr(st, hd) + status_get_homdex(st, hd)) / 3;
 	} else {
-		st->hit += level + st->dex + (bl->type == BL_PC ? st->luk / 3 + 175 : 150); //base level + ( every 1 dex = +1 hit ) + (every 3 luk = +1 hit) + 175
-		st->flee += level + st->agi + (bl->type == BL_MER ? 0: (bl->type == BL_PC ? st->luk / 5 : 0) + 100); //base level + ( every 1 agi = +1 flee ) + (every 5 luk = +1 flee) + 100
-		st->def2 += (int)(((float)level + st->vit) / 2 + (bl->type == BL_PC ? ((float)st->agi / 5) : 0)); //base level + (every 2 vit = +1 def) + (every 5 agi = +1 def)
+		st->hit += level + st->dex + (bl->type == BL_PC ? st->luk / 3 + 175 : 150);                                                                   // base level + ( every 1 dex = +1 hit ) + (every 3 luk = +1 hit) + 175
+		st->flee += level + st->agi + (bl->type == BL_MER ? 0 : (bl->type == BL_PC ? st->luk / 5 : 0) + 100);                                         // base level + ( every 1 agi = +1 flee ) + (every 5 luk = +1 flee) + 100
+		st->def2 += (int)(((float)level + st->vit) / 2 + (bl->type == BL_PC ? ((float)st->agi / 5) : 0));                                             // base level + (every 2 vit = +1 def) + (every 5 agi = +1 def)
 		st->mdef2 += (int)(bl->type == BL_PC ? (st->int_ + ((float)level / 4) + ((float)(st->dex + st->vit) / 5)) : ((float)(st->int_ + level) / 4)); //(every 4 base level = +1 mdef) + (every 1 int = +1 mdef) + (every 5 dex = +1 mdef) + (every 5 vit = +1 mdef)
 	}
-#else // not RENEWAL
+#else  // not RENEWAL
 	st->matk_min = status->base_matk_min(st);
 	st->matk_max = status->base_matk_max(st);
 	st->hit += level + st->dex;
@@ -3872,38 +3874,38 @@ static void status_calc_misc(struct block_list *bl, struct status_data *st, int 
 	st->def_percent = 100;
 	st->mdef_percent = 100;
 
-	if ( bl->type&battle_config.enable_critical )
+	if (bl->type & battle_config.enable_critical)
 		st->cri += 10 + (st->luk * 10 / 3); // (every 1 luk = +0.33 critical -> 3 luk = +1 critical)
 	else
 		st->cri = 0;
 
-	if ( bl->type&battle_config.enable_perfect_flee )
+	if (bl->type & battle_config.enable_perfect_flee)
 		st->flee2 += st->luk + 10; //(every 10 luk = +1 perfect flee)
 	else
 		st->flee2 = 0;
 
-	if ( st->batk ) {
+	if (st->batk) {
 		int temp = st->batk + status->base_atk(bl, st);
 		st->batk = cap_value(temp, battle_config.batk_min, battle_config.batk_max);
 	} else
 		st->batk = status->base_atk(bl, st);
-	if ( st->cri ) {
-		switch ( bl->type ) {
+	if (st->cri) {
+		switch (bl->type) {
 			case BL_MOB:
-				if ( battle_config.mob_critical_rate != 100 )
-					st->cri = st->cri*battle_config.mob_critical_rate / 100;
-				if ( !st->cri && battle_config.mob_critical_rate )
+				if (battle_config.mob_critical_rate != 100)
+					st->cri = st->cri * battle_config.mob_critical_rate / 100;
+				if (!st->cri && battle_config.mob_critical_rate)
 					st->cri = 10;
 				break;
 			case BL_PC:
-				//Players don't have a critical adjustment setting as of yet.
+				// Players don't have a critical adjustment setting as of yet.
 				break;
 			case BL_MER:
-	#ifdef RENEWAL
+#ifdef RENEWAL
 				st->matk_min = st->matk_max = status->base_matk_max(st);
 				st->def2 = st->vit + level / 10 + st->vit / 5;
 				st->mdef2 = level / 10 + st->int_ / 5;
-	#endif
+#endif
 			/* Fall through */
 			case BL_HOM:
 			case BL_NUL:
@@ -3915,13 +3917,13 @@ static void status_calc_misc(struct block_list *bl, struct status_data *st, int 
 			case BL_ITEM:
 			case BL_ALL:
 			default:
-				if ( battle_config.critical_rate != 100 )
-					st->cri = st->cri*battle_config.critical_rate / 100;
-				if ( !st->cri && battle_config.critical_rate )
+				if (battle_config.critical_rate != 100)
+					st->cri = st->cri * battle_config.critical_rate / 100;
+				if (!st->cri && battle_config.critical_rate)
 					st->cri = 10;
 		}
 	}
-	if ( bl->type&BL_REGEN )
+	if (bl->type & BL_REGEN)
 		status->calc_regen(bl, st, status->get_regen_data(bl));
 }
 
@@ -3930,58 +3932,58 @@ static void status_calc_misc(struct block_list *bl, struct status_data *st, int 
  *------------------------------------------*/
 static unsigned short status_calc_str(struct block_list *bl, struct status_change *sc, int str)
 {
-	if(!sc || !sc->count)
-		return cap_value(str,0,USHRT_MAX);
+	if (!sc || !sc->count)
+		return cap_value(str, 0, USHRT_MAX);
 
-	if(sc->data[SC_FULL_THROTTLE])
+	if (sc->data[SC_FULL_THROTTLE])
 		str += str * 20 / 100;
-	if(sc->data[SC_HARMONIZE]) {
+	if (sc->data[SC_HARMONIZE]) {
 		str -= sc->data[SC_HARMONIZE]->val2;
-		return (unsigned short)cap_value(str,0,USHRT_MAX);
+		return (unsigned short)cap_value(str, 0, USHRT_MAX);
 	}
-	if(sc->data[SC_BEYOND_OF_WARCRY])
+	if (sc->data[SC_BEYOND_OF_WARCRY])
 		str += sc->data[SC_BEYOND_OF_WARCRY]->val3;
-	if(sc->data[SC_INCALLSTATUS])
+	if (sc->data[SC_INCALLSTATUS])
 		str += sc->data[SC_INCALLSTATUS]->val1;
-	if(sc->data[SC_CHASEWALK2])
+	if (sc->data[SC_CHASEWALK2])
 		str += sc->data[SC_CHASEWALK2]->val1;
-	if(sc->data[SC_FOOD_STR])
+	if (sc->data[SC_FOOD_STR])
 		str += sc->data[SC_FOOD_STR]->val1;
-	if(sc->data[SC_FOOD_STR_CASH])
+	if (sc->data[SC_FOOD_STR_CASH])
 		str += sc->data[SC_FOOD_STR_CASH]->val1;
-	if(sc->data[SC_GDSKILL_BATTLEORDER])
+	if (sc->data[SC_GDSKILL_BATTLEORDER])
 		str += 5;
-	if(sc->data[SC_LEADERSHIP])
+	if (sc->data[SC_LEADERSHIP])
 		str += sc->data[SC_LEADERSHIP]->val1;
-	if(sc->data[SC_SHOUT])
+	if (sc->data[SC_SHOUT])
 		str += 4;
-	if(sc->data[SC_TRUESIGHT])
+	if (sc->data[SC_TRUESIGHT])
 		str += 5;
-	if(sc->data[SC_STRUP])
+	if (sc->data[SC_STRUP])
 		str += 10;
-	if(sc->data[SC_NJ_NEN])
+	if (sc->data[SC_NJ_NEN])
 		str += sc->data[SC_NJ_NEN]->val1;
-	if(sc->data[SC_BLESSING]){
-		if(sc->data[SC_BLESSING]->val2)
+	if (sc->data[SC_BLESSING]) {
+		if (sc->data[SC_BLESSING]->val2)
 			str += sc->data[SC_BLESSING]->val2;
 		else
 			str >>= 1;
 	}
-	if(sc->data[SC_MARIONETTE_MASTER])
-		str -= ((sc->data[SC_MARIONETTE_MASTER]->val3)>>16)&0xFF;
-	if(sc->data[SC_MARIONETTE])
-		str += ((sc->data[SC_MARIONETTE]->val3)>>16)&0xFF;
-	if(sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_HIGH)
-		str += ((sc->data[SC_SOULLINK]->val3)>>16)&0xFF;
-	if(sc->data[SC_GIANTGROWTH])
+	if (sc->data[SC_MARIONETTE_MASTER])
+		str -= ((sc->data[SC_MARIONETTE_MASTER]->val3) >> 16) & 0xFF;
+	if (sc->data[SC_MARIONETTE])
+		str += ((sc->data[SC_MARIONETTE]->val3) >> 16) & 0xFF;
+	if (sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_HIGH)
+		str += ((sc->data[SC_SOULLINK]->val3) >> 16) & 0xFF;
+	if (sc->data[SC_GIANTGROWTH])
 		str += 30;
-	if(sc->data[SC_SAVAGE_STEAK])
+	if (sc->data[SC_SAVAGE_STEAK])
 		str += sc->data[SC_SAVAGE_STEAK]->val1;
-	if(sc->data[SC_INSPIRATION])
+	if (sc->data[SC_INSPIRATION])
 		str += sc->data[SC_INSPIRATION]->val3;
-	if(sc->data[SC_STOMACHACHE])
+	if (sc->data[SC_STOMACHACHE])
 		str -= sc->data[SC_STOMACHACHE]->val1;
-	if(sc->data[SC_KYOUGAKU])
+	if (sc->data[SC_KYOUGAKU])
 		str -= sc->data[SC_KYOUGAKU]->val3;
 	if (sc->data[SC_2011RWC])
 		str += sc->data[SC_2011RWC]->val1;
@@ -3990,59 +3992,59 @@ static unsigned short status_calc_str(struct block_list *bl, struct status_chang
 	if (sc->data[SC_UNIVERSESTANCE] != NULL)
 		str += sc->data[SC_UNIVERSESTANCE]->val2;
 
-	return (unsigned short)cap_value(str,0,USHRT_MAX);
+	return (unsigned short)cap_value(str, 0, USHRT_MAX);
 }
 
 static unsigned short status_calc_agi(struct block_list *bl, struct status_change *sc, int agi)
 {
-	if(!sc || !sc->count)
-		return cap_value(agi,0,USHRT_MAX);
+	if (!sc || !sc->count)
+		return cap_value(agi, 0, USHRT_MAX);
 
-	if(sc->data[SC_FULL_THROTTLE])
+	if (sc->data[SC_FULL_THROTTLE])
 		agi += agi * 20 / 100;
-	if(sc->data[SC_HARMONIZE]) {
+	if (sc->data[SC_HARMONIZE]) {
 		agi -= sc->data[SC_HARMONIZE]->val2;
-		return (unsigned short)cap_value(agi,0,USHRT_MAX);
+		return (unsigned short)cap_value(agi, 0, USHRT_MAX);
 	}
-	if(sc->data[SC_CONCENTRATION] && !sc->data[SC_QUAGMIRE])
-		agi += (agi-sc->data[SC_CONCENTRATION]->val3)*sc->data[SC_CONCENTRATION]->val2/100;
-	if(sc->data[SC_INCALLSTATUS])
+	if (sc->data[SC_CONCENTRATION] && !sc->data[SC_QUAGMIRE])
+		agi += (agi - sc->data[SC_CONCENTRATION]->val3) * sc->data[SC_CONCENTRATION]->val2 / 100;
+	if (sc->data[SC_INCALLSTATUS])
 		agi += sc->data[SC_INCALLSTATUS]->val1;
-	if(sc->data[SC_INCAGI])
+	if (sc->data[SC_INCAGI])
 		agi += sc->data[SC_INCAGI]->val1;
-	if(sc->data[SC_FOOD_AGI])
+	if (sc->data[SC_FOOD_AGI])
 		agi += sc->data[SC_FOOD_AGI]->val1;
-	if(sc->data[SC_FOOD_AGI_CASH])
+	if (sc->data[SC_FOOD_AGI_CASH])
 		agi += sc->data[SC_FOOD_AGI_CASH]->val1;
-	if(sc->data[SC_SOULCOLD])
+	if (sc->data[SC_SOULCOLD])
 		agi += sc->data[SC_SOULCOLD]->val1;
-	if(sc->data[SC_TRUESIGHT])
+	if (sc->data[SC_TRUESIGHT])
 		agi += 5;
-	if(sc->data[SC_INC_AGI])
+	if (sc->data[SC_INC_AGI])
 		agi += sc->data[SC_INC_AGI]->val2;
-	if(sc->data[SC_GS_ACCURACY])
+	if (sc->data[SC_GS_ACCURACY])
 		agi += 4; // added based on skill updates [Reddozen]
-	if(sc->data[SC_DEC_AGI])
+	if (sc->data[SC_DEC_AGI])
 		agi -= sc->data[SC_DEC_AGI]->val2;
-	if(sc->data[SC_QUAGMIRE])
+	if (sc->data[SC_QUAGMIRE])
 		agi -= sc->data[SC_QUAGMIRE]->val2;
-	if(sc->data[SC_NJ_SUITON] && sc->data[SC_NJ_SUITON]->val3)
+	if (sc->data[SC_NJ_SUITON] && sc->data[SC_NJ_SUITON]->val3)
 		agi -= sc->data[SC_NJ_SUITON]->val2;
-	if(sc->data[SC_MARIONETTE_MASTER])
-		agi -= ((sc->data[SC_MARIONETTE_MASTER]->val3)>>8)&0xFF;
-	if(sc->data[SC_MARIONETTE])
-		agi += ((sc->data[SC_MARIONETTE]->val3)>>8)&0xFF;
-	if(sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_HIGH)
-		agi += ((sc->data[SC_SOULLINK]->val3)>>8)&0xFF;
-	if(sc->data[SC_ADORAMUS])
+	if (sc->data[SC_MARIONETTE_MASTER])
+		agi -= ((sc->data[SC_MARIONETTE_MASTER]->val3) >> 8) & 0xFF;
+	if (sc->data[SC_MARIONETTE])
+		agi += ((sc->data[SC_MARIONETTE]->val3) >> 8) & 0xFF;
+	if (sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_HIGH)
+		agi += ((sc->data[SC_SOULLINK]->val3) >> 8) & 0xFF;
+	if (sc->data[SC_ADORAMUS])
 		agi -= sc->data[SC_ADORAMUS]->val2;
-	if(sc->data[SC_DROCERA_HERB_STEAMED])
+	if (sc->data[SC_DROCERA_HERB_STEAMED])
 		agi += sc->data[SC_DROCERA_HERB_STEAMED]->val1;
-	if(sc->data[SC_INSPIRATION])
+	if (sc->data[SC_INSPIRATION])
 		agi += sc->data[SC_INSPIRATION]->val3;
-	if(sc->data[SC_STOMACHACHE])
+	if (sc->data[SC_STOMACHACHE])
 		agi -= sc->data[SC_STOMACHACHE]->val1;
-	if(sc->data[SC_KYOUGAKU])
+	if (sc->data[SC_KYOUGAKU])
 		agi -= sc->data[SC_KYOUGAKU]->val3;
 	if (sc->data[SC_2011RWC])
 		agi += sc->data[SC_2011RWC]->val1;
@@ -4055,51 +4057,51 @@ static unsigned short status_calc_agi(struct block_list *bl, struct status_chang
 	if (sc->data[SC_UNIVERSESTANCE] != NULL)
 		agi += sc->data[SC_UNIVERSESTANCE]->val2;
 
-	return (unsigned short)cap_value(agi,0,USHRT_MAX);
+	return (unsigned short)cap_value(agi, 0, USHRT_MAX);
 }
 
 static unsigned short status_calc_vit(struct block_list *bl, struct status_change *sc, int vit)
 {
-	if(!sc || !sc->count)
-		return cap_value(vit,0,USHRT_MAX);
+	if (!sc || !sc->count)
+		return cap_value(vit, 0, USHRT_MAX);
 
-	if(sc->data[SC_FULL_THROTTLE])
+	if (sc->data[SC_FULL_THROTTLE])
 		vit += vit * 20 / 100;
-	if(sc->data[SC_HARMONIZE]) {
+	if (sc->data[SC_HARMONIZE]) {
 		vit -= sc->data[SC_HARMONIZE]->val2;
-		return (unsigned short)cap_value(vit,0,USHRT_MAX);
+		return (unsigned short)cap_value(vit, 0, USHRT_MAX);
 	}
-	if(sc->data[SC_INCALLSTATUS])
+	if (sc->data[SC_INCALLSTATUS])
 		vit += sc->data[SC_INCALLSTATUS]->val1;
-	if(sc->data[SC_INCVIT])
+	if (sc->data[SC_INCVIT])
 		vit += sc->data[SC_INCVIT]->val1;
-	if(sc->data[SC_FOOD_VIT])
+	if (sc->data[SC_FOOD_VIT])
 		vit += sc->data[SC_FOOD_VIT]->val1;
-	if(sc->data[SC_FOOD_VIT_CASH])
+	if (sc->data[SC_FOOD_VIT_CASH])
 		vit += sc->data[SC_FOOD_VIT_CASH]->val1;
-	if(sc->data[SC_HLIF_CHANGE])
+	if (sc->data[SC_HLIF_CHANGE])
 		vit += sc->data[SC_HLIF_CHANGE]->val2;
-	if(sc->data[SC_GLORYWOUNDS])
+	if (sc->data[SC_GLORYWOUNDS])
 		vit += sc->data[SC_GLORYWOUNDS]->val1;
-	if(sc->data[SC_TRUESIGHT])
+	if (sc->data[SC_TRUESIGHT])
 		vit += 5;
-	if(sc->data[SC_MARIONETTE_MASTER])
-		vit -= sc->data[SC_MARIONETTE_MASTER]->val3&0xFF;
-	if(sc->data[SC_MARIONETTE])
-		vit += sc->data[SC_MARIONETTE]->val3&0xFF;
-	if(sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_HIGH)
-		vit += sc->data[SC_SOULLINK]->val3&0xFF;
-	if(sc->data[SC_LAUDAAGNUS])
+	if (sc->data[SC_MARIONETTE_MASTER])
+		vit -= sc->data[SC_MARIONETTE_MASTER]->val3 & 0xFF;
+	if (sc->data[SC_MARIONETTE])
+		vit += sc->data[SC_MARIONETTE]->val3 & 0xFF;
+	if (sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_HIGH)
+		vit += sc->data[SC_SOULLINK]->val3 & 0xFF;
+	if (sc->data[SC_LAUDAAGNUS])
 		vit += 4 + sc->data[SC_LAUDAAGNUS]->val1;
-	if(sc->data[SC_MINOR_BBQ])
+	if (sc->data[SC_MINOR_BBQ])
 		vit += sc->data[SC_MINOR_BBQ]->val1;
-	if(sc->data[SC_INSPIRATION])
+	if (sc->data[SC_INSPIRATION])
 		vit += sc->data[SC_INSPIRATION]->val3;
-	if(sc->data[SC_STOMACHACHE])
+	if (sc->data[SC_STOMACHACHE])
 		vit -= sc->data[SC_STOMACHACHE]->val1;
-	if(sc->data[SC_KYOUGAKU])
+	if (sc->data[SC_KYOUGAKU])
 		vit -= sc->data[SC_KYOUGAKU]->val3;
-	if(sc->data[SC_NOEQUIPARMOR])
+	if (sc->data[SC_NOEQUIPARMOR])
 		vit -= vit * sc->data[SC_NOEQUIPARMOR]->val2 / 100;
 	if (sc->data[SC_CUP_OF_BOZA])
 		vit += sc->data[SC_CUP_OF_BOZA]->val1;
@@ -4108,141 +4110,141 @@ static unsigned short status_calc_vit(struct block_list *bl, struct status_chang
 	if (sc->data[SC_UNIVERSESTANCE] != NULL)
 		vit += sc->data[SC_UNIVERSESTANCE]->val2;
 
-	return (unsigned short)cap_value(vit,0,USHRT_MAX);
+	return (unsigned short)cap_value(vit, 0, USHRT_MAX);
 }
 
 static unsigned short status_calc_int(struct block_list *bl, struct status_change *sc, int int_)
 {
 	nullpo_ret(bl);
-	if(!sc || !sc->count)
-		return cap_value(int_,0,USHRT_MAX);
+	if (!sc || !sc->count)
+		return cap_value(int_, 0, USHRT_MAX);
 
-	if(sc->data[SC_FULL_THROTTLE])
+	if (sc->data[SC_FULL_THROTTLE])
 		int_ += int_ * 20 / 100;
-	if(sc->data[SC_HARMONIZE]) {
+	if (sc->data[SC_HARMONIZE]) {
 		int_ -= sc->data[SC_HARMONIZE]->val2;
-		return (unsigned short)cap_value(int_,0,USHRT_MAX);
+		return (unsigned short)cap_value(int_, 0, USHRT_MAX);
 	}
-	if(sc->data[SC_MELODYOFSINK])
+	if (sc->data[SC_MELODYOFSINK])
 		int_ -= sc->data[SC_MELODYOFSINK]->val3;
-	if(sc->data[SC_INCALLSTATUS])
+	if (sc->data[SC_INCALLSTATUS])
 		int_ += sc->data[SC_INCALLSTATUS]->val1;
-	if(sc->data[SC_INCINT])
+	if (sc->data[SC_INCINT])
 		int_ += sc->data[SC_INCINT]->val1;
-	if(sc->data[SC_FOOD_INT])
+	if (sc->data[SC_FOOD_INT])
 		int_ += sc->data[SC_FOOD_INT]->val1;
-	if(sc->data[SC_FOOD_INT_CASH])
+	if (sc->data[SC_FOOD_INT_CASH])
 		int_ += sc->data[SC_FOOD_INT_CASH]->val1;
-	if(sc->data[SC_HLIF_CHANGE])
+	if (sc->data[SC_HLIF_CHANGE])
 		int_ += sc->data[SC_HLIF_CHANGE]->val3;
-	if(sc->data[SC_GDSKILL_BATTLEORDER])
+	if (sc->data[SC_GDSKILL_BATTLEORDER])
 		int_ += 5;
-	if(sc->data[SC_TRUESIGHT])
+	if (sc->data[SC_TRUESIGHT])
 		int_ += 5;
-	if(sc->data[SC_BLESSING]){
+	if (sc->data[SC_BLESSING]) {
 		if (sc->data[SC_BLESSING]->val2)
 			int_ += sc->data[SC_BLESSING]->val2;
 		else
 			int_ >>= 1;
 	}
-	if(sc->data[SC_NJ_NEN])
+	if (sc->data[SC_NJ_NEN])
 		int_ += sc->data[SC_NJ_NEN]->val1;
-	if(sc->data[SC_MARIONETTE_MASTER])
-		int_ -= ((sc->data[SC_MARIONETTE_MASTER]->val4)>>16)&0xFF;
-	if(sc->data[SC_MARIONETTE])
-		int_ += ((sc->data[SC_MARIONETTE]->val4)>>16)&0xFF;
-	if(sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_HIGH)
-		int_ += ((sc->data[SC_SOULLINK]->val4)>>16)&0xFF;
-	if(sc->data[SC_MANDRAGORA])
+	if (sc->data[SC_MARIONETTE_MASTER])
+		int_ -= ((sc->data[SC_MARIONETTE_MASTER]->val4) >> 16) & 0xFF;
+	if (sc->data[SC_MARIONETTE])
+		int_ += ((sc->data[SC_MARIONETTE]->val4) >> 16) & 0xFF;
+	if (sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_HIGH)
+		int_ += ((sc->data[SC_SOULLINK]->val4) >> 16) & 0xFF;
+	if (sc->data[SC_MANDRAGORA])
 		int_ -= 4 * sc->data[SC_MANDRAGORA]->val1;
-	if(sc->data[SC_COCKTAIL_WARG_BLOOD])
+	if (sc->data[SC_COCKTAIL_WARG_BLOOD])
 		int_ += sc->data[SC_COCKTAIL_WARG_BLOOD]->val1;
-	if(sc->data[SC_INSPIRATION])
+	if (sc->data[SC_INSPIRATION])
 		int_ += sc->data[SC_INSPIRATION]->val3;
-	if(sc->data[SC_STOMACHACHE])
+	if (sc->data[SC_STOMACHACHE])
 		int_ -= sc->data[SC_STOMACHACHE]->val1;
-	if(sc->data[SC_KYOUGAKU])
+	if (sc->data[SC_KYOUGAKU])
 		int_ -= sc->data[SC_KYOUGAKU]->val3;
 	if (sc->data[SC_2011RWC])
 		int_ += sc->data[SC_2011RWC]->val1;
 	if (sc->data[SC_INT_SCROLL])
 		int_ += sc->data[SC_INT_SCROLL]->val1;
 
-	if(bl->type != BL_PC){
-		if(sc->data[SC_NOEQUIPHELM])
-			int_ -= int_ * sc->data[SC_NOEQUIPHELM]->val2/100;
-		if(sc->data[SC__STRIPACCESSARY])
+	if (bl->type != BL_PC) {
+		if (sc->data[SC_NOEQUIPHELM])
+			int_ -= int_ * sc->data[SC_NOEQUIPHELM]->val2 / 100;
+		if (sc->data[SC__STRIPACCESSARY])
 			int_ -= int_ * sc->data[SC__STRIPACCESSARY]->val2 / 100;
 	}
 	if (sc->data[SC_UNIVERSESTANCE] != NULL)
 		int_ += sc->data[SC_UNIVERSESTANCE]->val2;
 
-	return (unsigned short)cap_value(int_,0,USHRT_MAX);
+	return (unsigned short)cap_value(int_, 0, USHRT_MAX);
 }
 
 static unsigned short status_calc_dex(struct block_list *bl, struct status_change *sc, int dex)
 {
 	nullpo_ret(bl);
-	if(!sc || !sc->count)
-		return cap_value(dex,0,USHRT_MAX);
+	if (!sc || !sc->count)
+		return cap_value(dex, 0, USHRT_MAX);
 
-	if(sc->data[SC_FULL_THROTTLE])
+	if (sc->data[SC_FULL_THROTTLE])
 		dex += dex * 20 / 100;
-	if(sc->data[SC_HARMONIZE]) {
+	if (sc->data[SC_HARMONIZE]) {
 		dex -= sc->data[SC_HARMONIZE]->val2;
-		return (unsigned short)cap_value(dex,0,USHRT_MAX);
+		return (unsigned short)cap_value(dex, 0, USHRT_MAX);
 	}
-	if(sc->data[SC_CONCENTRATION] && !sc->data[SC_QUAGMIRE])
-		dex += (dex-sc->data[SC_CONCENTRATION]->val4)*sc->data[SC_CONCENTRATION]->val2/100;
-	if(sc->data[SC_INCALLSTATUS])
+	if (sc->data[SC_CONCENTRATION] && !sc->data[SC_QUAGMIRE])
+		dex += (dex - sc->data[SC_CONCENTRATION]->val4) * sc->data[SC_CONCENTRATION]->val2 / 100;
+	if (sc->data[SC_INCALLSTATUS])
 		dex += sc->data[SC_INCALLSTATUS]->val1;
-	if(sc->data[SC_INCDEX])
+	if (sc->data[SC_INCDEX])
 		dex += sc->data[SC_INCDEX]->val1;
-	if(sc->data[SC_FOOD_DEX])
+	if (sc->data[SC_FOOD_DEX])
 		dex += sc->data[SC_FOOD_DEX]->val1;
-	if(sc->data[SC_FOOD_DEX_CASH])
+	if (sc->data[SC_FOOD_DEX_CASH])
 		dex += sc->data[SC_FOOD_DEX_CASH]->val1;
-	if(sc->data[SC_GDSKILL_BATTLEORDER])
+	if (sc->data[SC_GDSKILL_BATTLEORDER])
 		dex += 5;
-	if(sc->data[SC_HAWKEYES])
+	if (sc->data[SC_HAWKEYES])
 		dex += sc->data[SC_HAWKEYES]->val1;
-	if(sc->data[SC_TRUESIGHT])
+	if (sc->data[SC_TRUESIGHT])
 		dex += 5;
-	if(sc->data[SC_QUAGMIRE])
+	if (sc->data[SC_QUAGMIRE])
 		dex -= sc->data[SC_QUAGMIRE]->val2;
-	if(sc->data[SC_BLESSING]){
+	if (sc->data[SC_BLESSING]) {
 		if (sc->data[SC_BLESSING]->val2)
 			dex += sc->data[SC_BLESSING]->val2;
 		else
 			dex >>= 1;
 	}
-	if(sc->data[SC_GS_ACCURACY])
+	if (sc->data[SC_GS_ACCURACY])
 		dex += 4; // added based on skill updates [Reddozen]
-	if(sc->data[SC_MARIONETTE_MASTER])
-		dex -= ((sc->data[SC_MARIONETTE_MASTER]->val4)>>8)&0xFF;
-	if(sc->data[SC_MARIONETTE])
-		dex += ((sc->data[SC_MARIONETTE]->val4)>>8)&0xFF;
-	if(sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_HIGH)
-		dex += ((sc->data[SC_SOULLINK]->val4)>>8)&0xFF;
-	if(sc->data[SC_SIROMA_ICE_TEA])
+	if (sc->data[SC_MARIONETTE_MASTER])
+		dex -= ((sc->data[SC_MARIONETTE_MASTER]->val4) >> 8) & 0xFF;
+	if (sc->data[SC_MARIONETTE])
+		dex += ((sc->data[SC_MARIONETTE]->val4) >> 8) & 0xFF;
+	if (sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_HIGH)
+		dex += ((sc->data[SC_SOULLINK]->val4) >> 8) & 0xFF;
+	if (sc->data[SC_SIROMA_ICE_TEA])
 		dex += sc->data[SC_SIROMA_ICE_TEA]->val1;
-	if(sc->data[SC_INSPIRATION])
+	if (sc->data[SC_INSPIRATION])
 		dex += sc->data[SC_INSPIRATION]->val3;
-	if(sc->data[SC_STOMACHACHE])
+	if (sc->data[SC_STOMACHACHE])
 		dex -= sc->data[SC_STOMACHACHE]->val1;
-	if(sc->data[SC_KYOUGAKU])
+	if (sc->data[SC_KYOUGAKU])
 		dex -= sc->data[SC_KYOUGAKU]->val3;
 	if (sc->data[SC_2011RWC])
 		dex += sc->data[SC_2011RWC]->val1;
 
-	if(sc->data[SC_MARSHOFABYSS])
+	if (sc->data[SC_MARSHOFABYSS])
 		dex -= dex * sc->data[SC_MARSHOFABYSS]->val2 / 100;
-	if(sc->data[SC__STRIPACCESSARY] && bl->type != BL_PC)
+	if (sc->data[SC__STRIPACCESSARY] && bl->type != BL_PC)
 		dex -= dex * sc->data[SC__STRIPACCESSARY]->val2 / 100;
 	if (sc->data[SC_UNIVERSESTANCE] != NULL)
 		dex += sc->data[SC_UNIVERSESTANCE]->val2;
 
-	return (unsigned short)cap_value(dex,0,USHRT_MAX);
+	return (unsigned short)cap_value(dex, 0, USHRT_MAX);
 }
 
 static unsigned short status_calc_luk(struct block_list *bl, struct status_change *sc, int luk)
@@ -4273,11 +4275,11 @@ static unsigned short status_calc_luk(struct block_list *bl, struct status_chang
 	if (sc->data[SC_GLORIA])
 		luk += 30;
 	if (sc->data[SC_MARIONETTE_MASTER])
-		luk -= sc->data[SC_MARIONETTE_MASTER]->val4&0xFF;
+		luk -= sc->data[SC_MARIONETTE_MASTER]->val4 & 0xFF;
 	if (sc->data[SC_MARIONETTE])
-		luk += sc->data[SC_MARIONETTE]->val4&0xFF;
+		luk += sc->data[SC_MARIONETTE]->val4 & 0xFF;
 	if (sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_HIGH)
-		luk += sc->data[SC_SOULLINK]->val4&0xFF;
+		luk += sc->data[SC_SOULLINK]->val4 & 0xFF;
 	if (sc->data[SC_PUTTI_TAILS_NOODLES])
 		luk += sc->data[SC_PUTTI_TAILS_NOODLES]->val1;
 	if (sc->data[SC_INSPIRATION])
@@ -4459,12 +4461,12 @@ static int status_calc_mdef_percent(struct block_list *bl, struct status_change 
 static int status_calc_batk(struct block_list *bl, struct status_change *sc, int batk, bool viewable)
 {
 	nullpo_ret(bl);
-	if(!sc || !sc->count)
+	if (!sc || !sc->count)
 		return cap_value(batk, battle_config.batk_min, battle_config.batk_max);
 
-	if( !viewable ){
+	if (!viewable) {
 		/* some statuses that are hidden in the status window */
-		if(sc->data[SC_PLUSATTACKPOWER])
+		if (sc->data[SC_PLUSATTACKPOWER])
 			batk += sc->data[SC_PLUSATTACKPOWER]->val1;
 		if (sc->data[SC_POPECOOKIE] != NULL)
 			batk += batk * sc->data[SC_POPECOOKIE]->val1 / 100;
@@ -4473,44 +4475,39 @@ static int status_calc_batk(struct block_list *bl, struct status_change *sc, int
 		return cap_value(batk, battle_config.batk_min, battle_config.batk_max);
 	}
 #ifndef RENEWAL
-	if(sc->data[SC_PLUSATTACKPOWER])
+	if (sc->data[SC_PLUSATTACKPOWER])
 		batk += sc->data[SC_PLUSATTACKPOWER]->val1;
-	if(sc->data[SC_GS_MADNESSCANCEL])
+	if (sc->data[SC_GS_MADNESSCANCEL])
 		batk += 100;
-	if(sc->data[SC_GS_GATLINGFEVER])
+	if (sc->data[SC_GS_GATLINGFEVER])
 		batk += sc->data[SC_GS_GATLINGFEVER]->val3;
 #endif
-	if(sc->data[SC_BATKFOOD])
+	if (sc->data[SC_BATKFOOD])
 		batk += sc->data[SC_BATKFOOD]->val1;
-	if(sc->data[SC_FIRE_INSIGNIA] && sc->data[SC_FIRE_INSIGNIA]->val1 == 2)
+	if (sc->data[SC_FIRE_INSIGNIA] && sc->data[SC_FIRE_INSIGNIA]->val1 == 2)
 		batk += 50;
-	if(bl->type == BL_ELEM
-		&& ((sc->data[SC_FIRE_INSIGNIA] && sc->data[SC_FIRE_INSIGNIA]->val1 == 1)
-		|| (sc->data[SC_WATER_INSIGNIA] && sc->data[SC_WATER_INSIGNIA]->val1 == 1)
-		|| (sc->data[SC_WIND_INSIGNIA] && sc->data[SC_WIND_INSIGNIA]->val1 == 1)
-		|| (sc->data[SC_EARTH_INSIGNIA] && sc->data[SC_EARTH_INSIGNIA]->val1 == 1))
-		)
+	if (bl->type == BL_ELEM && ((sc->data[SC_FIRE_INSIGNIA] && sc->data[SC_FIRE_INSIGNIA]->val1 == 1) || (sc->data[SC_WATER_INSIGNIA] && sc->data[SC_WATER_INSIGNIA]->val1 == 1) || (sc->data[SC_WIND_INSIGNIA] && sc->data[SC_WIND_INSIGNIA]->val1 == 1) || (sc->data[SC_EARTH_INSIGNIA] && sc->data[SC_EARTH_INSIGNIA]->val1 == 1)))
 		batk += batk / 5;
-	if(sc->data[SC_FULL_SWING_K])
+	if (sc->data[SC_FULL_SWING_K])
 		batk += sc->data[SC_FULL_SWING_K]->val1;
-	if(sc->data[SC_VOLCANIC_ASH] && (bl->type==BL_MOB)){
-		if(status_get_element(bl) == ELE_WATER) //water type
+	if (sc->data[SC_VOLCANIC_ASH] && (bl->type == BL_MOB)) {
+		if (status_get_element(bl) == ELE_WATER) // water type
 			batk /= 2;
 	}
-	if(sc->data[SC_PYROCLASTIC])
+	if (sc->data[SC_PYROCLASTIC])
 		batk += sc->data[SC_PYROCLASTIC]->val2;
 	if (sc->data[SC_ANGRIFFS_MODUS])
 		batk += sc->data[SC_ANGRIFFS_MODUS]->val2;
 
-	if( sc->data[SC_ZANGETSU] )
+	if (sc->data[SC_ZANGETSU])
 		batk += sc->data[SC_ZANGETSU]->val2;
-#if 0 //Curse shouldn't effect on this?  <- Curse OR Bleeding??
+#if 0  // Curse shouldn't effect on this?  <- Curse OR Bleeding??
 	if(sc->data[SC_BLOODING])
 		batk -= batk * 25/100;
 #endif // 0
-	if(sc->data[SC__ENERVATION])
+	if (sc->data[SC__ENERVATION])
 		batk -= batk * sc->data[SC__ENERVATION]->val2 / 100;
-	if(sc->data[SC_SATURDAY_NIGHT_FEVER])
+	if (sc->data[SC_SATURDAY_NIGHT_FEVER])
 		batk += 100 * sc->data[SC_SATURDAY_NIGHT_FEVER]->val1;
 	if (sc->data[SC_BATTLESCROLL])
 		batk += batk * sc->data[SC_BATTLESCROLL]->val1 / 100;
@@ -4547,75 +4544,71 @@ static int status_calc_batk(struct block_list *bl, struct status_change *sc, int
 static int status_calc_watk(struct block_list *bl, struct status_change *sc, int watk, bool viewable)
 {
 	nullpo_ret(bl);
-	if(!sc || !sc->count)
+	if (!sc || !sc->count)
 		return cap_value(watk, battle_config.watk_min, battle_config.watk_max);
 
-	if( !viewable ){
+	if (!viewable) {
 		/* some statuses that are hidden in the status window */
-		if( sc->data[SC_WATER_BARRIER] )
+		if (sc->data[SC_WATER_BARRIER])
 			watk -= sc->data[SC_WATER_BARRIER]->val3;
-		if(sc->data[SC_GENTLETOUCH_CHANGE] && sc->data[SC_GENTLETOUCH_CHANGE]->val2)
+		if (sc->data[SC_GENTLETOUCH_CHANGE] && sc->data[SC_GENTLETOUCH_CHANGE]->val2)
 			watk += sc->data[SC_GENTLETOUCH_CHANGE]->val2;
 		return cap_value(watk, battle_config.watk_min, battle_config.watk_max);
 	}
 #ifndef RENEWAL
-	if(sc->data[SC_IMPOSITIO])
+	if (sc->data[SC_IMPOSITIO])
 		watk += sc->data[SC_IMPOSITIO]->val2;
-	if(sc->data[SC_DRUMBATTLE])
+	if (sc->data[SC_DRUMBATTLE])
 		watk += sc->data[SC_DRUMBATTLE]->val2;
 #endif
-	if(sc->data[SC_WATKFOOD])
+	if (sc->data[SC_WATKFOOD])
 		watk += sc->data[SC_WATKFOOD]->val1;
-	if(sc->data[SC_VOLCANO])
+	if (sc->data[SC_VOLCANO])
 		watk += sc->data[SC_VOLCANO]->val2;
-	if(sc->data[SC_MER_ATK])
+	if (sc->data[SC_MER_ATK])
 		watk += sc->data[SC_MER_ATK]->val2;
-	if(sc->data[SC_FIGHTINGSPIRIT])
+	if (sc->data[SC_FIGHTINGSPIRIT])
 		watk += sc->data[SC_FIGHTINGSPIRIT]->val1;
-	if(sc->data[SC_SHIELDSPELL_DEF] && sc->data[SC_SHIELDSPELL_DEF]->val1 == 3)
+	if (sc->data[SC_SHIELDSPELL_DEF] && sc->data[SC_SHIELDSPELL_DEF]->val1 == 3)
 		watk += sc->data[SC_SHIELDSPELL_DEF]->val2;
-	if(sc->data[SC_INSPIRATION])
+	if (sc->data[SC_INSPIRATION])
 		watk += sc->data[SC_INSPIRATION]->val2;
-	if( sc->data[SC_BANDING] && sc->data[SC_BANDING]->val2 > 1 )
+	if (sc->data[SC_BANDING] && sc->data[SC_BANDING]->val2 > 1)
 		watk += (10 + 10 * sc->data[SC_BANDING]->val1) * (sc->data[SC_BANDING]->val2);
-	if( sc->data[SC_TROPIC_OPTION] )
+	if (sc->data[SC_TROPIC_OPTION])
 		watk += sc->data[SC_TROPIC_OPTION]->val2;
-	if( sc->data[SC_HEATER_OPTION] )
+	if (sc->data[SC_HEATER_OPTION])
 		watk += sc->data[SC_HEATER_OPTION]->val2;
-	if( sc->data[SC_PYROTECHNIC_OPTION] )
+	if (sc->data[SC_PYROTECHNIC_OPTION])
 		watk += sc->data[SC_PYROTECHNIC_OPTION]->val2;
 
 #ifndef RENEWAL
-	if(sc->data[SC_NIBELUNGEN]) {
+	if (sc->data[SC_NIBELUNGEN]) {
 		if (bl->type != BL_PC) {
 			watk += sc->data[SC_NIBELUNGEN]->val2;
 		} else {
 			const struct map_session_data *sd = BL_UCCAST(BL_PC, bl);
-			int index = sd->equip_index[sd->state.lr_flag?EQI_HAND_L:EQI_HAND_R];
-			if(index >= 0 && sd->inventory_data[index] && sd->inventory_data[index]->wlv == 4)
+			int index = sd->equip_index[sd->state.lr_flag ? EQI_HAND_L : EQI_HAND_R];
+			if (index >= 0 && sd->inventory_data[index] && sd->inventory_data[index]->wlv == 4)
 				watk += sc->data[SC_NIBELUNGEN]->val2;
 		}
 	}
 #endif
-	if(sc->data[SC__ENERVATION])
+	if (sc->data[SC__ENERVATION])
 		watk -= watk * sc->data[SC__ENERVATION]->val2 / 100;
-	if(sc->data[SC_RUSH_WINDMILL])
+	if (sc->data[SC_RUSH_WINDMILL])
 		watk += sc->data[SC_RUSH_WINDMILL]->val2;
 	if (sc->data[SC_ODINS_POWER])
 		watk += 40 + 30 * sc->data[SC_ODINS_POWER]->val1;
-	if(sc->data[SC_STRIKING])
+	if (sc->data[SC_STRIKING])
 		watk += sc->data[SC_STRIKING]->val2;
-	if((sc->data[SC_FIRE_INSIGNIA] && sc->data[SC_FIRE_INSIGNIA]->val1 == 2)
-		|| (sc->data[SC_WATER_INSIGNIA] && sc->data[SC_WATER_INSIGNIA]->val1 == 2)
-		|| (sc->data[SC_WIND_INSIGNIA] && sc->data[SC_WIND_INSIGNIA]->val1 == 2)
-		|| (sc->data[SC_EARTH_INSIGNIA] && sc->data[SC_EARTH_INSIGNIA]->val1 == 2)
-		)
+	if ((sc->data[SC_FIRE_INSIGNIA] && sc->data[SC_FIRE_INSIGNIA]->val1 == 2) || (sc->data[SC_WATER_INSIGNIA] && sc->data[SC_WATER_INSIGNIA]->val1 == 2) || (sc->data[SC_WIND_INSIGNIA] && sc->data[SC_WIND_INSIGNIA]->val1 == 2) || (sc->data[SC_EARTH_INSIGNIA] && sc->data[SC_EARTH_INSIGNIA]->val1 == 2))
 		watk += watk / 10;
-	if(sc->data[SC_TIDAL_WEAPON])
+	if (sc->data[SC_TIDAL_WEAPON])
 		watk += watk * sc->data[SC_TIDAL_WEAPON]->val2 / 100;
-	if(sc->data[SC_ANGRIFFS_MODUS])
-		watk += watk * sc->data[SC_ANGRIFFS_MODUS]->val2/100;
-	if( sc->data[SC_FLASHCOMBO] )
+	if (sc->data[SC_ANGRIFFS_MODUS])
+		watk += watk * sc->data[SC_ANGRIFFS_MODUS]->val2 / 100;
+	if (sc->data[SC_FLASHCOMBO])
 		watk += sc->data[SC_FLASHCOMBO]->val2;
 	if (sc->data[SC_CATNIPPOWDER])
 		watk -= watk * sc->data[SC_CATNIPPOWDER]->val2 / 100;
@@ -4636,19 +4629,19 @@ static int status_calc_ematk(struct block_list *bl, struct status_change *sc, in
 		matk += sc->data[SC_PLUSMAGICPOWER]->val1;
 	if (sc->data[SC_MATKFOOD])
 		matk += sc->data[SC_MATKFOOD]->val1;
-	if(sc->data[SC_MANA_PLUS])
+	if (sc->data[SC_MANA_PLUS])
 		matk += sc->data[SC_MANA_PLUS]->val1;
-	if(sc->data[SC_AQUAPLAY_OPTION])
+	if (sc->data[SC_AQUAPLAY_OPTION])
 		matk += sc->data[SC_AQUAPLAY_OPTION]->val2;
-	if(sc->data[SC_CHILLY_AIR_OPTION])
+	if (sc->data[SC_CHILLY_AIR_OPTION])
 		matk += sc->data[SC_CHILLY_AIR_OPTION]->val2;
-	if(sc->data[SC_COOLER_OPTION])
+	if (sc->data[SC_COOLER_OPTION])
 		matk += sc->data[SC_COOLER_OPTION]->val2;
-	if(sc->data[SC_FIRE_INSIGNIA] && sc->data[SC_FIRE_INSIGNIA]->val1 == 3)
+	if (sc->data[SC_FIRE_INSIGNIA] && sc->data[SC_FIRE_INSIGNIA]->val1 == 3)
 		matk += 50;
-	if(sc->data[SC_ODINS_POWER])
-		matk += 40 + 30 * sc->data[SC_ODINS_POWER]->val1; //70 lvl1, 100lvl2
-	if(sc->data[SC_IZAYOI])
+	if (sc->data[SC_ODINS_POWER])
+		matk += 40 + 30 * sc->data[SC_ODINS_POWER]->val1; // 70 lvl1, 100lvl2
+	if (sc->data[SC_IZAYOI])
 		matk += 25 * sc->data[SC_IZAYOI]->val1;
 	if (sc->data[SC_SHRIMP])
 		matk += matk * sc->data[SC_SHRIMP]->val2 / 100;
@@ -4691,7 +4684,7 @@ static int status_calc_matk(struct block_list *bl, struct status_change *sc, int
 	if (sc->data[SC_FIRE_INSIGNIA] && sc->data[SC_FIRE_INSIGNIA]->val1 == 3)
 		matk += 50;
 	if (sc->data[SC_ODINS_POWER])
-		matk += 40 + 30 * sc->data[SC_ODINS_POWER]->val1; //70 lvl1, 100lvl2
+		matk += 40 + 30 * sc->data[SC_ODINS_POWER]->val1; // 70 lvl1, 100lvl2
 	if (sc->data[SC_IZAYOI])
 		matk += 25 * sc->data[SC_IZAYOI]->val1;
 #endif
@@ -4762,7 +4755,7 @@ static int status_calc_critical(struct block_list *bl, struct status_change *sc,
 		critical += sc->data[SC_STRIKING]->val1;
 #ifdef RENEWAL
 	if (sc->data[SC_SPEARQUICKEN])
-		critical += 3*sc->data[SC_SPEARQUICKEN]->val1 * 10;
+		critical += 3 * sc->data[SC_SPEARQUICKEN]->val1 * 10;
 #endif
 
 	if (sc->data[SC__INVISIBILITY])
@@ -4813,9 +4806,9 @@ static int status_calc_hit(struct block_list *bl, struct status_change *sc, int 
 	if (sc->data[SC_MER_HIT])
 		hit += sc->data[SC_MER_HIT]->val2;
 	if (sc->data[SC_INCHITRATE])
-		hit += hit * sc->data[SC_INCHITRATE]->val1/100;
+		hit += hit * sc->data[SC_INCHITRATE]->val1 / 100;
 	if (sc->data[SC_BLIND])
-		hit -= hit * 25/100;
+		hit -= hit * 25 / 100;
 	if (sc->data[SC_FIRE_EXPANSION_TEAR_GAS])
 		hit -= hit * 50 / 100;
 	if (sc->data[SC__GROOMY])
@@ -4825,7 +4818,7 @@ static int status_calc_hit(struct block_list *bl, struct status_change *sc, int 
 	if (sc->data[SC_VOLCANIC_ASH])
 		hit /= 2;
 	if (sc->data[SC_ILLUSIONDOPING])
-		hit -= hit * (5 + sc->data[SC_ILLUSIONDOPING]->val1) / 100; //custom
+		hit -= hit * (5 + sc->data[SC_ILLUSIONDOPING]->val1) / 100; // custom
 	if (sc->data[SC_ACARAJE])
 		hit += sc->data[SC_ACARAJE]->val1;
 	if (sc->data[SC_BUCHEDENOEL])
@@ -4910,7 +4903,7 @@ static int status_calc_flee(struct block_list *bl, struct status_change *sc, int
 	if (sc->data[SC__LAZINESS])
 		flee -= flee * sc->data[SC__LAZINESS]->val3 / 100;
 	if (sc->data[SC_GLOOMYDAY])
-		flee -= flee * ( 20 + 5 * sc->data[SC_GLOOMYDAY]->val1 ) / 100;
+		flee -= flee * (20 + 5 * sc->data[SC_GLOOMYDAY]->val1) / 100;
 	if (sc->data[SC_SATURDAY_NIGHT_FEVER])
 		flee -= flee * (40 + 10 * sc->data[SC_SATURDAY_NIGHT_FEVER]->val1) / 100;
 	if (sc->data[SC_FIRE_EXPANSION_SMOKE_POWDER])
@@ -4924,7 +4917,7 @@ static int status_calc_flee(struct block_list *bl, struct status_change *sc, int
 	if (sc->data[SC_ZEPHYR])
 		flee += sc->data[SC_ZEPHYR]->val2;
 	if (sc->data[SC_VOLCANIC_ASH] && (bl->type == BL_MOB)) { // mob
-		if(status_get_element(bl) == ELE_WATER) // water type
+		if (status_get_element(bl) == ELE_WATER)             // water type
 			flee /= 2;
 	}
 	if (sc->data[SC_OVERED_BOOST]) // should be final and unmodifiable by any means
@@ -4939,19 +4932,19 @@ static int status_calc_flee(struct block_list *bl, struct status_change *sc, int
 
 static int status_calc_flee2(struct block_list *bl, struct status_change *sc, int flee2, bool viewable)
 {
-	if(!sc || !sc->count)
+	if (!sc || !sc->count)
 		return cap_value(flee2, battle_config.flee2_min, battle_config.flee2_max);
 
-	if( !viewable ){
+	if (!viewable) {
 		/* some statuses that are hidden in the status window */
 		return cap_value(flee2, battle_config.flee2_min, battle_config.flee2_max);
 	}
 
-	if(sc->data[SC_PLUSAVOIDVALUE])
+	if (sc->data[SC_PLUSAVOIDVALUE])
 		flee2 += sc->data[SC_PLUSAVOIDVALUE]->val2;
-	if(sc->data[SC_WHISTLE])
-		flee2 += sc->data[SC_WHISTLE]->val3*10;
-	if(sc->data[SC__UNLUCKY])
+	if (sc->data[SC_WHISTLE])
+		flee2 += sc->data[SC_WHISTLE]->val3 * 10;
+	if (sc->data[SC__UNLUCKY])
 		flee2 -= flee2 * sc->data[SC__UNLUCKY]->val2 / 100;
 	if (sc->data[SC_FREYJASCROLL])
 		flee2 += sc->data[SC_FREYJASCROLL]->val2;
@@ -4964,21 +4957,21 @@ static defType status_calc_def(struct block_list *bl, struct status_change *sc, 
 	nullpo_retr(DEFTYPE_MIN, bl);
 
 	if (!sc || !sc->count)
-		return (defType)cap_value(def,DEFTYPE_MIN,DEFTYPE_MAX);
+		return (defType)cap_value(def, DEFTYPE_MIN, DEFTYPE_MAX);
 
 	if (!viewable) {
 		/* some statuses that are hidden in the status window */
 		if (sc->data[SC_CAMOUFLAGE])
-			def -= def * 5 * (10-sc->data[SC_CAMOUFLAGE]->val4) / 100;
-		if (sc->data[SC_OVERED_BOOST]  && bl->type == BL_PC)
+			def -= def * 5 * (10 - sc->data[SC_CAMOUFLAGE]->val4) / 100;
+		if (sc->data[SC_OVERED_BOOST] && bl->type == BL_PC)
 			def -= def * 50 / 100;
 		if (sc->data[SC_NEUTRALBARRIER])
-			def += def * (10 + 5*sc->data[SC_NEUTRALBARRIER]->val1) / 100;
+			def += def * (10 + 5 * sc->data[SC_NEUTRALBARRIER]->val1) / 100;
 		if (sc->data[SC_FORCEOFVANGUARD])
 			def += def * 2 * sc->data[SC_FORCEOFVANGUARD]->val1 / 100;
 		if (sc->data[SC_DEFSET])
 			return sc->data[SC_DEFSET]->val1;
-		return (defType)cap_value(def,DEFTYPE_MIN,DEFTYPE_MAX);
+		return (defType)cap_value(def, DEFTYPE_MIN, DEFTYPE_MAX);
 	}
 
 	if (sc->data[SC_BERSERK])
@@ -5011,18 +5004,18 @@ static defType status_calc_def(struct block_list *bl, struct status_change *sc, 
 
 #ifndef RENEWAL
 	if (sc->data[SC_STONE] && sc->opt1 == OPT1_STONE)
-		def >>=1;
+		def >>= 1;
 	if (sc->data[SC_FREEZE])
-		def >>=1;
+		def >>= 1;
 	if (sc->data[SC_INCDEFRATE])
-		def += def * sc->data[SC_INCDEFRATE]->val1/100;
+		def += def * sc->data[SC_INCDEFRATE]->val1 / 100;
 #endif
 	if (sc->data[SC_ANGRIFFS_MODUS])
 		def -= 30 + 20 * sc->data[SC_ANGRIFFS_MODUS]->val1;
 	if (sc->data[SC_CRUCIS])
-		def -= def * sc->data[SC_CRUCIS]->val2/100;
+		def -= def * sc->data[SC_CRUCIS]->val2 / 100;
 	if (sc->data[SC_ANALYZE])
-		def -= def * ( 14 * sc->data[SC_ANALYZE]->val1 ) / 100;
+		def -= def * (14 * sc->data[SC_ANALYZE]->val1) / 100;
 	if (sc->data[SC_SATURDAY_NIGHT_FEVER])
 		def -= def * (10 + 10 * sc->data[SC_SATURDAY_NIGHT_FEVER]->val1) / 100;
 	if (sc->data[SC_EARTHDRIVE])
@@ -5053,17 +5046,17 @@ static defType status_calc_def(struct block_list *bl, struct status_change *sc, 
 	if (sc->data[SC_SOULGOLEM] != NULL)
 		def += sc->data[SC_SOULGOLEM]->val2;
 
-	return (defType)cap_value(def,DEFTYPE_MIN,DEFTYPE_MAX);
+	return (defType)cap_value(def, DEFTYPE_MIN, DEFTYPE_MAX);
 }
 
 static signed short status_calc_def2(struct block_list *bl, struct status_change *sc, int def2, bool viewable)
 {
 	nullpo_retr(1, bl);
-	if(!sc || !sc->count)
+	if (!sc || !sc->count)
 #ifdef RENEWAL
-		return (short)cap_value(def2,SHRT_MIN,SHRT_MAX);
+		return (short)cap_value(def2, SHRT_MIN, SHRT_MAX);
 #else
-		return (short)cap_value(def2,1,SHRT_MAX);
+		return (short)cap_value(def2, 1, SHRT_MAX);
 #endif
 
 	if (!viewable) {
@@ -5073,15 +5066,15 @@ static signed short status_calc_def2(struct block_list *bl, struct status_change
 			def2 <<= 1;
 #endif
 		if (sc->data[SC_CAMOUFLAGE])
-			def2 -= def2 * 5 * (10-sc->data[SC_CAMOUFLAGE]->val4) / 100;
+			def2 -= def2 * 5 * (10 - sc->data[SC_CAMOUFLAGE]->val4) / 100;
 		if (sc->data[SC_GENTLETOUCH_REVITALIZE])
 			def2 += sc->data[SC_GENTLETOUCH_REVITALIZE]->val2;
 		if (sc->data[SC_DEFSET])
 			return sc->data[SC_DEFSET]->val1;
 #ifdef RENEWAL
-		return (short)cap_value(def2,SHRT_MIN,SHRT_MAX);
+		return (short)cap_value(def2, SHRT_MIN, SHRT_MAX);
 #else
-		return (short)cap_value(def2,1,SHRT_MAX);
+		return (short)cap_value(def2, 1, SHRT_MAX);
 #endif
 	}
 
@@ -5093,16 +5086,16 @@ static signed short status_calc_def2(struct block_list *bl, struct status_change
 		def2 += sc->data[SC_SUN_COMFORT]->val2;
 	if (sc->data[SC_BANDING] && sc->data[SC_BANDING]->val2 > 1)
 		def2 += (5 + sc->data[SC_BANDING]->val1) * (sc->data[SC_BANDING]->val2);
-#ifdef RENEWAL //in renewal only the VIT stat bonus is boosted by angelus
+#ifdef RENEWAL // in renewal only the VIT stat bonus is boosted by angelus
 	if (sc->data[SC_ANGELUS])
-		def2 += status_get_vit(bl) / 2 * sc->data[SC_ANGELUS]->val2/100;
+		def2 += status_get_vit(bl) / 2 * sc->data[SC_ANGELUS]->val2 / 100;
 #endif
 	if (sc->data[SC_ANALYZE])
-		def2 -= def2 * ( 14 * sc->data[SC_ANALYZE]->val1 ) / 100;
+		def2 -= def2 * (14 * sc->data[SC_ANALYZE]->val1) / 100;
 	if (sc->data[SC_ECHOSONG])
-		def2 += def2 * sc->data[SC_ECHOSONG]->val3/100;
-	if (sc->data[SC_VOLCANIC_ASH] && (bl->type==BL_MOB)) {
-		if (status_get_race(bl)==RC_PLANT)
+		def2 += def2 * sc->data[SC_ECHOSONG]->val3 / 100;
+	if (sc->data[SC_VOLCANIC_ASH] && (bl->type == BL_MOB)) {
+		if (status_get_race(bl) == RC_PLANT)
 			def2 /= 2;
 	}
 	if (sc->data[SC_NEEDLE_OF_PARALYZE])
@@ -5111,59 +5104,59 @@ static signed short status_calc_def2(struct block_list *bl, struct status_change
 		return 1;
 
 #ifdef RENEWAL
-	return (short)cap_value(def2,SHRT_MIN,SHRT_MAX);
+	return (short)cap_value(def2, SHRT_MIN, SHRT_MAX);
 #else
-	return (short)cap_value(def2,1,SHRT_MAX);
+	return (short)cap_value(def2, 1, SHRT_MAX);
 #endif
 }
 
 static defType status_calc_mdef(struct block_list *bl, struct status_change *sc, int mdef, bool viewable)
 {
 
-	if(!sc || !sc->count)
-		return (defType)cap_value(mdef,DEFTYPE_MIN,DEFTYPE_MAX);
+	if (!sc || !sc->count)
+		return (defType)cap_value(mdef, DEFTYPE_MIN, DEFTYPE_MAX);
 
-	if( !viewable ){
+	if (!viewable) {
 		/* some statuses that are hidden in the status window */
-		if(sc->data[SC_NEUTRALBARRIER] )
+		if (sc->data[SC_NEUTRALBARRIER])
 			mdef += mdef * (5 * sc->data[SC_NEUTRALBARRIER]->val1 + 10) / 100;
-		if(sc->data[SC_MDEFSET])
+		if (sc->data[SC_MDEFSET])
 			return sc->data[SC_MDEFSET]->val1;
-		return (defType)cap_value(mdef,DEFTYPE_MIN,DEFTYPE_MAX);
+		return (defType)cap_value(mdef, DEFTYPE_MIN, DEFTYPE_MAX);
 	}
 
 	if (sc->data[SC_BERSERK])
 		return 0;
-	if(sc->data[SC_BARRIER])
+	if (sc->data[SC_BARRIER])
 		return 100;
 
 #ifndef RENEWAL // no longer provides 90 MDEF in renewal mode
-	if(sc->data[SC_STEELBODY])
+	if (sc->data[SC_STEELBODY])
 		return 90;
 #endif
 
-	if(sc->data[SC_STONESKIN]) // [Aegis] Technically this uses MDEFPercent/DEFPercent + sth else
+	if (sc->data[SC_STONESKIN]) // [Aegis] Technically this uses MDEFPercent/DEFPercent + sth else
 		mdef += sc->data[SC_STONESKIN]->val3;
-	if(sc->data[SC_EARTH_INSIGNIA] && sc->data[SC_EARTH_INSIGNIA]->val1 == 3)
+	if (sc->data[SC_EARTH_INSIGNIA] && sc->data[SC_EARTH_INSIGNIA]->val1 == 3)
 		mdef += 50;
-	if(sc->data[SC_ENDURE])// It has been confirmed that eddga card grants 1 MDEF, not 0, not 10, but 1.
+	if (sc->data[SC_ENDURE]) // It has been confirmed that eddga card grants 1 MDEF, not 0, not 10, but 1.
 		mdef += (sc->data[SC_ENDURE]->val4 == 0) ? sc->data[SC_ENDURE]->val1 : 1;
-	if(sc->data[SC_STONEHARDSKIN])// Final MDEF increase divided by 10 since were using classic (pre-renewal) mechanics. [Rytech]
+	if (sc->data[SC_STONEHARDSKIN]) // Final MDEF increase divided by 10 since were using classic (pre-renewal) mechanics. [Rytech]
 		mdef += sc->data[SC_STONEHARDSKIN]->val1;
-	if(sc->data[SC_STONE] && sc->opt1 == OPT1_STONE)
-		mdef += 25*mdef/100;
-	if(sc->data[SC_FREEZE])
-		mdef += 25*mdef/100;
-	if(sc->data[SC_ANALYZE])
-		mdef -= mdef * ( 14 * sc->data[SC_ANALYZE]->val1 ) / 100;
-	if(sc->data[SC_SYMPHONY_LOVE])
+	if (sc->data[SC_STONE] && sc->opt1 == OPT1_STONE)
+		mdef += 25 * mdef / 100;
+	if (sc->data[SC_FREEZE])
+		mdef += 25 * mdef / 100;
+	if (sc->data[SC_ANALYZE])
+		mdef -= mdef * (14 * sc->data[SC_ANALYZE]->val1) / 100;
+	if (sc->data[SC_SYMPHONY_LOVE])
 		mdef += mdef * sc->data[SC_SYMPHONY_LOVE]->val2 / 100;
-	if(sc->data[SC_GENTLETOUCH_CHANGE] && sc->data[SC_GENTLETOUCH_CHANGE]->val4)
+	if (sc->data[SC_GENTLETOUCH_CHANGE] && sc->data[SC_GENTLETOUCH_CHANGE]->val4)
 		mdef -= mdef * sc->data[SC_GENTLETOUCH_CHANGE]->val4 / 100;
 	if (sc->data[SC_ODINS_POWER])
 		mdef -= 20 * sc->data[SC_ODINS_POWER]->val1;
-	if(sc->data[SC_BURNING])
-		mdef -= mdef *25 / 100;
+	if (sc->data[SC_BURNING])
+		mdef -= mdef * 25 / 100;
 	if (sc->data[SC_UNLIMIT])
 		return 1;
 	if (sc->data[SC_FREYJASCROLL])
@@ -5173,37 +5166,37 @@ static defType status_calc_mdef(struct block_list *bl, struct status_change *sc,
 	if (sc->data[SC_SOULGOLEM] != NULL)
 		mdef += sc->data[SC_SOULGOLEM]->val3;
 
-	return (defType)cap_value(mdef,DEFTYPE_MIN,DEFTYPE_MAX);
+	return (defType)cap_value(mdef, DEFTYPE_MIN, DEFTYPE_MAX);
 }
 
 static signed short status_calc_mdef2(struct block_list *bl, struct status_change *sc, int mdef2, bool viewable)
 {
-	if(!sc || !sc->count)
+	if (!sc || !sc->count)
 #ifdef RENEWAL
-		return (short)cap_value(mdef2,SHRT_MIN,SHRT_MAX);
+		return (short)cap_value(mdef2, SHRT_MIN, SHRT_MAX);
 #else
-		return (short)cap_value(mdef2,1,SHRT_MAX);
+		return (short)cap_value(mdef2, 1, SHRT_MAX);
 #endif
 
-	if( !viewable ){
+	if (!viewable) {
 		/* some statuses that are hidden in the status window */
-		if(sc->data[SC_MDEFSET])
+		if (sc->data[SC_MDEFSET])
 			return sc->data[SC_MDEFSET]->val1;
 #ifdef RENEWAL
 		if (sc->data[SC_ASSUMPTIO])
 			mdef2 <<= 1;
-		return (short)cap_value(mdef2,SHRT_MIN,SHRT_MAX);
+		return (short)cap_value(mdef2, SHRT_MIN, SHRT_MAX);
 #else
-		return (short)cap_value(mdef2,1,SHRT_MAX);
+		return (short)cap_value(mdef2, 1, SHRT_MAX);
 #endif
 	}
 
 	if (sc->data[SC_BERSERK])
 		return 0;
-	if(sc->data[SC_SKA])
+	if (sc->data[SC_SKA])
 		return 90;
-	if(sc->data[SC_ANALYZE])
-		mdef2 -= mdef2 * ( 14 * sc->data[SC_ANALYZE]->val1 ) / 100;
+	if (sc->data[SC_ANALYZE])
+		mdef2 -= mdef2 * (14 * sc->data[SC_ANALYZE]->val1) / 100;
 	if (sc->data[SC_UNLIMIT])
 		return 1;
 
@@ -5212,9 +5205,9 @@ static signed short status_calc_mdef2(struct block_list *bl, struct status_chang
 		mdef2 = (mdef2 * sstatus->mdef_percent) / 100;
 
 #ifdef RENEWAL
-	return (short)cap_value(mdef2,SHRT_MIN,SHRT_MAX);
+	return (short)cap_value(mdef2, SHRT_MIN, SHRT_MAX);
 #else
-	return (short)cap_value(mdef2,1,SHRT_MAX);
+	return (short)cap_value(mdef2, 1, SHRT_MAX);
 #endif
 }
 
@@ -5223,16 +5216,15 @@ static unsigned short status_calc_speed(struct block_list *bl, struct status_cha
 	struct map_session_data *sd = BL_CAST(BL_PC, bl);
 	int speed_rate = -1;
 
-	if( sc == NULL || ( sd && sd->state.permanent_speed ) )
-		return (unsigned short)cap_value(speed,MIN_WALK_SPEED,MAX_WALK_SPEED);
+	if (sc == NULL || (sd && sd->state.permanent_speed))
+		return (unsigned short)cap_value(speed, MIN_WALK_SPEED, MAX_WALK_SPEED);
 
 	bool skillTimerIsValid = sd != NULL && sd->ud.skilltimer != INVALID_TIMER;
 
 	if (skillTimerIsValid && sd->ud.skill_id == LG_EXEEDBREAK)
 		speed_rate = 160 - 10 * sd->ud.skill_lv;
 
-	if (speed_rate == -1)
-	{
+	if (speed_rate == -1) {
 		speed_rate = 100;
 		if (skillTimerIsValid) {
 			if ((skill->get_inf2(sd->ud.skill_id) & INF2_FREE_CAST_REDUCED) != 0)
@@ -5241,21 +5233,21 @@ static unsigned short status_calc_speed(struct block_list *bl, struct status_cha
 				speed_rate = 175 - 5 * pc->checkskill(sd, SA_FREECAST);
 		}
 
-		//GetMoveHasteValue2()
+		// GetMoveHasteValue2()
 		{
 			int val = 0;
 
-			if(sc->data[SC_FUSION]) {
+			if (sc->data[SC_FUSION]) {
 				val = 25;
 			} else if (sd) {
 				if (pc_isridingpeco(sd) || pc_isridingdragon(sd))
-					val = 25;//Same bonus
+					val = 25; // Same bonus
 				else if (sd->sc.data[SC_ALL_RIDING])
 					val = sd->sc.data[SC_ALL_RIDING]->val1;
 				else if (pc_isridingwug(sd))
 					val = 15 + 5 * pc->checkskill(sd, RA_WUGRIDER);
 				else if (pc_ismadogear(sd)) {
-					val = (- 10 * (5 - pc->checkskill(sd,NC_MADOLICENCE)));
+					val = (-10 * (5 - pc->checkskill(sd, NC_MADOLICENCE)));
 					if (sc->data[SC_ACCELERATION])
 						val += 25;
 				}
@@ -5264,70 +5256,68 @@ static unsigned short status_calc_speed(struct block_list *bl, struct status_cha
 			speed_rate -= val;
 		}
 
-		//GetMoveSlowValue()
+		// GetMoveSlowValue()
 		{
 			int val = 0;
 
-			if ( sd && sc->data[SC_HIDING] && pc->checkskill(sd,RG_TUNNELDRIVE) > 0 ) {
-				val = 120 - 6 * pc->checkskill(sd,RG_TUNNELDRIVE);
+			if (sd && sc->data[SC_HIDING] && pc->checkskill(sd, RG_TUNNELDRIVE) > 0) {
+				val = 120 - 6 * pc->checkskill(sd, RG_TUNNELDRIVE);
 			} else {
-				if( sd && sc->data[SC_CHASEWALK] && sc->data[SC_CHASEWALK]->val3 < 0 )
+				if (sd && sc->data[SC_CHASEWALK] && sc->data[SC_CHASEWALK]->val3 < 0)
 					val = sc->data[SC_CHASEWALK]->val3;
-				else
-				{
+				else {
 					// Longing for Freedom cancels song/dance penalty
-					if( sc->data[SC_LONGING] )
-						val = max( val, 50 - 10 * sc->data[SC_LONGING]->val1 );
-					else
-						if( sd && sc->data[SC_DANCING] )
-							val = max( val, 500 - (40 + 10 * (sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_BARDDANCER)) * pc->checkskill(sd,(sd->status.sex?BA_MUSICALLESSON:DC_DANCINGLESSON)) );
+					if (sc->data[SC_LONGING])
+						val = max(val, 50 - 10 * sc->data[SC_LONGING]->val1);
+					else if (sd && sc->data[SC_DANCING])
+						val = max(val, 500 - (40 + 10 * (sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_BARDDANCER)) * pc->checkskill(sd, (sd->status.sex ? BA_MUSICALLESSON : DC_DANCINGLESSON)));
 
-					if( sc->data[SC_DEC_AGI] )
-						val = max( val, 25 );
-					if( sc->data[SC_QUAGMIRE] || sc->data[SC_HALLUCINATIONWALK_POSTDELAY] )
-						val = max( val, 50 );
-					if( sc->data[SC_DONTFORGETME] )
-						val = max( val, sc->data[SC_DONTFORGETME]->val3 );
-					if( sc->data[SC_CURSE] )
-						val = max( val, 300 );
-					if( sc->data[SC_CHASEWALK] )
-						val = max( val, sc->data[SC_CHASEWALK]->val3 );
-					if( sc->data[SC_WEDDING] )
-						val = max( val, 100 );
-					if( sc->data[SC_JOINTBEAT] && sc->data[SC_JOINTBEAT]->val2&(BREAK_ANKLE|BREAK_KNEE) )
-						val = max( val, ((sc->data[SC_JOINTBEAT]->val2&BREAK_ANKLE) ? 50 : 0) + ((sc->data[SC_JOINTBEAT]->val2&BREAK_KNEE) ? 30 : 0) );
-					if( sc->data[SC_CLOAKING] && (sc->data[SC_CLOAKING]->val4&1) == 0 )
-						val = max( val, sc->data[SC_CLOAKING]->val1 < 3 ? 300 : 30 - 3 * sc->data[SC_CLOAKING]->val1 );
-					if( sc->data[SC_GOSPEL] && sc->data[SC_GOSPEL]->val4 == BCT_ENEMY )
-						val = max( val, 75 );
+					if (sc->data[SC_DEC_AGI])
+						val = max(val, 25);
+					if (sc->data[SC_QUAGMIRE] || sc->data[SC_HALLUCINATIONWALK_POSTDELAY])
+						val = max(val, 50);
+					if (sc->data[SC_DONTFORGETME])
+						val = max(val, sc->data[SC_DONTFORGETME]->val3);
+					if (sc->data[SC_CURSE])
+						val = max(val, 300);
+					if (sc->data[SC_CHASEWALK])
+						val = max(val, sc->data[SC_CHASEWALK]->val3);
+					if (sc->data[SC_WEDDING])
+						val = max(val, 100);
+					if (sc->data[SC_JOINTBEAT] && sc->data[SC_JOINTBEAT]->val2 & (BREAK_ANKLE | BREAK_KNEE))
+						val = max(val, ((sc->data[SC_JOINTBEAT]->val2 & BREAK_ANKLE) ? 50 : 0) + ((sc->data[SC_JOINTBEAT]->val2 & BREAK_KNEE) ? 30 : 0));
+					if (sc->data[SC_CLOAKING] && (sc->data[SC_CLOAKING]->val4 & 1) == 0)
+						val = max(val, sc->data[SC_CLOAKING]->val1 < 3 ? 300 : 30 - 3 * sc->data[SC_CLOAKING]->val1);
+					if (sc->data[SC_GOSPEL] && sc->data[SC_GOSPEL]->val4 == BCT_ENEMY)
+						val = max(val, 75);
 					if (sc->data[SC_SLOWDOWN])
 						val = max(val, 100);
 					if (sc->data[SC_MOVESLOW_POTION]) // Used by Slow_Down_Potion [Frost]
 						val = max(val, sc->data[SC_MOVESLOW_POTION]->val1);
-					if( sc->data[SC_GS_GATLINGFEVER] )
-						val = max( val, 100 );
-					if( sc->data[SC_NJ_SUITON] )
-						val = max( val, sc->data[SC_NJ_SUITON]->val3 );
-					if( sc->data[SC_SWOO] )
-						val = max( val, 300 );
-					if( sc->data[SC_FROSTMISTY] )
-						val = max( val, 50 );
-					if( sc->data[SC_CAMOUFLAGE] && (sc->data[SC_CAMOUFLAGE]->val3&1) == 0 )
-						val = max( val, sc->data[SC_CAMOUFLAGE]->val1 < 3 ? 0 : 25 * (5 - sc->data[SC_CAMOUFLAGE]->val1) );
-					if( sc->data[SC__GROOMY] )
-						val = max( val, sc->data[SC__GROOMY]->val2);
-					if( sc->data[SC_GLOOMYDAY] )
-						val = max( val, sc->data[SC_GLOOMYDAY]->val3 ); // Should be 50 (-50% speed)
-					if( sc->data[SC_STEALTHFIELD_MASTER] )
-						val = max( val, 30 );
-					if( sc->data[SC_BANDING_DEFENCE] )
-						val = max( val, sc->data[SC_BANDING_DEFENCE]->val1 );//+90% walking speed.
-					if( sc->data[SC_ROCK_CRUSHER_ATK] )
-						val = max( val, sc->data[SC_ROCK_CRUSHER_ATK]->val2 );
-					if( sc->data[SC_POWER_OF_GAIA] )
-						val = max( val, sc->data[SC_POWER_OF_GAIA]->val2 );
-					if( sc->data[SC_MELON_BOMB] )
-						val = max( val, sc->data[SC_MELON_BOMB]->val1 );
+					if (sc->data[SC_GS_GATLINGFEVER])
+						val = max(val, 100);
+					if (sc->data[SC_NJ_SUITON])
+						val = max(val, sc->data[SC_NJ_SUITON]->val3);
+					if (sc->data[SC_SWOO])
+						val = max(val, 300);
+					if (sc->data[SC_FROSTMISTY])
+						val = max(val, 50);
+					if (sc->data[SC_CAMOUFLAGE] && (sc->data[SC_CAMOUFLAGE]->val3 & 1) == 0)
+						val = max(val, sc->data[SC_CAMOUFLAGE]->val1 < 3 ? 0 : 25 * (5 - sc->data[SC_CAMOUFLAGE]->val1));
+					if (sc->data[SC__GROOMY])
+						val = max(val, sc->data[SC__GROOMY]->val2);
+					if (sc->data[SC_GLOOMYDAY])
+						val = max(val, sc->data[SC_GLOOMYDAY]->val3); // Should be 50 (-50% speed)
+					if (sc->data[SC_STEALTHFIELD_MASTER])
+						val = max(val, 30);
+					if (sc->data[SC_BANDING_DEFENCE])
+						val = max(val, sc->data[SC_BANDING_DEFENCE]->val1); //+90% walking speed.
+					if (sc->data[SC_ROCK_CRUSHER_ATK])
+						val = max(val, sc->data[SC_ROCK_CRUSHER_ATK]->val2);
+					if (sc->data[SC_POWER_OF_GAIA])
+						val = max(val, sc->data[SC_POWER_OF_GAIA]->val2);
+					if (sc->data[SC_MELON_BOMB])
+						val = max(val, sc->data[SC_MELON_BOMB]->val1);
 					if (sc->data[SC_STOMACHACHE])
 						val = max(val, sc->data[SC_STOMACHACHE]->val2);
 					if (sc->data[SC_MARSHOFABYSS]) // It stacks to other statuses so always put this at the end.
@@ -5345,14 +5335,14 @@ static unsigned short status_calc_speed(struct block_list *bl, struct status_cha
 					if (sc->data[SC_SP_SHA] != NULL)
 						val = max(val, sc->data[SC_SP_SHA]->val2);
 
-					if( sd && sd->bonus.speed_rate + sd->bonus.speed_add_rate > 0 ) // permanent item-based speedup
-						val = max( val, sd->bonus.speed_rate + sd->bonus.speed_add_rate );
+					if (sd && sd->bonus.speed_rate + sd->bonus.speed_add_rate > 0) // permanent item-based speedup
+						val = max(val, sd->bonus.speed_rate + sd->bonus.speed_add_rate);
 				}
 			}
 			speed_rate += val;
 		}
 
-		//GetMoveHasteValue1()
+		// GetMoveHasteValue1()
 		{
 			int val = 0;
 
@@ -5360,70 +5350,69 @@ static unsigned short status_calc_speed(struct block_list *bl, struct status_cha
 				val = max(val, sc->data[SC_MOVHASTE_INFINITY]->val1);
 			if (sc->data[SC_MOVHASTE_POTION]) // Used by Speed_Up_Potion and Guyak_Pudding [Frost]
 				val = max(val, sc->data[SC_MOVHASTE_POTION]->val1);
-			if( sc->data[SC_INC_AGI] )
-				val = max( val, 25 );
-			if( sc->data[SC_WINDWALK] )
-				val = max( val, 2 * sc->data[SC_WINDWALK]->val1 );
-			if( sc->data[SC_CARTBOOST] )
-				val = max( val, 20 );
-			if (sd != NULL && (sd->job & MAPID_UPPERMASK) == MAPID_ASSASSIN && pc->checkskill(sd,TF_MISS) > 0)
-				val = max( val, 1 * pc->checkskill(sd,TF_MISS) );
-			if( sc->data[SC_CLOAKING] && (sc->data[SC_CLOAKING]->val4&1) == 1 )
-				val = max( val, sc->data[SC_CLOAKING]->val1 >= 10 ? 25 : 3 * sc->data[SC_CLOAKING]->val1 - 3 );
+			if (sc->data[SC_INC_AGI])
+				val = max(val, 25);
+			if (sc->data[SC_WINDWALK])
+				val = max(val, 2 * sc->data[SC_WINDWALK]->val1);
+			if (sc->data[SC_CARTBOOST])
+				val = max(val, 20);
+			if (sd != NULL && (sd->job & MAPID_UPPERMASK) == MAPID_ASSASSIN && pc->checkskill(sd, TF_MISS) > 0)
+				val = max(val, 1 * pc->checkskill(sd, TF_MISS));
+			if (sc->data[SC_CLOAKING] && (sc->data[SC_CLOAKING]->val4 & 1) == 1)
+				val = max(val, sc->data[SC_CLOAKING]->val1 >= 10 ? 25 : 3 * sc->data[SC_CLOAKING]->val1 - 3);
 			if (sc->data[SC_BERSERK])
-				val = max( val, 25 );
-			if( sc->data[SC_RUN] )
-				val = max( val, 55 );
-			if( sc->data[SC_HLIF_AVOID] )
-				val = max( val, 10 * sc->data[SC_HLIF_AVOID]->val1 );
-			if( sc->data[SC_INVINCIBLE] && !sc->data[SC_INVINCIBLEOFF] )
-				val = max( val, 75 );
-			if( sc->data[SC_CLOAKINGEXCEED] )
-				val = max( val, sc->data[SC_CLOAKINGEXCEED]->val3);
-			if( sc->data[SC_HOVERING] )
-				val = max( val, 10 );
-			if( sc->data[SC_GN_CARTBOOST] )
-				val = max( val, sc->data[SC_GN_CARTBOOST]->val2 );
-			if( sc->data[SC_SWING] )
-				val = max( val, sc->data[SC_SWING]->val3 );
-			if( sc->data[SC_WIND_STEP_OPTION] )
-				val = max( val, sc->data[SC_WIND_STEP_OPTION]->val2 );
-			if( sc->data[SC_FULL_THROTTLE] )
-				val = max( val, 25);
+				val = max(val, 25);
+			if (sc->data[SC_RUN])
+				val = max(val, 55);
+			if (sc->data[SC_HLIF_AVOID])
+				val = max(val, 10 * sc->data[SC_HLIF_AVOID]->val1);
+			if (sc->data[SC_INVINCIBLE] && !sc->data[SC_INVINCIBLEOFF])
+				val = max(val, 75);
+			if (sc->data[SC_CLOAKINGEXCEED])
+				val = max(val, sc->data[SC_CLOAKINGEXCEED]->val3);
+			if (sc->data[SC_HOVERING])
+				val = max(val, 10);
+			if (sc->data[SC_GN_CARTBOOST])
+				val = max(val, sc->data[SC_GN_CARTBOOST]->val2);
+			if (sc->data[SC_SWING])
+				val = max(val, sc->data[SC_SWING]->val3);
+			if (sc->data[SC_WIND_STEP_OPTION])
+				val = max(val, sc->data[SC_WIND_STEP_OPTION]->val2);
+			if (sc->data[SC_FULL_THROTTLE])
+				val = max(val, 25);
 			if (sc->data[SC_MOVHASTE_HORSE])
 				val = max(val, sc->data[SC_MOVHASTE_HORSE]->val1);
-			if( sd && sd->bonus.speed_rate + sd->bonus.speed_add_rate < 0 ) // permanent item-based speedup
-				val = max( val, -(sd->bonus.speed_rate + sd->bonus.speed_add_rate) );
+			if (sd && sd->bonus.speed_rate + sd->bonus.speed_add_rate < 0) // permanent item-based speedup
+				val = max(val, -(sd->bonus.speed_rate + sd->bonus.speed_add_rate));
 			if (sc->data[SC_ARCLOUSEDASH])
 				val = max(val, sc->data[SC_ARCLOUSEDASH]->val3);
 
 			speed_rate -= val;
 		}
 
-		if( speed_rate < 40 )
+		if (speed_rate < 40)
 			speed_rate = 40;
 	}
 
-	//GetSpeed()
+	// GetSpeed()
 	{
-		if( sd && pc_iscarton(sd) )
-			speed += speed * (50 - 5 * pc->checkskill(sd,MC_PUSHCART)) / 100;
-		if( sc->data[SC_PARALYSE] )
+		if (sd && pc_iscarton(sd))
+			speed += speed * (50 - 5 * pc->checkskill(sd, MC_PUSHCART)) / 100;
+		if (sc->data[SC_PARALYSE])
 			speed += speed * 50 / 100;
-		if( sc->data[SC_REBOUND] )
+		if (sc->data[SC_REBOUND])
 			speed += max(speed, 100);
-		if( speed_rate != 100 )
+		if (speed_rate != 100)
 			speed = speed * speed_rate / 100;
-		if( sc->data[SC_STEELBODY] )
+		if (sc->data[SC_STEELBODY])
 			speed = 200;
-		if( sc->data[SC_DEFENDER] )
+		if (sc->data[SC_DEFENDER])
 			speed = max(speed, 200);
-		if( sc->data[SC_WALKSPEED] && sc->data[SC_WALKSPEED]->val1 > 0 ) // ChangeSpeed
+		if (sc->data[SC_WALKSPEED] && sc->data[SC_WALKSPEED]->val1 > 0) // ChangeSpeed
 			speed = speed * 100 / sc->data[SC_WALKSPEED]->val1;
-
 	}
 
-	return (unsigned short)cap_value(speed,MIN_WALK_SPEED,MAX_WALK_SPEED);
+	return (unsigned short)cap_value(speed, MIN_WALK_SPEED, MAX_WALK_SPEED);
 }
 
 // flag&1 - fixed value [malufett]
@@ -5437,30 +5426,26 @@ static short status_calc_aspd(struct block_list *bl, struct status_change *sc, s
 	if (!sc || !sc->count)
 		return 0;
 
-	if (flag&1) {
+	if (flag & 1) {
 		int i;
 		// ASPD fixed values
-		if (sc->data[i=SC_ATTHASTE_INFINITY]
-		  || sc->data[i=SC_ATTHASTE_POTION3]
-		  || sc->data[i=SC_ATTHASTE_POTION2]
-		  || sc->data[i=SC_ATTHASTE_POTION1]
-		)
+		if (sc->data[i = SC_ATTHASTE_INFINITY] || sc->data[i = SC_ATTHASTE_POTION3] || sc->data[i = SC_ATTHASTE_POTION2] || sc->data[i = SC_ATTHASTE_POTION1])
 			pots += sc->data[i]->val1;
 
 		if (!sc->data[SC_QUAGMIRE]) {
-			if(sc->data[SC_TWOHANDQUICKEN] && bonus < 7)
+			if (sc->data[SC_TWOHANDQUICKEN] && bonus < 7)
 				bonus = 7;
-			if(sc->data[SC_ONEHANDQUICKEN] && bonus < 7)
+			if (sc->data[SC_ONEHANDQUICKEN] && bonus < 7)
 				bonus = 7;
-			if(sc->data[SC_MER_QUICKEN] && bonus < 7) // needs more info
+			if (sc->data[SC_MER_QUICKEN] && bonus < 7) // needs more info
 				bonus = 7;
-			if(sc->data[SC_ADRENALINE2] && bonus < 6)
+			if (sc->data[SC_ADRENALINE2] && bonus < 6)
 				bonus = 6;
-			if(sc->data[SC_ADRENALINE] && bonus < 7)
+			if (sc->data[SC_ADRENALINE] && bonus < 7)
 				bonus = 7;
-			if(sc->data[SC_SPEARQUICKEN] && bonus < 7)
+			if (sc->data[SC_SPEARQUICKEN] && bonus < 7)
 				bonus = 7;
-			if(sc->data[SC_HLIF_FLEET] && bonus < 5)
+			if (sc->data[SC_HLIF_FLEET] && bonus < 5)
 				bonus = 5;
 		}
 
@@ -5504,9 +5489,9 @@ static short status_calc_aspd(struct block_list *bl, struct status_change *sc, s
 		if (sc->data[SC_GRAVITATION] && sc->data[SC_GRAVITATION]->val3 != BCT_SELF)
 			bonus -= sc->data[SC_GRAVITATION]->val2 / 10;
 		if (sc->data[SC_JOINTBEAT]) { // needs more info
-			if (sc->data[SC_JOINTBEAT]->val2&BREAK_WRIST)
+			if (sc->data[SC_JOINTBEAT]->val2 & BREAK_WRIST)
 				bonus -= 25;
-			if (sc->data[SC_JOINTBEAT]->val2&BREAK_KNEE)
+			if (sc->data[SC_JOINTBEAT]->val2 & BREAK_KNEE)
 				bonus -= 10;
 		}
 		if (sc->data[SC_FROSTMISTY])
@@ -5518,7 +5503,7 @@ static short status_calc_aspd(struct block_list *bl, struct status_change *sc, s
 		if (sc->data[SC__BODYPAINT])
 			bonus -= sc->data[SC__BODYPAINT]->val1;
 		if (sc->data[SC__INVISIBILITY])
-			bonus -= sc->data[SC__INVISIBILITY]->val2 ;
+			bonus -= sc->data[SC__INVISIBILITY]->val2;
 		if (sc->data[SC__GROOMY])
 			bonus -= sc->data[SC__GROOMY]->val2;
 		if (sc->data[SC_GLOOMYDAY])
@@ -5591,44 +5576,36 @@ static short status_calc_aspd_rate(struct block_list *bl, struct status_change *
 	int i;
 
 	nullpo_ret(bl);
-	if(!sc || !sc->count)
-		return cap_value(aspd_rate,0,SHRT_MAX);
+	if (!sc || !sc->count)
+		return cap_value(aspd_rate, 0, SHRT_MAX);
 
-	if( !sc->data[SC_QUAGMIRE] ){
+	if (!sc->data[SC_QUAGMIRE]) {
 		int max = 0;
-		if(sc->data[SC_STAR_COMFORT])
+		if (sc->data[SC_STAR_COMFORT])
 			max = sc->data[SC_STAR_COMFORT]->val2;
 
-		if(sc->data[SC_TWOHANDQUICKEN] &&
-			max < sc->data[SC_TWOHANDQUICKEN]->val2)
+		if (sc->data[SC_TWOHANDQUICKEN] && max < sc->data[SC_TWOHANDQUICKEN]->val2)
 			max = sc->data[SC_TWOHANDQUICKEN]->val2;
 
-		if(sc->data[SC_ONEHANDQUICKEN] &&
-			max < sc->data[SC_ONEHANDQUICKEN]->val2)
+		if (sc->data[SC_ONEHANDQUICKEN] && max < sc->data[SC_ONEHANDQUICKEN]->val2)
 			max = sc->data[SC_ONEHANDQUICKEN]->val2;
 
-		if(sc->data[SC_MER_QUICKEN] &&
-			max < sc->data[SC_MER_QUICKEN]->val2)
+		if (sc->data[SC_MER_QUICKEN] && max < sc->data[SC_MER_QUICKEN]->val2)
 			max = sc->data[SC_MER_QUICKEN]->val2;
 
-		if(sc->data[SC_ADRENALINE2] &&
-			max < sc->data[SC_ADRENALINE2]->val3)
+		if (sc->data[SC_ADRENALINE2] && max < sc->data[SC_ADRENALINE2]->val3)
 			max = sc->data[SC_ADRENALINE2]->val3;
 
-		if(sc->data[SC_ADRENALINE] &&
-			max < sc->data[SC_ADRENALINE]->val3)
+		if (sc->data[SC_ADRENALINE] && max < sc->data[SC_ADRENALINE]->val3)
 			max = sc->data[SC_ADRENALINE]->val3;
 
-		if(sc->data[SC_SPEARQUICKEN] &&
-			max < sc->data[SC_SPEARQUICKEN]->val2)
+		if (sc->data[SC_SPEARQUICKEN] && max < sc->data[SC_SPEARQUICKEN]->val2)
 			max = sc->data[SC_SPEARQUICKEN]->val2;
 
-		if(sc->data[SC_GS_GATLINGFEVER] &&
-			max < sc->data[SC_GS_GATLINGFEVER]->val2)
+		if (sc->data[SC_GS_GATLINGFEVER] && max < sc->data[SC_GS_GATLINGFEVER]->val2)
 			max = sc->data[SC_GS_GATLINGFEVER]->val2;
 
-		if(sc->data[SC_HLIF_FLEET] &&
-			max < sc->data[SC_HLIF_FLEET]->val2)
+		if (sc->data[SC_HLIF_FLEET] && max < sc->data[SC_HLIF_FLEET]->val2)
 			max = sc->data[SC_HLIF_FLEET]->val2;
 
 		if (sc->data[SC_ASSNCROS] && max < sc->data[SC_ASSNCROS]->val2) {
@@ -5636,88 +5613,85 @@ static short status_calc_aspd_rate(struct block_list *bl, struct status_change *
 				max = sc->data[SC_ASSNCROS]->val2;
 			} else {
 				switch (BL_UCCAST(BL_PC, bl)->weapontype) {
-				case W_BOW:
-				case W_REVOLVER:
-				case W_RIFLE:
-				case W_GATLING:
-				case W_SHOTGUN:
-				case W_GRENADE:
-					break;
-				default:
-					max = sc->data[SC_ASSNCROS]->val2;
+					case W_BOW:
+					case W_REVOLVER:
+					case W_RIFLE:
+					case W_GATLING:
+					case W_SHOTGUN:
+					case W_GRENADE:
+						break;
+					default:
+						max = sc->data[SC_ASSNCROS]->val2;
 				}
 			}
 		}
 
 		aspd_rate -= max;
 
-		if(sc->data[SC_BERSERK])
+		if (sc->data[SC_BERSERK])
 			aspd_rate -= 300;
-		else if(sc->data[SC_GS_MADNESSCANCEL])
+		else if (sc->data[SC_GS_MADNESSCANCEL])
 			aspd_rate -= 200;
 	}
 
-	if( sc->data[i=SC_ATTHASTE_INFINITY] ||
-		sc->data[i=SC_ATTHASTE_POTION3] ||
-		sc->data[i=SC_ATTHASTE_POTION2] ||
-		sc->data[i=SC_ATTHASTE_POTION1] )
+	if (sc->data[i = SC_ATTHASTE_INFINITY] || sc->data[i = SC_ATTHASTE_POTION3] || sc->data[i = SC_ATTHASTE_POTION2] || sc->data[i = SC_ATTHASTE_POTION1])
 		aspd_rate -= sc->data[i]->val2;
 
-	if(sc->data[SC_DONTFORGETME])
+	if (sc->data[SC_DONTFORGETME])
 		aspd_rate += 10 * sc->data[SC_DONTFORGETME]->val2;
-	if(sc->data[SC_LONGING])
+	if (sc->data[SC_LONGING])
 		aspd_rate += sc->data[SC_LONGING]->val2;
-	if(sc->data[SC_STEELBODY])
+	if (sc->data[SC_STEELBODY])
 		aspd_rate += 250;
-	if(sc->data[SC_SKA])
+	if (sc->data[SC_SKA])
 		aspd_rate += 250;
-	if(sc->data[SC_DEFENDER])
+	if (sc->data[SC_DEFENDER])
 		aspd_rate += sc->data[SC_DEFENDER]->val4;
-	if(sc->data[SC_GOSPEL] && sc->data[SC_GOSPEL]->val4 == BCT_ENEMY)
+	if (sc->data[SC_GOSPEL] && sc->data[SC_GOSPEL]->val4 == BCT_ENEMY)
 		aspd_rate += 250;
-	if(sc->data[SC_GRAVITATION] && sc->data[SC_GRAVITATION]->val3 != BCT_SELF)
+	if (sc->data[SC_GRAVITATION] && sc->data[SC_GRAVITATION]->val3 != BCT_SELF)
 		aspd_rate += sc->data[SC_GRAVITATION]->val2;
-	if(sc->data[SC_JOINTBEAT]) {
-		if( sc->data[SC_JOINTBEAT]->val2&BREAK_WRIST )
+	if (sc->data[SC_JOINTBEAT]) {
+		if (sc->data[SC_JOINTBEAT]->val2 & BREAK_WRIST)
 			aspd_rate += 250;
-		if( sc->data[SC_JOINTBEAT]->val2&BREAK_KNEE )
+		if (sc->data[SC_JOINTBEAT]->val2 & BREAK_KNEE)
 			aspd_rate += 100;
 	}
-	if( sc->data[SC_FROSTMISTY] )
+	if (sc->data[SC_FROSTMISTY])
 		aspd_rate += 150;
-	if( sc->data[SC_HALLUCINATIONWALK_POSTDELAY] )
+	if (sc->data[SC_HALLUCINATIONWALK_POSTDELAY])
 		aspd_rate += 500;
-	if( sc->data[SC_FIGHTINGSPIRIT] && sc->data[SC_FIGHTINGSPIRIT]->val2 )
+	if (sc->data[SC_FIGHTINGSPIRIT] && sc->data[SC_FIGHTINGSPIRIT]->val2)
 		aspd_rate -= sc->data[SC_FIGHTINGSPIRIT]->val2;
-	if( sc->data[SC_PARALYSE] )
+	if (sc->data[SC_PARALYSE])
 		aspd_rate += 100;
-	if( sc->data[SC__BODYPAINT] )
+	if (sc->data[SC__BODYPAINT])
 		aspd_rate += 10 * 5 * sc->data[SC__BODYPAINT]->val1;
-	if( sc->data[SC__INVISIBILITY] )
-		aspd_rate += sc->data[SC__INVISIBILITY]->val2 * 10 ;
-	if( sc->data[SC__GROOMY] )
+	if (sc->data[SC__INVISIBILITY])
+		aspd_rate += sc->data[SC__INVISIBILITY]->val2 * 10;
+	if (sc->data[SC__GROOMY])
 		aspd_rate += sc->data[SC__GROOMY]->val2 * 10;
-	if( sc->data[SC_SWING] )
+	if (sc->data[SC_SWING])
 		aspd_rate -= sc->data[SC_SWING]->val3 * 10;
-	if( sc->data[SC_DANCE_WITH_WUG] )
+	if (sc->data[SC_DANCE_WITH_WUG])
 		aspd_rate -= sc->data[SC_DANCE_WITH_WUG]->val3 * 10;
-	if( sc->data[SC_GLOOMYDAY] )
-		aspd_rate += ( 15 + 5 * sc->data[SC_GLOOMYDAY]->val1 );
-	if( sc->data[SC_EARTHDRIVE] )
+	if (sc->data[SC_GLOOMYDAY])
+		aspd_rate += (15 + 5 * sc->data[SC_GLOOMYDAY]->val1);
+	if (sc->data[SC_EARTHDRIVE])
 		aspd_rate += 250;
-	if( sc->data[SC_GENTLETOUCH_CHANGE] )
+	if (sc->data[SC_GENTLETOUCH_CHANGE])
 		aspd_rate -= sc->data[SC_GENTLETOUCH_CHANGE]->val3 * 10;
-	if( sc->data[SC_MELON_BOMB] )
+	if (sc->data[SC_MELON_BOMB])
 		aspd_rate += sc->data[SC_MELON_BOMB]->val1 * 10;
-	if( sc->data[SC_BOOST500] )
-		aspd_rate -= sc->data[SC_BOOST500]->val1 *10;
-	if( sc->data[SC_EXTRACT_SALAMINE_JUICE] )
+	if (sc->data[SC_BOOST500])
+		aspd_rate -= sc->data[SC_BOOST500]->val1 * 10;
+	if (sc->data[SC_EXTRACT_SALAMINE_JUICE])
 		aspd_rate -= sc->data[SC_EXTRACT_SALAMINE_JUICE]->val1 * 10;
-	if( sc->data[SC_INCASPDRATE] )
+	if (sc->data[SC_INCASPDRATE])
 		aspd_rate -= sc->data[SC_INCASPDRATE]->val1 * 10;
-	if( sc->data[SC_PAIN_KILLER])
+	if (sc->data[SC_PAIN_KILLER])
 		aspd_rate += sc->data[SC_PAIN_KILLER]->val2 * 10;
-	if( sc->data[SC_GOLDENE_FERSE])
+	if (sc->data[SC_GOLDENE_FERSE])
 		aspd_rate -= sc->data[SC_GOLDENE_FERSE]->val3 * 10;
 	if (sc->data[SC_ACARAJE])
 		aspd_rate += sc->data[SC_ACARAJE]->val2 * 10;
@@ -5730,25 +5704,25 @@ static short status_calc_aspd_rate(struct block_list *bl, struct status_change *
 	if (sc->data[SC_STARSTANCE] != NULL)
 		aspd_rate -= 10 * sc->data[SC_STARSTANCE]->val2;
 
-	return (short)cap_value(aspd_rate,0,SHRT_MAX);
+	return (short)cap_value(aspd_rate, 0, SHRT_MAX);
 }
 
 static unsigned short status_calc_dmotion(struct block_list *bl, struct status_change *sc, int dmotion)
 {
 	nullpo_ret(bl);
 	// It has been confirmed on official servers that MvP mobs have no dmotion even without endure
-	if (bl->type == BL_MOB && (BL_UCCAST(BL_MOB, bl)->status.mode&MD_BOSS))
+	if (bl->type == BL_MOB && (BL_UCCAST(BL_MOB, bl)->status.mode & MD_BOSS))
 		return 0;
 
-	if( !sc || !sc->count || map_flag_gvg2(bl->m) || map->list[bl->m].flag.battleground )
-		return cap_value(dmotion,0,USHRT_MAX);
+	if (!sc || !sc->count || map_flag_gvg2(bl->m) || map->list[bl->m].flag.battleground)
+		return cap_value(dmotion, 0, USHRT_MAX);
 
-	if( sc->data[SC_ENDURE] )
+	if (sc->data[SC_ENDURE])
 		return 0;
-	if( sc->data[SC_RUN] || sc->data[SC_WUGDASH] )
+	if (sc->data[SC_RUN] || sc->data[SC_WUGDASH])
 		return 0;
 
-	return (unsigned short)cap_value(dmotion,0,USHRT_MAX);
+	return (unsigned short)cap_value(dmotion, 0, USHRT_MAX);
 }
 
 static unsigned int status_calc_maxhp(struct block_list *bl, struct status_change *sc, uint64 maxhp)
@@ -5797,7 +5771,7 @@ static unsigned int status_calc_maxhp(struct block_list *bl, struct status_chang
 		maxhp += maxhp * (2 + sc->data[SC_RAISINGDRAGON]->val1) / 100;
 	if (sc->data[SC_GENTLETOUCH_CHANGE]) // Max HP decrease: [Skill Level x 4] %
 		maxhp -= maxhp * (4 * sc->data[SC_GENTLETOUCH_CHANGE]->val1) / 100;
-	if (sc->data[SC_GENTLETOUCH_REVITALIZE])// Max HP increase: [Skill Level x 2] %
+	if (sc->data[SC_GENTLETOUCH_REVITALIZE]) // Max HP increase: [Skill Level x 2] %
 		maxhp += maxhp * (2 * sc->data[SC_GENTLETOUCH_REVITALIZE]->val1) / 100;
 	if (sc->data[SC_MUSTLE_M])
 		maxhp += maxhp * sc->data[SC_MUSTLE_M]->val1 / 100;
@@ -5812,7 +5786,7 @@ static unsigned int status_calc_maxhp(struct block_list *bl, struct status_chang
 	if (sc->data[SC_UPHEAVAL_OPTION])
 		maxhp += maxhp * sc->data[SC_UPHEAVAL_OPTION]->val3 / 100;
 	if (sc->data[SC_ANGRIFFS_MODUS])
-		maxhp += maxhp * 5 * sc->data[SC_ANGRIFFS_MODUS]->val1 /100;
+		maxhp += maxhp * 5 * sc->data[SC_ANGRIFFS_MODUS]->val1 / 100;
 	if (sc->data[SC_GOLDENE_FERSE])
 		maxhp += maxhp * sc->data[SC_GOLDENE_FERSE]->val2 / 100;
 	if (sc->data[SC_FRIGG_SONG])
@@ -5874,79 +5848,75 @@ static unsigned int status_calc_maxsp(struct block_list *bl, struct status_chang
 
 static unsigned char status_calc_element(struct block_list *bl, struct status_change *sc, int element)
 {
-	if(!sc || !sc->count)
+	if (!sc || !sc->count)
 		return element;
 
-	if(sc->data[SC_FREEZE])
+	if (sc->data[SC_FREEZE])
 		return ELE_WATER;
-	if(sc->data[SC_STONE] && sc->opt1 == OPT1_STONE)
+	if (sc->data[SC_STONE] && sc->opt1 == OPT1_STONE)
 		return ELE_EARTH;
-	if(sc->data[SC_BENEDICTIO])
+	if (sc->data[SC_BENEDICTIO])
 		return ELE_HOLY;
-	if(sc->data[SC_PROPERTYUNDEAD])
+	if (sc->data[SC_PROPERTYUNDEAD])
 		return ELE_UNDEAD;
-	if(sc->data[SC_ARMOR_PROPERTY])
+	if (sc->data[SC_ARMOR_PROPERTY])
 		return sc->data[SC_ARMOR_PROPERTY]->val2;
-	if(sc->data[SC_SHAPESHIFT])
+	if (sc->data[SC_SHAPESHIFT])
 		return sc->data[SC_SHAPESHIFT]->val2;
 
-	return (unsigned char)cap_value(element,0,UCHAR_MAX);
+	return (unsigned char)cap_value(element, 0, UCHAR_MAX);
 }
 
 static unsigned char status_calc_element_lv(struct block_list *bl, struct status_change *sc, int lv)
 {
-	if(!sc || !sc->count)
+	if (!sc || !sc->count)
 		return lv;
 
-	if(sc->data[SC_FREEZE])
+	if (sc->data[SC_FREEZE])
 		return 1;
-	if(sc->data[SC_STONE] && sc->opt1 == OPT1_STONE)
+	if (sc->data[SC_STONE] && sc->opt1 == OPT1_STONE)
 		return 1;
-	if(sc->data[SC_BENEDICTIO])
+	if (sc->data[SC_BENEDICTIO])
 		return 1;
-	if(sc->data[SC_PROPERTYUNDEAD])
+	if (sc->data[SC_PROPERTYUNDEAD])
 		return 1;
-	if(sc->data[SC_ARMOR_PROPERTY])
+	if (sc->data[SC_ARMOR_PROPERTY])
 		return sc->data[SC_ARMOR_PROPERTY]->val1;
-	if(sc->data[SC_SHAPESHIFT])
+	if (sc->data[SC_SHAPESHIFT])
 		return 1;
-	if(sc->data[SC__INVISIBILITY])
+	if (sc->data[SC__INVISIBILITY])
 		return 1;
 
-	return (unsigned char)cap_value(lv,1,4);
+	return (unsigned char)cap_value(lv, 1, 4);
 }
 
 static unsigned char status_calc_attack_element(struct block_list *bl, struct status_change *sc, int element)
 {
-	if(!sc || !sc->count)
+	if (!sc || !sc->count)
 		return element;
-	if(sc->data[SC_ENCHANTARMS])
+	if (sc->data[SC_ENCHANTARMS])
 		return sc->data[SC_ENCHANTARMS]->val2;
-	if(sc->data[SC_PROPERTYWATER]
-	|| (sc->data[SC_WATER_INSIGNIA] && sc->data[SC_WATER_INSIGNIA]->val1 == 2) )
+	if (sc->data[SC_PROPERTYWATER] || (sc->data[SC_WATER_INSIGNIA] && sc->data[SC_WATER_INSIGNIA]->val1 == 2))
 		return ELE_WATER;
-	if(sc->data[SC_PROPERTYGROUND]
-	|| (sc->data[SC_EARTH_INSIGNIA] && sc->data[SC_EARTH_INSIGNIA]->val1 == 2) )
+	if (sc->data[SC_PROPERTYGROUND] || (sc->data[SC_EARTH_INSIGNIA] && sc->data[SC_EARTH_INSIGNIA]->val1 == 2))
 		return ELE_EARTH;
-	if(sc->data[SC_PROPERTYFIRE]
-	|| (sc->data[SC_FIRE_INSIGNIA] && sc->data[SC_FIRE_INSIGNIA]->val1 == 2) )
+	if (sc->data[SC_PROPERTYFIRE] || (sc->data[SC_FIRE_INSIGNIA] && sc->data[SC_FIRE_INSIGNIA]->val1 == 2))
 		return ELE_FIRE;
-	if(sc->data[SC_PROPERTYWIND]
-	|| (sc->data[SC_WIND_INSIGNIA] && sc->data[SC_WIND_INSIGNIA]->val1 == 2) )
+	if (sc->data[SC_PROPERTYWIND] || (sc->data[SC_WIND_INSIGNIA] && sc->data[SC_WIND_INSIGNIA]->val1 == 2))
 		return ELE_WIND;
-	if(sc->data[SC_ENCHANTPOISON])
+	if (sc->data[SC_ENCHANTPOISON])
 		return ELE_POISON;
-	if(sc->data[SC_ASPERSIO])
+	if (sc->data[SC_ASPERSIO])
 		return ELE_HOLY;
-	if(sc->data[SC_PROPERTYDARK])
+	if (sc->data[SC_PROPERTYDARK])
 		return ELE_DARK;
-	if(sc->data[SC_PROPERTYTELEKINESIS] || sc->data[SC__INVISIBILITY])
+	if (sc->data[SC_PROPERTYTELEKINESIS] || sc->data[SC__INVISIBILITY])
 		return ELE_GHOST;
-	if(sc->data[SC_TIDAL_WEAPON_OPTION] || sc->data[SC_TIDAL_WEAPON] )
+	if (sc->data[SC_TIDAL_WEAPON_OPTION] || sc->data[SC_TIDAL_WEAPON])
 		return ELE_WATER;
-	if(sc->data[SC_PYROCLASTIC])
+	if (sc->data[SC_PYROCLASTIC])
 		return ELE_FIRE;
-	return (unsigned char)cap_value(element,0,UCHAR_MAX);
+	return (unsigned char)cap_value(element, 0, UCHAR_MAX);
 }
 
 /**
@@ -5963,11 +5933,11 @@ static uint32 status_calc_mode(const struct block_list *bl, const struct status_
 		return mode & MD_MASK;
 	if (sc->data[SC_MODECHANGE] != NULL) {
 		if (sc->data[SC_MODECHANGE]->val2 != 0)
-			mode = sc->data[SC_MODECHANGE]->val2; //Set mode
+			mode = sc->data[SC_MODECHANGE]->val2; // Set mode
 		if (sc->data[SC_MODECHANGE]->val3)
-			mode |= sc->data[SC_MODECHANGE]->val3; //Add mode
+			mode |= sc->data[SC_MODECHANGE]->val3; // Add mode
 		if (sc->data[SC_MODECHANGE]->val4)
-			mode &= ~sc->data[SC_MODECHANGE]->val4; //Del mode
+			mode &= ~sc->data[SC_MODECHANGE]->val4; // Del mode
 	}
 	return mode & MD_MASK;
 }
@@ -5982,18 +5952,22 @@ static const char *status_get_name(const struct block_list *bl)
 {
 	nullpo_ret(bl);
 	switch (bl->type) {
-		case BL_PC:
-		{
+		case BL_PC: {
 			const struct map_session_data *sd = BL_UCCAST(BL_PC, bl);
 			if (sd->fakename[0] != '\0')
 				return sd->fakename;
 			return sd->status.name;
 		}
-		case BL_MOB: return BL_UCCAST(BL_MOB, bl)->name;
-		case BL_PET: return BL_UCCAST(BL_PET, bl)->pet.name;
-		case BL_HOM: return BL_UCCAST(BL_HOM, bl)->homunculus.name;
-		case BL_NPC: return BL_UCCAST(BL_NPC, bl)->name;
-		case BL_MER: return BL_UCCAST(BL_MER, bl)->db->name;
+		case BL_MOB:
+			return BL_UCCAST(BL_MOB, bl)->name;
+		case BL_PET:
+			return BL_UCCAST(BL_PET, bl)->pet.name;
+		case BL_HOM:
+			return BL_UCCAST(BL_HOM, bl)->homunculus.name;
+		case BL_NPC:
+			return BL_UCCAST(BL_NPC, bl)->name;
+		case BL_MER:
+			return BL_UCCAST(BL_MER, bl)->db->name;
 		case BL_NUL:
 		case BL_SKILL:
 		case BL_CHAT:
@@ -6017,11 +5991,10 @@ static int status_get_class(const struct block_list *bl)
 	switch (bl->type) {
 		case BL_PC:
 			return BL_UCCAST(BL_PC, bl)->status.class;
-		case BL_MOB:
-		{
+		case BL_MOB: {
 			const struct view_data *const vd = BL_UCCAST(BL_MOB, bl)->vd;
 			nullpo_ret(vd);
-			return vd->class; //Class used on all code should be the view class of the mob.
+			return vd->class; // Class used on all code should be the view class of the mob.
 		}
 		case BL_PET:
 			return BL_UCCAST(BL_PET, bl)->pet.class_;
@@ -6052,13 +6025,20 @@ static int status_get_lv(const struct block_list *bl)
 {
 	nullpo_ret(bl);
 	switch (bl->type) {
-		case BL_PC:  return BL_UCCAST(BL_PC, bl)->status.base_level;
-		case BL_MOB: return BL_UCCAST(BL_MOB, bl)->level;
-		case BL_PET: return BL_UCCAST(BL_PET, bl)->pet.level;
-		case BL_HOM: return BL_UCCAST(BL_HOM, bl)->homunculus.level;
-		case BL_MER: return BL_UCCAST(BL_MER, bl)->db->lv;
-		case BL_ELEM: return BL_UCCAST(BL_ELEM, bl)->db->lv;
-		case BL_NPC: return BL_UCCAST(BL_NPC, bl)->level;
+		case BL_PC:
+			return BL_UCCAST(BL_PC, bl)->status.base_level;
+		case BL_MOB:
+			return BL_UCCAST(BL_MOB, bl)->level;
+		case BL_PET:
+			return BL_UCCAST(BL_PET, bl)->pet.level;
+		case BL_HOM:
+			return BL_UCCAST(BL_HOM, bl)->homunculus.level;
+		case BL_MER:
+			return BL_UCCAST(BL_MER, bl)->db->lv;
+		case BL_ELEM:
+			return BL_UCCAST(BL_ELEM, bl)->db->lv;
+		case BL_NPC:
+			return BL_UCCAST(BL_NPC, bl)->level;
 		case BL_NUL:
 		case BL_CHAT:
 		case BL_SKILL:
@@ -6079,8 +6059,10 @@ static int status_get_spiritballs(const struct block_list *bl)
 	nullpo_ret(bl);
 
 	switch (bl->type) {
-		case BL_PC:  return BL_UCCAST(BL_PC, bl)->spiritball;
-		case BL_HOM: return BL_UCCAST(BL_HOM, bl)->homunculus.spiritball;
+		case BL_PC:
+			return BL_UCCAST(BL_PC, bl)->spiritball;
+		case BL_HOM:
+			return BL_UCCAST(BL_HOM, bl)->homunculus.spiritball;
 		case BL_MOB:
 		case BL_PET:
 		case BL_MER:
@@ -6100,10 +6082,14 @@ static struct regen_data *status_get_regen_data(struct block_list *bl)
 {
 	nullpo_retr(NULL, bl);
 	switch (bl->type) {
-		case BL_PC:  return &BL_UCAST(BL_PC, bl)->regen;
-		case BL_HOM: return &BL_UCAST(BL_HOM, bl)->regen;
-		case BL_MER: return &BL_UCAST(BL_MER, bl)->regen;
-		case BL_ELEM: return &BL_UCAST(BL_ELEM, bl)->regen;
+		case BL_PC:
+			return &BL_UCAST(BL_PC, bl)->regen;
+		case BL_HOM:
+			return &BL_UCAST(BL_HOM, bl)->regen;
+		case BL_MER:
+			return &BL_UCAST(BL_MER, bl)->regen;
+		case BL_ELEM:
+			return &BL_UCAST(BL_ELEM, bl)->regen;
 		case BL_NUL:
 		case BL_CHAT:
 		case BL_SKILL:
@@ -6122,14 +6108,19 @@ static struct status_data *status_get_status_data(struct block_list *bl)
 	nullpo_retr(&status->dummy, bl);
 
 	switch (bl->type) {
-		case BL_PC:  return &BL_UCAST(BL_PC, bl)->battle_status;
-		case BL_MOB: return &BL_UCAST(BL_MOB, bl)->status;
-		case BL_PET: return &BL_UCAST(BL_PET, bl)->status;
-		case BL_HOM: return &BL_UCAST(BL_HOM, bl)->battle_status;
-		case BL_MER: return &BL_UCAST(BL_MER, bl)->battle_status;
-		case BL_ELEM: return &BL_UCAST(BL_ELEM, bl)->battle_status;
-		case BL_NPC:
-		{
+		case BL_PC:
+			return &BL_UCAST(BL_PC, bl)->battle_status;
+		case BL_MOB:
+			return &BL_UCAST(BL_MOB, bl)->status;
+		case BL_PET:
+			return &BL_UCAST(BL_PET, bl)->status;
+		case BL_HOM:
+			return &BL_UCAST(BL_HOM, bl)->battle_status;
+		case BL_MER:
+			return &BL_UCAST(BL_MER, bl)->battle_status;
+		case BL_ELEM:
+			return &BL_UCAST(BL_ELEM, bl)->battle_status;
+		case BL_NPC: {
 			struct npc_data *nd = BL_UCAST(BL_NPC, bl);
 			return mob->db_checkid(nd->class_) == 0 ? &nd->status : &status->dummy;
 		}
@@ -6147,18 +6138,21 @@ static struct status_data *status_get_base_status(struct block_list *bl)
 {
 	nullpo_retr(NULL, bl);
 	switch (bl->type) {
-		case BL_PC:  return &BL_UCAST(BL_PC, bl)->base_status;
-		case BL_MOB:
-		{
+		case BL_PC:
+			return &BL_UCAST(BL_PC, bl)->base_status;
+		case BL_MOB: {
 			struct mob_data *md = BL_UCAST(BL_MOB, bl);
 			return md->base_status ? md->base_status : &md->db->status;
 		}
-		case BL_PET: return &BL_UCAST(BL_PET, bl)->db->status;
-		case BL_HOM: return &BL_UCAST(BL_HOM, bl)->base_status;
-		case BL_MER: return &BL_UCAST(BL_MER, bl)->base_status;
-		case BL_ELEM: return &BL_UCAST(BL_ELEM, bl)->base_status;
-		case BL_NPC:
-		{
+		case BL_PET:
+			return &BL_UCAST(BL_PET, bl)->db->status;
+		case BL_HOM:
+			return &BL_UCAST(BL_HOM, bl)->base_status;
+		case BL_MER:
+			return &BL_UCAST(BL_MER, bl)->base_status;
+		case BL_ELEM:
+			return &BL_UCAST(BL_ELEM, bl)->base_status;
+		case BL_NPC: {
 			struct npc_data *nd = BL_UCAST(BL_NPC, bl);
 			return mob->db_checkid(nd->class_) == 0 ? &nd->status : NULL;
 		}
@@ -6187,7 +6181,7 @@ static defType status_get_def(struct block_list *bl)
 static unsigned short status_get_speed(struct block_list *bl)
 {
 	nullpo_ret(bl);
-	if (bl->type == BL_NPC) //Only BL with speed data but no status_data [Skotlex]
+	if (bl->type == BL_NPC) // Only BL with speed data but no status_data [Skotlex]
 		return BL_UCCAST(BL_NPC, bl)->speed;
 	return status->get_status_data(bl)->speed;
 }
@@ -6196,60 +6190,48 @@ static int status_get_party_id(const struct block_list *bl)
 {
 	nullpo_ret(bl);
 	switch (bl->type) {
-	case BL_PC:
-		return BL_UCCAST(BL_PC, bl)->status.party_id;
-	case BL_PET:
-	{
-		const struct pet_data *pd = BL_UCCAST(BL_PET, bl);
-		if (pd->msd != NULL)
-			return pd->msd->status.party_id;
-	}
-		break;
-	case BL_MOB:
-	{
-		const struct mob_data *md = BL_UCCAST(BL_MOB, bl);
-		if (md->master_id > 0) {
-			const struct map_session_data *msd = NULL;
-			if (md->special_state.ai != AI_NONE && (msd = map->id2sd(md->master_id)) != NULL)
-				return msd->status.party_id;
-			return -md->master_id;
-		}
-	}
-		break;
-	case BL_HOM:
-	{
-		const struct homun_data *hd = BL_UCCAST(BL_HOM, bl);
-		if (hd->master != NULL)
-			return hd->master->status.party_id;
-	}
-		break;
-	case BL_MER:
-	{
-		const struct mercenary_data *mc = BL_UCCAST(BL_MER, bl);
-		if (mc->master != NULL)
-			return mc->master->status.party_id;
-	}
-		break;
-	case BL_SKILL:
-	{
-		const struct skill_unit *su = BL_UCCAST(BL_SKILL, bl);
-		if (su->group != NULL)
-			return su->group->party_id;
-	}
-		break;
-	case BL_ELEM:
-	{
-		const struct elemental_data *ed = BL_UCCAST(BL_ELEM, bl);
-		if (ed->master != NULL)
-			return ed->master->status.party_id;
-	}
-		break;
-	case BL_NUL:
-	case BL_CHAT:
-	case BL_ITEM:
-	case BL_NPC:
-	case BL_ALL:
-		break;
+		case BL_PC:
+			return BL_UCCAST(BL_PC, bl)->status.party_id;
+		case BL_PET: {
+			const struct pet_data *pd = BL_UCCAST(BL_PET, bl);
+			if (pd->msd != NULL)
+				return pd->msd->status.party_id;
+		} break;
+		case BL_MOB: {
+			const struct mob_data *md = BL_UCCAST(BL_MOB, bl);
+			if (md->master_id > 0) {
+				const struct map_session_data *msd = NULL;
+				if (md->special_state.ai != AI_NONE && (msd = map->id2sd(md->master_id)) != NULL)
+					return msd->status.party_id;
+				return -md->master_id;
+			}
+		} break;
+		case BL_HOM: {
+			const struct homun_data *hd = BL_UCCAST(BL_HOM, bl);
+			if (hd->master != NULL)
+				return hd->master->status.party_id;
+		} break;
+		case BL_MER: {
+			const struct mercenary_data *mc = BL_UCCAST(BL_MER, bl);
+			if (mc->master != NULL)
+				return mc->master->status.party_id;
+		} break;
+		case BL_SKILL: {
+			const struct skill_unit *su = BL_UCCAST(BL_SKILL, bl);
+			if (su->group != NULL)
+				return su->group->party_id;
+		} break;
+		case BL_ELEM: {
+			const struct elemental_data *ed = BL_UCCAST(BL_ELEM, bl);
+			if (ed->master != NULL)
+				return ed->master->status.party_id;
+		} break;
+		case BL_NUL:
+		case BL_CHAT:
+		case BL_ITEM:
+		case BL_NPC:
+		case BL_ALL:
+			break;
 	}
 	return 0;
 }
@@ -6258,69 +6240,56 @@ static int status_get_guild_id(const struct block_list *bl)
 {
 	nullpo_ret(bl);
 	switch (bl->type) {
-	case BL_PC:
-		return BL_UCCAST(BL_PC, bl)->status.guild_id;
-	case BL_PET:
-	{
-		const struct pet_data *pd = BL_UCCAST(BL_PET, bl);
-		if (pd->msd != NULL)
-			return pd->msd->status.guild_id;
-	}
-		break;
-	case BL_MOB:
-	{
-		const struct mob_data *md = BL_UCCAST(BL_MOB, bl);
-		const struct map_session_data *msd = NULL;
-		if (md->guardian_data != NULL) { //Guardian's guild [Skotlex]
-			// Guardian guild data may not been available yet, castle data is always set
-			if (md->guardian_data->g != NULL)
-				return md->guardian_data->g->guild_id;
-			return md->guardian_data->castle->guild_id;
-		}
-		if (md->special_state.ai != AI_NONE && (msd = map->id2sd(md->master_id)) != NULL)
-			return msd->status.guild_id; //Alchemist's mobs [Skotlex]
-		break;
-	}
-	case BL_HOM:
-	{
-		const struct homun_data *hd = BL_UCCAST(BL_HOM, bl);
-		if (hd->master != NULL)
-			return hd->master->status.guild_id;
-	}
-		break;
-	case BL_MER:
-	{
-		const struct mercenary_data *mc = BL_UCCAST(BL_MER, bl);
-		if (mc->master != NULL)
-			return mc->master->status.guild_id;
-	}
-		break;
-	case BL_NPC:
-	{
-		const struct npc_data *nd = BL_UCCAST(BL_NPC, bl);
-		if (nd->subtype == SCRIPT)
-			return nd->u.scr.guild_id;
-	}
-		break;
-	case BL_SKILL:
-	{
-		const struct skill_unit *su = BL_UCCAST(BL_SKILL, bl);
-		if (su->group != NULL)
-			return su->group->guild_id;
-	}
+		case BL_PC:
+			return BL_UCCAST(BL_PC, bl)->status.guild_id;
+		case BL_PET: {
+			const struct pet_data *pd = BL_UCCAST(BL_PET, bl);
+			if (pd->msd != NULL)
+				return pd->msd->status.guild_id;
+		} break;
+		case BL_MOB: {
+			const struct mob_data *md = BL_UCCAST(BL_MOB, bl);
+			const struct map_session_data *msd = NULL;
+			if (md->guardian_data != NULL) { // Guardian's guild [Skotlex]
+				// Guardian guild data may not been available yet, castle data is always set
+				if (md->guardian_data->g != NULL)
+					return md->guardian_data->g->guild_id;
+				return md->guardian_data->castle->guild_id;
+			}
+			if (md->special_state.ai != AI_NONE && (msd = map->id2sd(md->master_id)) != NULL)
+				return msd->status.guild_id; // Alchemist's mobs [Skotlex]
 			break;
-	case BL_ELEM:
-	{
-		const struct elemental_data *ed = BL_UCCAST(BL_ELEM, bl);
-		if (ed->master != NULL)
-			return ed->master->status.guild_id;
-	}
-		break;
-	case BL_NUL:
-	case BL_CHAT:
-	case BL_ITEM:
-	case BL_ALL:
-		break;
+		}
+		case BL_HOM: {
+			const struct homun_data *hd = BL_UCCAST(BL_HOM, bl);
+			if (hd->master != NULL)
+				return hd->master->status.guild_id;
+		} break;
+		case BL_MER: {
+			const struct mercenary_data *mc = BL_UCCAST(BL_MER, bl);
+			if (mc->master != NULL)
+				return mc->master->status.guild_id;
+		} break;
+		case BL_NPC: {
+			const struct npc_data *nd = BL_UCCAST(BL_NPC, bl);
+			if (nd->subtype == SCRIPT)
+				return nd->u.scr.guild_id;
+		} break;
+		case BL_SKILL: {
+			const struct skill_unit *su = BL_UCCAST(BL_SKILL, bl);
+			if (su->group != NULL)
+				return su->group->guild_id;
+		} break;
+		case BL_ELEM: {
+			const struct elemental_data *ed = BL_UCCAST(BL_ELEM, bl);
+			if (ed->master != NULL)
+				return ed->master->status.guild_id;
+		} break;
+		case BL_NUL:
+		case BL_CHAT:
+		case BL_ITEM:
+		case BL_ALL:
+			break;
 	}
 	return 0;
 }
@@ -6329,66 +6298,54 @@ static int status_get_emblem_id(const struct block_list *bl)
 {
 	nullpo_ret(bl);
 	switch (bl->type) {
-	case BL_PC:
-		return BL_UCCAST(BL_PC, bl)->guild_emblem_id;
-	case BL_PET:
-	{
-		const struct pet_data *pd = BL_UCCAST(BL_PET, bl);
-		if (pd->msd != NULL)
-			return pd->msd->guild_emblem_id;
-	}
-		break;
-	case BL_MOB:
-	{
-		const struct mob_data *md = BL_UCCAST(BL_MOB, bl);
-		const struct map_session_data *msd = NULL;
-		if (md->guardian_data != NULL) {
-			//Guardian's guild [Skotlex]
-			if (md->guardian_data->g != NULL)
-				return md->guardian_data->g->emblem_id;
-			return 0;
-		}
-		if (md->special_state.ai != AI_NONE && (msd = map->id2sd(md->master_id)) != NULL)
-			return msd->guild_emblem_id; //Alchemist's mobs [Skotlex]
-	}
-		break;
-	case BL_HOM:
-	{
-		const struct homun_data *hd = BL_UCCAST(BL_HOM, bl);
-		if (hd->master)
-			return hd->master->guild_emblem_id;
-	}
-		break;
-	case BL_MER:
-	{
-		const struct mercenary_data *mc = BL_UCCAST(BL_MER, bl);
-		if (mc->master)
-			return mc->master->guild_emblem_id;
-	}
-		break;
-	case BL_NPC:
-	{
-		const struct npc_data *nd = BL_UCCAST(BL_NPC, bl);
-		if (nd->subtype == SCRIPT && nd->u.scr.guild_id > 0) {
-			struct guild *g = guild->search(nd->u.scr.guild_id);
-			if (g != NULL)
-				return g->emblem_id;
-		}
-	}
-		break;
-	case BL_ELEM:
-	{
-		const struct elemental_data *ed = BL_UCCAST(BL_ELEM, bl);
-		if (ed->master)
-			return ed->master->guild_emblem_id;
-	}
-		break;
-	case BL_NUL:
-	case BL_CHAT:
-	case BL_ITEM:
-	case BL_SKILL:
-	case BL_ALL:
-		break;
+		case BL_PC:
+			return BL_UCCAST(BL_PC, bl)->guild_emblem_id;
+		case BL_PET: {
+			const struct pet_data *pd = BL_UCCAST(BL_PET, bl);
+			if (pd->msd != NULL)
+				return pd->msd->guild_emblem_id;
+		} break;
+		case BL_MOB: {
+			const struct mob_data *md = BL_UCCAST(BL_MOB, bl);
+			const struct map_session_data *msd = NULL;
+			if (md->guardian_data != NULL) {
+				// Guardian's guild [Skotlex]
+				if (md->guardian_data->g != NULL)
+					return md->guardian_data->g->emblem_id;
+				return 0;
+			}
+			if (md->special_state.ai != AI_NONE && (msd = map->id2sd(md->master_id)) != NULL)
+				return msd->guild_emblem_id; // Alchemist's mobs [Skotlex]
+		} break;
+		case BL_HOM: {
+			const struct homun_data *hd = BL_UCCAST(BL_HOM, bl);
+			if (hd->master)
+				return hd->master->guild_emblem_id;
+		} break;
+		case BL_MER: {
+			const struct mercenary_data *mc = BL_UCCAST(BL_MER, bl);
+			if (mc->master)
+				return mc->master->guild_emblem_id;
+		} break;
+		case BL_NPC: {
+			const struct npc_data *nd = BL_UCCAST(BL_NPC, bl);
+			if (nd->subtype == SCRIPT && nd->u.scr.guild_id > 0) {
+				struct guild *g = guild->search(nd->u.scr.guild_id);
+				if (g != NULL)
+					return g->emblem_id;
+			}
+		} break;
+		case BL_ELEM: {
+			const struct elemental_data *ed = BL_UCCAST(BL_ELEM, bl);
+			if (ed->master)
+				return ed->master->guild_emblem_id;
+		} break;
+		case BL_NUL:
+		case BL_CHAT:
+		case BL_ITEM:
+		case BL_SKILL:
+		case BL_ALL:
+			break;
 	}
 	return 0;
 }
@@ -6440,13 +6397,20 @@ static struct view_data *status_get_viewdata(struct block_list *bl)
 {
 	nullpo_retr(NULL, bl);
 	switch (bl->type) {
-		case BL_PC:  return &BL_UCAST(BL_PC, bl)->vd;
-		case BL_MOB: return BL_UCAST(BL_MOB, bl)->vd;
-		case BL_PET: return &BL_UCAST(BL_PET, bl)->vd;
-		case BL_NPC: return &BL_UCAST(BL_NPC, bl)->vd;
-		case BL_HOM: return BL_UCAST(BL_HOM, bl)->vd;
-		case BL_MER: return BL_UCAST(BL_MER, bl)->vd;
-		case BL_ELEM: return BL_UCAST(BL_ELEM, bl)->vd;
+		case BL_PC:
+			return &BL_UCAST(BL_PC, bl)->vd;
+		case BL_MOB:
+			return BL_UCAST(BL_MOB, bl)->vd;
+		case BL_PET:
+			return &BL_UCAST(BL_PET, bl)->vd;
+		case BL_NPC:
+			return &BL_UCAST(BL_NPC, bl)->vd;
+		case BL_HOM:
+			return BL_UCAST(BL_HOM, bl)->vd;
+		case BL_MER:
+			return BL_UCAST(BL_MER, bl)->vd;
+		case BL_ELEM:
+			return BL_UCAST(BL_ELEM, bl)->vd;
 		case BL_NUL:
 		case BL_CHAT:
 		case BL_ITEM:
@@ -6459,7 +6423,7 @@ static struct view_data *status_get_viewdata(struct block_list *bl)
 
 static void status_set_viewdata(struct block_list *bl, int class_)
 {
-	struct view_data* vd;
+	struct view_data *vd;
 	nullpo_retv(bl);
 	if (mob->db_checkid(class_) || mob->is_clone(class_))
 		vd = mob->get_viewdata(class_);
@@ -6475,149 +6439,136 @@ static void status_set_viewdata(struct block_list *bl, int class_)
 		vd = NULL;
 
 	switch (bl->type) {
-	case BL_PC:
-	{
-		struct map_session_data *sd = BL_UCAST(BL_PC, bl);
-		if (pc->db_checkid(class_)) {
-			if (pc_isridingpeco(sd)) {
-				PRAGMA_GCC46(GCC diagnostic push)
-				PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
-				switch (class_) {
-					//Adapt class to a Mounted one.
-					case JOB_KNIGHT:
-						class_ = JOB_KNIGHT2;
-						break;
-					case JOB_CRUSADER:
-						class_ = JOB_CRUSADER2;
-						break;
-					case JOB_LORD_KNIGHT:
-						class_ = JOB_LORD_KNIGHT2;
-						break;
-					case JOB_PALADIN:
-						class_ = JOB_PALADIN2;
-						break;
-					case JOB_BABY_KNIGHT:
-						class_ = JOB_BABY_KNIGHT2;
-						break;
-					case JOB_BABY_CRUSADER:
-						class_ = JOB_BABY_CRUSADER2;
-						break;
+		case BL_PC: {
+			struct map_session_data *sd = BL_UCAST(BL_PC, bl);
+			if (pc->db_checkid(class_)) {
+				if (pc_isridingpeco(sd)) {
+					PRAGMA_GCC46(GCC diagnostic push)
+					PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+					switch (class_) {
+						// Adapt class to a Mounted one.
+						case JOB_KNIGHT:
+							class_ = JOB_KNIGHT2;
+							break;
+						case JOB_CRUSADER:
+							class_ = JOB_CRUSADER2;
+							break;
+						case JOB_LORD_KNIGHT:
+							class_ = JOB_LORD_KNIGHT2;
+							break;
+						case JOB_PALADIN:
+							class_ = JOB_PALADIN2;
+							break;
+						case JOB_BABY_KNIGHT:
+							class_ = JOB_BABY_KNIGHT2;
+							break;
+						case JOB_BABY_CRUSADER:
+							class_ = JOB_BABY_CRUSADER2;
+							break;
+					}
+					PRAGMA_GCC46(GCC diagnostic pop)
 				}
-				PRAGMA_GCC46(GCC diagnostic pop)
-			}
-			sd->vd.class = class_;
-			clif->get_weapon_view(sd, &sd->vd.weapon, &sd->vd.shield);
-			sd->vd.head_top = sd->status.look.head_top;
-			sd->vd.head_mid = sd->status.look.head_mid;
-			sd->vd.head_bottom = sd->status.look.head_bottom;
-			sd->vd.hair_style = cap_value(sd->status.hair,0,battle_config.max_hair_style);
-			sd->vd.hair_color = cap_value(sd->status.hair_color,0,battle_config.max_hair_color);
-			sd->vd.cloth_color = cap_value(sd->status.clothes_color,0,battle_config.max_cloth_color);
-			sd->vd.robe = sd->status.look.robe;
-			sd->vd.body_style = sd->status.body;
-			sd->vd.sex = sd->status.sex;
+				sd->vd.class = class_;
+				clif->get_weapon_view(sd, &sd->vd.weapon, &sd->vd.shield);
+				sd->vd.head_top = sd->status.look.head_top;
+				sd->vd.head_mid = sd->status.look.head_mid;
+				sd->vd.head_bottom = sd->status.look.head_bottom;
+				sd->vd.hair_style = cap_value(sd->status.hair, 0, battle_config.max_hair_style);
+				sd->vd.hair_color = cap_value(sd->status.hair_color, 0, battle_config.max_hair_color);
+				sd->vd.cloth_color = cap_value(sd->status.clothes_color, 0, battle_config.max_cloth_color);
+				sd->vd.robe = sd->status.look.robe;
+				sd->vd.body_style = sd->status.body;
+				sd->vd.sex = sd->status.sex;
 
-			if (sd->vd.cloth_color) {
-				if ((sd->sc.option & OPTION_WEDDING) != 0 && battle_config.wedding_ignorepalette == true)
-					sd->vd.cloth_color = 0;
-				if ((sd->sc.option & OPTION_XMAS) != 0 && battle_config.xmas_ignorepalette == true)
-					sd->vd.cloth_color = 0;
-				if ((sd->sc.option & OPTION_SUMMER) != 0 && battle_config.summer_ignorepalette == true)
-					sd->vd.cloth_color = 0;
-				if ((sd->sc.option & OPTION_HANBOK) != 0 && battle_config.hanbok_ignorepalette == true)
-					sd->vd.cloth_color = 0;
-				if ((sd->sc.option & OPTION_OKTOBERFEST) != 0 && battle_config.oktoberfest_ignorepalette == true)
-					sd->vd.cloth_color = 0;
-				if ((sd->sc.option & OPTION_SUMMER2) != 0 && battle_config.summer2_ignorepalette == true)
-					sd->vd.cloth_color = 0;
-			}
-			if (sd->vd.body_style != 0 && (sd->sc.option & OPTION_COSTUME) != 0)
-				sd->vd.body_style = 0;
-		} else if (vd != NULL) {
-			memcpy(&sd->vd, vd, sizeof(struct view_data));
-		} else {
-			ShowError("status_set_viewdata (PC): No view data for class %d\n", class_);
-		}
-	}
-		break;
-	case BL_MOB:
-	{
-		struct mob_data *md = BL_UCAST(BL_MOB, bl);
-		if (vd != NULL) {
-			mob->free_dynamic_viewdata(md);
-			md->vd = vd;
-		} else if (pc->db_checkid(class_)) {
-			mob->set_dynamic_viewdata(md);
-			md->vd->class = class_;
-		} else {
-			ShowError("status_set_viewdata (MOB): No view data for class %d\n", class_);
-		}
-	}
-		break;
-	case BL_PET:
-	{
-		struct pet_data *pd = BL_UCAST(BL_PET, bl);
-		if (vd != NULL) {
-			memcpy(&pd->vd, vd, sizeof(struct view_data));
-			if (!pc->db_checkid(vd->class)) {
-				pd->vd.hair_style = battle_config.pet_hair_style;
-				if(pd->pet.equip) {
-					pd->vd.head_bottom = itemdb_viewid(pd->pet.equip);
-					if (!pd->vd.head_bottom)
-						pd->vd.head_bottom = pd->pet.equip;
+				if (sd->vd.cloth_color) {
+					if ((sd->sc.option & OPTION_WEDDING) != 0 && battle_config.wedding_ignorepalette == true)
+						sd->vd.cloth_color = 0;
+					if ((sd->sc.option & OPTION_XMAS) != 0 && battle_config.xmas_ignorepalette == true)
+						sd->vd.cloth_color = 0;
+					if ((sd->sc.option & OPTION_SUMMER) != 0 && battle_config.summer_ignorepalette == true)
+						sd->vd.cloth_color = 0;
+					if ((sd->sc.option & OPTION_HANBOK) != 0 && battle_config.hanbok_ignorepalette == true)
+						sd->vd.cloth_color = 0;
+					if ((sd->sc.option & OPTION_OKTOBERFEST) != 0 && battle_config.oktoberfest_ignorepalette == true)
+						sd->vd.cloth_color = 0;
+					if ((sd->sc.option & OPTION_SUMMER2) != 0 && battle_config.summer2_ignorepalette == true)
+						sd->vd.cloth_color = 0;
 				}
+				if (sd->vd.body_style != 0 && (sd->sc.option & OPTION_COSTUME) != 0)
+					sd->vd.body_style = 0;
+			} else if (vd != NULL) {
+				memcpy(&sd->vd, vd, sizeof(struct view_data));
+			} else {
+				ShowError("status_set_viewdata (PC): No view data for class %d\n", class_);
 			}
-		} else {
-			ShowError("status_set_viewdata (PET): No view data for class %d\n", class_);
-		}
-	}
-		break;
-	case BL_NPC:
-	{
-		struct npc_data *nd = BL_UCAST(BL_NPC, bl);
-		if (vd != NULL) {
-			memcpy(&nd->vd, vd, sizeof(struct view_data));
-		} else if (pc->db_checkid(class_)) {
-			memset(&nd->vd, 0, sizeof(struct view_data));
-			nd->vd.class = class_;
-		} else {
-			ShowError("status_set_viewdata (NPC): No view data for class %d (name=%s)\n", class_, nd->name);
-		}
-	}
-		break;
-	case BL_HOM: //[blackhole89]
-	{
-		struct homun_data *hd = BL_UCAST(BL_HOM, bl);
-		if (vd != NULL)
-			hd->vd = vd;
-		else
-			ShowError("status_set_viewdata (HOMUNCULUS): No view data for class %d\n", class_);
-	}
-		break;
-	case BL_MER:
-	{
-		struct mercenary_data *md = BL_UCAST(BL_MER, bl);
-		if (vd != NULL)
-			md->vd = vd;
-		else
-			ShowError("status_set_viewdata (MERCENARY): No view data for class %d\n", class_);
-	}
-		break;
-	case BL_ELEM:
-	{
-		struct elemental_data *ed = BL_UCAST(BL_ELEM, bl);
-		if (vd != NULL)
-			ed->vd = vd;
-		else
-			ShowError("status_set_viewdata (ELEMENTAL): No view data for class %d\n", class_);
-	}
-		break;
-	case BL_NUL:
-	case BL_ITEM:
-	case BL_SKILL:
-	case BL_CHAT:
-	case BL_ALL:
-		break;
+		} break;
+		case BL_MOB: {
+			struct mob_data *md = BL_UCAST(BL_MOB, bl);
+			if (vd != NULL) {
+				mob->free_dynamic_viewdata(md);
+				md->vd = vd;
+			} else if (pc->db_checkid(class_)) {
+				mob->set_dynamic_viewdata(md);
+				md->vd->class = class_;
+			} else {
+				ShowError("status_set_viewdata (MOB): No view data for class %d\n", class_);
+			}
+		} break;
+		case BL_PET: {
+			struct pet_data *pd = BL_UCAST(BL_PET, bl);
+			if (vd != NULL) {
+				memcpy(&pd->vd, vd, sizeof(struct view_data));
+				if (!pc->db_checkid(vd->class)) {
+					pd->vd.hair_style = battle_config.pet_hair_style;
+					if (pd->pet.equip) {
+						pd->vd.head_bottom = itemdb_viewid(pd->pet.equip);
+						if (!pd->vd.head_bottom)
+							pd->vd.head_bottom = pd->pet.equip;
+					}
+				}
+			} else {
+				ShowError("status_set_viewdata (PET): No view data for class %d\n", class_);
+			}
+		} break;
+		case BL_NPC: {
+			struct npc_data *nd = BL_UCAST(BL_NPC, bl);
+			if (vd != NULL) {
+				memcpy(&nd->vd, vd, sizeof(struct view_data));
+			} else if (pc->db_checkid(class_)) {
+				memset(&nd->vd, 0, sizeof(struct view_data));
+				nd->vd.class = class_;
+			} else {
+				ShowError("status_set_viewdata (NPC): No view data for class %d (name=%s)\n", class_, nd->name);
+			}
+		} break;
+		case BL_HOM: //[blackhole89]
+		{
+			struct homun_data *hd = BL_UCAST(BL_HOM, bl);
+			if (vd != NULL)
+				hd->vd = vd;
+			else
+				ShowError("status_set_viewdata (HOMUNCULUS): No view data for class %d\n", class_);
+		} break;
+		case BL_MER: {
+			struct mercenary_data *md = BL_UCAST(BL_MER, bl);
+			if (vd != NULL)
+				md->vd = vd;
+			else
+				ShowError("status_set_viewdata (MERCENARY): No view data for class %d\n", class_);
+		} break;
+		case BL_ELEM: {
+			struct elemental_data *ed = BL_UCAST(BL_ELEM, bl);
+			if (vd != NULL)
+				ed->vd = vd;
+			else
+				ShowError("status_set_viewdata (ELEMENTAL): No view data for class %d\n", class_);
+		} break;
+		case BL_NUL:
+		case BL_ITEM:
+		case BL_SKILL:
+		case BL_CHAT:
+		case BL_ALL:
+			break;
 	}
 }
 
@@ -6626,19 +6577,25 @@ static struct status_change *status_get_sc(struct block_list *bl)
 {
 	if (bl != NULL) {
 		switch (bl->type) {
-		case BL_PC:  return &BL_UCAST(BL_PC, bl)->sc;
-		case BL_MOB: return &BL_UCAST(BL_MOB, bl)->sc;
-		case BL_NPC: return NULL;
-		case BL_HOM: return &BL_UCAST(BL_HOM, bl)->sc;
-		case BL_MER: return &BL_UCAST(BL_MER, bl)->sc;
-		case BL_ELEM: return &BL_UCAST(BL_ELEM, bl)->sc;
-		case BL_NUL:
-		case BL_ITEM:
-		case BL_SKILL:
-		case BL_CHAT:
-		case BL_PET:
-		case BL_ALL:
-			break;
+			case BL_PC:
+				return &BL_UCAST(BL_PC, bl)->sc;
+			case BL_MOB:
+				return &BL_UCAST(BL_MOB, bl)->sc;
+			case BL_NPC:
+				return NULL;
+			case BL_HOM:
+				return &BL_UCAST(BL_HOM, bl)->sc;
+			case BL_MER:
+				return &BL_UCAST(BL_MER, bl)->sc;
+			case BL_ELEM:
+				return &BL_UCAST(BL_ELEM, bl)->sc;
+			case BL_NUL:
+			case BL_ITEM:
+			case BL_SKILL:
+			case BL_CHAT:
+			case BL_PET:
+			case BL_ALL:
+				break;
 		}
 	}
 	return NULL;
@@ -6648,7 +6605,7 @@ static void status_change_init(struct block_list *bl)
 {
 	struct status_change *sc = status->get_sc(bl);
 	nullpo_retv(sc);
-	memset(sc, 0, sizeof (struct status_change));
+	memset(sc, 0, sizeof(struct status_change));
 }
 
 /**
@@ -6659,11 +6616,11 @@ static void status_change_init(struct block_list *bl)
  */
 static int status_get_sc_def(struct block_list *src, struct block_list *bl, enum sc_type type, int rate, int tick, int flag, int skill_id)
 {
-	//Percentual resistance: 10000 = 100% Resist
-	//Example: 50% -> sc_def=5000 -> 25%; 5000ms -> tick_def=5000 -> 2500ms
+	// Percentual resistance: 10000 = 100% Resist
+	// Example: 50% -> sc_def=5000 -> 25%; 5000ms -> tick_def=5000 -> 2500ms
 	int sc_def = 0, tick_def = -1; //-1 = use sc_def
-	//Linear resistance substracted from rate and tick after percentual resistance was applied
-	//Example: 25% -> sc_def2=2000 -> 5%; 2500ms -> tick_def2=2000 -> 500ms
+	// Linear resistance substracted from rate and tick after percentual resistance was applied
+	// Example: 25% -> sc_def2=2000 -> 5%; 2500ms -> tick_def2=2000 -> 500ms
 	int sc_def2 = 0, tick_def2 = 0;
 
 	struct status_data *st, *bst;
@@ -6672,26 +6629,26 @@ static int status_get_sc_def(struct block_list *src, struct block_list *bl, enum
 
 	nullpo_ret(bl);
 
-	if(!src)
+	if (!src)
 		return tick ? tick : 1; // If no source, it can't be resisted (NPC given)
 
 /// Returns the 'bl's level, capped to 'cap'
-#define SCDEF_LVL_CAP(bl, cap) ( (bl) ? (status->get_lv(bl) > (cap) ? (cap) : status->get_lv(bl)) : 0 )
+#define SCDEF_LVL_CAP(bl, cap) ((bl) ? (status->get_lv(bl) > (cap) ? (cap) : status->get_lv(bl)) : 0)
 /// returns the difference between the levels of 'bl' and 'src', both capped to 'maxlv', multiplied by 'factor'
-#define SCDEF_LVL_DIFF(bl, src, maxlv, factor) ( ( SCDEF_LVL_CAP((bl), (maxlv)) - SCDEF_LVL_CAP((src), (maxlv)) ) * (factor) )
+#define SCDEF_LVL_DIFF(bl, src, maxlv, factor) ((SCDEF_LVL_CAP((bl), (maxlv)) - SCDEF_LVL_CAP((src), (maxlv))) * (factor))
 
-	//Status that are blocked by Golden Thief Bug card or Wand of Hermod
+	// Status that are blocked by Golden Thief Bug card or Wand of Hermod
 	if (status->isimmune(bl) && (skill->get_inf(skill_id) & INF_SELF_SKILL) == 0 // [Aegis] self-cast skills are not blocked, even if magic.
-	    && ((skill->get_type(skill_id, 1) & BF_MAGIC) != 0 // [Aegis] if an SC is caused by magic then it's blocked, no matter what SC.
+	    && ((skill->get_type(skill_id, 1) & BF_MAGIC) != 0                       // [Aegis] if an SC is caused by magic then it's blocked, no matter what SC.
 	        || (status->get_sc_type(type) & SC_NO_MAGIC_BLOCK) != 0))
 		return 0;
 
-	sd = BL_CAST(BL_PC,bl);
+	sd = BL_CAST(BL_PC, bl);
 	st = status->get_status_data(bl);
 	bst = status->get_base_status(bl);
 	nullpo_ret(bst);
 	sc = status->get_sc(bl);
-	if( sc && !sc->count )
+	if (sc && !sc->count)
 		sc = NULL;
 
 	if (sc && sc->data[SC_KINGS_GRACE]) {
@@ -6725,288 +6682,290 @@ static int status_get_sc_def(struct block_list *src, struct block_list *bl, enum
 	PRAGMA_GCC46(GCC diagnostic push)
 	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 	switch (type) {
-	case SC_STUN:
-		sc_def = st->vit*100;
-		sc_def2 = st->luk*10 + SCDEF_LVL_DIFF(bl, src, 99, 10);
-		tick_def2 = st->luk*10;
-		break;
-	case SC_POISON:
-	case SC_DPOISON:
-		sc_def = st->vit*100;
-		sc_def2 = st->luk*10 + SCDEF_LVL_DIFF(bl, src, 99, 10);
-		if (sd) {
-			//For players: 60000 - 450*vit - 100*luk
-			tick_def = st->vit*75;
-			tick_def2 = st->luk*100;
-		} else {
-			//For monsters: 30000 - 200*vit
-			tick>>=1;
-			tick_def = (st->vit*200)/3;
-		}
-		break;
-	case SC_SILENCE:
-#ifdef RENEWAL
-		sc_def = st->int_*100;
-		sc_def2 = (st->vit + st->luk) * 5 + SCDEF_LVL_DIFF(bl, src, 99, 10);
-#else
-		sc_def = st->vit*100;
-		sc_def2 = st->luk*10 + SCDEF_LVL_DIFF(bl, src, 99, 10);
-#endif
-		tick_def2 = st->luk * 10;
-		break;
-	case SC_BLOODING:
-#ifdef RENEWAL
-		sc_def = st->agi*100;
-#else
-		sc_def = st->vit*100;
-#endif
-		sc_def2 = st->luk*10 + SCDEF_LVL_DIFF(bl, src, 99, 10);
-		tick_def2 = st->luk*10;
-		break;
-	case SC_SLEEP:
-#ifdef RENEWAL
-		sc_def = st->agi*100;
-		sc_def2 = (st->int_ + st->luk) * 5 + SCDEF_LVL_DIFF(bl, src, 99, 10);
-#else
-		sc_def = st->int_*100;
-		sc_def2 = st->luk*10 + SCDEF_LVL_DIFF(bl, src, 99, 10);
-#endif
-		tick_def2 = st->luk*10;
-		break;
-	case SC_DEEP_SLEEP:
-		sc_def = bst->int_*50;
-		tick_def = 0; // Linear reduction instead
-		tick_def2 = bst->int_ * 50 + SCDEF_LVL_CAP(bl, 150) * 50; // kRO balance update lists this formula
-		break;
-	case SC_DEC_AGI:
-	case SC_ADORAMUS:
-		if (sd) tick >>= 1; //Half duration for players.
-		sc_def = st->mdef*100;
-#ifndef RENEWAL
-		sc_def2 = st->luk*10;
-#endif
-		tick_def = 0; //No duration reduction
-		break;
-	case SC_STONE:
-		sc_def = st->mdef*100;
-		sc_def2 = st->luk*10 + SCDEF_LVL_DIFF(bl, src, 99, 10);
-		tick_def = 0; //No duration reduction
-		break;
-	case SC_FREEZE:
-		sc_def = st->mdef*100;
-		sc_def2 = st->luk*10 + SCDEF_LVL_DIFF(bl, src, 99, 10);
-		tick_def2 = status_get_luk(src) * -10; //Caster can increase final duration with luk
-		break;
-	case SC_CURSE:
-		// Special property: immunity when luk is zero
-		if (st->luk == 0)
-			return 0;
-		sc_def = st->luk*100;
-		sc_def2 = st->luk*10 + SCDEF_LVL_DIFF(NULL, src, 99, 10); // Curse only has a level penalty and no resistance
-		tick_def = st->vit*100;
-		tick_def2 = st->luk*10;
-		break;
-	case SC_BLIND:
-		sc_def = (st->vit + st->int_)*50;
-		sc_def2 = st->luk*10 + SCDEF_LVL_DIFF(bl, src, 99, 10);
-		tick_def2 = st->luk*10;
-		break;
-	case SC_CONFUSION:
-		sc_def = (st->str + st->int_)*50;
-		sc_def2 = st->luk*10 + SCDEF_LVL_DIFF(bl, src, 99, 10);
-		tick_def2 = st->luk*10;
-		break;
-	case SC_ANKLESNARE:
-		if(st->mode&MD_BOSS) // Lasts 5 times less on bosses
-			tick /= 5;
-		sc_def = st->agi*50;
-		break;
-	case SC_MAGICMIRROR:
-	case SC_STONESKIN:
-		if (sd) //Duration greatly reduced for players.
-			tick /= 15;
-		sc_def2 = st->vit*25 + st->agi*10 + SCDEF_LVL_CAP(bl, 99) * 20; // Linear Reduction of Rate
-		break;
-	case SC_MARSHOFABYSS:
-		//5 second (Fixed) + 25 second - {( INT + LUK ) / 20 second }
-		tick_def2 = (st->int_ + st->luk)*50;
-		break;
-	case SC_STASIS:
-		//5 second (fixed) + { Stasis Skill level * 5 - (Target's VIT + DEX) / 20 }
-		tick_def2 = (st->vit + st->dex)*50;
-		break;
-	case SC_WHITEIMPRISON:
-		if( tick == 5000 ) // 100% on caster
+		case SC_STUN:
+			sc_def = st->vit * 100;
+			sc_def2 = st->luk * 10 + SCDEF_LVL_DIFF(bl, src, 99, 10);
+			tick_def2 = st->luk * 10;
 			break;
-		if (bl->type == BL_PC)
-			tick_def2 = st->vit*25 + st->agi*10 + SCDEF_LVL_CAP(bl, 150) * 20;
-		else
-			tick_def2 = (st->vit + st->luk)*50;
-		break;
-	case SC_BURNING:
-		tick_def2 = 75*st->luk + 125*st->agi;
-		break;
-	case SC_FROSTMISTY:
-		tick_def2 = (st->vit + st->dex)*50;
-		break;
-	case SC_OBLIVIONCURSE: // 100% - (100 - 0.8 x INT)
-		sc_def = st->int_*80;
-		/* Fall through */
-	case SC_TOXIN:
-	case SC_PARALYSE:
-	case SC_VENOMBLEED:
-	case SC_MAGICMUSHROOM:
-	case SC_DEATHHURT:
-	case SC_PYREXIA:
-	case SC_LEECHESEND:
-		tick_def2 = (st->vit + st->luk) * 500;
-		break;
-	case SC_WUGBITE: // {(Base Success chance) - (Target's AGI / 4)}
-		sc_def2 = st->agi*25;
-		break;
-	case SC_ELECTRICSHOCKER:
-		tick_def2 = (st->vit + st->agi) * 70;
-		break;
-	case SC_COLD:
-		tick_def2 = bst->vit*100 + status->get_lv(bl)*20;
-		break;
-	case SC_MANDRAGORA:
-		sc_def = (st->vit + st->luk)*20;
-		break;
-	case SC_SIREN:
-		tick_def2 = status->get_lv(bl) * 100 + (bl->type == BL_PC ? BL_UCCAST(BL_PC, bl)->status.job_level : 0);
-		break;
-	case SC_NEEDLE_OF_PARALYZE:
-		tick_def2 = (st->vit + st->luk) * 50;
-		break;
-	case SC_NETHERWORLD:
-		tick_def2 = 1000 * ((bl->type == BL_PC ? BL_UCCAST(BL_PC, bl)->status.job_level : 0) / 10 + status->get_lv(bl) / 50);
-		break;
-	case SC_NO_RECOVER_STATE:
-		tick_def2 = st->luk * 100;
-		break;
-	case SC_BIND_TRAP:
-		tick_def = bst->str * 50;
-		break;
-	default:
-		//Effect that cannot be reduced? Likely a buff.
-		if (!(rnd()%10000 < rate))
-			return 0;
-		return tick ? tick : 1;
+		case SC_POISON:
+		case SC_DPOISON:
+			sc_def = st->vit * 100;
+			sc_def2 = st->luk * 10 + SCDEF_LVL_DIFF(bl, src, 99, 10);
+			if (sd) {
+				// For players: 60000 - 450*vit - 100*luk
+				tick_def = st->vit * 75;
+				tick_def2 = st->luk * 100;
+			} else {
+				// For monsters: 30000 - 200*vit
+				tick >>= 1;
+				tick_def = (st->vit * 200) / 3;
+			}
+			break;
+		case SC_SILENCE:
+#ifdef RENEWAL
+			sc_def = st->int_ * 100;
+			sc_def2 = (st->vit + st->luk) * 5 + SCDEF_LVL_DIFF(bl, src, 99, 10);
+#else
+			sc_def = st->vit * 100;
+			sc_def2 = st->luk * 10 + SCDEF_LVL_DIFF(bl, src, 99, 10);
+#endif
+			tick_def2 = st->luk * 10;
+			break;
+		case SC_BLOODING:
+#ifdef RENEWAL
+			sc_def = st->agi * 100;
+#else
+			sc_def = st->vit * 100;
+#endif
+			sc_def2 = st->luk * 10 + SCDEF_LVL_DIFF(bl, src, 99, 10);
+			tick_def2 = st->luk * 10;
+			break;
+		case SC_SLEEP:
+#ifdef RENEWAL
+			sc_def = st->agi * 100;
+			sc_def2 = (st->int_ + st->luk) * 5 + SCDEF_LVL_DIFF(bl, src, 99, 10);
+#else
+			sc_def = st->int_ * 100;
+			sc_def2 = st->luk * 10 + SCDEF_LVL_DIFF(bl, src, 99, 10);
+#endif
+			tick_def2 = st->luk * 10;
+			break;
+		case SC_DEEP_SLEEP:
+			sc_def = bst->int_ * 50;
+			tick_def = 0;                                             // Linear reduction instead
+			tick_def2 = bst->int_ * 50 + SCDEF_LVL_CAP(bl, 150) * 50; // kRO balance update lists this formula
+			break;
+		case SC_DEC_AGI:
+		case SC_ADORAMUS:
+			if (sd)
+				tick >>= 1; // Half duration for players.
+			sc_def = st->mdef * 100;
+#ifndef RENEWAL
+			sc_def2 = st->luk * 10;
+#endif
+			tick_def = 0; // No duration reduction
+			break;
+		case SC_STONE:
+			sc_def = st->mdef * 100;
+			sc_def2 = st->luk * 10 + SCDEF_LVL_DIFF(bl, src, 99, 10);
+			tick_def = 0; // No duration reduction
+			break;
+		case SC_FREEZE:
+			sc_def = st->mdef * 100;
+			sc_def2 = st->luk * 10 + SCDEF_LVL_DIFF(bl, src, 99, 10);
+			tick_def2 = status_get_luk(src) * -10; // Caster can increase final duration with luk
+			break;
+		case SC_CURSE:
+			// Special property: immunity when luk is zero
+			if (st->luk == 0)
+				return 0;
+			sc_def = st->luk * 100;
+			sc_def2 = st->luk * 10 + SCDEF_LVL_DIFF(NULL, src, 99, 10); // Curse only has a level penalty and no resistance
+			tick_def = st->vit * 100;
+			tick_def2 = st->luk * 10;
+			break;
+		case SC_BLIND:
+			sc_def = (st->vit + st->int_) * 50;
+			sc_def2 = st->luk * 10 + SCDEF_LVL_DIFF(bl, src, 99, 10);
+			tick_def2 = st->luk * 10;
+			break;
+		case SC_CONFUSION:
+			sc_def = (st->str + st->int_) * 50;
+			sc_def2 = st->luk * 10 + SCDEF_LVL_DIFF(bl, src, 99, 10);
+			tick_def2 = st->luk * 10;
+			break;
+		case SC_ANKLESNARE:
+			if (st->mode & MD_BOSS) // Lasts 5 times less on bosses
+				tick /= 5;
+			sc_def = st->agi * 50;
+			break;
+		case SC_MAGICMIRROR:
+		case SC_STONESKIN:
+			if (sd) // Duration greatly reduced for players.
+				tick /= 15;
+			sc_def2 = st->vit * 25 + st->agi * 10 + SCDEF_LVL_CAP(bl, 99) * 20; // Linear Reduction of Rate
+			break;
+		case SC_MARSHOFABYSS:
+			// 5 second (Fixed) + 25 second - {( INT + LUK ) / 20 second }
+			tick_def2 = (st->int_ + st->luk) * 50;
+			break;
+		case SC_STASIS:
+			// 5 second (fixed) + { Stasis Skill level * 5 - (Target's VIT + DEX) / 20 }
+			tick_def2 = (st->vit + st->dex) * 50;
+			break;
+		case SC_WHITEIMPRISON:
+			if (tick == 5000) // 100% on caster
+				break;
+			if (bl->type == BL_PC)
+				tick_def2 = st->vit * 25 + st->agi * 10 + SCDEF_LVL_CAP(bl, 150) * 20;
+			else
+				tick_def2 = (st->vit + st->luk) * 50;
+			break;
+		case SC_BURNING:
+			tick_def2 = 75 * st->luk + 125 * st->agi;
+			break;
+		case SC_FROSTMISTY:
+			tick_def2 = (st->vit + st->dex) * 50;
+			break;
+		case SC_OBLIVIONCURSE: // 100% - (100 - 0.8 x INT)
+			sc_def = st->int_ * 80;
+			/* Fall through */
+		case SC_TOXIN:
+		case SC_PARALYSE:
+		case SC_VENOMBLEED:
+		case SC_MAGICMUSHROOM:
+		case SC_DEATHHURT:
+		case SC_PYREXIA:
+		case SC_LEECHESEND:
+			tick_def2 = (st->vit + st->luk) * 500;
+			break;
+		case SC_WUGBITE: // {(Base Success chance) - (Target's AGI / 4)}
+			sc_def2 = st->agi * 25;
+			break;
+		case SC_ELECTRICSHOCKER:
+			tick_def2 = (st->vit + st->agi) * 70;
+			break;
+		case SC_COLD:
+			tick_def2 = bst->vit * 100 + status->get_lv(bl) * 20;
+			break;
+		case SC_MANDRAGORA:
+			sc_def = (st->vit + st->luk) * 20;
+			break;
+		case SC_SIREN:
+			tick_def2 = status->get_lv(bl) * 100 + (bl->type == BL_PC ? BL_UCCAST(BL_PC, bl)->status.job_level : 0);
+			break;
+		case SC_NEEDLE_OF_PARALYZE:
+			tick_def2 = (st->vit + st->luk) * 50;
+			break;
+		case SC_NETHERWORLD:
+			tick_def2 = 1000 * ((bl->type == BL_PC ? BL_UCCAST(BL_PC, bl)->status.job_level : 0) / 10 + status->get_lv(bl) / 50);
+			break;
+		case SC_NO_RECOVER_STATE:
+			tick_def2 = st->luk * 100;
+			break;
+		case SC_BIND_TRAP:
+			tick_def = bst->str * 50;
+			break;
+		default:
+			// Effect that cannot be reduced? Likely a buff.
+			if (!(rnd() % 10000 < rate))
+				return 0;
+			return tick ? tick : 1;
 	}
 	PRAGMA_GCC46(GCC diagnostic pop)
 
 	if (sd) {
 
 		if (battle_config.pc_sc_def_rate != 100) {
-			sc_def = sc_def*battle_config.pc_sc_def_rate/100;
-			sc_def2 = sc_def2*battle_config.pc_sc_def_rate/100;
+			sc_def = sc_def * battle_config.pc_sc_def_rate / 100;
+			sc_def2 = sc_def2 * battle_config.pc_sc_def_rate / 100;
 		}
 
-		sc_def = min(sc_def, battle_config.pc_max_sc_def*100);
-		sc_def2 = min(sc_def2, battle_config.pc_max_sc_def*100);
+		sc_def = min(sc_def, battle_config.pc_max_sc_def * 100);
+		sc_def2 = min(sc_def2, battle_config.pc_max_sc_def * 100);
 
 		if (tick_def > 0 && battle_config.pc_sc_def_rate != 100) {
-			tick_def = tick_def*battle_config.pc_sc_def_rate/100;
-			tick_def2 = tick_def2*battle_config.pc_sc_def_rate/100;
+			tick_def = tick_def * battle_config.pc_sc_def_rate / 100;
+			tick_def2 = tick_def2 * battle_config.pc_sc_def_rate / 100;
 		}
 	} else {
 
 		if (battle_config.mob_sc_def_rate != 100) {
-			sc_def = sc_def*battle_config.mob_sc_def_rate/100;
-			sc_def2 = sc_def2*battle_config.mob_sc_def_rate/100;
+			sc_def = sc_def * battle_config.mob_sc_def_rate / 100;
+			sc_def2 = sc_def2 * battle_config.mob_sc_def_rate / 100;
 		}
 
-		sc_def = min(sc_def, battle_config.mob_max_sc_def*100);
-		sc_def2 = min(sc_def2, battle_config.mob_max_sc_def*100);
+		sc_def = min(sc_def, battle_config.mob_max_sc_def * 100);
+		sc_def2 = min(sc_def2, battle_config.mob_max_sc_def * 100);
 
 		if (tick_def > 0 && battle_config.mob_sc_def_rate != 100) {
-			tick_def = tick_def*battle_config.mob_sc_def_rate/100;
-			tick_def2 = tick_def2*battle_config.mob_sc_def_rate/100;
+			tick_def = tick_def * battle_config.mob_sc_def_rate / 100;
+			tick_def2 = tick_def2 * battle_config.mob_sc_def_rate / 100;
 		}
 	}
 
 	if (sc) {
 		if (sc->data[SC_SCRESIST])
-			sc_def += sc->data[SC_SCRESIST]->val1 * 100; //Status resist
+			sc_def += sc->data[SC_SCRESIST]->val1 * 100; // Status resist
 		else if (sc->data[SC_SIEGFRIED])
-			sc_def += sc->data[SC_SIEGFRIED]->val3 * 100; //Status resistance.
+			sc_def += sc->data[SC_SIEGFRIED]->val3 * 100; // Status resistance.
 		if (sc && sc->data[SC_MVPCARD_ORCHERO])
 			sc_def += sc->data[SC_MVPCARD_ORCHERO]->val1 * 100;
 	}
 
-	//When tick def not set, reduction is the same for both.
-	if(tick_def == -1)
+	// When tick def not set, reduction is the same for both.
+	if (tick_def == -1)
 		tick_def = sc_def;
 
-	//Natural resistance
-	if (!(flag&SCFLAG_FIXEDRATE)) {
-		rate -= rate*sc_def/10000;
+	// Natural resistance
+	if (!(flag & SCFLAG_FIXEDRATE)) {
+		rate -= rate * sc_def / 10000;
 		rate -= sc_def2;
 
-		//Minimum chances
+		// Minimum chances
 		PRAGMA_GCC46(GCC diagnostic push)
 		PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 		switch (type) {
-		case SC_OBLIVIONCURSE:
-			rate = max(rate,500); //Minimum of 5%
-			break;
-		case SC_WUGBITE:
-			rate = max(rate,5000); //Minimum of 50%
-			break;
+			case SC_OBLIVIONCURSE:
+				rate = max(rate, 500); // Minimum of 5%
+				break;
+			case SC_WUGBITE:
+				rate = max(rate, 5000); // Minimum of 50%
+				break;
 		}
 		PRAGMA_GCC46(GCC diagnostic pop)
 
-		//Item resistance (only applies to rate%)
-		if (sd && SC_COMMON_MIN <= type && type <= SC_COMMON_MAX)
-		{
-			if (sd->reseff[type-SC_COMMON_MIN] > 0)
-				rate -= rate * sd->reseff[type-SC_COMMON_MIN] / 10000;
+		// Item resistance (only applies to rate%)
+		if (sd && SC_COMMON_MIN <= type && type <= SC_COMMON_MAX) {
+			if (sd->reseff[type - SC_COMMON_MIN] > 0)
+				rate -= rate * sd->reseff[type - SC_COMMON_MIN] / 10000;
 			if (sd->sc.data[SC_TARGET_BLOOD])
 				rate -= rate * sd->sc.data[SC_TARGET_BLOOD]->val1 / 100;
 		}
 
-		//Aegis accuracy
-		if (rate > 0 && rate%10 != 0) rate += (10 - rate%10);
+		// Aegis accuracy
+		if (rate > 0 && rate % 10 != 0)
+			rate += (10 - rate % 10);
 	}
 
-	if (!(rnd()%10000 < rate))
+	if (!(rnd() % 10000 < rate))
 		return 0;
 
-	//Even if a status change doesn't have a duration, it should still trigger
-	if (tick < 1) return 1;
+	// Even if a status change doesn't have a duration, it should still trigger
+	if (tick < 1)
+		return 1;
 
-	//Rate reduction
-	if (flag&SCFLAG_FIXEDTICK)
+	// Rate reduction
+	if (flag & SCFLAG_FIXEDTICK)
 		return tick;
 
-	tick -= tick*tick_def/10000;
+	tick -= tick * tick_def / 10000;
 	tick -= tick_def2;
 
-	//Minimum durations
+	// Minimum durations
 	PRAGMA_GCC46(GCC diagnostic push)
 	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 	switch (type) {
-	case SC_ANKLESNARE:
-	case SC_BURNING:
-	case SC_MARSHOFABYSS:
-	case SC_STASIS:
-	case SC_DEEP_SLEEP:
-		tick = max(tick, 5000); //Minimum duration 5s
-		break;
-	case SC_FROSTMISTY:
-		tick = max(tick, 6000);
-		break;
-	case SC_NETHERWORLD:
-		tick = max(tick, 4000);
-		break;
-	case SC_SIREN:
-		tick = max(tick, 10000); // Minimum duration 10s
-		break;
-	default:
-		//Skills need to trigger even if the duration is reduced below 1ms
-		tick = max(tick, 1);
-		break;
+		case SC_ANKLESNARE:
+		case SC_BURNING:
+		case SC_MARSHOFABYSS:
+		case SC_STASIS:
+		case SC_DEEP_SLEEP:
+			tick = max(tick, 5000); // Minimum duration 5s
+			break;
+		case SC_FROSTMISTY:
+			tick = max(tick, 6000);
+			break;
+		case SC_NETHERWORLD:
+			tick = max(tick, 4000);
+			break;
+		case SC_SIREN:
+			tick = max(tick, 10000); // Minimum duration 10s
+			break;
+		default:
+			// Skills need to trigger even if the duration is reduced below 1ms
+			tick = max(tick, 1);
+			break;
 	}
 	PRAGMA_GCC46(GCC diagnostic pop)
 
@@ -7022,12 +6981,12 @@ static void status_display_add(struct map_session_data *sd, enum sc_type type, i
 	int i;
 
 	nullpo_retv(sd);
-	for( i = 0; i < sd->sc_display_count; i++ ) {
-		if( sd->sc_display[i]->type == type )
+	for (i = 0; i < sd->sc_display_count; i++) {
+		if (sd->sc_display[i]->type == type)
 			break;
 	}
 
-	if( i != sd->sc_display_count ) {
+	if (i != sd->sc_display_count) {
 		sd->sc_display[i]->val1 = dval1;
 		sd->sc_display[i]->val2 = dval2;
 		sd->sc_display[i]->val3 = dval3;
@@ -7042,7 +7001,7 @@ static void status_display_add(struct map_session_data *sd, enum sc_type type, i
 	entry->val3 = dval3;
 
 	RECREATE(sd->sc_display, struct sc_display_entry *, ++sd->sc_display_count);
-	sd->sc_display[ sd->sc_display_count - 1 ] = entry;
+	sd->sc_display[sd->sc_display_count - 1] = entry;
 }
 
 static void status_display_remove(struct map_session_data *sd, enum sc_type type)
@@ -7050,30 +7009,30 @@ static void status_display_remove(struct map_session_data *sd, enum sc_type type
 	int i;
 
 	nullpo_retv(sd);
-	for( i = 0; i < sd->sc_display_count; i++ ) {
-		if( sd->sc_display[i]->type == type )
+	for (i = 0; i < sd->sc_display_count; i++) {
+		if (sd->sc_display[i]->type == type)
 			break;
 	}
 
-	if( i != sd->sc_display_count ) {
+	if (i != sd->sc_display_count) {
 		int cursor;
 
 		ers_free(pc->sc_display_ers, sd->sc_display[i]);
 		sd->sc_display[i] = NULL;
 
 		/* the all-mighty compact-o-matic */
-		for( i = 0, cursor = 0; i < sd->sc_display_count; i++ ) {
-			if( sd->sc_display[i] == NULL )
+		for (i = 0, cursor = 0; i < sd->sc_display_count; i++) {
+			if (sd->sc_display[i] == NULL)
 				continue;
 
-			if( i != cursor ) {
+			if (i != cursor) {
 				sd->sc_display[cursor] = sd->sc_display[i];
 			}
 
 			cursor++;
 		}
 
-		if( !(sd->sc_display_count = cursor) ) {
+		if (!(sd->sc_display_count = cursor)) {
 			aFree(sd->sc_display);
 			sd->sc_display = NULL;
 		}
@@ -7102,8 +7061,8 @@ static void status_display_remove(struct map_session_data *sd, enum sc_type type
 static int status_change_start_sub(struct block_list *src, struct block_list *bl, enum sc_type type, int rate, int val1, int val2, int val3, int val4, int tick, int total_tick, int flag, int skill_id)
 {
 	struct map_session_data *sd = NULL;
-	struct status_change* sc;
-	struct status_change_entry* sce;
+	struct status_change *sc;
+	struct status_change_entry *sce;
 	struct status_data *st;
 	struct view_data *vd;
 	int opt_flag, undead_flag, val_flag = 0, tick_time = 0;
@@ -7119,7 +7078,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 	}
 
 	if (!sc)
-		return 0; //Unable to receive status changes
+		return 0; // Unable to receive status changes
 
 	if (status->isdead(bl) && type != SC_NOCHAT) // SC_NOCHAT should work even on dead characters
 		return 0;
@@ -7130,7 +7089,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 	if (bl->type == BL_MOB) {
 		struct mob_data *md = BL_CAST(BL_MOB, bl);
 		if (md && (md->class_ == MOBID_EMPELIUM || mob_is_battleground(md)) && type != SC_SAFETYWALL && type != SC_PNEUMA)
-			return 0; //Emperium/BG Monsters can't be afflicted by status changes
+			return 0; // Emperium/BG Monsters can't be afflicted by status changes
 #if 0
 		if (md && mob_is_gvg(md) && status->sc2scb_flag(type)&SCB_MAXHP)
 			return 0; //prevent status addinh hp to gvg mob (like bloodylust=hp*3 etc...
@@ -7142,10 +7101,11 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 
 	sd = BL_CAST(BL_PC, bl);
 
-	//Adjust total_tick according to status resistances
-	if( !(flag&(SCFLAG_NOAVOID|SCFLAG_LOADED)) ) {
+	// Adjust total_tick according to status resistances
+	if (!(flag & (SCFLAG_NOAVOID | SCFLAG_LOADED))) {
 		total_tick = status->get_sc_def(src, bl, type, rate, total_tick, flag, skill_id);
-		if( !total_tick ) return 0;
+		if (!total_tick)
+			return 0;
 	}
 
 	undead_flag = battle->check_undead(st->race, st->def_ele);
@@ -7157,28 +7117,26 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 		case SC_NIBELUNGEN:
 		case SC_INTOABYSS:
 		case SC_SIEGFRIED:
-			if( sd && !sd->status.party_id )
+			if (sd && !sd->status.party_id)
 				return 0;
 			break;
 		case SC_ANGRIFFS_MODUS:
 		case SC_GOLDENE_FERSE:
-			if ((type==SC_GOLDENE_FERSE && sc->data[SC_ANGRIFFS_MODUS])
-				|| (type==SC_ANGRIFFS_MODUS && sc->data[SC_GOLDENE_FERSE])
-				) {
+			if ((type == SC_GOLDENE_FERSE && sc->data[SC_ANGRIFFS_MODUS]) || (type == SC_ANGRIFFS_MODUS && sc->data[SC_GOLDENE_FERSE])) {
 				return 0;
 			}
 			FALLTHROUGH
 		case SC_VACUUM_EXTREME:
-			if(sc->data[SC_HALLUCINATIONWALK])
+			if (sc->data[SC_HALLUCINATIONWALK])
 				return 0;
 			break;
 		case SC_STONE:
-			if(sc->data[SC_POWER_OF_GAIA])
+			if (sc->data[SC_POWER_OF_GAIA])
 				return 0;
 			FALLTHROUGH
 		case SC_FREEZE:
-			//Undead are immune to Freeze/Stone
-			if (undead_flag && !(flag&SCFLAG_NOAVOID))
+			// Undead are immune to Freeze/Stone
+			if (undead_flag && !(flag & SCFLAG_NOAVOID))
 				return 0;
 			// SC_LEXAETERNA should be removed when applying SC_FREEZE on BL_PC types
 			// we remove SC_STONE later when we're done hardening the target.
@@ -7190,9 +7148,9 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 		case SC_FROSTMISTY:
 		case SC_COLD:
 			if (sc->opt1)
-				return 0; //Cannot override other opt1 status changes. [Skotlex]
-			if((type == SC_FREEZE || type == SC_FROSTMISTY || type == SC_COLD) && sc->data[SC_WARMER])
-				return 0; //Immune to Frozen and Freezing status if under Warmer status. [Jobbie]
+				return 0; // Cannot override other opt1 status changes. [Skotlex]
+			if ((type == SC_FREEZE || type == SC_FROSTMISTY || type == SC_COLD) && sc->data[SC_WARMER])
+				return 0; // Immune to Frozen and Freezing status if under Warmer status. [Jobbie]
 			break;
 		case SC_BERSERK: // There all like berserk, do not everlap each other
 			if (sc->data[SC__BLOODYLUST])
@@ -7220,23 +7178,23 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				return 0; // Overthrust can't take effect if under Max Overthrust. [Skotlex]
 			FALLTHROUGH
 		case SC_OVERTHRUSTMAX:
-			if (sc->option&OPTION_MADOGEAR)
+			if (sc->option & OPTION_MADOGEAR)
 				return 0; // Overthrust and Overthrust Max cannot be used on Mado Gear [Ind]
 			break;
 		case SC_ADRENALINE:
 			if (sd && !pc_check_weapontype(sd, skill->get_weapontype(BS_ADRENALINE)))
 				return 0;
-			if (sc->data[SC_QUAGMIRE] || sc->data[SC_DEC_AGI] || sc->option&OPTION_MADOGEAR) // Adrenaline doesn't affect Mado Gear [Ind]
+			if (sc->data[SC_QUAGMIRE] || sc->data[SC_DEC_AGI] || sc->option & OPTION_MADOGEAR) // Adrenaline doesn't affect Mado Gear [Ind]
 				return 0;
 			break;
 		case SC_ADRENALINE2:
-			if (sd && !pc_check_weapontype(sd,skill->get_weapontype(BS_ADRENALINE2)))
+			if (sd && !pc_check_weapontype(sd, skill->get_weapontype(BS_ADRENALINE2)))
 				return 0;
 			if (sc->data[SC_QUAGMIRE] || sc->data[SC_DEC_AGI])
 				return 0;
 			break;
 		case SC_MAGNIFICAT:
-			if (sc->option&OPTION_MADOGEAR) // Mado is immune to magnificat
+			if (sc->option & OPTION_MADOGEAR) // Mado is immune to magnificat
 				return 0;
 			break;
 		case SC_ONEHANDQUICKEN:
@@ -7251,7 +7209,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 		case SC_WINDWALK:
 		case SC_CARTBOOST:
 		case SC_ASSNCROS:
-			if (sc->option&OPTION_MADOGEAR)
+			if (sc->option & OPTION_MADOGEAR)
 				return 0; // Mado is immune to wind walk, cart boost, etc (others above) [Ind]
 			FALLTHROUGH
 		case SC_INC_AGI:
@@ -7262,8 +7220,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			if (sd && !skill->can_cloak(sd))
 				return 0;
 			break;
-		case SC_MODECHANGE:
-		{
+		case SC_MODECHANGE: {
 			uint32 mode = MD_NONE;
 			const struct status_data *bst = status->get_base_status(bl);
 			if (bst == NULL)
@@ -7277,80 +7234,83 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			}
 			mode = val2 != 0 ? val2 : bst->mode; // Base mode
 			if (val4 != 0)
-				mode &= ~val4; //Del mode
+				mode &= ~val4; // Del mode
 			if (val3 != 0)
-				mode |= val3; //Add mode
-			if (mode == bst->mode) { //No change.
-				if (sc->data[type] != NULL) //Abort previous status
+				mode |= val3;               // Add mode
+			if (mode == bst->mode) {        // No change.
+				if (sc->data[type] != NULL) // Abort previous status
 					return status_change_end(bl, type, INVALID_TIMER);
 				return 0;
 			}
-		}
-			break;
-			//Strip skills, need to divest something or it fails.
+		} break;
+			// Strip skills, need to divest something or it fails.
 		case SC_NOEQUIPWEAPON:
-			if (sd && !(flag&SCFLAG_LOADED)) { //apply sc anyway if loading saved sc_data
+			if (sd && !(flag & SCFLAG_LOADED)) { // apply sc anyway if loading saved sc_data
 				int i;
-				opt_flag = 0; //Reuse to check success condition.
-				if(sd->bonus.unstripable_equip&EQP_WEAPON)
+				opt_flag = 0; // Reuse to check success condition.
+				if (sd->bonus.unstripable_equip & EQP_WEAPON)
 					return 0;
 
 				i = sd->equip_index[EQI_HAND_R];
-				if (i>=0 && sd->inventory_data[i] && sd->inventory_data[i]->type == IT_WEAPON) {
-					opt_flag|=2;
-					pc->unequipitem(sd, i, PCUNEQUIPITEM_RECALC|PCUNEQUIPITEM_FORCE);
+				if (i >= 0 && sd->inventory_data[i] && sd->inventory_data[i]->type == IT_WEAPON) {
+					opt_flag |= 2;
+					pc->unequipitem(sd, i, PCUNEQUIPITEM_RECALC | PCUNEQUIPITEM_FORCE);
 				}
-				if (!opt_flag) return 0;
+				if (!opt_flag)
+					return 0;
 			}
-			if (total_tick == 1) return 1; //Minimal duration: Only strip without causing the SC
+			if (total_tick == 1)
+				return 1; // Minimal duration: Only strip without causing the SC
 			break;
 		case SC_NOEQUIPSHIELD:
 			if (val2 == 1) {
-				val2 = 0; //GX effect. Do not take shield off..
+				val2 = 0; // GX effect. Do not take shield off..
 			} else {
-				if (sd && !(flag&SCFLAG_LOADED)) {
+				if (sd && !(flag & SCFLAG_LOADED)) {
 					int i;
-					if(sd->bonus.unstripable_equip&EQP_SHIELD)
+					if (sd->bonus.unstripable_equip & EQP_SHIELD)
 						return 0;
 					i = sd->equip_index[EQI_HAND_L];
-					if ( i < 0 || !sd->inventory_data[i] || sd->inventory_data[i]->type != IT_ARMOR )
+					if (i < 0 || !sd->inventory_data[i] || sd->inventory_data[i]->type != IT_ARMOR)
 						return 0;
-					pc->unequipitem(sd, i, PCUNEQUIPITEM_RECALC|PCUNEQUIPITEM_FORCE);
+					pc->unequipitem(sd, i, PCUNEQUIPITEM_RECALC | PCUNEQUIPITEM_FORCE);
 				}
 			}
 			if (total_tick == 1)
-				return 1; //Minimal duration: Only strip without causing the SC
+				return 1; // Minimal duration: Only strip without causing the SC
 			break;
 		case SC_NOEQUIPARMOR:
-			if (sd && !(flag&SCFLAG_LOADED)) {
+			if (sd && !(flag & SCFLAG_LOADED)) {
 				int i;
-				if(sd->bonus.unstripable_equip&EQP_ARMOR)
+				if (sd->bonus.unstripable_equip & EQP_ARMOR)
 					return 0;
 				i = sd->equip_index[EQI_ARMOR];
-				if ( i < 0 || !sd->inventory_data[i] )
+				if (i < 0 || !sd->inventory_data[i])
 					return 0;
-				pc->unequipitem(sd, i, PCUNEQUIPITEM_RECALC|PCUNEQUIPITEM_FORCE);
+				pc->unequipitem(sd, i, PCUNEQUIPITEM_RECALC | PCUNEQUIPITEM_FORCE);
 			}
-			if (total_tick == 1) return 1; //Minimal duration: Only strip without causing the SC
+			if (total_tick == 1)
+				return 1; // Minimal duration: Only strip without causing the SC
 			break;
 		case SC_NOEQUIPHELM:
-			if (sd && !(flag&SCFLAG_LOADED)) {
+			if (sd && !(flag & SCFLAG_LOADED)) {
 				int i;
-				if(sd->bonus.unstripable_equip&EQP_HELM)
+				if (sd->bonus.unstripable_equip & EQP_HELM)
 					return 0;
 				i = sd->equip_index[EQI_HEAD_TOP];
-				if ( i < 0 || !sd->inventory_data[i] )
+				if (i < 0 || !sd->inventory_data[i])
 					return 0;
-				pc->unequipitem(sd, i, PCUNEQUIPITEM_RECALC|PCUNEQUIPITEM_FORCE);
+				pc->unequipitem(sd, i, PCUNEQUIPITEM_RECALC | PCUNEQUIPITEM_FORCE);
 			}
-			if (total_tick == 1) return 1; //Minimal duration: Only strip without causing the SC
+			if (total_tick == 1)
+				return 1; // Minimal duration: Only strip without causing the SC
 			break;
 		case SC_MER_FLEE:
 		case SC_MER_ATK:
 		case SC_MER_HP:
 		case SC_MER_SP:
 		case SC_MER_HIT:
-			if( bl->type != BL_MER )
+			if (bl->type != BL_MER)
 				return 0; // Stats only for Mercenaries
 			break;
 		// Normal foods can't overwrite cash foods, and cash foods only overwrite those of equal or lower level
@@ -7359,8 +7319,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				return 0;
 			FALLTHROUGH
 		case SC_FOOD_STR_CASH:
-			if ((sc->data[SC_FOOD_STR_CASH] != NULL && sc->data[SC_FOOD_STR_CASH]->val1 > val1)
-				|| (sc->data[SC_FOOD_STR] != NULL && sc->data[SC_FOOD_STR]->val1 > val1))
+			if ((sc->data[SC_FOOD_STR_CASH] != NULL && sc->data[SC_FOOD_STR_CASH]->val1 > val1) || (sc->data[SC_FOOD_STR] != NULL && sc->data[SC_FOOD_STR]->val1 > val1))
 				return 0;
 			break;
 		case SC_FOOD_AGI:
@@ -7368,8 +7327,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				return 0;
 			FALLTHROUGH
 		case SC_FOOD_AGI_CASH:
-			if ((sc->data[SC_FOOD_AGI_CASH] != NULL && sc->data[SC_FOOD_AGI_CASH]->val1 > val1)
-				|| (sc->data[SC_FOOD_AGI] != NULL && sc->data[SC_FOOD_AGI]->val1 > val1))
+			if ((sc->data[SC_FOOD_AGI_CASH] != NULL && sc->data[SC_FOOD_AGI_CASH]->val1 > val1) || (sc->data[SC_FOOD_AGI] != NULL && sc->data[SC_FOOD_AGI]->val1 > val1))
 				return 0;
 			break;
 		case SC_FOOD_VIT:
@@ -7377,8 +7335,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				return 0;
 			FALLTHROUGH
 		case SC_FOOD_VIT_CASH:
-			if ((sc->data[SC_FOOD_VIT_CASH] != NULL && sc->data[SC_FOOD_VIT_CASH]->val1 > val1)
-				|| (sc->data[SC_FOOD_VIT] != NULL && sc->data[SC_FOOD_VIT]->val1 > val1))
+			if ((sc->data[SC_FOOD_VIT_CASH] != NULL && sc->data[SC_FOOD_VIT_CASH]->val1 > val1) || (sc->data[SC_FOOD_VIT] != NULL && sc->data[SC_FOOD_VIT]->val1 > val1))
 				return 0;
 			break;
 		case SC_FOOD_INT:
@@ -7386,8 +7343,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				return 0;
 			FALLTHROUGH
 		case SC_FOOD_INT_CASH:
-			if ((sc->data[SC_FOOD_INT_CASH] != NULL && sc->data[SC_FOOD_INT_CASH]->val1 > val1)
-				|| (sc->data[SC_FOOD_INT] != NULL && sc->data[SC_FOOD_INT]->val1 > val1))
+			if ((sc->data[SC_FOOD_INT_CASH] != NULL && sc->data[SC_FOOD_INT_CASH]->val1 > val1) || (sc->data[SC_FOOD_INT] != NULL && sc->data[SC_FOOD_INT]->val1 > val1))
 				return 0;
 			break;
 		case SC_FOOD_DEX:
@@ -7395,8 +7351,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				return 0;
 			FALLTHROUGH
 		case SC_FOOD_DEX_CASH:
-			if ((sc->data[SC_FOOD_DEX_CASH] != NULL && sc->data[SC_FOOD_DEX_CASH]->val1 > val1)
-				|| (sc->data[SC_FOOD_DEX] != NULL && sc->data[SC_FOOD_DEX]->val1 > val1))
+			if ((sc->data[SC_FOOD_DEX_CASH] != NULL && sc->data[SC_FOOD_DEX_CASH]->val1 > val1) || (sc->data[SC_FOOD_DEX] != NULL && sc->data[SC_FOOD_DEX]->val1 > val1))
 				return 0;
 			break;
 		case SC_FOOD_LUK:
@@ -7404,31 +7359,31 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				return 0;
 			FALLTHROUGH
 		case SC_FOOD_LUK_CASH:
-			if ((sc->data[SC_FOOD_LUK_CASH] != NULL && sc->data[SC_FOOD_LUK_CASH]->val1 > val1)
-				|| (sc->data[SC_FOOD_LUK] != NULL && sc->data[SC_FOOD_LUK]->val1 > val1))
+			if ((sc->data[SC_FOOD_LUK_CASH] != NULL && sc->data[SC_FOOD_LUK_CASH]->val1 > val1) || (sc->data[SC_FOOD_LUK] != NULL && sc->data[SC_FOOD_LUK]->val1 > val1))
 				return 0;
 			break;
 		case SC_CAMOUFLAGE:
-			if( sd && pc->checkskill(sd, RA_CAMOUFLAGE) < 3 && !skill->check_camouflage(bl,NULL) )
+			if (sd && pc->checkskill(sd, RA_CAMOUFLAGE) < 3 && !skill->check_camouflage(bl, NULL))
 				return 0;
 			break;
 		case SC__STRIPACCESSARY:
-			if( sd ) {
+			if (sd) {
 				int i = -1;
-				if( !(sd->bonus.unstripable_equip&EQP_ACC_L) ) {
+				if (!(sd->bonus.unstripable_equip & EQP_ACC_L)) {
 					i = sd->equip_index[EQI_ACC_L];
-					if( i >= 0 && sd->inventory_data[i] && sd->inventory_data[i]->type == IT_ARMOR )
-						pc->unequipitem(sd, i, PCUNEQUIPITEM_RECALC|PCUNEQUIPITEM_FORCE); //L-Accessory
+					if (i >= 0 && sd->inventory_data[i] && sd->inventory_data[i]->type == IT_ARMOR)
+						pc->unequipitem(sd, i, PCUNEQUIPITEM_RECALC | PCUNEQUIPITEM_FORCE); // L-Accessory
 				}
-				if( !(sd->bonus.unstripable_equip&EQP_ACC_R) ) {
+				if (!(sd->bonus.unstripable_equip & EQP_ACC_R)) {
 					i = sd->equip_index[EQI_ACC_R];
-					if( i >= 0 && sd->inventory_data[i] && sd->inventory_data[i]->type == IT_ARMOR )
-						pc->unequipitem(sd, i, PCUNEQUIPITEM_RECALC|PCUNEQUIPITEM_FORCE); //R-Accessory
+					if (i >= 0 && sd->inventory_data[i] && sd->inventory_data[i]->type == IT_ARMOR)
+						pc->unequipitem(sd, i, PCUNEQUIPITEM_RECALC | PCUNEQUIPITEM_FORCE); // R-Accessory
 				}
-				if( i < 0 )
+				if (i < 0)
 					return 0;
 			}
-			if (total_tick == 1) return 1; //Minimal duration: Only strip without causing the SC
+			if (total_tick == 1)
+				return 1; // Minimal duration: Only strip without causing the SC
 			break;
 		case SC_TOXIN:
 		case SC_PARALYSE:
@@ -7437,15 +7392,14 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 		case SC_DEATHHURT:
 		case SC_PYREXIA:
 		case SC_OBLIVIONCURSE:
-		case SC_LEECHESEND:
-			{ // it doesn't stack or even renewed
-				int i = SC_TOXIN;
-				for(; i<= SC_LEECHESEND; i++)
-					if(sc->data[i]) return 0;
-			}
-			break;
+		case SC_LEECHESEND: { // it doesn't stack or even renewed
+			int i = SC_TOXIN;
+			for (; i <= SC_LEECHESEND; i++)
+				if (sc->data[i])
+					return 0;
+		} break;
 		case SC_MAGNETICFIELD:
-			if(sc->data[SC_HOVERING])
+			if (sc->data[SC_HOVERING])
 				return 0;
 			break;
 		case SC_HEAT_BARREL:
@@ -7467,27 +7421,27 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 	}
 	PRAGMA_GCC46(GCC diagnostic pop)
 
-	//Check for BOSS resistances
+	// Check for BOSS resistances
 	if (st->mode & MD_BOSS && !(flag & SCFLAG_NOAVOID)) {
 		if (status->is_boss_resist_sc(type))
 			return 0;
 	}
 
-	//Before overlapping fail, one must check for status cured.
+	// Before overlapping fail, one must check for status cured.
 	if (status->end_sc_before_start(bl, st, sc, type, undead_flag, val1, val2, val3, val4))
 		return 0;
 
-	//Check for overlapping fails
-	if( (sce = sc->data[type]) ) {
+	// Check for overlapping fails
+	if ((sce = sc->data[type])) {
 		PRAGMA_GCC46(GCC diagnostic push)
 		PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
-		switch( type ) {
+		switch (type) {
 			case SC_MER_FLEE:
 			case SC_MER_ATK:
 			case SC_MER_HP:
 			case SC_MER_SP:
 			case SC_MER_HIT:
-				if( sce->val1 > val1 )
+				if (sce->val1 > val1)
 					val1 = sce->val1;
 				break;
 			case SC_ADRENALINE:
@@ -7511,11 +7465,11 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			case SC_BLIND:
 			case SC_BLOODING:
 			case SC_DPOISON:
-			case SC_RG_CCONFINE_S: //Can't be re-closed in.
+			case SC_RG_CCONFINE_S: // Can't be re-closed in.
 			case SC_MARIONETTE_MASTER:
 			case SC_MARIONETTE:
 			case SC_NOCHAT:
-			case SC_HLIF_CHANGE: //Otherwise your Hp/Sp would get refilled while still within effect of the last invocation.
+			case SC_HLIF_CHANGE: // Otherwise your Hp/Sp would get refilled while still within effect of the last invocation.
 			case SC_ABUNDANCE:
 			case SC_TOXIN:
 			case SC_PARALYSE:
@@ -7556,28 +7510,28 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			case SC__AUTOSHADOWSPELL: // otherwise you can't change your shadow spell to a lower skill_id
 				break;
 			case SC_GOSPEL:
-				//Must not override a casting gospel char.
-				if(sce->val4 == BCT_SELF)
+				// Must not override a casting gospel char.
+				if (sce->val4 == BCT_SELF)
 					return 0;
-				if(sce->val1 > val1)
+				if (sce->val1 > val1)
 					return 1;
 				break;
 			case SC_ENDURE:
-				if(sce->val4 && !val4)
-					return 1; //Don't let you override infinite endure.
-				if(sce->val1 > val1)
+				if (sce->val4 && !val4)
+					return 1; // Don't let you override infinite endure.
+				if (sce->val1 > val1)
 					return 1;
 				break;
 			case SC_KAAHI:
-				//Kaahi overwrites previous level regardless of existing level.
-				//Delete timer if it exists.
+				// Kaahi overwrites previous level regardless of existing level.
+				// Delete timer if it exists.
 				if (sce->val4 != INVALID_TIMER) {
-					timer->delete(sce->val4,status->kaahi_heal_timer);
+					timer->delete(sce->val4, status->kaahi_heal_timer);
 					sce->val4 = INVALID_TIMER;
 				}
 				break;
 			case SC_JAILED:
-				//When a player is already jailed, do not edit the jail data.
+				// When a player is already jailed, do not edit the jail data.
 				val2 = sce->val2;
 				val3 = sce->val3;
 				val4 = sce->val4;
@@ -7593,7 +7547,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			case SC_GLORYWOUNDS:
 			case SC_SOULCOLD:
 			case SC_HAWKEYES:
-				if( sce->val4 && !val4 )//you cannot override master guild aura
+				if (sce->val4 && !val4) // you cannot override master guild aura
 					return 0;
 				break;
 			case SC_TAROTCARD_ATK_PERC:
@@ -7608,18 +7562,18 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				val2 |= sce->val2; // stackable ailments
 				FALLTHROUGH
 			default:
-				if(sce->val1 > val1)
-					return 1; //Return true to not mess up skill animations. [Skotlex]
+				if (sce->val1 > val1)
+					return 1; // Return true to not mess up skill animations. [Skotlex]
 		}
 		PRAGMA_GCC46(GCC diagnostic pop)
 	}
 
 	vd = status->get_viewdata(bl);
 	calc_flag = status->dbs->ChangeFlagTable[type];
-	if(!(flag&SCFLAG_LOADED)) { // Do not parse val settings when loading SCs
+	if (!(flag & SCFLAG_LOADED)) { // Do not parse val settings when loading SCs
 		PRAGMA_GCC46(GCC diagnostic push)
 		PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
-		switch(type) {
+		switch (type) {
 			case SC_AUTOTRADE:
 			case SC_KSPROTECTED:
 			case SC__BLOODYLUST:
@@ -7630,15 +7584,15 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				FALLTHROUGH
 			case SC_DEC_AGI:
 			case SC_INC_AGI:
-				val2 = 2 + val1; //Agi change
+				val2 = 2 + val1; // Agi change
 				break;
 			case SC_ENDURE:
 				val2 = 7; // Hit-count [Celest]
-				if( !(flag&SCFLAG_NOAVOID) && (bl->type&(BL_PC|BL_MER)) && !map_flag_gvg(bl->m) && !map->list[bl->m].flag.battleground && !val4 ) {
+				if (!(flag & SCFLAG_NOAVOID) && (bl->type & (BL_PC | BL_MER)) && !map_flag_gvg(bl->m) && !map->list[bl->m].flag.battleground && !val4) {
 					struct map_session_data *tsd;
-					if( sd ) {
+					if (sd) {
 						int i;
-						for( i = 0; i < MAX_PC_DEVOTION; i++ ) {
+						for (i = 0; i < MAX_PC_DEVOTION; i++) {
 							if (sd->devotion[i] && (tsd = map->id2sd(sd->devotion[i])) != NULL)
 								status->change_start(bl, &tsd->bl, type, 10000, val1, val2, val3, val4, total_tick, SCFLAG_NOAVOID | SCFLAG_NOICON, skill_id);
 						}
@@ -7649,68 +7603,67 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 						}
 					}
 				}
-				//val4 signals infinite endure (if val4 == 2 it is infinite endure from Berserk)
+				// val4 signals infinite endure (if val4 == 2 it is infinite endure from Berserk)
 				if (val4)
 					total_tick = INFINITE_DURATION;
 				break;
 			case SC_AUTOBERSERK:
-				if (st->hp < st->max_hp>>2 &&
-					(!sc->data[SC_PROVOKE] || sc->data[SC_PROVOKE]->val2==0))
+				if (st->hp < st->max_hp >> 2 && (!sc->data[SC_PROVOKE] || sc->data[SC_PROVOKE]->val2 == 0))
 					sc_start4(src, bl, SC_PROVOKE, 100, 10, 1, 0, 0, 60000, skill_id);
 				total_tick = INFINITE_DURATION;
 				break;
 			case SC_CRUCIS:
-				val2 = 10 + 4*val1; //Def reduction
+				val2 = 10 + 4 * val1; // Def reduction
 				total_tick = INFINITE_DURATION;
-				clif->emotion(bl,E_SWT);
+				clif->emotion(bl, E_SWT);
 				break;
 			case SC_MAXIMIZEPOWER:
-				tick_time = val2 = total_tick>0?total_tick:60000;
+				tick_time = val2 = total_tick > 0 ? total_tick : 60000;
 				total_tick = INFINITE_DURATION; // duration sent to the client should be infinite
 				break;
 			case SC_EDP: // [Celest]
-				//Chance to Poison enemies.
+			             // Chance to Poison enemies.
 #ifdef RENEWAL_EDP
 				val2 = ((val1 + 1) / 2 + 2);
 #else
 				val2 = val1 + 2;
 #endif
-				val3 = 50 * (val1 + 1); //Damage increase (+50 +50*lv%)
-				if( sd )//[Ind] - iROwiki says each level increases its duration by 3 seconds
-					total_tick += pc->checkskill(sd,GC_RESEARCHNEWPOISON)*3000;
+				val3 = 50 * (val1 + 1); // Damage increase (+50 +50*lv%)
+				if (sd)                 //[Ind] - iROwiki says each level increases its duration by 3 seconds
+					total_tick += pc->checkskill(sd, GC_RESEARCHNEWPOISON) * 3000;
 				break;
 			case SC_POISONREACT:
-				val2=(val1+1)/2 + val1/10; // Number of counters [Skotlex]
-				val3=50; // + 5*val1; //Chance to counter. [Skotlex]
+				val2 = (val1 + 1) / 2 + val1 / 10; // Number of counters [Skotlex]
+				val3 = 50;                         // + 5*val1; //Chance to counter. [Skotlex]
 				break;
 			case SC_MAGICROD:
-				val2 = val1*20; //SP gained
+				val2 = val1 * 20; // SP gained
 				break;
 			case SC_KYRIE:
 				val2 = APPLY_RATE(st->max_hp, (val1 * 2 + 10)); //%Max HP to absorb
 				// val4 holds current about of party memebers when casting AB_PRAEFATIO,
 				// as Praefatio's barrier has more health and blocks more hits than Kyrie Elesion.
-				if( val4 < 1 ) //== PR_KYRIE
+				if (val4 < 1)              //== PR_KYRIE
 					val3 = (val1 / 2 + 5); // Hits
-				else { //== AB_PRAEFATIO
-					val2 += val4 * 2; //Increase barrier strength per party member.
+				else {                     //== AB_PRAEFATIO
+					val2 += val4 * 2;      // Increase barrier strength per party member.
 					val3 = 6 + val1;
 				}
-				if( sd )
-					val1 = min(val1,pc->checkskill(sd,PR_KYRIE)); // use skill level to determine barrier health.
+				if (sd)
+					val1 = min(val1, pc->checkskill(sd, PR_KYRIE)); // use skill level to determine barrier health.
 				break;
 			case SC_MAGICPOWER:
-				//val1: Skill lv
-				val2 = 1; //Lasts 1 invocation
-				val3 = 5*val1; //Matk% increase
-				val4 = 0; // 0 = ready to be used, 1 = activated and running
+				// val1: Skill lv
+				val2 = 1;        // Lasts 1 invocation
+				val3 = 5 * val1; // Matk% increase
+				val4 = 0;        // 0 = ready to be used, 1 = activated and running
 				break;
 			case SC_SACRIFICE:
-				val2 = 5; //Lasts 5 hits
+				val2 = 5; // Lasts 5 hits
 				total_tick = INFINITE_DURATION;
 				break;
 			case SC_ENCHANTPOISON:
-				val2= 250+50*val1; //Poisoning Chance (2.5+0.5%) in 1/10000 rate
+				val2 = 250 + 50 * val1; // Poisoning Chance (2.5+0.5%) in 1/10000 rate
 				FALLTHROUGH
 			case SC_ASPERSIO:
 			case SC_PROPERTYFIRE:
@@ -7719,30 +7672,31 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			case SC_PROPERTYGROUND:
 			case SC_PROPERTYDARK:
 			case SC_PROPERTYTELEKINESIS:
-				skill->enchant_elemental_end(bl,type);
+				skill->enchant_elemental_end(bl, type);
 				break;
 			case SC_ARMOR_PROPERTY:
 				// val1 : Element Lvl (if called by skill lvl 1, takes random value between 1 and 4)
 				// val2 : Element (When no element, random one is picked)
 				// val3 : 0 = called by skill 1 = called by script (fixed level)
-				if( !val2 ) val2 = rnd()%ELE_MAX;
+				if (!val2)
+					val2 = rnd() % ELE_MAX;
 
-				if( val1 == 1 && val3 == 0 )
-					val1 = 1 + rnd()%4;
-				else if( val1 > 4 )
+				if (val1 == 1 && val3 == 0)
+					val1 = 1 + rnd() % 4;
+				else if (val1 > 4)
 					val1 = 4; // Max Level
-				val3 = 0; // Not need to keep this info.
+				val3 = 0;     // Not need to keep this info.
 				break;
 			case SC_PROVIDENCE:
-				val2=val1*5; //Race/Ele resist
+				val2 = val1 * 5; // Race/Ele resist
 				break;
 			case SC_REFLECTSHIELD:
-				val2=10+val1*3; // %Dmg reflected
-				if( !(flag&SCFLAG_NOAVOID) && (bl->type&(BL_PC|BL_MER)) ) {
+				val2 = 10 + val1 * 3; // %Dmg reflected
+				if (!(flag & SCFLAG_NOAVOID) && (bl->type & (BL_PC | BL_MER))) {
 					struct map_session_data *tsd;
-					if( sd ) {
+					if (sd) {
 						int i;
-						for( i = 0; i < MAX_PC_DEVOTION; i++ ) {
+						for (i = 0; i < MAX_PC_DEVOTION; i++) {
 							if (sd->devotion[i] && (tsd = map->id2sd(sd->devotion[i])) != NULL)
 								status->change_start(bl, &tsd->bl, type, 10000, val1, val2, 0, 0, total_tick, SCFLAG_NOAVOID | SCFLAG_NOICON, skill_id);
 						}
@@ -7763,92 +7717,93 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 					val2 = 15;
 				break;
 			case SC_NOEQUIPARMOR:
-				if (!sd) //Vit reduction
+				if (!sd) // Vit reduction
 					val2 = 40;
 				break;
 			case SC_NOEQUIPHELM:
-				if (!sd) //Int reduction
+				if (!sd) // Int reduction
 					val2 = 40;
 				break;
 			case SC_AUTOSPELL:
-				//Val1 Skill LV of Autospell
-				//Val2 Skill ID to cast
-				//Val3 Max Lv to cast
-				val4 = 5 + val1*2; //Chance of casting
+				// Val1 Skill LV of Autospell
+				// Val2 Skill ID to cast
+				// Val3 Max Lv to cast
+				val4 = 5 + val1 * 2; // Chance of casting
 				break;
 			case SC_VOLCANO:
-				val2 = val1*10; //Watk increase
-	#ifndef RENEWAL
+				val2 = val1 * 10; // Watk increase
+#ifndef RENEWAL
 				if (st->def_ele != ELE_FIRE)
 					val2 = 0;
-	#endif
+#endif
 				break;
 			case SC_VIOLENTGALE:
-				val2 = val1*3; //Flee increase
-	#ifndef RENEWAL
+				val2 = val1 * 3; // Flee increase
+#ifndef RENEWAL
 				if (st->def_ele != ELE_WIND)
 					val2 = 0;
-	#endif
+#endif
 				break;
 			case SC_DELUGE:
-				val2 = skill->deluge_eff[val1-1]; //HP increase
-	#ifndef RENEWAL
-				if(st->def_ele != ELE_WATER)
+				val2 = skill->deluge_eff[val1 - 1]; // HP increase
+#ifndef RENEWAL
+				if (st->def_ele != ELE_WATER)
 					val2 = 0;
-	#endif
+#endif
 				break;
 			case SC_NJ_SUITON:
 				if (val2 == 0 || (sd != NULL && (sd->job & MAPID_BASEMASK) == MAPID_NINJA)) {
-					//No penalties.
-					val2 = 0; //Agi penalty
-					val3 = 0; //Walk speed penalty
+					// No penalties.
+					val2 = 0; // Agi penalty
+					val3 = 0; // Walk speed penalty
 					break;
 				}
 				val3 = 50;
-				val2 = 3*((val1+1)/3);
-				if (val1 > 4) val2--;
+				val2 = 3 * ((val1 + 1) / 3);
+				if (val1 > 4)
+					val2--;
 				break;
 			case SC_ONEHANDQUICKEN:
 			case SC_TWOHANDQUICKEN:
 				val2 = 300;
-				if (val1 > 10) //For boss casted skills [Skotlex]
-					val2 += 20*(val1-10);
+				if (val1 > 10) // For boss casted skills [Skotlex]
+					val2 += 20 * (val1 - 10);
 				break;
 			case SC_MER_QUICKEN:
 				val2 = 300;
 				break;
-	#ifndef RENEWAL_ASPD
+#ifndef RENEWAL_ASPD
 			case SC_SPEARQUICKEN:
-				val2 = 200+10*val1;
+				val2 = 200 + 10 * val1;
 				break;
-	#endif
+#endif
 			case SC_DANCING:
-				//val1 : Skill ID + LV
-				//val2 : Skill Group of the Dance.
-				//val3 : Brings the skill_lv (merged into val1 here)
-				//val4 : Partner
+				// val1 : Skill ID + LV
+				// val2 : Skill Group of the Dance.
+				// val3 : Brings the skill_lv (merged into val1 here)
+				// val4 : Partner
 				if (val1 == CG_MOONLIT)
 					clif->status_change(bl, status->get_sc_icon(SC_MOON), status->get_sc_relevant_bl_types(SC_MOON), 1, total_tick, 0, 0, 0);
-				val1|= (val3<<16);
-				val3 = total_tick/1000; //Tick duration
-				tick_time = 1000; // [GodLesZ] tick time
+				val1 |= (val3 << 16);
+				val3 = total_tick / 1000; // Tick duration
+				tick_time = 1000;         // [GodLesZ] tick time
 				break;
 			case SC_LONGING:
-	#ifdef RENEWAL
+#ifdef RENEWAL
 				val2 = 50 + 10 * val1;
-	#else
-				val2 = 500-100*val1; //Aspd penalty.
-	#endif
+#else
+				val2 = 500 - 100 * val1; // Aspd penalty.
+#endif
 				break;
 			case SC_EXPLOSIONSPIRITS:
-				val2 = 75 + 25*val1; //Cri bonus
+				val2 = 75 + 25 * val1; // Cri bonus
 				break;
 
 			case SC_ATTHASTE_POTION1:
 			case SC_ATTHASTE_POTION2:
 			case SC_ATTHASTE_POTION3:
 			case SC_ATTHASTE_INFINITY:
-				val2 = 50*(2+type-SC_ATTHASTE_POTION1);
+				val2 = 50 * (2 + type - SC_ATTHASTE_POTION1);
 				break;
 
 			case SC_WEDDING:
@@ -7868,64 +7823,68 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				// This is done this way because the message that the client displays is hardcoded, and only
 				// shows how many minutes are remaining. [Panikon]
 				total_tick = 60000;
-				if (sd)
-				{
-					clif->changestatus(sd,SP_MANNER,sd->status.manner);
-					clif->updatestatus(sd,SP_MANNER);
+				if (sd) {
+					clif->changestatus(sd, SP_MANNER, sd->status.manner);
+					clif->updatestatus(sd, SP_MANNER);
 				}
 				break;
 
 			case SC_STONE:
-				val3 = total_tick/1000; //Petrified HP-damage iterations.
-				if(val3 < 1) val3 = 1;
-				total_tick = val4; //Petrifying time.
-				if(val4 > 500) // not with WL_SIENNAEXECRATE
-					total_tick = max(total_tick, 1000); //Min time
-				calc_flag = 0; //Actual status changes take effect on petrified state.
+				val3 = total_tick / 1000; // Petrified HP-damage iterations.
+				if (val3 < 1)
+					val3 = 1;
+				total_tick = val4;                      // Petrifying time.
+				if (val4 > 500)                         // not with WL_SIENNAEXECRATE
+					total_tick = max(total_tick, 1000); // Min time
+				calc_flag = 0;                          // Actual status changes take effect on petrified state.
 				break;
 
 			case SC_DPOISON:
-				//Lose 10/15% of your life as long as it doesn't brings life below 25%
-				if (st->hp > st->max_hp>>2) {
-					int diff = st->max_hp*(bl->type==BL_PC?10:15)/100;
-					if (st->hp - diff < st->max_hp>>2)
-						diff = st->hp - (st->max_hp>>2);
-					if( val2 && bl->type == BL_MOB ) {
-						struct block_list* src2 = map->id2bl(val2);
-						if( src2 )
+				// Lose 10/15% of your life as long as it doesn't brings life below 25%
+				if (st->hp > st->max_hp >> 2) {
+					int diff = st->max_hp * (bl->type == BL_PC ? 10 : 15) / 100;
+					if (st->hp - diff < st->max_hp >> 2)
+						diff = st->hp - (st->max_hp >> 2);
+					if (val2 && bl->type == BL_MOB) {
+						struct block_list *src2 = map->id2bl(val2);
+						if (src2)
 							mob->log_damage(BL_UCAST(BL_MOB, bl), src2, diff);
 					}
 					status_zap(bl, diff, 0);
 				}
 				// fall through
 			case SC_POISON:
-				val3 = total_tick/1000; //Damage iterations
-				if(val3 < 1) val3 = 1;
+				val3 = total_tick / 1000; // Damage iterations
+				if (val3 < 1)
+					val3 = 1;
 				tick_time = 1000; // [GodLesZ] tick time
-				//val4: HP damage
+				// val4: HP damage
 				if (bl->type == BL_PC)
-					val4 = (type == SC_DPOISON) ? 3 + st->max_hp/50 : 3 + st->max_hp*3/200;
+					val4 = (type == SC_DPOISON) ? 3 + st->max_hp / 50 : 3 + st->max_hp * 3 / 200;
 				else
-					val4 = (type == SC_DPOISON) ? 3 + st->max_hp/100 : 3 + st->max_hp/200;
+					val4 = (type == SC_DPOISON) ? 3 + st->max_hp / 100 : 3 + st->max_hp / 200;
 
 				break;
 			case SC_CONFUSION:
-				clif->emotion(bl,E_WHAT);
+				clif->emotion(bl, E_WHAT);
 				break;
 			case SC_BLOODING:
-				val4 = total_tick/10000;
-				if (!val4) val4 = 1;
+				val4 = total_tick / 10000;
+				if (!val4)
+					val4 = 1;
 				tick_time = 10000; // [GodLesZ] tick time
 				break;
 			case SC_S_LIFEPOTION:
 			case SC_L_LIFEPOTION:
 			case SC_M_LIFEPOTION:
 			case SC_G_LIFEPOTION:
-				if (val1 == 0) return 0;
+				if (val1 == 0)
+					return 0;
 				// val1 = heal percent/amount
 				// val2 = seconds between heals
 				// val4 = total of heals
-				if (val2 < 1) val2 = 1;
+				if (val2 < 1)
+					val2 = 1;
 				if ((val4 = total_tick / (val2 * 1000)) < 1)
 					val4 = 1;
 				tick_time = val2 * 1000; // [GodLesZ] tick time
@@ -7938,48 +7897,49 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 						return 0;
 					}
 					val1 = boss_md->bl.id;
-					if( (val4 = total_tick/1000) < 1 )
+					if ((val4 = total_tick / 1000) < 1)
 						val4 = 1;
 					tick_time = 1000; // [GodLesZ] tick time
 				}
 				break;
 			case SC_HIDING:
-				val2 = total_tick/1000;
+				val2 = total_tick / 1000;
 				tick_time = 1000; // [GodLesZ] tick time
-				val3 = 0; // unused, previously speed adjustment
-				val4 = val1+3; //Seconds before SP substraction happen.
+				val3 = 0;         // unused, previously speed adjustment
+				val4 = val1 + 3;  // Seconds before SP substraction happen.
 				break;
 			case SC_CHASEWALK:
-				val2 = total_tick>0?total_tick:10000; //Interval at which SP is drained.
-				val3 = 35 - 5 * val1; //Speed adjustment.
+				val2 = total_tick > 0 ? total_tick : 10000; // Interval at which SP is drained.
+				val3 = 35 - 5 * val1;                       // Speed adjustment.
 				if (sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_ROGUE)
 					val3 -= 40;
-				val4 = 10+val1*2; //SP cost.
-				if (map_flag_gvg(bl->m) || map->list[bl->m].flag.battleground) val4 *= 5;
+				val4 = 10 + val1 * 2; // SP cost.
+				if (map_flag_gvg(bl->m) || map->list[bl->m].flag.battleground)
+					val4 *= 5;
 				break;
 			case SC_CLOAKING:
-				if (!sd) //Monsters should be able to walk with no penalties. [Skotlex]
+				if (!sd) // Monsters should be able to walk with no penalties. [Skotlex]
 					val1 = 10;
-				tick_time = val2 = total_tick>0?total_tick:60000; //SP consumption rate.
-				total_tick = INFINITE_DURATION; // duration sent to the client should be infinite
-				val3 = 0; // unused, previously walk speed adjustment
-				//val4&1 signals the presence of a wall.
-				//val4&2 makes cloak not end on normal attacks [Skotlex]
-				//val4&4 makes cloak not end on using skills
-				if (bl->type == BL_PC || (bl->type == BL_MOB && BL_UCCAST(BL_MOB, bl)->special_state.clone)) //Standard cloaking.
-					val4 |= battle_config.pc_cloak_check_type&7;
+				tick_time = val2 = total_tick > 0 ? total_tick : 60000; // SP consumption rate.
+				total_tick = INFINITE_DURATION;                         // duration sent to the client should be infinite
+				val3 = 0;                                               // unused, previously walk speed adjustment
+				// val4&1 signals the presence of a wall.
+				// val4&2 makes cloak not end on normal attacks [Skotlex]
+				// val4&4 makes cloak not end on using skills
+				if (bl->type == BL_PC || (bl->type == BL_MOB && BL_UCCAST(BL_MOB, bl)->special_state.clone)) // Standard cloaking.
+					val4 |= battle_config.pc_cloak_check_type & 7;
 				else
-					val4 |= battle_config.monster_cloak_check_type&7;
+					val4 |= battle_config.monster_cloak_check_type & 7;
 				break;
 			case SC_SIGHT: /* splash status */
 			case SC_RUWACH:
 			case SC_WZ_SIGHTBLASTER:
-				val3 = skill->get_splash(val2, val1); //Val2 should bring the skill-id.
-				val2 = total_tick/20;
+				val3 = skill->get_splash(val2, val1); // Val2 should bring the skill-id.
+				val2 = total_tick / 20;
 				tick_time = 20; // [GodLesZ] tick time
 				break;
 
-				//Permanent effects.
+				// Permanent effects.
 			case SC_LEXAETERNA:
 			case SC_MODECHANGE:
 			case SC_WEIGHTOVER50:
@@ -7997,17 +7957,17 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				break;
 
 			case SC_AUTOGUARD:
-				if( !(flag&SCFLAG_NOAVOID) ) {
+				if (!(flag & SCFLAG_NOAVOID)) {
 					struct map_session_data *tsd;
 					int i;
 					for (i = val2 = 0; i < val1; i++) {
-						int t = 5-(i>>1);
-						val2 += (t < 0)? 1:t;
+						int t = 5 - (i >> 1);
+						val2 += (t < 0) ? 1 : t;
 					}
 
-					if( bl->type&(BL_PC|BL_MER) ) {
-						if( sd ) {
-							for( i = 0; i < MAX_PC_DEVOTION; i++ ) {
+					if (bl->type & (BL_PC | BL_MER)) {
+						if (sd) {
+							for (i = 0; i < MAX_PC_DEVOTION; i++) {
 								if (sd->devotion[i] && (tsd = map->id2sd(sd->devotion[i])) != NULL)
 									status->change_start(bl, &tsd->bl, type, 10000, val1, val2, 0, 0, total_tick, SCFLAG_NOAVOID | SCFLAG_NOICON, skill_id);
 							}
@@ -8022,16 +7982,16 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				break;
 
 			case SC_DEFENDER:
-				if (!(flag&SCFLAG_NOAVOID)) {
-					val2 = 5 + 15*val1; //Damage reduction
-					val3 = 0; // unused, previously speed adjustment
-					val4 = 250 - 50*val1; //Aspd adjustment
+				if (!(flag & SCFLAG_NOAVOID)) {
+					val2 = 5 + 15 * val1;   // Damage reduction
+					val3 = 0;               // unused, previously speed adjustment
+					val4 = 250 - 50 * val1; // Aspd adjustment
 
 					if (sd) {
 						struct map_session_data *tsd;
 						int i;
 						for (i = 0; i < MAX_PC_DEVOTION; i++) {
-							//See if there are devoted characters, and pass the status to them. [Skotlex]
+							// See if there are devoted characters, and pass the status to them. [Skotlex]
 							if (sd->devotion[i] && (tsd = map->id2sd(sd->devotion[i])) != NULL)
 								status->change_start(bl, &tsd->bl, type, 10000, val1, 5 + val1 * 5, val3, val4, total_tick, SCFLAG_NOAVOID, skill_id);
 						}
@@ -8044,141 +8004,160 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 					pc_setsit(sd);
 					clif->sitting(&sd->bl);
 				}
-				val2 = 12; //SP cost
-				val4 = 10000; //Decrease at 10secs intervals.
-				val3 = total_tick/val4;
+				val2 = 12;    // SP cost
+				val4 = 10000; // Decrease at 10secs intervals.
+				val3 = total_tick / val4;
 				total_tick = INFINITE_DURATION; // duration sent to the client should be infinite
-				tick_time = val4; // [GodLesZ] tick time
+				tick_time = val4;               // [GodLesZ] tick time
 				break;
 			case SC_PARRYING:
-				val2 = 20 + val1*3; //Block Chance
+				val2 = 20 + val1 * 3; // Block Chance
 				break;
 
 			case SC_WINDWALK:
-				val2 = (val1+1)/2; // Flee bonus is 1/1/2/2/3/3/4/4/5/5
+				val2 = (val1 + 1) / 2; // Flee bonus is 1/1/2/2/3/3/4/4/5/5
 				break;
 
 			case SC_JOINTBEAT:
-				if( val2&BREAK_NECK )
+				if (val2 & BREAK_NECK)
 					sc_start2(src, bl, SC_BLOODING, 100, val1, val3, skill->get_time2(status->sc2skill(type), val1), skill_id);
 				break;
 
 			case SC_BERSERK:
-				if( val3 == SC__BLOODYLUST )
+				if (val3 == SC__BLOODYLUST)
 					sc_start(src, bl, (sc_type)val3, 100, val1, total_tick, skill_id);
 				if (!val3 && (!sc->data[SC_ENDURE] || !sc->data[SC_ENDURE]->val4))
 					sc_start4(src, bl, SC_ENDURE, 100, 10, 0, 0, 2, total_tick, skill_id);
-				//HP healing is performing after the calc_status call.
-				//Val2 holds HP penalty
-				if (!val4) val4 = skill->get_time2(status->sc2skill(type),val1);
-				if (!val4) val4 = 10000; //Val4 holds damage interval
-				val3 = total_tick/val4; //val3 holds skill duration
-				tick_time = val4; // [GodLesZ] tick time
+				// HP healing is performing after the calc_status call.
+				// Val2 holds HP penalty
+				if (!val4)
+					val4 = skill->get_time2(status->sc2skill(type), val1);
+				if (!val4)
+					val4 = 10000;         // Val4 holds damage interval
+				val3 = total_tick / val4; // val3 holds skill duration
+				tick_time = val4;         // [GodLesZ] tick time
 				break;
 
 			case SC_GOSPEL:
-				if(val4 == BCT_SELF) {
+				if (val4 == BCT_SELF) {
 					// self effect
-					val2 = total_tick/10000;
-					tick_time = 10000; // [GodLesZ] tick time
-					status->change_clear_buffs(bl,3); //Remove buffs/debuffs
+					val2 = total_tick / 10000;
+					tick_time = 10000;                 // [GodLesZ] tick time
+					status->change_clear_buffs(bl, 3); // Remove buffs/debuffs
 				}
 				break;
 
-			case SC_MARIONETTE_MASTER:
-			{
+			case SC_MARIONETTE_MASTER: {
 				int stat;
 
 				val3 = 0;
 				val4 = 0;
-				stat = ( sd ? sd->status.str : status->get_base_status(bl)->str ) / 2; val3 |= cap_value(stat,0,0xFF)<<16;
-				stat = ( sd ? sd->status.agi : status->get_base_status(bl)->agi ) / 2; val3 |= cap_value(stat,0,0xFF)<<8;
-				stat = ( sd ? sd->status.vit : status->get_base_status(bl)->vit ) / 2; val3 |= cap_value(stat,0,0xFF);
-				stat = ( sd ? sd->status.int_: status->get_base_status(bl)->int_) / 2; val4 |= cap_value(stat,0,0xFF)<<16;
-				stat = ( sd ? sd->status.dex : status->get_base_status(bl)->dex ) / 2; val4 |= cap_value(stat,0,0xFF)<<8;
-				stat = ( sd ? sd->status.luk : status->get_base_status(bl)->luk ) / 2; val4 |= cap_value(stat,0,0xFF);
-			}
-				break;
-			case SC_MARIONETTE:
-			{
-				int stat,max_stat;
+				stat = (sd ? sd->status.str : status->get_base_status(bl)->str) / 2;
+				val3 |= cap_value(stat, 0, 0xFF) << 16;
+				stat = (sd ? sd->status.agi : status->get_base_status(bl)->agi) / 2;
+				val3 |= cap_value(stat, 0, 0xFF) << 8;
+				stat = (sd ? sd->status.vit : status->get_base_status(bl)->vit) / 2;
+				val3 |= cap_value(stat, 0, 0xFF);
+				stat = (sd ? sd->status.int_ : status->get_base_status(bl)->int_) / 2;
+				val4 |= cap_value(stat, 0, 0xFF) << 16;
+				stat = (sd ? sd->status.dex : status->get_base_status(bl)->dex) / 2;
+				val4 |= cap_value(stat, 0, 0xFF) << 8;
+				stat = (sd ? sd->status.luk : status->get_base_status(bl)->luk) / 2;
+				val4 |= cap_value(stat, 0, 0xFF);
+			} break;
+			case SC_MARIONETTE: {
+				int stat, max_stat;
 				// fetch caster information
 				struct block_list *pbl = map->id2bl(val1);
 				struct status_change *psc = pbl ? status->get_sc(pbl) : NULL;
 				struct status_change_entry *psce = psc ? psc->data[SC_MARIONETTE_MASTER] : NULL;
 				// fetch target's stats
-				struct status_data* tst = status->get_status_data(bl); // battle status
+				struct status_data *tst = status->get_status_data(bl); // battle status
 
 				if (!psce)
 					return 0;
 
 				val3 = 0;
 				val4 = 0;
-				max_stat = battle_config.max_parameter; //Cap to 99 (default)
-				stat = (psce->val3 >>16)&0xFF; stat = min(stat, max_stat - tst->str ); val3 |= cap_value(stat,0,0xFF)<<16;
-				stat = (psce->val3 >> 8)&0xFF; stat = min(stat, max_stat - tst->agi ); val3 |= cap_value(stat,0,0xFF)<<8;
-				stat = (psce->val3 >> 0)&0xFF; stat = min(stat, max_stat - tst->vit ); val3 |= cap_value(stat,0,0xFF);
-				stat = (psce->val4 >>16)&0xFF; stat = min(stat, max_stat - tst->int_); val4 |= cap_value(stat,0,0xFF)<<16;
-				stat = (psce->val4 >> 8)&0xFF; stat = min(stat, max_stat - tst->dex ); val4 |= cap_value(stat,0,0xFF)<<8;
-				stat = (psce->val4 >> 0)&0xFF; stat = min(stat, max_stat - tst->luk ); val4 |= cap_value(stat,0,0xFF);
-			}
-				break;
+				max_stat = battle_config.max_parameter; // Cap to 99 (default)
+				stat = (psce->val3 >> 16) & 0xFF;
+				stat = min(stat, max_stat - tst->str);
+				val3 |= cap_value(stat, 0, 0xFF) << 16;
+				stat = (psce->val3 >> 8) & 0xFF;
+				stat = min(stat, max_stat - tst->agi);
+				val3 |= cap_value(stat, 0, 0xFF) << 8;
+				stat = (psce->val3 >> 0) & 0xFF;
+				stat = min(stat, max_stat - tst->vit);
+				val3 |= cap_value(stat, 0, 0xFF);
+				stat = (psce->val4 >> 16) & 0xFF;
+				stat = min(stat, max_stat - tst->int_);
+				val4 |= cap_value(stat, 0, 0xFF) << 16;
+				stat = (psce->val4 >> 8) & 0xFF;
+				stat = min(stat, max_stat - tst->dex);
+				val4 |= cap_value(stat, 0, 0xFF) << 8;
+				stat = (psce->val4 >> 0) & 0xFF;
+				stat = min(stat, max_stat - tst->luk);
+				val4 |= cap_value(stat, 0, 0xFF);
+			} break;
 			case SC_SOULLINK:
-				//1st Transcendent Spirit works similar to Marionette Control
-				if(sd && val2 == SL_HIGH) {
-					int stat,max_stat;
+				// 1st Transcendent Spirit works similar to Marionette Control
+				if (sd && val2 == SL_HIGH) {
+					int stat, max_stat;
 					// Fetch target's stats
-					struct status_data* status2 = status->get_status_data(bl); // Battle status
+					struct status_data *status2 = status->get_status_data(bl); // Battle status
 					val3 = 0;
 					val4 = 0;
-					max_stat = (status->get_lv(bl)-10<50)?status->get_lv(bl)-10:50;
-					stat = max(0, max_stat - (int)status2->str ); val3 |= cap_value(stat,0,0xFF)<<16;
-					stat = max(0, max_stat - (int)status2->agi ); val3 |= cap_value(stat,0,0xFF)<<8;
-					stat = max(0, max_stat - (int)status2->vit ); val3 |= cap_value(stat,0,0xFF);
-					stat = max(0, max_stat - (int)status2->int_); val4 |= cap_value(stat,0,0xFF)<<16;
-					stat = max(0, max_stat - (int)status2->dex ); val4 |= cap_value(stat,0,0xFF)<<8;
-					stat = max(0, max_stat - (int)status2->luk ); val4 |= cap_value(stat,0,0xFF);
+					max_stat = (status->get_lv(bl) - 10 < 50) ? status->get_lv(bl) - 10 : 50;
+					stat = max(0, max_stat - (int)status2->str);
+					val3 |= cap_value(stat, 0, 0xFF) << 16;
+					stat = max(0, max_stat - (int)status2->agi);
+					val3 |= cap_value(stat, 0, 0xFF) << 8;
+					stat = max(0, max_stat - (int)status2->vit);
+					val3 |= cap_value(stat, 0, 0xFF);
+					stat = max(0, max_stat - (int)status2->int_);
+					val4 |= cap_value(stat, 0, 0xFF) << 16;
+					stat = max(0, max_stat - (int)status2->dex);
+					val4 |= cap_value(stat, 0, 0xFF) << 8;
+					stat = max(0, max_stat - (int)status2->luk);
+					val4 |= cap_value(stat, 0, 0xFF);
 				}
 				break;
 			case SC_SWORDREJECT:
-				val2 = 15*val1; //Reflect chance
-				val3 = 3; //Reflections
+				val2 = 15 * val1; // Reflect chance
+				val3 = 3;         // Reflections
 				total_tick = INFINITE_DURATION;
 				break;
 
 			case SC_MEMORIZE:
-				val2 = 5; //Memorized casts.
+				val2 = 5; // Memorized casts.
 				total_tick = INFINITE_DURATION;
 				break;
 
 			case SC_GRAVITATION:
-				val2 = 50*val1; //aspd reduction
+				val2 = 50 * val1; // aspd reduction
 				break;
 
 			case SC_GDSKILL_REGENERATION:
 				if (val1 == 1)
 					val2 = 200;
 				else
-					val2 = val1 * 100; //HP Regerenation rate: 200% 200% 300%
-				val3 = val1 * 100; //SP Regeneration Rate: 100% 200% 300%
-				//if val4 comes set, this blocks regen rather than increase it.
+					val2 = val1 * 100; // HP Regerenation rate: 200% 200% 300%
+				val3 = val1 * 100;     // SP Regeneration Rate: 100% 200% 300%
+				// if val4 comes set, this blocks regen rather than increase it.
 				break;
 
-			case SC_DEVOTION:
-			{
+			case SC_DEVOTION: {
 				struct block_list *d_bl;
 				struct status_change *d_sc;
 
 				if ((d_bl = map->id2bl(val1)) && (d_sc = status->get_sc(d_bl)) != NULL && d_sc->count) {
 					// Inherits Status From Source
-					const enum sc_type types[] = { SC_AUTOGUARD, SC_DEFENDER, SC_REFLECTSHIELD, SC_ENDURE };
-					int i = (map_flag_gvg(bl->m) || map->list[bl->m].flag.battleground)?2:3;
+					const enum sc_type types[] = {SC_AUTOGUARD, SC_DEFENDER, SC_REFLECTSHIELD, SC_ENDURE};
+					int i = (map_flag_gvg(bl->m) || map->list[bl->m].flag.battleground) ? 2 : 3;
 					while (i >= 0) {
 						enum sc_type type2 = types[i];
 						if (d_sc->data[type2]) {
-							status->change_start(bl, bl, type2, 10000, d_sc->data[type2]->val1, 0, 0, 0,
-								skill->get_time(status->sc2skill(type2), d_sc->data[type2]->val1),
-								(type2 != SC_DEFENDER) ? SCFLAG_NOICON : SCFLAG_NONE, skill_id);
+							status->change_start(bl, bl, type2, 10000, d_sc->data[type2]->val1, 0, 0, 0, skill->get_time(status->sc2skill(type2), d_sc->data[type2]->val1), (type2 != SC_DEFENDER) ? SCFLAG_NOICON : SCFLAG_NONE, skill_id);
 						}
 						i--;
 					}
@@ -8186,62 +8165,59 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				break;
 			}
 
-			case SC_COMA: //Coma. Sends a char to 1HP. If val2, do not zap sp
-				if( val3 && bl->type == BL_MOB ) {
-					struct block_list* src2 = map->id2bl(val3);
-					if( src2 )
+			case SC_COMA: // Coma. Sends a char to 1HP. If val2, do not zap sp
+				if (val3 && bl->type == BL_MOB) {
+					struct block_list *src2 = map->id2bl(val3);
+					if (src2)
 						mob->log_damage(BL_UCAST(BL_MOB, bl), src2, st->hp - 1);
 				}
-				status_zap(bl, st->hp-1, val2 ? 0 : st->sp);
+				status_zap(bl, st->hp - 1, val2 ? 0 : st->sp);
 				return 1;
 				break;
-			case SC_RG_CCONFINE_S:
-			{
+			case SC_RG_CCONFINE_S: {
 				struct block_list *src2 = val2 ? map->id2bl(val2) : NULL;
 				struct status_change *sc2 = src ? status->get_sc(src2) : NULL;
 				struct status_change_entry *sce2 = sc2 ? sc2->data[SC_RG_CCONFINE_M] : NULL;
 				if (src2 && sc2) {
-					if (!sce2) //Start lock on caster.
+					if (!sce2) // Start lock on caster.
 						sc_start4(src, src2, SC_RG_CCONFINE_M, 100, val1, 1, 0, 0, total_tick + 1000, skill_id);
-					else { //Increase count of locked enemies and refresh time.
+					else { // Increase count of locked enemies and refresh time.
 						(sce2->val2)++;
 						timer->delete(sce2->timer, status->change_timer);
-						sce2->timer = timer->add(timer->gettick()+total_tick+1000, status->change_timer, src2->id, SC_RG_CCONFINE_M);
+						sce2->timer = timer->add(timer->gettick() + total_tick + 1000, status->change_timer, src2->id, SC_RG_CCONFINE_M);
 					}
-				} else //Status failed.
+				} else // Status failed.
 					return 0;
-			}
-				break;
+			} break;
 			case SC_KAITE:
-				val2 = 1+val1/5; //Number of bounces: 1 + skill_lv/5
+				val2 = 1 + val1 / 5; // Number of bounces: 1 + skill_lv/5
 				break;
 			case SC_KAUPE:
 				switch (val1) {
-				case 3: //33*3 + 1 -> 100%
-					val2++;
-					FALLTHROUGH
-				case 1:
-				case 2: //33, 66%
-					val2 += 33*val1;
-					val3 = 1; //Dodge 1 attack total.
-					break;
-				default: //Custom. For high level mob usage, higher level means more blocks. [Skotlex]
-					val2 = 100;
-					val3 = val1-2;
-					break;
+					case 3: // 33*3 + 1 -> 100%
+						val2++;
+						FALLTHROUGH
+					case 1:
+					case 2: // 33, 66%
+						val2 += 33 * val1;
+						val3 = 1; // Dodge 1 attack total.
+						break;
+					default: // Custom. For high level mob usage, higher level means more blocks. [Skotlex]
+						val2 = 100;
+						val3 = val1 - 2;
+						break;
 				}
 				break;
 
-			case SC_COMBOATTACK:
-			{
-				//val1: Skill ID
-				//val2: When given, target (for autotargetting skills)
-				//val3: When set, this combo time should NOT delay attack/movement
-				//val3: If set to 2 this combo will delay ONLY attack
-				//val3: TK: Last used kick
-				//val4: TK: Combo time
+			case SC_COMBOATTACK: {
+				// val1: Skill ID
+				// val2: When given, target (for autotargetting skills)
+				// val3: When set, this combo time should NOT delay attack/movement
+				// val3: If set to 2 this combo will delay ONLY attack
+				// val3: TK: Last used kick
+				// val4: TK: Combo time
 				struct unit_data *ud = unit->bl2ud(bl);
-				if( ud && (!val3 || val3 == 2) ) {
+				if (ud && (!val3 || val3 == 2)) {
 					ud->attackabletime = timer->gettick() + total_tick;
 					if (!val3)
 						unit->set_walkdelay(bl, timer->gettick(), total_tick, 1);
@@ -8251,56 +8227,56 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				break;
 			}
 			case SC_EARTHSCROLL:
-				val2 = 11-val1; //Chance to consume: 11-skill_lv%
+				val2 = 11 - val1; // Chance to consume: 11-skill_lv%
 				break;
-			case SC_RUN:
-			{
-				//Store time at which you started running.
+			case SC_RUN: {
+				// Store time at which you started running.
 				int64 currenttick = timer->gettick();
 				// Note: this int64 value is stored in two separate int32 variables (FIXME)
-				val3 = (int)(currenttick&0x00000000ffffffffLL);
-				val4 = (int)((currenttick&0xffffffff00000000LL)>>32);
+				val3 = (int)(currenttick & 0x00000000ffffffffLL);
+				val4 = (int)((currenttick & 0xffffffff00000000LL) >> 32);
 			}
 				total_tick = INFINITE_DURATION;
 				break;
 			case SC_KAAHI:
-				val2 = 200*val1; //HP heal
-				val3 = 5*val1; //SP cost
-				val4 = INVALID_TIMER; //Kaahi Timer.
+				val2 = 200 * val1;    // HP heal
+				val3 = 5 * val1;      // SP cost
+				val4 = INVALID_TIMER; // Kaahi Timer.
 				break;
 			case SC_BLESSING:
-				if ((!undead_flag && st->race!=RC_DEMON) || bl->type == BL_PC)
+				if ((!undead_flag && st->race != RC_DEMON) || bl->type == BL_PC)
 					val2 = val1;
 				else
-					val2 = 0; //0 -> Half stat.
+					val2 = 0; // 0 -> Half stat.
 				break;
 			case SC_TRICKDEAD:
-				if (vd) vd->dead_sit = 1;
+				if (vd)
+					vd->dead_sit = 1;
 				total_tick = INFINITE_DURATION;
 				break;
 			case SC_CONCENTRATION:
 				val2 = 2 + val1;
-				if (sd) { //Store the card-bonus data that should not count in the %
-					val3 = sd->param_bonus[1]; //Agi
-					val4 = sd->param_bonus[4]; //Dex
+				if (sd) {                      // Store the card-bonus data that should not count in the %
+					val3 = sd->param_bonus[1]; // Agi
+					val4 = sd->param_bonus[4]; // Dex
 				} else {
 					val3 = val4 = 0;
 				}
 				break;
 			case SC_OVERTHRUSTMAX:
-				val2 = 20*val1; //Power increase
+				val2 = 20 * val1; // Power increase
 				break;
 			case SC_OVERTHRUST:
 #ifndef RENEWAL
-				if (val2 == 1) // cast on self
-					val3 = 5 * val1; //Power increase
-				else // received cast
+				if (val2 == 1)       // cast on self
+					val3 = 5 * val1; // Power increase
+				else                 // received cast
 					val3 = 5;
 #else
 				// for renewal this is actually wrong for party members since 2020 and will need to be changed.
 				val3 = 5 * val1; // Power increase
 #endif
-				if(sd && pc->checkskill(sd,BS_HILTBINDING)>0)
+				if (sd && pc->checkskill(sd, BS_HILTBINDING) > 0)
 					total_tick += total_tick / 10;
 				break;
 			case SC_ADRENALINE2:
@@ -8308,82 +8284,82 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				val3 = (val2) ? 300 : 200; // aspd increase
 				FALLTHROUGH
 			case SC_WEAPONPERFECT:
-				if(sd && pc->checkskill(sd,BS_HILTBINDING)>0)
+				if (sd && pc->checkskill(sd, BS_HILTBINDING) > 0)
 					total_tick += total_tick / 10;
 				break;
 			case SC_LKCONCENTRATION:
-				val2 = 5 * val1; // ATK% Increase
-				val3 = 10*val1; //Hit Increase
-				val4 = 5 * val1; // Def% reduction
+				val2 = 5 * val1;                                            // ATK% Increase
+				val3 = 10 * val1;                                           // Hit Increase
+				val4 = 5 * val1;                                            // Def% reduction
 				sc_start(src, bl, SC_ENDURE, 100, 1, total_tick, skill_id); // Endure effect
 				break;
 			case SC_ANGELUS:
-				val2 = 5*val1; // DEF% increase
+				val2 = 5 * val1; // DEF% increase
 				break;
 			case SC_IMPOSITIO:
-				val2 = 5*val1; //watk increase
+				val2 = 5 * val1; // watk increase
 				break;
 			case SC_MELTDOWN:
-				val2 = 100*val1; //Chance to break weapon
-				val3 = 70*val1; //Change to break armor
+				val2 = 100 * val1; // Chance to break weapon
+				val3 = 70 * val1;  // Change to break armor
 				break;
 			case SC_TRUESIGHT:
-				val2 = 10*val1; //Critical increase
-				val3 = 3*val1; //Hit increase
+				val2 = 10 * val1; // Critical increase
+				val3 = 3 * val1;  // Hit increase
 				break;
 			case SC_SUN_COMFORT:
-				val2 = (status->get_lv(bl) + st->dex + st->luk)/2; //def increase
+				val2 = (status->get_lv(bl) + st->dex + st->luk) / 2; // def increase
 				break;
 			case SC_MOON_COMFORT:
-				val2 = (status->get_lv(bl) + st->dex + st->luk)/10; //flee increase
+				val2 = (status->get_lv(bl) + st->dex + st->luk) / 10; // flee increase
 				break;
 			case SC_STAR_COMFORT:
-				val2 = (status->get_lv(bl) + st->dex + st->luk); //Aspd increase
+				val2 = (status->get_lv(bl) + st->dex + st->luk); // Aspd increase
 				break;
 			case SC_QUAGMIRE:
-				val2 = (sd?5:10)*val1; //Agi/Dex decrease.
+				val2 = (sd ? 5 : 10) * val1; // Agi/Dex decrease.
 				break;
 
 				// gs_something1 [Vicious]
 			case SC_GS_GATLINGFEVER:
-				val2 = 20*val1; //Aspd increase
-				val4 = 5*val1; //Flee decrease
-	#ifndef RENEWAL
-				val3 = 20+10*val1; //Batk increase
-	#endif
+				val2 = 20 * val1; // Aspd increase
+				val4 = 5 * val1;  // Flee decrease
+#ifndef RENEWAL
+				val3 = 20 + 10 * val1; // Batk increase
+#endif
 				break;
 
 			case SC_FLING:
-				val2 = 5*val1; // DEF% reduction
+				val2 = 5 * val1; // DEF% reduction
 				break;
 			case SC_PROVOKE:
-				//val2 signals autoprovoke.
-				val3 = 2+3*val1; //Atk increase
-				val4 = 5+5*val1; //Def reduction.
+				// val2 signals autoprovoke.
+				val3 = 2 + 3 * val1; // Atk increase
+				val4 = 5 + 5 * val1; // Def reduction.
 				break;
 			case SC_HLIF_AVOID:
-				//val2 = 10*val1; //Speed change rate.
+				// val2 = 10*val1; //Speed change rate.
 				break;
 			case SC_HAMI_DEFENCE:
-				val2 = 2*val1; //Def bonus
+				val2 = 2 * val1; // Def bonus
 				break;
 			case SC_HAMI_BLOODLUST:
-				val2 = 20+10*val1; //Atk rate change.
-				val3 = 3*val1; //Leech chance
-				val4 = 20; //Leech percent
+				val2 = 20 + 10 * val1; // Atk rate change.
+				val3 = 3 * val1;       // Leech chance
+				val4 = 20;             // Leech percent
 				break;
 			case SC_HLIF_FLEET:
-				val2 = 30*val1; //Aspd change
-				val3 = 5+5*val1; // ATK% change
+				val2 = 30 * val1;    // Aspd change
+				val3 = 5 + 5 * val1; // ATK% change
 				break;
 			case SC_MINDBREAKER:
 				val2 = 20 * val1; // MATK% increase.
 				val3 = 12 * val1; // MDEF% reduction.
 				break;
 			case SC_SKA:
-				val2 = total_tick/1000;
-				val3 = rnd()%100; //Def changes randomly every second...
-				tick_time = 1000; // [GodLesZ] tick time
+				val2 = total_tick / 1000;
+				val3 = rnd() % 100; // Def changes randomly every second...
+				tick_time = 1000;   // [GodLesZ] tick time
 				break;
 			case SC_JAILED:
 				// val1 is duration in minutes. Use INT_MAX to specify 'unlimited' time.
@@ -8394,83 +8370,78 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				// When renewing status' information
 				// val3 Return map_index
 				// val4 return coordinates
-				total_tick = val1>0?1000:250;
-				if (sd)
-				{
-					if (sd->mapindex != val2)
-					{
-						int pos = (bl->x&0xFFFF)|(bl->y<<16); /// Current Coordinates
-						int map_index = sd->mapindex; /// Current Map
-						//1. Place in Jail (val2 -> Jail Map, val3 -> x, val4 -> y
-						pc->setpos(sd,(unsigned short)val2,val3,val4, CLR_TELEPORT);
-						//2. Set restore point (val3 -> return map, val4 return coords
+				total_tick = val1 > 0 ? 1000 : 250;
+				if (sd) {
+					if (sd->mapindex != val2) {
+						int pos = (bl->x & 0xFFFF) | (bl->y << 16); /// Current Coordinates
+						int map_index = sd->mapindex;               /// Current Map
+						// 1. Place in Jail (val2 -> Jail Map, val3 -> x, val4 -> y
+						pc->setpos(sd, (unsigned short)val2, val3, val4, CLR_TELEPORT);
+						// 2. Set restore point (val3 -> return map, val4 return coords
 						val3 = map_index;
 						val4 = pos;
-					} else if (!val3
-						|| val3 == sd->mapindex
-						|| !sd->sc.data[SC_JAILED] // If player is being jailed and is already in jail (issue: 8206)
-					) { //Use save point.
+					} else if (!val3 || val3 == sd->mapindex || !sd->sc.data[SC_JAILED] // If player is being jailed and is already in jail (issue: 8206)
+					) {                                                                 // Use save point.
 						val3 = sd->status.save_point.map;
-						val4 = (sd->status.save_point.x&0xFFFF)
-							|(sd->status.save_point.y<<16);
+						val4 = (sd->status.save_point.x & 0xFFFF) | (sd->status.save_point.y << 16);
 					}
 				}
 				break;
 			case SC_NJ_UTSUSEMI:
-				val2=(val1+1)/2; // number of hits blocked
-				val3=skill->get_blewcount(NJ_UTSUSEMI, val1); //knockback value.
+				val2 = (val1 + 1) / 2;                          // number of hits blocked
+				val3 = skill->get_blewcount(NJ_UTSUSEMI, val1); // knockback value.
 				break;
 			case SC_NJ_BUNSINJYUTSU:
-				val2=(val1+1)/2; // number of hits blocked
+				val2 = (val1 + 1) / 2; // number of hits blocked
 				break;
 			case SC_HLIF_CHANGE:
-				val2= 30*val1; //Vit increase
-				val3= 20*val1; //Int increase
+				val2 = 30 * val1; // Vit increase
+				val3 = 20 * val1; // Int increase
 				break;
 			case SC_SWOO:
-				if(st->mode&MD_BOSS)
-					total_tick /= 5; //TODO: Reduce skill's duration. But for how long?
+				if (st->mode & MD_BOSS)
+					total_tick /= 5; // TODO: Reduce skill's duration. But for how long?
 				break;
 			case SC_SPIDERWEB:
-				if( bl->type == BL_PC )
+				if (bl->type == BL_PC)
 					total_tick /= 2;
 				break;
 			case SC_ARMOR:
-				//NPC_DEFENDER:
-				val2 = 80; //Damage reduction
-				//Attack requirements to be blocked:
-				val3 = BF_LONG; //Range
-				val4 = BF_WEAPON|BF_MISC; //Type
+				// NPC_DEFENDER:
+				val2 = 80; // Damage reduction
+				// Attack requirements to be blocked:
+				val3 = BF_LONG;             // Range
+				val4 = BF_WEAPON | BF_MISC; // Type
 				break;
 			case SC_ENCHANTARMS:
-				//end previous enchants
-				skill->enchant_elemental_end(bl,type);
-				//Make sure the received element is valid.
+				// end previous enchants
+				skill->enchant_elemental_end(bl, type);
+				// Make sure the received element is valid.
 				if (val2 >= ELE_MAX)
-					val2 = val2%ELE_MAX;
+					val2 = val2 % ELE_MAX;
 				else if (val2 < 0)
-					val2 = rnd()%ELE_MAX;
+					val2 = rnd() % ELE_MAX;
 				break;
 			case SC_CRITICALWOUND:
-				val2 = 20*val1; //Heal effectiveness decrease
+				val2 = 20 * val1; // Heal effectiveness decrease
 				break;
 			case SC_MAGICMIRROR:
 			case SC_SLOWCAST:
-				val2 = 20*val1; //Magic reflection/cast rate
+				val2 = 20 * val1; // Magic reflection/cast rate
 				break;
 
 			case SC_STONESKIN:
 				if (val2 == NPC_ANTIMAGIC) {
-					//Boost mdef
-					val2 =-20;
+					// Boost mdef
+					val2 = -20;
 					val3 = 20;
 				} else {
-					//Boost def
+					// Boost def
 					val2 = 20;
-					val3 =-20;
+					val3 = -20;
 				}
-				val2*=val1; //20% per level
-				val3*=val1;
+				val2 *= val1; // 20% per level
+				val3 *= val1;
 				break;
 			case SC_CASH_PLUSEXP:
 			case SC_CASH_PLUSONLYJOBEXP:
@@ -8480,41 +8451,37 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				break;
 			case SC_PLUSAVOIDVALUE:
 			case SC_CRITICALPERCENT:
-				val2 = val1*10; //Actual boost (since 100% = 1000)
+				val2 = val1 * 10; // Actual boost (since 100% = 1000)
 				break;
 			case SC_SUFFRAGIUM:
-				val2 = 15 * val1; //Speed cast decrease
+				val2 = 15 * val1; // Speed cast decrease
 				break;
 			case SC_HEALPLUS:
 				if (val1 < 1)
 					val1 = 1;
 				break;
 			case SC_ILLUSION:
-				val2 = 5+val1; //Factor by which displayed damage is increased by
+				val2 = 5 + val1; // Factor by which displayed damage is increased by
 				break;
 			case SC_DOUBLECASTING:
-				val2 = 30+10*val1; //Trigger rate
+				val2 = 30 + 10 * val1; // Trigger rate
 				break;
 			case SC_KAIZEL:
-				val2 = 10*val1; //% of life to be revived with
+				val2 = 10 * val1; //% of life to be revived with
 				break;
-			case SC_ARMORPROPERTY:
-				{
-					int ele = (val1 > 0 ? SC_RESIST_PROPERTY_WATER :
-							  (val2 > 0 ? SC_RESIST_PROPERTY_GROUND :
-							  (val3 > 0 ? SC_RESIST_PROPERTY_FIRE :
-							  (val4 > 0 ? SC_RESIST_PROPERTY_WIND : SI_BLANK))));
+			case SC_ARMORPROPERTY: {
+				int ele = (val1 > 0 ? SC_RESIST_PROPERTY_WATER : (val2 > 0 ? SC_RESIST_PROPERTY_GROUND : (val3 > 0 ? SC_RESIST_PROPERTY_FIRE : (val4 > 0 ? SC_RESIST_PROPERTY_WIND : SI_BLANK))));
 				clif->status_change(bl, status->get_sc_icon(ele), status->get_sc_relevant_bl_types(ele), 1, total_tick, 0, 0, 0);
 				break;
 				// case SC_ARMOR_RESIST:
 				// Mod your resistance against elements:
 				// val1 = water | val2 = earth | val3 = fire | val4 = wind
 				// break;
-				//case ????:
-				//Place here SCs that have no SCB_* data, no skill associated, no ICON
-				//associated, and yet are not wrong/unknown. [Skotlex]
-				//break;
-				}
+				// case ????:
+				// Place here SCs that have no SCB_* data, no skill associated, no ICON
+				// associated, and yet are not wrong/unknown. [Skotlex]
+				// break;
+			}
 			case SC_ARMOR_RESIST: {
 				struct status_change_entry *sce_water = sc->data[SC_RESIST_PROPERTY_WATER];
 				struct status_change_entry *sce_ground = sc->data[SC_RESIST_PROPERTY_GROUND];
@@ -8729,7 +8696,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				val2 = 5 * val1;
 				break;
 			case SC_REBIRTH:
-				val2 = 20*val1; //% of life to be revived with
+				val2 = 20 * val1; //% of life to be revived with
 				break;
 
 			case SC_MANU_DEF:
@@ -8746,8 +8713,8 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				val2 = 3; // Mora group
 				break;
 				/**
-				* General
-				**/
+				 * General
+				 **/
 			case SC_FEAR:
 				val2 = 2;
 				val4 = total_tick / 1000;
@@ -8755,25 +8722,25 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				break;
 			case SC_BURNING:
 				val4 = total_tick / 3000; // Total Ticks to Burn!!
-				tick_time = 3000; // [GodLesZ] tick time
+				tick_time = 3000;         // [GodLesZ] tick time
 				break;
 				/**
-				* Rune Knight
-				**/
+				 * Rune Knight
+				 **/
 			case SC_DEATHBOUND:
 				val2 = 500 + 100 * val1;
 				break;
 			case SC_STONEHARDSKIN:
-				if( sd )
-					val1 = sd->status.job_level * pc->checkskill(sd, RK_RUNEMASTERY) / 4; //DEF/MDEF Increase
+				if (sd)
+					val1 = sd->status.job_level * pc->checkskill(sd, RK_RUNEMASTERY) / 4; // DEF/MDEF Increase
 				break;
 			case SC_ABUNDANCE:
 				val4 = total_tick / 10000;
 				tick_time = 10000; // [GodLesZ] tick time
 				break;
 				/**
-				* Arch Bishop
-				**/
+				 * Arch Bishop
+				 **/
 			case SC_RENOVATIO:
 				val4 = total_tick / 5000;
 				tick_time = 5000;
@@ -8811,12 +8778,12 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				tick_time = 3000; // [GodLesZ] tick time
 				break;
 			case SC_CLOAKINGEXCEED:
-				val2 = (val1 + 1) / 2; // Hits
+				val2 = (val1 + 1) / 2;  // Hits
 				val3 = (val1 - 1) * 10; // Walk speed
 				if (bl->type == BL_PC)
-					val4 |= battle_config.pc_cloak_check_type&7;
+					val4 |= battle_config.pc_cloak_check_type & 7;
 				else
-					val4 |= battle_config.monster_cloak_check_type&7;
+					val4 |= battle_config.monster_cloak_check_type & 7;
 				tick_time = 1000; // [GodLesZ] tick time
 				break;
 			case SC_HALLUCINATIONWALK:
@@ -8831,7 +8798,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				break;
 			case SC_MARSHOFABYSS:
 				val2 = 6 * val1;
-				if( sd ) // half on players
+				if (sd) // half on players
 					val2 >>= 1;
 				break;
 			case SC_FROSTMISTY:
@@ -8847,17 +8814,24 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			case SC_SUMMON4:
 			case SC_SUMMON5:
 				val4 = total_tick / 1000;
-				if( val4 < 1 )
+				if (val4 < 1)
 					val4 = 1;
 				tick_time = 1000; // [GodLesZ] tick time
 				break;
 			case SC_SHAPESHIFT:
-				switch( val1 )
-				{
-				case 1: val2 = ELE_FIRE; break;
-				case 2: val2 = ELE_EARTH; break;
-				case 3: val2 = ELE_WIND; break;
-				case 4: val2 = ELE_WATER; break;
+				switch (val1) {
+					case 1:
+						val2 = ELE_FIRE;
+						break;
+					case 2:
+						val2 = ELE_EARTH;
+						break;
+					case 3:
+						val2 = ELE_WIND;
+						break;
+					case 4:
+						val2 = ELE_WATER;
+						break;
 				}
 				break;
 			case SC_STEALTHFIELD_MASTER:
@@ -8868,21 +8842,20 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			case SC_COLD:
 			case SC_MEIKYOUSISUI:
 				val4 = total_tick / 1000;
-				if( val4 < 1 )
+				if (val4 < 1)
 					val4 = 1;
 				tick_time = 1000; // [GodLesZ] tick time
 				break;
 			case SC_CAMOUFLAGE:
-				val4 = total_tick/1000;
+				val4 = total_tick / 1000;
 				tick_time = 1000; // [GodLesZ] tick time
 				break;
-			case SC_WUGDASH:
-			{
-				//Store time at which you started running.
+			case SC_WUGDASH: {
+				// Store time at which you started running.
 				int64 currenttick = timer->gettick();
 				// Note: this int64 value is stored in two separate int32 variables (FIXME)
-				val3 = (int)(currenttick&0x00000000ffffffffLL);
-				val4 = (int)((currenttick&0xffffffff00000000LL)>>32);
+				val3 = (int)(currenttick & 0x00000000ffffffffLL);
+				val4 = (int)((currenttick & 0xffffffff00000000LL) >> 32);
 			}
 				total_tick = INFINITE_DURATION;
 				break;
@@ -8891,20 +8864,19 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				tick_time = 1000;
 				break;
 			case SC__SHADOWFORM: {
-				struct map_session_data * s_sd = map->id2sd(val2);
-				if( s_sd )
+				struct map_session_data *s_sd = map->id2sd(val2);
+				if (s_sd)
 					s_sd->shadowform_id = bl->id;
 				val4 = total_tick / 1000;
 				tick_time = 1000; // [GodLesZ] tick time
-								 }
-				break;
+			} break;
 			case SC__STRIPACCESSARY:
 				if (!sd)
 					val2 = 20;
 				break;
 			case SC__INVISIBILITY:
 				val2 = 50 - 10 * val1; // ASPD
-				val3 = 200 * val1; // CRITICAL
+				val3 = 200 * val1;     // CRITICAL
 				val4 = total_tick / 1000;
 				tick_time = 1000; // [GodLesZ] tick time
 				break;
@@ -8916,15 +8888,15 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				}
 				break;
 			case SC__GROOMY:
-				val2 = 20 + 10 * val1; //ASPD. Need to confirm if Movement Speed reduction is the same. [Jobbie]
-				val3 = 20 * val1; //HIT
-				if( sd ) { // Removes Animals
+				val2 = 20 + 10 * val1; // ASPD. Need to confirm if Movement Speed reduction is the same. [Jobbie]
+				val3 = 20 * val1;      // HIT
+				if (sd) {              // Removes Animals
 					if (pc_isridingpeco(sd))
 						pc->setridingpeco(sd, false);
 					if (pc_isridingdragon(sd))
 						pc->setridingdragon(sd, 0);
 					if (pc_iswug(sd))
-						pc->setoption(sd, sd->sc.option&~OPTION_WUG);
+						pc->setoption(sd, sd->sc.option & ~OPTION_WUG);
 					if (pc_isridingwug(sd))
 						pc->setridingwug(sd, false);
 					if (pc_isfalcon(sd))
@@ -8939,7 +8911,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				break;
 			case SC__LAZINESS:
 				val2 = 10 + 10 * val1; // Cast reduction
-				val3 = 10 * val1; // Flee Reduction
+				val3 = 10 * val1;      // Flee Reduction
 				break;
 			case SC__UNLUCKY:
 				val2 = 10 * val1; // Crit and Flee2 Reduction
@@ -8951,9 +8923,9 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				sc_start(src, bl, SC_NOEQUIPSHIELD, 100, val1, total_tick, skill_id);
 				break;
 			case SC_GN_CARTBOOST:
-				if( val1 < 3 )
+				if (val1 < 3)
 					val2 = 50;
-				else if( val1 < 5 )
+				else if (val1 < 5)
 					val2 = 75;
 				else
 					val2 = 100;
@@ -8967,7 +8939,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				status_change_end(bl, SC_COLD, INVALID_TIMER);
 				break;
 			case SC_STRIKING:
-				val1 = 6 - val1;//spcost = 6 - level (lvl1:5 ... lvl 5: 1)
+				val1 = 6 - val1; // spcost = 6 - level (lvl1:5 ... lvl 5: 1)
 				val4 = total_tick / 1000;
 				tick_time = 1000; // [GodLesZ] tick time
 				break;
@@ -8980,28 +8952,26 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				val4 = tick / 3000;
 				tick_time = 3000;
 				break;
-			case SC_BLOOD_SUCKER:
-			{
+			case SC_BLOOD_SUCKER: {
 				struct block_list *src2 = map->id2bl(val2);
 				val3 = 1;
-				if(src2)
+				if (src2)
 					val3 = 200 + 100 * val1 + status_get_int(src2);
 				val4 = total_tick / 1000;
 				tick_time = 1000; // [GodLesZ] tick time
-			}
-				break;
+			} break;
 			case SC_SWING:
-				val3 = 5 * val1 + val2;//Movement Speed And ASPD Increase
+				val3 = 5 * val1 + val2; // Movement Speed And ASPD Increase
 				break;
 			case SC_SYMPHONY_LOVE:
-				val2 = 12 * val1 + val2 + (sd ? sd->status.job_level : 70) / 4;//MDEF Increase In %
+				val2 = 12 * val1 + val2 + (sd ? sd->status.job_level : 70) / 4; // MDEF Increase In %
 				break;
 			case SC_MOONLIT_SERENADE:
 			case SC_RUSH_WINDMILL:
 				val2 = 6 * val1 + val2 + (sd ? sd->status.job_level : 70) / 5;
 				break;
 			case SC_ECHOSONG:
-				val3 = 6 * val1 + val2 + (sd ? sd->status.job_level : 70) / 4;//DEF Increase In %
+				val3 = 6 * val1 + val2 + (sd ? sd->status.job_level : 70) / 4; // DEF Increase In %
 				break;
 			case SC_HARMONIZE:
 				val2 = 5 + 5 * val1;
@@ -9015,32 +8985,32 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				tick_time = 2000; // [GodLesZ] tick time
 				break;
 			case SC_SIRCLEOFNATURE:
-				val2 = 40 * val1;//HP recovery
-				val3 = 4 * val1;//SP drain
+				val2 = 40 * val1; // HP recovery
+				val3 = 4 * val1;  // SP drain
 				val4 = total_tick / 1000;
 				tick_time = 1000; // [GodLesZ] tick time
 				break;
 			case SC_SONG_OF_MANA:
 				val3 = 10 + 5 * val2;
-				val4 = total_tick/5000;
+				val4 = total_tick / 5000;
 				tick_time = 5000; // [GodLesZ] tick time
 				break;
 			case SC_SATURDAY_NIGHT_FEVER:
 				/*val2 = 12000 - 2000 * val1;//HP/SP Drain Timer
 				if ( val2 < 1000 )
-					val2 = 1000;//Added to prevent val3 from dividing by 0 when using level 6 or higher through commands. [Rytech]
+				    val2 = 1000;//Added to prevent val3 from dividing by 0 when using level 6 or higher through commands. [Rytech]
 				val3 = tick/val2;*/
 				val3 = total_tick / 3000;
-				tick_time = 3000;// [GodLesZ] tick time
+				tick_time = 3000; // [GodLesZ] tick time
 				break;
 			case SC_GLOOMYDAY:
-				if ( !val2 ) {
-					val2 = (val4 > 0 ? max(15, rnd()%(val4*5)) : 0) + val1 * 10;
+				if (!val2) {
+					val2 = (val4 > 0 ? max(15, rnd() % (val4 * 5)) : 0) + val1 * 10;
 				}
-				if ( rnd()%10000 < val1*100 ) { // 1% per SkillLv chance
-					if ( !val3 )
+				if (rnd() % 10000 < val1 * 100) { // 1% per SkillLv chance
+					if (!val3)
 						val3 = 50;
-					if( sd ) {
+					if (sd) {
 						if (pc_isridingpeco(sd))
 							pc->setridingpeco(sd, false);
 						if (pc_isridingdragon(sd))
@@ -9050,64 +9020,62 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				break;
 			case SC_SITDOWN_FORCE:
 			case SC_BANANA_BOMB_SITDOWN_POSTDELAY:
-				if( sd && !pc_issit(sd) )
-				{
+				if (sd && !pc_issit(sd)) {
 					pc_setsit(sd);
-					skill->sit(sd,1);
+					skill->sit(sd, 1);
 					clif->sitting(bl);
 				}
 				break;
 			case SC_DANCE_WITH_WUG:
-				val3 = 5 + 5 * val2;//ASPD Increase
-				val4 = 20 + 10 * val2;//Fixed Cast Time Reduction
+				val3 = 5 + 5 * val2;   // ASPD Increase
+				val4 = 20 + 10 * val2; // Fixed Cast Time Reduction
 				break;
 			case SC_LERADS_DEW:
-				val3 = 200 * val1 + 300 * val2;//MaxHP Increase
+				val3 = 200 * val1 + 300 * val2; // MaxHP Increase
 				break;
 			case SC_MELODYOFSINK:
-				val3 = val1 * (2 + val2);//INT Reduction. Formula Includes Caster And 2nd Performer.
-				val4 = total_tick/1000;
+				val3 = val1 * (2 + val2); // INT Reduction. Formula Includes Caster And 2nd Performer.
+				val4 = total_tick / 1000;
 				tick_time = 1000;
 				break;
 			case SC_BEYOND_OF_WARCRY:
-				val3 = val1 * (2 + val2);//STR And Crit Reduction. Formula Includes Caster And 2nd Performer.
-				val4 = 4 * val1 + 4 * val2;//MaxHP Reduction
+				val3 = val1 * (2 + val2);   // STR And Crit Reduction. Formula Includes Caster And 2nd Performer.
+				val4 = 4 * val1 + 4 * val2; // MaxHP Reduction
 				break;
-			case SC_UNLIMITED_HUMMING_VOICE:
-				{
-					struct unit_data *ud = unit->bl2ud(bl);
-					if( ud == NULL ) return 0;
-					ud->state.skillcastcancel = 0;
-					val3 = 15 - (3 * val2);//Increased SP Cost.
-				}
-				break;
+			case SC_UNLIMITED_HUMMING_VOICE: {
+				struct unit_data *ud = unit->bl2ud(bl);
+				if (ud == NULL)
+					return 0;
+				ud->state.skillcastcancel = 0;
+				val3 = 15 - (3 * val2); // Increased SP Cost.
+			} break;
 			case SC_LG_REFLECTDAMAGE:
 				val2 = 15 + 5 * val1;
-				val3 = 25 + 5 * val1; //Number of Reflects
-				val4 = total_tick/1000;
+				val3 = 25 + 5 * val1; // Number of Reflects
+				val4 = total_tick / 1000;
 				tick_time = 1000; // [GodLesZ] tick time
 				break;
 			case SC_FORCEOFVANGUARD:
-				val2 = 8 + 12 * val1; // Chance
-				val3 = 5 + 2 * val1; // Max rage counters
-				total_tick = INFINITE_DURATION; //endless duration in the client
+				val2 = 8 + 12 * val1;           // Chance
+				val3 = 5 + 2 * val1;            // Max rage counters
+				total_tick = INFINITE_DURATION; // endless duration in the client
 				break;
 			case SC_EXEEDBREAK:
-				if( sd ){
+				if (sd) {
 					short index = sd->equip_index[EQI_HAND_R];
 					val1 = 15 * (sd->status.job_level + val1 * 10);
-					if( index >= 0 && sd->inventory_data[index] && sd->inventory_data[index]->type == IT_WEAPON )
+					if (index >= 0 && sd->inventory_data[index] && sd->inventory_data[index]->type == IT_WEAPON)
 						val1 += (sd->inventory_data[index]->weight / 10 * sd->inventory_data[index]->wlv) * status->get_lv(bl) / 100;
 				}
 				break;
 			case SC_PRESTIGE:
-				val2 = (st->int_ + st->luk) * val1 / 20;// Chance to evade magic damage.
+				val2 = (st->int_ + st->luk) * val1 / 20; // Chance to evade magic damage.
 				val2 = val2 * status->get_lv(bl) / 200;
 				val2 += val1;
 				val1 *= 15; // Defence added
-				if( sd )
-					val1 += 10 * pc->checkskill(sd,CR_DEFENDER);
-				val1 = val1 *  status->get_lv(bl) / 100;
+				if (sd)
+					val1 += 10 * pc->checkskill(sd, CR_DEFENDER);
+				val1 = val1 * status->get_lv(bl) / 100;
 				break;
 			case SC_BANDING:
 				tick_time = 5000; // [GodLesZ] tick time
@@ -9117,36 +9085,34 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				tick_time = 1000; // [GodLesZ] tick time
 				break;
 			case SC_INSPIRATION:
-				if( sd ) {
-					val2 = 40 * val1 + 3 * sd->status.job_level;// ATK bonus
-					val3 = sd->status.base_level / 10 + sd->status.job_level / 5;// All stat bonus
+				if (sd) {
+					val2 = 40 * val1 + 3 * sd->status.job_level;                  // ATK bonus
+					val3 = sd->status.base_level / 10 + sd->status.job_level / 5; // All stat bonus
 				}
 				val4 = total_tick / 5000;
-				tick_time = 5000; // [GodLesZ] tick time
-				status->change_clear_buffs(bl,3); //Remove buffs/debuffs
+				tick_time = 5000;                  // [GodLesZ] tick time
+				status->change_clear_buffs(bl, 3); // Remove buffs/debuffs
 				break;
 			case SC_CRESCENTELBOW:
 				val2 = (sd ? sd->status.job_level : 2) / 2 + 50 + 5 * val1;
 				break;
 			case SC_LIGHTNINGWALK: //  [(Job Level / 2) + (40 + 5 * Skill Level)] %
-				val1 = (sd?sd->status.job_level:2)/2 + 40 + 5 * val1;
+				val1 = (sd ? sd->status.job_level : 2) / 2 + 40 + 5 * val1;
 				break;
 			case SC_RAISINGDRAGON:
 				val3 = total_tick / 5000;
 				tick_time = 5000; // [GodLesZ] tick time
 				break;
-			case SC_GENTLETOUCH_CHANGE:
-			{// take note there is no def increase as skill desc says. [malufett]
-				struct block_list * src2;
+			case SC_GENTLETOUCH_CHANGE: { // take note there is no def increase as skill desc says. [malufett]
+				struct block_list *src2;
 				val3 = st->agi * val1 / 60; // ASPD increase: [(Target AGI x Skill Level) / 60] %
-				if( (src2 = map->id2bl(val2)) ){
-					val4 = ( 200/(status_get_int(src2)?status_get_int(src2):1) ) * val1;// MDEF decrease: MDEF [(200 / Caster INT) x Skill Level]
-					val2 = ( status_get_dex(src2)/4 + status_get_str(src2)/2 ) * val1 / 5; // ATK increase: ATK [{(Caster DEX / 4) + (Caster STR / 2)} x Skill Level / 5]
+				if ((src2 = map->id2bl(val2))) {
+					val4 = (200 / (status_get_int(src2) ? status_get_int(src2) : 1)) * val1; // MDEF decrease: MDEF [(200 / Caster INT) x Skill Level]
+					val2 = (status_get_dex(src2) / 4 + status_get_str(src2) / 2) * val1 / 5; // ATK increase: ATK [{(Caster DEX / 4) + (Caster STR / 2)} x Skill Level / 5]
 				}
-			}
-				break;
+			} break;
 			case SC_GENTLETOUCH_REVITALIZE:
-				if(val2 < 0)
+				if (val2 < 0)
 					val2 = 0;
 				else
 					val2 = val2 / 4 * val1; // STAT DEF increase: [(Caster VIT / 4) x Skill Level]
@@ -9158,9 +9124,9 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				val2 = 60;
 				break;
 			case SC_HEATER_OPTION:
-				val2 = 120; // Watk. TODO: Renewal (Atk2)
+				val2 = 120;                             // Watk. TODO: Renewal (Atk2)
 				val3 = (sd ? sd->status.job_level : 0); // % Increase damage.
-				val4 = 3; // Change into fire element.
+				val4 = 3;                               // Change into fire element.
 				break;
 			case SC_TROPIC_OPTION:
 				val2 = 180; // Watk. TODO: Renewal (Atk2)
@@ -9170,9 +9136,9 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				val2 = 40;
 				break;
 			case SC_COOLER_OPTION:
-				val2 = 80; // Bonus Matk
+				val2 = 80;                              // Bonus Matk
 				val3 = (sd ? sd->status.job_level : 0); // % Freezing chance
-				val4 = 1; // Change into water elemet
+				val4 = 1;                               // Change into water elemet
 				break;
 			case SC_CHILLY_AIR_OPTION:
 				val2 = 120; // Matk. TODO: Renewal (Matk1)
@@ -9270,13 +9236,13 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				tick_time = 10000; // [GodLesZ] tick time
 				break;
 			case SC_STEAMPACK: // [Frost]
-				val3 = 100; // HP Consume.
+				val3 = 100;    // HP Consume.
 				val4 = total_tick / 10000;
 				tick_time = 10000;
 				sc_start(src, bl, SC_ENDURE, 100, 10, total_tick, skill_id); // Endure effect
 				break;
 			case SC_MAGIC_CANDY: // [Frost]
-				val3 = 90; // SP Consume.
+				val3 = 90;       // SP Consume.
 				val4 = total_tick / 10000;
 				tick_time = 10000;
 				break;
@@ -9305,58 +9271,65 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 					val3 = 0;
 				break;
 			case SC_KYOUGAKU: {
-				int min = val1*2;
-				int max = val1*3;
-				val3 = rnd()%(max-min)+min;
-					val2 = val1;
-					val1 = MOBID_PORING;
-				}
-				break;
+				int min = val1 * 2;
+				int max = val1 * 3;
+				val3 = rnd() % (max - min) + min;
+				val2 = val1;
+				val1 = MOBID_PORING;
+			} break;
 			case SC_KAGEMUSYA:
 				val3 = val1 * 2;
 				FALLTHROUGH
 			case SC_IZAYOI:
-				val2 = total_tick/1000;
+				val2 = total_tick / 1000;
 				tick_time = 1000;
 				break;
 			case SC_ZANGETSU:
 				val2 = val4 = status->get_lv(bl) / 3 + 20 * val1;
 				val3 = status->get_lv(bl) / 2 + 30 * val1;
-				val2 = (!(status_get_hp(bl)%2) ? val2 : -val3);
-				val3 = (!(status_get_sp(bl)%2) ? val4 : -val3);
+				val2 = (!(status_get_hp(bl) % 2) ? val2 : -val3);
+				val3 = (!(status_get_sp(bl) % 2) ? val4 : -val3);
 				break;
 			case SC_GENSOU:
 
-#define PER( a, lvl ) do { \
-	int temp__ = (a); \
-	if( temp__ <= 15 ) (lvl) = 1; \
-	else if( temp__ <= 30 ) (lvl) = 2; \
-	else if( temp__ <= 50 ) (lvl) = 3; \
-	else if( temp__ <= 75 ) (lvl) = 4; \
-	else (lvl) = 5; \
-} while(0)
+#define PER(a, lvl)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           \
+	do {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      \
+		int temp__ = (a);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     \
+		if (temp__ <= 15)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     \
+			(lvl) = 1;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        \
+		else if (temp__ <= 30)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                \
+			(lvl) = 2;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        \
+		else if (temp__ <= 50)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                \
+			(lvl) = 3;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        \
+		else if (temp__ <= 75)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                \
+			(lvl) = 4;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        \
+		else                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  \
+			(lvl) = 5;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        \
+	} while (0)
 
 			{
 				int hp = status_get_hp(bl), sp = status_get_sp(bl), lv = 5;
 
-				if (sp < 1) sp = 1;
-				if (hp < 1) hp = 1;
+				if (sp < 1)
+					sp = 1;
+				if (hp < 1)
+					hp = 1;
 
-				if( rnd()%100 > (25 + 10 * val1) - status_get_int(bl) / 2)
+				if (rnd() % 100 > (25 + 10 * val1) - status_get_int(bl) / 2)
 					return 0;
 
-				PER( 100 / (status_get_max_hp(bl) / hp), lv );
-				status->heal(bl, (!(hp%2) ? (6-lv) *4 / 100 : -(lv*4) / 100), 0, STATUS_HEAL_FORCED);
+				PER(100 / (status_get_max_hp(bl) / hp), lv);
+				status->heal(bl, (!(hp % 2) ? (6 - lv) * 4 / 100 : -(lv * 4) / 100), 0, STATUS_HEAL_FORCED);
 
-				PER( 100 / (status_get_max_sp(bl) / sp), lv );
-				status->heal(bl, 0,(!(sp%2) ? (6-lv) *3 / 100 : -(lv*3) / 100), STATUS_HEAL_FORCED);
+				PER(100 / (status_get_max_sp(bl) / sp), lv);
+				status->heal(bl, 0, (!(sp % 2) ? (6 - lv) * 3 / 100 : -(lv * 3) / 100), STATUS_HEAL_FORCED);
 			}
 #undef PER
-				break;
+			break;
 			case SC_ANGRIFFS_MODUS:
-				val2 = 50 + 20 * val1; //atk bonus
-				val3 = 40 + 20 * val1; // Flee reduction.
-				val4 = total_tick/1000; // hp/sp reduction timer
+				val2 = 50 + 20 * val1;    // atk bonus
+				val3 = 40 + 20 * val1;    // Flee reduction.
+				val4 = total_tick / 1000; // hp/sp reduction timer
 				tick_time = 1000;
 				break;
 			case SC_NEUTRALBARRIER:
@@ -9364,41 +9337,43 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				total_tick = INFINITE_DURATION;
 				break;
 			case SC_GOLDENE_FERSE:
-				val2 = 10 + 10*val1; //max hp bonus
-				val3 = 6 + 4 * val1; // Aspd Bonus
-				val4 = 2 + 2 * val1; // Chance of holy attack
+				val2 = 10 + 10 * val1; // max hp bonus
+				val3 = 6 + 4 * val1;   // Aspd Bonus
+				val4 = 2 + 2 * val1;   // Chance of holy attack
 				break;
 			case SC_OVERED_BOOST:
-				val2 = 300 + 40*val1; //flee bonus
-				val3 = 179 + 2*val1; //aspd bonus
+				val2 = 300 + 40 * val1; // flee bonus
+				val3 = 179 + 2 * val1;  // aspd bonus
 				break;
 			case SC_GRANITIC_ARMOR:
-				val2 = 2*val1; //dmg reduction
-				val3 = 6*val1; //dmg on status end
+				val2 = 2 * val1; // dmg reduction
+				val3 = 6 * val1; // dmg on status end
 				break;
 			case SC_MAGMA_FLOW:
-				val2 = 3*val1; //activation chance
+				val2 = 3 * val1; // activation chance
 				break;
 			case SC_PYROCLASTIC:
-				val2 += 10*val1; //atk bonus
+				val2 += 10 * val1; // atk bonus
 				break;
 			case SC_NEEDLE_OF_PARALYZE: //[Lighta] need real info
-				val2 = 2*val1; //def reduction
-				val3 = 500*val1; //varcast augmentation
+				val2 = 2 * val1;        // def reduction
+				val3 = 500 * val1;      // varcast augmentation
 				break;
 			case SC_PAIN_KILLER: //[Lighta] need real info
-				val2 = 2*val1; //aspd reduction %
-				val3 = 2*val1; //dmg reduction %
-				if(sc->data[SC_NEEDLE_OF_PARALYZE])
-					sc_start(src, bl, SC_ENDURE, 100, val1, total_tick, skill_id); //start endure for same duration
+				val2 = 2 * val1; // aspd reduction %
+				val3 = 2 * val1; // dmg reduction %
+				if (sc->data[SC_NEEDLE_OF_PARALYZE])
+					sc_start(src, bl, SC_ENDURE, 100, val1, total_tick, skill_id); // start endure for same duration
 				break;
 			case SC_STYLE_CHANGE: //[Lighta] need real info
 				total_tick = INFINITE_DURATION;
-				if(val2 == MH_MD_FIGHTING) val2 = MH_MD_GRAPPLING;
-				else val2 = MH_MD_FIGHTING;
+				if (val2 == MH_MD_FIGHTING)
+					val2 = MH_MD_GRAPPLING;
+				else
+					val2 = MH_MD_FIGHTING;
 				break;
 			case SC_FULL_THROTTLE:
-				status_percent_heal(bl,100,0);
+				status_percent_heal(bl, 100, 0);
 				val2 = 7 - val1;
 				tick_time = 1000;
 				val4 = total_tick / tick_time;
@@ -9438,7 +9413,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				 * val1 = <IN>skill_id
 				 * val2 = <OUT>attack addition
 				 **/
-				val2 = 20+(20*val1);
+				val2 = 20 + (20 * val1);
 				break;
 			/**
 			 * Summoner
@@ -9451,7 +9426,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				break;
 			case SC_ARCLOUSEDASH:
 				val2 = 15 + 5 * val1; // AGI
-				val3 = 25; // Move speed increase
+				val3 = 25;            // Move speed increase
 				if (sd != NULL && (sd->job & MAPID_BASEMASK) == MAPID_SUMMONER)
 					val4 = 10; // Ranged ATK increase
 				break;
@@ -9467,32 +9442,28 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				val2 = 10; // BATK%, MATK%
 				break;
 			case SC_CATNIPPOWDER:
-				val2 = 50; // WATK%, MATK%
+				val2 = 50;        // WATK%, MATK%
 				val3 = 25 * val1; // Move speed reduction
 				break;
 			case SC_WATER_SCREEN_OPTION:
 				tick_time = 10000;
 				break;
-			case SC_HEAT_BARREL:
-				{
-					int n = 10;
-					if (sd != NULL)
-						n = sd->spiritball_old;
+			case SC_HEAT_BARREL: {
+				int n = 10;
+				if (sd != NULL)
+					n = sd->spiritball_old;
 
-					val2 = n * 5; // -fixed casttime
-					val3 = (6 + val1 * 2) * n; // ATK
-					val4 = 25 + val1 * 5; // -hit
-				}
-				break;
-			case SC_PLATINUM_ALTER:
-				{
-					int n = 10;
-					if (sd != NULL)
-						n = sd->spiritball_old;
-					val2 = 10 * n; // +atk
-					val3 = (st->max_hp * (val1 * 5) / 100); // Barrier HP
-				}
-				break;
+				val2 = n * 5;              // -fixed casttime
+				val3 = (6 + val1 * 2) * n; // ATK
+				val4 = 25 + val1 * 5;      // -hit
+			} break;
+			case SC_PLATINUM_ALTER: {
+				int n = 10;
+				if (sd != NULL)
+					n = sd->spiritball_old;
+				val2 = 10 * n;                          // +atk
+				val3 = (st->max_hp * (val1 * 5) / 100); // Barrier HP
+			} break;
 			case SC_ANTI_MATERIAL_BLAST:
 				val2 = val1 * 10;
 				break;
@@ -9572,16 +9543,16 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				val4 = total_tick / tick_time;
 				break;
 			case SC_SOULGOLEM:
-				val2 = 60 * val1; // DEF Increase
+				val2 = 60 * val1;     // DEF Increase
 				val3 = 15 + 5 * val1; // MDEF Increase
 				break;
 			case SC_SOULSHADOW:
 				val2 = (1 + val1) / 2; // ASPD Increase
-				val3 = 10 + 2 * val1; // CRIT Increase
+				val3 = 10 + 2 * val1;  // CRIT Increase
 				break;
 			case SC_SOULFALCON:
 				val2 = 10 * val1; // WATK Increase
-				val3 = 10; // HIT Increase
+				val3 = 10;        // HIT Increase
 				if (val1 >= 3)
 					val3 += 3;
 				else if (val1 >= 5)
@@ -9589,7 +9560,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				break;
 			case SC_SOULFAIRY:
 				val2 = 10 * val1; // MATK Increase
-				val3 = 5; // Variable Cast Time Reduction
+				val3 = 5;         // Variable Cast Time Reduction
 				if (val1 >= 3)
 					val3 += 2;
 				else if (val1 >= 5)
@@ -9625,7 +9596,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			case SC_KAAHI:
 				val4 = INVALID_TIMER;
 				break;
-		PRAGMA_GCC46(GCC diagnostic pop)
+				PRAGMA_GCC46(GCC diagnostic pop)
 		}
 	}
 
@@ -9635,34 +9606,34 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 	/* [Ind/Hercules] */
 	status->change_start_display(sd, type, val1, val2, val3, val4);
 
-	//Those that make you stop attacking/walking....
+	// Those that make you stop attacking/walking....
 	status->change_start_stop_action(bl, type);
 
 	// Set option as needed.
 	opt_flag = status->change_start_set_option(bl, sc, type, val1, val2, val3, val4);
 
-	//On Aegis, when turning on a status change, first goes the option packet, then the sc packet.
-	if(opt_flag) {
+	// On Aegis, when turning on a status change, first goes the option packet, then the sc packet.
+	if (opt_flag) {
 		clif->changeoption(bl);
-		if( sd && opt_flag&0x4 ) {
+		if (sd && opt_flag & 0x4) {
 			if (vd)
 				clif->changelook(bl, LOOK_BASE, vd->class);
-			clif->changelook(bl,LOOK_WEAPON,0);
-			clif->changelook(bl,LOOK_SHIELD,0);
+			clif->changelook(bl, LOOK_WEAPON, 0);
+			clif->changelook(bl, LOOK_SHIELD, 0);
 			if (vd)
-				clif->changelook(bl,LOOK_CLOTHES_COLOR,vd->cloth_color);
+				clif->changelook(bl, LOOK_CLOTHES_COLOR, vd->cloth_color);
 		}
 	}
-	if (calc_flag&SCB_DYE) {
-		//Reset DYE color
+	if (calc_flag & SCB_DYE) {
+		// Reset DYE color
 		if (vd && vd->cloth_color) {
 			val4 = vd->cloth_color;
-			clif->changelook(bl,LOOK_CLOTHES_COLOR,0);
+			clif->changelook(bl, LOOK_CLOTHES_COLOR, 0);
 		}
-		calc_flag&=~SCB_DYE;
+		calc_flag &= ~SCB_DYE;
 	}
 
-#if 0 //Currently No SC's use this
+#if 0 // Currently No SC's use this
 	if (calc_flag&SCB_BODY) {
 		//Reset Body Style
 		if (vd && vd->body_style) {
@@ -9675,20 +9646,20 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 
 	if (!(flag & SCFLAG_LOADED))
 		tick = total_tick; // When starting a new SC (not loading), its remaining duration is the same as the total
-	if(!(flag & SCFLAG_NOICON) && !(flag & SCFLAG_LOADED && status->dbs->DisplayType[type]))
+	if (!(flag & SCFLAG_NOICON) && !(flag & SCFLAG_LOADED && status->dbs->DisplayType[type]))
 		clif->status_change_sub(bl, status->get_sc_icon(type), status->get_sc_relevant_bl_types(type), 1, tick, total_tick, (val_flag & 1) ? val1 : 1, (val_flag & 2) ? val2 : 0, (val_flag & 4) ? val3 : 0);
 
 	/**
-	* used as temporary storage for scs with interval ticks, so that the actual duration is sent to the client first.
-	**/
-	if(tick_time)
+	 * used as temporary storage for scs with interval ticks, so that the actual duration is sent to the client first.
+	 **/
+	if (tick_time)
 		tick = tick_time;
 
-	//Don't trust the previous sce assignment, in case the SC ended somewhere between there and here.
-	if((sce=sc->data[type])) {// reuse old sc
-		if( sce->timer != INVALID_TIMER )
+	// Don't trust the previous sce assignment, in case the SC ended somewhere between there and here.
+	if ((sce = sc->data[type])) { // reuse old sc
+		if (sce->timer != INVALID_TIMER)
 			timer->delete(sce->timer, status->change_timer);
-	} else {// new sc
+	} else { // new sc
 		++(sc->count);
 		sce = sc->data[type] = ers_alloc(status->data_ers, struct status_change_entry);
 	}
@@ -9703,38 +9674,36 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 		sce->timer = timer->add(timer->gettick() + tick, status->change_timer, bl->id, type);
 		sce->infinite_duration = false;
 	} else {
-		sce->timer = INVALID_TIMER; //Infinite duration
+		sce->timer = INVALID_TIMER; // Infinite duration
 		sce->infinite_duration = true;
-		if( sd )
-			chrif->save_scdata_single(sd->status.account_id,sd->status.char_id,type,sce);
+		if (sd)
+			chrif->save_scdata_single(sd->status.account_id, sd->status.char_id, type, sce);
 	}
 
 	if (calc_flag)
-		status_calc_bl(bl,calc_flag);
+		status_calc_bl(bl, calc_flag);
 
-	if(sd && sd->pd)
-		pet->sc_check(sd, type); //Skotlex: Pet Status Effect Healing
+	if (sd && sd->pd)
+		pet->sc_check(sd, type); // Skotlex: Pet Status Effect Healing
 
 	PRAGMA_GCC46(GCC diagnostic push)
 	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 	switch (type) {
 		case SC_BERSERK:
-			if (!(sce->val2)) { //don't heal if already set
-				status->heal(bl, st->max_hp, 0, STATUS_HEAL_FORCED); //Do not use percent_heal as this healing must override BERSERK's block.
-				status->set_sp(bl, 0, STATUS_HEAL_DEFAULT); //Damage all SP
+			if (!(sce->val2)) {                                      // don't heal if already set
+				status->heal(bl, st->max_hp, 0, STATUS_HEAL_FORCED); // Do not use percent_heal as this healing must override BERSERK's block.
+				status->set_sp(bl, 0, STATUS_HEAL_DEFAULT);          // Damage all SP
 			}
 			sce->val2 = 5 * st->max_hp / 100;
 			break;
 		case SC_HLIF_CHANGE:
 			status_percent_heal(bl, 100, 100);
 			break;
-		case SC_RUN:
-			{
-				struct unit_data *ud = unit->bl2ud(bl);
-				if( ud )
-					ud->state.running = unit->run(bl, NULL, SC_RUN);
-			}
-			break;
+		case SC_RUN: {
+			struct unit_data *ud = unit->bl2ud(bl);
+			if (ud)
+				ud->state.running = unit->run(bl, NULL, SC_RUN);
+		} break;
 		case SC_CASH_BOSS_ALARM:
 			if (sd != NULL)
 				clif->bossmapinfo(sd->fd, map->id2boss(sce->val1), BOSS_INFO_ALIVE_WITHMSG); // First Message
@@ -9752,63 +9721,61 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			status_percent_heal(bl, 0, sce->val4);
 			break;
 			/**
-			* Ranger
-			**/
-		case SC_WUGDASH:
-			{
-				struct unit_data *ud = unit->bl2ud(bl);
-				if( ud )
-					ud->state.running = unit->run(bl, sd, SC_WUGDASH);
-			}
-			break;
+			 * Ranger
+			 **/
+		case SC_WUGDASH: {
+			struct unit_data *ud = unit->bl2ud(bl);
+			if (ud)
+				ud->state.running = unit->run(bl, sd, SC_WUGDASH);
+		} break;
 		case SC_COMBOATTACK:
 			switch (sce->val1) {
-			case TK_STORMKICK:
-				clif->skill_nodamage(bl,bl,TK_READYSTORM,1,1);
-				break;
-			case TK_DOWNKICK:
-				clif->skill_nodamage(bl,bl,TK_READYDOWN,1,1);
-				break;
-			case TK_TURNKICK:
-				clif->skill_nodamage(bl,bl,TK_READYTURN,1,1);
-				break;
-			case TK_COUNTER:
-				clif->skill_nodamage(bl,bl,TK_READYCOUNTER,1,1);
-				break;
-			case MO_COMBOFINISH:
-			case CH_TIGERFIST:
-			case CH_CHAINCRUSH:
-				if (sd)
-					clif->skillinfo(sd,MO_EXTREMITYFIST, INF_SELF_SKILL);
-				break;
-			case TK_JUMPKICK:
-				if (sd)
-					clif->skillinfo(sd,TK_JUMPKICK, INF_SELF_SKILL);
-				break;
-			case MO_TRIPLEATTACK:
-				if (sd && pc->checkskill(sd, SR_DRAGONCOMBO) > 0)
-					clif->skillinfo(sd,SR_DRAGONCOMBO, INF_SELF_SKILL);
-				break;
-			case SR_FALLENEMPIRE:
-				if (sd){
-					clif->skillinfo(sd,SR_GATEOFHELL, INF_SELF_SKILL);
-					clif->skillinfo(sd,SR_TIGERCANNON, INF_SELF_SKILL);
-				}
-				break;
+				case TK_STORMKICK:
+					clif->skill_nodamage(bl, bl, TK_READYSTORM, 1, 1);
+					break;
+				case TK_DOWNKICK:
+					clif->skill_nodamage(bl, bl, TK_READYDOWN, 1, 1);
+					break;
+				case TK_TURNKICK:
+					clif->skill_nodamage(bl, bl, TK_READYTURN, 1, 1);
+					break;
+				case TK_COUNTER:
+					clif->skill_nodamage(bl, bl, TK_READYCOUNTER, 1, 1);
+					break;
+				case MO_COMBOFINISH:
+				case CH_TIGERFIST:
+				case CH_CHAINCRUSH:
+					if (sd)
+						clif->skillinfo(sd, MO_EXTREMITYFIST, INF_SELF_SKILL);
+					break;
+				case TK_JUMPKICK:
+					if (sd)
+						clif->skillinfo(sd, TK_JUMPKICK, INF_SELF_SKILL);
+					break;
+				case MO_TRIPLEATTACK:
+					if (sd && pc->checkskill(sd, SR_DRAGONCOMBO) > 0)
+						clif->skillinfo(sd, SR_DRAGONCOMBO, INF_SELF_SKILL);
+					break;
+				case SR_FALLENEMPIRE:
+					if (sd) {
+						clif->skillinfo(sd, SR_GATEOFHELL, INF_SELF_SKILL);
+						clif->skillinfo(sd, SR_TIGERCANNON, INF_SELF_SKILL);
+					}
+					break;
 			}
 			break;
-			case SC_RAISINGDRAGON:
-				sce->val2 = st->max_hp / 100;// Officially tested its 1%hp drain. [Jobbie]
+		case SC_RAISINGDRAGON:
+			sce->val2 = st->max_hp / 100; // Officially tested its 1%hp drain. [Jobbie]
 			break;
-			case SC_CRIMSON_MARKER:
-				if (src->type == BL_PC && (sd = map->id2sd(src->id)))
-					clif->crimson_marker(sd, bl, false);
+		case SC_CRIMSON_MARKER:
+			if (src->type == BL_PC && (sd = map->id2sd(src->id)))
+				clif->crimson_marker(sd, bl, false);
 			break;
 	}
 	PRAGMA_GCC46(GCC diagnostic pop)
 
-	if( opt_flag&2 && sd && sd->touching_id )
-		npc->touchnext_areanpc(sd,false); // run OnTouch_ on next char in range
+	if (opt_flag & 2 && sd && sd->touching_id)
+		npc->touchnext_areanpc(sd, false); // run OnTouch_ on next char in range
 
 	return 1;
 }
@@ -9817,7 +9784,7 @@ static bool status_change_start_unknown_sc(struct block_list *src, struct block_
 {
 	Assert_retr(false, type >= SC_NONE && type < SC_MAX);
 	if (calc_flag == SCB_NONE && status->dbs->SkillChangeTable[type] == 0 && status->get_sc_icon(type) == SI_BLANK) {
-		//Status change with no calc, no icon, and no skill associated...?
+		// Status change with no calc, no icon, and no skill associated...?
 		ShowError("UnknownStatusChange [%d]\n", type);
 		return true;
 	}
@@ -10047,29 +10014,57 @@ static int status_change_start_set_option(struct block_list *bl, struct status_c
 	PRAGMA_GCC46(GCC diagnostic push)
 	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 	switch (type) {
-		//OPT1
-		case SC_STONE:         sc->opt1 = OPT1_STONEWAIT;  break;
-		case SC_FREEZE:        sc->opt1 = OPT1_FREEZE;     break;
-		case SC_STUN:          sc->opt1 = OPT1_STUN;       break;
-		case SC_SLEEP:         sc->opt1 = OPT1_SLEEP;      break;
-		case SC_BURNING:       sc->opt1 = OPT1_BURNING;    break; // Burning need this to be showed correctly. [pakpil]
-		case SC_WHITEIMPRISON: sc->opt1 = OPT1_IMPRISON;   break;
-		case SC_COLD:          sc->opt1 = OPT1_CRYSTALIZE; break;
-		//OPT2
-		case SC_POISON:       sc->opt2 |= OPT2_POISON;       break;
-		case SC_CURSE:        sc->opt2 |= OPT2_CURSE;        break;
-		case SC_SILENCE:      sc->opt2 |= OPT2_SILENCE;      break;
+		// OPT1
+		case SC_STONE:
+			sc->opt1 = OPT1_STONEWAIT;
+			break;
+		case SC_FREEZE:
+			sc->opt1 = OPT1_FREEZE;
+			break;
+		case SC_STUN:
+			sc->opt1 = OPT1_STUN;
+			break;
+		case SC_SLEEP:
+			sc->opt1 = OPT1_SLEEP;
+			break;
+		case SC_BURNING:
+			sc->opt1 = OPT1_BURNING;
+			break; // Burning need this to be showed correctly. [pakpil]
+		case SC_WHITEIMPRISON:
+			sc->opt1 = OPT1_IMPRISON;
+			break;
+		case SC_COLD:
+			sc->opt1 = OPT1_CRYSTALIZE;
+			break;
+		// OPT2
+		case SC_POISON:
+			sc->opt2 |= OPT2_POISON;
+			break;
+		case SC_CURSE:
+			sc->opt2 |= OPT2_CURSE;
+			break;
+		case SC_SILENCE:
+			sc->opt2 |= OPT2_SILENCE;
+			break;
 
 		case SC_CRUCIS:
 		case SC__CHAOS:
 			sc->opt2 |= OPT2_SIGNUMCRUCIS;
 			break;
 
-		case SC_BLIND:        sc->opt2 |= OPT2_BLIND;        break;
-		case SC_ANGELUS:      sc->opt2 |= OPT2_ANGELUS;      break;
-		case SC_BLOODING:     sc->opt2 |= OPT2_BLEEDING;     break;
-		case SC_DPOISON:      sc->opt2 |= OPT2_DPOISON;      break;
-		//OPT3
+		case SC_BLIND:
+			sc->opt2 |= OPT2_BLIND;
+			break;
+		case SC_ANGELUS:
+			sc->opt2 |= OPT2_ANGELUS;
+			break;
+		case SC_BLOODING:
+			sc->opt2 |= OPT2_BLEEDING;
+			break;
+		case SC_DPOISON:
+			sc->opt2 |= OPT2_DPOISON;
+			break;
+		// OPT3
 		case SC_TWOHANDQUICKEN:
 		case SC_ONEHANDQUICKEN:
 		case SC_SPEARQUICKEN:
@@ -10080,7 +10075,7 @@ static int status_change_start_set_option(struct block_list *bl, struct status_c
 			break;
 		case SC_OVERTHRUSTMAX:
 		case SC_OVERTHRUST:
-		case SC_SWOO: //Why does it shares the same opt as Overthrust? Perhaps we'll never know...
+		case SC_SWOO: // Why does it shares the same opt as Overthrust? Perhaps we'll never know...
 			sc->opt3 |= OPT3_OVERTHRUST;
 			opt_flag = 0;
 			break;
@@ -10090,7 +10085,7 @@ static int status_change_start_set_option(struct block_list *bl, struct status_c
 			opt_flag = 0;
 			break;
 		case SC_INCATKRATE:
-			//Simulate Explosion Spirits effect for NPC_POWERUP [Skotlex]
+			// Simulate Explosion Spirits effect for NPC_POWERUP [Skotlex]
 			if (bl->type != BL_MOB) {
 				opt_flag = 0;
 				break;
@@ -10137,7 +10132,7 @@ static int status_change_start_set_option(struct block_list *bl, struct status_c
 			sc->opt3 |= OPT3_ASSUMPTIO;
 			opt_flag = 0;
 			break;
-		case SC_WARM: //SG skills [Komurka]
+		case SC_WARM: // SG skills [Komurka]
 			sc->opt3 |= OPT3_WARM;
 			opt_flag = 0;
 			break;
@@ -10163,7 +10158,7 @@ static int status_change_start_set_option(struct block_list *bl, struct status_c
 			opt_flag = 0;
 			break;
 #endif // 0
-		//OPTION
+       // OPTION
 		case SC_HIDING:
 			sc->option |= OPTION_HIDE;
 			opt_flag = 2;
@@ -10176,7 +10171,7 @@ static int status_change_start_set_option(struct block_list *bl, struct status_c
 			break;
 		case SC__INVISIBILITY:
 		case SC_CHASEWALK:
-			sc->option |= OPTION_CHASEWALK|OPTION_CLOAK;
+			sc->option |= OPTION_CHASEWALK | OPTION_CLOAK;
 			opt_flag = 2;
 			break;
 		case SC_SIGHT:
@@ -10246,15 +10241,13 @@ static void status_change_start_stop_action(struct block_list *bl, enum sc_type 
 		case SC_STUN:
 		case SC_SLEEP:
 		case SC_STONE:
-		case SC_DEEP_SLEEP:
-		{
+		case SC_DEEP_SLEEP: {
 			struct map_session_data *sd = BL_CAST(BL_PC, bl);
-			if (sd && pc_issit(sd)) //Avoid sprite sync problems.
+			if (sd && pc_issit(sd)) // Avoid sprite sync problems.
 				pc->setstand(sd);
 			FALLTHROUGH
 		}
-		case SC_GRAVITYCONTROL:
-		{
+		case SC_GRAVITYCONTROL: {
 			struct status_change *sc = status->get_sc(bl);
 			if (sc->data[SC_DANCING] != NULL)
 				unit->stop_walking(bl, STOPWALKING_FLAG_FIXPOS);
@@ -10263,7 +10256,7 @@ static void status_change_start_stop_action(struct block_list *bl, enum sc_type 
 		case SC_TRICKDEAD:
 			status_change_end(bl, SC_DANCING, INVALID_TIMER);
 			// Cancel cast when get status [LuzZza]
-			if (battle_config.sc_castcancel&bl->type)
+			if (battle_config.sc_castcancel & bl->type)
 				unit->skillcastcancel(bl, 0);
 			FALLTHROUGH
 		case SC_FALLENEMPIRE:
@@ -10331,8 +10324,7 @@ static void status_change_start_stop_action(struct block_list *bl, enum sc_type 
  * @retval false if no status change happened, or the other sc can be started regardless.
  * @retval true  if the status change was successfully applied and the other sc shouldn't be started.
  */
-static bool status_end_sc_before_start(struct block_list *bl, struct status_data *st, struct status_change *sc,
-				       enum sc_type type, int undead_flag, int val1, int val2, int val3, int val4)
+static bool status_end_sc_before_start(struct block_list *bl, struct status_data *st, struct status_change *sc, enum sc_type type, int undead_flag, int val1, int val2, int val3, int val4)
 {
 	nullpo_retr(true, bl);
 	nullpo_retr(true, st);
@@ -10341,335 +10333,335 @@ static bool status_end_sc_before_start(struct block_list *bl, struct status_data
 	PRAGMA_GCC46(GCC diagnostic push)
 	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 	switch (type) {
-	case SC_BLESSING:
-		// TODO: Blessing and Agi up should do 1 damage against players on Undead Status, even on PvM
-		// but cannot be plagiarized (this requires aegis investigation on packets and official behavior) [Brainstorm]
-		if ((undead_flag == 0 && st->race != RC_DEMON) || bl->type == BL_PC) {
-			bool prevent_start = false;
+		case SC_BLESSING:
+			// TODO: Blessing and Agi up should do 1 damage against players on Undead Status, even on PvM
+			// but cannot be plagiarized (this requires aegis investigation on packets and official behavior) [Brainstorm]
+			if ((undead_flag == 0 && st->race != RC_DEMON) || bl->type == BL_PC) {
+				bool prevent_start = false;
 
-			if (sc->data[SC_CURSE] != NULL) {
-				prevent_start = true;
-				status_change_end(bl, SC_CURSE, INVALID_TIMER);
+				if (sc->data[SC_CURSE] != NULL) {
+					prevent_start = true;
+					status_change_end(bl, SC_CURSE, INVALID_TIMER);
+				}
+
+				if (sc->data[SC_STONE] != NULL && sc->opt1 == OPT1_STONE) {
+					prevent_start = true;
+					status_change_end(bl, SC_STONE, INVALID_TIMER);
+				}
+
+				if (prevent_start)
+					return true;
 			}
 
-			if (sc->data[SC_STONE] != NULL && sc->opt1 == OPT1_STONE) {
-				prevent_start = true;
-				status_change_end(bl, SC_STONE, INVALID_TIMER);
-			}
+			if (sc->data[SC_SOULLINK] != NULL && sc->data[SC_SOULLINK]->val2 == SL_HIGH)
+				status_change_end(bl, SC_SOULLINK, INVALID_TIMER);
 
-			if (prevent_start)
-				return true;
-		}
-
-		if (sc->data[SC_SOULLINK] != NULL && sc->data[SC_SOULLINK]->val2 == SL_HIGH)
-			status_change_end(bl, SC_SOULLINK, INVALID_TIMER);
-
-		break;
-	case SC_INC_AGI:
-		status_change_end(bl, SC_DEC_AGI, INVALID_TIMER);
-
-		if (sc->data[SC_SOULLINK] != NULL && sc->data[SC_SOULLINK]->val2 == SL_HIGH)
-			status_change_end(bl, SC_SOULLINK, INVALID_TIMER);
-
-		break;
-	case SC_QUAGMIRE:
-		status_change_end(bl, SC_CONCENTRATION, INVALID_TIMER);
-		status_change_end(bl, SC_TRUESIGHT, INVALID_TIMER);
-		status_change_end(bl, SC_WINDWALK, INVALID_TIMER);
-		FALLTHROUGH // Also blocks the ones below...
-	case SC_DEC_AGI:
-	case SC_ADORAMUS:
-		status_change_end(bl, SC_CARTBOOST, INVALID_TIMER);
-		FALLTHROUGH // Also blocks the ones below...
-	case SC_DONTFORGETME:
-		status_change_end(bl, SC_INC_AGI, INVALID_TIMER);
-		status_change_end(bl, SC_ADRENALINE, INVALID_TIMER);
-		status_change_end(bl, SC_ADRENALINE2, INVALID_TIMER);
-		status_change_end(bl, SC_SPEARQUICKEN, INVALID_TIMER);
-		status_change_end(bl, SC_TWOHANDQUICKEN, INVALID_TIMER);
-		status_change_end(bl, SC_ONEHANDQUICKEN, INVALID_TIMER);
-		status_change_end(bl, SC_MER_QUICKEN, INVALID_TIMER);
-		status_change_end(bl, SC_ACCELERATION, INVALID_TIMER);
-		break;
-	case SC_ONEHANDQUICKEN:
-		// Removes the Aspd potion effect, as reported by Vicious. [Skotlex]
-		status_change_end(bl, SC_ATTHASTE_POTION1, INVALID_TIMER);
-		status_change_end(bl, SC_ATTHASTE_POTION2, INVALID_TIMER);
-		status_change_end(bl, SC_ATTHASTE_POTION3, INVALID_TIMER);
-		status_change_end(bl, SC_ATTHASTE_INFINITY, INVALID_TIMER);
-		break;
-	case SC_OVERTHRUSTMAX:
-		// Cancels Normal Overthrust. [Skotlex]
-		status_change_end(bl, SC_OVERTHRUST, INVALID_TIMER);
-		break;
-	case SC_KYRIE:
-		// Cancels Assumptio
-		status_change_end(bl, SC_ASSUMPTIO, INVALID_TIMER);
-		break;
-	case SC_MAGNIFICAT:
-		// Cancels Offertorium
-		status_change_end(bl, SC_OFFERTORIUM, INVALID_TIMER);
-		break;
-	case SC_OFFERTORIUM:
-		// Cancels Magnificat
-		status_change_end(bl, SC_MAGNIFICAT, INVALID_TIMER);
-		break;
-	case SC_DELUGE:
-		if (sc->data[SC_FOGWALL] != NULL && sc->data[SC_BLIND] != NULL)
-			status_change_end(bl, SC_BLIND, INVALID_TIMER);
-
-		break;
-	case SC_SILENCE:
-		if (sc->data[SC_GOSPEL] != NULL && sc->data[SC_GOSPEL]->val4 == BCT_SELF)
-			status_change_end(bl, SC_GOSPEL, INVALID_TIMER);
-
-		break;
-	case SC_HIDING:
-		status_change_end(bl, SC_RG_CCONFINE_M, INVALID_TIMER);
-		status_change_end(bl, SC_RG_CCONFINE_S, INVALID_TIMER);
-		break;
-	case SC_BERSERK:
-		if (val3 == SC__BLOODYLUST)
 			break;
-
-		if (battle_config.berserk_cancels_buffs != 0) {
-			status_change_end(bl, SC_ONEHANDQUICKEN, INVALID_TIMER);
-			status_change_end(bl, SC_TWOHANDQUICKEN, INVALID_TIMER);
-			status_change_end(bl, SC_LKCONCENTRATION, INVALID_TIMER);
-			status_change_end(bl, SC_PARRYING, INVALID_TIMER);
-			status_change_end(bl, SC_AURABLADE, INVALID_TIMER);
-			status_change_end(bl, SC_MER_QUICKEN, INVALID_TIMER);
-		} else {
-#ifdef RENEWAL
-			status_change_end(bl, SC_TWOHANDQUICKEN, INVALID_TIMER);
-#endif
-		}
-
-		break;
-	case SC_ASSUMPTIO:
-		status_change_end(bl, SC_KYRIE, INVALID_TIMER);
-		status_change_end(bl, SC_KAITE, INVALID_TIMER);
-		break;
-	case SC_KAITE:
-		status_change_end(bl, SC_ASSUMPTIO, INVALID_TIMER);
-		break;
-	case SC_CARTBOOST:
-		if (sc->data[SC_DEC_AGI] != NULL || sc->data[SC_ADORAMUS] != NULL) {
-			// Cancel Decrease Agi, but take no further effect [Skotlex]
+		case SC_INC_AGI:
 			status_change_end(bl, SC_DEC_AGI, INVALID_TIMER);
-			status_change_end(bl, SC_ADORAMUS, INVALID_TIMER);
-			return true;
-		}
 
-		break;
-	case SC_FUSION:
-		status_change_end(bl, SC_SOULLINK, INVALID_TIMER);
-		break;
-	case SC_GS_ADJUSTMENT:
-		status_change_end(bl, SC_GS_MADNESSCANCEL, INVALID_TIMER);
-		break;
-	case SC_GS_MADNESSCANCEL:
-		status_change_end(bl, SC_GS_ADJUSTMENT, INVALID_TIMER);
-		break;
-	case SC_PROPERTYUNDEAD:
-		// NPC_CHANGEUNDEAD will debuff Blessing and Agi Up
-		status_change_end(bl, SC_BLESSING, INVALID_TIMER);
-		status_change_end(bl, SC_INC_AGI, INVALID_TIMER);
-		break;
-	case SC_FOOD_STR:
-		status_change_end(bl, SC_FOOD_STR, INVALID_TIMER);
-		break;
-	case SC_FOOD_AGI:
-		status_change_end(bl, SC_FOOD_AGI, INVALID_TIMER);
-		break;
-	case SC_FOOD_VIT:
-		status_change_end(bl, SC_FOOD_VIT, INVALID_TIMER);
-		break;
-	case SC_FOOD_INT:
-		status_change_end(bl, SC_FOOD_INT, INVALID_TIMER);
-		break;
-	case SC_FOOD_DEX:
-		status_change_end(bl, SC_FOOD_DEX, INVALID_TIMER);
-		break;
-	case SC_FOOD_LUK:
-		status_change_end(bl, SC_FOOD_LUK, INVALID_TIMER);
-		break;
-	case SC_FOOD_STR_CASH:
-		status_change_end(bl, SC_FOOD_STR, INVALID_TIMER);
-		status_change_end(bl, SC_FOOD_STR_CASH, INVALID_TIMER);
-		break;
-	case SC_FOOD_AGI_CASH:
-		status_change_end(bl, SC_FOOD_AGI, INVALID_TIMER);
-		status_change_end(bl, SC_FOOD_AGI_CASH, INVALID_TIMER);
-		break;
-	case SC_FOOD_VIT_CASH:
-		status_change_end(bl, SC_FOOD_VIT, INVALID_TIMER);
-		status_change_end(bl, SC_FOOD_VIT_CASH, INVALID_TIMER);
-		break;
-	case SC_FOOD_INT_CASH:
-		status_change_end(bl, SC_FOOD_INT, INVALID_TIMER);
-		status_change_end(bl, SC_FOOD_INT_CASH, INVALID_TIMER);
-		break;
-	case SC_FOOD_DEX_CASH:
-		status_change_end(bl, SC_FOOD_DEX, INVALID_TIMER);
-		status_change_end(bl, SC_FOOD_DEX_CASH, INVALID_TIMER);
-		break;
-	case SC_FOOD_LUK_CASH:
-		status_change_end(bl, SC_FOOD_LUK, INVALID_TIMER);
-		status_change_end(bl, SC_FOOD_LUK_CASH, INVALID_TIMER);
-		break;
-	case SC_GM_BATTLE:
-		status_change_end(bl, SC_GM_BATTLE2, INVALID_TIMER);
-		break;
-	case SC_GM_BATTLE2:
-		status_change_end(bl, SC_GM_BATTLE, INVALID_TIMER);
-		break;
-	case SC_ENDURE:
-		if (val4 == 1)
-			status_change_end(bl, SC_LKCONCENTRATION, INVALID_TIMER);
+			if (sc->data[SC_SOULLINK] != NULL && sc->data[SC_SOULLINK]->val2 == SL_HIGH)
+				status_change_end(bl, SC_SOULLINK, INVALID_TIMER);
 
-		break;
-	case SC_FIGHTINGSPIRIT:
-	case SC_OVERED_BOOST:
-		status_change_end(bl, type, INVALID_TIMER); // Remove previous one.
-		break;
-	case SC_MARSHOFABYSS:
-		status_change_end(bl, SC_INCAGI, INVALID_TIMER);
-		status_change_end(bl, SC_WINDWALK, INVALID_TIMER);
-		status_change_end(bl, SC_ATTHASTE_POTION1, INVALID_TIMER);
-		status_change_end(bl, SC_ATTHASTE_POTION2, INVALID_TIMER);
-		status_change_end(bl, SC_ATTHASTE_POTION3, INVALID_TIMER);
-		status_change_end(bl, SC_ATTHASTE_INFINITY, INVALID_TIMER);
-		break;
-	// Group A Status (doesn't overlap)
-	case SC_SWING:
-	case SC_SYMPHONY_LOVE:
-	case SC_MOONLIT_SERENADE:
-	case SC_RUSH_WINDMILL:
-	case SC_ECHOSONG:
-	case SC_HARMONIZE:
-		if (type != SC_SWING)
-			status_change_end(bl, SC_SWING, INVALID_TIMER);
-
-		if (type != SC_SYMPHONY_LOVE)
-			status_change_end(bl, SC_SYMPHONY_LOVE, INVALID_TIMER);
-
-		if (type != SC_MOONLIT_SERENADE)
-			status_change_end(bl, SC_MOONLIT_SERENADE, INVALID_TIMER);
-
-		if (type != SC_RUSH_WINDMILL)
-			status_change_end(bl, SC_RUSH_WINDMILL, INVALID_TIMER);
-
-		if (type != SC_ECHOSONG)
-			status_change_end(bl, SC_ECHOSONG, INVALID_TIMER);
-
-		if (type != SC_HARMONIZE)
-			status_change_end(bl, SC_HARMONIZE, INVALID_TIMER);
-
-		break;
-	// Group B Status
-	case SC_SIREN:
-	case SC_DEEP_SLEEP:
-	case SC_SIRCLEOFNATURE:
-	case SC_LERADS_DEW:
-	case SC_MELODYOFSINK:
-	case SC_BEYOND_OF_WARCRY:
-	case SC_UNLIMITED_HUMMING_VOICE:
-	case SC_GLOOMYDAY:
-	case SC_SONG_OF_MANA:
-	case SC_DANCE_WITH_WUG:
-		if (type != SC_SIREN)
-			status_change_end(bl, SC_SIREN, INVALID_TIMER);
-
-		if (type != SC_DEEP_SLEEP)
-			status_change_end(bl, SC_DEEP_SLEEP, INVALID_TIMER);
-
-		if (type != SC_SIRCLEOFNATURE)
-			status_change_end(bl, SC_SIRCLEOFNATURE, INVALID_TIMER);
-
-		if (type != SC_LERADS_DEW)
-			status_change_end(bl, SC_LERADS_DEW, INVALID_TIMER);
-
-		if (type != SC_MELODYOFSINK)
-			status_change_end(bl, SC_MELODYOFSINK, INVALID_TIMER);
-
-		if (type != SC_BEYOND_OF_WARCRY)
-			status_change_end(bl, SC_BEYOND_OF_WARCRY, INVALID_TIMER);
-
-		if (type != SC_UNLIMITED_HUMMING_VOICE)
-			status_change_end(bl, SC_UNLIMITED_HUMMING_VOICE, INVALID_TIMER);
-
-		if (type != SC_GLOOMYDAY)
-			status_change_end(bl, SC_GLOOMYDAY, INVALID_TIMER);
-
-		if (type != SC_SONG_OF_MANA)
-			status_change_end(bl, SC_SONG_OF_MANA, INVALID_TIMER);
-
-		if (type != SC_DANCE_WITH_WUG)
-			status_change_end(bl, SC_DANCE_WITH_WUG, INVALID_TIMER);
-
-		break;
-	case SC_REFLECTSHIELD:
-		status_change_end(bl, SC_LG_REFLECTDAMAGE, INVALID_TIMER);
-		break;
-	case SC_LG_REFLECTDAMAGE:
-		status_change_end(bl, SC_REFLECTSHIELD, INVALID_TIMER);
-		break;
-	case SC_SHIELDSPELL_DEF:
-	case SC_SHIELDSPELL_MDEF:
-	case SC_SHIELDSPELL_REF:
-		status_change_end(bl, SC_MAGNIFICAT, INVALID_TIMER);
-		status_change_end(bl, SC_SHIELDSPELL_DEF, INVALID_TIMER);
-		status_change_end(bl, SC_SHIELDSPELL_MDEF, INVALID_TIMER);
-		status_change_end(bl, SC_SHIELDSPELL_REF, INVALID_TIMER);
-		break;
-	case SC_GENTLETOUCH_ENERGYGAIN:
-	case SC_GENTLETOUCH_CHANGE:
-	case SC_GENTLETOUCH_REVITALIZE:
-		if (type != SC_GENTLETOUCH_REVITALIZE)
-			status_change_end(bl, SC_GENTLETOUCH_REVITALIZE, INVALID_TIMER);
-
-		if (type != SC_GENTLETOUCH_ENERGYGAIN)
-			status_change_end(bl, SC_GENTLETOUCH_ENERGYGAIN, INVALID_TIMER);
-
-		if (type != SC_GENTLETOUCH_CHANGE)
-			status_change_end(bl, SC_GENTLETOUCH_CHANGE, INVALID_TIMER);
-
-		break;
-	case SC_INVINCIBLE:
-		status_change_end(bl, SC_INVINCIBLEOFF, INVALID_TIMER);
-		break;
-	case SC_INVINCIBLEOFF:
-		status_change_end(bl, SC_INVINCIBLE, INVALID_TIMER);
-		break;
-	case SC_MAGICPOWER:
-	case SC_IMPOSITIO:
-		status_change_end(bl, type, INVALID_TIMER);
-		break;
-	case SC_SUNSTANCE:
-	case SC_LUNARSTANCE:
-	case SC_STARSTANCE:
-	case SC_UNIVERSESTANCE:
-		if (sc->data[type] != NULL)
 			break;
-		status_change_end(bl, SC_SUNSTANCE, INVALID_TIMER);
-		status_change_end(bl, SC_LUNARSTANCE, INVALID_TIMER);
-		status_change_end(bl, SC_STARSTANCE, INVALID_TIMER);
-		status_change_end(bl, SC_UNIVERSESTANCE, INVALID_TIMER);
-		break;
-	case SC_SOULLINK:
-	case SC_SOULGOLEM:
-	case SC_SOULSHADOW:
-	case SC_SOULFALCON:
-	case SC_SOULFAIRY:
-		if (sc->data[type] != NULL)
+		case SC_QUAGMIRE:
+			status_change_end(bl, SC_CONCENTRATION, INVALID_TIMER);
+			status_change_end(bl, SC_TRUESIGHT, INVALID_TIMER);
+			status_change_end(bl, SC_WINDWALK, INVALID_TIMER);
+		FALLTHROUGH // Also blocks the ones below...
+		    case SC_DEC_AGI:
+		case SC_ADORAMUS:
+			status_change_end(bl, SC_CARTBOOST, INVALID_TIMER);
+		FALLTHROUGH // Also blocks the ones below...
+		    case SC_DONTFORGETME:
+			status_change_end(bl, SC_INC_AGI, INVALID_TIMER);
+			status_change_end(bl, SC_ADRENALINE, INVALID_TIMER);
+			status_change_end(bl, SC_ADRENALINE2, INVALID_TIMER);
+			status_change_end(bl, SC_SPEARQUICKEN, INVALID_TIMER);
+			status_change_end(bl, SC_TWOHANDQUICKEN, INVALID_TIMER);
+			status_change_end(bl, SC_ONEHANDQUICKEN, INVALID_TIMER);
+			status_change_end(bl, SC_MER_QUICKEN, INVALID_TIMER);
+			status_change_end(bl, SC_ACCELERATION, INVALID_TIMER);
 			break;
-		status_change_end(bl, SC_SOULLINK, INVALID_TIMER);
-		status_change_end(bl, SC_SOULGOLEM, INVALID_TIMER);
-		status_change_end(bl, SC_SOULSHADOW, INVALID_TIMER);
-		status_change_end(bl, SC_SOULFALCON, INVALID_TIMER);
-		status_change_end(bl, SC_SOULFAIRY, INVALID_TIMER);
-		break;
+		case SC_ONEHANDQUICKEN:
+			// Removes the Aspd potion effect, as reported by Vicious. [Skotlex]
+			status_change_end(bl, SC_ATTHASTE_POTION1, INVALID_TIMER);
+			status_change_end(bl, SC_ATTHASTE_POTION2, INVALID_TIMER);
+			status_change_end(bl, SC_ATTHASTE_POTION3, INVALID_TIMER);
+			status_change_end(bl, SC_ATTHASTE_INFINITY, INVALID_TIMER);
+			break;
+		case SC_OVERTHRUSTMAX:
+			// Cancels Normal Overthrust. [Skotlex]
+			status_change_end(bl, SC_OVERTHRUST, INVALID_TIMER);
+			break;
+		case SC_KYRIE:
+			// Cancels Assumptio
+			status_change_end(bl, SC_ASSUMPTIO, INVALID_TIMER);
+			break;
+		case SC_MAGNIFICAT:
+			// Cancels Offertorium
+			status_change_end(bl, SC_OFFERTORIUM, INVALID_TIMER);
+			break;
+		case SC_OFFERTORIUM:
+			// Cancels Magnificat
+			status_change_end(bl, SC_MAGNIFICAT, INVALID_TIMER);
+			break;
+		case SC_DELUGE:
+			if (sc->data[SC_FOGWALL] != NULL && sc->data[SC_BLIND] != NULL)
+				status_change_end(bl, SC_BLIND, INVALID_TIMER);
+
+			break;
+		case SC_SILENCE:
+			if (sc->data[SC_GOSPEL] != NULL && sc->data[SC_GOSPEL]->val4 == BCT_SELF)
+				status_change_end(bl, SC_GOSPEL, INVALID_TIMER);
+
+			break;
+		case SC_HIDING:
+			status_change_end(bl, SC_RG_CCONFINE_M, INVALID_TIMER);
+			status_change_end(bl, SC_RG_CCONFINE_S, INVALID_TIMER);
+			break;
+		case SC_BERSERK:
+			if (val3 == SC__BLOODYLUST)
+				break;
+
+			if (battle_config.berserk_cancels_buffs != 0) {
+				status_change_end(bl, SC_ONEHANDQUICKEN, INVALID_TIMER);
+				status_change_end(bl, SC_TWOHANDQUICKEN, INVALID_TIMER);
+				status_change_end(bl, SC_LKCONCENTRATION, INVALID_TIMER);
+				status_change_end(bl, SC_PARRYING, INVALID_TIMER);
+				status_change_end(bl, SC_AURABLADE, INVALID_TIMER);
+				status_change_end(bl, SC_MER_QUICKEN, INVALID_TIMER);
+			} else {
+#ifdef RENEWAL
+				status_change_end(bl, SC_TWOHANDQUICKEN, INVALID_TIMER);
+#endif
+			}
+
+			break;
+		case SC_ASSUMPTIO:
+			status_change_end(bl, SC_KYRIE, INVALID_TIMER);
+			status_change_end(bl, SC_KAITE, INVALID_TIMER);
+			break;
+		case SC_KAITE:
+			status_change_end(bl, SC_ASSUMPTIO, INVALID_TIMER);
+			break;
+		case SC_CARTBOOST:
+			if (sc->data[SC_DEC_AGI] != NULL || sc->data[SC_ADORAMUS] != NULL) {
+				// Cancel Decrease Agi, but take no further effect [Skotlex]
+				status_change_end(bl, SC_DEC_AGI, INVALID_TIMER);
+				status_change_end(bl, SC_ADORAMUS, INVALID_TIMER);
+				return true;
+			}
+
+			break;
+		case SC_FUSION:
+			status_change_end(bl, SC_SOULLINK, INVALID_TIMER);
+			break;
+		case SC_GS_ADJUSTMENT:
+			status_change_end(bl, SC_GS_MADNESSCANCEL, INVALID_TIMER);
+			break;
+		case SC_GS_MADNESSCANCEL:
+			status_change_end(bl, SC_GS_ADJUSTMENT, INVALID_TIMER);
+			break;
+		case SC_PROPERTYUNDEAD:
+			// NPC_CHANGEUNDEAD will debuff Blessing and Agi Up
+			status_change_end(bl, SC_BLESSING, INVALID_TIMER);
+			status_change_end(bl, SC_INC_AGI, INVALID_TIMER);
+			break;
+		case SC_FOOD_STR:
+			status_change_end(bl, SC_FOOD_STR, INVALID_TIMER);
+			break;
+		case SC_FOOD_AGI:
+			status_change_end(bl, SC_FOOD_AGI, INVALID_TIMER);
+			break;
+		case SC_FOOD_VIT:
+			status_change_end(bl, SC_FOOD_VIT, INVALID_TIMER);
+			break;
+		case SC_FOOD_INT:
+			status_change_end(bl, SC_FOOD_INT, INVALID_TIMER);
+			break;
+		case SC_FOOD_DEX:
+			status_change_end(bl, SC_FOOD_DEX, INVALID_TIMER);
+			break;
+		case SC_FOOD_LUK:
+			status_change_end(bl, SC_FOOD_LUK, INVALID_TIMER);
+			break;
+		case SC_FOOD_STR_CASH:
+			status_change_end(bl, SC_FOOD_STR, INVALID_TIMER);
+			status_change_end(bl, SC_FOOD_STR_CASH, INVALID_TIMER);
+			break;
+		case SC_FOOD_AGI_CASH:
+			status_change_end(bl, SC_FOOD_AGI, INVALID_TIMER);
+			status_change_end(bl, SC_FOOD_AGI_CASH, INVALID_TIMER);
+			break;
+		case SC_FOOD_VIT_CASH:
+			status_change_end(bl, SC_FOOD_VIT, INVALID_TIMER);
+			status_change_end(bl, SC_FOOD_VIT_CASH, INVALID_TIMER);
+			break;
+		case SC_FOOD_INT_CASH:
+			status_change_end(bl, SC_FOOD_INT, INVALID_TIMER);
+			status_change_end(bl, SC_FOOD_INT_CASH, INVALID_TIMER);
+			break;
+		case SC_FOOD_DEX_CASH:
+			status_change_end(bl, SC_FOOD_DEX, INVALID_TIMER);
+			status_change_end(bl, SC_FOOD_DEX_CASH, INVALID_TIMER);
+			break;
+		case SC_FOOD_LUK_CASH:
+			status_change_end(bl, SC_FOOD_LUK, INVALID_TIMER);
+			status_change_end(bl, SC_FOOD_LUK_CASH, INVALID_TIMER);
+			break;
+		case SC_GM_BATTLE:
+			status_change_end(bl, SC_GM_BATTLE2, INVALID_TIMER);
+			break;
+		case SC_GM_BATTLE2:
+			status_change_end(bl, SC_GM_BATTLE, INVALID_TIMER);
+			break;
+		case SC_ENDURE:
+			if (val4 == 1)
+				status_change_end(bl, SC_LKCONCENTRATION, INVALID_TIMER);
+
+			break;
+		case SC_FIGHTINGSPIRIT:
+		case SC_OVERED_BOOST:
+			status_change_end(bl, type, INVALID_TIMER); // Remove previous one.
+			break;
+		case SC_MARSHOFABYSS:
+			status_change_end(bl, SC_INCAGI, INVALID_TIMER);
+			status_change_end(bl, SC_WINDWALK, INVALID_TIMER);
+			status_change_end(bl, SC_ATTHASTE_POTION1, INVALID_TIMER);
+			status_change_end(bl, SC_ATTHASTE_POTION2, INVALID_TIMER);
+			status_change_end(bl, SC_ATTHASTE_POTION3, INVALID_TIMER);
+			status_change_end(bl, SC_ATTHASTE_INFINITY, INVALID_TIMER);
+			break;
+		// Group A Status (doesn't overlap)
+		case SC_SWING:
+		case SC_SYMPHONY_LOVE:
+		case SC_MOONLIT_SERENADE:
+		case SC_RUSH_WINDMILL:
+		case SC_ECHOSONG:
+		case SC_HARMONIZE:
+			if (type != SC_SWING)
+				status_change_end(bl, SC_SWING, INVALID_TIMER);
+
+			if (type != SC_SYMPHONY_LOVE)
+				status_change_end(bl, SC_SYMPHONY_LOVE, INVALID_TIMER);
+
+			if (type != SC_MOONLIT_SERENADE)
+				status_change_end(bl, SC_MOONLIT_SERENADE, INVALID_TIMER);
+
+			if (type != SC_RUSH_WINDMILL)
+				status_change_end(bl, SC_RUSH_WINDMILL, INVALID_TIMER);
+
+			if (type != SC_ECHOSONG)
+				status_change_end(bl, SC_ECHOSONG, INVALID_TIMER);
+
+			if (type != SC_HARMONIZE)
+				status_change_end(bl, SC_HARMONIZE, INVALID_TIMER);
+
+			break;
+		// Group B Status
+		case SC_SIREN:
+		case SC_DEEP_SLEEP:
+		case SC_SIRCLEOFNATURE:
+		case SC_LERADS_DEW:
+		case SC_MELODYOFSINK:
+		case SC_BEYOND_OF_WARCRY:
+		case SC_UNLIMITED_HUMMING_VOICE:
+		case SC_GLOOMYDAY:
+		case SC_SONG_OF_MANA:
+		case SC_DANCE_WITH_WUG:
+			if (type != SC_SIREN)
+				status_change_end(bl, SC_SIREN, INVALID_TIMER);
+
+			if (type != SC_DEEP_SLEEP)
+				status_change_end(bl, SC_DEEP_SLEEP, INVALID_TIMER);
+
+			if (type != SC_SIRCLEOFNATURE)
+				status_change_end(bl, SC_SIRCLEOFNATURE, INVALID_TIMER);
+
+			if (type != SC_LERADS_DEW)
+				status_change_end(bl, SC_LERADS_DEW, INVALID_TIMER);
+
+			if (type != SC_MELODYOFSINK)
+				status_change_end(bl, SC_MELODYOFSINK, INVALID_TIMER);
+
+			if (type != SC_BEYOND_OF_WARCRY)
+				status_change_end(bl, SC_BEYOND_OF_WARCRY, INVALID_TIMER);
+
+			if (type != SC_UNLIMITED_HUMMING_VOICE)
+				status_change_end(bl, SC_UNLIMITED_HUMMING_VOICE, INVALID_TIMER);
+
+			if (type != SC_GLOOMYDAY)
+				status_change_end(bl, SC_GLOOMYDAY, INVALID_TIMER);
+
+			if (type != SC_SONG_OF_MANA)
+				status_change_end(bl, SC_SONG_OF_MANA, INVALID_TIMER);
+
+			if (type != SC_DANCE_WITH_WUG)
+				status_change_end(bl, SC_DANCE_WITH_WUG, INVALID_TIMER);
+
+			break;
+		case SC_REFLECTSHIELD:
+			status_change_end(bl, SC_LG_REFLECTDAMAGE, INVALID_TIMER);
+			break;
+		case SC_LG_REFLECTDAMAGE:
+			status_change_end(bl, SC_REFLECTSHIELD, INVALID_TIMER);
+			break;
+		case SC_SHIELDSPELL_DEF:
+		case SC_SHIELDSPELL_MDEF:
+		case SC_SHIELDSPELL_REF:
+			status_change_end(bl, SC_MAGNIFICAT, INVALID_TIMER);
+			status_change_end(bl, SC_SHIELDSPELL_DEF, INVALID_TIMER);
+			status_change_end(bl, SC_SHIELDSPELL_MDEF, INVALID_TIMER);
+			status_change_end(bl, SC_SHIELDSPELL_REF, INVALID_TIMER);
+			break;
+		case SC_GENTLETOUCH_ENERGYGAIN:
+		case SC_GENTLETOUCH_CHANGE:
+		case SC_GENTLETOUCH_REVITALIZE:
+			if (type != SC_GENTLETOUCH_REVITALIZE)
+				status_change_end(bl, SC_GENTLETOUCH_REVITALIZE, INVALID_TIMER);
+
+			if (type != SC_GENTLETOUCH_ENERGYGAIN)
+				status_change_end(bl, SC_GENTLETOUCH_ENERGYGAIN, INVALID_TIMER);
+
+			if (type != SC_GENTLETOUCH_CHANGE)
+				status_change_end(bl, SC_GENTLETOUCH_CHANGE, INVALID_TIMER);
+
+			break;
+		case SC_INVINCIBLE:
+			status_change_end(bl, SC_INVINCIBLEOFF, INVALID_TIMER);
+			break;
+		case SC_INVINCIBLEOFF:
+			status_change_end(bl, SC_INVINCIBLE, INVALID_TIMER);
+			break;
+		case SC_MAGICPOWER:
+		case SC_IMPOSITIO:
+			status_change_end(bl, type, INVALID_TIMER);
+			break;
+		case SC_SUNSTANCE:
+		case SC_LUNARSTANCE:
+		case SC_STARSTANCE:
+		case SC_UNIVERSESTANCE:
+			if (sc->data[type] != NULL)
+				break;
+			status_change_end(bl, SC_SUNSTANCE, INVALID_TIMER);
+			status_change_end(bl, SC_LUNARSTANCE, INVALID_TIMER);
+			status_change_end(bl, SC_STARSTANCE, INVALID_TIMER);
+			status_change_end(bl, SC_UNIVERSESTANCE, INVALID_TIMER);
+			break;
+		case SC_SOULLINK:
+		case SC_SOULGOLEM:
+		case SC_SOULSHADOW:
+		case SC_SOULFALCON:
+		case SC_SOULFAIRY:
+			if (sc->data[type] != NULL)
+				break;
+			status_change_end(bl, SC_SOULLINK, INVALID_TIMER);
+			status_change_end(bl, SC_SOULGOLEM, INVALID_TIMER);
+			status_change_end(bl, SC_SOULSHADOW, INVALID_TIMER);
+			status_change_end(bl, SC_SOULFALCON, INVALID_TIMER);
+			status_change_end(bl, SC_SOULFAIRY, INVALID_TIMER);
+			break;
 	}
 	PRAGMA_GCC46(GCC diagnostic pop)
 
@@ -10709,7 +10701,7 @@ static bool status_is_immune_to_status(struct status_change *sc, enum sc_type ty
 	nullpo_retr(true, sc);
 	if (sc->data[SC_REFRESH]) {
 		if (type >= SC_COMMON_MIN && type <= SC_COMMON_MAX) // Confirmed.
-			return true; // Immune to status ailements
+			return true;                                    // Immune to status ailements
 		PRAGMA_GCC46(GCC diagnostic push)
 		PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 		switch (type) {
@@ -10771,7 +10763,7 @@ static bool status_is_immune_to_status(struct status_change *sc, enum sc_type ty
  *------------------------------------------*/
 static int status_change_clear(struct block_list *bl, int type)
 {
-	struct status_change* sc;
+	struct status_change *sc;
 	int i;
 
 	sc = status->get_sc(bl);
@@ -10791,15 +10783,15 @@ static int status_change_clear(struct block_list *bl, int type)
 	if (sc->count == 0)
 		return 0;
 
-	for(i = 0; i < SC_MAX; i++) {
-		if(!sc->data[i])
+	for (i = 0; i < SC_MAX; i++) {
+		if (!sc->data[i])
 			continue;
 
-		if(type == 0){
-			if( status->get_sc_type(i)&SC_NO_REM_DEATH ) {
+		if (type == 0) {
+			if (status->get_sc_type(i) & SC_NO_REM_DEATH) {
 				switch (i) {
-					case SC_ARMOR_PROPERTY://Only when its Holy or Dark that it doesn't dispell on death
-						if( sc->data[i]->val2 != ELE_HOLY && sc->data[i]->val2 != ELE_DARK )
+					case SC_ARMOR_PROPERTY: // Only when its Holy or Dark that it doesn't dispell on death
+						if (sc->data[i]->val2 != ELE_HOLY && sc->data[i]->val2 != ELE_DARK)
 							break;
 						FALLTHROUGH
 					default:
@@ -10807,13 +10799,13 @@ static int status_change_clear(struct block_list *bl, int type)
 				}
 			}
 		}
-		if( type == 3 && status->get_sc_type(i)&SC_NO_CLEAR )
+		if (type == 3 && status->get_sc_type(i) & SC_NO_CLEAR)
 			continue;
 
 		status_change_end(bl, (sc_type)i, INVALID_TIMER);
 
-		if( type == 1 && sc->data[i] ) {
-			//If for some reason status_change_end decides to still keep the status when quitting. [Skotlex]
+		if (type == 1 && sc->data[i]) {
+			// If for some reason status_change_end decides to still keep the status when quitting. [Skotlex]
 			(sc->count)--;
 			if (sc->data[i]->timer != INVALID_TIMER)
 				timer->delete(sc->data[i]->timer, status->change_timer);
@@ -10822,7 +10814,7 @@ static int status_change_clear(struct block_list *bl, int type)
 		}
 	}
 
-	if( type == 0 || type == 2 )
+	if (type == 0 || type == 2)
 		clif->changeoption(bl);
 
 	return 1;
@@ -10840,7 +10832,7 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 	struct status_change_entry *sce;
 	struct status_data *st;
 	struct view_data *vd;
-	int opt_flag=0;
+	int opt_flag = 0;
 	bool invisible = false;
 	e_scb_flag calc_flag = SCB_NONE;
 
@@ -10848,44 +10840,44 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 
 	sc = status->get_sc(bl);
 
-	if(type < 0 || type >= SC_MAX || !sc || !(sce = sc->data[type]))
+	if (type < 0 || type >= SC_MAX || !sc || !(sce = sc->data[type]))
 		return 0;
 
-	sd = BL_CAST(BL_PC,bl);
+	sd = BL_CAST(BL_PC, bl);
 
 	if (sce->timer != tid && tid != INVALID_TIMER && sce->timer != INVALID_TIMER)
 		return 0;
 
 	st = status->get_status_data(bl);
 
-	if( sd && sce->infinite_duration && !sd->state.loggingout )
-		chrif->del_scdata_single(sd->status.account_id,sd->status.char_id,type);
+	if (sd && sce->infinite_duration && !sd->state.loggingout)
+		chrif->del_scdata_single(sd->status.account_id, sd->status.char_id, type);
 
 	if (tid == INVALID_TIMER) {
 		if (type == SC_ENDURE && sce->val4)
-			//Do not end infinite endure.
-				return 0;
-		if (sce->timer != INVALID_TIMER) //Could be a SC with infinite duration
-			timer->delete(sce->timer,status->change_timer);
+			// Do not end infinite endure.
+			return 0;
+		if (sce->timer != INVALID_TIMER) // Could be a SC with infinite duration
+			timer->delete(sce->timer, status->change_timer);
 		if (sc->opt1) {
 			PRAGMA_GCC46(GCC diagnostic push)
 			PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 			switch (type) {
 				//"Ugly workaround"  [Skotlex]
-				//delays status change ending so that a skill that sets opt1 fails to
-				//trigger when it also removed one
+				// delays status change ending so that a skill that sets opt1 fails to
+				// trigger when it also removed one
 				case SC_STONE:
-					sce->val3 = 0; //Petrify time counter.
+					sce->val3 = 0; // Petrify time counter.
 					FALLTHROUGH
 				case SC_FREEZE:
 				case SC_STUN:
 				case SC_SLEEP:
 					if (sce->val1) {
-						//Removing the 'level' shouldn't affect anything in the code
-						//since these SC are not affected by it, and it lets us know
-						//if we have already delayed this attack or not.
+						// Removing the 'level' shouldn't affect anything in the code
+						// since these SC are not affected by it, and it lets us know
+						// if we have already delayed this attack or not.
 						sce->val1 = 0;
-						sce->timer = timer->add(timer->gettick()+10, status->change_timer, bl->id, type);
+						sce->timer = timer->add(timer->gettick() + 10, status->change_timer, bl->id, type);
 						return 1;
 					}
 			}
@@ -10897,8 +10889,8 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 
 	sc->data[type] = NULL;
 
-	if( sd && status->dbs->DisplayType[type] ) {
-		status->display_remove(sd,type);
+	if (sd && status->dbs->DisplayType[type]) {
+		status->display_remove(sd, type);
 	}
 
 	if ((sc->option & (OPTION_HIDE | OPTION_CLOAK | OPTION_INVISIBLE)) != 0)
@@ -10913,41 +10905,34 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 
 	PRAGMA_GCC46(GCC diagnostic push)
 	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
-	switch(type) {
-		case SC_GRANITIC_ARMOR:
-		{
-			int damage = st->max_hp*sce->val3/100;
-			if(st->hp < damage) //to not kill him
-				damage = st->hp-1;
-			status->damage(NULL, bl, damage,0,0,1);
-		}
-			break;
+	switch (type) {
+		case SC_GRANITIC_ARMOR: {
+			int damage = st->max_hp * sce->val3 / 100;
+			if (st->hp < damage) // to not kill him
+				damage = st->hp - 1;
+			status->damage(NULL, bl, damage, 0, 0, 1);
+		} break;
 		case SC_PYROCLASTIC:
-			if(bl->type == BL_PC)
-				skill->break_equip(bl,EQP_WEAPON,10000,BCT_SELF);
+			if (bl->type == BL_PC)
+				skill->break_equip(bl, EQP_WEAPON, 10000, BCT_SELF);
 			break;
-		case SC_RUN:
-			{
-				struct unit_data *ud = unit->bl2ud(bl);
-				bool begin_spurt = true;
-				// Note: this int64 value is stored in two separate int32 variables (FIXME)
-				int64 starttick  = (int64)sce->val3&0x00000000ffffffffLL;
-					  starttick |= ((int64)sce->val4<<32)&0xffffffff00000000LL;
+		case SC_RUN: {
+			struct unit_data *ud = unit->bl2ud(bl);
+			bool begin_spurt = true;
+			// Note: this int64 value is stored in two separate int32 variables (FIXME)
+			int64 starttick = (int64)sce->val3 & 0x00000000ffffffffLL;
+			starttick |= ((int64)sce->val4 << 32) & 0xffffffff00000000LL;
 
-				if (ud) {
-					if(!ud->state.running)
-						begin_spurt = false;
-					ud->state.running = 0;
-					if (ud->walktimer != INVALID_TIMER)
-						unit->stop_walking(bl, STOPWALKING_FLAG_FIXPOS);
-				}
-				if (begin_spurt && sce->val1 >= 7
-				 && DIFF_TICK(timer->gettick(), starttick) <= 1000
-				 && (!sd || (sd->weapontype1 == W_FIST && sd->weapontype2 == W_FIST))
-				)
-					sc_start(bl, bl, SC_STRUP, 100, sce->val1, skill->get_time2(status->sc2skill(type), sce->val1), status->sc2skill(type));
+			if (ud) {
+				if (!ud->state.running)
+					begin_spurt = false;
+				ud->state.running = 0;
+				if (ud->walktimer != INVALID_TIMER)
+					unit->stop_walking(bl, STOPWALKING_FLAG_FIXPOS);
 			}
-			break;
+			if (begin_spurt && sce->val1 >= 7 && DIFF_TICK(timer->gettick(), starttick) <= 1000 && (!sd || (sd->weapontype1 == W_FIST && sd->weapontype2 == W_FIST)))
+				sc_start(bl, bl, SC_STRUP, 100, sce->val1, skill->get_time2(status->sc2skill(type), sce->val1), status->sc2skill(type));
+		} break;
 		case SC_AUTOBERSERK:
 			if (sc->data[SC_PROVOKE] && sc->data[SC_PROVOKE]->val2 == 1)
 				status_change_end(bl, SC_PROVOKE, INVALID_TIMER);
@@ -10956,150 +10941,136 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 		case SC_ENDURE:
 		case SC_DEFENDER:
 		case SC_REFLECTSHIELD:
-		case SC_AUTOGUARD:
-			{
-				struct map_session_data *tsd;
-				if( bl->type == BL_PC ) {
-					// Clear Status from others
-					if (sd != NULL ) {
-						int i;
-						for( i = 0; i < MAX_PC_DEVOTION; i++ ) {
-							if (sd->devotion[i] && (tsd = map->id2sd(sd->devotion[i])) != NULL && tsd->sc.data[type])
-								status_change_end(&tsd->bl, type, INVALID_TIMER);
-						}
-					}
-				} else if (bl->type == BL_MER) {
-					struct mercenary_data *mc = BL_UCAST(BL_MER, bl);
-					if (mc->devotion_flag) {
-						// Clear Status from Master
-						tsd = mc->master;
-						if (tsd != NULL && tsd->sc.data[type] != NULL)
+		case SC_AUTOGUARD: {
+			struct map_session_data *tsd;
+			if (bl->type == BL_PC) {
+				// Clear Status from others
+				if (sd != NULL) {
+					int i;
+					for (i = 0; i < MAX_PC_DEVOTION; i++) {
+						if (sd->devotion[i] && (tsd = map->id2sd(sd->devotion[i])) != NULL && tsd->sc.data[type])
 							status_change_end(&tsd->bl, type, INVALID_TIMER);
 					}
 				}
-			}
-			break;
-		case SC_DEVOTION:
-			{
-				struct block_list *d_bl = map->id2bl(sce->val1);
-				if( d_bl ) {
-					if (d_bl->type == BL_PC)
-						BL_UCAST(BL_PC, d_bl)->devotion[sce->val2] = 0;
-					else if (d_bl->type == BL_MER)
-						BL_UCAST(BL_MER, d_bl)->devotion_flag = 0;
-					clif->devotion(d_bl, NULL);
+			} else if (bl->type == BL_MER) {
+				struct mercenary_data *mc = BL_UCAST(BL_MER, bl);
+				if (mc->devotion_flag) {
+					// Clear Status from Master
+					tsd = mc->master;
+					if (tsd != NULL && tsd->sc.data[type] != NULL)
+						status_change_end(&tsd->bl, type, INVALID_TIMER);
 				}
-
-				status_change_end(bl, SC_AUTOGUARD, INVALID_TIMER);
-				status_change_end(bl, SC_DEFENDER, INVALID_TIMER);
-				status_change_end(bl, SC_REFLECTSHIELD, INVALID_TIMER);
-				status_change_end(bl, SC_ENDURE, INVALID_TIMER);
 			}
-			break;
+		} break;
+		case SC_DEVOTION: {
+			struct block_list *d_bl = map->id2bl(sce->val1);
+			if (d_bl) {
+				if (d_bl->type == BL_PC)
+					BL_UCAST(BL_PC, d_bl)->devotion[sce->val2] = 0;
+				else if (d_bl->type == BL_MER)
+					BL_UCAST(BL_MER, d_bl)->devotion_flag = 0;
+				clif->devotion(d_bl, NULL);
+			}
+
+			status_change_end(bl, SC_AUTOGUARD, INVALID_TIMER);
+			status_change_end(bl, SC_DEFENDER, INVALID_TIMER);
+			status_change_end(bl, SC_REFLECTSHIELD, INVALID_TIMER);
+			status_change_end(bl, SC_ENDURE, INVALID_TIMER);
+		} break;
 
 		case SC_BLADESTOP:
-			if(sce->val4) {
+			if (sce->val4) {
 				int target_id = sce->val4;
 				struct block_list *tbl = map->id2bl(target_id);
 				struct status_change *tsc = status->get_sc(tbl);
 				sce->val4 = 0;
-				if(tbl && tsc && tsc->data[SC_BLADESTOP]) {
+				if (tbl && tsc && tsc->data[SC_BLADESTOP]) {
 					tsc->data[SC_BLADESTOP]->val4 = 0;
 					status_change_end(tbl, SC_BLADESTOP, INVALID_TIMER);
 				}
 				clif->bladestop(bl, target_id, 0);
 			}
 			break;
-		case SC_DANCING:
-			{
-				struct map_session_data *dsd;
-				struct status_change_entry *dsc;
+		case SC_DANCING: {
+			struct map_session_data *dsd;
+			struct status_change_entry *dsc;
 
-				if (sce->val4 && sce->val4 != BCT_SELF && (dsd=map->id2sd(sce->val4)) != NULL) {
-					// end status on partner as well
-					dsc = dsd->sc.data[SC_DANCING];
-					if (dsc) {
-						//This will prevent recursive loops.
-						dsc->val2 = dsc->val4 = 0;
+			if (sce->val4 && sce->val4 != BCT_SELF && (dsd = map->id2sd(sce->val4)) != NULL) {
+				// end status on partner as well
+				dsc = dsd->sc.data[SC_DANCING];
+				if (dsc) {
+					// This will prevent recursive loops.
+					dsc->val2 = dsc->val4 = 0;
 
-						status_change_end(&dsd->bl, SC_DANCING, INVALID_TIMER);
-					}
+					status_change_end(&dsd->bl, SC_DANCING, INVALID_TIMER);
 				}
-
-				if (sce->val2) {
-					// erase associated land skill
-					struct skill_unit_group *group = skill->id2group(sce->val2);
-
-					sce->val2 = 0;
-
-					if( group )
-						skill->del_unitgroup(group);
-				}
-
-				if ((sce->val1&0xFFFF) == CG_MOONLIT)
-					clif->sc_end(bl, bl->id, AREA, status->get_sc_icon(SC_MOON));
-
-				status_change_end(bl, SC_LONGING, INVALID_TIMER);
 			}
-			break;
+
+			if (sce->val2) {
+				// erase associated land skill
+				struct skill_unit_group *group = skill->id2group(sce->val2);
+
+				sce->val2 = 0;
+
+				if (group)
+					skill->del_unitgroup(group);
+			}
+
+			if ((sce->val1 & 0xFFFF) == CG_MOONLIT)
+				clif->sc_end(bl, bl->id, AREA, status->get_sc_icon(SC_MOON));
+
+			status_change_end(bl, SC_LONGING, INVALID_TIMER);
+		} break;
 		case SC_NOCHAT:
 			if (sd && sd->status.manner < 0 && tid != INVALID_TIMER)
 				sd->status.manner = 0;
-			if (sd && tid == INVALID_TIMER)
-			{
-				clif->changestatus(sd,SP_MANNER,sd->status.manner);
-				clif->updatestatus(sd,SP_MANNER);
+			if (sd && tid == INVALID_TIMER) {
+				clif->changestatus(sd, SP_MANNER, sd->status.manner);
+				clif->updatestatus(sd, SP_MANNER);
 			}
 			break;
-		case SC_SPLASHER:
-			{
-				struct block_list *src=map->id2bl(sce->val3);
-				if(src && tid != INVALID_TIMER)
-					skill->castend_damage_id(src, bl, sce->val2, sce->val1, timer->gettick(), SD_LEVEL );
+		case SC_SPLASHER: {
+			struct block_list *src = map->id2bl(sce->val3);
+			if (src && tid != INVALID_TIMER)
+				skill->castend_damage_id(src, bl, sce->val2, sce->val1, timer->gettick(), SD_LEVEL);
+		} break;
+		case SC_RG_CCONFINE_S: {
+			struct block_list *src = sce->val2 ? map->id2bl(sce->val2) : NULL;
+			struct status_change *sc2 = src ? status->get_sc(src) : NULL;
+			if (src && sc2 && sc2->data[SC_RG_CCONFINE_M]) {
+				// If status was already ended, do nothing.
+				// Decrease count
+				if (--(sc2->data[SC_RG_CCONFINE_M]->val2) <= 0) // No more holds, free him up.
+					status_change_end(src, SC_RG_CCONFINE_M, INVALID_TIMER);
 			}
-			break;
-		case SC_RG_CCONFINE_S:
-			{
-				struct block_list *src = sce->val2 ? map->id2bl(sce->val2) : NULL;
-				struct status_change *sc2 = src ? status->get_sc(src) : NULL;
-				if (src && sc2 && sc2->data[SC_RG_CCONFINE_M]) {
-					//If status was already ended, do nothing.
-					//Decrease count
-					if (--(sc2->data[SC_RG_CCONFINE_M]->val2) <= 0) //No more holds, free him up.
-						status_change_end(src, SC_RG_CCONFINE_M, INVALID_TIMER);
-				}
-			}
-			break;
+		} break;
 		case SC_RG_CCONFINE_M:
 			if (sce->val2 > 0) {
-				//Caster has been unlocked... nearby chars need to be unlocked.
-				int range = 1
-					+skill->get_range2(bl, status->sc2skill(type), sce->val1)
-					+skill->get_range2(bl, TF_BACKSLIDING, 1); //Since most people use this to escape the hold....
-				map->foreachinarea(status->change_timer_sub,
-					bl->m, bl->x-range, bl->y-range, bl->x+range,bl->y+range,BL_CHAR,bl,sce,type,timer->gettick());
+				// Caster has been unlocked... nearby chars need to be unlocked.
+				int range = 1 + skill->get_range2(bl, status->sc2skill(type), sce->val1) + skill->get_range2(bl, TF_BACKSLIDING, 1); // Since most people use this to escape the hold....
+				map->foreachinarea(status->change_timer_sub, bl->m, bl->x - range, bl->y - range, bl->x + range, bl->y + range, BL_CHAR, bl, sce, type, timer->gettick());
 			}
 			break;
 		case SC_COMBOATTACK:
-			if( sd )
+			if (sd)
 				switch (sce->val1) {
-				case MO_COMBOFINISH:
-				case CH_TIGERFIST:
-				case CH_CHAINCRUSH:
-					clif->skillinfo(sd, MO_EXTREMITYFIST, 0);
-					break;
-				case TK_JUMPKICK:
-					clif->skillinfo(sd, TK_JUMPKICK, 0);
-					break;
-				case MO_TRIPLEATTACK:
-					if (pc->checkskill(sd, SR_DRAGONCOMBO) > 0)
-						clif->skillinfo(sd, SR_DRAGONCOMBO, 0);
-					break;
-				case SR_FALLENEMPIRE:
-					clif->skillinfo(sd, SR_GATEOFHELL, 0);
-					clif->skillinfo(sd, SR_TIGERCANNON, 0);
-					break;
-			}
+					case MO_COMBOFINISH:
+					case CH_TIGERFIST:
+					case CH_CHAINCRUSH:
+						clif->skillinfo(sd, MO_EXTREMITYFIST, 0);
+						break;
+					case TK_JUMPKICK:
+						clif->skillinfo(sd, TK_JUMPKICK, 0);
+						break;
+					case MO_TRIPLEATTACK:
+						if (pc->checkskill(sd, SR_DRAGONCOMBO) > 0)
+							clif->skillinfo(sd, SR_DRAGONCOMBO, 0);
+						break;
+					case SR_FALLENEMPIRE:
+						clif->skillinfo(sd, SR_GATEOFHELL, 0);
+						clif->skillinfo(sd, SR_TIGERCANNON, 0);
+						break;
+				}
 			break;
 
 		case SC_MARIONETTE_MASTER:
@@ -11108,10 +11079,9 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 				// check for partner and end their marionette status as well
 				enum sc_type type2 = (type == SC_MARIONETTE_MASTER) ? SC_MARIONETTE : SC_MARIONETTE_MASTER;
 				struct block_list *pbl = map->id2bl(sce->val1);
-				struct status_change* sc2 = pbl ? status->get_sc(pbl) : NULL;
+				struct status_change *sc2 = pbl ? status->get_sc(pbl) : NULL;
 
-				if (sc2 && sc2->data[type2])
-				{
+				if (sc2 && sc2->data[type2]) {
 					sc2->data[type2]->val1 = 0;
 					status_change_end(pbl, type2, INVALID_TIMER);
 				}
@@ -11119,58 +11089,59 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 			break;
 
 		case SC_BERSERK:
-			if(st->hp > 200 && sc && sc->data[SC__BLOODYLUST]) {
+			if (st->hp > 200 && sc && sc->data[SC__BLOODYLUST]) {
 				status_percent_heal(bl, 100, 0);
 				status_change_end(bl, SC__BLOODYLUST, INVALID_TIMER);
-			} else if(st->hp > 100 && sce->val2) //If val2 is removed, no HP penalty (dispelled?) [Skotlex]
+			} else if (st->hp > 100 && sce->val2) // If val2 is removed, no HP penalty (dispelled?) [Skotlex]
 				status->set_hp(bl, 100, STATUS_HEAL_DEFAULT);
-			if(sc->data[SC_ENDURE] && sc->data[SC_ENDURE]->val4 == 2) {
+			if (sc->data[SC_ENDURE] && sc->data[SC_ENDURE]->val4 == 2) {
 				sc->data[SC_ENDURE]->val4 = 0;
 				status_change_end(bl, SC_ENDURE, INVALID_TIMER);
 			}
 			sc_start4(bl, bl, SC_GDSKILL_REGENERATION, 100, 10, 0, 0, (RGN_HP | RGN_SP), skill->get_time(LK_BERSERK, sce->val1), LK_BERSERK);
-			if( type == SC_SATURDAY_NIGHT_FEVER ) //Sit down force of Saturday Night Fever has the duration of only 3 seconds.
+			if (type == SC_SATURDAY_NIGHT_FEVER) // Sit down force of Saturday Night Fever has the duration of only 3 seconds.
 				sc_start(bl, bl, SC_SITDOWN_FORCE, 100, sce->val1, skill->get_time2(WM_SATURDAY_NIGHT_FEVER, sce->val1), WM_SATURDAY_NIGHT_FEVER);
 			break;
 		case SC_GOSPEL:
-			if (sce->val3) { //Clear the group.
-				struct skill_unit_group* group = skill->id2group(sce->val3);
+			if (sce->val3) { // Clear the group.
+				struct skill_unit_group *group = skill->id2group(sce->val3);
 				sce->val3 = 0;
-				if( group )
+				if (group)
 					skill->del_unitgroup(group);
 			}
 			break;
 		case SC_HERMODE:
-			if(sce->val3 == BCT_SELF)
+			if (sce->val3 == BCT_SELF)
 				skill->clear_unitgroup(bl);
 			break;
-		case SC_BASILICA: //Clear the skill area. [Skotlex]
+		case SC_BASILICA: // Clear the skill area. [Skotlex]
 			skill->clear_unitgroup(bl);
 			break;
 		case SC_TRICKDEAD:
-			if (vd) vd->dead_sit = 0;
+			if (vd)
+				vd->dead_sit = 0;
 			break;
 		case SC_WARM:
 		case SC__MANHOLE:
-			if (sce->val4) { //Clear the group.
-				struct skill_unit_group* group = skill->id2group(sce->val4);
+			if (sce->val4) { // Clear the group.
+				struct skill_unit_group *group = skill->id2group(sce->val4);
 				sce->val4 = 0;
-				if( group ) /* might have been cleared before status ended, e.g. land protector */
+				if (group) /* might have been cleared before status ended, e.g. land protector */
 					skill->del_unitgroup(group);
 			}
 			break;
 		case SC_KAAHI:
-			//Delete timer if it exists.
+			// Delete timer if it exists.
 			if (sce->val4 != INVALID_TIMER)
-				timer->delete(sce->val4,status->kaahi_heal_timer);
+				timer->delete(sce->val4, status->kaahi_heal_timer);
 			break;
 		case SC_JAILED:
-			if(tid == INVALID_TIMER)
+			if (tid == INVALID_TIMER)
 				break;
-			//natural expiration.
-			if(sd && sd->mapindex == sce->val2)
-				pc->setpos(sd,(unsigned short)sce->val3,sce->val4&0xFFFF, sce->val4>>16, CLR_TELEPORT);
-			break; //guess hes not in jail :P
+			// natural expiration.
+			if (sd && sd->mapindex == sce->val2)
+				pc->setpos(sd, (unsigned short)sce->val3, sce->val4 & 0xFFFF, sce->val4 >> 16, CLR_TELEPORT);
+			break; // guess hes not in jail :P
 		case SC_HLIF_CHANGE:
 			if (tid == INVALID_TIMER)
 				break;
@@ -11183,7 +11154,7 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 				break;
 			// Note: vending/buying is closed by unit_remove_map, no
 			// need to do it here.
-			if( sd ) {
+			if (sd) {
 				map->quit(sd);
 				// Because map->quit calls status_change_end with tid INVALID_TIMER
 				// from here it's not neccesary to continue
@@ -11192,7 +11163,7 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 			}
 			break;
 		case SC_STOP:
-			if( sce->val2 ) {
+			if (sce->val2) {
 				struct block_list *tbl = map->id2bl(sce->val2);
 				struct status_change *tsc = NULL;
 				sce->val2 = 0;
@@ -11205,45 +11176,39 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 				status_change_end(bl, SC_ENDURE, INVALID_TIMER);
 			break;
 			/**
-			* 3rd Stuff
-			**/
+			 * 3rd Stuff
+			 **/
 		case SC_MILLENNIUMSHIELD:
-			clif->millenniumshield(bl,0);
+			clif->millenniumshield(bl, 0);
 			break;
 		case SC_HALLUCINATIONWALK:
 			sc_start(bl, bl, SC_HALLUCINATIONWALK_POSTDELAY, 100, sce->val1, skill->get_time2(GC_HALLUCINATIONWALK, sce->val1), GC_HALLUCINATIONWALK);
 			break;
-		case SC_WHITEIMPRISON:
-			{
-				struct block_list* src = map->id2bl(sce->val2);
-				if (tid == INVALID_TIMER || src == NULL)
-					break; // Terminated by Damage
-				status_fix_damage(src,bl,400*sce->val1,clif->damage(bl,bl,0,0,400*sce->val1,0,BDT_NORMAL,0));
+		case SC_WHITEIMPRISON: {
+			struct block_list *src = map->id2bl(sce->val2);
+			if (tid == INVALID_TIMER || src == NULL)
+				break; // Terminated by Damage
+			status_fix_damage(src, bl, 400 * sce->val1, clif->damage(bl, bl, 0, 0, 400 * sce->val1, 0, BDT_NORMAL, 0));
+		} break;
+		case SC_WUGDASH: {
+			struct unit_data *ud = unit->bl2ud(bl);
+			if (ud) {
+				ud->state.running = 0;
+				if (ud->walktimer != INVALID_TIMER)
+					unit->stop_walking(bl, STOPWALKING_FLAG_FIXPOS);
 			}
-			break;
-		case SC_WUGDASH:
-			{
-				struct unit_data *ud = unit->bl2ud(bl);
-				if (ud) {
-					ud->state.running = 0;
-					if (ud->walktimer != INVALID_TIMER)
-						unit->stop_walking(bl, STOPWALKING_FLAG_FIXPOS);
-				}
-			}
-			break;
+		} break;
 		case SC_ADORAMUS:
 			status_change_end(bl, SC_BLIND, INVALID_TIMER);
 			break;
-		case SC__SHADOWFORM:
-			{
-				struct map_session_data *s_sd = map->id2sd(sce->val2);
-				if( !s_sd )
-					break;
-				s_sd->shadowform_id = 0;
-			}
-			break;
+		case SC__SHADOWFORM: {
+			struct map_session_data *s_sd = map->id2sd(sce->val2);
+			if (!s_sd)
+				break;
+			s_sd->shadowform_id = 0;
+		} break;
 		case SC_SITDOWN_FORCE:
-			if( sd && pc_issit(sd) ) {
+			if (sd && pc_issit(sd)) {
 				pc->setstand(sd);
 				clif->standing(bl);
 			}
@@ -11252,48 +11217,46 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 		case SC_STEALTHFIELD_MASTER:
 		case SC_SV_ROOTTWIST:
 			if (sce->val2) {
-				struct skill_unit_group* group = skill->id2group(sce->val2);
+				struct skill_unit_group *group = skill->id2group(sce->val2);
 				sce->val2 = 0;
 				if (group) /* might have been cleared before status ended, e.g. land protector */
 					skill->del_unitgroup(group);
 			}
 			break;
 		case SC_BANDING:
-			if(sce->val4) {
+			if (sce->val4) {
 				struct skill_unit_group *group = skill->id2group(sce->val4);
 				sce->val4 = 0;
-				if( group ) /* might have been cleared before status ended, e.g. land protector */
+				if (group) /* might have been cleared before status ended, e.g. land protector */
 					skill->del_unitgroup(group);
 			}
 			break;
 		case SC_CURSEDCIRCLE_ATKER:
-			if( sce->val2 ) // used the default area size cause there is a chance the caster could knock back and can't clear the target.
-				map->foreachinrange(status->change_timer_sub, bl, battle_config.area_size,BL_CHAR, bl, sce, SC_CURSEDCIRCLE_TARGET, timer->gettick());
+			if (sce->val2) // used the default area size cause there is a chance the caster could knock back and can't clear the target.
+				map->foreachinrange(status->change_timer_sub, bl, battle_config.area_size, BL_CHAR, bl, sce, SC_CURSEDCIRCLE_TARGET, timer->gettick());
 			break;
 		case SC_RAISINGDRAGON:
-			if ( sd && sce->val2 && !pc_isdead(sd) ) {
+			if (sd && sce->val2 && !pc_isdead(sd)) {
 				int i;
-				if ( (i = (sd->spiritball - 5)) > 0 )
+				if ((i = (sd->spiritball - 5)) > 0)
 					pc->delspiritball(sd, i, 0);
 				status_change_end(bl, SC_EXPLOSIONSPIRITS, INVALID_TIMER);
 			}
 			break;
-		case SC_CURSEDCIRCLE_TARGET:
-		{
+		case SC_CURSEDCIRCLE_TARGET: {
 			struct block_list *src = map->id2bl(sce->val2);
 			struct status_change *ssc = status->get_sc(src);
-			if( ssc && ssc->data[SC_CURSEDCIRCLE_ATKER] && --(ssc->data[SC_CURSEDCIRCLE_ATKER]->val2) == 0 ){
+			if (ssc && ssc->data[SC_CURSEDCIRCLE_ATKER] && --(ssc->data[SC_CURSEDCIRCLE_ATKER]->val2) == 0) {
 				status_change_end(src, SC_CURSEDCIRCLE_ATKER, INVALID_TIMER);
 				clif->bladestop(bl, sce->val2, 0);
 			}
-		}
-			break;
+		} break;
 		case SC_BLOOD_SUCKER:
-			if( sce->val2 ){
+			if (sce->val2) {
 				struct block_list *src = map->id2bl(sce->val2);
-				if(src) {
+				if (src) {
 					struct status_change *ssc = status->get_sc(src);
-					if( ssc )
+					if (ssc)
 						ssc->bs_counter--;
 				}
 			}
@@ -11302,7 +11265,7 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 			status_change_end(bl, SC_FIRE_EXPANSION_TEAR_GAS_SOB, INVALID_TIMER);
 			break;
 		case SC_CLAIRVOYANCE:
-			calc_flag = SCB_ALL;/* required for overlapping */
+			calc_flag = SCB_ALL; /* required for overlapping */
 			break;
 		case SC_FULL_THROTTLE:
 			sc_start(bl, bl, SC_REBOUND, 100, sce->val1, skill->get_time2(ALL_FULL_THROTTLE, sce->val1), ALL_FULL_THROTTLE);
@@ -11313,14 +11276,12 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 				status_change_end(bl, (sc_type)sce->val2, INVALID_TIMER);
 			break;
 		case SC_OVERED_BOOST:
-			switch( bl->type ){
-				case BL_HOM:
-				{
+			switch (bl->type) {
+				case BL_HOM: {
 					struct homun_data *hd = BL_CAST(BL_HOM, bl);
-						if( hd )
-							hd->homunculus.hunger = max(1, hd->homunculus.hunger - 50);
-				}
-					break;
+					if (hd)
+						hd->homunculus.hunger = max(1, hd->homunculus.hunger - 50);
+				} break;
 				case BL_PC:
 					status_zap(bl, 0, status_get_max_sp(bl) / 2);
 					break;
@@ -11521,29 +11482,26 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 				}
 			}
 			break;
-		case SC_HOWLING_MINE:
-			{
-				// Drop the material from target if expired
-				struct item it;
-				struct map_session_data *caster = NULL;
-				struct skill_condition req;
+		case SC_HOWLING_MINE: {
+			// Drop the material from target if expired
+			struct item it;
+			struct map_session_data *caster = NULL;
+			struct skill_condition req;
 
-				if (sce->val3 || status->isdead(bl) || !(caster = map->id2sd(sce->val2)))
-					break;
+			if (sce->val3 || status->isdead(bl) || !(caster = map->id2sd(sce->val2)))
+				break;
 
-				req = skill->get_requirement(sd, RL_H_MINE, 1);
+			req = skill->get_requirement(sd, RL_H_MINE, 1);
 
-				if (!itemdb->exists(req.itemid[0]))
-					break;
-				memset(&it, 0, sizeof(it));
-				it.nameid = req.itemid[0];
-				it.amount = max(req.amount[0], 1);
-				it.identify = 1;
-				map->addflooritem(&sd->bl, &it, it.amount, bl->m, bl->x, bl->y, caster->status.char_id, 0, 0, 4, false);
-			}
-			break;
-		case SC_CRIMSON_MARKER:
-		{
+			if (!itemdb->exists(req.itemid[0]))
+				break;
+			memset(&it, 0, sizeof(it));
+			it.nameid = req.itemid[0];
+			it.amount = max(req.amount[0], 1);
+			it.identify = 1;
+			map->addflooritem(&sd->bl, &it, it.amount, bl->m, bl->x, bl->y, caster->status.char_id, 0, 0, 4, false);
+		} break;
+		case SC_CRIMSON_MARKER: {
 			// Remove mark data from caster
 			struct map_session_data *caster = map->id2sd(sce->val2);
 			uint8 i = 0;
@@ -11555,8 +11513,7 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 				caster->c_marker[i] = 0;
 				clif->crimson_marker(caster, bl, true);
 			}
-		}
-			break;
+		} break;
 		case SC_SUNSTANCE:
 			status_change_end(bl, SC_LIGHTOFSUN, INVALID_TIMER);
 			break;
@@ -11576,15 +11533,13 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 			status_change_end(bl, SC_LIGHTOFSTAR, INVALID_TIMER);
 			status_change_end(bl, SC_DIMENSION, INVALID_TIMER);
 			break;
-		case SC_FLASHKICK:
-		{
-			struct map_session_data *tsd =  map->id2sd(sce->val1);
+		case SC_FLASHKICK: {
+			struct map_session_data *tsd = map->id2sd(sce->val1);
 
 			if (tsd == NULL)
 				break;
 			tsd->stellar_mark[sce->val2] = 0;
-		}
-			break;
+		} break;
 		case SC_GRAVITYCONTROL:
 			status_fix_damage(bl, bl, sce->val2, clif->damage(bl, bl, 0, 0, sce->val2, 0, BDT_NORMAL, 0));
 			clif->specialeffect(bl, 223, AREA);
@@ -11599,24 +11554,21 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 			if (sd != NULL)
 				pc->delsoulball(sd, sd->soulball, false);
 			break;
-		case SC_SOULUNITY:
-		{
+		case SC_SOULUNITY: {
 			struct map_session_data *tsd;
 
 			if (!(tsd = map->id2sd(sce->val2)))
 				break;
 
 			tsd->united_soul[sce->val3] = 0;
-		}
-			break;
-
+		} break;
 	}
 	PRAGMA_GCC46(GCC diagnostic pop)
 
 	opt_flag = 1;
 	PRAGMA_GCC46(GCC diagnostic push)
 	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
-	switch(type) {
+	switch (type) {
 		case SC_STONE:
 		case SC_FREEZE:
 		case SC_STUN:
@@ -11631,7 +11583,7 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 		case SC_CURSE:
 		case SC_SILENCE:
 		case SC_BLIND:
-			sc->opt2 &= ~(1<<(type-SC_POISON));
+			sc->opt2 &= ~(1 << (type - SC_POISON));
 			break;
 		case SC_DPOISON:
 			sc->opt2 &= ~OPT2_DPOISON;
@@ -11643,7 +11595,7 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 
 		case SC_HIDING:
 			sc->option &= ~OPTION_HIDE;
-			opt_flag|= 2|4; //Check for warp trigger + AoE trigger
+			opt_flag |= 2 | 4; // Check for warp trigger + AoE trigger
 			break;
 		case SC_CLOAKING:
 		case SC_CLOAKINGEXCEED:
@@ -11651,12 +11603,12 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 			sc->option &= ~OPTION_CLOAK;
 			/* Fall through */
 		case SC_CAMOUFLAGE:
-			opt_flag|= 2;
+			opt_flag |= 2;
 			break;
 		case SC__INVISIBILITY:
 		case SC_CHASEWALK:
-			sc->option &= ~(OPTION_CHASEWALK|OPTION_CLOAK);
-			opt_flag|= 2;
+			sc->option &= ~(OPTION_CHASEWALK | OPTION_CLOAK);
+			opt_flag |= 2;
 			break;
 		case SC_SIGHT:
 			sc->option &= ~OPTION_SIGHT;
@@ -11698,7 +11650,7 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 		case SC_FUSION:
 			sc->option &= ~OPTION_FLYING;
 			break;
-			//opt3
+			// opt3
 		case SC_TWOHANDQUICKEN:
 		case SC_ONEHANDQUICKEN:
 		case SC_SPEARQUICKEN:
@@ -11711,7 +11663,7 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 		case SC_OVERTHRUSTMAX:
 		case SC_SWOO:
 			sc->opt3 &= ~OPT3_OVERTHRUST;
-			if( type == SC_SWOO )
+			if (type == SC_SWOO)
 				opt_flag = 8;
 			else
 				opt_flag = 0;
@@ -11721,9 +11673,8 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 			sc->opt3 &= ~OPT3_ENERGYCOAT;
 			opt_flag = 0;
 			break;
-		case SC_INCATKRATE: //Simulated Explosion spirits effect.
-			if (bl->type != BL_MOB)
-			{
+		case SC_INCATKRATE: // Simulated Explosion spirits effect.
+			if (bl->type != BL_MOB) {
 				opt_flag = 0;
 				break;
 			}
@@ -11756,7 +11707,7 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 			break;
 #endif // 0
 		case SC_DANCING:
-			if ((sce->val1&0xFFFF) == CG_MOONLIT)
+			if ((sce->val1 & 0xFFFF) == CG_MOONLIT)
 				sc->opt3 &= ~OPT3_MOONLIT;
 			opt_flag = 0;
 			break;
@@ -11769,7 +11720,7 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 			sc->opt3 &= ~OPT3_ASSUMPTIO;
 			opt_flag = 0;
 			break;
-		case SC_WARM: //SG skills [Komurka]
+		case SC_WARM: // SG skills [Komurka]
 			sc->opt3 &= ~OPT3_WARM;
 			opt_flag = 0;
 			break;
@@ -11801,7 +11752,7 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 	PRAGMA_GCC46(GCC diagnostic pop)
 
 #ifdef ANTI_MAYAP_CHEAT
-	if (invisible && !(sc->option&(OPTION_HIDE|OPTION_CLOAK|OPTION_INVISIBLE))) {
+	if (invisible && !(sc->option & (OPTION_HIDE | OPTION_CLOAK | OPTION_INVISIBLE))) {
 		clif->slide(bl, bl->x, bl->y);
 		clif->fixpos(bl);
 	}
@@ -11813,10 +11764,10 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 			clif->party_hp(sd);
 	}
 
-	if (calc_flag&SCB_DYE) { //Restore DYE color
+	if (calc_flag & SCB_DYE) { // Restore DYE color
 		if (vd && !vd->cloth_color && sce->val4)
-			clif->changelook(bl,LOOK_CLOTHES_COLOR,sce->val4);
-		calc_flag&=~SCB_DYE;
+			clif->changelook(bl, LOOK_CLOTHES_COLOR, sce->val4);
+		calc_flag &= ~SCB_DYE;
 	}
 
 #if 0 // Currently No SC's use this
@@ -11827,33 +11778,33 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 	}
 #endif
 
-	//On Aegis, when turning off a status change, first goes the sc packet, then the option packet.
+	// On Aegis, when turning off a status change, first goes the sc packet, then the option packet.
 	if (remove_icon)
 		clif->sc_end(bl, bl->id, AREA, status->get_sc_icon(type));
 
-	if( opt_flag&8 ) //bugreport:681
+	if (opt_flag & 8) // bugreport:681
 		clif->changeoption2(bl);
-	else if(opt_flag) {
+	else if (opt_flag) {
 		clif->changeoption(bl);
-		if( sd && opt_flag&0x4 ) {
+		if (sd && opt_flag & 0x4) {
 			clif->changelook(bl, LOOK_BASE, sd->vd.class);
 			clif->get_weapon_view(sd, &sd->vd.weapon, &sd->vd.shield);
-			clif->changelook(bl,LOOK_WEAPON,sd->vd.weapon);
-			clif->changelook(bl,LOOK_SHIELD,sd->vd.shield);
-			clif->changelook(bl,LOOK_CLOTHES_COLOR,cap_value(sd->status.clothes_color,0,battle_config.max_cloth_color));
-			clif->changelook(bl,LOOK_BODY2,cap_value(sd->status.body,0,battle_config.max_body_style));
+			clif->changelook(bl, LOOK_WEAPON, sd->vd.weapon);
+			clif->changelook(bl, LOOK_SHIELD, sd->vd.shield);
+			clif->changelook(bl, LOOK_CLOTHES_COLOR, cap_value(sd->status.clothes_color, 0, battle_config.max_cloth_color));
+			clif->changelook(bl, LOOK_BODY2, cap_value(sd->status.body, 0, battle_config.max_body_style));
 		}
 	}
 
 	if (calc_flag)
-		status_calc_bl(bl,calc_flag);
+		status_calc_bl(bl, calc_flag);
 
-	if(opt_flag&4) //Out of hiding, invoke on place.
-		skill->unit_move(bl,timer->gettick(),1);
+	if (opt_flag & 4) // Out of hiding, invoke on place.
+		skill->unit_move(bl, timer->gettick(), 1);
 
 	if (opt_flag & 2 && sd) {
 		if (map->getcell(bl->m, bl, bl->x, bl->y, CELL_CHKNPC))
-			npc->touch_areanpc(sd,bl->m,bl->x,bl->y); //Trigger on-touch event.
+			npc->touch_areanpc(sd, bl->m, bl->x, bl->y); // Trigger on-touch event.
 		else
 			npc->untouch_areanpc(sd, bl->m, bl->x, bl->y);
 	}
@@ -11872,17 +11823,17 @@ static int kaahi_heal_timer(int tid, int64 tick, int id, intptr_t data)
 	struct status_data *st;
 	int hp;
 
-	if ((bl=map->id2bl(id)) == NULL || (sc=status->get_sc(bl)) == NULL || (sce=sc->data[SC_KAAHI]) == NULL)
+	if ((bl = map->id2bl(id)) == NULL || (sc = status->get_sc(bl)) == NULL || (sce = sc->data[SC_KAAHI]) == NULL)
 		return 0;
 
-	if(sce->val4 != tid) {
+	if (sce->val4 != tid) {
 		ShowError("kaahi_heal_timer: Timer mismatch: %d != %d\n", tid, sce->val4);
 		sce->val4 = INVALID_TIMER;
 		return 0;
 	}
 
-	st=status->get_status_data(bl);
-	if(!status->charge(bl, 0, sce->val3)) {
+	st = status->get_status_data(bl);
+	if (!status->charge(bl, 0, sce->val3)) {
 		sce->val4 = INVALID_TIMER;
 		return 0;
 	}
@@ -11913,19 +11864,19 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 
 	bl = map->id2bl(id);
 	if (!bl) {
-		ShowDebug("status_change_timer: Null pointer id: %d data: %"PRIdPTR"\n", id, data);
+		ShowDebug("status_change_timer: Null pointer id: %d data: %" PRIdPTR "\n", id, data);
 		return 0;
 	}
 	sc = status->get_sc(bl);
 	st = status->get_status_data(bl);
 
 	if (!sc || (sce = sc->data[type]) == NULL) {
-		ShowDebug("status_change_timer: Null pointer id: %d data: %"PRIdPTR" bl-type: %u\n", id, data, bl->type);
+		ShowDebug("status_change_timer: Null pointer id: %d data: %" PRIdPTR " bl-type: %u\n", id, data, bl->type);
 		return 0;
 	}
 
 	if (sce->timer != tid) {
-		ShowError("status_change_timer: Mismatch for type %d: %d != %d (bl id %d)\n",type,tid,sce->timer, bl->id);
+		ShowError("status_change_timer: Mismatch for type %d: %d != %d (bl id %d)\n", type, tid, sce->timer, bl->id);
 		return 0;
 	}
 
@@ -11934,49 +11885,51 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 	sd = BL_CAST(BL_PC, bl);
 
 	// set the next timer of the sce (don't assume the status still exists)
-#define sc_timer_next(t,f,i,d) do { \
-	if ((sce=sc->data[type])) \
-		sce->timer = timer->add((t),(f),(i),(d)); \
-	else \
-		ShowError("status_change_timer: Unexpected NULL status change id: %d data: %"PRIdPTR"\n", id, data); \
-} while(0)
+#define sc_timer_next(t, f, i, d)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             \
+	do {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      \
+		if ((sce = sc->data[type]))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           \
+			sce->timer = timer->add((t), (f), (i), (d));                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      \
+		else                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  \
+			ShowError("status_change_timer: Unexpected NULL status change id: %d data: %" PRIdPTR "\n", id, data);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            \
+	} while (0)
 
 	PRAGMA_GCC46(GCC diagnostic push)
 	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
-	switch(type) {
+	switch (type) {
 		case SC_MAXIMIZEPOWER:
 		case SC_CLOAKING:
-			if(!status->charge(bl, 0, 1))
-				break; //Not enough SP to continue.
-			sc_timer_next(sce->val2+tick, status->change_timer, bl->id, data);
+			if (!status->charge(bl, 0, 1))
+				break; // Not enough SP to continue.
+			sc_timer_next(sce->val2 + tick, status->change_timer, bl->id, data);
 			return 0;
 
 		case SC_CHASEWALK:
-			if(!status->charge(bl, 0, sce->val4))
-				break; //Not enough SP to continue.
+			if (!status->charge(bl, 0, sce->val4))
+				break; // Not enough SP to continue.
 
 			if (!sc->data[SC_CHASEWALK2]) {
 				sc_start(bl, bl, SC_CHASEWALK2, 100, 1 << (sce->val1 - 1),
-					(sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_ROGUE ? 10 : 1) //SL bonus -> x10 duration
-					* skill->get_time2(status->sc2skill(type), sce->val1), status->sc2skill(type));
+				         (sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_ROGUE ? 10 : 1) // SL bonus -> x10 duration
+				             * skill->get_time2(status->sc2skill(type), sce->val1),
+				         status->sc2skill(type));
 			}
-			sc_timer_next(sce->val2+tick, status->change_timer, bl->id, data);
+			sc_timer_next(sce->val2 + tick, status->change_timer, bl->id, data);
 			return 0;
 
 		case SC_SKA:
-			if(--(sce->val2)>0) {
-				sce->val3 = rnd()%100; //Random defense.
-				sc_timer_next(1000+tick, status->change_timer,bl->id, data);
+			if (--(sce->val2) > 0) {
+				sce->val3 = rnd() % 100; // Random defense.
+				sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
 				return 0;
 			}
 			break;
 
 		case SC_HIDING:
-			if(--(sce->val2)>0) {
-				if(sce->val2 % sce->val4 == 0 && !status->charge(bl, 0, 1))
-					break; //Fail if it's time to substract SP and there isn't.
+			if (--(sce->val2) > 0) {
+				if (sce->val2 % sce->val4 == 0 && !status->charge(bl, 0, 1))
+					break; // Fail if it's time to substract SP and there isn't.
 
-				sc_timer_next(1000+tick, status->change_timer,bl->id, data);
+				sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
 				return 0;
 			}
 			break;
@@ -11984,52 +11937,52 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 		case SC_SIGHT:
 		case SC_RUWACH:
 		case SC_WZ_SIGHTBLASTER:
-			if(type == SC_WZ_SIGHTBLASTER) {
-				//Restore trap immunity
-				if(sce->val4%2)
+			if (type == SC_WZ_SIGHTBLASTER) {
+				// Restore trap immunity
+				if (sce->val4 % 2)
 					sce->val4--;
-				map->foreachinrange(status->change_timer_sub, bl, sce->val3, BL_CHAR|BL_SKILL, bl, sce, type, tick);
+				map->foreachinrange(status->change_timer_sub, bl, sce->val3, BL_CHAR | BL_SKILL, bl, sce, type, tick);
 			} else
 				map->foreachinrange(status->change_timer_sub, bl, sce->val3, BL_CHAR, bl, sce, type, tick);
 
-			if( --(sce->val2)>0 ){
+			if (--(sce->val2) > 0) {
 				sce->val4 += 20; // use for Shadow Form 2 seconds checking.
-				sc_timer_next(20+tick, status->change_timer, bl->id, data);
+				sc_timer_next(20 + tick, status->change_timer, bl->id, data);
 				return 0;
 			}
 			break;
 
 		case SC_PROVOKE:
-			if(sce->val2) { //Auto-provoke (it is ended in status->heal)
-				sc_timer_next(1000*60+tick, status->change_timer, bl->id, data );
+			if (sce->val2) { // Auto-provoke (it is ended in status->heal)
+				sc_timer_next(1000 * 60 + tick, status->change_timer, bl->id, data);
 				return 0;
 			}
 			break;
 
 		case SC_STONE:
-			if(sc->opt1 == OPT1_STONEWAIT && sce->val3) {
+			if (sc->opt1 == OPT1_STONEWAIT && sce->val3) {
 				sce->val4 = 0;
 				unit->stop_walking(bl, STOPWALKING_FLAG_FIXPOS);
 				unit->stop_attack(bl);
 				sc->opt1 = OPT1_STONE;
 				clif->changeoption(bl);
-				sc_timer_next(1000+tick, status->change_timer, bl->id, data );
+				sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
 				status_calc_bl(bl, status->dbs->ChangeFlagTable[type]);
 				// Remove Lex Aeterna from BL_PC types
 				if (bl->type == BL_PC && sc->data[SC_LEXAETERNA] != NULL)
 					status_change_end(bl, SC_LEXAETERNA, INVALID_TIMER);
 				return 0;
 			}
-			if(--(sce->val3) > 0) {
-				if(++(sce->val4)%5 == 0 && st->hp > st->max_hp/4)
+			if (--(sce->val3) > 0) {
+				if (++(sce->val4) % 5 == 0 && st->hp > st->max_hp / 4)
 					status_percent_damage(NULL, bl, 1, 0, false);
-				sc_timer_next(1000+tick, status->change_timer, bl->id, data );
+				sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
 				return 0;
 			}
 			break;
 
 		case SC_POISON:
-			if (st->hp <= max(st->max_hp / 4, sce->val4)) //Stop damaging after 25% HP left.
+			if (st->hp <= max(st->max_hp / 4, sce->val4)) // Stop damaging after 25% HP left.
 				break;
 			FALLTHROUGH
 		case SC_DPOISON:
@@ -12039,7 +11992,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 					return 0;
 				}
 				if (sce->val2 != 0 && bl->type == BL_MOB) {
-					struct block_list* src = map->id2bl(sce->val2);
+					struct block_list *src = map->id2bl(sce->val2);
 					if (src != NULL)
 						mob->log_damage(BL_UCAST(BL_MOB, bl), src, sce->val4);
 				}
@@ -12054,37 +12007,38 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 			break;
 
 		case SC_TENSIONRELAX:
-			if(st->max_hp > st->hp && --(sce->val3) > 0) {
-				sc_timer_next(sce->val4+tick, status->change_timer, bl->id, data);
+			if (st->max_hp > st->hp && --(sce->val3) > 0) {
+				sc_timer_next(sce->val4 + tick, status->change_timer, bl->id, data);
 				return 0;
 			}
 			break;
 
 		case SC_KNOWLEDGE:
-			if (!sd) break;
-		{
-			int i;
-			for (i = 0; i < MAX_PC_FEELHATE; i++) {
-				if (bl->m == sd->feel_map[i].m) {
-					//Timeout will be handled by pc->setpos
-					sce->timer = INVALID_TIMER;
-					return 0;
+			if (!sd)
+				break;
+			{
+				int i;
+				for (i = 0; i < MAX_PC_FEELHATE; i++) {
+					if (bl->m == sd->feel_map[i].m) {
+						// Timeout will be handled by pc->setpos
+						sce->timer = INVALID_TIMER;
+						return 0;
+					}
 				}
 			}
-		}
 			break;
 
 		case SC_BLOODING:
 			if (--(sce->val4) >= 0) {
-				int hp =  rnd()%600 + 200;
-				struct block_list* src = map->id2bl(sce->val2);
-				if( src && bl && bl->type == BL_MOB ) {
-					mob->log_damage(BL_UCAST(BL_MOB, bl), src, sd != NULL || hp < st->hp ? hp : st->hp-1);
+				int hp = rnd() % 600 + 200;
+				struct block_list *src = map->id2bl(sce->val2);
+				if (src && bl && bl->type == BL_MOB) {
+					mob->log_damage(BL_UCAST(BL_MOB, bl), src, sd != NULL || hp < st->hp ? hp : st->hp - 1);
 				}
 				map->freeblock_lock();
-				status_fix_damage(src, bl, sd||hp<st->hp?hp:st->hp-1, 1);
-				if( sc->data[type] ) {
-					if( st->hp == 1 ) {
+				status_fix_damage(src, bl, sd || hp < st->hp ? hp : st->hp - 1, 1);
+				if (sc->data[type]) {
+					if (st->hp == 1) {
 						map->freeblock_unlock();
 						break;
 					}
@@ -12103,7 +12057,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 				// val1 < 0 = per max% | val1 > 0 = exact amount
 				int hp = 0;
 				if (st->hp < st->max_hp)
-					hp = (sce->val1 < 0) ? (int)(sd->status.max_hp * -1 * sce->val1 / 100.) : sce->val1 ;
+					hp = (sce->val1 < 0) ? (int)(sd->status.max_hp * -1 * sce->val1 / 100.) : sce->val1;
 				status->heal(bl, hp, 0, STATUS_HEAL_SHOWEFFECT);
 				sc_timer_next((sce->val2 * 1000) + tick, status->change_timer, bl->id, data);
 				return 0;
@@ -12115,7 +12069,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 				struct mob_data *boss_md = map->id2boss(sce->val1);
 				if (boss_md != NULL) {
 					if (sd->bl.m != boss_md->bl.m) { // Changed map
- 						return 0;
+						return 0;
 					} else if (boss_md->bl.prev != NULL) { // Boss monster still alive, update x and y position on map
 						sce->val2 = 0;
 						clif->bossmapinfo(sd->fd, boss_md, BOSS_INFO_ALIVE);
@@ -12130,13 +12084,13 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 			}
 			break;
 
-		case SC_DANCING: //SP consumption by time of dancing skills
-			{
-				int s = 0;
-				int sp = 1;
-				if (--sce->val3 <= 0)
-					break;
-				switch(sce->val1&0xFFFF){
+		case SC_DANCING: // SP consumption by time of dancing skills
+		{
+			int s = 0;
+			int sp = 1;
+			if (--sce->val3 <= 0)
+				break;
+			switch (sce->val1 & 0xFFFF) {
 				case BD_RICHMANKIM:
 				case BD_DRUMBATTLEFIELD:
 				case BD_RINGNIBELUNGEN:
@@ -12144,13 +12098,13 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 				case BA_DISSONANCE:
 				case BA_ASSASSINCROSS:
 				case DC_UGLYDANCE:
-					s=3;
+					s = 3;
 					break;
 				case BD_LULLABY:
 				case BD_ETERNALCHAOS:
 				case BD_ROKISWEIL:
 				case DC_FORTUNEKISS:
-					s=4;
+					s = 4;
 					break;
 				case CG_HERMODE:
 				case BD_INTOABYSS:
@@ -12158,120 +12112,117 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 				case DC_HUMMING:
 				case BA_POEMBRAGI:
 				case DC_SERVICEFORYOU:
-					s=5;
+					s = 5;
 					break;
 				case BA_APPLEIDUN:
-	#ifdef RENEWAL
-					s=5;
-	#else
-					s=6;
-	#endif
+#ifdef RENEWAL
+					s = 5;
+#else
+					s = 6;
+#endif
 					break;
 				case CG_MOONLIT:
-					//Moonlit's cost is 4sp*skill_lv [Skotlex]
-					sp= 4*(sce->val1>>16);
-					//Upkeep is also every 10 secs.
+					// Moonlit's cost is 4sp*skill_lv [Skotlex]
+					sp = 4 * (sce->val1 >> 16);
+					// Upkeep is also every 10 secs.
 					FALLTHROUGH
 				case DC_DONTFORGETME:
-					s=10;
+					s = 10;
 					break;
-				}
-				if( s != 0 && sce->val3 % s == 0 ) {
-					if (sc->data[SC_LONGING])
-						sp*= 3;
-					if (!status->charge(bl, 0, sp))
-						break;
-				}
-				sc_timer_next(1000+tick, status->change_timer, bl->id, data);
-				return 0;
 			}
-			break;
+			if (s != 0 && sce->val3 % s == 0) {
+				if (sc->data[SC_LONGING])
+					sp *= 3;
+				if (!status->charge(bl, 0, sp))
+					break;
+			}
+			sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
+			return 0;
+		} break;
 		case SC_BERSERK:
 			// 5% every 10 seconds [DracoRPG]
-			if( --( sce->val3 ) > 0 && status->charge(bl, sce->val2, 0) && st->hp > 100 ) {
-				sc_timer_next(sce->val4+tick, status->change_timer, bl->id, data);
+			if (--(sce->val3) > 0 && status->charge(bl, sce->val2, 0) && st->hp > 100) {
+				sc_timer_next(sce->val4 + tick, status->change_timer, bl->id, data);
 				return 0;
 			}
 			break;
 
 		case SC_NOCHAT:
-			if(sd) {
+			if (sd) {
 				sd->status.manner++;
-				clif->changestatus(sd,SP_MANNER,sd->status.manner);
-				clif->updatestatus(sd,SP_MANNER);
+				clif->changestatus(sd, SP_MANNER, sd->status.manner);
+				clif->updatestatus(sd, SP_MANNER);
 				if (sd->status.manner < 0) {
-					//Every 60 seconds your manner goes up by 1 until it gets back to 0.
-					sc_timer_next(60000+tick, status->change_timer, bl->id, data);
+					// Every 60 seconds your manner goes up by 1 until it gets back to 0.
+					sc_timer_next(60000 + tick, status->change_timer, bl->id, data);
 					return 0;
 				}
 			}
 			break;
 
 		case SC_SPLASHER:
-#if 0 // custom Venom Splasher countdown timer
+#if 0  // custom Venom Splasher countdown timer
 			if (sce->val4 % 1000 == 0 && bl && bl->type == BL_PC) {
 				char counter[10];
 				snprintf (counter, 10, "%d", sce->val4/1000);
 				clif->message(BL_UCCAST(BL_PC, bl)->fd, counter);
 			}
 #endif // 0
-			if((sce->val4 -= 500) > 0) {
+			if ((sce->val4 -= 500) > 0) {
 				sc_timer_next(500 + tick, status->change_timer, bl->id, data);
 				return 0;
 			}
 			break;
 
 		case SC_MARIONETTE_MASTER:
-		case SC_MARIONETTE:
-			{
-				struct block_list *pbl = map->id2bl(sce->val1);
-				if( pbl && check_distance_bl(bl, pbl, 7) ) {
-					sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
-					return 0;
-				}
+		case SC_MARIONETTE: {
+			struct block_list *pbl = map->id2bl(sce->val1);
+			if (pbl && check_distance_bl(bl, pbl, 7)) {
+				sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
+				return 0;
 			}
-			break;
+		} break;
 
 		case SC_GOSPEL:
-			if(sce->val4 == BCT_SELF && --(sce->val2) > 0) {
+			if (sce->val4 == BCT_SELF && --(sce->val2) > 0) {
 				int hp, sp;
 				hp = (sce->val1 > 5) ? 45 : 30;
 				sp = (sce->val1 > 5) ? 35 : 20;
-				if(!status->charge(bl, hp, sp))
+				if (!status->charge(bl, hp, sp))
 					break;
-				sc_timer_next(10000+tick, status->change_timer, bl->id, data);
+				sc_timer_next(10000 + tick, status->change_timer, bl->id, data);
 				return 0;
 			}
 			break;
 
 		case SC_JAILED:
-			if(sce->val1 == INT_MAX || --(sce->val1) > 0) {
-				sc_timer_next(60000+tick, status->change_timer, bl->id,data);
+			if (sce->val1 == INT_MAX || --(sce->val1) > 0) {
+				sc_timer_next(60000 + tick, status->change_timer, bl->id, data);
 				return 0;
 			}
 			break;
 
 		case SC_BLIND:
-			if(sc->data[SC_FOGWALL]) {
-				//Blind lasts forever while you are standing on the fog.
-				sc_timer_next(5000+tick, status->change_timer, bl->id, data);
+			if (sc->data[SC_FOGWALL]) {
+				// Blind lasts forever while you are standing on the fog.
+				sc_timer_next(5000 + tick, status->change_timer, bl->id, data);
 				return 0;
 			}
 			break;
 		case SC_ABUNDANCE:
-			if(--(sce->val4) > 0) {
+			if (--(sce->val4) > 0) {
 				status->heal(bl, 0, 60, STATUS_HEAL_DEFAULT);
-				sc_timer_next(10000+tick, status->change_timer, bl->id, data);
+				sc_timer_next(10000 + tick, status->change_timer, bl->id, data);
 			}
 			break;
 
 		case SC_PYREXIA:
-			if( --(sce->val4) > 0 ) {
+			if (--(sce->val4) > 0) {
 				map->freeblock_lock();
-				clif->damage(bl,bl,status_get_amotion(bl),status_get_dmotion(bl)+500,100,0,BDT_NORMAL,0);
-				status_fix_damage(NULL,bl,100,0);
-				if( sc->data[type] ) {
-					sc_timer_next(3000+tick,status->change_timer,bl->id,data);
+				clif->damage(bl, bl, status_get_amotion(bl), status_get_dmotion(bl) + 500, 100, 0, BDT_NORMAL, 0);
+				status_fix_damage(NULL, bl, 100, 0);
+				if (sc->data[type]) {
+					sc_timer_next(3000 + tick, status->change_timer, bl->id, data);
 				}
 				map->freeblock_unlock();
 				return 0;
@@ -12279,14 +12230,14 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 			break;
 
 		case SC_LEECHESEND:
-			if( --(sce->val4) > 0 ) {
-				int damage = st->max_hp/100; // {Target VIT x (New Poison Research Skill Level - 3)} + (Target HP/100)
+			if (--(sce->val4) > 0) {
+				int damage = st->max_hp / 100; // {Target VIT x (New Poison Research Skill Level - 3)} + (Target HP/100)
 				damage += st->vit * (sce->val1 - 3);
-				unit->skillcastcancel(bl,2);
+				unit->skillcastcancel(bl, 2);
 				map->freeblock_lock();
-				status->damage(bl, bl, damage, 0, clif->damage(bl,bl,status_get_amotion(bl),status_get_dmotion(bl)+500,damage,1,BDT_NORMAL,0), 1);
-				if( sc->data[type] ) {
-					sc_timer_next(1000 + tick, status->change_timer, bl->id, data );
+				status->damage(bl, bl, damage, 0, clif->damage(bl, bl, status_get_amotion(bl), status_get_dmotion(bl) + 500, damage, 1, BDT_NORMAL, 0), 1);
+				if (sc->data[type]) {
+					sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
 				}
 				map->freeblock_unlock();
 				return 0;
@@ -12294,26 +12245,26 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 			break;
 
 		case SC_MAGICMUSHROOM:
-			if( --(sce->val4) > 0 ) {
+			if (--(sce->val4) > 0) {
 				bool flag = 0;
 				int damage = st->max_hp * 3 / 100;
-				if( st->hp <= damage )
+				if (st->hp <= damage)
 					damage = st->hp - 1; // Cannot Kill
 
-				if( damage > 0 ) { // 3% Damage each 4 seconds
+				if (damage > 0) { // 3% Damage each 4 seconds
 					map->freeblock_lock();
-					status_zap(bl,damage,0);
+					status_zap(bl, damage, 0);
 					flag = !sc->data[type]; // Killed? Should not
 					map->freeblock_unlock();
 				}
 
-				if( !flag ) { // Random Skill Cast
+				if (!flag) { // Random Skill Cast
 					map->freeblock_lock();
 
-					if (sd && !pc_issit(sd)) { //can't cast if sit
+					if (sd && !pc_issit(sd)) { // can't cast if sit
 						int mushroom_skill_id = 0;
 						unit->stop_attack(bl);
-						unit->skillcastcancel(bl,0);
+						unit->skillcastcancel(bl, 0);
 						do {
 							int i = rnd() % MAX_SKILL_MAGICMUSHROOM_DB;
 							mushroom_skill_id = skill->dbs->magicmushroom_db[i].skill_id;
@@ -12322,9 +12273,9 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 						skill->castend_type(skill->get_casttype(mushroom_skill_id), bl, bl, mushroom_skill_id, 1, tick, 0);
 					}
 
-					clif->emotion(bl,E_HEH);
-					if( sc->data[type] )
-						sc_timer_next(4000+tick,status->change_timer,bl->id,data);
+					clif->emotion(bl, E_HEH);
+					if (sc->data[type])
+						sc_timer_next(4000 + tick, status->change_timer, bl->id, data);
 
 					map->freeblock_unlock();
 				}
@@ -12333,13 +12284,13 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 			break;
 
 		case SC_TOXIN:
-			if( --(sce->val4) > 0 ) {
-				//Damage is every 10 seconds including 3%sp drain.
+			if (--(sce->val4) > 0) {
+				// Damage is every 10 seconds including 3%sp drain.
 				map->freeblock_lock();
-				clif->damage(bl,bl,status_get_amotion(bl),1,1,0,BDT_NORMAL,0);
-				status->damage(NULL, bl, 1, st->max_sp * 3 / 100, 0, 0); //cancel dmg only if cancelable
-				if( sc->data[type] ) {
-					sc_timer_next(10000 + tick, status->change_timer, bl->id, data );
+				clif->damage(bl, bl, status_get_amotion(bl), 1, 1, 0, BDT_NORMAL, 0);
+				status->damage(NULL, bl, 1, st->max_sp * 3 / 100, 0, 0); // cancel dmg only if cancelable
+				if (sc->data[type]) {
+					sc_timer_next(10000 + tick, status->change_timer, bl->id, data);
 				}
 				map->freeblock_unlock();
 				return 0;
@@ -12347,37 +12298,37 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 			break;
 
 		case SC_OBLIVIONCURSE:
-			if( --(sce->val4) > 0 ) {
-				clif->emotion(bl,E_WHAT);
-				sc_timer_next(3000 + tick, status->change_timer, bl->id, data );
+			if (--(sce->val4) > 0) {
+				clif->emotion(bl, E_WHAT);
+				sc_timer_next(3000 + tick, status->change_timer, bl->id, data);
 				return 0;
 			}
 			break;
 
 		case SC_WEAPONBLOCKING:
-			if( --(sce->val4) > 0 ) {
-				if( !status->charge(bl,0,3) )
+			if (--(sce->val4) > 0) {
+				if (!status->charge(bl, 0, 3))
 					break;
-				sc_timer_next(5000+tick,status->change_timer,bl->id,data);
+				sc_timer_next(5000 + tick, status->change_timer, bl->id, data);
 				return 0;
 			}
 			break;
 
 		case SC_CLOAKINGEXCEED:
-			if(!status->charge(bl,0,10-sce->val1))
+			if (!status->charge(bl, 0, 10 - sce->val1))
 				break;
 			sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
 			return 0;
 
 		case SC_RENOVATIO:
-			if (--(sce->val4) > 0 ){
+			if (--(sce->val4) > 0) {
 				int heal = st->max_hp * 3 / 100;
 				if (sc->count && sc->data[SC_AKAITSUKI] && heal)
 					heal = ~heal + 1;
 
 				map->freeblock_lock();
 				status->heal(bl, heal, 0, STATUS_HEAL_SHOWEFFECT);
-				if( sc->data[type] ) {
+				if (sc->data[type]) {
 					sc_timer_next(5000 + tick, status->change_timer, bl->id, data);
 				}
 				map->freeblock_unlock();
@@ -12387,15 +12338,15 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 			break;
 
 		case SC_BURNING:
-			if( --(sce->val4) > 0 ) {
+			if (--(sce->val4) > 0) {
 				struct block_list *src = map->id2bl(sce->val3);
 				int damage = 1000 + 3 * status_get_max_hp(bl) / 100; // Deals fixed (1000 + 3%*MaxHP)
 
 				map->freeblock_lock();
-				clif->damage(bl,bl,0,0,damage,1,BDT_MULTIENDURE,0); //damage is like endure effect with no walk delay
+				clif->damage(bl, bl, 0, 0, damage, 1, BDT_MULTIENDURE, 0); // damage is like endure effect with no walk delay
 				status->damage(src, bl, damage, 0, 0, 1);
 
-				if( sc->data[type]){ // Target still lives. [LimitLine]
+				if (sc->data[type]) { // Target still lives. [LimitLine]
 					sc_timer_next(3000 + tick, status->change_timer, bl->id, data);
 				}
 				map->freeblock_unlock();
@@ -12404,8 +12355,8 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 			break;
 
 		case SC_FEAR:
-			if( --(sce->val4) > 0 ) {
-				if( sce->val2 > 0 )
+			if (--(sce->val4) > 0) {
+				if (sce->val2 > 0)
 					sce->val2--;
 				sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
 				return 0;
@@ -12417,8 +12368,8 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 		case SC_SUMMON3:
 		case SC_SUMMON4:
 		case SC_SUMMON5:
-			if( --(sce->val4) > 0 ) {
-				if( !status->charge(bl, 0, 1) )
+			if (--(sce->val4) > 0) {
+				if (!status->charge(bl, 0, 1))
 					break;
 				sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
 				return 0;
@@ -12426,9 +12377,9 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 			break;
 
 		case SC_READING_SB:
-			if( !status->charge(bl, 0, sce->val2) ) {
+			if (!status->charge(bl, 0, sce->val2)) {
 				int i;
-				for(i = SC_SPELLBOOK1; i <= SC_SPELLBOOK7; i++) // Also remove stored spell as well.
+				for (i = SC_SPELLBOOK1; i <= SC_SPELLBOOK7; i++) // Also remove stored spell as well.
 					status_change_end(bl, (sc_type)i, INVALID_TIMER);
 				break;
 			}
@@ -12436,7 +12387,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 			return 0;
 
 		case SC_ELECTRICSHOCKER:
-			if( --(sce->val4) > 0 ) {
+			if (--(sce->val4) > 0) {
 				status->charge(bl, 0, (int64)st->max_sp / 100 * sce->val1);
 				sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
 				return 0;
@@ -12444,16 +12395,16 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 			break;
 
 		case SC_CAMOUFLAGE:
-			if(--(sce->val4) > 0) {
-				status->charge(bl,0,7 - sce->val1);
+			if (--(sce->val4) > 0) {
+				status->charge(bl, 0, 7 - sce->val1);
 				sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
 				return 0;
 			}
 			break;
 
 		case SC__REPRODUCE:
-			if( --(sce->val4) >= 0 ) {
-				if( !status->charge(bl, 0, 9 - (1 + sce->val1) / 2) )
+			if (--(sce->val4) >= 0) {
+				if (!status->charge(bl, 0, 9 - (1 + sce->val1) / 2))
 					break;
 				sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
 				return 0;
@@ -12461,8 +12412,8 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 			break;
 
 		case SC__SHADOWFORM:
-			if( --(sce->val4) > 0 ) {
-				if( !status->charge(bl, 0, sce->val1 - (sce->val1 - 1)) )
+			if (--(sce->val4) > 0) {
+				if (!status->charge(bl, 0, sce->val1 - (sce->val1 - 1)))
 					break;
 				sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
 				return 0;
@@ -12470,8 +12421,8 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 			break;
 
 		case SC__INVISIBILITY:
-			if( --(sce->val4) >= 0 ) {
-				if( !status->charge(bl, 0, status_get_max_sp(bl) * (12 - sce->val1*2) / 100) )
+			if (--(sce->val4) >= 0) {
+				if (!status->charge(bl, 0, status_get_max_sp(bl) * (12 - sce->val1 * 2) / 100))
 					break;
 				sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
 				return 0;
@@ -12479,27 +12430,27 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 			break;
 
 		case SC_STRIKING:
-			if( --(sce->val4) > 0 ) {
-				if( !status->charge(bl,0, sce->val1 ) )
+			if (--(sce->val4) > 0) {
+				if (!status->charge(bl, 0, sce->val1))
 					break;
 				sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
 				return 0;
 			}
 			break;
 		case SC_BLOOD_SUCKER:
-			if( --(sce->val4) > 0 ) {
+			if (--(sce->val4) > 0) {
 				struct block_list *src = map->id2bl(sce->val2);
 				int damage;
 				if (src == NULL || (status->isdead(src) || src->m != bl->m || distance_bl(src, bl) >= 12))
 					break;
 				map->freeblock_lock();
-				damage =  sce->val3;
-				status->damage(src, bl, damage, 0, clif->damage(bl,bl,st->amotion,st->dmotion+200,damage,1,BDT_NORMAL,0), 1);
-				unit->skillcastcancel(bl,1);
-				if ( sc->data[type] ) {
+				damage = sce->val3;
+				status->damage(src, bl, damage, 0, clif->damage(bl, bl, st->amotion, st->dmotion + 200, damage, 1, BDT_NORMAL, 0), 1);
+				unit->skillcastcancel(bl, 1);
+				if (sc->data[type]) {
 					sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
 				}
-				status->heal(src, damage*(5 + 5 * sce->val1)/100, 0, STATUS_HEAL_DEFAULT); // 5 + 5% per level
+				status->heal(src, damage * (5 + 5 * sce->val1) / 100, 0, STATUS_HEAL_DEFAULT); // 5 + 5% per level
 				map->freeblock_unlock();
 				return 0;
 			}
@@ -12513,7 +12464,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 				clif->damage(bl, bl, 0, 0, damage, 1, BDT_MULTIENDURE, 0);
 				status->damage(src, bl, damage, 0, 0, 1);
 
-				if( sc->data[type] ) {
+				if (sc->data[type]) {
 					sc_timer_next(2000 + tick, status->change_timer, bl->id, data);
 				}
 				map->freeblock_unlock();
@@ -12528,16 +12479,15 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 			}
 			break;
 		case SC_SIREN:
-			if( --(sce->val4) > 0 ) {
-				clif->emotion(bl,E_LV);
+			if (--(sce->val4) > 0) {
+				clif->emotion(bl, E_LV);
 				sc_timer_next(2000 + tick, status->change_timer, bl->id, data);
 				return 0;
 			}
 			break;
 
 		case SC_DEEP_SLEEP:
-			if( --(sce->val4) >= 0 )
-			{// Recovers 3% of the player's MaxHP/MaxSP every 2 seconds.
+			if (--(sce->val4) >= 0) { // Recovers 3% of the player's MaxHP/MaxSP every 2 seconds.
 				status->heal(bl, st->max_hp * 3 / 100, st->max_sp * 3 / 100, STATUS_HEAL_SHOWEFFECT);
 				sc_timer_next(2000 + tick, status->change_timer, bl->id, data);
 				return 0;
@@ -12545,8 +12495,8 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 			break;
 
 		case SC_SIRCLEOFNATURE:
-			if( --(sce->val4) >= 0 ) {
-				if( !status->charge(bl,0,sce->val3) )
+			if (--(sce->val4) >= 0) {
+				if (!status->charge(bl, 0, sce->val3))
 					break;
 				status->heal(bl, sce->val2, 0, STATUS_HEAL_FORCED);
 				sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
@@ -12555,7 +12505,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 			break;
 
 		case SC_SONG_OF_MANA:
-			if( --(sce->val4) >= 0 ) {
+			if (--(sce->val4) >= 0) {
 				status->heal(bl, 0, sce->val3, STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT);
 				sc_timer_next(5000 + tick, status->change_timer, bl->id, data);
 				return 0;
@@ -12563,26 +12513,26 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 			break;
 
 		case SC_SATURDAY_NIGHT_FEVER:
-			if( --(sce->val3) >= 0 ) {
-				if( !status->charge(bl, st->max_hp * 1 / 100, st->max_sp * 1 / 100) )
-				break;
-				sc_timer_next(3000+tick, status->change_timer, bl->id, data);
+			if (--(sce->val3) >= 0) {
+				if (!status->charge(bl, st->max_hp * 1 / 100, st->max_sp * 1 / 100))
+					break;
+				sc_timer_next(3000 + tick, status->change_timer, bl->id, data);
 				return 0;
 			}
 			break;
 
 		case SC_MELODYOFSINK:
-			if( --(sce->val4) >= 0 ) {
-				status->charge(bl, 0, st->max_sp * ( 2 * sce->val1 + 2 * sce->val2 ) / 100);
-				sc_timer_next(1000+tick, status->change_timer, bl->id, data);
+			if (--(sce->val4) >= 0) {
+				status->charge(bl, 0, st->max_sp * (2 * sce->val1 + 2 * sce->val2) / 100);
+				sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
 				return 0;
 			}
 			break;
 
 		case SC_COLD:
-			if( --(sce->val4) > 0 ) {
+			if (--(sce->val4) > 0) {
 				// Drains 2% of HP and 1% of SP every seconds.
-				if( bl->type != BL_MOB) // doesn't work on mobs
+				if (bl->type != BL_MOB) // doesn't work on mobs
 					status->charge(bl, st->max_hp * 2 / 100, st->max_sp / 100);
 				sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
 				return 0;
@@ -12590,22 +12540,23 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 			break;
 
 		case SC_FORCEOFVANGUARD:
-			if( !status->charge(bl, 0, (24 - 4 * sce->val1)) )
+			if (!status->charge(bl, 0, (24 - 4 * sce->val1)))
 				break;
 			sc_timer_next(10000 + tick, status->change_timer, bl->id, data);
 			return 0;
 
 		case SC_BANDING:
-			if( status->charge(bl, 0, 7 - sce->val1) ) {
-				if( sd ) pc->banding(sd, sce->val1);
+			if (status->charge(bl, 0, 7 - sce->val1)) {
+				if (sd)
+					pc->banding(sd, sce->val1);
 				sc_timer_next(5000 + tick, status->change_timer, bl->id, data);
 				return 0;
 			}
 			break;
 
 		case SC_LG_REFLECTDAMAGE:
-			if( --(sce->val4) >= 0 ) {
-				if( !status->charge(bl,0,10) )
+			if (--(sce->val4) >= 0) {
+				if (!status->charge(bl, 0, 10))
 					break;
 				sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
 				return 0;
@@ -12613,77 +12564,76 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 			break;
 
 		case SC_OVERHEAT_LIMITPOINT:
-			if( --(sce->val1) > 0 ) { // Cooling
+			if (--(sce->val1) > 0) { // Cooling
 				sc_timer_next(30000 + tick, status->change_timer, bl->id, data);
 			}
 			break;
 
-		case SC_OVERHEAT:
-			{
-				int damage = st->max_hp / 100; // Suggestion 1% each second
-				if( damage >= st->hp ) damage = st->hp - 1; // Do not kill, just keep you with 1 hp minimum
-				map->freeblock_lock();
-				status_fix_damage(NULL,bl,damage,clif->damage(bl,bl,0,0,damage,0,BDT_NORMAL,0));
-				if( sc->data[type] ) {
-					sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
-				}
-				map->freeblock_unlock();
-				return 0;
-			}
-			break;
-
-		case SC_MAGNETICFIELD:
-			{
-				if( --(sce->val3) <= 0 )
-					break; // Time out
-				if( sce->val2 == bl->id ) {
-					if( !status->charge(bl,0,50) )
-						break; // No more SP status should end, and in the next second will end for the other affected players
-				} else {
-					struct block_list *src = map->id2bl(sce->val2);
-					struct status_change *ssc;
-					if( !src || (ssc = status->get_sc(src)) == NULL || !ssc->data[SC_MAGNETICFIELD] )
-						break; // Source no more under Magnetic Field
-				}
+		case SC_OVERHEAT: {
+			int damage = st->max_hp / 100; // Suggestion 1% each second
+			if (damage >= st->hp)
+				damage = st->hp - 1; // Do not kill, just keep you with 1 hp minimum
+			map->freeblock_lock();
+			status_fix_damage(NULL, bl, damage, clif->damage(bl, bl, 0, 0, damage, 0, BDT_NORMAL, 0));
+			if (sc->data[type]) {
 				sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
 			}
-			break;
+			map->freeblock_unlock();
+			return 0;
+		} break;
+
+		case SC_MAGNETICFIELD: {
+			if (--(sce->val3) <= 0)
+				break; // Time out
+			if (sce->val2 == bl->id) {
+				if (!status->charge(bl, 0, 50))
+					break; // No more SP status should end, and in the next second will end for the other affected players
+			} else {
+				struct block_list *src = map->id2bl(sce->val2);
+				struct status_change *ssc;
+				if (!src || (ssc = status->get_sc(src)) == NULL || !ssc->data[SC_MAGNETICFIELD])
+					break; // Source no more under Magnetic Field
+			}
+			sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
+		} break;
 
 		case SC_STEALTHFIELD_MASTER:
-			if(--(sce->val4) >= 0) {
+			if (--(sce->val4) >= 0) {
 				// 1% SP Upkeep Cost
 				int sp = st->max_sp / 100;
 
-				if( st->sp <= sp )
-					status_change_end(bl,SC_STEALTHFIELD_MASTER,INVALID_TIMER);
+				if (st->sp <= sp)
+					status_change_end(bl, SC_STEALTHFIELD_MASTER, INVALID_TIMER);
 
-				if( !status->charge(bl,0,sp) )
+				if (!status->charge(bl, 0, sp))
 					break;
 
-				if( !sc->data[SC_STEALTHFIELD_MASTER] )
+				if (!sc->data[SC_STEALTHFIELD_MASTER])
 					break;
 
-				sc_timer_next((2000 + 1000 * sce->val1)+tick,status->change_timer,bl->id, data);
+				sc_timer_next((2000 + 1000 * sce->val1) + tick, status->change_timer, bl->id, data);
 				return 0;
 			}
 			break;
 
 		case SC_INSPIRATION:
-			if(--(sce->val4) >= 0) {
+			if (--(sce->val4) >= 0) {
 				int hp = st->max_hp * (35 - 5 * sce->val1) / 1000;
 				int sp = st->max_sp * (45 - 5 * sce->val1) / 1000;
 
-				if( !status->charge(bl,hp,sp) ) break;
+				if (!status->charge(bl, hp, sp))
+					break;
 
-				sc_timer_next(5000+tick,status->change_timer,bl->id, data);
+				sc_timer_next(5000 + tick, status->change_timer, bl->id, data);
 				return 0;
 			}
 			break;
 
 		case SC_RAISINGDRAGON:
 			// 1% every 5 seconds [Jobbie]
-			if( --(sce->val3)>0 && status->charge(bl, sce->val2, 0) ) {
-				if( !sc->data[type] ) return 0;
+			if (--(sce->val3) > 0 && status->charge(bl, sce->val2, 0)) {
+				if (!sc->data[type])
+					return 0;
 				sc_timer_next(5000 + tick, status->change_timer, bl->id, data);
 				return 0;
 			}
@@ -12709,17 +12659,16 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 		case SC_WATER_DROP:
 		case SC_WIND_CURTAIN:
 		case SC_STONE_SHIELD:
-			if(status->charge(bl, 0, sce->val2) && (sce->val4==-1 || (sce->val4-=sce->val3)>=0)) {
+			if (status->charge(bl, 0, sce->val2) && (sce->val4 == -1 || (sce->val4 -= sce->val3) >= 0)) {
 				sc_timer_next(sce->val3 + tick, status->change_timer, bl->id, data);
 				return 0;
-			} else
-				if (bl->type == BL_ELEM)
-					elemental->change_mode(BL_CAST(BL_ELEM,bl),MAX_ELESKILLTREE);
+			} else if (bl->type == BL_ELEM)
+				elemental->change_mode(BL_CAST(BL_ELEM, bl), MAX_ELESKILLTREE);
 			break;
 		case SC_STOMACHACHE:
 			if (--(sce->val4) > 0) {
 				status->charge(bl, 0, sce->val3); // Reduce 8 SP every 10 seconds.
-				if (sd && !pc_issit(sd)) {     // Force to sit every 10 seconds.
+				if (sd && !pc_issit(sd)) {        // Force to sit every 10 seconds.
 					pc_stop_walking(sd, STOPWALKING_FLAG_FIXPOS | STOPWALKING_FLAG_NEXTCELL);
 					pc_stop_attack(sd);
 					pc_setsit(sd);
@@ -12749,43 +12698,45 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 			sc_timer_next(600000 + tick, status->change_timer, bl->id, data);
 			return 0;
 		case SC_MEIKYOUSISUI:
-			if( --(sce->val4) > 0 ) {
-				status->heal(bl, st->max_hp * (sce->val1+1) / 100, st->max_sp * sce->val1 / 100, STATUS_HEAL_DEFAULT);
+			if (--(sce->val4) > 0) {
+				status->heal(bl, st->max_hp * (sce->val1 + 1) / 100, st->max_sp * sce->val1 / 100, STATUS_HEAL_DEFAULT);
 				sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
 				return 0;
 			}
 			break;
 		case SC_IZAYOI:
 		case SC_KAGEMUSYA:
-			if( --(sce->val2) > 0 ) {
-				if(!status->charge(bl, 0, 1)) break;
-				sc_timer_next(1000+tick, status->change_timer, bl->id, data);
+			if (--(sce->val2) > 0) {
+				if (!status->charge(bl, 0, 1))
+					break;
+				sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
 				return 0;
 			}
 			break;
 		case SC_ANGRIFFS_MODUS:
-			if(--(sce->val4) > 0) { //drain hp/sp
-				if( !status->charge(bl,100,20) ) break;
-				sc_timer_next(1000+tick,status->change_timer,bl->id, data);
+			if (--(sce->val4) > 0) { // drain hp/sp
+				if (!status->charge(bl, 100, 20))
+					break;
+				sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
 				return 0;
 			}
 			break;
 		case SC_FULL_THROTTLE:
-			if( --(sce->val4) >= 0 ) {
+			if (--(sce->val4) >= 0) {
 				status_percent_damage(bl, bl, 0, sce->val2, false);
 				sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
 				return 0;
 			}
 			break;
 		case SC_KINGS_GRACE:
-			if( --(sce->val4) > 0 ) {
+			if (--(sce->val4) > 0) {
 				status_percent_heal(bl, sce->val2, 0);
 				sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
 				return 0;
 			}
 			break;
 		case SC_FRIGG_SONG:
-			if( --(sce->val4) > 0 ) {
+			if (--(sce->val4) > 0) {
 				status->heal(bl, sce->val3, 0, STATUS_HEAL_DEFAULT);
 				sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
 				return 0;
@@ -12864,7 +12815,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 	PRAGMA_GCC46(GCC diagnostic pop)
 
 	// default for all non-handled control paths is to end the status
-	return status_change_end( bl,type,tid );
+	return status_change_end(bl, type, tid);
 #undef sc_timer_next
 }
 
@@ -12873,11 +12824,11 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
  *------------------------------------------*/
 static int status_change_timer_sub(struct block_list *bl, va_list ap)
 {
-	struct status_change* tsc;
+	struct status_change *tsc;
 
-	struct block_list* src = va_arg(ap,struct block_list*);
-	struct status_change_entry* sce = va_arg(ap,struct status_change_entry*);
-	enum sc_type type = (sc_type)va_arg(ap,int); //gcc: enum args get promoted to int
+	struct block_list *src = va_arg(ap, struct block_list *);
+	struct status_change_entry *sce = va_arg(ap, struct status_change_entry *);
+	enum sc_type type = (sc_type)va_arg(ap, int); // gcc: enum args get promoted to int
 	int64 tick = va_arg(ap, int64);
 
 	nullpo_ret(bl);
@@ -12889,10 +12840,10 @@ static int status_change_timer_sub(struct block_list *bl, va_list ap)
 
 	PRAGMA_GCC46(GCC diagnostic push)
 	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
-	switch( type ) {
-		case SC_SIGHT: /* Reveal hidden ennemy on 3*3 range */
-			if( tsc && tsc->data[SC__SHADOWFORM] && (sce && sce->val4 >0 && sce->val4%2000 == 0) && // for every 2 seconds do the checking
-				rnd()%100 < 100-tsc->data[SC__SHADOWFORM]->val1*10 ) // [100 - (Skill Level x 10)] %
+	switch (type) {
+		case SC_SIGHT:                                                                                 /* Reveal hidden ennemy on 3*3 range */
+			if (tsc && tsc->data[SC__SHADOWFORM] && (sce && sce->val4 > 0 && sce->val4 % 2000 == 0) && // for every 2 seconds do the checking
+			    rnd() % 100 < 100 - tsc->data[SC__SHADOWFORM]->val1 * 10)                              // [100 - (Skill Level x 10)] %
 				status_change_end(bl, SC__SHADOWFORM, INVALID_TIMER);
 			/* Fall through */
 		case SC_CONCENTRATION:
@@ -12903,39 +12854,33 @@ static int status_change_timer_sub(struct block_list *bl, va_list ap)
 			status_change_end(bl, SC_NEWMOON, INVALID_TIMER);
 			break;
 		case SC_RUWACH: /* Reveal hidden target and deal little dammages if ennemy */
-			if (tsc && (tsc->data[SC_HIDING] || tsc->data[SC_CLOAKING] ||
-				tsc->data[SC_CAMOUFLAGE] || tsc->data[SC_CLOAKINGEXCEED] || tsc->data[SC_NEWMOON])) {
-					status_change_end(bl, SC_HIDING, INVALID_TIMER);
-					status_change_end(bl, SC_CLOAKING, INVALID_TIMER);
-					status_change_end(bl, SC_CAMOUFLAGE, INVALID_TIMER);
-					status_change_end(bl, SC_CLOAKINGEXCEED, INVALID_TIMER);
-					status_change_end(bl, SC_NEWMOON, INVALID_TIMER);
-					if(battle->check_target( src, bl, BCT_ENEMY ) > 0)
-						skill->attack(BF_MAGIC,src,src,bl,AL_RUWACH,1,tick,0);
+			if (tsc && (tsc->data[SC_HIDING] || tsc->data[SC_CLOAKING] || tsc->data[SC_CAMOUFLAGE] || tsc->data[SC_CLOAKINGEXCEED] || tsc->data[SC_NEWMOON])) {
+				status_change_end(bl, SC_HIDING, INVALID_TIMER);
+				status_change_end(bl, SC_CLOAKING, INVALID_TIMER);
+				status_change_end(bl, SC_CAMOUFLAGE, INVALID_TIMER);
+				status_change_end(bl, SC_CLOAKINGEXCEED, INVALID_TIMER);
+				status_change_end(bl, SC_NEWMOON, INVALID_TIMER);
+				if (battle->check_target(src, bl, BCT_ENEMY) > 0)
+					skill->attack(BF_MAGIC, src, src, bl, AL_RUWACH, 1, tick, 0);
 			}
-			if( tsc && tsc->data[SC__SHADOWFORM] && (sce && sce->val4 >0 && sce->val4%2000 == 0) && // for every 2 seconds do the checking
-				rnd()%100 < 100-tsc->data[SC__SHADOWFORM]->val1*10 ) // [100 - (Skill Level x 10)] %
+			if (tsc && tsc->data[SC__SHADOWFORM] && (sce && sce->val4 > 0 && sce->val4 % 2000 == 0) && // for every 2 seconds do the checking
+			    rnd() % 100 < 100 - tsc->data[SC__SHADOWFORM]->val1 * 10)                              // [100 - (Skill Level x 10)] %
 				status_change_end(bl, SC__SHADOWFORM, INVALID_TIMER);
 			break;
 		case SC_WZ_SIGHTBLASTER:
-			if (battle->check_target( src, bl, BCT_ENEMY ) > 0
-			 && status->check_skilluse(src, bl, WZ_SIGHTBLASTER, 2)
-			) {
+			if (battle->check_target(src, bl, BCT_ENEMY) > 0 && status->check_skilluse(src, bl, WZ_SIGHTBLASTER, 2)) {
 				const struct skill_unit *su = BL_CCAST(BL_SKILL, bl);
-				if (sce != NULL
-				 && skill->attack(BF_MAGIC,src,src,bl,WZ_SIGHTBLASTER,sce->val1,tick,0x4000)
-				 && (su == NULL || su->group == NULL || !(skill->get_inf2(su->group->skill_id)&INF2_TRAP))
-				) {
+				if (sce != NULL && skill->attack(BF_MAGIC, src, src, bl, WZ_SIGHTBLASTER, sce->val1, tick, 0x4000) && (su == NULL || su->group == NULL || !(skill->get_inf2(su->group->skill_id) & INF2_TRAP))) {
 					// The hit is not counted if it's against a trap
 					sce->val2 = 0; // This signals it to end.
-				} else if ((bl->type&BL_SKILL) && sce && sce->val4%2 == 0) {
-					//Remove trap immunity temporarily so it triggers if you still stand on it
+				} else if ((bl->type & BL_SKILL) && sce && sce->val4 % 2 == 0) {
+					// Remove trap immunity temporarily so it triggers if you still stand on it
 					sce->val4++;
 				}
 			}
 			break;
 		case SC_RG_CCONFINE_M:
-			//Lock char has released the hold on everyone...
+			// Lock char has released the hold on everyone...
 			if (tsc != NULL && src != NULL && tsc->data[SC_RG_CCONFINE_S] && tsc->data[SC_RG_CCONFINE_S]->val2 == src->id) {
 				tsc->data[SC_RG_CCONFINE_S]->val2 = 0;
 				status_change_end(bl, SC_RG_CCONFINE_S, INVALID_TIMER);
@@ -12973,12 +12918,12 @@ static int status_get_weapon_atk(struct block_list *bl, struct weapon_atk *watk,
 	if (bl->type == BL_PC && watk->atk) {
 		float strdex_bonus, variance;
 		int dstr;
-		if (flag&2)
+		if (flag & 2)
 			dstr = status_get_dex(bl);
 		else
 			dstr = status_get_str(bl);
 
-		variance = 5.0f * watk->atk *  watk->wlv / 100.0f;
+		variance = 5.0f * watk->atk * watk->wlv / 100.0f;
 		strdex_bonus = watk->atk * dstr / 200.0f;
 
 		min = (int)(watk->atk - variance + strdex_bonus) + watk->atk2;
@@ -12995,20 +12940,19 @@ static int status_get_weapon_atk(struct block_list *bl, struct weapon_atk *watk,
 		}
 	}
 
-	if (!(flag&1)) {
+	if (!(flag & 1)) {
 		if (max > min)
-			max = min + rnd()%(max - min + 1);
+			max = min + rnd() % (max - min + 1);
 		else
 			max = min;
 	}
 
-	if ( bl->type == BL_PC && !(flag & 2) ) {
+	if (bl->type == BL_PC && !(flag & 2)) {
 		const struct map_session_data *sd = BL_UCCAST(BL_PC, bl);
 		short index = sd->equip_index[EQI_HAND_R], refine_level;
-		if ( index >= 0 && sd->inventory_data[index] && sd->inventory_data[index]->type == IT_WEAPON
-			&& (refine_level = sd->status.inventory[index].refine) < 16 && refine_level) {
+		if (index >= 0 && sd->inventory_data[index] && sd->inventory_data[index]->type == IT_WEAPON && (refine_level = sd->status.inventory[index].refine) < 16 && refine_level) {
 			int r = refine->get_randombonus_max(watk->wlv, refine_level + (4 - watk->wlv) + 1) / 100;
-			if ( r )
+			if (r)
 				max += (rnd() % 100) % r + 1;
 		}
 
@@ -13037,10 +12981,10 @@ static void status_get_matk_sub(struct block_list *bl, int flag, unsigned short 
 	struct status_change *sc;
 	struct map_session_data *sd;
 
-	if ( bl == NULL )
+	if (bl == NULL)
 		return;
 
-	if ( flag != 0 && flag != 1 && flag != 3 ) {
+	if (flag != 0 && flag != 1 && flag != 3) {
 		ShowError("status_get_matk_sub: Unknown flag %d!\n", flag);
 		return;
 	}
@@ -13051,27 +12995,27 @@ static void status_get_matk_sub(struct block_list *bl, int flag, unsigned short 
 
 #ifdef RENEWAL
 	/**
-	* RE MATK Formula (from irowiki:http://irowiki.org/wiki/MATK)
-	* MATK = (sMATK + wMATK + eMATK) * Multiplicative Modifiers
-	**/
+	 * RE MATK Formula (from irowiki:http://irowiki.org/wiki/MATK)
+	 * MATK = (sMATK + wMATK + eMATK) * Multiplicative Modifiers
+	 **/
 	*matk_min = status->base_matk(bl, st, status->get_lv(bl));
 
 	//  Any +MATK you get from skills and cards, including cards in weapon, is added here.
-	if ( sd && sd->bonus.ematk > 0 && flag != 3 )
+	if (sd && sd->bonus.ematk > 0 && flag != 3)
 		*matk_min += sd->bonus.ematk;
 	if (sd && pc->checkskill(sd, SU_POWEROFLAND) > 0) {
 		if (pc->checkskill(sd, SU_SV_STEMSPEAR) == 5 && pc->checkskill(sd, SU_CN_POWDERING) == 5 && pc->checkskill(sd, SU_CN_METEOR) == 5 && pc->checkskill(sd, SU_SV_ROOTTWIST) == 5)
 			*matk_min += *matk_min * 20 / 100;
 	}
-	if ( flag != 3 )
+	if (flag != 3)
 		*matk_min = status->calc_ematk(bl, sc, *matk_min);
 
 	*matk_max = *matk_min;
 
-	switch ( bl->type ) {
+	switch (bl->type) {
 		case BL_PC:
-			//This is the only portion in MATK that varies depending on the weapon level and refinement rate.
-			if ( (st->rhw.matk + st->lhw.matk) > 0 ) {
+			// This is the only portion in MATK that varies depending on the weapon level and refinement rate.
+			if ((st->rhw.matk + st->lhw.matk) > 0) {
 				int wMatk = st->rhw.matk + st->lhw.matk; // Left and right matk stacks
 				int variance = wMatk * st->rhw.wlv / 10; // Only use right hand weapon level
 				if (sc != NULL && sc->data[SC_CATNIPPOWDER])
@@ -13080,27 +13024,21 @@ static void status_get_matk_sub(struct block_list *bl, int flag, unsigned short 
 				*matk_max += wMatk + variance;
 			}
 			break;
-		case BL_MER:
-		{
+		case BL_MER: {
 			const struct mercenary_data *mc = BL_UCCAST(BL_MER, bl);
 			*matk_min += 70 * mc->battle_status.rhw.atk2 / 100;
 			*matk_max += 130 * mc->battle_status.rhw.atk2 / 100;
-		}
-			break;
-		case BL_MOB:
-		{
+		} break;
+		case BL_MOB: {
 			const struct mob_data *md = BL_UCCAST(BL_MOB, bl);
 			*matk_min += 70 * md->status.rhw.atk2 / 100;
 			*matk_max += 130 * md->status.rhw.atk2 / 100;
-		}
-			break;
-		case BL_HOM:
-		{
+		} break;
+		case BL_HOM: {
 			const struct homun_data *hd = BL_UCCAST(BL_HOM, bl);
 			*matk_min += (status_get_homint(st, hd) + status_get_homdex(st, hd)) / 5;
 			*matk_max += (status_get_homluk(st, hd) + status_get_homint(st, hd) + status_get_homdex(st, hd)) / 3;
-		}
-			break;
+		} break;
 		case BL_NUL:
 		case BL_PET:
 		case BL_ITEM:
@@ -13117,22 +13055,21 @@ static void status_get_matk_sub(struct block_list *bl, int flag, unsigned short 
 	*matk_max = status->base_matk_max(st) + (sd ? sd->bonus.ematk : 0);
 #endif
 
-	if ( sd && sd->matk_rate != 100 ) {
+	if (sd && sd->matk_rate != 100) {
 		*matk_max = (*matk_max) * sd->matk_rate / 100;
 		*matk_min = (*matk_min) * sd->matk_rate / 100;
 	}
 
-	if ( (bl->type&BL_HOM && battle_config.hom_setting & 0x20)  //Hom Min Matk is always the same as Max Matk
-		|| (sc && sc->data[SC_RECOGNIZEDSPELL]) )
+	if ((bl->type & BL_HOM && battle_config.hom_setting & 0x20) // Hom Min Matk is always the same as Max Matk
+	    || (sc && sc->data[SC_RECOGNIZEDSPELL]))
 		*matk_min = *matk_max;
 
 #ifdef RENEWAL
-	if ( sd && !(flag & 2) ) {
+	if (sd && !(flag & 2)) {
 		short index = sd->equip_index[EQI_HAND_R], refine_level;
-		if ( index >= 0 && sd->inventory_data[index] && sd->inventory_data[index]->type == IT_WEAPON
-			&& (refine_level = sd->status.inventory[index].refine) < 16 && refine_level) {
+		if (index >= 0 && sd->inventory_data[index] && sd->inventory_data[index]->type == IT_WEAPON && (refine_level = sd->status.inventory[index].refine) < 16 && refine_level) {
 			int r = refine->get_randombonus_max(sd->inventory_data[index]->wlv, refine_level + (4 - sd->inventory_data[index]->wlv) + 1) / 100;
-			if ( r )
+			if (r)
 				*matk_max += (rnd() % 100) % r + 1;
 		}
 	}
@@ -13156,7 +13093,7 @@ static void status_get_matk_sub(struct block_list *bl, int flag, unsigned short 
  */
 static unsigned short status_get_rand_matk(unsigned short matk_max, unsigned short matk_min)
 {
-	if ( matk_max > matk_min )
+	if (matk_max > matk_min)
 		return matk_min + rnd() % (matk_max - matk_min);
 	else
 		return matk_min;
@@ -13178,19 +13115,19 @@ static int status_get_matk(struct block_list *bl, int flag)
 	struct status_data *st;
 	unsigned short matk_max, matk_min;
 
-	if ( bl == NULL )
+	if (bl == NULL)
 		return 1;
 
-	if ( flag < 1 || flag > 3 ) {
+	if (flag < 1 || flag > 3) {
 		ShowError("status_get_matk: Unknown flag %d!\n", flag);
 		return 1;
 	}
 
-	if ( (st = status->get_status_data(bl)) == NULL )
+	if ((st = status->get_status_data(bl)) == NULL)
 		return 0;
 
 	// Just get matk
-	if ( flag == 2 )
+	if (flag == 2)
 		return status_get_rand_matk(st->matk_max, st->matk_min);
 
 	status_get_matk_sub(bl, flag, &matk_max, &matk_min);
@@ -13208,13 +13145,13 @@ static void status_update_matk(struct block_list *bl)
 	struct status_change *sc;
 	unsigned short matk_max, matk_min;
 
-	if ( bl == NULL )
+	if (bl == NULL)
 		return;
 
-	if ( (st = status->get_status_data(bl)) == NULL )
+	if ((st = status->get_status_data(bl)) == NULL)
 		return;
 
-	if ( (sc = status->get_sc(bl)) == NULL )
+	if ((sc = status->get_sc(bl)) == NULL)
 		return;
 
 	status_get_matk_sub(bl, 0, &matk_max, &matk_min);
@@ -13236,58 +13173,57 @@ static int status_change_clear_buffs(struct block_list *bl, int type)
 	GUARD_MAP_LOCK
 
 	int i;
-	struct status_change *sc= status->get_sc(bl);
+	struct status_change *sc = status->get_sc(bl);
 
 	if (!sc || !sc->count)
 		return 0;
 
 	map->freeblock_lock();
 
-	if (type&6) //Debuffs
+	if (type & 6) // Debuffs
 		for (i = SC_COMMON_MIN; i <= SC_COMMON_MAX; i++)
 			status_change_end(bl, (sc_type)i, INVALID_TIMER);
 
-	for( i = SC_COMMON_MAX+1; i < SC_MAX; i++ ) {
-		if( !sc->data[i] || !status->get_sc_type(i) )
+	for (i = SC_COMMON_MAX + 1; i < SC_MAX; i++) {
+		if (!sc->data[i] || !status->get_sc_type(i))
 			continue;
 
-		if( type&3 && !(status->get_sc_type(i)&SC_BUFF) && !(status->get_sc_type(i)&SC_DEBUFF) )
+		if (type & 3 && !(status->get_sc_type(i) & SC_BUFF) && !(status->get_sc_type(i) & SC_DEBUFF))
 			continue;
 
-		if( type < 3 ) {
-			if( type&1 && !(status->get_sc_type(i)&SC_BUFF) )
+		if (type < 3) {
+			if (type & 1 && !(status->get_sc_type(i) & SC_BUFF))
 				continue;
-			if( type&2 && !(status->get_sc_type(i)&SC_DEBUFF) )
+			if (type & 2 && !(status->get_sc_type(i) & SC_DEBUFF))
 				continue;
 		}
 		PRAGMA_GCC46(GCC diagnostic push)
 		PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 		switch (i) {
-		case SC_DEEP_SLEEP:
-		case SC_FROSTMISTY:
-		case SC_COLD:
-		case SC_TOXIN:
-		case SC_PARALYSE:
-		case SC_VENOMBLEED:
-		case SC_MAGICMUSHROOM:
-		case SC_DEATHHURT:
-		case SC_PYREXIA:
-		case SC_OBLIVIONCURSE:
-		case SC_LEECHESEND:
-		case SC_MARSHOFABYSS:
-		case SC_MANDRAGORA:
-			if(!(type&4))
-				continue;
-			break;
-		case SC_BERSERK:
-			if(type&4)
-				continue;
-			sc->data[i]->val2 = 0;
-			break;
-		default:
-			if(type&4)
-				continue;
-
+			case SC_DEEP_SLEEP:
+			case SC_FROSTMISTY:
+			case SC_COLD:
+			case SC_TOXIN:
+			case SC_PARALYSE:
+			case SC_VENOMBLEED:
+			case SC_MAGICMUSHROOM:
+			case SC_DEATHHURT:
+			case SC_PYREXIA:
+			case SC_OBLIVIONCURSE:
+			case SC_LEECHESEND:
+			case SC_MARSHOFABYSS:
+			case SC_MANDRAGORA:
+				if (!(type & 4))
+					continue;
+				break;
+			case SC_BERSERK:
+				if (type & 4)
+					continue;
+				sc->data[i]->val2 = 0;
+				break;
+			default:
+				if (type & 4)
+					continue;
 		}
 		PRAGMA_GCC46(GCC diagnostic pop)
 		status_change_end(bl, (sc_type)i, INVALID_TIMER);
@@ -13305,80 +13241,80 @@ static int status_change_spread(struct block_list *src, struct block_list *bl, i
 	int64 tick;
 	struct status_change_data data;
 
-	if( !sc || !sc->count )
+	if (!sc || !sc->count)
 		return 0;
 
 	tick = timer->gettick();
 
-	for( i = SC_COMMON_MIN; i < SC_MAX; i++ ) {
-		if( !sc->data[i] || i == SC_COMMON_MAX )
+	for (i = SC_COMMON_MIN; i < SC_MAX; i++) {
+		if (!sc->data[i] || i == SC_COMMON_MAX)
 			continue;
 
 		PRAGMA_GCC46(GCC diagnostic push)
 		PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
-		switch( i ) {
-			//Debuffs that can be spreaded.
-			// NOTE: We'll add/delte SCs when we are able to confirm it.
-		case SC_CURSE:
-		case SC_SILENCE:
-		case SC_CONFUSION:
-		case SC_BLIND:
-		case SC_NOCHAT:
-		case SC_ILLUSION:
-		case SC_CRUCIS:
-		case SC_DEC_AGI:
-		case SC_SLOWDOWN:
-		case SC_MINDBREAKER:
-		case SC_DC_WINKCHARM:
-		case SC_STOP:
-		case SC_ORCISH:
-			//case SC_NOEQUIPWEAPON://Omg I got infected and had the urge to strip myself physically.
-			//case SC_NOEQUIPSHIELD://No this is stupid and shouldnt be spreadable at all.
-			//case SC_NOEQUIPARMOR:// Disabled until I can confirm if it does or not. [Rytech]
-			//case SC_NOEQUIPHELM:
-			//case SC__STRIPACCESSARY:
-		case SC_WUGBITE:
-		case SC_FROSTMISTY:
-		case SC_VENOMBLEED:
-		case SC_DEATHHURT:
-		case SC_PARALYSE:
-			if( sc->data[i]->timer != INVALID_TIMER ) {
-				const struct TimerData *td = timer->get(sc->data[i]->timer);
-				if (td == NULL || td->func != status->change_timer || DIFF_TICK(td->tick,tick) < 0)
-					continue;
-				data.tick = DIFF_TICK32(td->tick,tick);
-			} else {
-				data.tick = INFINITE_DURATION;
-			}
-			break;
-			// Special cases
-		case SC_POISON:
-		case SC_DPOISON:
-			data.tick = sc->data[i]->val3 * 1000;
-			break;
-		case SC_FEAR:
-		case SC_LEECHESEND:
-			data.tick = sc->data[i]->val4 * 1000;
-			break;
-		case SC_BURNING:
-			data.tick = sc->data[i]->val4 * 2000;
-			break;
-		case SC_PYREXIA:
-		case SC_OBLIVIONCURSE:
-			data.tick = sc->data[i]->val4 * 3000;
-			break;
-		case SC_MAGICMUSHROOM:
-			data.tick = sc->data[i]->val4 * 4000;
-			break;
-		case SC_TOXIN:
-		case SC_BLOODING:
-			data.tick = sc->data[i]->val4 * 10000;
-			break;
-		default:
-			continue;
+		switch (i) {
+				// Debuffs that can be spreaded.
+				//  NOTE: We'll add/delte SCs when we are able to confirm it.
+			case SC_CURSE:
+			case SC_SILENCE:
+			case SC_CONFUSION:
+			case SC_BLIND:
+			case SC_NOCHAT:
+			case SC_ILLUSION:
+			case SC_CRUCIS:
+			case SC_DEC_AGI:
+			case SC_SLOWDOWN:
+			case SC_MINDBREAKER:
+			case SC_DC_WINKCHARM:
+			case SC_STOP:
+			case SC_ORCISH:
+				// case SC_NOEQUIPWEAPON://Omg I got infected and had the urge to strip myself physically.
+				// case SC_NOEQUIPSHIELD://No this is stupid and shouldnt be spreadable at all.
+				// case SC_NOEQUIPARMOR:// Disabled until I can confirm if it does or not. [Rytech]
+				// case SC_NOEQUIPHELM:
+				// case SC__STRIPACCESSARY:
+			case SC_WUGBITE:
+			case SC_FROSTMISTY:
+			case SC_VENOMBLEED:
+			case SC_DEATHHURT:
+			case SC_PARALYSE:
+				if (sc->data[i]->timer != INVALID_TIMER) {
+					const struct TimerData *td = timer->get(sc->data[i]->timer);
+					if (td == NULL || td->func != status->change_timer || DIFF_TICK(td->tick, tick) < 0)
+						continue;
+					data.tick = DIFF_TICK32(td->tick, tick);
+				} else {
+					data.tick = INFINITE_DURATION;
+				}
+				break;
+				// Special cases
+			case SC_POISON:
+			case SC_DPOISON:
+				data.tick = sc->data[i]->val3 * 1000;
+				break;
+			case SC_FEAR:
+			case SC_LEECHESEND:
+				data.tick = sc->data[i]->val4 * 1000;
+				break;
+			case SC_BURNING:
+				data.tick = sc->data[i]->val4 * 2000;
+				break;
+			case SC_PYREXIA:
+			case SC_OBLIVIONCURSE:
+				data.tick = sc->data[i]->val4 * 3000;
+				break;
+			case SC_MAGICMUSHROOM:
+				data.tick = sc->data[i]->val4 * 4000;
+				break;
+			case SC_TOXIN:
+			case SC_BLOODING:
+				data.tick = sc->data[i]->val4 * 10000;
+				break;
+			default:
+				continue;
 		}
 		PRAGMA_GCC46(GCC diagnostic pop)
-		if( i ) {
+		if (i) {
 			data.val1 = sc->data[i]->val1;
 			data.val2 = sc->data[i]->val2;
 			data.val3 = sc->data[i]->val3;
@@ -13391,7 +13327,7 @@ static int status_change_spread(struct block_list *src, struct block_list *bl, i
 	return flag;
 }
 
-//Natural regen related stuff.
+// Natural regen related stuff.
 static int status_natural_heal(struct block_list *bl, va_list args)
 {
 	struct regen_data *regen;
@@ -13405,25 +13341,22 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 
 	nullpo_ret(bl);
 	regen = status->get_regen_data(bl);
-	if (!regen) return 0;
+	if (!regen)
+		return 0;
 	st = status->get_status_data(bl);
 	sc = status->get_sc(bl);
 	if (sc && !sc->count)
 		sc = NULL;
-	sd = BL_CAST(BL_PC,bl);
+	sd = BL_CAST(BL_PC, bl);
 
 	flag = regen->flag;
-	if (flag&RGN_HP && (st->hp >= st->max_hp || regen->state.block&1))
-		flag&=~(RGN_HP|RGN_SHP);
-	if (flag&RGN_SP && (st->sp >= st->max_sp || regen->state.block&2))
-		flag&=~(RGN_SP|RGN_SSP);
+	if (flag & RGN_HP && (st->hp >= st->max_hp || regen->state.block & 1))
+		flag &= ~(RGN_HP | RGN_SHP);
+	if (flag & RGN_SP && (st->sp >= st->max_sp || regen->state.block & 2))
+		flag &= ~(RGN_SP | RGN_SSP);
 
-	if (flag
-	  && (status->isdead(bl)
-	    || (sc && (sc->option&(OPTION_HIDE|OPTION_CLOAK|OPTION_CHASEWALK) || sc->data[SC__INVISIBILITY]))
-	     )
-	)
-		flag=0;
+	if (flag && (status->isdead(bl) || (sc && (sc->option & (OPTION_HIDE | OPTION_CLOAK | OPTION_CHASEWALK) || sc->data[SC__INVISIBILITY]))))
+		flag = 0;
 
 	if (sd) {
 		if (sd->hp_loss.value || sd->sp_loss.value)
@@ -13432,22 +13365,18 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 			pc->regen(sd, status->natural_heal_diff_tick);
 	}
 
-	if ((flag & (RGN_SHP | RGN_SSP)) != 0
-	 && regen->sitting != NULL
-	 && (vd = status->get_viewdata(bl)) != NULL
-	 && vd->dead_sit == 2
-	) {
-		//Apply sitting regen bonus.
+	if ((flag & (RGN_SHP | RGN_SSP)) != 0 && regen->sitting != NULL && (vd = status->get_viewdata(bl)) != NULL && vd->dead_sit == 2) {
+		// Apply sitting regen bonus.
 		sregen = regen->sitting;
 
 		if ((flag & RGN_SHP) != 0 && sregen->hp != 0 && sregen->rate.hp > 0) {
-			//Sitting HP regen
+			// Sitting HP regen
 			int tick = max(battle_config.natural_heal_cap, battle_config.natural_heal_skill_interval * 100 / sregen->rate.hp);
 
 			sregen->tick.hp += status->natural_heal_diff_tick;
 
 			if (regen->state.overweight != 0)
-				tick *= 2; //Half as fast when overweight.
+				tick *= 2; // Half as fast when overweight.
 
 			while (sregen->tick.hp >= tick) {
 				sregen->tick.hp -= tick;
@@ -13459,12 +13388,12 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 		}
 
 		if ((flag & RGN_SSP) != 0 && sregen->sp != 0 && sregen->sp > 0) {
-			//Sitting SP regen
+			// Sitting SP regen
 			int tick = max(battle_config.natural_heal_cap, battle_config.natural_heal_skill_interval * 100 / sregen->rate.sp);
 			sregen->tick.sp += status->natural_heal_diff_tick;
 
 			if (regen->state.overweight != 0)
-				tick *= 2; //Half as fast when overweight.
+				tick *= 2; // Half as fast when overweight.
 
 			while (sregen->tick.sp >= tick) {
 				sregen->tick.sp -= tick;
@@ -13476,8 +13405,7 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 					if ((rate = pc->checkskill(sd, TK_SPTIME)) != 0)
 						sc_start(bl, bl, skill->get_sc_type(TK_SPTIME), 100, rate, skill->get_time(TK_SPTIME, rate), TK_SPTIME);
 
-					if ((sd->job & MAPID_UPPERMASK) == MAPID_STAR_GLADIATOR
-						&& rnd() % 10000 < battle_config.sg_angel_skill_ratio) { //Angel of the Sun/Moon/Star
+					if ((sd->job & MAPID_UPPERMASK) == MAPID_STAR_GLADIATOR && rnd() % 10000 < battle_config.sg_angel_skill_ratio) { // Angel of the Sun/Moon/Star
 						clif->feel_hate_reset(sd);
 						pc->resethate(sd);
 						pc->resetfeel(sd);
@@ -13502,19 +13430,18 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 
 	ud = unit->bl2ud(bl);
 
-	if (flag&(RGN_HP|RGN_SHP|RGN_SSP) && ud && ud->walktimer != INVALID_TIMER) {
-		flag&=~(RGN_SHP|RGN_SSP);
-		if(!regen->state.walk)
-			flag&=~RGN_HP;
+	if (flag & (RGN_HP | RGN_SHP | RGN_SSP) && ud && ud->walktimer != INVALID_TIMER) {
+		flag &= ~(RGN_SHP | RGN_SSP);
+		if (!regen->state.walk)
+			flag &= ~RGN_HP;
 	}
 
 	if (!flag)
 		return 0;
 
-	int hp_bonus = regen->rate.hp,
-		sp_bonus = regen->rate.sp;
+	int hp_bonus = regen->rate.hp, sp_bonus = regen->rate.sp;
 	if ((flag & (RGN_HP | RGN_SP)) != 0) {
-		if(vd == NULL)
+		if (vd == NULL)
 			vd = status->get_viewdata(bl);
 		if (vd != NULL && vd->dead_sit == 2) {
 			// In Aegis sit bonus is calculated beofre any other bonuses
@@ -13527,35 +13454,35 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 	int hp_interval = battle_config.natural_healhp_interval;
 	int sp_interval = battle_config.natural_healsp_interval;
 	int interval_cap = battle_config.natural_heal_cap;
-	switch (bl->type) { //PC objects uses the default heal intervals provided above
-	case BL_HOM:
-		hp_interval = battle_config.hom_natural_heal_hp;
-		sp_interval = battle_config.hom_natural_heal_sp;
-		interval_cap = battle_config.hom_natural_heal_cap;
-		break;
-	case BL_MER:
-		hp_interval = battle_config.merc_natural_heal_hp;
-		sp_interval = battle_config.merc_natural_heal_sp;
-		interval_cap = battle_config.merc_natural_heal_cap;
-		break;
-	case BL_ELEM:
-		hp_interval = battle_config.elem_natural_heal_hp;
-		sp_interval = battle_config.elem_natural_heal_sp;
-		interval_cap = battle_config.elem_natural_heal_cap;
-		break;
-	case BL_NUL:
-	case BL_PET:
-	case BL_ITEM:
-	case BL_SKILL:
-	case BL_NPC:
-	case BL_CHAT:
-	case BL_PC:
-	case BL_MOB:
-	case BL_ALL:
-		break;
+	switch (bl->type) { // PC objects uses the default heal intervals provided above
+		case BL_HOM:
+			hp_interval = battle_config.hom_natural_heal_hp;
+			sp_interval = battle_config.hom_natural_heal_sp;
+			interval_cap = battle_config.hom_natural_heal_cap;
+			break;
+		case BL_MER:
+			hp_interval = battle_config.merc_natural_heal_hp;
+			sp_interval = battle_config.merc_natural_heal_sp;
+			interval_cap = battle_config.merc_natural_heal_cap;
+			break;
+		case BL_ELEM:
+			hp_interval = battle_config.elem_natural_heal_hp;
+			sp_interval = battle_config.elem_natural_heal_sp;
+			interval_cap = battle_config.elem_natural_heal_cap;
+			break;
+		case BL_NUL:
+		case BL_PET:
+		case BL_ITEM:
+		case BL_SKILL:
+		case BL_NPC:
+		case BL_CHAT:
+		case BL_PC:
+		case BL_MOB:
+		case BL_ALL:
+			break;
 	}
 
-	//Natural Hp regen
+	// Natural Hp regen
 	if ((flag & RGN_HP) != 0 && hp_bonus > 0) {
 		int tick = max(interval_cap, hp_interval * 100 / hp_bonus);
 		regen->tick.hp += status->natural_heal_diff_tick;
@@ -13575,7 +13502,7 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 		}
 	}
 
-	//Natural SP regen
+	// Natural SP regen
 	if ((flag & RGN_SP) != 0 && sp_bonus > 0) {
 		int tick = max(interval_cap, sp_interval * 100 / sp_bonus);
 		regen->tick.sp += status->natural_heal_diff_tick;
@@ -13596,11 +13523,11 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 	if (regen->skill == NULL)
 		return flag;
 
-	//Skill regen
+	// Skill regen
 	sregen = regen->skill;
 
 	if ((flag & RGN_SHP) != 0 && sregen->hp != 0 && sregen->rate.hp > 0) {
-		//Skill HP regen
+		// Skill HP regen
 		int tick = max(battle_config.natural_heal_cap, battle_config.natural_heal_skill_interval * 100 / sregen->rate.hp);
 		sregen->tick.hp += status->natural_heal_diff_tick;
 
@@ -13612,31 +13539,31 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 	}
 
 	if ((flag & RGN_SSP) != 0 && sregen->sp != 0 && sregen->rate.sp > 0) {
-		//Skill SP regen
+		// Skill SP regen
 		int tick = max(battle_config.natural_heal_cap, battle_config.natural_heal_skill_interval * 100 / sregen->rate.sp);
 		sregen->tick.sp += status->natural_heal_diff_tick;
 
 		while (sregen->tick.sp >= tick) {
 			int heal_val = sregen->sp;
-			if (sd != NULL && sd->state.doridori != 0) { //Angel of the Sun/Moon/Star
+			if (sd != NULL && sd->state.doridori != 0) { // Angel of the Sun/Moon/Star
 				if ((sd->job & MAPID_UPPERMASK) == MAPID_SUPER_NOVICE)
 					heal_val *= 2;
 				sd->state.doridori = 0;
 			}
 
 			sregen->tick.sp -= tick;
-			if (status->heal(bl, 0, heal_val, STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT) < heal_val)  //Full
+			if (status->heal(bl, 0, heal_val, STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT) < heal_val) // Full
 				break;
 		}
 	}
 	return flag;
 }
 
-//Natural heal main timer.
+// Natural heal main timer.
 static int status_natural_heal_timer(int tid, int64 tick, int id, intptr_t data)
 {
 	// This difference is always positive and lower than UINT_MAX (~24 days)
-	status->natural_heal_diff_tick = (unsigned int)cap_value(DIFF_TICK(tick,status->natural_heal_prev_tick), 0, UINT_MAX);
+	status->natural_heal_diff_tick = (unsigned int)cap_value(DIFF_TICK(tick, status->natural_heal_prev_tick), 0, UINT_MAX);
 	map->foreachregen(status->natural_heal);
 	status->natural_heal_prev_tick = tick;
 	return 0;
@@ -13645,7 +13572,7 @@ static int status_natural_heal_timer(int tid, int64 tick, int id, intptr_t data)
 static int status_get_sc_type(sc_type type)
 {
 
-	if( type <= SC_NONE || type >= SC_MAX )
+	if (type <= SC_NONE || type >= SC_MAX)
 		return 0;
 
 	return status->dbs->sc_conf[type];
@@ -13660,33 +13587,32 @@ static void status_read_job_db_sub(int idx, const char *name, struct config_sett
 	struct {
 		const char *name;
 		int id;
-	} wnames[] = {
-		{ "Fist", W_FIST },
-		{ "Dagger", W_DAGGER },
-		{ "Sword", W_1HSWORD },
-		{ "TwoHandSword", W_2HSWORD },
-		{ "Spear", W_1HSPEAR },
-		{ "TwoHandSpear", W_2HSPEAR },
-		{ "Axe", W_1HAXE },
-		{ "TwoHandAxe", W_2HAXE },
-		{ "Mace", W_MACE },
-		{ "TwoHandMace", W_2HMACE },
-		{ "Rod", W_STAFF },
-		{ "Bow", W_BOW },
-		{ "Knuckle", W_KNUCKLE },
-		{ "Instrument", W_MUSICAL },
-		{ "Whip", W_WHIP },
-		{ "Book", W_BOOK },
-		{ "Katar", W_KATAR },
-		{ "Revolver", W_REVOLVER },
-		{ "Rifle", W_RIFLE },
-		{ "GatlingGun", W_GATLING },
-		{ "Shotgun", W_SHOTGUN },
-		{ "GrenadeLauncher", W_GRENADE },
-		{ "FuumaShuriken", W_HUUMA },
-		{ "TwoHandRod", W_2HSTAFF },
+	} wnames[] = {{"Fist", W_FIST},
+	              {"Dagger", W_DAGGER},
+	              {"Sword", W_1HSWORD},
+	              {"TwoHandSword", W_2HSWORD},
+	              {"Spear", W_1HSPEAR},
+	              {"TwoHandSpear", W_2HSPEAR},
+	              {"Axe", W_1HAXE},
+	              {"TwoHandAxe", W_2HAXE},
+	              {"Mace", W_MACE},
+	              {"TwoHandMace", W_2HMACE},
+	              {"Rod", W_STAFF},
+	              {"Bow", W_BOW},
+	              {"Knuckle", W_KNUCKLE},
+	              {"Instrument", W_MUSICAL},
+	              {"Whip", W_WHIP},
+	              {"Book", W_BOOK},
+	              {"Katar", W_KATAR},
+	              {"Revolver", W_REVOLVER},
+	              {"Rifle", W_RIFLE},
+	              {"GatlingGun", W_GATLING},
+	              {"Shotgun", W_SHOTGUN},
+	              {"GrenadeLauncher", W_GRENADE},
+	              {"FuumaShuriken", W_HUUMA},
+	              {"TwoHandRod", W_2HSTAFF},
 #ifdef RENEWAL_ASPD
-		{ "Shield", MAX_SINGLE_WEAPON_TYPE }
+	              {"Shield", MAX_SINGLE_WEAPON_TYPE}
 #endif
 	};
 
@@ -13750,7 +13676,7 @@ static void status_read_job_db_sub(int idx, const char *name, struct config_sett
 			}
 
 			struct s_maxhp_entry *maxhp = status->get_maxhp_cap_entry(idx, 1);
-			for ( ; i <= pc->dbs->class_exp_table[idx][CLASS_EXP_TABLE_BASE]->max_level; i++) {
+			for (; i <= pc->dbs->class_exp_table[idx][CLASS_EXP_TABLE_BASE]->max_level; i++) {
 				if (i > maxhp->max_level)
 					maxhp = status->get_maxhp_cap_entry(idx, i);
 
@@ -13768,7 +13694,7 @@ static void status_read_job_db_sub(int idx, const char *name, struct config_sett
 			} else {
 				avg_increment = 1;
 			}
-			for ( ; i <= pc->dbs->class_exp_table[idx][CLASS_EXP_TABLE_BASE]->max_level; i++) {
+			for (; i <= pc->dbs->class_exp_table[idx][CLASS_EXP_TABLE_BASE]->max_level; i++) {
 				status->dbs->SP_table[idx][i] = min(base + avg_increment * i, battle_config.max_sp);
 			}
 		}
@@ -13815,7 +13741,7 @@ static void status_read_job_db_sub(int idx, const char *name, struct config_sett
 			}
 
 			struct s_maxhp_entry *maxhp = status->get_maxhp_cap_entry(idx, 1);
-			for ( ; i <= pc->dbs->class_exp_table[idx][CLASS_EXP_TABLE_BASE]->max_level; i++) {
+			for (; i <= pc->dbs->class_exp_table[idx][CLASS_EXP_TABLE_BASE]->max_level; i++) {
 				if (i > maxhp->max_level)
 					maxhp = status->get_maxhp_cap_entry(idx, i);
 
@@ -13844,7 +13770,7 @@ static void status_read_job_db_sub(int idx, const char *name, struct config_sett
 			} else {
 				avg_increment = 1;
 			}
-			for ( ; i <= pc->dbs->class_exp_table[idx][CLASS_EXP_TABLE_BASE]->max_level; i++) {
+			for (; i <= pc->dbs->class_exp_table[idx][CLASS_EXP_TABLE_BASE]->max_level; i++) {
 				status->dbs->SP_table[idx][i] = min(base + avg_increment * i, battle_config.max_sp);
 			}
 		}
@@ -13936,9 +13862,9 @@ static void status_read_job_db(void)
 	char config_filename[256];
 
 #ifdef RENEWAL_ASPD
-	libconfig->format_db_path(DBPATH_RE"job_db.conf", config_filename, sizeof(config_filename));
+	libconfig->format_db_path(DBPATH_RE "job_db.conf", config_filename, sizeof(config_filename));
 #else
-	libconfig->format_db_path(DBPATH_PRE"job_db.conf", config_filename, sizeof(config_filename));
+	libconfig->format_db_path(DBPATH_PRE "job_db.conf", config_filename, sizeof(config_filename));
 #endif
 
 	if (!libconfig->load_file(&job_db_conf, config_filename))
@@ -13958,7 +13884,7 @@ static void status_read_job_db(void)
 		status->check_job_bonus(idx, name, class);
 	}
 
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", i, config_filename);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", i, config_filename);
 	libconfig->destroy(&job_db_conf);
 }
 
@@ -13969,7 +13895,7 @@ static void status_check_job_bonus(int idx, const char *name, int class)
 
 	Assert_retv(idx >= 0 && idx < CLASS_COUNT);
 	bool isEmpty = true;
-	for(int i2 = 0; i2 < MAX_LEVEL; i2++) {
+	for (int i2 = 0; i2 < MAX_LEVEL; i2++) {
 		if (status->dbs->job_bonus[idx][i2] != 0) {
 			isEmpty = false;
 			break;
@@ -13983,21 +13909,21 @@ static void status_check_job_bonus(int idx, const char *name, int class)
 static void status_load_sc_type(void)
 {
 	// Storing the target job rather than simply SC_SOULLINK simplifies code later on.
-	skill->dbs->db[skill->get_index(SL_ALCHEMIST)].status_type   = (sc_type)MAPID_ALCHEMIST;
-	skill->dbs->db[skill->get_index(SL_MONK)].status_type        = (sc_type)MAPID_MONK;
-	skill->dbs->db[skill->get_index(SL_STAR)].status_type        = (sc_type)MAPID_STAR_GLADIATOR;
-	skill->dbs->db[skill->get_index(SL_SAGE)].status_type        = (sc_type)MAPID_SAGE;
-	skill->dbs->db[skill->get_index(SL_CRUSADER)].status_type    = (sc_type)MAPID_CRUSADER;
+	skill->dbs->db[skill->get_index(SL_ALCHEMIST)].status_type = (sc_type)MAPID_ALCHEMIST;
+	skill->dbs->db[skill->get_index(SL_MONK)].status_type = (sc_type)MAPID_MONK;
+	skill->dbs->db[skill->get_index(SL_STAR)].status_type = (sc_type)MAPID_STAR_GLADIATOR;
+	skill->dbs->db[skill->get_index(SL_SAGE)].status_type = (sc_type)MAPID_SAGE;
+	skill->dbs->db[skill->get_index(SL_CRUSADER)].status_type = (sc_type)MAPID_CRUSADER;
 	skill->dbs->db[skill->get_index(SL_SUPERNOVICE)].status_type = (sc_type)MAPID_SUPER_NOVICE;
-	skill->dbs->db[skill->get_index(SL_KNIGHT)].status_type      = (sc_type)MAPID_KNIGHT;
-	skill->dbs->db[skill->get_index(SL_WIZARD)].status_type      = (sc_type)MAPID_WIZARD;
-	skill->dbs->db[skill->get_index(SL_PRIEST)].status_type      = (sc_type)MAPID_PRIEST;
-	skill->dbs->db[skill->get_index(SL_BARDDANCER)].status_type  = (sc_type)MAPID_BARDDANCER;
-	skill->dbs->db[skill->get_index(SL_ROGUE)].status_type       = (sc_type)MAPID_ROGUE;
-	skill->dbs->db[skill->get_index(SL_ASSASIN)].status_type     = (sc_type)MAPID_ASSASSIN;
-	skill->dbs->db[skill->get_index(SL_BLACKSMITH)].status_type  = (sc_type)MAPID_BLACKSMITH;
-	skill->dbs->db[skill->get_index(SL_HUNTER)].status_type      = (sc_type)MAPID_HUNTER;
-	skill->dbs->db[skill->get_index(SL_SOULLINKER)].status_type  = (sc_type)MAPID_SOUL_LINKER;
+	skill->dbs->db[skill->get_index(SL_KNIGHT)].status_type = (sc_type)MAPID_KNIGHT;
+	skill->dbs->db[skill->get_index(SL_WIZARD)].status_type = (sc_type)MAPID_WIZARD;
+	skill->dbs->db[skill->get_index(SL_PRIEST)].status_type = (sc_type)MAPID_PRIEST;
+	skill->dbs->db[skill->get_index(SL_BARDDANCER)].status_type = (sc_type)MAPID_BARDDANCER;
+	skill->dbs->db[skill->get_index(SL_ROGUE)].status_type = (sc_type)MAPID_ROGUE;
+	skill->dbs->db[skill->get_index(SL_ASSASIN)].status_type = (sc_type)MAPID_ASSASSIN;
+	skill->dbs->db[skill->get_index(SL_BLACKSMITH)].status_type = (sc_type)MAPID_BLACKSMITH;
+	skill->dbs->db[skill->get_index(SL_HUNTER)].status_type = (sc_type)MAPID_HUNTER;
+	skill->dbs->db[skill->get_index(SL_SOULLINKER)].status_type = (sc_type)MAPID_SOUL_LINKER;
 }
 
 static bool status_readdb_job2(char *fields[], int columns, int current)
@@ -14013,9 +13939,8 @@ static bool status_readdb_job2(char *fields[], int columns, int current)
 	}
 	idx = pc->class2idx(class);
 
-	for(i = 1; i < columns; i++)
-	{
-		status->dbs->job_bonus[idx][i-1] = atoi(fields[i]);
+	for (i = 1; i < columns; i++) {
+		status->dbs->job_bonus[idx][i - 1] = atoi(fields[i]);
 	}
 	return true;
 }
@@ -14025,8 +13950,7 @@ static bool status_readdb_sizefix(char *fields[], int columns, int current)
 	unsigned int i;
 
 	nullpo_retr(false, fields);
-	for(i = 0; i < MAX_SINGLE_WEAPON_TYPE; i++)
-	{
+	for (i = 0; i < MAX_SINGLE_WEAPON_TYPE; i++) {
 		status->dbs->atkmods[current][i] = atoi(fields[i]);
 	}
 	return true;
@@ -14036,7 +13960,7 @@ static bool status_read_scdb_libconfig(void)
 {
 	struct config_t status_conf;
 	char filepath[512];
-	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH"sc_config.conf");
+	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH "sc_config.conf");
 
 	if (libconfig->load_file(&status_conf, filepath) == CONFIG_FALSE) {
 		ShowError("status_read_scdb_libconfig: can't read %s\n", filepath);
@@ -14053,11 +13977,11 @@ static bool status_read_scdb_libconfig(void)
 	}
 
 	// @TODO: find a better way of handling this
-	if (!battle_config.display_hallucination) //Disable Hallucination.
+	if (!battle_config.display_hallucination) // Disable Hallucination.
 		status->dbs->IconChangeTable[SC_ILLUSION].id = SI_BLANK;
 
 	libconfig->destroy(&status_conf);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 	return true;
 }
 
@@ -14090,7 +14014,6 @@ static bool status_read_scdb_libconfig_sub(struct config_setting_t *it, int idx,
 	else
 		status->dbs->IconChangeTable[status_id].id = SI_BLANK;
 
-
 	struct config_setting_t *sk = libconfig->setting_get_member(it, "Skill");
 	if (sk != NULL)
 		status->read_scdb_libconfig_sub_skill(sk, status_id, source);
@@ -14118,17 +14041,7 @@ static bool status_read_scdb_libconfig_sub_flag(struct config_setting_t *it, int
 			const char *name;
 			enum sc_conf_type value;
 		} flags[] = {
-			{ "NoDeathReset", SC_NO_REM_DEATH },
-			{ "NoSave", SC_NO_SAVE },
-			{ "NoDispelReset", SC_NO_DISPELL },
-			{ "NoClearanceReset", SC_NO_CLEARANCE },
-			{ "Buff", SC_BUFF },
-			{ "Debuff", SC_DEBUFF },
-			{ "NoMadoReset", SC_MADO_NO_RESET },
-			{ "NoAllReset", SC_NO_CLEAR },
-			{ "NoBoss", SC_NO_BOSS },
-			{ "NoBBReset", SC_BB_NO_RESET },
-			{ "NoMagicBlocked", SC_NO_MAGIC_BLOCK },
+		    {"NoDeathReset", SC_NO_REM_DEATH}, {"NoSave", SC_NO_SAVE}, {"NoDispelReset", SC_NO_DISPELL}, {"NoClearanceReset", SC_NO_CLEARANCE}, {"Buff", SC_BUFF}, {"Debuff", SC_DEBUFF}, {"NoMadoReset", SC_MADO_NO_RESET}, {"NoAllReset", SC_NO_CLEAR}, {"NoBoss", SC_NO_BOSS}, {"NoBBReset", SC_BB_NO_RESET}, {"NoMagicBlocked", SC_NO_MAGIC_BLOCK},
 		};
 
 		ARR_FIND(0, ARRAYLENGTH(flags), j, strcmpi(flag, flags[j].name) == 0);
@@ -14166,43 +14079,7 @@ static bool status_read_scdb_libconfig_sub_calcflag(struct config_setting_t *it,
 			const char *name;
 			e_scb_flag value;
 		} flags[] = {
-			{ "None", SCB_NONE },
-			{ "Base", SCB_BASE },
-			{ "Maxhp", SCB_MAXHP },
-			{ "Maxsp", SCB_MAXSP },
-			{ "Str", SCB_STR },
-			{ "Agi", SCB_AGI },
-			{ "Vit", SCB_VIT },
-			{ "Int", SCB_INT },
-			{ "Dex", SCB_DEX },
-			{ "Luk", SCB_LUK },
-			{ "Batk", SCB_BATK },
-			{ "Watk", SCB_WATK },
-			{ "Matk", SCB_MATK },
-			{ "Hit", SCB_HIT },
-			{ "Flee", SCB_FLEE },
-			{ "Def", SCB_DEF },
-			{ "Def2", SCB_DEF2 },
-			{ "Mdef", SCB_MDEF },
-			{ "Mdef2", SCB_MDEF2 },
-			{ "Speed", SCB_SPEED },
-			{ "Aspd", SCB_ASPD },
-			{ "Dspd", SCB_DSPD },
-			{ "Cri", SCB_CRI },
-			{ "Flee2", SCB_FLEE2 },
-			{ "Atk_Ele", SCB_ATK_ELE },
-			{ "Def_Ele", SCB_DEF_ELE },
-			{ "Mode", SCB_MODE },
-			{ "Size", SCB_SIZE },
-			{ "Race", SCB_RACE },
-			{ "Range", SCB_RANGE },
-			{ "Regen", SCB_REGEN },
-			{ "Dye", SCB_DYE },
-			{ "AtkPerc", SCB_ATK_PERC },
-			{ "DefPerc", SCB_DEF_PERC },
-			{ "MatkPerc", SCB_MATK_PERC },
-			{ "MdefPerc", SCB_MDEF_PERC },
-			{ "All", SCB_ALL },
+		    {"None", SCB_NONE}, {"Base", SCB_BASE}, {"Maxhp", SCB_MAXHP}, {"Maxsp", SCB_MAXSP}, {"Str", SCB_STR}, {"Agi", SCB_AGI}, {"Vit", SCB_VIT}, {"Int", SCB_INT}, {"Dex", SCB_DEX}, {"Luk", SCB_LUK}, {"Batk", SCB_BATK}, {"Watk", SCB_WATK}, {"Matk", SCB_MATK}, {"Hit", SCB_HIT}, {"Flee", SCB_FLEE}, {"Def", SCB_DEF}, {"Def2", SCB_DEF2}, {"Mdef", SCB_MDEF}, {"Mdef2", SCB_MDEF2}, {"Speed", SCB_SPEED}, {"Aspd", SCB_ASPD}, {"Dspd", SCB_DSPD}, {"Cri", SCB_CRI}, {"Flee2", SCB_FLEE2}, {"Atk_Ele", SCB_ATK_ELE}, {"Def_Ele", SCB_DEF_ELE}, {"Mode", SCB_MODE}, {"Size", SCB_SIZE}, {"Race", SCB_RACE}, {"Range", SCB_RANGE}, {"Regen", SCB_REGEN}, {"Dye", SCB_DYE}, {"AtkPerc", SCB_ATK_PERC}, {"DefPerc", SCB_DEF_PERC}, {"MatkPerc", SCB_MATK_PERC}, {"MdefPerc", SCB_MDEF_PERC}, {"All", SCB_ALL},
 		};
 
 		ARR_FIND(0, ARRAYLENGTH(flags), j, strcmpi(flag, flags[j].name) == 0);
@@ -14273,8 +14150,8 @@ static int status_maxhp_entry_compare(const void *entry1, const void *entry2)
 	nullpo_ret(entry1);
 	nullpo_ret(entry2);
 
-	struct s_maxhp_entry *entry1_ = (struct s_maxhp_entry *) entry1;
-	struct s_maxhp_entry *entry2_ = (struct s_maxhp_entry *) entry2;
+	struct s_maxhp_entry *entry1_ = (struct s_maxhp_entry *)entry1;
+	struct s_maxhp_entry *entry2_ = (struct s_maxhp_entry *)entry2;
 
 	return entry1_->max_level - entry2_->max_level;
 }
@@ -14312,8 +14189,7 @@ static bool status_read_unit_params_db_maxhp(struct s_unit_params *entry, struct
 			int lv;
 
 			if (sscanf(lv_str, "%*2s%3d", &lv) != 1) {
-				ShowError("%s: Could not read config MaxHP '%s' in entry '%s' in file '%s'. Is it in Lv[number] format? Skipping level...\n",
-					__func__, lv_str, entry->name, source);
+				ShowError("%s: Could not read config MaxHP '%s' in entry '%s' in file '%s'. Is it in Lv[number] format? Skipping level...\n", __func__, lv_str, entry->name, source);
 				continue;
 			}
 
@@ -14349,8 +14225,7 @@ static bool status_read_unit_params_db_maxhp(struct s_unit_params *entry, struct
 
 	for (int i = 0; i < entry->maxhp_size - 1; ++i) {
 		if (entry->maxhp[i].max_level == entry->maxhp[i + 1].max_level) {
-			ShowWarning("%s: There are multiple entries for MaxHP for Lv '%d' in entry '%s' in file '%s'. Only one will be used.\n",
-				__func__, entry->maxhp[i].max_level, entry->name, source);
+			ShowWarning("%s: There are multiple entries for MaxHP for Lv '%d' in entry '%s' in file '%s'. Only one will be used.\n", __func__, entry->maxhp[i].max_level, entry->name, source);
 		}
 	}
 
@@ -14370,7 +14245,7 @@ static bool status_read_unit_params_db_sub(const char *name, struct config_setti
 	nullpo_retr(false, name);
 	nullpo_retr(false, group);
 
-	struct s_unit_params entry = { 0 };
+	struct s_unit_params entry = {0};
 
 	const char *str = NULL;
 	int i32 = 0;
@@ -14466,7 +14341,7 @@ static bool status_read_unit_params_db_sub(const char *name, struct config_setti
 static void status_read_unit_params_db(void)
 {
 	char config_filename[256];
-	libconfig->format_db_path(DBPATH"unit_parameters_db.conf", config_filename, sizeof(config_filename));
+	libconfig->format_db_path(DBPATH "unit_parameters_db.conf", config_filename, sizeof(config_filename));
 
 	struct config_t param_db_conf;
 	if (!libconfig->load_file(&param_db_conf, config_filename))
@@ -14483,9 +14358,9 @@ static void status_read_unit_params_db(void)
 	}
 
 	if (!result)
-		ShowWarning("There were errors while reading '"CL_WHITE"%s"CL_RESET"'. Some entries may have been skipped. The logs above this line should have more information.\n", config_filename);
+		ShowWarning("There were errors while reading '" CL_WHITE "%s" CL_RESET "'. Some entries may have been skipped. The logs above this line should have more information.\n", config_filename);
 
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", i, config_filename);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", i, config_filename);
 	libconfig->destroy(&param_db_conf);
 }
 
@@ -14529,18 +14404,18 @@ static int status_readdb(void)
 
 	// initialize databases to default
 	//
-	if( core->runflag == MAPSERVER_ST_RUNNING ) {//not necessary during boot
+	if (core->runflag == MAPSERVER_ST_RUNNING) { // not necessary during boot
 		// reset job_db.conf data
 		memset(status->dbs->max_weight_base, 0, sizeof(status->dbs->max_weight_base));
 		memset(status->dbs->HP_table, 0, sizeof(status->dbs->HP_table));
 		memset(status->dbs->SP_table, 0, sizeof(status->dbs->SP_table));
 		// reset job_db2.txt data
-		memset(status->dbs->job_bonus,0,sizeof(status->dbs->job_bonus)); // Job-specific stats bonus
+		memset(status->dbs->job_bonus, 0, sizeof(status->dbs->job_bonus)); // Job-specific stats bonus
 		// resets unit_params_db.conf data
 		status->unit_params_clear_db();
 	}
-	for ( i = 0; i < CLASS_COUNT; i++ ) {
-		for ( j = 0; j < MAX_SINGLE_WEAPON_TYPE; j++ )
+	for (i = 0; i < CLASS_COUNT; i++) {
+		for (j = 0; j < MAX_SINGLE_WEAPON_TYPE; j++)
 			status->dbs->aspd_base[i][j] = 2000;
 #ifdef RENEWAL_ASPD
 		status->dbs->aspd_base[i][MAX_SINGLE_WEAPON_TYPE] = 0;
@@ -14548,14 +14423,14 @@ static int status_readdb(void)
 	}
 
 	// size_fix.txt
-	for(i = 0; i < ARRAYLENGTH(status->dbs->atkmods); i++)
-		for(j = 0; j < MAX_SINGLE_WEAPON_TYPE; j++)
+	for (i = 0; i < ARRAYLENGTH(status->dbs->atkmods); i++)
+		for (j = 0; j < MAX_SINGLE_WEAPON_TYPE; j++)
 			status->dbs->atkmods[i][j] = 100;
 
 	// read databases
 	//
-	sv->readdb(map->db_path, "job_db2.txt",         ',', 1,                 1+MAX_LEVEL,       -1,                       status->readdb_job2);
-	sv->readdb(map->db_path, DBPATH"size_fix.txt", ',', MAX_SINGLE_WEAPON_TYPE, MAX_SINGLE_WEAPON_TYPE, ARRAYLENGTH(status->dbs->atkmods), status->readdb_sizefix);
+	sv->readdb(map->db_path, "job_db2.txt", ',', 1, 1 + MAX_LEVEL, -1, status->readdb_job2);
+	sv->readdb(map->db_path, DBPATH "size_fix.txt", ',', MAX_SINGLE_WEAPON_TYPE, MAX_SINGLE_WEAPON_TYPE, ARRAYLENGTH(status->dbs->atkmods), status->readdb_sizefix);
 	status->read_scdb_libconfig();
 	status->read_unit_params_db();
 	status->read_job_db();
@@ -14575,14 +14450,14 @@ static int do_init_status(bool minimal)
 
 	VECTOR_INIT(status->unit_params_groups);
 
-	timer->add_func_list(status->change_timer,"status_change_timer");
-	timer->add_func_list(status->kaahi_heal_timer,"status_kaahi_heal_timer");
-	timer->add_func_list(status->natural_heal_timer,"status_natural_heal_timer");
+	timer->add_func_list(status->change_timer, "status_change_timer");
+	timer->add_func_list(status->kaahi_heal_timer, "status_kaahi_heal_timer");
+	timer->add_func_list(status->natural_heal_timer, "status_natural_heal_timer");
 	status->initChangeTables();
 	status->initDummyData();
 	status->readdb();
 	status->natural_heal_prev_tick = timer->gettick();
-	status->data_ers = ers_new(sizeof(struct status_change_entry),"status.c::data_ers",ERS_OPT_NONE);
+	status->data_ers = ers_new(sizeof(struct status_change_entry), "status.c::data_ers", ERS_OPT_NONE);
 	timer->add_interval(status->natural_heal_prev_tick + NATURAL_HEAL_INTERVAL, status->natural_heal_timer, 0, 0, NATURAL_HEAL_INTERVAL);
 	return 0;
 }
@@ -14606,10 +14481,10 @@ void status_defaults(void)
 	status->dbs = &statusdbs;
 
 	/* vars */
-	//we need it for new cards 15 Feb 2005, to check if the combo cards are insrerted into the CURRENT weapon only
-	//to avoid cards exploits
-	status->current_equip_item_index = 0; //Contains inventory index of an equipped item. To pass it into the EQUP_SCRIPT [Lupus]
-	status->current_equip_card_id = 0;    //To prevent card-stacking (from jA) [Skotlex]
+	// we need it for new cards 15 Feb 2005, to check if the combo cards are insrerted into the CURRENT weapon only
+	// to avoid cards exploits
+	status->current_equip_item_index = 0; // Contains inventory index of an equipped item. To pass it into the EQUP_SCRIPT [Lupus]
+	status->current_equip_card_id = 0;    // To prevent card-stacking (from jA) [Skotlex]
 
 	// These macros are used instead of a sum of sizeof(), to ensure that padding won't interfere with our size, and code won't rot when adding more fields
 	memset(ZEROED_BLOCK_POS(status->dbs), 0, ZEROED_BLOCK_SIZE(status->dbs));
@@ -14628,10 +14503,10 @@ void status_defaults(void)
 	status->get_sc_icon = status_get_sc_icon;
 
 	status->damage = status_damage;
-	//Define for standard HP/SP skill-related cost triggers (mobs require no HP/SP to use skills)
+	// Define for standard HP/SP skill-related cost triggers (mobs require no HP/SP to use skills)
 	status->charge = status_charge;
 	status->percent_change = status_percent_change;
-	//Used to set the hp/sp of an object to an absolute value (can't kill)
+	// Used to set the hp/sp of an object to an absolute value (can't kill)
 	status->set_hp = status_set_hp;
 	status->set_sp = status_set_sp;
 	status->heal = status_heal;
@@ -14700,7 +14575,7 @@ void status_defaults(void)
 	status->calc_regen_rate = status_calc_regen_rate;
 
 	status->check_skilluse_mapzone = status_check_skilluse_mapzone;
-	status->check_skilluse = status_check_skilluse; // [Skotlex]
+	status->check_skilluse = status_check_skilluse;     // [Skotlex]
 	status->check_visibility = status_check_visibility; //[Skotlex]
 
 	status->change_spread = status_change_spread;

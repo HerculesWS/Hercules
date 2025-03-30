@@ -83,7 +83,6 @@ void HPM_api_plugin_load_sub(struct hplugin *plugin)
 	plugin->hpi->sql_handle = api->mysql_handle;
 }
 
-
 void HPM_api_do_init(void)
 {
 	HPM->load_sub = HPM_api_plugin_load_sub;

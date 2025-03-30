@@ -30,16 +30,15 @@ struct s_pet;
  **/
 struct inter_pet_interface {
 	struct s_pet *pt;
-	int (*tosql) (const struct s_pet *p);
-	int (*fromsql) (int pet_id, struct s_pet* p);
-	int (*sql_init) (void);
-	void (*sql_final) (void);
-	int (*delete_) (int pet_id);
-	int (*parse_frommap) (int fd);
+	int (*tosql)(const struct s_pet *p);
+	int (*fromsql)(int pet_id, struct s_pet *p);
+	int (*sql_init)(void);
+	void (*sql_final)(void);
+	int (*delete_)(int pet_id);
+	int (*parse_frommap)(int fd);
 
-	struct s_pet *(*create) (int account_id, int char_id, int pet_class, int pet_lv, int pet_egg_id,
-			int pet_equip, short intimate, short hungry, char rename_flag, char incubate, const char *pet_name);
-	struct s_pet *(*load) (int account_id, int char_id, int pet_id);
+	struct s_pet *(*create)(int account_id, int char_id, int pet_class, int pet_lv, int pet_egg_id, int pet_equip, short intimate, short hungry, char rename_flag, char incubate, const char *pet_name);
+	struct s_pet *(*load)(int account_id, int char_id, int pet_id);
 };
 
 #ifdef HERCULES_CORE

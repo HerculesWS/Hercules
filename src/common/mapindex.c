@@ -42,21 +42,21 @@ struct mapindex_interface *mapindex;
 static const char *mapindex_getmapname(const char *string, char *output)
 {
 	static char buf[MAP_NAME_LENGTH];
-	char* dest = (output != NULL) ? output : buf;
+	char *dest = (output != NULL) ? output : buf;
 
 	size_t len;
 	nullpo_retr(buf, string);
 	len = strnlen(string, MAP_NAME_LENGTH_EXT);
 	if (len == MAP_NAME_LENGTH_EXT) {
-		ShowWarning("(mapindex_normalize_name) Map name '%*s' is too long!\n", 2*MAP_NAME_LENGTH_EXT, string);
+		ShowWarning("(mapindex_normalize_name) Map name '%*s' is too long!\n", 2 * MAP_NAME_LENGTH_EXT, string);
 		len--;
 	}
-	if (len >= 4 && stricmp(&string[len-4], ".gat") == 0)
+	if (len >= 4 && stricmp(&string[len - 4], ".gat") == 0)
 		len -= 4; // strip .gat extension
 
-	len = min(len, MAP_NAME_LENGTH-1);
-	safestrncpy(dest, string, len+1);
-	memset(&dest[len], '\0', MAP_NAME_LENGTH-len);
+	len = min(len, MAP_NAME_LENGTH - 1);
+	safestrncpy(dest, string, len + 1);
+	memset(&dest[len], '\0', MAP_NAME_LENGTH - len);
 
 	return dest;
 }
@@ -66,13 +66,13 @@ static const char *mapindex_getmapname(const char *string, char *output)
 static const char *mapindex_getmapname_ext(const char *string, char *output)
 {
 	static char buf[MAP_NAME_LENGTH_EXT];
-	char* dest = (output != NULL) ? output : buf;
+	char *dest = (output != NULL) ? output : buf;
 
 	size_t len;
 
 	nullpo_retr(buf, string);
 
-	safestrncpy(buf,string, sizeof(buf));
+	safestrncpy(buf, string, sizeof(buf));
 	sscanf(string, "%*[^#]%*[#]%15s", buf);
 
 	len = safestrnlen(buf, MAP_NAME_LENGTH);
@@ -81,14 +81,14 @@ static const char *mapindex_getmapname_ext(const char *string, char *output)
 		ShowWarning("(mapindex_normalize_name) Map name '%s' is too long!\n", buf);
 		len--;
 	}
-	safestrncpy(dest, buf, len+1);
+	safestrncpy(dest, buf, len + 1);
 
-	if (len < 4 || stricmp(&dest[len-4], ".gat") != 0) {
+	if (len < 4 || stricmp(&dest[len - 4], ".gat") != 0) {
 		strcpy(&dest[len], ".gat");
 		len += 4; // add .gat extension
 	}
 
-	memset(&dest[len], '\0', MAP_NAME_LENGTH_EXT-len);
+	memset(&dest[len], '\0', MAP_NAME_LENGTH_EXT - len);
 
 	return dest;
 }
@@ -99,7 +99,7 @@ static int mapindex_addmap(int index, const char *name)
 {
 	char map_name[MAP_NAME_LENGTH];
 
-	if (index == -1){
+	if (index == -1) {
 		for (index = 1; index < mapindex->num; index++) {
 			if (mapindex->list[index].name[0] == '\0')
 				break;
@@ -132,7 +132,7 @@ static int mapindex_addmap(int index, const char *name)
 	strdb_iput(mapindex->db, map_name, index);
 
 	if (mapindex->num <= index)
-		mapindex->num = index+1;
+		mapindex->num = index + 1;
 
 	return index;
 }
@@ -144,7 +144,7 @@ static unsigned short mapindex_name2id(const char *name)
 
 	mapindex->getmapname(name, map_name);
 
-	if( (i = strdb_iget(mapindex->db, map_name)) )
+	if ((i = strdb_iget(mapindex->db, map_name)))
 		return i;
 
 	ShowDebug("mapindex_name2id: Map \"%s\" not found in index list!\n", map_name);
@@ -154,7 +154,7 @@ static unsigned short mapindex_name2id(const char *name)
 static const char *mapindex_id2name_sub(uint16 id, const char *file, int line, const char *func)
 {
 	if (id >= MAX_MAPINDEX || !mapindex_exists(id)) {
-		ShowDebug("mapindex_id2name: Requested name for non-existant map index [%d] in cache. %s:%s:%d\n", id,file,func,line);
+		ShowDebug("mapindex_id2name: Requested name for non-existant map index [%d] in cache. %s:%s:%d\n", id, file, func, line);
 		return mapindex->list[0].name; // dummy empty string so that the callee doesn't crash
 	}
 	return mapindex->list[id].name;
@@ -196,7 +196,7 @@ static bool mapindex_config_read(void)
 {
 	struct config_t config;
 	const char *filename = "conf/common/map-index.conf";
-	
+
 	if (!libconfig->load_file(&config, filename))
 		return false; // Error message is already shown by libconfig->load_file
 
@@ -221,23 +221,23 @@ static int mapindex_init(void)
 	int index, total = 0;
 	char map_name[13];
 
-	if( ( fp = fopen(mapindex->config_file,"r") ) == NULL ){
+	if ((fp = fopen(mapindex->config_file, "r")) == NULL) {
 		ShowFatalError("Unable to read mapindex config file %s!\n", mapindex->config_file);
-		exit(EXIT_FAILURE); //Server can't really run without this file.
+		exit(EXIT_FAILURE); // Server can't really run without this file.
 	}
 
 	mapindex->db = strdb_alloc(DB_OPT_DUP_KEY, MAP_NAME_LENGTH);
 
-	while(fgets(line, sizeof(line), fp)) {
-		if(line[0] == '/' && line[1] == '/')
+	while (fgets(line, sizeof(line), fp)) {
+		if (line[0] == '/' && line[1] == '/')
 			continue;
 
 		switch (sscanf(line, "%12s\t%d", map_name, &index)) {
-			case 1: //Map with no ID given, auto-assign
-				index = last_index+1;
+			case 1: // Map with no ID given, auto-assign
+				index = last_index + 1;
 				/* Fall through */
-			case 2: //Map with ID given
-				mapindex->addmap(index,map_name);
+			case 2: // Map with ID given
+				mapindex->addmap(index, map_name);
 				total++;
 				break;
 			default:
@@ -278,14 +278,14 @@ void mapindex_defaults(void)
 	mapindex = &mapindex_s;
 
 	/* TODO: place it in inter-server.conf? */
-	snprintf(mapindex->config_file, sizeof(mapindex->config_file), "%s","db/map_index.txt");
+	snprintf(mapindex->config_file, sizeof(mapindex->config_file), "%s", "db/map_index.txt");
 	/* */
 	mapindex->db = NULL;
 	mapindex->num = 0;
 	mapindex->default_map = MAP_DEFAULT;
 	mapindex->default_x = MAP_DEFAULT_X;
 	mapindex->default_y = MAP_DEFAULT_Y;
-	memset (&mapindex->list, 0, sizeof (mapindex->list));
+	memset(&mapindex->list, 0, sizeof(mapindex->list));
 
 	/* */
 	mapindex->config_read = mapindex_config_read;

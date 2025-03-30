@@ -35,13 +35,13 @@
 #include "common/showmsg.h"
 #include "common/strlib.h"
 
-#include <stdio.h> // fopen
+#include <stdio.h>  // fopen
 #include <stdlib.h> // atoi
 #ifdef WIN32
-#	include <windows.h>
+	#include <windows.h>
 #else
-#	include <sys/time.h> // time constants
-#	include <unistd.h>
+	#include <sys/time.h> // time constants
+	#include <unistd.h>
 #endif
 #include <zlib.h>
 
@@ -59,8 +59,8 @@ struct sysinfo_private {
 	const char *vcsrevision_src;
 	char *vcsrevision_scripts;
 
-	bool (*git_get_revision) (char **out);
-	bool (*svn_get_revision) (char **out);
+	bool (*git_get_revision)(char **out);
+	bool (*svn_get_revision)(char **out);
 };
 
 /// sysinfo.c interface source
@@ -82,88 +82,88 @@ struct sysinfo_interface *sysinfo;
  * Values from: http://msdn.microsoft.com/en-us/library/windows/desktop/ms724358%28v=vs.85%29.aspx
  */
 enum windows_product_type {
-	msPRODUCT_UNDEFINED                           = 0x00000000, ///< An unknown product
-	msPRODUCT_ULTIMATE                            = 0x00000001, ///< Ultimate
-	msPRODUCT_HOME_BASIC                          = 0x00000002, ///< Home Basic
-	msPRODUCT_HOME_PREMIUM                        = 0x00000003, ///< Home Premium
-	msPRODUCT_ENTERPRISE                          = 0x00000004, ///< Enterprise
-	msPRODUCT_HOME_BASIC_N                        = 0x00000005, ///< Home Basic N
-	msPRODUCT_BUSINESS                            = 0x00000006, ///< Business
-	msPRODUCT_STANDARD_SERVER                     = 0x00000007, ///< Server Standard
-	msPRODUCT_DATACENTER_SERVER                   = 0x00000008, ///< Server Datacenter (full installation)
-	msPRODUCT_SMALLBUSINESS_SERVER                = 0x00000009, ///< Windows Small Business Server
-	msPRODUCT_ENTERPRISE_SERVER                   = 0x0000000A, ///< Server Enterprise (full installation)
-	msPRODUCT_STARTER                             = 0x0000000B, ///< Starter
-	msPRODUCT_DATACENTER_SERVER_CORE              = 0x0000000C, ///< Server Datacenter (core installation)
-	msPRODUCT_ENTERPRISE_SERVER_CORE              = 0x0000000E, ///< Server Enterprise (core installation)
-	msPRODUCT_STANDARD_SERVER_CORE                = 0x0000000D, ///< Server Standard (core installation)
-	msPRODUCT_ENTERPRISE_SERVER_IA64              = 0x0000000F, ///< Server Enterprise for Itanium-based Systems
-	msPRODUCT_BUSINESS_N                          = 0x00000010, ///< Business N
-	msPRODUCT_WEB_SERVER                          = 0x00000011, ///< Web Server (full installation)
-	msPRODUCT_CLUSTER_SERVER                      = 0x00000012, ///< HPC Edition
-	msPRODUCT_HOME_SERVER                         = 0x00000013, ///< Windows Storage Server 2008 R2 Essentials
-	msPRODUCT_STORAGE_EXPRESS_SERVER              = 0x00000014, ///< Storage Server Express
-	msPRODUCT_STORAGE_STANDARD_SERVER             = 0x00000015, ///< Storage Server Standard
-	msPRODUCT_STORAGE_WORKGROUP_SERVER            = 0x00000016, ///< Storage Server Workgroup
-	msPRODUCT_STORAGE_ENTERPRISE_SERVER           = 0x00000017, ///< Storage Server Enterprise
-	msPRODUCT_SERVER_FOR_SMALLBUSINESS            = 0x00000018, ///< Windows Server 2008 for Windows Essential Server Solutions
-	msPRODUCT_SMALLBUSINESS_SERVER_PREMIUM        = 0x00000019, ///< Small Business Server Premium
-	msPRODUCT_HOME_PREMIUM_N                      = 0x0000001A, ///< Home Premium N
-	msPRODUCT_ENTERPRISE_N                        = 0x0000001B, ///< Enterprise N
-	msPRODUCT_ULTIMATE_N                          = 0x0000001C, ///< Ultimate N
-	msPRODUCT_WEB_SERVER_CORE                     = 0x0000001D, ///< Web Server (core installation)
-	msPRODUCT_MEDIUMBUSINESS_SERVER_MANAGEMENT    = 0x0000001E, ///< Windows Essential Business Server Management Server
-	msPRODUCT_MEDIUMBUSINESS_SERVER_SECURITY      = 0x0000001F, ///< Windows Essential Business Server Security Server
-	msPRODUCT_MEDIUMBUSINESS_SERVER_MESSAGING     = 0x00000020, ///< Windows Essential Business Server Messaging Server
-	msPRODUCT_SERVER_FOUNDATION                   = 0x00000021, ///< Server Foundation
-	msPRODUCT_HOME_PREMIUM_SERVER                 = 0x00000022, ///< Windows Home Server 2011
-	msPRODUCT_SERVER_FOR_SMALLBUSINESS_V          = 0x00000023, ///< Windows Server 2008 without Hyper-V for Windows Essential Server Solutions
-	msPRODUCT_STANDARD_SERVER_V                   = 0x00000024, ///< Server Standard without Hyper-V
-	msPRODUCT_DATACENTER_SERVER_V                 = 0x00000025, ///< Server Datacenter without Hyper-V (full installation)
-	msPRODUCT_ENTERPRISE_SERVER_V                 = 0x00000026, ///< Server Enterprise without Hyper-V (full installation)
-	msPRODUCT_DATACENTER_SERVER_CORE_V            = 0x00000027, ///< Server Datacenter without Hyper-V (core installation)
-	msPRODUCT_STANDARD_SERVER_CORE_V              = 0x00000028, ///< Server Standard without Hyper-V (core installation)
-	msPRODUCT_ENTERPRISE_SERVER_CORE_V            = 0x00000029, ///< Server Enterprise without Hyper-V (core installation)
-	msPRODUCT_HYPERV                              = 0x0000002A, ///< Microsoft Hyper-V Server
-	msPRODUCT_STORAGE_EXPRESS_SERVER_CORE         = 0x0000002B, ///< Storage Server Express (core installation)
-	msPRODUCT_STORAGE_STANDARD_SERVER_CORE        = 0x0000002C, ///< Storage Server Standard (core installation)
-	msPRODUCT_STORAGE_WORKGROUP_SERVER_CORE       = 0x0000002D, ///< Storage Server Workgroup (core installation)
-	msPRODUCT_STORAGE_ENTERPRISE_SERVER_CORE      = 0x0000002E, ///< Storage Server Enterprise (core installation)
-	msPRODUCT_STARTER_N                           = 0x0000002F, ///< Starter N
-	msPRODUCT_PROFESSIONAL                        = 0x00000030, ///< Professional
-	msPRODUCT_PROFESSIONAL_N                      = 0x00000031, ///< Professional N
-	msPRODUCT_SB_SOLUTION_SERVER                  = 0x00000032, ///< Windows Small Business Server 2011 Essentials
-	msPRODUCT_SERVER_FOR_SB_SOLUTIONS             = 0x00000033, ///< Server For SB Solutions
-	msPRODUCT_STANDARD_SERVER_SOLUTIONS           = 0x00000034, ///< Server Solutions Premium
-	msPRODUCT_STANDARD_SERVER_SOLUTIONS_CORE      = 0x00000035, ///< Server Solutions Premium (core installation)
-	msPRODUCT_SB_SOLUTION_SERVER_EM               = 0x00000036, ///< Server For SB Solutions EM
-	msPRODUCT_SERVER_FOR_SB_SOLUTIONS_EM          = 0x00000037, ///< Server For SB Solutions EM
-	msPRODUCT_SOLUTION_EMBEDDEDSERVER             = 0x00000038, ///< Windows MultiPoint Server
-	msPRODUCT_ESSENTIALBUSINESS_SERVER_MGMT       = 0x0000003B, ///< Windows Essential Server Solution Management
-	msPRODUCT_ESSENTIALBUSINESS_SERVER_ADDL       = 0x0000003C, ///< Windows Essential Server Solution Additional
-	msPRODUCT_ESSENTIALBUSINESS_SERVER_MGMTSVC    = 0x0000003D, ///< Windows Essential Server Solution Management SVC
-	msPRODUCT_ESSENTIALBUSINESS_SERVER_ADDLSVC    = 0x0000003E, ///< Windows Essential Server Solution Additional SVC
-	msPRODUCT_SMALLBUSINESS_SERVER_PREMIUM_CORE   = 0x0000003F, ///< Small Business Server Premium (core installation)
-	msPRODUCT_CLUSTER_SERVER_V                    = 0x00000040, ///< Server Hyper Core V
-	msPRODUCT_STARTER_E                           = 0x00000042, ///< Not supported
-	msPRODUCT_HOME_BASIC_E                        = 0x00000043, ///< Not supported
-	msPRODUCT_HOME_PREMIUM_E                      = 0x00000044, ///< Not supported
-	msPRODUCT_PROFESSIONAL_E                      = 0x00000045, ///< Not supported
-	msPRODUCT_ENTERPRISE_E                        = 0x00000046, ///< Not supported
-	msPRODUCT_ULTIMATE_E                          = 0x00000047, ///< Not supported
-	msPRODUCT_ENTERPRISE_EVALUATION               = 0x00000048, ///< Server Enterprise (evaluation installation)
-	msPRODUCT_MULTIPOINT_STANDARD_SERVER          = 0x0000004C, ///< Windows MultiPoint Server Standard (full installation)
-	msPRODUCT_MULTIPOINT_PREMIUM_SERVER           = 0x0000004D, ///< Windows MultiPoint Server Premium (full installation)
-	msPRODUCT_STANDARD_EVALUATION_SERVER          = 0x0000004F, ///< Server Standard (evaluation installation)
-	msPRODUCT_DATACENTER_EVALUATION_SERVER        = 0x00000050, ///< Server Datacenter (evaluation installation)
-	msPRODUCT_ENTERPRISE_N_EVALUATION             = 0x00000054, ///< Enterprise N (evaluation installation)
+	msPRODUCT_UNDEFINED = 0x00000000,                           ///< An unknown product
+	msPRODUCT_ULTIMATE = 0x00000001,                            ///< Ultimate
+	msPRODUCT_HOME_BASIC = 0x00000002,                          ///< Home Basic
+	msPRODUCT_HOME_PREMIUM = 0x00000003,                        ///< Home Premium
+	msPRODUCT_ENTERPRISE = 0x00000004,                          ///< Enterprise
+	msPRODUCT_HOME_BASIC_N = 0x00000005,                        ///< Home Basic N
+	msPRODUCT_BUSINESS = 0x00000006,                            ///< Business
+	msPRODUCT_STANDARD_SERVER = 0x00000007,                     ///< Server Standard
+	msPRODUCT_DATACENTER_SERVER = 0x00000008,                   ///< Server Datacenter (full installation)
+	msPRODUCT_SMALLBUSINESS_SERVER = 0x00000009,                ///< Windows Small Business Server
+	msPRODUCT_ENTERPRISE_SERVER = 0x0000000A,                   ///< Server Enterprise (full installation)
+	msPRODUCT_STARTER = 0x0000000B,                             ///< Starter
+	msPRODUCT_DATACENTER_SERVER_CORE = 0x0000000C,              ///< Server Datacenter (core installation)
+	msPRODUCT_ENTERPRISE_SERVER_CORE = 0x0000000E,              ///< Server Enterprise (core installation)
+	msPRODUCT_STANDARD_SERVER_CORE = 0x0000000D,                ///< Server Standard (core installation)
+	msPRODUCT_ENTERPRISE_SERVER_IA64 = 0x0000000F,              ///< Server Enterprise for Itanium-based Systems
+	msPRODUCT_BUSINESS_N = 0x00000010,                          ///< Business N
+	msPRODUCT_WEB_SERVER = 0x00000011,                          ///< Web Server (full installation)
+	msPRODUCT_CLUSTER_SERVER = 0x00000012,                      ///< HPC Edition
+	msPRODUCT_HOME_SERVER = 0x00000013,                         ///< Windows Storage Server 2008 R2 Essentials
+	msPRODUCT_STORAGE_EXPRESS_SERVER = 0x00000014,              ///< Storage Server Express
+	msPRODUCT_STORAGE_STANDARD_SERVER = 0x00000015,             ///< Storage Server Standard
+	msPRODUCT_STORAGE_WORKGROUP_SERVER = 0x00000016,            ///< Storage Server Workgroup
+	msPRODUCT_STORAGE_ENTERPRISE_SERVER = 0x00000017,           ///< Storage Server Enterprise
+	msPRODUCT_SERVER_FOR_SMALLBUSINESS = 0x00000018,            ///< Windows Server 2008 for Windows Essential Server Solutions
+	msPRODUCT_SMALLBUSINESS_SERVER_PREMIUM = 0x00000019,        ///< Small Business Server Premium
+	msPRODUCT_HOME_PREMIUM_N = 0x0000001A,                      ///< Home Premium N
+	msPRODUCT_ENTERPRISE_N = 0x0000001B,                        ///< Enterprise N
+	msPRODUCT_ULTIMATE_N = 0x0000001C,                          ///< Ultimate N
+	msPRODUCT_WEB_SERVER_CORE = 0x0000001D,                     ///< Web Server (core installation)
+	msPRODUCT_MEDIUMBUSINESS_SERVER_MANAGEMENT = 0x0000001E,    ///< Windows Essential Business Server Management Server
+	msPRODUCT_MEDIUMBUSINESS_SERVER_SECURITY = 0x0000001F,      ///< Windows Essential Business Server Security Server
+	msPRODUCT_MEDIUMBUSINESS_SERVER_MESSAGING = 0x00000020,     ///< Windows Essential Business Server Messaging Server
+	msPRODUCT_SERVER_FOUNDATION = 0x00000021,                   ///< Server Foundation
+	msPRODUCT_HOME_PREMIUM_SERVER = 0x00000022,                 ///< Windows Home Server 2011
+	msPRODUCT_SERVER_FOR_SMALLBUSINESS_V = 0x00000023,          ///< Windows Server 2008 without Hyper-V for Windows Essential Server Solutions
+	msPRODUCT_STANDARD_SERVER_V = 0x00000024,                   ///< Server Standard without Hyper-V
+	msPRODUCT_DATACENTER_SERVER_V = 0x00000025,                 ///< Server Datacenter without Hyper-V (full installation)
+	msPRODUCT_ENTERPRISE_SERVER_V = 0x00000026,                 ///< Server Enterprise without Hyper-V (full installation)
+	msPRODUCT_DATACENTER_SERVER_CORE_V = 0x00000027,            ///< Server Datacenter without Hyper-V (core installation)
+	msPRODUCT_STANDARD_SERVER_CORE_V = 0x00000028,              ///< Server Standard without Hyper-V (core installation)
+	msPRODUCT_ENTERPRISE_SERVER_CORE_V = 0x00000029,            ///< Server Enterprise without Hyper-V (core installation)
+	msPRODUCT_HYPERV = 0x0000002A,                              ///< Microsoft Hyper-V Server
+	msPRODUCT_STORAGE_EXPRESS_SERVER_CORE = 0x0000002B,         ///< Storage Server Express (core installation)
+	msPRODUCT_STORAGE_STANDARD_SERVER_CORE = 0x0000002C,        ///< Storage Server Standard (core installation)
+	msPRODUCT_STORAGE_WORKGROUP_SERVER_CORE = 0x0000002D,       ///< Storage Server Workgroup (core installation)
+	msPRODUCT_STORAGE_ENTERPRISE_SERVER_CORE = 0x0000002E,      ///< Storage Server Enterprise (core installation)
+	msPRODUCT_STARTER_N = 0x0000002F,                           ///< Starter N
+	msPRODUCT_PROFESSIONAL = 0x00000030,                        ///< Professional
+	msPRODUCT_PROFESSIONAL_N = 0x00000031,                      ///< Professional N
+	msPRODUCT_SB_SOLUTION_SERVER = 0x00000032,                  ///< Windows Small Business Server 2011 Essentials
+	msPRODUCT_SERVER_FOR_SB_SOLUTIONS = 0x00000033,             ///< Server For SB Solutions
+	msPRODUCT_STANDARD_SERVER_SOLUTIONS = 0x00000034,           ///< Server Solutions Premium
+	msPRODUCT_STANDARD_SERVER_SOLUTIONS_CORE = 0x00000035,      ///< Server Solutions Premium (core installation)
+	msPRODUCT_SB_SOLUTION_SERVER_EM = 0x00000036,               ///< Server For SB Solutions EM
+	msPRODUCT_SERVER_FOR_SB_SOLUTIONS_EM = 0x00000037,          ///< Server For SB Solutions EM
+	msPRODUCT_SOLUTION_EMBEDDEDSERVER = 0x00000038,             ///< Windows MultiPoint Server
+	msPRODUCT_ESSENTIALBUSINESS_SERVER_MGMT = 0x0000003B,       ///< Windows Essential Server Solution Management
+	msPRODUCT_ESSENTIALBUSINESS_SERVER_ADDL = 0x0000003C,       ///< Windows Essential Server Solution Additional
+	msPRODUCT_ESSENTIALBUSINESS_SERVER_MGMTSVC = 0x0000003D,    ///< Windows Essential Server Solution Management SVC
+	msPRODUCT_ESSENTIALBUSINESS_SERVER_ADDLSVC = 0x0000003E,    ///< Windows Essential Server Solution Additional SVC
+	msPRODUCT_SMALLBUSINESS_SERVER_PREMIUM_CORE = 0x0000003F,   ///< Small Business Server Premium (core installation)
+	msPRODUCT_CLUSTER_SERVER_V = 0x00000040,                    ///< Server Hyper Core V
+	msPRODUCT_STARTER_E = 0x00000042,                           ///< Not supported
+	msPRODUCT_HOME_BASIC_E = 0x00000043,                        ///< Not supported
+	msPRODUCT_HOME_PREMIUM_E = 0x00000044,                      ///< Not supported
+	msPRODUCT_PROFESSIONAL_E = 0x00000045,                      ///< Not supported
+	msPRODUCT_ENTERPRISE_E = 0x00000046,                        ///< Not supported
+	msPRODUCT_ULTIMATE_E = 0x00000047,                          ///< Not supported
+	msPRODUCT_ENTERPRISE_EVALUATION = 0x00000048,               ///< Server Enterprise (evaluation installation)
+	msPRODUCT_MULTIPOINT_STANDARD_SERVER = 0x0000004C,          ///< Windows MultiPoint Server Standard (full installation)
+	msPRODUCT_MULTIPOINT_PREMIUM_SERVER = 0x0000004D,           ///< Windows MultiPoint Server Premium (full installation)
+	msPRODUCT_STANDARD_EVALUATION_SERVER = 0x0000004F,          ///< Server Standard (evaluation installation)
+	msPRODUCT_DATACENTER_EVALUATION_SERVER = 0x00000050,        ///< Server Datacenter (evaluation installation)
+	msPRODUCT_ENTERPRISE_N_EVALUATION = 0x00000054,             ///< Enterprise N (evaluation installation)
 	msPRODUCT_STORAGE_WORKGROUP_EVALUATION_SERVER = 0x0000005F, ///< Storage Server Workgroup (evaluation installation)
-	msPRODUCT_STORAGE_STANDARD_EVALUATION_SERVER  = 0x00000060, ///< Storage Server Standard (evaluation installation)
-	msPRODUCT_CORE_N                              = 0x00000062, ///< Windows 8 N
-	msPRODUCT_CORE_COUNTRYSPECIFIC                = 0x00000063, ///< Windows 8 China
-	msPRODUCT_CORE_SINGLELANGUAGE                 = 0x00000064, ///< Windows 8 Single Language
-	msPRODUCT_CORE                                = 0x00000065, ///< Windows 8
-	msPRODUCT_PROFESSIONAL_WMC                    = 0x00000067, ///< Professional with Media Center
+	msPRODUCT_STORAGE_STANDARD_EVALUATION_SERVER = 0x00000060,  ///< Storage Server Standard (evaluation installation)
+	msPRODUCT_CORE_N = 0x00000062,                              ///< Windows 8 N
+	msPRODUCT_CORE_COUNTRYSPECIFIC = 0x00000063,                ///< Windows 8 China
+	msPRODUCT_CORE_SINGLELANGUAGE = 0x00000064,                 ///< Windows 8 Single Language
+	msPRODUCT_CORE = 0x00000065,                                ///< Windows 8
+	msPRODUCT_PROFESSIONAL_WMC = 0x00000067,                    ///< Professional with Media Center
 };
 
 /**
@@ -181,64 +181,62 @@ enum windows_metrics {
  * Values from http://msdn.microsoft.com/en-us/library/windows/desktop/ms724833%28v=vs.85%29.aspx
  */
 enum windows_ver_suite {
-	msVER_SUITE_BLADE          = 0x00000400, ///< Windows Server 2003, Web Edition is installed.
+	msVER_SUITE_BLADE = 0x00000400,          ///< Windows Server 2003, Web Edition is installed.
 	msVER_SUITE_STORAGE_SERVER = 0x00002000, ///< Windows Storage Server 2003 R2 or Windows Storage Server 2003 is installed.
 	msVER_SUITE_COMPUTE_SERVER = 0x00004000, ///< Windows Server 2003, Compute Cluster Edition is installed.
-	msVER_SUITE_WH_SERVER      = 0x00008000, ///< Windows Home Server is installed.
+	msVER_SUITE_WH_SERVER = 0x00008000,      ///< Windows Home Server is installed.
 };
 
 #else // not WIN32
-// UNIX. Use build-time cached values
-#include "sysinfo.inc"
+    // UNIX. Use build-time cached values
+	#include "sysinfo.inc"
 #endif // WIN32
 
 // Compiler detection <http://sourceforge.net/p/predef/wiki/Compilers/>
 #if defined(__BORLANDC__)
-#define SYSINFO_COMPILER "Borland C++"
+	#define SYSINFO_COMPILER "Borland C++"
 #elif defined(__clang__)
-#define SYSINFO_COMPILER "Clang v" EXPAND_AND_QUOTE(__clang_major__) "." EXPAND_AND_QUOTE(__clang_minor__) "." EXPAND_AND_QUOTE(__clang_patchlevel__)
+	#define SYSINFO_COMPILER "Clang v" EXPAND_AND_QUOTE(__clang_major__) "." EXPAND_AND_QUOTE(__clang_minor__) "." EXPAND_AND_QUOTE(__clang_patchlevel__)
 #elif defined(__INTEL_COMPILER)
-#define SYSINFO_COMPILER "Intel CC v" EXPAND_AND_QUOTE(__INTEL_COMPILER)
+	#define SYSINFO_COMPILER "Intel CC v" EXPAND_AND_QUOTE(__INTEL_COMPILER)
 #elif defined(__MINGW32__)
-#if defined(__MINGW64__)
-#define SYSINFO_COMPILER "MinGW-w64 64 Bit v" EXPAND_AND_QUOTE(__MINGW64_VERSION_MAJOR) "." EXPAND_AND_QUOTE(__MINGW64_VERSION_MINOR) \
-	" (MinGW " EXPAND_AND_QUOTE(__MINGW32_MAJOR_VERSION) "." EXPAND_AND_QUOTE(__MINGW32_MINOR_VERSION) ")"
-#elif defined(__MINGW64_VERSION_MAJOR)
-#define SYSINFO_COMPILER "MinGW-w64 32 Bit v" EXPAND_AND_QUOTE(__MINGW64_VERSION_MAJOR) "." EXPAND_AND_QUOTE(__MINGW64_VERSION_MINOR) \
-	" (MinGW " EXPAND_AND_QUOTE(__MINGW32_MAJOR_VERSION) "." EXPAND_AND_QUOTE(__MINGW32_MINOR_VERSION) ")"
-#else
-#define SYSINFO_COMPILER "MinGW32 v" EXPAND_AND_QUOTE(__MINGW32_MAJOR_VERSION) "." EXPAND_AND_QUOTE(__MINGW32_MINOR_VERSION)
-#endif
+	#if defined(__MINGW64__)
+		#define SYSINFO_COMPILER "MinGW-w64 64 Bit v" EXPAND_AND_QUOTE(__MINGW64_VERSION_MAJOR) "." EXPAND_AND_QUOTE(__MINGW64_VERSION_MINOR) " (MinGW " EXPAND_AND_QUOTE(__MINGW32_MAJOR_VERSION) "." EXPAND_AND_QUOTE(__MINGW32_MINOR_VERSION) ")"
+	#elif defined(__MINGW64_VERSION_MAJOR)
+		#define SYSINFO_COMPILER "MinGW-w64 32 Bit v" EXPAND_AND_QUOTE(__MINGW64_VERSION_MAJOR) "." EXPAND_AND_QUOTE(__MINGW64_VERSION_MINOR) " (MinGW " EXPAND_AND_QUOTE(__MINGW32_MAJOR_VERSION) "." EXPAND_AND_QUOTE(__MINGW32_MINOR_VERSION) ")"
+	#else
+		#define SYSINFO_COMPILER "MinGW32 v" EXPAND_AND_QUOTE(__MINGW32_MAJOR_VERSION) "." EXPAND_AND_QUOTE(__MINGW32_MINOR_VERSION)
+	#endif
 #elif defined(__GNUC__)
-#define SYSINFO_COMPILER "GCC v" EXPAND_AND_QUOTE(__GNUC__) "." EXPAND_AND_QUOTE(__GNUC_MINOR__) "." EXPAND_AND_QUOTE(__GNUC_PATCHLEVEL__)
+	#define SYSINFO_COMPILER "GCC v" EXPAND_AND_QUOTE(__GNUC__) "." EXPAND_AND_QUOTE(__GNUC_MINOR__) "." EXPAND_AND_QUOTE(__GNUC_PATCHLEVEL__)
 #elif defined(_MSC_VER)
-#if _MSC_VER >= 1300 && _MSC_VER < 1310
-#define SYSINFO_COMPILER "Microsoft Visual C++ 7.0 (v" EXPAND_AND_QUOTE(_MSC_VER) ")"
-#elif _MSC_VER >= 1310 && _MSC_VER < 1400
-#define SYSINFO_COMPILER "Microsoft Visual C++ 2003 (v" EXPAND_AND_QUOTE(_MSC_VER) ")"
-#elif _MSC_VER >= 1400 && _MSC_VER < 1500
-#define SYSINFO_COMPILER "Microsoft Visual C++ 2005 (v" EXPAND_AND_QUOTE(_MSC_VER) ")"
-#elif _MSC_VER >= 1500 && _MSC_VER < 1600
-#define SYSINFO_COMPILER "Microsoft Visual C++ 2008 (v" EXPAND_AND_QUOTE(_MSC_VER) ")"
-#elif _MSC_VER >= 1600 && _MSC_VER < 1700
-#define SYSINFO_COMPILER "Microsoft Visual C++ 2010 (v" EXPAND_AND_QUOTE(_MSC_VER) ")"
-#elif _MSC_VER >= 1700 && _MSC_VER < 1800
-#define SYSINFO_COMPILER "Microsoft Visual C++ 2012 (v" EXPAND_AND_QUOTE(_MSC_VER) ")"
-#elif _MSC_VER >= 1800 && _MSC_VER < 1900
-#define SYSINFO_COMPILER "Microsoft Visual C++ 2013 (v" EXPAND_AND_QUOTE(_MSC_VER) ")"
-#elif _MSC_VER >= 1900 && _MSC_VER < 1910
-#define SYSINFO_COMPILER "Microsoft Visual C++ 2015 (v" EXPAND_AND_QUOTE(_MSC_VER) ")"
-#elif _MSC_VER >= 1910 && _MSC_VER < 1920
-#define SYSINFO_COMPILER "Microsoft Visual C++ 2017 (v" EXPAND_AND_QUOTE(_MSC_VER) ")"
-#elif _MSC_VER >= 1920 && _MSC_VER < 1930
-#define SYSINFO_COMPILER "Microsoft Visual C++ 2019 (v" EXPAND_AND_QUOTE(_MSC_VER) ")"
-#elif _MSC_VER >= 1930 && _MSC_VER < 2000
-#define SYSINFO_COMPILER "Microsoft Visual C++ 2022 (v" EXPAND_AND_QUOTE(_MSC_VER) ")"
-#else // < 1300 || >= 2000
-#define SYSINFO_COMPILER "Microsoft Visual C++ v" EXPAND_AND_QUOTE(_MSC_VER)
-#endif
+	#if _MSC_VER >= 1300 && _MSC_VER < 1310
+		#define SYSINFO_COMPILER "Microsoft Visual C++ 7.0 (v" EXPAND_AND_QUOTE(_MSC_VER) ")"
+	#elif _MSC_VER >= 1310 && _MSC_VER < 1400
+		#define SYSINFO_COMPILER "Microsoft Visual C++ 2003 (v" EXPAND_AND_QUOTE(_MSC_VER) ")"
+	#elif _MSC_VER >= 1400 && _MSC_VER < 1500
+		#define SYSINFO_COMPILER "Microsoft Visual C++ 2005 (v" EXPAND_AND_QUOTE(_MSC_VER) ")"
+	#elif _MSC_VER >= 1500 && _MSC_VER < 1600
+		#define SYSINFO_COMPILER "Microsoft Visual C++ 2008 (v" EXPAND_AND_QUOTE(_MSC_VER) ")"
+	#elif _MSC_VER >= 1600 && _MSC_VER < 1700
+		#define SYSINFO_COMPILER "Microsoft Visual C++ 2010 (v" EXPAND_AND_QUOTE(_MSC_VER) ")"
+	#elif _MSC_VER >= 1700 && _MSC_VER < 1800
+		#define SYSINFO_COMPILER "Microsoft Visual C++ 2012 (v" EXPAND_AND_QUOTE(_MSC_VER) ")"
+	#elif _MSC_VER >= 1800 && _MSC_VER < 1900
+		#define SYSINFO_COMPILER "Microsoft Visual C++ 2013 (v" EXPAND_AND_QUOTE(_MSC_VER) ")"
+	#elif _MSC_VER >= 1900 && _MSC_VER < 1910
+		#define SYSINFO_COMPILER "Microsoft Visual C++ 2015 (v" EXPAND_AND_QUOTE(_MSC_VER) ")"
+	#elif _MSC_VER >= 1910 && _MSC_VER < 1920
+		#define SYSINFO_COMPILER "Microsoft Visual C++ 2017 (v" EXPAND_AND_QUOTE(_MSC_VER) ")"
+	#elif _MSC_VER >= 1920 && _MSC_VER < 1930
+		#define SYSINFO_COMPILER "Microsoft Visual C++ 2019 (v" EXPAND_AND_QUOTE(_MSC_VER) ")"
+	#elif _MSC_VER >= 1930 && _MSC_VER < 2000
+		#define SYSINFO_COMPILER "Microsoft Visual C++ 2022 (v" EXPAND_AND_QUOTE(_MSC_VER) ")"
+	#else // < 1300 || >= 2000
+		#define SYSINFO_COMPILER "Microsoft Visual C++ v" EXPAND_AND_QUOTE(_MSC_VER)
+	#endif
 #else
-#define SYSINFO_COMPILER "Unknown"
+	#define SYSINFO_COMPILER "Unknown"
 #endif
 // end compiler detection
 
@@ -261,23 +259,23 @@ static bool sysinfo_svn_get_revision(char **out)
 	// - ignores database file structure
 	// - assumes the data in NODES.dav_cache column ends with "!svn/ver/<revision>/<path>)"
 	// - since it's a cache column, the data might not even exist
-	if ((fp = fopen(".svn"PATHSEP_STR"wc.db", "rb")) != NULL || (fp = fopen(".."PATHSEP_STR".svn"PATHSEP_STR"wc.db", "rb")) != NULL) {
+	if ((fp = fopen(".svn" PATHSEP_STR "wc.db", "rb")) != NULL || (fp = fopen(".." PATHSEP_STR ".svn" PATHSEP_STR "wc.db", "rb")) != NULL) {
 
-#ifndef SVNNODEPATH //not sure how to handle branches, so I'll leave this overridable define until a better solution comes up
-#define SVNNODEPATH trunk
-#endif // SVNNODEPATH
+	#ifndef SVNNODEPATH // not sure how to handle branches, so I'll leave this overridable define until a better solution comes up
+		#define SVNNODEPATH trunk
+	#endif // SVNNODEPATH
 
-		const char* prefix = "!svn/ver/";
-		const char* postfix = "/"EXPAND_AND_QUOTE(SVNNODEPATH)")"; // there should exist only 1 entry like this
+		const char *prefix = "!svn/ver/";
+		const char *postfix = "/" EXPAND_AND_QUOTE(SVNNODEPATH) ")"; // there should exist only 1 entry like this
 		size_t prefix_len = strlen(prefix);
 		size_t postfix_len = strlen(postfix);
-		size_t i,j,flen;
-		char* buffer;
+		size_t i, j, flen;
+		char *buffer;
 
 		// read file to buffer
 		fseek(fp, 0, SEEK_END);
 		flen = ftell(fp);
-		buffer = (char*)aMalloc(flen + 1);
+		buffer = (char *)aMalloc(flen + 1);
 		fseek(fp, 0, SEEK_SET);
 		flen = fread(buffer, 1, flen, fp);
 		buffer[flen] = '\0';
@@ -286,7 +284,7 @@ static bool sysinfo_svn_get_revision(char **out)
 		// parse buffer
 		for (i = prefix_len + 1; i + postfix_len <= flen; ++i) {
 			if (buffer[i] != postfix[0] || memcmp(buffer + i, postfix, postfix_len) != 0)
-				continue; // postfix mismatch
+				continue;             // postfix mismatch
 			for (j = i; j > 0; --j) { // skip digits
 				if (!ISDIGIT(buffer[j - 1]))
 					break;
@@ -334,7 +332,7 @@ static bool sysinfo_git_get_revision(char **out)
 		FILE *fp;
 		snprintf(filepath, sizeof(filepath), ".git/%s", ref);
 		if ((fp = fopen(filepath, "r")) != NULL) {
-			if (fgets(line, sizeof(line)-1, fp) == NULL) {
+			if (fgets(line, sizeof(line) - 1, fp) == NULL) {
 				fclose(fp);
 				break;
 			}
@@ -364,7 +362,7 @@ static bool sysinfo_git_get_revision(char **out)
 
 /// Windows-specific runtime detection functions.
 
-typedef BOOL (WINAPI *PGPI)(DWORD, DWORD, DWORD, DWORD, PDWORD);
+typedef BOOL(WINAPI *PGPI)(DWORD, DWORD, DWORD, DWORD, PDWORD);
 /**
  * Retrieves the Operating System version (Windows only).
  *
@@ -399,16 +397,16 @@ static void sysinfo_osversion_retrieve(void)
 	 * Windows, you'll have provided a less crippled API or something.
 	 * #pragma rantmode (off)
 	 */
-#pragma warning (push)
-#pragma warning (disable : 4996)
-	if (!GetVersionEx((OSVERSIONINFO*) &osvi)) {
+	#pragma warning(push)
+	#pragma warning(disable : 4996)
+	if (!GetVersionEx((OSVERSIONINFO *)&osvi)) {
 		sysinfo->p->osversion = aStrdup("Unknown Version");
 		return;
 	}
-#pragma warning (pop)
+	#pragma warning(pop)
 
-	if (VER_PLATFORM_WIN32_NT == osvi.dwPlatformId // Windows NT Family
-	 && ((osvi.dwMajorVersion > 4 && osvi.dwMajorVersion < 6) || (osvi.dwMajorVersion == 6 && osvi.dwMinorVersion <= 3)) // Between XP and 8.1
+	if (VER_PLATFORM_WIN32_NT == osvi.dwPlatformId                                                                          // Windows NT Family
+	    && ((osvi.dwMajorVersion > 4 && osvi.dwMajorVersion < 6) || (osvi.dwMajorVersion == 6 && osvi.dwMinorVersion <= 3)) // Between XP and 8.1
 	) {
 		if (osvi.dwMajorVersion == 6 && osvi.dwMinorVersion <= 3) { // Between Vista and 8.1
 			PGPI pGPI;
@@ -420,7 +418,7 @@ static void sysinfo_osversion_retrieve(void)
 			} else {
 				// If it's 2, it can be Windows 8, or any newer version -- see above for the reason.
 				// Fallback to using RtlGetVersion api to get the version
-				NTSTATUS(WINAPI *RtlGetVersion)(LPOSVERSIONINFOEX);
+				NTSTATUS(WINAPI * RtlGetVersion)(LPOSVERSIONINFOEX);
 				*(FARPROC *)&RtlGetVersion = GetProcAddress(GetModuleHandle(TEXT("ntdll")), "RtlGetVersion");
 				RtlGetVersion((LPOSVERSIONINFOEX)&osvi);
 
@@ -431,7 +429,7 @@ static void sysinfo_osversion_retrieve(void)
 					StrBuf->Printf(&buf, ".%d", osvi.dwMinorVersion);
 			}
 
-			pGPI = (PGPI) GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "GetProductInfo");
+			pGPI = (PGPI)GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "GetProductInfo");
 
 			pGPI(osvi.dwMajorVersion, osvi.dwMinorVersion, 0, 0, &dwType);
 
@@ -606,7 +604,7 @@ static void sysinfo_osversion_retrieve(void)
 	return;
 }
 
-typedef void (WINAPI *PGNSI)(LPSYSTEM_INFO);
+typedef void(WINAPI *PGNSI)(LPSYSTEM_INFO);
 
 /**
  * Retrieves SYSTEM_INFO (Windows only)
@@ -618,7 +616,7 @@ static void sysinfo_systeminfo_retrieve(LPSYSTEM_INFO info)
 	PGNSI pGNSI;
 
 	// Call GetNativeSystemInfo if supported or GetSystemInfo otherwise.
-	pGNSI = (PGNSI) GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "GetNativeSystemInfo");
+	pGNSI = (PGNSI)GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "GetNativeSystemInfo");
 	if (NULL != pGNSI)
 		pGNSI(info);
 	else
@@ -647,14 +645,8 @@ static void sysinfo_cpu_retrieve(void)
 
 	sysinfo_systeminfo_retrieve(&si);
 
-	if (si.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_INTEL
-	 || si.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_AMD64
-	) {
-		StrBuf->Printf(&buf, "%s CPU, Family %d, Model %d, Stepping %d",
-		               si.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_INTEL ? "x86" : "x86_64",
-		               si.wProcessorLevel,
-		               (si.wProcessorRevision&0xff00)>>8,
-		               (si.wProcessorRevision&0xff));
+	if (si.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_INTEL || si.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_AMD64) {
+		StrBuf->Printf(&buf, "%s CPU, Family %d, Model %d, Stepping %d", si.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_INTEL ? "x86" : "x86_64", si.wProcessorLevel, (si.wProcessorRevision & 0xff00) >> 8, (si.wProcessorRevision & 0xff));
 	} else {
 		StrBuf->AppendStr(&buf, "Unknown");
 	}
@@ -982,7 +974,7 @@ static void sysinfo_vcsrevision_reload(void)
 		return;
 	}
 	sysinfo->p->vcsrevision_scripts = aStrdup("Unknown");
-#endif  // WIN32
+#endif // WIN32
 }
 
 /**
@@ -1080,16 +1072,16 @@ static uint32 sysinfo_fflags(void)
 {
 	const uint32 flags = 0
 #ifdef ENABLE_CASHSHOP_PREVIEW_PATCH
-		| 1
-#endif  // ENABLE_CASHSHOP_PREVIEW_PATCH
+	                     | 1
+#endif // ENABLE_CASHSHOP_PREVIEW_PATCH
 #ifdef ENABLE_OLD_CASHSHOP_PREVIEW_PATCH
-		| 2
-#endif  // ENABLE_OLD_CASHSHOP_PREVIEW_PATCH
-	;
+	                     | 2
+#endif // ENABLE_OLD_CASHSHOP_PREVIEW_PATCH
+	    ;
 	return flags;
 }
 
-static const char* sysinfo_zlib(void)
+static const char *sysinfo_zlib(void)
 {
 	const char *compiled = ZLIB_VERSION;
 #if ZLIB_VERNUM >= 0x1020
@@ -1097,7 +1089,7 @@ static const char* sysinfo_zlib(void)
 	if (strcmp(compiled, linked) != 0) {
 		ShowError("Detected different zlib version: compiled %s, linked %s\n", compiled, linked);
 	}
-#endif  // ZLIB_VERNUM >= 0x1020
+#endif // ZLIB_VERNUM >= 0x1020
 	return compiled;
 }
 

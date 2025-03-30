@@ -54,20 +54,20 @@ struct path_interface *path;
 /// Path node
 struct path_node {
 	struct path_node *parent; ///< pointer to parent (for path reconstruction)
-	short x; ///< X-coordinate
-	short y; ///< Y-coordinate
-	short g_cost; ///< Actual cost from start to this node
-	short f_cost; ///< g_cost + heuristic(this, goal)
-	short flag; ///< SET_OPEN / SET_CLOSED
+	short x;                  ///< X-coordinate
+	short y;                  ///< Y-coordinate
+	short g_cost;             ///< Actual cost from start to this node
+	short f_cost;             ///< g_cost + heuristic(this, goal)
+	short flag;               ///< SET_OPEN / SET_CLOSED
 };
 
 /// Binary heap of path nodes
 BHEAP_STRUCT_DECL(node_heap, struct path_node *);
 
 /// Comparator for binary heap of path nodes (minimum cost at top)
-#define NODE_MINTOPCMP(i,j) ((i)->f_cost - (j)->f_cost)
+#define NODE_MINTOPCMP(i, j) ((i)->f_cost - (j)->f_cost)
 
-#define calc_index(x,y) (((x)+(y)*MAX_WALKPATH) & (MAX_WALKPATH*MAX_WALKPATH-1))
+#define calc_index(x, y) (((x) + (y) * MAX_WALKPATH) & (MAX_WALKPATH * MAX_WALKPATH - 1))
 
 /// Estimates the cost from (x0,y0) to (x1,y1).
 /// This is inadmissible (overestimating) heuristic used by game client.
@@ -75,11 +75,10 @@ BHEAP_STRUCT_DECL(node_heap, struct path_node *);
 /// @}
 
 // Translates dx,dy into walking direction
-static const unsigned char walk_choices [3][3] =
-{
-	{1,0,7},
-	{2,-1,6},
-	{3,4,5},
+static const unsigned char walk_choices[3][3] = {
+    {1, 0, 7},
+    {2, -1, 6},
+    {3, 4, 5},
 };
 
 /*==========================================
@@ -91,19 +90,19 @@ static int path_blownpos(struct block_list *bl, int16 m, int16 x0, int16 y0, enu
 	struct map_data *md;
 
 	Assert_retr(-1, m >= 0 && m < map->count);
-	if( !map->list[m].cell )
+	if (!map->list[m].cell)
 		return -1;
 	md = &map->list[m];
 
-	if( count>25 ){ //Cap to prevent too much processing...?
-		ShowWarning("path_blownpos: count too many %d !\n",count);
-		count=25;
+	if (count > 25) { // Cap to prevent too much processing...?
+		ShowWarning("path_blownpos: count too many %d !\n", count);
+		count = 25;
 	}
 	Assert_retr((x0 << 16) | y0, dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX);
 	int dx = dirx[dir];
 	int dy = diry[dir];
 
-	while( count > 0 && (dx != 0 || dy != 0) ) {
+	while (count > 0 && (dx != 0 || dy != 0)) {
 		if (!md->getcellp(md, bl, x0 + dx, y0 + dy, CELL_CHKPASS))
 			break;
 
@@ -112,7 +111,7 @@ static int path_blownpos(struct block_list *bl, int16 m, int16 x0, int16 y0, enu
 		count--;
 	}
 
-	return (x0<<16)|y0; //TODO: use 'struct point' here instead?
+	return (x0 << 16) | y0; // TODO: use 'struct point' here instead?
 }
 
 /*==========================================
@@ -128,7 +127,7 @@ static bool path_search_long(struct shootpath_data *spd, struct block_list *bl, 
 
 	Assert_retr(false, m >= 0 && m < map->count);
 
-	if( spd == NULL )
+	if (spd == NULL)
 		spd = &s_spd; // use dummy output variable
 
 	if (!map->list[m].cell)
@@ -156,8 +155,7 @@ static bool path_search_long(struct shootpath_data *spd, struct block_list *bl, 
 		spd->rx = 1;
 	}
 
-	while (x0 != x1 || y0 != y1)
-	{
+	while (x0 != x1 || y0 != y1) {
 		wx += dx;
 		wy += dy;
 		if (wx >= weight) {
@@ -171,8 +169,7 @@ static bool path_search_long(struct shootpath_data *spd, struct block_list *bl, 
 			wy += weight;
 			y0--;
 		}
-		if( spd->len<MAX_WALKPATH )
-		{
+		if (spd->len < MAX_WALKPATH) {
 			spd->x[spd->len] = x0;
 			spd->y[spd->len] = y0;
 			spd->len++;
@@ -215,15 +212,14 @@ static int add_path(struct node_heap *heap, struct path_node *tp, int16 x, int16
 	int i = calc_index(x, y);
 
 	if (tp[i].x == x && tp[i].y == y) { // We processed this node before
-		if (g_cost < tp[i].g_cost) { // New path to this node is better than old one
+		if (g_cost < tp[i].g_cost) {    // New path to this node is better than old one
 			// Update costs and parent
 			tp[i].g_cost = g_cost;
 			tp[i].parent = parent;
 			tp[i].f_cost = g_cost + h_cost;
 			if (tp[i].flag == SET_CLOSED) {
 				heap_push_node(heap, &tp[i]); // Put it in open set again
-			}
-			else if (heap_update_node(heap, &tp[i])) {
+			} else if (heap_update_node(heap, &tp[i])) {
 				return 1;
 			}
 			tp[i].flag = SET_OPEN;
@@ -267,7 +263,7 @@ static bool path_search(struct walkpath_data *wpd, struct block_list *bl, int16 
 		return false;
 	md = &map->list[m];
 
-	//Do not check starting cell as that would get you stuck.
+	// Do not check starting cell as that would get you stuck.
 	if (x0 < 0 || x0 >= md->xs || y0 < 0 || y0 >= md->ys /*|| md->getcellp(md, bl, x0, y0, cell)*/)
 		return false;
 
@@ -275,49 +271,49 @@ static bool path_search(struct walkpath_data *wpd, struct block_list *bl, int16 
 	if (x1 < 0 || x1 >= md->xs || y1 < 0 || y1 >= md->ys || md->getcellp(md, bl, x1, y1, cell))
 		return false;
 
-	if( x0 == x1 && y0 == y1 ) {
+	if (x0 == x1 && y0 == y1) {
 		wpd->path_len = 0;
 		wpd->path_pos = 0;
 		return true;
 	}
 
-	if (flag&1) {
+	if (flag & 1) {
 		// Try finding direct path to target
 		// Direct path goes diagonally first, then in straight line.
 
 		// calculate (sgn(x1-x0), sgn(y1-y0))
-		dx = ((dx = x1-x0)) ? ((dx<0) ? -1 : 1) : 0;
-		dy = ((dy = y1-y0)) ? ((dy<0) ? -1 : 1) : 0;
+		dx = ((dx = x1 - x0)) ? ((dx < 0) ? -1 : 1) : 0;
+		dy = ((dy = y1 - y0)) ? ((dy < 0) ? -1 : 1) : 0;
 
 		x = x0; // Current position = starting cell
 		y = y0;
 		i = 0;
-		while( i < ARRAYLENGTH(wpd->path) )
-		{
+		while (i < ARRAYLENGTH(wpd->path)) {
 			wpd->path[i] = walk_choices[-dy + 1][dx + 1];
 			i++;
 
 			x += dx; // Advance current position
 			y += dy;
 
-			if( x == x1 ) dx = 0; // destination x reached, no longer move along x-axis
-			if( y == y1 ) dy = 0; // destination y reached, no longer move along y-axis
+			if (x == x1)
+				dx = 0; // destination x reached, no longer move along x-axis
+			if (y == y1)
+				dy = 0; // destination y reached, no longer move along y-axis
 
-			if( dx == 0 && dy == 0 )
+			if (dx == 0 && dy == 0)
 				break; // success
 			if (md->getcellp(md, bl, x, y, cell))
 				break; // obstacle = failure
 		}
 
-		if( x == x1 && y == y1 )
-		{ // easy path successful.
+		if (x == x1 && y == y1) { // easy path successful.
 			wpd->path_len = i;
 			wpd->path_pos = 0;
 			return true;
 		}
 
 		return false; // easy path unsuccessful
-	} else { // !(flag&1)
+	} else {          // !(flag&1)
 		// A* (A-star) pathfinding
 		// We always use A* for finding walkpaths because it is what game client uses.
 		// Easy pathfinding cuts corners of non-walkable cells, but client always walks around it.
@@ -338,15 +334,15 @@ static bool path_search(struct walkpath_data *wpd, struct block_list *bl, int16 
 		// Start node
 		i = calc_index(x0, y0);
 		tp[i].parent = NULL;
-		tp[i].x      = x0;
-		tp[i].y      = y0;
+		tp[i].x = x0;
+		tp[i].y = y0;
 		tp[i].g_cost = 0;
 		tp[i].f_cost = heuristic(x0, y0, x1, y1);
-		tp[i].flag   = SET_OPEN;
+		tp[i].flag = SET_OPEN;
 
 		heap_push_node(&open_set, &tp[i]); // Put start node to 'open' set
 
-		for(;;) {
+		for (;;) {
 			int e = 0; // error flag
 
 			// Saves allowed directions for the current cell. Diagonal directions
@@ -364,11 +360,11 @@ static bool path_search(struct walkpath_data *wpd, struct block_list *bl, int16 
 				return false;
 			}
 
-			current = BHEAP_PEEK(open_set); // Look for the lowest f_cost node in the 'open' set
+			current = BHEAP_PEEK(open_set);                 // Look for the lowest f_cost node in the 'open' set
 			BHEAP_POP2(open_set, NODE_MINTOPCMP, swap_ptr); // Remove it from 'open' set
 
-			x      = current->x;
-			y      = current->y;
+			x = current->x;
+			y = current->y;
 			g_cost = current->g_cost;
 
 			current->flag = SET_CLOSED; // Add current node to 'closed' set
@@ -378,29 +374,33 @@ static bool path_search(struct walkpath_data *wpd, struct block_list *bl, int16 
 				break;
 			}
 
-			if (y < ys && !md->getcellp(md, bl, x, y+1, cell)) allowed_dirs |= DIR_NORTH;
-			if (y >  0 && !md->getcellp(md, bl, x, y-1, cell)) allowed_dirs |= DIR_SOUTH;
-			if (x < xs && !md->getcellp(md, bl, x+1, y, cell)) allowed_dirs |= DIR_EAST;
-			if (x >  0 && !md->getcellp(md, bl, x-1, y, cell)) allowed_dirs |= DIR_WEST;
+			if (y < ys && !md->getcellp(md, bl, x, y + 1, cell))
+				allowed_dirs |= DIR_NORTH;
+			if (y > 0 && !md->getcellp(md, bl, x, y - 1, cell))
+				allowed_dirs |= DIR_SOUTH;
+			if (x < xs && !md->getcellp(md, bl, x + 1, y, cell))
+				allowed_dirs |= DIR_EAST;
+			if (x > 0 && !md->getcellp(md, bl, x - 1, y, cell))
+				allowed_dirs |= DIR_WEST;
 
 #define chk_dir(d) ((allowed_dirs & (d)) == (d))
 			// Process neighbors of current node
-			if (chk_dir(DIR_SOUTH|DIR_EAST) && !md->getcellp(md, bl, x+1, y-1, cell))
-				e += add_path(&open_set, tp, x+1, y-1, g_cost + MOVE_DIAGONAL_COST, current, heuristic(x+1, y-1, x1, y1)); // (x+1, y-1) 5
+			if (chk_dir(DIR_SOUTH | DIR_EAST) && !md->getcellp(md, bl, x + 1, y - 1, cell))
+				e += add_path(&open_set, tp, x + 1, y - 1, g_cost + MOVE_DIAGONAL_COST, current, heuristic(x + 1, y - 1, x1, y1)); // (x+1, y-1) 5
 			if (chk_dir(DIR_EAST))
-				e += add_path(&open_set, tp, x+1, y, g_cost + MOVE_COST, current, heuristic(x+1, y, x1, y1)); // (x+1, y) 6
-			if (chk_dir(DIR_NORTH|DIR_EAST) && !md->getcellp(md, bl, x+1, y+1, cell))
-				e += add_path(&open_set, tp, x+1, y+1, g_cost + MOVE_DIAGONAL_COST, current, heuristic(x+1, y+1, x1, y1)); // (x+1, y+1) 7
+				e += add_path(&open_set, tp, x + 1, y, g_cost + MOVE_COST, current, heuristic(x + 1, y, x1, y1)); // (x+1, y) 6
+			if (chk_dir(DIR_NORTH | DIR_EAST) && !md->getcellp(md, bl, x + 1, y + 1, cell))
+				e += add_path(&open_set, tp, x + 1, y + 1, g_cost + MOVE_DIAGONAL_COST, current, heuristic(x + 1, y + 1, x1, y1)); // (x+1, y+1) 7
 			if (chk_dir(DIR_NORTH))
-				e += add_path(&open_set, tp, x, y+1, g_cost + MOVE_COST, current, heuristic(x, y+1, x1, y1)); // (x, y+1) 0
-			if (chk_dir(DIR_NORTH|DIR_WEST) && !md->getcellp(md, bl, x-1, y+1, cell))
-				e += add_path(&open_set, tp, x-1, y+1, g_cost + MOVE_DIAGONAL_COST, current, heuristic(x-1, y+1, x1, y1)); // (x-1, y+1) 1
+				e += add_path(&open_set, tp, x, y + 1, g_cost + MOVE_COST, current, heuristic(x, y + 1, x1, y1)); // (x, y+1) 0
+			if (chk_dir(DIR_NORTH | DIR_WEST) && !md->getcellp(md, bl, x - 1, y + 1, cell))
+				e += add_path(&open_set, tp, x - 1, y + 1, g_cost + MOVE_DIAGONAL_COST, current, heuristic(x - 1, y + 1, x1, y1)); // (x-1, y+1) 1
 			if (chk_dir(DIR_WEST))
-				e += add_path(&open_set, tp, x-1, y, g_cost + MOVE_COST, current, heuristic(x-1, y, x1, y1)); // (x-1, y) 2
-			if (chk_dir(DIR_SOUTH|DIR_WEST) && !md->getcellp(md, bl, x-1, y-1, cell))
-				e += add_path(&open_set, tp, x-1, y-1, g_cost + MOVE_DIAGONAL_COST, current, heuristic(x-1, y-1, x1, y1)); // (x-1, y-1) 3
+				e += add_path(&open_set, tp, x - 1, y, g_cost + MOVE_COST, current, heuristic(x - 1, y, x1, y1)); // (x-1, y) 2
+			if (chk_dir(DIR_SOUTH | DIR_WEST) && !md->getcellp(md, bl, x - 1, y - 1, cell))
+				e += add_path(&open_set, tp, x - 1, y - 1, g_cost + MOVE_DIAGONAL_COST, current, heuristic(x - 1, y - 1, x1, y1)); // (x-1, y-1) 3
 			if (chk_dir(DIR_SOUTH))
-				e += add_path(&open_set, tp, x, y-1, g_cost + MOVE_COST, current, heuristic(x, y-1, x1, y1)); // (x, y-1) 4
+				e += add_path(&open_set, tp, x, y - 1, g_cost + MOVE_COST, current, heuristic(x, y - 1, x1, y1)); // (x, y-1) 4
 #undef chk_dir
 			if (e) {
 				BHEAP_CLEAR(open_set);
@@ -408,7 +408,8 @@ static bool path_search(struct walkpath_data *wpd, struct block_list *bl, int16 
 			}
 		}
 
-		for (it = current; it->parent != NULL; it = it->parent, len++);
+		for (it = current; it->parent != NULL; it = it->parent, len++)
+			;
 		if (len > (int)sizeof(wpd->path)) {
 			return false;
 		}
@@ -416,7 +417,7 @@ static bool path_search(struct walkpath_data *wpd, struct block_list *bl, int16 
 		// Recreate path
 		wpd->path_len = len;
 		wpd->path_pos = 0;
-		for (it = current, j = len-1; j >= 0; it = it->parent, j--) {
+		for (it = current, j = len - 1; j >= 0; it = it->parent, j--) {
 			dx = it->x - it->parent->x;
 			dy = it->y - it->parent->y;
 			wpd->path[j] = walk_choices[-dy + 1][dx + 1];
@@ -427,16 +428,18 @@ static bool path_search(struct walkpath_data *wpd, struct block_list *bl, int16 
 	return false;
 }
 
-//Distance functions, taken from http://www.flipcode.com/articles/article_fastdistance.shtml
+// Distance functions, taken from http://www.flipcode.com/articles/article_fastdistance.shtml
 static bool check_distance(int dx, int dy, int distance)
 {
 #ifdef CIRCULAR_AREA
-	//In this case, we just do a square comparison. Add 1 tile grace for diagonal range checks.
-	return (dx*dx + dy*dy <= distance*distance + (dx&&dy?1:0));
+	// In this case, we just do a square comparison. Add 1 tile grace for diagonal range checks.
+	return (dx * dx + dy * dy <= distance * distance + (dx && dy ? 1 : 0));
 #else
-	if (dx < 0) dx = -dx;
-	if (dy < 0) dy = -dy;
-	return ((dx<dy?dy:dx) <= distance);
+	if (dx < 0)
+		dx = -dx;
+	if (dy < 0)
+		dy = -dy;
+	return ((dx < dy ? dy : dx) <= distance);
 #endif
 }
 
@@ -445,14 +448,17 @@ static unsigned int distance(int dx, int dy)
 #ifdef CIRCULAR_AREA
 	unsigned int min, max;
 
-	if ( dx < 0 ) dx = -dx;
-	if ( dy < 0 ) dy = -dy;
-	//There appears to be something wrong with the approximation below when either dx/dy is 0! [Skotlex]
-	if ( dx == 0 ) return dy;
-	if ( dy == 0 ) return dx;
+	if (dx < 0)
+		dx = -dx;
+	if (dy < 0)
+		dy = -dy;
+	// There appears to be something wrong with the approximation below when either dx/dy is 0! [Skotlex]
+	if (dx == 0)
+		return dy;
+	if (dy == 0)
+		return dx;
 
-	if ( dx < dy )
-	{
+	if (dx < dy) {
 		min = dx;
 		max = dy;
 	} else {
@@ -460,12 +466,13 @@ static unsigned int distance(int dx, int dy)
 		max = dx;
 	}
 	// coefficients equivalent to ( 123/128 * max ) and ( 51/128 * min )
-	return ((( max << 8 ) + ( max << 3 ) - ( max << 4 ) - ( max << 1 ) +
-		( min << 7 ) - ( min << 5 ) + ( min << 3 ) - ( min << 1 )) >> 8 );
+	return (((max << 8) + (max << 3) - (max << 4) - (max << 1) + (min << 7) - (min << 5) + (min << 3) - (min << 1)) >> 8);
 #else
-	if (dx < 0) dx = -dx;
-	if (dy < 0) dy = -dy;
-	return (dx<dy?dy:dx);
+	if (dx < 0)
+		dx = -dx;
+	if (dy < 0)
+		dy = -dy;
+	return (dx < dy ? dy : dx);
 #endif
 }
 
@@ -479,9 +486,10 @@ static unsigned int distance(int dx, int dy)
  */
 static bool check_distance_client(int dx, int dy, int distance)
 {
-	if(distance < 0) distance = 0;
+	if (distance < 0)
+		distance = 0;
 
-	return (path->distance_client(dx,dy) <= distance);
+	return (path->distance_client(dx, dy) <= distance);
 }
 
 /**
@@ -493,13 +501,14 @@ static bool check_distance_client(int dx, int dy, int distance)
  */
 static int distance_client(int dx, int dy)
 {
-	double temp_dist = sqrt((double)(dx*dx + dy*dy));
+	double temp_dist = sqrt((double)(dx * dx + dy * dy));
 
-	//Bonus factor used by client
-	//This affects even horizontal/vertical lines so they are one cell longer than expected
+	// Bonus factor used by client
+	// This affects even horizontal/vertical lines so they are one cell longer than expected
 	temp_dist -= 0.0625;
 
-	if(temp_dist < 0) temp_dist = 0;
+	if (temp_dist < 0)
+		temp_dist = 0;
 
 	return ((int)temp_dist);
 }

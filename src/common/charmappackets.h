@@ -27,7 +27,7 @@
 
 /* Packets Structs */
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
-#pragma pack(push, 1)
+	#pragma pack(push, 1)
 #endif // not NetBSD < 6 / Solaris
 
 struct PACKET_CHARMAP_AGENCY_JOIN_PARTY {
@@ -69,7 +69,7 @@ struct PACKET_CHARMAP_GUILD_INFO_EMBLEM {
 DEFINE_PACKET_ID(CHARMAP_GUILD_INFO_EMBLEM, 0x389c)
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
-#pragma pack(pop)
+	#pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
 
 #endif /* COMMON_CHARMAPPACKETS_H */

@@ -66,17 +66,17 @@ static struct homun_dbs homundbs;
 
 struct homunculus_interface *homun;
 
-//Returns the viewdata for homunculus
+// Returns the viewdata for homunculus
 static struct view_data *homunculus_get_viewdata(int class_)
 {
 	Assert_retr(NULL, homdb_checkid(class_));
 
-	return &homun->dbs->viewdb[class_-HM_CLASS_BASE];
+	return &homun->dbs->viewdb[class_ - HM_CLASS_BASE];
 }
 
 static enum homun_type homunculus_class2type(enum homun_id class_)
 {
-	switch(class_) {
+	switch (class_) {
 		// Normal Homunculus
 		case HOMID_LIF:
 		case HOMID_AMISTR:
@@ -120,8 +120,7 @@ static void homunculus_addspiritball(struct homun_data *hd, int max)
 
 	if (hd->homunculus.spiritball && hd->homunculus.spiritball >= max) {
 		hd->homunculus.spiritball = max;
-	}
-	else
+	} else
 		hd->homunculus.spiritball++;
 
 	clif->spiritballs(&hd->bl, hd->homunculus.spiritball, AREA);
@@ -149,31 +148,31 @@ static void homunculus_delspiritball(struct homun_data *hd, int count, int type)
 
 static void homunculus_damaged(struct homun_data *hd)
 {
-	clif->hominfo(hd->master,hd,0);
+	clif->hominfo(hd->master, hd, 0);
 }
 
 static int homunculus_dead(struct homun_data *hd)
 {
-	//There's no intimacy penalties on death (from Tharis)
+	// There's no intimacy penalties on death (from Tharis)
 	struct map_session_data *sd;
 
 	nullpo_retr(3, hd);
 	sd = hd->master;
 	clif->emotion(&hd->bl, E_WAH);
 
-	//Delete timers when dead.
+	// Delete timers when dead.
 	homun->hunger_timer_delete(hd);
 	hd->homunculus.hp = 0;
 
-	if (!sd) //unit remove map will invoke unit free
+	if (!sd) // unit remove map will invoke unit free
 		return 3;
 
 	clif->emotion(&sd->bl, E_SOB);
-	//Remove from map (if it has no intimacy, it is auto-removed from memory)
+	// Remove from map (if it has no intimacy, it is auto-removed from memory)
 	return 3;
 }
 
-//Vaporize a character's homun. If flag, HP needs to be 80% or above.
+// Vaporize a character's homun. If flag, HP needs to be 80% or above.
 static int homunculus_vaporize(struct map_session_data *sd, enum homun_state state, bool force)
 {
 	struct homun_data *hd;
@@ -185,24 +184,24 @@ static int homunculus_vaporize(struct map_session_data *sd, enum homun_state sta
 		return 0;
 
 	if (status->isdead(&hd->bl))
-		return 0; //Can't vaporize a dead homun.
+		return 0; // Can't vaporize a dead homun.
 
 	if (!force && get_percentage(hd->battle_status.hp, hd->battle_status.max_hp) < 80)
 		return 0;
 
-	hd->regen.state.block = 3; //Block regen while vaporized.
-	//Delete timers when vaporized.
+	hd->regen.state.block = 3; // Block regen while vaporized.
+	// Delete timers when vaporized.
 	homun->hunger_timer_delete(hd);
 	hd->homunculus.vaporize = state;
-	if(battle_config.hom_setting&0x40)
+	if (battle_config.hom_setting & 0x40)
 		memset(hd->blockskill, 0, sizeof(hd->blockskill));
 	clif->hominfo(sd, sd->hd, 0);
 	homun->save(hd);
 	return unit->remove_map(&hd->bl, CLR_OUTSIGHT, ALC_MARK);
 }
 
-//delete a homunculus, completely "killing it".
-//Emote is the emotion the master should use, send negative to disable.
+// delete a homunculus, completely "killing it".
+// Emote is the emotion the master should use, send negative to disable.
 static int homunculus_delete(struct homun_data *hd, int emote)
 {
 	struct map_session_data *sd;
@@ -210,17 +209,17 @@ static int homunculus_delete(struct homun_data *hd, int emote)
 	sd = hd->master;
 
 	if (!sd)
-		return unit->free(&hd->bl,CLR_DEAD);
+		return unit->free(&hd->bl, CLR_DEAD);
 
 	if (emote >= 0)
 		clif->emotion(&sd->bl, emote);
 
-	//This makes it be deleted right away.
+	// This makes it be deleted right away.
 	hd->homunculus.intimacy = 0;
 	// Send homunculus_dead to client
 	hd->homunculus.hp = 0;
 	clif->hominfo(sd, hd, 0);
-	return unit->remove_map(&hd->bl,CLR_OUTSIGHT, ALC_MARK);
+	return unit->remove_map(&hd->bl, CLR_OUTSIGHT, ALC_MARK);
 }
 
 static int homunculus_calc_skilltree(struct homun_data *hd, int flag_evolve)
@@ -231,24 +230,23 @@ static int homunculus_calc_skilltree(struct homun_data *hd, int flag_evolve)
 
 	nullpo_ret(hd);
 	/* load previous homunculus form skills first. */
-	if( hd->homunculus.prev_class != 0 ) {
+	if (hd->homunculus.prev_class != 0) {
 		c = hd->homunculus.prev_class - HM_CLASS_BASE;
 		Assert_ret(c >= 0 && c < MAX_HOMUNCULUS_CLASS);
 
-		for( i = 0; i < MAX_SKILL_TREE && ( id = homun->dbs->skill_tree[c][i].id ) > 0; i++ ) {
-			if( hd->homunculus.hskill[ id - HM_SKILLBASE ].id )
-				continue; //Skill already known.
-			if(!battle_config.skillfree) {
+		for (i = 0; i < MAX_SKILL_TREE && (id = homun->dbs->skill_tree[c][i].id) > 0; i++) {
+			if (hd->homunculus.hskill[id - HM_SKILLBASE].id)
+				continue; // Skill already known.
+			if (!battle_config.skillfree) {
 				for (j = 0; j < MAX_HOM_SKILL_REQUIRE; j++) {
-					if( homun->dbs->skill_tree[c][i].need[j].id &&
-					   homun->checkskill(hd,homun->dbs->skill_tree[c][i].need[j].id) < homun->dbs->skill_tree[c][i].need[j].lv ) {
+					if (homun->dbs->skill_tree[c][i].need[j].id && homun->checkskill(hd, homun->dbs->skill_tree[c][i].need[j].id) < homun->dbs->skill_tree[c][i].need[j].lv) {
 						f = 0;
 						break;
 					}
 				}
 			}
-			if ( f )
-				hd->homunculus.hskill[id-HM_SKILLBASE].id = id;
+			if (f)
+				hd->homunculus.hskill[id - HM_SKILLBASE].id = id;
 		}
 
 		f = 1;
@@ -257,26 +255,25 @@ static int homunculus_calc_skilltree(struct homun_data *hd, int flag_evolve)
 	c = hd->homunculus.class_ - HM_CLASS_BASE;
 	Assert_ret(c >= 0 && c < MAX_HOMUNCULUS_CLASS);
 
-	for( i = 0; i < MAX_SKILL_TREE && ( id = homun->dbs->skill_tree[c][i].id ) > 0; i++ ) {
-		if( hd->homunculus.hskill[ id - HM_SKILLBASE ].id )
-			continue; //Skill already known.
-		j = ( flag_evolve ) ? 1000 : hd->homunculus.intimacy;
-		if( j < homun->dbs->skill_tree[c][i].intimacylv )
+	for (i = 0; i < MAX_SKILL_TREE && (id = homun->dbs->skill_tree[c][i].id) > 0; i++) {
+		if (hd->homunculus.hskill[id - HM_SKILLBASE].id)
+			continue; // Skill already known.
+		j = (flag_evolve) ? 1000 : hd->homunculus.intimacy;
+		if (j < homun->dbs->skill_tree[c][i].intimacylv)
 			continue;
-		if(!battle_config.skillfree) {
+		if (!battle_config.skillfree) {
 			for (j = 0; j < MAX_HOM_SKILL_REQUIRE; j++) {
-				if( homun->dbs->skill_tree[c][i].need[j].id &&
-					homun->checkskill(hd,homun->dbs->skill_tree[c][i].need[j].id) < homun->dbs->skill_tree[c][i].need[j].lv ) {
+				if (homun->dbs->skill_tree[c][i].need[j].id && homun->checkskill(hd, homun->dbs->skill_tree[c][i].need[j].id) < homun->dbs->skill_tree[c][i].need[j].lv) {
 					f = 0;
 					break;
 				}
 			}
 		}
-		if ( f )
-			hd->homunculus.hskill[id-HM_SKILLBASE].id = id;
+		if (f)
+			hd->homunculus.hskill[id - HM_SKILLBASE].id = id;
 	}
 
-	if( hd->master )
+	if (hd->master)
 		clif->homskillinfoblock(hd->master);
 	return 0;
 }
@@ -284,11 +281,11 @@ static int homunculus_calc_skilltree(struct homun_data *hd, int flag_evolve)
 static int homunculus_checkskill(struct homun_data *hd, uint16 skill_id)
 {
 	int i = skill_id - HM_SKILLBASE;
-	if(!hd)
+	if (!hd)
 		return 0;
 
 	Assert_ret(i >= 0 && i < MAX_HOMUNSKILL);
-	if(hd->homunculus.hskill[i].id == skill_id)
+	if (hd->homunculus.hskill[i].id == skill_id)
 		return (hd->homunculus.hskill[i].lv);
 
 	return 0;
@@ -299,7 +296,7 @@ static int homunculus_skill_tree_get_max(int id, int b_class)
 	int i, skill_id;
 	b_class -= HM_CLASS_BASE;
 	Assert_ret(b_class >= 0 && b_class < MAX_HOMUNCULUS_CLASS);
-	for(i=0;(skill_id=homun->dbs->skill_tree[b_class][i].id)>0;i++)
+	for (i = 0; (skill_id = homun->dbs->skill_tree[b_class][i].id) > 0; i++)
 		if (id == skill_id)
 			return homun->dbs->skill_tree[b_class][i].max;
 	return skill->get_max(id);
@@ -315,12 +312,8 @@ static void homunculus_skillup(struct homun_data *hd, uint16 skill_id)
 
 	i = skill_id - HM_SKILLBASE;
 	Assert_retv(i >= 0 && i < MAX_HOMUNSKILL && i < MAX_SKILL_TREE);
-	if (hd->homunculus.skillpts > 0 &&
-		hd->homunculus.hskill[i].id &&
-		hd->homunculus.hskill[i].flag == SKILL_FLAG_PERMANENT && //Don't allow raising while you have granted skills. [Skotlex]
-		hd->homunculus.hskill[i].lv < homun->skill_tree_get_max(skill_id, hd->homunculus.class_)
-		)
-	{
+	if (hd->homunculus.skillpts > 0 && hd->homunculus.hskill[i].id && hd->homunculus.hskill[i].flag == SKILL_FLAG_PERMANENT && // Don't allow raising while you have granted skills. [Skotlex]
+	    hd->homunculus.hskill[i].lv < homun->skill_tree_get_max(skill_id, hd->homunculus.class_)) {
 		bool stop = false;
 		// Check if pre-requisites were met
 		if (battle_config.skillfree == 0) {
@@ -330,8 +323,7 @@ static void homunculus_skillup(struct homun_data *hd, uint16 skill_id)
 				stop = true;
 			if (!stop) {
 				for (int j = 0; j < MAX_HOM_SKILL_REQUIRE; j++) {
-					if (homun->dbs->skill_tree[c][i].need[j].id != 0 &&
-					   homun->checkskill(hd, homun->dbs->skill_tree[c][i].need[j].id) < homun->dbs->skill_tree[c][i].need[j].lv) {
+					if (homun->dbs->skill_tree[c][i].need[j].id != 0 && homun->checkskill(hd, homun->dbs->skill_tree[c][i].need[j].id) < homun->dbs->skill_tree[c][i].need[j].lv) {
 						stop = true;
 						break;
 					}
@@ -356,32 +348,32 @@ static bool homunculus_levelup(struct homun_data *hd)
 {
 	struct s_homunculus *hom;
 	struct h_stats *min, *max;
-	int growth_str, growth_agi, growth_vit, growth_int, growth_dex, growth_luk ;
+	int growth_str, growth_agi, growth_vit, growth_int, growth_dex, growth_luk;
 	int growth_max_hp, growth_max_sp;
 	enum homun_type htype;
 
 	nullpo_retr(false, hd);
-	if( (htype = homun->class2type(hd->homunculus.class_)) == HT_INVALID ) {
+	if ((htype = homun->class2type(hd->homunculus.class_)) == HT_INVALID) {
 		ShowError("homunculus_levelup: Invalid class %d. \n", hd->homunculus.class_);
 		return false;
 	}
 
-	if( !hd->exp_next || hd->homunculus.exp < hd->exp_next )
+	if (!hd->exp_next || hd->homunculus.exp < hd->exp_next)
 		return false;
 
 	if (hd->homunculus.level >= homun->get_max_level(hd))
 		return false;
 
 	hom = &hd->homunculus;
-	hom->level++ ;
+	hom->level++;
 	if (!(hom->level % 3))
-		hom->skillpts++; //1 skillpoint each 3 base level
+		hom->skillpts++; // 1 skillpoint each 3 base level
 
 	hom->exp -= hd->exp_next;
 	hd->exp_next = homun->get_exp_next(hd);
 
-	max  = &hd->homunculusDB->gmax;
-	min  = &hd->homunculusDB->gmin;
+	max = &hd->homunculusDB->gmax;
+	min = &hd->homunculusDB->gmin;
 
 	growth_max_hp = rnd->value(min->HP, max->HP);
 	growth_max_sp = rnd->value(min->SP, max->SP);
@@ -389,16 +381,16 @@ static bool homunculus_levelup(struct homun_data *hd)
 	growth_agi = rnd->value(min->agi, max->agi);
 	growth_vit = rnd->value(min->vit, max->vit);
 	growth_dex = rnd->value(min->dex, max->dex);
-	growth_int = rnd->value(min->int_,max->int_);
+	growth_int = rnd->value(min->int_, max->int_);
 	growth_luk = rnd->value(min->luk, max->luk);
 
-	//Aegis discards the decimals in the stat growth values!
-	growth_str-=growth_str%10;
-	growth_agi-=growth_agi%10;
-	growth_vit-=growth_vit%10;
-	growth_dex-=growth_dex%10;
-	growth_int-=growth_int%10;
-	growth_luk-=growth_luk%10;
+	// Aegis discards the decimals in the stat growth values!
+	growth_str -= growth_str % 10;
+	growth_agi -= growth_agi % 10;
+	growth_vit -= growth_vit % 10;
+	growth_dex -= growth_dex % 10;
+	growth_int -= growth_int % 10;
+	growth_luk -= growth_luk % 10;
 
 	hom->max_hp += growth_max_hp;
 	hom->max_sp += growth_max_sp;
@@ -406,18 +398,15 @@ static bool homunculus_levelup(struct homun_data *hd)
 	hom->agi += growth_agi;
 	hom->vit += growth_vit;
 	hom->dex += growth_dex;
-	hom->int_+= growth_int;
+	hom->int_ += growth_int;
 	hom->luk += growth_luk;
 
 	APPLY_HOMUN_LEVEL_STATWEIGHT();
 
-	if ( battle_config.homunculus_show_growth ) {
-		char output[256] ;
-		sprintf(output,
-			msg_sd(hd->master, MSGTBL_GROWTH_STATS), // Growth: hp:%d sp:%d str(%.2f) agi(%.2f) vit(%.2f) int(%.2f) dex(%.2f) luk(%.2f)
-			growth_max_hp, growth_max_sp,
-			growth_str/10.0, growth_agi/10.0, growth_vit/10.0,
-			growth_int/10.0, growth_dex/10.0, growth_luk/10.0);
+	if (battle_config.homunculus_show_growth) {
+		char output[256];
+		sprintf(output, msg_sd(hd->master, MSGTBL_GROWTH_STATS), // Growth: hp:%d sp:%d str(%.2f) agi(%.2f) vit(%.2f) int(%.2f) dex(%.2f) luk(%.2f)
+		        growth_max_hp, growth_max_sp, growth_str / 10.0, growth_agi / 10.0, growth_vit / 10.0, growth_int / 10.0, growth_dex / 10.0, growth_luk / 10.0);
 		clif_disp_onlyself(hd->master, output);
 	}
 	quest->questinfo_refresh(hd->master);
@@ -426,7 +415,7 @@ static bool homunculus_levelup(struct homun_data *hd)
 
 static int homunculus_change_class(struct homun_data *hd, int class_)
 {
-	int i = homun->db_search(class_,HOMUNCULUS_CLASS);
+	int i = homun->db_search(class_, HOMUNCULUS_CLASS);
 	nullpo_retr(0, hd);
 	if (i == INDEX_NOT_FOUND)
 		return 0;
@@ -449,7 +438,7 @@ static bool homunculus_evolve(struct homun_data *hd)
 	if (!sd)
 		return false;
 
-	if(!hd->homunculusDB->evo_class || hd->homunculus.class_ == hd->homunculusDB->evo_class) {
+	if (!hd->homunculusDB->evo_class || hd->homunculus.class_ == hd->homunculusDB->evo_class) {
 		clif->emotion(&hd->bl, E_SWT);
 		return false;
 	}
@@ -459,18 +448,18 @@ static bool homunculus_evolve(struct homun_data *hd)
 		return false;
 	}
 
-	//Apply evolution bonuses
+	// Apply evolution bonuses
 	hom = &hd->homunculus;
 	max = &hd->homunculusDB->emax;
 	min = &hd->homunculusDB->emin;
 	hom->max_hp += rnd->value(min->HP, max->HP);
 	hom->max_sp += rnd->value(min->SP, max->SP);
-	hom->str += 10*rnd->value(min->str, max->str);
-	hom->agi += 10*rnd->value(min->agi, max->agi);
-	hom->vit += 10*rnd->value(min->vit, max->vit);
-	hom->int_+= 10*rnd->value(min->int_,max->int_);
-	hom->dex += 10*rnd->value(min->dex, max->dex);
-	hom->luk += 10*rnd->value(min->luk, max->luk);
+	hom->str += 10 * rnd->value(min->str, max->str);
+	hom->agi += 10 * rnd->value(min->agi, max->agi);
+	hom->vit += 10 * rnd->value(min->vit, max->vit);
+	hom->int_ += 10 * rnd->value(min->int_, max->int_);
+	hom->dex += 10 * rnd->value(min->dex, max->dex);
+	hom->luk += 10 * rnd->value(min->luk, max->luk);
 	hom->intimacy = 500;
 
 	unit->remove_map(&hd->bl, CLR_OUTSIGHT, ALC_MARK);
@@ -478,15 +467,15 @@ static bool homunculus_evolve(struct homun_data *hd)
 
 	clif->spawn(&hd->bl);
 	clif->emotion(&sd->bl, E_NO1);
-	clif->specialeffect(&hd->bl,568,AREA);
+	clif->specialeffect(&hd->bl, 568, AREA);
 
-	//status_Calc flag&1 will make current HP/SP be reloaded from hom structure
+	// status_Calc flag&1 will make current HP/SP be reloaded from hom structure
 	hom->hp = hd->battle_status.hp;
 	hom->sp = hd->battle_status.sp;
-	status_calc_homunculus(hd,SCO_FIRST);
+	status_calc_homunculus(hd, SCO_FIRST);
 
-	if (!(battle_config.hom_setting&0x2))
-		skill->unit_move(&sd->hd->bl,timer->gettick(),1); // apply land skills immediately
+	if (!(battle_config.hom_setting & 0x2))
+		skill->unit_move(&sd->hd->bl, timer->gettick(), 1); // apply land skills immediately
 	quest->questinfo_refresh(sd);
 	return true;
 }
@@ -504,16 +493,16 @@ static bool homunculus_mutate(struct homun_data *hd, int homun_id)
 		return false;
 
 	m_class = homun->class2type(hd->homunculus.class_);
-	m_id    = homun->class2type(homun_id);
+	m_id = homun->class2type(homun_id);
 
-	if( m_class == HT_INVALID || m_id == HT_INVALID || m_class != HT_EVO || m_id != HT_S ) {
+	if (m_class == HT_INVALID || m_id == HT_INVALID || m_class != HT_EVO || m_id != HT_S) {
 		clif->emotion(&hd->bl, E_SWT);
 		return false;
 	}
 
 	prev_class = hd->homunculus.class_;
 
-	if( !homun->change_class(hd, homun_id) ) {
+	if (!homun->change_class(hd, homun_id)) {
 		ShowError("homunculus_mutate: Can't evolve homunc from %d to %d", hd->homunculus.class_, homun_id);
 		return false;
 	}
@@ -523,17 +512,17 @@ static bool homunculus_mutate(struct homun_data *hd, int homun_id)
 
 	clif->spawn(&hd->bl);
 	clif->emotion(&sd->bl, E_NO1);
-	clif->specialeffect(&hd->bl,568,AREA);
+	clif->specialeffect(&hd->bl, 568, AREA);
 
-	//status_Calc flag&1 will make current HP/SP be reloaded from hom structure
+	// status_Calc flag&1 will make current HP/SP be reloaded from hom structure
 	hom = &hd->homunculus;
 	hom->hp = hd->battle_status.hp;
 	hom->sp = hd->battle_status.sp;
 	hom->prev_class = prev_class;
-	status_calc_homunculus(hd,SCO_FIRST);
+	status_calc_homunculus(hd, SCO_FIRST);
 
-	if (!(battle_config.hom_setting&0x2))
-		skill->unit_move(&sd->hd->bl,timer->gettick(),1); // apply land skills immediately
+	if (!(battle_config.hom_setting & 0x2))
+		skill->unit_move(&sd->hd->bl, timer->gettick(), 1); // apply land skills immediately
 
 	return true;
 }
@@ -558,10 +547,10 @@ static int homunculus_gainexp(struct homun_data *hd, unsigned int exp)
 	enum homun_type htype;
 
 	nullpo_ret(hd);
-	if(hd->homunculus.vaporize != HOM_ST_ACTIVE)
+	if (hd->homunculus.vaporize != HOM_ST_ACTIVE)
 		return 1;
 
-	if( (htype = homun->class2type(hd->homunculus.class_)) == HT_INVALID ) {
+	if ((htype = homun->class2type(hd->homunculus.class_)) == HT_INVALID) {
 		ShowError("homunculus_gainexp: Invalid class %d. \n", hd->homunculus.class_);
 		return 0;
 	}
@@ -576,14 +565,15 @@ static int homunculus_gainexp(struct homun_data *hd, unsigned int exp)
 		return 0;
 	}
 
-	//levelup
-	while( hd->homunculus.exp > hd->exp_next && homun->levelup(hd) );
+	// levelup
+	while (hd->homunculus.exp > hd->exp_next && homun->levelup(hd))
+		;
 
-	if( hd->exp_next == 0 )
+	if (hd->exp_next == 0)
 		hd->homunculus.exp = 0;
 
-	clif->specialeffect(&hd->bl,568,AREA);
-	status_calc_homunculus(hd,SCO_NONE);
+	clif->specialeffect(&hd->bl, 568, AREA);
+	status_calc_homunculus(hd, SCO_NONE);
 	status_percent_heal(&hd->bl, 100, 100);
 	return 0;
 }
@@ -617,16 +607,16 @@ static unsigned int homunculus_consume_intimacy(struct homun_data *hd, unsigned 
 static void homunculus_healed(struct homun_data *hd)
 {
 	nullpo_retv(hd);
-	clif->hominfo(hd->master,hd,0);
+	clif->hominfo(hd->master, hd, 0);
 }
 
 static void homunculus_save(struct homun_data *hd)
 {
 	// copy data that must be saved in homunculus struct ( hp / sp )
 	struct map_session_data *sd = NULL;
-	//Do not check for max_hp/max_sp caps as current could be higher to max due
-	//to status changes/skills (they will be capped as needed upon stat
-	//calculation on login)
+	// Do not check for max_hp/max_sp caps as current could be higher to max due
+	// to status changes/skills (they will be capped as needed upon stat
+	// calculation on login)
 	nullpo_retv(hd);
 	sd = hd->master;
 	nullpo_retv(sd);
@@ -641,7 +631,7 @@ static unsigned char homunculus_menu(struct map_session_data *sd, unsigned char 
 	if (sd->hd == NULL)
 		return 1;
 
-	switch(menu_num) {
+	switch (menu_num) {
 		case 0:
 			break;
 		case 1:
@@ -651,7 +641,7 @@ static unsigned char homunculus_menu(struct map_session_data *sd, unsigned char 
 			homun->delete(sd->hd, -1);
 			break;
 		default:
-			ShowError("homunculus_menu : unknown menu choice : %d\n", menu_num) ;
+			ShowError("homunculus_menu : unknown menu choice : %d\n", menu_num);
 			break;
 	}
 	return 0;
@@ -663,27 +653,27 @@ static bool homunculus_feed(struct map_session_data *sd, struct homun_data *hd)
 
 	nullpo_retr(false, hd);
 	nullpo_retr(false, sd);
-	if(hd->homunculus.vaporize == HOM_ST_REST)
+	if (hd->homunculus.vaporize == HOM_ST_REST)
 		return false;
 
 	foodID = hd->homunculusDB->foodID;
-	i = pc->search_inventory(sd,foodID);
+	i = pc->search_inventory(sd, foodID);
 	if (i == INDEX_NOT_FOUND) {
-		clif->hom_food(sd,foodID,0);
+		clif->hom_food(sd, foodID, 0);
 		return false;
 	}
 	pc->delitem(sd, i, 1, 0, DELITEM_NORMAL, LOG_TYPE_CONSUME);
 
-	if ( hd->homunculus.hunger >= 91 ) {
+	if (hd->homunculus.hunger >= 91) {
 		homun->consume_intimacy(hd, 50);
 		emotion = E_WAH;
-	} else if ( hd->homunculus.hunger >= 76 ) {
+	} else if (hd->homunculus.hunger >= 76) {
 		homun->consume_intimacy(hd, 5);
 		emotion = E_SWT2;
-	} else if ( hd->homunculus.hunger >= 26 ) {
+	} else if (hd->homunculus.hunger >= 26) {
 		homun->add_intimacy(hd, 75);
 		emotion = E_HO;
-	} else if ( hd->homunculus.hunger >= 11 ) {
+	} else if (hd->homunculus.hunger >= 11) {
 		homun->add_intimacy(hd, 100);
 		emotion = E_HO;
 	} else {
@@ -691,17 +681,17 @@ static bool homunculus_feed(struct map_session_data *sd, struct homun_data *hd)
 		emotion = E_HO;
 	}
 
-	hd->homunculus.hunger += 10; //dunno increase value for each food
-	if(hd->homunculus.hunger > 100)
+	hd->homunculus.hunger += 10; // dunno increase value for each food
+	if (hd->homunculus.hunger > 100)
 		hd->homunculus.hunger = 100;
 
-	clif->emotion(&hd->bl,emotion);
-	clif->send_homdata(sd,SP_HUNGRY,hd->homunculus.hunger);
-	clif->send_homdata(sd,SP_INTIMATE,hd->homunculus.intimacy / 100);
-	clif->hom_food(sd,foodID,1);
+	clif->emotion(&hd->bl, emotion);
+	clif->send_homdata(sd, SP_HUNGRY, hd->homunculus.hunger);
+	clif->send_homdata(sd, SP_INTIMATE, hd->homunculus.intimacy / 100);
+	clif->hom_food(sd, foodID, 1);
 
 	// Too much food :/
-	if(hd->homunculus.intimacy == 0)
+	if (hd->homunculus.intimacy == 0)
 		return homun->delete(sd->hd, E_OMG);
 	return true;
 }
@@ -711,22 +701,22 @@ static int homunculus_hunger_timer(int tid, int64 tick, int id, intptr_t data)
 	struct map_session_data *sd;
 	struct homun_data *hd;
 
-	if(!(sd=map->id2sd(id)) || !sd->status.hom_id || !(hd=sd->hd))
+	if (!(sd = map->id2sd(id)) || !sd->status.hom_id || !(hd = sd->hd))
 		return 1;
 
-	if(hd->hungry_timer != tid){
-		ShowError("homunculus_hunger_timer %d != %d\n",hd->hungry_timer,tid);
+	if (hd->hungry_timer != tid) {
+		ShowError("homunculus_hunger_timer %d != %d\n", hd->hungry_timer, tid);
 		return 0;
 	}
 
 	hd->hungry_timer = INVALID_TIMER;
 
-	hd->homunculus.hunger-- ;
-	if(hd->homunculus.hunger <= 10) {
+	hd->homunculus.hunger--;
+	if (hd->homunculus.hunger <= 10) {
 		clif->emotion(&hd->bl, E_AN);
-	} else if(hd->homunculus.hunger == 25) {
+	} else if (hd->homunculus.hunger == 25) {
 		clif->emotion(&hd->bl, E_HMM);
-	} else if(hd->homunculus.hunger == 75) {
+	} else if (hd->homunculus.hunger == 75) {
 		clif->emotion(&hd->bl, E_OK);
 	}
 	if (battle_config.feature_enable_homun_autofeed != 0) {
@@ -735,24 +725,24 @@ static int homunculus_hunger_timer(int tid, int64 tick, int id, intptr_t data)
 				homun->feed(sd, hd);
 		}
 	}
-	if(hd->homunculus.hunger < 0) {
+	if (hd->homunculus.hunger < 0) {
 		hd->homunculus.hunger = 0;
 		// Delete the homunculus if intimacy <= 100
-		if ( !homun->consume_intimacy(hd, 100) )
+		if (!homun->consume_intimacy(hd, 100))
 			return homun->delete(hd, E_OMG);
-		clif->send_homdata(sd,SP_INTIMATE,hd->homunculus.intimacy / 100);
+		clif->send_homdata(sd, SP_INTIMATE, hd->homunculus.intimacy / 100);
 	}
 
-	clif->send_homdata(sd,SP_HUNGRY,hd->homunculus.hunger);
-	hd->hungry_timer = timer->add(tick+hd->homunculusDB->hungryDelay,homun->hunger_timer,sd->bl.id,0); //simple Fix albator
+	clif->send_homdata(sd, SP_HUNGRY, hd->homunculus.hunger);
+	hd->hungry_timer = timer->add(tick + hd->homunculusDB->hungryDelay, homun->hunger_timer, sd->bl.id, 0); // simple Fix albator
 	return 0;
 }
 
 static void homunculus_hunger_timer_delete(struct homun_data *hd)
 {
 	nullpo_retv(hd);
-	if(hd->hungry_timer != INVALID_TIMER) {
-		timer->delete(hd->hungry_timer,homun->hunger_timer);
+	if (hd->hungry_timer != INVALID_TIMER) {
+		timer->delete(hd->hungry_timer, homun->hunger_timer);
 		hd->hungry_timer = INVALID_TIMER;
 	}
 }
@@ -767,11 +757,11 @@ static int homunculus_change_name(struct map_session_data *sd, const char *name)
 	hd = sd->hd;
 	if (!homun_alive(hd))
 		return 1;
-	if(hd->homunculus.rename_flag && !battle_config.hom_rename)
+	if (hd->homunculus.rename_flag && !battle_config.hom_rename)
 		return 1;
 
-	for(i=0;i<NAME_LENGTH && name[i];i++){
-		if( !(name[i]&0xe0) || name[i]==0x7f)
+	for (i = 0; i < NAME_LENGTH && name[i]; i++) {
+		if (!(name[i] & 0xe0) || name[i] == 0x7f)
 			return 1;
 	}
 
@@ -786,10 +776,11 @@ static bool homunculus_change_name_ack(struct map_session_data *sd, const char *
 	nullpo_retr(false, name);
 	hd = sd->hd;
 	nullpo_retr(false, hd);
-	if (!homun_alive(hd)) return false;
+	if (!homun_alive(hd))
+		return false;
 
-	newname = aStrndup(name, NAME_LENGTH-1);
-	normalize_name(newname, " ");//bugreport:3032 // FIXME[Haru]: This should be normalized by the inter-server (so that it's const here)
+	newname = aStrndup(name, NAME_LENGTH - 1);
+	normalize_name(newname, " "); // bugreport:3032 // FIXME[Haru]: This should be normalized by the inter-server (so that it's const here)
 
 	if (flag == 0 || strlen(newname) == 0) {
 		clif->message(sd->fd, msg_sd(sd, MSGTBL_BAD_HOMPET_NAME)); // You cannot use this name
@@ -798,9 +789,9 @@ static bool homunculus_change_name_ack(struct map_session_data *sd, const char *
 	}
 	safestrncpy(hd->homunculus.name, newname, NAME_LENGTH);
 	aFree(newname);
-	clif->blname_ack(0,&hd->bl);
+	clif->blname_ack(0, &hd->bl);
 	hd->homunculus.rename_flag = 1;
-	clif->hominfo(sd,hd,0);
+	clif->hominfo(sd, hd, 0);
 	return true;
 }
 
@@ -808,17 +799,16 @@ static int homunculus_db_search(int key, enum HOMUN_TYPE type)
 {
 	int i;
 
-	for(i=0;i<MAX_HOMUNCULUS_CLASS;i++) {
-		if(homun->dbs->db[i].base_class <= 0)
+	for (i = 0; i < MAX_HOMUNCULUS_CLASS; i++) {
+		if (homun->dbs->db[i].base_class <= 0)
 			continue;
-		switch(type) {
+		switch (type) {
 			case HOMUNCULUS_CLASS:
-				if(homun->dbs->db[i].base_class == key ||
-					homun->dbs->db[i].evo_class == key)
+				if (homun->dbs->db[i].base_class == key || homun->dbs->db[i].evo_class == key)
 					return i;
 				break;
 			case HOMUNCULUS_FOOD:
-				if(homun->dbs->db[i].foodID == key)
+				if (homun->dbs->db[i].foodID == key)
 					return i;
 				break;
 			default:
@@ -849,7 +839,7 @@ static bool homunculus_create(struct map_session_data *sd, const struct s_homunc
 
 	Assert_retr(false, sd->status.hom_id == 0 || sd->hd == 0 || sd->hd->master == sd);
 
-	i = homun->db_search(hom->class_,HOMUNCULUS_CLASS);
+	i = homun->db_search(hom->class_, HOMUNCULUS_CLASS);
 	if (i == INDEX_NOT_FOUND) {
 		ShowError("homunculus_create: unknown class [%d] for homunculus '%s', requesting deletion.\n", hom->class_, hom->name);
 		sd->status.hom_id = 0;
@@ -882,7 +872,7 @@ static bool homunculus_create(struct map_session_data *sd, const struct s_homunc
 	hd->masterteleport_timer = 0;
 
 	map->addiddb(&hd->bl);
-	status_calc_homunculus(hd,SCO_FIRST);
+	status_calc_homunculus(hd, SCO_FIRST);
 	if (is_new) {
 		status_percent_heal(&hd->bl, 100, 100);
 	}
@@ -891,12 +881,12 @@ static bool homunculus_create(struct map_session_data *sd, const struct s_homunc
 	return true;
 }
 
-static void homunculus_init_timers(struct homun_data  *hd)
+static void homunculus_init_timers(struct homun_data *hd)
 {
 	nullpo_retv(hd);
 	if (hd->hungry_timer == INVALID_TIMER)
-		hd->hungry_timer = timer->add(timer->gettick()+hd->homunculusDB->hungryDelay,homun->hunger_timer,hd->master->bl.id,0);
-	hd->regen.state.block = 0; //Restore HP/SP block.
+		hd->hungry_timer = timer->add(timer->gettick() + hd->homunculusDB->hungryDelay, homun->hunger_timer, hd->master->bl.id, 0);
+	hd->regen.state.block = 0; // Restore HP/SP block.
 }
 
 static bool homunculus_call(struct map_session_data *sd)
@@ -904,7 +894,7 @@ static bool homunculus_call(struct map_session_data *sd)
 	struct homun_data *hd;
 
 	nullpo_retr(false, sd);
-	if (!sd->status.hom_id) //Create a new homun.
+	if (!sd->status.hom_id) // Create a new homun.
 		return homun->creation_request(sd, HM_CLASS_BASE + rnd->value(0, 7));
 
 	// If homunc not yet loaded, load it
@@ -914,26 +904,26 @@ static bool homunculus_call(struct map_session_data *sd)
 	hd = sd->hd;
 
 	if (hd->homunculus.vaporize != HOM_ST_REST)
-		return false; //Can't use this if homun wasn't vaporized.
+		return false; // Can't use this if homun wasn't vaporized.
 
 	homun->init_timers(hd);
 	hd->homunculus.vaporize = HOM_ST_ACTIVE;
-	if (hd->bl.prev == NULL) { //Spawn him
+	if (hd->bl.prev == NULL) { // Spawn him
 		hd->bl.x = sd->bl.x;
 		hd->bl.y = sd->bl.y;
 		hd->bl.m = sd->bl.m;
 		map->addblock(&hd->bl);
 		clif->spawn(&hd->bl);
-		clif->send_homdata(sd,SP_ACK,0);
-		clif->hominfo(sd,hd,1);
-		clif->hominfo(sd,hd,0); // send this x2. dunno why, but kRO does that [blackhole89]
+		clif->send_homdata(sd, SP_ACK, 0);
+		clif->hominfo(sd, hd, 1);
+		clif->hominfo(sd, hd, 0); // send this x2. dunno why, but kRO does that [blackhole89]
 		clif->homskillinfoblock(sd);
-		if (battle_config.slaves_inherit_speed&1)
+		if (battle_config.slaves_inherit_speed & 1)
 			status_calc_bl(&hd->bl, SCB_SPEED);
 		homun->save(hd);
 	} else
-		//Warp him to master.
-		unit->warp(&hd->bl,sd->bl.m, sd->bl.x, sd->bl.y,CLR_OUTSIGHT);
+		// Warp him to master.
+		unit->warp(&hd->bl, sd->bl.m, sd->bl.x, sd->bl.y, CLR_OUTSIGHT);
 	return true;
 }
 
@@ -964,7 +954,7 @@ static bool homunculus_recv_data(int account_id, const struct s_homunculus *sh, 
 	}
 
 	if (sd->hd != NULL) {
-		//uh? Overwrite the data.
+		// uh? Overwrite the data.
 		memcpy(&sd->hd->homunculus, sh, sizeof sd->hd->homunculus);
 		sd->hd->homunculus.char_id = sd->status.char_id; // Correct char id if necessary.
 	} else {
@@ -972,19 +962,18 @@ static bool homunculus_recv_data(int account_id, const struct s_homunculus *sh, 
 	}
 
 	hd = sd->hd;
-	if(hd != NULL && hd->homunculus.hp && hd->homunculus.vaporize == HOM_ST_ACTIVE && hd->bl.prev == NULL && sd->bl.prev != NULL) {
+	if (hd != NULL && hd->homunculus.hp && hd->homunculus.vaporize == HOM_ST_ACTIVE && hd->bl.prev == NULL && sd->bl.prev != NULL) {
 
 		map->addblock(&hd->bl);
 		clif->spawn(&hd->bl);
-		clif->send_homdata(sd,SP_ACK,0);
-		clif->hominfo(sd,hd,1);
-		clif->hominfo(sd,hd,0); // send this x2. dunno why, but kRO does that [blackhole89]
+		clif->send_homdata(sd, SP_ACK, 0);
+		clif->hominfo(sd, hd, 1);
+		clif->hominfo(sd, hd, 0); // send this x2. dunno why, but kRO does that [blackhole89]
 		clif->homskillinfoblock(sd);
 		homun->init_timers(hd);
 		/* force shuffle if your level is higher than the allowed */
 		if (hd->homunculus.level > homun->get_max_level(hd))
 			homun->shuffle(hd);
-
 	}
 	return true;
 }
@@ -998,29 +987,29 @@ static bool homunculus_creation_request(struct map_session_data *sd, int class_)
 
 	nullpo_retr(false, sd);
 
-	i = homun->db_search(class_,HOMUNCULUS_CLASS);
+	i = homun->db_search(class_, HOMUNCULUS_CLASS);
 	if (i == INDEX_NOT_FOUND)
 		return false;
 
 	memset(&hom, 0, sizeof(struct s_homunculus));
-	//Initial data
-	safestrncpy(hom.name, homun->dbs->db[i].name, NAME_LENGTH-1);
+	// Initial data
+	safestrncpy(hom.name, homun->dbs->db[i].name, NAME_LENGTH - 1);
 	hom.class_ = class_;
 	hom.level = 1;
-	hom.hunger = 32; //32%
-	hom.intimacy = 2100; //21/1000
+	hom.hunger = 32;     // 32%
+	hom.intimacy = 2100; // 21/1000
 	hom.char_id = sd->status.char_id;
 
-	hom.hp = 10 ;
+	hom.hp = 10;
 	base = &homun->dbs->db[i].base;
 	hom.max_hp = base->HP;
 	hom.max_sp = base->SP;
-	hom.str = base->str *10;
-	hom.agi = base->agi *10;
-	hom.vit = base->vit *10;
-	hom.int_= base->int_*10;
-	hom.dex = base->dex *10;
-	hom.luk = base->luk *10;
+	hom.str = base->str * 10;
+	hom.agi = base->agi * 10;
+	hom.vit = base->vit * 10;
+	hom.int_ = base->int_ * 10;
+	hom.dex = base->dex * 10;
+	hom.luk = base->luk * 10;
 
 	// Request homunculus creation
 	intif->homunculus_create(sd->status.account_id, &hom);
@@ -1029,13 +1018,13 @@ static bool homunculus_creation_request(struct map_session_data *sd, int class_)
 
 static bool homunculus_ressurect(struct map_session_data *sd, unsigned char per, short x, short y)
 {
-	struct homun_data* hd;
-	nullpo_retr(false,sd);
+	struct homun_data *hd;
+	nullpo_retr(false, sd);
 
 	if (!sd->status.hom_id)
 		return false; // no homunculus
 
-	if (!sd->hd) //Load homun data;
+	if (!sd->hd) // Load homun data;
 		return intif->homunculus_requestload(sd->status.account_id, sd->status.hom_id);
 
 	hd = sd->hd;
@@ -1050,7 +1039,7 @@ static bool homunculus_ressurect(struct map_session_data *sd, unsigned char per,
 	homun->init_timers(hd);
 
 	if (!hd->bl.prev) {
-		//Add it back to the map.
+		// Add it back to the map.
 		hd->bl.m = sd->bl.m;
 		hd->bl.x = x;
 		hd->bl.y = y;
@@ -1070,12 +1059,12 @@ static void homunculus_revive(struct homun_data *hd, unsigned int hp, unsigned i
 	hd->homunculus.hp = hd->battle_status.hp;
 	if (!sd)
 		return;
-	clif->send_homdata(sd,SP_ACK,0);
-	clif->hominfo(sd,hd,1);
-	clif->hominfo(sd,hd,0);
+	clif->send_homdata(sd, SP_ACK, 0);
+	clif->hominfo(sd, hd, 1);
+	clif->hominfo(sd, hd, 0);
 	clif->homskillinfoblock(sd);
 }
-//Resets a homunc stats back to zero (but doesn't touches hunger or intimacy)
+// Resets a homunc stats back to zero (but doesn't touches hunger or intimacy)
 static void homunculus_stat_reset(struct homun_data *hd)
 {
 	struct s_homunculus_db *db;
@@ -1089,12 +1078,12 @@ static void homunculus_stat_reset(struct homun_data *hd)
 	hom->hp = 10;
 	hom->max_hp = base->HP;
 	hom->max_sp = base->SP;
-	hom->str = base->str *10;
-	hom->agi = base->agi *10;
-	hom->vit = base->vit *10;
-	hom->int_= base->int_*10;
-	hom->dex = base->dex *10;
-	hom->luk = base->luk *10;
+	hom->str = base->str * 10;
+	hom->agi = base->agi * 10;
+	hom->vit = base->vit * 10;
+	hom->int_ = base->int_ * 10;
+	hom->dex = base->dex * 10;
+	hom->luk = base->luk * 10;
 	hom->exp = 0;
 	hd->exp_next = homun->get_exp_next(hd);
 	memset(&hd->homunculus.hskill, 0, sizeof hd->homunculus.hskill);
@@ -1118,45 +1107,42 @@ static bool homunculus_shuffle(struct homun_data *hd)
 	memcpy(&b_skill, &hd->homunculus.hskill, sizeof(b_skill));
 	skillpts = hd->homunculus.skillpts;
 
-	//Reset values to level 1.
+	// Reset values to level 1.
 	homun->stat_reset(hd);
 
-	//Level it back up
+	// Level it back up
 	do {
 		hd->homunculus.exp += hd->exp_next;
-	} while( hd->homunculus.level < lv && homun->levelup(hd) );
+	} while (hd->homunculus.level < lv && homun->levelup(hd));
 
-	if(hd->homunculus.class_ == hd->homunculusDB->evo_class) {
-		//Evolved bonuses
+	if (hd->homunculus.class_ == hd->homunculusDB->evo_class) {
+		// Evolved bonuses
 		struct s_homunculus *hom = &hd->homunculus;
 		struct h_stats *max = &hd->homunculusDB->emax, *min = &hd->homunculusDB->emin;
 		hom->max_hp += rnd->value(min->HP, max->HP);
 		hom->max_sp += rnd->value(min->SP, max->SP);
-		hom->str += 10*rnd->value(min->str, max->str);
-		hom->agi += 10*rnd->value(min->agi, max->agi);
-		hom->vit += 10*rnd->value(min->vit, max->vit);
-		hom->int_+= 10*rnd->value(min->int_,max->int_);
-		hom->dex += 10*rnd->value(min->dex, max->dex);
-		hom->luk += 10*rnd->value(min->luk, max->luk);
+		hom->str += 10 * rnd->value(min->str, max->str);
+		hom->agi += 10 * rnd->value(min->agi, max->agi);
+		hom->vit += 10 * rnd->value(min->vit, max->vit);
+		hom->int_ += 10 * rnd->value(min->int_, max->int_);
+		hom->dex += 10 * rnd->value(min->dex, max->dex);
+		hom->luk += 10 * rnd->value(min->luk, max->luk);
 	}
 
 	hd->homunculus.exp = exp;
 	memcpy(&hd->homunculus.hskill, &b_skill, sizeof(b_skill));
 	hd->homunculus.skillpts = skillpts;
 	clif->homskillinfoblock(sd);
-	status_calc_homunculus(hd,SCO_NONE);
+	status_calc_homunculus(hd, SCO_NONE);
 	status_percent_heal(&hd->bl, 100, 100);
-	clif->specialeffect(&hd->bl,568,AREA);
+	clif->specialeffect(&hd->bl, 568, AREA);
 
 	return true;
 }
 
 static void homunculus_read_db(void)
 {
-	const char *filename[] = {
-		DBPATH"homunculus_db.conf",
-		"homunculus_db2.conf"
-	};
+	const char *filename[] = {DBPATH "homunculus_db.conf", "homunculus_db2.conf"};
 	memset(homun->dbs->db, 0, sizeof(homun->dbs->db));
 
 	for (int i = 0; i < ARRAYLENGTH(filename); i++)
@@ -1190,7 +1176,7 @@ static bool homunculus_read_db_libconfig(const char *filename)
 	}
 
 	libconfig->destroy(&homun_conf);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 	return true;
 }
 
@@ -1280,18 +1266,17 @@ static bool homunculus_read_db_libconfig_sub_stats_group(struct config_setting_t
 	nullpo_retr(false, it);
 	nullpo_retr(false, smin);
 
-
 	if (smax != NULL) {
-#define homunculus_read_stats_minmax(name, min, max) \
-	do { \
-		struct config_setting_t *t = NULL; \
-		if ((t = libconfig->setting_get_member(it, (name))) != NULL && config_setting_is_list(t)) { \
-			(min) = libconfig->setting_get_int_elem(t, 0); \
-			(max) = libconfig->setting_get_int_elem(t, 1); \
-			if ((min) > (max)) \
-				(min) = (max); \
-		} \
-	} while(0)
+#define homunculus_read_stats_minmax(name, min, max)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          \
+	do {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      \
+		struct config_setting_t *t = NULL;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    \
+		if ((t = libconfig->setting_get_member(it, (name))) != NULL && config_setting_is_list(t)) {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           \
+			(min) = libconfig->setting_get_int_elem(t, 0);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    \
+			(max) = libconfig->setting_get_int_elem(t, 1);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    \
+			if ((min) > (max))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                \
+				(min) = (max);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                \
+		}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     \
+	} while (0)
 		homunculus_read_stats_minmax("Hp", smin->HP, smax->HP);
 		homunculus_read_stats_minmax("Sp", smin->SP, smax->SP);
 		homunculus_read_stats_minmax("Str", smin->str, smax->str);
@@ -1354,20 +1339,20 @@ static bool homunculus_read_skill_db_sub(char *split[], int columns, int current
 	int minJobLevelPresent = 0;
 
 	nullpo_retr(false, split);
-	if( columns == 15 )
+	if (columns == 15)
 		minJobLevelPresent = 1; // MinJobLvl has been added - FIXME: is this extra field even needed anymore?
 
 	// check for bounds [celest]
 	classid = atoi(split[0]) - HM_CLASS_BASE;
 
-	if ( classid < 0 || classid >= MAX_HOMUNCULUS_CLASS ) {
+	if (classid < 0 || classid >= MAX_HOMUNCULUS_CLASS) {
 		ShowWarning("homunculus_read_skill_db_sub: Invalid homunculus class %d.\n", atoi(split[0]));
 		return false;
 	}
 
-	k = atoi(split[1]); //This is to avoid adding two lines for the same skill. [Skotlex]
+	k = atoi(split[1]); // This is to avoid adding two lines for the same skill. [Skotlex]
 	// Search an empty line or a line with the same skill_id (stored in j)
-	ARR_FIND( 0, MAX_SKILL_TREE, j, !homun->dbs->skill_tree[classid][j].id || homun->dbs->skill_tree[classid][j].id == k );
+	ARR_FIND(0, MAX_SKILL_TREE, j, !homun->dbs->skill_tree[classid][j].id || homun->dbs->skill_tree[classid][j].id == k);
 	if (j == MAX_SKILL_TREE) {
 		ShowWarning("Unable to load skill %d into homunculus %d's tree. Maximum number of skills per class has been reached.\n", k, classid);
 		return false;
@@ -1379,11 +1364,11 @@ static bool homunculus_read_skill_db_sub(char *split[], int columns, int current
 		homun->dbs->skill_tree[classid][j].joblv = atoi(split[3]);
 
 	for (k = 0; k < MAX_HOM_SKILL_REQUIRE; k++) {
-		homun->dbs->skill_tree[classid][j].need[k].id = atoi(split[3+k*2+minJobLevelPresent]);
-		homun->dbs->skill_tree[classid][j].need[k].lv = atoi(split[3+k*2+minJobLevelPresent+1]);
+		homun->dbs->skill_tree[classid][j].need[k].id = atoi(split[3 + k * 2 + minJobLevelPresent]);
+		homun->dbs->skill_tree[classid][j].need[k].lv = atoi(split[3 + k * 2 + minJobLevelPresent + 1]);
 	}
 
-	homun->dbs->skill_tree[classid][j].intimacylv = atoi(split[13+minJobLevelPresent]) * 100;
+	homun->dbs->skill_tree[classid][j].intimacylv = atoi(split[13 + minJobLevelPresent]) * 100;
 
 	return true;
 }
@@ -1393,10 +1378,10 @@ static int8 homunculus_get_intimacy_grade(struct homun_data *hd)
 	unsigned int val;
 	nullpo_ret(hd);
 	val = hd->homunculus.intimacy / 100;
-	if( val > 100 ) {
-		if( val > 250 ) {
-			if( val > 750 ) {
-				if ( val > 900 )
+	if (val > 100) {
+		if (val > 250) {
+			if (val > 750) {
+				if (val > 900)
 					return 4;
 				else
 					return 3;
@@ -1462,16 +1447,13 @@ static void do_init_homunculus(bool minimal)
 	// Add homunc timer function to timer func list [Toms]
 	timer->add_func_list(homun->hunger_timer, "homunculus_hunger_timer");
 
-	//Stock view data for homuncs
+	// Stock view data for homuncs
 	memset(homun->dbs->viewdb, 0, sizeof(homun->dbs->viewdb));
 	for (class_ = 0; class_ < MAX_HOMUNCULUS_CLASS; class_++)
 		homun->dbs->viewdb[class_].class = HM_CLASS_BASE + class_;
 }
 
-static void do_final_homunculus(void)
-{
-
-}
+static void do_final_homunculus(void) {}
 
 void homunculus_defaults(void)
 {

@@ -1,0 +1,24 @@
+BasedOnStyle: LLVM
+IndentWidth: 4
+UseTab: ForIndentation
+TabWidth: 4
+ContinuationIndentWidth: 4
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterFunction: true
+  AfterControlStatement: false
+AllowShortFunctionsOnASingleLine: Empty
+ColumnLimit: 9999
+PointerAlignment: Right
+SpacesBeforeTrailingComments: 1
+SpacesInParentheses: false
+SpacesInCStyleCastParentheses: false
+SpacesInAngles: false
+SpacesInConditionalStatement: false
+SpaceBeforeParens: ControlStatements
+IndentCaseLabels: true
+AlwaysBreakBeforeMultilineStrings: false
+DerivePointerAlignment: false
+SortIncludes: false
+IncludeBlocks: Preserve
+IndentPPDirectives: BeforeHash

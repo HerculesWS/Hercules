@@ -48,18 +48,13 @@
 #include <string.h>
 
 // this message ids must not conflict with other plugins or hercules itself
-enum apimessages {
-	API_MSG_SAMPLE_LOGIN = API_MSG_CUSTOM + 0,
-	API_MSG_SAMPLE_CHAR  = API_MSG_CUSTOM + 1,
-	API_MSG_SAMPLE_MAP   = API_MSG_CUSTOM + 2,
-	API_MSG_SAMPLE_USER  = API_MSG_CUSTOM + 3
-};
+enum apimessages { API_MSG_SAMPLE_LOGIN = API_MSG_CUSTOM + 0, API_MSG_SAMPLE_CHAR = API_MSG_CUSTOM + 1, API_MSG_SAMPLE_MAP = API_MSG_CUSTOM + 2, API_MSG_SAMPLE_USER = API_MSG_CUSTOM + 3 };
 
 HPExport struct hplugin_info pinfo = {
-	"Http sample",    // Plugin name
-	SERVER_TYPE_CHAR|SERVER_TYPE_LOGIN|SERVER_TYPE_MAP|SERVER_TYPE_API, // Which server types this plugin works with?
-	"0.1",       // Plugin version
-	HPM_VERSION, // HPM Version (don't change, macro is automatically updated)
+    "Http sample",                                                            // Plugin name
+    SERVER_TYPE_CHAR | SERVER_TYPE_LOGIN | SERVER_TYPE_MAP | SERVER_TYPE_API, // Which server types this plugin works with?
+    "0.1",                                                                    // Plugin version
+    HPM_VERSION,                                                              // HPM Version (don't change, macro is automatically updated)
 };
 
 struct PACKET_API_sample_login_request_data {
@@ -110,7 +105,7 @@ HTTP_URL(my_sample_test_simple)
 
 	char buf[1000];
 	// get client user agent
-	const char *user_agent = (const char*)strdb_get(sd->headers_db, "User-Agent");
+	const char *user_agent = (const char *)strdb_get(sd->headers_db, "User-Agent");
 	const char *format = "<html>Hercules test from sample plugin.<br/>Your user agent is: %s<br/></html>\n";
 	if (user_agent != NULL) {
 		// copy user agent from http request to buffer
@@ -136,7 +131,7 @@ HTTP_URL(my_sample_test_login)
 	// create variable with custom data for send to login server
 	CREATE_HTTP_DATA(data, sample_login_request);
 	// get client user agent
-	const char *user_agent = (const char*)strdb_get(sd->headers_db, "User-Agent");
+	const char *user_agent = (const char *)strdb_get(sd->headers_db, "User-Agent");
 	if (user_agent != NULL) {
 		// copy user agent from http request to text field
 		safestrncpy(data.text, user_agent, sizeof(data.text));
@@ -163,9 +158,9 @@ HTTP_DATA(my_sample_test_login)
 
 	// generate html and send
 	const char *format = "<html>Hercules test from sample plugin.<br/>\n"
-		"Connected api servers count: %d<br/>\n"
-		"Connected char servers count: %d<br/>\n"
-		"</html>\n";
+	                     "Connected api servers count: %d<br/>\n"
+	                     "Connected char servers count: %d<br/>\n"
+	                     "</html>\n";
 	char buf[1000];
 	snprintf(buf, sizeof(buf), format, p->api_servers_count, p->char_servers_count);
 	httpsender->send_html(fd, buf);
@@ -184,7 +179,7 @@ HTTP_URL(my_sample_test_char)
 	// create variable with custom data for send other char server
 	CREATE_HTTP_DATA(data, sample_char_request);
 	// get client user agent
-	const char *user_agent = (const char*)strdb_get(sd->headers_db, "User-Agent");
+	const char *user_agent = (const char *)strdb_get(sd->headers_db, "User-Agent");
 	if (user_agent != NULL) {
 		// copy user agent from http request to text field
 		safestrncpy(data.text, user_agent, sizeof(data.text));
@@ -229,7 +224,7 @@ HTTP_URL(my_sample_test_map)
 	// create variable with custom data for send other char server
 	CREATE_HTTP_DATA(data, sample_map_request);
 	// get client user agent
-	const char *user_agent = (const char*)strdb_get(sd->headers_db, "User-Agent");
+	const char *user_agent = (const char *)strdb_get(sd->headers_db, "User-Agent");
 	if (user_agent != NULL) {
 		// copy user agent from http request to text field
 		safestrncpy(data.text, user_agent, sizeof(data.text));
@@ -332,13 +327,13 @@ void sample_login_api_packet(int fd)
 	int server_num = 0;
 	for (int i = 0; i < ARRAYLENGTH(login->dbs->server); ++i) {
 		if (sockt->session_is_active(login->dbs->server[i].fd))
-			server_num ++;
+			server_num++;
 	}
 	data->char_servers_count = server_num;
 	server_num = 0;
 	for (int i = 0; i < ARRAYLENGTH(login->dbs->api_server); ++i) {
 		if (sockt->session_is_active(login->dbs->api_server[i].fd))
-			server_num ++;
+			server_num++;
 	}
 	data->api_servers_count = server_num;
 
@@ -399,16 +394,26 @@ void sample_user_api_packet(int fd)
 }
 
 /* run when server starts */
-HPExport void plugin_init (void)
+HPExport void plugin_init(void)
 {
 	ShowInfo("Server type is ");
 
 	switch (SERVER_TYPE) {
-		case SERVER_TYPE_LOGIN: printf("Login Server\n"); break;
-		case SERVER_TYPE_CHAR: printf("Char Server\n"); break;
-		case SERVER_TYPE_MAP: printf ("Map Server\n"); break;
-		case SERVER_TYPE_API: printf ("Api Server\n"); break;
-		case SERVER_TYPE_UNKNOWN: printf ("Unknown Server\n"); break;
+		case SERVER_TYPE_LOGIN:
+			printf("Login Server\n");
+			break;
+		case SERVER_TYPE_CHAR:
+			printf("Char Server\n");
+			break;
+		case SERVER_TYPE_MAP:
+			printf("Map Server\n");
+			break;
+		case SERVER_TYPE_API:
+			printf("Api Server\n");
+			break;
+		case SERVER_TYPE_UNKNOWN:
+			printf("Unknown Server\n");
+			break;
 	}
 
 	ShowInfo("I'm being run from the '%s' filename\n", SERVER_NAME);
@@ -428,12 +433,10 @@ HPExport void plugin_init (void)
 	}
 }
 /* triggered when server starts loading, before any server-specific data is set */
-HPExport void server_preinit(void)
-{
-}
+HPExport void server_preinit(void) {}
 
 /* run when server is ready (online) */
-HPExport void server_online (void)
+HPExport void server_online(void)
 {
 	// Register url for GET request
 	if (SERVER_TYPE == SERVER_TYPE_API) {
@@ -456,6 +459,7 @@ HPExport void server_online (void)
 }
 
 /* run when server is shutting down */
-HPExport void plugin_final (void) {
-	ShowInfo ("%s says ~Bye world\n", pinfo.name);
+HPExport void plugin_final(void)
+{
+	ShowInfo("%s says ~Bye world\n", pinfo.name);
 }

@@ -42,7 +42,7 @@ struct enchantui_interface *enchantui;
 static void enchantui_read_db_libconfig(void)
 {
 	char filepath[512];
-	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH"enchant_db.conf");
+	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH "enchant_db.conf");
 
 	struct config_t enchant_conf;
 	if (libconfig->load_file(&enchant_conf, filepath) == CONFIG_FALSE) {
@@ -67,7 +67,7 @@ static void enchantui_read_db_libconfig(void)
 	}
 
 	libconfig->destroy(&enchant_conf);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 }
 
 static bool enchantui_read_db_libconfig_sub(const struct config_setting_t *it, int n, const char *source)
@@ -75,7 +75,7 @@ static bool enchantui_read_db_libconfig_sub(const struct config_setting_t *it, i
 	nullpo_retr(false, it);
 	nullpo_retr(false, source);
 
-	struct enchant_info ei = { 0 };
+	struct enchant_info ei = {0};
 
 	if (libconfig->setting_lookup_int(it, "Id", &ei.Id) == CONFIG_FALSE) {
 		ShowError("%s: Invalid Enchant Id provided for entry %d in '%s', skipping...\n", __func__, n, source);
@@ -320,7 +320,7 @@ static bool enchantui_read_db_libconfig_perfect_info(const struct config_setting
 	int i = 0;
 	struct config_setting_t *entry = NULL;
 	while ((entry = libconfig->setting_get_elem(it, i++)) != NULL) {
-		struct enchant_info_perfect_entry perfentry = { 0 };
+		struct enchant_info_perfect_entry perfentry = {0};
 		const char *name = config_setting_name(entry);
 
 		struct item_data *idata = itemdb->name2id(name);
@@ -358,7 +358,7 @@ static bool enchantui_read_db_libconfig_upgrade_info(const struct config_setting
 	int i = 0;
 	struct config_setting_t *entry = NULL;
 	while ((entry = libconfig->setting_get_elem(it, i++)) != NULL) {
-		struct enchant_info_upgrade_entry upgentry = { 0 };
+		struct enchant_info_upgrade_entry upgentry = {0};
 		const char *name = config_setting_name(entry);
 
 		struct item_data *idata = itemdb->name2id(name);
@@ -437,7 +437,7 @@ static bool enchantui_read_db_libconfig_materials_list(const struct config_setti
 
 		struct item_data *idata = itemdb->name2id(name);
 		if (idata == NULL) {
-			ShowWarning("%s: unknown materials item '%s' for entry %d in '%s', skipping...\n", __func__, name, n , source);
+			ShowWarning("%s: unknown materials item '%s' for entry %d in '%s', skipping...\n", __func__, name, n, source);
 			continue;
 		}
 
@@ -447,7 +447,7 @@ static bool enchantui_read_db_libconfig_materials_list(const struct config_setti
 			continue;
 		}
 
-		struct itemlist_entry mitem = { 0 };
+		struct itemlist_entry mitem = {0};
 		mitem.id = idata->nameid;
 		mitem.amount = i32;
 		VECTOR_ENSURE(*materials, 1, 1);
@@ -486,7 +486,7 @@ static bool enchantui_read_db_libconfig_itemrate_list(const struct config_settin
 			continue;
 		}
 
-		struct enchant_item_rate_entry ritem = { 0 };
+		struct enchant_item_rate_entry ritem = {0};
 		ritem.id = idata->nameid;
 		ritem.rate = i32;
 		VECTOR_ENSURE(*elist, 1, 1);

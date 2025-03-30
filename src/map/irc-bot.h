@@ -36,7 +36,7 @@ struct channel_data;
 
 struct irc_func {
 	char name[IRC_FUNC_LENGTH];
-	void (*func)(int, char*, char*, char*, char*);
+	void (*func)(int, char *, char *, char *, char *);
 };
 
 struct message_flood {
@@ -71,18 +71,18 @@ struct ircbot_interface {
 	/**
 	 * IRC bot initializer
 	 */
-	void (*init) (bool minimal);
+	void (*init)(bool minimal);
 
 	/**
 	 * IRC bot finalizer
 	 */
-	void (*final) (void);
+	void (*final)(void);
 
 	/**
 	 * Parser for the IRC server connection
 	 * @see do_sockets
 	 */
-	int (*parse) (int fd);
+	int (*parse)(int fd);
 
 	/**
 	 * Parse a received message from the irc server, and do the appropriate action
@@ -90,7 +90,7 @@ struct ircbot_interface {
 	 * @param fd  IRC server connection file descriptor
 	 * @param str Raw received message
 	 */
-	void (*parse_sub) (int fd, char *str);
+	void (*parse_sub)(int fd, char *str);
 
 	/**
 	 * Parse the source from a received irc message
@@ -102,7 +102,7 @@ struct ircbot_interface {
 	 * @param host   Pointer to a string where to return the hostname (may not be
 	 *               NULL, needs to be able to fit an IRC_HOST_LENGTH long string)
 	 */
-	void (*parse_source) (char *source, char *nick, char *ident, char *host);
+	void (*parse_source)(char *source, char *nick, char *ident, char *host);
 
 	/**
 	 * Search the handler for a given IRC received command
@@ -110,38 +110,38 @@ struct ircbot_interface {
 	 * @return              Function pointer to the command handler, NULL in case
 	 *                      of unhandled commands
 	 */
-	struct irc_func* (*func_search) (char* function_name);
+	struct irc_func *(*func_search)(char *function_name);
 
 	/**
 	 * Timer callback to (re-)connect to an IRC server
 	 * @see timer_interface::do_timer
 	 */
-	int (*connect_timer) (int tid, int64 tick, int id, intptr_t data);
+	int (*connect_timer)(int tid, int64 tick, int id, intptr_t data);
 
 	/**
 	 * Timer callback to send identification commands to an IRC server
 	 * @see timer_interface::do_timer
 	 */
-	int (*identify_timer) (int tid, int64 tick, int id, intptr_t data);
+	int (*identify_timer)(int tid, int64 tick, int id, intptr_t data);
 
 	/**
 	 * Timer callback to join channels (and optionally send NickServ commands)
 	 * @see timer_interface::do_timer
 	 */
-	int (*join_timer) (int tid, int64 tick, int id, intptr_t data);
+	int (*join_timer)(int tid, int64 tick, int id, intptr_t data);
 
 	/**
 	 * Timer callback to send queued IRC Commands
 	 * @see timer_interface::do_timer
 	 */
-	int (*queue_timer) (int tid, int64 tick, int id, intptr_t data);
+	int (*queue_timer)(int tid, int64 tick, int id, intptr_t data);
 
 	/**
 	 * Decides if an IRC Command should be queued or not, based on the flood protection settings.
 	 *
 	 * @param str Command to be checked
 	 */
-	void (*queue) (char *str);
+	void (*queue)(char *str);
 
 	/**
 	 * Send a raw command to the irc server
@@ -154,46 +154,46 @@ struct ircbot_interface {
 	 * @param name Sender's name
 	 * @param msg  Message text
 	 */
-	void (*relay) (const char *name, const char *msg);
+	void (*relay)(const char *name, const char *msg);
 
 	/**
 	 * Handler for the PING IRC command (send back a PONG)
 	 * @see ircbot_interface::parse_sub
 	 */
-	void (*pong) (int fd, char *cmd, char *source, char *target, char *msg);
+	void (*pong)(int fd, char *cmd, char *source, char *target, char *msg);
 
 	/**
 	 * Handler for the PRIVMSG IRC command (action depends on the message contents)
 	 * @see ircbot_interface::parse_sub
 	 */
-	void (*privmsg) (int fd, char *cmd, char *source, char *target, char *msg);
+	void (*privmsg)(int fd, char *cmd, char *source, char *target, char *msg);
 
 	/**
 	 * Handler for CTCP commands received via PRIVMSG
 	 * @see ircbot_interface::privmsg
 	 */
-	void (*privmsg_ctcp) (int fd, char *cmd, char *source, char *target, char *msg);
+	void (*privmsg_ctcp)(int fd, char *cmd, char *source, char *target, char *msg);
 
 	/**
 	 * Handler for the JOIN IRC command (notify an in-game channel of users joining
 	 * the IRC channel)
 	 * @see ircbot_interface::parse_sub
 	 */
-	void (*userjoin) (int fd, char *cmd, char *source, char *target, char *msg);
+	void (*userjoin)(int fd, char *cmd, char *source, char *target, char *msg);
 
 	/**
 	 * Handler for the PART and QUIT IRC commands (notify an in-game channel of
 	 * users leaving the IRC channel)
 	 * @see ircbot_interface::parse_sub
 	 */
-	void (*userleave) (int fd, char *cmd, char *source, char *target, char *msg);
+	void (*userleave)(int fd, char *cmd, char *source, char *target, char *msg);
 
 	/**
 	 * Handler for the NICK IRC commands (notify an in-game channel of users
 	 * changing their name while in the IRC channel)
 	 * @see ircbot_interface::parse_sub
 	 */
-	void (*usernick) (int fd, char *cmd, char *source, char *target, char *msg);
+	void (*usernick)(int fd, char *cmd, char *source, char *target, char *msg);
 };
 
 #ifdef HERCULES_CORE

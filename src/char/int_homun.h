@@ -28,15 +28,15 @@
  * inter_homunculus interface
  **/
 struct inter_homunculus_interface {
-	int (*sql_init) (void);
-	void (*sql_final) (void);
-	int (*parse_frommap) (int fd);
+	int (*sql_init)(void);
+	void (*sql_final)(void);
+	int (*parse_frommap)(int fd);
 
-	bool (*create) (struct s_homunculus *hd);
-	bool (*save) (const struct s_homunculus *hd);
-	bool (*load) (int homun_id, struct s_homunculus* hd);
-	bool (*delete) (int homun_id);
-	bool (*rename) (const char *name);
+	bool (*create)(struct s_homunculus *hd);
+	bool (*save)(const struct s_homunculus *hd);
+	bool (*load)(int homun_id, struct s_homunculus *hd);
+	bool (*delete)(int homun_id);
+	bool (*rename)(const char *name);
 };
 
 #ifdef HERCULES_CORE

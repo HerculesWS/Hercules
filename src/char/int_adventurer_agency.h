@@ -31,17 +31,17 @@ struct adventuter_agency_page;
  * inter_adventurer_agency_interface interface
  **/
 struct inter_adventurer_agency_interface {
-	int (*parse_frommap) (int fd);
-	void (*pJoinParty) (int fd);
-	bool (*entry_add) (int char_id, const struct party_add_data *entry);
-	bool (*entry_check_existing) (int char_id, int party_id);
-	void (*entry_delete_existing) (int char_id, int party_id);
-	bool (*entry_tosql) (int char_id, const char *char_name, int party_id, const struct party_add_data *entry);
-	int (*entry_delete) (int char_id, int master_aid);
-	void (*get_page) (int char_id, int page, struct adventuter_agency_page *packet);
-	int (*entry_to_flags) (int char_id, const struct party_add_data *entry);
-	int (*get_pages_count) (void);
-	int (*get_player_request) (int char_id, struct adventuter_agency_entry *entry);
+	int (*parse_frommap)(int fd);
+	void (*pJoinParty)(int fd);
+	bool (*entry_add)(int char_id, const struct party_add_data *entry);
+	bool (*entry_check_existing)(int char_id, int party_id);
+	void (*entry_delete_existing)(int char_id, int party_id);
+	bool (*entry_tosql)(int char_id, const char *char_name, int party_id, const struct party_add_data *entry);
+	int (*entry_delete)(int char_id, int master_aid);
+	void (*get_page)(int char_id, int page, struct adventuter_agency_page *packet);
+	int (*entry_to_flags)(int char_id, const struct party_add_data *entry);
+	int (*get_pages_count)(void);
+	int (*get_player_request)(int char_id, struct adventuter_agency_entry *entry);
 };
 
 #ifdef HERCULES_CORE

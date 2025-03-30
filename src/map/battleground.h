@@ -40,24 +40,24 @@ struct map_session_data;
  * Enumerations
  **/
 enum bg_queue_types {
-	BGQT_INVALID    = 0x0,
+	BGQT_INVALID = 0x0,
 	BGQT_INDIVIDUAL = 0x1,
-	BGQT_PARTY      = 0x2,
+	BGQT_PARTY = 0x2,
 	/* yup no 0x3 */
-	BGQT_GUILD      = 0x4,
+	BGQT_GUILD = 0x4,
 };
 
 enum bg_team_leave_type {
 	BGTL_LEFT = 0x0,
 	BGTL_QUIT = 0x1,
-	BGTL_AFK  = 0x2,
+	BGTL_AFK = 0x2,
 };
 
 struct battleground_member_data {
 	unsigned short x, y;
 	struct map_session_data *sd;
 	unsigned afk : 1;
-	struct point source;/* where did i come from before i join? */
+	struct point source; /* where did i come from before i join? */
 };
 
 struct battleground_data {
@@ -102,43 +102,43 @@ struct battleground_interface {
 	struct bg_arena **arena;
 	unsigned char arenas;
 	/* */
-	struct DBMap *team_db; // int bg_id -> struct battleground_data*
+	struct DBMap *team_db;     // int bg_id -> struct battleground_data*
 	unsigned int team_counter; // Next bg_id
 	/* */
-	void (*init) (bool minimal);
-	void (*final) (void);
+	void (*init)(bool minimal);
+	void (*final)(void);
 	/* */
-	struct bg_arena *(*name2arena) (const char *name);
-	void (*queue_add) (struct map_session_data *sd, struct bg_arena *arena, enum bg_queue_types type);
-	enum BATTLEGROUNDS_QUEUE_ACK (*can_queue) (struct map_session_data *sd, struct bg_arena *arena, enum bg_queue_types type);
-	int (*id2pos) (int queue_id, int account_id);
-	void (*queue_pc_cleanup) (struct map_session_data *sd);
-	void (*begin) (struct bg_arena *arena);
-	int (*begin_timer) (int tid, int64 tick, int id, intptr_t data);
-	void (*queue_pregame) (struct bg_arena *arena);
-	int (*fillup_timer) (int tid, int64 tick, int id, intptr_t data);
-	void (*queue_ready_ack) (struct bg_arena *arena, struct map_session_data *sd, bool response);
-	void (*match_over) (struct bg_arena *arena, bool canceled);
-	void (*queue_check) (struct bg_arena *arena);
-	struct battleground_data* (*team_search) (int bg_id);
-	struct map_session_data* (*getavailablesd) (struct battleground_data *bgd);
-	bool (*team_delete) (int bg_id);
-	bool (*team_warp) (int bg_id, unsigned short map_index, short x, short y);
-	void (*send_dot_remove) (struct map_session_data *sd);
-	bool (*team_join) (int bg_id, struct map_session_data *sd);
-	int (*team_leave) (struct map_session_data *sd, enum bg_team_leave_type flag);
-	bool (*member_respawn) (struct map_session_data *sd);
-	int (*create) (unsigned short map_index, short rx, short ry, const char *ev, const char *dev);
-	int (*team_get_id) (struct block_list *bl);
-	bool (*send_message) (struct map_session_data *sd, const char *mes);
-	int (*send_xy_timer_sub) (union DBKey key, struct DBData *data, va_list ap);
-	int (*send_xy_timer) (int tid, int64 tick, int id, intptr_t data);
-	int (*afk_timer) (int tid, int64 tick, int id, intptr_t data);
-	int (*team_db_final) (union DBKey key, struct DBData *data, va_list ap);
+	struct bg_arena *(*name2arena)(const char *name);
+	void (*queue_add)(struct map_session_data *sd, struct bg_arena *arena, enum bg_queue_types type);
+	enum BATTLEGROUNDS_QUEUE_ACK (*can_queue)(struct map_session_data *sd, struct bg_arena *arena, enum bg_queue_types type);
+	int (*id2pos)(int queue_id, int account_id);
+	void (*queue_pc_cleanup)(struct map_session_data *sd);
+	void (*begin)(struct bg_arena *arena);
+	int (*begin_timer)(int tid, int64 tick, int id, intptr_t data);
+	void (*queue_pregame)(struct bg_arena *arena);
+	int (*fillup_timer)(int tid, int64 tick, int id, intptr_t data);
+	void (*queue_ready_ack)(struct bg_arena *arena, struct map_session_data *sd, bool response);
+	void (*match_over)(struct bg_arena *arena, bool canceled);
+	void (*queue_check)(struct bg_arena *arena);
+	struct battleground_data *(*team_search)(int bg_id);
+	struct map_session_data *(*getavailablesd)(struct battleground_data *bgd);
+	bool (*team_delete)(int bg_id);
+	bool (*team_warp)(int bg_id, unsigned short map_index, short x, short y);
+	void (*send_dot_remove)(struct map_session_data *sd);
+	bool (*team_join)(int bg_id, struct map_session_data *sd);
+	int (*team_leave)(struct map_session_data *sd, enum bg_team_leave_type flag);
+	bool (*member_respawn)(struct map_session_data *sd);
+	int (*create)(unsigned short map_index, short rx, short ry, const char *ev, const char *dev);
+	int (*team_get_id)(struct block_list *bl);
+	bool (*send_message)(struct map_session_data *sd, const char *mes);
+	int (*send_xy_timer_sub)(union DBKey key, struct DBData *data, va_list ap);
+	int (*send_xy_timer)(int tid, int64 tick, int id, intptr_t data);
+	int (*afk_timer)(int tid, int64 tick, int id, intptr_t data);
+	int (*team_db_final)(union DBKey key, struct DBData *data, va_list ap);
 	/* */
-	enum bg_queue_types (*str2teamtype) (const char *str);
+	enum bg_queue_types (*str2teamtype)(const char *str);
 	/* */
-	void (*config_read) (void);
+	void (*config_read)(void);
 };
 
 #ifdef HERCULES_CORE

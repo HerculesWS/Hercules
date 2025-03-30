@@ -41,10 +41,10 @@
 #include <time.h>
 
 HPExport struct hplugin_info pinfo = {
-	"generate-translations", // Plugin name
-	SERVER_TYPE_MAP, // Which server types this plugin works with?
-	"0.1",           // Plugin version
-	HPM_VERSION,     // HPM Version (don't change, macro is automatically updated)
+    "generate-translations", // Plugin name
+    SERVER_TYPE_MAP,         // Which server types this plugin works with?
+    "0.1",                   // Plugin version
+    HPM_VERSION,             // HPM Version (don't change, macro is automatically updated)
 };
 
 struct DBMap *translatable_strings; // string map parsed (used when exporting strings only)
@@ -67,9 +67,9 @@ bool createdirectory(const char *dirname)
 		if (ERROR_ALREADY_EXISTS != GetLastError())
 			return false;
 	}
-#else /* Not WIN32 */
-	struct stat st = { 0 };
-	if (stat(dirname, &st) == -1 ) {
+#else  /* Not WIN32 */
+	struct stat st = {0};
+	if (stat(dirname, &st) == -1) {
 		if (mkdir(dirname, 0755) != 0)
 			return false;
 	}
@@ -106,7 +106,7 @@ void script_add_translatable_string_posthook(const struct script_string_buf *str
 	if (VECTOR_LENGTH(*string) > 1) {
 		// The length of *string will always be at least 1 because of the '\0'
 		if (translatable_strings == NULL) {
-			translatable_strings = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_ALLOW_NULL_DATA, 0);
+			translatable_strings = strdb_alloc(DB_OPT_DUP_KEY | DB_OPT_ALLOW_NULL_DATA, 0);
 		}
 
 		if (!strdb_exists(translatable_strings, VECTOR_DATA(*string))) {
@@ -116,20 +116,9 @@ void script_add_translatable_string_posthook(const struct script_string_buf *str
 	}
 
 	if (!duplicate) {
-		if (script->syntax.last_func == script->buildin_mes_offset
-		 || script->syntax.last_func == script->buildin_mes2_offset
-		 || script->syntax.last_func == script->buildin_zmes1_offset
-		 || script->syntax.last_func == script->buildin_zmes2_offset
-		 || script->syntax.last_func == script->buildin_select_offset
-		 || script->syntax.lang_macro_active
-		 ) {
+		if (script->syntax.last_func == script->buildin_mes_offset || script->syntax.last_func == script->buildin_mes2_offset || script->syntax.last_func == script->buildin_zmes1_offset || script->syntax.last_func == script->buildin_zmes2_offset || script->syntax.last_func == script->buildin_select_offset || script->syntax.lang_macro_active) {
 			is_translatable_string = true;
-		} else if (script->syntax.last_func == script->buildin_mesf_offset
-				|| script->syntax.last_func == script->buildin_mes2f_offset
-				|| script->syntax.last_func == script->buildin_zmes1f_offset
-				|| script->syntax.last_func == script->buildin_zmes2f_offset
-				|| script->syntax.lang_macro_fmtstring_active
-				) {
+		} else if (script->syntax.last_func == script->buildin_mesf_offset || script->syntax.last_func == script->buildin_mes2f_offset || script->syntax.last_func == script->buildin_zmes1f_offset || script->syntax.last_func == script->buildin_zmes2f_offset || script->syntax.lang_macro_fmtstring_active) {
 			is_translatable_fmtstring = true;
 		}
 	}
@@ -159,25 +148,19 @@ void script_add_translatable_string_posthook(const struct script_string_buf *str
 			normalize_name(VECTOR_DATA(lang_export_line_buf), "\r\n\t "); // [!] Note: VECTOR_LENGTH() will lie.
 		}
 
-		VECTOR_ENSURE(lang_export_escaped_buf, 4*VECTOR_LENGTH(*string)+1, 1);
-		VECTOR_LENGTH(lang_export_escaped_buf) = (int)sv->escape_c(VECTOR_DATA(lang_export_escaped_buf),
-				VECTOR_DATA(*string),
-				VECTOR_LENGTH(*string)-1, /* exclude null terminator */
-				"\"");
+		VECTOR_ENSURE(lang_export_escaped_buf, 4 * VECTOR_LENGTH(*string) + 1, 1);
+		VECTOR_LENGTH(lang_export_escaped_buf) = (int)sv->escape_c(VECTOR_DATA(lang_export_escaped_buf), VECTOR_DATA(*string), VECTOR_LENGTH(*string) - 1, /* exclude null terminator */
+		                                                           "\"");
 		VECTOR_PUSH(lang_export_escaped_buf, '\0');
 
-		fprintf(lang_export_fp, "\n#: %s\n"
-				"# %s\n"
-				"%s"
-				"msgctxt \"%s\"\n"
-				"msgid \"%s\"\n"
-				"msgstr \"\"\n",
-				script->parser_current_file ? script->parser_current_file : "Unknown File",
-				VECTOR_DATA(lang_export_line_buf),
-				is_translatable_fmtstring ? "#, c-format\n" : (has_percent_sign ? "#, no-c-format\n" : ""),
-				script->parser_current_npc_name ? script->parser_current_npc_name : "Unknown NPC",
-				VECTOR_DATA(lang_export_escaped_buf)
-		);
+		fprintf(lang_export_fp,
+		        "\n#: %s\n"
+		        "# %s\n"
+		        "%s"
+		        "msgctxt \"%s\"\n"
+		        "msgid \"%s\"\n"
+		        "msgstr \"\"\n",
+		        script->parser_current_file ? script->parser_current_file : "Unknown File", VECTOR_DATA(lang_export_line_buf), is_translatable_fmtstring ? "#, c-format\n" : (has_percent_sign ? "#, no-c-format\n" : ""), script->parser_current_npc_name ? script->parser_current_npc_name : "Unknown NPC", VECTOR_DATA(lang_export_escaped_buf));
 		lang_export_stringcount_total++;
 		lang_export_stringcount_current++;
 		VECTOR_TRUNCATE(lang_export_line_buf);
@@ -229,14 +212,14 @@ bool translations_enter_file(const char *filepath)
 		if (*p == '.') {
 			lang_export_filepath[i] = '_';
 #ifdef WIN32
-		} else if (*p == PATHSEP || *p == PATHSEP2) {  // quick hack for avoid windows issues
-#else  // WIN32
+		} else if (*p == PATHSEP || *p == PATHSEP2) { // quick hack for avoid windows issues
+#else                                                 // WIN32
 		} else if (*p == PATHSEP) {
-#endif  // WIN32
+#endif                                                // WIN32
 			if (!createdirectory(lang_export_filepath)) {
 				ShowError("generatetranslations: Unable to create output directory '%s'.\n", lang_export_filepath);
 				aFree(lang_export_filepath);
-			lang_export_filepath = NULL;
+				lang_export_filepath = NULL;
 				return false;
 			}
 			lang_export_filepath[i] = PATHSEP;
@@ -258,42 +241,42 @@ bool translations_enter_file(const char *filepath)
 	{
 		time_t t = time(NULL);
 		struct tm *lt = localtime(&t);
-		int year = lt->tm_year+1900;
+		int year = lt->tm_year + 1900;
 		char timestring[128] = "";
 		strftime(timestring, sizeof(timestring), "%Y-%m-%d %H:%M:%S%z", lt);
 		fprintf(lang_export_fp,
-				"# This file is part of Hercules.\n"
-				"# http://herc.ws - http://github.com/HerculesWS/Hercules\n"
-				"#\n"
-				"# Copyright (C) 2013-%d Hercules Dev Team\n"
-				"#\n"
-				"# Hercules is free software: you can redistribute it and/or modify\n"
-				"# it under the terms of the GNU General Public License as published by\n"
-				"# the Free Software Foundation, either version 3 of the License, or\n"
-				"# (at your option) any later version.\n"
-				"#\n"
-				"# This program is distributed in the hope that it will be useful,\n"
-				"# but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
-				"# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
-				"# GNU General Public License for more details.\n"
-				"#\n"
-				"# You should have received a copy of the GNU General Public License\n"
-				"# along with this program.  If not, see <http://www.gnu.org/licenses/>.\n\n"
+		        "# This file is part of Hercules.\n"
+		        "# http://herc.ws - http://github.com/HerculesWS/Hercules\n"
+		        "#\n"
+		        "# Copyright (C) 2013-%d Hercules Dev Team\n"
+		        "#\n"
+		        "# Hercules is free software: you can redistribute it and/or modify\n"
+		        "# it under the terms of the GNU General Public License as published by\n"
+		        "# the Free Software Foundation, either version 3 of the License, or\n"
+		        "# (at your option) any later version.\n"
+		        "#\n"
+		        "# This program is distributed in the hope that it will be useful,\n"
+		        "# but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+		        "# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+		        "# GNU General Public License for more details.\n"
+		        "#\n"
+		        "# You should have received a copy of the GNU General Public License\n"
+		        "# along with this program.  If not, see <http://www.gnu.org/licenses/>.\n\n"
 
-				"#,fuzzy\n"
-				"msgid \"\"\n"
-				"msgstr \"\"\n"
-				"\"Project-Id-Version: %s\\n\"\n"
-				"\"Report-Msgid-Bugs-To: dev@herc.ws\\n\"\n"
-				"\"POT-Creation-Date: %s\\n\"\n"
-				"\"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\\n\"\n"
-				"\"Last-Translator: FULL NAME <EMAIL@ADDRESS>\\n\"\n"
-				"\"Language-Team: LANGUAGE <LL@li.org>\\n\"\n"
-				"\"Language: \\n\"\n"
-				"\"MIME-Version: 1.0\\n\"\n"
-				"\"Content-Type: text/plain; charset=ISO-8859-1\\n\"\n"
-				"\"Content-Transfer-Encoding: 8bit\\n\"\n\n",
-				year, sysinfo->vcsrevision_scripts(), timestring);
+		        "#,fuzzy\n"
+		        "msgid \"\"\n"
+		        "msgstr \"\"\n"
+		        "\"Project-Id-Version: %s\\n\"\n"
+		        "\"Report-Msgid-Bugs-To: dev@herc.ws\\n\"\n"
+		        "\"POT-Creation-Date: %s\\n\"\n"
+		        "\"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\\n\"\n"
+		        "\"Last-Translator: FULL NAME <EMAIL@ADDRESS>\\n\"\n"
+		        "\"Language-Team: LANGUAGE <LL@li.org>\\n\"\n"
+		        "\"Language: \\n\"\n"
+		        "\"MIME-Version: 1.0\\n\"\n"
+		        "\"Content-Type: text/plain; charset=ISO-8859-1\\n\"\n"
+		        "\"Content-Transfer-Encoding: 8bit\\n\"\n\n",
+		        year, sysinfo->vcsrevision_scripts(), timestring);
 	}
 	return true;
 }
@@ -341,15 +324,14 @@ bool msg_config_read_posthook(bool retVal, const char *cfg_name, bool allow_over
 		for (i = 0; i < MSGTBL_MAX; i++) {
 			if (atcommand->msg_table[0][i] == NULL)
 				continue;
-			fprintf(lang_export_fp, "\n#: conf/messages.conf\n"
-					"# %d: %s\n"
-					"#, c-format\n"
-					"msgctxt \"messages.conf\"\n"
-					"msgid \"%s\"\n"
-					"msgstr \"\"\n",
-					i, atcommand->msg_table[0][i],
-					atcommand->msg_table[0][i]
-			       );
+			fprintf(lang_export_fp,
+			        "\n#: conf/messages.conf\n"
+			        "# %d: %s\n"
+			        "#, c-format\n"
+			        "msgctxt \"messages.conf\"\n"
+			        "msgid \"%s\"\n"
+			        "msgstr \"\"\n",
+			        i, atcommand->msg_table[0][i], atcommand->msg_table[0][i]);
 			lang_export_stringcount_total++;
 			lang_export_stringcount_current++;
 		}
@@ -374,8 +356,7 @@ int npc_parsesrcfile_posthook(int retVal, const char *filepath, bool runOnInit)
 
 HPExport void server_preinit(void)
 {
-	addArg("--generate-translations", false, generatetranslations,
-			"Creates 'generated_translations/**/*.pot' file with all translateable strings from scripts, server terminates afterwards.");
+	addArg("--generate-translations", false, generatetranslations, "Creates 'generated_translations/**/*.pot' file with all translateable strings from scripts, server terminates afterwards.");
 	VECTOR_INIT(lang_export_line_buf);
 	VECTOR_INIT(lang_export_escaped_buf);
 	addHookPost(script, add_translatable_string, script_add_translatable_string_posthook);
@@ -389,9 +370,7 @@ HPExport void server_preinit(void)
 	lang_export_stringcount_current = 0;
 }
 
-HPExport void plugin_init(void)
-{
-}
+HPExport void plugin_init(void) {}
 
 HPExport void server_online(void)
 {
@@ -401,6 +380,4 @@ HPExport void server_online(void)
 	core->runflag = CORE_ST_STOP;
 }
 
-HPExport void plugin_final(void)
-{
-}
+HPExport void plugin_final(void) {}

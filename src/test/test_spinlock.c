@@ -34,7 +34,7 @@
 // Simple test for the spinlock implementation to see if it works properly..
 //
 
-#define THRC 32 //thread Count
+#define THRC 32 // thread Count
 #define PERINC 100000
 #define LOOPS 47
 
@@ -42,10 +42,11 @@ static struct spin_lock lock;
 static unsigned int val = 0;
 static volatile int32 done_threads = 0;
 
-static  void *worker(void *p){
+static void *worker(void *p)
+{
 	register int i;
 
-	for(i = 0; i < PERINC; i++){
+	for (i = 0; i < PERINC; i++) {
 		EnterSpinLock(&lock);
 		EnterSpinLock(&lock);
 
@@ -58,7 +59,7 @@ static  void *worker(void *p){
 	InterlockedIncrement(&done_threads);
 
 	return NULL;
-}//end: worker()
+} // end: worker()
 
 int do_init(int argc, char **argv)
 {
@@ -71,20 +72,20 @@ int do_init(int argc, char **argv)
 	ShowStatus("This can take a while\n");
 	ShowStatus("\n\n");
 
-	ok =0;
-	for(j = 0; j < LOOPS; j++){
+	ok = 0;
+	for (j = 0; j < LOOPS; j++) {
 		val = 0;
 		done_threads = 0;
 
 		InitializeSpinLock(&lock);
 
-		for(i =0; i < THRC; i++){
-			t[i] = thread->create_opt(worker, NULL, 1024*512, THREADPRIO_NORMAL);
+		for (i = 0; i < THRC; i++) {
+			t[i] = thread->create_opt(worker, NULL, 1024 * 512, THREADPRIO_NORMAL);
 		}
 		(void)t;
 
-		while(1){
-			if(InterlockedCompareExchange(&done_threads, THRC, THRC) == THRC)
+		while (1) {
+			if (InterlockedCompareExchange(&done_threads, THRC, THRC) == THRC)
 				break;
 			thread->yield();
 		}
@@ -92,13 +93,12 @@ int do_init(int argc, char **argv)
 		FinalizeSpinLock(&lock);
 
 		// Everything fine?
-		if (val != (THRC*PERINC)) {
-			printf("FAILED! (Result: %u, Expected: %d)\n",  val,  (THRC*PERINC));
+		if (val != (THRC * PERINC)) {
+			printf("FAILED! (Result: %u, Expected: %d)\n", val, (THRC * PERINC));
 		} else {
-			printf("OK! (Result: %u, Expected: %d)\n", val, (THRC*PERINC));
+			printf("OK! (Result: %u, Expected: %d)\n", val, (THRC * PERINC));
 			ok++;
 		}
-
 	}
 
 	if (ok != LOOPS) {
@@ -108,23 +108,25 @@ int do_init(int argc, char **argv)
 
 	core->runflag = CORE_ST_STOP;
 	return EXIT_SUCCESS;
-}//end: do_init()
+} // end: do_init()
 
-void do_abort(void) {
-}//end: do_abort()
+void do_abort(void) {} // end: do_abort()
 
-void set_server_type(void) {
+void set_server_type(void)
+{
 	SERVER_TYPE = SERVER_TYPE_UNKNOWN;
-}//end: set_server_type()
+} // end: set_server_type()
 
-int do_final(void) {
+int do_final(void)
+{
 	ShowStatus("Test passed.\n");
 
 	return EXIT_SUCCESS;
-}//end: do_final()
+} // end: do_final()
 
-int parse_console(const char* command){
+int parse_console(const char *command)
+{
 	return 0;
-}//end: parse_console
+} // end: parse_console
 
-void cmdline_args_init_local(void) { }
+void cmdline_args_init_local(void) {}

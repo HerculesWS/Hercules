@@ -107,10 +107,10 @@
 #include <stdlib.h>
 
 struct HPM_atcommand_list {
-	//tracking currently not enabled
-	// - requires modifying how plugins calls atcommand creation
-	// - needs load/unload during runtime support
-	//unsigned int pID;/* plugin id */
+	// tracking currently not enabled
+	//  - requires modifying how plugins calls atcommand creation
+	//  - needs load/unload during runtime support
+	// unsigned int pID;/* plugin id */
 	char name[ATCOMMAND_LENGTH];
 	AtCommandFunc func;
 };
@@ -126,25 +126,25 @@ static unsigned int atcommand_list_items = 0;
 bool HPM_map_data_store_validate(enum HPluginDataTypes type, struct hplugin_data_store **storeptr, bool initialize)
 {
 	switch (type) {
-	case HPDT_MSD:
-	case HPDT_NPCD:
-	case HPDT_MAP:
-	case HPDT_PARTY:
-	case HPDT_GUILD:
-	case HPDT_INSTANCE:
-	case HPDT_MOBDB:
-	case HPDT_MOBDATA:
-	case HPDT_ITEMDATA:
-	case HPDT_BGDATA:
-	case HPDT_AUTOTRADE_VEND:
-	case HPDT_CLAN:
-	case HPDT_UNIT_PARAMETER:
-		// Initialized by the caller.
-		return true;
-	case HPDT_UNKNOWN:
-	case HPDT_SESSION:
-	default:
-		break;
+		case HPDT_MSD:
+		case HPDT_NPCD:
+		case HPDT_MAP:
+		case HPDT_PARTY:
+		case HPDT_GUILD:
+		case HPDT_INSTANCE:
+		case HPDT_MOBDB:
+		case HPDT_MOBDATA:
+		case HPDT_ITEMDATA:
+		case HPDT_BGDATA:
+		case HPDT_AUTOTRADE_VEND:
+		case HPDT_CLAN:
+		case HPDT_UNIT_PARAMETER:
+			// Initialized by the caller.
+			return true;
+		case HPDT_UNKNOWN:
+		case HPDT_SESSION:
+		default:
+			break;
 	}
 	return false;
 }
@@ -153,7 +153,7 @@ void HPM_map_plugin_load_sub(struct hplugin *plugin)
 {
 	plugin->hpi->sql_handle = map->mysql_handle;
 	plugin->hpi->addCommand = atcommand->create;
-	plugin->hpi->addScript  = script->addScript;
+	plugin->hpi->addScript = script->addScript;
 	plugin->hpi->addPCGPermission = HPM_map_add_group_permission;
 }
 
@@ -161,8 +161,8 @@ bool HPM_map_add_atcommand(char *name, AtCommandFunc func)
 {
 	unsigned int i = 0;
 
-	for(i = 0; i < atcommand_list_items; i++) {
-		if( !strcmpi(atcommand_list[i].name,name) ) {
+	for (i = 0; i < atcommand_list_items; i++) {
+		if (!strcmpi(atcommand_list[i].name, name)) {
 			ShowDebug("HPM_map_add_atcommand: duplicate command '%s', skipping...\n", name);
 			return false;
 		}
@@ -170,7 +170,7 @@ bool HPM_map_add_atcommand(char *name, AtCommandFunc func)
 
 	i = atcommand_list_items;
 
-	RECREATE(atcommand_list, struct HPM_atcommand_list , ++atcommand_list_items);
+	RECREATE(atcommand_list, struct HPM_atcommand_list, ++atcommand_list_items);
 
 	safestrncpy(atcommand_list[i].name, name, sizeof(atcommand_list[i].name));
 	atcommand_list[i].func = func;
@@ -182,8 +182,8 @@ void HPM_map_atcommands(void)
 {
 	unsigned int i;
 
-	for(i = 0; i < atcommand_list_items; i++) {
-		atcommand->add(atcommand_list[i].name,atcommand_list[i].func,true);
+	for (i = 0; i < atcommand_list_items; i++) {
+		atcommand->add(atcommand_list[i].name, atcommand_list[i].func, true);
 	}
 }
 

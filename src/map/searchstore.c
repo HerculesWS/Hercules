@@ -23,13 +23,13 @@
 #include "searchstore.h" // struct s_search_store_info
 
 #include "map/battle.h" // battle_config.*
-#include "map/clif.h" // clif-"open_search_store_info, clif-"search_store_info_*
-#include "map/pc.h" // struct map_session_data
+#include "map/clif.h"   // clif-"open_search_store_info, clif-"search_store_info_*
+#include "map/pc.h"     // struct map_session_data
 #include "common/cbasetypes.h"
-#include "common/memmgr.h" // aMalloc, aRealloc, aFree
-#include "common/nullpo.h" // nullpo_*
+#include "common/memmgr.h"  // aMalloc, aRealloc, aFree
+#include "common/nullpo.h"  // nullpo_*
 #include "common/showmsg.h" // ShowError, ShowWarning
-#include "common/strlib.h" // safestrncpy
+#include "common/strlib.h"  // safestrncpy
 
 static struct searchstore_interface searchstore_s;
 struct searchstore_interface *searchstore;
@@ -37,9 +37,11 @@ struct searchstore_interface *searchstore;
 /// retrieves search function by type
 static inline searchstore_search_t searchstore_getsearchfunc(unsigned char type)
 {
-	switch( type ) {
-		case SEARCHTYPE_VENDING:      return vending->search;
-		case SEARCHTYPE_BUYING_STORE: return buyingstore->search;
+	switch (type) {
+		case SEARCHTYPE_VENDING:
+			return vending->search;
+		case SEARCHTYPE_BUYING_STORE:
+			return buyingstore->search;
 	}
 	return NULL;
 }
@@ -47,9 +49,11 @@ static inline searchstore_search_t searchstore_getsearchfunc(unsigned char type)
 /// retrieves search-all function by type
 static inline searchstore_searchall_t searchstore_getsearchallfunc(unsigned char type)
 {
-	switch( type ) {
-		case SEARCHTYPE_VENDING:      return vending->searchall;
-		case SEARCHTYPE_BUYING_STORE: return buyingstore->searchall;
+	switch (type) {
+		case SEARCHTYPE_VENDING:
+			return vending->searchall;
+		case SEARCHTYPE_BUYING_STORE:
+			return buyingstore->searchall;
 	}
 	return NULL;
 }
@@ -58,9 +62,11 @@ static inline searchstore_searchall_t searchstore_getsearchallfunc(unsigned char
 static inline bool searchstore_hasstore(struct map_session_data *sd, unsigned char type)
 {
 	nullpo_retr(false, sd);
-	switch( type ) {
-		case SEARCHTYPE_VENDING:      return sd->state.vending;
-		case SEARCHTYPE_BUYING_STORE: return sd->state.buyingstore;
+	switch (type) {
+		case SEARCHTYPE_VENDING:
+			return sd->state.vending;
+		case SEARCHTYPE_BUYING_STORE:
+			return sd->state.buyingstore;
 	}
 	return false;
 }
@@ -69,9 +75,11 @@ static inline bool searchstore_hasstore(struct map_session_data *sd, unsigned ch
 static inline unsigned int searchstore_getstoreid(struct map_session_data *sd, unsigned char type)
 {
 	nullpo_retr(false, sd);
-	switch( type ) {
-		case SEARCHTYPE_VENDING:      return sd->vender_id;
-		case SEARCHTYPE_BUYING_STORE: return sd->buyer_id;
+	switch (type) {
+		case SEARCHTYPE_VENDING:
+			return sd->vender_id;
+		case SEARCHTYPE_BUYING_STORE:
+			return sd->buyer_id;
 	}
 	return 0;
 }
@@ -79,16 +87,16 @@ static inline unsigned int searchstore_getstoreid(struct map_session_data *sd, u
 static bool searchstore_open(struct map_session_data *sd, unsigned int uses, unsigned short effect)
 {
 	nullpo_retr(false, sd);
-	if( !battle_config.feature_search_stores || sd->searchstore.open ) {
+	if (!battle_config.feature_search_stores || sd->searchstore.open) {
 		return false;
 	}
 
-	if( !uses || effect >= EFFECTTYPE_MAX ) {// invalid input
+	if (!uses || effect >= EFFECTTYPE_MAX) { // invalid input
 		return false;
 	}
 
-	sd->searchstore.open   = true;
-	sd->searchstore.uses   = uses;
+	sd->searchstore.open = true;
+	sd->searchstore.uses = uses;
 	sd->searchstore.effect = effect;
 
 	clif->open_search_store_info(sd);
@@ -96,41 +104,37 @@ static bool searchstore_open(struct map_session_data *sd, unsigned int uses, uns
 	return true;
 }
 
-static void searchstore_query(struct map_session_data *sd,
-				unsigned char type,
-				unsigned int min_price, unsigned int max_price,
-				const uint32 *itemlist, unsigned int item_count,
-				const uint32 *cardlist, unsigned int card_count)
+static void searchstore_query(struct map_session_data *sd, unsigned char type, unsigned int min_price, unsigned int max_price, const uint32 *itemlist, unsigned int item_count, const uint32 *cardlist, unsigned int card_count)
 {
 	unsigned int i;
-	struct map_session_data* pl_sd;
+	struct map_session_data *pl_sd;
 	struct DBIterator *iter;
 	struct s_search_store_search s;
 	searchstore_searchall_t store_searchall;
 	time_t querytime;
 
-	if( !battle_config.feature_search_stores ) {
+	if (!battle_config.feature_search_stores) {
 		return;
 	}
 
 	nullpo_retv(sd);
-	if( !sd->searchstore.open ) {
+	if (!sd->searchstore.open) {
 		return;
 	}
 
-	if( ( store_searchall = searchstore_getsearchallfunc(type) ) == NULL ) {
+	if ((store_searchall = searchstore_getsearchallfunc(type)) == NULL) {
 		ShowError("searchstore_query: Unknown search type %u (account_id=%d).\n", (unsigned int)type, sd->bl.id);
 		return;
 	}
 
 	time(&querytime);
 
-	if( sd->searchstore.nextquerytime > querytime ) {
+	if (sd->searchstore.nextquerytime > querytime) {
 		clif->search_store_info_failed(sd, SSI_FAILED_LIMIT_SEARCH_TIME);
 		return;
 	}
 
-	if( !sd->searchstore.uses ) {
+	if (!sd->searchstore.uses) {
 		clif->search_store_info_failed(sd, SSI_FAILED_SEARCH_CNT);
 		return;
 	}
@@ -145,51 +149,51 @@ static void searchstore_query(struct map_session_data *sd,
 		nullpo_retv(cardlist);
 
 	// validate lists
-	for( i = 0; i < item_count; i++ ) {
-		if( !itemdb->exists(itemlist[i]) ) {
+	for (i = 0; i < item_count; i++) {
+		if (!itemdb->exists(itemlist[i])) {
 			ShowWarning("searchstore_query: Client resolved item %u is not known.\n", itemlist[i]);
 			clif->search_store_info_failed(sd, SSI_FAILED_NOTHING_SEARCH_ITEM);
 			return;
 		}
 	}
-	for( i = 0; i < card_count; i++ ) {
-		if( !itemdb->exists(cardlist[i]) ) {
+	for (i = 0; i < card_count; i++) {
+		if (!itemdb->exists(cardlist[i])) {
 			ShowWarning("searchstore_query: Client resolved card %u is not known.\n", cardlist[i]);
 			clif->search_store_info_failed(sd, SSI_FAILED_NOTHING_SEARCH_ITEM);
 			return;
 		}
 	}
 
-	if( max_price < min_price ) {
+	if (max_price < min_price) {
 		swap(min_price, max_price);
 	}
 
 	sd->searchstore.uses--;
 	sd->searchstore.type = type;
-	sd->searchstore.nextquerytime = querytime+battle_config.searchstore_querydelay;
+	sd->searchstore.nextquerytime = querytime + battle_config.searchstore_querydelay;
 
 	// drop previous results
 	searchstore->clear(sd);
 
 	// allocate max. amount of results
-	sd->searchstore.items = (struct s_search_store_info_item*)aMalloc(sizeof(struct s_search_store_info_item)*battle_config.searchstore_maxresults);
+	sd->searchstore.items = (struct s_search_store_info_item *)aMalloc(sizeof(struct s_search_store_info_item) * battle_config.searchstore_maxresults);
 
 	// search
-	s.search_sd  = sd;
-	s.itemlist   = itemlist;
-	s.cardlist   = cardlist;
+	s.search_sd = sd;
+	s.itemlist = itemlist;
+	s.cardlist = cardlist;
 	s.item_count = item_count;
 	s.card_count = card_count;
-	s.min_price  = min_price;
-	s.max_price  = max_price;
-	iter         = db_iterator(vending->db);
+	s.min_price = min_price;
+	s.max_price = max_price;
+	iter = db_iterator(vending->db);
 
-	for( pl_sd = dbi_first(iter); dbi_exists(iter);  pl_sd = dbi_next(iter) ) {
-		if( sd == pl_sd ) {// skip own shop, if any
+	for (pl_sd = dbi_first(iter); dbi_exists(iter); pl_sd = dbi_next(iter)) {
+		if (sd == pl_sd) { // skip own shop, if any
 			continue;
 		}
 
-		if( !store_searchall(pl_sd, &s) ) {// exceeded result size
+		if (!store_searchall(pl_sd, &s)) { // exceeded result size
 			clif->search_store_info_failed(sd, SSI_FAILED_OVER_MAXCOUNT);
 			break;
 		}
@@ -197,9 +201,9 @@ static void searchstore_query(struct map_session_data *sd,
 
 	dbi_destroy(iter);
 
-	if( sd->searchstore.count ) {
+	if (sd->searchstore.count) {
 		// reclaim unused memory
-		sd->searchstore.items = (struct s_search_store_info_item*)aRealloc(sd->searchstore.items, sizeof(struct s_search_store_info_item)*sd->searchstore.count);
+		sd->searchstore.items = (struct s_search_store_info_item *)aRealloc(sd->searchstore.items, sizeof(struct s_search_store_info_item) * sd->searchstore.count);
 
 		// present results
 		clif->search_store_info_ack(sd);
@@ -222,7 +226,7 @@ static void searchstore_query(struct map_session_data *sd,
 static bool searchstore_querynext(struct map_session_data *sd)
 {
 	nullpo_retr(false, sd);
-	if( sd->searchstore.count && ( sd->searchstore.count-1 )/SEARCHSTORE_RESULTS_PER_PAGE < sd->searchstore.pages ) {
+	if (sd->searchstore.count && (sd->searchstore.count - 1) / SEARCHSTORE_RESULTS_PER_PAGE < sd->searchstore.pages) {
 		return true;
 	}
 
@@ -232,8 +236,7 @@ static bool searchstore_querynext(struct map_session_data *sd)
 static void searchstore_next(struct map_session_data *sd)
 {
 	nullpo_retv(sd);
-	if( !battle_config.feature_search_stores || !sd->searchstore.open || sd->searchstore.count <= sd->searchstore.pages*SEARCHSTORE_RESULTS_PER_PAGE )
-	{// nothing (more) to display
+	if (!battle_config.feature_search_stores || !sd->searchstore.open || sd->searchstore.count <= sd->searchstore.pages * SEARCHSTORE_RESULTS_PER_PAGE) { // nothing (more) to display
 		return;
 	}
 
@@ -249,7 +252,7 @@ static void searchstore_clear(struct map_session_data *sd)
 	nullpo_retv(sd);
 	searchstore->clearremote(sd);
 
-	if( sd->searchstore.items ) {// release results
+	if (sd->searchstore.items) { // release results
 		aFree(sd->searchstore.items);
 		sd->searchstore.items = NULL;
 	}
@@ -261,7 +264,7 @@ static void searchstore_clear(struct map_session_data *sd)
 static void searchstore_close(struct map_session_data *sd)
 {
 	nullpo_retv(sd);
-	if( sd->searchstore.open ) {
+	if (sd->searchstore.open) {
 		searchstore->clear(sd);
 
 		sd->searchstore.uses = 0;
@@ -272,29 +275,29 @@ static void searchstore_close(struct map_session_data *sd)
 static void searchstore_click(struct map_session_data *sd, int account_id, int store_id, int nameid)
 {
 	unsigned int i;
-	struct map_session_data* pl_sd;
+	struct map_session_data *pl_sd;
 	searchstore_search_t store_search;
 
 	nullpo_retv(sd);
-	if( !battle_config.feature_search_stores || !sd->searchstore.open || !sd->searchstore.count ) {
+	if (!battle_config.feature_search_stores || !sd->searchstore.open || !sd->searchstore.count) {
 		return;
 	}
 
 	searchstore->clearremote(sd);
 
-	ARR_FIND( 0, sd->searchstore.count, i,  sd->searchstore.items[i].store_id == store_id && sd->searchstore.items[i].account_id == account_id && sd->searchstore.items[i].nameid == nameid );
-	if( i == sd->searchstore.count ) {// no such result, crafted
+	ARR_FIND(0, sd->searchstore.count, i, sd->searchstore.items[i].store_id == store_id && sd->searchstore.items[i].account_id == account_id && sd->searchstore.items[i].nameid == nameid);
+	if (i == sd->searchstore.count) { // no such result, crafted
 		ShowWarning("searchstore_click: Received request with item %d of account %d, which is not part of current result set (account_id=%d, char_id=%d).\n", nameid, account_id, sd->bl.id, sd->status.char_id);
 		clif->search_store_info_failed(sd, SSI_FAILED_SSILIST_CLICK_TO_OPEN_STORE);
 		return;
 	}
 
-	if( ( pl_sd = map->id2sd(account_id) ) == NULL ) {// no longer online
+	if ((pl_sd = map->id2sd(account_id)) == NULL) { // no longer online
 		clif->search_store_info_failed(sd, SSI_FAILED_SSILIST_CLICK_TO_OPEN_STORE);
 		return;
 	}
 
-	if( !searchstore_hasstore(pl_sd, sd->searchstore.type) || searchstore_getstoreid(pl_sd, sd->searchstore.type) != store_id ) {
+	if (!searchstore_hasstore(pl_sd, sd->searchstore.type) || searchstore_getstoreid(pl_sd, sd->searchstore.type) != store_id) {
 		// no longer vending/buying or not same shop
 		clif->search_store_info_failed(sd, SSI_FAILED_SSILIST_CLICK_TO_OPEN_STORE);
 		return;
@@ -302,16 +305,16 @@ static void searchstore_click(struct map_session_data *sd, int account_id, int s
 
 	store_search = searchstore_getsearchfunc(sd->searchstore.type);
 
-	if( !store_search(pl_sd, nameid) ) {// item no longer being sold/bought
+	if (!store_search(pl_sd, nameid)) { // item no longer being sold/bought
 		clif->search_store_info_failed(sd, SSI_FAILED_SSILIST_CLICK_TO_OPEN_STORE);
 		return;
 	}
 
-	switch( sd->searchstore.effect ) {
+	switch (sd->searchstore.effect) {
 		case EFFECTTYPE_NORMAL:
 			// display coords
 
-			if( sd->bl.m != pl_sd->bl.m ) {// not on same map, wipe previous marker
+			if (sd->bl.m != pl_sd->bl.m) { // not on same map, wipe previous marker
 				clif->search_store_info_click_ack(sd, -1, -1);
 			} else {
 				clif->search_store_info_click_ack(sd, pl_sd->bl.x, pl_sd->bl.y);
@@ -324,9 +327,13 @@ static void searchstore_click(struct map_session_data *sd, int account_id, int s
 			// to bypass range checks
 			sd->searchstore.remote_id = account_id;
 
-			switch( sd->searchstore.type ) {
-				case SEARCHTYPE_VENDING:      vending->list(sd, account_id); break;
-				case SEARCHTYPE_BUYING_STORE: buyingstore->open(sd, account_id);       break;
+			switch (sd->searchstore.type) {
+				case SEARCHTYPE_VENDING:
+					vending->list(sd, account_id);
+					break;
+				case SEARCHTYPE_BUYING_STORE:
+					buyingstore->open(sd, account_id);
+					break;
 			}
 
 			break;
@@ -340,7 +347,7 @@ static void searchstore_click(struct map_session_data *sd, int account_id, int s
 static bool searchstore_queryremote(struct map_session_data *sd, int account_id)
 {
 	nullpo_retr(false, sd);
-	return (bool)( sd->searchstore.open && sd->searchstore.count && sd->searchstore.remote_id == account_id );
+	return (bool)(sd->searchstore.open && sd->searchstore.count && sd->searchstore.remote_id == account_id);
 }
 
 /// removes range-check bypassing for remotely opened stores
@@ -353,10 +360,10 @@ static void searchstore_clearremote(struct map_session_data *sd)
 /// receives results from a store-specific callback
 static bool searchstore_result(struct map_session_data *sd, unsigned int store_id, int account_id, const char *store_name, int nameid, unsigned short amount, unsigned int price, const int *card, unsigned char refine_level, unsigned char grade_level, const struct item_option *option)
 {
-	struct s_search_store_info_item* ssitem;
+	struct s_search_store_info_item *ssitem;
 
 	nullpo_retr(false, sd);
-	if( sd->searchstore.count >= (unsigned int)battle_config.searchstore_maxresults ) {// no more
+	if (sd->searchstore.count >= (unsigned int)battle_config.searchstore_maxresults) { // no more
 		return false;
 	}
 	nullpo_retr(false, store_name);
@@ -391,5 +398,4 @@ void searchstore_defaults(void)
 	searchstore->queryremote = searchstore_queryremote;
 	searchstore->clearremote = searchstore_clearremote;
 	searchstore->result = searchstore_result;
-
 }

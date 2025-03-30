@@ -30,17 +30,17 @@ struct mmo_charstatus;
  * inter_mercenary interface
  **/
 struct inter_mercenary_interface {
-	bool (*owner_fromsql) (int char_id, struct mmo_charstatus *status);
-	bool (*owner_tosql) (int char_id, struct mmo_charstatus *status);
-	bool (*owner_delete) (int char_id);
-	int (*sql_init) (void);
-	void (*sql_final) (void);
-	int (*parse_frommap) (int fd);
+	bool (*owner_fromsql)(int char_id, struct mmo_charstatus *status);
+	bool (*owner_tosql)(int char_id, struct mmo_charstatus *status);
+	bool (*owner_delete)(int char_id);
+	int (*sql_init)(void);
+	void (*sql_final)(void);
+	int (*parse_frommap)(int fd);
 
-	bool (*create) (struct s_mercenary *merc);
-	bool (*save) (const struct s_mercenary *merc);
-	bool (*load) (int merc_id, int char_id, struct s_mercenary *merc);
-	bool (*delete) (int merc_id);
+	bool (*create)(struct s_mercenary *merc);
+	bool (*save)(const struct s_mercenary *merc);
+	bool (*load)(int merc_id, int char_id, struct s_mercenary *merc);
+	bool (*delete)(int merc_id);
 };
 
 #ifdef HERCULES_CORE

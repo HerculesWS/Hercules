@@ -39,25 +39,25 @@
 #include <stdlib.h>
 
 HPExport struct hplugin_info pinfo = {
-	"DB2SQL",        // Plugin name
-	SERVER_TYPE_MAP, // Which server types this plugin works with?
-	"0.5",           // Plugin version
-	HPM_VERSION,     // HPM Version (don't change, macro is automatically updated)
+    "DB2SQL",        // Plugin name
+    SERVER_TYPE_MAP, // Which server types this plugin works with?
+    "0.5",           // Plugin version
+    HPM_VERSION,     // HPM Version (don't change, macro is automatically updated)
 };
 
 #ifdef RENEWAL
-#define DBSUFFIX "_re"
+	#define DBSUFFIX "_re"
 #else // not RENEWAL
-#define DBSUFFIX ""
+	#define DBSUFFIX ""
 #endif
 
 /// Conversion state tracking.
 struct {
 	FILE *fp; ///< Currently open file pointer
 	struct {
-		char *p;    ///< Buffer pointer
-		size_t len; ///< Buffer length
-	} buf[6]; ///< Output buffer
+		char *p;         ///< Buffer pointer
+		size_t len;      ///< Buffer length
+	} buf[6];            ///< Output buffer
 	const char *db_name; ///< Database table name
 } tosql;
 
@@ -69,10 +69,10 @@ bool mobdb2sql_torun = false;
 static struct Sql *sql_handle = NULL;
 
 /// Backup of the original item_db parser function pointer.
-int (*itemdb_readdb_libconfig_sub) (struct config_setting_t *it, int n, const char *source, struct DBMap *itemconst_db);
+int (*itemdb_readdb_libconfig_sub)(struct config_setting_t *it, int n, const char *source, struct DBMap *itemconst_db);
 /// Backup of the original mob_db parser function pointer.
-int (*mob_read_db_sub) (struct config_setting_t *it, int n, const char *source);
-bool (*mob_skill_db_libconfig_sub_skill) (struct config_setting_t *it, int n, int mob_id);
+int (*mob_read_db_sub)(struct config_setting_t *it, int n, const char *source);
+bool (*mob_skill_db_libconfig_sub_skill)(struct config_setting_t *it, int n, int mob_id);
 
 //
 void do_mobskilldb2sql(void);
@@ -87,10 +87,10 @@ void hstr(const char *str)
 	nullpo_retv(str);
 	if (strlen(str) > tosql.buf[5].len) {
 		tosql.buf[5].len = tosql.buf[5].len + strlen(str) + 1000;
-		RECREATE(tosql.buf[5].p,char,tosql.buf[5].len);
+		RECREATE(tosql.buf[5].p, char, tosql.buf[5].len);
 	}
-	safestrncpy(tosql.buf[5].p,str,strlen(str));
-	normalize_name(tosql.buf[5].p,"\t\n ");
+	safestrncpy(tosql.buf[5].p, str, strlen(str));
+	normalize_name(tosql.buf[5].p, "\t\n ");
 }
 
 /**
@@ -100,34 +100,35 @@ void db2sql_fileheader(void)
 {
 	time_t t = time(NULL);
 	struct tm *lt = localtime(&t);
-	int year = lt->tm_year+1900;
+	int year = lt->tm_year + 1900;
 
 	fprintf(tosql.fp,
-			"-- This file is part of Hercules.\n"
-			"-- http://herc.ws - http://github.com/HerculesWS/Hercules\n"
-			"--\n"
-			"-- Copyright (C) 2013-%d Hercules Dev Team\n"
-			"--\n"
-			"-- Hercules is free software: you can redistribute it and/or modify\n"
-			"-- it under the terms of the GNU General Public License as published by\n"
-			"-- the Free Software Foundation, either version 3 of the License, or\n"
-			"-- (at your option) any later version.\n"
-			"--\n"
-			"-- This program is distributed in the hope that it will be useful,\n"
-			"-- but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
-			"-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
-			"-- GNU General Public License for more details.\n"
-			"--\n"
-			"-- You should have received a copy of the GNU General Public License\n"
-			"-- along with this program.  If not, see <http://www.gnu.org/licenses/>.\n\n"
+	        "-- This file is part of Hercules.\n"
+	        "-- http://herc.ws - http://github.com/HerculesWS/Hercules\n"
+	        "--\n"
+	        "-- Copyright (C) 2013-%d Hercules Dev Team\n"
+	        "--\n"
+	        "-- Hercules is free software: you can redistribute it and/or modify\n"
+	        "-- it under the terms of the GNU General Public License as published by\n"
+	        "-- the Free Software Foundation, either version 3 of the License, or\n"
+	        "-- (at your option) any later version.\n"
+	        "--\n"
+	        "-- This program is distributed in the hope that it will be useful,\n"
+	        "-- but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+	        "-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+	        "-- GNU General Public License for more details.\n"
+	        "--\n"
+	        "-- You should have received a copy of the GNU General Public License\n"
+	        "-- along with this program.  If not, see <http://www.gnu.org/licenses/>.\n\n"
 
-			"-- NOTE: This file was auto-generated and should never be manually edited,\n"
-			"--       as it will get overwritten. If you need to modify this file,\n"
-			"--       please consider modifying the corresponding .conf file inside\n"
-			"--       the db folder, and then re-run the db2sql plugin.\n\n"
+	        "-- NOTE: This file was auto-generated and should never be manually edited,\n"
+	        "--       as it will get overwritten. If you need to modify this file,\n"
+	        "--       please consider modifying the corresponding .conf file inside\n"
+	        "--       the db folder, and then re-run the db2sql plugin.\n\n"
 
-			"-- GENERATED FILE DO NOT EDIT --\n"
-			"\n", year);
+	        "-- GENERATED FILE DO NOT EDIT --\n"
+	        "\n",
+	        year);
 }
 
 /**
@@ -195,7 +196,7 @@ uint64 itemdb2sql_readdb_job_sub(struct config_setting_t *t)
 					newmask = 1ULL << 23;
 					break;
 				// Other Classes
-				case JOB_GANGSI: //Bongun/Munak
+				case JOB_GANGSI: // Bongun/Munak
 					newmask = 1ULL << 26;
 					break;
 				case JOB_DEATH_KNIGHT:
@@ -237,7 +238,7 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source, st
 	struct item_data *it = NULL;
 
 	if ((it = itemdb->exists(itemdb_readdb_libconfig_sub(entry, n, source, itemconst_db)))) {
-		char e_name[ITEM_NAME_LENGTH*2+1];
+		char e_name[ITEM_NAME_LENGTH * 2 + 1];
 		const char *bonus = NULL;
 		char *str;
 		int i32;
@@ -303,7 +304,7 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source, st
 		} else {
 			ui64 = UINT64_MAX;
 		}
-		StrBuf->Printf(&buf, "'%"PRIu64"',", ui64);
+		StrBuf->Printf(&buf, "'%" PRIu64 "',", ui64);
 
 		// equip_upper
 		if (map->setting_lookup_const_mask(entry, "Upper", &i32) && i32 >= 0)
@@ -332,46 +333,46 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source, st
 			StrBuf->AppendStr(&buf, "NULL,");
 
 		// refineable
-		StrBuf->Printf(&buf, "'%d',", it->flag.no_refine?0:1);
+		StrBuf->Printf(&buf, "'%d',", it->flag.no_refine ? 0 : 1);
 
 		// gradeable
-		StrBuf->Printf(&buf, "'%d',", it->flag.no_grade?1:0);
+		StrBuf->Printf(&buf, "'%d',", it->flag.no_grade ? 1 : 0);
 
 		// disable_options
-		StrBuf->Printf(&buf, "'%d',", it->flag.no_options?1:0);
+		StrBuf->Printf(&buf, "'%d',", it->flag.no_options ? 1 : 0);
 
 		// view_sprite
 		StrBuf->Printf(&buf, "'%d',", it->view_sprite);
 
 		// bindonequip
-		StrBuf->Printf(&buf, "'%d',", it->flag.bindonequip?1:0);
+		StrBuf->Printf(&buf, "'%d',", it->flag.bindonequip ? 1 : 0);
 
 		// forceserial
-		StrBuf->Printf(&buf, "'%d',", it->flag.force_serial?1:0);
+		StrBuf->Printf(&buf, "'%d',", it->flag.force_serial ? 1 : 0);
 
 		// buyingstore
-		StrBuf->Printf(&buf, "'%d',", it->flag.buyingstore?1:0);
+		StrBuf->Printf(&buf, "'%d',", it->flag.buyingstore ? 1 : 0);
 
 		// delay
 		StrBuf->Printf(&buf, "'%d',", it->delay);
 
 		// keepafteruse
-		StrBuf->Printf(&buf, "'%d',", it->flag.keepafteruse?1:0);
+		StrBuf->Printf(&buf, "'%d',", it->flag.keepafteruse ? 1 : 0);
 
 		// dropannounce
-		StrBuf->Printf(&buf, "'%d',", it->flag.drop_announce?1:0);
+		StrBuf->Printf(&buf, "'%d',", it->flag.drop_announce ? 1 : 0);
 
 		// showdropeffect
-		StrBuf->Printf(&buf, "'%d',", it->flag.showdropeffect?1:0);
+		StrBuf->Printf(&buf, "'%d',", it->flag.showdropeffect ? 1 : 0);
 
 		// dropeffectmode
 		StrBuf->Printf(&buf, "'%d',", it->dropeffectmode);
 
 		// ignorediscount
-		StrBuf->Printf(&buf, "'%d',", it->flag.ignore_discount?1:0);
+		StrBuf->Printf(&buf, "'%d',", it->flag.ignore_discount ? 1 : 0);
 
 		// ignoreovercharge
-		StrBuf->Printf(&buf, "'%d',", it->flag.ignore_overcharge?1:0);
+		StrBuf->Printf(&buf, "'%d',", it->flag.ignore_overcharge ? 1 : 0);
 
 		// trade_flag
 		StrBuf->Printf(&buf, "'%d',", it->flag.trade_restriction);
@@ -421,7 +422,7 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source, st
 			str = tosql.buf[5].p;
 			if (strlen(str) > tosql.buf[0].len) {
 				tosql.buf[0].len = tosql.buf[0].len + strlen(str) + 1000;
-				RECREATE(tosql.buf[0].p,char,tosql.buf[0].len);
+				RECREATE(tosql.buf[0].p, char, tosql.buf[0].len);
 			}
 			SQL->EscapeString(sql_handle, tosql.buf[0].p, str);
 			StrBuf->Printf(&buf, "'%s',", tosql.buf[0].p);
@@ -435,7 +436,7 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source, st
 			str = tosql.buf[5].p;
 			if (strlen(str) > tosql.buf[1].len) {
 				tosql.buf[1].len = tosql.buf[1].len + strlen(str) + 1000;
-				RECREATE(tosql.buf[1].p,char,tosql.buf[1].len);
+				RECREATE(tosql.buf[1].p, char, tosql.buf[1].len);
 			}
 			SQL->EscapeString(sql_handle, tosql.buf[1].p, str);
 			StrBuf->Printf(&buf, "'%s',", tosql.buf[1].p);
@@ -449,7 +450,7 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source, st
 			str = tosql.buf[5].p;
 			if (strlen(str) > tosql.buf[2].len) {
 				tosql.buf[2].len = tosql.buf[2].len + strlen(str) + 1000;
-				RECREATE(tosql.buf[2].p,char,tosql.buf[2].len);
+				RECREATE(tosql.buf[2].p, char, tosql.buf[2].len);
 			}
 			SQL->EscapeString(sql_handle, tosql.buf[2].p, str);
 			StrBuf->Printf(&buf, "'%s',", tosql.buf[2].p);
@@ -463,7 +464,7 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source, st
 			str = tosql.buf[5].p;
 			if (strlen(str) > tosql.buf[3].len) {
 				tosql.buf[3].len = tosql.buf[3].len + strlen(str) + 1000;
-				RECREATE(tosql.buf[3].p,char,tosql.buf[3].len);
+				RECREATE(tosql.buf[3].p, char, tosql.buf[3].len);
 			}
 			SQL->EscapeString(sql_handle, tosql.buf[3].p, str);
 			StrBuf->Printf(&buf, "'%s',", tosql.buf[3].p);
@@ -477,7 +478,7 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source, st
 			str = tosql.buf[5].p;
 			if (strlen(str) > tosql.buf[4].len) {
 				tosql.buf[4].len = tosql.buf[4].len + strlen(str) + 1000;
-				RECREATE(tosql.buf[4].p,char,tosql.buf[4].len);
+				RECREATE(tosql.buf[4].p, char, tosql.buf[4].len);
 			}
 			SQL->EscapeString(sql_handle, tosql.buf[4].p, str);
 			StrBuf->Printf(&buf, "'%s'", tosql.buf[4].p);
@@ -490,7 +491,7 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source, st
 		StrBuf->Destroy(&buf);
 	}
 
-	return it?it->nameid:0;
+	return it ? it->nameid : 0;
 }
 
 /**
@@ -501,61 +502,62 @@ void itemdb2sql_tableheader(void)
 	db2sql_fileheader();
 
 	fprintf(tosql.fp,
-			"--\n"
-			"-- Table structure for table `%s`\n"
-			"--\n"
-			"\n"
-			"DROP TABLE IF EXISTS `%s`;\n"
-			"CREATE TABLE `%s` (\n"
-			"  `id` int UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `name_english` varchar(50) NOT NULL DEFAULT '',\n"
-			"  `name_japanese` varchar(50) NOT NULL DEFAULT '',\n"
-			"  `type` tinyint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `subtype` tinyint UNSIGNED DEFAULT NULL,\n"
-			"  `price_buy` mediumint DEFAULT NULL,\n"
-			"  `price_sell` mediumint DEFAULT NULL,\n"
-			"  `weight` smallint UNSIGNED DEFAULT NULL,\n"
-			"  `atk` smallint UNSIGNED DEFAULT NULL,\n"
-			"  `matk` smallint UNSIGNED DEFAULT NULL,\n"
-			"  `defence` smallint UNSIGNED DEFAULT NULL,\n"
-			"  `range` tinyint UNSIGNED DEFAULT NULL,\n"
-			"  `slots` tinyint UNSIGNED DEFAULT NULL,\n"
-			"  `equip_jobs` bigint UNSIGNED DEFAULT NULL,\n"
-			"  `equip_upper` tinyint UNSIGNED DEFAULT NULL,\n"
-			"  `equip_genders` tinyint UNSIGNED DEFAULT NULL,\n"
-			"  `equip_locations` mediumint UNSIGNED DEFAULT NULL,\n"
-			"  `weapon_level` tinyint UNSIGNED DEFAULT NULL,\n"
-			"  `equip_level_min` smallint UNSIGNED DEFAULT NULL,\n"
-			"  `equip_level_max` smallint UNSIGNED DEFAULT NULL,\n"
-			"  `refineable` tinyint UNSIGNED DEFAULT NULL,\n"
-			"  `gradeable` tinyint UNSIGNED DEFAULT NULL,\n"
-			"  `disable_options` tinyint UNSIGNED DEFAULT NULL,\n"
-			"  `view_sprite` smallint UNSIGNED DEFAULT NULL,\n"
-			"  `bindonequip` tinyint UNSIGNED DEFAULT NULL,\n"
-			"  `forceserial` tinyint UNSIGNED DEFAULT NULL,\n"
-			"  `buyingstore` tinyint UNSIGNED DEFAULT NULL,\n"
-			"  `delay` mediumint UNSIGNED DEFAULT NULL,\n"
-			"  `keepafteruse` tinyint UNSIGNED DEFAULT NULL,\n"
-			"  `dropannounce` tinyint UNSIGNED DEFAULT NULL,\n"
-			"  `showdropeffect` tinyint UNSIGNED DEFAULT NULL,\n"
-			"  `dropeffectmode` tinyint UNSIGNED DEFAULT NULL,\n"
-			"  `ignorediscount` tinyint UNSIGNED DEFAULT NULL,\n"
-			"  `ignoreovercharge` tinyint UNSIGNED DEFAULT NULL,\n"
-			"  `trade_flag` smallint UNSIGNED DEFAULT NULL,\n"
-			"  `trade_group` smallint UNSIGNED DEFAULT NULL,\n"
-			"  `nouse_flag` smallint UNSIGNED DEFAULT NULL,\n"
-			"  `nouse_group` smallint UNSIGNED DEFAULT NULL,\n"
-			"  `stack_amount` mediumint UNSIGNED DEFAULT NULL,\n"
-			"  `stack_flag` tinyint UNSIGNED DEFAULT NULL,\n"
-			"  `sprite` mediumint UNSIGNED DEFAULT NULL,\n"
-			"  `script` text,\n"
-			"  `equip_script` text,\n"
-			"  `unequip_script` text,\n"
-			"  `rental_start_script` text,\n"
-			"  `rental_end_script` text,\n"
-			" PRIMARY KEY (`id`)\n"
-			") ENGINE=MyISAM;\n"
-			"\n", tosql.db_name,tosql.db_name,tosql.db_name);
+	        "--\n"
+	        "-- Table structure for table `%s`\n"
+	        "--\n"
+	        "\n"
+	        "DROP TABLE IF EXISTS `%s`;\n"
+	        "CREATE TABLE `%s` (\n"
+	        "  `id` int UNSIGNED NOT NULL DEFAULT '0',\n"
+	        "  `name_english` varchar(50) NOT NULL DEFAULT '',\n"
+	        "  `name_japanese` varchar(50) NOT NULL DEFAULT '',\n"
+	        "  `type` tinyint UNSIGNED NOT NULL DEFAULT '0',\n"
+	        "  `subtype` tinyint UNSIGNED DEFAULT NULL,\n"
+	        "  `price_buy` mediumint DEFAULT NULL,\n"
+	        "  `price_sell` mediumint DEFAULT NULL,\n"
+	        "  `weight` smallint UNSIGNED DEFAULT NULL,\n"
+	        "  `atk` smallint UNSIGNED DEFAULT NULL,\n"
+	        "  `matk` smallint UNSIGNED DEFAULT NULL,\n"
+	        "  `defence` smallint UNSIGNED DEFAULT NULL,\n"
+	        "  `range` tinyint UNSIGNED DEFAULT NULL,\n"
+	        "  `slots` tinyint UNSIGNED DEFAULT NULL,\n"
+	        "  `equip_jobs` bigint UNSIGNED DEFAULT NULL,\n"
+	        "  `equip_upper` tinyint UNSIGNED DEFAULT NULL,\n"
+	        "  `equip_genders` tinyint UNSIGNED DEFAULT NULL,\n"
+	        "  `equip_locations` mediumint UNSIGNED DEFAULT NULL,\n"
+	        "  `weapon_level` tinyint UNSIGNED DEFAULT NULL,\n"
+	        "  `equip_level_min` smallint UNSIGNED DEFAULT NULL,\n"
+	        "  `equip_level_max` smallint UNSIGNED DEFAULT NULL,\n"
+	        "  `refineable` tinyint UNSIGNED DEFAULT NULL,\n"
+	        "  `gradeable` tinyint UNSIGNED DEFAULT NULL,\n"
+	        "  `disable_options` tinyint UNSIGNED DEFAULT NULL,\n"
+	        "  `view_sprite` smallint UNSIGNED DEFAULT NULL,\n"
+	        "  `bindonequip` tinyint UNSIGNED DEFAULT NULL,\n"
+	        "  `forceserial` tinyint UNSIGNED DEFAULT NULL,\n"
+	        "  `buyingstore` tinyint UNSIGNED DEFAULT NULL,\n"
+	        "  `delay` mediumint UNSIGNED DEFAULT NULL,\n"
+	        "  `keepafteruse` tinyint UNSIGNED DEFAULT NULL,\n"
+	        "  `dropannounce` tinyint UNSIGNED DEFAULT NULL,\n"
+	        "  `showdropeffect` tinyint UNSIGNED DEFAULT NULL,\n"
+	        "  `dropeffectmode` tinyint UNSIGNED DEFAULT NULL,\n"
+	        "  `ignorediscount` tinyint UNSIGNED DEFAULT NULL,\n"
+	        "  `ignoreovercharge` tinyint UNSIGNED DEFAULT NULL,\n"
+	        "  `trade_flag` smallint UNSIGNED DEFAULT NULL,\n"
+	        "  `trade_group` smallint UNSIGNED DEFAULT NULL,\n"
+	        "  `nouse_flag` smallint UNSIGNED DEFAULT NULL,\n"
+	        "  `nouse_group` smallint UNSIGNED DEFAULT NULL,\n"
+	        "  `stack_amount` mediumint UNSIGNED DEFAULT NULL,\n"
+	        "  `stack_flag` tinyint UNSIGNED DEFAULT NULL,\n"
+	        "  `sprite` mediumint UNSIGNED DEFAULT NULL,\n"
+	        "  `script` text,\n"
+	        "  `equip_script` text,\n"
+	        "  `unequip_script` text,\n"
+	        "  `rental_start_script` text,\n"
+	        "  `rental_end_script` text,\n"
+	        " PRIMARY KEY (`id`)\n"
+	        ") ENGINE=MyISAM;\n"
+	        "\n",
+	        tosql.db_name, tosql.db_name, tosql.db_name);
 }
 
 /**
@@ -571,8 +573,8 @@ void do_itemdb2sql(void)
 		const char *source;
 		const char *destination;
 	} files[] = {
-		{"item_db", DBPATH"item_db.conf", "sql-files/item_db" DBSUFFIX ".sql"},
-		{"item_db2", "item_db2.conf", "sql-files/item_db2.sql"},
+	    {"item_db", DBPATH "item_db.conf", "sql-files/item_db" DBSUFFIX ".sql"},
+	    {"item_db2", "item_db2.conf", "sql-files/item_db2.sql"},
 	};
 
 	/* link */
@@ -620,7 +622,7 @@ int mobdb2sql_sub(struct config_setting_t *mobt, int n, const char *source)
 	nullpo_ret(mobt);
 
 	if ((md = mob->db(mob_read_db_sub(mobt, n, source))) != mob->dummy) {
-		char e_name[NAME_LENGTH*2+1];
+		char e_name[NAME_LENGTH * 2 + 1];
 		StringBuf buf;
 		int card_idx = 9, i;
 
@@ -780,49 +782,50 @@ void mobdb2sql_tableheader(void)
 	}
 
 	fprintf(tosql.fp,
-			"--\n"
-			"-- Table structure for table `%s`\n"
-			"--\n"
-			"\n"
-			"DROP TABLE IF EXISTS `%s`;\n"
-			"CREATE TABLE `%s` (\n"
-			"  `ID` mediumint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `Sprite` text NOT NULL,\n"
-			"  `kName` text NOT NULL,\n"
-			"  `iName` text NOT NULL,\n"
-			"  `LV` tinyint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `HP` int UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `SP` mediumint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `EXP` mediumint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `JEXP` mediumint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `Range1` tinyint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `ATK1` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `ATK2` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `DEF` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `MDEF` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `STR` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `AGI` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `VIT` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `INT` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `DEX` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `LUK` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `Range2` tinyint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `Range3` tinyint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `Scale` tinyint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `Race` tinyint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `Element` tinyint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `Mode` int UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `Speed` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `aDelay` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `aMotion` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `dMotion` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `MEXP` mediumint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"%s"
-			"  `DropCardid` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `DropCardper` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  PRIMARY KEY (`ID`)\n"
-			") ENGINE=MyISAM;\n"
-			"\n", tosql.db_name, tosql.db_name, tosql.db_name, StrBuf->Value(&buf));
+	        "--\n"
+	        "-- Table structure for table `%s`\n"
+	        "--\n"
+	        "\n"
+	        "DROP TABLE IF EXISTS `%s`;\n"
+	        "CREATE TABLE `%s` (\n"
+	        "  `ID` mediumint UNSIGNED NOT NULL DEFAULT '0',\n"
+	        "  `Sprite` text NOT NULL,\n"
+	        "  `kName` text NOT NULL,\n"
+	        "  `iName` text NOT NULL,\n"
+	        "  `LV` tinyint UNSIGNED NOT NULL DEFAULT '0',\n"
+	        "  `HP` int UNSIGNED NOT NULL DEFAULT '0',\n"
+	        "  `SP` mediumint UNSIGNED NOT NULL DEFAULT '0',\n"
+	        "  `EXP` mediumint UNSIGNED NOT NULL DEFAULT '0',\n"
+	        "  `JEXP` mediumint UNSIGNED NOT NULL DEFAULT '0',\n"
+	        "  `Range1` tinyint UNSIGNED NOT NULL DEFAULT '0',\n"
+	        "  `ATK1` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
+	        "  `ATK2` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
+	        "  `DEF` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
+	        "  `MDEF` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
+	        "  `STR` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
+	        "  `AGI` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
+	        "  `VIT` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
+	        "  `INT` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
+	        "  `DEX` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
+	        "  `LUK` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
+	        "  `Range2` tinyint UNSIGNED NOT NULL DEFAULT '0',\n"
+	        "  `Range3` tinyint UNSIGNED NOT NULL DEFAULT '0',\n"
+	        "  `Scale` tinyint UNSIGNED NOT NULL DEFAULT '0',\n"
+	        "  `Race` tinyint UNSIGNED NOT NULL DEFAULT '0',\n"
+	        "  `Element` tinyint UNSIGNED NOT NULL DEFAULT '0',\n"
+	        "  `Mode` int UNSIGNED NOT NULL DEFAULT '0',\n"
+	        "  `Speed` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
+	        "  `aDelay` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
+	        "  `aMotion` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
+	        "  `dMotion` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
+	        "  `MEXP` mediumint UNSIGNED NOT NULL DEFAULT '0',\n"
+	        "%s"
+	        "  `DropCardid` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
+	        "  `DropCardper` smallint UNSIGNED NOT NULL DEFAULT '0',\n"
+	        "  PRIMARY KEY (`ID`)\n"
+	        ") ENGINE=MyISAM;\n"
+	        "\n",
+	        tosql.db_name, tosql.db_name, tosql.db_name, StrBuf->Value(&buf));
 
 	StrBuf->Destroy(&buf);
 }
@@ -840,8 +843,8 @@ void do_mobdb2sql(void)
 		const char *source;
 		const char *destination;
 	} files[] = {
-		{"mob_db", DBPATH"mob_db.conf", "sql-files/mob_db" DBSUFFIX ".sql"},
-		{"mob_db2", "mob_db2.conf", "sql-files/mob_db2.sql"},
+	    {"mob_db", DBPATH "mob_db.conf", "sql-files/mob_db" DBSUFFIX ".sql"},
+	    {"mob_db2", "mob_db2.conf", "sql-files/mob_db2.sql"},
 	};
 
 	/* link */
@@ -883,29 +886,29 @@ void do_mobdb2sql(void)
 /**
  * Converts Mob Skill State constant to string
  */
-const char* mob_skill_state_tostring(enum MobSkillState mss)
+const char *mob_skill_state_tostring(enum MobSkillState mss)
 {
-	switch(mss) {
-	case MSS_ANY:
-		return "any";
-	case MSS_IDLE:
-		return "idle";
-	case MSS_WALK:
-		return "walk";
-	case MSS_LOOT:
-		return "loot";
-	case MSS_DEAD:
-		return "dead";
-	case MSS_BERSERK:
-		return "attack";
-	case MSS_ANGRY:
-		return "angry";
-	case MSS_RUSH:
-		return "chase";
-	case MSS_FOLLOW:
-		return "follow";
-	case MSS_ANYTARGET:
-		return "anytarget";
+	switch (mss) {
+		case MSS_ANY:
+			return "any";
+		case MSS_IDLE:
+			return "idle";
+		case MSS_WALK:
+			return "walk";
+		case MSS_LOOT:
+			return "loot";
+		case MSS_DEAD:
+			return "dead";
+		case MSS_BERSERK:
+			return "attack";
+		case MSS_ANGRY:
+			return "angry";
+		case MSS_RUSH:
+			return "chase";
+		case MSS_FOLLOW:
+			return "follow";
+		case MSS_ANYTARGET:
+			return "anytarget";
 	}
 
 	return "unknown";
@@ -914,36 +917,36 @@ const char* mob_skill_state_tostring(enum MobSkillState mss)
 /**
  * Converts Mob Skill Target constant to string
  */
-const char* mob_skill_target_tostring(int target)
+const char *mob_skill_target_tostring(int target)
 {
-	switch(target) {
-	case MST_TARGET:
-		return "target";
-	case MST_RANDOM:
-		return "randomtarget";
-	case MST_SELF:
-		return "self";
-	case MST_FRIEND:
-		return "friend";
-	case MST_MASTER:
-		return "master";
-	case MST_AROUND1:
-		return "around1";
-	case MST_AROUND2:
-		return "around2";
-	case MST_AROUND3:
-		return "around3";
-	//case MST_AROUND: // same value as MST_AROUND4
-	case MST_AROUND4:
-		return "around4";
-	case MST_AROUND5:
-		return "around5";
-	case MST_AROUND6:
-		return "around6";
-	case MST_AROUND7:
-		return "around7";
-	case MST_AROUND8:
-		return "around8";
+	switch (target) {
+		case MST_TARGET:
+			return "target";
+		case MST_RANDOM:
+			return "randomtarget";
+		case MST_SELF:
+			return "self";
+		case MST_FRIEND:
+			return "friend";
+		case MST_MASTER:
+			return "master";
+		case MST_AROUND1:
+			return "around1";
+		case MST_AROUND2:
+			return "around2";
+		case MST_AROUND3:
+			return "around3";
+		// case MST_AROUND: // same value as MST_AROUND4
+		case MST_AROUND4:
+			return "around4";
+		case MST_AROUND5:
+			return "around5";
+		case MST_AROUND6:
+			return "around6";
+		case MST_AROUND7:
+			return "around7";
+		case MST_AROUND8:
+			return "around8";
 	}
 	return "unknown";
 }
@@ -951,55 +954,55 @@ const char* mob_skill_target_tostring(int target)
 /**
  * Converts Mob Skill Condition constant to string
  */
-const char* mob_skill_condition_tostring(int condition)
+const char *mob_skill_condition_tostring(int condition)
 {
-	switch(condition) {
-	case MSC_ALWAYS:
-		return "always";
-	case MSC_MYHPLTMAXRATE:
-		return "myhpltmaxrate";
-	case MSC_MYHPINRATE:
-		return "myhpinrate";
-	case MSC_FRIENDHPLTMAXRATE:
-		return "friendhpltmaxrate";
-	case MSC_FRIENDHPINRATE:
-		return "friendhpinrate";
-	case MSC_MYSTATUSON:
-		return "mystatuson";
-	case MSC_MYSTATUSOFF:
-		return "mystatusoff";
-	case MSC_FRIENDSTATUSON:
-		return "friendstatuson";
-	case MSC_FRIENDSTATUSOFF:
-		return "friendstatusoff";
-	case MSC_ATTACKPCGT:
-		return "attackpcgt";
-	case MSC_ATTACKPCGE:
-		return "attackpcge";
-	case MSC_SLAVELT:
-		return "slavelt";
-	case MSC_SLAVELE:
-		return "slavele";
-	case MSC_CLOSEDATTACKED:
-		return "closedattacked";
-	case MSC_LONGRANGEATTACKED:
-		return "longrangeattacked";
-	case MSC_AFTERSKILL:
-		return "afterskill";
-	case MSC_SKILLUSED:
-		return "skillused";
-	case MSC_CASTTARGETED:
-		return "casttargeted";
-	case MSC_RUDEATTACKED:
-		return "rudeattacked";
-	case MSC_MASTERHPLTMAXRATE:
-		return "masterhpltmaxrate";
-	case MSC_MASTERATTACKED:
-		return "masterattacked";
-	case MSC_ALCHEMIST:
-		return "alchemist";
-	case MSC_SPAWN:
-		return "onspawn";
+	switch (condition) {
+		case MSC_ALWAYS:
+			return "always";
+		case MSC_MYHPLTMAXRATE:
+			return "myhpltmaxrate";
+		case MSC_MYHPINRATE:
+			return "myhpinrate";
+		case MSC_FRIENDHPLTMAXRATE:
+			return "friendhpltmaxrate";
+		case MSC_FRIENDHPINRATE:
+			return "friendhpinrate";
+		case MSC_MYSTATUSON:
+			return "mystatuson";
+		case MSC_MYSTATUSOFF:
+			return "mystatusoff";
+		case MSC_FRIENDSTATUSON:
+			return "friendstatuson";
+		case MSC_FRIENDSTATUSOFF:
+			return "friendstatusoff";
+		case MSC_ATTACKPCGT:
+			return "attackpcgt";
+		case MSC_ATTACKPCGE:
+			return "attackpcge";
+		case MSC_SLAVELT:
+			return "slavelt";
+		case MSC_SLAVELE:
+			return "slavele";
+		case MSC_CLOSEDATTACKED:
+			return "closedattacked";
+		case MSC_LONGRANGEATTACKED:
+			return "longrangeattacked";
+		case MSC_AFTERSKILL:
+			return "afterskill";
+		case MSC_SKILLUSED:
+			return "skillused";
+		case MSC_CASTTARGETED:
+			return "casttargeted";
+		case MSC_RUDEATTACKED:
+			return "rudeattacked";
+		case MSC_MASTERHPLTMAXRATE:
+			return "masterhpltmaxrate";
+		case MSC_MASTERATTACKED:
+			return "masterattacked";
+		case MSC_ALCHEMIST:
+			return "alchemist";
+		case MSC_SPAWN:
+			return "onspawn";
 	}
 	return "unknown";
 }
@@ -1016,7 +1019,7 @@ bool mobskilldb2sql_sub(struct config_setting_t *it, int n, int mob_id)
 	struct mob_db *md = mob->db(mob_id);
 	char valname[15];
 	const char *name = config_setting_name(it);
-	char e_name[NAME_LENGTH*2+1];
+	char e_name[NAME_LENGTH * 2 + 1];
 
 	nullpo_retr(false, it);
 	Assert_retr(false, mob_id <= 0 || md != mob->dummy);
@@ -1119,9 +1122,7 @@ bool mobskilldb2sql_sub(struct config_setting_t *it, int n, int mob_id)
 	StrBuf->Destroy(&buf);
 
 	return true;
-
 }
-
 
 /**
  * Prints a SQL table header for the current mob_skill_db table.
@@ -1131,33 +1132,34 @@ void mobskilldb2sql_tableheader(void)
 	db2sql_fileheader();
 
 	fprintf(tosql.fp,
-			"--\n"
-			"-- Table structure for table `%s`\n"
-			"--\n"
-			"\n"
-			"DROP TABLE IF EXISTS `%s`;\n"
-			"CREATE TABLE `%s` (\n"
-			"  `MOB_ID` smallint NOT NULL,\n"
-			"  `INFO` text NOT NULL,\n"
-			"  `STATE` text NOT NULL,\n"
-			"  `SKILL_ID` smallint NOT NULL,\n"
-			"  `SKILL_LV` tinyint NOT NULL,\n"
-			"  `RATE` smallint NOT NULL,\n"
-			"  `CASTTIME` mediumint NOT NULL,\n"
-			"  `DELAY` int NOT NULL,\n"
-			"  `CANCELABLE` text NOT NULL,\n"
-			"  `TARGET` text NOT NULL,\n"
-			"  `CONDITION` text NOT NULL,\n"
-			"  `CONDITION_VALUE` text,\n"
-			"  `VAL1` int DEFAULT NULL,\n"
-			"  `VAL2` int DEFAULT NULL,\n"
-			"  `VAL3` int DEFAULT NULL,\n"
-			"  `VAL4` int DEFAULT NULL,\n"
-			"  `VAL5` int DEFAULT NULL,\n"
-			"  `EMOTION` TEXT,\n"
-			"  `CHAT` TEXT\n"
-			") ENGINE=MyISAM;\n"
-			"\n", tosql.db_name, tosql.db_name, tosql.db_name);
+	        "--\n"
+	        "-- Table structure for table `%s`\n"
+	        "--\n"
+	        "\n"
+	        "DROP TABLE IF EXISTS `%s`;\n"
+	        "CREATE TABLE `%s` (\n"
+	        "  `MOB_ID` smallint NOT NULL,\n"
+	        "  `INFO` text NOT NULL,\n"
+	        "  `STATE` text NOT NULL,\n"
+	        "  `SKILL_ID` smallint NOT NULL,\n"
+	        "  `SKILL_LV` tinyint NOT NULL,\n"
+	        "  `RATE` smallint NOT NULL,\n"
+	        "  `CASTTIME` mediumint NOT NULL,\n"
+	        "  `DELAY` int NOT NULL,\n"
+	        "  `CANCELABLE` text NOT NULL,\n"
+	        "  `TARGET` text NOT NULL,\n"
+	        "  `CONDITION` text NOT NULL,\n"
+	        "  `CONDITION_VALUE` text,\n"
+	        "  `VAL1` int DEFAULT NULL,\n"
+	        "  `VAL2` int DEFAULT NULL,\n"
+	        "  `VAL3` int DEFAULT NULL,\n"
+	        "  `VAL4` int DEFAULT NULL,\n"
+	        "  `VAL5` int DEFAULT NULL,\n"
+	        "  `EMOTION` TEXT,\n"
+	        "  `CHAT` TEXT\n"
+	        ") ENGINE=MyISAM;\n"
+	        "\n",
+	        tosql.db_name, tosql.db_name, tosql.db_name);
 }
 
 /**
@@ -1171,8 +1173,8 @@ void do_mobskilldb2sql(void)
 		const char *source;
 		const char *destination;
 	} files[] = {
-		{"mob_skill_db", DBPATH"mob_skill_db.conf", "sql-files/mob_skill_db" DBSUFFIX ".sql"},
-		{"mob_skill_db2", "mob_skill_db2.conf", "sql-files/mob_skill_db2.sql"},
+	    {"mob_skill_db", DBPATH "mob_skill_db.conf", "sql-files/mob_skill_db" DBSUFFIX ".sql"},
+	    {"mob_skill_db2", "mob_skill_db2.conf", "sql-files/mob_skill_db2.sql"},
 	};
 
 	/* link */
@@ -1282,7 +1284,7 @@ HPExport void server_online(void)
 		do_mobdb2sql();
 }
 
-HPExport void plugin_final (void)
+HPExport void plugin_final(void)
 {
 	SQL->Free(sql_handle);
 	sql_handle = NULL;

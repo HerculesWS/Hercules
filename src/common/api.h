@@ -23,28 +23,6 @@
 
 #define MAX_CUSTOM_API_MSG 100
 
-enum API_MSG {
-	API_MSG_userconfig_load = 1,
-	API_MSG_userconfig_save = 2,
-	API_MSG_charconfig_load = 3,
-	API_MSG_userconfig_save_emotes = 4,
-	API_MSG_userconfig_save_hotkeys_emotion = 5,
-	API_MSG_userconfig_save_hotkeys_interface = 6,
-	API_MSG_userconfig_save_hotkeys_skill_bar1 = 7,
-	API_MSG_userconfig_save_hotkeys_skill_bar2 = 8,
-	API_MSG_emblem_upload = 9,
-	API_MSG_emblem_upload_guild_id = 10,
-	API_MSG_emblem_download = 11,
-	API_MSG_userconfig_save_userhotkey_v2 = 12,
-	API_MSG_userconfig_load_emotes = 13,
-	API_MSG_userconfig_load_hotkeys = 14,
-	API_MSG_party_list = 15,
-	API_MSG_party_get = 16,
-	API_MSG_party_add = 17,
-	API_MSG_party_del = 18,
-	API_MSG_party_info = 19,
-	API_MSG_CUSTOM,
-	API_MSG_MAX = API_MSG_CUSTOM + MAX_CUSTOM_API_MSG
-};
+enum API_MSG { API_MSG_userconfig_load = 1, API_MSG_userconfig_save = 2, API_MSG_charconfig_load = 3, API_MSG_userconfig_save_emotes = 4, API_MSG_userconfig_save_hotkeys_emotion = 5, API_MSG_userconfig_save_hotkeys_interface = 6, API_MSG_userconfig_save_hotkeys_skill_bar1 = 7, API_MSG_userconfig_save_hotkeys_skill_bar2 = 8, API_MSG_emblem_upload = 9, API_MSG_emblem_upload_guild_id = 10, API_MSG_emblem_download = 11, API_MSG_userconfig_save_userhotkey_v2 = 12, API_MSG_userconfig_load_emotes = 13, API_MSG_userconfig_load_hotkeys = 14, API_MSG_party_list = 15, API_MSG_party_get = 16, API_MSG_party_add = 17, API_MSG_party_del = 18, API_MSG_party_info = 19, API_MSG_CUSTOM, API_MSG_MAX = API_MSG_CUSTOM + MAX_CUSTOM_API_MSG };
 
 #endif /* COMMON_API_H */

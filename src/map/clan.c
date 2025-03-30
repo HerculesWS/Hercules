@@ -176,7 +176,7 @@ static bool clan_join(struct map_session_data *sd, int clan_id)
 	if (sd->status.guild_id > 0 || sd->guild != NULL) {
 		ShowError("clan_join: Player already joined in a guild. char_id: %d\n", sd->status.char_id);
 		return false;
-	} else if ( sd->status.clan_id > 0 || sd->clan != NULL) {
+	} else if (sd->status.clan_id > 0 || sd->clan != NULL) {
 		ShowError("clan_join: Player already joined in a clan. char_id: %d\n", sd->status.char_id);
 		return false;
 	}
@@ -289,7 +289,6 @@ static void clan_member_online(struct map_session_data *sd, bool first)
 		VECTOR_PUSH(c->members, m);
 	} else {
 		struct clan_member *m = &VECTOR_INDEX(c->members, i);
-
 
 		if (c->kick_time > 0 && inactivity > c->kick_time) {
 			if (m->online == 1) {
@@ -411,7 +410,6 @@ static void clan_member_offline(struct map_session_data *sd)
 	clif->clan_onlinecount(c);
 }
 
-
 /**
  * Sends a message to the whole clan
  */
@@ -465,54 +463,50 @@ static int clan_get_id(const struct block_list *bl)
 	nullpo_ret(bl);
 
 	switch (bl->type) {
-	case BL_PC: {
-		const struct map_session_data *sd = BL_UCCAST(BL_PC, bl);
-		return sd->status.clan_id;
-	}
-	case BL_NPC: {
-		const struct npc_data *nd = BL_UCCAST(BL_NPC, bl);
-		return nd->clan_id;
-	}
-	case BL_PET: {
-		const struct pet_data *pd = BL_UCCAST(BL_PET, bl);
-		if (pd->msd != NULL)
-			return pd->msd->status.clan_id;
-	}
-		break;
-	case BL_MOB: {
-		const struct mob_data *md = BL_UCCAST(BL_MOB, bl);
-		const struct map_session_data *msd;
-		if (md->special_state.ai != AI_NONE && (msd = map->id2sd(md->master_id)) != NULL) {
-			return msd->status.clan_id;
+		case BL_PC: {
+			const struct map_session_data *sd = BL_UCCAST(BL_PC, bl);
+			return sd->status.clan_id;
 		}
-		return md->clan_id;
-	}
-	case BL_HOM: {
-		const struct homun_data *hd = BL_UCCAST(BL_HOM, bl);
-		if (hd->master != NULL) {
-			return hd->master->status.clan_id;
+		case BL_NPC: {
+			const struct npc_data *nd = BL_UCCAST(BL_NPC, bl);
+			return nd->clan_id;
 		}
-	}
-		break;
-	case BL_MER: {
-		const struct mercenary_data *md = BL_UCCAST(BL_MER, bl);
-		if (md->master != NULL) {
-			return md->master->status.clan_id;
+		case BL_PET: {
+			const struct pet_data *pd = BL_UCCAST(BL_PET, bl);
+			if (pd->msd != NULL)
+				return pd->msd->status.clan_id;
+		} break;
+		case BL_MOB: {
+			const struct mob_data *md = BL_UCCAST(BL_MOB, bl);
+			const struct map_session_data *msd;
+			if (md->special_state.ai != AI_NONE && (msd = map->id2sd(md->master_id)) != NULL) {
+				return msd->status.clan_id;
+			}
+			return md->clan_id;
 		}
-	}
-		break;
-	case BL_SKILL: {
-		const struct skill_unit *su = BL_UCCAST(BL_SKILL, bl);
-		if (su->group != NULL)
-			return su->group->clan_id;
-	}
-		break;
-	case BL_NUL:
-	case BL_ITEM:
-	case BL_ELEM:
-	case BL_CHAT:
-	case BL_ALL:
-		break;
+		case BL_HOM: {
+			const struct homun_data *hd = BL_UCCAST(BL_HOM, bl);
+			if (hd->master != NULL) {
+				return hd->master->status.clan_id;
+			}
+		} break;
+		case BL_MER: {
+			const struct mercenary_data *md = BL_UCCAST(BL_MER, bl);
+			if (md->master != NULL) {
+				return md->master->status.clan_id;
+			}
+		} break;
+		case BL_SKILL: {
+			const struct skill_unit *su = BL_UCCAST(BL_SKILL, bl);
+			if (su->group != NULL)
+				return su->group->clan_id;
+		} break;
+		case BL_NUL:
+		case BL_ITEM:
+		case BL_ELEM:
+		case BL_CHAT:
+		case BL_ALL:
+			break;
 	}
 
 	return 0;
@@ -528,9 +522,9 @@ static int clan_inactivity_kick(int tid, int64 tick, int id, intptr_t data)
 
 	if ((c = clan->search(id)) != NULL) {
 		if (!c->kick_time || c->tid != tid || tid == INVALID_TIMER || c->tid == INVALID_TIMER) {
-		  ShowError("Timer Mismatch (Time: %d seconds) %d != %d", c->kick_time, c->tid, tid);
-		  Assert_report(0);
-		  return 0;
+			ShowError("Timer Mismatch (Time: %d seconds) %d != %d", c->kick_time, c->tid, tid);
+			Assert_report(0);
+			return 0;
 		}
 		for (i = 0; i < VECTOR_LENGTH(c->members); i++) {
 			struct clan_member *m = &VECTOR_INDEX(c->members, i);
@@ -548,7 +542,7 @@ static int clan_inactivity_kick(int tid, int64 tick, int id, intptr_t data)
 				clif->clan_onlinecount(c);
 			}
 		}
-		//Perform the kick for offline members that didn't connect after a server restart
+		// Perform the kick for offline members that didn't connect after a server restart
 		c->received = false;
 		intif->clan_kickoffline(c->clan_id, c->kick_time);
 		c->tid = timer->add(timer->gettick() + c->check_time, clan->inactivity_kick, c->clan_id, 0);
@@ -565,8 +559,8 @@ static int clan_request_kickoffline(int tid, int64 tick, int id, intptr_t data)
 
 	if ((c = clan->search(id)) != NULL) {
 		if (c->req_kick_tid != tid || c->req_kick_tid == INVALID_TIMER) {
-		  ShowError("Timer Mismatch %d != %d", c->tid, tid);
-		  return 0;
+			ShowError("Timer Mismatch %d != %d", c->tid, tid);
+			return 0;
 		}
 
 		if (c->received) {
@@ -589,8 +583,8 @@ static int clan_request_membercount(int tid, int64 tick, int id, intptr_t data)
 
 	if ((c = clan->search(id)) != NULL) {
 		if (c->req_count_tid != tid || c->req_count_tid == INVALID_TIMER) {
-		  ShowError("Timer Mismatch %d != %d", c->tid, tid);
-		  return 0;
+			ShowError("Timer Mismatch %d != %d", c->tid, tid);
+			return 0;
 		}
 
 		if (c->received) {
@@ -793,7 +787,7 @@ static int clan_read_db_sub(struct config_setting_t *settings, const char *sourc
 				for (i = 0; i < a; i++) {
 					struct clan_relationship r;
 					if ((allyConst = libconfig->setting_get_string_elem(allies, i)) != NULL) {
-						ARR_FIND(0, VECTOR_LENGTH(c->allies), j,  strcmp(VECTOR_INDEX(c->allies, j).constant, allyConst) == 0);
+						ARR_FIND(0, VECTOR_LENGTH(c->allies), j, strcmp(VECTOR_INDEX(c->allies, j).constant, allyConst) == 0);
 						if (j != VECTOR_LENGTH(c->allies)) {
 							ShowError("clan_read_db: Duplicate entry '%s' in allies for Clan %d in '%s', skipping...\n", allyConst, c->clan_id, source);
 							continue;
@@ -804,7 +798,6 @@ static int clan_read_db_sub(struct config_setting_t *settings, const char *sourc
 						safestrncpy(r.constant, allyConst, NAME_LENGTH);
 						VECTOR_PUSH(c->allies, r);
 					}
-
 				}
 			}
 		}
@@ -826,7 +819,7 @@ static int clan_read_db_sub(struct config_setting_t *settings, const char *sourc
 				for (i = 0; i < a; i++) {
 					struct clan_relationship r;
 					if ((antagonistConst = libconfig->setting_get_string_elem(antagonists, i)) != NULL) {
-						ARR_FIND(0, VECTOR_LENGTH(c->antagonists), j,  strcmp(VECTOR_INDEX(c->antagonists, j).constant, antagonistConst) == 0);
+						ARR_FIND(0, VECTOR_LENGTH(c->antagonists), j, strcmp(VECTOR_INDEX(c->antagonists, j).constant, antagonistConst) == 0);
 						if (j != VECTOR_LENGTH(c->antagonists)) {
 							ShowError("clan_read_db: Duplicate entry '%s' in antagonists for Clan %d in '%s', skipping...\n", antagonistConst, c->clan_id, source);
 							continue;
@@ -861,7 +854,7 @@ static int clan_read_db_sub(struct config_setting_t *settings, const char *sourc
 
 		for (c_ok = dbi_first(iter); dbi_exists(iter); c_ok = dbi_next(iter)) {
 			i = VECTOR_LENGTH(c_ok->allies);
-			while ( i > 0) {
+			while (i > 0) {
 				struct clan_relationship *r;
 
 				i--;
@@ -875,7 +868,7 @@ static int clan_read_db_sub(struct config_setting_t *settings, const char *sourc
 			}
 
 			i = VECTOR_LENGTH(c_ok->antagonists);
-			while ( i > 0) {
+			while (i > 0) {
 				struct clan_relationship *r;
 
 				i--;

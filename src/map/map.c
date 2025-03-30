@@ -92,7 +92,7 @@
 #include <string.h>
 #include <sys/stat.h>
 #ifndef _WIN32
-#include <unistd.h>
+	#include <unistd.h>
 #endif
 
 static struct map_interface map_s;
@@ -151,7 +151,7 @@ static int map_freeblock(struct block_list *bl)
 	nullpo_retr(map->block_free_lock, bl);
 
 	if (map->block_free_lock == 0) {
-		if( bl->type == BL_ITEM )
+		if (bl->type == BL_ITEM)
 			ers_free(map->flooritem_ers, bl);
 		else
 			aFree(bl);
@@ -192,7 +192,7 @@ static int map_freeblock_unlock(void)
 			aFree(map->block_free_sanitize[i]);
 			map->block_free_sanitize[i] = NULL;
 #endif
-			if( map->block_free[i]->type == BL_ITEM )
+			if (map->block_free[i]->type == BL_ITEM)
 				ers_free(map->flooritem_ers, map->block_free[i]);
 			else
 				aFree(map->block_free[i]);
@@ -230,19 +230,17 @@ static void map_update_cell_bl(struct block_list *bl, bool increase)
 	int pos;
 
 	nullpo_retv(bl);
-	if( bl->m < 0 || bl->x < 0 || bl->x >= map->list[bl->m].xs
-	              || bl->y < 0 || bl->y >= map->list[bl->m].ys
-	              || !(bl->type&BL_CHAR) )
+	if (bl->m < 0 || bl->x < 0 || bl->x >= map->list[bl->m].xs || bl->y < 0 || bl->y >= map->list[bl->m].ys || !(bl->type & BL_CHAR))
 		return;
 
 	// When reading from mapcache the cell isn't initialized
 	// TODO: Maybe start initializing cells when they're loaded instead of
 	// having to get them here? [Panikon]
-	if( map->list[bl->m].cell == (struct mapcell *)0xdeadbeaf )
+	if (map->list[bl->m].cell == (struct mapcell *)0xdeadbeaf)
 		map->cellfromcache(&map->list[bl->m]);
 
-	pos = bl->x + bl->y*map->list[bl->m].xs;
-	if( increase )
+	pos = bl->x + bl->y * map->list[bl->m].xs;
+	if (increase)
 		map->list[bl->m].cell[pos].cell_bl++;
 	else
 		map->list[bl->m].cell[pos].cell_bl--;
@@ -269,28 +267,30 @@ static int map_addblock(struct block_list *bl)
 	m = bl->m;
 	x = bl->x;
 	y = bl->y;
-	if( m < 0 || m >= map->count ) {
+	if (m < 0 || m >= map->count) {
 		ShowError("map_addblock: invalid map id (%d), only %d are loaded.\n", m, map->count);
 		return 1;
 	}
-	if( x < 0 || x >= map->list[m].xs || y < 0 || y >= map->list[m].ys ) {
+	if (x < 0 || x >= map->list[m].xs || y < 0 || y >= map->list[m].ys) {
 		ShowError("map_addblock: out-of-bounds coordinates (\"%s\",%d,%d), map is %dx%d\n", map->list[m].name, x, y, map->list[m].xs, map->list[m].ys);
 		return 1;
 	}
 
-	pos = x/BLOCK_SIZE+(y/BLOCK_SIZE)*map->list[m].bxs;
+	pos = x / BLOCK_SIZE + (y / BLOCK_SIZE) * map->list[m].bxs;
 
 	if (bl->type == BL_MOB) {
 		Assert_ret(map->list[m].block_mob != NULL);
 		bl->next = map->list[m].block_mob[pos];
 		bl->prev = &map->bl_head;
-		if (bl->next) bl->next->prev = bl;
+		if (bl->next)
+			bl->next->prev = bl;
 		map->list[m].block_mob[pos] = bl;
 	} else {
 		Assert_ret(map->list[m].block != NULL);
 		bl->next = map->list[m].block[pos];
 		bl->prev = &map->bl_head;
-		if (bl->next) bl->next->prev = bl;
+		if (bl->next)
+			bl->next->prev = bl;
 		map->list[m].block[pos] = bl;
 	}
 
@@ -322,12 +322,12 @@ static int map_delblock(struct block_list *bl)
 	map->update_cell_bl(bl, false);
 #endif
 
-	pos = bl->x/BLOCK_SIZE+(bl->y/BLOCK_SIZE)*map->list[bl->m].bxs;
+	pos = bl->x / BLOCK_SIZE + (bl->y / BLOCK_SIZE) * map->list[bl->m].bxs;
 
 	if (bl->next)
 		bl->next->prev = bl->prev;
 	if (bl->prev == &map->bl_head) {
-		//Since the head of the list, update the block_list map of []
+		// Since the head of the list, update the block_list map of []
 		if (bl->type == BL_MOB) {
 			Assert_ret(map->list[bl->m].block_mob != NULL);
 			map->list[bl->m].block_mob[pos] = bl->next;
@@ -358,100 +358,98 @@ static int map_moveblock(struct block_list *bl, int x1, int y1, int64 tick)
 	nullpo_ret(bl);
 	x0 = bl->x;
 	y0 = bl->y;
-	moveblock = ( x0/BLOCK_SIZE != x1/BLOCK_SIZE || y0/BLOCK_SIZE != y1/BLOCK_SIZE);
+	moveblock = (x0 / BLOCK_SIZE != x1 / BLOCK_SIZE || y0 / BLOCK_SIZE != y1 / BLOCK_SIZE);
 
 	if (!bl->prev) {
-		//Block not in map, just update coordinates, but do naught else.
+		// Block not in map, just update coordinates, but do naught else.
 		bl->x = x1;
 		bl->y = y1;
 		return 0;
 	}
 
-	//TODO: Perhaps some outs of bounds checking should be placed here?
-	if (bl->type&BL_CHAR) {
+	// TODO: Perhaps some outs of bounds checking should be placed here?
+	if (bl->type & BL_CHAR) {
 		sc = status->get_sc(bl);
 
-		skill->unit_move(bl,tick,2);
+		skill->unit_move(bl, tick, 2);
 		status_change_end(bl, SC_RG_CCONFINE_M, INVALID_TIMER);
 		status_change_end(bl, SC_RG_CCONFINE_S, INVALID_TIMER);
-		//status_change_end(bl, SC_BLADESTOP, INVALID_TIMER); //Won't stop when you are knocked away, go figure...
+		// status_change_end(bl, SC_BLADESTOP, INVALID_TIMER); //Won't stop when you are knocked away, go figure...
 		status_change_end(bl, SC_NJ_TATAMIGAESHI, INVALID_TIMER);
 		status_change_end(bl, SC_MAGICROD, INVALID_TIMER);
 		status_change_end(bl, SC_SU_STOOP, INVALID_TIMER);
-		if (sc && sc->data[SC_PROPERTYWALK] &&
-			sc->data[SC_PROPERTYWALK]->val3 >= skill->get_maxcount(sc->data[SC_PROPERTYWALK]->val1,sc->data[SC_PROPERTYWALK]->val2) )
-			status_change_end(bl,SC_PROPERTYWALK,INVALID_TIMER);
+		if (sc && sc->data[SC_PROPERTYWALK] && sc->data[SC_PROPERTYWALK]->val3 >= skill->get_maxcount(sc->data[SC_PROPERTYWALK]->val1, sc->data[SC_PROPERTYWALK]->val2))
+			status_change_end(bl, SC_PROPERTYWALK, INVALID_TIMER);
 	} else if (bl->type == BL_NPC) {
 		npc->unsetcells(BL_UCAST(BL_NPC, bl));
 	}
 
-	if (moveblock) map->delblock(bl);
+	if (moveblock)
+		map->delblock(bl);
 #ifdef CELL_NOSTACK
-	else map->update_cell_bl(bl, false);
+	else
+		map->update_cell_bl(bl, false);
 #endif
 	bl->x = x1;
 	bl->y = y1;
-	if (moveblock) map->addblock(bl);
+	if (moveblock)
+		map->addblock(bl);
 #ifdef CELL_NOSTACK
-	else map->update_cell_bl(bl, true);
+	else
+		map->update_cell_bl(bl, true);
 #endif
 
-	if (bl->type&BL_CHAR) {
+	if (bl->type & BL_CHAR) {
 		struct map_session_data *sd = BL_CAST(BL_PC, bl);
 
-		skill->unit_move(bl,tick,3);
+		skill->unit_move(bl, tick, 3);
 
 		if (sd != NULL && sd->shadowform_id != 0) {
-			//Shadow Form Target Moving
+			// Shadow Form Target Moving
 			struct block_list *d_bl;
-			if ((d_bl = map->id2bl(sd->shadowform_id)) == NULL || !check_distance_bl(bl,d_bl,10)) {
-				if( d_bl )
-					status_change_end(d_bl,SC__SHADOWFORM,INVALID_TIMER);
+			if ((d_bl = map->id2bl(sd->shadowform_id)) == NULL || !check_distance_bl(bl, d_bl, 10)) {
+				if (d_bl)
+					status_change_end(d_bl, SC__SHADOWFORM, INVALID_TIMER);
 				sd->shadowform_id = 0;
 			}
 		}
 
 		if (sc && sc->count) {
 			if (sc->data[SC_DANCING])
-				skill->unit_move_unit_group(skill->id2group(sc->data[SC_DANCING]->val2), bl->m, x1-x0, y1-y0);
+				skill->unit_move_unit_group(skill->id2group(sc->data[SC_DANCING]->val2), bl->m, x1 - x0, y1 - y0);
 			else {
 				if (sc->data[SC_CLOAKING])
 					skill->check_cloaking(bl, sc->data[SC_CLOAKING]);
 				if (sc->data[SC_WARM])
-					skill->unit_move_unit_group(skill->id2group(sc->data[SC_WARM]->val4), bl->m, x1-x0, y1-y0);
+					skill->unit_move_unit_group(skill->id2group(sc->data[SC_WARM]->val4), bl->m, x1 - x0, y1 - y0);
 				if (sc->data[SC_BANDING])
-					skill->unit_move_unit_group(skill->id2group(sc->data[SC_BANDING]->val4), bl->m, x1-x0, y1-y0);
+					skill->unit_move_unit_group(skill->id2group(sc->data[SC_BANDING]->val4), bl->m, x1 - x0, y1 - y0);
 
 				if (sc->data[SC_NEUTRALBARRIER_MASTER])
-					skill->unit_move_unit_group(skill->id2group(sc->data[SC_NEUTRALBARRIER_MASTER]->val2), bl->m, x1-x0, y1-y0);
+					skill->unit_move_unit_group(skill->id2group(sc->data[SC_NEUTRALBARRIER_MASTER]->val2), bl->m, x1 - x0, y1 - y0);
 				else if (sc->data[SC_STEALTHFIELD_MASTER])
-					skill->unit_move_unit_group(skill->id2group(sc->data[SC_STEALTHFIELD_MASTER]->val2), bl->m, x1-x0, y1-y0);
+					skill->unit_move_unit_group(skill->id2group(sc->data[SC_STEALTHFIELD_MASTER]->val2), bl->m, x1 - x0, y1 - y0);
 
-				if( sc->data[SC__SHADOWFORM] ) {//Shadow Form Caster Moving
+				if (sc->data[SC__SHADOWFORM]) { // Shadow Form Caster Moving
 					struct block_list *d_bl;
-					if( (d_bl = map->id2bl(sc->data[SC__SHADOWFORM]->val2)) == NULL || !check_distance_bl(bl,d_bl,10) )
-						status_change_end(bl,SC__SHADOWFORM,INVALID_TIMER);
+					if ((d_bl = map->id2bl(sc->data[SC__SHADOWFORM]->val2)) == NULL || !check_distance_bl(bl, d_bl, 10))
+						status_change_end(bl, SC__SHADOWFORM, INVALID_TIMER);
 				}
 
-				if (sc->data[SC_PROPERTYWALK]
-				 && sc->data[SC_PROPERTYWALK]->val3 < skill->get_maxcount(sc->data[SC_PROPERTYWALK]->val1,sc->data[SC_PROPERTYWALK]->val2)
-				 && map->find_skill_unit_oncell(bl,bl->x,bl->y,SO_ELECTRICWALK,NULL,0) == NULL
-				 && map->find_skill_unit_oncell(bl,bl->x,bl->y,SO_FIREWALK,NULL,0) == NULL
-				 && skill->unitsetting(bl,sc->data[SC_PROPERTYWALK]->val1,sc->data[SC_PROPERTYWALK]->val2,x0, y0,0)
-				) {
+				if (sc->data[SC_PROPERTYWALK] && sc->data[SC_PROPERTYWALK]->val3 < skill->get_maxcount(sc->data[SC_PROPERTYWALK]->val1, sc->data[SC_PROPERTYWALK]->val2) && map->find_skill_unit_oncell(bl, bl->x, bl->y, SO_ELECTRICWALK, NULL, 0) == NULL && map->find_skill_unit_oncell(bl, bl->x, bl->y, SO_FIREWALK, NULL, 0) == NULL && skill->unitsetting(bl, sc->data[SC_PROPERTYWALK]->val1, sc->data[SC_PROPERTYWALK]->val2, x0, y0, 0)) {
 					sc->data[SC_PROPERTYWALK]->val3++;
 				}
 			}
 			/* Guild Aura Moving */
 			if (sd != NULL && sd->state.gmaster_flag) {
 				if (sc->data[SC_LEADERSHIP])
-					skill->unit_move_unit_group(skill->id2group(sc->data[SC_LEADERSHIP]->val4), bl->m, x1-x0, y1-y0);
+					skill->unit_move_unit_group(skill->id2group(sc->data[SC_LEADERSHIP]->val4), bl->m, x1 - x0, y1 - y0);
 				if (sc->data[SC_GLORYWOUNDS])
-					skill->unit_move_unit_group(skill->id2group(sc->data[SC_GLORYWOUNDS]->val4), bl->m, x1-x0, y1-y0);
+					skill->unit_move_unit_group(skill->id2group(sc->data[SC_GLORYWOUNDS]->val4), bl->m, x1 - x0, y1 - y0);
 				if (sc->data[SC_SOULCOLD])
-					skill->unit_move_unit_group(skill->id2group(sc->data[SC_SOULCOLD]->val4), bl->m, x1-x0, y1-y0);
+					skill->unit_move_unit_group(skill->id2group(sc->data[SC_SOULCOLD]->val4), bl->m, x1 - x0, y1 - y0);
 				if (sc->data[SC_HAWKEYES])
-					skill->unit_move_unit_group(skill->id2group(sc->data[SC_HAWKEYES]->val4), bl->m, x1-x0, y1-y0);
+					skill->unit_move_unit_group(skill->id2group(sc->data[SC_HAWKEYES]->val4), bl->m, x1 - x0, y1 - y0);
 			}
 		}
 	} else if (bl->type == BL_NPC) {
@@ -470,7 +468,7 @@ static int map_moveblock(struct block_list *bl, int x1, int y1, int64 tick)
  *------------------------------------------*/
 static int map_count_oncell(int16 m, int16 x, int16 y, int type, int flag)
 {
-	int bx,by;
+	int bx, by;
 	struct block_list *bl;
 	int count = 0;
 
@@ -483,15 +481,15 @@ static int map_count_oncell(int16 m, int16 x, int16 y, int type, int flag)
 	if (x < 0 || y < 0 || (x >= map->list[m].xs) || (y >= map->list[m].ys))
 		return 0;
 
-	bx = x/BLOCK_SIZE;
-	by = y/BLOCK_SIZE;
+	bx = x / BLOCK_SIZE;
+	by = y / BLOCK_SIZE;
 
-	if (type&~BL_MOB) {
-		for (bl = map->list[m].block[bx+by*map->list[m].bxs]; bl != NULL; bl = bl->next) {
-			if (bl->x == x && bl->y == y && bl->type&type) {
-				if (flag&0x2) {
+	if (type & ~BL_MOB) {
+		for (bl = map->list[m].block[bx + by * map->list[m].bxs]; bl != NULL; bl = bl->next) {
+			if (bl->x == x && bl->y == y && bl->type & type) {
+				if (flag & 0x2) {
 					struct status_change *sc = status->get_sc(bl);
-					if (sc && (sc->option&OPTION_INVISIBLE))
+					if (sc && (sc->option & OPTION_INVISIBLE))
 						continue;
 					if (bl->type == BL_NPC) {
 						const struct npc_data *nd = BL_UCCAST(BL_NPC, bl);
@@ -499,7 +497,7 @@ static int map_count_oncell(int16 m, int16 x, int16 y, int type, int flag)
 							continue;
 					}
 				}
-				if (flag&0x1) {
+				if (flag & 0x1) {
 					struct unit_data *ud = unit->bl2ud(bl);
 					if (ud && ud->walktimer != INVALID_TIMER)
 						continue;
@@ -509,15 +507,15 @@ static int map_count_oncell(int16 m, int16 x, int16 y, int type, int flag)
 		}
 	}
 
-	if (type&BL_MOB) {
-		for (bl = map->list[m].block_mob[bx+by*map->list[m].bxs]; bl != NULL; bl = bl->next) {
+	if (type & BL_MOB) {
+		for (bl = map->list[m].block_mob[bx + by * map->list[m].bxs]; bl != NULL; bl = bl->next) {
 			if (bl->x == x && bl->y == y) {
-				if (flag&0x2) {
+				if (flag & 0x2) {
 					struct status_change *sc = status->get_sc(bl);
-					if (sc && (sc->option&OPTION_INVISIBLE))
+					if (sc && (sc->option & OPTION_INVISIBLE))
 						continue;
 				}
-				if (flag&0x1) {
+				if (flag & 0x1) {
 					struct unit_data *ud = unit->bl2ud(bl);
 					if (ud && ud->walktimer != INVALID_TIMER)
 						continue;
@@ -535,7 +533,7 @@ static int map_count_oncell(int16 m, int16 x, int16 y, int type, int flag)
  */
 static struct skill_unit *map_find_skill_unit_oncell(struct block_list *target, int16 x, int16 y, uint16 skill_id, struct skill_unit *out_unit, int flag)
 {
-	int16 m,bx,by;
+	int16 m, bx, by;
 	struct block_list *bl;
 	struct skill_unit *su;
 
@@ -551,17 +549,17 @@ static struct skill_unit *map_find_skill_unit_oncell(struct block_list *target, 
 	if (x < 0 || y < 0 || (x >= map->list[m].xs) || (y >= map->list[m].ys))
 		return NULL;
 
-	bx = x/BLOCK_SIZE;
-	by = y/BLOCK_SIZE;
+	bx = x / BLOCK_SIZE;
+	by = y / BLOCK_SIZE;
 
-	for( bl = map->list[m].block[bx+by*map->list[m].bxs] ; bl != NULL ; bl = bl->next ) {
+	for (bl = map->list[m].block[bx + by * map->list[m].bxs]; bl != NULL; bl = bl->next) {
 		if (bl->x != x || bl->y != y || bl->type != BL_SKILL)
 			continue;
 
 		su = BL_UCAST(BL_SKILL, bl);
-		if( su == out_unit || !su->alive || !su->group || su->group->skill_id != skill_id )
+		if (su == out_unit || !su->alive || !su->group || su->group->skill_id != skill_id)
 			continue;
-		if( !(flag&1) || battle->check_target(&su->bl,target,su->group->target_flag) > 0 )
+		if (!(flag & 1) || battle->check_target(&su->bl, target, su->group->target_flag) > 0)
 			return su;
 	}
 	return NULL;
@@ -583,7 +581,7 @@ static struct skill_unit *map_find_skill_unit_oncell(struct block_list *target, 
  * @param args Extra arguments for func
  * @return Sum of the values returned by func
  */
-static int bl_vforeach(int (*func)(struct block_list*, va_list), int blockcount, int max, va_list args)
+static int bl_vforeach(int (*func)(struct block_list *, va_list), int blockcount, int max, va_list args)
 {
 	GUARD_MAP_LOCK
 
@@ -592,7 +590,7 @@ static int bl_vforeach(int (*func)(struct block_list*, va_list), int blockcount,
 
 	map->freeblock_lock();
 	for (i = blockcount; i < map->bl_list_count && returnCount < max; i++) {
-		if (map->bl_list[i]->prev) { //func() may delete this bl_list[] slot, checking for prev ensures it wasn't queued for deletion.
+		if (map->bl_list[i]->prev) { // func() may delete this bl_list[] slot, checking for prev ensures it wasn't queued for deletion.
 			va_list argscopy;
 			va_copy(argscopy, args);
 			returnCount += func(map->bl_list[i], argscopy);
@@ -615,7 +613,7 @@ static int bl_vforeach(int (*func)(struct block_list*, va_list), int blockcount,
  * @param args Extra arguments for func
  * @return Sum of the values returned by func
  */
-static int map_vforeachinmap(int (*func)(struct block_list*, va_list), int16 m, int type, va_list args)
+static int map_vforeachinmap(int (*func)(struct block_list *, va_list), int16 m, int type, va_list args)
 {
 	int i;
 	int returnCount = 0;
@@ -632,18 +630,18 @@ static int map_vforeachinmap(int (*func)(struct block_list*, va_list), int16 m, 
 
 	bsize = map->list[m].bxs * map->list[m].bys;
 	for (i = 0; i < bsize; i++) {
-		if (type&~BL_MOB) {
+		if (type & ~BL_MOB) {
 			for (bl = map->list[m].block[i]; bl != NULL; bl = bl->next) {
-				if (bl->type&type) {
-					if( map->bl_list_count >= map->bl_list_size )
+				if (bl->type & type) {
+					if (map->bl_list_count >= map->bl_list_size)
 						map_bl_list_expand();
 					map->bl_list[map->bl_list_count++] = bl;
 				}
 			}
 		}
-		if (type&BL_MOB) {
+		if (type & BL_MOB) {
 			for (bl = map->list[m].block_mob[i]; bl != NULL; bl = bl->next) {
-				if( map->bl_list_count >= map->bl_list_size )
+				if (map->bl_list_count >= map->bl_list_size)
 					map_bl_list_expand();
 				map->bl_list[map->bl_list_count++] = bl;
 			}
@@ -667,7 +665,7 @@ static int map_vforeachinmap(int (*func)(struct block_list*, va_list), int16 m, 
  * @param ... Extra arguments for func
  * @return Sum of the values returned by func
  */
-static int map_foreachinmap(int (*func)(struct block_list*, va_list), int16 m, int type, ...)
+static int map_foreachinmap(int (*func)(struct block_list *, va_list), int16 m, int type, ...)
 {
 	int returnCount;
 	va_list ap;
@@ -679,7 +677,7 @@ static int map_foreachinmap(int (*func)(struct block_list*, va_list), int16 m, i
 	return returnCount;
 }
 
-static int map_forcountinmap(int (*func)(struct block_list*, va_list), int16 m, int count, int type, ...)
+static int map_forcountinmap(int (*func)(struct block_list *, va_list), int16 m, int count, int type, ...)
 {
 	int returnCount = 0;
 	va_list ap;
@@ -705,7 +703,7 @@ static int map_forcountinmap(int (*func)(struct block_list*, va_list), int16 m, 
  * @param ap Extra arguments for func
  * @return Sum of the values returned by func
  */
-static int map_vforeachininstance(int (*func)(struct block_list*, va_list), int16 instance_id, int type, va_list ap)
+static int map_vforeachininstance(int (*func)(struct block_list *, va_list), int16 instance_id, int type, va_list ap)
 {
 	int i;
 	int returnCount = 0;
@@ -732,7 +730,7 @@ static int map_vforeachininstance(int (*func)(struct block_list*, va_list), int1
  * @param ... Extra arguments for func
  * @return Sum of the values returned by func
  */
-static int map_foreachininstance(int (*func)(struct block_list*, va_list), int16 instance_id, int type, ...)
+static int map_foreachininstance(int (*func)(struct block_list *, va_list), int16 instance_id, int type, ...)
 {
 	int returnCount;
 	va_list ap;
@@ -753,7 +751,7 @@ static int map_foreachininstance(int (*func)(struct block_list*, va_list), int16
  * @param ... Extra arguments for func
  * @return Number of found objects
  */
-static int bl_getall_area(int type, int m, int x0, int y0, int x1, int y1, int (*func)(struct block_list*, va_list), ...)
+static int bl_getall_area(int type, int m, int x0, int y0, int x1, int y1, int (*func)(struct block_list *, va_list), ...)
 {
 	va_list args;
 	int bx, by;
@@ -774,8 +772,10 @@ static int bl_getall_area(int type, int m, int x0, int y0, int x1, int y1, int (
 	x1 = min(max(x1, 0), map->list[m].xs - 1);
 	y1 = min(max(y1, 0), map->list[m].ys - 1);
 
-	if (x1 < x0) swap(x0, x1);
-	if (y1 < y0) swap(y0, y1);
+	if (x1 < x0)
+		swap(x0, x1);
+	if (y1 < y0)
+		swap(y0, y1);
 
 	{
 		const int x0b = x0 / BLOCK_SIZE;
@@ -828,7 +828,7 @@ static int bl_getall_area(int type, int m, int x0, int y0, int x1, int y1, int (
 					}
 				}
 			}
-		} else {  // func != NULL
+		} else { // func != NULL
 			if (type & ~BL_MOB) {
 				for (by = y0b; by <= y1b; by++) {
 					const int bxs = by * bxs0;
@@ -877,7 +877,7 @@ static int bl_getall_area(int type, int m, int x0, int y0, int x1, int y1, int (
 static int bl_vgetall_inrange(struct block_list *bl, va_list args)
 {
 #ifdef CIRCULAR_AREA
-	struct block_list *center = va_arg(args, struct block_list*);
+	struct block_list *center = va_arg(args, struct block_list *);
 	int range = va_arg(args, int);
 	if (!check_distance_bl(center, bl, range))
 		return 0;
@@ -896,13 +896,14 @@ static int bl_vgetall_inrange(struct block_list *bl, va_list args)
  * @param ap Extra arguments for func
  * @return Sum of the values returned by func
  */
-static int map_vforeachinrange(int (*func)(struct block_list*, va_list), struct block_list *center, int16 range, int type, va_list ap)
+static int map_vforeachinrange(int (*func)(struct block_list *, va_list), struct block_list *center, int16 range, int type, va_list ap)
 {
 	int returnCount = 0;
 	int blockcount = map->bl_list_count;
 	va_list apcopy;
 
-	if (range < 0) range *= -1;
+	if (range < 0)
+		range *= -1;
 
 	bl_getall_area(type, center->m, center->x - range, center->y - range, center->x + range, center->y + range, bl_vgetall_inrange, center, range);
 
@@ -925,7 +926,7 @@ static int map_vforeachinrange(int (*func)(struct block_list*, va_list), struct 
  * @param ... Extra arguments for func
  * @return Sum of the values returned by func
  */
-static int map_foreachinrange(int (*func)(struct block_list*, va_list), struct block_list *center, int16 range, int type, ...)
+static int map_foreachinrange(int (*func)(struct block_list *, va_list), struct block_list *center, int16 range, int type, ...)
 {
 	int returnCount;
 	va_list ap;
@@ -950,13 +951,14 @@ static int map_foreachinrange(int (*func)(struct block_list*, va_list), struct b
  * @param ap Extra arguments for func
  * @return Sum of the values returned by func
  */
-static int map_vforcountinrange(int (*func)(struct block_list*, va_list), struct block_list *center, int16 range, int count, int type, va_list ap)
+static int map_vforcountinrange(int (*func)(struct block_list *, va_list), struct block_list *center, int16 range, int count, int type, va_list ap)
 {
 	int returnCount = 0;
 	int blockcount = map->bl_list_count;
 	va_list apcopy;
 
-	if (range < 0) range *= -1;
+	if (range < 0)
+		range *= -1;
 
 	bl_getall_area(type, center->m, center->x - range, center->y - range, center->x + range, center->y + range, bl_vgetall_inrange, center, range);
 
@@ -981,7 +983,7 @@ static int map_vforcountinrange(int (*func)(struct block_list*, va_list), struct
  * @param ... Extra arguments for func
  * @return Sum of the values returned by func
  */
-static int map_forcountinrange(int (*func)(struct block_list*, va_list), struct block_list *center, int16 range, int count, int type, ...)
+static int map_forcountinrange(int (*func)(struct block_list *, va_list), struct block_list *center, int16 range, int count, int type, ...)
 {
 	int returnCount;
 	va_list ap;
@@ -1002,7 +1004,7 @@ static int map_forcountinrange(int (*func)(struct block_list*, va_list), struct 
  */
 static int bl_vgetall_inshootrange(struct block_list *bl, va_list args)
 {
-	struct block_list *center = va_arg(args, struct block_list*);
+	struct block_list *center = va_arg(args, struct block_list *);
 #ifdef CIRCULAR_AREA
 	int range = va_arg(args, int);
 	nullpo_ret(center);
@@ -1028,13 +1030,14 @@ static int bl_vgetall_inshootrange(struct block_list *bl, va_list args)
  * @param ap Extra arguments for func
  * @return Sum of the values returned by func
  */
-static int map_vforeachinshootrange(int (*func)(struct block_list*, va_list), struct block_list *center, int16 range, int type, va_list ap)
+static int map_vforeachinshootrange(int (*func)(struct block_list *, va_list), struct block_list *center, int16 range, int type, va_list ap)
 {
 	int returnCount = 0;
 	int blockcount = map->bl_list_count;
 	va_list apcopy;
 
-	if (range < 0) range *= -1;
+	if (range < 0)
+		range *= -1;
 
 	bl_getall_area(type, center->m, center->x - range, center->y - range, center->x + range, center->y + range, bl_vgetall_inshootrange, center, range);
 
@@ -1057,7 +1060,7 @@ static int map_vforeachinshootrange(int (*func)(struct block_list*, va_list), st
  * @param ... Extra arguments for func
  * @return Sum of the values returned by func
  */
-static int map_foreachinshootrange(int (*func)(struct block_list*, va_list), struct block_list *center, int16 range, int type, ...)
+static int map_foreachinshootrange(int (*func)(struct block_list *, va_list), struct block_list *center, int16 range, int type, ...)
 {
 	int returnCount;
 	va_list ap;
@@ -1083,7 +1086,7 @@ static int map_foreachinshootrange(int (*func)(struct block_list*, va_list), str
  * @param ap Extra arguments for func
  * @return Sum of the values returned by func
  */
-static int map_vforeachinarea(int (*func)(struct block_list*, va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int type, va_list ap)
+static int map_vforeachinarea(int (*func)(struct block_list *, va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int type, va_list ap)
 {
 	int returnCount = 0;
 	int blockcount = map->bl_list_count;
@@ -1113,7 +1116,7 @@ static int map_vforeachinarea(int (*func)(struct block_list*, va_list), int16 m,
  * @param ... Extra arguments for func
  * @return Sum of the values returned by func
  */
-static int map_foreachinarea(int (*func)(struct block_list*, va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int type, ...)
+static int map_foreachinarea(int (*func)(struct block_list *, va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int type, ...)
 {
 	int returnCount;
 	va_list ap;
@@ -1141,7 +1144,7 @@ static int map_foreachinarea(int (*func)(struct block_list*, va_list), int16 m, 
  * @param ap Extra arguments for func
  * @return Sum of the values returned by func
  */
-static int map_vforcountinarea(int (*func)(struct block_list*, va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int count, int type, va_list ap)
+static int map_vforcountinarea(int (*func)(struct block_list *, va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int count, int type, va_list ap)
 {
 	int returnCount = 0;
 	int blockcount = map->bl_list_count;
@@ -1173,7 +1176,7 @@ static int map_vforcountinarea(int (*func)(struct block_list*, va_list), int16 m
  * @param ... Extra arguments for func
  * @return Sum of the values returned by func
  */
-static int map_forcountinarea(int (*func)(struct block_list*, va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int count, int type, ...)
+static int map_forcountinarea(int (*func)(struct block_list *, va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int count, int type, ...)
 {
 	int returnCount;
 	va_list ap;
@@ -1198,16 +1201,13 @@ static int bl_vgetall_inmovearea(struct block_list *bl, va_list args)
 {
 	int dx = va_arg(args, int);
 	int dy = va_arg(args, int);
-	struct block_list *center = va_arg(args, struct block_list*);
+	struct block_list *center = va_arg(args, struct block_list *);
 	int range = va_arg(args, int);
 
 	nullpo_ret(bl);
 	nullpo_ret(center);
 
-	if ((dx > 0 && bl->x < center->x - range + dx) ||
-		(dx < 0 && bl->x > center->x + range + dx) ||
-		(dy > 0 && bl->y < center->y - range + dy) ||
-		(dy < 0 && bl->y > center->y + range + dy))
+	if ((dx > 0 && bl->x < center->x - range + dx) || (dx < 0 && bl->x > center->x + range + dx) || (dy > 0 && bl->y < center->y - range + dy) || (dy < 0 && bl->y > center->y + range + dy))
 		return 1;
 	return 0;
 }
@@ -1231,17 +1231,20 @@ static int bl_vgetall_inmovearea(struct block_list *bl, va_list args)
  * @param ap Extra arguments for func
  * @return Sum of the values returned by func
  */
-static int map_vforeachinmovearea(int (*func)(struct block_list*, va_list), struct block_list *center, int16 range, int16 dx, int16 dy, int type, va_list ap)
+static int map_vforeachinmovearea(int (*func)(struct block_list *, va_list), struct block_list *center, int16 range, int16 dx, int16 dy, int type, va_list ap)
 {
 	int returnCount = 0;
 	int blockcount = map->bl_list_count;
 	int m, x0, x1, y0, y1;
 	va_list apcopy;
 
-	if (!range) return 0;
-	if (!dx && !dy) return 0; // No movement.
+	if (!range)
+		return 0;
+	if (!dx && !dy)
+		return 0; // No movement.
 
-	if (range < 0) range *= -1;
+	if (range < 0)
+		range *= -1;
 
 	m = center->m;
 	x0 = center->x - range;
@@ -1251,15 +1254,22 @@ static int map_vforeachinmovearea(int (*func)(struct block_list*, va_list), stru
 
 	if (dx == 0 || dy == 0) { // Movement along one axis only.
 		if (dx == 0) {
-			if (dy < 0) { y0 = y1 + dy + 1; } // Moving south
-			else        { y1 = y0 + dy - 1; } // North
-		} else { //dy == 0
-			if (dx < 0) { x0 = x1 + dx + 1; } // West
-			else        { x1 = x0 + dx - 1; } // East
+			if (dy < 0) {
+				y0 = y1 + dy + 1;
+			} // Moving south
+			else {
+				y1 = y0 + dy - 1;
+			} // North
+		} else { // dy == 0
+			if (dx < 0) {
+				x0 = x1 + dx + 1;
+			} // West
+			else {
+				x1 = x0 + dx - 1;
+			} // East
 		}
 		bl_getall_area(type, m, x0, y0, x1, y1, NULL);
-	}
-	else { // Diagonal movement
+	} else { // Diagonal movement
 		bl_getall_area(type, m, x0, y0, x1, y1, bl_vgetall_inmovearea, dx, dy, center, range);
 	}
 
@@ -1290,7 +1300,7 @@ static int map_vforeachinmovearea(int (*func)(struct block_list*, va_list), stru
  * @param ... Extra arguments for func
  * @return Sum of the values returned by func
  */
-static int map_foreachinmovearea(int (*func)(struct block_list*, va_list), struct block_list *center, int16 range, int16 dx, int16 dy, int type, ...)
+static int map_foreachinmovearea(int (*func)(struct block_list *, va_list), struct block_list *center, int16 range, int16 dx, int16 dy, int type, ...)
 {
 	int returnCount;
 	va_list ap;
@@ -1314,7 +1324,7 @@ static int map_foreachinmovearea(int (*func)(struct block_list*, va_list), struc
  * @param ap Extra arguments for func
  * @return Sum of the values returned by func
  */
-static int map_vforeachincell(int (*func)(struct block_list*, va_list), int16 m, int16 x, int16 y, int type, va_list ap)
+static int map_vforeachincell(int (*func)(struct block_list *, va_list), int16 m, int16 x, int16 y, int type, va_list ap)
 {
 	int returnCount = 0;
 	int blockcount = map->bl_list_count;
@@ -1341,7 +1351,7 @@ static int map_vforeachincell(int (*func)(struct block_list*, va_list), int16 m,
  * @param ... Extra arguments for func
  * @return Sum of the values returned by func
  */
-static int map_foreachincell(int (*func)(struct block_list*, va_list), int16 m, int16 x, int16 y, int type, ...)
+static int map_foreachincell(int (*func)(struct block_list *, va_list), int16 m, int16 x, int16 y, int type, ...)
 {
 	int returnCount;
 	va_list ap;
@@ -1361,7 +1371,7 @@ static int map_foreachincell(int (*func)(struct block_list*, va_list), int16 m, 
  */
 static int bl_vgetall_inpath(struct block_list *bl, va_list args)
 {
-	int m  = va_arg(args, int);
+	int m = va_arg(args, int);
 	int x0 = va_arg(args, int);
 	int y0 = va_arg(args, int);
 	int x1 = va_arg(args, int);
@@ -1377,13 +1387,13 @@ static int bl_vgetall_inpath(struct block_list *bl, va_list args)
 	nullpo_ret(bl);
 	xi = bl->x;
 	yi = bl->y;
-	k = ( xi - x0 ) * ( x1 - x0 ) + ( yi - y0 ) * ( y1 - y0 );
+	k = (xi - x0) * (x1 - x0) + (yi - y0) * (y1 - y0);
 
-	if ( k < 0 || k > len_limit ) //Since more skills use this, check for ending point as well.
+	if (k < 0 || k > len_limit) // Since more skills use this, check for ending point as well.
 		return 0;
 
-	if ( k > magnitude2 && !path->search_long(NULL, NULL, m, x0, y0, xi, yi, CELL_CHKWALL) )
-		return 0; //Targets beyond the initial ending point need the wall check.
+	if (k > magnitude2 && !path->search_long(NULL, NULL, m, x0, y0, xi, yi, CELL_CHKWALL))
+		return 0; // Targets beyond the initial ending point need the wall check.
 
 	/**
 	 * We're shifting the coords 8 bits higher
@@ -1428,7 +1438,7 @@ static int bl_vgetall_inpath(struct block_list *bl, va_list args)
  * @param ap Extra arguments for func
  * @return Sum of the values returned by func
  */
-static int map_vforeachinpath(int (*func)(struct block_list*, va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int16 range, int length, int type, va_list ap)
+static int map_vforeachinpath(int (*func)(struct block_list *, va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int16 range, int length, int type, va_list ap)
 {
 	// [Skotlex]
 	// check for all targets in the square that
@@ -1448,24 +1458,24 @@ static int map_vforeachinpath(int (*func)(struct block_list*, va_list), int16 m,
 	int blockcount = map->bl_list_count;
 	va_list apcopy;
 
-	//method specific variables
-	int magnitude2, len_limit; //The square of the magnitude
+	// method specific variables
+	int magnitude2, len_limit; // The square of the magnitude
 	int mx0 = x0, mx1 = x1, my0 = y0, my1 = y1;
 
-//Avoid needless calculations by not getting the sqrt right away.
-#define MAGNITUDE2(x0, y0, x1, y1) ( ( ( x1 ) - ( x0 ) ) * ( ( x1 ) - ( x0 ) ) + ( ( y1 ) - ( y0 ) ) * ( ( y1 ) - ( y0 ) ) )
+// Avoid needless calculations by not getting the sqrt right away.
+#define MAGNITUDE2(x0, y0, x1, y1) (((x1) - (x0)) * ((x1) - (x0)) + ((y1) - (y0)) * ((y1) - (y0)))
 	len_limit = magnitude2 = MAGNITUDE2(x0, y0, x1, y1);
-	if (magnitude2 < 1) //Same begin and ending point, can't trace path.
+	if (magnitude2 < 1) // Same begin and ending point, can't trace path.
 		return 0;
 
-	if (length) { //Adjust final position to fit in the given area.
-		//TODO: Find an alternate method which does not requires a square root calculation.
+	if (length) { // Adjust final position to fit in the given area.
+		// TODO: Find an alternate method which does not requires a square root calculation.
 		int k = (int)sqrt((float)magnitude2);
 		mx1 = x0 + (x1 - x0) * length / k;
 		my1 = y0 + (y1 - y0) * length / k;
 		len_limit = MAGNITUDE2(x0, y0, mx1, my1);
 	}
-	//Expand target area to cover range.
+	// Expand target area to cover range.
 	if (mx0 > mx1) {
 		mx0 += range;
 		mx1 -= range;
@@ -1507,7 +1517,7 @@ static int map_vforeachinpath(int (*func)(struct block_list*, va_list), int16 m,
  * @param ... Extra arguments for func
  * @return Sum of the values returned by func
  */
-static int map_foreachinpath(int (*func)(struct block_list*, va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int16 range, int length, int type, ...)
+static int map_foreachinpath(int (*func)(struct block_list *, va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int16 range, int length, int type, ...)
 {
 	int returnCount;
 	va_list ap;
@@ -1531,17 +1541,17 @@ static int map_get_new_object_id(void)
 
 	// find a free id
 	i = last_object_id + 1;
-	while( i != last_object_id ) {
-		if( i == MAX_FLOORITEM )
+	while (i != last_object_id) {
+		if (i == MAX_FLOORITEM)
 			i = MIN_FLOORITEM;
 
-		if( !idb_exists(map->id_db, i) )
+		if (!idb_exists(map->id_db, i))
 			break;
 
 		++i;
 	}
 
-	if( i == last_object_id ) {
+	if (i == last_object_id) {
 		ShowError("map_addobject: no free object id!\n");
 		return 0;
 	}
@@ -1585,8 +1595,8 @@ static void map_clearflooritem(struct block_list *bl)
 
 	nullpo_retv(fitem);
 
-	if( fitem->cleartimer != INVALID_TIMER )
-		timer->delete(fitem->cleartimer,map->clearflooritem_timer);
+	if (fitem->cleartimer != INVALID_TIMER)
+		timer->delete(fitem->cleartimer, map->clearflooritem_timer);
 
 	clif->clearflooritem(fitem, 0);
 	map->deliddb(&fitem->bl);
@@ -1601,30 +1611,30 @@ static void map_clearflooritem(struct block_list *bl)
  *------------------------------------------*/
 static int map_searchrandfreecell(int16 m, const struct block_list *bl, int16 *x, int16 *y, int stack)
 {
-	int free_cell,i,j;
+	int free_cell, i, j;
 	int free_cells[9][2];
 
 	nullpo_ret(x);
 	nullpo_ret(y);
 
-	for(free_cell=0,i=-1;i<=1;i++){
-		if(i+*y<0 || i+*y>=map->list[m].ys)
+	for (free_cell = 0, i = -1; i <= 1; i++) {
+		if (i + *y < 0 || i + *y >= map->list[m].ys)
 			continue;
-		for(j=-1;j<=1;j++){
-			if(j+*x<0 || j+*x>=map->list[m].xs)
+		for (j = -1; j <= 1; j++) {
+			if (j + *x < 0 || j + *x >= map->list[m].xs)
 				continue;
 			if (map->getcell(m, bl, j + *x, i + *y, CELL_CHKNOPASS) && !map->getcell(m, bl, j + *x, i + *y, CELL_CHKICEWALL))
 				continue;
-			//Avoid item stacking to prevent against exploits. [Skotlex]
-			if(stack && map->count_oncell(m,j+*x,i+*y, BL_ITEM, 0) > stack)
+			// Avoid item stacking to prevent against exploits. [Skotlex]
+			if (stack && map->count_oncell(m, j + *x, i + *y, BL_ITEM, 0) > stack)
 				continue;
-			free_cells[free_cell][0] = j+*x;
-			free_cells[free_cell++][1] = i+*y;
+			free_cells[free_cell][0] = j + *x;
+			free_cells[free_cell++][1] = i + *y;
 		}
 	}
-	if(free_cell==0)
+	if (free_cell == 0)
 		return 0;
-	free_cell = rnd()%free_cell;
+	free_cell = rnd() % free_cell;
 	*x = free_cells[free_cell][0];
 	*y = free_cells[free_cell][1];
 	return 1;
@@ -1655,8 +1665,7 @@ static int map_count_sub(struct block_list *bl, va_list ap)
  * @retval 1 failure, ran out of tries or wrong usage
  * @retval 2 failure, nullpointer
  */
-static int map_search_free_cell(struct block_list *src, int16 m, int16 *x, int16 *y,
-                               int16 range_x, int16 range_y, int flag)
+static int map_search_free_cell(struct block_list *src, int16 m, int16 *x, int16 *y, int16 range_x, int16 range_y, int flag)
 {
 	nullpo_retr(2, x);
 	nullpo_retr(2, y);
@@ -1728,9 +1737,7 @@ static int map_search_free_cell(struct block_list *src, int16 m, int16 *x, int16
 		if (avoidplayer_retries >= 100)
 			return 1; // Limit of retries reached.
 
-		if (avoidplayer_retries++ < battle_config.no_spawn_on_player
-		    && map->foreachinarea(map->count_sub, m, *x - AREA_SIZE, *y - AREA_SIZE,
-					  *x + AREA_SIZE, *y + AREA_SIZE, BL_PC) != 0)
+		if (avoidplayer_retries++ < battle_config.no_spawn_on_player && map->foreachinarea(map->count_sub, m, *x - AREA_SIZE, *y - AREA_SIZE, *x + AREA_SIZE, *y + AREA_SIZE, BL_PC) != 0)
 			continue;
 		return 0;
 	}
@@ -1759,35 +1766,35 @@ static bool map_closest_freecell(int16 m, const struct block_list *bl, int16 *x,
 	tx = *x;
 	ty = *y;
 
-	if(!map->count_oncell(m, tx, ty, type, flag))
-		return true; //Current cell is free
+	if (!map->count_oncell(m, tx, ty, type, flag))
+		return true; // Current cell is free
 
-	//Algorithm only works up to costrange of 34
-	while(costrange <= 34) {
+	// Algorithm only works up to costrange of 34
+	while (costrange <= 34) {
 		short dx = dirx[dir];
 		short dy = diry[dir];
 
-		//Linear search
+		// Linear search
 		if (!unit_is_diagonal_dir(dir) && (costrange % MOVE_COST) == 0) {
-			tx = *x+dx*(costrange/MOVE_COST);
-			ty = *y+dy*(costrange/MOVE_COST);
+			tx = *x + dx * (costrange / MOVE_COST);
+			ty = *y + dy * (costrange / MOVE_COST);
 			if (!map->count_oncell(m, tx, ty, type, flag) && map->getcell(m, bl, tx, ty, CELL_CHKPASS)) {
 				*x = tx;
 				*y = ty;
 				return true;
 			}
 		}
-		//Full diagonal search
+		// Full diagonal search
 		else if (unit_is_diagonal_dir(dir) && (costrange % MOVE_DIAGONAL_COST) == 0) {
-			tx = *x+dx*(costrange/MOVE_DIAGONAL_COST);
-			ty = *y+dy*(costrange/MOVE_DIAGONAL_COST);
+			tx = *x + dx * (costrange / MOVE_DIAGONAL_COST);
+			ty = *y + dy * (costrange / MOVE_DIAGONAL_COST);
 			if (!map->count_oncell(m, tx, ty, type, flag) && map->getcell(m, bl, tx, ty, CELL_CHKPASS)) {
 				*x = tx;
 				*y = ty;
 				return true;
 			}
 		}
-		//One cell diagonal, rest linear (TODO: Find a better algorithm for this)
+		// One cell diagonal, rest linear (TODO: Find a better algorithm for this)
 		else if (unit_is_diagonal_dir(dir) && (costrange % MOVE_COST) == 4) {
 			tx = *x + dx;
 			ty = *y + dy;
@@ -1813,15 +1820,18 @@ static bool map_closest_freecell(int16 m, const struct block_list *bl, int16 *x,
 			}
 		}
 
-		//Get next direction
+		// Get next direction
 		if (dir == UNIT_DIR_SOUTHEAST) {
-			//Diagonal search complete, repeat with higher cost range
-			if(costrange == 14) costrange += 6;
-			else if(costrange == 28 || costrange >= 38) costrange += 2;
-			else costrange += 4;
+			// Diagonal search complete, repeat with higher cost range
+			if (costrange == 14)
+				costrange += 6;
+			else if (costrange == 28 || costrange >= 38)
+				costrange += 2;
+			else
+				costrange += 4;
 			dir = UNIT_DIR_EAST;
 		} else if (dir == UNIT_DIR_SOUTH) {
-			//Linear search complete, switch to diagonal directions
+			// Linear search complete, switch to diagonal directions
 			dir = UNIT_DIR_NORTHEAST;
 		} else {
 			dir = unit_get_ccw90_dir(dir);
@@ -1844,13 +1854,13 @@ static bool map_closest_freecell(int16 m, const struct block_list *bl, int16 *x,
 static int map_addflooritem(const struct block_list *bl, struct item *item_data, int amount, int16 m, int16 x, int16 y, int first_charid, int second_charid, int third_charid, int flags, bool showdropeffect)
 {
 	int r;
-	struct flooritem_data *fitem=NULL;
+	struct flooritem_data *fitem = NULL;
 
 	nullpo_ret(item_data);
 
-	if (!map->searchrandfreecell(m, bl, &x, &y, (flags&2)?1:0))
+	if (!map->searchrandfreecell(m, bl, &x, &y, (flags & 2) ? 1 : 0))
 		return 0;
-	r=rnd();
+	r = rnd();
 
 	fitem = ers_alloc(map->flooritem_ers, struct flooritem_data);
 
@@ -1861,23 +1871,23 @@ static int map_addflooritem(const struct block_list *bl, struct item *item_data,
 	fitem->bl.y = y;
 	fitem->bl.id = map->get_new_object_id();
 	fitem->showdropeffect = showdropeffect;
-	if(fitem->bl.id==0){
+	if (fitem->bl.id == 0) {
 		ers_free(map->flooritem_ers, fitem);
 		return 0;
 	}
 
 	fitem->first_get_charid = first_charid;
-	fitem->first_get_tick = timer->gettick() + ((flags&1) ? battle_config.mvp_item_first_get_time : battle_config.item_first_get_time);
+	fitem->first_get_tick = timer->gettick() + ((flags & 1) ? battle_config.mvp_item_first_get_time : battle_config.item_first_get_time);
 	fitem->second_get_charid = second_charid;
-	fitem->second_get_tick = fitem->first_get_tick + ((flags&1) ? battle_config.mvp_item_second_get_time : battle_config.item_second_get_time);
+	fitem->second_get_tick = fitem->first_get_tick + ((flags & 1) ? battle_config.mvp_item_second_get_time : battle_config.item_second_get_time);
 	fitem->third_get_charid = third_charid;
-	fitem->third_get_tick = fitem->second_get_tick + ((flags&1) ? battle_config.mvp_item_third_get_time : battle_config.item_third_get_time);
+	fitem->third_get_tick = fitem->second_get_tick + ((flags & 1) ? battle_config.mvp_item_third_get_time : battle_config.item_third_get_time);
 
-	memcpy(&fitem->item_data,item_data,sizeof(*item_data));
-	fitem->item_data.amount=amount;
-	fitem->subx=(r&3)*3+3;
-	fitem->suby=((r>>2)&3)*3+3;
-	fitem->cleartimer=timer->add(timer->gettick()+battle_config.flooritem_lifetime,map->clearflooritem_timer,fitem->bl.id,0);
+	memcpy(&fitem->item_data, item_data, sizeof(*item_data));
+	fitem->item_data.amount = amount;
+	fitem->subx = (r & 3) * 3 + 3;
+	fitem->suby = ((r >> 2) & 3) * 3 + 3;
+	fitem->cleartimer = timer->add(timer->gettick() + battle_config.flooritem_lifetime, map->clearflooritem_timer, fitem->bl.id, 0);
 
 	map->addiddb(&fitem->bl);
 	map->addblock(&fitem->bl);
@@ -1900,17 +1910,17 @@ static struct DBData create_charid2nick(union DBKey key, va_list args)
 /// Does nothing if the character is online.
 static void map_addnickdb(int charid, const char *nick)
 {
-	struct charid2nick* p;
-	struct charid_request* req;
+	struct charid2nick *p;
+	struct charid_request *req;
 
-	if( map->charid2sd(charid) )
-		return;// already online
+	if (map->charid2sd(charid))
+		return; // already online
 
 	p = idb_ensure(map->nick_db, charid, map->create_charid2nick);
 	safestrncpy(p->nick, nick, sizeof(p->nick));
 
 	while (p->requests) {
-		struct map_session_data* sd;
+		struct map_session_data *sd;
 		req = p->requests;
 		p->requests = req->next;
 		sd = map->charid2sd(req->charid);
@@ -1924,15 +1934,15 @@ static void map_addnickdb(int charid, const char *nick)
 /// Sends name to all pending requests on charid.
 static void map_delnickdb(int charid, const char *name)
 {
-	struct charid2nick* p;
-	struct charid_request* req;
+	struct charid2nick *p;
+	struct charid_request *req;
 	struct DBData data;
 
 	if (!map->nick_db->remove(map->nick_db, DB->i2key(charid), &data) || (p = DB->data2ptr(&data)) == NULL)
 		return;
 
 	while (p->requests) {
-		struct map_session_data* sd;
+		struct map_session_data *sd;
 		req = p->requests;
 		p->requests = req->next;
 		sd = map->charid2sd(req->charid);
@@ -1946,22 +1956,22 @@ static void map_delnickdb(int charid, const char *name)
 /// Notifies sd of the nick of charid.
 /// Uses the name in the character if online.
 /// Uses the name in nick_db if offline.
-static void map_reqnickdb(struct map_session_data  *sd, int charid)
+static void map_reqnickdb(struct map_session_data *sd, int charid)
 {
-	struct charid2nick* p;
-	struct charid_request* req;
-	struct map_session_data* tsd;
+	struct charid2nick *p;
+	struct charid_request *req;
+	struct map_session_data *tsd;
 
 	nullpo_retv(sd);
 
 	tsd = map->charid2sd(charid);
-	if( tsd ) {
+	if (tsd) {
 		clif->solved_charname(sd->fd, charid, tsd->status.name);
 		return;
 	}
 
 	p = idb_ensure(map->nick_db, charid, map->create_charid2nick);
-	if( *p->nick ) {
+	if (*p->nick) {
 		clif->solved_charname(sd->fd, charid, p->nick);
 		return;
 	}
@@ -1982,20 +1992,20 @@ static void map_addiddb(struct block_list *bl)
 
 	if (bl->type == BL_PC) {
 		struct map_session_data *sd = BL_UCAST(BL_PC, bl);
-		idb_put(map->pc_db,sd->bl.id,sd);
-		idb_put(map->charid_db,sd->status.char_id,sd);
+		idb_put(map->pc_db, sd->bl.id, sd);
+		idb_put(map->charid_db, sd->status.char_id, sd);
 	} else if (bl->type == BL_MOB) {
 		struct mob_data *md = BL_UCAST(BL_MOB, bl);
-		idb_put(map->mobid_db,bl->id,bl);
+		idb_put(map->mobid_db, bl->id, bl);
 
 		if (md->state.boss == BTYPE_MVP)
 			idb_put(map->bossid_db, bl->id, bl);
 	}
 
-	if( bl->type & BL_REGEN )
+	if (bl->type & BL_REGEN)
 		idb_put(map->regen_db, bl->id, bl);
 
-	idb_put(map->id_db,bl->id,bl);
+	idb_put(map->id_db, bl->id, bl);
 }
 
 /*==========================================
@@ -2007,17 +2017,17 @@ static void map_deliddb(struct block_list *bl)
 
 	if (bl->type == BL_PC) {
 		struct map_session_data *sd = BL_UCAST(BL_PC, bl);
-		idb_remove(map->pc_db,sd->bl.id);
-		idb_remove(map->charid_db,sd->status.char_id);
+		idb_remove(map->pc_db, sd->bl.id);
+		idb_remove(map->charid_db, sd->status.char_id);
 	} else if (bl->type == BL_MOB) {
-		idb_remove(map->mobid_db,bl->id);
-		idb_remove(map->bossid_db,bl->id);
+		idb_remove(map->mobid_db, bl->id);
+		idb_remove(map->bossid_db, bl->id);
 	}
 
-	if( bl->type & BL_REGEN )
-		idb_remove(map->regen_db,bl->id);
+	if (bl->type & BL_REGEN)
+		idb_remove(map->regen_db, bl->id);
 
-	idb_remove(map->id_db,bl->id);
+	idb_remove(map->id_db, bl->id);
 }
 
 /*==========================================
@@ -2029,36 +2039,35 @@ static int map_quit(struct map_session_data *sd)
 
 	nullpo_ret(sd);
 
-	if(!sd->state.active) { //Removing a player that is not active.
+	if (!sd->state.active) { // Removing a player that is not active.
 		struct auth_node *node = chrif->search(sd->status.account_id);
-		if (node && node->char_id == sd->status.char_id &&
-			node->state != ST_LOGOUT)
-			//Except when logging out, clear the auth-connect data immediately.
+		if (node && node->char_id == sd->status.char_id && node->state != ST_LOGOUT)
+			// Except when logging out, clear the auth-connect data immediately.
 			chrif->auth_delete(node->account_id, node->char_id, node->state);
-		//Non-active players should not have loaded any data yet (or it was cleared already) so no additional cleanups are needed.
+		// Non-active players should not have loaded any data yet (or it was cleared already) so no additional cleanups are needed.
 		return 0;
 	}
 
-	if( sd->expiration_tid != INVALID_TIMER )
-		timer->delete(sd->expiration_tid,pc->expiration_timer);
+	if (sd->expiration_tid != INVALID_TIMER)
+		timer->delete(sd->expiration_tid, pc->expiration_timer);
 
-	if (sd->npc_timer_id != INVALID_TIMER) //Cancel the event timer.
+	if (sd->npc_timer_id != INVALID_TIMER) // Cancel the event timer.
 		npc->timerevent_quit(sd);
 
 	if (sd->npc_id)
 		npc->event_dequeue(sd);
 
-	if( sd->bg_id && !sd->bg_queue.arena ) /* TODO: dump this chunk after bg_queue is fully enabled */
-		bg->team_leave(sd,BGTL_QUIT);
+	if (sd->bg_id && !sd->bg_queue.arena) /* TODO: dump this chunk after bg_queue is fully enabled */
+		bg->team_leave(sd, BGTL_QUIT);
 
 	if (sd->status.clan_id)
-	  clan->member_offline(sd);
+		clan->member_offline(sd);
 
 	if (sd->state.autotrade && core->runflag != MAPSERVER_ST_SHUTDOWN && !channel->config->closing)
-		pc->autotrade_update(sd,PAUC_REMOVE);
+		pc->autotrade_update(sd, PAUC_REMOVE);
 
 	skill->cooldown_save(sd);
-	pc->itemcd_do(sd,false);
+	pc->itemcd_do(sd, false);
 
 	for (i = 0; i < VECTOR_LENGTH(sd->script_queues); i++) {
 		struct script_queue *queue = script->queue(VECTOR_INDEX(sd->script_queues, i));
@@ -2076,19 +2085,19 @@ static int map_quit(struct map_session_data *sd)
 	rodex->clean(sd, 0);
 	goldpc->stop(sd);
 
-	//Unit_free handles clearing the player related data,
-	//map->quit handles extra specific data which is related to quitting normally
+	// Unit_free handles clearing the player related data,
+	// map->quit handles extra specific data which is related to quitting normally
 	//(changing map-servers invokes unit_free but bypasses map->quit)
-	if( sd->sc.count ) {
-		//Status that are not saved...
-		for(i=0; i < SC_MAX; i++){
-			if ( status->get_sc_type(i)&SC_NO_SAVE ) {
-				if ( !sd->sc.data[i] )
+	if (sd->sc.count) {
+		// Status that are not saved...
+		for (i = 0; i < SC_MAX; i++) {
+			if (status->get_sc_type(i) & SC_NO_SAVE) {
+				if (!sd->sc.data[i])
 					continue;
-				switch( i ){
+				switch (i) {
 					case SC_ENDURE:
 					case SC_GDSKILL_REGENERATION:
-						if( !sd->sc.data[i]->val4 )
+						if (!sd->sc.data[i]->val4)
 							break;
 						FALLTHROUGH
 					default:
@@ -2098,35 +2107,37 @@ static int map_quit(struct map_session_data *sd)
 		}
 	}
 
-	for( i = 0; i < EQI_MAX; i++ ) {
-		if( sd->equip_index[ i ] >= 0 )
-			if( !pc->isequip( sd , sd->equip_index[ i ] ) )
+	for (i = 0; i < EQI_MAX; i++) {
+		if (sd->equip_index[i] >= 0)
+			if (!pc->isequip(sd, sd->equip_index[i]))
 				pc->unequipitem(sd, sd->equip_index[i], PCUNEQUIPITEM_FORCE);
 	}
 
 	// Return loot to owner
-	if( sd->pd ) pet->lootitem_drop(sd->pd, sd);
+	if (sd->pd)
+		pet->lootitem_drop(sd->pd, sd);
 
-	if( sd->state.storage_flag == STORAGE_FLAG_NORMAL ) sd->state.storage_flag = STORAGE_FLAG_CLOSED; // No need to Double Save Storage on Quit.
+	if (sd->state.storage_flag == STORAGE_FLAG_NORMAL)
+		sd->state.storage_flag = STORAGE_FLAG_CLOSED; // No need to Double Save Storage on Quit.
 
-	if( sd->ed ) {
+	if (sd->ed) {
 		elemental->clean_effect(sd->ed);
-		unit->remove_map(&sd->ed->bl,CLR_TELEPORT,ALC_MARK);
+		unit->remove_map(&sd->ed->bl, CLR_TELEPORT, ALC_MARK);
 	}
 
 	channel->quit(sd);
 
-	unit->remove_map_pc(sd,CLR_RESPAWN);
+	unit->remove_map_pc(sd, CLR_RESPAWN);
 
-	if( map->list[sd->bl.m].instance_id >= 0 ) { // Avoid map conflicts and warnings on next login
+	if (map->list[sd->bl.m].instance_id >= 0) { // Avoid map conflicts and warnings on next login
 		int16 m;
 		struct point *pt;
-		if( map->list[sd->bl.m].save.map )
+		if (map->list[sd->bl.m].save.map)
 			pt = &map->list[sd->bl.m].save;
 		else
 			pt = &sd->status.save_point;
 
-		if( (m=map->mapindex2mapid(pt->map)) >= 0 ) {
+		if ((m = map->mapindex2mapid(pt->map)) >= 0) {
 			sd->bl.m = m;
 			sd->bl.x = pt->x;
 			sd->bl.y = pt->y;
@@ -2134,7 +2145,7 @@ static int map_quit(struct map_session_data *sd)
 		}
 	}
 
-	if( sd->state.vending ) {
+	if (sd->state.vending) {
 		idb_remove(vending->db, sd->status.char_id);
 	}
 
@@ -2143,7 +2154,7 @@ static int map_quit(struct map_session_data *sd)
 	pc->clean_skilltree(sd);
 	pc->crimson_marker_clear(sd);
 	macro->detector_disconnect(sd);
-	chrif->save(sd,1);
+	chrif->save(sd, 1);
 	unit->free_pc(sd);
 	return 0;
 }
@@ -2163,7 +2174,7 @@ static struct map_session_data *map_id2sd(int id)
 	if (id <= 0)
 		return NULL;
 
-	bl = idb_get(map->pc_db,id);
+	bl = idb_get(map->pc_db, id);
 
 	if (bl)
 		Assert_retr(NULL, bl->type == BL_PC);
@@ -2180,7 +2191,7 @@ static struct map_session_data *map_id2sd(int id)
 static struct npc_data *map_id2nd(int id)
 {
 	// just a id2bl lookup because there's no npc_db
-	struct block_list* bl = map->id2bl(id);
+	struct block_list *bl = map->id2bl(id);
 
 	return BL_CAST(BL_NPC, bl);
 }
@@ -2200,7 +2211,7 @@ static struct mob_data *map_id2md(int id)
 	if (id <= 0)
 		return NULL;
 
-	bl = idb_get(map->mobid_db,id);
+	bl = idb_get(map->mobid_db, id);
 
 	if (bl)
 		Assert_retr(NULL, bl->type == BL_MOB);
@@ -2216,7 +2227,7 @@ static struct mob_data *map_id2md(int id)
  */
 static struct flooritem_data *map_id2fi(int id)
 {
-	struct block_list* bl = map->id2bl(id);
+	struct block_list *bl = map->id2bl(id);
 
 	return BL_CAST(BL_ITEM, bl);
 }
@@ -2230,7 +2241,7 @@ static struct flooritem_data *map_id2fi(int id)
  */
 static struct chat_data *map_id2cd(int id)
 {
-	struct block_list* bl = map->id2bl(id);
+	struct block_list *bl = map->id2bl(id);
 
 	return BL_CAST(BL_CHAT, bl);
 }
@@ -2244,7 +2255,7 @@ static struct chat_data *map_id2cd(int id)
  */
 static struct skill_unit *map_id2su(int id)
 {
-	struct block_list* bl = map->id2bl(id);
+	struct block_list *bl = map->id2bl(id);
 
 	return BL_CAST(BL_SKILL, bl);
 }
@@ -2258,7 +2269,7 @@ static struct skill_unit *map_id2su(int id)
  */
 static struct pet_data *map_id2pd(int id)
 {
-	struct block_list* bl = map->id2bl(id);
+	struct block_list *bl = map->id2bl(id);
 
 	return BL_CAST(BL_PET, bl);
 }
@@ -2272,7 +2283,7 @@ static struct pet_data *map_id2pd(int id)
  */
 static struct homun_data *map_id2hd(int id)
 {
-	struct block_list* bl = map->id2bl(id);
+	struct block_list *bl = map->id2bl(id);
 
 	return BL_CAST(BL_HOM, bl);
 }
@@ -2286,7 +2297,7 @@ static struct homun_data *map_id2hd(int id)
  */
 static struct mercenary_data *map_id2mc(int id)
 {
-	struct block_list* bl = map->id2bl(id);
+	struct block_list *bl = map->id2bl(id);
 
 	return BL_CAST(BL_MER, bl);
 }
@@ -2300,7 +2311,7 @@ static struct mercenary_data *map_id2mc(int id)
  */
 static struct elemental_data *map_id2ed(int id)
 {
-	struct block_list* bl = map->id2bl(id);
+	struct block_list *bl = map->id2bl(id);
 
 	return BL_CAST(BL_ELEM, bl);
 }
@@ -2328,24 +2339,24 @@ static struct block_list *map_id2bl(int id)
  */
 static bool map_blid_exists(int id)
 {
-	return (idb_exists(map->id_db,id));
+	return (idb_exists(map->id_db, id));
 }
 
 /// Returns the nick of the target charid or NULL if unknown (requests the nick to the char server).
 static const char *map_charid2nick(int charid)
 {
 	struct charid2nick *p;
-	struct map_session_data* sd;
+	struct map_session_data *sd;
 
 	sd = map->charid2sd(charid);
-	if( sd )
-		return sd->status.name;// character is online, return it's name
+	if (sd)
+		return sd->status.name; // character is online, return it's name
 
 	p = idb_ensure(map->nick_db, charid, map->create_charid2nick);
-	if( *p->nick )
-		return p->nick;// name in nick_db
+	if (*p->nick)
+		return p->nick; // name in nick_db
 
-	chrif->searchcharid(charid);// request the name
+	chrif->searchcharid(charid); // request the name
 	return NULL;
 }
 
@@ -2424,7 +2435,7 @@ static struct mob_data *map_getmob_boss(int16 m)
 	}
 	dbi_destroy(iter);
 
-	return (found)? md : NULL;
+	return (found) ? md : NULL;
 }
 
 static struct mob_data *map_id2boss(int id)
@@ -2432,7 +2443,7 @@ static struct mob_data *map_id2boss(int id)
 	struct block_list *bl = NULL;
 	if (id <= 0)
 		return NULL;
-	bl = idb_get(map->bossid_db,id);
+	bl = idb_get(map->bossid_db, id);
 	if (bl)
 		Assert_retr(NULL, bl->type == BL_MOB);
 	return BL_UCAST(BL_MOB, bl);
@@ -2478,16 +2489,15 @@ static void map_vforeachpc(int (*func)(struct map_session_data *sd, va_list args
 	struct DBIterator *iter = db_iterator(map->pc_db);
 	struct map_session_data *sd = NULL;
 
-	for( sd = dbi_first(iter); dbi_exists(iter); sd = dbi_next(iter) )
-	{
+	for (sd = dbi_first(iter); dbi_exists(iter); sd = dbi_next(iter)) {
 		va_list argscopy;
 		int ret;
 
 		va_copy(argscopy, args);
 		ret = func(sd, argscopy);
 		va_end(argscopy);
-		if( ret == -1 )
-			break;// stop iterating
+		if (ret == -1)
+			break; // stop iterating
 	}
 	dbi_destroy(iter);
 }
@@ -2518,8 +2528,8 @@ static void map_vforeachmob(int (*func)(struct mob_data *md, va_list args), va_l
 		va_copy(argscopy, args);
 		ret = func(md, argscopy);
 		va_end(argscopy);
-		if( ret == -1 )
-			break;// stop iterating
+		if (ret == -1)
+			break; // stop iterating
 	}
 	dbi_destroy(iter);
 }
@@ -2552,8 +2562,8 @@ static void map_vforeachnpc(int (*func)(struct npc_data *nd, va_list args), va_l
 			va_copy(argscopy, args);
 			ret = func(nd, argscopy);
 			va_end(argscopy);
-			if( ret == -1 )
-				break;// stop iterating
+			if (ret == -1)
+				break; // stop iterating
 		}
 	}
 	dbi_destroy(iter);
@@ -2585,8 +2595,8 @@ static void map_vforeachregen(int (*func)(struct block_list *bl, va_list args), 
 		va_copy(argscopy, args);
 		ret = func(bl, argscopy);
 		va_end(argscopy);
-		if( ret == -1 )
-			break;// stop iterating
+		if (ret == -1)
+			break; // stop iterating
 	}
 	dbi_destroy(iter);
 }
@@ -2617,8 +2627,8 @@ static void map_vforeachiddb(int (*func)(struct block_list *bl, va_list args), v
 		va_copy(argscopy, args);
 		ret = func(bl, argscopy);
 		va_end(argscopy);
-		if( ret == -1 )
-			break;// stop iterating
+		if (ret == -1)
+			break; // stop iterating
 	}
 	dbi_destroy(iter);
 }
@@ -2648,8 +2658,7 @@ struct s_mapiterator {
 /// @param _mapit_ Iterator
 /// @param _bl_ block_list
 /// @return true if it matches
-#define MAPIT_MATCHES(_mapit_,_bl_) \
-	( (_bl_)->type & (_mapit_)->types /* type matches */ )
+#define MAPIT_MATCHES(_mapit_, _bl_) ((_bl_)->type & (_mapit_)->types /* type matches */)
 
 /// Allocates a new iterator.
 /// Returns the new iterator.
@@ -2661,14 +2670,17 @@ struct s_mapiterator {
 /// @return Iterator
 static struct s_mapiterator *mapit_alloc(enum e_mapitflags flags, enum bl_type types)
 {
-	struct s_mapiterator* iter;
+	struct s_mapiterator *iter;
 
 	iter = ers_alloc(map->iterator_ers, struct s_mapiterator);
 	iter->flags = flags;
 	iter->types = types;
-	if( types == BL_PC )       iter->dbi = db_iterator(map->pc_db);
-	else if( types == BL_MOB ) iter->dbi = db_iterator(map->mobid_db);
-	else                       iter->dbi = db_iterator(map->id_db);
+	if (types == BL_PC)
+		iter->dbi = db_iterator(map->pc_db);
+	else if (types == BL_MOB)
+		iter->dbi = db_iterator(map->mobid_db);
+	else
+		iter->dbi = db_iterator(map->id_db);
 	return iter;
 }
 
@@ -2690,13 +2702,13 @@ static void mapit_free(struct s_mapiterator *iter)
 /// @return first block_list or NULL
 static struct block_list *mapit_first(struct s_mapiterator *iter)
 {
-	struct block_list* bl;
+	struct block_list *bl;
 
-	nullpo_retr(NULL,iter);
+	nullpo_retr(NULL, iter);
 
-	for (bl = dbi_first(iter->dbi); bl != NULL; bl = dbi_next(iter->dbi) ) {
-		if( MAPIT_MATCHES(iter,bl) )
-			break;// found match
+	for (bl = dbi_first(iter->dbi); bl != NULL; bl = dbi_next(iter->dbi)) {
+		if (MAPIT_MATCHES(iter, bl))
+			break; // found match
 	}
 	return bl;
 }
@@ -2708,13 +2720,13 @@ static struct block_list *mapit_first(struct s_mapiterator *iter)
 /// @return last block_list or NULL
 static struct block_list *mapit_last(struct s_mapiterator *iter)
 {
-	struct block_list* bl;
+	struct block_list *bl;
 
-	nullpo_retr(NULL,iter);
+	nullpo_retr(NULL, iter);
 
 	for (bl = dbi_last(iter->dbi); bl != NULL; bl = dbi_prev(iter->dbi)) {
-		if( MAPIT_MATCHES(iter,bl) )
-			break;// found match
+		if (MAPIT_MATCHES(iter, bl))
+			break; // found match
 	}
 	return bl;
 }
@@ -2726,17 +2738,17 @@ static struct block_list *mapit_last(struct s_mapiterator *iter)
 /// @return next block_list or NULL
 static struct block_list *mapit_next(struct s_mapiterator *iter)
 {
-	struct block_list* bl;
+	struct block_list *bl;
 
-	nullpo_retr(NULL,iter);
+	nullpo_retr(NULL, iter);
 
-	for( ; ; ) {
+	for (;;) {
 		bl = dbi_next(iter->dbi);
-		if( bl == NULL )
-			break;// end
-		if( MAPIT_MATCHES(iter,bl) )
-			break;// found a match
-		// try next
+		if (bl == NULL)
+			break; // end
+		if (MAPIT_MATCHES(iter, bl))
+			break; // found a match
+			       // try next
 	}
 	return bl;
 }
@@ -2748,17 +2760,17 @@ static struct block_list *mapit_next(struct s_mapiterator *iter)
 /// @return previous block_list or NULL
 static struct block_list *mapit_prev(struct s_mapiterator *iter)
 {
-	struct block_list* bl;
+	struct block_list *bl;
 
-	nullpo_retr(NULL,iter);
+	nullpo_retr(NULL, iter);
 
-	for( ; ; ) {
+	for (;;) {
 		bl = dbi_prev(iter->dbi);
-		if( bl == NULL )
-			break;// end
-		if( MAPIT_MATCHES(iter,bl) )
-			break;// found a match
-		// try prev
+		if (bl == NULL)
+			break; // end
+		if (MAPIT_MATCHES(iter, bl))
+			break; // found a match
+			       // try prev
 	}
 	return bl;
 }
@@ -2769,7 +2781,7 @@ static struct block_list *mapit_prev(struct s_mapiterator *iter)
 /// @return true if it exists
 static bool mapit_exists(struct s_mapiterator *iter)
 {
-	nullpo_retr(false,iter);
+	nullpo_retr(false, iter);
 
 	return dbi_exists(iter->dbi);
 }
@@ -2781,17 +2793,17 @@ static bool map_addnpc(int16 m, struct npc_data *nd)
 {
 	nullpo_ret(nd);
 
-	if( m < 0 || m >= map->count )
+	if (m < 0 || m >= map->count)
 		return false;
 
-	if( map->list[m].npc_num == MAX_NPC_PER_MAP ) {
-		ShowWarning("too many NPCs in one map %s\n",map->list[m].name);
+	if (map->list[m].npc_num == MAX_NPC_PER_MAP) {
+		ShowWarning("too many NPCs in one map %s\n", map->list[m].name);
 		return false;
 	}
 
-	map->list[m].npc[map->list[m].npc_num]=nd;
+	map->list[m].npc[map->list[m].npc_num] = nd;
 	map->list[m].npc_num++;
-	idb_put(map->id_db,nd->bl.id,nd);
+	idb_put(map->id_db, nd->bl.id, nd);
 	return true;
 }
 
@@ -2804,8 +2816,8 @@ static int map_addmobtolist(unsigned short m, struct spawn_data *spawn)
 {
 	int i;
 	nullpo_retr(-1, spawn);
-	ARR_FIND( 0, MAX_MOB_LIST_PER_MAP, i, map->list[m].moblist[i] == NULL );
-	if( i < MAX_MOB_LIST_PER_MAP ) {
+	ARR_FIND(0, MAX_MOB_LIST_PER_MAP, i, map->list[m].moblist[i] == NULL);
+	if (i < MAX_MOB_LIST_PER_MAP) {
 		map->list[m].moblist[i] = spawn;
 		return i;
 	}
@@ -2814,21 +2826,21 @@ static int map_addmobtolist(unsigned short m, struct spawn_data *spawn)
 
 static void map_spawnmobs(int16 m)
 {
-	int i, k=0;
+	int i, k = 0;
 	if (map->list[m].mob_delete_timer != INVALID_TIMER) {
-		//Mobs have not been removed yet [Skotlex]
+		// Mobs have not been removed yet [Skotlex]
 		timer->delete(map->list[m].mob_delete_timer, map->removemobs_timer);
 		map->list[m].mob_delete_timer = INVALID_TIMER;
 		return;
 	}
-	for(i=0; i<MAX_MOB_LIST_PER_MAP; i++)
-		if(map->list[m].moblist[i]!=NULL) {
-			k+=map->list[m].moblist[i]->num;
+	for (i = 0; i < MAX_MOB_LIST_PER_MAP; i++)
+		if (map->list[m].moblist[i] != NULL) {
+			k += map->list[m].moblist[i]->num;
 			npc->parse_mob2(map->list[m].moblist[i]);
 		}
 
 	if (battle_config.etc_log && k > 0) {
-		ShowStatus("Map %s: Spawned '"CL_WHITE"%d"CL_RESET"' mobs.\n",map->list[m].name, k);
+		ShowStatus("Map %s: Spawned '" CL_WHITE "%d" CL_RESET "' mobs.\n", map->list[m].name, k);
 	}
 }
 
@@ -2839,24 +2851,24 @@ static int map_removemobs_sub(struct block_list *bl, va_list ap)
 	Assert_ret(bl->type == BL_MOB);
 	md = BL_UCAST(BL_MOB, bl);
 
-	//When not to remove mob:
-	// doesn't respawn and is not a slave
-	if( !md->spawn && !md->master_id )
+	// When not to remove mob:
+	//  doesn't respawn and is not a slave
+	if (!md->spawn && !md->master_id)
 		return 0;
 	// respawn data is not in cache
-	if( md->spawn && !md->spawn->state.dynamic )
+	if (md->spawn && !md->spawn->state.dynamic)
 		return 0;
 	// hasn't spawned yet
-	if( md->spawn_timer != INVALID_TIMER )
+	if (md->spawn_timer != INVALID_TIMER)
 		return 0;
 	// is damaged and mob_remove_damaged is off
-	if( !battle_config.mob_remove_damaged && md->status.hp < md->status.max_hp )
+	if (!battle_config.mob_remove_damaged && md->status.hp < md->status.max_hp)
 		return 0;
 	// is a mvp
-	if( md->db->mexp > 0 )
+	if (md->db->mexp > 0)
 		return 0;
 
-	unit->free(&md->bl,CLR_OUTSIGHT);
+	unit->free(&md->bl, CLR_OUTSIGHT);
 
 	return 1;
 }
@@ -2866,22 +2878,22 @@ static int map_removemobs_timer(int tid, int64 tick, int id, intptr_t data)
 	int count;
 	const int16 m = id;
 
-	if (m < 0 || m >= map->count) { //Incorrect map id!
-		ShowError("map_removemobs_timer error: timer %d points to invalid map %d\n",tid, m);
+	if (m < 0 || m >= map->count) { // Incorrect map id!
+		ShowError("map_removemobs_timer error: timer %d points to invalid map %d\n", tid, m);
 		return 0;
 	}
-	if (map->list[m].mob_delete_timer != tid) { //Incorrect timer call!
-		ShowError("map_removemobs_timer mismatch: %d != %d (map %s)\n",map->list[m].mob_delete_timer, tid, map->list[m].name);
+	if (map->list[m].mob_delete_timer != tid) { // Incorrect timer call!
+		ShowError("map_removemobs_timer mismatch: %d != %d (map %s)\n", map->list[m].mob_delete_timer, tid, map->list[m].name);
 		return 0;
 	}
 	map->list[m].mob_delete_timer = INVALID_TIMER;
-	if (map->list[m].users > 0) //Map not empty!
+	if (map->list[m].users > 0) // Map not empty!
 		return 1;
 
 	count = map->foreachinmap(map->removemobs_sub, m, BL_MOB);
 
 	if (battle_config.etc_log && count > 0)
-		ShowStatus("Map %s: Removed '"CL_WHITE"%d"CL_RESET"' mobs.\n",map->list[m].name, count);
+		ShowStatus("Map %s: Removed '" CL_WHITE "%d" CL_RESET "' mobs.\n", map->list[m].name, count);
 
 	return 1;
 }
@@ -2890,9 +2902,9 @@ static void map_removemobs(int16 m)
 {
 	Assert_retv(m >= 0 && m < map->count);
 	if (map->list[m].mob_delete_timer != INVALID_TIMER) // should never happen
-		return; //Mobs are already scheduled for removal
+		return;                                         // Mobs are already scheduled for removal
 
-	map->list[m].mob_delete_timer = timer->add(timer->gettick()+battle_config.mob_remove_delay, map->removemobs_timer, m, 0);
+	map->list[m].mob_delete_timer = timer->add(timer->gettick() + battle_config.mob_remove_delay, map->removemobs_timer, m, 0);
 }
 
 /*==========================================
@@ -2927,8 +2939,7 @@ static int16 map_mapindex2mapid(unsigned short map_index)
  **/
 static int map_check_dir(enum unit_dir s_dir, enum unit_dir t_dir)
 {
-	if (s_dir == t_dir || ((t_dir + UNIT_DIR_MAX - 1) % UNIT_DIR_MAX) == s_dir
-	    || ((t_dir + UNIT_DIR_MAX + 1) % UNIT_DIR_MAX) == s_dir)
+	if (s_dir == t_dir || ((t_dir + UNIT_DIR_MAX - 1) % UNIT_DIR_MAX) == s_dir || ((t_dir + UNIT_DIR_MAX + 1) % UNIT_DIR_MAX) == s_dir)
 		return 0;
 	return 1;
 }
@@ -2970,14 +2981,14 @@ static enum unit_dir map_calc_dir(const struct block_list *src, int16 x, int16 y
 		else
 			dir = UNIT_DIR_SOUTHEAST;
 	} else if (dx <= 0 && dy <= 0) {
-		if (dx * 2 > dy || dx == 0 )
+		if (dx * 2 > dy || dx == 0)
 			dir = UNIT_DIR_SOUTH;
 		else if (dx < dy * 2 + 1 || dy == 0)
 			dir = UNIT_DIR_WEST;
 		else
 			dir = UNIT_DIR_SOUTHWEST;
 	} else {
-		if (-dx * 2 < dy || dx == 0 )
+		if (-dx * 2 < dy || dx == 0)
 			dir = UNIT_DIR_NORTH;
 		else if (-dx > dy * 2 + 1 || dy == 0)
 			dir = UNIT_DIR_WEST;
@@ -3108,8 +3119,7 @@ static int map_random_dir(struct block_list *bl, int16 *x, int16 *y)
 		xi = bl->x + segment * dirx[dir];
 		segment = (int16)sqrt(dist2 - segment * segment); // The complement of the previously picked segment
 		yi = bl->y + segment * diry[dir];
-	} while ((map->getcell(bl->m, bl, xi, yi, CELL_CHKNOPASS) || !path->search(NULL, bl, bl->m, bl->x, bl->y, xi, yi, 1, CELL_CHKNOREACH))
-	         && (++i) < 100);
+	} while ((map->getcell(bl->m, bl, xi, yi, CELL_CHKNOPASS) || !path->search(NULL, bl, bl->m, bl->x, bl->y, xi, yi, 1, CELL_CHKNOREACH)) && (++i) < 100);
 
 	if (i < 100) {
 		*x = xi;
@@ -3124,19 +3134,47 @@ static struct mapcell map_gat2cell(int gat)
 {
 	struct mapcell cell;
 
-	memset(&cell,0,sizeof(struct mapcell));
+	memset(&cell, 0, sizeof(struct mapcell));
 
-	switch( gat ) {
-		case 0: cell.walkable = 1; cell.shootable = 1; cell.water = 0; break; // walkable ground
-		case 1: cell.walkable = 0; cell.shootable = 0; cell.water = 0; break; // non-walkable ground
-		case 2: cell.walkable = 1; cell.shootable = 1; cell.water = 0; break; // ???
-		case 3: cell.walkable = 1; cell.shootable = 1; cell.water = 1; break; // walkable water
-		case 4: cell.walkable = 1; cell.shootable = 1; cell.water = 0; break; // ???
-		case 5: cell.walkable = 0; cell.shootable = 1; cell.water = 0; break; // gap (snipable)
-		case 6: cell.walkable = 1; cell.shootable = 1; cell.water = 0; break; // ???
-	default:
-		ShowWarning("map_gat2cell: unrecognized gat type '%d'\n", gat);
-		break;
+	switch (gat) {
+		case 0:
+			cell.walkable = 1;
+			cell.shootable = 1;
+			cell.water = 0;
+			break; // walkable ground
+		case 1:
+			cell.walkable = 0;
+			cell.shootable = 0;
+			cell.water = 0;
+			break; // non-walkable ground
+		case 2:
+			cell.walkable = 1;
+			cell.shootable = 1;
+			cell.water = 0;
+			break; // ???
+		case 3:
+			cell.walkable = 1;
+			cell.shootable = 1;
+			cell.water = 1;
+			break; // walkable water
+		case 4:
+			cell.walkable = 1;
+			cell.shootable = 1;
+			cell.water = 0;
+			break; // ???
+		case 5:
+			cell.walkable = 0;
+			cell.shootable = 1;
+			cell.water = 0;
+			break; // gap (snipable)
+		case 6:
+			cell.walkable = 1;
+			cell.shootable = 1;
+			cell.water = 0;
+			break; // ???
+		default:
+			ShowWarning("map_gat2cell: unrecognized gat type '%d'\n", gat);
+			break;
 	}
 
 	return cell;
@@ -3144,10 +3182,14 @@ static struct mapcell map_gat2cell(int gat)
 
 static int map_cell2gat(struct mapcell cell)
 {
-	if( cell.walkable == 1 && cell.shootable == 1 && cell.water == 0 ) return 0;
-	if( cell.walkable == 0 && cell.shootable == 0 && cell.water == 0 ) return 1;
-	if( cell.walkable == 1 && cell.shootable == 1 && cell.water == 1 ) return 3;
-	if( cell.walkable == 0 && cell.shootable == 1 && cell.water == 0 ) return 5;
+	if (cell.walkable == 1 && cell.shootable == 1 && cell.water == 0)
+		return 0;
+	if (cell.walkable == 0 && cell.shootable == 0 && cell.water == 0)
+		return 1;
+	if (cell.walkable == 1 && cell.shootable == 1 && cell.water == 1)
+		return 3;
+	if (cell.walkable == 0 && cell.shootable == 1 && cell.water == 0)
+		return 5;
 
 	ShowWarning("map_cell2gat: cell has no matching gat type\n");
 	return 1; // default to 'wall'
@@ -3175,14 +3217,14 @@ static void map_cellfromcache(struct map_data *m)
 		CREATE(m->cell, struct mapcell, size);
 
 		// Set cell properties
-		for( xy = 0; xy < size; ++xy ) {
+		for (xy = 0; xy < size; ++xy) {
 			m->cell[xy] = map->gat2cell(decode_buffer[xy]);
 		}
 
 		m->getcellp = map->getcellp;
-		m->setcell  = map->setcell;
+		m->setcell = map->setcell;
 
-		for(i = 0; i < m->npc_num; i++) {
+		for (i = 0; i < m->npc_num; i++) {
 			npc->setcells(m->npc[i]);
 		}
 	}
@@ -3202,71 +3244,71 @@ static int map_getcellp(struct map_data *m, const struct block_list *bl, int16 x
 
 	nullpo_ret(m);
 
-	//NOTE: this intentionally overrides the last row and column
-	if(x<0 || x>=m->xs-1 || y<0 || y>=m->ys-1)
-		return( cellchk == CELL_CHKNOPASS );
+	// NOTE: this intentionally overrides the last row and column
+	if (x < 0 || x >= m->xs - 1 || y < 0 || y >= m->ys - 1)
+		return (cellchk == CELL_CHKNOPASS);
 
-	cell = m->cell[x + y*m->xs];
+	cell = m->cell[x + y * m->xs];
 
-	switch(cellchk) {
-		// gat type retrieval
-	case CELL_GETTYPE:
-		return map->cell2gat(cell);
+	switch (cellchk) {
+			// gat type retrieval
+		case CELL_GETTYPE:
+			return map->cell2gat(cell);
 
-		// base gat type checks
-	case CELL_CHKWALL:
-		return (!cell.walkable && !cell.shootable);
-	case CELL_CHKWATER:
-		return (cell.water);
-	case CELL_CHKCLIFF:
-		return (!cell.walkable && cell.shootable);
+			// base gat type checks
+		case CELL_CHKWALL:
+			return (!cell.walkable && !cell.shootable);
+		case CELL_CHKWATER:
+			return (cell.water);
+		case CELL_CHKCLIFF:
+			return (!cell.walkable && cell.shootable);
 
-		// base cell type checks
-	case CELL_CHKNPC:
-		return (cell.npc);
-	case CELL_CHKBASILICA:
-		return (cell.basilica);
-	case CELL_CHKLANDPROTECTOR:
-		return (cell.landprotector);
-	case CELL_CHKNOVENDING:
-		return (cell.novending);
-	case CELL_CHKNOCHAT:
-		return (cell.nochat);
-	case CELL_CHKICEWALL:
-		return (cell.icewall);
-	case CELL_CHKNOICEWALL:
-		return (cell.noicewall);
-	case CELL_CHKNOSKILL:
-		return (cell.noskill);
+			// base cell type checks
+		case CELL_CHKNPC:
+			return (cell.npc);
+		case CELL_CHKBASILICA:
+			return (cell.basilica);
+		case CELL_CHKLANDPROTECTOR:
+			return (cell.landprotector);
+		case CELL_CHKNOVENDING:
+			return (cell.novending);
+		case CELL_CHKNOCHAT:
+			return (cell.nochat);
+		case CELL_CHKICEWALL:
+			return (cell.icewall);
+		case CELL_CHKNOICEWALL:
+			return (cell.noicewall);
+		case CELL_CHKNOSKILL:
+			return (cell.noskill);
 
-		// special checks
-	case CELL_CHKPASS:
+			// special checks
+		case CELL_CHKPASS:
 #ifdef CELL_NOSTACK
-		if (cell.cell_bl >= battle_config.custom_cell_stack_limit)
-			return 0;
-		FALLTHROUGH
+			if (cell.cell_bl >= battle_config.custom_cell_stack_limit)
+				return 0;
+			FALLTHROUGH
 #endif
-	case CELL_CHKREACH:
-		return (cell.walkable);
+		case CELL_CHKREACH:
+			return (cell.walkable);
 
-	case CELL_CHKNOPASS:
+		case CELL_CHKNOPASS:
 #ifdef CELL_NOSTACK
-		if (cell.cell_bl >= battle_config.custom_cell_stack_limit)
-			return 1;
-		FALLTHROUGH
+			if (cell.cell_bl >= battle_config.custom_cell_stack_limit)
+				return 1;
+			FALLTHROUGH
 #endif
-	case CELL_CHKNOREACH:
-		return (!cell.walkable);
+		case CELL_CHKNOREACH:
+			return (!cell.walkable);
 
-	case CELL_CHKSTACK:
+		case CELL_CHKSTACK:
 #ifdef CELL_NOSTACK
-		return (cell.cell_bl >= battle_config.custom_cell_stack_limit);
+			return (cell.cell_bl >= battle_config.custom_cell_stack_limit);
 #else
-		return 0;
+			return 0;
 #endif
 
-	default:
-		return 0;
+		default:
+			return 0;
 	}
 }
 
@@ -3276,7 +3318,7 @@ static int map_sub_getcellp(struct map_data *m, const struct block_list *bl, int
 	nullpo_ret(m);
 	map->cellfromcache(m);
 	m->getcellp = map->getcellp;
-	m->setcell  = map->setcell;
+	m->setcell = map->setcell;
 	return m->getcellp(m, bl, x, y, cellchk);
 }
 
@@ -3289,49 +3331,71 @@ static void map_setcell(int16 m, int16 x, int16 y, cell_t cell, bool flag)
 {
 	int j;
 
-	if( m < 0 || m >= map->count || x < 0 || x >= map->list[m].xs || y < 0 || y >= map->list[m].ys )
+	if (m < 0 || m >= map->count || x < 0 || x >= map->list[m].xs || y < 0 || y >= map->list[m].ys)
 		return;
 
-	j = x + y*map->list[m].xs;
+	j = x + y * map->list[m].xs;
 
-	switch( cell ) {
-	case CELL_WALKABLE:      map->list[m].cell[j].walkable = flag;      break;
-	case CELL_SHOOTABLE:     map->list[m].cell[j].shootable = flag;     break;
-	case CELL_WATER:         map->list[m].cell[j].water = flag;         break;
+	switch (cell) {
+		case CELL_WALKABLE:
+			map->list[m].cell[j].walkable = flag;
+			break;
+		case CELL_SHOOTABLE:
+			map->list[m].cell[j].shootable = flag;
+			break;
+		case CELL_WATER:
+			map->list[m].cell[j].water = flag;
+			break;
 
-	case CELL_NPC:           map->list[m].cell[j].npc = flag;           break;
-	case CELL_BASILICA:      map->list[m].cell[j].basilica = flag;      break;
-	case CELL_LANDPROTECTOR: map->list[m].cell[j].landprotector = flag; break;
-	case CELL_NOVENDING:     map->list[m].cell[j].novending = flag;     break;
-	case CELL_NOCHAT:        map->list[m].cell[j].nochat = flag;        break;
-	case CELL_ICEWALL:       map->list[m].cell[j].icewall = flag;       break;
-	case CELL_NOICEWALL:     map->list[m].cell[j].noicewall = flag;     break;
-	case CELL_NOSKILL:       map->list[m].cell[j].noskill = flag;       break;
+		case CELL_NPC:
+			map->list[m].cell[j].npc = flag;
+			break;
+		case CELL_BASILICA:
+			map->list[m].cell[j].basilica = flag;
+			break;
+		case CELL_LANDPROTECTOR:
+			map->list[m].cell[j].landprotector = flag;
+			break;
+		case CELL_NOVENDING:
+			map->list[m].cell[j].novending = flag;
+			break;
+		case CELL_NOCHAT:
+			map->list[m].cell[j].nochat = flag;
+			break;
+		case CELL_ICEWALL:
+			map->list[m].cell[j].icewall = flag;
+			break;
+		case CELL_NOICEWALL:
+			map->list[m].cell[j].noicewall = flag;
+			break;
+		case CELL_NOSKILL:
+			map->list[m].cell[j].noskill = flag;
+			break;
 
-	default:
-		ShowWarning("map_setcell: invalid cell type '%d'\n", (int)cell);
-		break;
+		default:
+			ShowWarning("map_setcell: invalid cell type '%d'\n", (int)cell);
+			break;
 	}
 }
 static void map_sub_setcell(int16 m, int16 x, int16 y, cell_t cell, bool flag)
 {
-	if( m < 0 || m >= map->count || x < 0 || x >= map->list[m].xs || y < 0 || y >= map->list[m].ys )
+	if (m < 0 || m >= map->count || x < 0 || x >= map->list[m].xs || y < 0 || y >= map->list[m].ys)
 		return;
 
 	map->cellfromcache(&map->list[m]);
 	map->list[m].setcell = map->setcell;
 	map->list[m].getcellp = map->getcellp;
-	map->list[m].setcell(m,x,y,cell,flag);
+	map->list[m].setcell(m, x, y, cell, flag);
 }
 static void map_setgatcell(int16 m, int16 x, int16 y, int gat)
 {
 	int j;
 	struct mapcell cell;
 
-	if( m < 0 || m >= map->count || x < 0 || x >= map->list[m].xs || y < 0 || y >= map->list[m].ys )
+	if (m < 0 || m >= map->count || x < 0 || x >= map->list[m].xs || y < 0 || y >= map->list[m].ys)
 		return;
 
-	j = x + y*map->list[m].xs;
+	j = x + y * map->list[m].xs;
 
 	cell = map->gat2cell(gat);
 	map->list[m].cell[j].walkable = cell.walkable;
@@ -3347,16 +3411,16 @@ static void map_iwall_nextxy(int16 x, int16 y, int8 dir, int pos, int16 *x1, int
 	nullpo_retv(x1);
 	nullpo_retv(y1);
 
-	if( dir == 0 || dir == 4 )
+	if (dir == 0 || dir == 4)
 		*x1 = x; // Keep X
-	else if( dir > 0 && dir < 4 )
+	else if (dir > 0 && dir < 4)
 		*x1 = x - pos; // Going left
 	else
 		*x1 = x + pos; // Going right
 
-	if( dir == 2 || dir == 6 )
+	if (dir == 2 || dir == 6)
 		*y1 = y;
-	else if( dir > 2 && dir < 6 )
+	else if (dir > 2 && dir < 6)
 		*y1 = y - pos;
 	else
 		*y1 = y + pos;
@@ -3368,10 +3432,10 @@ static bool map_iwall_set(int16 m, int16 x, int16 y, int size, int8 dir, bool sh
 	int i;
 	int16 x1 = 0, y1 = 0;
 
-	if( size < 1 || !wall_name )
+	if (size < 1 || !wall_name)
 		return false;
 
-	if( (iwall = (struct iwall_data *)strdb_get(map->iwall_db, wall_name)) != NULL )
+	if ((iwall = (struct iwall_data *)strdb_get(map->iwall_db, wall_name)) != NULL)
 		return false; // Already Exists
 
 	if (map->getcell(m, NULL, x, y, CELL_CHKNOREACH))
@@ -3386,7 +3450,7 @@ static bool map_iwall_set(int16 m, int16 x, int16 y, int size, int8 dir, bool sh
 	iwall->shootable = shootable;
 	safestrncpy(iwall->wall_name, wall_name, sizeof(iwall->wall_name));
 
-	for( i = 0; i < size; i++ ) {
+	for (i = 0; i < size; i++) {
 		map->iwall_nextxy(x, y, dir, i, &x1, &y1);
 
 		if (map->getcell(m, NULL, x1, y1, CELL_CHKNOREACH))
@@ -3415,15 +3479,15 @@ static void map_iwall_get(struct map_session_data *sd)
 
 	nullpo_retv(sd);
 
-	if( map->list[sd->bl.m].iwall_num < 1 )
+	if (map->list[sd->bl.m].iwall_num < 1)
 		return;
 
 	iter = db_iterator(map->iwall_db);
-	for( iwall = dbi_first(iter); dbi_exists(iter); iwall = dbi_next(iter) ) {
-		if( iwall->m != sd->bl.m )
+	for (iwall = dbi_first(iter); dbi_exists(iter); iwall = dbi_next(iter)) {
+		if (iwall->m != sd->bl.m)
 			continue;
 
-		for( i = 0; i < iwall->size; i++ ) {
+		for (i = 0; i < iwall->size; i++) {
 			map->iwall_nextxy(iwall->x, iwall->y, iwall->dir, i, &x1, &y1);
 			clif->changemapcell(sd->fd, iwall->m, x1, y1, map->getcell(iwall->m, &sd->bl, x1, y1, CELL_GETTYPE), SELF);
 		}
@@ -3436,10 +3500,10 @@ static bool map_iwall_remove(const char *wall_name)
 	struct iwall_data *iwall;
 	int16 i, x1, y1;
 
-	if( (iwall = (struct iwall_data *)strdb_get(map->iwall_db, wall_name)) == NULL )
+	if ((iwall = (struct iwall_data *)strdb_get(map->iwall_db, wall_name)) == NULL)
 		return false;
 
-	for( i = 0; i < iwall->size; i++ ) {
+	for (i = 0; i < iwall->size; i++) {
 		map->iwall_nextxy(iwall->x, iwall->y, iwall->dir, i, &x1, &y1);
 
 		map->list[iwall->m].setcell(iwall->m, x1, y1, CELL_SHOOTABLE, true);
@@ -3488,13 +3552,13 @@ static bool map_readfromcache(struct map_data *m)
 	file_size = (unsigned int)ftell(fp);
 	fseek(fp, 0, SEEK_SET); // Rewind file pointer before passing it to the read function.
 
-	switch(version) {
-	case 1:
-		retval = map->readfromcache_v1(fp, m, file_size);
-		break;
-	default:
-		ShowError("map_readfromcache: Mapcache file has unknown version '%d' for map '%s'.\n", version, m->name);
-		break;
+	switch (version) {
+		case 1:
+			retval = map->readfromcache_v1(fp, m, file_size);
+			break;
+		default:
+			ShowError("map_readfromcache: Mapcache file has unknown version '%d' for map '%s'.\n", version, m->name);
+			break;
 	}
 
 	fclose(fp);
@@ -3514,8 +3578,8 @@ static bool map_readfromcache(struct map_data *m)
  */
 static bool map_readfromcache_v1(FILE *fp, struct map_data *m, unsigned int file_size)
 {
-	struct map_cache_header mheader = { 0 };
-	uint8 md5buf[16] = { 0 };
+	struct map_cache_header mheader = {0};
+	uint8 md5buf[16] = {0};
 	int map_size;
 	nullpo_retr(false, fp);
 	nullpo_retr(false, m);
@@ -3597,8 +3661,8 @@ static int map_addmap(const char *mapname)
 static void map_delmapid(int id)
 {
 	Assert_retv(id >= 0 && id < map->count);
-	ShowNotice("Removing map [ %s ] from maplist"CL_CLL"\n",map->list[id].name);
-	memmove(map->list+id, map->list+id+1, sizeof(map->list[0])*(map->count-id-1));
+	ShowNotice("Removing map [ %s ] from maplist" CL_CLL "\n", map->list[id].name);
+	memmove(map->list + id, map->list + id + 1, sizeof(map->list[0]) * (map->count - id - 1));
 	map->count--;
 }
 
@@ -3620,7 +3684,7 @@ static int map_delmap(const char *mapname)
 	}
 
 	mapindex->getmapname(mapname, map_name);
-	for(i = 0; i < map->count; i++) {
+	for (i = 0; i < map->count; i++) {
 		if (strcmp(map->list[i].name, map_name) == 0) {
 			map->delmapid(i);
 			return 1;
@@ -3638,38 +3702,38 @@ static void map_zone_clear_single(struct map_zone_data *zone)
 
 	nullpo_retv(zone);
 
-	for(i = 0; i < zone->disabled_skills_count; i++) {
+	for (i = 0; i < zone->disabled_skills_count; i++) {
 		aFree(zone->disabled_skills[i]);
 	}
 
-	if( zone->disabled_skills )
+	if (zone->disabled_skills)
 		aFree(zone->disabled_skills);
 
-	if( zone->disabled_items )
+	if (zone->disabled_items)
 		aFree(zone->disabled_items);
 
-	if( zone->cant_disable_items )
+	if (zone->cant_disable_items)
 		aFree(zone->cant_disable_items);
 
-	for(i = 0; i < zone->mapflags_count; i++) {
+	for (i = 0; i < zone->mapflags_count; i++) {
 		aFree(zone->mapflags[i]);
 	}
 
-	if( zone->mapflags )
+	if (zone->mapflags)
 		aFree(zone->mapflags);
 
-	for(i = 0; i < zone->disabled_commands_count; i++) {
+	for (i = 0; i < zone->disabled_commands_count; i++) {
 		aFree(zone->disabled_commands[i]);
 	}
 
-	if( zone->disabled_commands )
+	if (zone->disabled_commands)
 		aFree(zone->disabled_commands);
 
-	for(i = 0; i < zone->capped_skills_count; i++) {
+	for (i = 0; i < zone->capped_skills_count; i++) {
 		aFree(zone->capped_skills[i]);
 	}
 
-	if( zone->capped_skills )
+	if (zone->capped_skills)
 		aFree(zone->capped_skills);
 }
 /**
@@ -3680,13 +3744,13 @@ static void map_zone_db_clear(void)
 	struct DBIterator *iter = db_iterator(map->zone_db);
 	struct map_zone_data *zone = NULL;
 
-	for(zone = dbi_first(iter); dbi_exists(iter); zone = dbi_next(iter)) {
+	for (zone = dbi_first(iter); dbi_exists(iter); zone = dbi_next(iter)) {
 		map->zone_clear_single(zone);
 	}
 
 	dbi_destroy(iter);
 
-	db_destroy(map->zone_db);/* will aFree(zone) */
+	db_destroy(map->zone_db); /* will aFree(zone) */
 
 	/* clear the pk zone stuff */
 	map->zone_clear_single(&map->zone_pk);
@@ -3704,7 +3768,7 @@ static void map_clean(int i)
 	if (map->list[i].block_mob)
 		aFree(map->list[i].block_mob);
 
-	if (battle_config.dynamic_mobs != 0) { //Dynamic mobs flag by [random]
+	if (battle_config.dynamic_mobs != 0) { // Dynamic mobs flag by [random]
 		if (map->list[i].mob_delete_timer != INVALID_TIMER)
 			timer->delete(map->list[i].mob_delete_timer, map->removemobs_timer);
 		for (int j = 0; j < MAX_MOB_LIST_PER_MAP; j++) {
@@ -3789,27 +3853,26 @@ static void map_zonedb_reload(void)
 	map->read_zone_db();
 }
 
-
 /// Initializes map flags and adjusts them depending on configuration.
 static void map_flags_init(void)
 {
 	int i, v = 0;
 
-	for( i = 0; i < map->count; i++ ) {
+	for (i = 0; i < map->count; i++) {
 		// mapflags
 		memset(&map->list[i].flag, 0, sizeof(map->list[i].flag));
 
 		// additional mapflag data
-		map->list[i].nocommand = 0;   // nocommand mapflag level
-		map->list[i].bexp      = 100; // per map base exp multiplicator
-		map->list[i].jexp      = 100; // per map job exp multiplicator
-		if( map->list[i].drop_list != NULL )
+		map->list[i].nocommand = 0; // nocommand mapflag level
+		map->list[i].bexp = 100;    // per map base exp multiplicator
+		map->list[i].jexp = 100;    // per map job exp multiplicator
+		if (map->list[i].drop_list != NULL)
 			aFree(map->list[i].drop_list);
 		map->list[i].drop_list = NULL;
 		map->list[i].drop_list_count = 0;
 
-		if( map->list[i].unit_count ) {
-			for(v = 0; v < map->list[i].unit_count; v++) {
+		if (map->list[i].unit_count) {
+			for (v = 0; v < map->list[i].unit_count; v++) {
 				aFree(map->list[i].units[v]);
 			}
 			aFree(map->list[i].units);
@@ -3817,8 +3880,8 @@ static void map_flags_init(void)
 		map->list[i].units = NULL;
 		map->list[i].unit_count = 0;
 
-		if( map->list[i].skill_count ) {
-			for(v = 0; v < map->list[i].skill_count; v++) {
+		if (map->list[i].skill_count) {
+			for (v = 0; v < map->list[i].skill_count; v++) {
 				aFree(map->list[i].skills[v]);
 			}
 			aFree(map->list[i].skills);
@@ -3827,14 +3890,14 @@ static void map_flags_init(void)
 		map->list[i].skill_count = 0;
 
 		// adjustments
-		if( battle_config.pk_mode ) {
+		if (battle_config.pk_mode) {
 			map->list[i].flag.pvp = 1; // make all maps pvp for pk_mode [Valaris]
 			map->list[i].zone = &map->zone_pk;
 		} else /* align with 'All' zone */
 			map->list[i].zone = &map->zone_all;
 
-		if( map->list[i].zone_mf_count ) {
-			for(v = 0; v < map->list[i].zone_mf_count; v++) {
+		if (map->list[i].zone_mf_count) {
+			for (v = 0; v < map->list[i].zone_mf_count; v++) {
 				aFree(map->list[i].zone_mf[v]);
 			}
 			aFree(map->list[i].zone_mf);
@@ -3847,10 +3910,10 @@ static void map_flags_init(void)
 		map->list[i].invincible_time_inc = 0;
 
 		map->list[i].weapon_damage_rate = 100;
-		map->list[i].magic_damage_rate  = 100;
-		map->list[i].misc_damage_rate   = 100;
-		map->list[i].short_damage_rate  = 100;
-		map->list[i].long_damage_rate   = 100;
+		map->list[i].magic_damage_rate = 100;
+		map->list[i].misc_damage_rate = 100;
+		map->list[i].short_damage_rate = 100;
+		map->list[i].long_damage_rate = 100;
 
 		VECTOR_CLEAR(map->list[i].qi_list);
 		VECTOR_INIT(map->list[i].qi_list);
@@ -3872,7 +3935,7 @@ static int map_waterheight(char *mapname)
 	const char *found;
 
 	nullpo_retr(NO_WATER, mapname);
-	//Look up for the rsw
+	// Look up for the rsw
 	snprintf(fn, sizeof(fn), "data\\%s.rsw", mapname);
 
 	if ((found = grfio->find_file(fn)))
@@ -3906,8 +3969,8 @@ static int map_waterheight(char *mapname)
 			offset += 1;
 		}
 
-		//Load water height from file
-		int wh = (int)*(float*)(rsw + offset);
+		// Load water height from file
+		int wh = (int)*(float *)(rsw + offset);
 		aFree(rsw);
 		return wh;
 	}
@@ -3921,7 +3984,7 @@ static int map_waterheight(char *mapname)
 static int map_readgat(struct map_data *m)
 {
 	char filename[256];
-	uint8* gat;
+	uint8 *gat;
 	int water_height;
 	size_t xy, off, num_cells;
 
@@ -3932,8 +3995,8 @@ static int map_readgat(struct map_data *m)
 	if (gat == NULL)
 		return 0;
 
-	m->xs = *(int32*)(gat+6);
-	m->ys = *(int32*)(gat+10);
+	m->xs = *(int32 *)(gat + 6);
+	m->ys = *(int32 *)(gat + 10);
 	num_cells = m->xs * m->ys;
 	CREATE(m->cell, struct mapcell, num_cells);
 
@@ -3941,14 +4004,13 @@ static int map_readgat(struct map_data *m)
 
 	// Set cell properties
 	off = 14;
-	for( xy = 0; xy < num_cells; ++xy )
-	{
+	for (xy = 0; xy < num_cells; ++xy) {
 		// read cell data
-		float height = *(float*)( gat + off      );
-		uint32 type = *(uint32*)( gat + off + 16 );
+		float height = *(float *)(gat + off);
+		uint32 type = *(uint32 *)(gat + off + 16);
 		off += 20;
 
-		if( type == 0 && water_height != NO_WATER && height > water_height )
+		if (type == 0 && water_height != NO_WATER && height > water_height)
 			type = 3; // Cell is 0 (walkable) but under water level, set to 3 (walkable water)
 
 		m->cell[xy] = map->gat2cell(type);
@@ -3988,29 +4050,25 @@ static int map_readallmaps(void)
 		ShowStatus("Loading maps using map cache files...\n");
 	}
 
-	for(i = 0; i < map->count; i++) {
+	for (i = 0; i < map->count; i++) {
 		size_t size;
 
 		// show progress
-		if(map->enable_grf)
-			ShowStatus("Loading maps [%i/%i]: %s"CL_CLL"\r", i, map->count, map->list[i].name);
+		if (map->enable_grf)
+			ShowStatus("Loading maps [%i/%i]: %s" CL_CLL "\r", i, map->count, map->list[i].name);
 
 		// try to load the map
-		if( !
-			(map->enable_grf?
-			map->readgat(&map->list[i])
-			:map->readfromcache(&map->list[i]))
-			) {
-				map->delmapid(i);
-				maps_removed++;
-				i--;
-				continue;
+		if (!(map->enable_grf ? map->readgat(&map->list[i]) : map->readfromcache(&map->list[i]))) {
+			map->delmapid(i);
+			maps_removed++;
+			i--;
+			continue;
 		}
 
 		map->list[i].index = mapindex->name2id(map->list[i].name);
 
-		if ( map->index2mapid[map_id2index(i)] != -1 ) {
-			ShowWarning("Map %s already loaded!"CL_CLL"\n", map->list[i].name);
+		if (map->index2mapid[map_id2index(i)] != -1) {
+			ShowWarning("Map %s already loaded!" CL_CLL "\n", map->list[i].name);
 			if (map->list[i].cell && map->list[i].cell != (struct mapcell *)0xdeadbeaf) {
 				aFree(map->list[i].cell);
 				map->list[i].cell = NULL;
@@ -4024,29 +4082,29 @@ static int map_readallmaps(void)
 		map->list[i].m = i;
 		map->addmap2db(&map->list[i]);
 
-		memset(map->list[i].moblist, 0, sizeof(map->list[i].moblist)); //Initialize moblist [Skotlex]
-		map->list[i].mob_delete_timer = INVALID_TIMER; //Initialize timer [Skotlex]
+		memset(map->list[i].moblist, 0, sizeof(map->list[i].moblist)); // Initialize moblist [Skotlex]
+		map->list[i].mob_delete_timer = INVALID_TIMER;                 // Initialize timer [Skotlex]
 
 		map->list[i].bxs = (map->list[i].xs + BLOCK_SIZE - 1) / BLOCK_SIZE;
 		map->list[i].bys = (map->list[i].ys + BLOCK_SIZE - 1) / BLOCK_SIZE;
 
-		size = map->list[i].bxs * map->list[i].bys * sizeof(struct block_list*);
-		map->list[i].block = (struct block_list**)aCalloc(1, size);
-		map->list[i].block_mob = (struct block_list**)aCalloc(1, size);
+		size = map->list[i].bxs * map->list[i].bys * sizeof(struct block_list *);
+		map->list[i].block = (struct block_list **)aCalloc(1, size);
+		map->list[i].block_mob = (struct block_list **)aCalloc(1, size);
 
 		map->list[i].getcellp = map->sub_getcellp;
-		map->list[i].setcell  = map->sub_setcell;
+		map->list[i].setcell = map->sub_setcell;
 	}
 
 	// intialization and configuration-dependent adjustments of mapflags
 	map->flags_init();
 
 	// finished map loading
-	ShowInfo("Successfully loaded '"CL_WHITE"%d"CL_RESET"' maps."CL_CLL"\n",map->count);
+	ShowInfo("Successfully loaded '" CL_WHITE "%d" CL_RESET "' maps." CL_CLL "\n", map->count);
 	instance->start_id = map->count; // Next Map Index will be instances
 
 	if (maps_removed)
-		ShowNotice("Maps removed: '"CL_WHITE"%d"CL_RESET"'\n",maps_removed);
+		ShowNotice("Maps removed: '" CL_WHITE "%d" CL_RESET "'\n", maps_removed);
 
 	return 0;
 }
@@ -4227,7 +4285,7 @@ static bool map_config_read_map_list(const char *filename, struct config_t *conf
 	nullpo_retr(false, filename);
 	nullpo_retr(false, config);
 
-	deleted_maps = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_ALLOW_NULL_DATA, MAP_NAME_LENGTH);
+	deleted_maps = strdb_alloc(DB_OPT_DUP_KEY | DB_OPT_ALLOW_NULL_DATA, MAP_NAME_LENGTH);
 
 	// Remove maps
 	if ((setting = libconfig->lookup(config, "map_configuration/map_removed")) != NULL) {
@@ -4368,7 +4426,7 @@ static bool map_read_npclist(const char *filename, bool imported)
 	if (!libconfig->load_file(&config, filename))
 		return false;
 
-	deleted_npcs = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_ALLOW_NULL_DATA, 0);
+	deleted_npcs = strdb_alloc(DB_OPT_DUP_KEY | DB_OPT_ALLOW_NULL_DATA, 0);
 
 	// Remove NPCs
 	if ((setting = libconfig->lookup(&config, "npc_removed_list")) != NULL) {
@@ -4453,7 +4511,7 @@ static void map_reloadnpc(bool clear)
 #endif
 
 	// Append extra scripts
-	for( i = 0; i < map->extra_scripts_count; i++ ) {
+	for (i = 0; i < map->extra_scripts_count; i++) {
 		npc->addsrcfile(map->extra_scripts[i]);
 	}
 }
@@ -4691,12 +4749,12 @@ static int map_sql_init(void)
 	map->mysql_handle = SQL->Malloc();
 
 	ShowInfo("Connecting to the Map DB Server....\n");
-	if( SQL_ERROR == SQL->Connect(map->mysql_handle, map->server_id, map->server_pw, map->server_ip, map->server_port, map->server_db) )
+	if (SQL_ERROR == SQL->Connect(map->mysql_handle, map->server_id, map->server_pw, map->server_ip, map->server_port, map->server_db))
 		exit(EXIT_FAILURE);
 	ShowStatus("connect success! (Map Server Connection)\n");
 
 	if (map->default_codepage[0] != '\0')
-		if ( SQL_ERROR == SQL->SetEncoding(map->mysql_handle, map->default_codepage) )
+		if (SQL_ERROR == SQL->SetEncoding(map->mysql_handle, map->default_codepage))
 			Sql_ShowDebug(map->mysql_handle);
 
 	return 0;
@@ -4744,8 +4802,8 @@ static struct map_zone_data *map_merge_zone(struct map_zone_data *main, struct m
 		safestrncpy(newzone + len, main->name, len + 12);
 	}
 
-	if( (zone = strdb_get(map->zone_db, newzone)) )
-		return zone;/* this zone has already been merged */
+	if ((zone = strdb_get(map->zone_db, newzone)))
+		return zone; /* this zone has already been merged */
 
 	CREATE(zone, struct map_zone_data, 1);
 	safestrncpy(zone->name, newzone, MAP_ZONE_NAME_LENGTH);
@@ -4756,72 +4814,72 @@ static struct map_zone_data *map_merge_zone(struct map_zone_data *main, struct m
 	zone->disabled_commands_count = main->disabled_commands_count + other->disabled_commands_count;
 	zone->capped_skills_count = main->capped_skills_count + other->capped_skills_count;
 
-	CREATE(zone->disabled_skills, struct map_zone_disabled_skill_entry *, zone->disabled_skills_count );
-	for(i = 0, cursor = 0; i < main->disabled_skills_count; i++, cursor++ ) {
-		CREATE(zone->disabled_skills[cursor], struct map_zone_disabled_skill_entry, 1 );
+	CREATE(zone->disabled_skills, struct map_zone_disabled_skill_entry *, zone->disabled_skills_count);
+	for (i = 0, cursor = 0; i < main->disabled_skills_count; i++, cursor++) {
+		CREATE(zone->disabled_skills[cursor], struct map_zone_disabled_skill_entry, 1);
 		memcpy(zone->disabled_skills[cursor], main->disabled_skills[i], sizeof(struct map_zone_disabled_skill_entry));
 	}
 
-	for(i = 0; i < other->disabled_skills_count; i++, cursor++ ) {
-		CREATE(zone->disabled_skills[cursor], struct map_zone_disabled_skill_entry, 1 );
+	for (i = 0; i < other->disabled_skills_count; i++, cursor++) {
+		CREATE(zone->disabled_skills[cursor], struct map_zone_disabled_skill_entry, 1);
 		memcpy(zone->disabled_skills[cursor], other->disabled_skills[i], sizeof(struct map_zone_disabled_skill_entry));
 	}
 
-	for(j = 0; j < main->cant_disable_items_count; j++) {
-		for(i = 0; i < other->disabled_items_count; i++) {
-			if( other->disabled_items[i] == main->cant_disable_items[j] ) {
+	for (j = 0; j < main->cant_disable_items_count; j++) {
+		for (i = 0; i < other->disabled_items_count; i++) {
+			if (other->disabled_items[i] == main->cant_disable_items[j]) {
 				zone->disabled_items_count--;
 				break;
 			}
 		}
 	}
 
-	CREATE(zone->disabled_items, int, zone->disabled_items_count );
-	for(i = 0, cursor = 0; i < main->disabled_items_count; i++, cursor++ ) {
+	CREATE(zone->disabled_items, int, zone->disabled_items_count);
+	for (i = 0, cursor = 0; i < main->disabled_items_count; i++, cursor++) {
 		zone->disabled_items[cursor] = main->disabled_items[i];
 	}
 
-	for(i = 0; i < other->disabled_items_count; i++) {
-		for(j = 0; j < main->cant_disable_items_count; j++) {
-			if( other->disabled_items[i] == main->cant_disable_items[j] ) {
+	for (i = 0; i < other->disabled_items_count; i++) {
+		for (j = 0; j < main->cant_disable_items_count; j++) {
+			if (other->disabled_items[i] == main->cant_disable_items[j]) {
 				break;
 			}
 		}
-		if( j != main->cant_disable_items_count )
+		if (j != main->cant_disable_items_count)
 			continue;
 		zone->disabled_items[cursor] = other->disabled_items[i];
 		cursor++;
 	}
 
-	CREATE(zone->mapflags, char *, zone->mapflags_count );
-	for(i = 0, cursor = 0; i < main->mapflags_count; i++, cursor++ ) {
-		CREATE(zone->mapflags[cursor], char, MAP_ZONE_MAPFLAG_LENGTH );
+	CREATE(zone->mapflags, char *, zone->mapflags_count);
+	for (i = 0, cursor = 0; i < main->mapflags_count; i++, cursor++) {
+		CREATE(zone->mapflags[cursor], char, MAP_ZONE_MAPFLAG_LENGTH);
 		safestrncpy(zone->mapflags[cursor], main->mapflags[i], MAP_ZONE_MAPFLAG_LENGTH);
 	}
 
-	for(i = 0; i < other->mapflags_count; i++, cursor++ ) {
-		CREATE(zone->mapflags[cursor], char, MAP_ZONE_MAPFLAG_LENGTH );
+	for (i = 0; i < other->mapflags_count; i++, cursor++) {
+		CREATE(zone->mapflags[cursor], char, MAP_ZONE_MAPFLAG_LENGTH);
 		safestrncpy(zone->mapflags[cursor], other->mapflags[i], MAP_ZONE_MAPFLAG_LENGTH);
 	}
 
 	CREATE(zone->disabled_commands, struct map_zone_disabled_command_entry *, zone->disabled_commands_count);
-	for(i = 0, cursor = 0; i < main->disabled_commands_count; i++, cursor++ ) {
+	for (i = 0, cursor = 0; i < main->disabled_commands_count; i++, cursor++) {
 		CREATE(zone->disabled_commands[cursor], struct map_zone_disabled_command_entry, 1);
 		memcpy(zone->disabled_commands[cursor], main->disabled_commands[i], sizeof(struct map_zone_disabled_command_entry));
 	}
 
-	for(i = 0; i < other->disabled_commands_count; i++, cursor++ ) {
+	for (i = 0; i < other->disabled_commands_count; i++, cursor++) {
 		CREATE(zone->disabled_commands[cursor], struct map_zone_disabled_command_entry, 1);
 		memcpy(zone->disabled_commands[cursor], other->disabled_commands[i], sizeof(struct map_zone_disabled_command_entry));
 	}
 
 	CREATE(zone->capped_skills, struct map_zone_skill_damage_cap_entry *, zone->capped_skills_count);
-	for(i = 0, cursor = 0; i < main->capped_skills_count; i++, cursor++ ) {
+	for (i = 0, cursor = 0; i < main->capped_skills_count; i++, cursor++) {
 		CREATE(zone->capped_skills[cursor], struct map_zone_skill_damage_cap_entry, 1);
 		memcpy(zone->capped_skills[cursor], main->capped_skills[i], sizeof(struct map_zone_skill_damage_cap_entry));
 	}
 
-	for(i = 0; i < other->capped_skills_count; i++, cursor++ ) {
+	for (i = 0; i < other->capped_skills_count; i++, cursor++) {
 		CREATE(zone->capped_skills[cursor], struct map_zone_skill_damage_cap_entry, 1);
 		memcpy(zone->capped_skills[cursor], other->capped_skills[i], sizeof(struct map_zone_skill_damage_cap_entry));
 	}
@@ -4838,20 +4896,20 @@ static void map_zone_change2(int m, struct map_zone_data *zone)
 	if (zone == NULL)
 		return;
 	Assert_retv(m >= 0 && m < map->count);
-	if( map->list[m].zone == zone )
+	if (map->list[m].zone == zone)
 		return;
 
-	if( !map->list[m].zone->info.merged ) /* we don't update it for merged zones! */
+	if (!map->list[m].zone->info.merged) /* we don't update it for merged zones! */
 		map->list[m].prev_zone = map->list[m].zone;
 
-	if( map->list[m].zone_mf_count )
+	if (map->list[m].zone_mf_count)
 		map->zone_remove(m);
 
-	if( zone->merge_type == MZMT_MERGEABLE && map->list[m].prev_zone->merge_type != MZMT_NEVERMERGE ) {
-		zone = map->merge_zone(zone,map->list[m].prev_zone);
+	if (zone->merge_type == MZMT_MERGEABLE && map->list[m].prev_zone->merge_type != MZMT_NEVERMERGE) {
+		zone = map->merge_zone(zone, map->list[m].prev_zone);
 	}
 
-	map->zone_apply(m,zone,empty,empty,empty);
+	map->zone_apply(m, zone, empty, empty, empty);
 }
 /* when changing from a mapflag to another during runtime */
 static void map_zone_change(int m, struct map_zone_data *zone, const char *start, const char *buffer, const char *filepath)
@@ -4859,9 +4917,9 @@ static void map_zone_change(int m, struct map_zone_data *zone, const char *start
 	Assert_retv(m >= 0 && m < map->count);
 	map->list[m].prev_zone = map->list[m].zone;
 
-	if( map->list[m].zone_mf_count )
+	if (map->list[m].zone_mf_count)
 		map->zone_remove(m);
-	map->zone_apply(m,zone,start,buffer,filepath);
+	map->zone_apply(m, zone, start, buffer, filepath);
 }
 /* removes previous mapflags from this map */
 static void map_zone_remove(int m)
@@ -4870,19 +4928,19 @@ static void map_zone_remove(int m)
 	unsigned short k;
 	const char *empty = "";
 	Assert_retv(m >= 0 && m < map->count);
-	for(k = 0; k < map->list[m].zone_mf_count; k++) {
-		size_t len = strlen(map->list[m].zone_mf[k]),j;
+	for (k = 0; k < map->list[m].zone_mf_count; k++) {
+		size_t len = strlen(map->list[m].zone_mf[k]), j;
 		params[0] = '\0';
 		memcpy(flag, map->list[m].zone_mf[k], MAP_ZONE_MAPFLAG_LENGTH);
-		for(j = 0; j < len; j++) {
-			if( flag[j] == '\t' ) {
-				memcpy(params, &flag[j+1], len - j);
+		for (j = 0; j < len; j++) {
+			if (flag[j] == '\t') {
+				memcpy(params, &flag[j + 1], len - j);
 				flag[j] = '\0';
 				break;
 			}
 		}
 
-		npc->parse_mapflag(map->list[m].name,empty,flag,params,empty,empty,empty, NULL);
+		npc->parse_mapflag(map->list[m].name, empty, flag, params, empty, empty, empty, NULL);
 		aFree(map->list[m].zone_mf[k]);
 		map->list[m].zone_mf[k] = NULL;
 	}
@@ -4936,7 +4994,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 
 	if (strcmpi(flag, "nomemo") == 0) {
 		if (state != 0 && map->list[m].flag.nomemo != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "nomemo\toff");
@@ -4945,7 +5003,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "noteleport") == 0) {
 		if (state != 0 && map->list[m].flag.noteleport != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "noteleport\toff");
@@ -4953,7 +5011,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 				map_zone_mf_cache_add(m, "noteleport");
 		}
 	} else if (strcmpi(flag, "nosave") == 0) {
-#if 0 /* not yet supported to be reversed */
+#if 0  /* not yet supported to be reversed */
 		char savemap[32];
 		int savex, savey;
 		if (state == 0) {
@@ -4976,7 +5034,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 #endif // 0
 	} else if (strcmpi(flag, "nobranch") == 0) {
 		if (state != 0 && map->list[m].flag.nobranch != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "nobranch\toff");
@@ -4985,7 +5043,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "nozenypenalty") == 0) {
 		if (state != 0 && map->list[m].flag.nozenypenalty != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "nozenypenalty\toff");
@@ -4994,7 +5052,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "pvp") == 0) {
 		if (state != 0 && map->list[m].flag.pvp != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "pvp\toff");
@@ -5003,7 +5061,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "pvp_noparty") == 0) {
 		if (state != 0 && map->list[m].flag.pvp_noparty != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "pvp_noparty\toff");
@@ -5012,7 +5070,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "pvp_noguild") == 0) {
 		if (state != 0 && map->list[m].flag.pvp_noguild != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "pvp_noguild\toff");
@@ -5021,7 +5079,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "gvg") == 0) {
 		if (state != 0 && map->list[m].flag.gvg != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "gvg\toff");
@@ -5030,7 +5088,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "gvg_noparty") == 0) {
 		if (state != 0 && map->list[m].flag.gvg_noparty != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "gvg_noparty\toff");
@@ -5039,7 +5097,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "notrade") == 0) {
 		if (state != 0 && map->list[m].flag.notrade != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "notrade\toff");
@@ -5048,7 +5106,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "noskill") == 0) {
 		if (state != 0 && map->list[m].flag.noskill != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "noskill\toff");
@@ -5057,7 +5115,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "nowarp") == 0) {
 		if (state != 0 && map->list[m].flag.nowarp != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "nowarp\toff");
@@ -5066,7 +5124,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "partylock") == 0) {
 		if (state != 0 && map->list[m].flag.partylock != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "partylock\toff");
@@ -5075,7 +5133,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "noicewall") == 0) {
 		if (state != 0 && map->list[m].flag.noicewall != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "noicewall\toff");
@@ -5084,7 +5142,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "snow") == 0) {
 		if (state != 0 && map->list[m].flag.snow != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "snow\toff");
@@ -5093,7 +5151,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "fog") == 0) {
 		if (state != 0 && map->list[m].flag.fog != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "fog\toff");
@@ -5102,7 +5160,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "sakura") == 0) {
 		if (state != 0 && map->list[m].flag.sakura != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "sakura\toff");
@@ -5111,7 +5169,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "leaves") == 0) {
 		if (state != 0 && map->list[m].flag.leaves != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "leaves\toff");
@@ -5120,7 +5178,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "clouds") == 0) {
 		if (state != 0 && map->list[m].flag.clouds != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "clouds\toff");
@@ -5129,7 +5187,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "clouds2") == 0) {
 		if (state != 0 && map->list[m].flag.clouds2 != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "clouds2\toff");
@@ -5138,7 +5196,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "fireworks") == 0) {
 		if (state != 0 && map->list[m].flag.fireworks != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "fireworks\toff");
@@ -5147,7 +5205,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "gvg_castle") == 0) {
 		if (state != 0 && map->list[m].flag.gvg_castle != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "gvg_castle\toff");
@@ -5156,7 +5214,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "gvg_dungeon") == 0) {
 		if (state != 0 && map->list[m].flag.gvg_dungeon != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "gvg_dungeon\toff");
@@ -5165,7 +5223,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "nightenabled") == 0) {
 		if (state != 0 && map->list[m].flag.nightenabled != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "nightenabled\toff");
@@ -5174,7 +5232,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "nobaseexp") == 0) {
 		if (state != 0 && map->list[m].flag.nobaseexp != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "nobaseexp\toff");
@@ -5183,7 +5241,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "nojobexp") == 0) {
 		if (state != 0 && map->list[m].flag.nojobexp != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "nojobexp\toff");
@@ -5192,7 +5250,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "nomobloot") == 0) {
 		if (state != 0 && map->list[m].flag.nomobloot != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "nomobloot\toff");
@@ -5201,7 +5259,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "nomvploot") == 0) {
 		if (state != 0 && map->list[m].flag.nomvploot != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "nomvploot\toff");
@@ -5210,7 +5268,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "noreturn") == 0) {
 		if (state != 0 && map->list[m].flag.noreturn != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "noreturn\toff");
@@ -5219,7 +5277,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "nowarpto") == 0) {
 		if (state != 0 && map->list[m].flag.nowarpto != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "nowarpto\toff");
@@ -5228,14 +5286,14 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "pvp_nightmaredrop") == 0) {
 		if (state != 0 && map->list[m].flag.pvp_nightmaredrop != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "pvp_nightmaredrop\toff");
 			else if (map->list[m].flag.pvp_nightmaredrop != 0)
 				map_zone_mf_cache_add(m, "pvp_nightmaredrop");
 		}
-#if 0 /* not yet fully supported */
+#if 0  /* not yet fully supported */
 		char drop_arg1[16], drop_arg2[16];
 		int drop_per = 0; noexp
 			if (sscanf(w4, "%15[^,],%15[^,],%d", drop_arg1, drop_arg2, &drop_per) == 3) {
@@ -5282,7 +5340,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "nodrop") == 0) {
 		if (state != 0 && map->list[m].flag.nodrop != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "nodrop\toff");
@@ -5328,7 +5386,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "novending") == 0) {
 		if (state != 0 && map->list[m].flag.novending != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "novending\toff");
@@ -5337,7 +5395,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "loadevent") == 0) {
 		if (state != 0 && map->list[m].flag.loadevent != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "loadevent\toff");
@@ -5346,7 +5404,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "nochat") == 0) {
 		if (state != 0 && map->list[m].flag.nochat != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "nochat\toff");
@@ -5355,7 +5413,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "noexppenalty") == 0) {
 		if (state != 0 && map->list[m].flag.noexppenalty != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "noexppenalty\toff");
@@ -5364,7 +5422,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "guildlock") == 0) {
 		if (state != 0 && map->list[m].flag.guildlock != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "guildlock\toff");
@@ -5373,7 +5431,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "town") == 0) {
 		if (state != 0 && map->list[m].flag.town != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "town\toff");
@@ -5382,7 +5440,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "autotrade") == 0) {
 		if (state != 0 && map->list[m].flag.autotrade != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "autotrade\toff");
@@ -5391,7 +5449,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "allowks") == 0) {
 		if (state != 0 && map->list[m].flag.allowks != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "allowks\toff");
@@ -5400,7 +5458,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "monster_noteleport") == 0) {
 		if (state != 0 && map->list[m].flag.monster_noteleport != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "monster_noteleport\toff");
@@ -5409,7 +5467,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "pvp_nocalcrank") == 0) {
 		if (state != 0 && map->list[m].flag.pvp_nocalcrank != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "pvp_nocalcrank\toff");
@@ -5418,7 +5476,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "battleground") == 0) {
 		if (state != 0 && map->list[m].flag.battleground != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "battleground\toff");
@@ -5427,7 +5485,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "cvc") == 0) {
 		if (state != 0 && map->list[m].flag.cvc != 0) {
-			;/* nothing to do */
+			; /* nothing to do */
 		} else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "cvc\toff");
@@ -5436,7 +5494,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "reset") == 0) {
 		if (state != 0 && map->list[m].flag.reset != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "reset\toff");
@@ -5445,7 +5503,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "notomb") == 0) {
 		if (state != 0 && map->list[m].flag.notomb != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "notomb\toff");
@@ -5454,7 +5512,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "nocashshop") == 0) {
 		if (state != 0 && map->list[m].flag.nocashshop != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "nocashshop\toff");
@@ -5463,7 +5521,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "noautoloot") == 0) {
 		if (state != 0 && map->list[m].flag.noautoloot != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "noautoloot\toff");
@@ -5472,7 +5530,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "noviewid") == 0) {
 		if (state != 0 && map->list[m].flag.noviewid != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "noviewid\toff");
@@ -5481,7 +5539,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "pairship_startable") == 0) {
 		if (state != 0 && map->list[m].flag.pairship_startable != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "pairship_startable\toff");
@@ -5490,7 +5548,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "pairship_endable") == 0) {
 		if (state != 0 && map->list[m].flag.pairship_endable != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "pairship_endable\toff");
@@ -5525,7 +5583,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "nomapchannelautojoin") == 0) {
 		if (state != 0 && map->list[m].flag.chsysnolocalaj != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "nomapchannelautojoin\toff");
@@ -5534,7 +5592,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "noknockback") == 0) {
 		if (state != 0 && map->list[m].flag.noknockback != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "noknockback\toff");
@@ -5543,7 +5601,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "src4instance") == 0) {
 		if (state != 0 && map->list[m].flag.src4instance != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "src4instance\toff");
@@ -5552,7 +5610,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "cvc") == 0) {
 		if (state != 0 && map->list[m].flag.cvc != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "cvc\toff");
@@ -5561,7 +5619,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "nopenalty") == 0) {
 		if (state != 0 && map->list[m].flag.noexppenalty != 0) /* they are applied together, no need to check both */
-			;/* nothing to do */
+			;                                                  /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "nopenalty\toff");
@@ -5570,7 +5628,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "noexp") == 0) {
 		if (state != 0 && map->list[m].flag.nobaseexp != 0) /* they are applied together, no need to check both */
-			;/* nothing to do */
+			;                                               /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "noexp\toff");
@@ -5579,7 +5637,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "noloot") == 0) {
 		if (state != 0 && map->list[m].flag.nomobloot != 0) /* they are applied together, no need to check both */
-			;/* nothing to do */
+			;                                               /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "noloot\toff");
@@ -5588,7 +5646,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 		}
 	} else if (strcmpi(flag, "nosendmail") == 0) {
 		if (state != 0 && map->list[m].flag.nosendmail != 0)
-			;/* nothing to do */
+			; /* nothing to do */
 		else {
 			if (state != 0)
 				map_zone_mf_cache_add(m, "nosendmail\toff");
@@ -5614,12 +5672,8 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 			}
 		}
 
-		if (modifier[0] == '\0'
-		 || (skill_id = skill->name2id(skill_name)) == 0
-		 || skill->get_unit_id(skill->name2id(skill_name), 1, 0) == 0
-		 || atoi(modifier) < 1 || atoi(modifier) > USHRT_MAX
-		   ) {
-			;/* we don't mind it, the server will take care of it next. */
+		if (modifier[0] == '\0' || (skill_id = skill->name2id(skill_name)) == 0 || skill->get_unit_id(skill->name2id(skill_name), 1, 0) == 0 || atoi(modifier) < 1 || atoi(modifier) > USHRT_MAX) {
+			; /* we don't mind it, the server will take care of it next. */
 		} else {
 			int idx = map->list[m].unit_count;
 			int k;
@@ -5651,12 +5705,8 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 			}
 		}
 
-		if (modifier[0] == '\0'
-		 || (skill_id = skill->name2id(skill_name)) == 0
-		 || atoi(modifier) < 1
-		 || atoi(modifier) > USHRT_MAX
-		   ) {
-			;/* we don't mind it, the server will take care of it next. */
+		if (modifier[0] == '\0' || (skill_id = skill->name2id(skill_name)) == 0 || atoi(modifier) < 1 || atoi(modifier) > USHRT_MAX) {
+			; /* we don't mind it, the server will take care of it next. */
 		} else {
 			int idx = map->list[m].skill_count;
 			int k;
@@ -5671,7 +5721,6 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 				sprintf(rflag, "adjust_skill_damage\t%s\t100", skill_name);
 				map_zone_mf_cache_add(m, rflag);
 			}
-
 		}
 	} else if (strcmpi(flag, "invincible_time_inc") == 0) {
 		if (state == 0) {
@@ -5777,20 +5826,20 @@ static void map_zone_apply(int m, struct map_zone_data *zone, const char *start,
 	Assert_retv(m >= 0 && m < map->count);
 	nullpo_retv(zone);
 	map->list[m].zone = zone;
-	for(i = 0; i < zone->mapflags_count; i++) {
+	for (i = 0; i < zone->mapflags_count; i++) {
 		size_t len = strlen(zone->mapflags[i]);
 		int k;
 		params[0] = '\0';
 		memcpy(flag, zone->mapflags[i], MAP_ZONE_MAPFLAG_LENGTH);
-		for(k = 0; k < len; k++) {
-			if( flag[k] == '\t' ) {
-				memcpy(params, &flag[k+1], len - k);
+		for (k = 0; k < len; k++) {
+			if (flag[k] == '\t') {
+				memcpy(params, &flag[k + 1], len - k);
 				flag[k] = '\0';
 				break;
 			}
 		}
 
-		if( map->zone_mf_cache(m,flag,params) )
+		if (map->zone_mf_cache(m, flag, params))
 			continue;
 
 		npc->parse_mapflag(map->list[m].name, empty, flag, params, start, buffer, filepath, NULL);
@@ -5802,67 +5851,66 @@ static void map_zone_init(void)
 	char flag[MAP_ZONE_MAPFLAG_LENGTH], params[MAP_ZONE_MAPFLAG_LENGTH];
 	struct map_zone_data *zone;
 	const char *empty = "";
-	int i,k,j;
+	int i, k, j;
 
 	zone = &map->zone_all;
 
-	for(i = 0; i < zone->mapflags_count; i++) {
+	for (i = 0; i < zone->mapflags_count; i++) {
 		size_t len = strlen(zone->mapflags[i]);
 		params[0] = '\0';
 		memcpy(flag, zone->mapflags[i], MAP_ZONE_MAPFLAG_LENGTH);
-		for(k = 0; k < len; k++) {
-			if( flag[k] == '\t' ) {
-				memcpy(params, &flag[k+1], len - k);
+		for (k = 0; k < len; k++) {
+			if (flag[k] == '\t') {
+				memcpy(params, &flag[k + 1], len - k);
 				flag[k] = '\0';
 				break;
 			}
 		}
 
-		for(j = 0; j < map->count; j++) {
-			if( map->list[j].zone == zone ) {
-				if( map->zone_mf_cache(j,flag,params) )
+		for (j = 0; j < map->count; j++) {
+			if (map->list[j].zone == zone) {
+				if (map->zone_mf_cache(j, flag, params))
 					break;
 				npc->parse_mapflag(map->list[j].name, empty, flag, params, empty, empty, empty, NULL);
 			}
 		}
 	}
 
-	if( battle_config.pk_mode ) {
+	if (battle_config.pk_mode) {
 		zone = &map->zone_pk;
-		for(i = 0; i < zone->mapflags_count; i++) {
+		for (i = 0; i < zone->mapflags_count; i++) {
 			size_t len = strlen(zone->mapflags[i]);
 			params[0] = '\0';
 			memcpy(flag, zone->mapflags[i], MAP_ZONE_MAPFLAG_LENGTH);
-			for(k = 0; k < len; k++) {
-				if( flag[k] == '\t' ) {
-					memcpy(params, &flag[k+1], len - k);
+			for (k = 0; k < len; k++) {
+				if (flag[k] == '\t') {
+					memcpy(params, &flag[k + 1], len - k);
 					flag[k] = '\0';
 					break;
 				}
 			}
-			for(j = 0; j < map->count; j++) {
-				if( map->list[j].zone == zone ) {
-					if( map->zone_mf_cache(j,flag,params) )
+			for (j = 0; j < map->count; j++) {
+				if (map->list[j].zone == zone) {
+					if (map->zone_mf_cache(j, flag, params))
 						break;
 					npc->parse_mapflag(map->list[j].name, empty, flag, params, empty, empty, empty, NULL);
 				}
 			}
 		}
 	}
-
 }
 static int map_zone_str2itemid(const char *name)
 {
 	struct item_data *data;
 
-	if( !name )
+	if (!name)
 		return 0;
 	if (name[0] == 'I' && name[1] == 'D' && strlen(name) <= 12) {
-		if( !( data = itemdb->exists(atoi(name+2))) ) {
+		if (!(data = itemdb->exists(atoi(name + 2)))) {
 			return 0;
 		}
 	} else {
-		if( !( data = itemdb->search_name(name) ) ) {
+		if (!(data = itemdb->search_name(name))) {
 			return 0;
 		}
 	}
@@ -5872,14 +5920,14 @@ static unsigned short map_zone_str2skillid(const char *name)
 {
 	unsigned short nameid = 0;
 
-	if( !name )
+	if (!name)
 		return 0;
 
 	if (name[0] == 'I' && name[1] == 'D' && strlen(name) <= 12) {
-		if( !skill->get_index((nameid = atoi(name+2))) )
+		if (!skill->get_index((nameid = atoi(name + 2))))
 			return 0;
 	} else {
-		if( !( nameid = strdb_iget(skill->name2id_db, name) ) ) {
+		if (!(nameid = strdb_iget(skill->name2id_db, name))) {
 			return 0;
 		}
 	}
@@ -5892,42 +5940,42 @@ static enum bl_type map_zone_bl_type(const char *entry, enum map_zone_skill_subt
 
 	nullpo_retr(BL_NUL, subtype);
 	*subtype = MZS_NONE;
-	if( !entry )
+	if (!entry)
 		return BL_NUL;
 
 	safestrncpy(temp, entry, 200);
 
-	parse = strtok(temp,"|");
+	parse = strtok(temp, "|");
 
 	while (parse != NULL) {
-		normalize_name(parse," ");
-		if( strcmpi(parse,"player") == 0 )
+		normalize_name(parse, " ");
+		if (strcmpi(parse, "player") == 0)
 			bl |= BL_PC;
-		else if( strcmpi(parse,"homun") == 0 )
+		else if (strcmpi(parse, "homun") == 0)
 			bl |= BL_HOM;
-		else if( strcmpi(parse,"mercenary") == 0 )
+		else if (strcmpi(parse, "mercenary") == 0)
 			bl |= BL_MER;
-		else if( strcmpi(parse,"monster") == 0 )
+		else if (strcmpi(parse, "monster") == 0)
 			bl |= BL_MOB;
-		else if( strcmpi(parse,"clone") == 0 ) {
+		else if (strcmpi(parse, "clone") == 0) {
 			bl |= BL_MOB;
 			*subtype |= MZS_CLONE;
-		} else if( strcmpi(parse,"mob_boss") == 0 ) {
+		} else if (strcmpi(parse, "mob_boss") == 0) {
 			bl |= BL_MOB;
 			*subtype |= MZS_BOSS;
-		} else if( strcmpi(parse,"elemental") == 0 )
+		} else if (strcmpi(parse, "elemental") == 0)
 			bl |= BL_ELEM;
-		else if( strcmpi(parse,"pet") == 0 )
+		else if (strcmpi(parse, "pet") == 0)
 			bl |= BL_PET;
-		else if( strcmpi(parse,"all") == 0 ) {
+		else if (strcmpi(parse, "all") == 0) {
 			bl |= BL_ALL;
 			*subtype |= MZS_ALL;
-		} else if( strcmpi(parse,"none") == 0 ) {
+		} else if (strcmpi(parse, "none") == 0) {
 			bl = BL_NUL;
 		} else {
-			ShowError("map_zone_db: '%s' unknown type, skipping...\n",parse);
+			ShowError("map_zone_db: '%s' unknown type, skipping...\n", parse);
 		}
-		parse = strtok(NULL,"|");
+		parse = strtok(NULL, "|");
 	}
 	return bl;
 }
@@ -5937,7 +5985,7 @@ static void read_map_zone_db(void)
 	struct config_t map_zone_db;
 	struct config_setting_t *zones = NULL;
 	char config_filename[256];
-	libconfig->format_db_path(DBPATH"map_zone_db.conf", config_filename, sizeof(config_filename));
+	libconfig->format_db_path(DBPATH "map_zone_db.conf", config_filename, sizeof(config_filename));
 	if (!libconfig->load_file(&map_zone_db, config_filename))
 		return;
 
@@ -5953,9 +6001,8 @@ static void read_map_zone_db(void)
 		struct config_setting_t *caps;
 		const char *name;
 		const char *zonename;
-		int i,h,v,j;
-		int zone_count = 0, disabled_skills_count = 0, disabled_items_count = 0, mapflags_count = 0,
-			disabled_commands_count = 0, capped_skills_count = 0;
+		int i, h, v, j;
+		int zone_count = 0, disabled_skills_count = 0, disabled_items_count = 0, mapflags_count = 0, disabled_commands_count = 0, capped_skills_count = 0;
 		enum map_zone_skill_subtype subtype;
 
 		zone_count = libconfig->setting_length(zones);
@@ -5965,65 +6012,64 @@ static void read_map_zone_db(void)
 			zone_e = libconfig->setting_get_elem(zones, i);
 
 			if (!libconfig->setting_lookup_string(zone_e, "name", &zonename)) {
-				ShowError("map_zone_db: missing zone name, skipping... (%s:%u)\n",
-					config_setting_source_file(zone_e), config_setting_source_line(zone_e));
-				libconfig->setting_remove_elem(zones,i);/* remove from the tree */
+				ShowError("map_zone_db: missing zone name, skipping... (%s:%u)\n", config_setting_source_file(zone_e), config_setting_source_line(zone_e));
+				libconfig->setting_remove_elem(zones, i); /* remove from the tree */
 				--zone_count;
 				--i;
 				continue;
 			}
 
-			if( strdb_exists(map->zone_db, zonename) ) {
-				ShowError("map_zone_db: duplicate zone name '%s', skipping...\n",zonename);
-				libconfig->setting_remove_elem(zones,i);/* remove from the tree */
+			if (strdb_exists(map->zone_db, zonename)) {
+				ShowError("map_zone_db: duplicate zone name '%s', skipping...\n", zonename);
+				libconfig->setting_remove_elem(zones, i); /* remove from the tree */
 				--zone_count;
 				--i;
 				continue;
 			}
 
 			/* is this the global template? */
-			if( strncmpi(zonename,MAP_ZONE_NORMAL_NAME,MAP_ZONE_NAME_LENGTH) == 0 ) {
+			if (strncmpi(zonename, MAP_ZONE_NORMAL_NAME, MAP_ZONE_NAME_LENGTH) == 0) {
 				zone = &map->zone_all;
 				zone->merge_type = MZMT_NEVERMERGE;
 				is_all = true;
-			} else if( strncmpi(zonename,MAP_ZONE_PK_NAME,MAP_ZONE_NAME_LENGTH) == 0 ) {
+			} else if (strncmpi(zonename, MAP_ZONE_PK_NAME, MAP_ZONE_NAME_LENGTH) == 0) {
 				zone = &map->zone_pk;
 				zone->merge_type = MZMT_NEVERMERGE;
 				is_all = true;
 			} else {
-				CREATE( zone, struct map_zone_data, 1 );
+				CREATE(zone, struct map_zone_data, 1);
 				zone->merge_type = MZMT_NORMAL;
 				zone->disabled_skills_count = 0;
-				zone->disabled_items_count  = 0;
+				zone->disabled_items_count = 0;
 			}
-			safestrncpy(zone->name, zonename, MAP_ZONE_NAME_LENGTH/2);
+			safestrncpy(zone->name, zonename, MAP_ZONE_NAME_LENGTH / 2);
 
-			if( (skills = libconfig->setting_get_member(zone_e, "disabled_skills")) != NULL ) {
+			if ((skills = libconfig->setting_get_member(zone_e, "disabled_skills")) != NULL) {
 				disabled_skills_count = libconfig->setting_length(skills);
 				/* validate */
-				for(h = 0; h < libconfig->setting_length(skills); h++) {
+				for (h = 0; h < libconfig->setting_length(skills); h++) {
 					struct config_setting_t *skillinfo = libconfig->setting_get_elem(skills, h);
 					name = config_setting_name(skillinfo);
-					if( !map->zone_str2skillid(name) ) {
-						ShowError("map_zone_db: unknown skill (%s) in disabled_skills for zone '%s', skipping skill...\n",name,zone->name);
-						libconfig->setting_remove_elem(skills,h);
+					if (!map->zone_str2skillid(name)) {
+						ShowError("map_zone_db: unknown skill (%s) in disabled_skills for zone '%s', skipping skill...\n", name, zone->name);
+						libconfig->setting_remove_elem(skills, h);
 						--disabled_skills_count;
 						--h;
 						continue;
 					}
-					if( !map->zone_bl_type(libconfig->setting_get_string_elem(skills,h),&subtype) )/* we don't remove it from the three due to inheritance */
+					if (!map->zone_bl_type(libconfig->setting_get_string_elem(skills, h), &subtype)) /* we don't remove it from the three due to inheritance */
 						--disabled_skills_count;
 				}
 				/* all ok, process */
-				CREATE( zone->disabled_skills, struct map_zone_disabled_skill_entry *, disabled_skills_count );
-				for(h = 0, v = 0; h < libconfig->setting_length(skills); h++) {
+				CREATE(zone->disabled_skills, struct map_zone_disabled_skill_entry *, disabled_skills_count);
+				for (h = 0, v = 0; h < libconfig->setting_length(skills); h++) {
 					struct config_setting_t *skillinfo = libconfig->setting_get_elem(skills, h);
-					struct map_zone_disabled_skill_entry * entry;
+					struct map_zone_disabled_skill_entry *entry;
 					enum bl_type type;
 					name = config_setting_name(skillinfo);
 
-					if( (type = map->zone_bl_type(libconfig->setting_get_string_elem(skills,h),&subtype)) ) { /* only add if enabled */
-						CREATE( entry, struct map_zone_disabled_skill_entry, 1 );
+					if ((type = map->zone_bl_type(libconfig->setting_get_string_elem(skills, h), &subtype))) { /* only add if enabled */
+						CREATE(entry, struct map_zone_disabled_skill_entry, 1);
 
 						entry->nameid = map->zone_str2skillid(name);
 						entry->type = type;
@@ -6031,90 +6077,87 @@ static void read_map_zone_db(void)
 
 						zone->disabled_skills[v++] = entry;
 					}
-
 				}
 				zone->disabled_skills_count = disabled_skills_count;
 			}
 
-			if( (items = libconfig->setting_get_member(zone_e, "disabled_items")) != NULL ) {
+			if ((items = libconfig->setting_get_member(zone_e, "disabled_items")) != NULL) {
 				disabled_items_count = libconfig->setting_length(items);
 				/* validate */
-				for(h = 0; h < libconfig->setting_length(items); h++) {
+				for (h = 0; h < libconfig->setting_length(items); h++) {
 					struct config_setting_t *item = libconfig->setting_get_elem(items, h);
 					name = config_setting_name(item);
-					if( !map->zone_str2itemid(name) ) {
-						ShowError("map_zone_db: unknown item (%s) in disabled_items for zone '%s', skipping item...\n",name,zone->name);
-						libconfig->setting_remove_elem(items,h);
+					if (!map->zone_str2itemid(name)) {
+						ShowError("map_zone_db: unknown item (%s) in disabled_items for zone '%s', skipping item...\n", name, zone->name);
+						libconfig->setting_remove_elem(items, h);
 						--disabled_items_count;
 						--h;
 						continue;
 					}
-					if( !libconfig->setting_get_bool(item) )/* we don't remove it from the three due to inheritance */
+					if (!libconfig->setting_get_bool(item)) /* we don't remove it from the three due to inheritance */
 						--disabled_items_count;
 				}
 				/* all ok, process */
-				CREATE( zone->disabled_items, int, disabled_items_count );
-				if( (libconfig->setting_length(items) - disabled_items_count) > 0 ) { //Some are forcefully enabled
+				CREATE(zone->disabled_items, int, disabled_items_count);
+				if ((libconfig->setting_length(items) - disabled_items_count) > 0) { // Some are forcefully enabled
 					zone->cant_disable_items_count = libconfig->setting_length(items) - disabled_items_count;
 					CREATE(zone->cant_disable_items, int, zone->cant_disable_items_count);
 				}
-				for(h = 0, v = 0, j = 0; h < libconfig->setting_length(items); h++) {
+				for (h = 0, v = 0, j = 0; h < libconfig->setting_length(items); h++) {
 					struct config_setting_t *item = libconfig->setting_get_elem(items, h);
 
 					name = config_setting_name(item);
-					if( libconfig->setting_get_bool(item) ) { /* only add if enabled */
+					if (libconfig->setting_get_bool(item)) { /* only add if enabled */
 						zone->disabled_items[v++] = map->zone_str2itemid(name);
 					} else { /** forcefully enabled **/
 						zone->cant_disable_items[j++] = map->zone_str2itemid(name);
 					}
-
 				}
 				zone->disabled_items_count = disabled_items_count;
 			}
 
-			if( (mapflags = libconfig->setting_get_member(zone_e, "mapflags")) != NULL ) {
+			if ((mapflags = libconfig->setting_get_member(zone_e, "mapflags")) != NULL) {
 				mapflags_count = libconfig->setting_length(mapflags);
 				/* mapflags are not validated here, so we save all anyway */
-				CREATE( zone->mapflags, char *, mapflags_count );
-				for(h = 0; h < mapflags_count; h++) {
-					CREATE( zone->mapflags[h], char, MAP_ZONE_MAPFLAG_LENGTH );
+				CREATE(zone->mapflags, char *, mapflags_count);
+				for (h = 0; h < mapflags_count; h++) {
+					CREATE(zone->mapflags[h], char, MAP_ZONE_MAPFLAG_LENGTH);
 
 					name = libconfig->setting_get_string_elem(mapflags, h);
 
 					safestrncpy(zone->mapflags[h], name, MAP_ZONE_MAPFLAG_LENGTH);
-
 				}
 				zone->mapflags_count = mapflags_count;
 			}
 
-			if( (commands = libconfig->setting_get_member(zone_e, "disabled_commands")) != NULL ) {
+			if ((commands = libconfig->setting_get_member(zone_e, "disabled_commands")) != NULL) {
 				disabled_commands_count = libconfig->setting_length(commands);
 				/* validate */
-				for(h = 0; h < libconfig->setting_length(commands); h++) {
+				for (h = 0; h < libconfig->setting_length(commands); h++) {
 					struct config_setting_t *command = libconfig->setting_get_elem(commands, h);
 					name = config_setting_name(command);
-					if( !atcommand->exists(name) ) {
-						ShowError("map_zone_db: unknown command '%s' in disabled_commands for zone '%s', skipping entry...\n",name,zone->name);
-						libconfig->setting_remove_elem(commands,h);
+					if (!atcommand->exists(name)) {
+						ShowError("map_zone_db: unknown command '%s' in disabled_commands for zone '%s', skipping entry...\n", name, zone->name);
+						libconfig->setting_remove_elem(commands, h);
 						--disabled_commands_count;
 						--h;
 						continue;
 					}
-					if( !libconfig->setting_get_int(command) )/* we don't remove it from the three due to inheritance */
+					if (!libconfig->setting_get_int(command)) /* we don't remove it from the three due to inheritance */
 						--disabled_commands_count;
 				}
 				/* all ok, process */
-				CREATE( zone->disabled_commands, struct map_zone_disabled_command_entry *, disabled_commands_count );
-				for(h = 0, v = 0; h < libconfig->setting_length(commands); h++) {
+				CREATE(zone->disabled_commands, struct map_zone_disabled_command_entry *, disabled_commands_count);
+				for (h = 0, v = 0; h < libconfig->setting_length(commands); h++) {
 					struct config_setting_t *command = libconfig->setting_get_elem(commands, h);
-					struct map_zone_disabled_command_entry * entry;
+					struct map_zone_disabled_command_entry *entry;
 					int group_lv;
 					name = config_setting_name(command);
 
-					if( (group_lv = libconfig->setting_get_int(command)) ) { /* only add if enabled */
-						CREATE( entry, struct map_zone_disabled_command_entry, 1 );
+					if ((group_lv = libconfig->setting_get_int(command))) { /* only add if enabled */
+						CREATE(entry, struct map_zone_disabled_command_entry, 1);
 
-						entry->cmd  = atcommand->exists(name)->func;
+						entry->cmd = atcommand->exists(name)->func;
 						entry->group_lv = group_lv;
 
 						zone->disabled_commands[v++] = entry;
@@ -6123,35 +6166,35 @@ static void read_map_zone_db(void)
 				zone->disabled_commands_count = disabled_commands_count;
 			}
 
-			if( (caps = libconfig->setting_get_member(zone_e, "skill_damage_cap")) != NULL ) {
+			if ((caps = libconfig->setting_get_member(zone_e, "skill_damage_cap")) != NULL) {
 				capped_skills_count = libconfig->setting_length(caps);
 				/* validate */
-				for(h = 0; h < libconfig->setting_length(caps); h++) {
+				for (h = 0; h < libconfig->setting_length(caps); h++) {
 					struct config_setting_t *cap = libconfig->setting_get_elem(caps, h);
 					name = config_setting_name(cap);
-					if( !map->zone_str2skillid(name) ) {
-						ShowError("map_zone_db: unknown skill (%s) in skill_damage_cap for zone '%s', skipping skill...\n",name,zone->name);
-						libconfig->setting_remove_elem(caps,h);
+					if (!map->zone_str2skillid(name)) {
+						ShowError("map_zone_db: unknown skill (%s) in skill_damage_cap for zone '%s', skipping skill...\n", name, zone->name);
+						libconfig->setting_remove_elem(caps, h);
 						--capped_skills_count;
 						--h;
 						continue;
 					}
-					if( !map->zone_bl_type(libconfig->setting_get_string_elem(cap,1),&subtype) )/* we don't remove it from the three due to inheritance */
+					if (!map->zone_bl_type(libconfig->setting_get_string_elem(cap, 1), &subtype)) /* we don't remove it from the three due to inheritance */
 						--capped_skills_count;
 				}
 				/* all ok, process */
-				CREATE( zone->capped_skills, struct map_zone_skill_damage_cap_entry *, capped_skills_count );
-				for(h = 0, v = 0; h < libconfig->setting_length(caps); h++) {
+				CREATE(zone->capped_skills, struct map_zone_skill_damage_cap_entry *, capped_skills_count);
+				for (h = 0, v = 0; h < libconfig->setting_length(caps); h++) {
 					struct config_setting_t *cap = libconfig->setting_get_elem(caps, h);
-					struct map_zone_skill_damage_cap_entry * entry;
+					struct map_zone_skill_damage_cap_entry *entry;
 					enum bl_type type;
 					name = config_setting_name(cap);
 
-					if( (type = map->zone_bl_type(libconfig->setting_get_string_elem(cap,1),&subtype)) ) { /* only add if enabled */
-						CREATE( entry, struct map_zone_skill_damage_cap_entry, 1 );
+					if ((type = map->zone_bl_type(libconfig->setting_get_string_elem(cap, 1), &subtype))) { /* only add if enabled */
+						CREATE(entry, struct map_zone_skill_damage_cap_entry, 1);
 
 						entry->nameid = map->zone_str2skillid(name);
-						entry->cap = libconfig->setting_get_int_elem(cap,0);
+						entry->cap = libconfig->setting_get_int_elem(cap, 0);
 						entry->type = type;
 						entry->subtype = subtype;
 						zone->capped_skills[v++] = entry;
@@ -6160,9 +6203,8 @@ static void read_map_zone_db(void)
 				zone->capped_skills_count = capped_skills_count;
 			}
 
-			if( !is_all ) /* global template doesn't go into db -- since it isn't a alloc'd piece of data */
+			if (!is_all) /* global template doesn't go into db -- since it isn't a alloc'd piece of data */
 				strdb_put(map->zone_db, zonename, zone);
-
 		}
 
 		/* process inheritance, aka loop through the whole thing again :P */
@@ -6174,43 +6216,43 @@ static void read_map_zone_db(void)
 			zone_e = libconfig->setting_get_elem(zones, i);
 			libconfig->setting_lookup_string(zone_e, "name", &zonename);
 
-			if( strncmpi(zonename,MAP_ZONE_ALL_NAME,MAP_ZONE_NAME_LENGTH) == 0 ) {
-				continue;/* all zone doesn't inherit anything (if it did, everything would link to each other and boom endless loop) */
+			if (strncmpi(zonename, MAP_ZONE_ALL_NAME, MAP_ZONE_NAME_LENGTH) == 0) {
+				continue; /* all zone doesn't inherit anything (if it did, everything would link to each other and boom endless loop) */
 			}
 
-			if( (inherit_tree = libconfig->setting_get_member(zone_e, "inherit")) != NULL ) {
+			if ((inherit_tree = libconfig->setting_get_member(zone_e, "inherit")) != NULL) {
 				/* append global zone to this */
-				new_entry = libconfig->setting_add(inherit_tree,MAP_ZONE_ALL_NAME,CONFIG_TYPE_STRING);
-				libconfig->setting_set_string(new_entry,MAP_ZONE_ALL_NAME);
+				new_entry = libconfig->setting_add(inherit_tree, MAP_ZONE_ALL_NAME, CONFIG_TYPE_STRING);
+				libconfig->setting_set_string(new_entry, MAP_ZONE_ALL_NAME);
 			} else {
 				/* create inherit member and add global zone to it */
-				inherit_tree = libconfig->setting_add(zone_e, "inherit",CONFIG_TYPE_ARRAY);
-				new_entry = libconfig->setting_add(inherit_tree,MAP_ZONE_ALL_NAME,CONFIG_TYPE_STRING);
-				libconfig->setting_set_string(new_entry,MAP_ZONE_ALL_NAME);
+				inherit_tree = libconfig->setting_add(zone_e, "inherit", CONFIG_TYPE_ARRAY);
+				new_entry = libconfig->setting_add(inherit_tree, MAP_ZONE_ALL_NAME, CONFIG_TYPE_STRING);
+				libconfig->setting_set_string(new_entry, MAP_ZONE_ALL_NAME);
 			}
 			inherit_count = libconfig->setting_length(inherit_tree);
-			for(h = 0; h < inherit_count; h++) {
-				struct map_zone_data *izone; /* inherit zone */
-				int disabled_skills_count_i = 0; /* disabled skill count from inherit zone */
-				int disabled_items_count_i = 0; /* disabled item count from inherit zone */
-				int mapflags_count_i = 0; /* mapflag count from inherit zone */
+			for (h = 0; h < inherit_count; h++) {
+				struct map_zone_data *izone;       /* inherit zone */
+				int disabled_skills_count_i = 0;   /* disabled skill count from inherit zone */
+				int disabled_items_count_i = 0;    /* disabled item count from inherit zone */
+				int mapflags_count_i = 0;          /* mapflag count from inherit zone */
 				int disabled_commands_count_i = 0; /* commands count from inherit zone */
-				int capped_skills_count_i = 0; /* skill capped count from inherit zone */
+				int capped_skills_count_i = 0;     /* skill capped count from inherit zone */
 
 				name = libconfig->setting_get_string_elem(inherit_tree, h);
-				libconfig->setting_lookup_string(zone_e, "name", &zonename);/* will succeed for we validated it earlier */
+				libconfig->setting_lookup_string(zone_e, "name", &zonename); /* will succeed for we validated it earlier */
 
-				if( !(izone = strdb_get(map->zone_db, name)) ) {
-					ShowError("map_zone_db: Unknown zone '%s' being inherit by zone '%s', skipping...\n",name,zonename);
+				if (!(izone = strdb_get(map->zone_db, name))) {
+					ShowError("map_zone_db: Unknown zone '%s' being inherit by zone '%s', skipping...\n", name, zonename);
 					continue;
 				}
 
-				if( strncmpi(zonename,MAP_ZONE_NORMAL_NAME,MAP_ZONE_NAME_LENGTH) == 0 ) {
+				if (strncmpi(zonename, MAP_ZONE_NORMAL_NAME, MAP_ZONE_NAME_LENGTH) == 0) {
 					zone = &map->zone_all;
-				} else if( strncmpi(zonename,MAP_ZONE_PK_NAME,MAP_ZONE_NAME_LENGTH) == 0 ) {
+				} else if (strncmpi(zonename, MAP_ZONE_PK_NAME, MAP_ZONE_NAME_LENGTH) == 0) {
 					zone = &map->zone_pk;
 				} else
-					zone = strdb_get(map->zone_db, zonename);/* will succeed for we just put it in here */
+					zone = strdb_get(map->zone_db, zonename); /* will succeed for we just put it in here */
 
 				disabled_skills_count_i = izone->disabled_skills_count;
 				disabled_items_count_i = izone->disabled_items_count;
@@ -6219,139 +6261,138 @@ static void read_map_zone_db(void)
 				capped_skills_count_i = izone->capped_skills_count;
 
 				/* process everything to override, paying attention to config_setting_get_bool */
-				if( disabled_skills_count_i ) {
-					if( (skills = libconfig->setting_get_member(zone_e, "disabled_skills")) == NULL )
-						skills = libconfig->setting_add(zone_e, "disabled_skills",CONFIG_TYPE_GROUP);
+				if (disabled_skills_count_i) {
+					if ((skills = libconfig->setting_get_member(zone_e, "disabled_skills")) == NULL)
+						skills = libconfig->setting_add(zone_e, "disabled_skills", CONFIG_TYPE_GROUP);
 					disabled_skills_count = libconfig->setting_length(skills);
-					for(j = 0; j < disabled_skills_count_i; j++) {
+					for (j = 0; j < disabled_skills_count_i; j++) {
 						int k;
-						for(k = 0; k < disabled_skills_count; k++) {
+						for (k = 0; k < disabled_skills_count; k++) {
 							struct config_setting_t *skillinfo = libconfig->setting_get_elem(skills, k);
-							if( map->zone_str2skillid(config_setting_name(skillinfo)) == izone->disabled_skills[j]->nameid ) {
+							if (map->zone_str2skillid(config_setting_name(skillinfo)) == izone->disabled_skills[j]->nameid) {
 								break;
 							}
 						}
-						if( k == disabled_skills_count ) {/* we didn't find it */
+						if (k == disabled_skills_count) { /* we didn't find it */
 							struct map_zone_disabled_skill_entry *entry;
-							RECREATE( zone->disabled_skills, struct map_zone_disabled_skill_entry *, ++zone->disabled_skills_count );
-							CREATE( entry, struct map_zone_disabled_skill_entry, 1 );
+							RECREATE(zone->disabled_skills, struct map_zone_disabled_skill_entry *, ++zone->disabled_skills_count);
+							CREATE(entry, struct map_zone_disabled_skill_entry, 1);
 							entry->nameid = izone->disabled_skills[j]->nameid;
 							entry->type = izone->disabled_skills[j]->type;
 							entry->subtype = izone->disabled_skills[j]->subtype;
-							zone->disabled_skills[zone->disabled_skills_count-1] = entry;
+							zone->disabled_skills[zone->disabled_skills_count - 1] = entry;
 						}
 					}
 				}
 
-				if( disabled_items_count_i ) {
-					if( (items = libconfig->setting_get_member(zone_e, "disabled_items")) == NULL )
-						items = libconfig->setting_add(zone_e, "disabled_items",CONFIG_TYPE_GROUP);
+				if (disabled_items_count_i) {
+					if ((items = libconfig->setting_get_member(zone_e, "disabled_items")) == NULL)
+						items = libconfig->setting_add(zone_e, "disabled_items", CONFIG_TYPE_GROUP);
 					disabled_items_count = libconfig->setting_length(items);
-					for(j = 0; j < disabled_items_count_i; j++) {
+					for (j = 0; j < disabled_items_count_i; j++) {
 						int k;
-						for(k = 0; k < disabled_items_count; k++) {
+						for (k = 0; k < disabled_items_count; k++) {
 							struct config_setting_t *item = libconfig->setting_get_elem(items, k);
 
 							name = config_setting_name(item);
 
-							if( map->zone_str2itemid(name) == izone->disabled_items[j] ) {
-								if( libconfig->setting_get_bool(item) )
+							if (map->zone_str2itemid(name) == izone->disabled_items[j]) {
+								if (libconfig->setting_get_bool(item))
 									continue;
 								break;
 							}
 						}
-						if( k == disabled_items_count ) {/* we didn't find it */
-							RECREATE( zone->disabled_items, int, ++zone->disabled_items_count );
-							zone->disabled_items[zone->disabled_items_count-1] = izone->disabled_items[j];
+						if (k == disabled_items_count) { /* we didn't find it */
+							RECREATE(zone->disabled_items, int, ++zone->disabled_items_count);
+							zone->disabled_items[zone->disabled_items_count - 1] = izone->disabled_items[j];
 						}
 					}
 				}
 
-				if( mapflags_count_i ) {
-					if( (mapflags = libconfig->setting_get_member(zone_e, "mapflags")) == NULL )
-						mapflags = libconfig->setting_add(zone_e, "mapflags",CONFIG_TYPE_ARRAY);
+				if (mapflags_count_i) {
+					if ((mapflags = libconfig->setting_get_member(zone_e, "mapflags")) == NULL)
+						mapflags = libconfig->setting_add(zone_e, "mapflags", CONFIG_TYPE_ARRAY);
 					mapflags_count = libconfig->setting_length(mapflags);
-					for(j = 0; j < mapflags_count_i; j++) {
+					for (j = 0; j < mapflags_count_i; j++) {
 						int k;
-						for(k = 0; k < mapflags_count; k++) {
+						for (k = 0; k < mapflags_count; k++) {
 							name = libconfig->setting_get_string_elem(mapflags, k);
 
-							if( strcmpi(name,izone->mapflags[j]) == 0 ) {
+							if (strcmpi(name, izone->mapflags[j]) == 0) {
 								break;
 							}
 						}
-						if( k == mapflags_count ) {/* we didn't find it */
-							RECREATE( zone->mapflags, char*, ++zone->mapflags_count );
-							CREATE( zone->mapflags[zone->mapflags_count-1], char, MAP_ZONE_MAPFLAG_LENGTH );
-							safestrncpy(zone->mapflags[zone->mapflags_count-1], izone->mapflags[j], MAP_ZONE_MAPFLAG_LENGTH);
+						if (k == mapflags_count) { /* we didn't find it */
+							RECREATE(zone->mapflags, char *, ++zone->mapflags_count);
+							CREATE(zone->mapflags[zone->mapflags_count - 1], char, MAP_ZONE_MAPFLAG_LENGTH);
+							safestrncpy(zone->mapflags[zone->mapflags_count - 1], izone->mapflags[j], MAP_ZONE_MAPFLAG_LENGTH);
 						}
 					}
 				}
 
-				if( disabled_commands_count_i ) {
-					if( (commands = libconfig->setting_get_member(zone_e, "disabled_commands")) == NULL )
-						commands = libconfig->setting_add(zone_e, "disabled_commands",CONFIG_TYPE_GROUP);
+				if (disabled_commands_count_i) {
+					if ((commands = libconfig->setting_get_member(zone_e, "disabled_commands")) == NULL)
+						commands = libconfig->setting_add(zone_e, "disabled_commands", CONFIG_TYPE_GROUP);
 
 					disabled_commands_count = libconfig->setting_length(commands);
-					for(j = 0; j < disabled_commands_count_i; j++) {
+					for (j = 0; j < disabled_commands_count_i; j++) {
 						int k;
-						for(k = 0; k < disabled_commands_count; k++) {
+						for (k = 0; k < disabled_commands_count; k++) {
 							struct config_setting_t *command = libconfig->setting_get_elem(commands, k);
-							if( atcommand->exists(config_setting_name(command))->func == izone->disabled_commands[j]->cmd ) {
+							if (atcommand->exists(config_setting_name(command))->func == izone->disabled_commands[j]->cmd) {
 								break;
 							}
 						}
-						if( k == disabled_commands_count ) {/* we didn't find it */
+						if (k == disabled_commands_count) { /* we didn't find it */
 							struct map_zone_disabled_command_entry *entry;
-							RECREATE( zone->disabled_commands, struct map_zone_disabled_command_entry *, ++zone->disabled_commands_count );
-							CREATE( entry, struct map_zone_disabled_command_entry, 1 );
+							RECREATE(zone->disabled_commands, struct map_zone_disabled_command_entry *, ++zone->disabled_commands_count);
+							CREATE(entry, struct map_zone_disabled_command_entry, 1);
 							entry->cmd = izone->disabled_commands[j]->cmd;
 							entry->group_lv = izone->disabled_commands[j]->group_lv;
-							zone->disabled_commands[zone->disabled_commands_count-1] = entry;
+							zone->disabled_commands[zone->disabled_commands_count - 1] = entry;
 						}
 					}
 				}
 
-				if( capped_skills_count_i ) {
-					if( (caps = libconfig->setting_get_member(zone_e, "skill_damage_cap")) == NULL )
-						caps = libconfig->setting_add(zone_e, "skill_damage_cap",CONFIG_TYPE_GROUP);
+				if (capped_skills_count_i) {
+					if ((caps = libconfig->setting_get_member(zone_e, "skill_damage_cap")) == NULL)
+						caps = libconfig->setting_add(zone_e, "skill_damage_cap", CONFIG_TYPE_GROUP);
 
 					capped_skills_count = libconfig->setting_length(caps);
-					for(j = 0; j < capped_skills_count_i; j++) {
+					for (j = 0; j < capped_skills_count_i; j++) {
 						int k;
-						for(k = 0; k < capped_skills_count; k++) {
+						for (k = 0; k < capped_skills_count; k++) {
 							struct config_setting_t *cap = libconfig->setting_get_elem(caps, k);
-							if( map->zone_str2skillid(config_setting_name(cap)) == izone->capped_skills[j]->nameid ) {
+							if (map->zone_str2skillid(config_setting_name(cap)) == izone->capped_skills[j]->nameid) {
 								break;
 							}
 						}
-						if( k == capped_skills_count ) {/* we didn't find it */
+						if (k == capped_skills_count) { /* we didn't find it */
 							struct map_zone_skill_damage_cap_entry *entry;
-							RECREATE( zone->capped_skills, struct map_zone_skill_damage_cap_entry *, ++zone->capped_skills_count );
-							CREATE( entry, struct map_zone_skill_damage_cap_entry, 1 );
+							RECREATE(zone->capped_skills, struct map_zone_skill_damage_cap_entry *, ++zone->capped_skills_count);
+							CREATE(entry, struct map_zone_skill_damage_cap_entry, 1);
 							entry->nameid = izone->capped_skills[j]->nameid;
 							entry->cap = izone->capped_skills[j]->cap;
 							entry->type = izone->capped_skills[j]->type;
 							entry->subtype = izone->capped_skills[j]->subtype;
-							zone->capped_skills[zone->capped_skills_count-1] = entry;
+							zone->capped_skills[zone->capped_skills_count - 1] = entry;
 						}
 					}
 				}
-
 			}
 		}
 
-		ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' zones in '"CL_WHITE"%s"CL_RESET"'.\n", zone_count, config_filename);
+		ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' zones in '" CL_WHITE "%s" CL_RESET "'.\n", zone_count, config_filename);
 
 		/* post-load processing */
-		if( (zone = strdb_get(map->zone_db, MAP_ZONE_PVP_NAME)) )
+		if ((zone = strdb_get(map->zone_db, MAP_ZONE_PVP_NAME)))
 			zone->merge_type = MZMT_MERGEABLE;
-		if( (zone = strdb_get(map->zone_db, MAP_ZONE_GVG_NAME)) )
+		if ((zone = strdb_get(map->zone_db, MAP_ZONE_GVG_NAME)))
 			zone->merge_type = MZMT_MERGEABLE;
-		if( (zone = strdb_get(map->zone_db, MAP_ZONE_BG_NAME)) )
+		if ((zone = strdb_get(map->zone_db, MAP_ZONE_BG_NAME)))
 			zone->merge_type = MZMT_MERGEABLE;
 		if ((zone = strdb_get(map->zone_db, MAP_ZONE_CVC_NAME)))
-		  zone->merge_type = MZMT_MERGEABLE;
+			zone->merge_type = MZMT_MERGEABLE;
 	}
 	/* not supposed to go in here but in skill_final whatever */
 	libconfig->destroy(&map_zone_db);
@@ -6399,13 +6440,12 @@ static bool map_remove_questinfo(int m, struct npc_data *nd)
  */
 static int nick_db_final(union DBKey key, struct DBData *data, va_list args)
 {
-	struct charid2nick* p = DB->data2ptr(data);
-	struct charid_request* req;
+	struct charid2nick *p = DB->data2ptr(data);
+	struct charid_request *req;
 
-	if( p == NULL )
+	if (p == NULL)
 		return 0;
-	while( p->requests )
-	{
+	while (p->requests) {
 		req = p->requests;
 		p->requests = req->next;
 		aFree(req);
@@ -6418,7 +6458,7 @@ static int cleanup_sub(struct block_list *bl, va_list ap)
 {
 	nullpo_ret(bl);
 
-	switch(bl->type) {
+	switch (bl->type) {
 		case BL_PC:
 			map->quit(BL_UCAST(BL_PC, bl));
 			break;
@@ -6426,10 +6466,10 @@ static int cleanup_sub(struct block_list *bl, va_list ap)
 			npc->unload(BL_UCAST(BL_NPC, bl), false, true);
 			break;
 		case BL_MOB:
-			unit->free(bl,CLR_OUTSIGHT);
+			unit->free(bl, CLR_OUTSIGHT);
 			break;
 		case BL_PET:
-			//There is no need for this, the pet is removed together with the player. [Skotlex]
+			// There is no need for this, the pet is removed together with the player. [Skotlex]
 			break;
 		case BL_ITEM:
 			map->clearflooritem(bl);
@@ -6476,17 +6516,18 @@ static void map_lock_check(const char *file, const char *func, int line, int loc
 int do_final(void)
 {
 	int i;
-	struct map_session_data* sd;
-	struct s_mapiterator* iter;
+	struct map_session_data *sd;
+	struct s_mapiterator *iter;
 
 	ShowStatus("Terminating...\n");
 
 	channel->config->closing = true;
 	HPM->event(HPET_FINAL);
 
-	if (map->cpsd) aFree(map->cpsd);
+	if (map->cpsd)
+		aFree(map->cpsd);
 
-	//Ladies and babies first.
+	// Ladies and babies first.
 	iter = mapit_getallusers();
 	for (sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter)))
 		map->quit(sd);
@@ -6497,11 +6538,11 @@ int do_final(void)
 
 	// remove all objects on maps
 	for (i = 0; i < map->count; i++) {
-		ShowStatus("Cleaning up maps [%d/%d]: %s..."CL_CLL"\r", i+1, map->count, map->list[i].name);
+		ShowStatus("Cleaning up maps [%d/%d]: %s..." CL_CLL "\r", i + 1, map->count, map->list[i].name);
 		if (map->list[i].m >= 0)
 			map->foreachinmap(map->cleanup_sub, i, BL_ALL);
 	}
-	ShowStatus("Cleaned up %d maps."CL_CLL"\n", map->count);
+	ShowStatus("Cleaned up %d maps." CL_CLL "\n", map->count);
 
 	if (map->extra_scripts) {
 		for (i = 0; i < map->extra_scripts_count; i++)
@@ -6511,13 +6552,13 @@ int do_final(void)
 		map->extra_scripts_count = 0;
 	}
 
-	map->id_db->foreach(map->id_db,map->cleanup_db_sub);
+	map->id_db->foreach (map->id_db, map->cleanup_db_sub);
 	chrif->char_reset_offline();
 	chrif->flush();
 
 	atcommand->final();
 	battle->final();
-	ircbot->final();/* before channel. */
+	ircbot->final(); /* before channel. */
 	channel->final();
 	chrif->final();
 	clan->final();
@@ -6580,13 +6621,13 @@ int do_final(void)
 	}
 	aFree(map->list);
 
-	if( map->block_free )
+	if (map->block_free)
 		aFree(map->block_free);
 #ifdef SANITIZE
 	if (map->block_free_sanitize)
 		aFree(map->block_free_sanitize);
 #endif
-	if( map->bl_list )
+	if (map->bl_list)
 		aFree(map->bl_list);
 
 	aFree(map->MAP_CONF_NAME);
@@ -6606,7 +6647,7 @@ int do_final(void)
 
 static int map_abort_sub(struct map_session_data *sd, va_list ap)
 {
-	chrif->save(sd,1);
+	chrif->save(sd, 1);
 	return 1;
 }
 
@@ -6617,14 +6658,13 @@ static int map_abort_sub(struct map_session_data *sd, va_list ap)
 void do_abort(void)
 {
 	static int run = 0;
-	//Save all characters and then flush the inter-connection.
+	// Save all characters and then flush the inter-connection.
 	if (run) {
 		ShowFatalError("Server has crashed while trying to save characters. Character data can't be saved!\n");
 		return;
 	}
 	run = 1;
-	if (!chrif->isconnected())
-	{
+	if (!chrif->isconnected()) {
 		if (db_size(map->pc_db))
 			ShowFatalError("Server has crashed without a connection to the char-server, %u characters can't be saved!\n", db_size(map->pc_db));
 		return;
@@ -6642,13 +6682,12 @@ void set_server_type(void)
 /// Called when a terminate signal is received.
 static void do_shutdown(void)
 {
-	if( core->runflag != MAPSERVER_ST_SHUTDOWN )
-	{
+	if (core->runflag != MAPSERVER_ST_SHUTDOWN) {
 		core->runflag = MAPSERVER_ST_SHUTDOWN;
 		ShowStatus("Shutting down...\n");
 		{
-			struct map_session_data* sd;
-			struct s_mapiterator* iter = mapit_getallusers();
+			struct map_session_data *sd;
+			struct s_mapiterator *iter = mapit_getallusers();
 			for (sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter)))
 				clif->GM_kick(NULL, sd);
 			mapit->free(iter);
@@ -6663,22 +6702,22 @@ static CPCMD(gm_position)
 	int x = 0, y = 0, m = 0;
 	char map_name[25];
 
-	if( line == NULL || sscanf(line, "%d %d %24s",&x,&y,map_name) < 3 ) {
-		ShowError("gm:info invalid syntax. use '"CL_WHITE"gm:info xCord yCord map_name"CL_RESET"'\n");
+	if (line == NULL || sscanf(line, "%d %d %24s", &x, &y, map_name) < 3) {
+		ShowError("gm:info invalid syntax. use '" CL_WHITE "gm:info xCord yCord map_name" CL_RESET "'\n");
 		return;
 	}
 
 	if ((m = map->mapname2mapid(map_name)) <= 0) {
-		ShowError("gm:info '"CL_WHITE"%s"CL_RESET"' is not a known map\n",map_name);
+		ShowError("gm:info '" CL_WHITE "%s" CL_RESET "' is not a known map\n", map_name);
 		return;
 	}
 
-	if( x < 0 || x >= map->list[m].xs || y < 0 || y >= map->list[m].ys ) {
-		ShowError("gm:info '"CL_WHITE"%d %d"CL_RESET"' is out of '"CL_WHITE"%s"CL_RESET"' map bounds!\n",x,y,map_name);
+	if (x < 0 || x >= map->list[m].xs || y < 0 || y >= map->list[m].ys) {
+		ShowError("gm:info '" CL_WHITE "%d %d" CL_RESET "' is out of '" CL_WHITE "%s" CL_RESET "' map bounds!\n", x, y, map_name);
 		return;
 	}
 
-	ShowInfo("HCP: updated console's game position to '"CL_WHITE"%d %d %s"CL_RESET"'\n",x,y,map_name);
+	ShowInfo("HCP: updated console's game position to '" CL_WHITE "%d %d %s" CL_RESET "'\n", x, y, map_name);
 	map->cpsd->bl.x = x;
 	map->cpsd->bl.y = y;
 	map->cpsd->bl.m = m;
@@ -6687,17 +6726,17 @@ static CPCMD(gm_position)
 static CPCMD(gm_use)
 {
 
-	if( line == NULL ) {
-		ShowError("gm:use invalid syntax. use '"CL_WHITE"gm:use @command <optional params>"CL_RESET"'\n");
+	if (line == NULL) {
+		ShowError("gm:use invalid syntax. use '" CL_WHITE "gm:use @command <optional params>" CL_RESET "'\n");
 		return;
 	}
 
 	map->cpsd_active = true;
 
-	if( !atcommand->exec(map->cpsd->fd, map->cpsd, line, false) )
-		ShowInfo("HCP: '"CL_WHITE"%s"CL_RESET"' failed\n",line);
+	if (!atcommand->exec(map->cpsd->fd, map->cpsd, line, false))
+		ShowInfo("HCP: '" CL_WHITE "%s" CL_RESET "' failed\n", line);
 	else
-		ShowInfo("HCP: '"CL_WHITE"%s"CL_RESET"' was used\n",line);
+		ShowInfo("HCP: '" CL_WHITE "%s" CL_RESET "' was used\n", line);
 
 	map->cpsd_active = false;
 }
@@ -6714,8 +6753,8 @@ static void map_cp_defaults(void)
 	Assert_retv(map->cpsd->bl.m >= 0);
 	map->cpsd->mapindex = map_id2index(map->cpsd->bl.m);
 
-	console->input->addCommand("gm:info",CPCMD_A(gm_position));
-	console->input->addCommand("gm:use",CPCMD_A(gm_use));
+	console->input->addCommand("gm:info", CPCMD_A(gm_position));
+	console->input->addCommand("gm:use", CPCMD_A(gm_use));
 #endif
 }
 
@@ -6904,7 +6943,7 @@ static CMDLINEARG(scriptcheck)
 static CMDLINEARG(loadscript)
 {
 	RECREATE(map->extra_scripts, char *, ++map->extra_scripts_count);
-	map->extra_scripts[map->extra_scripts_count-1] = aStrdup(params);
+	map->extra_scripts[map->extra_scripts_count - 1] = aStrdup(params);
 	return true;
 }
 
@@ -6913,17 +6952,17 @@ static CMDLINEARG(loadscript)
  */
 void cmdline_args_init_local(void)
 {
-	CMDLINEARG_DEF2(run-once, runonce, "Closes server after loading (testing).", CMDLINE_OPT_NORMAL);
-	CMDLINEARG_DEF2(map-config, mapconfig, "Alternative map-server configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
-	CMDLINEARG_DEF2(battle-config, battleconfig, "Alternative battle configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
-	CMDLINEARG_DEF2(atcommand-config, atcommandconfig, "Alternative atcommand configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
-	CMDLINEARG_DEF2(script-config, scriptconfig, "Alternative script configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
-	CMDLINEARG_DEF2(msg-config, msgconfig, "Alternative message configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
-	CMDLINEARG_DEF2(grf-path, grfpath, "Alternative GRF path configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
-	CMDLINEARG_DEF2(inter-config, interconfig, "Alternative inter-server configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
-	CMDLINEARG_DEF2(log-config, logconfig, "Alternative logging configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
-	CMDLINEARG_DEF2(script-check, scriptcheck, "Doesn't run the server, only tests the scripts passed through --load-script.", CMDLINE_OPT_SILENT);
-	CMDLINEARG_DEF2(load-script, loadscript, "Loads an additional script (can be repeated).", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2(run - once, runonce, "Closes server after loading (testing).", CMDLINE_OPT_NORMAL);
+	CMDLINEARG_DEF2(map - config, mapconfig, "Alternative map-server configuration.", CMDLINE_OPT_NORMAL | CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2(battle - config, battleconfig, "Alternative battle configuration.", CMDLINE_OPT_NORMAL | CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2(atcommand - config, atcommandconfig, "Alternative atcommand configuration.", CMDLINE_OPT_NORMAL | CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2(script - config, scriptconfig, "Alternative script configuration.", CMDLINE_OPT_NORMAL | CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2(msg - config, msgconfig, "Alternative message configuration.", CMDLINE_OPT_NORMAL | CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2(grf - path, grfpath, "Alternative GRF path configuration.", CMDLINE_OPT_NORMAL | CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2(inter - config, interconfig, "Alternative inter-server configuration.", CMDLINE_OPT_NORMAL | CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2(log - config, logconfig, "Alternative logging configuration.", CMDLINE_OPT_NORMAL | CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2(script - check, scriptcheck, "Doesn't run the server, only tests the scripts passed through --load-script.", CMDLINE_OPT_SILENT);
+	CMDLINEARG_DEF2(load - script, loadscript, "Loads an additional script (can be repeated).", CMDLINE_OPT_NORMAL | CMDLINE_OPT_PARAM);
 }
 
 int do_init(int argc, char *argv[])
@@ -6938,14 +6977,14 @@ int do_init(int argc, char *argv[])
 	map_load_defaults();
 	extraconf->init();
 
-	map->INTER_CONF_NAME         = aStrdup("conf/common/inter-server.conf");
-	map->LOG_CONF_NAME           = aStrdup("conf/map/logs.conf");
-	map->MAP_CONF_NAME           = aStrdup("conf/map/map-server.conf");
-	map->BATTLE_CONF_FILENAME    = aStrdup("conf/map/battle.conf");
+	map->INTER_CONF_NAME = aStrdup("conf/common/inter-server.conf");
+	map->LOG_CONF_NAME = aStrdup("conf/map/logs.conf");
+	map->MAP_CONF_NAME = aStrdup("conf/map/map-server.conf");
+	map->BATTLE_CONF_FILENAME = aStrdup("conf/map/battle.conf");
 	map->ATCOMMAND_CONF_FILENAME = aStrdup("conf/atcommand.conf");
-	map->SCRIPT_CONF_NAME        = aStrdup("conf/map/script.conf");
-	map->MSG_CONF_NAME           = aStrdup("conf/messages.conf");
-	map->GRF_PATH_FILENAME       = aStrdup("conf/grf-files.txt");
+	map->SCRIPT_CONF_NAME = aStrdup("conf/map/script.conf");
+	map->MSG_CONF_NAME = aStrdup("conf/messages.conf");
+	map->GRF_PATH_FILENAME = aStrdup("conf/grf-files.txt");
 
 	HPM_map_do_init();
 	cmdline->exec(argc, argv, CMDLINE_OPT_PREINIT);
@@ -6954,29 +6993,30 @@ int do_init(int argc, char *argv[])
 	HPM->event(HPET_PRE_INIT);
 
 	cmdline->exec(argc, argv, CMDLINE_OPT_NORMAL);
-	minimal = map->minimal;/* temp (perhaps make minimal a mask with options of what to load? e.g. plugin 1 does minimal |= mob_db; */
+	minimal = map->minimal; /* temp (perhaps make minimal a mask with options of what to load? e.g. plugin 1 does minimal |= mob_db; */
 	if (!minimal) {
 		map->config_read(map->MAP_CONF_NAME, false);
 
 		{
 			// TODO: Remove this when no longer needed.
-#define CHECK_OLD_LOCAL_CONF(oldname, newname) do { \
-	if (stat((oldname), &fileinfo) == 0 && fileinfo.st_size > 0) { \
-		ShowWarning("An old configuration file \"%s\" was found.\n", (oldname)); \
-		ShowWarning("If it contains settings you wish to keep, please merge them into \"%s\".\n", (newname)); \
-		ShowWarning("Otherwise, just delete it.\n"); \
-		ShowInfo("Resuming in 10 seconds...\n"); \
-		HSleep(10); \
-	} \
-} while (0)
-		struct stat fileinfo;
+#define CHECK_OLD_LOCAL_CONF(oldname, newname)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                \
+	do {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      \
+		if (stat((oldname), &fileinfo) == 0 && fileinfo.st_size > 0) {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        \
+			ShowWarning("An old configuration file \"%s\" was found.\n", (oldname));                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          \
+			ShowWarning("If it contains settings you wish to keep, please merge them into \"%s\".\n", (newname));                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             \
+			ShowWarning("Otherwise, just delete it.\n");                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      \
+			ShowInfo("Resuming in 10 seconds...\n");                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          \
+			HSleep(10);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       \
+		}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     \
+	} while (0)
+			struct stat fileinfo;
 
-		CHECK_OLD_LOCAL_CONF("conf/import/map_conf.txt", "conf/import/map-server.conf");
-		CHECK_OLD_LOCAL_CONF("conf/import/inter_conf.txt", "conf/import/inter-server.conf");
-		CHECK_OLD_LOCAL_CONF("conf/import/log_conf.txt", "conf/import/logs.conf");
-		CHECK_OLD_LOCAL_CONF("conf/import/script_conf.txt", "conf/import/script.conf");
-		CHECK_OLD_LOCAL_CONF("conf/import/packet_conf.txt", "conf/import/socket.conf");
-		CHECK_OLD_LOCAL_CONF("conf/import/battle_conf.txt", "conf/import/battle.conf");
+			CHECK_OLD_LOCAL_CONF("conf/import/map_conf.txt", "conf/import/map-server.conf");
+			CHECK_OLD_LOCAL_CONF("conf/import/inter_conf.txt", "conf/import/inter-server.conf");
+			CHECK_OLD_LOCAL_CONF("conf/import/log_conf.txt", "conf/import/logs.conf");
+			CHECK_OLD_LOCAL_CONF("conf/import/script_conf.txt", "conf/import/script.conf");
+			CHECK_OLD_LOCAL_CONF("conf/import/packet_conf.txt", "conf/import/socket.conf");
+			CHECK_OLD_LOCAL_CONF("conf/import/battle_conf.txt", "conf/import/battle.conf");
 
 #undef CHECK_OLD_LOCAL_CONF
 		}
@@ -7017,20 +7057,20 @@ int do_init(int argc, char *argv[])
 	}
 	script->config_read(map->SCRIPT_CONF_NAME, false);
 
-	map->id_db     = idb_alloc(DB_OPT_BASE);
-	map->pc_db     = idb_alloc(DB_OPT_BASE); //Added for reliable map->id2sd() use. [Skotlex]
-	map->mobid_db  = idb_alloc(DB_OPT_BASE); //Added to lower the load of the lazy mob AI. [Skotlex]
+	map->id_db = idb_alloc(DB_OPT_BASE);
+	map->pc_db = idb_alloc(DB_OPT_BASE);     // Added for reliable map->id2sd() use. [Skotlex]
+	map->mobid_db = idb_alloc(DB_OPT_BASE);  // Added to lower the load of the lazy mob AI. [Skotlex]
 	map->bossid_db = idb_alloc(DB_OPT_BASE); // Used for Convex Mirror quick MVP search
-	map->nick_db   = idb_alloc(DB_OPT_BASE);
+	map->nick_db = idb_alloc(DB_OPT_BASE);
 	map->charid_db = idb_alloc(DB_OPT_BASE);
-	map->regen_db  = idb_alloc(DB_OPT_BASE); // efficient status_natural_heal processing
-	map->iwall_db  = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, 2*NAME_LENGTH+2+1); // [Zephyrus] Invisible Walls
-	map->zone_db   = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, MAP_ZONE_NAME_LENGTH);
+	map->regen_db = idb_alloc(DB_OPT_BASE);                                                     // efficient status_natural_heal processing
+	map->iwall_db = strdb_alloc(DB_OPT_DUP_KEY | DB_OPT_RELEASE_DATA, 2 * NAME_LENGTH + 2 + 1); // [Zephyrus] Invisible Walls
+	map->zone_db = strdb_alloc(DB_OPT_DUP_KEY | DB_OPT_RELEASE_DATA, MAP_ZONE_NAME_LENGTH);
 
-	map->iterator_ers = ers_new(sizeof(struct s_mapiterator),"map.c::map_iterator_ers",ERS_OPT_CLEAN|ERS_OPT_FLEX_CHUNK);
+	map->iterator_ers = ers_new(sizeof(struct s_mapiterator), "map.c::map_iterator_ers", ERS_OPT_CLEAN | ERS_OPT_FLEX_CHUNK);
 	ers_chunk_size(map->iterator_ers, 25);
 
-	map->flooritem_ers = ers_new(sizeof(struct flooritem_data),"map.c::map_flooritem_ers",ERS_OPT_CLEAN|ERS_OPT_FLEX_CHUNK);
+	map->flooritem_ers = ers_new(sizeof(struct flooritem_data), "map.c::map_flooritem_ers", ERS_OPT_CLEAN | ERS_OPT_FLEX_CHUNK);
 	ers_chunk_size(map->flooritem_ers, 100);
 
 	if (!minimal) {
@@ -7043,9 +7083,9 @@ int do_init(int argc, char *argv[])
 
 	if (minimal) {
 		// Pretend all maps from the mapindex are on this mapserver
-		CREATE(map->list,struct map_data,i);
+		CREATE(map->list, struct map_data, i);
 
-		for( i = 0; i < MAX_MAPINDEX; i++ ) {
+		for (i = 0; i < MAX_MAPINDEX; i++) {
 			if (mapindex_exists(i)) {
 				map->addmap(mapindex_id2name(i));
 			}
@@ -7061,8 +7101,7 @@ int do_init(int argc, char *argv[])
 		timer->add_func_list(map->freeblock_timer, "map_freeblock_timer");
 		timer->add_func_list(map->clearflooritem_timer, "map_clearflooritem_timer");
 		timer->add_func_list(map->removemobs_timer, "map_removemobs_timer");
-		timer->add_interval(timer->gettick()+1000, map->freeblock_timer, 0, 0, 60*1000);
-
+		timer->add_interval(timer->gettick() + 1000, map->freeblock_timer, 0, 0, 60 * 1000);
 	}
 	HPM->event(HPET_INIT);
 
@@ -7078,7 +7117,7 @@ int do_init(int argc, char *argv[])
 	clan->init(minimal);
 	skill->init(minimal);
 	if (!minimal)
-		map->read_zone_db();/* read after item and skill initialization */
+		map->read_zone_db(); /* read after item and skill initialization */
 	mob->init(minimal);
 	pc->init(minimal);
 	refine->init(minimal);
@@ -7125,13 +7164,13 @@ int do_init(int argc, char *argv[])
 		exit(EXIT_SUCCESS);
 	}
 
-	npc->event_do_oninit( false ); // Init npcs (OnInit)
-	npc->market_fromsql(); /* after OnInit */
-	npc->barter_fromsql(); /* after OnInit */
+	npc->event_do_oninit(false);    // Init npcs (OnInit)
+	npc->market_fromsql();          /* after OnInit */
+	npc->barter_fromsql();          /* after OnInit */
 	npc->expanded_barter_fromsql(); /* after OnInit */
 
 	if (battle_config.pk_mode)
-		ShowNotice("Server is running on '"CL_WHITE"PK Mode"CL_RESET"'.\n");
+		ShowNotice("Server is running on '" CL_WHITE "PK Mode" CL_RESET "'.\n");
 
 	Sql_HerculesUpdateCheck(map->mysql_handle);
 
@@ -7141,9 +7180,9 @@ int do_init(int argc, char *argv[])
 		console->display_gplnotice();
 #endif
 
-	ShowStatus("Server is '"CL_GREEN"ready"CL_RESET"' and listening on port '"CL_WHITE"%d"CL_RESET"'.\n\n", map->port);
+	ShowStatus("Server is '" CL_GREEN "ready" CL_RESET "' and listening on port '" CL_WHITE "%d" CL_RESET "'.\n\n", map->port);
 
-	if( core->runflag != CORE_ST_STOP ) {
+	if (core->runflag != CORE_ST_STOP) {
 		core->shutdown_callback = map->do_shutdown;
 		core->runflag = MAPSERVER_ST_RUNNING;
 	}
@@ -7173,12 +7212,12 @@ void map_defaults(void)
 	map->extra_scripts = NULL;
 	map->extra_scripts_count = 0;
 
-	sprintf(map->db_path ,"db");
+	sprintf(map->db_path, "db");
 	libconfig->set_db_path(map->db_path);
-	sprintf(map->help_txt ,"conf/help.txt");
-	sprintf(map->charhelp_txt ,"conf/charhelp.txt");
+	sprintf(map->help_txt, "conf/help.txt");
+	sprintf(map->charhelp_txt, "conf/charhelp.txt");
 
-	sprintf(map->wisp_server_name ,"Server"); // can be modified in char-server configuration file
+	sprintf(map->wisp_server_name, "Server"); // can be modified in char-server configuration file
 
 	map->autosave_interval = DEFAULT_MAP_AUTOSAVE_INTERVAL;
 	map->minsave_interval = 100;
@@ -7186,10 +7225,10 @@ void map_defaults(void)
 	map->agit_flag = 0;
 	map->agit2_flag = 0;
 	map->night_flag = 0; // 0=day, 1=night [Yor]
-	map->enable_spy = 0; //To enable/disable @spy commands, which consume too much cpu time when sending packets. [Skotlex]
+	map->enable_spy = 0; // To enable/disable @spy commands, which consume too much cpu time when sending packets. [Skotlex]
 
-	map->INTER_CONF_NAME="conf/common/inter-server.conf";
-	map->LOG_CONF_NAME="conf/map/logs.conf";
+	map->INTER_CONF_NAME = "conf/common/inter-server.conf";
+	map->LOG_CONF_NAME = "conf/map/logs.conf";
 	map->MAP_CONF_NAME = "conf/map/map-server.conf";
 	map->BATTLE_CONF_FILENAME = "conf/map/battle.conf";
 	map->ATCOMMAND_CONF_FILENAME = "conf/atcommand.conf";
@@ -7199,10 +7238,10 @@ void map_defaults(void)
 
 	map->default_codepage[0] = '\0';
 	map->server_port = 3306;
-	sprintf(map->server_ip,"127.0.0.1");
-	sprintf(map->server_id,"ragnarok");
-	sprintf(map->server_pw,"ragnarok");
-	sprintf(map->server_db,"ragnarok");
+	sprintf(map->server_ip, "127.0.0.1");
+	sprintf(map->server_id, "ragnarok");
+	sprintf(map->server_pw, "ragnarok");
+	sprintf(map->server_db, "ragnarok");
 	map->mysql_handle = NULL;
 	map->default_lang_str[0] = '\0';
 
@@ -7237,11 +7276,11 @@ void map_defaults(void)
 	map->bl_list_count = 0;
 	map->bl_list_size = 0;
 
-	//all in a big chunk, respects order
-PRAGMA_GCC9(GCC diagnostic push)
-PRAGMA_GCC9(GCC diagnostic ignored "-Warray-bounds")
+	// all in a big chunk, respects order
+	PRAGMA_GCC9(GCC diagnostic push)
+	PRAGMA_GCC9(GCC diagnostic ignored "-Warray-bounds")
 	memset(ZEROED_BLOCK_POS(map), 0, ZEROED_BLOCK_SIZE(map));
-PRAGMA_GCC9(GCC diagnostic pop)
+	PRAGMA_GCC9(GCC diagnostic pop)
 
 	map->cpsd = NULL;
 	map->list = NULL;
@@ -7276,7 +7315,7 @@ PRAGMA_GCC9(GCC diagnostic pop)
 	map->addblock = map_addblock;
 	map->delblock = map_delblock;
 	map->moveblock = map_moveblock;
-	//blocklist nb in one cell
+	// blocklist nb in one cell
 	map->count_oncell = map_count_oncell;
 	map->find_skill_unit_oncell = map_find_skill_unit_oncell;
 	// search and creation
@@ -7372,8 +7411,8 @@ PRAGMA_GCC9(GCC diagnostic pop)
 	map->iwall_remove = map_iwall_remove;
 
 	map->addmobtolist = map_addmobtolist; // [Wizputer]
-	map->spawnmobs = map_spawnmobs; // [Wizputer]
-	map->removemobs = map_removemobs; // [Wizputer]
+	map->spawnmobs = map_spawnmobs;       // [Wizputer]
+	map->removemobs = map_removemobs;     // [Wizputer]
 	map->addmap2db = map_addmap2db;
 	map->removemapdb = map_removemapdb;
 	map->clean = map_clean;

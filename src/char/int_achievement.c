@@ -1,23 +1,23 @@
 /**
-* This file is part of Hercules.
-* http://herc.ws - http://github.com/HerculesWS/Hercules
-*
-* Copyright (C) 2017-2025 Hercules Dev Team
-* Copyright (C) Smokexyz
-*
-* Hercules is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2017-2025 Hercules Dev Team
+ * Copyright (C) Smokexyz
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 #define HERCULES_CORE
 
 #include "int_achievement.h"
@@ -76,7 +76,7 @@ static int inter_achievement_tosql(int char_id, struct char_achievements *cp, co
 			save = true;
 
 		if (save) {
-			StrBuf->Printf(&buf, "%s('%d', '%d', '%"PRId64"', '%"PRId64"'", rows ?", ":"", char_id, pa->id, (int64)pa->completed_at, (int64)pa->rewarded_at);
+			StrBuf->Printf(&buf, "%s('%d', '%d', '%" PRId64 "', '%" PRId64 "'", rows ? ", " : "", char_id, pa->id, (int64)pa->completed_at, (int64)pa->rewarded_at);
 			for (j = 0; j < MAX_ACHIEVEMENT_OBJECTIVES; j++)
 				StrBuf->Printf(&buf, ", '%d'", pa->objective[j]);
 			StrBuf->AppendStr(&buf, ")");
@@ -135,16 +135,19 @@ static bool inter_achievement_fromsql(int char_id, struct char_achievements *cp)
 
 	VECTOR_CLEAR(*cp);
 
-	if ((num_rows = (int) SQL->NumRows(inter->sql_handle)) != 0) {
+	if ((num_rows = (int)SQL->NumRows(inter->sql_handle)) != 0) {
 		int j = 0;
 
 		VECTOR_ENSURE(*cp, num_rows, 1);
 
 		for (i = 0; i < num_rows && SQL_SUCCESS == SQL->NextRow(inter->sql_handle); i++) {
-			struct achievement t_ach = { 0 };
-			SQL->GetData(inter->sql_handle, 0, &data, NULL); t_ach.id = atoi(data);
-			SQL->GetData(inter->sql_handle, 1, &data, NULL); t_ach.completed_at = atoi(data);
-			SQL->GetData(inter->sql_handle, 2, &data, NULL); t_ach.rewarded_at = atoi(data);
+			struct achievement t_ach = {0};
+			SQL->GetData(inter->sql_handle, 0, &data, NULL);
+			t_ach.id = atoi(data);
+			SQL->GetData(inter->sql_handle, 1, &data, NULL);
+			t_ach.completed_at = atoi(data);
+			SQL->GetData(inter->sql_handle, 2, &data, NULL);
+			t_ach.rewarded_at = atoi(data);
 			/* Objectives */
 			for (j = 0; j < MAX_ACHIEVEMENT_OBJECTIVES; j++) {
 				SQL->GetData(inter->sql_handle, j + 3, &data, NULL);
@@ -174,7 +177,7 @@ static int inter_achievement_parse_frommap(int fd)
 {
 	RFIFOHEAD(fd);
 
-	switch (RFIFOW(fd,0)) {
+	switch (RFIFOW(fd, 0)) {
 		case 0x3012:
 			mapif->pLoadAchievements(fd);
 			break;

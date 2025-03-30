@@ -30,25 +30,24 @@
 #include <stdlib.h>
 #include <string.h>
 #if defined(HAVE_LIBBACKTRACE)
-#include "libbacktrace/backtrace.h"
-#include "libbacktrace/backtrace-supported.h"
-#  if defined(WIN32)
-#    include <windows.h>
-#  elif defined(__sun)
-#    include <limits.h>
-#  elif defined(__linux) || defined(__linux__)
-#    include <unistd.h>
-#    include <limits.h>
-#  elif defined(__APPLE__) && defined(__MACH__)
-#    include <mach-o/dyld.h>
-#  elif defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__bsdi__) || defined(__DragonFly__)
-#    include <sys/types.h>
-#    include <sys/sysctl.h>
-#  endif
+	#include "libbacktrace/backtrace.h"
+	#include "libbacktrace/backtrace-supported.h"
+	#if defined(WIN32)
+		#include <windows.h>
+	#elif defined(__sun)
+		#include <limits.h>
+	#elif defined(__linux) || defined(__linux__)
+		#include <unistd.h>
+		#include <limits.h>
+	#elif defined(__APPLE__) && defined(__MACH__)
+		#include <mach-o/dyld.h>
+	#elif defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__bsdi__) || defined(__DragonFly__)
+		#include <sys/types.h>
+		#include <sys/sysctl.h>
+	#endif
 #elif defined(HAVE_EXECINFO)
-#include <execinfo.h>
+	#include <execinfo.h>
 #endif // HAVE_LIBBACKTRACE
-
 
 static struct nullpo_interface nullpo_s;
 struct nullpo_interface *nullpo;
@@ -63,12 +62,8 @@ static void nullpo_error_callback(void *data, const char *msg, int errnum)
 
 static int nullpo_print_callback(void *data, uintptr_t pc, const char *filename, int lineno, const char *function)
 {
-	ShowError("0x%lx %s\n",
-		(unsigned long) pc,
-		function == NULL ? "???" : function);
-	ShowError("\t%s:%d\n",
-		filename == NULL ? "???" : filename,
-		lineno);
+	ShowError("0x%lx %s\n", (unsigned long)pc, function == NULL ? "???" : function);
+	ShowError("\t%s:%d\n", filename == NULL ? "???" : filename, lineno);
 	return 0;
 }
 
@@ -79,26 +74,26 @@ static void nullpo_backtrace_print(struct backtrace_state *state)
 
 static bool nullpo_backtrace_get_executable_path(char *buf, size_t length)
 {
-#if defined(WIN32)
+	#if defined(WIN32)
 	char *exe_path = NULL;
 	if (_get_pgmptr(&exe_path) != 0)
 		return false;
 	safestrncpy(buf, exe_path, length);
 	return true;
-#elif defined(__sun)
+	#elif defined(__sun)
 	if (length < MAX_PATH)
 		return false;
 	if (realpath(getexecname(), buf) == NULL)
 		return false;
 	buf[length - 1] = '\0';
 	return true;
-#elif defined(__linux) || defined(__linux__)
+	#elif defined(__linux) || defined(__linux__)
 	ssize_t len = readlink("/proc/self/exe", buf, length);
 	if (len <= 0 || len == length)
 		return false;
 	buf[len] = '\0';
 	return true;
-#elif defined(__APPLE__) && defined(__MACH__)
+	#elif defined(__APPLE__) && defined(__MACH__)
 	uint32_t len = (uint32_t)length;
 	if (_NSGetExecutablePath(buf, &len) != 0)
 		return false; // buffer too small (!)
@@ -109,7 +104,7 @@ static bool nullpo_backtrace_get_executable_path(char *buf, size_t length)
 		free(canonical_path);
 	}
 	return true;
-#elif defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__bsdi__) || defined(__DragonFly__)
+	#elif defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__bsdi__) || defined(__DragonFly__)
 	int mib[4];
 	mib[0] = CTL_KERN;
 	mib[1] = KERN_PROC;
@@ -118,10 +113,10 @@ static bool nullpo_backtrace_get_executable_path(char *buf, size_t length)
 	if (sysctl(mib, 4, buf, &length, NULL, 0) != 0)
 		return false;
 	return true;
-#endif
+	#endif
 	return false;
 }
-#endif  // HAVE_LIBBACKTRACE
+#endif // HAVE_LIBBACKTRACE
 
 /**
  * Reports failed assertions or NULL pointers

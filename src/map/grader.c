@@ -44,7 +44,7 @@ struct grader_interface *grader;
 static bool grader_read_db_libconfig(void)
 {
 	char filepath[280];
-	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH"grade_db.conf");
+	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH "grade_db.conf");
 
 	struct config_t grade_db_conf;
 	if (libconfig->load_file(&grade_db_conf, filepath) == CONFIG_FALSE) {
@@ -63,7 +63,7 @@ static bool grader_read_db_libconfig(void)
 	}
 
 	libconfig->destroy(&grade_db_conf);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 	return true;
 }
 
@@ -339,18 +339,18 @@ void grader_enchant_start(struct map_session_data *sd, int idx, int mat_idx, boo
 			clif->announce_grade_status(sd, sd->status.inventory[idx].nameid, sd->status.inventory[idx].grade, false, ALL_CLIENT);
 
 		switch (gmaterial->failure_behavior) {
-		case GRADE_FAILURE_BEHAVIOR_KEEP:
-			clif->grade_enchant_result(sd, idx, (enum grade_level)sd->status.inventory[idx].grade, GRADE_UPGRADE_FAILED_KEEP);
-			break;
-		case GRADE_FAILURE_BEHAVIOR_DOWNGRADE:
-			clif->grade_enchant_result(sd, idx, (enum grade_level)sd->status.inventory[idx].grade, GRADE_UPGRADE_FAILED_DOWNGRADE);
-			sd->status.inventory[idx].grade -= 1;
-			sd->status.inventory[idx].grade = cap_value(sd->status.inventory[idx].grade, ITEM_GRADE_NONE, ITEM_GRADE_MAX - 1);
-			break;
-		case GRADE_FAILURE_BEHAVIOR_DESTROY:
-			clif->grade_enchant_result(sd, idx, (enum grade_level)sd->status.inventory[idx].grade, GRADE_UPGRADE_FAILED_DESTROY);
-			pc->delitem(sd, idx, 1, 0, DELITEM_FAILREFINE, LOG_TYPE_GRADE);
-			break;
+			case GRADE_FAILURE_BEHAVIOR_KEEP:
+				clif->grade_enchant_result(sd, idx, (enum grade_level)sd->status.inventory[idx].grade, GRADE_UPGRADE_FAILED_KEEP);
+				break;
+			case GRADE_FAILURE_BEHAVIOR_DOWNGRADE:
+				clif->grade_enchant_result(sd, idx, (enum grade_level)sd->status.inventory[idx].grade, GRADE_UPGRADE_FAILED_DOWNGRADE);
+				sd->status.inventory[idx].grade -= 1;
+				sd->status.inventory[idx].grade = cap_value(sd->status.inventory[idx].grade, ITEM_GRADE_NONE, ITEM_GRADE_MAX - 1);
+				break;
+			case GRADE_FAILURE_BEHAVIOR_DESTROY:
+				clif->grade_enchant_result(sd, idx, (enum grade_level)sd->status.inventory[idx].grade, GRADE_UPGRADE_FAILED_DESTROY);
+				pc->delitem(sd, idx, 1, 0, DELITEM_FAILREFINE, LOG_TYPE_GRADE);
+				break;
 		}
 	} else {
 		sd->status.inventory[idx].refine = 0; // Hardcoded in the client
@@ -378,9 +378,7 @@ static int do_init_grader(bool minimal)
 	return 0;
 }
 
-static void do_final_grader(void)
-{
-}
+static void do_final_grader(void) {}
 
 void grader_defaults(void)
 {

@@ -31,129 +31,129 @@
 PRAGMA_GCC5(GCC diagnostic push)
 PRAGMA_GCC5(GCC diagnostic ignored "-Wdiscarded-qualifiers")
 PRAGMA_GCC5(GCC diagnostic ignored "-Wsuggest-attribute=format")
-#if defined (HPMHOOKING_API)
-#define HPM_SERVER_TYPE SERVER_TYPE_API
-#define HPM_CORE_INCLUDE "HPMHooking/HPMHooking_api.HPMHooksCore.inc"
-#define HPM_HOOKS_INCLUDE "HPMHooking/HPMHooking_api.Hooks.inc"
-#define HPM_POINTS_INCLUDE "HPMHooking/HPMHooking_api.HookingPoints.inc"
-#define HPM_SOURCES_INCLUDE "HPMHooking/HPMHooking_api.sources.inc"
-#include "api/aclif.h"
-#include "api/aloginif.h"
-#include "api/api.h"
-#include "api/apisessiondata.h"
-#include "api/handlerfunc.h"
-#include "api/handlers.h"
-#include "api/httphandler.h"
-#include "api/httpparsehandler.h"
-#include "api/httpparser.h"
-#include "api/httpsender.h"
-#include "api/imageparser.h"
-#include "api/jsonparser.h"
-#include "api/jsonwriter.h"
-#include "api/mimepart.h"
-#elif defined (HPMHOOKING_LOGIN)
-#define HPM_SERVER_TYPE SERVER_TYPE_LOGIN
-#define HPM_CORE_INCLUDE "HPMHooking/HPMHooking_login.HPMHooksCore.inc"
-#define HPM_HOOKS_INCLUDE "HPMHooking/HPMHooking_login.Hooks.inc"
-#define HPM_POINTS_INCLUDE "HPMHooking/HPMHooking_login.HookingPoints.inc"
-#define HPM_SOURCES_INCLUDE "HPMHooking/HPMHooking_login.sources.inc"
-#include "login/account.h"
-#include "login/ipban.h"
-#include "login/lapiif.h"
-#include "login/lclif.h"
-#include "login/lclif.p.h"
-#include "login/login.h"
-#include "login/loginlog.h"
-#include "login/packets_ac_struct.h"
-#include "login/packets_ca_struct.h"
-#elif defined (HPMHOOKING_CHAR)
-#define HPM_SERVER_TYPE SERVER_TYPE_CHAR
-#define HPM_CORE_INCLUDE "HPMHooking/HPMHooking_char.HPMHooksCore.inc"
-#define HPM_HOOKS_INCLUDE "HPMHooking/HPMHooking_char.Hooks.inc"
-#define HPM_POINTS_INCLUDE "HPMHooking/HPMHooking_char.HookingPoints.inc"
-#define HPM_SOURCES_INCLUDE "HPMHooking/HPMHooking_char.sources.inc"
-#include "char/capiif.h"
-#include "char/char.h"
-#include "char/geoip.h"
-#include "char/int_achievement.h"
-#include "char/int_adventurer_agency.h"
-#include "char/int_auction.h"
-#include "char/int_clan.h"
-#include "char/int_elemental.h"
-#include "char/int_guild.h"
-#include "char/int_homun.h"
-#include "char/int_mail.h"
-#include "char/int_mercenary.h"
-#include "char/int_party.h"
-#include "char/int_pet.h"
-#include "char/int_quest.h"
-#include "char/int_rodex.h"
-#include "char/int_storage.h"
-#include "char/int_userconfig.h"
-#include "char/inter.h"
-#include "char/loginif.h"
-#include "char/mapif.h"
-#include "char/pincode.h"
-#include "common/mapindex.h"
-#elif defined (HPMHOOKING_MAP)
-#define HPM_SERVER_TYPE SERVER_TYPE_MAP
-#define HPM_CORE_INCLUDE "HPMHooking/HPMHooking_map.HPMHooksCore.inc"
-#define HPM_HOOKS_INCLUDE "HPMHooking/HPMHooking_map.Hooks.inc"
-#define HPM_POINTS_INCLUDE "HPMHooking/HPMHooking_map.HookingPoints.inc"
-#define HPM_SOURCES_INCLUDE "HPMHooking/HPMHooking_map.sources.inc"
-#include "map/achievement.h"
-#include "map/atcommand.h"
-#include "map/battle.h"
-#include "map/battleground.h"
-#include "map/channel.h"
-#include "map/chat.h"
-#include "map/chrif.h"
-#include "map/clan.h"
-#include "map/clif.h"
-#include "map/duel.h"
-#include "map/elemental.h"
-#include "map/enchantui.h"
-#include "map/goldpc.h"
-#include "map/grader.h"
-#include "map/guild.h"
-#include "map/homunculus.h"
-#include "map/instance.h"
-#include "map/intif.h"
-#include "map/irc-bot.h"
-#include "map/itemdb.h"
-#include "map/log.h"
-#include "map/mail.h"
-#include "map/map.h"
-#include "map/mapiif.h"
-#include "map/mapreg.h"
-#include "map/mercenary.h"
-#include "map/messages.h"
-#include "map/mob.h"
-#include "map/npc.h"
-#include "map/party.h"
-#include "map/path.h"
-#include "map/pc.h"
-#include "map/pet.h"
-#include "map/quest.h"
-#include "map/rodex.h"
-#include "map/refine.h"
-#include "map/refine.p.h"
-#include "map/script.h"
-#include "map/skill.h"
-#include "map/status.h"
-#include "map/storage.h"
-#include "map/stylist.h"
-#include "map/trade.h"
-#include "map/unit.h"
-#include "common/grfio.h"
-#include "common/mapindex.h"
+#if defined(HPMHOOKING_API)
+	#define HPM_SERVER_TYPE SERVER_TYPE_API
+	#define HPM_CORE_INCLUDE "HPMHooking/HPMHooking_api.HPMHooksCore.inc"
+	#define HPM_HOOKS_INCLUDE "HPMHooking/HPMHooking_api.Hooks.inc"
+	#define HPM_POINTS_INCLUDE "HPMHooking/HPMHooking_api.HookingPoints.inc"
+	#define HPM_SOURCES_INCLUDE "HPMHooking/HPMHooking_api.sources.inc"
+	#include "api/aclif.h"
+	#include "api/aloginif.h"
+	#include "api/api.h"
+	#include "api/apisessiondata.h"
+	#include "api/handlerfunc.h"
+	#include "api/handlers.h"
+	#include "api/httphandler.h"
+	#include "api/httpparsehandler.h"
+	#include "api/httpparser.h"
+	#include "api/httpsender.h"
+	#include "api/imageparser.h"
+	#include "api/jsonparser.h"
+	#include "api/jsonwriter.h"
+	#include "api/mimepart.h"
+#elif defined(HPMHOOKING_LOGIN)
+	#define HPM_SERVER_TYPE SERVER_TYPE_LOGIN
+	#define HPM_CORE_INCLUDE "HPMHooking/HPMHooking_login.HPMHooksCore.inc"
+	#define HPM_HOOKS_INCLUDE "HPMHooking/HPMHooking_login.Hooks.inc"
+	#define HPM_POINTS_INCLUDE "HPMHooking/HPMHooking_login.HookingPoints.inc"
+	#define HPM_SOURCES_INCLUDE "HPMHooking/HPMHooking_login.sources.inc"
+	#include "login/account.h"
+	#include "login/ipban.h"
+	#include "login/lapiif.h"
+	#include "login/lclif.h"
+	#include "login/lclif.p.h"
+	#include "login/login.h"
+	#include "login/loginlog.h"
+	#include "login/packets_ac_struct.h"
+	#include "login/packets_ca_struct.h"
+#elif defined(HPMHOOKING_CHAR)
+	#define HPM_SERVER_TYPE SERVER_TYPE_CHAR
+	#define HPM_CORE_INCLUDE "HPMHooking/HPMHooking_char.HPMHooksCore.inc"
+	#define HPM_HOOKS_INCLUDE "HPMHooking/HPMHooking_char.Hooks.inc"
+	#define HPM_POINTS_INCLUDE "HPMHooking/HPMHooking_char.HookingPoints.inc"
+	#define HPM_SOURCES_INCLUDE "HPMHooking/HPMHooking_char.sources.inc"
+	#include "char/capiif.h"
+	#include "char/char.h"
+	#include "char/geoip.h"
+	#include "char/int_achievement.h"
+	#include "char/int_adventurer_agency.h"
+	#include "char/int_auction.h"
+	#include "char/int_clan.h"
+	#include "char/int_elemental.h"
+	#include "char/int_guild.h"
+	#include "char/int_homun.h"
+	#include "char/int_mail.h"
+	#include "char/int_mercenary.h"
+	#include "char/int_party.h"
+	#include "char/int_pet.h"
+	#include "char/int_quest.h"
+	#include "char/int_rodex.h"
+	#include "char/int_storage.h"
+	#include "char/int_userconfig.h"
+	#include "char/inter.h"
+	#include "char/loginif.h"
+	#include "char/mapif.h"
+	#include "char/pincode.h"
+	#include "common/mapindex.h"
+#elif defined(HPMHOOKING_MAP)
+	#define HPM_SERVER_TYPE SERVER_TYPE_MAP
+	#define HPM_CORE_INCLUDE "HPMHooking/HPMHooking_map.HPMHooksCore.inc"
+	#define HPM_HOOKS_INCLUDE "HPMHooking/HPMHooking_map.Hooks.inc"
+	#define HPM_POINTS_INCLUDE "HPMHooking/HPMHooking_map.HookingPoints.inc"
+	#define HPM_SOURCES_INCLUDE "HPMHooking/HPMHooking_map.sources.inc"
+	#include "map/achievement.h"
+	#include "map/atcommand.h"
+	#include "map/battle.h"
+	#include "map/battleground.h"
+	#include "map/channel.h"
+	#include "map/chat.h"
+	#include "map/chrif.h"
+	#include "map/clan.h"
+	#include "map/clif.h"
+	#include "map/duel.h"
+	#include "map/elemental.h"
+	#include "map/enchantui.h"
+	#include "map/goldpc.h"
+	#include "map/grader.h"
+	#include "map/guild.h"
+	#include "map/homunculus.h"
+	#include "map/instance.h"
+	#include "map/intif.h"
+	#include "map/irc-bot.h"
+	#include "map/itemdb.h"
+	#include "map/log.h"
+	#include "map/mail.h"
+	#include "map/map.h"
+	#include "map/mapiif.h"
+	#include "map/mapreg.h"
+	#include "map/mercenary.h"
+	#include "map/messages.h"
+	#include "map/mob.h"
+	#include "map/npc.h"
+	#include "map/party.h"
+	#include "map/path.h"
+	#include "map/pc.h"
+	#include "map/pet.h"
+	#include "map/quest.h"
+	#include "map/rodex.h"
+	#include "map/refine.h"
+	#include "map/refine.p.h"
+	#include "map/script.h"
+	#include "map/skill.h"
+	#include "map/status.h"
+	#include "map/storage.h"
+	#include "map/stylist.h"
+	#include "map/trade.h"
+	#include "map/unit.h"
+	#include "common/grfio.h"
+	#include "common/mapindex.h"
 #else
-#define HPM_SERVER_TYPE SERVER_TYPE_UNKNOWN
-#define HPM_CORE_INCLUDE "HPMHooking/HPMHooking.HPMHooksCore.inc"
-#define HPM_HOOKS_INCLUDE "HPMHooking/HPMHooking.Hooks.inc"
-#define HPM_POINTS_INCLUDE "HPMHooking/HPMHooking.HookingPoints.inc"
-#define HPM_SOURCES_INCLUDE "HPMHooking/HPMHooking.sources.inc"
-#error HPMHooking plugin needs to be compiled for a specific server type. Please make sure your Makefiles are up to date.
+	#define HPM_SERVER_TYPE SERVER_TYPE_UNKNOWN
+	#define HPM_CORE_INCLUDE "HPMHooking/HPMHooking.HPMHooksCore.inc"
+	#define HPM_HOOKS_INCLUDE "HPMHooking/HPMHooking.Hooks.inc"
+	#define HPM_POINTS_INCLUDE "HPMHooking/HPMHooking.HookingPoints.inc"
+	#define HPM_SOURCES_INCLUDE "HPMHooking/HPMHooking.sources.inc"
+	#error HPMHooking plugin needs to be compiled for a specific server type. Please make sure your Makefiles are up to date.
 #endif
 PRAGMA_GCC5(GCC diagnostic pop)
 #include "common/base62.h"
@@ -182,17 +182,17 @@ PRAGMA_GCC5(GCC diagnostic pop)
 #include <string.h>
 
 HPExport struct hplugin_info pinfo = {
-	"HPMHooking",   // Plugin name
-	HPM_SERVER_TYPE,// Which server types this plugin works with?
-	"0.2",          // Plugin version
-	HPM_VERSION,    // HPM Version (don't change, macro is automatically updated)
+    "HPMHooking",    // Plugin name
+    HPM_SERVER_TYPE, // Which server types this plugin works with?
+    "0.2",           // Plugin version
+    HPM_VERSION,     // HPM Version (don't change, macro is automatically updated)
 };
 
-#define HP_POP(x,y) #x , (void**)(&x) , (void*)y , 0
-struct DBMap *hp_db;/* hooking points db -- for quick lookup */
+#define HP_POP(x, y) #x, (void **)(&x), (void *)y, 0
+struct DBMap *hp_db; /* hooking points db -- for quick lookup */
 
 struct HookingPointData {
-	char* name;
+	char *name;
 	void **sref;
 	void *tref;
 	int idx;
@@ -204,7 +204,7 @@ struct HPMHookPoint {
 };
 
 struct HPMHooksCore {
-	#include HPM_CORE_INCLUDE
+#include HPM_CORE_INCLUDE
 	struct {
 		int total;
 	} data;
@@ -215,11 +215,13 @@ bool *HPMforce_return;
 void HPM_HP_final(void);
 void HPM_HP_load(void);
 
-HPExport void server_post_final (void) {
+HPExport void server_post_final(void)
+{
 	HPM_HP_final();
 }
 
-HPExport const char *Hooked (bool *fr) {
+HPExport const char *Hooked(bool *fr)
+{
 	const char *ret = HPM_shared_symbols(HPM_SERVER_TYPE);
 	if (ret)
 		return ret;
@@ -228,22 +230,23 @@ HPExport const char *Hooked (bool *fr) {
 	return NULL;
 }
 
-HPExport bool HPM_Plugin_AddHook(enum HPluginHookType type, const char *target, void *hook, unsigned int pID) {
+HPExport bool HPM_Plugin_AddHook(enum HPluginHookType type, const char *target, void *hook, unsigned int pID)
+{
 	struct HookingPointData *hpd;
 
-	if (hp_db && (hpd = strdb_get(hp_db,target)) != NULL) {
+	if (hp_db && (hpd = strdb_get(hp_db, target)) != NULL) {
 		struct HPMHookPoint **hp = NULL;
 		int *count = NULL;
 
-		if( type == HOOK_TYPE_PRE ) {
-			hp = (struct HPMHookPoint **)((char *)&HPMHooks.list + (sizeof(struct HPMHookPoint *)*hpd->idx));
-			count = (int *)((char *)&HPMHooks.count + (sizeof(int)*hpd->idx));
+		if (type == HOOK_TYPE_PRE) {
+			hp = (struct HPMHookPoint **)((char *)&HPMHooks.list + (sizeof(struct HPMHookPoint *) * hpd->idx));
+			count = (int *)((char *)&HPMHooks.count + (sizeof(int) * hpd->idx));
 		} else {
-			hp = (struct HPMHookPoint **)((char *)&HPMHooks.list + (sizeof(struct HPMHookPoint *)*(hpd->idx+1)));
-			count = (int *)((char *)&HPMHooks.count + (sizeof(int)*(hpd->idx+1)));
+			hp = (struct HPMHookPoint **)((char *)&HPMHooks.list + (sizeof(struct HPMHookPoint *) * (hpd->idx + 1)));
+			count = (int *)((char *)&HPMHooks.count + (sizeof(int) * (hpd->idx + 1)));
 		}
 
-		if( hp ) {
+		if (hp) {
 			*count += 1;
 
 			RECREATE(*hp, struct HPMHookPoint, *count);
@@ -266,33 +269,35 @@ PRAGMA_GCC5(GCC diagnostic ignored "-Wsuggest-attribute=format")
 #include HPM_HOOKS_INCLUDE
 PRAGMA_GCC5(GCC diagnostic pop)
 
-void HPM_HP_final(void) {
+void HPM_HP_final(void)
+{
 	int i, len = HPMHooks.data.total * 2;
 
-	if( hp_db )
+	if (hp_db)
 		db_destroy(hp_db);
 
-	for(i = 0; i < len; i++) {
-		int *count = (int *)((char *)&HPMHooks.count + (sizeof(int)*(i)));
+	for (i = 0; i < len; i++) {
+		int *count = (int *)((char *)&HPMHooks.count + (sizeof(int) * (i)));
 
-		if( count && *count ) {
-			struct HPMHookPoint **hp = (struct HPMHookPoint **)((char *)&HPMHooks.list + (sizeof(struct HPMHookPoint *)*(i)));
+		if (count && *count) {
+			struct HPMHookPoint **hp = (struct HPMHookPoint **)((char *)&HPMHooks.list + (sizeof(struct HPMHookPoint *) * (i)));
 
-			if( hp && *hp )
+			if (hp && *hp)
 				aFree(*hp);
 		}
 	}
 }
 
-void HPM_HP_load(void) {
-	#include HPM_POINTS_INCLUDE
+void HPM_HP_load(void)
+{
+#include HPM_POINTS_INCLUDE
 	int i, len = ARRAYLENGTH(HookingPoints), idx = 0;
 
-	memset(&HPMHooks,0,sizeof(struct HPMHooksCore));
+	memset(&HPMHooks, 0, sizeof(struct HPMHooksCore));
 
-	hp_db = strdb_alloc(DB_OPT_BASE|DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, HookingPointsLenMax);
+	hp_db = strdb_alloc(DB_OPT_BASE | DB_OPT_DUP_KEY | DB_OPT_RELEASE_DATA, HookingPointsLenMax);
 
-	for(i = 0; i < len; i++) {
+	for (i = 0; i < len; i++) {
 		struct HookingPointData *hpd = NULL;
 
 		CREATE(hpd, struct HookingPointData, 1);
@@ -307,5 +312,5 @@ void HPM_HP_load(void) {
 		HPMHooks.data.total++;
 	}
 
-	#include HPM_SOURCES_INCLUDE
+#include HPM_SOURCES_INCLUDE
 }

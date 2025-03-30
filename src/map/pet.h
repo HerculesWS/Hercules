@@ -21,13 +21,13 @@
 #ifndef MAP_PET_H
 #define MAP_PET_H
 
-#include "map/map.h" // struct block_list
+#include "map/map.h"    // struct block_list
 #include "map/status.h" // enum sc_type
-#include "map/unit.h" // struct unit_data
+#include "map/unit.h"   // struct unit_data
 #include "common/hercules.h"
 #include "common/mmo.h" // NAME_LENGTH, struct s_pet
 
-#define MAX_PET_DB       300
+#define MAX_PET_DB 300
 #define MAX_PETLOOT_SIZE 30
 
 /** Pet Evolution [Dastgir/Hercules] */
@@ -38,7 +38,7 @@ struct pet_evolve_data {
 
 struct s_pet_db {
 	int class_;
-	char name[NAME_LENGTH],jname[NAME_LENGTH];
+	char name[NAME_LENGTH], jname[NAME_LENGTH];
 	int itemID;
 	int EggID;
 	int AcceID;
@@ -75,34 +75,34 @@ enum petdb_key_type {
 	PET_FOOD,
 };
 
-struct pet_recovery { //Stat recovery
+struct pet_recovery {     // Stat recovery
 	enum sc_type type;    ///< Status Change id
 	unsigned short delay; ///< How long before curing (secs).
 	int timer;
 };
 
 struct pet_bonus {
-	unsigned short type;     //bStr, bVit?
-	unsigned short val;      //Qty
-	unsigned short duration; //in secs
-	unsigned short delay;    //Time before RENEWAL_CAST (secs)
+	unsigned short type;     // bStr, bVit?
+	unsigned short val;      // Qty
+	unsigned short duration; // in secs
+	unsigned short delay;    // Time before RENEWAL_CAST (secs)
 	int timer;
 };
 
-struct pet_skill_attack { //Attack Skill
+struct pet_skill_attack { // Attack Skill
 	unsigned short id;
 	unsigned short lv;
-	unsigned short div_; //0 = Normal skill. >0 = Fixed damage (lv), fixed div_.
-	unsigned short rate; //Base chance of skill ocurrance (10 = 10% of attacks)
-	unsigned short bonusrate; //How being 100% loyal affects cast rate (10 = At 1000 intimacy->rate+10%
+	unsigned short div_;      // 0 = Normal skill. >0 = Fixed damage (lv), fixed div_.
+	unsigned short rate;      // Base chance of skill ocurrance (10 = 10% of attacks)
+	unsigned short bonusrate; // How being 100% loyal affects cast rate (10 = At 1000 intimacy->rate+10%
 };
 
-struct pet_skill_support { //Support Skill
+struct pet_skill_support { // Support Skill
 	unsigned short id;
 	unsigned short lv;
-	unsigned short hp; //Max HP% for skill to trigger (50 -> 50% for Magnificat)
-	unsigned short sp; //Max SP% for skill to trigger (100 = no check)
-	unsigned short delay; //Time (secs) between being able to recast.
+	unsigned short hp;    // Max HP% for skill to trigger (50 -> 50% for Magnificat)
+	unsigned short sp;    // Max SP% for skill to trigger (100 = no check)
+	unsigned short delay; // Time (secs) between being able to recast.
 	int timer;
 };
 
@@ -128,77 +128,76 @@ struct pet_data {
 	} state;
 	int move_fail_count;
 	int64 next_walktime, last_thinktime;
-	short rate_fix; //Support rate as modified by intimacy (1000 = 100%) [Skotlex]
+	short rate_fix; // Support rate as modified by intimacy (1000 = 100%) [Skotlex]
 
-	struct pet_recovery* recovery;
-	struct pet_bonus* bonus;
-	struct pet_skill_attack* a_skill;
-	struct pet_skill_support* s_skill;
-	struct pet_loot* loot;
+	struct pet_recovery *recovery;
+	struct pet_bonus *bonus;
+	struct pet_skill_attack *a_skill;
+	struct pet_skill_support *s_skill;
+	struct pet_loot *loot;
 
 	struct map_session_data *msd;
 };
 
 #define pet_stop_walking(pd, type) (unit->stop_walking(&(pd)->bl, (type)))
-#define pet_stop_attack(pd)        (unit->stop_attack(&(pd)->bl))
+#define pet_stop_attack(pd) (unit->stop_attack(&(pd)->bl))
 
 struct pet_interface {
 	struct s_pet_db db[MAX_PET_DB];
-	struct eri *item_drop_ers; //For loot drops delay structures.
+	struct eri *item_drop_ers; // For loot drops delay structures.
 	struct eri *item_drop_list_ers;
 
 	/* */
-	int (*init) (bool minimal);
-	int (*final) (void);
+	int (*init)(bool minimal);
+	int (*final)(void);
 	/* */
-	int (*hungry_val) (struct pet_data *pd);
-	void (*set_hunger) (struct pet_data *pd, int value);
-	int (*get_card4_value) (int rename_flag, int intimacy);
-	void (*set_intimate) (struct pet_data *pd, int value);
-	int (*create_egg) (struct map_session_data *sd, int item_id);
-	int (*unlocktarget) (struct pet_data *pd);
-	int (*attackskill) (struct pet_data *pd, int target_id);
-	int (*target_check) (struct map_session_data *sd, struct block_list *bl, int type);
-	int (*sc_check) (struct map_session_data *sd, int type);
-	int (*hungry) (int tid, int64 tick, int id, intptr_t data);
-	int (*search_petDB_index) (int key, enum petdb_key_type);
-	int (*hungry_timer_delete) (struct pet_data *pd);
-	int (*performance) (struct map_session_data *sd, struct pet_data *pd);
-	int (*return_egg) (struct map_session_data *sd, struct pet_data *pd);
-	int (*data_init) (struct map_session_data *sd, struct s_pet *petinfo);
-	int (*spawn) (struct map_session_data *sd, bool birth_process);
-	int (*birth_process) (struct map_session_data *sd, struct s_pet *petinfo);
-	int (*recv_petdata) (int account_id, struct s_pet *p, int flag);
-	int (*select_egg) (struct map_session_data *sd, int egg_index);
-	int (*catch_process1) (struct map_session_data *sd, int target_class);
-	int (*catch_process2) (struct map_session_data *sd, int target_id);
-	bool (*get_egg) (int account_id, int pet_class, int pet_id );
-	int (*unequipitem) (struct map_session_data *sd, struct pet_data *pd);
-	int (*food) (struct map_session_data *sd, struct pet_data *pd);
-	int (*ai_sub_hard_lootsearch) (struct block_list *bl, va_list ap);
-	int (*menu) (struct map_session_data *sd, int menunum);
-	int (*change_name) (struct map_session_data *sd, const char *name);
-	int (*change_name_ack) (struct map_session_data *sd, const char *name, int flag);
-	int (*equipitem) (struct map_session_data *sd, int index);
-	int (*randomwalk) (struct pet_data *pd, int64 tick);
-	int (*ai_sub_hard) (struct pet_data *pd, struct map_session_data *sd, int64 tick);
-	int (*ai_sub_foreachclient) (struct map_session_data *sd, va_list ap);
-	int (*ai_hard) (int tid, int64 tick, int id, intptr_t data);
-	int (*delay_item_drop) (int tid, int64 tick, int id, intptr_t data);
-	int (*lootitem_drop) (struct pet_data *pd, struct map_session_data *sd);
-	int (*skill_bonus_timer) (int tid, int64 tick, int id, intptr_t data);
-	int (*recovery_timer) (int tid, int64 tick, int id, intptr_t data);
-	int (*skill_support_timer) (int tid, int64 tick, int id, intptr_t data);
+	int (*hungry_val)(struct pet_data *pd);
+	void (*set_hunger)(struct pet_data *pd, int value);
+	int (*get_card4_value)(int rename_flag, int intimacy);
+	void (*set_intimate)(struct pet_data *pd, int value);
+	int (*create_egg)(struct map_session_data *sd, int item_id);
+	int (*unlocktarget)(struct pet_data *pd);
+	int (*attackskill)(struct pet_data *pd, int target_id);
+	int (*target_check)(struct map_session_data *sd, struct block_list *bl, int type);
+	int (*sc_check)(struct map_session_data *sd, int type);
+	int (*hungry)(int tid, int64 tick, int id, intptr_t data);
+	int (*search_petDB_index)(int key, enum petdb_key_type);
+	int (*hungry_timer_delete)(struct pet_data *pd);
+	int (*performance)(struct map_session_data *sd, struct pet_data *pd);
+	int (*return_egg)(struct map_session_data *sd, struct pet_data *pd);
+	int (*data_init)(struct map_session_data *sd, struct s_pet *petinfo);
+	int (*spawn)(struct map_session_data *sd, bool birth_process);
+	int (*birth_process)(struct map_session_data *sd, struct s_pet *petinfo);
+	int (*recv_petdata)(int account_id, struct s_pet *p, int flag);
+	int (*select_egg)(struct map_session_data *sd, int egg_index);
+	int (*catch_process1)(struct map_session_data *sd, int target_class);
+	int (*catch_process2)(struct map_session_data *sd, int target_id);
+	bool (*get_egg)(int account_id, int pet_class, int pet_id);
+	int (*unequipitem)(struct map_session_data *sd, struct pet_data *pd);
+	int (*food)(struct map_session_data *sd, struct pet_data *pd);
+	int (*ai_sub_hard_lootsearch)(struct block_list *bl, va_list ap);
+	int (*menu)(struct map_session_data *sd, int menunum);
+	int (*change_name)(struct map_session_data *sd, const char *name);
+	int (*change_name_ack)(struct map_session_data *sd, const char *name, int flag);
+	int (*equipitem)(struct map_session_data *sd, int index);
+	int (*randomwalk)(struct pet_data *pd, int64 tick);
+	int (*ai_sub_hard)(struct pet_data *pd, struct map_session_data *sd, int64 tick);
+	int (*ai_sub_foreachclient)(struct map_session_data *sd, va_list ap);
+	int (*ai_hard)(int tid, int64 tick, int id, intptr_t data);
+	int (*delay_item_drop)(int tid, int64 tick, int id, intptr_t data);
+	int (*lootitem_drop)(struct pet_data *pd, struct map_session_data *sd);
+	int (*skill_bonus_timer)(int tid, int64 tick, int id, intptr_t data);
+	int (*recovery_timer)(int tid, int64 tick, int id, intptr_t data);
+	int (*skill_support_timer)(int tid, int64 tick, int id, intptr_t data);
 
-	void (*read_db) (void);
-	int (*read_db_libconfig) (const char *filename, bool ignore_missing);
-	int (*read_db_sub) (struct config_setting_t *it, int n, const char *source);
-	bool (*read_db_sub_intimacy) (struct s_pet_db *entry, struct config_setting_t *t);
-	void (*read_db_clear) (void);
+	void (*read_db)(void);
+	int (*read_db_libconfig)(const char *filename, bool ignore_missing);
+	int (*read_db_sub)(struct config_setting_t *it, int n, const char *source);
+	bool (*read_db_sub_intimacy)(struct s_pet_db *entry, struct config_setting_t *t);
+	void (*read_db_clear)(void);
 
 	/* Pet Evolution [Dastgir/Hercules] */
-	bool (*read_db_sub_evolution) (struct s_pet_db *entry, struct config_setting_t *t);
-
+	bool (*read_db_sub_evolution)(struct s_pet_db *entry, struct config_setting_t *t);
 };
 
 #ifdef HERCULES_CORE

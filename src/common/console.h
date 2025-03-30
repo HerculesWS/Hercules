@@ -48,10 +48,10 @@ typedef void (*CParseFunc)(char *line);
  * x - command
  * y - category
  **/
-#define CPCMD(x) void console_parse_ ##x (char *line)
-#define CPCMD_A(x) console_parse_ ##x
-#define CPCMD_C(x,y) void console_parse_ ##y ##x (char *line)
-#define CPCMD_C_A(x,y) console_parse_ ##y ##x
+#define CPCMD(x) void console_parse_##x(char *line)
+#define CPCMD_A(x) console_parse_##x
+#define CPCMD_C(x, y) void console_parse_##y##x(char *line)
+#define CPCMD_C_A(x, y) console_parse_##y##x
 
 #define CP_CMD_LENGTH 20
 
@@ -84,27 +84,27 @@ struct console_input_interface {
 	/* */
 	struct Sql *SQL;
 	/* */
-	void (*parse_init) (void);
-	void (*parse_final) (void);
-	int (*parse_timer) (int tid, int64 tick, int id, intptr_t data);
-	void *(*pthread_main) (void *x);
-	void (*parse) (char* line);
-	void (*parse_sub) (char* line);
-	int (*key_pressed) (void);
-	void (*load_defaults) (void);
-	void (*parse_list_subs) (struct CParseEntry *cmd, unsigned char depth);
-	void (*addCommand) (char *name, CParseFunc func);
-	void (*setSQL) (struct Sql *SQL_handle);
+	void (*parse_init)(void);
+	void (*parse_final)(void);
+	int (*parse_timer)(int tid, int64 tick, int id, intptr_t data);
+	void *(*pthread_main)(void *x);
+	void (*parse)(char *line);
+	void (*parse_sub)(char *line);
+	int (*key_pressed)(void);
+	void (*load_defaults)(void);
+	void (*parse_list_subs)(struct CParseEntry *cmd, unsigned char depth);
+	void (*addCommand)(char *name, CParseFunc func);
+	void (*setSQL)(struct Sql *SQL_handle);
 #else // not CONSOLE_INPUT
 	UNAVAILABLE_STRUCT;
 #endif
 };
 
 struct console_interface {
-	void (*init) (void);
-	void (*final) (void);
-	void (*display_title) (void);
-	void (*display_gplnotice) (void);
+	void (*init)(void);
+	void (*final)(void);
+	void (*display_title)(void);
+	void (*display_gplnotice)(void);
 
 	struct console_input_interface *input;
 };

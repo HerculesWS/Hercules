@@ -27,7 +27,7 @@ struct map_session_data;
 
 /* Maximum available types for stylist */
 #ifndef MAX_STYLIST_TYPE
-#define MAX_STYLIST_TYPE LOOK_MAX
+	#define MAX_STYLIST_TYPE LOOK_MAX
 #endif
 
 /* Stylist data [Asheraf/Hercules]*/
@@ -45,19 +45,18 @@ struct stylist_data_entry {
 struct stylist_interface {
 	VECTOR_DECL(struct stylist_data_entry) data[MAX_STYLIST_TYPE];
 
-	void (*init) (bool minimal);
-	void (*final) (void);
+	void (*init)(bool minimal);
+	void (*final)(void);
 
-	void (*vector_init) (void);
-	void (*vector_clear) (void);
+	void (*vector_init)(void);
+	void (*vector_clear)(void);
 
-	bool (*read_db_libconfig) (void);
-	bool (*read_db_libconfig_sub) (struct config_setting_t *it, int idx, const char *source);
+	bool (*read_db_libconfig)(void);
+	bool (*read_db_libconfig_sub)(struct config_setting_t *it, int idx, const char *source);
 
-	void (*request_style_change) (struct map_session_data *sd, int type, int16 idx, bool isitem);
-	bool (*validate_requirements) (struct map_session_data *sd, int type, int16 idx);
-	void (*send_rodexitem) (struct map_session_data *sd, int itemid);
-
+	void (*request_style_change)(struct map_session_data *sd, int type, int16 idx, bool isitem);
+	bool (*validate_requirements)(struct map_session_data *sd, int type, int16 idx);
+	void (*send_rodexitem)(struct map_session_data *sd, int itemid);
 };
 
 #ifdef HERCULES_CORE
