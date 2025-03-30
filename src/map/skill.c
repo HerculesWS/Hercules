@@ -4108,7 +4108,9 @@ static int skill_check_unit_range_sub(struct block_list *bl, va_list ap)
 		case HT_BLASTMINE:
 		case HT_CLAYMORETRAP:
 		case HT_TALKIEBOX:
+#ifndef RENEWAL // 2018.11 rebalance - Basilica changed to a self buff
 		case HP_BASILICA:
+#endif
 		case RA_ELECTRICSHOCKER:
 		case RA_CLUSTERBOMB:
 		case RA_MAGENTATRAP:
@@ -4161,8 +4163,10 @@ static int skill_check_unit_range2_sub(struct block_list *bl, va_list ap)
 	if( status->isdead(bl) && skill_id != AL_WARP )
 		return 0;
 
+#ifndef RENEWAL // 2018.11 rebalance - Basilica changed to a self buff
 	if( skill_id == HP_BASILICA && bl->type == BL_PC )
 		return 0;
+#endif
 
 	if (skill_id == AM_DEMONSTRATION && bl->type == BL_MOB && BL_UCCAST(BL_MOB, bl)->class_ == MOBID_EMPELIUM)
 		return 0; //Allow casting Bomb/Demonstration Right under emperium [Skotlex]
@@ -7506,6 +7510,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 		case SP_SOULREAPER:
 #ifdef RENEWAL
 		case BD_ADAPTATION:
+		case HP_BASILICA: // 2018.11 rebalance - Basilica changed to a self buff
 #endif
 			clif->skill_nodamage(src,bl,skill_id,skill_lv,
 				sc_start(src, bl, type, 100, skill_lv, skill->get_time(skill_id, skill_lv), skill_id));
@@ -12601,6 +12606,8 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 			skill->unitsetting(src,skill_id,skill_lv,x,y,0);
 			flag|=1;
 			break;
+
+#ifndef RENEWAL // 2018.11 rebalance - Basilica changed to a self buff
 		case HP_BASILICA:
 			if( sc && sc->data[SC_BASILICA] )
 				status_change_end(src, SC_BASILICA, INVALID_TIMER); // Cancel Basilica
@@ -12617,6 +12624,8 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 				flag|=1;
 			}
 			break;
+#endif
+
 		case CG_HERMODE:
 			skill->clear_unitgroup(src);
 			if ((sg = skill->unitsetting(src,skill_id,skill_lv,x,y,0)))
@@ -13394,9 +13403,12 @@ static struct skill_unit_group *skill_unitsetting(struct block_list *src, uint16
 				val3 = group->val3; //as well as the mapindex to warp to.
 			}
 			break;
+
+#ifndef RENEWAL // 2018.11 rebalance - Basilica changed to a self buff
 		case HP_BASILICA:
 			val1 = src->id; // Store caster id.
 			break;
+#endif
 
 		case PR_SANCTUARY:
 		case NPC_EVILLAND:
@@ -17737,10 +17749,14 @@ static int skill_delay_fix(struct block_list *bl, uint16 skill_id, uint16 skill_
 		case SJ_PROMINENCEKICK:
 			time -= (4 * status_get_agi(bl) + 2 * status_get_dex(bl));
 			break;
+
+#ifndef RENEWAL // 2018.11 rebalance - Basilica changed to a self buff
 		case HP_BASILICA:
 			if( sc && !sc->data[SC_BASILICA] )
 				time = 0; // There is no Delay on Basilica creation, only on cancel
 			break;
+#endif
+
 		default:
 			if (battle_config.delay_dependon_dex && !(delaynodex&1)) {
 				// if skill delay is allowed to be reduced by dex
@@ -18717,7 +18733,9 @@ static int skill_cell_overlap(struct block_list *bl, va_list ap)
 			}
 			break;
 		case WZ_ICEWALL:
+#ifndef RENEWAL // 2018.11 rebalance - Basilica changed to a self buff
 		case HP_BASILICA:
+#endif
 			if (su->group->skill_id == skill_id) {
 				//These can't be placed on top of themselves (duration can't be refreshed)
 				(*alive) = 0;
@@ -19105,9 +19123,13 @@ static struct skill_unit *skill_initunit(struct skill_unit_group *group, int idx
 		case SA_LANDPROTECTOR:
 			skill->unitsetmapcell(su,SA_LANDPROTECTOR,group->skill_lv,CELL_LANDPROTECTOR,true);
 			break;
+
+#ifndef RENEWAL // 2018.11 rebalance - Basilica changed to a self buff
 		case HP_BASILICA:
 			skill->unitsetmapcell(su,HP_BASILICA,group->skill_lv,CELL_BASILICA,true);
 			break;
+#endif
+
 		default:
 			if (group->state.song_dance&0x1) //Check for dissonance.
 				skill->dance_overlap(su, 1);
@@ -19167,9 +19189,13 @@ static int skill_delunit(struct skill_unit *su)
 		case SA_LANDPROTECTOR:
 			skill->unitsetmapcell(su,SA_LANDPROTECTOR,group->skill_lv,CELL_LANDPROTECTOR,false);
 			break;
+
+#ifndef RENEWAL // 2018.11 rebalance - Basilica changed to a self buff
 		case HP_BASILICA:
 			skill->unitsetmapcell(su,HP_BASILICA,group->skill_lv,CELL_BASILICA,false);
 			break;
+#endif
+
 		case RA_ELECTRICSHOCKER: {
 				struct block_list* target = map->id2bl(group->val2);
 				if( target )

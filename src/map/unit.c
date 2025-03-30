@@ -1711,10 +1711,14 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 		if (sc && sc->data[SC_RUN])
 			casttime = -1;
 	break;
+
+#ifndef RENEWAL // 2018.11 rebalance - Basilica changed to a self buff
 	case HP_BASILICA:
 		if( sc && sc->data[SC_BASILICA] )
 			casttime = -1; // No Casting time on basilica cancel
 	break;
+#endif
+
 	case KN_CHARGEATK:
 		{
 		unsigned int k = (distance_bl(src,target)-1)/3; //+100% every 3 cells of distance

@@ -2361,6 +2361,8 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 		if (sc->data[SC_PROPERTYGROUND] != NULL)
 			sd->magic_atk_ele[ELE_EARTH] += sc->data[SC_PROPERTYGROUND]->val1;
 #endif
+		if (sc->data[SC_BASILICA_BUFF] != NULL)
+			sd->magic_atk_ele[ELE_HOLY] += sc->data[SC_BASILICA_BUFF]->val1;
 
 		// Geffen Scrolls
 		if (sc->data[SC_SKELSCROLL]) {
@@ -9953,6 +9955,12 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			case SC_SOULDIVISION:
 				val2 = 10 * 1; // Skill Aftercast Increase
 				break;
+
+			case SC_BASILICA_BUFF: // Renewal version of Basilica, where it is a buff.
+				val2 = 3 * val1; // Holy MATK % Increase
+				val3 = 5 * val1; // ATK % Increase
+				break;
+
 			default:
 				if (status->change_start_unknown_sc(src, bl, type, calc_flag, rate, val1, val2, val3, val4, total_tick, flag)) {
 					return 0;

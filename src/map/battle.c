@@ -880,6 +880,9 @@ static int64 battle_calc_masteryfix(struct block_list *src, struct block_list *t
 	}
 
 	if( sc ){ // sc considered as masteries
+		enum elements target_ele = status_get_element(target);
+		if (sc->data[SC_BASILICA_BUFF] != NULL && (target_ele == ELE_UNDEAD || target_ele == ELE_DARK))
+			damage += damage * sc->data[SC_BASILICA_BUFF]->val2 / 100;
 		if(sc->data[SC_GN_CARTBOOST])
 			damage += 10 * sc->data[SC_GN_CARTBOOST]->val1;
 		if(sc->data[SC_CAMOUFLAGE])

@@ -925,6 +925,9 @@ typedef enum sc_type {
 	SC_ENSEMBLEFATIGUE,
 	SC_ADAPTATION,
 
+	// New SCs for High Priest (2018.11 rebalance)
+	SC_BASILICA_BUFF, // Renewal version of Basilica, where it is an ATK/MATK buff.
+
 #ifndef SC_MAX
 	SC_MAX, //Automatically updated max, used in for's to check we are within bounds.
 #endif
