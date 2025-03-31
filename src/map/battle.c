@@ -2347,8 +2347,13 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					skillratio += 40 * skill_lv - 60;
 					break;
 				case SN_SHARPSHOOTING:
-				case MA_SHARPSHOOTING:
+				case MA_SHARPSHOOTING: // @TODO: Is mercenary also affected?
+#ifndef RENEWAL
 					skillratio += 100 + 50 * skill_lv;
+#else
+					skillratio += 50 + 200 * skill_lv;
+					RE_LVL_DMOD(100);
+#endif
 					break;
 				case CG_ARROWVULCAN:
 					skillratio += 100 + 100 * skill_lv;
@@ -5125,7 +5130,11 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 				break;
 			case SN_SHARPSHOOTING:
 			case MA_SHARPSHOOTING:
+#ifndef RENEWAL
 				cri += 200;
+#else
+				cri += 500; // 2018.11 rebalance - source: iRO Wiki
+#endif
 				break;
 			case NJ_KIRIKAGE:
 				cri += 250 + 50*skill_lv;
