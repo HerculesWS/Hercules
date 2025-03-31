@@ -1221,6 +1221,8 @@ static int skill_calc_heal(struct block_list *src, struct block_list *target, ui
 			hp += hp * sc->data[SC_VITALIZE_POTION]->val3 / 100;
 		if(sc->data[SC_WATER_INSIGNIA] && sc->data[SC_WATER_INSIGNIA]->val1 == 2)
 			hp += hp / 10;
+		if (sc->data[SC_ASSUMPTIO_BUFF] != NULL)
+			hp += hp * 2 * sc->data[SC_ASSUMPTIO_BUFF]->val1 / 100;
 		if (sc->data[SC_VITALITYACTIVATION])
 			hp = hp * 150 / 100;
 		if (sc->data[SC_NO_RECOVER_STATE])
@@ -2104,6 +2106,7 @@ static int skill_additional_effect(struct block_list *src, struct block_list *bl
 				//Deactivatable Statuses: Kyrie Eleison, Auto Guard, Steel Body, Assumptio, and Millennium Shield
 				status_change_end(bl, SC_KYRIE, INVALID_TIMER);
 				status_change_end(bl, SC_ASSUMPTIO, INVALID_TIMER);
+				status_change_end(bl, SC_ASSUMPTIO_BUFF, INVALID_TIMER);
 				status_change_end(bl, SC_STEELBODY, INVALID_TIMER);
 				status_change_end(bl, SC_GENTLETOUCH_CHANGE, INVALID_TIMER);
 				status_change_end(bl, SC_GENTLETOUCH_REVITALIZE, INVALID_TIMER);
@@ -2347,6 +2350,7 @@ static int skill_additional_effect(struct block_list *src, struct block_list *bl
 							continue;
 						break;
 					case SC_ASSUMPTIO:
+					case SC_ASSUMPTIO_BUFF:
 						if (bl->type == BL_MOB)
 							continue;
 						break;
@@ -8846,6 +8850,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 #endif
 
 						case SC_ASSUMPTIO:
+						case SC_ASSUMPTIO_BUFF:
 							if( bl->type == BL_MOB )
 								continue;
 							break;
@@ -10370,6 +10375,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 					PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 					switch (i) {
 						case SC_ASSUMPTIO:
+						case SC_ASSUMPTIO_BUFF:
 							if( bl->type == BL_MOB )
 								continue;
 							break;
