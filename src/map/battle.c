@@ -4360,7 +4360,9 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 		break;
 #endif
 	case HT_BLITZBEAT:
+#ifndef RENEWAL
 	case SN_FALCONASSAULT:
+#endif
 		// Blitz-beat Damage.
 		if (sd == NULL || (temp = pc->checkskill(sd,HT_STEELCROW)) <= 0)
 			temp = 0;
@@ -4381,6 +4383,24 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 			md.damage=md.damage*(150+70*skill_lv)/100;
 		}
 		break;
+
+#ifdef RENEWAL
+	case SN_FALCONASSAULT: {
+		int blitz_lv = 0;
+		int steel_crow_lv = 0;
+
+		if (sd != NULL) {
+			blitz_lv = pc->checkskill(sd, HT_BLITZBEAT);
+			steel_crow_lv = pc->checkskill(sd, HT_STEELCROW);
+		}
+
+		// Formula from iRO Wiki
+		int64 dmg_part1 = ((sstatus->agi / 2 + sstatus->dex / 10) * 2 + blitz_lv * 20 + steel_crow_lv * 6) * skill_lv + steel_crow_lv * 6;
+		md.damage = dmg_part1 * (steel_crow_lv / 20 + skill_lv + status->get_lv(src) / 50);
+	}
+		break;
+#endif
+
 	case TF_THROWSTONE:
 		md.damage=50;
 		break;
