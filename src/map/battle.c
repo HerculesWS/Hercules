@@ -2376,7 +2376,13 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					skillratio += 10 * skill_lv - 10;
 					break;
 				case PA_SHIELDCHAIN:
+#ifdef RENEWAL
+					// @TODO: Confirm if shield weight must be considered for RE_LVL_DMOD
+					skillratio += -100 + 300 + 200 * skill_lv;
+					RE_LVL_DMOD(100);
+#else
 					skillratio += 30 * skill_lv;
+#endif
 					break;
 				case WS_CARTTERMINATION:
 					i = 10 * (16 - skill_lv);
