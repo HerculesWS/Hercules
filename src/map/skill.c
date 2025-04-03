@@ -1839,9 +1839,11 @@ static int skill_additional_effect(struct block_list *src, struct block_list *bl
 			sc_start(src, bl, SC_STUN, (15 + skill_lv * 5), skill_lv, skill->get_time2(skill_id, skill_lv), skill_id);
 			break;
 
+#ifndef RENEWAL // 2018.11 rebalance - no longer drains SP from traget
 		case PA_PRESSURE:
 			status_percent_damage(src, bl, 0, 15+5*skill_lv, false);
 			break;
+#endif
 
 		case RG_RAID:
 			sc_start(src, bl, SC_STUN, (10 + 3 * skill_lv), skill_lv, skill->get_time(skill_id, skill_lv), skill_id);
