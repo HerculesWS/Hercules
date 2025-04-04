@@ -2332,7 +2332,12 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					skillratio += 300 + 100 * skill_lv;
 					break;
 				case CH_PALMSTRIKE:
+#ifndef RENEWAL
 					skillratio += 100 + 100 * skill_lv;
+#else
+					skillratio += -100 + 200 + 100 * skill_lv + 5 * st->str;
+					RE_LVL_DMOD(100);
+#endif
 					break;
 				case LK_HEADCRUSH:
 					skillratio += 40 * skill_lv;
