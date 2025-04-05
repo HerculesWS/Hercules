@@ -932,7 +932,7 @@ static int status_check_skilluse(struct block_list *src, struct block_list *targ
 		if (skill_id != 0 /* Do not block item-casted skills.*/ && (src->type != BL_PC || sd->auto_cast_current.type != AUTOCAST_ITEM)) {
 			//Skills blocked through status changes...
 			if (!flag && ( //Blocked only from using the skill (stuff like autospell may still go through
-				sc->data[SC_ENSEMBLEFATIGUE] ||
+				(sc->data[SC_ENSEMBLEFATIGUE] != NULL && skill_id != CG_SPECIALSINGER) ||
 				sc->data[SC_SILENCE] ||
 				sc->data[SC_STEELBODY] ||
 				sc->data[SC_BERSERK] ||

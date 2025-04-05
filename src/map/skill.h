@@ -70,10 +70,13 @@ struct status_change_entry;
 #endif  // CUSTOM_SKILL_RANGES
 
 
+// For Bard/Dancer skills: Tells whether skill belongs to both classes (true) or not (false)
+// used by changesex so invalid skills get properly cleaned up
 // (Epoque:) To-do: replace this macro with some sort of skill tree check (rather than hard-coded skill names)
 #define skill_ischangesex(id) ( \
 	((id) >= BD_ADAPTATION     && (id) <= DC_SERVICEFORYOU) || ((id) >= CG_ARROWVULCAN && (id) <= CG_MARIONETTE) || \
-	((id) >= CG_LONGINGFREEDOM && (id) <= CG_TAROTCARD)     || ((id) >= WA_SWING_DANCE && (id) <= WM_UNLIMITED_HUMMING_VOICE))
+	((id) >= CG_LONGINGFREEDOM && (id) <= CG_TAROTCARD)     || ((id) >= WA_SWING_DANCE && (id) <= WM_UNLIMITED_HUMMING_VOICE) || \
+	((id) == CG_SPECIALSINGER))
 
 #define MAX_SKILL_SPELLBOOK_DB     17
 #define MAX_SKILL_MAGICMUSHROOM_DB 23
@@ -1511,6 +1514,9 @@ enum e_skill {
 	SU_SPIRITOFLAND,
 	SU_CHATTERING,
 	SU_SPIRITOFSEA,
+
+	// 2018.11 rebalance - new Clown/Gypsy skill that replaces Longing for Freedom
+	CG_SPECIALSINGER = 5068,
 
 	HLIF_HEAL = 8001,
 	HLIF_AVOID,
