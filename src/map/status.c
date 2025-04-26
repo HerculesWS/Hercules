@@ -7889,10 +7889,11 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				//Chance to Poison enemies.
 #ifdef RENEWAL_EDP
 				val2 = ((val1 + 1) / 2 + 2);
+				val3 = 150 + val1 * 30; // Damage increase (+150 +30 * lv%)
 #else
 				val2 = val1 + 2;
-#endif
 				val3 = 50 * (val1 + 1); //Damage increase (+50 +50*lv%)
+#endif
 				if( sd )//[Ind] - iROwiki says each level increases its duration by 3 seconds
 					total_tick += pc->checkskill(sd,GC_RESEARCHNEWPOISON)*3000;
 				break;
