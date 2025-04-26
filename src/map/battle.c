@@ -1721,8 +1721,21 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 #endif
 					break;
 				case HW_NAPALMVULCAN:
+#ifndef RENEWAL
 					skillratio += 10 * skill_lv - 30;
+#else
+					skillratio += -100 + 70 * skill_lv;
+					RE_LVL_DMOD(100);
+#endif
 					break;
+
+#ifdef RENEWAL
+				case HW_GRAVITATION:
+					skillratio += -100 + 50 * skill_lv;
+					RE_LVL_DMOD(100);
+					break;
+#endif
+
 				case SL_STIN:
 					skillratio += (tst->size!=SZ_SMALL?-99:10*skill_lv); //target size must be small (0) for full damage.
 					break;
@@ -3731,7 +3744,9 @@ static int64 battle_calc_pc_damage(struct block_list *src, struct block_list *bl
 
 	switch (skill_id) {
 		//case PA_PRESSURE: /* pressure also belongs to this list but it doesn't reach this area -- so don't worry about it */
+#ifndef RENEWAL // 2018.10 rebalance - HW_GRAVITATION is a basic magic damage skill now
 		case HW_GRAVITATION:
+#endif
 		case NJ_ZENYNAGE:
 		case KO_MUCHANAGE:
 			break;
@@ -4497,10 +4512,14 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 #endif
 		}
 		break;
+
+#ifndef RENEWAL // 2018.10 rebalance - HW_GRAVITATION is a basic magic damage skill now
 	case HW_GRAVITATION:
 		md.damage = 200+200*skill_lv;
 		md.dmotion = 0; //No flinch animation.
 		break;
+#endif
+
 	case NPC_EVILLAND:
 		md.damage = skill->calc_heal(src,target,skill_id,skill_lv,false);
 		break;
