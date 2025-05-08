@@ -38,20 +38,22 @@ moro_cav,50,64,5	script	Yellow Seed#bios	CLEAR_NPC,{
 		
 	if (BaseLevel < 160) {
 		mes("^ff0000Characters below Level 160 cannot enter this dungeon.^000000");
-		close;
+		close();
 	}
 	if (questprogress(15006) == 0) {
 		mes("^ff0000You first must meet Wandering Old Man to gain access to this dungeon.^000000");
-		close;
+		close();
 	}
 	switch( questprogress(15005,PLAYTIME) ) {
 	case 0:
-		if(select("Create Instance", "Cancel") == 0 ) { close();	}
+		if(select("Create Instance", "Cancel") == 2 ) {
+			close(); 
+		}
 			if( questprogress(15008,PLAYTIME) == 2) {
 				mes("^0000ffThis Memorial Dungeon cannot be accessed for 23 hours after your last visit.^000000");
 				close();
 			}
-			if (getcharid(CHAR_ID_CHAR) != getpartyleader(.@party_id, 2)) {
+			if (getcharid(CHAR_ID_CHAR) != getpartyleader(getcharid(CHAR_ID_PARTY), 2)) {
 				mes("^ff0000The leader needs to generate the dungeon.^000000");
 				close();
 			}
@@ -71,18 +73,20 @@ moro_cav,50,64,5	script	Yellow Seed#bios	CLEAR_NPC,{
 				instance_init(.@instance);
 				mes("^ff0000Created the Memorial dungeon.^000000");
 				mes("^ff0000Please click and press Enter again.^000000");
-				close;
+				close();
 				}
 	case 1:
-			if( questprogress(15007,PLAYTIME) == 2) {
+			if (questprogress(15007, PLAYTIME) == 2 || questprogress(15008, PLAYTIME) == 2) {
 				mes("^0000ffThis Memorial Dungeon cannot be accessed for 23 hours after your last visit.^000000");
 				close();
 			} 
 			if (has_instance("1@dth1") == "" || has_instance("1@dth2") == "" || has_instance("1@dth3") == "" ) {
 				mes("^ff0000Your party leader has not yet created a Crack of Time.^000000");
-				close;
+				close();
 			}
-			if(select("Enter to the instance", "Cancel") == 2) { close(); }
+			if(select("Enter to the instance", "Cancel") == 2) { 
+				close();
+			}
 			mapannounce("moro_cav", sprintf(_$("%s of the party, %s, is entering Isle of Bios."), strcharinfo(PC_NAME), getpartyname(getcharid(CHAR_ID_PARTY))), bc_map, C_SPRINGGREEN);
 			setquest 15005;// Memorial Dungeon: Isle of Bios
 			setquest 15007;// Memorial Dungeon: Isle of Bios
@@ -91,9 +95,11 @@ moro_cav,50,64,5	script	Yellow Seed#bios	CLEAR_NPC,{
 			break;
 	case 2:
 			mes("^00ff00The 23 hours have passed, and the mystical barriers have faded. You are now free to return and explore the Memorial Dungeon once more.^000000");
-			erasequest 15005;// Memorial Dungeon: Isle of Bios (Isle of Bios becomes accessible for 23 hours after each exploration)
-			erasequest 15007;// Memorial Dungeon: Isle of Bios (Isle of Bios allows reentry for the first 5 minutes after its openin)
-			if(questactive(15008)){ erasequest 15008; }// Memorial Dungeon: Isle of Bios (You cleared the dungeon in 5 minutes after you entered it)
+			erasequest 15005;
+			erasequest 15007;
+			if(questprogress(15008,PLAYTIME ) == 2){ 
+				erasequest 15008; 
+			}
 			break;
 	}
 	
@@ -112,7 +118,7 @@ moro_cav,45,60,5	script	Wandering Old Man#sara	4_M_EINOLD,{
 		mes("...");
 		mes("I'm afraid you're not up for this yet.");
 		mes("You have to be at least Level 160.");
-		close;
+		close();
 	}
 	if (questprogress(15006) == 0) {
 		mes("[Wandering Old Man]");
@@ -142,12 +148,12 @@ moro_cav,45,60,5	script	Wandering Old Man#sara	4_M_EINOLD,{
 		mes("It's too dangerous for you to go alone. You should take at least one comrade with you.");
 		setquest 15006;// Isle of Bios Exploration
 		completequest 15006;// Isle of Bios Exploration
-		close;
+		close();
 	}
 	mes("[Wandering Old Man]");
 	mes("Please investigate that yellow seed.");
 	mes("It's too dangerous for you to go alone. You should take at least one comrade with you.");
-	close;
+	close();
 }
 // warps
 1@dth1,291,102,0	warp	warp1#bios1	2,2,1@dth2,17,93
@@ -474,7 +480,6 @@ OnTimer52700:
 	setnpcdisplay( 'zeith3$, 4_M_FROZEN_GC );
 	getpartymember(getcharid(CHAR_ID_PARTY), PT_MEMBER_NAME, .@player_name$);
 	getpartymember(getcharid(CHAR_ID_PARTY), PT_MEMBER_CHARID, .@char_id );
-	getpartymember(getcharid(CHAR_ID_PARTY), PT_MEMBER_ACCID, .@account_id );
 	.@count = getpartymember(getcharid(CHAR_ID_PARTY), PT_MEMBER_ACCID, .@account_id);
 
 	for ( .@i = 0; .@i < .@count; .@i++ ) {
