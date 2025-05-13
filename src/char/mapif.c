@@ -1831,12 +1831,14 @@ static int mapif_save_guild_storage_ack(int fd, int account_id, int guild_id, in
 
 /**
  * Loads the account storage and send to the map server.
- * @packet 0x3805     [out] <account_id>.L <struct item[]>.P
+ * @packet 0x3805     [out] <packet_len>.W <account_id>.L <storage_id>.W <struct item[]>.P
  * @param  fd         [in]  file/socket descriptor.
  * @param  account_id [in]  account id of the session.
+ * @param  storage_id   [in]  storage id to load
+ * @param  storage_size [in]  size of storage
  * @return 1 on success, 0 on failure.
  */
-static int mapif_account_storage_load(int fd, int account_id)
+static int mapif_account_storage_load(int fd, int account_id, int storage_id, int storage_size)
 {
 	struct storage_data stor = { 0 };
 	int count = 0, i = 0, len = 0;
@@ -1844,16 +1846,17 @@ static int mapif_account_storage_load(int fd, int account_id)
 	Assert_ret(account_id > 0);
 
 	VECTOR_INIT(stor.item);
-	count = inter_storage->fromsql(account_id, &stor);
+	count = inter_storage->fromsql(account_id, storage_id, &stor);
 
-	len = 8 + count * sizeof(struct item);
+	len = 10 + count * sizeof(struct item);
 
 	WFIFOHEAD(fd, len);
 	WFIFOW(fd, 0) = 0x3805;
 	WFIFOW(fd, 2) = (uint16) len;
 	WFIFOL(fd, 4) = account_id;
+	WFIFOW(fd, 8) = storage_id;
 	for (i = 0; i < count; i++)
-		memcpy(WFIFOP(fd, 8 + i * sizeof(struct item)), &VECTOR_INDEX(stor.item, i), sizeof(struct item));
+		memcpy(WFIFOP(fd, 10 + i * sizeof(struct item)), &VECTOR_INDEX(stor.item, i), sizeof(struct item));
 	WFIFOSET(fd, len);
 
 	VECTOR_CLEAR(stor.item);
@@ -1863,18 +1866,22 @@ static int mapif_account_storage_load(int fd, int account_id)
 
 /**
  * Parses account storage load request from map server.
- * @packet 0x3010 [in] <account_id>.L
+ * @packet 0x3010 [in] <account_id>.L storage_id>.W <storage_size>.W
  * @param  fd     [in] file/socket descriptor
  * @return 1 on success, 0 on failure.
  */
 static int mapif_parse_AccountStorageLoad(int fd)
 {
 	int account_id = RFIFOL(fd, 2);
+	int storage_id = RFIFOW(fd, 6);
+	int storage_size = RFIFOW(fd, 8);
 
 	Assert_ret(fd > 0);
 	Assert_ret(account_id > 0);
+	Assert_ret(storage_id > 0);
+	Assert_ret(storage_size >= 0);
 
-	mapif->account_storage_load(fd, account_id);
+	mapif->account_storage_load(fd, account_id, storage_id, storage_size);
 
 	return 1;
 }
@@ -1883,7 +1890,7 @@ static int mapif_parse_AccountStorageLoad(int fd)
  * Parses an account storage save request from the map server.
  *
  * @code{.unparsed}
- *	@packet 0x3011 [in] <packet_len>.W <account_id>.L <struct item[]>.P
+ *	@packet 0x3011 [in] <packet_len>.W <account_id>.L <storage_id>.W <struct item[]>.P
  * @endcode
  *
  * @attention If the size of packet 0x3011 changes,
@@ -1899,14 +1906,17 @@ static int mapif_parse_AccountStorageLoad(int fd)
  **/
 static int mapif_parse_AccountStorageSave(int fd)
 {
-	int payload_size = RFIFOW(fd, 2) - 8, account_id = RFIFOL(fd, 4);
+	int payload_size = RFIFOW(fd, 2) - 10;
+	int account_id = RFIFOL(fd, 4);
+	int storage_id = RFIFOW(fd, 8);
+
 	int i = 0, count = 0;
 	struct storage_data p_stor = { 0 };
 
 	Assert_ret(fd > 0);
 	Assert_ret(account_id > 0);
 
-	count = payload_size/sizeof(struct item);
+	count = payload_size / sizeof(struct item);
 
 	VECTOR_INIT(p_stor.item);
 
@@ -1914,7 +1924,7 @@ static int mapif_parse_AccountStorageSave(int fd)
 		VECTOR_ENSURE(p_stor.item, count, 1);
 
 		for (i = 0; i < count; i++) {
-			const struct item *it = RFIFOP(fd, 8 + i * sizeof(struct item));
+			const struct item *it = RFIFOP(fd, 10 + i * sizeof(struct item));
 
 			VECTOR_PUSH(p_stor.item, *it);
 		}
@@ -1922,11 +1932,11 @@ static int mapif_parse_AccountStorageSave(int fd)
 		p_stor.aggregate = count;
 	}
 
-	inter_storage->tosql(account_id, &p_stor);
+	inter_storage->tosql(account_id, storage_id, &p_stor);
 
 	VECTOR_CLEAR(p_stor.item);
 
-	mapif->sAccountStorageSaveAck(fd, account_id, true);
+	mapif->sAccountStorageSaveAck(fd, account_id, storage_id, true);
 
 	return 1;
 }
@@ -1934,18 +1944,20 @@ static int mapif_parse_AccountStorageSave(int fd)
 /**
  * Sends an acknowledgement for the save
  * status of the account storage.
- * @packet 0x3808     [out] <account_id>.L <save_flag>.B
+ * @packet 0x3808     [out] <account_id>.L <storage_id>.W <save_flag>.B
  * @param  fd         [in]  File/Socket Descriptor.
  * @param  account_id [in]  Account ID of the storage in question.
+ * @param storage_id [in] acknowledgement of storage id.
  * @param  flag       [in]  Save flag, true for success and false for failure.
  */
-static void mapif_send_AccountStorageSaveAck(int fd, int account_id, bool flag)
+static void mapif_send_AccountStorageSaveAck(int fd, int account_id, int storage_id, bool flag)
 {
-	WFIFOHEAD(fd, 7);
+	WFIFOHEAD(fd, 9);
 	WFIFOW(fd, 0) = 0x3808;
 	WFIFOL(fd, 2) = account_id;
-	WFIFOB(fd, 6) = flag ? 1 : 0;
-	WFIFOSET(fd, 7);
+	WFIFOW(fd, 6) = storage_id;
+	WFIFOB(fd, 8) = flag ? 1 : 0;
+	WFIFOSET(fd, 9);
 }
 
 static int mapif_parse_LoadGuildStorage(int fd)

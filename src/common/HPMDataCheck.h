@@ -1239,6 +1239,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#ifdef MAP_STORAGE_H
 		{ "guild_storage_interface", sizeof(struct guild_storage_interface), SERVER_TYPE_MAP },
 		{ "storage_interface", sizeof(struct storage_interface), SERVER_TYPE_MAP },
+		{ "storage_settings", sizeof(struct storage_settings), SERVER_TYPE_MAP },
 	#else
 		#define MAP_STORAGE_H
 	#endif // MAP_STORAGE_H

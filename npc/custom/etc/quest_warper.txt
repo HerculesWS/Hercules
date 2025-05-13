@@ -474,7 +474,7 @@ L_Storage:
 	}
 	mes "Close this window and I will open your storage.";
 	close2;
-	openstorage;
+	openstorage(STORAGE_TYPE_MAIN);
 	end;
 
 L_StorageJBlow:

@@ -11997,10 +11997,31 @@ static BUILDIN(gettimestr)
 static BUILDIN(openstorage)
 {
 	struct map_session_data *sd = script->rid2sd(st);
-	if (sd == NULL)
-		return false;
+	int storage_id = script_getnum(st, 2);
+	const struct storage_settings* stst = storage->get_settings(storage_id);
 
-	if (sd->storage.received == false) {
+	if (stst == NULL) {
+		script_pushint(st, 0);
+		ShowWarning("buildin_openstorage: Storage with ID %d was not found!\n", storage_id);
+		return false;
+	}
+
+	if (sd == NULL) {
+		script_pushint(st, 0);
+		ShowWarning("buildin_openstorage: Player not attached for Storage with ID %d!\n", storage_id);
+		return false;
+	}
+
+	enum storage_access_modes storage_access = script_hasdata(st, 3) ? script_getnum(st, 3) : STORAGE_ACCESS_ALL;
+
+	struct storage_data* stor = storage->ensure(sd, storage_id);
+	if (stor == NULL) {
+		script_pushint(st, 0);
+		ShowError("buildin_openstorage: Error ensuring storage for player aid %d, storage id %d.\n", sd->bl.id, storage_id);
+		return false;
+	}
+
+	if (stor->received == false) {
 		script_pushint(st, 0);
 		ShowWarning("buildin_openstorage: Storage data for AID %d has not been loaded.\n", sd->bl.id);
 		return false;
@@ -12012,9 +12033,11 @@ static BUILDIN(openstorage)
 		return true;
 	}
 
-	storage->open(sd);
-
-	script_pushint(st, 1); // success flag.
+	if (storage->open(sd, stor, storage_access) == 0) {
+		script_pushint(st, 1); // success
+	} else {
+		script_pushint(st, 0);
+	}
 	return true;
 }
 
@@ -29163,7 +29186,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(gettimetick,"i"),
 		BUILDIN_DEF(gettime,"i?"),
 		BUILDIN_DEF(gettimestr, "si?"),
-		BUILDIN_DEF(openstorage,""),
+		BUILDIN_DEF(openstorage, "i?"),
 		BUILDIN_DEF(guildopenstorage,""),
 		BUILDIN_DEF(itemskill,"vi?"),
 		BUILDIN_DEF(produce,"i"),
@@ -30467,6 +30490,12 @@ static void script_hardcoded_constants(void)
 	script->set_constant("MF_CVC", MF_CVC, false, false);
 	script->set_constant("MF_SPECIALPOPUP", MF_SPECIALPOPUP, false, false);
 	script->set_constant("MF_NOSENDMAIL", MF_NOSENDMAIL, false, false);
+
+	script->constdb_comment("Storage Access Types");
+	script->set_constant("STORAGE_ACCESS_VIEW", STORAGE_ACCESS_VIEW, false, false);
+	script->set_constant("STORAGE_ACCESS_GET", STORAGE_ACCESS_GET, false, false);
+	script->set_constant("STORAGE_ACCESS_PUT", STORAGE_ACCESS_PUT, false, false);
+	script->set_constant("STORAGE_ACCESS_ALL", STORAGE_ACCESS_ALL, false, false);
 
 	script->constdb_comment("Job masks / Job map_ids");
 

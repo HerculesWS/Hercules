@@ -645,6 +645,7 @@ struct status_change_data {
 };
 
 struct storage_data {
+	int uid;					   ///< Storage Identifier.
 	bool save;                     ///< save flag.
 	bool received;                 ///< received flag.
 	int aggregate;                 ///< total item count.
