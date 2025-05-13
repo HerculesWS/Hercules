@@ -27870,6 +27870,9 @@ static BUILDIN(hateffect)
 			}
 		}
 	}
+	
+	if (enabled == 0)
+		return true;
 
 	VECTOR_ENSURE(sd->hatEffectId, 1, 1);
 	VECTOR_PUSH(sd->hatEffectId, effectId);
