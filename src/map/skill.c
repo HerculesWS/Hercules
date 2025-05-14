@@ -2048,6 +2048,7 @@ static int skill_additional_effect(struct block_list *src, struct block_list *bl
 			sc_start(src, bl, SC_STUN, 40, skill_lv, skill->get_time(skill_id, skill_lv), skill_id);
 			break;
 		case WL_COMET:
+		case NPC_COMET:
 			sc_start4(src, bl, SC_BURNING, 100, skill_lv, 0, src->id, 0, skill->get_time2(skill_id, skill_lv), skill_id);
 			break;
 		case WL_EARTHSTRAIN:
@@ -3531,6 +3532,7 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 			FALLTHROUGH
 		case WL_SOULEXPANSION:
 		case WL_COMET:
+		case NPC_COMET:
 		case NJ_HUUMA:
 			dmg.dmotion = clif->skill_damage(src,bl,tick,dmg.amotion,dmg.dmotion,damage,dmg.div_,skill_id,skill_lv,BDT_MULTIHIT);
 			break;
@@ -5133,6 +5135,7 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 		case WL_SOULEXPANSION:
 		case WL_CRIMSONROCK:
 		case WL_COMET:
+		case NPC_COMET:
 		case WL_JACKFROST:
 		case RA_ARROWSTORM:
 		case RA_WUGDASH:
@@ -12291,6 +12294,7 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 		case NPC_EARTHQUAKE:
 		case NPC_EVILLAND:
 		case WL_COMET:
+		case NPC_COMET:
 		case RA_ELECTRICSHOCKER:
 		case RA_CLUSTERBOMB:
 		case RA_MAGENTATRAP:
@@ -13396,6 +13400,7 @@ static struct skill_unit_group *skill_unitsetting(struct block_list *src, uint16
 			limit = 1000000;//it doesn't matter
 			break;
 		case WL_COMET:
+		case NPC_COMET:
 			if( sc ) {
 				sc->comet_x = x;
 				sc->comet_y = y;

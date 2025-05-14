@@ -1866,6 +1866,11 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 						}
 					}
 					break;
+				case NPC_COMET:
+					i = (sc ? distance_xy(target->x, target->y, sc->comet_x, sc->comet_y) : 8) / 2;
+					i = cap_value(i, 1, 4);
+					skillratio = 2500 + ((skill_lv - i) * 500);
+					break;
 				case WL_CHAINLIGHTNING_ATK:
 					skillratio += 400 + 100 * skill_lv;
 					RE_LVL_DMOD(100);
