@@ -1,0 +1,39 @@
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020  Hercules Dev Team
+//= Copyright (C) Zarbony
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Lasagna Fild Warp Script
+//================= Description ===========================================
+//= Warp Points for Lasagna Fild
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
+
+lasa_fild01,134,381,0	warp	lasa_fild01#lasagna_1	2,2,lasagna,153,58
+lasa_fild01,341,375,0	warp	lasa_fild01#lasagna_2	2,2,lasagna,327,56
+
+lasa_fild02,16,98,0	warp	lasa_fild02#lasagna	2,2,lasagna,355,92
+lasa_fild02,348,244,0	warp	lasa_fild02#lasa_dun01	1,1,lasa_dun01,24,143
