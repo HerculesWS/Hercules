@@ -28,7 +28,7 @@
 
 /* Packets Structs */
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
-#pragma pack(push, 1)
+	#pragma pack(push, 1)
 #endif // not NetBSD < 6 / Solaris
 
 struct PACKET_CHARLOGIN_SET_ACCOUNT_ONLINE {
@@ -47,7 +47,7 @@ struct PACKET_CHARLOGIN_ONLINE_ACCOUNTS {
 DEFINE_PACKET_ID(CHARLOGIN_ONLINE_ACCOUNTS, 0x272d)
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
-#pragma pack(pop)
+	#pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
 
 #endif /* COMMON_CHARLOGINPACKETS_H */

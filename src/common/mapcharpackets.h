@@ -27,7 +27,7 @@
 
 /* Packets Structs */
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
-#pragma pack(push, 1)
+	#pragma pack(push, 1)
 #endif // not NetBSD < 6 / Solaris
 
 struct PACKET_MAPCHAR_AUTH_REQ {
@@ -59,7 +59,7 @@ struct PACKET_MAPCHAR_GUILD_EMBLEM {
 DEFINE_PACKET_ID(MAPCHAR_GUILD_EMBLEM, 0x303f)
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
-#pragma pack(pop)
+	#pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
 
 #endif /* COMMON_MAPCHARPACKETS_H */

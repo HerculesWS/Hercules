@@ -42,7 +42,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-//#define DEBUG_EMOTES
+// #define DEBUG_EMOTES
 
 static struct inter_userconfig_interface inter_userconfig_s;
 struct inter_userconfig_interface *inter_userconfig;
@@ -77,13 +77,13 @@ static enum userconfig_from_sql_result inter_userconfig_emotes_from_sql(int acco
 	if (result != SQL_SUCCESS) {
 		if (result == SQL_ERROR)
 			Sql_ShowDebug(inter->sql_handle);
-		
+
 		StrBuf->Destroy(&buf);
 		return (result == SQL_NO_DATA ? USERCONFIG_FROM_SQL_NOT_EXISTS : USERCONFIG_FROM_SQL_ERROR);
 	}
 
 	char *data = NULL;
-	for (int index = 0; index < MAX_EMOTES; index ++) {
+	for (int index = 0; index < MAX_EMOTES; index++) {
 		SQL->GetData(inter->sql_handle, index, &data, NULL);
 		safestrncpy(emotes->emote[index], data, EMOTE_SIZE);
 	}
@@ -97,7 +97,7 @@ static void inter_userconfig_use_default_emotes(int account_id, struct userconfi
 {
 	nullpo_retv(emotes);
 
-	for (int i = 0; i < MAX_EMOTES; i ++) {
+	for (int i = 0; i < MAX_EMOTES; i++) {
 		safestrncpy(emotes->emote[i], inter_userconfig->dbs->default_emotes[i], EMOTE_SIZE);
 	}
 }
@@ -159,7 +159,7 @@ void inter_userconfig_hotkey_tab_tosql(int account_id, const struct userconfig_u
 #ifdef DEBUG_EMOTES
 	ShowError("tab: %d\n", hotkeys->tab);
 #endif
-	for (int i = 0; i < hotkeys->count; i ++) {
+	for (int i = 0; i < hotkeys->count; i++) {
 #ifdef DEBUG_EMOTES
 		ShowError("desc: %s\n", hotkeys->keys[i].desc);
 		ShowError("index: %d\n", hotkeys->keys[i].index);
@@ -167,9 +167,7 @@ void inter_userconfig_hotkey_tab_tosql(int account_id, const struct userconfig_u
 		ShowError("key2: %d\n", hotkeys->keys[i].key2);
 #endif
 		SQL->EscapeString(inter->sql_handle, desc_esc, hotkeys->keys[i].desc);
-		if (SQL_ERROR == SQL->Query(inter->sql_handle,
-		    "INSERT INTO `%s` (`account_id`,`tab`,`desc`,`index`,`key1`,`key2`) VALUES ('%d','%d','%s','%d','%d','%d')",
-		    hotkeys_db, account_id, hotkeys->tab, desc_esc, hotkeys->keys[i].index, hotkeys->keys[i].key1, hotkeys->keys[i].key2)) {
+		if (SQL_ERROR == SQL->Query(inter->sql_handle, "INSERT INTO `%s` (`account_id`,`tab`,`desc`,`index`,`key1`,`key2`) VALUES ('%d','%d','%s','%d','%d','%d')", hotkeys_db, account_id, hotkeys->tab, desc_esc, hotkeys->keys[i].index, hotkeys->keys[i].key1, hotkeys->keys[i].key2)) {
 			Sql_ShowDebug(inter->sql_handle);
 			return;
 		}
@@ -178,8 +176,7 @@ void inter_userconfig_hotkey_tab_tosql(int account_id, const struct userconfig_u
 
 void inter_userconfig_hotkey_tab_clear(int account_id, int tab_id)
 {
-	if (SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `account_id` = '%d' and `tab` = '%d'",
-	    hotkeys_db, account_id, tab_id)) {
+	if (SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `account_id` = '%d' and `tab` = '%d'", hotkeys_db, account_id, tab_id)) {
 		Sql_ShowDebug(inter->sql_handle);
 	}
 }
@@ -188,16 +185,14 @@ bool inter_userconfig_hotkey_tab_fromsql(int account_id, struct userconfig_userh
 {
 	hotkeys->tab = tab_id;
 
-	if (SQL_SUCCESS != SQL->Query(inter->sql_handle,
-	    "SELECT `desc`, `index`, `key1`, `key2` FROM `%s` WHERE `account_id` = '%d' AND `tab` = '%d'",
-	    hotkeys_db, account_id, tab_id)) {
+	if (SQL_SUCCESS != SQL->Query(inter->sql_handle, "SELECT `desc`, `index`, `key1`, `key2` FROM `%s` WHERE `account_id` = '%d' AND `tab` = '%d'", hotkeys_db, account_id, tab_id)) {
 		Sql_ShowDebug(inter->sql_handle);
 		return false;
 	}
 
 	char *data = NULL;
 	int index = 0;
-	for (index = 0; index < MAX_USERHOTKEYS && SQL_SUCCESS == SQL->NextRow(inter->sql_handle); index ++) {
+	for (index = 0; index < MAX_USERHOTKEYS && SQL_SUCCESS == SQL->NextRow(inter->sql_handle); index++) {
 		SQL->GetData(inter->sql_handle, 0, &data, NULL);
 		safestrncpy(hotkeys->keys[index].desc, data, HOTKEY_DESCRIPTION_SIZE);
 		SQL->GetData(inter->sql_handle, 1, &data, NULL);

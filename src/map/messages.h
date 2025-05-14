@@ -22,15 +22,15 @@
 #define MAP_MESSAGES_H
 
 #if defined(PACKETVER_ZERO)
-#include "map/messages_zero.h"
+	#include "map/messages_zero.h"
 #elif defined(PACKETVER_RE)
-#include "map/messages_re.h"
+	#include "map/messages_re.h"
 #elif defined(PACKETVER_SAK)
-#include "map/messages_sak.h"
+	#include "map/messages_sak.h"
 #elif defined(PACKETVER_AD)
-#include "map/messages_ad.h"
+	#include "map/messages_ad.h"
 #else
-#include "map/messages_main.h"
+	#include "map/messages_main.h"
 #endif
 
 #endif /* MAP_MESSAGES_H */

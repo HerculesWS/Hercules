@@ -40,16 +40,16 @@
 #include <sys/stat.h>
 
 #ifdef RENEWAL
-#define OUTPUTFILENAME "doc" PATHSEP_STR "constants_re.md"
+	#define OUTPUTFILENAME "doc" PATHSEP_STR "constants_re.md"
 #else
-#define OUTPUTFILENAME "doc" PATHSEP_STR "constants_pre-re.md"
+	#define OUTPUTFILENAME "doc" PATHSEP_STR "constants_pre-re.md"
 #endif
 
 HPExport struct hplugin_info pinfo = {
-	"constdb2doc",   // Plugin name
-	SERVER_TYPE_MAP, // Which server types this plugin works with?
-	"0.1",           // Plugin version
-	HPM_VERSION,     // HPM Version (don't change, macro is automatically updated)
+    "constdb2doc",   // Plugin name
+    SERVER_TYPE_MAP, // Which server types this plugin works with?
+    "0.1",           // Plugin version
+    HPM_VERSION,     // HPM Version (don't change, macro is automatically updated)
 };
 
 FILE *out_fp;
@@ -78,8 +78,8 @@ void constdb2doc_script_set_constant(const char *name, int value, bool is_parame
 
 void constdb2doc_constdb(void)
 {
-	void (*script_set_constant) (const char* name, int value, bool is_parameter, bool is_deprecated) = NULL;
-	void (*script_constdb_comment) (const char *comment) = NULL;
+	void (*script_set_constant)(const char *name, int value, bool is_parameter, bool is_deprecated) = NULL;
+	void (*script_constdb_comment)(const char *comment) = NULL;
 
 	nullpo_retv(out_fp);
 
@@ -113,7 +113,7 @@ void constdb2doc_skilldb(void)
 
 	nullpo_retv(out_fp);
 
-	fprintf(out_fp, "## Skills (db/"DBPATH"skill_db.conf)\n\n");
+	fprintf(out_fp, "## Skills (db/" DBPATH "skill_db.conf)\n\n");
 	for (i = 1; i < MAX_SKILL_DB; i++) {
 		if (skill->dbs->db[i].name[0] != '\0')
 			fprintf(out_fp, "- `%s`: %d\n", skill->dbs->db[i].name, skill->dbs->db[i].nameid);
@@ -127,7 +127,7 @@ void constdb2doc_mobdb(void)
 
 	nullpo_retv(out_fp);
 
-	fprintf(out_fp, "## Mobs (db/"DBPATH"mob_db.conf)\n\n");
+	fprintf(out_fp, "## Mobs (db/" DBPATH "mob_db.conf)\n\n");
 	for (i = 0; i < MAX_MOB_DB; i++) {
 		struct mob_db *md = mob->db(i);
 		if (md == mob->dummy || md->sprite[0] == '\0')
@@ -150,7 +150,7 @@ void constdb2doc_itemdb(void)
 {
 	nullpo_retv(out_fp);
 
-	fprintf(out_fp, "## Items (db/"DBPATH"item_db.conf)\n");
+	fprintf(out_fp, "## Items (db/" DBPATH "item_db.conf)\n");
 	for (int i = 0; i < ARRAYLENGTH(itemdb->array); i++) {
 		struct item_data *id = constdb2doc_itemdb_search(i);
 		if (id == NULL || id->name[0] == '\0')
@@ -179,9 +179,8 @@ void do_constdb2doc(void)
 		return;
 	}
 
-	fprintf(out_fp,
-		"# Constants\n\n"
-		"> This document contains all the constants available to the script engine.\n\n");
+	fprintf(out_fp, "# Constants\n\n"
+	                "> This document contains all the constants available to the script engine.\n\n");
 
 	constdb2doc_constdb();
 
@@ -196,7 +195,8 @@ void do_constdb2doc(void)
 
 	fclose(out_fp);
 }
-CPCMD(constdb2doc) {
+CPCMD(constdb2doc)
+{
 	do_constdb2doc();
 }
 CMDLINEARG(constdb2doc)
@@ -204,13 +204,16 @@ CMDLINEARG(constdb2doc)
 	map->minimal = torun = true;
 	return true;
 }
-HPExport void server_preinit(void) {
+HPExport void server_preinit(void)
+{
 	addArg("--constdb2doc", false, constdb2doc, NULL);
 }
-HPExport void plugin_init(void) {
+HPExport void plugin_init(void)
+{
 	addCPCommand("server:tools:constdb2doc", constdb2doc);
 }
-HPExport void server_online(void) {
+HPExport void server_online(void)
+{
 	if (torun)
 		do_constdb2doc();
 }

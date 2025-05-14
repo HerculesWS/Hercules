@@ -64,7 +64,7 @@ static char char_server_ip[32] = "127.0.0.1";
 static char char_server_id[32] = "ragnarok";
 static char char_server_pw[100] = "ragnarok";
 static char char_server_db[32] = "ragnarok";
-static char default_codepage[32] = ""; //Feature by irmin.
+static char default_codepage[32] = ""; // Feature by irmin.
 
 int party_share_level = 10;
 
@@ -74,8 +74,7 @@ static char *msg_table[MAX_JOB_NAMES]; //  messages 550 ~ 699 are job names
 static const char *inter_msg_txt(int msg_number)
 {
 	msg_number -= 550;
-	if (msg_number >= 0 && msg_number < MAX_JOB_NAMES &&
-	    msg_table[msg_number] != NULL && msg_table[msg_number][0] != '\0')
+	if (msg_number >= 0 && msg_number < MAX_JOB_NAMES && msg_table[msg_number] != NULL && msg_table[msg_number][0] != '\0')
 		return msg_table[msg_number];
 
 	return "Unknown";
@@ -107,7 +106,7 @@ static bool inter_msg_config_read(const char *cfg_name, bool allow_override)
 	if ((--called) == 0)
 		memset(msg_table, 0, sizeof(msg_table[0]) * MAX_JOB_NAMES);
 
-	while(fgets(line, sizeof(line), fp) ) {
+	while (fgets(line, sizeof(line), fp)) {
 		if (line[0] == '/' && line[1] == '/')
 			continue;
 		if (sscanf(line, "%1023[^:]: %1023[^\r\n]", w1, w2) != 2)
@@ -117,20 +116,19 @@ static bool inter_msg_config_read(const char *cfg_name, bool allow_override)
 			inter->msg_config_read(w2, true);
 		else {
 			msg_number = atoi(w1);
-			if( msg_number < 550 || msg_number > (550+MAX_JOB_NAMES) )
+			if (msg_number < 550 || msg_number > (550 + MAX_JOB_NAMES))
 				continue;
 			msg_number -= 550;
 			if (msg_number >= 0 && msg_number < MAX_JOB_NAMES) {
 				if (msg_table[msg_number] != NULL) {
 					if (!allow_override) {
-						ShowError("Duplicate message: ID '%d' was already used for '%s'. Message '%s' will be ignored.\n",
-						          msg_number, w2, msg_table[msg_number]);
+						ShowError("Duplicate message: ID '%d' was already used for '%s'. Message '%s' will be ignored.\n", msg_number, w2, msg_table[msg_number]);
 						continue;
 					}
 					aFree(msg_table[msg_number]);
 				}
-				msg_table[msg_number] = (char *)aMalloc((strlen(w2) + 1)*sizeof (char));
-				strcpy(msg_table[msg_number],w2);
+				msg_table[msg_number] = (char *)aMalloc((strlen(w2) + 1) * sizeof(char));
+				strcpy(msg_table[msg_number], w2);
 			}
 		}
 	}
@@ -153,7 +151,9 @@ static void inter_do_final_msg(void)
 static const char *inter_job_name(int class)
 {
 	switch (class) {
-#define JOB_ENUM_VALUE(name, id, msgtbl) case JOB_ ## name: return inter->msg_txt(MSGTBL_ ## msgtbl);
+#define JOB_ENUM_VALUE(name, id, msgtbl)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      \
+	case JOB_##name:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          \
+		return inter->msg_txt(MSGTBL_##msgtbl);
 #include "common/class.h"
 #include "common/class_hidden.h"
 #include "common/class_special.h"
@@ -173,22 +173,22 @@ static void inter_vmsg_to_fd(int fd, int u_fd, int aid, char *msg, va_list ap)
 {
 	char msg_out[512];
 	va_list apcopy;
-	int len = 1;/* yes we start at 1 */
+	int len = 1; /* yes we start at 1 */
 
 	nullpo_retv(msg);
 	va_copy(apcopy, ap);
 	len += vsnprintf(msg_out, 512, msg, apcopy);
 	va_end(apcopy);
 
-	WFIFOHEAD(fd,12 + len);
+	WFIFOHEAD(fd, 12 + len);
 
-	WFIFOW(fd,0) = 0x3807;
-	WFIFOW(fd,2) = 12 + (unsigned short)len;
-	WFIFOL(fd,4) = u_fd;
-	WFIFOL(fd,8) = aid;
-	safestrncpy(WFIFOP(fd,12), msg_out, len);
+	WFIFOW(fd, 0) = 0x3807;
+	WFIFOW(fd, 2) = 12 + (unsigned short)len;
+	WFIFOL(fd, 4) = u_fd;
+	WFIFOL(fd, 8) = aid;
+	safestrncpy(WFIFOP(fd, 12), msg_out, len);
 
-	WFIFOSET(fd,12 + len);
+	WFIFOSET(fd, 12 + len);
 
 	return;
 }
@@ -206,7 +206,7 @@ static void inter_msg_to_fd(int fd, int u_fd, int aid, char *msg, ...) __attribu
 static void inter_msg_to_fd(int fd, int u_fd, int aid, char *msg, ...)
 {
 	va_list ap;
-	va_start(ap,msg);
+	va_start(ap, msg);
 	inter->vmsg_to_fd(fd, u_fd, aid, msg, ap);
 	va_end(ap);
 }
@@ -214,7 +214,7 @@ static void inter_msg_to_fd(int fd, int u_fd, int aid, char *msg, ...)
 /* [Dekamaster/Nightroad] */
 static void inter_accinfo(int u_fd, int aid, int castergroup, const char *query, int map_fd)
 {
-	char query_esq[NAME_LENGTH*2+1];
+	char query_esq[NAME_LENGTH * 2 + 1];
 	int account_id;
 	char *data;
 
@@ -224,10 +224,9 @@ static void inter_accinfo(int u_fd, int aid, int castergroup, const char *query,
 
 	if (account_id < START_ACCOUNT_NUM) {
 		// is string
-		if ( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `account_id`,`name`,`class`,`base_level`,`job_level`,`online` FROM `%s` WHERE `name` LIKE '%s' LIMIT 10", char_db, query_esq)
-				|| SQL->NumRows(inter->sql_handle) == 0 ) {
-			if( SQL->NumRows(inter->sql_handle) == 0 ) {
-				inter->msg_to_fd(map_fd, u_fd, aid, "No matches were found for your criteria, '%s'",query);
+		if (SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `account_id`,`name`,`class`,`base_level`,`job_level`,`online` FROM `%s` WHERE `name` LIKE '%s' LIMIT 10", char_db, query_esq) || SQL->NumRows(inter->sql_handle) == 0) {
+			if (SQL->NumRows(inter->sql_handle) == 0) {
+				inter->msg_to_fd(map_fd, u_fd, aid, "No matches were found for your criteria, '%s'", query);
 			} else {
 				Sql_ShowDebug(inter->sql_handle);
 				inter->msg_to_fd(map_fd, u_fd, aid, "An error occurred, bother your admin about it.");
@@ -235,25 +234,32 @@ static void inter_accinfo(int u_fd, int aid, int castergroup, const char *query,
 			SQL->FreeResult(inter->sql_handle);
 			return;
 		} else {
-			if( SQL->NumRows(inter->sql_handle) == 1 ) {//we found a perfect match
+			if (SQL->NumRows(inter->sql_handle) == 1) { // we found a perfect match
 				SQL->NextRow(inter->sql_handle);
-				SQL->GetData(inter->sql_handle, 0, &data, NULL); account_id = atoi(data);
+				SQL->GetData(inter->sql_handle, 0, &data, NULL);
+				account_id = atoi(data);
 				SQL->FreeResult(inter->sql_handle);
-			} else {// more than one, listing... [Dekamaster/Nightroad]
-				inter->msg_to_fd(map_fd, u_fd, aid, "Your query returned the following %d results, please be more specific...",(int)SQL->NumRows(inter->sql_handle));
-				while ( SQL_SUCCESS == SQL->NextRow(inter->sql_handle) ) {
+			} else { // more than one, listing... [Dekamaster/Nightroad]
+				inter->msg_to_fd(map_fd, u_fd, aid, "Your query returned the following %d results, please be more specific...", (int)SQL->NumRows(inter->sql_handle));
+				while (SQL_SUCCESS == SQL->NextRow(inter->sql_handle)) {
 					int class;
 					int base_level, job_level, online;
 					char name[NAME_LENGTH];
 
-					SQL->GetData(inter->sql_handle, 0, &data, NULL); account_id = atoi(data);
-					SQL->GetData(inter->sql_handle, 1, &data, NULL); safestrncpy(name, data, sizeof(name));
-					SQL->GetData(inter->sql_handle, 2, &data, NULL); class = atoi(data);
-					SQL->GetData(inter->sql_handle, 3, &data, NULL); base_level = atoi(data);
-					SQL->GetData(inter->sql_handle, 4, &data, NULL); job_level = atoi(data);
-					SQL->GetData(inter->sql_handle, 5, &data, NULL); online = atoi(data);
+					SQL->GetData(inter->sql_handle, 0, &data, NULL);
+					account_id = atoi(data);
+					SQL->GetData(inter->sql_handle, 1, &data, NULL);
+					safestrncpy(name, data, sizeof(name));
+					SQL->GetData(inter->sql_handle, 2, &data, NULL);
+					class = atoi(data);
+					SQL->GetData(inter->sql_handle, 3, &data, NULL);
+					base_level = atoi(data);
+					SQL->GetData(inter->sql_handle, 4, &data, NULL);
+					job_level = atoi(data);
+					SQL->GetData(inter->sql_handle, 5, &data, NULL);
+					online = atoi(data);
 
-					inter->msg_to_fd(map_fd, u_fd, aid, "[AID: %d] %s | %s | Level: %d/%d | %s", account_id, name, inter->job_name(class), base_level, job_level, online?"Online":"Offline");
+					inter->msg_to_fd(map_fd, u_fd, aid, "[AID: %d] %s | %s | Level: %d/%d | %s", account_id, name, inter->job_name(class), base_level, job_level, online ? "Online" : "Offline");
 				}
 				SQL->FreeResult(inter->sql_handle);
 				return;
@@ -263,16 +269,14 @@ static void inter_accinfo(int u_fd, int aid, int castergroup, const char *query,
 
 	/* it will only get here if we have a single match */
 	/* and we will send packet with account id to login server asking for account info */
-	if( account_id ) {
+	if (account_id) {
 		mapif->on_parse_accinfo(account_id, u_fd, aid, castergroup, map_fd);
 	}
 
 	return;
 }
 
-static void inter_accinfo2(bool success, int map_fd, int u_fd, int u_aid, int account_id, const char *userid, const char *user_pass,
-		const char *email, const char *last_ip, const char *lastlogin, const char *pin_code, const char *birthdate,
-		int group_id, int logincount, int state)
+static void inter_accinfo2(bool success, int map_fd, int u_fd, int u_aid, int account_id, const char *userid, const char *user_pass, const char *email, const char *last_ip, const char *lastlogin, const char *pin_code, const char *birthdate, int group_id, int logincount, int state)
 {
 	nullpo_retv(userid);
 	nullpo_retv(user_pass);
@@ -306,9 +310,11 @@ static void inter_accinfo2(bool success, int map_fd, int u_fd, int u_aid, int ac
 	inter->msg_to_fd(map_fd, u_fd, u_aid, "This user has logged %d times, the last time were at %s", logincount, lastlogin);
 	inter->msg_to_fd(map_fd, u_fd, u_aid, "-- Character Details --");
 
-	if ( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `char_id`, `name`, `char_num`, `class`, `base_level`, `job_level`, `online` "
-	                                         "FROM `%s` WHERE `account_id` = '%d' ORDER BY `char_num` LIMIT %d", char_db, account_id, MAX_CHARS)
-	  || SQL->NumRows(inter->sql_handle) == 0 ) {
+	if (SQL_ERROR == SQL->Query(inter->sql_handle,
+	                            "SELECT `char_id`, `name`, `char_num`, `class`, `base_level`, `job_level`, `online` "
+	                            "FROM `%s` WHERE `account_id` = '%d' ORDER BY `char_num` LIMIT %d",
+	                            char_db, account_id, MAX_CHARS) ||
+	    SQL->NumRows(inter->sql_handle) == 0) {
 		if (SQL->NumRows(inter->sql_handle) == 0) {
 			inter->msg_to_fd(map_fd, u_fd, u_aid, "This account doesn't have characters.");
 		} else {
@@ -316,21 +322,28 @@ static void inter_accinfo2(bool success, int map_fd, int u_fd, int u_aid, int ac
 			Sql_ShowDebug(inter->sql_handle);
 		}
 	} else {
-		while ( SQL_SUCCESS == SQL->NextRow(inter->sql_handle) ) {
+		while (SQL_SUCCESS == SQL->NextRow(inter->sql_handle)) {
 			char *data;
 			int char_id, class;
 			int char_num, base_level, job_level, online;
 			char name[NAME_LENGTH];
 
-			SQL->GetData(inter->sql_handle, 0, &data, NULL); char_id = atoi(data);
-			SQL->GetData(inter->sql_handle, 1, &data, NULL); safestrncpy(name, data, sizeof(name));
-			SQL->GetData(inter->sql_handle, 2, &data, NULL); char_num = atoi(data);
-			SQL->GetData(inter->sql_handle, 3, &data, NULL); class = atoi(data);
-			SQL->GetData(inter->sql_handle, 4, &data, NULL); base_level = atoi(data);
-			SQL->GetData(inter->sql_handle, 5, &data, NULL); job_level = atoi(data);
-			SQL->GetData(inter->sql_handle, 6, &data, NULL); online = atoi(data);
+			SQL->GetData(inter->sql_handle, 0, &data, NULL);
+			char_id = atoi(data);
+			SQL->GetData(inter->sql_handle, 1, &data, NULL);
+			safestrncpy(name, data, sizeof(name));
+			SQL->GetData(inter->sql_handle, 2, &data, NULL);
+			char_num = atoi(data);
+			SQL->GetData(inter->sql_handle, 3, &data, NULL);
+			class = atoi(data);
+			SQL->GetData(inter->sql_handle, 4, &data, NULL);
+			base_level = atoi(data);
+			SQL->GetData(inter->sql_handle, 5, &data, NULL);
+			job_level = atoi(data);
+			SQL->GetData(inter->sql_handle, 6, &data, NULL);
+			online = atoi(data);
 
-			inter->msg_to_fd(map_fd, u_fd, u_aid, "[Slot/CID: %d/%d] %s | %s | Level: %d/%d | %s", char_num, char_id, name, inter->job_name(class), base_level, job_level, online?"On":"Off");
+			inter->msg_to_fd(map_fd, u_fd, u_aid, "[Slot/CID: %d/%d] %s | %s | Level: %d/%d | %s", char_num, char_id, name, inter->job_name(class), base_level, job_level, online ? "On" : "Off");
 		}
 	}
 	SQL->FreeResult(inter->sql_handle);
@@ -348,47 +361,47 @@ static void inter_savereg(int account_id, int char_id, const char *key, unsigned
 	char val_esq[1000];
 	nullpo_retv(key);
 	/* to login server we go! */
-	if( key[0] == '#' && key[1] == '#' ) {/* global account reg */
+	if (key[0] == '#' && key[1] == '#') { /* global account reg */
 		if (sockt->session_is_valid(chr->login_fd))
-			chr->global_accreg_to_login_add(key,index,val,is_string);
+			chr->global_accreg_to_login_add(key, index, val, is_string);
 		else {
-			ShowError("Login server unavailable, cant perform update on '%s' variable for AID:%d CID:%d\n",key,account_id,char_id);
+			ShowError("Login server unavailable, cant perform update on '%s' variable for AID:%d CID:%d\n", key, account_id, char_id);
 		}
-	} else if ( key[0] == '#' ) {/* local account reg */
-		if( is_string ) {
-			if( val ) {
-				SQL->EscapeString(inter->sql_handle, val_esq, (char*)val);
-				if( SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s` (`account_id`,`key`,`index`,`value`) VALUES ('%d','%s','%u','%s')", acc_reg_str_db, account_id, key, index, val_esq) )
+	} else if (key[0] == '#') { /* local account reg */
+		if (is_string) {
+			if (val) {
+				SQL->EscapeString(inter->sql_handle, val_esq, (char *)val);
+				if (SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s` (`account_id`,`key`,`index`,`value`) VALUES ('%d','%s','%u','%s')", acc_reg_str_db, account_id, key, index, val_esq))
 					Sql_ShowDebug(inter->sql_handle);
 			} else {
-				if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `account_id` = '%d' AND `key` = '%s' AND `index` = '%u' LIMIT 1", acc_reg_str_db, account_id, key, index) )
+				if (SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `account_id` = '%d' AND `key` = '%s' AND `index` = '%u' LIMIT 1", acc_reg_str_db, account_id, key, index))
 					Sql_ShowDebug(inter->sql_handle);
 			}
 		} else {
-			if( val ) {
-				if( SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s` (`account_id`,`key`,`index`,`value`) VALUES ('%d','%s','%u','%d')", acc_reg_num_db, account_id, key, index, (int)val) )
+			if (val) {
+				if (SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s` (`account_id`,`key`,`index`,`value`) VALUES ('%d','%s','%u','%d')", acc_reg_num_db, account_id, key, index, (int)val))
 					Sql_ShowDebug(inter->sql_handle);
 			} else {
-				if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `account_id` = '%d' AND `key` = '%s' AND `index` = '%u' LIMIT 1", acc_reg_num_db, account_id, key, index) )
+				if (SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `account_id` = '%d' AND `key` = '%s' AND `index` = '%u' LIMIT 1", acc_reg_num_db, account_id, key, index))
 					Sql_ShowDebug(inter->sql_handle);
 			}
 		}
 	} else { /* char reg */
-		if( is_string ) {
-			if( val ) {
-				SQL->EscapeString(inter->sql_handle, val_esq, (char*)val);
-				if( SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s` (`char_id`,`key`,`index`,`value`) VALUES ('%d','%s','%u','%s')", char_reg_str_db, char_id, key, index, val_esq) )
+		if (is_string) {
+			if (val) {
+				SQL->EscapeString(inter->sql_handle, val_esq, (char *)val);
+				if (SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s` (`char_id`,`key`,`index`,`value`) VALUES ('%d','%s','%u','%s')", char_reg_str_db, char_id, key, index, val_esq))
 					Sql_ShowDebug(inter->sql_handle);
 			} else {
-				if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `char_id` = '%d' AND `key` = '%s' AND `index` = '%u' LIMIT 1", char_reg_str_db, char_id, key, index) )
+				if (SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `char_id` = '%d' AND `key` = '%s' AND `index` = '%u' LIMIT 1", char_reg_str_db, char_id, key, index))
 					Sql_ShowDebug(inter->sql_handle);
 			}
 		} else {
-			if( val ) {
-				if( SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s` (`char_id`,`key`,`index`,`value`) VALUES ('%d','%s','%u','%d')", char_reg_num_db, char_id, key, index, (int)val) )
+			if (val) {
+				if (SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s` (`char_id`,`key`,`index`,`value`) VALUES ('%d','%s','%u','%d')", char_reg_num_db, char_id, key, index, (int)val))
 					Sql_ShowDebug(inter->sql_handle);
 			} else {
-				if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `char_id` = '%d' AND `key` = '%s' AND `index` = '%u' LIMIT 1", char_reg_num_db, char_id, key, index) )
+				if (SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `char_id` = '%d' AND `key` = '%s' AND `index` = '%u' LIMIT 1", char_reg_num_db, char_id, key, index))
 					Sql_ShowDebug(inter->sql_handle);
 			}
 		}
@@ -398,20 +411,20 @@ static void inter_savereg(int account_id, int char_id, const char *key, unsigned
 // Load account_reg from sql (type=2)
 static int inter_accreg_fromsql(int account_id, int char_id, int fd, int type)
 {
-	char* data;
+	char *data;
 	size_t len;
 	unsigned int plen = 0;
 
-	switch( type ) {
-		case 3: //char reg
-			if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `key`, `index`, `value` FROM `%s` WHERE `char_id`='%d'", char_reg_str_db, char_id) )
+	switch (type) {
+		case 3: // char reg
+			if (SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `key`, `index`, `value` FROM `%s` WHERE `char_id`='%d'", char_reg_str_db, char_id))
 				Sql_ShowDebug(inter->sql_handle);
 			break;
-		case 2: //account reg
-			if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `key`, `index`, `value` FROM `%s` WHERE `account_id`='%d'", acc_reg_str_db, account_id) )
+		case 2: // account reg
+			if (SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `key`, `index`, `value` FROM `%s` WHERE `account_id`='%d'", acc_reg_str_db, account_id))
 				Sql_ShowDebug(inter->sql_handle);
 			break;
-		case 1: //account2 reg
+		case 1: // account2 reg
 			ShowError("inter->accreg_fromsql: Char server shouldn't handle type 1 registry values (##). That is the login server's work!\n");
 			return 0;
 		default:
@@ -424,9 +437,9 @@ static int inter_accreg_fromsql(int account_id, int char_id, int fd, int type)
 	/* 0x2 = length, set prior to being sent */
 	WFIFOL(fd, 4) = account_id;
 	WFIFOL(fd, 8) = char_id;
-	WFIFOB(fd, 12) = 0;/* var type (only set when all vars have been sent, regardless of type) */
-	WFIFOB(fd, 13) = 1;/* is string type */
-	WFIFOW(fd, 14) = 0;/* count */
+	WFIFOB(fd, 12) = 0; /* var type (only set when all vars have been sent, regardless of type) */
+	WFIFOB(fd, 13) = 1; /* is string type */
+	WFIFOW(fd, 14) = 0; /* count */
 	plen = 16;
 
 	/**
@@ -435,14 +448,14 @@ static int inter_accreg_fromsql(int account_id, int char_id, int fd, int type)
 	 * str type
 	 * { keyLength(B), key(<keyLength>), index(L), valLength(B), val(<valLength>) }
 	 **/
-	while ( SQL_SUCCESS == SQL->NextRow(inter->sql_handle) ) {
+	while (SQL_SUCCESS == SQL->NextRow(inter->sql_handle)) {
 		SQL->GetData(inter->sql_handle, 0, &data, NULL);
-		len = strlen(data)+1;
+		len = strlen(data) + 1;
 
-		WFIFOB(fd, plen) = (unsigned char)len;/* won't be higher; the column size is 32 */
+		WFIFOB(fd, plen) = (unsigned char)len; /* won't be higher; the column size is 32 */
 		plen += 1;
 
-		safestrncpy(WFIFOP(fd,plen), data, len);
+		safestrncpy(WFIFOP(fd, plen), data, len);
 		plen += len;
 
 		SQL->GetData(inter->sql_handle, 1, &data, NULL);
@@ -461,7 +474,7 @@ static int inter_accreg_fromsql(int account_id, int char_id, int fd, int type)
 
 		WFIFOW(fd, 14) += 1;
 
-		if( plen > 60000 ) {
+		if (plen > 60000) {
 			WFIFOW(fd, 2) = plen;
 			WFIFOSET(fd, plen);
 
@@ -471,9 +484,9 @@ static int inter_accreg_fromsql(int account_id, int char_id, int fd, int type)
 			/* 0x2 = length, set prior to being sent */
 			WFIFOL(fd, 4) = account_id;
 			WFIFOL(fd, 8) = char_id;
-			WFIFOB(fd, 12) = 0;/* var type (only set when all vars have been sent, regardless of type) */
-			WFIFOB(fd, 13) = 1;/* is string type */
-			WFIFOW(fd, 14) = 0;/* count */
+			WFIFOB(fd, 12) = 0; /* var type (only set when all vars have been sent, regardless of type) */
+			WFIFOB(fd, 13) = 1; /* is string type */
+			WFIFOW(fd, 14) = 0; /* count */
 			plen = 16;
 		}
 	}
@@ -484,16 +497,16 @@ static int inter_accreg_fromsql(int account_id, int char_id, int fd, int type)
 
 	SQL->FreeResult(inter->sql_handle);
 
-	switch( type ) {
-		case 3: //char reg
-			if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `key`, `index`, `value` FROM `%s` WHERE `char_id`='%d'", char_reg_num_db, char_id) )
+	switch (type) {
+		case 3: // char reg
+			if (SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `key`, `index`, `value` FROM `%s` WHERE `char_id`='%d'", char_reg_num_db, char_id))
 				Sql_ShowDebug(inter->sql_handle);
 			break;
-		case 2: //account reg
-			if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `key`, `index`, `value` FROM `%s` WHERE `account_id`='%d'", acc_reg_num_db, account_id) )
+		case 2: // account reg
+			if (SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `key`, `index`, `value` FROM `%s` WHERE `account_id`='%d'", acc_reg_num_db, account_id))
 				Sql_ShowDebug(inter->sql_handle);
 			break;
-#if 0 // This is already checked above.
+#if 0  // This is already checked above.
 		case 1: //account2 reg
 			ShowError("inter->accreg_fromsql: Char server shouldn't handle type 1 registry values (##). That is the login server's work!\n");
 			return 0;
@@ -505,9 +518,9 @@ static int inter_accreg_fromsql(int account_id, int char_id, int fd, int type)
 	/* 0x2 = length, set prior to being sent */
 	WFIFOL(fd, 4) = account_id;
 	WFIFOL(fd, 8) = char_id;
-	WFIFOB(fd, 12) = 0;/* var type (only set when all vars have been sent, regardless of type) */
-	WFIFOB(fd, 13) = 0;/* is int type */
-	WFIFOW(fd, 14) = 0;/* count */
+	WFIFOB(fd, 12) = 0; /* var type (only set when all vars have been sent, regardless of type) */
+	WFIFOB(fd, 13) = 0; /* is int type */
+	WFIFOW(fd, 14) = 0; /* count */
 	plen = 16;
 
 	/**
@@ -516,14 +529,14 @@ static int inter_accreg_fromsql(int account_id, int char_id, int fd, int type)
 	 * int type
 	 * { keyLength(B), key(<keyLength>), index(L), value(L) }
 	 **/
-	while ( SQL_SUCCESS == SQL->NextRow(inter->sql_handle) ) {
+	while (SQL_SUCCESS == SQL->NextRow(inter->sql_handle)) {
 		SQL->GetData(inter->sql_handle, 0, &data, NULL);
-		len = strlen(data)+1;
+		len = strlen(data) + 1;
 
-		WFIFOB(fd, plen) = (unsigned char)len;/* won't be higher; the column size is 32 */
+		WFIFOB(fd, plen) = (unsigned char)len; /* won't be higher; the column size is 32 */
 		plen += 1;
 
-		safestrncpy(WFIFOP(fd,plen), data, len);
+		safestrncpy(WFIFOP(fd, plen), data, len);
 		plen += len;
 
 		SQL->GetData(inter->sql_handle, 1, &data, NULL);
@@ -538,7 +551,7 @@ static int inter_accreg_fromsql(int account_id, int char_id, int fd, int type)
 
 		WFIFOW(fd, 14) += 1;
 
-		if( plen > 60000 ) {
+		if (plen > 60000) {
 			WFIFOW(fd, 2) = plen;
 			WFIFOSET(fd, plen);
 
@@ -548,9 +561,9 @@ static int inter_accreg_fromsql(int account_id, int char_id, int fd, int type)
 			/* 0x2 = length, set prior to being sent */
 			WFIFOL(fd, 4) = account_id;
 			WFIFOL(fd, 8) = char_id;
-			WFIFOB(fd, 12) = 0;/* var type (only set when all vars have been sent, regardless of type) */
-			WFIFOB(fd, 13) = 0;/* is int type */
-			WFIFOW(fd, 14) = 0;/* count */
+			WFIFOB(fd, 12) = 0; /* var type (only set when all vars have been sent, regardless of type) */
+			WFIFOB(fd, 13) = 0; /* is int type */
+			WFIFOW(fd, 14) = 0; /* count */
 			plen = 16;
 		}
 	}
@@ -682,7 +695,7 @@ static int inter_vlog(char *fmt, va_list ap) __attribute__((format(printf, 1, 0)
 static int inter_vlog(char *fmt, va_list ap)
 {
 	char str[255];
-	char esc_str[sizeof(str)*2+1];// escaped str
+	char esc_str[sizeof(str) * 2 + 1]; // escaped str
 	va_list apcopy;
 
 	va_copy(apcopy, ap);
@@ -690,7 +703,7 @@ static int inter_vlog(char *fmt, va_list ap)
 	va_end(apcopy);
 
 	SQL->EscapeStringLen(inter->sql_handle, esc_str, str, strnlen(str, sizeof(str)));
-	if( SQL_ERROR == SQL->Query(inter->sql_handle, "INSERT INTO `%s` (`time`, `log`) VALUES (NOW(),  '%s')", interlog_db, esc_str) )
+	if (SQL_ERROR == SQL->Query(inter->sql_handle, "INSERT INTO `%s` (`time`, `log`) VALUES (NOW(),  '%s')", interlog_db, esc_str))
 		Sql_ShowDebug(inter->sql_handle);
 
 	return 0;
@@ -708,7 +721,7 @@ static int inter_log(char *fmt, ...)
 	va_list ap;
 	int ret;
 
-	va_start(ap,fmt);
+	va_start(ap, fmt);
 	ret = inter->vlog(fmt, ap);
 	va_end(ap);
 
@@ -720,18 +733,17 @@ static int inter_init_sql(const char *file)
 {
 	inter->config_read(file, false);
 
-	//DB connection initialized
+	// DB connection initialized
 	inter->sql_handle = SQL->Malloc();
 	ShowInfo("Connect Character DB server.... (Character Server)\n");
-	if( SQL_ERROR == SQL->Connect(inter->sql_handle, char_server_id, char_server_pw, char_server_ip, (uint16)char_server_port, char_server_db) )
-	{
+	if (SQL_ERROR == SQL->Connect(inter->sql_handle, char_server_id, char_server_pw, char_server_ip, (uint16)char_server_port, char_server_db)) {
 		Sql_ShowDebug(inter->sql_handle);
 		SQL->Free(inter->sql_handle);
 		exit(EXIT_FAILURE);
 	}
 
-	if( *default_codepage ) {
-		if( SQL_ERROR == SQL->SetEncoding(inter->sql_handle, default_codepage) )
+	if (*default_codepage) {
+		if (SQL_ERROR == SQL->SetEncoding(inter->sql_handle, default_codepage))
 			Sql_ShowDebug(inter->sql_handle);
 	}
 
@@ -785,14 +797,13 @@ static int inter_mapif_init(int fd)
 /// @param length The minimum allowed length, or -1 for dynamic lookup
 static int inter_check_length(int fd, int length)
 {
-	if( length == -1 )
-	{// variable-length packet
-		if( RFIFOREST(fd) < 4 )
+	if (length == -1) { // variable-length packet
+		if (RFIFOREST(fd) < 4)
 			return 0;
-		length = RFIFOW(fd,2);
+		length = RFIFOW(fd, 2);
 	}
 
-	if( (int)RFIFOREST(fd) < length )
+	if ((int)RFIFOREST(fd) < length)
 		return 0;
 
 	return length;
@@ -802,7 +813,7 @@ static int inter_parse_frommap(int fd)
 {
 	int cmd;
 	int len = 0;
-	cmd = RFIFOW(fd,0);
+	cmd = RFIFOW(fd, 0);
 	// Check is valid packet entry
 	if (cmd < MIN_INTER_PACKET_DB || cmd >= MAX_INTER_PACKET_DB || packets->inter_db[cmd - MIN_INTER_PACKET_DB] == 0)
 		return 0;
@@ -811,30 +822,24 @@ static int inter_parse_frommap(int fd)
 	if ((len = inter->check_length(fd, packets->inter_db[cmd - MIN_INTER_PACKET_DB])) == 0)
 		return 2;
 
-	switch(cmd) {
-	case 0x3004: mapif->parse_Registry(fd); break;
-	case 0x3005: mapif->parse_RegistryRequest(fd); break;
-	case 0x3006: mapif->parse_NameChangeRequest(fd); break;
-	case 0x3007: mapif->parse_accinfo(fd); break;
-	default:
-		if(  inter_party->parse_frommap(fd)
-		  || inter_guild->parse_frommap(fd)
-		  || inter_storage->parse_frommap(fd)
-		  || inter_pet->parse_frommap(fd)
-		  || inter_homunculus->parse_frommap(fd)
-		  || inter_mercenary->parse_frommap(fd)
-		  || inter_elemental->parse_frommap(fd)
-		  || inter_mail->parse_frommap(fd)
-		  || inter_auction->parse_frommap(fd)
-		  || inter_quest->parse_frommap(fd)
-		  || inter_rodex->parse_frommap(fd)
-		  || inter_clan->parse_frommap(fd)
-		  || inter_achievement->parse_frommap(fd)
-		  || inter_adventurer_agency->parse_frommap(fd)
-		   )
+	switch (cmd) {
+		case 0x3004:
+			mapif->parse_Registry(fd);
 			break;
-		else
-			return 0;
+		case 0x3005:
+			mapif->parse_RegistryRequest(fd);
+			break;
+		case 0x3006:
+			mapif->parse_NameChangeRequest(fd);
+			break;
+		case 0x3007:
+			mapif->parse_accinfo(fd);
+			break;
+		default:
+			if (inter_party->parse_frommap(fd) || inter_guild->parse_frommap(fd) || inter_storage->parse_frommap(fd) || inter_pet->parse_frommap(fd) || inter_homunculus->parse_frommap(fd) || inter_mercenary->parse_frommap(fd) || inter_elemental->parse_frommap(fd) || inter_mail->parse_frommap(fd) || inter_auction->parse_frommap(fd) || inter_quest->parse_frommap(fd) || inter_rodex->parse_frommap(fd) || inter_clan->parse_frommap(fd) || inter_achievement->parse_frommap(fd) || inter_adventurer_agency->parse_frommap(fd))
+				break;
+			else
+				return 0;
 	}
 
 	RFIFOSKIP(fd, len);

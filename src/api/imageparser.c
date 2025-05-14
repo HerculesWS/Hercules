@@ -42,9 +42,7 @@ static int do_init_imageparser(bool minimal)
 	return 0;
 }
 
-static void do_final_imageparser(void)
-{
-}
+static void do_final_imageparser(void) {}
 
 static bool imageparser_validate_bmp_emblem(const char *emblem, uint64 emblem_len)
 {
@@ -63,26 +61,24 @@ static bool imageparser_validate_bmp_emblem(const char *emblem, uint64 emblem_le
 		BITMAPINFOHEADER_SIZE = 40, // sizeof(BITMAPINFOHEADER)
 	};
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
-#pragma pack(push, 1)
+	#pragma pack(push, 1)
 #endif // not NetBSD < 6 / Solaris
 	struct s_bitmaptripple {
-		//uint8 b;
-		//uint8 g;
-		//uint8 r;
-		uint32 rgb:24;
+		// uint8 b;
+		// uint8 g;
+		// uint8 r;
+		uint32 rgb : 24;
 	} __attribute__((packed));
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
-#pragma pack(pop)
-#endif // not NetBSD < 6 / Solaris
-	if (emblem_len > extraconf->emblems->max_bmp_guild_emblem_size
-	 || extraconf->emblems->max_bmp_guild_emblem_size < BITMAPFILEHEADER_SIZE + BITMAPINFOHEADER_SIZE
-	 || RBUFW(buf, 0) != 0x4d42 // BITMAPFILEHEADER.bfType (signature)
-	 || RBUFL(buf, 2) != emblem_len // BITMAPFILEHEADER.bfSize (file size)
-	 || RBUFL(buf, 14) != BITMAPINFOHEADER_SIZE // BITMAPINFOHEADER.biSize (other headers are not supported)
-	 || RBUFL(buf, 18) != extraconf->emblems->guild_emblem_width // BITMAPINFOHEADER.biWidth
-	 || RBUFL(buf, 22) != extraconf->emblems->guild_emblem_height // BITMAPINFOHEADER.biHeight (top-down bitmaps (-24) are not supported)
-	 || RBUFL(buf, 30) != 0 // BITMAPINFOHEADER.biCompression == BI_RGB (compression not supported)
-	 ) {
+	#pragma pack(pop)
+#endif                                                                                                                                                                                         // not NetBSD < 6 / Solaris
+	if (emblem_len > extraconf->emblems->max_bmp_guild_emblem_size || extraconf->emblems->max_bmp_guild_emblem_size < BITMAPFILEHEADER_SIZE + BITMAPINFOHEADER_SIZE || RBUFW(buf, 0) != 0x4d42 // BITMAPFILEHEADER.bfType (signature)
+	    || RBUFL(buf, 2) != emblem_len                                                                                                                                                         // BITMAPFILEHEADER.bfSize (file size)
+	    || RBUFL(buf, 14) != BITMAPINFOHEADER_SIZE                                                                                                                                             // BITMAPINFOHEADER.biSize (other headers are not supported)
+	    || RBUFL(buf, 18) != extraconf->emblems->guild_emblem_width                                                                                                                            // BITMAPINFOHEADER.biWidth
+	    || RBUFL(buf, 22) != extraconf->emblems->guild_emblem_height                                                                                                                           // BITMAPINFOHEADER.biHeight (top-down bitmaps (-24) are not supported)
+	    || RBUFL(buf, 30) != 0                                                                                                                                                                 // BITMAPINFOHEADER.biCompression == BI_RGB (compression not supported)
+	) {
 		// Invalid data
 		return false;
 	}
@@ -150,15 +146,13 @@ static bool imageparser_validate_gif_emblem(const char *emblem, uint64 emblem_le
 
 	if (emblem_len > extraconf->emblems->max_gif_guild_emblem_size) {
 #ifdef DEBUG_ERRORS
-		ShowError("Error: gif image file size too big: %"PRIu64"\n", emblem_len);
+		ShowError("Error: gif image file size too big: %" PRIu64 "\n", emblem_len);
 #endif
 		return false;
 	}
 
 	// basic check for gif format
-	if (emblem_len < 10 ||
-	    strncmp(emblem, "GIF", 3) != 0 ||
-	    (memcmp(emblem + 3, "87a", 3) != 0 && memcmp(emblem + 3, "89a", 3) != 0)) {
+	if (emblem_len < 10 || strncmp(emblem, "GIF", 3) != 0 || (memcmp(emblem + 3, "87a", 3) != 0 && memcmp(emblem + 3, "89a", 3) != 0)) {
 #ifdef DEBUG_ERRORS
 		ShowError("Error: Unknown gif image header\n");
 #endif
@@ -187,20 +181,19 @@ static bool imageparser_validate_gif_emblem(const char *emblem, uint64 emblem_le
 		return false;
 	}
 
-// last frame resolution check disabled because client support other frames resolution [4144]
-/*
-	if (image->Image.Width != extraconf->emblems->guild_emblem_width ||
-	    image->Image.Height != extraconf->emblems->guild_emblem_height) {
-#ifdef DEBUG_ERRORS
-		ShowError("Error: Gif image resolution error: %d, %d\n", image->Image.Width, image->Image.Height);
-#endif
-		DGifCloseFile(image, &error);
-		return false;
-	}
-*/
+	// last frame resolution check disabled because client support other frames resolution [4144]
+	/*
+	    if (image->Image.Width != extraconf->emblems->guild_emblem_width ||
+	        image->Image.Height != extraconf->emblems->guild_emblem_height) {
+	#ifdef DEBUG_ERRORS
+	        ShowError("Error: Gif image resolution error: %d, %d\n", image->Image.Width, image->Image.Height);
+	#endif
+	        DGifCloseFile(image, &error);
+	        return false;
+	    }
+	*/
 	// check image resolution and images count
-	if (image->SWidth != extraconf->emblems->guild_emblem_width ||
-	    image->SHeight != extraconf->emblems->guild_emblem_height) {
+	if (image->SWidth != extraconf->emblems->guild_emblem_width || image->SHeight != extraconf->emblems->guild_emblem_height) {
 #ifdef DEBUG_ERRORS
 		ShowError("Error: Gif canvas resolution error: %d, %d\n", image->SWidth, image->SHeight);
 #endif

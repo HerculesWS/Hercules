@@ -30,18 +30,18 @@ struct config_setting_t;
 struct eri;
 
 #ifndef MAPREG_AUTOSAVE_INTERVAL
-#define MAPREG_AUTOSAVE_INTERVAL (300 * 1000) //!< Interval for auto-saving permanent global variables to the database in milliseconds.
-#endif /** MAPREG_AUTOSAVE_INTERVAL **/
+	#define MAPREG_AUTOSAVE_INTERVAL (300 * 1000) //!< Interval for auto-saving permanent global variables to the database in milliseconds.
+#endif                                            /** MAPREG_AUTOSAVE_INTERVAL **/
 
 /** Global variable structure. **/
 struct mapreg_save {
-	int64 uid;         //!< The variable's unique ID.
-	union value {      //!< The variable's value container.
+	int64 uid;     //!< The variable's unique ID.
+	union value {  //!< The variable's value container.
 		int i;     //!< The variable's integer value.
 		char *str; //!< The variable's string value.
 	} u;
-	bool is_string;    //!< Whether the variable's value is a string.
-	bool save;         //!< Whether the variable's save operation is pending.
+	bool is_string; //!< Whether the variable's value is a string.
+	bool save;      //!< Whether the variable's save operation is pending.
 };
 
 /** The mapreg interface structure. **/
@@ -55,26 +55,26 @@ struct mapreg_interface {
 	char str_db[32];    //!< Name of SQL table which holds permanent global string variables.
 
 	/** Interface functions. **/
-	int (*readreg) (int64 uid);
-	char *(*readregstr) (int64 uid);
-	bool (*set_num_db) (int64 uid, const char *name, unsigned int index, int value);
-	bool (*delete_num_db) (int64 uid, const char *name, unsigned int index);
-	bool (*setreg) (int64 uid, int val);
-	bool (*set_str_db) (int64 uid, const char *name, unsigned int index, const char *value);
-	bool (*delete_str_db) (int64 uid, const char *name, unsigned int index);
-	bool (*setregstr) (int64 uid, const char *str);
-	void (*load_num_db) (void);
-	void (*load_str_db) (void);
-	void (*load) (void);
-	void (*save_num_db) (const char *name, unsigned int index, int value);
-	void (*save_str_db) (const char *name, unsigned int index, const char *value);
-	void (*save) (void);
-	int (*save_timer) (int tid, int64 tick, int id, intptr_t data);
-	int (*destroyreg) (union DBKey key, struct DBData *data, va_list ap);
-	void (*reload) (void);
-	bool (*config_read_registry) (const char *filename, const struct config_setting_t *config, bool imported);
-	void (*final) (void);
-	void (*init) (void);
+	int (*readreg)(int64 uid);
+	char *(*readregstr)(int64 uid);
+	bool (*set_num_db)(int64 uid, const char *name, unsigned int index, int value);
+	bool (*delete_num_db)(int64 uid, const char *name, unsigned int index);
+	bool (*setreg)(int64 uid, int val);
+	bool (*set_str_db)(int64 uid, const char *name, unsigned int index, const char *value);
+	bool (*delete_str_db)(int64 uid, const char *name, unsigned int index);
+	bool (*setregstr)(int64 uid, const char *str);
+	void (*load_num_db)(void);
+	void (*load_str_db)(void);
+	void (*load)(void);
+	void (*save_num_db)(const char *name, unsigned int index, int value);
+	void (*save_str_db)(const char *name, unsigned int index, const char *value);
+	void (*save)(void);
+	int (*save_timer)(int tid, int64 tick, int id, intptr_t data);
+	int (*destroyreg)(union DBKey key, struct DBData *data, va_list ap);
+	void (*reload)(void);
+	bool (*config_read_registry)(const char *filename, const struct config_setting_t *config, bool imported);
+	void (*final)(void);
+	void (*init)(void);
 };
 
 #ifdef HERCULES_CORE

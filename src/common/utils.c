@@ -31,13 +31,13 @@
 #include "common/strlib.h"
 
 #ifdef WIN32
-#	include "common/winapi.h"
-#	ifndef F_OK
-#		define F_OK   0x0
-#	endif  /* F_OK */
+	#include "common/winapi.h"
+	#ifndef F_OK
+		#define F_OK 0x0
+	#endif /* F_OK */
 #else
-#	include <dirent.h>
-#	include <unistd.h>
+	#include <dirent.h>
+	#include <unistd.h>
 #endif
 
 #include <math.h> // floor()
@@ -52,7 +52,7 @@ struct HCache_interface *HCache;
 void WriteDump(FILE *fp, const void *buffer, size_t length)
 {
 	size_t i;
-	char hex[48+1], ascii[16+1];
+	char hex[48 + 1], ascii[16 + 1];
 
 	nullpo_retv(fp);
 	nullpo_retv(buffer);
@@ -60,23 +60,20 @@ void WriteDump(FILE *fp, const void *buffer, size_t length)
 	fprintf(fp, "--- 00-01-02-03-04-05-06-07-08-09-0A-0B-0C-0D-0E-0F   0123456789ABCDEF\n");
 	ascii[16] = 0;
 
-	for( i = 0; i < length; i++ )
-	{
-		char c = RBUFB(buffer,i);
+	for (i = 0; i < length; i++) {
+		char c = RBUFB(buffer, i);
 
-		ascii[i%16] = ISCNTRL(c) ? '.' : c;
-		sprintf(hex+(i%16)*3, "%02X ", RBUFB(buffer,i));
+		ascii[i % 16] = ISCNTRL(c) ? '.' : c;
+		sprintf(hex + (i % 16) * 3, "%02X ", RBUFB(buffer, i));
 
-		if( (i%16) == 15 )
-		{
-			fprintf(fp, "%03X %s  %s\n", (unsigned int)(i/16), hex, ascii);
+		if ((i % 16) == 15) {
+			fprintf(fp, "%03X %s  %s\n", (unsigned int)(i / 16), hex, ascii);
 		}
 	}
 
-	if( (i%16) != 0 )
-	{
-		ascii[i%16] = 0;
-		fprintf(fp, "%03X %-48s  %-16s\n", (unsigned int)(i/16), hex, ascii);
+	if ((i % 16) != 0) {
+		ascii[i % 16] = 0;
+		fprintf(fp, "%03X %-48s  %-16s\n", (unsigned int)(i / 16), hex, ascii);
 	}
 }
 
@@ -84,26 +81,26 @@ void WriteDump(FILE *fp, const void *buffer, size_t length)
 void ShowDump(const void *buffer, size_t length)
 {
 	size_t i;
-	char hex[48+1], ascii[16+1];
+	char hex[48 + 1], ascii[16 + 1];
 
 	nullpo_retv(buffer);
 	ShowDebug("--- 00-01-02-03-04-05-06-07-08-09-0A-0B-0C-0D-0E-0F   0123456789ABCDEF\n");
 	ascii[16] = 0;
 
 	for (i = 0; i < length; i++) {
-		char c = RBUFB(buffer,i);
+		char c = RBUFB(buffer, i);
 
-		ascii[i%16] = ISCNTRL(c) ? '.' : c;
-		sprintf(hex+(i%16)*3, "%02X ", RBUFB(buffer,i));
+		ascii[i % 16] = ISCNTRL(c) ? '.' : c;
+		sprintf(hex + (i % 16) * 3, "%02X ", RBUFB(buffer, i));
 
-		if ((i%16) == 15) {
-			ShowDebug("%03"PRIXS" %s  %s\n", i/16, hex, ascii);
+		if ((i % 16) == 15) {
+			ShowDebug("%03" PRIXS " %s  %s\n", i / 16, hex, ascii);
 		}
 	}
 
-	if ((i%16) != 0) {
-		ascii[i%16] = 0;
-		ShowDebug("%03"PRIXS" %-48s  %-16s\n", i/16, hex, ascii);
+	if ((i % 16) != 0) {
+		ascii[i % 16] = 0;
+		ShowDebug("%03" PRIXS " %-48s  %-16s\n", i / 16, hex, ascii);
 	}
 }
 
@@ -116,43 +113,40 @@ static char *checkpath(char *path, const char *srcpath)
 
 	if (NULL == path || NULL == srcpath)
 		return path;
-	while(*srcpath) {
-		if (*srcpath=='/') {
+	while (*srcpath) {
+		if (*srcpath == '/') {
 			*p++ = '\\';
 			srcpath++;
-		}
-		else
+		} else
 			*p++ = *srcpath++;
 	}
-	*p = *srcpath; //EOS
+	*p = *srcpath; // EOS
 	return path;
 }
 
-void findfile(const char *p, const char *pat, void (func)(const char *, void *context), void *context)
+void findfile(const char *p, const char *pat, void(func)(const char *, void *context), void *context)
 {
 	WIN32_FIND_DATAA FindFileData;
 	HANDLE hFind;
 	char tmppath[MAX_DIR_PATH + 1];
-	const char *path    = (p  ==NULL)? "." : p;
-	const char *pattern = (pat==NULL)? "" : pat;
+	const char *path = (p == NULL) ? "." : p;
+	const char *pattern = (pat == NULL) ? "" : pat;
 
-	checkpath(tmppath,path);
-	if( PATHSEP != tmppath[strlen(tmppath)-1])
+	checkpath(tmppath, path);
+	if (PATHSEP != tmppath[strlen(tmppath) - 1])
 		strcat(tmppath, "\\*");
 	else
 		strcat(tmppath, "*");
 
 	hFind = FindFirstFileA(tmppath, &FindFileData);
-	if (hFind != INVALID_HANDLE_VALUE)
-	{
-		do
-		{
+	if (hFind != INVALID_HANDLE_VALUE) {
+		do {
 			if (strcmp(FindFileData.cFileName, ".") == 0)
 				continue;
 			if (strcmp(FindFileData.cFileName, "..") == 0)
 				continue;
 
-			sprintf(tmppath,"%s%c%s",path,PATHSEP,FindFileData.cFileName);
+			sprintf(tmppath, "%s%c%s", path, PATHSEP, FindFileData.cFileName);
 
 			if (strstr(FindFileData.cFileName, pattern)) {
 				func(tmppath, context);
@@ -161,7 +155,7 @@ void findfile(const char *p, const char *pat, void (func)(const char *, void *co
 			if ((FindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0) {
 				findfile(tmppath, pat, func, context);
 			}
-		}while (FindNextFileA(hFind, &FindFileData) != 0);
+		} while (FindNextFileA(hFind, &FindFileData) != 0);
 		FindClose(hFind);
 	}
 	return;
@@ -190,34 +184,34 @@ bool is_file(const char *path)
 static char *checkpath(char *path, const char *srcpath)
 {
 	// just make sure the char*path is not const
-	char *p=path;
+	char *p = path;
 
-	if(NULL!=path && NULL!=srcpath) {
-		while(*srcpath) {
-			if (*srcpath=='\\') {
+	if (NULL != path && NULL != srcpath) {
+		while (*srcpath) {
+			if (*srcpath == '\\') {
 				*p++ = '/';
 				srcpath++;
-			}
-			else
+			} else
 				*p++ = *srcpath++;
 		}
-		*p = *srcpath; //EOS
+		*p = *srcpath; // EOS
 	}
 	return path;
 }
 
-void findfile(const char *p, const char *pat, void (func)(const char *, void *context), void *context)
+void findfile(const char *p, const char *pat, void(func)(const char *, void *context), void *context)
 {
-	DIR* dir;             ///< pointer to the scanned directory.
-	struct dirent* entry; ///< pointer to one directory entry.
+	DIR *dir;             ///< pointer to the scanned directory.
+	struct dirent *entry; ///< pointer to one directory entry.
 	struct stat dir_stat; ///< used by stat().
-	char tmppath[MAX_DIR_PATH+1];
-	char path[MAX_DIR_PATH+1]= ".";
-	const char *pattern = (pat==NULL)? "" : pat;
-	if(p!=NULL) safestrncpy(path,p,sizeof(path));
+	char tmppath[MAX_DIR_PATH + 1];
+	char path[MAX_DIR_PATH + 1] = ".";
+	const char *pattern = (pat == NULL) ? "" : pat;
+	if (p != NULL)
+		safestrncpy(path, p, sizeof(path));
 
 	// open the directory for reading
-	dir = opendir( checkpath(path, path) );
+	dir = opendir(checkpath(path, path));
 	if (!dir) {
 		ShowError("Cannot read directory '%s'\n", path);
 		return;
@@ -251,7 +245,7 @@ void findfile(const char *p, const char *pat, void (func)(const char *, void *co
 			// decent recursively
 			findfile(tmppath, pat, func, context);
 		}
-	}//end while
+	} // end while
 
 	closedir(dir);
 }
@@ -285,31 +279,35 @@ bool exists(const char *filename)
 
 uint8 GetByte(uint32 val, int idx)
 {
-	switch( idx )
-	{
-	case 0: return (uint8)( (val & 0x000000FF)         );
-	case 1: return (uint8)( (val & 0x0000FF00) >> 0x08 );
-	case 2: return (uint8)( (val & 0x00FF0000) >> 0x10 );
-	case 3: return (uint8)( (val & 0xFF000000) >> 0x18 );
-	default:
+	switch (idx) {
+		case 0:
+			return (uint8)((val & 0x000000FF));
+		case 1:
+			return (uint8)((val & 0x0000FF00) >> 0x08);
+		case 2:
+			return (uint8)((val & 0x00FF0000) >> 0x10);
+		case 3:
+			return (uint8)((val & 0xFF000000) >> 0x18);
+		default:
 #if defined(DEBUG)
-		ShowDebug("GetByte: invalid index (idx=%d)\n", idx);
+			ShowDebug("GetByte: invalid index (idx=%d)\n", idx);
 #endif
-		return 0;
+			return 0;
 	}
 }
 
 uint16 GetWord(uint32 val, int idx)
 {
-	switch( idx )
-	{
-	case 0: return (uint16)( (val & 0x0000FFFF)         );
-	case 1: return (uint16)( (val & 0xFFFF0000) >> 0x10 );
-	default:
+	switch (idx) {
+		case 0:
+			return (uint16)((val & 0x0000FFFF));
+		case 1:
+			return (uint16)((val & 0xFFFF0000) >> 0x10);
+		default:
 #if defined(DEBUG)
-		ShowDebug("GetWord: invalid index (idx=%d)\n", idx);
+			ShowDebug("GetWord: invalid index (idx=%d)\n", idx);
 #endif
-		return 0;
+			return 0;
 	}
 }
 uint16 MakeWord(uint8 byte0, uint8 byte1)
@@ -319,49 +317,43 @@ uint16 MakeWord(uint8 byte0, uint8 byte1)
 
 uint32 MakeDWord(uint16 word0, uint16 word1)
 {
-	return
-		( (uint32)(word0        ) )|
-		( (uint32)(word1 << 0x10) );
+	return ((uint32)(word0)) | ((uint32)(word1 << 0x10));
 }
 
 /*************************************
-* Big-endian compatibility functions *
-*************************************/
+ * Big-endian compatibility functions *
+ *************************************/
 
 // Converts an int16 from current machine order to little-endian
 int16 MakeShortLE(int16 val)
 {
 	unsigned char buf[2];
-	buf[0] = (unsigned char)( (val & 0x00FF)         );
-	buf[1] = (unsigned char)( (val & 0xFF00) >> 0x08 );
-	return *((int16*)buf);
+	buf[0] = (unsigned char)((val & 0x00FF));
+	buf[1] = (unsigned char)((val & 0xFF00) >> 0x08);
+	return *((int16 *)buf);
 }
 
 // Converts an int32 from current machine order to little-endian
 int32 MakeLongLE(int32 val)
 {
 	unsigned char buf[4];
-	buf[0] = (unsigned char)( (val & 0x000000FF)         );
-	buf[1] = (unsigned char)( (val & 0x0000FF00) >> 0x08 );
-	buf[2] = (unsigned char)( (val & 0x00FF0000) >> 0x10 );
-	buf[3] = (unsigned char)( (val & 0xFF000000) >> 0x18 );
-	return *((int32*)buf);
+	buf[0] = (unsigned char)((val & 0x000000FF));
+	buf[1] = (unsigned char)((val & 0x0000FF00) >> 0x08);
+	buf[2] = (unsigned char)((val & 0x00FF0000) >> 0x10);
+	buf[3] = (unsigned char)((val & 0xFF000000) >> 0x18);
+	return *((int32 *)buf);
 }
 
 // Reads an uint16 in little-endian from the buffer
 uint16 GetUShort(const unsigned char *buf)
 {
-	return ( ((uint16)(buf[0]))         )
-	     | ( ((uint16)(buf[1])) << 0x08 );
+	return (((uint16)(buf[0]))) | (((uint16)(buf[1])) << 0x08);
 }
 
 // Reads an uint32 in little-endian from the buffer
 uint32 GetULong(const unsigned char *buf)
 {
-	return ( ((uint32)(buf[0]))         )
-	     | ( ((uint32)(buf[1])) << 0x08 )
-	     | ( ((uint32)(buf[2])) << 0x10 )
-	     | ( ((uint32)(buf[3])) << 0x18 );
+	return (((uint32)(buf[0]))) | (((uint32)(buf[1])) << 0x08) | (((uint32)(buf[2])) << 0x10) | (((uint32)(buf[3])) << 0x18);
 }
 
 // Reads an int32 in little-endian from the buffer
@@ -374,7 +366,7 @@ int32 GetLong(const unsigned char *buf)
 float GetFloat(const unsigned char *buf)
 {
 	uint32 val = GetULong(buf);
-	return *((float*)(void*)&val);
+	return *((float *)(void *)&val);
 }
 
 /// calculates the value of A / B, in percent (rounded down)
@@ -382,16 +374,14 @@ unsigned int get_percentage(const unsigned int A, const unsigned int B)
 {
 	double result;
 
-	if( B == 0 )
-	{
+	if (B == 0) {
 		ShowError("get_percentage(): division by zero! (A=%u,B=%u)\n", A, B);
 		return ~0U;
 	}
 
 	result = 100 * ((double)A / (double)B);
 
-	if( result > UINT_MAX )
-	{
+	if (result > UINT_MAX) {
 		ShowError("get_percentage(): result percentage too high! (A=%u,B=%u,result=%g)\n", A, B, result);
 		return UINT_MAX;
 	}
@@ -404,17 +394,15 @@ uint64 get_percentage64(const uint64 A, const uint64 B)
 {
 	double result;
 
-	if( B == 0 )
-	{
-		ShowError("get_percentage(): division by zero! (A=%"PRIu64",B=%"PRIu64")\n", A, B);
+	if (B == 0) {
+		ShowError("get_percentage(): division by zero! (A=%" PRIu64 ",B=%" PRIu64 ")\n", A, B);
 		return ~0U;
 	}
 
 	result = 100 * ((double)A / (double)B);
 
-	if( result > UINT_MAX )
-	{
-		ShowError("get_percentage(): result percentage too high! (A=%"PRIu64",B=%"PRIu64",result=%g)\n", A, B, result);
+	if (result > UINT_MAX) {
+		ShowError("get_percentage(): result percentage too high! (A=%" PRIu64 ",B=%" PRIu64 ",result=%g)\n", A, B, result);
 		return UINT_MAX;
 	}
 
@@ -484,7 +472,7 @@ static bool HCache_check(const char *file)
 	time_t rtime;
 
 	nullpo_retr(false, file);
-	if (!(first = fopen(file,"rb")))
+	if (!(first = fopen(file, "rb")))
 		return false;
 
 	if (file[0] == '.' && file[1] == '/')
@@ -494,15 +482,12 @@ static bool HCache_check(const char *file)
 
 	snprintf(s_path, 255, "./cache/%s", file);
 
-	if (!(second = fopen(s_path,"rb"))) {
+	if (!(second = fopen(s_path, "rb"))) {
 		fclose(first);
 		return false;
 	}
 
-	if (fread(dT,sizeof(dT),1,second) != 1
-	 || fread(&rtime,sizeof(rtime),1,second) != 1
-	 || dT[0] != HCACHE_KEY
-	 || HCache->recompile_time > rtime) {
+	if (fread(dT, sizeof(dT), 1, second) != 1 || fread(&rtime, sizeof(rtime), 1, second) != 1 || dT[0] != HCACHE_KEY || HCache->recompile_time > rtime) {
 		fclose(first);
 		fclose(second);
 		return false;
@@ -535,22 +520,22 @@ static FILE *HCache_open(const char *file, const char *opt)
 	nullpo_retr(NULL, file);
 	nullpo_retr(NULL, opt);
 
-	if( file[0] == '.' && file[1] == '/' )
+	if (file[0] == '.' && file[1] == '/')
 		file += 2;
-	else if( file[0] == '.' )
+	else if (file[0] == '.')
 		file++;
 
 	snprintf(s_path, 255, "./cache/%s", file);
 
-	if( !(first = fopen(s_path,opt)) ) {
+	if (!(first = fopen(s_path, opt))) {
 		return NULL;
 	}
 
-	if( opt[0] != 'r' ) {
-		char dT[1];/* 1-byte key to ensure our method is the latest, we can modify to ensure the method matches */
+	if (opt[0] != 'r') {
+		char dT[1]; /* 1-byte key to ensure our method is the latest, we can modify to ensure the method matches */
 		dT[0] = HCACHE_KEY;
-		hwrite(dT,sizeof(dT),1,first);
-		hwrite(&HCache->recompile_time,sizeof(HCache->recompile_time),1,first);
+		hwrite(dT, sizeof(dT), 1, first);
+		hwrite(&HCache->recompile_time, sizeof(HCache->recompile_time), 1, first);
 	}
 	if (fseek(first, 20, SEEK_SET) != 0) { // skip first 20, might wanna store something else later
 		fclose(first);
@@ -564,7 +549,7 @@ static void HCache_init(void)
 {
 	struct stat buf;
 	if (stat(SERVER_NAME, &buf) != 0) {
-		ShowWarning("Unable to open '%s', caching capabilities have been disabled!\n",SERVER_NAME);
+		ShowWarning("Unable to open '%s', caching capabilities have been disabled!\n", SERVER_NAME);
 		return;
 	}
 

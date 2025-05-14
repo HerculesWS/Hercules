@@ -52,7 +52,7 @@
  * the client automatically wrap text in dialogs, depending on font size and
  * dialog window size (may work better for clients using a non-standard font).
  */
-//#define SCRIPT_MES_STRIP_LINEBREAK
+// #define SCRIPT_MES_STRIP_LINEBREAK
 
 /// Comment to disable Hercules' console_parse
 /// CONSOLE_INPUT allows you to type commands into the server's console,
@@ -64,7 +64,7 @@
 /// Uncomment to enable the Cell Stack Limit mod.
 /// It's only config is the battle_config custom_cell_stack_limit.
 /// Only chars affected are those defined in BL_CHAR
-//#define CELL_NOSTACK
+// #define CELL_NOSTACK
 
 /// Uncomment to enable circular area checks.
 /// By default, most server-sided range checks in Aegis are of square shapes, so a monster
@@ -72,41 +72,41 @@
 /// Client-sided range checks are, however, are always circular.
 /// Enabling this changes all checks to circular checks, which is more realistic,
 /// - but is not the official behaviour.
-//#define CIRCULAR_AREA
+// #define CIRCULAR_AREA
 
-//This is the distance at which @autoloot works,
-//if the item drops farther from the player than this,
-//it will not be autolooted. [Skotlex]
-//Note: The range is unlimited unless this define is set.
-//#define AUTOLOOT_DISTANCE AREA_SIZE
+// This is the distance at which @autoloot works,
+// if the item drops farther from the player than this,
+// it will not be autolooted. [Skotlex]
+// Note: The range is unlimited unless this define is set.
+// #define AUTOLOOT_DISTANCE AREA_SIZE
 
 /// Uncomment to switch the way map zones' "skill_damage_cap" functions.
 /// When commented the cap takes place before modifiers, as to have them be useful.
 /// When uncommented the cap takes place after modifiers.
-//#define HMAP_ZONE_DAMAGE_CAP_TYPE
+// #define HMAP_ZONE_DAMAGE_CAP_TYPE
 
 /// Comment to disable Guild/Party Bound item system
 #define GP_BOUND_ITEMS
 
 /// Uncomment to enable real-time server stats (in and out data and ram usage). [Ai4rei]
-//#define SHOW_SERVER_STATS
+// #define SHOW_SERVER_STATS
 
 /// Comment to disable autotrade persistency (where autotrading merchants survive server restarts)
 #define AUTOTRADE_PERSISTENCY
 
 /// Uncomment for use with Nemo patch ExtendCashShopPreview
-//#define ENABLE_CASHSHOP_PREVIEW_PATCH
+// #define ENABLE_CASHSHOP_PREVIEW_PATCH
 
 /// Uncomment for use with Nemo patch ExtendOldCashShopPreview
-//#define ENABLE_OLD_CASHSHOP_PREVIEW_PATCH
+// #define ENABLE_OLD_CASHSHOP_PREVIEW_PATCH
 
 /// Uncomment to allow RE clients to enable RoDEX "Account Mail".
 /// RE clients requires Nemo patch for RoDEX Account Mail to work.
-//#define ENABLE_RODEX_ACCOUNT_MAIL_RE_PATCH
+// #define ENABLE_RODEX_ACCOUNT_MAIL_RE_PATCH
 
 /// Uncomment to allow flinch animation and walk delay to be synced
 /// Reduces positional lag when getting hit
-//#define WALKDELAY_SYNC
+// #define WALKDELAY_SYNC
 
 /**
  * No settings past this point

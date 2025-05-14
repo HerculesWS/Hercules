@@ -37,15 +37,11 @@ struct HttpHandler;
 struct multipartparser;
 struct MimePart;
 
-enum e_mime_flag {
-	MIME_FLAG_NONE = 0,
-	MIME_FLAG_CONTENT_DISPOSITION = 1,
-	MIME_FLAG_CONTENT_TYPE = 2
-};
+enum e_mime_flag { MIME_FLAG_NONE = 0, MIME_FLAG_CONTENT_DISPOSITION = 1, MIME_FLAG_CONTENT_TYPE = 2 };
 
 struct api_session_data {
 	int fd;
-	int id;  // for inter server requests
+	int id; // for inter server requests
 	int account_id;
 	int char_id;
 	HTTP_PARSER parser;
@@ -55,15 +51,15 @@ struct api_session_data {
 	struct multipartparser *multi_parser;
 	size_t request_size;
 	struct api_flag {
-		uint32 message_begin : 1;        // message parsing started
-		uint32 headers_complete : 1;     // headers parsing complete
-		uint32 message_complete : 1;     // message parsing complete
-		uint32 url : 1;                  // url parsing complete
-		uint32 status : 1;               // status code parsing complete
-		uint32 body : 1;                 // body parsing complete
-		uint32 multi_part_begin : 1;     // multi part parsing started
-		uint32 multi_part_complete : 1;  // multi part parsing complete
-		uint32 handled : 1;              // http request already handled
+		uint32 message_begin : 1;       // message parsing started
+		uint32 headers_complete : 1;    // headers parsing complete
+		uint32 message_complete : 1;    // message parsing complete
+		uint32 url : 1;                 // url parsing complete
+		uint32 status : 1;              // status code parsing complete
+		uint32 body : 1;                // body parsing complete
+		uint32 multi_part_begin : 1;    // multi part parsing started
+		uint32 multi_part_complete : 1; // multi part parsing complete
+		uint32 handled : 1;             // http request already handled
 	} flag;
 	char *url;
 	struct HttpHandler *handler;

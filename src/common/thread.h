@@ -34,19 +34,15 @@ typedef void *(*threadFunc)(void *); ///< Thread entry point function.
 /* Enums */
 
 /// Thread priority
-enum thread_priority {
-	THREADPRIO_LOW = 0,
-	THREADPRIO_NORMAL,
-	THREADPRIO_HIGH
-};
+enum thread_priority { THREADPRIO_LOW = 0, THREADPRIO_NORMAL, THREADPRIO_HIGH };
 
 /// The thread interface
 struct thread_interface {
 	/// Interface initialization.
-	void (*init) (void);
+	void (*init)(void);
 
 	/// Interface finalization.
-	void (*final) (void);
+	void (*final)(void);
 
 	/**
 	 * Creates a new Thread.
@@ -58,7 +54,7 @@ struct thread_interface {
 	 * @return The created thread object.
 	 * @retval NULL in vase of failure.
 	 */
-	struct thread_handle *(*create) (threadFunc entry_point, void *param);
+	struct thread_handle *(*create)(threadFunc entry_point, void *param);
 
 	/**
 	 * Creates a new Thread (with more creation options).
@@ -72,7 +68,7 @@ struct thread_interface {
 	 * @return The created thread object.
 	 * @retval NULL in case of failure.
 	 */
-	struct thread_handle *(*create_opt) (threadFunc entry_point, void *param, size_t stack_size, enum thread_priority prio);
+	struct thread_handle *(*create_opt)(threadFunc entry_point, void *param, size_t stack_size, enum thread_priority prio);
 
 	/**
 	 * Destroys the given Thread immediately.
@@ -82,7 +78,7 @@ struct thread_interface {
 	 *
 	 * @param handle The thread to destroy.
 	 */
-	void (*destroy) (struct thread_handle *handle);
+	void (*destroy)(struct thread_handle *handle);
 
 	/**
 	 * Returns the thread handle of the thread calling this function.
@@ -97,7 +93,7 @@ struct thread_interface {
 	 * @return the thread handle.
 	 * @retval NULL in case of failure.
 	 */
-	struct thread_handle *(*self) (void);
+	struct thread_handle *(*self)(void);
 
 	/**
 	 * Returns own thread id (TID).
@@ -109,7 +105,7 @@ struct thread_interface {
 	 * @return the thread ID.
 	 * @retval -1 in case of failure.
 	 */
-	int (*get_tid) (void);
+	int (*get_tid)(void);
 
 	/**
 	 * Waits for the given thread to terminate.
@@ -120,7 +116,7 @@ struct thread_interface {
 	 *
 	 * @retval true if the given thread has been terminated.
 	 */
-	bool (*wait) (struct thread_handle *handle, void **out_exit_code);
+	bool (*wait)(struct thread_handle *handle, void **out_exit_code);
 
 	/**
 	 * Sets the given priority in the OS scheduler.
@@ -128,14 +124,14 @@ struct thread_interface {
 	 * @param handle The thread to set the priority for.
 	 * @param prio   The priority to set (@see enum thread_priority).
 	 */
-	void (*prio_set) (struct thread_handle *handle, enum thread_priority prio);
+	void (*prio_set)(struct thread_handle *handle, enum thread_priority prio);
 
 	/**
 	 * Gets the current priority of the given thread.
 	 *
 	 * @param handle The thread to get the priority for.
 	 */
-	enum thread_priority (*prio_get) (struct thread_handle *handle);
+	enum thread_priority (*prio_get)(struct thread_handle *handle);
 
 	/**
 	 * Tells the OS scheduler to yield the execution of the calling thread.
@@ -144,7 +140,7 @@ struct thread_interface {
 	 *   This will not "pause" the thread, it just allows the OS to spend
 	 *   the remaining time of the slice to another thread.
 	 */
-	void (*yield) (void);
+	void (*yield)(void);
 };
 
 #ifdef HERCULES_CORE

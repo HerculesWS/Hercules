@@ -38,7 +38,7 @@ struct md5_interface {
 	 * @param[in]  string The source string (NUL terminated).
 	 * @param[out] output Output buffer (at least 33 bytes available).
 	 */
-	void (*string) (const char *string, char *output);
+	void (*string)(const char *string, char *output);
 
 	/**
 	 * Hashes a string, returning the buffer in binary format.
@@ -46,7 +46,7 @@ struct md5_interface {
 	 * @param[in]  string The source string.
 	 * @param[out] output Output buffer (at least 16 bytes available).
 	 */
-	void (*binary) (const uint8 *buf, const int buf_size, uint8 *output);
+	void (*binary)(const uint8 *buf, const int buf_size, uint8 *output);
 
 	/**
 	 * Generates a random salt.
@@ -54,7 +54,7 @@ struct md5_interface {
 	 * @param[in]  len    The desired salt length.
 	 * @param[out] output The output buffer (at least len bytes available).
 	 */
-	void (*salt) (int len, char *output);
+	void (*salt)(int len, char *output);
 };
 
 #ifdef HERCULES_CORE

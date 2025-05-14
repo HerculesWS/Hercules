@@ -21,7 +21,7 @@
 #define API_HPMAPI_H
 
 #ifndef HERCULES_CORE
-#error You should never include HPMapi.h from a plugin.
+	#error You should never include HPMapi.h from a plugin.
 #endif
 
 #include "common/cbasetypes.h"

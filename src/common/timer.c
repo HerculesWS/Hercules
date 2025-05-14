@@ -30,10 +30,10 @@
 #include "common/utils.h"
 
 #ifdef WIN32
-#	include "common/winapi.h" // GetTickCount()
+	#include "common/winapi.h" // GetTickCount()
 #else
-#	include <sys/time.h> // struct timeval, gettimeofday()
-#	include <unistd.h>
+	#include <sys/time.h> // struct timeval, gettimeofday()
+	#include <unistd.h>
 #endif
 
 #include <stdio.h>
@@ -49,7 +49,7 @@ struct timer_interface *timer;
 #define TIMER_MAX_INTERVAL 1000
 
 // timers (array)
-static struct TimerData* timer_data = NULL;
+static struct TimerData *timer_data = NULL;
 static int timer_data_max = 0;
 static int timer_data_num = 1;
 
@@ -58,48 +58,44 @@ static int *free_timer_list = NULL;
 static int free_timer_list_max = 0;
 static int free_timer_list_pos = 0;
 
-
 /// Comparator for the timer heap. (minimum tick at top)
 /// Returns negative if tid1's tick is smaller, positive if tid2's tick is smaller, 0 if equal.
 ///
 /// @param tid1 First timer
 /// @param tid2 Second timer
 /// @return negative if tid1 is top, positive if tid2 is top, 0 if equal
-#define DIFFTICK_MINTOPCMP(tid1,tid2) DIFF_TICK(timer_data[tid1].tick,timer_data[tid2].tick)
+#define DIFFTICK_MINTOPCMP(tid1, tid2) DIFF_TICK(timer_data[tid1].tick, timer_data[tid2].tick)
 
 // timer heap (binary heap of tid's)
 static BHEAP_VAR(int, timer_heap);
 
-
 // server startup time
 static time_t start_time;
-
 
 /*----------------------------
  * Timer debugging
  *----------------------------*/
 static struct timer_func_list {
-	struct timer_func_list* next;
+	struct timer_func_list *next;
 	TimerFunc func;
-	const char* name;
+	const char *name;
 } *tfl_root = NULL;
 
 /// Sets the name of a timer function.
 static int timer_add_func_list(TimerFunc func, char *name)
 {
-	struct timer_func_list* tfl;
+	struct timer_func_list *tfl;
 
 	nullpo_ret(func);
 	nullpo_ret(name);
 	if (name) {
-		for( tfl=tfl_root; tfl != NULL; tfl=tfl->next )
-		{// check suspicious cases
-			if( func == tfl->func )
-				ShowWarning("timer_add_func_list: duplicating function %p(%s) as %s.\n",tfl->func,tfl->name,name);
-			else if( strcmp(name,tfl->name) == 0 )
-				ShowWarning("timer_add_func_list: function %p has the same name as %p(%s)\n",func,tfl->func,tfl->name);
+		for (tfl = tfl_root; tfl != NULL; tfl = tfl->next) { // check suspicious cases
+			if (func == tfl->func)
+				ShowWarning("timer_add_func_list: duplicating function %p(%s) as %s.\n", tfl->func, tfl->name, name);
+			else if (strcmp(name, tfl->name) == 0)
+				ShowWarning("timer_add_func_list: function %p has the same name as %p(%s)\n", func, tfl->func, tfl->name);
 		}
-		CREATE(tfl,struct timer_func_list,1);
+		CREATE(tfl, struct timer_func_list, 1);
 		tfl->next = tfl_root;
 		tfl->func = func;
 		tfl->name = aStrdup(name);
@@ -111,9 +107,9 @@ static int timer_add_func_list(TimerFunc func, char *name)
 /// Returns the name of the timer function.
 static char *search_timer_func_list(TimerFunc func)
 {
-	struct timer_func_list* tfl;
+	struct timer_func_list *tfl;
 
-	for( tfl=tfl_root; tfl != NULL; tfl=tfl->next )
+	for (tfl = tfl_root; tfl != NULL; tfl = tfl->next)
 		if (func == tfl->func)
 			return tfl->name;
 
@@ -135,7 +131,7 @@ static __inline uint64 rdtsc_(void)
 		uint32 dw[2];
 	} t;
 
-	asm volatile("rdtsc":"=a"(t.dw[0]), "=d"(t.dw[1]) );
+	asm volatile("rdtsc" : "=a"(t.dw[0]), "=d"(t.dw[1]));
 
 	return t.qw;
 }
@@ -149,9 +145,9 @@ static void rdtsc_calibrate(void)
 
 	RDTSC_CLOCK = 0;
 
-	for(i = 0; i < 5; i++){
+	for (i = 0; i < 5; i++) {
 		t1 = rdtsc_();
-		usleep(1000000); //1000 MS
+		usleep(1000000); // 1000 MS
 		t2 = rdtsc_();
 		RDTSC_CLOCK += (t2 - t1) / 1000;
 	}
@@ -159,7 +155,7 @@ static void rdtsc_calibrate(void)
 
 	RDTSC_BEGINTICK = rdtsc_();
 
-	ShowMessage(" done. (Frequency: %u Mhz)\n", (uint32)(RDTSC_CLOCK/1000) );
+	ShowMessage(" done. (Frequency: %u Mhz)\n", (uint32)(RDTSC_CLOCK / 1000));
 }
 
 #endif
@@ -184,12 +180,12 @@ static int64 sys_tick(void)
 	//   check is required in order not to crash.
 	// http://msdn.microsoft.com/en-us/library/windows/desktop/ms724411%28v=vs.85%29.aspx
 	static bool first = true;
-	static ULONGLONG (WINAPI *pGetTickCount64)(void) = NULL;
+	static ULONGLONG(WINAPI * pGetTickCount64)(void) = NULL;
 
-	if( first ) {
+	if (first) {
 		HMODULE hlib = GetModuleHandle(TEXT("KERNEL32.DLL"));
-		if( hlib != NULL )
-			pGetTickCount64 = (ULONGLONG (WINAPI *)(void))GetProcAddress(hlib, "GetTickCount64");
+		if (hlib != NULL)
+			pGetTickCount64 = (ULONGLONG(WINAPI *)(void))GetProcAddress(hlib, "GetTickCount64");
 		first = false;
 	}
 	if (pGetTickCount64)
@@ -240,7 +236,7 @@ static int64 timer_gettick_nocache(void)
 
 static int64 timer_gettick(void)
 {
-	return ( --gettick_count == 0 ) ? gettick_nocache() : gettick_cache;
+	return (--gettick_count == 0) ? gettick_nocache() : gettick_cache;
 }
 //////////////////////////////
 #else
@@ -283,25 +279,25 @@ static int acquire_timer(void)
 	if (free_timer_list_pos) {
 		do {
 			tid = free_timer_list[--free_timer_list_pos];
-		} while(tid >= timer_data_num && free_timer_list_pos > 0);
+		} while (tid >= timer_data_num && free_timer_list_pos > 0);
 	} else
 		tid = timer_data_num;
 
 	// check available space
-	if( tid >= timer_data_num )
+	if (tid >= timer_data_num)
 		// possible timer_data null pointer
-		for (tid = timer_data_num; tid < timer_data_max && timer_data[tid].type; tid++);
-	if (tid >= timer_data_num && tid >= timer_data_max)
-	{// expand timer array
+		for (tid = timer_data_num; tid < timer_data_max && timer_data[tid].type; tid++)
+			;
+	if (tid >= timer_data_num && tid >= timer_data_max) { // expand timer array
 		timer_data_max += 256;
-		if( timer_data )
+		if (timer_data)
 			RECREATE(timer_data, struct TimerData, timer_data_max);
 		else
 			CREATE(timer_data, struct TimerData, timer_data_max);
-		memset(timer_data + (timer_data_max - 256), 0, sizeof(struct TimerData)*256);
+		memset(timer_data + (timer_data_max - 256), 0, sizeof(struct TimerData) * 256);
 	}
 
-	if( tid >= timer_data_num )
+	if (tid >= timer_data_num)
 		timer_data_num = tid + 1;
 
 	return tid;
@@ -316,21 +312,19 @@ static int timer_add(int64 tick, TimerFunc func, int id, intptr_t data)
 	nullpo_retr(INVALID_TIMER, func);
 
 	tid = acquire_timer();
-	if (timer_data[tid].type != 0 && timer_data[tid].type != TIMER_REMOVE_HEAP)
-	{
+	if (timer_data[tid].type != 0 && timer_data[tid].type != TIMER_REMOVE_HEAP) {
 		ShowError("timer_add error: wrong tid type: %d, [%d]%p(%s) -> %p(%s)\n", timer_data[tid].type, tid, func, search_timer_func_list(func), timer_data[tid].func, search_timer_func_list(timer_data[tid].func));
 		Assert_retr(INVALID_TIMER, 0);
 	}
-	if (timer_data[tid].func != NULL)
-	{
+	if (timer_data[tid].func != NULL) {
 		ShowError("timer_add error: func non NULL: [%d]%p(%s) -> %p(%s)\n", tid, func, search_timer_func_list(func), timer_data[tid].func, search_timer_func_list(timer_data[tid].func));
 		Assert_retr(INVALID_TIMER, 0);
 	}
-	timer_data[tid].tick     = tick;
-	timer_data[tid].func     = func;
-	timer_data[tid].id       = id;
-	timer_data[tid].data     = data;
-	timer_data[tid].type     = TIMER_ONCE_AUTODEL;
+	timer_data[tid].tick = tick;
+	timer_data[tid].func = func;
+	timer_data[tid].id = id;
+	timer_data[tid].data = data;
+	timer_data[tid].type = TIMER_ONCE_AUTODEL;
 	timer_data[tid].interval = 1000;
 	push_timer_heap(tid);
 
@@ -345,29 +339,26 @@ static int timer_add_interval(int64 tick, TimerFunc func, int id, intptr_t data,
 
 	nullpo_retr(INVALID_TIMER, func);
 	if (interval < 1) {
-		ShowError("timer_add_interval: invalid interval (tick=%"PRId64" %p[%s] id=%d data=%"PRIdPTR" diff_tick=%"PRId64")\n",
-		          tick, func, search_timer_func_list(func), id, data, DIFF_TICK(tick, timer->gettick()));
+		ShowError("timer_add_interval: invalid interval (tick=%" PRId64 " %p[%s] id=%d data=%" PRIdPTR " diff_tick=%" PRId64 ")\n", tick, func, search_timer_func_list(func), id, data, DIFF_TICK(tick, timer->gettick()));
 		return INVALID_TIMER;
 	}
 
 	tid = acquire_timer();
-	if (timer_data[tid].type != 0 && timer_data[tid].type != TIMER_REMOVE_HEAP)
-	{
+	if (timer_data[tid].type != 0 && timer_data[tid].type != TIMER_REMOVE_HEAP) {
 		ShowError("timer_add_interval: wrong tid type: %d, [%d]%p(%s) -> %p(%s)\n", timer_data[tid].type, tid, func, search_timer_func_list(func), timer_data[tid].func, search_timer_func_list(timer_data[tid].func));
 		Assert_retr(INVALID_TIMER, 0);
 		return INVALID_TIMER;
 	}
-	if (timer_data[tid].func != NULL)
-	{
+	if (timer_data[tid].func != NULL) {
 		ShowError("timer_add_interval: func non NULL: [%d]%p(%s) -> %p(%s)\n", tid, func, search_timer_func_list(func), timer_data[tid].func, search_timer_func_list(timer_data[tid].func));
 		Assert_retr(INVALID_TIMER, 0);
 		return INVALID_TIMER;
 	}
-	timer_data[tid].tick     = tick;
-	timer_data[tid].func     = func;
-	timer_data[tid].id       = id;
-	timer_data[tid].data     = data;
-	timer_data[tid].type     = TIMER_INTERVAL;
+	timer_data[tid].tick = tick;
+	timer_data[tid].func = func;
+	timer_data[tid].id = id;
+	timer_data[tid].data = data;
+	timer_data[tid].type = TIMER_INTERVAL;
 	timer_data[tid].interval = interval;
 	push_timer_heap(tid);
 
@@ -378,7 +369,7 @@ static int timer_add_interval(int64 tick, TimerFunc func, int id, intptr_t data,
 static const struct TimerData *timer_get(int tid)
 {
 	Assert_retr(NULL, tid > 0);
-	return ( tid >= 0 && tid < timer_data_num ) ? &timer_data[tid] : NULL;
+	return (tid >= 0 && tid < timer_data_num) ? &timer_data[tid] : NULL;
 }
 
 /// Marks a timer specified by 'id' for immediate deletion once it expires.
@@ -393,14 +384,13 @@ static int timer_do_delete(int tid, TimerFunc func)
 		Assert_retr(-1, 0);
 		return -1;
 	}
-	if( timer_data[tid].func != func ) {
+	if (timer_data[tid].func != func) {
 		ShowError("timer_do_delete error : function mismatch [%d]%p(%s) != %p(%s)\n", tid, timer_data[tid].func, search_timer_func_list(timer_data[tid].func), func, search_timer_func_list(func));
 		Assert_retr(-2, 0);
 		return -2;
 	}
 
-	if (timer_data[tid].type == 0 || timer_data[tid].type == TIMER_REMOVE_HEAP)
-	{
+	if (timer_data[tid].type == 0 || timer_data[tid].type == TIMER_REMOVE_HEAP) {
 		ShowError("timer_do_delete: timer already deleted: %d, [%d]%p(%s) -> %p(%s)\n", timer_data[tid].type, tid, func, search_timer_func_list(func), func, search_timer_func_list(func));
 		Assert_retr(-3, 0);
 		return -3;
@@ -421,7 +411,7 @@ static int64 timer_addtick(int tid, int64 tick)
 		Assert_retr(-1, 0);
 		return -1;
 	}
-	return timer->settick(tid, timer_data[tid].tick+tick);
+	return timer->settick(tid, timer_data[tid].tick + tick);
 }
 
 /**
@@ -455,10 +445,10 @@ static int64 timer_settick(int tid, int64 tick)
 		return -1;
 	}
 
-	if( tick == -1 )
+	if (tick == -1)
 		tick = 0; // add 1ms to avoid the error value -1
 
-	if( timer_data[tid].tick == tick )
+	if (timer_data[tid].tick == tick)
 		return tick; // nothing to do, already in proper position
 
 	// pop and push adjusted timer
@@ -480,18 +470,18 @@ static int do_timer(int64 tick)
 
 	// process all timers one by one
 	while (BHEAP_LENGTH(timer_heap) > 0) {
-		int tid = BHEAP_PEEK(timer_heap);// top element in heap (smallest tick)
+		int tid = BHEAP_PEEK(timer_heap); // top element in heap (smallest tick)
 
 		diff = DIFF_TICK(timer_data[tid].tick, tick);
-		if( diff > 0 )
+		if (diff > 0)
 			break; // no more expired timers to process
 
 		// remove timer
 		BHEAP_POP(timer_heap, DIFFTICK_MINTOPCMP, swap);
 		timer_data[tid].type |= TIMER_REMOVE_HEAP;
 
-		if( timer_data[tid].func ) {
-			if( diff < -1000 )
+		if (timer_data[tid].func) {
+			if (diff < -1000)
 				// timer was delayed for more than 1 second, use current tick instead
 				timer_data[tid].func(tid, tick, timer_data[tid].id, timer_data[tid].data);
 			else
@@ -499,28 +489,28 @@ static int do_timer(int64 tick)
 		}
 
 		// in the case the function didn't change anything...
-		if( timer_data[tid].type & TIMER_REMOVE_HEAP ) {
+		if (timer_data[tid].type & TIMER_REMOVE_HEAP) {
 			timer_data[tid].type &= ~TIMER_REMOVE_HEAP;
 
-			switch( timer_data[tid].type ) {
+			switch (timer_data[tid].type) {
 				default:
 				case TIMER_ONCE_AUTODEL:
 					timer_data[tid].type = 0;
 					timer_data[tid].func = NULL;
 					if (free_timer_list_pos >= free_timer_list_max) {
 						free_timer_list_max += 256;
-						RECREATE(free_timer_list,int,free_timer_list_max);
+						RECREATE(free_timer_list, int, free_timer_list_max);
 						memset(free_timer_list + (free_timer_list_max - 256), 0, 256 * sizeof(int));
 					}
 					free_timer_list[free_timer_list_pos++] = tid;
-				break;
+					break;
 				case TIMER_INTERVAL:
-					if( DIFF_TICK(timer_data[tid].tick, tick) < -1000 )
+					if (DIFF_TICK(timer_data[tid].tick, tick) < -1000)
 						timer_data[tid].tick = tick + timer_data[tid].interval;
 					else
 						timer_data[tid].tick += timer_data[tid].interval;
 					push_timer_heap(tid);
-				break;
+					break;
 			}
 		}
 	}
@@ -547,22 +537,24 @@ static void timer_final(void)
 	struct timer_func_list *tfl;
 	struct timer_func_list *next;
 
-	for( tfl=tfl_root; tfl != NULL; tfl = next ) {
+	for (tfl = tfl_root; tfl != NULL; tfl = next) {
 		next = tfl->next; // copy next pointer
 		aFree(tfl->name); // free structures
 		aFree(tfl);
 	}
 
-	if (timer_data) aFree(timer_data);
+	if (timer_data)
+		aFree(timer_data);
 	BHEAP_CLEAR(timer_heap);
-	if (free_timer_list) aFree(free_timer_list);
+	if (free_timer_list)
+		aFree(free_timer_list);
 }
 
 #ifdef BUILDBOT
-#define ShowClockError ShowInfo
-#else  // BUILDBOT
-#define ShowClockError ShowError
-#endif  // BUILDBOT
+	#define ShowClockError ShowInfo
+#else // BUILDBOT
+	#define ShowClockError ShowError
+#endif // BUILDBOT
 
 static bool timer_get_current_clocksource(char *buf, int buf_size)
 {
@@ -586,7 +578,7 @@ static bool timer_get_current_clocksource(char *buf, int buf_size)
 	return true;
 #else  // defined(__linux) || defined(__linux__)
 	return false;
-#endif  // defined(__linux) || defined(__linux__)
+#endif // defined(__linux) || defined(__linux__)
 }
 
 static bool timer_get_available_clocksource(char *buf, int buf_size)
@@ -611,7 +603,7 @@ static bool timer_get_available_clocksource(char *buf, int buf_size)
 	return true;
 #else  // defined(__linux) || defined(__linux__)
 	return false;
-#endif  // defined(__linux) || defined(__linux__)
+#endif // defined(__linux) || defined(__linux__)
 }
 
 static void timer_check_timers(void)
@@ -628,12 +620,13 @@ static void timer_check_timers(void)
 	if (strcmp(bufCur, "tsc") != 0) {
 		if (haveTsc || (strcmp(bufCur, "hyperv_clocksource_tsc_page") != 0 && strcmp(bufCur, "kvm-clock") != 0)) {
 			ShowClockError("Unoptimal clock source detected: '%s'. "
-			    "Please set clock source to 'tsc' or 'hyperv_clocksource_tsc_page' or 'kvm-clock'\n", bufCur);
+			               "Please set clock source to 'tsc' or 'hyperv_clocksource_tsc_page' or 'kvm-clock'\n",
+			               bufCur);
 			return;
 		}
 	}
 	ShowInfo("Using optimal clock source: '%s'\n", bufCur);
-#endif  // defined(__linux) || defined(__linux__)
+#endif // defined(__linux) || defined(__linux__)
 }
 
 #undef ShowClockError

@@ -47,14 +47,14 @@ struct PACKET_CZ_REQ_TRADE_BUYING_STORE_sub;
  **/
 /// failure constants for clif functions
 enum e_buyingstore_failure {
-	BUYINGSTORE_CREATE               = 1,  // "Failed to open buying store."
-	BUYINGSTORE_CREATE_OVERWEIGHT    = 2,  // "Total amount of then possessed items exceeds the weight limit by %d. Please re-enter."
-	BUYINGSTORE_TRADE_BUYER_ZENY     = 3,  // "All items within the buy limit were purchased."
-	BUYINGSTORE_TRADE_BUYER_NO_ITEMS = 4,  // "All items were purchased."
-	BUYINGSTORE_TRADE_SELLER_FAILED  = 5,  // "The deal has failed."
-	BUYINGSTORE_TRADE_SELLER_COUNT   = 6,  // "The trade failed, because the entered amount of item %s is higher, than the buyer is willing to buy."
-	BUYINGSTORE_TRADE_SELLER_ZENY    = 7,  // "The trade failed, because the buyer is lacking required balance."
-	BUYINGSTORE_CREATE_NO_INFO       = 8,  // "No sale (purchase) information available."
+	BUYINGSTORE_CREATE = 1,               // "Failed to open buying store."
+	BUYINGSTORE_CREATE_OVERWEIGHT = 2,    // "Total amount of then possessed items exceeds the weight limit by %d. Please re-enter."
+	BUYINGSTORE_TRADE_BUYER_ZENY = 3,     // "All items within the buy limit were purchased."
+	BUYINGSTORE_TRADE_BUYER_NO_ITEMS = 4, // "All items were purchased."
+	BUYINGSTORE_TRADE_SELLER_FAILED = 5,  // "The deal has failed."
+	BUYINGSTORE_TRADE_SELLER_COUNT = 6,   // "The trade failed, because the entered amount of item %s is higher, than the buyer is willing to buy."
+	BUYINGSTORE_TRADE_SELLER_ZENY = 7,    // "The trade failed, because the buyer is lacking required balance."
+	BUYINGSTORE_CREATE_NO_INFO = 8,       // "No sale (purchase) information available."
 };
 
 /**
@@ -77,23 +77,23 @@ struct s_buyingstore {
  **/
 struct buyingstore_interface {
 	unsigned int nextid;
-	int blankslots[MAX_SLOTS];  // used when checking whether or not an item's card slots are blank
-	struct item_option blankoptions[MAX_ITEM_OPTIONS];  // used for search result temporary.
+	int blankslots[MAX_SLOTS];                         // used when checking whether or not an item's card slots are blank
+	struct item_option blankoptions[MAX_ITEM_OPTIONS]; // used for search result temporary.
 	/* */
-	bool (*setup) (struct map_session_data* sd, unsigned char slots);
-	void (*create) (struct map_session_data* sd, int zenylimit, unsigned char result, const char* storename, const struct PACKET_CZ_REQ_OPEN_BUYING_STORE_sub* itemlist, unsigned int count);
-	void (*close) (struct map_session_data* sd);
-	void (*open) (struct map_session_data* sd, int account_id);
-	void (*trade) (struct map_session_data* sd, int account_id, unsigned int buyer_id, const struct PACKET_CZ_REQ_TRADE_BUYING_STORE_sub* itemlist, unsigned int count);
-	bool (*search) (struct map_session_data* sd, int nameid);
-	bool (*searchall) (struct map_session_data* sd, const struct s_search_store_search* s);
-	unsigned int (*getuid) (void);
+	bool (*setup)(struct map_session_data *sd, unsigned char slots);
+	void (*create)(struct map_session_data *sd, int zenylimit, unsigned char result, const char *storename, const struct PACKET_CZ_REQ_OPEN_BUYING_STORE_sub *itemlist, unsigned int count);
+	void (*close)(struct map_session_data *sd);
+	void (*open)(struct map_session_data *sd, int account_id);
+	void (*trade)(struct map_session_data *sd, int account_id, unsigned int buyer_id, const struct PACKET_CZ_REQ_TRADE_BUYING_STORE_sub *itemlist, unsigned int count);
+	bool (*search)(struct map_session_data *sd, int nameid);
+	bool (*searchall)(struct map_session_data *sd, const struct s_search_store_search *s);
+	unsigned int (*getuid)(void);
 };
 
 #ifdef HERCULES_CORE
-void buyingstore_defaults (void);
+void buyingstore_defaults(void);
 #endif // HERCULES_CORE
 
 HPShared struct buyingstore_interface *buyingstore;
 
-#endif  // MAP_BUYINGSTORE_H
+#endif // MAP_BUYINGSTORE_H

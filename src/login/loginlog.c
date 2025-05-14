@@ -33,27 +33,23 @@
 
 #include <stdlib.h> // exit
 
-
 static struct loginlog_interface loginlog_s;
 struct loginlog_interface *loginlog;
 static struct s_loginlog_dbs loginlogdbs;
-
 
 // Returns the number of failed login attempts by the ip in the last minutes.
 static unsigned long loginlog_failedattempts(uint32 ip, unsigned int minutes)
 {
 	unsigned long failures = 0;
 
-	if( !loginlog->enabled )
+	if (!loginlog->enabled)
 		return 0;
 
-	if( SQL_ERROR == SQL->Query(loginlog->sql_handle, "SELECT count(*) FROM `%s` WHERE `ip` = '%s' AND `rcode` = '1' AND `time` > NOW() - INTERVAL %u MINUTE",
-		loginlog->dbs->log_login_db, sockt->ip2str(ip,NULL), minutes) )// how many times failed account? in one ip.
+	if (SQL_ERROR == SQL->Query(loginlog->sql_handle, "SELECT count(*) FROM `%s` WHERE `ip` = '%s' AND `rcode` = '1' AND `time` > NOW() - INTERVAL %u MINUTE", loginlog->dbs->log_login_db, sockt->ip2str(ip, NULL), minutes)) // how many times failed account? in one ip.
 		Sql_ShowDebug(loginlog->sql_handle);
 
-	if( SQL_SUCCESS == SQL->NextRow(loginlog->sql_handle) )
-	{
-		char* data;
+	if (SQL_SUCCESS == SQL->NextRow(loginlog->sql_handle)) {
+		char *data;
 		SQL->GetData(loginlog->sql_handle, 0, &data, NULL);
 		failures = strtoul(data, NULL, 10);
 		SQL->FreeResult(loginlog->sql_handle);
@@ -61,30 +57,27 @@ static unsigned long loginlog_failedattempts(uint32 ip, unsigned int minutes)
 	return failures;
 }
 
-
 /*=============================================
  * Records an event in the login log
  *---------------------------------------------*/
 // TODO: add an enum of rcode values
 static void loginlog_log(uint32 ip, const char *username, int rcode, const char *message)
 {
-	char esc_username[NAME_LENGTH*2+1];
-	char esc_message[255*2+1];
+	char esc_username[NAME_LENGTH * 2 + 1];
+	char esc_message[255 * 2 + 1];
 	int retcode;
 
 	nullpo_retv(username);
 	nullpo_retv(message);
-	if( !loginlog->enabled )
+	if (!loginlog->enabled)
 		return;
 
 	SQL->EscapeStringLen(loginlog->sql_handle, esc_username, username, strnlen(username, NAME_LENGTH));
 	SQL->EscapeStringLen(loginlog->sql_handle, esc_message, message, strnlen(message, 255));
 
-	retcode = SQL->Query(loginlog->sql_handle,
-		"INSERT INTO `%s`(`time`,`ip`,`user`,`rcode`,`log`) VALUES (NOW(), '%s', '%s', '%d', '%s')",
-		loginlog->dbs->log_login_db, sockt->ip2str(ip,NULL), esc_username, rcode, esc_message);
+	retcode = SQL->Query(loginlog->sql_handle, "INSERT INTO `%s`(`time`,`ip`,`user`,`rcode`,`log`) VALUES (NOW(), '%s', '%s', '%d', '%s')", loginlog->dbs->log_login_db, sockt->ip2str(ip, NULL), esc_username, rcode, esc_message);
 
-	if( retcode != SQL_SUCCESS )
+	if (retcode != SQL_SUCCESS)
 		Sql_ShowDebug(loginlog->sql_handle);
 }
 
@@ -92,8 +85,7 @@ static bool loginlog_init(void)
 {
 	loginlog->sql_handle = SQL->Malloc();
 
-	if (SQL_ERROR == SQL->Connect(loginlog->sql_handle, loginlog->dbs->log_db_username, loginlog->dbs->log_db_password,
-	                              loginlog->dbs->log_db_hostname, loginlog->dbs->log_db_port, loginlog->dbs->log_db_database)) {
+	if (SQL_ERROR == SQL->Connect(loginlog->sql_handle, loginlog->dbs->log_db_username, loginlog->dbs->log_db_password, loginlog->dbs->log_db_hostname, loginlog->dbs->log_db_port, loginlog->dbs->log_db_database)) {
 		Sql_ShowDebug(loginlog->sql_handle);
 		SQL->Free(loginlog->sql_handle);
 		exit(EXIT_FAILURE);

@@ -30,24 +30,24 @@ struct s_search_store_search;
 struct CZ_PURCHASE_ITEM_FROMMC;
 
 struct s_vending {
-	short index; //cart index (return item data)
-	short amount; //amount of the item for vending
-	unsigned int value; //at which price
+	short index;        // cart index (return item data)
+	short amount;       // amount of the item for vending
+	unsigned int value; // at which price
 };
 
 struct vending_interface {
-	unsigned int next_id;/* next vender id */
+	unsigned int next_id; /* next vender id */
 	struct DBMap *db;
 	/* */
-	void (*init) (bool minimal);
-	void (*final) (void);
+	void (*init)(bool minimal);
+	void (*final)(void);
 	/* */
-	void (*close) (struct map_session_data* sd);
-	void (*open) (struct map_session_data* sd, const char* message, const uint8* data, int count);
-	void (*list) (struct map_session_data* sd, unsigned int id);
-	void (*purchase) (struct map_session_data* sd, int aid, unsigned int uid, const struct CZ_PURCHASE_ITEM_FROMMC *data, int count);
-	bool (*search) (struct map_session_data* sd, int nameid);
-	bool (*searchall) (struct map_session_data* sd, const struct s_search_store_search* s);
+	void (*close)(struct map_session_data *sd);
+	void (*open)(struct map_session_data *sd, const char *message, const uint8 *data, int count);
+	void (*list)(struct map_session_data *sd, unsigned int id);
+	void (*purchase)(struct map_session_data *sd, int aid, unsigned int uid, const struct CZ_PURCHASE_ITEM_FROMMC *data, int count);
+	bool (*search)(struct map_session_data *sd, int nameid);
+	bool (*searchall)(struct map_session_data *sd, const struct s_search_store_search *s);
 };
 
 #ifdef HERCULES_CORE

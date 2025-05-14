@@ -60,13 +60,13 @@ static bool stylist_read_db_libconfig(void)
 	}
 
 	libconfig->destroy(&stylist_conf);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", i, config_filename);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", i, config_filename);
 	return true;
 }
 
 static bool stylist_read_db_libconfig_sub(struct config_setting_t *it, int idx, const char *source)
 {
-	struct stylist_data_entry entry = { 0 };
+	struct stylist_data_entry entry = {0};
 	int i32 = 0, type = 0;
 	int64 i64 = 0;
 
@@ -139,7 +139,7 @@ static bool stylist_validate_requirements(struct map_session_data *sd, int type,
 
 static void stylist_send_rodexitem(struct map_session_data *sd, int itemid)
 {
-	struct rodex_message msg = { 0 };
+	struct rodex_message msg = {0};
 
 	nullpo_retv(sd);
 

@@ -38,9 +38,7 @@ static int do_init_jsonparser(bool minimal)
 	return 0;
 }
 
-static void do_final_jsonparser(void)
-{
-}
+static void do_final_jsonparser(void) {}
 
 static JsonP *jsonparser_parse(const char *text)
 {
@@ -49,14 +47,14 @@ static JsonP *jsonparser_parse(const char *text)
 	return cJSON_Parse(text);
 }
 
-char* jsonparser_get_formatted_string(const JsonP *parent)
+char *jsonparser_get_formatted_string(const JsonP *parent)
 {
 	nullpo_retr(NULL, parent);
 
 	return cJSON_Print(parent);
 }
 
-char* jsonparser_get_string(const JsonP *parent)
+char *jsonparser_get_string(const JsonP *parent)
 {
 	nullpo_retr(NULL, parent);
 

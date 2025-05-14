@@ -33,16 +33,16 @@ struct lclif_interface_private;
 /* Enums */
 /// Parse function return code
 enum parsefunc_rcode {
-	PACKET_VALID         =  1,
-	PACKET_INCOMPLETE    =  0,
-	PACKET_UNKNOWN       = -1,
+	PACKET_VALID = 1,
+	PACKET_INCOMPLETE = 0,
+	PACKET_UNKNOWN = -1,
 	PACKET_INVALIDLENGTH = -2,
-	PACKET_STOPPARSE     = -3,
-	PACKET_SKIP          = -4, //internal parser will skip this packet and go parser another, meant for plugins. [hemagx]
+	PACKET_STOPPARSE = -3,
+	PACKET_SKIP = -4, // internal parser will skip this packet and go parser another, meant for plugins. [hemagx]
 };
 
 /* Function Typedefs */
-typedef enum parsefunc_rcode (LoginParseFunc)(int fd, struct login_session_data *sd);
+typedef enum parsefunc_rcode(LoginParseFunc)(int fd, struct login_session_data *sd);
 
 /* Structs */
 

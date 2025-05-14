@@ -69,15 +69,15 @@ struct extraconf_interface {
 
 	struct emblems_config *emblems;
 
-	void (*init) (void);
-	void (*final) (void);
+	void (*init)(void);
+	void (*final)(void);
 
-	bool (*read_conf_file) (const char *filename, bool imported, const char *node, const struct config_data *conf_vars);
-	bool (*read_conf) (const char *filename, bool imported, struct config_t *config, const char *node, const struct config_data *conf_vars);
-	bool (*read_vars) (const char *filename, bool imported, struct config_t *config, const char *node, const struct config_data *conf_vars);
-	bool (*set_var) (struct config_data *conf_var, int val);
-	bool (*set_var_str) (struct config_data *conf_var, const char *val);
-	bool (*read_emblems) (void);
+	bool (*read_conf_file)(const char *filename, bool imported, const char *node, const struct config_data *conf_vars);
+	bool (*read_conf)(const char *filename, bool imported, struct config_t *config, const char *node, const struct config_data *conf_vars);
+	bool (*read_vars)(const char *filename, bool imported, struct config_t *config, const char *node, const struct config_data *conf_vars);
+	bool (*set_var)(struct config_data *conf_var, int val);
+	bool (*set_var_str)(struct config_data *conf_var, const char *val);
+	bool (*read_emblems)(void);
 };
 
 #ifdef HERCULES_CORE

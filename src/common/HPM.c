@@ -47,7 +47,7 @@
 #include <string.h>
 
 #ifndef WIN32
-#	include <unistd.h>
+	#include <unistd.h>
 #endif
 
 static struct malloc_interface iMalloc_HPM;
@@ -87,7 +87,7 @@ static void hplugin_trigger_event(enum hp_event_types type)
 static void hplugin_export_symbol(void *value, const char *name)
 {
 	struct hpm_symbol *symbol = NULL;
-	CREATE(symbol ,struct hpm_symbol, 1);
+	CREATE(symbol, struct hpm_symbol, 1);
 	symbol->name = name;
 	symbol->ptr = value;
 	VECTOR_ENSURE(HPM->symbols, 1, 1);
@@ -111,7 +111,7 @@ static void *hplugin_import_symbol(char *name, unsigned int pID)
 	if (i != VECTOR_LENGTH(HPM->symbols))
 		return VECTOR_INDEX(HPM->symbols, i)->ptr;
 
-	ShowError("HPM:get_symbol:%s: '"CL_WHITE"%s"CL_RESET"' not found!\n",HPM->pid2name(pID),name);
+	ShowError("HPM:get_symbol:%s: '" CL_WHITE "%s" CL_RESET "' not found!\n", HPM->pid2name(pID), name);
 	return NULL;
 }
 
@@ -119,12 +119,12 @@ static bool hplugin_iscompatible(char *version)
 {
 	unsigned int req_major = 0, req_minor = 0;
 
-	if( version == NULL )
+	if (version == NULL)
 		return false;
 
 	sscanf(version, "%u.%u", &req_major, &req_minor);
 
-	return ( req_major == HPM->version[0] && req_minor <= HPM->version[1] ) ? true : false;
+	return (req_major == HPM->version[0] && req_minor <= HPM->version[1]) ? true : false;
 }
 
 /**
@@ -139,7 +139,7 @@ static bool hplugin_exists(const char *filename)
 	int i;
 	nullpo_retr(false, filename);
 	for (i = 0; i < VECTOR_LENGTH(HPM->plugins); i++) {
-		if (strcmpi(VECTOR_INDEX(HPM->plugins, i)->filename,filename) == 0)
+		if (strcmpi(VECTOR_INDEX(HPM->plugins, i)->filename, filename) == 0)
 			return true;
 	}
 	return false;
@@ -161,20 +161,19 @@ static struct hplugin *hplugin_create(void)
 	return plugin;
 }
 
-static bool hplugins_addpacket(unsigned short cmd, unsigned short length, void (*receive) (int fd), unsigned int point, unsigned int pluginID)
+static bool hplugins_addpacket(unsigned short cmd, unsigned short length, void (*receive)(int fd), unsigned int point, unsigned int pluginID)
 {
 	struct HPluginPacket *packet;
 	int i;
 
 	if (point >= hpPHP_MAX) {
-		ShowError("HPM->addPacket:%s: unknown point '%u' specified for packet 0x%04x (len %d)\n",HPM->pid2name(pluginID),point,cmd,length);
+		ShowError("HPM->addPacket:%s: unknown point '%u' specified for packet 0x%04x (len %d)\n", HPM->pid2name(pluginID), point, cmd, length);
 		return false;
 	}
 
 	for (i = 0; i < VECTOR_LENGTH(HPM->packets[point]); i++) {
-		if (VECTOR_INDEX(HPM->packets[point], i).cmd == cmd ) {
-			ShowError("HPM->addPacket:%s: can't add packet 0x%04x, already in use by '%s'!",
-					HPM->pid2name(pluginID), cmd, HPM->pid2name(VECTOR_INDEX(HPM->packets[point], i).pluginID));
+		if (VECTOR_INDEX(HPM->packets[point], i).cmd == cmd) {
+			ShowError("HPM->addPacket:%s: can't add packet 0x%04x, already in use by '%s'!", HPM->pid2name(pluginID), cmd, HPM->pid2name(VECTOR_INDEX(HPM->packets[point], i).pluginID));
 			return false;
 		}
 	}
@@ -360,7 +359,7 @@ static void hplugins_removeFromHPData(enum HPluginDataTypes type, uint32 pluginI
 
 	entry = VECTOR_INDEX(store->entries, i);
 	VECTOR_ERASE(store->entries, i); // Erase and compact
-	aFree(entry->data); // when it's removed we delete it regardless of autofree
+	aFree(entry->data);              // when it's removed we delete it regardless of autofree
 	aFree(entry);
 }
 
@@ -368,15 +367,15 @@ static void hplugins_removeFromHPData(enum HPluginDataTypes type, uint32 pluginI
 static bool HPM_AddHook(enum HPluginHookType type, const char *target, void *hook, unsigned int pID)
 {
 	if (!HPM->hooking->enabled) {
-		ShowError("HPM:AddHook Fail! '%s' tried to hook to '%s' but HPMHooking is disabled!\n",HPM->pid2name(pID),target);
+		ShowError("HPM:AddHook Fail! '%s' tried to hook to '%s' but HPMHooking is disabled!\n", HPM->pid2name(pID), target);
 		return false;
 	}
 	/* search if target is a known hook point within 'common' */
 	/* if not check if a sub-hooking list is available (from the server) and run it by */
-	if (HPM->hooking->addhook_sub != NULL && HPM->hooking->addhook_sub(type,target,hook,pID))
+	if (HPM->hooking->addhook_sub != NULL && HPM->hooking->addhook_sub(type, target, hook, pID))
 		return true;
 
-	ShowError("HPM:AddHook: unknown Hooking Point '%s'!\n",target);
+	ShowError("HPM:AddHook: unknown Hooking Point '%s'!\n", target);
 
 	return false;
 }
@@ -414,7 +413,7 @@ static bool hpm_add_arg(unsigned int pluginID, char *name, bool has_param, Cmdli
 	ARR_FIND(0, VECTOR_LENGTH(cmdline->args_data), i, strcmp(VECTOR_INDEX(cmdline->args_data, i).name, name) == 0);
 
 	if (i != VECTOR_LENGTH(cmdline->args_data)) {
-		ShowError("HPM:add_arg:%s duplicate! (from %s)\n",name,HPM->pid2name(pluginID));
+		ShowError("HPM:add_arg:%s duplicate! (from %s)\n", name, HPM->pid2name(pluginID));
 		return false;
 	}
 
@@ -431,23 +430,23 @@ static bool hpm_add_arg(unsigned int pluginID, char *name, bool has_param, Cmdli
  * @retval true if the listener was added successfully.
  * @retval false in case of error.
  */
-static bool hplugins_addconf(unsigned int pluginID, enum HPluginConfType type, char *name, void (*parse_func) (const char *key, const char *val), int (*return_func) (const char *key), bool required)
+static bool hplugins_addconf(unsigned int pluginID, enum HPluginConfType type, char *name, void (*parse_func)(const char *key, const char *val), int (*return_func)(const char *key), bool required)
 {
 	struct HPConfListenStorage *conf;
 	int i;
 
 	if (parse_func == NULL) {
-		ShowError("HPM->addConf:%s: missing setter function for config '%s'\n",HPM->pid2name(pluginID),name);
+		ShowError("HPM->addConf:%s: missing setter function for config '%s'\n", HPM->pid2name(pluginID), name);
 		return false;
 	}
 
 	if (type == HPCT_BATTLE && return_func == NULL) {
-		ShowError("HPM->addConf:%s: missing getter function for config '%s'\n",HPM->pid2name(pluginID),name);
+		ShowError("HPM->addConf:%s: missing getter function for config '%s'\n", HPM->pid2name(pluginID), name);
 		return false;
 	}
 
 	if (type >= HPCT_MAX) {
-		ShowError("HPM->addConf:%s: unknown point '%u' specified for config '%s'\n",HPM->pid2name(pluginID),type,name);
+		ShowError("HPM->addConf:%s: unknown point '%u' specified for config '%s'\n", HPM->pid2name(pluginID), type, name);
 		return false;
 	}
 
@@ -458,8 +457,7 @@ static bool hplugins_addconf(unsigned int pluginID, enum HPluginConfType type, c
 
 	ARR_FIND(0, VECTOR_LENGTH(HPM->config_listeners[type]), i, strcmpi(name, VECTOR_INDEX(HPM->config_listeners[type], i).key) == 0);
 	if (i != VECTOR_LENGTH(HPM->config_listeners[type])) {
-		ShowError("HPM->addConf:%s: duplicate '%s', already in use by '%s'!",
-				HPM->pid2name(pluginID), name, HPM->pid2name(VECTOR_INDEX(HPM->config_listeners[type], i).pluginID));
+		ShowError("HPM->addConf:%s: duplicate '%s', already in use by '%s'!", HPM->pid2name(pluginID), name, HPM->pid2name(VECTOR_INDEX(HPM->config_listeners[type], i).pluginID));
 		return false;
 	}
 
@@ -489,8 +487,8 @@ static struct hplugin *hplugin_load(const char *filename)
 	struct s_HPMDataCheck *HPMDataCheck;
 	const char *(*HPMLoadEvent)(int server_type);
 
-	if( HPM->exists(filename) ) {
-		ShowWarning("HPM:plugin_load: attempting to load duplicate '"CL_WHITE"%s"CL_RESET"', skipping...\n", filename);
+	if (HPM->exists(filename)) {
+		ShowWarning("HPM:plugin_load: attempting to load duplicate '" CL_WHITE "%s" CL_RESET "', skipping...\n", filename);
 		return NULL;
 	}
 
@@ -498,22 +496,22 @@ static struct hplugin *hplugin_load(const char *filename)
 
 	if (!(plugin->dll = plugin_open(filename))) {
 		char buf[1024];
-		ShowFatalError("HPM:plugin_load: failed to load '"CL_WHITE"%s"CL_RESET"' (error: %s)!\n", filename, plugin_geterror(buf));
+		ShowFatalError("HPM:plugin_load: failed to load '" CL_WHITE "%s" CL_RESET "' (error: %s)!\n", filename, plugin_geterror(buf));
 		exit(EXIT_FAILURE);
 	}
 
-	if( !( info = plugin_import(plugin->dll, "pinfo",struct hplugin_info*) ) ) {
-		ShowFatalError("HPM:plugin_load: failed to retrieve 'plugin_info' for '"CL_WHITE"%s"CL_RESET"'!\n", filename);
+	if (!(info = plugin_import(plugin->dll, "pinfo", struct hplugin_info *))) {
+		ShowFatalError("HPM:plugin_load: failed to retrieve 'plugin_info' for '" CL_WHITE "%s" CL_RESET "'!\n", filename);
 		exit(EXIT_FAILURE);
 	}
 
-	if( !(info->type & SERVER_TYPE) ) {
+	if (!(info->type & SERVER_TYPE)) {
 		HPM->unload(plugin);
 		return NULL;
 	}
 
-	if( !HPM->iscompatible(info->req_version) ) {
-		ShowFatalError("HPM:plugin_load: '"CL_WHITE"%s"CL_RESET"' incompatible version '%s' -> '%s'!\n", filename, info->req_version, HPM_VERSION);
+	if (!HPM->iscompatible(info->req_version)) {
+		ShowFatalError("HPM:plugin_load: '" CL_WHITE "%s" CL_RESET "' incompatible version '%s' -> '%s'!\n", filename, info->req_version, HPM_VERSION);
 		exit(EXIT_FAILURE);
 	}
 
@@ -521,101 +519,99 @@ static struct hplugin *hplugin_load(const char *filename)
 	plugin->filename = aStrdup(filename);
 
 	if ((import_symbol_ref = plugin_import(plugin->dll, "import_symbol", ImportSymbolFunc **)) == NULL) {
-		ShowFatalError("HPM:plugin_load: failed to retrieve 'import_symbol' for '"CL_WHITE"%s"CL_RESET"'!\n", filename);
+		ShowFatalError("HPM:plugin_load: failed to retrieve 'import_symbol' for '" CL_WHITE "%s" CL_RESET "'!\n", filename);
 		exit(EXIT_FAILURE);
 	}
 
 	*import_symbol_ref = HPM->import_symbol;
 
-	if( !( HPMi = plugin_import(plugin->dll, "HPMi",struct HPMi_interface **) ) ) {
-		ShowFatalError("HPM:plugin_load: failed to retrieve 'HPMi' for '"CL_WHITE"%s"CL_RESET"'!\n", filename);
+	if (!(HPMi = plugin_import(plugin->dll, "HPMi", struct HPMi_interface **))) {
+		ShowFatalError("HPM:plugin_load: failed to retrieve 'HPMi' for '" CL_WHITE "%s" CL_RESET "'!\n", filename);
 		exit(EXIT_FAILURE);
 	}
 
-	if( !( *HPMi = plugin_import(plugin->dll, "HPMi_s",struct HPMi_interface *) ) ) {
-		ShowFatalError("HPM:plugin_load: failed to retrieve 'HPMi_s' for '"CL_WHITE"%s"CL_RESET"'!\n", filename);
+	if (!(*HPMi = plugin_import(plugin->dll, "HPMi_s", struct HPMi_interface *))) {
+		ShowFatalError("HPM:plugin_load: failed to retrieve 'HPMi_s' for '" CL_WHITE "%s" CL_RESET "'!\n", filename);
 		exit(EXIT_FAILURE);
 	}
 	plugin->hpi = *HPMi;
 
-	if( ( plugin->hpi->event[HPET_INIT] = plugin_import(plugin->dll, "plugin_init",void (*)(void)) ) )
+	if ((plugin->hpi->event[HPET_INIT] = plugin_import(plugin->dll, "plugin_init", void (*)(void))))
 		anyEvent = true;
 
-	if( ( plugin->hpi->event[HPET_FINAL] = plugin_import(plugin->dll, "plugin_final",void (*)(void)) ) )
+	if ((plugin->hpi->event[HPET_FINAL] = plugin_import(plugin->dll, "plugin_final", void (*)(void))))
 		anyEvent = true;
 
-	if( ( plugin->hpi->event[HPET_READY] = plugin_import(plugin->dll, "server_online",void (*)(void)) ) )
+	if ((plugin->hpi->event[HPET_READY] = plugin_import(plugin->dll, "server_online", void (*)(void))))
 		anyEvent = true;
 
-	if( ( plugin->hpi->event[HPET_POST_FINAL] = plugin_import(plugin->dll, "server_post_final",void (*)(void)) ) )
+	if ((plugin->hpi->event[HPET_POST_FINAL] = plugin_import(plugin->dll, "server_post_final", void (*)(void))))
 		anyEvent = true;
 
-	if( ( plugin->hpi->event[HPET_PRE_INIT] = plugin_import(plugin->dll, "server_preinit",void (*)(void)) ) )
+	if ((plugin->hpi->event[HPET_PRE_INIT] = plugin_import(plugin->dll, "server_preinit", void (*)(void))))
 		anyEvent = true;
 
-	if( !anyEvent ) {
-		ShowWarning("HPM:plugin_load: no events found for '"CL_WHITE"%s"CL_RESET"'!\n", filename);
+	if (!anyEvent) {
+		ShowWarning("HPM:plugin_load: no events found for '" CL_WHITE "%s" CL_RESET "'!\n", filename);
 		exit(EXIT_FAILURE);
 	}
 
 	if (!(HPMLoadEvent = plugin_import(plugin->dll, "HPM_shared_symbols", const char *(*)(int)))) {
-		ShowFatalError("HPM:plugin_load: failed to retrieve 'HPM_shared_symbols' for '"CL_WHITE"%s"CL_RESET"', most likely not including HPMDataCheck.h!\n", filename);
+		ShowFatalError("HPM:plugin_load: failed to retrieve 'HPM_shared_symbols' for '" CL_WHITE "%s" CL_RESET "', most likely not including HPMDataCheck.h!\n", filename);
 		exit(EXIT_FAILURE);
 	}
 	{
 		const char *failure = HPMLoadEvent(SERVER_TYPE);
 		if (failure) {
-			ShowFatalError("HPM:plugin_load: failed to import symbol '%s' into '"CL_WHITE"%s"CL_RESET"'.\n", failure, filename);
+			ShowFatalError("HPM:plugin_load: failed to import symbol '%s' into '" CL_WHITE "%s" CL_RESET "'.\n", failure, filename);
 			exit(EXIT_FAILURE);
 		}
 	}
 
-	if( !( HPMDataCheckLen = plugin_import(plugin->dll, "HPMDataCheckLen", unsigned int *) ) ) {
-		ShowFatalError("HPM:plugin_load: failed to retrieve 'HPMDataCheckLen' for '"CL_WHITE"%s"CL_RESET"', most likely not including HPMDataCheck.h!\n", filename);
+	if (!(HPMDataCheckLen = plugin_import(plugin->dll, "HPMDataCheckLen", unsigned int *))) {
+		ShowFatalError("HPM:plugin_load: failed to retrieve 'HPMDataCheckLen' for '" CL_WHITE "%s" CL_RESET "', most likely not including HPMDataCheck.h!\n", filename);
 		exit(EXIT_FAILURE);
 	}
 
-	if( !( HPMDataCheckVer = plugin_import(plugin->dll, "HPMDataCheckVer", int *) ) ) {
-		ShowFatalError("HPM:plugin_load: failed to retrieve 'HPMDataCheckVer' for '"CL_WHITE"%s"CL_RESET"', most likely an outdated plugin!\n", filename);
+	if (!(HPMDataCheckVer = plugin_import(plugin->dll, "HPMDataCheckVer", int *))) {
+		ShowFatalError("HPM:plugin_load: failed to retrieve 'HPMDataCheckVer' for '" CL_WHITE "%s" CL_RESET "', most likely an outdated plugin!\n", filename);
 		exit(EXIT_FAILURE);
 	}
 
-	if( !( HPMDataCheck = plugin_import(plugin->dll, "HPMDataCheck", struct s_HPMDataCheck *) ) ) {
-		ShowFatalError("HPM:plugin_load: failed to retrieve 'HPMDataCheck' for '"CL_WHITE"%s"CL_RESET"', most likely not including HPMDataCheck.h!\n", filename);
+	if (!(HPMDataCheck = plugin_import(plugin->dll, "HPMDataCheck", struct s_HPMDataCheck *))) {
+		ShowFatalError("HPM:plugin_load: failed to retrieve 'HPMDataCheck' for '" CL_WHITE "%s" CL_RESET "', most likely not including HPMDataCheck.h!\n", filename);
 		exit(EXIT_FAILURE);
 	}
 
 	// TODO: Remove the HPM->DataCheck != NULL check once login and char support is complete
-	if (HPM->DataCheck != NULL && !HPM->DataCheck(HPMDataCheck,*HPMDataCheckLen,*HPMDataCheckVer,plugin->info->name)) {
-		ShowFatalError("HPM:plugin_load: '"CL_WHITE"%s"CL_RESET"' failed DataCheck, out of sync from the core (recompile plugin)!\n", filename);
+	if (HPM->DataCheck != NULL && !HPM->DataCheck(HPMDataCheck, *HPMDataCheckLen, *HPMDataCheckVer, plugin->info->name)) {
+		ShowFatalError("HPM:plugin_load: '" CL_WHITE "%s" CL_RESET "' failed DataCheck, out of sync from the core (recompile plugin)!\n", filename);
 		exit(EXIT_FAILURE);
 	}
 
 	/* id */
-	plugin->hpi->pid                = plugin->idx;
+	plugin->hpi->pid = plugin->idx;
 	/* core */
-	plugin->hpi->memmgr             = HPMiMalloc;
+	plugin->hpi->memmgr = HPMiMalloc;
 #ifdef CONSOLE_INPUT
-	plugin->hpi->addCPCommand       = console->input->addCommand;
+	plugin->hpi->addCPCommand = console->input->addCommand;
 #endif // CONSOLE_INPUT
-	plugin->hpi->addPacket          = hplugins_addpacket;
-	plugin->hpi->addToHPData        = hplugins_addToHPData;
-	plugin->hpi->getFromHPData      = hplugins_getFromHPData;
-	plugin->hpi->removeFromHPData   = hplugins_removeFromHPData;
-	plugin->hpi->addArg             = hpm_add_arg;
-	plugin->hpi->addConf            = hplugins_addconf;
+	plugin->hpi->addPacket = hplugins_addpacket;
+	plugin->hpi->addToHPData = hplugins_addToHPData;
+	plugin->hpi->getFromHPData = hplugins_getFromHPData;
+	plugin->hpi->removeFromHPData = hplugins_removeFromHPData;
+	plugin->hpi->addArg = hpm_add_arg;
+	plugin->hpi->addConf = hplugins_addconf;
 	if ((plugin->hpi->hooking = plugin_import(plugin->dll, "HPMHooking_s", struct HPMHooking_interface *)) != NULL) {
-		plugin->hpi->hooking->AddHook     = HPM_AddHook;
-		plugin->hpi->hooking->HookStop    = HPM_HookStop;
+		plugin->hpi->hooking->AddHook = HPM_AddHook;
+		plugin->hpi->hooking->HookStop = HPM_HookStop;
 		plugin->hpi->hooking->HookStopped = HPM_HookStopped;
 	}
 	/* server specific */
-	if( HPM->load_sub )
+	if (HPM->load_sub)
 		HPM->load_sub(plugin);
 
-	ShowStatus("HPM: Loaded plugin '"CL_WHITE"%s"CL_RESET"' (%s)%s.\n",
-			plugin->info->name, plugin->info->version,
-			plugin->hpi->hooking != NULL ? " built with HPMHooking support" : "");
+	ShowStatus("HPM: Loaded plugin '" CL_WHITE "%s" CL_RESET "' (%s)%s.\n", plugin->info->name, plugin->info->version, plugin->hpi->hooking != NULL ? " built with HPMHooking support" : "");
 
 	return plugin;
 }
@@ -664,7 +660,7 @@ static void hplugins_config_read(void)
 	int i;
 
 	/* yes its ugly, its temporary and will be gone as soon as the new inter-server.conf is set */
-	if( (fp = fopen("conf/import/plugins.conf","r")) ) {
+	if ((fp = fopen("conf/import/plugins.conf", "r"))) {
 		config_filename = "conf/import/plugins.conf";
 		fclose(fp);
 	}
@@ -696,18 +692,17 @@ static void hplugins_config_read(void)
 		snprintf(hooking_plugin_name, sizeof(hooking_plugin_name), "HPMHooking%s", plugin_name_suffix);
 
 		for (i = 0; i < length; i++) {
-			const char *plugin_name = libconfig->setting_get_string_elem(plist,i);
-			if (strcmpi(plugin_name, "HPMHooking") == 0 || strcmpi(plugin_name, hooking_plugin_name) == 0) { //must load it first
+			const char *plugin_name = libconfig->setting_get_string_elem(plist, i);
+			if (strcmpi(plugin_name, "HPMHooking") == 0 || strcmpi(plugin_name, hooking_plugin_name) == 0) { // must load it first
 				struct hplugin *plugin;
 				snprintf(filename, 60, "plugins/%s%s", hooking_plugin_name, DLL_EXT);
 				if ((plugin = HPM->load(filename))) {
-					const char * (*func)(bool *fr);
-					bool (*addhook_sub) (enum HPluginHookType type, const char *target, void *hook, unsigned int pID);
-					if ((func = plugin_import(plugin->dll, "Hooked",const char * (*)(bool *))) != NULL
-					 && (addhook_sub = plugin_import(plugin->dll, "HPM_Plugin_AddHook",bool (*)(enum HPluginHookType, const char *, void *, unsigned int))) != NULL) {
+					const char *(*func)(bool *fr);
+					bool (*addhook_sub)(enum HPluginHookType type, const char *target, void *hook, unsigned int pID);
+					if ((func = plugin_import(plugin->dll, "Hooked", const char *(*)(bool *))) != NULL && (addhook_sub = plugin_import(plugin->dll, "HPM_Plugin_AddHook", bool (*)(enum HPluginHookType, const char *, void *, unsigned int))) != NULL) {
 						const char *failed = func(&HPM->hooking->force_return);
 						if (failed) {
-							ShowError("HPM: failed to retrieve '%s' for '"CL_WHITE"%s"CL_RESET"'!\n", failed, plugin_name);
+							ShowError("HPM: failed to retrieve '%s' for '" CL_WHITE "%s" CL_RESET "'!\n", failed, plugin_name);
 						} else {
 							HPM->hooking->enabled = true;
 							HPM->hooking->addhook_sub = addhook_sub;
@@ -719,16 +714,16 @@ static void hplugins_config_read(void)
 			}
 		}
 		for (i = 0; i < length; i++) {
-			if (strncmpi(libconfig->setting_get_string_elem(plist,i),"HPMHooking", 10) == 0) // Already loaded, skip
+			if (strncmpi(libconfig->setting_get_string_elem(plist, i), "HPMHooking", 10) == 0) // Already loaded, skip
 				continue;
-			snprintf(filename, 60, "plugins/%s%s", libconfig->setting_get_string_elem(plist,i), DLL_EXT);
+			snprintf(filename, 60, "plugins/%s%s", libconfig->setting_get_string_elem(plist, i), DLL_EXT);
 			HPM->load(filename);
 		}
 	}
 	libconfig->destroy(&plugins_conf);
 
 	if (VECTOR_LENGTH(HPM->plugins))
-		ShowStatus("HPM: There are '"CL_WHITE"%d"CL_RESET"' plugins loaded, type '"CL_WHITE"plugins"CL_RESET"' to list them\n", VECTOR_LENGTH(HPM->plugins));
+		ShowStatus("HPM: There are '" CL_WHITE "%d" CL_RESET "' plugins loaded, type '" CL_WHITE "plugins" CL_RESET "' to list them\n", VECTOR_LENGTH(HPM->plugins));
 }
 
 /**
@@ -747,11 +742,11 @@ static CPCMD(plugins)
 		return;
 	}
 
-	ShowInfo("HPC: There are '"CL_WHITE"%d"CL_RESET"' plugins loaded\n", VECTOR_LENGTH(HPM->plugins));
+	ShowInfo("HPC: There are '" CL_WHITE "%d" CL_RESET "' plugins loaded\n", VECTOR_LENGTH(HPM->plugins));
 
-	for(i = 0; i < VECTOR_LENGTH(HPM->plugins); i++) {
+	for (i = 0; i < VECTOR_LENGTH(HPM->plugins); i++) {
 		struct hplugin *plugin = VECTOR_INDEX(HPM->plugins, i);
-		ShowInfo("HPC: - '"CL_WHITE"%s"CL_RESET"' (%s)\n", plugin->info->name, plugin->filename);
+		ShowInfo("HPC: - '" CL_WHITE "%s" CL_RESET "' (%s)\n", plugin->info->name, plugin->filename);
 	}
 }
 
@@ -833,7 +828,7 @@ static const char *HPM_file2ptr(const char *file)
 	}
 
 	/* we handle this memory outside of the server's memory manager because we need it to exist after the memory manager goes down */
-	HPM->filenames.data = realloc(HPM->filenames.data, (++HPM->filenames.count)*sizeof(struct HPMFileNameCache));
+	HPM->filenames.data = realloc(HPM->filenames.data, (++HPM->filenames.count) * sizeof(struct HPMFileNameCache));
 
 	HPM->filenames.data[i].addr = file;
 	HPM->filenames.data[i].name = strdup(file);
@@ -843,27 +838,27 @@ static const char *HPM_file2ptr(const char *file)
 
 static void *HPM_mmalloc(size_t size, const char *file, int line, const char *func)
 {
-	return iMalloc->malloc(size,HPM_file2ptr(file),line,func);
+	return iMalloc->malloc(size, HPM_file2ptr(file), line, func);
 }
 
 static void *HPM_calloc(size_t num, size_t size, const char *file, int line, const char *func)
 {
-	return iMalloc->calloc(num,size,HPM_file2ptr(file),line,func);
+	return iMalloc->calloc(num, size, HPM_file2ptr(file), line, func);
 }
 
 static void *HPM_realloc(void *p, size_t size, const char *file, int line, const char *func)
 {
-	return iMalloc->realloc(p,size,HPM_file2ptr(file),line,func);
+	return iMalloc->realloc(p, size, HPM_file2ptr(file), line, func);
 }
 
 static void *HPM_reallocz(void *p, size_t size, const char *file, int line, const char *func)
 {
-	return iMalloc->reallocz(p,size,HPM_file2ptr(file),line,func);
+	return iMalloc->reallocz(p, size, HPM_file2ptr(file), line, func);
 }
 
 static char *HPM_astrdup(const char *p, const char *file, int line, const char *func)
 {
-	return iMalloc->astrdup(p,HPM_file2ptr(file),line,func);
+	return iMalloc->astrdup(p, HPM_file2ptr(file), line, func);
 }
 
 /**
@@ -940,23 +935,23 @@ static bool hplugins_parse_conf(const struct config_t *config, const char *filen
 		}
 
 		switch ((type = config_setting_type(setting))) {
-		case CONFIG_TYPE_INT:
-			val = libconfig->setting_get_int(setting);
-			sprintf(buf, "%d", val); // FIXME: Remove this when support to int's as value is added
-			str = buf;
-			break;
-		case CONFIG_TYPE_BOOL:
-			val = libconfig->setting_get_bool(setting);
-			sprintf(buf, "%d", val); // FIXME: Remove this when support to int's as value is added
-			str = buf;
-			break;
-		case CONFIG_TYPE_STRING:
-			str = libconfig->setting_get_string(setting);
-			break;
-		default: // Unsupported type
-			ShowWarning("Setting %s has unsupported type %d, ignoring...\n", config_name, type);
-			retval = false;
-			continue;
+			case CONFIG_TYPE_INT:
+				val = libconfig->setting_get_int(setting);
+				sprintf(buf, "%d", val); // FIXME: Remove this when support to int's as value is added
+				str = buf;
+				break;
+			case CONFIG_TYPE_BOOL:
+				val = libconfig->setting_get_bool(setting);
+				sprintf(buf, "%d", val); // FIXME: Remove this when support to int's as value is added
+				str = buf;
+				break;
+			case CONFIG_TYPE_STRING:
+				str = libconfig->setting_get_string(setting);
+				break;
+			default: // Unsupported type
+				ShowWarning("Setting %s has unsupported type %d, ignoring...\n", config_name, type);
+				retval = false;
+				continue;
 		}
 		entry->parse_func(config_name, str);
 	}
@@ -992,16 +987,16 @@ static bool hplugins_parse_battle_conf(const struct config_t *config, const char
 		}
 
 		switch ((type = config_setting_type(setting))) {
-		case CONFIG_TYPE_INT:
-			val = libconfig->setting_get_int(setting);
-			break;
-		case CONFIG_TYPE_BOOL:
-			val = libconfig->setting_get_bool(setting);
-			break;
-		default: // Unsupported type
-			ShowWarning("Setting %s has unsupported type %d, ignoring...\n", config_name, type);
-			retval = false;
-			continue;
+			case CONFIG_TYPE_INT:
+				val = libconfig->setting_get_int(setting);
+				break;
+			case CONFIG_TYPE_BOOL:
+				val = libconfig->setting_get_bool(setting);
+				break;
+			default: // Unsupported type
+				ShowWarning("Setting %s has unsupported type %d, ignoring...\n", config_name, type);
+				retval = false;
+				continue;
 		}
 		sprintf(str, "%d", val); // FIXME: Remove this when support to int's as value is added
 		entry->parse_func(config_name, str);
@@ -1073,16 +1068,16 @@ static bool HPM_DataCheck(struct s_HPMDataCheck *src, unsigned int size, int ver
 	}
 
 	for (i = 0; i < size; i++) {
-		if (!(src[i].type&SERVER_TYPE))
+		if (!(src[i].type & SERVER_TYPE))
 			continue;
 
 		if (!strdb_exists(datacheck_db, src[i].name)) {
-			ShowError("HPMDataCheck:%s: '%s' was not found\n",name,src[i].name);
+			ShowError("HPMDataCheck:%s: '%s' was not found\n", name, src[i].name);
 			return false;
 		} else {
-			j = strdb_uiget(datacheck_db, src[i].name);/* not double lookup; exists sets cache to found data */
+			j = strdb_uiget(datacheck_db, src[i].name); /* not double lookup; exists sets cache to found data */
 			if (src[i].size != datacheck_data[j].size) {
-				ShowWarning("HPMDataCheck:%s: '%s' size mismatch %u != %u\n",name,src[i].name,src[i].size,datacheck_data[j].size);
+				ShowWarning("HPMDataCheck:%s: '%s' size mismatch %u != %u\n", name, src[i].name, src[i].size, datacheck_data[j].size);
 				return false;
 			}
 		}
@@ -1101,9 +1096,9 @@ static void HPM_datacheck_init(const struct s_HPMDataCheck *src, unsigned int le
 	/**
 	 * Populates datacheck_db for easy lookup later on
 	 **/
-	datacheck_db = strdb_alloc(DB_OPT_BASE,0);
+	datacheck_db = strdb_alloc(DB_OPT_BASE, 0);
 
-	for(i = 0; i < length; i++) {
+	for (i = 0; i < length; i++) {
 		strdb_uiput(datacheck_db, src[i].name, i);
 	}
 }
@@ -1135,7 +1130,7 @@ static void hpm_init(void)
 
 	sscanf(HPM_VERSION, "%u.%u", &HPM->version[0], &HPM->version[1]);
 
-	if( HPM->version[0] == 0 && HPM->version[1] == 0 ) {
+	if (HPM->version[0] == 0 && HPM->version[1] == 0) {
 		ShowError("HPM:init:failed to retrieve HPM version!!\n");
 		return;
 	}
@@ -1149,7 +1144,7 @@ static void hpm_init(void)
 	}
 
 #ifdef CONSOLE_INPUT
-	console->input->addCommand("plugins",CPCMD_A(plugins));
+	console->input->addCommand("plugins", CPCMD_A(plugins));
 #endif
 	return;
 }

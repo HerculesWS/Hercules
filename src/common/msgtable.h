@@ -118,7 +118,7 @@ enum msgtable_messages {
 	MSGTBL_1_PLAYER_IN_MAP = 55,
 	/** %d players found in map '%s'. */
 	MSGTBL_N_PLAYERS_IN_MAP = 56,
-	//57-58 FREE
+	// 57-58 FREE
 	/** Night Mode Activated. */
 	MSGTBL_NIGHT_MODE_ACTIVATED = 59,
 	/** Day Mode Activated. */
@@ -131,7 +131,7 @@ enum msgtable_messages {
 	MSGTBL_MERCY_SHOWN = 63,
 	/** Mercy has been granted. */
 	MSGTBL_MERCY_GRANTED = 64,
-	//65-69 FREE
+	// 65-69 FREE
 	/** You have learned the skill. */
 	MSGTBL_LEARNED_SKILL = 70,
 	/** You have forgotten the skill. */
@@ -166,14 +166,14 @@ enum msgtable_messages {
 	MSGTBL_ALL_STATS_CHANGED = 84,
 	/** Invalid time for ban command. */
 	MSGTBL_INVALID_BAN_TIME = 85,
-	//86-87 FREE
+	// 86-87 FREE
 	/** Sending request to login server... */
 	MSGTBL_SENDING_REQUEST_TO_LOGIN = 88,
 	/** Night mode is already enabled. */
 	MSGTBL_NIGHT_MODE_ALREADY_ENABLED = 89,
 	/** Day mode is already enabled. */
 	MSGTBL_DAY_MODE_ALREADY_ENABLED = 90,
-	//91 FREE
+	// 91 FREE
 	/** All characters recalled! */
 	MSGTBL_RECALL_CHARACTERS_RECALLED = 92,
 	/** All online characters of the %s guild have been recalled to your position. */
@@ -192,7 +192,7 @@ enum msgtable_messages {
 	MSGTBL_RELOAD_SKILLDB_RELOADED = 99,
 	/** Scripts have been reloaded. */
 	MSGTBL_RELOAD_SCRIPTS_RELOADED = 100,
-	//101 FREE
+	// 101 FREE
 	/** You have mounted a Peco Peco. */
 	MSGTBL_MOUNTED_PECOPECO = 102,
 	/** No longer spying on the %s guild. */
@@ -242,7 +242,7 @@ enum msgtable_messages {
 	/** You're not disguised. */
 	MSGTBL_DISGUISE_NOT_DISGUISE = 125,
 
-	//Clone Messages
+	// Clone Messages
 	/** Cannot clone a player of higher GM level than yourself. */
 	MSGTBL_CLONE_HIGHER_GM = 126,
 	/** You've reached your slave clones limit. */
@@ -259,7 +259,7 @@ enum msgtable_messages {
 	MSGTBL_SLAVECLONE_SPAWNED = 132,
 	/** Unable to spawn slave clone. */
 	MSGTBL_SLAVECLONE_FAIL = 133,
-	//134-136 FREE (possibly for other clone types)
+	// 134-136 FREE (possibly for other clone types)
 
 	/** CvC: Off */
 	MSGTBL_CVC_OFF = 137,
@@ -374,7 +374,7 @@ enum msgtable_messages {
 	MSGTBL_PET_CAN_BE_RENAMED_ALREADY = 188,
 	/** Autofeed is disabled for this pet. */
 	MSGTBL_AUTOFEED_DISABLED = 189,
-	//190-194 FREE
+	// 190-194 FREE
 	/** All players have been kicked! */
 	MSGTBL_ALL_PLAYERS_KICKED = 195,
 	/** You already have this quest skill. */
@@ -383,10 +383,10 @@ enum msgtable_messages {
 	MSGTBL_INVALID_QUEST_SKILL_ID = 197,
 	/** This skill number doesn't exist. */
 	MSGTBL_INVALID_SKILL_ID = 198,
-	//199-200 FREE
+	// 199-200 FREE
 	/** You don't have this quest skill. */
 	MSGTBL_QUEST_SKILL_NOT_LEARNED = 201,
-	//202-203 FREE
+	// 202-203 FREE
 	/** You can't open a shop on this cell. */
 	MSGTBL_CANT_OPEN_SHOP_IN_CELL = 204,
 	/** Maybe you meant:  */
@@ -397,7 +397,7 @@ enum msgtable_messages {
 	MSGTBL_PLAYER_STATS_POINTS_RESET = 207,
 	/** '%s' skill and stat points have been reset. */
 	MSGTBL_PLAYER_SKILL_AND_STATS_RESET = 208,
-	//209-211 FREE
+	// 209-211 FREE
 	/** Cannot mount while in disguise. */
 	MSGTBL_CANT_MOUNT_IN_DISGUISE = 212,
 	/** You need %s to mount! */
@@ -406,7 +406,7 @@ enum msgtable_messages {
 	MSGTBL_PECO_RELEASED = 214,
 	/** Your class can't mount! */
 	MSGTBL_NO_MOUNT_FOR_CLASS = 215,
-	//216-218 FREE
+	// 216-218 FREE
 	/** %d day */
 	MSGTBL_DAY = 219,
 	/** %d days */
@@ -437,7 +437,7 @@ enum msgtable_messages {
 	MSGTBL_GAMETIME_ALWAYS_NIGHT = 232,
 	/** Game time: The game is in night for %s. */
 	MSGTBL_GAMETIME_NIGHT_TIME = 233,
-	//234 FREE
+	// 234 FREE
 	/** Game time: The game is in daylight for %s. */
 	MSGTBL_GAMETIME_DAY_TIME = 235,
 	/** You've got a new mail! */
@@ -502,7 +502,7 @@ enum msgtable_messages {
 	MSGTBL_NAME_BOUGHT_ITEM = 265,
 	/** Some of your items cannot be vended and were removed from the shop. */
 	MSGTBL_ITEMS_REMOVED_FROM_SHOP = 266,
-	//267-268 FREE
+	// 267-268 FREE
 	/** Displaying first %d out of %d matches */
 	MSGTBL_SEARCH_RESULT_OFFSET = 269,
 	//@me output format
@@ -533,7 +533,7 @@ enum msgtable_messages {
 	/** You can't create chat rooms in this map */
 	MSGTBL_CANT_CREATE_CHAT_IN_MAP = 281,
 
-	//Party-related
+	// Party-related
 	/** You need to be a party leader to use this command. */
 	MSGTBL_MUST_BE_PARTY_LEADER = 282,
 	/** Target character must be online and in your current party. */
@@ -547,16 +547,16 @@ enum msgtable_messages {
 	/** You cannot change party leaders in this map. */
 	MSGTBL_CANT_CHANGE_PARTY_LEADER_IN_MAP = 287,
 
-	//Missing stuff for @killer related commands.
+	// Missing stuff for @killer related commands.
 	/** You are no longer killable. */
 	MSGTBL_KILLABLE_OFF = 288,
-	//289-290 FREE
+	// 289-290 FREE
 	/** Weather effects will disappear after teleporting or refreshing. */
 	MSGTBL_CLEARWEATHER = 291,
 	/** Killer state reset. */
 	MSGTBL_KILLER_OFF = 292,
 
-	//Item Bind System
+	// Item Bind System
 	/** This bound item cannot be traded to that character. */
 	MSGTBL_BOUND_CANT_TRADE = 293,
 	/** This bound item cannot be stored there. */
@@ -569,7 +569,7 @@ enum msgtable_messages {
 	MSGTBL_ITEMBOUND_USAGE2 = 297,
 	/** Invalid bound type. Valid types are - 1:Account 2:Guild 3:Party 4:Character */
 	MSGTBL_ITEMBOUND_INVALID_TYPE = 298,
-	//299 FREE
+	// 299 FREE
 
 	// Guild Castles Number
 	// --------------------
@@ -649,7 +649,7 @@ enum msgtable_messages {
 	MSGTBL_GUILD_DOES_NOT_HAVE_STORAGE = 335,
 	/** You're not authorized to open your guild storage! */
 	MSGTBL_NOT_AUTHORIZED_TO_USE_GSTORAGE = 336,
-	//337-342 FREE
+	// 337-342 FREE
 
 	// Templates for @who output
 	/** Name: %s  */
@@ -660,13 +660,13 @@ enum msgtable_messages {
 	MSGTBL_WHO_PARTY_FORMAT = 345,
 	/** | Guild: '%s' */
 	MSGTBL_WHO_GUILD_FORMAT = 346,
-	//You may omit the last %s, then you won't see players job name
+	// You may omit the last %s, then you won't see players job name
 	/** | Lv:%d/%d | Job: %s */
 	MSGTBL_WHO_LEVEL_JOB_FORMAT = 347,
-	//You may omit 2 last %d, then you won't see players coordinates, just map name
+	// You may omit 2 last %d, then you won't see players coordinates, just map name
 	/** | Location: %s %d %d */
 	MSGTBL_WHO_LOCATION_FORMAT = 348,
-	//349 FREE
+	// 349 FREE
 
 	// @duel
 	/** Duel: You can't use @invite. You aren't a duelist. */
@@ -709,7 +709,7 @@ enum msgtable_messages {
 	MSGTBL_STYLESHOP_MAIL_TITLE = 367,
 	/** <MSG>2950</MSG> */
 	MSGTBL_STYLESHOP_MAIL_BODY = 368,
-	//369 FREE
+	// 369 FREE
 
 	/**  -- Duels: %d/%d, Members: %d/%d, Max players: %d -- */
 	MSGTBL_DUEL_INFO_LIMIT = 370,
@@ -728,15 +728,15 @@ enum msgtable_messages {
 	/**  -- Player %s has rejected the duel -- */
 	MSGTBL_DUEL_PLAYER_REJECTED = 377,
 
-	//378-385 FREE
+	// 378-385 FREE
 
 	// Main chat
 	/** %s :Main: %s */
 	MSGTBL_MAIN_CHAT = 386,
 
-	//387-389 FREE
+	// 387-389 FREE
 
-	//NoAsk
+	// NoAsk
 	/** Autorejecting is activated. */
 	MSGTBL_NOASK_ON = 390,
 	/** Autorejecting is deactivated. */
@@ -756,11 +756,11 @@ enum msgtable_messages {
 	/** Autorejected friend request from %s. */
 	MSGTBL_NOASK_REJECTED_FRIEND = 398,
 
-	//399 FREE
+	// 399 FREE
 
 	/** Usage: @jailfor <time> <character name> */
 	MSGTBL_JAILFOR_USAGE = 400,
-	//401 FREE
+	// 401 FREE
 	/** %s in jail for %d years, %d months, %d days, %d hours and %d minutes */
 	MSGTBL_JAILFOR_TIME = 402,
 
@@ -774,14 +774,14 @@ enum msgtable_messages {
 	/** War of Emperium SE is currently not in progress. */
 	MSGTBL_AGITEND2_NOT_IN_PROGRESS = 406,
 
-	//407 FREE
+	// 407 FREE
 
-	//chrif related
+	// chrif related
 	/** Disconnecting to perform change-sex request... */
 	MSGTBL_CHANGESEX_DISCONNECT = 408,
 	/** Your sex has been changed (disconnection required to complete the process)... */
 	MSGTBL_CHANGESEX_PERFORMED = 409,
-	//410-411 used by cash shop
+	// 410-411 used by cash shop
 	/** Your account is 'Unregistered'. */
 	MSGTBL_CHRIF_ACCOUNT_UNREGISTERED = 412,
 	/** Your account has an 'Incorrect Password'... */
@@ -802,7 +802,7 @@ enum msgtable_messages {
 	MSGTBL_CHRIF_ACCOUNT_UNAUTHORIZED = 420,
 	/** Your account has been totally erased. */
 	MSGTBL_CHRIF_ACCOUNT_ERASED = 421,
-	//422 FREE
+	// 422 FREE
 	/** Your account has been banished until  */
 	MSGTBL_CHRIF_ACCOUNT_BANNED = 423,
 	/** Login-server has been asked to %s the player '%.*s'. */
@@ -827,7 +827,7 @@ enum msgtable_messages {
 	MSGTBL_CHRIF_CHAR_BANNED_UNTIL = 433,
 	/** Char-server has been asked to %s the character '%.*s'. */
 	MSGTBL_CHRIF_CHAR_REQUEST = 434,
-	//435-448 FREE
+	// 435-448 FREE
 
 	// Homunculus messages
 	/** Homunculus Experience Gained Base:%u (%.2f%%) */
@@ -950,7 +950,7 @@ enum msgtable_messages {
 	MSGTBL_TRADE_SPOOF_BAN_ALERT = 507,
 	/** This player hasn't been banned (Ban option is disabled). */
 	MSGTBL_TRADE_SPOOF_NOT_BANNED = 508,
-	//509 FREE
+	// 509 FREE
 
 	// mail system
 	//----------------------
@@ -969,7 +969,7 @@ enum msgtable_messages {
 	MSGTBL_TRADE_SPOOF_TOO_MANY_ITEMS2 = 539,
 	/** This player has been definitively blocked. */
 	MSGTBL_TRADE_SPOOF_PERMANENT_BAN = 540,
-	//541-543 FREE
+	// 541-543 FREE
 
 	/** <MSG>3455</MSG> */
 	MSGTBL_ATTENDANCE_MAIL_SENDER = 544,
@@ -989,7 +989,6 @@ enum msgtable_messages {
 	// @autotrade
 	/** You should have a shop open in order to use @autotrade. */
 	MSGTBL_AUTOTRADE_MISSING_SHOP = 549,
-
 
 	// 550 - 699: Job names (also loaded by char-server)
 	// ----------------------------------------
@@ -1259,7 +1258,7 @@ enum msgtable_messages {
 	/** Baby Soul Reaper */
 	MSGTBL_JOB_BABY_SOUL_REAPER = 682,
 
-	//683-849 FREE (please start using from the top if you need, leave the 670+ range for new jobs)
+	// 683-849 FREE (please start using from the top if you need, leave the 670+ range for new jobs)
 
 	/** No Knockback | */
 	MSGTBL_MAPINFO_NO_KNOCKBACK = 850,
@@ -1440,7 +1439,7 @@ enum msgtable_messages {
 	/** Please enter at least one option. */
 	MSGTBL_ENTER_LEAST_ONE_OPTION = 921,
 
-	//922 FREE
+	// 922 FREE
 
 	// @jobchange
 	/** You can not change to this job by command. */
@@ -1456,7 +1455,7 @@ enum msgtable_messages {
 	/** Zone successfully changed from '%s' to '%s'. */
 	MSGTBL_SETZONE_SUCCESS_CHANGED = 927,
 
-	//928-978 FREE
+	// 928-978 FREE
 
 	// @hatereset
 	/** Reset 'Hatred' targets. */
@@ -1512,7 +1511,7 @@ enum msgtable_messages {
 	/** Please enter a hair color (usage: @haircolor/@hcolor <hair color: %d-%d>). */
 	MSGTBL_ENTER_HAIR_COLOR = 994,
 
-	//995 FREE
+	// 995 FREE
 
 	// @refine - Part 1
 	/** Please enter a position bitmask and an amount (usage: @refine <equip position> <+/- amount>). */
@@ -2064,7 +2063,7 @@ enum msgtable_messages {
 	/** Your guild's storage has already been opened by another member, try again later. */
 	MSGTBL_GUILDSTORAGE_ALREADY_OPENED = 1201,
 
-	//1202 FREE
+	// 1202 FREE
 
 	// @snow
 	/** Snow has stopped falling. */
@@ -2318,7 +2317,7 @@ enum msgtable_messages {
 	MSGTBL_MAPINFO_PRIVATE_AIRSHIP_STARTABLE = 1292,
 	/** PrivateAirshipEndable |  */
 	MSGTBL_MAPINFO_PRIVATE_AIRSHIP_ENDABLE = 1293,
-	//1294 used by hercules chat feature
+	// 1294 used by hercules chat feature
 
 	// @version
 	/** %s revision '%s' (src) / '%s' (scripts) */
@@ -2599,7 +2598,7 @@ enum msgtable_messages {
 	MSGTBL_JOIN_UNKNOWN_CHANNEL_NAME = 1400,
 	/** '%s' Channel is password protected (usage: %s <#channel_name> <password>) */
 	MSGTBL_JOIN_CHANNEL_PW_PROTECTED = 1401,
-	//1402 used by hercules chat feature
+	// 1402 used by hercules chat feature
 	/** You're now in the '%s' channel */
 	MSGTBL_JOIN_CHANNEL_SUCCESS = 1403,
 
@@ -2676,7 +2675,7 @@ enum msgtable_messages {
 	MSGTBL_CHANNEL_UNBIND_SUCCESS = 1433,
 	/** Player '%s' was not found */
 	MSGTBL_CHANNEL_PLAYER_NOT_FOUND = 1434,
-	//1435-1436 used by hercules chat feature
+	// 1435-1436 used by hercules chat feature
 	/** Player '%s' has now been banned from the '%s' channel */
 	MSGTBL_CHANNEL_BAN_SUCCESS = 1437,
 	/** You cannot join the '%s' channel because you've been banned from it */
@@ -2754,7 +2753,7 @@ enum msgtable_messages {
 	/** Costume '%s' removed. */
 	MSGTBL_COSTUME_REMOVED = 1473,
 
-	//src/map/pc.c::pc_isUseitem
+	// src/map/pc.c::pc_isUseitem
 	/** You cannot use this item while sitting. */
 	MSGTBL_NOT_USE_ITEM_SITTING = 1474,
 	/** You cannot use this item while your storage is open. */
@@ -2763,7 +2762,7 @@ enum msgtable_messages {
 	/** You are already mounting something else. */
 	MSGTBL_ALREADY_MOUNTED = 1476,
 
-	//src/map/pc.c::pc_isUseitem
+	// src/map/pc.c::pc_isUseitem
 	/** Item cannot be opened when the inventory is full. */
 	MSGTBL_INVENTORY_FULL = 1477,
 
@@ -2771,7 +2770,7 @@ enum msgtable_messages {
 	/** Homunculus reached its maximum level of '%d'. */
 	MSGTBL_HOMUNCULU_MAX_LV = 1478,
 
-	//src/map/clif.c::clif_parse_GlobalMessage
+	// src/map/clif.c::clif_parse_GlobalMessage
 	/** Dear angel, can you hear my voice? */
 	MSGTBL_DEAR_ANGEL_MSG = 1479,
 	/** I am %s Super Novice~ */
@@ -2779,13 +2778,13 @@ enum msgtable_messages {
 	/** Help me out~ Please~ T_T */
 	MSGTBL_HELP_ME_MSG = 1481,
 
-	//Banking
+	// Banking
 	/** You can't withdraw that much money. */
 	MSGTBL_CANNOT_WITHDRAW_MONEY = 1482,
 	/** Banking is disabled. */
 	MSGTBL_BANKING_DISABLED = 1483,
 
-	//src/map/atcommand.c::ACMD(auction)
+	// src/map/atcommand.c::ACMD(auction)
 	/** Auction is disabled. */
 	MSGTBL_AUCTION_DISABLED = 1484,
 

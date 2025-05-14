@@ -48,7 +48,7 @@ static struct capiif_interface capiif_s;
 struct capiif_interface *capiif;
 
 #define DEBUG_LOG
-//#define DEBUG_PACKETS
+// #define DEBUG_PACKETS
 
 static int capiif_parse_fromlogin_api_proxy(int fd)
 {
@@ -57,7 +57,7 @@ static int capiif_parse_fromlogin_api_proxy(int fd)
 
 #ifdef DEBUG_PACKETS
 	ShowInfo("capiif_parse_fromlogin_api_proxy: msg: %u, flags: %u, len: %u\n", msg, packet->flags, packet->packet_len);
-#endif  // DEBUG_PACKETS
+#endif // DEBUG_PACKETS
 
 	if (PROXY_PACKET_FLAG(packet, proxy_flag_map)) {
 		mapif->send((const unsigned char *)packet, packet->packet_len);
@@ -153,7 +153,7 @@ void capiif_parse_userconfig_save_emotes(int fd)
 
 	inter_userconfig->save_emotes(p->account_id, &data->emotes);
 
-//	dont need send reply
+	//	dont need send reply
 }
 
 void capiif_parse_charconfig_load(int fd)
@@ -174,7 +174,7 @@ void capiif_parse_emblem_upload_guild_id(int fd)
 	RFIFO_API_PROXY_PACKET_CHUNKED(p);
 	RFIFO_API_DATA(data, emblem_upload_guild_id);
 
-	struct online_char_data* character = capiif->get_online_character(&p->base);
+	struct online_char_data *character = capiif->get_online_character(&p->base);
 	if (character == NULL)
 		return;
 	chr->ensure_online_char_data(character);
@@ -193,7 +193,7 @@ void capiif_parse_emblem_upload(int fd)
 {
 	RFIFO_API_PROXY_PACKET_CHUNKED(p);
 
-	struct online_char_data* character = capiif->get_online_character(&p->base);
+	struct online_char_data *character = capiif->get_online_character(&p->base);
 	if (character == NULL)
 		return;
 	struct online_char_data2 *char_data = character->data;
@@ -207,19 +207,19 @@ void capiif_parse_emblem_upload(int fd)
 
 	RFIFO_CHUNKED_INIT(p, GET_RFIFO_API_PROXY_PACKET_CHUNKED_SIZE(fd), char_data->emblem_data);
 
-	RFIFO_CHUNKED_ERROR(p) {
+	RFIFO_CHUNKED_ERROR(p)
+	{
 		ShowError("Wrong guild emblem packets order\n");
 		chr->clean_online_char_emblem_data(character);
 		capiif->send_emblem_upload_result(fd, 0);
 		return;
 	}
 
-	RFIFO_CHUNKED_COMPLETE(p) {
+	RFIFO_CHUNKED_COMPLETE(p)
+	{
 		bool success = false;
 		if (inter_guild->is_guild_master(p->base.char_id, char_data->emblem_guild_id)) {
-			success = inter_guild->update_emblem(char_data->emblem_data.data_size,
-				char_data->emblem_guild_id,
-				char_data->emblem_data.data);
+			success = inter_guild->update_emblem(char_data->emblem_data.data_size, char_data->emblem_guild_id, char_data->emblem_data.data);
 		}
 
 		capiif->send_emblem_upload_result(fd, (success ? 1 : 0));
@@ -257,7 +257,8 @@ void capiif_emblem_download(int fd, int guild_id, int emblem_id)
 	}
 
 	RFIFO_API_PROXY_PACKET(p2);
-	WFIFO_CHUNKED_INIT(p, chr->login_fd, HEADER_API_PROXY_REPLY, PACKET_API_PROXY_CHUNKED, g->emblem_data, g->emblem_len) {
+	WFIFO_CHUNKED_INIT(p, chr->login_fd, HEADER_API_PROXY_REPLY, PACKET_API_PROXY_CHUNKED, g->emblem_data, g->emblem_len)
+	{
 		WFIFO_CHUNKED_BLOCK_START(p);
 		INIT_PACKET_REPLY_PROXY_FIELDS(&p->base, p2);
 		WFIFO_CHUNKED_BLOCK_END();
@@ -267,9 +268,9 @@ void capiif_emblem_download(int fd, int guild_id, int emblem_id)
 	WFIFO_CHUNKED_FINAL_END();
 }
 
-static struct online_char_data* capiif_get_online_character(const struct PACKET_API_PROXY *p)
+static struct online_char_data *capiif_get_online_character(const struct PACKET_API_PROXY *p)
 {
-	struct online_char_data* character = (struct online_char_data*)idb_get(chr->online_char_db, p->account_id);
+	struct online_char_data *character = (struct online_char_data *)idb_get(chr->online_char_db, p->account_id);
 	if (character == NULL) {
 		ShowError("Cant get online character. Account %d is not online.", p->account_id);
 		return NULL;
@@ -285,7 +286,7 @@ void capiif_parse_userconfig_load_hotkeys(int fd)
 {
 	RFIFO_API_PROXY_PACKET(p);
 
-	for (int tab = 0; tab < UserHotKey_v2_max; tab ++) {
+	for (int tab = 0; tab < UserHotKey_v2_max; tab++) {
 		WFIFO_APICHAR_PACKET_REPLY(userconfig_load_hotkeys_tab);
 		bool load_res = inter_userconfig->hotkey_tab_fromsql(p->account_id, &data->hotkeys, tab);
 		data->result = (load_res ? 1 : 0);
@@ -343,15 +344,12 @@ void capiif_parse_party_del(int fd)
 	WFIFOSET(chr->login_fd, packet->packet_len);
 }
 
-static void do_init_capiif(void)
-{
-}
+static void do_init_capiif(void) {}
 
-static void do_final_capiif(void)
-{
-}
+static void do_final_capiif(void) {}
 
-void capiif_defaults(void) {
+void capiif_defaults(void)
+{
 	capiif = &capiif_s;
 
 	capiif->init = do_init_capiif;

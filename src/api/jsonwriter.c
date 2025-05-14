@@ -38,9 +38,7 @@ static int do_init_jsonwriter(bool minimal)
 	return 0;
 }
 
-static void do_final_jsonwriter(void)
-{
-}
+static void do_final_jsonwriter(void) {}
 
 static JsonW *jsonwriter_create(const char *text)
 {
@@ -197,7 +195,7 @@ JsonW *jsonwriter_add_new_strings_to_array(JsonW *parent, ...)
 	va_start(va, parent);
 	const char *str;
 	JsonW *obj = NULL;
-	while ((str = va_arg(va, const char*)) != NULL) {
+	while ((str = va_arg(va, const char *)) != NULL) {
 		obj = jsonwriter->new_string(str);
 		if (!cJSON_IsString(obj)) {
 			Assert_report(0);
@@ -214,14 +212,14 @@ JsonW *jsonwriter_add_new_strings_to_array(JsonW *parent, ...)
 	return obj;
 }
 
-char* jsonwriter_get_formatted_string(const JsonW *parent)
+char *jsonwriter_get_formatted_string(const JsonW *parent)
 {
 	nullpo_retr(NULL, parent);
 
 	return cJSON_Print(parent);
 }
 
-char* jsonwriter_get_string(const JsonW *parent)
+char *jsonwriter_get_string(const JsonW *parent)
 {
 	nullpo_retr(NULL, parent);
 
@@ -235,7 +233,6 @@ JsonW *jsonwriter_get(const JsonW *parent, const char *name)
 
 	return cJSON_GetObjectItemCaseSensitive(parent, name);
 }
-
 
 void jsonwriter_print(const JsonW *parent)
 {

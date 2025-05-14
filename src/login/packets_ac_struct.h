@@ -28,18 +28,18 @@
 
 /// Packet IDs
 enum login_ac_packet_id {
-	HEADER_AC_ACCEPT_LOGIN         = 0x0069,
-	HEADER_AC_ACCEPT_LOGIN2        = 0x0ac4,
-	HEADER_AC_REFUSE_LOGIN         = 0x006a,
-	HEADER_SC_NOTIFY_BAN           = 0x0081,
-	HEADER_AC_ACK_HASH             = 0x01dc,
-	HEADER_AC_REFUSE_LOGIN_R2      = 0x083e,
-	HEADER_AC_REFUSE_LOGIN_R3      = 0x0b02,
+	HEADER_AC_ACCEPT_LOGIN = 0x0069,
+	HEADER_AC_ACCEPT_LOGIN2 = 0x0ac4,
+	HEADER_AC_REFUSE_LOGIN = 0x006a,
+	HEADER_SC_NOTIFY_BAN = 0x0081,
+	HEADER_AC_ACK_HASH = 0x01dc,
+	HEADER_AC_REFUSE_LOGIN_R2 = 0x083e,
+	HEADER_AC_REFUSE_LOGIN_R3 = 0x0b02,
 };
 
 /* Packets Structs */
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
-#pragma pack(push, 1)
+	#pragma pack(push, 1)
 #endif // not NetBSD < 6 / Solaris
 
 /**
@@ -89,16 +89,16 @@ struct PACKET_AC_ACCEPT_LOGIN {
 	uint8 twitter_flag;
 #endif
 	struct {
-		uint32 ip;        ///< Server IP address
-		int16 port;       ///< Server port
-		char name[MAX_CHARSERVER_NAME_SIZE];  ///< Server name
-		uint16 usercount; ///< Online users
-		uint16 state;     ///< Server state
-		uint16 property;  ///< Server property
+		uint32 ip;                           ///< Server IP address
+		int16 port;                          ///< Server port
+		char name[MAX_CHARSERVER_NAME_SIZE]; ///< Server name
+		uint16 usercount;                    ///< Online users
+		uint16 state;                        ///< Server state
+		uint16 property;                     ///< Server property
 #if PACKETVER >= 20170315
 		char unknown2[128];
 #endif
-	} server_list[];          ///< List of charservers
+	} server_list[]; ///< List of charservers
 } __attribute__((packed));
 
 /**
@@ -114,8 +114,8 @@ struct PACKET_AC_ACK_HASH {
 
 #if PACKETVER_MAIN_NUM >= 20181114 || PACKETVER_RE_NUM >= 20181114 || defined(PACKETVER_ZERO)
 struct PACKET_AC_REQ_MOBILE_OTP {
-	int16 packet_id;      ///< Packet ID (#HEADER_CA_SSO_LOGIN_REQ)
-	uint32 aid;           ///< Account ID
+	int16 packet_id; ///< Packet ID (#HEADER_CA_SSO_LOGIN_REQ)
+	uint32 aid;      ///< Account ID
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(AC_REQ_MOBILE_OTP, 0x09a2);
 #endif
@@ -152,7 +152,7 @@ DEFINE_PACKET_HEADER(AC_LOGIN_OTP, 0x0ad1);
 #endif
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
-#pragma pack(pop)
+	#pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
 
 #endif // LOGIN_PACKETS_AC_STRUCT_H

@@ -21,7 +21,7 @@
 #define CHAR_HPMCHAR_H
 
 #ifndef HERCULES_CORE
-#error You should never include HPMchar.h from a plugin.
+	#error You should never include HPMchar.h from a plugin.
 #endif
 
 #include "common/cbasetypes.h"

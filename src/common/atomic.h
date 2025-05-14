@@ -34,16 +34,17 @@
 #include "common/cbasetypes.h"
 
 #if defined(_MSC_VER)
-#include "common/winapi.h"
+	#include "common/winapi.h"
 
-// This checks if C/C++ Compiler Version is 18.00
-#if _MSC_VER < 1800
+	// This checks if C/C++ Compiler Version is 18.00
+	#if _MSC_VER < 1800
 
-#if !defined(_M_X64)
+		#if !defined(_M_X64)
 // When compiling for windows 32bit, the 8byte interlocked operations are not provided by Microsoft
 // (because they need at least i586 so its not generic enough.. ... )
-forceinline int64 InterlockedCompareExchange64(volatile int64 *dest, int64 exch, int64 _cmp){
-	_asm{
+forceinline int64 InterlockedCompareExchange64(volatile int64 *dest, int64 exch, int64 _cmp)
+{
+	_asm {
 		lea esi,_cmp;
 		lea edi,exch;
 
@@ -57,100 +58,112 @@ forceinline int64 InterlockedCompareExchange64(volatile int64 *dest, int64 exch,
 	}
 }
 
-forceinline volatile int64 InterlockedIncrement64(volatile int64 *addend){
+forceinline volatile int64 InterlockedIncrement64(volatile int64 *addend)
+{
 	__int64 old;
-	do{
+	do {
 		old = *addend;
-	}while(InterlockedCompareExchange64(addend, (old+1), old) != old);
+	} while (InterlockedCompareExchange64(addend, (old + 1), old) != old);
 
 	return (old + 1);
 }
 
-forceinline volatile int64 InterlockedDecrement64(volatile int64 *addend){
+forceinline volatile int64 InterlockedDecrement64(volatile int64 *addend)
+{
 	__int64 old;
 
-	do{
+	do {
 		old = *addend;
-	}while(InterlockedCompareExchange64(addend, (old-1), old) != old);
+	} while (InterlockedCompareExchange64(addend, (old - 1), old) != old);
 
 	return (old - 1);
 }
 
-forceinline volatile int64 InterlockedExchangeAdd64(volatile int64 *addend, int64 increment){
+forceinline volatile int64 InterlockedExchangeAdd64(volatile int64 *addend, int64 increment)
+{
 	__int64 old;
 
-	do{
+	do {
 		old = *addend;
-	}while(InterlockedCompareExchange64(addend, (old + increment), old) != old);
+	} while (InterlockedCompareExchange64(addend, (old + increment), old) != old);
 
 	return old;
 }
 
-forceinline volatile int64 InterlockedExchange64(volatile int64 *target, int64 val){
+forceinline volatile int64 InterlockedExchange64(volatile int64 *target, int64 val)
+{
 	__int64 old;
-	do{
+	do {
 		old = *target;
-	}while(InterlockedCompareExchange64(target, val, old) != old);
+	} while (InterlockedCompareExchange64(target, val, old) != old);
 
 	return old;
 }
 
-#endif //endif 32bit windows
+		#endif // endif 32bit windows
 
-#endif //endif _msc_ver check
+	#endif // endif _msc_ver check
 
 #elif defined(__GNUC__)
 
-// The __sync functions are available on x86 or ARMv6+
-#if !defined(__x86_64__) && !defined(__i386__) \
-	&& !defined(__ppc64__) && ! defined(__powerpc64__) \
-	&& ( !defined(__ARM_ARCH_VERSION__) || __ARM_ARCH_VERSION__ < 6 )
-#error Target platform currently not supported
-#endif
+	// The __sync functions are available on x86 or ARMv6+
+	#if !defined(__x86_64__) && !defined(__i386__) && !defined(__ppc64__) && !defined(__powerpc64__) && (!defined(__ARM_ARCH_VERSION__) || __ARM_ARCH_VERSION__ < 6)
+		#error Target platform currently not supported
+	#endif
 
-static forceinline int64 InterlockedExchangeAdd64(volatile int64 *addend, int64 increment){
+static forceinline int64 InterlockedExchangeAdd64(volatile int64 *addend, int64 increment)
+{
 	return __sync_fetch_and_add(addend, increment);
-}//end: InterlockedExchangeAdd64()
+} // end: InterlockedExchangeAdd64()
 
-#if !defined(__MINGW32__) && !defined(MINGW)
-static forceinline int32 InterlockedExchangeAdd(volatile int32 *addend, int32 increment){
+	#if !defined(__MINGW32__) && !defined(MINGW)
+static forceinline int32 InterlockedExchangeAdd(volatile int32 *addend, int32 increment)
+{
 	return __sync_fetch_and_add(addend, increment);
-}//end: InterlockedExchangeAdd()
+} // end: InterlockedExchangeAdd()
 
-static forceinline int64 InterlockedIncrement64(volatile int64 *addend){
+static forceinline int64 InterlockedIncrement64(volatile int64 *addend)
+{
 	return __sync_add_and_fetch(addend, 1);
-}//end: InterlockedIncrement64()
+} // end: InterlockedIncrement64()
 
-static forceinline int32 InterlockedIncrement(volatile int32 *addend){
+static forceinline int32 InterlockedIncrement(volatile int32 *addend)
+{
 	return __sync_add_and_fetch(addend, 1);
-}//end: InterlockedIncrement()
+} // end: InterlockedIncrement()
 
-static forceinline int64 InterlockedDecrement64(volatile int64 *addend){
+static forceinline int64 InterlockedDecrement64(volatile int64 *addend)
+{
 	return __sync_sub_and_fetch(addend, 1);
-}//end: InterlockedDecrement64()
+} // end: InterlockedDecrement64()
 
-static forceinline int32 InterlockedDecrement(volatile int32 *addend){
+static forceinline int32 InterlockedDecrement(volatile int32 *addend)
+{
 	return __sync_sub_and_fetch(addend, 1);
-}//end: InterlockedDecrement()
+} // end: InterlockedDecrement()
 
-static forceinline int64 InterlockedCompareExchange64(volatile int64 *dest, int64 exch, int64 cmp){
+static forceinline int64 InterlockedCompareExchange64(volatile int64 *dest, int64 exch, int64 cmp)
+{
 	return __sync_val_compare_and_swap(dest, cmp, exch);
-}//end: InterlockedCompareExchange64()
+} // end: InterlockedCompareExchange64()
 
-static forceinline int32 InterlockedCompareExchange(volatile int32 *dest, int32 exch, int32 cmp){
+static forceinline int32 InterlockedCompareExchange(volatile int32 *dest, int32 exch, int32 cmp)
+{
 	return __sync_val_compare_and_swap(dest, cmp, exch);
-}//end: InterlockedCompareExchnage()
+} // end: InterlockedCompareExchnage()
 
-static forceinline int64 InterlockedExchange64(volatile int64 *target, int64 val){
+static forceinline int64 InterlockedExchange64(volatile int64 *target, int64 val)
+{
 	return __sync_lock_test_and_set(target, val);
-}//end: InterlockedExchange64()
+} // end: InterlockedExchange64()
 
-static forceinline int32 InterlockedExchange(volatile int32 *target, int32 val){
+static forceinline int32 InterlockedExchange(volatile int32 *target, int32 val)
+{
 	return __sync_lock_test_and_set(target, val);
-}//end: InterlockedExchange()
+} // end: InterlockedExchange()
 
-#endif  // !defined(__MINGW32__) && !defined(MINGW)
+	#endif // !defined(__MINGW32__) && !defined(MINGW)
 
-#endif //endif compiler decision
+#endif // endif compiler decision
 
 #endif /* COMMON_ATOMIC_H */

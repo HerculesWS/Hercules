@@ -41,14 +41,14 @@ struct mutex_interface {
 	 *
 	 * @return The created mutex.
 	 */
-	struct mutex_data *(*create) (void);
+	struct mutex_data *(*create)(void);
 
 	/**
 	 * Destroys a mutex.
 	 *
 	 * @param m the mutex to destroy.
 	 */
-	void (*destroy) (struct mutex_data *m);
+	void (*destroy)(struct mutex_data *m);
 
 	/**
 	 * Gets a lock.
@@ -57,7 +57,7 @@ struct mutex_interface {
 	 *
 	 * @param m The mutex to lock.
 	 */
-	void (*lock) (struct mutex_data *m);
+	void (*lock)(struct mutex_data *m);
 
 	/**
 	 * Tries to get a lock.
@@ -69,28 +69,28 @@ struct mutex_interface {
 	 * @retval true if the lock was acquired.
 	 * @retval false if the mutex couldn't be locked.
 	 */
-	bool (*trylock) (struct mutex_data *m);
+	bool (*trylock)(struct mutex_data *m);
 
 	/**
 	 * Unlocks a mutex.
 	 *
 	 * @param m The mutex to unlock.
 	 */
-	void (*unlock) (struct mutex_data *m);
+	void (*unlock)(struct mutex_data *m);
 
 	/**
 	 * Creates a conditional variable.
 	 *
 	 * @return the created conditional variable.
 	 */
-	struct cond_data *(*cond_create) (void);
+	struct cond_data *(*cond_create)(void);
 
 	/**
 	 * Destroys a conditional variable.
 	 *
 	 * @param c the conditional variable to destroy.
 	 */
-	void (*cond_destroy) (struct cond_data *c);
+	void (*cond_destroy)(struct cond_data *c);
 
 	/**
 	 * Waits Until state is signaled.
@@ -99,7 +99,7 @@ struct mutex_interface {
 	 * @param m             The mutex used for synchronization.
 	 * @param timeout_ticks Timeout in ticks (-1 = INFINITE)
 	 */
-	void (*cond_wait) (struct cond_data *c, struct mutex_data *m, sysint timeout_ticks);
+	void (*cond_wait)(struct cond_data *c, struct mutex_data *m, sysint timeout_ticks);
 
 	/**
 	 * Sets the given condition var to signaled state.
@@ -109,7 +109,7 @@ struct mutex_interface {
 	 *
 	 * @param c Condition var to set in signaled state.
 	 */
-	void (*cond_signal) (struct cond_data *c);
+	void (*cond_signal)(struct cond_data *c);
 
 	/**
 	 * Sets notifies all waiting threads thats signaled.
@@ -119,7 +119,7 @@ struct mutex_interface {
 	 *
 	 * @param c Condition var to set in signaled state.
 	 */
-	void (*cond_broadcast) (struct cond_data *c);
+	void (*cond_broadcast)(struct cond_data *c);
 };
 
 #ifdef HERCULES_CORE

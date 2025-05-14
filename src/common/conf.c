@@ -23,10 +23,10 @@
 #include "conf.h"
 
 #include "common/core.h"
-#include "common/nullpo.h" // nullpo_retv
+#include "common/nullpo.h"  // nullpo_retv
 #include "common/showmsg.h" // ShowError
-#include "common/strlib.h" // safestrncpy
-#include "common/utils.h" // exists
+#include "common/strlib.h"  // safestrncpy
+#include "common/utils.h"   // exists
 
 #include <libconfig/libconfig.h>
 
@@ -88,8 +88,7 @@ static int config_load_file(struct config_t *config, const char *config_filename
 		return CONFIG_FALSE;
 	}
 	if (libconfig->read_file_src(config, config_filename) != CONFIG_TRUE) {
-		ShowError("%s:%d - %s\n", config_error_file(config),
-		          config_error_line(config), config_error_text(config));
+		ShowError("%s:%d - %s\n", config_error_file(config), config_error_line(config), config_error_text(config));
 		libconfig->destroy(config);
 		return CONFIG_FALSE;
 	}
@@ -106,7 +105,7 @@ static void config_setting_copy_simple(struct config_setting_t *parent, const st
 	} else {
 		struct config_setting_t *set;
 
-		if( libconfig->setting_get_member(parent, config_setting_name(src)) != NULL )
+		if (libconfig->setting_get_member(parent, config_setting_name(src)) != NULL)
 			return;
 
 		if ((set = libconfig->setting_add(parent, config_setting_name(src), config_setting_type(src))) == NULL)
@@ -154,7 +153,7 @@ static void config_setting_copy_aggregate(struct config_setting_t *parent, const
 	struct config_setting_t *newAgg;
 	int i, n;
 
-	if( libconfig->setting_get_member(parent, config_setting_name(src)) != NULL )
+	if (libconfig->setting_get_member(parent, config_setting_name(src)) != NULL)
 		return;
 
 	newAgg = libconfig->setting_add(parent, config_setting_name(src), config_setting_type(src));
@@ -483,7 +482,8 @@ static int config_lookup_int64_real(const struct config_t *config, const char *f
 	return CONFIG_TRUE;
 }
 
-void libconfig_defaults(void) {
+void libconfig_defaults(void)
+{
 	libconfig = &libconfig_s;
 
 	snprintf(libconfig->db_path, sizeof(libconfig->db_path), "db");

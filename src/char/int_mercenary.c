@@ -43,28 +43,33 @@ struct inter_mercenary_interface *inter_mercenary;
 
 static bool inter_mercenary_owner_fromsql(int char_id, struct mmo_charstatus *status)
 {
-	char* data;
+	char *data;
 
 	nullpo_ret(status);
-	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `merc_id`, `arch_calls`, `arch_faith`, `spear_calls`, `spear_faith`, `sword_calls`, `sword_faith` FROM `%s` WHERE `char_id` = '%d'", mercenary_owner_db, char_id) )
-	{
+	if (SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `merc_id`, `arch_calls`, `arch_faith`, `spear_calls`, `spear_faith`, `sword_calls`, `sword_faith` FROM `%s` WHERE `char_id` = '%d'", mercenary_owner_db, char_id)) {
 		Sql_ShowDebug(inter->sql_handle);
 		return false;
 	}
 
-	if( SQL_SUCCESS != SQL->NextRow(inter->sql_handle) )
-	{
+	if (SQL_SUCCESS != SQL->NextRow(inter->sql_handle)) {
 		SQL->FreeResult(inter->sql_handle);
 		return false;
 	}
 
-	SQL->GetData(inter->sql_handle,  0, &data, NULL); status->mer_id = atoi(data);
-	SQL->GetData(inter->sql_handle,  1, &data, NULL); status->arch_calls = atoi(data);
-	SQL->GetData(inter->sql_handle,  2, &data, NULL); status->arch_faith = atoi(data);
-	SQL->GetData(inter->sql_handle,  3, &data, NULL); status->spear_calls = atoi(data);
-	SQL->GetData(inter->sql_handle,  4, &data, NULL); status->spear_faith = atoi(data);
-	SQL->GetData(inter->sql_handle,  5, &data, NULL); status->sword_calls = atoi(data);
-	SQL->GetData(inter->sql_handle,  6, &data, NULL); status->sword_faith = atoi(data);
+	SQL->GetData(inter->sql_handle, 0, &data, NULL);
+	status->mer_id = atoi(data);
+	SQL->GetData(inter->sql_handle, 1, &data, NULL);
+	status->arch_calls = atoi(data);
+	SQL->GetData(inter->sql_handle, 2, &data, NULL);
+	status->arch_faith = atoi(data);
+	SQL->GetData(inter->sql_handle, 3, &data, NULL);
+	status->spear_calls = atoi(data);
+	SQL->GetData(inter->sql_handle, 4, &data, NULL);
+	status->spear_faith = atoi(data);
+	SQL->GetData(inter->sql_handle, 5, &data, NULL);
+	status->sword_calls = atoi(data);
+	SQL->GetData(inter->sql_handle, 6, &data, NULL);
+	status->sword_faith = atoi(data);
 	SQL->FreeResult(inter->sql_handle);
 
 	return true;
@@ -73,9 +78,7 @@ static bool inter_mercenary_owner_fromsql(int char_id, struct mmo_charstatus *st
 static bool inter_mercenary_owner_tosql(int char_id, struct mmo_charstatus *status)
 {
 	nullpo_ret(status);
-	if( SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s` (`char_id`, `merc_id`, `arch_calls`, `arch_faith`, `spear_calls`, `spear_faith`, `sword_calls`, `sword_faith`) VALUES ('%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d')",
-		mercenary_owner_db, char_id, status->mer_id, status->arch_calls, status->arch_faith, status->spear_calls, status->spear_faith, status->sword_calls, status->sword_faith) )
-	{
+	if (SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s` (`char_id`, `merc_id`, `arch_calls`, `arch_faith`, `spear_calls`, `spear_faith`, `sword_calls`, `sword_faith`) VALUES ('%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d')", mercenary_owner_db, char_id, status->mer_id, status->arch_calls, status->arch_faith, status->spear_calls, status->spear_faith, status->sword_calls, status->sword_faith)) {
 		Sql_ShowDebug(inter->sql_handle);
 		return false;
 	}
@@ -85,10 +88,10 @@ static bool inter_mercenary_owner_tosql(int char_id, struct mmo_charstatus *stat
 
 static bool inter_mercenary_owner_delete(int char_id)
 {
-	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `char_id` = '%d'", mercenary_owner_db, char_id) )
+	if (SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `char_id` = '%d'", mercenary_owner_db, char_id))
 		Sql_ShowDebug(inter->sql_handle);
 
-	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `char_id` = '%d'", mercenary_db, char_id) )
+	if (SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `char_id` = '%d'", mercenary_db, char_id))
 		Sql_ShowDebug(inter->sql_handle);
 
 	return true;
@@ -109,9 +112,7 @@ static bool inter_mercenary_create(struct s_mercenary *merc)
 	nullpo_retr(false, merc);
 	Assert_retr(false, merc->mercenary_id == 0);
 
-	if (SQL_ERROR == SQL->Query(inter->sql_handle,
-			"INSERT INTO `%s` (`char_id`,`class`,`hp`,`sp`,`kill_counter`,`life_time`) VALUES ('%d','%d','%d','%d','%u','%u')",
-			mercenary_db, merc->char_id, merc->class_, merc->hp, merc->sp, merc->kill_count, merc->life_time)) {
+	if (SQL_ERROR == SQL->Query(inter->sql_handle, "INSERT INTO `%s` (`char_id`,`class`,`hp`,`sp`,`kill_counter`,`life_time`) VALUES ('%d','%d','%d','%d','%u','%u')", mercenary_db, merc->char_id, merc->class_, merc->hp, merc->sp, merc->kill_count, merc->life_time)) {
 		Sql_ShowDebug(inter->sql_handle);
 		return false;
 	}
@@ -131,9 +132,7 @@ static bool inter_mercenary_save(const struct s_mercenary *merc)
 	nullpo_retr(false, merc);
 	Assert_retr(false, merc->mercenary_id > 0);
 
-	if (SQL_ERROR == SQL->Query(inter->sql_handle,
-			"UPDATE `%s` SET `char_id` = '%d', `class` = '%d', `hp` = '%d', `sp` = '%d', `kill_counter` = '%u', `life_time` = '%u' WHERE `mer_id` = '%d'",
-			mercenary_db, merc->char_id, merc->class_, merc->hp, merc->sp, merc->kill_count, merc->life_time, merc->mercenary_id)) {
+	if (SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `char_id` = '%d', `class` = '%d', `hp` = '%d', `sp` = '%d', `kill_counter` = '%u', `life_time` = '%u' WHERE `mer_id` = '%d'", mercenary_db, merc->char_id, merc->class_, merc->hp, merc->sp, merc->kill_count, merc->life_time, merc->mercenary_id)) {
 		Sql_ShowDebug(inter->sql_handle);
 		return false;
 	}
@@ -143,30 +142,33 @@ static bool inter_mercenary_save(const struct s_mercenary *merc)
 
 static bool inter_mercenary_load(int merc_id, int char_id, struct s_mercenary *merc)
 {
-	char* data;
+	char *data;
 
 	nullpo_ret(merc);
 	memset(merc, 0, sizeof(struct s_mercenary));
 	merc->mercenary_id = merc_id;
 	merc->char_id = char_id;
 
-	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `class`, `hp`, `sp`, `kill_counter`, `life_time` FROM `%s` WHERE `mer_id` = '%d' AND `char_id` = '%d'", mercenary_db, merc_id, char_id) )
-	{
+	if (SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `class`, `hp`, `sp`, `kill_counter`, `life_time` FROM `%s` WHERE `mer_id` = '%d' AND `char_id` = '%d'", mercenary_db, merc_id, char_id)) {
 		Sql_ShowDebug(inter->sql_handle);
 		return false;
 	}
 
-	if( SQL_SUCCESS != SQL->NextRow(inter->sql_handle) )
-	{
+	if (SQL_SUCCESS != SQL->NextRow(inter->sql_handle)) {
 		SQL->FreeResult(inter->sql_handle);
 		return false;
 	}
 
-	SQL->GetData(inter->sql_handle,  0, &data, NULL); merc->class_ = atoi(data);
-	SQL->GetData(inter->sql_handle,  1, &data, NULL); merc->hp = atoi(data);
-	SQL->GetData(inter->sql_handle,  2, &data, NULL); merc->sp = atoi(data);
-	SQL->GetData(inter->sql_handle,  3, &data, NULL); merc->kill_count = atoi(data);
-	SQL->GetData(inter->sql_handle,  4, &data, NULL); merc->life_time = atoi(data);
+	SQL->GetData(inter->sql_handle, 0, &data, NULL);
+	merc->class_ = atoi(data);
+	SQL->GetData(inter->sql_handle, 1, &data, NULL);
+	merc->hp = atoi(data);
+	SQL->GetData(inter->sql_handle, 2, &data, NULL);
+	merc->sp = atoi(data);
+	SQL->GetData(inter->sql_handle, 3, &data, NULL);
+	merc->kill_count = atoi(data);
+	SQL->GetData(inter->sql_handle, 4, &data, NULL);
+	merc->life_time = atoi(data);
 	SQL->FreeResult(inter->sql_handle);
 	if (chr->show_save_log)
 		ShowInfo("Mercenary loaded (%d - %d).\n", merc->mercenary_id, merc->char_id);
@@ -176,8 +178,7 @@ static bool inter_mercenary_load(int merc_id, int char_id, struct s_mercenary *m
 
 static bool inter_mercenary_delete(int merc_id)
 {
-	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `mer_id` = '%d'", mercenary_db, merc_id) )
-	{
+	if (SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `mer_id` = '%d'", mercenary_db, merc_id)) {
 		Sql_ShowDebug(inter->sql_handle);
 		return false;
 	}
@@ -200,13 +201,21 @@ static void inter_mercenary_sql_final(void)
  *------------------------------------------*/
 static int inter_mercenary_parse_frommap(int fd)
 {
-	unsigned short cmd = RFIFOW(fd,0);
+	unsigned short cmd = RFIFOW(fd, 0);
 
 	switch (cmd) {
-		case 0x3070: mapif->parse_mercenary_create(fd, RFIFOP(fd,4)); break;
-		case 0x3071: mapif->parse_mercenary_load(fd, RFIFOL(fd,2), RFIFOL(fd,6)); break;
-		case 0x3072: mapif->parse_mercenary_delete(fd, RFIFOL(fd,2)); break;
-		case 0x3073: mapif->parse_mercenary_save(fd, RFIFOP(fd,4)); break;
+		case 0x3070:
+			mapif->parse_mercenary_create(fd, RFIFOP(fd, 4));
+			break;
+		case 0x3071:
+			mapif->parse_mercenary_load(fd, RFIFOL(fd, 2), RFIFOL(fd, 6));
+			break;
+		case 0x3072:
+			mapif->parse_mercenary_delete(fd, RFIFOL(fd, 2));
+			break;
+		case 0x3073:
+			mapif->parse_mercenary_save(fd, RFIFOP(fd, 4));
+			break;
 		default:
 			return 0;
 	}

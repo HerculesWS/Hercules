@@ -79,8 +79,7 @@ static int CheckForCharServer(void)
 }
 
 // pet
-static int intif_create_pet(int account_id, int char_id, int pet_class, int pet_lv, int pet_egg_id,
-	int pet_equip, short intimate, short hungry, char rename_flag, char incubate, char *pet_name)
+static int intif_create_pet(int account_id, int char_id, int pet_class, int pet_lv, int pet_egg_id, int pet_equip, short intimate, short hungry, char rename_flag, char incubate, char *pet_name)
 {
 	if (intif->CheckForCharServer())
 		return 0;
@@ -109,11 +108,11 @@ static int intif_request_petdata(int account_id, int char_id, int pet_id)
 	if (intif->CheckForCharServer())
 		return 0;
 	WFIFOHEAD(inter_fd, 14);
-	WFIFOW(inter_fd,0) = 0x3081;
-	WFIFOL(inter_fd,2) = account_id;
-	WFIFOL(inter_fd,6) = char_id;
-	WFIFOL(inter_fd,10) = pet_id;
-	WFIFOSET(inter_fd,14);
+	WFIFOW(inter_fd, 0) = 0x3081;
+	WFIFOL(inter_fd, 2) = account_id;
+	WFIFOL(inter_fd, 6) = char_id;
+	WFIFOL(inter_fd, 10) = pet_id;
+	WFIFOSET(inter_fd, 14);
 
 	return 0;
 }
@@ -124,11 +123,11 @@ static int intif_save_petdata(int account_id, struct s_pet *p)
 		return 0;
 	nullpo_ret(p);
 	WFIFOHEAD(inter_fd, sizeof(struct s_pet) + 8);
-	WFIFOW(inter_fd,0) = 0x3082;
-	WFIFOW(inter_fd,2) = sizeof(struct s_pet) + 8;
-	WFIFOL(inter_fd,4) = account_id;
-	memcpy(WFIFOP(inter_fd,8),p,sizeof(struct s_pet));
-	WFIFOSET(inter_fd,WFIFOW(inter_fd,2));
+	WFIFOW(inter_fd, 0) = 0x3082;
+	WFIFOW(inter_fd, 2) = sizeof(struct s_pet) + 8;
+	WFIFOL(inter_fd, 4) = account_id;
+	memcpy(WFIFOP(inter_fd, 8), p, sizeof(struct s_pet));
+	WFIFOSET(inter_fd, WFIFOW(inter_fd, 2));
 
 	return 0;
 }
@@ -137,10 +136,10 @@ static int intif_delete_petdata(int pet_id)
 {
 	if (intif->CheckForCharServer())
 		return 0;
-	WFIFOHEAD(inter_fd,6);
-	WFIFOW(inter_fd,0) = 0x3083;
-	WFIFOL(inter_fd,2) = pet_id;
-	WFIFOSET(inter_fd,6);
+	WFIFOHEAD(inter_fd, 6);
+	WFIFOW(inter_fd, 0) = 0x3083;
+	WFIFOL(inter_fd, 2) = pet_id;
+	WFIFOSET(inter_fd, 6);
 
 	return 1;
 }
@@ -152,17 +151,17 @@ static int intif_rename(struct map_session_data *sd, int type, const char *name)
 
 	nullpo_ret(sd);
 	nullpo_ret(name);
-	WFIFOHEAD(inter_fd,NAME_LENGTH+12);
-	WFIFOW(inter_fd,0) = 0x3006;
-	WFIFOL(inter_fd,2) = sd->status.account_id;
-	WFIFOL(inter_fd,6) = sd->status.char_id;
-	WFIFOB(inter_fd,10) = type;  //Type: 0 - PC, 1 - PET, 2 - HOM
-	memcpy(WFIFOP(inter_fd,11),name, NAME_LENGTH);
-	WFIFOSET(inter_fd,NAME_LENGTH+12);
+	WFIFOHEAD(inter_fd, NAME_LENGTH + 12);
+	WFIFOW(inter_fd, 0) = 0x3006;
+	WFIFOL(inter_fd, 2) = sd->status.account_id;
+	WFIFOL(inter_fd, 6) = sd->status.char_id;
+	WFIFOB(inter_fd, 10) = type; // Type: 0 - PC, 1 - PET, 2 - HOM
+	memcpy(WFIFOP(inter_fd, 11), name, NAME_LENGTH);
+	WFIFOSET(inter_fd, NAME_LENGTH + 12);
 	return 0;
 }
 
-//Request for saving registry values.
+// Request for saving registry values.
 static int intif_saveregistry(struct map_session_data *sd)
 {
 	struct DBIterator *iter;
@@ -176,25 +175,25 @@ static int intif_saveregistry(struct map_session_data *sd)
 		return -1;
 
 	WFIFOHEAD(inter_fd, 60000 + 300);
-	WFIFOW(inter_fd,0)  = 0x3004;
+	WFIFOW(inter_fd, 0) = 0x3004;
 	/* 0x2 = length (set later) */
-	WFIFOL(inter_fd,4)  = sd->status.account_id;
-	WFIFOL(inter_fd,8)  = sd->status.char_id;
-	WFIFOW(inter_fd,12) = 0;/* count */
+	WFIFOL(inter_fd, 4) = sd->status.account_id;
+	WFIFOL(inter_fd, 8) = sd->status.char_id;
+	WFIFOW(inter_fd, 12) = 0; /* count */
 
 	plen = 14;
 
 	iter = db_iterator(sd->regs.vars);
-	for( data = iter->first(iter,&key); iter->exists(iter); data = iter->next(iter,&key) ) {
+	for (data = iter->first(iter, &key); iter->exists(iter); data = iter->next(iter, &key)) {
 		const char *varname = NULL;
 		struct script_reg_state *src = NULL;
 
-		if( data->type != DB_DATA_PTR ) /* its a @number */
+		if (data->type != DB_DATA_PTR) /* its a @number */
 			continue;
 
 		varname = script->get_str(script_getvarid(key.i64));
 
-		if( varname[0] == '@' ) /* @string$ can get here, so we skip */
+		if (varname[0] == '@') /* @string$ can get here, so we skip */
 			continue;
 
 		if (strlen(varname) > SCRIPT_VARNAME_LENGTH) {
@@ -204,29 +203,29 @@ static int intif_saveregistry(struct map_session_data *sd)
 		src = DB->data2ptr(data);
 
 		/* no need! */
-		if( !src->update )
+		if (!src->update)
 			continue;
 
 		src->update = false;
 
-		len = strlen(varname)+1;
+		len = strlen(varname) + 1;
 
-		WFIFOB(inter_fd, plen) = (unsigned char)len;/* won't be higher; the column size is 32 */
+		WFIFOB(inter_fd, plen) = (unsigned char)len; /* won't be higher; the column size is 32 */
 		plen += 1;
 
-		safestrncpy(WFIFOP(inter_fd,plen), varname, len);
+		safestrncpy(WFIFOP(inter_fd, plen), varname, len);
 		plen += len;
 
 		WFIFOL(inter_fd, plen) = script_getvaridx(key.i64);
 		plen += 4;
 
-		if( src->type ) {
+		if (src->type) {
 			struct script_reg_str *p = (struct script_reg_str *)src;
 
 			WFIFOB(inter_fd, plen) = p->value ? 2 : 3;
 			plen += 1;
 
-			if( p->value ) {
+			if (p->value) {
 				len = strlen(p->value);
 
 				WFIFOB(inter_fd, plen) = (unsigned char)len; // Won't be higher; the column size is 255.
@@ -235,35 +234,35 @@ static int intif_saveregistry(struct map_session_data *sd)
 				safestrncpy(WFIFOP(inter_fd, plen), p->value, len + 1);
 				plen += len + 1;
 			} else {
-				script->reg_destroy_single(sd,key.i64,&p->flag);
+				script->reg_destroy_single(sd, key.i64, &p->flag);
 			}
 		} else {
 			struct script_reg_num *p = (struct script_reg_num *)src;
 
-			WFIFOB(inter_fd, plen) =  p->value ? 0 : 1;
+			WFIFOB(inter_fd, plen) = p->value ? 0 : 1;
 			plen += 1;
 
-			if( p->value ) {
+			if (p->value) {
 				WFIFOL(inter_fd, plen) = p->value;
 				plen += 4;
 			} else {
-				script->reg_destroy_single(sd,key.i64,&p->flag);
+				script->reg_destroy_single(sd, key.i64, &p->flag);
 			}
 		}
 
-		WFIFOW(inter_fd,12) += 1;
+		WFIFOW(inter_fd, 12) += 1;
 
-		if( plen > 60000 ) {
+		if (plen > 60000) {
 			WFIFOW(inter_fd, 2) = plen;
 			WFIFOSET(inter_fd, plen);
 
 			/* prepare follow up */
 			WFIFOHEAD(inter_fd, 60000 + 300);
-			WFIFOW(inter_fd,0)  = 0x3004;
+			WFIFOW(inter_fd, 0) = 0x3004;
 			/* 0x2 = length (set later) */
-			WFIFOL(inter_fd,4)  = sd->status.account_id;
-			WFIFOL(inter_fd,8)  = sd->status.char_id;
-			WFIFOW(inter_fd,12) = 0;/* count */
+			WFIFOL(inter_fd, 4) = sd->status.account_id;
+			WFIFOL(inter_fd, 8) = sd->status.char_id;
+			WFIFOW(inter_fd, 12) = 0; /* count */
 
 			plen = 14;
 		}
@@ -279,7 +278,7 @@ static int intif_saveregistry(struct map_session_data *sd)
 	return 0;
 }
 
-//Request the registries for this player.
+// Request the registries for this player.
 static int intif_request_registry(struct map_session_data *sd, int flag)
 {
 	nullpo_ret(sd);
@@ -288,14 +287,14 @@ static int intif_request_registry(struct map_session_data *sd, int flag)
 	if (intif->CheckForCharServer())
 		return 0;
 
-	WFIFOHEAD(inter_fd,6);
-	WFIFOW(inter_fd,0) = 0x3005;
-	WFIFOL(inter_fd,2) = sd->status.account_id;
-	WFIFOL(inter_fd,6) = sd->status.char_id;
-	WFIFOB(inter_fd,10) = (flag&1) ? 1 : 0; //Request Acc Reg 2
-	WFIFOB(inter_fd,11) = (flag&2) ? 1 : 0; //Request Acc Reg
-	WFIFOB(inter_fd,12) = (flag&4) ? 1 : 0; //Request Char Reg
-	WFIFOSET(inter_fd,13);
+	WFIFOHEAD(inter_fd, 6);
+	WFIFOW(inter_fd, 0) = 0x3005;
+	WFIFOL(inter_fd, 2) = sd->status.account_id;
+	WFIFOL(inter_fd, 6) = sd->status.char_id;
+	WFIFOB(inter_fd, 10) = (flag & 1) ? 1 : 0; // Request Acc Reg 2
+	WFIFOB(inter_fd, 11) = (flag & 2) ? 1 : 0; // Request Acc Reg
+	WFIFOB(inter_fd, 12) = (flag & 4) ? 1 : 0; // Request Char Reg
+	WFIFOSET(inter_fd, 13);
 
 	return 0;
 }
@@ -348,7 +347,7 @@ static void intif_parse_account_storage(int fd)
 		return;
 	}
 
-	storage_count = (payload_size/sizeof(struct item));
+	storage_count = (payload_size / sizeof(struct item));
 
 	VECTOR_ENSURE(sd->storage.item, storage_count, 1);
 
@@ -360,7 +359,7 @@ static void intif_parse_account_storage(int fd)
 	}
 
 	sd->storage.received = true; // Mark the storage state as received.
-	sd->storage.save = false; // Initialize the save flag as false.
+	sd->storage.save = false;    // Initialize the save flag as false.
 
 	pc->checkitem(sd); // re-check remaining items.
 }
@@ -399,7 +398,7 @@ static void intif_send_account_storage(struct map_session_data *sd)
 	WFIFOHEAD(inter_fd, len);
 
 	WFIFOW(inter_fd, 0) = 0x3011;
-	WFIFOW(inter_fd, 2) = (uint16) len;
+	WFIFOW(inter_fd, 2) = (uint16)len;
 	WFIFOL(inter_fd, 4) = sd->status.account_id;
 	for (i = 0, c = 0; i < VECTOR_LENGTH(sd->storage.item); i++) {
 		if (VECTOR_INDEX(sd->storage.item, i).nameid == 0)
@@ -445,11 +444,11 @@ static int intif_request_guild_storage(int account_id, int guild_id)
 {
 	if (intif->CheckForCharServer())
 		return 0;
-	WFIFOHEAD(inter_fd,10);
-	WFIFOW(inter_fd,0) = 0x3018;
-	WFIFOL(inter_fd,2) = account_id;
-	WFIFOL(inter_fd,6) = guild_id;
-	WFIFOSET(inter_fd,10);
+	WFIFOHEAD(inter_fd, 10);
+	WFIFOW(inter_fd, 0) = 0x3018;
+	WFIFOL(inter_fd, 2) = account_id;
+	WFIFOL(inter_fd, 6) = guild_id;
+	WFIFOSET(inter_fd, 10);
 	return 0;
 }
 
@@ -479,17 +478,17 @@ static int intif_send_guild_storage(int account_id, struct guild_storage *gstor)
 		return 1;
 
 	nullpo_retr(1, gstor);
-	size = 20 + sizeof(gstor->items.data[0])*gstor->items.capacity;
+	size = 20 + sizeof(gstor->items.data[0]) * gstor->items.capacity;
 
 	WFIFOHEAD(inter_fd, size);
-	WFIFOW(inter_fd,0) = 0x3019;
-	WFIFOW(inter_fd,2) = size;
-	WFIFOL(inter_fd,4) = account_id;
-	WFIFOL(inter_fd,8) = gstor->guild_id;
-	WFIFOL(inter_fd,12) = gstor->items.capacity;
-	WFIFOL(inter_fd,16) = gstor->items.amount;
+	WFIFOW(inter_fd, 0) = 0x3019;
+	WFIFOW(inter_fd, 2) = size;
+	WFIFOL(inter_fd, 4) = account_id;
+	WFIFOL(inter_fd, 8) = gstor->guild_id;
+	WFIFOL(inter_fd, 12) = gstor->items.capacity;
+	WFIFOL(inter_fd, 16) = gstor->items.amount;
 	if (gstor->items.data != NULL)
-		memcpy(WFIFOP(inter_fd, 20), gstor->items.data, sizeof(gstor->items.data[0])*gstor->items.capacity);
+		memcpy(WFIFOP(inter_fd, 20), gstor->items.data, sizeof(gstor->items.data[0]) * gstor->items.capacity);
 	WFIFOSET(inter_fd, size);
 	return 0;
 }
@@ -502,14 +501,14 @@ static int intif_create_party(struct party_member *member, const char *name, int
 	nullpo_ret(member);
 	nullpo_ret(name);
 
-	WFIFOHEAD(inter_fd,64);
-	WFIFOW(inter_fd,0) = 0x3020;
-	WFIFOW(inter_fd,2) = 30+sizeof(struct party_member);
-	memcpy(WFIFOP(inter_fd,4),name, NAME_LENGTH);
-	WFIFOB(inter_fd,28)= item;
-	WFIFOB(inter_fd,29)= item2;
-	memcpy(WFIFOP(inter_fd,30), member, sizeof(struct party_member));
-	WFIFOSET(inter_fd,WFIFOW(inter_fd, 2));
+	WFIFOHEAD(inter_fd, 64);
+	WFIFOW(inter_fd, 0) = 0x3020;
+	WFIFOW(inter_fd, 2) = 30 + sizeof(struct party_member);
+	memcpy(WFIFOP(inter_fd, 4), name, NAME_LENGTH);
+	WFIFOB(inter_fd, 28) = item;
+	WFIFOB(inter_fd, 29) = item2;
+	memcpy(WFIFOP(inter_fd, 30), member, sizeof(struct party_member));
+	WFIFOSET(inter_fd, WFIFOW(inter_fd, 2));
 	return 0;
 }
 
@@ -518,11 +517,11 @@ static int intif_request_partyinfo(int party_id, int char_id)
 {
 	if (intif->CheckForCharServer())
 		return 0;
-	WFIFOHEAD(inter_fd,10);
-	WFIFOW(inter_fd,0) = 0x3021;
-	WFIFOL(inter_fd,2) = party_id;
-	WFIFOL(inter_fd,6) = char_id;
-	WFIFOSET(inter_fd,10);
+	WFIFOHEAD(inter_fd, 10);
+	WFIFOW(inter_fd, 0) = 0x3021;
+	WFIFOL(inter_fd, 2) = party_id;
+	WFIFOL(inter_fd, 6) = char_id;
+	WFIFOSET(inter_fd, 10);
 	return 0;
 }
 
@@ -532,12 +531,12 @@ static int intif_party_addmember(int party_id, struct party_member *member)
 	if (intif->CheckForCharServer())
 		return 0;
 	nullpo_ret(member);
-	WFIFOHEAD(inter_fd,42);
-	WFIFOW(inter_fd,0)=0x3022;
-	WFIFOW(inter_fd,2)=8+sizeof(struct party_member);
-	WFIFOL(inter_fd,4)=party_id;
-	memcpy(WFIFOP(inter_fd,8),member,sizeof(struct party_member));
-	WFIFOSET(inter_fd,WFIFOW(inter_fd, 2));
+	WFIFOHEAD(inter_fd, 42);
+	WFIFOW(inter_fd, 0) = 0x3022;
+	WFIFOW(inter_fd, 2) = 8 + sizeof(struct party_member);
+	WFIFOL(inter_fd, 4) = party_id;
+	memcpy(WFIFOP(inter_fd, 8), member, sizeof(struct party_member));
+	WFIFOSET(inter_fd, WFIFOW(inter_fd, 2));
 	return 1;
 }
 
@@ -546,13 +545,13 @@ static int intif_party_changeoption(int party_id, int account_id, int exp, int i
 {
 	if (intif->CheckForCharServer())
 		return 0;
-	WFIFOHEAD(inter_fd,14);
-	WFIFOW(inter_fd,0)=0x3023;
-	WFIFOL(inter_fd,2)=party_id;
-	WFIFOL(inter_fd,6)=account_id;
-	WFIFOW(inter_fd,10)=exp;
-	WFIFOW(inter_fd,12)=item;
-	WFIFOSET(inter_fd,14);
+	WFIFOHEAD(inter_fd, 14);
+	WFIFOW(inter_fd, 0) = 0x3023;
+	WFIFOL(inter_fd, 2) = party_id;
+	WFIFOL(inter_fd, 6) = account_id;
+	WFIFOW(inter_fd, 10) = exp;
+	WFIFOW(inter_fd, 12) = item;
+	WFIFOSET(inter_fd, 14);
 	return 0;
 }
 
@@ -561,12 +560,12 @@ static int intif_party_leave(int party_id, int account_id, int char_id)
 {
 	if (intif->CheckForCharServer())
 		return 0;
-	WFIFOHEAD(inter_fd,14);
-	WFIFOW(inter_fd,0)=0x3024;
-	WFIFOL(inter_fd,2)=party_id;
-	WFIFOL(inter_fd,6)=account_id;
-	WFIFOL(inter_fd,10)=char_id;
-	WFIFOSET(inter_fd,14);
+	WFIFOHEAD(inter_fd, 14);
+	WFIFOW(inter_fd, 0) = 0x3024;
+	WFIFOL(inter_fd, 2) = party_id;
+	WFIFOL(inter_fd, 6) = account_id;
+	WFIFOL(inter_fd, 10) = char_id;
+	WFIFOSET(inter_fd, 14);
 	return 0;
 }
 
@@ -577,23 +576,23 @@ static int intif_party_changemap(struct map_session_data *sd, int online)
 
 	if (intif->CheckForCharServer())
 		return 0;
-	if(!sd)
+	if (!sd)
 		return 0;
 
-	if( (m=map->mapindex2mapid(sd->mapindex)) >= 0 && map->list[m].instance_id >= 0 )
+	if ((m = map->mapindex2mapid(sd->mapindex)) >= 0 && map->list[m].instance_id >= 0)
 		map_index = map_id2index(map->list[m].instance_src_map);
 	else
 		map_index = sd->mapindex;
 
-	WFIFOHEAD(inter_fd,19);
-	WFIFOW(inter_fd,0)=0x3025;
-	WFIFOL(inter_fd,2)=sd->status.party_id;
-	WFIFOL(inter_fd,6)=sd->status.account_id;
-	WFIFOL(inter_fd,10)=sd->status.char_id;
-	WFIFOW(inter_fd,14)=map_index;
-	WFIFOB(inter_fd,16)=online;
-	WFIFOW(inter_fd,17)=sd->status.base_level;
-	WFIFOSET(inter_fd,19);
+	WFIFOHEAD(inter_fd, 19);
+	WFIFOW(inter_fd, 0) = 0x3025;
+	WFIFOL(inter_fd, 2) = sd->status.party_id;
+	WFIFOL(inter_fd, 6) = sd->status.account_id;
+	WFIFOL(inter_fd, 10) = sd->status.char_id;
+	WFIFOW(inter_fd, 14) = map_index;
+	WFIFOB(inter_fd, 16) = online;
+	WFIFOW(inter_fd, 17) = sd->status.base_level;
+	WFIFOSET(inter_fd, 19);
 	return 1;
 }
 
@@ -602,10 +601,10 @@ static int intif_break_party(int party_id)
 {
 	if (intif->CheckForCharServer())
 		return 0;
-	WFIFOHEAD(inter_fd,6);
-	WFIFOW(inter_fd,0)=0x3026;
-	WFIFOL(inter_fd,2)=party_id;
-	WFIFOSET(inter_fd,6);
+	WFIFOHEAD(inter_fd, 6);
+	WFIFOW(inter_fd, 0) = 0x3026;
+	WFIFOL(inter_fd, 2) = party_id;
+	WFIFOSET(inter_fd, 6);
 	return 0;
 }
 
@@ -614,12 +613,12 @@ static int intif_party_leaderchange(int party_id, int account_id, int char_id)
 {
 	if (intif->CheckForCharServer())
 		return 0;
-	WFIFOHEAD(inter_fd,14);
-	WFIFOW(inter_fd,0)=0x3029;
-	WFIFOL(inter_fd,2)=party_id;
-	WFIFOL(inter_fd,6)=account_id;
-	WFIFOL(inter_fd,10)=char_id;
-	WFIFOSET(inter_fd,14);
+	WFIFOHEAD(inter_fd, 14);
+	WFIFOW(inter_fd, 0) = 0x3029;
+	WFIFOL(inter_fd, 2) = party_id;
+	WFIFOL(inter_fd, 6) = account_id;
+	WFIFOL(inter_fd, 10) = char_id;
+	WFIFOSET(inter_fd, 14);
 	return 0;
 }
 
@@ -683,17 +682,17 @@ static void intif_parse_RecvClanMemberAction(int fd)
 
 	c->member_count = count;
 	switch (c->req_state) {
-	case CLAN_REQ_AFTER_KICK:
-		if (c->req_kick_tid != INVALID_TIMER) {
-			timer->delete(c->req_kick_tid, clan->request_kickoffline);
-			c->req_kick_tid = INVALID_TIMER;
-		}
-		break;
-	case CLAN_REQ_RELOAD:
-		map->foreachpc(clan->rejoin);
-		break;
-	default:
-		break;
+		case CLAN_REQ_AFTER_KICK:
+			if (c->req_kick_tid != INVALID_TIMER) {
+				timer->delete(c->req_kick_tid, clan->request_kickoffline);
+				c->req_kick_tid = INVALID_TIMER;
+			}
+			break;
+		case CLAN_REQ_RELOAD:
+			map->foreachpc(clan->rejoin);
+			break;
+		default:
+			break;
 	}
 	c->req_state = CLAN_REQ_NONE;
 }
@@ -706,13 +705,13 @@ static int intif_guild_create(const char *name, const struct guild_member *maste
 	nullpo_ret(master);
 	nullpo_ret(name);
 
-	WFIFOHEAD(inter_fd,sizeof(struct guild_member)+(8+NAME_LENGTH));
-	WFIFOW(inter_fd,0)=0x3030;
-	WFIFOW(inter_fd,2)=sizeof(struct guild_member)+(8+NAME_LENGTH);
-	WFIFOL(inter_fd,4)=master->account_id;
-	memcpy(WFIFOP(inter_fd,8),name,NAME_LENGTH);
-	memcpy(WFIFOP(inter_fd,8+NAME_LENGTH),master,sizeof(struct guild_member));
-	WFIFOSET(inter_fd,WFIFOW(inter_fd,2));
+	WFIFOHEAD(inter_fd, sizeof(struct guild_member) + (8 + NAME_LENGTH));
+	WFIFOW(inter_fd, 0) = 0x3030;
+	WFIFOW(inter_fd, 2) = sizeof(struct guild_member) + (8 + NAME_LENGTH);
+	WFIFOL(inter_fd, 4) = master->account_id;
+	memcpy(WFIFOP(inter_fd, 8), name, NAME_LENGTH);
+	memcpy(WFIFOP(inter_fd, 8 + NAME_LENGTH), master, sizeof(struct guild_member));
+	WFIFOSET(inter_fd, WFIFOW(inter_fd, 2));
 	return 0;
 }
 
@@ -721,10 +720,10 @@ static int intif_guild_request_info(int guild_id)
 {
 	if (intif->CheckForCharServer())
 		return 0;
-	WFIFOHEAD(inter_fd,6);
-	WFIFOW(inter_fd,0) = 0x3031;
-	WFIFOL(inter_fd,2) = guild_id;
-	WFIFOSET(inter_fd,6);
+	WFIFOHEAD(inter_fd, 6);
+	WFIFOW(inter_fd, 0) = 0x3031;
+	WFIFOL(inter_fd, 2) = guild_id;
+	WFIFOSET(inter_fd, 6);
 	return 0;
 }
 
@@ -734,12 +733,12 @@ static int intif_guild_addmember(int guild_id, struct guild_member *m)
 	if (intif->CheckForCharServer())
 		return 0;
 	nullpo_ret(m);
-	WFIFOHEAD(inter_fd,sizeof(struct guild_member)+8);
-	WFIFOW(inter_fd,0) = 0x3032;
-	WFIFOW(inter_fd,2) = sizeof(struct guild_member)+8;
-	WFIFOL(inter_fd,4) = guild_id;
-	memcpy(WFIFOP(inter_fd,8),m,sizeof(struct guild_member));
-	WFIFOSET(inter_fd,WFIFOW(inter_fd,2));
+	WFIFOHEAD(inter_fd, sizeof(struct guild_member) + 8);
+	WFIFOW(inter_fd, 0) = 0x3032;
+	WFIFOW(inter_fd, 2) = sizeof(struct guild_member) + 8;
+	WFIFOL(inter_fd, 4) = guild_id;
+	memcpy(WFIFOP(inter_fd, 8), m, sizeof(struct guild_member));
+	WFIFOSET(inter_fd, WFIFOW(inter_fd, 2));
 	return 0;
 }
 
@@ -751,11 +750,11 @@ static int intif_guild_change_gm(int guild_id, const char *name, int len)
 	nullpo_ret(name);
 	Assert_ret(len > 0 && len < 32000);
 	WFIFOHEAD(inter_fd, len + 8);
-	WFIFOW(inter_fd, 0)=0x3033;
-	WFIFOW(inter_fd, 2)=len+8;
-	WFIFOL(inter_fd, 4)=guild_id;
-	memcpy(WFIFOP(inter_fd,8),name,len);
-	WFIFOSET(inter_fd,len+8);
+	WFIFOW(inter_fd, 0) = 0x3033;
+	WFIFOW(inter_fd, 2) = len + 8;
+	WFIFOL(inter_fd, 4) = guild_id;
+	memcpy(WFIFOP(inter_fd, 8), name, len);
+	WFIFOSET(inter_fd, len + 8);
 	return 0;
 }
 
@@ -769,14 +768,14 @@ static int intif_guild_leave(int guild_id, int account_id, int char_id, int flag
 	WFIFOW(inter_fd, 0) = 0x3034;
 	WFIFOL(inter_fd, 2) = guild_id;
 	WFIFOL(inter_fd, 6) = account_id;
-	WFIFOL(inter_fd,10) = char_id;
-	WFIFOB(inter_fd,14) = flag;
-	safestrncpy(WFIFOP(inter_fd,15),mes,40);
-	WFIFOSET(inter_fd,55);
+	WFIFOL(inter_fd, 10) = char_id;
+	WFIFOB(inter_fd, 14) = flag;
+	safestrncpy(WFIFOP(inter_fd, 15), mes, 40);
+	WFIFOSET(inter_fd, 55);
 	return 0;
 }
 
-//Update request / Lv online status of the guild members
+// Update request / Lv online status of the guild members
 static int intif_guild_memberinfoshort(int guild_id, int account_id, int char_id, int online, int lv, int class)
 {
 	if (intif->CheckForCharServer())
@@ -785,15 +784,15 @@ static int intif_guild_memberinfoshort(int guild_id, int account_id, int char_id
 	WFIFOW(inter_fd, 0) = 0x3035;
 	WFIFOL(inter_fd, 2) = guild_id;
 	WFIFOL(inter_fd, 6) = account_id;
-	WFIFOL(inter_fd,10) = char_id;
-	WFIFOB(inter_fd,14) = online;
-	WFIFOL(inter_fd,15) = lv;
-	WFIFOL(inter_fd,19) = class;
-	WFIFOSET(inter_fd,23);
+	WFIFOL(inter_fd, 10) = char_id;
+	WFIFOB(inter_fd, 14) = online;
+	WFIFOL(inter_fd, 15) = lv;
+	WFIFOL(inter_fd, 19) = class;
+	WFIFOSET(inter_fd, 23);
 	return 0;
 }
 
-//Guild disbanded notification
+// Guild disbanded notification
 static int intif_guild_break(int guild_id)
 {
 	if (intif->CheckForCharServer())
@@ -801,7 +800,7 @@ static int intif_guild_break(int guild_id)
 	WFIFOHEAD(inter_fd, 6);
 	WFIFOW(inter_fd, 0) = 0x3036;
 	WFIFOL(inter_fd, 2) = guild_id;
-	WFIFOSET(inter_fd,6);
+	WFIFOSET(inter_fd, 6);
 	return 0;
 }
 
@@ -816,12 +815,12 @@ static int intif_guild_change_basicinfo(int guild_id, int type, const void *data
 	nullpo_ret(data);
 	Assert_ret(len >= 0 && len < 32000);
 	WFIFOHEAD(inter_fd, len + 10);
-	WFIFOW(inter_fd,0)=0x3039;
-	WFIFOW(inter_fd,2)=len+10;
-	WFIFOL(inter_fd,4)=guild_id;
-	WFIFOW(inter_fd,8)=type;
-	memcpy(WFIFOP(inter_fd,10),data,len);
-	WFIFOSET(inter_fd,len+10);
+	WFIFOW(inter_fd, 0) = 0x3039;
+	WFIFOW(inter_fd, 2) = len + 10;
+	WFIFOL(inter_fd, 4) = guild_id;
+	WFIFOW(inter_fd, 8) = type;
+	memcpy(WFIFOP(inter_fd, 10), data, len);
+	WFIFOSET(inter_fd, len + 10);
 	return 0;
 }
 
@@ -833,14 +832,14 @@ static int intif_guild_change_memberinfo(int guild_id, int account_id, int char_
 	nullpo_ret(data);
 	Assert_ret(len >= 0 && len < 32000);
 	WFIFOHEAD(inter_fd, len + 18);
-	WFIFOW(inter_fd, 0)=0x303a;
-	WFIFOW(inter_fd, 2)=len+18;
-	WFIFOL(inter_fd, 4)=guild_id;
-	WFIFOL(inter_fd, 8)=account_id;
-	WFIFOL(inter_fd,12)=char_id;
-	WFIFOW(inter_fd,16)=type;
-	memcpy(WFIFOP(inter_fd,18),data,len);
-	WFIFOSET(inter_fd,len+18);
+	WFIFOW(inter_fd, 0) = 0x303a;
+	WFIFOW(inter_fd, 2) = len + 18;
+	WFIFOL(inter_fd, 4) = guild_id;
+	WFIFOL(inter_fd, 8) = account_id;
+	WFIFOL(inter_fd, 12) = char_id;
+	WFIFOW(inter_fd, 16) = type;
+	memcpy(WFIFOP(inter_fd, 18), data, len);
+	WFIFOSET(inter_fd, len + 18);
 	return 0;
 }
 
@@ -858,25 +857,25 @@ static bool intif_guild_position(int guild_id, int idx, struct guild_position *p
 		return false;
 	nullpo_ret(p);
 
-	WFIFOHEAD(inter_fd, sizeof(struct guild_position)+12);
-	WFIFOW(inter_fd,0)=0x303b;
-	WFIFOW(inter_fd,2)=sizeof(struct guild_position)+12;
-	WFIFOL(inter_fd,4)=guild_id;
-	WFIFOL(inter_fd,8)=idx;
-	memcpy(WFIFOP(inter_fd,12),p,sizeof(struct guild_position));
-	WFIFOSET(inter_fd,WFIFOW(inter_fd,2));
+	WFIFOHEAD(inter_fd, sizeof(struct guild_position) + 12);
+	WFIFOW(inter_fd, 0) = 0x303b;
+	WFIFOW(inter_fd, 2) = sizeof(struct guild_position) + 12;
+	WFIFOL(inter_fd, 4) = guild_id;
+	WFIFOL(inter_fd, 8) = idx;
+	memcpy(WFIFOP(inter_fd, 12), p, sizeof(struct guild_position));
+	WFIFOSET(inter_fd, WFIFOW(inter_fd, 2));
 	return true;
 }
 
 // Request an update of Guildskill skill_id
 static int intif_guild_skillup(int guild_id, uint16 skill_id, int account_id, int max)
 {
-	if( intif->CheckForCharServer() )
+	if (intif->CheckForCharServer())
 		return 0;
 	WFIFOHEAD(inter_fd, 18);
-	WFIFOW(inter_fd, 0)  = 0x303c;
-	WFIFOL(inter_fd, 2)  = guild_id;
-	WFIFOL(inter_fd, 6)  = skill_id;
+	WFIFOW(inter_fd, 0) = 0x303c;
+	WFIFOL(inter_fd, 2) = guild_id;
+	WFIFOL(inter_fd, 6) = skill_id;
 	WFIFOL(inter_fd, 10) = account_id;
 	WFIFOL(inter_fd, 14) = max;
 	WFIFOSET(inter_fd, 18);
@@ -888,14 +887,14 @@ static int intif_guild_alliance(int guild_id1, int guild_id2, int account_id1, i
 {
 	if (intif->CheckForCharServer())
 		return 0;
-	WFIFOHEAD(inter_fd,19);
-	WFIFOW(inter_fd, 0)=0x303d;
-	WFIFOL(inter_fd, 2)=guild_id1;
-	WFIFOL(inter_fd, 6)=guild_id2;
-	WFIFOL(inter_fd,10)=account_id1;
-	WFIFOL(inter_fd,14)=account_id2;
-	WFIFOB(inter_fd,18)=flag;
-	WFIFOSET(inter_fd,19);
+	WFIFOHEAD(inter_fd, 19);
+	WFIFOW(inter_fd, 0) = 0x303d;
+	WFIFOL(inter_fd, 2) = guild_id1;
+	WFIFOL(inter_fd, 6) = guild_id2;
+	WFIFOL(inter_fd, 10) = account_id1;
+	WFIFOL(inter_fd, 14) = account_id2;
+	WFIFOB(inter_fd, 18) = flag;
+	WFIFOSET(inter_fd, 19);
 	return 0;
 }
 
@@ -906,12 +905,12 @@ static int intif_guild_notice(int guild_id, const char *mes1, const char *mes2)
 		return 0;
 	nullpo_ret(mes1);
 	nullpo_ret(mes2);
-	WFIFOHEAD(inter_fd,186);
-	WFIFOW(inter_fd,0)=0x303e;
-	WFIFOL(inter_fd,2)=guild_id;
+	WFIFOHEAD(inter_fd, 186);
+	WFIFOW(inter_fd, 0) = 0x303e;
+	WFIFOL(inter_fd, 2) = guild_id;
 	safestrncpy(WFIFOP(inter_fd, 6), mes1, MAX_GUILDMES1);
 	safestrncpy(WFIFOP(inter_fd, 66), mes2, MAX_GUILDMES2);
-	WFIFOSET(inter_fd,186);
+	WFIFOSET(inter_fd, 186);
 	return 0;
 }
 
@@ -925,7 +924,8 @@ static int intif_guild_emblem(int guild_id, int data_len, const char *data)
 	if (guild_id <= 0 || data_len < 0)
 		return 0;
 
-	WFIFO_CHUNKED_INIT(p, inter_fd, HEADER_MAPCHAR_GUILD_EMBLEM, PACKET_MAPCHAR_GUILD_EMBLEM, data, data_len) {
+	WFIFO_CHUNKED_INIT(p, inter_fd, HEADER_MAPCHAR_GUILD_EMBLEM, PACKET_MAPCHAR_GUILD_EMBLEM, data, data_len)
+	{
 		WFIFO_CHUNKED_BLOCK_START(p);
 		p->guild_id = guild_id;
 		p->unused = 0;
@@ -962,12 +962,12 @@ static int intif_guild_castle_datasave(int castle_id, int index, int value)
 {
 	if (intif->CheckForCharServer())
 		return 0;
-	WFIFOHEAD(inter_fd,9);
-	WFIFOW(inter_fd,0)=0x3041;
-	WFIFOW(inter_fd,2)=castle_id;
-	WFIFOB(inter_fd,4)=index;
-	WFIFOL(inter_fd,5)=value;
-	WFIFOSET(inter_fd,9);
+	WFIFOHEAD(inter_fd, 9);
+	WFIFOW(inter_fd, 0) = 0x3041;
+	WFIFOW(inter_fd, 2) = castle_id;
+	WFIFOB(inter_fd, 4) = index;
+	WFIFOL(inter_fd, 5) = value;
+	WFIFOSET(inter_fd, 9);
 	return 1;
 }
 
@@ -980,12 +980,12 @@ static int intif_homunculus_create(int account_id, struct s_homunculus *sh)
 	if (intif->CheckForCharServer())
 		return 0;
 	nullpo_ret(sh);
-	WFIFOHEAD(inter_fd, sizeof(struct s_homunculus)+8);
-	WFIFOW(inter_fd,0) = 0x3090;
-	WFIFOW(inter_fd,2) = sizeof(struct s_homunculus)+8;
-	WFIFOL(inter_fd,4) = account_id;
-	memcpy(WFIFOP(inter_fd,8),sh,sizeof(struct s_homunculus));
-	WFIFOSET(inter_fd, WFIFOW(inter_fd,2));
+	WFIFOHEAD(inter_fd, sizeof(struct s_homunculus) + 8);
+	WFIFOW(inter_fd, 0) = 0x3090;
+	WFIFOW(inter_fd, 2) = sizeof(struct s_homunculus) + 8;
+	WFIFOL(inter_fd, 4) = account_id;
+	memcpy(WFIFOP(inter_fd, 8), sh, sizeof(struct s_homunculus));
+	WFIFOSET(inter_fd, WFIFOW(inter_fd, 2));
 	return 0;
 }
 
@@ -994,9 +994,9 @@ static bool intif_homunculus_requestload(int account_id, int homun_id)
 	if (intif->CheckForCharServer())
 		return false;
 	WFIFOHEAD(inter_fd, 10);
-	WFIFOW(inter_fd,0) = 0x3091;
-	WFIFOL(inter_fd,2) = account_id;
-	WFIFOL(inter_fd,6) = homun_id;
+	WFIFOW(inter_fd, 0) = 0x3091;
+	WFIFOL(inter_fd, 2) = account_id;
+	WFIFOL(inter_fd, 6) = homun_id;
 	WFIFOSET(inter_fd, 10);
 	return true;
 }
@@ -1006,14 +1006,13 @@ static int intif_homunculus_requestsave(int account_id, struct s_homunculus *sh)
 	if (intif->CheckForCharServer())
 		return 0;
 	nullpo_ret(sh);
-	WFIFOHEAD(inter_fd, sizeof(struct s_homunculus)+8);
-	WFIFOW(inter_fd,0) = 0x3092;
-	WFIFOW(inter_fd,2) = sizeof(struct s_homunculus)+8;
-	WFIFOL(inter_fd,4) = account_id;
-	memcpy(WFIFOP(inter_fd,8),sh,sizeof(struct s_homunculus));
-	WFIFOSET(inter_fd, WFIFOW(inter_fd,2));
+	WFIFOHEAD(inter_fd, sizeof(struct s_homunculus) + 8);
+	WFIFOW(inter_fd, 0) = 0x3092;
+	WFIFOW(inter_fd, 2) = sizeof(struct s_homunculus) + 8;
+	WFIFOL(inter_fd, 4) = account_id;
+	memcpy(WFIFOP(inter_fd, 8), sh, sizeof(struct s_homunculus));
+	WFIFOSET(inter_fd, WFIFOW(inter_fd, 2));
 	return 0;
-
 }
 
 static int intif_homunculus_requestdelete(int homun_id)
@@ -1022,10 +1021,9 @@ static int intif_homunculus_requestdelete(int homun_id)
 		return 0;
 	WFIFOHEAD(inter_fd, 6);
 	WFIFOW(inter_fd, 0) = 0x3093;
-	WFIFOL(inter_fd,2) = homun_id;
-	WFIFOSET(inter_fd,6);
+	WFIFOL(inter_fd, 2) = homun_id;
+	WFIFOSET(inter_fd, 6);
 	return 0;
-
 }
 
 //-----------------------------------------------------------------
@@ -1036,47 +1034,47 @@ static void intif_parse_Registers(int fd)
 {
 	int flag;
 	struct map_session_data *sd;
-	int account_id = RFIFOL(fd,4), char_id = RFIFOL(fd,8);
+	int account_id = RFIFOL(fd, 4), char_id = RFIFOL(fd, 8);
 	struct auth_node *node = chrif->auth_check(account_id, char_id, ST_LOGIN);
 	char type = RFIFOB(fd, 13);
 
 	if (node)
 		sd = node->sd;
-	else { //Normally registries should arrive for in log-in chars.
+	else { // Normally registries should arrive for in log-in chars.
 		sd = map->id2sd(account_id);
 	}
 
 	if (!sd || sd->status.char_id != char_id) {
-		return; //Character registry from another character.
+		return; // Character registry from another character.
 	}
 
-	flag = ( sd->vars_received&PRL_ACCG && sd->vars_received&PRL_ACCL && sd->vars_received&PRL_CHAR ) ? 0 : 1;
+	flag = (sd->vars_received & PRL_ACCG && sd->vars_received & PRL_ACCL && sd->vars_received & PRL_CHAR) ? 0 : 1;
 
-	switch (RFIFOB(fd,12)) {
-		case 3: //Character Registry
+	switch (RFIFOB(fd, 12)) {
+		case 3: // Character Registry
 			sd->vars_received |= PRL_CHAR;
 			break;
-		case 2: //Account Registry
+		case 2: // Account Registry
 			sd->vars_received |= PRL_ACCL;
 			break;
-		case 1: //Account2 Registry
+		case 1: // Account2 Registry
 			sd->vars_received |= PRL_ACCG;
 			break;
 		case 0:
 			break;
 		default:
-			ShowError("intif_parse_Registers: Unrecognized type %d\n",RFIFOB(fd,12));
+			ShowError("intif_parse_Registers: Unrecognized type %d\n", RFIFOB(fd, 12));
 			return;
 	}
 	/* have it not complain about insertion of vars before loading, and not set those vars as new or modified */
 	pc->reg_load = true;
 
 	if (RFIFOW(fd, 14) != 0) {
-		char key[SCRIPT_VARNAME_LENGTH+1];
+		char key[SCRIPT_VARNAME_LENGTH + 1];
 		unsigned int index;
 		int max = RFIFOW(fd, 14), cursor = 16, i;
 
-		script->parser_current_file = "loading char/acc variables";//for script_add_str to refer to here in case errors occur
+		script->parser_current_file = "loading char/acc variables"; // for script_add_str to refer to here in case errors occur
 
 		/**
 		 * Vessel!char_reg_num_db
@@ -1098,14 +1096,14 @@ static void intif_parse_Registers(int fd)
 				safestrncpy(sval, RFIFOP(fd, cursor + 1), min((int)sizeof(sval), len + 1));
 				cursor += len + 2;
 
-				script->set_reg(NULL,sd,reference_uid(script->add_variable(key), index), key, sval, NULL);
+				script->set_reg(NULL, sd, reference_uid(script->add_variable(key), index), key, sval, NULL);
 			}
-		/**
-		 * Vessel!
-		 *
-		 * int type
-		 * { keyLength(B), key(<keyLength>), index(L), value(L) }
-		 **/
+			/**
+			 * Vessel!
+			 *
+			 * int type
+			 * { keyLength(B), key(<keyLength>), index(L), value(L) }
+			 **/
 		} else {
 			for (i = 0; i < max; i++) {
 				int ival;
@@ -1120,17 +1118,17 @@ static void intif_parse_Registers(int fd)
 				ival = RFIFOL(fd, cursor);
 				cursor += 4;
 
-				script->set_reg(NULL,sd,reference_uid(script->add_variable(key), index), key, (const void *)h64BPTRSIZE(ival), NULL);
+				script->set_reg(NULL, sd, reference_uid(script->add_variable(key), index), key, (const void *)h64BPTRSIZE(ival), NULL);
 			}
 		}
-		script->parser_current_file = NULL;/* reset */
+		script->parser_current_file = NULL; /* reset */
 	}
 
 	/* flag it back */
 	pc->reg_load = false;
 
-	if (flag && sd->vars_received&PRL_ACCG && sd->vars_received&PRL_ACCL && sd->vars_received&PRL_CHAR)
-		pc->reg_received(sd); //Received all registry values, execute init scripts and what-not. [Skotlex]
+	if (flag && sd->vars_received & PRL_ACCG && sd->vars_received & PRL_ACCL && sd->vars_received & PRL_CHAR)
+		pc->reg_received(sd); // Received all registry values, execute init scripts and what-not. [Skotlex]
 }
 
 /**
@@ -1156,23 +1154,22 @@ static void intif_parse_LoadGuildStorage(int fd)
 	if (guild_id <= 0)
 		return;
 
-	flag = RFIFOB(fd,12);
+	flag = RFIFOB(fd, 12);
 	storage_capacity = RFIFOL(fd, 13);
 	storage_amount = RFIFOL(fd, 17);
 	if (storage_capacity < storage_amount)
 		storage_capacity = storage_amount;
 
-	expected_size = 21 + (sizeof(gstor->items.data[0])*storage_capacity);
-	if (RFIFOW(fd,2) != expected_size) {
-		ShowError("intif_parse_LoadGuildStorage: data size mismatch! Expected: %d Received: %d\n",
-			expected_size, RFIFOW(fd,2));
+	expected_size = 21 + (sizeof(gstor->items.data[0]) * storage_capacity);
+	if (RFIFOW(fd, 2) != expected_size) {
+		ShowError("intif_parse_LoadGuildStorage: data size mismatch! Expected: %d Received: %d\n", expected_size, RFIFOW(fd, 2));
 		return;
 	}
 
 	sd = map->id2sd(account_id);
 	// When flag is true a player should always be attached, otherwise it's not possible
 	// to open the storage later
-	if ((flag&1) == 1 && sd == NULL) // Player logged off/invalid data
+	if ((flag & 1) == 1 && sd == NULL) // Player logged off/invalid data
 		return;
 
 	gstor = gstorage->ensure(guild_id);
@@ -1182,14 +1179,12 @@ static void intif_parse_LoadGuildStorage(int fd)
 	}
 	if (gstor->in_use) {
 		// Already open.. lets ignore this update
-		ShowWarning("intif_parse_LoadGuildStorage: storage received for a client was already opened (User AID %d: CID %d)\n",
-			flag?sd->status.account_id:0, flag?sd->status.char_id:0);
+		ShowWarning("intif_parse_LoadGuildStorage: storage received for a client was already opened (User AID %d: CID %d)\n", flag ? sd->status.account_id : 0, flag ? sd->status.char_id : 0);
 		return;
 	}
 
 	if (gstor->dirty) { // Already have storage, and it has been modified and not saved yet! Exploit! [Skotlex]
-		ShowWarning("intif_parse_LoadGuildStorage: received storage for an already modified non-saved storage! (User AID %d: CID%d)\n",
-			flag?sd->status.account_id:0, flag?sd->status.char_id:0);
+		ShowWarning("intif_parse_LoadGuildStorage: received storage for an already modified non-saved storage! (User AID %d: CID%d)\n", flag ? sd->status.account_id : 0, flag ? sd->status.char_id : 0);
 		return;
 	}
 
@@ -1204,10 +1199,10 @@ static void intif_parse_LoadGuildStorage(int fd)
 	}
 	gstor->items.data = aCalloc(gstor->items.capacity, sizeof(gstor->items.data[0]));
 	if (storage_capacity > 0) {
-		memcpy(gstor->items.data, RFIFOP(fd, 21), sizeof(gstor->items.data[0])*storage_capacity);
+		memcpy(gstor->items.data, RFIFOP(fd, 21), sizeof(gstor->items.data[0]) * storage_capacity);
 	}
 
-	if ((flag&1) == 1)
+	if ((flag & 1) == 1)
 		gstorage->open(sd);
 
 	return;
@@ -1216,70 +1211,69 @@ static void intif_parse_LoadGuildStorage(int fd)
 // ACK guild_storage saved
 static void intif_parse_SaveGuildStorage(int fd)
 {
-	gstorage->saved(/*RFIFOL(fd,2), */RFIFOL(fd,6));
+	gstorage->saved(/*RFIFOL(fd,2), */ RFIFOL(fd, 6));
 }
 
 // ACK party creation
 static void intif_parse_PartyCreated(int fd)
 {
-	if(battle_config.etc_log)
-		ShowInfo("intif: party created by account %u\n\n", RFIFOL(fd,2));
-	party->created(RFIFOL(fd,2), RFIFOL(fd,6),RFIFOB(fd,10),RFIFOL(fd,11), RFIFOP(fd,15));
+	if (battle_config.etc_log)
+		ShowInfo("intif: party created by account %u\n\n", RFIFOL(fd, 2));
+	party->created(RFIFOL(fd, 2), RFIFOL(fd, 6), RFIFOB(fd, 10), RFIFOL(fd, 11), RFIFOP(fd, 15));
 }
 
 // Receive party info
 static void intif_parse_PartyInfo(int fd)
 {
-	if (RFIFOW(fd,2) == 12) {
-		ShowWarning("intif: party noinfo (char_id=%u party_id=%u)\n", RFIFOL(fd,4), RFIFOL(fd,8));
-		party->recv_noinfo(RFIFOL(fd,8), RFIFOL(fd,4));
+	if (RFIFOW(fd, 2) == 12) {
+		ShowWarning("intif: party noinfo (char_id=%u party_id=%u)\n", RFIFOL(fd, 4), RFIFOL(fd, 8));
+		party->recv_noinfo(RFIFOL(fd, 8), RFIFOL(fd, 4));
 		return;
 	}
 
-	if (RFIFOW(fd,2) != 8+sizeof(struct party))
-		ShowError("intif: party info: data size mismatch (char_id=%u party_id=%u packet_len=%d expected_len=%"PRIuS")\n",
-		          RFIFOL(fd,4), RFIFOL(fd,8), RFIFOW(fd,2), 8+sizeof(struct party));
-	party->recv_info(RFIFOP(fd,8), RFIFOL(fd,4));
+	if (RFIFOW(fd, 2) != 8 + sizeof(struct party))
+		ShowError("intif: party info: data size mismatch (char_id=%u party_id=%u packet_len=%d expected_len=%" PRIuS ")\n", RFIFOL(fd, 4), RFIFOL(fd, 8), RFIFOW(fd, 2), 8 + sizeof(struct party));
+	party->recv_info(RFIFOP(fd, 8), RFIFOL(fd, 4));
 }
 
 // ACK adding party member
 static void intif_parse_PartyMemberAdded(int fd)
 {
-	if(battle_config.etc_log)
-		ShowInfo("intif: party member added Party (%u), Account(%u), Char(%u)\n", RFIFOL(fd,2), RFIFOL(fd,6), RFIFOL(fd,10));
-	party->member_added(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10), RFIFOB(fd, 14));
+	if (battle_config.etc_log)
+		ShowInfo("intif: party member added Party (%u), Account(%u), Char(%u)\n", RFIFOL(fd, 2), RFIFOL(fd, 6), RFIFOL(fd, 10));
+	party->member_added(RFIFOL(fd, 2), RFIFOL(fd, 6), RFIFOL(fd, 10), RFIFOB(fd, 14));
 }
 
 // ACK changing party option
 static void intif_parse_PartyOptionChanged(int fd)
 {
-	party->optionchanged(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOW(fd,10),RFIFOW(fd,12),RFIFOB(fd,14));
+	party->optionchanged(RFIFOL(fd, 2), RFIFOL(fd, 6), RFIFOW(fd, 10), RFIFOW(fd, 12), RFIFOB(fd, 14));
 }
 
 // ACK member leaving party
 static void intif_parse_PartyMemberWithdraw(int fd)
 {
-	if(battle_config.etc_log)
-		ShowInfo("intif: party member withdraw: Party(%u), Account(%u), Char(%u)\n", RFIFOL(fd,2), RFIFOL(fd,6), RFIFOL(fd,10));
-	party->member_withdraw(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10));
+	if (battle_config.etc_log)
+		ShowInfo("intif: party member withdraw: Party(%u), Account(%u), Char(%u)\n", RFIFOL(fd, 2), RFIFOL(fd, 6), RFIFOL(fd, 10));
+	party->member_withdraw(RFIFOL(fd, 2), RFIFOL(fd, 6), RFIFOL(fd, 10));
 }
 
 // ACK party break
 static void intif_parse_PartyBroken(int fd)
 {
-	party->broken(RFIFOL(fd,2));
+	party->broken(RFIFOL(fd, 2));
 }
 
 // ACK party on new map
 static void intif_parse_PartyMove(int fd)
 {
-	party->recv_movemap(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOW(fd,14),RFIFOB(fd,16),RFIFOW(fd,17));
+	party->recv_movemap(RFIFOL(fd, 2), RFIFOL(fd, 6), RFIFOL(fd, 10), RFIFOW(fd, 14), RFIFOB(fd, 16), RFIFOW(fd, 17));
 }
 
 // ACK guild creation
 static void intif_parse_GuildCreated(int fd)
 {
-	guild->created(RFIFOL(fd,2),RFIFOL(fd,6));
+	guild->created(RFIFOL(fd, 2), RFIFOL(fd, 6));
 }
 
 // ACK guild infos
@@ -1289,7 +1283,8 @@ static void intif_parse_GuildInfoEmblem(int fd)
 
 	RFIFO_CHUNKED_INIT(p, p->packetLength - sizeof(struct PACKET_CHARMAP_GUILD_INFO_EMBLEM), intif->emblem_tmp);
 
-	RFIFO_CHUNKED_ERROR(p) {
+	RFIFO_CHUNKED_ERROR(p)
+	{
 		intif->emblem_tmp_done = false;
 		intif->emblem_tmp_guild_id = 0;
 		intif->emblem_tmp_emblem_id = 0;
@@ -1297,7 +1292,8 @@ static void intif_parse_GuildInfoEmblem(int fd)
 		return;
 	}
 
-	RFIFO_CHUNKED_COMPLETE(p) {
+	RFIFO_CHUNKED_COMPLETE(p)
+	{
 		intif->emblem_tmp_done = true;
 		intif->emblem_tmp_guild_id = p->guild_id;
 		intif->emblem_tmp_emblem_id = p->emblem_id;
@@ -1315,11 +1311,8 @@ static void intif_parse_GuildInfo(int fd)
 	}
 	struct PACKET_CHARMAP_GUILD_INFO *p = RFIFOP(fd, 0);
 	if (p->packetLength != sizeof(struct PACKET_CHARMAP_GUILD_INFO))
-		ShowError("intif: guild info: data size mismatch - Gid: %d recv size: %d Expected size: %"PRIuS"\n",
-		          p->g.guild_id, p->packetLength, sizeof(struct PACKET_CHARMAP_GUILD_INFO));
-	if (intif->emblem_tmp_done == false ||
-	    intif->emblem_tmp_guild_id != p->g.guild_id ||
-	    intif->emblem_tmp_emblem_id != p->g.emblem_id) {
+		ShowError("intif: guild info: data size mismatch - Gid: %d recv size: %d Expected size: %" PRIuS "\n", p->g.guild_id, p->packetLength, sizeof(struct PACKET_CHARMAP_GUILD_INFO));
+	if (intif->emblem_tmp_done == false || intif->emblem_tmp_guild_id != p->g.guild_id || intif->emblem_tmp_emblem_id != p->g.emblem_id) {
 		guild->recv_info(&p->g, NULL);
 	} else {
 		guild->recv_info(&p->g, &intif->emblem_tmp);
@@ -1333,49 +1326,55 @@ static void intif_parse_GuildInfo(int fd)
 // ACK adding guild member
 static void intif_parse_GuildMemberAdded(int fd)
 {
-	if(battle_config.etc_log)
-		ShowInfo("intif: guild member added %u %u %u %d\n", RFIFOL(fd,2), RFIFOL(fd,6), RFIFOL(fd,10), RFIFOB(fd,14));
-	guild->member_added(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOB(fd,14));
+	if (battle_config.etc_log)
+		ShowInfo("intif: guild member added %u %u %u %d\n", RFIFOL(fd, 2), RFIFOL(fd, 6), RFIFOL(fd, 10), RFIFOB(fd, 14));
+	guild->member_added(RFIFOL(fd, 2), RFIFOL(fd, 6), RFIFOL(fd, 10), RFIFOB(fd, 14));
 }
 
 // ACK member leaving guild
 static void intif_parse_GuildMemberWithdraw(int fd)
 {
-	guild->member_withdraw(RFIFOL(fd,2), RFIFOL(fd,6), RFIFOL(fd,10), RFIFOB(fd,14), RFIFOP(fd,55), RFIFOP(fd,15));
+	guild->member_withdraw(RFIFOL(fd, 2), RFIFOL(fd, 6), RFIFOL(fd, 10), RFIFOB(fd, 14), RFIFOP(fd, 55), RFIFOP(fd, 15));
 }
 
 // ACK guild member basic info
 static void intif_parse_GuildMemberInfoShort(int fd)
 {
-	guild->recv_memberinfoshort(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOB(fd,14),RFIFOW(fd,15),RFIFOL(fd,17),RFIFOL(fd,21));
+	guild->recv_memberinfoshort(RFIFOL(fd, 2), RFIFOL(fd, 6), RFIFOL(fd, 10), RFIFOB(fd, 14), RFIFOW(fd, 15), RFIFOL(fd, 17), RFIFOL(fd, 21));
 }
 
 // ACK guild break
 static void intif_parse_GuildBroken(int fd)
 {
-	guild->broken(RFIFOL(fd,2),RFIFOB(fd,6));
+	guild->broken(RFIFOL(fd, 2), RFIFOB(fd, 6));
 }
 
 // basic guild info change notice
 // 0x3839 <packet len>.w <guild id>.l <type>.w <data>.?b
 static void intif_parse_GuildBasicInfoChanged(int fd)
 {
-	//int len = RFIFOW(fd,2) - 10;
-	int guild_id = RFIFOL(fd,4);
+	// int len = RFIFOW(fd,2) - 10;
+	int guild_id = RFIFOL(fd, 4);
 	const enum guild_basic_info type = RFIFOW(fd, 8);
-	//void* data = RFIFOP(fd,10);
+	// void* data = RFIFOP(fd,10);
 
-	struct guild* g = guild->search(guild_id);
-	if( g == NULL )
+	struct guild *g = guild->search(guild_id);
+	if (g == NULL)
 		return;
 
-	switch(type) {
-		case GBI_EXP:        g->exp = RFIFOQ(fd,10); break;
-		case GBI_GUILDLV:    g->guild_lv = RFIFOW(fd,10); break;
-		case GBI_SKILLPOINT: g->skill_point = RFIFOL(fd,10); break;
+	switch (type) {
+		case GBI_EXP:
+			g->exp = RFIFOQ(fd, 10);
+			break;
+		case GBI_GUILDLV:
+			g->guild_lv = RFIFOW(fd, 10);
+			break;
+		case GBI_SKILLPOINT:
+			g->skill_point = RFIFOL(fd, 10);
+			break;
 		case GBI_SKILLLV: {
 			int idx, max;
-			const struct guild_skill *p_gs = RFIFOP(fd,10);
+			const struct guild_skill *p_gs = RFIFOP(fd, 10);
 			struct guild_skill *gs = NULL;
 
 			idx = p_gs->id - GD_SKILLBASE;
@@ -1397,60 +1396,74 @@ static void intif_parse_GuildBasicInfoChanged(int fd)
 // 0x383a <packet len>.w <guild id>.l <account id>.l <char id>.l <type>.w <data>.?b
 static void intif_parse_GuildMemberInfoChanged(int fd)
 {
-	//int len = RFIFOW(fd,2) - 18;
-	int guild_id = RFIFOL(fd,4);
-	int account_id = RFIFOL(fd,8);
-	int char_id = RFIFOL(fd,12);
+	// int len = RFIFOW(fd,2) - 18;
+	int guild_id = RFIFOL(fd, 4);
+	int account_id = RFIFOL(fd, 8);
+	int char_id = RFIFOL(fd, 12);
 	enum guild_member_info type = RFIFOW(fd, 16);
-	//void* data = RFIFOP(fd,18);
+	// void* data = RFIFOP(fd,18);
 
-	struct guild* g;
+	struct guild *g;
 	int idx;
 
 	g = guild->search(guild_id);
-	if( g == NULL )
+	if (g == NULL)
 		return;
 
-	idx = guild->getindex(g,account_id,char_id);
+	idx = guild->getindex(g, account_id, char_id);
 	if (idx == INDEX_NOT_FOUND)
 		return;
 
-	switch( type ) {
-		case GMI_POSITION:   g->member[idx].position   = RFIFOW(fd,18); guild->memberposition_changed(g,idx,RFIFOW(fd,18)); break;
-		case GMI_EXP:        g->member[idx].exp        = RFIFOQ(fd,18); break;
-		case GMI_HAIR:       g->member[idx].hair       = RFIFOW(fd,18); break;
-		case GMI_HAIR_COLOR: g->member[idx].hair_color = RFIFOW(fd,18); break;
-		case GMI_GENDER:     g->member[idx].gender     = RFIFOW(fd,18); break;
-		case GMI_CLASS:      g->member[idx].class      = RFIFOW(fd,18); break;
-		case GMI_LEVEL:      g->member[idx].lv         = RFIFOW(fd,18); break;
+	switch (type) {
+		case GMI_POSITION:
+			g->member[idx].position = RFIFOW(fd, 18);
+			guild->memberposition_changed(g, idx, RFIFOW(fd, 18));
+			break;
+		case GMI_EXP:
+			g->member[idx].exp = RFIFOQ(fd, 18);
+			break;
+		case GMI_HAIR:
+			g->member[idx].hair = RFIFOW(fd, 18);
+			break;
+		case GMI_HAIR_COLOR:
+			g->member[idx].hair_color = RFIFOW(fd, 18);
+			break;
+		case GMI_GENDER:
+			g->member[idx].gender = RFIFOW(fd, 18);
+			break;
+		case GMI_CLASS:
+			g->member[idx].class = RFIFOW(fd, 18);
+			break;
+		case GMI_LEVEL:
+			g->member[idx].lv = RFIFOW(fd, 18);
+			break;
 	}
 }
 
 // ACK change of guild title
 static void intif_parse_GuildPosition(int fd)
 {
-	if (RFIFOW(fd,2)!=sizeof(struct guild_position)+12)
-		ShowError("intif: guild info: data size mismatch (%u) %d != %"PRIuS"\n",
-		          RFIFOL(fd,4), RFIFOW(fd,2), sizeof(struct guild_position) + 12);
-	guild->position_changed(RFIFOL(fd,4), RFIFOL(fd,8), RFIFOP(fd,12));
+	if (RFIFOW(fd, 2) != sizeof(struct guild_position) + 12)
+		ShowError("intif: guild info: data size mismatch (%u) %d != %" PRIuS "\n", RFIFOL(fd, 4), RFIFOW(fd, 2), sizeof(struct guild_position) + 12);
+	guild->position_changed(RFIFOL(fd, 4), RFIFOL(fd, 8), RFIFOP(fd, 12));
 }
 
 // ACK change of guild skill update
 static void intif_parse_GuildSkillUp(int fd)
 {
-	guild->skillupack(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10));
+	guild->skillupack(RFIFOL(fd, 2), RFIFOL(fd, 6), RFIFOL(fd, 10));
 }
 
 // ACK change of guild relationship
 static void intif_parse_GuildAlliance(int fd)
 {
-	guild->allianceack(RFIFOL(fd,2), RFIFOL(fd,6), RFIFOL(fd,10), RFIFOL(fd,14), RFIFOB(fd,18), RFIFOP(fd,19), RFIFOP(fd,43));
+	guild->allianceack(RFIFOL(fd, 2), RFIFOL(fd, 6), RFIFOL(fd, 10), RFIFOL(fd, 14), RFIFOB(fd, 18), RFIFOP(fd, 19), RFIFOP(fd, 43));
 }
 
 // ACK change of guild notice
 static void intif_parse_GuildNotice(int fd)
 {
-	guild->notice_changed(RFIFOL(fd,2), RFIFOP(fd,6), RFIFOP(fd,66));
+	guild->notice_changed(RFIFOL(fd, 2), RFIFOP(fd, 6), RFIFOP(fd, 66));
 }
 
 // ACK change of guild emblem
@@ -1465,16 +1478,15 @@ static void intif_parse_GuildEmblem(int fd)
 
 	RFIFO_CHUNKED_INIT(p, p->packetLength - sizeof(struct PACKET_CHARMAP_GUILD_EMBLEM), intif->emblem_tmp);
 
-	RFIFO_CHUNKED_ERROR(p) {
+	RFIFO_CHUNKED_ERROR(p)
+	{
 		fifo_chunk_buf_clear(intif->emblem_tmp);
 		return;
 	}
 
-	RFIFO_CHUNKED_COMPLETE(p) {
-		guild->emblem_changed(intif->emblem_tmp.data_size,
-			p->guild_id,
-			p->emblem_id,
-			intif->emblem_tmp.data);
+	RFIFO_CHUNKED_COMPLETE(p)
+	{
+		guild->emblem_changed(intif->emblem_tmp.data_size, p->guild_id, p->emblem_id, intif->emblem_tmp.data);
 		fifo_chunk_buf_clear(intif->emblem_tmp);
 	}
 }
@@ -1482,13 +1494,13 @@ static void intif_parse_GuildEmblem(int fd)
 // Reply guild castle data request
 static void intif_parse_GuildCastleDataLoad(int fd)
 {
-	guild->castledataloadack(RFIFOW(fd,2), RFIFOP(fd,4));
+	guild->castledataloadack(RFIFOW(fd, 2), RFIFOP(fd, 4));
 }
 
 // ACK change of guildmaster
 static void intif_parse_GuildMasterChanged(int fd)
 {
-	guild->gm_changed(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10));
+	guild->gm_changed(RFIFOL(fd, 2), RFIFOL(fd, 6), RFIFOL(fd, 10));
 }
 
 // Request pet creation
@@ -1502,27 +1514,27 @@ static void intif_parse_RecvPetData(int fd)
 {
 	struct s_pet p;
 	int len;
-	len=RFIFOW(fd,2);
-	if (sizeof(struct s_pet) != len-9) {
+	len = RFIFOW(fd, 2);
+	if (sizeof(struct s_pet) != len - 9) {
 		if (battle_config.etc_log)
-			ShowError("intif: pet data: data size mismatch %d != %"PRIuS"\n", len-9, sizeof(struct s_pet));
+			ShowError("intif: pet data: data size mismatch %d != %" PRIuS "\n", len - 9, sizeof(struct s_pet));
 	} else {
-		memcpy(&p,RFIFOP(fd,9),sizeof(struct s_pet));
-		pet->recv_petdata(RFIFOL(fd,4),&p,RFIFOB(fd,8));
+		memcpy(&p, RFIFOP(fd, 9), sizeof(struct s_pet));
+		pet->recv_petdata(RFIFOL(fd, 4), &p, RFIFOB(fd, 8));
 	}
 }
 /* Really? Whats the point, shouldn't be sent when successful then [Ind] */
 // ACK pet save data
 static void intif_parse_SavePetOk(int fd)
 {
-	if(RFIFOB(fd,6) == 1)
+	if (RFIFOB(fd, 6) == 1)
 		ShowError("pet data save failure\n");
 }
 /* Really? Whats the point, shouldn't be sent when successful then [Ind] */
 // ACK deleting pet
 static void intif_parse_DeletePetOk(int fd)
 {
-	if(RFIFOB(fd,2) == 1)
+	if (RFIFOB(fd, 2) == 1)
 		ShowError("pet data delete failure\n");
 }
 
@@ -1530,19 +1542,18 @@ static void intif_parse_DeletePetOk(int fd)
 static void intif_parse_ChangeNameOk(int fd)
 {
 	struct map_session_data *sd = NULL;
-	if((sd=map->id2sd(RFIFOL(fd,2)))==NULL ||
-		sd->status.char_id != RFIFOL(fd,6))
+	if ((sd = map->id2sd(RFIFOL(fd, 2))) == NULL || sd->status.char_id != RFIFOL(fd, 6))
 		return;
 
-	switch (RFIFOB(fd,10)) {
-	case 0: //Players [NOT SUPPORTED YET]
-		break;
-	case 1: //Pets
-		pet->change_name_ack(sd, RFIFOP(fd,12), RFIFOB(fd,11));
-		break;
-	case 2: //Hom
-		homun->change_name_ack(sd, RFIFOP(fd,12), RFIFOB(fd,11));
-		break;
+	switch (RFIFOB(fd, 10)) {
+		case 0: // Players [NOT SUPPORTED YET]
+			break;
+		case 1: // Pets
+			pet->change_name_ack(sd, RFIFOP(fd, 12), RFIFOB(fd, 11));
+			break;
+		case 2: // Hom
+			homun->change_name_ack(sd, RFIFOP(fd, 12), RFIFOB(fd, 11));
+			break;
 	}
 	return;
 }
@@ -1552,38 +1563,38 @@ static void intif_parse_ChangeNameOk(int fd)
 
 static void intif_parse_CreateHomunculus(int fd)
 {
-	int len = RFIFOW(fd,2)-9;
+	int len = RFIFOW(fd, 2) - 9;
 	if (sizeof(struct s_homunculus) != len) {
 		if (battle_config.etc_log)
-			ShowError("intif: create homun data: data size mismatch %d != %"PRIuS"\n", len, sizeof(struct s_homunculus));
+			ShowError("intif: create homun data: data size mismatch %d != %" PRIuS "\n", len, sizeof(struct s_homunculus));
 		return;
 	}
-	homun->recv_data(RFIFOL(fd,4), RFIFOP(fd,9), RFIFOB(fd,8)) ;
+	homun->recv_data(RFIFOL(fd, 4), RFIFOP(fd, 9), RFIFOB(fd, 8));
 }
 
 static void intif_parse_RecvHomunculusData(int fd)
 {
-	int len = RFIFOW(fd,2)-9;
+	int len = RFIFOW(fd, 2) - 9;
 
 	if (sizeof(struct s_homunculus) != len) {
 		if (battle_config.etc_log)
-			ShowError("intif: homun data: data size mismatch %d != %"PRIuS"\n", len, sizeof(struct s_homunculus));
+			ShowError("intif: homun data: data size mismatch %d != %" PRIuS "\n", len, sizeof(struct s_homunculus));
 		return;
 	}
-	homun->recv_data(RFIFOL(fd,4), RFIFOP(fd,9), RFIFOB(fd,8));
+	homun->recv_data(RFIFOL(fd, 4), RFIFOP(fd, 9), RFIFOB(fd, 8));
 }
 
 /* Really? Whats the point, shouldn't be sent when successful then [Ind] */
 static void intif_parse_SaveHomunculusOk(int fd)
 {
-	if(RFIFOB(fd,6) != 1)
-		ShowError("homunculus data save failure for account %u\n", RFIFOL(fd,2));
+	if (RFIFOB(fd, 6) != 1)
+		ShowError("homunculus data save failure for account %u\n", RFIFOL(fd, 2));
 }
 
 /* Really? Whats the point, shouldn't be sent when successful then [Ind] */
 static void intif_parse_DeleteHomunculusOk(int fd)
 {
-	if(RFIFOB(fd,2) != 1)
+	if (RFIFOB(fd, 2) != 1)
 		ShowError("Homunculus data delete failure\n");
 }
 
@@ -1635,7 +1646,7 @@ static void intif_parse_achievements_load(int fd)
 	VECTOR_ENSURE(sd->achievement, payload_count, 1);
 
 	for (i = 0; i < payload_count; i++) {
-		struct achievement t_ach = { 0 };
+		struct achievement t_ach = {0};
 
 		memcpy(&t_ach, RFIFOP(fd, 8 + i * sizeof(struct achievement)), sizeof(struct achievement));
 
@@ -1692,10 +1703,10 @@ static void intif_achievements_save(struct map_session_data *sd)
 static void intif_request_questlog(struct map_session_data *sd)
 {
 	nullpo_retv(sd);
-	WFIFOHEAD(inter_fd,6);
-	WFIFOW(inter_fd,0) = 0x3060;
-	WFIFOL(inter_fd,2) = sd->status.char_id;
-	WFIFOSET(inter_fd,6);
+	WFIFOHEAD(inter_fd, 6);
+	WFIFOW(inter_fd, 0) = 0x3060;
+	WFIFOL(inter_fd, 2) = sd->status.char_id;
+	WFIFOSET(inter_fd, 6);
 }
 
 /**
@@ -1707,7 +1718,7 @@ static void intif_request_questlog(struct map_session_data *sd)
  */
 static void intif_parse_QuestLog(int fd)
 {
-	int char_id = RFIFOL(fd, 4), num_received = (RFIFOW(fd, 2)-8)/sizeof(struct quest);
+	int char_id = RFIFOL(fd, 4), num_received = (RFIFOW(fd, 2) - 8) / sizeof(struct quest);
 	struct map_session_data *sd = map->charid2sd(char_id);
 
 	if (!sd) // User not online anymore
@@ -1730,7 +1741,7 @@ static void intif_parse_QuestLog(int fd)
 		}
 
 		for (i = 0; i < num_received; i++) {
-			if( quest->db(received[i].quest_id) == &quest->dummy ) {
+			if (quest->db(received[i].quest_id) == &quest->dummy) {
 				ShowError("intif_parse_QuestLog: quest %d not found in DB.\n", received[i].quest_id);
 				continue;
 			}
@@ -1746,8 +1757,8 @@ static void intif_parse_QuestLog(int fd)
 		if (sd->avail_quests < k) {
 			// sd->avail_quests and k didn't meet in the middle: some entries were skipped
 			if (k < num_received) // Move the entries at the end to fill the gap
-				memmove(&sd->quest_log[k], &sd->quest_log[sd->avail_quests], sizeof(struct quest)*(num_received - k));
-			sd->quest_log = aRealloc(sd->quest_log, sizeof(struct quest)*sd->num_quests);
+				memmove(&sd->quest_log[k], &sd->quest_log[sd->avail_quests], sizeof(struct quest) * (num_received - k));
+			sd->quest_log = aRealloc(sd->quest_log, sizeof(struct quest) * sd->num_quests);
 		}
 	}
 
@@ -1766,9 +1777,9 @@ static void intif_parse_QuestSave(int fd)
 	int cid = RFIFOL(fd, 2);
 	struct map_session_data *sd = map->id2sd(cid);
 
-	if( !RFIFOB(fd, 6) )
+	if (!RFIFOB(fd, 6))
 		ShowError("intif_parse_QuestSave: Failed to save quest(s) for character %d!\n", cid);
-	else if( sd )
+	else if (sd)
 		sd->save_quest = false;
 }
 
@@ -1780,18 +1791,18 @@ static void intif_parse_QuestSave(int fd)
  */
 static int intif_quest_save(struct map_session_data *sd)
 {
-	int len = sizeof(struct quest)*sd->num_quests + 8;
+	int len = sizeof(struct quest) * sd->num_quests + 8;
 
-	if(intif->CheckForCharServer())
+	if (intif->CheckForCharServer())
 		return 1;
 
 	WFIFOHEAD(inter_fd, len);
-	WFIFOW(inter_fd,0) = 0x3061;
-	WFIFOW(inter_fd,2) = len;
-	WFIFOL(inter_fd,4) = sd->status.char_id;
-	if( sd->num_quests )
-		memcpy(WFIFOP(inter_fd,8), sd->quest_log, sizeof(struct quest)*sd->num_quests);
-	WFIFOSET(inter_fd,  len);
+	WFIFOW(inter_fd, 0) = 0x3061;
+	WFIFOW(inter_fd, 2) = len;
+	WFIFOL(inter_fd, 4) = sd->status.char_id;
+	if (sd->num_quests)
+		memcpy(WFIFOP(inter_fd, 8), sd->quest_log, sizeof(struct quest) * sd->num_quests);
+	WFIFOSET(inter_fd, len);
 
 	return 0;
 }
@@ -1810,11 +1821,11 @@ static int intif_Mail_requestinbox(int char_id, unsigned char flag)
 	if (intif->CheckForCharServer())
 		return 0;
 
-	WFIFOHEAD(inter_fd,7);
-	WFIFOW(inter_fd,0) = 0x3048;
-	WFIFOL(inter_fd,2) = char_id;
-	WFIFOB(inter_fd,6) = flag;
-	WFIFOSET(inter_fd,7);
+	WFIFOHEAD(inter_fd, 7);
+	WFIFOW(inter_fd, 0) = 0x3048;
+	WFIFOL(inter_fd, 2) = char_id;
+	WFIFOB(inter_fd, 6) = flag;
+	WFIFOSET(inter_fd, 7);
 
 	return 0;
 }
@@ -1822,25 +1833,25 @@ static int intif_Mail_requestinbox(int char_id, unsigned char flag)
 static void intif_parse_MailInboxReceived(int fd)
 {
 	struct map_session_data *sd;
-	unsigned char flag = RFIFOB(fd,8);
+	unsigned char flag = RFIFOB(fd, 8);
 
-	sd = map->charid2sd(RFIFOL(fd,4));
+	sd = map->charid2sd(RFIFOL(fd, 4));
 
 	if (sd == NULL) /** user is not online anymore and its ok (quest log also does this) **/
 		return;
 
-	if (RFIFOW(fd,2) - 9 != sizeof(struct mail_data)) {
-		ShowError("intif_parse_MailInboxReceived: data size mismatch %d != %"PRIuS"\n", RFIFOW(fd,2) - 9, sizeof(struct mail_data));
+	if (RFIFOW(fd, 2) - 9 != sizeof(struct mail_data)) {
+		ShowError("intif_parse_MailInboxReceived: data size mismatch %d != %" PRIuS "\n", RFIFOW(fd, 2) - 9, sizeof(struct mail_data));
 		return;
 	}
 
-	//FIXME: this operation is not safe [ultramage]
-	memcpy(&sd->mail.inbox, RFIFOP(fd,9), sizeof(struct mail_data));
+	// FIXME: this operation is not safe [ultramage]
+	memcpy(&sd->mail.inbox, RFIFOP(fd, 9), sizeof(struct mail_data));
 	sd->mail.changed = false; // cache is now in sync
 
 	if (flag)
 		clif->mail_refreshinbox(sd);
-	else if( battle_config.mail_show_status && ( battle_config.mail_show_status == 1 || sd->mail.inbox.unread ) ) {
+	else if (battle_config.mail_show_status && (battle_config.mail_show_status == 1 || sd->mail.inbox.unread)) {
 		char output[128];
 		sprintf(output, msg_sd(sd, MSGTBL_MAIL_COUNT), sd->mail.inbox.unchecked, sd->mail.inbox.unread + sd->mail.inbox.unchecked);
 		clif_disp_onlyself(sd, output);
@@ -1854,10 +1865,10 @@ static int intif_Mail_read(int mail_id)
 	if (intif->CheckForCharServer())
 		return 0;
 
-	WFIFOHEAD(inter_fd,6);
-	WFIFOW(inter_fd,0) = 0x3049;
-	WFIFOL(inter_fd,2) = mail_id;
-	WFIFOSET(inter_fd,6);
+	WFIFOHEAD(inter_fd, 6);
+	WFIFOW(inter_fd, 0) = 0x3049;
+	WFIFOL(inter_fd, 2) = mail_id;
+	WFIFOSET(inter_fd, 6);
 
 	return 0;
 }
@@ -1869,10 +1880,10 @@ static int intif_Mail_getattach(int char_id, int mail_id)
 	if (intif->CheckForCharServer())
 		return 0;
 
-	WFIFOHEAD(inter_fd,10);
-	WFIFOW(inter_fd,0) = 0x304a;
-	WFIFOL(inter_fd,2) = char_id;
-	WFIFOL(inter_fd,6) = mail_id;
+	WFIFOHEAD(inter_fd, 10);
+	WFIFOW(inter_fd, 0) = 0x304a;
+	WFIFOL(inter_fd, 2) = char_id;
+	WFIFOL(inter_fd, 6) = mail_id;
 	WFIFOSET(inter_fd, 10);
 
 	return 0;
@@ -1882,22 +1893,22 @@ static void intif_parse_MailGetAttach(int fd)
 {
 	struct map_session_data *sd;
 	struct item item;
-	int zeny = RFIFOL(fd,8);
+	int zeny = RFIFOL(fd, 8);
 
 	Assert_retv(zeny >= 0);
-	sd = map->charid2sd( RFIFOL(fd,4) );
+	sd = map->charid2sd(RFIFOL(fd, 4));
 
 	if (sd == NULL) {
-		ShowError("intif_parse_MailGetAttach: char not found %u\n", RFIFOL(fd,4));
+		ShowError("intif_parse_MailGetAttach: char not found %u\n", RFIFOL(fd, 4));
 		return;
 	}
 
-	if (RFIFOW(fd,2) - 12 != sizeof(struct item)) {
-		ShowError("intif_parse_MailGetAttach: data size mismatch %d != %"PRIuS"\n", RFIFOW(fd,2) - 16, sizeof(struct item));
+	if (RFIFOW(fd, 2) - 12 != sizeof(struct item)) {
+		ShowError("intif_parse_MailGetAttach: data size mismatch %d != %" PRIuS "\n", RFIFOW(fd, 2) - 16, sizeof(struct item));
 		return;
 	}
 
-	memcpy(&item, RFIFOP(fd,12), sizeof(struct item));
+	memcpy(&item, RFIFOP(fd, 12), sizeof(struct item));
 
 	mail->getattachment(sd, zeny, &item);
 }
@@ -1909,11 +1920,11 @@ static int intif_Mail_delete(int char_id, int mail_id)
 	if (intif->CheckForCharServer())
 		return 0;
 
-	WFIFOHEAD(inter_fd,10);
-	WFIFOW(inter_fd,0) = 0x304b;
-	WFIFOL(inter_fd,2) = char_id;
-	WFIFOL(inter_fd,6) = mail_id;
-	WFIFOSET(inter_fd,10);
+	WFIFOHEAD(inter_fd, 10);
+	WFIFOW(inter_fd, 0) = 0x304b;
+	WFIFOL(inter_fd, 2) = char_id;
+	WFIFOL(inter_fd, 6) = mail_id;
+	WFIFOSET(inter_fd, 10);
 
 	return 0;
 }
@@ -1921,11 +1932,11 @@ static int intif_Mail_delete(int char_id, int mail_id)
 static void intif_parse_MailDelete(int fd)
 {
 	struct map_session_data *sd;
-	int char_id = RFIFOL(fd,2);
-	int mail_id = RFIFOL(fd,6);
-	bool failed = RFIFOB(fd,10);
+	int char_id = RFIFOL(fd, 2);
+	int mail_id = RFIFOL(fd, 6);
+	bool failed = RFIFOB(fd, 10);
 
-	if ( (sd = map->charid2sd(char_id)) == NULL) {
+	if ((sd = map->charid2sd(char_id)) == NULL) {
 		ShowError("intif_parse_MailDelete: char not found %d\n", char_id);
 		return;
 	}
@@ -1933,12 +1944,12 @@ static void intif_parse_MailDelete(int fd)
 	if (!failed) {
 		int i;
 		ARR_FIND(0, MAIL_MAX_INBOX, i, sd->mail.inbox.msg[i].id == mail_id);
-		if( i < MAIL_MAX_INBOX ) {
+		if (i < MAIL_MAX_INBOX) {
 			memset(&sd->mail.inbox.msg[i], 0, sizeof(struct mail_message));
 			sd->mail.inbox.amount--;
 		}
 
-		if( sd->mail.inbox.full )
+		if (sd->mail.inbox.full)
 			intif->Mail_requestinbox(sd->status.char_id, 1); // Free space is available for new mails
 	}
 
@@ -1952,35 +1963,35 @@ static int intif_Mail_return(int char_id, int mail_id)
 	if (intif->CheckForCharServer())
 		return 0;
 
-	WFIFOHEAD(inter_fd,10);
-	WFIFOW(inter_fd,0) = 0x304c;
-	WFIFOL(inter_fd,2) = char_id;
-	WFIFOL(inter_fd,6) = mail_id;
-	WFIFOSET(inter_fd,10);
+	WFIFOHEAD(inter_fd, 10);
+	WFIFOW(inter_fd, 0) = 0x304c;
+	WFIFOL(inter_fd, 2) = char_id;
+	WFIFOL(inter_fd, 6) = mail_id;
+	WFIFOSET(inter_fd, 10);
 
 	return 0;
 }
 
 static void intif_parse_MailReturn(int fd)
 {
-	struct map_session_data *sd = map->charid2sd(RFIFOL(fd,2));
-	int mail_id = RFIFOL(fd,6);
-	short fail = RFIFOB(fd,10);
+	struct map_session_data *sd = map->charid2sd(RFIFOL(fd, 2));
+	int mail_id = RFIFOL(fd, 6);
+	short fail = RFIFOB(fd, 10);
 
-	if( sd == NULL ) {
+	if (sd == NULL) {
 		ShowError("intif_parse_MailReturn: char not found %u\n", RFIFOL(fd, 2));
 		return;
 	}
 
-	if( !fail ) {
+	if (!fail) {
 		int i;
 		ARR_FIND(0, MAIL_MAX_INBOX, i, sd->mail.inbox.msg[i].id == mail_id);
-		if( i < MAIL_MAX_INBOX ) {
+		if (i < MAIL_MAX_INBOX) {
 			memset(&sd->mail.inbox.msg[i], 0, sizeof(struct mail_message));
 			sd->mail.inbox.amount--;
 		}
 
-		if( sd->mail.inbox.full )
+		if (sd->mail.inbox.full)
 			intif->Mail_requestinbox(sd->status.char_id, 1); // Free space is available for new mails
 	}
 
@@ -1997,12 +2008,12 @@ static int intif_Mail_send(int account_id, struct mail_message *msg)
 		return 0;
 
 	nullpo_ret(msg);
-	WFIFOHEAD(inter_fd,len);
-	WFIFOW(inter_fd,0) = 0x304d;
-	WFIFOW(inter_fd,2) = len;
-	WFIFOL(inter_fd,4) = account_id;
-	memcpy(WFIFOP(inter_fd,8), msg, sizeof(struct mail_message));
-	WFIFOSET(inter_fd,len);
+	WFIFOHEAD(inter_fd, len);
+	WFIFOW(inter_fd, 0) = 0x304d;
+	WFIFOW(inter_fd, 2) = len;
+	WFIFOL(inter_fd, 4) = account_id;
+	memcpy(WFIFOP(inter_fd, 8), msg, sizeof(struct mail_message));
+	WFIFOSET(inter_fd, len);
 
 	return 1;
 }
@@ -2013,22 +2024,22 @@ static void intif_parse_MailSend(int fd)
 	struct map_session_data *sd;
 	bool fail;
 
-	if( RFIFOW(fd,2) - 4 != sizeof(struct mail_message) ) {
-		ShowError("intif_parse_MailSend: data size mismatch %d != %"PRIuS"\n", RFIFOW(fd,2) - 4, sizeof(struct mail_message));
+	if (RFIFOW(fd, 2) - 4 != sizeof(struct mail_message)) {
+		ShowError("intif_parse_MailSend: data size mismatch %d != %" PRIuS "\n", RFIFOW(fd, 2) - 4, sizeof(struct mail_message));
 		return;
 	}
 
-	memcpy(&msg, RFIFOP(fd,4), sizeof(struct mail_message));
+	memcpy(&msg, RFIFOP(fd, 4), sizeof(struct mail_message));
 	fail = (msg.id == 0);
 
 	// notify sender
 	sd = map->charid2sd(msg.send_id);
-	if( sd != NULL ) {
-		if( fail )
+	if (sd != NULL) {
+		if (fail)
 			mail->deliveryfail(sd, &msg);
 		else {
 			clif->mail_send(sd->fd, false);
-			if( map->save_settings&16 )
+			if (map->save_settings & 16)
 				chrif->save(sd, 0);
 		}
 	}
@@ -2036,12 +2047,12 @@ static void intif_parse_MailSend(int fd)
 
 static void intif_parse_MailNew(int fd)
 {
-	struct map_session_data *sd = map->charid2sd(RFIFOL(fd,2));
-	int mail_id = RFIFOL(fd,6);
-	const char *sender_name = RFIFOP(fd,10);
-	const char *title = RFIFOP(fd,34);
+	struct map_session_data *sd = map->charid2sd(RFIFOL(fd, 2));
+	int mail_id = RFIFOL(fd, 6);
+	const char *sender_name = RFIFOP(fd, 10);
+	const char *title = RFIFOP(fd, 34);
 
-	if( sd == NULL )
+	if (sd == NULL)
 		return;
 
 	sd->mail.changed = true;
@@ -2056,31 +2067,31 @@ static int intif_Auction_requestlist(int char_id, short type, int price, const c
 {
 	int len = NAME_LENGTH + 16;
 
-	if( intif->CheckForCharServer() )
+	if (intif->CheckForCharServer())
 		return 0;
 
 	nullpo_ret(searchtext);
-	WFIFOHEAD(inter_fd,len);
-	WFIFOW(inter_fd,0) = 0x3050;
-	WFIFOW(inter_fd,2) = len;
-	WFIFOL(inter_fd,4) = char_id;
-	WFIFOW(inter_fd,8) = type;
-	WFIFOL(inter_fd,10) = price;
-	WFIFOW(inter_fd,14) = page;
-	memcpy(WFIFOP(inter_fd,16), searchtext, NAME_LENGTH);
-	WFIFOSET(inter_fd,len);
+	WFIFOHEAD(inter_fd, len);
+	WFIFOW(inter_fd, 0) = 0x3050;
+	WFIFOW(inter_fd, 2) = len;
+	WFIFOL(inter_fd, 4) = char_id;
+	WFIFOW(inter_fd, 8) = type;
+	WFIFOL(inter_fd, 10) = price;
+	WFIFOW(inter_fd, 14) = page;
+	memcpy(WFIFOP(inter_fd, 16), searchtext, NAME_LENGTH);
+	WFIFOSET(inter_fd, len);
 
 	return 0;
 }
 
 static void intif_parse_AuctionResults(int fd)
 {
-	struct map_session_data *sd = map->charid2sd(RFIFOL(fd,4));
-	short count = RFIFOW(fd,8);
-	short pages = RFIFOW(fd,10);
-	const uint8 *data = RFIFOP(fd,12);
+	struct map_session_data *sd = map->charid2sd(RFIFOL(fd, 4));
+	short count = RFIFOW(fd, 8);
+	short pages = RFIFOW(fd, 10);
+	const uint8 *data = RFIFOP(fd, 12);
 
-	if( sd == NULL )
+	if (sd == NULL)
 		return;
 
 	clif->auction_results(sd, count, pages, data);
@@ -2090,15 +2101,15 @@ static int intif_Auction_register(struct auction_data *auction)
 {
 	int len = sizeof(struct auction_data) + 4;
 
-	if( intif->CheckForCharServer() )
+	if (intif->CheckForCharServer())
 		return 0;
 
 	nullpo_ret(auction);
-	WFIFOHEAD(inter_fd,len);
-	WFIFOW(inter_fd,0) = 0x3051;
-	WFIFOW(inter_fd,2) = len;
-	memcpy(WFIFOP(inter_fd,4), auction, sizeof(struct auction_data));
-	WFIFOSET(inter_fd,len);
+	WFIFOHEAD(inter_fd, len);
+	WFIFOW(inter_fd, 0) = 0x3051;
+	WFIFOW(inter_fd, 2) = len;
+	memcpy(WFIFOP(inter_fd, 4), auction, sizeof(struct auction_data));
+	WFIFOSET(inter_fd, len);
 
 	return 1;
 }
@@ -2108,21 +2119,21 @@ static void intif_parse_AuctionRegister(int fd)
 	struct map_session_data *sd;
 	struct auction_data auction;
 
-	if (RFIFOW(fd,2) - 4 != sizeof(struct auction_data)) {
-		ShowError("intif_parse_AuctionRegister: data size mismatch %d != %"PRIuS"\n", RFIFOW(fd,2) - 4, sizeof(struct auction_data));
+	if (RFIFOW(fd, 2) - 4 != sizeof(struct auction_data)) {
+		ShowError("intif_parse_AuctionRegister: data size mismatch %d != %" PRIuS "\n", RFIFOW(fd, 2) - 4, sizeof(struct auction_data));
 		return;
 	}
 
-	memcpy(&auction, RFIFOP(fd,4), sizeof(struct auction_data));
-	if( (sd = map->charid2sd(auction.seller_id)) == NULL )
+	memcpy(&auction, RFIFOP(fd, 4), sizeof(struct auction_data));
+	if ((sd = map->charid2sd(auction.seller_id)) == NULL)
 		return;
 
-	if( auction.auction_id > 0 ) {
+	if (auction.auction_id > 0) {
 		clif->auction_message(sd->fd, 1); // Confirmation Packet ??
-		if( map->save_settings&32 )
-			chrif->save(sd,0);
+		if (map->save_settings & 32)
+			chrif->save(sd, 0);
 	} else {
-		int zeny = auction.hours*battle_config.auction_feeperhour;
+		int zeny = auction.hours * battle_config.auction_feeperhour;
 
 		clif->auction_message(sd->fd, 4);
 		pc->additem(sd, &auction.item, auction.item.amount, LOG_TYPE_AUCTION);
@@ -2133,58 +2144,66 @@ static void intif_parse_AuctionRegister(int fd)
 
 static int intif_Auction_cancel(int char_id, unsigned int auction_id)
 {
-	if( intif->CheckForCharServer() )
+	if (intif->CheckForCharServer())
 		return 0;
 
-	WFIFOHEAD(inter_fd,10);
-	WFIFOW(inter_fd,0) = 0x3052;
-	WFIFOL(inter_fd,2) = char_id;
-	WFIFOL(inter_fd,6) = auction_id;
-	WFIFOSET(inter_fd,10);
+	WFIFOHEAD(inter_fd, 10);
+	WFIFOW(inter_fd, 0) = 0x3052;
+	WFIFOL(inter_fd, 2) = char_id;
+	WFIFOL(inter_fd, 6) = auction_id;
+	WFIFOSET(inter_fd, 10);
 
 	return 0;
 }
 
 static void intif_parse_AuctionCancel(int fd)
 {
-	struct map_session_data *sd = map->charid2sd(RFIFOL(fd,2));
-	int result = RFIFOB(fd,6);
+	struct map_session_data *sd = map->charid2sd(RFIFOL(fd, 2));
+	int result = RFIFOB(fd, 6);
 
-	if( sd == NULL )
+	if (sd == NULL)
 		return;
 
-	switch( result ) {
-		case 0: clif->auction_message(sd->fd, 2); break;
-		case 1: clif->auction_close(sd->fd, 2); break;
-		case 2: clif->auction_close(sd->fd, 1); break;
-		case 3: clif->auction_message(sd->fd, 3); break;
+	switch (result) {
+		case 0:
+			clif->auction_message(sd->fd, 2);
+			break;
+		case 1:
+			clif->auction_close(sd->fd, 2);
+			break;
+		case 2:
+			clif->auction_close(sd->fd, 1);
+			break;
+		case 3:
+			clif->auction_message(sd->fd, 3);
+			break;
 	}
 }
 
 static int intif_Auction_close(int char_id, unsigned int auction_id)
 {
-	if( intif->CheckForCharServer() )
+	if (intif->CheckForCharServer())
 		return 0;
 
-	WFIFOHEAD(inter_fd,10);
-	WFIFOW(inter_fd,0) = 0x3053;
-	WFIFOL(inter_fd,2) = char_id;
-	WFIFOL(inter_fd,6) = auction_id;
-	WFIFOSET(inter_fd,10);
+	WFIFOHEAD(inter_fd, 10);
+	WFIFOW(inter_fd, 0) = 0x3053;
+	WFIFOL(inter_fd, 2) = char_id;
+	WFIFOL(inter_fd, 6) = auction_id;
+	WFIFOSET(inter_fd, 10);
 
 	return 0;
 }
 
 static void intif_parse_AuctionClose(int fd)
 {
-	struct map_session_data *sd = map->charid2sd(RFIFOL(fd,2));
-	unsigned char result = RFIFOB(fd,6);
+	struct map_session_data *sd = map->charid2sd(RFIFOL(fd, 2));
+	unsigned char result = RFIFOB(fd, 6);
 
-	if( sd == NULL )
+	if (sd == NULL)
 		return;
 
 	clif->auction_close(sd->fd, result);
-	if( result == 0 ) {
+	if (result == 0) {
 		// FIXME: Leeching off a parse function
 		clif->pAuction_cancelreg(fd, sd);
 		intif->Auction_requestlist(sd->status.char_id, 6, 0, "", 1);
@@ -2195,36 +2214,36 @@ static int intif_Auction_bid(int char_id, const char *name, unsigned int auction
 {
 	int len = 16 + NAME_LENGTH;
 
-	if( intif->CheckForCharServer() )
+	if (intif->CheckForCharServer())
 		return 0;
 
 	nullpo_ret(name);
-	WFIFOHEAD(inter_fd,len);
-	WFIFOW(inter_fd,0) = 0x3055;
-	WFIFOW(inter_fd,2) = len;
-	WFIFOL(inter_fd,4) = char_id;
-	WFIFOL(inter_fd,8) = auction_id;
-	WFIFOL(inter_fd,12) = bid;
-	memcpy(WFIFOP(inter_fd,16), name, NAME_LENGTH);
-	WFIFOSET(inter_fd,len);
+	WFIFOHEAD(inter_fd, len);
+	WFIFOW(inter_fd, 0) = 0x3055;
+	WFIFOW(inter_fd, 2) = len;
+	WFIFOL(inter_fd, 4) = char_id;
+	WFIFOL(inter_fd, 8) = auction_id;
+	WFIFOL(inter_fd, 12) = bid;
+	memcpy(WFIFOP(inter_fd, 16), name, NAME_LENGTH);
+	WFIFOSET(inter_fd, len);
 
 	return 0;
 }
 
 static void intif_parse_AuctionBid(int fd)
 {
-	struct map_session_data *sd = map->charid2sd(RFIFOL(fd,2));
-	int bid = RFIFOL(fd,6);
-	unsigned char result = RFIFOB(fd,10);
+	struct map_session_data *sd = map->charid2sd(RFIFOL(fd, 2));
+	int bid = RFIFOL(fd, 6);
+	unsigned char result = RFIFOB(fd, 10);
 
-	if( sd == NULL )
+	if (sd == NULL)
 		return;
 
 	clif->auction_message(sd->fd, result);
-	if( bid > 0 ) {
-		pc->getzeny(sd, bid, LOG_TYPE_AUCTION,NULL);
+	if (bid > 0) {
+		pc->getzeny(sd, bid, LOG_TYPE_AUCTION, NULL);
 	}
-	if( result == 1 ) { // To update the list, display your buy list
+	if (result == 1) { // To update the list, display your buy list
 		clif->pAuction_cancelreg(fd, sd);
 		intif->Auction_requestlist(sd->status.char_id, 7, 0, "", 1);
 	}
@@ -2233,10 +2252,10 @@ static void intif_parse_AuctionBid(int fd)
 // Used to send 'You have won the auction' and 'You failed to won the auction' messages
 static void intif_parse_AuctionMessage(int fd)
 {
-	struct map_session_data *sd = map->charid2sd(RFIFOL(fd,2));
-	unsigned char result = RFIFOB(fd,6);
+	struct map_session_data *sd = map->charid2sd(RFIFOL(fd, 2));
+	unsigned char result = RFIFOB(fd, 6);
 
-	if( sd == NULL )
+	if (sd == NULL)
 		return;
 
 	clif->auction_message(sd->fd, result);
@@ -2249,29 +2268,29 @@ static int intif_mercenary_create(struct s_mercenary *merc)
 {
 	int size = sizeof(struct s_mercenary) + 4;
 
-	if( intif->CheckForCharServer() )
+	if (intif->CheckForCharServer())
 		return 0;
 
 	nullpo_ret(merc);
-	WFIFOHEAD(inter_fd,size);
-	WFIFOW(inter_fd,0) = 0x3070;
-	WFIFOW(inter_fd,2) = size;
-	memcpy(WFIFOP(inter_fd,4), merc, sizeof(struct s_mercenary));
-	WFIFOSET(inter_fd,size);
+	WFIFOHEAD(inter_fd, size);
+	WFIFOW(inter_fd, 0) = 0x3070;
+	WFIFOW(inter_fd, 2) = size;
+	memcpy(WFIFOP(inter_fd, 4), merc, sizeof(struct s_mercenary));
+	WFIFOSET(inter_fd, size);
 	return 0;
 }
 
 static void intif_parse_MercenaryReceived(int fd)
 {
-	int len = RFIFOW(fd,2) - 5;
+	int len = RFIFOW(fd, 2) - 5;
 
 	if (sizeof(struct s_mercenary) != len) {
 		if (battle_config.etc_log)
-			ShowError("intif: create mercenary data size mismatch %d != %"PRIuS"\n", len, sizeof(struct s_mercenary));
+			ShowError("intif: create mercenary data size mismatch %d != %" PRIuS "\n", len, sizeof(struct s_mercenary));
 		return;
 	}
 
-	mercenary->data_received(RFIFOP(fd,5), RFIFOB(fd,4));
+	mercenary->data_received(RFIFOP(fd, 5), RFIFOB(fd, 4));
 }
 
 static int intif_mercenary_request(int merc_id, int char_id)
@@ -2279,11 +2298,11 @@ static int intif_mercenary_request(int merc_id, int char_id)
 	if (intif->CheckForCharServer())
 		return 0;
 
-	WFIFOHEAD(inter_fd,10);
-	WFIFOW(inter_fd,0) = 0x3071;
-	WFIFOL(inter_fd,2) = merc_id;
-	WFIFOL(inter_fd,6) = char_id;
-	WFIFOSET(inter_fd,10);
+	WFIFOHEAD(inter_fd, 10);
+	WFIFOW(inter_fd, 0) = 0x3071;
+	WFIFOL(inter_fd, 2) = merc_id;
+	WFIFOL(inter_fd, 6) = char_id;
+	WFIFOSET(inter_fd, 10);
 	return 0;
 }
 
@@ -2292,16 +2311,16 @@ static int intif_mercenary_delete(int merc_id)
 	if (intif->CheckForCharServer())
 		return 0;
 
-	WFIFOHEAD(inter_fd,6);
-	WFIFOW(inter_fd,0) = 0x3072;
-	WFIFOL(inter_fd,2) = merc_id;
-	WFIFOSET(inter_fd,6);
+	WFIFOHEAD(inter_fd, 6);
+	WFIFOW(inter_fd, 0) = 0x3072;
+	WFIFOL(inter_fd, 2) = merc_id;
+	WFIFOSET(inter_fd, 6);
 	return 0;
 }
 /* Really? Whats the point, shouldn't be sent when successful then [Ind] */
 static void intif_parse_MercenaryDeleted(int fd)
 {
-	if( RFIFOB(fd,2) != 1 )
+	if (RFIFOB(fd, 2) != 1)
 		ShowError("Mercenary data delete failure\n");
 }
 
@@ -2309,21 +2328,21 @@ static int intif_mercenary_save(struct s_mercenary *merc)
 {
 	int size = sizeof(struct s_mercenary) + 4;
 
-	if( intif->CheckForCharServer() )
+	if (intif->CheckForCharServer())
 		return 0;
 
 	nullpo_ret(merc);
-	WFIFOHEAD(inter_fd,size);
-	WFIFOW(inter_fd,0) = 0x3073;
-	WFIFOW(inter_fd,2) = size;
-	memcpy(WFIFOP(inter_fd,4), merc, sizeof(struct s_mercenary));
-	WFIFOSET(inter_fd,size);
+	WFIFOHEAD(inter_fd, size);
+	WFIFOW(inter_fd, 0) = 0x3073;
+	WFIFOW(inter_fd, 2) = size;
+	memcpy(WFIFOP(inter_fd, 4), merc, sizeof(struct s_mercenary));
+	WFIFOSET(inter_fd, size);
 	return 0;
 }
 /* Really? Whats the point, shouldn't be sent when successful then [Ind] */
 static void intif_parse_MercenarySaved(int fd)
 {
-	if( RFIFOB(fd,2) != 1 )
+	if (RFIFOB(fd, 2) != 1)
 		ShowError("Mercenary data save failure\n");
 }
 
@@ -2334,29 +2353,29 @@ static int intif_elemental_create(struct s_elemental *ele)
 {
 	int size = sizeof(struct s_elemental) + 4;
 
-	if( intif->CheckForCharServer() )
+	if (intif->CheckForCharServer())
 		return 0;
 
 	nullpo_ret(ele);
-	WFIFOHEAD(inter_fd,size);
-	WFIFOW(inter_fd,0) = 0x307c;
-	WFIFOW(inter_fd,2) = size;
-	memcpy(WFIFOP(inter_fd,4), ele, sizeof(struct s_elemental));
-	WFIFOSET(inter_fd,size);
+	WFIFOHEAD(inter_fd, size);
+	WFIFOW(inter_fd, 0) = 0x307c;
+	WFIFOW(inter_fd, 2) = size;
+	memcpy(WFIFOP(inter_fd, 4), ele, sizeof(struct s_elemental));
+	WFIFOSET(inter_fd, size);
 	return 0;
 }
 
 static void intif_parse_ElementalReceived(int fd)
 {
-	int len = RFIFOW(fd,2) - 5;
+	int len = RFIFOW(fd, 2) - 5;
 
 	if (sizeof(struct s_elemental) != len) {
 		if (battle_config.etc_log)
-			ShowError("intif: create elemental data size mismatch %d != %"PRIuS"\n", len, sizeof(struct s_elemental));
+			ShowError("intif: create elemental data size mismatch %d != %" PRIuS "\n", len, sizeof(struct s_elemental));
 		return;
 	}
 
-	elemental->data_received(RFIFOP(fd,5), RFIFOB(fd,4));
+	elemental->data_received(RFIFOP(fd, 5), RFIFOB(fd, 4));
 }
 
 static int intif_elemental_request(int ele_id, int char_id)
@@ -2364,11 +2383,11 @@ static int intif_elemental_request(int ele_id, int char_id)
 	if (intif->CheckForCharServer())
 		return 0;
 
-	WFIFOHEAD(inter_fd,10);
-	WFIFOW(inter_fd,0) = 0x307d;
-	WFIFOL(inter_fd,2) = ele_id;
-	WFIFOL(inter_fd,6) = char_id;
-	WFIFOSET(inter_fd,10);
+	WFIFOHEAD(inter_fd, 10);
+	WFIFOW(inter_fd, 0) = 0x307d;
+	WFIFOL(inter_fd, 2) = ele_id;
+	WFIFOL(inter_fd, 6) = char_id;
+	WFIFOSET(inter_fd, 10);
 	return 0;
 }
 
@@ -2377,16 +2396,16 @@ static int intif_elemental_delete(int ele_id)
 	if (intif->CheckForCharServer())
 		return 0;
 
-	WFIFOHEAD(inter_fd,6);
-	WFIFOW(inter_fd,0) = 0x307e;
-	WFIFOL(inter_fd,2) = ele_id;
-	WFIFOSET(inter_fd,6);
+	WFIFOHEAD(inter_fd, 6);
+	WFIFOW(inter_fd, 0) = 0x307e;
+	WFIFOL(inter_fd, 2) = ele_id;
+	WFIFOSET(inter_fd, 6);
 	return 0;
 }
 /* Really? Whats the point, shouldn't be sent when successful then [Ind] */
 static void intif_parse_ElementalDeleted(int fd)
 {
-	if( RFIFOB(fd,2) != 1 )
+	if (RFIFOB(fd, 2) != 1)
 		ShowError("Elemental data delete failure\n");
 }
 
@@ -2394,21 +2413,21 @@ static int intif_elemental_save(struct s_elemental *ele)
 {
 	int size = sizeof(struct s_elemental) + 4;
 
-	if( intif->CheckForCharServer() )
+	if (intif->CheckForCharServer())
 		return 0;
 
 	nullpo_ret(ele);
-	WFIFOHEAD(inter_fd,size);
-	WFIFOW(inter_fd,0) = 0x307f;
-	WFIFOW(inter_fd,2) = size;
-	memcpy(WFIFOP(inter_fd,4), ele, sizeof(struct s_elemental));
-	WFIFOSET(inter_fd,size);
+	WFIFOHEAD(inter_fd, size);
+	WFIFOW(inter_fd, 0) = 0x307f;
+	WFIFOW(inter_fd, 2) = size;
+	memcpy(WFIFOP(inter_fd, 4), ele, sizeof(struct s_elemental));
+	WFIFOSET(inter_fd, size);
 	return 0;
 }
 /* Really? Whats the point, shouldn't be sent when successful then [Ind] */
 static void intif_parse_ElementalSaved(int fd)
 {
-	if( RFIFOB(fd,2) != 1 )
+	if (RFIFOB(fd, 2) != 1)
 		ShowError("Elemental data save failure\n");
 }
 
@@ -2416,33 +2435,32 @@ static void intif_request_accinfo(int u_fd, int aid, int group_lv, char *query)
 {
 	nullpo_retv(query);
 
-	WFIFOHEAD(inter_fd,2 + 4 + 4 + 4 + NAME_LENGTH);
-	WFIFOW(inter_fd,0) = 0x3007;
-	WFIFOL(inter_fd,2) = u_fd;
-	WFIFOL(inter_fd,6) = aid;
-	WFIFOL(inter_fd,10) = group_lv;
-	safestrncpy(WFIFOP(inter_fd,14), query, NAME_LENGTH);
+	WFIFOHEAD(inter_fd, 2 + 4 + 4 + 4 + NAME_LENGTH);
+	WFIFOW(inter_fd, 0) = 0x3007;
+	WFIFOL(inter_fd, 2) = u_fd;
+	WFIFOL(inter_fd, 6) = aid;
+	WFIFOL(inter_fd, 10) = group_lv;
+	safestrncpy(WFIFOP(inter_fd, 14), query, NAME_LENGTH);
 
-	WFIFOSET(inter_fd,2 + 4 + 4 + 4 + NAME_LENGTH);
+	WFIFOSET(inter_fd, 2 + 4 + 4 + 4 + NAME_LENGTH);
 
 	return;
 }
 
 static void intif_parse_MessageToFD(int fd)
 {
-	int u_fd = RFIFOL(fd,4);
+	int u_fd = RFIFOL(fd, 4);
 
 	Assert_retv(sockt->session_is_valid(u_fd));
-	if( sockt->session[u_fd] && sockt->session[u_fd]->session_data ) {
-		int aid = RFIFOL(fd,8);
-		struct map_session_data * sd = sockt->session[u_fd]->session_data;
+	if (sockt->session[u_fd] && sockt->session[u_fd]->session_data) {
+		int aid = RFIFOL(fd, 8);
+		struct map_session_data *sd = sockt->session[u_fd]->session_data;
 		/* matching e.g. previous fd owner didn't dc during request or is still the same */
-		if( sd && sd->bl.id == aid ) {
+		if (sd && sd->bl.id == aid) {
 			char msg[512];
-			safestrncpy(msg, RFIFOP(fd,12), RFIFOW(fd,2) - 12);
-			clif->messagecolor_self(u_fd, COLOR_DEFAULT ,msg);
+			safestrncpy(msg, RFIFOP(fd, 12), RFIFOW(fd, 2) - 12);
+			clif->messagecolor_self(u_fd, COLOR_DEFAULT, msg);
 		}
-
 	}
 
 	return;
@@ -2453,28 +2471,28 @@ static void intif_parse_MessageToFD(int fd)
 static void intif_itembound_req(int char_id, int aid, int guild_id)
 {
 #ifdef GP_BOUND_ITEMS
-	struct guild_storage *gstor = idb_get(gstorage->db,guild_id);
-	WFIFOHEAD(inter_fd,12);
-	WFIFOW(inter_fd,0) = 0x3056;
-	WFIFOL(inter_fd,2) = char_id;
-	WFIFOL(inter_fd,6) = aid;
-	WFIFOW(inter_fd,10) = guild_id;
-	WFIFOSET(inter_fd,12);
-	if(gstor)
-		gstor->locked = true; //Lock for retrieval process
+	struct guild_storage *gstor = idb_get(gstorage->db, guild_id);
+	WFIFOHEAD(inter_fd, 12);
+	WFIFOW(inter_fd, 0) = 0x3056;
+	WFIFOL(inter_fd, 2) = char_id;
+	WFIFOL(inter_fd, 6) = aid;
+	WFIFOW(inter_fd, 10) = guild_id;
+	WFIFOSET(inter_fd, 12);
+	if (gstor)
+		gstor->locked = true; // Lock for retrieval process
 #endif
 }
 
-//3856
+// 3856
 static void intif_parse_Itembound_ack(int fd)
 {
 #ifdef GP_BOUND_ITEMS
 	struct guild_storage *gstor;
-	int guild_id = RFIFOW(fd,6);
+	int guild_id = RFIFOW(fd, 6);
 
-	gstor = idb_get(gstorage->db,guild_id);
-	if(gstor)
-		gstor->locked = false; //Unlock now that operation is completed
+	gstor = idb_get(gstorage->db, guild_id);
+	if (gstor)
+		gstor->locked = false; // Unlock now that operation is completed
 #endif
 }
 
@@ -2538,7 +2556,7 @@ static void intif_parse_RequestRodexOpenInbox(int fd)
 		sd->rodex.total += count;
 
 	if (RFIFOW(fd, 2) - 24 != count * sizeof(struct rodex_message)) {
-		ShowError("intif_parse_RodexInboxOpenReceived: data size mismatch %d != %"PRIuS"\n", RFIFOW(fd, 2) - 24, count * sizeof(struct rodex_message));
+		ShowError("intif_parse_RodexInboxOpenReceived: data size mismatch %d != %" PRIuS "\n", RFIFOW(fd, 2) - 24, count * sizeof(struct rodex_message));
 		return;
 	}
 
@@ -2546,7 +2564,7 @@ static void intif_parse_RequestRodexOpenInbox(int fd)
 		VECTOR_CLEAR(sd->rodex.messages);
 
 	for (i = 0, j = 24; i < count; ++i, j += sizeof(struct rodex_message)) {
-		struct rodex_message msg = { 0 };
+		struct rodex_message msg = {0};
 		VECTOR_ENSURE(sd->rodex.messages, 1, 1);
 		memcpy(&msg, RFIFOP(fd, j), sizeof(struct rodex_message));
 		VECTOR_PUSH(sd->rodex.messages, msg);
@@ -2771,7 +2789,7 @@ static void intif_parse_agency_joinResult(int fd)
 static int intif_parse(int fd)
 {
 	int packet_len, cmd;
-	cmd = RFIFOW(fd,0);
+	cmd = RFIFOW(fd, 0);
 
 	if (cmd == HEADER_API_PROXY_REQUEST)
 		return mapiif->parse_fromchar_api_proxy(fd);
@@ -2782,67 +2800,157 @@ static int intif_parse(int fd)
 	}
 	// Check the length of the packet
 	packet_len = packets->intif_db[cmd - MIN_INTIF_PACKET_DB];
-	if(packet_len==-1){
-		if(RFIFOREST(fd)<4)
+	if (packet_len == -1) {
+		if (RFIFOREST(fd) < 4)
 			return 2;
-		packet_len = RFIFOW(fd,2);
+		packet_len = RFIFOW(fd, 2);
 	}
-	if((int)RFIFOREST(fd)<packet_len){
+	if ((int)RFIFOREST(fd) < packet_len) {
 		return 2;
 	}
 	// Processing branch
-	switch(cmd){
-		case 0x3804: intif->pRegisters(fd); break;
-		case 0x3805: intif->pAccountStorage(fd); break;
-		case 0x3806: intif->pChangeNameOk(fd); break;
-		case 0x3807: intif->pMessageToFD(fd); break;
-		case 0x3808: intif->pAccountStorageSaveAck(fd); break;
-		case 0x3810: intif->pAchievementsLoad(fd); break;
-		case 0x3818: intif->pLoadGuildStorage(fd); break;
-		case 0x3819: intif->pSaveGuildStorage(fd); break;
-		case 0x3820: intif->pPartyCreated(fd); break;
-		case 0x3821: intif->pPartyInfo(fd); break;
-		case 0x3822: intif->pPartyMemberAdded(fd); break;
-		case 0x3823: intif->pPartyOptionChanged(fd); break;
-		case 0x3824: intif->pPartyMemberWithdraw(fd); break;
-		case 0x3825: intif->pPartyMove(fd); break;
-		case 0x3826: intif->pPartyBroken(fd); break;
-		case 0x3830: intif->pGuildCreated(fd); break;
-		case HEADER_CHARMAP_GUILD_INFO: intif->pGuildInfo(fd); break;
-		case HEADER_CHARMAP_GUILD_INFO_EMBLEM: intif->pGuildInfoEmblem(fd); break;
-		case 0x3832: intif->pGuildMemberAdded(fd); break;
-		case 0x3834: intif->pGuildMemberWithdraw(fd); break;
-		case 0x3835: intif->pGuildMemberInfoShort(fd); break;
-		case 0x3836: intif->pGuildBroken(fd); break;
-		case 0x3839: intif->pGuildBasicInfoChanged(fd); break;
-		case 0x383a: intif->pGuildMemberInfoChanged(fd); break;
-		case 0x383b: intif->pGuildPosition(fd); break;
-		case 0x383c: intif->pGuildSkillUp(fd); break;
-		case 0x383d: intif->pGuildAlliance(fd); break;
-		case 0x383e: intif->pGuildNotice(fd); break;
-		case HEADER_CHARMAP_GUILD_EMBLEM: intif->pGuildEmblem(fd); break;
-		case 0x3840: intif->pGuildCastleDataLoad(fd); break;
-		case 0x3843: intif->pGuildMasterChanged(fd); break;
+	switch (cmd) {
+		case 0x3804:
+			intif->pRegisters(fd);
+			break;
+		case 0x3805:
+			intif->pAccountStorage(fd);
+			break;
+		case 0x3806:
+			intif->pChangeNameOk(fd);
+			break;
+		case 0x3807:
+			intif->pMessageToFD(fd);
+			break;
+		case 0x3808:
+			intif->pAccountStorageSaveAck(fd);
+			break;
+		case 0x3810:
+			intif->pAchievementsLoad(fd);
+			break;
+		case 0x3818:
+			intif->pLoadGuildStorage(fd);
+			break;
+		case 0x3819:
+			intif->pSaveGuildStorage(fd);
+			break;
+		case 0x3820:
+			intif->pPartyCreated(fd);
+			break;
+		case 0x3821:
+			intif->pPartyInfo(fd);
+			break;
+		case 0x3822:
+			intif->pPartyMemberAdded(fd);
+			break;
+		case 0x3823:
+			intif->pPartyOptionChanged(fd);
+			break;
+		case 0x3824:
+			intif->pPartyMemberWithdraw(fd);
+			break;
+		case 0x3825:
+			intif->pPartyMove(fd);
+			break;
+		case 0x3826:
+			intif->pPartyBroken(fd);
+			break;
+		case 0x3830:
+			intif->pGuildCreated(fd);
+			break;
+		case HEADER_CHARMAP_GUILD_INFO:
+			intif->pGuildInfo(fd);
+			break;
+		case HEADER_CHARMAP_GUILD_INFO_EMBLEM:
+			intif->pGuildInfoEmblem(fd);
+			break;
+		case 0x3832:
+			intif->pGuildMemberAdded(fd);
+			break;
+		case 0x3834:
+			intif->pGuildMemberWithdraw(fd);
+			break;
+		case 0x3835:
+			intif->pGuildMemberInfoShort(fd);
+			break;
+		case 0x3836:
+			intif->pGuildBroken(fd);
+			break;
+		case 0x3839:
+			intif->pGuildBasicInfoChanged(fd);
+			break;
+		case 0x383a:
+			intif->pGuildMemberInfoChanged(fd);
+			break;
+		case 0x383b:
+			intif->pGuildPosition(fd);
+			break;
+		case 0x383c:
+			intif->pGuildSkillUp(fd);
+			break;
+		case 0x383d:
+			intif->pGuildAlliance(fd);
+			break;
+		case 0x383e:
+			intif->pGuildNotice(fd);
+			break;
+		case HEADER_CHARMAP_GUILD_EMBLEM:
+			intif->pGuildEmblem(fd);
+			break;
+		case 0x3840:
+			intif->pGuildCastleDataLoad(fd);
+			break;
+		case 0x3843:
+			intif->pGuildMasterChanged(fd);
+			break;
 
-		//Quest system
-		case 0x3860: intif->pQuestLog(fd); break;
-		case 0x3861: intif->pQuestSave(fd); break;
+		// Quest system
+		case 0x3860:
+			intif->pQuestLog(fd);
+			break;
+		case 0x3861:
+			intif->pQuestSave(fd);
+			break;
 
 		// Mail System
-		case 0x3848: intif->pMailInboxReceived(fd); break;
-		case 0x3849: intif->pMailNew(fd); break;
-		case 0x384a: intif->pMailGetAttach(fd); break;
-		case 0x384b: intif->pMailDelete(fd); break;
-		case 0x384c: intif->pMailReturn(fd); break;
-		case 0x384d: intif->pMailSend(fd); break;
+		case 0x3848:
+			intif->pMailInboxReceived(fd);
+			break;
+		case 0x3849:
+			intif->pMailNew(fd);
+			break;
+		case 0x384a:
+			intif->pMailGetAttach(fd);
+			break;
+		case 0x384b:
+			intif->pMailDelete(fd);
+			break;
+		case 0x384c:
+			intif->pMailReturn(fd);
+			break;
+		case 0x384d:
+			intif->pMailSend(fd);
+			break;
 		// Auction System
-		case 0x3850: intif->pAuctionResults(fd); break;
-		case 0x3851: intif->pAuctionRegister(fd); break;
-		case 0x3852: intif->pAuctionCancel(fd); break;
-		case 0x3853: intif->pAuctionClose(fd); break;
-		case 0x3854: intif->pAuctionMessage(fd); break;
-		case 0x3855: intif->pAuctionBid(fd); break;
-		//Bound items
+		case 0x3850:
+			intif->pAuctionResults(fd);
+			break;
+		case 0x3851:
+			intif->pAuctionRegister(fd);
+			break;
+		case 0x3852:
+			intif->pAuctionCancel(fd);
+			break;
+		case 0x3853:
+			intif->pAuctionClose(fd);
+			break;
+		case 0x3854:
+			intif->pAuctionMessage(fd);
+			break;
+		case 0x3855:
+			intif->pAuctionBid(fd);
+			break;
+		// Bound items
 		case 0x3856:
 #ifdef GP_BOUND_ITEMS
 			intif->pItembound_ack(fd);
@@ -2851,42 +2959,86 @@ static int intif_parse(int fd)
 #endif
 			break;
 		// Mercenary System
-		case 0x3870: intif->pMercenaryReceived(fd); break;
-		case 0x3871: intif->pMercenaryDeleted(fd); break;
-		case 0x3872: intif->pMercenarySaved(fd); break;
+		case 0x3870:
+			intif->pMercenaryReceived(fd);
+			break;
+		case 0x3871:
+			intif->pMercenaryDeleted(fd);
+			break;
+		case 0x3872:
+			intif->pMercenarySaved(fd);
+			break;
 		// Elemental System
-		case 0x387c: intif->pElementalReceived(fd); break;
-		case 0x387d: intif->pElementalDeleted(fd); break;
-		case 0x387e: intif->pElementalSaved(fd); break;
+		case 0x387c:
+			intif->pElementalReceived(fd);
+			break;
+		case 0x387d:
+			intif->pElementalDeleted(fd);
+			break;
+		case 0x387e:
+			intif->pElementalSaved(fd);
+			break;
 
-		case 0x3880: intif->pCreatePet(fd); break;
-		case 0x3881: intif->pRecvPetData(fd); break;
-		case 0x3882: intif->pSavePetOk(fd); break;
-		case 0x3883: intif->pDeletePetOk(fd); break;
-		case 0x3890: intif->pCreateHomunculus(fd); break;
-		case 0x3891: intif->pRecvHomunculusData(fd); break;
-		case 0x3892: intif->pSaveHomunculusOk(fd); break;
-		case 0x3893: intif->pDeleteHomunculusOk(fd); break;
+		case 0x3880:
+			intif->pCreatePet(fd);
+			break;
+		case 0x3881:
+			intif->pRecvPetData(fd);
+			break;
+		case 0x3882:
+			intif->pSavePetOk(fd);
+			break;
+		case 0x3883:
+			intif->pDeletePetOk(fd);
+			break;
+		case 0x3890:
+			intif->pCreateHomunculus(fd);
+			break;
+		case 0x3891:
+			intif->pRecvHomunculusData(fd);
+			break;
+		case 0x3892:
+			intif->pSaveHomunculusOk(fd);
+			break;
+		case 0x3893:
+			intif->pDeleteHomunculusOk(fd);
+			break;
 
 		// RoDEX
-		case 0x3895: intif->pRequestRodexOpenInbox(fd); break;
-		case 0x3896: intif->pRodexHasNew(fd); break;
-		case 0x3897: intif->pRodexSendMail(fd); break;
-		case 0x3898: intif->pRodexCheckName(fd); break;
-		case 0x3899: intif->pGetZenyAck(fd); break;
-		case 0x389a: intif->pGetItemsAck(fd); break;
+		case 0x3895:
+			intif->pRequestRodexOpenInbox(fd);
+			break;
+		case 0x3896:
+			intif->pRodexHasNew(fd);
+			break;
+		case 0x3897:
+			intif->pRodexSendMail(fd);
+			break;
+		case 0x3898:
+			intif->pRodexCheckName(fd);
+			break;
+		case 0x3899:
+			intif->pGetZenyAck(fd);
+			break;
+		case 0x389a:
+			intif->pGetItemsAck(fd);
+			break;
 
-		case 0x389b: intif->pAgencyJoinResult(fd); break;
+		case 0x389b:
+			intif->pAgencyJoinResult(fd);
+			break;
 
 		// Clan System
-		case 0x3858: intif->pRecvClanMemberAction(fd); break;
+		case 0x3858:
+			intif->pRecvClanMemberAction(fd);
+			break;
 
-	default:
-		ShowError("intif_parse : unknown packet %d %x\n",fd,RFIFOW(fd,0));
-		return 0;
+		default:
+			ShowError("intif_parse : unknown packet %d %x\n", fd, RFIFOW(fd, 0));
+			return 0;
 	}
 	// Skip packet
-	RFIFOSKIP(fd,packet_len);
+	RFIFOSKIP(fd, packet_len);
 	return 1;
 }
 

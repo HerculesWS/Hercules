@@ -26,34 +26,34 @@
  */
 enum unit_dir {
 	UNIT_DIR_UNDEFINED = -1,
-	UNIT_DIR_FIRST     = 0,
-	UNIT_DIR_NORTH     = 0,
+	UNIT_DIR_FIRST = 0,
+	UNIT_DIR_NORTH = 0,
 	UNIT_DIR_NORTHWEST = 1,
-	UNIT_DIR_WEST      = 2,
+	UNIT_DIR_WEST = 2,
 	UNIT_DIR_SOUTHWEST = 3,
-	UNIT_DIR_SOUTH     = 4,
+	UNIT_DIR_SOUTH = 4,
 	UNIT_DIR_SOUTHEAST = 5,
-	UNIT_DIR_EAST      = 6,
+	UNIT_DIR_EAST = 6,
 	UNIT_DIR_NORTHEAST = 7,
-	UNIT_DIR_MAX       = 8,
-	UNIT_DIR_9         = 9,  // unknown legacy usage
-	/* IMPORTANT: Changing the order would break the above macros
-	 * and several usages of directions anywhere */
+	UNIT_DIR_MAX = 8,
+	UNIT_DIR_9 = 9, // unknown legacy usage
+	                /* IMPORTANT: Changing the order would break the above macros
+	                 * and several usages of directions anywhere */
 };
 
 /* Returns the opposite of the facing direction */
-#define unit_get_opposite_dir(dir) ( ((dir) + 4) % UNIT_DIR_MAX )
+#define unit_get_opposite_dir(dir) (((dir) + 4) % UNIT_DIR_MAX)
 
 /* Returns true when direction is diagonal/combined (ex. UNIT_DIR_NORTHWEST, UNIT_DIR_SOUTHWEST, ...) */
-#define unit_is_diagonal_dir(dir) ( ((dir) % 2) == UNIT_DIR_NORTHWEST )
+#define unit_is_diagonal_dir(dir) (((dir) % 2) == UNIT_DIR_NORTHWEST)
 
 /* Returns true if direction equals val or the opposite direction of val */
-#define unit_is_dir_or_opposite(dir, val) ( ((dir) % 4) == (val) )
+#define unit_is_dir_or_opposite(dir, val) (((dir) % 4) == (val))
 
 /* Returns the next direction after 90° CCW on a compass */
-#define unit_get_ccw90_dir(dir) ( ((dir) + 2) % UNIT_DIR_MAX )
+#define unit_get_ccw90_dir(dir) (((dir) + 2) % UNIT_DIR_MAX)
 
 /* Returns a random diagonal direction */
-#define unit_get_rnd_diagonal_dir() ( UNIT_DIR_NORTHWEST + 2 * (rnd() % 4) )
+#define unit_get_rnd_diagonal_dir() (UNIT_DIR_NORTHWEST + 2 * (rnd() % 4))
 
 #endif /* MAP_UNITDEFINES_H */

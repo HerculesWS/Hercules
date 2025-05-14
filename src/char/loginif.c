@@ -39,7 +39,7 @@ static struct loginif_interface loginif_s;
 struct loginif_interface *loginif;
 
 /// Resets all the data.
-static void loginif_reset(void) __attribute__ ((noreturn));
+static void loginif_reset(void) __attribute__((noreturn));
 static void loginif_reset(void)
 {
 	// TODO kick everyone out and reset everything or wait for connect and try to reacquire locks [FlavioJS]
@@ -48,17 +48,15 @@ static void loginif_reset(void)
 	exit(EXIT_FAILURE);
 }
 
-
 /// Checks the conditions for the server to stop.
 /// Releases the cookie when all characters are saved.
 /// If all the conditions are met, it stops the core loop.
 static void loginif_check_shutdown(void)
 {
-	if( core->runflag != CHARSERVER_ST_SHUTDOWN )
+	if (core->runflag != CHARSERVER_ST_SHUTDOWN)
 		return;
 	core->runflag = CORE_ST_STOP;
 }
-
 
 /// Called when the connection to Login Server is disconnected.
 static void loginif_on_disconnect(void)
@@ -66,13 +64,12 @@ static void loginif_on_disconnect(void)
 	ShowWarning("Connection to Login Server lost.\n\n");
 }
 
-
 /// Called when all the connection steps are completed.
 static void loginif_on_ready(void)
 {
 	loginif->check_shutdown();
 
-	//Send online accounts to login server.
+	// Send online accounts to login server.
 	chr->send_accounts_tologin(INVALID_TIMER, timer->gettick(), 0, 0);
 
 	// if no map-server already connected, display a message...
@@ -88,7 +85,7 @@ static void do_init_loginif(void)
 
 	// send a list of all online account IDs to login server
 	timer->add_func_list(chr->send_accounts_tologin, "chr->send_accounts_tologin");
-	timer->add_interval(timer->gettick() + 1000, chr->send_accounts_tologin, 0, 0, 3600 * 1000); //Sync online accounts every hour
+	timer->add_interval(timer->gettick() + 1000, chr->send_accounts_tologin, 0, 0, 3600 * 1000); // Sync online accounts every hour
 }
 
 static void do_final_loginif(void)
@@ -102,85 +99,85 @@ static void do_final_loginif(void)
 static void loginif_block_account(int account_id, int flag)
 {
 	Assert_retv(chr->login_fd != -1);
-	WFIFOHEAD(chr->login_fd,10);
-	WFIFOW(chr->login_fd,0) = 0x2724;
-	WFIFOL(chr->login_fd,2) = account_id;
-	WFIFOL(chr->login_fd,6) = flag; // new account status
-	WFIFOSET(chr->login_fd,10);
+	WFIFOHEAD(chr->login_fd, 10);
+	WFIFOW(chr->login_fd, 0) = 0x2724;
+	WFIFOL(chr->login_fd, 2) = account_id;
+	WFIFOL(chr->login_fd, 6) = flag; // new account status
+	WFIFOSET(chr->login_fd, 10);
 }
 
 static void loginif_ban_account(int account_id, short year, short month, short day, short hour, short minute, short second)
 {
 	Assert_retv(chr->login_fd != -1);
-	WFIFOHEAD(chr->login_fd,18);
+	WFIFOHEAD(chr->login_fd, 18);
 	WFIFOW(chr->login_fd, 0) = 0x2725;
 	WFIFOL(chr->login_fd, 2) = account_id;
 	WFIFOW(chr->login_fd, 6) = year;
 	WFIFOW(chr->login_fd, 8) = month;
-	WFIFOW(chr->login_fd,10) = day;
-	WFIFOW(chr->login_fd,12) = hour;
-	WFIFOW(chr->login_fd,14) = minute;
-	WFIFOW(chr->login_fd,16) = second;
-	WFIFOSET(chr->login_fd,18);
+	WFIFOW(chr->login_fd, 10) = day;
+	WFIFOW(chr->login_fd, 12) = hour;
+	WFIFOW(chr->login_fd, 14) = minute;
+	WFIFOW(chr->login_fd, 16) = second;
+	WFIFOSET(chr->login_fd, 18);
 }
 
 static void loginif_unban_account(int account_id)
 {
 	Assert_retv(chr->login_fd != -1);
-	WFIFOHEAD(chr->login_fd,6);
-	WFIFOW(chr->login_fd,0) = 0x272a;
-	WFIFOL(chr->login_fd,2) = account_id;
-	WFIFOSET(chr->login_fd,6);
+	WFIFOHEAD(chr->login_fd, 6);
+	WFIFOW(chr->login_fd, 0) = 0x272a;
+	WFIFOL(chr->login_fd, 2) = account_id;
+	WFIFOSET(chr->login_fd, 6);
 }
 
 static void loginif_changesex(int account_id)
 {
 	Assert_retv(chr->login_fd != -1);
-	WFIFOHEAD(chr->login_fd,6);
-	WFIFOW(chr->login_fd,0) = 0x2727;
-	WFIFOL(chr->login_fd,2) = account_id;
-	WFIFOSET(chr->login_fd,6);
+	WFIFOHEAD(chr->login_fd, 6);
+	WFIFOW(chr->login_fd, 0) = 0x2727;
+	WFIFOL(chr->login_fd, 2) = account_id;
+	WFIFOSET(chr->login_fd, 6);
 }
 
 static void loginif_auth(int fd, struct char_session_data *sd, uint32 ipl)
 {
 	Assert_retv(chr->login_fd != -1);
 	nullpo_retv(sd);
-	WFIFOHEAD(chr->login_fd,23);
-	WFIFOW(chr->login_fd,0) = 0x2712; // ask login-server to authenticate an account
-	WFIFOL(chr->login_fd,2) = sd->account_id;
-	WFIFOL(chr->login_fd,6) = sd->login_id1;
-	WFIFOL(chr->login_fd,10) = sd->login_id2;
-	WFIFOB(chr->login_fd,14) = sd->sex;
-	WFIFOL(chr->login_fd,15) = htonl(ipl);
-	WFIFOL(chr->login_fd,19) = fd;
-	WFIFOSET(chr->login_fd,23);
+	WFIFOHEAD(chr->login_fd, 23);
+	WFIFOW(chr->login_fd, 0) = 0x2712; // ask login-server to authenticate an account
+	WFIFOL(chr->login_fd, 2) = sd->account_id;
+	WFIFOL(chr->login_fd, 6) = sd->login_id1;
+	WFIFOL(chr->login_fd, 10) = sd->login_id2;
+	WFIFOB(chr->login_fd, 14) = sd->sex;
+	WFIFOL(chr->login_fd, 15) = htonl(ipl);
+	WFIFOL(chr->login_fd, 19) = fd;
+	WFIFOSET(chr->login_fd, 23);
 }
 
 static void loginif_send_users_count(int users)
 {
 	Assert_retv(chr->login_fd != -1);
-	WFIFOHEAD(chr->login_fd,6);
-	WFIFOW(chr->login_fd,0) = 0x2714;
-	WFIFOL(chr->login_fd,2) = users;
-	WFIFOSET(chr->login_fd,6);
+	WFIFOHEAD(chr->login_fd, 6);
+	WFIFOW(chr->login_fd, 0) = 0x2714;
+	WFIFOL(chr->login_fd, 2) = users;
+	WFIFOSET(chr->login_fd, 6);
 }
 
 static void loginif_connect_to_server(void)
 {
 	Assert_retv(chr->login_fd != -1);
-	WFIFOHEAD(chr->login_fd,86);
-	WFIFOW(chr->login_fd,0) = 0x2710;
-	memcpy(WFIFOP(chr->login_fd,2), chr->userid, NAME_LENGTH);
-	memcpy(WFIFOP(chr->login_fd,26), chr->passwd, NAME_LENGTH);
-	WFIFOL(chr->login_fd,50) = 0;
-	WFIFOL(chr->login_fd,54) = htonl(chr->ip);
-	WFIFOW(chr->login_fd,58) = htons(chr->port);
-	memcpy(WFIFOP(chr->login_fd,60), chr->server_name, 20);
-	WFIFOW(chr->login_fd,80) = 0;
-	WFIFOW(chr->login_fd,82) = chr->server_type;
-	WFIFOW(chr->login_fd,84) = chr->new_display; //only display (New) if they want to [Kevin]
-	WFIFOSET(chr->login_fd,86);
+	WFIFOHEAD(chr->login_fd, 86);
+	WFIFOW(chr->login_fd, 0) = 0x2710;
+	memcpy(WFIFOP(chr->login_fd, 2), chr->userid, NAME_LENGTH);
+	memcpy(WFIFOP(chr->login_fd, 26), chr->passwd, NAME_LENGTH);
+	WFIFOL(chr->login_fd, 50) = 0;
+	WFIFOL(chr->login_fd, 54) = htonl(chr->ip);
+	WFIFOW(chr->login_fd, 58) = htons(chr->port);
+	memcpy(WFIFOP(chr->login_fd, 60), chr->server_name, 20);
+	WFIFOW(chr->login_fd, 80) = 0;
+	WFIFOW(chr->login_fd, 82) = chr->server_type;
+	WFIFOW(chr->login_fd, 84) = chr->new_display; // only display (New) if they want to [Kevin]
+	WFIFOSET(chr->login_fd, 86);
 }
 
 // this packet need only for api server
@@ -194,7 +191,8 @@ static void loginif_set_char_online(int char_id, int account_id)
 	WFIFOSET(chr->login_fd, 10);
 }
 
-void loginif_defaults(void) {
+void loginif_defaults(void)
+{
 	loginif = &loginif_s;
 
 	loginif->init = do_init_loginif;

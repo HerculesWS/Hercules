@@ -20,12 +20,12 @@
  */
 
 #ifndef CONFIG
-#define CONFIG(a, b, c, d, e)
+	#define CONFIG(a, b, c, d, e)
 #endif
 
 CONFIG(int, max_gif_guild_emblem_size, 51200, 0, 8388607)
-CONFIG(int, max_bmp_guild_emblem_size, 1800,  0, 2000)
-CONFIG(int, guild_emblem_width,        24,    1, 10000)
-CONFIG(int, guild_emblem_height,       24,    1, 10000)
-CONFIG(int, min_guild_emblem_frames,   1,     1, 10000)
-CONFIG(int, max_guild_emblem_frames,   10000, 1, 10000)
+CONFIG(int, max_bmp_guild_emblem_size, 1800, 0, 2000)
+CONFIG(int, guild_emblem_width, 24, 1, 10000)
+CONFIG(int, guild_emblem_height, 24, 1, 10000)
+CONFIG(int, min_guild_emblem_frames, 1, 1, 10000)
+CONFIG(int, max_guild_emblem_frames, 10000, 1, 10000)

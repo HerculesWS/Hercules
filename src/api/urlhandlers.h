@@ -19,10 +19,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #ifndef handler
-#define handler(method, url, func, flags)
-#define handler2(method, url, func, flags)
-#define packet_handler(func)
-#endif  // handler
+	#define handler(method, url, func, flags)
+	#define handler2(method, url, func, flags)
+	#define packet_handler(func)
+#endif // handler
 
 handler2(HTTP_POST, "/userconfig/load", userconfig_load, REQ_API);
 handler2(HTTP_POST, "/userconfig/save", userconfig_save, REQ_API_AUTH | REQ_DATA | REQ_AUTO_CLOSE);

@@ -25,8 +25,8 @@
 
 #include "map/battle.h" // struct battle_config
 #include "map/map.h"
-#include "map/mob.h"    // MAX_MOB_DB
-#include "map/pc.h"     // W_MUSICAL, W_WHIP
+#include "map/mob.h" // MAX_MOB_DB
+#include "map/pc.h"  // W_MUSICAL, W_WHIP
 #include "map/refine.h"
 #include "map/script.h" // item script processing
 #include "common/HPM.h"
@@ -54,25 +54,28 @@ static int itemdb_searchname_sub(union DBKey key, struct DBData *data, va_list a
 {
 	struct item_data *item = DB->data2ptr(data), **dst, **dst2;
 	char *str;
-	str=va_arg(ap,char *);
+	str = va_arg(ap, char *);
 	nullpo_ret(str);
-	dst=va_arg(ap,struct item_data **);
+	dst = va_arg(ap, struct item_data **);
 	nullpo_ret(dst);
-	dst2=va_arg(ap,struct item_data **);
+	dst2 = va_arg(ap, struct item_data **);
 	nullpo_ret(dst2);
-	if (item == &itemdb->dummy) return 0;
+	if (item == &itemdb->dummy)
+		return 0;
 
-	//Absolute priority to Aegis code name.
-	if (*dst != NULL) return 0;
-	if ( battle_config.case_sensitive_aegisnames && strcmp(item->name,str) == 0 )
-		*dst=item;
-	else if ( !battle_config.case_sensitive_aegisnames && strcasecmp(item->name,str) == 0 )
-		*dst=item;
+	// Absolute priority to Aegis code name.
+	if (*dst != NULL)
+		return 0;
+	if (battle_config.case_sensitive_aegisnames && strcmp(item->name, str) == 0)
+		*dst = item;
+	else if (!battle_config.case_sensitive_aegisnames && strcasecmp(item->name, str) == 0)
+		*dst = item;
 
-	//Second priority to Client displayed name.
-	if (*dst2 != NULL) return 0;
-	if( strcmpi(item->jname,str)==0 )
-		*dst2=item;
+	// Second priority to Client displayed name.
+	if (*dst2 != NULL)
+		return 0;
+	if (strcmpi(item->jname, str) == 0)
+		*dst2 = item;
 	return 0;
 }
 
@@ -81,35 +84,35 @@ static int itemdb_searchname_sub(union DBKey key, struct DBData *data, va_list a
  *------------------------------------------*/
 static struct item_data *itemdb_searchname(const char *str)
 {
-	struct item_data* item;
-	struct item_data* item2=NULL;
+	struct item_data *item;
+	struct item_data *item2 = NULL;
 	int i;
 
 	nullpo_retr(NULL, str);
-	for( i = 0; i < ARRAYLENGTH(itemdb->array); ++i ) {
+	for (i = 0; i < ARRAYLENGTH(itemdb->array); ++i) {
 		item = itemdb->array[i];
-		if( item == NULL )
+		if (item == NULL)
 			continue;
 
 		// Absolute priority to Aegis code name.
-		if ( battle_config.case_sensitive_aegisnames && strcmp(item->name,str) == 0 )
+		if (battle_config.case_sensitive_aegisnames && strcmp(item->name, str) == 0)
 			return item;
-		else if ( !battle_config.case_sensitive_aegisnames && strcasecmp(item->name,str) == 0 )
+		else if (!battle_config.case_sensitive_aegisnames && strcasecmp(item->name, str) == 0)
 			return item;
 
-		//Second priority to Client displayed name.
-		if (!item2 && strcasecmp(item->jname,str) == 0)
+		// Second priority to Client displayed name.
+		if (!item2 && strcasecmp(item->jname, str) == 0)
 			item2 = item;
 	}
 
 	item = NULL;
-	itemdb->other->foreach(itemdb->other,itemdb->searchname_sub,str,&item,&item2);
-	return item?item:item2;
+	itemdb->other->foreach (itemdb->other, itemdb->searchname_sub, str, &item, &item2);
+	return item ? item : item2;
 }
 /* name to item data */
 static struct item_data *itemdb_name2id(const char *str)
 {
-	return strdb_get(itemdb->names,str);
+	return strdb_get(itemdb->names, str);
 }
 
 /**
@@ -124,20 +127,9 @@ static int itemdb_searchname_array_sub(union DBKey key, struct DBData data, va_l
 	nullpo_ret(str);
 
 	if (itd == &itemdb->dummy)
-		return 1; //Invalid item.
+		return 1; // Invalid item.
 
-	if (
-		(flag == IT_SEARCH_NAME_PARTIAL
-		 && (stristr(itd->jname, str) != NULL
-			 || (battle_config.case_sensitive_aegisnames && strstr(itd->name, str))
-			 || (!battle_config.case_sensitive_aegisnames && stristr(itd->name, str))
-			 ))
-		|| (flag == IT_SEARCH_NAME_EXACT
-			&& (strcmp(itd->jname, str) == 0
-				|| (battle_config.case_sensitive_aegisnames && strcmp(itd->name, str) == 0)
-				|| (!battle_config.case_sensitive_aegisnames && strcasecmp(itd->name, str) == 0)
-				))
-		) {
+	if ((flag == IT_SEARCH_NAME_PARTIAL && (stristr(itd->jname, str) != NULL || (battle_config.case_sensitive_aegisnames && strstr(itd->name, str)) || (!battle_config.case_sensitive_aegisnames && stristr(itd->name, str)))) || (flag == IT_SEARCH_NAME_EXACT && (strcmp(itd->jname, str) == 0 || (battle_config.case_sensitive_aegisnames && strcmp(itd->name, str) == 0) || (!battle_config.case_sensitive_aegisnames && strcasecmp(itd->name, str) == 0)))) {
 
 		return 0;
 	} else {
@@ -160,9 +152,7 @@ static int itemdb_searchname_array(struct item_data **data, const int size, cons
 	Assert_ret(flag >= IT_SEARCH_NAME_PARTIAL && flag < IT_SEARCH_NAME_MAX);
 	Assert_ret(size > 0);
 
-	int
-		results_count = 0,
-		length = 0;
+	int results_count = 0, length = 0;
 
 	// Search in array
 	for (int i = 0; i < ARRAYLENGTH(itemdb->array); ++i) {
@@ -171,18 +161,7 @@ static int itemdb_searchname_array(struct item_data **data, const int size, cons
 		if (itd == NULL)
 			continue;
 
-		if (
-			(flag == IT_SEARCH_NAME_PARTIAL
-			 && (stristr(itd->jname, str) != NULL
-				 || (battle_config.case_sensitive_aegisnames && strstr(itd->name, str))
-				 || (!battle_config.case_sensitive_aegisnames && stristr(itd->name, str))
-				 ))
-			|| (flag == IT_SEARCH_NAME_EXACT
-				&& (strcmp(itd->jname, str) == 0
-					|| (battle_config.case_sensitive_aegisnames && strcmp(itd->name, str) == 0)
-					|| (!battle_config.case_sensitive_aegisnames && strcasecmp(itd->name, str) == 0)
-					))
-			) {
+		if ((flag == IT_SEARCH_NAME_PARTIAL && (stristr(itd->jname, str) != NULL || (battle_config.case_sensitive_aegisnames && strstr(itd->name, str)) || (!battle_config.case_sensitive_aegisnames && stristr(itd->name, str)))) || (flag == IT_SEARCH_NAME_EXACT && (strcmp(itd->jname, str) == 0 || (battle_config.case_sensitive_aegisnames && strcmp(itd->name, str) == 0) || (!battle_config.case_sensitive_aegisnames && strcasecmp(itd->name, str) == 0)))) {
 			if (length < size) {
 				data[length] = itd;
 				++length;
@@ -221,17 +200,17 @@ static int itemdb_chain_item(unsigned short chain_id, int *rate)
 {
 	struct item_chain_entry *entry;
 
-	if( chain_id >= itemdb->chain_count ) {
+	if (chain_id >= itemdb->chain_count) {
 		ShowError("itemdb_chain_item: unknown chain id %d\n", chain_id);
 		return UNKNOWN_ITEM_ID;
 	}
 
-	entry = &itemdb->chains[chain_id].items[ rnd()%itemdb->chains[chain_id].qty ];
+	entry = &itemdb->chains[chain_id].items[rnd() % itemdb->chains[chain_id].qty];
 
-	if( rnd()%10000 >= entry->rate )
+	if (rnd() % 10000 >= entry->rate)
 		return 0;
 
-	if( rate )
+	if (rate)
 		rate[0] = entry->rate;
 	return entry->id;
 }
@@ -242,48 +221,48 @@ static void itemdb_package_item(struct map_session_data *sd, struct item_package
 
 	nullpo_retv(sd);
 	nullpo_retv(package);
-	for( i = 0; i < package->must_qty; i++ ) {
+	for (i = 0; i < package->must_qty; i++) {
 		struct item it;
 		memset(&it, 0, sizeof(it));
 
 		it.nameid = package->must_items[i].id;
 		it.identify = 1;
 
-		if( package->must_items[i].hours ) {
-			it.expire_time = (unsigned int)(time(NULL) + ((package->must_items[i].hours*60)*60));
+		if (package->must_items[i].hours) {
+			it.expire_time = (unsigned int)(time(NULL) + ((package->must_items[i].hours * 60) * 60));
 		}
 
-		if( package->must_items[i].named ) {
+		if (package->must_items[i].named) {
 			it.card[0] = CARD0_FORGE;
 			it.card[1] = 0;
 			it.card[2] = GetWord(sd->status.char_id, 0);
 			it.card[3] = GetWord(sd->status.char_id, 1);
 		}
 
-		if( package->must_items[i].announce )
+		if (package->must_items[i].announce)
 			clif->package_announce(sd, package->must_items[i].id, package->id, it.refine);
 
-		if ( package->must_items[i].force_serial )
+		if (package->must_items[i].force_serial)
 			it.unique_id = itemdb->unique_id(sd);
 
 		get_count = itemdb->isstackable(package->must_items[i].id) ? package->must_items[i].qty : 1;
 
 		it.amount = get_count == 1 ? 1 : get_count;
 
-		for( j = 0; j < package->must_items[i].qty; j += get_count ) {
-			if ( ( flag = pc->additem(sd, &it, get_count, LOG_TYPE_SCRIPT) ) )
+		for (j = 0; j < package->must_items[i].qty; j += get_count) {
+			if ((flag = pc->additem(sd, &it, get_count, LOG_TYPE_SCRIPT)))
 				clif->additem(sd, 0, 0, flag);
 		}
 	}
 
-	if( package->random_qty ) {
-		for( i = 0; i < package->random_qty; i++ ) {
+	if (package->random_qty) {
+		for (i = 0; i < package->random_qty; i++) {
 			struct item_package_rand_entry *entry;
 
-			entry = &package->random_groups[i].random_list[rnd()%package->random_groups[i].random_qty];
+			entry = &package->random_groups[i].random_list[rnd() % package->random_groups[i].random_qty];
 
-			while( 1 ) {
-				if( rnd()%10000 >= entry->rate ) {
+			while (1) {
+				if (rnd() % 10000 >= entry->rate) {
 					entry = entry->next;
 					continue;
 				} else {
@@ -293,26 +272,26 @@ static void itemdb_package_item(struct map_session_data *sd, struct item_package
 					it.nameid = entry->id;
 					it.identify = 1;
 
-					if( entry->hours ) {
-						it.expire_time = (unsigned int)(time(NULL) + ((entry->hours*60)*60));
+					if (entry->hours) {
+						it.expire_time = (unsigned int)(time(NULL) + ((entry->hours * 60) * 60));
 					}
 
-					if( entry->named ) {
+					if (entry->named) {
 						it.card[0] = CARD0_FORGE;
 						it.card[1] = 0;
 						it.card[2] = GetWord(sd->status.char_id, 0);
 						it.card[3] = GetWord(sd->status.char_id, 1);
 					}
 
-					if( entry->announce )
+					if (entry->announce)
 						clif->package_announce(sd, entry->id, package->id, it.refine);
 
 					get_count = itemdb->isstackable(entry->id) ? entry->qty : 1;
 
 					it.amount = get_count == 1 ? 1 : get_count;
 
-					for( j = 0; j < entry->qty; j += get_count ) {
-						if ( ( flag = pc->additem(sd, &it, get_count, LOG_TYPE_SCRIPT) ) )
+					for (j = 0; j < entry->qty; j += get_count) {
+						if ((flag = pc->additem(sd, &it, get_count, LOG_TYPE_SCRIPT)))
 							clif->additem(sd, 0, 0, flag);
 					}
 					break;
@@ -330,7 +309,7 @@ static int itemdb_searchrandomid(struct item_group *group)
 
 	nullpo_retr(UNKNOWN_ITEM_ID, group);
 	if (group->qty)
-		return group->nameid[rnd()%group->qty];
+		return group->nameid[rnd() % group->qty];
 
 	ShowError("itemdb_searchrandomid: No item entries for group id %d\n", group->id);
 	return UNKNOWN_ITEM_ID;
@@ -340,8 +319,8 @@ static bool itemdb_in_group(struct item_group *group, int nameid)
 	int i;
 
 	nullpo_retr(false, group);
-	for( i = 0; i < group->qty; i++ )
-		if( group->nameid[i] == nameid )
+	for (i = 0; i < group->qty; i++)
+		if (group->nameid[i] == nameid)
 			return true;
 
 	return false;
@@ -367,13 +346,13 @@ static const struct item_group *itemdb_search_group(int nameid)
 /// Returns the item_data or NULL if it does not exist.
 static struct item_data *itemdb_exists(int nameid)
 {
-	struct item_data* item;
+	struct item_data *item;
 
-	if( nameid >= 0 && nameid < ARRAYLENGTH(itemdb->array) )
+	if (nameid >= 0 && nameid < ARRAYLENGTH(itemdb->array))
 		return itemdb->array[nameid];
-	item = (struct item_data*)idb_get(itemdb->other,nameid);
-	if( item == &itemdb->dummy )
-		return NULL;// dummy data, doesn't exist
+	item = (struct item_data *)idb_get(itemdb->other, nameid);
+	if (item == &itemdb->dummy)
+		return NULL; // dummy data, doesn't exist
 	return item;
 }
 
@@ -401,23 +380,35 @@ static struct item_reform *itemdb_reform_exists(int idx)
 /// @param type Type id to retrieve name for ( IT_* ).
 static const char *itemdb_typename(enum item_types type)
 {
-	switch(type)
-	{
-		case IT_HEALING:        return "Potion/Food";
-		case IT_USABLE:         return "Usable";
-		case IT_ETC:            return "Etc.";
-		case IT_WEAPON:         return "Weapon";
-		case IT_ARMOR:          return "Armor";
-		case IT_CARD:           return "Card";
-		case IT_PETEGG:         return "Pet Egg";
-		case IT_PETARMOR:       return "Pet Accessory";
-		case IT_AMMO:           return "Arrow/Ammunition";
-		case IT_DELAYCONSUME:   return "Delay-Consume Usable";
-		case IT_SELECTPACKAGE:  return "Selection Package Usable";
-		case IT_CASH:           return "Cash Usable";
+	switch (type) {
+		case IT_HEALING:
+			return "Potion/Food";
+		case IT_USABLE:
+			return "Usable";
+		case IT_ETC:
+			return "Etc.";
+		case IT_WEAPON:
+			return "Weapon";
+		case IT_ARMOR:
+			return "Armor";
+		case IT_CARD:
+			return "Card";
+		case IT_PETEGG:
+			return "Pet Egg";
+		case IT_PETARMOR:
+			return "Pet Accessory";
+		case IT_AMMO:
+			return "Arrow/Ammunition";
+		case IT_DELAYCONSUME:
+			return "Delay-Consume Usable";
+		case IT_SELECTPACKAGE:
+			return "Selection Package Usable";
+		case IT_CASH:
+			return "Cash Usable";
 		case IT_UNKNOWN2:
 		case IT_MAX:
-		case IT_UNKNOWN:        return "Unknown Type";
+		case IT_UNKNOWN:
+			return "Unknown Type";
 	}
 	return "Unknown Type";
 }
@@ -434,7 +425,7 @@ static const char *itemdb_typename(enum item_types type)
  */
 static void itemdb_jobid2mapid(uint64 *bclass, int job_class, bool enable)
 {
-	uint64 mask[3] = { 0 };
+	uint64 mask[3] = {0};
 	int i;
 
 	nullpo_retv(bclass);
@@ -531,7 +522,7 @@ static void itemdb_jobid2mapid(uint64 *bclass, int job_class, bool enable)
 			mask[0] = 1ULL << MAPID_SUMMONER;
 			break;
 		// Other Classes
-		case JOB_GANGSI: //Bongun/Munak
+		case JOB_GANGSI: // Bongun/Munak
 			mask[0] = 1ULL << MAPID_GANGSI;
 			break;
 		case JOB_DEATH_KNIGHT:
@@ -563,95 +554,95 @@ static void itemdb_jobmask2mapid(uint64 *bclass, uint64 jobmask)
 {
 	nullpo_retv(bclass);
 	bclass[0] = bclass[1] = bclass[2] = 0;
-	//Base classes
-	if (jobmask & 1ULL<<JOB_NOVICE) {
-		//Both Novice/Super-Novice are counted with the same ID
-		bclass[0] |= 1ULL<<MAPID_NOVICE;
-		bclass[1] |= 1ULL<<MAPID_NOVICE;
+	// Base classes
+	if (jobmask & 1ULL << JOB_NOVICE) {
+		// Both Novice/Super-Novice are counted with the same ID
+		bclass[0] |= 1ULL << MAPID_NOVICE;
+		bclass[1] |= 1ULL << MAPID_NOVICE;
 	}
-	if (jobmask & 1ULL<<JOB_SWORDMAN)
-		bclass[0] |= 1ULL<<MAPID_SWORDMAN;
-	if (jobmask & 1ULL<<JOB_MAGE)
-		bclass[0] |= 1ULL<<MAPID_MAGE;
-	if (jobmask & 1ULL<<JOB_ARCHER)
-		bclass[0] |= 1ULL<<MAPID_ARCHER;
-	if (jobmask & 1ULL<<JOB_ACOLYTE)
-		bclass[0] |= 1ULL<<MAPID_ACOLYTE;
-	if (jobmask & 1ULL<<JOB_MERCHANT)
-		bclass[0] |= 1ULL<<MAPID_MERCHANT;
-	if (jobmask & 1ULL<<JOB_THIEF)
-		bclass[0] |= 1ULL<<MAPID_THIEF;
-	//2-1 classes
-	if (jobmask & 1ULL<<JOB_KNIGHT)
-		bclass[1] |= 1ULL<<MAPID_SWORDMAN;
-	if (jobmask & 1ULL<<JOB_PRIEST)
-		bclass[1] |= 1ULL<<MAPID_ACOLYTE;
-	if (jobmask & 1ULL<<JOB_WIZARD)
-		bclass[1] |= 1ULL<<MAPID_MAGE;
-	if (jobmask & 1ULL<<JOB_BLACKSMITH)
-		bclass[1] |= 1ULL<<MAPID_MERCHANT;
-	if (jobmask & 1ULL<<JOB_HUNTER)
-		bclass[1] |= 1ULL<<MAPID_ARCHER;
-	if (jobmask & 1ULL<<JOB_ASSASSIN)
-		bclass[1] |= 1ULL<<MAPID_THIEF;
-	//2-2 classes
-	if (jobmask & 1ULL<<JOB_CRUSADER)
-		bclass[2] |= 1ULL<<MAPID_SWORDMAN;
-	if (jobmask & 1ULL<<JOB_MONK)
-		bclass[2] |= 1ULL<<MAPID_ACOLYTE;
-	if (jobmask & 1ULL<<JOB_SAGE)
-		bclass[2] |= 1ULL<<MAPID_MAGE;
-	if (jobmask & 1ULL<<JOB_ALCHEMIST)
-		bclass[2] |= 1ULL<<MAPID_MERCHANT;
-	if (jobmask & 1ULL<<JOB_BARD)
-		bclass[2] |= 1ULL<<MAPID_ARCHER;
-#if 0 // Bard/Dancer share the same slot now.
+	if (jobmask & 1ULL << JOB_SWORDMAN)
+		bclass[0] |= 1ULL << MAPID_SWORDMAN;
+	if (jobmask & 1ULL << JOB_MAGE)
+		bclass[0] |= 1ULL << MAPID_MAGE;
+	if (jobmask & 1ULL << JOB_ARCHER)
+		bclass[0] |= 1ULL << MAPID_ARCHER;
+	if (jobmask & 1ULL << JOB_ACOLYTE)
+		bclass[0] |= 1ULL << MAPID_ACOLYTE;
+	if (jobmask & 1ULL << JOB_MERCHANT)
+		bclass[0] |= 1ULL << MAPID_MERCHANT;
+	if (jobmask & 1ULL << JOB_THIEF)
+		bclass[0] |= 1ULL << MAPID_THIEF;
+	// 2-1 classes
+	if (jobmask & 1ULL << JOB_KNIGHT)
+		bclass[1] |= 1ULL << MAPID_SWORDMAN;
+	if (jobmask & 1ULL << JOB_PRIEST)
+		bclass[1] |= 1ULL << MAPID_ACOLYTE;
+	if (jobmask & 1ULL << JOB_WIZARD)
+		bclass[1] |= 1ULL << MAPID_MAGE;
+	if (jobmask & 1ULL << JOB_BLACKSMITH)
+		bclass[1] |= 1ULL << MAPID_MERCHANT;
+	if (jobmask & 1ULL << JOB_HUNTER)
+		bclass[1] |= 1ULL << MAPID_ARCHER;
+	if (jobmask & 1ULL << JOB_ASSASSIN)
+		bclass[1] |= 1ULL << MAPID_THIEF;
+	// 2-2 classes
+	if (jobmask & 1ULL << JOB_CRUSADER)
+		bclass[2] |= 1ULL << MAPID_SWORDMAN;
+	if (jobmask & 1ULL << JOB_MONK)
+		bclass[2] |= 1ULL << MAPID_ACOLYTE;
+	if (jobmask & 1ULL << JOB_SAGE)
+		bclass[2] |= 1ULL << MAPID_MAGE;
+	if (jobmask & 1ULL << JOB_ALCHEMIST)
+		bclass[2] |= 1ULL << MAPID_MERCHANT;
+	if (jobmask & 1ULL << JOB_BARD)
+		bclass[2] |= 1ULL << MAPID_ARCHER;
+#if 0  // Bard/Dancer share the same slot now.
 	if (jobmask & 1ULL<<JOB_DANCER)
 		bclass[2] |= 1ULL<<MAPID_ARCHER;
 #endif // 0
-	if (jobmask & 1ULL<<JOB_ROGUE)
-		bclass[2] |= 1ULL<<MAPID_THIEF;
-	//Special classes that don't fit above.
-	if (jobmask & 1ULL<<21) //Taekwon boy
-		bclass[0] |= 1ULL<<MAPID_TAEKWON;
-	if (jobmask & 1ULL<<22) //Star Gladiator
-		bclass[1] |= 1ULL<<MAPID_TAEKWON;
-	if (jobmask & 1ULL<<23) //Soul Linker
-		bclass[2] |= 1ULL<<MAPID_TAEKWON;
-	if (jobmask & 1ULL<<JOB_GUNSLINGER) {
-		//Rebellion job can equip Gunslinger equips. [Rytech]
-		bclass[0] |= 1ULL<<MAPID_GUNSLINGER;
-		bclass[1] |= 1ULL<<MAPID_GUNSLINGER;
+	if (jobmask & 1ULL << JOB_ROGUE)
+		bclass[2] |= 1ULL << MAPID_THIEF;
+	// Special classes that don't fit above.
+	if (jobmask & 1ULL << 21) // Taekwon boy
+		bclass[0] |= 1ULL << MAPID_TAEKWON;
+	if (jobmask & 1ULL << 22) // Star Gladiator
+		bclass[1] |= 1ULL << MAPID_TAEKWON;
+	if (jobmask & 1ULL << 23) // Soul Linker
+		bclass[2] |= 1ULL << MAPID_TAEKWON;
+	if (jobmask & 1ULL << JOB_GUNSLINGER) {
+		// Rebellion job can equip Gunslinger equips. [Rytech]
+		bclass[0] |= 1ULL << MAPID_GUNSLINGER;
+		bclass[1] |= 1ULL << MAPID_GUNSLINGER;
 	}
-	if (jobmask & 1ULL<<JOB_NINJA) {
-		//Kagerou/Oboro jobs can equip Ninja equips. [Rytech]
-		bclass[0] |= 1ULL<<MAPID_NINJA;
-		bclass[1] |= 1ULL<<MAPID_NINJA;
+	if (jobmask & 1ULL << JOB_NINJA) {
+		// Kagerou/Oboro jobs can equip Ninja equips. [Rytech]
+		bclass[0] |= 1ULL << MAPID_NINJA;
+		bclass[1] |= 1ULL << MAPID_NINJA;
 	}
-	if (jobmask & 1ULL<<26) //Bongun/Munak
-		bclass[0] |= 1ULL<<MAPID_GANGSI;
-	if (jobmask & 1ULL<<27) //Death Knight
-		bclass[1] |= 1ULL<<MAPID_GANGSI;
-	if (jobmask & 1ULL<<28) //Dark Collector
-		bclass[2] |= 1ULL<<MAPID_GANGSI;
-	if (jobmask & 1ULL<<29) //Kagerou / Oboro
-		bclass[1] |= 1ULL<<MAPID_NINJA;
-	if (jobmask & 1ULL<<30) //Rebellion
-		bclass[1] |= 1ULL<<MAPID_GUNSLINGER;
-	if (jobmask & 1ULL<<31) //Summoner
-		bclass[0] |= 1ULL<<MAPID_SUMMONER;
+	if (jobmask & 1ULL << 26) // Bongun/Munak
+		bclass[0] |= 1ULL << MAPID_GANGSI;
+	if (jobmask & 1ULL << 27) // Death Knight
+		bclass[1] |= 1ULL << MAPID_GANGSI;
+	if (jobmask & 1ULL << 28) // Dark Collector
+		bclass[2] |= 1ULL << MAPID_GANGSI;
+	if (jobmask & 1ULL << 29) // Kagerou / Oboro
+		bclass[1] |= 1ULL << MAPID_NINJA;
+	if (jobmask & 1ULL << 30) // Rebellion
+		bclass[1] |= 1ULL << MAPID_GUNSLINGER;
+	if (jobmask & 1ULL << 31) // Summoner
+		bclass[0] |= 1ULL << MAPID_SUMMONER;
 }
 
 static void create_dummy_data(void)
 {
 	memset(&itemdb->dummy, 0, sizeof(struct item_data));
-	itemdb->dummy.nameid=500;
-	itemdb->dummy.weight=1;
-	itemdb->dummy.value_sell=1;
-	itemdb->dummy.type=IT_ETC; //Etc item
-	safestrncpy(itemdb->dummy.name,"UNKNOWN_ITEM",sizeof(itemdb->dummy.name));
-	safestrncpy(itemdb->dummy.jname,"UNKNOWN_ITEM",sizeof(itemdb->dummy.jname));
-	itemdb->dummy.view_id=UNKNOWN_ITEM_ID;
+	itemdb->dummy.nameid = 500;
+	itemdb->dummy.weight = 1;
+	itemdb->dummy.value_sell = 1;
+	itemdb->dummy.type = IT_ETC; // Etc item
+	safestrncpy(itemdb->dummy.name, "UNKNOWN_ITEM", sizeof(itemdb->dummy.name));
+	safestrncpy(itemdb->dummy.jname, "UNKNOWN_ITEM", sizeof(itemdb->dummy.jname));
+	itemdb->dummy.view_id = UNKNOWN_ITEM_ID;
 }
 
 static struct item_data *create_item_data(int nameid)
@@ -671,17 +662,15 @@ static struct item_data *itemdb_load(int nameid)
 {
 	struct item_data *id;
 
-	if( nameid >= 0 && nameid < ARRAYLENGTH(itemdb->array) )
-	{
+	if (nameid >= 0 && nameid < ARRAYLENGTH(itemdb->array)) {
 		id = itemdb->array[nameid];
-		if( id == NULL || id == &itemdb->dummy )
+		if (id == NULL || id == &itemdb->dummy)
 			id = itemdb->array[nameid] = itemdb->create_item_data(nameid);
 		return id;
 	}
 
-	id = (struct item_data*)idb_get(itemdb->other, nameid);
-	if( id == NULL || id == &itemdb->dummy )
-	{
+	id = (struct item_data *)idb_get(itemdb->other, nameid);
+	if (id == NULL || id == &itemdb->dummy) {
 		id = itemdb->create_item_data(nameid);
 		idb_put(itemdb->other, nameid, id);
 	}
@@ -693,14 +682,13 @@ static struct item_data *itemdb_load(int nameid)
  *------------------------------------------*/
 static struct item_data *itemdb_search(int nameid)
 {
-	struct item_data* id;
-	if( nameid >= 0 && nameid < ARRAYLENGTH(itemdb->array) )
+	struct item_data *id;
+	if (nameid >= 0 && nameid < ARRAYLENGTH(itemdb->array))
 		id = itemdb->array[nameid];
 	else
-		id = (struct item_data*)idb_get(itemdb->other, nameid);
+		id = (struct item_data *)idb_get(itemdb->other, nameid);
 
-	if( id == NULL )
-	{
+	if (id == NULL) {
 		ShowWarning("itemdb_search: Item ID %d does not exists in the item_db. Using dummy data.\n", nameid);
 		id = &itemdb->dummy;
 		itemdb->dummy.nameid = nameid;
@@ -812,52 +800,52 @@ static int itemdb_isstackable2(struct item_data *data)
  *------------------------------------------*/
 static int itemdb_isdropable_sub(struct item_data *item, int gmlv, int unused)
 {
-	return (item && (!(item->flag.trade_restriction&ITR_NODROP) || gmlv >= item->gm_lv_trade_override));
+	return (item && (!(item->flag.trade_restriction & ITR_NODROP) || gmlv >= item->gm_lv_trade_override));
 }
 
 static int itemdb_cantrade_sub(struct item_data *item, int gmlv, int gmlv2)
 {
-	return (item && (!(item->flag.trade_restriction&ITR_NOTRADE) || gmlv >= item->gm_lv_trade_override || gmlv2 >= item->gm_lv_trade_override));
+	return (item && (!(item->flag.trade_restriction & ITR_NOTRADE) || gmlv >= item->gm_lv_trade_override || gmlv2 >= item->gm_lv_trade_override));
 }
 
 static int itemdb_canpartnertrade_sub(struct item_data *item, int gmlv, int gmlv2)
 {
-	return (item && (item->flag.trade_restriction&ITR_PARTNEROVERRIDE || gmlv >= item->gm_lv_trade_override || gmlv2 >= item->gm_lv_trade_override));
+	return (item && (item->flag.trade_restriction & ITR_PARTNEROVERRIDE || gmlv >= item->gm_lv_trade_override || gmlv2 >= item->gm_lv_trade_override));
 }
 
 static int itemdb_cansell_sub(struct item_data *item, int gmlv, int unused)
 {
-	return (item && (!(item->flag.trade_restriction&ITR_NOSELLTONPC) || gmlv >= item->gm_lv_trade_override));
+	return (item && (!(item->flag.trade_restriction & ITR_NOSELLTONPC) || gmlv >= item->gm_lv_trade_override));
 }
 
 static int itemdb_cancartstore_sub(struct item_data *item, int gmlv, int unused)
 {
-	return (item && (!(item->flag.trade_restriction&ITR_NOCART) || gmlv >= item->gm_lv_trade_override));
+	return (item && (!(item->flag.trade_restriction & ITR_NOCART) || gmlv >= item->gm_lv_trade_override));
 }
 
 static int itemdb_canstore_sub(struct item_data *item, int gmlv, int unused)
 {
-	return (item && (!(item->flag.trade_restriction&ITR_NOSTORAGE) || gmlv >= item->gm_lv_trade_override));
+	return (item && (!(item->flag.trade_restriction & ITR_NOSTORAGE) || gmlv >= item->gm_lv_trade_override));
 }
 
 static int itemdb_canguildstore_sub(struct item_data *item, int gmlv, int unused)
 {
-	return (item && (!(item->flag.trade_restriction&ITR_NOGSTORAGE) || gmlv >= item->gm_lv_trade_override));
+	return (item && (!(item->flag.trade_restriction & ITR_NOGSTORAGE) || gmlv >= item->gm_lv_trade_override));
 }
 
 static int itemdb_canmail_sub(struct item_data *item, int gmlv, int unused)
 {
-	return (item && (!(item->flag.trade_restriction&ITR_NOMAIL) || gmlv >= item->gm_lv_trade_override));
+	return (item && (!(item->flag.trade_restriction & ITR_NOMAIL) || gmlv >= item->gm_lv_trade_override));
 }
 
 static int itemdb_canauction_sub(struct item_data *item, int gmlv, int unused)
 {
-	return (item && (!(item->flag.trade_restriction&ITR_NOAUCTION) || gmlv >= item->gm_lv_trade_override));
+	return (item && (!(item->flag.trade_restriction & ITR_NOAUCTION) || gmlv >= item->gm_lv_trade_override));
 }
 
-static int itemdb_isrestricted(struct item *item, int gmlv, int gmlv2, int (*func)(struct item_data*, int, int))
+static int itemdb_isrestricted(struct item *item, int gmlv, int gmlv2, int (*func)(struct item_data *, int, int))
 {
-	struct item_data* item_data;
+	struct item_data *item_data;
 	int i;
 
 	nullpo_ret(item);
@@ -865,11 +853,12 @@ static int itemdb_isrestricted(struct item *item, int gmlv, int gmlv2, int (*fun
 	if (!func(item_data, gmlv, gmlv2))
 		return 0;
 
-	if(item_data->slot == 0 || itemdb_isspecial(item->card[0]))
+	if (item_data->slot == 0 || itemdb_isspecial(item->card[0]))
 		return 1;
 
-	for(i = 0; i < item_data->slot; i++) {
-		if (!item->card[i]) continue;
+	for (i = 0; i < item_data->slot; i++) {
+		if (!item->card[i])
+			continue;
 		if (!func(itemdb->search(item->card[i]), gmlv, gmlv2))
 			return 0;
 	}
@@ -922,7 +911,7 @@ static void itemdb_read_groups(void)
 	struct config_t item_group_conf;
 	struct config_setting_t *itg = NULL, *it = NULL;
 	char config_filename[256];
-	libconfig->format_db_path(DBPATH"item_group.conf", config_filename, sizeof(config_filename));
+	libconfig->format_db_path(DBPATH "item_group.conf", config_filename, sizeof(config_filename));
 	const char *itname;
 	int i = 0, count = 0, c;
 	unsigned int *gsize = NULL;
@@ -930,28 +919,28 @@ static void itemdb_read_groups(void)
 	if (!libconfig->load_file(&item_group_conf, config_filename))
 		return;
 
-	gsize = aMalloc( libconfig->setting_length(item_group_conf.root) * sizeof(unsigned int) );
+	gsize = aMalloc(libconfig->setting_length(item_group_conf.root) * sizeof(unsigned int));
 
-	for(i = 0; i < libconfig->setting_length(item_group_conf.root); i++)
+	for (i = 0; i < libconfig->setting_length(item_group_conf.root); i++)
 		gsize[i] = 0;
 
 	i = 0;
-	while( (itg = libconfig->setting_get_elem(item_group_conf.root,i++)) ) {
+	while ((itg = libconfig->setting_get_elem(item_group_conf.root, i++))) {
 		const char *name = config_setting_name(itg);
 
-		if( !itemdb->name2id(name) ) {
-			ShowWarning("itemdb_read_groups: unknown group item '%s', skipping..\n",name);
+		if (!itemdb->name2id(name)) {
+			ShowWarning("itemdb_read_groups: unknown group item '%s', skipping..\n", name);
 			config_setting_remove(item_group_conf.root, name);
 			--i;
 			continue;
 		}
 
 		c = 0;
-		while( (it = libconfig->setting_get_elem(itg,c++)) ) {
-			if( config_setting_is_list(it) )
-				gsize[ i - 1 ] += libconfig->setting_get_int_elem(it,1);
+		while ((it = libconfig->setting_get_elem(itg, c++))) {
+			if (config_setting_is_list(it))
+				gsize[i - 1] += libconfig->setting_get_int_elem(it, 1);
 			else
-				gsize[ i - 1 ] += 1;
+				gsize[i - 1] += 1;
 		}
 	}
 
@@ -959,37 +948,37 @@ static void itemdb_read_groups(void)
 	CREATE(itemdb->groups, struct item_group, libconfig->setting_length(item_group_conf.root));
 	itemdb->group_count = (unsigned short)libconfig->setting_length(item_group_conf.root);
 
-	while( (itg = libconfig->setting_get_elem(item_group_conf.root,i++)) ) {
+	while ((itg = libconfig->setting_get_elem(item_group_conf.root, i++))) {
 		struct item_data *data = itemdb->name2id(config_setting_name(itg));
 		int ecount = 0;
 
 		data->group = &itemdb->groups[count];
 
 		itemdb->groups[count].id = data->nameid;
-		itemdb->groups[count].qty = gsize[ count ];
+		itemdb->groups[count].qty = gsize[count];
 
 		CREATE(itemdb->groups[count].nameid, int, gsize[count] + 1);
 		c = 0;
-		while( (it = libconfig->setting_get_elem(itg,c++)) ) {
+		while ((it = libconfig->setting_get_elem(itg, c++))) {
 			int repeat = 1;
-			if( config_setting_is_list(it) ) {
-				itname = libconfig->setting_get_string_elem(it,0);
-				repeat = libconfig->setting_get_int_elem(it,1);
+			if (config_setting_is_list(it)) {
+				itname = libconfig->setting_get_string_elem(it, 0);
+				repeat = libconfig->setting_get_int_elem(it, 1);
 			} else
-				itname = libconfig->setting_get_string_elem(itg,c - 1);
+				itname = libconfig->setting_get_string_elem(itg, c - 1);
 
 			if (itname[0] == 'I' && itname[1] == 'D' && strlen(itname) <= 12) {
-				if( !( data = itemdb->exists(atoi(itname+2)) ) )
-					ShowWarning("itemdb_read_groups: unknown item ID '%d' in group '%s'!\n",atoi(itname+2),config_setting_name(itg));
-			} else if( !( data = itemdb->name2id(itname) ) )
-				ShowWarning("itemdb_read_groups: unknown item '%s' in group '%s'!\n",itname,config_setting_name(itg));
+				if (!(data = itemdb->exists(atoi(itname + 2))))
+					ShowWarning("itemdb_read_groups: unknown item ID '%d' in group '%s'!\n", atoi(itname + 2), config_setting_name(itg));
+			} else if (!(data = itemdb->name2id(itname)))
+				ShowWarning("itemdb_read_groups: unknown item '%s' in group '%s'!\n", itname, config_setting_name(itg));
 
 			itemdb->groups[count].nameid[ecount] = data ? data->nameid : 0;
-			if( repeat > 1 ) {
-				//memset would be better? I failed to get the following to work though hu
-				//memset(&itemdb->groups[count].nameid[ecount+1],itemdb->groups[count].nameid[ecount],sizeof(itemdb->groups[count].nameid[0])*repeat);
+			if (repeat > 1) {
+				// memset would be better? I failed to get the following to work though hu
+				// memset(&itemdb->groups[count].nameid[ecount+1],itemdb->groups[count].nameid[ecount],sizeof(itemdb->groups[count].nameid[0])*repeat);
 				int z;
-				for( z = ecount+1; z < ecount+repeat; z++ )
+				for (z = ecount + 1; z < ecount + repeat; z++)
 					itemdb->groups[count].nameid[z] = itemdb->groups[count].nameid[ecount];
 			}
 			ecount += repeat;
@@ -999,7 +988,7 @@ static void itemdb_read_groups(void)
 
 	libconfig->destroy(&item_group_conf);
 	aFree(gsize);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, config_filename);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, config_filename);
 }
 
 /* [Ind/Hercules] - HCache for Packages */
@@ -1010,65 +999,65 @@ static void itemdb_write_cached_packages(const char *config_filename)
 	unsigned short i;
 
 	nullpo_retv(config_filename);
-	if( !(file = HCache->open(config_filename,"wb")) ) {
+	if (!(file = HCache->open(config_filename, "wb"))) {
 		return;
 	}
 
 	// first 2 bytes = package count
-	hwrite(&pcount,sizeof(pcount),1,file);
+	hwrite(&pcount, sizeof(pcount), 1, file);
 
-	for(i = 0; i < pcount; i++) {
+	for (i = 0; i < pcount; i++) {
 		int id = itemdb->packages[i].id;
 		unsigned short random_qty = itemdb->packages[i].random_qty, must_qty = itemdb->packages[i].must_qty;
 		unsigned short c;
-		//into a package, first 2 bytes = id.
-		hwrite(&id,sizeof(id),1,file);
-		//next 2 bytes = must count
-		hwrite(&must_qty,sizeof(must_qty),1,file);
-		//next 2 bytes = random count
-		hwrite(&random_qty,sizeof(random_qty),1,file);
-		//now we loop into must
-		for(c = 0; c < must_qty; c++) {
+		// into a package, first 2 bytes = id.
+		hwrite(&id, sizeof(id), 1, file);
+		// next 2 bytes = must count
+		hwrite(&must_qty, sizeof(must_qty), 1, file);
+		// next 2 bytes = random count
+		hwrite(&random_qty, sizeof(random_qty), 1, file);
+		// now we loop into must
+		for (c = 0; c < must_qty; c++) {
 			struct item_package_must_entry *entry = &itemdb->packages[i].must_items[c];
 			unsigned char announce = entry->announce == 1 ? 1 : 0, named = entry->named == 1 ? 1 : 0, force_serial = entry->force_serial == 1 ? 1 : 0;
-			//first 2 byte = item id
-			hwrite(&entry->id,sizeof(entry->id),1,file);
-			//next 2 byte = qty
-			hwrite(&entry->qty,sizeof(entry->qty),1,file);
-			//next 2 byte = hours
-			hwrite(&entry->hours,sizeof(entry->hours),1,file);
-			//next 1 byte = announce (1:0)
-			hwrite(&announce,sizeof(announce),1,file);
-			//next 1 byte = named (1:0)
-			hwrite(&named,sizeof(named),1,file);
-			//next 1 byte = ForceSerial (1:0)
-			hwrite(&force_serial,sizeof(force_serial),1,file);
+			// first 2 byte = item id
+			hwrite(&entry->id, sizeof(entry->id), 1, file);
+			// next 2 byte = qty
+			hwrite(&entry->qty, sizeof(entry->qty), 1, file);
+			// next 2 byte = hours
+			hwrite(&entry->hours, sizeof(entry->hours), 1, file);
+			// next 1 byte = announce (1:0)
+			hwrite(&announce, sizeof(announce), 1, file);
+			// next 1 byte = named (1:0)
+			hwrite(&named, sizeof(named), 1, file);
+			// next 1 byte = ForceSerial (1:0)
+			hwrite(&force_serial, sizeof(force_serial), 1, file);
 		}
-		//now we loop into random groups
-		for(c = 0; c < random_qty; c++) {
+		// now we loop into random groups
+		for (c = 0; c < random_qty; c++) {
 			struct item_package_rand_group *group = &itemdb->packages[i].random_groups[c];
 			unsigned short group_qty = group->random_qty, h;
 
-			//next 2 bytes = how many entries in this group
-			hwrite(&group_qty,sizeof(group_qty),1,file);
-			//now we loop into the group's list
-			for(h = 0; h < group_qty; h++) {
+			// next 2 bytes = how many entries in this group
+			hwrite(&group_qty, sizeof(group_qty), 1, file);
+			// now we loop into the group's list
+			for (h = 0; h < group_qty; h++) {
 				struct item_package_rand_entry *entry = &itemdb->packages[i].random_groups[c].random_list[h];
 				unsigned char announce = entry->announce == 1 ? 1 : 0, named = entry->named == 1 ? 1 : 0, force_serial = entry->force_serial == 1 ? 1 : 0;
-				//first 2 byte = item id
-				hwrite(&entry->id,sizeof(entry->id),1,file);
-				//next 2 byte = qty
-				hwrite(&entry->qty,sizeof(entry->qty),1,file);
-				//next 2 byte = rate
-				hwrite(&entry->rate,sizeof(entry->rate),1,file);
-				//next 2 byte = hours
-				hwrite(&entry->hours,sizeof(entry->hours),1,file);
-				//next 1 byte = announce (1:0)
-				hwrite(&announce,sizeof(announce),1,file);
-				//next 1 byte = named (1:0)
-				hwrite(&named,sizeof(named),1,file);
-				//next 1 byte = ForceSerial (1:0)
-				hwrite(&force_serial,sizeof(force_serial),1,file);
+				// first 2 byte = item id
+				hwrite(&entry->id, sizeof(entry->id), 1, file);
+				// next 2 byte = qty
+				hwrite(&entry->qty, sizeof(entry->qty), 1, file);
+				// next 2 byte = rate
+				hwrite(&entry->rate, sizeof(entry->rate), 1, file);
+				// next 2 byte = hours
+				hwrite(&entry->hours, sizeof(entry->hours), 1, file);
+				// next 1 byte = announce (1:0)
+				hwrite(&announce, sizeof(announce), 1, file);
+				// next 1 byte = named (1:0)
+				hwrite(&named, sizeof(named), 1, file);
+				// next 1 byte = ForceSerial (1:0)
+				hwrite(&force_serial, sizeof(force_serial), 1, file);
 			}
 		}
 	}
@@ -1084,32 +1073,32 @@ static bool itemdb_read_cached_packages(const char *config_filename)
 	unsigned short i;
 
 	nullpo_retr(false, config_filename);
-	if( !(file = HCache->open(config_filename,"rb")) ) {
+	if (!(file = HCache->open(config_filename, "rb"))) {
 		return false;
 	}
 
 	// first 2 bytes = package count
-	hread(&pcount,sizeof(pcount),1,file);
+	hread(&pcount, sizeof(pcount), 1, file);
 
 	CREATE(itemdb->packages, struct item_package, pcount);
 	itemdb->package_count = pcount;
 
-	for( i = 0; i < pcount; i++ ) {
+	for (i = 0; i < pcount; i++) {
 		int id = 0;
 		unsigned short random_qty = 0, must_qty = 0;
 		struct item_data *pdata;
 		struct item_package *package = &itemdb->packages[i];
 		unsigned short c;
 
-		//into a package, first 4 bytes = id.
-		hread(&id,sizeof(id),1,file);
-		//next 2 bytes = must count
-		hread(&must_qty,sizeof(must_qty),1,file);
-		//next 2 bytes = random count
-		hread(&random_qty,sizeof(random_qty),1,file);
+		// into a package, first 4 bytes = id.
+		hread(&id, sizeof(id), 1, file);
+		// next 2 bytes = must count
+		hread(&must_qty, sizeof(must_qty), 1, file);
+		// next 2 bytes = random count
+		hread(&random_qty, sizeof(random_qty), 1, file);
 
-		if( !(pdata = itemdb->exists(id)) )
-			ShowWarning("itemdb_read_cached_packages: unknown package item '%d', skipping..\n",id);
+		if (!(pdata = itemdb->exists(id)))
+			ShowWarning("itemdb_read_cached_packages: unknown package item '%d', skipping..\n", id);
 		else
 			pdata->package = &itemdb->packages[i];
 
@@ -1119,30 +1108,30 @@ static bool itemdb_read_cached_packages(const char *config_filename)
 		package->must_items = NULL;
 		package->random_groups = NULL;
 
-		if( package->must_qty ) {
+		if (package->must_qty) {
 			CREATE(package->must_items, struct item_package_must_entry, package->must_qty);
-			//now we loop into must
-			for(c = 0; c < package->must_qty; c++) {
+			// now we loop into must
+			for (c = 0; c < package->must_qty; c++) {
 				struct item_package_must_entry *entry = &itemdb->packages[i].must_items[c];
 				int mid = 0;
 				unsigned short qty = 0, hours = 0;
 				unsigned char announce = 0, named = 0, force_serial = 0;
 				struct item_data *data;
-				//first 4 byte = item id
-				hread(&mid,sizeof(mid),1,file);
-				//next 2 byte = qty
-				hread(&qty,sizeof(qty),1,file);
-				//next 2 byte = hours
-				hread(&hours,sizeof(hours),1,file);
-				//next 1 byte = announce (1:0)
-				hread(&announce,sizeof(announce),1,file);
-				//next 1 byte = named (1:0)
-				hread(&named,sizeof(named),1,file);
-				//next 1 byte = ForceSerial (1:0)
-				hread(&force_serial,sizeof(force_serial),1,file);
+				// first 4 byte = item id
+				hread(&mid, sizeof(mid), 1, file);
+				// next 2 byte = qty
+				hread(&qty, sizeof(qty), 1, file);
+				// next 2 byte = hours
+				hread(&hours, sizeof(hours), 1, file);
+				// next 1 byte = announce (1:0)
+				hread(&announce, sizeof(announce), 1, file);
+				// next 1 byte = named (1:0)
+				hread(&named, sizeof(named), 1, file);
+				// next 1 byte = ForceSerial (1:0)
+				hread(&force_serial, sizeof(force_serial), 1, file);
 
-				if( !(data = itemdb->exists(mid)) )
-					ShowWarning("itemdb_read_cached_packages: unknown item '%d' in package '%s'!\n",mid,itemdb_name(package->id));
+				if (!(data = itemdb->exists(mid)))
+					ShowWarning("itemdb_read_cached_packages: unknown item '%d' in package '%s'!\n", mid, itemdb_name(package->id));
 
 				entry->id = data ? data->nameid : 0;
 				entry->hours = hours;
@@ -1152,46 +1141,47 @@ static bool itemdb_read_cached_packages(const char *config_filename)
 				entry->force_serial = force_serial ? 1 : 0;
 			}
 		}
-		if( package->random_qty ) {
-			//now we loop into random groups
+		if (package->random_qty) {
+			// now we loop into random groups
 			CREATE(package->random_groups, struct item_package_rand_group, package->random_qty);
-			for(c = 0; c < package->random_qty; c++) {
+			for (c = 0; c < package->random_qty; c++) {
 				unsigned short group_qty = 0, h;
 				struct item_package_rand_entry *prev = NULL;
 
-				//next 2 bytes = how many entries in this group
-				hread(&group_qty,sizeof(group_qty),1,file);
+				// next 2 bytes = how many entries in this group
+				hread(&group_qty, sizeof(group_qty), 1, file);
 
 				package->random_groups[c].random_qty = group_qty;
 				CREATE(package->random_groups[c].random_list, struct item_package_rand_entry, package->random_groups[c].random_qty);
 
-				//now we loop into the group's list
-				for(h = 0; h < group_qty; h++) {
+				// now we loop into the group's list
+				for (h = 0; h < group_qty; h++) {
 					struct item_package_rand_entry *entry = &itemdb->packages[i].random_groups[c].random_list[h];
 					int mid = 0;
 					unsigned short qty = 0, hours = 0, rate = 0;
 					unsigned char announce = 0, named = 0, force_serial = 0;
 					struct item_data *data;
 
-					if( prev ) prev->next = entry;
+					if (prev)
+						prev->next = entry;
 
-					//first 2 byte = item id
-					hread(&mid,sizeof(mid),1,file);
-					//next 2 byte = qty
-					hread(&qty,sizeof(qty),1,file);
-					//next 2 byte = rate
-					hread(&rate,sizeof(rate),1,file);
-					//next 2 byte = hours
-					hread(&hours,sizeof(hours),1,file);
-					//next 1 byte = announce (1:0)
-					hread(&announce,sizeof(announce),1,file);
-					//next 1 byte = named (1:0)
-					hread(&named,sizeof(named),1,file);
-					//next 1 byte = ForceSerial (1:0)
-					hread(&force_serial,sizeof(force_serial),1,file);
+					// first 2 byte = item id
+					hread(&mid, sizeof(mid), 1, file);
+					// next 2 byte = qty
+					hread(&qty, sizeof(qty), 1, file);
+					// next 2 byte = rate
+					hread(&rate, sizeof(rate), 1, file);
+					// next 2 byte = hours
+					hread(&hours, sizeof(hours), 1, file);
+					// next 1 byte = announce (1:0)
+					hread(&announce, sizeof(announce), 1, file);
+					// next 1 byte = named (1:0)
+					hread(&named, sizeof(named), 1, file);
+					// next 1 byte = ForceSerial (1:0)
+					hread(&force_serial, sizeof(force_serial), 1, file);
 
-					if( !(data = itemdb->exists(mid)) )
-						ShowWarning("itemdb_read_cached_packages: unknown item '%d' in package '%s'!\n",mid,itemdb_name(package->id));
+					if (!(data = itemdb->exists(mid)))
+						ShowWarning("itemdb_read_cached_packages: unknown item '%d' in package '%s'!\n", mid, itemdb_name(package->id));
 
 					entry->id = data ? data->nameid : 0;
 					entry->rate = rate;
@@ -1202,13 +1192,13 @@ static bool itemdb_read_cached_packages(const char *config_filename)
 					entry->force_serial = force_serial ? 1 : 0;
 					prev = entry;
 				}
-				if( prev )
+				if (prev)
 					prev->next = &itemdb->packages[i].random_groups[c].random_list[0];
 			}
 		}
 	}
 	fclose(file);
-	ShowStatus("Done reading '"CL_WHITE"%hu"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"' ("CL_GREEN"C"CL_RESET").\n", pcount, config_filename);
+	ShowStatus("Done reading '" CL_WHITE "%hu" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "' (" CL_GREEN "C" CL_RESET ").\n", pcount, config_filename);
 
 	return true;
 }
@@ -1217,26 +1207,26 @@ static void itemdb_read_packages(void)
 	struct config_t item_packages_conf;
 	struct config_setting_t *itg = NULL, *it = NULL, *t = NULL;
 	char config_filename[256];
-	libconfig->format_db_path(DBPATH"item_packages.conf", config_filename, sizeof(config_filename));
+	libconfig->format_db_path(DBPATH "item_packages.conf", config_filename, sizeof(config_filename));
 	const char *itname;
 	int i = 0, count = 0, c = 0, highest_gcount = 0;
 	unsigned int *must = NULL, *random = NULL, *rgroup = NULL, **rgroups = NULL;
 	struct item_package_rand_entry **prev = NULL;
 
-	if( HCache->check(config_filename) ) {
-		if( itemdb->read_cached_packages(config_filename) )
+	if (HCache->check(config_filename)) {
+		if (itemdb->read_cached_packages(config_filename))
 			return;
 	}
 
 	if (!libconfig->load_file(&item_packages_conf, config_filename))
 		return;
 
-	must = aMalloc( libconfig->setting_length(item_packages_conf.root) * sizeof(unsigned int) );
-	random = aMalloc( libconfig->setting_length(item_packages_conf.root) * sizeof(unsigned int) );
-	rgroup = aMalloc( libconfig->setting_length(item_packages_conf.root) * sizeof(unsigned int) );
-	rgroups = aMalloc( libconfig->setting_length(item_packages_conf.root) * sizeof(unsigned int *) );
+	must = aMalloc(libconfig->setting_length(item_packages_conf.root) * sizeof(unsigned int));
+	random = aMalloc(libconfig->setting_length(item_packages_conf.root) * sizeof(unsigned int));
+	rgroup = aMalloc(libconfig->setting_length(item_packages_conf.root) * sizeof(unsigned int));
+	rgroups = aMalloc(libconfig->setting_length(item_packages_conf.root) * sizeof(unsigned int *));
 
-	for(i = 0; i < libconfig->setting_length(item_packages_conf.root); i++) {
+	for (i = 0; i < libconfig->setting_length(item_packages_conf.root); i++) {
 		must[i] = 0;
 		random[i] = 0;
 		rgroup[i] = 0;
@@ -1245,59 +1235,59 @@ static void itemdb_read_packages(void)
 
 	/* validate tree, drop poisonous fruits! */
 	i = 0;
-	while( (itg = libconfig->setting_get_elem(item_packages_conf.root,i++)) ) {
+	while ((itg = libconfig->setting_get_elem(item_packages_conf.root, i++))) {
 		const char *name = config_setting_name(itg);
 
-		if( !itemdb->name2id(name) ) {
-			ShowWarning("itemdb_read_packages: unknown package item '%s', skipping..\n",name);
+		if (!itemdb->name2id(name)) {
+			ShowWarning("itemdb_read_packages: unknown package item '%s', skipping..\n", name);
 			libconfig->setting_remove(item_packages_conf.root, name);
 			--i;
 			continue;
 		}
 
 		c = 0;
-		while( (it = libconfig->setting_get_elem(itg,c++)) ) {
+		while ((it = libconfig->setting_get_elem(itg, c++))) {
 			int rval = 0;
-			if( !( t = libconfig->setting_get_member(it, "Random") ) || (rval = libconfig->setting_get_int(t)) < 0 ) {
-				ShowWarning("itemdb_read_packages: invalid 'Random' value (%d) for item '%s' in package '%s', defaulting to must!\n",rval,config_setting_name(it),name);
+			if (!(t = libconfig->setting_get_member(it, "Random")) || (rval = libconfig->setting_get_int(t)) < 0) {
+				ShowWarning("itemdb_read_packages: invalid 'Random' value (%d) for item '%s' in package '%s', defaulting to must!\n", rval, config_setting_name(it), name);
 				libconfig->setting_remove(it, config_setting_name(it));
 				--c;
 				continue;
 			}
 
-			if( rval == 0 )
-				must[ i - 1 ] += 1;
+			if (rval == 0)
+				must[i - 1] += 1;
 			else {
-				random[ i - 1 ] += 1;
-				if( rval > rgroup[i - 1] )
+				random[i - 1] += 1;
+				if (rval > rgroup[i - 1])
 					rgroup[i - 1] = rval;
-				if( rval > highest_gcount )
+				if (rval > highest_gcount)
 					highest_gcount = rval;
 			}
 		}
 	}
 
 	CREATE(prev, struct item_package_rand_entry *, highest_gcount);
-	for(i = 0; i < highest_gcount; i++) {
+	for (i = 0; i < highest_gcount; i++) {
 		prev[i] = NULL;
 	}
 
-	for(i = 0; i < libconfig->setting_length(item_packages_conf.root); i++ ) {
-		rgroups[i] = aMalloc( rgroup[i] * sizeof(unsigned int) );
-		for( c = 0; c < rgroup[i]; c++ ) {
+	for (i = 0; i < libconfig->setting_length(item_packages_conf.root); i++) {
+		rgroups[i] = aMalloc(rgroup[i] * sizeof(unsigned int));
+		for (c = 0; c < rgroup[i]; c++) {
 			rgroups[i][c] = 0;
 		}
 	}
 
 	/* grab the known sizes */
 	i = 0;
-	while( (itg = libconfig->setting_get_elem(item_packages_conf.root,i++)) ) {
-	   c = 0;
-	   while( (it = libconfig->setting_get_elem(itg,c++)) ) {
-		   int rval = 0;
-		   if ((t = libconfig->setting_get_member(it, "Random")) != NULL && (rval = libconfig->setting_get_int(t)) > 0) {
-			   rgroups[i - 1][rval - 1] += 1;
-		   }
+	while ((itg = libconfig->setting_get_elem(item_packages_conf.root, i++))) {
+		c = 0;
+		while ((it = libconfig->setting_get_elem(itg, c++))) {
+			int rval = 0;
+			if ((t = libconfig->setting_get_member(it, "Random")) != NULL && (rval = libconfig->setting_get_int(t)) > 0) {
+				rgroups[i - 1][rval - 1] += 1;
+			}
 		}
 	}
 
@@ -1306,77 +1296,77 @@ static void itemdb_read_packages(void)
 
 	/* write */
 	i = 0;
-	while( (itg = libconfig->setting_get_elem(item_packages_conf.root,i++)) ) {
+	while ((itg = libconfig->setting_get_elem(item_packages_conf.root, i++))) {
 		struct item_data *data = itemdb->name2id(config_setting_name(itg));
 		int r = 0, m = 0;
 
-		for(r = 0; r < highest_gcount; r++) {
+		for (r = 0; r < highest_gcount; r++) {
 			prev[r] = NULL;
 		}
 
 		data->package = &itemdb->packages[count];
 
-		itemdb->packages[count].id  = data->nameid;
+		itemdb->packages[count].id = data->nameid;
 		itemdb->packages[count].random_groups = NULL;
 		itemdb->packages[count].must_items = NULL;
-		itemdb->packages[count].random_qty = rgroup[ i - 1 ];
-		itemdb->packages[count].must_qty = must[ i - 1 ];
+		itemdb->packages[count].random_qty = rgroup[i - 1];
+		itemdb->packages[count].must_qty = must[i - 1];
 
-		if( itemdb->packages[count].random_qty ) {
+		if (itemdb->packages[count].random_qty) {
 			CREATE(itemdb->packages[count].random_groups, struct item_package_rand_group, itemdb->packages[count].random_qty);
-			for( c = 0; c < itemdb->packages[count].random_qty; c++ ) {
-				if( !rgroups[ i - 1 ][c] )
-					ShowError("itemdb_read_packages: package '%s' missing 'Random' field %d! there must not be gaps!\n",config_setting_name(itg),c+1);
+			for (c = 0; c < itemdb->packages[count].random_qty; c++) {
+				if (!rgroups[i - 1][c])
+					ShowError("itemdb_read_packages: package '%s' missing 'Random' field %d! there must not be gaps!\n", config_setting_name(itg), c + 1);
 				else
-					CREATE(itemdb->packages[count].random_groups[c].random_list, struct item_package_rand_entry, rgroups[ i - 1 ][c]);
+					CREATE(itemdb->packages[count].random_groups[c].random_list, struct item_package_rand_entry, rgroups[i - 1][c]);
 				itemdb->packages[count].random_groups[c].random_qty = 0;
 			}
 		}
-		if( itemdb->packages[count].must_qty )
+		if (itemdb->packages[count].must_qty)
 			CREATE(itemdb->packages[count].must_items, struct item_package_must_entry, itemdb->packages[count].must_qty);
 
 		c = 0;
-		while( (it = libconfig->setting_get_elem(itg,c++)) ) {
+		while ((it = libconfig->setting_get_elem(itg, c++))) {
 			int icount = 1, expire = 0, rate = 10000, gid = 0;
 			bool announce = false, named = false, force_serial = false;
 
 			itname = config_setting_name(it);
 
 			if (itname[0] == 'I' && itname[1] == 'D' && strlen(itname) <= 12) {
-				if( !( data = itemdb->exists(atoi(itname+2)) ) )
-					ShowWarning("itemdb_read_packages: unknown item ID '%d' in package '%s'!\n",atoi(itname+2),config_setting_name(itg));
-			} else if( !( data = itemdb->name2id(itname) ) )
-				ShowWarning("itemdb_read_packages: unknown item '%s' in package '%s'!\n",itname,config_setting_name(itg));
+				if (!(data = itemdb->exists(atoi(itname + 2))))
+					ShowWarning("itemdb_read_packages: unknown item ID '%d' in package '%s'!\n", atoi(itname + 2), config_setting_name(itg));
+			} else if (!(data = itemdb->name2id(itname)))
+				ShowWarning("itemdb_read_packages: unknown item '%s' in package '%s'!\n", itname, config_setting_name(itg));
 
-			if( ( t = libconfig->setting_get_member(it, "Count")) )
+			if ((t = libconfig->setting_get_member(it, "Count")))
 				icount = libconfig->setting_get_int(t);
 
-			if( ( t = libconfig->setting_get_member(it, "Expire")) )
+			if ((t = libconfig->setting_get_member(it, "Expire")))
 				expire = libconfig->setting_get_int(t);
 
-			if( ( t = libconfig->setting_get_member(it, "Rate")) ) {
-				if( (rate = (unsigned short)libconfig->setting_get_int(t)) > 10000 ) {
-					ShowWarning("itemdb_read_packages: invalid rate (%d) for item '%s' in package '%s'!\n",rate,itname,config_setting_name(itg));
+			if ((t = libconfig->setting_get_member(it, "Rate"))) {
+				if ((rate = (unsigned short)libconfig->setting_get_int(t)) > 10000) {
+					ShowWarning("itemdb_read_packages: invalid rate (%d) for item '%s' in package '%s'!\n", rate, itname, config_setting_name(itg));
 					rate = 10000;
 				}
 			}
 
-			if( ( t = libconfig->setting_get_member(it, "Announce")) && libconfig->setting_get_bool(t) )
+			if ((t = libconfig->setting_get_member(it, "Announce")) && libconfig->setting_get_bool(t))
 				announce = true;
 
-			if( ( t = libconfig->setting_get_member(it, "Named")) && libconfig->setting_get_bool(t) )
+			if ((t = libconfig->setting_get_member(it, "Named")) && libconfig->setting_get_bool(t))
 				named = true;
 
-			if( ( t = libconfig->setting_get_member(it, "ForceSerial")) && libconfig->setting_get_bool(t) )
+			if ((t = libconfig->setting_get_member(it, "ForceSerial")) && libconfig->setting_get_bool(t))
 				force_serial = true;
 
-			if( !( t = libconfig->setting_get_member(it, "Random") ) ) {
-				ShowWarning("itemdb_read_packages: missing 'Random' field for item '%s' in package '%s', defaulting to must!\n",itname,config_setting_name(itg));
+			if (!(t = libconfig->setting_get_member(it, "Random"))) {
+				ShowWarning("itemdb_read_packages: missing 'Random' field for item '%s' in package '%s', defaulting to must!\n", itname, config_setting_name(itg));
 				gid = 0;
 			} else
 				gid = libconfig->setting_get_int(t);
 
-			if( gid == 0 ) {
+			if (gid == 0) {
 				itemdb->packages[count].must_items[m].id = data ? data->nameid : 0;
 				itemdb->packages[count].must_items[m].qty = icount;
 				itemdb->packages[count].must_items[m].hours = expire;
@@ -1389,13 +1379,13 @@ static void itemdb_read_packages(void)
 
 				r = itemdb->packages[count].random_groups[gidx].random_qty;
 
-				if( prev[gidx] )
+				if (prev[gidx])
 					prev[gidx]->next = &itemdb->packages[count].random_groups[gidx].random_list[r];
 
 				itemdb->packages[count].random_groups[gidx].random_list[r].id = data ? data->nameid : 0;
 				itemdb->packages[count].random_groups[gidx].random_list[r].qty = icount;
-				if( (itemdb->packages[count].random_groups[gidx].random_list[r].rate = rate) == 10000 ) {
-					ShowWarning("itemdb_read_packages: item '%s' in '%s' has 100%% drop rate!! set this item as 'Random: 0' or other items won't drop!!!\n",itname,config_setting_name(itg));
+				if ((itemdb->packages[count].random_groups[gidx].random_list[r].rate = rate) == 10000) {
+					ShowWarning("itemdb_read_packages: item '%s' in '%s' has 100%% drop rate!! set this item as 'Random: 0' or other items won't drop!!!\n", itname, config_setting_name(itg));
 				}
 				itemdb->packages[count].random_groups[gidx].random_list[r].hours = expire;
 				itemdb->packages[count].random_groups[gidx].random_list[r].announce = announce == true ? 1 : 0;
@@ -1407,16 +1397,15 @@ static void itemdb_read_packages(void)
 			}
 		}
 
-		for(r = 0; r < highest_gcount; r++) {
-			if( prev[r] )
+		for (r = 0; r < highest_gcount; r++) {
+			if (prev[r])
 				prev[r]->next = &itemdb->packages[count].random_groups[r].random_list[0];
 		}
 
-		for( r = 0; r < itemdb->packages[count].random_qty; r++  ) {
-			if( itemdb->packages[count].random_groups[r].random_qty == 1 ) {
-				//item packages don't stop looping until something comes out of them, so if you have only one item in it the drop is guaranteed.
-				ShowWarning("itemdb_read_packages: in '%s' 'Random: %d' group has only 1 random option, drop rate will be 100%%!\n",
-				            itemdb_name(itemdb->packages[count].id),r+1);
+		for (r = 0; r < itemdb->packages[count].random_qty; r++) {
+			if (itemdb->packages[count].random_groups[r].random_qty == 1) {
+				// item packages don't stop looping until something comes out of them, so if you have only one item in it the drop is guaranteed.
+				ShowWarning("itemdb_read_packages: in '%s' 'Random: %d' group has only 1 random option, drop rate will be 100%%!\n", itemdb_name(itemdb->packages[count].id), r + 1);
 				itemdb->packages[count].random_groups[r].random_list[0].rate = 10000;
 			}
 		}
@@ -1425,7 +1414,7 @@ static void itemdb_read_packages(void)
 
 	aFree(must);
 	aFree(random);
-	for(i = 0; i < libconfig->setting_length(item_packages_conf.root); i++ ) {
+	for (i = 0; i < libconfig->setting_length(item_packages_conf.root); i++) {
 		aFree(rgroups[i]);
 	}
 	aFree(rgroups);
@@ -1434,10 +1423,10 @@ static void itemdb_read_packages(void)
 
 	libconfig->destroy(&item_packages_conf);
 
-	if( HCache->enabled )
+	if (HCache->enabled)
 		itemdb->write_cached_packages(config_filename);
 
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, config_filename);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, config_filename);
 }
 
 /**
@@ -1473,7 +1462,7 @@ static void itemdb_read_options(void)
 	script->parser_current_file = filepath;
 #endif // ENABLE_CASE_CHECK
 
-	if ((ito=libconfig->setting_get_member(item_options_db.root, "item_options_db")) == NULL) {
+	if ((ito = libconfig->setting_get_member(item_options_db.root, "item_options_db")) == NULL) {
 		ShowError("itemdb_read_options: '%s' could not be loaded.\n", filepath);
 		libconfig->destroy(&item_options_db);
 		return;
@@ -1484,7 +1473,7 @@ static void itemdb_read_options(void)
 	VECTOR_ENSURE(duplicate_id, libconfig->setting_length(ito), 1);
 
 	while ((conf = libconfig->setting_get_elem(ito, index++))) {
-		struct itemdb_option t_opt = { 0 }, *s_opt = NULL;
+		struct itemdb_option t_opt = {0}, *s_opt = NULL;
 		const char *str = NULL;
 		int i = 0;
 
@@ -1557,7 +1546,7 @@ static void itemdb_read_options(void)
 
 	VECTOR_CLEAR(duplicate_id);
 
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 }
 
 static void itemdb_read_chains(void)
@@ -1565,7 +1554,7 @@ static void itemdb_read_chains(void)
 	struct config_t item_chain_conf;
 	struct config_setting_t *itc = NULL;
 	char config_filename[256];
-	libconfig->format_db_path(DBPATH"item_chain.conf", config_filename, sizeof(config_filename));
+	libconfig->format_db_path(DBPATH "item_chain.conf", config_filename, sizeof(config_filename));
 	int i = 0, count = 0;
 
 	if (!libconfig->load_file(&item_chain_conf, config_filename))
@@ -1577,29 +1566,29 @@ static void itemdb_read_chains(void)
 #ifdef ENABLE_CASE_CHECK
 	script->parser_current_file = config_filename;
 #endif // ENABLE_CASE_CHECK
-	while( (itc = libconfig->setting_get_elem(item_chain_conf.root,i++)) ) {
+	while ((itc = libconfig->setting_get_elem(item_chain_conf.root, i++))) {
 		struct item_data *data = NULL;
 		struct item_chain_entry *prev = NULL;
 		const char *name = config_setting_name(itc);
 		int c = 0;
 		struct config_setting_t *entry = NULL;
 
-		script->set_constant2(name, i-1, false, false);
+		script->set_constant2(name, i - 1, false, false);
 		itemdb->chains[count].qty = (unsigned short)libconfig->setting_length(itc);
 
 		CREATE(itemdb->chains[count].items, struct item_chain_entry, libconfig->setting_length(itc));
 
-		while( (entry = libconfig->setting_get_elem(itc,c++)) ) {
+		while ((entry = libconfig->setting_get_elem(itc, c++))) {
 			const char *itname = config_setting_name(entry);
 			if (itname[0] == 'I' && itname[1] == 'D' && strlen(itname) <= 12) {
-				if( !( data = itemdb->exists(atoi(itname+2)) ) )
-					ShowWarning("itemdb_read_chains: unknown item ID '%d' in chain '%s'!\n",atoi(itname+2),name);
-			} else if( !( data = itemdb->name2id(itname) ) )
-				ShowWarning("itemdb_read_chains: unknown item '%s' in chain '%s'!\n",itname,name);
+				if (!(data = itemdb->exists(atoi(itname + 2))))
+					ShowWarning("itemdb_read_chains: unknown item ID '%d' in chain '%s'!\n", atoi(itname + 2), name);
+			} else if (!(data = itemdb->name2id(itname)))
+				ShowWarning("itemdb_read_chains: unknown item '%s' in chain '%s'!\n", itname, name);
 
 			struct item_chain_entry *item = &itemdb->chains[count].items[c - 1];
 
-			if( prev )
+			if (prev)
 				prev->next = item;
 
 			item->id = data ? data->nameid : 0;
@@ -1613,7 +1602,7 @@ static void itemdb_read_chains(void)
 			prev = item;
 		}
 
-		if( prev )
+		if (prev)
 			prev->next = &itemdb->chains[count].items[0];
 
 		count++;
@@ -1624,7 +1613,7 @@ static void itemdb_read_chains(void)
 
 	libconfig->destroy(&item_chain_conf);
 
-	if( !script->get_constant("ITMCHAIN_ORE",&i) )
+	if (!script->get_constant("ITMCHAIN_ORE", &i))
 		ShowWarning("itemdb_read_chains: failed to find 'ITMCHAIN_ORE' chain to link to cache!\n");
 	else
 		itemdb->chain_cache[ECC_ORE] = i;
@@ -1639,14 +1628,14 @@ static void itemdb_read_chains(void)
 	else
 		itemdb->chain_cache[ECC_NEO_INSURANCE] = i;
 
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, config_filename);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, config_filename);
 }
 
 static bool itemdb_read_combodb_libconfig(void)
 {
 	struct config_t combo_conf;
 	char filepath[290];
-	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH"item_combo_db.conf");
+	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH "item_combo_db.conf");
 
 	if (libconfig->load_file(&combo_conf, filepath) == CONFIG_FALSE) {
 		ShowError("itemdb_read_combodb_libconfig: can't read %s\n", filepath);
@@ -1669,7 +1658,7 @@ static bool itemdb_read_combodb_libconfig(void)
 	}
 
 	libconfig->destroy(&combo_conf);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 	return true;
 }
 
@@ -1743,13 +1732,13 @@ static bool itemdb_read_combodb_libconfig_sub(struct config_setting_t *it, int i
 static int itemdb_gendercheck(struct item_data *id)
 {
 	nullpo_ret(id);
-	if (id->nameid == WEDDING_RING_M) //Grom Ring
+	if (id->nameid == WEDDING_RING_M) // Grom Ring
 		return 1;
-	if (id->nameid == WEDDING_RING_F) //Bride Ring
+	if (id->nameid == WEDDING_RING_F) // Bride Ring
 		return 0;
-	if (id->subtype == W_MUSICAL && id->type == IT_WEAPON) //Musical instruments are always male-only
+	if (id->subtype == W_MUSICAL && id->type == IT_WEAPON) // Musical instruments are always male-only
 		return 1;
-	if (id->subtype == W_WHIP && id->type == IT_WEAPON) //Whips are always female-only
+	if (id->subtype == W_WHIP && id->type == IT_WEAPON) // Whips are always female-only
 		return 0;
 
 	return (battle_config.ignore_items_gender) ? 2 : id->sex;
@@ -1784,8 +1773,7 @@ static int itemdb_validate_entry(struct item_data *entry, int n, const char *sou
 	if (entry->nameid <= 0) {
 #endif
 		// item id wrong for any packet versions
-		ShowWarning("itemdb_validate_entry: Invalid item ID %d in entry %d of '%s', allowed values 0 < ID < %d (MAX_ITEM_ID), skipping.\n",
-				entry->nameid, n, source, MAX_ITEM_ID);
+		ShowWarning("itemdb_validate_entry: Invalid item ID %d in entry %d of '%s', allowed values 0 < ID < %d (MAX_ITEM_ID), skipping.\n", entry->nameid, n, source, MAX_ITEM_ID);
 		if (entry->script) {
 			script->free_code(entry->script);
 			entry->script = NULL;
@@ -1822,8 +1810,7 @@ static int itemdb_validate_entry(struct item_data *entry, int n, const char *sou
 			++c;
 
 		if (*c != '\0') {
-			ShowWarning("itemdb_validate_entry: Invalid characters in the AegisName '%s' for item %d in '%s'. Skipping.\n",
-					entry->name, entry->nameid, source);
+			ShowWarning("itemdb_validate_entry: Invalid characters in the AegisName '%s' for item %d in '%s'. Skipping.\n", entry->name, entry->nameid, source);
 			if (entry->script) {
 				script->free_code(entry->script);
 				entry->script = NULL;
@@ -1848,15 +1835,12 @@ static int itemdb_validate_entry(struct item_data *entry, int n, const char *sou
 		}
 	}
 
-	if( entry->type < 0 || entry->type == IT_UNKNOWN || entry->type == IT_UNKNOWN2
-	 || (entry->type > IT_SELECTPACKAGE && entry->type < IT_CASH ) || entry->type >= IT_MAX
-	) {
+	if (entry->type < 0 || entry->type == IT_UNKNOWN || entry->type == IT_UNKNOWN2 || (entry->type > IT_SELECTPACKAGE && entry->type < IT_CASH) || entry->type >= IT_MAX) {
 		// catch invalid item types
-		ShowWarning("itemdb_validate_entry: Invalid item type %d for item %d in '%s'. IT_ETC will be used.\n",
-		            entry->type, entry->nameid, source);
+		ShowWarning("itemdb_validate_entry: Invalid item type %d for item %d in '%s'. IT_ETC will be used.\n", entry->type, entry->nameid, source);
 		entry->type = IT_ETC;
-	} else if( entry->type == IT_DELAYCONSUME ) {
-		//Items that are consumed only after target confirmation
+	} else if (entry->type == IT_DELAYCONSUME) {
+		// Items that are consumed only after target confirmation
 		entry->type = IT_USABLE;
 		entry->flag.delay_consume = 1;
 	} else if (entry->type == IT_SELECTPACKAGE) {
@@ -1864,42 +1848,38 @@ static int itemdb_validate_entry(struct item_data *entry, int n, const char *sou
 		entry->flag.select_package = 1;
 	}
 
-	//When a particular price is not given, we should base it off the other one
+	// When a particular price is not given, we should base it off the other one
 	//(it is important to make a distinction between 'no price' and 0z)
-	if( entry->value_buy < 0 && entry->value_sell < 0 ) {
+	if (entry->value_buy < 0 && entry->value_sell < 0) {
 		entry->value_buy = entry->value_sell = 0;
-	} else if( entry->value_buy < 0 ) {
+	} else if (entry->value_buy < 0) {
 		entry->value_buy = entry->value_sell * 2;
-	} else if( entry->value_sell < 0 ) {
+	} else if (entry->value_sell < 0) {
 		entry->value_sell = entry->value_buy / 2;
 	}
-	if( entry->value_buy/124. < entry->value_sell/75. ) {
+	if (entry->value_buy / 124. < entry->value_sell / 75.) {
 		ShowWarning("itemdb_validate_entry: Buying/Selling [%d/%d] price of item %d (%s) in '%s' "
 		            "allows Zeny making exploit through buying/selling at discounted/overcharged prices!\n",
 		            entry->value_buy, entry->value_sell, entry->nameid, entry->jname, source);
 	}
 
-	if( entry->slot > MAX_SLOTS ) {
-		ShowWarning("itemdb_validate_entry: Item %d (%s) in '%s' specifies %d slots, but the server only supports up to %d. Using %d slots.\n",
-		            entry->nameid, entry->jname, source, entry->slot, MAX_SLOTS, MAX_SLOTS);
+	if (entry->slot > MAX_SLOTS) {
+		ShowWarning("itemdb_validate_entry: Item %d (%s) in '%s' specifies %d slots, but the server only supports up to %d. Using %d slots.\n", entry->nameid, entry->jname, source, entry->slot, MAX_SLOTS, MAX_SLOTS);
 		entry->slot = MAX_SLOTS;
 	}
 
 	if (!entry->equip && itemdb->isequip2(entry)) {
-		ShowWarning("itemdb_validate_entry: Item %d (%s) in '%s' is an equipment with no equip-field! Making it an etc item.\n",
-		            entry->nameid, entry->jname, source);
+		ShowWarning("itemdb_validate_entry: Item %d (%s) in '%s' is an equipment with no equip-field! Making it an etc item.\n", entry->nameid, entry->jname, source);
 		entry->type = IT_ETC;
 	}
 
 	if (entry->flag.trade_restriction > ITR_ALL) {
-		ShowWarning("itemdb_validate_entry: Invalid trade restriction flag 0x%x for item %d (%s) in '%s', defaulting to none.\n",
-		            (unsigned int)entry->flag.trade_restriction, entry->nameid, entry->jname, source);
+		ShowWarning("itemdb_validate_entry: Invalid trade restriction flag 0x%x for item %d (%s) in '%s', defaulting to none.\n", (unsigned int)entry->flag.trade_restriction, entry->nameid, entry->jname, source);
 		entry->flag.trade_restriction = ITR_NONE;
 	}
 
 	if (entry->gm_lv_trade_override < 0 || entry->gm_lv_trade_override > 100) {
-		ShowWarning("itemdb_validate_entry: Invalid trade-override GM level %d for item %d (%s) in '%s', defaulting to none.\n",
-		            entry->gm_lv_trade_override, entry->nameid, entry->jname, source);
+		ShowWarning("itemdb_validate_entry: Invalid trade-override GM level %d for item %d (%s) in '%s', defaulting to none.\n", entry->gm_lv_trade_override, entry->nameid, entry->jname, source);
 		entry->gm_lv_trade_override = 0;
 	}
 	if (entry->gm_lv_trade_override == 0) {
@@ -1908,14 +1888,12 @@ static int itemdb_validate_entry(struct item_data *entry, int n, const char *sou
 	}
 
 	if (entry->item_usage.flag > INR_ALL) {
-		ShowWarning("itemdb_validate_entry: Invalid nouse flag 0x%x for item %d (%s) in '%s', defaulting to none.\n",
-		            entry->item_usage.flag, entry->nameid, entry->jname, source);
+		ShowWarning("itemdb_validate_entry: Invalid nouse flag 0x%x for item %d (%s) in '%s', defaulting to none.\n", entry->item_usage.flag, entry->nameid, entry->jname, source);
 		entry->item_usage.flag = INR_NONE;
 	}
 
 	if (entry->item_usage.override > 100) {
-		ShowWarning("itemdb_validate_entry: Invalid nouse-override GM level %d for item %d (%s) in '%s', defaulting to none.\n",
-		            entry->item_usage.override, entry->nameid, entry->jname, source);
+		ShowWarning("itemdb_validate_entry: Invalid nouse-override GM level %d for item %d (%s) in '%s', defaulting to none.\n", entry->item_usage.override, entry->nameid, entry->jname, source);
 		entry->item_usage.override = 0;
 	}
 	if (entry->item_usage.override == 0) {
@@ -1924,29 +1902,26 @@ static int itemdb_validate_entry(struct item_data *entry, int n, const char *sou
 	}
 
 	if (entry->stack.amount > 0 && !itemdb->isstackable2(entry)) {
-		ShowWarning("itemdb_validate_entry: Item %d (%s) of type %d is not stackable, ignoring stack settings in '%s'.\n",
-		            entry->nameid, entry->jname, entry->type, source);
+		ShowWarning("itemdb_validate_entry: Item %d (%s) of type %d is not stackable, ignoring stack settings in '%s'.\n", entry->nameid, entry->jname, entry->type, source);
 		memset(&entry->stack, '\0', sizeof(entry->stack));
 	}
 
 	if (entry->type == IT_WEAPON && (entry->subtype <= 0 || entry->subtype >= MAX_SINGLE_WEAPON_TYPE)) {
-		ShowWarning("itemdb_validate_entry: Invalid View for weapon items. View value %d for item %d (%s) in '%s', defaulting to W_DAGGER.\n",
-		            entry->subtype, entry->nameid, entry->jname, source);
+		ShowWarning("itemdb_validate_entry: Invalid View for weapon items. View value %d for item %d (%s) in '%s', defaulting to W_DAGGER.\n", entry->subtype, entry->nameid, entry->jname, source);
 		entry->subtype = W_DAGGER;
 	} else if (entry->type == IT_AMMO && (entry->subtype <= 0 || entry->subtype >= MAX_AMMO_TYPE)) {
-		ShowWarning("itemdb_validate_entry: Invalid View for ammunition items. View value %d for item %d (%s) in '%s', defaulting to A_ARROW.\n",
-		            entry->subtype, entry->nameid, entry->jname, source);
+		ShowWarning("itemdb_validate_entry: Invalid View for ammunition items. View value %d for item %d (%s) in '%s', defaulting to A_ARROW.\n", entry->subtype, entry->nameid, entry->jname, source);
 		entry->subtype = A_ARROW;
 	}
 
 	entry->wlv = cap_value(entry->wlv, REFINE_TYPE_ARMOR, REFINE_TYPE_MAX);
 
-	if( !entry->elvmax )
+	if (!entry->elvmax)
 		entry->elvmax = MAX_LEVEL;
-	else if( entry->elvmax < entry->elv )
+	else if (entry->elvmax < entry->elv)
 		entry->elvmax = entry->elv;
 
-	if( entry->type != IT_ARMOR && entry->type != IT_WEAPON && !entry->flag.no_refine )
+	if (entry->type != IT_ARMOR && entry->type != IT_WEAPON && !entry->flag.no_refine)
 		entry->flag.no_refine = 1;
 
 	if (entry->type != IT_ARMOR && entry->type != IT_WEAPON && !entry->flag.no_options)
@@ -1957,7 +1932,7 @@ static int itemdb_validate_entry(struct item_data *entry, int n, const char *sou
 		entry->view_id = 0;
 	}
 
-	entry->sex = itemdb->gendercheck(entry); //Apply gender filtering.
+	entry->sex = itemdb->gendercheck(entry); // Apply gender filtering.
 
 	// Validated. Finally insert it
 	item = itemdb->load(entry->nameid);
@@ -2039,7 +2014,7 @@ static void itemdb_readdb_job_sub(struct item_data *id, struct config_setting_t 
  */
 static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const char *source, struct DBMap *itemconst_db)
 {
-	struct item_data id = { 0 };
+	struct item_data id = {0};
 	struct config_setting_t *t = NULL;
 	const char *str = NULL;
 	int i32 = 0;
@@ -2103,14 +2078,14 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 	 * OnRentalEndScript: <" on renting end script ">
 	 * Inherit: inherit or override
 	 */
-	if(!map->setting_lookup_const(it, "Id", &i32)) {
+	if (!map->setting_lookup_const(it, "Id", &i32)) {
 		ShowWarning("itemdb_readdb_libconfig_sub: Invalid or missing id in \"%s\", entry #%d, skipping.\n", source, n);
 		return 0;
 	}
 	id.nameid = i32;
 
-	if( (t = libconfig->setting_get_member(it, "Inherit")) && (inherit = libconfig->setting_get_bool(t)) ) {
-		if( !itemdb->exists(id.nameid) ) {
+	if ((t = libconfig->setting_get_member(it, "Inherit")) && (inherit = libconfig->setting_get_bool(t))) {
+		if (!itemdb->exists(id.nameid)) {
 			ShowWarning("itemdb_readdb_libconfig_sub: Trying to inherit nonexistent item %d, default values will be used instead.\n", id.nameid);
 			inherit = false;
 		} else {
@@ -2163,7 +2138,7 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 		safestrncpy(id.name, str, sizeof(id.name));
 	}
 
-	if( !libconfig->setting_lookup_string(it, "Name", &str) || !*str ) {
+	if (!libconfig->setting_lookup_string(it, "Name", &str) || !*str) {
 		if (!inherit && !clone) {
 			ShowWarning("itemdb_readdb_libconfig_sub: Missing Name in item %d of \"%s\", skipping.\n", id.nameid, source);
 			return 0;
@@ -2181,8 +2156,7 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 		if (id.type == IT_WEAPON || id.type == IT_AMMO)
 			id.subtype = i32;
 		else
-			ShowWarning("itemdb_readdb_libconfig_sub: Field 'Subtype' is only allowed for IT_WEAPON or IT_AMMO (Item #%d: %s). Ignoring.\n",
-					id.nameid, id.name);
+			ShowWarning("itemdb_readdb_libconfig_sub: Field 'Subtype' is only allowed for IT_WEAPON or IT_AMMO (Item #%d: %s). Ignoring.\n", id.nameid, id.name);
 	}
 
 	if (map->setting_lookup_const(it, "Buy", &i32))
@@ -2240,21 +2214,21 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 	if (map->setting_lookup_const(it, "WeaponLv", &i32) && i32 >= 0)
 		id.wlv = i32;
 
-	if( (t = libconfig->setting_get_member(it, "EquipLv")) ) {
-		if( config_setting_is_aggregate(t) ) {
-			if( libconfig->setting_length(t) >= 2 )
+	if ((t = libconfig->setting_get_member(it, "EquipLv"))) {
+		if (config_setting_is_aggregate(t)) {
+			if (libconfig->setting_length(t) >= 2)
 				id.elvmax = libconfig->setting_get_int_elem(t, 1);
-			if( libconfig->setting_length(t) >= 1 )
+			if (libconfig->setting_length(t) >= 1)
 				id.elv = libconfig->setting_get_int_elem(t, 0);
 		} else {
 			id.elv = libconfig->setting_get_int(t);
 		}
 	}
 
-	if( (t = libconfig->setting_get_member(it, "Refine")) )
+	if ((t = libconfig->setting_get_member(it, "Refine")))
 		id.flag.no_refine = libconfig->setting_get_bool(t) ? 0 : 1;
 
-	if( (t = libconfig->setting_get_member(it, "Grade")) )
+	if ((t = libconfig->setting_get_member(it, "Grade")))
 		id.flag.no_grade = libconfig->setting_get_bool(t) ? 1 : 0;
 
 	if ((t = libconfig->setting_get_member(it, "DisableOptions")))
@@ -2269,13 +2243,13 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 	if (map->setting_lookup_const(it, "ViewSprite", &i32) && i32 >= 0)
 		id.view_sprite = i32;
 
-	if( (t = libconfig->setting_get_member(it, "BindOnEquip")) )
+	if ((t = libconfig->setting_get_member(it, "BindOnEquip")))
 		id.flag.bindonequip = libconfig->setting_get_bool(t) ? 1 : 0;
 
-	if( (t = libconfig->setting_get_member(it, "ForceSerial")) )
+	if ((t = libconfig->setting_get_member(it, "ForceSerial")))
 		id.flag.force_serial = libconfig->setting_get_bool(t) ? 1 : 0;
 
-	if ( (t = libconfig->setting_get_member(it, "BuyingStore")) )
+	if ((t = libconfig->setting_get_member(it, "BuyingStore")))
 		id.flag.buyingstore = libconfig->setting_get_bool(t) ? 1 : 0;
 
 	if ((t = libconfig->setting_get_member(it, "KeepAfterUse")))
@@ -2293,7 +2267,7 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 	if ((t = libconfig->setting_get_member(it, "IgnoreOvercharge")))
 		id.flag.ignore_overcharge = libconfig->setting_get_bool(t) ? 1 : 0;
 
-	if ( (t = libconfig->setting_get_member(it, "Trade")) ) {
+	if ((t = libconfig->setting_get_member(it, "Trade"))) {
 		if (config_setting_is_group(t)) {
 			struct config_setting_t *tt = NULL;
 
@@ -2384,10 +2358,10 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 			int stack_amount = libconfig->setting_get_int_elem(t, 0);
 			if (stack_amount >= 0) {
 				id.stack.amount = cap_value(stack_amount, 0, USHRT_MAX);
-				id.stack.inventory = (stack_flag&1)!=0;
-				id.stack.cart = (stack_flag&2)!=0;
-				id.stack.storage = (stack_flag&4)!=0;
-				id.stack.guildstorage = (stack_flag&8)!=0;
+				id.stack.inventory = (stack_flag & 1) != 0;
+				id.stack.cart = (stack_flag & 2) != 0;
+				id.stack.storage = (stack_flag & 4) != 0;
+				id.stack.guildstorage = (stack_flag & 8) != 0;
 			}
 		}
 	}
@@ -2454,11 +2428,11 @@ static int itemdb_readdb_libconfig(const char *filename, struct DBMap *itemconst
 	}
 
 	// TODO add duplicates check for itemdb->other
-	memset(&duplicate,0,sizeof(duplicate));
+	memset(&duplicate, 0, sizeof(duplicate));
 	duplicate_db = idb_alloc(DB_OPT_BASE);
 
-	while( (it = libconfig->setting_get_elem(itdb,i++)) ) {
-		int nameid = itemdb->readdb_libconfig_sub(it, i-1, filename, itemconst_db);
+	while ((it = libconfig->setting_get_elem(itdb, i++))) {
+		int nameid = itemdb->readdb_libconfig_sub(it, i - 1, filename, itemconst_db);
 
 		if (nameid <= 0 || nameid > MAX_ITEM_ID)
 			continue;
@@ -2470,15 +2444,13 @@ static int itemdb_readdb_libconfig(const char *filename, struct DBMap *itemconst
 
 		if (nameid < MAX_ITEMDB) {
 			if (duplicate[nameid]) {
-				ShowWarning("itemdb_readdb:%s: duplicate entry of ID #%d (%s/%s)\n",
-						filename, nameid, itemdb_name(nameid), itemdb_jname(nameid));
+				ShowWarning("itemdb_readdb:%s: duplicate entry of ID #%d (%s/%s)\n", filename, nameid, itemdb_name(nameid), itemdb_jname(nameid));
 			} else {
 				duplicate[nameid] = true;
 			}
 		} else {
 			if (idb_exists(duplicate_db, nameid)) {
-				ShowWarning("itemdb_readdb:%s: duplicate entry of ID #%d (%s/%s)\n",
-						filename, nameid, itemdb_name(nameid), itemdb_jname(nameid));
+				ShowWarning("itemdb_readdb:%s: duplicate entry of ID #%d (%s/%s)\n", filename, nameid, itemdb_name(nameid), itemdb_jname(nameid));
 			} else {
 				idb_iput(duplicate_db, nameid, true);
 			}
@@ -2486,7 +2458,7 @@ static int itemdb_readdb_libconfig(const char *filename, struct DBMap *itemconst
 	}
 	db_destroy(duplicate_db);
 	libconfig->destroy(&item_db_conf);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 	return count;
 }
 
@@ -2510,7 +2482,7 @@ static bool itemdb_read_libconfig_lapineddukddak(void)
 	int i = 0;
 	int count = 0;
 
-	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH"item_lapineddukddak.conf");
+	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH "item_lapineddukddak.conf");
 	if (libconfig->load_file(&item_lapineddukddak, filepath) == CONFIG_FALSE)
 		return false;
 
@@ -2520,7 +2492,7 @@ static bool itemdb_read_libconfig_lapineddukddak(void)
 	}
 
 	libconfig->destroy(&item_lapineddukddak);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 	return true;
 }
 
@@ -2571,7 +2543,7 @@ static bool itemdb_read_libconfig_lapineddukddak_sub_sources(struct config_setti
 	VECTOR_INIT(data->lapineddukddak->SourceItems);
 	while ((entry = libconfig->setting_get_elem(sources, i++)) != NULL) {
 		struct item_data *edata = NULL;
-		struct itemlist_entry item = { 0 };
+		struct itemlist_entry item = {0};
 		const char *name = config_setting_name(entry);
 		int i32 = 0;
 
@@ -2602,7 +2574,7 @@ static bool itemdb_read_libconfig_lapineupgrade(void)
 	int i = 0;
 	int count = 0;
 
-	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH"item_lapineupgrade.conf");
+	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH "item_lapineupgrade.conf");
 	if (libconfig->load_file(&item_lapineupgrade, filepath) == CONFIG_FALSE)
 		return false;
 
@@ -2612,7 +2584,7 @@ static bool itemdb_read_libconfig_lapineupgrade(void)
 	}
 
 	libconfig->destroy(&item_lapineupgrade);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 	return true;
 }
 
@@ -2695,7 +2667,7 @@ static bool itemdb_read_libconfig_item_reform_info(void)
 	struct config_t item_reform;
 	char filepath[290];
 
-	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH"item_reform_info.conf");
+	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH "item_reform_info.conf");
 	if (libconfig->load_file(&item_reform, filepath) == CONFIG_FALSE)
 		return false;
 
@@ -2709,7 +2681,7 @@ static bool itemdb_read_libconfig_item_reform_info(void)
 	}
 
 	libconfig->destroy(&item_reform);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 	return true;
 }
 
@@ -2718,7 +2690,7 @@ static bool itemdb_read_libconfig_item_reform_info_sub(struct config_setting_t *
 	nullpo_retr(false, it);
 	nullpo_retr(false, source);
 
-	struct item_reform ir = { 0 };
+	struct item_reform ir = {0};
 
 	if (libconfig->setting_lookup_int(it, "Id", &ir.Id) == CONFIG_FALSE || ir.Id < 0) {
 		ShowWarning("%s: invalid entry Id %d at %s, skipping..\n", __func__, ir.Id, source);
@@ -2772,7 +2744,7 @@ static bool itemdb_read_libconfig_item_reform_info_materials(struct config_setti
 	while ((entry = libconfig->setting_get_elem(it, i++)) != NULL) {
 		const char *name = config_setting_name(entry);
 		struct item_data *idata = itemdb->name2id(name);
-		struct itemlist_entry item = { 0 };
+		struct itemlist_entry item = {0};
 
 		if (idata == NULL) {
 			ShowWarning("%s: unknown item '%s' for entry with Id %d, skipping..\n", __func__, name, ir->Id);
@@ -2840,7 +2812,7 @@ static bool itemdb_read_libconfig_item_reform_list(void)
 	struct config_t item_reform;
 	char filepath[290];
 
-	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH"item_reform_list.conf");
+	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH "item_reform_list.conf");
 	if (libconfig->load_file(&item_reform, filepath) == CONFIG_FALSE)
 		return false;
 
@@ -2857,7 +2829,7 @@ static bool itemdb_read_libconfig_item_reform_list(void)
 	}
 
 	libconfig->destroy(&item_reform);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 	return true;
 }
 
@@ -2906,8 +2878,7 @@ static void itemdb_item_reform(struct map_session_data *sd, const struct item_re
 	const struct item *itr = &sd->status.inventory[idx];
 
 	// Validate refine rate requirement
-	if ((itemdb_type(itr->nameid) == IT_ARMOR || itemdb_type(itr->nameid) == IT_WEAPON)
-		&& (itr->refine < ir->NeedRefineMin || itr->refine > ir->NeedRefineMax))
+	if ((itemdb_type(itr->nameid) == IT_ARMOR || itemdb_type(itr->nameid) == IT_WEAPON) && (itr->refine < ir->NeedRefineMin || itr->refine > ir->NeedRefineMax))
 		return;
 
 	// Validate random option requirement
@@ -2991,8 +2962,8 @@ static void itemdb_read(bool minimal)
 	struct DBData prev;
 
 	const char *filename[] = {
-		DBPATH"item_db.conf",
-		"item_db2.conf",
+	    DBPATH "item_db.conf",
+	    "item_db2.conf",
 	};
 
 	// temporary itemconst db for item cloning because it happens before itemdb->name_constants()
@@ -3004,16 +2975,16 @@ static void itemdb_read(bool minimal)
 	db_destroy(itemconst_db);
 
 	// TODO check duplicate names also in itemdb->other
-	for( i = 0; i < ARRAYLENGTH(itemdb->array); ++i ) {
-		if( itemdb->array[i] ) {
-			if( itemdb->names->put(itemdb->names,DB->str2key(itemdb->array[i]->name),DB->ptr2data(itemdb->array[i]),&prev) ) {
+	for (i = 0; i < ARRAYLENGTH(itemdb->array); ++i) {
+		if (itemdb->array[i]) {
+			if (itemdb->names->put(itemdb->names, DB->str2key(itemdb->array[i]->name), DB->ptr2data(itemdb->array[i]), &prev)) {
 				struct item_data *data = DB->data2ptr(&prev);
-				ShowError("itemdb_read: duplicate AegisName '%s' in item ID %d and %d\n",itemdb->array[i]->name,itemdb->array[i]->nameid,data->nameid);
+				ShowError("itemdb_read: duplicate AegisName '%s' in item ID %d and %d\n", itemdb->array[i]->name, itemdb->array[i]->nameid, data->nameid);
 			}
 		}
 	}
 
-	itemdb->other->foreach(itemdb->other, itemdb->addname_sub);
+	itemdb->other->foreach (itemdb->other, itemdb->addname_sub);
 
 	itemdb->read_options();
 
@@ -3054,7 +3025,7 @@ static int itemdb_addname_sub(union DBKey key, struct DBData *data, va_list ap)
  **/
 static struct item_combo *itemdb_id2combo(int id)
 {
-	if( id > itemdb->combo_count )
+	if (id > itemdb->combo_count)
 		return NULL;
 	return itemdb->combos[id];
 }
@@ -3075,20 +3046,20 @@ static bool itemdb_is_item_usable(struct item_data *item)
 /// Destroys the item_data.
 static void destroy_item_data(struct item_data *self, int free_self)
 {
-	if( self == NULL )
+	if (self == NULL)
 		return;
 	// free scripts
-	if( self->script )
+	if (self->script)
 		script->free_code(self->script);
-	if( self->equip_script )
+	if (self->equip_script)
 		script->free_code(self->equip_script);
-	if( self->unequip_script )
+	if (self->unequip_script)
 		script->free_code(self->unequip_script);
 	if (self->rental_start_script != NULL)
 		script->free_code(self->rental_start_script);
 	if (self->rental_end_script != NULL)
 		script->free_code(self->rental_end_script);
-	if( self->combos )
+	if (self->combos)
 		aFree(self->combos);
 	if (self->lapineddukddak != NULL) {
 		if (self->lapineddukddak->script != NULL)
@@ -3109,7 +3080,7 @@ static void destroy_item_data(struct item_data *self, int free_self)
 	memset(self, 0xDD, sizeof(struct item_data));
 #endif
 	// free self
-	if( free_self )
+	if (free_self)
 		aFree(self);
 }
 
@@ -3120,7 +3091,7 @@ static int itemdb_final_sub(union DBKey key, struct DBData *data, va_list ap)
 {
 	struct item_data *id = DB->data2ptr(data);
 
-	if( id != &itemdb->dummy )
+	if (id != &itemdb->dummy)
 		itemdb->destroy_item_data(id, 1);
 
 	return 0;
@@ -3149,15 +3120,14 @@ static void itemdb_clear(bool total)
 {
 	int i;
 	// clear the previous itemdb data
-	for( i = 0; i < ARRAYLENGTH(itemdb->array); ++i ) {
-		if( itemdb->array[i] )
+	for (i = 0; i < ARRAYLENGTH(itemdb->array); ++i) {
+		if (itemdb->array[i])
 			itemdb->destroy_item_data(itemdb->array[i], 1);
 	}
 
-	if( itemdb->groups )
-	{
-		for( i = 0; i < itemdb->group_count; i++ ) {
-			if( itemdb->groups[i].nameid )
+	if (itemdb->groups) {
+		for (i = 0; i < itemdb->group_count; i++) {
+			if (itemdb->groups[i].nameid)
 				aFree(itemdb->groups[i].nameid);
 		}
 		aFree(itemdb->groups);
@@ -3185,7 +3155,7 @@ static void itemdb_clear(bool total)
 					aFree(itemdb->packages[i].random_groups[j].random_list);
 				aFree(itemdb->packages[i].random_groups);
 			}
-			if( itemdb->packages[i].must_items )
+			if (itemdb->packages[i].must_items)
 				aFree(itemdb->packages[i].must_items);
 		}
 		aFree(itemdb->packages);
@@ -3219,26 +3189,26 @@ static void itemdb_clear(bool total)
 
 static void itemdb_reload(void)
 {
-	struct s_mapiterator* iter;
-	struct map_session_data* sd;
+	struct s_mapiterator *iter;
+	struct map_session_data *sd;
 
-	int i,d,k;
+	int i, d, k;
 
 	itemdb->clear(false);
 
 	// read new data
 	itemdb->read(false);
 
-	//Epoque's awesome @reloaditemdb fix - thanks! [Ind]
+	// Epoque's awesome @reloaditemdb fix - thanks! [Ind]
 	//- Fixes the need of a @reloadmobdb after a @reloaditemdb to re-link monster drop data
 	for (i = 0; i < MAX_MOB_DB; i++) {
 		struct mob_db *entry;
 		if ((i >= MOBID_TREASURE_BOX1 && i <= MOBID_TREASURE_BOX40) || (i >= MOBID_TREASURE_BOX41 && i <= MOBID_TREASURE_BOX49))
 			continue;
 		entry = mob->db(i);
-		for(d = 0; d < MAX_MOB_DROP; d++) {
+		for (d = 0; d < MAX_MOB_DROP; d++) {
 			struct item_data *id;
-			if( !entry->dropitem[d].nameid )
+			if (!entry->dropitem[d].nameid)
 				continue;
 			id = itemdb->search(entry->dropitem[d].nameid);
 
@@ -3251,7 +3221,7 @@ static void itemdb_reload(void)
 				continue;
 
 			if (id->mob[k].id != i && k != MAX_SEARCH - 1)
-				memmove(&id->mob[k+1], &id->mob[k], (MAX_SEARCH-k-1)*sizeof(id->mob[0]));
+				memmove(&id->mob[k + 1], &id->mob[k], (MAX_SEARCH - k - 1) * sizeof(id->mob[0]));
 			id->mob[k].chance = entry->dropitem[d].p;
 			id->mob[k].id = i;
 		}
@@ -3260,19 +3230,19 @@ static void itemdb_reload(void)
 	// readjust itemdb pointer cache for each player
 	iter = mapit_geteachpc();
 	for (sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter))) {
-		memset(sd->item_delay, 0, sizeof(sd->item_delay));  // reset item delays
+		memset(sd->item_delay, 0, sizeof(sd->item_delay)); // reset item delays
 		pc->setinventorydata(sd);
 
 		if (battle->bc->item_check != PCCHECKITEM_NONE) // Check and flag items for inspection.
-			sd->itemcheck = (enum pc_checkitem_types) battle->bc->item_check;
+			sd->itemcheck = (enum pc_checkitem_types)battle->bc->item_check;
 
 		/* clear combo bonuses */
 		if (sd->combo_count) {
 			aFree(sd->combos);
 			sd->combos = NULL;
 			sd->combo_count = 0;
-			if( pc->load_combo(sd) > 0 )
-				status_calc_pc(sd,SCO_FORCE);
+			if (pc->load_combo(sd) > 0)
+				status_calc_pc(sd, SCO_FORCE);
 		}
 
 		// Check for and delete unavailable/disabled items.
@@ -3288,7 +3258,7 @@ static void itemdb_name_constants(void)
 #ifdef ENABLE_CASE_CHECK
 	script->parser_current_file = "Item Database (Likely an invalid or conflicting AegisName)";
 #endif // ENABLE_CASE_CHECK
-	for( data = dbi_first(iter); dbi_exists(iter); data = dbi_next(iter) )
+	for (data = dbi_first(iter); dbi_exists(iter); data = dbi_next(iter))
 		script->set_constant2(data->name, data->nameid, false, false);
 #ifdef ENABLE_CASE_CHECK
 	script->parser_current_file = NULL;
@@ -3314,8 +3284,8 @@ static void do_init_itemdb(bool minimal)
 	itemdb->other = idb_alloc(DB_OPT_BASE);
 	itemdb->options = idb_alloc(DB_OPT_RELEASE_DATA);
 	itemdb->reform = idb_alloc(DB_OPT_RELEASE_DATA);
-	itemdb->names = strdb_alloc(DB_OPT_BASE,ITEM_NAME_LENGTH);
-	itemdb->create_dummy_data(); //Dummy data item.
+	itemdb->names = strdb_alloc(DB_OPT_BASE, ITEM_NAME_LENGTH);
+	itemdb->create_dummy_data(); // Dummy data item.
 	itemdb->read(minimal);
 
 	if (minimal)

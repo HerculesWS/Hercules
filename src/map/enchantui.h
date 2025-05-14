@@ -89,37 +89,37 @@ struct enchantui_interface {
 	struct DBMap *db; // int enchant_id -> struct enchant_info *
 
 	/* core */
-	int (*init) (bool minimal);
-	void (*final) (void);
+	int (*init)(bool minimal);
+	void (*final)(void);
 
-	int (*db_final_sub) (union DBKey key, struct DBData *data, va_list ap);
-	struct enchant_info *(*exists) (int64 id);
+	int (*db_final_sub)(union DBKey key, struct DBData *data, va_list ap);
+	struct enchant_info *(*exists)(int64 id);
 
 	/* database */
 	void (*read_db_libconfig)(void);
-	bool (*read_db_libconfig_sub) (const struct config_setting_t *it, int n, const char *source);
-	bool (*read_db_libconfig_slot_order) (const struct config_setting_t *it, struct enchant_info *einfo, int n, const char *source);
-	bool (*read_db_libconfig_target_items) (const struct config_setting_t *it, struct enchant_info *einfo, int n, const char *source);
-	bool (*read_db_libconfig_slot_info) (const struct config_setting_t *it, struct enchant_info *einfo, int n, const char *source);
-	bool (*read_db_libconfig_slot_info_sub) (const struct config_setting_t *it, struct enchant_slot_info *sinfo, int n, const char *source);
-	bool (*read_db_libconfig_gradebonus) (const struct config_setting_t *it, struct enchant_slot_info *sinfo, int n, const char *source);
-	bool (*read_db_libconfig_normal_info) (const struct config_setting_t *it, struct enchant_info_normal *ninfo, int n, const char *source);
-	bool (*read_db_libconfig_perfect_info) (const struct config_setting_t *it, struct enchant_info_perfect *epinfo, int n, const char *source);
-	bool (*read_db_libconfig_upgrade_info) (const struct config_setting_t *it, struct enchant_info_upgrade *uinfo, int n, const char *source);
-	bool (*read_db_libconfig_reset_info) (const struct config_setting_t *it, struct enchant_info_reset *rinfo, int n, const char *source);
-	bool (*read_db_libconfig_materials_list) (const struct config_setting_t *it, struct itemlist *materials, int n, const char *source);
-	bool (*read_db_libconfig_itemrate_list) (const struct config_setting_t *it, struct enchant_item_list *elist, int n, const char *source);
+	bool (*read_db_libconfig_sub)(const struct config_setting_t *it, int n, const char *source);
+	bool (*read_db_libconfig_slot_order)(const struct config_setting_t *it, struct enchant_info *einfo, int n, const char *source);
+	bool (*read_db_libconfig_target_items)(const struct config_setting_t *it, struct enchant_info *einfo, int n, const char *source);
+	bool (*read_db_libconfig_slot_info)(const struct config_setting_t *it, struct enchant_info *einfo, int n, const char *source);
+	bool (*read_db_libconfig_slot_info_sub)(const struct config_setting_t *it, struct enchant_slot_info *sinfo, int n, const char *source);
+	bool (*read_db_libconfig_gradebonus)(const struct config_setting_t *it, struct enchant_slot_info *sinfo, int n, const char *source);
+	bool (*read_db_libconfig_normal_info)(const struct config_setting_t *it, struct enchant_info_normal *ninfo, int n, const char *source);
+	bool (*read_db_libconfig_perfect_info)(const struct config_setting_t *it, struct enchant_info_perfect *epinfo, int n, const char *source);
+	bool (*read_db_libconfig_upgrade_info)(const struct config_setting_t *it, struct enchant_info_upgrade *uinfo, int n, const char *source);
+	bool (*read_db_libconfig_reset_info)(const struct config_setting_t *it, struct enchant_info_reset *rinfo, int n, const char *source);
+	bool (*read_db_libconfig_materials_list)(const struct config_setting_t *it, struct itemlist *materials, int n, const char *source);
+	bool (*read_db_libconfig_itemrate_list)(const struct config_setting_t *it, struct enchant_item_list *elist, int n, const char *source);
 
 	/* processing requests */
-	const struct enchant_info *(*validate_targetitem) (struct map_session_data *sd, int64 enchant_group, int index);
-	int (*validate_slot_id) (struct map_session_data *sd, const struct enchant_info *ei, const struct item *it);
-	bool (*validate_requirements) (struct map_session_data *sd, const int zeny, const struct itemlist *materials);
-	bool (*validate_material_list) (struct map_session_data *sd, const struct itemlist *materials);
-	bool (*consume_material_list) (struct map_session_data *sd, const struct itemlist *materials);
-	void (*normal_request) (struct map_session_data *sd, int64 enchant_group, int index);
-	void (*perfect_request) (struct map_session_data *sd, int64 enchant_group, int index, int itemid);
-	void (*upgrade_request) (struct map_session_data *sd, int64 enchant_group, int index, int slot_id);
-	void (*reset_request) (struct map_session_data *sd, int64 enchant_group, int index);
+	const struct enchant_info *(*validate_targetitem)(struct map_session_data *sd, int64 enchant_group, int index);
+	int (*validate_slot_id)(struct map_session_data *sd, const struct enchant_info *ei, const struct item *it);
+	bool (*validate_requirements)(struct map_session_data *sd, const int zeny, const struct itemlist *materials);
+	bool (*validate_material_list)(struct map_session_data *sd, const struct itemlist *materials);
+	bool (*consume_material_list)(struct map_session_data *sd, const struct itemlist *materials);
+	void (*normal_request)(struct map_session_data *sd, int64 enchant_group, int index);
+	void (*perfect_request)(struct map_session_data *sd, int64 enchant_group, int index, int itemid);
+	void (*upgrade_request)(struct map_session_data *sd, int64 enchant_group, int index, int slot_id);
+	void (*reset_request)(struct map_session_data *sd, int64 enchant_group, int index);
 };
 
 #ifdef HERCULES_CORE

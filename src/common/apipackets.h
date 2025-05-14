@@ -27,49 +27,37 @@
 
 /* Packets Structs */
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
-#pragma pack(push, 1)
+	#pragma pack(push, 1)
 #endif // not NetBSD < 6 / Solaris
 
 #ifndef EMOTE_SIZE
-// 50 + end of string
-#define EMOTE_SIZE 51
+	// 50 + end of string
+	#define EMOTE_SIZE 51
 #endif
 
 #ifndef MAX_EMOTES
-#define MAX_EMOTES 10
+	#define MAX_EMOTES 10
 #endif
 
 #ifndef HOTKEY_DESCRIPTION_SIZE
-#define HOTKEY_DESCRIPTION_SIZE 116
+	#define HOTKEY_DESCRIPTION_SIZE 116
 #endif
 
 // [4144] for now using number of hotkeys bit bigger than actual amount
 #ifndef MAX_USERHOTKEYS
-#define MAX_USERHOTKEYS 50
+	#define MAX_USERHOTKEYS 50
 #endif
 
 #ifndef ADVENTURER_AGENCY_PAGE_SIZE
-#define ADVENTURER_AGENCY_PAGE_SIZE 10
+	#define ADVENTURER_AGENCY_PAGE_SIZE 10
 #endif
 
 #define HEADER_API_PROXY_REQUEST 0x2842
 #define HEADER_API_PROXY_REPLY 0x2818
 
-enum UserHotKey_v2
-{
-	UserHotKey_v2_SkillBar_1Tab = 0,
-	UserHotKey_v2_SkillBar_2Tab = 1,
-	UserHotKey_v2_InterfaceTab = 2,
-	UserHotKey_v2_EmotionTab = 3,
-	UserHotKey_v2_max
-};
+enum UserHotKey_v2 { UserHotKey_v2_SkillBar_1Tab = 0, UserHotKey_v2_SkillBar_2Tab = 1, UserHotKey_v2_InterfaceTab = 2, UserHotKey_v2_EmotionTab = 3, UserHotKey_v2_max };
 
-enum adventurer_agency_flags {
-	AGENCY_HEALER = 1,
-	AGENCY_ASSIST = 2,
-	AGENCY_TANKER = 4,
-	AGENCY_DEALER = 8
-};
+enum adventurer_agency_flags { AGENCY_HEALER = 1, AGENCY_ASSIST = 2, AGENCY_TANKER = 4, AGENCY_DEALER = 8 };
 
 // base
 struct PACKET_API_PROXY {
@@ -91,14 +79,9 @@ struct PACKET_API_PROXY0 {
 	char data[];
 } __attribute__((packed));
 
-enum proxy_flag {
-	proxy_flag_login = 1,
-	proxy_flag_char = 2,
-	proxy_flag_map = 4
-};
+enum proxy_flag { proxy_flag_login = 1, proxy_flag_char = 2, proxy_flag_map = 4 };
 
-STATIC_ASSERT(sizeof(struct PACKET_API_PROXY) == sizeof(struct PACKET_API_PROXY0),
-		"Structs PACKET_API_PROXY and PACKET_API_PROXY0 must be same");
+STATIC_ASSERT(sizeof(struct PACKET_API_PROXY) == sizeof(struct PACKET_API_PROXY0), "Structs PACKET_API_PROXY and PACKET_API_PROXY0 must be same");
 
 struct PACKET_API_PROXY_CHUNKED {
 	struct PACKET_API_PROXY base;
@@ -139,7 +122,7 @@ struct PACKET_API_userconfig_save_userhotkey_v2_data {
 
 struct PACKET_API_userconfig_save_userhotkey_v2 {
 	struct PACKET_API_userconfig_save_userhotkey_v2_data data;
-}  __attribute__((packed));
+} __attribute__((packed));
 
 /*
 empty structs not supported by visual studio. left for future usage
@@ -191,7 +174,6 @@ struct PACKET_API_party_add_data {
 struct PACKET_API_party_add {
 	struct PACKET_API_party_add_data data;
 } __attribute__((packed));
-
 
 struct PACKET_API_party_list_data {
 	int page;
@@ -246,7 +228,6 @@ struct PACKET_API_REPLY_emblem_upload {
 	int result; // 0 = error, 1 = success
 } __attribute__((packed));
 
-
 struct PACKET_API_REPLY_emblem_download {
 	uint8 flag;
 	char data[];
@@ -294,14 +275,14 @@ struct PACKET_API_REPLY_party_info {
 #define CHUNKED_FLAG_SIZE 1
 
 #define RFIFO_DATA_PTR() RFIFOP(fd, WFIFO_APICHAR_SIZE)
-#define RFIFO_API_DATA(var, type) const struct PACKET_API_ ## type ## _data *var = (const struct PACKET_API_ ## type ## _data*)RFIFO_DATA_PTR()
+#define RFIFO_API_DATA(var, type) const struct PACKET_API_##type##_data *var = (const struct PACKET_API_##type##_data *)RFIFO_DATA_PTR()
 #define RFIFO_API_PROXY_PACKET(var) const struct PACKET_API_PROXY *var = RFIFOP(fd, 0)
 #define RFIFO_API_PROXY_PACKET_CHUNKED(var) const struct PACKET_API_PROXY_CHUNKED *var = RFIFOP(fd, 0)
 #define GET_RFIFO_API_PROXY_PACKET_SIZE(fd) (RFIFOW(fd, 2) - sizeof(struct PACKET_API_PROXY))
 #define PROXY_PACKET_FLAG(packet, flag) ((packet)->flags & (flag)) != 0
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
-#pragma pack(pop)
+	#pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
 
 #endif /* COMMON_API_PACKETS_H */

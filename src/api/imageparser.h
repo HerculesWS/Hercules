@@ -37,11 +37,11 @@ struct gif_user_data {
  * imageparser.c Interface
  **/
 struct imageparser_interface {
-	int (*init) (bool minimal);
-	void (*final) (void);
-	bool (*validate_bmp_emblem) (const char *emblem, uint64 emblem_len);
-	bool (*validate_gif_emblem) (const char *emblem, uint64 emblem_len);
-	int (*read_gif_func) (GifFileType *gif, GifByteType *buf, int len);
+	int (*init)(bool minimal);
+	void (*final)(void);
+	bool (*validate_bmp_emblem)(const char *emblem, uint64 emblem_len);
+	bool (*validate_gif_emblem)(const char *emblem, uint64 emblem_len);
+	int (*read_gif_func)(GifFileType *gif, GifByteType *buf, int len);
 };
 
 #ifdef HERCULES_CORE

@@ -61,17 +61,17 @@ static void mapif_ban(int id, unsigned int flag, int status)
 {
 	// send to all map-servers to disconnect the player
 	unsigned char buf[11];
-	WBUFW(buf,0) = 0x2b14;
-	WBUFL(buf,2) = id;
-	WBUFB(buf,6) = flag; // 0: change of status, 1: ban
-	WBUFL(buf,7) = status; // status or final date of a banishment
+	WBUFW(buf, 0) = 0x2b14;
+	WBUFL(buf, 2) = id;
+	WBUFB(buf, 6) = flag;   // 0: change of status, 1: ban
+	WBUFL(buf, 7) = status; // status or final date of a banishment
 	mapif->send(buf, 11);
 }
 
 /// Initializes a server structure.
 static void mapif_server_init(void)
 {
-	//memset(&chr->map_server, 0, sizeof(chr->map_server));
+	// memset(&chr->map_server, 0, sizeof(chr->map_server));
 	chr->map_server.fd = -1;
 }
 
@@ -89,7 +89,7 @@ static void mapif_server_reset(void)
 {
 	if (SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `index`='%d'", ragsrvinfo_db, chr->map_server.fd))
 		Sql_ShowDebug(inter->sql_handle);
-	chr->online_char_db->foreach(chr->online_char_db, chr->db_setoffline); //Tag relevant chars as 'in disconnected' server.
+	chr->online_char_db->foreach (chr->online_char_db, chr->db_setoffline); // Tag relevant chars as 'in disconnected' server.
 	mapif->server_destroy();
 	mapif->server_init();
 }
@@ -154,7 +154,6 @@ static void mapif_send_users_count(int users)
 	mapif->send(buf, 6);
 }
 
-
 static void mapif_auction_message(int char_id, unsigned char result)
 {
 	unsigned char buf[74];
@@ -195,14 +194,7 @@ static void mapif_parse_auction_requestlist(int fd)
 	memcpy(searchtext, RFIFOP(fd, 16), NAME_LENGTH);
 
 	for (auction = dbi_first(iter); dbi_exists(iter); auction = dbi_next(iter)) {
-		if ((type == 0 && auction->type != IT_ARMOR && auction->type != IT_PETARMOR)
-		 || (type == 1 && auction->type != IT_WEAPON)
-		 || (type == 2 && auction->type != IT_CARD)
-		 || (type == 3 && auction->type != IT_ETC)
-		 || (type == 4 && !strstr(auction->item_name, searchtext))
-		 || (type == 5 && auction->price > price)
-		 || (type == 6 && auction->seller_id != char_id)
-		 || (type == 7 && auction->buyer_id != char_id))
+		if ((type == 0 && auction->type != IT_ARMOR && auction->type != IT_PETARMOR) || (type == 1 && auction->type != IT_WEAPON) || (type == 2 && auction->type != IT_CARD) || (type == 3 && auction->type != IT_ETC) || (type == 4 && !strstr(auction->item_name, searchtext)) || (type == 5 && auction->price > price) || (type == 6 && auction->seller_id != char_id) || (type == 7 && auction->buyer_id != char_id))
 			continue;
 
 		i++;
@@ -229,7 +221,7 @@ static void mapif_auction_register(int fd, struct auction_data *auction)
 
 	nullpo_retv(auction);
 
-	WFIFOHEAD(fd,len);
+	WFIFOHEAD(fd, len);
 	WFIFOW(fd, 0) = 0x3851;
 	WFIFOW(fd, 2) = len;
 	memcpy(WFIFOP(fd, 4), auction, sizeof(struct auction_data));
@@ -239,11 +231,11 @@ static void mapif_auction_register(int fd, struct auction_data *auction)
 static void mapif_parse_auction_register(int fd)
 {
 	struct auction_data auction;
-	if( RFIFOW(fd, 2) != sizeof(struct auction_data) + 4 )
+	if (RFIFOW(fd, 2) != sizeof(struct auction_data) + 4)
 		return;
 
 	memcpy(&auction, RFIFOP(fd, 4), sizeof(struct auction_data));
-	if( inter_auction->count(auction.seller_id, false) < 5 )
+	if (inter_auction->count(auction.seller_id, false) < 5)
 		auction.auction_id = inter_auction->create(&auction);
 
 	mapif->auction_register(fd, &auction);
@@ -283,7 +275,6 @@ static void mapif_parse_auction_cancel(int fd)
 
 	mapif->auction_cancel(fd, char_id, 0); // The auction has been canceled
 }
-
 
 static void mapif_auction_close(int fd, int char_id, unsigned char result)
 {
@@ -484,7 +475,8 @@ static int mapif_guild_info_emblem(const struct guild *g)
 	if (fd < 0)
 		return -1;
 
-	WFIFO_CHUNKED_INIT(p, fd, HEADER_CHARMAP_GUILD_INFO_EMBLEM, PACKET_CHARMAP_GUILD_INFO_EMBLEM, g->emblem_data, g->emblem_len) {
+	WFIFO_CHUNKED_INIT(p, fd, HEADER_CHARMAP_GUILD_INFO_EMBLEM, PACKET_CHARMAP_GUILD_INFO_EMBLEM, g->emblem_data, g->emblem_len)
+	{
 		WFIFO_CHUNKED_BLOCK_START(p);
 		p->guild_id = g->guild_id;
 		p->emblem_id = g->emblem_id;
@@ -614,7 +606,7 @@ static int mapif_guild_skillupack(int guild_id, uint16 skill_id, int account_id)
 	WBUFW(buf, 0) = 0x383c;
 	WBUFL(buf, 2) = guild_id;
 	WBUFL(buf, 6) = skill_id;
-	WBUFL(buf,10) = account_id;
+	WBUFL(buf, 10) = account_id;
 	mapif->send(buf, 14);
 	return 0;
 }
@@ -633,7 +625,7 @@ static int mapif_guild_alliance(int guild_id1, int guild_id2, int account_id1, i
 	WBUFB(buf, 18) = flag;
 	memcpy(WBUFP(buf, 19), name1, NAME_LENGTH);
 	memcpy(WBUFP(buf, 19 + NAME_LENGTH), name2, NAME_LENGTH);
-	mapif->send(buf,19 + 2 * NAME_LENGTH);
+	mapif->send(buf, 19 + 2 * NAME_LENGTH);
 	return 0;
 }
 
@@ -644,7 +636,7 @@ static int mapif_guild_position(struct guild *g, int idx)
 	nullpo_ret(g);
 	Assert_ret(idx >= 0 && idx < MAX_GUILDPOSITION);
 	WBUFW(buf, 0) = 0x383b;
-	WBUFW(buf, 2) = sizeof(struct guild_position)+12;
+	WBUFW(buf, 2) = sizeof(struct guild_position) + 12;
 	WBUFL(buf, 4) = g->guild_id;
 	WBUFL(buf, 8) = idx;
 	memcpy(WBUFP(buf, 12), &g->position[idx], sizeof(struct guild_position));
@@ -674,7 +666,8 @@ static int mapif_guild_emblem(struct guild *g)
 	if (fd < 0)
 		return -1;
 
-	WFIFO_CHUNKED_INIT(p, fd, HEADER_CHARMAP_GUILD_EMBLEM, PACKET_CHARMAP_GUILD_EMBLEM, g->emblem_data, g->emblem_len) {
+	WFIFO_CHUNKED_INIT(p, fd, HEADER_CHARMAP_GUILD_EMBLEM, PACKET_CHARMAP_GUILD_EMBLEM, g->emblem_data, g->emblem_len)
+	{
 		WFIFO_CHUNKED_BLOCK_START(p);
 		p->guild_id = g->guild_id;
 		p->emblem_id = g->emblem_id;
@@ -728,7 +721,7 @@ static int mapif_parse_CreateGuild(int fd, int account_id, const char *name, con
 	g = inter_guild->create(name, master);
 
 	// Report to client
-	mapif->guild_created(fd,account_id,g);
+	mapif->guild_created(fd, account_id, g);
 	if (g != NULL) {
 		mapif->guild_info(g);
 	}
@@ -739,7 +732,7 @@ static int mapif_parse_CreateGuild(int fd, int account_id, const char *name, con
 // Return guild info to client
 static int mapif_parse_GuildInfo(int fd, int guild_id)
 {
-	struct guild * g = inter_guild->fromsql(guild_id); //We use this because on start-up the info of castle-owned guilds is required. [Skotlex]
+	struct guild *g = inter_guild->fromsql(guild_id); // We use this because on start-up the info of castle-owned guilds is required. [Skotlex]
 	if (g != NULL) {
 		if (!inter_guild->calcinfo(g))
 			mapif->guild_info(g);
@@ -787,7 +780,7 @@ static int mapif_parse_GuildBasicInfoChange(int fd, int guild_id, int type, cons
 {
 	inter_guild->update_basic_info(guild_id, type, data, len);
 	// Information is already sent in mapif->guild_info
-	//mapif->guild_basicinfochanged(guild_id,type,data,len);
+	// mapif->guild_basicinfochanged(guild_id,type,data,len);
 	return 0;
 }
 
@@ -832,15 +825,15 @@ static int mapif_parse_GuildEmblem(int fd)
 	struct PACKET_MAPCHAR_GUILD_EMBLEM *p = RFIFOP(fd, 0);
 	RFIFO_CHUNKED_INIT(p, p->packetLength - sizeof(struct PACKET_MAPCHAR_GUILD_EMBLEM), mapif->emblem_tmp);
 
-	RFIFO_CHUNKED_ERROR(p) {
+	RFIFO_CHUNKED_ERROR(p)
+	{
 		fifo_chunk_buf_clear(mapif->emblem_tmp);
 		return 0;
 	}
 
-	RFIFO_CHUNKED_COMPLETE(p) {
-		inter_guild->update_emblem(mapif->emblem_tmp.data_size,
-			p->guild_id,
-			p->data);
+	RFIFO_CHUNKED_COMPLETE(p)
+	{
+		inter_guild->update_emblem(mapif->emblem_tmp.data_size, p->guild_id, p->data);
 		fifo_chunk_buf_clear(mapif->emblem_tmp);
 	}
 
@@ -858,7 +851,7 @@ static int mapif_parse_GuildCastleDataSave(int fd, int castle_id, int index, int
 	return 0;
 }
 
-static int mapif_parse_GuildMasterChange(int fd, int guild_id, const char* name, int len)
+static int mapif_parse_GuildMasterChange(int fd, int guild_id, const char *name, int len)
 {
 	inter_guild->change_leader(guild_id, name, len);
 	return 0;
@@ -880,7 +873,7 @@ static void mapif_homunculus_deleted(int fd, int flag)
 {
 	WFIFOHEAD(fd, 3);
 	WFIFOW(fd, 0) = 0x3893;
-	WFIFOB(fd,2) = flag; //Flag 1 = success
+	WFIFOB(fd, 2) = flag; // Flag 1 = success
 	WFIFOSET(fd, 3);
 }
 
@@ -960,14 +953,14 @@ static void mapif_parse_homunculus_rename(int fd, int account_id, int char_id, c
 static void mapif_mail_sendinbox(int fd, int char_id, unsigned char flag, struct mail_data *md)
 {
 	nullpo_retv(md);
-	//FIXME: dumping the whole structure like this is unsafe [ultramage]
+	// FIXME: dumping the whole structure like this is unsafe [ultramage]
 	WFIFOHEAD(fd, sizeof(struct mail_data) + 9);
 	WFIFOW(fd, 0) = 0x3848;
 	WFIFOW(fd, 2) = sizeof(struct mail_data) + 9;
 	WFIFOL(fd, 4) = char_id;
 	WFIFOB(fd, 8) = flag;
-	memcpy(WFIFOP(fd, 9),md,sizeof(struct mail_data));
-	WFIFOSET(fd,WFIFOW(fd, 2));
+	memcpy(WFIFOP(fd, 9), md, sizeof(struct mail_data));
+	WFIFOSET(fd, WFIFOW(fd, 2));
 }
 
 /*==========================================
@@ -1001,12 +994,12 @@ static void mapif_mail_sendattach(int fd, int char_id, struct mail_message *msg)
 	WFIFOL(fd, 4) = char_id;
 	WFIFOL(fd, 8) = (msg->zeny > 0) ? msg->zeny : 0;
 	memcpy(WFIFOP(fd, 12), &msg->item, sizeof(struct item));
-	WFIFOSET(fd,WFIFOW(fd, 2));
+	WFIFOSET(fd, WFIFOW(fd, 2));
 }
 
 static void mapif_parse_mail_getattach(int fd)
 {
-	struct mail_message msg = { 0 };
+	struct mail_message msg = {0};
 	int char_id = RFIFOL(fd, 2);
 	int mail_id = RFIFOL(fd, 6);
 
@@ -1083,7 +1076,7 @@ static void mapif_parse_mail_return(int fd)
 /*==========================================
  * Send Mail
  *------------------------------------------*/
-static void mapif_mail_send(int fd, struct mail_message* msg)
+static void mapif_mail_send(int fd, struct mail_message *msg)
 {
 	int len = sizeof(struct mail_message) + 4;
 
@@ -1092,7 +1085,7 @@ static void mapif_mail_send(int fd, struct mail_message* msg)
 	WFIFOW(fd, 0) = 0x384d;
 	WFIFOW(fd, 2) = len;
 	memcpy(WFIFOP(fd, 4), msg, sizeof(struct mail_message));
-	WFIFOSET(fd,len);
+	WFIFOSET(fd, len);
 }
 
 static void mapif_parse_mail_send(int fd)
@@ -1109,7 +1102,7 @@ static void mapif_parse_mail_send(int fd)
 	inter_mail->send(account_id, &msg);
 
 	mapif->mail_send(fd, &msg); // notify sender
-	mapif->mail_new(&msg); // notify recipient
+	mapif->mail_new(&msg);      // notify recipient
 }
 
 static void mapif_mercenary_send(int fd, struct s_mercenary *merc, unsigned char flag)
@@ -1122,7 +1115,7 @@ static void mapif_mercenary_send(int fd, struct s_mercenary *merc, unsigned char
 	WFIFOW(fd, 2) = size;
 	WFIFOB(fd, 4) = flag;
 	memcpy(WFIFOP(fd, 5), merc, sizeof(struct s_mercenary));
-	WFIFOSET(fd,size);
+	WFIFOSET(fd, size);
 }
 
 static void mapif_parse_mercenary_create(int fd, const struct s_mercenary *merc)
@@ -1193,7 +1186,7 @@ static int mapif_party_created(int fd, int account_id, int char_id, struct party
 	return 0;
 }
 
-//Party information not found
+// Party information not found
 static void mapif_party_noinfo(int fd, int party_id, int char_id)
 {
 	WFIFOHEAD(fd, 12);
@@ -1205,7 +1198,7 @@ static void mapif_party_noinfo(int fd, int party_id, int char_id)
 	ShowWarning("int_party: info not found (party_id=%d char_id=%d)\n", party_id, char_id);
 }
 
-//Digest party information
+// Digest party information
 static void mapif_party_info(const struct party *p, int char_id)
 {
 	unsigned char buf[8 + sizeof(struct party)];
@@ -1217,7 +1210,7 @@ static void mapif_party_info(const struct party *p, int char_id)
 	mapif->send(buf, WBUFW(buf, 2));
 }
 
-//Whether or not additional party members
+// Whether or not additional party members
 static int mapif_party_memberadded(int fd, int party_id, int account_id, int char_id, int flag)
 {
 	WFIFOHEAD(fd, 15);
@@ -1246,7 +1239,7 @@ static int mapif_party_optionchanged(const struct party *p, int account_id, int 
 	return 0;
 }
 
-//Withdrawal notification party
+// Withdrawal notification party
 static int mapif_party_withdraw(int party_id, int account_id, int char_id)
 {
 	unsigned char buf[16];
@@ -1259,7 +1252,7 @@ static int mapif_party_withdraw(int party_id, int account_id, int char_id)
 	return 0;
 }
 
-//Party map update notification
+// Party map update notification
 static int mapif_party_membermoved(struct party *p, int idx)
 {
 	unsigned char buf[20];
@@ -1277,7 +1270,7 @@ static int mapif_party_membermoved(struct party *p, int idx)
 	return 0;
 }
 
-//Dissolution party notification
+// Dissolution party notification
 static int mapif_party_broken(int party_id, int flag)
 {
 	unsigned char buf[16];
@@ -1285,7 +1278,7 @@ static int mapif_party_broken(int party_id, int flag)
 	WBUFL(buf, 2) = party_id;
 	WBUFB(buf, 6) = flag;
 	mapif->send(buf, 7);
-	//printf("int_party: broken %d\n",party_id);
+	// printf("int_party: broken %d\n",party_id);
 	return 0;
 }
 
@@ -1336,14 +1329,14 @@ static int mapif_parse_PartyAddMember(int fd, int party_id, const struct party_m
 	return 0;
 }
 
-//Party setting change request
+// Party setting change request
 static int mapif_parse_PartyChangeOption(int fd, int party_id, int account_id, int exp, int item)
 {
 	inter_party->change_option(party_id, account_id, exp, item);
 	return 0;
 }
 
-//Request leave party
+// Request leave party
 static int mapif_parse_PartyLeave(int fd, int party_id, int account_id, int char_id)
 {
 	inter_party->leave(party_id, account_id, char_id);
@@ -1357,7 +1350,7 @@ static int mapif_parse_PartyChangeMap(int fd, int party_id, int account_id, int 
 	return 0;
 }
 
-//Request party dissolution
+// Request party dissolution
 static int mapif_parse_BreakParty(int fd, int party_id)
 {
 	inter_party->disband(party_id);
@@ -1376,7 +1369,7 @@ static int mapif_pet_created(int fd, int account_id, struct s_pet *p)
 	WFIFOHEAD(fd, 14);
 	WFIFOW(fd, 0) = 0x3880;
 	WFIFOL(fd, 2) = account_id;
-	if (p != NULL){
+	if (p != NULL) {
 		WFIFOL(fd, 6) = p->class_;
 		WFIFOL(fd, 10) = p->pet_id;
 		ShowInfo("int_pet: created pet %d - %s\n", p->pet_id, p->name);
@@ -1439,13 +1432,13 @@ static int mapif_delete_pet_ack(int fd, int flag)
 
 static int mapif_save_pet(int fd, int account_id, const struct s_pet *data)
 {
-	//here process pet save request.
+	// here process pet save request.
 	int len;
 	nullpo_ret(data);
 	RFIFOHEAD(fd);
 	len = RFIFOW(fd, 2);
-	if (sizeof(struct s_pet) != len-8) {
-		ShowError("inter pet: data size mismatch: %d != %"PRIuS"\n", len-8, sizeof(struct s_pet));
+	if (sizeof(struct s_pet) != len - 8) {
+		ShowError("inter pet: data size mismatch: %d != %" PRIuS "\n", len - 8, sizeof(struct s_pet));
 		return 0;
 	}
 
@@ -1466,17 +1459,7 @@ static int mapif_parse_CreatePet(int fd)
 {
 	const struct PACKET_INTER_CREATE_PET *p = RP2PTR(fd);
 
-	struct s_pet *pet = inter_pet->create(p->account_id,
-		p->char_id,
-		p->pet_class,
-		p->pet_lv,
-		p->pet_egg_id,
-		p->pet_equip,
-		p->intimate,
-		p->hungry,
-		p->rename_flag,
-		p->incubate,
-		p->pet_name);
+	struct s_pet *pet = inter_pet->create(p->account_id, p->char_id, p->pet_class, p->pet_lv, p->pet_egg_id, p->pet_equip, p->intimate, p->hungry, p->rename_flag, p->incubate, p->pet_name);
 
 	if (pet != NULL)
 		mapif->pet_created(fd, p->account_id, pet);
@@ -1540,7 +1523,7 @@ static int mapif_parse_quest_save(int fd)
 	bool success;
 
 	if (num > 0)
-		qd = RFIFOP(fd,8);
+		qd = RFIFOP(fd, 8);
 
 	success = inter_quest->save(char_id, qd, num);
 
@@ -1552,9 +1535,9 @@ static int mapif_parse_quest_save(int fd)
 
 static void mapif_send_quests(int fd, int char_id, struct quest *tmp_questlog, int num_quests)
 {
-	WFIFOHEAD(fd,num_quests*sizeof(struct quest) + 8);
+	WFIFOHEAD(fd, num_quests * sizeof(struct quest) + 8);
 	WFIFOW(fd, 0) = 0x3860;
-	WFIFOW(fd, 2) = num_quests*sizeof(struct quest) + 8;
+	WFIFOW(fd, 2) = num_quests * sizeof(struct quest) + 8;
 	WFIFOL(fd, 4) = char_id;
 
 	if (num_quests > 0) {
@@ -1576,7 +1559,7 @@ static void mapif_send_quests(int fd, int char_id, struct quest *tmp_questlog, i
  */
 static int mapif_parse_quest_load(int fd)
 {
-	int char_id = RFIFOL(fd,2);
+	int char_id = RFIFOL(fd, 2);
 	struct quest *tmp_questlog = NULL;
 	int num_quests;
 
@@ -1597,12 +1580,12 @@ static int mapif_parse_quest_load(int fd)
 static void mapif_parse_rodex_requestinbox(int fd)
 {
 	int count;
-	int char_id = RFIFOL(fd,2);
+	int char_id = RFIFOL(fd, 2);
 	int account_id = RFIFOL(fd, 6);
 	int8 flag = RFIFOB(fd, 10);
 	int8 opentype = RFIFOB(fd, 11);
 	int64 mail_id = RFIFOQ(fd, 12);
-	struct rodex_maillist mails = { 0 };
+	struct rodex_maillist mails = {0};
 
 	VECTOR_INIT(mails);
 	if (flag == 0)
@@ -1705,12 +1688,12 @@ static void mapif_parse_rodex_updatemail(int fd)
  *------------------------------------------*/
 static void mapif_parse_rodex_send(int fd)
 {
-	struct rodex_message msg = { 0 };
+	struct rodex_message msg = {0};
 
-	if (RFIFOW(fd,2) != 4 + sizeof(struct rodex_message))
+	if (RFIFOW(fd, 2) != 4 + sizeof(struct rodex_message))
 		return;
 
-	memcpy(&msg, RFIFOP(fd,4), sizeof(struct rodex_message));
+	memcpy(&msg, RFIFOP(fd, 4), sizeof(struct rodex_message));
 	if (msg.receiver_id > 0 || msg.receiver_accountid > 0)
 		msg.id = inter_rodex->savemessage(&msg);
 
@@ -1722,13 +1705,13 @@ static void mapif_rodex_send(int fd, int sender_id, int receiver_id, int receive
 	Assert_retv(sender_id >= 0);
 	Assert_retv(receiver_id + receiver_accountid > 0);
 
-	WFIFOHEAD(fd,15);
-	WFIFOW(fd,0) = 0x3897;
-	WFIFOL(fd,2) = sender_id;
-	WFIFOL(fd,6) = receiver_id;
-	WFIFOL(fd,10) = receiver_accountid;
-	WFIFOB(fd,14) = result;
-	WFIFOSET(fd,15);
+	WFIFOHEAD(fd, 15);
+	WFIFOW(fd, 0) = 0x3897;
+	WFIFOL(fd, 2) = sender_id;
+	WFIFOL(fd, 6) = receiver_id;
+	WFIFOL(fd, 10) = receiver_accountid;
+	WFIFOB(fd, 14) = result;
+	WFIFOSET(fd, 15);
 }
 
 /*------------------------------------------
@@ -1838,7 +1821,7 @@ static int mapif_save_guild_storage_ack(int fd, int account_id, int guild_id, in
  */
 static int mapif_account_storage_load(int fd, int account_id)
 {
-	struct storage_data stor = { 0 };
+	struct storage_data stor = {0};
 	int count = 0, i = 0, len = 0;
 
 	Assert_ret(account_id > 0);
@@ -1850,7 +1833,7 @@ static int mapif_account_storage_load(int fd, int account_id)
 
 	WFIFOHEAD(fd, len);
 	WFIFOW(fd, 0) = 0x3805;
-	WFIFOW(fd, 2) = (uint16) len;
+	WFIFOW(fd, 2) = (uint16)len;
 	WFIFOL(fd, 4) = account_id;
 	for (i = 0; i < count; i++)
 		memcpy(WFIFOP(fd, 8 + i * sizeof(struct item)), &VECTOR_INDEX(stor.item, i), sizeof(struct item));
@@ -1901,12 +1884,12 @@ static int mapif_parse_AccountStorageSave(int fd)
 {
 	int payload_size = RFIFOW(fd, 2) - 8, account_id = RFIFOL(fd, 4);
 	int i = 0, count = 0;
-	struct storage_data p_stor = { 0 };
+	struct storage_data p_stor = {0};
 
 	Assert_ret(fd > 0);
 	Assert_ret(account_id > 0);
 
-	count = payload_size/sizeof(struct item);
+	count = payload_size / sizeof(struct item);
 
 	VECTOR_INIT(p_stor.item);
 
@@ -1991,7 +1974,7 @@ static int mapif_parse_SaveGuildStorage(int fd)
 		return 1;
 	}
 
-	struct guild_storage gstor = { 0 };
+	struct guild_storage gstor = {0};
 
 	if (storage_capacity > 0) {
 		gstor.items.data = aCalloc(storage_capacity, sizeof gstor.items.data[0]);
@@ -2019,7 +2002,7 @@ static int mapif_itembound_ack(int fd, int aid, int guild_id)
 #ifdef GP_BOUND_ITEMS
 	WFIFOHEAD(fd, 8);
 	WFIFOW(fd, 0) = 0x3856;
-	WFIFOL(fd, 2) = aid;/* the value is not being used, drop? */
+	WFIFOL(fd, 2) = aid; /* the value is not being used, drop? */
 	WFIFOW(fd, 6) = guild_id;
 	WFIFOSET(fd, 8);
 #endif
@@ -2035,7 +2018,7 @@ static void mapif_parse_ItemBoundRetrieve(int fd)
 
 	inter_storage->retrieve_bound_items(char_id, account_id, guild_id);
 
-	//Finally reload storage and tell map we're done
+	// Finally reload storage and tell map we're done
 	mapif->load_guild_storage(fd, account_id, guild_id, 0);
 
 	// If character is logged in char, disconnect
@@ -2057,13 +2040,13 @@ static void mapif_parse_accinfo(int fd)
 }
 
 // Send the requested account_reg
-static int mapif_account_reg_reply(int fd,int account_id,int char_id, int type)
+static int mapif_account_reg_reply(int fd, int account_id, int char_id, int type)
 {
 	inter->accreg_fromsql(account_id, char_id, fd, type);
 	return 0;
 }
 
-//Request to kick char from a certain map server. [Skotlex]
+// Request to kick char from a certain map server. [Skotlex]
 static int mapif_disconnectplayer(int account_id, int char_id, int reason)
 {
 	unsigned char buf[7];
@@ -2097,27 +2080,27 @@ static int mapif_parse_Registry(int fd)
 			cursor += 4;
 
 			switch (RFIFOB(fd, cursor++)) {
-			/* int */
-			case 0:
-				inter->savereg(account_id, char_id, key, index, RFIFOL(fd, cursor), false);
-				cursor += 4;
-				break;
-			case 1:
-				inter->savereg(account_id, char_id, key, index, 0, false);
-				break;
-			/* str */
-			case 2:
-				len = RFIFOB(fd, cursor);
-				safestrncpy(sval, RFIFOP(fd, cursor + 1), min((int)sizeof(sval), len + 1));
-				cursor += len + 2;
-				inter->savereg(account_id, char_id, key, index, (intptr_t)sval, true);
-				break;
-			case 3:
-				inter->savereg(account_id, char_id, key, index, 0, true);
-				break;
-			default:
-				ShowError("mapif->parse_Registry: unknown type %d\n", RFIFOB(fd, cursor - 1));
-				return 1;
+				/* int */
+				case 0:
+					inter->savereg(account_id, char_id, key, index, RFIFOL(fd, cursor), false);
+					cursor += 4;
+					break;
+				case 1:
+					inter->savereg(account_id, char_id, key, index, 0, false);
+					break;
+				/* str */
+				case 2:
+					len = RFIFOB(fd, cursor);
+					safestrncpy(sval, RFIFOP(fd, cursor + 1), min((int)sizeof(sval), len + 1));
+					cursor += len + 2;
+					inter->savereg(account_id, char_id, key, index, (intptr_t)sval, true);
+					break;
+				case 3:
+					inter->savereg(account_id, char_id, key, index, 0, true);
+					break;
+				default:
+					ShowError("mapif->parse_Registry: unknown type %d\n", RFIFOB(fd, cursor - 1));
+					return 1;
 			}
 		}
 
@@ -2130,13 +2113,13 @@ static int mapif_parse_Registry(int fd)
 // Request the value of all registries.
 static int mapif_parse_RegistryRequest(int fd)
 {
-	//Load Char Registry
+	// Load Char Registry
 	if (RFIFOB(fd, 12))
 		mapif->account_reg_reply(fd, RFIFOL(fd, 2), RFIFOL(fd, 6), 3); // 3: char reg
-	//Load Account Registry
+	// Load Account Registry
 	if (RFIFOB(fd, 11) != 0)
 		mapif->account_reg_reply(fd, RFIFOL(fd, 2), RFIFOL(fd, 6), 2); // 2: account reg
-	//Ask Login Server for Account2 values.
+	// Ask Login Server for Account2 values.
 	if (RFIFOB(fd, 10) != 0)
 		chr->request_accreg2(RFIFOL(fd, 2), RFIFOL(fd, 6));
 	return 1;
@@ -2145,7 +2128,7 @@ static int mapif_parse_RegistryRequest(int fd)
 static void mapif_namechange_ack(int fd, int account_id, int char_id, int type, int flag, const char *const name)
 {
 	nullpo_retv(name);
-	WFIFOHEAD(fd, NAME_LENGTH+13);
+	WFIFOHEAD(fd, NAME_LENGTH + 13);
 	WFIFOW(fd, 0) = 0x3806;
 	WFIFOL(fd, 2) = account_id;
 	WFIFOL(fd, 6) = char_id;
@@ -2169,22 +2152,22 @@ static int mapif_parse_NameChangeRequest(int fd)
 	// Check Authorized letters/symbols in the name
 	if (char_name_option == 1) { // only letters/symbols in char_name_letters are authorized
 		for (i = 0; i < NAME_LENGTH && name[i]; i++)
-		if (strchr(char_name_letters, name[i]) == NULL) {
-			mapif->namechange_ack(fd, account_id, char_id, type, 0, name);
-			return 0;
-		}
+			if (strchr(char_name_letters, name[i]) == NULL) {
+				mapif->namechange_ack(fd, account_id, char_id, type, 0, name);
+				return 0;
+			}
 	} else if (char_name_option == 2) { // letters/symbols in char_name_letters are forbidden
 		for (i = 0; i < NAME_LENGTH && name[i]; i++)
-		if (strchr(char_name_letters, name[i]) != NULL) {
-			mapif->namechange_ack(fd, account_id, char_id, type, 0, name);
-			return 0;
-		}
+			if (strchr(char_name_letters, name[i]) != NULL) {
+				mapif->namechange_ack(fd, account_id, char_id, type, 0, name);
+				return 0;
+			}
 	}
-	//TODO: type holds the type of object to rename.
-	//If it were a player, it needs to have the guild information and db information
-	//updated here, because changing it on the map won't make it be saved [Skotlex]
+	// TODO: type holds the type of object to rename.
+	// If it were a player, it needs to have the guild information and db information
+	// updated here, because changing it on the map won't make it be saved [Skotlex]
 
-	//name allowed.
+	// name allowed.
 	mapif->namechange_ack(fd, account_id, char_id, type, 1, name);
 	return 0;
 }
@@ -2267,8 +2250,7 @@ static void mapif_send_achievements_to_map(int fd, int char_id, const struct cha
 
 	data_size = sizeof(struct achievement) * VECTOR_LENGTH(*cp);
 
-STATIC_ASSERT((sizeof(struct achievement) * MAX_ACHIEVEMENT_DB + 8 <= UINT16_MAX),
-	"The achievements data can potentially be larger than the maximum packet size. This may cause errors at run-time.");
+	STATIC_ASSERT((sizeof(struct achievement) * MAX_ACHIEVEMENT_DB + 8 <= UINT16_MAX), "The achievements data can potentially be larger than the maximum packet size. This may cause errors at run-time.");
 
 	/* Send to the map server. */
 	WFIFOHEAD(fd, (8 + data_size));
@@ -2288,7 +2270,7 @@ STATIC_ASSERT((sizeof(struct achievement) * MAX_ACHIEVEMENT_DB + 8 <= UINT16_MAX
 static void mapif_parse_save_achievements(int fd)
 {
 	int size = 0, char_id = 0, payload_count = 0, i = 0;
-	struct char_achievements p = { 0 };
+	struct char_achievements p = {0};
 
 	RFIFOHEAD(fd);
 	size = RFIFOW(fd, 2);
@@ -2300,7 +2282,7 @@ static void mapif_parse_save_achievements(int fd)
 	VECTOR_ENSURE(p, payload_count, 1);
 
 	for (i = 0; i < payload_count; i++) {
-		struct achievement ach = { 0 };
+		struct achievement ach = {0};
 		memcpy(&ach, RFIFOP(fd, 8 + i * sizeof(struct achievement)), sizeof(struct achievement));
 		VECTOR_PUSH(p, ach);
 	}
@@ -2321,7 +2303,7 @@ static void mapif_achievement_save(int char_id, struct char_achievements *p)
 	struct char_achievements *cp = NULL;
 
 	nullpo_retv(p);
-	
+
 	/* Get loaded achievements. */
 	cp = idb_ensure(inter_achievement->char_achievements, char_id, inter_achievement->ensure_char_achievements);
 

@@ -21,7 +21,7 @@
 #define MAP_HPMMAP_H
 
 #ifndef HERCULES_CORE
-#error You should never include HPMmap.h from a plugin.
+	#error You should never include HPMmap.h from a plugin.
 #endif
 
 #include "map/atcommand.h"

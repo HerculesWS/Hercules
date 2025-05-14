@@ -31,45 +31,42 @@ struct map_session_data;
 struct questinfo;
 struct mob_data;
 
-#define MAX_QUEST_DB (60355+1) // Highest quest ID + 1
-#define QUEST_MAPWIDE_ID 10363 // MobId handled by the client to display MapName
-#define QUEST_MOBTYPE_ID 31999 // MobId handled by the client to display Mob properties
+#define MAX_QUEST_DB (60355 + 1) // Highest quest ID + 1
+#define QUEST_MAPWIDE_ID 10363   // MobId handled by the client to display MapName
+#define QUEST_MOBTYPE_ID 31999   // MobId handled by the client to display Mob properties
 
-#define quest_mobtype2client(type) (\
-	((type).size_enabled ? quest->mobsize2client((type).size) : 0) \
-	| ((type).ele_enabled ? quest->mobele2client((type).ele) : 0) \
-	| ((type).race_enabled ? quest->mobrace2client((type).race) : 0))
+#define quest_mobtype2client(type) (((type).size_enabled ? quest->mobsize2client((type).size) : 0) | ((type).ele_enabled ? quest->mobele2client((type).ele) : 0) | ((type).race_enabled ? quest->mobrace2client((type).race) : 0))
 #define quest_mobtypeisenabled(type) ((type).size_enabled || (type).ele_enabled || (type).race_enabled)
 
 enum quest_mobtype {
 	// Monster Sizes
-	QMT_SZ_SMALL         = 0x10,
-	QMT_SZ_MEDIUM        = 0x20,
-	QMT_SZ_LARGE         = 0x40,
+	QMT_SZ_SMALL = 0x10,
+	QMT_SZ_MEDIUM = 0x20,
+	QMT_SZ_LARGE = 0x40,
 
 	// Monster Races
-	QMT_RC_DEMIHUMAN     = 0x80,
-	QMT_RC_BRUTE         = 0x100,
-	QMT_RC_INSECT        = 0x200,
-	QMT_RC_FISH          = 0x400,
-	QMT_RC_PLANT         = 0x800,
-	QMT_RC_DEMON         = 0x1000,
-	QMT_RC_ANGEL         = 0x2000,
-	QMT_RC_UNDEAD        = 0x4000,
-	QMT_RC_FORMLESS      = 0x8000,
-	QMT_RC_DRAGON        = 0x10000,
+	QMT_RC_DEMIHUMAN = 0x80,
+	QMT_RC_BRUTE = 0x100,
+	QMT_RC_INSECT = 0x200,
+	QMT_RC_FISH = 0x400,
+	QMT_RC_PLANT = 0x800,
+	QMT_RC_DEMON = 0x1000,
+	QMT_RC_ANGEL = 0x2000,
+	QMT_RC_UNDEAD = 0x4000,
+	QMT_RC_FORMLESS = 0x8000,
+	QMT_RC_DRAGON = 0x10000,
 
 	// Monster Elements
-	QMT_ELE_WATER        = 0x20000,
-	QMT_ELE_WIND         = 0x40000,
-	QMT_ELE_EARTH        = 0x80000,
-	QMT_ELE_FIRE         = 0x100000,
-	QMT_ELE_DARK         = 0x200000,
-	QMT_ELE_HOLY         = 0x400000,
-	QMT_ELE_POISON       = 0x800000,
-	QMT_ELE_GHOST        = 0x1000000,
-	QMT_ELE_NEUTRAL      = 0x2000000,
-	QMT_ELE_UNDEAD       = 0x4000000
+	QMT_ELE_WATER = 0x20000,
+	QMT_ELE_WIND = 0x40000,
+	QMT_ELE_EARTH = 0x80000,
+	QMT_ELE_FIRE = 0x100000,
+	QMT_ELE_DARK = 0x200000,
+	QMT_ELE_HOLY = 0x400000,
+	QMT_ELE_POISON = 0x800000,
+	QMT_ELE_GHOST = 0x1000000,
+	QMT_ELE_NEUTRAL = 0x2000000,
+	QMT_ELE_UNDEAD = 0x4000000
 };
 
 struct quest_dropitem {
@@ -104,7 +101,7 @@ struct quest_db {
 	struct quest_objective *objectives;
 	int dropitem_count;
 	struct quest_dropitem *dropitem;
-	//char name[NAME_LENGTH];
+	// char name[NAME_LENGTH];
 };
 
 // Questlog check types
@@ -129,7 +126,7 @@ struct questinfo {
 	unsigned short icon;
 	unsigned char color;
 	bool hasJob;
-	unsigned int job;/* perhaps a mapid mask would be most flexible? */
+	unsigned int job; /* perhaps a mapid mask would be most flexible? */
 	bool sex_enabled;
 	int sex;
 	struct {
@@ -149,41 +146,41 @@ struct questinfo {
 
 struct quest_interface {
 	struct quest_db **db_data; ///< Quest database
-	struct quest_db dummy;                  ///< Dummy entry for invalid quest lookups
+	struct quest_db dummy;     ///< Dummy entry for invalid quest lookups
 	/* */
-	void (*init) (bool minimal);
-	void (*final) (void);
-	void (*reload) (void);
+	void (*init)(bool minimal);
+	void (*final)(void);
+	void (*reload)(void);
 	/* */
-	struct quest_db *(*db) (int quest_id);
-	int (*pc_login) (struct map_session_data *sd);
-	int (*add) (struct map_session_data *sd, int quest_id, unsigned int time_limit);
-	int (*change) (struct map_session_data *sd, int qid1, int qid2);
-	int (*delete) (struct map_session_data *sd, int quest_id);
-	int (*update_objective_sub) (struct block_list *bl, va_list ap);
-	void (*update_objective) (struct map_session_data *sd, const struct mob_data *md);
-	int (*update_status) (struct map_session_data *sd, int quest_id, enum quest_state qs);
-	int (*check) (struct map_session_data *sd, int quest_id, enum quest_check_type type);
-	void (*clear) (void);
-	int (*read_db) (void);
-	struct quest_db *(*read_db_sub) (struct config_setting_t *cs, int n, const char *source);
-	int (*setting_lookup_const) (struct config_setting_t *tt, const char *name, int *value, int quest_id, int idx, const char *kind, const char *source);
+	struct quest_db *(*db)(int quest_id);
+	int (*pc_login)(struct map_session_data *sd);
+	int (*add)(struct map_session_data *sd, int quest_id, unsigned int time_limit);
+	int (*change)(struct map_session_data *sd, int qid1, int qid2);
+	int (*delete)(struct map_session_data *sd, int quest_id);
+	int (*update_objective_sub)(struct block_list *bl, va_list ap);
+	void (*update_objective)(struct map_session_data *sd, const struct mob_data *md);
+	int (*update_status)(struct map_session_data *sd, int quest_id, enum quest_state qs);
+	int (*check)(struct map_session_data *sd, int quest_id, enum quest_check_type type);
+	void (*clear)(void);
+	int (*read_db)(void);
+	struct quest_db *(*read_db_sub)(struct config_setting_t *cs, int n, const char *source);
+	int (*setting_lookup_const)(struct config_setting_t *tt, const char *name, int *value, int quest_id, int idx, const char *kind, const char *source);
 
-	int (*questinfo_validate_icon) (int icon);
-	void (*questinfo_refresh) (struct map_session_data *sd);
-	bool (*questinfo_validate) (struct map_session_data *sd, struct questinfo *qi);
-	bool (*questinfo_validate_job) (struct map_session_data *sd, struct questinfo *qi);
-	bool (*questinfo_validate_sex) (struct map_session_data *sd, struct questinfo *qi);
-	bool (*questinfo_validate_baselevel) (struct map_session_data *sd, struct questinfo *qi);
-	bool (*questinfo_validate_joblevel) (struct map_session_data *sd, struct questinfo *qi);
-	bool (*questinfo_validate_items) (struct map_session_data *sd, struct questinfo *qi);
-	bool (*questinfo_validate_homunculus_level) (struct map_session_data *sd, struct questinfo *qi);
-	bool (*questinfo_validate_homunculus_type) (struct map_session_data *sd, struct questinfo *qi);
-	bool (*questinfo_validate_quests) (struct map_session_data *sd, struct questinfo *qi);
-	bool (*questinfo_validate_mercenary_class) (struct map_session_data *sd, struct questinfo *qi);
-	enum quest_mobtype (*mobsize2client) (uint8 size);
-	enum quest_mobtype (*mobele2client) (uint8 type);
-	enum quest_mobtype (*mobrace2client) (uint8 type);
+	int (*questinfo_validate_icon)(int icon);
+	void (*questinfo_refresh)(struct map_session_data *sd);
+	bool (*questinfo_validate)(struct map_session_data *sd, struct questinfo *qi);
+	bool (*questinfo_validate_job)(struct map_session_data *sd, struct questinfo *qi);
+	bool (*questinfo_validate_sex)(struct map_session_data *sd, struct questinfo *qi);
+	bool (*questinfo_validate_baselevel)(struct map_session_data *sd, struct questinfo *qi);
+	bool (*questinfo_validate_joblevel)(struct map_session_data *sd, struct questinfo *qi);
+	bool (*questinfo_validate_items)(struct map_session_data *sd, struct questinfo *qi);
+	bool (*questinfo_validate_homunculus_level)(struct map_session_data *sd, struct questinfo *qi);
+	bool (*questinfo_validate_homunculus_type)(struct map_session_data *sd, struct questinfo *qi);
+	bool (*questinfo_validate_quests)(struct map_session_data *sd, struct questinfo *qi);
+	bool (*questinfo_validate_mercenary_class)(struct map_session_data *sd, struct questinfo *qi);
+	enum quest_mobtype (*mobsize2client)(uint8 size);
+	enum quest_mobtype (*mobele2client)(uint8 type);
+	enum quest_mobtype (*mobrace2client)(uint8 type);
 };
 
 #ifdef HERCULES_CORE

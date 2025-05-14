@@ -57,13 +57,12 @@
 #include <string.h>
 #include <sys/stat.h>
 #ifndef _WIN32
-#include <unistd.h>
+	#include <unistd.h>
 #endif
 
 static struct api_interface api_s;
 
 struct api_interface *api;
-
 
 int do_final(void)
 {
@@ -90,7 +89,7 @@ int do_final(void)
 void do_abort(void)
 {
 	static int run = 0;
-	//Save all characters and then flush the inter-connection.
+	// Save all characters and then flush the inter-connection.
 	if (run) {
 		ShowFatalError("Server has crashed while trying to save characters. Character data can't be saved!\n");
 		return;
@@ -107,8 +106,7 @@ void set_server_type(void)
 /// Called when a terminate signal is received.
 static void do_shutdown(void)
 {
-	if (core->runflag != APISERVER_ST_SHUTDOWN)
-	{
+	if (core->runflag != APISERVER_ST_SHUTDOWN) {
 		core->runflag = APISERVER_ST_SHUTDOWN;
 		ShowStatus("Shutting down...\n");
 		sockt->flush_fifos();
@@ -172,9 +170,9 @@ static CMDLINEARG(netconfig)
  */
 void cmdline_args_init_local(void)
 {
-	CMDLINEARG_DEF2(run-once, runonce, "Closes server after loading (testing).", CMDLINE_OPT_NORMAL);
-	CMDLINEARG_DEF2(api-config, apiconfig, "Alternative api-server configuration.", CMDLINE_OPT_PARAM);
-	CMDLINEARG_DEF2(net-config, netconfig, "Alternative subnet configuration.", CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2(run - once, runonce, "Closes server after loading (testing).", CMDLINE_OPT_NORMAL);
+	CMDLINEARG_DEF2(api - config, apiconfig, "Alternative api-server configuration.", CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2(net - config, netconfig, "Alternative subnet configuration.", CMDLINE_OPT_PARAM);
 }
 
 static int api_check_connect_login_server(int tid, int64 tick, int id, intptr_t data)
@@ -184,7 +182,7 @@ static int api_check_connect_login_server(int tid, int64 tick, int id, intptr_t 
 
 	ShowInfo("Attempt to connect to login-server...\n");
 
-	if ((aloginif->fd = sockt->make_connection(aloginif->ip, aloginif->port, NULL)) == -1) { //Try again later. [Skotlex]
+	if ((aloginif->fd = sockt->make_connection(aloginif->ip, aloginif->port, NULL)) == -1) { // Try again later. [Skotlex]
 		aloginif->fd = 0;
 		return 0;
 	}
@@ -427,7 +425,7 @@ int do_init(int argc, char *argv[])
 	aclif->init(minimal);
 	httpparser->init(minimal);
 
-	if( minimal ) {
+	if (minimal) {
 		HPM->event(HPET_READY);
 		exit(EXIT_SUCCESS);
 	}
@@ -436,9 +434,9 @@ int do_init(int argc, char *argv[])
 
 	Sql_HerculesUpdateCheck(api->mysql_handle);
 
-	ShowStatus("Server is '"CL_GREEN"ready"CL_RESET"' and listening on port '"CL_WHITE"%d"CL_RESET"'.\n\n", api->port);
+	ShowStatus("Server is '" CL_GREEN "ready" CL_RESET "' and listening on port '" CL_WHITE "%d" CL_RESET "'.\n\n", api->port);
 
-	if( core->runflag != CORE_ST_STOP ) {
+	if (core->runflag != CORE_ST_STOP) {
 		core->shutdown_callback = api->do_shutdown;
 		core->runflag = APISERVER_ST_RUNNING;
 	}
@@ -462,10 +460,10 @@ void api_defaults(void)
 	api->retval = EXIT_SUCCESS;
 
 	api->server_port = 3306;
-	sprintf(api->server_ip,"127.0.0.1");
-	sprintf(api->server_id,"ragnarok");
-	sprintf(api->server_pw,"ragnarok");
-	sprintf(api->server_db,"ragnarok");
+	sprintf(api->server_ip, "127.0.0.1");
+	sprintf(api->server_id, "ragnarok");
+	sprintf(api->server_pw, "ragnarok");
+	sprintf(api->server_db, "ragnarok");
 	api->mysql_handle = NULL;
 	api->ip_connections_limit = 5;
 

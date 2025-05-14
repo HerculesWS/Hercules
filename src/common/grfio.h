@@ -34,10 +34,10 @@ struct grfio_interface {
 	 *
 	 * @param fname Name of the configuration file.
 	 */
-	void (*init) (const char *fname);
+	void (*init)(const char *fname);
 
 	/// Interface finalization.
-	void (*final) (void);
+	void (*final)(void);
 
 	/**
 	 * Reads a file into a newly allocated buffer (from grf or data directory).
@@ -47,7 +47,7 @@ struct grfio_interface {
 	 * @return The file data.
 	 * @retval NULL in case of error.
 	 */
-	void *(*reads) (const char *fname, int *size);
+	void *(*reads)(const char *fname, int *size);
 
 	/**
 	 * Finds a file in the grf or data directory
@@ -56,7 +56,7 @@ struct grfio_interface {
 	 * @return The original file name.
 	 * @retval NULL if the file wasn't found.
 	 */
-	const char *(*find_file) (const char *fname);
+	const char *(*find_file)(const char *fname);
 
 	/**
 	 * Calculates a CRC32 hash.
@@ -66,7 +66,7 @@ struct grfio_interface {
 	 *
 	 * @return The CRC32 hash.
 	 */
-	unsigned long (*crc32) (const unsigned char *buf, unsigned int len);
+	unsigned long (*crc32)(const unsigned char *buf, unsigned int len);
 
 	/**
 	 * Decompresses ZIP data.
@@ -87,7 +87,7 @@ struct grfio_interface {
 	 * @return error code.
 	 * @retval Z_OK in case of success.
 	 */
-	int (*decode_zip) (void *dest, unsigned long *dest_len, const void *source, unsigned long source_len);
+	int (*decode_zip)(void *dest, unsigned long *dest_len, const void *source, unsigned long source_len);
 
 	/**
 	 * Compresses data to ZIP format.
@@ -103,16 +103,16 @@ struct grfio_interface {
 	 * @param[in]     source     The source (uncompressed) buffer.
 	 * @param[in]     source_len Source data length.
 	 */
-	int (*encode_zip) (void *dest, unsigned long *dest_len, const void *source, unsigned long source_len);
+	int (*encode_zip)(void *dest, unsigned long *dest_len, const void *source, unsigned long source_len);
 
 	/**
 	 * Report zlib error
 	 *
 	 * @param[in] err    Error code to report.
 	 */
-	void (*report_error) (int err);
+	void (*report_error)(int err);
 
-	char *(*decode_filename) (unsigned char *buf, int len);
+	char *(*decode_filename)(unsigned char *buf, int len);
 };
 
 /**
@@ -130,4 +130,4 @@ void grfio_defaults(void);
 #endif // HERCULES_CORE
 
 HPShared struct grfio_interface *grfio; ///< Pointer to the grfio interface.
-#endif /* COMMON_GRFIO_H */
+#endif                                  /* COMMON_GRFIO_H */

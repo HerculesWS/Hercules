@@ -76,9 +76,7 @@ static void packets_addLenChrif(int id, int len)
 	packets->chrif_db[id - MIN_CHRIF_PACKET_DB] = len;
 }
 
-static void packets_final(void)
-{
-}
+static void packets_final(void) {}
 
 void packets_defaults(void)
 {

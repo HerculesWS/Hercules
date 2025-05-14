@@ -29,12 +29,12 @@
 #include <stdarg.h>
 
 #ifndef MAX_RESPONSE_SIZE
-#define MAX_RESPONSE_SIZE 50000
+	#define MAX_RESPONSE_SIZE 50000
 #endif
 
 #if MAX_RESPONSE_SIZE < 100
-#error MAX_RESPONSE_SIZE must be atleast 100 bytes
-#endif  // MAX_RESPONSE_SIZE < 100
+	#error MAX_RESPONSE_SIZE must be atleast 100 bytes
+#endif // MAX_RESPONSE_SIZE < 100
 
 struct api_session_data;
 
@@ -44,18 +44,18 @@ struct api_session_data;
 struct httpsender_interface {
 	char *tmp_buffer;
 	char *server_name;
-	int (*init) (bool minimal);
-	void (*final) (void);
+	int (*init)(bool minimal);
+	void (*final)(void);
 
-	const char * (*http_status_name) (enum http_status status);
+	const char *(*http_status_name)(enum http_status status);
 
-	void (*send_continue) (int fd);
+	void (*send_continue)(int fd);
 
-	bool (*send_plain) (int fd, const char *data);
-	bool (*send_html) (int fd, const char *data);
-	bool (*send_json) (int fd, const JsonW *json);
-	bool (*send_json_text) (int fd, const char *json, enum http_status status);
-	bool (*send_binary) (int fd, const char *data, const size_t data_len);
+	bool (*send_plain)(int fd, const char *data);
+	bool (*send_html)(int fd, const char *data);
+	bool (*send_json)(int fd, const JsonW *json);
+	bool (*send_json_text)(int fd, const char *json, enum http_status status);
+	bool (*send_binary)(int fd, const char *data, const size_t data_len);
 };
 
 #ifdef HERCULES_CORE

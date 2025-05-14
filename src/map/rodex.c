@@ -33,7 +33,6 @@
 #include "common/msgtable.h"
 #include "common/showmsg.h"
 
-
 // NOTE : These values are hardcoded into the client
 // Cost of each Attached Item
 #define ATTACHITEM_COST 2500
@@ -93,9 +92,7 @@ static void rodex_add_item(struct map_session_data *sd, int16 idx, int16 amount)
 		return;
 	}
 
-	if (!pc_can_give_items(sd) || inv_item->expire_time
-		|| !itemdb_canmail(&sd->status.inventory[idx], pc_get_group_level(sd))
-		|| (inv_item->bound && !pc_can_give_bound_items(sd))) {
+	if (!pc_can_give_items(sd) || inv_item->expire_time || !itemdb_canmail(&sd->status.inventory[idx], pc_get_group_level(sd)) || (inv_item->bound && !pc_can_give_bound_items(sd))) {
 		clif->rodex_add_item_result(sd, idx, amount, RODEX_ADD_ITEM_NOT_TRADEABLE);
 		return;
 	}
@@ -106,9 +103,7 @@ static void rodex_add_item(struct map_session_data *sd, int16 idx, int16 amount)
 	// stackable item, try to find it in the current list
 	if (itemdb->isstackable(inv_item->nameid) == 1) {
 		for (i = 0; i < RODEX_MAX_ITEM; ++i) {
-			if (sd->rodex.tmp.items[i].idx == idx
-				&& inv_item->nameid == sd->rodex.tmp.items[i].item.nameid
-				&& inv_item->unique_id == sd->rodex.tmp.items[i].item.unique_id) {
+			if (sd->rodex.tmp.items[i].idx == idx && inv_item->nameid == sd->rodex.tmp.items[i].item.nameid && inv_item->unique_id == sd->rodex.tmp.items[i].item.unique_id) {
 				is_new = false;
 				break;
 			}
@@ -249,7 +244,7 @@ static int rodex_send_mail(struct map_session_data *sd, const char *receiver_nam
 		return RODEX_SEND_MAIL_FATAL_ERROR;
 	}
 
-	total_zeny = zeny + sd->rodex.tmp.items_count * ATTACHITEM_COST + (2 * zeny)/100;
+	total_zeny = zeny + sd->rodex.tmp.items_count * ATTACHITEM_COST + (2 * zeny) / 100;
 
 	if (strcmp(receiver_name, sd->rodex.tmp.receiver_name) != 0) {
 		rodex->clean(sd, 1);
@@ -283,14 +278,7 @@ static int rodex_send_mail(struct map_session_data *sd, const char *receiver_nam
 		if (tmpItem->nameid == 0)
 			continue;
 
-		if (tmpItem->nameid != invItem->nameid ||
-		    tmpItem->unique_id != invItem->unique_id ||
-		    tmpItem->refine != invItem->refine ||
-		    tmpItem->attribute != invItem->attribute ||
-		    tmpItem->expire_time != invItem->expire_time ||
-		    tmpItem->bound != invItem->bound ||
-		    tmpItem->amount > invItem->amount ||
-		    tmpItem->amount < 1) {
+		if (tmpItem->nameid != invItem->nameid || tmpItem->unique_id != invItem->unique_id || tmpItem->refine != invItem->refine || tmpItem->attribute != invItem->attribute || tmpItem->expire_time != invItem->expire_time || tmpItem->bound != invItem->bound || tmpItem->amount > invItem->amount || tmpItem->amount < 1) {
 			rodex->clean(sd, 1);
 			return RODEX_SEND_MAIL_ITEM_ERROR;
 		}
@@ -301,9 +289,7 @@ static int rodex_send_mail(struct map_session_data *sd, const char *receiver_nam
 			}
 		}
 		for (j = 0; j < MAX_ITEM_OPTIONS; j++) {
-			if (tmpItem->option[j].index != invItem->option[j].index ||
-			    tmpItem->option[j].value != invItem->option[j].value ||
-			    tmpItem->option[j].param != invItem->option[j].param) {
+			if (tmpItem->option[j].index != invItem->option[j].index || tmpItem->option[j].value != invItem->option[j].value || tmpItem->option[j].param != invItem->option[j].param) {
 				rodex->clean(sd, 1);
 				return RODEX_SEND_MAIL_ITEM_ERROR;
 			}
@@ -389,10 +375,7 @@ static struct rodex_message *rodex_get_mail(struct map_session_data *sd, int64 m
 
 	char_id = sd->status.char_id;
 
-	if ((msg->is_deleted == true)
-		|| (msg->expire_date < time(NULL) && ((msg->receiver_accountid > 0) || (msg->receiver_id == char_id && msg->sender_id != char_id)))
-		|| (msg->expire_date + RODEX_EXPIRE < time(NULL))
-		)
+	if ((msg->is_deleted == true) || (msg->expire_date < time(NULL) && ((msg->receiver_accountid > 0) || (msg->receiver_id == char_id && msg->sender_id != char_id))) || (msg->expire_date + RODEX_EXPIRE < time(NULL)))
 		return NULL;
 
 	return msg;
@@ -503,7 +486,7 @@ static void rodex_getItemsAck(struct map_session_data *sd, int64 mail_id, int8 o
 	}
 
 	if (VECTOR_INDEX(sd->rodex.claim_list, 0) != mail_id) {
-		ShowError("rodex_getItemsAck: Mail ID mismatch. Expected %"PRId64", got %"PRId64"\n", VECTOR_INDEX(sd->rodex.claim_list, 0), mail_id);
+		ShowError("rodex_getItemsAck: Mail ID mismatch. Expected %" PRId64 ", got %" PRId64 "\n", VECTOR_INDEX(sd->rodex.claim_list, 0), mail_id);
 		return;
 	}
 
@@ -574,8 +557,7 @@ static void rodex_get_items(struct map_session_data *sd, int8 opentype, int64 ma
 			if (j < msg->items_count) {
 				struct item_data *idata = itemdb->search(sd->status.inventory[i].nameid);
 
-				if ((idata->stack.inventory && sd->status.inventory[i].amount + msg->items[j].item.amount > idata->stack.amount) ||
-					sd->status.inventory[i].amount + msg->items[j].item.amount > MAX_AMOUNT) {
+				if ((idata->stack.inventory && sd->status.inventory[i].amount + msg->items[j].item.amount > idata->stack.amount) || sd->status.inventory[i].amount + msg->items[j].item.amount > MAX_AMOUNT) {
 					clif->rodex_request_items(sd, opentype, mail_id, RODEX_GET_ITEM_FULL_ERROR);
 					return;
 				}
@@ -702,10 +684,7 @@ static void do_init_rodex(bool minimal)
 		return;
 }
 
-static void do_final_rodex(void)
-{
-
-}
+static void do_final_rodex(void) {}
 
 void rodex_defaults(void)
 {

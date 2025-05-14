@@ -21,7 +21,7 @@
 #define COMMON_PACKETSSTATIC_LEN_H
 
 #ifdef packetLen
-#error packetLen already defined
+	#error packetLen already defined
 #endif
 
 #include "common/packetsmacro.h"

@@ -32,11 +32,11 @@
 #define MAX_MOBSKILL 50
 
 #ifndef MAX_MOB_LIST_PER_MAP
-#ifdef RENEWAL
-#define MAX_MOB_LIST_PER_MAP 100
-#else
-#define MAX_MOB_LIST_PER_MAP 115
-#endif
+	#ifdef RENEWAL
+		#define MAX_MOB_LIST_PER_MAP 100
+	#else
+		#define MAX_MOB_LIST_PER_MAP 115
+	#endif
 #endif
 
 #define MAX_EVENTQUEUE 2
@@ -46,7 +46,7 @@
 #define MAX_FLOORITEM START_ACCOUNT_NUM
 #define MAX_IGNORE_LIST 20 // official is 14
 #define MAX_VENDING 12
-#define MAX_MAP_SIZE (512*512) // Wasn't there something like this already? Can't find it.. [Shinryo]
+#define MAX_MAP_SIZE (512 * 512) // Wasn't there something like this already? Can't find it.. [Shinryo]
 
 #define BLOCK_SIZE 8
 #define block_free_max 1048576
@@ -55,25 +55,25 @@
 // The following system marks a different job ID system used by the map server,
 // which makes a lot more sense than the normal one. [Skotlex]
 // These marks the "level" of the job.
-#define JOBL_2_1   0x0100
-#define JOBL_2_2   0x0200
-#define JOBL_2     0x0300 // JOBL_2_1 | JOBL_2_2
+#define JOBL_2_1 0x0100
+#define JOBL_2_2 0x0200
+#define JOBL_2 0x0300 // JOBL_2_1 | JOBL_2_2
 #define JOBL_UPPER 0x1000
-#define JOBL_BABY  0x2000
+#define JOBL_BABY 0x2000
 #define JOBL_THIRD 0x4000
 
 // For filtering and quick checking.
 #define MAPID_BASEMASK 0x00ff
 #define MAPID_UPPERMASK 0x0fff
-#define MAPID_THIRDMASK (JOBL_THIRD|MAPID_UPPERMASK)
+#define MAPID_THIRDMASK (JOBL_THIRD | MAPID_UPPERMASK)
 
 // Max size for inputs to Vending text prompts
 #define MESSAGE_SIZE (79 + 1)
 // Max size for inputs to Graffiti, Talkie Box text prompts
 #if PACKETVER_MAIN_NUM >= 20190904 || PACKETVER_RE_NUM >= 20190904 || PACKETVER_ZERO_NUM >= 20190828
-#define TALKBOX_MESSAGE_SIZE 21
+	#define TALKBOX_MESSAGE_SIZE 21
 #else
-#define TALKBOX_MESSAGE_SIZE (79 + 1)
+	#define TALKBOX_MESSAGE_SIZE (79 + 1)
 #endif
 // String length you can write in the 'talking box'
 #define CHATBOX_SIZE (70 + 1)
@@ -83,17 +83,10 @@
 // Max allowed chat text length
 #define CHAT_SIZE_MAX (255 + 1)
 // 24 for npc name + 24 for label + 2 for a "::" and 1 for EOS
-#define EVENT_NAME_LENGTH ( NAME_LENGTH * 2 + 3 )
-#define DEFAULT_MAP_AUTOSAVE_INTERVAL (5*60*1000)
+#define EVENT_NAME_LENGTH (NAME_LENGTH * 2 + 3)
+#define DEFAULT_MAP_AUTOSAVE_INTERVAL (5 * 60 * 1000)
 // Specifies maps where players may hit each other
-#define map_flag_vs(m) ( \
-		map->list[m].flag.pvp \
-		|| map->list[m].flag.gvg_dungeon \
-		|| map->list[m].flag.gvg \
-		|| ((map->agit_flag || map->agit2_flag) && map->list[m].flag.gvg_castle) \
-		|| map->list[m].flag.battleground \
-		|| map->list[m].flag.cvc \
-		)
+#define map_flag_vs(m) (map->list[m].flag.pvp || map->list[m].flag.gvg_dungeon || map->list[m].flag.gvg || ((map->agit_flag || map->agit2_flag) && map->list[m].flag.gvg_castle) || map->list[m].flag.battleground || map->list[m].flag.cvc)
 // Specifies maps that have special GvG/WoE restrictions
 #define map_flag_gvg(m) (map->list[m].flag.gvg || ((map->agit_flag || map->agit2_flag) && map->list[m].flag.gvg_castle))
 // Specifies if the map is tagged as GvG/WoE (regardless of map->agit_flag status)
@@ -104,7 +97,7 @@
 #define map_no_view(m, view) (map->list[m].flag.noviewid & (view))
 
 // For common mapforeach calls. Since pets cannot be affected, they aren't included here yet.
-#define BL_CHAR (BL_PC|BL_MOB|BL_HOM|BL_MER|BL_ELEM)
+#define BL_CHAR (BL_PC | BL_MOB | BL_HOM | BL_MER | BL_ELEM)
 
 #define MAP_ZONE_NAME_LENGTH 60
 #define MAP_ZONE_ALL_NAME "All"

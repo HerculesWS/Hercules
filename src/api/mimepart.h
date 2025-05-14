@@ -22,11 +22,11 @@
 #define API_MIMEPART_H
 
 #ifndef MAX_MIME_NAME
-#define MAX_MIME_NAME 20
+	#define MAX_MIME_NAME 20
 #endif
 
 #ifndef MAX_MIME_CONTENT_TYPE
-#define MAX_MIME_CONTENT_TYPE 25
+	#define MAX_MIME_CONTENT_TYPE 25
 #endif
 
 struct MimePart {

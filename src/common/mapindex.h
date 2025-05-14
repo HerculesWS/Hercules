@@ -37,7 +37,7 @@ struct DBMap; // common/db.h
 #define MAP_DEFAULT_X 150
 #define MAP_DEFAULT_Y 150
 
-//Some definitions for the mayor city maps.
+// Some definitions for the mayor city maps.
 #define MAP_PRONTERA "prontera"
 #define MAP_GEFFEN "geffen"
 #define MAP_MORROC "morocc"
@@ -76,8 +76,8 @@ struct DBMap; // common/db.h
 #define MAP_ECLAGE "eclage"
 #define MAP_ECLAGE_IN "ecl_in01"
 
-#define mapindex_id2name(n) mapindex->id2name((n),__FILE__, __LINE__, __func__)
-#define mapindex_exists(n) ( mapindex->list[(n)].name[0] != '\0' )
+#define mapindex_id2name(n) mapindex->id2name((n), __FILE__, __LINE__, __func__)
+#define mapindex_exists(n) (mapindex->list[(n)].name[0] != '\0')
 
 /**
  * mapindex.c interface
@@ -99,22 +99,22 @@ struct mapindex_interface {
 		char name[MAP_NAME_LENGTH];
 	} list[MAX_MAPINDEX];
 	/* */
-	bool (*config_read_dbpath) (const char *filename, const struct config_t *config);
-	bool (*config_read) (void);
+	bool (*config_read_dbpath)(const char *filename, const struct config_t *config);
+	bool (*config_read)(void);
 	/* */
-	int (*init) (void);
-	void (*final) (void);
+	int (*init)(void);
+	void (*final)(void);
 	/* */
-	int (*addmap) (int index, const char* name);
-	void (*removemap) (int index);
-	const char* (*getmapname) (const char* string, char* output);
+	int (*addmap)(int index, const char *name);
+	void (*removemap)(int index);
+	const char *(*getmapname)(const char *string, char *output);
 	/* TODO: server shouldn't be handling the extension, game client automatically adds .gat/.rsw/.whatever
 	 * and there are official map names taking advantage of it that we cant support due to the .gat room being saved */
-	const char* (*getmapname_ext) (const char* string, char* output);
+	const char *(*getmapname_ext)(const char *string, char *output);
 	/* TODO: Hello World! make up your mind, this thing is int on some places and unsigned short on others */
-	unsigned short (*name2id) (const char*);
-	const char * (*id2name) (uint16 id, const char *file, int line, const char *func);
-	bool (*check_default) (void);
+	unsigned short (*name2id)(const char *);
+	const char *(*id2name)(uint16 id, const char *file, int line, const char *func);
+	bool (*check_default)(void);
 };
 
 #ifdef HERCULES_CORE

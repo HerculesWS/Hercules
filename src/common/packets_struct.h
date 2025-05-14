@@ -18,7 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #ifndef COMMON_PACKETS_STRUCT_H
 #define COMMON_PACKETS_STRUCT_H
 
@@ -27,7 +26,7 @@
 #include "common/packetsmacro.h"
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
-#pragma pack(push, 1)
+	#pragma pack(push, 1)
 #endif // not NetBSD < 6 / Solaris
 
 struct PACKET_INTER_CREATE_PET {
@@ -47,7 +46,7 @@ struct PACKET_INTER_CREATE_PET {
 DEFINE_PACKET_ID(INTER_CREATE_PET, 0x3080);
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
-#pragma pack(pop)
+	#pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
 
 #endif /* COMMON_PACKETS_STRUCT_H */
