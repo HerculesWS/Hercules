@@ -18760,21 +18760,28 @@ static BUILDIN(unequip)
 
 static BUILDIN(equip)
 {
-	int nameid=0,i;
+	int nameid = 0, i;
 	struct item_data *item_data;
 	struct map_session_data *sd = script->rid2sd(st);
-	if (sd == NULL)
-		return false;
 
-	nameid=script_getnum(st,2);
-	if((item_data = itemdb->exists(nameid)) == NULL)
-	{
-		ShowError("wrong item ID : equipitem(%d)\n",nameid);
+	if (sd == NULL) {
+		script_pushint(st, 0);
+		return true;
+	}
+
+	nameid = script_getnum(st, 2);
+	if ((item_data = itemdb->exists(nameid)) == NULL) {
+		ShowError("buildin_equip: Invalid Item ID (%d).\n", nameid);
+		script_pushint(st, 0);
 		return false;
 	}
+
 	ARR_FIND(0, sd->status.inventorySize, i, sd->status.inventory[i].nameid == nameid && sd->status.inventory[i].equip == 0);
+
 	if (i < sd->status.inventorySize)
-		pc->equipitem(sd, i, item_data->equip);
+		script_pushint(st, pc->equipitem(sd, i, item_data->equip));
+	else
+		script_pushint(st, 0);
 
 	return true;
 }
@@ -18799,6 +18806,48 @@ static BUILDIN(autoequip)
 	}
 
 	item_data->flag.autoequip = flag>0?1:0;
+	return true;
+}
+
+/**
+ * equipidx(<index>)
+ */
+static BUILDIN(equipidx)
+{
+	struct map_session_data *sd = script->rid2sd(st);
+
+	if (sd == NULL) {
+		script_pushint(st, 0);
+		return true;
+	}
+
+	int i = script_getnum(st, 2);
+	if (i < 0 || i >= sd->status.inventorySize) {
+		ShowError("buildin_equipidx: Index (%d) should be from 0-%d.\n", i, sd->status.inventorySize - 1);
+		script_pushint(st, 0);
+		return false;
+	}
+
+	if (sd->status.inventory[i].equip != 0) { // item already equipped, run silently
+		script_pushint(st, 1);
+		return true;
+	}
+
+	int nameid = sd->status.inventory[i].nameid;
+	struct item_data *item_data = itemdb->exists(nameid);
+	if (item_data == NULL) {
+		ShowError("buildin_equipidx: Invalid Item ID (%d).\n", nameid);
+		script_pushint(st, 0);
+		return false;
+	}
+
+	if (pc->equipitem(sd, i, item_data->equip) == 0) {
+		ShowWarning("buildin_equipidx: Item ID (%d) at index (%d) cannot be equipped.\n", nameid, i);
+		script_pushint(st, 0);
+		return false;
+	}
+
+	script_pushint(st, 1);
 	return true;
 }
 
@@ -29398,6 +29447,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(equip,"i"),
 		BUILDIN_DEF(autoequip,"ii"),
 		BUILDIN_DEF(equip2,"iiiiiii"),
+		BUILDIN_DEF(equipidx, "i?"),
 		BUILDIN_DEF(setbattleflag,"si"),
 		BUILDIN_DEF(getbattleflag,"s"),
 		BUILDIN_DEF(setitemscript,"is?"), //Set NEW item bonus script. Lupus
