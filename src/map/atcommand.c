@@ -630,6 +630,7 @@ ACMD(who)
 	 * 1 = @who  : Player name, [Title], [Party name], [Guild name]
 	 * 2 = @who2 : Player name, [Title], BLvl, JLvl, Job
 	 * 3 = @who3 : [CID/AID] Player name [Title], Map, X, Y
+	 * 4 = @who4 : Player name, [Title], [Party name], [Guild name]
 	 */
 	int display_type = 1;
 	int map_id = -1;
@@ -646,6 +647,8 @@ ACMD(who)
 		display_type = 2;
 	else if (stristr(info->command, "3") != NULL)
 		display_type = 3;
+	else if (stristr(info->command, "4") != NULL)
+		display_type = 4;
 
 	level = pc_get_group_level(sd);
 	StrBuf->Init(&buf);
@@ -674,6 +677,10 @@ ACMD(who)
 					StrBuf->Printf(&buf, msg_fd(fd, MSGTBL_WHO_LOCATION_FORMAT), mapindex_id2name(pl_sd->mapindex), pl_sd->bl.x, pl_sd->bl.y); // "| Location: %s %d %d"
 					break;
 				}
+				case 4:
+					if (pl_sd->state.autotrade == 1 || pl_sd->state.vending || pl_sd->state.buyingstore)
+						continue;
+					FALLTHROUGH
 				default: {
 					struct party_data *p = party->search(pl_sd->status.party_id);
 					struct guild *g = pl_sd->guild;
@@ -10556,9 +10563,11 @@ static void atcommand_basecommands(void)
 		ACMD_DEF(who),
 		ACMD_DEF2("who2", who),
 		ACMD_DEF2("who3", who),
+		ACMD_DEF2("who4", who),
 		ACMD_DEF2("whomap", who),
 		ACMD_DEF2("whomap2", who),
 		ACMD_DEF2("whomap3", who),
+		ACMD_DEF2("whomap4", who),
 		ACMD_DEF(whogm),
 		ACMD_DEF(save),
 		ACMD_DEF(load),
