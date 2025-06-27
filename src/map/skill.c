@@ -13447,6 +13447,10 @@ static struct skill_unit_group *skill_unitsetting(struct block_list *src, uint16
 		case NPC_EARTHQUAKE:
 			clif->skill_damage(src, src, timer->gettick(), status_get_amotion(src), 0, -30000, 1, skill_id, skill_lv, BDT_SKILL);
 			break;
+		case MH_VOLCANIC_ASH:
+			if (!map_flag_vs(src->m))
+				target = BCT_ENEMY;
+			break;
 		default:
 			skill->unitsetting1_unknown(src, &skill_id, &skill_lv, &x, &y, &flag, &val1, &val2, &val3);
 			break;
