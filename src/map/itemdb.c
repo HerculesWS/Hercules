@@ -2220,7 +2220,7 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 		} else if (!inherit && !clone) {
 			itemdb->jobmask2mapid(id.class_base, UINT64_MAX);
 		}
-	} else if (!inherit) {
+	} else if (!inherit && !clone) {
 		itemdb->jobmask2mapid(id.class_base, UINT64_MAX);
 	}
 
