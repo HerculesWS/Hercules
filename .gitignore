@@ -145,3 +145,6 @@ Thumbs.db
 
 # ccache
 /.ccache/
+
+# visual studio
+/.vs/
