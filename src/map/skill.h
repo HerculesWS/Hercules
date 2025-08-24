@@ -155,10 +155,11 @@ enum e_skill_inf2 {
 
 // Flags passed to skill_attack/skill_area_sub
 enum e_skill_display {
-	SD_LEVEL     = 0x1000, // skill_attack will send -1 instead of skill level (affects display of some skills)
-	SD_ANIMATION = 0x2000, // skill_attack will use '5' instead of the skill's 'type' (this makes skills show an animation)
-	SD_SPLASH    = 0x4000, // skill_area_sub will count targets in skill_area_temp[2]
-	SD_PREAMBLE  = 0x8000, // skill_area_sub will transmit a 'magic' damage packet (-30000 dmg) for the first target selected
+	SD_LEVEL     = 0x01000, // skill_attack will send -1 instead of skill level (affects display of some skills)
+	SD_ANIMATION = 0x02000, // skill_attack will use '5' instead of the skill's 'type' (this makes skills show an animation)
+	SD_SPLASH    = 0x04000, // skill_area_sub will count targets in skill_area_temp[2]
+	SD_PREAMBLE  = 0x08000, // skill_area_sub will transmit a 'magic' damage packet (-30000 dmg) for the first target selected
+	SD_COMBO     = 0x10000, // skill_attack will preserve combo status for area targets
 };
 
 enum {

@@ -5189,6 +5189,11 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 				if ((skill_id == SP_SHA || skill_id == SP_SWHOO) && bl->type != BL_MOB)
 					break;
 
+				// Preserve combo status for SR_SKYNETBLOW and SR_TIGERCANNON area targets
+				if ((skill_id == SR_SKYNETBLOW || skill_id == SR_TIGERCANNON) && sc != NULL && sc->data[SC_COMBOATTACK] != NULL) {
+					sflag |= SD_COMBO; // Use a flag to indicate combo status
+				}
+
 #ifndef RENEWAL
 				switch (skill_id) {
 				case AS_SPLASHER:
