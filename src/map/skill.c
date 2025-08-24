@@ -8946,6 +8946,10 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 					return 0;
 				}
 				unit->stop_attack(src);
+				// If this is a mob, clear its aggressive state and target to prevent ping-pong behavior
+				if (md != NULL) {
+					mob->unlocktarget(md, tick);
+				}
 				//Run skillv tiles overriding the can-move check.
 				if (unit->walk_toxy(src, src->x + skill_lv * -dirx[dir], src->y + skill_lv * -diry[dir], 2) == 0
 				    && md != NULL)
