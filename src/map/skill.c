@@ -12835,6 +12835,16 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 					continue;
 				if (distance_xy(x, y, ud->skillunit[i]->unit.data[0].bl.x, ud->skillunit[i]->unit.data[0].bl.y) < r) {
 					switch (skill_lv) {
+						case 1: 
+							// Extend duration by 10 seconds
+							if(ud->skillunit[i]->limit < INFINITE_DURATION)
+								ud->skillunit[i]->limit += 10000; // 10 seconds = 10000ms
+							ud->skillunit[i]->val2 = skill_lv;
+							break;
+						case 2:
+							// Cancel Demonic Fire effect
+							skill->delunit(&ud->skillunit[i]->unit.data[0]);
+							break;
 						case 3:
 							ud->skillunit[i]->unit_id = UNT_FIRE_EXPANSION_SMOKE_POWDER;
 							clif->changetraplook(&ud->skillunit[i]->unit.data[0].bl, UNT_FIRE_EXPANSION_SMOKE_POWDER);
