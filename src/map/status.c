@@ -3669,9 +3669,22 @@ static int status_base_amotion_pc(struct map_session_data *sd, struct status_dat
 	nullpo_ret(sd);
 	nullpo_ret(st);
 
-	amotion = status->dbs->aspd_base[pc->class2idx(sd->status.class)][sd->weapontype1];
+	// Prioritize shadow weapon over regular weapon for ASPD calculation
+	int primary_weapon_type = sd->weapontype1;
+	int secondary_weapon_type = sd->weapontype2;
+	
+	// Check if shadow weapon is equipped and use it as primary for ASPD
+	if (sd->equip_index[EQI_SHADOW_WEAPON] >= 0 && sd->inventory_data[sd->equip_index[EQI_SHADOW_WEAPON]]) {
+		primary_weapon_type = sd->inventory_data[sd->equip_index[EQI_SHADOW_WEAPON]]->subtype;
+		// If regular weapon is also equipped, use it as secondary
+		if (sd->equip_index[EQI_HAND_R] >= 0 && sd->inventory_data[sd->equip_index[EQI_HAND_R]]) {
+			secondary_weapon_type = sd->inventory_data[sd->equip_index[EQI_HAND_R]]->subtype;
+		}
+	}
+
+	amotion = status->dbs->aspd_base[pc->class2idx(sd->status.class)][primary_weapon_type];
 	if (sd->weapontype > MAX_SINGLE_WEAPON_TYPE)
-		amotion += status->dbs->aspd_base[pc->class2idx(sd->status.class)][sd->weapontype2] / 4;
+		amotion += status->dbs->aspd_base[pc->class2idx(sd->status.class)][secondary_weapon_type] / 4;
 	if (sd->has_shield)
 		amotion += status->dbs->aspd_base[pc->class2idx(sd->status.class)][MAX_SINGLE_WEAPON_TYPE];
 	switch (sd->weapontype) {
@@ -3695,10 +3708,22 @@ static int status_base_amotion_pc(struct map_session_data *sd, struct status_dat
 		val += ((skill_lv + 1) / 2);
 	amotion = ((int)(temp + ((float)(status->calc_aspd(&sd->bl, &sd->sc, 1) + val) * st->agi / 200)) - min(amotion, 200));
 #else
-	// base weapon delay
+	// base weapon delay - prioritize shadow weapon for ASPD calculation
+	int primary_weapon_type = sd->weapontype1;
+	int secondary_weapon_type = sd->weapontype2;
+	
+	// Check if shadow weapon is equipped and use it as primary for ASPD
+	if (sd->equip_index[EQI_SHADOW_WEAPON] >= 0 && sd->inventory_data[sd->equip_index[EQI_SHADOW_WEAPON]]) {
+		primary_weapon_type = sd->inventory_data[sd->equip_index[EQI_SHADOW_WEAPON]]->subtype;
+		// If regular weapon is also equipped, use it as secondary
+		if (sd->equip_index[EQI_HAND_R] >= 0 && sd->inventory_data[sd->equip_index[EQI_HAND_R]]) {
+			secondary_weapon_type = sd->inventory_data[sd->equip_index[EQI_HAND_R]]->subtype;
+		}
+	}
+	
 	amotion = (sd->weapontype < MAX_SINGLE_WEAPON_TYPE)
 		? (status->dbs->aspd_base[pc->class2idx(sd->status.class)][sd->weapontype]) // single weapon
-		: (status->dbs->aspd_base[pc->class2idx(sd->status.class)][sd->weapontype1] + status->dbs->aspd_base[pc->class2idx(sd->status.class)][sd->weapontype2]) * 7 / 10; // dual-wield
+		: (status->dbs->aspd_base[pc->class2idx(sd->status.class)][primary_weapon_type] + status->dbs->aspd_base[pc->class2idx(sd->status.class)][secondary_weapon_type]) * 7 / 10; // dual-wield
 
 	// percentual delay reduction from stats
 	amotion -= amotion * (4 * st->agi + st->dex) / 1000;
