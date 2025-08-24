@@ -9326,32 +9326,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				val3 = (!(status_get_sp(bl)%2) ? val4 : -val3);
 				break;
 			case SC_GENSOU:
-
-#define PER( a, lvl ) do { \
-	int temp__ = (a); \
-	if( temp__ <= 15 ) (lvl) = 1; \
-	else if( temp__ <= 30 ) (lvl) = 2; \
-	else if( temp__ <= 50 ) (lvl) = 3; \
-	else if( temp__ <= 75 ) (lvl) = 4; \
-	else (lvl) = 5; \
-} while(0)
-
-			{
-				int hp = status_get_hp(bl), sp = status_get_sp(bl), lv = 5;
-
-				if (sp < 1) sp = 1;
-				if (hp < 1) hp = 1;
-
-				if( rnd()%100 > (25 + 10 * val1) - status_get_int(bl) / 2)
-					return 0;
-
-				PER( 100 / (status_get_max_hp(bl) / hp), lv );
-				status->heal(bl, (!(hp%2) ? (6-lv) *4 / 100 : -(lv*4) / 100), 0, STATUS_HEAL_FORCED);
-
-				PER( 100 / (status_get_max_sp(bl) / sp), lv );
-				status->heal(bl, 0,(!(sp%2) ? (6-lv) *3 / 100 : -(lv*3) / 100), STATUS_HEAL_FORCED);
-			}
-#undef PER
+				// SC_GENSOU is now handled in the timer function for recurring effects
 				break;
 			case SC_ANGRIFFS_MODUS:
 				val2 = 50 + 20 * val1; //atk bonus
@@ -12857,6 +12832,58 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 
 				status->heal(bl, 150 * sce->val1, 0, 2);
 				sc_timer_next(3000 + tick, status->change_timer, bl->id, data);
+				return 0;
+			}
+			break;
+		case SC_GENSOU:
+			{
+				int hp = status_get_hp(bl), sp = status_get_sp(bl);
+				int max_hp = status_get_max_hp(bl), max_sp = status_get_max_sp(bl);
+				int hp_percent = (hp * 100) / max_hp;
+				int sp_percent = (sp * 100) / max_sp;
+				int skill_lv = sce->val1;
+				
+				// Ensure minimum values
+				if (sp < 1) sp = 1;
+				if (hp < 1) hp = 1;
+				
+				// Simplified success rate calculation - higher INT increases success chance
+				int success_rate = 25 + (10 * skill_lv) + (status_get_int(bl) / 4);
+				if (rnd()%100 >= success_rate)
+					break; // Skip this tick but continue the status
+				
+				// HP recovery: heal when HP is low, damage when HP is high
+				int hp_recovery = 0;
+				if (hp_percent <= 50) {
+					// Heal when HP is 50% or below
+					hp_recovery = (max_hp * (10 + skill_lv * 2)) / 100;
+				} else if (hp_percent >= 80) {
+					// Small damage when HP is 80% or above
+					hp_recovery = -(max_hp * skill_lv) / 100;
+				}
+				
+				// SP recovery: heal when SP is low, damage when SP is high
+				int sp_recovery = 0;
+				if (sp_percent <= 50) {
+					// Heal when SP is 50% or below
+					sp_recovery = (max_sp * (8 + skill_lv * 1.5)) / 100;
+				} else if (sp_percent >= 80) {
+					// Small damage when SP is 80% or above
+					sp_recovery = -(max_sp * skill_lv) / 100;
+				}
+				
+				// Apply HP recovery
+				if (hp_recovery != 0) {
+					status->heal(bl, hp_recovery, 0, STATUS_HEAL_FORCED);
+				}
+				
+				// Apply SP recovery
+				if (sp_recovery != 0) {
+					status->heal(bl, 0, sp_recovery, STATUS_HEAL_FORCED);
+				}
+				
+				// Continue the status effect with a 1-second timer
+				sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
 				return 0;
 			}
 			break;
