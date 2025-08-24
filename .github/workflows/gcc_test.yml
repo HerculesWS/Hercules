@@ -3,11 +3,11 @@ name: gcc_test
 on: workflow_call
 
 env:
-  MYSQL_DATABASE: 'ragnarok'
-  MYSQL_USER: 'ragnarok'
-  MYSQL_PASSWORD: 'ragnarok'
-  MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
-  DEBIAN_COMMON_PACKAGES: make zlib1g-dev libpcre3-dev git python3 libzstd-dev
+  MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE || 'ragnarok' }}
+  MYSQL_USER: ${{ secrets.MYSQL_USER || 'ragnarok' }}
+  MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD || 'ragnarok' }}
+  MYSQL_ALLOW_EMPTY_PASSWORD: ${{ secrets.MYSQL_ALLOW_EMPTY_PASSWORD || 'yes' }}
+  DEBIAN_COMMON_PACKAGES: make zlib1g-dev libpcre2-dev git python3 libzstd-dev
 
 jobs:
   build:
@@ -32,24 +32,24 @@ jobs:
       cancel-in-progress: true
 
     container:
-      image: debian:unstable
+      image: debian:bookworm
     services:
       mariadb:
-        image: mariadb:latest
+        image: mariadb:11.1
         ports:
           - 33306:3306
         env:
-          MYSQL_DATABASE: 'ragnarok'
-          MYSQL_USER: 'ragnarok'
-          MYSQL_PASSWORD: 'ragnarok'
-          MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE || 'ragnarok' }}
+          MYSQL_USER: ${{ secrets.MYSQL_USER || 'ragnarok' }}
+          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD || 'ragnarok' }}
+          MYSQL_ALLOW_EMPTY_PASSWORD: ${{ secrets.MYSQL_ALLOW_EMPTY_PASSWORD || 'yes' }}
         options: >-
           --health-cmd="healthcheck.sh --connect --innodb_initialized"
           --health-interval=5s
           --health-timeout=2s
           --health-retries=3
     env:
-      INSTALL_PACKAGES: ${{ matrix.CC }} mariadb-client libmariadbclient-dev-compat
+      INSTALL_PACKAGES: ${{ matrix.CC }} default-mysql-client libmariadb-dev
       SQLHOST: mariadb
       CC: ${{ matrix.CC }}
       CONFIGURE_FLAGS: CC=${{ matrix.CC }} --enable-debug --enable-Werror --enable-buildbot ${{ matrix.RENEWAL }} ${{ matrix.HTTPLIB }} ${{ matrix.CLIENT_TYPE }} ${{ matrix.SANITIZER }} ${{ matrix.PACKET_VERSION }} --enable-lto
@@ -58,6 +58,12 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
+
+      - name: Cache apt packages
+        uses: actions/cache@v4
+        with:
+          path: /var/cache/apt/archives
+          key: apt-${{ runner.os }}-v1
 
       - name: info
         run: |
