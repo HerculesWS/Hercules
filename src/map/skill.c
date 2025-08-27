@@ -11274,7 +11274,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 			if( sd ) {
 				int ammo_id;
 				int equip_idx = sd->equip_index[EQI_AMMO];
-				if( equip_idx <= 0 )
+				if( equip_idx < 0 )
 					break; // No ammo.
 				if (sd->inventory_data[equip_idx] == NULL)
 					break;
