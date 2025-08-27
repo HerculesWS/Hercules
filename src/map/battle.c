@@ -6683,6 +6683,7 @@ static enum damage_lv battle_weapon_attack(struct block_list *src, struct block_
 			if( --(sc->data[SC_SPELLFIST]->val1) >= 0 ){
 				struct Damage ad = battle->calc_attack(BF_MAGIC,src,target,sc->data[SC_SPELLFIST]->val3,sc->data[SC_SPELLFIST]->val4,flag|BF_SHORT);
 				wd.damage = ad.damage;
+				wd.div_ = ad.div_;
 				damage_div_fix(wd.damage, wd.div_);
 			}else
 				status_change_end(src,SC_SPELLFIST,INVALID_TIMER);
