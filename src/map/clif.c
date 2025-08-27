@@ -5020,6 +5020,15 @@ static void clif_getareachar_unit(struct map_session_data *sd, struct block_list
 		{
 			struct map_session_data *tsd = BL_UCAST(BL_PC, bl);
 			clif->getareachar_pc(sd, tsd);
+			/* When viewer has intravision/clairvoyance, ensure disguised hiders are still visible */
+			{
+				struct status_change *t_sc = status->get_sc(&tsd->bl);
+				if( t_sc && ( t_sc->option & ( OPTION_HIDE | OPTION_CLOAK | OPTION_CHASEWALK ) ) && clif->isdisguised(bl) ) {
+					if( sd->sc.data[SC_CLAIRVOYANCE] || sd->special_state.intravision ) {
+						clif->refreshlook(&sd->bl, bl->id, LOOK_BASE, tsd->status.class, SELF);
+					}
+				}
+			}
 			if (tsd->state.size == SZ_BIG) // tiny/big players [Valaris]
 				clif->specialeffect_single(bl,423,sd->fd);
 			else if (tsd->state.size == SZ_MEDIUM)
