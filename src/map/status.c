@@ -8022,18 +8022,18 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				break;
 
 			case SC_DEFENDER:
-				if (!(flag&SCFLAG_NOAVOID)) {
-					val2 = 5 + 15*val1; //Damage reduction
+				if ((flag & SCFLAG_NOAVOID) == 0) {
+					val2 = 5 + 15 * val1; //Damage reduction
 					val3 = 0; // unused, previously speed adjustment
-					val4 = 250 - 50*val1; //Aspd adjustment
+					val4 = 250 - 50 * val1; //Aspd adjustment
 
-					if (sd) {
+					if (sd != NULL) {
 						struct map_session_data *tsd;
 						int i;
 						for (i = 0; i < MAX_PC_DEVOTION; i++) {
 							//See if there are devoted characters, and pass the status to them. [Skotlex]
-							if (sd->devotion[i] && (tsd = map->id2sd(sd->devotion[i])) != NULL)
-								status->change_start(bl, &tsd->bl, type, 10000, val1, 5 + val1 * 5, val3, val4, total_tick, SCFLAG_NOAVOID, skill_id);
+							if (sd->devotion[i] != 0 && (tsd = map->id2sd(sd->devotion[i])) != NULL)
+								status->change_start(bl, &tsd->bl, type, 10000, val1, val2, val3, val4, total_tick, SCFLAG_NOAVOID, skill_id);
 						}
 					}
 				}
