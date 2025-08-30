@@ -2609,6 +2609,11 @@ static void status_calc_regen_pc(struct map_session_data *sd, struct status_data
 	nullpo_retv(st);
 	nullpo_retv(regen);
 
+	if (regen->skill == NULL)
+		regen->skill = &sd->skill_regen;
+	if (regen->sitting == NULL)
+		regen->sitting = &sd->sitting_regen;
+
 	struct status_change *sc = &sd->sc;
 
 	if ((sc->data[SC_POISON] != NULL && sc->data[SC_SLOWPOISON] == NULL)
@@ -2795,6 +2800,14 @@ static void status_calc_regen(struct block_list *bl, struct status_data *st, str
 	nullpo_retv(st);
 	nullpo_retv(regen);
 
+	if (bl->type == BL_PC) {
+		struct map_session_data *sd = BL_UCAST(BL_PC, bl);
+		if (regen->skill == NULL)
+			regen->skill = &sd->skill_regen;
+		if (regen->sitting == NULL)
+			regen->sitting = &sd->sitting_regen;
+	}
+
 	regen->flag = RGN_HP | RGN_SP;
 	if (regen->skill != NULL || regen->sitting != NULL)
 		regen->flag |= RGN_SHP | RGN_SSP;
@@ -2843,6 +2856,11 @@ static void status_calc_regen_rate_pc(struct map_session_data *sd, struct regen_
 {
 	nullpo_retv(sd);
 	nullpo_retv(regen);
+
+	if (regen->skill == NULL)
+		regen->skill = &sd->skill_regen;
+	if (regen->sitting == NULL)
+		regen->sitting = &sd->sitting_regen;
 
 	struct guild_castle *gc = guild->mapindex2gc(sd->bl.m);
 	if (gc != NULL && gc->guild_id == sd->status.guild_id) {
@@ -2918,6 +2936,14 @@ static void status_calc_regen_rate(struct block_list *bl, struct regen_data *reg
 		return;
 
 	nullpo_retv(regen);
+
+	if (bl->type == BL_PC) {
+		struct map_session_data *sd = BL_UCAST(BL_PC, bl);
+		if (regen->skill == NULL)
+			regen->skill = &sd->skill_regen;
+		if (regen->sitting == NULL)
+			regen->sitting = &sd->sitting_regen;
+	}
 
 	regen->rate.hp = 100;
 	regen->rate.sp = 100;
@@ -13414,6 +13440,13 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 	if (sc && !sc->count)
 		sc = NULL;
 	sd = BL_CAST(BL_PC,bl);
+
+	if (bl->type == BL_PC && sd != NULL) {
+		if (regen->skill == NULL)
+			regen->skill = &sd->skill_regen;
+		if (regen->sitting == NULL)
+			regen->sitting = &sd->sitting_regen;
+	}
 
 	flag = regen->flag;
 	if (flag&RGN_HP && (st->hp >= st->max_hp || regen->state.block&1))
