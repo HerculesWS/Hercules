@@ -12125,7 +12125,7 @@ static void pc_autotrade_start(struct map_session_data *sd)
 		SQL->GetData(map->mysql_handle, 2, &data, NULL); price = atoi(data);
 
 		ARR_FIND(0, MAX_CART, i, sd->status.cart[i].id == itemkey);
-		if( i != MAX_CART && itemdb_cantrade(&sd->status.cart[i], 0, 0) ) {
+		if( i != MAX_CART && itemdb->cantrade(&sd->status.cart[i], 0, 0) ) {
 			if( amount > sd->status.cart[i].amount )
 				amount = sd->status.cart[i].amount;
 
