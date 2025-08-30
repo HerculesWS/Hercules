@@ -11204,6 +11204,9 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 	 *
 	 **/
 	clif->inventoryList(sd);
+	
+	// Refresh equipment display to respect NOVIEWID flag on first connection
+	pc->equiplookall(sd);
 
 	// Send the cart inventory, counts & weight to the client.
 	if (pc_iscarton(sd)) {
@@ -11531,8 +11534,11 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 
 		map->iwall_get(sd); // Updates walls info on this map to client.
 		status_calc_pc(sd, SCO_NONE); // Some conditions are map-dependent so we must recalculate.
+		
+		// Refresh equipment display to respect NOVIEWID flag on map change
+		pc->equiplookall(sd);
+		
 		sd->state.changemap = false;
-
 		if (channel->config->local && channel->config->local_autojoin)
 			channel->map_join(sd);
 
