@@ -84,15 +84,6 @@ struct mob_interface *mob;
 #define MAX_MINCHASE 30 //Max minimum chase value to use for mobs.
 #define RUDE_ATTACKED_COUNT 2 //After how many rude-attacks should the skill be used?
 
-//Dynamic item drop ratio database for per-item drop ratio modifiers overriding global drop ratios.
-#define MAX_ITEMRATIO_MOBS 10
-struct item_drop_ratio {
-	int drop_ratio;
-	int mob_id[MAX_ITEMRATIO_MOBS];
-};
-static struct item_drop_ratio *item_drop_ratio_db[MAX_ITEMDB];
-static struct DBMap *item_drop_ratio_other_db = NULL;
-
 static struct eri *item_drop_ers; //For loot drops delay structures.
 static struct eri *item_drop_list_ers;
 
@@ -4211,27 +4202,7 @@ static unsigned int mob_drop_adjust(int baserate, int rate_adjust, unsigned shor
 	return (unsigned int)cap_value(rate,rate_min,rate_max);
 }
 
-static struct item_drop_ratio *mob_get_item_drop_ratio(int nameid)
-{
-	Assert_retr(NULL, nameid > 0);
-	if (nameid < ARRAYLENGTH(item_drop_ratio_db)) {
-		return item_drop_ratio_db[nameid];
-	} else {
-		return (struct item_drop_ratio *)idb_get(item_drop_ratio_other_db, nameid);
-	}
-}
 
-static void mob_set_item_drop_ratio(int nameid, struct item_drop_ratio *ratio)
-{
-	Assert_retv(nameid > 0);
-	if (nameid < ARRAYLENGTH(item_drop_ratio_db)) {
-		Assert_retv(item_drop_ratio_db[nameid] == NULL);
-		item_drop_ratio_db[nameid] = ratio;
-	} else {
-		Assert_retv(idb_get(item_drop_ratio_other_db, nameid) == NULL);
-		idb_put(item_drop_ratio_other_db, nameid, ratio);
-	}
-}
 
 /**
  * Check if global item drop rate is overridden for given item
@@ -4242,19 +4213,24 @@ static void mob_set_item_drop_ratio(int nameid, struct item_drop_ratio *ratio)
  */
 static void item_dropratio_adjust(int nameid, int mob_id, int *rate_adjust)
 {
-	struct item_drop_ratio *dropRatio;
-	nullpo_retv(rate_adjust);
-
-	dropRatio = mob->get_item_drop_ratio(nameid);
-	if (dropRatio) {
-		if (dropRatio->mob_id[0] ) { // only for listed mobs
-			int i;
-			ARR_FIND(0, MAX_ITEMRATIO_MOBS, i, dropRatio->mob_id[i] == mob_id);
-			if (i < MAX_ITEMRATIO_MOBS) // found
-				*rate_adjust = dropRatio->drop_ratio;
+	struct item_data *item = itemdb->search(nameid);
+	if (item == NULL || item->drop_ratio == 0) {
+		*rate_adjust = 100;  // Default to 100% if no custom ratio
+		return;
+	}
+	// Check if mob_id is in the mob_id array
+	int i;
+	for (i = 0; i < MAX_ITEMRATIO_MOBS && item->mob_id[i] != 0; i++) {
+		if (item->mob_id[i] == mob_id) {
+			*rate_adjust = item->drop_ratio;
+			return;
 		}
-		else // for all mobs
-			*rate_adjust = dropRatio->drop_ratio;
+	}
+	// If mob_id not found or mob_id[0] is 0 (all mobs), use drop_ratio
+	if (item->mob_id[0] == 0 || i == MAX_ITEMRATIO_MOBS) {
+		*rate_adjust = item->drop_ratio;
+	} else {
+		*rate_adjust = 100;  // Default if mob not listed
 	}
 }
 
@@ -5945,28 +5921,22 @@ static bool mob_readdb_race2(char *fields[], int columns, int current)
 static bool mob_readdb_itemratio(char *str[], int columns, int current)
 {
 	int nameid, ratio, i;
-	struct item_drop_ratio *dropRatio;
+	struct item_data *item;
 
 	nullpo_retr(false, str);
 	nameid = atoi(str[0]);
 
-	if( itemdb->exists(nameid) == NULL )
-	{
+	item = itemdb->search(nameid);
+	if (item == NULL) {
 		ShowWarning("itemdb_read_itemratio: Invalid item id %d.\n", nameid);
 		return false;
 	}
 
 	ratio = atoi(str[1]);
+	item->drop_ratio = ratio;
 
-	dropRatio = mob->get_item_drop_ratio(nameid);
-	if (dropRatio == NULL) {
-		dropRatio = (struct item_drop_ratio*)aCalloc(1, sizeof(struct item_drop_ratio));
-		mob->set_item_drop_ratio(nameid, dropRatio);
-	}
-
-	dropRatio->drop_ratio = ratio;
-	for (i = 0; i < columns - 2; i++)
-		dropRatio->mob_id[i] = atoi(str[i + 2]);
+	for (i = 0; i < columns - 2 && i < MAX_ITEMRATIO_MOBS; i++)
+		item->mob_id[i] = atoi(str[i + 2]);
 
 	return true;
 }
@@ -5992,18 +5962,6 @@ static void mob_load(bool minimal)
 	sv->readdb(map->db_path, DBPATH"mob_race2_db.txt", ',', 2, 20, -1, mob->readdb_race2);
 }
 
-/**
- * @see DBApply
- */
-static int mob_final_ratio_sub(union DBKey key, struct DBData *data, va_list ap)
-{
-	struct item_drop_ratio *ratio = DB->data2ptr(data);
-
-	if (ratio)
-		aFree(ratio);
-
-	return 0;
-}
 
 static int mob_reload_sub_mob(struct mob_data *md, va_list args)
 {
@@ -6039,17 +5997,9 @@ static void mob_reload(void)
 			mob->db_data[i]->maxskill=0;
 		}
 
-	// Clear item_drop_ratio_db
-	for (i = 0; i < MAX_ITEMDB; i++) {
-		if (item_drop_ratio_db[i]) {
-			aFree(item_drop_ratio_db[i]);
-			item_drop_ratio_db[i] = NULL;
-		}
-	}
 	for (i = 0; i < MOBG_MAX_GROUP; i++) {
 		VECTOR_CLEAR(mob->mob_groups[i]);
 	}
-	mob->item_drop_ratio_other_db->clear(mob->item_drop_ratio_other_db, mob->final_ratio_sub);
 
 	mob->destroy_drop_groups();
 
@@ -6152,19 +6102,9 @@ static int do_final_mob(void)
 			mob->chat_db[i] = NULL;
 		}
 	}
-	for (i = 0; i < MAX_ITEMDB; i++)
-	{
-		if (item_drop_ratio_db[i] != NULL)
-		{
-			aFree(item_drop_ratio_db[i]);
-			item_drop_ratio_db[i] = NULL;
-		}
-	}
 	for (i = 0; i < MOBG_MAX_GROUP; i++) {
 		VECTOR_CLEAR(mob->mob_groups[i]);
 	}
-	mob->item_drop_ratio_other_db->clear(mob->item_drop_ratio_other_db, mob->final_ratio_sub);
-	db_destroy(mob->item_drop_ratio_other_db);
 	ers_destroy(item_drop_ers);
 	ers_destroy(item_drop_list_ers);
 	return 0;
@@ -6208,9 +6148,6 @@ void mob_defaults(void)
 	memcpy(mob->splendide, mob_splendide, sizeof(mob->splendide));
 	memcpy(mob->mora, mob_mora, sizeof(mob->mora));
 
-	item_drop_ratio_other_db = idb_alloc(DB_OPT_BASE);
-	mob->item_drop_ratio_db = item_drop_ratio_db;
-	mob->item_drop_ratio_other_db = item_drop_ratio_other_db;
 
 	/* */
 	mob->reload = mob_reload;
@@ -6325,9 +6262,6 @@ void mob_defaults(void)
 	mob->readdb_race2 = mob_readdb_race2;
 	mob->readdb_itemratio = mob_readdb_itemratio;
 	mob->load = mob_load;
-	mob->get_item_drop_ratio = mob_get_item_drop_ratio;
-	mob->set_item_drop_ratio = mob_set_item_drop_ratio;
-	mob->final_ratio_sub = mob_final_ratio_sub;
 	mob->clear_spawninfo = mob_clear_spawninfo;
 	mob->destroy_mob_db = mob_destroy_mob_db;
 	mob->destroy_drop_groups = mob_destroy_drop_groups;

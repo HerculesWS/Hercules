@@ -80,6 +80,10 @@ struct hplugin_data_store;
 #define MAX_ITEM_GRADE 7
 #endif
 
+#ifndef MAX_ITEMRATIO_MOBS
+#define MAX_ITEMRATIO_MOBS 10
+#endif
+
 enum item_itemid {
 	ITEMID_RED_POTION            = 501,
 	ITEMID_YELLOW_POTION         = 503,
@@ -572,6 +576,8 @@ struct item_data {
 		unsigned short chance;
 		int id;
 	} mob[MAX_SEARCH];                  ///< Holds the mobs that have the highest drop rate for this item. [Skotlex]
+	int drop_ratio;                     ///< Drop ratio for item-specific drop modifiers.
+	int mob_id[MAX_ITEMRATIO_MOBS];     ///< Mob IDs for which the drop ratio applies.
 	struct script_code *script;         ///< Default script for everything.
 	struct script_code *equip_script;   ///< Script executed once when equipping.
 	struct script_code *unequip_script; ///< Script executed once when unequipping.
