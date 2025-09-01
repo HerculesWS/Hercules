@@ -10972,6 +10972,8 @@ static int pc_autosave(int tid, int64 tick, int id, intptr_t data)
 	struct s_mapiterator* iter;
 	struct map_session_data* sd;
 	static int last_save_id = 0, save_flag = 0;
+	static int autosave_tid = INVALID_TIMER;
+	static int current_interval = 0;
 
 	if(save_flag == 2) //Someone was saved on last call, normal cycle
 		save_flag = 0;
@@ -11000,7 +11002,23 @@ static int pc_autosave(int tid, int64 tick, int id, intptr_t data)
 	interval = map->autosave_interval/(map->usercount()+1);
 	if(interval < map->minsave_interval)
 		interval = map->minsave_interval;
-	timer->add(timer->gettick()+interval,pc->autosave,0,0);
+
+	// Update timer interval if it has changed
+	if(autosave_tid != INVALID_TIMER && current_interval != interval) {
+		// Update the interval directly
+		if(timer->set_interval(autosave_tid, interval) == 0) {
+			current_interval = interval;
+		} else {
+			// Fallback: delete and recreate if set_interval fails
+			timer->delete(autosave_tid, pc->autosave);
+			autosave_tid = timer->add_interval(timer->gettick()+interval, pc->autosave, 0, 0, interval);
+			current_interval = interval;
+		}
+	} else if(autosave_tid == INVALID_TIMER) {
+		// First time - create interval timer
+		autosave_tid = timer->add_interval(timer->gettick()+interval, pc->autosave, 0, 0, interval);
+		current_interval = interval;
+	}
 
 	return 0;
 }
