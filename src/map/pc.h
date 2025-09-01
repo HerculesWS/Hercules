@@ -1120,6 +1120,11 @@ END_ZEROED_BLOCK; /* End */
 	int (*changelook) (struct map_session_data *sd,int type,int val);
 	int (*equiplookall) (struct map_session_data *sd);
 
+	// NOVIEWID helper functions
+	bool (*equipment_visible) (struct map_session_data *sd, int pos);
+	int (*get_equipment_view_sprite) (struct map_session_data *sd, int regular_pos, int costume_pos, struct item_data *id, bool hide_costumes);
+	void (*update_equipment_look) (struct map_session_data *sd, int pos, int look_type, int *look_value, int regular_pos, int costume_pos, struct item_data *id, bool hide_costumes);
+
 	int64 (*readparam) (const struct map_session_data *sd, int type);
 	int (*setparam) (struct map_session_data *sd, int type, int64 val);
 	int (*readreg) (struct map_session_data *sd, int64 reg);
