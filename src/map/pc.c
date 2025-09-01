@@ -9024,18 +9024,108 @@ static int pc_jobchange(struct map_session_data *sd, int class, int upper)
 }
 
 /*==========================================
+ * Check if equipment should be displayed based on NOVIEWID flag
+ *------------------------------------------*/
+static bool pc_equipment_visible(struct map_session_data *sd, int pos)
+{
+	nullpo_ret(sd);
+	return !map_no_view(sd->bl.m, pos);
+}
+
+/*==========================================
+ * Get the appropriate view sprite for equipment with costume priority
+ *------------------------------------------*/
+static int pc_get_equipment_view_sprite(struct map_session_data *sd, int regular_pos, int costume_pos, struct item_data *id, bool hide_costumes)
+{
+	int view_sprite = 0;
+
+	// Check costume first if costumes aren't hidden
+	if (!hide_costumes) {
+		int costume_equip = pc->checkequip(sd, costume_pos);
+		if (costume_equip != -1 && sd->inventory_data[costume_equip] != NULL) {
+			view_sprite = sd->inventory_data[costume_equip]->view_sprite;
+		}
+	}
+
+	// Fall back to regular equipment if no costume or costumes are hidden
+	if (view_sprite == 0 && id != NULL) {
+		view_sprite = id->view_sprite;
+	}
+
+	return view_sprite;
+}
+
+/*==========================================
+ * Update equipment appearance with NOVIEWID and costume priority handling
+ *------------------------------------------*/
+static void pc_update_equipment_look(struct map_session_data *sd, int pos, int look_type, int *look_value, int regular_pos, int costume_pos, struct item_data *id, bool hide_costumes)
+{
+	if (pc->equipment_visible(sd, pos)) {
+		*look_value = pc->get_equipment_view_sprite(sd, regular_pos, costume_pos, id, hide_costumes);
+	} else {
+		*look_value = 0;
+	}
+	clif->changelook(&sd->bl, look_type, *look_value);
+}
+
+/*==========================================
  * Tell client player sd has change equipement
  *------------------------------------------*/
 static int pc_equiplookall(struct map_session_data *sd)
 {
 	nullpo_ret(sd);
 
-	clif->changelook(&sd->bl,LOOK_WEAPON,0);
-	clif->changelook(&sd->bl,LOOK_SHOES,0);
-	clif->changelook(&sd->bl, LOOK_HEAD_BOTTOM, sd->status.look.head_bottom);
-	clif->changelook(&sd->bl, LOOK_HEAD_TOP, sd->status.look.head_top);
-	clif->changelook(&sd->bl, LOOK_HEAD_MID, sd->status.look.head_mid);
-	clif->changelook(&sd->bl, LOOK_ROBE, sd->status.look.robe);
+	// Check NOVIEWID flag and update equipment display accordingly
+	if (pc->equipment_visible(sd, EQP_HAND_R)) {
+		clif->changelook(&sd->bl, LOOK_WEAPON, sd->status.look.weapon);
+	} else {
+		clif->changelook(&sd->bl, LOOK_WEAPON, 0);
+	}
+
+	if (pc->equipment_visible(sd, EQP_SHOES)) {
+		clif->changelook(&sd->bl, LOOK_SHOES, 0);
+	}
+
+	// Check if map has NOVIEWID flag for costumes (cache this value for performance)
+	const bool hide_costumes = (map->list[sd->bl.m].flag.noviewid & EQP_COSTUME) != 0;
+
+	// Handle headgear with NOVIEWID and costume priority
+	struct {
+		int eqp_pos, costume_pos, look_type;
+		int *look_value;
+	} headgear_slots[] = {
+		{ EQP_HEAD_LOW, EQP_COSTUME_HEAD_LOW, LOOK_HEAD_BOTTOM, &sd->status.look.head_bottom },
+		{ EQP_HEAD_MID, EQP_COSTUME_HEAD_MID, LOOK_HEAD_MID, &sd->status.look.head_mid },
+		{ EQP_HEAD_TOP, EQP_COSTUME_HEAD_TOP, LOOK_HEAD_TOP, &sd->status.look.head_top }
+	};
+
+	for (int i = 0; i < ARRAYLENGTH(headgear_slots); i++) {
+		if (pc->equipment_visible(sd, headgear_slots[i].eqp_pos)) {
+			int view_sprite = pc->get_equipment_view_sprite(sd, headgear_slots[i].eqp_pos, headgear_slots[i].costume_pos, NULL, hide_costumes);
+			if (view_sprite == 0) {
+				// Use current look value if no costume/equipment found
+				view_sprite = *headgear_slots[i].look_value;
+			}
+			*headgear_slots[i].look_value = view_sprite;
+			clif->changelook(&sd->bl, headgear_slots[i].look_type, view_sprite);
+		} else {
+			*headgear_slots[i].look_value = 0;
+			clif->changelook(&sd->bl, headgear_slots[i].look_type, 0);
+		}
+	}
+
+	// Handle garment with NOVIEWID and costume priority
+	if (pc->equipment_visible(sd, EQP_GARMENT)) {
+		int view_sprite = pc->get_equipment_view_sprite(sd, EQP_GARMENT, EQP_COSTUME_GARMENT, NULL, hide_costumes);
+		if (view_sprite == 0) {
+			view_sprite = sd->status.look.robe; // Use current robe value if no costume found
+		}
+		sd->status.look.robe = view_sprite;
+		clif->changelook(&sd->bl, LOOK_ROBE, view_sprite);
+	} else {
+		sd->status.look.robe = 0;
+		clif->changelook(&sd->bl, LOOK_ROBE, 0);
+	}
 
 	return 0;
 }
@@ -10104,59 +10194,115 @@ static void pc_equipitem_pos(struct map_session_data *sd, struct item_data *id, 
 	}
 	//Added check to prevent sending the same look on multiple slots ->
 	//causes client to redraw item on top of itself. (suggested by Lupus)
-	if (!map_no_view(sd->bl.m,EQP_HEAD_LOW) && pos & EQP_HEAD_LOW && pc->checkequip(sd,EQP_COSTUME_HEAD_LOW) == -1) {
-		if (id && !(pos&(EQP_HEAD_TOP|EQP_HEAD_MID)))
-			sd->status.look.head_bottom = id->view_sprite;
-		else
-			sd->status.look.head_bottom = 0;
-		clif->changelook(&sd->bl, LOOK_HEAD_BOTTOM, sd->status.look.head_bottom);
+	struct {
+		int eqp_pos, costume_pos, look_type, pos_mask;
+		int *look_value;
+	} equip_headgear_slots[] = {
+		{ EQP_HEAD_LOW, EQP_COSTUME_HEAD_LOW, LOOK_HEAD_BOTTOM, (EQP_HEAD_TOP|EQP_HEAD_MID), &sd->status.look.head_bottom },
+		{ EQP_HEAD_TOP, EQP_COSTUME_HEAD_TOP, LOOK_HEAD_TOP, 0, &sd->status.look.head_top },
+		{ EQP_HEAD_MID, EQP_COSTUME_HEAD_MID, LOOK_HEAD_MID, EQP_HEAD_TOP, &sd->status.look.head_mid }
+	};
+
+	for (int i = 0; i < ARRAYLENGTH(equip_headgear_slots); i++) {
+		if (pc->equipment_visible(sd, equip_headgear_slots[i].eqp_pos) && (pos & equip_headgear_slots[i].eqp_pos)) {
+			int costume_equip = pc->checkequip(sd, equip_headgear_slots[i].costume_pos);
+			if (costume_equip != -1) {
+				// Costume takes priority over regular equipment
+				*equip_headgear_slots[i].look_value = (sd->inventory_data[costume_equip] != NULL) ? sd->inventory_data[costume_equip]->view_sprite : 0;
+			} else if (id && !(pos & equip_headgear_slots[i].pos_mask)) {
+				*equip_headgear_slots[i].look_value = id->view_sprite;
+			} else {
+				*equip_headgear_slots[i].look_value = 0;
+			}
+			clif->changelook(&sd->bl, equip_headgear_slots[i].look_type, *equip_headgear_slots[i].look_value);
+		}
 	}
-	if (!map_no_view(sd->bl.m,EQP_HEAD_TOP) && pos & EQP_HEAD_TOP && pc->checkequip(sd,EQP_COSTUME_HEAD_TOP) == -1) {
-		if (id)
-			sd->status.look.head_top = id->view_sprite;
-		else
-			sd->status.look.head_top = 0;
-		clif->changelook(&sd->bl, LOOK_HEAD_TOP, sd->status.look.head_top);
-	}
-	if (!map_no_view(sd->bl.m,EQP_HEAD_MID) && pos & EQP_HEAD_MID && pc->checkequip(sd,EQP_COSTUME_HEAD_MID) == -1) {
-		if (id && !(pos&EQP_HEAD_TOP))
-			sd->status.look.head_mid = id->view_sprite;
-		else
-			sd->status.look.head_mid = 0;
-		clif->changelook(&sd->bl, LOOK_HEAD_MID, sd->status.look.head_mid);
-	}
-	if (!map_no_view(sd->bl.m,EQP_COSTUME_HEAD_TOP) && pos & EQP_COSTUME_HEAD_TOP) {
-		if (id){
-			sd->status.look.head_top = id->view_sprite;
-		} else
-			sd->status.look.head_top = 0;
-		clif->changelook(&sd->bl, LOOK_HEAD_TOP, sd->status.look.head_top);
-	}
-	if (!map_no_view(sd->bl.m,EQP_COSTUME_HEAD_MID) && pos & EQP_COSTUME_HEAD_MID) {
-		if(id && !(pos&EQP_HEAD_TOP)){
-			sd->status.look.head_mid = id->view_sprite;
-		} else
-			sd->status.look.head_mid = 0;
-		clif->changelook(&sd->bl, LOOK_HEAD_MID, sd->status.look.head_mid);
-	}
-	if (!map_no_view(sd->bl.m,EQP_COSTUME_HEAD_LOW) && pos & EQP_COSTUME_HEAD_LOW) {
-		if (id && !(pos&(EQP_HEAD_TOP|EQP_HEAD_MID))){
-			sd->status.look.head_bottom = id->view_sprite;
-		} else
-			sd->status.look.head_bottom = 0;
-		clif->changelook(&sd->bl, LOOK_HEAD_BOTTOM, sd->status.look.head_bottom);
+	// Check if map has NOVIEWID flag for costumes (cache this value for performance)
+	const bool hide_costumes = (map->list[sd->bl.m].flag.noviewid & EQP_COSTUME) != 0;
+	
+	if (!hide_costumes) {
+		struct {
+			int costume_pos, look_type, pos_mask;
+			int *look_value;
+		} costume_slots[] = {
+			{ EQP_COSTUME_HEAD_TOP, LOOK_HEAD_TOP, 0, &sd->status.look.head_top },
+			{ EQP_COSTUME_HEAD_MID, LOOK_HEAD_MID, EQP_HEAD_TOP, &sd->status.look.head_mid },
+			{ EQP_COSTUME_HEAD_LOW, LOOK_HEAD_BOTTOM, (EQP_HEAD_TOP|EQP_HEAD_MID), &sd->status.look.head_bottom }
+		};
+
+		for (int i = 0; i < ARRAYLENGTH(costume_slots); i++) {
+			if (pc->equipment_visible(sd, costume_slots[i].costume_pos) && (pos & costume_slots[i].costume_pos)) {
+				if (id && !(pos & costume_slots[i].pos_mask)) {
+					*costume_slots[i].look_value = id->view_sprite;
+				} else {
+					*costume_slots[i].look_value = 0;
+				}
+				clif->changelook(&sd->bl, costume_slots[i].look_type, *costume_slots[i].look_value);
+			}
+		}
+	} else {
+		// If map has NOVIEWID flag for costumes, hide them and show regular equipment
+		if (pos & EQP_COSTUME_HEAD_TOP) {
+			// Show regular headgear if available
+			int equip = pc->checkequip(sd, EQP_HEAD_TOP);
+			if (equip >= 0 && sd->inventory_data[equip] != NULL) {
+				sd->status.look.head_top = sd->inventory_data[equip]->view_sprite;
+			} else {
+				sd->status.look.head_top = 0;
+			}
+			clif->changelook(&sd->bl, LOOK_HEAD_TOP, sd->status.look.head_top);
+		}
+		if (pos & EQP_COSTUME_HEAD_MID) {
+			// Show regular headgear if available
+			int equip = pc->checkequip(sd, EQP_HEAD_MID);
+			if (equip >= 0 && sd->inventory_data[equip] != NULL) {
+				sd->status.look.head_mid = sd->inventory_data[equip]->view_sprite;
+			} else {
+				sd->status.look.head_mid = 0;
+			}
+			clif->changelook(&sd->bl, LOOK_HEAD_MID, sd->status.look.head_mid);
+		}
+		if (pos & EQP_COSTUME_HEAD_LOW) {
+			// Show regular headgear if available
+			int equip = pc->checkequip(sd, EQP_HEAD_LOW);
+			if (equip >= 0 && sd->inventory_data[equip] != NULL) {
+				sd->status.look.head_bottom = sd->inventory_data[equip]->view_sprite;
+			} else {
+				sd->status.look.head_bottom = 0;
+			}
+			clif->changelook(&sd->bl, LOOK_HEAD_BOTTOM, sd->status.look.head_bottom);
+		}
 	}
 
-	if (!map_no_view(sd->bl.m,EQP_SHOES) && pos & EQP_SHOES)
-		clif->changelook(&sd->bl,LOOK_SHOES,0);
-	if (!map_no_view(sd->bl.m,EQP_GARMENT) && pos&EQP_GARMENT && pc->checkequip(sd,EQP_COSTUME_GARMENT) == -1) {
-		sd->status.look.robe = id ? id->view_sprite : 0;
-		clif->changelook(&sd->bl, LOOK_ROBE, sd->status.look.robe);
+	// Handle shoes and garment with costume priority
+	if (pc->equipment_visible(sd, EQP_SHOES) && pos & EQP_SHOES) {
+		clif->changelook(&sd->bl, LOOK_SHOES, 0);
 	}
 
-	if (!map_no_view(sd->bl.m,EQP_COSTUME_GARMENT) && pos & EQP_COSTUME_GARMENT) {
-		sd->status.look.robe = id ? id->view_sprite : 0;
+	if (pc->equipment_visible(sd, EQP_GARMENT) && pos & EQP_GARMENT) {
+		int costume_equip = pc->checkequip(sd, EQP_COSTUME_GARMENT);
+		if (costume_equip != -1) {
+			// Costume takes priority over regular equipment
+			sd->status.look.robe = (sd->inventory_data[costume_equip] != NULL) ? sd->inventory_data[costume_equip]->view_sprite : 0;
+		} else {
+			sd->status.look.robe = id ? id->view_sprite : 0;
+		}
 		clif->changelook(&sd->bl, LOOK_ROBE, sd->status.look.robe);
+	}
+	
+	if (!hide_costumes) {
+		if (pc->equipment_visible(sd, EQP_COSTUME_GARMENT) && pos & EQP_COSTUME_GARMENT) {
+			sd->status.look.robe = id ? id->view_sprite : 0;
+			clif->changelook(&sd->bl, LOOK_ROBE, sd->status.look.robe);
+		}
+	} else {
+		// If map has NOVIEWID flag for costumes, hide them and show regular equipment
+		if (pos & EQP_COSTUME_GARMENT) {
+			int regular_equip = pc->checkequip(sd, EQP_GARMENT);
+			sd->status.look.robe = (regular_equip >= 0 && sd->inventory_data[regular_equip] != NULL) ?
+				sd->inventory_data[regular_equip]->view_sprite : 0;
+			clif->changelook(&sd->bl, LOOK_ROBE, sd->status.look.robe);
+		}
 	}
 }
 
@@ -10346,48 +10492,99 @@ static void pc_unequipitem_pos(struct map_session_data *sd, int n, int pos)
 		pc->calcweapontype(sd);
 		clif->changelook(&sd->bl, LOOK_SHIELD, sd->status.look.shield);
 	}
-	if (pos & EQP_HEAD_LOW && pc->checkequip(sd,EQP_COSTUME_HEAD_LOW) == -1) {
-		sd->status.look.head_bottom = 0;
-		clif->changelook(&sd->bl, LOOK_HEAD_BOTTOM, sd->status.look.head_bottom);
+	// Check if map has NOVIEWID flag for costumes (cache this value for performance)
+	const bool hide_costumes = (map->list[sd->bl.m].flag.noviewid & EQP_COSTUME) != 0;
+
+	if (pos & EQP_HEAD_LOW) {
+		if (hide_costumes || pc->checkequip(sd,EQP_COSTUME_HEAD_LOW) == -1) {
+			sd->status.look.head_bottom = 0;
+			clif->changelook(&sd->bl, LOOK_HEAD_BOTTOM, sd->status.look.head_bottom);
+		}
 	}
-	if (pos & EQP_HEAD_TOP && pc->checkequip(sd,EQP_COSTUME_HEAD_TOP) == -1) {
-		sd->status.look.head_top = 0;
-		clif->changelook(&sd->bl, LOOK_HEAD_TOP, sd->status.look.head_top);
+	if (pos & EQP_HEAD_TOP) {
+		if (hide_costumes || pc->checkequip(sd,EQP_COSTUME_HEAD_TOP) == -1) {
+			sd->status.look.head_top = 0;
+			clif->changelook(&sd->bl, LOOK_HEAD_TOP, sd->status.look.head_top);
+		}
 	}
-	if (pos & EQP_HEAD_MID && pc->checkequip(sd,EQP_COSTUME_HEAD_MID) == -1) {
-		sd->status.look.head_mid = 0;
-		clif->changelook(&sd->bl, LOOK_HEAD_MID, sd->status.look.head_mid);
+	if (pos & EQP_HEAD_MID) {
+		if (hide_costumes || pc->checkequip(sd,EQP_COSTUME_HEAD_MID) == -1) {
+			sd->status.look.head_mid = 0;
+			clif->changelook(&sd->bl, LOOK_HEAD_MID, sd->status.look.head_mid);
+		}
 	}
 
 	if (pos & EQP_COSTUME_HEAD_TOP) {
-		int equip = pc->checkequip(sd, EQP_HEAD_TOP);
-		sd->status.look.head_top = (equip >= 0 && sd->inventory_data[equip] != NULL) ? sd->inventory_data[equip]->view_sprite : 0;
+		if (!hide_costumes) {
+			int equip = pc->checkequip(sd, EQP_HEAD_TOP);
+			sd->status.look.head_top = (equip >= 0 && sd->inventory_data[equip] != NULL) ? sd->inventory_data[equip]->view_sprite : 0;
+		} else {
+			// If costumes are hidden, make sure regular equipment is shown
+			int equip = pc->checkequip(sd, EQP_HEAD_TOP);
+			if (equip >= 0 && sd->inventory_data[equip] != NULL) {
+				sd->status.look.head_top = sd->inventory_data[equip]->view_sprite;
+			} else {
+				sd->status.look.head_top = 0;
+			}
+		}
 		clif->changelook(&sd->bl, LOOK_HEAD_TOP, sd->status.look.head_top);
 	}
 
 	if (pos & EQP_COSTUME_HEAD_MID) {
-		int equip = pc->checkequip(sd, EQP_HEAD_MID);
-		sd->status.look.head_mid = (equip >= 0 && sd->inventory_data[equip] != NULL) ? sd->inventory_data[equip]->view_sprite : 0;
+		if (!hide_costumes) {
+			int equip = pc->checkequip(sd, EQP_HEAD_MID);
+			sd->status.look.head_mid = (equip >= 0 && sd->inventory_data[equip] != NULL) ? sd->inventory_data[equip]->view_sprite : 0;
+		} else {
+			// If costumes are hidden, make sure regular equipment is shown
+			int equip = pc->checkequip(sd, EQP_HEAD_MID);
+			if (equip >= 0 && sd->inventory_data[equip] != NULL) {
+				sd->status.look.head_mid = sd->inventory_data[equip]->view_sprite;
+			} else {
+				sd->status.look.head_mid = 0;
+			}
+		}
 		clif->changelook(&sd->bl, LOOK_HEAD_MID, sd->status.look.head_mid);
 	}
 
 	if (pos & EQP_COSTUME_HEAD_LOW) {
-		int equip = pc->checkequip(sd, EQP_HEAD_LOW);
-		sd->status.look.head_bottom = (equip >= 0 && sd->inventory_data[equip] != NULL) ? sd->inventory_data[equip]->view_sprite : 0;
+		if (!hide_costumes) {
+			int equip = pc->checkequip(sd, EQP_HEAD_LOW);
+			sd->status.look.head_bottom = (equip >= 0 && sd->inventory_data[equip] != NULL) ? sd->inventory_data[equip]->view_sprite : 0;
+		} else {
+			// If costumes are hidden, make sure regular equipment is shown
+			int equip = pc->checkequip(sd, EQP_HEAD_LOW);
+			if (equip >= 0 && sd->inventory_data[equip] != NULL) {
+				sd->status.look.head_bottom = sd->inventory_data[equip]->view_sprite;
+			} else {
+				sd->status.look.head_bottom = 0;
+			}
+		}
 		clif->changelook(&sd->bl, LOOK_HEAD_BOTTOM, sd->status.look.head_bottom);
 	}
 
 	if (pos & EQP_SHOES)
 		clif->changelook(&sd->bl,LOOK_SHOES,0);
 
-	if (pos & EQP_GARMENT && pc->checkequip(sd,EQP_COSTUME_GARMENT) == -1) {
-		sd->status.look.robe = 0;
-		clif->changelook(&sd->bl, LOOK_ROBE, 0);
+	if (pos & EQP_GARMENT) {
+		if (hide_costumes || pc->checkequip(sd,EQP_COSTUME_GARMENT) == -1) {
+			sd->status.look.robe = 0;
+			clif->changelook(&sd->bl, LOOK_ROBE, 0);
+		}
 	}
 
 	if (pos & EQP_COSTUME_GARMENT) {
-		int equip = pc->checkequip(sd, EQP_GARMENT);
-		sd->status.look.robe = (equip >= 0 && sd->inventory_data[equip] != NULL) ? sd->inventory_data[equip]->view_sprite : 0;
+		if (!hide_costumes) {
+			int equip = pc->checkequip(sd, EQP_GARMENT);
+			sd->status.look.robe = (equip >= 0 && sd->inventory_data[equip] != NULL) ? sd->inventory_data[equip]->view_sprite : 0;
+		} else {
+			// If costumes are hidden, make sure regular equipment is shown
+			int equip = pc->checkequip(sd, EQP_GARMENT);
+			if (equip >= 0 && sd->inventory_data[equip] != NULL) {
+				sd->status.look.robe = sd->inventory_data[equip]->view_sprite;
+			} else {
+				sd->status.look.robe = 0;
+			}
+		}
 		clif->changelook(&sd->bl, LOOK_ROBE, sd->status.look.robe);
 	}
 }
@@ -12960,6 +13157,11 @@ void pc_defaults(void)
 	pc->setridingwug = pc_setridingwug;
 	pc->changelook = pc_changelook;
 	pc->equiplookall = pc_equiplookall;
+
+	// NOVIEWID helper functions
+	pc->equipment_visible = pc_equipment_visible;
+	pc->get_equipment_view_sprite = pc_get_equipment_view_sprite;
+	pc->update_equipment_look = pc_update_equipment_look;
 
 	pc->readparam = pc_readparam;
 	pc->setparam = pc_setparam;
