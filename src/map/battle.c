@@ -4868,13 +4868,13 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 		 || (sd->bonus.double_rate > 0 && sd->weapontype1 != W_FIST) //Will fail bare-handed
 		 || (sc != NULL && sc->data[SC_KAGEMUSYA] != NULL && sd->weapontype1 != W_FIST) // Need confirmation
 		) {
-			// Success chance is not added, the higher one is used [Skotlex]
-			if (rnd() % 100 < (5 * skill_lv > sd->bonus.double_rate ? 5 * skill_lv : sc != NULL && sc->data[SC_KAGEMUSYA] != NULL ? sc->data[SC_KAGEMUSYA]->val1 * 3 : sd->bonus.double_rate))
-			{
-				wd.div_ = skill->get_num(TF_DOUBLE, skill_lv != 0 ? skill_lv : 1);
-				wd.type = BDT_MULTIHIT;
-				hitpercbonus += skill_lv;
-			}
+		    // Success chance is not added, the higher one is used [Skotlex]
+		    if (rnd() % 100 < min(100, 5 * skill_lv + sd->bonus.double_rate + (sc != NULL && sc->data[SC_KAGEMUSYA] != NULL ? sc->data[SC_KAGEMUSYA]->val1 * 3 : 0)))
+		    {
+		        wd.div_ = skill->get_num(TF_DOUBLE, skill_lv != 0 ? skill_lv : 1);
+		        wd.type = BDT_MULTIHIT;
+		        hitpercbonus += skill_lv;
+		    }
 		}
 		else if (((sd->weapontype1 == W_REVOLVER && (skill_lv = pc->checkskill(sd, GS_CHAINACTION)) > 0)
 			|| (sc && sc->count && sc->data[SC_ETERNAL_CHAIN] && (skill_lv = sc->data[SC_ETERNAL_CHAIN]->val1) > 0))
