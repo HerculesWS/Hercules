@@ -11356,36 +11356,82 @@ static bool atcommand_can_use(struct map_session_data *sd, const char *command)
 {
 	AtCommandInfo *acmd_d;
 	struct atcmd_binding_data *bcmd_d;
+	AtCommandFunc cmd_func = NULL;
 
 	nullpo_retr(false, sd);
 
 	if ((acmd_d = atcommand->get_info_byname(atcommand->check_alias(command + 1))) != NULL) {
-		return ((*command == atcommand->at_symbol && acmd_d->at_groups[pcg->get_idx(sd->group)] > 0) ||
-				(*command == atcommand->char_symbol && acmd_d->char_groups[pcg->get_idx(sd->group)] > 0));
+		if (!((*command == atcommand->at_symbol && acmd_d->at_groups[pcg->get_idx(sd->group)] > 0) ||
+				(*command == atcommand->char_symbol && acmd_d->char_groups[pcg->get_idx(sd->group)] > 0)))
+			return false;
+		cmd_func = acmd_d->func;
 	} else if ((bcmd_d = atcommand->get_bind_byname(atcommand->check_alias(command + 1))) != NULL) {
-		return ((*command == atcommand->at_symbol && bcmd_d->at_groups[pcg->get_idx(sd->group)] > 0) ||
-				(*command == atcommand->char_symbol && bcmd_d->char_groups[pcg->get_idx(sd->group)] > 0));
+		if (!((*command == atcommand->at_symbol && bcmd_d->at_groups[pcg->get_idx(sd->group)] > 0) ||
+				(*command == atcommand->char_symbol && bcmd_d->char_groups[pcg->get_idx(sd->group)] > 0)))
+			return false;
+		// For bound commands, get the original command's func
+		AtCommandInfo *orig_acmd_d = atcommand->get_info_byname(bcmd_d->command);
+		if (orig_acmd_d != NULL)
+			cmd_func = orig_acmd_d->func;
+	} else {
+		return false;
 	}
 
-	return false;
+	// Check if command is disabled in the current map zone
+	if (cmd_func != NULL && map->list[sd->bl.m].zone != NULL) {
+		int i;
+		for (i = 0; i < map->list[sd->bl.m].zone->disabled_commands_count; i++) {
+			if (cmd_func == map->list[sd->bl.m].zone->disabled_commands[i]->cmd) {
+				if (pc_get_group_level(sd) < map->list[sd->bl.m].zone->disabled_commands[i]->group_lv) {
+					return false; // Command is disabled for this player's group level
+				}
+				break; // Found the command, no need to check further
+			}
+		}
+	}
+
+	return true;
 }
 
 static bool atcommand_can_use2(struct map_session_data *sd, const char *command, AtCommandType type)
 {
 	AtCommandInfo *acmd_d;
 	struct atcmd_binding_data *bcmd_d;
+	AtCommandFunc cmd_func = NULL;
 
 	nullpo_retr(false, sd);
 
 	if ((acmd_d = atcommand->get_info_byname(atcommand->check_alias(command))) != NULL) {
-		return ((type == COMMAND_ATCOMMAND && acmd_d->at_groups[pcg->get_idx(sd->group)] > 0) ||
-				(type == COMMAND_CHARCOMMAND && acmd_d->char_groups[pcg->get_idx(sd->group)] > 0));
+		if (!((type == COMMAND_ATCOMMAND && acmd_d->at_groups[pcg->get_idx(sd->group)] > 0) ||
+				(type == COMMAND_CHARCOMMAND && acmd_d->char_groups[pcg->get_idx(sd->group)] > 0)))
+			return false;
+		cmd_func = acmd_d->func;
 	} else if ((bcmd_d = atcommand->get_bind_byname(atcommand->check_alias(command))) != NULL) {
-		return ((type == COMMAND_ATCOMMAND && bcmd_d->at_groups[pcg->get_idx(sd->group)] > 0) ||
-				(type == COMMAND_CHARCOMMAND && bcmd_d->char_groups[pcg->get_idx(sd->group)] > 0));
+		if (!((type == COMMAND_ATCOMMAND && bcmd_d->at_groups[pcg->get_idx(sd->group)] > 0) ||
+				(type == COMMAND_CHARCOMMAND && bcmd_d->char_groups[pcg->get_idx(sd->group)] > 0)))
+			return false;
+		// For bound commands, get the original command's func
+		AtCommandInfo *orig_acmd_d = atcommand->get_info_byname(bcmd_d->command);
+		if (orig_acmd_d != NULL)
+			cmd_func = orig_acmd_d->func;
+	} else {
+		return false;
 	}
 
-	return false;
+	// Check if command is disabled in the current map zone
+	if (cmd_func != NULL && map->list[sd->bl.m].zone != NULL) {
+		int i;
+		for (i = 0; i < map->list[sd->bl.m].zone->disabled_commands_count; i++) {
+			if (cmd_func == map->list[sd->bl.m].zone->disabled_commands[i]->cmd) {
+				if (pc_get_group_level(sd) < map->list[sd->bl.m].zone->disabled_commands[i]->group_lv) {
+					return false; // Command is disabled for this player's group level
+				}
+				break; // Found the command, no need to check further
+			}
+		}
+	}
+
+	return true;
 }
 
 static bool atcommand_hp_add(char *name, AtCommandFunc func)
