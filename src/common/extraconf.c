@@ -141,10 +141,10 @@ static bool extraconf_read_vars(const char *filename, bool imported, struct conf
 		}
 
 		if (type == CONFIG_TYPE_STRING) {
-			if (!extraconf->set_var_str(&conf_vars[i], valStr))
+			if (!extraconf->set_var_str((struct config_data *)&conf_vars[i], valStr))
 				retval = false;
 		} else {
-			if (!extraconf->set_var(&conf_vars[i], val))
+			if (!extraconf->set_var((struct config_data *)&conf_vars[i], val))
 				retval = false;
 		}
 		i++;

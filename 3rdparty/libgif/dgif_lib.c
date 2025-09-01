@@ -389,7 +389,7 @@ DGifGetImageHeader(GifFileType *GifFile)
     }
     /* Does this image have local color map? */
     if (Buf[0] & 0x80) {
-        unsigned int i;
+        int i;
 
         GifFile->Image.ColorMap = GifMakeMapObject(1 << BitsPerPixel, NULL);
         if (GifFile->Image.ColorMap == NULL) {
