@@ -7,7 +7,7 @@ env:
   MYSQL_USER: ${{ secrets.MYSQL_USER || 'ragnarok' }}
   MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD || 'ragnarok' }}
   MYSQL_ALLOW_EMPTY_PASSWORD: ${{ secrets.MYSQL_ALLOW_EMPTY_PASSWORD || 'yes' }}
-  DEBIAN_COMMON_PACKAGES: make zlib1g-dev libpcre2-dev git python3 libzstd-dev
+  DEBIAN_COMMON_PACKAGES: make zlib1g-dev libpcre3-dev git python3 libzstd-dev
 
 jobs:
   build:
@@ -53,7 +53,7 @@ jobs:
           --health-timeout=2s
           --health-retries=3
     env:
-      INSTALL_PACKAGES: ${{ matrix.CC }} default-mysql-client libmariadb-dev
+      INSTALL_PACKAGES: ${{ matrix.CC }} default-mysql-client libmariadb-dev-compat
       SQLHOST: mariadb
       CC: ${{ matrix.CC }}
       CONFIGURE_FLAGS: CC=${{ matrix.CC }} --enable-debug --enable-Werror --enable-buildbot ${{ matrix.RENEWAL }} ${{ matrix.HTTPLIB }} ${{ matrix.CLIENT_TYPE }} ${{ matrix.SANITIZER }} ${{ matrix.PACKET_VERSION }} --enable-epoll
