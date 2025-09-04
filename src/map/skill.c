@@ -3828,14 +3828,15 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 	}
 
 	//Delayed damage must be dealt after the knockback (it needs to know actual position of target)
-	if (dmg.amotion){
-		if( shadow_flag ){
-			if( !status->isdead(bl) && additional_effects )
-				skill->additional_effect(src,bl,skill_id,skill_lv,dmg.flag,dmg.dmg_lv,tick);
-			if( dmg.flag > ATK_BLOCK )
-				skill->counter_additional_effect(src,bl,skill_id,skill_lv,dmg.flag,tick);
-		}else
-			battle->delay_damage(tick, dmg.amotion,src,bl,dmg.flag,skill_id,skill_lv,damage,dmg.dmg_lv,dmg.dmotion, additional_effects);
+	if (dmg.amotion != 0) {
+		if (shadow_flag == true)
+			if (status->isdead(bl) == 0 && additional_effects == true) {
+				skill->additional_effect(src, bl, skill_id, skill_lv, dmg.flag, dmg.dmg_lv, tick);
+			if (dmg.dmg_lv > ATK_BLOCK)
+				skill->counter_additional_effect(src, bl, skill_id, skill_lv, dmg.flag, tick);
+		} else {
+			battle->delay_damage(tick, dmg.amotion, src, bl, dmg.flag, skill_id, skill_lv, damage, dmg.dmg_lv, dmg.dmotion, additional_effects);
+		}
 	}
 
 	if (sc != NULL && skill_id != PA_PRESSURE && skill_id != SJ_NOVAEXPLOSING && skill_id != SP_SOULEXPLOSION) {
