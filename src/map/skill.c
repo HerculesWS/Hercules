@@ -3805,6 +3805,8 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 					skill->addtimerskill(src, tick + status_get_amotion(src), bl->id, 0, 0, LG_OVERBRAND_PLUSATK, skill_lv, BF_WEAPON, flag|SD_ANIMATION);
 				break;
 			case SR_KNUCKLEARROW:
+				dir = map->calc_dir(bl, src->x, src->y); // Get direction from target to source
+				unit->set_dir(bl, unit_get_opposite_dir(dir));
 				if( skill->blown(dsrc,bl,dmg.blewcount,dir,0) && !(flag&4) ) {
 					short dir_x, dir_y;
 					if (Assert_chk(dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX)) {
