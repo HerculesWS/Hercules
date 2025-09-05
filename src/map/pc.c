@@ -911,6 +911,15 @@ static int pc_setequipindex(struct map_session_data *sd)
 				}
 			}
 
+			// Handle shadow weapon - prioritize it over regular weapon for weapon type calculation
+			if (sd->status.inventory[i].equip & EQP_SHADOW_WEAPON) {
+				if (sd->inventory_data[i]) {
+					// Shadow weapon takes precedence for weapon type calculation
+					sd->weapontype1 = sd->inventory_data[i]->subtype;
+					sd->status.look.weapon = sd->inventory_data[i]->view_sprite;
+				}
+			}
+
 			if (sd->status.inventory[i].equip & EQP_HAND_L) {
 				if (sd->inventory_data[i] != NULL) {
 					if (sd->inventory_data[i]->type == IT_WEAPON)
@@ -10070,8 +10079,8 @@ static int pc_load_combo(struct map_session_data *sd)
 static void pc_equipitem_pos(struct map_session_data *sd, struct item_data *id, int n, int pos)
 {
 	nullpo_retv(sd);
-	if ((!map_no_view(sd->bl.m,EQP_SHADOW_WEAPON) && pos & EQP_SHADOW_WEAPON) ||
-		 (pos & EQP_HAND_R)) {
+	// Handle shadow weapon first - it takes precedence
+	if (!map_no_view(sd->bl.m,EQP_SHADOW_WEAPON) && pos & EQP_SHADOW_WEAPON) {
 		if (id != NULL) {
 			sd->weapontype1 = id->subtype;
 			sd->status.look.weapon = id->view_sprite;
@@ -10082,8 +10091,23 @@ static void pc_equipitem_pos(struct map_session_data *sd, struct item_data *id, 
 		pc->calcweapontype(sd);
 		clif->changelook(&sd->bl, LOOK_WEAPON, sd->status.look.weapon);
 	}
-	if ((!map_no_view(sd->bl.m,EQP_SHADOW_SHIELD) && pos & EQP_SHADOW_SHIELD) ||
-		 (pos & EQP_HAND_L)) {
+	// Handle regular weapon only if no shadow weapon is equipped
+	else if (pos & EQP_HAND_R) {
+		// Only set weapon type if no shadow weapon is equipped
+		if (sd->equip_index[EQI_SHADOW_WEAPON] < 0) {
+			if (id != NULL) {
+				sd->weapontype1 = id->subtype;
+				sd->status.look.weapon = id->view_sprite;
+			} else {
+				sd->weapontype1 = W_FIST;
+				sd->status.look.weapon = 0;
+			}
+			pc->calcweapontype(sd);
+			clif->changelook(&sd->bl, LOOK_WEAPON, sd->status.look.weapon);
+		}
+	}
+	// Handle shadow shield first - it takes precedence
+	if (!map_no_view(sd->bl.m,EQP_SHADOW_SHIELD) && pos & EQP_SHADOW_SHIELD) {
 		if (id != NULL) {
 			if (id->type == IT_WEAPON) {
 				sd->has_shield = false;
@@ -10101,6 +10125,29 @@ static void pc_equipitem_pos(struct map_session_data *sd, struct item_data *id, 
 		}
 		pc->calcweapontype(sd);
 		clif->changelook(&sd->bl, LOOK_SHIELD, sd->status.look.shield);
+	}
+	// Handle regular left hand only if no shadow shield is equipped
+	else if (pos & EQP_HAND_L) {
+		// Only set shield/weapon type if no shadow shield is equipped
+		if (sd->equip_index[EQI_SHADOW_SHIELD] < 0) {
+			if (id != NULL) {
+				if (id->type == IT_WEAPON) {
+					sd->has_shield = false;
+					sd->status.look.shield = 0;
+					sd->weapontype2 = id->subtype;
+				} else if (id->type == IT_ARMOR) {
+					sd->has_shield = true;
+					sd->status.look.shield = id->view_sprite;
+					sd->weapontype2 = W_FIST;
+				}
+			} else {
+				sd->has_shield = false;
+				sd->status.look.shield = 0;
+				sd->weapontype2 = W_FIST;
+			}
+			pc->calcweapontype(sd);
+			clif->changelook(&sd->bl, LOOK_SHIELD, sd->status.look.shield);
+		}
 	}
 	//Added check to prevent sending the same look on multiple slots ->
 	//causes client to redraw item on top of itself. (suggested by Lupus)

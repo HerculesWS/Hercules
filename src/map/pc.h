@@ -771,12 +771,13 @@ END_ZEROED_BLOCK;
 #define pc_stop_walking(sd, type) (unit->stop_walking(&(sd)->bl, (type)))
 #define pc_stop_attack(sd)        (unit->stop_attack(&(sd)->bl))
 
-//Weapon check considering dual wielding.
+//Weapon check considering dual wielding and shadow equipment.
 #define pc_check_weapontype(sd, type) ( \
 	(type) & ( \
 		(sd)->weapontype < MAX_SINGLE_WEAPON_TYPE ? \
 			1 << (sd)->weapontype : \
-			(1 << (sd)->weapontype1) | (1 << (sd)->weapontype2) \
+			(1 << (sd)->weapontype1) | (1 << (sd)->weapontype2) | \
+			((sd)->equip_index[EQI_SHADOW_WEAPON] >= 0 ? 1 << (sd)->inventory_data[(sd)->equip_index[EQI_SHADOW_WEAPON]]->subtype : 0) \
 		) \
 	)
 
