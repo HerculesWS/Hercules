@@ -380,7 +380,7 @@ static void sysinfo_osversion_retrieve(void)
 	osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
 
 	if (sysinfo->p->osversion != NULL) {
-		aFree(sysinfo->p->osversion);
+		aFree((char*)sysinfo->p->osversion);
 		sysinfo->p->osversion = NULL;
 	}
 
@@ -641,7 +641,7 @@ static void sysinfo_cpu_retrieve(void)
 	StrBuf->Init(&buf);
 
 	if (sysinfo->p->cpu != NULL) {
-		aFree(sysinfo->p->cpu);
+		aFree((char*)sysinfo->p->cpu);
 		sysinfo->p->cpu = NULL;
 	}
 
@@ -676,7 +676,7 @@ static void sysinfo_arch_retrieve(void)
 	ZeroMemory(&si, sizeof(SYSTEM_INFO));
 
 	if (sysinfo->p->arch != NULL) {
-		aFree(sysinfo->p->arch);
+		aFree((char*)sysinfo->p->arch);
 		sysinfo->p->arch = NULL;
 	}
 
@@ -702,7 +702,7 @@ static void sysinfo_arch_retrieve(void)
 static void sysinfo_vcsrevision_src_retrieve(void)
 {
 	if (sysinfo->p->vcsrevision_src != NULL) {
-		aFree(sysinfo->p->vcsrevision_src);
+		aFree((char*)sysinfo->p->vcsrevision_src);
 		sysinfo->p->vcsrevision_src = NULL;
 	}
 	// Try Git, then SVN
@@ -1036,13 +1036,13 @@ static void sysinfo_final(void)
 #ifdef WIN32
 	// Only need to be free'd in win32, they're #defined elsewhere
 	if (sysinfo->p->osversion)
-		aFree(sysinfo->p->osversion);
+		aFree((char*)sysinfo->p->osversion);
 	if (sysinfo->p->cpu)
-		aFree(sysinfo->p->cpu);
+		aFree((char*)sysinfo->p->cpu);
 	if (sysinfo->p->arch)
-		aFree(sysinfo->p->arch);
+		aFree((char*)sysinfo->p->arch);
 	if (sysinfo->p->vcsrevision_src)
-		aFree(sysinfo->p->vcsrevision_src);
+		aFree((char*)sysinfo->p->vcsrevision_src);
 #endif
 	sysinfo->p->platform = NULL;
 	sysinfo->p->osversion = NULL;

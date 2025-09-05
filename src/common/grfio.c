@@ -642,8 +642,8 @@ static int grfio_entryread(const char *grfname, int gentry)
 	if (grf_version == 0x01) {
 		// ****** Grf version 01xx ******
 		int64 list_size = grf_size - htell(fp);
-		grf_filelist = aMalloc(list_size);
-		if (fread(grf_filelist,1,list_size,fp) != (size_t)list_size) {
+		grf_filelist = aMalloc((size_t)list_size);
+		if (fread(grf_filelist,1,(size_t)list_size,fp) != (size_t)list_size) {
 			ShowError("Couldn't read all grf_filelist element of %s \n", grfname);
 			aFree(grf_filelist);
 			fclose(fp);

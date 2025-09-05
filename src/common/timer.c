@@ -109,7 +109,7 @@ static int timer_add_func_list(TimerFunc func, char *name)
 }
 
 /// Returns the name of the timer function.
-static char *search_timer_func_list(TimerFunc func)
+static const char *search_timer_func_list(TimerFunc func)
 {
 	struct timer_func_list* tfl;
 
@@ -549,7 +549,7 @@ static void timer_final(void)
 
 	for( tfl=tfl_root; tfl != NULL; tfl = next ) {
 		next = tfl->next; // copy next pointer
-		aFree(tfl->name); // free structures
+		aFree((char*)tfl->name); // free structures
 		aFree(tfl);
 	}
 

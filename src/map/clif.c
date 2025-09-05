@@ -2310,7 +2310,7 @@ static void clif_scriptmes(struct map_session_data *sd, int npcid, const char *m
 	struct PACKET_ZC_SAY_DIALOG *p = WFIFOP(fd, 0);
 
 	p->PacketType = HEADER_ZC_SAY_DIALOG;
-	p->PacketLength = len;
+	p->PacketLength = (int16)len;
 	p->NpcID = npcid;
 #ifdef SCRIPT_MES_STRIP_LINEBREAK
 	char *stripmes = aStrdup(mes);
@@ -2350,7 +2350,7 @@ static void clif_scriptmes2(struct map_session_data *sd, int npcid, const char *
 	struct PACKET_ZC_SAY_DIALOG2 *p = WFIFOP(fd, 0);
 
 	p->PacketType = HEADER_ZC_SAY_DIALOG2;
-	p->PacketLength = len;
+	p->PacketLength = (int16)len;
 	p->NpcID = npcid;
 #if PACKETVER_MAIN_NUM >= 20220504
 	p->type = type;
@@ -13233,7 +13233,7 @@ static void clif_parse_PutItemToCart(int fd, struct map_session_data *sd)
 	if (!pc_iscarton(sd))
 		return;
 
-	struct PACKET_CZ_MOVE_ITEM_FROM_BODY_TO_CART *p = RFIFOP(fd, 0);
+	const struct PACKET_CZ_MOVE_ITEM_FROM_BODY_TO_CART *p = RFIFOP(fd, 0);
 	const int index = p->index - 2;
 	const int flag = pc->putitemtocart(sd, index, p->count);
 

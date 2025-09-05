@@ -438,7 +438,7 @@ static bool httpparser_parse(int fd)
 		int idx = httpparser->search_request_line_end(sd);
 		if (idx >= 0) {
 			// in headers found separator and need parse them
-			Assert_retr(false, sd->request_temp_size >= idx + 2);
+			Assert_retr(false, sd->request_temp_size >= (size_t)(idx + 2));
 			const bool res = httpparser->parse_real(fd, sd, sd->request_temp, idx + 2);
 			if (!res)
 				return false;

@@ -1285,7 +1285,7 @@ static void intif_parse_GuildCreated(int fd)
 // ACK guild infos
 static void intif_parse_GuildInfoEmblem(int fd)
 {
-	struct PACKET_CHARMAP_GUILD_INFO_EMBLEM *p = RFIFOP(fd, 0);
+	const struct PACKET_CHARMAP_GUILD_INFO_EMBLEM *p = RFIFOP(fd, 0);
 
 	RFIFO_CHUNKED_INIT(p, p->packetLength - sizeof(struct PACKET_CHARMAP_GUILD_INFO_EMBLEM), intif->emblem_tmp);
 
@@ -1308,12 +1308,12 @@ static void intif_parse_GuildInfoEmblem(int fd)
 static void intif_parse_GuildInfo(int fd)
 {
 	if (RFIFOW(fd, 2) == sizeof(struct PACKET_CHARMAP_GUILD_INFO_EMPTY)) {
-		struct PACKET_CHARMAP_GUILD_INFO_EMPTY *empty = RFIFOP(fd, 0);
+		const struct PACKET_CHARMAP_GUILD_INFO_EMPTY *empty = RFIFOP(fd, 0);
 		ShowWarning("intif: guild noinfo %d\n", empty->guild_id);
 		guild->recv_noinfo(empty->guild_id);
 		return;
 	}
-	struct PACKET_CHARMAP_GUILD_INFO *p = RFIFOP(fd, 0);
+	const struct PACKET_CHARMAP_GUILD_INFO *p = RFIFOP(fd, 0);
 	if (p->packetLength != sizeof(struct PACKET_CHARMAP_GUILD_INFO))
 		ShowError("intif: guild info: data size mismatch - Gid: %d recv size: %d Expected size: %"PRIuS"\n",
 		          p->g.guild_id, p->packetLength, sizeof(struct PACKET_CHARMAP_GUILD_INFO));
@@ -1456,7 +1456,7 @@ static void intif_parse_GuildNotice(int fd)
 // ACK change of guild emblem
 static void intif_parse_GuildEmblem(int fd)
 {
-	struct PACKET_CHARMAP_GUILD_EMBLEM *p = RFIFOP(fd, 0);
+	const struct PACKET_CHARMAP_GUILD_EMBLEM *p = RFIFOP(fd, 0);
 
 	// reset tmp emblem fields always for avoid reuse emblem buffer for other things [4144]
 	intif->emblem_tmp_done = false;
