@@ -2611,7 +2611,8 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					RE_LVL_DMOD(100);
 					break;
 				case SR_SKYNETBLOW:
-					if( sc && sc->data[SC_COMBOATTACK] && sc->data[SC_COMBOATTACK]->val1 == SR_DRAGONCOMBO )//ATK [{(Skill Level x 100) + (Caster AGI) + 150} x Caster Base Level / 100] %
+					if ((sc != NULL && sc->data[SC_COMBOATTACK] != NULL && sc->data[SC_COMBOATTACK]->val1 == SR_DRAGONCOMBO) || ((flag & SD_COMBO) != 0)) 
+						//ATK [{(Skill Level x 100) + (Caster AGI) + 150} x Caster Base Level / 100] %
 						skillratio += 100 * skill_lv + status_get_agi(src) + 50;
 					else //ATK [{(Skill Level x 80) + (Caster AGI)} x Caster Base Level / 100] %
 						skillratio += -100 + 80 * skill_lv + status_get_agi(src);
@@ -2629,21 +2630,21 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 						skillratio += status_get_int(src) * 2;
 					}
 					break;
-				case SR_FALLENEMPIRE:// ATK [(Skill Level x 150 + 100) x Caster Base Level / 150] %
+				case SR_FALLENEMPIRE: // ATK [(Skill Level x 150 + 100) x Caster Base Level / 150] %
 					skillratio += 150 *skill_lv;
 					RE_LVL_DMOD(150);
 					break;
-				case SR_TIGERCANNON:// ATK [((Caster consumed HP + SP) / 4) x Caster Base Level / 100] %
-					{
-						int hp = status_get_max_hp(src) * (10 + 2 * skill_lv) / 100,
-							sp = status_get_max_sp(src) * (6 + skill_lv) / 100;
-						if( sc && sc->data[SC_COMBOATTACK] && sc->data[SC_COMBOATTACK]->val1 == SR_FALLENEMPIRE ) // ATK [((Caster consumed HP + SP) / 2) x Caster Base Level / 100] %
-							skillratio += -100 + (hp+sp) / 2;
-						else
-							skillratio += -100 + (hp+sp) / 4;
-						RE_LVL_DMOD(100);
-					}
-						break;
+				case SR_TIGERCANNON: 
+				{
+					int hp = status_get_max_hp(src) * (10 + 2 * skill_lv) / 100,
+						sp = status_get_max_sp(src) * (6 + skill_lv) / 100;
+					if ((sc != NULL && sc->data[SC_COMBOATTACK] != NULL && sc->data[SC_COMBOATTACK]->val1 == SR_FALLENEMPIRE) || ((flag & SD_COMBO) != 0))
+						skillratio += -100 + (hp + sp) / 2; // ATK [((Caster consumed HP + SP) / 2) x Caster Base Level / 100] %
+					else
+						skillratio += -100 + (hp + sp) / 4; // ATK [((Caster consumed HP + SP) / 4) x Caster Base Level / 100] %
+					RE_LVL_DMOD(100);
+				}
+					break;
 				case SR_RAMPAGEBLASTER:
 					skillratio += 20 * skill_lv * (sd?sd->spiritball_old:5) - 100;
 					if( sc && sc->data[SC_EXPLOSIONSPIRITS] ) {
