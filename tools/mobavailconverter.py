@@ -23,6 +23,11 @@
 
 import re
 import csv
+import sys
+
+# Add logging to stderr
+def log(message):
+	print(message, file=sys.stderr)
 
 f = open('../db/re/mob_db.conf')
 mob_db = f.read()
@@ -31,12 +36,18 @@ with open('../db/mob_avail.txt') as dbfile:
 	mob_avail = csv.reader(dbfile, delimiter=',')
 
 	for mob in mob_avail:
-		if len(mob) == 0 or mob[0].startswith('//'):
+		if len(mob) == 0:
 			continue
 
+		# Strip comments from each field
 		mob = [re.sub(r'//.*', '', i).strip() for i in mob]
 
+		# Skip if first field is empty or starts with comment
+		if not mob[0] or mob[0].startswith('//'):
+			continue
+
 		mob_id = int(mob[0])
+		log(f"Processing mob ID: {mob_id}")
 		sprite_id = int(mob[1])
 		weapon = 0
 		shield = 0
@@ -81,8 +92,10 @@ with open('../db/mob_avail.txt') as dbfile:
 			s += '\t\tHairColorId: {}\n'.format(hair_color)
 		if cloth_color != 0:
 			s += '\t\tBodyColorId: {}\n'.format(cloth_color)
-		if gender != 0:
-			s += '\t\tGender: SEX_MALE\n'
+		if gender == 0:
+			s += '\t\tGender: "SEX_FEMALE"\n'
+		elif gender == 1:
+			s += '\t\tGender: "SEX_MALE"\n'
 		if option != 0:
 			s += '\t\tOptions: {}\n'.format(option)
 		s += '\t}'
@@ -91,4 +104,5 @@ with open('../db/mob_avail.txt') as dbfile:
 			r'(\tId: ' + str(mob_id) + r'\n([\S\s]*?)(?=},))},',
 			r'\1' + str(s) + r'\n},',
 			mob_db)
-	print(mob_db)
+		log(f"Finished processing mob ID: {mob_id}")
+print(mob_db)
