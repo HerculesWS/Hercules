@@ -5673,11 +5673,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 				&& skill_id != CR_GRANDCROSS
 				&& skill_id != NPC_GRANDDARKNESS
 				&& skill_id != PA_SHIELDCHAIN
-				&& skill_id != KO_HAPPOKUNAI
-#ifndef RENEWAL
-				&& !flag.cri
-#endif
-			) {
+				&& skill_id != KO_HAPPOKUNAI) {
 				//Elemental/Racial adjustments
 				if (sd->right_weapon.def_ratio_atk_ele & (1<<tstatus->def_ele)
 				 || sd->right_weapon.def_ratio_atk_race & map->race_id2mask(tstatus->race)
