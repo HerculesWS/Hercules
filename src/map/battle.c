@@ -7346,7 +7346,7 @@ static int battle_check_target(struct block_list *src, struct block_list *target
 		if (flag & (BCT_GUILD | BCT_ENEMY)) {
 			int s_guild = status->get_guild_id(s_bl);
 			int t_guild = status->get_guild_id(t_bl);
-			if (!(map->list[m].flag.pvp && map->list[m].flag.pvp_noguild)
+			if ( ((!(map->list[m].flag.pvp && map->list[m].flag.pvp_noguild)) || (flag & BCT_SAMEGUILD))
 			 && s_guild && t_guild
 			 && (s_guild == t_guild || (!(flag & BCT_SAMEGUILD) && guild->isallied(s_guild, t_guild)))
 			 && (!map->list[m].flag.battleground || sbg_id == tbg_id)
