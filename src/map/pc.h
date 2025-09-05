@@ -1181,6 +1181,8 @@ END_ZEROED_BLOCK; /* End */
 	bool (*read_attr_fix_db) (void);
 	int (*read_attr_fix_db_entry) (struct config_setting_t *def_attr, enum elements def_ele, const char *def_ele_name);
 	int (*read_attr_fix_db_level) (struct config_setting_t *def_lv, enum elements def_ele, int lv, const char *def_ele_name);
+	bool (*read_level_penalty_db_sub) (const struct config_setting_t *it, int n, const char *source);
+	void (*read_level_penalty_db) (void);
 	int (*map_day_timer) (int tid, int64 tick, int id, intptr_t data); // by [yor]
 	int (*map_night_timer) (int tid, int64 tick, int id, intptr_t data); // by [yor]
 	// Rental System
@@ -1224,7 +1226,6 @@ END_ZEROED_BLOCK; /* End */
 	int (*eventtimer) (int tid, int64 tick, int id, intptr_t data);
 	int (*daynight_timer_sub) (struct map_session_data *sd,va_list ap);
 	int (*charm_timer) (int tid, int64 tick, int id, intptr_t data);
-	bool (*readdb_levelpenalty) (char* fields[], int columns, int current);
 	int (*autosave) (int tid, int64 tick, int id, intptr_t data);
 	int (*follow_timer) (int tid, int64 tick, int id, intptr_t data);
 	void (*read_skill_tree) (void);
