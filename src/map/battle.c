@@ -3580,6 +3580,16 @@ static int64 battle_calc_damage(struct block_list *src, struct block_list *bl, s
 			damage = div_;
 	}
 
+	// Basilica physical damage bonus against shadow/undead
+	if (damage > 0) {
+		struct status_change *s_sc = status->get_sc(src);
+		struct status_data *tstatus = status->get_status_data(bl);
+		if (s_sc != NULL && s_sc->data[SC_BASILICA] != NULL && (tstatus->race == RC_DEMON || tstatus->race == RC_UNDEAD)) {
+			int skill_lv = s_sc->data[SC_BASILICA]->val1;
+			damage += damage * 5 * skill_lv / 100;
+		}
+	}
+
 	if( bl->type == BL_MOB && !status->isdead(bl) && src != bl) {
 		struct mob_data *md = BL_UCAST(BL_MOB, bl);
 		if (damage > 0)
@@ -4117,7 +4127,13 @@ static struct Damage battle_calc_magic_attack(struct block_list *src, struct blo
 
 		if (!(nk&NK_NO_ELEFIX))
 			ad.damage=battle->attr_fix(src, target, ad.damage, s_ele, tstatus->def_ele, tstatus->ele_lv);
-
+	
+		// Basilica holy magic damage bonus
+		if (sc != NULL && sc->data[SC_BASILICA] != NULL && s_ele == ELE_HOLY) {
+			int skill_lv = sc->data[SC_BASILICA]->val1;
+			ad.damage += ad.damage * 3 * skill_lv / 100;
+		}
+	
 		if( skill_id == CR_GRANDCROSS || skill_id == NPC_GRANDDARKNESS )
 		{ //Apply the physical part of the skill's damage. [Skotlex]
 			struct Damage wd = battle->calc_weapon_attack(src,target,skill_id,skill_lv,mflag);

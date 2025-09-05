@@ -1225,6 +1225,8 @@ static int skill_calc_heal(struct block_list *src, struct block_list *target, ui
 			hp += hp / 10;
 		if (sc->data[SC_VITALITYACTIVATION])
 			hp = hp * 150 / 100;
+		if (sc->data[SC_ASSUMPTIO] != NULL)
+			hp += hp * 2 * sc->data[SC_ASSUMPTIO]->val1 / 100;
 		if (sc->data[SC_NO_RECOVER_STATE])
 			hp = 0;
 	}

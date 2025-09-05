@@ -4998,6 +4998,8 @@ static defType status_calc_def(struct block_list *bl, struct status_change *sc, 
 		def += sc->data[SC_STONEHARDSKIN]->val1;
 	if (sc->data[SC_DRUMBATTLE])
 		def += sc->data[SC_DRUMBATTLE]->val3;
+	if (sc->data[SC_ASSUMPTIO] != NULL)
+		def += 50 * sc->data[SC_ASSUMPTIO]->val1;
 
 	if (sc->data[SC_STONESKIN])
 		def += sc->data[SC_STONESKIN]->val2;
@@ -10402,10 +10404,6 @@ static bool status_end_sc_before_start(struct block_list *bl, struct status_data
 		// Cancels Normal Overthrust. [Skotlex]
 		status_change_end(bl, SC_OVERTHRUST, INVALID_TIMER);
 		break;
-	case SC_KYRIE:
-		// Cancels Assumptio
-		status_change_end(bl, SC_ASSUMPTIO, INVALID_TIMER);
-		break;
 	case SC_MAGNIFICAT:
 		// Cancels Offertorium
 		status_change_end(bl, SC_OFFERTORIUM, INVALID_TIMER);
@@ -10447,7 +10445,6 @@ static bool status_end_sc_before_start(struct block_list *bl, struct status_data
 
 		break;
 	case SC_ASSUMPTIO:
-		status_change_end(bl, SC_KYRIE, INVALID_TIMER);
 		status_change_end(bl, SC_KAITE, INVALID_TIMER);
 		break;
 	case SC_KAITE:
