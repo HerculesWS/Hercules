@@ -11256,6 +11256,7 @@ static void pc_del_charm(struct map_session_data *sd, int count, enum spirit_cha
 	clif->spiritcharm(sd);
 }
 
+
 /**
  * Renewal EXP/Itemdrop rate modifier base on level penalty.
  *
@@ -11270,20 +11271,23 @@ static int pc_level_penalty_mod(int diff, unsigned char race, uint32 mode, int t
 #if defined(RENEWAL_DROP) || defined(RENEWAL_EXP)
 	int rate = 100, i;
 
-	if( diff < 0 )
-		diff = MAX_LEVEL + ( ~diff + 1 );
+	if (diff < 0)
+		diff = MAX_LEVEL + (~diff + 1);
 
-	for (i = RC_FORMLESS; i < RC_MAX; i++) {
-		int tmp;
+	 for (i = RC_FORMLESS; i < RC_MAX; i++) {
+ 		int tmp;
 
-		if (race != i) {
-			if (mode&MD_BOSS && i < RC_BOSS)
-				i = RC_BOSS;
-			else if (i <= RC_BOSS)
-				continue;
-		}
+		// Check the penalty for the matching race or appropriate fallback
+ 		if (race != i) {
+ 			// For boss monsters, use boss penalty if current i is below boss
+ 			if ((mode & MD_BOSS) != 0 && i < RC_BOSS) {
+ 				i = RC_BOSS;  // Jump to boss race for checking
+ 			} else if (i <= RC_BOSS) {
+ 				continue;  // Skip non-matching races below or at boss
+ 			}
+ 		}
 
-		if ((tmp=pc->level_penalty[type][i][diff]) > 0) {
+		if ((tmp = pc->level_penalty[type][i][diff]) > 0) {
 			rate = tmp;
 			break;
 		}
@@ -11291,7 +11295,7 @@ static int pc_level_penalty_mod(int diff, unsigned char race, uint32 mode, int t
 
 	return rate;
 #else
-	return 100;
+	 return 100;
 #endif
 }
 
@@ -11524,34 +11528,101 @@ static void pc_clear_skill_tree(void)
 	memset(pc->skill_tree, 0, sizeof(pc->skill_tree));
 }
 
-static bool pc_readdb_levelpenalty(char *fields[], int columns, int current)
+/**
+ * Parses a single level penalty entry from libconfig format
+ * @param it The config setting entry to parse
+ * @param n Entry number for error reporting
+ * @param source Source file path for error reporting
+ * @return true on success, false on failure
+ */
+static bool pc_read_level_penalty_db_sub(const struct config_setting_t *it, int n, const char *source)
 {
 #if defined(RENEWAL_DROP) || defined(RENEWAL_EXP)
-	int type, race, diff;
+	int type, race, diff, rate;
 
-	nullpo_retr(false, fields);
-	type = atoi(fields[0]);
-	race = atoi(fields[1]);
-	diff = atoi(fields[2]);
+	const char *type_str = NULL;
+	if (libconfig->setting_lookup_string(it, "type", &type_str)) {
+		// Handle type constants
+		if (strcmp(type_str, "EXP_PENALTY_RATE") == 0)
+			type = 1;
+		else if (strcmp(type_str, "ITEM_DROP_PENALTY_RATE") == 0)
+			type = 2;
+		else {
+			ShowError("%s: Invalid type constant '%s' for entry %d in '%s', skipping...\n", __func__, type_str, n, source);
+			return false;
+		}
+	} else if (!libconfig->setting_lookup_int(it, "type", &type)) {
+		ShowError("%s: Invalid or missing type for entry %d in '%s', skipping...\n", __func__, n, source);
+		return false;
+	}
 
-	if( type != 1 && type != 2 ){
-		ShowWarning("pc_readdb_levelpenalty: Invalid type %d specified.\n", type);
+	if (!libconfig->setting_lookup_int(it, "race", &race)) {
+		ShowError("%s: Invalid or missing race for entry %d in '%s', skipping...\n", __func__, n, source);
+		return false;
+	}
+
+	if (!libconfig->setting_lookup_int(it, "diff", &diff)) {
+		ShowError("%s: Invalid or missing diff for entry %d in '%s', skipping...\n", __func__, n, source);
+		return false;
+	}
+
+	if (!libconfig->setting_lookup_int(it, "rate", &rate)) {
+		ShowError("%s: Invalid or missing rate for entry %d in '%s', skipping...\n", __func__, n, source);
+		return false;
+	}
+
+	if (type != 1 && type != 2) {
+		ShowWarning("%s: Invalid type %d specified for entry %d in '%s'.\n", __func__, type, n, source);
 		return false;
 	}
 
 	if (race < RC_FORMLESS || race > RC_MAX) {
-		ShowWarning("pc_readdb_levelpenalty: Invalid race %d specified.\n", race);
+		ShowWarning("%s: Invalid race %d specified for entry %d in '%s'.\n", __func__, race, n, source);
 		return false;
 	}
 
 	diff = min(diff, MAX_LEVEL);
 
-	if( diff < 0 )
-		diff = min(MAX_LEVEL + ( ~(diff) + 1 ), MAX_LEVEL*2);
+	if (diff < 0)
+		diff = min(MAX_LEVEL + (~(diff) + 1), MAX_LEVEL * 2);
 
-	pc->level_penalty[type][race][diff] = atoi(fields[3]);
+	pc->level_penalty[type][race][diff] = rate;
 #endif
 	return true;
+}
+
+/**
+ * Reads the level penalty database from configuration file.
+ */
+static void pc_read_level_penalty_db(void)
+{
+#if defined(RENEWAL_DROP) || defined(RENEWAL_EXP)
+	struct config_t level_penalty_conf;
+	const char *filepath = "db/re/level_penalty.conf";
+
+	if (libconfig->load_file(&level_penalty_conf, filepath) == CONFIG_FALSE) {
+		ShowError("%s: can't read %s\n", __func__, filepath);
+		return;
+	}
+
+	struct config_setting_t *level_penalty_db = NULL;
+	if ((level_penalty_db = libconfig->setting_get_member(level_penalty_conf.root, "level_penalty_db")) == NULL) {
+		ShowError("%s: can't read level_penalty_db\n", __func__);
+		libconfig->destroy(&level_penalty_conf);
+		return;
+	}
+
+	int i = 0, count = 0;
+	struct config_setting_t *it = NULL;
+
+	while ((it = libconfig->setting_get_elem(level_penalty_db, i++)) != NULL) {
+		if (pc->read_level_penalty_db_sub(it, i, filepath))
+			++count;
+	}
+
+	libconfig->destroy(&level_penalty_conf);
+	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+#endif
 }
 
 static bool pc_read_exp_db_sub_class(struct config_setting_t *t, bool base)
@@ -11800,6 +11871,7 @@ static bool pc_read_attr_fix_db(void)
  * exp_group_db.conf - required experience values
  * skill_tree.txt    - skill tree for every class
  * attr_fix.conf     - elemental adjustment table
+ * level_penalty.conf - exp/itemdrop penalty table (Renewal only)
  *------------------------------------------*/
 static int pc_readdb(void)
 {
@@ -11813,20 +11885,7 @@ static int pc_readdb(void)
 	pc->clear_skill_tree();
 	pc->read_skill_tree();
 #if defined(RENEWAL_DROP) || defined(RENEWAL_EXP)
-	sv->readdb(map->db_path, "re/level_penalty.txt", ',', 4, 4, -1, pc->readdb_levelpenalty);
-	for (int k = 1; k < 3; k++) { // fill in the blanks
-		for (int j = RC_FORMLESS; j < RC_MAX; j++) {
-			int tmp = 0;
-			for (int i = 0; i < MAX_LEVEL * 2; i++) {
-				if( i == MAX_LEVEL+1 )
-					tmp = pc->level_penalty[k][j][0];// reset
-				if( pc->level_penalty[k][j][i] > 0 )
-					tmp = pc->level_penalty[k][j][i];
-				else
-					pc->level_penalty[k][j][i] = tmp;
-			}
-		}
-	}
+	pc->read_level_penalty_db();
 #endif
 
 	// Reset then read attr_fix
@@ -13024,6 +13083,8 @@ void pc_defaults(void)
 	pc->read_attr_fix_db = pc_read_attr_fix_db;
 	pc->read_attr_fix_db_entry = pc_read_attr_fix_db_entry;
 	pc->read_attr_fix_db_level = pc_read_attr_fix_db_level;
+	pc->read_level_penalty_db_sub = pc_read_level_penalty_db_sub;
+	pc->read_level_penalty_db = pc_read_level_penalty_db;
 	pc->map_day_timer = map_day_timer; // by [yor]
 	pc->map_night_timer = map_night_timer; // by [yor]
 	// Rental System
@@ -13066,7 +13127,6 @@ void pc_defaults(void)
 	pc->eventtimer = pc_eventtimer;
 	pc->daynight_timer_sub = pc_daynight_timer_sub;
 	pc->charm_timer = pc_charm_timer;
-	pc->readdb_levelpenalty = pc_readdb_levelpenalty;
 	pc->autosave = pc_autosave;
 	pc->follow_timer = pc_follow_timer;
 	pc->read_skill_tree = pc_read_skill_tree;
