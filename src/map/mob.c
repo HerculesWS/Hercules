@@ -5192,6 +5192,12 @@ static int mob_read_db_sub(struct config_setting_t *mobt, int n, const char *sou
 		md.status.race = 0;
 	}
 
+	if (map->setting_lookup_const(mobt, "RaceGroup", &i32) && i32 >= 0) {
+		md.race2 = i32;
+	} else if (!inherit) {
+		md.race2 = 0;
+	}
+
 	if ((t = libconfig->setting_get_member(mobt, "Element")) && config_setting_is_list(t)) {
 		int value = 0;
 		if (mob->get_const(libconfig->setting_get_elem(t, 0), &i32) && mob->get_const(libconfig->setting_get_elem(t, 1), &value)) {
@@ -5913,32 +5919,6 @@ static void mob_readskilldb(void)
 	}
 }
 
-/*==========================================
- * mob_race2_db.txt reading
- *------------------------------------------*/
-static bool mob_readdb_race2(char *fields[], int columns, int current)
-{
-	int race, i;
-
-	nullpo_retr(false, fields);
-	race = atoi(fields[0]);
-
-	if (race < RC2_NONE || race >= RC2_MAX) {
-		ShowWarning("mob_readdb_race2: Unknown race2 %d.\n", race);
-		return false;
-	}
-
-	for (i = 1; i < columns; i++) {
-		int mobid = atoi(fields[i]);
-		if (mob->db(mobid) == mob->dummy) {
-			ShowWarning("mob_readdb_race2: Unknown mob id %d for race2 %d.\n", mobid, race);
-			continue;
-		}
-		mob->db_data[mobid]->race2 = race;
-	}
-	return true;
-}
-
 /**
  * Read mob_item_ratio.txt
  */
@@ -5989,7 +5969,6 @@ static void mob_load(bool minimal)
 	mob->readskilldb();
 	mob->mobavail_removal_notice();
 	mob->read_group_db();
-	sv->readdb(map->db_path, DBPATH"mob_race2_db.txt", ',', 2, 20, -1, mob->readdb_race2);
 }
 
 /**
@@ -6322,7 +6301,6 @@ void mob_defaults(void)
 	mob->parse_row_chatdb = mob_parse_row_chatdb;
 	mob->readchatdb = mob_readchatdb;
 	mob->readskilldb = mob_readskilldb;
-	mob->readdb_race2 = mob_readdb_race2;
 	mob->readdb_itemratio = mob_readdb_itemratio;
 	mob->load = mob_load;
 	mob->get_item_drop_ratio = mob_get_item_drop_ratio;
