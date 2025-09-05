@@ -437,6 +437,8 @@ static bool chat_deletenpcchat(struct npc_data *nd)
 
 	chat->npc_kick_all(cd);
 	clif->clearchat(cd, 0);
+	if (cd->kick_list)
+		db_destroy(cd->kick_list);
 	map->deliddb(&cd->bl);
 	map->delblock(&cd->bl);
 	map->freeblock(&cd->bl);
