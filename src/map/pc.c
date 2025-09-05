@@ -11806,8 +11806,12 @@ static int pc_readdb(void)
 	/**
 	 * Read and load into memory, the exp_group_db.conf file.
 	 */
+	pc->clear_class_exp_table();
 	pc->clear_exp_groups();
 	pc->read_exp_db();
+
+	// Repopulate class_exp_table after reloading exp groups
+	status->read_job_db();
 
 	// Reset and read skilltree
 	pc->clear_skill_tree();
@@ -12543,6 +12547,16 @@ static void pc_clear_exp_groups(void)
 	}
 }
 
+static void pc_clear_class_exp_table(void)
+{
+	int i, j;
+	for (i = 0; i < CLASS_COUNT; i++) {
+		for (j = 0; j < 2; j++) {
+			pc->dbs->class_exp_table[i][j] = NULL;
+		}
+	}
+}
+
 static void pc_init_exp_groups(void)
 {
 	int i;
@@ -13079,6 +13093,7 @@ void pc_defaults(void)
 	pc->removecombo = pc_removecombo;
 	pc->update_job_and_level = pc_update_job_and_level;
 	pc->clear_exp_groups = pc_clear_exp_groups;
+	pc->clear_class_exp_table = pc_clear_class_exp_table;
 	pc->init_exp_groups = pc_init_exp_groups;
 	pc->job_is_dummy = pc_job_is_dummy;
 
