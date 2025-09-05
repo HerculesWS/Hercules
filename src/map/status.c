@@ -3852,6 +3852,10 @@ static void status_calc_misc(struct block_list *bl, struct status_data *st, int 
 		st->flee = level + status_get_homagi(st, hd);
 		st->rhw.atk = (status_get_homstr(st, hd) + status_get_homdex(st, hd)) / 5;
 		st->rhw.atk2 = (status_get_homluk(st, hd) + status_get_homstr(st, hd) + status_get_homdex(st, hd)) / 3;
+	} else if ( bl->type == BL_MOB ) {
+		// Mob MATK calculation formula from const.h
+		st->matk_min = level + st->int_ + st->rhw.atk2 * 7 / 10;
+		st->matk_max = level + st->int_ + st->rhw.atk2 * 13 / 10;
 	} else {
 		st->hit += level + st->dex + (bl->type == BL_PC ? st->luk / 3 + 175 : 150); //base level + ( every 1 dex = +1 hit ) + (every 3 luk = +1 hit) + 175
 		st->flee += level + st->agi + (bl->type == BL_MER ? 0: (bl->type == BL_PC ? st->luk / 5 : 0) + 100); //base level + ( every 1 agi = +1 flee ) + (every 5 luk = +1 flee) + 100
