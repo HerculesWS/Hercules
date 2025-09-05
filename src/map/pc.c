@@ -10091,7 +10091,7 @@ static void pc_equipitem_pos(struct map_session_data *sd, struct item_data *id, 
 				sd->weapontype2 = id->subtype;
 			} else if (id->type == IT_ARMOR) {
 				sd->has_shield = true;
-				sd->status.look.shield = id->view_sprite;
+				sd->status.look.shield = id->view_id;
 				sd->weapontype2 = W_FIST;
 			}
 		} else {
