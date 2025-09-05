@@ -69,6 +69,7 @@ struct timer_interface {
 
 	int64 (*addtick) (int tid, int64 tick);
 	int64 (*settick) (int tid, int64 tick);
+	int (*set_interval) (int tid, int interval);
 
 	int (*add_func_list) (TimerFunc func, char* name);
 

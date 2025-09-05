@@ -469,6 +469,40 @@ static int64 timer_settick(int tid, int64 tick)
 }
 
 /**
+ * Modifies a timer's interval.
+ *
+ * @param tid     The timer ID.
+ * @param interval New interval value.
+ * @return 0 on success, -1 on failure.
+ */
+static int timer_set_interval(int tid, int interval)
+{
+	if (tid < 1 || tid >= timer_data_num) {
+		ShowError("timer_set_interval error : no such timer [%d]\n", tid);
+		Assert_retr(-1, 0);
+		return -1;
+	}
+	if (timer_data[tid].type == 0 || timer_data[tid].type == TIMER_REMOVE_HEAP) {
+		ShowError("timer_set_interval error: set interval for deleted timer %d, [%d](%p(%s))\n", timer_data[tid].type, tid, timer_data[tid].func, search_timer_func_list(timer_data[tid].func));
+		Assert_retr(-1, 0);
+		return -1;
+	}
+	if (timer_data[tid].func == NULL) {
+		ShowError("timer_set_interval error: set interval for timer with wrong func [%d](%p(%s))\n", tid, timer_data[tid].func, search_timer_func_list(timer_data[tid].func));
+		Assert_retr(-1, 0);
+		return -1;
+	}
+	if (interval < 1) {
+		ShowError("timer_set_interval: invalid interval %d for timer [%d]\n", interval, tid);
+		Assert_retr(-1, 0);
+		return -1;
+	}
+
+	timer_data[tid].interval = interval;
+	return 0;
+}
+
+/**
  * Executes all expired timers.
  *
  * @param tick The current tick.
@@ -657,6 +691,7 @@ void timer_defaults(void)
 	timer->delete = timer_do_delete;
 	timer->addtick = timer_addtick;
 	timer->settick = timer_settick;
+	timer->set_interval = timer_set_interval;
 	timer->get_uptime = timer_get_uptime;
 	timer->perform = do_timer;
 	timer->init = timer_init;
