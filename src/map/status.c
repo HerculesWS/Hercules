@@ -5795,8 +5795,8 @@ static unsigned int status_calc_maxhp(struct block_list *bl, struct status_chang
 		maxhp += maxhp * 5 * sc->data[SC_INSPIRATION]->val1 / 100 + 600 * sc->data[SC_INSPIRATION]->val1;
 	if (sc->data[SC_RAISINGDRAGON])
 		maxhp += maxhp * (2 + sc->data[SC_RAISINGDRAGON]->val1) / 100;
-	if (sc->data[SC_GENTLETOUCH_CHANGE]) // Max HP decrease: [Skill Level x 4] %
-		maxhp -= maxhp * (4 * sc->data[SC_GENTLETOUCH_CHANGE]->val1) / 100;
+		if (sc->data[SC_GENTLETOUCH_CHANGE]) // Max HP decrease: [Skill Level x 1] %
+		maxhp -= maxhp * (1 * sc->data[SC_GENTLETOUCH_CHANGE]->val1) / 100;
 	if (sc->data[SC_GENTLETOUCH_REVITALIZE])// Max HP increase: [Skill Level x 2] %
 		maxhp += maxhp * (2 * sc->data[SC_GENTLETOUCH_REVITALIZE]->val1) / 100;
 	if (sc->data[SC_MUSTLE_M])
