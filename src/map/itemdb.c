@@ -1526,9 +1526,12 @@ static void itemdb_read_options(void)
 		/* Set name as a script constant with index as value. */
 		script->set_constant2(str, t_opt.index, false, false);
 
+		/* Store name in the option struct */
+		safestrncpy(t_opt.name, str, sizeof(t_opt.name));
+
 		/* Script Code Lookup */
 		if (!libconfig->setting_lookup_string(conf, "Script", &str)) {
-			ShowError("itemdb_read_options: Script code not found for entry %s (Id: %d) in '%s', skipping...\n", str, t_opt.index, filepath);
+			ShowError("itemdb_read_options: Script code not found for entry %s (Id: %d) in '%s', skipping...\n", t_opt.name, t_opt.index, filepath);
 			continue;
 		}
 
