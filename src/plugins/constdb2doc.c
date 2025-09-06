@@ -171,6 +171,21 @@ void constdb2doc_itemdb(void)
 	fprintf(out_fp, "\n");
 }
 
+void constdb2doc_itemoptions(void)
+{
+	nullpo_retv(out_fp);
+
+	fprintf(out_fp, "## Item Options (db/item_options.conf)\n\n");
+	if (db_size(itemdb->options) > 0) {
+		struct DBIterator *iter = db_iterator(itemdb->options);
+		for (struct itemdb_option *ito = dbi_first(iter); dbi_exists(iter); ito = dbi_next(iter)) {
+			fprintf(out_fp, "- `%s`: %d\n", ito->name, ito->index);
+		}
+		dbi_destroy(iter);
+	}
+	fprintf(out_fp, "\n");
+}
+
 void do_constdb2doc(void)
 {
 	/* File Type Detector */
@@ -190,6 +205,8 @@ void do_constdb2doc(void)
 	constdb2doc_mobdb();
 
 	constdb2doc_itemdb();
+
+	constdb2doc_itemoptions();
 
 	fprintf(out_fp, "> End of list\n\n");
 	fprintf(out_fp, "<!--GENERATED FILE DO NOT EDIT-->\n");

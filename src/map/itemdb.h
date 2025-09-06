@@ -506,6 +506,7 @@ struct item_package {
 
 struct itemdb_option {
 	int16 index;
+	char name[ITEM_NAME_LENGTH];
 	struct script_code *script;
 };
 
