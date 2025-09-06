@@ -8503,9 +8503,9 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 					int ele = (val1 > 0 ? SC_RESIST_PROPERTY_WATER :
 							  (val2 > 0 ? SC_RESIST_PROPERTY_GROUND :
 							  (val3 > 0 ? SC_RESIST_PROPERTY_FIRE :
-							  (val4 > 0 ? SC_RESIST_PROPERTY_WIND : SI_BLANK))));
-				clif->status_change(bl, status->get_sc_icon(ele), status->get_sc_relevant_bl_types(ele), 1, total_tick, 0, 0, 0);
-				break;
+							  (val4 > 0 ? SC_RESIST_PROPERTY_WIND : SC_NONE))));
+					clif->status_change(bl, status->get_sc_icon(ele), status->get_sc_relevant_bl_types(ele), 1, total_tick, 0, 0, 0);
+					break;
 				// case SC_ARMOR_RESIST:
 				// Mod your resistance against elements:
 				// val1 = water | val2 = earth | val3 = fire | val4 = wind

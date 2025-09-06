@@ -3,10 +3,10 @@ name: mysql
 on: workflow_call
 
 env:
-  MYSQL_DATABASE: 'ragnarok'
-  MYSQL_USER: 'ragnarok'
-  MYSQL_PASSWORD: 'ragnarok'
-  MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+  MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE || 'ragnarok' }}
+  MYSQL_USER: ${{ secrets.MYSQL_USER || 'ragnarok' }}
+  MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD || 'ragnarok' }}
+  MYSQL_ALLOW_EMPTY_PASSWORD: ${{ secrets.MYSQL_ALLOW_EMPTY_PASSWORD || 'yes' }}
   DEBIAN_COMMON_PACKAGES: make zlib1g-dev libpcre3-dev git python3 libzstd-dev
 
 jobs:
@@ -21,7 +21,7 @@ jobs:
         HTTPLIB: ["", "--with-http_parser=llhttp"]
         SANITIZER: ["--disable-manager", "--enable-sanitize=full"]
         PACKET_VERSION: ["--enable-packetver=20221024"]
-        MYSQL: ["5.6", "5.7", "latest"]
+        MYSQL: ["5.6", "5.7", "8.0"]
 
     # github.head_ref will stop previous runs in the same PR (if in a PR)
     # github.run_id is a fallback when outside a PR (e.g. every merge in master will run, and previous won't stop)
@@ -30,20 +30,20 @@ jobs:
       cancel-in-progress: true
 
     container:
-      image: debian:unstable
+      image: debian:bookworm
     services:
       mysql:
         image: mysql:${{ matrix.MYSQL }}
         ports:
           - 33306:3306
         env:
-          MYSQL_DATABASE: 'ragnarok'
-          MYSQL_USER: 'ragnarok'
-          MYSQL_PASSWORD: 'ragnarok'
-          MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE || 'ragnarok' }}
+          MYSQL_USER: ${{ secrets.MYSQL_USER || 'ragnarok' }}
+          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD || 'ragnarok' }}
+          MYSQL_ALLOW_EMPTY_PASSWORD: ${{ secrets.MYSQL_ALLOW_EMPTY_PASSWORD || 'yes' }}
         options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3
     env:
-      INSTALL_PACKAGES: ${{ matrix.CC }} mysql-client libmysqlclient-dev
+      INSTALL_PACKAGES: ${{ matrix.CC }} default-mysql-client libmariadb-dev-compat
       SQLHOST: mysql
       CC: ${{ matrix.CC }}
       CONFIGURE_FLAGS: CC=${{ matrix.CC }} --enable-debug --enable-Werror --enable-buildbot ${{ matrix.RENEWAL }} ${{ matrix.HTTPLIB }} ${{ matrix.CLIENT_TYPE }} ${{ matrix.SANITIZER }} ${{ matrix.PACKET_VERSION }}
@@ -52,6 +52,12 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
+
+      - name: Cache apt packages
+        uses: actions/cache@v4
+        with:
+          path: /var/cache/apt/archives
+          key: apt-${{ runner.os }}-v1
 
       - name: info
         run: |

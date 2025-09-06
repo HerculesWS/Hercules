@@ -3,10 +3,10 @@ name: windows
 on: workflow_call
 
 env:
-  MYSQL_DATABASE: 'ragnarok'
-  MYSQL_USER: 'ragnarok'
-  MYSQL_PASSWORD: 'ragnarok'
-  MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+  MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE || 'ragnarok' }}
+  MYSQL_USER: ${{ secrets.MYSQL_USER || 'ragnarok' }}
+  MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD || 'ragnarok' }}
+  MYSQL_ALLOW_EMPTY_PASSWORD: ${{ secrets.MYSQL_ALLOW_EMPTY_PASSWORD || 'yes' }}
 
 jobs:
   build:
