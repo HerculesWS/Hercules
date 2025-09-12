@@ -2803,9 +2803,9 @@ static int npc_selllist_sub(struct map_session_data *sd, struct itemlist *item_l
 {
 	char npc_ev[EVENT_NAME_LENGTH];
 	char card_slot[NAME_LENGTH];
-	char opt_index_str[NAME_LENGTH];
-	char opt_value_str[NAME_LENGTH];
-	char opt_param_str[NAME_LENGTH];
+	char opt_index_str[32];
+	char opt_value_str[32];
+	char opt_param_str[32];
 	int i = 0;
 	int j = 0;
 	int key_nameid = 0;
