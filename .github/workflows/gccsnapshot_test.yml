@@ -92,8 +92,6 @@ jobs:
       - name: build
         run: |
           export PATH=/usr/lib/gcc-snapshot/bin:$PATH
-          export CFLAGS="-I/usr/include"
-          export LDFLAGS="-L/usr/lib/x86_64-linux-gnu"
           ./tools/ci/travis.sh build $CONFIGURE_FLAGS
 
       - name: test
