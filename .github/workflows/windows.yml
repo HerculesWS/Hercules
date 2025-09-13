@@ -14,7 +14,15 @@ jobs:
     timeout-minutes: 30
     strategy:
       matrix:
-        CC: ['15.0', '16.0', '17.0']
+        include:
+          - CC: '15.0'
+            SDK: '10.0.15063.0'
+          - CC: '16.0'
+            SDK: '10.0.18362.0'
+          - CC: '17.0'
+            SDK: '10.0.19041.0'
+          - CC: '17.0'
+            SDK: '10.0.22000.0'
         RENEWAL: ["", "DISABLE_RENEWAL"]
         CLIENT_TYPE: ["", "ENABLE_PACKETVER_RE", "ENABLE_PACKETVER_ZERO"]
         PACKET_VERSION: ["PACKETVER=20221024", "PACKETVER=20130724"]
@@ -25,7 +33,7 @@ jobs:
     # github.head_ref will stop previous runs in the same PR (if in a PR)
     # github.run_id is a fallback when outside a PR (e.g. every merge in master will run, and previous won't stop)
     concurrency:
-      group: msbuild-${{ github.head_ref || github.run_id }}_VisualStudio-${{ matrix.CC }}_${{ matrix.RENEWAL }}_${{ matrix.CLIENT_TYPE }}_${{ matrix.PACKET_VERSION }}
+      group: msbuild-${{ github.head_ref || github.run_id }}_VisualStudio-${{ matrix.CC }}_SDK-${{ matrix.SDK }}_${{ matrix.RENEWAL }}_${{ matrix.CLIENT_TYPE }}_${{ matrix.PACKET_VERSION }}
       cancel-in-progress: true
 
     steps:
@@ -37,6 +45,11 @@ jobs:
         uses: microsoft/setup-msbuild@v2
         with:
           vs-version: ${{ matrix.CC }}
+
+      - name: Check WindowsTargetPlatformVersion
+        run: |
+          $version = (Get-ItemProperty "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Microsoft SDKs\Windows\v10.0" -Name ProductVersion).ProductVersion
+          Write-Host "WindowsTargetPlatformVersion: $version"
 
       - uses: shogo82148/actions-setup-mysql@v1
         with:
@@ -53,7 +66,7 @@ jobs:
 
       - name: build
         run: |
-          .\tools\ci\windows.ps1 build ${{ matrix.CLIENT_TYPE }} ${{ matrix.PACKET_VERSION}} ${{ matrix.RENEWAL }}
+          .\tools\ci\windows.ps1 build ${{ matrix.CC }} ${{ matrix.SDK }} ${{ matrix.CLIENT_TYPE }} ${{ matrix.PACKET_VERSION}} ${{ matrix.RENEWAL }}
 
       - name: run
         run: |

@@ -31,9 +31,16 @@ function CreatePluginProject {
 }
 
 function WritePropsFile {
-	param([string[]]$definitions)
+	param([string]$vsVersion, [string]$sdkVersion, [string[]]$definitions)
 
-	Write-Host "Writing props file with definitions: $definitions"
+	Write-Host "Writing props file for VS $vsVersion with SDK $sdkVersion and definitions: $definitions"
+
+	$toolset = switch ($vsVersion) {
+		'15.0' { 'v141' }
+		'16.0' { 'v142' }
+		'17.0' { 'v143' }
+		default { 'v143' }
+	}
 
 	# Add preprocessor definitions for msbuild using a props file
 	# https://learn.microsoft.com/en-us/visualstudio/msbuild/customize-cpp-builds?view=vs-2022
@@ -41,6 +48,10 @@ function WritePropsFile {
 @"
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <WindowsTargetPlatformVersion>$sdkVersion</WindowsTargetPlatformVersion>
+    <PlatformToolset>$toolset</PlatformToolset>
+  </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);$($definitions -join ";")</PreprocessorDefinitions>
@@ -74,7 +85,10 @@ function CatchProcessErrors {
 
 Write-Host "Arguments: $args"
 if ($args[0] -eq "build") {
-	$propsFile = WritePropsFile $args[1..($args.Length - 1)]
+	$vsVersion = $args[1]
+	$sdkVersion = $args[2]
+	$definitions = $args[3..($args.Length - 1)]
+	$propsFile = WritePropsFile $vsVersion $sdkVersion $definitions
 	CatchProcessErrors msbuild "-m Hercules.sln /p:ForceImportBeforeCppTargets=$propsFile"
 
 	foreach ($plugin in @("httpsample", "constdb2doc", "db2sql", "dbghelpplug", "generate-translations", "mapcache", "script_mapquit")) {
