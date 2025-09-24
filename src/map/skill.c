@@ -12290,6 +12290,7 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 	#endif
 		case NPC_EARTHQUAKE:
 		case NPC_EVILLAND:
+		case NPC_VENOMFOG:
 		case WL_COMET:
 		case RA_ELECTRICSHOCKER:
 		case RA_CLUSTERBOMB:
@@ -14413,6 +14414,7 @@ static int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *b
 		case UNT_PSYCHIC_WAVE:
 		case UNT_MAGMA_ERUPTION:
 		case UNT_MAKIBISHI:
+		case UNT_VENOMFOG:
 			skill->attack(skill->get_type(sg->skill_id, sg->skill_lv), ss, &src->bl, bl, sg->skill_id, sg->skill_lv, tick, 0);
 			break;
 
