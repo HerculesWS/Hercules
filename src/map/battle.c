@@ -2149,6 +2149,9 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 				case NPC_EARTHQUAKE:
 					skillratio += 100 + 100 * skill_lv + 100 * (skill_lv / 2);
 					break;
+				case NPC_REVERBERATION_ATK:
+					skillratio += 400 + 200 * skill_lv;
+					break;					
 				case RG_BACKSTAP:
 					if (sd != NULL && sd->weapontype == W_BOW && battle_config.backstab_bow_penalty)
 						skillratio += (200 + 40 * skill_lv) / 2;
@@ -5629,6 +5632,9 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 				case WM_REVERBERATION_MELEE:
 					rskill = WM_REVERBERATION;
 					break;
+				case NPC_REVERBERATION_ATK:
+					rskill = NPC_REVERBERATION;
+					break;					
 				case GN_CRAZYWEED_ATK:
 					rskill = GN_CRAZYWEED;
 					break;
