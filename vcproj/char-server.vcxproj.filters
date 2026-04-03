@@ -375,6 +375,7 @@
     <ClInclude Include="..\src\char\int_userconfig.h">
       <Filter>char</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\char\packets_hc_struct.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="common">

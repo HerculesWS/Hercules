@@ -273,6 +273,8 @@
     <ClInclude Include="..\src\login\lapiif.h">
       <Filter>login</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\login\packets_ac_struct.h" />
+    <ClInclude Include="..\src\login\packets_ca_struct.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="common">
