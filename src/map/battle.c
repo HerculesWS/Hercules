@@ -3248,11 +3248,8 @@ static int64 battle_calc_damage(struct block_list *src, struct block_list *bl, s
 
 		if( damage ) {
 			if( sc->data[SC_DEEP_SLEEP] ) {
-				damage = damage * 225 / 100; // 2.25x damage while in Deep Sleep
-				status_change_end(bl,SC_DEEP_SLEEP,INVALID_TIMER); 
-			} else if( sc->data[SC_SLEEP] ) {
-				damage = damage * 150 / 100; // 1.5x damage while in Sleep
-				status_change_end(bl,SC_SLEEP,INVALID_TIMER);
+				damage += damage / 2; // 1.5 times more damage while in Deep Sleep.
+				status_change_end(bl,SC_DEEP_SLEEP,INVALID_TIMER);
 			}
 			if( s_sd && t_sd && sc->data[SC_COLD] && flag&BF_WEAPON ){
 				switch (s_sd->weapontype) {
@@ -4404,6 +4401,8 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 	case WM_SOUND_OF_DESTRUCTION:
 		md.damage = 1000 * skill_lv + (int64)sstatus->int_ * (sd ? pc->checkskill(sd,WM_LESSON) : 10);
 		md.damage += md.damage * 10 * battle->calc_chorusbonus(sd) / 100;
+		if (tsc != NULL && (tsc->data[SC_SLEEP] != NULL || tsc->data[SC_DEEP_SLEEP] != NULL))
+			md.damage = md.damage * 150 / 100;
 		break;
 	/**
 	 * Mechanic
