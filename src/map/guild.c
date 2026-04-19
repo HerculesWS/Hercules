@@ -219,11 +219,12 @@ static bool guild_read_castledb_libconfig_sub(struct config_setting_t *it, int i
 	}
 	safestrncpy(gc->castle_event, name, sizeof(gc->castle_event));
 
-	if (map->setting_lookup_const(it, "SiegeType", &i32) && (i32 >= SIEGE_TYPE_MAX || i32 < 0)) {
-		ShowWarning("guild_read_castledb_libconfig_sub: Invalid SiegeType in \"%s\", entry #%d, defaulting to SIEGE_TYPE_FE.\n", source, idx);
-		gc->siege_type = SIEGE_TYPE_FE;
-	} else {
-		gc->siege_type = i32;
+	gc->siege_type = SIEGE_TYPE_FE;
+	if (map->setting_lookup_const(it, "SiegeType", &i32)) {
+		if (i32 >= SIEGE_TYPE_FE && i32 < SIEGE_TYPE_MAX)
+			gc->siege_type = i32;
+		else
+			ShowWarning("guild_read_castledb_libconfig_sub: Invalid SiegeType in \"%s\", entry #%d, defaulting to SIEGE_TYPE_FE.\n", source, idx);
 	}
 
 	libconfig->setting_lookup_bool_real(it, "EnableClientWarp", &gc->enable_client_warp);
