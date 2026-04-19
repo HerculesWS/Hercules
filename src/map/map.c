@@ -5764,6 +5764,24 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 				map_zone_mf_cache_add(m, rflag);
 			}
 		}
+	} else if (strcmpi(flag, "noviewid") == 0) {
+		if (state && map->list[m].flag.noviewid == (uint32)strtoull(params, NULL, 0)) {
+			/* nothing to do */
+		} else {
+			sprintf(rflag, "noviewid\t%u", map->list[m].flag.noviewid);
+			map_zone_mf_cache_add(m, rflag);
+		}
+	} else if (strcmpi(flag, "src4instance") == 0) {
+		if (state && map->list[m].flag.src4instance)
+			;/* nothing to do */
+		else {
+			if (state)
+				map_zone_mf_cache_add(m, "src4instance\toff");
+			else if (map->list[m].flag.src4instance)
+				map_zone_mf_cache_add(m, "src4instance");
+		}
+	} else {
+		ShowError("map_zone_mf_cache: unsupported flag '%s' in '%s'\n", flag, map->list[m].name);
 	}
 
 	return false;

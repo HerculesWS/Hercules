@@ -1085,10 +1085,12 @@ END_ZEROED_BLOCK; /* End */
 	bool (*resetskill_job) (struct map_session_data *sd, int index);
 	int (*resetfeel) (struct map_session_data *sd);
 	int (*resethate) (struct map_session_data *sd);
+	uint32 (*equip_costume_overlap) (uint32 pos);
 	int (*equipitem) (struct map_session_data *sd,int n,int req_pos);
 	void (*equipitem_pos) (struct map_session_data *sd, struct item_data *id, int n, int pos);
 	int (*unequipitem) (struct map_session_data *sd,int n,int flag);
 	void (*unequipitem_pos) (struct map_session_data *sd, int n, int pos);
+	void (*unequipitem_pos_sub) (struct map_session_data *sd, int pos_combination, int *look, int look_type, int pos, int pos_costume);
 	int (*checkitem) (struct map_session_data *sd);
 	int (*useitem) (struct map_session_data *sd,int n);
 	void (*autocast_clear_current) (struct map_session_data *sd);
