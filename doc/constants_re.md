@@ -19566,6 +19566,8 @@
 - `S_Infinity_Shield`: 24733
 - `S_CriticalHit_Weapon`: 24738
 - `S_KingbirdAnc_Weapon`: 24745
+- `Gift_Wrapping_Ribbon`: 25086
+- `Gift_Wrapping_Wing`: 25089
 - `Slug_Bullet`: 25187
 - `Suspicious_Bottle`: 25231
 - `Cheap_Lubricant`: 25232
