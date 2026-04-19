@@ -2350,9 +2350,16 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 				case MA_SHARPSHOOTING:
 					skillratio += 100 + 50 * skill_lv;
 					break;
+
 				case CG_ARROWVULCAN:
+#ifndef RENEWAL
 					skillratio += 100 + 100 * skill_lv;
+#else
+					skillratio += -100 + 500 + 100 * skill_lv;
+					RE_LVL_DMOD(100);
+#endif
 					break;
+
 				case AS_SPLASHER:
 #ifndef RENEWAL
 					skillratio += 400 + 50 * skill_lv;

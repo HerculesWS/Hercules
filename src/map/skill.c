@@ -96,7 +96,7 @@ static const struct {
 	{ KO_YAMIKUMO, OB_AKAITSUKI },
 	{ ECL_SNOWFLIP, ALL_THANATOS_RECALL },
 	{ GC_DARKCROW, NC_MAGMA_ERUPTION_DOTDAMAGE },
-	{ SU_BASIC_SKILL, SU_SPIRITOFSEA },
+	{ SU_BASIC_SKILL, CG_SPECIALSINGER },
 	{ HLIF_HEAL, MH_VOLCANIC_ASH },
 	{ MS_BASH, MER_INVINCIBLEOFF2 },
 	{ EL_CIRCLE_OF_FIRE, EL_STONE_RAIN },
@@ -9576,6 +9576,11 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 				} while ((--count) > 0);
 				clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
 			}
+			break;
+
+		case CG_SPECIALSINGER:
+			status_change_end(bl, SC_ENSEMBLEFATIGUE, INVALID_TIMER);
+			clif->skill_nodamage(src, bl, skill_id, skill_lv, 0);
 			break;
 
 		case SL_ALCHEMIST:
