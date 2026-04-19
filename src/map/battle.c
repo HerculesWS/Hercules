@@ -2373,8 +2373,13 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					skillratio += 40 * skill_lv - 60;
 					break;
 				case SN_SHARPSHOOTING:
-				case MA_SHARPSHOOTING:
+				case MA_SHARPSHOOTING: // @TODO: Is mercenary also affected?
+#ifndef RENEWAL
 					skillratio += 100 + 50 * skill_lv;
+#else
+					skillratio += 50 + 200 * skill_lv;
+					RE_LVL_DMOD(100);
+#endif
 					break;
 
 				case CG_ARROWVULCAN:
@@ -4396,7 +4401,9 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 		break;
 #endif
 	case HT_BLITZBEAT:
+#ifndef RENEWAL
 	case SN_FALCONASSAULT:
+#endif
 		// Blitz-beat Damage.
 		if (sd == NULL || (temp = pc->checkskill(sd,HT_STEELCROW)) <= 0)
 			temp = 0;
@@ -4417,6 +4424,24 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 			md.damage=md.damage*(150+70*skill_lv)/100;
 		}
 		break;
+
+#ifdef RENEWAL
+	case SN_FALCONASSAULT: {
+		int blitz_lv = 0;
+		int steel_crow_lv = 0;
+
+		if (sd != NULL) {
+			blitz_lv = pc->checkskill(sd, HT_BLITZBEAT);
+			steel_crow_lv = pc->checkskill(sd, HT_STEELCROW);
+		}
+
+		// Formula from iRO Wiki
+		int64 dmg_part1 = ((sstatus->agi / 2 + sstatus->dex / 10) * 2 + blitz_lv * 20 + steel_crow_lv * 6) * skill_lv + steel_crow_lv * 6;
+		md.damage = dmg_part1 * (steel_crow_lv / 20 + skill_lv + status->get_lv(src) / 50);
+	}
+		break;
+#endif
+
 	case TF_THROWSTONE:
 		md.damage=50;
 		break;
@@ -5166,7 +5191,11 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 				break;
 			case SN_SHARPSHOOTING:
 			case MA_SHARPSHOOTING:
+#ifndef RENEWAL
 				cri += 200;
+#else
+				cri += 500; // 2018.11 rebalance - source: iRO Wiki
+#endif
 				break;
 			case NJ_KIRIKAGE:
 				cri += 250 + 50*skill_lv;
