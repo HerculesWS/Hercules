@@ -2361,6 +2361,8 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 		if (sc->data[SC_PROPERTYGROUND] != NULL)
 			sd->magic_atk_ele[ELE_EARTH] += sc->data[SC_PROPERTYGROUND]->val1;
 #endif
+		if (sc->data[SC_BASILICA_BUFF] != NULL)
+			sd->magic_atk_ele[ELE_HOLY] += sc->data[SC_BASILICA_BUFF]->val1;
 
 		// Geffen Scrolls
 		if (sc->data[SC_SKELSCROLL]) {
@@ -5243,6 +5245,9 @@ static signed short status_calc_def2(struct block_list *bl, struct status_change
 		if (sc->data[SC_ASSUMPTIO])
 			def2 <<= 1;
 #endif
+		// @TODO: Is is hidden or it should show?
+		if (sc->data[SC_ASSUMPTIO_BUFF] != NULL)
+			def2 += sc->data[SC_ASSUMPTIO_BUFF]->val1 * 50;
 		if (sc->data[SC_CAMOUFLAGE])
 			def2 -= def2 * 5 * (10-sc->data[SC_CAMOUFLAGE]->val4) / 100;
 		if (sc->data[SC_GENTLETOUCH_REVITALIZE])
@@ -9953,6 +9958,12 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			case SC_SOULDIVISION:
 				val2 = 10 * 1; // Skill Aftercast Increase
 				break;
+
+			case SC_BASILICA_BUFF: // Renewal version of Basilica, where it is a buff.
+				val2 = 3 * val1; // Holy MATK % Increase
+				val3 = 5 * val1; // ATK % Increase
+				break;
+
 			default:
 				if (status->change_start_unknown_sc(src, bl, type, calc_flag, rate, val1, val2, val3, val4, total_tick, flag)) {
 					return 0;
@@ -10489,6 +10500,7 @@ static int status_change_start_set_option(struct block_list *bl, struct status_c
 			opt_flag = 0;
 			break;
 		case SC_ASSUMPTIO:
+		case SC_ASSUMPTIO_BUFF:
 			sc->opt3 |= OPT3_ASSUMPTIO;
 			opt_flag = 0;
 			break;
@@ -10763,7 +10775,7 @@ static bool status_end_sc_before_start(struct block_list *bl, struct status_data
 		status_change_end(bl, SC_OVERTHRUST, INVALID_TIMER);
 		break;
 	case SC_KYRIE:
-		// Cancels Assumptio
+		// Cancels Assumptio (Non-Renewal version)
 		status_change_end(bl, SC_ASSUMPTIO, INVALID_TIMER);
 		break;
 	case SC_MAGNIFICAT:
@@ -10807,11 +10819,13 @@ static bool status_end_sc_before_start(struct block_list *bl, struct status_data
 
 		break;
 	case SC_ASSUMPTIO:
+	// case SC_ASSUMPTIO_BUFF: // 2018.11 rebalance - New assumptio works together with Kaite/Kyrie
 		status_change_end(bl, SC_KYRIE, INVALID_TIMER);
 		status_change_end(bl, SC_KAITE, INVALID_TIMER);
 		break;
 	case SC_KAITE:
 		status_change_end(bl, SC_ASSUMPTIO, INVALID_TIMER);
+		// status_change_end(bl, SC_ASSUMPTIO_BUFF, INVALID_TIMER); // 2018.11 rebalance - New assumptio works together with Kaite/Kyrie
 		break;
 	case SC_CARTBOOST:
 		if (sc->data[SC_DEC_AGI] != NULL || sc->data[SC_ADORAMUS] != NULL) {
