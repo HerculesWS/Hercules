@@ -555,6 +555,15 @@
     <ClInclude Include="..\src\map\mapiif.h">
       <Filter>map</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\map\mapdefines.h" />
+    <ClInclude Include="..\src\map\messages_ad.h" />
+    <ClInclude Include="..\src\map\messages_main.h" />
+    <ClInclude Include="..\src\map\messages_re.h" />
+    <ClInclude Include="..\src\map\messages_sak.h" />
+    <ClInclude Include="..\src\map\messages_zero.h" />
+    <ClInclude Include="..\src\map\messages.h" />
+    <ClInclude Include="..\src\map\packets_shuffle_re.h" />
+    <ClInclude Include="..\src\map\unitdefines.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="common">
