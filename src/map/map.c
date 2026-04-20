@@ -5699,7 +5699,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 				map_zone_mf_cache_add(m, rflag);
 			}
 		}
-	} else if (strcmpi(flag, "magic_damage_rate")) {
+	} else if (strcmpi(flag, "magic_damage_rate") == 0) {
 		if (state == 0) {
 			if (map->list[m].magic_damage_rate != 100) {
 				sprintf(rflag, "magic_damage_rate\t%d", map->list[m].magic_damage_rate);
