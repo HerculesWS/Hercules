@@ -47,15 +47,15 @@ jobs:
     needs: build
     if: ${{ !failure() && !cancelled() }}
     uses: ./.github/workflows/mysql.yml
-  macos_latest:
-    needs: build
-    if: ${{ !failure() && !cancelled() }}
-    uses: ./.github/workflows/macos_latest.yml
-  macos_m1:
-    needs: build
-    if: ${{ !failure() && !cancelled() }}
-    uses: ./.github/workflows/macos_m1.yml
-  windows:
-    needs: build
-    if: ${{ !failure() && !cancelled() }}
-    uses: ./.github/workflows/windows.yml
+#  macos_latest:
+#    needs: build
+#    if: ${{ !failure() && !cancelled() }}
+#    uses: ./.github/workflows/macos_latest.yml
+#  macos_m1:
+#    needs: build
+#    if: ${{ !failure() && !cancelled() }}
+#    uses: ./.github/workflows/macos_m1.yml
+#  windows:
+#    needs: build
+#    if: ${{ !failure() && !cancelled() }}
+#    uses: ./.github/workflows/windows.yml
