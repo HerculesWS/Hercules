@@ -723,7 +723,7 @@ static int bg_afk_timer(int tid, int64 tick, int id, intptr_t data)
 	for (sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter))) {
 		if( !sd->bg_queue.arena || !sd->bg_id )
 			continue;
-		if( DIFF_TICK(sockt->last_tick, sd->idletime) > bg->mafksec )
+		if( DIFF_TICK(sockt->last_tick, sd->idletime) > (bg->mafksec * 1000) )
 			bg->team_leave(sd,BGTL_AFK);
 		count++;
 	}
