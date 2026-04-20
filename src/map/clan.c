@@ -924,11 +924,17 @@ static void clan_read_db(struct config_setting_t *settings, const char *source, 
  *
  * @param bool clear Whether to clear clan->db before reading clans
  */
+static bool clan_config_read_from_file(const char *config_filename, bool reload);
+
 static bool clan_config_read(bool reload)
+{
+	return clan_config_read_from_file("conf/clans.conf", reload);
+}
+
+static bool clan_config_read_from_file(const char *config_filename, bool reload)
 {
 	struct config_t clan_conf;
 	struct config_setting_t *settings = NULL;
-	const char *config_filename = "conf/clans.conf"; // FIXME: hardcoded name
 	int kicktime = 0, kickchecktime = 0;
 
 	if (reload) {
@@ -974,6 +980,12 @@ static bool clan_config_read(bool reload)
 
 	clan->config_read_additional_settings(settings, config_filename);
 	clan->read_db(settings, config_filename, reload);
+
+	{
+		const char *import = NULL;
+		if (libconfig->lookup_string(&clan_conf, "import", &import) == CONFIG_TRUE)
+			clan_config_read_from_file(import, false);
+	}
 	libconfig->destroy(&clan_conf);
 	return true;
 }

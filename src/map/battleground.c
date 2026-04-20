@@ -351,11 +351,17 @@ static enum bg_queue_types bg_str2teamtype(const char *str)
 	return type;
 }
 
+static void bg_config_read_from_file(const char *config_filename);
+
 static void bg_config_read(void)
+{
+	bg_config_read_from_file("conf/battlegrounds.conf");
+}
+
+static void bg_config_read_from_file(const char *config_filename)
 {
 	struct config_t bg_conf;
 	struct config_setting_t *data = NULL;
-	const char *config_filename = "conf/battlegrounds.conf"; // FIXME hardcoded name
 
 	if (!libconfig->load_file(&bg_conf, config_filename))
 		return;
@@ -515,6 +521,12 @@ static void bg_config_read(void)
 			}
 			bg->arenas = arena_count;
 		}
+	}
+
+	{
+		const char *import = NULL;
+		if (libconfig->lookup_string(&bg_conf, "import", &import) == CONFIG_TRUE)
+			bg_config_read_from_file(import);
 	}
 	libconfig->destroy(&bg_conf);
 }

@@ -58,28 +58,41 @@ static inline GroupSettings *name2group(const char *group_name)
 	return strdb_get(pcg->name_db, group_name);
 }
 
+/*
+ * Pool of config objects kept alive until all group processing is done.
+ * group_settings->commands/permissions/root point into these configs.
+ */
+#define PC_GROUPS_MAX_CONFIGS 2
+static struct config_t pc_group_conf_pool[PC_GROUPS_MAX_CONFIGS];
+static int pc_group_conf_count = 0;
+
 /**
- * Loads group configuration from config file into memory.
+ * Loads one config file into the pool and registers its groups in pcg->db.
+ * Does NOT process inheritance or permissions — those happen after all files
+ * are loaded so that cross-file inheritance and a single atcommand->load_groups
+ * call with the correct total size are possible.
  * @private
  */
-static void read_config(void)
+static void read_config_file(const char *filename)
 {
-	struct config_t pc_group_config;
-	struct config_setting_t *groups = NULL;
-	const char *config_filename = "conf/groups.conf"; // FIXME hardcoded name
-	int group_count = 0;
+	struct config_t *config;
+	struct config_setting_t *groups;
 
-	if (!libconfig->load_file(&pc_group_config, config_filename))
+	if (pc_group_conf_count >= PC_GROUPS_MAX_CONFIGS) {
+		ShowWarning("pc_groups:read_config: Maximum import depth reached, skipping '%s'\n", filename);
 		return;
+	}
+	config = &pc_group_conf_pool[pc_group_conf_count++];
+	if (!libconfig->load_file(config, filename)) {
+		--pc_group_conf_count; // load_file already destroyed config on failure
+		return;
+	}
 
-	groups = libconfig->lookup(&pc_group_config, "groups");
-
+	groups = libconfig->lookup(config, "groups");
 	if (groups != NULL) {
 		GroupSettings *group_settings = NULL;
-		struct DBIterator *iter = NULL;
-		int i, loop = 0;
+		int i, group_count = libconfig->setting_length(groups);
 
-		group_count = libconfig->setting_length(groups);
 		for (i = 0; i < group_count; ++i) {
 			int id = 0, level = 0;
 			const char *groupname = NULL;
@@ -138,14 +151,40 @@ static void read_config(void)
 			group_settings->permissions = libconfig->setting_get_member(group, "permissions");
 			group_settings->inheritance_done = false;
 			group_settings->root = group;
-			group_settings->index = i;
+			group_settings->index = (int)db_size(pcg->db); // global sequential index
 
 			strdb_put(pcg->name_db, groupname, group_settings);
 			idb_put(pcg->db, id, group_settings);
 		}
-		group_count = libconfig->setting_length(groups); // Save number of groups
-		assert(group_count == db_size(pcg->db));
+	}
 
+	const char *import = NULL;
+	if (libconfig->lookup_string(config, "import", &import) == CONFIG_TRUE)
+		read_config_file(import);
+	/* config is intentionally not destroyed here; it remains alive until
+	 * read_config() has finished all processing (inheritance, permissions,
+	 * atcommand->load_groups), since group_settings fields point into it. */
+}
+
+/**
+ * Loads group configuration from config file(s) into memory.
+ * @private
+ */
+static void read_config(void)
+{
+	GroupSettings *group_settings = NULL;
+	struct DBIterator *iter = NULL;
+	int i, loop = 0;
+	int total_group_count;
+
+	pc_group_conf_count = 0;
+
+	// Phase 1: Register all groups from base config and any import
+	read_config_file("conf/groups.conf");
+
+	total_group_count = (int)db_size(pcg->db);
+
+	if (total_group_count > 0) {
 		// Check if all commands and permissions exist
 		iter = db_iterator(pcg->db);
 		for (group_settings = dbi_first(iter); dbi_exists(iter); group_settings = dbi_next(iter)) {
@@ -191,7 +230,7 @@ static void read_config(void)
 
 		// Apply inheritance
 		i = 0; // counter for processed groups
-		while (i < group_count) {
+		while (i < total_group_count) {
 			iter = db_iterator(pcg->db);
 			for (group_settings = dbi_first(iter); dbi_exists(iter); group_settings = dbi_next(iter)) {
 				struct config_setting_t *inherit = NULL,
@@ -249,12 +288,11 @@ static void read_config(void)
 			}
 			dbi_destroy(iter);
 
-			if (++loop > group_count) {
-				ShowWarning("pc_groups:read_config: Could not process inheritance rules, check your config '%s' for cycles...\n",
-				            config_filename);
+			if (++loop > total_group_count) {
+				ShowWarning("pc_groups:read_config: Could not process inheritance rules, check your config for cycles...\n");
 				break;
 			}
-		} // while(i < group_count)
+		} // while(i < total_group_count)
 
 		// Pack permissions into GroupSettings.e_permissions for faster checking
 		iter = db_iterator(pcg->db);
@@ -278,12 +316,13 @@ static void read_config(void)
 
 		// Atcommand permissions are processed by atcommand module.
 		// Fetch all groups and relevant config setting and send them
-		// to atcommand->load_group() for processing.
-		if (group_count > 0) {
+		// to atcommand->load_groups() for processing. Called once with
+		// the full total so at_groups/char_groups arrays are correctly sized.
+		{
 			GroupSettings **pc_groups = NULL;
 			struct config_setting_t **commands = NULL;
-			CREATE(pc_groups, GroupSettings*, group_count);
-			CREATE(commands, struct config_setting_t*, group_count);
+			CREATE(pc_groups, GroupSettings*, total_group_count);
+			CREATE(commands, struct config_setting_t*, total_group_count);
 			i = 0;
 			iter = db_iterator(pcg->db);
 			for (group_settings = dbi_first(iter); dbi_exists(iter); group_settings = dbi_next(iter)) {
@@ -291,17 +330,19 @@ static void read_config(void)
 				commands[i] = group_settings->commands;
 				i++;
 			}
-			atcommand->load_groups(pc_groups, commands, group_count);
+			atcommand->load_groups(pc_groups, commands, total_group_count);
 			dbi_destroy(iter);
 			aFree(pc_groups);
 			aFree(commands);
 		}
 	}
 
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' groups in '"CL_WHITE"%s"CL_RESET"'.\n", group_count, config_filename);
+	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' groups in '"CL_WHITE"%s"CL_RESET"'.\n", total_group_count, "conf/groups.conf");
 
-	// All data is loaded now, discard config
-	libconfig->destroy(&pc_group_config);
+	// All processing done; destroy all config objects from the pool
+	for (i = 0; i < pc_group_conf_count; i++)
+		libconfig->destroy(&pc_group_conf_pool[i]);
+	pc_group_conf_count = 0;
 }
 
 /**
