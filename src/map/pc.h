@@ -1181,6 +1181,7 @@ END_ZEROED_BLOCK; /* End */
 	bool (*read_attr_fix_db) (void);
 	int (*read_attr_fix_db_entry) (struct config_setting_t *def_attr, enum elements def_ele, const char *def_ele_name);
 	int (*read_attr_fix_db_level) (struct config_setting_t *def_lv, enum elements def_ele, int lv, const char *def_ele_name);
+	void (*level_penalty_txt_removal_notice) (void);
 	bool (*read_level_penalty_db_sub) (const struct config_setting_t *it, int n, const char *source);
 	void (*read_level_penalty_db) (void);
 	int (*map_day_timer) (int tid, int64 tick, int id, intptr_t data); // by [yor]

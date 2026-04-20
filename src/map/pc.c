@@ -11591,6 +11591,15 @@ static bool pc_read_level_penalty_db_sub(const struct config_setting_t *it, int 
 	return true;
 }
 
+static void pc_level_penalty_txt_removal_notice(void)
+{
+	const char *filepath = "db/re/level_penalty.txt";
+
+	if (exists(filepath)) {
+		ShowError("pc_level_penalty_txt_removal_notice: the usage of %s is no longer supported, convert your data using tools/level_penalty_converter.py and delete the file to suspend this message.\n", filepath);
+	}
+}
+
 /**
  * Reads the level penalty database from configuration file.
  */
@@ -11885,6 +11894,7 @@ static int pc_readdb(void)
 	pc->clear_skill_tree();
 	pc->read_skill_tree();
 #if defined(RENEWAL_DROP) || defined(RENEWAL_EXP)
+	pc->level_penalty_txt_removal_notice();
 	pc->read_level_penalty_db();
 #endif
 
@@ -13083,6 +13093,7 @@ void pc_defaults(void)
 	pc->read_attr_fix_db = pc_read_attr_fix_db;
 	pc->read_attr_fix_db_entry = pc_read_attr_fix_db_entry;
 	pc->read_attr_fix_db_level = pc_read_attr_fix_db_level;
+	pc->level_penalty_txt_removal_notice = pc_level_penalty_txt_removal_notice;
 	pc->read_level_penalty_db_sub = pc_read_level_penalty_db_sub;
 	pc->read_level_penalty_db = pc_read_level_penalty_db;
 	pc->map_day_timer = map_day_timer; // by [yor]
