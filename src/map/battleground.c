@@ -391,6 +391,7 @@ static void bg_config_read(void)
 				int prizeWin, prizeLoss, prizeDraw;
 				int minPlayers, maxPlayers, minTeamPlayers;
 				int maxDuration;
+				int requeue_delay = 300;
 				int fillup_duration = 0, pregame_duration = 0;
 				enum bg_queue_types allowedTypes;
 
@@ -474,6 +475,13 @@ static void bg_config_read(void)
 					maxDuration = 30;
 				}
 
+				libconfig->setting_lookup_int(arena, "requeue_delay", &requeue_delay);
+
+				if( requeue_delay < 0 ) {
+					ShowWarning("bg_config_read: invalid %d value for arena '%s' requeue_delay, defaulting to 300.\n",requeue_delay,aName);
+					requeue_delay = 300;
+				}
+
 				libconfig->setting_lookup_int(arena, "fillDuration", &fillup_duration);
 				libconfig->setting_lookup_int(arena, "pGameDuration", &pregame_duration);
 
@@ -503,6 +511,7 @@ static void bg_config_read(void)
 				bg->arena[i]->max_players = maxPlayers;
 				bg->arena[i]->min_team_players = minTeamPlayers;
 				safestrncpy(bg->arena[i]->delay_var, aDelayVar, NAME_LENGTH);
+				bg->arena[i]->requeue_delay = requeue_delay;
 				bg->arena[i]->maxDuration = maxDuration;
 				bg->arena[i]->queue_id = script->queue_create();
 				bg->arena[i]->begin_timer = INVALID_TIMER;
@@ -623,7 +632,7 @@ static void bg_match_over(struct bg_arena *arena, bool canceled)
 		if (canceled)
 			clif->messagecolor_self(sd->fd, COLOR_RED, msg_sd(sd, MSGTBL_BG_MATCH_CANCELED_NO_PLAYERS)); // "BG Match Canceled: not enough players."
 		else
-			pc_setglobalreg(sd, script->add_variable(arena->delay_var), (unsigned int)time(NULL));
+			pc_setglobalreg(sd, script->add_variable(arena->delay_var), (unsigned int)time(NULL) + arena->requeue_delay);
 	}
 
 	arena->begin_timer = INVALID_TIMER;
