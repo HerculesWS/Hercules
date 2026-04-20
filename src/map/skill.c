@@ -4138,6 +4138,7 @@ static int skill_check_unit_range(struct block_list *bl, int x, int y, uint16 sk
 static int skill_check_unit_range2_sub(struct block_list *bl, va_list ap)
 {
 	uint16 skill_id;
+	struct status_change *sc;
 
 	if(bl->prev == NULL)
 		return 0;
@@ -4152,6 +4153,14 @@ static int skill_check_unit_range2_sub(struct block_list *bl, va_list ap)
 
 	if (skill_id == AM_DEMONSTRATION && bl->type == BL_MOB && BL_UCCAST(BL_MOB, bl)->class_ == MOBID_EMPELIUM)
 		return 0; //Allow casting Bomb/Demonstration Right under emperium [Skotlex]
+
+	// Check if character is hidden/invisible - hidden characters should not block trap placement
+	if (bl->type == BL_PC) {
+		sc = status->get_sc(bl);
+		if (sc && (sc->option & (OPTION_HIDE | OPTION_CLOAK | OPTION_INVISIBLE | OPTION_CHASEWALK)))
+			return 0; // Hidden/invisible characters don't block trap placement
+	}
+
 	return 1;
 }
 
