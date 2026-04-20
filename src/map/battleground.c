@@ -602,8 +602,10 @@ static void bg_queue_player_cleanup(struct map_session_data *sd)
 		else
 			clif->bgqueue_notice_delete(sd,BGQND_FAIL_NOT_QUEUING,bg->arena[0]->name);
 	}
-	if( sd->bg_queue.arena )
-		script->queue_remove(sd->bg_queue.arena->queue_id,sd->status.account_id);
+	if( sd->bg_queue.arena ) {
+		int qid = sd->bg_queue.arena->match_queue_id ? sd->bg_queue.arena->match_queue_id : sd->bg_queue.arena->queue_id;
+		script->queue_remove(qid, sd->status.account_id);
+	}
 	sd->bg_queue.arena = NULL;
 	sd->bg_queue.ready = 0;
 	sd->bg_queue.client_has_bg_data = 0;
@@ -779,6 +781,15 @@ static void bg_queue_check(struct bg_arena *arena)
 	}
 }
 
+static bool bg_member_meets_requirements(struct map_session_data *msd, struct bg_arena *arena)
+{
+	if (msd->status.base_level < arena->min_level || msd->status.base_level > arena->max_level)
+		return false;
+	if ((msd->job & JOBL_2) == 0)
+		return false;
+	return true;
+}
+
 static void bg_queue_add(struct map_session_data *sd, struct bg_arena *arena, enum bg_queue_types type)
 {
 	enum BATTLEGROUNDS_QUEUE_ACK result = bg->can_queue(sd,arena,type);
@@ -870,15 +881,6 @@ static void bg_queue_add(struct map_session_data *sd, struct bg_arena *arena, en
 	}
 	clif->bgqueue_ack(sd,BGQA_SUCCESS,arena->id);
 	bg->queue_check(arena);
-}
-
-static bool bg_member_meets_requirements(struct map_session_data *msd, struct bg_arena *arena)
-{
-	if (msd->status.base_level < arena->min_level || msd->status.base_level > arena->max_level)
-		return false;
-	if ((msd->job & JOBL_2) == 0)
-		return false;
-	return true;
 }
 
 static enum BATTLEGROUNDS_QUEUE_ACK bg_canqueue(struct map_session_data *sd, struct bg_arena *arena, enum bg_queue_types type)
