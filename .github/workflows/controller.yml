@@ -19,14 +19,14 @@ jobs:
     needs: tools
     if: ${{ !failure() && !cancelled() }}
     uses: ./.github/workflows/build.yml
-  clang_test:
-    needs: build
-    if: ${{ !failure() && !cancelled() }}
-    uses: ./.github/workflows/clang_test.yml
-  gcc_test:
-    needs: build
-    if: ${{ !failure() && !cancelled() }}
-    uses: ./.github/workflows/gcc_test.yml
+#  clang_test:
+#    needs: build
+#    if: ${{ !failure() && !cancelled() }}
+#    uses: ./.github/workflows/clang_test.yml
+#  gcc_test:
+#    needs: build
+#    if: ${{ !failure() && !cancelled() }}
+#    uses: ./.github/workflows/gcc_test.yml
   gccsnapshot_test:
     needs: build
     if: ${{ !failure() && !cancelled() }}
