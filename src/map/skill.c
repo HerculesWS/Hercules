@@ -11471,6 +11471,10 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 				clif->skill_fail(sd, skill_id, USESKILL_FAIL_TOTARGET_PLAYER, 0, 0);
 				break;
 			}
+			// Apply status effect for OB_OBOROGENSOU and OB_AKAITSUKI
+			clif->skill_nodamage(src, bl, skill_id, skill_lv, sc_start(src, bl, type, 100, skill_lv, skill->get_time(skill_id, skill_lv), skill_id));
+			clif->skill_damage(src, bl, tick, status_get_amotion(src), 0, -30000, 1, skill_id, skill_lv, BDT_SKILL);
+			break;
 		case KO_IZAYOI:
 		case OB_ZANGETSU:
 		case KG_KYOMU:
