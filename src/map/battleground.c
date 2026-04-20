@@ -514,6 +514,7 @@ static void bg_config_read(void)
 				bg->arena[i]->requeue_delay = requeue_delay;
 				bg->arena[i]->maxDuration = maxDuration;
 				bg->arena[i]->queue_id = script->queue_create();
+				bg->arena[i]->match_queue_id = 0;
 				bg->arena[i]->begin_timer = INVALID_TIMER;
 				bg->arena[i]->fillup_timer = INVALID_TIMER;
 				bg->arena[i]->pregame_duration = pregame_duration;
@@ -611,7 +612,8 @@ static void bg_queue_player_cleanup(struct map_session_data *sd)
 
 static void bg_match_over(struct bg_arena *arena, bool canceled)
 {
-	struct script_queue *queue = script->queue(arena->queue_id);
+	int active_queue_id = arena->match_queue_id ? arena->match_queue_id : arena->queue_id;
+	struct script_queue *queue = script->queue(active_queue_id);
 	int i;
 
 	nullpo_retv(arena);
@@ -635,10 +637,12 @@ static void bg_match_over(struct bg_arena *arena, bool canceled)
 			pc_setglobalreg(sd, script->add_variable(arena->delay_var), (unsigned int)time(NULL) + arena->requeue_delay);
 	}
 
-	arena->begin_timer = INVALID_TIMER;
-	arena->fillup_timer = INVALID_TIMER;
-	/* reset queue */
-	script->queue_clear(arena->queue_id);
+	if( arena->match_queue_id == 0 ) {
+		arena->begin_timer = INVALID_TIMER;
+		arena->fillup_timer = INVALID_TIMER;
+	}
+	script->queue_clear(active_queue_id);
+	arena->match_queue_id = 0;
 }
 
 static void bg_begin(struct bg_arena *arena)
@@ -665,13 +669,15 @@ static void bg_begin(struct bg_arena *arena)
 	if( count < arena->min_players ) {
 		bg->match_over(arena,true);
 	} else {
+		arena->match_queue_id = arena->queue_id;
+		arena->queue_id = script->queue_create();
 		arena->ongoing = true;
 
 		if( bg->afk_timer_id == INVALID_TIMER && bg->mafksec > 0 )
 			bg->afk_timer_id = timer->add(timer->gettick()+10000,bg->afk_timer,0,0);
 
 		/* TODO: make this a arena-independent var? or just .@? */
-		mapreg->setreg(script->add_variable("$@bg_queue_id"),arena->queue_id);
+		mapreg->setreg(script->add_variable("$@bg_queue_id"),arena->match_queue_id);
 		mapreg->setregstr(script->add_variable("$@bg_delay_var$"),bg->gdelay_var);
 
 		count = 0;
@@ -781,7 +787,7 @@ static void bg_queue_add(struct map_session_data *sd, struct bg_arena *arena, en
 
 	nullpo_retv(sd);
 	nullpo_retv(arena);
-	if( arena->begin_timer != INVALID_TIMER || arena->ongoing ) {
+	if( arena->begin_timer != INVALID_TIMER ) {
 		clif->bgqueue_ack(sd,BGQA_FAIL_QUEUING_FINISHED,arena->id);
 		return;
 	}
