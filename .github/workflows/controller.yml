@@ -19,10 +19,10 @@ jobs:
     needs: tools
     if: ${{ !failure() && !cancelled() }}
     uses: ./.github/workflows/build.yml
-  clang15_test:
+  clang_test:
     needs: build
     if: ${{ !failure() && !cancelled() }}
-    uses: ./.github/workflows/clang15_test.yml
+    uses: ./.github/workflows/clang_test.yml
   gcc_test:
     needs: build
     if: ${{ !failure() && !cancelled() }}
