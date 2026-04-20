@@ -15,8 +15,8 @@ jobs:
     timeout-minutes: 30
     strategy:
       matrix:
-        # gcc, clang-8, clang-9 removed for reduce number of jobs
-        CC: ["gcc-12", "clang-13"]
+        # Testing the oldest and newest supported version of gcc/clang on our supported platofrms
+        CC: ["clang-15", "clang-19", "gcc-12", "gcc-14"]
         RENEWAL: [""]
         CLIENT_TYPE: ["", "--enable-packetver-re", "--enable-packetver-zero"]
         HTTPLIB: ["", "--with-http_parser=llhttp"]
@@ -36,7 +36,7 @@ jobs:
       cancel-in-progress: true
 
     container:
-      image: debian:bookworm
+      image: ubuntu:24.04
     services:
       mariadb:
         image: mariadb:latest
