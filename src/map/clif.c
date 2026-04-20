@@ -24032,9 +24032,14 @@ static void clif_open_ui_send1(struct map_session_data *sd, enum zc_ui_types ui_
 
 	switch (ui_type) {
 	case ZC_BANK_UI:
-	case ZC_STYLIST_UI:
 	case ZC_CAPTCHA_UI:
 	case ZC_MACRO_UI:
+#if PACKETVER >= 20171122
+		p.data = data;
+#endif
+		break;
+	case ZC_STYLIST_UI:
+		sd->state.stylist_ui = 1;
 #if PACKETVER >= 20171122
 		p.data = data;
 #endif
@@ -24351,6 +24356,9 @@ static void clif_parse_cz_req_style_change(int fd, struct map_session_data *sd)
 	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
 		return;
 
+	if (sd->state.stylist_ui == 0)
+		return;
+
 	const struct PACKET_CZ_REQ_STYLE_CHANGE *p = RP2PTR(fd);
 
 	if (p->HeadStyle > 0)
@@ -24373,6 +24381,9 @@ static void clif_parse_cz_req_style_change2(int fd, struct map_session_data *sd)
 static void clif_parse_cz_req_style_change2(int fd, struct map_session_data *sd)
 {
 	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
+		return;
+
+	if (sd->state.stylist_ui == 0)
 		return;
 
 	const struct PACKET_CZ_REQ_STYLE_CHANGE2 *p = RP2PTR(fd);
@@ -24401,7 +24412,7 @@ static void clif_parse_cz_req_style_change2(int fd, struct map_session_data *sd)
 static void clif_parse_cz_style_close(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
 static void clif_parse_cz_style_close(int fd, struct map_session_data *sd)
 {
-	// do nothing
+	sd->state.stylist_ui = 0;
 }
 
 static void clif_style_change_response(struct map_session_data *sd, enum stylist_shop flag)
