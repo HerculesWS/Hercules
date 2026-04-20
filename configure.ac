@@ -766,7 +766,8 @@ AC_COMPILE_IFELSE(
 	]
 )
 
-CFLAGS="$CFLAGS -pipe -ffast-math -Wall -Wextra -Wno-sign-compare"
+# FIXME: Disabling no fininit math because CJson requires it, once we move dependencies away let's not make it global
+CFLAGS="$CFLAGS -pipe -ffast-math -fno-finite-math-only -Wall -Wextra -Wno-sign-compare"
 CPPFLAGS="$CPPFLAGS -I../common"
 LDFLAGS="$LDFLAGS"
 
