@@ -477,7 +477,7 @@ static void bg_config_read(void)
 
 				libconfig->setting_lookup_int(arena, "requeue_delay", &requeue_delay);
 
-				if( requeue_delay < 0 ) {
+				if (requeue_delay < 0) {
 					ShowWarning("bg_config_read: invalid %d value for arena '%s' requeue_delay, defaulting to 300.\n",requeue_delay,aName);
 					requeue_delay = 300;
 				}
@@ -602,8 +602,14 @@ static void bg_queue_player_cleanup(struct map_session_data *sd)
 		else
 			clif->bgqueue_notice_delete(sd,BGQND_FAIL_NOT_QUEUING,bg->arena[0]->name);
 	}
-	if( sd->bg_queue.arena )
-		script->queue_remove(sd->bg_queue.arena->queue_id,sd->status.account_id);
+	if (sd->bg_queue.arena) {
+		int qid;
+		if (sd->bg_queue.arena->match_queue_id)
+			qid = sd->bg_queue.arena->match_queue_id;
+		else
+			qid = sd->bg_queue.arena->queue_id;
+		script->queue_remove(qid, sd->status.account_id);
+	}
 	sd->bg_queue.arena = NULL;
 	sd->bg_queue.ready = 0;
 	sd->bg_queue.client_has_bg_data = 0;
@@ -637,7 +643,7 @@ static void bg_match_over(struct bg_arena *arena, bool canceled)
 			pc_setglobalreg(sd, script->add_variable(arena->delay_var), (unsigned int)time(NULL) + arena->requeue_delay);
 	}
 
-	if( arena->match_queue_id == 0 ) {
+	if (arena->match_queue_id == 0) {
 		arena->begin_timer = INVALID_TIMER;
 		arena->fillup_timer = INVALID_TIMER;
 	}
@@ -723,7 +729,7 @@ static int bg_afk_timer(int tid, int64 tick, int id, intptr_t data)
 	for (sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter))) {
 		if( !sd->bg_queue.arena || !sd->bg_id )
 			continue;
-		if( DIFF_TICK(sockt->last_tick, sd->idletime) > (bg->mafksec * 1000) )
+		if (DIFF_TICK(sockt->last_tick, sd->idletime) > (bg->mafksec * 1000))
 			bg->team_leave(sd,BGTL_AFK);
 		count++;
 	}
@@ -779,6 +785,15 @@ static void bg_queue_check(struct bg_arena *arena)
 	}
 }
 
+static bool bg_member_meets_requirements(struct map_session_data *sd, struct bg_arena *arena)
+{
+	if (sd->status.base_level < arena->min_level || sd->status.base_level > arena->max_level)
+		return false;
+	if ((sd->job & JOBL_2) == 0)
+		return false;
+	return true;
+}
+
 static void bg_queue_add(struct map_session_data *sd, struct bg_arena *arena, enum bg_queue_types type)
 {
 	enum BATTLEGROUNDS_QUEUE_ACK result = bg->can_queue(sd,arena,type);
@@ -787,7 +802,7 @@ static void bg_queue_add(struct map_session_data *sd, struct bg_arena *arena, en
 
 	nullpo_retv(sd);
 	nullpo_retv(arena);
-	if( arena->begin_timer != INVALID_TIMER ) {
+	if (arena->begin_timer != INVALID_TIMER) {
 		clif->bgqueue_ack(sd,BGQA_FAIL_QUEUING_FINISHED,arena->id);
 		return;
 	}
@@ -801,8 +816,10 @@ static void bg_queue_add(struct map_session_data *sd, struct bg_arena *arena, en
 		case BGQT_PARTY: {
 			struct party_data *p = party->search(sd->status.party_id);
 			for( i = 0; i < MAX_PARTY; i++ ) {
-				if( !p->data[i].sd || p->data[i].sd->bg_queue.arena != NULL ) continue;
-				if( !bg_member_meets_requirements(p->data[i].sd, arena) ) continue;
+				if (!p->data[i].sd || p->data[i].sd->bg_queue.arena != NULL)
+					continue;
+				if (!bg_member_meets_requirements(p->data[i].sd, arena))
+					continue;
 				count++;
 			}
 		}
@@ -811,7 +828,7 @@ static void bg_queue_add(struct map_session_data *sd, struct bg_arena *arena, en
 			for ( i=0; i<sd->guild->max_member; i++ ) {
 				if ( !sd->guild->member[i].sd || sd->guild->member[i].sd->bg_queue.arena != NULL )
 					continue;
-				if ( !bg_member_meets_requirements(sd->guild->member[i].sd, arena) )
+				if (!bg_member_meets_requirements(sd->guild->member[i].sd, arena))
 					continue;
 				count++;
 			}
@@ -840,8 +857,10 @@ static void bg_queue_add(struct map_session_data *sd, struct bg_arena *arena, en
 		case BGQT_PARTY: {
 			struct party_data *p = party->search(sd->status.party_id);
 			for( i = 0; i < MAX_PARTY; i++ ) {
-				if( !p->data[i].sd || p->data[i].sd->bg_queue.arena != NULL ) continue;
-				if( !bg_member_meets_requirements(p->data[i].sd, arena) ) continue;
+				if (!p->data[i].sd || p->data[i].sd->bg_queue.arena != NULL)
+					continue;
+				if (!bg_member_meets_requirements(p->data[i].sd, arena))
+					continue;
 				p->data[i].sd->bg_queue.type = type;
 				p->data[i].sd->bg_queue.arena = arena;
 				p->data[i].sd->bg_queue.ready = 0;
@@ -855,7 +874,7 @@ static void bg_queue_add(struct map_session_data *sd, struct bg_arena *arena, en
 			for ( i=0; i<sd->guild->max_member; i++ ) {
 				if ( !sd->guild->member[i].sd || sd->guild->member[i].sd->bg_queue.arena != NULL )
 					continue;
-				if ( !bg_member_meets_requirements(sd->guild->member[i].sd, arena) )
+				if (!bg_member_meets_requirements(sd->guild->member[i].sd, arena))
 					continue;
 				sd->guild->member[i].sd->bg_queue.type = type;
 				sd->guild->member[i].sd->bg_queue.arena = arena;
@@ -870,15 +889,6 @@ static void bg_queue_add(struct map_session_data *sd, struct bg_arena *arena, en
 	}
 	clif->bgqueue_ack(sd,BGQA_SUCCESS,arena->id);
 	bg->queue_check(arena);
-}
-
-static bool bg_member_meets_requirements(struct map_session_data *msd, struct bg_arena *arena)
-{
-	if (msd->status.base_level < arena->min_level || msd->status.base_level > arena->max_level)
-		return false;
-	if ((msd->job & JOBL_2) == 0)
-		return false;
-	return true;
 }
 
 static enum BATTLEGROUNDS_QUEUE_ACK bg_canqueue(struct map_session_data *sd, struct bg_arena *arena, enum bg_queue_types type)
@@ -928,11 +938,12 @@ static enum BATTLEGROUNDS_QUEUE_ACK bg_canqueue(struct map_session_data *sd, str
 				return BGQA_NOT_PARTY_GUILD_LEADER;
 			else {
 				int i, count = 0;
-				for ( i=0; i<sd->guild->max_member; i++ ) {
-					struct map_session_data *msd = sd->guild->member[i].sd;
-					if ( !msd || msd->bg_queue.arena != NULL )
+				struct guild *guild = sd->guild;
+				for (i = 0; i < guild->max_member; i++) {
+					struct map_session_data *sd = guild->member[i].sd;
+					if (!sd || sd->bg_queue.arena != NULL)
 						continue;
-					if ( !bg_member_meets_requirements(msd, arena) )
+					if (!bg_member_meets_requirements(sd, arena))
 						continue;
 					count++;
 				}
@@ -957,12 +968,12 @@ static enum BATTLEGROUNDS_QUEUE_ACK bg_canqueue(struct map_session_data *sd, str
 					bool is_leader = false;
 
 					for(i = 0; i < MAX_PARTY; i++) {
-						struct map_session_data *msd = p->data[i].sd;
-						if( !msd )
-							continue;
-						if( p->party.member[i].leader && sd == msd )
+						if (p->party.member[i].leader && p->data[i].sd == sd)
 							is_leader = true;
-						if( msd->bg_queue.arena == NULL && bg_member_meets_requirements(msd, arena) )
+						struct map_session_data *sd = p->data[i].sd;
+						if (!sd)
+							continue;
+						if (sd->bg_queue.arena == NULL && bg_member_meets_requirements(sd, arena))
 							count++;
 					}
 

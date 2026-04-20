@@ -2048,9 +2048,9 @@ static int map_quit(struct map_session_data *sd)
 	if (sd->npc_id)
 		npc->event_dequeue(sd);
 
-	if( sd->bg_id )
+	if (sd->bg_id)
 		bg->team_leave(sd,BGTL_QUIT);
-	else if( sd->bg_queue.arena )
+	else if (sd->bg_queue.arena)
 		bg->queue_pc_cleanup(sd);
 
 	if (sd->status.clan_id)
