@@ -1250,6 +1250,10 @@ Darwin*)
 	;;
 esac
 
+# FIXME: we should have this enabled however clang is too agressive
+# and we need to fix all functions etc that takes different enum values in bitfields together
+AC_CHECK_COMPILER_WNOFLAG(enum-enum-conversion)
+
 # Certain versions of gcc make -Wshadow completely useless by making it flood
 # you with unnecessary warnings <https://lkml.org/lkml/2006/11/28/239>
 # Let's check if we can really use it
