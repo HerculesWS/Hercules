@@ -2608,8 +2608,11 @@ static void status_calc_regen_pc(struct map_session_data *sd, struct status_data
 	nullpo_retv(sd);
 	nullpo_retv(st);
 	nullpo_retv(regen);
-	nullpo_retv(regen->sitting);
-	nullpo_retv(regen->skill);
+
+	if (regen->skill == NULL)
+		regen->skill = &sd->skill_regen;
+	if (regen->sitting == NULL)
+		regen->sitting = &sd->sitting_regen;
 
 	struct status_change *sc = &sd->sc;
 
@@ -2683,38 +2686,42 @@ static void status_calc_regen_pc(struct map_session_data *sd, struct status_data
 	}
 
 	// Skill HP/SP restore bonuses
-	struct regen_data_sub *skill_regen = regen->skill;
-	skill_regen->hp = 0;
-	skill_regen->sp = 0;
+	if (regen->skill != NULL) {
+		struct regen_data_sub *skill_regen = regen->skill;
+		skill_regen->hp = 0;
+		skill_regen->sp = 0;
 
-	if ((skill_lv = pc->checkskill(sd, SM_RECOVERY)) > 0)
-		skill_regen->hp += skill_lv * 5 + skill_lv * st->max_hp / 500;
+		if ((skill_lv = pc->checkskill(sd, SM_RECOVERY)) > 0)
+			skill_regen->hp += skill_lv * 5 + skill_lv * st->max_hp / 500;
 
-	if ((skill_lv = pc->checkskill(sd, MG_SRECOVERY)) > 0)
-		skill_regen->sp += skill_lv * 3 + skill_lv * st->max_sp / 500;
-	if ((skill_lv = pc->checkskill(sd, NJ_NINPOU)) > 0)
-		skill_regen->sp += skill_lv * 3 + skill_lv * st->max_sp / 500;
-	if ((skill_lv = pc->checkskill(sd, WM_LESSON)) > 0)
-		skill_regen->sp += skill_lv * 3 + skill_lv * st->max_sp / 500;
+		if ((skill_lv = pc->checkskill(sd, MG_SRECOVERY)) > 0)
+			skill_regen->sp += skill_lv * 3 + skill_lv * st->max_sp / 500;
+		if ((skill_lv = pc->checkskill(sd, NJ_NINPOU)) > 0)
+			skill_regen->sp += skill_lv * 3 + skill_lv * st->max_sp / 500;
+		if ((skill_lv = pc->checkskill(sd, WM_LESSON)) > 0)
+			skill_regen->sp += skill_lv * 3 + skill_lv * st->max_sp / 500;
+	}
 
 	// Skill HP/SP during sitting bonuses
-	struct regen_data_sub *sitting_regen = regen->sitting;
-	sitting_regen->hp = 0;
-	sitting_regen->sp = 0;
+	if (regen->sitting != NULL) {
+		struct regen_data_sub *sitting_regen = regen->sitting;
+		sitting_regen->hp = 0;
+		sitting_regen->sp = 0;
 
-	if ((skill_lv = pc->checkskill(sd, MO_SPIRITSRECOVERY)) > 0)
-		sitting_regen->hp += skill_lv * 4 + skill_lv * st->max_hp / 500;
+		if ((skill_lv = pc->checkskill(sd, MO_SPIRITSRECOVERY)) > 0)
+			sitting_regen->hp += skill_lv * 4 + skill_lv * st->max_hp / 500;
 
-	if ((skill_lv = pc->checkskill(sd, TK_HPTIME)) > 0 && sd->state.rest != 0)
-		sitting_regen->hp += skill_lv * 30 + skill_lv * st->max_hp / 500;
+		if ((skill_lv = pc->checkskill(sd, TK_HPTIME)) > 0 && sd->state.rest != 0)
+			sitting_regen->hp += skill_lv * 30 + skill_lv * st->max_hp / 500;
 
-	if ((skill_lv = pc->checkskill(sd, TK_SPTIME)) > 0 && sd->state.rest != 0) {
-		sitting_regen->sp += skill_lv * 3 + skill_lv * st->max_sp / 500;
-		if ((skill_lv = pc->checkskill(sd, SL_KAINA)) > 0) //Power up Enjoyable Rest
-			sitting_regen->sp += sitting_regen->sp * (30 + 10 * skill_lv) / 100;
+		if ((skill_lv = pc->checkskill(sd, TK_SPTIME)) > 0 && sd->state.rest != 0) {
+			sitting_regen->sp += skill_lv * 3 + skill_lv * st->max_sp / 500;
+			if ((skill_lv = pc->checkskill(sd, SL_KAINA)) > 0) //Power up Enjoyable Rest
+				sitting_regen->sp += sitting_regen->sp * (30 + 10 * skill_lv) / 100;
+		}
+		if ((skill_lv = pc->checkskill(sd, MO_SPIRITSRECOVERY)) > 0)
+			sitting_regen->sp += skill_lv * 2 + skill_lv * st->max_sp / 500;
 	}
-	if ((skill_lv = pc->checkskill(sd, MO_SPIRITSRECOVERY)) > 0)
-		sitting_regen->sp += skill_lv * 2 + skill_lv * st->max_sp / 500;
 }
 
 static void status_calc_regen_homunculus(struct homun_data *hd, struct status_data *st, struct regen_data *regen)
@@ -2793,6 +2800,14 @@ static void status_calc_regen(struct block_list *bl, struct status_data *st, str
 	nullpo_retv(st);
 	nullpo_retv(regen);
 
+	if (bl->type == BL_PC) {
+		struct map_session_data *sd = BL_UCAST(BL_PC, bl);
+		if (regen->skill == NULL)
+			regen->skill = &sd->skill_regen;
+		if (regen->sitting == NULL)
+			regen->sitting = &sd->sitting_regen;
+	}
+
 	regen->flag = RGN_HP | RGN_SP;
 	if (regen->skill != NULL || regen->sitting != NULL)
 		regen->flag |= RGN_SHP | RGN_SSP;
@@ -2841,8 +2856,11 @@ static void status_calc_regen_rate_pc(struct map_session_data *sd, struct regen_
 {
 	nullpo_retv(sd);
 	nullpo_retv(regen);
-	nullpo_retv(regen->skill);
-	nullpo_retv(regen->sitting);
+
+	if (regen->skill == NULL)
+		regen->skill = &sd->skill_regen;
+	if (regen->sitting == NULL)
+		regen->sitting = &sd->sitting_regen;
 
 	struct guild_castle *gc = guild->mapindex2gc(sd->bl.m);
 	if (gc != NULL && gc->guild_id == sd->status.guild_id) {
@@ -2874,7 +2892,10 @@ static void status_calc_regen_rate_pc(struct map_session_data *sd, struct regen_
 	// it's also applied last right before the actual heal function call [hemagx]
 	if (regen->state.overweight == 0 && sc->data[SC_TENSIONRELAX] != NULL) {
 		regen->rate.hp *= 3;
-		regen->skill->rate.hp *= 3;
+		// Only modify skill regen rate if skill regen data exists
+		if (regen->skill != NULL) {
+			regen->skill->rate.hp *= 3;
+		}
 	}
 }
 
@@ -2915,6 +2936,14 @@ static void status_calc_regen_rate(struct block_list *bl, struct regen_data *reg
 		return;
 
 	nullpo_retv(regen);
+
+	if (bl->type == BL_PC) {
+		struct map_session_data *sd = BL_UCAST(BL_PC, bl);
+		if (regen->skill == NULL)
+			regen->skill = &sd->skill_regen;
+		if (regen->sitting == NULL)
+			regen->sitting = &sd->sitting_regen;
+	}
 
 	regen->rate.hp = 100;
 	regen->rate.sp = 100;
@@ -13411,6 +13440,13 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 	if (sc && !sc->count)
 		sc = NULL;
 	sd = BL_CAST(BL_PC,bl);
+
+	if (bl->type == BL_PC && sd != NULL) {
+		if (regen->skill == NULL)
+			regen->skill = &sd->skill_regen;
+		if (regen->sitting == NULL)
+			regen->sitting = &sd->sitting_regen;
+	}
 
 	flag = regen->flag;
 	if (flag&RGN_HP && (st->hp >= st->max_hp || regen->state.block&1))
