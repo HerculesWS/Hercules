@@ -116,7 +116,7 @@ static int status_get_sc_relevant_bl_types(enum sc_type type)
 
 static int status_get_sc_icon(enum sc_type type)
 {
-	Assert_retr(SI_BLANK, type >= SC_NONE && type < SC_MAX);
+	Assert_retr(SI_BLANK, type > SC_NONE && type < SC_MAX);
 
 	return status->dbs->IconChangeTable[type].id;
 }
