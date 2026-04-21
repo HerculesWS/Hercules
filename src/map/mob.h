@@ -614,10 +614,10 @@ struct mob_interface {
 	void (*read_db_viewdata_sub) (struct mob_db *entry, struct config_setting_t *t);
 	void (*name_constants) (void);
 	void (*mobavail_removal_notice) (void);
+	void (*race2_db_removal_notice) (void);
 	bool (*parse_row_chatdb) (char **str, const char *source, int line, int *last_msg_id);
 	void (*readchatdb) (void);
 	void (*readskilldb) (void);
-	bool (*readdb_race2) (char *fields[], int columns, int current);
 	bool (*readdb_itemratio) (char *str[], int columns, int current);
 	void (*load) (bool minimal);
 	void (*clear_spawninfo) (void);
