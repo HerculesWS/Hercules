@@ -101,12 +101,10 @@ jobs:
       - name: test
         run: |
           export PATH=/usr/lib/gcc-snapshot/bin:$PATH
-          export LD_PRELOAD=/usr/lib/gcc-snapshot/lib/libasan.so.8.0.0
-          ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
+          ./tools/ci/travis.sh --sanitizer-build test ragnarok ragnarok ragnarok $SQLHOST
 
       - name: extra test
         if: env.PACKET_VERSION != '--enable-packetver=20130724'
         run: |
           export PATH=/usr/lib/gcc-snapshot/bin:$PATH
-          export LD_PRELOAD=/usr/lib/gcc-snapshot/lib/libasan.so.8.0.0
-          ./tools/ci/travis.sh extratest
+          ./tools/ci/travis.sh --sanitizer-build extratest

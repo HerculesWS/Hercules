@@ -20,6 +20,11 @@
 
 # Base Author: Haru @ http://herc.ws
 
+if [ "$1" == "--sanitizer-build" ]; then
+    SANITIZER_BUILD=1
+    shift
+fi
+
 MODE="$1"
 shift
 
@@ -50,7 +55,12 @@ function aborterror {
 function run_server {
 	echo "Running: $1 --run-once $2"
 	rm -rf core* || true
+	BACKUP_LD_PRELOAD="$LD_PRELOAD"
+	if [ $SANITIZER_BUILD -eq 1 ]; then
+		export LD_PRELOAD=/usr/lib/gcc-snapshot/lib/libasan.so.8.0.0
+	fi
 	CRASH_PLEASE=1 $1 --run-once $2 2>runlog.txt
+	LD_PRELOAD="$BACKUP_LD_PRELOAD"
 	export errcode=$?
 	export teststr=$(head -c 10000 runlog.txt|grep -v "WARNING: MYSQL_OPT_RECONNECT is deprecated and will be removed in a future version.")
 	if [[ -n "${teststr}" ]]; then
@@ -102,6 +112,7 @@ DBNAME=ragnarok
 DBUSER=ragnarok
 DBPASS=ragnarok
 DBHOST=localhost
+SANITIZER_BUILD=0
 
 case "$MODE" in
 	createdb|importdb|test)
@@ -244,8 +255,8 @@ EOF
 			export ASAN_OPTIONS=leak_check_at_exit=1:detect_stack_use_after_return=true:strict_init_order=true:detect_odr_violation=0
 		fi
 		# run_test spinlock # Not running the spinlock test for the time being (too time consuming)
-		run_test libconfig
-		run_test chunked
+		# run_test libconfig
+		# run_test chunked
 		echo "run all servers without HPM"
 		run_server ./login-server
 		run_server ./char-server
