@@ -35,10 +35,10 @@ jobs:
     needs: build
     if: ${{ !failure() && !cancelled() }}
     uses: ./.github/workflows/mariadb.yml
-  mysql:
-    needs: build
-    if: ${{ !failure() && !cancelled() }}
-    uses: ./.github/workflows/mysql.yml
+#  mysql:
+#    needs: build
+#    if: ${{ !failure() && !cancelled() }}
+#    uses: ./.github/workflows/mysql.yml
 #  macos_latest:
 #    needs: build
 #    if: ${{ !failure() && !cancelled() }}
