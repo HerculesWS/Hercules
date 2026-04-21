@@ -382,7 +382,7 @@ static void testChunked1(void)
 	testChunkedBuf("", 0);
 	show_success = false;
 	ShowStatus("Test long chunked\n");
-	for (int f = 0; f < MAX_TEST_BUFFER; f += 100) {
+	for (int f = 1; f < MAX_TEST_BUFFER; f += 100) {
 		// reallocate buffer always for detect overflow
 		char *buf = aCalloc(1, f);
 		for (int i = 0; i < f; i ++) {
