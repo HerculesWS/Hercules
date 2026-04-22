@@ -834,6 +834,144 @@ All these changes only affect Renewal. Pre-renewal is unchanged.
 - Rebalance of `WS_OVERTHRUSTMAX` (Maximum Power Thrust)
   - Removed chance of weapon destruction
 
+##### High Priest
+
+- Rebalance of `HP_BASILICA` Basilica
+  - Skill reworked. It is now a simple buff on the caster.
+  - SC_BASILICA_BUFF added (given by Basilica)
+    - Boosts MATK of Holy magic skills by `(3 x SkillLvel)%`
+    - Boosts Physical ATK by `(5 x SkillLevel)%` against elements Shadow and Undead
+  - Reduced fixed casting from `(4 + SkillLevel)s` to `1` s
+  - Added `3` s of Variable cast time
+  - Global delay reduced to `1` s
+  - Added Cooldown of `30s`
+  - SP cost reduced
+    - Old: `80 / 90 / 100 / 110 / 120` s
+    - New: `40 / 50 / 60 / 70 / 80` s
+  - SC Duration increased
+  - Item requirements removed
+- Rebalance of `HP_ASSUMPTIO ` Assumptio
+  - Effect changed
+    - Old: Doubles Hard DEF and Hard MDEF
+    - New: Increases Hard DEF by `(SkillLv x 50)`;
+    - Increases incoming heal effectivenes by `(SkillLv x 2)`%
+  - Can now be used together with Kyrie Eleison/Kaite/Praefaetio
+  - Global delay reduced to `0.5s` on all skill levels
+
+##### Sniper
+
+- Rebalance of `SN_SHARPSHOOTING` Focused Arrow Strike
+  - Reduced Fixed Cast Time: `1` s -> `0.5` s
+  - Reduced Variable Cast Time: `1` s -> `0.5` s
+  - Reduced Global skill delay: `1.5` s -> `0.5` s
+  - Changed damage formula:
+    - Old: `(100 + SkillLv x 50)` %
+    - New: `(150 + SkillLv x 200)` %
+  - Damage now scales with user's base level
+  - Changed critical rate bonus: `20` % -> `50` % (source: iRO Wiki)
+
+- Rebalance of `SN_FALCONASSAULT` Falcon Assault
+  - Damage formula changed
+     - Old: `(150 + SkillLv x 70)` % of Blitz Beat damage
+     - New:* `((Floor(AGI ÷ 2) x 2 + Floor(DEX ÷ 10) x 2 + Blitz_Beat_Lvl x 20 + Steel_Crow_Lv x 6) x Skill Level + Steel_Crow_Lvl x 6) x (Steel_Crow_Lvl ÷ 20 + Skill Level + Base Lvl ÷ 50)`
+* Note: Damage formula is based on iRO wiki
+
+##### High Wizard
+
+Rebalance of `HW_GRAVITATION` Gravitational Field
+  - Skill is reworked and is now a simple AOE Magic damage at position
+  - Damage changed:
+    - Old: `(500 + SkillLv x 100)` every `0.5` seconds for a period of time
+    - New: `(SkillLv x 50)` % MATK, in a pack of `(8 + SkillLv x 2)` hits
+  - Damage now scales with user's base level
+  - It no longer causes ASPD reduction
+  - SP Cost changed:
+    - Old: `20 / 40 / 60 / 80 / 100`
+    - New: `60 / 70 / 80 / 90 / 100`
+  - It no longer requires blue gemstone
+  - Fixed cast time reduced from `5` s to `1` s
+  - Added `5` s of Variable cast time
+  - Added `5` s of CoolDown
+  - Reduced Global Delay from 9s to 1s (see note)
+
+  Note: Hercules did not have a global delay for this skill, even though
+  official sources mention there used to be a 9s global delay. So this
+  commit is actually adding 1s of global delay instead of reducing
+
+Rebalance of `HW_NAPALMVULCAN` Napalm Vulcan
+  - Damage formula changed
+     - Old: SkillLevel Hits of `125` % MATK
+     - New: SkillLevel Hists of `(SkillLevel x 70)` % MATK
+  - Damage now scales with user's base level
+  - When hitting multiple targets, it no longer splits the damage
+  - Global delay reduced from `1` s to `0.5` s
+  - Added `1 s of Cooldown
+
+#### 2-2 Transcendent Classes
+
+##### Paladin
+
+- Rebalance of `PA_SHIELDCHAIN` Shield Chain
+  - Increase Range `4` -> `11`
+  - Damage formula changed
+    - Old: `(500 + SkillLv x 150)` %
+    - New: `(300 + SkillLv x 200)` %
+    - Damage now scales with user's base level
+
+- Rebalance of `PA_PRESSURE`  Gloria Domini
+  - Damage type changed from fixed to Holy Magic damage
+  - Damage formula changed:
+     - Old: `500 + SkillLv x 300` (Fixed)
+     - New: `(500 + SkillLv x 150)` % MATK
+     - Damage now scales with user's base level
+  - Variable casting reduced: `4` s -> `1` s
+  - Global delay reduced: `4` s -> `1` s
+
+##### Professor
+
+- Rebalance of `PF_HPCONVERSION` Indulge
+  - Reduce global delay to 0.5s on all skill levels*
+
+  NOTE: iRO Wiki says it is on "all skill levels", while the official
+  patch notes for kRO and iRO suggests it was generally reduced but only
+  level 5 really gets 0.5s... We are following iRO Wiki here
+
+##### Champion
+
+Rebalance of `CH_SOULCOLLECT` Zen
+- Fixed Cast Time reduced `2` s -> `1` s
+
+Rebalance of `CH_PALMSTRIKE` Raging Palm Strike
+- Damage formula changed:
+  - Old: `[200 + SkillLv * 100]` %
+  - New: `[200 + SkillLv * 100 + Str * 5]` %
+  - Damage now scales with user's base level
+
+Rebalance of `CH_TIGERFIST` Glacier Fist
+- Damage formula changed:
+  - Old: `[40 + 100 * SkillLv]` %
+  - New: `[500 + 150 * SkillLv]` %
+  - Damage now scales with user's base level
+
+Rebalance of `CH_CHAINCRUSH` Chain Crush Combo
+- Reduced number of spirit spheres: `2` -> `1`
+- Changed damage formula:
+  - Old: `[400 + 100 * SkillLv]` %
+  - New: `[200 * SkillLv]` %
+  - Damage now scales with user's base level
+
+##### Clown/Gypsy
+
+- `CG_LONGINGFREEDOM` (Longing for Freedom) removed,
+  replaced by CG_SPECIALSINGER (Skilled Special Singer)
+- Skilled Special Singer is a skill that removes `SC_ENSEMBLEFATIGUE`,
+  a SC caused when using ensemble skills which prevents skill usage
+  along other debuffs.
+
+### Fixed
+- Corrected EDP behavior on renewal `Meteor Assault` is no long affected by EDP and `Soul Destroy` is now affected by EDP. (#3350)
+- Changed EDP Weapon ATK increase in Renewal to match. (#3350)
+
 ### Other changes
 
 - The `is_quest` argument to `pc->gainexp()` has been changed to a `flags` bitmask enum, in order to allow expansion to different flags. (#3279)
