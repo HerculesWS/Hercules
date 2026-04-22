@@ -30,19 +30,19 @@ import re
 import sys
 
 RACE_NAMES = {
-    0:  'RC_FORMLESS',
-    1:  'RC_UNDEAD',
-    2:  'RC_BRUTE',
-    3:  'RC_PLANT',
-    4:  'RC_INSECT',
-    5:  'RC_FISH',
-    6:  'RC_DEMON',
-    7:  'RC_DEMIHUMAN',
-    8:  'RC_ANGEL',
-    9:  'RC_DRAGON',
-    10: 'RC_PLAYER',
-    11: 'RC_BOSS',
-    12: 'RC_NONBOSS',
+    0:  'RC_Formless',
+    1:  'RC_Undead',
+    2:  'RC_Brute',
+    3:  'RC_Plant',
+    4:  'RC_Insect',
+    5:  'RC_Fish',
+    6:  'RC_Demon',
+    7:  'RC_DemiHuman',
+    8:  'RC_Angel',
+    9:  'RC_Dragon',
+    10: 'RC_Player',
+    11: 'RC_Boss',
+    12: 'RC_NonBoss',
 }
 
 TYPE_NAMES = {
@@ -88,8 +88,8 @@ level_penalty_db: (
  **************************************************************************
 {
 \t// Level of the defending element (by default, may be Lv1 up to Lv4)
-\ttype: <EXP_PENALTY_RATE or ITEM_DROP_PENALTY_RATE>,
-\trace: <RC_* constant>,
+\ttype: <"EXP_PENALTY_RATE" or "ITEM_DROP_PENALTY_RATE">,
+\trace: <RC_* constant (e.g. "RC_Boss", "RC_NonBoss")>,
 \tdiff: <level difference>,
 \trate: <penalty rate, where 100 means 100% (base rate, no additions/reductions)>
 },
@@ -128,8 +128,8 @@ def main():
     print(HEADER)
     for type_id, race_id, diff, rate in entries:
         print('{')
-        print(f'\ttype: {TYPE_NAMES[type_id]},')
-        print(f'\trace: {RACE_NAMES[race_id]},')
+        print(f'\ttype: "{TYPE_NAMES[type_id]}",')
+        print(f'\trace: "{RACE_NAMES[race_id]}",')
         print(f'\tdiff: {diff},')
         print(f'\trate: {rate}')
         print('},')
