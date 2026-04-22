@@ -8026,7 +8026,7 @@ static void clif_autospell(struct map_session_data *sd, uint16 skill_lv, int *sk
 #if PACKETVER_MAIN_NUM >= 20090406 || defined(PACKETVER_RE) || defined(PACKETVER_ZERO) || PACKETVER_SAK_NUM >= 20080618
 	nullpo_retv(sd);
 
-#if PACKETVER_MAIN_NUM >= 20181128 || PACKETVER_RE_NUM >= 20181031
+#if PACKETVER_MAIN_NUM >= 20181128 || PACKETVER_RE_NUM >= 20181031 || PACKETVER_ZERO_NUM >= 20180523
 	const int len = sizeof(struct PACKET_ZC_AUTOSPELLLIST) + sizeof(int) * list_len;
 #else
 	const int len = sizeof(struct PACKET_ZC_AUTOSPELLLIST);
@@ -8043,7 +8043,7 @@ static void clif_autospell(struct map_session_data *sd, uint16 skill_lv, int *sk
 	memset(p, 0, sizeof(struct PACKET_ZC_AUTOSPELLLIST));
 
 	p->packetType = HEADER_ZC_AUTOSPELLLIST;
-#if PACKETVER_MAIN_NUM >= 20181128 || PACKETVER_RE_NUM >= 20181031
+#if PACKETVER_MAIN_NUM >= 20181128 || PACKETVER_RE_NUM >= 20181031 || PACKETVER_ZERO_NUM >= 20180523
 	p->packetLength = len;
 #endif
 	memcpy(p->skills, skill_ids_list, sizeof(int) * list_len);

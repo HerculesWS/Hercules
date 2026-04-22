@@ -12159,7 +12159,7 @@ static BUILDIN(getexp)
 	base = cap_value(apply_percentrate(base, battle_config.quest_exp_rate, 100), 0, INT_MAX);
 	job = cap_value(apply_percentrate(job, battle_config.quest_exp_rate, 100), 0, INT_MAX);
 
-	pc->gainexp(sd, &sd->bl, base, job, true);
+	pc->gainexp(sd, &sd->bl, base, job, EXP_FLAG_QUEST);
 
 	return true;
 }
@@ -30670,6 +30670,9 @@ static void script_hardcoded_constants(void)
 	script->set_constant("UNIT_PARAM_MAX_ASPD", UNIT_PARAM_MAX_ASPD, false, false);
 	script->set_constant("UNIT_PARAM_MAX_HP", UNIT_PARAM_MAX_HP, false, false);
 	script->set_constant("UNIT_PARAM_MAX_STATS", UNIT_PARAM_MAX_STATS, false, false);
+
+	script->constdb_comment("autospell db constants");
+	script->set_constant2("HALF_AUTOSPELL_LEVEL", HALF_AUTOSPELL_LEVEL, false, false);
 
 	script->constdb_comment("Renewal");
 #ifdef RENEWAL

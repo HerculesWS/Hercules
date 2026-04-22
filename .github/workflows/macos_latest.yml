@@ -22,6 +22,13 @@ jobs:
         HTTPLIB: ["", "--with-http_parser=llhttp"]
         SANITIZER: ["--disable-manager", "--disable-manager --enable-sanitize=full"]
         PACKET_VERSION: ["--enable-packetver=20221024", "--enable-packetver=20130724"]
+        include:
+          # Empty CLASSIC_AUTOSPELL_LIST for every other flow
+          - CLASSIC_AUTOSPELL_LIST: ""
+          # Use "-DCLASSIC_AUTOSPELL_LIST" for 20130724 RE or we will get warnings due to the list being too small
+          - PACKET_VERSION: "--enable-packetver=20130724"
+            RENEWAL: ""
+            CLASSIC_AUTOSPELL_LIST: "-DCLASSIC_AUTOSPELL_LIST"
         exclude:
           - PACKET_VERSION: "--enable-packetver=20130724"
             CLIENT_TYPE: "--enable-packetver-zero"
@@ -36,6 +43,7 @@ jobs:
       CC: ${{ matrix.CC }}
       CONFIGURE_FLAGS: CC=${{ matrix.CC }} --enable-debug --enable-Werror --enable-buildbot ${{ matrix.RENEWAL }} ${{ matrix.HTTPLIB }} ${{ matrix.CLIENT_TYPE }} ${{ matrix.SANITIZER }} ${{ matrix.PACKET_VERSION }}
       PACKET_VERSION: ${{ matrix.PACKET_VERSION }}
+      CLASSIC_AUTOSPELL_LIST: ${{ matrix.CLASSIC_AUTOSPELL_LIST }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -47,7 +55,7 @@ jobs:
 
       - name: prepare the build environment
         run: |
-          echo "CPPFLAGS=-I$(brew --prefix)/include" >> $GITHUB_ENV
+          echo "CPPFLAGS=-I$(brew --prefix)/include $CLASSIC_AUTOSPELL_LIST" >> $GITHUB_ENV
           echo "LDFLAGS=-L$(brew --prefix)/lib" >> $GITHUB_ENV
 
       - name: install packages

@@ -75,6 +75,7 @@ prontera,146,163,6	script	Novice Castles	4_F_NOVICE,{
 		} else if (select("Warp me to Novice Castles","Cancel") == 1) {
 			// remove several unallowed buffs
 			sc_end SC_ASSUMPTIO;
+			sc_end SC_ASSUMPTIO_BUFF;
 			sc_end SC_IMPOSITIO;
 			sc_end SC_SUFFRAGIUM;
 			sc_end SC_MAGNIFICAT;

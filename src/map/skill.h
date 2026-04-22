@@ -70,20 +70,26 @@ struct status_change_entry;
 #endif  // CUSTOM_SKILL_RANGES
 
 
+// For Bard/Dancer skills: Tells whether skill belongs to both classes (true) or not (false)
+// used by changesex so invalid skills get properly cleaned up
 // (Epoque:) To-do: replace this macro with some sort of skill tree check (rather than hard-coded skill names)
 #define skill_ischangesex(id) ( \
 	((id) >= BD_ADAPTATION     && (id) <= DC_SERVICEFORYOU) || ((id) >= CG_ARROWVULCAN && (id) <= CG_MARIONETTE) || \
-	((id) >= CG_LONGINGFREEDOM && (id) <= CG_TAROTCARD)     || ((id) >= WA_SWING_DANCE && (id) <= WM_UNLIMITED_HUMMING_VOICE))
+	((id) >= CG_LONGINGFREEDOM && (id) <= CG_TAROTCARD)     || ((id) >= WA_SWING_DANCE && (id) <= WM_UNLIMITED_HUMMING_VOICE) || \
+	((id) == CG_SPECIALSINGER))
 
 #define MAX_SKILL_SPELLBOOK_DB     17
 #define MAX_SKILL_MAGICMUSHROOM_DB 23
-#define MAX_AUTOSPELL_DB           7
+#define MAX_AUTOSPELL_DB           9
 
 //Walk intervals at which chase-skills are attempted to be triggered.
 #define WALK_SKILL_INTERVAL 5
 
 // Max Crimson Marker targets (RL_C_MARKER)
 #define MAX_SKILL_CRIMSON_MARKER 3
+
+// Autospell db special level/constant for "use half of casted level"
+#define HALF_AUTOSPELL_LEVEL -1
 
 /**
  * Enumerations
@@ -1509,6 +1515,9 @@ enum e_skill {
 	SU_CHATTERING,
 	SU_SPIRITOFSEA,
 
+	// 2018.11 rebalance - new Clown/Gypsy skill that replaces Longing for Freedom
+	CG_SPECIALSINGER = 5068,
+
 	HLIF_HEAL = 8001,
 	HLIF_AVOID,
 	HLIF_BRAIN,
@@ -1815,7 +1824,7 @@ enum skill_enabled_npc_flags {
 struct s_autospell_db {
 	int autospell_level; //< Minimum AutoSpell level to show this skill
 	int skill_id; //< Skill Id
-	int skill_lv[MAX_SKILL_LEVEL]; //< Maximum usable skill level at each AutoSpell level
+	int skill_lv[MAX_SKILL_LEVEL]; //< Maximum usable skill level at each AutoSpell level (also accepts HALF_AUTOSPELL_LEVEL as level)
 	bool spirit_boost; //< Whether Sage's Spirit boosts this skill to maximum level
 };
 
@@ -2189,6 +2198,8 @@ struct skill_interface {
 	int (*arrow_create) ( struct map_session_data *sd,int nameid);
 	void (*castend_type) (enum cast_enum type, struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag);
 	int (*castend_nodamage_id) (struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag);
+	void (*castend_nodamage_id_sc_song) (struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag);
+	void (*castend_nodamage_id_ugly_dance) (struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag);
 	int (*castend_damage_id) (struct block_list* src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick,int flag);
 	int (*castend_pos2) (struct block_list *src, int x, int y, uint16 skill_id, uint16 skill_lv, int64 tick, int flag);
 	int (*blockpc_start) (struct map_session_data *sd, uint16 skill_id, int tick);

@@ -65,6 +65,19 @@
 //#define DEVOTION_REFLECT_DAMAGE
 
 /**
+ * When enabled, RENEWAL servers loads db/pre-re/autospell_db.conf instead of db/re/autospell_db.conf.
+ *
+ * This makes the autospell skill list and used levels follow Pre-RE version, but every other effect stays as renewal.
+ *
+ * More details:
+ * - Maximum used level of a skill will follow Pre-RE, instead of the half autospell level of RE
+ * - Bolt skills will stay at the maximum "enabled" level instead of random levels
+ *
+ * You may want to enable this if you have a client that can't support the list with more than 7 skills.
+ */
+//#define CLASSIC_AUTOSPELL_LIST
+
+/**
  * No settings past this point
  **/
 

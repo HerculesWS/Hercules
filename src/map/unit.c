@@ -1558,8 +1558,12 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 	tstatus = status->get_status_data(target);
 	// Record the status of the previous skill)
 	if (sd) {
-
-		if ((skill->get_inf2(skill_id)&INF2_ENSEMBLE_SKILL) && skill->check_pc_partner(sd, skill_id, &skill_lv, 1, 0) < 1) {
+#ifdef RENEWAL
+		static const int ensemble_range = 4;
+#else
+		static const int ensemble_range = 1;
+#endif
+		if ((skill->get_inf2(skill_id)&INF2_ENSEMBLE_SKILL) && skill->check_pc_partner(sd, skill_id, &skill_lv, ensemble_range, 0) < 1) {
 			clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
 			return 0;
 		}
@@ -1656,10 +1660,12 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 		} else if (!status->isdead(target))
 			return 0; //Can't cast on non-dead characters.
 	break;
+#ifndef RENEWAL
 	case MO_FINGEROFFENSIVE:
 		if(sd)
 			casttime += casttime * min(skill_lv, sd->spiritball);
 	break;
+#endif
 	case MO_EXTREMITYFIST:
 		if (sc && sc->data[SC_COMBOATTACK] &&
 		   (sc->data[SC_COMBOATTACK]->val1 == MO_COMBOFINISH ||
@@ -1705,10 +1711,14 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 		if (sc && sc->data[SC_RUN])
 			casttime = -1;
 	break;
+
+#ifndef RENEWAL // 2018.11 rebalance - Basilica changed to a self buff
 	case HP_BASILICA:
 		if( sc && sc->data[SC_BASILICA] )
 			casttime = -1; // No Casting time on basilica cancel
 	break;
+#endif
+
 	case KN_CHARGEATK:
 		{
 		unsigned int k = (distance_bl(src,target)-1)/3; //+100% every 3 cells of distance
