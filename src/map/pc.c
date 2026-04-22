@@ -11646,7 +11646,6 @@ static bool pc_read_level_penalty_db_sub(const struct config_setting_t *it, int 
 
 	const char *type_str = NULL;
 	if (libconfig->setting_lookup_string(it, "type", &type_str)) {
-		// Handle type constants
 		if (strcmp(type_str, "EXP_PENALTY_RATE") == 0) {
 			type = 1;
 		} else if (strcmp(type_str, "ITEM_DROP_PENALTY_RATE") == 0) {
@@ -11660,7 +11659,7 @@ static bool pc_read_level_penalty_db_sub(const struct config_setting_t *it, int 
 		return false;
 	}
 
-	if (!libconfig->setting_lookup_int(it, "race", &race)) {
+	if (!map->setting_lookup_const(it, "race", &race)) {
 		ShowError("%s: Invalid or missing race for entry %d in '%s', skipping...\n", __func__, n, source);
 		return false;
 	}
