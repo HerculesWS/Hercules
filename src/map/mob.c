@@ -4456,12 +4456,18 @@ static bool mob_read_optdrops_db(void)
 		return false;
 	}
 
-	struct config_setting_t *its = libconfig->lookup(&option_groups, "option_drop_group_db");
-	struct config_setting_t *groups = NULL;
+	struct config_setting_t *its = NULL;
+	if ((its = libconfig->lookup(&option_groups, "option_drop_group_db")) == NULL) {
+		ShowError("can't read %s\n", filepath);
+		libconfig->destroy(&option_groups);
+		return false;
+	}
+
+	struct config_setting_t *groups = libconfig->setting_get_elem(its, 0);
+	int count = 0;
 
 	int i = 0;
-	if (its != NULL && (groups = libconfig->setting_get_elem(its, 0)) != NULL) {
-		int count = libconfig->setting_length(groups);
+	if (groups != NULL && (count = libconfig->setting_length(groups)) > 0) {
 		mob->opt_drop_groups = aCalloc(count, sizeof(struct optdrop_group));
 		mob->opt_drop_groups_count = count; // maximum size (used by assertions)
 
@@ -6109,6 +6115,9 @@ static void mob_destroy_mob_db(int index)
  */
 static void mob_destroy_drop_groups(void)
 {
+	if (mob->opt_drop_groups == NULL)
+		return;
+
 	for (int i = 0; i < mob->opt_drop_groups_count; i++) {
 		struct optdrop_group *group = &mob->opt_drop_groups[i];
 
@@ -6197,6 +6206,8 @@ void mob_defaults(void)
 
 	memset(mob->db_data, 0, sizeof(mob->db_data));
 	mob->dummy = NULL;
+	mob->opt_drop_groups = NULL;
+	mob->opt_drop_groups_count = 0;
 	memset(mob->chat_db, 0, sizeof(mob->chat_db));
 
 	memcpy(mob->manuk, mob_manuk, sizeof(mob->manuk));

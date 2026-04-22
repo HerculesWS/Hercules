@@ -45,7 +45,7 @@ jobs:
       PACKET_VERSION: ${{ matrix.PACKET_VERSION }}
       CLASSIC_AUTOSPELL_LIST: ${{ matrix.CLASSIC_AUTOSPELL_LIST }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 1
 

@@ -21,7 +21,7 @@ jobs:
         HTTPLIB: ["", "--with-http_parser=llhttp"]
         SANITIZER: ["--disable-manager", "--enable-sanitize=full"]
         PACKET_VERSION: ["--enable-packetver=20221024"]
-        MYSQL: ["10.2", "latest"]
+        MYSQL: ["10.11", "11.8", "latest"]
 
     # github.head_ref will stop previous runs in the same PR (if in a PR)
     # github.run_id is a fallback when outside a PR (e.g. every merge in master will run, and previous won't stop)
@@ -30,7 +30,7 @@ jobs:
       cancel-in-progress: true
 
     container:
-      image: debian:unstable
+      image: ubuntu:24.04
     services:
       mysql:
         image: mariadb:${{ matrix.MYSQL }}
@@ -53,7 +53,7 @@ jobs:
       CONFIGURE_FLAGS: CC=${{ matrix.CC }} --enable-debug --enable-Werror --enable-buildbot ${{ matrix.RENEWAL }} ${{ matrix.HTTPLIB }} ${{ matrix.CLIENT_TYPE }} ${{ matrix.SANITIZER }} ${{ matrix.PACKET_VERSION }}
       PACKET_VERSION: ${{ matrix.PACKET_VERSION }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 1
 

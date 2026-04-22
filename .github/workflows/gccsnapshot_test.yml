@@ -39,7 +39,7 @@ jobs:
       cancel-in-progress: true
 
     container:
-      image: debian:unstable
+      image: ubuntu:24.04
     services:
       mariadb:
         image: mariadb:latest
@@ -62,7 +62,7 @@ jobs:
       CONFIGURE_FLAGS: CC=${{ matrix.CC }} --enable-debug --enable-Werror --enable-buildbot ${{ matrix.RENEWAL }} ${{ matrix.HTTPLIB }} ${{ matrix.CLIENT_TYPE }} ${{ matrix.SANITIZER }} ${{ matrix.PACKET_VERSION }} --enable-lto CPPFLAGS=${{ matrix.CLASSIC_AUTOSPELL_LIST }}
       PACKET_VERSION: ${{ matrix.PACKET_VERSION }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 1
 
@@ -101,12 +101,10 @@ jobs:
       - name: test
         run: |
           export PATH=/usr/lib/gcc-snapshot/bin:$PATH
-          export LD_PRELOAD=/usr/lib/gcc-snapshot/lib/libasan.so.8.0.0
-          ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
+          ./tools/ci/travis.sh --sanitizer-build test ragnarok ragnarok ragnarok $SQLHOST
 
       - name: extra test
         if: env.PACKET_VERSION != '--enable-packetver=20130724'
         run: |
           export PATH=/usr/lib/gcc-snapshot/bin:$PATH
-          export LD_PRELOAD=/usr/lib/gcc-snapshot/lib/libasan.so.8.0.0
-          ./tools/ci/travis.sh extratest
+          ./tools/ci/travis.sh --sanitizer-build extratest

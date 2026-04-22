@@ -766,7 +766,8 @@ AC_COMPILE_IFELSE(
 	]
 )
 
-CFLAGS="$CFLAGS -pipe -ffast-math -Wall -Wextra -Wno-sign-compare"
+# FIXME: Disabling no fininit math because CJson requires it, once we move dependencies away let's not make it global
+CFLAGS="$CFLAGS -pipe -ffast-math -fno-finite-math-only -Wall -Wextra -Wno-sign-compare"
 CPPFLAGS="$CPPFLAGS -I../common"
 LDFLAGS="$LDFLAGS"
 
@@ -1249,6 +1250,10 @@ Darwin*)
 	AC_CHECK_COMPILER_WNOFLAG(deprecated-declarations)
 	;;
 esac
+
+# FIXME: we should have this enabled however clang is too agressive
+# and we need to fix all functions etc that takes different enum values in bitfields together
+AC_CHECK_COMPILER_WNOFLAG(enum-enum-conversion)
 
 # Certain versions of gcc make -Wshadow completely useless by making it flood
 # you with unnecessary warnings <https://lkml.org/lkml/2006/11/28/239>

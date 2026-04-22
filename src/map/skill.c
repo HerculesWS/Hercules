@@ -12863,7 +12863,7 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 #ifndef RENEWAL // 2018.10 rebalance - HW_GRAVITATION is a basic magic damage skill now
 			if ((sg = skill->unitsetting(src,skill_id,skill_lv,x,y,0)))
 				sc_start4(src, src, type, 100, skill_lv, 0, BCT_SELF, sg->group_id, skill->get_time(skill_id, skill_lv), skill_id);
-				flag|=1;
+			flag |=1;
 #else
 			r = skill->get_splash(skill_id,skill_lv);
 			map->foreachinarea(skill->area_sub, src->m, x - r, y - r, x + r, y + r, skill->splash_target(src),
