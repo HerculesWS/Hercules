@@ -24,12 +24,57 @@ If you are reading this in a text editor, simply ignore this section
 
 ## [v2026.04] `April 2026`
 
+### Added
+
+- Added support for constants from `item_options.conf` to be exported by constdb2doc.
+- Added a unit test for headgear/costume overlapping interaction. (#3397)
+- Added script function `F_GetMobNaviList` that allows for displaying a list of mobs, their count and have their names navi linked. (#3406)
+- Added Cart Decoration skill quest based on kRO Zero. (#3406)
+
+### Changed
+
+- Migrated `mob_race2_db.txt` to `RaceGroup` field in `mob_db.conf` a conversion script to convert your database can be found at `tools/mob_race2_db_converter.py`. (#3394)
+- Migrated `level_panalty.txt` to config format at`level_penalty.conf` a conversion script to convert your database can be found at `tools/level_penalty_converter.py`. (#3393, #3412)
+
+### Fixed
+
+- Fixed a logical flaw in the hateffect script function, where calling it with `enabled = 0` (to remove an effect) would still add the `effectId` to the `hatEffectId` vector if it wasn't already present. (#3349)
+- Fixed chat room kicked list not being properly freed after chat room is destroyed. (#3368, issue #787)
+- Fixed `GN_SLINGITEM` not working when ammo is in slot 0 in inventory. (#3371)
+- Fixed various issued with txt -> conf mob db converter. (#3390, issue #2766)
+- Fixed costume overlapping and `noviewid` behavior. (#3397)
+- Fixed castle seige type being filled with whatever integer value was read before it when server fails to read it instead of defaulting to `SIEGE_TYPE_FE`. (#3398)
+- Fixed Gentle touch reducing max HP more than it should. From `4` % per level to `1` % per level. (#3358)
+- Fixed a mix between `sc_type` and `si_type` in `SC_ARMORPROPERTY` with may lead to confusion. (#3410)
+- Corrected the assertion in `status_get_sc_icon` on `type` that allowed a buffer overflow. (#3410)
+- Fixed a buffer overflow in `test_chunked`. (#3410)
+- Fixed random options drop groups doing a size 0 allocation when none is provided in database, this also fixes the size of it being uninitalized. (#3410)
+
 ### Other changes
 
 - The `is_quest` argument to `pc->gainexp()` has been changed to a `flags` bitmask enum, in order to allow expansion to different flags. (#3279)
 - Fixed the damage increase by STR of `KN_BRANDISHSPEAR` it should increase the ratio by 5 for each STR point, not 1. (#3331)
 - Corrected EDP behavior on renewal `Meteor Assault` is no long affected by EDP and `Soul Destroy` is now affected by EDP. (#3350)
 - Changed EDP Weapon ATK increase in Renewal to match pre-renewal as it gave more accurate results in tests. (#3350)
+- Added an assert to ensure `MAX_PACKET_DB` is within the range of 2 bytes. (#3309)
+- Added an alert when plugins tries to add a packet outside of the supported range. (#3309)
+- Added `.vs/` folder to `.gitignore`. (#3355)
+- Moved from `php-sqllint` to `SQLFluff` to lint SQL files in repository. (#3399)
+- Update Visual Studio project files to include latest changes. (#3408)
+- Removed CI providers that we no longer use (Appveyor, Travis). (#3410)
+- Refactored CI builds to only build for actively supported platform, software and compilers. (#3410)
+- Temporary disabled builds that requires a newer version of libpcre until we migrate to it. (#3410)
+- Temporary disabled `-Wenum-enum-conversion` and `-fno-finite-math-only` compiling flags. (#3410)
+- Implemented a simple block-header for disabled memory manager builds to allow the lookup of allocated memory size. (#3410)
+  - This also fixed a buffer overflow in `aReallocZ`.
+- Updated CI github actions version and code analyzer version. (#3410)
+- Updated sanitizer builds to only load the sanitizer for the targetted server/test decreasing false positive. (#3410)
+
+### Deprecated
+- At some point in the future support for MSVC will be completely removed and so is support for windows, the recommended setup for developers on windows is to use WSL with your favorite flavor of linux.
+- Xcode project will be removed in the future
+
+Please check [Supported Platforms](https://github.com/HerculesWS/Hercules/wiki/Supported-Platforms) know about our updated support strategy for platforms, compilers and database.
 
 ### Rebalance changes
 
