@@ -10,7 +10,7 @@ env:
 
 jobs:
   hwsapi:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu:24.04
     concurrency:
       group: hwsapibot
       cancel-in-progress: true
