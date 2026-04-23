@@ -5019,7 +5019,12 @@ static void clif_getareachar_unit(struct map_session_data *sd, struct block_list
 		case BL_PC:
 		{
 			struct map_session_data *tsd = BL_UCAST(BL_PC, bl);
+			struct status_change *t_sc = status->get_sc(bl);
 			clif->getareachar_pc(sd, tsd);
+			if (t_sc != NULL && (t_sc->option & (OPTION_HIDE | OPTION_CLOAK | OPTION_CHASEWALK)) != 0
+			    && clif->isdisguised(bl) && (sd->sc.data[SC_CLAIRVOYANCE] != NULL || sd->special_state.intravision != 0)) {
+				clif->refreshlook(&sd->bl, bl->id, LOOK_BASE, tsd->status.class, SELF);
+			}
 			if (tsd->state.size == SZ_BIG) // tiny/big players [Valaris]
 				clif->specialeffect_single(bl,423,sd->fd);
 			else if (tsd->state.size == SZ_MEDIUM)
