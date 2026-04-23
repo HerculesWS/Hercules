@@ -343,6 +343,78 @@ OnInit:
 	sellitem Thunder_P;
 }
 
+//== Al De Baran ===========================================
+aldeba_in,94,56,5	trader	Tool Dealer#alde	4_M_01,{
+OnInit:
+	sellitem Red_Potion;
+	sellitem Orange_Potion;
+	sellitem Yellow_Potion;
+	sellitem White_Potion;
+	sellitem Green_Potion;
+	sellitem Center_Potion;
+	sellitem Awakening_Potion;
+	sellitem Wing_Of_Fly;
+	sellitem Wing_Of_Butterfly;
+	sellitem Spectacles;
+	sellitem Leaf_Of_Yggdrasil;
+}
+
+alde_alche,38,184,3	trader	Material Seller#alche	4_M_SAGE_C,{
+OnInit:
+	sellitem Life_Force_Pot;
+	sellitem Yggdrasilberry_Dew;
+	sellitem Seed_Of_Life;
+}
+
+//== Lighthalzen ===========================================
+lhz_in02,31,145,4	trader	Tool Dealer#lhz	4_F_01,{
+OnInit:
+	sellitem Spectacles;
+	sellitem Yellow_Potion;
+	sellitem White_Potion;
+	sellitem Green_Potion;
+	sellitem Berserk_Potion;
+	sellitem Awakening_Potion;
+	sellitem Wing_Of_Fly;
+	sellitem Wing_Of_Butterfly;
+	sellitem Booby_Trap;
+	sellitem Leaf_Of_Yggdrasil;
+	sellitem Iron_Arrow;
+}
+
+lhz_in02,87,208,3	trader	Toy Supplier#lhz	4_M_PIERROT,{
+OnInit:
+	sellitem Spinning_Eyes;
+	sellitem Eye_Bandage;
+	sellitem Luxury_Sunglasses;
+	sellitem Granpa_Beard;
+}
+
+lhz_in03,239,106,5	trader	Tool Dealer#lhz2	4_F_EINWOMAN,{
+OnInit:
+	sellitem Red_Potion;
+	sellitem Orange_Potion;
+	sellitem Green_Potion;
+	sellitem Center_Potion;
+	sellitem Awakening_Potion;
+	sellitem Wing_Of_Fly;
+	sellitem Wing_Of_Butterfly;
+	sellitem Booby_Trap;
+	sellitem Spectacles;
+}
+
+lighthalzen,222,191,4	trader	Pet Groomer#lhz	4_M_TELEPORTER,{
+OnInit:
+	sellitem Pet_Food;
+	sellitem Pet_Incubator;
+	sellitem Backpack;
+	sellitem Rocker_Glasses;
+	sellitem Mojji;
+	sellitem Vital_Flower_;
+	sellitem Flame_Gemstone;
+	sellitem Bun_;
+}
+
 //== Cooking Addition ======================================
 prontera,156,212,1	trader	Chef Assistant#prt	8_F_GIRL,{
 OnInit:
@@ -374,4 +446,17 @@ OnInit:
 payon,206,119,5	trader	Chef Assistant#pay	4_M_ORIENT02,{
 OnInit:
 	sellitem Hot_Sauce;
+}
+
+aldebaran,165,107,2	trader	Chef Assistant#alde	4W_M_01,{
+OnInit:
+	sellitem Red_Spice;
+	sellitem Yellow_Spice;
+	sellitem Bread;
+}
+
+lighthalzen,126,126,3	trader	Chef Assistant#lhz	4_M_01,{
+OnInit:
+	sellitem Red_Spice;
+	sellitem Yellow_Spice;
 }
