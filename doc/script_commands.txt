@@ -2245,6 +2245,20 @@ Example:
 
 ---------------------------------------
 
+*bitcount(<number>)
+
+This command returns the number of set bits in an integer.
+Also called popcount in many programming languages.
+Very usefull when working with bitmasks.
+
+Example:
+
+bitcount(3);             // 2
+bitcount(0b10101010);    // 4
+bitcount(0xFF);          // 8
+
+---------------------------------------
+
 *if (<condition>) <statement or block>
 
 This is the basic conditional command.
