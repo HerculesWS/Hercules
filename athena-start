@@ -10,66 +10,72 @@ M_SRV=map-server
 A_SRV=api-server
 
 print_start() {
-#    more << EOF
-echo "Athena Starting..."
-echo "            (c) 2003 Athena Project"
-echo "              modified by shazeya@syafi.com"
-echo ""
-#echo "Debug informations will appear,"
-#echo "since this is a test release."
-#echo ""
-echo "checking..."
-#EOF
+    echo "Athena Starting..."
+    echo "            (c) 2003 Athena Project"
+    echo "              modified by shazeya@syafi.com"
+    echo ""
+    echo "checking..."
 }
 
 check_files() {
-
-    for i in ${L_SRV} ${C_SRV} ${M_SRV} ${A_SRV}
-    do
-        if [ ! -f ./$i ]; then
+    for i in ${L_SRV} ${C_SRV} ${M_SRV} ${A_SRV}; do
+        if [ ! -f ."/$i" ]; then
             echo "$i does not exist, or can't run."
             echo "Stop. Check your compile."
-            exit 1;
+            exit 1
         fi
     done
-
-#    more << EOF
-echo "Check complete."
-echo "Looks good, a nice Athena!"
-#EOF
+    echo "Check complete."
+    echo "Looks good, a nice Athena!"
 }
-
 
 case $1 in
     'start')
         print_start
         check_files
 
-        exec ./${L_SRV}&
-	echo $! > .${L_SRV}.pid
-        exec ./${C_SRV}&
-	echo $! > .${C_SRV}.pid
-        exec ./${M_SRV}&
-	echo $! > .${M_SRV}.pid
-        exec ./${A_SRV}&
-	echo $! > .${A_SRV}.pid
+        for srv in ${L_SRV} ${C_SRV} ${M_SRV} ${A_SRV}; do
+            ./"$srv" &
+            echo $! > ."$srv".pid
+        done
 
         echo "Now Started Athena."
-;;
+        ;;
+    
     'stop')
-	for i in .${L_SRV}.pid .${C_SRV}.pid .${M_SRV}.pid .${A_SRV}.pid
-	    do
-		if [ -e ./$i ]; then
-		    kill $(cat $i)
-		    rm $i
-		fi
-	    done
-;;
+        for srv in ${L_SRV} ${C_SRV} ${M_SRV} ${A_SRV}; do
+            pid_file=".$srv.pid"
+
+            if [ -e "$pid_file" ]; then
+                pid=$(cat "$pid_file")
+                
+                if kill -0 "$pid" 2>/dev/null; then
+                    echo "Stopping $srv (PID: $pid)..."
+                    kill "$pid"
+                    sleep 2
+
+                    if kill -0 "$pid" 2>/dev/null; then
+                        echo "Force killing $srv (PID: $pid)..."
+                        kill -9 "$pid"
+                    fi
+                else
+                    echo "$srv is not running."
+                fi
+                
+                rm -f "$pid_file"
+            else
+                echo "No PID file for $srv."
+            fi
+        done
+        ;;
+    
     'restart')
         $0 stop
+        sleep 2
         $0 start
-;;
+        ;;
+    
     *)
         echo "Usage: athena-start { start | stop | restart }"
-;;
+        ;;
 esac
