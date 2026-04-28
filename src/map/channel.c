@@ -577,11 +577,17 @@ static void channel_quit_guild(struct map_session_data *sd)
 	}
 }
 
+static void read_channels_config_from_file(const char *config_filename);
+
 static void read_channels_config(void)
+{
+	read_channels_config_from_file("conf/channels.conf");
+}
+
+static void read_channels_config_from_file(const char *config_filename)
 {
 	struct config_t channels_conf;
 	struct config_setting_t *chsys = NULL;
-	const char *config_filename = "conf/channels.conf"; // FIXME hardcoded name
 
 	if (!libconfig->load_file(&channels_conf, config_filename))
 		return;
@@ -811,6 +817,12 @@ static void read_channels_config(void)
 		channel->config->channel_opt_msg_delay = channel_opt_msg_delay;
 
 		ShowStatus("Done reading '"CL_WHITE"%u"CL_RESET"' channels in '"CL_WHITE"%s"CL_RESET"'.\n", db_size(channel->db), config_filename);
+	}
+
+	{
+		const char *import = NULL;
+		if (libconfig->lookup_string(&channels_conf, "import", &import) == CONFIG_TRUE)
+			read_channels_config_from_file(import);
 	}
 	libconfig->destroy(&channels_conf);
 }

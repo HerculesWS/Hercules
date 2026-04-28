@@ -2124,6 +2124,12 @@ static void socket_net_config_read(const char *filename)
 		ShowNotice("Please edit your '%s' allowed list to fit your network configuration.\n", filename);
 	}
 #endif  // BUILDBOT
+
+	{
+		const char *import = NULL;
+		if (libconfig->lookup_string(&network_config, "import", &import) == CONFIG_TRUE)
+			sockt->net_config_read(import);
+	}
 	libconfig->destroy(&network_config);
 	return;
 }
