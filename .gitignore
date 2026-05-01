@@ -148,3 +148,9 @@ Thumbs.db
 
 # visual studio
 /.vs/
+
+# Default build directory
+/build/
+
+# Cache directroy created by clangd
+/.cache/
