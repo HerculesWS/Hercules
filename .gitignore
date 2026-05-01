@@ -154,3 +154,6 @@ Thumbs.db
 
 # Cache directroy created by clangd
 /.cache/
+
+# venv
+/.venv/
