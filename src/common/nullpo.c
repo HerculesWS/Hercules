@@ -30,8 +30,8 @@
 #include <stdlib.h>
 #include <string.h>
 #if defined(HAVE_LIBBACKTRACE)
-#include "libbacktrace/backtrace.h"
-#include "libbacktrace/backtrace-supported.h"
+#include <backtrace.h>
+#include <backtrace-supported.h>
 #  if defined(WIN32)
 #    include <windows.h>
 #  elif defined(__sun)
