@@ -163,6 +163,7 @@ else()
   testadd_warning_compiler_flag(no-discarded-qualifiers)
   testadd_warning_compiler_flag(no-unused-but-set-variable)
   testadd_warning_compiler_flag(shadow)
+  testadd_warning_compiler_flag(no-deprecated-non-prototype)
 
   # Linker flags
 
@@ -253,3 +254,7 @@ get_directory_property(MYDEFS COMPILE_OPTIONS)
 message("CFLAGS=${MYDEFS}")
 get_directory_property(MYDEFS COMPILE_DEFINITIONS)
 message("DEFS=${MYDEFS}")
+
+include_directories(${PROJECT_SOURCE_DIR}/src)
+include_directories(${PROJECT_SOURCE_DIR}/3rdparty)
+add_subdirectory(3rdparty)
