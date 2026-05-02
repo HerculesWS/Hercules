@@ -39,8 +39,14 @@ if [ -z "$1" ]; then
 	exit 1
 fi
 
+if [ -z "$2" ]; then
+	echo 'No copy file path specified'
+	exit 1
+fi
+
 OUTFILE="$1"
-shift
+COPYPATH="$2"
+shift 2
 
 if ! touch "$OUTFILE"; then
 	echo 'Cannot create output file'
@@ -290,3 +296,9 @@ cat >> "$OUTFILE" << EOF
 
 EOF
 [ $? -eq 0 ] || do_fail
+
+if cmp -s "$COPYPATH" "$OUTFILE"; then
+	rm "$OUTFILE" ;
+else
+	mv "$OUTFILE" "$COPYPATH" || true ;
+fi

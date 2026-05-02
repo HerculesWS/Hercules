@@ -133,21 +133,25 @@ if(COMMON_MEMORY_MANAGER_LINK)
   target_link_libraries(common PRIVATE ${COMMON_MEMORY_MANAGER_LINK})
 endif()
 
-# Run sysinfogen.sh whenever src/common/sysinfo.inc is required in a build
-
 if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
-  # In original configure.ac CPFLAGS and DEFs can be mixed but LDFLAGS isn't included
+  # Run sysinfogen.sh whenever common is required in a build
   get_directory_property(SYSGEN_CFLAGS COMPILE_OPTIONS)
   get_directory_property(SYSGEN_DEFS COMPILE_DEFINITIONS)
+  get_directory_property(SYSGEN_LDFLAGS LINK_OPTIONS)
 
-  add_custom_command(
-    OUTPUT "${AUTOGEN_DIR}/sysinfo.inc"
+  add_custom_target(sysinfo
     COMMAND
       "${CMAKE_SOURCE_DIR}/sysinfogen.sh"
+      "${AUTOGEN_DIR}/sysinfo.inc.new"
       "${AUTOGEN_DIR}/sysinfo.inc"
       ${SYSGEN_CFLAGS}
+      ${SYSGEN_LDFLAGS}
       ${SYSGEN_DEFS}
+    COMMENT "Generate synsinfo.inc"
     DEPENDS "${CMAKE_SOURCE_DIR}/sysinfogen.sh"
-    WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    BYPRODUCTS "${AUTOGEN_DIR}/sysinfo.inc"
   )
+
+  add_dependencies(common sysinfo)
 endif()
