@@ -95,6 +95,16 @@ elseif(NOT CMAKE_C_BYTE_ORDER STREQUAL "LITTLE_ENDIAN")
   message(WARNING "unable to determine endianess, only little endian is supported")
 endif()
 
+# [START] conan settings
+# (MAKE SURE THIS BLOCK BEFORE FIRST find_package() OR ELSE IT WON'T WORK)
+set(HERCULES_CONAN_NAME "hercules")
+
+if(ENABLE_LIBBACKTRACE)
+  list(APPEND CONAN_INSTALL_ARGS "-o" "${HERCULES_CONAN_NAME}/*:with_libbacktrace=True")
+endif()
+
+# [END] conan settings
+
 include(LanguageFeatureHelper)
 # Check for headers
 test_header_def(sys/stat)
