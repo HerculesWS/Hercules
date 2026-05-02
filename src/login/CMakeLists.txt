@@ -16,9 +16,59 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-add_subdirectory(config) # Has to be first as defines some variables
-add_subdirectory(api)
-add_subdirectory(common)
-add_subdirectory(char)
-add_subdirectory(login)
-add_subdirectory(map)
+set(LOGIN_SRCS
+  account.c
+  HPMlogin.c
+  ipban.c
+  lclif.c
+  login.c
+  loginlog.c
+  lapiif.c
+)
+
+set(LOGIN_HDRS
+  login.h
+  account.h
+  apipackets.h
+  HPMlogin.h
+  ipban.h
+  lclif.h
+  loginlog.h
+  lapiif.h
+)
+
+list(APPEND LOGIN_HDRS ${CONFIG_HDRS})
+
+set(LOGIN_PRVT
+  lclif.p.h
+)
+
+source_group("Login source files"
+  FILES
+  ${LOGIN_SRCS}
+)
+
+source_group("Login header files"
+  FILES
+  ${LOGIN_HDRS}
+)
+
+source_group("Login private header files"
+  FILES
+  ${LOGIN_PRVT}
+)
+
+add_executable(login-server
+  ${LOGIN_SRCS}
+  ${LOGIN_HDRS}
+  ${LOGIN_PRVT}
+)
+
+target_link_libraries(login-server PUBLIC common)
+
+install(
+  TARGETS login-server
+  RUNTIME
+    DESTINATION
+    .
+)
