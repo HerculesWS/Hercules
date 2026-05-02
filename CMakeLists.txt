@@ -35,6 +35,9 @@ if(NOT CMAKE_BUILD_TYPE)
   message(FATAL_ERROR "Build type not specified. Specify it with -DCMAKE_BUILD_TYPE=type (type can be one of Release, RelWithDebInfo, Debug)")
 endif()
 
+# Global variables
+set(PLUGIN_COMPILE_OPTIONS "")
+
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
   set(RUNNING_ON_LINUX ON)
 else()
@@ -71,18 +74,20 @@ option(ENABLE_RDTSC "Uses rdtsc as timing source (disabled by default)
 				 SpeedStep(R)), do not enable this option. Recent CPUs (Intel Core or newer) guarantee
 				 a fixed increment rate for their TSC, so it should be safe to use, but please doublecheck
 				 the documentation of both your CPU and OS before enabling this option." OFF)
-set(PROFILER "none" CACHE STRING "Profilers: none, gprof (disabled by default)")
+set(ENABLE_PROFILER "none" CACHE STRING "Profilers: none, gprof (disabled by default)")
 option(ENABLE_RENEWAL "Enable renewal" ON)
 option(ENABLE_LTO "Enables or Disables Linktime Code Optimization (LTO is disabled by default)" OFF)
 option(ENABLE_SANITIZE "Enables sanitizer. (disabled by default)" OFF)
 option(ENABLE_WERROR "Enables -Werror in the compiler flags. (disabled by default)" OFF)
 set(MAX_CONNECTIONS "" CACHE STRING "optionally set the maximum connections the core can handle (Without epoll enabled, default: 1024. With epol enabled: 3072)")
 set(WITH_HTTP_PARSER "http-parser" CACHE STRING "select http parser. Allowed values: http-parser, llhttp")
+option(ENABLE_CLASSIC_AUTOSPELL "Enables classic auto spell list" OFF)
 
-if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
-  if(ENABLE_GDB)
-    message(FATAL_ERROR "ENABLE_GDB can be only used in debug builds")
-  endif()
+if(CMAKE_C_BYTE_ORDER STREQUAL "BIG_ENDIAN")
+  message(FATAL_ERROR "bigendian is not supported... stopping")
+elseif(NOT CMAKE_C_BYTE_ORDER STREQUAL "LITTLE_ENDIAN")
+  set(WORDS_BIGENDIAN FALSE)
+  message(WARNING "unable to determine endianess, only little endian is supported")
 endif()
 
 include(LanguageFeatureHelper)
@@ -112,38 +117,47 @@ else()
   include(CompilerFlagHelpers)
   testadd_compiler_flag(pipe REQUIRED)
   testadd_compiler_flag(ffast-math REQUIRED)
-  testadd_compiler_flag(fno-finite-math-only REQUIRED)
-  testadd_compiler_flag(fsigned-char REQUIRED)
-  testadd_compiler_flag(fcf-protection=none REQUIRED)
+  testadd_compiler_flag(fsigned-char)
+  testadd_compiler_flag(fcf-protection=none)
   testadd_compiler_flag(fno-strict-aliasing REQUIRED)
   testadd_compiler_flag(fno-omit-frame-pointer REQUIRED)
-  testadd_compiler_flag(fno-var-tracking REQUIRED)
+  testadd_compiler_flag(fno-var-tracking)
 
   # Warnings we explictily require or disable
-  testadd_warning_compiler_flag(all)
-  testadd_warning_compiler_flag(extra)
-  testadd_warning_compiler_flag(no-sign-compare)
+  testadd_warning_compiler_flag(all REQUIRED)
+  testadd_warning_compiler_flag(extra REQUIRED)
+  testadd_warning_compiler_flag(no-sign-compare REQUIRED)
   testadd_warning_compiler_flag(no-unused-parameter)
   testadd_warning_compiler_flag(no-clobbered)
   testadd_warning_compiler_flag(empty-body)
+  testadd_warning_compiler_flag(newline-eof)
   testadd_warning_compiler_flag(int-conversion)
   testadd_warning_compiler_flag(init-self)
   testadd_warning_compiler_flag(pointer-arith)
   testadd_warning_compiler_flag(switch-bool)
   testadd_warning_compiler_flag(enum-conversion)
+  testadd_warning_compiler_flag(shorten-64-to-32)
+  testadd_warning_compiler_flag(constant-conversion)
+  testadd_warning_compiler_flag(bool-conversion)
   testadd_warning_compiler_flag(format-security)
   testadd_warning_compiler_flag(format)
   testadd_warning_compiler_flag(format-signedness)
   testadd_warning_compiler_flag(format-y2k)
   testadd_warning_compiler_flag(format-overflow=2)
   testadd_warning_compiler_flag(format-diag)
+  # testadd_warning_compiler_flag(format-truncation=2)
+  testadd_warning_compiler_flag(missing-include-dirs)
   testadd_warning_compiler_flag(suggest-attribute=noreturn)
   testadd_warning_compiler_flag(suggest-attribute=format)
+  # testadd_warning_compiler_flag(suggest-attribute=malloc)
   testadd_warning_compiler_flag(undef)
+  #testadd_warning_compiler_flag(cast-align)
+  #testadd_warning_compiler_flag(logical-op) # some useless warnings
   testadd_warning_compiler_flag(nested-externs)
   testadd_warning_compiler_flag(old-style-definition)
   testadd_warning_compiler_flag(overlength-strings)
   testadd_warning_compiler_flag(redundant-decls)
+  # testadd_warning_compiler_flag(cast-qual)
   testadd_warning_compiler_flag(misleading-indentation)
   testadd_warning_compiler_flag(null-dereference)
   testadd_warning_compiler_flag(vla)
@@ -158,12 +172,70 @@ else()
   testadd_warning_compiler_flag(absolute-value)
   testadd_warning_compiler_flag(shift-overflow=2)
   testadd_warning_compiler_flag(enum-int-mismatch)
+  #testadd_warning_compiler_flag(unreachable-code)
+  #testadd_warning_compiler_flag(unused-const-variable=2)
+  #testadd_warning_compiler_flag(write-strings)
+  #testadd_warning_compiler_flag(no-format-nonliteral)
   testadd_warning_compiler_flag(no-switch)
   testadd_warning_compiler_flag(no-missing-field-initializers)
+  # testadd_warning_compiler_flag(no-suggest-attribute=format)
+  testadd_warning_compiler_flag(no-incompatible-pointer-types-discards-qualifiers)
   testadd_warning_compiler_flag(no-discarded-qualifiers)
-  testadd_warning_compiler_flag(no-unused-but-set-variable)
-  testadd_warning_compiler_flag(shadow)
   testadd_warning_compiler_flag(no-deprecated-non-prototype)
+  testadd_warning_compiler_flag(no-unused-but-set-variable)
+  testadd_warning_compiler_flag(no-enum-enum-conversion)
+
+  if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    testadd_warning_compiler_flag(no-deprecated-declarations)
+  endif()
+
+  # Certain versions of gcc make -Wshadow completely useless by making it flood
+  # you with unnecessary warnings <https://lkml.org/lkml/2006/11/28/239>
+  # Let's check if we can really use it
+  set(OLD_CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS}")
+  set(CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS} -Werror -Wshadow")
+  check_c_source_compiles([[
+    int foo(void) {
+      return 0;
+    }
+
+    int main(int argc, int *argv[]) {
+      int foo = 0;
+      return foo + 1;
+    }
+  ]] IS_WSHADOW_GOOD)
+  if(IS_WSHADOW_GOOD)
+    testadd_warning_compiler_flag(shadow)
+  endif()
+  set(CMAKE_REQUIRED_FLAGS "${OLD_CMAKE_REQUIRED_FLAGS}")
+
+  # Certain versions of gcc implement -Wformat-truncation in a naive way,
+  # disregarding the actual values that an integer can take in every code path
+  # and assuming a worst case of INT_MAX. That makes it not very useful as it
+  # produces meaningless warnings.
+  has_compiler_flag(Wno-format-truncation HAS_NO_FORMAT_TRANSACTION)
+  if(NOT HAS_NO_FORMAT_TRANSACTION)
+    set(OLD_CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS}")
+    set(CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS} -Werror")
+    check_c_source_compiles([[
+      #include <stdio.h>
+      int foo(int argc, char *argv[]) {
+        char buf[3];
+        for (int i = 0; i < 4; i++) {
+          snprintf(buf, sizeof(buf), "a%d", i);
+        }
+        return buf[1];
+      }
+    ]] IS_FORMAT_TRANSACTION_GOOD)
+
+    if(NOT IS_FORMAT_TRANSACTION_GOOD)
+      testadd_warning_compiler_flag(no-format-truncation)
+    endif()
+    set(CMAKE_REQUIRED_FLAGS "${OLD_CMAKE_REQUIRED_FLAGS}")
+  endif()
+
+  # Plugin flags
+  testwrite_compiler_flag(PLUGIN_COMPILE_OPTIONS fPIC)
 
   # Linker flags
 
@@ -205,6 +277,26 @@ else()
   message(STATUS "CLOCK_MONOTONIC is either unsupported or not working as expected")
 endif()
 
+# Check if epoll is available and we're on linux
+if(ENABLE_EPOLL)
+  check_source_runs(C [[
+    #ifndef __linux__
+    #error This is not Linux
+    #endif
+    #include <sys/epoll.h>
+    int main(int argc, char** argv)
+    {
+      return 0;
+    }
+  ]] HAVE_LINUX_EPOLL)
+
+  if(NOT HAVE_LINUX_EPOLL)
+    message(FATAL_ERROR "epoll support explicitly enabled but not available")
+  else()
+    add_compile_definitions(SOCKET_EPOLL)
+  endif()
+endif()
+
 # Check for libraries
 if(ENABLE_LIBBACKTRACE)
   find_package(libbacktrace REQUIRED)
@@ -229,11 +321,132 @@ find_package(ZLIB REQUIRED)
 
 # Check for compile settings
 
+# Memory manager setting
+if(MEMORY_MANAGER STREQUAL "none")
+  add_compile_definitions(NO_MEMMGR)
+elseif(MEMORY_MANAGER STREQUAL "memwatch")
+  test_header_def(memwatch REQUIRED)
+  add_compile_definitions(MEMWATCH)
+elseif(MEMORY_MANAGER STREQUAL "dmalloc")
+  test_header_def(dmalloc REQUIRED)
+  add_compile_definitions(DMALLOC DMALLOC_FUNC_CHECK)
+  set(COMMON_MEMORY_MANAGER_LINK "dmalloc")
+elseif(MEMORY_MANAGER STREQUAL "gcollect")
+  test_header_def(gc REQUIRED)
+  add_compile_definitions(GCOLLECT)
+  set(COMMON_MEMORY_MANAGER_LINK "gc")
+elseif(MEMORY_MANAGER STREQUAL "bcheck")
+  add_compile_definitions(BCHECK)
+elseif(NOT MEMORY_MANAGER STREQUAL "builtin")
+  message(FATAL_ERROR "Unknown memory manager chosen ${MEMORY_MANAGER}")
+endif()
+
+add_compile_definitions(
+  $<$<BOOL:${PACKETVER}>:PACKETVER=${PACKETVER}>
+  $<$<BOOL:${ENABLE_PACKETVER_RE}>:ENABLE_PACKETVER_RE>
+  $<$<BOOL:${ENABLE_PACKETVER_ZERO}>:ENABLE_PACKETVER_ZERO>
+  $<$<BOOL:${ENABLE_PACKETVER_SAK}>:ENABLE_PACKETVER_SAK>
+  $<$<BOOL:${ENABLE_PACKETVER_AD}>:ENABLE_PACKETVER_AD>
+  $<$<BOOL:${CASHSHOP_PREVIEW_PATCH}>:ENABLE_CASHSHOP_PREVIEW_PATCH>
+  $<$<BOOL:${OLD_CASHSHOP_PREVIEW_PATCH}>:ENABLE_OLD_CASHSHOP_PREVIEW_PATCH>
+  $<$<BOOL:${ENABLE_EPOLL}>:SOCKET_EPOLL>
+  $<$<BOOL:${ENABLE_BUILDBOT}>:BUILDBOT>
+  $<$<BOOL:${ENABLE_RDTSC}>:ENABLE_RDTSC>
+  $<$<BOOL:${ENABLE_CLASSIC_AUTOSPELL}>:CLASSIC_AUTOSPELL_LIST>
+  $<$<NOT:$<BOOL:${ENABLE_RENEWAL}>>:DISABLE_RENEWAL>
+)
+
+if(NOT "${OBFUSCATIONKEY1}" STREQUAL "" OR NOT "${OBFUSCATIONKEY2}" STREQUAL "" OR NOT "${OBFUSCATIONKEY3}" STREQUAL "")
+  if("${OBFUSCATIONKEY1}" STREQUAL "" OR "${OBFUSCATIONKEY2}" STREQUAL "" OR "${OBFUSCATIONKEY3}" STREQUAL "")
+    message(FATAL_ERROR "Less than three obfuscation keys have been specified. They will all be ignored.")
+  elseif(NOT OBFUSCATIONKEY1 MATCHES "^0x[A-Fa-f0-9][A-Fa-f0-9][A-Fa-f0-9][A-Fa-f0-9][A-Fa-f0-9][A-Fa-f0-9][A-Fa-f0-9][A-Fa-f0-9]$")
+    message(FATAL_ERROR "Invalid OBFUSCATIONKEY1 format specified. It should be in the 0xNNNNNNNN format (with 8 hex digits).")
+  elseif(NOT OBFUSCATIONKEY2 MATCHES "^0x[A-Fa-f0-9][A-Fa-f0-9][A-Fa-f0-9][A-Fa-f0-9][A-Fa-f0-9][A-Fa-f0-9][A-Fa-f0-9][A-Fa-f0-9]$")
+    message(FATAL_ERROR "Invalid OBFUSCATIONKEY2 format specified. It should be in the 0xNNNNNNNN format (with 8 hex digits).")
+  elseif(NOT OBFUSCATIONKEY3 MATCHES "^0x[A-Fa-f0-9][A-Fa-f0-9][A-Fa-f0-9][A-Fa-f0-9][A-Fa-f0-9][A-Fa-f0-9][A-Fa-f0-9][A-Fa-f0-9]$")
+    message(FATAL_ERROR "Invalid OBFUSCATIONKEY3 format specified. It should be in the 0xNNNNNNNN format (with 8 hex digits).")
+  else()
+    add_compile_definitions("OBFUSCATIONKEY1=${OBFUSCATIONKEY1}" "OBFUSCATIONKEY2=${OBFUSCATIONKEY2}" "OBFUSCATIONKEY3=${OBFUSCATIONKEY3}")
+  endif()
+endif()
+
 # Debug setting
+if(NOT "${CMAKE_BUILD_TYPE}" STREQUAL "Debug" AND NOT "${CMAKE_BUILD_TYPE}" STREQUAL "RelWithDebInfo")
+  if(${ENABLE_GDB})
+    message(FATAL_ERROR "ENABLE_GDB can be only used in debug builds")
+  endif()
+else()
+  if(${ENABLE_GDB})
+    testadd_compiler_flag(ggdb REQUIRED)
+  endif()
+endif()
+
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
   add_compile_definitions(DEBUG)
-  if(ENABLE_GDB)
-    testadd_compiler_flag(ggdb REQUIRED)
+endif()
+
+if(ENABLE_PROFILER STREQUAL "none")
+elseif(ENABLE_PROFILER STREQUAL "gprof")
+  add_compile_options(pg)
+  add_link_options(pg)
+else()
+  message(FATAL_ERROR "Unknown profiler option ${ENABLE_PROFILER}")
+endif()
+
+if(ENABLE_WERROR)
+  if (MSVC)
+    add_compile_options(/WX)
+  else()
+    testadd_warning_compiler_flag(error REQUIRED)
+  endif()
+endif()
+
+if(ENABLE_LTO)
+  if (MSVC)
+    message(FATAL_ERROR "LTO Cannot be enabled on MSVC builds")
+  endif()
+  testadd_compiler_flag(flto REQUIRED)
+  testadd_compiler_flag(ffat-lto-objects REQUIRED)
+  testadd_linker_flag(flto REQUIRED)
+  testadd_linker_flag(ffat-lto-objects REQUIRED)
+endif()
+
+if(ENABLE_SANITIZE)
+  if (MSVC)
+    message(FATAL_ERROR "Sanitizer Cannot be enabled on MSVC builds")
+  endif()
+  add_compile_definitions(SANITIZE)
+  testadd_sanitizer_flag(address)
+  testadd_sanitizer_flag(shift)
+  testadd_sanitizer_flag(integer-divide-by-zero)
+  testadd_sanitizer_flag(unreachable)
+  testadd_sanitizer_flag(vla-bound)
+  testadd_sanitizer_flag(null)
+  testadd_sanitizer_flag(return)
+  testadd_sanitizer_flag(signed-integer-overflow)
+  testadd_sanitizer_flag(bounds)
+  testadd_sanitizer_flag(bounds-strict)
+  testadd_sanitizer_flag(object-size)
+  testadd_sanitizer_flag(float-divide-by-zero)
+  testadd_sanitizer_flag(float-cast-overflow)
+  testadd_sanitizer_flag(nonnull-attribute)
+  testadd_sanitizer_flag(returns-nonnull-attribute)
+  testadd_sanitizer_flag(bool)
+  testadd_sanitizer_flag(enum)
+  testadd_sanitizer_flag(vptr)
+  testadd_sanitizer_flag(address-use-after-scope)
+  testadd_sanitizer_flag(pointer-overflow)
+  testadd_sanitizer_flag(builtin)
+  testadd_sanitizer_flag(pointer-compare)
+  testadd_sanitizer_flag(pointer-subtract)
+  testadd_sanitizer_flag(shift-exponent)
+  testadd_sanitizer_flag(shift-base)
+  testadd_sanitizer_flag(sanitize-address-use-after-scope)
+endif()
+
+if(MAX_CONNECTIONS)
+  if(MAX_CONNECTIONS GREATER 0)
+    add_compile_definitions("MAXCONN=${MAX_CONNECTIONS}")
   endif()
 endif()
 
@@ -249,6 +462,27 @@ if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
     DEPENDS sysinfogen.sh
   )
 endif()
+
+# Checks for external programs that may be needed in some targets/commands
+find_program(DOXYGEN_FOUND doxygen)
+find_program(PERL_FOUND perl)
+
+# Checks and creates the import conf directory
+if(EXISTS "${CMAKE_SOURCE_DIR}/conf/import")
+  message(STATUS "config import directory already exists.")
+else()
+  message(STATUS "creating config import directory ${CMAKE_SOURCE_DIR}/conf/import")
+  file(MAKE_DIRECTORY "${CMAKE_SOURCE_DIR}/conf/import")
+endif()
+
+# Check import templates and copy them if not already copied
+file(GLOB_RECURSE import_tmpl_items RELATIVE "${CMAKE_SOURCE_DIR}/conf/import-tmpl/" CONFIGURE_DEPENDS "conf/import-tmpl/*")
+foreach(tmpl_name ${import_tmpl_items})
+  if(NOT EXISTS "${CMAKE_SOURCE_DIR}/conf/import/${tmpl_name}")
+    message(STATUS "Creating ${CMAKE_SOURCE_DIR}/conf/import/${tmpl_name}")
+    file(COPY_FILE "${CMAKE_SOURCE_DIR}/conf/import-tmpl/${tmpl_name}" "${CMAKE_SOURCE_DIR}/conf/import/${tmpl_name}")
+  endif()
+endforeach()
 
 get_directory_property(MYDEFS LINK_OPTIONS)
 message("LDFLAGS=${MYDEFS}")
