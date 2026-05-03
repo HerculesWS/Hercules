@@ -135,8 +135,6 @@ set(MAP_HDRS
   vending.h
 )
 
-list(APPEND MAP_HDRS ${CONFIG_HDRS})
-
 set(MAP_PRVT
   refine.p.h
 )

@@ -49,8 +49,6 @@ set(API_HDRS
   http_include.h
 )
 
-list(APPEND API_HDRS ${CONFIG_HDRS})
-
 set(API_PRVT
 )
 

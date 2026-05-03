@@ -70,8 +70,6 @@ set(CHAR_HDRS
   capiif.h
 )
 
-list(APPEND CHAR_HDRS ${CONFIG_HDRS})
-
 set(CHAR_PRVT
 )
 

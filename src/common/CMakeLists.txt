@@ -92,7 +92,14 @@ set(COMMON_HDRS
   ../plugins/HPMHooking.h
 )
 
-list(APPEND COMMON_HDRS ${CONFIG_HDRS})
+set(CONFIG_HDRS
+  ../config/const.h
+  ../config/core.h
+  ../config/renewal.h
+  ../config/secure.h
+  ../config/classes/general.h
+)
+
 if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
   list(APPEND COMMON_HDRS "${AUTOGEN_DIR}/sysinfo.inc")
 endif()
@@ -108,6 +115,7 @@ source_group("Common source files"
 source_group("Common header files"
   FILES
   ${COMMON_HDRS}
+  ${CONFIG_HDRS}
 )
 
 source_group("Common private header files"
@@ -119,6 +127,7 @@ add_library(common STATIC
   ${COMMON_SRCS}
   ${COMMON_HDRS}
   ${COMMON_PRVT}
+  ${CONFIG_HDRS}
 )
 
 target_link_libraries(common PRIVATE hercules-mt19937ar)

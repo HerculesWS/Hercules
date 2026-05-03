@@ -37,8 +37,6 @@ set(LOGIN_HDRS
   lapiif.h
 )
 
-list(APPEND LOGIN_HDRS ${CONFIG_HDRS})
-
 set(LOGIN_PRVT
   lclif.p.h
 )
