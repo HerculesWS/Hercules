@@ -25,10 +25,31 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE BOOL "Enable compile commands" FORCE)
+if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
+  set(CMAKE_INSTALL_LIBDIR "lib")
+else()
+  set(CMAKE_INSTALL_LIBDIR ".")
+endif()
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules")
+
+# RPATH settings
+if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
+  set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
+  set(CMAKE_INSTALL_RPATH_USE_LINK_PATH OFF)
+
+  if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    set(CMAKE_INSTALL_RPATH "@executable_path/${CMAKE_INSTALL_LIBDIR}/")
+  else()
+    set(CMAKE_INSTALL_RPATH "\$ORIGIN/${CMAKE_INSTALL_LIBDIR}/") # Linux and modern BSD systems supports $ORIGIN
+  endif()
+endif()
 
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
   message(FATAL_ERROR "In-source builds are not allowed. Please create a separate build directory.")
+endif()
+
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+  message(FATAL_ERROR "Installation path is missing. Please pass it to cmake.")
 endif()
 
 if(NOT CMAKE_BUILD_TYPE)
@@ -96,8 +117,14 @@ elseif(NOT CMAKE_C_BYTE_ORDER STREQUAL "LITTLE_ENDIAN")
 endif()
 
 # [START] conan settings
-# (MAKE SURE THIS BLOCK BEFORE FIRST find_package() OR ELSE IT WON'T WORK)
+# MAKE SURE THIS BLOCK EXISTS BEFORE THE FIRST find_package() CALL OR ELSE IT WON'T WORK
 set(HERCULES_CONAN_NAME "hercules")
+
+list(APPEND CONAN_INSTALL_ARGS "--deployer=runtime_deploy" "--deployer-folder=runtime-lib")
+install(
+  DIRECTORY "${CMAKE_BINARY_DIR}/runtime-lib/"
+  TYPE LIB
+)
 
 if(ENABLE_LIBBACKTRACE)
   list(APPEND CONAN_INSTALL_ARGS "-o" "${HERCULES_CONAN_NAME}/*:with_libbacktrace=True")
@@ -128,7 +155,7 @@ if(MSVC)
   # Definations
   add_compile_definitions(WIN32 _WIN32 __WIN32 _CRT_SECURE_NO_DEPRECATE _CRT_NONSTDC_NO_DEPRECATE FD_SETSIZE=4096 WIN32_LEAN_AND_MEAN)
 else()
-  # Check for mandatory compile flags (currently it's just a list of all default flag using just ./configure)
+  # Check for mandatory compile flags
   include(CompilerFlagHelpers)
   testadd_compiler_flag(pipe REQUIRED)
   testadd_compiler_flag(ffast-math REQUIRED)
