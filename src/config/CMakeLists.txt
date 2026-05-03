@@ -17,9 +17,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 set(CONFIG_HDRS
-  "${CMAKE_SOURCE_DIR}/src/config/const.h"
-  "${CMAKE_SOURCE_DIR}/src/config/core.h"
-  "${CMAKE_SOURCE_DIR}/src/config/renewal.h"
-  "${CMAKE_SOURCE_DIR}/src/config/secure.h"
-  "${CMAKE_SOURCE_DIR}/src/config/classes/general.h"
+  const.h
+  core.h
+  renewal.h
+  secure.h
+  classes/general.h
 )
