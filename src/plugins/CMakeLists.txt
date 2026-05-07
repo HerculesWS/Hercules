@@ -20,10 +20,11 @@
 # _plugin_name the plugin name which will be used for the output file and target name, keep it file system friendly
 # CFILES list or lists of plugin files to compile
 # CDEFS list or lists of definations to set
+# CFLAGS list or lists of compiler options to be set
 # VIRTUAL_TARGET a name of a target that this plugin will be added as a dependency to
 function(add_plugin_target _plugin_name)
   set(oneValueArgs VIRTUAL_TARGET)
-  set(multiValueArgs CFILES CDEFS)
+  set(multiValueArgs CFILES CDEFS CFLAGS)
   cmake_parse_arguments(PARSE_ARGV
     1
     arg
@@ -38,6 +39,7 @@ function(add_plugin_target _plugin_name)
 
   set(_cfiles "")
   set(_cdefs "")
+  set(_cflags "")
 
   foreach(value IN LISTS arg_CFILES)
     list(APPEND _cfiles "${value}")
@@ -49,6 +51,12 @@ function(add_plugin_target _plugin_name)
     endforeach()
   endif()
 
+  if (arg_CFLAGS)
+    foreach(value IN LISTS arg_CFLAGS)
+      list(APPEND _cflags "${value}")
+    endforeach()
+  endif()
+
   add_library(${_plugin_name} SHARED ${_cfiles})
   add_custom_target("plugin.${_plugin_name}")
   add_dependencies("plugin.${_plugin_name}" ${_plugin_name})
@@ -57,6 +65,9 @@ function(add_plugin_target _plugin_name)
   target_compile_options(${_plugin_name} PRIVATE ${PLUGIN_COMPILE_OPTIONS})
   if(arg_CDEFS)
     target_compile_definitions(${_plugin_name} PRIVATE ${_cdefs})
+  endif()
+  if (arg_CFLAGS)
+    target_compile_options(${_plugin_name} PRIVATE ${_cflags})
   endif()
   set_target_properties(${_plugin_name} PROPERTIES PREFIX "")
 
