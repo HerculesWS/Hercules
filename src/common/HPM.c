@@ -40,7 +40,7 @@
 #include "common/timer.h"
 #include "common/utils.h"
 #include "common/nullpo.h"
-#include "plugins/HPMHooking.h"
+#include "plugins/HPMHooking/HPMHooking.h"
 
 #include <stdio.h>
 #include <stdlib.h>

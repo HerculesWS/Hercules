@@ -32,7 +32,7 @@
 #include "map/npc.h"
 #include "map/script.h"
 
-#include "plugins/HPMHooking.h"
+#include "plugins/HPMHooking/HPMHooking.h"
 #include "common/HPMDataCheck.h"
 
 #include <stdio.h>

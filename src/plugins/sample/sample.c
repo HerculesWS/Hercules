@@ -18,12 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
-// add custom compile flags. Can be any compiler flags.
--DTESTVAR -DTESTVAR2=2 #PLUGINFLAGS
-*/
-
-#ifndef WIN32
+/// Sample Hercules Plugin
 
 // check is TESTVAR defined from custom compile flags
 #ifndef TESTVAR
@@ -35,9 +30,7 @@
 #error TESTVAR2 not defined
 #endif
 
-#endif  // WIN32
-
-/// Sample Hercules Plugin
+#include "sample.h"
 
 #include "common/hercules.h" /* Should always be the first Hercules file included! (if you don't make it first, you won't be able to use interfaces) */
 #include "common/memmgr.h"
@@ -51,7 +44,7 @@
 #include "map/pc.h"
 #include "map/script.h"
 
-#include "plugins/HPMHooking.h"
+#include "plugins/HPMHooking/HPMHooking.h"
 #include "common/HPMDataCheck.h" /* should always be the last Hercules file included! (if you don't make it last, it'll intentionally break compile time) */
 
 #include <stdio.h>
@@ -65,7 +58,7 @@ HPExport struct hplugin_info pinfo = {
 	HPM_VERSION, // HPM Version (don't change, macro is automatically updated)
 };
 ACMD(sample) {//@sample command - 5 params: const int fd, struct map_session_data* sd, const char* command, const char* message, struct AtCommandInfo *info
-	printf("I'm being run! message -> '%s' by %s\n",message,sd->status.name);
+	atcmd_sample_message(message, sd->status.name);
 	return true;
 }
 BUILDIN(sample) {//script command 'sample(num);' - 1 param: struct script_state* st
@@ -193,6 +186,12 @@ int return_my_setting(const char *key)
 		return my_setting;
 
 	return 0;
+}
+
+/* Prints a message to console and shows an example of function declared by defined later */
+static void atcmd_sample_message(const char *message, const char *sd_name)
+{
+	printf("I'm being run! message -> '%s' by %s\n", message, sd_name);
 }
 
 /* run when server starts */

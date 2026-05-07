@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "HPMHooking.h"
+#include "plugins/HPMHooking/HPMHooking.h"
 
 #include "common/hercules.h"
 #include "common/db.h"
@@ -33,10 +33,10 @@ PRAGMA_GCC5(GCC diagnostic ignored "-Wdiscarded-qualifiers")
 PRAGMA_GCC5(GCC diagnostic ignored "-Wsuggest-attribute=format")
 #if defined (HPMHOOKING_API)
 #define HPM_SERVER_TYPE SERVER_TYPE_API
-#define HPM_CORE_INCLUDE "HPMHooking/HPMHooking_api.HPMHooksCore.inc"
-#define HPM_HOOKS_INCLUDE "HPMHooking/HPMHooking_api.Hooks.inc"
-#define HPM_POINTS_INCLUDE "HPMHooking/HPMHooking_api.HookingPoints.inc"
-#define HPM_SOURCES_INCLUDE "HPMHooking/HPMHooking_api.sources.inc"
+#define HPM_CORE_INCLUDE "plugins/HPMHooking/HPMHooking_api.HPMHooksCore.inc"
+#define HPM_HOOKS_INCLUDE "plugins/HPMHooking/HPMHooking_api.Hooks.inc"
+#define HPM_POINTS_INCLUDE "plugins/HPMHooking/HPMHooking_api.HookingPoints.inc"
+#define HPM_SOURCES_INCLUDE "plugins/HPMHooking/HPMHooking_api.sources.inc"
 #include "api/aclif.h"
 #include "api/aloginif.h"
 #include "api/api.h"
@@ -53,10 +53,10 @@ PRAGMA_GCC5(GCC diagnostic ignored "-Wsuggest-attribute=format")
 #include "api/mimepart.h"
 #elif defined (HPMHOOKING_LOGIN)
 #define HPM_SERVER_TYPE SERVER_TYPE_LOGIN
-#define HPM_CORE_INCLUDE "HPMHooking/HPMHooking_login.HPMHooksCore.inc"
-#define HPM_HOOKS_INCLUDE "HPMHooking/HPMHooking_login.Hooks.inc"
-#define HPM_POINTS_INCLUDE "HPMHooking/HPMHooking_login.HookingPoints.inc"
-#define HPM_SOURCES_INCLUDE "HPMHooking/HPMHooking_login.sources.inc"
+#define HPM_CORE_INCLUDE "plugins/HPMHooking/HPMHooking_login.HPMHooksCore.inc"
+#define HPM_HOOKS_INCLUDE "plugins/HPMHooking/HPMHooking_login.Hooks.inc"
+#define HPM_POINTS_INCLUDE "plugins/HPMHooking/HPMHooking_login.HookingPoints.inc"
+#define HPM_SOURCES_INCLUDE "plugins/HPMHooking/HPMHooking_login.sources.inc"
 #include "login/account.h"
 #include "login/ipban.h"
 #include "login/lapiif.h"
@@ -68,10 +68,10 @@ PRAGMA_GCC5(GCC diagnostic ignored "-Wsuggest-attribute=format")
 #include "login/packets_ca_struct.h"
 #elif defined (HPMHOOKING_CHAR)
 #define HPM_SERVER_TYPE SERVER_TYPE_CHAR
-#define HPM_CORE_INCLUDE "HPMHooking/HPMHooking_char.HPMHooksCore.inc"
-#define HPM_HOOKS_INCLUDE "HPMHooking/HPMHooking_char.Hooks.inc"
-#define HPM_POINTS_INCLUDE "HPMHooking/HPMHooking_char.HookingPoints.inc"
-#define HPM_SOURCES_INCLUDE "HPMHooking/HPMHooking_char.sources.inc"
+#define HPM_CORE_INCLUDE "plugins/HPMHooking/HPMHooking_char.HPMHooksCore.inc"
+#define HPM_HOOKS_INCLUDE "plugins/HPMHooking/HPMHooking_char.Hooks.inc"
+#define HPM_POINTS_INCLUDE "plugins/HPMHooking/HPMHooking_char.HookingPoints.inc"
+#define HPM_SOURCES_INCLUDE "plugins/HPMHooking/HPMHooking_char.sources.inc"
 #include "char/capiif.h"
 #include "char/char.h"
 #include "char/geoip.h"
@@ -97,10 +97,10 @@ PRAGMA_GCC5(GCC diagnostic ignored "-Wsuggest-attribute=format")
 #include "common/mapindex.h"
 #elif defined (HPMHOOKING_MAP)
 #define HPM_SERVER_TYPE SERVER_TYPE_MAP
-#define HPM_CORE_INCLUDE "HPMHooking/HPMHooking_map.HPMHooksCore.inc"
-#define HPM_HOOKS_INCLUDE "HPMHooking/HPMHooking_map.Hooks.inc"
-#define HPM_POINTS_INCLUDE "HPMHooking/HPMHooking_map.HookingPoints.inc"
-#define HPM_SOURCES_INCLUDE "HPMHooking/HPMHooking_map.sources.inc"
+#define HPM_CORE_INCLUDE "plugins/HPMHooking/HPMHooking_map.HPMHooksCore.inc"
+#define HPM_HOOKS_INCLUDE "plugins/HPMHooking/HPMHooking_map.Hooks.inc"
+#define HPM_POINTS_INCLUDE "plugins/HPMHooking/HPMHooking_map.HookingPoints.inc"
+#define HPM_SOURCES_INCLUDE "plugins/HPMHooking/HPMHooking_map.sources.inc"
 #include "map/achievement.h"
 #include "map/atcommand.h"
 #include "map/battle.h"
@@ -149,11 +149,11 @@ PRAGMA_GCC5(GCC diagnostic ignored "-Wsuggest-attribute=format")
 #include "common/mapindex.h"
 #else
 #define HPM_SERVER_TYPE SERVER_TYPE_UNKNOWN
-#define HPM_CORE_INCLUDE "HPMHooking/HPMHooking.HPMHooksCore.inc"
-#define HPM_HOOKS_INCLUDE "HPMHooking/HPMHooking.Hooks.inc"
-#define HPM_POINTS_INCLUDE "HPMHooking/HPMHooking.HookingPoints.inc"
-#define HPM_SOURCES_INCLUDE "HPMHooking/HPMHooking.sources.inc"
-#error HPMHooking plugin needs to be compiled for a specific server type. Please make sure your Makefiles are up to date.
+#define HPM_CORE_INCLUDE "plugins/HPMHooking/HPMHooking.HPMHooksCore.inc"
+#define HPM_HOOKS_INCLUDE "plugins/HPMHooking/HPMHooking.Hooks.inc"
+#define HPM_POINTS_INCLUDE "plugins/HPMHooking/HPMHooking.HookingPoints.inc"
+#define HPM_SOURCES_INCLUDE "plugins/HPMHooking/HPMHooking.sources.inc"
+#error HPMHooking plugin needs to be compiled for a specific server type. Please make sure your CMakeLists are up to date.
 #endif
 PRAGMA_GCC5(GCC diagnostic pop)
 #include "common/base62.h"

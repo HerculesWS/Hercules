@@ -16,61 +16,49 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-################  PLUGIN CONFIGURATION  ##############################
-#                                                                    #
-# When you add a plugin, add its name here:                          #
-# Example: if you have a plugin named my_cool_plugin.c and another   #
-# one named my_second_plugin.c, add them to the list like this:      #
-#                                                                    #
-# set(MY_PLUGINS                                                     #
-#   my_cool_plugin                                                   #
-#   my_second_plugin                                                 #
-# )                                                                  #
-#                                                                    #
-# This is only needed if you want to build your plugin through       #
-#   'make plugins' or 'make all'. If you don't add it to this list,  #
-#   you will still be able to build your plugin through              #
-#   'make plugin.my_plugin'                                          #
-#                                                                    #
-# Note: DO NOT include the .c extension!!!                           #
-
-set(MY_PLUGINS
-)
-
-#                                                                    #
-#########  DO NOT EDIT ANYTHING BELOW THIS LINE!!!  ##################
-
-set(HERC_PLUGINS
-  sample
-  httpsample
-  db2sql
-  constdb2doc
-  generate-translations
-  mapcache
-  script_mapquit
-  HPMHooking_api
-  HPMHooking_char
-  HPMHooking_login
-  HPMHooking_map
-)
-
+# Creates a hercules plugin target
+# _plugin_name the plugin name which will be used for the output file and target name, keep it file system friendly
+# CFILES list or lists of plugin files to compile
+# CDEFS list or lists of definations to set
+# VIRTUAL_TARGET a name of a target that this plugin will be added as a dependency to
 function(add_plugin_target _plugin_name)
-  if(${_plugin_name} MATCHES "HPMHooking_.*")
-    set(_plugin_c_file "HPMHooking.c")
-  else()
-    set(_plugin_c_file "${_plugin_name}.c")
-  endif()
-
-  source_group("Login header files"
-    FILES
-    ${_plugin_c_file}
+  set(oneValueArgs VIRTUAL_TARGET)
+  set(multiValueArgs CFILES CDEFS)
+  cmake_parse_arguments(PARSE_ARGV
+    1
+    arg
+    ""
+    "${oneValueArgs}"
+    "${multiValueArgs}"
   )
 
-  add_library(${_plugin_name} SHARED ${_plugin_c_file})
+  if(NOT arg_CFILES)
+    message(FATAL_ERROR "Plugins must define CFILES")
+  endif()
+
+  set(_cfiles "")
+  set(_cdefs "")
+
+  foreach(value IN LISTS arg_CFILES)
+    list(APPEND _cfiles "${value}")
+  endforeach()
+
+  if(arg_CDEFS)
+    foreach(value IN LISTS arg_CDEFS)
+      list(APPEND _cdefs "${value}")
+    endforeach()
+  endif()
+
+  add_library(${_plugin_name} SHARED ${_cfiles})
   add_custom_target("plugin.${_plugin_name}")
   add_dependencies("plugin.${_plugin_name}" ${_plugin_name})
+  add_dependencies(plugins ${_plugin_name})
 
   target_compile_options(${_plugin_name} PRIVATE ${PLUGIN_COMPILE_OPTIONS})
+  if(arg_CDEFS)
+    target_compile_definitions(${_plugin_name} PRIVATE ${_cdefs})
+  endif()
+  set_target_properties(${_plugin_name} PROPERTIES PREFIX "")
 
   target_link_libraries(${_plugin_name} PUBLIC common)
   target_link_libraries(${_plugin_name} PRIVATE cjson::cjson)
@@ -81,21 +69,8 @@ function(add_plugin_target _plugin_name)
   target_link_libraries(${_plugin_name} PRIVATE ZLIB::ZLIB)
   target_link_libraries(${_plugin_name} PRIVATE pcre::pcre)
 
-  # Shouldn't we just turn this into some regex?
-  if(${_plugin_name} STREQUAL "HPMHooking_api")
-    target_compile_definitions(${_plugin_name} PRIVATE HPMHOOKING_API)
-  elseif(${_plugin_name} STREQUAL "HPMHooking_char")
-    target_compile_definitions(${_plugin_name} PRIVATE HPMHOOKING_CHAR)
-  elseif(${_plugin_name} STREQUAL "HPMHooking_login")
-    target_compile_definitions(${_plugin_name} PRIVATE HPMHOOKING_LOGIN)
-  elseif(${_plugin_name} STREQUAL "HPMHooking_map")
-    target_compile_definitions(${_plugin_name} PRIVATE HPMHOOKING_MAP)
-  endif()
-
-  if(${_plugin_name} MATCHES "HPMHooking_.*")
-    add_dependencies(plugin.HPMHooking ${_plugin_name})
-  else()
-    add_dependencies(plugins ${_plugin_name})
+  if (arg_VIRTUAL_TARGET)
+    add_dependencies(${arg_VIRTUAL_TARGET} ${_plugin_name})
   endif()
 
   install(
@@ -113,8 +88,17 @@ function(add_plugin_target _plugin_name)
 endfunction()
 
 add_custom_target(plugins)
-add_custom_target(plugin.HPMHooking)
 
-foreach(PLUGIN_NAME IN LISTS MY_PLUGINS HERC_PLUGINS)
-  add_plugin_target(${PLUGIN_NAME})
+# Get all items in the current directory
+file(GLOB dir_items RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *)
+
+foreach(item ${dir_items})
+  if(IS_DIRECTORY
+    ${CMAKE_CURRENT_SOURCE_DIR}/${item}
+    AND
+    EXISTS
+    ${CMAKE_CURRENT_SOURCE_DIR}/${item}/CMakeLists.txt
+  )
+    add_subdirectory(${item})
+  endif()
 endforeach()

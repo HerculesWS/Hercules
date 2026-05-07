@@ -47,7 +47,7 @@ extern struct HPMHooking_interface HPMHooking_s;
 HPExport struct HPMHooking_interface HPMHooking_s;
 #endif
 
-#include "HPMHooking/HPMHooking.Defs.inc"
+#include "plugins/HPMHooking/HPMHooking.Defs.inc"
 
 #define addHookPre(ifname, funcname, hook) ( \
 		(void)((HPMHOOK_pre_ ## ifname ## _ ## funcname)0 == (hook)), \
