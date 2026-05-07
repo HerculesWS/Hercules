@@ -180,7 +180,7 @@ static void my_clif_equipitemack(struct map_session_data *sd, int n, int pos, en
 {
 }
 
-static void my_status_calc_bl_(struct block_list *bl, enum scb_flag flag, enum e_status_calc_opt opt)
+static void my_status_calc_bl_(struct block_list *bl, e_scb_flag flag, enum e_status_calc_opt opt)
 {
 }
 
