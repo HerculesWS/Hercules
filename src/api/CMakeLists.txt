@@ -83,6 +83,8 @@ endif()
 target_link_libraries(api-server PRIVATE hercules-multipart-parser)
 target_link_libraries(api-server PRIVATE cjson::cjson)
 
+add_dependencies(sql api-server)
+
 install(
   TARGETS api-server
   RUNTIME

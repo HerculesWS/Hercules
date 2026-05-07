@@ -169,3 +169,5 @@ install(
     DESTINATION
     .
 )
+
+add_dependencies(sql map-server)

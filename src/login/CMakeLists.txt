@@ -64,6 +64,8 @@ add_executable(login-server
 
 target_link_libraries(login-server PUBLIC common)
 
+add_dependencies(sql login-server)
+
 install(
   TARGETS login-server
   RUNTIME
