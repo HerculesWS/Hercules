@@ -48,3 +48,7 @@ add_library(hercules-libconfig STATIC
   ${HERC_LIBCONF_SRCS}
   ${HERC_LIBCONF_HDRS}
 )
+
+if(NOT MSVC)
+  target_compile_options(hercules-libconfig PRIVATE -Wno-null-dereference)
+endif()
