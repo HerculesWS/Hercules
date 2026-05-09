@@ -371,7 +371,7 @@ malangdo,184,139,4	script	Storekeeper#mal	4_CAT_ADV2,{
 	mes "[Storekeeper]";
 	mes "Thank you.";
 	close2;
-	openstorage;
+	openstorage(STORAGE_TYPE_MAIN);
 	end;
 }
 

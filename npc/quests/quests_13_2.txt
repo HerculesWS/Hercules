@@ -109,7 +109,7 @@ spl_fild02,25,211,4	script	Cat Hand Agent#spl	4_M_BOSSCAT,{
 				mes "Thank you.";
 				mes "Your storage will be opened shortly.";
 				close2;
-				openstorage;
+				openstorage(STORAGE_TYPE_MAIN);
 				end;
 			}
 			else {
@@ -156,7 +156,7 @@ spl_fild02,25,211,4	script	Cat Hand Agent#spl	4_M_BOSSCAT,{
 				mes "Thank you.";
 				mes "Your storage will be opened shortly.";
 				close2;
-				openstorage;
+				openstorage(STORAGE_TYPE_MAIN);
 				end;
 			}
 			else {
@@ -277,7 +277,7 @@ spl_fild02,25,211,4	script	Cat Hand Agent#spl	4_M_BOSSCAT,{
 				mes "Thank you.";
 				mes "Your storage will be opened shortly.";
 				close2;
-				openstorage;
+				openstorage(STORAGE_TYPE_MAIN);
 				end;
 			}
 			else {
