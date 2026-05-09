@@ -21,7 +21,6 @@ cmake_minimum_required(VERSION 3.25)
 project(hercules LANGUAGES C CXX)
 
 # CMake settings
-enable_testing()
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS ON)
@@ -110,12 +109,17 @@ option(ENABLE_WERROR "Enables -Werror in the compiler flags. (disabled by defaul
 set(MAX_CONNECTIONS "" CACHE STRING "optionally set the maximum connections the core can handle (Without epoll enabled, default: 1024. With epol enabled: 3072)")
 set(WITH_HTTP_PARSER "http-parser" CACHE STRING "select http parser. Allowed values: http-parser, llhttp")
 option(ENABLE_CLASSIC_AUTOSPELL "Enables classic auto spell list" OFF)
+option(ENABLE_TESTING "Enables compiling and running of tests" OFF)
 
 if(CMAKE_C_BYTE_ORDER STREQUAL "BIG_ENDIAN")
   message(FATAL_ERROR "bigendian is not supported... stopping")
 elseif(NOT CMAKE_C_BYTE_ORDER STREQUAL "LITTLE_ENDIAN")
   set(WORDS_BIGENDIAN FALSE)
   message(WARNING "unable to determine endianess, only little endian is supported")
+endif()
+
+if (ENABLE_TESTING)
+  enable_testing()
 endif()
 
 # [START] conan settings
