@@ -105,8 +105,7 @@ static int duel_create(struct map_session_data *sd, const unsigned int maxpl)
 	safestrncpy(output, msg_sd(sd, MSGTBL_DUEL_CREATED), sizeof(output)); // " -- Duel has been created (@invite/@leave) --"
 	clif_disp_onlyself(sd, output);
 
-	clif->map_property(sd, MAPPROPERTY_FREEPVPZONE);
-	clif->maptypeproperty2(&sd->bl,SELF);
+	clif->map_property(&sd->bl, MAPPROPERTY_FREEPVPZONE, SELF);
 	return i;
 }
 
@@ -154,8 +153,8 @@ static void duel_leave(const unsigned int did, struct map_session_data *sd)
 
 	sd->duel_group = 0;
 	duel_savetime(sd);
-	clif->map_property(sd, MAPPROPERTY_NOTHING);
-	clif->maptypeproperty2(&sd->bl,SELF);
+	clif->map_property(&sd->bl, MAPPROPERTY_NOTHING, SELF);
+
 }
 
 static void duel_accept(const unsigned int did, struct map_session_data *sd)
@@ -172,8 +171,7 @@ static void duel_accept(const unsigned int did, struct map_session_data *sd)
 	sprintf(output, msg_sd(sd, MSGTBL_DUEL_PLAYER_ACCEPTED), sd->status.name);
 	clif->disp_message(&sd->bl, output, DUEL_WOS);
 
-	clif->map_property(sd, MAPPROPERTY_FREEPVPZONE);
-	clif->maptypeproperty2(&sd->bl,SELF);
+	clif->map_property(&sd->bl, MAPPROPERTY_FREEPVPZONE, SELF);
 }
 
 static void duel_reject(const unsigned int did, struct map_session_data *sd)
