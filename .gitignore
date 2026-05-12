@@ -172,6 +172,9 @@ Thumbs.db
 # Default build directory
 /build/
 
+# Default install directory
+/bin/
+
 # Cache directroy created by clangd
 /.cache/
 

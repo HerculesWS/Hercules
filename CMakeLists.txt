@@ -49,7 +49,7 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
 endif()
 
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-  message(FATAL_ERROR "Installation path is missing. Please pass it to cmake.")
+  set_property(CACHE CMAKE_INSTALL_PREFIX PROPERTY VALUE "${CMAKE_SOURCE_DIR}/bin")
 endif()
 
 if(NOT CMAKE_BUILD_TYPE)
