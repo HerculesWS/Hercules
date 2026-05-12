@@ -39,8 +39,10 @@ if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
 
   if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     set(CMAKE_INSTALL_RPATH "@executable_path/${CMAKE_INSTALL_LIBDIR}/")
+    set(PLUGIN_INSTALL_RPATH "@executable_path/../${CMAKE_INSTALL_LIBDIR}/") # One directory up for plugins
   else()
     set(CMAKE_INSTALL_RPATH "\$ORIGIN/${CMAKE_INSTALL_LIBDIR}/") # Linux and modern BSD systems supports $ORIGIN
+    set(PLUGIN_INSTALL_RPATH "\$ORIGIN/../${CMAKE_INSTALL_LIBDIR}/") # One directory up for plugins
   endif()
 endif()
 
