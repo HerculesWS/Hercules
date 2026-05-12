@@ -368,6 +368,7 @@ find_package(cJSON REQUIRED)
 find_package(mariadb-connector-c REQUIRED)
 find_package(pcre REQUIRED)
 find_package(ZLIB REQUIRED)
+find_package(GIF REQUIRED)
 
 # Check for compile settings
 

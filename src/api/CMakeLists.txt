@@ -74,7 +74,6 @@ add_executable(api-server
 )
 
 target_link_libraries(api-server PUBLIC common)
-target_link_libraries(api-server PRIVATE hercules-libgif)
 if(WITH_HTTP_PARSER STREQUAL "http-parser")
   target_link_libraries(api-server PRIVATE hercules-http_parser)
 else()
@@ -82,6 +81,7 @@ else()
 endif()
 target_link_libraries(api-server PRIVATE hercules-multipart-parser)
 target_link_libraries(api-server PRIVATE cjson::cjson)
+target_link_libraries(api-server PRIVATE GIF::GIF)
 
 add_dependencies(sql api-server)
 

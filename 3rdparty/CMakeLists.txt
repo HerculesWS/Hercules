@@ -18,7 +18,6 @@
 
 add_subdirectory(libconfig)
 add_subdirectory(mt19937ar)
-add_subdirectory(libgif)
 add_subdirectory(multipart-parser)
 if(WITH_HTTP_PARSER STREQUAL "http-parser")
   add_subdirectory(http-parser)

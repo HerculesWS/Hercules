@@ -21,3 +21,4 @@ class HerculesRecipe(ConanFile):
         self.requires("mariadb-connector-c/3.4.8", options={"shared": True})
         self.requires("pcre/8.45")
         self.requires("zlib/1.3.2")
+        self.requires("giflib/5.2.2")

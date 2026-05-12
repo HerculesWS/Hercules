@@ -23,7 +23,7 @@
 
 #include "common/hercules.h"
 
-#include <libgif/gif_lib.h>
+#include <gif_lib.h>
 
 #include <stdarg.h>
 
