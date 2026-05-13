@@ -39,11 +39,6 @@
 #	include <unistd.h>
 #endif
 
-// When Compiling using MSC (on win32..) we know we have support in any case!
-#ifdef _MSC_VER
-#define HAS_TLS
-#endif
-
 /** @file
  * Thread interface implementation.
  * @author Florian Wilkemeyer <fw@f-ws.de>
@@ -161,7 +156,10 @@ static void *thread_main_redirector(void *p)
 
 	thread_terminated(self);
 #ifdef WIN32
+#pragma warning (push)
+#pragma warning (disable: 4311)
 	return (DWORD)ret;
+#pragma warning (pop)
 #else
 	return ret;
 #endif

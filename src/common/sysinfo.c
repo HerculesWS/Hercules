@@ -39,6 +39,7 @@
 #include <stdlib.h> // atoi
 #ifdef WIN32
 #	include <windows.h>
+#	include <winternl.h>
 #else
 #	include <sys/time.h> // time constants
 #	include <unistd.h>

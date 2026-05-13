@@ -92,7 +92,11 @@
 
 static struct core_interface core_s;
 struct core_interface *core = &core_s;
+#ifdef WIN32
+static char executable_path[MAX_PATH];
+#else
 static char executable_path[PATH_MAX];
+#endif
 
 // Added by Gabuzomeu
 //
