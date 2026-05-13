@@ -676,6 +676,20 @@ static void hplugins_config_read(void)
 	if (!libconfig->load_file(&plugins_conf, config_filename))
 		return;
 
+	char *base_path = aStrdup(core->executable_path);
+	size_t base_path_length = strlen(base_path);
+	for (size_t j = base_path_length - 1; j > 0; --j) {
+#ifdef WIN32
+		const char path_delimiter = '\\';
+#else
+		const char path_delimiter = '/';
+#endif
+		if (base_path[j] == path_delimiter) {
+			base_path[j] = '\0';
+			break;
+		}
+	}
+
 	plist = libconfig->lookup(&plugins_conf, "plugins_list");
 	for (i = 0; i < VECTOR_LENGTH(HPM->cmdline_load_plugins); i++) {
 		struct config_setting_t *entry = libconfig->setting_add(plist, NULL, CONFIG_TYPE_STRING);
@@ -684,7 +698,7 @@ static void hplugins_config_read(void)
 
 	if (plist != NULL) {
 		int length = libconfig->setting_length(plist);
-		char filename[60];
+		char filename[4096];
 		char hooking_plugin_name[32];
 		const char *plugin_name_suffix = "";
 		if (SERVER_TYPE == SERVER_TYPE_LOGIN)
@@ -703,7 +717,7 @@ static void hplugins_config_read(void)
 			const char *plugin_name = libconfig->setting_get_string_elem(plist,i);
 			if (strcmpi(plugin_name, "HPMHooking") == 0 || strcmpi(plugin_name, hooking_plugin_name) == 0) { //must load it first
 				struct hplugin *plugin;
-				snprintf(filename, 60, "plugins/%s%s", hooking_plugin_name, DLL_EXT);
+				snprintf(filename, sizeof(filename), "%s/herc-plugins/%s%s", base_path, hooking_plugin_name, DLL_EXT);
 				if ((plugin = HPM->load(filename))) {
 					const char * (*func)(bool *fr);
 					bool (*addhook_sub) (enum HPluginHookType type, const char *target, void *hook, unsigned int pID);
@@ -725,11 +739,12 @@ static void hplugins_config_read(void)
 		for (i = 0; i < length; i++) {
 			if (strncmpi(libconfig->setting_get_string_elem(plist,i),"HPMHooking", 10) == 0) // Already loaded, skip
 				continue;
-			snprintf(filename, 60, "plugins/%s%s", libconfig->setting_get_string_elem(plist,i), DLL_EXT);
+			snprintf(filename, sizeof(filename), "%s/herc-plugins/%s%s", base_path, libconfig->setting_get_string_elem(plist,i), DLL_EXT);
 			HPM->load(filename);
 		}
 	}
 	libconfig->destroy(&plugins_conf);
+	aFree(base_path);
 
 	if (VECTOR_LENGTH(HPM->plugins))
 		ShowStatus("HPM: There are '"CL_WHITE"%d"CL_RESET"' plugins loaded, type '"CL_WHITE"plugins"CL_RESET"' to list them\n", VECTOR_LENGTH(HPM->plugins));
