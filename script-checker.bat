@@ -40,6 +40,6 @@ ECHO.
 
 :LOOP
 	SET /P SCRIPT="Enter path/to/your/script.txt: " %=%
-	map-server.exe --script-check --load-script %SCRIPT%
+	"bin/map-server.exe" --script-check --load-script %SCRIPT%
 	ECHO.
 GOTO LOOP
