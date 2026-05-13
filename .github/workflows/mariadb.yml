@@ -7,7 +7,11 @@ env:
   MYSQL_USER: 'ragnarok'
   MYSQL_PASSWORD: 'ragnarok'
   MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
-  DEBIAN_COMMON_PACKAGES: make zlib1g-dev libpcre3-dev git python3 libzstd-dev
+  DEBIAN_COMMON_PACKAGES: cmake make git python3 python3-venv libzstd-dev g++
+
+defaults:
+  run:
+    shell: bash
 
 jobs:
   build:
@@ -18,9 +22,9 @@ jobs:
         CC: [gcc]
         RENEWAL: [""]
         CLIENT_TYPE: [""]
-        HTTPLIB: ["", "--with-http_parser=llhttp"]
-        SANITIZER: ["--disable-manager", "--enable-sanitize=full"]
-        PACKET_VERSION: ["--enable-packetver=20221024"]
+        HTTPLIB: ["", "-DWITH_HTTP_PARSER=llhttp"]
+        SANITIZER: ["-DMEMORY_MANAGER=none", "-DMEMORY_MANAGER=none -DENABLE_SANITIZE=ON"]
+        PACKET_VERSION: ["-DPACKETVER=20221024"]
         MYSQL: ["10.11", "11.8", "latest"]
 
     # github.head_ref will stop previous runs in the same PR (if in a PR)
@@ -30,7 +34,7 @@ jobs:
       cancel-in-progress: true
 
     container:
-      image: ubuntu:24.04
+      image: ubuntu:26.04
     services:
       mysql:
         image: mariadb:${{ matrix.MYSQL }}
@@ -47,10 +51,10 @@ jobs:
           --health-timeout=2s
           --health-retries=3
     env:
-      INSTALL_PACKAGES: ${{ matrix.CC }} mariadb-client libmariadbclient-dev-compat
+      INSTALL_PACKAGES: ${{ matrix.CC }} mariadb-client
       SQLHOST: mysql
       CC: ${{ matrix.CC }}
-      CONFIGURE_FLAGS: CC=${{ matrix.CC }} --enable-debug --enable-Werror --enable-buildbot ${{ matrix.RENEWAL }} ${{ matrix.HTTPLIB }} ${{ matrix.CLIENT_TYPE }} ${{ matrix.SANITIZER }} ${{ matrix.PACKET_VERSION }}
+      CONFIGURE_FLAGS: -DCMAKE_C_COMPILER=${{ matrix.CC }} -DCMAKE_BUILD_TYPE=Debug -DENABLE_WERROR=ON -DENABLE_BUILDBOT=ON ${{ matrix.RENEWAL }} ${{ matrix.HTTPLIB }} ${{ matrix.CLIENT_TYPE }} ${{ matrix.SANITIZER }} ${{ matrix.PACKET_VERSION }}
       PACKET_VERSION: ${{ matrix.PACKET_VERSION }}
     steps:
       - uses: actions/checkout@v6
@@ -76,6 +80,8 @@ jobs:
 
       - name: build
         run: |
+          ./tools/ci/travis.sh prepareenv
+          source .venv/bin/activate
           ./tools/ci/travis.sh build $CONFIGURE_FLAGS
 
       - name: test
@@ -83,11 +89,6 @@ jobs:
           ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
 
       - name: extra test
-        if: env.PACKET_VERSION != '--enable-packetver=20130724'
-        run: |
-          ./tools/ci/travis.sh extratest
-
-      - name: extra test
-        if: env.PACKET_VERSION != '--enable-packetver=20130724'
+        if: env.PACKET_VERSION != '-DPACKETVER=20130724'
         run: |
           ./tools/ci/travis.sh extratest

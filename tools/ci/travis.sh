@@ -44,6 +44,7 @@ function usage {
 	echo "    $0 getplugins"
 	echo "    $0 startmysql"
 	echo "    $0 extratest"
+	echo "    $0 prepareenv"
 	exit 1
 }
 
@@ -81,29 +82,16 @@ function run_server {
 }
 
 function run_test {
-	echo "Running: test_$1"
+	echo "Running tests $1"
 	sysctl -w kernel.core_pattern=core || true
 	rm -rf core* || true
-	CRASH_PLEASE=1 ./test_$1 2>runlog.txt
+	(cd build && ctest -R "$1" > ../runlog.txt)
 	export errcode=$?
-	export teststr=$(head -c 10000 runlog.txt)
-	if [[ -n "${teststr}" ]]; then
-		echo "Errors found in running test $1."
-		head -c 10000 runlog.txt
-		aborterror "Errors found in running test $1."
-	else
-		echo "No errors found for test $1."
-	fi
 	if [ ${errcode} -ne 0 ]; then
-		echo "test $1 terminated with exit code ${errcode}"
+		echo "Tests terminated with exit code ${errcode}"
 		echo cat runlog.txt
 		cat runlog.txt
-		echo crash dump
-		COREFILE=$(find . -maxdepth 1 -name "core*" | head -n 1)
-		if [[ -f "$COREFILE" ]]; then
-			gdb -c "$COREFILE" $1 -ex "thread apply all bt" -ex "set pagination 0" -batch
-		fi
-		aborterror "Test failed"
+		aborterror "Tests failed"
 	fi
 }
 
@@ -189,11 +177,12 @@ case "$MODE" in
 		else
 			echo "Skip validateinterfaces"
 		fi
-		./configure $@ || (cat config.log && aborterror "Configure error, aborting build.")
-		make -j3 || aborterror "Build failed."
-		make plugins -j3 || aborterror "Build failed."
-		make plugin.script_mapquit -j3 || aborterror "Build failed."
-		make test || aborterror "Build failed."
+		cmake -B build -S . -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=cmake_modules/conan_provider.cmake -DENABLE_TESTING=ON $@ || aborterror "cmake error, aborting build."
+		(cd build && make -j3) || aborterror "Build failed."
+		(cd build && make plugins -j3) || aborterror "Build failed."
+		(cd build && make plugin.script_mapquit -j3) || aborterror "Build failed."
+		(cd build && make tests) || aborterror "Build failed."
+		(cd build && make install) || aborterror "Failed to install targets."
 		;;
 	buildhpm)
 		./configure $@ || (cat config.log && aborterror "Configure error, aborting build.")
@@ -254,52 +243,50 @@ EOF
 		else
 			export ASAN_OPTIONS=leak_check_at_exit=1:detect_stack_use_after_return=true:strict_init_order=true:detect_odr_violation=0
 		fi
-		# run_test spinlock # Not running the spinlock test for the time being (too time consuming)
-		# run_test libconfig
-		# run_test chunked
+		run_test "base62|chunked|libconfig"
 		echo "run all servers without HPM"
-		run_server ./login-server
-		run_server ./char-server
-		run_server ./map-server "$ARGS"
-		run_server ./api-server
+		run_server ./bin/login-server
+		run_server ./bin/char-server
+		run_server ./bin/map-server "$ARGS"
+		run_server ./bin/api-server
 		echo "run all servers with HPM"
-		run_server ./login-server "$PLUGINS"
-		run_server ./char-server "$PLUGINS"
-		run_server ./map-server "$ARGS $PLUGINS"
-		run_server ./api-server "$PLUGINS"
+		run_server ./bin/login-server "$PLUGINS"
+		run_server ./bin/char-server "$PLUGINS"
+		run_server ./bin/map-server "$ARGS $PLUGINS"
+		run_server ./bin/api-server "$PLUGINS"
 		echo "run all servers with sample plugin"
-		run_server ./login-server "$PLUGINS --load-plugin sample"
-		run_server ./char-server "$PLUGINS --load-plugin sample"
-		run_server ./map-server "$PLUGINS --load-plugin sample"
-		run_server ./api-server "$PLUGINS --load-plugin sample"
+		run_server ./bin/login-server "$PLUGINS --load-plugin sample"
+		run_server ./bin/char-server "$PLUGINS --load-plugin sample"
+		run_server ./bin/map-server "$PLUGINS --load-plugin sample"
+		run_server ./bin/api-server "$PLUGINS --load-plugin sample"
 		echo "run all servers with httpsample plugin"
-		run_server ./login-server "$PLUGINS --load-plugin httpsample"
-		run_server ./char-server "$PLUGINS --load-plugin httpsample"
-		run_server ./map-server "$PLUGINS --load-plugin httpsample"
-		run_server ./api-server "$PLUGINS --load-plugin httpsample"
+		run_server ./bin/login-server "$PLUGINS --load-plugin httpsample"
+		run_server ./bin/char-server "$PLUGINS --load-plugin httpsample"
+		run_server ./bin/map-server "$PLUGINS --load-plugin httpsample"
+		run_server ./bin/api-server "$PLUGINS --load-plugin httpsample"
 		echo "run all servers with constdb2doc"
-		run_server ./map-server "$PLUGINS --load-plugin constdb2doc --constdb2doc"
+		run_server ./bin/map-server "$PLUGINS --load-plugin constdb2doc --constdb2doc"
 		echo "run all servers with db2sql"
 		run_server ./bin/map-server "$PLUGINS --load-plugin db2sql --db2sql"
 		run_server ./bin/map-server "$PLUGINS --load-plugin db2sql --itemdb2sql"
 		run_server ./bin/map-server "$PLUGINS --load-plugin db2sql --mobdb2sql"
 		echo "run all servers with generate-translations"
-		run_server ./map-server "$PLUGINS --load-plugin generate-translations --generate-translations"
+		run_server ./bin/map-server "$PLUGINS --load-plugin generate-translations --generate-translations"
 		echo "run all servers with mapcache"
 # for other flags need grf or other files
-		run_server ./map-server "$PLUGINS --load-plugin mapcache --fix-md5"
+		run_server ./bin/map-server "$PLUGINS --load-plugin mapcache --fix-md5"
 		echo "run all servers with script_mapquit"
-		run_server ./map-server "$PLUGINS --load-plugin script_mapquit"
+		run_server ./bin/map-server "$PLUGINS --load-plugin script_mapquit"
 		;;
 	extratest)
 		export ASAN_OPTIONS=leak_check_at_exit=1:detect_stack_use_after_return=true:strict_init_order=true:detect_odr_violation=0
 		PLUGINS="--load-plugin HPMHooking"
 		echo "run map server with uncommented old and custom scripts"
 		find ./npc -type f -name "*.conf" -exec ./tools/ci/uncomment.sh {} \;
-		run_server ./login-server "$PLUGINS"
-		run_server ./char-server "$PLUGINS"
-		run_server ./map-server "$ARGS $PLUGINS"
-		run_server ./api-server "$PLUGINS"
+		run_server ./bin/login-server "$PLUGINS"
+		run_server ./bin/char-server "$PLUGINS"
+		run_server ./bin/map-server "$ARGS $PLUGINS"
+		run_server ./bin/api-server "$PLUGINS"
 		;;
 	getplugins)
 		echo "Cloning plugins repository..."
@@ -319,6 +306,12 @@ EOF
 		service mysql stop || true
 		service mysql start || true
 		service mysql status || true
+		;;
+	prepareenv)
+		echo "Preparing enviroment"
+		python3 -m venv .venv || aborterror "Unable to create python virtual env"
+		source .venv/bin/activate || aborterror "Unable to activate virtual env"
+		pip install conan || aborterror "Unable to install conan"
 		;;
 	*)
 		usage
