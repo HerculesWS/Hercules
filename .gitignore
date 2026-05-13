@@ -128,8 +128,6 @@ Thumbs.db
 !/src/plugins/constdb2doc/*
 !/src/plugins/db2sql/
 !/src/plugins/db2sql/*
-!/src/plugins/dbghelpplug/
-!/src/plugins/dbghelpplug/*
 !/src/plugins/generate-translations/
 !/src/plugins/generate-translations/*
 !/src/plugins/httpsample/
