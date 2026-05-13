@@ -563,7 +563,7 @@ static FILE *HCache_open(const char *file, const char *opt)
 static void HCache_init(void)
 {
 	struct stat buf;
-	if (stat(SERVER_NAME, &buf) != 0) {
+	if (stat(core->executable_path, &buf) != 0) {
 		ShowWarning("Unable to open '%s', caching capabilities have been disabled!\n",SERVER_NAME);
 		return;
 	}
