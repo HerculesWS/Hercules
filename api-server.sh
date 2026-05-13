@@ -8,7 +8,7 @@ if [ -f .stopserver3 ] ; then
 echo server marked down >> server-log.txt
 else
 echo restarting server at time at `date +"%m-%d-%H:%M-%S"`>> start-log.txt
-./bin/char-server
+./bin/api-server
 fi
 
 sleep 5
