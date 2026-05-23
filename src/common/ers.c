@@ -19,45 +19,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*****************************************************************************\
- *  <H1>Entry Reusage System</H1>                                            *
- *                                                                           *
- *  There are several root entry managers, each with a different entry size. *
- *  Each manager will keep track of how many instances have been 'created'.  *
- *  They will only automatically destroy themselves after the last instance  *
- *  is destroyed.                                                            *
- *                                                                           *
- *  Entries can be allocated from the managers.                              *
- *  If it has reusable entries (freed entry), it uses one.                   *
- *  So no assumption should be made about the data of the entry.             *
- *  Entries should be freed in the manager they where allocated from.        *
- *  Failure to do so can lead to unexpected behaviors.                      *
- *                                                                           *
- *  <H2>Advantages:</H2>                                                     *
- *  - The same manager is used for entries of the same size.                 *
- *    So entries freed in one instance of the manager can be used by other   *
- *    instances of the manager.                                              *
- *  - Much less memory allocation/deallocation - program will be faster.     *
- *  - Avoids memory fragmentation - program will run better for longer.       *
- *                                                                           *
- *  <H2>Disadvantages:</H2>                                                   *
- *  - Unused entries are almost inevitable - memory being wasted.            *
- *  - A  manager will only auto-destroy when all of its instances are        *
- *    destroyed so memory will usually only be recovered near the end.       *
- *  - Always wastes space for entries smaller than a pointer.                *
- *                                                                           *
- *  WARNING: The system is not thread-safe at the moment.                    *
- *                                                                           *
- *  HISTORY:                                                                 *
- *    0.1 - Initial version                                                  *
- *    1.0 - ERS Rework                                                       *
- *                                                                           *
- * @version 1.0 - ERS Rework                                                 *
- * @author GreenBox @ rAthena Project                                        *
- * @encoding US-ASCII                                                        *
- * @see common#ers.h                                                         *
-\*****************************************************************************/
-
 #define HERCULES_CORE
 
 #include "ers.h"
@@ -70,6 +31,46 @@
 #include <stdlib.h>
 #include <string.h>
 
+/**
+ * Entry Reusage System (ERS)
+ *
+ * An Entry Reusage System (ERS) for efficient memory management of objects of the same size.
+ * ERS optimizes memory allocation by reusing previously allocated entries, reducing 
+ * fragmentation, and improving performance.
+ *
+ * This system provides efficient memory management for applications that frequently allocate 
+ * and free objects of the same size.
+ *
+ * Advantages:
+ *   Memory Reuse: Objects are recycled, leading to lower memory allocation/deallocation
+ *   overhead and less fragmentation.
+ *   Performance: The system uses memory more efficiently, making the program faster and
+ *   more stable over time.
+ *   Flexibility: The system can adjust the chunk size for each cache to balance performance
+ *   and memory usage.
+ * Disadvantages:
+ *   Memory Waste: Unused entries may still occupy memory, especially for small objects.
+ *   Memory Recovery Delay: Memory is only fully recovered when the last instance of a cache is destroyed.
+ *   Non-thread-safe: The system is not designed to be thread-safe.
+ *
+ * Functions:
+ *   ers_find_cache: Finds or creates a cache for a given object size and options.
+ *   ers_obj_alloc_entry: Allocates a new entry from the cache.
+ *   ers_obj_free_entry: Frees an entry and adds it to the reuse list.
+ *   ers_obj_size: Returns the size of an entry.
+ *   ers_obj_destroy: Destroys an ERS instance and frees associated resources.
+ *   ers_report: Provides a report on the current memory usage and cache statistics.
+ *   ers_final: Cleans up any remaining ERS instances during shutdown.
+ *
+ * History:
+ *   0.1 - Initial version
+ *   1.0 - ERS Rework
+ *
+ * @version 1.0 - ERS Rework
+ * @author GreenBox @ rAthena Project
+ * @encoding US-ASCII
+ * @see common#ers.h   
+ */
 #ifndef DISABLE_ERS
 
 #define ERS_BLOCK_ENTRIES 2048
