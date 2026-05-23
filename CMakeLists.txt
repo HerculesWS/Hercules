@@ -467,6 +467,7 @@ if(ENABLE_SANITIZE)
     message(FATAL_ERROR "Sanitizer Cannot be enabled on MSVC builds")
   endif()
   add_compile_definitions(SANITIZE)
+  # skipped because server have multiple issues: -fsanitize=alignment
   testadd_sanitizer_flag(address)
   testadd_sanitizer_flag(shift)
   testadd_sanitizer_flag(integer-divide-by-zero)
