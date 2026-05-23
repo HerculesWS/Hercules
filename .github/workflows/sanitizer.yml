@@ -7,7 +7,7 @@ env:
   MYSQL_USER: 'ragnarok'
   MYSQL_PASSWORD: 'ragnarok'
   MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
-  DEBIAN_COMMON_PACKAGES: cmake make git python3 python3-venv libzstd-dev g++ gcc-snapshot
+  DEBIAN_COMMON_PACKAGES: cmake make git python3 python3-venv libzstd-dev g++
 
 defaults:
   run:
@@ -43,7 +43,7 @@ jobs:
       cancel-in-progress: true
 
     container:
-      image: ubuntu:26.04
+      image: ubuntu:24.04
     services:
       mariadb:
         image: mariadb:latest
@@ -79,38 +79,25 @@ jobs:
           ./tools/ci/retry.sh apt-get update
           ./tools/ci/retry.sh apt-get install -y -qq $INSTALL_PACKAGES $DEBIAN_COMMON_PACKAGES
 
-      - name: gcc version
-        run: |
-          export PATH=/usr/lib/gcc-snapshot/bin:$PATH
-          gcc --version
-          ls -la /usr/lib/x86_64-linux-gnu/libasan.* || true
-          ls -la /usr/lib/gcc-snapshot/lib/libasan.* || true
-          ls -la /usr/lib/gcc-snapshot/lib/libasan.so.8.0.0
-
       - name: init database
         run: |
-          export PATH=/usr/lib/gcc-snapshot/bin:$PATH
           ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok $SQLHOST
 
       - name: get plugins
         run: |
-          export PATH=/usr/lib/gcc-snapshot/bin:$PATH
           ./tools/ci/travis.sh getplugins || true
 
       - name: build
         run: |
-          export PATH=/usr/lib/gcc-snapshot/bin:$PATH
           ./tools/ci/travis.sh prepareenv
           source .venv/bin/activate
           ./tools/ci/travis.sh build $CONFIGURE_FLAGS
 
       - name: test
         run: |
-          export PATH=/usr/lib/gcc-snapshot/bin:$PATH
           ./tools/ci/travis.sh --sanitizer-build test ragnarok ragnarok ragnarok $SQLHOST
 
       - name: extra test
         if: env.PACKET_VERSION != '-DPACKETVER=20130724'
         run: |
-          export PATH=/usr/lib/gcc-snapshot/bin:$PATH
           ./tools/ci/travis.sh --sanitizer-build extratest

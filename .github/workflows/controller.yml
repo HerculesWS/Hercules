@@ -27,10 +27,10 @@ jobs:
 #    needs: build
 #    if: ${{ !failure() && !cancelled() }}
 #    uses: ./.github/workflows/gcc_test.yml
-  gccsnapshot_test:
+  sanitizer:
     needs: build
     if: ${{ !failure() && !cancelled() }}
-    uses: ./.github/workflows/gccsnapshot_test.yml
+    uses: ./.github/workflows/sanitizer.yml
   mariadb:
     needs: build
     if: ${{ !failure() && !cancelled() }}

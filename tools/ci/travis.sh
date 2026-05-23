@@ -58,7 +58,7 @@ function run_server {
 	rm -rf core* || true
 	BACKUP_LD_PRELOAD="$LD_PRELOAD"
 	if [ $SANITIZER_BUILD -eq 1 ]; then
-		export LD_PRELOAD=/usr/lib/gcc-snapshot/lib/libasan.so.8.0.0
+		export LD_PRELOAD=/usr/lib/gcc/x86_64-linux-gnu/15/libasan.so
 	fi
 	CRASH_PLEASE=1 $1 --run-once $2 2>runlog.txt
 	LD_PRELOAD="$BACKUP_LD_PRELOAD"
