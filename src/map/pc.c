@@ -11082,7 +11082,7 @@ static void pc_autosave_start(void)
 	if (pc->autosave_tid != INVALID_TIMER)
 		return;
 
-	interval = map->autosave_interval / (VECTOR_LENGTH(pc->autosave_queue) + 1);
+	interval = map->autosave_interval / VECTOR_LENGTH(pc->autosave_queue);
 	if (interval < map->minsave_interval)
 		interval = map->minsave_interval;
 	pc->autosave_tid = timer->add(timer->gettick() + interval, pc->autosave, 0, 0);
