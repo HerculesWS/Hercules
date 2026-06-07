@@ -126,7 +126,7 @@ struct channel_interface {
 	void (*quit_guild) (struct map_session_data *sd);
 	void (*irc_join) (struct map_session_data *sd);
 
-	void (*config_read) (void);
+	void (*config_read) (const char *config_filename);
 };
 
 #ifdef HERCULES_CORE

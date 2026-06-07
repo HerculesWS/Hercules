@@ -657,29 +657,28 @@ CMDLINEARG(loadplugin)
 }
 
 /**
- * Reads the plugin configuration and loads the plugins as necessary.
+ * Loads plugins listed in one plugins.conf file. Called for the primary file
+ * and recursively for any file referenced by its "import" key.
+ * @param is_primary true only for the first call; causes cmdline plugins to be
+ *                   appended to plist so HPMHooking ordering is respected.
  */
-static void hplugins_config_read(void)
+static void hplugins_config_read_from_file(const char *config_filename, bool is_primary)
 {
 	struct config_t plugins_conf;
 	struct config_setting_t *plist = NULL;
-	const char *config_filename = "conf/plugins.conf"; // FIXME hardcoded name
-	FILE *fp;
 	int i;
-
-	/* yes its ugly, its temporary and will be gone as soon as the new inter-server.conf is set */
-	if( (fp = fopen("conf/import/plugins.conf","r")) ) {
-		config_filename = "conf/import/plugins.conf";
-		fclose(fp);
-	}
 
 	if (!libconfig->load_file(&plugins_conf, config_filename))
 		return;
 
 	plist = libconfig->lookup(&plugins_conf, "plugins_list");
-	for (i = 0; i < VECTOR_LENGTH(HPM->cmdline_load_plugins); i++) {
-		struct config_setting_t *entry = libconfig->setting_add(plist, NULL, CONFIG_TYPE_STRING);
-		config_setting_set_string(entry, VECTOR_INDEX(HPM->cmdline_load_plugins, i));
+	if (is_primary && plist != NULL) {
+		/* Append command-line-requested plugins to the list so the
+		 * HPMHooking-first ordering logic below applies to them too. */
+		for (i = 0; i < VECTOR_LENGTH(HPM->cmdline_load_plugins); i++) {
+			struct config_setting_t *entry = libconfig->setting_add(plist, NULL, CONFIG_TYPE_STRING);
+			config_setting_set_string(entry, VECTOR_INDEX(HPM->cmdline_load_plugins, i));
+		}
 	}
 
 	if (plist != NULL) {
@@ -729,7 +728,21 @@ static void hplugins_config_read(void)
 			HPM->load(filename);
 		}
 	}
+
+	{
+		const char *import = NULL;
+		if (libconfig->lookup_string(&plugins_conf, "import", &import) == CONFIG_TRUE)
+			hplugins_config_read_from_file(import, false);
+	}
 	libconfig->destroy(&plugins_conf);
+}
+
+/**
+ * Reads the plugin configuration and loads the plugins as necessary.
+ */
+static void hplugins_config_read(void)
+{
+	hplugins_config_read_from_file("conf/plugins.conf", true);
 
 	if (VECTOR_LENGTH(HPM->plugins))
 		ShowStatus("HPM: There are '"CL_WHITE"%d"CL_RESET"' plugins loaded, type '"CL_WHITE"plugins"CL_RESET"' to list them\n", VECTOR_LENGTH(HPM->plugins));
