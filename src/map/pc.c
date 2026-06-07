@@ -1375,6 +1375,9 @@ static bool pc_authok(struct map_session_data *sd, int login_id2, time_t expirat
 
 	sd->lang_id = map->default_lang_id;
 
+	sd->regen.skill = &sd->skill_regen;
+	sd->regen.sitting = &sd->sitting_regen;
+
 	//warp player
 	if ((i=pc->setpos(sd,sd->status.last_point.map, sd->status.last_point.x, sd->status.last_point.y, CLR_OUTSIGHT)) != 0) {
 		ShowError ("Last_point_map %s - id %d not found (error code %d)\n", mapindex_id2name(sd->status.last_point.map), sd->status.last_point.map, i);
