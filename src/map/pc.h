@@ -948,6 +948,8 @@ struct pc_interface {
 	/* */
 	int day_timer_tid;
 	int night_timer_tid;
+	int autosave_tid;
+	VECTOR_DECL(int) autosave_queue;
 	/* */
 
 BEGIN_ZEROED_BLOCK; /* Everything within this block will be memset to 0 when status_defaults() is executed */
@@ -1241,6 +1243,7 @@ END_ZEROED_BLOCK; /* End */
 	int (*daynight_timer_sub) (struct map_session_data *sd,va_list ap);
 	int (*charm_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*autosave) (int tid, int64 tick, int id, intptr_t data);
+	void (*autosave_remove) (int bl_id);
 	int (*follow_timer) (int tid, int64 tick, int id, intptr_t data);
 	void (*read_skill_tree) (void);
 	bool (*read_skill_job_skip) (short skill_id, int job_id);
