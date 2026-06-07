@@ -82,6 +82,8 @@
 static struct pc_interface pc_s;
 struct pc_interface *pc;
 
+static void pc_autosave_start(void);
+
 static struct class_exp_tables exptables;
 
 //Converts a class to its array index for CLASS_COUNT defined arrays.
@@ -1599,6 +1601,9 @@ static int pc_reg_received(struct map_session_data *sd)
 	intif->Mail_requestinbox(sd->status.char_id, 0); // MAIL SYSTEM - Request Mail Inbox
 	intif->request_questlog(sd);
 	intif->rodex_checkhasnew(sd);
+
+	VECTOR_PUSH(pc->autosave_queue, sd->bl.id);
+	pc_autosave_start();
 
 	if (sd->state.connect_new == 0 && sd->fd) { //Character already loaded map! Gotta trigger LoadEndAck manually.
 		sd->state.connect_new = 1;
@@ -11068,43 +11073,65 @@ static int pc_setsavepoint(struct map_session_data *sd, short map_index, int x, 
 }
 
 /*==========================================
- * Save 1 player data at autosave intervall
+ * Start the autosave timer if not already running.
+ *------------------------------------------*/
+static void pc_autosave_start(void)
+{
+	int interval;
+
+	if (pc->autosave_tid != INVALID_TIMER)
+		return;
+
+	interval = map->autosave_interval / (VECTOR_LENGTH(pc->autosave_queue) + 1);
+	if (interval < map->minsave_interval)
+		interval = map->minsave_interval;
+	pc->autosave_tid = timer->add(timer->gettick() + interval, pc->autosave, 0, 0);
+}
+
+/*==========================================
+ * Remove a player from the autosave queue (called on logout).
+ *------------------------------------------*/
+static void pc_autosave_remove(int bl_id)
+{
+	int i;
+	ARR_FIND(0, VECTOR_LENGTH(pc->autosave_queue), i, VECTOR_INDEX(pc->autosave_queue, i) == bl_id);
+	if (i < VECTOR_LENGTH(pc->autosave_queue))
+		VECTOR_ERASE(pc->autosave_queue, i);
+}
+
+/*==========================================
+ * Save 1 player data at autosave interval.
+ * Uses a queue to find the next player in O(1) instead of iterating all players.
+ * Stops the timer when no players remain; restarted by pc_autosave_start on login.
  *------------------------------------------*/
 static int pc_autosave(int tid, int64 tick, int id, intptr_t data)
 {
 	int interval;
-	struct s_mapiterator* iter;
-	struct map_session_data* sd;
-	static int last_save_id = 0, save_flag = 0;
 
-	if(save_flag == 2) //Someone was saved on last call, normal cycle
-		save_flag = 0;
-	else
-		save_flag = 1; //Noone was saved, so save first found char.
+	pc->autosave_tid = INVALID_TIMER;
 
-	iter = mapit_getallusers();
-	for (sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter))) {
-		if(sd->bl.id == last_save_id && save_flag != 1) {
-			save_flag = 1;
-			continue;
-		}
+	// Find and save the next valid player, skipping any who have disconnected
+	while (VECTOR_LENGTH(pc->autosave_queue) > 0) {
+		int bl_id = VECTOR_INDEX(pc->autosave_queue, 0);
+		struct map_session_data *sd;
 
-		if(save_flag != 1) //Not our turn to save yet.
-			continue;
+		VECTOR_ERASE(pc->autosave_queue, 0);
+		sd = map->id2sd(bl_id);
+		if (sd == NULL)
+			continue; // disconnected without queue cleanup; skip
 
-		//Save char.
-		last_save_id = sd->bl.id;
-		save_flag = 2;
-
-		chrif->save(sd,0);
+		chrif->save(sd, 0);
+		VECTOR_PUSH(pc->autosave_queue, bl_id);
 		break;
 	}
-	mapit->free(iter);
 
-	interval = map->autosave_interval/(map->usercount()+1);
-	if(interval < map->minsave_interval)
+	if (VECTOR_LENGTH(pc->autosave_queue) == 0)
+		return 0; // no players; timer stays stopped until next login
+
+	interval = map->autosave_interval / VECTOR_LENGTH(pc->autosave_queue);
+	if (interval < map->minsave_interval)
 		interval = map->minsave_interval;
-	timer->add(timer->gettick()+interval,pc->autosave,0,0);
+	pc->autosave_tid = timer->add(timer->gettick() + interval, pc->autosave, 0, 0);
 
 	return 0;
 }
@@ -12913,7 +12940,8 @@ static void do_init_pc(bool minimal)
 	timer->add_func_list(pc->global_expiration_timer,"pc_global_expiration_timer");
 	timer->add_func_list(pc->expiration_timer,"pc_expiration_timer");
 
-	timer->add(timer->gettick() + map->autosave_interval, pc->autosave, 0, 0);
+	pc->autosave_tid = INVALID_TIMER;
+	VECTOR_INIT(pc->autosave_queue);
 
 	// 0=day, 1=night [Yor]
 	map->night_flag = battle_config.night_at_start ? 1 : 0;
@@ -13244,6 +13272,7 @@ void pc_defaults(void)
 	pc->daynight_timer_sub = pc_daynight_timer_sub;
 	pc->charm_timer = pc_charm_timer;
 	pc->autosave = pc_autosave;
+	pc->autosave_remove = pc_autosave_remove;
 	pc->follow_timer = pc_follow_timer;
 	pc->read_skill_tree = pc_read_skill_tree;
 	pc->read_skill_job_skip = pc_read_skill_job_skip;
