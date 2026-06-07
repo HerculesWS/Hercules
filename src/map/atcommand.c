@@ -11270,6 +11270,10 @@ static void atcommand_config_read(const char *config_filename)
 
 	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' command aliases in '"CL_WHITE"%s"CL_RESET"'.\n", num_aliases, config_filename);
 
+	const char *import = NULL;
+	if (libconfig->lookup_string(&atcommand_config, "import", &import) == CONFIG_TRUE)
+		atcommand->config_read(import);
+
 	libconfig->destroy(&atcommand_config);
 	return;
 }
