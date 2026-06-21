@@ -36,7 +36,8 @@
 #if defined(_MSC_VER)
 #include "common/winapi.h"
 
-#if _MSC_VER < 1800 && !defined(_M_X64)
+#if _MSC_VER < 1800
+#if !defined(_M_X64)
 // When compiling for windows 32bit, the 8byte interlocked operations are not provided by Microsoft
 // (because they need at least i586 so its not generic enough.. ... )
 forceinline int64 InterlockedCompareExchange64(volatile int64 *dest, int64 exch, int64 _cmp){
@@ -92,14 +93,13 @@ forceinline volatile int64 InterlockedExchange64(volatile int64 *target, int64 v
 	return old;
 }
 
-#endif //endif 32bit windows
-
-#if _M_X64 // Redefine the 32bit interlock function
+#else // _M_X64
 #define InterlockedExchange(_Target, _Value) _InterlockedExchange((_Target), (_Value))
 #define InterlockedCompareExchange(_Destination, _ExChange, _Comperand) _InterlockedCompareExchange((_Destination), (_ExChange), (_Comperand))
 #define InterlockedIncrement(_Addend) _InterlockedIncrement((_Addend))
 #define InterlockedDecrement(_Addend) _InterlockedDecrement((_Addend))
-#endif
+#endif // _M_X64
+#endif // _MSC_VER < 1800
 
 #elif defined(__GNUC__)
 
