@@ -52,29 +52,18 @@ following list is broken down into Windows and Unix (incl. Linux) prerequisites.
 
 For a list of supported platforms, please refer to the [Supported Platforms](https://github.com/HerculesWS/Hercules/wiki/Supported-Platforms) wiki page.
 
-#### Windows
-  - [Git client](https://git-scm.com/)
-  - [Microsoft Visual Studio Community](https://visualstudio.microsoft.com/vs/community/)
+- git
+- gcc or clang or msvc (on windows)
+- cmake
+- python3
+- A build system like GNU make or Ninja (Ninja is preferred build system on windows, recommended for *Unix as well)
+- MariaDB
+- *Optional dependencies for development only*
+  - perl (required to rebuild the HPM Hooks and HPMDataCheck)
+    - requires the XML::Simple module, which in turn requires libexpat-dev
+  - Doxygen (required to rebuild the HPM Hooks and HPMDataCheck)
 
-#### Unix/Linux/BSD (names of packages may require specific version numbers on certain distributions)
-  - git
-  - gcc or clang (version 4.5 or newer, recommended 5.0 or newer)
-  - GNU make
-  - MySQL (`mysql-server`) or MariaDB
-  - libmysqlclient (`mysql-devel`)
-  - zlib (`zlib-devel`)
-  - libpcre (`pcre-devel`)
-  - *Optional dependencies for development only*
-    - perl (required to rebuild the HPM Hooks and HPMDataCheck)
-      - requires the XML::Simple module, which in turn requires libexpat-dev
-    - Doxygen (required to rebuild the HPM Hooks and HPMDataCheck)
-
-#### Mac OS X
-  - Xcode or the Xcode command-line tools.
-  - MySQL-compatible server (installation of `mysql` or `mariadb` through [Homebrew](http://brew.sh/) is recommended)
-  - PCRE library (installation of `pcre` through [Homebrew](http://brew.sh) is recommended)
-  - *Optional dependencies for development only*
-    - Doxygen (required to rebuild the HPM Hooks and HPMDataCheck)
+For a full list of prerequisites, please refer to the [Building](https://github.com/HerculesWS/Hercules/wiki/Building) wiki page.
 
 #### Optional, useful tools
   - MySQL GUI clients
@@ -96,58 +85,11 @@ For a list of supported platforms, please refer to the [Supported Platforms](htt
         - *More options available at [wikipedia.org](https://en.wikipedia.org/wiki/Comparison_of_text_editors#Overview)*
 
 
-## Installation
+## Building and Installation
 ------------
 
-This section is a very brief set of installation instructions. For more concise
-guides relevant to your Operation System, please refer to the Wiki (links at
-the end of this file).
+For guides on building and installing hercules please check our wiki at [Building](https://github.com/HerculesWS/Hercules/wiki/Building) and [Installation](https://github.com/HerculesWS/Hercules/wiki/Installation) wiki pages.
 
-#### Windows
-##### Easy installation
-  1. Install the prerequisites.
-  2. Clone the [Hercules repository](https://github.com/HerculesWS/Hercules) using a git client, into a new
-     folder.
-      - If you do not want to use the command line, you can instead clone with [GitHub Desktop](https://desktop.github.com/).
-  3. Run `mariadb.bat` to automatically install and configure MariaDB.
-  4. Start Visual Studio and load the provided solution:
-      - Compile and run the three projects, login-server, char-server, map-server.
-##### Manual installation
-  1. Install the prerequisites.
-  2. Install a MySQL-compatible server, such as [MariaDB](https://mariadb.org/) (recommended) or [MySQL Community Edition](https://www.mysql.com/products/community/)
-  3. Clone the Hercules repository [Hercules repository](https://github.com/HerculesWS/Hercules) using a git client, into a new
-     folder.
-  4. Connect to the MySQL server as root:
-      - Create a database (hercules): `CREATE DATABASE hercules;`
-      - Create a user (hercules): `CREATE USER 'hercules'@'localhost' IDENTIFIED BY 'password';`.
-      - Give permissions (GRANT SELECT,INSERT,UPDATE,DELETE) to the user: `GRANT SELECT,INSERT,UPDATE,DELETE ON hercules.* TO 'hercules'@'localhost';`
-  5. Connect to the MySQL server as the new user:
-      - Import the .sql files in /sql-files/ into the new database.
-  6. Start Visual Studio and load the provided solution:
-      - Compile and run the three projects, login-server, char-server, map-server.
-
-#### Unix
-  1. Install the prerequisites through your distribution's package manager
-      - (Red Hat compatible / CentOS) `yum install gcc make mysql mysql-devel mysql-server pcre-devel zlib-devel git`
-      - (Debian compatible) `apt-get install gcc make libmysqlclient-dev zlib1g-dev libpcre3-dev mysql-server git`
-      - (FreeBSD) `pkg install clang35 gmake mysql56-server mysql-connector-c pcre git`
-      - (Mac OS X):
-          - Install Xcode through the Mac App Store
-          - Initialize the build tools through the Terminal `xcode-select --help`
-          - Install Homebrew as described on the project page
-          - Install the other prerequisites: `brew install mysql pcre`
-  2. Clone the Hercules repository `git clone https://github.com/HerculesWS/Hercules.git ~/Hercules`
-  3. Configure the MySQL server and start it.
-  4. Connect to the MySQL server as root:
-      - Create a database (hercules): `CREATE DATABASE hercules;`
-      - Create a user (hercules): `CREATE USER 'hercules'@'localhost' IDENTIFIED BY 'password';`.
-      - Give permissions (GRANT SELECT,INSERT,UPDATE,DELETE) to the user: `GRANT SELECT,INSERT,UPDATE,DELETE ON hercules.* TO 'hercules'@'localhost';`
-  5. Connect to the MySQL server as the new user:
-      - Import the .sql files in /sql-files/ into the new database.
-  6. Enter the Hercules directory and configure/build Hercules
-      - `./configure`
-      - `make clean && make sql` (on FreeBSD, replace `make` with `gmake`)
-  7. Start the three servers login-server, char-server, map-server.
 
 ## Troubleshooting
 ---------------
