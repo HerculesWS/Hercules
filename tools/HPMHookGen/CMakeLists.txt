@@ -59,6 +59,14 @@ if(DOXYGEN_FOUND AND PERL_FOUND AND PYTHON3_FOUND)
       "${CMAKE_CURRENT_SOURCE_DIR}/doxyoutput"
       "${API_SERVER_PATH}/handlers.h.dox"
   )
+
+  set_property(
+    TARGET hooks
+    APPEND
+    PROPERTY
+      ADDITIONAL_CLEAN_FILES
+      "${CMAKE_CURRENT_SOURCE_DIR}/doxyoutput"
+  )
 else()
   add_custom_target(hooks
     COMMAND

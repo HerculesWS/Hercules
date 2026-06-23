@@ -24,6 +24,14 @@ if(DOXYGEN_FOUND)
       "doxygen.conf"
     BYPRODUCTS "${CMAKE_CURRENT_SOURCE_DIR}/docs"
   )
+
+  set_property(
+    TARGET docs
+    APPEND
+    PROPERTY
+      ADDITIONAL_CLEAN_FILES
+      "${CMAKE_CURRENT_SOURCE_DIR}/docs"
+  )
 else()
   add_custom_target(docs
     COMMAND
