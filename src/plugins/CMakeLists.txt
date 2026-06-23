@@ -57,42 +57,40 @@ function(add_plugin_target _plugin_name)
     endforeach()
   endif()
 
-  add_library(${_plugin_name} SHARED ${_cfiles})
-  add_custom_target("plugin.${_plugin_name}")
-  add_dependencies("plugin.${_plugin_name}" ${_plugin_name})
-  add_dependencies(plugins ${_plugin_name})
+  add_library("plugin.${_plugin_name}" SHARED ${_cfiles})
+  add_dependencies(plugins "plugin.${_plugin_name}")
 
-  target_compile_options(${_plugin_name} PRIVATE ${PLUGIN_COMPILE_OPTIONS})
+  target_compile_options("plugin.${_plugin_name}" PRIVATE ${PLUGIN_COMPILE_OPTIONS})
   if(PLUGIN_INSTALL_RPATH)
-    set_target_properties(${_plugin_name}
+    set_target_properties("plugin.${_plugin_name}"
       PROPERTIES INSTALL_RPATH ${PLUGIN_INSTALL_RPATH}
     )
   endif()
 
   if(arg_CDEFS)
-    target_compile_definitions(${_plugin_name} PRIVATE ${_cdefs})
+    target_compile_definitions("plugin.${_plugin_name}" PRIVATE ${_cdefs})
   endif()
   if(arg_CFLAGS)
-    target_compile_options(${_plugin_name} PRIVATE ${_cflags})
+    target_compile_options("plugin.${_plugin_name}" PRIVATE ${_cflags})
   endif()
-  set_target_properties(${_plugin_name} PROPERTIES PREFIX "")
+  set_target_properties("plugin.${_plugin_name}" PROPERTIES PREFIX "" OUTPUT_NAME ${_plugin_name})
 
-  target_link_libraries(${_plugin_name} PUBLIC common)
-  target_link_libraries(${_plugin_name} PRIVATE cjson::cjson)
+  target_link_libraries("plugin.${_plugin_name}" PUBLIC common)
+  target_link_libraries("plugin.${_plugin_name}" PRIVATE cjson::cjson)
   if(ENABLE_LIBBACKTRACE)
-    target_link_libraries(${_plugin_name} PRIVATE libbacktrace::libbacktrace)
+    target_link_libraries("plugin.${_plugin_name}" PRIVATE libbacktrace::libbacktrace)
   endif()
-  target_link_libraries(${_plugin_name} PRIVATE mariadb-connector-c::mariadb-connector-c)
-  target_link_libraries(${_plugin_name} PRIVATE ZLIB::ZLIB)
-  target_link_libraries(${_plugin_name} PRIVATE GIF::GIF)
-  target_link_libraries(${_plugin_name} PRIVATE pcre::pcre)
+  target_link_libraries("plugin.${_plugin_name}" PRIVATE mariadb-connector-c::mariadb-connector-c)
+  target_link_libraries("plugin.${_plugin_name}" PRIVATE ZLIB::ZLIB)
+  target_link_libraries("plugin.${_plugin_name}" PRIVATE GIF::GIF)
+  target_link_libraries("plugin.${_plugin_name}" PRIVATE pcre::pcre)
 
   if(arg_VIRTUAL_TARGET)
-    add_dependencies(${arg_VIRTUAL_TARGET} ${_plugin_name})
+    add_dependencies(${arg_VIRTUAL_TARGET} "plugin.${_plugin_name}")
   endif()
 
   install(
-    TARGETS ${_plugin_name}
+    TARGETS "plugin.${_plugin_name}"
     OPTIONAL
     RUNTIME
       DESTINATION
