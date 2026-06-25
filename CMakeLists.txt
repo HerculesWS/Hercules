@@ -112,6 +112,7 @@ set(MAX_CONNECTIONS "" CACHE STRING "optionally set the maximum connections the 
 set(WITH_HTTP_PARSER "http-parser" CACHE STRING "select http parser. Allowed values: http-parser, llhttp")
 option(ENABLE_CLASSIC_AUTOSPELL "Enables classic auto spell list" OFF)
 option(ENABLE_TESTING "Enables compiling and running of tests" OFF)
+option(ENABLE_ASAN_LEAKREPORT "Enables memory leak reports by AddressSanitizer requires memory manager to be disabled" OFF)
 
 if(CMAKE_C_BYTE_ORDER STREQUAL "BIG_ENDIAN")
   message(FATAL_ERROR "bigendian is not supported... stopping")
@@ -500,6 +501,17 @@ if(MAX_CONNECTIONS)
   if(MAX_CONNECTIONS GREATER 0)
     add_compile_definitions("MAXCONN=${MAX_CONNECTIONS}")
   endif()
+endif()
+
+if (ENABLE_ASAN_LEAKREPORT)
+  if (MSVC)
+    message(FATAL_ERROR "Sanitizer Cannot be enabled on MSVC builds")
+  endif()
+  if (NOT MEMORY_MANAGER STREQUAL "none")
+    message(FATAL_ERROR "You may not use AddressSanitizer memory leak reports with memory manager on")
+  endif()
+
+  testadd_sanitizer_flag(leak REQUIRED)
 endif()
 
 # Checks for external programs that may be needed in some targets/commands
