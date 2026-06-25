@@ -113,6 +113,8 @@ set(WITH_HTTP_PARSER "http-parser" CACHE STRING "select http parser. Allowed val
 option(ENABLE_CLASSIC_AUTOSPELL "Enables classic auto spell list" OFF)
 option(ENABLE_TESTING "Enables compiling and running of tests" OFF)
 option(ENABLE_ASAN_LEAKREPORT "Enables memory leak reports by AddressSanitizer requires memory manager to be disabled" OFF)
+option(BUILD_PLUGINS "Enables building of plugins" ON)
+option(BUILD_HPMHOOKING "Enables building of HPM Hooks" OFF)
 
 if(CMAKE_C_BYTE_ORDER STREQUAL "BIG_ENDIAN")
   message(FATAL_ERROR "bigendian is not supported... stopping")

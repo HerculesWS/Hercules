@@ -58,7 +58,7 @@ jobs:
       INSTALL_PACKAGES: ${{ matrix.CC }} mariadb-client
       SQLHOST: mariadb
       CC: ${{ matrix.CC }}
-      CONFIGURE_FLAGS: -DCMAKE_C_COMPILER=${{ matrix.CC }} -DCMAKE_BUILD_TYPE=Debug -DENABLE_WERROR=ON -DENABLE_BUILDBOT=ON ${{ matrix.RENEWAL }} ${{ matrix.HTTPLIB }} ${{ matrix.CLIENT_TYPE }} ${{ matrix.SANITIZER }} ${{ matrix.PACKET_VERSION }} -DENABLE_EPOLL=ON
+      CONFIGURE_FLAGS: -DCMAKE_C_COMPILER=${{ matrix.CC }} -DCMAKE_BUILD_TYPE=Debug -DENABLE_WERROR=ON -DENABLE_BUILDBOT=ON ${{ matrix.RENEWAL }} ${{ matrix.HTTPLIB }} ${{ matrix.CLIENT_TYPE }} ${{ matrix.SANITIZER }} ${{ matrix.PACKET_VERSION }} -DENABLE_EPOLL=ON -DBUILD_HPMHOOKING=ON
     steps:
       - uses: actions/checkout@v6
         with:

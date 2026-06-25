@@ -41,7 +41,7 @@ jobs:
           echo -n "$GPG_SIGNING_KEY" | base64 --decode | gpg --import
           git config --local user.signingkey A667DC2F80D63FEF
           source .venv/bin/activate
-          cmake -B build -S . -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=cmake_modules/conan_provider.cmake -DCMAKE_BUILD_TYPE=Debug
+          cmake -B build -S . -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=cmake_modules/conan_provider.cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_HPMHOOKING=ON
 
       - name: hpmhooking
         run: |
@@ -64,14 +64,14 @@ jobs:
       - name: itemdb2sql
         run: |
           source .venv/bin/activate
-          cmake -B build -S . -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=cmake_modules/conan_provider.cmake -DCMAKE_BUILD_TYPE=Debug -DENABLE_RENEWAL=OFF
+          cmake -B build -S . -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=cmake_modules/conan_provider.cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_HPMHOOKING=ON -DENABLE_RENEWAL=OFF
           (cd build && make clean)
           start_this=$(date +%s.%3N)
           (cd build && make map-server plugin.db2sql install -j3)
           ./bin/map-server --load-plugin db2sql --itemdb2sql
           end_this=$(date +%s.%3N)
           elapsed_itemdb=$(echo "scale=0; ($end_this - $start_this) * 1000 / 1" | bc)
-          cmake -B build -S . -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=cmake_modules/conan_provider.cmake -DCMAKE_BUILD_TYPE=Debug -DENABLE_RENEWAL=ON
+          cmake -B build -S . -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=cmake_modules/conan_provider.cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_HPMHOOKING=ON -DENABLE_RENEWAL=ON
           (cd build && make clean)
           start_this=$(date +%s.%3N)
           (cd build && make map-server plugin.db2sql install -j3)
@@ -84,14 +84,14 @@ jobs:
       - name: mobdb2sql
         run: |
           source .venv/bin/activate
-          cmake -B build -S . -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=cmake_modules/conan_provider.cmake -DCMAKE_BUILD_TYPE=Debug -DENABLE_RENEWAL=OFF
+          cmake -B build -S . -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=cmake_modules/conan_provider.cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_HPMHOOKING=ON -DENABLE_RENEWAL=OFF
           (cd build && make clean)
           start_this=$(date +%s.%3N)
           (cd build && make map-server plugin.db2sql install -j3)
           ./bin/map-server --load-plugin db2sql --mobdb2sql
           end_this=$(date +%s.%3N)
           elapsed_mobdb=$(echo "scale=0; ($end_this - $start_this) * 1000 / 1" | bc)
-          cmake -B build -S . -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=cmake_modules/conan_provider.cmake -DCMAKE_BUILD_TYPE=Debug -DENABLE_RENEWAL=ON
+          cmake -B build -S . -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=cmake_modules/conan_provider.cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_HPMHOOKING=ON -DENABLE_RENEWAL=ON
           (cd build && make clean)
           start_this=$(date +%s.%3N)
           (cd build && make map-server plugin.db2sql install -j3)
@@ -104,14 +104,14 @@ jobs:
       - name: constdb2doc
         run: |
           source .venv/bin/activate
-          cmake -B build -S . -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=cmake_modules/conan_provider.cmake -DCMAKE_BUILD_TYPE=Debug -DENABLE_RENEWAL=OFF
+          cmake -B build -S . -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=cmake_modules/conan_provider.cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_HPMHOOKING=ON -DENABLE_RENEWAL=OFF
           (cd build && make clean)
           start_this=$(date +%s.%3N)
           (cd build && make map-server plugin.constdb2doc install -j3)
           ./bin/map-server --load-plugin constdb2doc --constdb2doc
           end_this=$(date +%s.%3N)
           elapsed_constdb=$(echo "scale=0; ($end_this - $start_this) * 1000 / 1" | bc)
-          cmake -B build -S . -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=cmake_modules/conan_provider.cmake -DCMAKE_BUILD_TYPE=Debug -DENABLE_RENEWAL=ON
+          cmake -B build -S . -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=cmake_modules/conan_provider.cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_HPMHOOKING=ON -DENABLE_RENEWAL=ON
           (cd build && make clean)
           start_this=$(date +%s.%3N)
           (cd build && make map-server plugin.constdb2doc install -j3)

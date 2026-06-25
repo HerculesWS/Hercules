@@ -58,19 +58,19 @@ set(HPMHOOKING_SERVERS
   map
 )
 
-add_custom_target(plugin.HPMHooking)
+if(BUILD_HPMHOOKING)
+  add_custom_target(plugin.HPMHooking)
 
-foreach(server IN LISTS HPMHOOKING_SERVERS)
-  string(TOUPPER ${server} server_upper)
+  foreach(server IN LISTS HPMHOOKING_SERVERS)
+    string(TOUPPER ${server} server_upper)
 
-  add_plugin_target("${HERC_PLUGIN_NAME}_${server}"
-    CFILES
-      ${HERC_PLUGIN_C}
-      ${HERC_PLUGIN_H}
-      ${HPMHOOKING_INCLUDES}
-    CDEFS
-      "HPMHOOKING_${server_upper}"
-    VIRTUAL_TARGET
-      "plugin.HPMHooking"
-  )
-endforeach()
+    add_plugin_target("${HERC_PLUGIN_NAME}_${server}"
+      CFILES
+        ${HERC_PLUGIN_C}
+        ${HERC_PLUGIN_H}
+        ${HPMHOOKING_INCLUDES}
+      CDEFS "HPMHOOKING_${server_upper}"
+      VIRTUAL_TARGET "plugin.HPMHooking"
+    )
+  endforeach()
+endif()
