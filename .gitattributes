@@ -1,5 +1,9 @@
-*   text=auto
-*.c diff=cpp
+*    text=auto
+*.c  diff=cpp
+*.sh text eol=lf
+
+/script-checker text eol=lf
+/athena-start   text eol=lf
 
 # libconfig generated files
 3rdparty/libconfig/grammar.c linguist-generated=true
