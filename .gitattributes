@@ -1,6 +1,7 @@
-*    text=auto
-*.c  diff=cpp
-*.sh text eol=lf
+*     text=auto
+*.c   diff=cpp
+*.sh  text eol=lf
+*.bat text eol=crlf
 
 /script-checker text eol=lf
 /athena-start   text eol=lf
