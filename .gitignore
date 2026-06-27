@@ -44,7 +44,6 @@ Thumbs.db
 #OSX Xcode project user-sensitive-stuff
 /DerivedData
 /Hercules
-/build
 /Hercules.xcodeproj/xcuserdata
 /Hercules.xcodeproj/project.xcworkspace/xcuserdata/
 /Hercules.xcodeproj/project.xcworkspace/xcshareddata/Hercules.xccheckout
@@ -169,6 +168,7 @@ Thumbs.db
 
 # Default build directory
 /build/
+/build*
 
 # Default install directory
 /bin/
@@ -178,3 +178,6 @@ Thumbs.db
 
 # venv
 /.venv/
+
+# VSCode workspaces
+/*.code-workspace
