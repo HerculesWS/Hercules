@@ -1,8 +1,5 @@
-*        text=auto
-*.c      diff=cpp
-*.sln    merge=union
-*.vcproj merge=union
-*.vcxproj merge=union
+*   text=auto
+*.c diff=cpp
 
 # libconfig generated files
 3rdparty/libconfig/grammar.c linguist-generated=true
