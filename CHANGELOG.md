@@ -22,6 +22,18 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
+## [v2026.06] `June 2026`
+
+### Changed
+#### Migration of build system to CMake and Conan for dependency management
+We've migrated our build systems from Makefiles, Visual Studio Code solutions and Xcode Projects to a unified build system under CMake which will generate the appropriate build files for your compiler and system.
+
+With this change we're introducing conan as our dependency manager, it will take care of managing 3rdparty dependencies like maraidb, zlib and most of the libraries that were previously added to 3rdparty directory, unless it's either not available on conan and/or modified by us like libconfig where we added certain features to it.
+
+You can know more about how to build hercules now and the changes to the file layouts, in addition to how to use the convenience scripts to setup your environment through our wiki pages at [Building](https://github.com/HerculesWS/Hercules/wiki/Building) and [Installation](https://github.com/HerculesWS/Hercules/wiki/Installation).
+
+This changes were introduced in PR #3413 
+
 ## [v2026.04] `April 2026`
 
 ### Added
@@ -4198,6 +4210,8 @@ Note: everything included in this release is part of PR #3198 which consists of 
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2026.06]: https://github.com/HerculesWS/Hercules/compare/v2026.04...v2026.06
+[v2026.04]: https://github.com/HerculesWS/Hercules/compare/v2025.01...v2026.04
 [v2025.01]: https://github.com/HerculesWS/Hercules/compare/v2024.11...v2025.01
 [v2024.11]: https://github.com/HerculesWS/Hercules/compare/v2024.10...v2024.11
 [v2024.10]: https://github.com/HerculesWS/Hercules/compare/v2024.09...v2024.10
