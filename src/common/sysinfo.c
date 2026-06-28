@@ -39,6 +39,7 @@
 #include <stdlib.h> // atoi
 #ifdef WIN32
 #	include <windows.h>
+#	include <winternl.h>
 #else
 #	include <sys/time.h> // time constants
 #	include <unistd.h>
@@ -855,9 +856,11 @@ static const char *sysinfo_arch(void)
  */
 static bool sysinfo_is64bit(void)
 {
-#ifdef _LP64
+#ifdef __64BIT__
+	STATIC_ASSERT(sizeof(void *) == 8, "Unexpected pointer size for 64 bit builds");
 	return true;
 #else
+	STATIC_ASSERT(sizeof(void *) == 4, "Unexpected pointer size for 32 bit builds");
 	return false;
 #endif
 }

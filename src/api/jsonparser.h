@@ -23,7 +23,7 @@
 
 #include "common/hercules.h"
 
-#include <cJSON/cJSON.h>
+#include <cjson/cJSON.h>
 
 #include <stdarg.h>
 

@@ -1,0 +1,103 @@
+name: gccsnapshot_test
+
+on: workflow_call
+
+env:
+  MYSQL_DATABASE: 'ragnarok'
+  MYSQL_USER: 'ragnarok'
+  MYSQL_PASSWORD: 'ragnarok'
+  MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+  DEBIAN_COMMON_PACKAGES: cmake make git python3 python3-venv libzstd-dev g++
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      matrix:
+        CC: [gcc]
+        RENEWAL: ["", "-DENABLE_RENEWAL=OFF"]
+        CLIENT_TYPE: ["", "-DENABLE_PACKETVER_RE=ON", "-DENABLE_PACKETVER_ZERO=ON"]
+        HTTPLIB: ["", "-DWITH_HTTP_PARSER=llhttp"]
+        SANITIZER: ["-DMEMORY_MANAGER=none", "-DMEMORY_MANAGER=none -DENABLE_SANITIZE=ON"]
+        PACKET_VERSION: ["-DPACKETVER=20221024", "-DPACKETVER=20130724"]
+        include:
+          # Empty CLASSIC_AUTOSPELL_LIST for every other flow
+          - CLASSIC_AUTOSPELL_LIST: ""
+          # Use "-DCLASSIC_AUTOSPELL_LIST" for 20130724 RE or we will get warnings due to the list being too small
+          - PACKET_VERSION: "-DPACKETVER=20130724"
+            RENEWAL: ""
+            CLASSIC_AUTOSPELL_LIST: "-DENABLE_CLASSIC_AUTOSPELL=ON"
+        exclude:
+          - PACKET_VERSION: "-DPACKETVER=20130724"
+            CLIENT_TYPE: "-DENABLE_PACKETVER_ZERO=ON"
+
+    # github.head_ref will stop previous runs in the same PR (if in a PR)
+    # github.run_id is a fallback when outside a PR (e.g. every merge in master will run, and previous won't stop)
+    concurrency:
+      group: gccsnapshot_test-${{ github.head_ref || github.run_id }}_${{ matrix.CC }}_${{ matrix.RENEWAL }}_${{ matrix.CLIENT_TYPE }}_${{ matrix.HTTPLIB }}_${{ matrix.SANITIZER }}_${{ matrix.PACKET_VERSION}}
+      cancel-in-progress: true
+
+    container:
+      image: ubuntu:24.04
+    services:
+      mariadb:
+        image: mariadb:latest
+        ports:
+          - 33306:3306
+        env:
+          MYSQL_DATABASE: 'ragnarok'
+          MYSQL_USER: 'ragnarok'
+          MYSQL_PASSWORD: 'ragnarok'
+          MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=5s
+          --health-timeout=2s
+          --health-retries=3
+    env:
+      INSTALL_PACKAGES: ${{ matrix.CC }} mariadb-client
+      SQLHOST: mariadb
+      CC: ${{ matrix.CC }}
+      CONFIGURE_FLAGS: -DCMAKE_C_COMPILER=${{ matrix.CC }} -DCMAKE_BUILD_TYPE=Debug -DENABLE_WERROR=ON -DENABLE_BUILDBOT=ON ${{ matrix.RENEWAL }} ${{ matrix.HTTPLIB }} ${{ matrix.CLIENT_TYPE }} ${{ matrix.SANITIZER }} ${{ matrix.PACKET_VERSION }} -DENABLE_LTO=ON ${{ matrix.CLASSIC_AUTOSPELL_LIST }} -DBUILD_HPMHOOKING=ON
+      PACKET_VERSION: ${{ matrix.PACKET_VERSION }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+
+      - name: info
+        run: |
+          uname -a
+
+      - name: install packages
+        run: |
+          ./tools/ci/retry.sh apt-get update
+          ./tools/ci/retry.sh apt-get install -y -qq $INSTALL_PACKAGES $DEBIAN_COMMON_PACKAGES
+
+      - name: init database
+        run: |
+          ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok $SQLHOST
+
+      - name: get plugins
+        run: |
+          ./tools/ci/travis.sh getplugins || true
+
+      - name: build
+        run: |
+          ./tools/ci/travis.sh prepareenv
+          source .venv/bin/activate
+          ./tools/ci/travis.sh build $CONFIGURE_FLAGS
+
+      - name: test
+        run: |
+          ./tools/ci/travis.sh --sanitizer-build test ragnarok ragnarok ragnarok $SQLHOST
+
+      - name: extra test
+        if: env.PACKET_VERSION != '-DPACKETVER=20130724'
+        run: |
+          ./tools/ci/travis.sh --sanitizer-build extratest

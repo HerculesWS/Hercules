@@ -34,7 +34,7 @@ jobs:
         run: |
           ./tools/ci/retry.sh apt-get update
           ./tools/ci/retry.sh apt-get install -y -qq $INSTALL_PACKAGES $DEBIAN_COMMON_PACKAGES
-          pip3 install --upgrade pip sqlfluff --break-system-packages
+          pip3 install sqlfluff --break-system-packages
 
       - name: check sql syntax
         run: |

@@ -2,6 +2,10 @@ name: "CodeQL"
 
 on: workflow_call
 
+defaults:
+  run:
+    shell: bash
+
 jobs:
   analyze:
     name: Analyze
@@ -10,7 +14,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: ['c', 'python']
+        include:
+          - language: 'c'
+            build-mode: 'manual'
+          - language: 'python'
+            build-mode: 'none'
 
     # github.head_ref will stop previous runs in the same PR (if in a PR)
     # github.run_id is a fallback when outside a PR (e.g. every merge in master will run, and previous won't stop)
@@ -34,11 +42,15 @@ jobs:
       uses: github/codeql-action/init@v4
       with:
         languages: ${{ matrix.language }}
+        build-mode: ${{ matrix.build-mode }}
 
-    # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
-    # If this step fails, then you should remove it and run the build manually (see below)
-    - name: Autobuild
-      uses: github/codeql-action/autobuild@v4
+    # Build hercules
+    - if: matrix.build-mode == 'manual'
+      name: Manual Build
+      run: |
+          ./tools/ci/travis.sh prepareenv
+          source .venv/bin/activate
+          ./tools/ci/travis.sh build -DCMAKE_BUILD_TYPE=Release
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v4

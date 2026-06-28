@@ -27,17 +27,7 @@
 extern "C" {
 #endif /* __cplusplus */
 
-#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
-#if defined(LIBCONFIG_STATIC)
 #define LIBCONFIG_API
-#elif defined(LIBCONFIG_EXPORTS)
-#define LIBCONFIG_API __declspec(dllexport)
-#else /* ! LIBCONFIG_EXPORTS */
-#define LIBCONFIG_API __declspec(dllimport)
-#endif /* LIBCONFIG_STATIC */
-#else /* ! WIN32 */
-#define LIBCONFIG_API
-#endif /* WIN32 */
 
 #define LIBCONFIG_VER_MAJOR    1
 #define LIBCONFIG_VER_MINOR    5

@@ -1,2 +1,2 @@
 @ECHO OFF
-CALL serv.bat api-server.exe Api-Server
+CALL serv.bat "bin/api-server.exe" Api-Server

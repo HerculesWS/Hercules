@@ -95,6 +95,8 @@ static struct Sql *Sql_Malloc(void)
 	{
 		my_bool reconnect = 1;
 		mysql_options(&self->handle, MYSQL_OPT_RECONNECT, &reconnect);
+		my_bool tls_verify = 0;
+		mysql_options(&self->handle, MYSQL_OPT_SSL_VERIFY_SERVER_CERT, &tls_verify);
 #if defined(WIN32) && !defined(__MINGW32__) && !defined(MINGW)
 		mysql_optionsv(&self->handle, MYSQL_PLUGIN_DIR, MARIADB_PLUGINDIR);
 #endif

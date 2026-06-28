@@ -44,7 +44,6 @@ Thumbs.db
 #OSX Xcode project user-sensitive-stuff
 /DerivedData
 /Hercules
-/build
 /Hercules.xcodeproj/xcuserdata
 /Hercules.xcodeproj/project.xcworkspace/xcuserdata/
 /Hercules.xcodeproj/project.xcworkspace/xcshareddata/Hercules.xccheckout
@@ -121,7 +120,25 @@ Thumbs.db
 /src/tool/obj_all
 
 # /src/plugins/
-/src/plugins/Makefile
+/src/plugins/*
+!/src/plugins/HPMHooking/
+!/src/plugins/HPMHooking/*
+!/src/plugins/constdb2doc/
+!/src/plugins/constdb2doc/*
+!/src/plugins/db2sql/
+!/src/plugins/db2sql/*
+!/src/plugins/generate-translations/
+!/src/plugins/generate-translations/*
+!/src/plugins/httpsample/
+!/src/plugins/httpsample/*
+!/src/plugins/mapcache/
+!/src/plugins/mapcache/*
+!/src/plugins/sample/
+!/src/plugins/sample/*
+!/src/plugins/script_mapquit/
+!/src/plugins/script_mapquit/*
+!/src/plugins/test_equippos/
+!/src/plugins/test_equippos/*
 
 # /tools/
 /tools/convert
@@ -148,3 +165,19 @@ Thumbs.db
 
 # visual studio
 /.vs/
+
+# Default build directory
+/build/
+/build*
+
+# Default install directory
+/bin/
+
+# Cache directroy created by clangd
+/.cache/
+
+# venv
+/.venv/
+
+# VSCode workspaces
+/*.code-workspace

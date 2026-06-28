@@ -1,0 +1,43 @@
+# This file is part of Hercules.
+# http://herc.ws - http://github.com/HerculesWS/Hercules
+#
+# Copyright (C) 2026 Hercules Dev Team
+#
+# Hercules is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# Plugin name
+set(HERC_PLUGIN_NAME sample)
+
+# List of source files of the plugin
+set(HERC_PLUGIN_C
+  sample.c
+)
+
+# List of header files of the plugin
+set(HERC_PLUGIN_H
+  sample.h
+)
+
+# List of definations to pass to the plugin
+set(HERC_PLUGIN_DEF
+  TESTVAR
+  TESTVAR2=2
+)
+
+add_plugin_target(${HERC_PLUGIN_NAME}
+  CFILES
+    ${HERC_PLUGIN_C}
+    ${HERC_PLUGIN_H}
+  CDEFS ${HERC_PLUGIN_DEF}
+)

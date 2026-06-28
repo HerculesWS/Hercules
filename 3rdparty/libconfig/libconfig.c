@@ -41,9 +41,10 @@
 #include "libconfig.h"
 #include "parsectx.h"
 #include "scanctx.h"
-#include "wincompat.h"
 #include "grammar.h"
 #include "scanner.h"
+
+#include "wincompat.h"
 
 #define PATH_TOKENS ":/"
 #define CHUNK_SIZE 16

@@ -81,6 +81,7 @@ struct core_interface {
 	int runflag;
 	char *server_name;
 	enum server_types server_type;
+	char *executable_path;
 
 	/// Called when a terminate signal is received. (Ctrl+C pressed)
 	/// If NULL, runflag is set to CORE_ST_STOP instead.

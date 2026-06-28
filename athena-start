@@ -4,10 +4,10 @@
 
 PATH=./:$PATH
 
-L_SRV=login-server
-C_SRV=char-server
-M_SRV=map-server
-A_SRV=api-server
+L_SRV=bin/login-server
+C_SRV=bin/char-server
+M_SRV=bin/map-server
+A_SRV=bin/api-server
 
 print_start() {
 #    more << EOF
