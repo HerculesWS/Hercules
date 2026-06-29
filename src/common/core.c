@@ -277,7 +277,7 @@ static bool get_executable_path(char *buf, size_t length)
 	return true;
 #elif defined(__linux) || defined(__linux__)
 	ssize_t len = readlink("/proc/self/exe", buf, length);
-	if (len <= 0 || len == length)
+	if (len <= 0 || len == (ssize_t)length)
 		return false;
 	buf[len] = '\0';
 	return true;

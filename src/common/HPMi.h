@@ -239,7 +239,7 @@ struct HPMi_interface {
 	void *(*getFromHPData) (enum HPluginDataTypes type, uint32 pluginID, struct hplugin_data_store *store, uint32 classid);
 	void (*removeFromHPData) (enum HPluginDataTypes type, uint32 pluginID, struct hplugin_data_store *store, uint32 classid);
 	/* packet */
-	bool (*addPacket) (unsigned short cmd, unsigned short length, void (*receive)(int fd), unsigned int point, unsigned int pluginID);
+	bool (*addPacket) (unsigned short cmd, int length, void (*receive)(int fd), unsigned int point, unsigned int pluginID);
 	/* program --arg/-a */
 	bool (*addArg) (unsigned int pluginID, char *name, bool has_param, CmdlineExecFunc func, const char *help);
 	/* battle-config recv param */

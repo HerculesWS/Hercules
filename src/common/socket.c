@@ -846,8 +846,8 @@ static int rfifoskip(int fd, size_t len)
 		Assert_report(0);
 		len = RFIFOREST(fd);
 	} else {
-		const size_t lenRest = RFIFOREST(fd);
-		if (s->flag.validate == 1 && len == lenRest) {
+		const ssize_t lenRest = RFIFOREST(fd);
+		if (s->flag.validate == 1 && (ssize_t)len == lenRest) {
 			if (lenRest >= 2) {
 				const uint32 cmd = (uint32)RFIFOW(fd, 0);
 				if (cmd < MIN_PACKET_DB || cmd > MAX_PACKET_DB) {
@@ -862,12 +862,12 @@ static int rfifoskip(int fd, size_t len)
 						} else {
 							packet_len = RFIFOW(fd, 2);
 							if (packet_len != lenRest) {
-								ShowError("Skip packet 0x%04X with dynamic size %"PRIuS", but must be size %d\n", cmd, lenRest, packet_len);
+								ShowError("Skip packet 0x%04X with dynamic size %"PRIdS", but must be size %d\n", cmd, lenRest, packet_len);
 								Assert_report(0);
 							}
 						}
 					} else if (packet_len != lenRest) {
-						ShowError("Skip packet 0x%04X with size %"PRIuS", but must be size %d\n", cmd, lenRest, packet_len);
+						ShowError("Skip packet 0x%04X with size %"PRIdS", but must be size %d\n", cmd, lenRest, packet_len);
 						Assert_report(0);
 					}
 				}

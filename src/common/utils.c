@@ -232,7 +232,7 @@ void findfile(const char *p, const char *pat, void (func)(const char *, void *co
 		if (strcmp(entry->d_name, "..") == 0)
 			continue;
 
-		if (snprintf(tmppath, sizeof(tmppath), "%s%c%s", path, PATHSEP, entry->d_name) >= sizeof(tmppath)) {
+		if (snprintf(tmppath, sizeof(tmppath), "%s%c%s", path, PATHSEP, entry->d_name) >= (ssize_t)sizeof(tmppath)) {
 			ShowError("findfile: too long path would be truncated: '%s' - skipping\n", tmppath);
 			continue;
 		}
