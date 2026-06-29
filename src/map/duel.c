@@ -86,13 +86,13 @@ static void duel_showinfo(const unsigned int did, struct map_session_data *sd)
 	map->foreachpc(duel_showinfo_sub, sd, &p);
 }
 
-static int duel_create(struct map_session_data *sd, const unsigned int maxpl)
+static unsigned int duel_create(struct map_session_data *sd, const unsigned int maxpl)
 {
-	int i=1;
 	char output[256];
 
 	nullpo_ret(sd);
 
+	unsigned int i = 1;
 	while(i < MAX_DUEL && duel->list[i].members_count > 0) i++;
 	if(i == MAX_DUEL) return 0;
 

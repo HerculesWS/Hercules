@@ -8558,7 +8558,7 @@ ACMD(duel)
 			struct map_session_data *target_sd = map->nick2sd(message, true);
 			if (target_sd != NULL) {
 				unsigned int newduel;
-				if ((newduel = duel->create(sd, 2)) != -1) {
+				if ((newduel = duel->create(sd, 2)) != 0) {
 					if (target_sd->duel_group > 0 || target_sd->duel_invite > 0) {
 						clif->message(fd, msg_fd(fd, MSGTBL_DUEL_PLAYER_IN_DUEL)); // "Duel: Player already in duel."
 						return false;
