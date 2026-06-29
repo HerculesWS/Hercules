@@ -745,7 +745,7 @@ struct s_packet_db {
 
 struct hCSData {
 	int id;
-	unsigned int price;
+	int price;
 };
 
 struct cdelayed_damage {
