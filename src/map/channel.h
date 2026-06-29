@@ -90,7 +90,7 @@ struct channel_data {
 	struct DBMap *banned;
 	char handlers[MAX_EVENTQUEUE][EVENT_NAME_LENGTH];
 	unsigned int options;
-	unsigned int owner;
+	int owner;
 	enum channel_types type;
 	uint16 m;
 	unsigned char msg_delay;
