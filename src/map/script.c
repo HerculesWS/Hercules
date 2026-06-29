@@ -27058,7 +27058,7 @@ static BUILDIN(channelmes)
 		return true;
 	}
 
-	char *message = script_getstr(st, 3);
+	const char *message = script_getstr(st, 3);
 	if (clif->validate_message(sd, message) == false) {
 		script_pushint(st, 0);
 		return true;

@@ -153,7 +153,7 @@ static bool extraconf_read_vars(const char *filename, bool imported, struct conf
 	return retval;
 }
 
-static bool extraconf_set_var(struct config_data *conf_var, int value)
+static bool extraconf_set_var(const struct config_data *conf_var, int value)
 {
 	nullpo_retr(false, conf_var);
 
@@ -174,7 +174,7 @@ static bool extraconf_set_var(struct config_data *conf_var, int value)
 	return true;
 }
 
-static bool extraconf_set_var_str(struct config_data *conf_var, const char *val)
+static bool extraconf_set_var_str(const struct config_data *conf_var, const char *val)
 {
 	nullpo_retr(false, conf_var);
 	nullpo_retr(false, val);

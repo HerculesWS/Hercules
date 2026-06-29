@@ -889,7 +889,7 @@ ACMD(storage)
 		return false;
 	}
 
-	struct storage_settings *stst = storage->get_settings(storage_id);
+	const struct storage_settings *stst = storage->get_settings(storage_id);
 	if (stst == NULL) {
 		clif->message(fd, msg_fd(fd, MSGTBL_STORAGE_INVALID));
 		return false;
@@ -5685,7 +5685,7 @@ ACMD(storeall)
 		return false;
 	}
 
-	struct storage_settings *stst = storage->get_settings(storage_id);
+	const struct storage_settings *stst = storage->get_settings(storage_id);
 	if (stst == NULL) {
 		clif->message(fd, msg_fd(fd, MSGTBL_STORAGE_INVALID));
 		return false;
@@ -5749,7 +5749,7 @@ ACMD(clearstorage)
 		return false;
 	}
 
-	struct storage_settings *stst = storage->get_settings(storage_id);
+	const struct storage_settings *stst = storage->get_settings(storage_id);
 	if (stst == NULL) {
 		clif->message(fd, msg_fd(fd, MSGTBL_STORAGE_INVALID));
 		return false;
@@ -8900,7 +8900,7 @@ ACMD(itemlist)
 			return false;
 		}
 
-		struct storage_settings *stst = storage->get_settings(storage_id);
+		const struct storage_settings *stst = storage->get_settings(storage_id);
 		if (stst == NULL) {
 			clif->message(fd, msg_fd(fd, MSGTBL_STORAGE_INVALID));
 			return false;

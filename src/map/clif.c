@@ -10775,7 +10775,7 @@ static void clif_msgtable_color(struct map_session_data *sd, enum clif_messages 
 	clif->send(&p, sizeof(p), &sd->bl, SELF);
 }
 
-static bool clif_validate_message(struct map_session_data *sd, char *message)
+static bool clif_validate_message(struct map_session_data *sd, const char *message)
 {
 	nullpo_retr(false, message);
 
@@ -13253,7 +13253,7 @@ static void clif_parse_PutItemToCart(int fd, struct map_session_data *sd)
 	if (!pc_iscarton(sd))
 		return;
 
-	struct PACKET_CZ_MOVE_ITEM_FROM_BODY_TO_CART *p = RFIFOP(fd, 0);
+	const struct PACKET_CZ_MOVE_ITEM_FROM_BODY_TO_CART *p = RFIFOP(fd, 0);
 	const int index = p->index - 2;
 	const int flag = pc->putitemtocart(sd, index, p->count);
 

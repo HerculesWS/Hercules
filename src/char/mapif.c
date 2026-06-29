@@ -829,7 +829,7 @@ static int mapif_parse_GuildNotice(int fd, int guild_id, const char *mes1, const
 
 static int mapif_parse_GuildEmblem(int fd)
 {
-	struct PACKET_MAPCHAR_GUILD_EMBLEM *p = RFIFOP(fd, 0);
+	const struct PACKET_MAPCHAR_GUILD_EMBLEM *p = RFIFOP(fd, 0);
 	RFIFO_CHUNKED_INIT(p, p->packetLength - sizeof(struct PACKET_MAPCHAR_GUILD_EMBLEM), mapif->emblem_tmp);
 
 	RFIFO_CHUNKED_ERROR(p) {

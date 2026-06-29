@@ -158,7 +158,6 @@ test_function_def(setrlimit)
 if(MSVC)
   # Warnings
   add_compile_options(/W3 /wd4100 /wd4800)
-  add_compile_options(/wd4090) # Disable const qualifier mismatch because msvs doesn't like const passed to our aFree
   add_compile_options(/wd4244 /wd4267) # Disable int conversion possible lose of data
   add_compile_options(/wd4018) # Disable signed/unsigned arthmatic mismatch
   add_compile_options(/wd5287) # Disable enum conversion warning
@@ -233,7 +232,6 @@ else()
   testadd_warning_compiler_flag(no-missing-field-initializers)
   # testadd_warning_compiler_flag(no-suggest-attribute=format)
   testadd_warning_compiler_flag(no-incompatible-pointer-types-discards-qualifiers)
-  testadd_warning_compiler_flag(no-discarded-qualifiers)
   testadd_warning_compiler_flag(no-deprecated-non-prototype)
   testadd_warning_compiler_flag(no-unused-but-set-variable)
   testadd_warning_compiler_flag(no-enum-enum-conversion)
