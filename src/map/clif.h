@@ -933,7 +933,7 @@ struct clif_interface {
 	/* Cash Shop [Ind/Hercules] */
 	struct {
 		struct hCSData **data[CASHSHOP_TAB_MAX];
-		unsigned int item_count[CASHSHOP_TAB_MAX];
+		int item_count[CASHSHOP_TAB_MAX];
 	} cs;
 	/* roulette data */
 	struct {
