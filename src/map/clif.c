@@ -20462,8 +20462,8 @@ static void clif_parse_SearchStoreInfo(int fd, struct map_session_data *sd)
 	int packet_len, count, item_count, card_count;
 	int i;
 	const struct PACKET_CZ_SEARCH_STORE_INFO *p = RFIFOP(fd, 0);
-	uint32 *items_list;
-	uint32 *cards_list;
+	int32 *items_list;
+	int32 *cards_list;
 
 	packet_len = p->packetLength;
 
@@ -20504,8 +20504,8 @@ static void clif_parse_SearchStoreInfo(int fd, struct map_session_data *sd)
 
 	cardlist = RFIFOP(fd, sizeof(struct PACKET_CZ_SEARCH_STORE_INFO) + blocksize * item_count);
 
-	items_list = aMalloc(sizeof(uint32) * item_count);
-	cards_list = aMalloc(sizeof(uint32) * card_count);
+	items_list = aMalloc(sizeof(int32) * item_count);
+	cards_list = aMalloc(sizeof(int32) * card_count);
 	for (i = 0; i < item_count; i ++) {
 		items_list[i] = itemlist[i].itemId;
 	}
