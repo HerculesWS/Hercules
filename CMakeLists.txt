@@ -177,7 +177,6 @@ else()
   # Warnings we explictily require or disable
   testadd_warning_compiler_flag(all REQUIRED)
   testadd_warning_compiler_flag(extra REQUIRED)
-  testadd_warning_compiler_flag(no-sign-compare REQUIRED)
   testadd_warning_compiler_flag(no-unused-parameter)
   testadd_warning_compiler_flag(no-clobbered)
   testadd_warning_compiler_flag(empty-body)

@@ -51,4 +51,6 @@ add_library(hercules-libconfig STATIC
 
 if(NOT MSVC)
   target_compile_options(hercules-libconfig PRIVATE -Wno-null-dereference)
+else()
+  target_compile_options(hercules-libconfig PRIVATE /wd4245)
 endif()
