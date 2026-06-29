@@ -856,7 +856,7 @@ struct script_interface {
 	VECTOR_DECL(struct script_queue_iterator) hqi;
 	/*  */
 	char **buildin;
-	unsigned int buildin_count;
+	int buildin_count;
 	/**
 	 * used to generate quick script_array entries
 	 **/
