@@ -3427,7 +3427,7 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 					sce->val1 = skill_id; //Update combo-skill
 					sce->val3 = skill_id;
 					if( sce->timer != INVALID_TIMER )
-						timer->delete(sce->timer, status->change_timer);
+						timer->delete_(sce->timer, status->change_timer);
 					sce->timer = timer->add(tick+sce->val4, status->change_timer, src->id, SC_COMBOATTACK);
 					break;
 				}
@@ -4706,7 +4706,7 @@ static int skill_cleartimerskill(struct block_list *src)
 					if(skill->cleartimerskill_exception(ud->skilltimerskill[i]->skill_id))
 						continue;
 			}
-			timer->delete(ud->skilltimerskill[i]->timer, skill->timerskill);
+			timer->delete_(ud->skilltimerskill[i]->timer, skill->timerskill);
 			ers_free(skill->timer_ers, ud->skilltimerskill[i]);
 			ud->skilltimerskill[i]=NULL;
 		}
@@ -6870,7 +6870,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 				x1 = sd->bl.x + range;
 				y1 = sd->bl.y + range;
 
-				elemental->delete(sd->ed,0);
+				elemental->delete_(sd->ed,0);
 
 				if(!skill->check_unit_range(src,src->x,src->y,skill_id,skill_lv))
 					ret = skill->castend_pos2(src,src->x,src->y,skill_id,skill_lv,tick,flag);
@@ -11327,7 +11327,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 
 				// Remove previous elemental first.
 				if( sd->ed )
-					elemental->delete(sd->ed,0);
+					elemental->delete_(sd->ed,0);
 
 				// Summoning the new one.
 				if( !elemental->create(sd,elemental_class,skill->get_time(skill_id,skill_lv)) ) {
@@ -11345,7 +11345,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 				if( !sd->ed ) break;
 
 				if( skill_lv == 4 ) {// At level 4 delete elementals.
-					elemental->delete(sd->ed, 0);
+					elemental->delete_(sd->ed, 0);
 					break;
 				}
 				switch( skill_lv ) {// Select mode based on skill level used.
@@ -11584,7 +11584,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 					summon_md->master_id = src->id;
 					summon_md->special_state.ai = AI_ZANZOU;
 					if( summon_md->deletetimer != INVALID_TIMER )
-						timer->delete(summon_md->deletetimer, mob->timer_delete);
+						timer->delete_(summon_md->deletetimer, mob->timer_delete);
 					summon_md->deletetimer = timer->add(timer->gettick() + skill->get_time(skill_id, skill_lv), mob->timer_delete, summon_md->bl.id, 0);
 					mob->spawn( summon_md );
 					pc->setinvincibletimer(sd,500);// unlock target lock
@@ -11773,7 +11773,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 				if (summon_md != NULL) {
 					summon_md->master_id = src->id;
 					if (summon_md->deletetimer != INVALID_TIMER)
-						timer->delete(summon_md->deletetimer, mob->timer_delete);
+						timer->delete_(summon_md->deletetimer, mob->timer_delete);
 					summon_md->deletetimer = timer->add(timer->gettick() + skill->get_time(skill_id, skill_lv), mob->timer_delete, summon_md->bl.id, 0);
 					mob->spawn(summon_md); //Now it is ready for spawning.
 					sc_start4(src, &summon_md->bl, SC_MODECHANGE, 100, 1, 0, MD_CANATTACK | MD_AGGRESSIVE, 0, 60000, skill_id);
@@ -12773,7 +12773,7 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 					md->master_id = src->id;
 					md->special_state.ai = (skill_id == AM_SPHEREMINE) ? AI_SPHERE : AI_FLORA;
 					if( md->deletetimer != INVALID_TIMER )
-						timer->delete(md->deletetimer, mob->timer_delete);
+						timer->delete_(md->deletetimer, mob->timer_delete);
 					md->deletetimer = timer->add(timer->gettick() + skill->get_time(skill_id,skill_lv), mob->timer_delete, md->bl.id, 0);
 					mob->spawn (md); //Now it is ready for spawning.
 				}
@@ -12893,7 +12893,7 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 					if ((i = skill->get_time(skill_id, skill_lv)) > 0)
 					{
 						if( md->deletetimer != INVALID_TIMER )
-							timer->delete(md->deletetimer, mob->timer_delete);
+							timer->delete_(md->deletetimer, mob->timer_delete);
 						md->deletetimer = timer->add(tick + i, mob->timer_delete, md->bl.id, 0);
 					}
 					mob->spawn (md);
@@ -13037,7 +13037,7 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 					md->master_id = src->id;
 					md->special_state.ai = AI_FLORA;
 					if( md->deletetimer != INVALID_TIMER )
-						timer->delete(md->deletetimer, mob->timer_delete);
+						timer->delete_(md->deletetimer, mob->timer_delete);
 					md->deletetimer = timer->add(timer->gettick() + skill->get_time(skill_id, skill_lv), mob->timer_delete, md->bl.id, 0);
 					mob->spawn( md );
 				}
@@ -14072,7 +14072,7 @@ static int skill_unit_onplace(struct skill_unit *src, struct block_list *bl, int
 				// eA style:
 				// Readjust timers since the effect will not last long.
 				sce->val4 = 0;
-				timer->delete(sce->timer, status->change_timer);
+				timer->delete_(sce->timer, status->change_timer);
 				sce->timer = timer->add(tick+sg->limit, status->change_timer, bl->id, type);
 			} else if (!battle_config.song_timer_reset) {
 				// Aegis style:
@@ -14080,7 +14080,7 @@ static int skill_unit_onplace(struct skill_unit *src, struct block_list *bl, int
 				const struct TimerData *td = timer->get(sce->timer);
 				if (DIFF_TICK32(td->tick, timer->gettick()) < sg->interval) {
 					// Update with new values as the current one will vanish soon
-					timer->delete(sce->timer, status->change_timer);
+					timer->delete_(sce->timer, status->change_timer);
 					sce->timer = timer->add(tick+sg->limit, status->change_timer, bl->id, type);
 					sce->val1 = sg->skill_lv; // Why are we storing skill_lv as val1?
 					sce->val2 = sg->val1;
@@ -14570,7 +14570,7 @@ static int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *b
 				const struct TimerData *td = timer->get(tsc->data[type]->timer);
 				if (DIFF_TICK32(td->tick, timer->gettick()) < sg->interval) {
 					// Update with new values as the current one will vanish
-					timer->delete(tsc->data[type]->timer, status->change_timer);
+					timer->delete_(tsc->data[type]->timer, status->change_timer);
 					tsc->data[type]->timer = timer->add(tick+sg->limit, status->change_timer, bl->id, type);
 					tsc->data[type]->val1 = sg->skill_lv;
 					tsc->data[type]->val2 = sg->val1;
@@ -15190,7 +15190,7 @@ static int skill_unit_onleft(uint16 skill_id, struct block_list *bl, int64 tick)
 			if ((battle_config.song_timer_reset && sce) // eAthena style: update everytime
 			  || (!battle_config.song_timer_reset && sce && sce->val4 != 1) // Aegis style: update only when it was not a reduced effect
 			) {
-				timer->delete(sce->timer, status->change_timer);
+				timer->delete_(sce->timer, status->change_timer);
 				//NOTE: It'd be nice if we could get the skill_lv for a more accurate extra time, but alas...
 				//not possible on our current implementation.
 				sce->val4 = 1; //Store the fact that this is a "reduced" duration effect.
@@ -15205,7 +15205,7 @@ static int skill_unit_onleft(uint16 skill_id, struct block_list *bl, int64 tick)
 					if (bl->type == BL_PC) //Players get blind ended immediately, others have it still for 30 secs. [Skotlex]
 						status_change_end(bl, SC_BLIND, INVALID_TIMER);
 					else {
-						timer->delete(sce->timer, status->change_timer);
+						timer->delete_(sce->timer, status->change_timer);
 						sce->timer = timer->add(30000+tick, status->change_timer, bl->id, SC_BLIND);
 					}
 				}
@@ -20875,7 +20875,7 @@ static int skill_magicdecoy(struct map_session_data *sd, int nameid)
 		md->master_id = sd->bl.id;
 		md->special_state.ai = AI_FLORA;
 		if( md->deletetimer != INVALID_TIMER )
-			timer->delete(md->deletetimer, mob->timer_delete);
+			timer->delete_(md->deletetimer, mob->timer_delete);
 		md->deletetimer = timer->add(timer->gettick() + skill->get_time(NC_MAGICDECOY,skill_id), mob->timer_delete, md->bl.id, 0);
 		mob->spawn(md);
 		md->status.matk_min = md->status.matk_max = 250 + (50 * skill_id);
@@ -21780,7 +21780,7 @@ static void skill_cooldown_save(struct map_session_data *sd)
 
 		cd->entry[i]->duration = DIFF_TICK32(cd->entry[i]->started + cd->entry[i]->duration, now);
 		if (cd->entry[i]->timer != INVALID_TIMER) {
-			timer->delete(cd->entry[i]->timer, skill->blockpc_end);
+			timer->delete_(cd->entry[i]->timer, skill->blockpc_end);
 			cd->entry[i]->timer = INVALID_TIMER;
 		}
 	}

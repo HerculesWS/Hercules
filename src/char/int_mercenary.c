@@ -228,5 +228,5 @@ void inter_mercenary_defaults(void)
 	inter_mercenary->create = inter_mercenary_create;
 	inter_mercenary->load = inter_mercenary_load;
 	inter_mercenary->save = inter_mercenary_save;
-	inter_mercenary->delete = inter_mercenary_delete;
+	inter_mercenary->delete_ = inter_mercenary_delete;
 }

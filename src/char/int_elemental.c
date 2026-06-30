@@ -184,5 +184,5 @@ void inter_elemental_defaults(void)
 	inter_elemental->create = inter_elemental_create;
 	inter_elemental->save = inter_elemental_save;
 	inter_elemental->load = inter_elemental_load;
-	inter_elemental->delete = inter_elemental_delete;
+	inter_elemental->delete_ = inter_elemental_delete;
 }

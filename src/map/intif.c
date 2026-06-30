@@ -705,7 +705,7 @@ static void intif_parse_RecvClanMemberAction(int fd)
 
 	c->received = true;
 	if (c->req_count_tid != INVALID_TIMER) {
-		timer->delete(c->req_count_tid, clan->request_membercount);
+		timer->delete_(c->req_count_tid, clan->request_membercount);
 		c->req_count_tid = INVALID_TIMER;
 	}
 
@@ -713,7 +713,7 @@ static void intif_parse_RecvClanMemberAction(int fd)
 	switch (c->req_state) {
 	case CLAN_REQ_AFTER_KICK:
 		if (c->req_kick_tid != INVALID_TIMER) {
-			timer->delete(c->req_kick_tid, clan->request_kickoffline);
+			timer->delete_(c->req_kick_tid, clan->request_kickoffline);
 			c->req_kick_tid = INVALID_TIMER;
 		}
 		break;

@@ -1199,7 +1199,7 @@ void gstorage_defaults(void)
 	gstorage->final_sub = gstorage_final_sub;
 	/* */
 	gstorage->ensure = guild2storage_ensure;
-	gstorage->delete = guild_storage_delete;
+	gstorage->delete_ = guild_storage_delete;
 	gstorage->open = storage_guild_storageopen;
 	gstorage->additem = guild_storage_additem;
 	gstorage->delitem = guild_storage_delitem;

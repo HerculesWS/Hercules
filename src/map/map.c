@@ -1586,7 +1586,7 @@ static void map_clearflooritem(struct block_list *bl)
 	nullpo_retv(fitem);
 
 	if( fitem->cleartimer != INVALID_TIMER )
-		timer->delete(fitem->cleartimer,map->clearflooritem_timer);
+		timer->delete_(fitem->cleartimer,map->clearflooritem_timer);
 
 	clif->clearflooritem(fitem, 0);
 	map->deliddb(&fitem->bl);
@@ -2040,7 +2040,7 @@ static int map_quit(struct map_session_data *sd)
 	}
 
 	if( sd->expiration_tid != INVALID_TIMER )
-		timer->delete(sd->expiration_tid,pc->expiration_timer);
+		timer->delete_(sd->expiration_tid,pc->expiration_timer);
 
 	if (sd->npc_timer_id != INVALID_TIMER) //Cancel the event timer.
 		npc->timerevent_quit(sd);
@@ -2817,7 +2817,7 @@ static void map_spawnmobs(int16 m)
 	int i, k=0;
 	if (map->list[m].mob_delete_timer != INVALID_TIMER) {
 		//Mobs have not been removed yet [Skotlex]
-		timer->delete(map->list[m].mob_delete_timer, map->removemobs_timer);
+		timer->delete_(map->list[m].mob_delete_timer, map->removemobs_timer);
 		map->list[m].mob_delete_timer = INVALID_TIMER;
 		return;
 	}
@@ -3706,7 +3706,7 @@ static void map_clean(int i)
 
 	if (battle_config.dynamic_mobs != 0) { //Dynamic mobs flag by [random]
 		if (map->list[i].mob_delete_timer != INVALID_TIMER)
-			timer->delete(map->list[i].mob_delete_timer, map->removemobs_timer);
+			timer->delete_(map->list[i].mob_delete_timer, map->removemobs_timer);
 		for (int j = 0; j < MAX_MOB_LIST_PER_MAP; j++) {
 			if (map->list[i].moblist[j] != NULL)
 				aFree(map->list[i].moblist[j]);
@@ -3752,7 +3752,7 @@ static void map_clean(int i)
 		aFree(map->list[i].drop_list);
 
 	if (map->list[i].channel != NULL)
-		channel->delete(map->list[i].channel);
+		channel->delete_(map->list[i].channel);
 
 	VECTOR_CLEAR(map->list[i].qi_list);
 	HPM->data_store_destroy(&map->list[i].hdata);

@@ -160,7 +160,7 @@ static void pc_setinvincibletimer(struct map_session_data *sd, int val)
 	val += map->list[sd->bl.m].invincible_time_inc;
 
 	if( sd->invincible_timer != INVALID_TIMER )
-		timer->delete(sd->invincible_timer,pc->invincible_timer);
+		timer->delete_(sd->invincible_timer,pc->invincible_timer);
 	sd->invincible_timer = timer->add(timer->gettick()+val,pc->invincible_timer,sd->bl.id,0);
 }
 
@@ -170,7 +170,7 @@ static void pc_delinvincibletimer(struct map_session_data *sd)
 
 	if( sd->invincible_timer != INVALID_TIMER )
 	{
-		timer->delete(sd->invincible_timer,pc->invincible_timer);
+		timer->delete_(sd->invincible_timer,pc->invincible_timer);
 		sd->invincible_timer = INVALID_TIMER;
 		skill->unit_move(&sd->bl,timer->gettick(),1);
 	}
@@ -244,7 +244,7 @@ static int pc_addspiritball(struct map_session_data *sd, int interval, int max)
 
 	if( sd->spiritball && sd->spiritball >= max ) {
 		if(sd->spirit_timer[0] != INVALID_TIMER)
-			timer->delete(sd->spirit_timer[0],pc->spiritball_timer);
+			timer->delete_(sd->spirit_timer[0],pc->spiritball_timer);
 		sd->spiritball--;
 		if( sd->spiritball != 0 )
 			memmove(sd->spirit_timer+0, sd->spirit_timer+1, (sd->spiritball)*sizeof(int));
@@ -293,7 +293,7 @@ static int pc_delspiritball(struct map_session_data *sd, int count, int type)
 
 	for(i=0;i<count;i++) {
 		if(sd->spirit_timer[i] != INVALID_TIMER) {
-			timer->delete(sd->spirit_timer[i],pc->spiritball_timer);
+			timer->delete_(sd->spirit_timer[i],pc->spiritball_timer);
 			sd->spirit_timer[i] = INVALID_TIMER;
 		}
 	}
@@ -613,7 +613,7 @@ static int pc_inventory_rental_clear(struct map_session_data *sd)
 	nullpo_ret(sd);
 	if( sd->rental_timer != INVALID_TIMER )
 	{
-		timer->delete(sd->rental_timer, pc->inventory_rental_end);
+		timer->delete_(sd->rental_timer, pc->inventory_rental_end);
 		sd->rental_timer = INVALID_TIMER;
 	}
 
@@ -1613,7 +1613,7 @@ static int pc_reg_received(struct map_session_data *sd)
 		map->list[sd->bl.m].users_pvp--;
 
 		if( map->list[sd->bl.m].flag.pvp && !map->list[sd->bl.m].flag.pvp_nocalcrank && sd->pvp_timer != INVALID_TIMER ) {// unregister the player for ranking
-			timer->delete( sd->pvp_timer, pc->calc_pvprank_timer );
+			timer->delete_( sd->pvp_timer, pc->calc_pvprank_timer );
 			sd->pvp_timer = INVALID_TIMER;
 		}
 		clif->changeoption(&sd->bl);
@@ -2346,7 +2346,7 @@ static int pc_delautobonus(struct map_session_data *sd, struct s_autobonus *auto
 			}
 			else
 			{ // Logout / Unequipped an item with an activated bonus
-				timer->delete(autobonus[i].active,pc->endautobonus);
+				timer->delete_(autobonus[i].active,pc->endautobonus);
 				autobonus[i].active = INVALID_TIMER;
 			}
 		}
@@ -6084,7 +6084,7 @@ static int pc_setpos(struct map_session_data *sd, unsigned short map_index, int 
 				struct status_change_entry *sce = sd->sc.data[SC_KNOWLEDGE];
 
 				if (sce->timer != INVALID_TIMER)
-					timer->delete(sce->timer, status->change_timer);
+					timer->delete_(sce->timer, status->change_timer);
 
 				sce->timer = timer->add(timer->gettick() + skill->get_time(SG_KNOWLEDGE, sce->val1),
 							status->change_timer, sd->bl.id, SC_KNOWLEDGE);
@@ -6686,7 +6686,7 @@ static int pc_stop_following(struct map_session_data *sd)
 	nullpo_ret(sd);
 
 	if (sd->followtimer != INVALID_TIMER) {
-		timer->delete(sd->followtimer,pc->follow_timer);
+		timer->delete_(sd->followtimer,pc->follow_timer);
 		sd->followtimer = INVALID_TIMER;
 	}
 	sd->followtarget = -1;
@@ -7954,10 +7954,10 @@ static int pc_dead(struct map_session_data *sd, struct block_list *src)
 		homun->vaporize(sd, HOM_ST_REST, true);
 
 	if (sd->md != NULL)
-		mercenary->delete(sd->md, MERC_DELETE_RANAWAY); // Your mercenary soldier ran away.
+		mercenary->delete_(sd->md, MERC_DELETE_RANAWAY); // Your mercenary soldier ran away.
 
 	if (sd->ed != NULL)
-		elemental->delete(sd->ed, 0);
+		elemental->delete_(sd->ed, 0);
 
 	if (battle_config.duel_autoleave_when_die != 0) { // Leave duel if character died. [LuzZza]
 		if (sd->duel_group > 0)
@@ -8976,7 +8976,7 @@ static int pc_jobchange(struct map_session_data *sd, int class_, int upper)
 		clif->overweight_percent(sd);
 
 	if (sd->ed)
-		elemental->delete(sd->ed, 0);
+		elemental->delete_(sd->ed, 0);
 	if (sd->state.vending)
 		vending->close(sd);
 
@@ -9155,7 +9155,7 @@ static void pc_hide(struct map_session_data *sd, bool show_msg)
 
 	if (map->list[sd->bl.m].flag.pvp != 0 && map->list[sd->bl.m].flag.pvp_nocalcrank == 0
 	    && sd->pvp_timer != INVALID_TIMER) { // Unregister the player for ranking.
-		timer->delete(sd->pvp_timer, pc->calc_pvprank_timer);
+		timer->delete_(sd->pvp_timer, pc->calc_pvprank_timer);
 		sd->pvp_timer = INVALID_TIMER;
 	}
 
@@ -9874,7 +9874,7 @@ static int pc_deleventtimer(struct map_session_data *sd, const char *name)
 	if( i == MAX_EVENTTIMER )
 		return 0; // not found
 
-	timer->delete(sd->eventtimer[i],pc->eventtimer);
+	timer->delete_(sd->eventtimer[i],pc->eventtimer);
 	sd->eventtimer[i] = INVALID_TIMER;
 	sd->eventcount--;
 	aFree(p);
@@ -9916,7 +9916,7 @@ static int pc_cleareventtimer(struct map_session_data *sd)
 	for(i=0;i<MAX_EVENTTIMER;i++)
 		if( sd->eventtimer[i] != INVALID_TIMER ){
 			char *p = (char *)(timer->get(sd->eventtimer[i])->data);
-			timer->delete(sd->eventtimer[i],pc->eventtimer);
+			timer->delete_(sd->eventtimer[i],pc->eventtimer);
 			sd->eventtimer[i] = INVALID_TIMER;
 			sd->eventcount--;
 			if (p) aFree(p);
@@ -11306,7 +11306,7 @@ static void pc_add_charm(struct map_session_data *sd, int interval, int max, enu
 
 	if (sd->charm_count && sd->charm_count >= max) {
 		if (sd->charm_timer[0] != INVALID_TIMER)
-			timer->delete(sd->charm_timer[0],pc->charm_timer);
+			timer->delete_(sd->charm_timer[0],pc->charm_timer);
 		sd->charm_count--;
 		if (sd->charm_count != 0)
 			memmove(sd->charm_timer+0, sd->charm_timer+1, sd->charm_count*sizeof(int));
@@ -11355,7 +11355,7 @@ static void pc_del_charm(struct map_session_data *sd, int count, enum spirit_cha
 
 	for (i = 0; i < count; i++) {
 		if(sd->charm_timer[i] != INVALID_TIMER) {
-			timer->delete(sd->charm_timer[i],pc->charm_timer);
+			timer->delete_(sd->charm_timer[i],pc->charm_timer);
 			sd->charm_timer[i] = INVALID_TIMER;
 		}
 	}

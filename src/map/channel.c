@@ -440,7 +440,7 @@ static void channel_leave(struct channel_data *chan, struct map_session_data *sd
 		sd->gcbind = NULL;
 
 	if (!db_size(chan->users) && chan->type == HCS_TYPE_PRIVATE) {
-		channel->delete(chan);
+		channel->delete_(chan);
 	} else if (!channel->config->closing && (chan->options & HCS_OPT_ANNOUNCE_JOIN)) {
 		char message[60];
 		sprintf(message, msg_txt(MSGTBL_PLAYER_LEFT), chan->name, sd->status.name); // #%s '%s' left
@@ -836,7 +836,7 @@ static void do_final_channel(void)
 	struct channel_data *chan;
 
 	for( chan = dbi_first(iter); dbi_exists(iter); chan = dbi_next(iter) ) {
-		channel->delete(chan);
+		channel->delete_(chan);
 	}
 
 	dbi_destroy(iter);
@@ -865,7 +865,7 @@ void channel_defaults(void)
 
 	channel->search = channel_search;
 	channel->create = channel_create;
-	channel->delete = channel_delete;
+	channel->delete_ = channel_delete;
 
 	channel->set_password = channel_set_password;
 	channel->ban = channel_ban;

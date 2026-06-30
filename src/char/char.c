@@ -243,7 +243,7 @@ static void char_set_char_charselect(int account_id)
 		character->pincode_enable = pincode->charselect + pincode->enabled;
 
 	if(character->waiting_disconnect != INVALID_TIMER) {
-		timer->delete(character->waiting_disconnect, chr->waiting_disconnect);
+		timer->delete_(character->waiting_disconnect, chr->waiting_disconnect);
 		character->waiting_disconnect = INVALID_TIMER;
 	}
 
@@ -275,7 +275,7 @@ static void char_set_char_online(bool is_initializing, int char_id, int account_
 
 	//Get rid of disconnect timer
 	if(character->waiting_disconnect != INVALID_TIMER) {
-		timer->delete(character->waiting_disconnect, chr->waiting_disconnect);
+		timer->delete_(character->waiting_disconnect, chr->waiting_disconnect);
 		character->waiting_disconnect = INVALID_TIMER;
 	}
 
@@ -324,7 +324,7 @@ static void char_set_char_offline(int char_id, int account_id)
 		}
 
 		if(character->waiting_disconnect != INVALID_TIMER){
-			timer->delete(character->waiting_disconnect, chr->waiting_disconnect);
+			timer->delete_(character->waiting_disconnect, chr->waiting_disconnect);
 			character->waiting_disconnect = INVALID_TIMER;
 		}
 
@@ -1930,11 +1930,11 @@ static int char_delete_char_sql(int char_id)
 
 	/* remove homunculus */
 	if( hom_id )
-		inter_homunculus->delete(hom_id);
+		inter_homunculus->delete_(hom_id);
 
 	/* remove elemental */
 	if (elemental_id)
-		inter_elemental->delete(elemental_id);
+		inter_elemental->delete_(elemental_id);
 
 	/* remove mercenary data */
 	inter_mercenary->owner_delete(char_id);

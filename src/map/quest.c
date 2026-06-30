@@ -1172,7 +1172,7 @@ void quest_defaults(void)
 	quest->pc_login = quest_pc_login;
 	quest->add = quest_add;
 	quest->change = quest_change;
-	quest->delete = quest_delete;
+	quest->delete_ = quest_delete;
 	quest->update_objective_sub = quest_update_objective_sub;
 	quest->update_objective = quest_update_objective;
 	quest->update_status = quest_update_status;

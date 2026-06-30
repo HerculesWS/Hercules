@@ -1626,7 +1626,7 @@ static int atcommand_pvpoff_sub(struct block_list *bl, va_list ap)
 
 	clif->pvpset(sd, 0, 0, 2);
 	if (sd->pvp_timer != INVALID_TIMER) {
-		timer->delete(sd->pvp_timer, pc->calc_pvprank_timer);
+		timer->delete_(sd->pvp_timer, pc->calc_pvprank_timer);
 		sd->pvp_timer = INVALID_TIMER;
 	}
 	return 0;
@@ -9520,7 +9520,7 @@ ACMD(quest)
 			return true;
 		}
 
-		if (quest->delete(sd, quest_id) != 0) {
+		if (quest->delete_(sd, quest_id) != 0) {
 			clif->message(fd, msg_fd(fd, MSGTBL_QUEST_ERASE_FAILED));
 			return true;
 		}
@@ -10399,7 +10399,7 @@ ACMD(cddebug)
 		if( cd ) {//reset
 			for(i = 0; i < cd->cursor; i++) {
 				if( !cd->entry[i] ) continue;
-				timer->delete(cd->entry[i]->timer,skill->blockpc_end);
+				timer->delete_(cd->entry[i]->timer,skill->blockpc_end);
 				ers_free(skill->cd_entry_ers, cd->entry[i]);
 			}
 

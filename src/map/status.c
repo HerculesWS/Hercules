@@ -7787,7 +7787,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				//Kaahi overwrites previous level regardless of existing level.
 				//Delete timer if it exists.
 				if (sce->val4 != INVALID_TIMER) {
-					timer->delete(sce->val4,status->kaahi_heal_timer);
+					timer->delete_(sce->val4,status->kaahi_heal_timer);
 					sce->val4 = INVALID_TIMER;
 				}
 				break;
@@ -8528,7 +8528,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 						sc_start4(src, src2, SC_RG_CCONFINE_M, 100, val1, 1, 0, 0, total_tick + 1000, skill_id);
 					else { //Increase count of locked enemies and refresh time.
 						(sce2->val2)++;
-						timer->delete(sce2->timer, status->change_timer);
+						timer->delete_(sce2->timer, status->change_timer);
 						sce2->timer = timer->add(timer->gettick()+total_tick+1000, status->change_timer, src2->id, SC_RG_CCONFINE_M);
 					}
 				} else //Status failed.
@@ -9300,7 +9300,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 					if (homun_alive(sd->hd))
 						homun->vaporize(sd, HOM_ST_REST, true);
 					if (sd->md != NULL)
-						mercenary->delete(sd->md, MERC_DELETE_RANAWAY);
+						mercenary->delete_(sd->md, MERC_DELETE_RANAWAY);
 				}
 				break;
 			case SC__LAZINESS:
@@ -10059,7 +10059,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 	//Don't trust the previous sce assignment, in case the SC ended somewhere between there and here.
 	if((sce=sc->data[type])) {// reuse old sc
 		if( sce->timer != INVALID_TIMER )
-			timer->delete(sce->timer, status->change_timer);
+			timer->delete_(sce->timer, status->change_timer);
 	} else {// new sc
 		++(sc->count);
 		sce = sc->data[type] = ers_alloc(status->data_ers, struct status_change_entry);
@@ -11254,7 +11254,7 @@ static int status_change_clear(struct block_list *bl, int type)
 			//If for some reason status_change_end decides to still keep the status when quitting. [Skotlex]
 			(sc->count)--;
 			if (sc->data[i]->timer != INVALID_TIMER)
-				timer->delete(sc->data[i]->timer, status->change_timer);
+				timer->delete_(sc->data[i]->timer, status->change_timer);
 			ers_free(status->data_ers, sc->data[i]);
 			sc->data[i] = NULL;
 		}
@@ -11304,7 +11304,7 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 			//Do not end infinite endure.
 				return 0;
 		if (sce->timer != INVALID_TIMER) //Could be a SC with infinite duration
-			timer->delete(sce->timer,status->change_timer);
+			timer->delete_(sce->timer,status->change_timer);
 		if (sc->opt1) {
 			PRAGMA_GCC46(GCC diagnostic push)
 			PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
@@ -11600,7 +11600,7 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 		case SC_KAAHI:
 			//Delete timer if it exists.
 			if (sce->val4 != INVALID_TIMER)
-				timer->delete(sce->val4,status->kaahi_heal_timer);
+				timer->delete_(sce->val4,status->kaahi_heal_timer);
 			break;
 		case SC_JAILED:
 			if(tid == INVALID_TIMER)

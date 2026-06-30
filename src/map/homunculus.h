@@ -169,7 +169,7 @@ struct homunculus_interface {
 	void (*damaged) (struct homun_data *hd);
 	int (*dead) (struct homun_data *hd);
 	int (*vaporize) (struct map_session_data *sd, enum homun_state state, bool force);
-	int (*delete) (struct homun_data *hd, int emote);
+	int (*delete_) (struct homun_data *hd, int emote);
 	int (*checkskill) (struct homun_data *hd, uint16 skill_id);
 	int (*calc_skilltree) (struct homun_data *hd, int flag_evolve);
 	int (*skill_tree_get_max) (int id, int b_class);

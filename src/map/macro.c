@@ -175,7 +175,7 @@ static void macro_detector_process_answer(struct map_session_data *sd, const cha
 	// Correct answer
 	if (captcha_answer != NULL && strcmp(captcha_answer, cd->captcha_answer) == 0) {
 		// Delete the timer
-		timer->delete(sd->macro_detect.timer, macro->detector_timeout);
+		timer->delete_(sd->macro_detect.timer, macro->detector_timeout);
 
 		// Clear the macro detect data
 		memset(&sd->macro_detect, 0, sizeof(sd->macro_detect));
@@ -216,7 +216,7 @@ static void macro_detector_disconnect(struct map_session_data *sd)
 
 	// Delete the timeout timer
 	if (sd->macro_detect.timer != INVALID_TIMER) {
-		timer->delete(sd->macro_detect.timer, macro->detector_timeout);
+		timer->delete_(sd->macro_detect.timer, macro->detector_timeout);
 		sd->macro_detect.timer = INVALID_TIMER;
 	}
 

@@ -230,7 +230,7 @@ static bool inter_quest_save(int char_id, const struct quest *new_qd, int new_n)
 	}
 
 	for (i = 0; i < old_n; i++) // Quests not in new_qd but in old_qd are to be erased.
-		success &= inter_quest->delete(char_id, old_qd[i].quest_id);
+		success &= inter_quest->delete_(char_id, old_qd[i].quest_id);
 
 	if (old_qd)
 		aFree(old_qd);
@@ -260,7 +260,7 @@ void inter_quest_defaults(void)
 
 	inter_quest->parse_frommap = inter_quest_parse_frommap;
 	inter_quest->fromsql = inter_quest_fromsql;
-	inter_quest->delete = inter_quest_delete;
+	inter_quest->delete_ = inter_quest_delete;
 	inter_quest->add = inter_quest_add;
 	inter_quest->update = inter_quest_update;
 	inter_quest->save = inter_quest_save;

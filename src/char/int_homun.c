@@ -271,6 +271,6 @@ void inter_homunculus_defaults(void)
 	inter_homunculus->create = inter_homunculus_create;
 	inter_homunculus->save = inter_homunculus_save;
 	inter_homunculus->load = inter_homunculus_load;
-	inter_homunculus->delete = inter_homunculus_delete;
+	inter_homunculus->delete_ = inter_homunculus_delete;
 	inter_homunculus->rename = inter_homunculus_rename;
 }

@@ -648,7 +648,7 @@ static unsigned char homunculus_menu(struct map_session_data *sd, unsigned char 
 			homun->feed(sd, sd->hd);
 			break;
 		case 2:
-			homun->delete(sd->hd, -1);
+			homun->delete_(sd->hd, -1);
 			break;
 		default:
 			ShowError("homunculus_menu : unknown menu choice : %d\n", menu_num) ;
@@ -702,7 +702,7 @@ static bool homunculus_feed(struct map_session_data *sd, struct homun_data *hd)
 
 	// Too much food :/
 	if(hd->homunculus.intimacy == 0)
-		return homun->delete(sd->hd, E_OMG);
+		return homun->delete_(sd->hd, E_OMG);
 	return true;
 }
 
@@ -739,7 +739,7 @@ static int homunculus_hunger_timer(int tid, int64 tick, int id, intptr_t data)
 		hd->homunculus.hunger = 0;
 		// Delete the homunculus if intimacy <= 100
 		if ( !homun->consume_intimacy(hd, 100) )
-			return homun->delete(hd, E_OMG);
+			return homun->delete_(hd, E_OMG);
 		clif->send_homdata(sd,SP_INTIMATE,hd->homunculus.intimacy / 100);
 	}
 
@@ -752,7 +752,7 @@ static void homunculus_hunger_timer_delete(struct homun_data *hd)
 {
 	nullpo_retv(hd);
 	if(hd->hungry_timer != INVALID_TIMER) {
-		timer->delete(hd->hungry_timer,homun->hunger_timer);
+		timer->delete_(hd->hungry_timer,homun->hunger_timer);
 		hd->hungry_timer = INVALID_TIMER;
 	}
 }
@@ -1488,7 +1488,7 @@ void homunculus_defaults(void)
 	homun->damaged = homunculus_damaged;
 	homun->dead = homunculus_dead;
 	homun->vaporize = homunculus_vaporize;
-	homun->delete = homunculus_delete;
+	homun->delete_ = homunculus_delete;
 	homun->checkskill = homunculus_checkskill;
 	homun->calc_skilltree = homunculus_calc_skilltree;
 	homun->skill_tree_get_max = homunculus_skill_tree_get_max;

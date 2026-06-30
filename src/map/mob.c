@@ -166,7 +166,7 @@ static void mvptomb_spawn_delayed(struct npc_data *nd)
 	nullpo_retv(nd);
 
 	if (nd->u.tomb.spawn_timer != INVALID_TIMER)
-		timer->delete(nd->u.tomb.spawn_timer, mob->mvptomb_delayspawn);
+		timer->delete_(nd->u.tomb.spawn_timer, mob->mvptomb_delayspawn);
 
 	nd->u.tomb.spawn_timer = timer->add(timer->gettick() + battle_config.mvp_tomb_spawn_delay, mob->mvptomb_delayspawn, nd->bl.id, 0);
 }
@@ -255,7 +255,7 @@ static void mvptomb_destroy(struct mob_data *md)
 		}
 
 		if (nd->u.tomb.spawn_timer != INVALID_TIMER)
-			timer->delete(nd->u.tomb.spawn_timer, mob->mvptomb_delayspawn);
+			timer->delete_(nd->u.tomb.spawn_timer, mob->mvptomb_delayspawn);
 
 		map->deliddb(&nd->bl);
 
@@ -1097,7 +1097,7 @@ static int mob_setdelayspawn(struct mob_data *md)
 		spawntime = 5000;
 
 	if( md->spawn_timer != INVALID_TIMER )
-		timer->delete(md->spawn_timer, mob->delayspawn);
+		timer->delete_(md->spawn_timer, mob->delayspawn);
 	md->spawn_timer = timer->add(timer->gettick()+spawntime, mob->delayspawn, md->bl.id, 0);
 
 	// Clear per-target ground skill tick cache for the next natural life.
@@ -1150,14 +1150,14 @@ static int mob_spawn(struct mob_data *md)
 			if (map->search_free_cell(&md->bl, -1, &md->bl.x, &md->bl.y, md->spawn->xs, md->spawn->ys, sfc_flag) != 0) {
 				// retry again later
 				if( md->spawn_timer != INVALID_TIMER )
-					timer->delete(md->spawn_timer, mob->delayspawn);
+					timer->delete_(md->spawn_timer, mob->delayspawn);
 				md->spawn_timer = timer->add(tick+5000,mob->delayspawn,md->bl.id,0);
 				return 1;
 			}
 		} else if( battle_config.no_spawn_on_player > 99 && map->foreachinrange(mob->count_sub, &md->bl, AREA_SIZE, BL_PC) ) {
 			// retry again later (players on sight)
 			if( md->spawn_timer != INVALID_TIMER )
-				timer->delete(md->spawn_timer, mob->delayspawn);
+				timer->delete_(md->spawn_timer, mob->delayspawn);
 			md->spawn_timer = timer->add(tick+5000,mob->delayspawn,md->bl.id,0);
 			return 1;
 		}
@@ -1173,7 +1173,7 @@ static int mob_spawn(struct mob_data *md)
 	md->ud.dir = 0;
 	if( md->spawn_timer != INVALID_TIMER )
 	{
-		timer->delete(md->spawn_timer, mob->delayspawn);
+		timer->delete_(md->spawn_timer, mob->delayspawn);
 		md->spawn_timer = INVALID_TIMER;
 	}
 
@@ -3034,7 +3034,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 	}
 
 	if(md->deletetimer != INVALID_TIMER) {
-		timer->delete(md->deletetimer,mob->timer_delete);
+		timer->delete_(md->deletetimer,mob->timer_delete);
 		md->deletetimer = INVALID_TIMER;
 	}
 	/**
@@ -4125,7 +4125,7 @@ static int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 
 
 	if (duration > 0) { /// Auto delete after a while.
 		if (md->deletetimer != INVALID_TIMER)
-			timer->delete(md->deletetimer, mob->timer_delete);
+			timer->delete_(md->deletetimer, mob->timer_delete);
 
 		md->deletetimer = timer->add(timer->gettick() + duration, mob->timer_delete, md->bl.id, 0);
 	}

@@ -1967,10 +1967,10 @@ static int guild_broken(int guild_id, int flag)
 
 	guild->db->foreach(guild->db,guild->broken_sub,guild_id);
 	guild->castle_db->foreach(guild->castle_db,guild->castle_broken_sub,guild_id);
-	gstorage->delete(guild_id);
+	gstorage->delete_(guild_id);
 	if (channel->config->ally) {
 		if( g->channel != NULL ) {
-			channel->delete(g->channel);
+			channel->delete_(g->channel);
 		}
 	}
 	if( g->instance )
@@ -2500,7 +2500,7 @@ static void do_final_guild(void)
 
 	for( g = dbi_first(iter); dbi_exists(iter); g = dbi_next(iter) ) {
 		if( g->channel != NULL )
-			channel->delete(g->channel);
+			channel->delete_(g->channel);
 		if( g->instance != NULL ) {
 			aFree(g->instance);
 			g->instance = NULL;

@@ -292,7 +292,7 @@ static int aclif_session_delete(int fd)
 	sd->request_temp = NULL;
 	if (sd->json != NULL)
 	{
-		jsonwriter->delete(sd->json);
+		jsonwriter->delete_(sd->json);
 		sd->json = NULL;
 	}
 

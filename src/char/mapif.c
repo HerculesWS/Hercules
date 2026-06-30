@@ -422,7 +422,7 @@ static void mapif_elemental_deleted(int fd, unsigned char flag)
 
 static void mapif_parse_elemental_delete(int fd, int ele_id)
 {
-	bool result = inter_elemental->delete(ele_id);
+	bool result = inter_elemental->delete_(ele_id);
 	mapif->elemental_deleted(fd, result);
 }
 
@@ -934,7 +934,7 @@ static void mapif_parse_homunculus_create(int fd, int len, int account_id, const
 
 static void mapif_parse_homunculus_delete(int fd, int homun_id)
 {
-	bool result = inter_homunculus->delete(homun_id);
+	bool result = inter_homunculus->delete_(homun_id);
 	mapif->homunculus_deleted(fd, result);
 }
 
@@ -1033,7 +1033,7 @@ static void mapif_parse_mail_delete(int fd)
 {
 	int char_id = RFIFOL(fd, 2);
 	int mail_id = RFIFOL(fd, 6);
-	bool failed = !inter_mail->delete(char_id, mail_id);
+	bool failed = !inter_mail->delete_(char_id, mail_id);
 	mapif->mail_delete(fd, char_id, mail_id, failed);
 }
 
@@ -1153,7 +1153,7 @@ static void mapif_mercenary_deleted(int fd, unsigned char flag)
 
 static void mapif_parse_mercenary_delete(int fd, int merc_id)
 {
-	bool result = inter_mercenary->delete(merc_id);
+	bool result = inter_mercenary->delete_(merc_id);
 	mapif->mercenary_deleted(fd, result);
 }
 

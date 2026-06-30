@@ -519,7 +519,7 @@ static void ircbot_final(void)
 	}
 
 	if (ircbot->queue_tid != INVALID_TIMER)
-		timer->delete(ircbot->queue_tid, ircbot->queue_timer);
+		timer->delete_(ircbot->queue_tid, ircbot->queue_timer);
 
 	while (ircbot->message_current != NULL) {
 		struct message_flood *next = ircbot->message_current->next;

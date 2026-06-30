@@ -576,7 +576,7 @@ static void bg_queue_ready_ack(struct bg_arena *arena, struct map_session_data *
 		}
 		/* check if all are ready then cancel timer, and start game  */
 		if (count == VECTOR_LENGTH(queue->entries)) {
-			timer->delete(arena->begin_timer,bg->begin_timer);
+			timer->delete_(arena->begin_timer,bg->begin_timer);
 			arena->begin_timer = INVALID_TIMER;
 			bg->begin(arena);
 		}
@@ -755,7 +755,7 @@ static void bg_queue_check(struct bg_arena *arena)
 	count = VECTOR_LENGTH(queue->entries);
 	if( count == arena->max_players ) {
 		if( arena->fillup_timer != INVALID_TIMER ) {
-			timer->delete(arena->fillup_timer,bg->fillup_timer);
+			timer->delete_(arena->fillup_timer,bg->fillup_timer);
 			arena->fillup_timer = INVALID_TIMER;
 		}
 		bg->queue_pregame(arena);

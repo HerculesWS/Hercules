@@ -94,7 +94,7 @@ static struct online_login_data* login_add_online_user(int char_server, int acco
 	p->char_server = char_server;
 	if( p->waiting_disconnect != INVALID_TIMER )
 	{
-		timer->delete(p->waiting_disconnect, login->waiting_disconnect_timer);
+		timer->delete_(p->waiting_disconnect, login->waiting_disconnect_timer);
 		p->waiting_disconnect = INVALID_TIMER;
 	}
 	return p;
@@ -106,7 +106,7 @@ static void login_remove_online_user(int account_id)
 	if (p == NULL)
 		return;
 	if (p->waiting_disconnect != INVALID_TIMER)
-		timer->delete(p->waiting_disconnect, login->waiting_disconnect_timer);
+		timer->delete_(p->waiting_disconnect, login->waiting_disconnect_timer);
 
 	idb_remove(login->online_db, account_id);
 
@@ -138,7 +138,7 @@ static int login_online_db_setoffline(union DBKey key, struct DBData *data, va_l
 		p->char_server = -1;
 		if( p->waiting_disconnect != INVALID_TIMER )
 		{
-			timer->delete(p->waiting_disconnect, login->waiting_disconnect_timer);
+			timer->delete_(p->waiting_disconnect, login->waiting_disconnect_timer);
 			p->waiting_disconnect = INVALID_TIMER;
 		}
 	}
@@ -692,7 +692,7 @@ static void login_fromchar_parse_online_accounts(int fd, int id)
 		login_data->char_server = id;
 
 		if (login_data->waiting_disconnect != INVALID_TIMER) {
-			timer->delete(login_data->waiting_disconnect, login->waiting_disconnect_timer);
+			timer->delete_(login_data->waiting_disconnect, login->waiting_disconnect_timer);
 			login_data->waiting_disconnect = INVALID_TIMER;
 		}
 	}

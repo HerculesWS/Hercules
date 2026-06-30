@@ -45,7 +45,7 @@ static int inter_storage_tosql(int account_id, int storage_id, const struct stor
 {
 	int i = 0, j = 0;
 	bool matched_p[MAX_STORAGE] = { false };
-	int delete[MAX_STORAGE] = { 0 };
+	int delete_[MAX_STORAGE] = { 0 };
 	int total_deletes = 0, total_updates = 0, total_inserts = 0;
 	struct storage_data cp = { 0 };
 	StringBuf buf;
@@ -97,7 +97,7 @@ static int inter_storage_tosql(int account_id, int storage_id, const struct stor
 				}
 				matched_p[j] = true;
 			} else { // Does not exist, so set for deletion.
-				delete[total_deletes++] = cp_it->id;
+				delete_[total_deletes++] = cp_it->id;
 			}
 		}
 
@@ -111,7 +111,7 @@ static int inter_storage_tosql(int account_id, int storage_id, const struct stor
 			StrBuf->Clear(&buf);
 			StrBuf->Printf(&buf, "DELETE FROM `%s` WHERE `id` IN (", storage_db);
 			for (i = 0; i < total_deletes; i++) {
-				StrBuf->Printf(&buf, "%s'%d'", i == 0 ? "" : ", ", delete[i]);
+				StrBuf->Printf(&buf, "%s'%d'", i == 0 ? "" : ", ", delete_[i]);
 			}
 			StrBuf->AppendStr(&buf, ");");
 

@@ -102,7 +102,7 @@ HTTP_DATA(userconfig_load)
 #endif
 
 		if (sd->json != NULL) {
-			jsonwriter->delete(sd->json);
+			jsonwriter->delete_(sd->json);
 			sd->json = NULL;
 		}
 
@@ -119,7 +119,7 @@ HTTP_DATA(userconfig_load)
 	jsonwriter->print(json);
 #endif
 	httpsender->send_json(fd, json);
-	jsonwriter->delete(json);
+	jsonwriter->delete_(json);
 	sd->json = NULL;
 
 	aclif->terminate_connection(fd);
@@ -243,7 +243,7 @@ HTTP_URL(userconfig_save)
 	JsonP *dataNode = jsonparser->get(json, "data");
 	if (dataNode == NULL) {
 		ShowError("data node is missing in userconfig_save. %d: %s\n", fd, sd->url);
-		jsonparser->delete(json);
+		jsonparser->delete_(json);
 		return false;
 	}
 
@@ -251,7 +251,7 @@ HTTP_URL(userconfig_save)
 
 	if (!jsonparser->is_null_or_missing(userHotkey)) {
 		ShowError("UserHotkey node in userconfig_save not supporter. %d: %s\n", fd, sd->url);
-		jsonparser->delete(json);
+		jsonparser->delete_(json);
 		return false;
 	}
 
@@ -280,7 +280,7 @@ HTTP_URL(userconfig_save)
 		SEND_CHAR_ASYNC_DATA(userconfig_save_emotes, &data);
 	}
 
-	jsonparser->delete(json);
+	jsonparser->delete_(json);
 
 	return true;
 }
@@ -451,7 +451,7 @@ HTTP_DATA(party_list)
 #endif
 
 	httpsender->send_json(fd, json);
-	jsonwriter->delete(json);
+	jsonwriter->delete_(json);
 	aclif->terminate_connection(fd);
 }
 
@@ -497,7 +497,7 @@ HTTP_DATA(party_get)
 #endif
 
 	httpsender->send_json(fd, json);
-	jsonwriter->delete(json);
+	jsonwriter->delete_(json);
 	aclif->terminate_connection(fd);
 }
 
@@ -527,7 +527,7 @@ HTTP_DATA(party_add)
 #endif
 
 	httpsender->send_json(fd, json);
-	jsonwriter->delete(json);
+	jsonwriter->delete_(json);
 	aclif->terminate_connection(fd);
 }
 
@@ -574,7 +574,7 @@ HTTP_DATA(party_del)
 #endif
 
 	httpsender->send_json(fd, json);
-	jsonwriter->delete(json);
+	jsonwriter->delete_(json);
 	aclif->terminate_connection(fd);
 }
 
@@ -605,7 +605,7 @@ HTTP_DATA(party_info)
 #endif
 
 	httpsender->send_json(fd, json);
-	jsonwriter->delete(json);
+	jsonwriter->delete_(json);
 	aclif->terminate_connection(fd);
 }
 

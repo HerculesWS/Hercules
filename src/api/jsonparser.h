@@ -53,7 +53,7 @@ struct jsonparser_interface {
 	double (*get_child_number_value) (const JsonP *parent, const char *name);
 	int (*get_child_int_value) (const JsonP *parent, const char *name);
 	void (*free) (char *ptr);
-	void (*delete) (JsonP *ptr);
+	void (*delete_) (JsonP *ptr);
 };
 
 #ifdef HERCULES_CORE

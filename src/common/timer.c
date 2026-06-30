@@ -655,7 +655,7 @@ void timer_defaults(void)
 	timer->add_interval = timer_add_interval;
 	timer->add_func_list = timer_add_func_list;
 	timer->get = timer_get;
-	timer->delete = timer_do_delete;
+	timer->delete_ = timer_do_delete;
 	timer->addtick = timer_addtick;
 	timer->settick = timer_settick;
 	timer->get_uptime = timer_get_uptime;

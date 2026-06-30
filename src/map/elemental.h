@@ -131,7 +131,7 @@ struct elemental_interface {
 	void (*heal) (struct elemental_data *ed, int hp, int sp);
 	int (*dead) (struct elemental_data *ed);
 
-	int (*delete) (struct elemental_data *ed, int reply);
+	int (*delete_) (struct elemental_data *ed, int reply);
 	void (*summon_stop) (struct elemental_data *ed);
 
 	int (*get_lifetime) (struct elemental_data *ed);

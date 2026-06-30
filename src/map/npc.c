@@ -738,7 +738,7 @@ static int npc_timerevent_stop(struct npc_data *nd)
 		const struct TimerData *td = timer->get(*tid);
 		if (td && td->data)
 			ers_free(npc->timer_event_ers, (void*)td->data);
-		timer->delete(*tid,npc->timerevent);
+		timer->delete_(*tid,npc->timerevent);
 		*tid = INVALID_TIMER;
 	}
 
@@ -771,7 +771,7 @@ static void npc_timerevent_quit(struct map_session_data *sd)
 	// Delete timer
 	nd = map->id2nd(td->id);
 	ted = (struct timer_event_data*)td->data;
-	timer->delete(sd->npc_timer_id, npc->timerevent);
+	timer->delete_(sd->npc_timer_id, npc->timerevent);
 	sd->npc_timer_id = INVALID_TIMER;
 
 	// Execute OnTimerQuit
@@ -3174,7 +3174,7 @@ static int npc_unload(struct npc_data *nd, bool single, bool unload_mobs)
 				if (td != NULL && td->data != 0)
 					ers_free(npc->timer_event_ers, (void*)td->data);
 
-				timer->delete(sd->npc_timer_id, npc->timerevent);
+				timer->delete_(sd->npc_timer_id, npc->timerevent);
 				sd->npc_timer_id = INVALID_TIMER;
 			}
 		}
@@ -3187,7 +3187,7 @@ static int npc_unload(struct npc_data *nd, bool single, bool unload_mobs)
 			if (td != NULL && td->data != 0)
 				ers_free(npc->timer_event_ers, (void*)td->data);
 
-			timer->delete(nd->u.scr.timerid, npc->timerevent);
+			timer->delete_(nd->u.scr.timerid, npc->timerevent);
 		}
 
 		if (nd->u.scr.timer_event != NULL)
@@ -5802,7 +5802,7 @@ static int npc_reload(void)
 				}
 
 				if (map->list[m].mob_delete_timer != INVALID_TIMER) { /// Mobs were removed anyway, so delete the timer. [Inkfish]
-					timer->delete(map->list[m].mob_delete_timer, map->removemobs_timer);
+					timer->delete_(map->list[m].mob_delete_timer, map->removemobs_timer);
 					map->list[m].mob_delete_timer = INVALID_TIMER;
 				}
 			}

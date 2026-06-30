@@ -65,7 +65,7 @@ struct timer_interface {
 	int (*add) (int64 tick, TimerFunc func, int id, intptr_t data);
 	int (*add_interval) (int64 tick, TimerFunc func, int id, intptr_t data, int interval);
 	const struct TimerData *(*get) (int tid);
-	int (*delete) (int tid, TimerFunc func);
+	int (*delete_) (int tid, TimerFunc func);
 
 	int64 (*addtick) (int tid, int64 tick);
 	int64 (*settick) (int tid, int64 tick);

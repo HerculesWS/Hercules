@@ -19520,7 +19520,7 @@ static void clif_parse_mercenary_action(int fd, struct map_session_data *sd)
 		return;
 
 	if (option == 2)
-		mercenary->delete(sd->md, MERC_DELETE_REMOVED);
+		mercenary->delete_(sd->md, MERC_DELETE_REMOVED);
 }
 
 /// Mercenary Message

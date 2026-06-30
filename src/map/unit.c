@@ -468,7 +468,7 @@ static int unit_walk_toxy_timer(int tid, int64 tick, int id, intptr_t data)
 	if (ud->stepaction && ud->target_to != 0) {
 		// Delete old stepaction even if not executed yet, the latest command is what counts
 		if (ud->steptimer != INVALID_TIMER) {
-			timer->delete(ud->steptimer, unit->steptimer);
+			timer->delete_(ud->steptimer, unit->steptimer);
 			ud->steptimer = INVALID_TIMER;
 		}
 		// Delay stepactions by half a step (so they are executed at full step)
@@ -538,7 +538,7 @@ static int unit_walk_toxy_timer(int tid, int64 tick, int id, intptr_t data)
 			// Walked on occupied cell, call unit->walk_toxy again
 			if (ud->steptimer != INVALID_TIMER) {
 				// Execute step timer on next step instead
-				timer->delete(ud->steptimer, unit->steptimer);
+				timer->delete_(ud->steptimer, unit->steptimer);
 				ud->steptimer = INVALID_TIMER;
 			}
 			return unit->walk_toxy(bl, x, y, 8);
@@ -1156,10 +1156,10 @@ static int unit_stop_walking(struct block_list *bl, int flag)
 	if(!ud || ud->walktimer == INVALID_TIMER)
 		return 0;
 	//NOTE: We are using timer data after deleting it because we know the
-	//timer->delete function does not messes with it. If the function's
+	//timer->delete_ function does not messes with it. If the function's
 	//behavior changes in the future, this code could break!
 	td = timer->get(ud->walktimer);
-	timer->delete(ud->walktimer, unit->walk_toxy_timer);
+	timer->delete_(ud->walktimer, unit->walk_toxy_timer);
 	ud->walktimer = INVALID_TIMER;
 	ud->state.change_walk_target = 0;
 	tick = timer->gettick();
@@ -2086,7 +2086,7 @@ static void unit_stop_attack(struct block_list *bl)
 		return;
 
 	//Clear timer
-	timer->delete(ud->attacktimer, unit->attack_timer);
+	timer->delete_(ud->attacktimer, unit->attack_timer);
 	ud->attacktimer = INVALID_TIMER;
 }
 
@@ -2111,7 +2111,7 @@ static void unit_stop_stepaction(struct block_list *bl)
 		return;
 
 	//Clear timer
-	timer->delete(ud->steptimer, unit->steptimer);
+	timer->delete_(ud->steptimer, unit->steptimer);
 	ud->steptimer = INVALID_TIMER;
 }
 
@@ -2225,7 +2225,7 @@ static int unit_cancel_combo(struct block_list *bl)
 	if (ud->attacktimer == INVALID_TIMER)
 		return 1; //Nothing more to do.
 
-	timer->delete(ud->attacktimer, unit->attack_timer);
+	timer->delete_(ud->attacktimer, unit->attack_timer);
 	ud->attacktimer=timer->add(ud->attackabletime,unit->attack_timer,bl->id,0);
 	return 1;
 }
@@ -2547,9 +2547,9 @@ static int unit_skillcastcancel(struct block_list *bl, int type)
 		skill_id = ud->skill_id;
 
 	if (skill->get_inf(skill_id) & INF_GROUND_SKILL)
-		ret = timer->delete( ud->skilltimer, skill->castend_pos );
+		ret = timer->delete_( ud->skilltimer, skill->castend_pos );
 	else
-		ret = timer->delete( ud->skilltimer, skill->castend_id );
+		ret = timer->delete_( ud->skilltimer, skill->castend_id );
 	if( ret < 0 )
 		ShowError("delete timer error %d : skill %d (%s)\n",ret,skill_id,skill->get_name(skill_id));
 
@@ -2771,7 +2771,7 @@ static int unit_remove_map(struct block_list *bl, enum clr_type clrtype, const c
 			sd->adopt_invite = 0;
 
 			if(sd->pvp_timer != INVALID_TIMER) {
-				timer->delete(sd->pvp_timer,pc->calc_pvprank_timer);
+				timer->delete_(sd->pvp_timer,pc->calc_pvprank_timer);
 				sd->pvp_timer = INVALID_TIMER;
 				sd->pvp_rank = 0;
 			}
@@ -3040,7 +3040,7 @@ static int unit_free(struct block_list *bl, enum clr_type clrtype)
 			if( pd->s_skill )
 			{
 				if (pd->s_skill->timer != INVALID_TIMER) {
-					timer->delete(pd->s_skill->timer, pet->skill_support_timer);
+					timer->delete_(pd->s_skill->timer, pet->skill_support_timer);
 				}
 				aFree(pd->s_skill);
 				pd->s_skill = NULL;
@@ -3048,14 +3048,14 @@ static int unit_free(struct block_list *bl, enum clr_type clrtype)
 			if( pd->recovery )
 			{
 				if(pd->recovery->timer != INVALID_TIMER)
-					timer->delete(pd->recovery->timer, pet->recovery_timer);
+					timer->delete_(pd->recovery->timer, pet->recovery_timer);
 				aFree(pd->recovery);
 				pd->recovery = NULL;
 			}
 			if( pd->bonus )
 			{
 				if (pd->bonus->timer != INVALID_TIMER)
-					timer->delete(pd->bonus->timer, pet->skill_bonus_timer);
+					timer->delete_(pd->bonus->timer, pet->skill_bonus_timer);
 				aFree(pd->bonus);
 				pd->bonus = NULL;
 			}
@@ -3086,12 +3086,12 @@ static int unit_free(struct block_list *bl, enum clr_type clrtype)
 
 			if( md->spawn_timer != INVALID_TIMER )
 			{
-				timer->delete(md->spawn_timer,mob->delayspawn);
+				timer->delete_(md->spawn_timer,mob->delayspawn);
 				md->spawn_timer = INVALID_TIMER;
 			}
 			if( md->deletetimer != INVALID_TIMER )
 			{
-				timer->delete(md->deletetimer,mob->timer_delete);
+				timer->delete_(md->deletetimer,mob->timer_delete);
 				md->deletetimer = INVALID_TIMER;
 			}
 			if( md->lootitem )

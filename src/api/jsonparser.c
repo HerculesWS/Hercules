@@ -183,5 +183,5 @@ void jsonparser_defaults(void)
 	jsonparser->is_null_or_missing = jsonparser_is_null_or_missing;
 	jsonparser->print = jsonparser_print;
 	jsonparser->free = jsonparser_free;
-	jsonparser->delete = jsonparser_delete;
+	jsonparser->delete_ = jsonparser_delete;
 }

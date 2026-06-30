@@ -4329,7 +4329,7 @@ static void script_free_state(struct script_state *st)
 		}
 
 		if( st->sleep.timer != INVALID_TIMER )
-			timer->delete(st->sleep.timer, script->run_timer);
+			timer->delete_(st->sleep.timer, script->run_timer);
 		if( st->stack ) {
 			script->free_vars(st->stack->scope.vars);
 			if( st->stack->scope.arrays )
@@ -5020,7 +5020,7 @@ static void script_detach_state(struct script_state *st, bool dequeue_event)
 #ifdef SECURE_NPCTIMEOUT
 			// We're done with this NPC session, so we cancel the timer (if existent) and move on
 			if( sd->npc_idle_timer != INVALID_TIMER ) {
-				timer->delete(sd->npc_idle_timer,npc->secure_timeout_timer);
+				timer->delete_(sd->npc_idle_timer,npc->secure_timeout_timer);
 				sd->npc_idle_timer = INVALID_TIMER;
 			}
 #endif
@@ -6218,7 +6218,7 @@ static int script_reload(void)
 	script->clear_translations(true);
 
 	if( script->parse_cleanup_timer_id != INVALID_TIMER ) {
-		timer->delete(script->parse_cleanup_timer_id,script->parse_cleanup_timer);
+		timer->delete_(script->parse_cleanup_timer_id,script->parse_cleanup_timer);
 		script->parse_cleanup_timer_id = INVALID_TIMER;
 	}
 
@@ -15144,7 +15144,7 @@ static int buildin_pvpoff_sub(struct block_list *bl, va_list ap)
 
 	clif->pvpset(sd, 0, 0, 2);
 	if (sd->pvp_timer != INVALID_TIMER) {
-		timer->delete(sd->pvp_timer, pc->calc_pvprank_timer);
+		timer->delete_(sd->pvp_timer, pc->calc_pvprank_timer);
 		sd->pvp_timer = INVALID_TIMER;
 	}
 	return 0;
@@ -16771,7 +16771,7 @@ static BUILDIN(petskillbonus)
 	if (pd->bonus)
 	{ //Clear previous bonus
 		if (pd->bonus->timer != INVALID_TIMER)
-			timer->delete(pd->bonus->timer, pet->skill_bonus_timer);
+			timer->delete_(pd->bonus->timer, pet->skill_bonus_timer);
 	} else //init
 		pd->bonus = (struct pet_bonus *) aMalloc(sizeof(struct pet_bonus));
 
@@ -17294,7 +17294,7 @@ static BUILDIN(petrecovery)
 	if (pd->recovery)
 	{ //Halt previous bonus
 		if (pd->recovery->timer != INVALID_TIMER)
-			timer->delete(pd->recovery->timer, pet->recovery_timer);
+			timer->delete_(pd->recovery->timer, pet->recovery_timer);
 	} else //Init
 		pd->recovery = (struct pet_recovery *)aMalloc(sizeof(struct pet_recovery));
 
@@ -17348,7 +17348,7 @@ static BUILDIN(petskillsupport)
 	if (pd->s_skill) {
 		//Clear previous skill
 		if (pd->s_skill->timer != INVALID_TIMER) {
-			timer->delete(pd->s_skill->timer, pet->skill_support_timer);
+			timer->delete_(pd->s_skill->timer, pet->skill_support_timer);
 		}
 	} else {
 		//init memory
@@ -18542,7 +18542,7 @@ static BUILDIN(summon)
 		md->special_state.ai = AI_ATTACK;
 
 		if (md->deletetimer != INVALID_TIMER)
-			timer->delete(md->deletetimer, mob->timer_delete);
+			timer->delete_(md->deletetimer, mob->timer_delete);
 
 		const int timeout = script_hasdata(st, 4) ? script_getnum(st, 4) * 1000 : 60000;
 
@@ -23150,7 +23150,7 @@ static BUILDIN(awake)
 				tst->rid = 0;
 			}
 
-			timer->delete(tst->sleep.timer, script->run_timer);
+			timer->delete_(tst->sleep.timer, script->run_timer);
 			tst->sleep.timer = INVALID_TIMER;
 			if(tst->state != RERUNLINE)
 				tst->sleep.tick = 0;
@@ -23425,7 +23425,7 @@ static BUILDIN(mercenary_delete)
 		struct mercenary_data *md = (sd->status.mer_id && sd->md != NULL) ? sd->md : NULL;
 
 		if (md != NULL)
-			mercenary->delete(md, type);
+			mercenary->delete_(md, type);
 	}
 
 	return true;
@@ -23819,10 +23819,10 @@ static BUILDIN(erasequest)
 			return false;
 		}
 		for (quest_id = script_getnum(st, 2); quest_id < script_getnum(st, 3); quest_id++) {
-			quest->delete(sd, quest_id);
+			quest->delete_(sd, quest_id);
 		}
 	} else {
-		quest->delete(sd, script_getnum(st, 2));
+		quest->delete_(sd, script_getnum(st, 2));
 	}
 
 	return true;

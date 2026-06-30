@@ -492,7 +492,7 @@ static void instance_del_map(int16 m)
 	map->foreachinmap(instance_cleanup_sub, m, BL_ALL);
 
 	if( map->list[m].mob_delete_timer != INVALID_TIMER )
-		timer->delete(map->list[m].mob_delete_timer, map->removemobs_timer);
+		timer->delete_(map->list[m].mob_delete_timer, map->removemobs_timer);
 
 	mapindex->removemap(map_id2index(m));
 
@@ -539,7 +539,7 @@ static void instance_del_map(int16 m)
 		ShowError("map_instance_del: failed to remove %s from instance list (%s): %d\n", map->list[m].name, instance->list[map->list[m].instance_id].name, m);
 
 	if( map->list[m].channel )
-		channel->delete(map->list[m].channel);
+		channel->delete_(map->list[m].channel);
 
 	map->removemapdb(&map->list[m]);
 	memset(&map->list[m], 0x00, sizeof(map->list[0]));
@@ -637,9 +637,9 @@ static void instance_destroy(int instance_id)
 		instance->list[instance_id].regs.arrays->destroy(instance->list[instance_id].regs.arrays, script->array_free_db);
 
 	if( instance->list[instance_id].progress_timer != INVALID_TIMER )
-		timer->delete( instance->list[instance_id].progress_timer, instance->destroy_timer);
+		timer->delete_( instance->list[instance_id].progress_timer, instance->destroy_timer);
 	if( instance->list[instance_id].idle_timer != INVALID_TIMER )
-		timer->delete( instance->list[instance_id].idle_timer, instance->destroy_timer);
+		timer->delete_( instance->list[instance_id].idle_timer, instance->destroy_timer);
 
 	instance->list[instance_id].regs.vars = NULL;
 
@@ -667,7 +667,7 @@ static void instance_check_idle(int instance_id)
 		idle = false;
 
 	if (instance->list[instance_id].idle_timer != INVALID_TIMER && !idle) {
-		timer->delete(instance->list[instance_id].idle_timer, instance->destroy_timer);
+		timer->delete_(instance->list[instance_id].idle_timer, instance->destroy_timer);
 		instance->list[instance_id].idle_timer = INVALID_TIMER;
 		instance->list[instance_id].idle_timeout = 0;
 
@@ -695,9 +695,9 @@ static void instance_set_timeout(int instance_id, unsigned int progress_timeout,
 		return;
 
 	if( instance->list[instance_id].progress_timer != INVALID_TIMER )
-		timer->delete( instance->list[instance_id].progress_timer, instance->destroy_timer);
+		timer->delete_( instance->list[instance_id].progress_timer, instance->destroy_timer);
 	if( instance->list[instance_id].idle_timer != INVALID_TIMER )
-		timer->delete( instance->list[instance_id].idle_timer, instance->destroy_timer);
+		timer->delete_( instance->list[instance_id].idle_timer, instance->destroy_timer);
 
 	if( progress_timeout ) {
 		instance->list[instance_id].progress_timeout = now + progress_timeout;

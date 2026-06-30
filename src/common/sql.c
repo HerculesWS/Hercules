@@ -429,7 +429,7 @@ static void Sql_Free(struct Sql *self)
 	{
 		SQL->FreeResult(self);
 		StrBuf->Destroy(&self->buf);
-		if( self->keepalive != INVALID_TIMER ) timer->delete(self->keepalive, Sql_P_KeepaliveTimer);
+		if( self->keepalive != INVALID_TIMER ) timer->delete_(self->keepalive, Sql_P_KeepaliveTimer);
 		mysql_close(&self->handle);
 		aFree(self);
 	}
