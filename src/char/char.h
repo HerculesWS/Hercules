@@ -101,8 +101,8 @@ enum inventory_table_type {
 struct char_auth_node {
 	int account_id;
 	int char_id;
-	uint32 login_id1;
-	uint32 login_id2;
+	int32 login_id1;
+	int32 login_id2;
 	uint32 ip;
 	int sex;
 	time_t expiration_time; // # of seconds 1/1/1970 (timestamp): Validity limit of the account (0 = unlimited)

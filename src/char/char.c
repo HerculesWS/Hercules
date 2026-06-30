@@ -2452,8 +2452,8 @@ static void char_parse_fromlogin_auth_state(int fd)
 {
 	struct char_session_data* sd = NULL;
 	int account_id = RFIFOL(fd,2);
-	uint32 login_id1 = RFIFOL(fd,6);
-	uint32 login_id2 = RFIFOL(fd,10);
+	int32 login_id1 = RFIFOSL(fd,6);
+	int32 login_id2 = RFIFOSL(fd,10);
 	uint8 sex = RFIFOB(fd,14);
 	uint8 result = RFIFOB(fd,15);
 	int request_id = RFIFOL(fd,16);
@@ -2495,7 +2495,7 @@ static void char_parse_fromlogin_account_data(int fd)
 	struct char_session_data* sd = (struct char_session_data*)sockt->session[fd]->session_data;
 	int i;
 	// find the authenticated session with this account id
-	ARR_FIND( 0, sockt->fd_max, i, sockt->session[i] && (sd = (struct char_session_data*)sockt->session[i]->session_data) && sd->auth && sd->account_id == RFIFOL(fd,2) );
+	ARR_FIND(0, sockt->fd_max, i, sockt->session[i] && (sd = (struct char_session_data*)sockt->session[i]->session_data) && sd->auth && sd->account_id == RFIFOSL(fd,2));
 	if( i < sockt->fd_max ) {
 		memcpy(sd->email, RFIFOP(fd,6), 40);
 		sd->expiration_time = (time_t)RFIFOL(fd,46);
@@ -4399,14 +4399,14 @@ static void char_send_account_id(int fd, int account_id)
 static void char_parse_char_connect(int fd, struct char_session_data *sd, uint32 ipl)
 {
 	int account_id = RFIFOL(fd,2);
-	uint32 login_id1 = RFIFOL(fd,6);
-	uint32 login_id2 = RFIFOL(fd,10);
+	int32 login_id1 = RFIFOSL(fd,6);
+	int32 login_id2 = RFIFOSL(fd,10);
 	int sex = RFIFOB(fd,16);
 	struct char_auth_node* node;
 
 	RFIFOSKIP(fd,17);
 
-	ShowInfo("request connect - account_id:%d/login_id1:%u/login_id2:%u\n", account_id, login_id1, login_id2);
+	ShowInfo("request connect - account_id:%d/login_id1:%d/login_id2:%d\n", account_id, login_id1, login_id2);
 
 	if (sd) {
 		//Received again auth packet for already authenticated account?? Discard it.
@@ -4992,7 +4992,7 @@ static void char_parse_char_login_map_server(int fd, uint32 ipl)
 static void char_parse_char_pincode_check(int fd, struct char_session_data *sd) __attribute__((nonnull (2)));
 static void char_parse_char_pincode_check(int fd, struct char_session_data *sd)
 {
-	if (RFIFOL(fd,2) == sd->account_id)
+	if (RFIFOSL(fd,2) == sd->account_id)
 		pincode->check(fd, sd);
 
 	RFIFOSKIP(fd, 10);
@@ -5001,7 +5001,7 @@ static void char_parse_char_pincode_check(int fd, struct char_session_data *sd)
 static void char_parse_char_pincode_window(int fd, struct char_session_data *sd) __attribute__((nonnull (2)));
 static void char_parse_char_pincode_window(int fd, struct char_session_data *sd)
 {
-	if (RFIFOL(fd,2) == sd->account_id)
+	if (RFIFOSL(fd,2) == sd->account_id)
 		pincode->loginstate(fd, sd, PINCODE_LOGIN_NOTSET);
 
 	RFIFOSKIP(fd, 6);
@@ -5010,7 +5010,7 @@ static void char_parse_char_pincode_window(int fd, struct char_session_data *sd)
 static void char_parse_char_pincode_change(int fd, struct char_session_data *sd) __attribute__((nonnull (2)));
 static void char_parse_char_pincode_change(int fd, struct char_session_data *sd)
 {
-	if (RFIFOL(fd,2) == sd->account_id)
+	if (RFIFOSL(fd,2) == sd->account_id)
 		pincode->change(fd, sd);
 
 	RFIFOSKIP(fd, 14);
@@ -5019,7 +5019,7 @@ static void char_parse_char_pincode_change(int fd, struct char_session_data *sd)
 static void char_parse_char_pincode_first_pin(int fd, struct char_session_data *sd) __attribute__((nonnull (2)));
 static void char_parse_char_pincode_first_pin(int fd, struct char_session_data *sd)
 {
-	if (RFIFOL(fd,2) == sd->account_id)
+	if (RFIFOSL(fd,2) == sd->account_id)
 		pincode->setnew (fd, sd);
 	RFIFOSKIP(fd, 10);
 }

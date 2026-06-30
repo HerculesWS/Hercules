@@ -1230,7 +1230,7 @@ static bool inter_guild_update_basic_info(int guild_id, enum guild_basic_info ty
 	switch (type) {
 		case GBI_EXP:
 			value = *((const int16 *)data);
-			if( value < 0 && abs(value) > g->exp )
+			if( value < 0 && (uint64)abs(value) > g->exp )
 				return 0;
 			g->exp += value;
 			inter_guild->calcinfo(g);

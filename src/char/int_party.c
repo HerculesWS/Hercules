@@ -619,7 +619,7 @@ static bool inter_party_change_map(int party_id, int account_id, int char_id, un
 	if (i == MAX_PARTY) /// Character not found in party.
 		return false;
 
-	if (p->party.member[i].online != online)
+	if (p->party.member[i].online != (unsigned int)online)
 		p->party.member[i].online = online;
 
 	if (p->party.member[i].lv != lv)
