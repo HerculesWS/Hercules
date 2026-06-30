@@ -5833,8 +5833,11 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 					int spell[SC_SPELLBOOK7-SC_SPELLBOOK1 + 1];
 					int cooldown;
 
-					for(i = SC_SPELLBOOK7; i >= SC_SPELLBOOK1; i--) // List all available spell to be released
-					if( sc->data[i] ) spell[s++] = i;
+					// List all available spell to be released
+					for (i = SC_SPELLBOOK7; i >= SC_SPELLBOOK1; i--) {
+						if (sc->data[i])
+							spell[s++] = i;
+					}
 
 					if ( s == 0 )
 						break;
@@ -10864,7 +10867,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 				for(i=0; i<SC_MAX; i++)
 				{
 					if (!tsc->data[i])
-					continue;
+						continue;
 					switch(i){
 						case SC_POISON:
 						case SC_BLIND:

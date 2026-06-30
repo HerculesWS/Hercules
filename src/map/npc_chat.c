@@ -124,7 +124,7 @@ static struct pcrematch_set *lookup_pcreset(struct npc_data *nd, int setid)
 
 	while (pcreset != NULL) {
 		if (pcreset->setid == setid)
-		break;
+			break;
 		pcreset = pcreset->next;
 	}
 	if (pcreset == NULL)
@@ -132,7 +132,7 @@ static struct pcrematch_set *lookup_pcreset(struct npc_data *nd, int setid)
 
 	while (pcreset != NULL) {
 		if (pcreset->setid == setid)
-		break;
+			break;
 		pcreset = pcreset->next;
 	}
 

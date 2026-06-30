@@ -72,11 +72,9 @@ static int inter_guild_save_timer(int tid, int64 tick, int id, intptr_t data)
 	{
 		if (!g)
 			continue;
-		if( state == 0 && g->guild_id == last_id )
+		if (state == 0 && g->guild_id == last_id) {
 			state++; //Save next guild in the list.
-		else
-		if( state == 1 && g->save_flag&GS_MASK )
-		{
+		} else if(state == 1 && g->save_flag&GS_MASK) {
 			inter_guild->tosql(g, g->save_flag&GS_MASK);
 			g->save_flag &= ~GS_MASK;
 

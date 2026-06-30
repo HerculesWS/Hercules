@@ -1791,8 +1791,7 @@ static bool mob_ai_sub_hard(struct mob_data *md, int64 tick)
 				return true;
 			}
 		}
-		else
-		if( (abl = map->id2bl(md->attacked_id)) && (!tbl || mob->can_changetarget(md, abl, mode) || (md->sc.count && md->sc.data[SC__CHAOS]))) {
+		else if( (abl = map->id2bl(md->attacked_id)) && (!tbl || mob->can_changetarget(md, abl, mode) || (md->sc.count && md->sc.data[SC__CHAOS]))) {
 			int dist;
 			if( md->bl.m != abl->m || abl->prev == NULL
 			 || (dist = distance_bl(&md->bl, abl)) >= MAX_MINCHASE // Attacker longer than visual area

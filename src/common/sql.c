@@ -729,8 +729,8 @@ static size_t SqlStmt_NumParams(struct SqlStmt *self)
 /// Binds a parameter to a buffer.
 static int SqlStmt_BindParam(struct SqlStmt *self, size_t idx, enum SqlDataType buffer_type, const void *buffer, size_t buffer_len)
 {
-	if( self == NULL )
-	return SQL_ERROR;
+	if (self == NULL)
+		return SQL_ERROR;
 
 	if( !self->bind_params )
 	{// initialize the bindings
