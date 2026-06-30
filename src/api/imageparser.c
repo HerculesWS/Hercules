@@ -74,13 +74,13 @@ static bool imageparser_validate_bmp_emblem(const char *emblem, uint64 emblem_le
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
-	if (emblem_len > extraconf->emblems->max_bmp_guild_emblem_size
+	if ((int)emblem_len > extraconf->emblems->max_bmp_guild_emblem_size // Safe to conver it to int, we check if it's not negative
 	 || extraconf->emblems->max_bmp_guild_emblem_size < BITMAPFILEHEADER_SIZE + BITMAPINFOHEADER_SIZE
 	 || RBUFW(buf, 0) != 0x4d42 // BITMAPFILEHEADER.bfType (signature)
 	 || RBUFL(buf, 2) != emblem_len // BITMAPFILEHEADER.bfSize (file size)
 	 || RBUFL(buf, 14) != BITMAPINFOHEADER_SIZE // BITMAPINFOHEADER.biSize (other headers are not supported)
-	 || RBUFL(buf, 18) != extraconf->emblems->guild_emblem_width // BITMAPINFOHEADER.biWidth
-	 || RBUFL(buf, 22) != extraconf->emblems->guild_emblem_height // BITMAPINFOHEADER.biHeight (top-down bitmaps (-24) are not supported)
+	 || RBUFSL(buf, 18) != extraconf->emblems->guild_emblem_width // BITMAPINFOHEADER.biWidth
+	 || RBUFSL(buf, 22) != extraconf->emblems->guild_emblem_height // BITMAPINFOHEADER.biHeight (top-down bitmaps (-24) are not supported)
 	 || RBUFL(buf, 30) != 0 // BITMAPINFOHEADER.biCompression == BI_RGB (compression not supported)
 	 ) {
 		// Invalid data
@@ -148,7 +148,7 @@ static bool imageparser_validate_gif_emblem(const char *emblem, uint64 emblem_le
 {
 	nullpo_retr(false, emblem);
 
-	if (emblem_len > extraconf->emblems->max_gif_guild_emblem_size) {
+	if (emblem_len > (uint64)extraconf->emblems->max_gif_guild_emblem_size) {
 #ifdef DEBUG_ERRORS
 		ShowError("Error: gif image file size too big: %"PRIu64"\n", emblem_len);
 #endif

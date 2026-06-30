@@ -236,7 +236,7 @@ static bool aclif_socket_secure_check(int fd)
 
 	int count = 0;
 	const int max_count = api->ip_connections_limit;
-	const int client_addr = sockt->session[fd]->client_addr;
+	const uint32 client_addr = sockt->session[fd]->client_addr;
 	for (int fd2 = 0; fd2 < sockt->fd_max; fd2 ++) {
 		if (!sockt->session_is_valid(fd2))
 			continue;
