@@ -11748,7 +11748,12 @@ static void pc_read_level_penalty_db(void)
 
 static bool pc_read_exp_db_sub_class(struct config_setting_t *t, bool base)
 {
-	struct class_exp_group entry = { { 0 } };
+	struct class_exp_group entry = {
+		.name = "",
+		.max_level = 0,
+		.exp = { 0 }
+	};
+
 	struct config_setting_t *exp_t = NULL;
 	int maxlv = 0;
 
