@@ -223,7 +223,6 @@ else()
   #testadd_warning_compiler_flag(no-format-nonliteral)
   testadd_warning_compiler_flag(no-switch)
   # testadd_warning_compiler_flag(no-suggest-attribute=format)
-  testadd_warning_compiler_flag(no-unused-but-set-variable)
   testadd_warning_compiler_flag(no-enum-enum-conversion)
 
   if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
