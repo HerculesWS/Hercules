@@ -92,7 +92,7 @@ enum ERSOptions {
 	ERS_OPT_NONE        = 0x00,
 	ERS_OPT_CLEAR       = 0x01,/* silently clears any entries left in the manager upon destruction */
 	ERS_OPT_WAIT        = 0x02,/* wait for entries to come in order to list! */
-	ERS_OPT_FREE_NAME   = 0x04,/* name is dynamic memory, and should be freed */
+	// ERS_OPT_FREE_NAME   = 0x04,/* name is dynamic memory, and should be freed */ // UNUSED
 	ERS_OPT_CLEAN       = 0x08,/* clears used memory upon ers_free so that its all new to be reused on the next alloc */
 	ERS_OPT_FLEX_CHUNK  = 0x10,/* signs that it should look for its own cache given it'll have a dynamic chunk size, so that it doesn't affect the other ERS it'd otherwise be sharing */
 
@@ -177,7 +177,7 @@ typedef struct eri {
  * @param The requested size of the entry in bytes
  * @return Interface of the object
  */
-ERS *ers_new(uint32 size, char *name, enum ERSOptions options);
+ERS *ers_new(uint32 size, const char *name, enum ERSOptions options);
 
 /**
  * Print a report about the current state of the Entry Reusage System.
