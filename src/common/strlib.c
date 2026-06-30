@@ -27,7 +27,7 @@
 #include "common/nullpo.h"
 #include "common/showmsg.h"
 
-#include <errno.h>
+#include <algorithm>
 #include <stdio.h>
 #include <stdlib.h>
 

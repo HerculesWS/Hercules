@@ -92,6 +92,10 @@ struct core_interface {
 #define SERVER_NAME (core->server_name)
 #define SERVER_TYPE (core->server_type)
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef HERCULES_CORE
 extern void cmdline_args_init_local(void);
 extern int do_init(int,char**);
@@ -110,5 +114,9 @@ void cmdline_defaults(void);
 
 HPShared struct core_interface *core;
 HPShared struct cmdline_interface *cmdline;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* COMMON_CORE_H */

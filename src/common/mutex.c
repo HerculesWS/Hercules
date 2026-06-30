@@ -173,7 +173,7 @@ static void cond_destroy(struct cond_data *c)
 static void cond_wait(struct cond_data *c, struct mutex_data *m, sysint timeout_ticks)
 {
 #ifdef WIN32
-	register DWORD ms;
+	DWORD ms;
 	int result;
 	bool is_last = false;
 

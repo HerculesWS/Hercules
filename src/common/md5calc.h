@@ -57,10 +57,18 @@ struct md5_interface {
 	void (*salt) (int len, char *output);
 };
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef HERCULES_CORE
 void md5_defaults(void);
 #endif // HERCULES_CORE
 
 HPShared struct md5_interface *md5; ///< Pointer to the md5 interface.
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* COMMON_MD5CALC_H */
