@@ -158,10 +158,18 @@ struct nullpo_interface {
 	struct backtrace_state *backtrace_state;
 };
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef HERCULES_CORE
 void nullpo_defaults(void);
 #endif // HERCULES_CORE
 
 HPShared struct nullpo_interface *nullpo;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* COMMON_NULLPO_H */

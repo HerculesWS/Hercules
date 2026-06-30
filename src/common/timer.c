@@ -36,6 +36,7 @@
 #	include <unistd.h>
 #endif
 
+#include <algorithm>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -267,7 +268,7 @@ static int64 timer_gettick(void)
 static void push_timer_heap(int tid)
 {
 	BHEAP_ENSURE(timer_heap, 1, 256);
-	BHEAP_PUSH(timer_heap, tid, DIFFTICK_MINTOPCMP, swap);
+	BHEAP_PUSH(timer_heap, tid, DIFFTICK_MINTOPCMP, std::swap);
 }
 
 /*==========================
@@ -462,9 +463,9 @@ static int64 timer_settick(int tid, int64 tick)
 		return tick; // nothing to do, already in proper position
 
 	// pop and push adjusted timer
-	BHEAP_POPINDEX(timer_heap, i, DIFFTICK_MINTOPCMP, swap);
+	BHEAP_POPINDEX(timer_heap, i, DIFFTICK_MINTOPCMP, std::swap);
 	timer_data[tid].tick = tick;
-	BHEAP_PUSH(timer_heap, tid, DIFFTICK_MINTOPCMP, swap);
+	BHEAP_PUSH(timer_heap, tid, DIFFTICK_MINTOPCMP, std::swap);
 	return tick;
 }
 
@@ -487,7 +488,7 @@ static int do_timer(int64 tick)
 			break; // no more expired timers to process
 
 		// remove timer
-		BHEAP_POP(timer_heap, DIFFTICK_MINTOPCMP, swap);
+		BHEAP_POP(timer_heap, DIFFTICK_MINTOPCMP, std::swap);
 		timer_data[tid].type |= TIMER_REMOVE_HEAP;
 
 		if( timer_data[tid].func ) {

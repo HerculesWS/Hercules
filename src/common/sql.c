@@ -561,7 +561,7 @@ static int Sql_P_BindSqlDataType(MYSQL_BIND *bind, enum SqlDataType buffer_type,
 		break;
 	default:
 	case SQLDT_LASTID:
-		ShowDebug("Sql_P_BindSqlDataType: unsupported buffer type (%u)\n", buffer_type);
+		ShowDebug("Sql_P_BindSqlDataType: unsupported buffer type (%u)\n", (unsigned int)buffer_type);
 		return SQL_ERROR;
 	}
 	bind->buffer = buffer;
@@ -583,7 +583,7 @@ static void Sql_P_ShowDebugMysqlFieldInfo(const char *prefix, enum enum_field_ty
 	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 	switch (type) {
 		default:
-			ShowDebug("%stype=%s%u, length=%lu\n", prefix, sign, type, length);
+			ShowDebug("%stype=%s%u, length=%lu\n", prefix, sign, (unsigned int)type, length);
 			return;
 #define SHOW_DEBUG_OF(x) case x: type_string = #x; break
 		SHOW_DEBUG_OF(MYSQL_TYPE_TINY);

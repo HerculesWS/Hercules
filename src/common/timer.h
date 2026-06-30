@@ -82,10 +82,18 @@ struct timer_interface {
 	bool (*get_available_clocksource) (char *buf, int buf_size);
 };
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef HERCULES_CORE
 void timer_defaults(void);
 #endif // HERCULES_CORE
 
 HPShared struct timer_interface *timer;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* COMMON_TIMER_H */

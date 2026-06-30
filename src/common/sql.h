@@ -264,6 +264,10 @@ struct sql_interface {
 
 };
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef HERCULES_CORE
 void sql_defaults(void);
 
@@ -274,6 +278,10 @@ void Sql_HerculesUpdateSkip(struct Sql *self, const char *filename);
 #endif // HERCULES_CORE
 
 HPShared struct sql_interface *SQL;
+
+#ifdef __cplusplus
+}
+#endif
 
 #if defined(SQL_REMOVE_SHOWDEBUG)
 #define Sql_ShowDebug(self) (void)(self)

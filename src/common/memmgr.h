@@ -92,6 +92,10 @@ struct malloc_interface {
 	void (*init_messages) (void);
 };
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void free_proxy(void *p, const char *file, int line, const char *func);
 void *malloc_proxy(size_t size, const char *file, int line, const char *func) GCC11ATTR ((malloc, malloc (free_proxy, 1))) __attribute__ ((alloc_size (1))) GCCATTR ((returns_nonnull));
 void *calloc_proxy(size_t num, size_t size, const char *file, int line, const char *func) GCC11ATTR ((malloc, malloc (free_proxy, 1))) __attribute__ ((alloc_size (1, 2))) GCCATTR ((returns_nonnull));
@@ -113,5 +117,9 @@ HPShared struct malloc_interface *iMalloc;
 // include allocation proxy functions
 #include "common/memmgr_inc.h"
 #endif // HERCULES_CORE
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* COMMON_MEMMGR_H */

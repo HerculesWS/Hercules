@@ -259,10 +259,18 @@ struct socket_interface {
 	void (*net_config_read) (const char *filename);
 };
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef HERCULES_CORE
 void socket_defaults(void);
 #endif // HERCULES_CORE
 
 HPShared struct socket_interface *sockt;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* COMMON_SOCKET_H */

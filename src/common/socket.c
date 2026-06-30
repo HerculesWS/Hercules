@@ -388,7 +388,7 @@ static void setsocketopts(int fd, struct hSockOpt *opt)
 #else // not WIN32
 	int yes = 1;
 #endif // WIN32
-	struct linger lopt = { 0 };
+	struct linger lopt{};
 
 	// Note: We cast the fourth argument to (char *) because, while in UNIX
 	// it takes a const void *, in Windows it takes a const char *.
@@ -413,7 +413,7 @@ static void setsocketopts(int fd, struct hSockOpt *opt)
 #if defined(WIN32)
 		DWORD timeout = 5000; // https://msdn.microsoft.com/en-us/library/windows/desktop/ms740476(v=vs.85).aspx
 #else // not WIN32
-		struct timeval timeout = { 0 };
+		struct timeval timeout{};
 		timeout.tv_sec = 5;
 #endif // WIN32
 
@@ -615,7 +615,7 @@ static int connect_client(int listen_fd)
 
 static int make_listen_bind(uint32 ip, uint16 port)
 {
-	struct sockaddr_in server_address = { 0 };
+	struct sockaddr_in server_address{};
 	int fd;
 	int result;
 
@@ -684,7 +684,7 @@ static int make_listen_bind(uint32 ip, uint16 port)
 
 static int make_connection(uint32 ip, uint16 port, struct hSockOpt *opt)
 {
-	struct sockaddr_in remote_address = { 0 };
+	struct sockaddr_in remote_address{};
 	int fd;
 	int result;
 

@@ -62,10 +62,18 @@ struct sysinfo_interface {
 	void (*final) (void);
 };
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef HERCULES_CORE
 void sysinfo_defaults(void);
 #endif // HERCULES_CORE
 
 HPShared struct sysinfo_interface *sysinfo;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* COMMON_SYSINFO_H */

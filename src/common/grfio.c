@@ -40,6 +40,17 @@
  */
 
 /// File entry table struct.
+//struct grf_filelist {
+//	int srclen = 0;         ///< compressed size
+//	int srclen_aligned = 0;
+//	int declen = 0;         ///< original size
+//	int64 srcpos = 0;         ///< position of entry in grf
+//	int next = 0;           ///< index of next filelist entry with same hash (-1: end of entry chain)
+//	char type = 0;
+//	char fn[256-4*5] = {0};   ///< file name
+//	char *fnd = nullptr;          ///< if the file was cloned, contains name of original file
+//	int8 gentry = 0;        ///< read grf file select
+//};
 struct grf_filelist {
 	int srclen;         ///< compressed size
 	int srclen_aligned;
@@ -51,7 +62,6 @@ struct grf_filelist {
 	char *fnd;          ///< if the file was cloned, contains name of original file
 	int8 gentry;        ///< read grf file select
 };
-
 enum grf_filelist_type {
 	FILELIST_TYPE_FILE           = 0x01, ///< entry is a file
 	FILELIST_TYPE_ENCRYPT_MIXED  = 0x02, ///< encryption mode 0 (header DES + periodic DES/shuffle)
@@ -281,7 +291,7 @@ static unsigned long grfio_crc32(const unsigned char *buf, unsigned int len)
 /// @copydoc grfio_interface::decode_zip
 static int grfio_decode_zip(void *dest, unsigned long *dest_len, const void *source, unsigned long source_len)
 {
-	const int ret = uncompress(dest, dest_len, source, source_len);
+	const int ret = uncompress((uint8 *)dest, dest_len, (const uint8 *)source, source_len);
 	if (ret != Z_OK)
 		grfio->report_error(ret);
 	return ret;
@@ -296,7 +306,7 @@ static int grfio_encode_zip(void *dest, unsigned long *dest_len, const void *sou
 		/* [Ind/Hercules] */
 		CREATE(dest, unsigned char, *dest_len);
 	}
-	const int ret = compress(dest, dest_len, source, source_len);
+	const int ret = compress((uint8 *)dest, dest_len, (const uint8 *)source, source_len);
 	if (ret != Z_OK)
 		grfio->report_error(ret);
 	return ret;
@@ -652,7 +662,7 @@ static int grfio_entryread(const char *grfname, int gentry)
 
 		// Get an entry
 		for (entry = 0, ofs = 0; entry < entrys; ++entry) {
-			struct grf_filelist aentry = { 0 };
+			struct grf_filelist aentry;
 			int ofs2 = ofs+getlong(grf_filelist+ofs)+4;
 			unsigned char type = grf_filelist[ofs2+12];
 			if (type&FILELIST_TYPE_FILE) {
@@ -803,7 +813,7 @@ static bool grfio_parse_restable_row(const char *row)
 	grfio_localpath_create(local, sizeof(local), dst);
 	if (exists(local)) {
 		// alias for local resource
-		struct grf_filelist fentry = { 0 };
+		struct grf_filelist fentry;
 		safestrncpy(fentry.fn, src, sizeof(fentry.fn));
 		fentry.fnd = aStrdup(dst);
 		grfio_filelist_modify(&fentry);
@@ -840,7 +850,7 @@ static void grfio_resourcecheck(void)
 	}
 
 	// read resnametable from loaded GRF's, only if it cannot be loaded from the data directory
-	buf = grfio->reads("data\\resnametable.txt", &size);
+	buf = (char *)grfio->reads("data\\resnametable.txt", &size);
 	if (buf != NULL) {
 		char *ptr = NULL;
 		buf[size] = '\0';

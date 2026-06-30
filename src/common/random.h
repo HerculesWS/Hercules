@@ -92,10 +92,18 @@ struct rnd_interface {
  */
 #define rnd() rnd->random()
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef HERCULES_CORE
 void rnd_defaults(void);
 #endif // HERCULES_CORE
 
 HPShared struct rnd_interface *rnd; ///< Pointer to the random interface.
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* COMMON_RANDOM_H */

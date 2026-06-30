@@ -71,10 +71,18 @@ struct packets_interface {
 	int chrif_db[MAX_CHRIF_PACKET_DB - MIN_CHRIF_PACKET_DB + 1];
 };
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef HERCULES_CORE
 void packets_defaults(void);
 #endif // HERCULES_CORE
 
 HPShared struct packets_interface *packets;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* COMMON_PACKETS_H */

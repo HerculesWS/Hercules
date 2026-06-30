@@ -117,10 +117,18 @@ struct mapindex_interface {
 	bool (*check_default) (void);
 };
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef HERCULES_CORE
 void mapindex_defaults(void);
 #endif // HERCULES_CORE
 
 HPShared struct mapindex_interface *mapindex;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* COMMON_MAPINDEX_H */

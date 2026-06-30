@@ -243,11 +243,11 @@ static bool hplugin_data_store_validate(enum HPluginDataTypes type, struct hplug
 		case HPDT_UNIT_PARAMETER:
 		default:
 			if (HPM->data_store_validate_sub == NULL) {
-				ShowError("HPM:validateHPData failed, type %u needs sub-handler!\n", type);
+				ShowError("HPM:validateHPData failed, type %u needs sub-handler!\n", (unsigned int)type);
 				return false;
 			}
 			if (!HPM->data_store_validate_sub(type, storeptr, initialize)) {
-				ShowError("HPM:HPM:validateHPData failed, unknown type %u!\n", type);
+				ShowError("HPM:HPM:validateHPData failed, unknown type %u!\n", (unsigned int)type);
 				return false;
 			}
 			break;
@@ -257,7 +257,7 @@ static bool hplugin_data_store_validate(enum HPluginDataTypes type, struct hplug
 		store = *storeptr;
 	}
 	if (store->type != type) {
-		ShowError("HPM:HPM:validateHPData failed, store type mismatch %u != %u.\n", store->type, type);
+		ShowError("HPM:HPM:validateHPData failed, store type mismatch %u != %u.\n", (unsigned int)store->type, (unsigned int)type);
 		return false;
 	}
 	return true;
@@ -282,7 +282,7 @@ static void hplugins_addToHPData(enum HPluginDataTypes type, uint32 pluginID, st
 
 	if (!HPM->data_store_validate(type, storeptr, true)) {
 		/* woo it failed! */
-		ShowError("HPM:addToHPData:%s: failed, type %u (%u|%u)\n", HPM->pid2name(pluginID), type, pluginID, classid);
+		ShowError("HPM:addToHPData:%s: failed, type %u (%u|%u)\n", HPM->pid2name(pluginID), (unsigned int)type, pluginID, classid);
 		return;
 	}
 	store = *storeptr;
@@ -324,7 +324,7 @@ static void *hplugins_getFromHPData(enum HPluginDataTypes type, uint32 pluginID,
 
 	if (!HPM->data_store_validate(type, &store, false)) {
 		/* woo it failed! */
-		ShowError("HPM:getFromHPData:%s: failed, type %u (%u|%u)\n", HPM->pid2name(pluginID), type, pluginID, classid);
+		ShowError("HPM:getFromHPData:%s: failed, type %u (%u|%u)\n", HPM->pid2name(pluginID), (unsigned int)type, pluginID, classid);
 		return NULL;
 	}
 	if (!store)
@@ -352,7 +352,7 @@ static void hplugins_removeFromHPData(enum HPluginDataTypes type, uint32 pluginI
 
 	if (!HPM->data_store_validate(type, &store, false)) {
 		/* woo it failed! */
-		ShowError("HPM:removeFromHPData:%s: failed, type %u (%u|%u)\n", HPM->pid2name(pluginID), type, pluginID, classid);
+		ShowError("HPM:removeFromHPData:%s: failed, type %u (%u|%u)\n", HPM->pid2name(pluginID), (unsigned int)type, pluginID, classid);
 		return;
 	}
 	if (!store)
@@ -451,7 +451,7 @@ static bool hplugins_addconf(unsigned int pluginID, enum HPluginConfType type, c
 	}
 
 	if (type >= HPCT_MAX) {
-		ShowError("HPM->addConf:%s: unknown point '%u' specified for config '%s'\n",HPM->pid2name(pluginID),type,name);
+		ShowError("HPM->addConf:%s: unknown point '%u' specified for config '%s'\n", HPM->pid2name(pluginID), (unsigned int)type, name);
 		return false;
 	}
 
@@ -852,7 +852,7 @@ static const char *HPM_file2ptr(const char *file)
 	}
 
 	/* we handle this memory outside of the server's memory manager because we need it to exist after the memory manager goes down */
-	HPM->filenames.data = realloc(HPM->filenames.data, (++HPM->filenames.count)*sizeof(struct HPMFileNameCache));
+	HPM->filenames.data = (struct HPMFileNameCache *)realloc(HPM->filenames.data, (++HPM->filenames.count)*sizeof(struct HPMFileNameCache));
 
 	HPM->filenames.data[i].addr = file;
 	HPM->filenames.data[i].name = strdup(file);

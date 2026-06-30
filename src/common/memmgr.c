@@ -154,7 +154,7 @@ static void *aCalloc_(size_t num, size_t size, const char *file, int line, const
 static void *aRealloc_(void *p, size_t size, const char *file, int line, const char *func) __attribute__ ((alloc_size (2))) __attribute__((nonnull (1))) GCCATTR ((returns_nonnull));
 static void *aRealloc_(void *p, size_t size, const char *file, int line, const char *func)
 {
-	struct nomemmgr_block *real_p = p;
+	struct nomemmgr_block *real_p = (struct nomemmgr_block *)p;
 	if (real_p != NULL) {
 		real_p = real_p - 1;
 	}
