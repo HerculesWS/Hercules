@@ -19,13 +19,16 @@ jobs:
     timeout-minutes: 30
     strategy:
       matrix:
-        CC: [gcc]
+        CC: [gcc-15]
         RENEWAL: [""]
         CLIENT_TYPE: [""]
         HTTPLIB: ["", "-DWITH_HTTP_PARSER=llhttp"]
         SANITIZER: ["-DMEMORY_MANAGER=none", "-DMEMORY_MANAGER=none -DENABLE_SANITIZE=ON"]
         PACKET_VERSION: ["-DPACKETVER=20221024"]
         MYSQL: ["10.11", "11.8", "latest"]
+        include:
+          - CXX: 'g++-15'
+            CC: 'gcc-15'
 
     # github.head_ref will stop previous runs in the same PR (if in a PR)
     # github.run_id is a fallback when outside a PR (e.g. every merge in master will run, and previous won't stop)
@@ -51,10 +54,11 @@ jobs:
           --health-timeout=2s
           --health-retries=3
     env:
-      INSTALL_PACKAGES: ${{ matrix.CC }} mariadb-client
+      INSTALL_PACKAGES: ${{ matrix.CC }} ${{ matrix.CXX }} mariadb-client
       SQLHOST: mysql
       CC: ${{ matrix.CC }}
-      CONFIGURE_FLAGS: -DCMAKE_C_COMPILER=${{ matrix.CC }} -DCMAKE_BUILD_TYPE=Debug -DENABLE_WERROR=ON -DENABLE_BUILDBOT=ON ${{ matrix.RENEWAL }} ${{ matrix.HTTPLIB }} ${{ matrix.CLIENT_TYPE }} ${{ matrix.SANITIZER }} ${{ matrix.PACKET_VERSION }} -DBUILD_HPMHOOKING=ON
+      CXX: ${{ matrix.CXX }}
+      CONFIGURE_FLAGS: -DCMAKE_C_COMPILER=${{ matrix.CC }} -DCMAKE_CXX_COMPILER=${{ matrix.CXX }} -DCMAKE_BUILD_TYPE=Debug -DENABLE_WERROR=ON -DENABLE_BUILDBOT=ON ${{ matrix.RENEWAL }} ${{ matrix.HTTPLIB }} ${{ matrix.CLIENT_TYPE }} ${{ matrix.SANITIZER }} ${{ matrix.PACKET_VERSION }} -DBUILD_HPMHOOKING=ON
       PACKET_VERSION: ${{ matrix.PACKET_VERSION }}
     steps:
       - uses: actions/checkout@v6

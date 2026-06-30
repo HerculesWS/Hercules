@@ -7,7 +7,7 @@ env:
   MYSQL_USER: 'ragnarok'
   MYSQL_PASSWORD: 'ragnarok'
   MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
-  DEBIAN_COMMON_PACKAGES: cmake make git python3 python3-venv libzstd-dev g++
+  DEBIAN_COMMON_PACKAGES: cmake make git python3 python3-venv libzstd-dev
 
 defaults:
   run:
@@ -19,7 +19,7 @@ jobs:
     timeout-minutes: 30
     strategy:
       matrix:
-        CC: [gcc]
+        CC: [gcc-15]
         RENEWAL: ["", "-DENABLE_RENEWAL=OFF"]
         CLIENT_TYPE: ["", "-DENABLE_PACKETVER_RE=ON", "-DENABLE_PACKETVER_ZERO=ON"]
         HTTPLIB: ["", "-DWITH_HTTP_PARSER=llhttp"]
@@ -32,6 +32,9 @@ jobs:
           - PACKET_VERSION: "-DPACKETVER=20130724"
             RENEWAL: ""
             CLASSIC_AUTOSPELL_LIST: "-DENABLE_CLASSIC_AUTOSPELL=ON"
+          - CXX: 'g++-15'
+            CC: 'gcc-15'
+
         exclude:
           - PACKET_VERSION: "-DPACKETVER=20130724"
             CLIENT_TYPE: "-DENABLE_PACKETVER_ZERO=ON"
@@ -43,7 +46,7 @@ jobs:
       cancel-in-progress: true
 
     container:
-      image: ubuntu:24.04
+      image: ubuntu:26.04
     services:
       mariadb:
         image: mariadb:latest
@@ -60,10 +63,11 @@ jobs:
           --health-timeout=2s
           --health-retries=3
     env:
-      INSTALL_PACKAGES: ${{ matrix.CC }} mariadb-client
+      INSTALL_PACKAGES: ${{ matrix.CC }} ${{ matrix.CXX }} mariadb-client
       SQLHOST: mariadb
       CC: ${{ matrix.CC }}
-      CONFIGURE_FLAGS: -DCMAKE_C_COMPILER=${{ matrix.CC }} -DCMAKE_BUILD_TYPE=Debug -DENABLE_WERROR=ON -DENABLE_BUILDBOT=ON ${{ matrix.RENEWAL }} ${{ matrix.HTTPLIB }} ${{ matrix.CLIENT_TYPE }} ${{ matrix.SANITIZER }} ${{ matrix.PACKET_VERSION }} -DENABLE_LTO=ON ${{ matrix.CLASSIC_AUTOSPELL_LIST }} -DBUILD_HPMHOOKING=ON
+      CXX: ${{ matrix.CXX }}
+      CONFIGURE_FLAGS: -DCMAKE_C_COMPILER=${{ matrix.CC }} -DCMAKE_CXX_COMPILER=${{ matrix.CXX }} -DCMAKE_BUILD_TYPE=Debug -DENABLE_WERROR=ON -DENABLE_BUILDBOT=ON ${{ matrix.RENEWAL }} ${{ matrix.HTTPLIB }} ${{ matrix.CLIENT_TYPE }} ${{ matrix.SANITIZER }} ${{ matrix.PACKET_VERSION }} -DENABLE_LTO=ON ${{ matrix.CLASSIC_AUTOSPELL_LIST }} -DBUILD_HPMHOOKING=ON
       PACKET_VERSION: ${{ matrix.PACKET_VERSION }}
     steps:
       - uses: actions/checkout@v6

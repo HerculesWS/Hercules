@@ -7,7 +7,7 @@ env:
   MYSQL_USER: 'ragnarok'
   MYSQL_PASSWORD: 'ragnarok'
   MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
-  DEBIAN_COMMON_PACKAGES: make git python3 libzstd-dev python3-venv cmake g++
+  DEBIAN_COMMON_PACKAGES: make git python3 libzstd-dev python3-venv cmake
 
 defaults:
   run:
@@ -20,7 +20,7 @@ jobs:
     strategy:
       matrix:
         # Testing the oldest and newest supported version of gcc/clang on our supported platofrms
-        CC: ["clang", "gcc"]
+        CC: ["clang-21", "gcc-15"]
         RENEWAL: [""]
         CLIENT_TYPE: ["", "-DENABLE_PACKETVER_RE=ON", "-DENABLE_PACKETVER_ZERO=ON"]
         HTTPLIB: ["", "-DWITH_HTTP_PARSER=llhttp"]
@@ -30,6 +30,11 @@ jobs:
         exclude:
           - PACKET_VERSION: "-DPACKETVER=20100105"
             CLIENT_TYPE: "-DENABLE_PACKETVER_ZERO=ON"
+        include:
+          - CXX: 'g++-15'
+            CC: 'gcc-15'
+          - CXX: 'clang++-21'
+            CC: 'clang-21'
 
     # github.head_ref will stop previous runs in the same PR (if in a PR)
     # github.run_id is a fallback when outside a PR (e.g. every merge in master will run, and previous won't stop)
@@ -55,10 +60,11 @@ jobs:
           --health-timeout=2s
           --health-retries=3
     env:
-      INSTALL_PACKAGES: ${{ matrix.CC }} mariadb-client
+      INSTALL_PACKAGES: ${{ matrix.CC }} ${{ matrix.CXX }} mariadb-client
       SQLHOST: mariadb
       CC: ${{ matrix.CC }}
-      CONFIGURE_FLAGS: -DCMAKE_C_COMPILER=${{ matrix.CC }} -DCMAKE_BUILD_TYPE=Debug -DENABLE_WERROR=ON -DENABLE_BUILDBOT=ON ${{ matrix.RENEWAL }} ${{ matrix.HTTPLIB }} ${{ matrix.CLIENT_TYPE }} ${{ matrix.SANITIZER }} ${{ matrix.PACKET_VERSION }} -DENABLE_EPOLL=ON -DBUILD_HPMHOOKING=ON
+      CXX: ${{ matrix.CXX }}
+      CONFIGURE_FLAGS: -DCMAKE_C_COMPILER=${{ matrix.CC }} -DCMAKE_CXX_COMPILER=${{ matrix.CXX }} -DCMAKE_BUILD_TYPE=Debug -DENABLE_WERROR=ON -DENABLE_BUILDBOT=ON ${{ matrix.RENEWAL }} ${{ matrix.HTTPLIB }} ${{ matrix.CLIENT_TYPE }} ${{ matrix.SANITIZER }} ${{ matrix.PACKET_VERSION }} -DENABLE_EPOLL=ON -DBUILD_HPMHOOKING=ON
     steps:
       - uses: actions/checkout@v6
         with:
