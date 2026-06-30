@@ -101,6 +101,7 @@
 #endif
 
 // debug function name
+#ifndef __cplusplus // (C++17 has __func__)
 #ifndef __NETBSD__
 #if !defined(__STDC_VERSION__) || __STDC_VERSION__ < 199901L
 #	if __GNUC__ >= 2 || defined(WIN32)
@@ -108,6 +109,7 @@
 #	else
 #		define __func__ ""
 #	endif
+#endif
 #endif
 #endif
 
@@ -282,7 +284,6 @@ typedef uintptr_t uintptr;
 // keyword replacement
 #ifdef _MSC_VER
 // For MSVC (windows)
-#define inline __inline
 #define forceinline __forceinline
 #define ra_align(n) __declspec(align(n))
 #else
@@ -356,13 +357,16 @@ typedef uintptr_t uintptr;
 #define GCC11ATTR(str)
 #endif // defined(__GNUC__) && !defined(__clang__)
 
+#ifdef __cplusplus
+#define FALLTHROUGH [[fallthrough]];
+#elif defined(__GNUC__) && (GCC_VERSION >= 70000)
 // fallthrough attribute only enabled on gcc >= 7.0
-#if defined(__GNUC__) && (GCC_VERSION >= 70000)
 #define FALLTHROUGH __attribute__ ((fallthrough));
 #else // ! defined(__GNUC__) && (GCC_VERSION >= 70000)
 #define FALLTHROUGH
 #endif // ! defined(__GNUC__) && (GCC_VERSION >= 70000)
 
+#ifndef __cplusplus
 // boolean types for C
 #if !defined(_MSC_VER) || _MSC_VER >= 1800
 // MSVC doesn't have stdbool.h yet as of Visual Studio 2012 (MSVC version 17.00)
@@ -379,10 +383,12 @@ typedef char bool;
 #define true  (1==1)
 #define __bool_true_false_are_defined
 #endif // __bool_true_false_are_defined
+#endif
 
 //////////////////////////////////////////////////////////////////////////
 // macro tools
 
+#ifndef __cplusplus
 #define herc_internal_swap(a,b) do { if ((a) != (b)) { (a) ^= (b); (b) ^= (a); (a) ^= (b); } } while(0)
 #define herc_internal_swap_ptr(a,b) do { if ((a) != (b)) (a) = (void*)((intptr_t)(a) ^ (intptr_t)(b)); (b) = (void*)((intptr_t)(a) ^ (intptr_t)(b)); (a) = (void*)((intptr_t)(a) ^ (intptr_t)(b)); } while(0)
 
@@ -395,11 +401,20 @@ typedef char bool;
 #define HSWAP_PTR(a, b) herc_internal_swap_ptr((a), (b))
 #define HMAX(a, b) herc_internal_max((a), (b))
 #define HMIN(a, b) herc_internal_min((a), (b))
+#else
+// Macros to ease the c++ transition - remove later
+#define HSWAP(a, b) std::swap((a), (b))
+#define HSWAP_PTR(a, b) std::swap((a), (b))
+#define HMAX(a, b) std::max((a), (b))
+#define HMIN(a, b) std::min((a), (b))
+#endif
 
+#ifndef __cplusplus
 //////////////////////////////////////////////////////////////////////////
 // should not happen
 #ifndef NULL
 #define NULL (void *)0
+#endif
 #endif
 
 //////////////////////////////////////////////////////////////////////////
@@ -492,8 +507,13 @@ typedef char bool;
 #endif
 
 // Temporary helpers to zero-initialize structs to ease the c++ transition
+#ifdef __cplusplus
+#define ZERO_INITIALIZED {}
+#define ZERO_INITIALIZED_NESTED {}
+#else
 #define ZERO_INITIALIZED = { 0 }
 #define ZERO_INITIALIZED_NESTED = { { 0 } }
+#endif
 
 /** Support macros for marking blocks to memset to 0 */
 #define BEGIN_ZEROED_BLOCK int8 HERC__zeroed_block_BEGIN
@@ -505,7 +525,10 @@ typedef char bool;
 #define UNAVAILABLE_STRUCT int8 HERC__unavailable_struct
 
 /** Static assertion (only on compilers that support it) */
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
+#if defined(__cplusplus)
+// C++ version
+#define STATIC_ASSERT(ex, msg) static_assert(ex, msg)
+#elif defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
 // C11 version
 #define STATIC_ASSERT(ex, msg) _Static_assert(ex, msg)
 #elif defined(_MSC_VER)
@@ -517,7 +540,11 @@ typedef char bool;
 #endif
 
 // Temporary helper to specify an enum's underlying type, to ease the c++ transition
+#ifdef __cplusplus
+#define CXX_ENUM_TYPE(t) : t
+#else
 // (this doesn't do anything in c)
 #define CXX_ENUM_TYPE(t)
+#endif
 
 #endif /* COMMON_CBASETYPES_H */

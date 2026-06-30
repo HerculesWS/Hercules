@@ -36,6 +36,10 @@
 #include "common/winapi.h"
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef WIN32
 #ifdef _MSC_VER
 #pragma warning (push)
@@ -116,5 +120,9 @@ static forceinline void LeaveSpinLock(struct spin_lock *lck)
 }
 
 #endif // HERCULES_CORE
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* COMMON_SPINLOCK_H */

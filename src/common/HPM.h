@@ -177,10 +177,18 @@ struct HPM_interface {
 	struct HPMHooking_core_interface *hooking;
 };
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 CMDLINEARG(loadplugin);
 
 extern struct HPM_interface *HPM;
 
 void hpm_defaults(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* COMMON_HPM_H */

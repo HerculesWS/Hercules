@@ -34,10 +34,18 @@ struct base62_interface {
 	bool (*encode_int_padded) (int value, char *buf, int min_len, int buf_len);
 };
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef HERCULES_CORE
 void base62_defaults(void);
 #endif // HERCULES_CORE
 
 HPShared struct base62_interface *base62;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // COMMON_BASE62_H
