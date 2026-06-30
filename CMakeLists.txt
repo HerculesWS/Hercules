@@ -159,7 +159,6 @@ if(MSVC)
   # Warnings
   add_compile_options(/W3 /wd4100 /wd4800)
   add_compile_options(/wd4244 /wd4267) # Disable int conversion possible lose of data
-  add_compile_options(/wd5287) # Disable enum conversion warning
   add_compile_options(/wd4312) # Disable conversion to greater size warning (see 0xdeadbeef pointers)
   # Definations
   add_compile_definitions(WIN32 _WIN32 __WIN32 _CRT_SECURE_NO_DEPRECATE _CRT_NONSTDC_NO_DEPRECATE FD_SETSIZE=4096 WIN32_LEAN_AND_MEAN)
@@ -223,7 +222,6 @@ else()
   #testadd_warning_compiler_flag(no-format-nonliteral)
   testadd_warning_compiler_flag(no-switch)
   # testadd_warning_compiler_flag(no-suggest-attribute=format)
-  testadd_warning_compiler_flag(no-enum-enum-conversion)
 
   if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     testadd_warning_compiler_flag(no-deprecated-declarations)
