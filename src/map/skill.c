@@ -4308,14 +4308,14 @@ static int skill_check_condition_mercenary(struct block_list *bl, int skill_id, 
 
 		int mhp = skill->get_mhp(skill_id, lv);
 
-		if (mhp > 0 && get_percentage(st->hp, st->max_hp) > mhp) {
+		if (mhp > 0 && (int)get_percentage(st->hp, st->max_hp) > mhp) {
 			clif->skill_fail(sd, skill_id, USESKILL_FAIL_HP_INSUFFICIENT, 0, 0);
 			return 0;
 		}
 
 		int msp = skill->get_msp(skill_id, lv);
 
-		if (msp > 0 && get_percentage(st->sp, st->max_sp) > msp) {
+		if (msp > 0 && (int)get_percentage(st->sp, st->max_sp) > msp) {
 			clif->skill_fail(sd, skill_id, USESKILL_FAIL_SP_INSUFFICIENT, 0, 0);
 			return 0;
 		}
@@ -10240,7 +10240,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 			break;
 		case GC_HALLUCINATIONWALK:
 			{
-				int heal = status_get_max_hp(bl) * ( 18 - 2 * skill_lv ) / 100;
+				unsigned int heal = status_get_max_hp(bl) * ( 18 - 2 * skill_lv ) / 100;
 				if( status_get_hp(bl) < heal ) { // if you haven't enough HP skill fails.
 					if (sd) clif->skill_fail(sd, skill_id, USESKILL_FAIL_HP_INSUFFICIENT, 0, 0);
 					break;
@@ -13122,7 +13122,7 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 				// FIXME: Code after this point assumes that the group has one and only one unit, regardless of what the skill_unit_db says.
 				if (ud->skillunit[i]->unit.count != 1)
 					continue;
-				if (distance_xy(x, y, ud->skillunit[i]->unit.data[0].bl.x, ud->skillunit[i]->unit.data[0].bl.y) < r) {
+				if (r >= 0 && distance_xy(x, y, ud->skillunit[i]->unit.data[0].bl.x, ud->skillunit[i]->unit.data[0].bl.y) < (unsigned int)r) {
 					switch (skill_lv) {
 						case 3:
 							ud->skillunit[i]->unit_id = UNT_FIRE_EXPANSION_SMOKE_POWDER;
@@ -15493,7 +15493,7 @@ static int skill_check_condition_mob_master_sub(struct block_list *bl, va_list a
 	md = BL_UCCAST(BL_MOB, bl);
 
 	if( md->master_id != src_id
-	 || md->special_state.ai != (skill_id == AM_SPHEREMINE?AI_SPHERE:skill_id == KO_ZANZOU?AI_ZANZOU:skill_id == MH_SUMMON_LEGION?AI_ATTACK:AI_FLORA) )
+	 || md->special_state.ai != (unsigned int)(skill_id == AM_SPHEREMINE?AI_SPHERE:skill_id == KO_ZANZOU?AI_ZANZOU:skill_id == MH_SUMMON_LEGION?AI_ATTACK:AI_FLORA) )
 		return 0; //Non alchemist summoned mobs have nothing to do here.
 	if(md->class_==mob_class)
 		(*c)++;
@@ -16371,7 +16371,7 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 		case KO_HYOUHU_HUBUKI:
 		case KO_KAZEHU_SEIRAN:
 		case KO_DOHU_KOUKAI:
-			if (sd->charm_type == skill->get_ele(skill_id, skill_lv) && sd->charm_count >= MAX_SPIRITCHARM) {
+			if ((int)sd->charm_type == skill->get_ele(skill_id, skill_lv) && sd->charm_count >= MAX_SPIRITCHARM) {
 				clif->skill_fail(sd, skill_id, USESKILL_FAIL_SUMMON, 0, 0);
 				return 0;
 			}
@@ -16498,7 +16498,7 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 			}
 			break;
 		case ST_RECOV_WEIGHT_RATE:
-			if (pc_overhealweightrate(sd) <= 100 && sd->weight * 100 / sd->max_weight >= pc_overhealweightrate(sd)) {
+			if (pc_overhealweightrate(sd) <= 100 && sd->weight * 100 / sd->max_weight >= (unsigned int)pc_overhealweightrate(sd)) {
 				clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
 				return 0;
 			}
@@ -16612,14 +16612,14 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 	}
 	PRAGMA_GCC46(GCC diagnostic pop)
 
-	if(require.mhp > 0 && get_percentage(st->hp, st->max_hp) > require.mhp) {
+	if(require.mhp > 0 && get_percentage(st->hp, st->max_hp) > (unsigned int)require.mhp) {
 		//mhp is the max-hp-requirement, that is,
 		//you must have this % or less of HP to cast it.
 		clif->skill_fail(sd, skill_id, USESKILL_FAIL_HP_INSUFFICIENT, 0, 0);
 		return 0;
 	}
 
-	if (require.msp > 0 && get_percentage(st->sp, st->max_sp) > require.msp) {
+	if (require.msp > 0 && get_percentage(st->sp, st->max_sp) > (unsigned int)require.msp) {
 		clif->skill_fail(sd, skill_id, USESKILL_FAIL_SP_INSUFFICIENT, 0, 0);
 		return 0;
 	}

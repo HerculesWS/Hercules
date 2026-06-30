@@ -1189,7 +1189,7 @@ static int status_calc_mob_(struct mob_data *md, enum e_status_calc_opt opt)
 		mstatus->max_sp += diff*mstatus->int_;
 		mstatus->hp = mstatus->max_hp;
 		mstatus->sp = mstatus->max_sp;
-		mstatus->speed -= cap_value(diff, 0, mstatus->speed - 10);
+		mstatus->speed -= cap_value((unsigned int)diff, 0, mstatus->speed - 10);
 	}
 
 	if (flag&2 && battle_config.mob_size_influence) {
@@ -1298,8 +1298,8 @@ static int status_calc_pet_(struct pet_data *pd, enum e_status_calc_opt opt)
 			pstatus->dex = (bstat->dex*lv)/pd->db->lv;
 			pstatus->luk = (bstat->luk*lv)/pd->db->lv;
 
-			pstatus->rhw.atk = cap_value(pstatus->rhw.atk, 1, battle_config.pet_max_atk1);
-			pstatus->rhw.atk2 = cap_value(pstatus->rhw.atk2, 2, battle_config.pet_max_atk2);
+			pstatus->rhw.atk = cap_value(pstatus->rhw.atk, 1, (unsigned int)battle_config.pet_max_atk1);
+			pstatus->rhw.atk2 = cap_value(pstatus->rhw.atk2, 2, (unsigned int)battle_config.pet_max_atk2);
 			pstatus->str = cap_value(pstatus->str,1,battle_config.pet_max_stats);
 			pstatus->agi = cap_value(pstatus->agi,1,battle_config.pet_max_stats);
 			pstatus->vit = cap_value(pstatus->vit,1,battle_config.pet_max_stats);
@@ -1460,8 +1460,9 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 	struct status_data *bstatus; // pointer to the player's base status
 	const struct status_change *sc;
 	struct s_skill b_skill[MAX_SKILL_DB]; // previous skill tree
-	int b_weight, b_max_weight, b_cart_weight_max, // previous weight
+	int b_cart_weight_max, // previous weight
 		i, k, index, skill_lv,refinedef=0;
+	unsigned int b_weight, b_max_weight;
 	int64 i64;
 
 	nullpo_retr(-1, sd);
@@ -3247,7 +3248,7 @@ static void status_calc_bl_main(struct block_list *bl, e_scb_flag flag)
 
 		st->speed = status->calc_speed(bl, sc, bst->speed);
 
-		if( bl->type&BL_PC && !(sd && sd->state.permanent_speed) && st->speed < battle_config.max_walk_speed )
+		if( bl->type&BL_PC && !(sd && sd->state.permanent_speed) && st->speed < (unsigned int)battle_config.max_walk_speed )
 			st->speed = battle_config.max_walk_speed;
 
 		if (bl->type&BL_HOM && battle_config.hom_setting&0x8) {
@@ -7478,7 +7479,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				val3 |= sc->data[type]->val3;
 				val4 |= sc->data[type]->val4;
 			}
-			mode = val2 != 0 ? val2 : bst->mode; // Base mode
+			mode = (unsigned int)val2 != 0 ? (unsigned int)val2 : bst->mode; // Base mode
 			if (val4 != 0)
 				mode &= ~val4; //Del mode
 			if (val3 != 0)
@@ -11353,7 +11354,7 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 	switch(type) {
 		case SC_GRANITIC_ARMOR:
 		{
-			int damage = st->max_hp*sce->val3/100;
+			unsigned int damage = st->max_hp*sce->val3/100;
 			if(st->hp < damage) //to not kill him
 				damage = st->hp-1;
 			status->damage(NULL, bl, damage,0,0,1);
@@ -12466,7 +12467,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 			break;
 
 		case SC_POISON:
-			if (st->hp <= max(st->max_hp / 4, sce->val4)) //Stop damaging after 25% HP left.
+			if (st->hp <= max(st->max_hp / 4, (unsigned int)sce->val4)) //Stop damaging after 25% HP left.
 				break;
 			FALLTHROUGH
 		case SC_DPOISON:
@@ -12513,13 +12514,13 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 
 		case SC_BLOODING:
 			if (--(sce->val4) >= 0) {
-				int hp =  rnd()%600 + 200;
+				unsigned int hp =  rnd()%600 + 200;
 				struct block_list* src = map->id2bl(sce->val2);
 				if( src && bl && bl->type == BL_MOB ) {
-					mob->log_damage(BL_UCAST(BL_MOB, bl), src, sd != NULL || hp < st->hp ? hp : st->hp-1);
+					mob->log_damage(BL_UCAST(BL_MOB, bl), src, sd != NULL || hp < st->hp ? hp : st->hp - 1);
 				}
 				map->freeblock_lock();
-				status_fix_damage(src, bl, sd||hp<st->hp?hp:st->hp-1, 1);
+				status_fix_damage(src, bl, sd || hp < st->hp ? hp : st->hp - 1, 1);
 				if( sc->data[type] ) {
 					if( st->hp == 1 ) {
 						map->freeblock_unlock();
@@ -12736,7 +12737,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 		case SC_MAGICMUSHROOM:
 			if( --(sce->val4) > 0 ) {
 				bool flag = 0;
-				int damage = st->max_hp * 3 / 100;
+				unsigned int damage = st->max_hp * 3 / 100;
 				if( st->hp <= damage )
 					damage = st->hp - 1; // Cannot Kill
 
@@ -13060,7 +13061,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 
 		case SC_OVERHEAT:
 			{
-				int damage = st->max_hp / 100; // Suggestion 1% each second
+				unsigned int damage = st->max_hp / 100; // Suggestion 1% each second
 				if( damage >= st->hp ) damage = st->hp - 1; // Do not kill, just keep you with 1 hp minimum
 				map->freeblock_lock();
 				status_fix_damage(NULL,bl,damage,clif->damage(bl,bl,0,0,damage,0,BDT_NORMAL,0));
@@ -13092,7 +13093,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 		case SC_STEALTHFIELD_MASTER:
 			if(--(sce->val4) >= 0) {
 				// 1% SP Upkeep Cost
-				int sp = st->max_sp / 100;
+				unsigned int sp = st->max_sp / 100;
 
 				if( st->sp <= sp )
 					status_change_end(bl,SC_STEALTHFIELD_MASTER,INVALID_TIMER);
@@ -13882,7 +13883,7 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 
 		if ((flag & RGN_SHP) != 0 && sregen->hp != 0 && sregen->rate.hp > 0) {
 			//Sitting HP regen
-			int tick = max(battle_config.natural_heal_cap, battle_config.natural_heal_skill_interval * 100 / sregen->rate.hp);
+			unsigned int tick = max(battle_config.natural_heal_cap, battle_config.natural_heal_skill_interval * 100 / sregen->rate.hp);
 
 			sregen->tick.hp += status->natural_heal_diff_tick;
 
@@ -13900,7 +13901,7 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 
 		if ((flag & RGN_SSP) != 0 && sregen->sp != 0 && sregen->sp > 0) {
 			//Sitting SP regen
-			int tick = max(battle_config.natural_heal_cap, battle_config.natural_heal_skill_interval * 100 / sregen->rate.sp);
+			unsigned int tick = max(battle_config.natural_heal_cap, battle_config.natural_heal_skill_interval * 100 / sregen->rate.sp);
 			sregen->tick.sp += status->natural_heal_diff_tick;
 
 			if (regen->state.overweight != 0)
@@ -13997,7 +13998,7 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 
 	//Natural Hp regen
 	if ((flag & RGN_HP) != 0 && hp_bonus > 0) {
-		int tick = max(interval_cap, hp_interval * 100 / hp_bonus);
+		unsigned int tick = max(interval_cap, hp_interval * 100 / hp_bonus);
 		regen->tick.hp += status->natural_heal_diff_tick;
 
 		if (ud != NULL && ud->walktimer != INVALID_TIMER)
@@ -14017,7 +14018,7 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 
 	//Natural SP regen
 	if ((flag & RGN_SP) != 0 && sp_bonus > 0) {
-		int tick = max(interval_cap, sp_interval * 100 / sp_bonus);
+		unsigned int tick = max(interval_cap, sp_interval * 100 / sp_bonus);
 		regen->tick.sp += status->natural_heal_diff_tick;
 
 		if (regen->tick.sp >= tick) {
@@ -14041,7 +14042,7 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 
 	if ((flag & RGN_SHP) != 0 && sregen->hp != 0 && sregen->rate.hp > 0) {
 		//Skill HP regen
-		int tick = max(battle_config.natural_heal_cap, battle_config.natural_heal_skill_interval * 100 / sregen->rate.hp);
+		unsigned int tick = max(battle_config.natural_heal_cap, battle_config.natural_heal_skill_interval * 100 / sregen->rate.hp);
 		sregen->tick.hp += status->natural_heal_diff_tick;
 
 		while (sregen->tick.hp >= tick) {
@@ -14053,7 +14054,7 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 
 	if ((flag & RGN_SSP) != 0 && sregen->sp != 0 && sregen->rate.sp > 0) {
 		//Skill SP regen
-		int tick = max(battle_config.natural_heal_cap, battle_config.natural_heal_skill_interval * 100 / sregen->rate.sp);
+		unsigned int tick = max(battle_config.natural_heal_cap, battle_config.natural_heal_skill_interval * 100 / sregen->rate.sp);
 		sregen->tick.sp += status->natural_heal_diff_tick;
 
 		while (sregen->tick.sp >= tick) {

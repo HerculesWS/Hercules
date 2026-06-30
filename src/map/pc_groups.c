@@ -144,7 +144,7 @@ static void read_config(void)
 			idb_put(pcg->db, id, group_settings);
 		}
 		group_count = libconfig->setting_length(groups); // Save number of groups
-		assert(group_count == db_size(pcg->db));
+		assert((unsigned int)group_count == db_size(pcg->db));
 
 		// Check if all commands and permissions exist
 		iter = db_iterator(pcg->db);

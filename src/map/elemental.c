@@ -499,7 +499,7 @@ static int elemental_action(struct elemental_data *ed, struct block_list *bl, in
 		struct map_session_data *sd = BL_CAST(BL_PC, battle->get_master(&ed->bl));
 		if( sd ){
 			if( sd->skill_id_old != SO_EL_ACTION && //regardless of remaining HP/SP it can be cast
-				(status_get_hp(&ed->bl) < req.hp || status_get_sp(&ed->bl) < req.sp) )
+				(status_get_hp(&ed->bl) < (unsigned int)req.hp || status_get_sp(&ed->bl) < (unsigned int)req.sp) )
 				return 1;
 			else
 				status_zap(&ed->bl, req.hp, req.sp);
@@ -738,7 +738,7 @@ static int elemental_ai_sub_timer(struct elemental_data *ed, struct map_session_
 
 	// Check if caster can sustain the summoned elemental
 	if( DIFF_TICK(tick,ed->last_spdrain_time) >= 10000 ){// Drain SP every 10 seconds
-		int sp = 5;
+		unsigned int sp = 5;
 
 		switch (ed->vd->class) {
 			case ELEID_EL_AGNI_M:

@@ -1559,7 +1559,7 @@ static void intif_parse_ChangeNameOk(int fd)
 {
 	struct map_session_data *sd = NULL;
 	if((sd=map->id2sd(RFIFOL(fd,2)))==NULL ||
-		sd->status.char_id != RFIFOL(fd,6))
+		sd->status.char_id != RFIFOSL(fd,6))
 		return;
 
 	switch (RFIFOB(fd,10)) {
@@ -2548,7 +2548,6 @@ static void intif_parse_RequestRodexOpenInbox(int fd)
 #if PACKETVER >= 20170419
 	int64 mail_id = RFIFOQ(fd, 16);
 #endif
-	int i, j;
 
 	sd = map->charid2sd(RFIFOL(fd, 4));
 
@@ -2565,7 +2564,7 @@ static void intif_parse_RequestRodexOpenInbox(int fd)
 	else
 		sd->rodex.total += count;
 
-	if (RFIFOW(fd, 2) - 24 != count * sizeof(struct rodex_message)) {
+	if (RFIFOW(fd, 2) - 24 != count * (int)sizeof(struct rodex_message)) {
 		ShowError("intif_parse_RodexInboxOpenReceived: data size mismatch %d != %"PRIuS"\n", RFIFOW(fd, 2) - 24, count * sizeof(struct rodex_message));
 		return;
 	}
@@ -2573,7 +2572,7 @@ static void intif_parse_RequestRodexOpenInbox(int fd)
 	if (flag == 0 && is_first)
 		VECTOR_CLEAR(sd->rodex.messages);
 
-	for (i = 0, j = 24; i < count; ++i, j += sizeof(struct rodex_message)) {
+	for (int i = 0, j = 24; i < count; ++i, j += sizeof(struct rodex_message)) {
 		struct rodex_message msg = { 0 };
 		VECTOR_ENSURE(sd->rodex.messages, 1, 1);
 		memcpy(&msg, RFIFOP(fd, j), sizeof(struct rodex_message));

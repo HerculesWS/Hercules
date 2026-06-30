@@ -78,7 +78,7 @@ BHEAP_STRUCT_DECL(node_heap, struct path_node *);
 static const unsigned char walk_choices [3][3] =
 {
 	{1,0,7},
-	{2,-1,6},
+	{2,UINT8_MAX,6},
 	{3,4,5},
 };
 

@@ -2223,7 +2223,7 @@ static void mob_item_drop(struct mob_data *md, struct item_drop_list *dlist, str
 	if( sd == NULL ) sd = map->charid2sd(dlist->third_charid);
 
 	if( sd
-		&& (drop_rate <= sd->state.autoloot || pc->isautolooting(sd, ditem->item_data.nameid))
+		&& ((unsigned int)drop_rate <= sd->state.autoloot || pc->isautolooting(sd, ditem->item_data.nameid))
 		&& (!map->list[sd->bl.m].flag.noautoloot)
 		&& (battle_config.idle_no_autoloot == 0 || DIFF_TICK(sockt->last_tick, sd->idletime) < battle_config.idle_no_autoloot)
 		&& (battle_config.homunculus_autoloot?1:!flag)
@@ -2302,7 +2302,8 @@ static int mob_respawn(int tid, int64 tick, int id, intptr_t data)
 
 static void mob_log_damage(struct mob_data *md, struct block_list *src, int damage)
 {
-	int char_id = 0, flag = MDLF_NORMAL;
+	int char_id = 0;
+	unsigned int flag = MDLF_NORMAL;
 
 	nullpo_retv(md);
 	nullpo_retv(src);
@@ -3496,7 +3497,7 @@ static struct block_list *mob_getmasterhpltmaxrate(struct mob_data *md, int rate
 {
 	if( md && md->master_id > 0 ) {
 		struct block_list *bl = map->id2bl(md->master_id);
-		if( bl && get_percentage(status_get_hp(bl), status_get_max_hp(bl)) < rate )
+		if( bl && get_percentage(status_get_hp(bl), status_get_max_hp(bl)) < (unsigned int)rate )
 			return bl;
 	}
 

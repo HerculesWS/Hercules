@@ -5505,7 +5505,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 			}
 		}
 		if (sscanf(params, "%d", &state) == 1) {
-			if (state != map->list[m].flag.nostorage) {
+			if ((unsigned int)state != map->list[m].flag.nostorage) {
 				sprintf(rflag, "nostorage\t%d", state);
 				map_zone_mf_cache_add(m, rflag);
 			}
@@ -5518,7 +5518,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 			}
 		}
 		if (sscanf(params, "%d", &state) == 1) {
-			if (state != map->list[m].flag.nogstorage) {
+			if ((unsigned int)state != map->list[m].flag.nogstorage) {
 				sprintf(rflag, "nogstorage\t%d", state);
 				map_zone_mf_cache_add(m, rflag);
 			}
@@ -5681,7 +5681,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 			}
 		}
 		if (sscanf(params, "%d", &state) == 1) {
-			if (state != map->list[m].invincible_time_inc) {
+			if ((unsigned int)state != map->list[m].invincible_time_inc) {
 				sprintf(rflag, "invincible_time_inc\t%s", params);
 				map_zone_mf_cache_add(m, rflag);
 			}
@@ -5759,7 +5759,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 			}
 		}
 		if (sscanf(params, "%d", &state) == 1) {
-			if (state != map->list[m].flag.nopet) {
+			if ((unsigned int)state != map->list[m].flag.nopet) {
 				sprintf(rflag, "nopet\t%d", state);
 				map_zone_mf_cache_add(m, rflag);
 			}
@@ -5797,10 +5797,9 @@ static void map_zone_apply(int m, struct map_zone_data *zone, const char *start,
 	map->list[m].zone = zone;
 	for(i = 0; i < zone->mapflags_count; i++) {
 		size_t len = strlen(zone->mapflags[i]);
-		int k;
 		params[0] = '\0';
 		memcpy(flag, zone->mapflags[i], MAP_ZONE_MAPFLAG_LENGTH);
-		for(k = 0; k < len; k++) {
+		for(size_t k = 0; k < len; k++) {
 			if( flag[k] == '\t' ) {
 				memcpy(params, &flag[k+1], len - k);
 				flag[k] = '\0';
@@ -5820,7 +5819,7 @@ static void map_zone_init(void)
 	char flag[MAP_ZONE_MAPFLAG_LENGTH], params[MAP_ZONE_MAPFLAG_LENGTH];
 	struct map_zone_data *zone;
 	const char *empty = "";
-	int i,k,j;
+	int i,j;
 
 	zone = &map->zone_all;
 
@@ -5828,7 +5827,7 @@ static void map_zone_init(void)
 		size_t len = strlen(zone->mapflags[i]);
 		params[0] = '\0';
 		memcpy(flag, zone->mapflags[i], MAP_ZONE_MAPFLAG_LENGTH);
-		for(k = 0; k < len; k++) {
+		for(size_t k = 0; k < len; k++) {
 			if( flag[k] == '\t' ) {
 				memcpy(params, &flag[k+1], len - k);
 				flag[k] = '\0';
@@ -5851,7 +5850,7 @@ static void map_zone_init(void)
 			size_t len = strlen(zone->mapflags[i]);
 			params[0] = '\0';
 			memcpy(flag, zone->mapflags[i], MAP_ZONE_MAPFLAG_LENGTH);
-			for(k = 0; k < len; k++) {
+			for(size_t k = 0; k < len; k++) {
 				if( flag[k] == '\t' ) {
 					memcpy(params, &flag[k+1], len - k);
 					flag[k] = '\0';

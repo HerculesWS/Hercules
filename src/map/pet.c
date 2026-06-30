@@ -153,7 +153,7 @@ static void pet_set_intimate(struct pet_data *pd, int value)
 		int i;
 
 		ARR_FIND(0, sd->status.inventorySize, i, sd->status.inventory[i].card[0] == CARD0_PET
-			 && pd->pet.pet_id == MakeDWord(sd->status.inventory[i].card[1], sd->status.inventory[i].card[2]));
+			 && pd->pet.pet_id == (int)MakeDWord(sd->status.inventory[i].card[1], sd->status.inventory[i].card[2]));
 
 		if (i != sd->status.inventorySize)
 			pc->delitem(sd, i, 1, 0, DELITEM_NORMAL, LOG_TYPE_EGG);
@@ -459,7 +459,7 @@ static int pet_return_egg(struct map_session_data *sd, struct pet_data *pd)
 
 	// Pet Evolution
 	ARR_FIND(0, sd->status.inventorySize, i, sd->status.inventory[i].card[0] == CARD0_PET &&
-			pd->pet.pet_id == MakeDWord(sd->status.inventory[i].card[1], sd->status.inventory[i].card[2]));
+			pd->pet.pet_id == (int)MakeDWord(sd->status.inventory[i].card[1], sd->status.inventory[i].card[2]));
 
 	if (i != sd->status.inventorySize) {
 		sd->status.inventory[i].attribute &= ~ATTR_BROKEN;
@@ -650,7 +650,7 @@ static int pet_recv_petdata(int account_id, struct s_pet *p, int flag)
 		int i;
 		// Get Egg Index
 		ARR_FIND(0, sd->status.inventorySize, i, sd->status.inventory[i].card[0] == CARD0_PET &&
-			p->pet_id == MakeDWord(sd->status.inventory[i].card[1], sd->status.inventory[i].card[2]));
+			p->pet_id == (int)MakeDWord(sd->status.inventory[i].card[1], sd->status.inventory[i].card[2]));
 
 		if(i == sd->status.inventorySize) {
 			ShowError("pet_recv_petdata: Hatching pet (%d:%s) aborted, couldn't find egg in inventory for removal!\n",p->pet_id, p->name);
@@ -1126,7 +1126,7 @@ static int pet_ai_sub_hard(struct pet_data *pd, struct map_session_data *sd, int
 		return 0;
 	}
 
-	if (pd->status.speed != pd->petDB->speed) { // Reset speed to normal.
+	if (pd->status.speed != (uint32)pd->petDB->speed) { // Reset speed to normal.
 		if (pd->ud.walktimer != INVALID_TIMER)
 			return 0; // Wait until the pet finishes walking back to master.
 
@@ -1346,7 +1346,7 @@ static int pet_skill_bonus_timer(int tid, int64 tick, int id, intptr_t data)
 		return 1;
 	}
 
-	int bonus;
+	unsigned int bonus;
 	int duration;
 
 	// Determine the time for the next timer.

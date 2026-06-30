@@ -1703,7 +1703,7 @@ static void npc_market_fromsql(void)
 			continue;
 		}
 
-		int i;
+		unsigned int i;
 		for (i = 0; i < nd->u.scr.shop->items; i++) {
 			if( nd->u.scr.shop->item[i].nameid == itemid ) {
 				nd->u.scr.shop->item[i].qty = amount;
@@ -1725,7 +1725,7 @@ static void npc_market_fromsql(void)
 static void npc_market_tosql(struct npc_data *nd, int index)
 {
 	nullpo_retv(nd);
-	Assert_retv(index >= 0 && index < nd->u.scr.shop->items);
+	Assert_retv(index >= 0 && (unsigned int)index < nd->u.scr.shop->items);
 	if (SQL_ERROR == SQL->Query(map->mysql_handle, "REPLACE INTO `%s` VALUES ('%s','%d','%d')",
 		map->npc_market_data_db, nd->exname, nd->u.scr.shop->item[index].nameid, nd->u.scr.shop->item[index].qty))
 		Sql_ShowDebug(map->mysql_handle);
@@ -1750,7 +1750,7 @@ static void npc_market_delfromsql_sub(const char *npcname, int index)
 static void npc_market_delfromsql(struct npc_data *nd, int index)
 {
 	nullpo_retv(nd);
-	Assert_retv(index == INT_MAX || (index >= 0 && index < nd->u.scr.shop->items));
+	Assert_retv(index == INT_MAX || (index >= 0 && (unsigned int)index < nd->u.scr.shop->items));
 	npc->market_delfromsql_sub(nd->exname, index == INT_MAX ? index : nd->u.scr.shop->item[index].nameid);
 }
 
@@ -1793,10 +1793,10 @@ static void npc_barter_fromsql(void)
 			continue;
 		}
 
-		int i;
+		unsigned int i;
 		for (i = 0; i < nd->u.scr.shop->items; i++) {
 			struct npc_item_list *const item = &nd->u.scr.shop->item[i];
-			if (item->nameid == itemid && item->value == removeId && item->value2 == removeAmount) {
+			if (item->nameid == itemid && item->value == (unsigned int)removeId && item->value2 == removeAmount) {
 				item->qty = amount;
 				break;
 			}
@@ -1817,7 +1817,7 @@ static void npc_barter_fromsql(void)
 static void npc_barter_tosql(struct npc_data *nd, int index)
 {
 	nullpo_retv(nd);
-	Assert_retv(index >= 0 && index < nd->u.scr.shop->items);
+	Assert_retv(index >= 0 && (unsigned int)index < nd->u.scr.shop->items);
 	const struct npc_item_list *const item = &nd->u.scr.shop->item[index];
 	if (item->qty == -1)
 		return;
@@ -1853,7 +1853,7 @@ static void npc_barter_delfromsql(struct npc_data *nd, int index)
 	if (index == INT_MAX) {
 		npc->barter_delfromsql_sub(nd->exname, INT_MAX, 0, 0);
 	} else {
-		Assert_retv(index >= 0 && index < nd->u.scr.shop->items);
+		Assert_retv(index >= 0 && (unsigned int)index < nd->u.scr.shop->items);
 		const struct npc_item_list *const item = &nd->u.scr.shop->item[index];
 		npc->barter_delfromsql_sub(nd->exname, item->nameid, item->value, item->value2);
 	}
@@ -1912,10 +1912,10 @@ static void npc_expanded_barter_fromsql(void)
 			continue;
 		}
 
-		int i;
+		unsigned int i;
 		for (i = 0; i < nd->u.scr.shop->items; i++) {
 			struct npc_item_list *const item = &nd->u.scr.shop->item[i];
-			if (item->nameid == itemid && item->value == zeny) {
+			if (item->nameid == itemid && item->value == (unsigned int)zeny) {
 				int count = nd->u.scr.shop->item[i].value2;
 				if (count > 10)
 					count = 10;
@@ -1952,7 +1952,7 @@ static void npc_expanded_barter_fromsql(void)
 static void npc_expanded_barter_tosql(struct npc_data *nd, int index)
 {
 	nullpo_retv(nd);
-	Assert_retv(index >= 0 && index < nd->u.scr.shop->items);
+	Assert_retv(index >= 0 && (unsigned int)index < nd->u.scr.shop->items);
 	const struct npc_item_list *const item = &nd->u.scr.shop->item[index];
 	if (item->qty == -1)
 		return;
@@ -2028,7 +2028,7 @@ static void npc_expanded_barter_delfromsql(struct npc_data *nd, int index)
 	if (index == INT_MAX) {
 		npc->expanded_barter_delfromsql_sub(nd->exname, INT_MAX, 0, 0, NULL);
 	} else {
-		Assert_retv(index >= 0 && index < nd->u.scr.shop->items);
+		Assert_retv(index >= 0 && (unsigned int)index < nd->u.scr.shop->items);
 		const struct npc_item_list *const item = &nd->u.scr.shop->item[index];
 		npc->expanded_barter_delfromsql_sub(nd->exname, item->nameid, item->value, item->value2, &item->currency[0]);
 	}
@@ -2050,7 +2050,7 @@ static bool npc_trader_open(struct map_session_data *sd, struct npc_data *nd)
 			clif->npcbuysell(sd,nd->bl.id);
 			return true;/* we skip sd->npc_shopid, npc->buysell will set it then when the player selects */
 		case NST_MARKET: {
-				int i;
+				unsigned int i;
 
 				for(i = 0; i < nd->u.scr.shop->items; i++) {
 					if( nd->u.scr.shop->item[i].qty )
@@ -2565,7 +2565,7 @@ static int npc_barter_buylist(struct map_session_data *sd, struct barteritemlist
 			return 13;  // no such item in shop
 		if (entry->addId != shop[j].nameid && entry->addId != itemdb_viewid(shop[j].nameid))
 			return 13;  // no such item in shop
-		if (removeId != shop[j].value && removeId != itemdb_viewid(shop[j].value))
+		if ((unsigned int)removeId != shop[j].value && removeId != itemdb_viewid(shop[j].value))
 			return 13;  // no such item in shop
 		entry->addId = shop[j].nameid;  // item_avail replacement
 		removeId = shop[j].value;  // item_avail replacement
@@ -3207,7 +3207,7 @@ static int npc_unload(struct npc_data *nd, bool single, bool unload_mobs)
 
 			if (nd->u.scr.shop != NULL) {
 				if (nd->u.scr.shop->item != NULL) {
-					for (int i = 0; i < nd->u.scr.shop->items; i ++) {
+					for (unsigned int i = 0; i < nd->u.scr.shop->items; i ++) {
 						if (nd->u.scr.shop->item[i].currency != NULL)
 							aFree(nd->u.scr.shop->item[i].currency);
 					}
@@ -3649,7 +3649,7 @@ static const char *npc_parse_shop(const char *w1, const char *w2, const char *w3
 	size_t items_count = 40; // Starting items size
 
 	const char *p;
-	int x, y, dir, m, i, class_;
+	int x, y, dir, m, class_;
 	struct npc_data *nd;
 	enum npc_subtype type;
 
@@ -3692,6 +3692,8 @@ static const char *npc_parse_shop(const char *w1, const char *w2, const char *w3
 	items = aMalloc(sizeof(items[0])*items_count);
 
 	p = strchr(w4,',');
+	unsigned int i = 0;
+
 	for( i = 0; p; ++i ) {
 		int nameid, value;
 		struct item_data* id;

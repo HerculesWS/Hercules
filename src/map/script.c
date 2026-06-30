@@ -441,7 +441,7 @@ static unsigned int calc_hash_ci(const char *p)
 /// Looks up string using the provided id.
 static const char *script_get_str(int id)
 {
-	Assert_retr(NULL, id >= LABEL_START && id < script->str_size);
+	Assert_retr(NULL, id >= LABEL_START && (size_t)id < script->str_size);
 	return script->str_buf+script->str_data[id].str;
 }
 
@@ -613,7 +613,7 @@ static int script_add_str(const char *p)
 	len=(int)strlen(p);
 
 	// grow string buffer if neccessary
-	while( script->str_pos+len+1 >= script->str_size ) {
+	while ((size_t)(script->str_pos+len+1) >= script->str_size) {
 		script->str_size += 10240;
 		RECREATE(script->str_buf,char,script->str_size);
 		memset(script->str_buf + (script->str_size - 10240), '\0', 10240);
@@ -8127,7 +8127,6 @@ static BUILDIN(copyarray)
 	int32 idx2;
 	int32 id1;
 	int32 id2;
-	int32 i;
 	uint32 count;
 	struct map_session_data *sd = NULL;
 
@@ -8166,21 +8165,21 @@ static BUILDIN(copyarray)
 	}
 
 	count = script_getnum(st, 4);
-	if( count > SCRIPT_MAX_ARRAYSIZE - idx1 )
+	if( count > (uint32)(SCRIPT_MAX_ARRAYSIZE - idx1))
 		count = SCRIPT_MAX_ARRAYSIZE - idx1;
 	if( count <= 0 || (idx1 == idx2 && is_same_reference(data1, data2)) )
 		return true;// nothing to copy
 
 	if( is_same_reference(data1, data2) && idx1 > idx2 ) {
 		// destination might be overlapping the source - copy in reverse order
-		for( i = count - 1; i >= 0; --i ) {
+		for (int i = count - 1; i >= 0; --i) {
 			const void *value = script->get_val2(st, reference_uid(id2, idx2 + i), reference_getref(data2));
 			script->set_reg(st, sd, reference_uid(id1, idx1 + i), name1, value, reference_getref(data1));
 			script_removetop(st, -1, 0);
 		}
 	} else {
 		// normal copy
-		for( i = 0; i < count; ++i ) {
+		for (uint32 i = 0; i < count; ++i) {
 			if( idx2 + i < SCRIPT_MAX_ARRAYSIZE ) {
 				const void *value = script->get_val2(st, reference_uid(id2, idx2 + i), reference_getref(data2));
 				script->set_reg(st, sd, reference_uid(id1, idx1 + i), name1, value, reference_getref(data1));
@@ -11976,7 +11975,7 @@ static BUILDIN(gettimestr)
 		return false;
 	}
 
-	if (maxlen >= sizeof(tmpstr)) {
+	if ((size_t)maxlen >= sizeof(tmpstr)) {
 		ShowWarning("buildin_gettimestr: Length value is too big %d, max allowed %lu.\n", maxlen, sizeof(tmpstr) - 1);
 		return false;
 	}
@@ -14595,7 +14594,7 @@ static BUILDIN(warpwaitingpc)
 
 		if (cd->zeny) {
 			// fee set
-			if ((uint32)sd->status.zeny < cd->zeny) {
+			if (sd->status.zeny < cd->zeny) {
 				// no zeny to cover set fee
 				break;
 			}
@@ -19155,7 +19154,7 @@ static BUILDIN(setchar)
 	int index = script_getnum(st,4);
 	char *output = aStrdup(str);
 
-	if(index >= 0 && index < strlen(output))
+	if(index >= 0 && (size_t)index < strlen(output))
 		output[index] = *c;
 
 	script_pushstr(st, output);
@@ -19175,7 +19174,7 @@ static BUILDIN(insertchar)
 
 	if(index < 0)
 		index = 0;
-	else if(index > len)
+	else if((size_t)index > len)
 		index = (int)len;
 
 	output = (char*)aMalloc(len + 2);
@@ -19199,7 +19198,7 @@ static BUILDIN(delchar)
 	char *output;
 	size_t len = strlen(str);
 
-	if(index < 0 || index > len) {
+	if(index < 0 || (size_t)index > len) {
 		//return original
 		output = aStrdup(str);
 		script_pushstr(st, output);
@@ -19263,7 +19262,7 @@ static BUILDIN(substr)
 
 	int len = 0;
 
-	if(start >= 0 && end < strlen(str) && start <= end) {
+	if(start >= 0 && (size_t)end < strlen(str) && start <= end) {
 		len = end - start + 1;
 		output = (char*)aMalloc(len + 1);
 		memcpy(output, &str[start], len);
@@ -19349,7 +19348,7 @@ static BUILDIN(implode)
 {
 	struct script_data* data = script_getdata(st, 2);
 	const char *name;
-	uint32 array_size, id;
+	int array_size, id;
 
 	struct map_session_data *sd = NULL;
 
@@ -19590,7 +19589,7 @@ static BUILDIN(strpos)
 	}
 
 	len = strlen(haystack);
-	for ( ; i < len; ++i ) {
+	for (; (size_t)i < len; ++i) { // FIXME: i can be passed as negative value which isn't handled
 		if ( haystack[i] == *needle ) {
 			// matched starting char -- loop through remaining chars
 			const char *h, *n;
@@ -19629,7 +19628,7 @@ static BUILDIN(replacestr)
 
 	int count = 0;
 	int numFinds = 0;
-	int i = 0, f = 0;
+	size_t i = 0, f = 0;
 
 	if(findlen == 0) {
 		ShowError("script:replacestr: Invalid search length.\n");
@@ -19709,7 +19708,7 @@ static BUILDIN(countstr)
 	bool usecase = true;
 
 	int numFinds = 0;
-	int i = 0, f = 0;
+	size_t i = 0, f = 0;
 
 	if(findlen == 0) {
 		ShowError("script:countstr: Invalid search length.\n");
@@ -20064,7 +20063,7 @@ static int buildin_query_sql_sub(struct script_state *st, struct Sql *handle)
 	const char* query;
 	struct script_data* data;
 	const char* name;
-	unsigned int max_rows = SCRIPT_MAX_ARRAYSIZE; // maximum number of rows
+	int max_rows = SCRIPT_MAX_ARRAYSIZE; // maximum number of rows
 	int num_vars;
 	int num_cols;
 
@@ -20128,8 +20127,8 @@ static int buildin_query_sql_sub(struct script_state *st, struct Sql *handle)
 				script->setd_sub(st, sd, name, i, (void *)h64BPTRSIZE((str?atoi(str):0)), reference_getref(data));
 		}
 	}
-	if( i == max_rows && max_rows < SQL->NumRows(handle) ) {
-		ShowWarning("script:query_sql: Only %u/%u rows have been stored.\n", max_rows, (unsigned int)SQL->NumRows(handle));
+	if( i == max_rows && (unsigned int)max_rows < SQL->NumRows(handle) ) {
+		ShowWarning("script:query_sql: Only %d/%u rows have been stored.\n", max_rows, (unsigned int)SQL->NumRows(handle));
 		script->reportsrc(st);
 	}
 
@@ -20316,7 +20315,7 @@ static BUILDIN(npcshopdelitem)
 
 	// remove specified items from the shop item list
 	for (i = 3; i < 3 + amount; i++) {
-		unsigned int nameid = script_getnum(st,i);
+		int nameid = script_getnum(st,i);
 
 		ARR_FIND(0, size, n, nd->u.shop.shop_item[n].nameid == nameid);
 		if (n == size) {
@@ -25588,7 +25587,7 @@ static BUILDIN(npcskill)
 	struct npc_data *nd;
 	uint16 skill_id             = script_isstringtype(st, 2) ? skill->name2id(script_getstr(st, 2)) : script_getnum(st, 2);
 	unsigned short skill_level  = script_getnum(st, 3);
-	unsigned int stat_point     = script_getnum(st, 4);
+	int stat_point              = script_getnum(st, 4);
 	unsigned int npc_level      = script_getnum(st, 5);
 	struct map_session_data *sd = script->rid2sd(st);
 
@@ -25596,6 +25595,11 @@ static BUILDIN(npcskill)
 		return true;
 
 	nd = map->id2nd(sd->npc_id);
+
+	if (stat_point < 0) {
+		ShowError("npcskill: negative stat point given (%d)\n", stat_point);
+		return false;
+	}
 
 	if (stat_point > battle_config.max_third_parameter) {
 		ShowError("npcskill: stat point exceeded maximum of %d.\n",battle_config.max_third_parameter );
@@ -26551,7 +26555,7 @@ static BUILDIN(endsellitem)
 
 	int newIndex = nd->u.scr.shop->shop_last_index;
 	const struct npc_item_list *const newItem = &nd->u.scr.shop->item[newIndex];
-	int i = 0;
+	unsigned int i = 0;
 	for (i = 0; i < nd->u.scr.shop->items - 1; i++) {
 		const struct npc_item_list *const item = &nd->u.scr.shop->item[i];
 		if (item->nameid != newItem->nameid || item->value != newItem->value)
@@ -26600,10 +26604,11 @@ static BUILDIN(sellitem)
 {
 	struct npc_data *nd;
 	struct item_data *it;
-	int i = 0, id = script_getnum(st,2);
+	int id = script_getnum(st,2);
 	int value = 0;
 	int value2 = 0;
 	int qty = 0;
+	unsigned int i = 0;
 
 	if( !(nd = map->id2nd(st->oid)) ) {
 		ShowWarning("buildin_sellitem: trying to run without a proper NPC!\n");
@@ -26646,14 +26651,14 @@ static BUILDIN(sellitem)
 		if (nd->u.scr.shop->type == NST_BARTER) {
 			for (i = 0; i < nd->u.scr.shop->items; i++) {
 				const struct npc_item_list *const item = &nd->u.scr.shop->item[i];
-				if (item->nameid == id && item->value == value && item->value2 == value2) {
+				if (item->nameid == id && item->value == (unsigned int)value && item->value2 == value2) {
 					break;
 				}
 			}
 		} else if (nd->u.scr.shop->type == NST_EXPANDED_BARTER) {
 			for (i = 0; i < nd->u.scr.shop->items; i++) {
 				const struct npc_item_list *const item = &nd->u.scr.shop->item[i];
-				if (item->nameid != id || item->value != value)
+				if (item->nameid != id || item->value != (unsigned int)value)
 					continue;
 				if (item->value2 != (script_lastdata(st) - 4) / 3)
 					continue;
@@ -26755,9 +26760,10 @@ static BUILDIN(startsellitem)
 {
 	struct npc_data *nd;
 	struct item_data *it;
-	int i = 0, id = script_getnum(st,2);
+	int id = script_getnum(st,2);
 	int value2 = 0;
 	int qty = 0;
+	unsigned int i = 0;
 
 	if (!(nd = map->id2nd(st->oid))) {
 		ShowWarning("buildin_startsellitem: trying to run without a proper NPC!\n");
@@ -26819,7 +26825,8 @@ static BUILDIN(startsellitem)
 static BUILDIN(stopselling)
 {
 	struct npc_data *nd;
-	int i, id = script_getnum(st, 2);
+	int id = script_getnum(st, 2);
+	unsigned int i = 0;
 
 	if (!(nd = map->id2nd(st->oid)) || !nd->u.scr.shop) {
 		ShowWarning("buildin_stopselling: trying to run without a proper NPC!\n");
@@ -26835,7 +26842,7 @@ static BUILDIN(stopselling)
 		const int amount2 = script_getnum(st, 4);
 		for (i = 0; i < nd->u.scr.shop->items; i++) {
 			const struct npc_item_list *const item = &nd->u.scr.shop->item[i];
-			if (item->nameid == id && item->value == id2 && item->value2 == amount2) {
+			if (item->nameid == id && item->value == (unsigned int)id2 && item->value2 == amount2) {
 				break;
 			}
 		}
@@ -26847,7 +26854,7 @@ static BUILDIN(stopselling)
 		const int price = script_getnum(st, 3);
 		for (i = 0; i < nd->u.scr.shop->items; i++) {
 			const struct npc_item_list *const item = &nd->u.scr.shop->item[i];
-			if (item->nameid == id && item->value == price) {
+			if (item->nameid == id && item->value == (unsigned int)price) {
 				break;
 			}
 		}
@@ -26860,7 +26867,7 @@ static BUILDIN(stopselling)
 	}
 
 	if (i != nd->u.scr.shop->items) {
-		int cursor;
+		unsigned int cursor;
 
 		if (nd->u.scr.shop->type == NST_MARKET)
 			npc->market_delfromsql(nd, i);
@@ -26949,8 +26956,7 @@ static BUILDIN(tradertype)
 	if( !nd->u.scr.shop )
 		npc->trader_update(nd->src_id?nd->src_id:nd->bl.id);
 	else {/* clear list */
-		int i;
-		for( i = 0; i < nd->u.scr.shop->items; i++ ) {
+		for (unsigned int i = 0; i < nd->u.scr.shop->items; ++i) {
 			nd->u.scr.shop->item[i].nameid = 0;
 			nd->u.scr.shop->item[i].value  = 0;
 			nd->u.scr.shop->item[i].qty    = 0;
@@ -27025,7 +27031,7 @@ static BUILDIN(shopcount)
 		return false;
 	}
 
-	int i;
+	unsigned int i;
 	/* lookup */
 	for (i = 0; i < nd->u.scr.shop->items; i++) {
 		if( nd->u.scr.shop->item[i].nameid == id ) {

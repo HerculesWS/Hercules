@@ -3536,10 +3536,10 @@ static void clif_guild_xy_remove(struct map_session_data *sd)
 
 	nullpo_retv(sd);
 
-	WBUFW(buf,0)=0x1eb;
-	WBUFL(buf,2)=sd->status.account_id;
-	WBUFW(buf,6)=-1;
-	WBUFW(buf,8)=-1;
+	WBUFW(buf,0) = 0x1eb;
+	WBUFL(buf,2) = sd->status.account_id;
+	WBUFW(buf,6) = 0xFFFF;
+	WBUFW(buf,8) = 0xFFFF;
 	clif->send(buf,packet_len(0x1eb),&sd->bl,GUILD_SAMEMAP_WOS);
 }
 
@@ -5921,7 +5921,9 @@ static void clif_skill_cooldown(struct map_session_data *sd, uint16 skill_id, un
 /// Skill attack effect and damage.
 /// 0114 <skill id>.W <src id>.L <dst id>.L <tick>.L <src delay>.L <dst delay>.L <damage>.W <level>.W <div>.W <type>.B (ZC_NOTIFY_SKILL)
 /// 01de <skill id>.W <src id>.L <dst id>.L <tick>.L <src delay>.L <dst delay>.L <damage>.L <level>.W <div>.W <type>.B (ZC_NOTIFY_SKILL2)
-static int clif_skill_damage(struct block_list *src, struct block_list *dst, int64 tick, int sdelay, int ddelay, int64 in_damage, int div, uint16 skill_id, uint16 skill_lv, enum battle_dmg_type type)
+///
+/// @param skill_lv level of the skill used, accept magic values like -1, -2 which the client sometimes require it
+static int clif_skill_damage(struct block_list *src, struct block_list *dst, int64 tick, int sdelay, int ddelay, int64 in_damage, int div, uint16 skill_id, int skill_lv, enum battle_dmg_type type)
 {
 	nullpo_ret(src);
 	nullpo_ret(dst);
@@ -5957,7 +5959,7 @@ static int clif_skill_damage(struct block_list *src, struct block_list *dst, int
 	} else {
 		p.damage = damage;
 	}
-	p.level = skill_lv;
+	p.level = (int16)skill_lv;
 	p.count = div;
 	p.action = type;
 
@@ -8980,7 +8982,7 @@ static void clif_guild_message(struct guild *g, int account_id, const char *mes,
 	if (len == 0)
 		return;
 
-	if (len > sizeof(buf)-5) {
+	if ((size_t)len > sizeof(buf)-5) {
 		ShowWarning("clif_guild_message: Truncated message '%s' (len=%d, max=%"PRIuS", guild_id=%d).\n", mes, len, sizeof(buf)-5, g->guild_id);
 		len = sizeof(buf)-5;
 	}
@@ -10408,10 +10410,10 @@ static void clif_party_xy_remove(struct map_session_data *sd)
 {
 	unsigned char buf[16];
 	nullpo_retv(sd);
-	WBUFW(buf,0)=0x107;
-	WBUFL(buf,2)=sd->status.account_id;
-	WBUFW(buf,6)=-1;
-	WBUFW(buf,8)=-1;
+	WBUFW(buf,0) = 0x107;
+	WBUFL(buf,2) = sd->status.account_id;
+	WBUFW(buf,6) = 0xFFFF;
+	WBUFW(buf,8) = 0xFFFF;
 	clif->send(buf,packet_len(0x107),&sd->bl,PARTY_SAMEMAP_WOS);
 }
 
@@ -13377,7 +13379,7 @@ static void clif_parse_SelectCart(int fd, struct map_session_data *sd)
 #if PACKETVER >= 20150805 // RagexeRE
 	int type;
 
-	if (!sd || !pc->checkskill(sd, MC_CARTDECORATE) || RFIFOL(fd, 2) != sd->status.account_id)
+	if (!sd || !pc->checkskill(sd, MC_CARTDECORATE) || RFIFOSL(fd, 2) != sd->status.account_id)
 		return;
 
 	type = RFIFOB(fd, 6);
@@ -14144,7 +14146,7 @@ static void clif_parse_NpcStringInput(int fd, struct map_session_data *sd)
 	if (len < 9)
 		return;
 
-	npcid = (sd->state.using_megaphone == 0) ? RFIFOL(fd, 4) : sd->npc_id;
+	npcid = (sd->state.using_megaphone == 0) ? RFIFOSL(fd, 4) : sd->npc_id;
 	message = RFIFOP(fd, 8);
 
 	safestrncpy(sd->npc_str, message, min(message_len,CHATBOX_SIZE));
@@ -15684,24 +15686,26 @@ static bool clif_validate_emblem(const uint8 *emblem, unsigned long emblem_len)
 #endif // not NetBSD < 6 / Solaris
 	uint8 buf[1800]; // no well-formed emblem bitmap is larger than 1782 (24 bit) / 1654 (8 bit) bytes
 	unsigned long buf_len = sizeof(buf);
-	int header = 0, bitmap = 0, offbits = 0, palettesize = 0;
 
 	nullpo_retr(false, emblem);
 	if (grfio->decode_zip(buf, &buf_len, emblem, emblem_len) != 0
 	 || buf_len < BITMAPFILEHEADER_SIZE + BITMAPINFOHEADER_SIZE
-	 || buf_len > extraconf->emblems->max_bmp_guild_emblem_size
+	 || (int)buf_len > extraconf->emblems->max_bmp_guild_emblem_size
 	 || RBUFW(buf,0) != 0x4d42 // BITMAPFILEHEADER.bfType (signature)
 	 || RBUFL(buf,2) != buf_len // BITMAPFILEHEADER.bfSize (file size)
 	 || RBUFL(buf,14) != BITMAPINFOHEADER_SIZE // BITMAPINFOHEADER.biSize (other headers are not supported)
-	 || RBUFL(buf,18) != extraconf->emblems->guild_emblem_width // BITMAPINFOHEADER.biWidth
-	 || RBUFL(buf,22) != extraconf->emblems->guild_emblem_height // BITMAPINFOHEADER.biHeight (top-down bitmaps (-24) are not supported)
+	 || RBUFSL(buf,18) != extraconf->emblems->guild_emblem_width // BITMAPINFOHEADER.biWidth
+	 || RBUFSL(buf,22) != extraconf->emblems->guild_emblem_height // BITMAPINFOHEADER.biHeight (top-down bitmaps (-24) are not supported)
 	 || RBUFL(buf,30) != 0 // BITMAPINFOHEADER.biCompression == BI_RGB (compression not supported)
 	 ) {
 		// Invalid data
 		return false;
 	}
 
-	offbits = RBUFL(buf,10); // BITMAPFILEHEADER.bfOffBits (offset to bitmap bits)
+	uint32 offbits = RBUFL(buf,10); // BITMAPFILEHEADER.bfOffBits (offset to bitmap bits)
+	size_t bitmap = 0;
+	uint32 header = 0;
+	uint32 palettesize = 0;
 
 	switch( RBUFW(buf,28) ) { // BITMAPINFOHEADER.biBitCount
 		case 8:
@@ -16197,7 +16201,7 @@ static void clif_parse_pet_evolution(int fd, struct map_session_data *sd)
 	int inv_index;
 
 	ARR_FIND(0, sd->status.inventorySize, inv_index, sd->status.inventory[inv_index].card[0] == CARD0_PET
-		 && sd->status.pet_id == MakeDWord(sd->status.inventory[inv_index].card[1],
+		 && sd->status.pet_id == (int)MakeDWord(sd->status.inventory[inv_index].card[1],
 						   sd->status.inventory[inv_index].card[2]));
 
 	if (inv_index == sd->status.inventorySize) { // No pet egg.
@@ -16227,7 +16231,7 @@ static void clif_parse_pet_evolution(int fd, struct map_session_data *sd)
 	for (int i = 0; i < VECTOR_LENGTH(pet->db[pet_index].evolve_data); i++) {
 		struct pet_evolve_data *ped = &VECTOR_INDEX(pet->db[pet_index].evolve_data, i);
 
-		if (ped->petEggId == p->EvolvedPetEggID) {
+		if (ped->petEggId == (int32)p->EvolvedPetEggID) {
 			if (VECTOR_LENGTH(ped->items) == 0) {
 				clif->petEvolutionResult(fd, PET_EVOL_NO_RECIPE);
 				return;
@@ -17582,9 +17586,9 @@ static void clif_parse_HomAttack(int fd, struct map_session_data *sd)
 	struct block_list *bl = NULL;
 	const struct PACKET_CZ_REQUEST_ACTNPC *p = RP2PTR(fd);
 
-	if (homun_alive(sd->hd) && sd->hd->bl.id == p->GID)
+	if (homun_alive(sd->hd) && sd->hd->bl.id == (int32)p->GID)
 		bl = &sd->hd->bl;
-	else if (sd->md && sd->md->bl.id == p->GID)
+	else if (sd->md && sd->md->bl.id == (int32)p->GID)
 		bl = &sd->md->bl;
 	else
 		return;
@@ -18726,7 +18730,7 @@ static void clif_parse_cashshop_buy(int fd, struct map_session_data *sd)
 		struct itemlist item_list = { 0 };
 		int i;
 
-		if (len < sizeof(struct PACKET_CZ_PC_BUY_CASH_POINT_ITEM)) {
+		if ((size_t)len < sizeof(struct PACKET_CZ_PC_BUY_CASH_POINT_ITEM)) {
 			ShowWarning("Player %d sent incorrect cash shop buy packet (len %d)!\n", sd->status.char_id, len);
 			return;
 		}
@@ -19625,9 +19629,9 @@ static void clif_bg_xy_remove(struct map_session_data *sd)
 	WBUFW(buf,0)=0x2df;
 	WBUFL(buf,2)=sd->status.account_id;
 	memset(WBUFP(buf,6), 0, NAME_LENGTH);
-	WBUFW(buf,30)=0;
-	WBUFW(buf,32)=-1;
-	WBUFW(buf,34)=-1;
+	WBUFW(buf,30) = 0;
+	WBUFW(buf,32) = 0xFFFF;
+	WBUFW(buf,34) = 0xFFFF;
 
 	clif->send(buf, packet_len(0x2df), &sd->bl, BG_SAMEMAP_WOS);
 }
@@ -20119,7 +20123,7 @@ static void clif_parse_ReqOpenBuyingStore(int fd, struct map_session_data *sd)
 	packet_len = p->packetLength;
 
 	// TODO: Make this check global for all variable length packets.
-	if (packet_len < sizeof(struct PACKET_CZ_REQ_OPEN_BUYING_STORE))
+	if ((size_t)packet_len < sizeof(struct PACKET_CZ_REQ_OPEN_BUYING_STORE))
 	{// minimum packet length
 		ShowError("clif_parse_ReqOpenBuyingStore: Malformed packet (expected length=%u, length=%d, account_id=%d).\n", (uint32)sizeof(struct PACKET_CZ_REQ_OPEN_BUYING_STORE), packet_len, sd->bl.id);
 		return;
@@ -20326,7 +20330,7 @@ static void clif_parse_ReqTradeBuyingStore(int fd, struct map_session_data *sd)
 	const struct PACKET_CZ_REQ_TRADE_BUYING_STORE *p = RFIFOP(fd, 0);
 	packet_len = p->packetLength;
 
-	if (packet_len < sizeof(struct PACKET_CZ_REQ_TRADE_BUYING_STORE))
+	if ((size_t)packet_len < sizeof(struct PACKET_CZ_REQ_TRADE_BUYING_STORE))
 	{// minimum packet length
 		ShowError("clif_parse_ReqTradeBuyingStore: Malformed packet (expected length=%u, length=%d, account_id=%d).\n", (uint32)sizeof(struct PACKET_CZ_REQ_TRADE_BUYING_STORE), packet_len, sd->bl.id);
 		return;
@@ -20467,7 +20471,7 @@ static void clif_parse_SearchStoreInfo(int fd, struct map_session_data *sd)
 
 	packet_len = p->packetLength;
 
-	if (packet_len < sizeof(struct PACKET_CZ_SEARCH_STORE_INFO))
+	if ((size_t)packet_len < sizeof(struct PACKET_CZ_SEARCH_STORE_INFO))
 	{// minimum packet length
 		ShowError("clif_parse_SearchStoreInfo: Malformed packet (expected length=%u, length=%d, account_id=%d).\n", (uint32)sizeof(struct PACKET_CZ_SEARCH_STORE_INFO), packet_len, sd->bl.id);
 		return;
@@ -21317,7 +21321,7 @@ static void clif_parse_cashShopBuy(int fd, struct map_session_data *sd)
 		return;
 
 	unsigned short limit = RFIFOW(fd, 4);
-	unsigned int kafra_pay = RFIFOL(fd, 6); // [Ryuuzaki] - These are free cash points (strangely #CASH = main cash currently for us, confusing)
+	int kafra_pay = RFIFOSL(fd, 6); // [Ryuuzaki] - These are free cash points (strangely #CASH = main cash currently for us, confusing)
 	int count = (len - 10) / 10;
 	if (count != limit) {
 		ShowError("Wrong cash shop limit: %d\n", limit);
@@ -21340,7 +21344,7 @@ static void clif_parse_cashShopBuy(int fd, struct map_session_data *sd)
 		}
 		if(j < clif->cs.item_count[tab]) {
 			struct item_data *data;
-			if(sd->kafraPoints < kafra_pay) {
+			if(kafra_pay < 0 || sd->kafraPoints < kafra_pay) {
 				result = CSBR_SHORTTAGE_CASH;
 			} else if((sd->cashPoints+kafra_pay) < (clif->cs.data[tab][j]->price * qty)) {
 				result = CSBR_SHORTTAGE_CASH;
@@ -22266,7 +22270,11 @@ static void clif_parse_RouletteOpen(int fd, struct map_session_data *sd)
 	p.Serial = 0;
 	p.Step = sd->roulette.stage - 1;
 	p.Idx = (char)sd->roulette.prizeIdx;
-	p.AdditionItemID = -1; /** TODO **/
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+	p.AdditionItemID = 0xFFFFFFFF; /** TODO **/
+#else
+	p.AdditionItemID = 0xFFFF; /** TODO **/
+#endif
 	p.BronzePoint = pc_readglobalreg(sd, script->add_variable("TmpRouletteBronze"));
 	p.GoldPoint = pc_readglobalreg(sd, script->add_variable("TmpRouletteGold"));
 	p.SilverPoint = pc_readglobalreg(sd, script->add_variable("TmpRouletteSilver"));
@@ -22919,7 +22927,7 @@ static void clif_clan_message(struct clan *c, const char *mes, int len)
 #if PACKETVER >= 20120716
 	struct map_session_data *sd;
 	struct PACKET_ZC_NOTIFY_CLAN_CHAT *p;
-	unsigned int max_len = CHAT_SIZE_MAX - 5 - NAME_LENGTH;
+	int max_len = CHAT_SIZE_MAX - 5 - NAME_LENGTH;
 	int packet_length;
 
 	nullpo_retv(c);
@@ -22928,7 +22936,7 @@ static void clif_clan_message(struct clan *c, const char *mes, int len)
 	if (len == 0) {
 		return;
 	} else if (len > max_len) {
-		ShowWarning("clif_clan_message: Truncated message '%s' (len=%d, max=%u, clan_id=%d).\n", mes, len, max_len, c->clan_id);
+		ShowWarning("clif_clan_message: Truncated message '%s' (len=%d, max=%d, clan_id=%d).\n", mes, len, max_len, c->clan_id);
 		len = max_len;
 	}
 
@@ -23423,7 +23431,7 @@ static void clif_parse_rodex_send_mail(int fd, struct map_session_data *sd)
 	const struct PACKET_CZ_SEND_MAIL *rPacket = RFIFOP(fd, 0);
 	int8 result;
 
-	if (rPacket->TextcontentsLength + rPacket->Titlelength > rPacket->PacketLength - sizeof(*rPacket)) {
+	if (rPacket->TextcontentsLength + rPacket->Titlelength > rPacket->PacketLength - (int)sizeof(*rPacket)) {
 		result = RODEX_SEND_MAIL_FATAL_ERROR;
 	} else if (rPacket->TextcontentsLength > RODEX_BODY_LENGTH || rPacket->Titlelength > RODEX_TITLE_LENGTH) {
 		result = RODEX_SEND_MAIL_FATAL_ERROR;
@@ -24724,7 +24732,7 @@ static void clif_npc_expanded_barter_open(struct map_session_data *sd, struct np
 			buf_left -= ptr_size;
 			items_count ++;
 			int count = shop[i].value2;
-			if (buf_left < sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO_sub2) * count) {
+			if ((size_t)buf_left < sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO_sub2) * count) {
 				NEXT_EXPANDED_BARTER_ITEM(item, 0);
 				break;
 			}
@@ -25079,7 +25087,7 @@ static void clif_parse_lapineDdukDdak_ack(int fd, struct map_session_data *sd)
 	if (pc->search_inventory(sd, it->nameid) == INDEX_NOT_FOUND)
 		return;
 
-	if (((p->packetLength - sizeof(struct PACKET_CZ_REQ_RANDOM_COMBINE_ITEM)) / sizeof(struct PACKET_CZ_REQ_RANDOM_COMBINE_ITEM_sub)) != it->lapineddukddak->NeedCount)
+	if (((p->packetLength - (int)sizeof(struct PACKET_CZ_REQ_RANDOM_COMBINE_ITEM)) / (int)sizeof(struct PACKET_CZ_REQ_RANDOM_COMBINE_ITEM_sub)) != it->lapineddukddak->NeedCount)
 		return;
 
 	for (int i = 0; i < it->lapineddukddak->NeedCount; ++i) {

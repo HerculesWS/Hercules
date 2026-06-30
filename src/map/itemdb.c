@@ -1269,7 +1269,7 @@ static void itemdb_read_packages(void)
 				must[ i - 1 ] += 1;
 			else {
 				random[ i - 1 ] += 1;
-				if( rval > rgroup[i - 1] )
+				if( (unsigned int)rval > rgroup[i - 1] )
 					rgroup[i - 1] = rval;
 				if( rval > highest_gcount )
 					highest_gcount = rval;
@@ -1284,7 +1284,7 @@ static void itemdb_read_packages(void)
 
 	for(i = 0; i < libconfig->setting_length(item_packages_conf.root); i++ ) {
 		rgroups[i] = aMalloc( rgroup[i] * sizeof(unsigned int) );
-		for( c = 0; c < rgroup[i]; c++ ) {
+		for( c = 0; (unsigned int)c < rgroup[i]; c++ ) {
 			rgroups[i][c] = 0;
 		}
 	}

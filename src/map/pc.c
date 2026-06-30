@@ -3516,31 +3516,31 @@ static int pc_bonus2(struct map_session_data *sd, int type, int type2, int val)
 		case SP_SKILL_ATK:
 			if(sd->state.lr_flag == 2)
 				break;
-			ARR_FIND(0, ARRAYLENGTH(sd->skillatk), i, sd->skillatk[i].id == 0 || sd->skillatk[i].id == type2);
+			ARR_FIND(0, ARRAYLENGTH(sd->skillatk), i, sd->skillatk[i].id == 0 || sd->skillatk[i].id == (unsigned int)type2);
 			if (i == ARRAYLENGTH(sd->skillatk)) {
 				//Better mention this so the array length can be updated. [Skotlex]
 				ShowDebug("script->run: bonus2 bSkillAtk reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n",
 				          ARRAYLENGTH(sd->skillatk), type2, val);
 				break;
 			}
-			if (sd->skillatk[i].id == type2)
+			if (sd->skillatk[i].id == (unsigned int)type2)
 				sd->skillatk[i].val += val;
 			else {
-				sd->skillatk[i].id = type2;
+				sd->skillatk[i].id = (unsigned int)type2;
 				sd->skillatk[i].val = val;
 			}
 			break;
 		case SP_SKILL_HEAL:
 			if(sd->state.lr_flag == 2)
 				break;
-			ARR_FIND(0, ARRAYLENGTH(sd->skillheal), i, sd->skillheal[i].id == 0 || sd->skillheal[i].id == type2);
+			ARR_FIND(0, ARRAYLENGTH(sd->skillheal), i, sd->skillheal[i].id == 0 || sd->skillheal[i].id == (unsigned int)type2);
 			if (i == ARRAYLENGTH(sd->skillheal)) {
 				// Better mention this so the array length can be updated. [Skotlex]
 				ShowDebug("script->run: bonus2 bSkillHeal reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n",
 				          ARRAYLENGTH(sd->skillheal), type2, val);
 				break;
 			}
-			if (sd->skillheal[i].id == type2)
+			if (sd->skillheal[i].id == (unsigned int)type2)
 				sd->skillheal[i].val += val;
 			else {
 				sd->skillheal[i].id = type2;
@@ -3550,14 +3550,14 @@ static int pc_bonus2(struct map_session_data *sd, int type, int type2, int val)
 		case SP_SKILL_HEAL2:
 			if(sd->state.lr_flag == 2)
 				break;
-			ARR_FIND(0, ARRAYLENGTH(sd->skillheal2), i, sd->skillheal2[i].id == 0 || sd->skillheal2[i].id == type2);
+			ARR_FIND(0, ARRAYLENGTH(sd->skillheal2), i, sd->skillheal2[i].id == 0 || sd->skillheal2[i].id == (unsigned int)type2);
 			if (i == ARRAYLENGTH(sd->skillheal2)) {
 				// Better mention this so the array length can be updated. [Skotlex]
 				ShowDebug("script->run: bonus2 bSkillHeal2 reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n",
 				          ARRAYLENGTH(sd->skillheal2), type2, val);
 				break;
 			}
-			if (sd->skillheal2[i].id == type2)
+			if (sd->skillheal2[i].id == (unsigned int)type2)
 				sd->skillheal2[i].val += val;
 			else {
 				sd->skillheal2[i].id = type2;
@@ -3567,14 +3567,14 @@ static int pc_bonus2(struct map_session_data *sd, int type, int type2, int val)
 		case SP_ADD_SKILL_BLOW:
 			if(sd->state.lr_flag == 2)
 				break;
-			ARR_FIND(0, ARRAYLENGTH(sd->skillblown), i, sd->skillblown[i].id == 0 || sd->skillblown[i].id == type2);
+			ARR_FIND(0, ARRAYLENGTH(sd->skillblown), i, sd->skillblown[i].id == 0 || sd->skillblown[i].id == (unsigned int)type2);
 			if (i == ARRAYLENGTH(sd->skillblown)) {
 				//Better mention this so the array length can be updated. [Skotlex]
 				ShowDebug("script->run: bonus2 bSkillBlown reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n",
 				          ARRAYLENGTH(sd->skillblown), type2, val);
 				break;
 			}
-			if(sd->skillblown[i].id == type2)
+			if(sd->skillblown[i].id == (unsigned int)type2)
 				sd->skillblown[i].val += val;
 			else {
 				sd->skillblown[i].id = type2;
@@ -3587,7 +3587,7 @@ static int pc_bonus2(struct map_session_data *sd, int type, int type2, int val)
 		case SP_CASTRATE:
 			if(sd->state.lr_flag == 2)
 				break;
-			ARR_FIND(0, ARRAYLENGTH(sd->skillcast), i, sd->skillcast[i].id == 0 || sd->skillcast[i].id == type2);
+			ARR_FIND(0, ARRAYLENGTH(sd->skillcast), i, sd->skillcast[i].id == 0 || sd->skillcast[i].id == (unsigned int)type2);
 			if (i == ARRAYLENGTH(sd->skillcast)) {
 				//Better mention this so the array length can be updated. [Skotlex]
 				ShowDebug("script->run: bonus2 %s reached its limit (%d skills per character), bonus skill %d (+%d%%) lost.\n",
@@ -3595,7 +3595,7 @@ static int pc_bonus2(struct map_session_data *sd, int type, int type2, int val)
 					ARRAYLENGTH(sd->skillcast), type2, val);
 				break;
 			}
-			if(sd->skillcast[i].id == type2)
+			if(sd->skillcast[i].id == (unsigned int)type2)
 				sd->skillcast[i].val += val;
 			else {
 				sd->skillcast[i].id = type2;
@@ -3607,7 +3607,7 @@ static int pc_bonus2(struct map_session_data *sd, int type, int type2, int val)
 			if(sd->state.lr_flag == 2)
 				break;
 
-			ARR_FIND(0, ARRAYLENGTH(sd->skillfixcastrate), i, sd->skillfixcastrate[i].id == 0 || sd->skillfixcastrate[i].id == type2);
+			ARR_FIND(0, ARRAYLENGTH(sd->skillfixcastrate), i, sd->skillfixcastrate[i].id == 0 || sd->skillfixcastrate[i].id == (unsigned int)type2);
 
 			if (i == ARRAYLENGTH(sd->skillfixcastrate)) {
 				ShowDebug("script->run: bonus2 bFixedCastrate reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n",
@@ -3615,7 +3615,7 @@ static int pc_bonus2(struct map_session_data *sd, int type, int type2, int val)
 				break;
 			}
 
-			if(sd->skillfixcastrate[i].id == type2)
+			if(sd->skillfixcastrate[i].id == (unsigned int)type2)
 				sd->skillfixcastrate[i].val -= val;
 
 			else {
@@ -3800,13 +3800,13 @@ static int pc_bonus2(struct map_session_data *sd, int type, int type2, int val)
 		case SP_SKILL_USE_SP_RATE: //bonus2 bSkillUseSPrate,n,x;
 			if(sd->state.lr_flag == 2)
 				break;
-			ARR_FIND(0, ARRAYLENGTH(sd->skillusesprate), i, sd->skillusesprate[i].id == 0 || sd->skillusesprate[i].id == type2);
+			ARR_FIND(0, ARRAYLENGTH(sd->skillusesprate), i, sd->skillusesprate[i].id == 0 || sd->skillusesprate[i].id == (unsigned int)type2);
 			if (i == ARRAYLENGTH(sd->skillusesprate)) {
 				ShowDebug("script->run: bonus2 bSkillUseSPrate reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n",
 				          ARRAYLENGTH(sd->skillusesprate), type2, val);
 				break;
 			}
-			if (sd->skillusesprate[i].id == type2)
+			if (sd->skillusesprate[i].id == (unsigned int)type2)
 				sd->skillusesprate[i].val += val;
 			else {
 				sd->skillusesprate[i].id = type2;
@@ -3816,13 +3816,13 @@ static int pc_bonus2(struct map_session_data *sd, int type, int type2, int val)
 		case SP_SKILL_COOLDOWN:
 			if(sd->state.lr_flag == 2)
 				break;
-			ARR_FIND(0, ARRAYLENGTH(sd->skillcooldown), i, sd->skillcooldown[i].id == 0 || sd->skillcooldown[i].id == type2);
+			ARR_FIND(0, ARRAYLENGTH(sd->skillcooldown), i, sd->skillcooldown[i].id == 0 || sd->skillcooldown[i].id == (unsigned int)type2);
 			if (i == ARRAYLENGTH(sd->skillcooldown)) {
 				ShowDebug("script->run: bonus2 bSkillCoolDown reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n",
 				          ARRAYLENGTH(sd->skillcooldown), type2, val);
 				break;
 			}
-			if (sd->skillcooldown[i].id == type2)
+			if (sd->skillcooldown[i].id == (unsigned int)type2)
 				sd->skillcooldown[i].val += val;
 			else {
 				sd->skillcooldown[i].id = type2;
@@ -3832,13 +3832,13 @@ static int pc_bonus2(struct map_session_data *sd, int type, int type2, int val)
 		case SP_SKILL_FIXEDCAST:
 			if(sd->state.lr_flag == 2)
 				break;
-			ARR_FIND(0, ARRAYLENGTH(sd->skillfixcast), i, sd->skillfixcast[i].id == 0 || sd->skillfixcast[i].id == type2);
+			ARR_FIND(0, ARRAYLENGTH(sd->skillfixcast), i, sd->skillfixcast[i].id == 0 || sd->skillfixcast[i].id == (unsigned int)type2);
 			if (i == ARRAYLENGTH(sd->skillfixcast)) {
 				ShowDebug("script->run: bonus2 bSkillFixedCast reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n",
 				          ARRAYLENGTH(sd->skillfixcast), type2, val);
 				break;
 			}
-			if (sd->skillfixcast[i].id == type2)
+			if (sd->skillfixcast[i].id == (unsigned int)type2)
 				sd->skillfixcast[i].val += val;
 			else {
 				sd->skillfixcast[i].id = type2;
@@ -3848,13 +3848,13 @@ static int pc_bonus2(struct map_session_data *sd, int type, int type2, int val)
 		case SP_SKILL_VARIABLECAST:
 			if(sd->state.lr_flag == 2)
 				break;
-			ARR_FIND(0, ARRAYLENGTH(sd->skillvarcast), i, sd->skillvarcast[i].id == 0 || sd->skillvarcast[i].id == type2);
+			ARR_FIND(0, ARRAYLENGTH(sd->skillvarcast), i, sd->skillvarcast[i].id == 0 || sd->skillvarcast[i].id == (unsigned int)type2);
 			if (i == ARRAYLENGTH(sd->skillvarcast)) {
 				ShowDebug("script->run: bonus2 bSkillVariableCast reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n",
 				          ARRAYLENGTH(sd->skillvarcast), type2, val);
 				break;
 			}
-			if (sd->skillvarcast[i].id == type2)
+			if (sd->skillvarcast[i].id == (unsigned int)type2)
 				sd->skillvarcast[i].val += val;
 			else {
 				sd->skillvarcast[i].id = type2;
@@ -3865,13 +3865,13 @@ static int pc_bonus2(struct map_session_data *sd, int type, int type2, int val)
 		case SP_VARCASTRATE:
 			if(sd->state.lr_flag == 2)
 				break;
-			ARR_FIND(0, ARRAYLENGTH(sd->skillcast), i, sd->skillcast[i].id == 0 || sd->skillcast[i].id == type2);
+			ARR_FIND(0, ARRAYLENGTH(sd->skillcast), i, sd->skillcast[i].id == 0 || sd->skillcast[i].id == (unsigned int)type2);
 			if (i == ARRAYLENGTH(sd->skillcast)) {
 				ShowDebug("script->run: bonus2 bVariableCastrate reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n",
 				          ARRAYLENGTH(sd->skillcast), type2, val);
 				break;
 			}
-			if(sd->skillcast[i].id == type2)
+			if(sd->skillcast[i].id == (unsigned int)type2)
 				sd->skillcast[i].val -= val;
 			else {
 				sd->skillcast[i].id = type2;
@@ -3882,13 +3882,13 @@ static int pc_bonus2(struct map_session_data *sd, int type, int type2, int val)
 		case SP_SKILL_USE_SP: //bonus2 bSkillUseSP,n,x;
 			if(sd->state.lr_flag == 2)
 				break;
-			ARR_FIND(0, ARRAYLENGTH(sd->skillusesp), i, sd->skillusesp[i].id == 0 || sd->skillusesp[i].id == type2);
+			ARR_FIND(0, ARRAYLENGTH(sd->skillusesp), i, sd->skillusesp[i].id == 0 || sd->skillusesp[i].id == (unsigned int)type2);
 			if (i == ARRAYLENGTH(sd->skillusesp)) {
 				ShowDebug("script->run: bonus2 bSkillUseSP reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n",
 				          ARRAYLENGTH(sd->skillusesp), type2, val);
 				break;
 			}
-			if (sd->skillusesp[i].id == type2)
+			if (sd->skillusesp[i].id == (unsigned int)type2)
 				sd->skillusesp[i].val += val;
 			else {
 				sd->skillusesp[i].id = type2;
@@ -3924,13 +3924,13 @@ static int pc_bonus2(struct map_session_data *sd, int type, int type2, int val)
 		case SP_SUB_SKILL:
 			if (sd->state.lr_flag == 2)
 				break;
-			ARR_FIND(0, ARRAYLENGTH(sd->subskill), i, sd->subskill[i].id == 0 || sd->subskill[i].id == type2);
+			ARR_FIND(0, ARRAYLENGTH(sd->subskill), i, sd->subskill[i].id == 0 || sd->subskill[i].id == (unsigned int)type2);
 			if (i == ARRAYLENGTH(sd->subskill)) {
 				ShowDebug("script->run: bonus2 bSubSkill reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n",
 				          ARRAYLENGTH(sd->subskill), type2, val);
 				break;
 			}
-			if (sd->subskill[i].id == type2) {
+			if (sd->subskill[i].id == (unsigned int)type2) {
 				sd->subskill[i].val += val;
 			} else {
 				sd->subskill[i].id = type2;
@@ -6905,8 +6905,8 @@ static void pc_calcexp(struct map_session_data *sd, uint64 *base_exp, uint64 *jo
 	bexp += apply_percentrate64(bexp, buff_ratio, 100);
 	jexp += apply_percentrate64(jexp, buff_ratio + buff_job_ratio, 100);
 
-	*job_exp = cap_value(jexp, 1, UINT64_MAX);
-	*base_exp = cap_value(bexp, 1, UINT64_MAX);
+	*job_exp = cap_value(jexp, 1, INT64_MAX);
+	*base_exp = cap_value(bexp, 1, INT64_MAX);
 }
 
 /**
@@ -7587,7 +7587,7 @@ static int pc_resetstate(struct map_session_data *sd)
  *------------------------------------------*/
 static int pc_resetskill(struct map_session_data *sd, int flag)
 {
-	int i, inf2, skill_point=0;
+	int inf2, skill_point=0;
 	nullpo_ret(sd);
 
 	if (flag&PCRESETSKILL_CHSEX && (sd->job & MAPID_UPPERMASK) != MAPID_BARDDANCER)
@@ -7603,28 +7603,29 @@ static int pc_resetskill(struct map_session_data *sd, int flag)
 
 		if( pc->checkskill(sd, SG_DEVIL) &&  !pc->nextjobexp(sd) ) //Remove perma blindness due to skill-reset. [Skotlex]
 			clif->sc_end(&sd->bl, sd->bl.id, SELF, status->get_sc_icon(SC_DEVIL1));
-		i = sd->sc.option;
-		if( i&OPTION_RIDING && pc->checkskill(sd, KN_RIDING) )
-			i &= ~OPTION_RIDING;
-		if( i&OPTION_FALCON && pc->checkskill(sd, HT_FALCON) )
-			i &= ~OPTION_FALCON;
-		if( i&OPTION_DRAGON && pc->checkskill(sd, RK_DRAGONTRAINING) )
-			i &= ~OPTION_DRAGON;
-		if( i&OPTION_WUG && pc->checkskill(sd, RA_WUGMASTERY) )
-			i &= ~OPTION_WUG;
-		if( i&OPTION_WUGRIDER && pc->checkskill(sd, RA_WUGRIDER) )
-			i &= ~OPTION_WUGRIDER;
-		if (i&OPTION_MADOGEAR && (sd->job & MAPID_THIRDMASK) == MAPID_MECHANIC)
-			i &= ~OPTION_MADOGEAR;
+
+		unsigned int options = sd->sc.option;
+		if (options&OPTION_RIDING && pc->checkskill(sd, KN_RIDING))
+			options &= ~OPTION_RIDING;
+		if (options&OPTION_FALCON && pc->checkskill(sd, HT_FALCON))
+			options &= ~OPTION_FALCON;
+		if (options&OPTION_DRAGON && pc->checkskill(sd, RK_DRAGONTRAINING))
+			options &= ~OPTION_DRAGON;
+		if (options&OPTION_WUG && pc->checkskill(sd, RA_WUGMASTERY))
+			options &= ~OPTION_WUG;
+		if (options&OPTION_WUGRIDER && pc->checkskill(sd, RA_WUGRIDER))
+			options &= ~OPTION_WUGRIDER;
+		if (options&OPTION_MADOGEAR && (sd->job & MAPID_THIRDMASK) == MAPID_MECHANIC)
+			options &= ~OPTION_MADOGEAR;
 #ifndef NEW_CARTS
-		if( i&OPTION_CART && pc->checkskill(sd, MC_PUSHCART) )
-			i &= ~OPTION_CART;
+		if (options&OPTION_CART && pc->checkskill(sd, MC_PUSHCART))
+			options &= ~OPTION_CART;
 #else
 		if( sd->sc.data[SC_PUSH_CART] )
 			pc->setcart(sd, 0);
 #endif
-		if( i != sd->sc.option )
-			pc->setoption(sd, i);
+		if( options != sd->sc.option )
+			pc->setoption(sd, options);
 
 		if( homun_alive(sd->hd) && pc->checkskill(sd, AM_CALLHOMUN) )
 			homun->vaporize(sd, HOM_ST_REST, true);
@@ -7633,7 +7634,7 @@ static int pc_resetskill(struct map_session_data *sd, int flag)
 			status_change_end(&sd->bl, SC_SPRITEMABLE, INVALID_TIMER);
 	}
 
-	for (i = 1; i < MAX_SKILL_DB; i++) {
+	for (int i = 1; i < MAX_SKILL_DB; i++) {
 		int lv = sd->status.skill[i].lv;
 		if (lv < 1) continue;
 
@@ -8982,28 +8983,28 @@ static int pc_jobchange(struct map_session_data *sd, int class, int upper)
 	map->foreachinmap(pc->jobchange_killclone, sd->bl.m, BL_MOB, sd->bl.id);
 
 	//Remove peco/cart/falcon
-	i = sd->sc.option;
-	if (i&OPTION_RIDING && (!pc->checkskill(sd, KN_RIDING) || (sd->job & MAPID_THIRDMASK) == MAPID_RUNE_KNIGHT))
-		i&=~OPTION_RIDING;
-	if( i&OPTION_FALCON && !pc->checkskill(sd, HT_FALCON) )
-		i&=~OPTION_FALCON;
-	if( i&OPTION_DRAGON && !pc->checkskill(sd,RK_DRAGONTRAINING) )
-		i&=~OPTION_DRAGON;
-	if( i&OPTION_WUGRIDER && !pc->checkskill(sd,RA_WUGMASTERY) )
-		i&=~OPTION_WUGRIDER;
-	if( i&OPTION_WUG && !pc->checkskill(sd,RA_WUGMASTERY) )
-		i&=~OPTION_WUG;
-	if( i&OPTION_MADOGEAR ) //You do not need a skill for this.
-		i&=~OPTION_MADOGEAR;
+	unsigned int options = sd->sc.option;
+	if (options&OPTION_RIDING && (!pc->checkskill(sd, KN_RIDING) || (sd->job & MAPID_THIRDMASK) == MAPID_RUNE_KNIGHT))
+		options &= ~OPTION_RIDING;
+	if (options&OPTION_FALCON && !pc->checkskill(sd, HT_FALCON))
+		options &= ~OPTION_FALCON;
+	if (options&OPTION_DRAGON && !pc->checkskill(sd,RK_DRAGONTRAINING))
+		options &= ~OPTION_DRAGON;
+	if (options&OPTION_WUGRIDER && !pc->checkskill(sd,RA_WUGMASTERY))
+		options &= ~OPTION_WUGRIDER;
+	if (options&OPTION_WUG && !pc->checkskill(sd,RA_WUGMASTERY))
+		options &= ~OPTION_WUG;
+	if (options&OPTION_MADOGEAR) //You do not need a skill for this.
+		options &= ~OPTION_MADOGEAR;
 #ifndef NEW_CARTS
-	if( i&OPTION_CART && !pc->checkskill(sd, MC_PUSHCART) )
-		i&=~OPTION_CART;
+	if (options&OPTION_CART && !pc->checkskill(sd, MC_PUSHCART))
+		options &= ~OPTION_CART;
 #else
 	if( sd->sc.data[SC_PUSH_CART] && !pc->checkskill(sd, MC_PUSHCART) )
 		pc->setcart(sd, 0);
 #endif
-	if(i != sd->sc.option)
-		pc->setoption(sd, i);
+	if (options != sd->sc.option)
+		pc->setoption(sd, options);
 
 	if(homun_alive(sd->hd) && !pc->checkskill(sd, AM_CALLHOMUN))
 		homun->vaporize(sd, HOM_ST_REST, true);
@@ -10835,10 +10836,10 @@ static int pc_calc_pvprank(struct map_session_data *sd)
 {
 	nullpo_ret(sd);
 	struct map_data *m = &map->list[sd->bl.m];
-	int old = sd->pvp_rank;
+	unsigned int old = sd->pvp_rank;
 	sd->pvp_rank = 1;
 	map->foreachinmap(pc->calc_pvprank_sub, sd->bl.m, BL_PC, sd);
-	if (old != sd->pvp_rank || sd->pvp_lastusers != m->users_pvp) {
+	if (old != sd->pvp_rank || sd->pvp_lastusers != (unsigned int)m->users_pvp) {
 		sd->pvp_lastusers = m->users_pvp;
 		clif->pvpset(sd, sd->pvp_rank, sd->pvp_lastusers, 0);
 	}
@@ -11013,7 +11014,7 @@ static void pc_bleeding(struct map_session_data *sd, unsigned int diff_tick)
 			hp += sd->hp_loss.value;
 			sd->hp_loss.tick -= sd->hp_loss.rate;
 		}
-		if(hp >= sd->battle_status.hp)
+		if((unsigned int)hp >= sd->battle_status.hp)
 			hp = sd->battle_status.hp-1; //Script drains cannot kill you.
 	}
 
@@ -11120,7 +11121,7 @@ static int pc_autosave(int tid, int64 tick, int id, intptr_t data)
 static int pc_daynight_timer_sub(struct map_session_data *sd, va_list ap)
 {
 	nullpo_ret(sd);
-	if (sd->state.night != map->night_flag && map->list[sd->bl.m].flag.nightenabled) { //Night/day state does not match.
+	if (sd->state.night != (unsigned int)map->night_flag && map->list[sd->bl.m].flag.nightenabled) { //Night/day state does not match.
 		clif->status_change(&sd->bl, status->get_sc_icon(SC_SKE), status->get_sc_relevant_bl_types(SC_SKE), map->night_flag, 0, 0, 0, 0); //New night effect by dynamix [Skotlex]
 		sd->state.night = map->night_flag;
 		return 1;
@@ -12312,7 +12313,7 @@ static void pc_autotrade_start(struct map_session_data *sd)
 			if( amount ) {
 				sd->vending[count].index = i;
 				sd->vending[count].amount = amount;
-				sd->vending[count].value = cap_value(price, 0, (unsigned int)battle_config.vending_max_value);
+				sd->vending[count].value = cap_value(price, 0, battle_config.vending_max_value);
 
 				count++;
 			}

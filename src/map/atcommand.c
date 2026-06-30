@@ -3031,7 +3031,7 @@ ACMD(petrename)
 	int i;
 
 	ARR_FIND(0, sd->status.inventorySize, i, sd->status.inventory[i].card[0] == CARD0_PET
-		 && pd->pet.pet_id == MakeDWord(sd->status.inventory[i].card[1], sd->status.inventory[i].card[2]));
+		 && pd->pet.pet_id == (int)MakeDWord(sd->status.inventory[i].card[1], sd->status.inventory[i].card[2]));
 
 	if (i != sd->status.inventorySize)
 		sd->status.inventory[i].card[3] = pet->get_card4_value(pd->pet.rename_flag, pd->pet.intimate);
@@ -4150,7 +4150,7 @@ ACMD(mapinfo)
 	if (map->list[m_id].flag.town != 0)
 		clif->message(fd, msg_fd(fd, MSGTBL_MAPINFO_TOWN_MAP)); // Town Map
 
-	if (battle_config.autotrade_mapflag == map->list[m_id].flag.autotrade)
+	if ((unsigned int)battle_config.autotrade_mapflag == map->list[m_id].flag.autotrade)
 		clif->message(fd, msg_fd(fd, MSGTBL_MAPINFO_AUTOTRADE_ENABLED)); // Autotrade Enabled
 	else
 		clif->message(fd, msg_fd(fd, MSGTBL_MAPINFO_AUTOTRADE_DISABLED)); // Autotrade Disabled
@@ -6136,7 +6136,7 @@ ACMD(changelook)
  *------------------------------------------*/
 ACMD(autotrade)
 {
-	if( map->list[sd->bl.m].flag.autotrade != battle_config.autotrade_mapflag ) {
+	if (map->list[sd->bl.m].flag.autotrade != (unsigned int)battle_config.autotrade_mapflag) {
 		clif->message(fd, msg_fd(fd, MSGTBL_AUTOTRADE_NOT_ALLOWED)); // Autotrade is not allowed in this map.
 		return false;
 	}
@@ -6234,7 +6234,7 @@ ACMD(changeleader)
 ACMD(partyoption)
 {
 	struct party_data *p;
-	int mi, option;
+	int mi;
 	char w1[16], w2[16];
 
 	if (sd->status.party_id == 0 || (p = party->search(sd->status.party_id)) == NULL)
@@ -6259,7 +6259,7 @@ ACMD(partyoption)
 		return false;
 	}
 
-	option = (config_switch(w1)?1:0)|(config_switch(w2)?2:0); // TODO: Add documentation for these values
+	unsigned int option = (config_switch(w1) ? 1 : 0) | (config_switch(w2) ? 2 : 0); // TODO: Add documentation for these values
 
 	//Change item share type.
 	if (option != p->party.item)
@@ -6408,7 +6408,7 @@ ACMD(autoloottype)
 {
 	uint8 action = 3; // 1=add, 2=remove, 3=help+list (default), 4=reset
 	enum item_types type = -1;
-	int ITEM_NONE = 0;
+	unsigned int ITEM_NONE = 0;
 
 	if (*message) {
 		if (message[0] == '+') {
@@ -8093,7 +8093,7 @@ ACMD(sizeall)
 
 	iter = mapit_getallusers();
 	for (pl_sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); pl_sd = BL_UCAST(BL_PC, mapit->next(iter))) {
-		if (pl_sd->state.size != size) {
+		if (pl_sd->state.size != (unsigned int)size) {
 			if (pl_sd->state.size) {
 				pl_sd->state.size = SZ_SMALL;
 				pc->setpos(pl_sd, pl_sd->mapindex, pl_sd->bl.x, pl_sd->bl.y, CLR_TELEPORT);
@@ -8134,7 +8134,7 @@ ACMD(sizeguild)
 	size = cap_value(size,SZ_SMALL,SZ_BIG);
 
 	for (i = 0; i < g->max_member; i++) {
-		if ((pl_sd = g->member[i].sd) && pl_sd->state.size != size) {
+		if ((pl_sd = g->member[i].sd) && pl_sd->state.size != (unsigned int)size) {
 			if( pl_sd->state.size ) {
 				pl_sd->state.size = SZ_SMALL;
 				pc->setpos(pl_sd, pl_sd->mapindex, pl_sd->bl.x, pl_sd->bl.y, CLR_TELEPORT);
@@ -11435,10 +11435,10 @@ static void atcommand_db_load_groups(GroupSettings **groups, struct config_setti
 	nullpo_retv(groups);
 	nullpo_retv(commands_);
 	for (atcmd = dbi_first(iter); dbi_exists(iter); atcmd = dbi_next(iter)) {
-		int i;
 		CREATE(atcmd->at_groups, char, sz);
 		CREATE(atcmd->char_groups, char, sz);
-		for (i = 0; i < sz; i++) {
+
+		for (size_t i = 0; i < sz; i++) {
 			GroupSettings *group = groups[i];
 			struct config_setting_t *commands = commands_[i];
 			int result = 0;
@@ -11450,7 +11450,7 @@ static void atcommand_db_load_groups(GroupSettings **groups, struct config_setti
 			}
 
 			idx = pcg->get_idx(group);
-			if (idx < 0 || idx >= sz) {
+			if (idx < 0 || (size_t)idx >= sz) {
 				ShowError("atcommand_db_load_groups: index (%d) out of bounds [0,%"PRIuS"]\n", idx, sz - 1);
 				continue;
 			}

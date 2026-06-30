@@ -179,7 +179,7 @@ static void achievement_progress_add(struct map_session_data *sd, const struct a
 	nullpo_retv(ad);
 
 	Assert_retv(progress != 0);
-	Assert_retv(obj_idx < VECTOR_LENGTH(ad->objective));
+	Assert_retv(obj_idx < (size_t)VECTOR_LENGTH(ad->objective));
 
 	if ((ach = achievement->ensure(sd, ad)) == NULL)
 		return;
@@ -220,7 +220,7 @@ static void achievement_progress_set(struct map_session_data *sd, const struct a
 	nullpo_retv(ad);
 
 	Assert_retv(progress != 0);
-	Assert_retv(obj_idx < VECTOR_LENGTH(ad->objective));
+	Assert_retv(obj_idx < (size_t)VECTOR_LENGTH(ad->objective));
 
 	if (progress >= VECTOR_INDEX(ad->objective, obj_idx).goal) {
 
@@ -770,7 +770,7 @@ static void achievement_validate_refine(struct map_session_data *sd, unsigned in
 	struct item_data *id = NULL;
 
 	nullpo_retv(sd);
-	Assert_retv(idx < sd->status.inventorySize);
+	Assert_retv((int)idx < sd->status.inventorySize);
 
 	id = itemdb->exists(sd->status.inventory[idx].nameid);
 
