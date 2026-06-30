@@ -230,7 +230,7 @@ struct PACKET_CA_CHARSERVERCONNECT {
 	char name[MAX_CHARSERVER_NAME_SIZE];  ///< Charserver name
 	int16 unknown2;
 	int16 type;        ///< Charserver type
-	int16 new;         ///< Whether charserver is to be marked as new
+	int16 new_;         ///< Whether charserver is to be marked as new
 } __attribute__((packed));
 
 /**
