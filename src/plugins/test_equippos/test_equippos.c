@@ -84,11 +84,11 @@ VECTOR_STRUCT_DECL(autorelease, struct map_session_data *);
 static bool checklook(const struct view_data *vd, enum look expected_bottom, enum look expected_top, enum look expected_mid)
 {
 	nullpo_retr(false, vd);
-	if (vd->head_bottom != expected_bottom)
+	if (vd->head_bottom != (int)expected_bottom)
 		return false;
-	if (vd->head_top != expected_top)
+	if (vd->head_top != (int)expected_top)
 		return false;
-	if (vd->head_mid != expected_mid)
+	if (vd->head_mid != (int)expected_mid)
 		return false;
 	return true;
 }
