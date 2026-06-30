@@ -858,7 +858,7 @@ static bool quest_questinfo_validate_job(struct map_session_data *sd, struct que
 {
 	nullpo_retr(false, sd);
 	nullpo_retr(false, qi);
-	if (sd->status.class == qi->job)
+	if (sd->status.class_ == qi->job)
 		return true;
 	return false;
 }

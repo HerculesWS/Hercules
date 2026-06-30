@@ -156,7 +156,7 @@ static struct map_session_data *make_sd(void)
 	dummy->status.account_id = 150000;
 	dummy->status.char_id = 150000;
 	dummy->status.base_level = 1;
-	dummy->vd.class = JOB_NOVICE;
+	dummy->vd.class_ = JOB_NOVICE;
 	dummy->status.inventorySize = FIXED_INVENTORY_SIZE;
 	for (int i = 0; i < ARRAYLENGTH(items); i++) {
 		dummy->inventory_data[i] = &items[i];

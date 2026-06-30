@@ -291,7 +291,7 @@ struct char_interface {
 	int (*check_connect_login_server) (int tid, int64 tick, int id, intptr_t data);
 	int (*online_data_cleanup_sub) (union DBKey key, struct DBData *data, va_list ap);
 	int (*online_data_cleanup) (int tid, int64 tick, int id, intptr_t data);
-	void (*change_sex_sub) (int sex, int acc, int char_id, int class, int guild_id);
+	void (*change_sex_sub) (int sex, int acc, int char_id, int class_, int guild_id);
 	void (*online_char_destroy) (struct online_char_data *character);
 	int (*online_char_destroy_sub) (union DBKey key, struct DBData *data, va_list ap);
 	void (*ensure_online_char_data) (struct online_char_data *character);

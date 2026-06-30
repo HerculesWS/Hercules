@@ -68,7 +68,7 @@ static void party_fill_member(struct party_member *member, struct map_session_da
 	member->account_id = sd->status.account_id;
 	member->char_id    = sd->status.char_id;
 	safestrncpy(member->name, sd->status.name, NAME_LENGTH);
-	member->class      = sd->status.class;
+	member->class_      = sd->status.class_;
 	member->map        = sd->mapindex;
 	member->lv         = sd->status.base_level;
 	member->online     = 1;
@@ -247,7 +247,7 @@ static void party_check_state(struct party_data *p)
 	memset(&p->state, 0, sizeof(p->state));
 	for (i = 0; i < MAX_PARTY; i++) {
 		if (!p->party.member[i].online) continue; //Those not online shouldn't apart to skill usage and all that.
-		switch (p->party.member[i].class) {
+		switch (p->party.member[i].class_) {
 			case JOB_MONK:
 			case JOB_BABY_MONK:
 			case JOB_CHAMPION:

@@ -740,7 +740,7 @@ static int elemental_ai_sub_timer(struct elemental_data *ed, struct map_session_
 	if( DIFF_TICK(tick,ed->last_spdrain_time) >= 10000 ){// Drain SP every 10 seconds
 		unsigned int sp = 5;
 
-		switch (ed->vd->class) {
+		switch (ed->vd->class_) {
 			case ELEID_EL_AGNI_M:
 			case ELEID_EL_AQUA_M:
 			case ELEID_EL_VENTUS_M:
@@ -903,7 +903,7 @@ static int read_elementaldb(void)
 		db->lv = atoi(str[3]);
 
 		estatus = &db->status;
-		db->vd.class = db->class_;
+		db->vd.class_ = db->class_;
 
 		estatus->max_hp = atoi(str[4]);
 		estatus->max_sp = atoi(str[5]);
@@ -1070,7 +1070,7 @@ void elemental_defaults(void)
 	memset(elemental->db,0,sizeof(elemental->db));
 
 	/* funcs */
-	elemental->class = elemental_class;
+	elemental->class_ = elemental_class;
 	elemental->get_viewdata = elemental_get_viewdata;
 
 	elemental->create = elemental_create;

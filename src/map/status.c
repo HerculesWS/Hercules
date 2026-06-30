@@ -1332,7 +1332,7 @@ static unsigned int status_get_base_maxsp(const struct map_session_data *sd, con
 
 	nullpo_ret(sd);
 	nullpo_ret(st);
-	val = pc->class2idx(sd->status.class);
+	val = pc->class2idx(sd->status.class_);
 	val = status->dbs->SP_table[val][sd->status.base_level];
 
 	if ((sd->job & JOBL_UPPER) != 0)
@@ -1353,7 +1353,7 @@ static unsigned int status_get_base_maxhp(const struct map_session_data *sd, con
 
 	nullpo_ret(sd);
 	nullpo_ret(st);
-	val = pc->class2idx(sd->status.class);
+	val = pc->class2idx(sd->status.class_);
 	val = status->dbs->HP_table[val][sd->status.base_level];
 
 	if ((sd->job & MAPID_UPPERMASK) == MAPID_SUPER_NOVICE && sd->status.base_level >= 99)
@@ -1478,7 +1478,7 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 
 	pc->calc_skilltree(sd); // SkillTree calculation
 
-	sd->max_weight = status->dbs->max_weight_base[pc->class2idx(sd->status.class)]+sd->status.str*300;
+	sd->max_weight = status->dbs->max_weight_base[pc->class2idx(sd->status.class_)]+sd->status.str*300;
 
 	if(opt&SCO_FIRST) {
 		//Load Hp/SP from char-received data.
@@ -1864,7 +1864,7 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 	// ----- STATS CALCULATION -----
 
 	// Job bonuses
-	index = pc->class2idx(sd->status.class);
+	index = pc->class2idx(sd->status.class_);
 	for (i = 0; i < sd->status.job_level && i < MAX_LEVEL; i++) {
 		if(!status->dbs->job_bonus[index][i])
 			continue;
@@ -3729,11 +3729,11 @@ static int status_base_amotion_pc(struct map_session_data *sd, struct status_dat
 	nullpo_ret(sd);
 	nullpo_ret(st);
 
-	amotion = status->dbs->aspd_base[pc->class2idx(sd->status.class)][sd->weapontype1];
+	amotion = status->dbs->aspd_base[pc->class2idx(sd->status.class_)][sd->weapontype1];
 	if (sd->weapontype > MAX_SINGLE_WEAPON_TYPE)
-		amotion += status->dbs->aspd_base[pc->class2idx(sd->status.class)][sd->weapontype2] / 4;
+		amotion += status->dbs->aspd_base[pc->class2idx(sd->status.class_)][sd->weapontype2] / 4;
 	if (sd->has_shield)
-		amotion += status->dbs->aspd_base[pc->class2idx(sd->status.class)][MAX_SINGLE_WEAPON_TYPE];
+		amotion += status->dbs->aspd_base[pc->class2idx(sd->status.class_)][MAX_SINGLE_WEAPON_TYPE];
 	switch (sd->weapontype) {
 		case W_BOW:
 		case W_MUSICAL:
@@ -3762,8 +3762,8 @@ static int status_base_amotion_pc(struct map_session_data *sd, struct status_dat
 #else
 	// base weapon delay
 	amotion = (sd->weapontype < MAX_SINGLE_WEAPON_TYPE)
-		? (status->dbs->aspd_base[pc->class2idx(sd->status.class)][sd->weapontype]) // single weapon
-		: (status->dbs->aspd_base[pc->class2idx(sd->status.class)][sd->weapontype1] + status->dbs->aspd_base[pc->class2idx(sd->status.class)][sd->weapontype2]) * 7 / 10; // dual-wield
+		? (status->dbs->aspd_base[pc->class2idx(sd->status.class_)][sd->weapontype]) // single weapon
+		: (status->dbs->aspd_base[pc->class2idx(sd->status.class_)][sd->weapontype1] + status->dbs->aspd_base[pc->class2idx(sd->status.class_)][sd->weapontype2]) * 7 / 10; // dual-wield
 
 	// percentual delay reduction from stats
 	amotion -= amotion * (4 * st->agi + st->dex) / 1000;
@@ -6220,12 +6220,12 @@ static int status_get_class(const struct block_list *bl)
 	nullpo_ret(bl);
 	switch (bl->type) {
 		case BL_PC:
-			return BL_UCCAST(BL_PC, bl)->status.class;
+			return BL_UCCAST(BL_PC, bl)->status.class_;
 		case BL_MOB:
 		{
 			const struct view_data *const vd = BL_UCCAST(BL_MOB, bl)->vd;
 			nullpo_ret(vd);
-			return vd->class; //Class used on all code should be the view class of the mob.
+			return vd->class_; //Class used on all code should be the view class of the mob.
 		}
 		case BL_PET:
 			return BL_UCCAST(BL_PET, bl)->pet.class_;
@@ -6671,9 +6671,9 @@ static void status_set_viewdata(struct block_list *bl, int class_)
 		vd = npc->get_viewdata(class_);
 	else if (homdb_checkid(class_))
 		vd = homun->get_viewdata(class_);
-	else if (mercenary->class(class_))
+	else if (mercenary->class_(class_))
 		vd = mercenary->get_viewdata(class_);
-	else if (elemental->class(class_))
+	else if (elemental->class_(class_))
 		vd = elemental->get_viewdata(class_);
 	else
 		vd = NULL;
@@ -6709,7 +6709,7 @@ static void status_set_viewdata(struct block_list *bl, int class_)
 				}
 				PRAGMA_GCC46(GCC diagnostic pop)
 			}
-			sd->vd.class = class_;
+			sd->vd.class_ = class_;
 			clif->get_weapon_view(sd, &sd->vd.weapon, &sd->vd.shield);
 			sd->vd.head_top = sd->status.look.head_top;
 			sd->vd.head_mid = sd->status.look.head_mid;
@@ -6752,7 +6752,7 @@ static void status_set_viewdata(struct block_list *bl, int class_)
 			md->vd = vd;
 		} else if (pc->db_checkid(class_)) {
 			mob->set_dynamic_viewdata(md);
-			md->vd->class = class_;
+			md->vd->class_ = class_;
 		} else {
 			ShowError("status_set_viewdata (MOB): No view data for class %d\n", class_);
 		}
@@ -6763,7 +6763,7 @@ static void status_set_viewdata(struct block_list *bl, int class_)
 		struct pet_data *pd = BL_UCAST(BL_PET, bl);
 		if (vd != NULL) {
 			memcpy(&pd->vd, vd, sizeof(struct view_data));
-			if (!pc->db_checkid(vd->class)) {
+			if (!pc->db_checkid(vd->class_)) {
 				pd->vd.hair_style = battle_config.pet_hair_style;
 				if(pd->pet.equip) {
 					pd->vd.head_bottom = itemdb_viewid(pd->pet.equip);
@@ -6783,7 +6783,7 @@ static void status_set_viewdata(struct block_list *bl, int class_)
 			memcpy(&nd->vd, vd, sizeof(struct view_data));
 		} else if (pc->db_checkid(class_)) {
 			memset(&nd->vd, 0, sizeof(struct view_data));
-			nd->vd.class = class_;
+			nd->vd.class_ = class_;
 		} else {
 			ShowError("status_set_viewdata (NPC): No view data for class %d (name=%s)\n", class_, nd->name);
 		}
@@ -9988,7 +9988,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			case SC_DRESS_UP:
 				if (vd == NULL)
 					break;
-				clif->changelook(bl, LOOK_BASE, vd->class);
+				clif->changelook(bl, LOOK_BASE, vd->class_);
 				clif->changelook(bl, LOOK_WEAPON, 0);
 				clif->changelook(bl, LOOK_SHIELD, 0);
 				clif->changelook(bl, LOOK_CLOTHES_COLOR, vd->cloth_color);
@@ -10018,7 +10018,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 		clif->changeoption(bl);
 		if( sd && opt_flag&0x4 ) {
 			if (vd)
-				clif->changelook(bl, LOOK_BASE, vd->class);
+				clif->changelook(bl, LOOK_BASE, vd->class_);
 			clif->changelook(bl,LOOK_WEAPON,0);
 			clif->changelook(bl,LOOK_SHIELD,0);
 			if (vd)
@@ -12274,7 +12274,7 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 	else if(opt_flag) {
 		clif->changeoption(bl);
 		if( sd && opt_flag&0x4 ) {
-			clif->changelook(bl, LOOK_BASE, sd->vd.class);
+			clif->changelook(bl, LOOK_BASE, sd->vd.class_);
 			clif->get_weapon_view(sd, &sd->vd.weapon, &sd->vd.shield);
 			clif->changelook(bl,LOOK_WEAPON,sd->vd.weapon);
 			clif->changelook(bl,LOOK_SHIELD,sd->vd.shield);
@@ -14386,26 +14386,26 @@ static void status_read_job_db(void)
 		return;
 
 	while ((jdb = libconfig->setting_get_elem(job_db_conf.root, i++))) {
-		int class, idx;
+		int class_, idx;
 		const char *name = config_setting_name(jdb);
 
-		if ((class = pc->check_job_name(name)) == -1) {
+		if ((class_ = pc->check_job_name(name)) == -1) {
 			ShowWarning("pc_read_job_db: '%s' unknown job name!\n", name);
 			continue;
 		}
 
-		idx = pc->class2idx(class);
+		idx = pc->class2idx(class_);
 		status->read_job_db_sub(idx, name, jdb);
-		status->check_job_bonus(idx, name, class);
+		status->check_job_bonus(idx, name, class_);
 	}
 
 	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", i, config_filename);
 	libconfig->destroy(&job_db_conf);
 }
 
-static void status_check_job_bonus(int idx, const char *name, int class)
+static void status_check_job_bonus(int idx, const char *name, int class_)
 {
-	if (class == JOB_NOVICE || class == JOB_BABY)
+	if (class_ == JOB_NOVICE || class_ == JOB_BABY)
 		return;
 
 	Assert_retv(idx >= 0 && idx < CLASS_COUNT);
@@ -14417,7 +14417,7 @@ static void status_check_job_bonus(int idx, const char *name, int class)
 		}
 	}
 	if (isEmpty) {
-		ShowWarning("Missing job %s (%d) in job_db2.txt\n", name, class);
+		ShowWarning("Missing job %s (%d) in job_db2.txt\n", name, class_);
 	}
 }
 
@@ -14443,16 +14443,16 @@ static void status_load_sc_type(void)
 
 static bool status_readdb_job2(char *fields[], int columns, int current)
 {
-	int idx, class, i;
+	int idx, class_, i;
 
 	nullpo_retr(false, fields);
-	class = atoi(fields[0]);
+	class_ = atoi(fields[0]);
 
-	if (!pc->db_checkid(class)) {
-		ShowWarning("status_readdb_job2: Invalid job class %d specified.\n", class);
+	if (!pc->db_checkid(class_)) {
+		ShowWarning("status_readdb_job2: Invalid job class %d specified.\n", class_);
 		return false;
 	}
-	idx = pc->class2idx(class);
+	idx = pc->class2idx(class_);
 
 	for(i = 1; i < columns; i++)
 	{

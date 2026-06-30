@@ -1044,10 +1044,10 @@ static int skill_get_fixed_cast(int skill_id, int skill_lv)
 #endif
 }
 
-static int skill_tree_get_max(int skill_id, int class)
+static int skill_tree_get_max(int skill_id, int class_)
 {
 	int i;
-	int class_idx = pc->class2idx(class);
+	int class_idx = pc->class2idx(class_);
 
 	ARR_FIND( 0, MAX_SKILL_TREE, i, pc->skill_tree[class_idx][i].id == 0 || pc->skill_tree[class_idx][i].id == skill_id );
 	if( i < MAX_SKILL_TREE && pc->skill_tree[class_idx][i].id == skill_id )
@@ -18137,7 +18137,7 @@ static void skill_weaponrefine(struct map_session_data *sd, int idx)
 			per = refine->get_refine_chance(ditem->wlv, (int)item->refine, REFINE_CHANCE_TYPE_NORMAL) * 10;
 
 			// Aegis leaked formula. [malufett]
-			if (sd->status.class == JOB_MECHANIC_T)
+			if (sd->status.class_ == JOB_MECHANIC_T)
 				per += 100;
 			else
 				per += 5 * (sd->status.job_level - 50);

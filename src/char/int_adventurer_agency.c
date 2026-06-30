@@ -84,7 +84,7 @@ static void inter_adventurer_agency_parse_joinParty(int fd)
 	member.account_id = cp->account_id;
 	member.char_id    = cp->char_id;
 	safestrncpy(member.name, cp->name, NAME_LENGTH);
-	member.class      = cp->class;
+	member.class_      = cp->class_;
 	member.map        = map_index;
 	member.lv         = cp->base_level;
 	member.online     = 1;

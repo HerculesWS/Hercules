@@ -7837,18 +7837,18 @@ static BUILDIN(percentheal)
  *------------------------------------------*/
 static BUILDIN(jobchange)
 {
-	int class, upper=-1;
+	int class_, upper=-1;
 
-	class = script_getnum(st,2);
+	class_ = script_getnum(st,2);
 	if( script_hasdata(st,3) )
 		upper=script_getnum(st,3);
 
-	if (pc->db_checkid(class)) {
+	if (pc->db_checkid(class_)) {
 		struct map_session_data *sd = script->rid2sd(st);
 		if (sd == NULL)
 			return true;
 
-		pc->jobchange(sd, class, upper);
+		pc->jobchange(sd, class_, upper);
 	}
 
 	return true;
@@ -7859,8 +7859,8 @@ static BUILDIN(jobchange)
  *------------------------------------------*/
 static BUILDIN(jobname)
 {
-	int class = script_getnum(st,2);
-	script_pushconststr(st, pc->job_name(class));
+	int class_ = script_getnum(st,2);
+	script_pushconststr(st, pc->job_name(class_));
 	return true;
 }
 
@@ -10030,7 +10030,7 @@ static BUILDIN(getpartyleader)
 	switch (type) {
 		case 1: script_pushint(st,p->party.member[i].account_id); break;
 		case 2: script_pushint(st,p->party.member[i].char_id); break;
-		case 3: script_pushint(st,p->party.member[i].class); break;
+		case 3: script_pushint(st,p->party.member[i].class_); break;
 		case 4: script_pushstrcopy(st,mapindex_id2name(p->party.member[i].map)); break;
 		case 5: script_pushint(st,p->party.member[i].lv); break;
 		default: script_pushstrcopy(st,p->party.member[i].name); break;
@@ -14109,16 +14109,16 @@ static BUILDIN(homunculus_shuffle)
 //These two functions bring the eA MAPID_* class functionality to scripts.
 static BUILDIN(eaclass)
 {
-	int class;
+	int class_;
 	if (script_hasdata(st,2)) {
-		class = script_getnum(st,2);
+		class_ = script_getnum(st,2);
 	} else {
 		struct map_session_data *sd = script->rid2sd(st);
 		if (sd == NULL)
 			return true;
-		class = sd->status.class;
+		class_ = sd->status.class_;
 	}
-	script_pushint(st,pc->jobid2mapid(class));
+	script_pushint(st,pc->jobid2mapid(class_));
 	return true;
 }
 
@@ -14236,7 +14236,7 @@ static BUILDIN(changebase)
 			return true;
 	}
 
-	if (sd->disguise == -1 && vclass != sd->vd.class)
+	if (sd->disguise == -1 && vclass != sd->vd.class_)
 		pc->changelook(sd,LOOK_BASE,vclass); //Updated client view. Base, Weapon and Cloth Colors.
 
 	return true;
@@ -16999,23 +16999,23 @@ static BUILDIN(undisguise)
  *------------------------------------------*/
 static BUILDIN(classchange)
 {
-	int class, type, target;
+	int class_, type, target;
 	struct block_list *bl = map->id2bl(st->oid);
 
 	if (bl == NULL)
 		return true;
 
-	class = script_getnum(st, 2);
+	class_ = script_getnum(st, 2);
 	type = script_getnum(st, 3);
 	target = script_hasdata(st, 4) ? script_getnum(st, 4) : 0;
 
 	if (target > 0) {
 		struct map_session_data *sd = script->charid2sd(st, target);
 		if (sd != NULL) {
-			clif->class_change(bl, class, type, sd);
+			clif->class_change(bl, class_, type, sd);
 		}
 	} else {
-		clif->class_change(bl, class, type, NULL);
+		clif->class_change(bl, class_, type, NULL);
 	}
 	return true;
 }
@@ -21252,7 +21252,7 @@ static BUILDIN(setunitdata)
 			break;
 		case UDT_CLASS:
 			if ((val >= JOB_NOVICE && val <= JOB_MAX_BASIC) || (val >= JOB_NOVICE_HIGH && val <= JOB_MAX))
-				md->vd->class = val;
+				md->vd->class_ = val;
 			else
 				mob->class_change(md, val);
 			clif->clearunit_area(bl, CLR_OUTSIGHT);
@@ -22210,7 +22210,7 @@ static BUILDIN(getunitdata)
 		case UDT_AI:          script_pushint(st, md->special_state.ai); break;
 		case UDT_SCOPTION:    script_pushint(st, md->sc.option); break;
 		case UDT_SEX:         script_pushint(st, md->vd->sex); break;
-		case UDT_CLASS:       script_pushint(st, md->vd->class); break;
+		case UDT_CLASS:       script_pushint(st, md->vd->class_); break;
 		case UDT_HAIRSTYLE:   script_pushint(st, md->vd->hair_style); break;
 		case UDT_HAIRCOLOR:   script_pushint(st, md->vd->hair_color); break;
 		case UDT_HEADBOTTOM:  script_pushint(st, md->vd->head_bottom); break;
@@ -22524,7 +22524,7 @@ static BUILDIN(getunitdata)
 		case UDT_ADELAY:      script_pushint(st, nd->status.adelay); break;
 		case UDT_DMOTION:     script_pushint(st, nd->status.dmotion); break;
 		case UDT_SEX:         script_pushint(st, nd->vd.sex); break;
-		case UDT_CLASS:       script_pushint(st, nd->vd.class); break;
+		case UDT_CLASS:       script_pushint(st, nd->vd.class_); break;
 		case UDT_HAIRSTYLE:   script_pushint(st, nd->vd.hair_style); break;
 		case UDT_HAIRCOLOR:   script_pushint(st, nd->vd.hair_color); break;
 		case UDT_HEADBOTTOM:  script_pushint(st, nd->vd.head_bottom); break;
@@ -23390,7 +23390,7 @@ static BUILDIN(mercenary_create)
 
 	class_ = script_getnum(st,2);
 
-	if( !mercenary->class(class_) )
+	if( !mercenary->class_(class_) )
 		return true;
 
 	contract_time = script_getnum(st,3);
@@ -23775,7 +23775,7 @@ static BUILDIN(setquestinfo)
 	{
 		int mer_class = script_getnum(st, 3);
 
-		if (!mercenary->class(mer_class)) {
+		if (!mercenary->class_(mer_class)) {
 			ShowWarning("buildin_setquestinfo: invalid mercenary class given (%d).\n", mer_class);
 			return false;
 		}
@@ -28735,30 +28735,30 @@ static BUILDIN(mestipbox)
  */
 static BUILDIN(getunitparam)
 {
-	int class = -1;
+	int class_ = -1;
 	if (script_hasdata(st, 3)) {
-		class = script_getnum(st, 3);
-		if (class != -1) {
-			if (!pc->db_checkid(class)) {
-				ShowError("buildin_getunitparam: invalid class (%d)\n", class);
+		class_ = script_getnum(st, 3);
+		if (class_ != -1) {
+			if (!pc->db_checkid(class_)) {
+				ShowError("buildin_getunitparam: invalid class (%d)\n", class_);
 				st->state = END;
 				return false;
 			}
-			class = pc->class2idx(class);
+			class_ = pc->class2idx(class_);
 		}
 	}
 
 	struct map_session_data *sd = NULL;
-	if (class == -1) {
+	if (class_ == -1) {
 		sd = script_rid2sd(st);
 		if (sd == NULL) {
 			ShowError("buildin_getunitparam: No player attached, but class == -1.\n");
 			return false;
 		}
-		class = pc->class2idx(sd->status.class);
+		class_ = pc->class2idx(sd->status.class_);
 	}
 
-	struct s_unit_params *entry = status->dbs->unit_params[class];
+	struct s_unit_params *entry = status->dbs->unit_params[class_];
 	int param = script_getnum(st, 2);
 	switch (param) {
 	case UNIT_PARAM_NAME:

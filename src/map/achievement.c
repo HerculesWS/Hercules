@@ -468,7 +468,7 @@ static void achievement_validate_pc_kill(struct map_session_data *sd, struct map
 	/* */
 	VECTOR_INIT(criteria.jobid);
 	VECTOR_ENSURE(criteria.jobid, 1, 1);
-	VECTOR_PUSH(criteria.jobid, dstsd->status.class);
+	VECTOR_PUSH(criteria.jobid, dstsd->status.class_);
 
 	/* Job class */
 	achievement->validate_type(sd, ACH_KILL_PC_JOB, &criteria, true);
@@ -528,7 +528,7 @@ static void achievement_validate_jobchange(struct map_session_data *sd)
 
 	VECTOR_INIT(criteria.jobid);
 	VECTOR_ENSURE(criteria.jobid, 1, 1);
-	VECTOR_PUSH(criteria.jobid, sd->status.class);
+	VECTOR_PUSH(criteria.jobid, sd->status.class_);
 
 	criteria.goal = 1;
 
@@ -570,7 +570,7 @@ static void achievement_validate_stats(struct map_session_data *sd, enum status_
 
 	VECTOR_INIT(criteria.jobid);
 	VECTOR_ENSURE(criteria.jobid, 1, 1);
-	VECTOR_PUSH(criteria.jobid, sd->status.class);
+	VECTOR_PUSH(criteria.jobid, sd->status.class_);
 
 	/* Stat and Job class */
 	achievement->validate_type(sd, ACH_STATUS_BY_JOB, &criteria, false);
@@ -912,9 +912,9 @@ static void achievement_validate_achieve(struct map_session_data *sd, int achid)
  * Validates taming type objectives.
  * @type ACH_PET_CREATE
  * @param[in] sd        pointer to session data.
- * @param[in] class     (criteria) class of the monster tamed.
+ * @param[in] class_     (criteria) class of the monster tamed.
  */
-static void achievement_validate_taming(struct map_session_data *sd, int class)
+static void achievement_validate_taming(struct map_session_data *sd, int class_)
 {
 	struct achievement_objective criteria = { 0 };
 
@@ -923,10 +923,10 @@ static void achievement_validate_taming(struct map_session_data *sd, int class)
 	if (sd->achievements_received == false)
 		return;
 
-	Assert_retv(class > 0);
-	Assert_retv(mob->db(class) != mob->dummy);
+	Assert_retv(class_ > 0);
+	Assert_retv(mob->db(class_) != mob->dummy);
 
-	criteria.mobid = class;
+	criteria.mobid = class_;
 	criteria.goal = 1;
 
 	achievement->validate_type(sd, ACH_PET_CREATE, &criteria, true);

@@ -555,7 +555,7 @@ static int mapif_guild_memberinfoshort(struct guild *g, int idx)
 	WBUFL(buf, 10) = g->member[idx].char_id;
 	WBUFB(buf, 14) = (unsigned char)g->member[idx].online;
 	WBUFW(buf, 15) = g->member[idx].lv;
-	WBUFL(buf, 17) = g->member[idx].class;
+	WBUFL(buf, 17) = g->member[idx].class_;
 	WBUFL(buf, 21) = g->member[idx].last_login;
 	mapif->send(buf, 25);
 	return 0;
@@ -766,9 +766,9 @@ static int mapif_parse_GuildLeave(int fd, int guild_id, int account_id, int char
 }
 
 // Change member info
-static int mapif_parse_GuildChangeMemberInfoShort(int fd, int guild_id, int account_id, int char_id, int online, int lv, int class)
+static int mapif_parse_GuildChangeMemberInfoShort(int fd, int guild_id, int account_id, int char_id, int online, int lv, int class_)
 {
-	inter_guild->update_member_info_short(guild_id, account_id, char_id, online, lv, class);
+	inter_guild->update_member_info_short(guild_id, account_id, char_id, online, lv, class_);
 	return 0;
 }
 

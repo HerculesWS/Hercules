@@ -2126,7 +2126,7 @@ struct skill_interface {
 	int (*get_unit_layout_type) (int skill_id, int skill_lv);
 	int (*get_unit_range) (int skill_id, int skill_lv);
 	int (*get_cooldown) (int skill_id, int skill_lv);
-	int (*tree_get_max) (int skill_id, int class);
+	int (*tree_get_max) (int skill_id, int class_);
 	const char *(*get_name) (int skill_id);
 	const char *(*get_desc) (int skill_id);
 	/* whether its CAST_GROUND, CAST_DAMAGE or CAST_NODAMAGE */

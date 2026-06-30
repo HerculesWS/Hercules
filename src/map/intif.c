@@ -805,7 +805,7 @@ static int intif_guild_leave(int guild_id, int account_id, int char_id, int flag
 }
 
 //Update request / Lv online status of the guild members
-static int intif_guild_memberinfoshort(int guild_id, int account_id, int char_id, int online, int lv, int class)
+static int intif_guild_memberinfoshort(int guild_id, int account_id, int char_id, int online, int lv, int class_)
 {
 	if (intif->CheckForCharServer())
 		return 0;
@@ -816,7 +816,7 @@ static int intif_guild_memberinfoshort(int guild_id, int account_id, int char_id
 	WFIFOL(inter_fd,10) = char_id;
 	WFIFOB(inter_fd,14) = online;
 	WFIFOL(inter_fd,15) = lv;
-	WFIFOL(inter_fd,19) = class;
+	WFIFOL(inter_fd,19) = class_;
 	WFIFOSET(inter_fd,23);
 	return 0;
 }
@@ -1449,7 +1449,7 @@ static void intif_parse_GuildMemberInfoChanged(int fd)
 		case GMI_HAIR:       g->member[idx].hair       = RFIFOW(fd,18); break;
 		case GMI_HAIR_COLOR: g->member[idx].hair_color = RFIFOW(fd,18); break;
 		case GMI_GENDER:     g->member[idx].gender     = RFIFOW(fd,18); break;
-		case GMI_CLASS:      g->member[idx].class      = RFIFOW(fd,18); break;
+		case GMI_CLASS:      g->member[idx].class_      = RFIFOW(fd,18); break;
 		case GMI_LEVEL:      g->member[idx].lv         = RFIFOW(fd,18); break;
 	}
 }

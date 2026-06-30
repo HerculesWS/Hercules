@@ -2078,7 +2078,7 @@ struct PACKET_ZC_ADD_MEMBER_TO_GROUP {
 #endif
 	uint32 leader;
 #if PACKETVER_MAIN_NUM >= 20170524 || PACKETVER_RE_NUM >= 20170502 || defined(PACKETVER_ZERO)
-	int16 class;
+	int16 class_;
 	int16 baseLevel;
 #endif
 	int16 x;
@@ -2101,7 +2101,7 @@ struct PACKET_ZC_GROUP_LIST_SUB {
 	uint8 leader;
 	uint8 offline;
 #if PACKETVER_MAIN_NUM >= 20170524 || PACKETVER_RE_NUM >= 20170502 || defined(PACKETVER_ZERO)
-	int16 class;
+	int16 class_;
 	int16 baseLevel;
 #endif
 } __attribute__((packed));

@@ -117,7 +117,7 @@ static bool stylist_validate_requirements(struct map_session_data *sd, int type,
 
 	entry = &VECTOR_INDEX(stylist->data[type], idx);
 
-	if (sd->status.class == JOB_SUMMONER && (entry->allow_doram == false))
+	if (sd->status.class_ == JOB_SUMMONER && (entry->allow_doram == false))
 		return false;
 
 	if (entry->id >= 0) {

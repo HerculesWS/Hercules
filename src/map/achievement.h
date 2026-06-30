@@ -270,7 +270,7 @@ struct achievement_interface {
 	void (*validate_item_get) (struct map_session_data *sd, int nameid, int amount);
 	void (*validate_item_sell) (struct map_session_data *sd, int nameid, int amount);
 	void (*validate_achieve) (struct map_session_data *sd, int achid);
-	void (*validate_taming) (struct map_session_data *sd, int class);
+	void (*validate_taming) (struct map_session_data *sd, int class_);
 	void (*validate_achievement_rank) (struct map_session_data *sd, int rank);
 	/* */
 	bool (*type_requires_criteria) (enum achievement_types type);

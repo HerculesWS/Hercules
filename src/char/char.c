@@ -532,7 +532,7 @@ static int char_mmo_char_tosql(int char_id, struct mmo_charstatus *p)
 	if (
 		(p->hair != cp->hair) || (p->hair_color != cp->hair_color) ||
 		(p->clothes_color != cp->clothes_color) || (p->body != cp->body) ||
-		(p->class != cp->class) ||
+		(p->class_ != cp->class_) ||
 		(p->partner_id != cp->partner_id) || (p->father != cp->father) ||
 		(p->mother != cp->mother) || (p->child != cp->child) ||
 		(p->karma != cp->karma) || (p->manner != cp->manner) ||
@@ -544,7 +544,7 @@ static int char_mmo_char_tosql(int char_id, struct mmo_charstatus *p)
 			"`partner_id`='%d', `father`='%d', `mother`='%d', `child`='%d',"
 			"`karma`='%d', `manner`='%d', `fame`='%d'"
 			" WHERE  `account_id`='%d' AND `char_id` = '%d'",
-			char_db, p->class,
+			char_db, p->class_,
 			p->hair, p->hair_color, p->clothes_color, p->body,
 			p->partner_id, p->father, p->mother, p->child,
 			p->karma, p->manner, p->fame,
@@ -1107,7 +1107,7 @@ static int char_mmo_chars_fromsql(struct char_session_data *sd, uint8 *buf, int 
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 0,  SQLDT_INT,    &p.char_id,          sizeof p.char_id,          NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 1,  SQLDT_UCHAR,  &p.slot,             sizeof p.slot,             NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 2,  SQLDT_STRING, &p.name,             sizeof p.name,             NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 3,  SQLDT_INT,    &p.class,            sizeof p.class,            NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 3,  SQLDT_INT,    &p.class_,            sizeof p.class_,            NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 4,  SQLDT_INT,    &p.base_level,       sizeof p.base_level,       NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 5,  SQLDT_INT,    &p.job_level,        sizeof p.job_level,        NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 6,  SQLDT_UINT64, &p.base_exp,         sizeof p.base_exp,         NULL, NULL)
@@ -1230,7 +1230,7 @@ static int char_mmo_char_fromsql(int char_id, struct mmo_charstatus *p, bool loa
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 1,  SQLDT_INT,    &p->account_id,         sizeof p->account_id,         NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 2,  SQLDT_UCHAR,  &p->slot,               sizeof p->slot,               NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 3,  SQLDT_STRING, &p->name,               sizeof p->name,               NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 4,  SQLDT_INT,    &p->class,              sizeof p->class,              NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 4,  SQLDT_INT,    &p->class_,              sizeof p->class_,              NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 5,  SQLDT_INT,    &p->base_level,         sizeof p->base_level,         NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 6,  SQLDT_INT,    &p->job_level,          sizeof p->job_level,          NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 7,  SQLDT_UINT64, &p->base_exp,           sizeof p->base_exp,           NULL, NULL)
@@ -1602,7 +1602,7 @@ static int char_rename_char_sql(struct char_session_data *sd, int char_id)
 					" '%d', '%d'"
 					")",
 					charlog_db,
-					sd->account_id, char_dat.char_id, char_dat.slot, char_dat.class, esc_name,
+					sd->account_id, char_dat.char_id, char_dat.slot, char_dat.class_, esc_name,
 					char_dat.str, char_dat.agi, char_dat.vit, char_dat.int_, char_dat.dex, char_dat.luk,
 					char_dat.hair, char_dat.hair_color
 					))
@@ -2083,7 +2083,7 @@ static int char_mmo_char_tobuf(uint8 *buffer, struct mmo_charstatus *p)
 	WBUFW(buf, 48) = min(p->max_sp, INT16_MAX);
 #endif  // PACKETVER_MAIN_NUM >= 20201007 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 	WBUFW(buf,50) = DEFAULT_WALK_SPEED; // p->speed;
-	WBUFW(buf,52) = p->class;
+	WBUFW(buf,52) = p->class_;
 	WBUFW(buf,54) = p->hair;
 #if PACKETVER >= 20141022
 	WBUFW(buf,56) = p->body;
@@ -2554,11 +2554,11 @@ static void char_changesex(int account_id, int sex)
  * @param sex The character's new gender (SEX_MALE or SEX_FEMALE).
  * @param acc The character's account ID.
  * @param char_id The character ID.
- * @param class The character's current job class.
+ * @param class_ The character's current job class.
  * @param guild_id The character's guild ID.
  *
  **/
-static void char_change_sex_sub(int sex, int acc, int char_id, int class, int guild_id)
+static void char_change_sex_sub(int sex, int acc, int char_id, int class_, int guild_id)
 {
 	struct SqlStmt *stmt = SQL->StmtMalloc(inter->sql_handle);
 
@@ -2580,22 +2580,22 @@ static void char_change_sex_sub(int sex, int acc, int char_id, int class, int gu
 	}
 
 	/** Correct the job class for gender specific jobs according to the passed gender. **/
-	if (class == JOB_BARD || class == JOB_DANCER)
-		class = (sex == SEX_MALE ? JOB_BARD : JOB_DANCER);
-	else if (class == JOB_CLOWN || class == JOB_GYPSY)
-		class = (sex == SEX_MALE ? JOB_CLOWN : JOB_GYPSY);
-	else if (class == JOB_BABY_BARD || class == JOB_BABY_DANCER)
-		class = (sex == SEX_MALE ? JOB_BABY_BARD : JOB_BABY_DANCER);
-	else if (class == JOB_MINSTREL || class == JOB_WANDERER)
-		class = (sex == SEX_MALE ? JOB_MINSTREL : JOB_WANDERER);
-	else if (class == JOB_MINSTREL_T || class == JOB_WANDERER_T)
-		class = (sex == SEX_MALE ? JOB_MINSTREL_T : JOB_WANDERER_T);
-	else if (class == JOB_BABY_MINSTREL || class == JOB_BABY_WANDERER)
-		class = (sex == SEX_MALE ? JOB_BABY_MINSTREL : JOB_BABY_WANDERER);
-	else if (class == JOB_KAGEROU || class == JOB_OBORO)
-		class = (sex == SEX_MALE ? JOB_KAGEROU : JOB_OBORO);
-	else if (class == JOB_BABY_KAGEROU || class == JOB_BABY_OBORO)
-		class = (sex == SEX_MALE ? JOB_BABY_KAGEROU : JOB_BABY_OBORO);
+	if (class_ == JOB_BARD || class_ == JOB_DANCER)
+		class_ = (sex == SEX_MALE ? JOB_BARD : JOB_DANCER);
+	else if (class_ == JOB_CLOWN || class_ == JOB_GYPSY)
+		class_ = (sex == SEX_MALE ? JOB_CLOWN : JOB_GYPSY);
+	else if (class_ == JOB_BABY_BARD || class_ == JOB_BABY_DANCER)
+		class_ = (sex == SEX_MALE ? JOB_BABY_BARD : JOB_BABY_DANCER);
+	else if (class_ == JOB_MINSTREL || class_ == JOB_WANDERER)
+		class_ = (sex == SEX_MALE ? JOB_MINSTREL : JOB_WANDERER);
+	else if (class_ == JOB_MINSTREL_T || class_ == JOB_WANDERER_T)
+		class_ = (sex == SEX_MALE ? JOB_MINSTREL_T : JOB_WANDERER_T);
+	else if (class_ == JOB_BABY_MINSTREL || class_ == JOB_BABY_WANDERER)
+		class_ = (sex == SEX_MALE ? JOB_BABY_MINSTREL : JOB_BABY_WANDERER);
+	else if (class_ == JOB_KAGEROU || class_ == JOB_OBORO)
+		class_ = (sex == SEX_MALE ? JOB_KAGEROU : JOB_OBORO);
+	else if (class_ == JOB_BABY_KAGEROU || class_ == JOB_BABY_OBORO)
+		class_ = (sex == SEX_MALE ? JOB_BABY_KAGEROU : JOB_BABY_OBORO);
 
 #if PACKETVER >= 20141016
 	char gender = (sex == SEX_MALE) ? 'M' : ((sex == SEX_FEMALE) ? 'F' : 'U');
@@ -2608,7 +2608,7 @@ static void char_change_sex_sub(int sex, int acc, int char_id, int class, int gu
 
 	/** Don't update guild data if changing gender fails to prevent data de-synchronisation. **/
 	if (SQL_ERROR == SQL->StmtPrepare(stmt, query_char, char_db)
-	    || SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_INT32, &class, sizeof(class))
+	    || SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_INT32, &class_, sizeof(class_))
 	    || SQL_ERROR == SQL->StmtBindParam(stmt, 1, SQLDT_ENUM, &gender, sizeof(gender))
 	    || SQL_ERROR == SQL->StmtBindParam(stmt, 2, SQLDT_INT32, &char_id, sizeof(char_id))
 	    || SQL_ERROR == SQL->StmtExecute(stmt)) {
@@ -2626,7 +2626,7 @@ static void char_change_sex_sub(int sex, int acc, int char_id, int class, int gu
 
 static int char_parse_fromlogin_changesex_reply(int fd)
 {
-	int char_id = 0, class = 0, guild_id = 0;
+	int char_id = 0, class_ = 0, guild_id = 0;
 	int i;
 	struct char_auth_node *node;
 	struct SqlStmt *stmt;
@@ -2651,7 +2651,7 @@ static int char_parse_fromlogin_changesex_reply(int fd)
 	if (SQL_ERROR == SQL->StmtPrepare(stmt, "SELECT `char_id`,`class`,`guild_id` FROM `%s` WHERE `account_id` = '%d'", char_db, acc)
 	 || SQL_ERROR == SQL->StmtExecute(stmt)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 0, SQLDT_INT, &char_id,  sizeof char_id,  NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 1, SQLDT_INT, &class,    sizeof class,    NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 1, SQLDT_INT, &class_,    sizeof class_,    NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 2, SQLDT_INT, &guild_id, sizeof guild_id, NULL, NULL)
 	) {
 		SqlStmt_ShowDebug(stmt);
@@ -2659,7 +2659,7 @@ static int char_parse_fromlogin_changesex_reply(int fd)
 	}
 
 	for (i = 0; i < MAX_CHARS && SQL_SUCCESS == SQL->StmtNextRow(stmt); ++i) {
-		chr->change_sex_sub(sex, acc, char_id, class, guild_id);
+		chr->change_sex_sub(sex, acc, char_id, class_, guild_id);
 	}
 	SQL->StmtFree(stmt);
 
@@ -3467,7 +3467,7 @@ static int char_changecharsex(int char_id, int sex)
 
 	const char *query = "SELECT `account_id`, `class`, `guild_id` FROM `%s` WHERE `char_id`=?";
 	int account_id = 0;
-	int class = 0;
+	int class_ = 0;
 	int guild_id = 0;
 
 	/** Abort changing gender if there was an error while loading the data. **/
@@ -3475,7 +3475,7 @@ static int char_changecharsex(int char_id, int sex)
 	    || SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_INT32, &char_id, sizeof(char_id))
 	    || SQL_ERROR == SQL->StmtExecute(stmt)
 	    || SQL_ERROR == SQL->StmtBindColumn(stmt, 0, SQLDT_INT32, &account_id, sizeof(account_id), NULL, NULL)
-	    || SQL_ERROR == SQL->StmtBindColumn(stmt, 1, SQLDT_INT32, &class, sizeof(class), NULL, NULL)
+	    || SQL_ERROR == SQL->StmtBindColumn(stmt, 1, SQLDT_INT32, &class_, sizeof(class_), NULL, NULL)
 	    || SQL_ERROR == SQL->StmtBindColumn(stmt, 2, SQLDT_INT32, &guild_id, sizeof(guild_id), NULL, NULL)) {
 		SqlStmt_ShowDebug(stmt);
 		SQL->StmtFree(stmt);
@@ -3504,7 +3504,7 @@ static int char_changecharsex(int char_id, int sex)
 	}
 
 	SQL->StmtFree(stmt);
-	chr->change_sex_sub(sex, account_id, char_id, class, guild_id);
+	chr->change_sex_sub(sex, account_id, char_id, class_, guild_id);
 	chr->disconnect_player(account_id); // Disconnect player if online on char-server.
 	chr->changesex(account_id, sex); // Notify all mapservers about this change.
 
@@ -4613,7 +4613,7 @@ static void char_parse_char_select(int fd, struct char_session_data *sd, uint32 
 					" '%d', '%d', '%d', '%d', '%d', '%d',"
 					" '%d', '%d')",
 					charlog_db,
-					sd->account_id, cd->char_id, slot, char_dat.class, esc_name,
+					sd->account_id, cd->char_id, slot, char_dat.class_, esc_name,
 					char_dat.str, char_dat.agi, char_dat.vit, char_dat.int_, char_dat.dex, char_dat.luk,
 					char_dat.hair, char_dat.hair_color
 					))

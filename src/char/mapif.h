@@ -89,7 +89,7 @@ struct mapif_interface {
 	int (*parse_GuildInfo) (int fd, int guild_id);
 	int (*parse_GuildAddMember) (int fd, int guild_id, const struct guild_member *m);
 	int (*parse_GuildLeave) (int fd, int guild_id, int account_id, int char_id, int flag, const char *mes);
-	int (*parse_GuildChangeMemberInfoShort) (int fd, int guild_id, int account_id, int char_id, int online, int lv, int class);
+	int (*parse_GuildChangeMemberInfoShort) (int fd, int guild_id, int account_id, int char_id, int online, int lv, int class_);
 	int (*parse_BreakGuild) (int fd, int guild_id);
 	int (*parse_GuildBasicInfoChange) (int fd, int guild_id, int type, const void *data, int len);
 	int (*parse_GuildMemberInfoChange) (int fd, int guild_id, int account_id, int char_id, int type, const char *data, int len);

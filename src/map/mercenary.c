@@ -451,7 +451,7 @@ static bool read_mercenarydb_sub(char *str[], int columns, int current)
 	db->lv = atoi(str[3]);
 
 	mstatus = &db->status;
-	db->vd.class = db->class_;
+	db->vd.class_ = db->class_;
 
 	mstatus->max_hp = atoi(str[4]);
 	mstatus->max_sp = atoi(str[5]);
@@ -567,7 +567,7 @@ void mercenary_defaults(void)
 	/* funcs */
 	mercenary->init = do_init_mercenary;
 
-	mercenary->class = merc_class;
+	mercenary->class_ = merc_class;
 	mercenary->get_viewdata = merc_get_viewdata;
 
 	mercenary->create = merc_create;

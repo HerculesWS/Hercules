@@ -126,7 +126,7 @@ struct mercenary_interface {
 
 	void (*init) (bool minimal);
 
-	bool (*class) (int class_);
+	bool (*class_) (int class_);
 	struct view_data * (*get_viewdata) (int class_);
 
 	int (*create) (struct map_session_data *sd, int class_, unsigned int lifetime);

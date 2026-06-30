@@ -1465,7 +1465,7 @@ static void do_init_homunculus(bool minimal)
 	//Stock view data for homuncs
 	memset(homun->dbs->viewdb, 0, sizeof(homun->dbs->viewdb));
 	for (class_ = 0; class_ < MAX_HOMUNCULUS_CLASS; class_++)
-		homun->dbs->viewdb[class_].class = HM_CLASS_BASE + class_;
+		homun->dbs->viewdb[class_].class_ = HM_CLASS_BASE + class_;
 }
 
 static void do_final_homunculus(void)
