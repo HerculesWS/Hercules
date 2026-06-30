@@ -71,24 +71,24 @@ static void display_title(void)
 	const char *vcstype = sysinfo->vcstype();
 
 	ShowMessage("\n");
-	ShowMessage(""CL_BG_RED""CL_BT_WHITE"                                                                      "CL_CLL""CL_NORMAL"\n");
-	ShowMessage(""CL_BG_RED""CL_BT_WHITE"                 Hercules Development Team presents                   "CL_CLL""CL_NORMAL"\n");
-	ShowMessage(""CL_BG_RED""CL_BT_WHITE"                _   _                     _                           "CL_CLL""CL_NORMAL"\n");
-	ShowMessage(""CL_BG_RED""CL_BT_WHITE"               | | | |                   | |                          "CL_CLL""CL_NORMAL"\n");
-	ShowMessage(""CL_BG_RED""CL_BT_WHITE"               | |_| | ___ _ __ ___ _   _| | ___  ___                 "CL_CLL""CL_NORMAL"\n");
-	ShowMessage(""CL_BG_RED""CL_BT_WHITE"               |  _  |/ _ \\ '__/ __| | | | |/ _ \\/ __|                "CL_CLL""CL_NORMAL"\n");
-	ShowMessage(""CL_BG_RED""CL_BT_WHITE"               | | | |  __/ | | (__| |_| | |  __/\\__ \\                "CL_CLL""CL_NORMAL"\n");
-	ShowMessage(""CL_BG_RED""CL_BT_WHITE"               \\_| |_/\\___|_|  \\___|\\__,_|_|\\___||___/                "CL_CLL""CL_NORMAL"\n");
-	ShowMessage(""CL_BG_RED""CL_BT_WHITE"                                                                      "CL_CLL""CL_NORMAL"\n");
-	ShowMessage(""CL_BG_RED""CL_BT_WHITE"                      http://herc.ws/board/                           "CL_CLL""CL_NORMAL"\n");
-	ShowMessage(""CL_BG_RED""CL_BT_WHITE"                                                                      "CL_CLL""CL_NORMAL"\n");
+	ShowMessage("" CL_BG_RED "" CL_BT_WHITE "                                                                      " CL_CLL"" CL_NORMAL"\n");
+	ShowMessage("" CL_BG_RED "" CL_BT_WHITE "                 Hercules Development Team presents                   " CL_CLL"" CL_NORMAL"\n");
+	ShowMessage("" CL_BG_RED "" CL_BT_WHITE "                _   _                     _                           " CL_CLL"" CL_NORMAL"\n");
+	ShowMessage("" CL_BG_RED "" CL_BT_WHITE "               | | | |                   | |                          " CL_CLL"" CL_NORMAL"\n");
+	ShowMessage("" CL_BG_RED "" CL_BT_WHITE "               | |_| | ___ _ __ ___ _   _| | ___  ___                 " CL_CLL"" CL_NORMAL"\n");
+	ShowMessage("" CL_BG_RED "" CL_BT_WHITE "               |  _  |/ _ \\ '__/ __| | | | |/ _ \\/ __|                " CL_CLL "" CL_NORMAL "\n");
+	ShowMessage("" CL_BG_RED "" CL_BT_WHITE "               | | | |  __/ | | (__| |_| | |  __/\\__ \\                " CL_CLL "" CL_NORMAL "\n");
+	ShowMessage("" CL_BG_RED "" CL_BT_WHITE "               \\_| |_/\\___|_|  \\___|\\__,_|_|\\___||___/                " CL_CLL "" CL_NORMAL "\n");
+	ShowMessage("" CL_BG_RED "" CL_BT_WHITE "                                                                      " CL_CLL "" CL_NORMAL "\n");
+	ShowMessage("" CL_BG_RED "" CL_BT_WHITE "                      http://herc.ws/board/                           " CL_CLL "" CL_NORMAL "\n");
+	ShowMessage("" CL_BG_RED "" CL_BT_WHITE "                                                                      " CL_CLL "" CL_NORMAL "\n");
 
 	ShowInfo("Hercules %d-bit for %s\n", sysinfo->is64bit() ? 64 : 32, sysinfo->platform());
-	ShowInfo("Build revision: '"CL_WHITE"%d"CL_RESET"'\n", sysinfo->build_revision());
-	ShowInfo("%s revision (src): '"CL_WHITE"%s"CL_RESET"'\n", vcstype, sysinfo->vcsrevision_src());
-	ShowInfo("%s revision (scripts): '"CL_WHITE"%s"CL_RESET"'\n", vcstype, sysinfo->vcsrevision_scripts());
-	ShowInfo("OS version: '"CL_WHITE"%s"CL_RESET" [%s]'\n", sysinfo->osversion(), sysinfo->arch());
-	ShowInfo("CPU: '"CL_WHITE"%s [%d]"CL_RESET"'\n", sysinfo->cpu(), sysinfo->cpucores());
+	ShowInfo("Build revision: '" CL_WHITE "%d" CL_RESET "'\n", sysinfo->build_revision());
+	ShowInfo("%s revision (src): '" CL_WHITE "%s" CL_RESET "'\n", vcstype, sysinfo->vcsrevision_src());
+	ShowInfo("%s revision (scripts): '" CL_WHITE "%s" CL_RESET "'\n", vcstype, sysinfo->vcsrevision_scripts());
+	ShowInfo("OS version: '" CL_WHITE "%s" CL_RESET " [%s]'\n", sysinfo->osversion(), sysinfo->arch());
+	ShowInfo("CPU: '" CL_WHITE "%s [%d]" CL_RESET "'\n", sysinfo->cpu(), sysinfo->cpucores());
 	ShowInfo("Compiled with %s, zlib: %s\n", sysinfo->compiler(), sysinfo->zlib());
 	ShowInfo("Compile Flags: %s\n", sysinfo->cflags());
 	ShowInfo("Feature Flags: 0x%x\n", sysinfo->fflags());
@@ -167,10 +167,10 @@ static CPCMD(help)
 	for (i = 0; i < VECTOR_LENGTH(console->input->command_list); i++) {
 		struct CParseEntry *entry = VECTOR_INDEX(console->input->command_list, i);
 		if (entry->type == CPET_CATEGORY) {
-			ShowInfo("- '"CL_WHITE"%s"CL_RESET"' subs\n", entry->cmd);
+			ShowInfo("- '" CL_WHITE "%s" CL_RESET "' subs\n", entry->cmd);
 			console->input->parse_list_subs(entry, 2);
 		} else {
-			ShowInfo("- '"CL_WHITE"%s"CL_RESET"'\n", entry->cmd);
+			ShowInfo("- '" CL_WHITE "%s" CL_RESET "'\n", entry->cmd);
 		}
 	}
 }
@@ -235,10 +235,10 @@ static void console_load_defaults(void)
 #define CP_DEF(x) { #x , CPET_FUNCTION, CPCMD_A(x), NULL, NULL }
 
 	struct {
-		char *name;
+		const char *name;
 		int type;
 		CParseFunc func;
-		char *connect;
+		const char *connect;
 		struct CParseEntry *self;
 	} default_list[] = {
 		CP_DEF(help),
@@ -314,7 +314,7 @@ static void console_load_defaults(void)
  * @param name The command name.
  * @param func The command callback.
  */
-static void console_parse_create(char *name, CParseFunc func)
+static void console_parse_create(const char *name, CParseFunc func)
 {
 	int i;
 	char *tok;
@@ -381,7 +381,7 @@ static void console_parse_list_subs(struct CParseEntry *cmd, unsigned char depth
 	for (i = 0; i < VECTOR_LENGTH(cmd->u.children); i++) {
 		struct CParseEntry *child = VECTOR_INDEX(cmd->u.children, i);
 		memset(msg, '-', depth);
-		snprintf(msg + depth, (CP_CMD_LENGTH * 2) - depth, " '"CL_WHITE"%s"CL_RESET"'", child->cmd);
+		snprintf(msg + depth, (CP_CMD_LENGTH * 2) - depth, " '" CL_WHITE "%s" CL_RESET "'", child->cmd);
 		if (child->type == CPET_FUNCTION) {
 			ShowInfo("%s\n",msg);
 		} else {
@@ -414,7 +414,7 @@ static void console_parse_sub(char *line)
 
 	ARR_FIND(0, VECTOR_LENGTH(console->input->command_list), i, strcmpi(tok, VECTOR_INDEX(console->input->command_list, i)->cmd) == 0);
 	if (i == VECTOR_LENGTH(console->input->command_list)) {
-		ShowError("'"CL_WHITE"%s"CL_RESET"' is not a known command, type '"CL_WHITE"help"CL_RESET"' to list all commands\n",line);
+		ShowError("'" CL_WHITE "%s" CL_RESET "' is not a known command, type '" CL_WHITE "help" CL_RESET "' to list all commands\n",line);
 		return;
 	}
 
@@ -443,15 +443,15 @@ static void console_parse_sub(char *line)
 		if (i == VECTOR_LENGTH(cmd->u.children)) {
 			if (strcmpi("help", tok) == 0) {
 				if (VECTOR_LENGTH(cmd->u.children)) {
-					ShowInfo("- '"CL_WHITE"%s"CL_RESET"' subs\n",sublist);
+					ShowInfo("- '" CL_WHITE "%s" CL_RESET "' subs\n",sublist);
 					console->input->parse_list_subs(cmd,2);
 				} else {
-					ShowError("'"CL_WHITE"%s"CL_RESET"' doesn't possess any subcommands\n",sublist);
+					ShowError("'" CL_WHITE "%s" CL_RESET "' doesn't possess any subcommands\n",sublist);
 				}
 				return;
 			}
-			ShowError("'"CL_WHITE"%s"CL_RESET"' is not a known subcommand of '"CL_WHITE"%s"CL_RESET"'\n",tok,cmd->cmd);
-			ShowError("type '"CL_WHITE"%s help"CL_RESET"' to list its subcommands\n",sublist);
+			ShowError("'" CL_WHITE "%s" CL_RESET "' is not a known subcommand of '" CL_WHITE "%s" CL_RESET "'\n",tok,cmd->cmd);
+			ShowError("type '" CL_WHITE "%s help" CL_RESET "' to list its subcommands\n",sublist);
 			return;
 		}
 		entry = VECTOR_INDEX(cmd->u.children, i);
@@ -473,7 +473,7 @@ static void console_parse_sub(char *line)
 		if (len < sizeof(sublist) - 1)
 			snprintf(sublist + len, sizeof(sublist) - len, " %s", cmd->cmd);
 	}
-	ShowError("Is only a category, type '"CL_WHITE"%s help"CL_RESET"' to list its subcommands\n",sublist);
+	ShowError("Is only a category, type '" CL_WHITE "%s help" CL_RESET "' to list its subcommands\n",sublist);
 }
 
 static void console_parse(char *line)

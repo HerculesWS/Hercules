@@ -70,7 +70,7 @@ struct timer_interface {
 	int64 (*addtick) (int tid, int64 tick);
 	int64 (*settick) (int tid, int64 tick);
 
-	int (*add_func_list) (TimerFunc func, char* name);
+	int (*add_func_list) (TimerFunc func, const char* name);
 
 	unsigned long (*get_uptime) (void);
 
@@ -82,10 +82,18 @@ struct timer_interface {
 	bool (*get_available_clocksource) (char *buf, int buf_size);
 };
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef HERCULES_CORE
 void timer_defaults(void);
 #endif // HERCULES_CORE
 
 HPShared struct timer_interface *timer;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* COMMON_TIMER_H */

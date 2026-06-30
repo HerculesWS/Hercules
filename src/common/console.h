@@ -97,7 +97,7 @@ struct console_input_interface {
 	int (*key_pressed) (void);
 	void (*load_defaults) (void);
 	void (*parse_list_subs) (struct CParseEntry *cmd, unsigned char depth);
-	void (*addCommand) (char *name, CParseFunc func);
+	void (*addCommand) (const char *name, CParseFunc func);
 	void (*setSQL) (struct Sql *SQL_handle);
 #else // not CONSOLE_INPUT
 	UNAVAILABLE_STRUCT;
@@ -113,10 +113,18 @@ struct console_interface {
 	struct console_input_interface *input;
 };
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef HERCULES_CORE
 void console_defaults(void);
 #endif // HERCULES_CORE
 
 HPShared struct console_interface *console;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* COMMON_CONSOLE_H */

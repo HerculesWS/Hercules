@@ -67,9 +67,9 @@ struct cond_data {
 /// @copydoc mutex_interface::create()
 static struct mutex_data *mutex_create(void)
 {
-	struct mutex_data *m = aMalloc(sizeof(struct mutex_data));
+	struct mutex_data *m = (struct mutex_data *)aMalloc(sizeof(struct mutex_data));
 	if (m == NULL) {
-		ShowFatalError("ramutex_create: OOM while allocating %"PRIuS" bytes.\n", sizeof(struct mutex_data));
+		ShowFatalError("ramutex_create: OOM while allocating %" PRIuS " bytes.\n", sizeof(struct mutex_data));
 		return NULL;
 	}
 
@@ -136,9 +136,9 @@ static void mutex_unlock(struct mutex_data *m)
 /// @copydoc mutex_interface::cond_create()
 static struct cond_data *cond_create(void)
 {
-	struct cond_data *c = aMalloc(sizeof(struct cond_data));
+	struct cond_data *c = (struct cond_data *)aMalloc(sizeof(struct cond_data));
 	if (c == NULL) {
-		ShowFatalError("racond_create: OOM while allocating %"PRIuS" bytes\n", sizeof(struct cond_data));
+		ShowFatalError("racond_create: OOM while allocating %" PRIuS " bytes\n", sizeof(struct cond_data));
 		return NULL;
 	}
 
@@ -173,7 +173,7 @@ static void cond_destroy(struct cond_data *c)
 static void cond_wait(struct cond_data *c, struct mutex_data *m, sysint timeout_ticks)
 {
 #ifdef WIN32
-	register DWORD ms;
+	DWORD ms;
 	int result;
 	bool is_last = false;
 

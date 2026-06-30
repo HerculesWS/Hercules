@@ -233,7 +233,7 @@ struct HPMi_interface {
 	void (*event[HPET_MAX]) (void);
 	bool (*addCommand) (char *name, bool (*func)(const int fd, struct map_session_data* sd, const char* command, const char* message,struct AtCommandInfo *info));
 	bool (*addScript) (char *name, char *args, bool (*func)(struct script_state *st), bool isDeprecated);
-	void (*addCPCommand) (char *name, CParseFunc func);
+	void (*addCPCommand) (const char *name, CParseFunc func);
 	/* HPM Custom Data */
 	void (*addToHPData) (enum HPluginDataTypes type, uint32 pluginID, struct hplugin_data_store **storeptr, void *data, uint32 classid, bool autofree);
 	void *(*getFromHPData) (enum HPluginDataTypes type, uint32 pluginID, struct hplugin_data_store *store, uint32 classid);

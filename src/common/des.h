@@ -60,10 +60,18 @@ struct des_interface {
 	void (*decrypt) (unsigned char *data, size_t size);
 };
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef HERCULES_CORE
 void des_defaults(void);
 #endif // HERCULES_CORE
 
 HPShared struct des_interface *des; ///< Pointer to the des interface implementation.
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // COMMON_DES_H

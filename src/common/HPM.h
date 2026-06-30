@@ -155,7 +155,7 @@ struct HPM_interface {
 	void (*share) (void *value, const char *name);
 	void (*config_read) (void);
 	bool (*parse_battle_conf) (const struct config_t *config, const char *filename, bool imported);
-	char *(*pid2name) (unsigned int pid);
+	const char *(*pid2name) (unsigned int pid);
 	unsigned char (*parse_packets) (int fd, int packet_id, enum HPluginPacketHookingPoints point);
 	void (*load_sub) (struct hplugin *plugin);
 	/* for custom config parsing */
@@ -177,10 +177,18 @@ struct HPM_interface {
 	struct HPMHooking_core_interface *hooking;
 };
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 CMDLINEARG(loadplugin);
 
 extern struct HPM_interface *HPM;
 
 void hpm_defaults(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* COMMON_HPM_H */

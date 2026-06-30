@@ -164,3 +164,5 @@ if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
 
   add_dependencies(common sysinfo)
 endif()
+
+set_source_files_properties(${COMMON_SRCS} PROPERTIES LANGUAGE CXX)

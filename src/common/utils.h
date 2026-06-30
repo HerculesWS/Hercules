@@ -42,6 +42,10 @@
 //Caps values to min/max
 #define cap_value(a, min, max) (((a) >= (max)) ? (max) : ((a) <= (min)) ? (min) : (a))
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef HERCULES_CORE
 // generate a hex dump of the first 'length' bytes of 'buffer'
 void WriteDump(FILE* fp, const void* buffer, size_t length);
@@ -85,6 +89,10 @@ int64 htell(FILE *stream);
 int hseek(FILE *stream, int64 offset, int origin);
 #endif // HERCULES_CORE
 
+#ifdef __cplusplus
+}
+#endif
+
 #ifdef WIN32
 #define HSleep(x) Sleep(1000 * (x))
 #else // ! WIN32
@@ -102,10 +110,18 @@ struct HCache_interface {
 	bool enabled;
 };
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef HERCULES_CORE
 void HCache_defaults(void);
 #endif // HERCULES_CORE
 
 HPShared struct HCache_interface *HCache;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* COMMON_UTILS_H */

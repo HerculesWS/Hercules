@@ -125,9 +125,18 @@ struct grfio_interface {
  */
 #define grfio_read(fn) grfio->reads((fn), NULL)
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef HERCULES_CORE
 void grfio_defaults(void);
 #endif // HERCULES_CORE
 
 HPShared struct grfio_interface *grfio; ///< Pointer to the grfio interface.
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif /* COMMON_GRFIO_H */

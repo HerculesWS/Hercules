@@ -689,7 +689,7 @@ static union DBKey db_dup_key(struct DBMap_impl *db, union DBKey key)
 		case DB_ISTRING:
 		{
 			size_t len = strnlen(key.str, db->maxlen);
-			char *str = aMalloc(len + 1);
+			char *str = (char *)aMalloc(len + 1);
 
 			memcpy(str, key.str, len);
 			str[len] = '\0';
@@ -2430,7 +2430,7 @@ static enum DBOptions db_fix_options(enum DBType type, enum DBOptions options)
 			return (enum DBOptions)(options&~(DB_OPT_DUP_KEY|DB_OPT_RELEASE_KEY));
 
 		default:
-			ShowError("db_fix_options: Unknown database type %u with options %x\n", type, options);
+			ShowError("db_fix_options: Unknown database type %u with options %x\n", (unsigned int)type, (unsigned int)options);
 			FALLTHROUGH
 		case DB_STRING:
 		case DB_ISTRING: // String databases, no fix required
@@ -2461,7 +2461,7 @@ static DBComparator db_default_cmp(enum DBType type)
 		case DB_INT64:   return &db_int64_cmp;
 		case DB_UINT64:  return &db_uint64_cmp;
 		default:
-			ShowError("db_default_cmp: Unknown database type %u\n", type);
+			ShowError("db_default_cmp: Unknown database type %u\n", (unsigned int)type);
 			return NULL;
 	}
 }
@@ -2489,7 +2489,7 @@ static DBHasher db_default_hash(enum DBType type)
 		case DB_INT64:   return &db_int64_hash;
 		case DB_UINT64:  return &db_uint64_hash;
 		default:
-			ShowError("db_default_hash: Unknown database type %u\n", type);
+			ShowError("db_default_hash: Unknown database type %u\n", (unsigned int)type);
 			return NULL;
 	}
 }
@@ -2545,7 +2545,7 @@ static DBReleaser db_custom_release(enum DBReleaseOption which)
 		case DB_RELEASE_DATA:    return &db_release_data;
 		case DB_RELEASE_BOTH:    return &db_release_both;
 		default:
-			ShowError("db_custom_release: Unknown release options %u\n", which);
+			ShowError("db_custom_release: Unknown release options %u\n", (unsigned int)which);
 			return NULL;
 	}
 }

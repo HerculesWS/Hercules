@@ -75,7 +75,7 @@ static struct thread_handle l_threads[THREADS_MAX];
 /// @copydoc thread_interface::init()
 static void thread_init(void)
 {
-	register int i;
+	int i;
 	memset(&l_threads, 0x00, THREADS_MAX * sizeof(struct thread_handle));
 
 	for (i = 0; i < THREADS_MAX; i++) {
@@ -94,7 +94,7 @@ static void thread_init(void)
 /// @copydoc thread_interface::final()
 static void thread_final(void)
 {
-	register int i;
+	int i;
 
 	// Unterminated Threads Left?
 	// Shouldn't happen ... Kill 'em all!
@@ -128,7 +128,7 @@ static void *thread_main_redirector(void *p)
 	sigset_t set; // on Posix Thread platforms
 #endif
 	void *ret;
-	struct thread_handle *self = p;
+	struct thread_handle *self = (struct thread_handle *)p;
 
 	// Update myID @ TLS to right id.
 #ifdef HAS_TLS
@@ -158,6 +158,7 @@ static void *thread_main_redirector(void *p)
 #ifdef WIN32
 #pragma warning (push)
 #pragma warning (disable: 4311)
+#pragma warning (disable: 4302)
 	return (DWORD)ret;
 #pragma warning (pop)
 #else

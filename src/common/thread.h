@@ -147,10 +147,18 @@ struct thread_interface {
 	void (*yield) (void);
 };
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef HERCULES_CORE
 void thread_defaults(void);
 #endif // HERCULES_CORE
 
 HPShared struct thread_interface *thread; ///< Pointer to the thread interface.
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* COMMON_THREAD_H */

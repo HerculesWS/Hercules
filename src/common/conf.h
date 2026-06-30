@@ -123,10 +123,18 @@ struct libconfig_interface {
 	int (*lookup_mutable_string) (const struct config_t *config, const char *name, char *out, size_t out_size);
 };
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef HERCULES_CORE
 void libconfig_defaults(void);
 #endif // HERCULES_CORE
 
 HPShared struct libconfig_interface *libconfig;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // COMMON_CONF_H

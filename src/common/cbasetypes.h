@@ -282,7 +282,6 @@ typedef uintptr_t uintptr;
 // keyword replacement
 #ifdef _MSC_VER
 // For MSVC (windows)
-#define inline __inline
 #define forceinline __forceinline
 #define ra_align(n) __declspec(align(n))
 #else
@@ -383,6 +382,7 @@ typedef char bool;
 //////////////////////////////////////////////////////////////////////////
 // macro tools
 
+#ifndef __cplusplus
 #ifdef swap // just to be sure
 #undef swap
 #endif
@@ -402,6 +402,7 @@ typedef char bool;
 
 #ifndef min
 #define min(a,b) (((a) < (b)) ? (a) : (b))
+#endif
 #endif
 
 //////////////////////////////////////////////////////////////////////////

@@ -388,7 +388,7 @@ static void setsocketopts(int fd, struct hSockOpt *opt)
 #else // not WIN32
 	int yes = 1;
 #endif // WIN32
-	struct linger lopt = { 0 };
+	struct linger lopt{};
 
 	// Note: We cast the fourth argument to (char *) because, while in UNIX
 	// it takes a const void *, in Windows it takes a const char *.
@@ -413,7 +413,7 @@ static void setsocketopts(int fd, struct hSockOpt *opt)
 #if defined(WIN32)
 		DWORD timeout = 5000; // https://msdn.microsoft.com/en-us/library/windows/desktop/ms740476(v=vs.85).aspx
 #else // not WIN32
-		struct timeval timeout = { 0 };
+		struct timeval timeout{};
 		timeout.tv_sec = 5;
 #endif // WIN32
 
@@ -615,7 +615,7 @@ static int connect_client(int listen_fd)
 
 static int make_listen_bind(uint32 ip, uint16 port)
 {
-	struct sockaddr_in server_address = { 0 };
+	struct sockaddr_in server_address{};
 	int fd;
 	int result;
 
@@ -684,7 +684,7 @@ static int make_listen_bind(uint32 ip, uint16 port)
 
 static int make_connection(uint32 ip, uint16 port, struct hSockOpt *opt)
 {
-	struct sockaddr_in remote_address = { 0 };
+	struct sockaddr_in remote_address{};
 	int fd;
 	int result;
 
@@ -842,7 +842,7 @@ static int rfifoskip(int fd, size_t len)
 	s = sockt->session[fd];
 
 	if (s->rdata_size < s->rdata_pos + len) {
-		ShowError("RFIFOSKIP: skipped past end of read buffer! Adjusting from %"PRIuS" to %"PRIuS" (session #%d)\n", len, RFIFOREST(fd), fd);
+		ShowError("RFIFOSKIP: skipped past end of read buffer! Adjusting from %" PRIuS " to %" PRIuS " (session #%d)\n", len, RFIFOREST(fd), fd);
 		Assert_report(0);
 		len = RFIFOREST(fd);
 	} else {
@@ -862,12 +862,12 @@ static int rfifoskip(int fd, size_t len)
 						} else {
 							packet_len = RFIFOW(fd, 2);
 							if (packet_len != lenRest) {
-								ShowError("Skip packet 0x%04X with dynamic size %"PRIdS", but must be size %d\n", cmd, lenRest, packet_len);
+								ShowError("Skip packet 0x%04X with dynamic size %" PRIdS ", but must be size %d\n", cmd, lenRest, packet_len);
 								Assert_report(0);
 							}
 						}
 					} else if (packet_len != lenRest) {
-						ShowError("Skip packet 0x%04X with size %"PRIdS", but must be size %d\n", cmd, lenRest, packet_len);
+						ShowError("Skip packet 0x%04X with size %" PRIdS ", but must be size %d\n", cmd, lenRest, packet_len);
 						Assert_report(0);
 					}
 				}
@@ -921,7 +921,7 @@ static int wfifoset(int fd, size_t len, bool validate)
 	if( !s->flag.server ) {
 
 		if (len > socket_max_client_packet) { // see declaration of socket_max_client_packet for details
-			ShowError("WFIFOSET: Dropped too large client packet 0x%04x (length=%"PRIuS", max=%"PRIuS").\n",
+			ShowError("WFIFOSET: Dropped too large client packet 0x%04x (length=%" PRIuS ", max=%" PRIuS ").\n",
 			          WFIFOW(fd,0), len, socket_max_client_packet);
 			return 0;
 		}
@@ -1248,7 +1248,7 @@ static int connect_check_(uint32 ip)
 	}
 
 	// Inspect connection history
-	if( ( hist = uidb_get(connect_history, ip)) ) { //IP found
+	if( ( hist = (struct connect_history *)uidb_get(connect_history, ip)) ) { //IP found
 		if( hist->ddos ) {// flagged as DDoS
 			return (connect_ok == 2 ? 1 : 0);
 		} else if( DIFF_TICK(timer->gettick(),hist->tick) < ddos_interval ) {// connection within ddos_interval
@@ -1287,7 +1287,7 @@ static int connect_check_clear(int tid, int64 tick, int id, intptr_t data)
 
 	iter = db_iterator(connect_history);
 
-	for( hist = dbi_first(iter); dbi_exists(iter); hist = dbi_next(iter) ){
+	for( hist = (struct connect_history *)dbi_first(iter); dbi_exists(iter); hist = (struct connect_history *)dbi_next(iter) ){
 		if( (!hist->ddos && DIFF_TICK(tick,hist->tick) > ddos_interval*3) ||
 			(hist->ddos && DIFF_TICK(tick,hist->tick) > ddos_autoreset) )
 			{// Remove connection history
@@ -1763,7 +1763,7 @@ static void socket_init(void)
 	}
 
 	memset(&epevent, 0x00, sizeof(struct epoll_event));
-	epevents = aCalloc(epoll_maxevents, sizeof(struct epoll_event));
+	epevents = (struct epoll_event *)aCalloc(epoll_maxevents, sizeof(struct epoll_event));
 
 	ShowInfo("Server uses '" CL_WHITE "epoll" CL_RESET "' with up to " CL_WHITE "%d" CL_RESET " events per cycle as event dispatcher\n", epoll_maxevents);
 
@@ -1787,7 +1787,7 @@ static void socket_init(void)
 	timer->add_func_list(connect_check_clear, "connect_check_clear");
 	timer->add_interval(timer->gettick()+1000, connect_check_clear, 0, 0, 5*60*1000);
 
-	ShowInfo("Server supports up to '"CL_WHITE"%"PRIu64""CL_RESET"' concurrent connections.\n", rlim_cur);
+	ShowInfo("Server supports up to '" CL_WHITE "%" PRIu64 "" CL_RESET "' concurrent connections.\n", rlim_cur);
 }
 
 static bool session_is_valid(int fd)

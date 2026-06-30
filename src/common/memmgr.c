@@ -121,7 +121,7 @@ struct nomemmgr_block {
 static void *aMalloc_(size_t size, const char *file, int line, const char *func) __attribute__ ((alloc_size (1))) GCCATTR ((returns_nonnull));
 static void *aMalloc_(size_t size, const char *file, int line, const char *func)
 {
-	struct nomemmgr_block *ret = MALLOC(size + sizeof(*ret), file, line, func);
+	struct nomemmgr_block *ret = (struct nomemmgr_block *)MALLOC(size + sizeof(*ret), file, line, func);
 	// ShowMessage("%s:%d: in func %s: aMalloc %d\n",file,line,func,size);
 	if (ret == NULL){
 		ShowFatalError("%s:%d: in func %s: aMalloc error out of memory!\n",file,line,func);
@@ -137,7 +137,7 @@ static void *aCalloc_(size_t num, size_t size, const char *file, int line, const
 static void *aCalloc_(size_t num, size_t size, const char *file, int line, const char *func)
 {
 	// We won't use CALLOC here because we need to embed our magical size header
-	struct nomemmgr_block *ret = MALLOC((size * num) + sizeof(*ret), file, line, func);
+	struct nomemmgr_block *ret = (struct nomemmgr_block *)MALLOC((size * num) + sizeof(*ret), file, line, func);
 
 	// ShowMessage("%s:%d: in func %s: aCalloc %d %d\n",file,line,func,num,size);
 	if (ret == NULL){
@@ -154,12 +154,12 @@ static void *aCalloc_(size_t num, size_t size, const char *file, int line, const
 static void *aRealloc_(void *p, size_t size, const char *file, int line, const char *func) __attribute__ ((alloc_size (2))) __attribute__((nonnull (1))) GCCATTR ((returns_nonnull));
 static void *aRealloc_(void *p, size_t size, const char *file, int line, const char *func)
 {
-	struct nomemmgr_block *real_p = p;
+	struct nomemmgr_block *real_p = (struct nomemmgr_block *)p;
 	if (real_p != NULL) {
 		real_p = real_p - 1;
 	}
 
-	struct nomemmgr_block *ret = REALLOC(real_p, size + sizeof(*real_p), file, line, func);
+	struct nomemmgr_block *ret = (struct nomemmgr_block *)REALLOC(real_p, size + sizeof(*real_p), file, line, func);
 	// ShowMessage("%s:%d: in func %s: aRealloc %p %d\n",file,line,func,p,size);
 	if (ret == NULL){
 		ShowFatalError("%s:%d: in func %s: aRealloc error out of memory!\n",file,line,func);
@@ -180,7 +180,7 @@ static void *aReallocz_(void *p, size_t size, const char *file, int line, const 
 		struct nomemmgr_block *real_p = ((struct nomemmgr_block *)p - 1);
 		size_t old_size = real_p->size;
 
-		ret = REALLOC(real_p, size + sizeof(*ret), file, line, func);
+		ret = (struct nomemmgr_block *)REALLOC(real_p, size + sizeof(*ret), file, line, func);
 
 		if (ret != NULL) {
 			ret->size = size + sizeof(*ret);
@@ -191,7 +191,7 @@ static void *aReallocz_(void *p, size_t size, const char *file, int line, const 
 			}
 		}
 	} else {
-		ret = REALLOC(p, size + sizeof(*ret), file, line, func);
+		ret = (struct nomemmgr_block *)REALLOC(p, size + sizeof(*ret), file, line, func);
 
 		if (ret != NULL) {
 			memset(ret, 0, size + sizeof(*ret));
@@ -212,7 +212,7 @@ static char *aStrdup_(const char *p, const char *file, int line, const char *fun
 {
 	// since we now have headers it can't be just a wraper
 	size_t len = strlen(p);
-	char *ret = iMalloc->malloc(len + 1, file, line, func);
+	char *ret = (char *)iMalloc->malloc(len + 1, file, line, func);
 
 	// ShowMessage("%s:%d: in func %s: aStrdup %p\n",file,line,func,p);
 	if (ret == NULL){
@@ -246,7 +246,7 @@ static char *aStrndup_(const char *p, size_t size, const char *file, int line, c
 static char *aStrndup_(const char *p, size_t size, const char *file, int line, const char *func)
 {
 	size_t len = strnlen(p, size);
-	char *ret = iMalloc->malloc(len + 1, file, line, func);
+	char *ret = (char *)iMalloc->malloc(len + 1, file, line, func);
 	if (ret == NULL) {
 		ShowFatalError("%s:%d: in func %s: aStrndup error out of memory!\n", file, line, func);
 		exit(EXIT_FAILURE);
@@ -374,7 +374,7 @@ static void *mmalloc_(size_t size, const char *file, int line, const char *func)
 static void *mmalloc_(size_t size, const char *file, int line, const char *func)
 {
 	if (((long) size) < 0) {
-		ShowFatalError("%s:%d: in func %s: mmalloc_: %"PRIuS"\n", file, line, func, size);
+		ShowFatalError("%s:%d: in func %s: mmalloc_: %" PRIuS "\n", file, line, func, size);
 		exit(EXIT_FAILURE);
 	}
 
@@ -407,7 +407,7 @@ static void *mmalloc_(size_t size, const char *file, int line, const char *func)
 			*(long*)((char*)p + sizeof(struct unit_head_large) - sizeof(long) + size) = 0xdeadbeaf;
 			return (char *)p + sizeof(struct unit_head_large) - sizeof(long);
 		} else {
-			ShowFatalError("Memory manager::memmgr_alloc failed (allocating %"PRIuS"+%"PRIuS" bytes at %s:%d).\n",
+			ShowFatalError("Memory manager::memmgr_alloc failed (allocating %" PRIuS "+%" PRIuS " bytes at %s:%d).\n",
 			               sizeof(struct unit_head_large), size, file, line);
 			exit(EXIT_FAILURE);
 		}
@@ -576,7 +576,7 @@ static char *mstrndup_(const char *p, size_t size, const char *file, int line, c
 static char *mstrndup_(const char *p, size_t size, const char *file, int line, const char *func)
 {
 	size_t len = strnlen(p, size);
-	char *string = iMalloc->malloc(len + 1, file, line, func);
+	char *string = (char *)iMalloc->malloc(len + 1, file, line, func);
 	memcpy(string, p, len);
 	string[len] = '\0';
 	return string;
@@ -928,16 +928,16 @@ void memmgr_report(int extra)
 	}
 	for( j = 0; j < 100; j++ ) {
 		if( data[j].size != 0 ) {
-			ShowMessage("[malloc] : "CL_WHITE"%s"CL_RESET":"CL_WHITE"%d"CL_RESET" %u instances => %.2f MB\n",data[j].file,data[j].line,data[j].count,(double)((data[j].size)/1024)/1024);
+			ShowMessage("[malloc] : " CL_WHITE "%s" CL_RESET ":" CL_WHITE "%d" CL_RESET " %u instances => %.2f MB\n",data[j].file,data[j].line,data[j].count,(double)((data[j].size)/1024)/1024);
 		}
 	}
 	ShowMessage("[malloc] : reporting %u instances | %.2f MB\n",count,(double)((size)/1024)/1024);
 	ShowMessage("[malloc] : internal usage %.2f MB | %.2f MB\n",(double)((memmgr_usage_bytes_t-memmgr_usage_bytes)/1024)/1024,(double)((memmgr_usage_bytes_t)/1024)/1024);
 
 	if (extra) {
-		ShowMessage("[malloc] : unit_head_large: %"PRIuS" bytes\n", sizeof(struct unit_head_large));
-		ShowMessage("[malloc] : unit_head: %"PRIuS" bytes\n", sizeof(struct unit_head));
-		ShowMessage("[malloc] : block: %"PRIuS" bytes\n", sizeof(struct block));
+		ShowMessage("[malloc] : unit_head_large: %" PRIuS " bytes\n", sizeof(struct unit_head_large));
+		ShowMessage("[malloc] : unit_head: %" PRIuS " bytes\n", sizeof(struct unit_head));
+		ShowMessage("[malloc] : block: %" PRIuS " bytes\n", sizeof(struct block));
 	}
 
 }
@@ -959,7 +959,7 @@ static void memmgr_init_messages(void)
 {
 #ifdef LOG_MEMMGR
 	sprintf(memmer_logfile, "log/%s.leaks", SERVER_NAME);
-	ShowStatus("Memory manager initialized: "CL_WHITE"%s"CL_RESET"\n", memmer_logfile);
+	ShowStatus("Memory manager initialized: " CL_WHITE "%s" CL_RESET "\n", memmer_logfile);
 #endif /* LOG_MEMMGR */
 }
 #endif /* USE_MEMMGR */

@@ -122,10 +122,18 @@ struct mutex_interface {
 	void (*cond_broadcast) (struct cond_data *c);
 };
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef HERCULES_CORE
 void mutex_defaults(void);
 #endif // HERCULES_CORE
 
 HPShared struct mutex_interface *mutex; ///< Pointer to the mutex interface.
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* COMMON_MUTEX_H */

@@ -167,7 +167,7 @@ static ers_cache_t *ers_find_cache(unsigned int size, enum ERSOptions Options)
 	cache->UsedObjs = 0;
 	cache->Max = 0;
 	cache->ChunkSize = ERS_BLOCK_ENTRIES;
-	cache->Options = (Options & ERS_CACHE_OPTIONS);
+	cache->Options = (enum ERSOptions)(Options & ERS_CACHE_OPTIONS);
 
 	if (CacheList == NULL)
 	{
@@ -374,7 +374,7 @@ void ers_report(void)
 		if( (instance->Options & ERS_OPT_WAIT) && !instance->Count )
 			continue;
 		instance_c_d++;
-		ShowMessage(CL_BOLD"[ERS Instance "CL_NORMAL""CL_WHITE"%s"CL_NORMAL""CL_BOLD" report]\n"CL_NORMAL, instance->Name);
+		ShowMessage(CL_BOLD "[ERS Instance " CL_NORMAL " " CL_WHITE "%s" CL_NORMAL "" CL_BOLD " report]\n" CL_NORMAL, instance->Name);
 		ShowMessage("\tblock size        : %u\n", instance->Cache->ObjectSize);
 		ShowMessage("\tblocks being used : %u\n", instance->Count);
 		ShowMessage("\tpeak blocks       : %u\n", instance->Peak);
@@ -384,7 +384,7 @@ void ers_report(void)
 
 	for (cache = CacheList; cache; cache = cache->Next) {
 		cache_c++;
-		ShowMessage(CL_BOLD"[ERS Cache of size '"CL_NORMAL""CL_WHITE"%u"CL_NORMAL""CL_BOLD"' report]\n"CL_NORMAL, cache->ObjectSize);
+		ShowMessage(CL_BOLD "[ERS Cache of size '" CL_NORMAL "" CL_WHITE "%u" CL_NORMAL "" CL_BOLD "' report]\n" CL_NORMAL, cache->ObjectSize);
 		ShowMessage("\tinstances          : %d\n", cache->ReferenceCount);
 		ShowMessage("\tblocks in use      : %u/%u\n", cache->UsedObjs, cache->UsedObjs+cache->Free);
 		ShowMessage("\tblocks unused      : %u\n", cache->Free);
@@ -396,11 +396,11 @@ void ers_report(void)
 		memory_t += (cache->UsedObjs+cache->Free) * cache->ObjectSize;
 	}
 #ifdef DEBUG
-	ShowInfo("ers_report: '"CL_WHITE"%u"CL_NORMAL"' instances in use, '"CL_WHITE"%u"CL_NORMAL"' displayed\n",instance_c,instance_c_d);
+	ShowInfo("ers_report: '" CL_WHITE "%u" CL_NORMAL "' instances in use, '" CL_WHITE "%u" CL_NORMAL "' displayed\n",instance_c,instance_c_d);
 #endif
-	ShowInfo("ers_report: '"CL_WHITE"%u"CL_NORMAL"' caches in use\n",cache_c);
-	ShowInfo("ers_report: '"CL_WHITE"%u"CL_NORMAL"' blocks in use, consuming '"CL_WHITE"%.2f MB"CL_NORMAL"'\n",blocks_u,(double)((memory_b)/1024)/1024);
-	ShowInfo("ers_report: '"CL_WHITE"%u"CL_NORMAL"' blocks total, consuming '"CL_WHITE"%.2f MB"CL_NORMAL"' \n",blocks_a,(double)((memory_t)/1024)/1024);
+	ShowInfo("ers_report: '" CL_WHITE "%u" CL_NORMAL "' caches in use\n",cache_c);
+	ShowInfo("ers_report: '" CL_WHITE "%u" CL_NORMAL "' blocks in use, consuming '" CL_WHITE "%.2f MB" CL_NORMAL "'\n",blocks_u,(double)((memory_b)/1024)/1024);
+	ShowInfo("ers_report: '" CL_WHITE "%u" CL_NORMAL "' blocks total, consuming '" CL_WHITE "%.2f MB" CL_NORMAL "' \n",blocks_a,(double)((memory_t)/1024)/1024);
 }
 
 /**

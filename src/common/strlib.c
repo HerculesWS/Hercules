@@ -27,7 +27,7 @@
 #include "common/nullpo.h"
 #include "common/showmsg.h"
 
-#include <errno.h>
+#include <algorithm>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -967,7 +967,7 @@ static bool sv_readdb(const char *directory, const char *filename, char delim, i
 
 	aFree(fields);
 	fclose(fp);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", entries, path);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", entries, path);
 
 	return true;
 }
@@ -1059,7 +1059,7 @@ static int StringBuf_AppendStr(StringBuf *self, const char *str)
 	if( needed >= available ) {
 		// not enough space, expand the buffer (minimum expansion = 1024)
 		size_t off = (self->ptr_ - self->buf_);
-		self->max_ += max(needed, 1024);
+		self->max_ += std::max(needed, (size_t)1024);
 		self->buf_ = (char*)aRealloc(self->buf_, self->max_ + 1);
 		self->ptr_ = self->buf_ + off;
 	}
