@@ -10628,7 +10628,7 @@ static void status_change_start_stop_action(struct block_list *bl, enum sc_type 
 		case SC_GRAVITYCONTROL:
 		{
 			struct status_change *sc = status->get_sc(bl);
-			if (sc->data[SC_DANCING] != NULL)
+			if (sc != NULL && sc->data[SC_DANCING] != NULL)
 				unit->stop_walking(bl, STOPWALKING_FLAG_FIXPOS);
 			FALLTHROUGH
 		}

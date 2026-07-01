@@ -290,6 +290,7 @@ void grader_enchant_start(struct map_session_data *sd, int idx, int mat_idx, boo
 		return;
 
 	const struct s_grade_info *gi = grader->get_grade_info(sd->status.inventory[idx].grade);
+	nullpo_retv(gi);
 	const struct grade_material *gmaterial = &gi->materials[mat_idx];
 
 	// Validate the grading material

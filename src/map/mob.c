@@ -3817,11 +3817,12 @@ static int mob_use_skill(struct mob_data *md, int64 tick, int event)
 			char temp[CHAT_SIZE_MAX + NAME_LENGTH + 10];
 			char name[NAME_LENGTH];
 			struct mob_chat *mc = mob->chat(ms[skill_idx].msg_id);
-
-			snprintf(name, sizeof(name), "%s", md->name);
-			strtok(name, "#"); // Discard extra name identifier if present. [Daegaladh]
-			snprintf(temp, sizeof(temp), "%s : %s", name, mc->msg);
-			clif->messagecolor(&md->bl, mc->color, temp);
+			if (!nullpo_chk(mc)) {
+				snprintf(name, sizeof(name), "%s", md->name);
+				strtok(name, "#"); // Discard extra name identifier if present. [Daegaladh]
+				snprintf(temp, sizeof(temp), "%s : %s", name, mc->msg);
+				clif->messagecolor(&md->bl, mc->color, temp);
+			}
 		}
 
 		if ((battle_config.mob_ai & 0x200) == 0) { // Pass on delay to same skill.
