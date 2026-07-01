@@ -1173,16 +1173,22 @@ static const char *parse_variable(const char *p)
 	nullpo_ret(p); // Can't be NULL but silence gcc warnings
 
 	if (*p == '[') {
-		int i, j;
 		// array variable so process the array as appropriate
-		for (p2 = p, i = 0, j = 1; p; ++ i) {
-			if( *p ++ == ']' && --(j) == 0 ) break;
-			if( *p == '[' ) ++ j;
+		p2 = p;
+		int open_brackets = 1;
+		while (*(++p) != '\0') {
+			if (*p == ']' && --open_brackets == 0) {
+				p++;
+				break;
+			}
+			if (*p == '[')
+				open_brackets++;
 		}
 
-		if( !(p = script->skip_space(p)) ) {
+		p = script->skip_space(p);
+		if (p == NULL /* Can't be NULL but silence gcc warnings */ || *p == '\0') {
 			// end of line or invalid characters remaining
-			disp_error_message("Missing right expression or closing bracket for variable.", p);
+			disp_error_message("Missing right expression or closing bracket for variable.", p2);
 		}
 	}
 
