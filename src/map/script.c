@@ -1013,6 +1013,7 @@ static const char *parse_callfunc(const char *p, int require_paren, int is_custo
 
 	p = script->skip_word(p);
 	p = script->skip_space(p);
+	nullpo_ret(p); // Can't be NULL but silence gcc warnings
 	script->syntax.curly[script->syntax.curly_count].type = TYPE_ARGLIST;
 	script->syntax.curly[script->syntax.curly_count].count = 0;
 
@@ -1135,7 +1136,8 @@ static void parse_variable_sub_push(int word, const char *p2)
 		p3 = script->parse_subexpr(p2 + 1, 1);
 		p3 = script->skip_space(p3);
 
-		if( *p3 != ']' ) {// closing parenthesis is required for this script
+		if (p3 == NULL /* Can't be NULL but silence gcc warnings */ || *p3 != ']' ) {
+			// closing parenthesis is required for this script
 			disp_error_message("Missing closing ']' parenthesis for the variable assignment.", p3);
 		}
 
@@ -1168,11 +1170,7 @@ static const char *parse_variable(const char *p)
 	// skip the variable where applicable
 	p = script->skip_word(p);
 	p = script->skip_space(p);
-
-	if( p == NULL ) {
-		// end of the line or invalid buffer
-		return NULL;
-	}
+	nullpo_ret(p); // Can't be NULL but silence gcc warnings
 
 	if (*p == '[') {
 		int i, j;
@@ -1231,10 +1229,7 @@ static const char *parse_variable(const char *p)
 	}
 	PRAGMA_GCC46(GCC diagnostic pop)
 
-	if( p == NULL ) {
-		// end of line or invalid buffer
-		return NULL;
-	}
+	nullpo_ret(p); // Can't be NULL but silence gcc warnings
 
 	// push the set function onto the stack
 	script->syntax.nested_call++;
@@ -1606,7 +1601,7 @@ static const char *parse_simpleexpr_name(const char *p)
 
 		p = script->parse_subexpr(p + 1, -1);
 		p = script->skip_space(p);
-		if (*p != ']')
+		if (p == NULL /* Can't be NULL but silence gcc warnings */ || *p != ']')
 			disp_error_message("parse_simpleexpr: unmatched ']'", p);
 		++p;
 		script->addc(C_FUNC);
@@ -1736,8 +1731,9 @@ static const char *script_parse_subexpr(const char *p, int limit)
 			// B
 			p = script->parse_subexpr(p, -1);
 			p = script->skip_space(p);
-			if (*(p++) != ':')
+			if (p == NULL /* Can't be NULL but silence gcc warnings */ || *(p++) != ':') {
 				disp_error_message("parse_subexpr: need ':'", p - 1);
+			}
 			// op_3 jmp (skip over C)
 			script->addl(l2);
 			script->addc(C_OP3_JMP);
@@ -1862,7 +1858,7 @@ static const char *parse_syntax_function (const char *p, bool is_public)
 
 	const char *p2 = script->skip_space(p);
 
-	if (*p2 == ';') {
+	if (p2 != NULL /* Can't be NULL but silence gcc warnings */ && *p2 == ';') {
 		// function <name> ;
 		// function declaration - just register the name
 		int l = script->add_word(func_name);
@@ -1877,7 +1873,7 @@ static const char *parse_syntax_function (const char *p, bool is_public)
 		// Close condition of if, for, while
 		p = script->parse_syntax_close(p2 + 1);
 		return p;
-	} else if (*p2 == '{') {
+	} else if (p2 != NULL /* Can't be NULL but silence gcc warnings */ && *p2 == '{') {
 		// function <name> <line/block of code>
 		script->syntax.curly[script->syntax.curly_count].type  = TYPE_USERFUNC;
 		script->syntax.curly[script->syntax.curly_count].count = 1;
@@ -2013,8 +2009,9 @@ static const char *parse_syntax(const char *p)
 				script->syntax.curly_count--;
 			}
 			p = script->skip_space(p2);
-			if(*p != ';')
+			if (p == NULL /* Can't be NULL but silence gcc warnings */ || *p != ';') {
 				disp_error_message("parse_syntax: need ';'",p);
+			}
 			// Closing decision if, for , while
 			p = script->parse_syntax_close(p + 1);
 			return p;
@@ -2069,8 +2066,9 @@ static const char *parse_syntax(const char *p)
 					p = script->skip_word(p);
 				}
 				p = script->skip_space(p);
-				if(*p != ':')
+				if (p == NULL /* Can't be NULL but silence gcc warnings */ || *p != ':') {
 					disp_error_message("parse_syntax: expect ':'",p);
+				}
 				sprintf(label,"if(%d != $@__SW%x_VAL) goto __SW%x_%x;",
 					v, (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].count+1);
 				script->syntax.curly[script->syntax.curly_count++].type = TYPE_NULL;
@@ -2123,8 +2121,9 @@ static const char *parse_syntax(const char *p)
 				script->syntax.curly_count--;
 			}
 			p = script->skip_space(p2);
-			if(*p != ';')
+			if (p == NULL /* Never NULL but gcc-16 doesn't realize */ || *p != ';') {
 				disp_error_message("parse_syntax: need ';'",p);
+			}
 			//Closing decision if, for , while
 			p = script->parse_syntax_close(p + 1);
 			return p;
@@ -2144,7 +2143,7 @@ static const char *parse_syntax(const char *p)
 				int l;
 				// Put the label location
 				p = script->skip_space(p2);
-				if(*p != ':') {
+				if (p == NULL /* Can't be NULL but silence gcc warnings */ || *p != ':') {
 					disp_error_message("parse_syntax: need ':'",p);
 				}
 				sprintf(label, "__SW%x_%x", (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].count);
@@ -2197,8 +2196,9 @@ static const char *parse_syntax(const char *p)
 
 			p=script->skip_space(p2);
 
-			if(*p != '(')
+			if (p == NULL /* Can't be NULL but silence gcc warnings */ || *p != '(') {
 				disp_error_message("parse_syntax: need '('",p);
+			}
 			p++;
 
 			// Execute the initialization statement
@@ -2212,7 +2212,7 @@ static const char *parse_syntax(const char *p)
 			script->set_label(l, VECTOR_LENGTH(script->buf), p);
 
 			p=script->skip_space(p);
-			if(*p == ';') {
+			if (p == NULL /* Can't be NULL but silence gcc warnings */|| *p == ';') {
 				// For (; Because the pattern of always true ;)
 				;
 			} else {
@@ -2225,8 +2225,9 @@ static const char *parse_syntax(const char *p)
 				script->addl(script->add_str(label));
 				script->addc(C_FUNC);
 			}
-			if(*p != ';')
+			if(p == NULL /* Can't be NULL but silence gcc warnings */ || *p != ';') {
 				disp_error_message("parse_syntax: need ';'",p);
+			}
 			p++;
 
 			// Skip to the beginning of the loop
@@ -2274,7 +2275,8 @@ static const char *parse_syntax(const char *p)
 			// If process
 			char label[256];
 			p=script->skip_space(p2);
-			if(*p != '(') { //Prevent if this {} non-c script->syntax. from Rayce (jA)
+			if (p == NULL /* Can't be NULL but silence gcc warnings */ || *p != '(') {
+				//Prevent if this {} non-c script->syntax. from Rayce (jA)
 				disp_error_message("need '('",p);
 			}
 			script->syntax.curly[script->syntax.curly_count].type  = TYPE_IF;
@@ -2318,7 +2320,7 @@ static const char *parse_syntax(const char *p)
 			// Processing of switch ()
 			char label[256];
 			p=script->skip_space(p2);
-			if(*p != '(') {
+			if (p == NULL /* Can't be NULL but silence gcc warnings */ || *p != '(') {
 				disp_error_message("need '('",p);
 			}
 			script->syntax.curly[script->syntax.curly_count].type  = TYPE_SWITCH;
@@ -2332,7 +2334,7 @@ static const char *parse_syntax(const char *p)
 			script->addl(script->add_str(label));
 			p=script->parse_expr(p);
 			p=script->skip_space(p);
-			if(*p != '{') {
+			if (p == NULL /* Can't be NULL but silence gcc warnings */ || *p != '{') {
 				disp_error_message("parse_syntax: need '{'",p);
 			}
 			script->addc(C_FUNC);
@@ -2345,7 +2347,7 @@ static const char *parse_syntax(const char *p)
 			int l;
 			char label[256];
 			p=script->skip_space(p2);
-			if(*p != '(') {
+			if (p == NULL /* Can't be NULL but silence gcc warnings */ || *p != '(') {
 				disp_error_message("need '('",p);
 			}
 			script->syntax.curly[script->syntax.curly_count].type  = TYPE_WHILE;
@@ -2426,7 +2428,7 @@ static const char *parse_syntax_close_sub(const char *p, int *flag)
 			if( p2 - p == 2 && strncmp(p, "if", 2) == 0 ) {
 				// else - if
 				p=script->skip_space(p2);
-				if(*p != '(') {
+				if (p == NULL /* Can't be NULL but silence gcc warnings */ || *p != '(') {
 					disp_error_message("need '('",p);
 				}
 				sprintf(label, "__IF%x_%x", (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].count);
@@ -2476,7 +2478,7 @@ static const char *parse_syntax_close_sub(const char *p, int *flag)
 		}
 
 		p = script->skip_space(p2);
-		if(*p != '(') {
+		if (p == NULL /* Can't be NULL but silence gcc warnings */ || *p != '(') {
 			disp_error_message("need '('",p);
 		}
 
@@ -2502,7 +2504,7 @@ static const char *parse_syntax_close_sub(const char *p, int *flag)
 		l=script->add_str(label);
 		script->set_label(l, VECTOR_LENGTH(script->buf), p);
 		p = script->skip_space(p);
-		if(*p != ';') {
+		if (p == NULL /* Can't be NULL but silence gcc warnings */ || *p != ';') {
 			disp_error_message("parse_syntax: need ';'",p);
 			return p+1;
 		}
@@ -2988,7 +2990,8 @@ static struct script_code *parse_script(const char *src, const char *file, int l
 		// Special handling only label
 		tmpp = script->skip_space(script->skip_word(p));
 
-		if (*tmpp == ':' && !(strncmp(p, "default:", 8) == 0 && p + 7 == tmpp)
+		if (tmpp != NULL /* Can't be NULL but silence gcc warnings */ && *tmpp == ':'
+			&& !(strncmp(p, "default:", 8) == 0 && p + 7 == tmpp)
 			&& !(strncmp(p, "function", 8) == 0 && script->skip_space(p + 8) == tmpp)) {
 			i = script->add_word(p);
 			script->set_label(i, VECTOR_LENGTH(script->buf), p);
