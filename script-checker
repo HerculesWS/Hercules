@@ -23,7 +23,7 @@
 
 ORIG_CWD="$(pwd)"
 BASEDIR="$(dirname "$0")"
-EXECUTABLE="./map-server"
+EXECUTABLE="./bin/map-server"
 
 cd "${BASEDIR}"
 if [ -z "$1" ]; then
