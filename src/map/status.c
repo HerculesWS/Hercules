@@ -3130,7 +3130,7 @@ static void status_calc_bl_main(struct block_list *bl, e_scb_flag flag)
 
 	if ((flag & SCB_MDEF_PERC) != 0) {
 		st->mdef_percent = status->calc_mdef_percent(bl, sc);
-		flag |= SCB_MDEF;
+		flag |= SCB_MDEF2;
 	}
 
 	if (flag & SCB_BATK) {
