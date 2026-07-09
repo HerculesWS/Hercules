@@ -1879,7 +1879,8 @@ static const char *parse_syntax_function (const char *p, bool is_public)
 		// Close condition of if, for, while
 		p = script->parse_syntax_close(p2 + 1);
 		return p;
-	} else if (p2 != NULL /* Can't be NULL but silence gcc warnings */ && *p2 == '{') {
+	}
+	if (p2 != NULL /* Can't be NULL but silence gcc warnings */ && *p2 == '{') {
 		// function <name> <line/block of code>
 		script->syntax.curly[script->syntax.curly_count].type  = TYPE_USERFUNC;
 		script->syntax.curly[script->syntax.curly_count].count = 1;
@@ -1912,10 +1913,9 @@ static const char *parse_syntax_function (const char *p, bool is_public)
 		}
 
 		return script->skip_space(p);
-	} else {
-		disp_error_message("script:parse_syntax_function: expected ';' or '{' at function syntax", p);
 	}
 
+	disp_error_message("script:parse_syntax_function: expected ';' or '{' at function syntax", p);
 	return p;
 }
 
@@ -1926,12 +1926,14 @@ static const char *parse_curly_close(const char *p)
 	if(script->syntax.curly_count <= 0) {
 		disp_error_message("parse_curly_close: unexpected string",p);
 		return p + 1;
-	} else if(script->syntax.curly[script->syntax.curly_count-1].type == TYPE_NULL) {
+	}
+	if (script->syntax.curly[script->syntax.curly_count-1].type == TYPE_NULL) {
 		script->syntax.curly_count--;
 		//Close decision  if, for , while
 		p = script->parse_syntax_close(p + 1);
 		return p;
-	} else if(script->syntax.curly[script->syntax.curly_count-1].type == TYPE_SWITCH) {
+	}
+	if (script->syntax.curly[script->syntax.curly_count-1].type == TYPE_SWITCH) {
 		//Closing switch()
 		int pos = script->syntax.curly_count-1;
 		char label[256];
@@ -1970,10 +1972,9 @@ static const char *parse_curly_close(const char *p)
 		//Closing decision if, for , while
 		p = script->parse_syntax_close(p + 1);
 		return p;
-	} else {
-		disp_error_message("parse_curly_close: unexpected string",p);
-		return p + 1;
 	}
+	disp_error_message("parse_curly_close: unexpected string",p);
+	return p + 1;
 }
 
 // Syntax-related processing
@@ -2009,11 +2010,11 @@ static const char *parse_syntax(const char *p)
 			}
 			if(pos < 0) {
 				disp_error_message("parse_syntax: unexpected 'break'",p);
-			} else {
-				script->syntax.curly[script->syntax.curly_count++].type = TYPE_NULL;
-				script->parse_line(label);
-				script->syntax.curly_count--;
 			}
+			script->syntax.curly[script->syntax.curly_count++].type = TYPE_NULL;
+			script->parse_line(label);
+			script->syntax.curly_count--;
+
 			p = script->skip_space(p2);
 			if (p == NULL /* Can't be NULL but silence gcc warnings */ || *p != ';') {
 				disp_error_message("parse_syntax: need ';'",p);
@@ -2031,101 +2032,104 @@ static const char *parse_syntax(const char *p)
 			if(pos < 0 || script->syntax.curly[pos].type != TYPE_SWITCH) {
 				disp_error_message("parse_syntax: unexpected 'case' ",p);
 				return p+1;
-			} else {
-				char label[256];
-				int  l,v;
-				char *np;
-				if(script->syntax.curly[pos].count != 1) {
-					//Jump for FALLTHRU
-					sprintf(label,"goto __SW%x_%xJ;", (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].count);
-					script->syntax.curly[script->syntax.curly_count++].type = TYPE_NULL;
-					script->parse_line(label);
-					script->syntax.curly_count--;
-
-					// You are here labeled
-					sprintf(label,"__SW%x_%x", (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].count);
-					l=script->add_str(label);
-					script->set_label(l, VECTOR_LENGTH(script->buf), p);
-				}
-				//Decision statement switch
-				p = script->skip_space(p2);
-				if(p == p2) {
-					disp_error_message("parse_syntax: expect space ' '",p);
-				}
-				// check whether case label is integer or not
-				if(is_number(p)) {
-					//Numeric value
-					v = (int)strtol(p,&np,0);
-					if((*p == '-' || *p == '+') && ISDIGIT(p[1])) // pre-skip because '-' can not skip_word
-						p++;
-					p = script->skip_word(p);
-					if(np != p)
-						disp_error_message("parse_syntax: 'case' label is not an integer",np);
-				} else {
-					//Check for constants
-					p2 = script->skip_word(p);
-					v = (int)(size_t) (p2-p); // length of word at p2
-					memcpy(label,p,v);
-					label[v]='\0';
-					if( !script->get_constant(label, &v) )
-						disp_error_message("parse_syntax: 'case' label is not an integer",p);
-					p = script->skip_word(p);
-				}
-				p = script->skip_space(p);
-				if (p == NULL /* Can't be NULL but silence gcc warnings */ || *p != ':') {
-					disp_error_message("parse_syntax: expect ':'",p);
-				}
-				sprintf(label,"if(%d != $@__SW%x_VAL) goto __SW%x_%x;",
-					v, (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].count+1);
+			}
+			char label[256];
+			int  l,v;
+			char *np;
+			if(script->syntax.curly[pos].count != 1) {
+				//Jump for FALLTHRU
+				sprintf(label,"goto __SW%x_%xJ;", (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].count);
 				script->syntax.curly[script->syntax.curly_count++].type = TYPE_NULL;
-				// Bad I do not parse twice
-				p2 = script->parse_line(label);
-				script->parse_line(p2);
-				script->syntax.curly_count--;
-				if(script->syntax.curly[pos].count != 1) {
-					// Label after the completion of FALLTHRU
-					sprintf(label, "__SW%x_%xJ", (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].count);
-					l=script->add_str(label);
-					script->set_label(l, VECTOR_LENGTH(script->buf), p);
-				}
-				// check duplication of case label [Rayce]
-				if(linkdb_search(&script->syntax.curly[pos].case_label, (void*)h64BPTRSIZE(v)) != NULL)
-					disp_error_message("parse_syntax: dup 'case'",p);
-				linkdb_insert(&script->syntax.curly[pos].case_label, (void*)h64BPTRSIZE(v), (void*)1);
-
-				sprintf(label, "__setr $@__SW%x_VAL,0;", (unsigned int)script->syntax.curly[pos].index);
-				script->syntax.curly[script->syntax.curly_count++].type = TYPE_NULL;
-
 				script->parse_line(label);
 				script->syntax.curly_count--;
-				script->syntax.curly[pos].count++;
+
+				// You are here labeled
+				sprintf(label,"__SW%x_%x", (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].count);
+				l=script->add_str(label);
+				script->set_label(l, VECTOR_LENGTH(script->buf), p);
 			}
+			//Decision statement switch
+			p = script->skip_space(p2);
+			if(p == p2) {
+				disp_error_message("parse_syntax: expect space ' '",p);
+			}
+			// check whether case label is integer or not
+			if(is_number(p)) {
+				//Numeric value
+				v = (int)strtol(p,&np,0);
+				if((*p == '-' || *p == '+') && ISDIGIT(p[1])) // pre-skip because '-' can not skip_word
+					p++;
+				p = script->skip_word(p);
+				if(np != p)
+					disp_error_message("parse_syntax: 'case' label is not an integer",np);
+			} else {
+				//Check for constants
+				p2 = script->skip_word(p);
+				v = (int)(size_t) (p2-p); // length of word at p2
+				memcpy(label,p,v);
+				label[v]='\0';
+				if( !script->get_constant(label, &v) )
+					disp_error_message("parse_syntax: 'case' label is not an integer",p);
+				p = script->skip_word(p);
+			}
+			p = script->skip_space(p);
+			if (p == NULL /* Can't be NULL but silence gcc warnings */ || *p != ':') {
+				disp_error_message("parse_syntax: expect ':'",p);
+			}
+			sprintf(label,"if(%d != $@__SW%x_VAL) goto __SW%x_%x;",
+				v, (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].count+1);
+			script->syntax.curly[script->syntax.curly_count++].type = TYPE_NULL;
+			// Bad I do not parse twice
+			p2 = script->parse_line(label);
+			script->parse_line(p2);
+			script->syntax.curly_count--;
+			if(script->syntax.curly[pos].count != 1) {
+				// Label after the completion of FALLTHRU
+				sprintf(label, "__SW%x_%xJ", (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].count);
+				l=script->add_str(label);
+				script->set_label(l, VECTOR_LENGTH(script->buf), p);
+			}
+			// check duplication of case label [Rayce]
+			if(linkdb_search(&script->syntax.curly[pos].case_label, (void*)h64BPTRSIZE(v)) != NULL)
+				disp_error_message("parse_syntax: dup 'case'",p);
+			linkdb_insert(&script->syntax.curly[pos].case_label, (void*)h64BPTRSIZE(v), (void*)1);
+
+			sprintf(label, "__setr $@__SW%x_VAL,0;", (unsigned int)script->syntax.curly[pos].index);
+			script->syntax.curly[script->syntax.curly_count++].type = TYPE_NULL;
+
+			script->parse_line(label);
+			script->syntax.curly_count--;
+			script->syntax.curly[pos].count++;
+
 			return p + 1;
-		} else if( p2 - p == 8 && strncmp(p, "continue", 8) == 0 ) {
+		}
+		if (p2 - p == 8 && strncmp(p, "continue", 8) == 0) {
 			// Processing continue
 			char label[256];
 			int pos = script->syntax.curly_count - 1;
 			while(pos >= 0) {
-				if(script->syntax.curly[pos].type == TYPE_DO) {
+				if (script->syntax.curly[pos].type == TYPE_DO) {
 					sprintf(label, "goto __DO%x_NXT;", (unsigned int)script->syntax.curly[pos].index);
 					script->syntax.curly[pos].flag = 1; //Flag put the link for continue
 					break;
-				} else if(script->syntax.curly[pos].type == TYPE_FOR) {
+				}
+				if (script->syntax.curly[pos].type == TYPE_FOR) {
 					sprintf(label, "goto __FR%x_NXT;", (unsigned int)script->syntax.curly[pos].index);
 					break;
-				} else if(script->syntax.curly[pos].type == TYPE_WHILE) {
+				}
+				if (script->syntax.curly[pos].type == TYPE_WHILE) {
 					sprintf(label, "goto __WL%x_NXT;", (unsigned int)script->syntax.curly[pos].index);
 					break;
 				}
 				pos--;
 			}
-			if(pos < 0) {
+			if (pos < 0) {
 				disp_error_message("parse_syntax: unexpected 'continue'",p);
-			} else {
-				script->syntax.curly[script->syntax.curly_count++].type = TYPE_NULL;
-				script->parse_line(label);
-				script->syntax.curly_count--;
 			}
+			script->syntax.curly[script->syntax.curly_count++].type = TYPE_NULL;
+			script->parse_line(label);
+			script->syntax.curly_count--;
+
 			p = script->skip_space(p2);
 			if (p == NULL /* Never NULL but gcc-16 doesn't realize */ || *p != ';') {
 				disp_error_message("parse_syntax: need ';'",p);
@@ -2142,36 +2146,38 @@ static const char *parse_syntax(const char *p)
 			int pos = script->syntax.curly_count-1;
 			if(pos < 0 || script->syntax.curly[pos].type != TYPE_SWITCH) {
 				disp_error_message("parse_syntax: unexpected 'default'",p);
-			} else if(script->syntax.curly[pos].flag) {
-				disp_error_message("parse_syntax: dup 'default'",p);
-			} else {
-				char label[256];
-				int l;
-				// Put the label location
-				p = script->skip_space(p2);
-				if (p == NULL /* Can't be NULL but silence gcc warnings */ || *p != ':') {
-					disp_error_message("parse_syntax: need ':'",p);
-				}
-				sprintf(label, "__SW%x_%x", (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].count);
-				l=script->add_str(label);
-				script->set_label(l, VECTOR_LENGTH(script->buf), p);
-
-				// Skip to the next link w/o condition
-				sprintf(label, "goto __SW%x_%x;", (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].count + 1);
-				script->syntax.curly[script->syntax.curly_count++].type = TYPE_NULL;
-				script->parse_line(label);
-				script->syntax.curly_count--;
-
-				// The default label
-				sprintf(label, "__SW%x_DEF", (unsigned int)script->syntax.curly[pos].index);
-				l=script->add_str(label);
-				script->set_label(l, VECTOR_LENGTH(script->buf), p);
-
-				script->syntax.curly[script->syntax.curly_count - 1].flag = 1;
-				script->syntax.curly[pos].count++;
 			}
+			if(script->syntax.curly[pos].flag) {
+				disp_error_message("parse_syntax: dup 'default'",p);
+			}
+			char label[256];
+			int l;
+			// Put the label location
+			p = script->skip_space(p2);
+			if (p == NULL /* Can't be NULL but silence gcc warnings */ || *p != ':') {
+				disp_error_message("parse_syntax: need ':'",p);
+			}
+			sprintf(label, "__SW%x_%x", (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].count);
+			l=script->add_str(label);
+			script->set_label(l, VECTOR_LENGTH(script->buf), p);
+
+			// Skip to the next link w/o condition
+			sprintf(label, "goto __SW%x_%x;", (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].count + 1);
+			script->syntax.curly[script->syntax.curly_count++].type = TYPE_NULL;
+			script->parse_line(label);
+			script->syntax.curly_count--;
+
+			// The default label
+			sprintf(label, "__SW%x_DEF", (unsigned int)script->syntax.curly[pos].index);
+			l=script->add_str(label);
+			script->set_label(l, VECTOR_LENGTH(script->buf), p);
+
+			script->syntax.curly[script->syntax.curly_count - 1].flag = 1;
+			script->syntax.curly[pos].count++;
+
 			return p + 1;
-		} else if( p2 - p == 2 && strncmp(p, "do", 2) == 0 ) {
+		}
+		if (p2 - p == 2 && strncmp(p, "do", 2) == 0) {
 			int l;
 			char label[256];
 			p=script->skip_space(p2);
@@ -2266,13 +2272,13 @@ static const char *parse_syntax(const char *p)
 			l=script->add_str(label);
 			script->set_label(l, VECTOR_LENGTH(script->buf), p);
 			return p;
-		} else if( p2 - p == 8 && strncmp(p, "function", 8) == 0 ) {
+		}
+		if (p2 - p == 8 && strncmp(p, "function", 8) == 0) {
 			// local function not marked as public or private
 			if (script->config.functions_private_by_default) {
 				return script->parse_syntax_function(p2, false);
-			} else {
-				return script->parse_syntax_function(p2, true);
 			}
+			return script->parse_syntax_function(p2, true);
 		}
 		break;
 	case 'i':
