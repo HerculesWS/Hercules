@@ -3611,30 +3611,27 @@ ACMD(guild)
 
 ACMD(breakguild)
 {
-	if (sd->status.guild_id) { // Check if the player has a guild
-		struct guild *g = sd->guild; // Search the guild
-		if (g) { // Check if guild was found
-			if (sd->state.gmaster_flag) { // Check if player is guild master
-				int ret = 0;
-				ret = guild->dobreak(sd, g->name); // Break guild
-				if (ret) { // Check if anything went wrong
-					return true; // Guild was broken
-				} else {
-					return false; // Something went wrong
-				}
-			} else { // Not guild master
-				clif->message(fd, msg_fd(fd, MSGTBL_CHANGEGM_GM_REQUIRED)); // You need to be a Guild Master to use this command.
-				return false;
-			}
-		} else { // Guild was not found. HOW?
-			clif->message(fd, msg_fd(fd, MSGTBL_NOT_IN_A_GUILD2)); // You are not in a guild.
-			return false;
-		}
-	} else { // Player does not have a guild
+	if (sd->status.guild_id == 0) {
+		// Player does not have a guild
 		clif->message(fd, msg_fd(fd, MSGTBL_NOT_IN_A_GUILD2)); // You are not in a guild.
 		return false;
 	}
-	return true;
+	struct guild *g = sd->guild; // Search the guild
+	if (g == NULL) {
+		// Guild was not found. HOW?
+		clif->message(fd, msg_fd(fd, MSGTBL_NOT_IN_A_GUILD2)); // You are not in a guild.
+		return false;
+	}
+	if (sd->state.gmaster_flag == 0) {
+		// Not guild master
+		clif->message(fd, msg_fd(fd, MSGTBL_CHANGEGM_GM_REQUIRED)); // You need to be a Guild Master to use this command.
+		return false;
+	}
+	int ret = guild->dobreak(sd, g->name); // Break guild
+	if (ret == 0) {
+		return false; // Something went wrong
+	}
+	return true; // Guild was broken
 }
 
 /*==========================================
