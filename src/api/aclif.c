@@ -1138,7 +1138,8 @@ static void aclif_remove_remove_timer(struct online_api_login_data *user)
 static const char *aclif_get_first_world_name(void)
 {
 	struct DBIterator *iter = db_iterator(aclif->char_servers_db);
-	for (struct char_server_data *data = dbi_first(iter); dbi_exists(iter); data = dbi_next(iter)) {
+	struct char_server_data *data = dbi_first(iter);
+	if (dbi_exists(iter)) {
 		dbi_destroy(iter);
 		return data->world_name;
 	}
