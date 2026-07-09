@@ -157,7 +157,7 @@ test_function_def(setrlimit)
 
 if(MSVC)
   # Warnings
-  add_compile_options(/W3 /wd4100 /wd4800)
+  add_compile_options(/W3 /wd4100)
   add_compile_options(/wd4244 /wd4267) # Disable int conversion possible lose of data
   add_compile_options(/wd4312) # Disable conversion to greater size warning (see 0xdeadbeef pointers)
   # Definations
