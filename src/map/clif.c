@@ -329,7 +329,6 @@ static unsigned char clif_bl_type(struct block_list *bl)
 		return CLUT_ELEMENTAL;
 	case BL_NUL:
 	case BL_ALL:
-	default:
 		return CLUT_NPC;
 	}
 #endif
