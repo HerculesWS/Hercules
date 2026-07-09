@@ -220,8 +220,9 @@ static int lapiif_parse_fromapi_api_proxy(int fd)
 			return 0;
 	}
 
-	RFIFOSKIP(fd, packet->packet_len);
-	return 0;
+	// Uncomment if any new cases are added to the above switch that can break out of it
+	// RFIFOSKIP(fd, packet->packet_len);
+	// return 0;
 }
 
 static void lapiif_parse_proxy_api_to_char(int fd)
