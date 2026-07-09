@@ -899,7 +899,14 @@ struct script_interface {
 	int buildin_callfunc_ref;
 	int buildin_getelementofarray_ref;
 	/* */
+#ifdef _MSC_VER
+#pragma warning (push)
+#pragma warning (disable: 4324)
+#endif
 	jmp_buf     error_jump;
+#ifdef _MSC_VER
+#pragma warning (pop)
+#endif
 	char*       error_msg;
 	const char* error_pos;
 	int         error_report; // if the error should produce output
