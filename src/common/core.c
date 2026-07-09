@@ -301,8 +301,9 @@ static bool get_executable_path(char *buf, size_t length)
 	if (sysctl(mib, 4, buf, &length, NULL, 0) != 0)
 		return false;
 	return true;
-#endif
+#else
 	return false;
+#endif
 }
 
 static void core_defaults(void)
