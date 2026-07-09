@@ -15395,8 +15395,6 @@ static int skill_check_condition_char_sub(struct block_list *bl, va_list ap)
 				{
 					p_sd[(*c)++]=tsd->bl.id;
 					return skill_lv;
-				} else {
-					return 0;
 				}
 			}
 			break;
