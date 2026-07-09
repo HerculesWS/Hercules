@@ -1840,6 +1840,10 @@ static const char *parse_line(const char *p)
 	return p;
 }
 
+#ifdef _MSC_VER
+#pragma warning (push)
+#pragma warning (disable: 4702)
+#endif
 /**
  * parses a local function expression
  *
@@ -1918,7 +1922,14 @@ static const char *parse_syntax_function (const char *p, bool is_public)
 	disp_error_message("script:parse_syntax_function: expected ';' or '{' at function syntax", p);
 	return p;
 }
+#ifdef _MSC_VER
+#pragma warning (pop)
+#endif
 
+#ifdef _MSC_VER
+#pragma warning (push)
+#pragma warning (disable: 4702)
+#endif
 // { ... } Closing process
 static const char *parse_curly_close(const char *p)
 {
@@ -1976,7 +1987,14 @@ static const char *parse_curly_close(const char *p)
 	disp_error_message("parse_curly_close: unexpected string",p);
 	return p + 1;
 }
+#ifdef _MSC_VER
+#pragma warning (pop)
+#endif
 
+#ifdef _MSC_VER
+#pragma warning (push)
+#pragma warning (disable: 4702)
+#endif
 // Syntax-related processing
 // break, case, continue, default, do, for, function,
 // if, switch, while ? will handle this internally.
@@ -2386,6 +2404,9 @@ static const char *parse_syntax(const char *p)
 	}
 	return NULL;
 }
+#ifdef _MSC_VER
+#pragma warning (pop)
+#endif
 
 static const char *parse_syntax_close(const char *p)
 {
@@ -2399,6 +2420,10 @@ static const char *parse_syntax_close(const char *p)
 	return p;
 }
 
+#ifdef _MSC_VER
+#pragma warning (push)
+#pragma warning (disable: 4702)
+#endif
 // Close judgment if, for, while, of do
 // flag == 1 : closed
 // flag == 0 : not closed
@@ -2573,6 +2598,9 @@ static const char *parse_syntax_close_sub(const char *p, int *flag)
 		return p;
 	}
 }
+#ifdef _MSC_VER
+#pragma warning (pop)
+#endif
 
 /// Retrieves the value of a constant.
 static bool script_get_constant(const char *name, int *value)
@@ -2883,6 +2911,10 @@ static void script_warning(const char *src, const char *file, int start_line, co
 	StrBuf->Destroy(&buf);
 }
 
+#ifdef _MSC_VER
+#pragma warning (push)
+#pragma warning (disable: 4702)
+#endif
 /*==========================================
  * Analysis of the script
  *------------------------------------------*/
@@ -3109,6 +3141,9 @@ static struct script_code *parse_script(const char *src, const char *file, int l
 #endif // ENABLE_CASE_CHECK
 	return code;
 }
+#ifdef _MSC_VER
+#pragma warning (pop)
+#endif
 
 /**
  * Creates a new script_code instance from an existing one.
