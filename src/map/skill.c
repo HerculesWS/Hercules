@@ -15347,62 +15347,61 @@ static int skill_check_condition_char_sub(struct block_list *bl, va_list ap)
 		if (tsd->status.party_id == sd->status.party_id && (tsd->job & MAPID_THIRDMASK) == MAPID_MINSTRELWANDERER)
 			p_sd[(*c)++] = tsd->bl.id;
 		return 1;
-	} else {
+	}
 
-		switch(skill_id) {
-			case PR_BENEDICTIO:
-			{
-				enum unit_dir dir = map->calc_dir(&sd->bl, tsd->bl.x, tsd->bl.y);
-				dir = (unit->getdir(&sd->bl) + dir) % UNIT_DIR_MAX; //This adjusts dir to account for the direction the sd is facing.
-				if ((tsd->job & MAPID_BASEMASK) == MAPID_ACOLYTE && (dir == UNIT_DIR_WEST || dir == UNIT_DIR_EAST) //Must be standing to the left/right of Priest.
-				    && sd->status.sp >= 10) {
-					p_sd[(*c)++]=tsd->bl.id;
-				}
-				return 1;
+	switch(skill_id) {
+		case PR_BENEDICTIO:
+		{
+			enum unit_dir dir = map->calc_dir(&sd->bl, tsd->bl.x, tsd->bl.y);
+			dir = (unit->getdir(&sd->bl) + dir) % UNIT_DIR_MAX; //This adjusts dir to account for the direction the sd is facing.
+			if ((tsd->job & MAPID_BASEMASK) == MAPID_ACOLYTE && (dir == UNIT_DIR_WEST || dir == UNIT_DIR_EAST) //Must be standing to the left/right of Priest.
+				&& sd->status.sp >= 10) {
+				p_sd[(*c)++]=tsd->bl.id;
 			}
-			case AB_ADORAMUS:
-			// Adoramus does not consume Blue Gemstone when there is at least 1 Priest class next to the caster
-				if ((tsd->job & MAPID_UPPERMASK) == MAPID_PRIEST)
-					p_sd[(*c)++] = tsd->bl.id;
-				return 1;
-			case WL_COMET:
-			// Comet does not consume Red Gemstones when there is at least 1 Warlock class next to the caster
-				if ((tsd->job & MAPID_THIRDMASK) == MAPID_WARLOCK)
-					p_sd[(*c)++] = tsd->bl.id;
-				return 1;
-			case LG_RAYOFGENESIS:
-				if (tsd->status.party_id == sd->status.party_id && (tsd->job & MAPID_THIRDMASK) == MAPID_ROYAL_GUARD && tsd->sc.data[SC_BANDING])
-					p_sd[(*c)++] = tsd->bl.id;
-				return 1;
-			default: //Warning: Assuming Ensemble Dance/Songs for code speed. [Skotlex]
-				{
-					if(pc_issit(tsd) || !unit->can_move(&tsd->bl))
-						return 0;
+			return 1;
+		}
+		case AB_ADORAMUS:
+		// Adoramus does not consume Blue Gemstone when there is at least 1 Priest class next to the caster
+			if ((tsd->job & MAPID_UPPERMASK) == MAPID_PRIEST)
+				p_sd[(*c)++] = tsd->bl.id;
+			return 1;
+		case WL_COMET:
+		// Comet does not consume Red Gemstones when there is at least 1 Warlock class next to the caster
+			if ((tsd->job & MAPID_THIRDMASK) == MAPID_WARLOCK)
+				p_sd[(*c)++] = tsd->bl.id;
+			return 1;
+		case LG_RAYOFGENESIS:
+			if (tsd->status.party_id == sd->status.party_id && (tsd->job & MAPID_THIRDMASK) == MAPID_ROYAL_GUARD && tsd->sc.data[SC_BANDING])
+				p_sd[(*c)++] = tsd->bl.id;
+			return 1;
+		default: //Warning: Assuming Ensemble Dance/Songs for code speed. [Skotlex]
+			{
+				if(pc_issit(tsd) || !unit->can_move(&tsd->bl))
+					return 0;
 
-					uint16 skill_lv = pc->checkskill(tsd, skill_id);
+				uint16 skill_lv = pc->checkskill(tsd, skill_id);
 #ifdef RENEWAL // In Renewal, partner also gets the requirements consumed, so we must check it
-					if (skill->check_condition_castbegin(tsd, skill_id, skill_lv) == 0)
-						return 0;
+				if (skill->check_condition_castbegin(tsd, skill_id, skill_lv) == 0)
+					return 0;
 #endif
 
-					if (sd->status.sex != tsd->status.sex &&
-							(tsd->job & MAPID_UPPERMASK) == MAPID_BARDDANCER &&
-							skill_lv > 0 &&
-							(tsd->weapontype1==W_MUSICAL || tsd->weapontype1==W_WHIP) &&
-							sd->status.party_id && tsd->status.party_id &&
-							sd->status.party_id == tsd->status.party_id &&
-							!tsd->sc.data[SC_DANCING])
-					{
-						p_sd[(*c)++]=tsd->bl.id;
-						return skill_lv;
-					} else {
-						return 0;
-					}
+				if (sd->status.sex != tsd->status.sex &&
+						(tsd->job & MAPID_UPPERMASK) == MAPID_BARDDANCER &&
+						skill_lv > 0 &&
+						(tsd->weapontype1==W_MUSICAL || tsd->weapontype1==W_WHIP) &&
+						sd->status.party_id && tsd->status.party_id &&
+						sd->status.party_id == tsd->status.party_id &&
+						!tsd->sc.data[SC_DANCING])
+				{
+					p_sd[(*c)++]=tsd->bl.id;
+					return skill_lv;
+				} else {
+					return 0;
 				}
-				break;
-		}
-
+			}
+			break;
 	}
+
 	return 0;
 }
 
