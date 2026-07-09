@@ -157,8 +157,9 @@ test_function_def(setrlimit)
 
 if(MSVC)
   # Warnings
-  add_compile_options(/W3 /wd4100)
+  add_compile_options(/W3)
   add_compile_options(/wd4244 /wd4267) # Disable int conversion possible lose of data
+  add_compile_options(/wd4100) # Disable unused parameter warning mostly due to BUILDIN and similar functions having unused parameters
   add_compile_options(/wd4312) # Disable conversion to greater size warning (see 0xdeadbeef pointers)
   # Definations
   add_compile_definitions(WIN32 _WIN32 __WIN32 _CRT_SECURE_NO_DEPRECATE _CRT_NONSTDC_NO_DEPRECATE FD_SETSIZE=4096 WIN32_LEAN_AND_MEAN)
