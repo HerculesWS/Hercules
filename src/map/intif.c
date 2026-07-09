@@ -1345,6 +1345,10 @@ static void intif_parse_GuildInfo(int fd)
 	if (p->packetLength != sizeof(struct PACKET_CHARMAP_GUILD_INFO))
 		ShowError("intif: guild info: data size mismatch - Gid: %d recv size: %d Expected size: %"PRIuS"\n",
 		          p->g.guild_id, p->packetLength, sizeof(struct PACKET_CHARMAP_GUILD_INFO));
+#ifdef _MSC_VER
+#pragma warning (push)
+#pragma warning (disable: 4366)
+#endif
 	if (intif->emblem_tmp_done == false ||
 	    intif->emblem_tmp_guild_id != p->g.guild_id ||
 	    intif->emblem_tmp_emblem_id != p->g.emblem_id) {
@@ -1352,6 +1356,9 @@ static void intif_parse_GuildInfo(int fd)
 	} else {
 		guild->recv_info(&p->g, &intif->emblem_tmp);
 	}
+#ifdef _MSC_VER
+#pragma warning (pop)
+#endif
 	intif->emblem_tmp_done = false;
 	intif->emblem_tmp_guild_id = 0;
 	intif->emblem_tmp_emblem_id = 0;
