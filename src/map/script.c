@@ -18904,15 +18904,13 @@ static BUILDIN(getbattleflag)
 
 	flag = script_getstr(st,2);
 
-	if (battle->config_get_value(flag, &value)) {
-		script_pushint(st,value);
-		return true;
-	} else {
+	if (battle->config_get_value(flag, &value) == 0) {
 		script_pushint(st,0);
 		ShowWarning("buildin_getbattleflag: non-exist battle config requested %s \n", flag);
 		return false;
 	}
 
+	script_pushint(st,value);
 	return true;
 }
 
