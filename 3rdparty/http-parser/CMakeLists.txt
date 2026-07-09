@@ -41,4 +41,6 @@ add_library(hercules-http_parser STATIC
 
 if(NOT MSVC)
   target_compile_options(hercules-http_parser PRIVATE -Wno-shadow -Wno-switch-enum)
+else()
+  target_compile_options(hercules-http_parser PRIVATE /wd4456)
 endif()

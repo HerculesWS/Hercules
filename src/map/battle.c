@@ -6530,7 +6530,7 @@ static void battle_reflect_damage(struct block_list *target, struct block_list *
 
 					trdamage -= rdamage;/* wont count towards total */
 
-					enum autocast_type ac_type;
+					enum autocast_type ac_type = AUTOCAST_NONE;
 
 					if (sd != NULL) {
 						ac_type = sd->auto_cast_current.type;

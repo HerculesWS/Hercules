@@ -20112,7 +20112,8 @@ static int skill_can_produce_mix(struct map_session_data *sd, int nameid, int tr
 static int skill_produce_mix(struct map_session_data *sd, uint16 skill_id, int nameid, int slot1, int slot2, int slot3, int qty)
 {
 	int slot[3];
-	int i,sc,ele,idx,equip,wlv,make_per = 0,flag = 0,skill_lv = 0;
+	int i,sc,ele,idx,equip,make_per = 0,flag = 0,skill_lv = 0;
+	int wlv = 0; // Consider weapon level 0 until actually a weapon is picked later in code
 	int num = -1; // exclude the recipe
 	struct status_data *st;
 	struct item_data* data;

@@ -6361,7 +6361,7 @@ static bool script_sprintf_helper(struct script_state *st, int start, struct Str
 				np++;
 		} else if (*np == '*') {
 			bool positional_widtharg = false;
-			int width_arg;
+			int width_arg = 0;
 			np++;
 			// pos-parameter = number "$"
 			if (ISDIGIT(*np) && *np != '0') {
@@ -18141,7 +18141,7 @@ static BUILDIN(getnpcdir)
 // set npc direction [4144]
 static BUILDIN(setnpcdir)
 {
-	int newdir;
+	int newdir = 0;
 	struct npc_data *nd = NULL;
 
 	if (script_hasdata(st, 3)) {

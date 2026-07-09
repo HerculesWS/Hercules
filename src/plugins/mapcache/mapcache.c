@@ -107,7 +107,7 @@ bool write_mapcache(const uint8 *buf, int32 buf_len, bool is_compressed, const c
 	struct map_cache_header header = { 0 };
 	char file_path[255];
 	int mapname_len;
-	unsigned long compressed_buf_len;
+	unsigned long compressed_buf_len = 0;
 	uint8 *compressed_buf = NULL;
 	FILE *new_mapcache_fp;
 

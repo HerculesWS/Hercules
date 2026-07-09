@@ -101,7 +101,7 @@ static void rodex_add_item(struct map_session_data *sd, int16 idx, int16 amount)
 	}
 
 	bool is_new = true;
-	int i;
+	int i = RODEX_MAX_ITEM;
 
 	// stackable item, try to find it in the current list
 	if (itemdb->isstackable(inv_item->nameid) == 1) {
