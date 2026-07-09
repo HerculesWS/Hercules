@@ -897,7 +897,7 @@ static const char *parse_callfunc(const char *p, int require_paren, int is_custo
 	const char *p2;
 	char *arg = NULL;
 	char null_arg = '\0';
-	int func;
+	int func = -1;
 	bool lang_macro = false;
 
 	nullpo_retr(NULL, p);
