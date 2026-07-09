@@ -75,7 +75,11 @@ struct console_input_interface {
 	/* vars */
 	struct spin_lock *ptlock;      ///< parse thread lock.
 	struct thread_handle *pthread; ///< parse thread.
+#ifdef WIN32
+	volatile long ptstate;         ///< parse thread state.
+#else
 	volatile int32 ptstate;        ///< parse thread state.
+#endif
 	struct mutex_data *ptmutex;    ///< parse thread mutex.
 	struct cond_data *ptcond;      ///< parse thread conditional variable.
 	/* */
