@@ -445,19 +445,9 @@ static bool httpparser_parse(int fd)
 			sd->request_temp_size -= idx + 2;
 			memmove(sd->request_temp, sd->request_temp + idx + 2, sd->request_temp_size);
 			return true;
-		} else {
-			// data cached, but no yet separator
-			return true;
 		}
-		if (sd->flag.headers_complete != 0) {
-			// header was complete in previous parse. try to parse additional data
-			const bool res = httpparser->parse_real(fd, sd, sd->request_temp, sd->request_temp_size);
-			aFree(sd->request_temp);
-			sd->request_temp = NULL;
-			sd->request_temp_size = 0;
-			sd->request_temp_alloc_size = 0;
-			return res;
-		}
+
+		return true;
 	} else {
 		// parse received non headers data
 		const bool res = httpparser->parse_real(fd, sd, data, data_size);
