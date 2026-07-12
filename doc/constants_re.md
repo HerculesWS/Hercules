@@ -5707,6 +5707,13 @@
 - `MF_SPECIALPOPUP`: 66
 - `MF_NOSENDMAIL`: 67
 
+### Storage Access Types
+
+- `STORAGE_ACCESS_VIEW`: 0
+- `STORAGE_ACCESS_GET`: 1
+- `STORAGE_ACCESS_PUT`: 2
+- `STORAGE_ACCESS_ALL`: 3
+
 ### Job masks / Job map_ids
 
 - `EAJL_2_1`: 256
