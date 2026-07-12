@@ -50,8 +50,8 @@ if ($PSVersionTable.PSVersion.Major -lt 3) {
 }
 
 # differentiate between right click -> run with powershell and execution from within a shell
-$exe_path = $(gwmi win32_process -Filter "processid='$PID'").ExecutablePath
-$cmd_line = $(gwmi win32_process -Filter "processid='$PID'").CommandLine
+$exe_path = $(gcim win32_process -Filter "processid='$PID'").ExecutablePath
+$cmd_line = $(gcim win32_process -Filter "processid='$PID'").CommandLine
 $script_path = $MyInvocation.MyCommand.Path
 if ($cmd_line -match "`"$([regex]::escape($exe_path)).*$([regex]::escape($script_path))\s*`"") {
   $is_cli = $False
