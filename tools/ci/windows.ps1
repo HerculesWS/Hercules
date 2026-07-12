@@ -54,12 +54,15 @@ function WritePropsFile {
 function CatchProcessErrors {
 	param([string]$programName, [string]$additionalArgs)
 
-	Write-Host "Running server $programName with arguments: $additionalArgs"
+	$errorFileName = $programName.Replace("\\", "--").Replace("/", "--")
 
-	$process = Start-Process -FilePath "$programName" -ArgumentList $additionalArgs -NoNewWindow -PassThru -RedirectStandardError "error_$programName.txt"
+	Write-Host "Running server $programName and writing errors to error_$errorFileName.txt with arguments: $additionalArgs"
+
+	$process = Start-Process -FilePath "$programName" -ArgumentList $additionalArgs -NoNewWindow -PassThru -RedirectStandardError "error_$errorFileName.txt"
+	$handle = $process.Handle # Workaround a bug where handle becomes null after wait https://stackoverflow.com/questions/44057728/start-process-system-diagnostics-process-exitcode-is-null-with-nonewwindow
 	$process.WaitForExit()
 
-	$errorText = Get-Content "error_$programName.txt" -TotalCount 10000
+	$errorText = Get-Content "error_$errorFileName.txt" -TotalCount 10000
 	if ($null -ne $errorText -and $errorText -ne "") {
 		Write-Host "Errors found in running server $programName"
 		Write-Host "$errorText"
@@ -74,31 +77,31 @@ function CatchProcessErrors {
 
 Write-Host "Arguments: $args"
 if ($args[0] -eq "build") {
-	$propsFile = WritePropsFile $args[1..($args.Length - 1)]
-	CatchProcessErrors msbuild "-m Hercules.sln /p:ForceImportBeforeCppTargets=$propsFile"
-
-	foreach ($plugin in @("httpsample", "constdb2doc", "db2sql", "dbghelpplug", "generate-translations", "mapcache", "script_mapquit")) {
-		CreatePluginProject $plugin
-		CatchProcessErrors msbuild "-m vcproj\\plugin-$plugin.vcxproj /p:ForceImportBeforeCppTargets=$propsFile"
-	}
+	$compileFlags = $args[1..($args.Length - 1)]
+	./setup_env.ps1 -BuildDir build
+	Push-Location "build"
+	cmake -S .. -B . $compileFlags
+	ninja all
+	ninja install
+	Pop-Location
 }
 elseif ($args[0] -eq "run") {
 	$serverArgs = "--run-once"
-	CatchProcessErrors "api-server.exe" $serverArgs
-	CatchProcessErrors "login-server.exe" $serverArgs
-	CatchProcessErrors "char-server.exe" $serverArgs
-	CatchProcessErrors "map-server.exe" $serverArgs
+	CatchProcessErrors "bin/api-server.exe" $serverArgs
+	CatchProcessErrors "bin/login-server.exe" $serverArgs
+	CatchProcessErrors "bin/char-server.exe" $serverArgs
+	CatchProcessErrors "bin/map-server.exe" $serverArgs
 }
 elseif ($args[0] -eq "test") {
 	$serverArgs = "--run-once"
-	foreach ($plugin in @("HPMHooking", "httpsample", "constdb2doc", "db2sql", "dbghelpplug", "generate-translations", "mapcache", "script_mapquit")) {
+	foreach ($plugin in @("HPMHooking", "httpsample", "constdb2doc", "db2sql", "generate-translations", "mapcache", "script_mapquit")) {
 		$serverArgs += " --load-plugin $plugin"
 	}
-	CatchProcessErrors "map-server.exe" "$serverArgs --load-script npc/dev/test.txt --load-script npc/dev/ci_test.txt"
-	CatchProcessErrors "map-server.exe" "$serverArgs --constdb2doc"
-	CatchProcessErrors "map-server.exe" "$serverArgs --db2sql"
-	CatchProcessErrors "map-server.exe" "$serverArgs --itemdb2sql"
-	CatchProcessErrors "map-server.exe" "$serverArgs --mobdb2sql"
-	CatchProcessErrors "map-server.exe" "$serverArgs --generate-translations"
-	CatchProcessErrors "map-server.exe" "$serverArgs --fix-md5"
+	CatchProcessErrors "bin/map-server.exe" "$serverArgs --load-script npc/dev/test.txt --load-script npc/dev/ci_test.txt"
+	CatchProcessErrors "bin/map-server.exe" "$serverArgs --constdb2doc"
+	CatchProcessErrors "bin/map-server.exe" "$serverArgs --db2sql"
+	CatchProcessErrors "bin/map-server.exe" "$serverArgs --itemdb2sql"
+	CatchProcessErrors "bin/map-server.exe" "$serverArgs --mobdb2sql"
+	CatchProcessErrors "bin/map-server.exe" "$serverArgs --generate-translations"
+	CatchProcessErrors "bin/map-server.exe" "$serverArgs --fix-md5"
 }

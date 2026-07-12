@@ -1,4 +1,4 @@
-name: windows
+name: build windows
 
 on: workflow_call
 
@@ -10,22 +10,30 @@ env:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: windows-2025
     timeout-minutes: 30
     strategy:
       matrix:
-        CC: [msbuild]
-        RENEWAL: ["", "DISABLE_RENEWAL"]
-        CLIENT_TYPE: ["", "ENABLE_PACKETVER_RE", "ENABLE_PACKETVER_ZERO"]
-        PACKET_VERSION: ["PACKETVER=20221024", "PACKETVER=20130724"]
+        CC: [msvc]
+        RENEWAL: ["", "-DENABLE_RENEWAL=OFF"]
+        CLIENT_TYPE: ["", "-DENABLE_PACKETVER_RE=ON", "-DENABLE_PACKETVER_ZERO=ON"]
+        HTTPLIB: ["", "-DWITH_HTTP_PARSER=llhttp"]
+        PACKET_VERSION: ["-DPACKETVER=20221024", "-DPACKETVER=20130724"]
+        include:
+          # Empty CLASSIC_AUTOSPELL_LIST for every other flow
+          - CLASSIC_AUTOSPELL_LIST: ""
+          # Use "-DCLASSIC_AUTOSPELL_LIST" for 20130724 RE or we will get warnings due to the list being too small
+          - PACKET_VERSION: "-DPACKETVER=20130724"
+            RENEWAL: ""
+            CLASSIC_AUTOSPELL_LIST: "-DENABLE_CLASSIC_AUTOSPELL=ON"
         exclude:
-          - PACKET_VERSION: "PACKETVER=20130724"
-            CLIENT_TYPE: "ENABLE_PACKETVER_ZERO"
+          - PACKET_VERSION: "-DPACKETVER=20130724"
+            CLIENT_TYPE: "-DENABLE_PACKETVER_ZERO=ON"
 
     # github.head_ref will stop previous runs in the same PR (if in a PR)
     # github.run_id is a fallback when outside a PR (e.g. every merge in master will run, and previous won't stop)
     concurrency:
-      group: msbuild-${{ github.head_ref || github.run_id }}_${{ matrix.CC }}_${{ matrix.RENEWAL }}_${{ matrix.CLIENT_TYPE }}_${{ matrix.PACKET_VERSION}}
+      group: build_windows-${{ github.head_ref || github.run_id }}_${{ matrix.CC }}_${{ matrix.RENEWAL }}_${{ matrix.CLIENT_TYPE }}_${{ matrix.HTTPLIB }}_${{ matrix.PACKET_VERSION}}
       cancel-in-progress: true
 
     steps:
@@ -33,8 +41,9 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Add msbuild to PATH
-        uses: microsoft/setup-msbuild@v2
+#      - name: install packages
+#        run: |
+#          winget install Ninja-build.Ninja cmake python3 --accept-source-agreements --accept-package-agreements --disable-interactivity --silent
 
       - uses: shogo82148/actions-setup-mysql@v1
         with:
@@ -51,13 +60,13 @@ jobs:
 
       - name: build
         run: |
-          .\tools\ci\windows.ps1 build ${{ matrix.CLIENT_TYPE }} ${{ matrix.PACKET_VERSION}} ${{ matrix.RENEWAL }}
+          .\tools\ci\windows.ps1 build ${{ matrix.CLIENT_TYPE }} ${{ matrix.PACKET_VERSION}} ${{ matrix.RENEWAL }} ${{ matrix.HTTPLIB }} ${{ matrix.CLASSIC_AUTOSPELL_LIST }} -DENABLE_WERROR=ON -DENABLE_BUILDBOT=ON -DBUILD_HPMHOOKING=ON
 
       - name: run
         run: |
           .\tools\ci\windows.ps1 run
 
       - name: test
-        if: matrix.PACKET_VERSION != 'PACKETVER=20130724'
+        if: matrix.PACKET_VERSION != '-DPACKETVER=20130724'
         run: |
           .\tools\ci\windows.ps1 test
