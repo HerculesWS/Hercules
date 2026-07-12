@@ -1,0 +1,43 @@
+name: tools-windows
+
+on: workflow_call
+
+jobs:
+  build:
+    runs-on: windows-2025
+    timeout-minutes: 30
+    strategy:
+      matrix:
+        CC: [msvc]
+
+    # github.head_ref will stop previous runs in the same PR (if in a PR)
+    # github.run_id is a fallback when outside a PR (e.g. every merge in master will run, and previous won't stop)
+    concurrency:
+      group: tools-windows-${{ github.head_ref || github.run_id }}_${{ matrix.CC }}
+      cancel-in-progress: true
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+
+      - uses: actions/cache/restore@v6 # We're restoring first so if a cache already exists from previous CI run, it's used and step finishes quicker.
+        name: restore conan cache
+        id: cache-restore
+        with:
+          path: ~/.conan2
+          key: ${{ runner.os }}-${{ matrix.CC }}-${{ hashFiles('conanfile.py') }}
+
+      - name: run cmake first run
+        if: steps.cache-restore.outputs.cache-hit != 'true'
+        run: |
+          ./setup_env.ps1
+
+      - uses: actions/cache/save@v6
+        if: steps.cache-restore.outputs.cache-hit != 'true'
+        name: save conan cache
+        id: cache_save
+        with:
+          path: ~/.conan2
+          key: ${{ runner.os }}-${{ matrix.CC }}-${{ hashFiles('conanfile.py') }}
+

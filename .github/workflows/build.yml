@@ -74,6 +74,13 @@ jobs:
         run: |
           uname -a
 
+      - uses: actions/cache/restore@v6
+        name: restore conan cache
+        id: cache
+        with:
+          path: ~/.conan2
+          key: ${{ runner.os }}-${{ matrix.CC }}-${{ hashFiles('conanfile.py') }}
+
       - name: install packages
         run: |
           ./tools/ci/retry.sh apt-get update

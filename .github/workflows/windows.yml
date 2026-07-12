@@ -45,6 +45,13 @@ jobs:
 #        run: |
 #          winget install Ninja-build.Ninja cmake python3 --accept-source-agreements --accept-package-agreements --disable-interactivity --silent
 
+      - uses: actions/cache/restore@v6
+        name: restore conan cache
+        id: cache
+        with:
+          path: ~/.conan2
+          key: ${{ runner.os }}-${{ matrix.CC }}-${{ hashFiles('conanfile.py') }}
+
       - uses: shogo82148/actions-setup-mysql@v1
         with:
           distribution: "mariadb"
