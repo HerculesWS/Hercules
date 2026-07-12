@@ -26102,8 +26102,7 @@ static void clif_format_itemlink(StringBuf *buf, const struct item *it)
 	// Client-versions that doesn't support <ITEML>, return the item name and ends.
 	StrBuf->Printf(buf, "%s", itd->jname);
 	return;
-#endif // PACKETVER_MAIN_NUM < 20150923 && PACKETVER_RE_NUM < 20150819 && !defined(PACKETVER_ZERO)
-
+#else
 	// Separators that didn't change along the time
 	static const char ref_sep = '%';
 #if PACKETVER >= 20161116
@@ -26181,6 +26180,7 @@ static void clif_format_itemlink(StringBuf *buf, const struct item *it)
 	StrBuf->Printf(buf, "</%s>", tag_name);
 
 	#undef get_padded_value
+#endif // PACKETVER_MAIN_NUM < 20150923 && PACKETVER_RE_NUM < 20150819 && !defined(PACKETVER_ZERO)
 }
 
 /**
