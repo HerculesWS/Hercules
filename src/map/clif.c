@@ -24212,11 +24212,10 @@ static void clif_open_ui_send(struct map_session_data *sd, enum zc_ui_types ui_t
 static void clif_open_ui(struct map_session_data *sd, enum cz_ui_types uiType)
 {
 	nullpo_retv(sd);
-
+#if PACKETVER >= 20150128
 	enum zc_ui_types send_ui_type;
 
 	switch (uiType) {
-#if PACKETVER >= 20150128
 	case CZ_BANK_UI:
 		send_ui_type = ZC_BANK_UI;
 		break;
@@ -24229,7 +24228,6 @@ static void clif_open_ui(struct map_session_data *sd, enum cz_ui_types uiType)
 	case CZ_MACRO_DETECTOR_UI:
 		send_ui_type = ZC_MACRO_UI;
 		break;
-#endif
 #if PACKETVER >= 20171122
 	case CZ_ATTENDANCE_UI:
 		send_ui_type = ZC_ATTENDANCE_UI;
@@ -24242,6 +24240,10 @@ static void clif_open_ui(struct map_session_data *sd, enum cz_ui_types uiType)
 	}
 
 	clif->open_ui_send(sd, send_ui_type);
+#else
+	ShowWarning("clif_open_ui: Requested UI (%u) is not implemented yet.\n", uiType);
+	return;
+#endif
 }
 
 static void clif_parse_attendance_reward_request(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
