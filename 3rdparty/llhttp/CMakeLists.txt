@@ -43,4 +43,6 @@ add_library(hercules-llhttp STATIC
 
 if(NOT MSVC)
   target_compile_options(hercules-llhttp PRIVATE -Wno-error -Wno-format -Wno-format-y2k -Wno-format-security -Wno-redundant-decls -Wno-undef -Wno-switch-enum)
+else()
+  target_compile_options(hercules-llhttp PRIVATE /wd4702)
 endif()
