@@ -70,8 +70,6 @@ struct hplugin_data_store;
 // Disable this to make monsters not do any path search when looking for a target (old behavior).
 #define ACTIVEPATHSEARCH
 
-struct item_drop_ratio;
-
 enum e_bosstype {
 	BTYPE_NONE = 0,
 	BTYPE_BOSS = 1,
@@ -504,8 +502,6 @@ struct mob_interface {
 	int manuk[8];
 	int splendide[5];
 	int mora[5];
-	struct item_drop_ratio **item_drop_ratio_db;
-	struct DBMap *item_drop_ratio_other_db;
 	/* */
 	int (*init) (bool mimimal);
 	int (*final) (void);
@@ -621,9 +617,6 @@ struct mob_interface {
 	bool (*readdb_itemratio) (char *str[], int columns, int current);
 	void (*load) (bool minimal);
 	void (*clear_spawninfo) (void);
-	struct item_drop_ratio *(*get_item_drop_ratio) (int nameid);
-	void (*set_item_drop_ratio) (int nameid, struct item_drop_ratio *ratio);
-	int (*final_ratio_sub) (union DBKey key, struct DBData *data, va_list ap);
 	void (*destroy_mob_db) (int index);
 	void (*destroy_drop_groups) (void);
 	bool (*skill_db_libconfig) (const char *filename, bool ignore_missing);
