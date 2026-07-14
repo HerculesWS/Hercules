@@ -6140,6 +6140,9 @@ item in his/her inventory, while the autoequip function will equip the
 given item ID when this is looted. The option parameter of the autoequip
 is 1 or 0, 1 to turn it on, and 0 to turn it off.
 
+equip() returns 1 if the item was successfully equipped and 0 if the
+item failed to equip.
+
 Examples:
 
 //This will equip a 1104 (falchion) on the character if this is in the
@@ -6156,6 +6159,30 @@ Examples:
 
 //The invoked character will no longer automatically equip a falchion.
 	autoequip(Falchion, 0);
+
+---------------------------------------
+
+*equipidx(<index>)
+
+The equipidx function will attempt to equip the item at the given inventory
+inventory index. This feature is only really useful when multiple instances
+of an Item ID exist in the player's inventory.
+
+Returns 1 if the item was successfully equipped.
+Returns 0 if the item failed to equip.
+
+See getinventorylist() for an explanation on retrieving an inventory index.
+
+Examples:
+
+//	This will prioritize equip a rental Knife
+	getinventorylist();
+	for (.@i = 0; .@i < @inventorylist_count; ++.@i) {
+		if (@inventorylist_id[.@i] == Knife && @inventorylist_expire[.@i]) {
+			equipidx(.@i);
+			break;
+		}
+	}
 
 ---------------------------------------
 
