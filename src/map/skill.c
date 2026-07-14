@@ -14184,7 +14184,7 @@ static int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *b
 	struct skill_unit_group_tickset *ts;
 	enum sc_type type;
 	uint16 skill_id;
-	int diff=0;
+	int64 diff = 0;
 
 	nullpo_ret(src);
 	nullpo_ret(bl);
@@ -14247,7 +14247,7 @@ static int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *b
 
 	if ((ts = skill->unitgrouptickset_search(bl,sg,tick))) {
 		//Not all have it, eg: Traps don't have it even though they can be hit by Heaven's Drive [Skotlex]
-		diff = DIFF_TICK32(tick,ts->tick);
+		diff = DIFF_TICK(tick,ts->tick);
 		if (diff < 0)
 			return 0;
 		ts->tick = tick+sg->interval;
