@@ -4601,6 +4601,8 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 	case WM_SOUND_OF_DESTRUCTION:
 		md.damage = 1000 * skill_lv + (int64)sstatus->int_ * (sd ? pc->checkskill(sd,WM_LESSON) : 10);
 		md.damage += md.damage * 10 * battle->calc_chorusbonus(sd) / 100;
+		if (tsc != NULL && (tsc->data[SC_SLEEP] != NULL || tsc->data[SC_DEEP_SLEEP] != NULL))
+			md.damage = md.damage * 150 / 100;
 		break;
 	/**
 	 * Mechanic
