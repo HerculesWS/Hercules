@@ -1099,6 +1099,10 @@ static int mob_setdelayspawn(struct mob_data *md)
 	if( md->spawn_timer != INVALID_TIMER )
 		timer->delete(md->spawn_timer, mob->delayspawn);
 	md->spawn_timer = timer->add(timer->gettick()+spawntime, mob->delayspawn, md->bl.id, 0);
+
+	// Clear per-target ground skill tick cache for the next natural life.
+	memset(md->ud.skillunittick, 0, sizeof(md->ud.skillunittick));
+
 	return 0;
 }
 
