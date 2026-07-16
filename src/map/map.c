@@ -2039,6 +2039,8 @@ static int map_quit(struct map_session_data *sd)
 		return 0;
 	}
 
+	pc->autosave_remove(sd->bl.id);
+
 	if( sd->expiration_tid != INVALID_TIMER )
 		timer->delete(sd->expiration_tid,pc->expiration_timer);
 
