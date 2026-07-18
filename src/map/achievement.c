@@ -193,10 +193,10 @@ static void achievement_progress_add(struct map_session_data *sd, const struct a
 
 		// Check if the Achievement is complete.
 		if (achievement->check_complete(sd, ad)) {
-			achievement->validate_achieve(sd, ad->id);
 			if ((ach = achievement->ensure(sd, ad)) == NULL)
 				return;
 			ach->completed_at = time(NULL);
+			achievement->validate_achieve(sd, ad->id);
 		}
 
 		// update client.
@@ -233,10 +233,10 @@ static void achievement_progress_set(struct map_session_data *sd, const struct a
 		ach->objective[obj_idx] = VECTOR_INDEX(ad->objective, obj_idx).goal;
 
 		if (achievement->check_complete(sd, ad)) {
-			achievement->validate_achieve(sd, ad->id);
 			if ((ach = achievement->ensure(sd, ad)) == NULL)
 				return;
 			ach->completed_at = time(NULL);
+			achievement->validate_achieve(sd, ad->id);
 		}
 
 		clif->achievement_send_update(sd->fd, sd, ad);
