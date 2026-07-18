@@ -82,8 +82,10 @@ struct bg_arena {
 	short max_players;
 	short min_team_players;
 	char delay_var[NAME_LENGTH];
+	int requeue_delay;
 	unsigned short maxDuration;
 	int queue_id;
+	int match_queue_id;
 	int begin_timer;
 	int fillup_timer;
 	int game_timer;
