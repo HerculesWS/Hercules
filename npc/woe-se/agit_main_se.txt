@@ -1693,6 +1693,23 @@ OnEnable:
 OnBarrierDestroyed:
 	.@num = atoi(charat(strnpcinfo(NPC_NAME_VISIBLE),2));
 	if (!.@num) end;
+	
+	// Protection for 1st Barricade line - check if Guardian Stones are still intact
+	// Only apply protection to the 1st barricade line (RL0)
+	if (strnpcinfo(NPC_NAME_VISIBLE) == "RL0#"+strnpcinfo(NPC_NAME_HIDDEN)) {
+		.@var$ = substr(strnpcinfo(NPC_NAME_HIDDEN),0,1)+substr(strnpcinfo(NPC_NAME_HIDDEN),8,9);
+		// Check if both Guardian Stones are destroyed (value 1 or 2 means destroyed)
+		if (getd("$agit_"+.@var$+"[0]") != 1 && getd("$agit_"+.@var$+"[0]") != 2) {
+			// First Guardian Stone still intact - prevent destruction
+			end;
+		}
+		if (getd("$agit_"+.@var$+"[1]") != 1 && getd("$agit_"+.@var$+"[1]") != 2) {
+			// Second Guardian Stone still intact - prevent destruction
+			end;
+		}
+		// Both Guardian Stones are destroyed, allow 1st barricade to be destroyed
+	}
+	
 	set getd(".MyMobCount_"+.@num+strnpcinfo(NPC_NAME_HIDDEN)),getd(".MyMobCount_"+.@num+strnpcinfo(NPC_NAME_HIDDEN))-1;
 	if (getd(".MyMobCount_"+.@num+strnpcinfo(NPC_NAME_HIDDEN)) == 0) {
 		.@var$ = substr(strnpcinfo(NPC_NAME_HIDDEN),0,1)+substr(strnpcinfo(NPC_NAME_HIDDEN),8,9);
