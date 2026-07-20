@@ -476,8 +476,8 @@ struct {
 	struct HPMHookPoint *HP_jsonparser_get_child_int_value_post;
 	struct HPMHookPoint *HP_jsonparser_free_pre;
 	struct HPMHookPoint *HP_jsonparser_free_post;
-	struct HPMHookPoint *HP_jsonparser_delete_pre;
-	struct HPMHookPoint *HP_jsonparser_delete_post;
+	struct HPMHookPoint *HP_jsonparser_delete__pre;
+	struct HPMHookPoint *HP_jsonparser_delete__post;
 	struct HPMHookPoint *HP_jsonwriter_init_pre;
 	struct HPMHookPoint *HP_jsonwriter_init_post;
 	struct HPMHookPoint *HP_jsonwriter_final_pre;
@@ -524,8 +524,8 @@ struct {
 	struct HPMHookPoint *HP_jsonwriter_get_formatted_string_post;
 	struct HPMHookPoint *HP_jsonwriter_free_pre;
 	struct HPMHookPoint *HP_jsonwriter_free_post;
-	struct HPMHookPoint *HP_jsonwriter_delete_pre;
-	struct HPMHookPoint *HP_jsonwriter_delete_post;
+	struct HPMHookPoint *HP_jsonwriter_delete__pre;
+	struct HPMHookPoint *HP_jsonwriter_delete__post;
 	struct HPMHookPoint *HP_libconfig_set_db_path_pre;
 	struct HPMHookPoint *HP_libconfig_set_db_path_post;
 	struct HPMHookPoint *HP_libconfig_format_db_path_pre;
@@ -1012,8 +1012,8 @@ struct {
 	struct HPMHookPoint *HP_timer_add_interval_post;
 	struct HPMHookPoint *HP_timer_get_pre;
 	struct HPMHookPoint *HP_timer_get_post;
-	struct HPMHookPoint *HP_timer_delete_pre;
-	struct HPMHookPoint *HP_timer_delete_post;
+	struct HPMHookPoint *HP_timer_delete__pre;
+	struct HPMHookPoint *HP_timer_delete__post;
 	struct HPMHookPoint *HP_timer_addtick_pre;
 	struct HPMHookPoint *HP_timer_addtick_post;
 	struct HPMHookPoint *HP_timer_settick_pre;
@@ -1487,8 +1487,8 @@ struct {
 	int HP_jsonparser_get_child_int_value_post;
 	int HP_jsonparser_free_pre;
 	int HP_jsonparser_free_post;
-	int HP_jsonparser_delete_pre;
-	int HP_jsonparser_delete_post;
+	int HP_jsonparser_delete__pre;
+	int HP_jsonparser_delete__post;
 	int HP_jsonwriter_init_pre;
 	int HP_jsonwriter_init_post;
 	int HP_jsonwriter_final_pre;
@@ -1535,8 +1535,8 @@ struct {
 	int HP_jsonwriter_get_formatted_string_post;
 	int HP_jsonwriter_free_pre;
 	int HP_jsonwriter_free_post;
-	int HP_jsonwriter_delete_pre;
-	int HP_jsonwriter_delete_post;
+	int HP_jsonwriter_delete__pre;
+	int HP_jsonwriter_delete__post;
 	int HP_libconfig_set_db_path_pre;
 	int HP_libconfig_set_db_path_post;
 	int HP_libconfig_format_db_path_pre;
@@ -2023,8 +2023,8 @@ struct {
 	int HP_timer_add_interval_post;
 	int HP_timer_get_pre;
 	int HP_timer_get_post;
-	int HP_timer_delete_pre;
-	int HP_timer_delete_post;
+	int HP_timer_delete__pre;
+	int HP_timer_delete__post;
 	int HP_timer_addtick_pre;
 	int HP_timer_addtick_post;
 	int HP_timer_settick_pre;

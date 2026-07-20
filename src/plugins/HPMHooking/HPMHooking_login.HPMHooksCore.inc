@@ -914,8 +914,8 @@ struct {
 	struct HPMHookPoint *HP_timer_add_interval_post;
 	struct HPMHookPoint *HP_timer_get_pre;
 	struct HPMHookPoint *HP_timer_get_post;
-	struct HPMHookPoint *HP_timer_delete_pre;
-	struct HPMHookPoint *HP_timer_delete_post;
+	struct HPMHookPoint *HP_timer_delete__pre;
+	struct HPMHookPoint *HP_timer_delete__post;
 	struct HPMHookPoint *HP_timer_addtick_pre;
 	struct HPMHookPoint *HP_timer_addtick_post;
 	struct HPMHookPoint *HP_timer_settick_pre;
@@ -1827,8 +1827,8 @@ struct {
 	int HP_timer_add_interval_post;
 	int HP_timer_get_pre;
 	int HP_timer_get_post;
-	int HP_timer_delete_pre;
-	int HP_timer_delete_post;
+	int HP_timer_delete__pre;
+	int HP_timer_delete__post;
 	int HP_timer_addtick_pre;
 	int HP_timer_addtick_post;
 	int HP_timer_settick_pre;

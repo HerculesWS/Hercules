@@ -1636,11 +1636,11 @@ bool HP_extraconf_read_vars(const char *filename, bool imported, struct config_t
 	}
 	return retVal___;
 }
-bool HP_extraconf_set_var(struct config_data *conf_var, int val) {
+bool HP_extraconf_set_var(const struct config_data *conf_var, int val) {
 	int hIndex = 0;
 	bool retVal___ = false;
 	if (HPMHooks.count.HP_extraconf_set_var_pre > 0) {
-		bool (*preHookFunc) (struct config_data **conf_var, int *val);
+		bool (*preHookFunc) (const struct config_data **conf_var, int *val);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_extraconf_set_var_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_extraconf_set_var_pre[hIndex].func;
@@ -1655,7 +1655,7 @@ bool HP_extraconf_set_var(struct config_data *conf_var, int val) {
 		retVal___ = HPMHooks.source.extraconf.set_var(conf_var, val);
 	}
 	if (HPMHooks.count.HP_extraconf_set_var_post > 0) {
-		bool (*postHookFunc) (bool retVal___, struct config_data *conf_var, int val);
+		bool (*postHookFunc) (bool retVal___, const struct config_data *conf_var, int val);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_extraconf_set_var_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_extraconf_set_var_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, conf_var, val);
@@ -1663,11 +1663,11 @@ bool HP_extraconf_set_var(struct config_data *conf_var, int val) {
 	}
 	return retVal___;
 }
-bool HP_extraconf_set_var_str(struct config_data *conf_var, const char *val) {
+bool HP_extraconf_set_var_str(const struct config_data *conf_var, const char *val) {
 	int hIndex = 0;
 	bool retVal___ = false;
 	if (HPMHooks.count.HP_extraconf_set_var_str_pre > 0) {
-		bool (*preHookFunc) (struct config_data **conf_var, const char **val);
+		bool (*preHookFunc) (const struct config_data **conf_var, const char **val);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_extraconf_set_var_str_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_extraconf_set_var_str_pre[hIndex].func;
@@ -1682,7 +1682,7 @@ bool HP_extraconf_set_var_str(struct config_data *conf_var, const char *val) {
 		retVal___ = HPMHooks.source.extraconf.set_var_str(conf_var, val);
 	}
 	if (HPMHooks.count.HP_extraconf_set_var_str_post > 0) {
-		bool (*postHookFunc) (bool retVal___, struct config_data *conf_var, const char *val);
+		bool (*postHookFunc) (bool retVal___, const struct config_data *conf_var, const char *val);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_extraconf_set_var_str_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_extraconf_set_var_str_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, conf_var, val);
@@ -11920,14 +11920,14 @@ const struct TimerData * HP_timer_get(int tid) {
 	}
 	return retVal___;
 }
-int HP_timer_delete(int tid, TimerFunc func) {
+int HP_timer_delete_(int tid, TimerFunc func) {
 	int hIndex = 0;
 	int retVal___ = 0;
-	if (HPMHooks.count.HP_timer_delete_pre > 0) {
+	if (HPMHooks.count.HP_timer_delete__pre > 0) {
 		int (*preHookFunc) (int *tid, TimerFunc *func);
 		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_timer_delete_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_timer_delete_pre[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_timer_delete__pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_timer_delete__pre[hIndex].func;
 			retVal___ = preHookFunc(&tid, &func);
 		}
 		if (*HPMforce_return) {
@@ -11936,12 +11936,12 @@ int HP_timer_delete(int tid, TimerFunc func) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.timer.delete(tid, func);
+		retVal___ = HPMHooks.source.timer.delete_(tid, func);
 	}
-	if (HPMHooks.count.HP_timer_delete_post > 0) {
+	if (HPMHooks.count.HP_timer_delete__post > 0) {
 		int (*postHookFunc) (int retVal___, int tid, TimerFunc func);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_timer_delete_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_timer_delete_post[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_timer_delete__post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_timer_delete__post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, tid, func);
 		}
 	}
