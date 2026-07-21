@@ -23461,11 +23461,11 @@ int64 HP_timer_settick(int tid, int64 tick) {
 	}
 	return retVal___;
 }
-int HP_timer_add_func_list(TimerFunc func, char *name) {
+int HP_timer_add_func_list(TimerFunc func, const char *name) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_timer_add_func_list_pre > 0) {
-		int (*preHookFunc) (TimerFunc *func, char **name);
+		int (*preHookFunc) (TimerFunc *func, const char **name);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_timer_add_func_list_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_timer_add_func_list_pre[hIndex].func;
@@ -23480,7 +23480,7 @@ int HP_timer_add_func_list(TimerFunc func, char *name) {
 		retVal___ = HPMHooks.source.timer.add_func_list(func, name);
 	}
 	if (HPMHooks.count.HP_timer_add_func_list_post > 0) {
-		int (*postHookFunc) (int retVal___, TimerFunc func, char *name);
+		int (*postHookFunc) (int retVal___, TimerFunc func, const char *name);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_timer_add_func_list_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_timer_add_func_list_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, func, name);

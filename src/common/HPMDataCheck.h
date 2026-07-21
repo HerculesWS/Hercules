@@ -37,60 +37,60 @@
 
 HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#ifdef API_ACLIF_H
-		{ "aclif_interface", sizeof(struct aclif_interface), SERVER_TYPE_UNKNOWN },
-		{ "char_server_data", sizeof(struct char_server_data), SERVER_TYPE_UNKNOWN },
-		{ "online_api_login_data", sizeof(struct online_api_login_data), SERVER_TYPE_UNKNOWN },
+		{ "aclif_interface", sizeof(struct aclif_interface), SERVER_TYPE_API },
+		{ "char_server_data", sizeof(struct char_server_data), SERVER_TYPE_API },
+		{ "online_api_login_data", sizeof(struct online_api_login_data), SERVER_TYPE_API },
 	#else
 		#define API_ACLIF_H
 	#endif // API_ACLIF_H
 	#ifdef API_ALOGINIF_H
-		{ "aloginif_interface", sizeof(struct aloginif_interface), SERVER_TYPE_UNKNOWN },
+		{ "aloginif_interface", sizeof(struct aloginif_interface), SERVER_TYPE_API },
 	#else
 		#define API_ALOGINIF_H
 	#endif // API_ALOGINIF_H
 	#ifdef API_APISESSIONDATA_H
-		{ "api_session_data", sizeof(struct api_session_data), SERVER_TYPE_UNKNOWN },
+		{ "api_session_data", sizeof(struct api_session_data), SERVER_TYPE_API },
 	#else
 		#define API_APISESSIONDATA_H
 	#endif // API_APISESSIONDATA_H
 	#ifdef API_API_H
-		{ "api_interface", sizeof(struct api_interface), SERVER_TYPE_UNKNOWN },
+		{ "api_interface", sizeof(struct api_interface), SERVER_TYPE_API },
 	#else
 		#define API_API_H
 	#endif // API_API_H
 	#ifdef API_HTTPHANDLER_H
-		{ "HttpHandler", sizeof(struct HttpHandler), SERVER_TYPE_UNKNOWN },
+		{ "HttpHandler", sizeof(struct HttpHandler), SERVER_TYPE_API },
 	#else
 		#define API_HTTPHANDLER_H
 	#endif // API_HTTPHANDLER_H
 	#ifdef API_HTTPPARSER_H
-		{ "httpparser_interface", sizeof(struct httpparser_interface), SERVER_TYPE_UNKNOWN },
+		{ "httpparser_interface", sizeof(struct httpparser_interface), SERVER_TYPE_API },
 	#else
 		#define API_HTTPPARSER_H
 	#endif // API_HTTPPARSER_H
 	#ifdef API_HTTPSENDER_H
-		{ "httpsender_interface", sizeof(struct httpsender_interface), SERVER_TYPE_UNKNOWN },
+		{ "httpsender_interface", sizeof(struct httpsender_interface), SERVER_TYPE_API },
 	#else
 		#define API_HTTPSENDER_H
 	#endif // API_HTTPSENDER_H
 	#ifdef API_IMAGEPARSER_H
-		{ "gif_user_data", sizeof(struct gif_user_data), SERVER_TYPE_UNKNOWN },
-		{ "imageparser_interface", sizeof(struct imageparser_interface), SERVER_TYPE_UNKNOWN },
+		{ "gif_user_data", sizeof(struct gif_user_data), SERVER_TYPE_API },
+		{ "imageparser_interface", sizeof(struct imageparser_interface), SERVER_TYPE_API },
 	#else
 		#define API_IMAGEPARSER_H
 	#endif // API_IMAGEPARSER_H
 	#ifdef API_JSONPARSER_H
-		{ "jsonparser_interface", sizeof(struct jsonparser_interface), SERVER_TYPE_UNKNOWN },
+		{ "jsonparser_interface", sizeof(struct jsonparser_interface), SERVER_TYPE_API },
 	#else
 		#define API_JSONPARSER_H
 	#endif // API_JSONPARSER_H
 	#ifdef API_JSONWRITER_H
-		{ "jsonwriter_interface", sizeof(struct jsonwriter_interface), SERVER_TYPE_UNKNOWN },
+		{ "jsonwriter_interface", sizeof(struct jsonwriter_interface), SERVER_TYPE_API },
 	#else
 		#define API_JSONWRITER_H
 	#endif // API_JSONWRITER_H
 	#ifdef API_MIMEPART_H
-		{ "MimePart", sizeof(struct MimePart), SERVER_TYPE_UNKNOWN },
+		{ "MimePart", sizeof(struct MimePart), SERVER_TYPE_API },
 	#else
 		#define API_MIMEPART_H
 	#endif // API_MIMEPART_H
