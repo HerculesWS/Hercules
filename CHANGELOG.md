@@ -71,6 +71,8 @@ This changes were implemented in PR #3330 and full documentation can be found in
 - Fixed script-checker wraper using old executable paths before cmake setup (#3416)
 - Fixed `setup_env.ps1` using deprecated `gwmi` cmdlet
 - Fixed a stale skill tick entry in mob ground skills that doesn't allow overlap can cause a mob to be immune to them indefinitely due to 32bit vs 64bit mixing of tick time (#3418, issue #3417)
+- Fixed mdef percentage calculation change not triggering mdef2 re-calculation which is what it is applied to, making it not apply in most cases (f1cfe5271401552fbbf9f1b3528d5283d1110bcf)
+- Corrected some Rebellion skills having the incorrect field name for skill cooldown in database, making them without cooldown (#3348)
 
 ## [v2026.06] `June 2026`
 
