@@ -322,11 +322,11 @@ static void testChunkedBuf2(char *data, int sz)
 	fake_rflags = (char *)aCalloc(1, cnt);
 
 	WFIFO_CHUNKED_INIT(p, fd, 0x1234, PACKET_TEST_CHUNKED, data, data_len) {
-		WFIFO_CHUNKED_BLOCK_START(p, PACKET_TEST_CHUNKED);
+		WFIFO_CHUNKED_BLOCK_START(p);
 		p->msg_id = msg_id;
 		WFIFO_CHUNKED_BLOCK_END();
 	}
-	WFIFO_CHUNKED_FINAL_START(p, PACKET_TEST_CHUNKED);
+	WFIFO_CHUNKED_FINAL_START(p);
 	p->msg_id = msg_id;
 	WFIFO_CHUNKED_FINAL_END();
 

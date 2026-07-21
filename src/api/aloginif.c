@@ -354,11 +354,11 @@ static void aloginif_send_split_to_server(int fd, struct api_session_data *sd, i
 		data_len = 0;
 
 	WFIFO_CHUNKED_INIT(p, aloginif->fd, HEADER_API_PROXY_REQUEST, PACKET_API_PROXY_CHUNKED, data, data_len) {
-		WFIFO_CHUNKED_BLOCK_START(p, PACKET_API_PROXY_CHUNKED);
+		WFIFO_CHUNKED_BLOCK_START(p);
 		INIT_PACKET_PROXY_FIELDS(&p->base, sd, proxy_flag);
 		WFIFO_CHUNKED_BLOCK_END();
 	}
-	WFIFO_CHUNKED_FINAL_START(p, PACKET_API_PROXY_CHUNKED);
+	WFIFO_CHUNKED_FINAL_START(p);
 	INIT_PACKET_PROXY_FIELDS(&p->base, sd, proxy_flag);
 	WFIFO_CHUNKED_FINAL_END();
 }

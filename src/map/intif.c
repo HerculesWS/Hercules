@@ -953,12 +953,12 @@ static int intif_guild_emblem(int guild_id, int data_len, const char *data)
 		return 0;
 
 	WFIFO_CHUNKED_INIT(p, inter_fd, HEADER_MAPCHAR_GUILD_EMBLEM, PACKET_MAPCHAR_GUILD_EMBLEM, data, data_len) {
-		WFIFO_CHUNKED_BLOCK_START(p, PACKET_MAPCHAR_GUILD_EMBLEM);
+		WFIFO_CHUNKED_BLOCK_START(p);
 		p->guild_id = guild_id;
 		p->unused = 0;
 		WFIFO_CHUNKED_BLOCK_END();
 	}
-	WFIFO_CHUNKED_FINAL_START(p, PACKET_MAPCHAR_GUILD_EMBLEM);
+	WFIFO_CHUNKED_FINAL_START(p);
 	p->guild_id = guild_id;
 	p->unused = 0;
 	WFIFO_CHUNKED_FINAL_END();

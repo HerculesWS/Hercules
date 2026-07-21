@@ -8724,13 +8724,13 @@ static void clif_guild_emblem_body(struct map_session_data *sd, struct guild *g)
 
 #if PACKETVER_MAIN_NUM >= 20190821 || PACKETVER_RE_NUM >= 20190807 || PACKETVER_ZERO_NUM >= 20190710
 	WFIFO_CLIENT_CHUNKED_INIT(p, fd, HEADER_ZC_GUILD_EMBLEM_IMG, PACKET_ZC_GUILD_EMBLEM_IMG, g->emblem_data, g->emblem_len) {
-		WFIFO_CLIENT_CHUNKED_BLOCK_START(p, PACKET_ZC_GUILD_EMBLEM_IMG, emblem_data);
+		WFIFO_CLIENT_CHUNKED_BLOCK_START(p, emblem_data);
 		p->guild_id = g->guild_id;
 		p->emblem_id = g->emblem_id;
 		p->result = ZC_GUILD_EMBLEM_TYPE_ADD;
 		WFIFO_CLIENT_CHUNKED_BLOCK_END();
 	}
-	WFIFO_CLIENT_CHUNKED_FINAL_START(p, PACKET_ZC_GUILD_EMBLEM_IMG, emblem_data);
+	WFIFO_CLIENT_CHUNKED_FINAL_START(p, emblem_data);
 	p->guild_id = g->guild_id;
 	p->emblem_id = g->emblem_id;
 	p->result = ZC_GUILD_EMBLEM_TYPE_ADD;
