@@ -78,10 +78,18 @@ struct httpparser_interface {
 	int (*on_multi_body_end) (struct multipartparser *parser);
 };
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef HERCULES_CORE
 void httpparser_defaults(void);
 #endif // HERCULES_CORE
 
 HPShared struct httpparser_interface *httpparser;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* API_HTTPPARSER_H */

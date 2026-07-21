@@ -50,10 +50,18 @@ struct handlers_interface {
 #undef packet_handler
 };
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef HERCULES_CORE
 void handlers_defaults(void);
 #endif // HERCULES_CORE
 
 HPShared struct handlers_interface *handlers;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* API_HANDLERS_H */

@@ -28,6 +28,7 @@
 #include "common/api.h"
 #include "common/cbasetypes.h"
 #include "common/conf.h"
+#include "common/db.h"
 #include "common/ers.h"
 #include "common/grfio.h"
 #include "common/memmgr.h"

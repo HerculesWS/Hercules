@@ -56,10 +56,18 @@ struct jsonparser_interface {
 	void (*delete_) (JsonP *ptr);
 };
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef HERCULES_CORE
 void jsonparser_defaults(void);
 #endif // HERCULES_CORE
 
 HPShared struct jsonparser_interface *jsonparser;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* API_JSONPARSER_H */
