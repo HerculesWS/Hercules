@@ -34,6 +34,7 @@
 #include "common/sql.h"
 #include "common/strlib.h"
 
+#include <algorithm>
 #include <stdlib.h>
 
 /// global defines

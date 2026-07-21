@@ -141,10 +141,18 @@ struct lclif_interface {
 	int (*parse)(int fd);
 };
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef HERCULES_CORE
 void lclif_defaults(void);
 #endif
 
 HPShared struct lclif_interface *lclif;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // LOGIN_LCLIF_H

@@ -210,10 +210,18 @@ struct account_interface {
 	bool (*db_read_inter) (AccountDB_SQL *db, const char *filename, bool imported);
 };
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef HERCULES_CORE
 void account_defaults(void);
 #endif // HERCULES_CORE
 
 HPShared struct account_interface *account;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* LOGIN_ACCOUNT_H */
