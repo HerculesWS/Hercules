@@ -60,10 +60,18 @@ struct lapiif_interface {
 	void (*parse_proxy_api_from_char) (int fd);
 };
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef HERCULES_CORE
 void lapiif_defaults(void);
 #endif // HERCULES_CORE
 
 HPShared struct lapiif_interface *lapiif;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* LOGIN_LAPIIF_H */

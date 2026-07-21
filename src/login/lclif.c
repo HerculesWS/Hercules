@@ -40,6 +40,8 @@
 #include "common/strlib.h"
 #include "common/utils.h"
 
+#include <algorithm>
+
 /** @file
  * Implementation of the login client interface.
  */
