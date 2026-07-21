@@ -22,6 +22,56 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
+## [v2026.07] `July 2026`
+
+### Added
+
+#### HUSS (Hercules Ultimate Storage System)
+
+Now storage is configurable through a config file residing in `conf/storage.conf` you can create multiple storages with different sizes and control their access through scripts.
+
+This system now requires a storage ID or name passed to the following player commands:
+
+* @storage
+* @storeall
+* @storagelist
+* @clearstorage
+
+The following script commands now requires storage id and access mode:
+
+* openstorage
+
+This changes were implemented in PR #3330 and full documentation can be found in the config file, script docs, and atcomamnd docs.
+
+### Changed
+
+- Changed identifiers named `class`, `delete`, and `new` to `class_`, `delete_`, and `new_` respectively to support compilation as C++ in the future, we highly recommend to change your code to match this change for easier migration to C++ later (#3416)
+- Changed ERS to always take ownership of it's given name (#3416)
+- Update github actions workflow to work with a hybrid C/C++ compilation (#3416)
+- Removed unmaintained/broken apple script for script-checking (#3416)
+- Raised MSVC warning level to level 4 (#3416)
+
+### Fixed
+
+- Fixed some potential null dereference errors and silence some other false positives reported by gcc-16 (#3416)
+- Fixed a possible buffer overrun in variable expressions missing closing bracket detection in script parser (#3416)
+- Removed following warning suppressions and/or fixed their cause (#3416)
+  - `-Wdiscarded-qualifiers`
+  - `-Wsign-compare`
+  - `-Wmissing-field-initializers`
+  - `-Wincompatible-pointer-types-discards-qualifiers`
+  - `-Wdeprecated-non-prototype`
+  - `-Wunused-but-set-variable`
+  - `-Wenum-enum-conversion` for clang and `C5287` for MSVC
+  - `C4057`
+  - `C4310`
+  - `C4701`
+  - `C4702`
+  - `C4701`
+- Fixed script-checker wraper using old executable paths before cmake setup (#3416)
+- Fixed `setup_env.ps1` using deprecated `gwmi` cmdlet
+- Fixed a stale skill tick entry in mob ground skills that doesn't allow overlap can cause a mob to be immune to them indefinitely due to 32bit vs 64bit mixing of tick time (#3418, issue #3417)
+
 ## [v2026.06] `June 2026`
 
 ### Changed
@@ -32,7 +82,7 @@ With this change we're introducing conan as our dependency manager, it will take
 
 You can know more about how to build hercules now and the changes to the file layouts, in addition to how to use the convenience scripts to setup your environment through our wiki pages at [Building](https://github.com/HerculesWS/Hercules/wiki/Building) and [Installation](https://github.com/HerculesWS/Hercules/wiki/Installation).
 
-This changes were introduced in PR #3413 
+This changes were introduced in PR #3413
 
 ## [v2026.04] `April 2026`
 
@@ -4210,6 +4260,7 @@ Note: everything included in this release is part of PR #3198 which consists of 
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2026.07]: https://github.com/HerculesWS/Hercules/compare/v2026.06...v2026.07
 [v2026.06]: https://github.com/HerculesWS/Hercules/compare/v2026.04...v2026.06
 [v2026.04]: https://github.com/HerculesWS/Hercules/compare/v2025.01...v2026.04
 [v2025.01]: https://github.com/HerculesWS/Hercules/compare/v2024.11...v2025.01
