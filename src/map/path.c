@@ -78,7 +78,7 @@ BHEAP_STRUCT_DECL(node_heap, struct path_node *);
 static const unsigned char walk_choices [3][3] =
 {
 	{1,0,7},
-	{2,-1,6},
+	{2,UINT8_MAX,6},
 	{3,4,5},
 };
 
@@ -317,114 +317,114 @@ static bool path_search(struct walkpath_data *wpd, struct block_list *bl, int16 
 		}
 
 		return false; // easy path unsuccessful
-	} else { // !(flag&1)
-		// A* (A-star) pathfinding
-		// We always use A* for finding walkpaths because it is what game client uses.
-		// Easy pathfinding cuts corners of non-walkable cells, but client always walks around it.
+	}
+	// !(flag&1)
 
-		BHEAP_STRUCT_VAR(node_heap, open_set); // 'Open' set
+	// A* (A-star) pathfinding
+	// We always use A* for finding walkpaths because it is what game client uses.
+	// Easy pathfinding cuts corners of non-walkable cells, but client always walks around it.
 
-		// FIXME: This array is too small to ensure all paths shorter than MAX_WALKPATH
-		// can be found without node collision: calc_index(node1) = calc_index(node2).
-		// Figure out more proper size or another way to keep track of known nodes.
-		struct path_node tp[MAX_WALKPATH * MAX_WALKPATH];
-		struct path_node *current, *it;
-		int xs = md->xs - 1;
-		int ys = md->ys - 1;
-		int len = 0;
-		int j;
-		memset(tp, 0, sizeof(tp));
+	BHEAP_STRUCT_VAR(node_heap, open_set); // 'Open' set
 
-		// Start node
-		i = calc_index(x0, y0);
-		tp[i].parent = NULL;
-		tp[i].x      = x0;
-		tp[i].y      = y0;
-		tp[i].g_cost = 0;
-		tp[i].f_cost = heuristic(x0, y0, x1, y1);
-		tp[i].flag   = SET_OPEN;
+	// FIXME: This array is too small to ensure all paths shorter than MAX_WALKPATH
+	// can be found without node collision: calc_index(node1) = calc_index(node2).
+	// Figure out more proper size or another way to keep track of known nodes.
+	struct path_node tp[MAX_WALKPATH * MAX_WALKPATH];
+	struct path_node *current, *it;
+	int xs = md->xs - 1;
+	int ys = md->ys - 1;
+	int len = 0;
+	int j;
+	memset(tp, 0, sizeof(tp));
 
-		heap_push_node(&open_set, &tp[i]); // Put start node to 'open' set
+	// Start node
+	i = calc_index(x0, y0);
+	tp[i].parent = NULL;
+	tp[i].x      = x0;
+	tp[i].y      = y0;
+	tp[i].g_cost = 0;
+	tp[i].f_cost = heuristic(x0, y0, x1, y1);
+	tp[i].flag   = SET_OPEN;
 
-		for(;;) {
-			int e = 0; // error flag
+	heap_push_node(&open_set, &tp[i]); // Put start node to 'open' set
 
-			// Saves allowed directions for the current cell. Diagonal directions
-			// are only allowed if both directions around it are allowed. This is
-			// to prevent cutting corner of nearby wall.
-			// For example, you can only go NW from the current cell, if you can
-			// go N *and* you can go W. Otherwise you need to walk around the
-			// (corner of the) non-walkable cell.
-			int allowed_dirs = 0;
+	for(;;) {
+		int e = 0; // error flag
 
-			int g_cost;
+		// Saves allowed directions for the current cell. Diagonal directions
+		// are only allowed if both directions around it are allowed. This is
+		// to prevent cutting corner of nearby wall.
+		// For example, you can only go NW from the current cell, if you can
+		// go N *and* you can go W. Otherwise you need to walk around the
+		// (corner of the) non-walkable cell.
+		int allowed_dirs = 0;
 
-			if (BHEAP_LENGTH(open_set) == 0) {
-				BHEAP_CLEAR(open_set);
-				return false;
-			}
+		int g_cost;
 
-			current = BHEAP_PEEK(open_set); // Look for the lowest f_cost node in the 'open' set
-			BHEAP_POP2(open_set, NODE_MINTOPCMP, swap_ptr); // Remove it from 'open' set
-
-			x      = current->x;
-			y      = current->y;
-			g_cost = current->g_cost;
-
-			current->flag = SET_CLOSED; // Add current node to 'closed' set
-
-			if (x == x1 && y == y1) {
-				BHEAP_CLEAR(open_set);
-				break;
-			}
-
-			if (y < ys && !md->getcellp(md, bl, x, y+1, cell)) allowed_dirs |= DIR_NORTH;
-			if (y >  0 && !md->getcellp(md, bl, x, y-1, cell)) allowed_dirs |= DIR_SOUTH;
-			if (x < xs && !md->getcellp(md, bl, x+1, y, cell)) allowed_dirs |= DIR_EAST;
-			if (x >  0 && !md->getcellp(md, bl, x-1, y, cell)) allowed_dirs |= DIR_WEST;
-
-#define chk_dir(d) ((allowed_dirs & (d)) == (d))
-			// Process neighbors of current node
-			if (chk_dir(DIR_SOUTH|DIR_EAST) && !md->getcellp(md, bl, x+1, y-1, cell))
-				e += add_path(&open_set, tp, x+1, y-1, g_cost + MOVE_DIAGONAL_COST, current, heuristic(x+1, y-1, x1, y1)); // (x+1, y-1) 5
-			if (chk_dir(DIR_EAST))
-				e += add_path(&open_set, tp, x+1, y, g_cost + MOVE_COST, current, heuristic(x+1, y, x1, y1)); // (x+1, y) 6
-			if (chk_dir(DIR_NORTH|DIR_EAST) && !md->getcellp(md, bl, x+1, y+1, cell))
-				e += add_path(&open_set, tp, x+1, y+1, g_cost + MOVE_DIAGONAL_COST, current, heuristic(x+1, y+1, x1, y1)); // (x+1, y+1) 7
-			if (chk_dir(DIR_NORTH))
-				e += add_path(&open_set, tp, x, y+1, g_cost + MOVE_COST, current, heuristic(x, y+1, x1, y1)); // (x, y+1) 0
-			if (chk_dir(DIR_NORTH|DIR_WEST) && !md->getcellp(md, bl, x-1, y+1, cell))
-				e += add_path(&open_set, tp, x-1, y+1, g_cost + MOVE_DIAGONAL_COST, current, heuristic(x-1, y+1, x1, y1)); // (x-1, y+1) 1
-			if (chk_dir(DIR_WEST))
-				e += add_path(&open_set, tp, x-1, y, g_cost + MOVE_COST, current, heuristic(x-1, y, x1, y1)); // (x-1, y) 2
-			if (chk_dir(DIR_SOUTH|DIR_WEST) && !md->getcellp(md, bl, x-1, y-1, cell))
-				e += add_path(&open_set, tp, x-1, y-1, g_cost + MOVE_DIAGONAL_COST, current, heuristic(x-1, y-1, x1, y1)); // (x-1, y-1) 3
-			if (chk_dir(DIR_SOUTH))
-				e += add_path(&open_set, tp, x, y-1, g_cost + MOVE_COST, current, heuristic(x, y-1, x1, y1)); // (x, y-1) 4
-#undef chk_dir
-			if (e) {
-				BHEAP_CLEAR(open_set);
-				return false;
-			}
-		}
-
-		for (it = current; it->parent != NULL; it = it->parent, len++);
-		if (len > (int)sizeof(wpd->path)) {
+		if (BHEAP_LENGTH(open_set) == 0) {
+			BHEAP_CLEAR(open_set);
 			return false;
 		}
 
-		// Recreate path
-		wpd->path_len = len;
-		wpd->path_pos = 0;
-		for (it = current, j = len-1; j >= 0; it = it->parent, j--) {
-			dx = it->x - it->parent->x;
-			dy = it->y - it->parent->y;
-			wpd->path[j] = walk_choices[-dy + 1][dx + 1];
-		}
-		return true;
-	} // A* end
+		current = BHEAP_PEEK(open_set); // Look for the lowest f_cost node in the 'open' set
+		BHEAP_POP2(open_set, NODE_MINTOPCMP, swap_ptr); // Remove it from 'open' set
 
-	return false;
+		x      = current->x;
+		y      = current->y;
+		g_cost = current->g_cost;
+
+		current->flag = SET_CLOSED; // Add current node to 'closed' set
+
+		if (x == x1 && y == y1) {
+			BHEAP_CLEAR(open_set);
+			break;
+		}
+
+		if (y < ys && !md->getcellp(md, bl, x, y+1, cell)) allowed_dirs |= DIR_NORTH;
+		if (y >  0 && !md->getcellp(md, bl, x, y-1, cell)) allowed_dirs |= DIR_SOUTH;
+		if (x < xs && !md->getcellp(md, bl, x+1, y, cell)) allowed_dirs |= DIR_EAST;
+		if (x >  0 && !md->getcellp(md, bl, x-1, y, cell)) allowed_dirs |= DIR_WEST;
+
+#define chk_dir(d) ((allowed_dirs & (d)) == (d))
+		// Process neighbors of current node
+		if (chk_dir(DIR_SOUTH|DIR_EAST) && !md->getcellp(md, bl, x+1, y-1, cell))
+			e += add_path(&open_set, tp, x+1, y-1, g_cost + MOVE_DIAGONAL_COST, current, heuristic(x+1, y-1, x1, y1)); // (x+1, y-1) 5
+		if (chk_dir(DIR_EAST))
+			e += add_path(&open_set, tp, x+1, y, g_cost + MOVE_COST, current, heuristic(x+1, y, x1, y1)); // (x+1, y) 6
+		if (chk_dir(DIR_NORTH|DIR_EAST) && !md->getcellp(md, bl, x+1, y+1, cell))
+			e += add_path(&open_set, tp, x+1, y+1, g_cost + MOVE_DIAGONAL_COST, current, heuristic(x+1, y+1, x1, y1)); // (x+1, y+1) 7
+		if (chk_dir(DIR_NORTH))
+			e += add_path(&open_set, tp, x, y+1, g_cost + MOVE_COST, current, heuristic(x, y+1, x1, y1)); // (x, y+1) 0
+		if (chk_dir(DIR_NORTH|DIR_WEST) && !md->getcellp(md, bl, x-1, y+1, cell))
+			e += add_path(&open_set, tp, x-1, y+1, g_cost + MOVE_DIAGONAL_COST, current, heuristic(x-1, y+1, x1, y1)); // (x-1, y+1) 1
+		if (chk_dir(DIR_WEST))
+			e += add_path(&open_set, tp, x-1, y, g_cost + MOVE_COST, current, heuristic(x-1, y, x1, y1)); // (x-1, y) 2
+		if (chk_dir(DIR_SOUTH|DIR_WEST) && !md->getcellp(md, bl, x-1, y-1, cell))
+			e += add_path(&open_set, tp, x-1, y-1, g_cost + MOVE_DIAGONAL_COST, current, heuristic(x-1, y-1, x1, y1)); // (x-1, y-1) 3
+		if (chk_dir(DIR_SOUTH))
+			e += add_path(&open_set, tp, x, y-1, g_cost + MOVE_COST, current, heuristic(x, y-1, x1, y1)); // (x, y-1) 4
+#undef chk_dir
+		if (e) {
+			BHEAP_CLEAR(open_set);
+			return false;
+		}
+	}
+
+	for (it = current; it->parent != NULL; it = it->parent, len++);
+	if (len > (int)sizeof(wpd->path)) {
+		return false;
+	}
+
+	// Recreate path
+	wpd->path_len = len;
+	wpd->path_pos = 0;
+	for (it = current, j = len-1; j >= 0; it = it->parent, j--) {
+		dx = it->x - it->parent->x;
+		dy = it->y - it->parent->y;
+		wpd->path[j] = walk_choices[-dy + 1][dx + 1];
+	}
+	return true;
+	// A* end
 }
 
 //Distance functions, taken from http://www.flipcode.com/articles/article_fastdistance.shtml

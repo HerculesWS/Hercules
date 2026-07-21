@@ -40,7 +40,7 @@ struct inter_interface {
 	const char* (*msg_txt) (int msg_number);
 	bool (*msg_config_read) (const char *cfg_name, bool allow_override);
 	void (*do_final_msg) (void);
-	const char* (*job_name) (int class);
+	const char* (*job_name) (int class_);
 	void (*vmsg_to_fd) (int fd, int u_fd, int aid, char* msg, va_list ap) __attribute__((format(printf, 4, 0)));
 	void (*msg_to_fd) (int fd, int u_fd, int aid, char *msg, ...) __attribute__((format(printf, 4, 5)));
 	void (*savereg) (int account_id, int char_id, const char *key, unsigned int index, intptr_t val, bool is_string);

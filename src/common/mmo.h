@@ -781,7 +781,7 @@ struct mmo_charstatus {
 	int zeny;
 	int bank_vault;
 
-	int class;
+	int class_;
 	int status_point, skill_point;
 	int hp,max_hp,sp,max_sp;
 	unsigned int option;
@@ -907,7 +907,7 @@ struct party_member {
 	int account_id;
 	int char_id;
 	char name[NAME_LENGTH];
-	int class;
+	int class_;
 	int lv;
 	unsigned short map;
 	unsigned leader : 1,
@@ -927,7 +927,7 @@ struct map_session_data;
 struct guild_member {
 	int account_id, char_id;
 	short hair,hair_color,gender;
-	int class;
+	int class_;
 	short lv;
 	uint64 exp;
 	int exp_payper;

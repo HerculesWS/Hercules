@@ -758,12 +758,12 @@ END_ZEROED_BLOCK;
 
 #define pc_isfalcon(sd)       ( (sd)->sc.option&OPTION_FALCON )
 #define pc_isinvisible(sd)    ( (sd)->sc.option&OPTION_INVISIBLE )
-#define pc_overhealweightrate(sd) ( status->dbs->unit_params[pc->class2idx((sd)->status.class)]->natural_heal_weight_rate )
-#define pc_isoverhealweight(sd) ( (sd)->weight * 100 >= (sd)->max_weight * status->dbs->unit_params[pc->class2idx((sd)->status.class)]->natural_heal_weight_rate )
+#define pc_overhealweightrate(sd) ( status->dbs->unit_params[pc->class2idx((sd)->status.class_)]->natural_heal_weight_rate )
+#define pc_isoverhealweight(sd) ( (sd)->weight * 100 >= (sd)->max_weight * status->dbs->unit_params[pc->class2idx((sd)->status.class_)]->natural_heal_weight_rate )
 #define pc_is90overweight(sd) ( (sd)->weight*10 >= (sd)->max_weight*9 )
-#define pc_maxhp_cap(sd) ( status->get_maxhp_cap_entry(pc->class2idx((sd)->status.class), (sd)->status.base_level)->value )
-#define pc_max_aspd(sd) ( status->dbs->unit_params[pc->class2idx((sd)->status.class)]->max_aspd )
-#define pc_maxstats(sd)   ( status->dbs->unit_params[pc->class2idx((sd)->status.class)]->max_stats )
+#define pc_maxhp_cap(sd) ( status->get_maxhp_cap_entry(pc->class2idx((sd)->status.class_), (sd)->status.base_level)->value )
+#define pc_max_aspd(sd) ( status->dbs->unit_params[pc->class2idx((sd)->status.class_)]->max_aspd )
+#define pc_maxstats(sd)   ( status->dbs->unit_params[pc->class2idx((sd)->status.class_)]->max_stats )
 /// Generic check for mounts
 #define pc_hasmount(sd)       ( (sd)->sc.option&(OPTION_RIDING|OPTION_WUGRIDER|OPTION_DRAGON|OPTION_MADOGEAR) )
 /// Knight classes Peco / Gryphon
@@ -980,7 +980,7 @@ END_ZEROED_BLOCK; /* End */
 	void (*final) (void);
 
 	struct map_session_data* (*get_dummy_sd) (void);
-	int (*class2idx) (int class);
+	int (*class2idx) (int class_);
 	bool (*can_talk) (struct map_session_data *sd);
 	bool (*can_attack) ( struct map_session_data *sd, int target_id );
 
@@ -1120,7 +1120,7 @@ END_ZEROED_BLOCK; /* End */
 	void (*heal) (struct map_session_data *sd,unsigned int hp,unsigned int sp, int type);
 	int (*itemheal) (struct map_session_data *sd,int itemid, int hp,int sp);
 	int (*percentheal) (struct map_session_data *sd,int hp,int sp);
-	int (*jobchange) (struct map_session_data *sd, int class, int upper);
+	int (*jobchange) (struct map_session_data *sd, int class_, int upper);
 	void (*hide) (struct map_session_data *sd, bool show_msg);
 	void (*unhide) (struct map_session_data *sd, bool show_msg);
 	int (*setoption) (struct map_session_data *sd,int type);
@@ -1167,10 +1167,10 @@ END_ZEROED_BLOCK; /* End */
 	void (*setstand) (struct map_session_data *sd);
 	int (*candrop) (struct map_session_data *sd,struct item *item);
 
-	int (*jobid2mapid) (int class); // Skotlex
+	int (*jobid2mapid) (int class_); // Skotlex
 	int (*mapid2jobid) (unsigned int class_, int sex); // Skotlex
 
-	const char * (*job_name) (int class);
+	const char * (*job_name) (int class_);
 
 	void (*setinvincibletimer) (struct map_session_data* sd, int val);
 	void (*delinvincibletimer) (struct map_session_data* sd);
@@ -1204,7 +1204,7 @@ END_ZEROED_BLOCK; /* End */
 	int (*inventory_rental_clear) (struct map_session_data *sd);
 	void (*inventory_rental_add) (struct map_session_data *sd, int seconds);
 
-	int (*disguise) (struct map_session_data *sd, int class);
+	int (*disguise) (struct map_session_data *sd, int class_);
 	bool (*isautolooting) (struct map_session_data *sd, int nameid);
 
 	void (*overheat) (struct map_session_data *sd, int val);
@@ -1263,7 +1263,7 @@ END_ZEROED_BLOCK; /* End */
 	int (*global_expiration_timer) (int tid, int64 tick, int id, intptr_t data);
 	void (*expire_check) (struct map_session_data *sd);
 
-	bool (*db_checkid) (int class);
+	bool (*db_checkid) (int class_);
 
 	void (*validate_levels) (void);
 	void (*update_job_and_level) (struct map_session_data *sd);

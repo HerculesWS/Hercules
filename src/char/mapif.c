@@ -422,7 +422,7 @@ static void mapif_elemental_deleted(int fd, unsigned char flag)
 
 static void mapif_parse_elemental_delete(int fd, int ele_id)
 {
-	bool result = inter_elemental->delete(ele_id);
+	bool result = inter_elemental->delete_(ele_id);
 	mapif->elemental_deleted(fd, result);
 }
 
@@ -555,7 +555,7 @@ static int mapif_guild_memberinfoshort(struct guild *g, int idx)
 	WBUFL(buf, 10) = g->member[idx].char_id;
 	WBUFB(buf, 14) = (unsigned char)g->member[idx].online;
 	WBUFW(buf, 15) = g->member[idx].lv;
-	WBUFL(buf, 17) = g->member[idx].class;
+	WBUFL(buf, 17) = g->member[idx].class_;
 	WBUFL(buf, 21) = g->member[idx].last_login;
 	mapif->send(buf, 25);
 	return 0;
@@ -766,9 +766,9 @@ static int mapif_parse_GuildLeave(int fd, int guild_id, int account_id, int char
 }
 
 // Change member info
-static int mapif_parse_GuildChangeMemberInfoShort(int fd, int guild_id, int account_id, int char_id, int online, int lv, int class)
+static int mapif_parse_GuildChangeMemberInfoShort(int fd, int guild_id, int account_id, int char_id, int online, int lv, int class_)
 {
-	inter_guild->update_member_info_short(guild_id, account_id, char_id, online, lv, class);
+	inter_guild->update_member_info_short(guild_id, account_id, char_id, online, lv, class_);
 	return 0;
 }
 
@@ -829,7 +829,7 @@ static int mapif_parse_GuildNotice(int fd, int guild_id, const char *mes1, const
 
 static int mapif_parse_GuildEmblem(int fd)
 {
-	struct PACKET_MAPCHAR_GUILD_EMBLEM *p = RFIFOP(fd, 0);
+	const struct PACKET_MAPCHAR_GUILD_EMBLEM *p = RFIFOP(fd, 0);
 	RFIFO_CHUNKED_INIT(p, p->packetLength - sizeof(struct PACKET_MAPCHAR_GUILD_EMBLEM), mapif->emblem_tmp);
 
 	RFIFO_CHUNKED_ERROR(p) {
@@ -934,7 +934,7 @@ static void mapif_parse_homunculus_create(int fd, int len, int account_id, const
 
 static void mapif_parse_homunculus_delete(int fd, int homun_id)
 {
-	bool result = inter_homunculus->delete(homun_id);
+	bool result = inter_homunculus->delete_(homun_id);
 	mapif->homunculus_deleted(fd, result);
 }
 
@@ -1033,7 +1033,7 @@ static void mapif_parse_mail_delete(int fd)
 {
 	int char_id = RFIFOL(fd, 2);
 	int mail_id = RFIFOL(fd, 6);
-	bool failed = !inter_mail->delete(char_id, mail_id);
+	bool failed = !inter_mail->delete_(char_id, mail_id);
 	mapif->mail_delete(fd, char_id, mail_id, failed);
 }
 
@@ -1153,7 +1153,7 @@ static void mapif_mercenary_deleted(int fd, unsigned char flag)
 
 static void mapif_parse_mercenary_delete(int fd, int merc_id)
 {
-	bool result = inter_mercenary->delete(merc_id);
+	bool result = inter_mercenary->delete_(merc_id);
 	mapif->mercenary_deleted(fd, result);
 }
 

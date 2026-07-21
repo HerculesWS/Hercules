@@ -166,7 +166,7 @@ static void mvptomb_spawn_delayed(struct npc_data *nd)
 	nullpo_retv(nd);
 
 	if (nd->u.tomb.spawn_timer != INVALID_TIMER)
-		timer->delete(nd->u.tomb.spawn_timer, mob->mvptomb_delayspawn);
+		timer->delete_(nd->u.tomb.spawn_timer, mob->mvptomb_delayspawn);
 
 	nd->u.tomb.spawn_timer = timer->add(timer->gettick() + battle_config.mvp_tomb_spawn_delay, mob->mvptomb_delayspawn, nd->bl.id, 0);
 }
@@ -255,7 +255,7 @@ static void mvptomb_destroy(struct mob_data *md)
 		}
 
 		if (nd->u.tomb.spawn_timer != INVALID_TIMER)
-			timer->delete(nd->u.tomb.spawn_timer, mob->mvptomb_delayspawn);
+			timer->delete_(nd->u.tomb.spawn_timer, mob->mvptomb_delayspawn);
 
 		map->deliddb(&nd->bl);
 
@@ -1097,7 +1097,7 @@ static int mob_setdelayspawn(struct mob_data *md)
 		spawntime = 5000;
 
 	if( md->spawn_timer != INVALID_TIMER )
-		timer->delete(md->spawn_timer, mob->delayspawn);
+		timer->delete_(md->spawn_timer, mob->delayspawn);
 	md->spawn_timer = timer->add(timer->gettick()+spawntime, mob->delayspawn, md->bl.id, 0);
 
 	// Clear per-target ground skill tick cache for the next natural life.
@@ -1150,14 +1150,14 @@ static int mob_spawn(struct mob_data *md)
 			if (map->search_free_cell(&md->bl, -1, &md->bl.x, &md->bl.y, md->spawn->xs, md->spawn->ys, sfc_flag) != 0) {
 				// retry again later
 				if( md->spawn_timer != INVALID_TIMER )
-					timer->delete(md->spawn_timer, mob->delayspawn);
+					timer->delete_(md->spawn_timer, mob->delayspawn);
 				md->spawn_timer = timer->add(tick+5000,mob->delayspawn,md->bl.id,0);
 				return 1;
 			}
 		} else if( battle_config.no_spawn_on_player > 99 && map->foreachinrange(mob->count_sub, &md->bl, AREA_SIZE, BL_PC) ) {
 			// retry again later (players on sight)
 			if( md->spawn_timer != INVALID_TIMER )
-				timer->delete(md->spawn_timer, mob->delayspawn);
+				timer->delete_(md->spawn_timer, mob->delayspawn);
 			md->spawn_timer = timer->add(tick+5000,mob->delayspawn,md->bl.id,0);
 			return 1;
 		}
@@ -1173,7 +1173,7 @@ static int mob_spawn(struct mob_data *md)
 	md->ud.dir = 0;
 	if( md->spawn_timer != INVALID_TIMER )
 	{
-		timer->delete(md->spawn_timer, mob->delayspawn);
+		timer->delete_(md->spawn_timer, mob->delayspawn);
 		md->spawn_timer = INVALID_TIMER;
 	}
 
@@ -1791,8 +1791,7 @@ static bool mob_ai_sub_hard(struct mob_data *md, int64 tick)
 				return true;
 			}
 		}
-		else
-		if( (abl = map->id2bl(md->attacked_id)) && (!tbl || mob->can_changetarget(md, abl, mode) || (md->sc.count && md->sc.data[SC__CHAOS]))) {
+		else if( (abl = map->id2bl(md->attacked_id)) && (!tbl || mob->can_changetarget(md, abl, mode) || (md->sc.count && md->sc.data[SC__CHAOS]))) {
 			int dist;
 			if( md->bl.m != abl->m || abl->prev == NULL
 			 || (dist = distance_bl(&md->bl, abl)) >= MAX_MINCHASE // Attacker longer than visual area
@@ -1926,7 +1925,7 @@ static bool mob_ai_sub_hard(struct mob_data *md, int64 tick)
 			memmove(&md->lootitem[0], &md->lootitem[1], (LOOTITEM_SIZE-1)*sizeof(md->lootitem[0]));
 			memcpy (&md->lootitem[LOOTITEM_SIZE-1], &fitem->item_data, sizeof(md->lootitem[0]));
 		}
-		if (pc->db_checkid(md->vd->class)) {
+		if (pc->db_checkid(md->vd->class_)) {
 			//Give them walk act/delay to properly mimic players. [Skotlex]
 			clif->takeitem(&md->bl,tbl);
 			md->ud.canact_tick = tick + md->status.amotion;
@@ -2224,7 +2223,7 @@ static void mob_item_drop(struct mob_data *md, struct item_drop_list *dlist, str
 	if( sd == NULL ) sd = map->charid2sd(dlist->third_charid);
 
 	if( sd
-		&& (drop_rate <= sd->state.autoloot || pc->isautolooting(sd, ditem->item_data.nameid))
+		&& ((unsigned int)drop_rate <= sd->state.autoloot || pc->isautolooting(sd, ditem->item_data.nameid))
 		&& (!map->list[sd->bl.m].flag.noautoloot)
 		&& (battle_config.idle_no_autoloot == 0 || DIFF_TICK(sockt->last_tick, sd->idletime) < battle_config.idle_no_autoloot)
 		&& (battle_config.homunculus_autoloot?1:!flag)
@@ -2303,7 +2302,8 @@ static int mob_respawn(int tid, int64 tick, int id, intptr_t data)
 
 static void mob_log_damage(struct mob_data *md, struct block_list *src, int damage)
 {
-	int char_id = 0, flag = MDLF_NORMAL;
+	int char_id = 0;
+	unsigned int flag = MDLF_NORMAL;
 
 	nullpo_retv(md);
 	nullpo_retv(src);
@@ -3034,7 +3034,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 	}
 
 	if(md->deletetimer != INVALID_TIMER) {
-		timer->delete(md->deletetimer,mob->timer_delete);
+		timer->delete_(md->deletetimer,mob->timer_delete);
 		md->deletetimer = INVALID_TIMER;
 	}
 	/**
@@ -3047,7 +3047,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 
 	if( !rebirth ) {
 
-		if (pc->db_checkid(md->vd->class)) {
+		if (pc->db_checkid(md->vd->class_)) {
 			// Player mobs are not removed automatically by the client.
 			/* first we set them dead, then we delay the out sight effect */
 			clif->clearunit_area(&md->bl,CLR_DEAD);
@@ -3196,7 +3196,7 @@ static int mob_class_change(struct mob_data *md, int class_)
 	mob_stop_walking(md, STOPWALKING_FLAG_NONE);
 	unit->skillcastcancel(&md->bl, 0);
 	status->set_viewdata(&md->bl, class_);
-	clif->class_change(&md->bl, md->vd->class, 1, NULL);
+	clif->class_change(&md->bl, md->vd->class_, 1, NULL);
 	status_calc_mob(md, SCO_FIRST);
 	md->ud.state.speed_changed = 1; //Speed change update.
 
@@ -3497,7 +3497,7 @@ static struct block_list *mob_getmasterhpltmaxrate(struct mob_data *md, int rate
 {
 	if( md && md->master_id > 0 ) {
 		struct block_list *bl = map->id2bl(md->master_id);
-		if( bl && get_percentage(status_get_hp(bl), status_get_max_hp(bl)) < rate )
+		if( bl && get_percentage(status_get_hp(bl), status_get_max_hp(bl)) < (unsigned int)rate )
 			return bl;
 	}
 
@@ -3818,11 +3818,12 @@ static int mob_use_skill(struct mob_data *md, int64 tick, int event)
 			char temp[CHAT_SIZE_MAX + NAME_LENGTH + 10];
 			char name[NAME_LENGTH];
 			struct mob_chat *mc = mob->chat(ms[skill_idx].msg_id);
-
-			snprintf(name, sizeof(name), "%s", md->name);
-			strtok(name, "#"); // Discard extra name identifier if present. [Daegaladh]
-			snprintf(temp, sizeof(temp), "%s : %s", name, mc->msg);
-			clif->messagecolor(&md->bl, mc->color, temp);
+			if (!nullpo_chk(mc)) {
+				snprintf(name, sizeof(name), "%s", md->name);
+				strtok(name, "#"); // Discard extra name identifier if present. [Daegaladh]
+				snprintf(temp, sizeof(temp), "%s : %s", name, mc->msg);
+				clif->messagecolor(&md->bl, mc->color, temp);
+			}
 		}
 
 		if ((battle_config.mob_ai & 0x200) == 0) { // Pass on delay to same skill.
@@ -3968,8 +3969,8 @@ static int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 
 
 	/// Go Backwards to give better priority to advanced skills.
 	for (int i = 0, j = MAX_SKILL_TREE - 1; j >= 0 && i < MAX_MOBSKILL; j--) {
-		const int idx = pc->skill_tree[pc->class2idx(sd->status.class)][j].idx;
-		const int skill_id = pc->skill_tree[pc->class2idx(sd->status.class)][j].id;
+		const int idx = pc->skill_tree[pc->class2idx(sd->status.class_)][j].idx;
+		const int skill_id = pc->skill_tree[pc->class2idx(sd->status.class_)][j].id;
 
 		if (skill_id == 0 || sd->status.skill[idx].lv < 1 ||
 		    (skill->dbs->db[idx].inf2 & (INF2_WEDDING_SKILL | INF2_GUILD_SKILL)) > 0)
@@ -4124,7 +4125,7 @@ static int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 
 
 	if (duration > 0) { /// Auto delete after a while.
 		if (md->deletetimer != INVALID_TIMER)
-			timer->delete(md->deletetimer, mob->timer_delete);
+			timer->delete_(md->deletetimer, mob->timer_delete);
 
 		md->deletetimer = timer->add(timer->gettick() + duration, mob->timer_delete, md->bl.id, 0);
 	}
@@ -4536,7 +4537,7 @@ static void mob_read_db_viewdata_sub(struct mob_db *entry, struct config_setting
 	int i32;
 
 	if ((it = libconfig->setting_get_member(t, "SpriteId")) != NULL)
-		entry->vd.class = libconfig->setting_get_int(it);
+		entry->vd.class_ = libconfig->setting_get_int(it);
 	if ((it = libconfig->setting_get_member(t, "WeaponId")) != NULL)
 		entry->vd.weapon = libconfig->setting_get_int(it);
 	if ((it = libconfig->setting_get_member(t, "ShieldId")) != NULL)
@@ -5071,7 +5072,7 @@ static int mob_read_db_sub(struct config_setting_t *mobt, int n, const char *sou
 		return 0;
 	}
 	md.mob_id = i32;
-	md.vd.class = md.mob_id;
+	md.vd.class_ = md.mob_id;
 
 	if ((t = libconfig->setting_get_member(mobt, "Inherit")) && (inherit = libconfig->setting_get_bool(t))) {
 		if (!mob->db_data[md.mob_id]) {

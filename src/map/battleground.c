@@ -576,7 +576,7 @@ static void bg_queue_ready_ack(struct bg_arena *arena, struct map_session_data *
 		}
 		/* check if all are ready then cancel timer, and start game  */
 		if (count == VECTOR_LENGTH(queue->entries)) {
-			timer->delete(arena->begin_timer,bg->begin_timer);
+			timer->delete_(arena->begin_timer,bg->begin_timer);
 			arena->begin_timer = INVALID_TIMER;
 			bg->begin(arena);
 		}
@@ -755,7 +755,7 @@ static void bg_queue_check(struct bg_arena *arena)
 	count = VECTOR_LENGTH(queue->entries);
 	if( count == arena->max_players ) {
 		if( arena->fillup_timer != INVALID_TIMER ) {
-			timer->delete(arena->fillup_timer,bg->fillup_timer);
+			timer->delete_(arena->fillup_timer,bg->fillup_timer);
 			arena->fillup_timer = INVALID_TIMER;
 		}
 		bg->queue_pregame(arena);
@@ -853,11 +853,9 @@ static void bg_queue_add(struct map_session_data *sd, struct bg_arena *arena, en
 
 static enum BATTLEGROUNDS_QUEUE_ACK bg_canqueue(struct map_session_data *sd, struct bg_arena *arena, enum bg_queue_types type)
 {
-	int tick;
-	unsigned int tsec;
-
 	nullpo_retr(BGQA_FAIL_TYPE_INVALID, sd);
 	nullpo_retr(BGQA_FAIL_TYPE_INVALID, arena);
+
 	if( !(arena->allowed_types & type) )
 		return BGQA_FAIL_TYPE_INVALID;
 
@@ -867,7 +865,8 @@ static enum BATTLEGROUNDS_QUEUE_ACK bg_canqueue(struct map_session_data *sd, str
 	if ((sd->job & JOBL_2) == 0) /* TODO: maybe make this a per-arena setting, so users may make custom arenas like baby-only,whatever. */
 		return BGQA_FAIL_CLASS_INVALID;
 
-	tsec = (unsigned int)time(NULL);
+	int tick;
+	time_t tsec = time(NULL);
 
 	if ( ( tick = pc_readglobalreg(sd, script->add_variable(bg->gdelay_var)) ) && tsec < tick ) {
 		char response[100];

@@ -65,7 +65,7 @@ struct ircbot_interface {
 	/* */
 	struct {
 		struct irc_func **list;
-		unsigned int size;
+		int size;
 	} funcs;
 
 	/**

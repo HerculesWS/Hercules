@@ -129,7 +129,7 @@ struct questinfo {
 	unsigned short icon;
 	unsigned char color;
 	bool hasJob;
-	unsigned int job;/* perhaps a mapid mask would be most flexible? */
+	int job;/* perhaps a mapid mask would be most flexible? */
 	bool sex_enabled;
 	int sex;
 	struct {
@@ -159,7 +159,7 @@ struct quest_interface {
 	int (*pc_login) (struct map_session_data *sd);
 	int (*add) (struct map_session_data *sd, int quest_id, unsigned int time_limit);
 	int (*change) (struct map_session_data *sd, int qid1, int qid2);
-	int (*delete) (struct map_session_data *sd, int quest_id);
+	int (*delete_) (struct map_session_data *sd, int quest_id);
 	int (*update_objective_sub) (struct block_list *bl, va_list ap);
 	void (*update_objective) (struct map_session_data *sd, const struct mob_data *md);
 	int (*update_status) (struct map_session_data *sd, int quest_id, enum quest_state qs);

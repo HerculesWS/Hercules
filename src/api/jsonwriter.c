@@ -117,7 +117,7 @@ JsonW *jsonwriter_add_new_array(JsonW *parent, const char *name)
 	JsonW *obj = jsonwriter->new_array();
 	Assert_retr(NULL, cJSON_IsArray(obj));
 	if (!jsonwriter->add_node(parent, name, obj)) {
-		jsonwriter->delete(obj);
+		jsonwriter->delete_(obj);
 		Assert_retr(NULL, 0);
 	}
 	return obj;
@@ -131,7 +131,7 @@ JsonW *jsonwriter_add_new_null(JsonW *parent, const char *name)
 	JsonW *obj = jsonwriter->new_null();
 	Assert_retr(NULL, cJSON_IsNull(obj));
 	if (!jsonwriter->add_node(parent, name, obj)) {
-		jsonwriter->delete(obj);
+		jsonwriter->delete_(obj);
 		Assert_retr(NULL, 0);
 	}
 	return obj;
@@ -169,7 +169,7 @@ JsonW *jsonwriter_add_new_string_to_array(JsonW *parent, const char *str)
 	JsonW *obj = jsonwriter->new_string(str);
 	Assert_retr(NULL, cJSON_IsString(obj));
 	if (!jsonwriter->add_node_to_array(parent, obj)) {
-		jsonwriter->delete(obj);
+		jsonwriter->delete_(obj);
 		Assert_retr(NULL, 0);
 	}
 	return obj;
@@ -182,7 +182,7 @@ JsonW *jsonwriter_add_new_object_to_array(JsonW *parent)
 	JsonW *obj = jsonwriter->new_object();
 	Assert_retr(NULL, cJSON_IsObject(obj));
 	if (!jsonwriter->add_node_to_array(parent, obj)) {
-		jsonwriter->delete(obj);
+		jsonwriter->delete_(obj);
 		Assert_retr(NULL, 0);
 	}
 	return obj;
@@ -205,7 +205,7 @@ JsonW *jsonwriter_add_new_strings_to_array(JsonW *parent, ...)
 			return obj;
 		}
 		if (!jsonwriter->add_node_to_array(parent, obj)) {
-			jsonwriter->delete(obj);
+			jsonwriter->delete_(obj);
 			Assert_retr(NULL, 0);
 		}
 	}
@@ -283,5 +283,5 @@ void jsonwriter_defaults(void)
 	jsonwriter->get = jsonwriter_get;
 	jsonwriter->print = jsonwriter_print;
 	jsonwriter->free = jsonwriter_free;
-	jsonwriter->delete = jsonwriter_delete;
+	jsonwriter->delete_ = jsonwriter_delete;
 }

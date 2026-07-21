@@ -161,7 +161,7 @@ static struct hplugin *hplugin_create(void)
 	return plugin;
 }
 
-static bool hplugins_addpacket(unsigned short cmd, unsigned short length, void (*receive) (int fd), unsigned int point, unsigned int pluginID)
+static bool hplugins_addpacket(unsigned short cmd, int length, void (*receive) (int fd), unsigned int point, unsigned int pluginID)
 {
 	struct HPluginPacket *packet;
 	int i;
@@ -185,7 +185,7 @@ static bool hplugins_addpacket(unsigned short cmd, unsigned short length, void (
 
 	packet->pluginID = pluginID;
 	packet->cmd = cmd;
-	packet->len = length;
+	packet->len = (short)length;
 	packet->receive = receive;
 
 	if (cmd <= MAX_PACKET_DB && cmd >= MIN_PACKET_DB) {

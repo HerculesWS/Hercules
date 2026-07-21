@@ -75,7 +75,7 @@ static void ipban_final(void)
 
 	if (login->config->ipban_cleanup_interval > 0)
 		// release data
-		timer->delete(ipban->cleanup_timer_id, ipban->cleanup);
+		timer->delete_(ipban->cleanup_timer_id, ipban->cleanup);
 
 	ipban->cleanup(0,0,0,0); // always clean up on login-server stop
 

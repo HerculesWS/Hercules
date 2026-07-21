@@ -49,15 +49,15 @@
 /// Private interface fields
 struct sysinfo_private {
 	const char *platform;
-	const char *osversion;
-	const char *cpu;
+	char *osversion;
+	char *cpu;
 	int cpucores;
-	const char *arch;
+	char *arch;
 	const char *compiler;
 	const char *cflags;
 	char *vcstype_name;
 	int vcstype;
-	const char *vcsrevision_src;
+	char *vcsrevision_src;
 	char *vcsrevision_scripts;
 
 	bool (*git_get_revision) (char **out);

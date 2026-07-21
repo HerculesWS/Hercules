@@ -76,7 +76,7 @@ struct api_session_data {
 	int post_headers_count;
 	bool has_errors; // used for partial data to flag something went wrong.
 	char *body;
-	char *world_name;
+	const char *world_name;
 	size_t body_size;
 	struct fifo_chunk_buf data;
 	JsonW *json;

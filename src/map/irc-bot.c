@@ -160,7 +160,7 @@ static int irc_parse(int fd)
 /// @copydoc ircbot_interface::parse_source()
 static void irc_parse_source(char *source, char *nick, char *ident, char *host)
 {
-	int i, pos = 0;
+	int pos = 0;
 	size_t len;
 	unsigned char stage = 0;
 
@@ -169,10 +169,10 @@ static void irc_parse_source(char *source, char *nick, char *ident, char *host)
 	nullpo_retv(nick);
 	nullpo_retv(ident);
 	nullpo_retv(host);
-	for(i = 0; i < len; i++) {
+	for(size_t i = 0; i < len; i++) {
 		if( stage == 0 && source[i] == '!' ) {
 			safestrncpy(nick, &source[0], min(i + 1, IRC_NICK_LENGTH));
-			pos = i+1;
+			pos = (int)i + 1;
 			stage = 1;
 		} else if( stage == 1 && source[i] == '@' ) {
 			safestrncpy(ident, &source[pos], min(i - pos + 1, IRC_IDENT_LENGTH));
@@ -519,7 +519,7 @@ static void ircbot_final(void)
 	}
 
 	if (ircbot->queue_tid != INVALID_TIMER)
-		timer->delete(ircbot->queue_tid, ircbot->queue_timer);
+		timer->delete_(ircbot->queue_tid, ircbot->queue_timer);
 
 	while (ircbot->message_current != NULL) {
 		struct message_flood *next = ircbot->message_current->next;

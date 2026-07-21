@@ -15,6 +15,10 @@ jobs:
     needs: hwsapibot
     if: ${{ !failure() && !cancelled() }}
     uses: ./.github/workflows/tools.yml
+  tools-windows:
+    needs: hwsapibot
+    if: ${{ !failure() && !cancelled() }}
+    uses: ./.github/workflows/tools-windows.yml
   build:
     needs: tools
     if: ${{ !failure() && !cancelled() }}
@@ -47,7 +51,7 @@ jobs:
 #    needs: build
 #    if: ${{ !failure() && !cancelled() }}
 #    uses: ./.github/workflows/macos_m1.yml
-#  windows:
-#    needs: build
-#    if: ${{ !failure() && !cancelled() }}
-#    uses: ./.github/workflows/windows.yml
+  windows:
+    needs: tools-windows
+    if: ${{ !failure() && !cancelled() }}
+    uses: ./.github/workflows/windows.yml

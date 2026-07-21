@@ -267,7 +267,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(jsonparser->get_child_number_value, HP_jsonparser_get_child_number_value) },
 	{ HP_POP(jsonparser->get_child_int_value, HP_jsonparser_get_child_int_value) },
 	{ HP_POP(jsonparser->free, HP_jsonparser_free) },
-	{ HP_POP(jsonparser->delete, HP_jsonparser_delete) },
+	{ HP_POP(jsonparser->delete_, HP_jsonparser_delete_) },
 /* jsonwriter_interface */
 	{ HP_POP(jsonwriter->init, HP_jsonwriter_init) },
 	{ HP_POP(jsonwriter->final, HP_jsonwriter_final) },
@@ -292,7 +292,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(jsonwriter->get_string, HP_jsonwriter_get_string) },
 	{ HP_POP(jsonwriter->get_formatted_string, HP_jsonwriter_get_formatted_string) },
 	{ HP_POP(jsonwriter->free, HP_jsonwriter_free) },
-	{ HP_POP(jsonwriter->delete, HP_jsonwriter_delete) },
+	{ HP_POP(jsonwriter->delete_, HP_jsonwriter_delete_) },
 /* libconfig_interface */
 	{ HP_POP(libconfig->set_db_path, HP_libconfig_set_db_path) },
 	{ HP_POP(libconfig->format_db_path, HP_libconfig_format_db_path) },
@@ -551,7 +551,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(timer->add, HP_timer_add) },
 	{ HP_POP(timer->add_interval, HP_timer_add_interval) },
 	{ HP_POP(timer->get, HP_timer_get) },
-	{ HP_POP(timer->delete, HP_timer_delete) },
+	{ HP_POP(timer->delete_, HP_timer_delete_) },
 	{ HP_POP(timer->addtick, HP_timer_addtick) },
 	{ HP_POP(timer->settick, HP_timer_settick) },
 	{ HP_POP(timer->add_func_list, HP_timer_add_func_list) },

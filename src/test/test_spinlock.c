@@ -40,7 +40,11 @@
 
 static struct spin_lock lock;
 static unsigned int val = 0;
+#ifdef WIN32
+static volatile LONG done_threads = 0;
+#else
 static volatile int32 done_threads = 0;
+#endif
 
 static  void *worker(void *p){
 	register int i;

@@ -441,7 +441,7 @@ static unsigned int calc_hash_ci(const char *p)
 /// Looks up string using the provided id.
 static const char *script_get_str(int id)
 {
-	Assert_retr(NULL, id >= LABEL_START && id < script->str_size);
+	Assert_retr(NULL, id >= LABEL_START && (size_t)id < script->str_size);
 	return script->str_buf+script->str_data[id].str;
 }
 
@@ -613,7 +613,7 @@ static int script_add_str(const char *p)
 	len=(int)strlen(p);
 
 	// grow string buffer if neccessary
-	while( script->str_pos+len+1 >= script->str_size ) {
+	while ((size_t)(script->str_pos+len+1) >= script->str_size) {
 		script->str_size += 10240;
 		RECREATE(script->str_buf,char,script->str_size);
 		memset(script->str_buf + (script->str_size - 10240), '\0', 10240);
@@ -897,7 +897,7 @@ static const char *parse_callfunc(const char *p, int require_paren, int is_custo
 	const char *p2;
 	char *arg = NULL;
 	char null_arg = '\0';
-	int func;
+	int func = -1;
 	bool lang_macro = false;
 
 	nullpo_retr(NULL, p);
@@ -1013,6 +1013,7 @@ static const char *parse_callfunc(const char *p, int require_paren, int is_custo
 
 	p = script->skip_word(p);
 	p = script->skip_space(p);
+	nullpo_ret(p); // Can't be NULL but silence gcc warnings
 	script->syntax.curly[script->syntax.curly_count].type = TYPE_ARGLIST;
 	script->syntax.curly[script->syntax.curly_count].count = 0;
 
@@ -1135,7 +1136,8 @@ static void parse_variable_sub_push(int word, const char *p2)
 		p3 = script->parse_subexpr(p2 + 1, 1);
 		p3 = script->skip_space(p3);
 
-		if( *p3 != ']' ) {// closing parenthesis is required for this script
+		if (p3 == NULL /* Can't be NULL but silence gcc warnings */ || *p3 != ']' ) {
+			// closing parenthesis is required for this script
 			disp_error_message("Missing closing ']' parenthesis for the variable assignment.", p3);
 		}
 
@@ -1168,23 +1170,25 @@ static const char *parse_variable(const char *p)
 	// skip the variable where applicable
 	p = script->skip_word(p);
 	p = script->skip_space(p);
-
-	if( p == NULL ) {
-		// end of the line or invalid buffer
-		return NULL;
-	}
+	nullpo_ret(p); // Can't be NULL but silence gcc warnings
 
 	if (*p == '[') {
-		int i, j;
 		// array variable so process the array as appropriate
-		for (p2 = p, i = 0, j = 1; p; ++ i) {
-			if( *p ++ == ']' && --(j) == 0 ) break;
-			if( *p == '[' ) ++ j;
+		p2 = p;
+		int open_brackets = 1;
+		while (*(++p) != '\0') {
+			if (*p == ']' && --open_brackets == 0) {
+				p++;
+				break;
+			}
+			if (*p == '[')
+				open_brackets++;
 		}
 
-		if( !(p = script->skip_space(p)) ) {
+		p = script->skip_space(p);
+		if (p == NULL /* Can't be NULL but silence gcc warnings */ || *p == '\0') {
 			// end of line or invalid characters remaining
-			disp_error_message("Missing right expression or closing bracket for variable.", p);
+			disp_error_message("Missing right expression or closing bracket for variable.", p2);
 		}
 	}
 
@@ -1231,10 +1235,7 @@ static const char *parse_variable(const char *p)
 	}
 	PRAGMA_GCC46(GCC diagnostic pop)
 
-	if( p == NULL ) {
-		// end of line or invalid buffer
-		return NULL;
-	}
+	nullpo_ret(p); // Can't be NULL but silence gcc warnings
 
 	// push the set function onto the stack
 	script->syntax.nested_call++;
@@ -1606,7 +1607,7 @@ static const char *parse_simpleexpr_name(const char *p)
 
 		p = script->parse_subexpr(p + 1, -1);
 		p = script->skip_space(p);
-		if (*p != ']')
+		if (p == NULL /* Can't be NULL but silence gcc warnings */ || *p != ']')
 			disp_error_message("parse_simpleexpr: unmatched ']'", p);
 		++p;
 		script->addc(C_FUNC);
@@ -1736,8 +1737,9 @@ static const char *script_parse_subexpr(const char *p, int limit)
 			// B
 			p = script->parse_subexpr(p, -1);
 			p = script->skip_space(p);
-			if (*(p++) != ':')
+			if (p == NULL /* Can't be NULL but silence gcc warnings */ || *(p++) != ':') {
 				disp_error_message("parse_subexpr: need ':'", p - 1);
+			}
 			// op_3 jmp (skip over C)
 			script->addl(l2);
 			script->addc(C_OP3_JMP);
@@ -1838,6 +1840,10 @@ static const char *parse_line(const char *p)
 	return p;
 }
 
+#ifdef _MSC_VER
+#pragma warning (push)
+#pragma warning (disable: 4702)
+#endif
 /**
  * parses a local function expression
  *
@@ -1862,7 +1868,7 @@ static const char *parse_syntax_function (const char *p, bool is_public)
 
 	const char *p2 = script->skip_space(p);
 
-	if (*p2 == ';') {
+	if (p2 != NULL /* Can't be NULL but silence gcc warnings */ && *p2 == ';') {
 		// function <name> ;
 		// function declaration - just register the name
 		int l = script->add_word(func_name);
@@ -1877,7 +1883,8 @@ static const char *parse_syntax_function (const char *p, bool is_public)
 		// Close condition of if, for, while
 		p = script->parse_syntax_close(p2 + 1);
 		return p;
-	} else if (*p2 == '{') {
+	}
+	if (p2 != NULL /* Can't be NULL but silence gcc warnings */ && *p2 == '{') {
 		// function <name> <line/block of code>
 		script->syntax.curly[script->syntax.curly_count].type  = TYPE_USERFUNC;
 		script->syntax.curly[script->syntax.curly_count].count = 1;
@@ -1910,13 +1917,19 @@ static const char *parse_syntax_function (const char *p, bool is_public)
 		}
 
 		return script->skip_space(p);
-	} else {
-		disp_error_message("script:parse_syntax_function: expected ';' or '{' at function syntax", p);
 	}
 
+	disp_error_message("script:parse_syntax_function: expected ';' or '{' at function syntax", p);
 	return p;
 }
+#ifdef _MSC_VER
+#pragma warning (pop)
+#endif
 
+#ifdef _MSC_VER
+#pragma warning (push)
+#pragma warning (disable: 4702)
+#endif
 // { ... } Closing process
 static const char *parse_curly_close(const char *p)
 {
@@ -1924,12 +1937,14 @@ static const char *parse_curly_close(const char *p)
 	if(script->syntax.curly_count <= 0) {
 		disp_error_message("parse_curly_close: unexpected string",p);
 		return p + 1;
-	} else if(script->syntax.curly[script->syntax.curly_count-1].type == TYPE_NULL) {
+	}
+	if (script->syntax.curly[script->syntax.curly_count-1].type == TYPE_NULL) {
 		script->syntax.curly_count--;
 		//Close decision  if, for , while
 		p = script->parse_syntax_close(p + 1);
 		return p;
-	} else if(script->syntax.curly[script->syntax.curly_count-1].type == TYPE_SWITCH) {
+	}
+	if (script->syntax.curly[script->syntax.curly_count-1].type == TYPE_SWITCH) {
 		//Closing switch()
 		int pos = script->syntax.curly_count-1;
 		char label[256];
@@ -1968,12 +1983,18 @@ static const char *parse_curly_close(const char *p)
 		//Closing decision if, for , while
 		p = script->parse_syntax_close(p + 1);
 		return p;
-	} else {
-		disp_error_message("parse_curly_close: unexpected string",p);
-		return p + 1;
 	}
+	disp_error_message("parse_curly_close: unexpected string",p);
+	return p + 1;
 }
+#ifdef _MSC_VER
+#pragma warning (pop)
+#endif
 
+#ifdef _MSC_VER
+#pragma warning (push)
+#pragma warning (disable: 4702)
+#endif
 // Syntax-related processing
 // break, case, continue, default, do, for, function,
 // if, switch, while ? will handle this internally.
@@ -2007,14 +2028,15 @@ static const char *parse_syntax(const char *p)
 			}
 			if(pos < 0) {
 				disp_error_message("parse_syntax: unexpected 'break'",p);
-			} else {
-				script->syntax.curly[script->syntax.curly_count++].type = TYPE_NULL;
-				script->parse_line(label);
-				script->syntax.curly_count--;
 			}
+			script->syntax.curly[script->syntax.curly_count++].type = TYPE_NULL;
+			script->parse_line(label);
+			script->syntax.curly_count--;
+
 			p = script->skip_space(p2);
-			if(*p != ';')
+			if (p == NULL /* Can't be NULL but silence gcc warnings */ || *p != ';') {
 				disp_error_message("parse_syntax: need ';'",p);
+			}
 			// Closing decision if, for , while
 			p = script->parse_syntax_close(p + 1);
 			return p;
@@ -2028,103 +2050,108 @@ static const char *parse_syntax(const char *p)
 			if(pos < 0 || script->syntax.curly[pos].type != TYPE_SWITCH) {
 				disp_error_message("parse_syntax: unexpected 'case' ",p);
 				return p+1;
-			} else {
-				char label[256];
-				int  l,v;
-				char *np;
-				if(script->syntax.curly[pos].count != 1) {
-					//Jump for FALLTHRU
-					sprintf(label,"goto __SW%x_%xJ;", (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].count);
-					script->syntax.curly[script->syntax.curly_count++].type = TYPE_NULL;
-					script->parse_line(label);
-					script->syntax.curly_count--;
-
-					// You are here labeled
-					sprintf(label,"__SW%x_%x", (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].count);
-					l=script->add_str(label);
-					script->set_label(l, VECTOR_LENGTH(script->buf), p);
-				}
-				//Decision statement switch
-				p = script->skip_space(p2);
-				if(p == p2) {
-					disp_error_message("parse_syntax: expect space ' '",p);
-				}
-				// check whether case label is integer or not
-				if(is_number(p)) {
-					//Numeric value
-					v = (int)strtol(p,&np,0);
-					if((*p == '-' || *p == '+') && ISDIGIT(p[1])) // pre-skip because '-' can not skip_word
-						p++;
-					p = script->skip_word(p);
-					if(np != p)
-						disp_error_message("parse_syntax: 'case' label is not an integer",np);
-				} else {
-					//Check for constants
-					p2 = script->skip_word(p);
-					v = (int)(size_t) (p2-p); // length of word at p2
-					memcpy(label,p,v);
-					label[v]='\0';
-					if( !script->get_constant(label, &v) )
-						disp_error_message("parse_syntax: 'case' label is not an integer",p);
-					p = script->skip_word(p);
-				}
-				p = script->skip_space(p);
-				if(*p != ':')
-					disp_error_message("parse_syntax: expect ':'",p);
-				sprintf(label,"if(%d != $@__SW%x_VAL) goto __SW%x_%x;",
-					v, (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].count+1);
+			}
+			char label[256];
+			int  l,v;
+			char *np;
+			if(script->syntax.curly[pos].count != 1) {
+				//Jump for FALLTHRU
+				sprintf(label,"goto __SW%x_%xJ;", (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].count);
 				script->syntax.curly[script->syntax.curly_count++].type = TYPE_NULL;
-				// Bad I do not parse twice
-				p2 = script->parse_line(label);
-				script->parse_line(p2);
-				script->syntax.curly_count--;
-				if(script->syntax.curly[pos].count != 1) {
-					// Label after the completion of FALLTHRU
-					sprintf(label, "__SW%x_%xJ", (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].count);
-					l=script->add_str(label);
-					script->set_label(l, VECTOR_LENGTH(script->buf), p);
-				}
-				// check duplication of case label [Rayce]
-				if(linkdb_search(&script->syntax.curly[pos].case_label, (void*)h64BPTRSIZE(v)) != NULL)
-					disp_error_message("parse_syntax: dup 'case'",p);
-				linkdb_insert(&script->syntax.curly[pos].case_label, (void*)h64BPTRSIZE(v), (void*)1);
-
-				sprintf(label, "__setr $@__SW%x_VAL,0;", (unsigned int)script->syntax.curly[pos].index);
-				script->syntax.curly[script->syntax.curly_count++].type = TYPE_NULL;
-
 				script->parse_line(label);
 				script->syntax.curly_count--;
-				script->syntax.curly[pos].count++;
+
+				// You are here labeled
+				sprintf(label,"__SW%x_%x", (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].count);
+				l=script->add_str(label);
+				script->set_label(l, VECTOR_LENGTH(script->buf), p);
 			}
+			//Decision statement switch
+			p = script->skip_space(p2);
+			if(p == p2) {
+				disp_error_message("parse_syntax: expect space ' '",p);
+			}
+			// check whether case label is integer or not
+			if(is_number(p)) {
+				//Numeric value
+				v = (int)strtol(p,&np,0);
+				if((*p == '-' || *p == '+') && ISDIGIT(p[1])) // pre-skip because '-' can not skip_word
+					p++;
+				p = script->skip_word(p);
+				if(np != p)
+					disp_error_message("parse_syntax: 'case' label is not an integer",np);
+			} else {
+				//Check for constants
+				p2 = script->skip_word(p);
+				v = (int)(size_t) (p2-p); // length of word at p2
+				memcpy(label,p,v);
+				label[v]='\0';
+				if( !script->get_constant(label, &v) )
+					disp_error_message("parse_syntax: 'case' label is not an integer",p);
+				p = script->skip_word(p);
+			}
+			p = script->skip_space(p);
+			if (p == NULL /* Can't be NULL but silence gcc warnings */ || *p != ':') {
+				disp_error_message("parse_syntax: expect ':'",p);
+			}
+			sprintf(label,"if(%d != $@__SW%x_VAL) goto __SW%x_%x;",
+				v, (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].count+1);
+			script->syntax.curly[script->syntax.curly_count++].type = TYPE_NULL;
+			// Bad I do not parse twice
+			p2 = script->parse_line(label);
+			script->parse_line(p2);
+			script->syntax.curly_count--;
+			if(script->syntax.curly[pos].count != 1) {
+				// Label after the completion of FALLTHRU
+				sprintf(label, "__SW%x_%xJ", (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].count);
+				l=script->add_str(label);
+				script->set_label(l, VECTOR_LENGTH(script->buf), p);
+			}
+			// check duplication of case label [Rayce]
+			if(linkdb_search(&script->syntax.curly[pos].case_label, (void*)h64BPTRSIZE(v)) != NULL)
+				disp_error_message("parse_syntax: dup 'case'",p);
+			linkdb_insert(&script->syntax.curly[pos].case_label, (void*)h64BPTRSIZE(v), (void*)1);
+
+			sprintf(label, "__setr $@__SW%x_VAL,0;", (unsigned int)script->syntax.curly[pos].index);
+			script->syntax.curly[script->syntax.curly_count++].type = TYPE_NULL;
+
+			script->parse_line(label);
+			script->syntax.curly_count--;
+			script->syntax.curly[pos].count++;
+
 			return p + 1;
-		} else if( p2 - p == 8 && strncmp(p, "continue", 8) == 0 ) {
+		}
+		if (p2 - p == 8 && strncmp(p, "continue", 8) == 0) {
 			// Processing continue
 			char label[256];
 			int pos = script->syntax.curly_count - 1;
 			while(pos >= 0) {
-				if(script->syntax.curly[pos].type == TYPE_DO) {
+				if (script->syntax.curly[pos].type == TYPE_DO) {
 					sprintf(label, "goto __DO%x_NXT;", (unsigned int)script->syntax.curly[pos].index);
 					script->syntax.curly[pos].flag = 1; //Flag put the link for continue
 					break;
-				} else if(script->syntax.curly[pos].type == TYPE_FOR) {
+				}
+				if (script->syntax.curly[pos].type == TYPE_FOR) {
 					sprintf(label, "goto __FR%x_NXT;", (unsigned int)script->syntax.curly[pos].index);
 					break;
-				} else if(script->syntax.curly[pos].type == TYPE_WHILE) {
+				}
+				if (script->syntax.curly[pos].type == TYPE_WHILE) {
 					sprintf(label, "goto __WL%x_NXT;", (unsigned int)script->syntax.curly[pos].index);
 					break;
 				}
 				pos--;
 			}
-			if(pos < 0) {
+			if (pos < 0) {
 				disp_error_message("parse_syntax: unexpected 'continue'",p);
-			} else {
-				script->syntax.curly[script->syntax.curly_count++].type = TYPE_NULL;
-				script->parse_line(label);
-				script->syntax.curly_count--;
 			}
+			script->syntax.curly[script->syntax.curly_count++].type = TYPE_NULL;
+			script->parse_line(label);
+			script->syntax.curly_count--;
+
 			p = script->skip_space(p2);
-			if(*p != ';')
+			if (p == NULL /* Never NULL but gcc-16 doesn't realize */ || *p != ';') {
 				disp_error_message("parse_syntax: need ';'",p);
+			}
 			//Closing decision if, for , while
 			p = script->parse_syntax_close(p + 1);
 			return p;
@@ -2137,36 +2164,38 @@ static const char *parse_syntax(const char *p)
 			int pos = script->syntax.curly_count-1;
 			if(pos < 0 || script->syntax.curly[pos].type != TYPE_SWITCH) {
 				disp_error_message("parse_syntax: unexpected 'default'",p);
-			} else if(script->syntax.curly[pos].flag) {
-				disp_error_message("parse_syntax: dup 'default'",p);
-			} else {
-				char label[256];
-				int l;
-				// Put the label location
-				p = script->skip_space(p2);
-				if(*p != ':') {
-					disp_error_message("parse_syntax: need ':'",p);
-				}
-				sprintf(label, "__SW%x_%x", (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].count);
-				l=script->add_str(label);
-				script->set_label(l, VECTOR_LENGTH(script->buf), p);
-
-				// Skip to the next link w/o condition
-				sprintf(label, "goto __SW%x_%x;", (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].count + 1);
-				script->syntax.curly[script->syntax.curly_count++].type = TYPE_NULL;
-				script->parse_line(label);
-				script->syntax.curly_count--;
-
-				// The default label
-				sprintf(label, "__SW%x_DEF", (unsigned int)script->syntax.curly[pos].index);
-				l=script->add_str(label);
-				script->set_label(l, VECTOR_LENGTH(script->buf), p);
-
-				script->syntax.curly[script->syntax.curly_count - 1].flag = 1;
-				script->syntax.curly[pos].count++;
 			}
+			if(script->syntax.curly[pos].flag) {
+				disp_error_message("parse_syntax: dup 'default'",p);
+			}
+			char label[256];
+			int l;
+			// Put the label location
+			p = script->skip_space(p2);
+			if (p == NULL /* Can't be NULL but silence gcc warnings */ || *p != ':') {
+				disp_error_message("parse_syntax: need ':'",p);
+			}
+			sprintf(label, "__SW%x_%x", (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].count);
+			l=script->add_str(label);
+			script->set_label(l, VECTOR_LENGTH(script->buf), p);
+
+			// Skip to the next link w/o condition
+			sprintf(label, "goto __SW%x_%x;", (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].count + 1);
+			script->syntax.curly[script->syntax.curly_count++].type = TYPE_NULL;
+			script->parse_line(label);
+			script->syntax.curly_count--;
+
+			// The default label
+			sprintf(label, "__SW%x_DEF", (unsigned int)script->syntax.curly[pos].index);
+			l=script->add_str(label);
+			script->set_label(l, VECTOR_LENGTH(script->buf), p);
+
+			script->syntax.curly[script->syntax.curly_count - 1].flag = 1;
+			script->syntax.curly[pos].count++;
+
 			return p + 1;
-		} else if( p2 - p == 2 && strncmp(p, "do", 2) == 0 ) {
+		}
+		if (p2 - p == 2 && strncmp(p, "do", 2) == 0) {
 			int l;
 			char label[256];
 			p=script->skip_space(p2);
@@ -2197,8 +2226,9 @@ static const char *parse_syntax(const char *p)
 
 			p=script->skip_space(p2);
 
-			if(*p != '(')
+			if (p == NULL /* Can't be NULL but silence gcc warnings */ || *p != '(') {
 				disp_error_message("parse_syntax: need '('",p);
+			}
 			p++;
 
 			// Execute the initialization statement
@@ -2212,7 +2242,7 @@ static const char *parse_syntax(const char *p)
 			script->set_label(l, VECTOR_LENGTH(script->buf), p);
 
 			p=script->skip_space(p);
-			if(*p == ';') {
+			if (p == NULL /* Can't be NULL but silence gcc warnings */|| *p == ';') {
 				// For (; Because the pattern of always true ;)
 				;
 			} else {
@@ -2225,8 +2255,9 @@ static const char *parse_syntax(const char *p)
 				script->addl(script->add_str(label));
 				script->addc(C_FUNC);
 			}
-			if(*p != ';')
+			if(p == NULL /* Can't be NULL but silence gcc warnings */ || *p != ';') {
 				disp_error_message("parse_syntax: need ';'",p);
+			}
 			p++;
 
 			// Skip to the beginning of the loop
@@ -2259,13 +2290,13 @@ static const char *parse_syntax(const char *p)
 			l=script->add_str(label);
 			script->set_label(l, VECTOR_LENGTH(script->buf), p);
 			return p;
-		} else if( p2 - p == 8 && strncmp(p, "function", 8) == 0 ) {
+		}
+		if (p2 - p == 8 && strncmp(p, "function", 8) == 0) {
 			// local function not marked as public or private
 			if (script->config.functions_private_by_default) {
 				return script->parse_syntax_function(p2, false);
-			} else {
-				return script->parse_syntax_function(p2, true);
 			}
+			return script->parse_syntax_function(p2, true);
 		}
 		break;
 	case 'i':
@@ -2274,7 +2305,8 @@ static const char *parse_syntax(const char *p)
 			// If process
 			char label[256];
 			p=script->skip_space(p2);
-			if(*p != '(') { //Prevent if this {} non-c script->syntax. from Rayce (jA)
+			if (p == NULL /* Can't be NULL but silence gcc warnings */ || *p != '(') {
+				//Prevent if this {} non-c script->syntax. from Rayce (jA)
 				disp_error_message("need '('",p);
 			}
 			script->syntax.curly[script->syntax.curly_count].type  = TYPE_IF;
@@ -2318,7 +2350,7 @@ static const char *parse_syntax(const char *p)
 			// Processing of switch ()
 			char label[256];
 			p=script->skip_space(p2);
-			if(*p != '(') {
+			if (p == NULL /* Can't be NULL but silence gcc warnings */ || *p != '(') {
 				disp_error_message("need '('",p);
 			}
 			script->syntax.curly[script->syntax.curly_count].type  = TYPE_SWITCH;
@@ -2332,7 +2364,7 @@ static const char *parse_syntax(const char *p)
 			script->addl(script->add_str(label));
 			p=script->parse_expr(p);
 			p=script->skip_space(p);
-			if(*p != '{') {
+			if (p == NULL /* Can't be NULL but silence gcc warnings */ || *p != '{') {
 				disp_error_message("parse_syntax: need '{'",p);
 			}
 			script->addc(C_FUNC);
@@ -2345,7 +2377,7 @@ static const char *parse_syntax(const char *p)
 			int l;
 			char label[256];
 			p=script->skip_space(p2);
-			if(*p != '(') {
+			if (p == NULL /* Can't be NULL but silence gcc warnings */ || *p != '(') {
 				disp_error_message("need '('",p);
 			}
 			script->syntax.curly[script->syntax.curly_count].type  = TYPE_WHILE;
@@ -2372,6 +2404,9 @@ static const char *parse_syntax(const char *p)
 	}
 	return NULL;
 }
+#ifdef _MSC_VER
+#pragma warning (pop)
+#endif
 
 static const char *parse_syntax_close(const char *p)
 {
@@ -2385,6 +2420,10 @@ static const char *parse_syntax_close(const char *p)
 	return p;
 }
 
+#ifdef _MSC_VER
+#pragma warning (push)
+#pragma warning (disable: 4702)
+#endif
 // Close judgment if, for, while, of do
 // flag == 1 : closed
 // flag == 0 : not closed
@@ -2426,7 +2465,7 @@ static const char *parse_syntax_close_sub(const char *p, int *flag)
 			if( p2 - p == 2 && strncmp(p, "if", 2) == 0 ) {
 				// else - if
 				p=script->skip_space(p2);
-				if(*p != '(') {
+				if (p == NULL /* Can't be NULL but silence gcc warnings */ || *p != '(') {
 					disp_error_message("need '('",p);
 				}
 				sprintf(label, "__IF%x_%x", (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].count);
@@ -2476,7 +2515,7 @@ static const char *parse_syntax_close_sub(const char *p, int *flag)
 		}
 
 		p = script->skip_space(p2);
-		if(*p != '(') {
+		if (p == NULL /* Can't be NULL but silence gcc warnings */ || *p != '(') {
 			disp_error_message("need '('",p);
 		}
 
@@ -2502,7 +2541,7 @@ static const char *parse_syntax_close_sub(const char *p, int *flag)
 		l=script->add_str(label);
 		script->set_label(l, VECTOR_LENGTH(script->buf), p);
 		p = script->skip_space(p);
-		if(*p != ';') {
+		if (p == NULL /* Can't be NULL but silence gcc warnings */ || *p != ';') {
 			disp_error_message("parse_syntax: need ';'",p);
 			return p+1;
 		}
@@ -2559,6 +2598,9 @@ static const char *parse_syntax_close_sub(const char *p, int *flag)
 		return p;
 	}
 }
+#ifdef _MSC_VER
+#pragma warning (pop)
+#endif
 
 /// Retrieves the value of a constant.
 static bool script_get_constant(const char *name, int *value)
@@ -2869,6 +2911,10 @@ static void script_warning(const char *src, const char *file, int start_line, co
 	StrBuf->Destroy(&buf);
 }
 
+#ifdef _MSC_VER
+#pragma warning (push)
+#pragma warning (disable: 4702)
+#endif
 /*==========================================
  * Analysis of the script
  *------------------------------------------*/
@@ -2988,7 +3034,8 @@ static struct script_code *parse_script(const char *src, const char *file, int l
 		// Special handling only label
 		tmpp = script->skip_space(script->skip_word(p));
 
-		if (*tmpp == ':' && !(strncmp(p, "default:", 8) == 0 && p + 7 == tmpp)
+		if (tmpp != NULL /* Can't be NULL but silence gcc warnings */ && *tmpp == ':'
+			&& !(strncmp(p, "default:", 8) == 0 && p + 7 == tmpp)
 			&& !(strncmp(p, "function", 8) == 0 && script->skip_space(p + 8) == tmpp)) {
 			i = script->add_word(p);
 			script->set_label(i, VECTOR_LENGTH(script->buf), p);
@@ -3094,6 +3141,9 @@ static struct script_code *parse_script(const char *src, const char *file, int l
 #endif // ENABLE_CASE_CHECK
 	return code;
 }
+#ifdef _MSC_VER
+#pragma warning (pop)
+#endif
 
 /**
  * Creates a new script_code instance from an existing one.
@@ -4320,7 +4370,7 @@ static void script_free_state(struct script_state *st)
 		}
 
 		if( st->sleep.timer != INVALID_TIMER )
-			timer->delete(st->sleep.timer, script->run_timer);
+			timer->delete_(st->sleep.timer, script->run_timer);
 		if( st->stack ) {
 			script->free_vars(st->stack->scope.vars);
 			if( st->stack->scope.arrays )
@@ -5011,7 +5061,7 @@ static void script_detach_state(struct script_state *st, bool dequeue_event)
 #ifdef SECURE_NPCTIMEOUT
 			// We're done with this NPC session, so we cancel the timer (if existent) and move on
 			if( sd->npc_idle_timer != INVALID_TIMER ) {
-				timer->delete(sd->npc_idle_timer,npc->secure_timeout_timer);
+				timer->delete_(sd->npc_idle_timer,npc->secure_timeout_timer);
 				sd->npc_idle_timer = INVALID_TIMER;
 			}
 #endif
@@ -6209,7 +6259,7 @@ static int script_reload(void)
 	script->clear_translations(true);
 
 	if( script->parse_cleanup_timer_id != INVALID_TIMER ) {
-		timer->delete(script->parse_cleanup_timer_id,script->parse_cleanup_timer);
+		timer->delete_(script->parse_cleanup_timer_id,script->parse_cleanup_timer);
 		script->parse_cleanup_timer_id = INVALID_TIMER;
 	}
 
@@ -6352,7 +6402,7 @@ static bool script_sprintf_helper(struct script_state *st, int start, struct Str
 				np++;
 		} else if (*np == '*') {
 			bool positional_widtharg = false;
-			int width_arg;
+			int width_arg = 0;
 			np++;
 			// pos-parameter = number "$"
 			if (ISDIGIT(*np) && *np != '0') {
@@ -7828,18 +7878,18 @@ static BUILDIN(percentheal)
  *------------------------------------------*/
 static BUILDIN(jobchange)
 {
-	int class, upper=-1;
+	int class_, upper=-1;
 
-	class = script_getnum(st,2);
+	class_ = script_getnum(st,2);
 	if( script_hasdata(st,3) )
 		upper=script_getnum(st,3);
 
-	if (pc->db_checkid(class)) {
+	if (pc->db_checkid(class_)) {
 		struct map_session_data *sd = script->rid2sd(st);
 		if (sd == NULL)
 			return true;
 
-		pc->jobchange(sd, class, upper);
+		pc->jobchange(sd, class_, upper);
 	}
 
 	return true;
@@ -7850,8 +7900,8 @@ static BUILDIN(jobchange)
  *------------------------------------------*/
 static BUILDIN(jobname)
 {
-	int class = script_getnum(st,2);
-	script_pushconststr(st, pc->job_name(class));
+	int class_ = script_getnum(st,2);
+	script_pushconststr(st, pc->job_name(class_));
 	return true;
 }
 
@@ -8118,7 +8168,6 @@ static BUILDIN(copyarray)
 	int32 idx2;
 	int32 id1;
 	int32 id2;
-	int32 i;
 	uint32 count;
 	struct map_session_data *sd = NULL;
 
@@ -8157,21 +8206,21 @@ static BUILDIN(copyarray)
 	}
 
 	count = script_getnum(st, 4);
-	if( count > SCRIPT_MAX_ARRAYSIZE - idx1 )
+	if( count > (uint32)(SCRIPT_MAX_ARRAYSIZE - idx1))
 		count = SCRIPT_MAX_ARRAYSIZE - idx1;
 	if( count <= 0 || (idx1 == idx2 && is_same_reference(data1, data2)) )
 		return true;// nothing to copy
 
 	if( is_same_reference(data1, data2) && idx1 > idx2 ) {
 		// destination might be overlapping the source - copy in reverse order
-		for( i = count - 1; i >= 0; --i ) {
+		for (int i = count - 1; i >= 0; --i) {
 			const void *value = script->get_val2(st, reference_uid(id2, idx2 + i), reference_getref(data2));
 			script->set_reg(st, sd, reference_uid(id1, idx1 + i), name1, value, reference_getref(data1));
 			script_removetop(st, -1, 0);
 		}
 	} else {
 		// normal copy
-		for( i = 0; i < count; ++i ) {
+		for (uint32 i = 0; i < count; ++i) {
 			if( idx2 + i < SCRIPT_MAX_ARRAYSIZE ) {
 				const void *value = script->get_val2(st, reference_uid(id2, idx2 + i), reference_getref(data2));
 				script->set_reg(st, sd, reference_uid(id1, idx1 + i), name1, value, reference_getref(data1));
@@ -10022,7 +10071,7 @@ static BUILDIN(getpartyleader)
 	switch (type) {
 		case 1: script_pushint(st,p->party.member[i].account_id); break;
 		case 2: script_pushint(st,p->party.member[i].char_id); break;
-		case 3: script_pushint(st,p->party.member[i].class); break;
+		case 3: script_pushint(st,p->party.member[i].class_); break;
 		case 4: script_pushstrcopy(st,mapindex_id2name(p->party.member[i].map)); break;
 		case 5: script_pushint(st,p->party.member[i].lv); break;
 		default: script_pushstrcopy(st,p->party.member[i].name); break;
@@ -11967,7 +12016,7 @@ static BUILDIN(gettimestr)
 		return false;
 	}
 
-	if (maxlen >= sizeof(tmpstr)) {
+	if ((size_t)maxlen >= sizeof(tmpstr)) {
 		ShowWarning("buildin_gettimestr: Length value is too big %d, max allowed %lu.\n", maxlen, sizeof(tmpstr) - 1);
 		return false;
 	}
@@ -14101,16 +14150,16 @@ static BUILDIN(homunculus_shuffle)
 //These two functions bring the eA MAPID_* class functionality to scripts.
 static BUILDIN(eaclass)
 {
-	int class;
+	int class_;
 	if (script_hasdata(st,2)) {
-		class = script_getnum(st,2);
+		class_ = script_getnum(st,2);
 	} else {
 		struct map_session_data *sd = script->rid2sd(st);
 		if (sd == NULL)
 			return true;
-		class = sd->status.class;
+		class_ = sd->status.class_;
 	}
-	script_pushint(st,pc->jobid2mapid(class));
+	script_pushint(st,pc->jobid2mapid(class_));
 	return true;
 }
 
@@ -14228,7 +14277,7 @@ static BUILDIN(changebase)
 			return true;
 	}
 
-	if (sd->disguise == -1 && vclass != sd->vd.class)
+	if (sd->disguise == -1 && vclass != sd->vd.class_)
 		pc->changelook(sd,LOOK_BASE,vclass); //Updated client view. Base, Weapon and Cloth Colors.
 
 	return true;
@@ -14586,7 +14635,7 @@ static BUILDIN(warpwaitingpc)
 
 		if (cd->zeny) {
 			// fee set
-			if ((uint32)sd->status.zeny < cd->zeny) {
+			if (sd->status.zeny < cd->zeny) {
 				// no zeny to cover set fee
 				break;
 			}
@@ -15136,7 +15185,7 @@ static int buildin_pvpoff_sub(struct block_list *bl, va_list ap)
 
 	clif->pvpset(sd, 0, 0, 2);
 	if (sd->pvp_timer != INVALID_TIMER) {
-		timer->delete(sd->pvp_timer, pc->calc_pvprank_timer);
+		timer->delete_(sd->pvp_timer, pc->calc_pvprank_timer);
 		sd->pvp_timer = INVALID_TIMER;
 	}
 	return 0;
@@ -16763,7 +16812,7 @@ static BUILDIN(petskillbonus)
 	if (pd->bonus)
 	{ //Clear previous bonus
 		if (pd->bonus->timer != INVALID_TIMER)
-			timer->delete(pd->bonus->timer, pet->skill_bonus_timer);
+			timer->delete_(pd->bonus->timer, pet->skill_bonus_timer);
 	} else //init
 		pd->bonus = (struct pet_bonus *) aMalloc(sizeof(struct pet_bonus));
 
@@ -16991,23 +17040,23 @@ static BUILDIN(undisguise)
  *------------------------------------------*/
 static BUILDIN(classchange)
 {
-	int class, type, target;
+	int class_, type, target;
 	struct block_list *bl = map->id2bl(st->oid);
 
 	if (bl == NULL)
 		return true;
 
-	class = script_getnum(st, 2);
+	class_ = script_getnum(st, 2);
 	type = script_getnum(st, 3);
 	target = script_hasdata(st, 4) ? script_getnum(st, 4) : 0;
 
 	if (target > 0) {
 		struct map_session_data *sd = script->charid2sd(st, target);
 		if (sd != NULL) {
-			clif->class_change(bl, class, type, sd);
+			clif->class_change(bl, class_, type, sd);
 		}
 	} else {
-		clif->class_change(bl, class, type, NULL);
+		clif->class_change(bl, class_, type, NULL);
 	}
 	return true;
 }
@@ -17286,7 +17335,7 @@ static BUILDIN(petrecovery)
 	if (pd->recovery)
 	{ //Halt previous bonus
 		if (pd->recovery->timer != INVALID_TIMER)
-			timer->delete(pd->recovery->timer, pet->recovery_timer);
+			timer->delete_(pd->recovery->timer, pet->recovery_timer);
 	} else //Init
 		pd->recovery = (struct pet_recovery *)aMalloc(sizeof(struct pet_recovery));
 
@@ -17340,7 +17389,7 @@ static BUILDIN(petskillsupport)
 	if (pd->s_skill) {
 		//Clear previous skill
 		if (pd->s_skill->timer != INVALID_TIMER) {
-			timer->delete(pd->s_skill->timer, pet->skill_support_timer);
+			timer->delete_(pd->s_skill->timer, pet->skill_support_timer);
 		}
 	} else {
 		//init memory
@@ -18133,7 +18182,7 @@ static BUILDIN(getnpcdir)
 // set npc direction [4144]
 static BUILDIN(setnpcdir)
 {
-	int newdir;
+	int newdir = 0;
 	struct npc_data *nd = NULL;
 
 	if (script_hasdata(st, 3)) {
@@ -18534,7 +18583,7 @@ static BUILDIN(summon)
 		md->special_state.ai = AI_ATTACK;
 
 		if (md->deletetimer != INVALID_TIMER)
-			timer->delete(md->deletetimer, mob->timer_delete);
+			timer->delete_(md->deletetimer, mob->timer_delete);
 
 		const int timeout = script_hasdata(st, 4) ? script_getnum(st, 4) * 1000 : 60000;
 
@@ -18896,15 +18945,13 @@ static BUILDIN(getbattleflag)
 
 	flag = script_getstr(st,2);
 
-	if (battle->config_get_value(flag, &value)) {
-		script_pushint(st,value);
-		return true;
-	} else {
+	if (battle->config_get_value(flag, &value) == 0) {
 		script_pushint(st,0);
 		ShowWarning("buildin_getbattleflag: non-exist battle config requested %s \n", flag);
 		return false;
 	}
 
+	script_pushint(st,value);
 	return true;
 }
 
@@ -19146,7 +19193,7 @@ static BUILDIN(setchar)
 	int index = script_getnum(st,4);
 	char *output = aStrdup(str);
 
-	if(index >= 0 && index < strlen(output))
+	if(index >= 0 && (size_t)index < strlen(output))
 		output[index] = *c;
 
 	script_pushstr(st, output);
@@ -19166,7 +19213,7 @@ static BUILDIN(insertchar)
 
 	if(index < 0)
 		index = 0;
-	else if(index > len)
+	else if((size_t)index > len)
 		index = (int)len;
 
 	output = (char*)aMalloc(len + 2);
@@ -19190,7 +19237,7 @@ static BUILDIN(delchar)
 	char *output;
 	size_t len = strlen(str);
 
-	if(index < 0 || index > len) {
+	if(index < 0 || (size_t)index > len) {
 		//return original
 		output = aStrdup(str);
 		script_pushstr(st, output);
@@ -19254,7 +19301,7 @@ static BUILDIN(substr)
 
 	int len = 0;
 
-	if(start >= 0 && end < strlen(str) && start <= end) {
+	if(start >= 0 && (size_t)end < strlen(str) && start <= end) {
 		len = end - start + 1;
 		output = (char*)aMalloc(len + 1);
 		memcpy(output, &str[start], len);
@@ -19340,7 +19387,7 @@ static BUILDIN(implode)
 {
 	struct script_data* data = script_getdata(st, 2);
 	const char *name;
-	uint32 array_size, id;
+	int array_size, id;
 
 	struct map_session_data *sd = NULL;
 
@@ -19581,7 +19628,7 @@ static BUILDIN(strpos)
 	}
 
 	len = strlen(haystack);
-	for ( ; i < len; ++i ) {
+	for (; (size_t)i < len; ++i) { // FIXME: i can be passed as negative value which isn't handled
 		if ( haystack[i] == *needle ) {
 			// matched starting char -- loop through remaining chars
 			const char *h, *n;
@@ -19620,7 +19667,7 @@ static BUILDIN(replacestr)
 
 	int count = 0;
 	int numFinds = 0;
-	int i = 0, f = 0;
+	size_t i = 0, f = 0;
 
 	if(findlen == 0) {
 		ShowError("script:replacestr: Invalid search length.\n");
@@ -19700,7 +19747,7 @@ static BUILDIN(countstr)
 	bool usecase = true;
 
 	int numFinds = 0;
-	int i = 0, f = 0;
+	size_t i = 0, f = 0;
 
 	if(findlen == 0) {
 		ShowError("script:countstr: Invalid search length.\n");
@@ -20055,7 +20102,7 @@ static int buildin_query_sql_sub(struct script_state *st, struct Sql *handle)
 	const char* query;
 	struct script_data* data;
 	const char* name;
-	unsigned int max_rows = SCRIPT_MAX_ARRAYSIZE; // maximum number of rows
+	int max_rows = SCRIPT_MAX_ARRAYSIZE; // maximum number of rows
 	int num_vars;
 	int num_cols;
 
@@ -20119,8 +20166,8 @@ static int buildin_query_sql_sub(struct script_state *st, struct Sql *handle)
 				script->setd_sub(st, sd, name, i, (void *)h64BPTRSIZE((str?atoi(str):0)), reference_getref(data));
 		}
 	}
-	if( i == max_rows && max_rows < SQL->NumRows(handle) ) {
-		ShowWarning("script:query_sql: Only %u/%u rows have been stored.\n", max_rows, (unsigned int)SQL->NumRows(handle));
+	if( i == max_rows && (unsigned int)max_rows < SQL->NumRows(handle) ) {
+		ShowWarning("script:query_sql: Only %d/%u rows have been stored.\n", max_rows, (unsigned int)SQL->NumRows(handle));
 		script->reportsrc(st);
 	}
 
@@ -20307,7 +20354,7 @@ static BUILDIN(npcshopdelitem)
 
 	// remove specified items from the shop item list
 	for (i = 3; i < 3 + amount; i++) {
-		unsigned int nameid = script_getnum(st,i);
+		int nameid = script_getnum(st,i);
 
 		ARR_FIND(0, size, n, nd->u.shop.shop_item[n].nameid == nameid);
 		if (n == size) {
@@ -21244,7 +21291,7 @@ static BUILDIN(setunitdata)
 			break;
 		case UDT_CLASS:
 			if ((val >= JOB_NOVICE && val <= JOB_MAX_BASIC) || (val >= JOB_NOVICE_HIGH && val <= JOB_MAX))
-				md->vd->class = val;
+				md->vd->class_ = val;
 			else
 				mob->class_change(md, val);
 			clif->clearunit_area(bl, CLR_OUTSIGHT);
@@ -22202,7 +22249,7 @@ static BUILDIN(getunitdata)
 		case UDT_AI:          script_pushint(st, md->special_state.ai); break;
 		case UDT_SCOPTION:    script_pushint(st, md->sc.option); break;
 		case UDT_SEX:         script_pushint(st, md->vd->sex); break;
-		case UDT_CLASS:       script_pushint(st, md->vd->class); break;
+		case UDT_CLASS:       script_pushint(st, md->vd->class_); break;
 		case UDT_HAIRSTYLE:   script_pushint(st, md->vd->hair_style); break;
 		case UDT_HAIRCOLOR:   script_pushint(st, md->vd->hair_color); break;
 		case UDT_HEADBOTTOM:  script_pushint(st, md->vd->head_bottom); break;
@@ -22516,7 +22563,7 @@ static BUILDIN(getunitdata)
 		case UDT_ADELAY:      script_pushint(st, nd->status.adelay); break;
 		case UDT_DMOTION:     script_pushint(st, nd->status.dmotion); break;
 		case UDT_SEX:         script_pushint(st, nd->vd.sex); break;
-		case UDT_CLASS:       script_pushint(st, nd->vd.class); break;
+		case UDT_CLASS:       script_pushint(st, nd->vd.class_); break;
 		case UDT_HAIRSTYLE:   script_pushint(st, nd->vd.hair_style); break;
 		case UDT_HAIRCOLOR:   script_pushint(st, nd->vd.hair_color); break;
 		case UDT_HEADBOTTOM:  script_pushint(st, nd->vd.head_bottom); break;
@@ -23142,7 +23189,7 @@ static BUILDIN(awake)
 				tst->rid = 0;
 			}
 
-			timer->delete(tst->sleep.timer, script->run_timer);
+			timer->delete_(tst->sleep.timer, script->run_timer);
 			tst->sleep.timer = INVALID_TIMER;
 			if(tst->state != RERUNLINE)
 				tst->sleep.tick = 0;
@@ -23382,7 +23429,7 @@ static BUILDIN(mercenary_create)
 
 	class_ = script_getnum(st,2);
 
-	if( !mercenary->class(class_) )
+	if( !mercenary->class_(class_) )
 		return true;
 
 	contract_time = script_getnum(st,3);
@@ -23417,7 +23464,7 @@ static BUILDIN(mercenary_delete)
 		struct mercenary_data *md = (sd->status.mer_id && sd->md != NULL) ? sd->md : NULL;
 
 		if (md != NULL)
-			mercenary->delete(md, type);
+			mercenary->delete_(md, type);
 	}
 
 	return true;
@@ -23767,7 +23814,7 @@ static BUILDIN(setquestinfo)
 	{
 		int mer_class = script_getnum(st, 3);
 
-		if (!mercenary->class(mer_class)) {
+		if (!mercenary->class_(mer_class)) {
 			ShowWarning("buildin_setquestinfo: invalid mercenary class given (%d).\n", mer_class);
 			return false;
 		}
@@ -23811,10 +23858,10 @@ static BUILDIN(erasequest)
 			return false;
 		}
 		for (quest_id = script_getnum(st, 2); quest_id < script_getnum(st, 3); quest_id++) {
-			quest->delete(sd, quest_id);
+			quest->delete_(sd, quest_id);
 		}
 	} else {
-		quest->delete(sd, script_getnum(st, 2));
+		quest->delete_(sd, script_getnum(st, 2));
 	}
 
 	return true;
@@ -25579,7 +25626,7 @@ static BUILDIN(npcskill)
 	struct npc_data *nd;
 	uint16 skill_id             = script_isstringtype(st, 2) ? skill->name2id(script_getstr(st, 2)) : script_getnum(st, 2);
 	unsigned short skill_level  = script_getnum(st, 3);
-	unsigned int stat_point     = script_getnum(st, 4);
+	int stat_point              = script_getnum(st, 4);
 	unsigned int npc_level      = script_getnum(st, 5);
 	struct map_session_data *sd = script->rid2sd(st);
 
@@ -25587,6 +25634,11 @@ static BUILDIN(npcskill)
 		return true;
 
 	nd = map->id2nd(sd->npc_id);
+
+	if (stat_point < 0) {
+		ShowError("npcskill: negative stat point given (%d)\n", stat_point);
+		return false;
+	}
 
 	if (stat_point > battle_config.max_third_parameter) {
 		ShowError("npcskill: stat point exceeded maximum of %d.\n",battle_config.max_third_parameter );
@@ -26542,7 +26594,7 @@ static BUILDIN(endsellitem)
 
 	int newIndex = nd->u.scr.shop->shop_last_index;
 	const struct npc_item_list *const newItem = &nd->u.scr.shop->item[newIndex];
-	int i = 0;
+	unsigned int i = 0;
 	for (i = 0; i < nd->u.scr.shop->items - 1; i++) {
 		const struct npc_item_list *const item = &nd->u.scr.shop->item[i];
 		if (item->nameid != newItem->nameid || item->value != newItem->value)
@@ -26591,10 +26643,11 @@ static BUILDIN(sellitem)
 {
 	struct npc_data *nd;
 	struct item_data *it;
-	int i = 0, id = script_getnum(st,2);
+	int id = script_getnum(st,2);
 	int value = 0;
 	int value2 = 0;
 	int qty = 0;
+	unsigned int i = 0;
 
 	if( !(nd = map->id2nd(st->oid)) ) {
 		ShowWarning("buildin_sellitem: trying to run without a proper NPC!\n");
@@ -26637,14 +26690,14 @@ static BUILDIN(sellitem)
 		if (nd->u.scr.shop->type == NST_BARTER) {
 			for (i = 0; i < nd->u.scr.shop->items; i++) {
 				const struct npc_item_list *const item = &nd->u.scr.shop->item[i];
-				if (item->nameid == id && item->value == value && item->value2 == value2) {
+				if (item->nameid == id && item->value == (unsigned int)value && item->value2 == value2) {
 					break;
 				}
 			}
 		} else if (nd->u.scr.shop->type == NST_EXPANDED_BARTER) {
 			for (i = 0; i < nd->u.scr.shop->items; i++) {
 				const struct npc_item_list *const item = &nd->u.scr.shop->item[i];
-				if (item->nameid != id || item->value != value)
+				if (item->nameid != id || item->value != (unsigned int)value)
 					continue;
 				if (item->value2 != (script_lastdata(st) - 4) / 3)
 					continue;
@@ -26746,9 +26799,10 @@ static BUILDIN(startsellitem)
 {
 	struct npc_data *nd;
 	struct item_data *it;
-	int i = 0, id = script_getnum(st,2);
+	int id = script_getnum(st,2);
 	int value2 = 0;
 	int qty = 0;
+	unsigned int i = 0;
 
 	if (!(nd = map->id2nd(st->oid))) {
 		ShowWarning("buildin_startsellitem: trying to run without a proper NPC!\n");
@@ -26810,7 +26864,8 @@ static BUILDIN(startsellitem)
 static BUILDIN(stopselling)
 {
 	struct npc_data *nd;
-	int i, id = script_getnum(st, 2);
+	int id = script_getnum(st, 2);
+	unsigned int i = 0;
 
 	if (!(nd = map->id2nd(st->oid)) || !nd->u.scr.shop) {
 		ShowWarning("buildin_stopselling: trying to run without a proper NPC!\n");
@@ -26826,7 +26881,7 @@ static BUILDIN(stopselling)
 		const int amount2 = script_getnum(st, 4);
 		for (i = 0; i < nd->u.scr.shop->items; i++) {
 			const struct npc_item_list *const item = &nd->u.scr.shop->item[i];
-			if (item->nameid == id && item->value == id2 && item->value2 == amount2) {
+			if (item->nameid == id && item->value == (unsigned int)id2 && item->value2 == amount2) {
 				break;
 			}
 		}
@@ -26838,7 +26893,7 @@ static BUILDIN(stopselling)
 		const int price = script_getnum(st, 3);
 		for (i = 0; i < nd->u.scr.shop->items; i++) {
 			const struct npc_item_list *const item = &nd->u.scr.shop->item[i];
-			if (item->nameid == id && item->value == price) {
+			if (item->nameid == id && item->value == (unsigned int)price) {
 				break;
 			}
 		}
@@ -26851,7 +26906,7 @@ static BUILDIN(stopselling)
 	}
 
 	if (i != nd->u.scr.shop->items) {
-		int cursor;
+		unsigned int cursor;
 
 		if (nd->u.scr.shop->type == NST_MARKET)
 			npc->market_delfromsql(nd, i);
@@ -26940,8 +26995,7 @@ static BUILDIN(tradertype)
 	if( !nd->u.scr.shop )
 		npc->trader_update(nd->src_id?nd->src_id:nd->bl.id);
 	else {/* clear list */
-		int i;
-		for( i = 0; i < nd->u.scr.shop->items; i++ ) {
+		for (unsigned int i = 0; i < nd->u.scr.shop->items; ++i) {
 			nd->u.scr.shop->item[i].nameid = 0;
 			nd->u.scr.shop->item[i].value  = 0;
 			nd->u.scr.shop->item[i].qty    = 0;
@@ -27016,7 +27070,7 @@ static BUILDIN(shopcount)
 		return false;
 	}
 
-	int i;
+	unsigned int i;
 	/* lookup */
 	for (i = 0; i < nd->u.scr.shop->items; i++) {
 		if( nd->u.scr.shop->item[i].nameid == id ) {
@@ -27049,7 +27103,7 @@ static BUILDIN(channelmes)
 		return true;
 	}
 
-	char *message = script_getstr(st, 3);
+	const char *message = script_getstr(st, 3);
 	if (clif->validate_message(sd, message) == false) {
 		script_pushint(st, 0);
 		return true;
@@ -28720,30 +28774,30 @@ static BUILDIN(mestipbox)
  */
 static BUILDIN(getunitparam)
 {
-	int class = -1;
+	int class_ = -1;
 	if (script_hasdata(st, 3)) {
-		class = script_getnum(st, 3);
-		if (class != -1) {
-			if (!pc->db_checkid(class)) {
-				ShowError("buildin_getunitparam: invalid class (%d)\n", class);
+		class_ = script_getnum(st, 3);
+		if (class_ != -1) {
+			if (!pc->db_checkid(class_)) {
+				ShowError("buildin_getunitparam: invalid class (%d)\n", class_);
 				st->state = END;
 				return false;
 			}
-			class = pc->class2idx(class);
+			class_ = pc->class2idx(class_);
 		}
 	}
 
 	struct map_session_data *sd = NULL;
-	if (class == -1) {
+	if (class_ == -1) {
 		sd = script_rid2sd(st);
 		if (sd == NULL) {
 			ShowError("buildin_getunitparam: No player attached, but class == -1.\n");
 			return false;
 		}
-		class = pc->class2idx(sd->status.class);
+		class_ = pc->class2idx(sd->status.class_);
 	}
 
-	struct s_unit_params *entry = status->dbs->unit_params[class];
+	struct s_unit_params *entry = status->dbs->unit_params[class_];
 	int param = script_getnum(st, 2);
 	switch (param) {
 	case UNIT_PARAM_NAME:

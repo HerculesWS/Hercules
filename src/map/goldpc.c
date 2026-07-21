@@ -194,7 +194,7 @@ static void goldpc_start(struct map_session_data *sd)
 
 	sd->goldpc.start_tick = 0;
 	if (sd->goldpc.tid != INVALID_TIMER) {
-		timer->delete(sd->goldpc.tid, goldpc->timeout);
+		timer->delete_(sd->goldpc.tid, goldpc->timeout);
 		sd->goldpc.tid = INVALID_TIMER;
 	}
 
@@ -279,7 +279,7 @@ static void goldpc_stop(struct map_session_data *sd)
 			pc_setaccountreg(sd, script->add_variable(GOLDPC_PLAYTIME_VAR), playtime);
 		}
 
-		timer->delete(sd->goldpc.tid, goldpc_timeout);
+		timer->delete_(sd->goldpc.tid, goldpc_timeout);
 		sd->goldpc.tid = INVALID_TIMER;
 	}
 }

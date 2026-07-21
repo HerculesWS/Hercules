@@ -40,7 +40,7 @@ struct inter_mercenary_interface {
 	bool (*create) (struct s_mercenary *merc);
 	bool (*save) (const struct s_mercenary *merc);
 	bool (*load) (int merc_id, int char_id, struct s_mercenary *merc);
-	bool (*delete) (int merc_id);
+	bool (*delete_) (int merc_id);
 };
 
 #ifdef HERCULES_CORE

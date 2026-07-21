@@ -940,7 +940,7 @@ static bool clan_config_read(bool reload)
 				script->free_code(c_clear->buff.script);
 			}
 			if (c_clear->tid != INVALID_TIMER) {
-				timer->delete(c_clear->tid, clan->inactivity_kick);
+				timer->delete_(c_clear->tid, clan->inactivity_kick);
 			}
 			VECTOR_CLEAR(c_clear->allies);
 			VECTOR_CLEAR(c_clear->antagonists);
@@ -1025,7 +1025,7 @@ static void do_final_clan(void)
 			script->free_code(c->buff.script);
 		}
 		if (c->tid != INVALID_TIMER) {
-			timer->delete(c->tid, clan->inactivity_kick);
+			timer->delete_(c->tid, clan->inactivity_kick);
 		}
 		VECTOR_CLEAR(c->allies);
 		VECTOR_CLEAR(c->antagonists);

@@ -501,7 +501,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(timer->add, HP_timer_add) },
 	{ HP_POP(timer->add_interval, HP_timer_add_interval) },
 	{ HP_POP(timer->get, HP_timer_get) },
-	{ HP_POP(timer->delete, HP_timer_delete) },
+	{ HP_POP(timer->delete_, HP_timer_delete_) },
 	{ HP_POP(timer->addtick, HP_timer_addtick) },
 	{ HP_POP(timer->settick, HP_timer_settick) },
 	{ HP_POP(timer->add_func_list, HP_timer_add_func_list) },

@@ -126,7 +126,7 @@ struct mercenary_interface {
 
 	void (*init) (bool minimal);
 
-	bool (*class) (int class_);
+	bool (*class_) (int class_);
 	struct view_data * (*get_viewdata) (int class_);
 
 	int (*create) (struct map_session_data *sd, int class_, unsigned int lifetime);
@@ -136,7 +136,7 @@ struct mercenary_interface {
 	void (*heal) (struct mercenary_data *md, int hp, int sp);
 	int (*dead) (struct mercenary_data *md);
 
-	void (*delete) (struct mercenary_data *md, int reply);
+	void (*delete_) (struct mercenary_data *md, int reply);
 	void (*contract_stop) (struct mercenary_data *md);
 
 	int (*get_lifetime) (struct mercenary_data *md);

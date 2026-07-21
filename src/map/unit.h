@@ -83,7 +83,7 @@ struct unit_data {
 };
 
 struct view_data {
-	int16 class;
+	int16 class_;
 	int weapon,
 		shield, //Or left-hand weapon.
 		robe,

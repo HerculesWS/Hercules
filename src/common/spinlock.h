@@ -37,11 +37,18 @@
 #endif
 
 #ifdef WIN32
+#ifdef _MSC_VER
+#pragma warning (push)
+#pragma warning (disable: 4324)
+#endif
 struct __declspec(align(64)) spin_lock {
 	volatile LONG lock;
 	volatile LONG nest;
 	volatile LONG sync_lock;
 };
+#ifdef _MSC_VER
+#pragma warning (pop)
+#endif
 #else
 struct spin_lock {
 	volatile int32 lock;

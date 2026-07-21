@@ -320,7 +320,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(inter_elemental->create, HP_inter_elemental_create) },
 	{ HP_POP(inter_elemental->save, HP_inter_elemental_save) },
 	{ HP_POP(inter_elemental->load, HP_inter_elemental_load) },
-	{ HP_POP(inter_elemental->delete, HP_inter_elemental_delete) },
+	{ HP_POP(inter_elemental->delete_, HP_inter_elemental_delete_) },
 /* inter_guild_interface */
 	{ HP_POP(inter_guild->save_timer, HP_inter_guild_save_timer) },
 	{ HP_POP(inter_guild->removemember_tosql, HP_inter_guild_removemember_tosql) },
@@ -366,7 +366,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(inter_homunculus->create, HP_inter_homunculus_create) },
 	{ HP_POP(inter_homunculus->save, HP_inter_homunculus_save) },
 	{ HP_POP(inter_homunculus->load, HP_inter_homunculus_load) },
-	{ HP_POP(inter_homunculus->delete, HP_inter_homunculus_delete) },
+	{ HP_POP(inter_homunculus->delete_, HP_inter_homunculus_delete_) },
 	{ HP_POP(inter_homunculus->rename, HP_inter_homunculus_rename) },
 /* inter_interface */
 	{ HP_POP(inter->msg_txt, HP_inter_msg_txt) },
@@ -398,7 +398,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(inter_mail->sendmail, HP_inter_mail_sendmail) },
 	{ HP_POP(inter_mail->mark_read, HP_inter_mail_mark_read) },
 	{ HP_POP(inter_mail->get_attachment, HP_inter_mail_get_attachment) },
-	{ HP_POP(inter_mail->delete, HP_inter_mail_delete) },
+	{ HP_POP(inter_mail->delete_, HP_inter_mail_delete_) },
 	{ HP_POP(inter_mail->return_message, HP_inter_mail_return_message) },
 	{ HP_POP(inter_mail->send, HP_inter_mail_send) },
 /* inter_mercenary_interface */
@@ -411,7 +411,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(inter_mercenary->create, HP_inter_mercenary_create) },
 	{ HP_POP(inter_mercenary->save, HP_inter_mercenary_save) },
 	{ HP_POP(inter_mercenary->load, HP_inter_mercenary_load) },
-	{ HP_POP(inter_mercenary->delete, HP_inter_mercenary_delete) },
+	{ HP_POP(inter_mercenary->delete_, HP_inter_mercenary_delete_) },
 /* inter_party_interface */
 	{ HP_POP(inter_party->check_lv, HP_inter_party_check_lv) },
 	{ HP_POP(inter_party->is_family_party, HP_inter_party_is_family_party) },
@@ -447,7 +447,7 @@ struct HookingPointData HookingPoints[] = {
 /* inter_quest_interface */
 	{ HP_POP(inter_quest->parse_frommap, HP_inter_quest_parse_frommap) },
 	{ HP_POP(inter_quest->fromsql, HP_inter_quest_fromsql) },
-	{ HP_POP(inter_quest->delete, HP_inter_quest_delete) },
+	{ HP_POP(inter_quest->delete_, HP_inter_quest_delete_) },
 	{ HP_POP(inter_quest->add, HP_inter_quest_add) },
 	{ HP_POP(inter_quest->update, HP_inter_quest_update) },
 	{ HP_POP(inter_quest->save, HP_inter_quest_save) },
@@ -945,7 +945,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(timer->add, HP_timer_add) },
 	{ HP_POP(timer->add_interval, HP_timer_add_interval) },
 	{ HP_POP(timer->get, HP_timer_get) },
-	{ HP_POP(timer->delete, HP_timer_delete) },
+	{ HP_POP(timer->delete_, HP_timer_delete_) },
 	{ HP_POP(timer->addtick, HP_timer_addtick) },
 	{ HP_POP(timer->settick, HP_timer_settick) },
 	{ HP_POP(timer->add_func_list, HP_timer_add_func_list) },

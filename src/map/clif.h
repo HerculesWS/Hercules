@@ -745,7 +745,7 @@ struct s_packet_db {
 
 struct hCSData {
 	int id;
-	unsigned int price;
+	int price;
 };
 
 struct cdelayed_damage {
@@ -933,7 +933,7 @@ struct clif_interface {
 	/* Cash Shop [Ind/Hercules] */
 	struct {
 		struct hCSData **data[CASHSHOP_TAB_MAX];
-		unsigned int item_count[CASHSHOP_TAB_MAX];
+		int item_count[CASHSHOP_TAB_MAX];
 	} cs;
 	/* roulette data */
 	struct {
@@ -1203,7 +1203,7 @@ struct clif_interface {
 	void (*wedding_effect) (struct block_list *bl);
 	void (*divorced) (struct map_session_data* sd, const char* name);
 	void (*callpartner) (struct map_session_data *sd);
-	int (*skill_damage) (struct block_list *src, struct block_list *dst, int64 tick, int sdelay, int ddelay, int64 damage, int div, uint16 skill_id, uint16 skill_lv, enum battle_dmg_type type);
+	int (*skill_damage) (struct block_list *src, struct block_list *dst, int64 tick, int sdelay, int ddelay, int64 damage, int div, uint16 skill_id, int skill_lv, enum battle_dmg_type type);
 #if 0
 	int (*skill_damage2) (struct block_list *src, struct block_list *dst, int64 tick, int sdelay, int ddelay, int damage, int div, uint16 skill_id, uint16 skill_lv, enum battle_dmg_type type);
 #endif
@@ -1272,7 +1272,7 @@ struct clif_interface {
 	void (*messages) (const int fd, const char *mes, ...) __attribute__((format(printf, 2, 3)));
 	const char *(*process_chat_message) (struct map_session_data *sd, const struct packet_chat_message *packet, char *out_buf, int out_buflen);
 	bool (*process_whisper_message) (struct map_session_data *sd, const struct packet_whisper_message *packet, char *out_name, char *out_message, int out_messagelen);
-	bool (*validate_message) (struct map_session_data *sd, char *message);
+	bool (*validate_message) (struct map_session_data *sd, const char *message);
 	void (*wisexin) (struct map_session_data *sd,int type,int flag);
 	void (*wisall) (struct map_session_data *sd,int type,int flag);
 	void (*PMIgnoreList) (struct map_session_data* sd);

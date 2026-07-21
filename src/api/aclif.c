@@ -236,7 +236,7 @@ static bool aclif_socket_secure_check(int fd)
 
 	int count = 0;
 	const int max_count = api->ip_connections_limit;
-	const int client_addr = sockt->session[fd]->client_addr;
+	const uint32 client_addr = sockt->session[fd]->client_addr;
 	for (int fd2 = 0; fd2 < sockt->fd_max; fd2 ++) {
 		if (!sockt->session_is_valid(fd2))
 			continue;
@@ -292,7 +292,7 @@ static int aclif_session_delete(int fd)
 	sd->request_temp = NULL;
 	if (sd->json != NULL)
 	{
-		jsonwriter->delete(sd->json);
+		jsonwriter->delete_(sd->json);
 		sd->json = NULL;
 	}
 
@@ -1138,7 +1138,8 @@ static void aclif_remove_remove_timer(struct online_api_login_data *user)
 static const char *aclif_get_first_world_name(void)
 {
 	struct DBIterator *iter = db_iterator(aclif->char_servers_db);
-	for (struct char_server_data *data = dbi_first(iter); dbi_exists(iter); data = dbi_next(iter)) {
+	struct char_server_data *data = dbi_first(iter);
+	if (dbi_exists(iter)) {
 		dbi_destroy(iter);
 		return data->world_name;
 	}

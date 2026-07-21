@@ -219,7 +219,7 @@ static int elemental_summon_end_timer(int tid, int64 tick, int id, intptr_t data
 	}
 
 	ed->summon_timer = INVALID_TIMER;
-	elemental->delete(ed, 0); // Elemental's summon time is over.
+	elemental->delete_(ed, 0); // Elemental's summon time is over.
 
 	return 0;
 }
@@ -228,7 +228,7 @@ static void elemental_summon_stop(struct elemental_data *ed)
 {
 	nullpo_retv(ed);
 	if( ed->summon_timer != INVALID_TIMER )
-		timer->delete(ed->summon_timer, elemental->summon_end_timer);
+		timer->delete_(ed->summon_timer, elemental->summon_end_timer);
 	ed->summon_timer = INVALID_TIMER;
 }
 
@@ -499,7 +499,7 @@ static int elemental_action(struct elemental_data *ed, struct block_list *bl, in
 		struct map_session_data *sd = BL_CAST(BL_PC, battle->get_master(&ed->bl));
 		if( sd ){
 			if( sd->skill_id_old != SO_EL_ACTION && //regardless of remaining HP/SP it can be cast
-				(status_get_hp(&ed->bl) < req.hp || status_get_sp(&ed->bl) < req.sp) )
+				(status_get_hp(&ed->bl) < (unsigned int)req.hp || status_get_sp(&ed->bl) < (unsigned int)req.sp) )
 				return 1;
 			else
 				status_zap(&ed->bl, req.hp, req.sp);
@@ -608,7 +608,7 @@ static void elemental_heal(struct elemental_data *ed, int hp, int sp)
 
 static int elemental_dead(struct elemental_data *ed)
 {
-	elemental->delete(ed, 1);
+	elemental->delete_(ed, 1);
 	return 0;
 }
 
@@ -738,9 +738,9 @@ static int elemental_ai_sub_timer(struct elemental_data *ed, struct map_session_
 
 	// Check if caster can sustain the summoned elemental
 	if( DIFF_TICK(tick,ed->last_spdrain_time) >= 10000 ){// Drain SP every 10 seconds
-		int sp = 5;
+		unsigned int sp = 5;
 
-		switch (ed->vd->class) {
+		switch (ed->vd->class_) {
 			case ELEID_EL_AGNI_M:
 			case ELEID_EL_AQUA_M:
 			case ELEID_EL_VENTUS_M:
@@ -756,7 +756,7 @@ static int elemental_ai_sub_timer(struct elemental_data *ed, struct map_session_
 		}
 
 		if( status_get_sp(&sd->bl) < sp ){ // Can't sustain delete it.
-			elemental->delete(sd->ed,0);
+			elemental->delete_(sd->ed,0);
 			return 0;
 		}
 
@@ -903,7 +903,7 @@ static int read_elementaldb(void)
 		db->lv = atoi(str[3]);
 
 		estatus = &db->status;
-		db->vd.class = db->class_;
+		db->vd.class_ = db->class_;
 
 		estatus->max_hp = atoi(str[4]);
 		estatus->max_sp = atoi(str[5]);
@@ -1070,7 +1070,7 @@ void elemental_defaults(void)
 	memset(elemental->db,0,sizeof(elemental->db));
 
 	/* funcs */
-	elemental->class = elemental_class;
+	elemental->class_ = elemental_class;
 	elemental->get_viewdata = elemental_get_viewdata;
 
 	elemental->create = elemental_create;
@@ -1083,7 +1083,7 @@ void elemental_defaults(void)
 	elemental->heal = elemental_heal;
 	elemental->dead = elemental_dead;
 
-	elemental->delete = elemental_delete;
+	elemental->delete_ = elemental_delete;
 	elemental->summon_stop = elemental_summon_stop;
 
 	elemental->get_lifetime = elemental_get_lifetime;

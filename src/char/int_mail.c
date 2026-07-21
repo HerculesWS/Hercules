@@ -451,7 +451,7 @@ void inter_mail_defaults(void)
 	inter_mail->loadmessage = inter_mail_loadmessage;
 	inter_mail->mark_read = inter_mail_mark_read;
 	inter_mail->get_attachment = inter_mail_get_attachment;
-	inter_mail->delete = inter_mail_delete;
+	inter_mail->delete_ = inter_mail_delete;
 	inter_mail->return_message = inter_mail_return_message;
 	inter_mail->send = inter_mail_send;
 }

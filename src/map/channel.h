@@ -90,7 +90,7 @@ struct channel_data {
 	struct DBMap *banned;
 	char handlers[MAX_EVENTQUEUE][EVENT_NAME_LENGTH];
 	unsigned int options;
-	unsigned int owner;
+	int owner;
 	enum channel_types type;
 	uint16 m;
 	unsigned char msg_delay;
@@ -106,7 +106,7 @@ struct channel_interface {
 
 	struct channel_data *(*search) (const char *name, struct map_session_data *sd);
 	struct channel_data *(*create) (enum channel_types type, const char *name, unsigned char color);
-	void (*delete) (struct channel_data *chan);
+	void (*delete_) (struct channel_data *chan);
 
 	void (*set_password) (struct channel_data *chan, const char *password);
 	enum channel_operation_status (*ban) (struct channel_data *chan, const struct map_session_data *ssd, struct map_session_data *tsd);

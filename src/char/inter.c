@@ -150,9 +150,9 @@ static void inter_do_final_msg(void)
 		aFree(msg_table[i]);
 }
 
-static const char *inter_job_name(int class)
+static const char *inter_job_name(int class_)
 {
-	switch (class) {
+	switch (class_) {
 #define JOB_ENUM_VALUE(name, id, msgtbl) case JOB_ ## name: return inter->msg_txt(MSGTBL_ ## msgtbl);
 #include "common/class.h"
 #include "common/class_hidden.h"
@@ -242,18 +242,18 @@ static void inter_accinfo(int u_fd, int aid, int castergroup, const char *query,
 			} else {// more than one, listing... [Dekamaster/Nightroad]
 				inter->msg_to_fd(map_fd, u_fd, aid, "Your query returned the following %d results, please be more specific...",(int)SQL->NumRows(inter->sql_handle));
 				while ( SQL_SUCCESS == SQL->NextRow(inter->sql_handle) ) {
-					int class;
+					int class_;
 					int base_level, job_level, online;
 					char name[NAME_LENGTH];
 
 					SQL->GetData(inter->sql_handle, 0, &data, NULL); account_id = atoi(data);
 					SQL->GetData(inter->sql_handle, 1, &data, NULL); safestrncpy(name, data, sizeof(name));
-					SQL->GetData(inter->sql_handle, 2, &data, NULL); class = atoi(data);
+					SQL->GetData(inter->sql_handle, 2, &data, NULL); class_ = atoi(data);
 					SQL->GetData(inter->sql_handle, 3, &data, NULL); base_level = atoi(data);
 					SQL->GetData(inter->sql_handle, 4, &data, NULL); job_level = atoi(data);
 					SQL->GetData(inter->sql_handle, 5, &data, NULL); online = atoi(data);
 
-					inter->msg_to_fd(map_fd, u_fd, aid, "[AID: %d] %s | %s | Level: %d/%d | %s", account_id, name, inter->job_name(class), base_level, job_level, online?"Online":"Offline");
+					inter->msg_to_fd(map_fd, u_fd, aid, "[AID: %d] %s | %s | Level: %d/%d | %s", account_id, name, inter->job_name(class_), base_level, job_level, online?"Online":"Offline");
 				}
 				SQL->FreeResult(inter->sql_handle);
 				return;
@@ -318,19 +318,19 @@ static void inter_accinfo2(bool success, int map_fd, int u_fd, int u_aid, int ac
 	} else {
 		while ( SQL_SUCCESS == SQL->NextRow(inter->sql_handle) ) {
 			char *data;
-			int char_id, class;
+			int char_id, class_;
 			int char_num, base_level, job_level, online;
 			char name[NAME_LENGTH];
 
 			SQL->GetData(inter->sql_handle, 0, &data, NULL); char_id = atoi(data);
 			SQL->GetData(inter->sql_handle, 1, &data, NULL); safestrncpy(name, data, sizeof(name));
 			SQL->GetData(inter->sql_handle, 2, &data, NULL); char_num = atoi(data);
-			SQL->GetData(inter->sql_handle, 3, &data, NULL); class = atoi(data);
+			SQL->GetData(inter->sql_handle, 3, &data, NULL); class_ = atoi(data);
 			SQL->GetData(inter->sql_handle, 4, &data, NULL); base_level = atoi(data);
 			SQL->GetData(inter->sql_handle, 5, &data, NULL); job_level = atoi(data);
 			SQL->GetData(inter->sql_handle, 6, &data, NULL); online = atoi(data);
 
-			inter->msg_to_fd(map_fd, u_fd, u_aid, "[Slot/CID: %d/%d] %s | %s | Level: %d/%d | %s", char_num, char_id, name, inter->job_name(class), base_level, job_level, online?"On":"Off");
+			inter->msg_to_fd(map_fd, u_fd, u_aid, "[Slot/CID: %d/%d] %s | %s | Level: %d/%d | %s", char_num, char_id, name, inter->job_name(class_), base_level, job_level, online?"On":"Off");
 		}
 	}
 	SQL->FreeResult(inter->sql_handle);

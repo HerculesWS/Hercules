@@ -101,8 +101,8 @@ enum inventory_table_type {
 struct char_auth_node {
 	int account_id;
 	int char_id;
-	uint32 login_id1;
-	uint32 login_id2;
+	int32 login_id1;
+	int32 login_id2;
 	uint32 ip;
 	int sex;
 	time_t expiration_time; // # of seconds 1/1/1970 (timestamp): Validity limit of the account (0 = unlimited)
@@ -291,7 +291,7 @@ struct char_interface {
 	int (*check_connect_login_server) (int tid, int64 tick, int id, intptr_t data);
 	int (*online_data_cleanup_sub) (union DBKey key, struct DBData *data, va_list ap);
 	int (*online_data_cleanup) (int tid, int64 tick, int id, intptr_t data);
-	void (*change_sex_sub) (int sex, int acc, int char_id, int class, int guild_id);
+	void (*change_sex_sub) (int sex, int acc, int char_id, int class_, int guild_id);
 	void (*online_char_destroy) (struct online_char_data *character);
 	int (*online_char_destroy_sub) (union DBKey key, struct DBData *data, va_list ap);
 	void (*ensure_online_char_data) (struct online_char_data *character);

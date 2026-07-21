@@ -705,7 +705,7 @@ static void intif_parse_RecvClanMemberAction(int fd)
 
 	c->received = true;
 	if (c->req_count_tid != INVALID_TIMER) {
-		timer->delete(c->req_count_tid, clan->request_membercount);
+		timer->delete_(c->req_count_tid, clan->request_membercount);
 		c->req_count_tid = INVALID_TIMER;
 	}
 
@@ -713,7 +713,7 @@ static void intif_parse_RecvClanMemberAction(int fd)
 	switch (c->req_state) {
 	case CLAN_REQ_AFTER_KICK:
 		if (c->req_kick_tid != INVALID_TIMER) {
-			timer->delete(c->req_kick_tid, clan->request_kickoffline);
+			timer->delete_(c->req_kick_tid, clan->request_kickoffline);
 			c->req_kick_tid = INVALID_TIMER;
 		}
 		break;
@@ -805,7 +805,7 @@ static int intif_guild_leave(int guild_id, int account_id, int char_id, int flag
 }
 
 //Update request / Lv online status of the guild members
-static int intif_guild_memberinfoshort(int guild_id, int account_id, int char_id, int online, int lv, int class)
+static int intif_guild_memberinfoshort(int guild_id, int account_id, int char_id, int online, int lv, int class_)
 {
 	if (intif->CheckForCharServer())
 		return 0;
@@ -816,7 +816,7 @@ static int intif_guild_memberinfoshort(int guild_id, int account_id, int char_id
 	WFIFOL(inter_fd,10) = char_id;
 	WFIFOB(inter_fd,14) = online;
 	WFIFOL(inter_fd,15) = lv;
-	WFIFOL(inter_fd,19) = class;
+	WFIFOL(inter_fd,19) = class_;
 	WFIFOSET(inter_fd,23);
 	return 0;
 }
@@ -1313,7 +1313,7 @@ static void intif_parse_GuildCreated(int fd)
 // ACK guild infos
 static void intif_parse_GuildInfoEmblem(int fd)
 {
-	struct PACKET_CHARMAP_GUILD_INFO_EMBLEM *p = RFIFOP(fd, 0);
+	const struct PACKET_CHARMAP_GUILD_INFO_EMBLEM *p = RFIFOP(fd, 0);
 
 	RFIFO_CHUNKED_INIT(p, p->packetLength - sizeof(struct PACKET_CHARMAP_GUILD_INFO_EMBLEM), intif->emblem_tmp);
 
@@ -1336,15 +1336,19 @@ static void intif_parse_GuildInfoEmblem(int fd)
 static void intif_parse_GuildInfo(int fd)
 {
 	if (RFIFOW(fd, 2) == sizeof(struct PACKET_CHARMAP_GUILD_INFO_EMPTY)) {
-		struct PACKET_CHARMAP_GUILD_INFO_EMPTY *empty = RFIFOP(fd, 0);
+		const struct PACKET_CHARMAP_GUILD_INFO_EMPTY *empty = RFIFOP(fd, 0);
 		ShowWarning("intif: guild noinfo %d\n", empty->guild_id);
 		guild->recv_noinfo(empty->guild_id);
 		return;
 	}
-	struct PACKET_CHARMAP_GUILD_INFO *p = RFIFOP(fd, 0);
+	const struct PACKET_CHARMAP_GUILD_INFO *p = RFIFOP(fd, 0);
 	if (p->packetLength != sizeof(struct PACKET_CHARMAP_GUILD_INFO))
 		ShowError("intif: guild info: data size mismatch - Gid: %d recv size: %d Expected size: %"PRIuS"\n",
 		          p->g.guild_id, p->packetLength, sizeof(struct PACKET_CHARMAP_GUILD_INFO));
+#ifdef _MSC_VER
+#pragma warning (push)
+#pragma warning (disable: 4366)
+#endif
 	if (intif->emblem_tmp_done == false ||
 	    intif->emblem_tmp_guild_id != p->g.guild_id ||
 	    intif->emblem_tmp_emblem_id != p->g.emblem_id) {
@@ -1352,6 +1356,9 @@ static void intif_parse_GuildInfo(int fd)
 	} else {
 		guild->recv_info(&p->g, &intif->emblem_tmp);
 	}
+#ifdef _MSC_VER
+#pragma warning (pop)
+#endif
 	intif->emblem_tmp_done = false;
 	intif->emblem_tmp_guild_id = 0;
 	intif->emblem_tmp_emblem_id = 0;
@@ -1449,7 +1456,7 @@ static void intif_parse_GuildMemberInfoChanged(int fd)
 		case GMI_HAIR:       g->member[idx].hair       = RFIFOW(fd,18); break;
 		case GMI_HAIR_COLOR: g->member[idx].hair_color = RFIFOW(fd,18); break;
 		case GMI_GENDER:     g->member[idx].gender     = RFIFOW(fd,18); break;
-		case GMI_CLASS:      g->member[idx].class      = RFIFOW(fd,18); break;
+		case GMI_CLASS:      g->member[idx].class_      = RFIFOW(fd,18); break;
 		case GMI_LEVEL:      g->member[idx].lv         = RFIFOW(fd,18); break;
 	}
 }
@@ -1484,7 +1491,7 @@ static void intif_parse_GuildNotice(int fd)
 // ACK change of guild emblem
 static void intif_parse_GuildEmblem(int fd)
 {
-	struct PACKET_CHARMAP_GUILD_EMBLEM *p = RFIFOP(fd, 0);
+	const struct PACKET_CHARMAP_GUILD_EMBLEM *p = RFIFOP(fd, 0);
 
 	// reset tmp emblem fields always for avoid reuse emblem buffer for other things [4144]
 	intif->emblem_tmp_done = false;
@@ -1559,7 +1566,7 @@ static void intif_parse_ChangeNameOk(int fd)
 {
 	struct map_session_data *sd = NULL;
 	if((sd=map->id2sd(RFIFOL(fd,2)))==NULL ||
-		sd->status.char_id != RFIFOL(fd,6))
+		sd->status.char_id != RFIFOSL(fd,6))
 		return;
 
 	switch (RFIFOB(fd,10)) {
@@ -2548,7 +2555,6 @@ static void intif_parse_RequestRodexOpenInbox(int fd)
 #if PACKETVER >= 20170419
 	int64 mail_id = RFIFOQ(fd, 16);
 #endif
-	int i, j;
 
 	sd = map->charid2sd(RFIFOL(fd, 4));
 
@@ -2565,7 +2571,7 @@ static void intif_parse_RequestRodexOpenInbox(int fd)
 	else
 		sd->rodex.total += count;
 
-	if (RFIFOW(fd, 2) - 24 != count * sizeof(struct rodex_message)) {
+	if (RFIFOW(fd, 2) - 24 != count * (int)sizeof(struct rodex_message)) {
 		ShowError("intif_parse_RodexInboxOpenReceived: data size mismatch %d != %"PRIuS"\n", RFIFOW(fd, 2) - 24, count * sizeof(struct rodex_message));
 		return;
 	}
@@ -2573,7 +2579,7 @@ static void intif_parse_RequestRodexOpenInbox(int fd)
 	if (flag == 0 && is_first)
 		VECTOR_CLEAR(sd->rodex.messages);
 
-	for (i = 0, j = 24; i < count; ++i, j += sizeof(struct rodex_message)) {
+	for (int i = 0, j = 24; i < count; ++i, j += sizeof(struct rodex_message)) {
 		struct rodex_message msg = { 0 };
 		VECTOR_ENSURE(sd->rodex.messages, 1, 1);
 		memcpy(&msg, RFIFOP(fd, j), sizeof(struct rodex_message));

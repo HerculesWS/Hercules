@@ -35,7 +35,7 @@ struct inter_elemental_interface {
 	bool (*create) (struct s_elemental *ele);
 	bool (*save) (const struct s_elemental *ele);
 	bool (*load) (int ele_id, int char_id, struct s_elemental *ele);
-	bool (*delete) (int ele_id);
+	bool (*delete_) (int ele_id);
 };
 
 #ifdef HERCULES_CORE

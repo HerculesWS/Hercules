@@ -175,7 +175,7 @@ static void macro_detector_process_answer(struct map_session_data *sd, const cha
 	// Correct answer
 	if (captcha_answer != NULL && strcmp(captcha_answer, cd->captcha_answer) == 0) {
 		// Delete the timer
-		timer->delete(sd->macro_detect.timer, macro->detector_timeout);
+		timer->delete_(sd->macro_detect.timer, macro->detector_timeout);
 
 		// Clear the macro detect data
 		memset(&sd->macro_detect, 0, sizeof(sd->macro_detect));
@@ -216,7 +216,7 @@ static void macro_detector_disconnect(struct map_session_data *sd)
 
 	// Delete the timeout timer
 	if (sd->macro_detect.timer != INVALID_TIMER) {
-		timer->delete(sd->macro_detect.timer, macro->detector_timeout);
+		timer->delete_(sd->macro_detect.timer, macro->detector_timeout);
 		sd->macro_detect.timer = INVALID_TIMER;
 	}
 
@@ -331,13 +331,13 @@ static bool macro_read_captcha_db_libconfig_sub(const struct config_setting_t *i
 		return false;
 	}
 
-	const unsigned long alen = strlen(answer);
+	const size_t alen = strlen(answer);
 	if (alen < 4 || alen > 15) {
 		ShowError("%s: Answer \"%s\" must be between 4~15 chars in len for entry %d in %s\n", __func__, answer, n, source);
 		return false;
 	}
 
-	for (int i = 0; i < alen; ++i) {
+	for (size_t i = 0; i < alen; ++i) {
 		if (strchr(macro_allowed_answer_chars, answer[i]) == NULL) {
 			ShowError("%s: Answer \"%s\" have an invalid character \"%c\" for entry %d in %s\n", __func__, answer, answer[i], n, source);
 			return false;

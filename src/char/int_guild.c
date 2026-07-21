@@ -72,11 +72,9 @@ static int inter_guild_save_timer(int tid, int64 tick, int id, intptr_t data)
 	{
 		if (!g)
 			continue;
-		if( state == 0 && g->guild_id == last_id )
+		if (state == 0 && g->guild_id == last_id) {
 			state++; //Save next guild in the list.
-		else
-		if( state == 1 && g->save_flag&GS_MASK )
-		{
+		} else if(state == 1 && g->save_flag&GS_MASK) {
 			inter_guild->tosql(g, g->save_flag&GS_MASK);
 			g->save_flag &= ~GS_MASK;
 
@@ -264,7 +262,7 @@ static bool inter_guild_tosql(struct guild *g, int flag)
 					"VALUES ('%d','%d','%d','%d','%d','%d','%d','%d','%"PRIu64"','%d','%d','%d','%s')",
 					guild_member_db, g->guild_id, m->account_id, m->char_id,
 					m->hair, m->hair_color, m->gender,
-					m->class, m->lv, m->exp, m->exp_payper, m->online, m->position, esc_name) )
+					m->class_, m->lv, m->exp, m->exp_payper, m->online, m->position, esc_name) )
 					Sql_ShowDebug(inter->sql_handle);
 				if (m->modified&GS_MEMBER_NEW || new_guild == 1)
 				{
@@ -458,7 +456,7 @@ static struct guild *inter_guild_fromsql(int guild_id)
 		SQL->GetData(inter->sql_handle,  2, &data, NULL); m->hair = atoi(data);
 		SQL->GetData(inter->sql_handle,  3, &data, NULL); m->hair_color = atoi(data);
 		SQL->GetData(inter->sql_handle,  4, &data, NULL); m->gender = atoi(data);
-		SQL->GetData(inter->sql_handle,  5, &data, NULL); m->class = atoi(data);
+		SQL->GetData(inter->sql_handle,  5, &data, NULL); m->class_ = atoi(data);
 		SQL->GetData(inter->sql_handle,  6, &data, NULL); m->lv = atoi(data);
 		SQL->GetData(inter->sql_handle,  7, &data, NULL); m->exp = strtoull(data, NULL, 10);
 		SQL->GetData(inter->sql_handle,  8, &data, NULL); m->exp_payper = (unsigned int)atoi(data);
@@ -1116,7 +1114,7 @@ static bool inter_guild_leave(int guild_id, int account_id, int char_id, int fla
 }
 
 // Change member info
-static bool inter_guild_update_member_info_short(int guild_id, int account_id, int char_id, int online, int lv, int class)
+static bool inter_guild_update_member_info_short(int guild_id, int account_id, int char_id, int online, int lv, int class_)
 {
 	// Could speed up by manipulating only guild_member
 	struct guild *g;
@@ -1131,7 +1129,7 @@ static bool inter_guild_update_member_info_short(int guild_id, int account_id, i
 	if (i < g->max_member) {
 		g->member[i].online = online;
 		g->member[i].lv = lv;
-		g->member[i].class = class;
+		g->member[i].class_ = class_;
 		g->member[i].last_login = (uint32)time(NULL);
 		g->member[i].modified = GS_MEMBER_MODIFIED;
 		mapif->guild_memberinfoshort(g, i);
@@ -1232,7 +1230,7 @@ static bool inter_guild_update_basic_info(int guild_id, enum guild_basic_info ty
 	switch (type) {
 		case GBI_EXP:
 			value = *((const int16 *)data);
-			if( value < 0 && abs(value) > g->exp )
+			if( value < 0 && (uint64)abs(value) > g->exp )
 				return 0;
 			g->exp += value;
 			inter_guild->calcinfo(g);
@@ -1360,7 +1358,7 @@ static bool inter_guild_update_member_info(int guild_id, int account_id, int cha
 		}
 		case GMI_CLASS:
 		{
-			g->member[i].class = *(const int16 *)data;
+			g->member[i].class_ = *(const int16 *)data;
 			g->member[i].modified = GS_MEMBER_MODIFIED;
 			mapif->guild_memberinfochanged(guild_id,account_id,char_id,type,data,len);
 			g->save_flag |= GS_MEMBER; //Save new data.

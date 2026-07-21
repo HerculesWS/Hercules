@@ -46,7 +46,7 @@ struct duel_interface {
 
 	/* funcs */
 	//Duel functions // [LuzZza]
-	int (*create) (struct map_session_data* sd, const unsigned int maxpl);
+	unsigned int (*create) (struct map_session_data* sd, const unsigned int maxpl);
 	void (*invite) (const unsigned int did, struct map_session_data* sd, struct map_session_data* target_sd);
 	void (*accept) (const unsigned int did, struct map_session_data* sd);
 	void (*reject) (const unsigned int did, struct map_session_data* sd);

@@ -1044,10 +1044,10 @@ static int skill_get_fixed_cast(int skill_id, int skill_lv)
 #endif
 }
 
-static int skill_tree_get_max(int skill_id, int class)
+static int skill_tree_get_max(int skill_id, int class_)
 {
 	int i;
-	int class_idx = pc->class2idx(class);
+	int class_idx = pc->class2idx(class_);
 
 	ARR_FIND( 0, MAX_SKILL_TREE, i, pc->skill_tree[class_idx][i].id == 0 || pc->skill_tree[class_idx][i].id == skill_id );
 	if( i < MAX_SKILL_TREE && pc->skill_tree[class_idx][i].id == skill_id )
@@ -3427,7 +3427,7 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 					sce->val1 = skill_id; //Update combo-skill
 					sce->val3 = skill_id;
 					if( sce->timer != INVALID_TIMER )
-						timer->delete(sce->timer, status->change_timer);
+						timer->delete_(sce->timer, status->change_timer);
 					sce->timer = timer->add(tick+sce->val4, status->change_timer, src->id, SC_COMBOATTACK);
 					break;
 				}
@@ -4308,14 +4308,14 @@ static int skill_check_condition_mercenary(struct block_list *bl, int skill_id, 
 
 		int mhp = skill->get_mhp(skill_id, lv);
 
-		if (mhp > 0 && get_percentage(st->hp, st->max_hp) > mhp) {
+		if (mhp > 0 && (int)get_percentage(st->hp, st->max_hp) > mhp) {
 			clif->skill_fail(sd, skill_id, USESKILL_FAIL_HP_INSUFFICIENT, 0, 0);
 			return 0;
 		}
 
 		int msp = skill->get_msp(skill_id, lv);
 
-		if (msp > 0 && get_percentage(st->sp, st->max_sp) > msp) {
+		if (msp > 0 && (int)get_percentage(st->sp, st->max_sp) > msp) {
 			clif->skill_fail(sd, skill_id, USESKILL_FAIL_SP_INSUFFICIENT, 0, 0);
 			return 0;
 		}
@@ -4706,7 +4706,7 @@ static int skill_cleartimerskill(struct block_list *src)
 					if(skill->cleartimerskill_exception(ud->skilltimerskill[i]->skill_id))
 						continue;
 			}
-			timer->delete(ud->skilltimerskill[i]->timer, skill->timerskill);
+			timer->delete_(ud->skilltimerskill[i]->timer, skill->timerskill);
 			ers_free(skill->timer_ers, ud->skilltimerskill[i]);
 			ud->skilltimerskill[i]=NULL;
 		}
@@ -5833,8 +5833,11 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 					int spell[SC_SPELLBOOK7-SC_SPELLBOOK1 + 1];
 					int cooldown;
 
-					for(i = SC_SPELLBOOK7; i >= SC_SPELLBOOK1; i--) // List all available spell to be released
-					if( sc->data[i] ) spell[s++] = i;
+					// List all available spell to be released
+					for (i = SC_SPELLBOOK7; i >= SC_SPELLBOOK1; i--) {
+						if (sc->data[i])
+							spell[s++] = i;
+					}
 
 					if ( s == 0 )
 						break;
@@ -6867,7 +6870,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 				x1 = sd->bl.x + range;
 				y1 = sd->bl.y + range;
 
-				elemental->delete(sd->ed,0);
+				elemental->delete_(sd->ed,0);
 
 				if(!skill->check_unit_range(src,src->x,src->y,skill_id,skill_lv))
 					ret = skill->castend_pos2(src,src->x,src->y,skill_id,skill_lv,tick,flag);
@@ -10237,7 +10240,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 			break;
 		case GC_HALLUCINATIONWALK:
 			{
-				int heal = status_get_max_hp(bl) * ( 18 - 2 * skill_lv ) / 100;
+				unsigned int heal = status_get_max_hp(bl) * ( 18 - 2 * skill_lv ) / 100;
 				if( status_get_hp(bl) < heal ) { // if you haven't enough HP skill fails.
 					if (sd) clif->skill_fail(sd, skill_id, USESKILL_FAIL_HP_INSUFFICIENT, 0, 0);
 					break;
@@ -10864,7 +10867,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 				for(i=0; i<SC_MAX; i++)
 				{
 					if (!tsc->data[i])
-					continue;
+						continue;
 					switch(i){
 						case SC_POISON:
 						case SC_BLIND:
@@ -11324,7 +11327,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 
 				// Remove previous elemental first.
 				if( sd->ed )
-					elemental->delete(sd->ed,0);
+					elemental->delete_(sd->ed,0);
 
 				// Summoning the new one.
 				if( !elemental->create(sd,elemental_class,skill->get_time(skill_id,skill_lv)) ) {
@@ -11342,7 +11345,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 				if( !sd->ed ) break;
 
 				if( skill_lv == 4 ) {// At level 4 delete elementals.
-					elemental->delete(sd->ed, 0);
+					elemental->delete_(sd->ed, 0);
 					break;
 				}
 				switch( skill_lv ) {// Select mode based on skill level used.
@@ -11581,7 +11584,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 					summon_md->master_id = src->id;
 					summon_md->special_state.ai = AI_ZANZOU;
 					if( summon_md->deletetimer != INVALID_TIMER )
-						timer->delete(summon_md->deletetimer, mob->timer_delete);
+						timer->delete_(summon_md->deletetimer, mob->timer_delete);
 					summon_md->deletetimer = timer->add(timer->gettick() + skill->get_time(skill_id, skill_lv), mob->timer_delete, summon_md->bl.id, 0);
 					mob->spawn( summon_md );
 					pc->setinvincibletimer(sd,500);// unlock target lock
@@ -11770,7 +11773,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 				if (summon_md != NULL) {
 					summon_md->master_id = src->id;
 					if (summon_md->deletetimer != INVALID_TIMER)
-						timer->delete(summon_md->deletetimer, mob->timer_delete);
+						timer->delete_(summon_md->deletetimer, mob->timer_delete);
 					summon_md->deletetimer = timer->add(timer->gettick() + skill->get_time(skill_id, skill_lv), mob->timer_delete, summon_md->bl.id, 0);
 					mob->spawn(summon_md); //Now it is ready for spawning.
 					sc_start4(src, &summon_md->bl, SC_MODECHANGE, 100, 1, 0, MD_CANATTACK | MD_AGGRESSIVE, 0, 60000, skill_id);
@@ -12770,7 +12773,7 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 					md->master_id = src->id;
 					md->special_state.ai = (skill_id == AM_SPHEREMINE) ? AI_SPHERE : AI_FLORA;
 					if( md->deletetimer != INVALID_TIMER )
-						timer->delete(md->deletetimer, mob->timer_delete);
+						timer->delete_(md->deletetimer, mob->timer_delete);
 					md->deletetimer = timer->add(timer->gettick() + skill->get_time(skill_id,skill_lv), mob->timer_delete, md->bl.id, 0);
 					mob->spawn (md); //Now it is ready for spawning.
 				}
@@ -12890,7 +12893,7 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 					if ((i = skill->get_time(skill_id, skill_lv)) > 0)
 					{
 						if( md->deletetimer != INVALID_TIMER )
-							timer->delete(md->deletetimer, mob->timer_delete);
+							timer->delete_(md->deletetimer, mob->timer_delete);
 						md->deletetimer = timer->add(tick + i, mob->timer_delete, md->bl.id, 0);
 					}
 					mob->spawn (md);
@@ -13034,7 +13037,7 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 					md->master_id = src->id;
 					md->special_state.ai = AI_FLORA;
 					if( md->deletetimer != INVALID_TIMER )
-						timer->delete(md->deletetimer, mob->timer_delete);
+						timer->delete_(md->deletetimer, mob->timer_delete);
 					md->deletetimer = timer->add(timer->gettick() + skill->get_time(skill_id, skill_lv), mob->timer_delete, md->bl.id, 0);
 					mob->spawn( md );
 				}
@@ -13119,7 +13122,7 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 				// FIXME: Code after this point assumes that the group has one and only one unit, regardless of what the skill_unit_db says.
 				if (ud->skillunit[i]->unit.count != 1)
 					continue;
-				if (distance_xy(x, y, ud->skillunit[i]->unit.data[0].bl.x, ud->skillunit[i]->unit.data[0].bl.y) < r) {
+				if (r >= 0 && distance_xy(x, y, ud->skillunit[i]->unit.data[0].bl.x, ud->skillunit[i]->unit.data[0].bl.y) < (unsigned int)r) {
 					switch (skill_lv) {
 						case 3:
 							ud->skillunit[i]->unit_id = UNT_FIRE_EXPANSION_SMOKE_POWDER;
@@ -14069,7 +14072,7 @@ static int skill_unit_onplace(struct skill_unit *src, struct block_list *bl, int
 				// eA style:
 				// Readjust timers since the effect will not last long.
 				sce->val4 = 0;
-				timer->delete(sce->timer, status->change_timer);
+				timer->delete_(sce->timer, status->change_timer);
 				sce->timer = timer->add(tick+sg->limit, status->change_timer, bl->id, type);
 			} else if (!battle_config.song_timer_reset) {
 				// Aegis style:
@@ -14077,7 +14080,7 @@ static int skill_unit_onplace(struct skill_unit *src, struct block_list *bl, int
 				const struct TimerData *td = timer->get(sce->timer);
 				if (DIFF_TICK32(td->tick, timer->gettick()) < sg->interval) {
 					// Update with new values as the current one will vanish soon
-					timer->delete(sce->timer, status->change_timer);
+					timer->delete_(sce->timer, status->change_timer);
 					sce->timer = timer->add(tick+sg->limit, status->change_timer, bl->id, type);
 					sce->val1 = sg->skill_lv; // Why are we storing skill_lv as val1?
 					sce->val2 = sg->val1;
@@ -14567,7 +14570,7 @@ static int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *b
 				const struct TimerData *td = timer->get(tsc->data[type]->timer);
 				if (DIFF_TICK32(td->tick, timer->gettick()) < sg->interval) {
 					// Update with new values as the current one will vanish
-					timer->delete(tsc->data[type]->timer, status->change_timer);
+					timer->delete_(tsc->data[type]->timer, status->change_timer);
 					tsc->data[type]->timer = timer->add(tick+sg->limit, status->change_timer, bl->id, type);
 					tsc->data[type]->val1 = sg->skill_lv;
 					tsc->data[type]->val2 = sg->val1;
@@ -15187,7 +15190,7 @@ static int skill_unit_onleft(uint16 skill_id, struct block_list *bl, int64 tick)
 			if ((battle_config.song_timer_reset && sce) // eAthena style: update everytime
 			  || (!battle_config.song_timer_reset && sce && sce->val4 != 1) // Aegis style: update only when it was not a reduced effect
 			) {
-				timer->delete(sce->timer, status->change_timer);
+				timer->delete_(sce->timer, status->change_timer);
 				//NOTE: It'd be nice if we could get the skill_lv for a more accurate extra time, but alas...
 				//not possible on our current implementation.
 				sce->val4 = 1; //Store the fact that this is a "reduced" duration effect.
@@ -15202,7 +15205,7 @@ static int skill_unit_onleft(uint16 skill_id, struct block_list *bl, int64 tick)
 					if (bl->type == BL_PC) //Players get blind ended immediately, others have it still for 30 secs. [Skotlex]
 						status_change_end(bl, SC_BLIND, INVALID_TIMER);
 					else {
-						timer->delete(sce->timer, status->change_timer);
+						timer->delete_(sce->timer, status->change_timer);
 						sce->timer = timer->add(30000+tick, status->change_timer, bl->id, SC_BLIND);
 					}
 				}
@@ -15344,62 +15347,59 @@ static int skill_check_condition_char_sub(struct block_list *bl, va_list ap)
 		if (tsd->status.party_id == sd->status.party_id && (tsd->job & MAPID_THIRDMASK) == MAPID_MINSTRELWANDERER)
 			p_sd[(*c)++] = tsd->bl.id;
 		return 1;
-	} else {
+	}
 
-		switch(skill_id) {
-			case PR_BENEDICTIO:
-			{
-				enum unit_dir dir = map->calc_dir(&sd->bl, tsd->bl.x, tsd->bl.y);
-				dir = (unit->getdir(&sd->bl) + dir) % UNIT_DIR_MAX; //This adjusts dir to account for the direction the sd is facing.
-				if ((tsd->job & MAPID_BASEMASK) == MAPID_ACOLYTE && (dir == UNIT_DIR_WEST || dir == UNIT_DIR_EAST) //Must be standing to the left/right of Priest.
-				    && sd->status.sp >= 10) {
-					p_sd[(*c)++]=tsd->bl.id;
-				}
-				return 1;
+	switch(skill_id) {
+		case PR_BENEDICTIO:
+		{
+			enum unit_dir dir = map->calc_dir(&sd->bl, tsd->bl.x, tsd->bl.y);
+			dir = (unit->getdir(&sd->bl) + dir) % UNIT_DIR_MAX; //This adjusts dir to account for the direction the sd is facing.
+			if ((tsd->job & MAPID_BASEMASK) == MAPID_ACOLYTE && (dir == UNIT_DIR_WEST || dir == UNIT_DIR_EAST) //Must be standing to the left/right of Priest.
+				&& sd->status.sp >= 10) {
+				p_sd[(*c)++]=tsd->bl.id;
 			}
-			case AB_ADORAMUS:
-			// Adoramus does not consume Blue Gemstone when there is at least 1 Priest class next to the caster
-				if ((tsd->job & MAPID_UPPERMASK) == MAPID_PRIEST)
-					p_sd[(*c)++] = tsd->bl.id;
-				return 1;
-			case WL_COMET:
-			// Comet does not consume Red Gemstones when there is at least 1 Warlock class next to the caster
-				if ((tsd->job & MAPID_THIRDMASK) == MAPID_WARLOCK)
-					p_sd[(*c)++] = tsd->bl.id;
-				return 1;
-			case LG_RAYOFGENESIS:
-				if (tsd->status.party_id == sd->status.party_id && (tsd->job & MAPID_THIRDMASK) == MAPID_ROYAL_GUARD && tsd->sc.data[SC_BANDING])
-					p_sd[(*c)++] = tsd->bl.id;
-				return 1;
-			default: //Warning: Assuming Ensemble Dance/Songs for code speed. [Skotlex]
-				{
-					if(pc_issit(tsd) || !unit->can_move(&tsd->bl))
-						return 0;
+			return 1;
+		}
+		case AB_ADORAMUS:
+		// Adoramus does not consume Blue Gemstone when there is at least 1 Priest class next to the caster
+			if ((tsd->job & MAPID_UPPERMASK) == MAPID_PRIEST)
+				p_sd[(*c)++] = tsd->bl.id;
+			return 1;
+		case WL_COMET:
+		// Comet does not consume Red Gemstones when there is at least 1 Warlock class next to the caster
+			if ((tsd->job & MAPID_THIRDMASK) == MAPID_WARLOCK)
+				p_sd[(*c)++] = tsd->bl.id;
+			return 1;
+		case LG_RAYOFGENESIS:
+			if (tsd->status.party_id == sd->status.party_id && (tsd->job & MAPID_THIRDMASK) == MAPID_ROYAL_GUARD && tsd->sc.data[SC_BANDING])
+				p_sd[(*c)++] = tsd->bl.id;
+			return 1;
+		default: //Warning: Assuming Ensemble Dance/Songs for code speed. [Skotlex]
+			{
+				if(pc_issit(tsd) || !unit->can_move(&tsd->bl))
+					return 0;
 
-					uint16 skill_lv = pc->checkskill(tsd, skill_id);
+				uint16 skill_lv = pc->checkskill(tsd, skill_id);
 #ifdef RENEWAL // In Renewal, partner also gets the requirements consumed, so we must check it
-					if (skill->check_condition_castbegin(tsd, skill_id, skill_lv) == 0)
-						return 0;
+				if (skill->check_condition_castbegin(tsd, skill_id, skill_lv) == 0)
+					return 0;
 #endif
 
-					if (sd->status.sex != tsd->status.sex &&
-							(tsd->job & MAPID_UPPERMASK) == MAPID_BARDDANCER &&
-							skill_lv > 0 &&
-							(tsd->weapontype1==W_MUSICAL || tsd->weapontype1==W_WHIP) &&
-							sd->status.party_id && tsd->status.party_id &&
-							sd->status.party_id == tsd->status.party_id &&
-							!tsd->sc.data[SC_DANCING])
-					{
-						p_sd[(*c)++]=tsd->bl.id;
-						return skill_lv;
-					} else {
-						return 0;
-					}
+				if (sd->status.sex != tsd->status.sex &&
+						(tsd->job & MAPID_UPPERMASK) == MAPID_BARDDANCER &&
+						skill_lv > 0 &&
+						(tsd->weapontype1==W_MUSICAL || tsd->weapontype1==W_WHIP) &&
+						sd->status.party_id && tsd->status.party_id &&
+						sd->status.party_id == tsd->status.party_id &&
+						!tsd->sc.data[SC_DANCING])
+				{
+					p_sd[(*c)++]=tsd->bl.id;
+					return skill_lv;
 				}
-				break;
-		}
-
+			}
+			break;
 	}
+
 	return 0;
 }
 
@@ -15490,7 +15490,7 @@ static int skill_check_condition_mob_master_sub(struct block_list *bl, va_list a
 	md = BL_UCCAST(BL_MOB, bl);
 
 	if( md->master_id != src_id
-	 || md->special_state.ai != (skill_id == AM_SPHEREMINE?AI_SPHERE:skill_id == KO_ZANZOU?AI_ZANZOU:skill_id == MH_SUMMON_LEGION?AI_ATTACK:AI_FLORA) )
+	 || md->special_state.ai != (unsigned int)(skill_id == AM_SPHEREMINE?AI_SPHERE:skill_id == KO_ZANZOU?AI_ZANZOU:skill_id == MH_SUMMON_LEGION?AI_ATTACK:AI_FLORA) )
 		return 0; //Non alchemist summoned mobs have nothing to do here.
 	if(md->class_==mob_class)
 		(*c)++;
@@ -16368,7 +16368,7 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 		case KO_HYOUHU_HUBUKI:
 		case KO_KAZEHU_SEIRAN:
 		case KO_DOHU_KOUKAI:
-			if (sd->charm_type == skill->get_ele(skill_id, skill_lv) && sd->charm_count >= MAX_SPIRITCHARM) {
+			if ((int)sd->charm_type == skill->get_ele(skill_id, skill_lv) && sd->charm_count >= MAX_SPIRITCHARM) {
 				clif->skill_fail(sd, skill_id, USESKILL_FAIL_SUMMON, 0, 0);
 				return 0;
 			}
@@ -16495,7 +16495,7 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 			}
 			break;
 		case ST_RECOV_WEIGHT_RATE:
-			if (pc_overhealweightrate(sd) <= 100 && sd->weight * 100 / sd->max_weight >= pc_overhealweightrate(sd)) {
+			if (pc_overhealweightrate(sd) <= 100 && sd->weight * 100 / sd->max_weight >= (unsigned int)pc_overhealweightrate(sd)) {
 				clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
 				return 0;
 			}
@@ -16609,14 +16609,14 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 	}
 	PRAGMA_GCC46(GCC diagnostic pop)
 
-	if(require.mhp > 0 && get_percentage(st->hp, st->max_hp) > require.mhp) {
+	if(require.mhp > 0 && get_percentage(st->hp, st->max_hp) > (unsigned int)require.mhp) {
 		//mhp is the max-hp-requirement, that is,
 		//you must have this % or less of HP to cast it.
 		clif->skill_fail(sd, skill_id, USESKILL_FAIL_HP_INSUFFICIENT, 0, 0);
 		return 0;
 	}
 
-	if (require.msp > 0 && get_percentage(st->sp, st->max_sp) > require.msp) {
+	if (require.msp > 0 && get_percentage(st->sp, st->max_sp) > (unsigned int)require.msp) {
 		clif->skill_fail(sd, skill_id, USESKILL_FAIL_SP_INSUFFICIENT, 0, 0);
 		return 0;
 	}
@@ -18134,7 +18134,7 @@ static void skill_weaponrefine(struct map_session_data *sd, int idx)
 			per = refine->get_refine_chance(ditem->wlv, (int)item->refine, REFINE_CHANCE_TYPE_NORMAL) * 10;
 
 			// Aegis leaked formula. [malufett]
-			if (sd->status.class == JOB_MECHANIC_T)
+			if (sd->status.class_ == JOB_MECHANIC_T)
 				per += 100;
 			else
 				per += 5 * (sd->status.job_level - 50);
@@ -19695,7 +19695,7 @@ static int skill_unit_timer_sub(union DBKey key, struct DBData *data, va_list ap
 			case UNT_FEINTBOMB: {
 				struct block_list *src = map->id2bl(group->src_id);
 				if( src ) {
-					map->foreachinrange(skill->area_sub, &su->bl, su->range, skill->splash_target(src), src, SC_FEINTBOMB, group->skill_lv, tick, BCT_ENEMY|SD_ANIMATION|1, skill->castend_damage_id);
+					map->foreachinrange(skill->area_sub, &su->bl, su->range, skill->splash_target(src), src, SC_FEINTBOMB, group->skill_lv, tick, (unsigned int)BCT_ENEMY | (unsigned int)SD_ANIMATION | 1, skill->castend_damage_id); // FIXME: we shouldn't be mixing different enums for bit fields
 					status_change_end(src, SC__FEINTBOMB_MASTER, INVALID_TIMER);
 				}
 				skill->delunit(su);
@@ -20109,7 +20109,8 @@ static int skill_can_produce_mix(struct map_session_data *sd, int nameid, int tr
 static int skill_produce_mix(struct map_session_data *sd, uint16 skill_id, int nameid, int slot1, int slot2, int slot3, int qty)
 {
 	int slot[3];
-	int i,sc,ele,idx,equip,wlv,make_per = 0,flag = 0,skill_lv = 0;
+	int i,sc,ele,idx,equip,make_per = 0,flag = 0,skill_lv = 0;
+	int wlv = 0; // Consider weapon level 0 until actually a weapon is picked later in code
 	int num = -1; // exclude the recipe
 	struct status_data *st;
 	struct item_data* data;
@@ -20872,7 +20873,7 @@ static int skill_magicdecoy(struct map_session_data *sd, int nameid)
 		md->master_id = sd->bl.id;
 		md->special_state.ai = AI_FLORA;
 		if( md->deletetimer != INVALID_TIMER )
-			timer->delete(md->deletetimer, mob->timer_delete);
+			timer->delete_(md->deletetimer, mob->timer_delete);
 		md->deletetimer = timer->add(timer->gettick() + skill->get_time(NC_MAGICDECOY,skill_id), mob->timer_delete, md->bl.id, 0);
 		mob->spawn(md);
 		md->status.matk_min = md->status.matk_max = 250 + (50 * skill_id);
@@ -21777,7 +21778,7 @@ static void skill_cooldown_save(struct map_session_data *sd)
 
 		cd->entry[i]->duration = DIFF_TICK32(cd->entry[i]->started + cd->entry[i]->duration, now);
 		if (cd->entry[i]->timer != INVALID_TIMER) {
-			timer->delete(cd->entry[i]->timer, skill->blockpc_end);
+			timer->delete_(cd->entry[i]->timer, skill->blockpc_end);
 			cd->entry[i]->timer = INVALID_TIMER;
 		}
 	}

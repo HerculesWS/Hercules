@@ -60,7 +60,7 @@ struct jsonwriter_interface {
 	char* (*get_string) (const JsonW *parent);
 	char* (*get_formatted_string) (const JsonW *parent);
 	void (*free) (char *ptr);
-	void (*delete) (JsonW *ptr);
+	void (*delete_) (JsonW *ptr);
 };
 
 #ifdef HERCULES_CORE

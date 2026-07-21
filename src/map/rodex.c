@@ -101,7 +101,7 @@ static void rodex_add_item(struct map_session_data *sd, int16 idx, int16 amount)
 	}
 
 	bool is_new = true;
-	int i;
+	int i = RODEX_MAX_ITEM;
 
 	// stackable item, try to find it in the current list
 	if (itemdb->isstackable(inv_item->nameid) == 1) {
@@ -206,8 +206,8 @@ static void rodex_remove_item(struct map_session_data *sd, int16 idx, int16 amou
 /// @param name : The name of the character to check
 /// @param base_level : Reference to return the character base level, if he exists
 /// @param char_id : Reference to return the character id, if he exists
-/// @param class : Reference to return the character class id, if he exists
-static void rodex_check_player(struct map_session_data *sd, const char *name, int *base_level, int *char_id, int *class)
+/// @param class_ : Reference to return the character class id, if he exists
+static void rodex_check_player(struct map_session_data *sd, const char *name, int *base_level, int *char_id, int *class_)
 {
 	intif->rodex_checkname(sd, name);
 }

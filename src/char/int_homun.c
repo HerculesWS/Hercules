@@ -226,14 +226,13 @@ static bool inter_homunculus_rename(const char *name)
 
 	nullpo_ret(name);
 	// Check Authorized letters/symbols in the name of the homun
-	if( char_name_option == 1 )
-	{// only letters/symbols in char_name_letters are authorized
+	if (char_name_option == 1) {
+		// only letters/symbols in char_name_letters are authorized
 		for( i = 0; i < NAME_LENGTH && name[i]; i++ )
 			if( strchr(char_name_letters, name[i]) == NULL )
 				return false;
-	} else
-	if( char_name_option == 2 )
-	{// letters/symbols in char_name_letters are forbidden
+	} else if (char_name_option == 2) {
+		// letters/symbols in char_name_letters are forbidden
 		for( i = 0; i < NAME_LENGTH && name[i]; i++ )
 			if( strchr(char_name_letters, name[i]) != NULL )
 				return false;
@@ -272,6 +271,6 @@ void inter_homunculus_defaults(void)
 	inter_homunculus->create = inter_homunculus_create;
 	inter_homunculus->save = inter_homunculus_save;
 	inter_homunculus->load = inter_homunculus_load;
-	inter_homunculus->delete = inter_homunculus_delete;
+	inter_homunculus->delete_ = inter_homunculus_delete;
 	inter_homunculus->rename = inter_homunculus_rename;
 }

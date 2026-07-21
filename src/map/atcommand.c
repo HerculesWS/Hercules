@@ -662,7 +662,7 @@ ACMD(who)
 					if (pc_get_group_id(pl_sd) > 0) // Player title, if exists
 						StrBuf->Printf(&buf, msg_fd(fd, MSGTBL_WHO_TITLE_FORMAT), pcg->get_name(pl_sd->group)); // "(%s) "
 					StrBuf->Printf(&buf, msg_fd(fd, MSGTBL_WHO_LEVEL_JOB_FORMAT), pl_sd->status.base_level, pl_sd->status.job_level,
-									 pc->job_name(pl_sd->status.class)); // "| Lv:%d/%d | Job: %s"
+									 pc->job_name(pl_sd->status.class_)); // "| Lv:%d/%d | Job: %s"
 					break;
 				}
 				case 3: {
@@ -771,7 +771,7 @@ ACMD(whogm)
 
 		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_WHOGM_BLEVEL_JLEVEL), // BLvl: %d | Job: %s (Lvl: %d)
 				pl_sd->status.base_level,
-				pc->job_name(pl_sd->status.class), pl_sd->status.job_level);
+				pc->job_name(pl_sd->status.class_), pl_sd->status.job_level);
 		clif->message(fd, atcmd_output);
 
 		p = party->search(pl_sd->status.party_id);
@@ -889,7 +889,7 @@ ACMD(storage)
 		return false;
 	}
 
-	struct storage_settings *stst = storage->get_settings(storage_id);
+	const struct storage_settings *stst = storage->get_settings(storage_id);
 	if (stst == NULL) {
 		clif->message(fd, msg_fd(fd, MSGTBL_STORAGE_INVALID));
 		return false;
@@ -1626,7 +1626,7 @@ static int atcommand_pvpoff_sub(struct block_list *bl, va_list ap)
 
 	clif->pvpset(sd, 0, 0, 2);
 	if (sd->pvp_timer != INVALID_TIMER) {
-		timer->delete(sd->pvp_timer, pc->calc_pvprank_timer);
+		timer->delete_(sd->pvp_timer, pc->calc_pvprank_timer);
 		sd->pvp_timer = INVALID_TIMER;
 	}
 	return 0;
@@ -3031,7 +3031,7 @@ ACMD(petrename)
 	int i;
 
 	ARR_FIND(0, sd->status.inventorySize, i, sd->status.inventory[i].card[0] == CARD0_PET
-		 && pd->pet.pet_id == MakeDWord(sd->status.inventory[i].card[1], sd->status.inventory[i].card[2]));
+		 && pd->pet.pet_id == (int)MakeDWord(sd->status.inventory[i].card[1], sd->status.inventory[i].card[2]));
 
 	if (i != sd->status.inventorySize)
 		sd->status.inventory[i].card[3] = pet->get_card4_value(pd->pet.rename_flag, pd->pet.intimate);
@@ -3611,30 +3611,27 @@ ACMD(guild)
 
 ACMD(breakguild)
 {
-	if (sd->status.guild_id) { // Check if the player has a guild
-		struct guild *g = sd->guild; // Search the guild
-		if (g) { // Check if guild was found
-			if (sd->state.gmaster_flag) { // Check if player is guild master
-				int ret = 0;
-				ret = guild->dobreak(sd, g->name); // Break guild
-				if (ret) { // Check if anything went wrong
-					return true; // Guild was broken
-				} else {
-					return false; // Something went wrong
-				}
-			} else { // Not guild master
-				clif->message(fd, msg_fd(fd, MSGTBL_CHANGEGM_GM_REQUIRED)); // You need to be a Guild Master to use this command.
-				return false;
-			}
-		} else { // Guild was not found. HOW?
-			clif->message(fd, msg_fd(fd, MSGTBL_NOT_IN_A_GUILD2)); // You are not in a guild.
-			return false;
-		}
-	} else { // Player does not have a guild
+	if (sd->status.guild_id == 0) {
+		// Player does not have a guild
 		clif->message(fd, msg_fd(fd, MSGTBL_NOT_IN_A_GUILD2)); // You are not in a guild.
 		return false;
 	}
-	return true;
+	struct guild *g = sd->guild; // Search the guild
+	if (g == NULL) {
+		// Guild was not found. HOW?
+		clif->message(fd, msg_fd(fd, MSGTBL_NOT_IN_A_GUILD2)); // You are not in a guild.
+		return false;
+	}
+	if (sd->state.gmaster_flag == 0) {
+		// Not guild master
+		clif->message(fd, msg_fd(fd, MSGTBL_CHANGEGM_GM_REQUIRED)); // You need to be a Guild Master to use this command.
+		return false;
+	}
+	int ret = guild->dobreak(sd, g->name); // Break guild
+	if (ret == 0) {
+		return false; // Something went wrong
+	}
+	return true; // Guild was broken
 }
 
 /*==========================================
@@ -4150,7 +4147,7 @@ ACMD(mapinfo)
 	if (map->list[m_id].flag.town != 0)
 		clif->message(fd, msg_fd(fd, MSGTBL_MAPINFO_TOWN_MAP)); // Town Map
 
-	if (battle_config.autotrade_mapflag == map->list[m_id].flag.autotrade)
+	if ((unsigned int)battle_config.autotrade_mapflag == map->list[m_id].flag.autotrade)
 		clif->message(fd, msg_fd(fd, MSGTBL_MAPINFO_AUTOTRADE_ENABLED)); // Autotrade Enabled
 	else
 		clif->message(fd, msg_fd(fd, MSGTBL_MAPINFO_AUTOTRADE_DISABLED)); // Autotrade Disabled
@@ -5685,7 +5682,7 @@ ACMD(storeall)
 		return false;
 	}
 
-	struct storage_settings *stst = storage->get_settings(storage_id);
+	const struct storage_settings *stst = storage->get_settings(storage_id);
 	if (stst == NULL) {
 		clif->message(fd, msg_fd(fd, MSGTBL_STORAGE_INVALID));
 		return false;
@@ -5749,7 +5746,7 @@ ACMD(clearstorage)
 		return false;
 	}
 
-	struct storage_settings *stst = storage->get_settings(storage_id);
+	const struct storage_settings *stst = storage->get_settings(storage_id);
 	if (stst == NULL) {
 		clif->message(fd, msg_fd(fd, MSGTBL_STORAGE_INVALID));
 		return false;
@@ -6136,7 +6133,7 @@ ACMD(changelook)
  *------------------------------------------*/
 ACMD(autotrade)
 {
-	if( map->list[sd->bl.m].flag.autotrade != battle_config.autotrade_mapflag ) {
+	if (map->list[sd->bl.m].flag.autotrade != (unsigned int)battle_config.autotrade_mapflag) {
 		clif->message(fd, msg_fd(fd, MSGTBL_AUTOTRADE_NOT_ALLOWED)); // Autotrade is not allowed in this map.
 		return false;
 	}
@@ -6234,7 +6231,7 @@ ACMD(changeleader)
 ACMD(partyoption)
 {
 	struct party_data *p;
-	int mi, option;
+	int mi;
 	char w1[16], w2[16];
 
 	if (sd->status.party_id == 0 || (p = party->search(sd->status.party_id)) == NULL)
@@ -6259,7 +6256,7 @@ ACMD(partyoption)
 		return false;
 	}
 
-	option = (config_switch(w1)?1:0)|(config_switch(w2)?2:0); // TODO: Add documentation for these values
+	unsigned int option = (config_switch(w1) ? 1 : 0) | (config_switch(w2) ? 2 : 0); // TODO: Add documentation for these values
 
 	//Change item share type.
 	if (option != p->party.item)
@@ -6408,7 +6405,7 @@ ACMD(autoloottype)
 {
 	uint8 action = 3; // 1=add, 2=remove, 3=help+list (default), 4=reset
 	enum item_types type = -1;
-	int ITEM_NONE = 0;
+	unsigned int ITEM_NONE = 0;
 
 	if (*message) {
 		if (message[0] == '+') {
@@ -7314,9 +7311,9 @@ ACMD(mobinfo)
 
 		// stats
 		if (monster->mexp)
-			snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_MOBINFO_MVP), monster->name, monster->jname, monster->sprite, monster->vd.class); // MVP Monster: '%s'/'%s'/'%s' (%d)
+			snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_MOBINFO_MVP), monster->name, monster->jname, monster->sprite, monster->vd.class_); // MVP Monster: '%s'/'%s'/'%s' (%d)
 		else
-			snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_MOBINFO_NORMAL), monster->name, monster->jname, monster->sprite, monster->vd.class); // Monster: '%s'/'%s'/'%s' (%d)
+			snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_MOBINFO_NORMAL), monster->name, monster->jname, monster->sprite, monster->vd.class_); // Monster: '%s'/'%s'/'%s' (%d)
 		clif->message(fd, atcmd_output);
 
 		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_MOBINFO_STATS), monster->lv, monster->status.max_hp, base_exp, job_exp, MOB_HIT(monster), MOB_FLEE(monster)); //  Lv:%d  HP:%d  Base EXP:%u  Job EXP:%u  HIT:%d  FLEE:%d
@@ -8093,7 +8090,7 @@ ACMD(sizeall)
 
 	iter = mapit_getallusers();
 	for (pl_sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); pl_sd = BL_UCAST(BL_PC, mapit->next(iter))) {
-		if (pl_sd->state.size != size) {
+		if (pl_sd->state.size != (unsigned int)size) {
 			if (pl_sd->state.size) {
 				pl_sd->state.size = SZ_SMALL;
 				pc->setpos(pl_sd, pl_sd->mapindex, pl_sd->bl.x, pl_sd->bl.y, CLR_TELEPORT);
@@ -8134,7 +8131,7 @@ ACMD(sizeguild)
 	size = cap_value(size,SZ_SMALL,SZ_BIG);
 
 	for (i = 0; i < g->max_member; i++) {
-		if ((pl_sd = g->member[i].sd) && pl_sd->state.size != size) {
+		if ((pl_sd = g->member[i].sd) && pl_sd->state.size != (unsigned int)size) {
 			if( pl_sd->state.size ) {
 				pl_sd->state.size = SZ_SMALL;
 				pc->setpos(pl_sd, pl_sd->mapindex, pl_sd->bl.x, pl_sd->bl.y, CLR_TELEPORT);
@@ -8558,7 +8555,7 @@ ACMD(duel)
 			struct map_session_data *target_sd = map->nick2sd(message, true);
 			if (target_sd != NULL) {
 				unsigned int newduel;
-				if ((newduel = duel->create(sd, 2)) != -1) {
+				if ((newduel = duel->create(sd, 2)) != 0) {
 					if (target_sd->duel_group > 0 || target_sd->duel_invite > 0) {
 						clif->message(fd, msg_fd(fd, MSGTBL_DUEL_PLAYER_IN_DUEL)); // "Duel: Player already in duel."
 						return false;
@@ -8900,7 +8897,7 @@ ACMD(itemlist)
 			return false;
 		}
 
-		struct storage_settings *stst = storage->get_settings(storage_id);
+		const struct storage_settings *stst = storage->get_settings(storage_id);
 		if (stst == NULL) {
 			clif->message(fd, msg_fd(fd, MSGTBL_STORAGE_INVALID));
 			return false;
@@ -9095,7 +9092,7 @@ ACMD(stats)
 	output_table[14].value = sd->change_level_2nd;
 	output_table[15].value = sd->change_level_3rd;
 
-	sprintf(job_jobname, "Job - %s %s", pc->job_name(sd->status.class), "(level %d)");
+	sprintf(job_jobname, "Job - %s %s", pc->job_name(sd->status.class_), "(level %d)");
 	sprintf(output, msg_fd(fd, MSGTBL_TARGET_STATS), sd->status.name); // '%s' stats:
 
 	clif->message(fd, output);
@@ -9520,7 +9517,7 @@ ACMD(quest)
 			return true;
 		}
 
-		if (quest->delete(sd, quest_id) != 0) {
+		if (quest->delete_(sd, quest_id) != 0) {
 			clif->message(fd, msg_fd(fd, MSGTBL_QUEST_ERASE_FAILED));
 			return true;
 		}
@@ -10399,7 +10396,7 @@ ACMD(cddebug)
 		if( cd ) {//reset
 			for(i = 0; i < cd->cursor; i++) {
 				if( !cd->entry[i] ) continue;
-				timer->delete(cd->entry[i]->timer,skill->blockpc_end);
+				timer->delete_(cd->entry[i]->timer,skill->blockpc_end);
 				ers_free(skill->cd_entry_ers, cd->entry[i]);
 			}
 
@@ -11435,10 +11432,10 @@ static void atcommand_db_load_groups(GroupSettings **groups, struct config_setti
 	nullpo_retv(groups);
 	nullpo_retv(commands_);
 	for (atcmd = dbi_first(iter); dbi_exists(iter); atcmd = dbi_next(iter)) {
-		int i;
 		CREATE(atcmd->at_groups, char, sz);
 		CREATE(atcmd->char_groups, char, sz);
-		for (i = 0; i < sz; i++) {
+
+		for (size_t i = 0; i < sz; i++) {
 			GroupSettings *group = groups[i];
 			struct config_setting_t *commands = commands_[i];
 			int result = 0;
@@ -11450,7 +11447,7 @@ static void atcommand_db_load_groups(GroupSettings **groups, struct config_setti
 			}
 
 			idx = pcg->get_idx(group);
-			if (idx < 0 || idx >= sz) {
+			if (idx < 0 || (size_t)idx >= sz) {
 				ShowError("atcommand_db_load_groups: index (%d) out of bounds [0,%"PRIuS"]\n", idx, sz - 1);
 				continue;
 			}

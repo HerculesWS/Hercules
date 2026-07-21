@@ -373,7 +373,7 @@ static void guild_makemember(struct guild_member *m, struct map_session_data *sd
 	m->hair       = sd->status.hair;
 	m->hair_color = sd->status.hair_color;
 	m->gender     = sd->status.sex;
-	m->class      = sd->status.class;
+	m->class_      = sd->status.class_;
 	m->lv         = sd->status.base_level;
 	//m->exp        = 0;
 	//m->exp_payper = 0;
@@ -1131,7 +1131,7 @@ static int guild_send_memberinfoshort(struct map_session_data *sd, int online)
 		return 0;
 
 	intif->guild_memberinfoshort(g->guild_id,
-		sd->status.account_id,sd->status.char_id,online,sd->status.base_level,sd->status.class);
+		sd->status.account_id,sd->status.char_id,online,sd->status.base_level,sd->status.class_);
 
 	if(!online){
 		int i = guild->getindex(g,sd->status.account_id,sd->status.char_id);
@@ -1151,7 +1151,7 @@ static int guild_send_memberinfoshort(struct map_session_data *sd, int online)
 }
 
 // cleaned up [LuzZza]
-static int guild_recv_memberinfoshort(int guild_id, int account_id, int char_id, int online, int lv, int class, uint32 last_login)
+static int guild_recv_memberinfoshort(int guild_id, int account_id, int char_id, int online, int lv, int class_, uint32 last_login)
 {
 	int i, alv, c, idx = INDEX_NOT_FOUND, om = 0, oldonline = -1;
 	struct guild *g = guild->search(guild_id);
@@ -1166,7 +1166,7 @@ static int guild_recv_memberinfoshort(int guild_id, int account_id, int char_id,
 			oldonline=m->online;
 			m->online=online;
 			m->lv=lv;
-			m->class = class;
+			m->class_ = class_;
 			m->last_login = last_login;
 			idx=i;
 		}
@@ -1967,10 +1967,10 @@ static int guild_broken(int guild_id, int flag)
 
 	guild->db->foreach(guild->db,guild->broken_sub,guild_id);
 	guild->castle_db->foreach(guild->castle_db,guild->castle_broken_sub,guild_id);
-	gstorage->delete(guild_id);
+	gstorage->delete_(guild_id);
 	if (channel->config->ally) {
 		if( g->channel != NULL ) {
-			channel->delete(g->channel);
+			channel->delete_(g->channel);
 		}
 	}
 	if( g->instance )
@@ -2500,7 +2500,7 @@ static void do_final_guild(void)
 
 	for( g = dbi_first(iter); dbi_exists(iter); g = dbi_next(iter) ) {
 		if( g->channel != NULL )
-			channel->delete(g->channel);
+			channel->delete_(g->channel);
 		if( g->instance != NULL ) {
 			aFree(g->instance);
 			g->instance = NULL;

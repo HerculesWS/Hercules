@@ -6530,7 +6530,7 @@ static void battle_reflect_damage(struct block_list *target, struct block_list *
 
 					trdamage -= rdamage;/* wont count towards total */
 
-					enum autocast_type ac_type;
+					enum autocast_type ac_type = AUTOCAST_NONE;
 
 					if (sd != NULL) {
 						ac_type = sd->auto_cast_current.type;
@@ -6821,7 +6821,7 @@ static enum damage_lv battle_weapon_attack(struct block_list *src, struct block_
 {
 	GUARD_MAP_LOCK
 
-	struct map_session_data *sd = NULL, *tsd = NULL;
+	struct map_session_data *sd = NULL;
 	struct status_data *sstatus, *tstatus;
 	struct status_change *sc, *tsc;
 	int64 damage;
@@ -6835,7 +6835,6 @@ static enum damage_lv battle_weapon_attack(struct block_list *src, struct block_
 		return ATK_NONE;
 
 	sd = BL_CAST(BL_PC, src);
-	tsd = BL_CAST(BL_PC, target);
 
 	sstatus = status->get_status_data(src);
 	tstatus = status->get_status_data(target);

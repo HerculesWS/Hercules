@@ -260,7 +260,7 @@ static int merc_contract_end_timer(int tid, int64 tick, int id, intptr_t data)
 	}
 
 	md->contract_timer = INVALID_TIMER;
-	mercenary->delete(md, MERC_DELETE_EXPIRED); // Mercenary soldier's duty hour is over.
+	mercenary->delete_(md, MERC_DELETE_EXPIRED); // Mercenary soldier's duty hour is over.
 
 	return 0;
 }
@@ -303,7 +303,7 @@ static void merc_contract_stop(struct mercenary_data *md)
 {
 	nullpo_retv(md);
 	if( md->contract_timer != INVALID_TIMER )
-		timer->delete(md->contract_timer, mercenary->contract_end_timer);
+		timer->delete_(md->contract_timer, mercenary->contract_end_timer);
 	md->contract_timer = INVALID_TIMER;
 }
 
@@ -392,7 +392,7 @@ static void mercenary_heal(struct mercenary_data *md, int hp, int sp)
 
 static int mercenary_dead(struct mercenary_data *md)
 {
-	mercenary->delete(md, MERC_DELETE_KILLED);
+	mercenary->delete_(md, MERC_DELETE_KILLED);
 	return 0;
 }
 
@@ -451,7 +451,7 @@ static bool read_mercenarydb_sub(char *str[], int columns, int current)
 	db->lv = atoi(str[3]);
 
 	mstatus = &db->status;
-	db->vd.class = db->class_;
+	db->vd.class_ = db->class_;
 
 	mstatus->max_hp = atoi(str[4]);
 	mstatus->max_sp = atoi(str[5]);
@@ -567,7 +567,7 @@ void mercenary_defaults(void)
 	/* funcs */
 	mercenary->init = do_init_mercenary;
 
-	mercenary->class = merc_class;
+	mercenary->class_ = merc_class;
 	mercenary->get_viewdata = merc_get_viewdata;
 
 	mercenary->create = merc_create;
@@ -577,7 +577,7 @@ void mercenary_defaults(void)
 	mercenary->heal = mercenary_heal;
 	mercenary->dead = mercenary_dead;
 
-	mercenary->delete = merc_delete;
+	mercenary->delete_ = merc_delete;
 	mercenary->contract_stop = merc_contract_stop;
 
 	mercenary->get_lifetime = mercenary_get_lifetime;

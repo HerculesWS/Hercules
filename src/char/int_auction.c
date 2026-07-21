@@ -182,7 +182,7 @@ static void inter_auction_delete(struct auction_data *auction)
 		Sql_ShowDebug(inter->sql_handle);
 
 	if( auction->auction_end_timer != INVALID_TIMER )
-		timer->delete(auction->auction_end_timer, inter_auction->end_timer);
+		timer->delete_(auction->auction_end_timer, inter_auction->end_timer);
 
 	idb_remove(inter_auction->db, auction_id);
 }

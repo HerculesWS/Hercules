@@ -35,7 +35,7 @@ struct inter_homunculus_interface {
 	bool (*create) (struct s_homunculus *hd);
 	bool (*save) (const struct s_homunculus *hd);
 	bool (*load) (int homun_id, struct s_homunculus* hd);
-	bool (*delete) (int homun_id);
+	bool (*delete_) (int homun_id);
 	bool (*rename) (const char *name);
 };
 

@@ -157,11 +157,11 @@ test_function_def(setrlimit)
 
 if(MSVC)
   # Warnings
-  add_compile_options(/W3 /wd4100 /wd4800)
-  add_compile_options(/wd4090) # Disable const qualifier mismatch because msvs doesn't like const passed to our aFree
+  add_compile_options(/W4)
+  add_compile_options(/wd4127) # Silence constant expression warning as we need them sometimes and they're heavily used
+  add_compile_options(/wd4200 /wd4152) # Silence warning of non-standard extension being used in our code
   add_compile_options(/wd4244 /wd4267) # Disable int conversion possible lose of data
-  add_compile_options(/wd4018) # Disable signed/unsigned arthmatic mismatch
-  add_compile_options(/wd5287) # Disable enum conversion warning
+  add_compile_options(/wd4100) # Disable unused parameter warning mostly due to BUILDIN and similar functions having unused parameters
   add_compile_options(/wd4312) # Disable conversion to greater size warning (see 0xdeadbeef pointers)
   # Definations
   add_compile_definitions(WIN32 _WIN32 __WIN32 _CRT_SECURE_NO_DEPRECATE _CRT_NONSTDC_NO_DEPRECATE FD_SETSIZE=4096 WIN32_LEAN_AND_MEAN)
@@ -179,12 +179,10 @@ else()
   # Warnings we explictily require or disable
   testadd_warning_compiler_flag(all REQUIRED)
   testadd_warning_compiler_flag(extra REQUIRED)
-  testadd_warning_compiler_flag(no-sign-compare REQUIRED)
   testadd_warning_compiler_flag(no-unused-parameter)
   testadd_warning_compiler_flag(no-clobbered)
   testadd_warning_compiler_flag(empty-body)
   testadd_warning_compiler_flag(newline-eof)
-  testadd_warning_compiler_flag(int-conversion)
   testadd_warning_compiler_flag(init-self)
   testadd_warning_compiler_flag(pointer-arith)
   testadd_warning_compiler_flag(switch-bool)
@@ -206,8 +204,6 @@ else()
   testadd_warning_compiler_flag(undef)
   #testadd_warning_compiler_flag(cast-align)
   #testadd_warning_compiler_flag(logical-op) # some useless warnings
-  testadd_warning_compiler_flag(nested-externs)
-  testadd_warning_compiler_flag(old-style-definition)
   testadd_warning_compiler_flag(overlength-strings)
   testadd_warning_compiler_flag(redundant-decls)
   # testadd_warning_compiler_flag(cast-qual)
@@ -222,21 +218,13 @@ else()
   testadd_warning_compiler_flag(stringop-overread)
   testadd_warning_compiler_flag(string-compare)
   testadd_warning_compiler_flag(zero-length-bounds)
-  testadd_warning_compiler_flag(absolute-value)
   testadd_warning_compiler_flag(shift-overflow=2)
-  testadd_warning_compiler_flag(enum-int-mismatch)
   #testadd_warning_compiler_flag(unreachable-code)
   #testadd_warning_compiler_flag(unused-const-variable=2)
   #testadd_warning_compiler_flag(write-strings)
   #testadd_warning_compiler_flag(no-format-nonliteral)
   testadd_warning_compiler_flag(no-switch)
-  testadd_warning_compiler_flag(no-missing-field-initializers)
   # testadd_warning_compiler_flag(no-suggest-attribute=format)
-  testadd_warning_compiler_flag(no-incompatible-pointer-types-discards-qualifiers)
-  testadd_warning_compiler_flag(no-discarded-qualifiers)
-  testadd_warning_compiler_flag(no-deprecated-non-prototype)
-  testadd_warning_compiler_flag(no-unused-but-set-variable)
-  testadd_warning_compiler_flag(no-enum-enum-conversion)
 
   if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     testadd_warning_compiler_flag(no-deprecated-declarations)
