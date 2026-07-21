@@ -56,10 +56,18 @@ struct ipban_interface {
 	void (*log) (uint32 ip);
 };
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef HERCULES_CORE
 void ipban_defaults(void);
 #endif // HERCULES_CORE
 
 HPShared struct ipban_interface *ipban;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* LOGIN_IPBAN_H */

@@ -52,10 +52,18 @@ struct loginlog_interface {
 	bool (*config_read) (const char *filename, bool imported);
 };
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef HERCULES_CORE
 void loginlog_defaults(void);
 #endif // HERCULES_CORE
 
 HPShared struct loginlog_interface *loginlog;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* LOGIN_LOGINLOG_H */

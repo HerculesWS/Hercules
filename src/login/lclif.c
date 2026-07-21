@@ -40,6 +40,8 @@
 #include "common/strlib.h"
 #include "common/utils.h"
 
+#include <algorithm>
+
 /** @file
  * Implementation of the login client interface.
  */
@@ -209,7 +211,7 @@ static enum parsefunc_rcode lclif_parse_CA_SSO_LOGIN_REQ(int fd, struct login_se
 	sd->clienttype = packet->clienttype;
 	sd->version = packet->version;
 	safestrncpy(sd->userid, packet->id, NAME_LENGTH);
-	safestrncpy(sd->passwd, packet->t1, min(tokenlen + 1, PASSWD_LEN)); // Variable-length field, don't copy more than necessary
+	safestrncpy(sd->passwd, packet->t1, std::min(tokenlen + 1, PASSWD_LEN)); // Variable-length field, don't copy more than necessary
 
 	if (login->config->use_md5_passwds)
 		md5->string(sd->passwd, sd->passwd);
@@ -532,7 +534,7 @@ static const struct login_packet_db *lclif_packet(int16 packet_id)
 /// @copydoc lclif_interface::parse_packet()
 static enum parsefunc_rcode lclif_parse_packet(const struct login_packet_db *lpd, int fd, struct login_session_data *sd)
 {
-	int result;
+	enum parsefunc_rcode result;
 	result = (*lpd->pFunc)(fd, sd);
 	RFIFOSKIP(fd, (lpd->len == -1) ? RFIFOW(fd, 2) : lpd->len);
 	return result;

@@ -1391,7 +1391,7 @@ static void login_auth_failed(struct login_session_data *sd, int result)
 		ipban->log(ip); // log failed password attempt
 
 	if (result == 6) {
-		struct mmo_account acc = { 0 };
+		struct mmo_account acc{};
 		if (accounts->load_str(accounts, &acc, sd->userid))
 			ban_time = acc.unban_time;
 	}
