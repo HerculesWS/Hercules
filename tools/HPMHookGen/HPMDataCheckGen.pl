@@ -52,7 +52,7 @@ foreach my $file (@files) {
 		} else {
 			$plugintypes = 'SERVER_TYPE_ALL';
 		}
-	} elsif ($foldername =~ /^(LOGIN|CHAR|MAP)/) {
+	} elsif ($foldername =~ /^(LOGIN|CHAR|MAP|API)/) {
 		$plugintypes = "SERVER_TYPE_${foldername}";
 	}
 	my $symboldata = {
