@@ -47,7 +47,7 @@ struct hplugin_info {
 };
 
 struct s_HPMDataCheck {
-	char *name;
+	const char *name;
 	unsigned int size;
 	int type;
 };
