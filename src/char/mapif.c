@@ -484,12 +484,12 @@ static int mapif_guild_info_emblem(const struct guild *g)
 		return -1;
 
 	WFIFO_CHUNKED_INIT(p, fd, HEADER_CHARMAP_GUILD_INFO_EMBLEM, PACKET_CHARMAP_GUILD_INFO_EMBLEM, g->emblem_data, g->emblem_len) {
-		WFIFO_CHUNKED_BLOCK_START(p, PACKET_CHARMAP_GUILD_INFO_EMBLEM);
+		WFIFO_CHUNKED_BLOCK_START(p);
 		p->guild_id = g->guild_id;
 		p->emblem_id = g->emblem_id;
 		WFIFO_CHUNKED_BLOCK_END();
 	}
-	WFIFO_CHUNKED_FINAL_START(p, PACKET_CHARMAP_GUILD_INFO_EMBLEM);
+	WFIFO_CHUNKED_FINAL_START(p);
 	p->guild_id = g->guild_id;
 	p->emblem_id = g->emblem_id;
 	WFIFO_CHUNKED_FINAL_END();
@@ -674,12 +674,12 @@ static int mapif_guild_emblem(struct guild *g)
 		return -1;
 
 	WFIFO_CHUNKED_INIT(p, fd, HEADER_CHARMAP_GUILD_EMBLEM, PACKET_CHARMAP_GUILD_EMBLEM, g->emblem_data, g->emblem_len) {
-		WFIFO_CHUNKED_BLOCK_START(p, PACKET_CHARMAP_GUILD_EMBLEM);
+		WFIFO_CHUNKED_BLOCK_START(p);
 		p->guild_id = g->guild_id;
 		p->emblem_id = g->emblem_id;
 		WFIFO_CHUNKED_BLOCK_END();
 	}
-	WFIFO_CHUNKED_FINAL_START(p, PACKET_CHARMAP_GUILD_EMBLEM);
+	WFIFO_CHUNKED_FINAL_START(p);
 	p->guild_id = g->guild_id;
 	p->emblem_id = g->emblem_id;
 	WFIFO_CHUNKED_FINAL_END();
