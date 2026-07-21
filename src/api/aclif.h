@@ -211,6 +211,10 @@ struct aclif_interface {
 	void (*show_request) (int fd, struct api_session_data *sd, bool show_http_headers);
 };
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef HERCULES_CORE
 void aclif_defaults(void);
 #else
@@ -228,5 +232,9 @@ void aclif_defaults(void);
 #endif // HERCULES_CORE
 
 HPShared struct aclif_interface *aclif;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* API_ACLIF_H */
