@@ -83,7 +83,7 @@ static const char *httpsender_http_status_name(enum http_status status)
 	HTTP_STATUS_MAP(XX)
 	#undef XX
 	default:
-		ShowWarning("%s: Invalid http status (%u) received.\n", __func__, status);
+		ShowWarning("%s: Invalid http status (%u) received.\n", __func__, (unsigned int)status);
 		return "Unknown";
 	}
 }
@@ -180,7 +180,7 @@ static bool httpsender_send_json_text(int fd, const char *json, enum http_status
 		"Content-Length: %" PRIuS "\n"
 		"\n"
 		"%s",
-		status, httpsender->http_status_name(status),
+		(unsigned int)status, httpsender->http_status_name(status),
 		httpsender->server_name, sz, json);
 	WFIFOHEAD(fd, buf_sz);
 	WFIFOADDSTR(fd, tmp_buffer);

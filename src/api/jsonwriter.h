@@ -63,10 +63,18 @@ struct jsonwriter_interface {
 	void (*delete_) (JsonW *ptr);
 };
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef HERCULES_CORE
 void jsonwriter_defaults(void);
 #endif // HERCULES_CORE
 
 HPShared struct jsonwriter_interface *jsonwriter;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* API_JSONWRITER_H */

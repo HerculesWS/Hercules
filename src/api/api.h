@@ -81,10 +81,18 @@ struct api_interface {
 	void (*do_shutdown) (void);
 };
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef HERCULES_CORE
 void api_defaults(void);
 #endif // HERCULES_CORE
 
 HPShared struct api_interface *api;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* API_API_H */

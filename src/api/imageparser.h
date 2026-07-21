@@ -44,10 +44,18 @@ struct imageparser_interface {
 	int (*read_gif_func) (GifFileType *gif, GifByteType *buf, int len);
 };
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef HERCULES_CORE
 void imageparser_defaults(void);
 #endif // HERCULES_CORE
 
 HPShared struct imageparser_interface *imageparser;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* API_IMAGEPARSER_H */

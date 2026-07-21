@@ -58,10 +58,18 @@ struct httpsender_interface {
 	bool (*send_binary) (int fd, const char *data, const size_t data_len);
 };
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef HERCULES_CORE
 void httpsender_defaults(void);
 #endif // HERCULES_CORE
 
 HPShared struct httpsender_interface *httpsender;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* API_HTTPSENDER_H */

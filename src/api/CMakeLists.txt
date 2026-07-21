@@ -91,3 +91,5 @@ install(
     DESTINATION
     .
 )
+
+set_source_files_properties(${API_SRCS} PROPERTIES LANGUAGE CXX)

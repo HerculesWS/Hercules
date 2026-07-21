@@ -89,7 +89,7 @@ int jsonparser_get_array_size(const JsonP *parent)
 
 char *jsonparser_get_string_value(const JsonP *parent)
 {
-	nullpo_retr(false, parent);
+	nullpo_retr(NULL, parent);
 	Assert_retr(0, cJSON_IsString(parent));
 
 	return parent->valuestring;
@@ -113,8 +113,8 @@ int jsonparser_get_int_value(const JsonP *parent)
 
 char *jsonparser_get_child_string_value(const JsonP *parent, const char *name)
 {
-	nullpo_retr(false, parent);
-	nullpo_retr(false, name);
+	nullpo_retr(NULL, parent);
+	nullpo_retr(NULL, name);
 
 	JsonP *value = jsonparser->get(parent, name);
 	return jsonparser->get_string_value(value);

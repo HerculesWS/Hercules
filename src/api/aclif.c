@@ -28,6 +28,7 @@
 #include "common/api.h"
 #include "common/cbasetypes.h"
 #include "common/conf.h"
+#include "common/db.h"
 #include "common/ers.h"
 #include "common/grfio.h"
 #include "common/memmgr.h"
@@ -217,8 +218,8 @@ static int aclif_connected(int fd)
 	struct api_session_data *sd = NULL;
 	CREATE(sd, struct api_session_data, 1);
 	sd->fd = fd;
-	sd->headers_db = strdb_alloc(DB_OPT_BASE | DB_OPT_RELEASE_BOTH, MAX_HEADER_NAME_SIZE);
-	sd->post_headers_db = strdb_alloc(DB_OPT_BASE | DB_OPT_RELEASE_DATA, MAX_POST_HEADER_NAME_SIZE);
+	sd->headers_db = strdb_alloc((enum DBOptions)(DB_OPT_BASE | DB_OPT_RELEASE_BOTH), MAX_HEADER_NAME_SIZE);
+	sd->post_headers_db = strdb_alloc((enum DBOptions)(DB_OPT_BASE | DB_OPT_RELEASE_DATA), MAX_POST_HEADER_NAME_SIZE);
 	sd->id = aclif->id_counter++;
 	sockt->session[fd]->session_data = sd;
 	httpparser->init_parser(fd, sd);
@@ -303,7 +304,7 @@ static int aclif_session_delete(int fd)
 static void aclif_init_handlers(void)
 {
 	for (int i = 0; i < HTTP_MAX_PROTOCOL; i ++) {
-		aclif->handlers_db[i] = strdb_alloc(DB_OPT_BASE | DB_OPT_RELEASE_DATA, MAX_URL_SIZE);
+		aclif->handlers_db[i] = strdb_alloc((enum DBOptions)(DB_OPT_BASE | DB_OPT_RELEASE_DATA), MAX_URL_SIZE);
 	}
 }
 
@@ -1195,7 +1196,7 @@ void aclif_defaults(void)
 		aclif->handlers_db[i] = NULL;
 	}
 	aclif->online_db = idb_alloc(DB_OPT_RELEASE_DATA);
-	aclif->char_servers_db = strdb_alloc(DB_OPT_BASE | DB_OPT_RELEASE_BOTH, MAX_CHARSERVER_NAME_SIZE);
+	aclif->char_servers_db = strdb_alloc((enum DBOptions)(DB_OPT_BASE | DB_OPT_RELEASE_BOTH), MAX_CHARSERVER_NAME_SIZE);
 	aclif->char_servers_id_db = idb_alloc(DB_OPT_BASE);
 
 	/* core */

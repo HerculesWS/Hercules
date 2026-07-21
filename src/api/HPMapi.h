@@ -30,6 +30,10 @@
 struct hplugin;
 struct map_session_data;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 bool HPM_api_data_store_validate(enum HPluginDataTypes type, struct hplugin_data_store **storeptr, bool initialize);
 
 void HPM_api_plugin_load_sub(struct hplugin *plugin);
@@ -37,5 +41,9 @@ void HPM_api_plugin_load_sub(struct hplugin *plugin);
 void HPM_api_do_final(void);
 
 void HPM_api_do_init(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* API_HPMAPI_H */

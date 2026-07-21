@@ -96,10 +96,18 @@ struct aloginif_interface {
 	void (*parse_from_char) (int fd, Handler_func func);
 };
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef HERCULES_CORE
 void aloginif_defaults(void);
 #endif // HERCULES_CORE
 
 HPShared struct aloginif_interface *aloginif;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* API_ALOGINIF_H */
