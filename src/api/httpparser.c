@@ -18,6 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include "api/http_include.h"
+#include "http-parser/http_parser.h"
 #define HERCULES_CORE
 
 #include "config/core.h" // ANTI_MAYAP_CHEAT, RENEWAL, SECURE_NPCTIMEOUT
@@ -58,7 +60,7 @@ struct httpparser_interface *httpparser;
 
 #define GET_FD_SD \
 	int fd = (int)(intptr_t)parser->data; \
-	struct api_session_data *sd = sockt->session[fd]->session_data; \
+	struct api_session_data *sd = (struct api_session_data *)sockt->session[fd]->session_data; \
 	nullpo_ret(sd);
 
 #define GET_FD() (int)(intptr_t)parser->data
@@ -96,7 +98,7 @@ static int handler_on_headers_complete(HTTP_PARSER *parser)
 
 	// Per RFC-9110, only HTTP 1.1 and newer should handle Expect: https://httpwg.org/specs/rfc9110.html#field.expect
 	if (parser->http_major >= 1 && parser->http_minor >= 1) {
-		const char *expect = strdb_get(sd->headers_db, "Expect");
+		const char *expect = (const char *)strdb_get(sd->headers_db, "Expect");
 		if (expect != NULL && strcmp(expect, "100-continue") == 0)
 			httpsender->send_continue(fd);
 	}
@@ -148,7 +150,7 @@ static int handler_on_url(HTTP_PARSER *parser, const char *at, size_t length)
 	if (sockt->session[fd]->flag.eof)
 		return 0;
 
-	aclif->set_url(fd, parser->method, at, length);
+	aclif->set_url(fd, (http_method)parser->method, at, length);
 
 #ifdef DEBUG_LOG
 	ShowInfo("Url: %d: %.*s\n", parser->method, (int)length, at);
@@ -350,13 +352,13 @@ static int handler_on_multi_body_end(struct multipartparser *parser)
 static const char *httpparser_get_method_str(struct api_session_data *sd)
 {
 	nullpo_retr(NULL, sd);
-	return http_method_str(sd->parser.method);
+	return http_method_str((enum http_method)sd->parser.method);
 }
 
 static http_method httpparser_get_method(struct api_session_data *sd)
 {
-	nullpo_retr(0, sd);
-	return sd->parser.method;
+	nullpo_retr((enum http_method)0, sd);
+	return (enum http_method)sd->parser.method;
 }
 
 static bool httpparser_parse_real(int fd, struct api_session_data *sd, const char *data, size_t data_size)
@@ -386,7 +388,7 @@ static void httpparser_add_to_temp_request(int fd, struct api_session_data *sd, 
 {
 	nullpo_retv(sd);
 	if (sd->request_temp == NULL) {
-		sd->request_temp = aCalloc(1, data_size);
+		sd->request_temp = (char *)aCalloc(1, data_size);
 		sd->request_temp_size = data_size;
 		sd->request_temp_alloc_size = data_size;
 		memcpy(sd->request_temp, data, data_size);
@@ -394,7 +396,7 @@ static void httpparser_add_to_temp_request(int fd, struct api_session_data *sd, 
 		const size_t old_size = sd->request_temp_size;
 		sd->request_temp_size += data_size;
 		if (sd->request_temp_alloc_size < sd->request_temp_size) {
-			sd->request_temp = aRealloc(sd->request_temp, sd->request_temp_size);
+			sd->request_temp = (char *)aRealloc(sd->request_temp, sd->request_temp_size);
 			sd->request_temp_alloc_size = sd->request_temp_size;
 		}
 		memcpy(sd->request_temp + old_size, data, data_size);
@@ -421,12 +423,12 @@ static bool httpparser_parse(int fd)
 {
 	nullpo_ret(sockt->session[fd]);
 
-	struct api_session_data *sd = sockt->session[fd]->session_data;
+	struct api_session_data *sd = (struct api_session_data *)sockt->session[fd]->session_data;
 	size_t data_size = RFIFOREST(fd);
 	if (data_size == 0)
 		return true;
 
-	const char *data = RFIFOP(fd, 0);
+	const char *data = (const char*)RFIFOP(fd, 0);
 
 	if (sd->flag.headers_complete == 0) {
 		// because parser cant handle part of header, need cache incomplete headers
@@ -459,9 +461,9 @@ static bool httpparser_parse(int fd)
 static void httpparser_show_error(int fd, struct api_session_data *sd)
 {
 #ifdef USE_HTTP_PARSER
-	ShowError("http parser error %d: %d, %s, %s\n", fd, sd->parser.http_errno, http_errno_name(sd->parser.http_errno), http_errno_description(sd->parser.http_errno));
+	ShowError("http parser error %d: %d, %s, %s\n", fd, sd->parser.http_errno, http_errno_name((enum http_errno)sd->parser.http_errno), http_errno_description((enum http_errno)sd->parser.http_errno));
 #else  // USE_HTTP_PARSER
-	ShowError("http parser error %d: %d, %s, %s\n", fd, sd->parser.error, http_errno_name(sd->parser.error), sd->parser.reason);
+	ShowError("http parser error %d: %d, %s, %s\n", fd, sd->parser.error, http_errno_name((enum http_errno)sd->parser.error), sd->parser.reason);
 #endif  // USE_HTTP_PARSER
 }
 
@@ -469,7 +471,7 @@ static bool httpparser_multi_parse(int fd)
 {
 	nullpo_ret(sockt->session[fd]);
 
-	struct api_session_data *sd = sockt->session[fd]->session_data;
+	struct api_session_data *sd = (struct api_session_data *)sockt->session[fd]->session_data;
 
 	if (sd->multi_parser == NULL)
 		return true;
@@ -495,7 +497,7 @@ static void httpparser_init_multi_parser(int fd, struct api_session_data *sd, co
 {
 	nullpo_retv(sd);
 	nullpo_retv(boundary);
-	sd->multi_parser = aMalloc(sizeof(multipartparser));
+	sd->multi_parser = (multipartparser *)aMalloc(sizeof(multipartparser));
 	multipartparser_init(sd->multi_parser, boundary);
 	sd->multi_parser->data = (void*)(intptr_t)fd;
 }
@@ -506,7 +508,7 @@ static void httpparser_delete_parser(int fd)
 
 static void httpparser_init_settings(void)
 {
-	httpparser->settings = aCalloc(1, sizeof(struct http_parser_settings));
+	httpparser->settings = (struct http_parser_settings *)aCalloc(1, sizeof(struct http_parser_settings));
 #ifndef USE_HTTP_PARSER
 	llhttp_settings_init(httpparser->settings);
 #endif  // USE_HTTP_PARSER
@@ -524,7 +526,7 @@ static void httpparser_init_settings(void)
 
 static void httpparser_init_multi_settings(void)
 {
-	httpparser->multi_settings = aCalloc(1, sizeof(struct multipartparser_callbacks));
+	httpparser->multi_settings = (struct multipartparser_callbacks *)aCalloc(1, sizeof(struct multipartparser_callbacks));
 	multipartparser_callbacks_init(httpparser->multi_settings);
 	httpparser->multi_settings->on_body_begin = httpparser->on_multi_body_begin;
 	httpparser->multi_settings->on_part_begin = httpparser->on_multi_part_begin;

@@ -103,7 +103,7 @@ static bool aloginif_setip(const char *ip)
 
 	safestrncpy(aloginif->ip_str, ip, sizeof(aloginif->ip_str));
 
-	ShowInfo("Login Server IP Address : '"CL_WHITE"%s"CL_RESET"' -> '"CL_WHITE"%s"CL_RESET"'.\n", ip, sockt->ip2str(aloginif->ip, ip_str));
+	ShowInfo("Login Server IP Address : '" CL_WHITE "%s" CL_RESET "' -> '" CL_WHITE "%s" CL_RESET "'.\n", ip, sockt->ip2str(aloginif->ip, ip_str));
 
 	return true;
 }
@@ -235,7 +235,7 @@ static int aloginif_parse_disconnect_user(int fd)
 
 static int aloginif_parse_connect_user(int fd)
 {
-	aclif->add_online_player(RFIFOL(fd, 2), RFIFOP(fd, 6));
+	aclif->add_online_player(RFIFOL(fd, 2), (const unsigned char *)RFIFOP(fd, 6));
 	return 0;
 }
 
@@ -279,7 +279,7 @@ static int aloginif_parse_char_servers_list(int fd)
 	ShowInfo("Got %d char servers.\n", count);
 #endif
 	for (int f = 0; f < count; f ++) {
-		aclif->add_char_server(RFIFOW(fd, offset), RFIFOP(fd, offset + 2));
+		aclif->add_char_server(RFIFOW(fd, offset), (const char *)RFIFOP(fd, offset + 2));
 		offset += part_size;
 	}
 	return 0;
@@ -288,7 +288,7 @@ static int aloginif_parse_char_servers_list(int fd)
 static int aloginif_parse_remove_char_server(int fd)
 {
 	const int char_server_id = RFIFOW(fd, 2);
-	const char *name = idb_get(aclif->char_servers_id_db, char_server_id);
+	const char *name = (const char *)idb_get(aclif->char_servers_id_db, char_server_id);
 	nullpo_retr(1, name);
 
 	ShowInfo("Char-server '%s' has disconnected.\n", name);
@@ -299,9 +299,9 @@ static int aloginif_parse_remove_char_server(int fd)
 static int aloginif_parse_add_char_server(int fd)
 {
 	const int char_server_id = RFIFOW(fd, 2);
-	struct char_server_data *data = aCalloc(1, sizeof(struct char_server_data));
+	struct char_server_data *data = (struct char_server_data *)aCalloc(1, sizeof(struct char_server_data));
 	data->id = char_server_id;
-	char *name = aStrdup(RFIFOP(fd, 4));
+	char *name = aStrdup((char *)RFIFOP(fd, 4));
 	data->world_name = name;
 	strdb_put(aclif->char_servers_db, name, data);
 	idb_put(aclif->char_servers_id_db, data->id, name);
@@ -335,7 +335,7 @@ static void aloginif_send_to_server(int fd, struct api_session_data *sd, int msg
 
 	const int len = (int)sizeof(struct PACKET_API_PROXY) + (int)data_len;
 	WFIFOHEAD(aloginif->fd, len);
-	struct PACKET_API_PROXY *p = WFIFOP(aloginif->fd, 0);
+	struct PACKET_API_PROXY *p = (struct PACKET_API_PROXY *)WFIFOP(aloginif->fd, 0);
 	p->packet_id = HEADER_API_PROXY_REQUEST;
 	p->packet_len = len;
 	INIT_PACKET_PROXY_FIELDS(p, sd, proxy_flag);
@@ -369,7 +369,7 @@ static void aloginif_parse_from_char(int fd, Handler_func func)
 	const int user_fd = p->client_fd;
 	if (!sockt->session_is_active(user_fd))
 		return;
-	struct api_session_data *sd = sockt->session[user_fd]->session_data;
+	struct api_session_data *sd = (struct api_session_data *)sockt->session[user_fd]->session_data;
 	nullpo_retv(sd);
 	if (sd->account_id != p->account_id)
 		return;

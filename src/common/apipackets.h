@@ -295,8 +295,8 @@ struct PACKET_API_REPLY_party_info {
 
 #define RFIFO_DATA_PTR() RFIFOP(fd, WFIFO_APICHAR_SIZE)
 #define RFIFO_API_DATA(var, type) const struct PACKET_API_ ## type ## _data *var = (const struct PACKET_API_ ## type ## _data*)RFIFO_DATA_PTR()
-#define RFIFO_API_PROXY_PACKET(var) const struct PACKET_API_PROXY *var = RFIFOP(fd, 0)
-#define RFIFO_API_PROXY_PACKET_CHUNKED(var) const struct PACKET_API_PROXY_CHUNKED *var = RFIFOP(fd, 0)
+#define RFIFO_API_PROXY_PACKET(var) const struct PACKET_API_PROXY *var = (const struct PACKET_API_PROXY *)RFIFOP(fd, 0)
+#define RFIFO_API_PROXY_PACKET_CHUNKED(var) const struct PACKET_API_PROXY_CHUNKED *var = (const struct PACKET_API_PROXY_CHUNKED *)RFIFOP(fd, 0)
 #define GET_RFIFO_API_PROXY_PACKET_SIZE(fd) (RFIFOW(fd, 2) - sizeof(struct PACKET_API_PROXY))
 #define PROXY_PACKET_FLAG(packet, flag) ((packet)->flags & (flag)) != 0
 

@@ -83,7 +83,7 @@ static const char *httpsender_http_status_name(enum http_status status)
 	HTTP_STATUS_MAP(XX)
 	#undef XX
 	default:
-		ShowWarning("%s: Invalid http status (%u) received.\n", __func__, status);
+		ShowWarning("%s: Invalid http status (%u) received.\n", __func__, (unsigned int)status);
 		return "Unknown";
 	}
 }
@@ -120,7 +120,7 @@ static bool httpsender_send_html(int fd, const char *data)
 		"HTTP/1.1 200 OK\n"
 		"Server: %s\n"
 		"Content-Type: text/html\n"
-		"Content-Length: %"PRIuS"\n"
+		"Content-Length: %" PRIuS "\n"
 		"\n"
 		"%s",
 		httpsender->server_name, sz, data);
@@ -142,7 +142,7 @@ static bool httpsender_send_json(int fd, const JsonW *json)
 		"HTTP/1.1 200 OK\n"
 		"Server: %s\n"
 		"Content-Type: application/json; charset=utf-8\n"
-		"Content-Length: %"PRIuS"\n"
+		"Content-Length: %" PRIuS "\n"
 		"\n"
 		"%s",
 		httpsender->server_name, sz, data);
@@ -177,10 +177,10 @@ static bool httpsender_send_json_text(int fd, const char *json, enum http_status
 		"HTTP/1.1 %u %s\n"
 		"Server: %s\n"
 		"Content-Type: application/json; charset=utf-8\n"
-		"Content-Length: %"PRIuS"\n"
+		"Content-Length: %" PRIuS "\n"
 		"\n"
 		"%s",
-		status, httpsender->http_status_name(status),
+		(unsigned int)status, httpsender->http_status_name(status),
 		httpsender->server_name, sz, json);
 	WFIFOHEAD(fd, buf_sz);
 	WFIFOADDSTR(fd, tmp_buffer);
@@ -202,7 +202,7 @@ static bool httpsender_send_plain(int fd, const char *data)
 		"HTTP/1.1 200 OK\n"
 		"Server: %s\n"
 		"Content-Type: text/plain; charset=utf-8\n"
-		"Content-Length: %"PRIuS"\n"
+		"Content-Length: %" PRIuS "\n"
 		"\n"
 		"%s",
 		httpsender->server_name, sz, data);
@@ -224,7 +224,7 @@ static bool httpsender_send_binary(int fd, const char *data, const size_t data_l
 		"HTTP/1.1 200 OK\n"
 		"Server: %s\n"
 		"Content-Type: octet-stream\n"
-		"Content-Length: %"PRIuS"\n"
+		"Content-Length: %" PRIuS "\n"
 		"\n",
 		httpsender->server_name, data_len);
 	WFIFOHEAD(fd, buf_sz);

@@ -436,7 +436,7 @@ int do_init(int argc, char *argv[])
 
 	Sql_HerculesUpdateCheck(api->mysql_handle);
 
-	ShowStatus("Server is '"CL_GREEN"ready"CL_RESET"' and listening on port '"CL_WHITE"%d"CL_RESET"'.\n\n", api->port);
+	ShowStatus("Server is '" CL_GREEN "ready" CL_RESET "' and listening on port '" CL_WHITE "%d" CL_RESET "'.\n\n", api->port);
 
 	if( core->runflag != CORE_ST_STOP ) {
 		core->shutdown_callback = api->do_shutdown;

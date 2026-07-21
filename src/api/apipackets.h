@@ -25,7 +25,7 @@
 #include "api/aloginif.h"
 
 #define GET_HTTP_DATA(var, type) const struct PACKET_API_REPLY_ ## type *var = (const struct PACKET_API_REPLY_ ## type*)data
-#define CREATE_HTTP_DATA(var, type) struct PACKET_API_ ## type ## _data var = { 0 }
+#define CREATE_HTTP_DATA(var, type) struct PACKET_API_ ## type ## _data var{}
 
 #ifdef HERCULES_CORE
 #define SEND_LOGIN_ASYNC_DATA(name, data) aloginif->send_to_server(fd, sd, API_MSG_ ## name, data, sizeof(struct PACKET_API_ ## name), proxy_flag_login)
