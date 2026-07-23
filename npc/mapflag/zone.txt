@@ -75,6 +75,11 @@ prt_are_in	mapflag	zone	Izlude Battle Arena
 1@nyd	mapflag	zone	Memorial Dungeon
 2@nyd	mapflag	zone	Memorial Dungeon
 
+// Isle of Bios ======
+1@dth1	mapflag	zone	Memorial Dungeon
+1@dth2	mapflag	zone	Memorial Dungeon
+1@dth3	mapflag	zone	Memorial Dungeon
+
 //Towns
 alberta	mapflag	zone	Towns
 aldebaran	mapflag	zone	Towns
