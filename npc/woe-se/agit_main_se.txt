@@ -1699,7 +1699,8 @@ OnBarrierDestroyed:
 		setd "$agit_"+.@var$+"["+(.@num+1)+"]",1;
 		setarray .@count$[0],"1st","2nd","3rd";
 		mapannounce strnpcinfo(NPC_NAME_HIDDEN),"The "+.@count$[.@num-1]+" Fortress Gate is destroyed.",bc_map,"0x00ff00";
-		delwall .@var$+"_"+strnpcinfo(NPC_NAME_VISIBLE);
+		if (checkwall(sprintf("%s_%s", .@var$, strnpcinfo(NPC_NAME_VISIBLE))))
+			delwall(sprintf("%s_%s", .@var$, strnpcinfo(NPC_NAME_VISIBLE)));
 	}
 	end;
 
@@ -1729,7 +1730,8 @@ OnDisable:
 		}
 	}
 	setcell(strnpcinfo(NPC_NAME_HIDDEN), .@x[0], .@y[0], .@x[1], .@y[1], cell_basilica, false);
-	delwall substr(strnpcinfo(NPC_NAME_HIDDEN),0,1)+substr(strnpcinfo(NPC_NAME_HIDDEN),8,9)+"_"+strnpcinfo(NPC_NAME_VISIBLE);
+	if (checkwall(sprintf("%s%s_%s", substr(strnpcinfo(NPC_NAME_HIDDEN), 0, 1), substr(strnpcinfo(NPC_NAME_HIDDEN), 8, 9), strnpcinfo(NPC_NAME_VISIBLE))))
+		delwall(sprintf("%s%s_%s", substr(strnpcinfo(NPC_NAME_HIDDEN), 0, 1), substr(strnpcinfo(NPC_NAME_HIDDEN), 8, 9), strnpcinfo(NPC_NAME_VISIBLE)));
 	killmonster strnpcinfo(NPC_NAME_HIDDEN),strnpcinfo(NPC_NAME)+"::OnBarrierDestroyed";
 	end;
 }
