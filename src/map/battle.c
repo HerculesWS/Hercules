@@ -442,7 +442,6 @@ static int64 battle_attr_fix(struct block_list *src, struct block_list *target, 
 			if( tsc->data[SC_EARTH_INSIGNIA]) damage += damage/2;
 			if( tsc->data[SC_FIRE_CLOAK_OPTION])
 				damage -= damage * tsc->data[SC_FIRE_CLOAK_OPTION]->val2 / 100;
-			if( tsc->data[SC_VOLCANIC_ASH]) damage += damage/2; //150%
 			break;
 		case ELE_HOLY:
 			if( tsc->data[SC_ORATIO]) ratio += tsc->data[SC_ORATIO]->val1 * 2;
