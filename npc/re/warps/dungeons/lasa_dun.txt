@@ -1,0 +1,43 @@
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020  Hercules Dev Team
+//= Copyright (C) Zarbony
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Lasagna Dungeon Warp Script
+//================= Description ===========================================
+//= Warp Points for Lasagna Dungeon
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
+
+lasa_dun_q,190,14,0	warp	lasa_dun_q#lasa_dun01	1,1,lasa_dun01,152,98
+
+lasa_dun01,18,143,0	warp	lasa_dun01#lasa_fild02	1,1,lasa_fild02,344,243
+lasa_dun01,157,98,0	warp	lasa_dun01#lasa_dun02	1,1,lasa_dun02,22,171
+
+lasa_dun02,18,171,0	warp	lasa_dun02#lasa_dun01	1,1,lasa_dun01,153,98
+lasa_dun02,146,58,0	warp	lasa_dun02#lasa_dun03	1,1,lasa_dun03,190,18
+
+lasa_dun03,190,15,0	warp	lasa_dun03#lasa_dun02	1,1,lasa_dun02,146,54
