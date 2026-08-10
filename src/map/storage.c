@@ -41,6 +41,7 @@
 #include "common/nullpo.h"
 #include "common/showmsg.h"
 
+#include <algorithm>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

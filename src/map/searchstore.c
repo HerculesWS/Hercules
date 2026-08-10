@@ -31,6 +31,8 @@
 #include "common/showmsg.h" // ShowError, ShowWarning
 #include "common/strlib.h" // safestrncpy
 
+#include <utility>
+
 static struct searchstore_interface searchstore_s;
 struct searchstore_interface *searchstore;
 

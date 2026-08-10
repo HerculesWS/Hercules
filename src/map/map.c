@@ -85,6 +85,7 @@
 #include "common/timer.h"
 #include "common/utils.h"
 
+#include <algorithm>
 #include <math.h>
 #include <stdarg.h>
 #include <stdio.h>

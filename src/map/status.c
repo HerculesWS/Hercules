@@ -56,6 +56,7 @@
 #include "common/utils.h"
 #include "common/conf.h"
 
+#include <algorithm>
 #include <math.h>
 #include <memory.h>
 #include <stdio.h>

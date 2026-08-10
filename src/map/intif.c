@@ -58,6 +58,7 @@
 #include "common/packets.h"
 #include "common/chunked/wfifo.h"
 
+#include <algorithm>
 #include <fcntl.h>
 #include <signal.h>
 #include <stdio.h>

@@ -817,7 +817,7 @@ static void instance_reload_map_flags(int instance_id)
 		struct map_data *dstMap = &map->list[curInst->map[i]];
 		const struct map_data *srcMap = &map->list[dstMap->instance_src_map];
 
-		memcpy(&dstMap->flag, &srcMap->flag, sizeof(struct map_flag));
+		memcpy(&dstMap->flag, &srcMap->flag, sizeof(struct map_data::map_flag));
 
 		dstMap->flag.src4instance = 0;
 	}

@@ -56,6 +56,7 @@
 #include "common/timer.h"
 #include "common/utils.h"
 
+#include <algorithm>
 #include <errno.h>
 #include <math.h>
 #include <stdio.h>
