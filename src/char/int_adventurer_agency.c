@@ -80,7 +80,7 @@ static void inter_adventurer_agency_parse_joinParty(int fd)
 		return;
 	}
 
-	struct party_member member = { 0 };
+	struct party_member member{};
 	member.account_id = cp->account_id;
 	member.char_id    = cp->char_id;
 	safestrncpy(member.name, cp->name, NAME_LENGTH);

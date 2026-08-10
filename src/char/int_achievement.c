@@ -141,7 +141,7 @@ static bool inter_achievement_fromsql(int char_id, struct char_achievements *cp)
 		VECTOR_ENSURE(*cp, num_rows, 1);
 
 		for (i = 0; i < num_rows && SQL_SUCCESS == SQL->NextRow(inter->sql_handle); i++) {
-			struct achievement t_ach = { 0 };
+			struct achievement t_ach{};
 			SQL->GetData(inter->sql_handle, 0, &data, NULL); t_ach.id = atoi(data);
 			SQL->GetData(inter->sql_handle, 1, &data, NULL); t_ach.completed_at = atoi(data);
 			SQL->GetData(inter->sql_handle, 2, &data, NULL); t_ach.rewarded_at = atoi(data);

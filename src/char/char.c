@@ -69,6 +69,7 @@
 #include "common/timer.h"
 #include "common/utils.h"
 
+#include <algorithm>
 #include <signal.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -731,7 +732,7 @@ static int char_getitemdata_from_sql(struct item *items, int max, int guid, enum
 	const char *selectoption = NULL;
 	bool has_favorite = false;
 	StringBuf buf;
-	struct item item = { 0 }; // temp storage variable
+	struct item item{}; // temp storage variable
 
 	if (max > 0)
 		nullpo_retr(-1, items);
@@ -1872,7 +1873,7 @@ static int char_delete_char_sql(int char_id)
 	SQL->GetData(inter->sql_handle, 9, &data, NULL);
 	elemental_id = atoi(data);
 
-	SQL->EscapeStringLen(inter->sql_handle, esc_name, name, min(len, (size_t)NAME_LENGTH));
+	SQL->EscapeStringLen(inter->sql_handle, esc_name, name, std::min(len, (size_t)NAME_LENGTH));
 	SQL->FreeResult(inter->sql_handle);
 
 	//check for config char del condition [Lupus]
@@ -2029,19 +2030,19 @@ static int char_mmo_char_tobuf(uint8 *buffer, struct mmo_charstatus *p)
 
 	WBUFL(buf,0) = p->char_id;
 #if PACKETVER >= 20170830
-	WBUFQ(buf,4) = min(p->base_exp, (uint64)INT64_MAX);
+	WBUFQ(buf,4) = std::min(p->base_exp, (uint64)INT64_MAX);
 	offset += 4;
 	buf = WBUFP(uint8 *, buffer, offset);
 #else
-	WBUFL(buf,4) = min((uint32)(p->base_exp), (uint32)INT32_MAX); // FIXME: This should run on the larger type and be cast to uint32 after the clamping
+	WBUFL(buf,4) = std::min((uint32)(p->base_exp), (uint32)INT32_MAX); // FIXME: This should run on the larger type and be cast to uint32 after the clamping
 #endif
 	WBUFL(buf,8) = p->zeny;
 #if PACKETVER >= 20170830
-	WBUFQ(buf,12) = min(p->job_exp, (uint64)INT64_MAX);
+	WBUFQ(buf,12) = std::min(p->job_exp, (uint64)INT64_MAX);
 	offset += 4;
 	buf = WBUFP(uint8 *, buffer, offset);
 #else
-	WBUFL(buf,12) = min((uint32)(p->job_exp), (uint32)INT32_MAX); // FIXME: This should run on the larger type and be cast to uint32 after the clamping
+	WBUFL(buf,12) = std::min((uint32)(p->job_exp), (uint32)INT32_MAX); // FIXME: This should run on the larger type and be cast to uint32 after the clamping
 #endif
 	WBUFL(buf,16) = p->job_level;
 	WBUFL(buf,20) = 0; // probably opt1
@@ -2049,7 +2050,7 @@ static int char_mmo_char_tobuf(uint8 *buffer, struct mmo_charstatus *p)
 	WBUFL(buf,28) = (p->option &~ 0x40);
 	WBUFL(buf,32) = p->karma;
 	WBUFL(buf,36) = p->manner;
-	WBUFW(buf,40) = min(p->status_point, (int)INT16_MAX);
+	WBUFW(buf,40) = std::min(p->status_point, (int)INT16_MAX);
 #if PACKETVER_MAIN_NUM >= 20201007 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 	WBUFQ(buf, 42) = p->hp;
 	WBUFQ(buf, 50) = p->max_hp;
@@ -2061,8 +2062,8 @@ static int char_mmo_char_tobuf(uint8 *buffer, struct mmo_charstatus *p)
 	offset+=4;
 	buf = WBUFP(uint8 *, buffer,offset);
 #else
-	WBUFW(buf,42) = min(p->hp, (int)INT16_MAX);
-	WBUFW(buf,44) = min(p->max_hp, (int)INT16_MAX);
+	WBUFW(buf,42) = std::min(p->hp, (int)INT16_MAX);
+	WBUFW(buf,44) = std::min(p->max_hp, (int)INT16_MAX);
 #endif
 #if PACKETVER_MAIN_NUM >= 20201007 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 	WBUFQ(buf, 46) = p->sp;
@@ -2070,8 +2071,8 @@ static int char_mmo_char_tobuf(uint8 *buffer, struct mmo_charstatus *p)
 	offset += 12;
 	buf = WBUFP(uint8 *, buffer, offset);
 #else  // PACKETVER_MAIN_NUM >= 20201007 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
-	WBUFW(buf, 46) = min(p->sp, (int)INT16_MAX);
-	WBUFW(buf, 48) = min(p->max_sp, (int)INT16_MAX);
+	WBUFW(buf, 46) = std::min(p->sp, (int)INT16_MAX);
+	WBUFW(buf, 48) = std::min(p->max_sp, (int)INT16_MAX);
 #endif  // PACKETVER_MAIN_NUM >= 20201007 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 	WBUFW(buf,50) = DEFAULT_WALK_SPEED; // p->speed;
 	WBUFW(buf,52) = p->class_;
@@ -2087,7 +2088,7 @@ static int char_mmo_char_tobuf(uint8 *buffer, struct mmo_charstatus *p)
 	WBUFW(buf,56) = (p->option&(OPTION_RIDING|OPTION_DRAGON|OPTION_WUG|OPTION_WUGRIDER|OPTION_MADOGEAR|OPTION_HANBOK)) ? 0 : p->look.weapon;
 
 	WBUFW(buf,58) = p->base_level;
-	WBUFW(buf,60) = min(p->skill_point, (int)INT16_MAX);
+	WBUFW(buf,60) = std::min(p->skill_point, (int)INT16_MAX);
 	WBUFW(buf,62) = p->look.head_bottom;
 	WBUFW(buf,64) = p->look.shield;
 	WBUFW(buf,66) = p->look.head_top;
@@ -2095,12 +2096,12 @@ static int char_mmo_char_tobuf(uint8 *buffer, struct mmo_charstatus *p)
 	WBUFW(buf,70) = p->hair_color;
 	WBUFW(buf,72) = p->clothes_color;
 	memcpy(WBUFP(char *, buf,74), p->name, NAME_LENGTH);
-	WBUFB(buf,98) = min(p->str, (short)UINT8_MAX);
-	WBUFB(buf,99) = min(p->agi, (short)UINT8_MAX);
-	WBUFB(buf,100) = min(p->vit, (short)UINT8_MAX);
-	WBUFB(buf,101) = min(p->int_, (short)UINT8_MAX);
-	WBUFB(buf,102) = min(p->dex, (short)UINT8_MAX);
-	WBUFB(buf,103) = min(p->luk, (short)UINT8_MAX);
+	WBUFB(buf,98) = std::min(p->str, (short)UINT8_MAX);
+	WBUFB(buf,99) = std::min(p->agi, (short)UINT8_MAX);
+	WBUFB(buf,100) = std::min(p->vit, (short)UINT8_MAX);
+	WBUFB(buf,101) = std::min(p->int_, (short)UINT8_MAX);
+	WBUFB(buf,102) = std::min(p->dex, (short)UINT8_MAX);
+	WBUFB(buf,103) = std::min(p->luk, (short)UINT8_MAX);
 	WBUFW(buf,104) = p->slot;
 #if PACKETVER >= 20061023
 	WBUFW(buf,106) = ( p->rename > 0 ) ? 0 : 1;
@@ -2998,7 +2999,7 @@ static void char_read_fame_list(void)
 		smith_fame_list[i].fame = atoi(data);
 		// name
 		SQL->GetData(inter->sql_handle, 2, &data, &len);
-		memcpy(smith_fame_list[i].name, data, min(len, (size_t)NAME_LENGTH));
+		memcpy(smith_fame_list[i].name, data, std::min(len, (size_t)NAME_LENGTH));
 	}
 	// Build Alchemist ranking list
 	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `char_id`,`fame`,`name` FROM `%s` WHERE `fame`>0 AND (`class`='%d' OR `class`='%d' OR `class`='%d' OR `class`='%d' OR `class`='%d' OR `class`='%d') ORDER BY `fame` DESC LIMIT 0,%d", char_db, JOB_ALCHEMIST, JOB_CREATOR, JOB_BABY_ALCHEMIST, JOB_GENETIC, JOB_GENETIC_T, JOB_BABY_GENETIC, fame_list_size_chemist) )
@@ -3013,7 +3014,7 @@ static void char_read_fame_list(void)
 		chemist_fame_list[i].fame = atoi(data);
 		// name
 		SQL->GetData(inter->sql_handle, 2, &data, &len);
-		memcpy(chemist_fame_list[i].name, data, min(len, (size_t)NAME_LENGTH));
+		memcpy(chemist_fame_list[i].name, data, std::min(len, (size_t)NAME_LENGTH));
 	}
 	// Build Taekwon ranking list
 	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `char_id`,`fame`,`name` FROM `%s` WHERE `fame`>0 AND (`class` in('%d', '%d')) ORDER BY `fame` DESC LIMIT 0,%d", char_db, JOB_TAEKWON, JOB_BABY_TAEKWON, fame_list_size_taekwon) )
@@ -3028,7 +3029,7 @@ static void char_read_fame_list(void)
 		taekwon_fame_list[i].fame = atoi(data);
 		// name
 		SQL->GetData(inter->sql_handle, 2, &data, &len);
-		memcpy(taekwon_fame_list[i].name, data, min(len, (size_t)NAME_LENGTH));
+		memcpy(taekwon_fame_list[i].name, data, std::min(len, (size_t)NAME_LENGTH));
 	}
 	SQL->FreeResult(inter->sql_handle);
 }
@@ -3508,7 +3509,7 @@ static void char_parse_frommap_change_account(int fd)
 
 	int acc = RFIFOL(fd,2); // account_id of who ask (-1 if server itself made this request)
 	const char *name = RFIFOP(char *, fd, 6); // name of the target character
-	enum zh_char_ask_name_type type = RFIFOW(fd,30); // type of operation: 1-block, 2-ban, 3-unblock, 4-unban, 5 changesex, 6 charban, 7 charunban
+	enum zh_char_ask_name_type type = (enum zh_char_ask_name_type)RFIFOW(fd,30); // type of operation: 1-block, 2-ban, 3-unblock, 4-unban, 5 changesex, 6 charban, 7 charunban
 	short year = 0, month = 0, day = 0, hour = 0, minute = 0, second = 0;
 	int sex = SEX_MALE;
 	if (type == 2 || type == 6) {
@@ -4133,7 +4134,7 @@ static int char_mapif_init(int fd)
  */
 static uint32 char_lan_subnet_check(uint32 ip)
 {
-	struct s_subnet lan = {0};
+	struct s_subnet lan{};
 	if (sockt->lan_subnet_check(ip, &lan)) {
 		ShowInfo("Subnet check [%u.%u.%u.%u]: Matches " CL_CYAN "%u.%u.%u.%u/%u.%u.%u.%u" CL_RESET "\n", CONVIP(ip), CONVIP(lan.ip & lan.mask), CONVIP(lan.mask));
 		return lan.ip;
@@ -5923,7 +5924,7 @@ static void char_config_set_start_item(const struct config_setting_t *setting)
 
 	for (i = 0; i < count; i++) {
 		const struct config_setting_t *t = libconfig->setting_get_elem(setting, i);
-		struct start_item_s start_item = { 0 };
+		struct start_item_s start_item{};
 
 		if (t == NULL)
 			continue;

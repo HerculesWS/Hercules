@@ -38,6 +38,7 @@
 #include "common/strlib.h"
 #include "common/timer.h"
 
+#include <algorithm>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -391,8 +392,8 @@ static struct guild *inter_guild_fromsql(int guild_id)
 	CREATE(g, struct guild, 1);
 
 	g->guild_id = guild_id;
-	SQL->GetData(inter->sql_handle,  0, &data, &len); memcpy(g->name, data, min(len, (size_t)NAME_LENGTH));
-	SQL->GetData(inter->sql_handle,  1, &data, &len); memcpy(g->master, data, min(len, (size_t)NAME_LENGTH));
+	SQL->GetData(inter->sql_handle,  0, &data, &len); memcpy(g->name, data, std::min(len, (size_t)NAME_LENGTH));
+	SQL->GetData(inter->sql_handle,  1, &data, &len); memcpy(g->master, data, std::min(len, (size_t)NAME_LENGTH));
 	SQL->GetData(inter->sql_handle,  2, &data, NULL); g->guild_lv = atoi(data);
 	SQL->GetData(inter->sql_handle,  3, &data, NULL); g->connect_member = atoi(data);
 	SQL->GetData(inter->sql_handle,  4, &data, NULL); g->max_member = atoi(data);
@@ -406,8 +407,8 @@ static struct guild *inter_guild_fromsql(int guild_id)
 	SQL->GetData(inter->sql_handle,  7, &data, NULL); g->exp = strtoull(data, NULL, 10);
 	SQL->GetData(inter->sql_handle,  8, &data, NULL); g->next_exp = (unsigned int)strtoul(data, NULL, 10);
 	SQL->GetData(inter->sql_handle,  9, &data, NULL); g->skill_point = atoi(data);
-	SQL->GetData(inter->sql_handle, 10, &data, &len); memcpy(g->mes1, data, min(len, sizeof(g->mes1)));
-	SQL->GetData(inter->sql_handle, 11, &data, &len); memcpy(g->mes2, data, min(len, sizeof(g->mes2)));
+	SQL->GetData(inter->sql_handle, 10, &data, &len); memcpy(g->mes1, data, std::min(len, sizeof(g->mes1)));
+	SQL->GetData(inter->sql_handle, 11, &data, &len); memcpy(g->mes2, data, std::min(len, sizeof(g->mes2)));
 	SQL->GetData(inter->sql_handle, 12, &data, &len); g->emblem_len = atoi(data);
 	SQL->GetData(inter->sql_handle, 13, &data, &len); g->emblem_id = atoi(data);
 	SQL->GetData(inter->sql_handle, 14, &data, &len);
@@ -462,7 +463,7 @@ static struct guild *inter_guild_fromsql(int guild_id)
 		SQL->GetData(inter->sql_handle, 10, &data, NULL); m->position = atoi(data);
 		if( m->position >= MAX_GUILDPOSITION ) // Fix reduction of MAX_GUILDPOSITION [PoW]
 			m->position = MAX_GUILDPOSITION - 1;
-		SQL->GetData(inter->sql_handle, 11, &data, &len); memcpy(m->name, data, min(len, (size_t)NAME_LENGTH));
+		SQL->GetData(inter->sql_handle, 11, &data, &len); memcpy(m->name, data, std::min(len, (size_t)NAME_LENGTH));
 		SQL->GetData(inter->sql_handle, 12, &data, NULL);
 		if (data != NULL) {
 			m->last_login = atoi(data);
@@ -492,7 +493,7 @@ static struct guild *inter_guild_fromsql(int guild_id)
 		if( position < 0 || position >= MAX_GUILDPOSITION )
 			continue;// invalid position
 		pos = &g->position[position];
-		SQL->GetData(inter->sql_handle, 1, &data, &len); memcpy(pos->name, data, min(len, (size_t)NAME_LENGTH));
+		SQL->GetData(inter->sql_handle, 1, &data, &len); memcpy(pos->name, data, std::min(len, (size_t)NAME_LENGTH));
 		SQL->GetData(inter->sql_handle, 2, &data, NULL); pos->mode = atoi(data);
 		SQL->GetData(inter->sql_handle, 3, &data, NULL); pos->exp_mode = atoi(data);
 		pos->modified = GS_POSITION_UNMODIFIED;
@@ -512,7 +513,7 @@ static struct guild *inter_guild_fromsql(int guild_id)
 
 		SQL->GetData(inter->sql_handle, 0, &data, NULL); a->opposition = atoi(data);
 		SQL->GetData(inter->sql_handle, 1, &data, NULL); a->guild_id = atoi(data);
-		SQL->GetData(inter->sql_handle, 2, &data, &len); memcpy(a->name, data, min(len, (size_t)NAME_LENGTH));
+		SQL->GetData(inter->sql_handle, 2, &data, &len); memcpy(a->name, data, std::min(len, (size_t)NAME_LENGTH));
 	}
 
 	//printf("- Read guild_expulsion %d from sql \n",guild_id);
@@ -529,8 +530,8 @@ static struct guild *inter_guild_fromsql(int guild_id)
 
 		SQL->GetData(inter->sql_handle, 0, &data, NULL); e->account_id = atoi(data);
 		SQL->GetData(inter->sql_handle, 1, &data, NULL); e->char_id = atoi(data);
-		SQL->GetData(inter->sql_handle, 2, &data, &len); memcpy(e->name, data, min(len, (size_t)NAME_LENGTH));
-		SQL->GetData(inter->sql_handle, 3, &data, &len); memcpy(e->mes, data, min(len, sizeof(e->mes)));
+		SQL->GetData(inter->sql_handle, 2, &data, &len); memcpy(e->name, data, std::min(len, (size_t)NAME_LENGTH));
+		SQL->GetData(inter->sql_handle, 3, &data, &len); memcpy(e->mes, data, std::min(len, sizeof(e->mes)));
 	}
 
 	//printf("- Read guild_skill %d from sql \n",guild_id);
@@ -1259,7 +1260,7 @@ static bool inter_guild_update_basic_info(int guild_id, enum guild_basic_info ty
 			break;
 
 		default:
-			ShowError("int_guild: GuildBasicInfoChange: Unknown type %u, see mmo.h::guild_basic_info for more information\n", type);
+			ShowError("int_guild: GuildBasicInfoChange: Unknown type %u, see mmo.h::guild_basic_info for more information\n", (unsigned int)type);
 			return false;
 	}
 	mapif->guild_info(g);
@@ -1370,7 +1371,7 @@ static bool inter_guild_update_member_info(int guild_id, int account_id, int cha
 			break;
 		}
 		default:
-		  ShowError("int_guild: GuildMemberInfoChange: Unknown type %u\n", type);
+		  ShowError("int_guild: GuildMemberInfoChange: Unknown type %u\n", (unsigned int)type);
 		  return false;
 		  break;
 	}

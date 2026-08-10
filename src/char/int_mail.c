@@ -34,6 +34,7 @@
 #include "common/strlib.h"
 #include "common/timer.h"
 
+#include <algorithm>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -150,7 +151,7 @@ static int inter_mail_savemessage(struct mail_message *msg)
 	for (j = 0; j < MAX_ITEM_OPTIONS; j++)
 		StrBuf->Printf(&buf, ", `opt_idx%d`, `opt_val%d`", j, j);
 	StrBuf->Printf(&buf, ") VALUES (?, '%d', ?, '%d', ?, ?, '%lu', '%u', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%" PRIu64 "'",
-		msg->send_id, msg->dest_id, (unsigned long)msg->timestamp, msg->status, msg->zeny, msg->item.amount, msg->item.nameid, msg->item.refine, msg->item.grade, msg->item.attribute, msg->item.identify, msg->item.unique_id);
+		msg->send_id, msg->dest_id, (unsigned long)msg->timestamp, (unsigned int)msg->status, msg->zeny, msg->item.amount, msg->item.nameid, msg->item.refine, msg->item.grade, msg->item.attribute, msg->item.identify, msg->item.unique_id);
 	for (j = 0; j < MAX_SLOTS; j++)
 		StrBuf->Printf(&buf, ", '%d'", msg->item.card[j]);
 	for (j = 0; j < MAX_ITEM_OPTIONS; j++)
@@ -331,7 +332,7 @@ static bool inter_mail_return_message(int char_id, int mail_id, int *new_mail)
 		char temp_[MAIL_TITLE_LENGTH];
 
 		// swap sender and receiver
-		swap(msg.send_id, msg.dest_id);
+		std::swap(msg.send_id, msg.dest_id);
 		safestrncpy(temp_, msg.send_name, NAME_LENGTH);
 		safestrncpy(msg.send_name, msg.dest_name, NAME_LENGTH);
 		safestrncpy(msg.dest_name, temp_, NAME_LENGTH);

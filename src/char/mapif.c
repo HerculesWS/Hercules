@@ -52,6 +52,7 @@
 #include "common/strlib.h"
 #include "common/chunked/wfifo.h"
 
+#include <algorithm>
 #include <stdlib.h>
 
 static struct mapif_interface mapif_s;
@@ -186,7 +187,7 @@ static void mapif_parse_auction_requestlist(int fd)
 	char searchtext[NAME_LENGTH];
 	int char_id = RFIFOL(fd, 4), len = sizeof(struct auction_data);
 	int price = RFIFOL(fd, 10);
-	short type = RFIFOW(fd, 8), page = max(1i16, (short)RFIFOW(fd, 14)); // FIXME: There's no need for these vars to be smaller than int
+	short type = RFIFOW(fd, 8), page = std::max(1i16, (short)RFIFOW(fd, 14)); // FIXME: There's no need for these vars to be smaller than int
 	unsigned char buf[5 * sizeof(struct auction_data)];
 	struct DBIterator *iter = db_iterator(inter_auction->db);
 	short i = 0, j = 0, pages = 1;
@@ -784,7 +785,7 @@ static int mapif_parse_BreakGuild(int fd, int guild_id)
  **/
 static int mapif_parse_GuildBasicInfoChange(int fd, int guild_id, int type, const void *data, int len)
 {
-	inter_guild->update_basic_info(guild_id, type, data, len);
+	inter_guild->update_basic_info(guild_id, (enum guild_basic_info)type, data, len);
 	// Information is already sent in mapif->guild_info
 	//mapif->guild_basicinfochanged(guild_id,type,data,len);
 	return 0;
@@ -793,7 +794,7 @@ static int mapif_parse_GuildBasicInfoChange(int fd, int guild_id, int type, cons
 // Modification of the guild
 static int mapif_parse_GuildMemberInfoChange(int fd, int guild_id, int account_id, int char_id, int type, const char *data, int len)
 {
-	inter_guild->update_member_info(guild_id, account_id, char_id, type, data, len);
+	inter_guild->update_member_info(guild_id, account_id, char_id, (enum guild_member_info)type, data, len);
 	return 0;
 }
 
@@ -1005,7 +1006,7 @@ static void mapif_mail_sendattach(int fd, int char_id, struct mail_message *msg)
 
 static void mapif_parse_mail_getattach(int fd)
 {
-	struct mail_message msg = { 0 };
+	struct mail_message msg{};
 	int char_id = RFIFOL(fd, 2);
 	int mail_id = RFIFOL(fd, 6);
 
@@ -1601,7 +1602,7 @@ static void mapif_parse_rodex_requestinbox(int fd)
 	int8 flag = RFIFOB(fd, 10);
 	int8 opentype = RFIFOB(fd, 11);
 	int64 mail_id = RFIFOQ(fd, 12);
-	struct rodex_maillist mails = { 0 };
+	struct rodex_maillist mails{};
 
 	VECTOR_INIT(mails);
 	if (flag == 0)
@@ -1632,7 +1633,7 @@ static void mapif_rodex_sendinbox(int fd, int char_id, int8 opentype, int8 flag,
 			limit = to_send;
 			is_last = true;
 		} else {
-			limit = min(to_send, per_packet);
+			limit = std::min(to_send, per_packet);
 			if (limit != to_send) {
 				is_last = false;
 			}
@@ -1704,7 +1705,7 @@ static void mapif_parse_rodex_updatemail(int fd)
  *------------------------------------------*/
 static void mapif_parse_rodex_send(int fd)
 {
-	struct rodex_message msg = { 0 };
+	struct rodex_message msg{};
 
 	if (RFIFOW(fd,2) != 4 + sizeof(struct rodex_message))
 		return;
@@ -1839,7 +1840,7 @@ static int mapif_save_guild_storage_ack(int fd, int account_id, int guild_id, in
  */
 static int mapif_account_storage_load(int fd, int account_id, int storage_id, int storage_size)
 {
-	struct storage_data stor = { 0 };
+	struct storage_data stor{};
 	int count = 0, i = 0, len = 0;
 
 	Assert_ret(account_id > 0);
@@ -1910,7 +1911,7 @@ static int mapif_parse_AccountStorageSave(int fd)
 	int storage_id = RFIFOW(fd, 8);
 
 	int i = 0, count = 0;
-	struct storage_data p_stor = { 0 };
+	struct storage_data p_stor{};
 
 	Assert_ret(fd > 0);
 	Assert_ret(account_id > 0);
@@ -2002,7 +2003,7 @@ static int mapif_parse_SaveGuildStorage(int fd)
 		return 1;
 	}
 
-	struct guild_storage gstor = { 0 };
+	struct guild_storage gstor{};
 
 	if (storage_capacity > 0) {
 		gstor.items.data = (struct item *)aCalloc(storage_capacity, sizeof gstor.items.data[0]);
@@ -2101,7 +2102,7 @@ static int mapif_parse_Registry(int fd)
 		for (i = 0; i < count; i++) {
 			unsigned int index;
 			int len = RFIFOB(fd, cursor);
-			safestrncpy(key, RFIFOP(char *, fd, cursor + 1), min((int)sizeof(key), len));
+			safestrncpy(key, RFIFOP(char *, fd, cursor + 1), std::min((int)sizeof(key), len));
 			cursor += len + 1;
 
 			index = RFIFOL(fd, cursor);
@@ -2119,7 +2120,7 @@ static int mapif_parse_Registry(int fd)
 			/* str */
 			case 2:
 				len = RFIFOB(fd, cursor);
-				safestrncpy(sval, RFIFOP(char *, fd, cursor + 1), min((int)sizeof(sval), len + 1));
+				safestrncpy(sval, RFIFOP(char *, fd, cursor + 1), std::min((int)sizeof(sval), len + 1));
 				cursor += len + 2;
 				inter->savereg(account_id, char_id, key, index, (intptr_t)sval, true);
 				break;
@@ -2296,7 +2297,7 @@ STATIC_ASSERT((sizeof(struct achievement) * MAX_ACHIEVEMENT_DB + 8 <= UINT16_MAX
 static void mapif_parse_save_achievements(int fd)
 {
 	int size = 0, char_id = 0, payload_count = 0, i = 0;
-	struct char_achievements p = { 0 };
+	struct char_achievements p{};
 
 	RFIFOHEAD(fd);
 	size = RFIFOW(fd, 2);
@@ -2308,7 +2309,7 @@ static void mapif_parse_save_achievements(int fd)
 	VECTOR_ENSURE(p, payload_count, 1);
 
 	for (i = 0; i < payload_count; i++) {
-		struct achievement ach = { 0 };
+		struct achievement ach{};
 		memcpy(&ach, RFIFOP(struct achievement *, fd, 8 + i * sizeof(struct achievement)), sizeof(struct achievement));
 		VECTOR_PUSH(p, ach);
 	}

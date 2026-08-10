@@ -44,7 +44,7 @@ struct inter_rodex_interface *inter_rodex;
 static int inter_rodex_fromsql(int char_id, int account_id, int8 opentype, int64 mail_id, struct rodex_maillist *mails)
 {
 	int count = 0;
-	struct rodex_message msg = { 0 };
+	struct rodex_message msg{};
 	struct SqlStmt *stmt;
 
 	nullpo_retr(-1, mails);
@@ -131,7 +131,7 @@ static int inter_rodex_fromsql(int char_id, int account_id, int8 opentype, int64
 	}
 
 	{
-		struct item it = { 0 };
+		struct item it{};
 		StringBuf buf;
 		struct SqlStmt *stmt_items = SQL->StmtMalloc(inter->sql_handle);
 		int i;
@@ -414,7 +414,7 @@ static int inter_rodex_getitems(int64 mail_id, struct rodex_item *items)
 		}
 		StrBuf->Printf(&buf, "FROM `%s` WHERE mail_id = ? ORDER BY `mail_id` ASC", rodex_item_db);
 
-		struct item it = { 0 };
+		struct item it{};
 
 		if (SQL_ERROR == SQL->StmtPrepareStr(stmt_items, StrBuf->Value(&buf))
 		 || SQL_ERROR == SQL->StmtBindParam(stmt_items, 0, SQLDT_INT64, &mail_id, sizeof mail_id)

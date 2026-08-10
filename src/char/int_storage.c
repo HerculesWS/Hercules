@@ -47,7 +47,7 @@ static int inter_storage_tosql(int account_id, int storage_id, const struct stor
 	bool matched_p[MAX_STORAGE] = { false };
 	int delete_[MAX_STORAGE] = { 0 };
 	int total_deletes = 0, total_updates = 0, total_inserts = 0;
-	struct storage_data cp = { 0 };
+	struct storage_data cp{};
 	StringBuf buf;
 
 	nullpo_ret(p);
@@ -194,7 +194,7 @@ static int inter_storage_fromsql(int account_id, int storage_id, struct storage_
 		VECTOR_ENSURE(p->item, num_rows, 1);
 
 		for (int j = 0; j < num_rows && SQL_SUCCESS == SQL->NextRow(inter->sql_handle); ++j) {
-			struct item item = { 0 };
+			struct item item{};
 			SQL->GetData(inter->sql_handle, 0, &data, NULL); item.id = atoi(data);
 			SQL->GetData(inter->sql_handle, 1, &data, NULL); item.nameid = atoi(data);
 			SQL->GetData(inter->sql_handle, 2, &data, NULL); item.amount = atoi(data);

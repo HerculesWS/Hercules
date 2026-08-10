@@ -257,8 +257,8 @@ static struct s_pet *inter_pet_create(int account_id, int char_id, int pet_class
 	inter_pet->pt->level = pet_lv;
 	inter_pet->pt->egg_id = pet_egg_id;
 	inter_pet->pt->equip = pet_equip;
-	inter_pet->pt->intimate = cap_value(intimate, PET_INTIMACY_NONE, PET_INTIMACY_MAX);
-	inter_pet->pt->hungry = cap_value(hungry, PET_HUNGER_STARVING, PET_HUNGER_STUFFED);
+	inter_pet->pt->intimate = cap_value(intimate, (int)PET_INTIMACY_NONE, (int)PET_INTIMACY_MAX);
+	inter_pet->pt->hungry = cap_value(hungry, (int)PET_HUNGER_STARVING, (int)PET_HUNGER_STUFFED);
 	inter_pet->pt->rename_flag = rename_flag;
 	inter_pet->pt->incubate = incubate;
 	inter_pet->pt->pet_id = 0; // Signal NEW pet.
