@@ -69,6 +69,7 @@
 #include "common/timer.h"
 #include "common/utils.h"
 
+#include <algorithm>
 #include <signal.h>
 #include <stdarg.h>
 #include <stdio.h>

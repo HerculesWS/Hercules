@@ -36,6 +36,7 @@
 #include "common/sql.h"
 #include "common/strlib.h"
 
+#include <algorithm>
 #include <stdio.h>
 #include <stdlib.h>
 

@@ -104,3 +104,5 @@ install(
     DESTINATION
     .
 )
+
+set_source_files_properties(${CHAR_SRCS} PROPERTIES LANGUAGE CXX)
