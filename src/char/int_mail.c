@@ -34,6 +34,7 @@
 #include "common/strlib.h"
 #include "common/timer.h"
 
+#include <algorithm>
 #include <stdio.h>
 #include <stdlib.h>
 

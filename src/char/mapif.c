@@ -52,6 +52,7 @@
 #include "common/strlib.h"
 #include "common/chunked/wfifo.h"
 
+#include <algorithm>
 #include <stdlib.h>
 
 static struct mapif_interface mapif_s;
