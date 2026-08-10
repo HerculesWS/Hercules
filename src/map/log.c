@@ -523,7 +523,7 @@ static void log_set_defaults(void)
 	memset(&logs->config, 0, sizeof(logs->config));
 
 	//map_log default values
-	logs->config.enable_logs = 0xFFFFF;
+	logs->config.enable_logs = LOG_TYPE_ALL;
 	logs->config.commands = true;
 
 	//map_log/database default values
@@ -707,7 +707,7 @@ static bool log_config_read(const char *filename, bool imported)
 	}
 
 	if (libconfig->setting_lookup_int(setting, "enable", &temp) == CONFIG_TRUE) {
-		logs->config.enable_logs = temp&LOG_TYPE_ALL; // e_log_pick_type
+		logs->config.enable_logs = (e_log_pick_type)(temp&LOG_TYPE_ALL); // e_log_pick_type
 	}
 	libconfig->setting_lookup_int(setting, "log_zeny", &logs->config.zeny);
 	libconfig->setting_lookup_bool_real(setting, "log_branch", &logs->config.branch);

@@ -720,7 +720,7 @@ static void instance_set_timeout(int instance_id, unsigned int progress_timeout,
 	}
 
 	if( instance->list[instance_id].idle_timer == INVALID_TIMER && instance->list[instance_id].progress_timer != INVALID_TIMER )
-		clif->instance(instance_id, 3, 0);
+		clif->instance(instance_id, INSTANCE_WND_INFO_PROGRESS_TIME, 0);
 }
 
 /*--------------------------------------
@@ -817,7 +817,7 @@ static void instance_reload_map_flags(int instance_id)
 		struct map_data *dstMap = &map->list[curInst->map[i]];
 		const struct map_data *srcMap = &map->list[dstMap->instance_src_map];
 
-		memcpy(&dstMap->flag, &srcMap->flag, sizeof(struct map_flag));
+		memcpy(&dstMap->flag, &srcMap->flag, sizeof(struct map_data::map_flag));
 
 		dstMap->flag.src4instance = 0;
 	}

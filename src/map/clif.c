@@ -83,6 +83,7 @@
 #include "common/utils.h"
 #include "common/chunked/wfifo.h"
 
+#include <algorithm>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -848,7 +849,7 @@ static void clif_dropflooritem(struct flooritem_data *fitem)
 	p.ITAID = fitem->bl.id;
 	p.ITID = ((view = itemdb_viewid(fitem->item_data.nameid)) > 0) ? view : fitem->item_data.nameid;
 #if PACKETVER >= 20130000 /* not sure date */
-	p.type = itemtype(itemdb_type(fitem->item_data.nameid));
+	p.type = itemtype((enum item_types)itemdb_type(fitem->item_data.nameid));
 #endif
 	p.IsIdentified = fitem->item_data.identify ? 1 : 0;
 	p.xPos = fitem->bl.x;
@@ -1763,8 +1764,8 @@ static void clif_hominfo(struct map_session_data *sd, struct homun_data *hd, int
 	p.exp = hd->homunculus.exp;
 	p.expNext = hd->exp_next;
 #else  // PACKETVER_MAIN_NUM >= 20210303 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
-	p.exp = (uint32)min(hd->homunculus.exp, (uint64)UINT32_MAX);
-	p.expNext = (uint32)min(hd->exp_next, (uint64)UINT32_MAX);
+	p.exp = (uint32)std::min(hd->homunculus.exp, (uint64)UINT32_MAX);
+	p.expNext = (uint32)std::min(hd->exp_next, (uint64)UINT32_MAX);
 #endif  // PACKETVER_MAIN_NUM >= 20210303 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 
 	if (hd->homunculus.level >= homun->get_max_level(hd))
@@ -2225,7 +2226,7 @@ static void clif_buylist(struct map_session_data *sd, struct npc_data *nd)
 
 			p->items[c].price = val;
 			p->items[c].discountPrice = pc->modifybuyvalue(sd, val, id->flag.ignore_discount);
-			p->items[c].itemType = itemtype(id->type);
+			p->items[c].itemType = itemtype((enum item_types)id->type);
 			p->items[c].itemId = (id->view_id > 0) ? id->view_id : id->nameid;
 #if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 			p->items[c].viewSprite = id->view_sprite;
@@ -2864,7 +2865,7 @@ static void clif_additem(struct map_session_data *sd, int n, int amount, int fai
 		p.refiningLevel =sd->status.inventory[n].refine;
 		clif->addcards(&p.slot, &sd->status.inventory[n]);
 		p.location = pc->equippoint(sd,n);
-		p.type = itemtype(sd->inventory_data[n]->type);
+		p.type = itemtype((enum item_types)sd->inventory_data[n]->type);
 #if PACKETVER >= 20061218
 		p.HireExpireDate = sd->status.inventory[n].expire_time;
 #endif
@@ -2955,7 +2956,7 @@ static void clif_item_sub(unsigned char *buf, int n, struct item *i, struct item
 		WBUFW(buf,n)=id->view_id;
 	else
 		WBUFW(buf,n)=i->nameid;
-	WBUFB(buf,n+2)=itemtype(id->type);
+	WBUFB(buf,n+2)=itemtype((enum item_types)id->type);
 	WBUFB(buf,n+3)=i->identify;
 	if (equip >= 0) { //Equippable item
 		WBUFW(buf,n+4)=equip;
@@ -2984,7 +2985,7 @@ static void clif_item_equip(short idx, struct EQUIPITEM_INFO *p, struct item *it
 	else
 		p->ITID = it->nameid;
 
-	p->type = itemtype(id->type);
+	p->type = itemtype((enum item_types)id->type);
 
 #if PACKETVER < 20120925
 	p->IsIdentified = it->identify ? 1 : 0;
@@ -3039,7 +3040,7 @@ static void clif_item_normal(short idx, struct NORMALITEM_INFO *p, struct item *
 	else
 		p->ITID = i->nameid;
 
-	p->type = itemtype(id->type);
+	p->type = itemtype((enum item_types)id->type);
 
 #if PACKETVER < 20120925
 	p->IsIdentified = i->identify ? 1 : 0;
@@ -4094,18 +4095,18 @@ static void clif_initialstatus(struct map_session_data *sd)
 	unsigned char *buf = WFIFOP(unsigned char *, fd, 0);
 
 	WBUFW(buf,0)=0xbd;
-	WBUFW(buf,2)=min(sd->status.status_point, (int)INT16_MAX);
-	WBUFB(buf,4)=min(sd->status.str, (short)UINT8_MAX);
+	WBUFW(buf,2)=std::min(sd->status.status_point, (int)INT16_MAX);
+	WBUFB(buf,4)=std::min(sd->status.str, (short)UINT8_MAX);
 	WBUFB(buf,5)=pc->need_status_point(sd,SP_STR,1);
-	WBUFB(buf,6)=min(sd->status.agi, (short)UINT8_MAX);
+	WBUFB(buf,6)=std::min(sd->status.agi, (short)UINT8_MAX);
 	WBUFB(buf,7)=pc->need_status_point(sd,SP_AGI,1);
-	WBUFB(buf,8)=min(sd->status.vit, (short)UINT8_MAX);
+	WBUFB(buf,8)=std::min(sd->status.vit, (short)UINT8_MAX);
 	WBUFB(buf,9)=pc->need_status_point(sd,SP_VIT,1);
-	WBUFB(buf,10)=min(sd->status.int_, (short)UINT8_MAX);
+	WBUFB(buf,10)=std::min(sd->status.int_, (short)UINT8_MAX);
 	WBUFB(buf,11)=pc->need_status_point(sd,SP_INT,1);
-	WBUFB(buf,12)=min(sd->status.dex, (short)UINT8_MAX);
+	WBUFB(buf,12)=std::min(sd->status.dex, (short)UINT8_MAX);
 	WBUFB(buf,13)=pc->need_status_point(sd,SP_DEX,1);
-	WBUFB(buf,14)=min(sd->status.luk, (short)UINT8_MAX);
+	WBUFB(buf,14)=std::min(sd->status.luk, (short)UINT8_MAX);
 	WBUFB(buf,15)=pc->need_status_point(sd,SP_LUK,1);
 
 	WBUFW(buf,16) = pc_leftside_atk(sd);
@@ -4893,7 +4894,7 @@ static void clif_storageitemadded(struct map_session_data *sd, struct item *i, i
 	p->amount = amount;
 	p->itemId = (view > 0) ? view : i->nameid;
 #if PACKETVER >= 5
-	p->itemType = itemtype(itemdb_type(i->nameid));
+	p->itemType = itemtype((enum item_types)itemdb_type(i->nameid));
 #endif
 	p->identified = i->identify;
 	p->damaged = i->attribute;
@@ -5144,11 +5145,11 @@ static int clif_damage(struct block_list *src, struct block_list *dst, int sdela
 	}
 
 #if PACKETVER < 20071113
-	damage = (short)min(in_damage, (int64)INT16_MAX);
-	damage2 = (short)min(in_damage2, (int64)INT16_MAX);
+	damage = (short)std::min(in_damage, (int64)INT16_MAX);
+	damage2 = (short)std::min(in_damage2, (int64)INT16_MAX);
 #else
-	damage = (int)min(in_damage, (int64)INT_MAX);
-	damage2 = (int)min(in_damage2, (int64)INT_MAX);
+	damage = (int)std::min(in_damage, (int64)INT_MAX);
+	damage2 = (int)std::min(in_damage2, (int64)INT_MAX);
 #endif
 
 	type = clif_calc_delay(type,div,damage+damage2,ddelay);
@@ -6047,9 +6048,9 @@ static int clif_skill_nodamage(struct block_list *src, struct block_list *dst, u
 	p.PacketType = HEADER_ZC_USE_SKILL;
 	p.SKID = skill_id;
 #if PACKETVER_MAIN_NUM >= 20130731 || PACKETVER_RE_NUM >= 20130724 || defined(PACKETVER_ZERO)
-	p.level = min(heal, INT_MAX);
+	p.level = std::min(heal, INT_MAX);
 #else
-	p.level = min(heal, (int)INT16_MAX);
+	p.level = std::min(heal, (int)INT16_MAX);
 #endif
 	p.targetAID = dst->id;
 	p.srcAID = src ? src->id : 0;
@@ -6481,7 +6482,6 @@ static void clif_displaymessage_sprintf(const int fd, const char *mes, ...)
 		ShowMessage("\n");
 	} else if (fd > 0) {
 		int len = 1;
-		char *ptr;
 
 		WFIFOHEAD(fd, 5 + 255);/* ensure the maximum */
 
@@ -6491,7 +6491,7 @@ static void clif_displaymessage_sprintf(const int fd, const char *mes, ...)
 		va_end(ap);
 
 		/* adjusting */
-		ptr = WFIFOP(char *, fd, 4);
+		char *ptr = WFIFOP(char *, fd, 4);
 		ptr[len - 1] = '\0';
 
 		/* */
@@ -6556,7 +6556,6 @@ static void clif_GlobalMessage(struct block_list *bl, const char *message)
 /// 01c3 <packet len>.W <fontColor>.L <fontType>.W <fontSize>.W <fontAlign>.W <fontY>.W <message>.?B
 static void clif_broadcast2(struct block_list *bl, const char *mes, int len, unsigned int fontColor, short fontType, short fontSize, short fontAlign, short fontY, enum send_target target)
 {
-
 	nullpo_retv(mes);
 
 	unsigned char *buf = (unsigned char *)aMalloc((16 + len)*sizeof(unsigned char));
@@ -7197,7 +7196,7 @@ static void clif_vendinglist(struct map_session_data *sd, unsigned int id, struc
 		p->items[i].price = vending_items[i].value;
 		p->items[i].amount = vending_items[i].amount;
 		p->items[i].index = vending_items[i].index + 2;
-		p->items[i].itemType = itemtype(data->type);
+		p->items[i].itemType = itemtype((enum item_types)data->type);
 		p->items[i].itemId = (data->view_id > 0) ? data->view_id : vsd->status.cart[index].nameid;
 		p->items[i].identified = vsd->status.cart[index].identify;
 		p->items[i].damaged = vsd->status.cart[index].attribute;
@@ -7264,7 +7263,7 @@ static void clif_openvending(struct map_session_data *sd, int id, struct s_vendi
 		p->items[i].price = vending_items[i].value;
 		p->items[i].index = vending_items[i].index + 2;
 		p->items[i].amount = vending_items[i].amount;
-		p->items[i].itemType = itemtype(data->type);
+		p->items[i].itemType = itemtype((enum item_types)data->type);
 		p->items[i].itemId = (data->view_id > 0) ? data->view_id : sd->status.cart[index].nameid;
 		p->items[i].identified = sd->status.cart[index].identify;
 		p->items[i].damaged = sd->status.cart[index].attribute;
@@ -12118,10 +12117,8 @@ static void clif_parse_ChangeDir(int fd, struct map_session_data *sd) __attribut
 /// There are various variants of this packet, some of them have padding between fields.
 static void clif_parse_ChangeDir(int fd, struct map_session_data *sd)
 {
-	unsigned char headdir, dir;
-
-	headdir = RFIFOB(fd,packet_db[RFIFOW(fd,0)].pos[0]);
-	dir = RFIFOB(fd,packet_db[RFIFOW(fd,0)].pos[1]);
+	unsigned char headdir = RFIFOB(fd,packet_db[RFIFOW(fd,0)].pos[0]);
+	enum unit_dir dir = (enum unit_dir)RFIFOB(fd,packet_db[RFIFOW(fd,0)].pos[1]);
 	pc_setdir(sd, dir, headdir);
 
 	clif->changed_dir(&sd->bl, AREA_WOS);
@@ -12134,7 +12131,7 @@ static void clif_parse_Emotion(int fd, struct map_session_data *sd) __attribute_
 ///     @see enum emotion_type
 static void clif_parse_Emotion(int fd, struct map_session_data *sd)
 {
-	enum emotion_type emoticon = RFIFOB(fd,packet_db[RFIFOW(fd,0)].pos[0]);
+	enum emotion_type emoticon = (enum emotion_type)RFIFOB(fd,packet_db[RFIFOW(fd,0)].pos[0]);
 
 	if (battle_config.basic_skill_check == 0 || pc->check_basicskill(sd, 2)) {
 		if (emoticon == E_MUTE) {// prevent use of the mute emote [Valaris]
@@ -12152,7 +12149,7 @@ static void clif_parse_Emotion(int fd, struct map_session_data *sd)
 		pc->update_idle_time(sd, BCIDLE_EMOTION);
 
 		if(battle_config.client_reshuffle_dice && emoticon>=E_DICE1 && emoticon<=E_DICE6) {// re-roll dice
-			emoticon = rnd()%6+E_DICE1;
+			emoticon = (enum emotion_type)(rnd() % 6 + E_DICE1);
 		}
 
 		clif->emotion(&sd->bl, emoticon);
@@ -13023,7 +13020,7 @@ static void clif_parse_CreateChatRoom(int fd, struct map_session_data *sd)
 	}
 
 	safestrncpy(s_password, password, CHATROOM_PASS_SIZE);
-	safestrncpy(s_title, title, min(len+1,CHATROOM_TITLE_SIZE)); //NOTE: assumes that safestrncpy will not access the len+1'th byte
+	safestrncpy(s_title, title, std::min(len+1,CHATROOM_TITLE_SIZE)); //NOTE: assumes that safestrncpy will not access the len+1'th byte
 
 	chat->create_pc_chat(sd, s_title, s_password, limit, pub);
 }
@@ -13070,7 +13067,7 @@ static void clif_parse_ChatRoomStatusChange(int fd, struct map_session_data *sd)
 	const char *title = RFIFOP(char *, fd, 15); // not zero-terminated
 
 	safestrncpy(s_password, password, CHATROOM_PASS_SIZE);
-	safestrncpy(s_title, title, min(len+1,CHATROOM_TITLE_SIZE)); //NOTE: assumes that safestrncpy will not access the len+1'th byte
+	safestrncpy(s_title, title, std::min(len+1,CHATROOM_TITLE_SIZE)); //NOTE: assumes that safestrncpy will not access the len+1'th byte
 
 	chat->change_status(sd, s_title, s_password, limit, pub);
 }
@@ -14130,7 +14127,7 @@ static void clif_parse_NpcStringInput(int fd, struct map_session_data *sd)
 	npcid = (sd->state.using_megaphone == 0) ? RFIFOSL(fd, 4) : sd->npc_id;
 	const char *message = RFIFOP(char *, fd, 8);
 
-	safestrncpy(sd->npc_str, message, min(message_len,CHATBOX_SIZE));
+	safestrncpy(sd->npc_str, message, std::min(message_len,CHATBOX_SIZE));
 	npc->scriptcont(sd, npcid, false);
 }
 
@@ -17262,7 +17259,7 @@ static void clif_parse_ranklist(int fd, struct map_session_data *sd) __attribute
  * */
 static void clif_parse_ranklist(int fd, struct map_session_data *sd)
 {
-	int16 type = RFIFOW(fd, 2); //type
+	enum fame_list_type type = (enum fame_list_type)RFIFOW(fd, 2); //type
 
 	switch( type ) {
 		case RANKTYPE_BLACKSMITH:
@@ -17648,17 +17645,17 @@ static void clif_check(int fd, struct map_session_data *pl_sd)
 	nullpo_retv(pl_sd);
 	WFIFOHEAD(fd,packet_len(0x214));
 	WFIFOW(fd, 0) = 0x214;
-	WFIFOB(fd, 2) = min(pl_sd->status.str, (short)UINT8_MAX);
+	WFIFOB(fd, 2) = std::min(pl_sd->status.str, (short)UINT8_MAX);
 	WFIFOB(fd, 3) = pc->need_status_point(pl_sd, SP_STR, 1);
-	WFIFOB(fd, 4) = min(pl_sd->status.agi, (short)UINT8_MAX);
+	WFIFOB(fd, 4) = std::min(pl_sd->status.agi, (short)UINT8_MAX);
 	WFIFOB(fd, 5) = pc->need_status_point(pl_sd, SP_AGI, 1);
-	WFIFOB(fd, 6) = min(pl_sd->status.vit, (short)UINT8_MAX);
+	WFIFOB(fd, 6) = std::min(pl_sd->status.vit, (short)UINT8_MAX);
 	WFIFOB(fd, 7) = pc->need_status_point(pl_sd, SP_VIT, 1);
-	WFIFOB(fd, 8) = min(pl_sd->status.int_, (short)UINT8_MAX);
+	WFIFOB(fd, 8) = std::min(pl_sd->status.int_, (short)UINT8_MAX);
 	WFIFOB(fd, 9) = pc->need_status_point(pl_sd, SP_INT, 1);
-	WFIFOB(fd,10) = min(pl_sd->status.dex, (short)UINT8_MAX);
+	WFIFOB(fd,10) = std::min(pl_sd->status.dex, (short)UINT8_MAX);
 	WFIFOB(fd,11) = pc->need_status_point(pl_sd, SP_DEX, 1);
-	WFIFOB(fd,12) = min(pl_sd->status.luk, (short)UINT8_MAX);
+	WFIFOB(fd,12) = std::min(pl_sd->status.luk, (short)UINT8_MAX);
 	WFIFOB(fd,13) = pc->need_status_point(pl_sd, SP_LUK, 1);
 	WFIFOW(fd,14) = pl_sd->battle_status.batk+pl_sd->battle_status.rhw.atk+pl_sd->battle_status.lhw.atk;
 	WFIFOW(fd,16) = pl_sd->battle_status.rhw.atk2+pl_sd->battle_status.lhw.atk2;
@@ -18634,7 +18631,7 @@ static void clif_cashshop_show(struct map_session_data *sd, struct npc_data *nd)
 				continue;
 			p->items[c].price = shop[i].value;
 			p->items[c].discountPrice = shop[i].value;
-			p->items[c].itemType = itemtype(id->type);
+			p->items[c].itemType = itemtype((enum item_types)id->type);
 			p->items[c].itemId = (id->view_id > 0) ? id->view_id : id->nameid;
 #ifdef ENABLE_OLD_CASHSHOP_PREVIEW_PATCH
 			p->items[c].location = pc->item_equippoint(sd, id);
@@ -18912,7 +18909,7 @@ static void clif_parse_cz_config(int fd, struct map_session_data *sd)
 	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
 		return;
 
-	enum CZ_CONFIG type = RFIFOL(fd, 2);
+	enum CZ_CONFIG type = (enum CZ_CONFIG)RFIFOL(fd, 2);
 	int flag = RFIFOL(fd, 6);
 
 	switch (type) {
@@ -19503,7 +19500,7 @@ static void clif_parse_mercenary_action(int fd, struct map_session_data *sd)
 static void clif_mercenary_message(struct map_session_data *sd, int message)
 {
 #if PACKETVER >= 20070227
-	clif->msgtable(sd, MSG_MER_FINISH + message);
+	clif->msgtable(sd, (enum clif_messages)(MSG_MER_FINISH + message));
 #endif
 }
 
@@ -19857,7 +19854,7 @@ static void clif_party_show_picker(struct map_session_data *sd, struct item *ite
 	p.refine = item_data->refine;
 	clif->addcards(&p.slot, item_data);
 	p.location = id->equip; // equip location
-	p.itemType = itemtype(id->type); // item type
+	p.itemType = itemtype((enum item_types)id->type); // item type
 #if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 	p.grade = item_data->grade;
 #endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
@@ -20506,7 +20503,7 @@ static void clif_search_store_info_ack(struct map_session_data *sd)
 	nullpo_retv(sd);
 	fd = sd->fd;
 	start = sd->searchstore.pages * SEARCHSTORE_RESULTS_PER_PAGE;
-	end   = min(sd->searchstore.count, start + SEARCHSTORE_RESULTS_PER_PAGE);
+	end   = std::min(sd->searchstore.count, start + SEARCHSTORE_RESULTS_PER_PAGE);
 
 	len = sizeof(struct PACKET_ZC_SEARCH_STORE_INFO_ACK) + (end - start) * blocksize;
 	WFIFOHEAD(fd, len);
@@ -20515,7 +20512,7 @@ static void clif_search_store_info_ack(struct map_session_data *sd)
 	p->packetLength = len;
 	p->firstPage = !sd->searchstore.pages;
 	p->nextPage = searchstore->querynext(sd);
-	p->usesCount = (unsigned char)min(sd->searchstore.uses, (unsigned int)UINT8_MAX);
+	p->usesCount = (unsigned char)std::min(sd->searchstore.uses, (unsigned int)UINT8_MAX);
 
 	for (i = start; i < end; i++) {
 		struct s_search_store_info_item* ssitem = &sd->searchstore.items[i];
@@ -20601,7 +20598,7 @@ static void clif_open_search_store_info(struct map_session_data *sd)
 	WFIFOW(fd,0) = 0x83a;
 	WFIFOW(fd,2) = sd->searchstore.effect;
 #if PACKETVER > 20100701
-	WFIFOB(fd,4) = (unsigned char)min(sd->searchstore.uses, (unsigned int)UINT8_MAX);
+	WFIFOB(fd,4) = (unsigned char)std::min(sd->searchstore.uses, (unsigned int)UINT8_MAX);
 #endif
 	WFIFOSET(fd,packet_len(0x83a));
 #endif
@@ -20931,7 +20928,7 @@ static void clif_parse_SkillSelectMenu(int fd, struct map_session_data *sd)
 		return;
 
 	if (pc_istrading_except_npc(sd) || sd->state.prevend != 0 || (sd->npc_id != 0 && sd->state.using_megaphone == 0)) {
-		clif->skill_fail(sd, sd->ud.skill_id, 0, 0, 0);
+		clif->skill_fail(sd, sd->ud.skill_id, USESKILL_FAIL_LEVEL, 0, 0);
 		clif_menuskill_clear(sd);
 		return;
 	}
@@ -20945,7 +20942,7 @@ static void clif_parse_SkillSelectMenu(int fd, struct map_session_data *sd)
 	 */
 	if (p->selectedSkillId == 0 || skill->get_index_sub(p->selectedSkillId, false) == 0) {
 		status_change_end(&sd->bl, SC_STOP, INVALID_TIMER);
-		clif->skill_fail(sd, sd->ud.skill_id, 0, 0, 0);
+		clif->skill_fail(sd, sd->ud.skill_id, USESKILL_FAIL_LEVEL, 0, 0);
 		clif_menuskill_clear(sd);
 		return;
 	}
@@ -22033,9 +22030,9 @@ static int clif_delay_damage(int64 tick, struct block_list *src, struct block_li
 	}
 
 #if PACKETVER < 20071113
-	damage = (short)min(in_damage, (int64)INT16_MAX);
+	damage = (short)std::min(in_damage, (int64)INT16_MAX);
 #else
-	damage = (int)min(in_damage, (int64)INT_MAX);
+	damage = (int)std::min(in_damage, (int64)INT_MAX);
 #endif
 
 	type = clif_calc_delay(type,div,damage,ddelay);
@@ -22101,7 +22098,7 @@ static void clif_npc_market_open(struct map_session_data *sd, struct npc_data *n
 			packet->list[c].nameid = shop[i].nameid;
 			packet->list[c].price  = shop[i].value;
 			packet->list[c].qty    = shop[i].qty;
-			packet->list[c].type   = itemtype(id->type);
+			packet->list[c].type   = itemtype((enum item_types)id->type);
 			packet->list[c].weight = id->weight * 10;
 #if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 			packet->list[c].location = pc->item_equippoint(sd, id);
@@ -22301,7 +22298,7 @@ static void clif_parse_RouletteGenerate(int fd, struct map_session_data *sd)
 	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
 		return;
 
-	unsigned char result = GENERATE_ROULETTE_SUCCESS;
+	enum GENERATE_ROULETTE_ACK result = GENERATE_ROULETTE_SUCCESS;
 	short stage = sd->roulette.stage;
 
 	if( !battle_config.feature_roulette ) {
@@ -22591,8 +22588,8 @@ static void clif_openmergeitem(int fd, struct map_session_data *sd)
 
 static int clif_comparemergeitem(const void *a, const void *b)
 {
-	const struct merge_item *a_ = a;
-	const struct merge_item *b_ = b;
+	const struct merge_item *a_ = (const struct merge_item *)a;
+	const struct merge_item *b_ = (const struct merge_item *)b;
 
 	nullpo_ret(a);
 	nullpo_ret(b);
@@ -23264,7 +23261,7 @@ static void clif_rodex_add_item_result(struct map_session_data *sd, int16 idx, i
 	packet->index = idx + 2;
 	packet->count = amount;
 	packet->itemId = sd->status.inventory[idx].nameid;
-	packet->type = itemtype(sd->inventory_data[idx]->type);
+	packet->type = itemtype((enum item_types)sd->inventory_data[idx]->type);
 	packet->IsIdentified = sd->status.inventory[idx].identify ? 1 : 0;
 	packet->IsDamaged = (sd->status.inventory[idx].attribute & ATTR_BROKEN) != 0 ? 1 : 0;
 	packet->refiningLevel = sd->status.inventory[idx].refine;
@@ -23680,7 +23677,7 @@ static void clif_rodex_read_mail(struct map_session_data *sd, int8 opentype, str
 		memset(item, 0x0, sizeof(struct PACKET_ZC_ACK_READ_RODEX_SUB));
 		item->ITID = it->nameid;
 		item->count = it->amount;
-		item->type = itemtype(itemdb->search(it->nameid)->type);
+		item->type = itemtype((enum item_types)itemdb->search(it->nameid)->type);
 		item->IsIdentified = it->identify ? 1 : 0;
 		item->IsDamaged = (it->attribute & ATTR_BROKEN) != 0 ? 1 : 0;
 		item->refiningLevel = it->refine;
@@ -24012,7 +24009,7 @@ static void clif_parse_open_ui_request(int fd, struct map_session_data *sd)
 
 	const struct PACKET_CZ_OPEN_UI *p = RP2PTR(struct PACKET_CZ_OPEN_UI *, fd);
 
-	clif->open_ui(sd, p->UIType);
+	clif->open_ui(sd, (enum cz_ui_types)p->UIType);
 }
 
 /**
@@ -24587,7 +24584,7 @@ static void clif_npc_barter_open(struct map_session_data *sd, struct npc_data *n
 				continue;
 
 			packet->list[c].nameid = shop[i].nameid;
-			packet->list[c].type   = itemtype(id->type);
+			packet->list[c].type   = itemtype((enum item_types)id->type);
 			packet->list[c].amount = shop[i].qty;
 			packet->list[c].currencyNameid = shop[i].value;
 			packet->list[c].currencyAmount = shop[i].value2;
@@ -24868,7 +24865,7 @@ static void clif_AddItemRefineryUIAck(struct map_session_data *sd, int item_inde
 	p->itemIndex = item_index + 2;
 	p->blacksmithBlessing = req->blacksmith_blessing;
 
-	int weapon_level = itemdb_wlv(sd->status.inventory[item_index].nameid);
+	enum refine_type weapon_level = (enum refine_type)itemdb_wlv(sd->status.inventory[item_index].nameid);
 	for (int i = 0; i < req->req_count; ++i) {
 		p->req[i].chance = refine->get_refine_chance(weapon_level, sd->status.inventory[item_index].refine, req->req[i].type);
 		p->req[i].itemId = req->req[i].nameid;
@@ -26359,8 +26356,8 @@ static int clif_parse(int fd)
 
 		if( battle_config.packet_obfuscation == 2 || cmd != RFIFOW(fd, 0) || (sd && sd->parse_cmd_func == clif->parse_cmd_decrypt) ) {
 			// Note: Overriding const qualifier to re-inject the decoded packet ID.
-#define RFIFOP_mutable(fd, pos) ((void *)(sockt->session[fd]->rdata + sockt->session[fd]->rdata_pos + (pos)))
-			int16 *packet_id = RFIFOP_mutable(fd, 0);
+#define RFIFOP_mutable(T, fd, pos) ((T)(void *)(sockt->session[fd]->rdata + sockt->session[fd]->rdata_pos + (pos)))
+			int16 *packet_id = RFIFOP_mutable(int16 *, fd, 0);
 #undef RFIFOP_mutable
 			*packet_id = cmd;
 			if( sd ) {

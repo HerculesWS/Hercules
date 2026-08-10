@@ -75,6 +75,7 @@
 #include "common/timer.h"
 #include "common/utils.h"
 
+#include <algorithm>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -336,7 +337,7 @@ ACMD(send)
 				// parse string
 				++message;
 				CHECK_EOS(message);
-				end=(num<=0? 0: min(off+((int)num),len));
+				end=(num<=0? 0: std::min(off+((int)num),len));
 				for(; *message != '"' && (off < end || end == 0); ++off){
 					if(*message == '\\'){
 						++message;
@@ -2749,11 +2750,11 @@ ACMD(param)
 
 	if (new_value != *stats[i]) {
 		*stats[i] = new_value;
-		clif->updatestatus(sd, SP_STR + i);
-		clif->updatestatus(sd, SP_USTR + i);
+		clif->updatestatus(sd, (enum status_point_types)(SP_STR + i));
+		clif->updatestatus(sd, (enum status_point_types)(SP_USTR + i));
 		status_calc_pc(sd, SCO_FORCE);
 		clif->message(fd, msg_fd(fd, MSGTBL_STAT_CHANGED)); // Stat changed.
-		achievement->validate_stats(sd, SP_STR + i, new_value); // Achievements [Smokexyz/Hercules]
+		achievement->validate_stats(sd, (enum status_point_types)(SP_STR + i), new_value); // Achievements [Smokexyz/Hercules]
 	} else {
 		if (value < 0)
 			clif->message(fd, msg_fd(fd, MSGTBL_UNABLE_TO_DECREASE_VALUE)); // Unable to decrease the number/value.
@@ -2802,8 +2803,8 @@ ACMD(stat_all)
 
 		if (new_value != (int)*stats[index]) {
 			*stats[index] = new_value;
-			clif->updatestatus(sd, SP_STR + index);
-			clif->updatestatus(sd, SP_USTR + index);
+			clif->updatestatus(sd, (enum status_point_types)(SP_STR + index));
+			clif->updatestatus(sd, (enum status_point_types)(SP_USTR + index));
 			count++;
 		}
 	}
@@ -3524,7 +3525,7 @@ ACMD(spiritball)
 	int max_spiritballs;
 	int number;
 
-	max_spiritballs = min(ARRAYLENGTH(sd->spirit_timer), 0x7FFF);
+	max_spiritballs = std::min(ARRAYLENGTH(sd->spirit_timer), 0x7FFF);
 
 	if (!*message || (number = atoi(message)) < 0 || number > max_spiritballs)
 	{
@@ -6105,7 +6106,8 @@ ACMD(divorce)
 ACMD(changelook)
 {
 	int i, j = 0, k = 0;
-	int pos[8] = { LOOK_HEAD_TOP,LOOK_HEAD_MID,LOOK_HEAD_BOTTOM,LOOK_WEAPON,LOOK_SHIELD,LOOK_SHOES,LOOK_ROBE,LOOK_BODY2 };
+	enum look pos[8] = { LOOK_HEAD_TOP,LOOK_HEAD_MID,LOOK_HEAD_BOTTOM,LOOK_WEAPON,LOOK_SHIELD,LOOK_SHOES,LOOK_ROBE,LOOK_BODY2 };
+	enum look look = LOOK_BASE;
 
 	if((i = sscanf(message, "%12d %12d", &j, &k)) < 1) {
 		clif->message(fd, msg_fd(fd, MSGTBL_CHANGELOOK_USAGE)); // Usage: @changelook {<position>} <view id>
@@ -6114,13 +6116,13 @@ ACMD(changelook)
 	} else if ( i == 2 ) {
 		if (j < 1 || j > 7)
 			j = 1;
-		j = pos[j - 1];
+		look = pos[j - 1];
 	} else if( i == 1 ) { // position not defined, use HEAD_TOP as default
 		k = j; // swap
-		j = LOOK_HEAD_TOP;
+		look = LOOK_HEAD_TOP;
 	}
 
-	clif->changelook(&sd->bl,j,k);
+	clif->changelook(&sd->bl, look, k);
 
 	return true;
 }
@@ -6150,7 +6152,7 @@ ACMD(autotrade)
 	if( battle_config.at_timeout ) {
 		int timeout = atoi(message);
 		status->change_start(NULL,&sd->bl, SC_AUTOTRADE, 10000, 0, 0, 0, 0,
-		                     ((timeout > 0) ? min(timeout, battle_config.at_timeout) : battle_config.at_timeout) * 60000, SCFLAG_NONE, 0);
+		                     ((timeout > 0) ? std::min(timeout, battle_config.at_timeout) : battle_config.at_timeout) * 60000, SCFLAG_NONE, 0);
 	}
 
 	channel->quit(sd);
@@ -6402,7 +6404,7 @@ ACMD(autolootitem)
 ACMD(autoloottype)
 {
 	uint8 action = 3; // 1=add, 2=remove, 3=help+list (default), 4=reset
-	enum item_types type = -1;
+	enum item_types type{};
 	unsigned int ITEM_NONE = 0;
 
 	if (*message) {
@@ -6450,7 +6452,7 @@ ACMD(autoloottype)
 				return false;
 			}
 			sd->state.autoloottype |= (1<<type); // Stores the type
-			snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_AUTOLOOT_TYPE_ENABLED), itemdb->typename(type)); // Autolooting item type: '%s'
+			snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_AUTOLOOT_TYPE_ENABLED), itemdb->type_to_name(type)); // Autolooting item type: '%s'
 			clif->message(fd, atcmd_output);
 			break;
 		case 2:
@@ -6459,7 +6461,7 @@ ACMD(autoloottype)
 				return false;
 			}
 			sd->state.autoloottype &= ~(1<<type);
-			snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_AUTOLOOT_TYPE_REMOVED), itemdb->typename(type)); // Removed item type: '%s' from your autoloottype list.
+			snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_AUTOLOOT_TYPE_REMOVED), itemdb->type_to_name(type)); // Removed item type: '%s' from your autoloottype list.
 			clif->message(fd, atcmd_output);
 			break;
 		case 3:
@@ -6478,7 +6480,7 @@ ACMD(autoloottype)
 				clif->message(fd, msg_fd(fd, MSGTBL_AUTOLOOT_TYPE_LIST)); // Item types on your autoloottype list:
 				for(i=0; i < IT_MAX; i++) {
 					if (sd->state.autoloottype&(1<<i)) {
-						snprintf(atcmd_output, sizeof(atcmd_output), " '%s'", itemdb->typename(i));
+						snprintf(atcmd_output, sizeof(atcmd_output), " '%s'", itemdb->type_to_name((enum item_types)i));
 						clif->message(fd, atcmd_output);
 					}
 				}
@@ -6831,7 +6833,7 @@ ACMD(pettalk)
 			}
 			sd->emotionlasttime = time(NULL);
 
-			clif->emotion(&pd->bl, i);
+			clif->emotion(&pd->bl, (enum emotion_type)i);
 			return true;
 		}
 	}
@@ -7489,7 +7491,7 @@ ACMD(homlevel)
 
 	hd = sd->hd;
 
-	if ((htype = homun->class2type(hd->homunculus.class_)) == HT_INVALID) {
+	if ((htype = homun->class2type((enum homun_id)hd->homunculus.class_)) == HT_INVALID) {
 		ShowError("atcommand_homlevel: invalid homun class %d (player %s)\n", hd->homunculus.class_,sd->status.name);
 		return false;
 	}
@@ -7545,8 +7547,8 @@ ACMD(hommutate)
 		homun_id = atoi(message);
 	}
 
-	m_class = homun->class2type(sd->hd->homunculus.class_);
-	m_id    = homun->class2type(homun_id);
+	m_class = homun->class2type((enum homun_id)sd->hd->homunculus.class_);
+	m_id    = homun->class2type((enum homun_id)homun_id);
 
 	if (m_class == HT_EVO && m_id == HT_S && sd->hd->homunculus.level >= 99) {
 		homun->mutate(sd->hd, homun_id);
@@ -7833,7 +7835,7 @@ ACMD(iteminfo)
 
 			snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ITEMINFO_DETAILS), // Item: '%s'/'%s' (%d) Type: %s | Extra Effect: %s
 				item_data->name, StrBuf->Value(&buf), item_data->nameid,
-				itemdb->typename(item_data->type),
+				itemdb->type_to_name((enum item_types)item_data->type),
 				(item_data->script == NULL) ? msg_fd(fd, MSGTBL_ITEMINFO_NONE) : msg_fd(fd, MSGTBL_ITEMINFO_WITH_SCRIPT) // None / With script
 			);
 			StrBuf->Clear(&buf);
@@ -10285,7 +10287,7 @@ ACMD(costume)
 		"Summer2",
 #endif
 	};
-	const int name2id[] = {
+	const enum sc_type name2id[] = {
 		SC_WEDDING,
 		SC_XMAS,
 		SC_SUMMER,
@@ -11081,7 +11083,7 @@ static void atcommand_get_suggestions(struct map_session_data *sd, const char *n
 		// Merge full match and prefix match results
 		if (prefix_count < MAX_SUGGESTIONS) {
 			memmove(&suggestions[prefix_count], full_match, sizeof(char*) * (MAX_SUGGESTIONS-prefix_count));
-			prefix_count = min(prefix_count+full_count, MAX_SUGGESTIONS);
+			prefix_count = std::min(prefix_count+full_count, MAX_SUGGESTIONS);
 		}
 
 		// Build the suggestion string
@@ -11560,9 +11562,9 @@ static void atcommand_doload(void)
 	if( core->runflag >= MAPSERVER_ST_RUNNING )
 		atcommand->cmd_db_clear();
 	if( atcommand->db == NULL )
-		atcommand->db = stridb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, ATCOMMAND_LENGTH);
+		atcommand->db = stridb_alloc((enum DBOptions)(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA), ATCOMMAND_LENGTH);
 	if( atcommand->alias_db == NULL )
-		atcommand->alias_db = stridb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, ATCOMMAND_LENGTH);
+		atcommand->alias_db = stridb_alloc((enum DBOptions)(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA), ATCOMMAND_LENGTH);
 	atcommand->base_commands(); //fills initial atcommand_db with known commands
 	atcommand->config_read(map->ATCOMMAND_CONF_FILENAME);
 }

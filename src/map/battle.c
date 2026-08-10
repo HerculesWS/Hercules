@@ -54,6 +54,7 @@
 #include "common/timer.h"
 #include "common/utils.h"
 
+#include <algorithm>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -881,7 +882,7 @@ static int64 battle_calc_masteryfix(struct block_list *src, struct block_list *t
 	}
 
 	if( sc ){ // sc considered as masteries
-		enum elements target_ele = status_get_element(target);
+		enum elements target_ele = (enum elements)status_get_element(target);
 		if (sc->data[SC_BASILICA_BUFF] != NULL && (target_ele == ELE_UNDEAD || target_ele == ELE_DARK))
 			damage += damage * sc->data[SC_BASILICA_BUFF]->val2 / 100;
 		if(sc->data[SC_GN_CARTBOOST])
@@ -2551,7 +2552,7 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 							short index = sd->equip_index[EQI_HAND_R];
 							if( index >= 0 && sd->inventory_data[index]
 								&& sd->inventory_data[index]->type == IT_WEAPON )
-								skillratio += (10000 - min(10000, sd->inventory_data[index]->weight)) / 10;
+								skillratio += (10000 - std::min(10000, sd->inventory_data[index]->weight)) / 10;
 							skillratio = skillratio * (100 + (status->get_lv(src)-100) / 2) / 100 + 50 * pc->checkskill(sd,LK_SPIRALPIERCE);
 						}
 					break;
@@ -3261,7 +3262,7 @@ static int64 battle_calc_damage(struct block_list *src, struct block_list *bl, s
 		if( sc->data[SC__MAELSTROM] && (flag&BF_MAGIC) && skill_id && (skill->get_inf(skill_id)&INF_GROUND_SKILL) ) {
 			// {(Maelstrom Skill LevelxAbsorbed Skill Level)+(Caster's Job/5)}/2
 			int sp = (sc->data[SC__MAELSTROM]->val1 * skill_lv + (t_sd ? t_sd->status.job_level / 5 : 0)) / 2;
-			status->heal(bl, 0, sp, STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT);
+			status->heal(bl, 0, sp, (enum status_heal_flag)(STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT));
 			d->dmg_lv = ATK_BLOCK;
 			return 0;
 		}
@@ -3306,7 +3307,7 @@ static int64 battle_calc_damage(struct block_list *src, struct block_list *bl, s
 				unit->set_walkdelay(bl, timer->gettick(), delay, 1);
 
 				if(sc->data[SC_CR_SHRINK] && rnd()%100<5*sce->val1)
-					skill->blown(bl,src,skill->get_blewcount(CR_SHRINK,1),-1,0);
+					skill->blown(bl, src, skill->get_blewcount(CR_SHRINK, 1), UNIT_DIR_UNDEFINED, 0);
 
 				d->dmg_lv = ATK_MISS;
 				return 0;
@@ -3374,7 +3375,7 @@ static int64 battle_calc_damage(struct block_list *src, struct block_list *bl, s
 				skill->counter_additional_effect( src, bl, skill_id, skill_lv, flag, timer->gettick() );
 			if (sce) {
 				clif->specialeffect(bl, 462, AREA);
-				skill->blown(src,bl,sce->val3,-1,0);
+				skill->blown(src, bl, sce->val3, UNIT_DIR_UNDEFINED, 0);
 			}
 			//Both need to be consumed if they are active.
 			if (sce && --(sce->val2) <= 0)
@@ -3658,7 +3659,7 @@ static int64 battle_calc_damage(struct block_list *src, struct block_list *bl, s
 		//(since battle_drain is strictly for players currently)
 		if ((sce=sc->data[SC_HAMI_BLOODLUST]) && flag&BF_WEAPON && damage > 0 &&
 			rnd()%100 < sce->val3)
-			status->heal(src, damage*sce->val4/100, 0, STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT);
+			status->heal(src, damage*sce->val4/100, 0, (enum status_heal_flag)(STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT));
 
 		if( (sce = sc->data[SC_FORCEOFVANGUARD]) && flag&BF_WEAPON
 			&& rnd()%100 < sce->val2 && sc->fv_counter <= sce->val3 )
@@ -3706,7 +3707,7 @@ static int64 battle_calc_damage(struct block_list *src, struct block_list *bl, s
 		}
 		if (s_sc->data[SC_POISONINGWEAPON] != NULL) {
 			if (!(flag & BF_SKILL) && (flag & BF_WEAPON) && damage > 0 && rnd() % 100 < s_sc->data[SC_POISONINGWEAPON]->val3) {
-				sc_type poison_sc = s_sc->data[SC_POISONINGWEAPON]->val2;
+				sc_type poison_sc = (sc_type)s_sc->data[SC_POISONINGWEAPON]->val2;
 				int duration = skill->get_time2(GC_POISONINGWEAPON, (poison_sc == SC_VENOMBLEED ? 1 : 2));
 				sc_start(src, bl, poison_sc, 100, s_sc->data[SC_POISONINGWEAPON]->val1, duration, GC_POISONINGWEAPON);
 			}
@@ -4282,7 +4283,7 @@ static struct Damage battle_calc_magic_attack(struct block_list *src, struct blo
 				case WZ_HEAVENDRIVE:
 					if(sc->data[SC_GUST_OPTION] || sc->data[SC_PETROLOGY_OPTION]
 						|| sc->data[SC_PYROTECHNIC_OPTION] || sc->data[SC_AQUAPLAY_OPTION])
-						ad.damage += (6 + sstatus->int_/4) + max(sstatus->dex-10,0)/30;
+						ad.damage += (6 + sstatus->int_/4) + std::max(sstatus->dex-10,0)/30;
 					break;
 			}
 		}
@@ -4483,7 +4484,7 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 			int64 matk=0, atk;
 			short tdef = status->get_total_def(target);
 			short tmdef =  status->get_total_mdef(target);
-			int targetVit = min(120, (int)status_get_vit(target));
+			int targetVit = std::min(120, (int)status_get_vit(target));
 			short totaldef = (tmdef + tdef - ((uint64)(tmdef + tdef) >> 32)) >> 1; // FIXME: What's the >> 32 supposed to do here? tmdef and tdef are both 16-bit...
 
 			matk = battle->calc_magic_attack(src, target, skill_id, skill_lv, mflag).damage;
@@ -4503,7 +4504,7 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 
 				if( (vitfactor=(status_get_vit(target)-120.0f)) > 0)
 					vitfactor = (vitfactor * (matk + atk) / 10) / status_get_vit(target);
-				ftemp = max(0.0f, vitfactor) + (targetVit * (matk + atk)) / 10;
+				ftemp = std::max(0.0f, vitfactor) + (targetVit * (matk + atk)) / 10;
 				md.damage = (int64)(ftemp * 70 * skill_lv / 100);
 				if (target->type == BL_PC)
 					md.damage >>= 1;
@@ -4636,7 +4637,7 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 		// (Base ATK + Weapon ATK) * Ratio
 		md.damage = (sstatus->batk + sstatus->rhw.atk) * (200 + 100 * skill_lv) / 100;
 		// Additional Damage
-		md.damage += sstatus->max_hp / (6 - min(5, (int)skill_lv)) + status_get_max_sp(src) * (2 * skill_lv);
+		md.damage += sstatus->max_hp / (6 - std::min(5, (int)skill_lv)) + status_get_max_sp(src) * (2 * skill_lv);
 		break;
 	case SP_SOULEXPLOSION:
 		md.damage = tstatus->hp * (20 + 10 * skill_lv) / 100;
@@ -5141,7 +5142,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 						}
 				}
 				if ( wd.div_ > 1 ) {
-					wd.div_ = min(wd.div_, (int)sd->status.inventory[i].amount);
+					wd.div_ = std::min(wd.div_, (int)sd->status.inventory[i].amount);
 					sc->data[SC_FEARBREEZE]->val4 = wd.div_ - 1;
 					wd.type = BDT_MULTIHIT;
 				}
@@ -6411,9 +6412,7 @@ static void battle_reflect_damage(struct block_list *target, struct block_list *
 	int64 tick = timer->gettick();
 	int delay = 50, rdelay = 0;
 #ifdef RENEWAL
-	int max_reflect_damage;
-
-	max_reflect_damage = max(status_get_max_hp(target), status_get_max_hp(target) * status->get_lv(target) / 100);
+	int64 max_reflect_damage = std::max(status_get_max_hp(target), status_get_max_hp(target) * status->get_lv(target) / 100);
 #endif
 
 	damage = wd->damage + wd->damage2;
@@ -6426,9 +6425,9 @@ static void battle_reflect_damage(struct block_list *target, struct block_list *
 	sc = status->get_sc(target);
 
 #ifdef RENEWAL
-#define NORMALIZE_RDAMAGE(d) ( trdamage += rdamage = max(1i64, min(max_reflect_damage, (d))) )
+#define NORMALIZE_RDAMAGE(d) ( trdamage += rdamage = std::max(1i64, std::min(max_reflect_damage, (d))) )
 #else
-#define NORMALIZE_RDAMAGE(d) ( trdamage += rdamage = max(1i64, (d)) )
+#define NORMALIZE_RDAMAGE(d) ( trdamage += rdamage = std::max(1i64, (d)) )
 #endif
 
 	if( sc && !sc->count )
@@ -6696,7 +6695,7 @@ static void battle_drain(struct map_session_data *sd, struct block_list *tbl, in
 
 	if (!thp && !tsp) return;
 
-	status->heal(&sd->bl, thp, tsp, STATUS_HEAL_FORCED | (battle_config.show_hp_sp_drain ? STATUS_HEAL_SHOWEFFECT : STATUS_HEAL_DEFAULT));
+	status->heal(&sd->bl, thp, tsp, (enum status_heal_flag)(STATUS_HEAL_FORCED | (battle_config.show_hp_sp_drain ? STATUS_HEAL_SHOWEFFECT : STATUS_HEAL_DEFAULT)));
 
 	if (rhp || rsp)
 		status_zap(tbl, rhp, rsp);
@@ -6993,9 +6992,9 @@ static enum damage_lv battle_weapon_attack(struct block_list *src, struct block_
 
 	if (sd != NULL && sd->state.onekillmonster != 0 && target->type == BL_MOB) {
 		damage = tstatus->hp;
-		wd.dmotion = clif->damage(src, target, wd.amotion, wd.dmotion, damage, wd.div_ , wd.type, 0);
+		wd.dmotion = clif->damage(src, target, wd.amotion, wd.dmotion, damage, wd.div_ , (enum battle_dmg_type)wd.type, 0);
 	} else {
-		wd.dmotion = clif->damage(src, target, wd.amotion, wd.dmotion, wd.damage, wd.div_ , wd.type, wd.damage2);
+		wd.dmotion = clif->damage(src, target, wd.amotion, wd.dmotion, wd.damage, wd.div_ , (enum battle_dmg_type)wd.type, wd.damage2);
 	}
 
 	if (sd && sd->bonus.splash_range > 0 && damage > 0)
@@ -7003,7 +7002,7 @@ static enum damage_lv battle_weapon_attack(struct block_list *src, struct block_
 	if (target->type == BL_SKILL && damage > 0) {
 		struct skill_unit *su = BL_UCAST(BL_SKILL, target);
 		if (su->group && su->group->skill_id == HT_BLASTMINE)
-			skill->blown(src, target, 3, -1, 0);
+			skill->blown(src, target, 3, UNIT_DIR_UNDEFINED, 0);
 	}
 	map->freeblock_lock();
 
@@ -7068,7 +7067,7 @@ static enum damage_lv battle_weapon_attack(struct block_list *src, struct block_
 		sp = skill->get_sp(skill_id,skill_lv) * 2 / 3;
 
 		if (status->charge(src, 0, sp)) {
-			skill->castend_type(skill->get_casttype(skill_id), src, target, skill_id, skill_lv, tick, flag);
+			skill->castend_type((enum cast_enum)skill->get_casttype(skill_id), src, target, skill_id, skill_lv, tick, flag);
 		}
 	}
 	if (sd) {
@@ -7114,9 +7113,9 @@ static enum damage_lv battle_weapon_attack(struct block_list *src, struct block_
 
 				sd->auto_cast_current.type = AUTOCAST_TEMP;
 				skill->consume_requirement(sd,r_skill,r_lv,3);
-				skill->castend_type(type, src, target, r_skill, r_lv, tick, flag);
+				skill->castend_type((enum cast_enum)type, src, target, r_skill, r_lv, tick, flag);
 				sd->auto_cast_current.type = AUTOCAST_NONE;
-				sd->ud.canact_tick = max(tick + skill->delay_fix(src, r_skill, r_lv), sd->ud.canact_tick);
+				sd->ud.canact_tick = std::max(tick + skill->delay_fix(src, r_skill, r_lv), sd->ud.canact_tick);
 				clif->status_change(src, status->get_sc_icon(SC_POSTDELAY), status->get_sc_relevant_bl_types(SC_POSTDELAY), 1, skill->delay_fix(src, r_skill, r_lv), 0, 0, 1);
 			}
 		}

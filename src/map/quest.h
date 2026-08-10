@@ -42,6 +42,7 @@ struct mob_data;
 #define quest_mobtypeisenabled(type) ((type).size_enabled || (type).ele_enabled || (type).race_enabled)
 
 enum quest_mobtype {
+	QMT_NONE             = 0x0,
 	// Monster Sizes
 	QMT_SZ_SMALL         = 0x10,
 	QMT_SZ_MEDIUM        = 0x20,

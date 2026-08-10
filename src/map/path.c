@@ -32,6 +32,7 @@
 #include "common/random.h"
 #include "common/showmsg.h"
 
+#include <utility>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -137,8 +138,8 @@ static bool path_search_long(struct shootpath_data *spd, struct block_list *bl, 
 
 	dx = (x1 - x0);
 	if (dx < 0) {
-		swap(x0, x1);
-		swap(y0, y1);
+		std::swap(x0, x1);
+		std::swap(y0, y1);
 		dx = -dx;
 	}
 	dy = (y1 - y0);
@@ -192,7 +193,7 @@ static bool path_search_long(struct shootpath_data *spd, struct block_list *bl, 
 static void heap_push_node(struct node_heap *heap, struct path_node *node)
 {
 	BHEAP_ENSURE(*heap, 1, 256);
-	BHEAP_PUSH2(*heap, node, NODE_MINTOPCMP, swap_ptr);
+	BHEAP_PUSH2(*heap, node, NODE_MINTOPCMP, std::swap);
 }
 
 /// Updates path_node in the binary node_heap.
@@ -204,7 +205,7 @@ static int heap_update_node(struct node_heap *heap, struct path_node *node)
 		ShowError("heap_update_node: node not found\n");
 		return 1;
 	}
-	BHEAP_UPDATE(*heap, i, NODE_MINTOPCMP, swap_ptr);
+	BHEAP_UPDATE(*heap, i, NODE_MINTOPCMP, std::swap);
 	return 0;
 }
 
@@ -367,7 +368,7 @@ static bool path_search(struct walkpath_data *wpd, struct block_list *bl, int16 
 		}
 
 		current = BHEAP_PEEK(open_set); // Look for the lowest f_cost node in the 'open' set
-		BHEAP_POP2(open_set, NODE_MINTOPCMP, swap_ptr); // Remove it from 'open' set
+		BHEAP_POP2(open_set, NODE_MINTOPCMP, std::swap); // Remove it from 'open' set
 
 		x      = current->x;
 		y      = current->y;

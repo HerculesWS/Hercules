@@ -41,6 +41,7 @@
 #include "common/nullpo.h"
 #include "common/showmsg.h"
 
+#include <algorithm>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -56,8 +57,8 @@ struct guild_storage_interface *gstorage;
  *------------------------------------------*/
 static int storage_comp_item(const void *i1_, const void *i2_)
 {
-	const struct item *i1 = i1_;
-	const struct item *i2 = i2_;
+	const struct item *i1 = (const struct item *)i1_;
+	const struct item *i2 = (const struct item *)i2_;
 
 	if (i1->nameid == i2->nameid)
 		return 0;
@@ -1066,7 +1067,7 @@ bool storage_config_read(const char *filename, bool imported)
 
 		if (s_conf.capacity > MAX_STORAGE) {
 			ShowWarning("storage_config_read: Capacity for Storage #%d ('%s') is over MAX_STORAGE. Capping to %d.\n", s_conf.uid, s_conf.name, MAX_STORAGE);
-			s_conf.capacity = min(s_conf.capacity, MAX_STORAGE);
+			s_conf.capacity = std::min(s_conf.capacity, MAX_STORAGE);
 		}
 
 		if (libconfig->setting_lookup_string(t, "Constant", &constant) == CONFIG_FALSE) {

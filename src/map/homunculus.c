@@ -213,7 +213,7 @@ static int homunculus_delete(struct homun_data *hd, int emote)
 		return unit->free(&hd->bl,CLR_DEAD);
 
 	if (emote >= 0)
-		clif->emotion(&sd->bl, emote);
+		clif->emotion(&sd->bl, (enum emotion_type)emote);
 
 	//This makes it be deleted right away.
 	hd->homunculus.intimacy = 0;
@@ -361,7 +361,7 @@ static bool homunculus_levelup(struct homun_data *hd)
 	enum homun_type htype;
 
 	nullpo_retr(false, hd);
-	if( (htype = homun->class2type(hd->homunculus.class_)) == HT_INVALID ) {
+	if( (htype = homun->class2type((enum homun_id)hd->homunculus.class_)) == HT_INVALID ) {
 		ShowError("homunculus_levelup: Invalid class %d. \n", hd->homunculus.class_);
 		return false;
 	}
@@ -503,8 +503,8 @@ static bool homunculus_mutate(struct homun_data *hd, int homun_id)
 	if (!sd)
 		return false;
 
-	m_class = homun->class2type(hd->homunculus.class_);
-	m_id    = homun->class2type(homun_id);
+	m_class = homun->class2type((enum homun_id)hd->homunculus.class_);
+	m_id    = homun->class2type((enum homun_id)homun_id);
 
 	if( m_class == HT_INVALID || m_id == HT_INVALID || m_class != HT_EVO || m_id != HT_S ) {
 		clif->emotion(&hd->bl, E_SWT);
@@ -561,7 +561,7 @@ static int homunculus_gainexp(struct homun_data *hd, unsigned int exp)
 	if(hd->homunculus.vaporize != HOM_ST_ACTIVE)
 		return 1;
 
-	if( (htype = homun->class2type(hd->homunculus.class_)) == HT_INVALID ) {
+	if( (htype = homun->class2type((enum homun_id)hd->homunculus.class_)) == HT_INVALID ) {
 		ShowError("homunculus_gainexp: Invalid class %d. \n", hd->homunculus.class_);
 		return 0;
 	}
@@ -659,7 +659,8 @@ static unsigned char homunculus_menu(struct map_session_data *sd, unsigned char 
 
 static bool homunculus_feed(struct map_session_data *sd, struct homun_data *hd)
 {
-	int i, foodID, emotion;
+	int i, foodID;
+	enum emotion_type emotion;
 
 	nullpo_retr(false, hd);
 	nullpo_retr(false, sd);

@@ -1819,7 +1819,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(itemdb->searchname_sub, HP_itemdb_searchname_sub) },
 	{ HP_POP(itemdb->searchname_array_sub, HP_itemdb_searchname_array_sub) },
 	{ HP_POP(itemdb->searchrandomid, HP_itemdb_searchrandomid) },
-	{ HP_POP(itemdb->typename, HP_itemdb_typename) },
+	{ HP_POP(itemdb->type_to_name, HP_itemdb_type_to_name) },
 	{ HP_POP(itemdb->jobmask2mapid, HP_itemdb_jobmask2mapid) },
 	{ HP_POP(itemdb->jobid2mapid, HP_itemdb_jobid2mapid) },
 	{ HP_POP(itemdb->create_dummy_data, HP_itemdb_create_dummy_data) },

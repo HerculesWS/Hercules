@@ -3550,8 +3550,8 @@ struct {
 	struct HPMHookPoint *HP_itemdb_searchname_array_sub_post;
 	struct HPMHookPoint *HP_itemdb_searchrandomid_pre;
 	struct HPMHookPoint *HP_itemdb_searchrandomid_post;
-	struct HPMHookPoint *HP_itemdb_typename_pre;
-	struct HPMHookPoint *HP_itemdb_typename_post;
+	struct HPMHookPoint *HP_itemdb_type_to_name_pre;
+	struct HPMHookPoint *HP_itemdb_type_to_name_post;
 	struct HPMHookPoint *HP_itemdb_jobmask2mapid_pre;
 	struct HPMHookPoint *HP_itemdb_jobmask2mapid_post;
 	struct HPMHookPoint *HP_itemdb_jobid2mapid_pre;
@@ -11171,8 +11171,8 @@ struct {
 	int HP_itemdb_searchname_array_sub_post;
 	int HP_itemdb_searchrandomid_pre;
 	int HP_itemdb_searchrandomid_post;
-	int HP_itemdb_typename_pre;
-	int HP_itemdb_typename_post;
+	int HP_itemdb_type_to_name_pre;
+	int HP_itemdb_type_to_name_post;
 	int HP_itemdb_jobmask2mapid_pre;
 	int HP_itemdb_jobmask2mapid_post;
 	int HP_itemdb_jobid2mapid_pre;

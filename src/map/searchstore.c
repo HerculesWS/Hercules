@@ -31,6 +31,8 @@
 #include "common/showmsg.h" // ShowError, ShowWarning
 #include "common/strlib.h" // safestrncpy
 
+#include <utility>
+
 static struct searchstore_interface searchstore_s;
 struct searchstore_interface *searchstore;
 
@@ -160,7 +162,7 @@ static void searchstore_query(struct map_session_data *sd,
 	}
 
 	if( max_price < min_price ) {
-		swap(min_price, max_price);
+		std::swap(min_price, max_price);
 	}
 
 	sd->searchstore.uses--;

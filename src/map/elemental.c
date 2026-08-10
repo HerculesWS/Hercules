@@ -244,15 +244,15 @@ static int elemental_delete(struct elemental_data *ed, int reply)
 	elemental->summon_stop(ed);
 
 	if( !sd )
-		return unit->free(&ed->bl, 0);
+		return unit->free(&ed->bl, CLR_OUTSIGHT);
 
 	sd->ed = NULL;
 	sd->status.ele_id = 0;
 
 	if( !ed->bl.prev )
-		return unit->free(&ed->bl, 0);
+		return unit->free(&ed->bl, CLR_OUTSIGHT);
 
-	return unit->remove_map(&ed->bl, 0, ALC_MARK);
+	return unit->remove_map(&ed->bl, CLR_OUTSIGHT, ALC_MARK);
 }
 
 static void elemental_summon_init(struct elemental_data *ed)
@@ -364,7 +364,7 @@ static int elemental_clean_single_effect(struct elemental_data *ed, uint16 skill
 			case SC_CIRCLE_OF_FIRE_OPTION:
 			case SC_TIDAL_WEAPON_OPTION:
 				if( bl ) status_change_end(bl,type,INVALID_TIMER); // Master
-				status_change_end(&ed->bl,type-1,INVALID_TIMER); // Elemental Spirit
+				status_change_end(&ed->bl, (enum sc_type)(type-1),INVALID_TIMER); // Elemental Spirit
 				break;
 			case SC_ZEPHYR:
 				if( bl ) status_change_end(bl,type,INVALID_TIMER);

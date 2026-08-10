@@ -193,7 +193,7 @@ static enum channel_operation_status channel_ban(struct channel_data *chan, cons
 		return HCS_STATUS_ALREADY;
 
 	if (!chan->banned)
-		chan->banned = idb_alloc(DB_OPT_BASE|DB_OPT_ALLOW_NULL_DATA|DB_OPT_RELEASE_DATA);
+		chan->banned = idb_alloc((enum DBOptions)(DB_OPT_BASE|DB_OPT_ALLOW_NULL_DATA|DB_OPT_RELEASE_DATA));
 
 	CREATE(entry, struct channel_ban_entry, 1);
 	safestrncpy(entry->name, tsd->status.name, NAME_LENGTH);
@@ -822,7 +822,7 @@ static int do_init_channel(bool minimal)
 	if (minimal)
 		return 0;
 
-	channel->db = stridb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, HCS_NAME_LENGTH);
+	channel->db = stridb_alloc((enum DBOptions)(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA), HCS_NAME_LENGTH);
 	channel->config->ally = channel->config->local = channel->config->irc = channel->config->ally_autojoin = channel->config->local_autojoin = channel->config->irc_autojoin = false;
 	channel->config_read();
 

@@ -56,6 +56,7 @@
 #include "common/timer.h"
 #include "common/utils.h"
 
+#include <algorithm>
 #include <errno.h>
 #include <math.h>
 #include <stdio.h>
@@ -425,7 +426,7 @@ static int npc_event_sub(struct map_session_data *sd, struct event_data *ev, con
  */
 static void npc_event_doall_sub(void *key, void *data, va_list ap)
 {
-	struct event_data* ev = data;
+	struct event_data* ev = (struct event_data *)data;
 	int* c;
 	const char* name;
 	int rid;
@@ -1210,10 +1211,10 @@ static int npc_check_areanpc(int flag, int16 m, int16 x, int16 y, int16 range)
 	Assert_retr(1, m >= 0 && m < map->count);
 
 	if (range < 0) return 0;
-	x0 = max(x-range, 0);
-	y0 = max(y-range, 0);
-	x1 = min(x+range, map->list[m].xs-1);
-	y1 = min(y+range, map->list[m].ys-1);
+	x0 = std::max(x-range, 0);
+	y0 = std::max(y-range, 0);
+	x1 = std::min(x+range, map->list[m].xs-1);
+	y1 = std::min(y+range, map->list[m].ys-1);
 
 	//First check for npc_cells on the range given
 	i = 0;
@@ -2419,8 +2420,8 @@ static enum market_buy_result npc_market_buylist(struct map_session_data *sd, st
 	int i,j,w,new_;
 	unsigned short shop_size = 0;
 
-	nullpo_retr(1, sd);
-	nullpo_retr(1, item_list);
+	nullpo_retr(MARKET_BUY_RESULT_SUCCESS, sd); // FIXME: Is this the right value?
+	nullpo_retr(MARKET_BUY_RESULT_SUCCESS, item_list); // FIXME: Is this the right value?
 
 	nd = npc->checknear(sd,map->id2bl(sd->npc_shopid));
 
@@ -2472,7 +2473,7 @@ static enum market_buy_result npc_market_buylist(struct map_session_data *sd, st
 				new_++;
 				break;
 			case ADDITEM_OVERAMOUNT: /* TODO find official response for this */
-				return 1;
+				return MARKET_BUY_RESULT_SUCCESS;
 		}
 
 		z += (int64)value * entry->amount;
@@ -3518,7 +3519,7 @@ static struct npc_data *npc_add_warp(char *name, short from_mapid, short from_x,
 
 	nullpo_retr(NULL, name);
 
-	nd = npc->create_npc(WARP, from_mapid, from_x, from_y, 0, battle_config.warp_point_debug ? WARP_DEBUG_CLASS : WARP_CLASS);
+	nd = npc->create_npc(WARP, from_mapid, from_x, from_y, UNIT_DIR_NORTH, battle_config.warp_point_debug ? WARP_DEBUG_CLASS : WARP_CLASS);
 
 	safestrncpy(nd->exname, name, ARRAYLENGTH(nd->exname));
 	if (npc->name2id(nd->exname) != NULL) {
@@ -3600,7 +3601,7 @@ static const char *npc_parse_warp(const char *w1, const char *w2, const char *w3
 		return strchr(start,'\n');;//try next
 	}
 
-	nd = npc->create_npc(WARP, m, x, y, 0, battle_config.warp_point_debug ? WARP_DEBUG_CLASS : WARP_CLASS);
+	nd = npc->create_npc(WARP, m, x, y, UNIT_DIR_NORTH, battle_config.warp_point_debug ? WARP_DEBUG_CLASS : WARP_CLASS);
 	npc->parsename(nd, w3, start, buffer, filepath);
 	nd->path = npc->retainpathreference(filepath);
 
@@ -3746,7 +3747,7 @@ static const char *npc_parse_shop(const char *w1, const char *w2, const char *w3
 	}
 
 	class_ = m == -1 ? FAKE_NPC : npc->parseview(w4, start, buffer, filepath);
-	nd = npc->create_npc(type, m, x, y, dir, class_);
+	nd = npc->create_npc(type, m, x, y, (enum unit_dir)dir, class_);
 	CREATE(nd->u.shop.shop_item, struct npc_item_list, i);
 	memcpy(nd->u.shop.shop_item, items, sizeof(items[0])*i);
 	aFree(items);
@@ -3946,7 +3947,7 @@ static const char *npc_parse_script(const char *w1, const char *w2, const char *
 	}
 
 	class_ = m == -1 ? FAKE_NPC : npc->parseview(w4, start, buffer, filepath);
-	nd = npc->create_npc(SCRIPT, m, x, y, dir, class_);
+	nd = npc->create_npc(SCRIPT, m, x, y, (enum unit_dir)dir, class_);
 	if (sscanf(w4, "%*[^,],%d,%d", &xs, &ys) == 2) {
 		// OnTouch area defined
 		nd->u.scr.xs = xs;
@@ -4257,7 +4258,7 @@ static const char *npc_parse_duplicate(const char *w1, const char *w2, const cha
 	}
 
 	class_ = m == -1 ? FAKE_NPC : npc->parseview(w4, start, buffer, filepath);
-	nd = npc->create_npc(dnd->subtype, m, x, y, dir, class_);
+	nd = npc->create_npc(dnd->subtype, m, x, y, (enum unit_dir)dir, class_);
 	npc->parsename(nd, w3, start, buffer, filepath);
 	nd->path = npc->retainpathreference(filepath);
 	if (!npc->duplicate_sub(nd, dnd, xs, ys, options)) {
@@ -5484,7 +5485,7 @@ static int npc_parsesrcfile(const char *filepath, bool runOnInit)
 			ShowWarning("npc_parsesrcfile: w1 truncated, too much data (%d) in file '%s', line '%d'.\n", pos[3]-pos[2], filepath, strline(buffer,p-buffer));
 			success = EXIT_FAILURE;
 		}
-		i = min(pos[3]-pos[2], ARRAYLENGTH(w1)-1);
+		i = std::min(pos[3]-pos[2], ARRAYLENGTH(w1)-1);
 		memcpy(w1, p+pos[2], i*sizeof(char));
 		w1[i] = '\0';
 		// fill w2
@@ -5492,7 +5493,7 @@ static int npc_parsesrcfile(const char *filepath, bool runOnInit)
 			ShowWarning("npc_parsesrcfile: w2 truncated, too much data (%d) in file '%s', line '%d'.\n", pos[5]-pos[4], filepath, strline(buffer,p-buffer));
 			success = EXIT_FAILURE;
 		}
-		i = min(pos[5]-pos[4], ARRAYLENGTH(w2)-1);
+		i = std::min(pos[5]-pos[4], ARRAYLENGTH(w2)-1);
 		memcpy(w2, p+pos[4], i*sizeof(char));
 		w2[i] = '\0';
 		// fill w3
@@ -5500,7 +5501,7 @@ static int npc_parsesrcfile(const char *filepath, bool runOnInit)
 			ShowWarning("npc_parsesrcfile: w3 truncated, too much data (%d) in file '%s', line '%d'.\n", pos[7]-pos[6], filepath, strline(buffer,p-buffer));
 			success = EXIT_FAILURE;
 		}
-		i = min(pos[7]-pos[6], ARRAYLENGTH(w3)-1);
+		i = std::min(pos[7]-pos[6], ARRAYLENGTH(w3)-1);
 		memcpy(w3, p+pos[6], i*sizeof(char));
 		w3[i] = '\0';
 		// fill w4 (to end of line)
@@ -5509,7 +5510,7 @@ static int npc_parsesrcfile(const char *filepath, bool runOnInit)
 			success = EXIT_FAILURE;
 		}
 		if( pos[8] != -1 ) {
-			i = min(pos[1]-pos[8], ARRAYLENGTH(w4)-1);
+			i = std::min(pos[1]-pos[8], ARRAYLENGTH(w4)-1);
 			memcpy(w4, p+pos[8], i*sizeof(char));
 			w4[i] = '\0';
 		} else {
@@ -6000,10 +6001,10 @@ static int do_init_npc(bool minimal)
 		npc_viewdb[i].class_ = i;
 	for( i = MAX_NPC_CLASS2_START; i < MAX_NPC_CLASS2_END; i++ )
 		npc_viewdb2[i - MAX_NPC_CLASS2_START].class_ = i;
-	npc->ev_db = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, EVENT_NAME_LENGTH);
-	npc->ev_label_db = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, NAME_LENGTH);
+	npc->ev_db = strdb_alloc((DBOptions)(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA), EVENT_NAME_LENGTH);
+	npc->ev_label_db = strdb_alloc((DBOptions)(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA), NAME_LENGTH);
 	npc->name_db = strdb_alloc(DB_OPT_BASE, NAME_LENGTH);
-	npc->path_db = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, 0);
+	npc->path_db = strdb_alloc((DBOptions)(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA), 0);
 
 	npc->npc_last_npd = NULL;
 	npc->npc_last_path = NULL;

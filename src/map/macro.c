@@ -37,6 +37,7 @@
 #include "map/clif.h"
 #include "map/pc.h"
 
+#include <algorithm>
 #include <stdlib.h>
 
 static struct macro_interface macro_s;
@@ -114,7 +115,7 @@ static void macro_captcha_preview(struct map_session_data *sd, const int captcha
 	const int chunks = (cd->image_size / MAX_CAPTCHA_CHUNK_SIZE) +
 						(cd->image_size % MAX_CAPTCHA_CHUNK_SIZE != 0);
 	for (int i = 0, offset = 0; i < chunks; i++) {
-		const int chunk_size = min(cd->image_size - offset, MAX_CAPTCHA_CHUNK_SIZE);
+		const int chunk_size = std::min(cd->image_size - offset, MAX_CAPTCHA_CHUNK_SIZE);
 		clif->captcha_preview_request_download(sd, cd->captcha_key, chunk_size, &cd->image_data[offset]);
 		offset += chunk_size;
 	}
@@ -134,7 +135,7 @@ static void macro_detector_request(struct map_session_data *sd)
 	const int chunks = (cd->image_size / MAX_CAPTCHA_CHUNK_SIZE) +
 						(cd->image_size % MAX_CAPTCHA_CHUNK_SIZE != 0);
 	for (int i = 0, offset = 0; i < chunks; i++) {
-		const int chunk_size = min(cd->image_size - offset, MAX_CAPTCHA_CHUNK_SIZE);
+		const int chunk_size = std::min(cd->image_size - offset, MAX_CAPTCHA_CHUNK_SIZE);
 		clif->macro_detector_request_download(sd, cd->captcha_key, chunk_size, &cd->image_data[offset]);
 		offset += chunk_size;
 	}

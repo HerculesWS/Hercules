@@ -52,6 +52,7 @@
 #include "common/timer.h"
 #include "common/utils.h"
 
+#include <algorithm>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -271,7 +272,7 @@ static int pet_target_check(struct map_session_data *sd, struct block_list *bl, 
 
 	int rate = ((type == 0) ? pd->petDB->attack_rate : pd->petDB->defence_attack_rate) * pd->rate_fix / 1000;
 
-	if (rnd() % 10000 < max(rate, 1) && (pd->target_id == 0 || rnd() % 10000 < pd->petDB->change_target_rate))
+	if (rnd() % 10000 < std::max(rate, 1) && (pd->target_id == 0 || rnd() % 10000 < pd->petDB->change_target_rate))
 		pd->target_id = bl->id;
 
 	return 0;
@@ -362,7 +363,7 @@ static int pet_hungry(int tid, int64 tick, int id, intptr_t data)
 	}
 
 	interval = interval * battle_config.pet_hungry_delay_rate / 100;
-	pd->pet_hungry_timer = timer->add(tick + max(interval, 1), pet->hungry, sd->bl.id, 0);
+	pd->pet_hungry_timer = timer->add(tick + std::max(interval, 1), pet->hungry, sd->bl.id, 0);
 
 	return 0;
 }
@@ -565,7 +566,7 @@ static int pet_data_init(struct map_session_data *sd, struct s_pet *petinfo)
 
 	if (pd->petDB->hungry_delay > 0) {
 		int interval = pd->petDB->hungry_delay * battle_config.pet_hungry_delay_rate / 100;
-		pd->pet_hungry_timer = timer->add(timer->gettick() + max(interval, 1), pet->hungry, sd->bl.id, 0);
+		pd->pet_hungry_timer = timer->add(timer->gettick() + std::max(interval, 1), pet->hungry, sd->bl.id, 0);
 	}
 
 	return 0;
@@ -1118,7 +1119,7 @@ static int pet_ai_sub_hard(struct pet_data *pd, struct map_session_data *sd, int
 		if (DIFF_TICK(tick, pd->ud.canmove_tick) < 0)
 			return 0; // Can't move yet.
 
-		pd->status.speed = max(sd->battle_status.speed / 2, (uint32)MIN_WALK_SPEED);
+		pd->status.speed = std::max(sd->battle_status.speed / 2, (uint32)MIN_WALK_SPEED);
 
 		if (unit->walk_tobl(&pd->bl, &sd->bl, 3, 0) != 0)
 			pet->randomwalk(pd, tick);
@@ -1669,7 +1670,7 @@ static int pet_read_db_sub(struct config_setting_t *it, int n, const char *sourc
 		entry.r_hungry = 10;
 		entry.r_full = 100;
 		entry.die = 20;
-		entry.starving_delay = min(20000, entry.hungry_delay);
+		entry.starving_delay = std::min(20000, entry.hungry_delay);
 		entry.starving_decrement = 20;
 	}
 

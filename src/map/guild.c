@@ -49,6 +49,7 @@
 #include "common/timer.h"
 #include "common/utils.h"
 
+#include <algorithm>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -1531,7 +1532,7 @@ static int guild_skillupack(int guild_id, uint16 skill_id, int account_id)
 			// Guild storage handling
 			case GD_GUILD_STORAGE:
 #ifdef OFFICIAL_GUILD_STORAGE
-				g->max_storage = min(g->skill[skill_id-GD_SKILLBASE].lv * GUILD_STORAGE_EXPANSION_STEP, MAX_GUILD_STORAGE);
+				g->max_storage = std::min(g->skill[skill_id-GD_SKILLBASE].lv * GUILD_STORAGE_EXPANSION_STEP, MAX_GUILD_STORAGE);
 #endif // OFFICIAL_GUILD_STORAGE
 				break;
 		}
@@ -1557,11 +1558,11 @@ static void guild_guildaura_refresh(struct map_session_data *sd, uint16 skill_id
 		return;
 	if (sd->sc.data[type] && (group = skill->id2group(sd->sc.data[type]->val4)) != NULL) {
 		skill->del_unitgroup(group);
-		status_change_end(&sd->bl,type,INVALID_TIMER);
+		status_change_end(&sd->bl, (enum sc_type)type,INVALID_TIMER);
 	}
 	group = skill->unitsetting(&sd->bl,skill_id,skill_lv,sd->bl.x,sd->bl.y,0);
 	if( group ) {
-		sc_start4(NULL, &sd->bl, type, 100, (battle_config.guild_aura & 16) ? 0 : skill_lv, 0, 0, group->group_id, 600000, skill_id);// duration doesn't matter these status never end with val4
+		sc_start4(NULL, &sd->bl, (enum sc_type)type, 100, (battle_config.guild_aura & 16) ? 0 : skill_lv, 0, 0, group->group_id, 600000, skill_id);// duration doesn't matter these status never end with val4
 	}
 	return;
 }

@@ -38,6 +38,7 @@
 #include "common/strlib.h"
 #include "common/utils.h"
 
+#include <algorithm>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -202,7 +203,7 @@ static int itemdb_searchname_array(struct item_data **data, const int size, cons
 		CREATE(dbmap_data, struct DBData *, dbmap_size);
 
 		dbmap_count = itemdb->other->getall(itemdb->other, dbmap_data, dbmap_size, itemdb->searchname_array_sub, str, flag);
-		dbmap_size = min(dbmap_count, dbmap_size);
+		dbmap_size = std::min(dbmap_count, dbmap_size);
 
 		for (int i = 0; i < dbmap_size; ++i) {
 			data[length] = (struct item_data *)DB->data2ptr(dbmap_data[i]);
@@ -400,7 +401,7 @@ static struct item_reform *itemdb_reform_exists(int idx)
 
 /// Returns human readable name for given item type.
 /// @param type Type id to retrieve name for ( IT_* ).
-static const char *itemdb_typename(enum item_types type)
+static const char *itemdb_type_to_name(enum item_types type)
 {
 	switch(type)
 	{
@@ -3381,7 +3382,7 @@ void itemdb_defaults(void)
 	itemdb->searchname_sub = itemdb_searchname_sub;
 	itemdb->searchname_array_sub = itemdb_searchname_array_sub;
 	itemdb->searchrandomid = itemdb_searchrandomid;
-	itemdb->typename = itemdb_typename;
+	itemdb->type_to_name = itemdb_type_to_name;
 	itemdb->jobmask2mapid = itemdb_jobmask2mapid;
 	itemdb->jobid2mapid = itemdb_jobid2mapid;
 	itemdb->create_dummy_data = create_dummy_data;

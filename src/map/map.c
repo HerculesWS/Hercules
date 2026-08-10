@@ -85,6 +85,7 @@
 #include "common/timer.h"
 #include "common/utils.h"
 
+#include <algorithm>
 #include <math.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -769,13 +770,13 @@ static int bl_getall_area(int type, int m, int x0, int y0, int x1, int y1, int (
 	Assert_ret(listm->block != NULL);
 
 	// Limit search area to map size
-	x0 = min(max(x0, 0), map->list[m].xs - 1);
-	y0 = min(max(y0, 0), map->list[m].ys - 1);
-	x1 = min(max(x1, 0), map->list[m].xs - 1);
-	y1 = min(max(y1, 0), map->list[m].ys - 1);
+	x0 = std::min(std::max(x0, 0), map->list[m].xs - 1);
+	y0 = std::min(std::max(y0, 0), map->list[m].ys - 1);
+	x1 = std::min(std::max(x1, 0), map->list[m].xs - 1);
+	y1 = std::min(std::max(y1, 0), map->list[m].ys - 1);
 
-	if (x1 < x0) swap(x0, x1);
-	if (y1 < y0) swap(y0, y1);
+	if (x1 < x0) std::swap(x0, x1);
+	if (y1 < y0) std::swap(y0, y1);
 
 	{
 		const int x0b = x0 / BLOCK_SIZE;
@@ -1692,20 +1693,20 @@ static int map_search_free_cell(struct block_list *src, int16 m, int16 *x, int16
 	if (range_x < 0 || range_y < 0) {
 		if (Assert_chk(map->list[m].xs > 2 * margin && map->list[m].ys > 2 * margin))
 			ShowDebug("search_freecell_map_margin is too big for at least one map.");
-		tries = min(map->list[m].xs * map->list[m].ys, 500); // For likely every map this will be 500...
+		tries = std::min(map->list[m].xs * map->list[m].ys, 500); // For likely every map this will be 500...
 	} else {
-		tries = min(width * height, 100);
+		tries = std::min(width * height, 100);
 	}
 
 	int avoidplayer_retries = 0;
 	while (tries-- > 0) {
 		if (range_x < 0)
-			*x = rnd() % max(1, map->list[m].xs - 2 * margin) + margin;
+			*x = rnd() % std::max(1, map->list[m].xs - 2 * margin) + margin;
 		else
 			*x = rnd() % width - range_x + center_x;
 
 		if (range_y < 0)
-			*y = rnd() % max(1, map->list[m].ys - 2 * margin) + margin;
+			*y = rnd() % std::max(1, map->list[m].ys - 2 * margin) + margin;
 		else
 			*y = rnd() % height - range_y + center_y;
 
@@ -2082,7 +2083,7 @@ static int map_quit(struct map_session_data *sd)
 	if( sd->sc.count ) {
 		//Status that are not saved...
 		for(i=0; i < SC_MAX; i++){
-			if ( status->get_sc_type(i)&SC_NO_SAVE ) {
+			if ( status->get_sc_type((enum sc_type)i)&SC_NO_SAVE ) {
 				if ( !sd->sc.data[i] )
 					continue;
 				switch( i ){
@@ -2996,8 +2997,8 @@ static int map_get_random_cell(struct block_list *bl, int16 m, int16 *x, int16 *
 	enum unit_dir dir = unit_get_rnd_diagonal_dir();
 
 	for (int i = 0; i < 4; i++, dir = unit_get_ccw90_dir(dir)) {
-		int16 x_rnd_dist = (min_dist + rnd()) % max(1i16, max_dist);
-		int16 y_rnd_dist = (min_dist + rnd()) % max(1i16, max_dist);
+		int16 x_rnd_dist = (min_dist + rnd()) % std::max(1i16, max_dist);
+		int16 y_rnd_dist = (min_dist + rnd()) % std::max(1i16, max_dist);
 		int16 x_rnd = *x + dirx[dir] * x_rnd_dist;
 		int16 y_rnd = *y + diry[dir] * y_rnd_dist;
 
@@ -3039,8 +3040,8 @@ static int map_get_random_cell_in_range(struct block_list *bl, int16 m, int16 *x
 	enum unit_dir dir = unit_get_rnd_diagonal_dir();
 
 	for (int i = 0; i < 4; i++, dir = unit_get_ccw90_dir(dir)) {
-		int16 x_rnd_range = rnd() % max(1i16, x_range);
-		int16 y_rnd_range = rnd() % max(1i16, y_range);
+		int16 x_rnd_range = rnd() % std::max(1i16, x_range);
+		int16 y_rnd_range = rnd() % std::max(1i16, y_range);
 		int16 x_rnd = *x + dirx[dir] * x_rnd_range;
 		int16 y_rnd = *y + diry[dir] * y_rnd_range;
 
@@ -3765,7 +3766,7 @@ static void map_zonedb_reload(void)
 	map->zone_db_clear();
 
 	// then reload everything from scratch:
-	map->zone_db = strdb_alloc(DB_OPT_DUP_KEY | DB_OPT_RELEASE_DATA, MAP_ZONE_NAME_LENGTH);
+	map->zone_db = strdb_alloc((DBOptions)(DB_OPT_DUP_KEY | DB_OPT_RELEASE_DATA), MAP_ZONE_NAME_LENGTH);
 	map->read_zone_db();
 }
 
@@ -3848,7 +3849,6 @@ static void map_flags_init(void)
 static int map_waterheight(char *mapname)
 {
 	char fn[256];
-	char *rsw = NULL;
 	const char *found;
 
 	nullpo_retr(NO_WATER, mapname);
@@ -3859,7 +3859,7 @@ static int map_waterheight(char *mapname)
 		safestrncpy(fn, found, sizeof(fn)); // replace with real name
 
 	// read & convert fn
-	rsw = grfio_read(fn);
+	char *rsw = (char *)grfio_read(fn);
 	if (rsw) {
 		if (memcmp(rsw, "GRSW", 4) != 0) {
 			ShowWarning("Failed to find water level for %s (%s)\n", mapname, fn);
@@ -3901,14 +3901,13 @@ static int map_waterheight(char *mapname)
 static int map_readgat(struct map_data *m)
 {
 	char filename[256];
-	uint8* gat;
 	int water_height;
 	size_t xy, off, num_cells;
 
 	nullpo_ret(m);
 	sprintf(filename, "data\\%s.gat", m->name);
 
-	gat = grfio_read(filename);
+	uint8 *gat = (uint8 *)grfio_read(filename);
 	if (gat == NULL)
 		return 0;
 
@@ -4207,7 +4206,7 @@ static bool map_config_read_map_list(const char *filename, struct config_t *conf
 	nullpo_retr(false, filename);
 	nullpo_retr(false, config);
 
-	deleted_maps = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_ALLOW_NULL_DATA, MAP_NAME_LENGTH);
+	deleted_maps = strdb_alloc((enum DBOptions)(DB_OPT_DUP_KEY|DB_OPT_ALLOW_NULL_DATA), MAP_NAME_LENGTH);
 
 	// Remove maps
 	if ((setting = libconfig->lookup(config, "map_configuration/map_removed")) != NULL) {
@@ -4348,7 +4347,7 @@ static bool map_read_npclist(const char *filename, bool imported)
 	if (!libconfig->load_file(&config, filename))
 		return false;
 
-	deleted_npcs = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_ALLOW_NULL_DATA, 0);
+	deleted_npcs = strdb_alloc((enum DBOptions)(DB_OPT_DUP_KEY|DB_OPT_ALLOW_NULL_DATA), 0);
 
 	// Remove NPCs
 	if ((setting = libconfig->lookup(&config, "npc_removed_list")) != NULL) {
@@ -5899,26 +5898,26 @@ static enum bl_type map_zone_bl_type(const char *entry, enum map_zone_skill_subt
 	while (parse != NULL) {
 		normalize_name(parse," ");
 		if( strcmpi(parse,"player") == 0 )
-			bl |= BL_PC;
+			bl = (enum bl_type)(bl | BL_PC);
 		else if( strcmpi(parse,"homun") == 0 )
-			bl |= BL_HOM;
+			bl = (enum bl_type)(bl | BL_HOM);
 		else if( strcmpi(parse,"mercenary") == 0 )
-			bl |= BL_MER;
+			bl = (enum bl_type)(bl | BL_MER);
 		else if( strcmpi(parse,"monster") == 0 )
-			bl |= BL_MOB;
+			bl = (enum bl_type)(bl | BL_MOB);
 		else if( strcmpi(parse,"clone") == 0 ) {
-			bl |= BL_MOB;
-			*subtype |= MZS_CLONE;
+			bl = (enum bl_type)(bl | BL_MOB);
+			*subtype = (enum map_zone_skill_subtype)(*subtype | MZS_CLONE);
 		} else if( strcmpi(parse,"mob_boss") == 0 ) {
-			bl |= BL_MOB;
-			*subtype |= MZS_BOSS;
+			bl = (enum bl_type)(bl | BL_MOB);
+			*subtype = (enum map_zone_skill_subtype)(*subtype | MZS_BOSS);
 		} else if( strcmpi(parse,"elemental") == 0 )
-			bl |= BL_ELEM;
+			bl = (enum bl_type)(bl | BL_ELEM);
 		else if( strcmpi(parse,"pet") == 0 )
-			bl |= BL_PET;
+			bl = (enum bl_type)(bl | BL_PET);
 		else if( strcmpi(parse,"all") == 0 ) {
-			bl |= BL_ALL;
-			*subtype |= MZS_ALL;
+			bl = (enum bl_type)(bl | BL_ALL);
+			*subtype = (enum map_zone_skill_subtype)(*subtype | MZS_ALL);
 		} else if( strcmpi(parse,"none") == 0 ) {
 			bl = BL_NUL;
 		} else {
@@ -7037,13 +7036,13 @@ int do_init(int argc, char *argv[])
 	map->nick_db   = idb_alloc(DB_OPT_BASE);
 	map->charid_db = idb_alloc(DB_OPT_BASE);
 	map->regen_db  = idb_alloc(DB_OPT_BASE); // efficient status_natural_heal processing
-	map->iwall_db  = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, 2*NAME_LENGTH+2+1); // [Zephyrus] Invisible Walls
-	map->zone_db   = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, MAP_ZONE_NAME_LENGTH);
+	map->iwall_db  = strdb_alloc((enum DBOptions)(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA), 2*NAME_LENGTH+2+1); // [Zephyrus] Invisible Walls
+	map->zone_db   = strdb_alloc((enum DBOptions)(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA), MAP_ZONE_NAME_LENGTH);
 
-	map->iterator_ers = ers_new(sizeof(struct s_mapiterator),"map.c::map_iterator_ers",ERS_OPT_CLEAN|ERS_OPT_FLEX_CHUNK);
+	map->iterator_ers = ers_new(sizeof(struct s_mapiterator),"map.c::map_iterator_ers",(enum ERSOptions)(ERS_OPT_CLEAN|ERS_OPT_FLEX_CHUNK));
 	ers_chunk_size(map->iterator_ers, 25);
 
-	map->flooritem_ers = ers_new(sizeof(struct flooritem_data),"map.c::map_flooritem_ers",ERS_OPT_CLEAN|ERS_OPT_FLEX_CHUNK);
+	map->flooritem_ers = ers_new(sizeof(struct flooritem_data),"map.c::map_flooritem_ers",(enum ERSOptions)(ERS_OPT_CLEAN|ERS_OPT_FLEX_CHUNK));
 	ers_chunk_size(map->flooritem_ers, 100);
 
 	if (!minimal) {
@@ -7202,15 +7201,15 @@ void map_defaults(void)
 	map->night_flag = 0; // 0=day, 1=night [Yor]
 	map->enable_spy = 0; //To enable/disable @spy commands, which consume too much cpu time when sending packets. [Skotlex]
 
-	map->INTER_CONF_NAME="conf/common/inter-server.conf";
-	map->LOG_CONF_NAME="conf/map/logs.conf";
-	map->MAP_CONF_NAME = "conf/map/map-server.conf";
-	map->BATTLE_CONF_FILENAME = "conf/map/battle.conf";
-	map->ATCOMMAND_CONF_FILENAME = "conf/atcommand.conf";
-	map->SCRIPT_CONF_NAME = "conf/map/script.conf";
-	map->MSG_CONF_NAME = "conf/messages.conf";
-	map->GRF_PATH_FILENAME = "conf/grf-files.txt";
-	map->STORAGE_CONF_FILENAME = "conf/storage.conf";
+	map->INTER_CONF_NAME = NULL;
+	map->LOG_CONF_NAME = NULL;
+	map->MAP_CONF_NAME = NULL;
+	map->BATTLE_CONF_FILENAME = NULL;
+	map->ATCOMMAND_CONF_FILENAME = NULL;
+	map->SCRIPT_CONF_NAME = NULL;
+	map->MSG_CONF_NAME = NULL;
+	map->GRF_PATH_FILENAME = NULL;
+	map->STORAGE_CONF_FILENAME = NULL;
 
 	map->default_codepage[0] = '\0';
 	map->server_port = 3306;

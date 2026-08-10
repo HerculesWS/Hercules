@@ -337,7 +337,7 @@ void grader_enchant_start(struct map_session_data *sd, int idx, int mat_idx, boo
 	const int grade_chance = gi->success_chance + (use_blessing ? gi->blessing.bonus * blessing_amount : 0);
 	if (rnd() % 100 >= grade_chance) {
 		if ((gi->announce & GRADE_ANNOUNCE_FAILURE) != 0)
-			clif->announce_grade_status(sd, sd->status.inventory[idx].nameid, sd->status.inventory[idx].grade, false, ALL_CLIENT);
+			clif->announce_grade_status(sd, sd->status.inventory[idx].nameid, (enum grade_level)sd->status.inventory[idx].grade, false, ALL_CLIENT);
 
 		switch (gmaterial->failure_behavior) {
 		case GRADE_FAILURE_BEHAVIOR_KEEP:
@@ -359,7 +359,7 @@ void grader_enchant_start(struct map_session_data *sd, int idx, int mat_idx, boo
 		clif->grade_enchant_result(sd, idx, (enum grade_level)sd->status.inventory[idx].grade, GRADE_UPGRADE_SUCCESS);
 
 		if ((gi->announce & GRADE_ANNOUNCE_SUCCESS) != 0)
-			clif->announce_grade_status(sd, sd->status.inventory[idx].nameid, sd->status.inventory[idx].grade, true, ALL_CLIENT);
+			clif->announce_grade_status(sd, sd->status.inventory[idx].nameid, (enum grade_level)sd->status.inventory[idx].grade, true, ALL_CLIENT);
 	}
 }
 

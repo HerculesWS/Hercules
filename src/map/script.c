@@ -79,6 +79,7 @@
 #include "common/utils.h"
 #include "common/HPM.h"
 
+#include <algorithm>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -1646,7 +1647,7 @@ static void script_add_translatable_string(const struct script_string_buf *strin
 		VECTOR_PUSHARRAY(script->buf, (void *)&st->translations, sizeof(st->translations));
 
 		for (u = 0; u != st->translations; u++) {
-			struct string_translation_entry *entry = (void *)(st->buf+st_cursor);
+			struct string_translation_entry *entry = (struct string_translation_entry *)(st->buf+st_cursor);
 			char *stringptr = &entry->string[0];
 			st_cursor += sizeof(*entry);
 			VECTOR_ENSURE(script->buf, (int)(sizeof(entry->lang_id) + sizeof(char *)), SCRIPT_BLOCK_SIZE);
@@ -1910,7 +1911,7 @@ static const char *parse_syntax_function (const char *p, bool is_public)
 
 			if ((script->parse_options & SCRIPT_USE_LABEL_DB) != 0) {
 				script->label_add(l, VECTOR_LENGTH(script->buf),
-					LABEL_IS_USERFUNC | (is_public ? LABEL_IS_EXTERN : 0));
+					(enum script_label_flags)(LABEL_IS_USERFUNC | (is_public ? LABEL_IS_EXTERN : 0)));
 			}
 		} else {
 			disp_error_message("script:parse_syntax_function: function name is already in use", func_name);
@@ -3042,7 +3043,7 @@ static struct script_code *parse_script(const char *src, const char *file, int l
 
 			if ((script->parse_options & SCRIPT_USE_LABEL_DB) != 0) {
 				bool is_extern = ((p[0] == 'O' || p[0] == 'o') && (p[1] == 'N' || p[1] == 'n'));
-				script->label_add(i, VECTOR_LENGTH(script->buf), is_extern ? LABEL_IS_EXTERN : 0);
+				script->label_add(i, VECTOR_LENGTH(script->buf), is_extern ? LABEL_IS_EXTERN : LABEL_NOFLAGS);
 			}
 
 			p = tmpp + 1;
@@ -3468,7 +3469,7 @@ static void script_array_ensure_zero(struct script_state *st, struct map_session
 			sd = map->id2sd(st->rid); // Retrieve the missing sd
 		src = script->array_src(st, sd, name, ref);
 		if( is_string_variable(name) ) {
-			const char *str = script->get_val2(st, uid, ref);
+			const char *str = (const char *)script->get_val2(st, uid, ref);
 			if (str != NULL && *str != '\0')
 				insert = true;
 			script_removetop(st, -1, 0);
@@ -6055,7 +6056,7 @@ static void script_load_translation_sub(const char *filename, void *context)
 {
 	nullpo_retv(context);
 
-	struct load_translation_data *data = context;
+	struct load_translation_data *data = (struct load_translation_data *)context;
 
 	data->translation_count += script->load_translation_file(filename, data->lang_id);
 }
@@ -6178,9 +6179,9 @@ static void do_init_script(bool minimal)
 	script->userfunc_db = strdb_alloc(DB_OPT_DUP_KEY,0);
 	script->autobonus_db = strdb_alloc(DB_OPT_DUP_KEY,0);
 
-	script->st_ers = ers_new(sizeof(struct script_state), "script.c::st_ers", ERS_OPT_CLEAN|ERS_OPT_FLEX_CHUNK);
-	script->stack_ers = ers_new(sizeof(struct script_stack), "script.c::script_stack", ERS_OPT_NONE|ERS_OPT_FLEX_CHUNK);
-	script->array_ers = ers_new(sizeof(struct script_array), "script.c::array_ers", ERS_OPT_CLEAN|ERS_OPT_CLEAR);
+	script->st_ers = ers_new(sizeof(struct script_state), "script.c::st_ers", (enum ERSOptions)(ERS_OPT_CLEAN|ERS_OPT_FLEX_CHUNK));
+	script->stack_ers = ers_new(sizeof(struct script_stack), "script.c::script_stack", (enum ERSOptions)(ERS_OPT_NONE|ERS_OPT_FLEX_CHUNK));
+	script->array_ers = ers_new(sizeof(struct script_array), "script.c::array_ers", (enum ERSOptions)(ERS_OPT_CLEAN|ERS_OPT_CLEAR));
 
 	ers_chunk_size(script->st_ers, 10);
 	ers_chunk_size(script->stack_ers, 10);
@@ -7384,7 +7385,7 @@ static BUILDIN(rand)
 		min = script_getnum(st,2);
 		max = script_getnum(st,3);
 		if( max < min )
-			swap(min, max);
+			std::swap(min, max);
 		range = max - min + 1;
 	} else {
 		// range
@@ -7501,8 +7502,8 @@ static BUILDIN(areawarp)
 			y3 = 0;
 		} else if( x3 && y3 ) {
 			// normalize x3/y3 coordinates
-			if( x3 < x2 ) swap(x3,x2);
-			if( y3 < y2 ) swap(y3,y2);
+			if( x3 < x2 ) std::swap(x3,x2);
+			if( y3 < y2 ) std::swap(y3,y2);
 		}
 	}
 
@@ -8455,7 +8456,7 @@ static BUILDIN(changelook)
 	if( sd == NULL )
 		return true;
 
-	clif->changelook(&sd->bl,type,val);
+	clif->changelook(&sd->bl, (enum look)type,val);
 
 	return true;
 }
@@ -9961,7 +9962,7 @@ static BUILDIN(getpartymember)
 {
 	struct map_session_data *sd = NULL;
 	struct party_data *p = party->search(script_getnum(st, 2));
-	enum partymember_type type = script_getnum(st, 3);
+	enum partymember_type type = (enum partymember_type)script_getnum(st, 3);
 	struct script_data *data = script_getdata(st, 4);
 	const char *varname = reference_getname(data);
 	int id = reference_getid(data);
@@ -10096,7 +10097,7 @@ static BUILDIN(getguildinfo)
 		g = sd ? sd->guild : NULL;
 	}
 
-	enum guildinfo_type type = script_getnum(st, 2);
+	enum guildinfo_type type = (enum guildinfo_type)script_getnum(st, 2);
 
 	if (g == NULL) {
 		// guild does not exist
@@ -10169,7 +10170,7 @@ static BUILDIN(getguildmember)
 {
 	struct map_session_data *sd = NULL;
 	struct guild *g = guild->search(script_getnum(st, 2));
-	enum guildmember_type type = script_getnum(st, 3);
+	enum guildmember_type type = (enum guildmember_type)script_getnum(st, 3);
 	struct script_data *data = script_getdata(st, 4);
 	const char *varname = reference_getname(data);
 	int id = reference_getid(data);
@@ -10814,7 +10815,7 @@ static BUILDIN(getequippercentrefinery)
 
 	if (i >= 0 && sd->status.inventory[i].nameid != 0 && sd->status.inventory[i].refine < MAX_REFINE)
 		script_pushint(st,
-			refine->get_refine_chance(itemdb_wlv(sd->status.inventory[i].nameid), (int) sd->status.inventory[i].refine, (enum refine_chance_type) type));
+			refine->get_refine_chance((enum refine_type)itemdb_wlv(sd->status.inventory[i].nameid), (int) sd->status.inventory[i].refine, (enum refine_chance_type) type));
 	else
 		script_pushint(st, 0);
 
@@ -11766,7 +11767,7 @@ static BUILDIN(setmount)
 	if (script_hasdata(st,2))
 		flag = script_getnum(st,2);
 
-	enum mado_type mtype = script_hasdata(st, 3) ? script_getnum(st, 3) : MADO_ROBOT;
+	enum mado_type mtype = script_hasdata(st, 3) ? (enum mado_type)script_getnum(st, 3) : MADO_ROBOT;
 	if (mtype < MADO_ROBOT || mtype >= MADO_MAX) {
 		ShowError("script_setmount: Invalid mado type has been passed (%d).\n", flag);
 		return false;
@@ -12047,7 +12048,7 @@ static BUILDIN(openstorage)
 		return false;
 	}
 
-	enum storage_access_modes storage_access = script_hasdata(st, 3) ? script_getnum(st, 3) : STORAGE_ACCESS_ALL;
+	enum storage_access_modes storage_access = script_hasdata(st, 3) ? (enum storage_access_modes)script_getnum(st, 3) : STORAGE_ACCESS_ALL;
 
 	struct storage_data* stor = storage->ensure(sd, storage_id);
 	if (stor == NULL) {
@@ -12835,7 +12836,7 @@ static BUILDIN(gettimer)
 			if (sd->eventtimer[i] != INVALID_TIMER) {
 				td = timer->get(sd->eventtimer[i]);
 				Assert_retr(false, td != NULL);
-				tick = max(0, DIFF_TICK32(td->tick, timer->gettick()));
+				tick = std::max(0, DIFF_TICK32(td->tick, timer->gettick()));
 
 				if (event != NULL) {
 					if ((first == true || tick < val) && strcmp((char *)(td->data), event) == 0) {
@@ -12855,14 +12856,14 @@ static BUILDIN(gettimer)
 			if (sd->eventtimer[i] != INVALID_TIMER) {
 				td = timer->get(sd->eventtimer[i]);
 				Assert_retr(false, td != NULL);
-				tick = max(0, DIFF_TICK32(td->tick, timer->gettick()));
+				tick = std::max(0, DIFF_TICK32(td->tick, timer->gettick()));
 
 				if (event != NULL) {
 					if (strcmp((char *)(td->data), event) == 0) {
-						val = max(val, tick);
+						val = std::max(val, tick);
 					}
 				} else {
-					val = max(val, tick);
+					val = std::max(val, tick);
 				}
 			}
 		}
@@ -12922,7 +12923,7 @@ static BUILDIN(getunits)
 	int32 id;
 	uint32 start;
 	struct reg_db *ref;
-	enum bl_type type = script_getnum(st, 2);
+	enum bl_type type = (enum bl_type)script_getnum(st, 2);
 	struct script_data *data = script_getdata(st, 3);
 	uint32 count = 0;
 	uint32 limit = script_getnum(st, 4);
@@ -13824,7 +13825,7 @@ static BUILDIN(sc_start)
 	else
 		flag = script_hasdata(st,5+start_type) ? script_getnum(st,5+start_type) : SCFLAG_NOAVOID;
 
-	rate = script_hasdata(st,4+start_type)?min(script_getnum(st,4+start_type),10000):10000;
+	rate = script_hasdata(st,4+start_type) ? std::min(script_getnum(st,4+start_type),10000) : 10000;
 
 	if(script_hasdata(st,(6+start_type)))
 		bl = map->id2bl(script_getnum(st,(6+start_type)));
@@ -14041,8 +14042,8 @@ static BUILDIN(homunculus_mutate)
 		else
 			homun_id = HOMID_EIRA + (rnd() % 4);
 
-		m_class = homun->class2type(sd->hd->homunculus.class_);
-		m_id    = homun->class2type(homun_id);
+		m_class = homun->class2type((enum homun_id)sd->hd->homunculus.class_);
+		m_id    = homun->class2type((enum homun_id)homun_id);
 
 		if (m_class == HT_EVO && m_id == HT_S &&
 			sd->hd->homunculus.level >= 99 && i != INDEX_NOT_FOUND &&
@@ -14074,7 +14075,7 @@ static BUILDIN(homunculus_morphembryo)
 		return true;
 
 	if (homun_alive(sd->hd)) {
-		enum homun_type m_class = homun->class2type(sd->hd->homunculus.class_);
+		enum homun_type m_class = homun->class2type((enum homun_id)sd->hd->homunculus.class_);
 
 		if (m_class == HT_EVO && sd->hd->homunculus.level >= 99) {
 			struct item item_tmp;
@@ -14737,7 +14738,7 @@ enum mapinfo_info {
 
 static BUILDIN(getmapinfo)
 {
-	enum mapinfo_info mode = script_getnum(st, 2);
+	enum mapinfo_info mode = (enum mapinfo_info)script_getnum(st, 2);
 	int16 m = -1;
 
 	if (script_hasdata(st, 3)) {
@@ -15273,13 +15274,13 @@ static BUILDIN(emotion)
 		else
 			sd = script->rid2sd(st);
 		if (sd != NULL)
-			clif->emotion(&sd->bl,type);
+			clif->emotion(&sd->bl, (enum emotion_type)type);
 	} else if( script_hasdata(st,4) ) {
 		struct npc_data *nd = npc->name2id(script_getstr(st,4));
 		if (nd != NULL)
-			clif->emotion(&nd->bl,type);
+			clif->emotion(&nd->bl, (enum emotion_type)type);
 	} else {
-		clif->emotion(map->id2bl(st->oid),type);
+		clif->emotion(map->id2bl(st->oid), (enum emotion_type)type);
 	}
 	return true;
 }
@@ -17057,7 +17058,7 @@ static BUILDIN(playbgm)
 		const char *name = script_getstr(st,2);
 
 		if (script_hasdata(st, 3))
-			clif->playBGM(sd, name, script_getnum(st, 3));
+			clif->playBGM(sd, name, (enum play_npc_bgm)script_getnum(st, 3));
 		else
 			clif->playBGM(sd, name, PLAY_BGM_LOOP);
 	}
@@ -17068,7 +17069,7 @@ static BUILDIN(playbgm)
 static int playbgm_sub(struct block_list *bl, va_list ap)
 {
 	const char* name = va_arg(ap,const char*);
-	enum play_npc_bgm type = va_arg(ap, int);
+	enum play_npc_bgm type = (enum play_npc_bgm)va_arg(ap, int);
 
 	clif->playBGM(BL_CAST(BL_PC, bl), name, type);
 
@@ -17078,7 +17079,7 @@ static int playbgm_sub(struct block_list *bl, va_list ap)
 static int playbgm_foreachpc_sub(struct map_session_data *sd, va_list args)
 {
 	const char* name = va_arg(args, const char*);
-	enum play_npc_bgm type = va_arg(args, int);
+	enum play_npc_bgm type = (enum play_npc_bgm)va_arg(args, int);
 
 	nullpo_ret(name);
 	clif->playBGM(sd, name, type);
@@ -17174,7 +17175,7 @@ static BUILDIN(soundeffect)
 {
 	struct map_session_data *sd = script->rid2sd(st);
 	const char* name = script_getstr(st, 2);
-	enum play_sound_act type = script_getnum(st, 3);
+	enum play_sound_act type = (enum play_sound_act)script_getnum(st, 3);
 	int term = 0;
 	if (script_hasdata(st, 4))
 		term = script_getnum(st, 4);
@@ -17189,7 +17190,7 @@ static int soundeffect_sub(struct block_list *bl, va_list ap)
 {
 	struct map_session_data *sd = NULL;
 	char *name = va_arg(ap, char *);
-	enum play_sound_act type = va_arg(ap, int);
+	enum play_sound_act type = (enum play_sound_act)va_arg(ap, int);
 	int term = va_arg(ap, int);
 
 	nullpo_ret(bl);
@@ -17212,7 +17213,7 @@ static BUILDIN(soundeffectall)
 		return true;
 
 	const char *name = script_getstr(st, 2);
-	enum play_sound_act type = script_getnum(st, 3);
+	enum play_sound_act type = (enum play_sound_act)script_getnum(st, 3);
 
 	//FIXME: enumerating map squares (map->foreach) is slower than enumerating the list of online players (map->foreachpc?) [ultramage]
 
@@ -17262,7 +17263,7 @@ static BUILDIN(soundeffectall2)
 		return true;
 
 	const char *name = script_getstr(st, 2);
-	enum play_sound_act type = script_getnum(st, 3);
+	enum play_sound_act type = (enum play_sound_act)script_getnum(st, 3);
 	int term = 0;
 	if (script_hasdata(st, 4))
 		term = script_getnum(st, 4);
@@ -17455,7 +17456,7 @@ static BUILDIN(specialeffect)
 	enum send_target target = AREA;
 
 	if (script_hasdata(st, 3)) {
-		target = script_getnum(st, 3);
+		target = (enum send_target)script_getnum(st, 3);
 	}
 
 	if (script_hasdata(st, 4)) {
@@ -17504,7 +17505,7 @@ static BUILDIN(specialeffectnum)
 	enum send_target target = AREA;
 
 	if (script_hasdata(st, 5)) {
-		target = script_getnum(st, 5);
+		target = (enum send_target)script_getnum(st, 5);
 	}
 
 	if (script_hasdata(st, 6)) {
@@ -17549,7 +17550,7 @@ static BUILDIN(removespecialeffect)
 	enum send_target target = AREA;
 
 	if (script_hasdata(st, 3)) {
-		target = script_getnum(st, 3);
+		target = (enum send_target)script_getnum(st, 3);
 	}
 
 	if (script_hasdata(st, 4)) {
@@ -17983,7 +17984,7 @@ static BUILDIN(movenpc)
 		return false;
 
 	if (script_hasdata(st,5))
-		nd->dir = script_getnum(st,5) % 8;
+		nd->dir = (enum unit_dir)(script_getnum(st,5) % UNIT_DIR_MAX);
 	npc->movenpc(nd, x, y);
 	return true;
 }
@@ -18168,26 +18169,26 @@ static BUILDIN(getnpcdir)
 // set npc direction [4144]
 static BUILDIN(setnpcdir)
 {
-	int newdir = 0;
+	enum unit_dir newdir = UNIT_DIR_UNDEFINED;
 	struct npc_data *nd = NULL;
 
 	if (script_hasdata(st, 3)) {
 		nd = npc->name2id(script_getstr(st, 2));
-		newdir = script_getnum(st, 3);
+		newdir = (enum unit_dir)script_getnum(st, 3);
 	} else if (script_hasdata(st, 2)) {
 		if (!st->oid)
 			return false;
 
 		nd = map->id2nd(st->oid);
-		newdir = script_getnum(st, 2);
+		newdir = (enum unit_dir)script_getnum(st, 2);
 	}
 	if (nd == NULL)
 		return false;
 
-	if (newdir < 0)
-		newdir = 0;
-	else if (newdir > 7)
-		newdir = 7;
+	if (newdir < UNIT_DIR_FIRST)
+		newdir = UNIT_DIR_NORTH;
+	else if (newdir >= UNIT_DIR_MAX)
+		newdir = UNIT_DIR_NORTHEAST;
 
 	nd->dir = newdir;
 	if (nd->ud)
@@ -18512,7 +18513,7 @@ static BUILDIN(logmes)
 	nullpo_retr(false, sd);
 
 	if (script_hasdata(st, 3)) {
-		type = script_getnum(st, 3);
+		type = (enum logmes_type)script_getnum(st, 3);
 	}
 
 	switch (type) {
@@ -19413,9 +19414,9 @@ static BUILDIN(implode)
 	} else {
 		int i;
 		size_t len = 0, glue_len = 0, k = 0;
-		const char *glue = NULL, *temp;
+		const char *glue = NULL;
 		for(i = 0; i <= array_size; ++i) {
-			temp = script->get_val2(st, reference_uid(id, i), reference_getref(data));
+			const char *temp = (const char *)script->get_val2(st, reference_uid(id, i), reference_getref(data));
 			len += strlen(temp);
 			script_removetop(st, -1, 0);
 		}
@@ -19430,7 +19431,7 @@ static BUILDIN(implode)
 
 		//build output
 		for(i = 0; i < array_size; ++i) {
-			temp = script->get_val2(st, reference_uid(id, i), reference_getref(data));
+			const char *temp = (const char *)script->get_val2(st, reference_uid(id, i), reference_getref(data));
 			len = strlen(temp);
 			memcpy(&output[k], temp, len);
 			k += len;
@@ -19440,7 +19441,7 @@ static BUILDIN(implode)
 			}
 			script_removetop(st, -1, 0);
 		}
-		temp = script->get_val2(st, reference_uid(id, array_size), reference_getref(data));
+		const char *temp = (const char *)script->get_val2(st, reference_uid(id, array_size), reference_getref(data));
 		len = strlen(temp);
 		memcpy(&output[k], temp, len);
 		k += len;
@@ -20735,7 +20736,7 @@ static BUILDIN(rid2name)
 static BUILDIN(setpcblock)
 {
 	struct map_session_data *sd = script_hasdata(st, 4) ? script->id2sd(st, script_getnum(st, 4)) : script->rid2sd(st);
-	enum pcblock_action_flag type = script_getnum(st, 2);
+	enum pcblock_action_flag type = (enum pcblock_action_flag)script_getnum(st, 2);
 	int state = (script_getnum(st, 3) > 0) ? 1 : 0;
 
 	if (sd == NULL) {
@@ -21150,6 +21151,7 @@ static BUILDIN(setunitdata)
 		setunitdata_check_bounds(4, 0, CHAR_MAX);
 		break;
 	case UDT_GROUP:
+	{
 		setunitdata_check_bounds(4, 0, INT_MAX);
 
 		struct unit_data *ud = unit->bl2ud2(bl);
@@ -21164,6 +21166,7 @@ static BUILDIN(setunitdata)
 		clif->blname_ack(0, bl); // Send update to client.
 		script_pushint(st, 1);
 		return true;
+	}
 	case UDT_DAMAGE_TAKEN_RATE:
 		setunitdata_check_bounds(4, 1, INT_MAX);
 		break;
@@ -22883,7 +22886,7 @@ static BUILDIN(unitattack)
 	switch( unit_bl->type )
 	{
 		case BL_PC:
-			clif->pActionRequest_sub(BL_UCAST(BL_PC, unit_bl), actiontype > 0 ? 0x07 : 0x00, target_bl->id, timer->gettick());
+			clif->pActionRequest_sub(BL_UCAST(BL_PC, unit_bl), actiontype > 0 ? ACT_ATTACK_REPEAT : ACT_ATTACK, target_bl->id, timer->gettick());
 			script_pushint(st, 1);
 			return true;
 		case BL_MOB:
@@ -22956,7 +22959,7 @@ static BUILDIN(unittalk)
 	}
 
 	if (script_hasdata(st, 5)) {
-		target = script_getnum(st, 5);
+		target = (enum send_target)script_getnum(st, 5);
 	}
 
 	if (script_hasdata(st, 6)) {
@@ -22996,11 +22999,10 @@ static BUILDIN(unittalk)
 static BUILDIN(unitemote)
 {
 	int unit_id;
-	int emotion;
 	struct block_list* bl;
 
 	unit_id = script_getnum(st,2);
-	emotion = script_getnum(st,3);
+	enum emotion_type emotion = (enum emotion_type)script_getnum(st,3);
 	bl = map->id2bl(unit_id);
 	if( bl != NULL )
 		clif->emotion(bl, emotion);
@@ -23384,8 +23386,8 @@ static BUILDIN(setcell)
 		return true;
 	}
 
-	if( x1 > x2 ) swap(x1,x2);
-	if( y1 > y2 ) swap(y1,y2);
+	if( x1 > x2 ) std::swap(x1,x2);
+	if( y1 > y2 ) std::swap(y1,y2);
 
 	for( y = y1; y <= y2; ++y )
 		for( x = x1; x <= x2; ++x )
@@ -24841,7 +24843,7 @@ static int buildin_mobuseskill_sub(struct block_list *bl, va_list ap)
 	uint16 skill_lv = va_arg(ap,int);
 	int casttime    = va_arg(ap,int);
 	int cancel      = va_arg(ap,int);
-	int emotion     = va_arg(ap,int);
+	enum emotion_type emotion = (enum emotion_type)va_arg(ap,int);
 	int target      = va_arg(ap,int);
 
 	nullpo_ret(bl);
@@ -24963,14 +24965,14 @@ static BUILDIN(pushpc)
 		return true;
 	}
 
-	enum unit_dir dir = script_getnum(st, 2);
+	enum unit_dir dir = (enum unit_dir)script_getnum(st, 2);
 	cells = script_getnum(st,3);
 
 	if (dir >= UNIT_DIR_MAX) {
 		ShowWarning("buildin_pushpc: Invalid direction %d specified.\n", dir);
 		script->reportsrc(st);
 
-		dir %= UNIT_DIR_MAX;  // trim spin-over
+		dir = (enum unit_dir)(dir % UNIT_DIR_MAX);  // trim spin-over
 	}
 
 	if(!cells)
@@ -25450,7 +25452,6 @@ static BUILDIN(unbindatcmd)
 static BUILDIN(has_permission)
 {
 	struct map_session_data *sd;
-	enum e_pc_permission perm;
 
 	if (script_hasdata(st, 3)) {
 		sd = map->id2sd(script_getnum(st, 3));
@@ -25483,7 +25484,7 @@ static BUILDIN(has_permission)
 	}
 
 	// to ckeck for built-in permission
-	perm = script_getnum(st, 2);
+	enum e_pc_permission perm = (enum e_pc_permission)script_getnum(st, 2);
 	script_pushint(st, pc_has_permission(sd, perm));
 	return true;
 }
@@ -27150,7 +27151,8 @@ static BUILDIN(removechannelhandler)
 static BUILDIN(showscript)
 {
 	const char *msg = script_getstr(st, 2);
-	int id = 0, flag = AREA;
+	int id = 0;
+	enum send_target flag = AREA;
 
 	if (script_hasdata(st, 3))
 		id = script_getnum(st, 3);
@@ -27432,7 +27434,7 @@ static BUILDIN(dressroom)
 	}
 
 	if (script_hasdata(st, 2)) {
-		mode = script_getnum(st, 2);
+		mode = (enum dressroom_mode)script_getnum(st, 2);
 	}
 
 	switch (mode) {
@@ -27554,8 +27556,8 @@ static BUILDIN(mesnavigation)
 	int x = script_hasdata(st, 4) ? script_getnum(st, 4) : 0;
 	int y = script_hasdata(st, 5) ? script_getnum(st, 5) : 0;
 	bool showWindow = script_hasdata(st, 6) ? (script_getnum(st, 6) == 1) : false;
-	enum navigation_mode mode = script_hasdata(st, 7) ? script_getnum(st, 7) : NAV_MODE_ALL;
-	enum navigation_service services = script_hasdata(st, 8) ? script_getnum(st, 8) : NAV_KAFRA_AND_AIRSHIP;
+	enum navigation_mode mode = script_hasdata(st, 7) ? (enum navigation_mode)script_getnum(st, 7) : NAV_MODE_ALL;
+	enum navigation_service services = script_hasdata(st, 8) ? (enum navigation_service)script_getnum(st, 8) : NAV_KAFRA_AND_AIRSHIP;
 	int monster_id = script_hasdata(st, 9) ? script_getnum(st, 9) : 0;
 
 	return script->format_navigation(st, label, mapname, x, y, mode, services, showWindow, monster_id);
@@ -27668,7 +27670,7 @@ static BUILDIN(rodex_sendmail)
 
 		int amount = script_getnum(st, param + 1);
 
-		if (amount < 1 || amount > min(MAX_AMOUNT, SHRT_MAX)) {
+		if (amount < 1 || amount > std::min(MAX_AMOUNT, SHRT_MAX)) {
 			ShowError("script:rodex_sendmail: Invalid amount %d passed for item %d!\n", amount, i + 1);
 			return false;
 		}
@@ -27678,7 +27680,7 @@ static BUILDIN(rodex_sendmail)
 		if (script_isstringtype(st, param) == false) {
 			int itemid = script_getnum(st, param);
 
-			if (itemdb->exists(itemid) == false) {
+			if (itemdb->exists(itemid) == NULL) {
 				ShowError("script:rodex_sendmail: Unknown item ID %d.\n", itemid);
 				return false;
 			}
@@ -27738,7 +27740,7 @@ static BUILDIN(rodex_sendmail2)
 
 		int amount = script_getnum(st, param + 1);
 
-		if (amount < 1 || amount > min(MAX_AMOUNT, SHRT_MAX)) {
+		if (amount < 1 || amount > std::min(MAX_AMOUNT, SHRT_MAX)) {
 			ShowError("script:rodex_sendmail: Invalid amount %d passed for item %d!\n", amount, i + 1);
 			return false;
 		}
@@ -27763,7 +27765,7 @@ static BUILDIN(rodex_sendmail2)
 		if (data_isstring(script_getdata(st, param)) == false) {
 			int itemid = script_getnum(st, param);
 
-			if (itemdb->exists(itemid) == false) {
+			if (itemdb->exists(itemid) == NULL) {
 				ShowError("script:rodex_sendmail: Unknown item ID %d.\n", itemid);
 				return false;
 			}
@@ -28002,7 +28004,7 @@ static BUILDIN(msgtable)
 	if (sd == NULL)
 		return false;
 
-	const enum clif_messages msgId = script_getnum(st, 2);
+	enum clif_messages msgId = (enum clif_messages)script_getnum(st, 2);
 	if (script_hasdata(st, 3)) {
 		clif->msgtable_color(sd, msgId, script_getnum(st, 3));
 	} else {
@@ -28018,7 +28020,7 @@ static BUILDIN(msgtable2)
 	if (sd == NULL)
 		return false;
 
-	const enum clif_messages msgId = script_getnum(st, 2);
+	enum clif_messages msgId = (enum clif_messages)script_getnum(st, 2);
 	if (script_isstringtype(st, 3)) {
 		const char *value = script_getstr(st, 3);
 		if (script_hasdata(st, 4)) {
@@ -28054,7 +28056,7 @@ static BUILDIN(changecamera)
 
 	enum send_target target = SELF;
 	if (script_hasdata(st, 5)) {
-		target = script_getnum(st, 5);
+		target = (enum send_target)script_getnum(st, 5);
 	}
 	clif->camera_change(sd, (float)script_getnum(st, 2), (float)script_getnum(st, 3), (float)script_getnum(st, 4), target);
 	return true;
@@ -28109,7 +28111,7 @@ static BUILDIN(enchantitem)
 		script_pushint(st, false);
 		return true;
 	}
-	const bool res = clif->enchant_equipment(sd, pc->equip_pos[pos], cardSlot, cardId, 1);
+	const bool res = clif->enchant_equipment(sd, (enum equip_pos)pc->equip_pos[pos], cardSlot, cardId, 1);
 	if (res) {
 		logs->pick_pc(sd, LOG_TYPE_CARD, -1, &sd->status.inventory[n],sd->inventory_data[n]);
 		sd->status.inventory[n].card[cardSlot] = cardId;
@@ -28130,7 +28132,7 @@ static BUILDIN(expandinventoryack)
 	if (script_hasdata(st, 3)) {
 		itemId = script_getnum(st, 3);
 	}
-	clif->inventoryExpandAck(sd, script_getnum(st, 2), itemId);
+	clif->inventoryExpandAck(sd, (enum expand_inventory)script_getnum(st, 2), itemId);
 	return true;
 }
 
@@ -28140,7 +28142,7 @@ static BUILDIN(expandinventoryresult)
 	struct map_session_data *sd = script_rid2sd(st);
 	if (sd == NULL)
 		return false;
-	clif->inventoryExpandResult(sd, script_getnum(st, 2));
+	clif->inventoryExpandResult(sd, (enum expand_inventory_result)script_getnum(st, 2));
 	return true;
 }
 
@@ -28452,7 +28454,7 @@ static BUILDIN(setdialogalign)
 	if (sd == NULL)
 		return true;
 
-	clif->sayDialogAlign(sd, st->oid, script_getnum(st, 2));
+	clif->sayDialogAlign(sd, st->oid, (enum say_dialog_align)script_getnum(st, 2));
 
 	return true;
 }
@@ -28663,7 +28665,7 @@ static BUILDIN(dynamicnpccreateresult)
 		return false;
 	}
 
-	clif->dynamicnpc_create_result(sd, flag);
+	clif->dynamicnpc_create_result(sd, (enum dynamicnpc_create_result)flag);
 	return true;
 }
 

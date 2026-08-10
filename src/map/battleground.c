@@ -335,13 +335,13 @@ static enum bg_queue_types bg_str2teamtype(const char *str)
 	while (parse != NULL) {
 		normalize_name(parse," ");
 		if( strcmpi(parse,"all") == 0 )
-			type |= BGQT_INDIVIDUAL|BGQT_PARTY|BGQT_GUILD;
+			type = (enum bg_queue_types)(type|BGQT_INDIVIDUAL|BGQT_PARTY|BGQT_GUILD);
 		else if( strcmpi(parse,"party") == 0 )
-			type |= BGQT_PARTY;
+			type = (enum bg_queue_types)(type|BGQT_PARTY);
 		else if( strcmpi(parse,"guild") == 0 )
-			type |= BGQT_GUILD;
+			type = (enum bg_queue_types)(type|BGQT_GUILD);
 		else if( strcmpi(parse,"solo") == 0 )
-			type |= BGQT_INDIVIDUAL;
+			type = (enum bg_queue_types)(type|BGQT_INDIVIDUAL);
 		else {
 			ShowError("bg_str2teamtype: '%s' unknown type, skipping...\n",parse);
 		}
@@ -597,7 +597,7 @@ static void bg_queue_player_cleanup(struct map_session_data *sd)
 	sd->bg_queue.arena = NULL;
 	sd->bg_queue.ready = 0;
 	sd->bg_queue.client_has_bg_data = 0;
-	sd->bg_queue.type = 0;
+	sd->bg_queue.type = BGQT_INVALID;
 }
 
 static void bg_match_over(struct bg_arena *arena, bool canceled)
@@ -617,7 +617,7 @@ static void bg_match_over(struct bg_arena *arena, bool canceled)
 			continue;
 
 		if (sd->bg_queue.arena) {
-			bg->team_leave(sd, 0);
+			bg->team_leave(sd, BGTL_LEFT);
 			bg->queue_pc_cleanup(sd);
 		}
 		if (canceled)

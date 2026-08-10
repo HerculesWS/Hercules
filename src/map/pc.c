@@ -74,6 +74,7 @@
 #include "common/timer.h"
 #include "common/utils.h"
 
+#include <algorithm>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -505,7 +506,7 @@ static void pc_addfame(struct map_session_data *sd, int ranktype, int count)
 	if (sd->status.fame > MAX_FAME)
 		sd->status.fame = MAX_FAME;
 
-	clif->update_rankingpoint(sd, ranktype, count);
+	clif->update_rankingpoint(sd, (enum fame_list_type)ranktype, count);
 	chrif->updatefamelist(sd);
 }
 
@@ -580,7 +581,7 @@ static int pc_setrestartvalue(struct map_session_data *sd, int type)
 
 	if (type&1) {
 		//Normal resurrection
-		status->heal(&sd->bl, bst->hp, 0, STATUS_HEAL_FORCED | STATUS_HEAL_ALLOWREVIVE);
+		status->heal(&sd->bl, bst->hp, 0, (enum status_heal_flag)(STATUS_HEAL_FORCED | STATUS_HEAL_ALLOWREVIVE));
 		if( st->sp < bst->sp )
 			status->set_sp(&sd->bl, bst->sp, STATUS_HEAL_FORCED);
 	} else { //Just for saving on the char-server (with values as if respawned)
@@ -646,13 +647,13 @@ static void pc_inventory_rentals(struct map_session_data *sd)
 		} else {
 			expire_tick = (int64)(sd->status.inventory[i].expire_time - time(NULL)) * 1000;
 			clif->rental_time(sd->fd, sd->status.inventory[i].nameid, (int)(expire_tick / 1000));
-			next_tick = min(expire_tick, next_tick);
+			next_tick = std::min(expire_tick, next_tick);
 			c++;
 		}
 	}
 
 	if( c > 0 ) // min(next_tick,3600000) 1 hour each timer to keep announcing to the owner, and to avoid a but with rental time > 15 days
-		sd->rental_timer = timer->add(timer->gettick() + min(next_tick, 3600000i64), pc->inventory_rental_end, sd->bl.id, 0);
+		sd->rental_timer = timer->add(timer->gettick() + std::min(next_tick, 3600000i64), pc->inventory_rental_end, sd->bl.id, 0);
 	else
 		sd->rental_timer = INVALID_TIMER;
 }
@@ -675,7 +676,7 @@ static void pc_inventory_rental_add(struct map_session_data *sd, int seconds)
 		}
 	}
 	else
-		sd->rental_timer = timer->add(timer->gettick() + min(tick,3600000), pc->inventory_rental_end, sd->bl.id, 0);
+		sd->rental_timer = timer->add(timer->gettick() + std::min(tick,3600000), pc->inventory_rental_end, sd->bl.id, 0);
 }
 
 /*==========================================
@@ -1338,7 +1339,7 @@ static bool pc_authok(struct map_session_data *sd, int login_id2, time_t expirat
 	sd->bg_queue.arena = NULL;
 	sd->bg_queue.ready = 0;
 	sd->bg_queue.client_has_bg_data = 0;
-	sd->bg_queue.type = 0;
+	sd->bg_queue.type = BGQT_INVALID;
 
 	VECTOR_INIT(sd->auto_cast); // Initialize auto-cast vector.
 	VECTOR_INIT(sd->channels);
@@ -1584,7 +1585,7 @@ static int pc_reg_received(struct map_session_data *sd)
 
 	pc->load_combo(sd);
 
-	status_calc_pc(sd,SCO_FIRST|SCO_FORCE);
+	status_calc_pc(sd, (enum e_status_calc_opt)(SCO_FIRST|SCO_FORCE));
 	chrif->scdata_request(sd->status.account_id, sd->status.char_id);
 
 	if (sd->status.clan_id)
@@ -2676,7 +2677,7 @@ static int pc_bonus(struct map_session_data *sd, int type, int val)
 			break;
 		case SP_SPEED_RATE: //Non stackable increase
 			if(sd->state.lr_flag != 2)
-				sd->bonus.speed_rate = min(sd->bonus.speed_rate, -val);
+				sd->bonus.speed_rate = std::min(sd->bonus.speed_rate, -val);
 			break;
 		case SP_SPEED_ADDRATE: //Stackable increase
 			if(sd->state.lr_flag != 2)
@@ -3430,14 +3431,14 @@ static int pc_bonus2(struct map_session_data *sd, int type, int type2, int val)
 		case SP_HP_VANISH_RATE:
 			if (sd->state.lr_flag != 2) {
 				sd->bonus.hp_vanish_rate += type2;
-				sd->bonus.hp_vanish_per = max(sd->bonus.hp_vanish_per, val);
+				sd->bonus.hp_vanish_per = std::max(sd->bonus.hp_vanish_per, val);
 				sd->bonus.hp_vanish_trigger = 0;
 			}
 			break;
 		case SP_SP_VANISH_RATE:
 			if (sd->state.lr_flag != 2) {
 				sd->bonus.sp_vanish_rate += type2;
-				sd->bonus.sp_vanish_per = max(sd->bonus.sp_vanish_per, val);
+				sd->bonus.sp_vanish_per = std::max(sd->bonus.sp_vanish_per, val);
 				sd->bonus.sp_vanish_trigger = 0;
 			}
 			break;
@@ -4111,14 +4112,14 @@ static int pc_bonus3(struct map_session_data *sd, int type, int type2, int type3
 		case SP_HP_VANISH_RATE:
 			if (sd->state.lr_flag != 2) {
 				sd->bonus.hp_vanish_rate += type2;
-				sd->bonus.hp_vanish_per = max(sd->bonus.hp_vanish_per, type3);
+				sd->bonus.hp_vanish_per = std::max(sd->bonus.hp_vanish_per, type3);
 				sd->bonus.hp_vanish_trigger = val;
 			}
 			break;
 		case SP_SP_VANISH_RATE:
 			if (sd->state.lr_flag != 2) {
 				sd->bonus.sp_vanish_rate += type2;
-				sd->bonus.sp_vanish_per = max(sd->bonus.sp_vanish_per, type3);
+				sd->bonus.sp_vanish_per = std::max(sd->bonus.sp_vanish_per, type3);
 				sd->bonus.sp_vanish_trigger = val;
 			}
 			break;
@@ -6133,7 +6134,7 @@ static int pc_setpos(struct map_session_data *sd, unsigned short map_index, int 
 	}
 
 	if (battle_config.player_warp_keep_direction == 0)
-		sd->ud.dir = 0; // Make character facing north.
+		sd->ud.dir = UNIT_DIR_NORTH; // Make character facing north.
 
 	if (sd->bl.prev != NULL) {
 		unit->remove_map_pc(sd, clrtype);
@@ -6256,7 +6257,7 @@ static int pc_memo(struct map_session_data *sd, int pos)
 		int i;
 		// prevent memo-ing the same map multiple times
 		ARR_FIND( 0, MAX_MEMOPOINTS, i, sd->status.memo_point[i].map == map_id2index(sd->bl.m) );
-		memmove(&sd->status.memo_point[1], &sd->status.memo_point[0], (min(i,MAX_MEMOPOINTS-1))*sizeof(struct point));
+		memmove(&sd->status.memo_point[1], &sd->status.memo_point[0], (std::min(i,MAX_MEMOPOINTS-1))*sizeof(struct point));
 		pos = 0;
 	}
 
@@ -6420,7 +6421,7 @@ int pc_get_skill_cooldown(struct map_session_data *sd, uint16 skill_id, uint16 s
 	if (i < ARRAYLENGTH(sd->skillcooldown))
 		cooldown += sd->skillcooldown[i].val;
 
-	return max(0, cooldown);
+	return std::max(0, cooldown);
 }
 
 /*==========================================
@@ -7141,7 +7142,7 @@ static int pc_setstat(struct map_session_data *sd, int type, int val)
 			return -1;
 	}
 
- 	achievement->validate_stats(sd, type, val); // Achievements [Smokexyz/Hercules]
+ 	achievement->validate_stats(sd, (enum status_point_types)type, val); // Achievements [Smokexyz/Hercules]
 
 	return val;
 }
@@ -7173,7 +7174,7 @@ static int pc_need_status_point(struct map_session_data *sd, int type, int val)
 	high = low + val;
 
 	if ( val < 0 )
-		swap(low, high);
+		std::swap(low, high);
 
 	for ( ; low < high; low++ )
 #ifdef RENEWAL // renewal status point cost formula
@@ -7258,7 +7259,7 @@ static bool pc_statusup(struct map_session_data *sd, int type, int increase)
 	status_calc_pc(sd, SCO_NONE);
 
 	// update increase cost indicator
-	clif->updatestatus(sd, SP_USTR + type-SP_STR);
+	clif->updatestatus(sd, (enum status_point_types)(SP_USTR + type-SP_STR));
 
 	// update statpoint count
 	clif->updatestatus(sd, SP_STATUSPOINT);
@@ -7266,7 +7267,7 @@ static bool pc_statusup(struct map_session_data *sd, int type, int increase)
 	// update stat value
 	clif->statusupack(sd, type, 1, final_value); // required
 	if (final_value > 255)
-		clif->updatestatus(sd, type); // send after the 'ack' to override the truncated value
+		clif->updatestatus(sd, (enum status_point_types)type); // send after the 'ack' to override the truncated value
 
 	return true;
 }
@@ -7304,12 +7305,12 @@ static int pc_statusup2(struct map_session_data *sd, int type, int val)
 
 	// update increase cost indicator
 	if( need != pc->need_status_point(sd,type,1) )
-		clif->updatestatus(sd, SP_USTR + type-SP_STR);
+		clif->updatestatus(sd, (enum status_point_types)(SP_USTR + type-SP_STR));
 
 	// update stat value
 	clif->statusupack(sd,type,1,val); // required
 	if( val > 255 )
-		clif->updatestatus(sd,type); // send after the 'ack' to override the truncated value
+		clif->updatestatus(sd, (enum status_point_types)type); // send after the 'ack' to override the truncated value
 
 	return val;
 }
@@ -8184,7 +8185,7 @@ static int pc_dead(struct map_session_data *sd, struct block_list *src)
 				if (sd->status.mod_death != 100)
 					base_penalty = base_penalty * sd->status.mod_death / 100;
 
-				sd->status.base_exp -= min(sd->status.base_exp, (uint64)base_penalty);
+				sd->status.base_exp -= std::min(sd->status.base_exp, (uint64)base_penalty);
 				clif->updatestatus(sd, SP_BASEEXP);
 			}
 		}
@@ -8209,7 +8210,7 @@ static int pc_dead(struct map_session_data *sd, struct block_list *src)
 				if (sd->status.mod_death != 100)
 					job_penalty = job_penalty * sd->status.mod_death / 100;
 
-				sd->status.job_exp -= min(sd->status.job_exp, (uint64)job_penalty);
+				sd->status.job_exp -= std::min(sd->status.job_exp, (uint64)job_penalty);
 				clif->updatestatus(sd, SP_JOBEXP);
 			}
 		}
@@ -8682,7 +8683,7 @@ static int pc_setparam(struct map_session_data *sd, int type, int64 val)
 		ShowError("pc_setparam: Attempted to set unknown parameter '%d'.\n", type);
 		return 0;
 	}
-	clif->updatestatus(sd,type);
+	clif->updatestatus(sd, (enum status_point_types)type);
 
 	return 1;
 }
@@ -9128,7 +9129,7 @@ static int pc_changelook(struct map_session_data *sd, int type, int val)
 			sd->status.body=val;
 			break;
 	}
-	clif->changelook(&sd->bl,type,val);
+	clif->changelook(&sd->bl, (enum look)type,val);
 	return 0;
 }
 
@@ -9262,9 +9263,9 @@ static int pc_setoption(struct map_session_data *sd, int type)
 
 		// End all SCs that can be reset when mado is taken off
 		for( i = 0; i < SC_MAX; i++ ) {
-			if ( !sd->sc.data[i] || !status->get_sc_type(i) )
+			if ( !sd->sc.data[i] || !status->get_sc_type((enum sc_type)i) )
 				continue;
-			if ( status->get_sc_type(i)&SC_MADO_NO_RESET )
+			if ( status->get_sc_type((enum sc_type)i)&SC_MADO_NO_RESET )
 				continue;
 			switch (i) {
 				case SC_BERSERK:
@@ -10420,11 +10421,11 @@ static void pc_unequipitem_pos_sub(struct map_session_data *sd, int pos_combinat
 	pos_costume &= ~map->list[sd->bl.m].flag.noviewid;
 	if ((pos_combination & pos) != 0 && pc->checkequip(sd, pos_costume) == -1) {
 		*look = 0;
-		clif->changelook(&sd->bl, look_type, 0);
+		clif->changelook(&sd->bl, (enum look)look_type, 0);
 	}
 	if ((pos_combination & pos_costume) != 0 || pos_costume == 0) {
 		*look = 0;
-		clif->changelook(&sd->bl, look_type, 0);
+		clif->changelook(&sd->bl, (enum look)look_type, 0);
 
 		int equipped_item = pc->checkequip(sd, pos); // Item that was overlapped by unequipped costume
 		if (equipped_item >= 0) { // There might still be costumes overlapping
@@ -10664,7 +10665,7 @@ static int pc_checkitem(struct map_session_data *sd)
 					sd->status.inventory[i].unique_id = itemdb->unique_id(sd);
 			}
 
-			sd->itemcheck &= ~PCCHECKITEM_INVENTORY;
+			sd->itemcheck = (enum pc_checkitem_types)(sd->itemcheck & ~PCCHECKITEM_INVENTORY);
 		}
 
 		if (sd->itemcheck & PCCHECKITEM_CART) {
@@ -10682,7 +10683,7 @@ static int pc_checkitem(struct map_session_data *sd)
 					sd->status.cart[i].unique_id = itemdb->unique_id(sd);
 			}
 
-			sd->itemcheck &= ~PCCHECKITEM_CART;
+			sd->itemcheck = (enum pc_checkitem_types)(sd->itemcheck & ~PCCHECKITEM_CART);
 		}
 
 		if ((sd->itemcheck & PCCHECKITEM_STORAGE) != 0) {
@@ -10711,7 +10712,7 @@ static int pc_checkitem(struct map_session_data *sd)
 
 			storage->close(sd);
 
-			sd->itemcheck &= ~PCCHECKITEM_STORAGE;
+			sd->itemcheck = (enum pc_checkitem_types)(sd->itemcheck & ~PCCHECKITEM_STORAGE);
 		}
 
 		if (sd->guild && sd->itemcheck & PCCHECKITEM_GSTORAGE) {
@@ -10734,7 +10735,7 @@ static int pc_checkitem(struct map_session_data *sd)
 				}
 			}
 
-			sd->itemcheck &= ~PCCHECKITEM_GSTORAGE;
+			sd->itemcheck = (enum pc_checkitem_types)(sd->itemcheck & ~PCCHECKITEM_GSTORAGE);
 		}
 	}
 
@@ -11200,7 +11201,7 @@ static void pc_overheat(struct map_session_data *sd, int val)
 		status_change_end(&sd->bl,SC_OVERHEAT_LIMITPOINT,INVALID_TIMER);
 	}
 
-	heat = max(0,heat); // Avoid negative HEAT
+	heat = std::max(0,heat); // Avoid negative HEAT
 	if( heat >= limit[skill_lv] )
 		sc_start(NULL, &sd->bl, SC_OVERHEAT, 100, 0, 1000, 0);
 	else
@@ -11688,10 +11689,10 @@ static bool pc_read_level_penalty_db_sub(const struct config_setting_t *it, int 
 		return false;
 	}
 
-	diff = min(diff, MAX_LEVEL);
+	diff = std::min(diff, MAX_LEVEL);
 
 	if (diff < 0)
-		diff = min(MAX_LEVEL + (~(diff) + 1), MAX_LEVEL * 2);
+		diff = std::min(MAX_LEVEL + (~(diff) + 1), MAX_LEVEL * 2);
 
 	pc->level_penalty[type][race][diff] = rate;
 #endif
@@ -12941,8 +12942,8 @@ static void do_init_pc(bool minimal)
 	pcg->init();
 
 	pc->sc_display_ers = ers_new(sizeof(struct sc_display_entry), "pc.c:sc_display_ers", ERS_OPT_FLEX_CHUNK);
-	pc->num_reg_ers = ers_new(sizeof(struct script_reg_num), "pc.c::num_reg_ers", ERS_OPT_CLEAN|ERS_OPT_FLEX_CHUNK);
-	pc->str_reg_ers = ers_new(sizeof(struct script_reg_str), "pc.c::str_reg_ers", ERS_OPT_CLEAN|ERS_OPT_FLEX_CHUNK);
+	pc->num_reg_ers = ers_new(sizeof(struct script_reg_num), "pc.c::num_reg_ers", (enum ERSOptions)(ERS_OPT_CLEAN|ERS_OPT_FLEX_CHUNK));
+	pc->str_reg_ers = ers_new(sizeof(struct script_reg_str), "pc.c::str_reg_ers", (enum ERSOptions)(ERS_OPT_CLEAN|ERS_OPT_FLEX_CHUNK));
 
 	ers_chunk_size(pc->sc_display_ers, 150);
 	ers_chunk_size(pc->num_reg_ers, 300);

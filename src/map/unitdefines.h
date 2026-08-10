@@ -42,7 +42,7 @@ enum unit_dir {
 };
 
 /* Returns the opposite of the facing direction */
-#define unit_get_opposite_dir(dir) ( ((dir) + 4) % UNIT_DIR_MAX )
+#define unit_get_opposite_dir(dir) ( (enum unit_dir)(((dir) + 4) % UNIT_DIR_MAX) )
 
 /* Returns true when direction is diagonal/combined (ex. UNIT_DIR_NORTHWEST, UNIT_DIR_SOUTHWEST, ...) */
 #define unit_is_diagonal_dir(dir) ( ((dir) % 2) == UNIT_DIR_NORTHWEST )
@@ -51,9 +51,9 @@ enum unit_dir {
 #define unit_is_dir_or_opposite(dir, val) ( ((dir) % 4) == (val) )
 
 /* Returns the next direction after 90° CCW on a compass */
-#define unit_get_ccw90_dir(dir) ( ((dir) + 2) % UNIT_DIR_MAX )
+#define unit_get_ccw90_dir(dir) ( (enum unit_dir)(((dir) + 2) % UNIT_DIR_MAX) )
 
 /* Returns a random diagonal direction */
-#define unit_get_rnd_diagonal_dir() ( UNIT_DIR_NORTHWEST + 2 * (rnd() % 4) )
+#define unit_get_rnd_diagonal_dir() ( (enum unit_dir)(UNIT_DIR_NORTHWEST + 2 * (rnd() % 4)) )
 
 #endif /* MAP_UNITDEFINES_H */
