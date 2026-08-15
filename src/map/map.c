@@ -1900,13 +1900,12 @@ static struct DBData create_charid2nick(union DBKey key, va_list args)
 /// Does nothing if the character is online.
 static void map_addnickdb(int charid, const char *nick)
 {
-	struct charid2nick* p;
 	struct charid_request* req;
 
 	if( map->charid2sd(charid) )
 		return;// already online
 
-	p = idb_ensure(map->nick_db, charid, map->create_charid2nick);
+	struct charid2nick *p = (struct charid2nick *)idb_ensure(map->nick_db, charid, map->create_charid2nick);
 	safestrncpy(p->nick, nick, sizeof(p->nick));
 
 	while (p->requests) {
@@ -1950,7 +1949,6 @@ static void map_delnickdb(int charid, const char *name)
 /// Uses the name in nick_db if offline.
 static void map_reqnickdb(struct map_session_data  *sd, int charid)
 {
-	struct charid2nick* p;
 	struct charid_request* req;
 	struct map_session_data* tsd;
 
@@ -1962,7 +1960,7 @@ static void map_reqnickdb(struct map_session_data  *sd, int charid)
 		return;
 	}
 
-	p = idb_ensure(map->nick_db, charid, map->create_charid2nick);
+	struct charid2nick *p = (struct charid2nick *)idb_ensure(map->nick_db, charid, map->create_charid2nick);
 	if( *p->nick ) {
 		clif->solved_charname(sd->fd, charid, p->nick);
 		return;
@@ -2332,14 +2330,13 @@ static bool map_blid_exists(int id)
 /// Returns the nick of the target charid or NULL if unknown (requests the nick to the char server).
 static const char *map_charid2nick(int charid)
 {
-	struct charid2nick *p;
 	struct map_session_data* sd;
 
 	sd = map->charid2sd(charid);
 	if( sd )
 		return sd->status.name;// character is online, return it's name
 
-	p = idb_ensure(map->nick_db, charid, map->create_charid2nick);
+	struct charid2nick *p = (struct charid2nick *)idb_ensure(map->nick_db, charid, map->create_charid2nick);
 	if( *p->nick )
 		return p->nick;// name in nick_db
 
