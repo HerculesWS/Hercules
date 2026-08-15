@@ -2531,7 +2531,7 @@ static void clif_sendfakenpc(struct map_session_data *sd, int npcid)
 	sd->state.using_fake_npc = 1;
 	WFIFOHEAD(fd, packet_len(0x78));
 	buf = WFIFOP(fd,0);
-	memset(WBUFP(buf,0), 0, packet_len(0x78));
+	memset(WBUFP(char *, buf,0), 0, packet_len(0x78));
 	WBUFW(buf,0)=0x78;
 #if PACKETVER >= 20071106
 	WBUFB(buf,2) = 0; // object type
@@ -4476,7 +4476,7 @@ static void clif_dispchat(struct chat_data *cd, int fd)
 	WBUFW(buf,12) = cd->limit;
 	WBUFW(buf,14) = (cd->owner->type == BL_NPC) ? cd->users+1 : cd->users;
 	WBUFB(buf,16) = type;
-	memcpy(WBUFP(buf,17), cd->title, len); // not zero-terminated
+	memcpy(WBUFP(char *, buf,17), cd->title, len); // not zero-terminated
 
 	if( fd ) {
 		WFIFOHEAD(fd,WBUFW(buf,2));
@@ -4516,7 +4516,7 @@ static void clif_changechatstatus(struct chat_data *cd)
 	WBUFW(buf,12) = cd->limit;
 	WBUFW(buf,14) = (cd->owner->type == BL_NPC) ? cd->users+1 : cd->users;
 	WBUFB(buf,16) = type;
-	memcpy(WBUFP(buf,17), cd->title, len); // not zero-terminated
+	memcpy(WBUFP(char *, buf,17), cd->title, len); // not zero-terminated
 
 	clif->send(buf,WBUFW(buf,2),cd->owner,CHAT);
 }
@@ -4615,7 +4615,7 @@ static void clif_addchat(struct chat_data *cd, struct map_session_data *sd)
 
 	WBUFW(buf, 0) = 0xdc;
 	WBUFW(buf, 2) = cd->users;
-	memcpy(WBUFP(buf, 4),sd->status.name,NAME_LENGTH);
+	memcpy(WBUFP(char *, buf, 4),sd->status.name,NAME_LENGTH);
 	clif->send(buf,packet_len(0xdc),&sd->bl,CHAT_WOS);
 }
 
@@ -4659,7 +4659,7 @@ static void clif_leavechat(struct chat_data *cd, struct map_session_data *sd, bo
 
 	WBUFW(buf, 0) = 0xdd;
 	WBUFW(buf, 2) = cd->users-1;
-	memcpy(WBUFP(buf,4),sd->status.name,NAME_LENGTH);
+	memcpy(WBUFP(char *, buf,4),sd->status.name,NAME_LENGTH);
 	WBUFB(buf,28) = flag;
 
 	clif->send(buf,packet_len(0xdd),&sd->bl,CHAT);
@@ -5278,7 +5278,7 @@ static void clif_changemapcell(int fd, int16 m, int x, int y, int type, enum sen
 	WBUFW(buf,2) = x;
 	WBUFW(buf,4) = y;
 	WBUFW(buf,6) = type;
-	mapindex->getmapname_ext(map->list[m].custom_name ? map->list[map->list[m].instance_src_map].name : map->list[m].name, WBUFP(buf,8));
+	mapindex->getmapname_ext(map->list[m].custom_name ? map->list[map->list[m].instance_src_map].name : map->list[m].name, WBUFP(char *, buf,8));
 
 	if( fd ) {
 		WFIFOHEAD(fd,packet_len(0x192));
@@ -6526,7 +6526,7 @@ static void clif_broadcast(struct block_list *bl, const char *mes, int len, int 
 		WBUFL(buf,4) = 0x73737373; //If there's "ssss", game client will recognize message as 'WoE broadcast'.
 	else if ((type & BC_MEGAPHONE) != 0)
 		WBUFL(buf, 4) = 0x6363696d; // If there's "micc" at the beginning of the message, the game client will recognize message as 'Megaphone shout'.
-	memcpy(WBUFP(buf, 4 + lp), mes, len);
+	memcpy(WBUFP(char *, buf, 4 + lp), mes, len);
 	clif->send(buf, WBUFW(buf,2), bl, target);
 
 	aFree(buf);
@@ -6555,7 +6555,7 @@ static void clif_GlobalMessage(struct block_list *bl, const char *message)
 	WBUFW(buf,0) = 0x8d;
 	WBUFW(buf,2) = len+8;
 	WBUFL(buf,4) = bl->id;
-	safestrncpy(WBUFP(buf,8),message,len);
+	safestrncpy(WBUFP(char *, buf, 8), message, len);
 	clif->send(buf,WBUFW(buf,2),bl,ALL_CLIENT);
 }
 
@@ -6575,7 +6575,7 @@ static void clif_broadcast2(struct block_list *bl, const char *mes, int len, uns
 	WBUFW(buf,10) = fontSize;
 	WBUFW(buf,12) = fontAlign;
 	WBUFW(buf,14) = fontY;
-	memcpy(WBUFP(buf,16), mes, len);
+	memcpy(WBUFP(char *, buf, 16), mes, len);
 	clif->send(buf, WBUFW(buf,2), bl, target);
 
 	aFree(buf);
@@ -8645,7 +8645,7 @@ static void clif_guild_positionchanged(struct guild *g, int idx)
 	WBUFL(buf, 8)=g->position[idx].mode;
 	WBUFL(buf,12)=idx;
 	WBUFL(buf,16)=g->position[idx].exp_mode;
-	memcpy(WBUFP(buf,20),g->position[idx].name,NAME_LENGTH);
+	memcpy(WBUFP(char *, buf, 20), g->position[idx].name, NAME_LENGTH);
 	// }*
 	if( (sd=guild->getavailablesd(g))!=NULL )
 		clif->send(buf,WBUFW(buf,2),&sd->bl,GUILD);
@@ -8988,7 +8988,7 @@ static void clif_guild_message(struct guild *g, int account_id, const char *mes,
 
 	WBUFW(buf, 0) = 0x17f;
 	WBUFW(buf, 2) = len + 5;
-	safestrncpy(WBUFP(buf,4), mes, len+1);
+	safestrncpy(WBUFP(char *, buf, 4), mes, len + 1);
 
 	if ((sd = guild->getavailablesd(g)) != NULL)
 		clif->send(buf, WBUFW(buf,2), &sd->bl, GUILD_NOBG);
@@ -9083,7 +9083,7 @@ static void clif_guild_allianceadded(struct guild *g, int idx)
 	WBUFW(buf,0)=0x185;
 	WBUFL(buf,2)=g->alliance[idx].opposition;
 	WBUFL(buf,6)=g->alliance[idx].guild_id;
-	memcpy(WBUFP(buf,10),g->alliance[idx].name,NAME_LENGTH);
+	memcpy(WBUFP(char *, buf, 10), g->alliance[idx].name, NAME_LENGTH);
 	clif->send(buf,packet_len(0x185),guild->getavailablesd(g),GUILD);
 }
 #endif // 0
@@ -9139,7 +9139,7 @@ static void clif_guild_set_position(struct map_session_data *sd)
 	}
 
 	unsigned char buf[sizeof(struct PACKET_ZC_GUILD_POSITION) + NAME_LENGTH];
-	struct PACKET_ZC_GUILD_POSITION *p = WBUFP(buf, 0);
+	struct PACKET_ZC_GUILD_POSITION *p = WBUFP(struct PACKET_ZC_GUILD_POSITION *, buf, 0);
 	p->packetType = 0xafd;
 	p->packetLength = len;
 	p->AID = sd->bl.id;
@@ -9205,7 +9205,7 @@ static void clif_callpartner(struct map_session_data *sd)
 	if( sd->status.partner_id ) {
 		const char *p;
 		if( ( p = map->charid2nick(sd->status.partner_id) ) != NULL ) {
-			memcpy(WBUFP(buf,2), p, NAME_LENGTH);
+			memcpy(WBUFP(char *, buf, 2), p, NAME_LENGTH);
 		} else {
 			WBUFB(buf,2) = 0;
 		}
@@ -9286,7 +9286,7 @@ static void clif_disp_message(struct block_list *src, const char *mes, enum send
 
 	WBUFW(buf, 0) = 0x17f;
 	WBUFW(buf, 2) = len + 5;
-	safestrncpy(WBUFP(buf,4), mes, len+1);
+	safestrncpy(WBUFP(char *, buf, 4), mes, len + 1);
 	clif->send(buf, WBUFW(buf,2), src, target);
 }
 
@@ -9659,7 +9659,7 @@ static void clif_messagecolor(struct block_list *bl, uint32 color, const char *m
 	WBUFW(buf,2) = msg_len + 12;
 	WBUFL(buf,4) = bl->id;
 	WBUFL(buf,8) = RGB2BGR(color);
-	memcpy(WBUFP(buf,12), msg, msg_len);
+	memcpy(WBUFP(char *, buf, 12), msg, msg_len);
 
 	clif->send(buf, WBUFW(buf,2), bl, AREA_CHAT_WOC);
 }
@@ -10974,11 +10974,11 @@ static void clif_channel_msg2(struct channel_data *chan, char *msg)
 	WBUFW(buf,2) = msg_len + 12;
 	WBUFL(buf,4) = 0;
 	WBUFL(buf,8) = RGB2BGR(color);
-	safestrncpy(WBUFP(buf,12), msg, msg_len);
+	safestrncpy(WBUFP(char *, buf, 12), msg, msg_len);
 
 	for (user = dbi_first(iter); dbi_exists(iter); user = dbi_next(iter)) {
 		WFIFOHEAD(user->fd,msg_len + 12);
-		memcpy(WFIFOP(user->fd,0), WBUFP(buf,0), msg_len + 12);
+		memcpy(WFIFOP(user->fd,0), WBUFP(char *, buf, 0), msg_len + 12);
 		WFIFOSET(user->fd, msg_len + 12);
 	}
 
@@ -12058,9 +12058,9 @@ static void clif_parse_GlobalMessage(int fd, struct map_session_data *sd)
 		WBUFW(buf, 2) = 8 + outlen;
 		WBUFL(buf, 4) = sd->bl.id;
 		if (is_fakename)
-			snprintf(WBUFP(buf, 8), outlen, "%s : %s", sd->fakename, message);
+			snprintf(WBUFP(char *, buf, 8), outlen, "%s : %s", sd->fakename, message);
 		else
-			safestrncpy(WBUFP(buf, 8), full_message, outlen);
+			safestrncpy(WBUFP(char *, buf, 8), full_message, outlen);
 		//FIXME: chat has range of 9 only
 		clif->send(buf, WBUFW(buf, 2), &sd->bl, sd->chat_id != 0 ? CHAT_WOS : AREA_CHAT_WOC);
 		aFree(buf);
@@ -14912,7 +14912,7 @@ static void clif_PartyBookingInsertNotify(struct map_session_data *sd, struct pa
 
 	WBUFW(buf, 0) = 0x809;
 	WBUFL(buf, 2) = pb_ad->index;
-	memcpy(WBUFP(buf, 6), pb_ad->charname, NAME_LENGTH);
+	memcpy(WBUFP(char *, buf, 6), pb_ad->charname, NAME_LENGTH);
 	WBUFL(buf, 30) = pb_ad->expiretime;
 	WBUFW(buf, 34) = pb_ad->p_detail.level;
 	WBUFW(buf, 36) = pb_ad->p_detail.mapid;
@@ -15131,9 +15131,9 @@ static void clif_PartyRecruitInsertNotify(struct map_session_data *sd, struct pa
 	WBUFW(buf, 0) = 0x8ec;
 	WBUFL(buf, 2) = pb_ad->index;
 	WBUFL(buf, 6) = pb_ad->expiretime;
-	memcpy(WBUFP(buf, 10), pb_ad->charname, NAME_LENGTH);
+	memcpy(WBUFP(char *, buf, 10), pb_ad->charname, NAME_LENGTH);
 	WBUFW(buf,34) = pb_ad->p_detail.level;
-	memcpy(WBUFP(buf, 36), pb_ad->p_detail.notice, PB_NOTICE_LENGTH);
+	memcpy(WBUFP(char *, buf, 36), pb_ad->p_detail.notice, PB_NOTICE_LENGTH);
 	clif->send(buf, packet_len(0x8ec), &sd->bl, ALL_CLIENT);
 #else
 	return;
@@ -15151,7 +15151,7 @@ static void clif_PartyRecruitUpdateNotify(struct map_session_data *sd, struct pa
 	nullpo_retv(pb_ad);
 	WBUFW(buf, 0) = 0x8ed;
 	WBUFL(buf, 2) = pb_ad->index;
-	memcpy(WBUFP(buf, 6), pb_ad->p_detail.notice, PB_NOTICE_LENGTH);
+	memcpy(WBUFP(char *, buf, 6), pb_ad->p_detail.notice, PB_NOTICE_LENGTH);
 
 	clif->send(buf, packet_len(0x8ed), &sd->bl, ALL_CLIENT);
 #else
@@ -15239,7 +15239,7 @@ static void clif_PartyBookingVolunteerInfo(int index, struct map_session_data *s
 	WBUFL(buf, 2) = sd->status.account_id;
 	WBUFL(buf, 6) = sd->status.class_;
 	WBUFW(buf, 10) = sd->status.base_level;
-	memcpy(WBUFP(buf, 12), sd->status.name, NAME_LENGTH);
+	memcpy(WBUFP(char *, buf, 12), sd->status.name, NAME_LENGTH);
 
 	clif->send(buf, packet_len(0x8f2), &sd->bl, ALL_CLIENT);
 #else
@@ -15363,7 +15363,7 @@ static void clif_PartyBookingAddFilteringList(int index, struct map_session_data
 	nullpo_retv(sd);
 	WBUFW(buf, 0) = 0x90b;
 	WBUFL(buf, 2) = sd->bl.id;
-	memcpy(WBUFP(buf, 6), sd->status.name, NAME_LENGTH);
+	memcpy(WBUFP(char *, buf, 6), sd->status.name, NAME_LENGTH);
 
 	clif->send(buf, packet_len(0x90b), &sd->bl, ALL_CLIENT);
 #else
@@ -15380,7 +15380,7 @@ static void clif_PartyBookingSubFilteringList(int gid, struct map_session_data *
 	nullpo_retv(sd);
 	WBUFW(buf, 0) = 0x90c;
 	WBUFL(buf, 2) = gid;
-	memcpy(WBUFP(buf, 6), sd->status.name, NAME_LENGTH);
+	memcpy(WBUFP(char *, buf, 6), sd->status.name, NAME_LENGTH);
 
 	clif->send(buf, packet_len(0x90c), &sd->bl, ALL_CLIENT);
 #else
@@ -18997,14 +18997,13 @@ static void clif_quest_send_list(struct map_session_data *sd)
 {
 	int i, len, real_len;
 	uint8 *buf = NULL;
-	struct packet_quest_list_header *packet = NULL;
 	nullpo_retv(sd);
 
 	len = sizeof(struct packet_quest_list_header)
 	    + sd->avail_quests * (sizeof(struct packet_quest_list_info)
 	                         + MAX_QUEST_OBJECTIVES * sizeof(struct packet_mission_info_sub)); // >= than the actual length
 	buf = aMalloc(len);
-	packet = WBUFP(buf, 0);
+	struct packet_quest_list_header *packet = WBUFP(struct packet_quest_list_header *, buf, 0);
 	real_len = sizeof(*packet);
 
 	packet->PacketType = questListType;
@@ -19110,7 +19109,6 @@ static void clif_quest_add(struct map_session_data *sd, struct quest *qd)
 {
 	int i, len;
 	uint8 *buf = NULL;
-	struct packet_quest_add_header *packet = NULL;
 	struct quest_db *qi;
 
 	nullpo_retv(sd);
@@ -19123,7 +19121,7 @@ static void clif_quest_add(struct map_session_data *sd, struct quest *qd)
 	            + MAX_QUEST_OBJECTIVES * sizeof(struct packet_quest_hunt_sub); // >= than the actual length
 
 	buf = aCalloc(1, len);
-	packet = (struct packet_quest_add_header *)WBUFP(buf, 0);
+	struct packet_quest_add_header *packet = WBUFP(struct packet_quest_add_header *, buf, 0);
 
 	packet->PacketType = questAddType;
 	packet->questID = qd->quest_id;
@@ -19191,7 +19189,6 @@ static void clif_quest_update_objective(struct map_session_data *sd, struct ques
 {
 	int i, len, real_len;
 	uint8 *buf = NULL;
-	struct packet_quest_update_header *packet = NULL;
 	struct quest_db *qi;
 
 	nullpo_retv(sd);
@@ -19204,7 +19201,7 @@ static void clif_quest_update_objective(struct map_session_data *sd, struct ques
 	            + MAX_QUEST_OBJECTIVES * sizeof(struct packet_quest_update_hunt); // >= than the actual length
 
 	buf = aCalloc(1, len);
-	packet = (struct packet_quest_update_header *)WBUFP(buf, 0);
+	struct packet_quest_update_header *packet = WBUFP(struct packet_quest_update_header *, buf, 0);
 	real_len = sizeof(*packet);
 
 	packet->PacketType = questUpdateType;
@@ -19237,7 +19234,6 @@ static void clif_quest_notify_objective(struct map_session_data *sd, struct ques
 #if PACKETVER >= 20150513
 	int i, len, real_len;
 	uint8 *buf = NULL;
-	struct packet_quest_hunt_info *packet = NULL;
 	struct quest_db *qi;
 
 	nullpo_retv(sd);
@@ -19250,7 +19246,7 @@ static void clif_quest_notify_objective(struct map_session_data *sd, struct ques
 	            + MAX_QUEST_OBJECTIVES * sizeof(struct packet_quest_hunt_info_sub); // >= than the actual length
 
 	buf = aCalloc(1, len);
-	packet = (struct packet_quest_hunt_info *)WBUFP(buf, 0);
+	struct packet_quest_hunt_info *packet = WBUFP(struct packet_quest_hunt_info *, buf, 0);
 	real_len = sizeof(*packet);
 
 	packet->PacketType = questUpdateType2;
@@ -19611,7 +19607,7 @@ static void clif_bg_xy(struct map_session_data *sd)
 
 	WBUFW(buf,0)=0x2df;
 	WBUFL(buf,2)=sd->status.account_id;
-	memcpy(WBUFP(buf,6), sd->status.name, NAME_LENGTH);
+	memcpy(WBUFP(char *, buf,6), sd->status.name, NAME_LENGTH);
 	WBUFW(buf,30)=sd->status.class_;
 	WBUFW(buf,32)=sd->bl.x;
 	WBUFW(buf,34)=sd->bl.y;
@@ -19626,7 +19622,7 @@ static void clif_bg_xy_remove(struct map_session_data *sd)
 
 	WBUFW(buf,0)=0x2df;
 	WBUFL(buf,2)=sd->status.account_id;
-	memset(WBUFP(buf,6), 0, NAME_LENGTH);
+	memset(WBUFP(char *, buf, 6), 0, NAME_LENGTH);
 	WBUFW(buf,30) = 0;
 	WBUFW(buf,32) = 0xFFFF;
 	WBUFW(buf,34) = 0xFFFF;
@@ -19656,8 +19652,8 @@ static void clif_bg_message(struct battleground_data *bgd, int src_id, const cha
 	WBUFW(buf, 0) = 0x2dc;
 	WBUFW(buf, 2) = len + NAME_LENGTH + 9;
 	WBUFL(buf, 4) = src_id;
-	safestrncpy(WBUFP(buf, 8), name, NAME_LENGTH);
-	safestrncpy(WBUFP(buf, 32), mes, len + 1);
+	safestrncpy(WBUFP(char *, buf, 8), name, NAME_LENGTH);
+	safestrncpy(WBUFP(char *, buf, 32), mes, len + 1);
 	clif->send(buf, WBUFW(buf, 2), &sd->bl, BG);
 
 	aFree(buf);
@@ -19724,7 +19720,7 @@ static void clif_sendbgemblem_area(struct map_session_data *sd)
 
 	WBUFW(buf, 0) = 0x2dd;
 	WBUFL(buf,2) = sd->bl.id;
-	safestrncpy(WBUFP(buf,6), sd->status.name, NAME_LENGTH); // name don't show in screen.
+	safestrncpy(WBUFP(char *, buf, 6), sd->status.name, NAME_LENGTH); // name don't show in screen.
 	WBUFW(buf,30) = sd->bg_id;
 	clif->send(buf,packet_len(0x2dd), &sd->bl, AREA);
 }
@@ -19791,7 +19787,7 @@ static int clif_instance(int instance_id, enum instance_window_info_type type, i
 			// Required to start the instancing information window on Client
 			// This window re-appear each "refresh" of client automatically until type 4 is send to client.
 			WBUFW(buf, 0) = 0x02CB;
-			memcpy(WBUFP(buf, 2), instance->list[instance_id].name, INSTANCE_NAME_LENGTH);
+			memcpy(WBUFP(char *, buf, 2), instance->list[instance_id].name, INSTANCE_NAME_LENGTH);
 			WBUFW(buf, 63) = flag;
 			clif->send(buf, packet_len(0x02CB), &sd->bl, target);
 			break;
@@ -19807,7 +19803,7 @@ static int clif_instance(int instance_id, enum instance_window_info_type type, i
 		case INSTANCE_WND_INFO_IDLE_TIME:
 			// S 0x2cd <Instance Name>.61B <Instance Remaining Time>.L <Instance Noplayers close time>.L
 			WBUFW(buf, 0) = 0x02CD;
-			memcpy(WBUFP(buf, 2), instance->list[instance_id].name, 61);
+			memcpy(WBUFP(char *, buf, 2), instance->list[instance_id].name, 61);
 			if (type == INSTANCE_WND_INFO_PROGRESS_TIME) {
 				WBUFL(buf, 63) = instance->list[instance_id].progress_timeout;
 				WBUFL(buf, 67) = 0;
@@ -21525,7 +21521,7 @@ static void clif_ShowScript(struct block_list *bl, const char *message, enum sen
 	WBUFW(buf,0) = 0x8b3;
 	WBUFW(buf,2) = len+8;
 	WBUFL(buf,4) = bl->id;
-	safestrncpy(WBUFP(buf,8),message,len);
+	safestrncpy(WBUFP(char *, buf, 8), message, len);
 	clif->send(buf, WBUFW(buf,2), bl, target);
 #endif
 }

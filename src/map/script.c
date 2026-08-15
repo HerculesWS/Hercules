@@ -5886,7 +5886,7 @@ static bool script_load_translation_addstring(const char *file, uint8 lang_id, c
 		RECREATE(st->buf, uint8, st->len + inner_len);
 
 		WBUFB(st->buf, st->len) = lang_id;
-		safestrncpy(WBUFP(st->buf, st->len + 1), VECTOR_DATA(*msgstr), msgstr_len + 1);
+		safestrncpy(WBUFP(char *, st->buf, st->len + 1), VECTOR_DATA(*msgstr), msgstr_len + 1);
 
 		st->translations++;
 		st->len += inner_len;
