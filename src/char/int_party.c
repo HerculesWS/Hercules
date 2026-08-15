@@ -99,7 +99,7 @@ static int inter_party_is_family_party(struct party_data *p)
 		if (p->party.member[i].online == 0)
 			continue;
 
-		struct mmo_charstatus *char_i = idb_get(chr->char_db_, p->party.member[i].char_id);
+		struct mmo_charstatus *char_i = (struct mmo_charstatus *)idb_get(chr->char_db_, p->party.member[i].char_id);
 
 		if (char_i == NULL)
 			continue;
@@ -108,7 +108,7 @@ static int inter_party_is_family_party(struct party_data *p)
 			if (p->party.member[j].online == 0)
 				continue;
 
-			struct mmo_charstatus *char_j = idb_get(chr->char_db_, p->party.member[j].char_id);
+			struct mmo_charstatus *char_j = (struct mmo_charstatus *)idb_get(chr->char_db_, p->party.member[j].char_id);
 
 			if (char_j == NULL)
 				continue;
@@ -132,7 +132,7 @@ static int inter_party_is_family_party(struct party_data *p)
 
 	if (child_id != 0 && p->size > 2) {
 		for (int i = 0; i < MAX_PARTY; i++) {
-			struct mmo_charstatus *party_member = idb_get(chr->char_db_, p->party.member[i].char_id);
+			struct mmo_charstatus *party_member = (struct mmo_charstatus *)idb_get(chr->char_db_, p->party.member[i].char_id);
 
 			/// Check if there is a stranger within the party.
 			if (party_member != NULL && party_member->char_id != child_id && party_member->child != child_id) {
@@ -291,7 +291,6 @@ static struct party_data *inter_party_fromsql(int party_id)
 {
 	int leader_id = 0;
 	int leader_char = 0;
-	struct party_data* p;
 	struct party_member* m;
 	char* data;
 	size_t len;
@@ -304,7 +303,7 @@ static struct party_data *inter_party_fromsql(int party_id)
 		return NULL;
 
 	//Load from memory
-	p = (struct party_data*)idb_get(inter_party->db, party_id);
+	struct party_data *p = (struct party_data *)idb_get(inter_party->db, party_id);
 	if( p != NULL )
 		return p;
 

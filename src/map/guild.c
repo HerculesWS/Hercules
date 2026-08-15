@@ -276,7 +276,7 @@ static bool guild_read_castledb_libconfig_sub_warp(struct config_setting_t *wd, 
 /// lookup: guild id -> guild*
 static struct guild *guild_search(int guild_id)
 {
-	return (struct guild*)idb_get(guild->db,guild_id);
+	return (struct guild *)idb_get(guild->db, guild_id);
 }
 
 /// lookup: guild name -> guild*
@@ -299,7 +299,7 @@ static struct guild *guild_searchname(const char *str)
 /// lookup: castle id -> castle*
 static struct guild_castle *guild_castle_search(int gcid)
 {
-	return (struct guild_castle*)idb_get(guild->castle_db,gcid);
+	return (struct guild_castle *)idb_get(guild->castle_db, gcid);
 }
 
 /// lookup: map index -> castle*
@@ -609,7 +609,7 @@ static int guild_recv_info(const struct guild *sg, struct fifo_chunk_buf *emblem
 
 	nullpo_ret(sg);
 
-	if((g = (struct guild*)idb_get(guild->db,sg->guild_id))==NULL) {
+	if((g = (struct guild *)idb_get(guild->db, sg->guild_id)) == NULL) {
 		guild_new = true;
 		g=(struct guild *)aCalloc(1,sizeof(struct guild));
 		g->instance = NULL;
@@ -1100,7 +1100,7 @@ static void guild_retrieveitembound(int char_id, int aid, int guild_id)
 	if (sd != NULL) { //Character is online
 		pc->bound_clear(sd,IBT_GUILD);
 	} else { //Character is offline, ask char server to do the job
-		struct guild_storage *gstor = idb_get(gstorage->db,guild_id);
+		struct guild_storage *gstor = (struct guild_storage *)idb_get(gstorage->db, guild_id);
 		if (gstor != NULL && gstor->in_use) {
 			// Someone is in guild storage, close them
 			struct s_mapiterator* iter = mapit_getallusers();

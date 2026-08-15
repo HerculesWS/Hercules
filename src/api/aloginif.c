@@ -288,7 +288,7 @@ static int aloginif_parse_char_servers_list(int fd)
 static int aloginif_parse_remove_char_server(int fd)
 {
 	const int char_server_id = RFIFOW(fd, 2);
-	const char *name = idb_get(aclif->char_servers_id_db, char_server_id);
+	const char *name = (const char *)idb_get(aclif->char_servers_id_db, char_server_id);
 	nullpo_retr(1, name);
 
 	ShowInfo("Char-server '%s' has disconnected.\n", name);

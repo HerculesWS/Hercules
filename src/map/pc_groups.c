@@ -55,7 +55,7 @@ static GroupSettings *pc_group_get_dummy_group(void)
  */
 static inline GroupSettings *name2group(const char *group_name)
 {
-	return strdb_get(pcg->name_db, group_name);
+	return (GroupSettings *)strdb_get(pcg->name_db, group_name);
 }
 
 /**
@@ -340,7 +340,7 @@ static bool pc_group_exists(int group_id)
  */
 static GroupSettings *pc_group_id2group(int group_id)
 {
-	return idb_get(pcg->db, group_id);
+	return (GroupSettings *)idb_get(pcg->db, group_id);
 }
 
 /**

@@ -1681,7 +1681,7 @@ ACMD(pvpon)
 		return false;
 	}
 
-	map->zone_change2(sd->bl.m,strdb_get(map->zone_db, MAP_ZONE_PVP_NAME));
+	map->zone_change2(sd->bl.m, (struct map_zone_data *)strdb_get(map->zone_db, MAP_ZONE_PVP_NAME));
 	map->list[sd->bl.m].flag.pvp = 1;
 
 	if (!battle_config.pk_mode) {// display pvp circle and rank
@@ -1726,7 +1726,7 @@ ACMD(gvgon)
 		return false;
 	}
 
-	map->zone_change2(sd->bl.m,strdb_get(map->zone_db, MAP_ZONE_GVG_NAME));
+	map->zone_change2(sd->bl.m, (struct map_zone_data *)strdb_get(map->zone_db, MAP_ZONE_GVG_NAME));
 	map->list[sd->bl.m].flag.gvg = 1;
 	clif->map_property_mapall(sd->bl.m, MAPPROPERTY_AGITZONE);
 	clif->maptypeproperty2(&sd->bl,ALL_SAMEMAP);
@@ -1765,7 +1765,7 @@ ACMD(cvcon)
 		return false;
 	}
 
-	map->zone_change2(sd->bl.m, strdb_get(map->zone_db, MAP_ZONE_CVC_NAME));
+	map->zone_change2(sd->bl.m, (struct map_zone_data *)strdb_get(map->zone_db, MAP_ZONE_CVC_NAME));
 	map->list[sd->bl.m].flag.cvc = 1;
 	clif->map_property_mapall(sd->bl.m, MAPPROPERTY_AGITZONE);
 	clif->maptypeproperty2(&sd->bl, ALL_SAMEMAP);
@@ -1927,7 +1927,7 @@ ACMD(setzone)
 		return false;
 	}
 
-	struct map_zone_data *zone = strdb_get(map->zone_db, zone_name);
+	struct map_zone_data *zone = (struct map_zone_data *)strdb_get(map->zone_db, zone_name);
 	const char *prev_zone_name = map->list[sd->bl.m].zone->name;
 
 	// handle special zones:
@@ -5797,7 +5797,6 @@ ACMD(cleargstorage)
 {
 	int i, j;
 	struct guild *g;
-	struct guild_storage *guild_storage;
 
 	g = sd->guild;
 
@@ -5816,7 +5815,7 @@ ACMD(cleargstorage)
 		return false;
 	}
 
-	guild_storage = idb_get(gstorage->db,sd->status.guild_id);
+	struct guild_storage *guild_storage = (struct guild_storage *)idb_get(gstorage->db,sd->status.guild_id);
 	if (guild_storage == NULL) {// Doesn't have opened @gstorage yet, so we skip the deletion since *shouldn't* have any item there.
 		return false;
 	}
@@ -8324,22 +8323,22 @@ ACMD(mapflag)
 
 	if (strcmp(flag_name, "gvg") == 0) {
 		if (flag && !map->list[sd->bl.m].flag.gvg)
-			map->zone_change2(sd->bl.m, strdb_get(map->zone_db, MAP_ZONE_GVG_NAME));
+			map->zone_change2(sd->bl.m, (struct map_zone_data *)strdb_get(map->zone_db, MAP_ZONE_GVG_NAME));
 		else if (!flag && map->list[sd->bl.m].flag.gvg)
 			map->zone_change2(sd->bl.m, map->list[sd->bl.m].prev_zone);
 	} else if (strcmp(flag_name, "pvp") == 0) {
 		if (flag && !map->list[sd->bl.m].flag.pvp)
-			map->zone_change2(sd->bl.m, strdb_get(map->zone_db, MAP_ZONE_PVP_NAME));
+			map->zone_change2(sd->bl.m, (struct map_zone_data *)strdb_get(map->zone_db, MAP_ZONE_PVP_NAME));
 		else if (!flag && map->list[sd->bl.m].flag.pvp)
 			map->zone_change2(sd->bl.m, map->list[sd->bl.m].prev_zone);
 	} else if (strcmp(flag_name, "battleground") == 0) {
 		if (flag && !map->list[sd->bl.m].flag.battleground)
-			map->zone_change2(sd->bl.m, strdb_get(map->zone_db, MAP_ZONE_BG_NAME));
+			map->zone_change2(sd->bl.m, (struct map_zone_data *)strdb_get(map->zone_db, MAP_ZONE_BG_NAME));
 		else if (!flag && map->list[sd->bl.m].flag.battleground)
 			map->zone_change2(sd->bl.m, map->list[sd->bl.m].prev_zone);
 	} else if (strcmp(flag_name, "cvc") == 0) {
 		if (flag && !map->list[sd->bl.m].flag.cvc)
-			map->zone_change2(sd->bl.m, strdb_get(map->zone_db, MAP_ZONE_CVC_NAME));
+			map->zone_change2(sd->bl.m, (struct map_zone_data *)strdb_get(map->zone_db, MAP_ZONE_CVC_NAME));
 		else if (!flag && map->list[sd->bl.m].flag.cvc)
 			map->zone_change2(sd->bl.m, map->list[sd->bl.m].prev_zone);
 	}
@@ -10370,7 +10369,7 @@ ACMD(cddebug)
 	int i;
 	struct skill_cd* cd = NULL;
 
-	if (!(cd = idb_get(skill->cd_db,sd->status.char_id))) {
+	if (!(cd = (struct skill_cd *)idb_get(skill->cd_db,sd->status.char_id))) {
 		clif->message(fd,"No cool down list found");
 	} else {
 		clif->messages(fd,"Found %d registered cooldowns",cd->cursor);
@@ -11010,13 +11009,13 @@ static bool atcommand_add(char *name, AtCommandFunc func, bool replace)
  *------------------------------------------*/
 static AtCommandInfo *atcommand_exists(const char *name)
 {
-	return strdb_get(atcommand->db, name);
+	return (AtCommandInfo *)strdb_get(atcommand->db, name);
 }
 
 static AtCommandInfo *get_atcommandinfo_byname(const char *name)
 {
 	AtCommandInfo *cmd;
-	if ((cmd = strdb_get(atcommand->db, name)))
+	if ((cmd = (AtCommandInfo *)strdb_get(atcommand->db, name)))
 		return cmd;
 	return NULL;
 }
@@ -11024,7 +11023,7 @@ static AtCommandInfo *get_atcommandinfo_byname(const char *name)
 static const char *atcommand_checkalias(const char *aliasname)
 {
 	AliasInfo *alias_info = NULL;
-	if ((alias_info = (AliasInfo*)strdb_get(atcommand->alias_db, aliasname)) != NULL)
+	if ((alias_info = (AliasInfo *)strdb_get(atcommand->alias_db, aliasname)) != NULL)
 		return alias_info->command->command;
 	return aliasname;
 }

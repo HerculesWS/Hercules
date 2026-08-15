@@ -290,7 +290,7 @@ static void goldpc_stop(struct map_session_data *sd)
  */
 static struct goldpc_mode * goldpc_db_exists(int id)
 {
-	return (struct goldpc_mode *) idb_get(goldpc->db, id);
+	return (struct goldpc_mode *)idb_get(goldpc->db, id);
 }
 
 static int do_init_goldpc(bool minimal)

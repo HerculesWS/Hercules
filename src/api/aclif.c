@@ -364,7 +364,7 @@ static void aclif_set_url(int fd, http_method method, const char *url, size_t si
 	sd->url = aMalloc(size + 1);
 	safestrncpy(sd->url, url, size + 1);
 
-	struct HttpHandler *handler = strdb_get(aclif->handlers_db[method], sd->url);
+	struct HttpHandler *handler = (struct HttpHandler *)strdb_get(aclif->handlers_db[method], sd->url);
 	if (handler == NULL) {
 		ShowWarning("Unhandled url %d: %s\n", fd, sd->url);
 		sockt->eof(fd);
@@ -627,7 +627,7 @@ static void aclif_check_headers(int fd, struct api_session_data *sd)
 	nullpo_retv(sd);
 	Assert_retv(sd->flag.headers_complete == 1);
 
-	const char *size_str = strdb_get(sd->headers_db, "Content-Length");
+	const char *size_str = (char *)strdb_get(sd->headers_db, "Content-Length");
 	if (size_str != NULL) {
 		const size_t sz = (size_t)atoll(size_str);
 		if (sz > MAX_BODY_SIZE) {
@@ -637,7 +637,7 @@ static void aclif_check_headers(int fd, struct api_session_data *sd)
 		}
 	}
 
-	const char *content_type = strdb_get(sd->headers_db, "Content-Type");
+	const char *content_type = (char *)strdb_get(sd->headers_db, "Content-Type");
 	if (content_type == NULL)
 		return;
 	const char *post_name = "multipart/form-data; boundary=";
@@ -689,7 +689,7 @@ static bool aclif_decode_post_headers(int fd, struct api_session_data *sd)
 			return false;
 		}
 
-		login_data = idb_get(aclif->online_db, account_id);
+		login_data = (struct online_api_login_data *)idb_get(aclif->online_db, account_id);
 		if (login_data == NULL) {
 			ShowError("Account not logged in %d: %d\n", fd, account_id);
 			return false;
@@ -734,7 +734,7 @@ static bool aclif_decode_post_headers(int fd, struct api_session_data *sd)
 			return false;
 		}
 
-		char_server_data = strdb_get(aclif->char_servers_db, name);
+		char_server_data = (struct char_server_data *)strdb_get(aclif->char_servers_db, name);
 		if (char_server_data == NULL) {
 			ShowError("Unknown world name %d: %s\n", fd, name);
 			return false;
@@ -887,7 +887,7 @@ static void aclif_delete_online_player(int account_id)
 #ifdef DEBUG_ONLINEDB_LOG
 	ShowInfo("disconnect account: %d\n", account_id);
 #endif
-	struct online_api_login_data *data = idb_get(aclif->online_db, account_id);
+	struct online_api_login_data *data = (struct online_api_login_data *)idb_get(aclif->online_db, account_id);
 	if (data != NULL) {
 		aclif->add_remove_timer(data);
 	}
@@ -915,7 +915,7 @@ static void aclif_add_online_player(int account_id, const unsigned char *auth_to
 
 static void aclif_add_online_char(int account_id, int char_id)
 {
-	struct online_api_login_data *user = idb_get(aclif->online_db, account_id);
+	struct online_api_login_data *user = (struct online_api_login_data *)idb_get(aclif->online_db, account_id);
 	if (user == NULL) {
 		ShowError("Cant set char online. Account not logged in: %d\n", account_id);
 		return;
@@ -969,7 +969,7 @@ static bool aclif_is_post_header_present(struct api_session_data *sd, const char
 	nullpo_retr(false, sd);
 	nullpo_retr(false, name);
 
-	struct MimePart *header = strdb_get(sd->post_headers_db, name);
+	struct MimePart *header = (struct MimePart *)strdb_get(sd->post_headers_db, name);
 	if (header == NULL)
 		return false;
 	return header->data != NULL && header->data_size != 0;
@@ -998,7 +998,7 @@ static bool aclif_get_post_header_data_int(struct api_session_data *sd, const ch
 	nullpo_retr(false, sd);
 	nullpo_retr(false, name);
 
-	struct MimePart *header = strdb_get(sd->post_headers_db, name);
+	struct MimePart *header = (struct MimePart *)strdb_get(sd->post_headers_db, name);
 	if (header == NULL)
 		return false;
 	char *data = header->data;
@@ -1041,7 +1041,7 @@ static bool aclif_get_post_header_data_str(struct api_session_data *sd, const ch
 	nullpo_retr(false, sd);
 	nullpo_retr(false, name);
 
-	struct MimePart *header = strdb_get(sd->post_headers_db, name);
+	struct MimePart *header = (struct MimePart *)strdb_get(sd->post_headers_db, name);
 	if (header == NULL)
 		return false;
 	*data = header->data;
@@ -1065,7 +1065,7 @@ static bool aclif_get_post_header_data_json(struct api_session_data *sd, const c
 	nullpo_retr(false, sd);
 	nullpo_retr(false, name);
 
-	struct MimePart *header = strdb_get(sd->post_headers_db, name);
+	struct MimePart *header = (struct MimePart *)strdb_get(sd->post_headers_db, name);
 	if (header == NULL)
 		return false;
 	*json = jsonparser->parse(header->data);
@@ -1087,7 +1087,7 @@ static bool aclif_get_post_header_content_type(struct api_session_data *sd, cons
 	nullpo_retr(false, sd);
 	nullpo_retr(false, name);
 
-	struct MimePart *header = strdb_get(sd->post_headers_db, name);
+	struct MimePart *header = (struct MimePart *)strdb_get(sd->post_headers_db, name);
 	if (header == NULL)
 		return false;
 	*content_type = header->content_type;
@@ -1118,7 +1118,7 @@ static void aclif_remove_char_server(int char_server_id, const char *name)
 static int aclif_get_char_server_id(struct api_session_data *sd)
 {
 	nullpo_retr(-1, sd);
-	struct char_server_data *data = strdb_get(aclif->char_servers_db, sd->world_name);
+	struct char_server_data *data = (struct char_server_data *)strdb_get(aclif->char_servers_db, sd->world_name);
 	nullpo_retr(-1, data);
 	return data->id;
 }

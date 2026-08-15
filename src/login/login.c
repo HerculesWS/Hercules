@@ -102,7 +102,7 @@ static struct online_login_data* login_add_online_user(int char_server, int acco
 
 static void login_remove_online_user(int account_id)
 {
-	struct online_login_data* p = (struct online_login_data*)idb_get(login->online_db, account_id);
+	struct online_login_data *p = (struct online_login_data *)idb_get(login->online_db, account_id);
 	if (p == NULL)
 		return;
 	if (p->waiting_disconnect != INVALID_TIMER)
@@ -115,7 +115,7 @@ static void login_remove_online_user(int account_id)
 
 static int login_waiting_disconnect_timer(int tid, int64 tick, int id, intptr_t data)
 {
-	struct online_login_data* p = (struct online_login_data*)idb_get(login->online_db, id);
+	struct online_login_data *p = (struct online_login_data *)idb_get(login->online_db, id);
 	if( p != NULL && p->waiting_disconnect == tid && p->account_id == id )
 	{
 		p->waiting_disconnect = INVALID_TIMER;
@@ -317,8 +317,6 @@ static void login_fromchar_auth_ack(int fd, int account_id, uint32 login_id1, ui
 
 static void login_fromchar_parse_auth(int fd, int id, const char *const ip)
 {
-	struct login_auth_node* node;
-
 	int account_id = RFIFOL(fd,2);
 	uint32 login_id1 = RFIFOL(fd,6);
 	uint32 login_id2 = RFIFOL(fd,10);
@@ -327,7 +325,7 @@ static void login_fromchar_parse_auth(int fd, int id, const char *const ip)
 	int request_id = RFIFOL(fd,19);
 	RFIFOSKIP(fd,23);
 
-	node = (struct login_auth_node*)idb_get(login->auth_db, account_id);
+	struct login_auth_node *node = (struct login_auth_node *)idb_get(login->auth_db, account_id);
 	if( core->runflag == LOGINSERVER_ST_RUNNING &&
 		node != NULL &&
 		node->account_id == account_id &&
@@ -738,7 +736,7 @@ static bool login_fromchar_parse_wrong_pincode(int fd)
 	struct mmo_account acc;
 
 	if( accounts->load_num(accounts, &acc, RFIFOL(fd,2) ) ) {
-		struct online_login_data* ld = (struct online_login_data*)idb_get(login->online_db,acc.account_id);
+		struct online_login_data *ld = (struct online_login_data *)idb_get(login->online_db,acc.account_id);
 
 		if (ld == NULL) {
 			RFIFOSKIP(fd,6);
@@ -1292,7 +1290,7 @@ static void login_auth_ok(struct login_session_data *sd)
 	}
 
 	{
-		struct online_login_data* data = (struct online_login_data*)idb_get(login->online_db, sd->account_id);
+		struct online_login_data *data = (struct online_login_data *)idb_get(login->online_db, sd->account_id);
 		if( data )
 		{// account is already marked as online!
 			if( data->char_server > -1 )
