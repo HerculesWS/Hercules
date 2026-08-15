@@ -37,7 +37,7 @@
 #undef WFIFOSET
 
 #define WFIFOHEAD(fd, size) fake_WFIFOHEAD(fd, size)
-#define WFIFOP(fd, pos) fake_WFIFOP(fd, pos)
+#define WFIFOP(T, fd, pos) ((T)fake_WFIFOP(fd, pos))
 #define WFIFOSET(fd, size) fake_WFIFOSET(fd, size)
 
 #undef RFIFOHEAD
@@ -322,11 +322,11 @@ static void testChunkedBuf2(char *data, int sz)
 	fake_rflags = aCalloc(1, cnt);
 
 	WFIFO_CHUNKED_INIT(p, fd, 0x1234, PACKET_TEST_CHUNKED, data, data_len) {
-		WFIFO_CHUNKED_BLOCK_START(p);
+		WFIFO_CHUNKED_BLOCK_START(p, PACKET_TEST_CHUNKED);
 		p->msg_id = msg_id;
 		WFIFO_CHUNKED_BLOCK_END();
 	}
-	WFIFO_CHUNKED_FINAL_START(p);
+	WFIFO_CHUNKED_FINAL_START(p, PACKET_TEST_CHUNKED);
 	p->msg_id = msg_id;
 	WFIFO_CHUNKED_FINAL_END();
 

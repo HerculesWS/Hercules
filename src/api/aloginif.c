@@ -120,8 +120,8 @@ static void aloginif_connect_to_server(void)
 
 	WFIFOHEAD(aloginif->fd, 50);
 	WFIFOW(aloginif->fd, 0) = 0x2720;
-	memcpy(WFIFOP(aloginif->fd, 2), aloginif->userid, NAME_LENGTH);
-	memcpy(WFIFOP(aloginif->fd, 26), aloginif->passwd, NAME_LENGTH);
+	memcpy(WFIFOP(char *, aloginif->fd, 2), aloginif->userid, NAME_LENGTH);
+	memcpy(WFIFOP(char *, aloginif->fd, 26), aloginif->passwd, NAME_LENGTH);
 	WFIFOSET(aloginif->fd, 50);
 }
 
@@ -354,11 +354,11 @@ static void aloginif_send_split_to_server(int fd, struct api_session_data *sd, i
 		data_len = 0;
 
 	WFIFO_CHUNKED_INIT(p, aloginif->fd, HEADER_API_PROXY_REQUEST, PACKET_API_PROXY_CHUNKED, data, data_len) {
-		WFIFO_CHUNKED_BLOCK_START(p);
+		WFIFO_CHUNKED_BLOCK_START(p, PACKET_API_PROXY_CHUNKED);
 		INIT_PACKET_PROXY_FIELDS(&p->base, sd, proxy_flag);
 		WFIFO_CHUNKED_BLOCK_END();
 	}
-	WFIFO_CHUNKED_FINAL_START(p);
+	WFIFO_CHUNKED_FINAL_START(p, PACKET_API_PROXY_CHUNKED);
 	INIT_PACKET_PROXY_FIELDS(&p->base, sd, proxy_flag);
 	WFIFO_CHUNKED_FINAL_END();
 }

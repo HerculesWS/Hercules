@@ -140,7 +140,7 @@ static int mapif_send(const unsigned char *buf, unsigned int len)
 	if (fd < 0)
 		return -1;
 	WFIFOHEAD(fd, len);
-	memcpy(WFIFOP(fd, 0), buf, len);
+	memcpy(WFIFOP(unsigned char *, fd, 0), buf, len);
 	WFIFOSET(fd, len);
 	return 0;
 }
@@ -177,7 +177,7 @@ static void mapif_auction_sendlist(int fd, int char_id, short count, short pages
 	WFIFOL(fd, 4) = char_id;
 	WFIFOW(fd, 8) = count;
 	WFIFOW(fd, 10) = pages;
-	memcpy(WFIFOP(fd, 12), buf, len - 12);
+	memcpy(WFIFOP(unsigned char *, fd, 12), buf, len - 12);
 	WFIFOSET(fd, len);
 }
 
@@ -232,7 +232,7 @@ static void mapif_auction_register(int fd, struct auction_data *auction)
 	WFIFOHEAD(fd,len);
 	WFIFOW(fd, 0) = 0x3851;
 	WFIFOW(fd, 2) = len;
-	memcpy(WFIFOP(fd, 4), auction, sizeof(struct auction_data));
+	memcpy(WFIFOP(struct auction_data *, fd, 4), auction, sizeof(struct auction_data));
 	WFIFOSET(fd, len);
 }
 
@@ -390,7 +390,7 @@ static void mapif_elemental_send(int fd, struct s_elemental *ele, unsigned char 
 	WFIFOW(fd, 0) = 0x387c;
 	WFIFOW(fd, 2) = size;
 	WFIFOB(fd, 4) = flag;
-	memcpy(WFIFOP(fd, 5), ele, sizeof(struct s_elemental));
+	memcpy(WFIFOP(struct s_elemental *, fd, 5), ele, sizeof(struct s_elemental));
 	WFIFOSET(fd, size);
 }
 
@@ -485,12 +485,12 @@ static int mapif_guild_info_emblem(const struct guild *g)
 		return -1;
 
 	WFIFO_CHUNKED_INIT(p, fd, HEADER_CHARMAP_GUILD_INFO_EMBLEM, PACKET_CHARMAP_GUILD_INFO_EMBLEM, g->emblem_data, g->emblem_len) {
-		WFIFO_CHUNKED_BLOCK_START(p);
+		WFIFO_CHUNKED_BLOCK_START(p, PACKET_CHARMAP_GUILD_INFO_EMBLEM);
 		p->guild_id = g->guild_id;
 		p->emblem_id = g->emblem_id;
 		WFIFO_CHUNKED_BLOCK_END();
 	}
-	WFIFO_CHUNKED_FINAL_START(p);
+	WFIFO_CHUNKED_FINAL_START(p, PACKET_CHARMAP_GUILD_INFO_EMBLEM);
 	p->guild_id = g->guild_id;
 	p->emblem_id = g->emblem_id;
 	WFIFO_CHUNKED_FINAL_END();
@@ -675,12 +675,12 @@ static int mapif_guild_emblem(struct guild *g)
 		return -1;
 
 	WFIFO_CHUNKED_INIT(p, fd, HEADER_CHARMAP_GUILD_EMBLEM, PACKET_CHARMAP_GUILD_EMBLEM, g->emblem_data, g->emblem_len) {
-		WFIFO_CHUNKED_BLOCK_START(p);
+		WFIFO_CHUNKED_BLOCK_START(p, PACKET_CHARMAP_GUILD_EMBLEM);
 		p->guild_id = g->guild_id;
 		p->emblem_id = g->emblem_id;
 		WFIFO_CHUNKED_BLOCK_END();
 	}
-	WFIFO_CHUNKED_FINAL_START(p);
+	WFIFO_CHUNKED_FINAL_START(p, PACKET_CHARMAP_GUILD_EMBLEM);
 	p->guild_id = g->guild_id;
 	p->emblem_id = g->emblem_id;
 	WFIFO_CHUNKED_FINAL_END();
@@ -712,7 +712,7 @@ static int mapif_guild_castle_dataload(int fd, int sz, const int *castle_ids)
 	WFIFOW(fd, 2) = len;
 	for (i = 0; i < num; i++) {
 		gc = inter_guild->castle_fromsql(*(castle_ids++));
-		memcpy(WFIFOP(fd, 4 + i * sizeof(*gc)), gc, sizeof(*gc));
+		memcpy(WFIFOP(struct guild_castle *, fd, 4 + i * sizeof(*gc)), gc, sizeof(*gc));
 	}
 	WFIFOSET(fd, len);
 	return 0;
@@ -872,7 +872,7 @@ static void mapif_homunculus_created(int fd, int account_id, const struct s_homu
 	WFIFOW(fd, 2) = sizeof(struct s_homunculus) + 9;
 	WFIFOL(fd, 4) = account_id;
 	WFIFOB(fd, 8) = flag;
-	memcpy(WFIFOP(fd, 9), sh, sizeof(struct s_homunculus));
+	memcpy(WFIFOP(struct s_homunculus *, fd, 9), sh, sizeof(struct s_homunculus));
 	WFIFOSET(fd, WFIFOW(fd, 2));
 }
 
@@ -892,10 +892,10 @@ static void mapif_homunculus_loaded(int fd, int account_id, struct s_homunculus 
 	WFIFOL(fd, 4) = account_id;
 	if (hd != NULL) {
 		WFIFOB(fd, 8) = 1; // success
-		memcpy(WFIFOP(fd, 9), hd, sizeof(struct s_homunculus));
+		memcpy(WFIFOP(struct s_homunculus *, fd, 9), hd, sizeof(struct s_homunculus));
 	} else {
 		WFIFOB(fd, 8) = 0; // not found.
-		memset(WFIFOP(fd, 9), 0, sizeof(struct s_homunculus));
+		memset(WFIFOP(struct s_homunculus *, fd, 9), 0, sizeof(struct s_homunculus));
 	}
 	WFIFOSET(fd, sizeof(struct s_homunculus) + 9);
 }
@@ -917,7 +917,7 @@ static void mapif_homunculus_renamed(int fd, int account_id, int char_id, unsign
 	WFIFOL(fd, 2) = account_id;
 	WFIFOL(fd, 6) = char_id;
 	WFIFOB(fd, 10) = flag;
-	safestrncpy(WFIFOP(fd, 11), name, NAME_LENGTH);
+	safestrncpy(WFIFOP(char *, fd, 11), name, NAME_LENGTH);
 	WFIFOSET(fd, NAME_LENGTH + 12);
 }
 
@@ -966,7 +966,7 @@ static void mapif_mail_sendinbox(int fd, int char_id, unsigned char flag, struct
 	WFIFOW(fd, 2) = sizeof(struct mail_data) + 9;
 	WFIFOL(fd, 4) = char_id;
 	WFIFOB(fd, 8) = flag;
-	memcpy(WFIFOP(fd, 9),md,sizeof(struct mail_data));
+	memcpy(WFIFOP(struct mail_data *, fd, 9),md,sizeof(struct mail_data));
 	WFIFOSET(fd,WFIFOW(fd, 2));
 }
 
@@ -1000,7 +1000,7 @@ static void mapif_mail_sendattach(int fd, int char_id, struct mail_message *msg)
 	WFIFOW(fd, 2) = sizeof(struct item) + 12;
 	WFIFOL(fd, 4) = char_id;
 	WFIFOL(fd, 8) = (msg->zeny > 0) ? msg->zeny : 0;
-	memcpy(WFIFOP(fd, 12), &msg->item, sizeof(struct item));
+	memcpy(WFIFOP(struct item *, fd, 12), &msg->item, sizeof(struct item));
 	WFIFOSET(fd,WFIFOW(fd, 2));
 }
 
@@ -1091,7 +1091,7 @@ static void mapif_mail_send(int fd, struct mail_message* msg)
 	WFIFOHEAD(fd, len);
 	WFIFOW(fd, 0) = 0x384d;
 	WFIFOW(fd, 2) = len;
-	memcpy(WFIFOP(fd, 4), msg, sizeof(struct mail_message));
+	memcpy(WFIFOP(struct mail_message *, fd, 4), msg, sizeof(struct mail_message));
 	WFIFOSET(fd,len);
 }
 
@@ -1121,7 +1121,7 @@ static void mapif_mercenary_send(int fd, struct s_mercenary *merc, unsigned char
 	WFIFOW(fd, 0) = 0x3870;
 	WFIFOW(fd, 2) = size;
 	WFIFOB(fd, 4) = flag;
-	memcpy(WFIFOP(fd, 5), merc, sizeof(struct s_mercenary));
+	memcpy(WFIFOP(struct s_mercenary *, fd, 5), merc, sizeof(struct s_mercenary));
 	WFIFOSET(fd,size);
 }
 
@@ -1181,12 +1181,12 @@ static int mapif_party_created(int fd, int account_id, int char_id, struct party
 	if (p != NULL) {
 		WFIFOB(fd, 10) = 0;
 		WFIFOL(fd, 11) = p->party_id;
-		memcpy(WFIFOP(fd, 15), p->name, NAME_LENGTH);
+		memcpy(WFIFOP(char *, fd, 15), p->name, NAME_LENGTH);
 		ShowInfo("int_party: Party created (%d - %s)\n", p->party_id, p->name);
 	} else {
 		WFIFOB(fd, 10) = 1;
 		WFIFOL(fd, 11) = 0;
-		memset(WFIFOP(fd, 15), 0, NAME_LENGTH);
+		memset(WFIFOP(char *, fd, 15), 0, NAME_LENGTH);
 	}
 	WFIFOSET(fd, 39);
 
@@ -1397,7 +1397,7 @@ static int mapif_pet_info(int fd, int account_id, struct s_pet *p)
 	WFIFOW(fd, 2) = sizeof(struct s_pet) + 9;
 	WFIFOL(fd, 4) = account_id;
 	WFIFOB(fd, 8) = 0;
-	memcpy(WFIFOP(fd, 9), p, sizeof(struct s_pet));
+	memcpy(WFIFOP(struct s_pet *, fd, 9), p, sizeof(struct s_pet));
 	WFIFOSET(fd, WFIFOW(fd, 2));
 
 	return 0;
@@ -1410,7 +1410,7 @@ static int mapif_pet_noinfo(int fd, int account_id)
 	WFIFOW(fd, 2) = sizeof(struct s_pet) + 9;
 	WFIFOL(fd, 4) = account_id;
 	WFIFOB(fd, 8) = 1;
-	memset(WFIFOP(fd, 9), 0, sizeof(struct s_pet));
+	memset(WFIFOP(struct s_pet *, fd, 9), 0, sizeof(struct s_pet));
 	WFIFOSET(fd, WFIFOW(fd, 2));
 
 	return 0;
@@ -1559,7 +1559,7 @@ static void mapif_send_quests(int fd, int char_id, struct quest *tmp_questlog, i
 
 	if (num_quests > 0) {
 		nullpo_retv(tmp_questlog);
-		memcpy(WFIFOP(fd, 8), tmp_questlog, sizeof(struct quest) * num_quests);
+		memcpy(WFIFOP(struct quest *, fd, 8), tmp_questlog, sizeof(struct quest) * num_quests);
 	}
 
 	WFIFOSET(fd, num_quests * sizeof(struct quest) + 8);
@@ -1651,7 +1651,7 @@ static void mapif_rodex_sendinbox(int fd, int char_id, int8 opentype, int8 flag,
 		WFIFOL(fd, 12) = limit;
 		WFIFOQ(fd, 16) = mail_id;
 		for (j = 0; j < limit; ++j, ++sent, i += sizeof(struct rodex_message)) {
-			memcpy(WFIFOP(fd, i), &VECTOR_INDEX(*mails, sent), sizeof(struct rodex_message));
+			memcpy(WFIFOP(struct rodex_message *, fd, i), &VECTOR_INDEX(*mails, sent), sizeof(struct rodex_message));
 		}
 		WFIFOSET(fd, size);
 
@@ -1761,7 +1761,7 @@ static void mapif_rodex_checkname(int fd, int reqchar_id, int target_char_id, in
 	WFIFOL(fd, 6) = target_char_id;
 	WFIFOL(fd, 10) = target_class;
 	WFIFOL(fd, 14) = target_level;
-	safestrncpy(WFIFOP(fd, 18), name, NAME_LENGTH);
+	safestrncpy(WFIFOP(char *, fd, 18), name, NAME_LENGTH);
 	WFIFOSET(fd, 18 + NAME_LENGTH);
 }
 
@@ -1798,7 +1798,7 @@ static int mapif_load_guild_storage(int fd, int account_id, int guild_id, char f
 			WFIFOL(fd, 13) = gs->items.capacity;
 			WFIFOL(fd, 17) = gs->items.amount;
 			if (gs->items.data != NULL) {
-				memcpy(WFIFOP(fd, 21), gs->items.data, sizeof gs->items.data[0] * gs->items.capacity);
+				memcpy(WFIFOP(struct item *, fd, 21), gs->items.data, sizeof gs->items.data[0] * gs->items.capacity);
 				aFree(gs->items.data);
 			}
 			WFIFOSET(fd, size);
@@ -1856,7 +1856,7 @@ static int mapif_account_storage_load(int fd, int account_id, int storage_id, in
 	WFIFOL(fd, 4) = account_id;
 	WFIFOW(fd, 8) = storage_id;
 	for (i = 0; i < count; i++)
-		memcpy(WFIFOP(fd, 10 + i * sizeof(struct item)), &VECTOR_INDEX(stor.item, i), sizeof(struct item));
+		memcpy(WFIFOP(struct item *, fd, 10 + i * sizeof(struct item)), &VECTOR_INDEX(stor.item, i), sizeof(struct item));
 	WFIFOSET(fd, len);
 
 	VECTOR_CLEAR(stor.item);
@@ -2163,7 +2163,7 @@ static void mapif_namechange_ack(int fd, int account_id, int char_id, int type, 
 	WFIFOL(fd, 6) = char_id;
 	WFIFOB(fd, 10) = type;
 	WFIFOB(fd, 11) = flag;
-	memcpy(WFIFOP(fd, 12), name, NAME_LENGTH);
+	memcpy(WFIFOP(char *, fd, 12), name, NAME_LENGTH);
 	WFIFOSET(fd, NAME_LENGTH + 13);
 }
 
@@ -2288,7 +2288,7 @@ STATIC_ASSERT((sizeof(struct achievement) * MAX_ACHIEVEMENT_DB + 8 <= UINT16_MAX
 	WFIFOW(fd, 2) = (8 + data_size);
 	WFIFOL(fd, 4) = char_id;
 	for (i = 0; i < VECTOR_LENGTH(*cp); i++)
-		memcpy(WFIFOP(fd, 8 + i * sizeof(struct achievement)), &VECTOR_INDEX(*cp, i), sizeof(struct achievement));
+		memcpy(WFIFOP(struct achievement *, fd, 8 + i * sizeof(struct achievement)), &VECTOR_INDEX(*cp, i), sizeof(struct achievement));
 	WFIFOSET(fd, 8 + data_size);
 }
 

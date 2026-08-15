@@ -37,7 +37,7 @@
 	struct PACKET_API_PROXY *packet = WP2PTR(struct PACKET_API_PROXY *, chr->login_fd); \
 	packet->packet_id = HEADER_API_PROXY_REPLY; \
 	packet->packet_len = WFIFO_APICHAR_SIZE + sizeof(struct PACKET_API_REPLY_ ## type); \
-	struct PACKET_API_REPLY_ ## type *data = WFIFOP(chr->login_fd, sizeof(struct PACKET_API_PROXY))
+	struct PACKET_API_REPLY_ ## type *data = WFIFOP(struct PACKET_API_REPLY_ ## type *, chr->login_fd, sizeof(struct PACKET_API_PROXY))
 
 #define INIT_PACKET_REPLY_PROXY_FIELDS(p, p2) \
 	(p)->msg_id = (p2)->msg_id; \

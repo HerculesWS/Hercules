@@ -67,7 +67,7 @@ static void lapiif_connect_user(struct login_session_data *sd, const unsigned ch
 		WFIFOHEAD(fd, 6 + AUTH_TOKEN_SIZE);
 		WFIFOW(fd, 0) = 0x2814;
 		WFIFOL(fd, 2) = sd->account_id;
-		memcpy(WFIFOP(fd, 6), auth_token, AUTH_TOKEN_SIZE);
+		memcpy(WFIFOP(unsigned char *, fd, 6), auth_token, AUTH_TOKEN_SIZE);
 		WFIFOSET(fd, 6 + AUTH_TOKEN_SIZE);
 	}
 }
@@ -275,7 +275,7 @@ static void lapiif_add_char_server_to(int char_server_id, int api_server_id)
 	WFIFOHEAD(fd, 4 + MAX_CHARSERVER_NAME_SIZE);
 	WFIFOW(fd, 0) = 0x2817;
 	WFIFOW(fd, 2) = char_server_id;
-	safestrncpy(WFIFOP(fd, 4), login->dbs->server[char_server_id].name, MAX_CHARSERVER_NAME_SIZE);
+	safestrncpy(WFIFOP(char *, fd, 4), login->dbs->server[char_server_id].name, MAX_CHARSERVER_NAME_SIZE);
 	WFIFOSET(fd, 4 + MAX_CHARSERVER_NAME_SIZE);
 }
 
@@ -341,7 +341,7 @@ static void lapiif_send_char_servers(int api_server_id)
 
 		WFIFOW(fd, offset) = i;
 		offset += 2;
-		safestrncpy(WFIFOP(fd, offset), login->dbs->server[i].name, MAX_CHARSERVER_NAME_SIZE);
+		safestrncpy(WFIFOP(char *, fd, offset), login->dbs->server[i].name, MAX_CHARSERVER_NAME_SIZE);
 		offset += MAX_CHARSERVER_NAME_SIZE;
 	}
 	WFIFOSET(fd, length);

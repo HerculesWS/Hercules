@@ -37,6 +37,6 @@
 	struct PACKET_API_PROXY *packet = WP2PTR(struct PACKET_API_PROXY *, chrif->fd); \
 	packet->packet_id = HEADER_API_PROXY_REPLY; \
 	packet->packet_len = WFIFO_APICHAR_SIZE + sizeof(struct PACKET_API_REPLY_ ## type); \
-	struct PACKET_API_REPLY_ ## type *data = WFIFOP(chrif->fd, sizeof(struct PACKET_API_PROXY))
+	struct PACKET_API_REPLY_ ## type *data = WFIFOP(struct PACKET_API_REPLY_ ## type *, chrif->fd, sizeof(struct PACKET_API_PROXY))
 
 #endif /* MAP_APIPACKETS_H */

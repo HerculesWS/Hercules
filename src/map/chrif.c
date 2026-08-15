@@ -281,7 +281,7 @@ static bool chrif_save(struct map_session_data *sd, int flag)
 	WFIFOL(chrif->fd,4) = sd->status.account_id;
 	WFIFOL(chrif->fd,8) = sd->status.char_id;
 	WFIFOB(chrif->fd,12) = (flag==1)?1:0; //Flag to tell char-server this character is quitting.
-	memcpy(WFIFOP(chrif->fd,13), &sd->status, sizeof(sd->status));
+	memcpy(WFIFOP(struct mmo_charstatus *, chrif->fd, 13), &sd->status, sizeof(sd->status));
 	WFIFOSET(chrif->fd, WFIFOW(chrif->fd,2));
 
 	if( sd->status.pet_id > 0 && sd->pd )
@@ -312,8 +312,8 @@ static void chrif_connect(int fd)
 	ShowStatus("Logging in to char server...\n");
 	WFIFOHEAD(fd,60);
 	WFIFOW(fd,0) = 0x2af8;
-	memcpy(WFIFOP(fd,2), chrif->userid, NAME_LENGTH);
-	memcpy(WFIFOP(fd,26), chrif->passwd, NAME_LENGTH);
+	memcpy(WFIFOP(char *, fd, 2), chrif->userid, NAME_LENGTH);
+	memcpy(WFIFOP(char *, fd, 26), chrif->passwd, NAME_LENGTH);
 	WFIFOL(fd,50) = 0;
 	WFIFOL(fd,54) = htonl(clif->map_ip);
 	WFIFOW(fd,58) = htons(clif->map_port);
@@ -682,8 +682,8 @@ static bool chrif_changeemail(int id, const char *actual_email, const char *new_
 	WFIFOHEAD(chrif->fd,86);
 	WFIFOW(chrif->fd,0) = 0x2b0c;
 	WFIFOL(chrif->fd,2) = id;
-	memcpy(WFIFOP(chrif->fd,6), actual_email, 40);
-	memcpy(WFIFOP(chrif->fd,46), new_email, 40);
+	memcpy(WFIFOP(char *, chrif->fd, 6), actual_email, 40);
+	memcpy(WFIFOP(char *, chrif->fd, 46), new_email, 40);
 	WFIFOSET(chrif->fd,86);
 
 	return true;
@@ -711,7 +711,7 @@ static bool chrif_char_ask_name(int acc, const char *character_name, unsigned sh
 	WFIFOHEAD(chrif->fd,44);
 	WFIFOW(chrif->fd,0) = 0x2b0e;
 	WFIFOL(chrif->fd,2) = acc;
-	safestrncpy(WFIFOP(chrif->fd,6), character_name, NAME_LENGTH);
+	safestrncpy(WFIFOP(char *, chrif->fd, 6), character_name, NAME_LENGTH);
 	WFIFOW(chrif->fd,30) = operation_type;
 
 	if (operation_type == CHAR_ASK_NAME_BAN || operation_type == CHAR_ASK_NAME_CHARBAN) {
@@ -744,7 +744,7 @@ static bool chrif_changesex(struct map_session_data *sd, bool change_account)
 	WFIFOHEAD(chrif->fd,44);
 	WFIFOW(chrif->fd,0) = 0x2b0e;
 	WFIFOL(chrif->fd,2) = sd->status.account_id;
-	safestrncpy(WFIFOP(chrif->fd,6), sd->status.name, NAME_LENGTH);
+	safestrncpy(WFIFOP(char *, chrif->fd, 6), sd->status.name, NAME_LENGTH);
 	WFIFOW(chrif->fd,30) = change_account ? CHAR_ASK_NAME_CHANGESEX : CHAR_ASK_NAME_CHANGECHARSEX;
 	if (!change_account)
 		WFIFOB(chrif->fd,32) = sd->status.sex == SEX_MALE ? SEX_FEMALE : SEX_MALE;
@@ -1114,7 +1114,7 @@ static bool chrif_save_scdata(struct map_session_data *sd)
 		data.val2 = sc->data[i]->val2;
 		data.val3 = sc->data[i]->val3;
 		data.val4 = sc->data[i]->val4;
-		memcpy(WFIFOP(chrif->fd,14 +count*sizeof(struct status_change_data)),
+		memcpy(WFIFOP(struct status_change_data *, chrif->fd, 14 + count * sizeof(struct status_change_data)),
 			&data, sizeof(struct status_change_data));
 		count++;
 	}

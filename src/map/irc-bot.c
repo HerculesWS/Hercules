@@ -287,7 +287,7 @@ static void irc_send(char *str, bool force)
 	}
 
 	WFIFOHEAD(ircbot->fd, len);
-	snprintf(WFIFOP(ircbot->fd,0),IRC_MESSAGE_LENGTH, "%s\r\n", str);
+	snprintf(WFIFOP(char *, ircbot->fd, 0), IRC_MESSAGE_LENGTH, "%s\r\n", str);
 	WFIFOSET(ircbot->fd, len);
 }
 

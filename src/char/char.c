@@ -2155,7 +2155,7 @@ static void char_send_HC_ACK_CHARINFO_PER_PAGE(int fd, struct char_session_data 
 	struct PACKET_HC_ACK_CHARINFO_PER_PAGE *p = WP2PTR(struct PACKET_HC_ACK_CHARINFO_PER_PAGE *, fd);
 	int count = 0;
 	p->packetId = HEADER_HC_ACK_CHARINFO_PER_PAGE;
-	p->packetLen = chr->mmo_chars_fromsql(sd, WFIFOP(fd, len), &count) + len;
+	p->packetLen = chr->mmo_chars_fromsql(sd, WFIFOP(uint8 *, fd, len), &count) + len;
 	WFIFOSET(fd, p->packetLen);
 	// send empty packet if chars count is 3, for trigger final code in client
 	if (count == 3) {
@@ -2194,7 +2194,7 @@ static void char_mmo_char_send_ban_list(int fd, struct char_session_data *sd)
 
 		for(i = 0, c = 0; i < MAX_CHARS; i++) {
 			if( sd->unban_time[i] ) {
-				timestamp2string(WFIFOP(fd,8 + (28*c)), 20, sd->unban_time[i], "%Y-%m-%d %H:%M:%S");
+				timestamp2string(WFIFOP(char *, fd, 8 + (28*c)), 20, sd->unban_time[i], "%Y-%m-%d %H:%M:%S");
 
 				if( sd->unban_time[i] > now )
 					WFIFOL(fd, 4 + (24*c)) = sd->found_char[i];
@@ -2232,7 +2232,7 @@ static void char_mmo_char_send_slots_info(int fd, struct char_session_data *sd)
 	WFIFOB(fd, 6) = 0;
 	WFIFOB(fd, 7) = sd->char_slots;
 	WFIFOB(fd, 8) = sd->char_slots;
-	memset(WFIFOP(fd, 9), 0, 20); // unused bytes
+	memset(WFIFOP(void *, fd, 9), 0, 20); // unused bytes
 	WFIFOSET(fd, 29);
 #endif
 }
@@ -2257,8 +2257,8 @@ static int char_mmo_char_send_characters(int fd, struct char_session_data *sd)
 	WFIFOB(fd,5) = sd->char_slots; // Available slots. (aka PremiumStartSlot)
 	WFIFOB(fd,6) = MAX_CHARS; // Premium slots. AKA any existent chars past sd->char_slots but within MAX_CHARS will show a 'Premium Service' in red
 #endif
-	memset(WFIFOP(fd,4 + offset), 0, 20); // unknown bytes
-	j += chr->mmo_chars_fromsql(sd, WFIFOP(fd, j), NULL);
+	memset(WFIFOP(void *, fd,4 + offset), 0, 20); // unknown bytes
+	j += chr->mmo_chars_fromsql(sd, WFIFOP(uint8 *, fd, j), NULL);
 	WFIFOW(fd,2) = j; // packet len
 	WFIFOSET(fd,j);
 
@@ -2944,7 +2944,7 @@ static void char_global_accreg_to_login_add(const char *key, unsigned int index,
 	WFIFOB(chr->login_fd, nlen) = (unsigned char)len;/* won't be higher; the column size is 32 */
 	nlen += 1;
 
-	safestrncpy(WFIFOP(chr->login_fd,nlen), key, len);
+	safestrncpy(WFIFOP(char *, chr->login_fd, nlen), key, len);
 	nlen += len;
 
 	WFIFOL(chr->login_fd, nlen) = index;
@@ -2961,7 +2961,7 @@ static void char_global_accreg_to_login_add(const char *key, unsigned int index,
 			WFIFOB(chr->login_fd, nlen) = (unsigned char)len; // Won't be higher; the column size is 255.
 			nlen += 1;
 
-			safestrncpy(WFIFOP(chr->login_fd, nlen), sval, len + 1);
+			safestrncpy(WFIFOP(char *, chr->login_fd, nlen), sval, len + 1);
 			nlen += len + 1;
 		}
 	} else {
@@ -3137,7 +3137,7 @@ static void char_map_received_ok(int fd)
 	WFIFOHEAD(fd, 3 + NAME_LENGTH);
 	WFIFOW(fd,0) = 0x2afb;
 	WFIFOB(fd,2) = 0;
-	memcpy(WFIFOP(fd,3), wisp_server_name, NAME_LENGTH);
+	memcpy(WFIFOP(char *, fd, 3), wisp_server_name, NAME_LENGTH);
 	WFIFOSET(fd,3+NAME_LENGTH);
 }
 
@@ -3188,7 +3188,7 @@ static void char_send_scdata(int fd, int aid, int cid)
 			SQL->GetData(inter->sql_handle, 4, &data, NULL); scdata.val2 = atoi(data);
 			SQL->GetData(inter->sql_handle, 5, &data, NULL); scdata.val3 = atoi(data);
 			SQL->GetData(inter->sql_handle, 6, &data, NULL); scdata.val4 = atoi(data);
-			memcpy(WFIFOP(fd, 14+count*sizeof(struct status_change_data)), &scdata, sizeof(struct status_change_data));
+			memcpy(WFIFOP(struct status_change_data *, fd, 14 + count*sizeof(struct status_change_data)), &scdata, sizeof(struct status_change_data));
 		}
 		if (count >= 50)
 			ShowWarning("Too many status changes for %d:%d, some of them were not loaded.\n", aid, cid);
@@ -3355,10 +3355,10 @@ static void char_char_name_ack(int fd, int char_id)
 	WFIFOW(fd,0) = 0x2b09;
 	WFIFOL(fd,2) = char_id;
 #if PACKETVER_MAIN_NUM >= 20180307 || PACKETVER_RE_NUM >= 20180221 || PACKETVER_ZERO_NUM >= 20180328
-	if (chr->loadName(char_id, WFIFOP(fd,6)) == 0)
+	if (chr->loadName(char_id, WFIFOP(char *, fd, 6)) == 0)
 		WFIFOL(fd, 6) = 0;
 #else
-	chr->loadName(char_id, WFIFOP(fd,6));
+	chr->loadName(char_id, WFIFOP(char *, fd, 6));
 #endif
 	WFIFOSET(fd,30);
 }
@@ -3373,7 +3373,7 @@ static void char_parse_frommap_change_email(int fd)
 {
 	if (chr->login_fd > 0) { // don't send request if no login-server
 		WFIFOHEAD(chr->login_fd,86);
-		memcpy(WFIFOP(chr->login_fd,0), RFIFOP(fd,0),86); // 0x2722 <account_id>.L <actual_e-mail>.40B <new_e-mail>.40B
+		memcpy(WFIFOP(void *, chr->login_fd, 0), RFIFOP(fd, 0), 86); // 0x2722 <account_id>.L <actual_e-mail>.40B <new_e-mail>.40B
 		WFIFOW(chr->login_fd,0) = 0x2722;
 		WFIFOSET(chr->login_fd,86);
 	}
@@ -3438,7 +3438,7 @@ static void char_ask_name_ack(int fd, int acc, const char *name, int type, int r
 	WFIFOHEAD(fd,34);
 	WFIFOW(fd, 0) = 0x2b0f;
 	WFIFOL(fd, 2) = acc;
-	safestrncpy(WFIFOP(fd,6), name, NAME_LENGTH);
+	safestrncpy(WFIFOP(char *, fd, 6), name, NAME_LENGTH);
 	WFIFOW(fd,30) = type;
 	WFIFOW(fd,32) = result;
 	WFIFOSET(fd,34);
@@ -3763,7 +3763,7 @@ static void char_map_auth_ok(int fd, int account_id, struct char_auth_node *node
 		WFIFOL(fd,20) = 0;
 		WFIFOB(fd,24) = 0;
 	}
-	memcpy(WFIFOP(fd,25), cd, sizeof(struct mmo_charstatus));
+	memcpy(WFIFOP(struct mmo_charstatus *, fd, 25), cd, sizeof(struct mmo_charstatus));
 	WFIFOSET(fd, WFIFOW(fd,2));
 }
 
@@ -4478,14 +4478,14 @@ static void char_send_map_info(int fd, uint32 subnet_map_ip, struct mmo_charstat
 	WFIFOHEAD(fd, len);
 	WFIFOW(fd, 0) = cmd;
 	WFIFOL(fd, 2) = cd->char_id;
-	mapindex->getmapname_ext(mapindex_id2name(cd->last_point.map), WFIFOP(fd, 6));
+	mapindex->getmapname_ext(mapindex_id2name(cd->last_point.map), WFIFOP(char *, fd, 6));
 	WFIFOL(fd, 22) = htonl((subnet_map_ip) ? subnet_map_ip : chr->map_server.ip);
 	WFIFOW(fd, 26) = sockt->ntows(htons(chr->map_server.port)); // [!] LE byte order here [!]
 #if PACKETVER >= 20170329
 	if (dnsHost != NULL) {
-		safestrncpy(WFIFOP(fd, 28), dnsHost, 128);
+		safestrncpy(WFIFOP(char *, fd, 28), dnsHost, 128);
 	} else {
-		memset(WFIFOP(fd, 28), 0, 128);
+		memset(WFIFOP(char *, fd, 28), 0, 128);
 	}
 #endif
 	WFIFOSET(fd, len);
@@ -4496,7 +4496,7 @@ static void char_send_wait_char_server(int fd)
 	WFIFOHEAD(fd, 24);
 	WFIFOW(fd, 0) = 0x840;
 	WFIFOW(fd, 2) = 24;
-	safestrncpy(WFIFOP(fd,4), "0", 20);/* we can't send empty (otherwise the list will pop up) */
+	safestrncpy(WFIFOP(char *, fd,4), "0", 20);/* we can't send empty (otherwise the list will pop up) */
 	WFIFOSET(fd, 24);
 }
 
@@ -4694,7 +4694,7 @@ static void char_creation_ok(int fd, struct mmo_charstatus *char_dat)
 	// send to player
 	WFIFOHEAD(fd, 2 + MAX_CHAR_BUF);
 	WFIFOW(fd, 0) = HEADER_HC_ACCEPT_MAKECHAR;
-	len = 2 + chr->mmo_char_tobuf(WFIFOP(fd, 2), char_dat);
+	len = 2 + chr->mmo_char_tobuf(WFIFOP(uint8 *, fd, 2), char_dat);
 	WFIFOSET(fd, len);
 }
 
