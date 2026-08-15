@@ -727,18 +727,17 @@ struct packet_spawn_unit {
 #endif
 	int16 job;
 	uint16 head;
-#if PACKETVER < 7
-	uint16 weapon;
-#else
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 weapon;
+#else
+	uint16 weapon;
 #endif
 #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 shield;
-#endif
-	uint16 accessory;
-#if PACKETVER < 7
+#else
 	uint16 shield;
 #endif
+	uint16 accessory;
 	uint16 accessory2;
 	uint16 accessory3;
 	int16 headpalette;
@@ -800,19 +799,18 @@ struct packet_unit_walking {
 #endif
 	int16 job;
 	uint16 head;
-#if PACKETVER < 7
-	uint16 weapon;
-#else
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 weapon;
+#else
+	uint16 weapon;
 #endif
 #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 shield;
+#else
+	uint16 shield;
 #endif
 	uint16 accessory;
 	uint32 moveStartTime;
-#if PACKETVER < 7
-	uint16 shield;
-#endif
 	uint16 accessory2;
 	uint16 accessory3;
 	int16 headpalette;
@@ -872,18 +870,17 @@ struct packet_idle_unit {
 #endif
 	int16 job;
 	uint16 head;
-#if PACKETVER < 7
-	uint16 weapon;
-#else
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 weapon;
+#else
+	uint16 weapon;
 #endif
 #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 shield;
-#endif
-	uint16 accessory;
-#if PACKETVER < 7
+#else
 	uint16 shield;
 #endif
+	uint16 accessory;
 	uint16 accessory2;
 	uint16 accessory3;
 	int16 headpalette;

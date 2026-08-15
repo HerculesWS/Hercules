@@ -1141,9 +1141,7 @@ static void clif_set_unit_idle(struct block_list *bl, struct map_session_data *t
 	p.head = vd->hair_style;
 	p.weapon = vd->weapon;
 	p.accessory = vd->head_bottom;
-#if PACKETVER < 7 || PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	p.shield = vd->shield;
-#endif
 	p.accessory2 = vd->head_top;
 	p.accessory3 = vd->head_mid;
 	if (bl->type == BL_NPC && vd->class_ == FLAG_CLASS) {
@@ -1300,9 +1298,7 @@ static void clif_spawn_unit(struct block_list *bl, enum send_target target)
 	p.head = vd->hair_style;
 	p.weapon = vd->weapon;
 	p.accessory = vd->head_bottom;
-#if PACKETVER < 7 || PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	p.shield = vd->shield;
-#endif
 	p.accessory2 = vd->head_top;
 	p.accessory3 = vd->head_mid;
 	if (bl->type == BL_NPC && vd->class_ == FLAG_CLASS) {
@@ -1410,9 +1406,7 @@ static void clif_set_unit_walking(struct block_list *bl, struct map_session_data
 	p.weapon = vd->weapon;
 	p.accessory = vd->head_bottom;
 	p.moveStartTime = (unsigned int)timer->gettick();
-#if PACKETVER < 7 || PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	p.shield = vd->shield;
-#endif
 	p.accessory2 = vd->head_top;
 	p.accessory3 = vd->head_mid;
 	p.headpalette = vd->hair_color;
