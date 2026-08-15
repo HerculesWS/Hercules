@@ -215,7 +215,7 @@ static void mapif_parse_auction_requestlist(int fd)
 		if (page != pages)
 			continue; // This is not the requested Page
 
-		memcpy(WBUFP(buf, j * len), auction, len);
+		memcpy(WBUFP(struct auction_data *, buf, j * len), auction, len);
 		j++; // Found Results
 	}
 	dbi_destroy(iter);
@@ -536,8 +536,8 @@ static int mapif_guild_withdraw(int guild_id, int account_id, int char_id, int f
 	WBUFL(buf, 6) = account_id;
 	WBUFL(buf, 10) = char_id;
 	WBUFB(buf, 14) = flag;
-	safestrncpy(WBUFP(buf, 15), mes, 40);
-	memcpy(WBUFP(buf, 55), name, NAME_LENGTH);
+	safestrncpy(WBUFP(char *, buf, 15), mes, 40);
+	memcpy(WBUFP(char *, buf, 55), name, NAME_LENGTH);
 	mapif->send(buf, 55 + NAME_LENGTH);
 	ShowInfo("int_guild: guild withdraw (%d - %d: %s - %s)\n", guild_id, account_id, name, mes);
 	return 0;
@@ -584,7 +584,7 @@ static int mapif_guild_basicinfochanged(int guild_id, int type, const void *data
 	WBUFW(buf, 2) = len + 10;
 	WBUFL(buf, 4) = guild_id;
 	WBUFW(buf, 8) = type;
-	memcpy(WBUFP(buf, 10), data, len);
+	memcpy(WBUFP(void *, buf, 10), data, len);
 	mapif->send(buf, len + 10);
 	return 0;
 }
@@ -602,7 +602,7 @@ static int mapif_guild_memberinfochanged(int guild_id, int account_id, int char_
 	WBUFL(buf, 8) = account_id;
 	WBUFL(buf, 12) = char_id;
 	WBUFW(buf, 16) = type;
-	memcpy(WBUFP(buf, 18), data, len);
+	memcpy(WBUFP(void *, buf, 18), data, len);
 	mapif->send(buf, len + 18);
 	return 0;
 }
@@ -631,8 +631,8 @@ static int mapif_guild_alliance(int guild_id1, int guild_id2, int account_id1, i
 	WBUFL(buf, 10) = account_id1;
 	WBUFL(buf, 14) = account_id2;
 	WBUFB(buf, 18) = flag;
-	memcpy(WBUFP(buf, 19), name1, NAME_LENGTH);
-	memcpy(WBUFP(buf, 19 + NAME_LENGTH), name2, NAME_LENGTH);
+	memcpy(WBUFP(char *, buf, 19), name1, NAME_LENGTH);
+	memcpy(WBUFP(char *, buf, 19 + NAME_LENGTH), name2, NAME_LENGTH);
 	mapif->send(buf,19 + 2 * NAME_LENGTH);
 	return 0;
 }
@@ -647,7 +647,7 @@ static int mapif_guild_position(struct guild *g, int idx)
 	WBUFW(buf, 2) = sizeof(struct guild_position)+12;
 	WBUFL(buf, 4) = g->guild_id;
 	WBUFL(buf, 8) = idx;
-	memcpy(WBUFP(buf, 12), &g->position[idx], sizeof(struct guild_position));
+	memcpy(WBUFP(struct guild_position *, buf, 12), &g->position[idx], sizeof(struct guild_position));
 	mapif->send(buf, WBUFW(buf, 2));
 	return 0;
 }
@@ -659,8 +659,8 @@ static int mapif_guild_notice(struct guild *g)
 	nullpo_ret(g);
 	WBUFW(buf, 0) = 0x383e;
 	WBUFL(buf, 2) = g->guild_id;
-	memcpy(WBUFP(buf, 6), g->mes1, MAX_GUILDMES1);
-	memcpy(WBUFP(buf, 66), g->mes2, MAX_GUILDMES2);
+	memcpy(WBUFP(char *, buf, 6), g->mes1, MAX_GUILDMES1);
+	memcpy(WBUFP(char *, buf, 66), g->mes2, MAX_GUILDMES2);
 	mapif->send(buf, 186);
 	return 0;
 }
@@ -1050,8 +1050,8 @@ static void mapif_mail_new(struct mail_message *msg)
 	WBUFW(buf, 0) = 0x3849;
 	WBUFL(buf, 2) = msg->dest_id;
 	WBUFL(buf, 6) = msg->id;
-	memcpy(WBUFP(buf, 10), msg->send_name, NAME_LENGTH);
-	memcpy(WBUFP(buf, 34), msg->title, MAIL_TITLE_LENGTH);
+	memcpy(WBUFP(char *, buf, 10), msg->send_name, NAME_LENGTH);
+	memcpy(WBUFP(char *, buf, 34), msg->title, MAIL_TITLE_LENGTH);
 	mapif->send(buf, 74);
 }
 
@@ -1213,7 +1213,7 @@ static void mapif_party_info(const struct party *p, int char_id)
 	WBUFW(buf, 0) = 0x3821;
 	WBUFW(buf, 2) = 8 + sizeof(struct party);
 	WBUFL(buf, 4) = char_id;
-	memcpy(WBUFP(buf, 8), p, sizeof(struct party));
+	memcpy(WBUFP(struct party *, buf, 8), p, sizeof(struct party));
 	mapif->send(buf, WBUFW(buf, 2));
 }
 
@@ -2360,7 +2360,7 @@ static void mapif_rodex_getitemsack(int char_id, int64 mail_id, uint8 opentype, 
 	WBUFQ(buf, 6) = mail_id;
 	WBUFB(buf, 14) = opentype;
 	WBUFB(buf, 15) = count;
-	memcpy(WBUFP(buf, 16), items, sizeof(struct rodex_item) * RODEX_MAX_ITEM);
+	memcpy(WBUFP(struct rodex_item *, buf, 16), items, sizeof(struct rodex_item) * RODEX_MAX_ITEM);
 	mapif->send(buf, 16 + sizeof(struct rodex_item) * RODEX_MAX_ITEM);
 }
 
