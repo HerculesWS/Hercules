@@ -1072,21 +1072,41 @@ static int unit_warp(struct block_list *bl, short m, short x, short y, enum clr_
 		//animation, it messes up with unit_remove_map! [Skotlex]
 		return 1;
 
+	// Invalid map index
 	if( m<0 ) m=bl->m;
 
+	// Map restrictions
 	switch (bl->type) {
 		case BL_MOB:
 		{
 			const struct mob_data *md = BL_UCCAST(BL_MOB, bl);
-			if (map->list[bl->m].flag.monster_noteleport && md->master_id == 0)
+			// Check for monster noteleport flag
+			if (map->list[bl->m].flag.monster_noteleport && md->master_id == 0) {
+				ShowDebug("unit_warp: Monster warp blocked by noteleport flag map %d (%s)\n", m, map->list[m].name);
 				return 1;
-			if (m != bl->m && map->list[m].flag.nobranch && battle_config.mob_warp&4 && md->master_id == 0)
+			}
+			// Check for branch restriction on mob warp between maps
+			if (m != bl->m && map->list[m].flag.nobranch && battle_config.mob_warp&4 && md->master_id == 0) {
+				ShowDebug("unit_warp: Monster warp blocked by nobranch flag map %d (%s)\n", m, map->list[m].name);
 				return 1;
+			}
+			// Check for valid cell to warp to
+			if (!map->getcell(m, bl, x, y, CELL_CHKREACH)) {
+				// Search for a nearby walkable cell 
+				if (!map->search_free_cell(NULL, m, &x, &y, 4, 4, SFC_XY_CENTER)) {
+					ShowDebug("unit_warp: No valid cell found near target coordinates map %d (%s) x=%d y=%d\n", m, map->list[m].name, x, y);
+					return 1;
+				}
+			}
 		}
 			break;
 		case BL_PC:
-			if (map->list[bl->m].flag.noteleport)
+			if (map->list[bl->m].flag.noteleport) {
+				struct map_session_data *sd = BL_CAST(BL_PC, bl);
+				if (sd)
+					clif->message(sd->fd, "Can't teleport on this map");
 				return 1;
+			}
 			break;
 		case BL_NUL:
 		case BL_PET:
@@ -1101,21 +1121,34 @@ static int unit_warp(struct block_list *bl, short m, short x, short y, enum clr_
 			break;
 	}
 
-	if (x<0 || y<0) {
-		//Random map position.
-		if (map->search_free_cell(NULL, m, &x, &y, -1, -1, SFC_XY_CENTER) != 0) {
-			ShowWarning("unit_warp failed. Unit Id:%d/Type:%u, target position map %d (%s) at [%d,%d]\n", bl->id, bl->type, m, map->list[m].name, x, y);
+	// Validate target coordinates
+	if (x < 0 || y < 0 || x >= map->list[m].xs || y >= map->list[m].ys) {
+		// Random map position if coordinates invalid or out of bounds
+		if (!map->search_free_cell(NULL, m, &x, &y, -1, -1, SFC_XY_CENTER)) {
+			ShowDebug("unit_warp: Failed to find valid random coordinates. Unit Id:%d/Type:%u, map %d (%s)\n",
+				bl->id, bl->type, m, map->list[m].name);
 			return 2;
-
 		}
-	} else if (bl->type != BL_NPC && map->getcell(m, bl, x, y, CELL_CHKNOREACH)) {
-		//Invalid target cell
-		ShowWarning("unit_warp: Specified non-walkable target cell: %d (%s) at [%d,%d]\n", m, map->list[m].name, x,y);
-
-		if (map->search_free_cell(NULL, m, &x, &y, 4, 4, SFC_XY_CENTER) != 0) {
-			//Can't find a nearby cell
-			ShowWarning("unit_warp failed. Unit Id:%d/Type:%u, target position map %d (%s) at [%d,%d]\n", bl->id, bl->type, m, map->list[m].name, x, y);
-			return 2;
+	} else if (bl->type != BL_NPC) {
+		// Check if target cell is valid for the unit type
+		if (map->getcell(m, bl, x, y, CELL_CHKNOPASS) 
+			|| (bl->type == BL_MOB && map->getcell(m, bl, x, y, CELL_CHKWALL))) {
+			// If cell not valid, try to find a nearby one
+			int search_size = 4;  // Start with a small search area
+			while (search_size <= 16) { // Gradually expand up to 16x16 area
+				if (!map->search_free_cell(NULL, m, &x, &y, search_size, search_size, SFC_XY_CENTER)) {
+					search_size *= 2;
+					continue;
+				}
+				// Found a valid cell
+				break;
+			}
+			if (search_size > 16) {
+				ShowDebug("unit_warp: Could not find valid coordinates after extended search. "
+					"Unit Id:%d/Type:%u, map %d (%s) at [%d,%d]\n",
+					bl->id, bl->type, m, map->list[m].name, x, y);
+				return 2;
+			}
 		}
 	}
 
