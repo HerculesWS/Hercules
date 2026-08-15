@@ -45,7 +45,7 @@
 #define WFIFO_CHUNKED_BLOCK_START_RAW1(p, pname, _dataField, chunk_size) \
 		p ## _len = p ## _fixed_len + (chunk_size); \
 		WFIFOHEAD(p ## _fd, p ## _len); \
-		p = WFIFOP(struct pname *, p ## _fd, 0); \
+		p = WP2PTR(struct pname *, p ## _fd); \
 		WFIFOW(p ## _fd, 0) = p ## _header_id; \
 		WFIFOW(p ## _fd, 2) = p ## _len; \
 		memcpy((p)->_dataField, p ## data + p ## _offset, (chunk_size))
@@ -62,7 +62,7 @@
 	const uint32 p ## _left_size = p ## data_len - p ## _full_chunks_count * (chunk_size); \
 	p ## _len = p ## _fixed_len + p ## _left_size; \
 	WFIFOHEAD(p ## _fd, p ## _len); \
-	p = WFIFOP(struct pname *, p ## _fd, 0); \
+	p = WP2PTR(struct pname *, p ## _fd); \
 	WFIFOW(p ## _fd, 0) = p ## _header_id; \
 	WFIFOW(p ## _fd, 2) = p ## _len; \
 	if (p ## _left_size > 0) \
