@@ -71,7 +71,7 @@ static enum parsefunc_rcode lclif_parse_CA_CONNECT_INFO_CHANGED(int fd, struct l
 static enum parsefunc_rcode lclif_parse_CA_EXE_HASHCHECK(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
 static enum parsefunc_rcode lclif_parse_CA_EXE_HASHCHECK(int fd, struct login_session_data *sd)
 {
-	const struct PACKET_CA_EXE_HASHCHECK *packet = RP2PTR(fd);
+	const struct PACKET_CA_EXE_HASHCHECK *packet = RP2PTR(struct PACKET_CA_EXE_HASHCHECK *, fd);
 	sd->has_client_hash = 1;
 	memcpy(sd->client_hash, packet->hash_value, 16);
 	return PACKET_VALID;
@@ -81,7 +81,7 @@ static enum parsefunc_rcode lclif_parse_CA_EXE_HASHCHECK(int fd, struct login_se
 static enum parsefunc_rcode lclif_parse_CA_LOGIN(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
 static enum parsefunc_rcode lclif_parse_CA_LOGIN(int fd, struct login_session_data *sd)
 {
-	const struct PACKET_CA_LOGIN *packet = RP2PTR(fd);
+	const struct PACKET_CA_LOGIN *packet = RP2PTR(struct PACKET_CA_LOGIN *, fd);
 
 	sd->version = packet->version;
 	sd->clienttype = packet->clienttype;
@@ -100,7 +100,7 @@ static enum parsefunc_rcode lclif_parse_CA_LOGIN(int fd, struct login_session_da
 static enum parsefunc_rcode lclif_parse_CA_LOGIN2(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
 static enum parsefunc_rcode lclif_parse_CA_LOGIN2(int fd, struct login_session_data *sd)
 {
-	const struct PACKET_CA_LOGIN2 *packet = RP2PTR(fd);
+	const struct PACKET_CA_LOGIN2 *packet = RP2PTR(struct PACKET_CA_LOGIN2 *, fd);
 
 	sd->version = packet->version;
 	sd->clienttype = packet->clienttype;
@@ -116,7 +116,7 @@ static enum parsefunc_rcode lclif_parse_CA_LOGIN2(int fd, struct login_session_d
 static enum parsefunc_rcode lclif_parse_CA_LOGIN3(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
 static enum parsefunc_rcode lclif_parse_CA_LOGIN3(int fd, struct login_session_data *sd)
 {
-	const struct PACKET_CA_LOGIN3 *packet = RP2PTR(fd);
+	const struct PACKET_CA_LOGIN3 *packet = RP2PTR(struct PACKET_CA_LOGIN3 *, fd);
 
 	sd->version = packet->version;
 	sd->clienttype = packet->clienttype;
@@ -134,7 +134,7 @@ static enum parsefunc_rcode lclif_parse_CA_LOGIN3(int fd, struct login_session_d
 static enum parsefunc_rcode lclif_parse_CA_LOGIN4(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
 static enum parsefunc_rcode lclif_parse_CA_LOGIN4(int fd, struct login_session_data *sd)
 {
-	const struct PACKET_CA_LOGIN4 *packet = RP2PTR(fd);
+	const struct PACKET_CA_LOGIN4 *packet = RP2PTR(struct PACKET_CA_LOGIN4 *, fd);
 
 	sd->version = packet->version;
 	sd->clienttype = packet->clienttype;
@@ -152,7 +152,7 @@ static enum parsefunc_rcode lclif_parse_CA_LOGIN4(int fd, struct login_session_d
 static enum parsefunc_rcode lclif_parse_CA_LOGIN_PCBANG(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
 static enum parsefunc_rcode lclif_parse_CA_LOGIN_PCBANG(int fd, struct login_session_data *sd)
 {
-	const struct PACKET_CA_LOGIN_PCBANG *packet = RP2PTR(fd);
+	const struct PACKET_CA_LOGIN_PCBANG *packet = RP2PTR(struct PACKET_CA_LOGIN_PCBANG *, fd);
 
 	sd->version = packet->version;
 	sd->clienttype = packet->clienttype;
@@ -174,7 +174,7 @@ static enum parsefunc_rcode lclif_parse_CA_LOGIN_PCBANG(int fd, struct login_ses
 static enum parsefunc_rcode lclif_parse_CA_LOGIN_HAN(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
 static enum parsefunc_rcode lclif_parse_CA_LOGIN_HAN(int fd, struct login_session_data *sd)
 {
-	const struct PACKET_CA_LOGIN_HAN *packet = RP2PTR(fd);
+	const struct PACKET_CA_LOGIN_HAN *packet = RP2PTR(struct PACKET_CA_LOGIN_HAN *, fd);
 
 	sd->version = packet->version;
 	sd->clienttype = packet->clienttype;
@@ -197,7 +197,7 @@ static enum parsefunc_rcode lclif_parse_CA_LOGIN_HAN(int fd, struct login_sessio
 static enum parsefunc_rcode lclif_parse_CA_SSO_LOGIN_REQ(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
 static enum parsefunc_rcode lclif_parse_CA_SSO_LOGIN_REQ(int fd, struct login_session_data *sd)
 {
-	const struct PACKET_CA_SSO_LOGIN_REQ *packet = RP2PTR(fd);
+	const struct PACKET_CA_SSO_LOGIN_REQ *packet = RP2PTR(struct PACKET_CA_SSO_LOGIN_REQ *, fd);
 	int tokenlen = (int)RFIFOREST(fd) - (int)sizeof(*packet);
 
 	if (tokenlen > PASSWD_LEN || tokenlen < 1) {
@@ -223,7 +223,7 @@ static enum parsefunc_rcode lclif_parse_CA_SSO_LOGIN_REQ(int fd, struct login_se
 static enum parsefunc_rcode lclif_parse_CA_LOGIN_OTP(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
 static enum parsefunc_rcode lclif_parse_CA_LOGIN_OTP(int fd, struct login_session_data *sd)
 {
-	//const struct PACKET_CA_LOGIN_OTP *packet = RP2PTR(fd);
+	//const struct PACKET_CA_LOGIN_OTP *packet = RP2PTR(struct PACKET_CA_LOGIN_OTP *, fd);
 	login->client_login_otp(fd, sd);
 	return PACKET_VALID;
 }

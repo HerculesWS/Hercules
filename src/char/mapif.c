@@ -1464,7 +1464,7 @@ static int mapif_delete_pet(int fd, int pet_id)
 
 static int mapif_parse_CreatePet(int fd)
 {
-	const struct PACKET_INTER_CREATE_PET *p = RP2PTR(fd);
+	const struct PACKET_INTER_CREATE_PET *p = RP2PTR(struct PACKET_INTER_CREATE_PET *, fd);
 
 	struct s_pet *pet = inter_pet->create(p->account_id,
 		p->char_id,
