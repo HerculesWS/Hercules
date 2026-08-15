@@ -1166,7 +1166,7 @@ static int char_mmo_chars_fromsql(struct char_session_data *sd, uint8 *buf, int 
 		sd->found_char[p.slot] = p.char_id;
 		sd->unban_time[p.slot] = unban_time;
 		p.sex = chr->mmo_gender(sd, &p, sex[0]);
-		j += chr->mmo_char_tobuf(WBUFP(buf, j), &p);
+		j += chr->mmo_char_tobuf(WBUFP(uint8 *, buf, j), &p);
 		tmpCount ++;
 	}
 
@@ -2029,18 +2029,17 @@ static int char_count_users(void)
 static int char_mmo_char_tobuf(uint8 *buffer, struct mmo_charstatus *p)
 {
 	unsigned short offset = 0;
-	uint8* buf;
 
 	if( buffer == NULL || p == NULL )
 		return 0;
 
-	buf = WBUFP(buffer,0);
+	uint8 *buf = WBUFP(uint8 *, buffer, 0);
 
 	WBUFL(buf,0) = p->char_id;
 #if PACKETVER >= 20170830
 	WBUFQ(buf,4) = min(p->base_exp, INT64_MAX);
 	offset += 4;
-	buf = WBUFP(buffer, offset);
+	buf = WBUFP(uint8 *, buffer, offset);
 #else
 	WBUFL(buf,4) = min((uint32)(p->base_exp), INT32_MAX);
 #endif
@@ -2048,7 +2047,7 @@ static int char_mmo_char_tobuf(uint8 *buffer, struct mmo_charstatus *p)
 #if PACKETVER >= 20170830
 	WBUFQ(buf,12) = min(p->job_exp, INT64_MAX);
 	offset += 4;
-	buf = WBUFP(buffer, offset);
+	buf = WBUFP(uint8 *, buffer, offset);
 #else
 	WBUFL(buf,12) = min((uint32)(p->job_exp), INT32_MAX);
 #endif
@@ -2063,12 +2062,12 @@ static int char_mmo_char_tobuf(uint8 *buffer, struct mmo_charstatus *p)
 	WBUFQ(buf, 42) = p->hp;
 	WBUFQ(buf, 50) = p->max_hp;
 	offset += 12;
-	buf = WBUFP(buffer, offset);
+	buf = WBUFP(uint8 *, buffer, offset);
 #elif PACKETVER > 20081217
 	WBUFL(buf,42) = p->hp;
 	WBUFL(buf,46) = p->max_hp;
 	offset+=4;
-	buf = WBUFP(buffer,offset);
+	buf = WBUFP(uint8 *, buffer,offset);
 #else
 	WBUFW(buf,42) = min(p->hp, INT16_MAX);
 	WBUFW(buf,44) = min(p->max_hp, INT16_MAX);
@@ -2077,7 +2076,7 @@ static int char_mmo_char_tobuf(uint8 *buffer, struct mmo_charstatus *p)
 	WBUFQ(buf, 46) = p->sp;
 	WBUFQ(buf, 54) = p->max_sp;
 	offset += 12;
-	buf = WBUFP(buffer, offset);
+	buf = WBUFP(uint8 *, buffer, offset);
 #else  // PACKETVER_MAIN_NUM >= 20201007 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 	WBUFW(buf, 46) = min(p->sp, INT16_MAX);
 	WBUFW(buf, 48) = min(p->max_sp, INT16_MAX);
@@ -2088,7 +2087,7 @@ static int char_mmo_char_tobuf(uint8 *buffer, struct mmo_charstatus *p)
 #if PACKETVER >= 20141022
 	WBUFW(buf,56) = p->body;
 	offset+=2;
-	buf = WBUFP(buffer,offset);
+	buf = WBUFP(uint8 *, buffer,offset);
 #endif
 
 	//When the weapon is sent and your option is riding, the client crashes on login!?
@@ -2103,7 +2102,7 @@ static int char_mmo_char_tobuf(uint8 *buffer, struct mmo_charstatus *p)
 	WBUFW(buf,68) = p->look.head_mid;
 	WBUFW(buf,70) = p->hair_color;
 	WBUFW(buf,72) = p->clothes_color;
-	memcpy(WBUFP(buf,74), p->name, NAME_LENGTH);
+	memcpy(WBUFP(char *, buf,74), p->name, NAME_LENGTH);
 	WBUFB(buf,98) = min(p->str, UINT8_MAX);
 	WBUFB(buf,99) = min(p->agi, UINT8_MAX);
 	WBUFB(buf,100) = min(p->vit, UINT8_MAX);
@@ -2116,7 +2115,7 @@ static int char_mmo_char_tobuf(uint8 *buffer, struct mmo_charstatus *p)
 	offset += 2;
 #endif
 #if (PACKETVER >= 20100720 && PACKETVER <= 20100727) || PACKETVER >= 20100803
-	mapindex->getmapname_ext(mapindex_id2name(p->last_point.map), WBUFP(buf,108));
+	mapindex->getmapname_ext(mapindex_id2name(p->last_point.map), WBUFP(char *, buf,108));
 	offset += MAP_NAME_LENGTH_EXT;
 #endif
 #if PACKETVER >= 20100803
@@ -3052,21 +3051,21 @@ static int char_send_fame_list(void)
 	WBUFW(buf,0) = 0x2b1b;
 
 	for(i = 0; i < fame_list_size_smith && smith_fame_list[i].id; i++) {
-		memcpy(WBUFP(buf, len), &smith_fame_list[i], sizeof(struct fame_list));
+		memcpy(WBUFP(struct fame_list *, buf, len), &smith_fame_list[i], sizeof(struct fame_list));
 		len += sizeof(struct fame_list);
 	}
 	// add blacksmith's block length
 	WBUFW(buf, 6) = len;
 
 	for(i = 0; i < fame_list_size_chemist && chemist_fame_list[i].id; i++) {
-		memcpy(WBUFP(buf, len), &chemist_fame_list[i], sizeof(struct fame_list));
+		memcpy(WBUFP(struct fame_list *, buf, len), &chemist_fame_list[i], sizeof(struct fame_list));
 		len += sizeof(struct fame_list);
 	}
 	// add alchemist's block length
 	WBUFW(buf, 4) = len;
 
 	for(i = 0; i < fame_list_size_taekwon && taekwon_fame_list[i].id; i++) {
-		memcpy(WBUFP(buf, len), &taekwon_fame_list[i], sizeof(struct fame_list));
+		memcpy(WBUFP(struct fame_list *, buf, len), &taekwon_fame_list[i], sizeof(struct fame_list));
 		len += sizeof(struct fame_list);
 	}
 	// add total packet length
