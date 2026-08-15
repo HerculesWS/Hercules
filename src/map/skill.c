@@ -19575,13 +19575,12 @@ static int skill_unit_timer_sub_onplace(struct block_list *bl, va_list ap)
  */
 static int skill_unit_timer_sub(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct skill_unit* su;
 	struct skill_unit_group* group;
 	int64 tick = va_arg(ap,int64);
 	bool dissonance;
 	struct block_list* bl;
 
-	su = DB->data2ptr(data);
+	struct skill_unit *su = (struct skill_unit *)DB->data2ptr(data);
 	nullpo_ret(su);
 	group = su->group;
 	bl = &su->bl;

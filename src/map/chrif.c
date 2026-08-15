@@ -377,7 +377,7 @@ static void chrif_connectack(int fd)
  */
 static int chrif_reconnect(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct auth_node *node = DB->data2ptr(data);
+	struct auth_node *node = (struct auth_node *)DB->data2ptr(data);
 
 	nullpo_ret(node);
 	switch (node->state) {
@@ -591,7 +591,7 @@ static void chrif_authfail(int fd)
  */
 static int auth_db_cleanup_sub(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct auth_node *node = DB->data2ptr(data);
+	struct auth_node *node = (struct auth_node *)DB->data2ptr(data);
 
 	nullpo_retr(1, node);
 	if(DIFF_TICK(timer->gettick(),node->node_created)>60000) {
@@ -1551,7 +1551,7 @@ static void chrif_del_scdata_single(int account_id, int char_id, short type)
  */
 static int auth_db_final(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct auth_node *node = DB->data2ptr(data);
+	struct auth_node *node = (struct auth_node *)DB->data2ptr(data);
 
 	nullpo_ret(node);
 	if (node->sd) {

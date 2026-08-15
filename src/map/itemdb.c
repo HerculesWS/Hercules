@@ -52,7 +52,9 @@ struct itemdb_interface *itemdb;
  */
 static int itemdb_searchname_sub(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct item_data *item = DB->data2ptr(data), **dst, **dst2;
+	struct item_data *item = (struct item_data *)DB->data2ptr(data);
+	struct item_data **dst;
+	struct item_data **dst2;
 	char *str;
 	str=va_arg(ap,char *);
 	nullpo_ret(str);
@@ -117,7 +119,7 @@ static struct item_data *itemdb_name2id(const char *str)
  */
 static int itemdb_searchname_array_sub(union DBKey key, struct DBData data, va_list ap)
 {
-	struct item_data *itd = DB->data2ptr(&data);
+	struct item_data *itd = (struct item_data *)DB->data2ptr(&data);
 	const char *str = va_arg(ap, const char *);
 	enum item_name_search_flag flag = va_arg(ap, enum item_name_search_flag);
 
@@ -203,7 +205,7 @@ static int itemdb_searchname_array(struct item_data **data, const int size, cons
 		dbmap_size = min(dbmap_count, dbmap_size);
 
 		for (int i = 0; i < dbmap_size; ++i) {
-			data[length] = DB->data2ptr(dbmap_data[i]);
+			data[length] = (struct item_data *)DB->data2ptr(dbmap_data[i]);
 			++length;
 		}
 
@@ -3010,7 +3012,7 @@ static void itemdb_read(bool minimal)
 	for( i = 0; i < ARRAYLENGTH(itemdb->array); ++i ) {
 		if( itemdb->array[i] ) {
 			if( itemdb->names->put(itemdb->names,DB->str2key(itemdb->array[i]->name),DB->ptr2data(itemdb->array[i]),&prev) ) {
-				struct item_data *data = DB->data2ptr(&prev);
+				struct item_data *data = (struct item_data *)DB->data2ptr(&prev);
 				ShowError("itemdb_read: duplicate AegisName '%s' in item ID %d and %d\n",itemdb->array[i]->name,itemdb->array[i]->nameid,data->nameid);
 			}
 		}
@@ -3041,11 +3043,11 @@ static void itemdb_read(bool minimal)
  */
 static int itemdb_addname_sub(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct item_data *item = DB->data2ptr(data);
+	struct item_data *item = (struct item_data *)DB->data2ptr(data);
 	struct DBData prev;
 
 	if (itemdb->names->put(itemdb->names, DB->str2key(item->name), DB->ptr2data(item), &prev)) {
-		struct item_data *oldItem = DB->data2ptr(&prev);
+		struct item_data *oldItem = (struct item_data *)DB->data2ptr(&prev);
 		ShowError("itemdb_read: duplicate AegisName '%s' in item ID %d and %d\n", item->name, item->nameid, oldItem->nameid);
 	}
 
@@ -3121,7 +3123,7 @@ static void destroy_item_data(struct item_data *self, int free_self)
  */
 static int itemdb_final_sub(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct item_data *id = DB->data2ptr(data);
+	struct item_data *id = (struct item_data *)DB->data2ptr(data);
 
 	if( id != &itemdb->dummy )
 		itemdb->destroy_item_data(id, 1);
@@ -3131,7 +3133,7 @@ static int itemdb_final_sub(union DBKey key, struct DBData *data, va_list ap)
 
 static int itemdb_options_final_sub(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct itemdb_option *ito = DB->data2ptr(data);
+	struct itemdb_option *ito = (struct itemdb_option *)DB->data2ptr(data);
 
 	if (ito->script != NULL)
 		script->free_code(ito->script);
@@ -3141,7 +3143,7 @@ static int itemdb_options_final_sub(union DBKey key, struct DBData *data, va_lis
 
 static int itemdb_reform_final_sub(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct item_reform *ito = DB->data2ptr(data);
+	struct item_reform *ito = (struct item_reform *)DB->data2ptr(data);
 
 	VECTOR_CLEAR(ito->Materials);
 

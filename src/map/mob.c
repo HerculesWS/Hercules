@@ -6003,7 +6003,7 @@ static void mob_load(bool minimal)
  */
 static int mob_final_ratio_sub(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct item_drop_ratio *ratio = DB->data2ptr(data);
+	struct item_drop_ratio *ratio = (struct item_drop_ratio *)DB->data2ptr(data);
 
 	if (ratio)
 		aFree(ratio);

@@ -130,7 +130,7 @@ static int login_waiting_disconnect_timer(int tid, int64 tick, int id, intptr_t 
  */
 static int login_online_db_setoffline(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct online_login_data* p = DB->data2ptr(data);
+	struct online_login_data *p = (struct online_login_data *)DB->data2ptr(data);
 	int server_id = va_arg(ap, int);
 	nullpo_ret(p);
 	if( server_id == -1 )
@@ -152,7 +152,7 @@ static int login_online_db_setoffline(union DBKey key, struct DBData *data, va_l
  */
 static int login_online_data_cleanup_sub(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct online_login_data *character= DB->data2ptr(data);
+	struct online_login_data *character = (struct online_login_data *)DB->data2ptr(data);
 	nullpo_ret(character);
 	if (character->char_server == -2) //Unknown server.. set them offline
 		login->remove_online_user(character->account_id);

@@ -3022,7 +3022,7 @@ static int npc_remove_map(struct npc_data *nd)
  */
 static int npc_unload_ev(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct event_data* ev = DB->data2ptr(data);
+	struct event_data *ev = (struct event_data *)DB->data2ptr(data);
 	char* npcname = va_arg(ap, char *);
 
 	if(strcmp(ev->nd->exname,npcname)==0){
@@ -3037,7 +3037,7 @@ static int npc_unload_ev(union DBKey key, struct DBData *data, va_list ap)
  */
 static int npc_unload_ev_label(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct linkdb_node **label_linkdb = DB->data2ptr(data);
+	struct linkdb_node **label_linkdb = (struct linkdb_node **)DB->data2ptr(data);
 	struct npc_data* nd = va_arg(ap, struct npc_data *);
 
 	linkdb_erase(label_linkdb, nd);
@@ -4632,7 +4632,7 @@ static const char *npc_parse_function(const char *w1, const char *w2, const char
 
 	func_db = script->userfunc_db;
 	if (func_db->put(func_db, DB->str2key(w3), DB->ptr2data(scriptroot), &old_data)) {
-		struct script_code *oldscript = (struct script_code*)DB->data2ptr(&old_data);
+		struct script_code *oldscript = (struct script_code *)DB->data2ptr(&old_data);
 		ShowWarning("npc_parse_function: Overwriting user function [%s] in file '%s', line '%d'.\n", w3, filepath, strline(buffer,start-buffer));
 		script->free_vars(oldscript->local.vars);
 		VECTOR_CLEAR(oldscript->script_buf);
@@ -5666,7 +5666,7 @@ static void npc_read_event_script(void)
 		for( data = iter->first(iter,&key); iter->exists(iter); data = iter->next(iter,&key) )
 		{
 			const char* p = key.str;
-			struct event_data* ed = DB->data2ptr(data);
+			struct event_data *ed = (struct event_data *)DB->data2ptr(data);
 			unsigned char count = script_event[i].event_count;
 
 			if( count >= ARRAYLENGTH(script_event[i].event) )
@@ -5701,7 +5701,7 @@ static void npc_read_event_script(void)
  */
 static int npc_path_db_clear_sub(union DBKey key, struct DBData *data, va_list args)
 {
-	struct npc_path_data *npd = DB->data2ptr(data);
+	struct npc_path_data *npd = (struct npc_path_data *)DB->data2ptr(data);
 	nullpo_ret(npd);
 	if (npd->path)
 		aFree(npd->path);
@@ -5713,7 +5713,7 @@ static int npc_path_db_clear_sub(union DBKey key, struct DBData *data, va_list a
  */
 static int npc_ev_label_db_clear_sub(union DBKey key, struct DBData *data, va_list args)
 {
-	struct linkdb_node **label_linkdb = DB->data2ptr(data);
+	struct linkdb_node **label_linkdb = (struct linkdb_node **)DB->data2ptr(data);
 	linkdb_final(label_linkdb); // linked data (struct event_data*) is freed when clearing ev_db
 	return 0;
 }

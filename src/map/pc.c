@@ -9581,33 +9581,32 @@ static char *pc_readregstr(struct map_session_data *sd, int64 reg)
  **/
 static void pc_setregstr(struct map_session_data *sd, int64 reg, const char *str)
 {
-	struct script_reg_str *p = NULL;
 	unsigned int index = script_getvaridx(reg);
 	struct DBData prev;
 
 	nullpo_retv(sd);
 	nullpo_retv(str);
 	if( str[0] ) {
-		p = ers_alloc(pc->str_reg_ers, struct script_reg_str);
+		struct script_reg_str *p_new = ers_alloc(pc->str_reg_ers, struct script_reg_str);
 
-		p->value = aStrdup(str);
-		p->flag.type = 1;
+		p_new->value = aStrdup(str);
+		p_new->flag.type = 1;
 
-		if( sd->regs.vars->put(sd->regs.vars, DB->i642key(reg), DB->ptr2data(p), &prev) ) {
-			p = DB->data2ptr(&prev);
-			if( p->value )
-				aFree(p->value);
-			ers_free(pc->str_reg_ers, p);
+		if( sd->regs.vars->put(sd->regs.vars, DB->i642key(reg), DB->ptr2data(p_new), &prev) ) {
+			struct script_reg_str *p_old = (struct script_reg_str *)DB->data2ptr(&prev);
+			if (p_old->value)
+				aFree(p_old->value);
+			ers_free(pc->str_reg_ers, p_old);
 		} else {
 			if( index )
 				script->array_update(&sd->regs, reg, false);
 		}
 	} else {
 		if( sd->regs.vars->remove(sd->regs.vars, DB->i642key(reg), &prev) ) {
-			p = DB->data2ptr(&prev);
-			if( p->value )
-				aFree(p->value);
-			ers_free(pc->str_reg_ers, p);
+			struct script_reg_str *p_old = (struct script_reg_str *)DB->data2ptr(&prev);
+			if (p_old->value)
+				aFree(p_old->value);
+			ers_free(pc->str_reg_ers, p_old);
 			if( index )
 				script->array_update(&sd->regs, reg, true);
 		}
@@ -9737,7 +9736,8 @@ static int pc_setregistry(struct map_session_data *sd, int64 reg, int val)
 			p->flag.update = 1;
 
 		if( sd->regs.vars->put(sd->regs.vars, DB->i642key(reg), DB->ptr2data(p), &prev) ) {
-			p = DB->data2ptr(&prev);
+			// TODO: Is this intentionally overwriting p? (see the check below to decide whether to mark as dirty)
+			p = (struct script_reg_num *)DB->data2ptr(&prev);
 			ers_free(pc->num_reg_ers, p);
 		}
 	}
@@ -9794,7 +9794,8 @@ static int pc_setregistry_str(struct map_session_data *sd, int64 reg, const char
 		p->flag.type = 1;
 
 		if( sd->regs.vars->put(sd->regs.vars, DB->i642key(reg), DB->ptr2data(p), &prev) ) {
-			p = DB->data2ptr(&prev);
+			// TODO: Is this intentionally overwriting p? (see the check below to decide whether to mark as dirty)
+			p = (struct script_reg_str *)DB->data2ptr(&prev);
 			if( p->value )
 				aFree(p->value);
 			ers_free(pc->str_reg_ers, p);
@@ -12490,7 +12491,7 @@ static void pc_autotrade_populate(struct map_session_data *sd)
  */
 static int pc_autotrade_final(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct autotrade_vending* at_v = DB->data2ptr(data);
+	struct autotrade_vending *at_v = (struct autotrade_vending *)DB->data2ptr(data);
 	nullpo_ret(at_v);
 	HPM->data_store_destroy(&at_v->hdata);
 	return 0;

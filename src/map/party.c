@@ -133,7 +133,7 @@ static int party_db_final(union DBKey key, struct DBData *data, va_list ap)
 {
 	struct party_data *p;
 
-	if ((p = DB->data2ptr(data))) {
+	if ((p = (struct party_data *)DB->data2ptr(data))) {
 		if (p->instance)
 			aFree(p->instance);
 
