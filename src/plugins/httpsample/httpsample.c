@@ -110,7 +110,7 @@ HTTP_URL(my_sample_test_simple)
 
 	char buf[1000];
 	// get client user agent
-	const char *user_agent = (const char*)strdb_get(sd->headers_db, "User-Agent");
+	const char *user_agent = (const char *)strdb_get(sd->headers_db, "User-Agent");
 	const char *format = "<html>Hercules test from sample plugin.<br/>Your user agent is: %s<br/></html>\n";
 	if (user_agent != NULL) {
 		// copy user agent from http request to buffer
@@ -136,7 +136,7 @@ HTTP_URL(my_sample_test_login)
 	// create variable with custom data for send to login server
 	CREATE_HTTP_DATA(data, sample_login_request);
 	// get client user agent
-	const char *user_agent = (const char*)strdb_get(sd->headers_db, "User-Agent");
+	const char *user_agent = (const char *)strdb_get(sd->headers_db, "User-Agent");
 	if (user_agent != NULL) {
 		// copy user agent from http request to text field
 		safestrncpy(data.text, user_agent, sizeof(data.text));
@@ -184,7 +184,7 @@ HTTP_URL(my_sample_test_char)
 	// create variable with custom data for send other char server
 	CREATE_HTTP_DATA(data, sample_char_request);
 	// get client user agent
-	const char *user_agent = (const char*)strdb_get(sd->headers_db, "User-Agent");
+	const char *user_agent = (const char *)strdb_get(sd->headers_db, "User-Agent");
 	if (user_agent != NULL) {
 		// copy user agent from http request to text field
 		safestrncpy(data.text, user_agent, sizeof(data.text));
@@ -229,7 +229,7 @@ HTTP_URL(my_sample_test_map)
 	// create variable with custom data for send other char server
 	CREATE_HTTP_DATA(data, sample_map_request);
 	// get client user agent
-	const char *user_agent = (const char*)strdb_get(sd->headers_db, "User-Agent");
+	const char *user_agent = (const char *)strdb_get(sd->headers_db, "User-Agent");
 	if (user_agent != NULL) {
 		// copy user agent from http request to text field
 		safestrncpy(data.text, user_agent, sizeof(data.text));

@@ -583,7 +583,7 @@ static struct guild_storage *guild2storage_ensure(int guild_id)
  */
 static void guild_storage_delete(int guild_id)
 {
-	struct guild_storage *gstor = idb_get(gstorage->db, guild_id);
+	struct guild_storage *gstor = (struct guild_storage *)idb_get(gstorage->db, guild_id);
 	if (gstor == NULL)
 		return;
 
@@ -634,7 +634,7 @@ static int storage_guild_storageopen(struct map_session_data *sd)
 		return 1;
 	}
 
-	if ((gstor = idb_get(gstorage->db, sd->status.guild_id)) == NULL || gstor->items.data == NULL) {
+	if ((gstor = (struct guild_storage *)idb_get(gstorage->db, sd->status.guild_id)) == NULL || gstor->items.data == NULL) {
 		intif->request_guild_storage(sd->status.account_id, sd->status.guild_id);
 		return 0;
 	}
@@ -757,11 +757,10 @@ static int guild_storage_delitem(struct map_session_data *sd, struct guild_stora
  *------------------------------------------*/
 static int storage_guild_storageadd(struct map_session_data *sd, int index, int amount)
 {
-	struct guild_storage *stor;
-
 	nullpo_ret(sd);
 	nullpo_ret(sd->guild);
-	nullpo_ret(stor=idb_get(gstorage->db,sd->status.guild_id));
+	struct guild_storage *stor = (struct guild_storage *)idb_get(gstorage->db, sd->status.guild_id);
+	nullpo_ret(stor);
 
 	if (!stor->in_use || stor->items.amount > sd->guild->max_storage)
 		return 0;
@@ -797,12 +796,12 @@ static int storage_guild_storageadd(struct map_session_data *sd, int index, int 
  *------------------------------------------*/
 static int storage_guild_storageget(struct map_session_data *sd, int index, int amount)
 {
-	struct guild_storage *stor;
 	int flag;
 
 	nullpo_ret(sd);
 	nullpo_ret(sd->guild);
-	nullpo_ret(stor=idb_get(gstorage->db,sd->status.guild_id));
+	struct guild_storage *stor = (struct guild_storage *)idb_get(gstorage->db,sd->status.guild_id);
+	nullpo_ret(stor);
 
 	if(!stor->in_use)
 		return 0;
@@ -839,11 +838,10 @@ static int storage_guild_storageget(struct map_session_data *sd, int index, int 
  *------------------------------------------*/
 static int storage_guild_storageaddfromcart(struct map_session_data *sd, int index, int amount)
 {
-	struct guild_storage *stor;
-
 	nullpo_ret(sd);
 	nullpo_ret(sd->guild);
-	nullpo_ret(stor=idb_get(gstorage->db,sd->status.guild_id));
+	struct guild_storage *stor = (struct guild_storage *)idb_get(gstorage->db,sd->status.guild_id);
+	nullpo_ret(stor);
 
 	if (!stor->in_use || stor->items.amount > sd->guild->max_storage)
 		return 0;
@@ -872,11 +870,11 @@ static int storage_guild_storageaddfromcart(struct map_session_data *sd, int ind
  *------------------------------------------*/
 static int storage_guild_storagegettocart(struct map_session_data *sd, int index, int amount)
 {
-	struct guild_storage *stor;
-
 	nullpo_ret(sd);
 	nullpo_ret(sd->guild);
-	nullpo_ret(stor=idb_get(gstorage->db,sd->status.guild_id));
+
+	struct guild_storage *stor = (struct guild_storage *)idb_get(gstorage->db,sd->status.guild_id);
+	nullpo_ret(stor);
 
 	if(!stor->in_use)
 		return 0;
@@ -904,7 +902,7 @@ static int storage_guild_storagegettocart(struct map_session_data *sd, int index
  *------------------------------------------*/
 static int storage_guild_storagesave(int account_id, int guild_id, int flag)
 {
-	struct guild_storage *stor = idb_get(gstorage->db,guild_id);
+	struct guild_storage *stor = (struct guild_storage *)idb_get(gstorage->db, guild_id);
 
 	if (stor != NULL) {
 		if (flag) //Char quitting, close it.
@@ -926,7 +924,7 @@ static int storage_guild_storagesaved(int guild_id)
 {
 	struct guild_storage *stor;
 
-	if((stor=idb_get(gstorage->db,guild_id)) != NULL) {
+	if ((stor = (struct guild_storage *)idb_get(gstorage->db,guild_id)) != NULL) {
 		if (stor->dirty && !stor->in_use) {
 			//Storage has been correctly saved.
 			stor->dirty = false;
@@ -939,10 +937,9 @@ static int storage_guild_storagesaved(int guild_id)
 //Close storage for sd and save it
 static int storage_guild_storageclose(struct map_session_data *sd)
 {
-	struct guild_storage *stor;
-
 	nullpo_ret(sd);
-	nullpo_ret(stor=idb_get(gstorage->db,sd->status.guild_id));
+	struct guild_storage *stor = (struct guild_storage *)idb_get(gstorage->db,sd->status.guild_id);
+	nullpo_ret(stor);
 
 	clif->storageclose(sd);
 	if (stor->in_use) {
@@ -959,10 +956,10 @@ static int storage_guild_storageclose(struct map_session_data *sd)
 
 static int storage_guild_storage_quit(struct map_session_data *sd, int flag)
 {
-	struct guild_storage *stor;
-
 	nullpo_ret(sd);
-	nullpo_ret(stor=idb_get(gstorage->db,sd->status.guild_id));
+
+	struct guild_storage *stor = (struct guild_storage *)idb_get(gstorage->db,sd->status.guild_id);
+	nullpo_ret(stor);
 
 	if(flag) {
 		//Only during a guild break flag is 1 (don't save storage)

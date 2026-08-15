@@ -50,7 +50,7 @@ struct mapreg_interface *mapreg; //!< Public interface structure.
  **/
 static int mapreg_get_num_reg(int64 uid)
 {
-	struct mapreg_save *var = i64db_get(mapreg->regs.vars, uid);
+	struct mapreg_save *var = (struct mapreg_save *)i64db_get(mapreg->regs.vars, uid);
 	return (var != NULL) ? var->u.i : 0;
 }
 
@@ -63,7 +63,7 @@ static int mapreg_get_num_reg(int64 uid)
  **/
 static char *mapreg_get_str_reg(int64 uid)
 {
-	struct mapreg_save *var = i64db_get(mapreg->regs.vars, uid);
+	struct mapreg_save *var = (struct mapreg_save *)i64db_get(mapreg->regs.vars, uid);
 	return (var != NULL) ? var->u.str : NULL;
 }
 
@@ -86,7 +86,7 @@ static bool mapreg_set_num_db(int64 uid, const char *name, unsigned int index, i
 	if (value == 0)
 		return mapreg->delete_num_db(uid, name, index);
 
-	struct mapreg_save *var = i64db_get(mapreg->regs.vars, uid);
+	struct mapreg_save *var = (struct mapreg_save *)i64db_get(mapreg->regs.vars, uid);
 
 	// Update variable.
 	if (var != NULL) {
@@ -152,7 +152,7 @@ static bool mapreg_delete_num_db(int64 uid, const char *name, unsigned int index
 	Assert_retr(false, *name != '\0');
 	Assert_retr(false, strlen(name) <= SCRIPT_VARNAME_LENGTH);
 
-	struct mapreg_save *var = i64db_get(mapreg->regs.vars, uid);
+	struct mapreg_save *var = (struct mapreg_save *)i64db_get(mapreg->regs.vars, uid);
 
 	if (var != NULL)
 		ers_free(mapreg->ers, var);
@@ -228,7 +228,7 @@ static bool mapreg_set_str_db(int64 uid, const char *name, unsigned int index, c
 	if (script->is_permanent_variable(name))
 		Assert_retr(false, strlen(value) <= SCRIPT_STRING_VAR_LENGTH);
 
-	struct mapreg_save *var = i64db_get(mapreg->regs.vars, uid);
+	struct mapreg_save *var = (struct mapreg_save *)i64db_get(mapreg->regs.vars, uid);
 
 	// Update variable.
 	if (var != NULL) {
@@ -297,7 +297,7 @@ static bool mapreg_delete_str_db(int64 uid, const char *name, unsigned int index
 	Assert_retr(false, *name != '\0');
 	Assert_retr(false, strlen(name) <= SCRIPT_VARNAME_LENGTH);
 
-	struct mapreg_save *var = i64db_get(mapreg->regs.vars, uid);
+	struct mapreg_save *var = (struct mapreg_save *)i64db_get(mapreg->regs.vars, uid);
 
 	if (var != NULL) {
 		if (var->u.str != NULL)

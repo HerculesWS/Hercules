@@ -111,7 +111,7 @@ static struct item_data *itemdb_searchname(const char *str)
 /* name to item data */
 static struct item_data *itemdb_name2id(const char *str)
 {
-	return strdb_get(itemdb->names,str);
+	return (struct item_data *)strdb_get(itemdb->names, str);
 }
 
 /**
@@ -369,11 +369,10 @@ static const struct item_group *itemdb_search_group(int nameid)
 /// Returns the item_data or NULL if it does not exist.
 static struct item_data *itemdb_exists(int nameid)
 {
-	struct item_data* item;
 
 	if( nameid >= 0 && nameid < ARRAYLENGTH(itemdb->array) )
 		return itemdb->array[nameid];
-	item = (struct item_data*)idb_get(itemdb->other,nameid);
+	struct item_data *item = (struct item_data *)idb_get(itemdb->other, nameid);
 	if( item == &itemdb->dummy )
 		return NULL;// dummy data, doesn't exist
 	return item;
@@ -671,17 +670,16 @@ static struct item_data *create_item_data(int nameid)
  *------------------------------------------*/
 static struct item_data *itemdb_load(int nameid)
 {
-	struct item_data *id;
 
 	if( nameid >= 0 && nameid < ARRAYLENGTH(itemdb->array) )
 	{
-		id = itemdb->array[nameid];
+		struct item_data *id = itemdb->array[nameid];
 		if( id == NULL || id == &itemdb->dummy )
 			id = itemdb->array[nameid] = itemdb->create_item_data(nameid);
 		return id;
 	}
 
-	id = (struct item_data*)idb_get(itemdb->other, nameid);
+	struct item_data *id = (struct item_data *)idb_get(itemdb->other, nameid);
 	if( id == NULL || id == &itemdb->dummy )
 	{
 		id = itemdb->create_item_data(nameid);
@@ -699,7 +697,7 @@ static struct item_data *itemdb_search(int nameid)
 	if( nameid >= 0 && nameid < ARRAYLENGTH(itemdb->array) )
 		id = itemdb->array[nameid];
 	else
-		id = (struct item_data*)idb_get(itemdb->other, nameid);
+		id = (struct item_data *)idb_get(itemdb->other, nameid);
 
 	if( id == NULL )
 	{

@@ -96,7 +96,7 @@ static int handler_on_headers_complete(HTTP_PARSER *parser)
 
 	// Per RFC-9110, only HTTP 1.1 and newer should handle Expect: https://httpwg.org/specs/rfc9110.html#field.expect
 	if (parser->http_major >= 1 && parser->http_minor >= 1) {
-		const char *expect = strdb_get(sd->headers_db, "Expect");
+		const char *expect = (const char *)strdb_get(sd->headers_db, "Expect");
 		if (expect != NULL && strcmp(expect, "100-continue") == 0)
 			httpsender->send_continue(fd);
 	}

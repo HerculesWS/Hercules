@@ -5779,7 +5779,7 @@ static void pc_bound_clear(struct map_session_data *sd, enum e_item_bound_type t
 			ShowError("Helllo! You reached pc_bound_clear for IBT_ACCOUNT, unfortunately no scenario was expected for this!\n");
 			break;
 		case IBT_GUILD: {
-				struct guild_storage *gstor = idb_get(gstorage->db,sd->status.guild_id);
+				struct guild_storage *gstor = (struct guild_storage *)idb_get(gstorage->db,sd->status.guild_id);
 
 				for (i = 0; i < sd->status.inventorySize; i++ ) {
 					if(sd->status.inventory[i].bound == type) {
@@ -9569,10 +9569,8 @@ static void pc_setreg(struct map_session_data *sd, int64 reg, int val)
  **/
 static char *pc_readregstr(struct map_session_data *sd, int64 reg)
 {
-	struct script_reg_str *p = NULL;
-
 	nullpo_retr(NULL, sd);
-	p = i64db_get(sd->regs.vars, reg);
+	struct script_reg_str *p = (struct script_reg_str *)i64db_get(sd->regs.vars, reg);
 
 	return p ? p->value : NULL;
 }
@@ -9620,8 +9618,6 @@ static void pc_setregstr(struct map_session_data *sd, int64 reg, const char *str
  **/
 static int pc_readregistry(struct map_session_data *sd, int64 reg)
 {
-	struct script_reg_num *p = NULL;
-
 	nullpo_ret(sd);
 	if (!sd->vars_ok) {
 		ShowError("pc_readregistry: Trying to read reg %s before it's been loaded!\n", script->get_str(script_getvarid(reg)));
@@ -9631,7 +9627,7 @@ static int pc_readregistry(struct map_session_data *sd, int64 reg)
 		return 0;
 	}
 
-	p = i64db_get(sd->regs.vars, reg);
+	struct script_reg_num *p = (struct script_reg_num *)i64db_get(sd->regs.vars, reg);
 
 	return p ? p->value : 0;
 }
@@ -9643,8 +9639,6 @@ static int pc_readregistry(struct map_session_data *sd, int64 reg)
  **/
 static char *pc_readregistry_str(struct map_session_data *sd, int64 reg)
 {
-	struct script_reg_str *p = NULL;
-
 	nullpo_retr(NULL, sd);
 	if (!sd->vars_ok) {
 		ShowError("pc_readregistry_str: Trying to read reg %s before it's been loaded!\n", script->get_str(script_getvarid(reg)));
@@ -9654,7 +9648,7 @@ static char *pc_readregistry_str(struct map_session_data *sd, int64 reg)
 		return NULL;
 	}
 
-	p = i64db_get(sd->regs.vars, reg);
+	struct script_reg_str *p = (struct script_reg_str *)i64db_get(sd->regs.vars, reg);
 
 	return p ? p->value : NULL;
 }
@@ -9711,7 +9705,7 @@ static int pc_setregistry(struct map_session_data *sd, int64 reg, int val)
 		return 0;
 	}
 
-	if( (p = i64db_get(sd->regs.vars, reg) ) ) {
+	if ((p = (struct script_reg_num *)i64db_get(sd->regs.vars, reg)) != NULL) {
 		if( val ) {
 			if( !p->value && index ) /* its a entry that was deleted, so we reset array */
 				script->array_update(&sd->regs, reg, false);
@@ -9766,7 +9760,7 @@ static int pc_setregistry_str(struct map_session_data *sd, int64 reg, const char
 		return 0;
 	}
 
-	if( (p = i64db_get(sd->regs.vars, reg) ) ) {
+	if ((p = (struct script_reg_str *)i64db_get(sd->regs.vars, reg)) != NULL) {
 		if( val[0] ) {
 			if( p->value )
 				aFree(p->value);
@@ -10721,7 +10715,7 @@ static int pc_checkitem(struct map_session_data *sd)
 		}
 
 		if (sd->guild && sd->itemcheck & PCCHECKITEM_GSTORAGE) {
-			struct guild_storage *guild_storage = idb_get(gstorage->db,sd->guild->guild_id);
+			struct guild_storage *guild_storage = (struct guild_storage *)idb_get(gstorage->db,sd->guild->guild_id);
 			if (guild_storage) {
 				for (i = 0; i < guild_storage->items.capacity; i++) {
 					if ((id = guild_storage->items.data[i].nameid) == 0)
@@ -12099,7 +12093,7 @@ static void pc_itemcd_do(struct map_session_data *sd, bool load)
 
 	nullpo_retv(sd);
 	if( load ) {
-		if( !(cd = idb_get(pc->itemcd_db, sd->status.char_id)) ) {
+		if ((cd = (struct item_cd *)idb_get(pc->itemcd_db, sd->status.char_id)) == NULL) {
 			// no skill cooldown is associated with this character
 			return;
 		}
@@ -12112,7 +12106,7 @@ static void pc_itemcd_do(struct map_session_data *sd, bool load)
 		}
 		idb_remove(pc->itemcd_db,sd->status.char_id);
 	} else {
-		if( !(cd = idb_get(pc->itemcd_db,sd->status.char_id)) ) {
+		if ((cd = (struct item_cd *)idb_get(pc->itemcd_db,sd->status.char_id)) == NULL) {
 			// create a new skill cooldown object for map storage
 			CREATE( cd, struct item_cd, 1 );
 			idb_put( pc->itemcd_db, sd->status.char_id, cd );
@@ -12450,7 +12444,7 @@ static void pc_autotrade_populate(struct map_session_data *sd)
 	int i, j, k, cursor = 0;
 
 	nullpo_retv(sd);
-	if( !(data = idb_get(pc->at_db,sd->status.char_id)) )
+	if ((data = (struct autotrade_vending *)idb_get(pc->at_db, sd->status.char_id)) == NULL)
 		return;
 
 	for(i = 0; i < data->vend_num; i++) {

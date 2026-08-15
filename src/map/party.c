@@ -146,7 +146,7 @@ static struct party_data *party_search(int party_id)
 {
 	if(!party_id)
 		return NULL;
-	return (struct party_data*)idb_get(party->db,party_id);
+	return (struct party_data *)idb_get(party->db, party_id);
 }
 
 /// Party data lookup using party name.
@@ -276,7 +276,6 @@ static void party_check_state(struct party_data *p)
 
 static int party_recv_info(const struct party *sp, int char_id)
 {
-	struct party_data* p;
 	const struct party_member *member;
 	struct map_session_data* sd;
 	int removed[MAX_PARTY];// member_id in old data
@@ -289,7 +288,7 @@ static int party_recv_info(const struct party *sp, int char_id)
 
 	nullpo_ret(sp);
 
-	p = (struct party_data*)idb_get(party->db, sp->party_id);
+	struct party_data *p = (struct party_data *)idb_get(party->db, sp->party_id);
 	if( p != NULL ) {// diff members
 		int i;
 		for (member_id = 0; member_id < MAX_PARTY; ++member_id) {
@@ -1289,12 +1288,11 @@ static struct party_booking_ad_info *create_party_booking_data(void)
 static void party_recruit_register(struct map_session_data *sd, short level, const char *notice)
 {
 #ifdef PARTY_RECRUIT
-	struct party_booking_ad_info *pb_ad;
 
 	nullpo_retv(sd);
 	nullpo_retv(notice);
 
-	pb_ad = (struct party_booking_ad_info*)idb_get(party->booking_db, sd->status.char_id);
+	struct party_booking_ad_info *pb_ad = (struct party_booking_ad_info *)idb_get(party->booking_db, sd->status.char_id);
 
 	if( pb_ad == NULL )
 	{
@@ -1322,13 +1320,12 @@ static void party_recruit_register(struct map_session_data *sd, short level, con
 static void party_booking_register(struct map_session_data *sd, short level, short mapid, short *job)
 {
 #ifndef PARTY_RECRUIT
-	struct party_booking_ad_info *pb_ad;
 	int i;
 
 	nullpo_retv(sd);
 	nullpo_retv(job);
 
-	pb_ad = (struct party_booking_ad_info *)idb_get(party->booking_db, sd->status.char_id);
+	struct party_booking_ad_info *pb_ad = (struct party_booking_ad_info *)idb_get(party->booking_db, sd->status.char_id);
 	if (pb_ad == NULL) {
 		pb_ad = party->create_booking_data();
 		idb_put(party->booking_db, sd->status.char_id, pb_ad);
@@ -1359,10 +1356,8 @@ static void party_booking_register(struct map_session_data *sd, short level, sho
 static void party_recruit_update(struct map_session_data *sd, const char *notice)
 {
 #ifdef PARTY_RECRUIT
-	struct party_booking_ad_info *pb_ad;
-
 	nullpo_retv(sd);
-	pb_ad = (struct party_booking_ad_info*)idb_get(party->booking_db, sd->status.char_id);
+	struct party_booking_ad_info *pb_ad = (struct party_booking_ad_info *)idb_get(party->booking_db, sd->status.char_id);
 
 	if( pb_ad == NULL )
 		return;
@@ -1382,12 +1377,11 @@ static void party_booking_update(struct map_session_data *sd, short *job)
 {
 #ifndef PARTY_RECRUIT
 	int i;
-	struct party_booking_ad_info *pb_ad;
 
 	nullpo_retv(sd);
 	nullpo_retv(job);
 
-	pb_ad = (struct party_booking_ad_info *)idb_get(party->booking_db, sd->status.char_id);
+	struct party_booking_ad_info *pb_ad = (struct party_booking_ad_info *)idb_get(party->booking_db, sd->status.char_id);
 
 	if (pb_ad == NULL)
 		return;
@@ -1480,12 +1474,10 @@ static void party_booking_search(struct map_session_data *sd, short level, short
 
 static bool party_booking_delete(struct map_session_data *sd)
 {
-	struct party_booking_ad_info* pb_ad;
-
 	nullpo_retr(false, sd);
 
-	if((pb_ad = (struct party_booking_ad_info*)idb_get(party->booking_db, sd->status.char_id))!=NULL)
-	{
+	struct party_booking_ad_info *pb_ad;
+	if((pb_ad = (struct party_booking_ad_info *)idb_get(party->booking_db, sd->status.char_id)) != NULL) {
 #ifdef PARTY_RECRUIT
 		clif->PartyRecruitDeleteNotify(sd, pb_ad->index);
 #else

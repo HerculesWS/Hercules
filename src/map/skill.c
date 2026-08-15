@@ -19260,7 +19260,7 @@ static int skill_delunit(struct skill_unit *su)
 /// Returns the target skill_unit_group or NULL if not found.
 static struct skill_unit_group *skill_id2group(int group_id)
 {
-	return (struct skill_unit_group*)idb_get(skill->group_db, group_id);
+	return (struct skill_unit_group *)idb_get(skill->group_db, group_id);
 }
 
 /// Returns a new group_id that isn't being used in skill->group_db.
@@ -21137,7 +21137,7 @@ static int skill_blockpc_end(int tid, int64 tick, int id, intptr_t data)
 	if (!sd || !sd->blockskill[data])
 		return 0;
 
-	if( ( cd = idb_get(skill->cd_db,sd->status.char_id) ) ) {
+	if ((cd = (struct skill_cd *)idb_get(skill->cd_db, sd->status.char_id)) != NULL) {
 		int i;
 
 		for( i = 0; i < cd->cursor; i++ ) {
@@ -21199,7 +21199,7 @@ static int skill_blockpc_start_(struct map_session_data *sd, uint16 skill_id, in
 	if( battle_config.display_status_timers )
 		clif->skill_cooldown(sd, skill_id, tick);
 
-	if( !(cd = idb_get(skill->cd_db,sd->status.char_id)) ) {// create a new skill cooldown object for map storage
+	if ((cd = (struct skill_cd *)idb_get(skill->cd_db, sd->status.char_id)) == NULL) {// create a new skill cooldown object for map storage
 		cd = ers_alloc(skill->cd_ers, struct skill_cd);
 
 		idb_put( skill->cd_db, sd->status.char_id, cd );
@@ -21343,7 +21343,7 @@ static void skill_usave_trigger(struct map_session_data *sd)
 	struct skill_unit_save * sus = NULL;
 
 	nullpo_retv(sd);
-	if( ! (sus = idb_get(skill->usave_db,sd->status.char_id)) ) {
+	if ((sus = (struct skill_unit_save *)idb_get(skill->usave_db,sd->status.char_id)) == NULL) {
 		return;
 	}
 
@@ -21766,7 +21766,7 @@ static void skill_cooldown_save(struct map_session_data *sd)
 
 	nullpo_retv(sd);
 
-	if ((cd = idb_get(skill->cd_db, sd->status.char_id)) == NULL)
+	if ((cd = (struct skill_cd *)idb_get(skill->cd_db, sd->status.char_id)) == NULL)
 		return;
 
 	now = timer->gettick();
@@ -21796,7 +21796,7 @@ static void skill_cooldown_load(struct map_session_data *sd)
 	// always check to make sure the session properly exists
 	nullpo_retv(sd);
 
-	if( !(cd = idb_get(skill->cd_db, sd->status.char_id)) ) {// no skill cooldown is associated with this character
+	if ((cd = (struct skill_cd *)idb_get(skill->cd_db, sd->status.char_id)) == NULL) {// no skill cooldown is associated with this character
 		return;
 	}
 

@@ -67,14 +67,14 @@ static void inter_adventurer_agency_parse_joinParty(int fd)
 	const int party_id = p->party_id;
 	const int map_index = p->map_index;
 
-	struct mmo_charstatus *cp = (struct mmo_charstatus*)idb_get(chr->char_db_, char_id);
+	struct mmo_charstatus *cp = (struct mmo_charstatus *)idb_get(chr->char_db_, char_id);
 	nullpo_retv(cp);
 	if (cp->party_id != 0) {
 		mapif->agency_joinPartyResult(fd, char_id, AGENCY_PLAYER_ALREADY_IN_PARTY);
 		return;
 	}
 
-	struct party_data* party = (struct party_data*)idb_get(inter_party->db, party_id);
+	struct party_data *party = (struct party_data *)idb_get(inter_party->db, party_id);
 	if (party == NULL) {
 		mapif->agency_joinPartyResult(fd, char_id, AGENCY_PARTY_NOT_FOUND);
 		return;
@@ -127,12 +127,12 @@ static void inter_adventurer_agency_entry_delete_existing(int char_id, int party
 
 static int inter_adventurer_agency_entry_delete(int char_id, int master_aid)
 {
-	struct mmo_charstatus *cp = (struct mmo_charstatus*)idb_get(chr->char_db_, char_id);
+	struct mmo_charstatus *cp = (struct mmo_charstatus *)idb_get(chr->char_db_, char_id);
 	nullpo_retr(1, cp);
 	if (cp->party_id == 0)
 		return 1;
 
-	struct party_data* p = (struct party_data*)idb_get(inter_party->db, cp->party_id);
+	struct party_data *p = (struct party_data *)idb_get(inter_party->db, cp->party_id);
 	if (p == NULL)
 		return 1;
 
@@ -181,12 +181,12 @@ bool inter_adventurer_agency_entry_add(int char_id, const struct party_add_data 
 {
 	nullpo_retr(false, entry);
 
-	struct mmo_charstatus *cp = (struct mmo_charstatus*)idb_get(chr->char_db_, char_id);
+	struct mmo_charstatus *cp = (struct mmo_charstatus *)idb_get(chr->char_db_, char_id);
 	nullpo_retr(false, cp);
 	if (cp->party_id == 0)
 		return false;
 
-	struct party_data* p = (struct party_data*)idb_get(inter_party->db, cp->party_id);
+	struct party_data *p = (struct party_data *)idb_get(inter_party->db, cp->party_id);
 	if (p == NULL)
 		return false;
 
@@ -225,7 +225,7 @@ void inter_adventurer_agency_get_page(int char_id, int page, struct adventuter_a
 		packet->entry[index].char_id = atoi(data);
 
 		// do not access any methods for avoid new db connections
-		struct mmo_charstatus *cp = (struct mmo_charstatus*)idb_get(chr->char_db_, packet->entry[index].char_id);
+		struct mmo_charstatus *cp = (struct mmo_charstatus *)idb_get(chr->char_db_, packet->entry[index].char_id);
 		if (cp == NULL) {
 			// add offline char
 			packet->entry[index].account_id = 0;
@@ -292,7 +292,7 @@ int inter_adventurer_agency_get_player_request(int char_id, struct adventuter_ag
 		SQL->GetData(inter->sql_handle, 0, &data, NULL);
 		entry->char_id = atoi(data);
 		// do not access any methods for avoid new db connections
-		struct mmo_charstatus *cp = (struct mmo_charstatus*)idb_get(chr->char_db_, entry->char_id);
+		struct mmo_charstatus *cp = (struct mmo_charstatus *)idb_get(chr->char_db_, entry->char_id);
 		if (cp == NULL) {
 			safestrncpy(entry->char_name, "offline", NAME_LENGTH);
 			entry->account_id = 0;

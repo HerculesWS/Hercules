@@ -50,7 +50,7 @@ struct achievement_interface *achievement;
  */
 static const struct achievement_data *achievement_get(int aid)
 {
-	return (struct achievement_data *) idb_get(achievement->db, aid);
+	return (struct achievement_data *)idb_get(achievement->db, aid);
 }
 
 /**

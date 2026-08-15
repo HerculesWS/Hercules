@@ -231,7 +231,7 @@ HPExport const char *Hooked (bool *fr) {
 HPExport bool HPM_Plugin_AddHook(enum HPluginHookType type, const char *target, void *hook, unsigned int pID) {
 	struct HookingPointData *hpd;
 
-	if (hp_db && (hpd = strdb_get(hp_db,target)) != NULL) {
+	if (hp_db && (hpd = (struct HookingPointData *)strdb_get(hp_db,target)) != NULL) {
 		struct HPMHookPoint **hp = NULL;
 		int *count = NULL;
 

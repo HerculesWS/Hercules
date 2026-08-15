@@ -3426,7 +3426,7 @@ static void clif_parse_inventoryExpansion(int fd, struct map_session_data *sd)
 	struct event_data *ev = NULL;
 
 	safestrncpy(evname, "inventory_expansion::OnInvExpandRequest", EVENT_NAME_LENGTH);
-	if ((ev = strdb_get(npc->ev_db, evname))) {
+	if ((ev = (struct event_data *)strdb_get(npc->ev_db, evname))) {
 		script->run_npc(ev->nd->u.scr.script, ev->pos, sd->bl.id, ev->nd->bl.id);
 	} else {
 		ShowError("clif_parse_inventoryExpansion: event '%s' not found, operation failed.\n", evname);
@@ -3451,7 +3451,7 @@ static void clif_parse_inventoryExpansionConfirmed(int fd, struct map_session_da
 	struct event_data *ev = NULL;
 
 	safestrncpy(evname, "inventory_expansion::OnInvExpandConfirmed", EVENT_NAME_LENGTH);
-	if ((ev = strdb_get(npc->ev_db, evname))) {
+	if ((ev = (struct event_data *)strdb_get(npc->ev_db, evname))) {
 		script->run_npc(ev->nd->u.scr.script, ev->pos, sd->bl.id, ev->nd->bl.id);
 	} else {
 		ShowError("clif_parse_inventoryExpansionConfirmed: event '%s' not found, operation failed.\n", evname);
@@ -3467,7 +3467,7 @@ static void clif_parse_inventoryExpansionRejected(int fd, struct map_session_dat
 	struct event_data *ev = NULL;
 
 	safestrncpy(evname, "inventory_expansion::OnInvExpandRejected", EVENT_NAME_LENGTH);
-	if ((ev = strdb_get(npc->ev_db, evname))) {
+	if ((ev = (struct event_data *)strdb_get(npc->ev_db, evname))) {
 		script->run_npc(ev->nd->u.scr.script, ev->pos, sd->bl.id, ev->nd->bl.id);
 	} else {
 		ShowError("clif_parse_inventoryExpansionRejected: event '%s' not found, operation failed.\n", evname);
@@ -9714,7 +9714,7 @@ static void clif_refresh_storagewindow(struct map_session_data *sd)
 	// remain locked forever and nobody will be able to access it
 	if (sd->state.storage_flag == STORAGE_FLAG_GUILD) {
 		struct guild_storage *gstor;
-		if( (gstor = idb_get(gstorage->db,sd->status.guild_id)) == NULL) {
+		if ((gstor = (struct guild_storage *)idb_get(gstorage->db,sd->status.guild_id)) == NULL) {
 			// Shouldn't happen... The information should already be at the map-server
 			intif->request_guild_storage(sd->status.account_id,sd->status.guild_id);
 		} else {
@@ -24327,7 +24327,7 @@ static void clif_parse_private_airship_request(int fd, struct map_session_data *
 	const struct PACKET_CZ_PRIVATE_AIRSHIP_REQUEST *p = RP2PTR(struct PACKET_CZ_PRIVATE_AIRSHIP_REQUEST *, fd);
 
 	safestrncpy(evname, "private_airship::OnAirShipRequest", EVENT_NAME_LENGTH);
-	if ((ev = strdb_get(npc->ev_db, evname))) {
+	if ((ev = (struct event_data *)strdb_get(npc->ev_db, evname)) != NULL) {
 		pc->setregstr(sd, script->add_variable("@mapname$"), p->mapName);
 		pc->setreg(sd, script->add_variable("@itemid"), p->ItemID);
 		script->run_npc(ev->nd->u.scr.script, ev->pos, sd->bl.id, ev->nd->bl.id);
@@ -25916,7 +25916,7 @@ static void clif_parse_dynamicnpc_create_request(int fd, struct map_session_data
 	const struct PACKET_CZ_DYNAMICNPC_CREATE_REQUEST *p = RFIFO2PTR(struct PACKET_CZ_DYNAMICNPC_CREATE_REQUEST *, fd);
 
 	safestrncpy(evname, "dynamicnpc_create::OnRequest", EVENT_NAME_LENGTH);
-	if ((ev = strdb_get(npc->ev_db, evname))) {
+	if ((ev = (struct event_data *)strdb_get(npc->ev_db, evname)) != NULL) {
 		pc->setregstr(sd, script->add_variable("@name$"), p->name);
 		script->run_npc(ev->nd->u.scr.script, ev->pos, sd->bl.id, ev->nd->bl.id);
 	} else {

@@ -1248,7 +1248,7 @@ static int connect_check_(uint32 ip)
 	}
 
 	// Inspect connection history
-	if( ( hist = uidb_get(connect_history, ip)) ) { //IP found
+	if ((hist = (struct connect_history *)uidb_get(connect_history, ip)) != NULL) { //IP found
 		if( hist->ddos ) {// flagged as DDoS
 			return (connect_ok == 2 ? 1 : 0);
 		} else if( DIFF_TICK(timer->gettick(),hist->tick) < ddos_interval ) {// connection within ddos_interval

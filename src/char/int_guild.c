@@ -360,7 +360,6 @@ static bool inter_guild_tosql(struct guild *g, int flag)
  */
 static struct guild *inter_guild_fromsql(int guild_id)
 {
-	struct guild *g;
 	char* data;
 	size_t len;
 	char* p;
@@ -369,7 +368,7 @@ static struct guild *inter_guild_fromsql(int guild_id)
 	if( guild_id <= 0 )
 		return NULL;
 
-	g = (struct guild*)idb_get(inter_guild->guild_db, guild_id);
+	struct guild *g = (struct guild *)idb_get(inter_guild->guild_db, guild_id);
 	if( g )
 		return g;
 
@@ -597,7 +596,7 @@ static struct guild_castle *inter_guild_castle_fromsql(int castle_id)
 	char *data;
 	int i;
 	StringBuf buf;
-	struct guild_castle *gc = idb_get(inter_guild->castle_db, castle_id);
+	struct guild_castle *gc = (struct guild_castle *)idb_get(inter_guild->castle_db, castle_id);
 
 	if (gc != NULL)
 		return gc;
@@ -1574,7 +1573,7 @@ static bool inter_guild_update_castle_data(int castle_id, int index, int value)
 		case 1:
 			if (inter->enable_logs && gc->guild_id != value) {
 				int gid = (value) ? value : gc->guild_id;
-				struct guild *g = idb_get(inter_guild->guild_db, gid);
+				struct guild *g = (struct guild *)idb_get(inter_guild->guild_db, gid);
 				inter->log("guild %s (id=%d) %s castle id=%d\n",
 				          (g) ? g->name : "??", gid, (value) ? "occupy" : "abandon", castle_id);
 			}

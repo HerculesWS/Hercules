@@ -254,7 +254,6 @@ static void char_set_char_charselect(int account_id)
 static void char_set_char_online(bool is_initializing, int char_id, int account_id, bool standalone)
 {
 	struct online_char_data* character;
-	struct mmo_charstatus *cp;
 
 	//Update DB
 	if( SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `online`='1' WHERE `char_id`='%d' LIMIT 1", char_db, char_id) )
@@ -280,7 +279,7 @@ static void char_set_char_online(bool is_initializing, int char_id, int account_
 	}
 
 	//Set char online in guild cache. If char is in memory, use the guild id on it, otherwise seek it.
-	cp = (struct mmo_charstatus*)idb_get(chr->char_db_,char_id);
+	struct mmo_charstatus *cp = (struct mmo_charstatus *)idb_get(chr->char_db_, char_id);
 	inter_guild->CharOnline(char_id, cp?cp->guild_id:-1);
 
 	//Notify login server
@@ -299,9 +298,9 @@ static void char_set_char_offline(int char_id, int account_id)
 	}
 	else
 	{
-		struct mmo_charstatus *cp = (struct mmo_charstatus*) idb_get(chr->char_db_, char_id);
+		struct mmo_charstatus *cp = (struct mmo_charstatus *)idb_get(chr->char_db_, char_id);
 		/* Character Achievements */
-		struct char_achievements *c_ach = (struct char_achievements *) idb_get(inter_achievement->char_achievements, char_id);
+		struct char_achievements *c_ach = (struct char_achievements *)idb_get(inter_achievement->char_achievements, char_id);
 
 		inter_guild->CharOffline(char_id, cp?cp->guild_id:-1);
 
@@ -316,7 +315,7 @@ static void char_set_char_offline(int char_id, int account_id)
 			Sql_ShowDebug(inter->sql_handle);
 	}
 
-	if ((character = (struct online_char_data*)idb_get(chr->online_char_db, account_id)) != NULL) {
+	if ((character = (struct online_char_data *)idb_get(chr->online_char_db, account_id)) != NULL) {
 		//We don't free yet to avoid aCalloc/aFree spamming during char change. [Skotlex]
 		if (character->mapserver_connection == OCS_CONNECTED) {
 			if (chr->map_server.users > 0) // Prevent this value from going negative.
@@ -2370,7 +2369,7 @@ static void char_auth_ok(int fd, struct char_session_data *sd)
 
 	nullpo_retv(sd);
 
-	if( (character = (struct online_char_data*)idb_get(chr->online_char_db, sd->account_id)) != NULL ) {
+	if( (character = (struct online_char_data *)idb_get(chr->online_char_db, sd->account_id)) != NULL ) {
 		// check if character is not online already. [Skotlex]
 		if (character->mapserver_connection == OCS_CONNECTED) {
 			//Character already online. KICK KICK KICK
@@ -2627,7 +2626,6 @@ static int char_parse_fromlogin_changesex_reply(int fd)
 {
 	int char_id = 0, class_ = 0, guild_id = 0;
 	int i;
-	struct char_auth_node *node;
 	struct SqlStmt *stmt;
 
 	int acc = RFIFOL(fd,2);
@@ -2641,7 +2639,7 @@ static int char_parse_fromlogin_changesex_reply(int fd)
 		return 1;
 	}
 
-	node = (struct char_auth_node*)idb_get(auth_db, acc);
+	struct char_auth_node *node = (struct char_auth_node *)idb_get(auth_db, acc);
 	if (node != NULL)
 		node->sex = sex;
 
@@ -2688,7 +2686,7 @@ static void char_parse_fromlogin_ban(int fd)
 static void char_parse_fromlogin_kick(int fd)
 {
 	int aid = RFIFOL(fd,2);
-	struct online_char_data* character = (struct online_char_data*)idb_get(chr->online_char_db, aid);
+	struct online_char_data *character = (struct online_char_data *)idb_get(chr->online_char_db, aid);
 	RFIFOSKIP(fd,6);
 	if (character != NULL) {
 		// account is already marked as online!
@@ -3270,7 +3268,7 @@ static void char_parse_frommap_save_character(int fd)
 	}
 	//Check account only if this ain't final save. Final-save goes through because of the char-map reconnect
 	if (RFIFOB(fd,12)
-	 || ( (character = (struct online_char_data*)idb_get(chr->online_char_db, aid)) != NULL
+	 || ( (character = (struct online_char_data *)idb_get(chr->online_char_db, aid)) != NULL
 	    && character->char_id == cid)
 	) {
 		struct mmo_charstatus char_dat;
@@ -3782,8 +3780,6 @@ static void char_map_auth_failed(int fd, int account_id, int char_id, int login_
 static void char_parse_frommap_auth_request(int fd)
 {
 	struct mmo_charstatus char_dat;
-	struct char_auth_node* node;
-	struct mmo_charstatus* cd;
 
 	const struct PACKET_MAPCHAR_AUTH_REQ *p = RP2PTR(struct PACKET_MAPCHAR_AUTH_REQ *, fd);
 
@@ -3796,12 +3792,12 @@ static void char_parse_frommap_auth_request(int fd)
 
 	RFIFOSKIP(fd, sizeof(struct PACKET_MAPCHAR_AUTH_REQ));
 
-	node = (struct char_auth_node*)idb_get(auth_db, account_id);
-	cd = (struct mmo_charstatus*)uidb_get(chr->char_db_,char_id);
+	struct char_auth_node *node = (struct char_auth_node *)idb_get(auth_db, account_id);
+	struct mmo_charstatus *cd = (struct mmo_charstatus *)uidb_get(chr->char_db_,char_id);
 
 	if( cd == NULL ) { //Really shouldn't happen.
 		chr->mmo_char_fromsql(char_id, &char_dat, true);
-		cd = (struct mmo_charstatus*)uidb_get(chr->char_db_,char_id);
+		cd = (struct mmo_charstatus *)uidb_get(chr->char_db_,char_id);
 	}
 
 	if (core->runflag == CHARSERVER_ST_RUNNING && cd != NULL && standalone != 0) {
@@ -4401,7 +4397,6 @@ static void char_parse_char_connect(int fd, struct char_session_data *sd, uint32
 	int32 login_id1 = RFIFOSL(fd,6);
 	int32 login_id2 = RFIFOSL(fd,10);
 	int sex = RFIFOB(fd,16);
-	struct char_auth_node* node;
 
 	RFIFOSKIP(fd,17);
 
@@ -4432,7 +4427,7 @@ static void char_parse_char_connect(int fd, struct char_session_data *sd, uint32
 	}
 
 	// search authentication
-	node = (struct char_auth_node*)idb_get(auth_db, account_id);
+	struct char_auth_node *node = (struct char_auth_node *)idb_get(auth_db, account_id);
 	if( node != NULL &&
 		node->account_id == account_id &&
 		node->login_id1  == login_id1 &&
@@ -4534,7 +4529,6 @@ static void char_parse_char_select(int fd, struct char_session_data *sd, uint32 
 static void char_parse_char_select(int fd, struct char_session_data *sd, uint32 ipl)
 {
 	struct mmo_charstatus char_dat;
-	struct mmo_charstatus *cd;
 	struct char_auth_node* node;
 	char* data;
 	int char_id;
@@ -4546,8 +4540,7 @@ static void char_parse_char_select(int fd, struct char_session_data *sd, uint32 
 
 #if PACKETVER >= 20110309
 	if( pincode->enabled ){ // hack check
-		struct online_char_data* character;
-		character = (struct online_char_data*)idb_get(chr->online_char_db, sd->account_id);
+		struct online_char_data* character = (struct online_char_data *)idb_get(chr->online_char_db, sd->account_id);
 		if( character && character->pincode_enable == -1){
 			chr->auth_error(fd, 0);
 			return;
@@ -4593,7 +4586,7 @@ static void char_parse_char_select(int fd, struct char_session_data *sd, uint32 
 	}
 
 	//Have to switch over to the DB instance otherwise data won't propagate [Kevin]
-	cd = (struct mmo_charstatus *)idb_get(chr->char_db_, char_id);
+	struct mmo_charstatus *cd = (struct mmo_charstatus *)idb_get(chr->char_db_, char_id);
 	nullpo_retv(cd);
 	if( cd->sex == 99 )
 		cd->sex = sd->sex;
@@ -4776,8 +4769,7 @@ static void char_parse_char_delete_char(int fd, struct char_session_data *sd, un
 
 #if PACKETVER >= 20110309
 	if (pincode->enabled) { // hack check
-		struct online_char_data* character;
-		character = (struct online_char_data*)idb_get(chr->online_char_db, sd->account_id);
+		struct online_char_data *character = (struct online_char_data *)idb_get(chr->online_char_db, sd->account_id);
 		if( character && character->pincode_enable == -1 ){
 			chr->auth_error(fd, 0);
 			RFIFOSKIP(fd,( cmd == 0x68) ? 46 : 56);
@@ -5076,7 +5068,7 @@ static int char_parse_char(int fd)
 	{
 		if( sd != NULL && sd->auth ) {
 			// already authed client
-			struct online_char_data* data = (struct online_char_data*)idb_get(chr->online_char_db, sd->account_id);
+			struct online_char_data *data = (struct online_char_data *)idb_get(chr->online_char_db, sd->account_id);
 			if( data != NULL && data->fd == fd)
 				data->fd = -1;
 			if (data == NULL || data->mapserver_connection == OCS_NOT_CONNECTED) //If it is not in any server, send it offline. [Skotlex]
@@ -5369,8 +5361,8 @@ static int char_check_connect_login_server(int tid, int64 tick, int id, intptr_t
 //------------------------------------------------
 static int char_waiting_disconnect(int tid, int64 tick, int id, intptr_t data)
 {
-	struct online_char_data* character;
-	if ((character = (struct online_char_data*)idb_get(chr->online_char_db, id)) != NULL && character->waiting_disconnect == tid) {
+	struct online_char_data *character;
+	if ((character = (struct online_char_data *)idb_get(chr->online_char_db, id)) != NULL && character->waiting_disconnect == tid) {
 		//Mark it offline due to timeout.
 		character->waiting_disconnect = INVALID_TIMER;
 		chr->set_char_offline(character->char_id, character->account_id);

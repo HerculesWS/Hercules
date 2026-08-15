@@ -83,7 +83,7 @@ static struct channel_data *channel_search(const char *name, struct map_session_
 		return sd->guild->channel;
 	}
 
-	return strdb_get(channel->db, realname);
+	return (struct channel_data *)strdb_get(channel->db, realname);
 }
 
 /**

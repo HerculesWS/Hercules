@@ -87,7 +87,7 @@ static void chrif_check_shutdown(void)
 
 static struct auth_node* chrif_search(int account_id)
 {
-	return (struct auth_node*)idb_get(chrif->auth_db, account_id);
+	return (struct auth_node *)idb_get(chrif->auth_db, account_id);
 }
 
 static struct auth_node* chrif_auth_check(int account_id, int char_id, enum sd_state state)

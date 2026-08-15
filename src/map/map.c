@@ -1558,7 +1558,7 @@ static int map_get_new_object_id(void)
  *------------------------------------------*/
 static int map_clearflooritem_timer(int tid, int64 tick, int id, intptr_t data)
 {
-	struct block_list *bl = idb_get(map->id_db, id);
+	struct block_list *bl = (struct block_list *)idb_get(map->id_db, id);
 	struct flooritem_data *fitem = BL_CAST(BL_ITEM, bl);
 
 	if (fitem == NULL || fitem->cleartimer != tid) {
@@ -2161,12 +2161,10 @@ static int map_quit(struct map_session_data *sd)
  */
 static struct map_session_data *map_id2sd(int id)
 {
-	struct block_list *bl = NULL;
 	if (id <= 0)
 		return NULL;
 
-	bl = idb_get(map->pc_db,id);
-
+	struct block_list *bl = (struct block_list *)idb_get(map->pc_db, id);
 	if (bl)
 		Assert_retr(NULL, bl->type == BL_PC);
 	return BL_UCAST(BL_PC, bl);
@@ -2198,12 +2196,10 @@ static struct npc_data *map_id2nd(int id)
  */
 static struct mob_data *map_id2md(int id)
 {
-	struct block_list *bl = NULL;
 	if (id <= 0)
 		return NULL;
 
-	bl = idb_get(map->mobid_db,id);
-
+	struct block_list *bl = (struct block_list *)idb_get(map->mobid_db, id);
 	if (bl)
 		Assert_retr(NULL, bl->type == BL_MOB);
 	return BL_UCAST(BL_MOB, bl);
@@ -2318,7 +2314,7 @@ static struct elemental_data *map_id2ed(int id)
  */
 static struct block_list *map_id2bl(int id)
 {
-	return idb_get(map->id_db, id);
+	return (struct block_list *)idb_get(map->id_db, id);
 }
 
 /**
@@ -2354,7 +2350,7 @@ static const char *map_charid2nick(int charid)
 /// Returns the struct map_session_data of the charid or NULL if the char is not online.
 static struct map_session_data *map_charid2sd(int charid)
 {
-	struct block_list *bl = idb_get(map->charid_db, charid);
+	struct block_list *bl = (struct block_list *)idb_get(map->charid_db, charid);
 	if (bl)
 		Assert_retr(NULL, bl->type == BL_PC);
 	return BL_UCAST(BL_PC, bl);
@@ -2431,10 +2427,9 @@ static struct mob_data *map_getmob_boss(int16 m)
 
 static struct mob_data *map_id2boss(int id)
 {
-	struct block_list *bl = NULL;
 	if (id <= 0)
 		return NULL;
-	bl = idb_get(map->bossid_db,id);
+	struct block_list *bl = (struct block_list *)idb_get(map->bossid_db, id);
 	if (bl)
 		Assert_retr(NULL, bl->type == BL_MOB);
 	return BL_UCAST(BL_MOB, bl);
@@ -3373,7 +3368,7 @@ static bool map_iwall_set(int16 m, int16 x, int16 y, int size, int8 dir, bool sh
 	if( size < 1 || !wall_name )
 		return false;
 
-	if( (iwall = (struct iwall_data *)strdb_get(map->iwall_db, wall_name)) != NULL )
+	if ((iwall = (struct iwall_data *)strdb_get(map->iwall_db, wall_name)) != NULL)
 		return false; // Already Exists
 
 	if (map->getcell(m, NULL, x, y, CELL_CHKNOREACH))
@@ -3438,7 +3433,7 @@ static bool map_iwall_remove(const char *wall_name)
 	struct iwall_data *iwall;
 	int16 i, x1, y1;
 
-	if( (iwall = (struct iwall_data *)strdb_get(map->iwall_db, wall_name)) == NULL )
+	if ((iwall = (struct iwall_data *)strdb_get(map->iwall_db, wall_name)) == NULL)
 		return false;
 
 	for( i = 0; i < iwall->size; i++ ) {
@@ -4746,7 +4741,7 @@ static struct map_zone_data *map_merge_zone(struct map_zone_data *main, struct m
 		safestrncpy(newzone + len, main->name, len + 12);
 	}
 
-	if( (zone = strdb_get(map->zone_db, newzone)) )
+	if ((zone = (struct map_zone_data *)strdb_get(map->zone_db, newzone)) != NULL)
 		return zone;/* this zone has already been merged */
 
 	CREATE(zone, struct map_zone_data, 1);
@@ -6219,7 +6214,7 @@ static void read_map_zone_db(void)
 				name = libconfig->setting_get_string_elem(inherit_tree, h);
 				libconfig->setting_lookup_string(zone_e, "name", &zonename);/* will succeed for we validated it earlier */
 
-				if( !(izone = strdb_get(map->zone_db, name)) ) {
+				if ((izone = (struct map_zone_data *)strdb_get(map->zone_db, name)) == NULL) {
 					ShowError("map_zone_db: Unknown zone '%s' being inherit by zone '%s', skipping...\n",name,zonename);
 					continue;
 				}
@@ -6229,7 +6224,7 @@ static void read_map_zone_db(void)
 				} else if( strncmpi(zonename,MAP_ZONE_PK_NAME,MAP_ZONE_NAME_LENGTH) == 0 ) {
 					zone = &map->zone_pk;
 				} else
-					zone = strdb_get(map->zone_db, zonename);/* will succeed for we just put it in here */
+					zone = (struct map_zone_data *)strdb_get(map->zone_db, zonename);/* will succeed for we just put it in here */
 
 				disabled_skills_count_i = izone->disabled_skills_count;
 				disabled_items_count_i = izone->disabled_items_count;
@@ -6363,13 +6358,13 @@ static void read_map_zone_db(void)
 		ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' zones in '"CL_WHITE"%s"CL_RESET"'.\n", zone_count, config_filename);
 
 		/* post-load processing */
-		if( (zone = strdb_get(map->zone_db, MAP_ZONE_PVP_NAME)) )
+		if ((zone = (struct map_zone_data *)strdb_get(map->zone_db, MAP_ZONE_PVP_NAME)) != NULL)
 			zone->merge_type = MZMT_MERGEABLE;
-		if( (zone = strdb_get(map->zone_db, MAP_ZONE_GVG_NAME)) )
+		if ((zone = (struct map_zone_data *)strdb_get(map->zone_db, MAP_ZONE_GVG_NAME)) != NULL)
 			zone->merge_type = MZMT_MERGEABLE;
-		if( (zone = strdb_get(map->zone_db, MAP_ZONE_BG_NAME)) )
+		if ((zone = (struct map_zone_data *)strdb_get(map->zone_db, MAP_ZONE_BG_NAME)) != NULL)
 			zone->merge_type = MZMT_MERGEABLE;
-		if ((zone = strdb_get(map->zone_db, MAP_ZONE_CVC_NAME)))
+		if ((zone = (struct map_zone_data *)strdb_get(map->zone_db, MAP_ZONE_CVC_NAME)) != NULL)
 		  zone->merge_type = MZMT_MERGEABLE;
 	}
 	/* not supposed to go in here but in skill_final whatever */

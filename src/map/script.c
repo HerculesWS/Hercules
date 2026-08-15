@@ -1629,7 +1629,7 @@ static void script_add_translatable_string(const struct script_string_buf *strin
 
 	nullpo_retv(string);
 	if (script->syntax.translation_db == NULL
-	 || (st = strdb_get(script->syntax.translation_db, VECTOR_DATA(*string))) == NULL) {
+	 || (st = (struct string_translation *)strdb_get(script->syntax.translation_db, VECTOR_DATA(*string))) == NULL) {
 		script->addc(C_STR);
 
 		VECTOR_ENSURE(script->buf, VECTOR_LENGTH(*string), SCRIPT_BLOCK_SIZE);
@@ -2943,7 +2943,7 @@ static struct script_code *parse_script(const char *src, const char *file, int l
 		if( !script->translation_db )
 			script->load_translations();
 		if( script->translation_db )
-			script->syntax.translation_db = strdb_get(script->translation_db, script->parser_current_npc_name);
+			script->syntax.translation_db = (struct DBMap *)strdb_get(script->translation_db, script->parser_current_npc_name);
 	}
 
 	VECTOR_TRUNCATE(script->buf);
@@ -3218,17 +3218,16 @@ static struct map_session_data *script_nick2sd(struct script_state *st, const ch
 static char *get_val_npcscope_str(struct script_state *st, struct reg_db *n, struct script_data *data)
 {
 	if (n)
-		return (char*)i64db_get(n->vars, reference_getuid(data));
+		return (char *)i64db_get(n->vars, reference_getuid(data));
 	else
 		return NULL;
 }
 
 static char *get_val_pc_ref_str(struct script_state *st, struct reg_db *n, struct script_data *data)
 {
-	struct script_reg_str *p = NULL;
 	nullpo_retr(NULL, n);
 
-	p = i64db_get(n->vars, reference_getuid(data));
+	struct script_reg_str *p = (struct script_reg_str *)i64db_get(n->vars, reference_getuid(data));
 	return p ? p->value : NULL;
 }
 
@@ -3236,7 +3235,7 @@ static char *get_val_instance_str(struct script_state *st, const char *name, str
 {
 	nullpo_retr(NULL, st);
 	if (st->instance_id >= 0) {
-		return (char*)i64db_get(instance->list[st->instance_id].regs.vars, reference_getuid(data));
+		return (char *)i64db_get(instance->list[st->instance_id].regs.vars, reference_getuid(data));
 	} else {
 		ShowWarning("script_get_val: cannot access instance variable '%s', defaulting to \"\"\n", name);
 		return NULL;
@@ -3253,10 +3252,9 @@ static int get_val_npcscope_num(struct script_state *st, struct reg_db *n, struc
 
 static int get_val_pc_ref_num(struct script_state *st, struct reg_db *n, struct script_data *data)
 {
-	struct script_reg_num *p = NULL;
 	nullpo_retr(0, n);
 
-	p = i64db_get(n->vars, reference_getuid(data));
+	struct script_reg_num *p = (struct script_reg_num *)i64db_get(n->vars, reference_getuid(data));
 	return p ? p->value : 0;
 }
 
@@ -3483,7 +3481,7 @@ static void script_array_ensure_zero(struct script_state *st, struct map_session
 	}
 
 	if (src && src->arrays) {
-		struct script_array *sa = idb_get(src->arrays, script_getvarid(uid));
+		struct script_array *sa = (struct script_array *)idb_get(src->arrays, script_getvarid(uid));
 		if (sa) {
 			unsigned int i;
 
@@ -3511,7 +3509,7 @@ static unsigned int script_array_size(struct script_state *st, struct map_sessio
 	struct reg_db *src = script->array_src(st, sd, name, ref);
 
 	if( src && src->arrays )
-		sa = idb_get(src->arrays, script->search_str(name));
+		sa = (struct script_array *)idb_get(src->arrays, script->search_str(name));
 
 	return sa ? sa->size : 0;
 }
@@ -3528,7 +3526,7 @@ static unsigned int script_array_highest_key(struct script_state *st, struct map
 
 		script->array_ensure_zero(st,sd,reference_uid(key, 0),ref);
 
-		if( ( sa = idb_get(src->arrays, key) ) ) {
+		if ((sa = (struct script_array *)idb_get(src->arrays, key)) != NULL) {
 			unsigned int i, highest_key = 0;
 
 			for(i = 0; i < sa->size; i++) {
@@ -3663,7 +3661,7 @@ static void script_array_update(struct reg_db *src, int64 num, bool empty)
 	if (!src->arrays) {
 		src->arrays = idb_alloc(DB_OPT_BASE);
 	} else {
-		sa = idb_get(src->arrays, id);
+		sa = (struct script_array *)idb_get(src->arrays, id);
 	}
 
 	if( sa ) {
@@ -5024,7 +5022,7 @@ static void script_stop_instances(struct script_code *code)
  *------------------------------------------*/
 static int run_script_timer(int tid, int64 tick, int id, intptr_t data)
 {
-	struct script_state *st     = idb_get(script->st_db,(int)data);
+	struct script_state *st = (struct script_state *)idb_get(script->st_db, (int)data);
 	if( st ) {
 		struct map_session_data *sd = map->id2sd(st->rid);
 
@@ -5378,7 +5376,7 @@ static void script_run_autobonus(const char *autobonus, int id, int pos)
 
 static void script_add_autobonus(const char *autobonus)
 {
-	if( strdb_get(script->autobonus_db, autobonus) == NULL ) {
+	if (strdb_get(script->autobonus_db, autobonus) == NULL) {
 		struct script_code *scriptroot = script->parse(autobonus, "autobonus", 0, 0, NULL);
 
 		if( scriptroot )
@@ -5407,7 +5405,7 @@ static void script_cleararray_pc(struct map_session_data *sd, const char *varnam
 	if( value )
 		script->array_ensure_zero(NULL,sd,reference_uid(key,0),NULL);
 
-	if( !(sa = idb_get(src->arrays, key)) ) /* non-existent array, nothing to empty */
+	if ((sa = (struct script_array *)idb_get(src->arrays, key)) == NULL) /* non-existent array, nothing to empty */
 		return;
 
 	size = sa->size;
@@ -5871,12 +5869,12 @@ static bool script_load_translation_addstring(const char *file, uint8 lang_id, c
 		struct string_translation *st = NULL;
 		struct DBMap *string_db;
 
-		if ((string_db = strdb_get(script->translation_db, msgctxt)) == NULL) {
+		if ((string_db = (struct DBMap *)strdb_get(script->translation_db, msgctxt)) == NULL) {
 			string_db = strdb_alloc(DB_OPT_DUP_KEY, 0);
 			strdb_put(script->translation_db, msgctxt, string_db);
 		}
 
-		if ((st = strdb_get(string_db, VECTOR_DATA(*msgid))) == NULL) {
+		if ((st = (struct string_translation *)strdb_get(string_db, VECTOR_DATA(*msgid))) == NULL) {
 			CREATE(st, struct string_translation, 1);
 			st->string_id = script->string_dup(VECTOR_DATA(*msgid));
 			strdb_put(string_db, VECTOR_DATA(*msgid), st);
@@ -7086,13 +7084,11 @@ static BUILDIN(callfunc)
 {
 	int i, j;
 	struct script_retinfo* ri;
-	struct script_code* scr;
 	const char* str = script_getstr(st,2);
 	struct reg_db *ref = NULL;
 
-	scr = (struct script_code*)strdb_get(script->userfunc_db, str);
-	if( !scr )
-	{
+	struct script_code *scr = (struct script_code *)strdb_get(script->userfunc_db, str);
+	if (scr == NULL) {
 		ShowError("script:callfunc: function not found! [%s]\n", str);
 		st->state = END;
 		return false;
@@ -8326,7 +8322,7 @@ static BUILDIN(deletearray)
 
 	script->array_ensure_zero(st,NULL,data->u.num,reference_getref(data));
 
-	if ( !(sa = idb_get(src->arrays, id)) ) { /* non-existent array, nothing to empty */
+	if ((sa = (struct script_array *)idb_get(src->arrays, id)) == NULL) { /* non-existent array, nothing to empty */
 		return true;// not a variable
 	}
 
@@ -15145,7 +15141,7 @@ static BUILDIN(pvpon)
 		return true;
 	}
 
-	map->zone_change2(m, strdb_get(map->zone_db, MAP_ZONE_PVP_NAME));
+	map->zone_change2(m, (struct map_zone_data *)strdb_get(map->zone_db, MAP_ZONE_PVP_NAME));
 	map->list[m].flag.pvp = 1;
 	clif->map_property_mapall(m, MAPPROPERTY_FREEPVPZONE);
 	bl.type = BL_NUL;
@@ -15231,7 +15227,7 @@ static BUILDIN(gvgon)
 			return true;
 		}
 
-		map->zone_change2(m, strdb_get(map->zone_db, MAP_ZONE_GVG_NAME));
+		map->zone_change2(m, (struct map_zone_data *)strdb_get(map->zone_db, MAP_ZONE_GVG_NAME));
 		map->list[m].flag.gvg = 1;
 		clif->map_property_mapall(m, MAPPROPERTY_AGITZONE);
 		bl.type = BL_NUL;
@@ -28621,7 +28617,7 @@ static BUILDIN(calldynamicnpc)
 	npc->duplicate_sub(nd_target, snd, xs, ys, NPO_NONE);
 	char evname[EVENT_NAME_LENGTH];
 	snprintf(evname, EVENT_NAME_LENGTH, "%s::OnDynamicNpcInit", nd_target->exname);
-	struct event_data *ev = strdb_get(npc->ev_db, evname);
+	struct event_data *ev = (struct event_data *)strdb_get(npc->ev_db, evname);
 	if (ev != NULL)
 		script->run_npc(ev->nd->u.scr.script, ev->pos, sd->bl.id, ev->nd->bl.id);
 	script_pushint(st, 1);
