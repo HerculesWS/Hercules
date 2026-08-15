@@ -1905,7 +1905,7 @@ static void do_init_achievement(bool minimal)
 static int achievement_db_finalize(union DBKey key, struct DBData *data, va_list args)
 {
 	int i = 0;
-	struct achievement_data *ad = DB->data2ptr(data);
+	struct achievement_data *ad = (struct achievement_data *)DB->data2ptr(data);
 
 	for(i = 0; i < VECTOR_LENGTH(ad->objective); i++)
 		VECTOR_CLEAR(VECTOR_INDEX(ad->objective, i).jobid);

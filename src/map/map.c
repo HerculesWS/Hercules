@@ -1928,7 +1928,9 @@ static void map_delnickdb(int charid, const char *name)
 	struct charid_request* req;
 	struct DBData data;
 
-	if (!map->nick_db->remove(map->nick_db, DB->i2key(charid), &data) || (p = DB->data2ptr(&data)) == NULL)
+	if (!map->nick_db->remove(map->nick_db, DB->i2key(charid), &data))
+		return;
+	if ((p = (struct charid2nick *)DB->data2ptr(&data)) == NULL)
 		return;
 
 	while (p->requests) {
@@ -6416,7 +6418,7 @@ static bool map_remove_questinfo(int m, struct npc_data *nd)
  */
 static int nick_db_final(union DBKey key, struct DBData *data, va_list args)
 {
-	struct charid2nick* p = DB->data2ptr(data);
+	struct charid2nick *p = (struct charid2nick *)DB->data2ptr(data);
 	struct charid_request* req;
 
 	if( p == NULL )
@@ -6471,7 +6473,7 @@ static int cleanup_sub(struct block_list *bl, va_list ap)
  */
 static int cleanup_db_sub(union DBKey key, struct DBData *data, va_list va)
 {
-	return map->cleanup_sub(DB->data2ptr(data), va);
+	return map->cleanup_sub((struct block_list *)DB->data2ptr(data), va);
 }
 
 static void map_lock_check(const char *file, const char *func, int line, int lock_count)

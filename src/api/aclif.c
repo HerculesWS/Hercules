@@ -251,7 +251,7 @@ static bool aclif_socket_secure_check(int fd)
 
 static int aclif_post_headers_destroy_sub(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct MimePart *part = DB->data2ptr(data);
+	struct MimePart *part = (struct MimePart *)DB->data2ptr(data);
 	if (part && part->data) {
 		aFree(part->data);
 		part->data = NULL;

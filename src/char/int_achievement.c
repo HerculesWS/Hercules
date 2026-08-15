@@ -217,7 +217,7 @@ static struct DBData inter_achievement_ensure_char_achievements(union DBKey key,
  */
 static int inter_achievement_char_achievements_clear(union DBKey key, struct DBData *data, va_list args)
 {
-	struct char_achievements *ca = DB->data2ptr(data);
+	struct char_achievements *ca = (struct char_achievements *)DB->data2ptr(data);
 
 	VECTOR_CLEAR(*ca);
 

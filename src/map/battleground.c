@@ -300,7 +300,7 @@ static bool bg_send_message(struct map_session_data *sd, const char *mes)
  */
 static int bg_send_xy_timer_sub(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct battleground_data *bgd = DB->data2ptr(data);
+	struct battleground_data *bgd = (struct battleground_data *)DB->data2ptr(data);
 	struct map_session_data *sd;
 	int i;
 	nullpo_ret(bgd);
@@ -973,7 +973,7 @@ static void do_init_battleground(bool minimal)
  */
 static int bg_team_db_final(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct battleground_data* bgd = DB->data2ptr(data);
+	struct battleground_data *bgd = (struct battleground_data *)DB->data2ptr(data);
 
 	HPM->data_store_destroy(&bgd->hdata);
 

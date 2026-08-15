@@ -604,7 +604,7 @@ static int mapreg_destroy_reg(union DBKey key, struct DBData *data, va_list ap)
 	if (data->type != DB_DATA_PTR) // Sanity check
 		return 1;
 
-	struct mapreg_save *var = DB->data2ptr(data);
+	struct mapreg_save *var = (struct mapreg_save *)DB->data2ptr(data);
 
 	if (var == NULL)
 		return 1;

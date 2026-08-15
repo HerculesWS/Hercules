@@ -347,7 +347,7 @@ static void char_set_char_offline(int char_id, int account_id)
  */
 static int char_db_setoffline(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct online_char_data* character = (struct online_char_data*)DB->data2ptr(data);
+	struct online_char_data *character = (struct online_char_data *)DB->data2ptr(data);
 	nullpo_ret(character);
 	if (character->mapserver_connection == OCS_CONNECTED)
 		character->mapserver_connection = OCS_UNKNOWN; //In some map server that we aren't connected to.
@@ -359,7 +359,7 @@ static int char_db_setoffline(union DBKey key, struct DBData *data, va_list ap)
  */
 static int char_db_kickoffline(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct online_char_data* character = (struct online_char_data*)DB->data2ptr(data);
+	struct online_char_data *character = (struct online_char_data *)DB->data2ptr(data);
 	bool for_shutdown = (bool)va_arg(ap, int);
 	nullpo_ret(character);
 
@@ -5304,7 +5304,7 @@ static int char_broadcast_user_count(int tid, int64 tick, int id, intptr_t data)
  */
 static int char_send_accounts_tologin_sub(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct online_char_data* character = DB->data2ptr(data);
+	struct online_char_data *character = (struct online_char_data *)DB->data2ptr(data);
 	int* i = va_arg(ap, int*);
 	int* accounts = va_arg(ap, int *);
 
@@ -5383,7 +5383,7 @@ static int char_waiting_disconnect(int tid, int64 tick, int id, intptr_t data)
  */
 static int char_online_data_cleanup_sub(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct online_char_data *character= DB->data2ptr(data);
+	struct online_char_data *character = (struct online_char_data *)DB->data2ptr(data);
 	nullpo_ret(character);
 	if (character->fd != -1)
 		return 0; //Character still connected
@@ -6101,7 +6101,7 @@ static void char_online_char_destroy(struct online_char_data *character)
 
 static int char_online_char_destroy_sub(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct online_char_data *character = DB->data2ptr(data);
+	struct online_char_data *character = (struct online_char_data *)DB->data2ptr(data);
 	nullpo_ret(character);
 	chr->online_char_destroy(character);
 	return 0;

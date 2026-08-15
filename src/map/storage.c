@@ -85,7 +85,7 @@ static void storage_sortitem(struct item *items, unsigned int size)
  */
 static int storage_reconnect_sub(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct guild_storage *stor = DB->data2ptr(data);
+	struct guild_storage *stor = (struct guild_storage *)DB->data2ptr(data);
 	nullpo_ret(stor);
 	if (stor->dirty && !stor->in_use) //Save closed storages.
 		gstorage->save(0, stor->guild_id,0);
@@ -1147,7 +1147,7 @@ static void do_init_gstorage(bool minimal)
  */
 static int gstorage_final_sub(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct guild_storage *gstor = DB->data2ptr(data);
+	struct guild_storage *gstor = (struct guild_storage *)DB->data2ptr(data);
 	if (gstor->items.data != NULL)
 		aFree(gstor->items.data);
 	return 0;

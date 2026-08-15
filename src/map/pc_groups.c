@@ -478,7 +478,7 @@ static void do_init_pc_groups(void)
  */
 static int group_db_clear_sub(union DBKey key, struct DBData *data, va_list args)
 {
-	GroupSettings *group = DB->data2ptr(data);
+	GroupSettings *group = (GroupSettings *)DB->data2ptr(data);
 	nullpo_ret(group);
 	if (group->name)
 		aFree(group->name);
