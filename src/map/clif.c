@@ -11709,7 +11709,7 @@ static void clif_parse_HotkeyRowShift1(int fd, struct map_session_data *sd) __at
 static void clif_parse_HotkeyRowShift1(int fd, struct map_session_data *sd)
 {
 #if PACKETVER_MAIN_NUM >= 20140129 || PACKETVER_RE_NUM >= 20140129 || defined(PACKETVER_ZERO)
-	const struct PACKET_CZ_SHORTCUTKEYBAR_ROTATE1 *p = RFIFOP(struct PACKET_CZ_SHORTCUTKEYBAR_ROTATE1 *, fd, 0);
+	const struct PACKET_CZ_SHORTCUTKEYBAR_ROTATE1 *p = RP2PTR(struct PACKET_CZ_SHORTCUTKEYBAR_ROTATE1 *, fd);
 	sd->status.hotkey_rowshift = p->rowshift;
 #endif
 }
@@ -11718,7 +11718,7 @@ static void clif_parse_HotkeyRowShift2(int fd, struct map_session_data *sd) __at
 static void clif_parse_HotkeyRowShift2(int fd, struct map_session_data *sd)
 {
 #if PACKETVER_MAIN_NUM >= 20190522 || PACKETVER_RE_NUM >= 20190508 || PACKETVER_ZERO_NUM >= 20190605
-	const struct PACKET_CZ_SHORTCUTKEYBAR_ROTATE2 *p = RFIFOP(struct PACKET_CZ_SHORTCUTKEYBAR_ROTATE2 *,fd, 0);
+	const struct PACKET_CZ_SHORTCUTKEYBAR_ROTATE2 *p = RP2PTR(struct PACKET_CZ_SHORTCUTKEYBAR_ROTATE2 *, fd);
 	if (p->tab == 0)
 		sd->status.hotkey_rowshift = p->rowshift;
 	else
@@ -11733,7 +11733,7 @@ static void clif_parse_Hotkey1(int fd, struct map_session_data *sd)
 {
 #ifdef HOTKEY_SAVING
 #if PACKETVER_MAIN_NUM >= 20070618 || defined(PACKETVER_RE) || defined(PACKETVER_ZERO) || PACKETVER_AD_NUM >= 20070618 || PACKETVER_SAK_NUM >= 20070618
-	const struct PACKET_CZ_SHORTCUT_KEY_CHANGE1 *p = RFIFOP(struct PACKET_CZ_SHORTCUT_KEY_CHANGE1 *, fd, 0);
+	const struct PACKET_CZ_SHORTCUT_KEY_CHANGE1 *p = RP2PTR(struct PACKET_CZ_SHORTCUT_KEY_CHANGE1 *, fd);
 	const unsigned short idx = p->index;
 	Assert_retv(idx < MAX_HOTKEYS);
 
@@ -11750,7 +11750,7 @@ static void clif_parse_Hotkey2(int fd, struct map_session_data *sd)
 {
 #ifdef HOTKEY_SAVING
 #if PACKETVER_MAIN_NUM >= 20190522 || PACKETVER_RE_NUM >= 20190508 || PACKETVER_ZERO_NUM >= 20190605
-	const struct PACKET_CZ_SHORTCUT_KEY_CHANGE2 *p = RFIFOP(struct PACKET_CZ_SHORTCUT_KEY_CHANGE2 *, fd, 0);
+	const struct PACKET_CZ_SHORTCUT_KEY_CHANGE2 *p = RP2PTR(struct PACKET_CZ_SHORTCUT_KEY_CHANGE2 *, fd);
 	const unsigned short idx = p->index + p->tab * MAX_HOTKEYS;
 	Assert_retv(idx < MAX_HOTKEYS_DB);
 
@@ -12748,7 +12748,7 @@ static void clif_parse_UnequipAllItems(int fd, struct map_session_data *sd)
 {
 #if PACKETVER_MAIN_NUM >= 20210818 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20210818
 	// commented because no fields in use
-	// const struct PACKET_CZ_REQ_TAKEOFF_EQUIP_ALL *p = RFIFOP(struct PACKET_CZ_REQ_TAKEOFF_EQUIP_ALL *, fd, 0);
+	// const struct PACKET_CZ_REQ_TAKEOFF_EQUIP_ALL *p = RP2PTR(struct PACKET_CZ_REQ_TAKEOFF_EQUIP_ALL *, fd);
 
 	if (pc_isvending(sd)) {
 		clif->unequipAllItemsAck(sd, TAKEOFF_EQUIP_ALL_FAILED);
@@ -12801,7 +12801,7 @@ static void clif_parse_NpcClicked(int fd, struct map_session_data *sd)
 {
 	struct block_list *bl;
 
-	const struct PACKET_CZ_CONTACTNPC *packet = RFIFOP(struct PACKET_CZ_CONTACTNPC *, fd, 0);
+	const struct PACKET_CZ_CONTACTNPC *packet = RP2PTR(struct PACKET_CZ_CONTACTNPC *, fd);
 
 	if( pc_isdead(sd) ) {
 		clif->clearunit_area(&sd->bl,CLR_DEAD);
@@ -12895,7 +12895,7 @@ static void clif_parse_NpcBuyListSend(int fd, struct map_session_data *sd)
 	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
 		return;
 
-	const struct PACKET_CZ_PC_PURCHASE_ITEMLIST *p = RFIFOP(struct PACKET_CZ_PC_PURCHASE_ITEMLIST *, fd, 0);
+	const struct PACKET_CZ_PC_PURCHASE_ITEMLIST *p = RP2PTR(struct PACKET_CZ_PC_PURCHASE_ITEMLIST *, fd);
 	int n = ((int)p->packetLength - sizeof(struct PACKET_CZ_PC_PURCHASE_ITEMLIST)) / sizeof(struct PACKET_CZ_PC_PURCHASE_ITEMLIST_sub);
 	int result;
 
@@ -13240,7 +13240,7 @@ static void clif_parse_PutItemToCart(int fd, struct map_session_data *sd)
 	if (!pc_iscarton(sd))
 		return;
 
-	const struct PACKET_CZ_MOVE_ITEM_FROM_BODY_TO_CART *p = RFIFOP(struct PACKET_CZ_MOVE_ITEM_FROM_BODY_TO_CART *, fd, 0);
+	const struct PACKET_CZ_MOVE_ITEM_FROM_BODY_TO_CART *p = RP2PTR(struct PACKET_CZ_MOVE_ITEM_FROM_BODY_TO_CART *, fd);
 	const int index = p->index - 2;
 	const int flag = pc->putitemtocart(sd, index, p->count);
 
@@ -13285,7 +13285,7 @@ static void clif_parse_reqGearOff(int fd, struct map_session_data *sd) __attribu
 static void clif_parse_reqGearOff(int fd, struct map_session_data *sd)
 {
 #if PACKETVER_MAIN_NUM >= 20190703 || PACKETVER_RE_NUM >= 20190703 || PACKETVER_ZERO_NUM >= 20190709
-	const struct PACKET_CZ_UNINSTALLATION *p = RFIFOP(struct PACKET_CZ_UNINSTALLATION *, fd, 0);
+	const struct PACKET_CZ_UNINSTALLATION *p = RP2PTR(struct PACKET_CZ_UNINSTALLATION *, fd);
 	switch (p->InstallationKind) {
 	case REMOVE_MOUNT_DRAGON:
 		if (pc_isridingdragon(sd))
@@ -13676,7 +13676,7 @@ static void clif_parse_startUseSkillToId(int fd, struct map_session_data *sd) __
 static void clif_parse_startUseSkillToId(int fd, struct map_session_data *sd)
 {
 #if PACKETVER_MAIN_NUM >= 20181002 || PACKETVER_RE_NUM >= 20181002 || PACKETVER_ZERO_NUM >= 20181010
-	const struct PACKET_CZ_USE_SKILL_START *p = RFIFOP(struct PACKET_CZ_USE_SKILL_START *, fd, 0);
+	const struct PACKET_CZ_USE_SKILL_START *p = RP2PTR(struct PACKET_CZ_USE_SKILL_START *, fd);
 	clif->useSkillToIdReal(fd, sd, p->skillId, p->skillLv, p->targetId, false);
 #endif
 }
@@ -13685,7 +13685,7 @@ static void clif_parse_stopUseSkillToId(int fd, struct map_session_data *sd) __a
 static void clif_parse_stopUseSkillToId(int fd, struct map_session_data *sd)
 {
 #if PACKETVER_MAIN_NUM >= 20181002 || PACKETVER_RE_NUM >= 20181002 || PACKETVER_ZERO_NUM >= 20181010
-	const struct PACKET_CZ_USE_SKILL_END *p = RFIFOP(struct PACKET_CZ_USE_SKILL_END *, fd, 0);
+	const struct PACKET_CZ_USE_SKILL_END *p = RP2PTR(struct PACKET_CZ_USE_SKILL_END *, fd);
 	if (p->skillId != GC_ROLLINGCUTTER) {
 		ShowWarning("Packet CZ_USE_SKILL_END usage for unknown skill: %d\n", p->skillId);
 	}
@@ -13879,7 +13879,7 @@ static void clif_parse_ProduceMix(int fd, struct map_session_data *sd) __attribu
 /// 018e <name id>.W { <material id>.W }*3
 static void clif_parse_ProduceMix(int fd, struct map_session_data *sd)
 {
-	const struct PACKET_CZ_REQMAKINGITEM *p = RFIFOP(struct PACKET_CZ_REQMAKINGITEM *, fd, 0);
+	const struct PACKET_CZ_REQMAKINGITEM *p = RP2PTR(struct PACKET_CZ_REQMAKINGITEM *, fd);
 
 	switch (sd->menuskill_id) {
 		case -1:
@@ -13915,7 +13915,7 @@ static void clif_parse_Cooking(int fd, struct map_session_data *sd) __attribute_
 ///     6 = GN_S_PHARMACY
 static void clif_parse_Cooking(int fd, struct map_session_data *sd)
 {
-	const struct PACKET_CZ_REQ_MAKINGITEM *p = RFIFOP(struct PACKET_CZ_REQ_MAKINGITEM *, fd, 0);
+	const struct PACKET_CZ_REQ_MAKINGITEM *p = RP2PTR(struct PACKET_CZ_REQ_MAKINGITEM *, fd);
 	int type = p->type;
 	int nameid = p->itemId;
 	int amount = sd->menuskill_val2 ? sd->menuskill_val2 : 1;
@@ -13939,7 +13939,7 @@ static void clif_parse_RepairItem1(int fd, struct map_session_data *sd) __attrib
 /// 01fd <index>.W <name id>.W <refine>.B <card1>.W <card2>.W <card3>.W <card4>.W
 static void clif_parse_RepairItem1(int fd, struct map_session_data *sd)
 {
-	const struct PACKET_CZ_REQ_ITEMREPAIR1 *p = RFIFOP(struct PACKET_CZ_REQ_ITEMREPAIR1 *, fd, 0);
+	const struct PACKET_CZ_REQ_ITEMREPAIR1 *p = RP2PTR(struct PACKET_CZ_REQ_ITEMREPAIR1 *, fd);
 
 	if (sd->menuskill_id != BS_REPAIRWEAPON)
 		return;
@@ -13960,7 +13960,7 @@ static void clif_parse_RepairItem2(int fd, struct map_session_data *sd) __attrib
 static void clif_parse_RepairItem2(int fd, struct map_session_data *sd)
 {
 #if PACKETVER >= 20191224
-	const struct PACKET_CZ_REQ_ITEMREPAIR2 *p = RFIFOP(struct PACKET_CZ_REQ_ITEMREPAIR2 *, fd, 0);
+	const struct PACKET_CZ_REQ_ITEMREPAIR2 *p = RP2PTR(struct PACKET_CZ_REQ_ITEMREPAIR2 *, fd);
 
 	if (sd->menuskill_id != BS_REPAIRWEAPON)
 		return;
@@ -14044,7 +14044,7 @@ static void clif_parse_NpcSelectMenuZero(int fd, struct map_session_data *sd)
 	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
 		return;
 
-	const struct PACKET_CZ_CHOOSE_MENU_ZERO *packet = RFIFOP(struct PACKET_CZ_CHOOSE_MENU_ZERO *, fd, 0);
+	const struct PACKET_CZ_CHOOSE_MENU_ZERO *packet = RP2PTR(struct PACKET_CZ_CHOOSE_MENU_ZERO *, fd);
 	int npc_id = packet->NpcID;
 	const uint8 select = packet->menuIndex;
 
@@ -15617,7 +15617,7 @@ static void clif_parse_GuildRequestEmblem1(int fd, struct map_session_data *sd) 
 /// 0151 <guild id>.L
 static void clif_parse_GuildRequestEmblem1(int fd, struct map_session_data *sd)
 {
-	const struct PACKET_CZ_REQ_GUILD_EMBLEM_IMG1 *p = RFIFOP(struct PACKET_CZ_REQ_GUILD_EMBLEM_IMG1 *, fd, 0);
+	const struct PACKET_CZ_REQ_GUILD_EMBLEM_IMG1 *p = RP2PTR(struct PACKET_CZ_REQ_GUILD_EMBLEM_IMG1 *, fd);
 	struct guild* g = guild->search(p->guild_id);
 	if (g != NULL)
 		clif->guild_emblem(sd, g);
@@ -15628,7 +15628,7 @@ static void clif_parse_GuildRequestEmblem2(int fd, struct map_session_data *sd) 
 static void clif_parse_GuildRequestEmblem2(int fd, struct map_session_data *sd)
 {
 #if PACKETVER_MAIN_NUM >= 20190227 || PACKETVER_RE_NUM >= 20190227 || PACKETVER_ZERO_NUM >= 20190313
-	const struct PACKET_CZ_REQ_GUILD_EMBLEM_IMG2 *p = RFIFOP(struct PACKET_CZ_REQ_GUILD_EMBLEM_IMG2 *, fd, 0);
+	const struct PACKET_CZ_REQ_GUILD_EMBLEM_IMG2 *p = RP2PTR(struct PACKET_CZ_REQ_GUILD_EMBLEM_IMG2 *, fd);
 	struct guild* g = guild->search(p->guild_id);
 	if (g != NULL)
 		clif->guild_emblem(sd, g);
@@ -15640,7 +15640,7 @@ static void clif_parse_GuildRequestEmblem3(int fd, struct map_session_data *sd) 
 static void clif_parse_GuildRequestEmblem3(int fd, struct map_session_data *sd)
 {
 #if PACKETVER >= 20190724
-	const struct PACKET_CZ_REQ_GUILD_EMBLEM_IMG3 *p = RFIFOP(struct PACKET_CZ_REQ_GUILD_EMBLEM_IMG3 *, fd, 0);
+	const struct PACKET_CZ_REQ_GUILD_EMBLEM_IMG3 *p = RP2PTR(struct PACKET_CZ_REQ_GUILD_EMBLEM_IMG3 *, fd);
 	struct guild* g = guild->search(p->guild_id);
 	if (g != NULL)
 		clif->guild_emblem(sd, g);
@@ -18695,7 +18695,7 @@ static void clif_parse_cashshop_buy(int fd, struct map_session_data *sd)
 		return;
 
 	int fail = 0;
-	const struct PACKET_CZ_PC_BUY_CASH_POINT_ITEM *p = RFIFOP(struct PACKET_CZ_PC_BUY_CASH_POINT_ITEM *, fd, 0);
+	const struct PACKET_CZ_PC_BUY_CASH_POINT_ITEM *p = RP2PTR(struct PACKET_CZ_PC_BUY_CASH_POINT_ITEM *, fd);
 
 	if (sd->state.trading || !sd->npc_shopid || pc_has_permission(sd,PC_PERM_DISABLE_STORE)) {
 		fail = 1;
@@ -18958,7 +18958,7 @@ static void clif_parse_PartyTick(int fd, struct map_session_data *sd) __attribut
 ///         1 = disabled
 static void clif_parse_PartyTick(int fd, struct map_session_data *sd)
 {
-	const struct PACKET_CZ_PARTY_CONFIG *const p = RFIFOP(struct PACKET_CZ_PARTY_CONFIG *, fd, 0);
+	const struct PACKET_CZ_PARTY_CONFIG *const p = RP2PTR(struct PACKET_CZ_PARTY_CONFIG *, fd);
 	const bool newAllowParty = p->refuseInvite ? true : false;
 	if (newAllowParty != sd->status.allow_party) {
 		sd->status.allow_party = newAllowParty;
@@ -20096,7 +20096,7 @@ static void clif_parse_ReqOpenBuyingStore(int fd, struct map_session_data *sd)
 	unsigned char result;
 	int zenylimit;
 	int count, packet_len;
-	const struct PACKET_CZ_REQ_OPEN_BUYING_STORE *p = RFIFOP(struct PACKET_CZ_REQ_OPEN_BUYING_STORE *, fd, 0);
+	const struct PACKET_CZ_REQ_OPEN_BUYING_STORE *p = RP2PTR(struct PACKET_CZ_REQ_OPEN_BUYING_STORE *, fd);
 
 	packet_len = p->packetLength;
 
@@ -20303,7 +20303,7 @@ static void clif_parse_ReqTradeBuyingStore(int fd, struct map_session_data *sd)
 	int account_id;
 	unsigned int buyer_id;
 	int count, packet_len;
-	const struct PACKET_CZ_REQ_TRADE_BUYING_STORE *p = RFIFOP(struct PACKET_CZ_REQ_TRADE_BUYING_STORE *, fd, 0);
+	const struct PACKET_CZ_REQ_TRADE_BUYING_STORE *p = RP2PTR(struct PACKET_CZ_REQ_TRADE_BUYING_STORE *, fd);
 	packet_len = p->packetLength;
 
 	if ((size_t)packet_len < sizeof(struct PACKET_CZ_REQ_TRADE_BUYING_STORE))
@@ -20440,7 +20440,7 @@ static void clif_parse_SearchStoreInfo(int fd, struct map_session_data *sd)
 	unsigned int min_price, max_price;
 	int packet_len, count, item_count, card_count;
 	int i;
-	const struct PACKET_CZ_SEARCH_STORE_INFO *p = RFIFOP(struct PACKET_CZ_SEARCH_STORE_INFO *, fd, 0);
+	const struct PACKET_CZ_SEARCH_STORE_INFO *p = RP2PTR(struct PACKET_CZ_SEARCH_STORE_INFO *, fd);
 	int32 *items_list;
 	int32 *cards_list;
 
@@ -20633,7 +20633,7 @@ static void clif_parse_SearchStoreInfoListItemClick(int fd, struct map_session_d
 	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
 		return;
 
-	const struct PACKET_CZ_SSILIST_ITEM_CLICK *p = RFIFOP(struct PACKET_CZ_SSILIST_ITEM_CLICK *, fd, 0);
+	const struct PACKET_CZ_SSILIST_ITEM_CLICK *p = RP2PTR(struct PACKET_CZ_SSILIST_ITEM_CLICK *, fd);
 	searchstore->click(sd, p->AID, p->storeId, p->itemId);
 }
 
@@ -21197,7 +21197,7 @@ static void clif_parse_cashShopOpen2(int fd, struct map_session_data *sd)
 	}
 
 #if PACKETVER >= 20191224
-	const struct PACKET_CZ_SE_CASHSHOP_OPEN2 *p = RFIFOP(struct PACKET_CZ_SE_CASHSHOP_OPEN2 *, fd, 0);
+	const struct PACKET_CZ_SE_CASHSHOP_OPEN2 *p = RP2PTR(struct PACKET_CZ_SE_CASHSHOP_OPEN2 *, fd);
 	clif->cashShopOpen(fd, sd, p->tab);
 #endif
 }
@@ -23208,7 +23208,7 @@ static void clif_parse_rodex_open_write_mail(int fd, struct map_session_data *sd
 	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
 		return;
 
-	const struct PACKET_CZ_REQ_OPEN_WRITE_MAIL *rPacket = RFIFOP(struct PACKET_CZ_REQ_OPEN_WRITE_MAIL *, fd, 0);
+	const struct PACKET_CZ_REQ_OPEN_WRITE_MAIL *rPacket = RP2PTR(struct PACKET_CZ_REQ_OPEN_WRITE_MAIL *, fd);
 	int8 result = (rodex->isenabled() && (sd->npc_id == 0 || sd->state.using_megaphone != 0)) ? 1 : 0;
 
 	if (result == 1)
@@ -23239,7 +23239,7 @@ static void clif_parse_rodex_add_item(int fd, struct map_session_data *sd)
 	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
 		return;
 
-	const struct PACKET_CZ_ADD_ITEM_TO_MAIL *rPacket = RFIFOP(struct PACKET_CZ_ADD_ITEM_TO_MAIL *, fd, 0);
+	const struct PACKET_CZ_ADD_ITEM_TO_MAIL *rPacket = RP2PTR(struct PACKET_CZ_ADD_ITEM_TO_MAIL *, fd);
 	int16 idx = rPacket->index - 2;
 
 	rodex->add_item(sd, idx, (int16)rPacket->count);
@@ -23301,7 +23301,7 @@ static void clif_parse_rodex_remove_item(int fd, struct map_session_data *sd)
 	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
 		return;
 
-	const struct PACKET_CZ_REQ_REMOVE_ITEM_MAIL *rPacket = RFIFOP(struct PACKET_CZ_REQ_REMOVE_ITEM_MAIL *, fd, 0);
+	const struct PACKET_CZ_REQ_REMOVE_ITEM_MAIL *rPacket = RP2PTR(struct PACKET_CZ_REQ_REMOVE_ITEM_MAIL *, fd);
 	int16 idx = rPacket->index - 2;
 
 	rodex->remove_item(sd, idx, (int16)rPacket->cnt);
@@ -23340,7 +23340,7 @@ static void clif_parse_rodex_checkname1(int fd, struct map_session_data *sd) __a
 static void clif_parse_rodex_checkname1(int fd, struct map_session_data *sd)
 {
 #if PACKETVER >= 20140423
-	const struct PACKET_CZ_CHECKNAME1 *rPacket = RFIFOP(struct PACKET_CZ_CHECKNAME1 *, fd, 0);
+	const struct PACKET_CZ_CHECKNAME1 *rPacket = RP2PTR(struct PACKET_CZ_CHECKNAME1 *, fd);
 	int char_id = 0, base_level = 0;
 	int class_ = 0;
 	char name[NAME_LENGTH];
@@ -23355,7 +23355,7 @@ static void clif_parse_rodex_checkname2(int fd, struct map_session_data *sd) __a
 static void clif_parse_rodex_checkname2(int fd, struct map_session_data *sd)
 {
 #if PACKETVER_MAIN_NUM >= 20201104 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20201118
-	const struct PACKET_CZ_CHECKNAME2 *rPacket = RFIFOP(struct PACKET_CZ_CHECKNAME2 *, fd, 0);
+	const struct PACKET_CZ_CHECKNAME2 *rPacket = RP2PTR(struct PACKET_CZ_CHECKNAME2 *, fd);
 	int char_id = 0, base_level = 0;
 	int class_ = 0;
 	char name[NAME_LENGTH];
@@ -23400,7 +23400,7 @@ static void clif_parse_rodex_send_mail(int fd, struct map_session_data *sd)
 	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
 		return;
 
-	const struct PACKET_CZ_SEND_MAIL *rPacket = RFIFOP(struct PACKET_CZ_SEND_MAIL *, fd, 0);
+	const struct PACKET_CZ_SEND_MAIL *rPacket = RP2PTR(struct PACKET_CZ_SEND_MAIL *, fd);
 	int8 result;
 
 	if (rPacket->TextcontentsLength + rPacket->Titlelength > rPacket->PacketLength - (int)sizeof(*rPacket)) {
@@ -23633,7 +23633,7 @@ static void clif_parse_rodex_next_maillist(int fd, struct map_session_data *sd)
 	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
 		return;
 
-	const struct PACKET_CZ_REQ_NEXT_MAIL_LIST *packet = RFIFOP(struct PACKET_CZ_REQ_NEXT_MAIL_LIST *, fd, 0);
+	const struct PACKET_CZ_REQ_NEXT_MAIL_LIST *packet = RP2PTR(struct PACKET_CZ_REQ_NEXT_MAIL_LIST *, fd);
 
 	rodex->next_page(sd, packet->opentype, packet->Lower_MailID);
 }
@@ -23644,7 +23644,7 @@ static void clif_parse_rodex_read_mail(int fd, struct map_session_data *sd)
 	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
 		return;
 
-	const struct PACKET_CZ_REQ_READ_MAIL *rPacket = RFIFOP(struct PACKET_CZ_REQ_READ_MAIL *, fd, 0);
+	const struct PACKET_CZ_REQ_READ_MAIL *rPacket = RP2PTR(struct PACKET_CZ_REQ_READ_MAIL *, fd);
 
 #if PACKETVER_RE_NUM >= 20190508 || PACKETVER_MAIN_NUM >= 20190522 || PACKETVER_ZERO_NUM >= 20190529
 	// After the bulk actions were added, the deleted mails are still clickable, but they send mail_id = -1
@@ -23715,7 +23715,7 @@ static void clif_parse_rodex_delete_mail(int fd, struct map_session_data *sd)
 	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
 		return;
 
-	const struct PACKET_CZ_REQ_DELETE_MAIL *rPacket = RFIFOP(struct PACKET_CZ_REQ_DELETE_MAIL *, fd, 0);
+	const struct PACKET_CZ_REQ_DELETE_MAIL *rPacket = RP2PTR(struct PACKET_CZ_REQ_DELETE_MAIL *, fd);
 
 	rodex->delete_mail(sd, rPacket->MailID);
 }
@@ -23745,7 +23745,7 @@ static void clif_parse_rodex_request_zeny(int fd, struct map_session_data *sd)
 	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
 		return;
 
-	const struct PACKET_CZ_REQ_ZENY_FROM_MAIL *rPacket = RFIFOP(struct PACKET_CZ_REQ_ZENY_FROM_MAIL *, fd, 0);
+	const struct PACKET_CZ_REQ_ZENY_FROM_MAIL *rPacket = RP2PTR(struct PACKET_CZ_REQ_ZENY_FROM_MAIL *, fd);
 
 	rodex->get_zeny(sd, rPacket->opentype, rPacket->MailID);
 }
@@ -23776,7 +23776,7 @@ static void clif_parse_rodex_request_items(int fd, struct map_session_data *sd)
 	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
 		return;
 
-	const struct PACKET_CZ_REQ_ITEM_FROM_MAIL *rPacket = RFIFOP(struct PACKET_CZ_REQ_ITEM_FROM_MAIL *, fd, 0);
+	const struct PACKET_CZ_REQ_ITEM_FROM_MAIL *rPacket = RP2PTR(struct PACKET_CZ_REQ_ITEM_FROM_MAIL *, fd);
 
 	rodex->get_items(sd, rPacket->opentype, rPacket->MailID);
 }
@@ -23818,7 +23818,7 @@ static void clif_parse_rodex_refresh_maillist(int fd, struct map_session_data *s
 	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
 		return;
 
-	const struct PACKET_CZ_REQ_REFRESH_MAIL_LIST *packet = RFIFOP(struct PACKET_CZ_REQ_REFRESH_MAIL_LIST *, fd, 0);
+	const struct PACKET_CZ_REQ_REFRESH_MAIL_LIST *packet = RP2PTR(struct PACKET_CZ_REQ_REFRESH_MAIL_LIST *, fd);
 #if PACKETVER >= 20170419
 	rodex->refresh(sd, RODEX_OPENTYPE_UNSET, packet->Upper_MailID);
 #else
@@ -23832,7 +23832,7 @@ static void clif_parse_rodex_open_mailbox(int fd, struct map_session_data *sd)
 	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
 		return;
 
-	const struct PACKET_CZ_REQ_OPEN_MAIL *packet = RFIFOP(struct PACKET_CZ_REQ_OPEN_MAIL *, fd, 0);
+	const struct PACKET_CZ_REQ_OPEN_MAIL *packet = RP2PTR(struct PACKET_CZ_REQ_OPEN_MAIL *, fd);
 #if PACKETVER >= 20170419
 	rodex->open(sd, RODEX_OPENTYPE_UNSET, packet->char_Upper_MailID);
 #else
@@ -24524,7 +24524,7 @@ static void clif_parse_cameraInfo(int fd, struct map_session_data *sd)
 	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
 		return;
 
-	const struct PACKET_CZ_VIEW_CAMERAINFO *const p = RFIFOP(struct PACKET_CZ_VIEW_CAMERAINFO *, fd, 0);
+	const struct PACKET_CZ_VIEW_CAMERAINFO *const p = RP2PTR(struct PACKET_CZ_VIEW_CAMERAINFO *, fd);
 	char command[200];
 	if (p->action == 1) {
 		snprintf(command, sizeof(command), "%ccamerainfo", atcommand->at_symbol);

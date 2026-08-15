@@ -44,10 +44,12 @@
 
 #undef RFIFOHEAD
 #undef RFIFOP
+#undef RFIFO2PTR
 #undef RFIFOSET
 
 #define RFIFOHEAD(fd, size) fake_RFIFOHEAD(fd, size)
 #define RFIFOP(T, fd, pos) ((const T)fake_RFIFOP(fd, pos))
+#define RFIFO2PTR(T, fd) ((const T)fake_RFIFOP(fd, 0))
 #define RFIFOSET(fd, size) fake_RFIFOSET(fd, size)
 
 #undef WFIFO_CHUNK_SIZE
