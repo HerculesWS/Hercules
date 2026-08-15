@@ -2250,10 +2250,8 @@ static void mapif_parse_load_achievements(int fd)
  */
 static void mapif_achievement_load(int fd, int char_id)
 {
-	struct char_achievements *cp = NULL;
-
 	/* Ensure data exists */
-	cp = idb_ensure(inter_achievement->char_achievements, char_id, inter_achievement->ensure_char_achievements);
+	struct char_achievements *cp = (struct char_achievements *)idb_ensure(inter_achievement->char_achievements, char_id, inter_achievement->ensure_char_achievements);
 
 	/* Load storage for char-server. */
 	inter_achievement->fromsql(char_id, cp);
@@ -2329,12 +2327,10 @@ static void mapif_parse_save_achievements(int fd)
  */
 static void mapif_achievement_save(int char_id, struct char_achievements *p)
 {
-	struct char_achievements *cp = NULL;
-
 	nullpo_retv(p);
 	
 	/* Get loaded achievements. */
-	cp = idb_ensure(inter_achievement->char_achievements, char_id, inter_achievement->ensure_char_achievements);
+	struct char_achievements *cp = (struct char_achievements *)idb_ensure(inter_achievement->char_achievements, char_id, inter_achievement->ensure_char_achievements);
 
 	if (VECTOR_LENGTH(*p)) /* Save current achievements. */
 		inter_achievement->tosql(char_id, cp, p);

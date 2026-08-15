@@ -227,9 +227,7 @@ static void char_set_account_offline(int account_id)
 
 static void char_set_char_charselect(int account_id)
 {
-	struct online_char_data* character;
-
-	character = (struct online_char_data*)idb_ensure(chr->online_char_db, account_id, chr->create_online_char_data);
+	struct online_char_data *character = (struct online_char_data *)idb_ensure(chr->online_char_db, account_id, chr->create_online_char_data);
 
 	if (character->mapserver_connection == OCS_NOT_CONNECTED) {
 		if (chr->map_server.users > 0) // Prevent this value from going negative.
@@ -253,14 +251,12 @@ static void char_set_char_charselect(int account_id)
 
 static void char_set_char_online(bool is_initializing, int char_id, int account_id, bool standalone)
 {
-	struct online_char_data* character;
-
 	//Update DB
 	if( SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `online`='1' WHERE `char_id`='%d' LIMIT 1", char_db, char_id) )
 		Sql_ShowDebug(inter->sql_handle);
 
 	//Check to see for online conflicts
-	character = (struct online_char_data*)idb_ensure(chr->online_char_db, account_id, chr->create_online_char_data);
+	struct online_char_data *character = (struct online_char_data *)idb_ensure(chr->online_char_db, account_id, chr->create_online_char_data);
 
 	//Update state data
 	character->char_id = char_id;
@@ -420,14 +416,13 @@ static int char_mmo_char_tosql(int char_id, struct mmo_charstatus *p)
 {
 	int diff = 0;
 	char save_status[128]; //For displaying save information. [Skotlex]
-	struct mmo_charstatus *cp;
 	int errors = 0; //If there are any errors while saving, "cp" will not be updated at the end.
 	StringBuf buf;
 
 	nullpo_ret(p);
 	if (char_id != p->char_id) return 0;
 
-	cp = idb_ensure(chr->char_db_, char_id, chr->create_charstatus);
+	struct mmo_charstatus *cp = (struct mmo_charstatus *)idb_ensure(chr->char_db_, char_id, chr->create_charstatus);
 
 	StrBuf->Init(&buf);
 	memset(save_status, 0, sizeof(save_status));
@@ -1182,7 +1177,6 @@ static int char_mmo_char_fromsql(int char_id, struct mmo_charstatus *p, bool loa
 {
 	int i = 0;
 	char t_msg[128] = "";
-	struct mmo_charstatus* cp;
 	struct SqlStmt *stmt;
 	char last_map[MAP_NAME_LENGTH_EXT];
 	char save_map[MAP_NAME_LENGTH_EXT];
@@ -1463,7 +1457,7 @@ static int char_mmo_char_fromsql(int char_id, struct mmo_charstatus *p, bool loa
 	if (opt & OPT_ALLOW_CALL)
 		p->allow_call = true;
 
-	cp = idb_ensure(chr->char_db_, char_id, chr->create_charstatus);
+	struct mmo_charstatus *cp = (struct mmo_charstatus *)idb_ensure(chr->char_db_, char_id, chr->create_charstatus);
 	memcpy(cp, p, sizeof(struct mmo_charstatus));
 	return 1;
 }
@@ -3239,7 +3233,7 @@ static void char_parse_frommap_set_users(int fd)
 	for (int i = 0; i < chr->map_server.users; i++) {
 		int aid = RFIFOL(fd,6+i*8);
 		int cid = RFIFOL(fd,6+i*8+4);
-		struct online_char_data *character = idb_ensure(chr->online_char_db, aid, chr->create_online_char_data);
+		struct online_char_data *character = (struct online_char_data *)idb_ensure(chr->online_char_db, aid, chr->create_online_char_data);
 		character->mapserver_connection = OCS_CONNECTED;
 		character->char_id = cid;
 	}

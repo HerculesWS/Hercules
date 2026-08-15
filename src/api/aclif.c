@@ -907,7 +907,7 @@ static void aclif_add_online_player(int account_id, const unsigned char *auth_to
 	ShowInfo("connect account: %d\n", account_id);
 //	ShowInfo("token: %.*s\n", 16, auth_token);
 #endif
-	struct online_api_login_data *user = idb_ensure(aclif->online_db, account_id, aclif->create_online_login_data);
+	struct online_api_login_data *user = (struct online_api_login_data *)idb_ensure(aclif->online_db, account_id, aclif->create_online_login_data);
 	if (user->remove_tick != 0)
 		aclif->remove_remove_timer(user);
 	memcpy(user->auth_token, auth_token, AUTH_TOKEN_SIZE);

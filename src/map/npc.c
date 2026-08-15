@@ -402,7 +402,6 @@ static int npc_event_export(struct npc_data *nd, int i)
 		&& ((nd->u.scr.label_list[i].flags & LABEL_IS_USERFUNC) == 0
 			|| script->config.functions_as_events)) {
 		struct event_data *ev;
-		struct linkdb_node **label_linkdb = NULL;
 		char buf[EVENT_NAME_LENGTH];
 		snprintf(buf, ARRAYLENGTH(buf), "%s::%s", nd->exname, lname);
 		if (strdb_exists(npc->ev_db, buf)) // There was already another event of the same name?
@@ -412,7 +411,7 @@ static int npc_event_export(struct npc_data *nd, int i)
 		ev->nd = nd;
 		ev->pos = pos;
 		strdb_put(npc->ev_db, buf, ev);
-		label_linkdb = strdb_ensure(npc->ev_label_db, lname, npc->event_export_create);
+		struct linkdb_node **label_linkdb = (struct linkdb_node **)strdb_ensure(npc->ev_label_db, lname, npc->event_export_create);
 		linkdb_insert(label_linkdb, nd, ev);
 	}
 	return 0;
