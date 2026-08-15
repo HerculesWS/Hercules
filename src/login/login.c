@@ -1432,7 +1432,7 @@ static bool login_client_login_otp(int fd, struct login_session_data *sd)
 	// send ok response with fake token
 	const int len = sizeof(struct PACKET_AC_LOGIN_OTP) + 6;  // + "token" string
 	WFIFOHEAD(fd, len);
-	struct PACKET_AC_LOGIN_OTP *packet = WP2PTR(sd->fd);
+	struct PACKET_AC_LOGIN_OTP *packet = WP2PTR(struct PACKET_AC_LOGIN_OTP *, sd->fd);
 	memset(packet, 0, len);
 	packet->packet_id = HEADER_AC_LOGIN_OTP;
 	packet->packet_len = len;
@@ -1454,7 +1454,7 @@ static void login_client_login_mobile_otp_request(int fd, struct login_session_d
 {
 #if PACKETVER_MAIN_NUM >= 20181114 || PACKETVER_RE_NUM >= 20181114 || defined(PACKETVER_ZERO)
 	WFIFOHEAD(sd->fd, sizeof(struct PACKET_AC_REQ_MOBILE_OTP));
-	struct PACKET_AC_REQ_MOBILE_OTP *packet = WP2PTR(sd->fd);
+	struct PACKET_AC_REQ_MOBILE_OTP *packet = WP2PTR(struct PACKET_AC_REQ_MOBILE_OTP *, sd->fd);
 	packet->packet_id = HEADER_AC_REQ_MOBILE_OTP;
 	packet->aid = sd->account_id;
 	WFIFOSET(fd, sizeof(struct PACKET_AC_REQ_MOBILE_OTP));

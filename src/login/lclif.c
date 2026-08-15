@@ -54,7 +54,7 @@ static void lclif_connection_error(int fd, uint8 error)
 {
 	struct PACKET_SC_NOTIFY_BAN *packet = NULL;
 	WFIFOHEAD(fd, sizeof(*packet));
-	packet = WP2PTR(fd);
+	packet = WP2PTR(struct PACKET_SC_NOTIFY_BAN *, fd);
 	packet->packet_id = HEADER_SC_NOTIFY_BAN;
 	packet->error_code = error;
 	WFIFOSET(fd, sizeof(*packet));
@@ -301,7 +301,7 @@ static bool lclif_send_server_list(struct login_session_data *sd)
 
 	// Allocate the packet
 	WFIFOHEAD(sd->fd, length);
-	packet = WP2PTR(sd->fd);
+	packet = WP2PTR(struct PACKET_AC_ACCEPT_LOGIN *, sd->fd);
 
 #if PACKETVER < 20170315
 	packet->packet_id = HEADER_AC_ACCEPT_LOGIN;
@@ -352,17 +352,18 @@ static bool lclif_send_server_list(struct login_session_data *sd)
 static void lclif_send_auth_failed(int fd, time_t ban, uint32 error)
 {
 #if PACKETVER >= 20180627
-	struct PACKET_AC_REFUSE_LOGIN_R2 *packet = NULL;
+	typedef struct PACKET_AC_REFUSE_LOGIN_R2 lclif_send_auth_failed_packet_t;
 	int packet_id = HEADER_AC_REFUSE_LOGIN_R3;
 #elif PACKETVER >= 20101123
-	struct PACKET_AC_REFUSE_LOGIN_R2 *packet = NULL;
+	typedef struct PACKET_AC_REFUSE_LOGIN_R2 lclif_send_auth_failed_packet_t;
 	int packet_id = HEADER_AC_REFUSE_LOGIN_R2;
 #else
-	struct PACKET_AC_REFUSE_LOGIN *packet = NULL;
+	typedef struct PACKET_AC_REFUSE_LOGIN lclif_send_auth_failed_packet_t;
 	int packet_id = HEADER_AC_REFUSE_LOGIN;
 #endif
+	lclif_send_auth_failed_packet_t *packet = NULL;
 	WFIFOHEAD(fd, sizeof(*packet));
-	packet = WP2PTR(fd);
+	packet = WP2PTR(lclif_send_auth_failed_packet_t *, fd);
 	packet->packet_id = packet_id;
 	packet->error_code = error;
 	if (error == 6)
@@ -377,7 +378,7 @@ static void lclif_send_login_error(int fd, uint8 error)
 {
 	struct PACKET_AC_REFUSE_LOGIN *packet = NULL;
 	WFIFOHEAD(fd, sizeof(*packet));
-	packet = WP2PTR(fd);
+	packet = WP2PTR(struct PACKET_AC_REFUSE_LOGIN *, fd);
 	packet->packet_id = HEADER_AC_REFUSE_LOGIN;
 	packet->error_code = error;
 	memset(packet->block_date, '\0', sizeof(packet->block_date));
@@ -392,7 +393,7 @@ static void lclif_send_coding_key(int fd, struct login_session_data *sd)
 	int16 size = sizeof(*packet) + sd->md5keylen;
 
 	WFIFOHEAD(fd, size);
-	packet = WP2PTR(fd);
+	packet = WP2PTR(struct PACKET_AC_ACK_HASH *, fd);
 	packet->packet_id = HEADER_AC_ACK_HASH;
 	packet->packet_len = size;
 	memcpy(packet->secret, sd->md5key, sd->md5keylen);

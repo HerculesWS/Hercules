@@ -86,8 +86,8 @@ struct config_setting_t;
 #define RP2PTR(fd) RFIFO2PTR(fd)
 
 /* [Hemagx/Hercules] */
-#define WFIFO2PTR(fd) ((void *)(sockt->session[fd]->wdata + sockt->session[fd]->wdata_size))
-#define WP2PTR(fd) WFIFO2PTR(fd)
+#define WFIFO2PTR(T, fd) ((T)(void *)(sockt->session[fd]->wdata + sockt->session[fd]->wdata_size))
+#define WP2PTR(T, fd) WFIFO2PTR(T, fd)
 
 // buffer I/O macros
 static inline const void *RBUFP_(const void *p, int pos) __attribute__((const, unused));
