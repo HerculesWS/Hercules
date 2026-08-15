@@ -1313,7 +1313,7 @@ static void intif_parse_GuildCreated(int fd)
 // ACK guild infos
 static void intif_parse_GuildInfoEmblem(int fd)
 {
-	const struct PACKET_CHARMAP_GUILD_INFO_EMBLEM *p = RFIFOP(fd, 0);
+	const struct PACKET_CHARMAP_GUILD_INFO_EMBLEM *p = RP2PTR(struct PACKET_CHARMAP_GUILD_INFO_EMBLEM *, fd);
 
 	RFIFO_CHUNKED_INIT(p, p->packetLength - sizeof(struct PACKET_CHARMAP_GUILD_INFO_EMBLEM), intif->emblem_tmp);
 
@@ -1336,12 +1336,12 @@ static void intif_parse_GuildInfoEmblem(int fd)
 static void intif_parse_GuildInfo(int fd)
 {
 	if (RFIFOW(fd, 2) == sizeof(struct PACKET_CHARMAP_GUILD_INFO_EMPTY)) {
-		const struct PACKET_CHARMAP_GUILD_INFO_EMPTY *empty = RFIFOP(fd, 0);
+		const struct PACKET_CHARMAP_GUILD_INFO_EMPTY *empty = RP2PTR(struct PACKET_CHARMAP_GUILD_INFO_EMPTY *, fd);
 		ShowWarning("intif: guild noinfo %d\n", empty->guild_id);
 		guild->recv_noinfo(empty->guild_id);
 		return;
 	}
-	const struct PACKET_CHARMAP_GUILD_INFO *p = RFIFOP(fd, 0);
+	const struct PACKET_CHARMAP_GUILD_INFO *p = RP2PTR(struct PACKET_CHARMAP_GUILD_INFO *, fd);
 	if (p->packetLength != sizeof(struct PACKET_CHARMAP_GUILD_INFO))
 		ShowError("intif: guild info: data size mismatch - Gid: %d recv size: %d Expected size: %"PRIuS"\n",
 		          p->g.guild_id, p->packetLength, sizeof(struct PACKET_CHARMAP_GUILD_INFO));
@@ -2790,7 +2790,7 @@ static void intif_request_agency_join_party(int char_id, int party_id, int map_i
 
 static void intif_parse_agency_joinResult(int fd)
 {
-	const struct PACKET_CHARMAP_AGENCY_JOIN_PARTY *p = RFIFOP(fd, 0);
+	const struct PACKET_CHARMAP_AGENCY_JOIN_PARTY *p = RP2PTR(struct PACKET_CHARMAP_AGENCY_JOIN_PARTY *, fd);
 	const int char_id = p->char_id;
 	const int result = p->result;
 	struct map_session_data *sd = map->charid2sd(char_id);

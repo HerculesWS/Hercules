@@ -3785,7 +3785,7 @@ static void char_parse_frommap_auth_request(int fd)
 	struct char_auth_node* node;
 	struct mmo_charstatus* cd;
 
-	const struct PACKET_MAPCHAR_AUTH_REQ *p = RFIFOP(fd, 0);
+	const struct PACKET_MAPCHAR_AUTH_REQ *p = RP2PTR(struct PACKET_MAPCHAR_AUTH_REQ *, fd);
 
 	int account_id   = p->account_id;
 	int char_id      = p->char_id;

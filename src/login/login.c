@@ -663,7 +663,7 @@ static void login_fromchar_parse_unban(int fd, int id, const char *const ip)
 
 static void login_fromchar_parse_account_online(int fd, int id)
 {
-	const struct PACKET_CHARLOGIN_SET_ACCOUNT_ONLINE *p = RFIFOP(fd, 0);
+	const struct PACKET_CHARLOGIN_SET_ACCOUNT_ONLINE *p = RP2PTR(struct PACKET_CHARLOGIN_SET_ACCOUNT_ONLINE *, fd);
 
 	login->add_online_user(id, p->account_id);
 
@@ -685,7 +685,7 @@ static void login_fromchar_parse_online_accounts(int fd, int id)
 {
 	login->online_db->foreach(login->online_db, login->online_db_setoffline, id); //Set all chars from this char-server offline first
 
-	const struct PACKET_CHARLOGIN_ONLINE_ACCOUNTS *p = RFIFOP(fd, 0);
+	const struct PACKET_CHARLOGIN_ONLINE_ACCOUNTS *p = RP2PTR(struct PACKET_CHARLOGIN_ONLINE_ACCOUNTS *, fd);
 	for (uint32 i = 0; i < p->list_length; i++) {
 		int aid = p->accounts[i];
 		struct online_login_data *login_data = idb_ensure(login->online_db, aid, login->create_online_user);

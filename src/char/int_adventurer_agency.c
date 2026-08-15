@@ -62,7 +62,7 @@ static int inter_adventurer_agency_parse_frommap(int fd)
 
 static void inter_adventurer_agency_parse_joinParty(int fd)
 {
-	const struct PACKET_MAPCHAR_AGENCY_JOIN_PARTY_REQ *p = RFIFOP(fd, 0);
+	const struct PACKET_MAPCHAR_AGENCY_JOIN_PARTY_REQ *p = RP2PTR(struct PACKET_MAPCHAR_AGENCY_JOIN_PARTY_REQ *, fd);
 	const int char_id = p->char_id;
 	const int party_id = p->party_id;
 	const int map_index = p->map_index;
