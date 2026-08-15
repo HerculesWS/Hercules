@@ -451,14 +451,14 @@ static int lclif_parse(int fd)
 		case PACKET_UNKNOWN:
 			ShowWarning("lclif_parse: Received unsupported packet (packet 0x%04x, %d bytes received), disconnecting session #%d.\n", (unsigned int)packet_id, packet_len, fd);
 #ifdef DUMP_INVALID_PACKET
-			ShowDump(RFIFOP(fd, 0), RFIFOREST(fd));
+			ShowDump(RFIFOP(void *, fd, 0), RFIFOREST(fd));
 #endif
 			sockt->eof(fd);
 			return 0;
 		case PACKET_INVALIDLENGTH:
 			ShowWarning("lclif_parse: Received packet 0x%04x specifies invalid packet_len (%d), disconnecting session #%d.\n", (unsigned int)packet_id, packet_len, fd);
 #ifdef DUMP_INVALID_PACKET
-			ShowDump(RFIFOP(fd, 0), RFIFOREST(fd));
+			ShowDump(RFIFOP(void *, fd, 0), RFIFOREST(fd));
 #endif
 			sockt->eof(fd);
 			return 0;

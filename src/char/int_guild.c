@@ -1668,23 +1668,23 @@ static int inter_guild_parse_frommap(int fd)
 {
 	RFIFOHEAD(fd);
 	switch(RFIFOW(fd,0)) {
-	case 0x3030: mapif->parse_CreateGuild(fd, RFIFOL(fd,4), RFIFOP(fd,8), RFIFOP(fd,32)); break;
+	case 0x3030: mapif->parse_CreateGuild(fd, RFIFOL(fd, 4), RFIFOP(char *, fd, 8), RFIFOP(struct guild_member *, fd, 32)); break;
 	case 0x3031: mapif->parse_GuildInfo(fd,RFIFOL(fd,2)); break;
-	case 0x3032: mapif->parse_GuildAddMember(fd, RFIFOL(fd,4), RFIFOP(fd,8)); break;
-	case 0x3033: mapif->parse_GuildMasterChange(fd, RFIFOL(fd,4), RFIFOP(fd,8), RFIFOW(fd,2)-8); break;
-	case 0x3034: mapif->parse_GuildLeave(fd, RFIFOL(fd,2), RFIFOL(fd,6), RFIFOL(fd,10), RFIFOB(fd,14), RFIFOP(fd,15)); break;
+	case 0x3032: mapif->parse_GuildAddMember(fd, RFIFOL(fd, 4), RFIFOP(struct guild_member *, fd, 8)); break;
+	case 0x3033: mapif->parse_GuildMasterChange(fd, RFIFOL(fd, 4), RFIFOP(char *, fd, 8), RFIFOW(fd, 2)-8); break;
+	case 0x3034: mapif->parse_GuildLeave(fd, RFIFOL(fd, 2), RFIFOL(fd, 6), RFIFOL(fd, 10), RFIFOB(fd, 14), RFIFOP(char *, fd, 15)); break;
 	case 0x3035: mapif->parse_GuildChangeMemberInfoShort(fd,RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOB(fd,14),RFIFOL(fd,15),RFIFOL(fd,19)); break;
 	case 0x3036: mapif->parse_BreakGuild(fd,RFIFOL(fd,2)); break;
-	case 0x3039: mapif->parse_GuildBasicInfoChange(fd, RFIFOL(fd,4), RFIFOW(fd,8), RFIFOP(fd,10), RFIFOW(fd,2)-10); break;
-	case 0x303A: mapif->parse_GuildMemberInfoChange(fd, RFIFOL(fd,4), RFIFOL(fd,8), RFIFOL(fd,12), RFIFOW(fd,16), RFIFOP(fd,18), RFIFOW(fd,2)-18); break;
-	case 0x303B: mapif->parse_GuildPosition(fd, RFIFOL(fd,4), RFIFOL(fd,8), RFIFOP(fd,12)); break;
+	case 0x3039: mapif->parse_GuildBasicInfoChange(fd, RFIFOL(fd, 4), RFIFOW(fd,8), RFIFOP(void *, fd, 10), RFIFOW(fd, 2)-10); break;
+	case 0x303A: mapif->parse_GuildMemberInfoChange(fd, RFIFOL(fd, 4), RFIFOL(fd, 8), RFIFOL(fd, 12), RFIFOW(fd, 16), RFIFOP(char *, fd, 18), RFIFOW(fd, 2)-18); break;
+	case 0x303B: mapif->parse_GuildPosition(fd, RFIFOL(fd, 4), RFIFOL(fd, 8), RFIFOP(struct guild_position *, fd, 12)); break;
 	case 0x303C: mapif->parse_GuildSkillUp(fd,RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOL(fd,14)); break;
 	case 0x303D: mapif->parse_GuildAlliance(fd,RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOL(fd,14),RFIFOB(fd,18)); break;
-	case 0x303E: mapif->parse_GuildNotice(fd, RFIFOL(fd,2), RFIFOP(fd,6), RFIFOP(fd,66)); break;
+	case 0x303E: mapif->parse_GuildNotice(fd, RFIFOL(fd, 2), RFIFOP(char *, fd, 6), RFIFOP(char *, fd, 66)); break;
 	case HEADER_MAPCHAR_GUILD_EMBLEM:
 		mapif->parse_GuildEmblem(fd);
 		break;
-	case 0x3040: mapif->parse_GuildCastleDataLoad(fd, RFIFOW(fd,2), RFIFOP(fd,4)); break;
+	case 0x3040: mapif->parse_GuildCastleDataLoad(fd, RFIFOW(fd, 2), RFIFOP(int *, fd, 4)); break;
 	case 0x3041: mapif->parse_GuildCastleDataSave(fd,RFIFOW(fd,2),RFIFOB(fd,4),RFIFOL(fd,5)); break;
 
 	default:

@@ -443,7 +443,7 @@ static void chrif_sendmapack(int fd)
 		exit(EXIT_FAILURE);
 	}
 
-	memcpy(map->wisp_server_name, RFIFOP(fd,3), NAME_LENGTH);
+	memcpy(map->wisp_server_name, RFIFOP(char *, fd, 3), NAME_LENGTH);
 
 	chrif->on_ready();
 }
@@ -517,7 +517,7 @@ static void chrif_authok(int fd)
 	expiration_time = (time_t)(int32)RFIFOL(fd,16);
 	group_id = RFIFOL(fd,20);
 	changing_mapservers = (RFIFOB(fd,24));
-	charstatus = RFIFOP(fd,25);
+	charstatus = RFIFOP(struct mmo_charstatus *, fd, 25);
 	char_id = charstatus->char_id;
 
 	//Check if we don't already have player data in our server
@@ -1029,21 +1029,21 @@ static void chrif_recvfamelist(int fd)
 
 	size = RFIFOW(fd, 6); //Blacksmith block size
 	for (num = 0; len < size && num < MAX_FAME_LIST; num++) {
-		memcpy(&pc->smith_fame_list[num], RFIFOP(fd,len), sizeof(struct fame_list));
+		memcpy(&pc->smith_fame_list[num], RFIFOP(struct fame_list *, fd, len), sizeof(struct fame_list));
 		len += sizeof(struct fame_list);
 	}
 	total += num;
 
 	size = RFIFOW(fd, 4); //Alchemist block size
 	for (num = 0; len < size && num < MAX_FAME_LIST; num++) {
-		memcpy(&pc->chemist_fame_list[num], RFIFOP(fd,len), sizeof(struct fame_list));
+		memcpy(&pc->chemist_fame_list[num], RFIFOP(struct fame_list *, fd, len), sizeof(struct fame_list));
 		len += sizeof(struct fame_list);
 	}
 	total += num;
 
 	size = RFIFOW(fd, 2); //Total packet length
 	for (num = 0; len < size && num < MAX_FAME_LIST; num++) {
-		memcpy(&pc->taekwon_fame_list[num], RFIFOP(fd,len), sizeof(struct fame_list));
+		memcpy(&pc->taekwon_fame_list[num], RFIFOP(struct fame_list *, fd, len), sizeof(struct fame_list));
 		len += sizeof(struct fame_list);
 	}
 	total += num;
@@ -1155,7 +1155,7 @@ static bool chrif_load_scdata(int fd)
 	count = RFIFOW(fd,12); //sc_count
 
 	for (i = 0; i < count; i++) {
-		const struct status_change_data *data = RFIFOP(fd,14 + i*sizeof(struct status_change_data));
+		const struct status_change_data *data = RFIFOP(struct status_change_data *, fd, 14 + i*sizeof(struct status_change_data));
 		status->change_start_sub(NULL, &sd->bl, (sc_type)data->type, 10000, data->val1, data->val2, data->val3, data->val4,
 			data->tick, data->total_tick, SCFLAG_NOAVOID | SCFLAG_FIXEDTICK | SCFLAG_LOADED | SCFLAG_FIXEDRATE, 0);
 	}
@@ -1381,10 +1381,10 @@ static int chrif_parse(int fd)
 			case 0x2afd: chrif->authok(fd); break;
 			case 0x2b00: map->setusers(RFIFOL(fd,2)); chrif->keepalive(fd); break;
 			case 0x2b03: clif->charselectok(RFIFOL(fd,2), RFIFOB(fd,6)); break;
-			case 0x2b09: map->addnickdb(RFIFOL(fd,2), RFIFOP(fd,6)); break;
+			case 0x2b09: map->addnickdb(RFIFOL(fd,2), RFIFOP(char *, fd, 6)); break;
 			case 0x2b0a: sockt->datasync(fd, false); break;
 			case 0x2b0d: chrif->changedsex(fd); break;
-			case 0x2b0f: chrif->char_ask_name_answer(RFIFOL(fd,2), RFIFOP(fd,6), RFIFOW(fd,30), RFIFOW(fd,32)); break;
+			case 0x2b0f: chrif->char_ask_name_answer(RFIFOL(fd, 2), RFIFOP(char *, fd, 6), RFIFOW(fd, 30), RFIFOW(fd, 32)); break;
 			case 0x2b12: chrif->divorceack(RFIFOL(fd,2), RFIFOL(fd,6)); break;
 			case 0x2b14: chrif->idbanned(fd); break;
 			case 0x2b1b: chrif->recvfamelist(fd); break;
