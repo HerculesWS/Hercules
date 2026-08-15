@@ -49,11 +49,11 @@
 #include <time.h>
 
 #define WFIFOADDSTR(fd, str) \
-    memcpy(WFIFOP(fd, 0), str, strlen(str)); \
+    memcpy(WFIFOP(char *, fd, 0), str, strlen(str)); \
     WFIFOSET(fd, strlen(str));
 
 #define WFIFOADDBUF(fd, buf, buf_size) \
-    memcpy(WFIFOP(fd, 0), buf, buf_size); \
+    memcpy(WFIFOP(char *, fd, 0), buf, buf_size); \
     WFIFOSET(fd, buf_size);
 
 static struct httpsender_interface httpsender_s;

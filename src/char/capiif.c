@@ -130,7 +130,7 @@ static void capiif_parse_proxy_api_from_map(int fd)
 	if (!sockt->session_is_active(login_fd))
 		return;
 	WFIFOHEAD(login_fd, len);
-	memcpy(WFIFOP(login_fd, 0), inPacket, len);
+	memcpy(WFIFOP(struct PACKET_API_PROXY *, login_fd, 0), inPacket, len);
 	WFIFOW(login_fd, 0) = HEADER_API_PROXY_REPLY;
 	WFIFOSET(login_fd, len);
 }
@@ -258,11 +258,11 @@ void capiif_emblem_download(int fd, int guild_id, int emblem_id)
 
 	RFIFO_API_PROXY_PACKET(p2);
 	WFIFO_CHUNKED_INIT(p, chr->login_fd, HEADER_API_PROXY_REPLY, PACKET_API_PROXY_CHUNKED, g->emblem_data, g->emblem_len) {
-		WFIFO_CHUNKED_BLOCK_START(p);
+		WFIFO_CHUNKED_BLOCK_START(p, PACKET_API_PROXY_CHUNKED);
 		INIT_PACKET_REPLY_PROXY_FIELDS(&p->base, p2);
 		WFIFO_CHUNKED_BLOCK_END();
 	}
-	WFIFO_CHUNKED_FINAL_START(p);
+	WFIFO_CHUNKED_FINAL_START(p, PACKET_API_PROXY_CHUNKED);
 	INIT_PACKET_REPLY_PROXY_FIELDS(&p->base, p2);
 	WFIFO_CHUNKED_FINAL_END();
 }
