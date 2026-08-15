@@ -43,7 +43,7 @@
 
 CREATE TABLE IF NOT EXISTS `atcommandlog` (
   `atcommand_id` MEDIUMINT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `atcommand_date` DATETIME NULL,
+  `atcommand_date` TIMESTAMP NULL,
   `account_id` INT UNSIGNED NOT NULL DEFAULT '0',
   `char_id` INT UNSIGNED NOT NULL DEFAULT '0',
   `char_name` VARCHAR(25) NOT NULL DEFAULT '',
@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS `atcommandlog` (
 
 CREATE TABLE IF NOT EXISTS `branchlog` (
   `branch_id` MEDIUMINT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `branch_date` DATETIME NULL,
+  `branch_date` TIMESTAMP NULL,
   `account_id` INT NOT NULL DEFAULT '0',
   `char_id` INT NOT NULL DEFAULT '0',
   `char_name` VARCHAR(25) NOT NULL DEFAULT '',
@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS `branchlog` (
 
 CREATE TABLE IF NOT EXISTS `chatlog` (
   `id` BIGINT NOT NULL AUTO_INCREMENT,
-  `time` DATETIME NULL,
+  `time` TIMESTAMP NULL,
   `type` ENUM('O','W','P','G','M','C') NOT NULL DEFAULT 'O',
   `type_id` INT NOT NULL DEFAULT '0',
   `src_charid` INT NOT NULL DEFAULT '0',
@@ -96,7 +96,7 @@ CREATE TABLE IF NOT EXISTS `chatlog` (
 --
 
 CREATE TABLE IF NOT EXISTS `loginlog` (
-  `time` DATETIME NULL,
+  `time` TIMESTAMP NULL,
   `ip` VARCHAR(15) NOT NULL DEFAULT '',
   `user` VARCHAR(23) NOT NULL DEFAULT '',
   `rcode` TINYINT NOT NULL DEFAULT '0',
@@ -110,7 +110,7 @@ CREATE TABLE IF NOT EXISTS `loginlog` (
 
 CREATE TABLE IF NOT EXISTS `mvplog` (
   `mvp_id` MEDIUMINT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `mvp_date` DATETIME NULL,
+  `mvp_date` TIMESTAMP NULL,
   `kill_char_id` INT NOT NULL DEFAULT '0',
   `monster_id` SMALLINT NOT NULL DEFAULT '0',
   `prize` INT NOT NULL DEFAULT '0',
@@ -125,7 +125,7 @@ CREATE TABLE IF NOT EXISTS `mvplog` (
 
 CREATE TABLE IF NOT EXISTS `npclog` (
   `npc_id` MEDIUMINT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `npc_date` DATETIME NULL,
+  `npc_date` TIMESTAMP NULL,
   `account_id` INT UNSIGNED NOT NULL DEFAULT '0',
   `char_id` INT UNSIGNED NOT NULL DEFAULT '0',
   `char_name` VARCHAR(25) NOT NULL DEFAULT '',
@@ -142,7 +142,7 @@ CREATE TABLE IF NOT EXISTS `npclog` (
 
 CREATE TABLE IF NOT EXISTS `picklog` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `time` DATETIME NULL,
+  `time` TIMESTAMP NULL,
   `char_id` INT NOT NULL DEFAULT '0',
   `type` ENUM('M','P','L','T','V','S','N','C','A','R','G','E','B','O','I','X','D','U','K','Y','Z','W','Q','J','H','@','0','1','2','3','4','5') NOT NULL DEFAULT 'P',
   `nameid` INT NOT NULL DEFAULT '0',
@@ -175,7 +175,7 @@ CREATE TABLE IF NOT EXISTS `picklog` (
 
 CREATE TABLE IF NOT EXISTS `zenylog` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `time` DATETIME NULL,
+  `time` TIMESTAMP NULL,
   `char_id` INT NOT NULL DEFAULT '0',
   `src_id` INT NOT NULL DEFAULT '0',
   `type` ENUM('T','V','P','M','S','N','D','C','A','E','I','B','K','4','5') NOT NULL DEFAULT 'S',
