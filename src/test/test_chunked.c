@@ -34,10 +34,12 @@
 
 #undef WFIFOHEAD
 #undef WFIFOP
+#undef WFIFO2PTR
 #undef WFIFOSET
 
 #define WFIFOHEAD(fd, size) fake_WFIFOHEAD(fd, size)
 #define WFIFOP(T, fd, pos) ((T)fake_WFIFOP(fd, pos))
+#define WFIFO2PTR(T, fd) ((T)fake_WFIFOP(fd, 0))
 #define WFIFOSET(fd, size) fake_WFIFOSET(fd, size)
 
 #undef RFIFOHEAD

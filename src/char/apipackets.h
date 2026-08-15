@@ -26,15 +26,15 @@
 
 #define WFIFO_APICHAR_PACKET_REPLY_EMPTY() \
 	WFIFOHEAD(chr->login_fd, WFIFO_APICHAR_SIZE); \
-	struct PACKET_API_PROXY *packet = WFIFOP(struct PACKET_API_PROXY *, chr->login_fd, 0); \
-	memcpy(packet, RFIFOP(struct PACKET_API_PROXY *, fd, 0), WFIFO_APICHAR_SIZE); \
+	struct PACKET_API_PROXY *packet = WP2PTR(struct PACKET_API_PROXY *, chr->login_fd); \
+	memcpy(packet, RP2PTR(struct PACKET_API_PROXY *, fd), WFIFO_APICHAR_SIZE); \
 	packet->packet_id = HEADER_API_PROXY_REPLY; \
 	packet->packet_len = WFIFO_APICHAR_SIZE; \
 
 #define WFIFO_APICHAR_PACKET_REPLY(type) \
 	WFIFOHEAD(chr->login_fd, WFIFO_APICHAR_SIZE + sizeof(struct PACKET_API_REPLY_ ## type)); \
-	struct PACKET_API_PROXY *packet = WFIFOP(struct PACKET_API_PROXY *, chr->login_fd, 0); \
-	memcpy(packet, RFIFOP(struct PACKET_API_PROXY *, fd, 0), WFIFO_APICHAR_SIZE); \
+	struct PACKET_API_PROXY *packet = WP2PTR(struct PACKET_API_PROXY *, chr->login_fd); \
+	memcpy(packet, RP2PTR(struct PACKET_API_PROXY *, fd), WFIFO_APICHAR_SIZE); \
 	packet->packet_id = HEADER_API_PROXY_REPLY; \
 	packet->packet_len = WFIFO_APICHAR_SIZE + sizeof(struct PACKET_API_REPLY_ ## type); \
 	struct PACKET_API_REPLY_ ## type *data = WFIFOP(struct PACKET_API_REPLY_ ## type *, chr->login_fd, sizeof(struct PACKET_API_PROXY))
