@@ -171,12 +171,12 @@ static void loginif_connect_to_server(void)
 	Assert_retv(chr->login_fd != -1);
 	WFIFOHEAD(chr->login_fd,86);
 	WFIFOW(chr->login_fd,0) = 0x2710;
-	memcpy(WFIFOP(chr->login_fd,2), chr->userid, NAME_LENGTH);
-	memcpy(WFIFOP(chr->login_fd,26), chr->passwd, NAME_LENGTH);
+	memcpy(WFIFOP(char *, chr->login_fd, 2), chr->userid, NAME_LENGTH);
+	memcpy(WFIFOP(char *, chr->login_fd, 26), chr->passwd, NAME_LENGTH);
 	WFIFOL(chr->login_fd,50) = 0;
 	WFIFOL(chr->login_fd,54) = htonl(chr->ip);
 	WFIFOW(chr->login_fd,58) = htons(chr->port);
-	memcpy(WFIFOP(chr->login_fd,60), chr->server_name, 20);
+	memcpy(WFIFOP(char *, chr->login_fd, 60), chr->server_name, 20);
 	WFIFOW(chr->login_fd,80) = 0;
 	WFIFOW(chr->login_fd,82) = chr->server_type;
 	WFIFOW(chr->login_fd,84) = chr->new_display; //only display (New) if they want to [Kevin]

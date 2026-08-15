@@ -179,7 +179,7 @@ static int charif_sendallwos(int sfd, uint8 *buf, size_t len)
 		int fd = login->dbs->server[i].fd;
 		if (sockt->session_is_valid(fd) && fd != sfd) {
 			WFIFOHEAD(fd,len);
-			memcpy(WFIFOP(fd,0), buf, len);
+			memcpy(WFIFOP(uint8 *, fd,0), buf, len);
 			WFIFOSET(fd,len);
 			++c;
 		}
@@ -410,22 +410,22 @@ static void login_fromchar_account(int fd, int account_id, struct mmo_account *a
 		if (pincode[0] == '\0')
 			memset(pincode,'\0',sizeof(pincode));
 
-		safestrncpy(WFIFOP(fd,6), email, 40);
+		safestrncpy(WFIFOP(char *, fd, 6), email, 40);
 		WFIFOL(fd,46) = (uint32)expiration_time;
 		WFIFOB(fd,50) = (unsigned char)group_id;
 		WFIFOB(fd,51) = char_slots;
-		safestrncpy(WFIFOP(fd,52), birthdate, 10+1);
-		safestrncpy(WFIFOP(fd,63), pincode, 4+1 );
+		safestrncpy(WFIFOP(char *, fd, 52), birthdate, 10+1);
+		safestrncpy(WFIFOP(char *, fd, 63), pincode, 4+1);
 		WFIFOL(fd,68) = acc->pincode_change;
 	}
 	else
 	{
-		safestrncpy(WFIFOP(fd,6), "", 40);
+		safestrncpy(WFIFOP(char *, fd, 6), "", 40);
 		WFIFOL(fd,46) = 0;
 		WFIFOB(fd,50) = 0;
 		WFIFOB(fd,51) = 0;
-		safestrncpy(WFIFOP(fd,52), "", 10+1);
-		safestrncpy(WFIFOP(fd,63), "\0\0\0\0", 4+1 );
+		safestrncpy(WFIFOP(char *, fd, 52), "", 10+1);
+		safestrncpy(WFIFOP(char *, fd, 63), "\0\0\0\0", 4+1);
 		WFIFOL(fd,68) = 0;
 	}
 	WFIFOSET(fd,72);
@@ -759,22 +759,22 @@ static void login_fromchar_accinfo(int fd, int account_id, int u_fd, int u_aid, 
 	{
 		WFIFOHEAD(fd,183);
 		WFIFOW(fd,0) = 0x2737;
-		safestrncpy(WFIFOP(fd,2), acc->userid, NAME_LENGTH);
+		safestrncpy(WFIFOP(char *, fd, 2), acc->userid, NAME_LENGTH);
 		if (u_group >= acc->group_id)
-			safestrncpy(WFIFOP(fd,26), acc->pass, 33);
+			safestrncpy(WFIFOP(char *, fd, 26), acc->pass, 33);
 		else
-			memset(WFIFOP(fd,26), '\0', 33);
-		safestrncpy(WFIFOP(fd,59), acc->email, 40);
-		safestrncpy(WFIFOP(fd,99), acc->last_ip, 16);
+			memset(WFIFOP(char *, fd, 26), '\0', 33);
+		safestrncpy(WFIFOP(char *, fd, 59), acc->email, 40);
+		safestrncpy(WFIFOP(char *, fd, 99), acc->last_ip, 16);
 		WFIFOL(fd,115) = acc->group_id;
-		safestrncpy(WFIFOP(fd,119), acc->lastlogin, 24);
+		safestrncpy(WFIFOP(char *, fd, 119), acc->lastlogin, 24);
 		WFIFOL(fd,143) = acc->logincount;
 		WFIFOL(fd,147) = acc->state;
 		if (u_group >= acc->group_id)
-			safestrncpy(WFIFOP(fd,151), acc->pincode, 5);
+			safestrncpy(WFIFOP(char *, fd, 151), acc->pincode, 5);
 		else
-			memset(WFIFOP(fd,151), '\0', 5);
-		safestrncpy(WFIFOP(fd,156), acc->birthdate, 11);
+			memset(WFIFOP(char *, fd, 151), '\0', 5);
+		safestrncpy(WFIFOP(char *, fd, 156), acc->birthdate, 11);
 		WFIFOL(fd,167) = map_fd;
 		WFIFOL(fd,171) = u_fd;
 		WFIFOL(fd,175) = u_aid;
