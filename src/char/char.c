@@ -2496,7 +2496,7 @@ static void char_parse_fromlogin_account_data(int fd)
 	// find the authenticated session with this account id
 	ARR_FIND(0, sockt->fd_max, i, sockt->session[i] && (sd = (struct char_session_data*)sockt->session[i]->session_data) && sd->auth && sd->account_id == RFIFOSL(fd,2));
 	if( i < sockt->fd_max ) {
-		memcpy(sd->email, RFIFOP(fd,6), 40);
+		memcpy(sd->email, RFIFOP(char *, fd, 6), 40);
 		sd->expiration_time = (time_t)RFIFOL(fd,46);
 		sd->group_id = RFIFOB(fd,50);
 		sd->char_slots = RFIFOB(fd,51);
@@ -2505,8 +2505,8 @@ static void char_parse_fromlogin_account_data(int fd)
 			sd->char_slots = MAX_CHARS;/* cap to maximum */
 		} else if ( sd->char_slots <= 0 )/* no value aka 0 in sql */
 			sd->char_slots = MAX_CHARS;/* cap to maximum */
-		safestrncpy(sd->birthdate, RFIFOP(fd,52), sizeof(sd->birthdate));
-		safestrncpy(sd->pincode, RFIFOP(fd,63), sizeof(sd->pincode));
+		safestrncpy(sd->birthdate, RFIFOP(char *, fd, 52), sizeof(sd->birthdate));
+		safestrncpy(sd->pincode, RFIFOP(char *, fd, 63), sizeof(sd->pincode));
 		sd->pincode_change = RFIFOL(fd,68);
 		// continued from chr->auth_ok...
 		if( (max_connect_user == 0 && sd->group_id != gm_allow_group) ||
@@ -2673,7 +2673,7 @@ static int char_parse_fromlogin_changesex_reply(int fd)
 static void char_parse_fromlogin_account_reg2(int fd)
 {
 	//Receive account_reg2 registry, forward to map servers.
-	mapif->send(RFIFOP(fd, 0), RFIFOW(fd,2));
+	mapif->send(RFIFOP(unsigned char *, fd, 0), RFIFOW(fd, 2));
 	RFIFOSKIP(fd, RFIFOW(fd,2));
 }
 
@@ -2754,9 +2754,9 @@ static void char_parse_fromlogin_accinfo2_failed(int fd)
 
 static void char_parse_fromlogin_accinfo2_ok(int fd)
 {
-	inter->accinfo2(true, RFIFOL(fd,167), RFIFOL(fd,171), RFIFOL(fd,175), RFIFOL(fd,179),
-	                      RFIFOP(fd,2), RFIFOP(fd,26), RFIFOP(fd,59), RFIFOP(fd,99), RFIFOP(fd,119),
-	                      RFIFOP(fd,151), RFIFOP(fd,156), RFIFOL(fd,115), RFIFOL(fd,143), RFIFOL(fd,147));
+	inter->accinfo2(true, RFIFOL(fd, 167), RFIFOL(fd, 171), RFIFOL(fd, 175), RFIFOL(fd, 179),
+	                      RFIFOP(char *, fd, 2), RFIFOP(char *, fd, 26), RFIFOP(char *, fd, 59), RFIFOP(char *, fd, 99), RFIFOP(char *, fd, 119),
+	                      RFIFOP(char *, fd, 151), RFIFOP(char *, fd, 156), RFIFOL(fd, 115), RFIFOL(fd, 143), RFIFOL(fd, 147));
 	RFIFOSKIP(fd,183);
 }
 
@@ -3274,7 +3274,7 @@ static void char_parse_frommap_save_character(int fd)
 	    && character->char_id == cid)
 	) {
 		struct mmo_charstatus char_dat;
-		memcpy(&char_dat, RFIFOP(fd,13), sizeof(struct mmo_charstatus));
+		memcpy(&char_dat, RFIFOP(struct mmo_charstatus *, fd, 13), sizeof(struct mmo_charstatus));
 		chr->mmo_char_tosql(cid, &char_dat);
 	} else {
 		//This may be valid on char-server reconnection, when re-sending characters that already logged off.
@@ -3373,7 +3373,7 @@ static void char_parse_frommap_change_email(int fd)
 {
 	if (chr->login_fd > 0) { // don't send request if no login-server
 		WFIFOHEAD(chr->login_fd,86);
-		memcpy(WFIFOP(void *, chr->login_fd, 0), RFIFOP(fd, 0), 86); // 0x2722 <account_id>.L <actual_e-mail>.40B <new_e-mail>.40B
+		memcpy(WFIFOP(void *, chr->login_fd, 0), RFIFOP(void *, fd, 0), 86); // 0x2722 <account_id>.L <actual_e-mail>.40B <new_e-mail>.40B
 		WFIFOW(chr->login_fd,0) = 0x2722;
 		WFIFOSET(chr->login_fd,86);
 	}
@@ -3516,7 +3516,7 @@ static void char_parse_frommap_change_account(int fd)
 	char esc_name[NAME_LENGTH*2+1];
 
 	int acc = RFIFOL(fd,2); // account_id of who ask (-1 if server itself made this request)
-	const char *name = RFIFOP(fd,6); // name of the target character
+	const char *name = RFIFOP(char *, fd, 6); // name of the target character
 	enum zh_char_ask_name_type type = RFIFOW(fd,30); // type of operation: 1-block, 2-ban, 3-unblock, 4-unban, 5 changesex, 6 charban, 7 charunban
 	short year = 0, month = 0, day = 0, hour = 0, minute = 0, second = 0;
 	int sex = SEX_MALE;
@@ -3713,7 +3713,7 @@ static void char_parse_frommap_save_status_change_data(int fd)
 		StrBuf->Printf(&buf, "INSERT INTO `%s` (`account_id`, `char_id`, `type`, `tick`, `total_tick`, `val1`, `val2`, `val3`, `val4`) VALUES ", scdata_db);
 		for( i = 0; i < count; ++i )
 		{
-			memcpy (&data, RFIFOP(fd, 14+i*sizeof(struct status_change_data)), sizeof(struct status_change_data));
+			memcpy (&data, RFIFOP(struct status_change_data *, fd, 14 + i * sizeof(struct status_change_data)), sizeof(struct status_change_data));
 			if( i > 0 )
 				StrBuf->AppendStr(&buf, ", ");
 			StrBuf->Printf(&buf, "('%d','%d','%hu','%d','%d','%d','%d','%d','%d')", aid, cid,
@@ -4721,11 +4721,11 @@ static void char_parse_char_create_new_char(int fd, struct char_session_data *sd
 				RFIFOSKIP(fd, 36);
 				return;
 		}
-		result = chr->make_new_char_sql(sd, RFIFOP(fd, 2), 1, 1, 1, 1, 1, 1, RFIFOB(fd, 26), RFIFOW(fd, 27), RFIFOW(fd, 29), RFIFOL(fd, 31), sex);
+		result = chr->make_new_char_sql(sd, RFIFOP(char *, fd, 2), 1, 1, 1, 1, 1, 1, RFIFOB(fd, 26), RFIFOW(fd, 27), RFIFOW(fd, 29), RFIFOL(fd, 31), sex);
 #elif PACKETVER >= 20120307
-		result = chr->make_new_char_sql(sd, RFIFOP(fd, 2), 1, 1, 1, 1, 1, 1, RFIFOB(fd, 26), RFIFOW(fd, 27), RFIFOW(fd, 29), JOB_NOVICE, 'U');
+		result = chr->make_new_char_sql(sd, RFIFOP(char *, fd, 2), 1, 1, 1, 1, 1, 1, RFIFOB(fd, 26), RFIFOW(fd, 27), RFIFOW(fd, 29), JOB_NOVICE, 'U');
 #else
-		result = chr->make_new_char_sql(sd, RFIFOP(fd, 2), RFIFOB(fd, 26), RFIFOB(fd, 27), RFIFOB(fd, 28), RFIFOB(fd, 29), RFIFOB(fd, 30), RFIFOB(fd, 31), RFIFOB(fd, 32), RFIFOW(fd, 33), RFIFOW(fd, 35), JOB_NOVICE, 'U');
+		result = chr->make_new_char_sql(sd, RFIFOP(char *, fd, 2), RFIFOB(fd, 26), RFIFOB(fd, 27), RFIFOB(fd, 28), RFIFOB(fd, 29), RFIFOB(fd, 30), RFIFOB(fd, 31), RFIFOB(fd, 32), RFIFOW(fd, 33), RFIFOW(fd, 35), JOB_NOVICE, 'U');
 #endif
 	}
 
@@ -4786,7 +4786,7 @@ static void char_parse_char_delete_char(int fd, struct char_session_data *sd, un
 	}
 #endif
 	ShowInfo(CL_RED"Request Char Deletion: "CL_GREEN"%d (%d)"CL_RESET"\n", sd->account_id, cid);
-	memcpy(email, RFIFOP(fd,6), 40);
+	memcpy(email, RFIFOP(char *, fd, 6), 40);
 	RFIFOSKIP(fd,( cmd == 0x68) ? 46 : 56);
 
 	// Check if e-mail is correct
@@ -4840,7 +4840,7 @@ static void char_parse_char_rename_char(int fd, struct char_session_data *sd)
 {
 	int i, cid =RFIFOL(fd,2);
 	char name[NAME_LENGTH];
-	safestrncpy(name, RFIFOP(fd,6), NAME_LENGTH);
+	safestrncpy(name, RFIFOP(char *, fd, 6), NAME_LENGTH);
 	RFIFOSKIP(fd,30);
 
 	ARR_FIND( 0, MAX_CHARS, i, sd->found_char[i] == cid );
@@ -4863,7 +4863,7 @@ static void char_parse_char_rename_char2(int fd, struct char_session_data *sd)
 {
 	int i, aid = RFIFOL(fd,2), cid =RFIFOL(fd,6);
 	char name[NAME_LENGTH];
-	safestrncpy(name, RFIFOP(fd,10), NAME_LENGTH);
+	safestrncpy(name, RFIFOP(char *, fd, 10), NAME_LENGTH);
 	RFIFOSKIP(fd,34);
 
 	if( aid != sd->account_id )
@@ -4959,8 +4959,8 @@ static void char_login_map_server_ack(int fd, uint8 flag)
 static void char_parse_char_login_map_server(int fd, uint32 ipl)
 {
 	char l_user[24], l_pass[24];
-	safestrncpy(l_user, RFIFOP(fd,2), 24);
-	safestrncpy(l_pass, RFIFOP(fd,26), 24);
+	safestrncpy(l_user, RFIFOP(char *, fd, 2), 24);
+	safestrncpy(l_pass, RFIFOP(char *, fd, 26), 24);
 
 	if (core->runflag != CHARSERVER_ST_RUNNING ||
 		chr->map_server.fd > 0 ||

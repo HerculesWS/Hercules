@@ -426,7 +426,7 @@ static bool httpparser_parse(int fd)
 	if (data_size == 0)
 		return true;
 
-	const char *data = RFIFOP(fd, 0);
+	const char *data = RFIFOP(char *, fd, 0);
 
 	if (sd->flag.headers_complete == 0) {
 		// because parser cant handle part of header, need cache incomplete headers

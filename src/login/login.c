@@ -371,7 +371,7 @@ static void login_fromchar_parse_request_change_email(int fd, int id, const char
 	char email[40];
 
 	int account_id = RFIFOL(fd,2);
-	safestrncpy(email, RFIFOP(fd,6), 40); remove_control_chars(email);
+	safestrncpy(email, RFIFOP(char *, fd, 6), 40); remove_control_chars(email);
 	RFIFOSKIP(fd,46);
 
 	if( e_mail_check(email) == 0 )
@@ -468,8 +468,8 @@ static void login_fromchar_parse_change_email(int fd, int id, const char *const 
 	char new_email[40];
 
 	int account_id = RFIFOL(fd,2);
-	safestrncpy(actual_email, RFIFOP(fd,6), 40);
-	safestrncpy(new_email, RFIFOP(fd,46), 40);
+	safestrncpy(actual_email, RFIFOP(char *, fd, 6), 40);
+	safestrncpy(new_email, RFIFOP(char *, fd, 46), 40);
 	RFIFOSKIP(fd, 86);
 
 	if( e_mail_check(actual_email) == 0 )
@@ -726,7 +726,7 @@ static void login_fromchar_parse_change_pincode(int fd)
 	struct mmo_account acc;
 
 	if (accounts->load_num(accounts, &acc, RFIFOL(fd,2))) {
-		safestrncpy(acc.pincode, RFIFOP(fd,6), sizeof(acc.pincode));
+		safestrncpy(acc.pincode, RFIFOP(char *, fd, 6), sizeof(acc.pincode));
 		acc.pincode_change = ((unsigned int)time(NULL));
 		accounts->save(accounts, &acc);
 	}
@@ -1491,15 +1491,15 @@ static void login_parse_request_connection(int fd, struct login_session_data* sd
 	uint16 new_;
 	int result;
 
-	safestrncpy(sd->userid, RFIFOP(fd,2), NAME_LENGTH);
-	safestrncpy(sd->passwd, RFIFOP(fd,26), NAME_LENGTH);
+	safestrncpy(sd->userid, RFIFOP(char *, fd, 2), NAME_LENGTH);
+	safestrncpy(sd->passwd, RFIFOP(char *, fd, 26), NAME_LENGTH);
 	if (login->config->use_md5_passwds)
 		md5->string(sd->passwd, sd->passwd);
 	sd->passwdenc = PWENC_NONE;
 	sd->version = login->config->client_version_to_connect; // hack to skip version check
 	server_ip = ntohl(RFIFOL(fd,54));
 	server_port = ntohs(RFIFOW(fd,58));
-	safestrncpy(server_name, RFIFOP(fd,60), 20);
+	safestrncpy(server_name, RFIFOP(char *, fd, 60), 20);
 	type = RFIFOW(fd,82);
 	new_ = RFIFOW(fd,84);
 
@@ -1553,8 +1553,8 @@ static void login_parse_request_api_connection(int fd, struct login_session_data
 	uint32 server_ip = sockt->session[fd]->client_addr;
 	int result;
 
-	safestrncpy(sd->userid, RFIFOP(fd,2), NAME_LENGTH);
-	safestrncpy(sd->passwd, RFIFOP(fd,26), NAME_LENGTH);
+	safestrncpy(sd->userid, RFIFOP(char *, fd, 2), NAME_LENGTH);
+	safestrncpy(sd->passwd, RFIFOP(char *, fd, 26), NAME_LENGTH);
 	if (login->config->use_md5_passwds)
 		md5->string(sd->passwd, sd->passwd);
 	sd->passwdenc = PWENC_NONE;

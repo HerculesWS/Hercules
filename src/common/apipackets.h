@@ -293,8 +293,8 @@ struct PACKET_API_REPLY_party_info {
 #define WFIFO_APICHAR_SIZE sizeof(struct PACKET_API_PROXY)
 #define CHUNKED_FLAG_SIZE 1
 
-#define RFIFO_DATA_PTR() RFIFOP(fd, WFIFO_APICHAR_SIZE)
-#define RFIFO_API_DATA(var, type) const struct PACKET_API_ ## type ## _data *var = (const struct PACKET_API_ ## type ## _data*)RFIFO_DATA_PTR()
+#define RFIFO_DATA_PTR(T) RFIFOP(T, fd, WFIFO_APICHAR_SIZE)
+#define RFIFO_API_DATA(var, type) const struct PACKET_API_ ## type ## _data *var = RFIFO_DATA_PTR(struct PACKET_API_ ## type ## _data *)
 #define RFIFO_API_PROXY_PACKET(var) const struct PACKET_API_PROXY *var = RP2PTR(struct PACKET_API_PROXY *, fd)
 #define RFIFO_API_PROXY_PACKET_CHUNKED(var) const struct PACKET_API_PROXY_CHUNKED *var = RP2PTR(struct PACKET_API_PROXY_CHUNKED *, fd)
 #define GET_RFIFO_API_PROXY_PACKET_SIZE(fd) (RFIFOW(fd, 2) - sizeof(struct PACKET_API_PROXY))

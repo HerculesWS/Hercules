@@ -235,7 +235,7 @@ static int aloginif_parse_disconnect_user(int fd)
 
 static int aloginif_parse_connect_user(int fd)
 {
-	aclif->add_online_player(RFIFOL(fd, 2), RFIFOP(fd, 6));
+	aclif->add_online_player(RFIFOL(fd, 2), RFIFOP(unsigned char *, fd, 6));
 	return 0;
 }
 
@@ -279,7 +279,7 @@ static int aloginif_parse_char_servers_list(int fd)
 	ShowInfo("Got %d char servers.\n", count);
 #endif
 	for (int f = 0; f < count; f ++) {
-		aclif->add_char_server(RFIFOW(fd, offset), RFIFOP(fd, offset + 2));
+		aclif->add_char_server(RFIFOW(fd, offset), RFIFOP(char *, fd, offset + 2));
 		offset += part_size;
 	}
 	return 0;
@@ -301,7 +301,7 @@ static int aloginif_parse_add_char_server(int fd)
 	const int char_server_id = RFIFOW(fd, 2);
 	struct char_server_data *data = aCalloc(1, sizeof(struct char_server_data));
 	data->id = char_server_id;
-	char *name = aStrdup(RFIFOP(fd, 4));
+	char *name = aStrdup(RFIFOP(char *, fd, 4));
 	data->world_name = name;
 	strdb_put(aclif->char_servers_db, name, data);
 	idb_put(aclif->char_servers_id_db, data->id, name);
@@ -379,7 +379,7 @@ static void aloginif_parse_from_char(int fd, Handler_func func)
 		return;
 
 	if (func != NULL) {
-		func(user_fd, sd, RFIFOP(fd, WFIFO_APICHAR_SIZE), p->packet_len - WFIFO_APICHAR_SIZE);
+		func(user_fd, sd, RFIFOP(void *, fd, WFIFO_APICHAR_SIZE), p->packet_len - WFIFO_APICHAR_SIZE);
 	} else {
 		aclif->terminate_connection(user_fd);
 	}

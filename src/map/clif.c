@@ -183,7 +183,7 @@ static inline void RBUFPOS(const uint8 *p, unsigned short pos, short *x, short *
 
 static inline void RFIFOPOS(int fd, unsigned short pos, short *x, short *y, unsigned char *dir)
 {
-	RBUFPOS(RFIFOP(fd,pos), 0, x, y, dir);
+	RBUFPOS(RFIFOP(uint8 *, fd, pos), 0, x, y, dir);
 }
 
 #if 0 // currently unused
@@ -12084,7 +12084,7 @@ static void clif_parse_MapMove(int fd, struct map_session_data *sd)
 	char command[MAP_NAME_LENGTH_EXT+25];
 	char map_name[MAP_NAME_LENGTH_EXT];
 
-	safestrncpy(map_name, RFIFOP(fd,2), MAP_NAME_LENGTH_EXT);
+	safestrncpy(map_name, RFIFOP(char *, fd, 2), MAP_NAME_LENGTH_EXT);
 	sprintf(command, "%cmapmove %s %d %d", atcommand->at_symbol, map_name, RFIFOW(fd,18), RFIFOW(fd,20));
 	atcommand->exec(fd, sd, command, true);
 }
@@ -12513,7 +12513,7 @@ static void clif_parse_Broadcast(int fd, struct map_session_data *sd)
 	if (len >= (int)(sizeof command - strlen(command)))
 		len = (int)(sizeof command - strlen(command)) - 1;
 
-	strncat(command, RFIFOP(fd,4), len);
+	strncat(command, RFIFOP(char *, fd, 4), len);
 	atcommand->exec(fd, sd, command, true);
 }
 
@@ -12997,8 +12997,6 @@ static void clif_parse_CreateChatRoom(int fd, struct map_session_data *sd)
 	int len = (int)RFIFOW(fd, 2) - 15;
 	int limit;
 	bool pub;
-	const char *password; //not zero-terminated
-	const char *title; // not zero-terminated
 	char s_password[CHATROOM_PASS_SIZE];
 	char s_title[CHATROOM_TITLE_SIZE];
 
@@ -13007,8 +13005,8 @@ static void clif_parse_CreateChatRoom(int fd, struct map_session_data *sd)
 
 	limit = RFIFOW(fd, 4);
 	pub = (RFIFOB(fd, 6) != 0);
-	password = RFIFOP(fd, 7); //not zero-terminated
-	title = RFIFOP(fd, 15); // not zero-terminated
+	const char *password = RFIFOP(char *, fd, 7); //not zero-terminated
+	const char *title = RFIFOP(char *, fd, 15); // not zero-terminated
 
 	if (limit < 0)
 		return;
@@ -13043,7 +13041,7 @@ static void clif_parse_ChatAddMember(int fd, struct map_session_data *sd)
 		return;
 
 	int chatid = RFIFOL(fd,2);
-	const char *password = RFIFOP(fd,6); // not zero-terminated
+	const char *password = RFIFOP(char *, fd, 6); // not zero-terminated
 
 	chat->join(sd,chatid,password);
 }
@@ -13062,8 +13060,6 @@ static void clif_parse_ChatRoomStatusChange(int fd, struct map_session_data *sd)
 	int len = (int)RFIFOW(fd, 2) - 15;
 	int limit;
 	bool pub;
-	const char *password; // not zero-terminated
-	const char *title; // not zero-terminated
 	char s_password[CHATROOM_PASS_SIZE];
 	char s_title[CHATROOM_TITLE_SIZE];
 
@@ -13074,8 +13070,8 @@ static void clif_parse_ChatRoomStatusChange(int fd, struct map_session_data *sd)
 	if (limit < 0)
 		return;
 	pub = (RFIFOB(fd, 6) != 0);
-	password = RFIFOP(fd, 7); // not zero-terminated
-	title = RFIFOP(fd, 15); // not zero-terminated
+	const char *password = RFIFOP(char *, fd, 7); // not zero-terminated
+	const char *title = RFIFOP(char *, fd, 15); // not zero-terminated
 
 	safestrncpy(s_password, password, CHATROOM_PASS_SIZE);
 	safestrncpy(s_title, title, min(len+1,CHATROOM_TITLE_SIZE)); //NOTE: assumes that safestrncpy will not access the len+1'th byte
@@ -13094,7 +13090,7 @@ static void clif_parse_ChangeChatOwner(int fd, struct map_session_data *sd)
 	if (sd->state.trading || (pc_isdead(sd) && (battle_config.allowed_actions_when_dead & PCALLOWACTION_CHAT) == 0) || pc_isvending(sd))
 		return;
 
-	chat->change_owner(sd, RFIFOP(fd,6)); // non null terminated
+	chat->change_owner(sd, RFIFOP(char *, fd, 6)); // non null terminated
 }
 
 static void clif_parse_KickFromChat(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
@@ -13105,7 +13101,7 @@ static void clif_parse_KickFromChat(int fd, struct map_session_data *sd)
 	if (sd->state.trading || (pc_isdead(sd) && (battle_config.allowed_actions_when_dead & PCALLOWACTION_CHAT) == 0) || pc_isvending(sd))
 		return;
 
-	chat->kick(sd, RFIFOP(fd,2)); // non null terminated
+	chat->kick(sd, RFIFOP(char *, fd, 2)); // non null terminated
 }
 
 static void clif_parse_ChatLeave(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
@@ -13751,7 +13747,7 @@ static void clif_parse_UseSkillToPosSub(int fd, struct map_session_data *sd, uin
 			return;
 		}
 		//You can't use Graffiti/TalkieBox AND have a vending open, so this is safe.
-		safestrncpy(sd->message, RFIFOP(fd, skillmoreinfo), TALKBOX_MESSAGE_SIZE);
+		safestrncpy(sd->message, RFIFOP(char *, fd, skillmoreinfo), TALKBOX_MESSAGE_SIZE);
 	}
 
 	if (sd->ud.skilltimer != INVALID_TIMER && sd->auto_cast_current.type == AUTOCAST_NONE)
@@ -13844,7 +13840,7 @@ static void clif_parse_UseSkillMap(int fd, struct map_session_data *sd)
 	uint16 skill_id = RFIFOW(fd,2);
 	char map_name[MAP_NAME_LENGTH];
 
-	mapindex->getmapname(RFIFOP(fd,4), map_name);
+	mapindex->getmapname(RFIFOP(char *, fd, 4), map_name);
 	sd->state.workinprogress = 0;
 
 	if(skill_id != sd->menuskill_id)
@@ -14131,13 +14127,12 @@ static void clif_parse_NpcStringInput(int fd, struct map_session_data *sd)
 	int message_len = len - 8;
 #endif
 	int npcid;
-	const char *message;
 
 	if (len < 9)
 		return;
 
 	npcid = (sd->state.using_megaphone == 0) ? RFIFOSL(fd, 4) : sd->npc_id;
-	message = RFIFOP(fd, 8);
+	const char *message = RFIFOP(char *, fd, 8);
 
 	safestrncpy(sd->npc_str, message, min(message_len,CHATBOX_SIZE));
 	npc->scriptcont(sd, npcid, false);
@@ -14336,7 +14331,7 @@ static void clif_parse_LocalBroadcast(int fd, struct map_session_data *sd)
 	if (len >= (int)(sizeof command - strlen(command)))
 		len = (int)(sizeof command - strlen(command)) - 1;
 
-	strncat(command, RFIFOP(fd,4), len);
+	strncat(command, RFIFOP(char *, fd, 4), len);
 	atcommand->exec(fd, sd, command, true);
 }
 
@@ -14509,7 +14504,7 @@ static void clif_parse_CreateParty(int fd, struct map_session_data *sd)
 
 	char name[NAME_LENGTH];
 
-	safestrncpy(name, RFIFOP(fd,2), NAME_LENGTH);
+	safestrncpy(name, RFIFOP(char *, fd, 2), NAME_LENGTH);
 
 	if( map->list[sd->bl.m].flag.partylock ) {
 		// Party locked.
@@ -14534,7 +14529,7 @@ static void clif_parse_CreateParty2(int fd, struct map_session_data *sd)
 	int item1 = RFIFOB(fd,26);
 	int item2 = RFIFOB(fd,27);
 
-	safestrncpy(name, RFIFOP(fd,2), NAME_LENGTH);
+	safestrncpy(name, RFIFOP(char *, fd, 2), NAME_LENGTH);
 
 	if( map->list[sd->bl.m].flag.partylock ) {
 		// Party locked.
@@ -14585,7 +14580,7 @@ static void clif_parse_PartyInvite2(int fd, struct map_session_data *sd)
 	struct map_session_data *t_sd;
 	char name[NAME_LENGTH];
 
-	safestrncpy(name, RFIFOP(fd,2), NAME_LENGTH);
+	safestrncpy(name, RFIFOP(char *, fd, 2), NAME_LENGTH);
 
 	if(map->list[sd->bl.m].flag.partylock) {
 		// Party locked.
@@ -14660,7 +14655,7 @@ static void clif_parse_RemovePartyMember(int fd, struct map_session_data *sd)
 		clif->message(fd, msg_fd(fd, MSGTBL_PARTY_CHANGE_DISABLED)); // Party modification is disabled in this map.
 		return;
 	}
-	party->removemember(sd, RFIFOL(fd, 2), RFIFOP(fd, 6));
+	party->removemember(sd, RFIFOL(fd, 2), RFIFOP(char *, fd, 6));
 }
 
 static void clif_parse_PartyChangeOption(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
@@ -14969,7 +14964,7 @@ static void clif_parse_PartyRecruitRegisterReq(int fd, struct map_session_data *
 		return;
 
 	short level = RFIFOW(fd, 2);
-	const char *notice = RFIFOP(fd, 4);
+	const char *notice = RFIFOP(char *, fd, 4);
 
 	party->recruit_register(sd, level, notice);
 #else
@@ -15101,7 +15096,7 @@ static void clif_parse_PartyRecruitUpdateReq(int fd, struct map_session_data *sd
 	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd))
 		return;
 
-	const char *notice = RFIFOP(fd, 2);
+	const char *notice = RFIFOP(char *, fd, 2);
 
 	party->recruit_update(sd, notice);
 #else
@@ -15475,9 +15470,9 @@ static void clif_parse_OpenVending(int fd, struct map_session_data *sd)
 	if (len < 0)
 		return;
 
-	const char *message = RFIFOP(fd, 4);
+	const char *message = RFIFOP(char *, fd, 4);
 	bool flag = (RFIFOB(fd, 84) != 0) ? true : false;
-	const uint8 *data = RFIFOP(fd, 85);
+	const uint8 *data = RFIFOP(uint8 *, fd, 85);
 
 	if (!flag)
 		sd->state.prevend = sd->state.workinprogress = 0;
@@ -15508,7 +15503,7 @@ static void clif_parse_CreateGuild(int fd, struct map_session_data *sd)
 		return;
 
 	char name[NAME_LENGTH];
-	safestrncpy(name, RFIFOP(fd,6), NAME_LENGTH);
+	safestrncpy(name, RFIFOP(char *, fd, 6), NAME_LENGTH);
 
 	if (map->list[sd->bl.m].flag.guildlock) {
 		clif->message(fd, msg_fd(fd, MSGTBL_GUILD_CHANGE_DISABLED)); // Guild modification is disabled in this map.
@@ -15584,7 +15579,7 @@ static void clif_parse_GuildChangePositionInfo(int fd, struct map_session_data *
 
 	for (i = 0; i < count; i ++ ) {
 		int idx = i * 40 + 4;
-		guild->change_position(sd->status.guild_id, RFIFOL(fd, idx), RFIFOL(fd, idx + 4), RFIFOL(fd, idx + 12), RFIFOP(fd, idx + 16));
+		guild->change_position(sd->status.guild_id, RFIFOL(fd, idx), RFIFOL(fd, idx + 4), RFIFOL(fd, idx + 12), RFIFOP(char *, fd, idx + 16));
 	}
 }
 
@@ -15789,7 +15784,7 @@ static void clif_parse_GuildChangeEmblem(int fd, struct map_session_data *sd)
 		return;
 
 	unsigned int emblem_len = RFIFOW(fd, 2) - 4;
-	const uint8* emblem = RFIFOP(fd, 4);
+	const uint8* emblem = RFIFOP(uint8 *, fd, 4);
 
 	if (!emblem_len || !sd->state.gmaster_flag)
 		return;
@@ -15812,13 +15807,12 @@ static void clif_parse_GuildChangeNotice(int fd, struct map_session_data *sd)
 		return;
 
 	int guild_id = RFIFOL(fd, 2);
-	char *msg1 = NULL, *msg2 = NULL;
 
 	if (!sd->state.gmaster_flag)
 		return;
 
-	msg1 = aStrndup(RFIFOP(fd,6), MAX_GUILDMES1-1);
-	msg2 = aStrndup(RFIFOP(fd,66), MAX_GUILDMES2-1);
+	char *msg1 = aStrndup(RFIFOP(char *, fd, 6), MAX_GUILDMES1-1);
+	char *msg2 = aStrndup(RFIFOP(char *, fd, 66), MAX_GUILDMES2-1);
 
 	// compensate for some client defects when using multilingual mode
 	if (msg1[0] == '|' && msg1[3] == '|') msg1+= 3; // skip duplicate marker
@@ -15880,7 +15874,7 @@ static void clif_parse_GuildInvite2(int fd, struct map_session_data *sd)
 	char nick[NAME_LENGTH];
 	struct map_session_data *t_sd = NULL;
 
-	safestrncpy(nick, RFIFOP(fd, 2), NAME_LENGTH);
+	safestrncpy(nick, RFIFOP(char *, fd, 2), NAME_LENGTH);
 	t_sd = map->nick2sd(nick, true);
 
 	clif->sub_guild_invite(fd, sd, t_sd);
@@ -15914,7 +15908,7 @@ static void clif_parse_GuildLeave(int fd, struct map_session_data *sd)
 		return;
 	}
 
-	guild->leave(sd, RFIFOL(fd, 2), RFIFOL(fd, 6), RFIFOL(fd, 10), RFIFOP(fd, 14));
+	guild->leave(sd, RFIFOL(fd, 2), RFIFOL(fd, 6), RFIFOL(fd, 10), RFIFOP(char *, fd, 14));
 }
 
 static void clif_parse_GuildExpulsion(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
@@ -15929,7 +15923,7 @@ static void clif_parse_GuildExpulsion(int fd, struct map_session_data *sd)
 		clif->message(fd, msg_fd(fd, MSGTBL_GUILD_CHANGE_DISABLED)); // Guild modification is disabled in this map.
 		return;
 	}
-	guild->expulsion(sd, RFIFOL(fd, 2), RFIFOL(fd, 6), RFIFOL(fd, 10), RFIFOP(fd, 14));
+	guild->expulsion(sd, RFIFOL(fd, 2), RFIFOL(fd, 6), RFIFOL(fd, 10), RFIFOP(char *, fd, 14));
 }
 
 /**
@@ -16063,7 +16057,7 @@ static void clif_parse_GuildBreak(int fd, struct map_session_data *sd)
 		clif->message(fd, msg_fd(fd, MSGTBL_GUILD_CHANGE_DISABLED)); // Guild modification is disabled in this map.
 		return;
 	}
-	safestrncpy(key, RFIFOP(fd, 2), 40);
+	safestrncpy(key, RFIFOP(char *, fd, 2), 40);
 	guild->dobreak(sd, key);
 }
 
@@ -16163,7 +16157,7 @@ static void clif_parse_ChangePetName(int fd, struct map_session_data *sd)
 	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
 		return;
 
-	pet->change_name(sd, RFIFOP(fd,2));
+	pet->change_name(sd, RFIFOP(char *, fd, 2));
 }
 
 /**
@@ -16383,7 +16377,7 @@ static void clif_parse_GMShift(int fd, struct map_session_data *sd)
 	char player_name[NAME_LENGTH];
 	char command[NAME_LENGTH + 20];
 
-	safestrncpy(player_name, RFIFOP(fd,2), NAME_LENGTH);
+	safestrncpy(player_name, RFIFOP(char *, fd, 2), NAME_LENGTH);
 
 	sprintf(command, "%cjumpto %s", atcommand->at_symbol, player_name);
 	atcommand->exec(fd, sd, command, true);
@@ -16420,7 +16414,7 @@ static void clif_parse_GMRecall(int fd, struct map_session_data *sd)
 	char player_name[NAME_LENGTH];
 	char command[NAME_LENGTH+8];
 
-	safestrncpy(player_name, RFIFOP(fd,2), NAME_LENGTH);
+	safestrncpy(player_name, RFIFOP(char *, fd, 2), NAME_LENGTH);
 
 	sprintf(command, "%crecall %s", atcommand->at_symbol, player_name);
 	atcommand->exec(fd, sd, command, true);
@@ -16599,7 +16593,7 @@ static void clif_parse_GMRc(int fd, struct map_session_data *sd)
 	char command[NAME_LENGTH+15];
 	char name[NAME_LENGTH];
 
-	safestrncpy(name, RFIFOP(fd,2), NAME_LENGTH);
+	safestrncpy(name, RFIFOP(char *, fd, 2), NAME_LENGTH);
 
 	sprintf(command, "%cmute %d %s", atcommand->at_symbol, 60, name);
 	atcommand->exec(fd, sd, command, true);
@@ -16667,7 +16661,7 @@ static void clif_parse_PMIgnore(int fd, struct map_session_data *sd)
 	uint8 type;
 	int i;
 
-	safestrncpy(nick, RFIFOP(fd,2), NAME_LENGTH);
+	safestrncpy(nick, RFIFOP(char *, fd, 2), NAME_LENGTH);
 
 	type = RFIFOB(fd,26);
 
@@ -16958,7 +16952,7 @@ static void clif_parse_FriendsListAdd(int fd, struct map_session_data *sd)
 	int i;
 	char nick[NAME_LENGTH];
 
-	safestrncpy(nick, RFIFOP(fd,2), NAME_LENGTH);
+	safestrncpy(nick, RFIFOP(char *, fd, 2), NAME_LENGTH);
 
 	f_sd = map->nick2sd(nick, true);
 
@@ -17512,7 +17506,7 @@ static void clif_parse_ChangeHomunculusName(int fd, struct map_session_data *sd)
 	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
 		return;
 
-	homun->change_name(sd, RFIFOP(fd,2));
+	homun->change_name(sd, RFIFOP(char *, fd, 2));
 }
 
 static void clif_parse_HomMoveToMaster(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
@@ -17702,7 +17696,7 @@ static void clif_parse_Check(int fd, struct map_session_data *sd)
 	if(!pc_has_permission(sd, PC_PERM_USE_CHECK))
 		return;
 
-	safestrncpy(charname, RFIFOP(fd,packet_db[RFIFOW(fd,0)].pos[0]), sizeof(charname));
+	safestrncpy(charname, RFIFOP(char *, fd, packet_db[RFIFOW(fd, 0)].pos[0]), sizeof(charname));
 
 	if ((pl_sd = map->nick2sd(charname, true)) == NULL || pc_get_group_level(sd) < pc_get_group_level(pl_sd)) {
 		return;
@@ -18187,15 +18181,15 @@ static void clif_parse_Mail_send(int fd, struct map_session_data *sd)
 	msg.send_id = sd->status.char_id;
 	msg.dest_id = 0; // will attempt to resolve name
 	safestrncpy(msg.send_name, sd->status.name, NAME_LENGTH);
-	safestrncpy(msg.dest_name, RFIFOP(fd,4), NAME_LENGTH);
-	safestrncpy(msg.title, RFIFOP(fd,28), MAIL_TITLE_LENGTH);
+	safestrncpy(msg.dest_name, RFIFOP(char *, fd, 4), NAME_LENGTH);
+	safestrncpy(msg.title, RFIFOP(char *, fd, 28), MAIL_TITLE_LENGTH);
 
 	if (msg.title[0] == '\0') {
 		return; // Message has no length and somehow client verification was skipped.
 	}
 
 	if (body_len)
-		safestrncpy(msg.body, RFIFOP(fd,69), body_len + 1);
+		safestrncpy(msg.body, RFIFOP(char *, fd, 69), body_len + 1);
 	else
 		memset(msg.body, 0x00, MAIL_BODY_LENGTH);
 
@@ -18568,7 +18562,7 @@ static void clif_parse_Auction_search(int fd, struct map_session_data *sd)
 
 	clif->pAuction_cancelreg(fd, sd);
 
-	safestrncpy(search_text, RFIFOP(fd,8), sizeof(search_text));
+	safestrncpy(search_text, RFIFOP(char *, fd, 8), sizeof(search_text));
 	intif->Auction_requestlist(sd->status.char_id, type, price, search_text, page);
 }
 
@@ -20443,7 +20437,6 @@ static void clif_parse_SearchStoreInfo(int fd, struct map_session_data *sd)
 
 	const unsigned int blocksize = sizeof(struct PACKET_CZ_SEARCH_STORE_INFO_item);
 	const struct PACKET_CZ_SEARCH_STORE_INFO_item* itemlist;
-	const struct PACKET_CZ_SEARCH_STORE_INFO_item* cardlist;
 	unsigned char type;
 	unsigned int min_price, max_price;
 	int packet_len, count, item_count, card_count;
@@ -20489,7 +20482,7 @@ static void clif_parse_SearchStoreInfo(int fd, struct map_session_data *sd)
 		return;
 	}
 
-	cardlist = RFIFOP(fd, sizeof(struct PACKET_CZ_SEARCH_STORE_INFO) + blocksize * item_count);
+	const struct PACKET_CZ_SEARCH_STORE_INFO_item *cardlist = RFIFOP(struct PACKET_CZ_SEARCH_STORE_INFO_item *, fd, sizeof(struct PACKET_CZ_SEARCH_STORE_INFO) + blocksize * item_count);
 
 	items_list = aMalloc(sizeof(int32) * item_count);
 	cards_list = aMalloc(sizeof(int32) * card_count);
@@ -20682,7 +20675,7 @@ static void clif_parse_debug(int fd, struct map_session_data *sd)
 		ShowDebug("Packet debug of 0x%04X (length %d), session #%d\n", (unsigned int)cmd, packet_len, fd);
 	}
 
-	ShowDump(RFIFOP(fd,0), packet_len);
+	ShowDump(RFIFOP(void *, fd, 0), packet_len);
 }
 /*==========================================
  * Server tells client to display a window similar to Magnifier (item) one
@@ -26340,7 +26333,7 @@ static int clif_parse(int fd)
 			ShowWarning("clif_parse: Received unsupported packet (packet 0x%04x (0x%04x), %"PRIuS" bytes received), disconnecting session #%d.\n",
 			            (unsigned int)cmd, RFIFOW(fd,0), RFIFOREST(fd), fd);
 #ifdef DUMP_INVALID_PACKET
-			ShowDump(RFIFOP(fd,0), RFIFOREST(fd));
+			ShowDump(RFIFOP(void *, fd, 0), RFIFOREST(fd));
 #endif
 			sockt->eof(fd);
 			return 0;
@@ -26356,7 +26349,7 @@ static int clif_parse(int fd)
 			if (packet_len < 4 || packet_len > 32768) {
 				ShowWarning("clif_parse: Received packet 0x%04x specifies invalid packet_len (%d), disconnecting session #%d.\n", (unsigned int)cmd, packet_len, fd);
 #ifdef DUMP_INVALID_PACKET
-				ShowDump(RFIFOP(fd,0), RFIFOREST(fd));
+				ShowDump(RFIFOP(void *, fd, 0), RFIFOREST(fd));
 #endif
 				sockt->eof(fd);
 
@@ -26410,7 +26403,7 @@ static int clif_parse(int fd)
 					fprintf(fp, "Unknown packet 0x%04X (length %d), session #%d\n", cmd, packet_len, fd);
 				}
 
-				WriteDump(fp, RFIFOP(fd,0), packet_len);
+				WriteDump(fp, RFIFOP(void *, fd, 0), packet_len);
 				fprintf(fp, "\n");
 				fclose(fp);
 			} else {
@@ -26423,7 +26416,7 @@ static int clif_parse(int fd)
 					ShowDebug("Unknown packet 0x%04X (length %d), session #%d\n", cmd, packet_len, fd);
 				}
 
-				ShowDump(RFIFOP(fd,0), packet_len);
+				ShowDump(RFIFOP(void *, fd, 0), packet_len);
 			}
 #else
 			clif->pDull(fd, sd);

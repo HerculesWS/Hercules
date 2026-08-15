@@ -365,7 +365,7 @@ static void intif_parse_account_storage(int fd)
 	stor->aggregate = storage_count; // Total items in storage.
 
 	for (i = 0; i < storage_count; i++) {
-		const struct item *it = RFIFOP(fd, 10 + i * sizeof(struct item));
+		const struct item *it = RFIFOP(struct item *, fd, 10 + i * sizeof(struct item));
 		VECTOR_PUSH(stor->item, *it);
 	}
 
@@ -1116,14 +1116,14 @@ static void intif_parse_Registers(int fd)
 			char sval[SCRIPT_STRING_VAR_LENGTH + 1];
 			for (i = 0; i < max; i++) {
 				int len = RFIFOB(fd, cursor);
-				safestrncpy(key, RFIFOP(fd, cursor + 1), min((int)sizeof(key), len));
+				safestrncpy(key, RFIFOP(char *, fd, cursor + 1), min((int)sizeof(key), len));
 				cursor += len + 1;
 
 				index = RFIFOL(fd, cursor);
 				cursor += 4;
 
 				len = RFIFOB(fd, cursor);
-				safestrncpy(sval, RFIFOP(fd, cursor + 1), min((int)sizeof(sval), len + 1));
+				safestrncpy(sval, RFIFOP(char *, fd, cursor + 1), min((int)sizeof(sval), len + 1));
 				cursor += len + 2;
 
 				script->set_reg(NULL,sd,reference_uid(script->add_variable(key), index), key, sval, NULL);
@@ -1139,7 +1139,7 @@ static void intif_parse_Registers(int fd)
 				int ival;
 
 				int len = RFIFOB(fd, cursor);
-				safestrncpy(key, RFIFOP(fd, cursor + 1), min((int)sizeof(key), len));
+				safestrncpy(key, RFIFOP(char *, fd, cursor + 1), min((int)sizeof(key), len));
 				cursor += len + 1;
 
 				index = RFIFOL(fd, cursor);
@@ -1232,7 +1232,7 @@ static void intif_parse_LoadGuildStorage(int fd)
 	}
 	gstor->items.data = aCalloc(gstor->items.capacity, sizeof(gstor->items.data[0]));
 	if (storage_capacity > 0) {
-		memcpy(gstor->items.data, RFIFOP(fd, 21), sizeof(gstor->items.data[0])*storage_capacity);
+		memcpy(gstor->items.data, RFIFOP(struct item *, fd, 21), sizeof(gstor->items.data[0])*storage_capacity);
 	}
 
 	if ((flag&1) == 1)
@@ -1252,7 +1252,7 @@ static void intif_parse_PartyCreated(int fd)
 {
 	if(battle_config.etc_log)
 		ShowInfo("intif: party created by account %u\n\n", RFIFOL(fd,2));
-	party->created(RFIFOL(fd,2), RFIFOL(fd,6),RFIFOB(fd,10),RFIFOL(fd,11), RFIFOP(fd,15));
+	party->created(RFIFOL(fd, 2), RFIFOL(fd, 6), RFIFOB(fd, 10), RFIFOL(fd, 11), RFIFOP(char *, fd, 15));
 }
 
 // Receive party info
@@ -1267,7 +1267,7 @@ static void intif_parse_PartyInfo(int fd)
 	if (RFIFOW(fd,2) != 8+sizeof(struct party))
 		ShowError("intif: party info: data size mismatch (char_id=%u party_id=%u packet_len=%d expected_len=%"PRIuS")\n",
 		          RFIFOL(fd,4), RFIFOL(fd,8), RFIFOW(fd,2), 8+sizeof(struct party));
-	party->recv_info(RFIFOP(fd,8), RFIFOL(fd,4));
+	party->recv_info(RFIFOP(struct party *, fd, 8), RFIFOL(fd, 4));
 }
 
 // ACK adding party member
@@ -1376,7 +1376,7 @@ static void intif_parse_GuildMemberAdded(int fd)
 // ACK member leaving guild
 static void intif_parse_GuildMemberWithdraw(int fd)
 {
-	guild->member_withdraw(RFIFOL(fd,2), RFIFOL(fd,6), RFIFOL(fd,10), RFIFOB(fd,14), RFIFOP(fd,55), RFIFOP(fd,15));
+	guild->member_withdraw(RFIFOL(fd, 2), RFIFOL(fd, 6), RFIFOL(fd, 10), RFIFOB(fd, 14), RFIFOP(char *, fd, 55), RFIFOP(char *, fd, 15));
 }
 
 // ACK guild member basic info
@@ -1398,7 +1398,7 @@ static void intif_parse_GuildBasicInfoChanged(int fd)
 	//int len = RFIFOW(fd,2) - 10;
 	int guild_id = RFIFOL(fd,4);
 	const enum guild_basic_info type = RFIFOW(fd, 8);
-	//void* data = RFIFOP(fd,10);
+	//void* data = RFIFOP(void *, fd, 10);
 
 	struct guild* g = guild->search(guild_id);
 	if( g == NULL )
@@ -1410,7 +1410,7 @@ static void intif_parse_GuildBasicInfoChanged(int fd)
 		case GBI_SKILLPOINT: g->skill_point = RFIFOL(fd,10); break;
 		case GBI_SKILLLV: {
 			int idx, max;
-			const struct guild_skill *p_gs = RFIFOP(fd,10);
+			const struct guild_skill *p_gs = RFIFOP(struct guild_skill *, fd, 10);
 			struct guild_skill *gs = NULL;
 
 			idx = p_gs->id - GD_SKILLBASE;
@@ -1437,7 +1437,7 @@ static void intif_parse_GuildMemberInfoChanged(int fd)
 	int account_id = RFIFOL(fd,8);
 	int char_id = RFIFOL(fd,12);
 	enum guild_member_info type = RFIFOW(fd, 16);
-	//void* data = RFIFOP(fd,18);
+	//void* data = RFIFOP(void *, fd, 18);
 
 	struct guild* g;
 	int idx;
@@ -1467,7 +1467,7 @@ static void intif_parse_GuildPosition(int fd)
 	if (RFIFOW(fd,2)!=sizeof(struct guild_position)+12)
 		ShowError("intif: guild info: data size mismatch (%u) %d != %"PRIuS"\n",
 		          RFIFOL(fd,4), RFIFOW(fd,2), sizeof(struct guild_position) + 12);
-	guild->position_changed(RFIFOL(fd,4), RFIFOL(fd,8), RFIFOP(fd,12));
+	guild->position_changed(RFIFOL(fd, 4), RFIFOL(fd, 8), RFIFOP(struct guild_position *, fd, 12));
 }
 
 // ACK change of guild skill update
@@ -1479,19 +1479,19 @@ static void intif_parse_GuildSkillUp(int fd)
 // ACK change of guild relationship
 static void intif_parse_GuildAlliance(int fd)
 {
-	guild->allianceack(RFIFOL(fd,2), RFIFOL(fd,6), RFIFOL(fd,10), RFIFOL(fd,14), RFIFOB(fd,18), RFIFOP(fd,19), RFIFOP(fd,43));
+	guild->allianceack(RFIFOL(fd, 2), RFIFOL(fd, 6), RFIFOL(fd, 10), RFIFOL(fd, 14), RFIFOB(fd, 18), RFIFOP(char *, fd, 19), RFIFOP(char *, fd, 43));
 }
 
 // ACK change of guild notice
 static void intif_parse_GuildNotice(int fd)
 {
-	guild->notice_changed(RFIFOL(fd,2), RFIFOP(fd,6), RFIFOP(fd,66));
+	guild->notice_changed(RFIFOL(fd, 2), RFIFOP(char *, fd, 6), RFIFOP(char *, fd, 66));
 }
 
 // ACK change of guild emblem
 static void intif_parse_GuildEmblem(int fd)
 {
-	const struct PACKET_CHARMAP_GUILD_EMBLEM *p = RFIFOP(fd, 0);
+	const struct PACKET_CHARMAP_GUILD_EMBLEM *p = RP2PTR(struct PACKET_CHARMAP_GUILD_EMBLEM *, fd);
 
 	// reset tmp emblem fields always for avoid reuse emblem buffer for other things [4144]
 	intif->emblem_tmp_done = false;
@@ -1517,7 +1517,7 @@ static void intif_parse_GuildEmblem(int fd)
 // Reply guild castle data request
 static void intif_parse_GuildCastleDataLoad(int fd)
 {
-	guild->castledataloadack(RFIFOW(fd,2), RFIFOP(fd,4));
+	guild->castledataloadack(RFIFOW(fd, 2), RFIFOP(struct guild_castle *, fd, 4));
 }
 
 // ACK change of guildmaster
@@ -1542,7 +1542,7 @@ static void intif_parse_RecvPetData(int fd)
 		if (battle_config.etc_log)
 			ShowError("intif: pet data: data size mismatch %d != %"PRIuS"\n", len-9, sizeof(struct s_pet));
 	} else {
-		memcpy(&p,RFIFOP(fd,9),sizeof(struct s_pet));
+		memcpy(&p, RFIFOP(struct s_pet *, fd, 9), sizeof(struct s_pet));
 		pet->recv_petdata(RFIFOL(fd,4),&p,RFIFOB(fd,8));
 	}
 }
@@ -1573,10 +1573,10 @@ static void intif_parse_ChangeNameOk(int fd)
 	case 0: //Players [NOT SUPPORTED YET]
 		break;
 	case 1: //Pets
-		pet->change_name_ack(sd, RFIFOP(fd,12), RFIFOB(fd,11));
+		pet->change_name_ack(sd, RFIFOP(char *, fd, 12), RFIFOB(fd, 11));
 		break;
 	case 2: //Hom
-		homun->change_name_ack(sd, RFIFOP(fd,12), RFIFOB(fd,11));
+		homun->change_name_ack(sd, RFIFOP(char *, fd, 12), RFIFOB(fd, 11));
 		break;
 	}
 	return;
@@ -1593,7 +1593,7 @@ static void intif_parse_CreateHomunculus(int fd)
 			ShowError("intif: create homun data: data size mismatch %d != %"PRIuS"\n", len, sizeof(struct s_homunculus));
 		return;
 	}
-	homun->recv_data(RFIFOL(fd,4), RFIFOP(fd,9), RFIFOB(fd,8)) ;
+	homun->recv_data(RFIFOL(fd, 4), RFIFOP(struct s_homunculus *, fd, 9), RFIFOB(fd, 8)) ;
 }
 
 static void intif_parse_RecvHomunculusData(int fd)
@@ -1605,7 +1605,7 @@ static void intif_parse_RecvHomunculusData(int fd)
 			ShowError("intif: homun data: data size mismatch %d != %"PRIuS"\n", len, sizeof(struct s_homunculus));
 		return;
 	}
-	homun->recv_data(RFIFOL(fd,4), RFIFOP(fd,9), RFIFOB(fd,8));
+	homun->recv_data(RFIFOL(fd, 4), RFIFOP(struct s_homunculus *, fd, 9), RFIFOB(fd, 8));
 }
 
 /* Really? Whats the point, shouldn't be sent when successful then [Ind] */
@@ -1672,7 +1672,7 @@ static void intif_parse_achievements_load(int fd)
 	for (i = 0; i < payload_count; i++) {
 		struct achievement t_ach = { 0 };
 
-		memcpy(&t_ach, RFIFOP(fd, 8 + i * sizeof(struct achievement)), sizeof(struct achievement));
+		memcpy(&t_ach, RFIFOP(struct achievement *, fd, 8 + i * sizeof(struct achievement)), sizeof(struct achievement));
 
 		if (achievement->get(t_ach.id) == NULL) {
 			ShowError("intif_parse_achievements_load: Invalid Achievement %d received from character %d. Ignoring...\n", t_ach.id, char_id);
@@ -1756,7 +1756,7 @@ static void intif_parse_QuestLog(int fd)
 			sd->quest_log = NULL;
 		}
 	} else {
-		const struct quest *received = RFIFOP(fd, 8);
+		const struct quest *received = RFIFOP(struct quest *, fd, 8);
 		int i, k = num_received;
 		if (sd->quest_log) {
 			RECREATE(sd->quest_log, struct quest, num_received);
@@ -1870,7 +1870,7 @@ static void intif_parse_MailInboxReceived(int fd)
 	}
 
 	//FIXME: this operation is not safe [ultramage]
-	memcpy(&sd->mail.inbox, RFIFOP(fd,9), sizeof(struct mail_data));
+	memcpy(&sd->mail.inbox, RFIFOP(struct mail_data *, fd, 9), sizeof(struct mail_data));
 	sd->mail.changed = false; // cache is now in sync
 
 	if (flag)
@@ -1932,7 +1932,7 @@ static void intif_parse_MailGetAttach(int fd)
 		return;
 	}
 
-	memcpy(&item, RFIFOP(fd,12), sizeof(struct item));
+	memcpy(&item, RFIFOP(struct item *, fd, 12), sizeof(struct item));
 
 	mail->getattachment(sd, zeny, &item);
 }
@@ -2053,7 +2053,7 @@ static void intif_parse_MailSend(int fd)
 		return;
 	}
 
-	memcpy(&msg, RFIFOP(fd,4), sizeof(struct mail_message));
+	memcpy(&msg, RFIFOP(struct mail_message *, fd, 4), sizeof(struct mail_message));
 	fail = (msg.id == 0);
 
 	// notify sender
@@ -2073,8 +2073,8 @@ static void intif_parse_MailNew(int fd)
 {
 	struct map_session_data *sd = map->charid2sd(RFIFOL(fd,2));
 	int mail_id = RFIFOL(fd,6);
-	const char *sender_name = RFIFOP(fd,10);
-	const char *title = RFIFOP(fd,34);
+	const char *sender_name = RFIFOP(char *, fd, 10);
+	const char *title = RFIFOP(char *, fd, 34);
 
 	if( sd == NULL )
 		return;
@@ -2113,7 +2113,7 @@ static void intif_parse_AuctionResults(int fd)
 	struct map_session_data *sd = map->charid2sd(RFIFOL(fd,4));
 	short count = RFIFOW(fd,8);
 	short pages = RFIFOW(fd,10);
-	const uint8 *data = RFIFOP(fd,12);
+	const uint8 *data = RFIFOP(uint8 *, fd, 12);
 
 	if( sd == NULL )
 		return;
@@ -2148,7 +2148,7 @@ static void intif_parse_AuctionRegister(int fd)
 		return;
 	}
 
-	memcpy(&auction, RFIFOP(fd,4), sizeof(struct auction_data));
+	memcpy(&auction, RFIFOP(struct auction_data *, fd, 4), sizeof(struct auction_data));
 	if( (sd = map->charid2sd(auction.seller_id)) == NULL )
 		return;
 
@@ -2306,7 +2306,7 @@ static void intif_parse_MercenaryReceived(int fd)
 		return;
 	}
 
-	mercenary->data_received(RFIFOP(fd,5), RFIFOB(fd,4));
+	mercenary->data_received(RFIFOP(struct s_mercenary *, fd, 5), RFIFOB(fd, 4));
 }
 
 static int intif_mercenary_request(int merc_id, int char_id)
@@ -2391,7 +2391,7 @@ static void intif_parse_ElementalReceived(int fd)
 		return;
 	}
 
-	elemental->data_received(RFIFOP(fd,5), RFIFOB(fd,4));
+	elemental->data_received(RFIFOP(struct s_elemental *, fd, 5), RFIFOB(fd, 4));
 }
 
 static int intif_elemental_request(int ele_id, int char_id)
@@ -2474,7 +2474,7 @@ static void intif_parse_MessageToFD(int fd)
 		/* matching e.g. previous fd owner didn't dc during request or is still the same */
 		if( sd && sd->bl.id == aid ) {
 			char msg[512];
-			safestrncpy(msg, RFIFOP(fd,12), RFIFOW(fd,2) - 12);
+			safestrncpy(msg, RFIFOP(char *, fd, 12), RFIFOW(fd, 2) - 12);
 			clif->messagecolor_self(u_fd, COLOR_DEFAULT ,msg);
 		}
 
@@ -2582,7 +2582,7 @@ static void intif_parse_RequestRodexOpenInbox(int fd)
 	for (int i = 0, j = 24; i < count; ++i, j += sizeof(struct rodex_message)) {
 		struct rodex_message msg = { 0 };
 		VECTOR_ENSURE(sd->rodex.messages, 1, 1);
-		memcpy(&msg, RFIFOP(fd, j), sizeof(struct rodex_message));
+		memcpy(&msg, RFIFOP(struct rodex_message *, fd, j), sizeof(struct rodex_message));
 		VECTOR_PUSH(sd->rodex.messages, msg);
 	}
 
@@ -2727,7 +2727,7 @@ static void intif_parse_RodexCheckName(int fd)
 	int target_level = RFIFOL(fd, 14);
 	char name[NAME_LENGTH];
 
-	safestrncpy(name, RFIFOP(inter_fd, 18), NAME_LENGTH);
+	safestrncpy(name, RFIFOP(char *, inter_fd, 18), NAME_LENGTH);
 
 	if (reqchar_id <= 0)
 		return;
@@ -2773,7 +2773,7 @@ static void intif_parse_GetItemsAck(int fd)
 	uint8 opentype = RFIFOB(fd, 14);
 	int count = RFIFOB(fd, 15);
 	struct rodex_item items[RODEX_MAX_ITEM];
-	memcpy(&items[0], RFIFOP(fd, 16), sizeof(struct rodex_item) * RODEX_MAX_ITEM);
+	memcpy(&items[0], RFIFOP(struct rodex_item *, fd, 16), sizeof(struct rodex_item) * RODEX_MAX_ITEM);
 	rodex->getItemsAck(sd, mail_id, opentype, count, &items[0]);
 }
 

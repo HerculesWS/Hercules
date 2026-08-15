@@ -192,7 +192,7 @@ static void mapif_parse_auction_requestlist(int fd)
 	struct auction_data *auction;
 	short i = 0, j = 0, pages = 1;
 
-	memcpy(searchtext, RFIFOP(fd, 16), NAME_LENGTH);
+	memcpy(searchtext, RFIFOP(char *, fd, 16), NAME_LENGTH);
 
 	for (auction = dbi_first(iter); dbi_exists(iter); auction = dbi_next(iter)) {
 		if ((type == 0 && auction->type != IT_ARMOR && auction->type != IT_PETARMOR)
@@ -242,7 +242,7 @@ static void mapif_parse_auction_register(int fd)
 	if( RFIFOW(fd, 2) != sizeof(struct auction_data) + 4 )
 		return;
 
-	memcpy(&auction, RFIFOP(fd, 4), sizeof(struct auction_data));
+	memcpy(&auction, RFIFOP(struct auction_data *, fd, 4), sizeof(struct auction_data));
 	if( inter_auction->count(auction.seller_id, false) < 5 )
 		auction.auction_id = inter_auction->create(&auction);
 
@@ -361,7 +361,7 @@ static void mapif_parse_auction_bid(int fd)
 	}
 
 	auction->buyer_id = char_id;
-	safestrncpy(auction->buyer_name, RFIFOP(fd, 16), NAME_LENGTH);
+	safestrncpy(auction->buyer_name, RFIFOP(char *, fd, 16), NAME_LENGTH);
 	auction->price = bid;
 
 	if (bid >= auction->buynow) {
@@ -1104,7 +1104,7 @@ static void mapif_parse_mail_send(int fd)
 		return;
 
 	account_id = RFIFOL(fd, 4);
-	memcpy(&msg, RFIFOP(fd, 8), sizeof(struct mail_message));
+	memcpy(&msg, RFIFOP(struct mail_message *, fd, 8), sizeof(struct mail_message));
 
 	inter_mail->send(account_id, &msg);
 
@@ -1505,7 +1505,7 @@ static int mapif_parse_LoadPet(int fd)
 static int mapif_parse_SavePet(int fd)
 {
 	RFIFOHEAD(fd);
-	mapif->save_pet(fd, RFIFOL(fd, 4), RFIFOP(fd, 8));
+	mapif->save_pet(fd, RFIFOL(fd, 4), RFIFOP(struct s_pet *, fd, 8));
 	return 0;
 }
 
@@ -1540,7 +1540,7 @@ static int mapif_parse_quest_save(int fd)
 	bool success;
 
 	if (num > 0)
-		qd = RFIFOP(fd,8);
+		qd = RFIFOP(struct quest *, fd, 8);
 
 	success = inter_quest->save(char_id, qd, num);
 
@@ -1710,7 +1710,7 @@ static void mapif_parse_rodex_send(int fd)
 	if (RFIFOW(fd,2) != 4 + sizeof(struct rodex_message))
 		return;
 
-	memcpy(&msg, RFIFOP(fd,4), sizeof(struct rodex_message));
+	memcpy(&msg, RFIFOP(struct rodex_message *, fd, 4), sizeof(struct rodex_message));
 	if (msg.receiver_id > 0 || msg.receiver_accountid > 0)
 		msg.id = inter_rodex->savemessage(&msg);
 
@@ -1741,7 +1741,7 @@ static void mapif_parse_rodex_checkname(int fd)
 	int target_char_id, target_level;
 	int target_class;
 
-	safestrncpy(name, RFIFOP(fd, 6), NAME_LENGTH);
+	safestrncpy(name, RFIFOP(char *, fd, 6), NAME_LENGTH);
 
 	if (inter_rodex->checkname(name, &target_char_id, &target_class, &target_level) == true)
 		mapif->rodex_checkname(fd, reqchar_id, target_char_id, target_class, target_level, name);
@@ -1924,7 +1924,7 @@ static int mapif_parse_AccountStorageSave(int fd)
 		VECTOR_ENSURE(p_stor.item, count, 1);
 
 		for (i = 0; i < count; i++) {
-			const struct item *it = RFIFOP(fd, 10 + i * sizeof(struct item));
+			const struct item *it = RFIFOP(struct item *, fd, 10 + i * sizeof(struct item));
 
 			VECTOR_PUSH(p_stor.item, *it);
 		}
@@ -2007,7 +2007,7 @@ static int mapif_parse_SaveGuildStorage(int fd)
 
 	if (storage_capacity > 0) {
 		gstor.items.data = aCalloc(storage_capacity, sizeof gstor.items.data[0]);
-		memcpy(gstor.items.data, RFIFOP(fd, 20), sizeof gstor.items.data[0] * storage_capacity);
+		memcpy(gstor.items.data, RFIFOP(struct item *, fd, 20), sizeof gstor.items.data[0] * storage_capacity);
 	}
 	gstor.items.amount = storage_amount;
 	gstor.items.capacity = storage_capacity;
@@ -2063,7 +2063,7 @@ static void mapif_parse_accinfo(int fd)
 	char query[NAME_LENGTH];
 	int u_fd = RFIFOL(fd, 2), aid = RFIFOL(fd, 6), castergroup = RFIFOL(fd, 10);
 
-	safestrncpy(query, RFIFOP(fd, 14), NAME_LENGTH);
+	safestrncpy(query, RFIFOP(char *, fd, 14), NAME_LENGTH);
 
 	inter->accinfo(u_fd, aid, castergroup, query, fd);
 }
@@ -2102,7 +2102,7 @@ static int mapif_parse_Registry(int fd)
 		for (i = 0; i < count; i++) {
 			unsigned int index;
 			int len = RFIFOB(fd, cursor);
-			safestrncpy(key, RFIFOP(fd, cursor + 1), min((int)sizeof(key), len));
+			safestrncpy(key, RFIFOP(char *, fd, cursor + 1), min((int)sizeof(key), len));
 			cursor += len + 1;
 
 			index = RFIFOL(fd, cursor);
@@ -2120,7 +2120,7 @@ static int mapif_parse_Registry(int fd)
 			/* str */
 			case 2:
 				len = RFIFOB(fd, cursor);
-				safestrncpy(sval, RFIFOP(fd, cursor + 1), min((int)sizeof(sval), len + 1));
+				safestrncpy(sval, RFIFOP(char *, fd, cursor + 1), min((int)sizeof(sval), len + 1));
 				cursor += len + 2;
 				inter->savereg(account_id, char_id, key, index, (intptr_t)sval, true);
 				break;
@@ -2170,13 +2170,12 @@ static void mapif_namechange_ack(int fd, int account_id, int char_id, int type, 
 static int mapif_parse_NameChangeRequest(int fd)
 {
 	int account_id, char_id, type;
-	const char *name;
 	int i;
 
 	account_id = RFIFOL(fd, 2);
 	char_id = RFIFOL(fd, 6);
 	type = RFIFOB(fd, 10);
-	name = RFIFOP(fd, 11);
+	const char *name = RFIFOP(char *, fd, 11);
 
 	// Check Authorized letters/symbols in the name
 	if (char_name_option == 1) { // only letters/symbols in char_name_letters are authorized
@@ -2313,7 +2312,7 @@ static void mapif_parse_save_achievements(int fd)
 
 	for (i = 0; i < payload_count; i++) {
 		struct achievement ach = { 0 };
-		memcpy(&ach, RFIFOP(fd, 8 + i * sizeof(struct achievement)), sizeof(struct achievement));
+		memcpy(&ach, RFIFOP(struct achievement *, fd, 8 + i * sizeof(struct achievement)), sizeof(struct achievement));
 		VECTOR_PUSH(p, ach);
 	}
 
