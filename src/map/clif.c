@@ -15747,8 +15747,8 @@ static bool clif_validate_emblem(const uint8 *emblem, unsigned long emblem_len)
 		switch( RBUFW(buf,28) ) {
 			case 8: // palette indexes
 			{
-				const uint8 *indexes = RBUFP(buf,offbits);
-				const uint32 *palette = RBUFP(buf,BITMAPFILEHEADER_SIZE + BITMAPINFOHEADER_SIZE);
+				const uint8 *indexes = RBUFP(uint8 *, buf, offbits);
+				const uint32 *palette = RBUFP(uint32 *, buf, BITMAPFILEHEADER_SIZE + BITMAPINFOHEADER_SIZE);
 
 				for (i = 0; i < extraconf->emblems->guild_emblem_width * extraconf->emblems->guild_emblem_height; i++) {
 					if( indexes[i] >= palettesize ) // Invalid color
@@ -15766,7 +15766,7 @@ static bool clif_validate_emblem(const uint8 *emblem, unsigned long emblem_len)
 			}
 			case 24: // full colors
 			{
-				const struct s_bitmaptripple *pixels = RBUFP(buf,offbits);
+				const struct s_bitmaptripple *pixels = RBUFP(struct s_bitmaptripple *, buf, offbits);
 
 				for (i = 0; i < extraconf->emblems->guild_emblem_width * extraconf->emblems->guild_emblem_height; i++) {
 					// if( pixels[i].r < 0xF8 || pixels[i].g > 0x07 || pixels[i].b < 0xF8 )
@@ -18259,7 +18259,7 @@ static void clif_Auction_results(struct map_session_data *sd, short count, short
 
 	for( i = 0; i < count; i++ ) {
 		int k = 12 + (i * 83);
-		memcpy(&auction, RBUFP(buf,i * len), len);
+		memcpy(&auction, RBUFP(struct auction_data *, buf, i * len), len);
 
 		WFIFOL(fd,k) = auction.auction_id;
 		safestrncpy(WFIFOP(fd,4+k), auction.seller_name, NAME_LENGTH);

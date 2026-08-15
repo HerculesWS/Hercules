@@ -95,15 +95,15 @@ static inline const void *RBUFP_(const void *p, int pos)
 {
 	return ((const uint8 *)p) + pos;
 }
-#define RBUFP(p,pos) RBUFP_(p, (int)(pos))
-#define RBUFB(p,pos) (*(const uint8 *)RBUFP((p),(pos)))
-#define RBUFW(p,pos) (*(const uint16 *)RBUFP((p),(pos)))
-#define RBUFL(p,pos) (*(const uint32 *)RBUFP((p),(pos)))
-#define RBUFQ(p,pos) (*(const uint64 *)RBUFP((p),(pos)))
-#define RBUFSB(p,pos) (*(const int8 *)RBUFP((p),(pos)))
-#define RBUFSW(p,pos) (*(const int16 *)RBUFP((p),(pos)))
-#define RBUFSL(p,pos) (*(const int32 *)RBUFP((p),(pos)))
-#define RBUFSQ(p,pos) (*(const int64 *)RBUFP((p),(pos)))
+#define RBUFP(T, p,pos) ((const T)RBUFP_(p, (int)(pos)))
+#define RBUFB(p,pos) (*RBUFP(uint8 *, (p),(pos)))
+#define RBUFW(p,pos) (*RBUFP(uint16 *, (p),(pos)))
+#define RBUFL(p,pos) (*RBUFP(uint32 *, (p),(pos)))
+#define RBUFQ(p,pos) (*RBUFP(uint64 *, (p),(pos)))
+#define RBUFSB(p,pos) (*RBUFP(int8 *, (p),(pos)))
+#define RBUFSW(p,pos) (*RBUFP(int16 *, (p),(pos)))
+#define RBUFSL(p,pos) (*RBUFP(int32 *, (p),(pos)))
+#define RBUFSQ(p,pos) (*RBUFP(int64 *, (p),(pos)))
 
 static inline void *WBUFP_(void *p, int pos) __attribute__((const, unused));
 static inline void *WBUFP_(void *p, int pos)
