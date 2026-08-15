@@ -1248,6 +1248,7 @@ static int unit_can_move(struct block_list *bl)
 		sd->state.vending ||
 		sd->state.prevend ||
 		sd->state.buyingstore ||
+		sd->state.stylist_ui ||
 		sd->block_action.move
 	))
 		return 0; //Can't move
