@@ -209,7 +209,7 @@ static void char_set_account_online(int account_id, bool standalone)
 {
 	WFIFOHEAD(chr->login_fd, sizeof(struct PACKET_CHARLOGIN_SET_ACCOUNT_ONLINE));
 	
-	struct PACKET_CHARLOGIN_SET_ACCOUNT_ONLINE *p = WFIFOP(chr->login_fd, 0);
+	struct PACKET_CHARLOGIN_SET_ACCOUNT_ONLINE *p = WP2PTR(struct PACKET_CHARLOGIN_SET_ACCOUNT_ONLINE *, chr->login_fd);
 	p->packetType = HEADER_CHARLOGIN_SET_ACCOUNT_ONLINE;
 	p->account_id = account_id;
 	p->standalone = standalone ? 1 : 0;
@@ -2152,7 +2152,7 @@ static void char_send_HC_ACK_CHARINFO_PER_PAGE(int fd, struct char_session_data 
 #if PACKETVER_MAIN_NUM >= 20130522 || PACKETVER_RE_NUM >= 20130327 || defined(PACKETVER_ZERO)
 	const int len = sizeof(struct PACKET_HC_ACK_CHARINFO_PER_PAGE);
 	WFIFOHEAD(fd, len + (MAX_CHARS * MAX_CHAR_BUF));
-	struct PACKET_HC_ACK_CHARINFO_PER_PAGE *p = WFIFOP(fd, 0);
+	struct PACKET_HC_ACK_CHARINFO_PER_PAGE *p = WP2PTR(struct PACKET_HC_ACK_CHARINFO_PER_PAGE *, fd);
 	int count = 0;
 	p->packetId = HEADER_HC_ACK_CHARINFO_PER_PAGE;
 	p->packetLen = chr->mmo_chars_fromsql(sd, WFIFOP(fd, len), &count) + len;
@@ -2169,7 +2169,7 @@ static void char_send_HC_ACK_CHARINFO_PER_PAGE_tail(int fd, struct char_session_
 #if PACKETVER_MAIN_NUM >= 20130522 || PACKETVER_RE_NUM >= 20130327 || defined(PACKETVER_ZERO)
 	const int len = sizeof(struct PACKET_HC_ACK_CHARINFO_PER_PAGE);
 	WFIFOHEAD(fd, len);
-	struct PACKET_HC_ACK_CHARINFO_PER_PAGE *p = WFIFOP(fd, 0);
+	struct PACKET_HC_ACK_CHARINFO_PER_PAGE *p = WP2PTR(struct PACKET_HC_ACK_CHARINFO_PER_PAGE *, fd);
 	p->packetId = HEADER_HC_ACK_CHARINFO_PER_PAGE;
 	p->packetLen = len;
 	WFIFOSET(fd, p->packetLen);
@@ -5328,7 +5328,7 @@ static int char_send_accounts_tologin(int tid, int64 tick, int id, intptr_t data
 		int len = sizeof(struct PACKET_CHARLOGIN_ONLINE_ACCOUNTS) + sizeof(*p->accounts) * users;
 
 		WFIFOHEAD(chr->login_fd, len);
-		p = WFIFOP(chr->login_fd, 0);
+		p = WP2PTR(struct PACKET_CHARLOGIN_ONLINE_ACCOUNTS *, chr->login_fd);
 		p->packetType = HEADER_CHARLOGIN_ONLINE_ACCOUNTS;
 
 		chr->online_char_db->foreach(chr->online_char_db, chr->send_accounts_tologin_sub, &i, p->accounts);

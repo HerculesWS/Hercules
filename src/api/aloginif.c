@@ -335,7 +335,7 @@ static void aloginif_send_to_server(int fd, struct api_session_data *sd, int msg
 
 	const int len = (int)sizeof(struct PACKET_API_PROXY) + (int)data_len;
 	WFIFOHEAD(aloginif->fd, len);
-	struct PACKET_API_PROXY *p = WFIFOP(aloginif->fd, 0);
+	struct PACKET_API_PROXY *p = WP2PTR(struct PACKET_API_PROXY *, aloginif->fd);
 	p->packet_id = HEADER_API_PROXY_REQUEST;
 	p->packet_len = len;
 	INIT_PACKET_PROXY_FIELDS(p, sd, proxy_flag);

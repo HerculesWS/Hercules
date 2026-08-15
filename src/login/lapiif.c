@@ -237,8 +237,8 @@ static void lapiif_parse_proxy_api_to_char(int fd)
 	}
 	const int len = inPacket->packet_len;
 	WFIFOHEAD(char_fd, len);
-	memcpy(WFIFOP(char_fd, 0), inPacket, len);
-	struct PACKET_API_PROXY *p = WFIFOP(char_fd, 0);
+	memcpy(WP2PTR(struct PACKET_API_PROXY *, char_fd), inPacket, len);
+	struct PACKET_API_PROXY *p = WP2PTR(struct PACKET_API_PROXY *, char_fd);
 	p->packet_id = HEADER_API_PROXY_REQUEST;
 	p->char_server_id = fd;
 	WFIFOSET(char_fd, len);
@@ -252,7 +252,7 @@ static void lapiif_parse_proxy_api_from_char(int fd)
 		return;
 	const int len = inPacket->packet_len;
 	WFIFOHEAD(api_fd, len);
-	memcpy(WFIFOP(api_fd, 0), inPacket, len);
+	memcpy(WP2PTR(struct PACKET_API_PROXY *, api_fd), inPacket, len);
 	WFIFOW(api_fd, 0) = HEADER_API_PROXY_REPLY;
 	WFIFOSET(api_fd, len);
 }

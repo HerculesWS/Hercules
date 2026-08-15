@@ -130,7 +130,7 @@ static void capiif_parse_proxy_api_from_map(int fd)
 	if (!sockt->session_is_active(login_fd))
 		return;
 	WFIFOHEAD(login_fd, len);
-	memcpy(WFIFOP(login_fd, 0), inPacket, len);
+	memcpy(WP2PTR(struct PACKET_API_PROXY *, login_fd), inPacket, len);
 	WFIFOW(login_fd, 0) = HEADER_API_PROXY_REPLY;
 	WFIFOSET(login_fd, len);
 }

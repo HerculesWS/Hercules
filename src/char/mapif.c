@@ -2367,7 +2367,7 @@ static void mapif_rodex_getitemsack(int char_id, int64 mail_id, uint8 opentype, 
 static void mapif_agency_joinPartyResult(int fd, int char_id, enum adventurer_agency_result result)
 {
 	WFIFOHEAD(fd, sizeof(struct PACKET_CHARMAP_AGENCY_JOIN_PARTY));
-	struct PACKET_CHARMAP_AGENCY_JOIN_PARTY *p = WFIFOP(fd, 0);
+	struct PACKET_CHARMAP_AGENCY_JOIN_PARTY *p = WP2PTR(struct PACKET_CHARMAP_AGENCY_JOIN_PARTY *, fd);
 
 	p->packetType = 0x389b;
 	p->char_id = char_id;

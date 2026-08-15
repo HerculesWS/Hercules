@@ -479,7 +479,7 @@ static void chrif_authreq(struct map_session_data *sd, bool hstandalone)
 	}
 
 	WFIFOHEAD(chrif->fd, sizeof(struct PACKET_MAPCHAR_AUTH_REQ));
-	struct PACKET_MAPCHAR_AUTH_REQ *p = WFIFOP(chrif->fd, 0);
+	struct PACKET_MAPCHAR_AUTH_REQ *p = WP2PTR(struct PACKET_MAPCHAR_AUTH_REQ *, chrif->fd);
 	p->packetType = HEADER_MAPCHAR_AUTH_REQ;
 	p->account_id = sd->status.account_id;
 	p->char_id = sd->status.char_id;

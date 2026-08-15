@@ -87,7 +87,7 @@ static int intif_create_pet(int account_id, int char_id, int pet_class, int pet_
 	nullpo_ret(pet_name);
 
 	WFIFOHEAD(inter_fd, sizeof(struct PACKET_INTER_CREATE_PET));
-	struct PACKET_INTER_CREATE_PET *p = WFIFOP(inter_fd, 0);
+	struct PACKET_INTER_CREATE_PET *p = WP2PTR(struct PACKET_INTER_CREATE_PET *, inter_fd);
 	p->packet_id = HEADER_INTER_CREATE_PET;
 	p->account_id = account_id;
 	p->char_id = char_id;
@@ -2780,7 +2780,7 @@ static void intif_parse_GetItemsAck(int fd)
 static void intif_request_agency_join_party(int char_id, int party_id, int map_index)
 {
 	WFIFOHEAD(inter_fd, sizeof(struct PACKET_MAPCHAR_AGENCY_JOIN_PARTY_REQ));
-	struct PACKET_MAPCHAR_AGENCY_JOIN_PARTY_REQ *p = WFIFOP(inter_fd, 0);
+	struct PACKET_MAPCHAR_AGENCY_JOIN_PARTY_REQ *p = WP2PTR(struct PACKET_MAPCHAR_AGENCY_JOIN_PARTY_REQ *, inter_fd);
 	p->packetType = 0x3084;
 	p->char_id = char_id;
 	p->party_id = party_id;
