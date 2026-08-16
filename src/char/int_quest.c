@@ -114,7 +114,7 @@ static struct quest *inter_quest_fromsql(int char_id, int *count)
 		if (i < *count) {
 			// Should never happen. Compact array
 			*count = i;
-			questlog = aRealloc(questlog, sizeof(struct quest)*i);
+			questlog = (struct quest *)aRealloc(questlog, sizeof(struct quest)*i);
 		}
 	}
 

@@ -135,7 +135,7 @@ static void fake_WFIFOHEAD(int fd, int size)
 
 	fake_wfd = fd;
 	fake_wsize = size;
-	fake_wbuf = aCalloc(1, size);
+	fake_wbuf = (uint8 *)aCalloc(1, size);
 }
 
 static void fake_WFIFOSET(int fd, int size)
@@ -253,7 +253,7 @@ static void testChunked1Send(int fd, int size)
 	ShowBuf("test send called: ", fake_wbuf, fake_wsize);
 #endif
 	// reallocate buffer always for detect overflow
-	char *buf = aCalloc(1, size);
+	char *buf = (char *)aCalloc(1, size);
 	memcpy(buf, fake_wbuf, size);
 	if (pRecv != NULL)
 		pRecv(buf, size);
@@ -319,7 +319,7 @@ static void testChunkedBuf2(char *data, int sz)
 	write_clear();
 
 	// reallocate buffer always for detect overflow
-	fake_rflags = aCalloc(1, cnt);
+	fake_rflags = (char *)aCalloc(1, cnt);
 
 	WFIFO_CHUNKED_INIT(p, fd, 0x1234, PACKET_TEST_CHUNKED, data, data_len) {
 		WFIFO_CHUNKED_BLOCK_START(p, PACKET_TEST_CHUNKED);
@@ -384,7 +384,7 @@ static void testChunked1(void)
 	ShowStatus("Test long chunked\n");
 	for (int f = 1; f < MAX_TEST_BUFFER; f += 100) {
 		// reallocate buffer always for detect overflow
-		char *buf = aCalloc(1, f);
+		char *buf = (char *)aCalloc(1, f);
 		for (int i = 0; i < f; i ++) {
 			buf[i] = '0' + (i % 10);
 		}

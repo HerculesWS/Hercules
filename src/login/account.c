@@ -45,7 +45,7 @@ struct account_interface *account;
 /// public constructor
 static AccountDB *account_db_sql(void)
 {
-	AccountDB_SQL* db = (AccountDB_SQL*)aCalloc(1, sizeof(AccountDB_SQL));
+	AccountDB_SQL *db = (AccountDB_SQL *)aCalloc(1, sizeof(AccountDB_SQL));
 
 	// set up the vtable
 	db->vtable.init         = account->db_sql_init;
@@ -417,10 +417,9 @@ static bool account_db_sql_load_str(AccountDB *self, struct mmo_account *acc, co
 static AccountDBIterator *account_db_sql_iterator(AccountDB *self)
 {
 	AccountDB_SQL* db = (AccountDB_SQL*)self;
-	AccountDBIterator_SQL* iter;
 
 	nullpo_retr(NULL, db);
-	iter = (AccountDBIterator_SQL*)aCalloc(1, sizeof(AccountDBIterator_SQL));
+	AccountDBIterator_SQL *iter = (AccountDBIterator_SQL *)aCalloc(1, sizeof(AccountDBIterator_SQL));
 	// set up the vtable
 	iter->vtable.destroy = account->db_sql_iter_destroy;
 	iter->vtable.next    = account->db_sql_iter_next;

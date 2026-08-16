@@ -347,8 +347,7 @@ static int inter_storage_guild_storage_fromsql(int guild_id, struct guild_storag
 
 	if (gstor->items.amount < gstor->items.capacity) {
 		if (gstor->items.amount > 0) {
-			struct item *temp;
-			temp = aRealloc(gstor->items.data, sizeof(gstor->items.data[0])*gstor->items.amount);
+			struct item *temp = (struct item *)aRealloc(gstor->items.data, sizeof(gstor->items.data[0])*gstor->items.amount);
 			if (temp != NULL)
 				gstor->items.data = temp;
 		} else {

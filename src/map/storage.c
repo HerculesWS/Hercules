@@ -555,8 +555,7 @@ static void storage_storage_quit(struct map_session_data *sd, int flag)
  */
 static struct DBData create_guildstorage(union DBKey key, va_list args)
 {
-	struct guild_storage *gs = NULL;
-	gs = (struct guild_storage *) aCalloc(1, sizeof(struct guild_storage));
+	struct guild_storage *gs = (struct guild_storage *)aCalloc(1, sizeof(struct guild_storage));
 	gs->guild_id=key.i;
 	return DB->ptr2data(gs);
 }

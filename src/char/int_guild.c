@@ -180,8 +180,8 @@ static bool inter_guild_tosql(struct guild *g, int flag)
 
 		if (flag & GS_EMBLEM)
 		{
-			char *emblem_data = aMalloc(g->emblem_len * 2 + 1);
-			char* pData = emblem_data;
+			char *emblem_data = (char *)aMalloc(g->emblem_len * 2 + 1);
+			char *pData = emblem_data;
 
 			strcat(t_info, " emblem");
 			// Convert emblem_data to hex
@@ -412,7 +412,7 @@ static struct guild *inter_guild_fromsql(int guild_id)
 	SQL->GetData(inter->sql_handle, 13, &data, &len); g->emblem_id = atoi(data);
 	SQL->GetData(inter->sql_handle, 14, &data, &len);
 
-	g->emblem_data = aMalloc(g->emblem_len);
+	g->emblem_data = (char *)aMalloc(g->emblem_len);
 
 	// convert emblem data from hexadecimal to binary
 	//TODO: why not store it in the db as binary directly? [ultramage]
@@ -945,7 +945,6 @@ static int inter_guild_calcinfo(struct guild *g)
 
 static struct guild *inter_guild_create(const char *name, const struct guild_member *master)
 {
-	struct guild *g;
 	int i=0;
 #ifdef NOISY
 	ShowInfo("Creating Guild (%s)\n", name);
@@ -969,7 +968,7 @@ static struct guild *inter_guild_create(const char *name, const struct guild_mem
 			}
 	}
 
-	g = (struct guild *)aMalloc(sizeof(struct guild));
+	struct guild *g = (struct guild *)aMalloc(sizeof(struct guild));
 	memset(g,0,sizeof(struct guild));
 
 	memcpy(g->name,name,NAME_LENGTH);
@@ -1551,7 +1550,7 @@ static bool inter_guild_update_emblem(int len, int guild_id, const char *data)
 		return false;
 
 	if (len > g->emblem_len)
-		g->emblem_data = aReallocz(g->emblem_data, len);
+		g->emblem_data = (char *)aReallocz(g->emblem_data, len);
 	memcpy(g->emblem_data, data, len);
 	g->emblem_len = len;
 	g->emblem_id++;

@@ -6507,10 +6507,9 @@ static void clif_displaymessage_sprintf(const int fd, const char *mes, ...)
 static void clif_broadcast(struct block_list *bl, const char *mes, int len, int type, enum send_target target)
 {
 	int lp = ((type & BC_COLOR_MASK) != 0 || (type & BC_MEGAPHONE) != 0) ? 4 : 0;
-	unsigned char *buf = NULL;
 	nullpo_retv(mes);
 
-	buf = aMalloc((4 + lp + len)*sizeof(unsigned char));
+	unsigned char *buf = (unsigned char *)aMalloc((4 + lp + len)*sizeof(unsigned char));
 
 	WBUFW(buf,0) = 0x9a;
 	WBUFW(buf,2) = 4 + lp + len;
@@ -6557,11 +6556,10 @@ static void clif_GlobalMessage(struct block_list *bl, const char *message)
 /// 01c3 <packet len>.W <fontColor>.L <fontType>.W <fontSize>.W <fontAlign>.W <fontY>.W <message>.?B
 static void clif_broadcast2(struct block_list *bl, const char *mes, int len, unsigned int fontColor, short fontType, short fontSize, short fontAlign, short fontY, enum send_target target)
 {
-	unsigned char *buf;
 
 	nullpo_retv(mes);
 
-	buf = aMalloc((16 + len)*sizeof(unsigned char));
+	unsigned char *buf = (unsigned char *)aMalloc((16 + len)*sizeof(unsigned char));
 	WBUFW(buf,0)  = 0x1c3;
 	WBUFW(buf,2)  = len + 16;
 	WBUFL(buf,4)  = fontColor;
@@ -8470,7 +8468,7 @@ static void clif_guild_castlelist(struct map_session_data *sd)
 	int castle_count = guild->checkcastles(g);
 	if (castle_count > 0) {
 		int len = sizeof(struct PACKET_ZC_GUILD_AGIT_INFO) + castle_count;
-		struct PACKET_ZC_GUILD_AGIT_INFO *p = aMalloc(len);
+		struct PACKET_ZC_GUILD_AGIT_INFO *p = (struct PACKET_ZC_GUILD_AGIT_INFO *)aMalloc(len);
 		p->packetType = HEADER_ZC_GUILD_AGIT_INFO;
 		p->packetLength = len;
 
@@ -18979,13 +18977,12 @@ static void clif_parse_PartyTick(int fd, struct map_session_data *sd)
 static void clif_quest_send_list(struct map_session_data *sd)
 {
 	int i, len, real_len;
-	uint8 *buf = NULL;
 	nullpo_retv(sd);
 
 	len = sizeof(struct packet_quest_list_header)
 	    + sd->avail_quests * (sizeof(struct packet_quest_list_info)
 	                         + MAX_QUEST_OBJECTIVES * sizeof(struct packet_mission_info_sub)); // >= than the actual length
-	buf = aMalloc(len);
+	uint8 *buf = (uint8 *)aMalloc(len);
 	struct packet_quest_list_header *packet = WBUFP(struct packet_quest_list_header *, buf, 0);
 	real_len = sizeof(*packet);
 
@@ -19091,7 +19088,6 @@ static void clif_quest_send_mission(struct map_session_data *sd)
 static void clif_quest_add(struct map_session_data *sd, struct quest *qd)
 {
 	int i, len;
-	uint8 *buf = NULL;
 	struct quest_db *qi;
 
 	nullpo_retv(sd);
@@ -19103,7 +19099,7 @@ static void clif_quest_add(struct map_session_data *sd, struct quest *qd)
 	len = sizeof(struct packet_quest_add_header)
 	            + MAX_QUEST_OBJECTIVES * sizeof(struct packet_quest_hunt_sub); // >= than the actual length
 
-	buf = aCalloc(1, len);
+	uint8 *buf = (uint8 *)aCalloc(1, len);
 	struct packet_quest_add_header *packet = WBUFP(struct packet_quest_add_header *, buf, 0);
 
 	packet->PacketType = questAddType;
@@ -19171,7 +19167,6 @@ static void clif_quest_delete(struct map_session_data *sd, int quest_id)
 static void clif_quest_update_objective(struct map_session_data *sd, struct quest *qd)
 {
 	int i, len, real_len;
-	uint8 *buf = NULL;
 	struct quest_db *qi;
 
 	nullpo_retv(sd);
@@ -19183,7 +19178,7 @@ static void clif_quest_update_objective(struct map_session_data *sd, struct ques
 	len = sizeof(struct packet_quest_update_header)
 	            + MAX_QUEST_OBJECTIVES * sizeof(struct packet_quest_update_hunt); // >= than the actual length
 
-	buf = aCalloc(1, len);
+	uint8 *buf = (uint8 *)aCalloc(1, len);
 	struct packet_quest_update_header *packet = WBUFP(struct packet_quest_update_header *, buf, 0);
 	real_len = sizeof(*packet);
 
@@ -19216,7 +19211,6 @@ static void clif_quest_notify_objective(struct map_session_data *sd, struct ques
 {
 #if PACKETVER >= 20150513
 	int i, len, real_len;
-	uint8 *buf = NULL;
 	struct quest_db *qi;
 
 	nullpo_retv(sd);
@@ -19228,7 +19222,7 @@ static void clif_quest_notify_objective(struct map_session_data *sd, struct ques
 	len = sizeof(struct packet_quest_hunt_info)
 	            + MAX_QUEST_OBJECTIVES * sizeof(struct packet_quest_hunt_info_sub); // >= than the actual length
 
-	buf = aCalloc(1, len);
+	uint8 *buf = (uint8 *)aCalloc(1, len);
 	struct packet_quest_hunt_info *packet = WBUFP(struct packet_quest_hunt_info *, buf, 0);
 	real_len = sizeof(*packet);
 
@@ -19618,7 +19612,6 @@ static void clif_bg_xy_remove(struct map_session_data *sd)
 static void clif_bg_message(struct battleground_data *bgd, int src_id, const char *name, const char *mes)
 {
 	struct map_session_data *sd;
-	unsigned char *buf;
 	int len;
 
 	nullpo_retv(bgd);
@@ -19630,7 +19623,7 @@ static void clif_bg_message(struct battleground_data *bgd, int src_id, const cha
 
 	len = (int)strlen(mes);
 	Assert_retv(len <= INT16_MAX - NAME_LENGTH - 9);
-	buf = (unsigned char *)aCalloc(len + NAME_LENGTH + 9, sizeof(unsigned char));
+	unsigned char *buf = (unsigned char *)aCalloc(len + NAME_LENGTH + 9, sizeof(unsigned char));
 
 	WBUFW(buf, 0) = 0x2dc;
 	WBUFW(buf, 2) = len + NAME_LENGTH + 9;
@@ -20440,8 +20433,6 @@ static void clif_parse_SearchStoreInfo(int fd, struct map_session_data *sd)
 	int packet_len, count, item_count, card_count;
 	int i;
 	const struct PACKET_CZ_SEARCH_STORE_INFO *p = RP2PTR(struct PACKET_CZ_SEARCH_STORE_INFO *, fd);
-	int32 *items_list;
-	int32 *cards_list;
 
 	packet_len = p->packetLength;
 
@@ -20482,8 +20473,8 @@ static void clif_parse_SearchStoreInfo(int fd, struct map_session_data *sd)
 
 	const struct PACKET_CZ_SEARCH_STORE_INFO_item *cardlist = RFIFOP(struct PACKET_CZ_SEARCH_STORE_INFO_item *, fd, sizeof(struct PACKET_CZ_SEARCH_STORE_INFO) + blocksize * item_count);
 
-	items_list = aMalloc(sizeof(int32) * item_count);
-	cards_list = aMalloc(sizeof(int32) * card_count);
+	int32 *items_list = (int32 *)aMalloc(sizeof(int32) * item_count);
+	int32 *cards_list = (int32 *)aMalloc(sizeof(int32) * card_count);
 	for (i = 0; i < item_count; i ++) {
 		items_list[i] = itemlist[i].itemId;
 	}
@@ -23895,7 +23886,7 @@ static void clif_hat_effect(struct block_list *bl, struct block_list *tbl, enum 
 	nullpo_retv(sd);
 
 	const int len = sizeof(struct PACKET_ZC_EQUIPMENT_EFFECT) + VECTOR_LENGTH(sd->hatEffectId) * 2;
-	struct PACKET_ZC_EQUIPMENT_EFFECT *p = aMalloc(len);
+	struct PACKET_ZC_EQUIPMENT_EFFECT *p = (struct PACKET_ZC_EQUIPMENT_EFFECT *)aMalloc(len);
 
 	p->packetType = HEADER_ZC_EQUIPMENT_EFFECT;
 	p->packetLength = len;
@@ -23920,7 +23911,7 @@ static void clif_hat_effect_single(struct block_list *bl, uint16 effectId, bool 
 	nullpo_retv(bl);
 
 	const int len = sizeof(struct PACKET_ZC_EQUIPMENT_EFFECT) + 2;
-	struct PACKET_ZC_EQUIPMENT_EFFECT *p = aMalloc(len);
+	struct PACKET_ZC_EQUIPMENT_EFFECT *p = (struct PACKET_ZC_EQUIPMENT_EFFECT *)aMalloc(len);
 
 	p->packetType = HEADER_ZC_EQUIPMENT_EFFECT;
 	p->packetLength = len;

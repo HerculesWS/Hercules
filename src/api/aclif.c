@@ -327,7 +327,7 @@ static void aclif_add_handler(http_method method, const char *url, HttpParseHand
 #ifdef DEBUG_LOG
 	ShowWarning("Add url: %s\n", url);
 #endif
-	struct HttpHandler *handler = aCalloc(1, sizeof(struct HttpHandler));
+	struct HttpHandler *handler = (struct HttpHandler *)aCalloc(1, sizeof(struct HttpHandler));
 	handler->method = method;
 	handler->func = func;
 	handler->flags = flags;
@@ -361,7 +361,7 @@ static void aclif_set_url(int fd, http_method method, const char *url, size_t si
 	nullpo_retv(sd);
 
 	aFree(sd->url);
-	sd->url = aMalloc(size + 1);
+	sd->url = (char *)aMalloc(size + 1);
 	safestrncpy(sd->url, url, size + 1);
 
 	struct HttpHandler *handler = (struct HttpHandler *)strdb_get(aclif->handlers_db[method], sd->url);
@@ -398,7 +398,7 @@ static void aclif_set_body(int fd, const char *body, size_t size)
 	nullpo_retv(sd);
 
 	aFree(sd->body);
-	sd->body = aMalloc(size + 1);
+	sd->body = (char *)aMalloc(size + 1);
 	memcpy(sd->body, body, size);
 	sd->body[size] = 0;
 	sd->body_size = size;
@@ -556,7 +556,7 @@ static void aclif_set_post_header_data(int fd, const char *value, size_t size)
 		// initial set header data
 		if (sd->temp_mime_header->data != NULL)
 			aFree(sd->temp_mime_header->data);
-		sd->temp_mime_header->data = aMalloc(size + 1);
+		sd->temp_mime_header->data = (char *)aMalloc(size + 1);
 		memcpy(sd->temp_mime_header->data, value, size);
 		sd->temp_mime_header->data_size = (uint32)size;
 		sd->flag.multi_part_begin = 0;
@@ -567,7 +567,7 @@ static void aclif_set_post_header_data(int fd, const char *value, size_t size)
 	} else {
 		// append header data
 		const uint32 newSize = sd->temp_mime_header->data_size + (uint32)size;
-		sd->temp_mime_header->data = aRealloc(sd->temp_mime_header->data, newSize + 1);
+		sd->temp_mime_header->data = (char *)aRealloc(sd->temp_mime_header->data, newSize + 1);
 		memcpy(sd->temp_mime_header->data + sd->temp_mime_header->data_size, value, size);
 		sd->temp_mime_header->data_size = newSize;
 	}
@@ -589,7 +589,7 @@ static void aclif_multi_part_start(int fd, struct api_session_data *sd)
 	sd->flag.multi_part_complete = 0;
 	if (sd->temp_mime_header)
 		aFree(sd->temp_mime_header);
-	sd->temp_mime_header = aCalloc(1, sizeof(*sd->temp_mime_header));
+	sd->temp_mime_header = (struct MimePart *)aCalloc(1, sizeof(*sd->temp_mime_header));
 	sd->mime_flag = MIME_FLAG_NONE;
 }
 
@@ -1101,7 +1101,7 @@ static int aclif_get_post_headers_count(struct api_session_data *sd)
 
 static void aclif_add_char_server(int char_server_id, const char *name)
 {
-	struct char_server_data *data = aCalloc(1, sizeof(struct char_server_data));
+	struct char_server_data *data = (struct char_server_data *)aCalloc(1, sizeof(struct char_server_data));
 	data->id = char_server_id;
 	char *name2 = aStrdup(name);
 	data->world_name = name2;

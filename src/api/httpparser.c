@@ -386,7 +386,7 @@ static void httpparser_add_to_temp_request(int fd, struct api_session_data *sd, 
 {
 	nullpo_retv(sd);
 	if (sd->request_temp == NULL) {
-		sd->request_temp = aCalloc(1, data_size);
+		sd->request_temp = (char *)aCalloc(1, data_size);
 		sd->request_temp_size = data_size;
 		sd->request_temp_alloc_size = data_size;
 		memcpy(sd->request_temp, data, data_size);
@@ -394,7 +394,7 @@ static void httpparser_add_to_temp_request(int fd, struct api_session_data *sd, 
 		const size_t old_size = sd->request_temp_size;
 		sd->request_temp_size += data_size;
 		if (sd->request_temp_alloc_size < sd->request_temp_size) {
-			sd->request_temp = aRealloc(sd->request_temp, sd->request_temp_size);
+			sd->request_temp = (char *)aRealloc(sd->request_temp, sd->request_temp_size);
 			sd->request_temp_alloc_size = sd->request_temp_size;
 		}
 		memcpy(sd->request_temp + old_size, data, data_size);
@@ -495,7 +495,7 @@ static void httpparser_init_multi_parser(int fd, struct api_session_data *sd, co
 {
 	nullpo_retv(sd);
 	nullpo_retv(boundary);
-	sd->multi_parser = aMalloc(sizeof(multipartparser));
+	sd->multi_parser = (multipartparser *)aMalloc(sizeof(multipartparser));
 	multipartparser_init(sd->multi_parser, boundary);
 	sd->multi_parser->data = (void*)(intptr_t)fd;
 }
@@ -506,7 +506,7 @@ static void httpparser_delete_parser(int fd)
 
 static void httpparser_init_settings(void)
 {
-	httpparser->settings = aCalloc(1, sizeof(struct http_parser_settings));
+	httpparser->settings = (struct http_parser_settings *)aCalloc(1, sizeof(struct http_parser_settings));
 #ifndef USE_HTTP_PARSER
 	llhttp_settings_init(httpparser->settings);
 #endif  // USE_HTTP_PARSER
@@ -524,7 +524,7 @@ static void httpparser_init_settings(void)
 
 static void httpparser_init_multi_settings(void)
 {
-	httpparser->multi_settings = aCalloc(1, sizeof(struct multipartparser_callbacks));
+	httpparser->multi_settings = (struct multipartparser_callbacks *)aCalloc(1, sizeof(struct multipartparser_callbacks));
 	multipartparser_callbacks_init(httpparser->multi_settings);
 	httpparser->multi_settings->on_body_begin = httpparser->on_multi_body_begin;
 	httpparser->multi_settings->on_part_begin = httpparser->on_multi_part_begin;

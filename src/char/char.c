@@ -406,8 +406,7 @@ static void char_set_all_offline_sql(void)
  */
 static struct DBData char_create_charstatus(union DBKey key, va_list args)
 {
-	struct mmo_charstatus *cp;
-	cp = (struct mmo_charstatus *) aCalloc(1,sizeof(struct mmo_charstatus));
+	struct mmo_charstatus *cp = (struct mmo_charstatus *)aCalloc(1,sizeof(struct mmo_charstatus));
 	cp->char_id = key.i;
 	return DB->ptr2data(cp);
 }
@@ -874,7 +873,7 @@ static int char_memitemdata_to_sql(const struct item *p_items, int current_size,
 	if (current_size > 0) {
 		nullpo_ret(p_items);
 
-		matched_p = aCalloc(current_size, sizeof(bool));
+		matched_p = (bool *)aCalloc(current_size, sizeof(bool));
 	}
 
 	StringBuf buf;
@@ -883,9 +882,9 @@ static int char_memitemdata_to_sql(const struct item *p_items, int current_size,
 	/**
 	 * If the storage table is not empty, check for items and replace or delete where needed.
 	 */
-	struct item *cp_items = aCalloc(max_size, sizeof(struct item));
+	struct item *cp_items = (struct item *)aCalloc(max_size, sizeof(struct item));
 	if ((db_size = chr->getitemdata_from_sql(cp_items, max_size, guid, table)) > 0) {
-		int *deletes = aCalloc(db_size, sizeof(struct item));
+		int *deletes = (int *)aCalloc(db_size, sizeof(struct item));
 
 		for (int i = 0; i < db_size; i++) {
 			const struct item *cp_it = &cp_items[i];
@@ -6097,7 +6096,7 @@ static void char_ensure_online_char_data(struct online_char_data *character)
 {
 	nullpo_retv(character);
 	if (character->data == NULL) {
-		character->data = aCalloc(1, sizeof(struct online_char_data2));
+		character->data = (struct online_char_data2 *)aCalloc(1, sizeof(struct online_char_data2));
 	}
 }
 

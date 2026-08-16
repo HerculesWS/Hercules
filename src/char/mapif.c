@@ -1784,7 +1784,7 @@ static int mapif_load_guild_storage(int fd, int account_id, int guild_id, char f
 		Sql_ShowDebug(inter->sql_handle);
 	} else if (SQL->NumRows(inter->sql_handle) > 0) {
 		// guild exists
-		struct guild_storage *gs = aCalloc(1, sizeof(*gs));
+		struct guild_storage *gs = (struct guild_storage *)aCalloc(1, sizeof(*gs));
 
 		if (inter_storage->guild_storage_fromsql(guild_id, gs) == 0) {
 			int size = 21 + sizeof gs->items.data[0] * gs->items.capacity;
@@ -2005,7 +2005,7 @@ static int mapif_parse_SaveGuildStorage(int fd)
 	struct guild_storage gstor = { 0 };
 
 	if (storage_capacity > 0) {
-		gstor.items.data = aCalloc(storage_capacity, sizeof gstor.items.data[0]);
+		gstor.items.data = (struct item *)aCalloc(storage_capacity, sizeof gstor.items.data[0]);
 		memcpy(gstor.items.data, RFIFOP(struct item *, fd, 20), sizeof gstor.items.data[0] * storage_capacity);
 	}
 	gstor.items.amount = storage_amount;

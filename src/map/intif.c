@@ -1229,7 +1229,7 @@ static void intif_parse_LoadGuildStorage(int fd)
 	if (gstor->items.data != NULL) {
 		aFree(gstor->items.data);
 	}
-	gstor->items.data = aCalloc(gstor->items.capacity, sizeof(gstor->items.data[0]));
+	gstor->items.data = (struct item *)aCalloc(gstor->items.capacity, sizeof(gstor->items.data[0]));
 	if (storage_capacity > 0) {
 		memcpy(gstor->items.data, RFIFOP(struct item *, fd, 21), sizeof(gstor->items.data[0])*storage_capacity);
 	}
@@ -1781,7 +1781,7 @@ static void intif_parse_QuestLog(int fd)
 			// sd->avail_quests and k didn't meet in the middle: some entries were skipped
 			if (k < num_received) // Move the entries at the end to fill the gap
 				memmove(&sd->quest_log[k], &sd->quest_log[sd->avail_quests], sizeof(struct quest)*(num_received - k));
-			sd->quest_log = aRealloc(sd->quest_log, sizeof(struct quest)*sd->num_quests);
+			sd->quest_log = (struct quest *)aRealloc(sd->quest_log, sizeof(struct quest) * sd->num_quests);
 		}
 	}
 

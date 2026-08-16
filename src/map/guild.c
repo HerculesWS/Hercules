@@ -609,7 +609,7 @@ static int guild_recv_info(const struct guild *sg, struct fifo_chunk_buf *emblem
 
 	if((g = (struct guild *)idb_get(guild->db, sg->guild_id)) == NULL) {
 		guild_new = true;
-		g=(struct guild *)aCalloc(1,sizeof(struct guild));
+		g = (struct guild *)aCalloc(1, sizeof(struct guild));
 		g->instance = NULL;
 		g->instances = 0;
 		idb_put(guild->db,sg->guild_id,g);
@@ -691,7 +691,7 @@ static int guild_recv_info(const struct guild *sg, struct fifo_chunk_buf *emblem
 	} else {
 		if (!guild_new)
 			aFree(before.emblem_data);
-		g->emblem_data = aMalloc(emblem_buf->data_size);
+		g->emblem_data = (char *)aMalloc(emblem_buf->data_size);
 		memcpy(g->emblem_data, emblem_buf->data, emblem_buf->data_size);
 	}
 
@@ -1367,7 +1367,7 @@ static int guild_emblem_changed(int len, int guild_id, int emblem_id, const char
 		return 0;
 
 	if (len > g->emblem_len)
-		g->emblem_data = aReallocz(g->emblem_data, len);
+		g->emblem_data = (char *)aReallocz(g->emblem_data, len);
 	memcpy(g->emblem_data, data, len);
 	g->emblem_len = len;
 	g->emblem_id = emblem_id;

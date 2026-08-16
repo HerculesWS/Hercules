@@ -121,7 +121,7 @@ struct nomemmgr_block {
 static void *aMalloc_(size_t size, const char *file, int line, const char *func) __attribute__ ((alloc_size (1))) GCCATTR ((returns_nonnull));
 static void *aMalloc_(size_t size, const char *file, int line, const char *func)
 {
-	struct nomemmgr_block *ret = MALLOC(size + sizeof(*ret), file, line, func);
+	struct nomemmgr_block *ret = (struct nomemmgr_block *)MALLOC(size + sizeof(*ret), file, line, func);
 	// ShowMessage("%s:%d: in func %s: aMalloc %d\n",file,line,func,size);
 	if (ret == NULL){
 		ShowFatalError("%s:%d: in func %s: aMalloc error out of memory!\n",file,line,func);
@@ -137,7 +137,7 @@ static void *aCalloc_(size_t num, size_t size, const char *file, int line, const
 static void *aCalloc_(size_t num, size_t size, const char *file, int line, const char *func)
 {
 	// We won't use CALLOC here because we need to embed our magical size header
-	struct nomemmgr_block *ret = MALLOC((size * num) + sizeof(*ret), file, line, func);
+	struct nomemmgr_block *ret = (struct nomemmgr_block *)MALLOC((size * num) + sizeof(*ret), file, line, func);
 
 	// ShowMessage("%s:%d: in func %s: aCalloc %d %d\n",file,line,func,num,size);
 	if (ret == NULL){
@@ -159,7 +159,7 @@ static void *aRealloc_(void *p, size_t size, const char *file, int line, const c
 		real_p = real_p - 1;
 	}
 
-	struct nomemmgr_block *ret = REALLOC(real_p, size + sizeof(*real_p), file, line, func);
+	struct nomemmgr_block *ret = (struct nomemmgr_block *)REALLOC(real_p, size + sizeof(*real_p), file, line, func);
 	// ShowMessage("%s:%d: in func %s: aRealloc %p %d\n",file,line,func,p,size);
 	if (ret == NULL){
 		ShowFatalError("%s:%d: in func %s: aRealloc error out of memory!\n",file,line,func);
@@ -180,7 +180,7 @@ static void *aReallocz_(void *p, size_t size, const char *file, int line, const 
 		struct nomemmgr_block *real_p = ((struct nomemmgr_block *)p - 1);
 		size_t old_size = real_p->size;
 
-		ret = REALLOC(real_p, size + sizeof(*ret), file, line, func);
+		ret = (struct nomemmgr_block *)REALLOC(real_p, size + sizeof(*ret), file, line, func);
 
 		if (ret != NULL) {
 			ret->size = size + sizeof(*ret);
@@ -191,7 +191,7 @@ static void *aReallocz_(void *p, size_t size, const char *file, int line, const 
 			}
 		}
 	} else {
-		ret = REALLOC(p, size + sizeof(*ret), file, line, func);
+		ret = (struct nomemmgr_block *)REALLOC(p, size + sizeof(*ret), file, line, func);
 
 		if (ret != NULL) {
 			memset(ret, 0, size + sizeof(*ret));
@@ -212,7 +212,7 @@ static char *aStrdup_(const char *p, const char *file, int line, const char *fun
 {
 	// since we now have headers it can't be just a wraper
 	size_t len = strlen(p);
-	char *ret = iMalloc->malloc(len + 1, file, line, func);
+	char *ret = (char *)iMalloc->malloc(len + 1, file, line, func);
 
 	// ShowMessage("%s:%d: in func %s: aStrdup %p\n",file,line,func,p);
 	if (ret == NULL){
@@ -246,7 +246,7 @@ static char *aStrndup_(const char *p, size_t size, const char *file, int line, c
 static char *aStrndup_(const char *p, size_t size, const char *file, int line, const char *func)
 {
 	size_t len = strnlen(p, size);
-	char *ret = iMalloc->malloc(len + 1, file, line, func);
+	char *ret = (char *)iMalloc->malloc(len + 1, file, line, func);
 	if (ret == NULL) {
 		ShowFatalError("%s:%d: in func %s: aStrndup error out of memory!\n", file, line, func);
 		exit(EXIT_FAILURE);
@@ -550,7 +550,7 @@ static char *mstrdup_(const char *p, const char *file, int line, const char *fun
 static char *mstrdup_(const char *p, const char *file, int line, const char *func)
 {
 	size_t len = strlen(p);
-	char *string  = (char *)iMalloc->malloc(len + 1,file,line,func);
+	char *string = (char *)iMalloc->malloc(len + 1,file,line,func);
 	memcpy(string,p,len+1);
 	return string;
 }
@@ -576,7 +576,7 @@ static char *mstrndup_(const char *p, size_t size, const char *file, int line, c
 static char *mstrndup_(const char *p, size_t size, const char *file, int line, const char *func)
 {
 	size_t len = strnlen(p, size);
-	char *string = iMalloc->malloc(len + 1, file, line, func);
+	char *string = (char *)iMalloc->malloc(len + 1, file, line, func);
 	memcpy(string, p, len);
 	string[len] = '\0';
 	return string;

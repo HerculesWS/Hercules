@@ -125,7 +125,7 @@ static struct irc_func *irc_func_search(char *function_name)
 /// @copydoc ircbot_interface::parse()
 static int irc_parse(int fd)
 {
-	char *parse_string = NULL, *p = NULL, *str_safe = NULL;
+	char *p = NULL, *str_safe = NULL;
 
 	if (sockt->session[fd]->flag.eof) {
 		sockt->close(fd);
@@ -141,7 +141,7 @@ static int irc_parse(int fd)
 	if( !RFIFOREST(fd) )
 		return 0;
 
-	parse_string = aMalloc(RFIFOREST(fd));
+	char *parse_string = (char *)aMalloc(RFIFOREST(fd));
 	safestrncpy(parse_string, RFIFOP(char *, fd, 0), RFIFOREST(fd));
 	RFIFOSKIP(fd, RFIFOREST(fd));
 	RFIFOFLUSH(fd);

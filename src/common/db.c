@@ -689,7 +689,7 @@ static union DBKey db_dup_key(struct DBMap_impl *db, union DBKey key)
 		case DB_ISTRING:
 		{
 			size_t len = strnlen(key.str, db->maxlen);
-			char *str = aMalloc(len + 1);
+			char *str = (char *)aMalloc(len + 1);
 
 			memcpy(str, key.str, len);
 			str[len] = '\0';
@@ -2923,9 +2923,9 @@ static void db_final(void)
 // Link DB System - jAthena
 void linkdb_insert(struct linkdb_node **head, void *key, void *data)
 {
-	struct linkdb_node *node;
-	if( head == NULL ) return ;
-	node = (struct linkdb_node*)aMalloc( sizeof(struct linkdb_node) );
+	if (head == NULL)
+		return;
+	struct linkdb_node *node = (struct linkdb_node *)aMalloc(sizeof(struct linkdb_node));
 	if( *head == NULL ) {
 		// first node
 		*head      = node;

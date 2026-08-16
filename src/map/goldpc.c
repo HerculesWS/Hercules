@@ -102,7 +102,7 @@ bool goldpc_read_db_libconfig_sub(const struct config_setting_t *it, int n, cons
 	// Client always counts towards GOLDPC_MAX_TIME, so calculate an offset that should be added when sending to client
 	mode.time_offset = (GOLDPC_MAX_TIME - mode.required_time);
 
-	struct goldpc_mode *mode_entry = aCalloc(1, sizeof(struct goldpc_mode));
+	struct goldpc_mode *mode_entry = (struct goldpc_mode *)aCalloc(1, sizeof(struct goldpc_mode));
 	*mode_entry = mode;
 	idb_put(goldpc->db, mode.id, mode_entry);
 
