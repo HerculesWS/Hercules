@@ -381,7 +381,7 @@ static bool macro_read_captcha_db_libconfig_sub_loadbmp(const char *filepath, st
 	}
 
 	// Load the file data and verify magic
-	char *bmp_data = aMalloc(CAPTCHA_BMP_SIZE);
+	char *bmp_data = (char *)aMalloc(CAPTCHA_BMP_SIZE);
 	if (fread(bmp_data, CAPTCHA_BMP_SIZE, 1, fp) != 1) {
 		ShowError("%s: Failed to read data from \"%s\"\n", __func__, filepath);
 		fclose(fp);

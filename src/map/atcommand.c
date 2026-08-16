@@ -11392,7 +11392,7 @@ static void atcommand_config_read(const char *config_filename)
 				if( commandinfo->help == NULL ) {
 					const char *str = libconfig->setting_get_string(command);
 					size_t len = strlen(str);
-					commandinfo->help = aMalloc(len + 1);
+					commandinfo->help = (char *)aMalloc(len + 1);
 					safestrncpy(commandinfo->help, str, len + 1);
 				}
 			}

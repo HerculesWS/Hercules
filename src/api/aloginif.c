@@ -299,7 +299,7 @@ static int aloginif_parse_remove_char_server(int fd)
 static int aloginif_parse_add_char_server(int fd)
 {
 	const int char_server_id = RFIFOW(fd, 2);
-	struct char_server_data *data = aCalloc(1, sizeof(struct char_server_data));
+	struct char_server_data *data = (struct char_server_data *)aCalloc(1, sizeof(struct char_server_data));
 	data->id = char_server_id;
 	char *name = aStrdup(RFIFOP(char *, fd, 4));
 	data->world_name = name;

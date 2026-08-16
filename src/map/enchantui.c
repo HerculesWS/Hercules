@@ -117,7 +117,7 @@ static bool enchantui_read_db_libconfig_sub(const struct config_setting_t *it, i
 		return false;
 
 	// Copy the entry into the database
-	struct enchant_info *s_ei = aCalloc(1, sizeof(struct enchant_info));
+	struct enchant_info *s_ei = (struct enchant_info *)aCalloc(1, sizeof(struct enchant_info));
 	*s_ei = ei;
 	idb_put(enchantui->db, ei.Id, s_ei);
 

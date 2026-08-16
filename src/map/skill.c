@@ -13763,7 +13763,7 @@ static struct skill_unit_group *skill_unitsetting(struct block_list *src, uint16
 		active_flag = 0;
 
 	if(skill_id==HT_TALKIEBOX || skill_id==RG_GRAFFITI){
-		group->valstr=(char *) aMalloc(MESSAGE_SIZE*sizeof(char));
+		group->valstr = (char *)aMalloc(MESSAGE_SIZE * sizeof(char));
 		if (sd)
 			safestrncpy(group->valstr, sd->message, MESSAGE_SIZE);
 		else //Eh... we have to write something here... even though mobs shouldn't use this. [Skotlex]
@@ -19956,7 +19956,6 @@ static int skill_unit_move_unit_group(struct skill_unit_group *group, int16 m, i
 {
 	int i,j;
 	int64 tick = timer->gettick();
-	int *m_flag;
 	struct skill_unit *su1;
 	struct skill_unit *su2;
 
@@ -19973,7 +19972,7 @@ static int skill_unit_move_unit_group(struct skill_unit_group *group, int16 m, i
 	if (group->unit_id == UNT_ICEWALL || group->unit_id == UNT_WALLOFTHORN || group->unit_id == UNT_BOOKOFCREATINGSTAR)
 		return 0; //Icewalls and Wall of Thorns don't get knocked back
 
-	m_flag = (int *) aCalloc(group->unit.count, sizeof(int));
+	int *m_flag = (int *)aCalloc(group->unit.count, sizeof(int));
 	// m_flag:
 	//  0: Neither of the following (skill_unit_onplace & skill_unit_onout are needed)
 	//  1: Unit will move to a slot that had another unit of the same group (skill_unit_onplace not needed)

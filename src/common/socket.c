@@ -1762,7 +1762,7 @@ static void socket_init(void)
 	}
 
 	memset(&epevent, 0x00, sizeof(struct epoll_event));
-	epevents = aCalloc(epoll_maxevents, sizeof(struct epoll_event));
+	epevents = (struct epoll_event *)aCalloc(epoll_maxevents, sizeof(struct epoll_event));
 
 	ShowInfo("Server uses '" CL_WHITE "epoll" CL_RESET "' with up to " CL_WHITE "%d" CL_RESET " events per cycle as event dispatcher\n", epoll_maxevents);
 
