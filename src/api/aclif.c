@@ -134,7 +134,7 @@ static int aclif_parse(int fd)
 #ifdef DEBUG_LOG
 	ShowInfo("parse called: %d\n", fd);
 #endif
-	struct api_session_data *sd = sockt->session[fd]->session_data;
+	struct api_session_data *sd = (struct api_session_data *)sockt->session[fd]->session_data;
 	nullpo_ret(sd);
 	if (sd->flag.handled == 1) {
 		if (sockt->session[fd] == NULL || sockt->session[fd]->flag.eof != 0) {
@@ -264,7 +264,7 @@ static int aclif_session_delete(int fd)
 {
 	nullpo_ret(sockt->session[fd]);
 
-	struct api_session_data *sd = sockt->session[fd]->session_data;
+	struct api_session_data *sd = (struct api_session_data *)sockt->session[fd]->session_data;
 	if (sd == NULL)
 		ShowInfo("disconnected %d\n", fd);
 	nullpo_ret(sd);
@@ -357,7 +357,7 @@ static void aclif_set_url(int fd, http_method method, const char *url, size_t si
 		sockt->eof(fd);
 		return;
 	}
-	struct api_session_data *sd = sockt->session[fd]->session_data;
+	struct api_session_data *sd = (struct api_session_data *)sockt->session[fd]->session_data;
 	nullpo_retv(sd);
 
 	aFree(sd->url);
@@ -394,7 +394,7 @@ static void aclif_set_body(int fd, const char *body, size_t size)
 		sockt->eof(fd);
 		return;
 	}
-	struct api_session_data *sd = sockt->session[fd]->session_data;
+	struct api_session_data *sd = (struct api_session_data *)sockt->session[fd]->session_data;
 	nullpo_retv(sd);
 
 	aFree(sd->body);
@@ -419,7 +419,7 @@ static void aclif_set_header_name(int fd, const char *name, size_t size)
 		sockt->eof(fd);
 		return;
 	}
-	struct api_session_data *sd = sockt->session[fd]->session_data;
+	struct api_session_data *sd = (struct api_session_data *)sockt->session[fd]->session_data;
 	nullpo_retv(sd);
 
 	if (sd->headers_count >= MAX_HEADER_COUNT) {
@@ -453,7 +453,7 @@ static void aclif_set_header_value(int fd, const char *value, size_t size)
 {
 	nullpo_retv(value);
 
-	struct api_session_data *sd = sockt->session[fd]->session_data;
+	struct api_session_data *sd = (struct api_session_data *)sockt->session[fd]->session_data;
 	nullpo_retv(sd);
 	if (!aclif->check_header(fd, sd, sd->temp_header, value, size)) {
 		sockt->eof(fd);
@@ -473,7 +473,7 @@ static void aclif_set_post_header_name(int fd, const char *name, size_t size)
 		sockt->eof(fd);
 		return;
 	}
-	struct api_session_data *sd = sockt->session[fd]->session_data;
+	struct api_session_data *sd = (struct api_session_data *)sockt->session[fd]->session_data;
 	nullpo_retv(sd);
 
 	if (sd->post_headers_count >= MAX_POST_HEADER_COUNT) {
@@ -500,7 +500,7 @@ static void aclif_set_post_header_value(int fd, const char *value, size_t size)
 		sockt->eof(fd);
 		return;
 	}
-	struct api_session_data *sd = sockt->session[fd]->session_data;
+	struct api_session_data *sd = (struct api_session_data *)sockt->session[fd]->session_data;
 	nullpo_retv(sd);
 
 	if (sd->mime_flag == MIME_FLAG_CONTENT_DISPOSITION) {
@@ -549,7 +549,7 @@ static void aclif_set_post_header_data(int fd, const char *value, size_t size)
 		sockt->eof(fd);
 		return;
 	}
-	struct api_session_data *sd = sockt->session[fd]->session_data;
+	struct api_session_data *sd = (struct api_session_data *)sockt->session[fd]->session_data;
 	nullpo_retv(sd);
 
 	if (sd->flag.multi_part_begin == 1) {

@@ -80,7 +80,7 @@ int my_setting;
 /* cmd 0xf3 - it is a client-server existent id, for clif_parse_GlobalMessage */
 /* in this sample we do nothing and simply redirect */
 void sample_packet0f3(int fd) {
-	struct map_session_data *sd = sockt->session[fd]->session_data;
+	struct map_session_data *sd = (struct map_session_data *)sockt->session[fd]->session_data;
 	struct sample_data_struct *data;
 
 	if( !sd ) return;/* socket didn't fully log-in? this packet shouldn't do anything then! */

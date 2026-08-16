@@ -369,7 +369,7 @@ static void aloginif_parse_from_char(int fd, Handler_func func)
 	const int user_fd = p->client_fd;
 	if (!sockt->session_is_active(user_fd))
 		return;
-	struct api_session_data *sd = sockt->session[user_fd]->session_data;
+	struct api_session_data *sd = (struct api_session_data *)sockt->session[user_fd]->session_data;
 	nullpo_retv(sd);
 	if (sd->account_id != p->account_id)
 		return;
