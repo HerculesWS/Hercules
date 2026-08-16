@@ -245,7 +245,7 @@ static bool clif_setip(const char *ip)
 	}
 
 	safestrncpy(clif->map_ip_str, ip, sizeof(clif->map_ip_str));
-	ShowInfo("Map Server IP Address : '"CL_WHITE"%s"CL_RESET"' -> '"CL_WHITE"%s"CL_RESET"'.\n", ip, sockt->ip2str(clif->map_ip, ip_str));
+	ShowInfo("Map Server IP Address : '" CL_WHITE "%s" CL_RESET "' -> '" CL_WHITE "%s" CL_RESET "'.\n", ip, sockt->ip2str(clif->map_ip, ip_str));
 	return true;
 }
 
@@ -255,7 +255,7 @@ static bool clif_setbindip(const char *ip)
 	clif->bind_ip = sockt->host2ip(ip);
 	if ( clif->bind_ip ) {
 		char ip_str[16];
-		ShowInfo("Map Server Bind IP Address : '"CL_WHITE"%s"CL_RESET"' -> '"CL_WHITE"%s"CL_RESET"'.\n", ip, sockt->ip2str(clif->bind_ip, ip_str));
+		ShowInfo("Map Server Bind IP Address : '" CL_WHITE "%s" CL_RESET "' -> '" CL_WHITE "%s" CL_RESET "'.\n", ip, sockt->ip2str(clif->bind_ip, ip_str));
 		return true;
 	}
 	ShowWarning("Failed to Resolve Map Server Address! (%s)\n", ip);
@@ -8972,7 +8972,7 @@ static void clif_guild_message(struct guild *g, int account_id, const char *mes,
 		return;
 
 	if ((size_t)len > sizeof(buf)-5) {
-		ShowWarning("clif_guild_message: Truncated message '%s' (len=%d, max=%"PRIuS", guild_id=%d).\n", mes, len, sizeof(buf)-5, g->guild_id);
+		ShowWarning("clif_guild_message: Truncated message '%s' (len=%d, max=%" PRIuS ", guild_id=%d).\n", mes, len, sizeof(buf)-5, g->guild_id);
 		len = sizeof(buf)-5;
 	}
 
@@ -9270,7 +9270,7 @@ static void clif_disp_message(struct block_list *src, const char *mes, enum send
 		return;
 
 	if (len > (int)sizeof(buf)-5) {
-		ShowWarning("clif_disp_message: Truncated message '%s' (len=%d, max=%"PRIuS", aid=%d).\n", mes, len, sizeof(buf)-5, src->id);
+		ShowWarning("clif_disp_message: Truncated message '%s' (len=%d, max=%" PRIuS ", aid=%d).\n", mes, len, sizeof(buf)-5, src->id);
 		len = (int)sizeof(buf)-5;
 	}
 
@@ -14015,7 +14015,7 @@ static void clif_parse_NpcSelectMenu(int fd, struct map_session_data *sd)
 		if( sd->npc_idle_timer != INVALID_TIMER ) {
 #endif
 			struct npc_data *nd = map->id2nd(npc_id);
-			ShowWarning("Invalid menu selection on npc %d:'%s' - got %d, valid range is [%d..%d] (player AID:%d, CID:%d, name:'%s')!\n", npc_id, (nd)?nd->name:"invalid npc id", select, 1, sd->npc_menu, sd->bl.id, sd->status.char_id, sd->status.name);
+			ShowWarning("Invalid menu selection on npc %d:'%s' - got %d, valid range is [%d..%d] (player AID:%d, CID:%d, name:'%s')!\n", npc_id, (nd) ? nd->name : "invalid npc id", select, 1, sd->npc_menu, sd->bl.id, sd->status.char_id, sd->status.name);
 			clif->GM_kick(NULL,sd);
 #ifdef SECURE_NPCTIMEOUT
 		}
@@ -21069,7 +21069,7 @@ static void clif_cashshop_db(void)
 
 	}
 	libconfig->destroy(&cashshop_conf);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", item_count_t, config_filename);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", item_count_t, config_filename);
 }
 /// Items that are in favorite tab of inventory (ZC_ITEM_FAVORITE).
 /// 0900 <index>.W <favorite>.B
@@ -22494,7 +22494,7 @@ static bool clif_parse_roulette_db(void)
 			clif->rd.qty[i][j] = 1;
 		}
 	}
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", item_count_t, config_filename);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", item_count_t, config_filename);
 
 	return true;
 }
@@ -23943,7 +23943,7 @@ static bool clif_parse_attendance_db(void)
 	}
 
 	libconfig->destroy(&attendance_conf);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", i, config_filename);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", i, config_filename);
 	return true;
 }
 
@@ -26279,11 +26279,11 @@ static int clif_parse(int fd)
 					//Disassociate character from the socket connection.
 					sockt->session[fd]->session_data = NULL;
 					sd->fd = 0;
-					ShowInfo("Character '"CL_WHITE"%s"CL_RESET"' logged off (using @autotrade).\n", sd->status.name);
+					ShowInfo("Character '" CL_WHITE "%s" CL_RESET "' logged off (using @autotrade).\n", sd->status.name);
 				} else
 					if (sd->state.active) {
 						// Player logout display [Valaris]
-						ShowInfo("Character '"CL_WHITE"%s"CL_RESET"' logged off.\n", sd->status.name);
+						ShowInfo("Character '" CL_WHITE "%s" CL_RESET "' logged off.\n", sd->status.name);
 						clif->quitsave(fd, sd);
 					} else {
 						//Unusual logout (during log on/off/map-changer procedure)
@@ -26291,7 +26291,7 @@ static int clif_parse(int fd)
 						map->quit(sd);
 					}
 			} else {
-				ShowInfo("Closed connection from '"CL_WHITE"%s"CL_RESET"'.\n", sockt->ip2str(sockt->session[fd]->client_addr, NULL));
+				ShowInfo("Closed connection from '" CL_WHITE "%s" CL_RESET "'.\n", sockt->ip2str(sockt->session[fd]->client_addr, NULL));
 			}
 			sockt->close(fd);
 			return 0;
@@ -26318,7 +26318,7 @@ static int clif_parse(int fd)
 
 		// filter out invalid / unsupported packets
 		if (cmd > MAX_PACKET_DB || cmd < MIN_PACKET_DB || packets->db[cmd] == 0) {
-			ShowWarning("clif_parse: Received unsupported packet (packet 0x%04x (0x%04x), %"PRIuS" bytes received), disconnecting session #%d.\n",
+			ShowWarning("clif_parse: Received unsupported packet (packet 0x%04x (0x%04x), %" PRIuS " bytes received), disconnecting session #%d.\n",
 			            (unsigned int)cmd, RFIFOW(fd,0), RFIFOREST(fd), fd);
 #ifdef DUMP_INVALID_PACKET
 			ShowDump(RFIFOP(void *, fd, 0), RFIFOREST(fd));
@@ -26348,7 +26348,7 @@ static int clif_parse(int fd)
 		if ((int)RFIFOREST(fd) < packet_len) {
 			if (sd == NULL) {
 				if (packet_db[cmd].func != clif->pWantToConnection) {
-					ShowWarning("clif_parse: Received first unsupported packet (packet 0x%04x (0x%04x), %"PRIuS" bytes received), disconnecting session #%d.\n",
+					ShowWarning("clif_parse: Received first unsupported packet (packet 0x%04x (0x%04x), %" PRIuS " bytes received), disconnecting session #%d.\n",
 				            (unsigned int)cmd, RFIFOW(fd, 0), RFIFOREST(fd), fd);
 					sockt->eof(fd);
 				}
@@ -26535,7 +26535,7 @@ static int do_init_clif(bool minimal)
 	sockt->set_defaultparse(clif->parse);
 	sockt->validate = true;
 	if (sockt->make_listen_bind(clif->bind_ip,clif->map_port) == -1) {
-		ShowFatalError("Failed to bind to port '"CL_WHITE"%d"CL_RESET"'\n",clif->map_port);
+		ShowFatalError("Failed to bind to port '" CL_WHITE "%d" CL_RESET "'\n",clif->map_port);
 		exit(EXIT_FAILURE);
 	}
 

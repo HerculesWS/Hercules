@@ -1156,7 +1156,7 @@ static void achievement_readdb_ranks(void)
 		return;
 	}
 
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", entry, filename);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", entry, filename);
 }
 
 /**
@@ -1783,7 +1783,7 @@ static void achievement_readdb_additional_fields(const struct config_setting_t *
 static void achievement_readb(void)
 {
 	char filename[256];
-	libconfig->format_db_path(DBPATH"achievement_db.conf", filename, sizeof(filename));
+	libconfig->format_db_path(DBPATH "achievement_db.conf", filename, sizeof(filename));
 	struct config_t ach_conf = { 0 };
 	struct config_setting_t *achdb = NULL, *conf = NULL;
 	int entry = 0, count = 0;
@@ -1872,7 +1872,7 @@ static void achievement_readb(void)
 
 	VECTOR_CLEAR(duplicate);
 
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filename);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filename);
 }
 
 /**

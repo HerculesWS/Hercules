@@ -11399,7 +11399,7 @@ static void atcommand_config_read(const char *config_filename)
 		}
 	}
 
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' command aliases in '"CL_WHITE"%s"CL_RESET"'.\n", num_aliases, config_filename);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' command aliases in '" CL_WHITE "%s" CL_RESET "'.\n", num_aliases, config_filename);
 
 	libconfig->destroy(&atcommand_config);
 	return;
@@ -11446,7 +11446,7 @@ static void atcommand_db_load_groups(GroupSettings **groups, struct config_setti
 
 			idx = pcg->get_idx(group);
 			if (idx < 0 || (size_t)idx >= sz) {
-				ShowError("atcommand_db_load_groups: index (%d) out of bounds [0,%"PRIuS"]\n", idx, sz - 1);
+				ShowError("atcommand_db_load_groups: index (%d) out of bounds [0,%" PRIuS "]\n", idx, sz - 1);
 				continue;
 			}
 

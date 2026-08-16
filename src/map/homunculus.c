@@ -1154,7 +1154,7 @@ static bool homunculus_shuffle(struct homun_data *hd)
 static void homunculus_read_db(void)
 {
 	const char *filename[] = {
-		DBPATH"homunculus_db.conf",
+		DBPATH "homunculus_db.conf",
 		"homunculus_db2.conf"
 	};
 	memset(homun->dbs->db, 0, sizeof(homun->dbs->db));
@@ -1190,7 +1190,7 @@ static bool homunculus_read_db_libconfig(const char *filename)
 	}
 
 	libconfig->destroy(&homun_conf);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 	return true;
 }
 

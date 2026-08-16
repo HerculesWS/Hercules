@@ -809,7 +809,7 @@ static void read_channels_config(void)
 		}
 		channel->config->channel_opt_msg_delay = channel_opt_msg_delay;
 
-		ShowStatus("Done reading '"CL_WHITE"%u"CL_RESET"' channels in '"CL_WHITE"%s"CL_RESET"'.\n", db_size(channel->db), config_filename);
+		ShowStatus("Done reading '" CL_WHITE "%u" CL_RESET "' channels in '" CL_WHITE "%s" CL_RESET "'.\n", db_size(channel->db), config_filename);
 	}
 	libconfig->destroy(&channels_conf);
 }

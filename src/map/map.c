@@ -2811,7 +2811,7 @@ static void map_spawnmobs(int16 m)
 		}
 
 	if (battle_config.etc_log && k > 0) {
-		ShowStatus("Map %s: Spawned '"CL_WHITE"%d"CL_RESET"' mobs.\n",map->list[m].name, k);
+		ShowStatus("Map %s: Spawned '" CL_WHITE "%d" CL_RESET "' mobs.\n",map->list[m].name, k);
 	}
 }
 
@@ -2864,7 +2864,7 @@ static int map_removemobs_timer(int tid, int64 tick, int id, intptr_t data)
 	count = map->foreachinmap(map->removemobs_sub, m, BL_MOB);
 
 	if (battle_config.etc_log && count > 0)
-		ShowStatus("Map %s: Removed '"CL_WHITE"%d"CL_RESET"' mobs.\n",map->list[m].name, count);
+		ShowStatus("Map %s: Removed '" CL_WHITE "%d" CL_RESET "' mobs.\n",map->list[m].name, count);
 
 	return 1;
 }
@@ -3579,7 +3579,7 @@ static int map_addmap(const char *mapname)
 static void map_delmapid(int id)
 {
 	Assert_retv(id >= 0 && id < map->count);
-	ShowNotice("Removing map [ %s ] from maplist"CL_CLL"\n",map->list[id].name);
+	ShowNotice("Removing map [ %s ] from maplist" CL_CLL "\n",map->list[id].name);
 	memmove(map->list+id, map->list+id+1, sizeof(map->list[0])*(map->count-id-1));
 	map->count--;
 }
@@ -3973,7 +3973,7 @@ static int map_readallmaps(void)
 
 		// show progress
 		if(map->enable_grf)
-			ShowStatus("Loading maps [%i/%i]: %s"CL_CLL"\r", i, map->count, map->list[i].name);
+			ShowStatus("Loading maps [%i/%i]: %s" CL_CLL "\r", i, map->count, map->list[i].name);
 
 		// try to load the map
 		if( !
@@ -3990,7 +3990,7 @@ static int map_readallmaps(void)
 		map->list[i].index = mapindex->name2id(map->list[i].name);
 
 		if ( map->index2mapid[map_id2index(i)] != -1 ) {
-			ShowWarning("Map %s already loaded!"CL_CLL"\n", map->list[i].name);
+			ShowWarning("Map %s already loaded!" CL_CLL "\n", map->list[i].name);
 			if (map->list[i].cell && map->list[i].cell != (struct mapcell *)0xdeadbeaf) {
 				aFree(map->list[i].cell);
 				map->list[i].cell = NULL;
@@ -4022,11 +4022,11 @@ static int map_readallmaps(void)
 	map->flags_init();
 
 	// finished map loading
-	ShowInfo("Successfully loaded '"CL_WHITE"%d"CL_RESET"' maps."CL_CLL"\n",map->count);
+	ShowInfo("Successfully loaded '" CL_WHITE "%d" CL_RESET "' maps." CL_CLL "\n",map->count);
 	instance->start_id = map->count; // Next Map Index will be instances
 
 	if (maps_removed)
-		ShowNotice("Maps removed: '"CL_WHITE"%d"CL_RESET"'\n",maps_removed);
+		ShowNotice("Maps removed: '" CL_WHITE "%d" CL_RESET "'\n",maps_removed);
 
 	return 0;
 }
@@ -5934,7 +5934,7 @@ static void read_map_zone_db(void)
 	struct config_t map_zone_db;
 	struct config_setting_t *zones = NULL;
 	char config_filename[256];
-	libconfig->format_db_path(DBPATH"map_zone_db.conf", config_filename, sizeof(config_filename));
+	libconfig->format_db_path(DBPATH "map_zone_db.conf", config_filename, sizeof(config_filename));
 	if (!libconfig->load_file(&map_zone_db, config_filename))
 		return;
 
@@ -6338,7 +6338,7 @@ static void read_map_zone_db(void)
 			}
 		}
 
-		ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' zones in '"CL_WHITE"%s"CL_RESET"'.\n", zone_count, config_filename);
+		ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' zones in '" CL_WHITE "%s" CL_RESET "'.\n", zone_count, config_filename);
 
 		/* post-load processing */
 		if ((zone = (struct map_zone_data *)strdb_get(map->zone_db, MAP_ZONE_PVP_NAME)) != NULL)
@@ -6494,11 +6494,11 @@ int do_final(void)
 
 	// remove all objects on maps
 	for (i = 0; i < map->count; i++) {
-		ShowStatus("Cleaning up maps [%d/%d]: %s..."CL_CLL"\r", i+1, map->count, map->list[i].name);
+		ShowStatus("Cleaning up maps [%d/%d]: %s..." CL_CLL "\r", i+1, map->count, map->list[i].name);
 		if (map->list[i].m >= 0)
 			map->foreachinmap(map->cleanup_sub, i, BL_ALL);
 	}
-	ShowStatus("Cleaned up %d maps."CL_CLL"\n", map->count);
+	ShowStatus("Cleaned up %d maps." CL_CLL "\n", map->count);
 
 	if (map->extra_scripts) {
 		for (i = 0; i < map->extra_scripts_count; i++)
@@ -6663,21 +6663,21 @@ static CPCMD(gm_position)
 	char map_name[25];
 
 	if( line == NULL || sscanf(line, "%d %d %24s",&x,&y,map_name) < 3 ) {
-		ShowError("gm:info invalid syntax. use '"CL_WHITE"gm:info xCord yCord map_name"CL_RESET"'\n");
+		ShowError("gm:info invalid syntax. use '" CL_WHITE "gm:info xCord yCord map_name" CL_RESET "'\n");
 		return;
 	}
 
 	if ((m = map->mapname2mapid(map_name)) <= 0) {
-		ShowError("gm:info '"CL_WHITE"%s"CL_RESET"' is not a known map\n",map_name);
+		ShowError("gm:info '" CL_WHITE "%s" CL_RESET "' is not a known map\n",map_name);
 		return;
 	}
 
 	if( x < 0 || x >= map->list[m].xs || y < 0 || y >= map->list[m].ys ) {
-		ShowError("gm:info '"CL_WHITE"%d %d"CL_RESET"' is out of '"CL_WHITE"%s"CL_RESET"' map bounds!\n",x,y,map_name);
+		ShowError("gm:info '" CL_WHITE "%d %d" CL_RESET "' is out of '" CL_WHITE "%s" CL_RESET "' map bounds!\n",x,y,map_name);
 		return;
 	}
 
-	ShowInfo("HCP: updated console's game position to '"CL_WHITE"%d %d %s"CL_RESET"'\n",x,y,map_name);
+	ShowInfo("HCP: updated console's game position to '" CL_WHITE "%d %d %s" CL_RESET "'\n",x,y,map_name);
 	map->cpsd->bl.x = x;
 	map->cpsd->bl.y = y;
 	map->cpsd->bl.m = m;
@@ -6687,16 +6687,16 @@ static CPCMD(gm_use)
 {
 
 	if( line == NULL ) {
-		ShowError("gm:use invalid syntax. use '"CL_WHITE"gm:use @command <optional params>"CL_RESET"'\n");
+		ShowError("gm:use invalid syntax. use '" CL_WHITE "gm:use @command <optional params>" CL_RESET "'\n");
 		return;
 	}
 
 	map->cpsd_active = true;
 
 	if( !atcommand->exec(map->cpsd->fd, map->cpsd, line, false) )
-		ShowInfo("HCP: '"CL_WHITE"%s"CL_RESET"' failed\n",line);
+		ShowInfo("HCP: '" CL_WHITE "%s" CL_RESET "' failed\n",line);
 	else
-		ShowInfo("HCP: '"CL_WHITE"%s"CL_RESET"' was used\n",line);
+		ShowInfo("HCP: '" CL_WHITE "%s" CL_RESET "' was used\n",line);
 
 	map->cpsd_active = false;
 }
@@ -7145,7 +7145,7 @@ int do_init(int argc, char *argv[])
 	npc->expanded_barter_fromsql(); /* after OnInit */
 
 	if (battle_config.pk_mode)
-		ShowNotice("Server is running on '"CL_WHITE"PK Mode"CL_RESET"'.\n");
+		ShowNotice("Server is running on '" CL_WHITE "PK Mode" CL_RESET "'.\n");
 
 	Sql_HerculesUpdateCheck(map->mysql_handle);
 
@@ -7155,7 +7155,7 @@ int do_init(int argc, char *argv[])
 		console->display_gplnotice();
 #endif
 
-	ShowStatus("Server is '"CL_GREEN"ready"CL_RESET"' and listening on port '"CL_WHITE"%d"CL_RESET"'.\n\n", map->port);
+	ShowStatus("Server is '" CL_GREEN "ready" CL_RESET "' and listening on port '" CL_WHITE "%d" CL_RESET "'.\n\n", map->port);
 
 	if( core->runflag != CORE_ST_STOP ) {
 		core->shutdown_callback = map->do_shutdown;

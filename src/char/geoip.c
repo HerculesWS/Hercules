@@ -123,7 +123,7 @@ static void geoip_final(bool shutdown)
 
 	if (geoip->data->active) {
 		if (!shutdown)
-			ShowStatus("GeoIP "CL_RED"disabled"CL_RESET".\n");
+			ShowStatus("GeoIP " CL_RED "disabled" CL_RESET ".\n");
 		geoip->data->active = false;
 	}
 }
@@ -200,7 +200,7 @@ static void geoip_init(void)
 		geoip->final(false);
 		return;
 	}
-	ShowStatus("Finished Reading "CL_GREEN"GeoIP"CL_RESET" Database.\n");
+	ShowStatus("Finished Reading " CL_GREEN "GeoIP" CL_RESET " Database.\n");
 }
 
 void geoip_defaults(void)

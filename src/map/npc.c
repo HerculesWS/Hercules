@@ -543,7 +543,7 @@ static int npc_event_do_clock(int tid, int64 tick, int id, intptr_t data)
  **/
 static void npc_event_do_oninit(bool reload)
 {
-	ShowStatus("Event '"CL_WHITE"OnInit"CL_RESET"' executed with '"CL_WHITE"%d"CL_RESET"' NPCs."CL_CLL"\n", npc->event_doall("OnInit"));
+	ShowStatus("Event '" CL_WHITE "OnInit" CL_RESET "' executed with '" CL_WHITE "%d" CL_RESET "' NPCs." CL_CLL "\n", npc->event_doall("OnInit"));
 
 	// This interval has already been added on startup
 	if( !reload )
@@ -5718,17 +5718,17 @@ static void npc_process_files(int npc_min)
 
 	ShowStatus("Loading NPCs...\r");
 	for( file = npc->src_files; file != NULL; file = file->next ) {
-		ShowStatus("Loading NPC file: %s"CL_CLL"\r", file->name);
+		ShowStatus("Loading NPC file: %s" CL_CLL "\r", file->name);
 		if (npc->parsesrcfile(file->name, false) != EXIT_SUCCESS)
 			map->retval = EXIT_FAILURE;
 	}
-	ShowInfo ("Done loading '"CL_WHITE"%d"CL_RESET"' NPCs:"CL_CLL"\n"
-		"\t-'"CL_WHITE"%d"CL_RESET"' Warps\n"
-		"\t-'"CL_WHITE"%d"CL_RESET"' Shops\n"
-		"\t-'"CL_WHITE"%d"CL_RESET"' Scripts\n"
-		"\t-'"CL_WHITE"%d"CL_RESET"' Spawn sets\n"
-		"\t-'"CL_WHITE"%d"CL_RESET"' Mobs Cached\n"
-		"\t-'"CL_WHITE"%d"CL_RESET"' Mobs Not Cached\n",
+	ShowInfo ("Done loading '" CL_WHITE "%d" CL_RESET "' NPCs:" CL_CLL "\n"
+		"\t-'" CL_WHITE "%d" CL_RESET "' Warps\n"
+		"\t-'" CL_WHITE "%d" CL_RESET "' Shops\n"
+		"\t-'" CL_WHITE "%d" CL_RESET "' Scripts\n"
+		"\t-'" CL_WHITE "%d" CL_RESET "' Spawn sets\n"
+		"\t-'" CL_WHITE "%d" CL_RESET "' Mobs Cached\n"
+		"\t-'" CL_WHITE "%d" CL_RESET "' Mobs Not Cached\n",
 		npc->npc_id - npc_min, npc->npc_warp, npc->npc_shop, npc->npc_script, npc->npc_mob, npc->npc_cache_mob, npc->npc_delay_mob);
 }
 
@@ -5837,9 +5837,9 @@ static int npc_reload(void)
 	 * Executed when connection is established with char-server in chrif_connectack().
 	 */
 	if (intif->CheckForCharServer() == 0) {
-		ShowStatus("Event '"CL_WHITE"OnInterIfInit"CL_RESET"' executed with '"CL_WHITE"%d"CL_RESET"' NPCs.\n",
+		ShowStatus("Event '" CL_WHITE "OnInterIfInit" CL_RESET "' executed with '" CL_WHITE "%d" CL_RESET "' NPCs.\n",
 		           npc->event_doall("OnInterIfInit"));
-		ShowStatus("Event '"CL_WHITE"OnInterIfInitOnce"CL_RESET"' executed with '"CL_WHITE"%d"CL_RESET"' NPCs.\n",
+		ShowStatus("Event '" CL_WHITE "OnInterIfInitOnce" CL_RESET "' executed with '" CL_WHITE "%d" CL_RESET "' NPCs.\n",
 		           npc->event_doall("OnInterIfInitOnce"));
 	}
 

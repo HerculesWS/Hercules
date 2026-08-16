@@ -91,7 +91,7 @@ static int inter_storage_tosql(int account_id, int storage_id, const struct stor
 						StrBuf->Printf(&buf, ", '%d'", p_it->card[k]);
 					for (k = 0; k < MAX_ITEM_OPTIONS; ++k)
 						StrBuf->Printf(&buf, ", '%d', '%d'", p_it->option[k].index, p_it->option[k].value);
-					StrBuf->Printf(&buf, ", '%u', '%d', '%"PRIu64"')", p_it->expire_time, p_it->bound, p_it->unique_id);
+					StrBuf->Printf(&buf, ", '%u', '%d', '%" PRIu64 "')", p_it->expire_time, p_it->bound, p_it->unique_id);
 
 					total_updates++;
 				}
@@ -140,7 +140,7 @@ static int inter_storage_tosql(int account_id, int storage_id, const struct stor
 			StrBuf->AppendStr(&buf, ") VALUES ");
 		}
 
-		StrBuf->Printf(&buf, "%s('%d', '%d', '%d', '%d', '%u', '%d',  '%d', '%d', '%d', '%u', '%d', '%"PRIu64"'",
+		StrBuf->Printf(&buf, "%s('%d', '%d', '%d', '%d', '%u', '%d',  '%d', '%d', '%d', '%u', '%d', '%" PRIu64 "'",
 					   total_inserts > 0 ? ", " : "", account_id, storage_id, p_it->nameid, p_it->amount, p_it->equip, p_it->identify, p_it->refine, p_it->grade,
 					   p_it->attribute, p_it->expire_time, p_it->bound, p_it->unique_id);
 		for (j = 0; j < MAX_SLOTS; ++j)
@@ -540,7 +540,7 @@ static bool inter_storage_retrieve_bound_items(int char_id, int account_id, int 
 		if (j != 0)
 			StrBuf->AppendStr(&buf, ",");
 
-		StrBuf->Printf(&buf, "('%d', '%d', '%d', '%u', '%d', '%d', '%d', '%d', '%u', '%d', '%"PRIu64"'",
+		StrBuf->Printf(&buf, "('%d', '%d', '%d', '%u', '%d', '%d', '%d', '%d', '%u', '%d', '%" PRIu64 "'",
 			guild_id, items[j].nameid, items[j].amount, items[j].equip, items[j].identify, items[j].refine, items[j].grade,
 			items[j].attribute, items[j].expire_time, items[j].bound, items[j].unique_id);
 		for (s = 0; s < MAX_SLOTS; ++s)

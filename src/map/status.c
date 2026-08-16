@@ -12351,14 +12351,14 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 
 	bl = map->id2bl(id);
 	if (!bl) {
-		ShowDebug("status_change_timer: Null pointer id: %d data: %"PRIdPTR"\n", id, data);
+		ShowDebug("status_change_timer: Null pointer id: %d data: %" PRIdPTR "\n", id, data);
 		return 0;
 	}
 	sc = status->get_sc(bl);
 	st = status->get_status_data(bl);
 
 	if (!sc || (sce = sc->data[type]) == NULL) {
-		ShowDebug("status_change_timer: Null pointer id: %d data: %"PRIdPTR" bl-type: %u\n", id, data, bl->type);
+		ShowDebug("status_change_timer: Null pointer id: %d data: %" PRIdPTR " bl-type: %u\n", id, data, bl->type);
 		return 0;
 	}
 
@@ -12376,7 +12376,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 	if ((sce=sc->data[type])) \
 		sce->timer = timer->add((t),(f),(i),(d)); \
 	else \
-		ShowError("status_change_timer: Unexpected NULL status change id: %d data: %"PRIdPTR"\n", id, data); \
+		ShowError("status_change_timer: Unexpected NULL status change id: %d data: %" PRIdPTR "\n", id, data); \
 } while(0)
 
 	PRAGMA_GCC46(GCC diagnostic push)
@@ -14377,9 +14377,9 @@ static void status_read_job_db(void)
 	char config_filename[256];
 
 #ifdef RENEWAL_ASPD
-	libconfig->format_db_path(DBPATH_RE"job_db.conf", config_filename, sizeof(config_filename));
+	libconfig->format_db_path(DBPATH_RE "job_db.conf", config_filename, sizeof(config_filename));
 #else
-	libconfig->format_db_path(DBPATH_PRE"job_db.conf", config_filename, sizeof(config_filename));
+	libconfig->format_db_path(DBPATH_PRE "job_db.conf", config_filename, sizeof(config_filename));
 #endif
 
 	if (!libconfig->load_file(&job_db_conf, config_filename))
@@ -14399,7 +14399,7 @@ static void status_read_job_db(void)
 		status->check_job_bonus(idx, name, class_);
 	}
 
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", i, config_filename);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", i, config_filename);
 	libconfig->destroy(&job_db_conf);
 }
 
@@ -14477,7 +14477,7 @@ static bool status_read_scdb_libconfig(void)
 {
 	struct config_t status_conf;
 	char filepath[512];
-	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH"sc_config.conf");
+	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH "sc_config.conf");
 
 	if (libconfig->load_file(&status_conf, filepath) == CONFIG_FALSE) {
 		ShowError("status_read_scdb_libconfig: can't read %s\n", filepath);
@@ -14498,7 +14498,7 @@ static bool status_read_scdb_libconfig(void)
 		status->dbs->IconChangeTable[SC_ILLUSION].id = SI_BLANK;
 
 	libconfig->destroy(&status_conf);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 	return true;
 }
 
@@ -14907,7 +14907,7 @@ static bool status_read_unit_params_db_sub(const char *name, struct config_setti
 static void status_read_unit_params_db(void)
 {
 	char config_filename[256];
-	libconfig->format_db_path(DBPATH"unit_parameters_db.conf", config_filename, sizeof(config_filename));
+	libconfig->format_db_path(DBPATH "unit_parameters_db.conf", config_filename, sizeof(config_filename));
 
 	struct config_t param_db_conf;
 	if (!libconfig->load_file(&param_db_conf, config_filename))
@@ -14924,9 +14924,9 @@ static void status_read_unit_params_db(void)
 	}
 
 	if (!result)
-		ShowWarning("There were errors while reading '"CL_WHITE"%s"CL_RESET"'. Some entries may have been skipped. The logs above this line should have more information.\n", config_filename);
+		ShowWarning("There were errors while reading '" CL_WHITE "%s" CL_RESET "'. Some entries may have been skipped. The logs above this line should have more information.\n", config_filename);
 
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", i, config_filename);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", i, config_filename);
 	libconfig->destroy(&param_db_conf);
 }
 
@@ -14996,7 +14996,7 @@ static int status_readdb(void)
 	// read databases
 	//
 	sv->readdb(map->db_path, "job_db2.txt",         ',', 1,                 1+MAX_LEVEL,       -1,                       status->readdb_job2);
-	sv->readdb(map->db_path, DBPATH"size_fix.txt", ',', MAX_SINGLE_WEAPON_TYPE, MAX_SINGLE_WEAPON_TYPE, ARRAYLENGTH(status->dbs->atkmods), status->readdb_sizefix);
+	sv->readdb(map->db_path, DBPATH "size_fix.txt", ',', MAX_SINGLE_WEAPON_TYPE, MAX_SINGLE_WEAPON_TYPE, ARRAYLENGTH(status->dbs->atkmods), status->readdb_sizefix);
 	status->read_scdb_libconfig();
 	status->read_unit_params_db();
 	status->read_job_db();

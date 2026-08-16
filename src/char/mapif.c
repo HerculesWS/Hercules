@@ -1444,7 +1444,7 @@ static int mapif_save_pet(int fd, int account_id, const struct s_pet *data)
 	RFIFOHEAD(fd);
 	len = RFIFOW(fd, 2);
 	if (sizeof(struct s_pet) != len-8) {
-		ShowError("inter pet: data size mismatch: %d != %"PRIuS"\n", len-8, sizeof(struct s_pet));
+		ShowError("inter pet: data size mismatch: %d != %" PRIuS "\n", len-8, sizeof(struct s_pet));
 		return 0;
 	}
 

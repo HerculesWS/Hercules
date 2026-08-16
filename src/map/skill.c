@@ -21145,7 +21145,7 @@ static int skill_blockpc_end(int tid, int64 tick, int id, intptr_t data)
 		}
 
 		if (i == cd->cursor) {
-			ShowError("skill_blockpc_end: '%s': no data found for '%"PRIdPTR"'\n", sd->status.name, data);
+			ShowError("skill_blockpc_end: '%s': no data found for '%" PRIdPTR "'\n", sd->status.name, data);
 		} else {
 			int cursor = 0;
 
@@ -25180,7 +25180,7 @@ static bool skill_read_skilldb(const char *filename)
 	db_destroy(loaded_ids_db);
 
 	libconfig->destroy(&skilldb);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 	return true;
 }
 
@@ -25399,7 +25399,7 @@ static bool skill_read_autospell_db(const char *filename)
 
 	qsort(skill->dbs->autospell_db, MAX_AUTOSPELL_DB, sizeof(struct s_autospell_db), skill->autospell_db_entry_compare);
 
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 
 	return true;
 }
@@ -25427,7 +25427,7 @@ static void skill_readdb(bool minimal)
 	itemdb->name_constants(); // refresh ItemDB constants before loading of skills
 
 	const char *filenames[] = {
-		DBPATH"skill_db.conf",
+		DBPATH "skill_db.conf",
 		"skill_db2.conf",
 	};
 

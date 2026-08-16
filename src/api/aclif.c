@@ -100,7 +100,7 @@ static bool aclif_setip(const char *ip)
 	}
 
 	safestrncpy(aclif->api_ip_str, ip, sizeof(aclif->api_ip_str));
-	ShowInfo("Api server IP address : '"CL_WHITE"%s"CL_RESET"' -> '"CL_WHITE"%s"CL_RESET"'.\n", ip, sockt->ip2str(aclif->api_ip, ip_str));
+	ShowInfo("Api server IP address : '" CL_WHITE "%s" CL_RESET "' -> '" CL_WHITE "%s" CL_RESET "'.\n", ip, sockt->ip2str(aclif->api_ip, ip_str));
 	return true;
 }
 
@@ -110,7 +110,7 @@ static bool aclif_setbindip(const char *ip)
 	aclif->bind_ip = sockt->host2ip(ip);
 	if (aclif->bind_ip) {
 		char ip_str[16];
-		ShowInfo("Api Server Bind IP Address : '"CL_WHITE"%s"CL_RESET"' -> '"CL_WHITE"%s"CL_RESET"'.\n", ip, sockt->ip2str(aclif->bind_ip, ip_str));
+		ShowInfo("Api Server Bind IP Address : '" CL_WHITE "%s" CL_RESET "' -> '" CL_WHITE "%s" CL_RESET "'.\n", ip, sockt->ip2str(aclif->bind_ip, ip_str));
 		return true;
 	}
 	ShowWarning("Failed to Resolve Api Server Address! (%s)\n", ip);
@@ -1157,7 +1157,7 @@ static int do_init_aclif(bool minimal)
 	sockt->set_default_delete(aclif->session_delete);
 	sockt->validate = false;
 	if (sockt->make_listen_bind(aclif->bind_ip, aclif->api_port) == -1) {
-		ShowFatalError("Failed to bind to port '"CL_WHITE"%d"CL_RESET"'\n", aclif->api_port);
+		ShowFatalError("Failed to bind to port '" CL_WHITE "%d" CL_RESET "'\n", aclif->api_port);
 		exit(EXIT_FAILURE);
 	}
 

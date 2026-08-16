@@ -42,7 +42,7 @@ struct enchantui_interface *enchantui;
 static void enchantui_read_db_libconfig(void)
 {
 	char filepath[512];
-	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH"enchant_db.conf");
+	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH "enchant_db.conf");
 
 	struct config_t enchant_conf;
 	if (libconfig->load_file(&enchant_conf, filepath) == CONFIG_FALSE) {
@@ -67,7 +67,7 @@ static void enchantui_read_db_libconfig(void)
 	}
 
 	libconfig->destroy(&enchant_conf);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 }
 
 static bool enchantui_read_db_libconfig_sub(const struct config_setting_t *it, int n, const char *source)

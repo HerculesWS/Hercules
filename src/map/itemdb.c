@@ -922,7 +922,7 @@ static void itemdb_read_groups(void)
 	struct config_t item_group_conf;
 	struct config_setting_t *itg = NULL, *it = NULL;
 	char config_filename[256];
-	libconfig->format_db_path(DBPATH"item_group.conf", config_filename, sizeof(config_filename));
+	libconfig->format_db_path(DBPATH "item_group.conf", config_filename, sizeof(config_filename));
 	const char *itname;
 	int i = 0, count = 0, c;
 
@@ -998,7 +998,7 @@ static void itemdb_read_groups(void)
 
 	libconfig->destroy(&item_group_conf);
 	aFree(gsize);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, config_filename);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, config_filename);
 }
 
 /* [Ind/Hercules] - HCache for Packages */
@@ -1207,7 +1207,7 @@ static bool itemdb_read_cached_packages(const char *config_filename)
 		}
 	}
 	fclose(file);
-	ShowStatus("Done reading '"CL_WHITE"%hu"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"' ("CL_GREEN"C"CL_RESET").\n", pcount, config_filename);
+	ShowStatus("Done reading '" CL_WHITE "%hu" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "' (" CL_GREEN "C" CL_RESET ").\n", pcount, config_filename);
 
 	return true;
 }
@@ -1216,7 +1216,7 @@ static void itemdb_read_packages(void)
 	struct config_t item_packages_conf;
 	struct config_setting_t *itg = NULL, *it = NULL, *t = NULL;
 	char config_filename[256];
-	libconfig->format_db_path(DBPATH"item_packages.conf", config_filename, sizeof(config_filename));
+	libconfig->format_db_path(DBPATH "item_packages.conf", config_filename, sizeof(config_filename));
 	const char *itname;
 	int i = 0, count = 0, c = 0, highest_gcount = 0;
 	struct item_package_rand_entry **prev = NULL;
@@ -1435,7 +1435,7 @@ static void itemdb_read_packages(void)
 	if( HCache->enabled )
 		itemdb->write_cached_packages(config_filename);
 
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, config_filename);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, config_filename);
 }
 
 /**
@@ -1558,7 +1558,7 @@ static void itemdb_read_options(void)
 
 	VECTOR_CLEAR(duplicate_id);
 
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 }
 
 static void itemdb_read_chains(void)
@@ -1566,7 +1566,7 @@ static void itemdb_read_chains(void)
 	struct config_t item_chain_conf;
 	struct config_setting_t *itc = NULL;
 	char config_filename[256];
-	libconfig->format_db_path(DBPATH"item_chain.conf", config_filename, sizeof(config_filename));
+	libconfig->format_db_path(DBPATH "item_chain.conf", config_filename, sizeof(config_filename));
 	int i = 0, count = 0;
 
 	if (!libconfig->load_file(&item_chain_conf, config_filename))
@@ -1640,14 +1640,14 @@ static void itemdb_read_chains(void)
 	else
 		itemdb->chain_cache[ECC_NEO_INSURANCE] = i;
 
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, config_filename);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, config_filename);
 }
 
 static bool itemdb_read_combodb_libconfig(void)
 {
 	struct config_t combo_conf;
 	char filepath[290];
-	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH"item_combo_db.conf");
+	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH "item_combo_db.conf");
 
 	if (libconfig->load_file(&combo_conf, filepath) == CONFIG_FALSE) {
 		ShowError("itemdb_read_combodb_libconfig: can't read %s\n", filepath);
@@ -1670,7 +1670,7 @@ static bool itemdb_read_combodb_libconfig(void)
 	}
 
 	libconfig->destroy(&combo_conf);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 	return true;
 }
 
@@ -2487,7 +2487,7 @@ static int itemdb_readdb_libconfig(const char *filename, struct DBMap *itemconst
 	}
 	db_destroy(duplicate_db);
 	libconfig->destroy(&item_db_conf);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 	return count;
 }
 
@@ -2511,7 +2511,7 @@ static bool itemdb_read_libconfig_lapineddukddak(void)
 	int i = 0;
 	int count = 0;
 
-	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH"item_lapineddukddak.conf");
+	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH "item_lapineddukddak.conf");
 	if (libconfig->load_file(&item_lapineddukddak, filepath) == CONFIG_FALSE)
 		return false;
 
@@ -2521,7 +2521,7 @@ static bool itemdb_read_libconfig_lapineddukddak(void)
 	}
 
 	libconfig->destroy(&item_lapineddukddak);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 	return true;
 }
 
@@ -2603,7 +2603,7 @@ static bool itemdb_read_libconfig_lapineupgrade(void)
 	int i = 0;
 	int count = 0;
 
-	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH"item_lapineupgrade.conf");
+	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH "item_lapineupgrade.conf");
 	if (libconfig->load_file(&item_lapineupgrade, filepath) == CONFIG_FALSE)
 		return false;
 
@@ -2613,7 +2613,7 @@ static bool itemdb_read_libconfig_lapineupgrade(void)
 	}
 
 	libconfig->destroy(&item_lapineupgrade);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 	return true;
 }
 
@@ -2696,7 +2696,7 @@ static bool itemdb_read_libconfig_item_reform_info(void)
 	struct config_t item_reform;
 	char filepath[290];
 
-	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH"item_reform_info.conf");
+	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH "item_reform_info.conf");
 	if (libconfig->load_file(&item_reform, filepath) == CONFIG_FALSE)
 		return false;
 
@@ -2710,7 +2710,7 @@ static bool itemdb_read_libconfig_item_reform_info(void)
 	}
 
 	libconfig->destroy(&item_reform);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 	return true;
 }
 
@@ -2841,7 +2841,7 @@ static bool itemdb_read_libconfig_item_reform_list(void)
 	struct config_t item_reform;
 	char filepath[290];
 
-	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH"item_reform_list.conf");
+	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH "item_reform_list.conf");
 	if (libconfig->load_file(&item_reform, filepath) == CONFIG_FALSE)
 		return false;
 
@@ -2858,7 +2858,7 @@ static bool itemdb_read_libconfig_item_reform_list(void)
 	}
 
 	libconfig->destroy(&item_reform);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 	return true;
 }
 
@@ -2992,7 +2992,7 @@ static void itemdb_read(bool minimal)
 	struct DBData prev;
 
 	const char *filename[] = {
-		DBPATH"item_db.conf",
+		DBPATH "item_db.conf",
 		"item_db2.conf",
 	};
 

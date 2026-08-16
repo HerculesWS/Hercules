@@ -1104,7 +1104,7 @@ bool storage_config_read(const char *filename, bool imported)
 
 	libconfig->destroy(&stor_libconf);
 
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", VECTOR_LENGTH(storage->configuration), map->STORAGE_CONF_FILENAME);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", VECTOR_LENGTH(storage->configuration), map->STORAGE_CONF_FILENAME);
 
 	return true;
 }

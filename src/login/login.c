@@ -2342,7 +2342,7 @@ int do_init(int argc, char **argv)
 
 	// server port open & binding
 	if ((login->fd = sockt->make_listen_bind(login->config->login_ip,login->config->login_port)) == -1) {
-		ShowFatalError("Failed to bind to port '"CL_WHITE"%d"CL_RESET"'\n",login->config->login_port);
+		ShowFatalError("Failed to bind to port '" CL_WHITE "%d" CL_RESET "'\n",login->config->login_port);
 		exit(EXIT_FAILURE);
 	}
 
@@ -2355,7 +2355,7 @@ int do_init(int argc, char **argv)
 	console->display_gplnotice();
 #endif // CONSOLE_INPUT
 
-	ShowStatus("The login-server is "CL_GREEN"ready"CL_RESET" (Server is listening on the port %u).\n\n", login->config->login_port);
+	ShowStatus("The login-server is " CL_GREEN "ready" CL_RESET " (Server is listening on the port %u).\n\n", login->config->login_port);
 	loginlog->log(0, "login server", 100, "login server started");
 
 	HPM->event(HPET_READY);

@@ -624,7 +624,7 @@ static int refine_readdb_refine_libconfig(const char *filename)
 		}
 	}
 	libconfig->destroy(&refine_db_conf);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 
 	return count;
 }
@@ -635,7 +635,7 @@ static int refine_init(bool minimal)
 	if (minimal)
 		return 0;
 
-	refine->p->readdb_refine_libconfig(DBPATH"refine_db.conf");
+	refine->p->readdb_refine_libconfig(DBPATH "refine_db.conf");
 	return 0;
 }
 

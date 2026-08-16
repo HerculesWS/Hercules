@@ -76,7 +76,7 @@ static int inter_achievement_tosql(int char_id, struct char_achievements *cp, co
 			save = true;
 
 		if (save) {
-			StrBuf->Printf(&buf, "%s('%d', '%d', '%"PRId64"', '%"PRId64"'", rows ?", ":"", char_id, pa->id, (int64)pa->completed_at, (int64)pa->rewarded_at);
+			StrBuf->Printf(&buf, "%s('%d', '%d', '%" PRId64 "', '%" PRId64 "'", rows ?", ":"", char_id, pa->id, (int64)pa->completed_at, (int64)pa->rewarded_at);
 			for (j = 0; j < MAX_ACHIEVEMENT_OBJECTIVES; j++)
 				StrBuf->Printf(&buf, ", '%d'", pa->objective[j]);
 			StrBuf->AppendStr(&buf, ")");

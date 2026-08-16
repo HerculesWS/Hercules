@@ -410,7 +410,7 @@ static int lclif_parse(int fd)
 	sockt->ip2str(ipl, ip);
 
 	if (sockt->session[fd]->flag.eof) {
-		ShowInfo("Closed connection from '"CL_WHITE"%s"CL_RESET"'.\n", ip);
+		ShowInfo("Closed connection from '" CL_WHITE "%s" CL_RESET "'.\n", ip);
 		sockt->close(fd);
 		return 0;
 	}

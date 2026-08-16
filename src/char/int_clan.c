@@ -65,7 +65,7 @@ static int inter_clan_kick_inactive_members(int clan_id, int kick_interval)
 
 	// Kick Inactive members
 	if (SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET "
-		"`clan_id` = 0 WHERE `clan_id` = '%d' AND `online` = 0 AND `last_login` < %"PRId64,
+		"`clan_id` = 0 WHERE `clan_id` = '%d' AND `online` = 0 AND `last_login` < %" PRId64,
 		char_db, clan_id, (int64)(time(NULL) - kick_interval)))
 	{
 		Sql_ShowDebug(inter->sql_handle);
@@ -103,7 +103,7 @@ static int inter_clan_count_members(int clan_id, int kick_interval)
 	}
 
 	// Count members
-	if (SQL_ERROR == SQL->StmtPrepare(stmt, "SELECT COUNT(*) FROM `%s` WHERE `clan_id` = ? AND `last_login` >= %"PRId64, char_db, (int64)(time(NULL) - kick_interval))
+	if (SQL_ERROR == SQL->StmtPrepare(stmt, "SELECT COUNT(*) FROM `%s` WHERE `clan_id` = ? AND `last_login` >= %" PRId64, char_db, (int64)(time(NULL) - kick_interval))
 	 || SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_INT, &clan_id, sizeof(clan_id))
 	 || SQL_ERROR == SQL->StmtExecute(stmt)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 0, SQLDT_INT, &count, sizeof(count), NULL, NULL)

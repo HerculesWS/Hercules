@@ -266,7 +266,7 @@ static void script_reportdata(struct script_data *data)
 			ShowDebug("Data: nothing (nil)\n");
 			break;
 		case C_INT:// number
-			ShowDebug("Data: number value=%"PRId64"\n", data->u.num);
+			ShowDebug("Data: number value=%" PRId64 "\n", data->u.num);
 			break;
 		case C_STR:
 		case C_CONSTSTR:// string
@@ -290,7 +290,7 @@ static void script_reportdata(struct script_data *data)
 			}
 			break;
 		case C_POS:// label
-			ShowDebug("Data: label pos=%"PRId64"\n", data->u.num);
+			ShowDebug("Data: label pos=%" PRId64 "\n", data->u.num);
 			break;
 		default:
 			ShowDebug("Data: %s\n", script->op2name(data->type));
@@ -816,7 +816,7 @@ static const char *script_skip_space(const char *p)
 			for(;;)
 			{
 				if( *p == '\0' ) {
-					script->disp_warning_message("script:script->skip_space: end of file while parsing block comment. expected "CL_BOLD"*/"CL_NORM, p);
+					script->disp_warning_message("script:script->skip_space: end of file while parsing block comment. expected " CL_BOLD "*/" CL_NORM, p);
 					return p;
 				}
 				if( *p == '*' && p[1] == '/' )
@@ -2833,15 +2833,15 @@ static const char *script_print_line(StringBuf *buf, const char *p, const char *
 		if( p + i != mark)
 			StrBuf->Printf(buf, "%*c", w, c);
 		else
-			StrBuf->Printf(buf, CL_BT_RED"%*c"CL_RESET, w, c);
+			StrBuf->Printf(buf, CL_BT_RED "%*c" CL_RESET, w, c);
 	}
 	StrBuf->AppendStr(buf, "\n");
 	if( mark ) {
-		StrBuf->AppendStr(buf, "        "CL_BT_CYAN); // len = 8
+		StrBuf->AppendStr(buf, "        " CL_BT_CYAN); // len = 8
 		for( ; mark_pos > 0; mark_pos-- ) {
 			StrBuf->AppendStr(buf, "~");
 		}
-		StrBuf->AppendStr(buf, CL_RESET CL_BT_GREEN"^"CL_RESET"\n");
+		StrBuf->AppendStr(buf, CL_RESET CL_BT_GREEN "^" CL_RESET "\n");
 	}
 	return p+i+(p[i] == '\n' ? 1 : 0);
 }
@@ -2871,7 +2871,7 @@ static void script_errorwarning_sub(StringBuf *buf, const char *src, const char 
 	error_linepos = p;
 
 	if( line >= 0 )
-		StrBuf->Printf(buf, "script error in file '%s' line %d column %"PRIdPTR"\n", file, line, error_pos-error_linepos+1);
+		StrBuf->Printf(buf, "script error in file '%s' line %d column %" PRIdPTR "\n", file, line, error_pos-error_linepos+1);
 	else
 		StrBuf->Printf(buf, "script error in file '%s' item ID %d\n", file, -line);
 
@@ -3123,7 +3123,7 @@ static struct script_code *parse_script(const char *src, const char *file, int l
 			break;
 		}
 		PRAGMA_GCC46(GCC diagnostic pop)
-		ShowMessage(CL_CLL"\n");
+		ShowMessage(CL_CLL "\n");
 	}
 #endif
 
@@ -4031,7 +4031,7 @@ static const char *conv_str(struct script_state *st, struct script_data *data)
 		// int -> string
 		char *p;
 		CREATE(p, char, ITEM_NAME_LENGTH);
-		snprintf(p, ITEM_NAME_LENGTH, "%"PRId64"", data->u.num);
+		snprintf(p, ITEM_NAME_LENGTH, "%" PRId64, data->u.num);
 		p[ITEM_NAME_LENGTH-1] = '\0';
 		data->type = C_STR;
 		data->u.mutstr = p;
@@ -6080,7 +6080,7 @@ static int script_load_translation(const char *directory, uint8 lang_id)
 
 	findfile(directory, ".po", script_load_translation_sub, &data);
 
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' translations in '"CL_WHITE"%s"CL_RESET"'.\n", data.translation_count, directory);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' translations in '" CL_WHITE "%s" CL_RESET "'.\n", data.translation_count, directory);
 	return data.translation_count;
 }
 
@@ -6902,7 +6902,7 @@ static BUILDIN(menu)
 			char* menu;
 			CREATE(menu, char, MAX_MENU_LENGTH);
 			safestrncpy(menu, StrBuf->Value(&buf), MAX_MENU_LENGTH - 1);
-			ShowWarning("NPC Menu too long! (source:%s / length:%d)\n",nd?nd->name:"Unknown",StrBuf->Length(&buf));
+			ShowWarning("NPC Menu too long! (source:%s / length:%d)\n",nd ? nd->name : "Unknown",StrBuf->Length(&buf));
 			menuFunc(sd, st->oid, menu);
 			aFree(menu);
 		} else {
@@ -7010,7 +7010,7 @@ static BUILDIN(select)
 			char* menu;
 			CREATE(menu, char, MAX_MENU_LENGTH);
 			safestrncpy(menu, StrBuf->Value(&buf), MAX_MENU_LENGTH - 1);
-			ShowWarning("NPC Menu too long! (source:%s / length:%d)\n",nd?nd->name:"Unknown",StrBuf->Length(&buf));
+			ShowWarning("NPC Menu too long! (source:%s / length:%d)\n",nd ? nd->name : "Unknown",StrBuf->Length(&buf));
 			menuFunc(sd, st->oid, menu);
 			aFree(menu);
 		} else {
@@ -8408,7 +8408,7 @@ static BUILDIN(getelementofarray)
 
 	i = script_getnum(st, 3);
 	if (i < 0 || i > SCRIPT_MAX_ARRAYSIZE) {
-		ShowWarning("script:getelementofarray: index out of range (%"PRId64")\n", i);
+		ShowWarning("script:getelementofarray: index out of range (%" PRId64 ")\n", i);
 		script->reportdata(data);
 		script_pushnil(st);
 		st->state = END;
@@ -12698,7 +12698,7 @@ static BUILDIN(donpcevent)
 	script->check_event(st, event);
 	if( !npc->event_do(event) ) {
 		struct npc_data * nd = map->id2nd(st->oid);
-		ShowDebug("NPCEvent '%s' not found! (source: %s)\n",event,nd?nd->name:"Unknown");
+		ShowDebug("NPCEvent '%s' not found! (source: %s)\n",event,nd ? nd->name : "Unknown");
 		script_pushint(st, 0);
 	} else
 		script_pushint(st, 1);
@@ -19100,7 +19100,7 @@ static BUILDIN(data_to_string)
 			char *str = NULL;
 
 			CREATE(str, char, 20);
-			snprintf(str, 20, "%"PRId64"", data->u.num);
+			snprintf(str, 20, "%" PRId64, data->u.num);
 			script_pushstr(st, str);
 		} else if (data_islabel(data)) {
 			const char *str = "";
@@ -27635,7 +27635,7 @@ static bool buildin_rodex_sendmail_sub(struct script_state *st, struct rodex_mes
 	if (script_hasdata(st, 6)) {
 		msg->zeny = script_getnum(st, 6);
 		if (msg->zeny < 0 || msg->zeny > MAX_ZENY) {
-			ShowError("script:rodex_sendmail: Invalid Zeny value %"PRId64"!\n", msg->zeny);
+			ShowError("script:rodex_sendmail: Invalid Zeny value %" PRId64 "!\n", msg->zeny);
 			return false;
 		}
 	}

@@ -60,7 +60,7 @@ static bool stylist_read_db_libconfig(void)
 	}
 
 	libconfig->destroy(&stylist_conf);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", i, config_filename);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", i, config_filename);
 	return true;
 }
 

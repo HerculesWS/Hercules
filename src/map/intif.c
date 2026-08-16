@@ -1264,7 +1264,7 @@ static void intif_parse_PartyInfo(int fd)
 	}
 
 	if (RFIFOW(fd,2) != 8+sizeof(struct party))
-		ShowError("intif: party info: data size mismatch (char_id=%u party_id=%u packet_len=%d expected_len=%"PRIuS")\n",
+		ShowError("intif: party info: data size mismatch (char_id=%u party_id=%u packet_len=%d expected_len=%" PRIuS ")\n",
 		          RFIFOL(fd,4), RFIFOL(fd,8), RFIFOW(fd,2), 8+sizeof(struct party));
 	party->recv_info(RFIFOP(struct party *, fd, 8), RFIFOL(fd, 4));
 }
@@ -1342,7 +1342,7 @@ static void intif_parse_GuildInfo(int fd)
 	}
 	const struct PACKET_CHARMAP_GUILD_INFO *p = RP2PTR(struct PACKET_CHARMAP_GUILD_INFO *, fd);
 	if (p->packetLength != sizeof(struct PACKET_CHARMAP_GUILD_INFO))
-		ShowError("intif: guild info: data size mismatch - Gid: %d recv size: %d Expected size: %"PRIuS"\n",
+		ShowError("intif: guild info: data size mismatch - Gid: %d recv size: %d Expected size: %" PRIuS "\n",
 		          p->g.guild_id, p->packetLength, sizeof(struct PACKET_CHARMAP_GUILD_INFO));
 #ifdef _MSC_VER
 #pragma warning (push)
@@ -1464,7 +1464,7 @@ static void intif_parse_GuildMemberInfoChanged(int fd)
 static void intif_parse_GuildPosition(int fd)
 {
 	if (RFIFOW(fd,2)!=sizeof(struct guild_position)+12)
-		ShowError("intif: guild info: data size mismatch (%u) %d != %"PRIuS"\n",
+		ShowError("intif: guild info: data size mismatch (%u) %d != %" PRIuS "\n",
 		          RFIFOL(fd,4), RFIFOW(fd,2), sizeof(struct guild_position) + 12);
 	guild->position_changed(RFIFOL(fd, 4), RFIFOL(fd, 8), RFIFOP(struct guild_position *, fd, 12));
 }
@@ -1539,7 +1539,7 @@ static void intif_parse_RecvPetData(int fd)
 	len=RFIFOW(fd,2);
 	if (sizeof(struct s_pet) != len-9) {
 		if (battle_config.etc_log)
-			ShowError("intif: pet data: data size mismatch %d != %"PRIuS"\n", len-9, sizeof(struct s_pet));
+			ShowError("intif: pet data: data size mismatch %d != %" PRIuS "\n", len-9, sizeof(struct s_pet));
 	} else {
 		memcpy(&p, RFIFOP(struct s_pet *, fd, 9), sizeof(struct s_pet));
 		pet->recv_petdata(RFIFOL(fd,4),&p,RFIFOB(fd,8));
@@ -1589,7 +1589,7 @@ static void intif_parse_CreateHomunculus(int fd)
 	int len = RFIFOW(fd,2)-9;
 	if (sizeof(struct s_homunculus) != len) {
 		if (battle_config.etc_log)
-			ShowError("intif: create homun data: data size mismatch %d != %"PRIuS"\n", len, sizeof(struct s_homunculus));
+			ShowError("intif: create homun data: data size mismatch %d != %" PRIuS "\n", len, sizeof(struct s_homunculus));
 		return;
 	}
 	homun->recv_data(RFIFOL(fd, 4), RFIFOP(struct s_homunculus *, fd, 9), RFIFOB(fd, 8)) ;
@@ -1601,7 +1601,7 @@ static void intif_parse_RecvHomunculusData(int fd)
 
 	if (sizeof(struct s_homunculus) != len) {
 		if (battle_config.etc_log)
-			ShowError("intif: homun data: data size mismatch %d != %"PRIuS"\n", len, sizeof(struct s_homunculus));
+			ShowError("intif: homun data: data size mismatch %d != %" PRIuS "\n", len, sizeof(struct s_homunculus));
 		return;
 	}
 	homun->recv_data(RFIFOL(fd, 4), RFIFOP(struct s_homunculus *, fd, 9), RFIFOB(fd, 8));
@@ -1864,7 +1864,7 @@ static void intif_parse_MailInboxReceived(int fd)
 		return;
 
 	if (RFIFOW(fd,2) - 9 != sizeof(struct mail_data)) {
-		ShowError("intif_parse_MailInboxReceived: data size mismatch %d != %"PRIuS"\n", RFIFOW(fd,2) - 9, sizeof(struct mail_data));
+		ShowError("intif_parse_MailInboxReceived: data size mismatch %d != %" PRIuS "\n", RFIFOW(fd,2) - 9, sizeof(struct mail_data));
 		return;
 	}
 
@@ -1927,7 +1927,7 @@ static void intif_parse_MailGetAttach(int fd)
 	}
 
 	if (RFIFOW(fd,2) - 12 != sizeof(struct item)) {
-		ShowError("intif_parse_MailGetAttach: data size mismatch %d != %"PRIuS"\n", RFIFOW(fd,2) - 16, sizeof(struct item));
+		ShowError("intif_parse_MailGetAttach: data size mismatch %d != %" PRIuS "\n", RFIFOW(fd,2) - 16, sizeof(struct item));
 		return;
 	}
 
@@ -2048,7 +2048,7 @@ static void intif_parse_MailSend(int fd)
 	bool fail;
 
 	if( RFIFOW(fd,2) - 4 != sizeof(struct mail_message) ) {
-		ShowError("intif_parse_MailSend: data size mismatch %d != %"PRIuS"\n", RFIFOW(fd,2) - 4, sizeof(struct mail_message));
+		ShowError("intif_parse_MailSend: data size mismatch %d != %" PRIuS "\n", RFIFOW(fd,2) - 4, sizeof(struct mail_message));
 		return;
 	}
 
@@ -2143,7 +2143,7 @@ static void intif_parse_AuctionRegister(int fd)
 	struct auction_data auction;
 
 	if (RFIFOW(fd,2) - 4 != sizeof(struct auction_data)) {
-		ShowError("intif_parse_AuctionRegister: data size mismatch %d != %"PRIuS"\n", RFIFOW(fd,2) - 4, sizeof(struct auction_data));
+		ShowError("intif_parse_AuctionRegister: data size mismatch %d != %" PRIuS "\n", RFIFOW(fd,2) - 4, sizeof(struct auction_data));
 		return;
 	}
 
@@ -2301,7 +2301,7 @@ static void intif_parse_MercenaryReceived(int fd)
 
 	if (sizeof(struct s_mercenary) != len) {
 		if (battle_config.etc_log)
-			ShowError("intif: create mercenary data size mismatch %d != %"PRIuS"\n", len, sizeof(struct s_mercenary));
+			ShowError("intif: create mercenary data size mismatch %d != %" PRIuS "\n", len, sizeof(struct s_mercenary));
 		return;
 	}
 
@@ -2386,7 +2386,7 @@ static void intif_parse_ElementalReceived(int fd)
 
 	if (sizeof(struct s_elemental) != len) {
 		if (battle_config.etc_log)
-			ShowError("intif: create elemental data size mismatch %d != %"PRIuS"\n", len, sizeof(struct s_elemental));
+			ShowError("intif: create elemental data size mismatch %d != %" PRIuS "\n", len, sizeof(struct s_elemental));
 		return;
 	}
 
@@ -2570,7 +2570,7 @@ static void intif_parse_RequestRodexOpenInbox(int fd)
 		sd->rodex.total += count;
 
 	if (RFIFOW(fd, 2) - 24 != count * (int)sizeof(struct rodex_message)) {
-		ShowError("intif_parse_RodexInboxOpenReceived: data size mismatch %d != %"PRIuS"\n", RFIFOW(fd, 2) - 24, count * sizeof(struct rodex_message));
+		ShowError("intif_parse_RodexInboxOpenReceived: data size mismatch %d != %" PRIuS "\n", RFIFOW(fd, 2) - 24, count * sizeof(struct rodex_message));
 		return;
 	}
 
