@@ -2469,7 +2469,7 @@ static void intif_parse_MessageToFD(int fd)
 	Assert_retv(sockt->session_is_valid(u_fd));
 	if( sockt->session[u_fd] && sockt->session[u_fd]->session_data ) {
 		int aid = RFIFOL(fd,8);
-		struct map_session_data * sd = sockt->session[u_fd]->session_data;
+		struct map_session_data *sd = (struct map_session_data *)sockt->session[u_fd]->session_data;
 		/* matching e.g. previous fd owner didn't dc during request or is still the same */
 		if( sd && sd->bl.id == aid ) {
 			char msg[512];

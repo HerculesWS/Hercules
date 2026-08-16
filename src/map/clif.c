@@ -6774,7 +6774,7 @@ static void clif_wis_message(int fd, const char *nick, const char *mes, int mes_
 ///     other = target character is not logged in
 static void clif_wis_end(int fd, int flag)
 {
-	struct map_session_data *sd = sockt->session_is_valid(fd) ? sockt->session[fd]->session_data : NULL;
+	struct map_session_data *sd = sockt->session_is_valid(fd) ? (struct map_session_data *)sockt->session[fd]->session_data : NULL;
 	struct packet_wis_end p;
 
 	if( !sd )
@@ -9811,7 +9811,7 @@ static void clif_send_selforarea(int fd, struct block_list *bl, const void *buf,
 	if (fd == 0) {
 		clif->send(buf, len, bl, AREA);
 	} else {
-		struct map_session_data *sd = sockt->session_is_valid(fd) ? sockt->session[fd]->session_data : NULL;
+		struct map_session_data *sd = sockt->session_is_valid(fd) ? (struct map_session_data *)sockt->session[fd]->session_data : NULL;
 		if (sd != NULL) {
 			clif->send(buf, len, &sd->bl, SELF);
 		} else {
@@ -26262,7 +26262,6 @@ static void clif_format_tipbox(StringBuf *buf, const char *label, int tip_id)
 static int clif_parse(int fd)
 {
 	int cmd, packet_len;
-	struct map_session_data *sd;
 	int pnum;
 
 	//TODO apply delays or disconnect based on packet throughput [FlavioJS]
@@ -26272,7 +26271,7 @@ static int clif_parse(int fd)
 		unsigned short (*parse_cmd_func)(int fd, struct map_session_data *sd);
 		// begin main client packet processing loop
 
-		sd = sockt->session[fd]->session_data;
+		struct map_session_data *sd = (struct map_session_data *)sockt->session[fd]->session_data;
 
 		if (sockt->session[fd]->flag.eof) {
 			if (sd) {

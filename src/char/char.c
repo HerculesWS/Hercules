@@ -2332,10 +2332,10 @@ static int char_char_family(int cid1, int cid2, int cid3)
 static void char_disconnect_player(int account_id)
 {
 	int i;
-	struct char_session_data* sd;
+	struct char_session_data *sd;
 
 	// disconnect player if online on char-server
-	ARR_FIND( 0, sockt->fd_max, i, sockt->session[i] && (sd = (struct char_session_data*)sockt->session[i]->session_data) && sd->account_id == account_id );
+	ARR_FIND(0, sockt->fd_max, i, sockt->session[i] && (sd = (struct char_session_data *)sockt->session[i]->session_data) && sd->account_id == account_id);
 	if( i < sockt->fd_max )
 		sockt->eof(i);
 }
@@ -2454,7 +2454,7 @@ static void char_parse_fromlogin_auth_state(int fd)
 	unsigned int expiration_time = RFIFOL(fd, 29);
 	RFIFOSKIP(fd,33);
 
-	if (sockt->session_is_active(request_id) && (sd=(struct char_session_data*)sockt->session[request_id]->session_data) &&
+	if (sockt->session_is_active(request_id) && (sd = (struct char_session_data *)sockt->session[request_id]->session_data) &&
 		!sd->auth && sd->account_id == account_id && sd->login_id1 == login_id1 && sd->login_id2 == login_id2 && sd->sex == sex )
 	{
 		int client_fd = request_id;
@@ -2483,10 +2483,10 @@ static void char_parse_fromlogin_auth_state(int fd)
 
 static void char_parse_fromlogin_account_data(int fd)
 {
-	struct char_session_data* sd = (struct char_session_data*)sockt->session[fd]->session_data;
+	struct char_session_data *sd = (struct char_session_data *)sockt->session[fd]->session_data;
 	int i;
 	// find the authenticated session with this account id
-	ARR_FIND(0, sockt->fd_max, i, sockt->session[i] && (sd = (struct char_session_data*)sockt->session[i]->session_data) && sd->auth && sd->account_id == RFIFOSL(fd,2));
+	ARR_FIND(0, sockt->fd_max, i, sockt->session[i] && (sd = (struct char_session_data *)sockt->session[i]->session_data) && sd->auth && sd->account_id == RFIFOSL(fd,2));
 	if( i < sockt->fd_max ) {
 		memcpy(sd->email, RFIFOP(char *, fd, 6), 40);
 		sd->expiration_time = (time_t)RFIFOL(fd,46);
@@ -2692,7 +2692,7 @@ static void char_parse_fromlogin_kick(int fd)
 			// Manual kick from char server.
 			struct char_session_data *tsd;
 			int i;
-			ARR_FIND( 0, sockt->fd_max, i, sockt->session[i] && (tsd = (struct char_session_data*)sockt->session[i]->session_data) && tsd->account_id == aid );
+			ARR_FIND(0, sockt->fd_max, i, sockt->session[i] && (tsd = (struct char_session_data *)sockt->session[i]->session_data) && tsd->account_id == aid);
 			if( i < sockt->fd_max )
 			{
 				chr->authfail_fd(i, 2);
@@ -4187,7 +4187,7 @@ static void char_delete2_accept_ack(int fd, int char_id, uint32 result)
 {// HC: <082a>.W <char id>.L <Msg:0-5>.L
 #if PACKETVER_MAIN_NUM >= 20130522 || PACKETVER_RE_NUM >= 20130327 || defined(PACKETVER_ZERO)
 	if( result == 1 ) {
-		struct char_session_data* sd = (struct char_session_data*)sockt->session[fd]->session_data;
+		struct char_session_data *sd = (struct char_session_data *)sockt->session[fd]->session_data;
 		chr->send_HC_ACK_CHARINFO_PER_PAGE(fd, sd);
 	}
 #endif
@@ -4403,7 +4403,7 @@ static void char_parse_char_connect(int fd, struct char_session_data *sd, uint32
 	}
 
 	CREATE(sockt->session[fd]->session_data, struct char_session_data, 1);
-	sd = (struct char_session_data*)sockt->session[fd]->session_data;
+	sd = (struct char_session_data *)sockt->session[fd]->session_data;
 	sd->account_id = account_id;
 	sd->login_id1 = login_id1;
 	sd->login_id2 = login_id2;
@@ -5048,10 +5048,9 @@ static int char_parse_char_unknown_packet(int fd, uint32 ipl)
 static int char_parse_char(int fd)
 {
 	unsigned short cmd;
-	struct char_session_data* sd;
 	uint32 ipl = sockt->session[fd]->client_addr;
 
-	sd = (struct char_session_data*)sockt->session[fd]->session_data;
+	struct char_session_data *sd = (struct char_session_data *)sockt->session[fd]->session_data;
 
 	// disconnect any player if no login-server.
 	if(chr->login_fd < 0)

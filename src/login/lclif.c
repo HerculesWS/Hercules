@@ -415,7 +415,7 @@ static int lclif_parse(int fd)
 		return 0;
 	}
 
-	if ((sd = sockt->session[fd]->session_data) == NULL) {
+	if ((sd = (struct login_session_data *)sockt->session[fd]->session_data) == NULL) {
 		// Perform ip-ban check
 		if (login->config->ipban && !sockt->trusted_ip_check(ipl) && ipban->check(ipl)) {
 			ShowStatus("Connection refused: IP isn't authorized (deny/allow, ip: %s).\n", ip);
@@ -427,7 +427,7 @@ static int lclif_parse(int fd)
 
 		// create a session for this new connection
 		CREATE(sockt->session[fd]->session_data, struct login_session_data, 1);
-		sd = sockt->session[fd]->session_data;
+		sd = (struct login_session_data *)sockt->session[fd]->session_data;
 		sd->fd = fd;
 	}
 

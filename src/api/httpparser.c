@@ -58,7 +58,7 @@ struct httpparser_interface *httpparser;
 
 #define GET_FD_SD \
 	int fd = (int)(intptr_t)parser->data; \
-	struct api_session_data *sd = sockt->session[fd]->session_data; \
+	struct api_session_data *sd = (struct api_session_data *)sockt->session[fd]->session_data; \
 	nullpo_ret(sd);
 
 #define GET_FD() (int)(intptr_t)parser->data
@@ -421,7 +421,7 @@ static bool httpparser_parse(int fd)
 {
 	nullpo_ret(sockt->session[fd]);
 
-	struct api_session_data *sd = sockt->session[fd]->session_data;
+	struct api_session_data *sd = (struct api_session_data *)sockt->session[fd]->session_data;
 	size_t data_size = RFIFOREST(fd);
 	if (data_size == 0)
 		return true;
@@ -469,7 +469,7 @@ static bool httpparser_multi_parse(int fd)
 {
 	nullpo_ret(sockt->session[fd]);
 
-	struct api_session_data *sd = sockt->session[fd]->session_data;
+	struct api_session_data *sd = (struct api_session_data *)sockt->session[fd]->session_data;
 
 	if (sd->multi_parser == NULL)
 		return true;
