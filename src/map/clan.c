@@ -83,7 +83,7 @@ static struct clan *clan_searchname(const char *name)
 	nullpo_retr(NULL, name);
 
 	iter = db_iterator(clan->db);
-	for (c = dbi_first(iter); dbi_exists(iter); c = dbi_next(iter)) {
+	for (c = (struct clan *)dbi_first(iter); dbi_exists(iter); c = (struct clan *)dbi_next(iter)) {
 		if (strncmpi(c->name, name, NAME_LENGTH) == 0 || strncmpi(c->constant, name, NAME_LENGTH) == 0) {
 			break;
 		}
@@ -448,9 +448,7 @@ static void clan_recv_message(struct clan *c, const char *mes, int len)
 static void clan_set_constants(void)
 {
 	struct DBIterator *iter = db_iterator(clan->db);
-	struct clan *c;
-
-	for (c = dbi_first(iter); dbi_exists(iter); c = dbi_next(iter)) {
+	for (struct clan *c = (struct clan *)dbi_first(iter); dbi_exists(iter); c = (struct clan *)dbi_next(iter)) {
 		script->set_constant2(c->constant, c->clan_id, false, false);
 	}
 
@@ -856,10 +854,10 @@ static int clan_read_db_sub(struct config_setting_t *settings, const char *sourc
 	// Validating Relations
 	if (valid > 0) {
 		struct DBIterator *iter = db_iterator(clan->db);
-		struct clan *c_ok, *c;
+		struct clan *c;
 		int i;
 
-		for (c_ok = dbi_first(iter); dbi_exists(iter); c_ok = dbi_next(iter)) {
+		for (struct clan *c_ok = (struct clan *)dbi_first(iter); dbi_exists(iter); c_ok = (struct clan *)dbi_next(iter)) {
 			i = VECTOR_LENGTH(c_ok->allies);
 			while ( i > 0) {
 				struct clan_relationship *r;
@@ -933,9 +931,7 @@ static bool clan_config_read(bool reload)
 
 	if (reload) {
 		struct DBIterator *iter = db_iterator(clan->db);
-		struct clan *c_clear;
-
-		for (c_clear = dbi_first(iter); dbi_exists(iter); c_clear = dbi_next(iter)) {
+		for (struct clan *c_clear = (struct clan *)dbi_first(iter); dbi_exists(iter); c_clear = (struct clan *)dbi_next(iter)) {
 			if (c_clear->buff.script != NULL) {
 				script->free_code(c_clear->buff.script);
 			}
@@ -1018,9 +1014,7 @@ static void do_init_clan(bool minimal)
 static void do_final_clan(void)
 {
 	struct DBIterator *iter = db_iterator(clan->db);
-	struct clan *c;
-
-	for (c = dbi_first(iter); dbi_exists(iter); c = dbi_next(iter)) {
+	for (struct clan *c = (struct clan *)dbi_first(iter); dbi_exists(iter); c = (struct clan *)dbi_next(iter)) {
 		if (c->buff.script) {
 			script->free_code(c->buff.script);
 		}

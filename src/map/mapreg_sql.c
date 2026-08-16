@@ -547,9 +547,7 @@ static void mapreg_save(void)
 {
 	if (mapreg->dirty) {
 		struct DBIterator *iter = db_iterator(mapreg->regs.vars);
-		struct mapreg_save *var = NULL;
-
-		for (var = dbi_first(iter); dbi_exists(iter); var = dbi_next(iter)) {
+		for (struct mapreg_save *var = (struct mapreg_save *)dbi_first(iter); dbi_exists(iter); var = (struct mapreg_save *)dbi_next(iter)) {
 			if (var->save) {
 				int index = script_getvaridx(var->uid);
 				const char *name = script->get_str(script_getvarid(var->uid));

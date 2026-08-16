@@ -8476,7 +8476,7 @@ static void clif_guild_castlelist(struct map_session_data *sd)
 
 		int i = 0;
 		struct DBIterator *iter = db_iterator(guild->castle_db);
-		for (struct guild_castle *gc = dbi_first(iter); dbi_exists(iter); gc = dbi_next(iter)) {
+		for (struct guild_castle *gc = (struct guild_castle *)dbi_first(iter); dbi_exists(iter); gc = (struct guild_castle *)dbi_next(iter)) {
 			if (gc->guild_id == g->guild_id) {
 				p->castle_list[i] = gc->castle_id;
 				++i;
@@ -10915,7 +10915,6 @@ static bool clif_process_whisper_message(struct map_session_data *sd, const stru
 static void clif_channel_msg(struct channel_data *chan, struct map_session_data *sd, char *msg)
 {
 	struct DBIterator *iter;
-	struct map_session_data *user;
 	int msg_len;
 	uint32 color;
 
@@ -10934,7 +10933,7 @@ static void clif_channel_msg(struct channel_data *chan, struct map_session_data 
 	WFIFOL(sd->fd,8) = RGB2BGR(color);
 	safestrncpy(WFIFOP(char *, sd->fd, 12), msg, msg_len);
 
-	for (user = dbi_first(iter); dbi_exists(iter); user = dbi_next(iter)) {
+	for (struct map_session_data *user = (struct map_session_data *)dbi_first(iter); dbi_exists(iter); user = (struct map_session_data *)dbi_next(iter)) {
 		if( user->fd == sd->fd )
 			continue;
 		WFIFOHEAD(user->fd,msg_len + 12);
@@ -10950,7 +10949,6 @@ static void clif_channel_msg(struct channel_data *chan, struct map_session_data 
 static void clif_channel_msg2(struct channel_data *chan, char *msg)
 {
 	struct DBIterator *iter;
-	struct map_session_data *user;
 	unsigned char buf[210];
 	int msg_len;
 	uint32 color;
@@ -10968,7 +10966,7 @@ static void clif_channel_msg2(struct channel_data *chan, char *msg)
 	WBUFL(buf,8) = RGB2BGR(color);
 	safestrncpy(WBUFP(char *, buf, 12), msg, msg_len);
 
-	for (user = dbi_first(iter); dbi_exists(iter); user = dbi_next(iter)) {
+	for (struct map_session_data *user = (struct map_session_data *)dbi_first(iter); dbi_exists(iter); user = (struct map_session_data *)dbi_next(iter)) {
 		WFIFOHEAD(user->fd,msg_len + 12);
 		memcpy(WFIFOP(char *, user->fd, 0), WBUFP(char *, buf, 0), msg_len + 12);
 		WFIFOSET(user->fd, msg_len + 12);

@@ -613,7 +613,7 @@ static void aclif_multi_body_complete(int fd, struct api_session_data *sd)
 
 	struct DBIterator *iter = db_iterator(sd->post_headers_db);
 #ifdef DEBUG_LOG
-	for (struct MimePart *data = dbi_first(iter); dbi_exists(iter); data = dbi_next(iter)) {
+	for (struct MimePart *data = (struct MimePart *)dbi_first(iter); dbi_exists(iter); data = (struct MimePart *)dbi_next(iter)) {
 		ShowError("found mime headers: %s, %s, '%s'\n", data->name, data->content_type, data->data);
 	}
 #endif
@@ -866,7 +866,7 @@ static void aclif_show_request(int fd, struct api_session_data *sd, bool show_ht
 		sd->headers_db->foreach(sd->headers_db, aclif->print_header);
 
 	struct DBIterator *iter = db_iterator(sd->post_headers_db);
-	for (struct MimePart *data = dbi_first(iter); dbi_exists(iter); data = dbi_next(iter)) {
+	for (struct MimePart *data = (struct MimePart *)dbi_first(iter); dbi_exists(iter); data = (struct MimePart *)dbi_next(iter)) {
 		if (*data->content_type == '\x0')
 			ShowInfo(" mime header: %s, '%s'\n", data->name, data->data);
 		else
@@ -1138,7 +1138,7 @@ static void aclif_remove_remove_timer(struct online_api_login_data *user)
 static const char *aclif_get_first_world_name(void)
 {
 	struct DBIterator *iter = db_iterator(aclif->char_servers_db);
-	struct char_server_data *data = dbi_first(iter);
+	struct char_server_data *data = (struct char_server_data *)dbi_first(iter);
 	if (dbi_exists(iter)) {
 		dbi_destroy(iter);
 		return data->world_name;

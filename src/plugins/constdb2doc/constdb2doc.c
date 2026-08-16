@@ -160,7 +160,7 @@ void constdb2doc_itemdb(void)
 
 	if (db_size(itemdb->other) > 0) {
 		struct DBIterator *iter = db_iterator(itemdb->other);
-		for (struct item_data *itd = dbi_first(iter); dbi_exists(iter); itd = dbi_next(iter)) {
+		for (struct item_data *itd = (struct item_data *)dbi_first(iter); dbi_exists(iter); itd = (struct item_data *)dbi_next(iter)) {
 			if (itd == &itemdb->dummy)
 				continue;
 			fprintf(out_fp, "- `%s`: %d\n", itd->name, itd->nameid);
@@ -178,7 +178,7 @@ void constdb2doc_itemoptions(void)
 	fprintf(out_fp, "## Item Options (db/item_options.conf)\n\n");
 	if (db_size(itemdb->options) > 0) {
 		struct DBIterator *iter = db_iterator(itemdb->options);
-		for (struct itemdb_option *ito = dbi_first(iter); dbi_exists(iter); ito = dbi_next(iter)) {
+		for (struct itemdb_option *ito = (struct itemdb_option *)dbi_first(iter); dbi_exists(iter); ito = (struct itemdb_option *)dbi_next(iter)) {
 			fprintf(out_fp, "- `%s`: %d\n", ito->name, ito->index);
 		}
 		dbi_destroy(iter);

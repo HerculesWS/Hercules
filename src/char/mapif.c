@@ -189,12 +189,11 @@ static void mapif_parse_auction_requestlist(int fd)
 	short type = RFIFOW(fd, 8), page = max(1, RFIFOW(fd, 14));
 	unsigned char buf[5 * sizeof(struct auction_data)];
 	struct DBIterator *iter = db_iterator(inter_auction->db);
-	struct auction_data *auction;
 	short i = 0, j = 0, pages = 1;
 
 	memcpy(searchtext, RFIFOP(char *, fd, 16), NAME_LENGTH);
 
-	for (auction = dbi_first(iter); dbi_exists(iter); auction = dbi_next(iter)) {
+	for (struct auction_data *auction = (struct auction_data *)dbi_first(iter); dbi_exists(iter); auction = (struct auction_data *)dbi_next(iter)) {
 		if ((type == 0 && auction->type != IT_ARMOR && auction->type != IT_PETARMOR)
 		 || (type == 1 && auction->type != IT_WEAPON)
 		 || (type == 2 && auction->type != IT_CARD)

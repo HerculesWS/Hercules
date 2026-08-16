@@ -2411,7 +2411,7 @@ static struct mob_data *map_getmob_boss(int16 m)
 	bool found = false;
 
 	iter = db_iterator(map->bossid_db);
-	for (md = dbi_first(iter); dbi_exists(iter); md = dbi_next(iter)) {
+	for (md = (struct mob_data *)dbi_first(iter); dbi_exists(iter); md = (struct mob_data *)dbi_next(iter)) {
 		if (md->bl.m == m) {
 			found = true;
 			break;
@@ -2470,10 +2470,7 @@ static uint32 map_race_id2mask(int race)
 static void map_vforeachpc(int (*func)(struct map_session_data *sd, va_list args), va_list args)
 {
 	struct DBIterator *iter = db_iterator(map->pc_db);
-	struct map_session_data *sd = NULL;
-
-	for( sd = dbi_first(iter); dbi_exists(iter); sd = dbi_next(iter) )
-	{
+	for (struct map_session_data *sd = (struct map_session_data *)dbi_first(iter); dbi_exists(iter); sd = (struct map_session_data *)dbi_next(iter)) {
 		va_list argscopy;
 		int ret;
 
@@ -2503,9 +2500,7 @@ static void map_foreachpc(int (*func)(struct map_session_data *sd, va_list args)
 static void map_vforeachmob(int (*func)(struct mob_data *md, va_list args), va_list args)
 {
 	struct DBIterator *iter = db_iterator(map->mobid_db);
-	struct mob_data *md = NULL;
-
-	for (md = dbi_first(iter); dbi_exists(iter); md = dbi_next(iter)) {
+	for (struct mob_data *md = (struct mob_data *)dbi_first(iter); dbi_exists(iter); md = (struct mob_data *)dbi_next(iter)) {
 		va_list argscopy;
 		int ret;
 
@@ -2535,9 +2530,7 @@ static void map_foreachmob(int (*func)(struct mob_data *md, va_list args), ...)
 static void map_vforeachnpc(int (*func)(struct npc_data *nd, va_list args), va_list args)
 {
 	struct DBIterator *iter = db_iterator(map->id_db);
-	struct block_list *bl = NULL;
-
-	for (bl = dbi_first(iter); dbi_exists(iter); bl = dbi_next(iter)) {
+	for (struct block_list *bl = (struct block_list *)dbi_first(iter); dbi_exists(iter); bl = (struct block_list *)dbi_next(iter)) {
 		if (bl->type == BL_NPC) {
 			struct npc_data *nd = BL_UCAST(BL_NPC, bl);
 			va_list argscopy;
@@ -2570,9 +2563,7 @@ static void map_foreachnpc(int (*func)(struct npc_data *nd, va_list args), ...)
 static void map_vforeachregen(int (*func)(struct block_list *bl, va_list args), va_list args)
 {
 	struct DBIterator *iter = db_iterator(map->regen_db);
-	struct block_list *bl = NULL;
-
-	for (bl = dbi_first(iter); dbi_exists(iter); bl = dbi_next(iter)) {
+	for (struct block_list *bl = (struct block_list *)dbi_first(iter); dbi_exists(iter); bl = (struct block_list *)dbi_next(iter)) {
 		va_list argscopy;
 		int ret;
 
@@ -2602,9 +2593,7 @@ static void map_foreachregen(int (*func)(struct block_list *bl, va_list args), .
 static void map_vforeachiddb(int (*func)(struct block_list *bl, va_list args), va_list args)
 {
 	struct DBIterator *iter = db_iterator(map->id_db);
-	struct block_list *bl = NULL;
-
-	for (bl = dbi_first(iter); dbi_exists(iter); bl = dbi_next(iter)) {
+	for (struct block_list *bl = (struct block_list *)dbi_first(iter); dbi_exists(iter); bl = (struct block_list *)dbi_next(iter)) {
 		va_list argscopy;
 		int ret;
 
@@ -2688,7 +2677,7 @@ static struct block_list *mapit_first(struct s_mapiterator *iter)
 
 	nullpo_retr(NULL,iter);
 
-	for (bl = dbi_first(iter->dbi); bl != NULL; bl = dbi_next(iter->dbi) ) {
+	for (bl = (struct block_list *)dbi_first(iter->dbi); bl != NULL; bl = (struct block_list *)dbi_next(iter->dbi) ) {
 		if( MAPIT_MATCHES(iter,bl) )
 			break;// found match
 	}
@@ -2706,7 +2695,7 @@ static struct block_list *mapit_last(struct s_mapiterator *iter)
 
 	nullpo_retr(NULL,iter);
 
-	for (bl = dbi_last(iter->dbi); bl != NULL; bl = dbi_prev(iter->dbi)) {
+	for (bl = (struct block_list *)dbi_last(iter->dbi); bl != NULL; bl = (struct block_list *)dbi_prev(iter->dbi)) {
 		if( MAPIT_MATCHES(iter,bl) )
 			break;// found match
 	}
@@ -2725,7 +2714,7 @@ static struct block_list *mapit_next(struct s_mapiterator *iter)
 	nullpo_retr(NULL,iter);
 
 	for( ; ; ) {
-		bl = dbi_next(iter->dbi);
+		bl = (struct block_list *)dbi_next(iter->dbi);
 		if( bl == NULL )
 			break;// end
 		if( MAPIT_MATCHES(iter,bl) )
@@ -2747,7 +2736,7 @@ static struct block_list *mapit_prev(struct s_mapiterator *iter)
 	nullpo_retr(NULL,iter);
 
 	for( ; ; ) {
-		bl = dbi_prev(iter->dbi);
+		bl = (struct block_list *)dbi_prev(iter->dbi);
 		if( bl == NULL )
 			break;// end
 		if( MAPIT_MATCHES(iter,bl) )
@@ -3402,7 +3391,6 @@ static bool map_iwall_set(int16 m, int16 x, int16 y, int size, int8 dir, bool sh
 
 static void map_iwall_get(struct map_session_data *sd)
 {
-	struct iwall_data *iwall;
 	struct DBIterator *iter;
 	int16 x1, y1;
 	int i;
@@ -3413,7 +3401,7 @@ static void map_iwall_get(struct map_session_data *sd)
 		return;
 
 	iter = db_iterator(map->iwall_db);
-	for( iwall = dbi_first(iter); dbi_exists(iter); iwall = dbi_next(iter) ) {
+	for (struct iwall_data *iwall = (struct iwall_data *)dbi_first(iter); dbi_exists(iter); iwall = (struct iwall_data *)dbi_next(iter)) {
 		if( iwall->m != sd->bl.m )
 			continue;
 
@@ -3672,9 +3660,7 @@ static void map_zone_clear_single(struct map_zone_data *zone)
 static void map_zone_db_clear(void)
 {
 	struct DBIterator *iter = db_iterator(map->zone_db);
-	struct map_zone_data *zone = NULL;
-
-	for(zone = dbi_first(iter); dbi_exists(iter); zone = dbi_next(iter)) {
+	for (struct map_zone_data *zone = (struct map_zone_data *)dbi_first(iter); dbi_exists(iter); zone = (struct map_zone_data *)dbi_next(iter)) {
 		map->zone_clear_single(zone);
 	}
 

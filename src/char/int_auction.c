@@ -46,11 +46,9 @@ struct inter_auction_interface *inter_auction;
 static int inter_auction_count(int char_id, bool buy)
 {
 	int i = 0;
-	struct auction_data *auction;
 	struct DBIterator *iter = db_iterator(inter_auction->db);
 
-	for( auction = dbi_first(iter); dbi_exists(iter); auction = dbi_next(iter) )
-	{
+	for (struct auction_data *auction = (struct auction_data *)dbi_first(iter); dbi_exists(iter); auction = (struct auction_data *)dbi_next(iter)) {
 		if ((buy && auction->buyer_id == char_id) || (!buy && auction->seller_id == char_id))
 			i++;
 	}

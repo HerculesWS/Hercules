@@ -1565,7 +1565,6 @@ ACMD(help)
 	{   // Display aliases
 		struct DBIterator *iter;
 		AtCommandInfo *command_info;
-		AliasInfo *alias_info = NULL;
 		StringBuf buf;
 		bool has_aliases = false;
 
@@ -1573,7 +1572,7 @@ ACMD(help)
 		StrBuf->AppendStr(&buf, msg_fd(fd, MSGTBL_HELP_AVAILABLE_ALIASES)); // Available aliases:
 		command_info = atcommand->get_info_byname(command_name);
 		iter = db_iterator(atcommand->alias_db);
-		for (alias_info = dbi_first(iter); dbi_exists(iter); alias_info = dbi_next(iter)) {
+		for (AliasInfo *alias_info = (AliasInfo *)dbi_first(iter); dbi_exists(iter); alias_info = (AliasInfo *)dbi_next(iter)) {
 			if (alias_info->command == command_info) {
 				StrBuf->Printf(&buf, " %s", alias_info->alias);
 				has_aliases = true;
@@ -9205,7 +9204,6 @@ static void atcommand_commands_sub(struct map_session_data *sd, const int fd, At
 {
 	char line_buff[CHATBOX_SIZE];
 	char* cur = line_buff;
-	AtCommandInfo* cmd;
 	struct DBIterator *iter = db_iterator(atcommand->db);
 	int count = 0;
 
@@ -9214,7 +9212,7 @@ static void atcommand_commands_sub(struct map_session_data *sd, const int fd, At
 
 	clif->message(fd, msg_fd(fd, MSGTBL_AVAILABLE_COMMANDS)); // "Available commands:"
 
-	for (cmd = dbi_first(iter); dbi_exists(iter); cmd = dbi_next(iter)) {
+	for (AtCommandInfo *cmd = (AtCommandInfo *)dbi_first(iter); dbi_exists(iter); cmd = (AtCommandInfo *)dbi_next(iter)) {
 		size_t slen;
 
 		switch( type ) {
@@ -9802,7 +9800,6 @@ static void atcommand_channel_help(int fd, const char *command, bool can_create)
 /* [Ind/Hercules] */
 ACMD(channel)
 {
-	struct channel_data *chan;
 	char subcmd[HCS_NAME_LENGTH], sub1[HCS_NAME_LENGTH], sub2[HCS_NAME_LENGTH], sub3[HCS_NAME_LENGTH];
 	sub1[0] = sub2[0] = sub3[0] = '\0';
 
@@ -9832,7 +9829,7 @@ ACMD(channel)
 			return false;
 		}
 
-		chan = channel->create(HCS_TYPE_PRIVATE, sub1 + 1, 0);
+		struct channel_data *chan = channel->create(HCS_TYPE_PRIVATE, sub1 + 1, 0);
 		channel->set_password(chan, pass);
 		chan->owner = sd->status.char_id;
 
@@ -9859,7 +9856,7 @@ ACMD(channel)
 				snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_CHANNEL_LIST_ENTRY), channel->config->ally_name, db_size(g->channel->users));// - #%s ( %d users )
 				clif->message(fd, atcmd_output);
 			}
-			for (chan = dbi_first(iter); dbi_exists(iter); chan = dbi_next(iter)) {
+			for (struct channel_data *chan = (struct channel_data *)dbi_first(iter); dbi_exists(iter); chan = (struct channel_data *)dbi_next(iter)) {
 				if (show_all || chan->type == HCS_TYPE_PUBLIC || chan->type == HCS_TYPE_IRC) {
 					snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_CHANNEL_LIST_ENTRY), chan->name, db_size(chan->users));// - #%s ( %d users )
 					clif->message(fd, atcmd_output);
@@ -9875,6 +9872,7 @@ ACMD(channel)
 			return false;
 		}
 
+		struct channel_data *chan;
 		if (!(chan = channel->search(sub1, sd))) {
 			snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_CHANNEL_NOT_AVAILABLE), sub1);// Channel '%s' is not available
 			clif->message(fd, atcmd_output);
@@ -9961,6 +9959,7 @@ ACMD(channel)
 			return false;
 		}
 
+		struct channel_data *chan;
 		if (!(chan = channel->search(sub1, sd))) {
 			snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_CHANNEL_NOT_AVAILABLE), sub1);// Channel '%s' is not available
 			clif->message(fd, atcmd_output);
@@ -10010,6 +10009,7 @@ ACMD(channel)
 			clif->message(fd, msg_fd(fd, MSGTBL_CHANNEL_NAME_START));// Channel name must start with a '#'
 			return false;
 		}
+		struct channel_data *chan;
 		if (!(chan = channel->search(sub1, sd))) {
 			snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_CHANNEL_NOT_AVAILABLE), sub1);// Channel '%s' is not available
 			clif->message(fd, atcmd_output);
@@ -10047,6 +10047,7 @@ ACMD(channel)
 			clif->message(fd, msg_fd(fd, MSGTBL_CHANNEL_NAME_START));// Channel name must start with a '#'
 			return false;
 		}
+		struct channel_data *chan;
 		if (!(chan = channel->search(sub1, sd))) {
 			snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_CHANNEL_NOT_AVAILABLE), sub1);// Channel '%s' is not available
 			clif->message(fd, atcmd_output);
@@ -10076,6 +10077,7 @@ ACMD(channel)
 			clif->message(fd, msg_fd(fd, MSGTBL_CHANNEL_NAME_START));// Channel name must start with a '#'
 			return false;
 		}
+		struct channel_data *chan;
 		if (!(chan = channel->search(sub1, sd))) {
 			snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_CHANNEL_NOT_AVAILABLE), sub1);// Channel '%s' is not available
 			clif->message(fd, atcmd_output);
@@ -10118,6 +10120,7 @@ ACMD(channel)
 			clif->message(fd, msg_fd(fd, MSGTBL_CHANNEL_NAME_START));// Channel name must start with a '#'
 			return false;
 		}
+		struct channel_data *chan;
 		if (!(chan = channel->search(sub1, sd))) {
 			snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_CHANNEL_NOT_AVAILABLE), sub1);// Channel '%s' is not available
 			clif->message(fd, atcmd_output);
@@ -10447,10 +10450,9 @@ ACMD(lang)
 ACMD(claninfo)
 {
 	struct DBIterator *iter = db_iterator(clan->db);
-	struct clan *c;
 	int i, count;
 
-	for (c = dbi_first(iter); dbi_exists(iter); c = dbi_next(iter)) {
+	for (struct clan *c = (struct clan *)dbi_first(iter); dbi_exists(iter); c = (struct clan *)dbi_next(iter)) {
 		snprintf(atcmd_output, sizeof(atcmd_output), "Clan #%d:", c->clan_id);
 		clif->messagecolor_self(fd, COLOR_DEFAULT, atcmd_output);
 
@@ -11032,8 +11034,6 @@ static const char *atcommand_checkalias(const char *aliasname)
 static void atcommand_get_suggestions(struct map_session_data *sd, const char *name, bool is_atcmd_cmd)
 {
 	struct DBIterator *atcommand_iter, *alias_iter;
-	AtCommandInfo* command_info = NULL;
-	AliasInfo* alias_info = NULL;
 	AtCommandType type = is_atcmd_cmd ? COMMAND_ATCOMMAND : COMMAND_CHARCOMMAND;
 	char* full_match[MAX_SUGGESTIONS];
 	char* suggestions[MAX_SUGGESTIONS];
@@ -11048,7 +11048,7 @@ static void atcommand_get_suggestions(struct map_session_data *sd, const char *n
 	alias_iter = db_iterator(atcommand->alias_db);
 
 	// Build the matches
-	for (command_info = dbi_first(atcommand_iter); dbi_exists(atcommand_iter); command_info = dbi_next(atcommand_iter))     {
+	for (AtCommandInfo *command_info = (AtCommandInfo *)dbi_first(atcommand_iter); dbi_exists(atcommand_iter); command_info = (AtCommandInfo *)dbi_next(atcommand_iter)) {
 		match = strstr(command_info->command, name);
 		can_use = atcommand->can_use2(sd, command_info->command, type);
 		if ( prefix_count < MAX_SUGGESTIONS && match == command_info->command && can_use ) {
@@ -11061,7 +11061,7 @@ static void atcommand_get_suggestions(struct map_session_data *sd, const char *n
 		}
 	}
 
-	for (alias_info = dbi_first(alias_iter); dbi_exists(alias_iter); alias_info = dbi_next(alias_iter)) {
+	for (AliasInfo *alias_info = (AliasInfo *)dbi_first(alias_iter); dbi_exists(alias_iter); alias_info = (AliasInfo *)dbi_next(alias_iter)) {
 		match = strstr(alias_info->alias, name);
 		can_use = atcommand->can_use2(sd, alias_info->command->command,type);
 		if ( prefix_count < MAX_SUGGESTIONS && match == alias_info->alias && can_use) {
@@ -11426,11 +11426,10 @@ static inline int atcommand_command_type2idx(AtCommandType type)
 static void atcommand_db_load_groups(GroupSettings **groups, struct config_setting_t **commands_, size_t sz)
 {
 	struct DBIterator *iter = db_iterator(atcommand->db);
-	AtCommandInfo *atcmd;
 
 	nullpo_retv(groups);
 	nullpo_retv(commands_);
-	for (atcmd = dbi_first(iter); dbi_exists(iter); atcmd = dbi_next(iter)) {
+	for (AtCommandInfo *atcmd = (AtCommandInfo *)dbi_first(iter); dbi_exists(iter); atcmd = (AtCommandInfo *)dbi_next(iter)) {
 		CREATE(atcmd->at_groups, char, sz);
 		CREATE(atcmd->char_groups, char, sz);
 

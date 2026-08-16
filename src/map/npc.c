@@ -2083,13 +2083,12 @@ static bool npc_trader_open(struct map_session_data *sd, struct npc_data *nd)
 static void npc_trader_update(int master)
 {
 	struct DBIterator *iter;
-	struct block_list* bl;
 	struct npc_data *master_nd = map->id2nd(master);
 
 	CREATE(master_nd->u.scr.shop,struct npc_shop_data,1);
 
 	iter = db_iterator(map->id_db);
-	for (bl = dbi_first(iter); dbi_exists(iter); bl = dbi_next(iter)) {
+	for (struct block_list *bl = (struct block_list *)dbi_first(iter); dbi_exists(iter); bl = (struct block_list *)dbi_next(iter)) {
 		if (bl->type == BL_NPC) {
 			struct npc_data *nd = BL_UCAST(BL_NPC, bl);
 			if (nd->src_id == master) {
@@ -5871,7 +5870,7 @@ static bool npc_unloadfile(const char *filepath, bool unload_mobs)
 	struct DBIterator *iter = db_iterator(npc->name_db);
 	bool found = false;
 
-	for (struct npc_data *nd = dbi_first(iter); dbi_exists(iter); nd = dbi_next(iter)) {
+	for (struct npc_data *nd = (struct npc_data *)dbi_first(iter); dbi_exists(iter); nd = (struct npc_data *)dbi_next(iter)) {
 		if (nd->path != NULL && strcasecmp(nd->path, filepath) == 0) { // FIXME: This can break in case-sensitive file systems.
 			found = true;
 			npc->unload_duplicates(nd, unload_mobs); /// Unload any NPC which could duplicate this but be in a different file.

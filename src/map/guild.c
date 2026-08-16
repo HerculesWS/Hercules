@@ -282,12 +282,11 @@ static struct guild *guild_search(int guild_id)
 /// lookup: guild name -> guild*
 static struct guild *guild_searchname(const char *str)
 {
-	struct guild* g;
+	struct guild *g;
 	struct DBIterator *iter = db_iterator(guild->db);
 
 	nullpo_retr(NULL, str);
-	for( g = dbi_first(iter); dbi_exists(iter); g = dbi_next(iter) )
-	{
+	for (g = (struct guild *)dbi_first(iter); dbi_exists(iter); g = (struct guild *)dbi_next(iter)) {
 		if( strcmpi(g->name, str) == 0 )
 			break;
 	}
@@ -305,11 +304,10 @@ static struct guild_castle *guild_castle_search(int gcid)
 /// lookup: map index -> castle*
 static struct guild_castle *guild_mapindex2gc(short map_index)
 {
-	struct guild_castle* gc;
+	struct guild_castle *gc;
 	struct DBIterator *iter = db_iterator(guild->castle_db);
 
-	for( gc = dbi_first(iter); dbi_exists(iter); gc = dbi_next(iter) )
-	{
+	for (gc = (struct guild_castle *)dbi_first(iter); dbi_exists(iter); gc = (struct guild_castle *)dbi_next(iter)) {
 		if( gc->mapindex == map_index )
 			break;
 	}
@@ -1384,9 +1382,7 @@ static int guild_emblem_changed(int len, int guild_id, int emblem_id, const char
 	}
 	{// update guardians (mobs)
 		struct DBIterator *iter = db_iterator(guild->castle_db);
-		struct guild_castle* gc;
-		for( gc = (struct guild_castle*)dbi_first(iter) ; dbi_exists(iter); gc = (struct guild_castle*)dbi_next(iter) )
-		{
+		for (struct guild_castle *gc = (struct guild_castle *)dbi_first(iter); dbi_exists(iter); gc = (struct guild_castle *)dbi_next(iter)) {
 			if( gc->guild_id != guild_id )
 				continue;
 			// update permanent guardians
@@ -2132,14 +2128,13 @@ static void guild_castle_map_init(void)
 	int num = db_size(guild->castle_db);
 
 	if (num > 0) {
-		struct guild_castle* gc = NULL;
 		int *castle_ids, *cursor;
 		struct DBIterator *iter = NULL;
 
 		CREATE(castle_ids, int, num);
 		cursor = castle_ids;
 		iter = db_iterator(guild->castle_db);
-		for (gc = dbi_first(iter); dbi_exists(iter); gc = dbi_next(iter)) {
+		for (struct guild_castle *gc = (struct guild_castle *)dbi_first(iter); dbi_exists(iter); gc = (struct guild_castle *)dbi_next(iter)) {
 			*(cursor++) = gc->castle_id;
 		}
 		dbi_destroy(iter);
@@ -2346,10 +2341,9 @@ static void guild_agit2_end(void)
 static int guild_checkcastles(struct guild *g)
 {
 	int nb_cas = 0;
-	struct guild_castle* gc = NULL;
 	struct DBIterator *iter = db_iterator(guild->castle_db);
 
-	for (gc = dbi_first(iter); dbi_exists(iter); gc = dbi_next(iter)) {
+	for (struct guild_castle *gc = (struct guild_castle *)dbi_first(iter); dbi_exists(iter); gc = (struct guild_castle *)dbi_next(iter)) {
 		if (gc->guild_id == g->guild_id) {
 			nb_cas++;
 		}
@@ -2494,9 +2488,7 @@ static void do_init_guild(bool minimal)
 static void do_final_guild(void)
 {
 	struct DBIterator *iter = db_iterator(guild->db);
-	struct guild *g;
-
-	for( g = dbi_first(iter); dbi_exists(iter); g = dbi_next(iter) ) {
+	for (struct guild *g = (struct guild *)dbi_first(iter); dbi_exists(iter); g = (struct guild *)dbi_next(iter)) {
 		if( g->channel != NULL )
 			channel->delete_(g->channel);
 		if( g->instance != NULL ) {

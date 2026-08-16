@@ -152,10 +152,10 @@ static struct party_data *party_search(int party_id)
 /// Party data lookup using party name.
 static struct party_data *party_searchname(const char *str)
 {
-	struct party_data* p;
+	struct party_data *p;
 
 	struct DBIterator *iter = db_iterator(party->db);
-	for (p = dbi_first(iter); dbi_exists(iter); p = dbi_next(iter)) {
+	for (p = (struct party_data *)dbi_first(iter); dbi_exists(iter); p = (struct party_data *)dbi_next(iter)) {
 		if( strncmpi(p->party.name,str,NAME_LENGTH) == 0 )
 			break;
 	}
@@ -988,11 +988,9 @@ static int party_skill_check(struct map_session_data *sd, int party_id, uint16 s
 static int party_send_xy_timer(int tid, int64 tick, int id, intptr_t data)
 {
 	struct DBIterator *iter = db_iterator(party->db);
-	struct party_data* p;
 
 	// for each existing party,
-	for( p = dbi_first(iter); dbi_exists(iter); p = dbi_next(iter) )
-	{
+	for (struct party_data *p = (struct party_data *)dbi_first(iter); dbi_exists(iter); p = (struct party_data *)dbi_next(iter)) {
 		int i;
 
 		if( !p->party.count )
@@ -1404,7 +1402,6 @@ static void party_booking_update(struct map_session_data *sd, short *job)
 static void party_recruit_search(struct map_session_data *sd, short level, short mapid, unsigned long lastindex, short resultcount)
 {
 #ifdef PARTY_RECRUIT
-	struct party_booking_ad_info *pb_ad;
 	int count = 0;
 	struct party_booking_ad_info *result_list[MAX_PARTY_BOOKING_RESULTS];
 	bool more_result = false;
@@ -1413,7 +1410,7 @@ static void party_recruit_search(struct map_session_data *sd, short level, short
 	nullpo_retv(sd);
 	memset(result_list, 0, sizeof(result_list));
 
-	for (pb_ad = dbi_first(iter); dbi_exists(iter); pb_ad = dbi_next(iter)) {
+	for (struct party_booking_ad_info *pb_ad = (struct party_booking_ad_info *)dbi_first(iter); dbi_exists(iter); pb_ad = (struct party_booking_ad_info *)dbi_next(iter)) {
 		if (level != 0 && (pb_ad->p_detail.level < level - 15 || pb_ad->p_detail.level > level))
 			continue;
 		if (count >= MAX_PARTY_BOOKING_RESULTS) {
@@ -1433,7 +1430,6 @@ static void party_recruit_search(struct map_session_data *sd, short level, short
 static void party_booking_search(struct map_session_data *sd, short level, short mapid, short job, unsigned long lastindex, short resultcount)
 {
 #ifndef PARTY_RECRUIT
-	struct party_booking_ad_info *pb_ad;
 	int i;
 	int count = 0;
 	struct party_booking_ad_info *result_list[MAX_PARTY_BOOKING_RESULTS];
@@ -1444,7 +1440,7 @@ static void party_booking_search(struct map_session_data *sd, short level, short
 
 	memset(result_list, 0, sizeof(result_list));
 
-	for (pb_ad = dbi_first(iter); dbi_exists(iter); pb_ad = dbi_next(iter)) {
+	for (struct party_booking_ad_info *pb_ad = (struct party_booking_ad_info *)dbi_first(iter); dbi_exists(iter); pb_ad = (struct party_booking_ad_info *)dbi_next(iter)) {
 		if (pb_ad->index < lastindex || (level != 0 && (pb_ad->p_detail.level < level - 15 || pb_ad->p_detail.level > level)))
 			continue;
 		if (count >= MAX_PARTY_BOOKING_RESULTS) {
