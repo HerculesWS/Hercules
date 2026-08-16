@@ -1279,7 +1279,6 @@ static int connect_check_clear(int tid, int64 tick, int id, intptr_t data)
 {
 	int clear = 0;
 	int list  = 0;
-	struct connect_history *hist = NULL;
 	struct DBIterator *iter;
 
 	if( !db_size(connect_history) )
@@ -1287,7 +1286,7 @@ static int connect_check_clear(int tid, int64 tick, int id, intptr_t data)
 
 	iter = db_iterator(connect_history);
 
-	for( hist = dbi_first(iter); dbi_exists(iter); hist = dbi_next(iter) ){
+	for (struct connect_history *hist = (struct connect_history *)dbi_first(iter); dbi_exists(iter); hist = (struct connect_history *)dbi_next(iter)) {
 		if( (!hist->ddos && DIFF_TICK(tick,hist->tick) > ddos_interval*3) ||
 			(hist->ddos && DIFF_TICK(tick,hist->tick) > ddos_autoreset) )
 			{// Remove connection history

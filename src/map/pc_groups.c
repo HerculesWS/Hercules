@@ -75,7 +75,6 @@ static void read_config(void)
 	groups = libconfig->lookup(&pc_group_config, "groups");
 
 	if (groups != NULL) {
-		GroupSettings *group_settings = NULL;
 		struct DBIterator *iter = NULL;
 		int i, loop = 0;
 
@@ -128,6 +127,7 @@ static void read_config(void)
 				continue;
 			}
 
+			GroupSettings *group_settings = NULL;
 			CREATE(group_settings, GroupSettings, 1);
 			group_settings->id = id;
 			group_settings->level = level;
@@ -148,7 +148,7 @@ static void read_config(void)
 
 		// Check if all commands and permissions exist
 		iter = db_iterator(pcg->db);
-		for (group_settings = dbi_first(iter); dbi_exists(iter); group_settings = dbi_next(iter)) {
+		for (GroupSettings *group_settings = (GroupSettings *)dbi_first(iter); dbi_exists(iter); group_settings = (GroupSettings *)dbi_next(iter)) {
 			struct config_setting_t *commands = group_settings->commands, *permissions = group_settings->permissions;
 			int count = 0;
 
@@ -193,7 +193,7 @@ static void read_config(void)
 		i = 0; // counter for processed groups
 		while (i < group_count) {
 			iter = db_iterator(pcg->db);
-			for (group_settings = dbi_first(iter); dbi_exists(iter); group_settings = dbi_next(iter)) {
+			for (GroupSettings *group_settings = (GroupSettings *)dbi_first(iter); dbi_exists(iter); group_settings = (GroupSettings *)dbi_next(iter)) {
 				struct config_setting_t *inherit = NULL,
 				                 *commands = group_settings->commands,
 					             *permissions = group_settings->permissions;
@@ -258,7 +258,7 @@ static void read_config(void)
 
 		// Pack permissions into GroupSettings.e_permissions for faster checking
 		iter = db_iterator(pcg->db);
-		for (group_settings = dbi_first(iter); dbi_exists(iter); group_settings = dbi_next(iter)) {
+		for (GroupSettings *group_settings = (GroupSettings *)dbi_first(iter); dbi_exists(iter); group_settings = (GroupSettings *)dbi_next(iter)) {
 			struct config_setting_t *permissions = group_settings->permissions;
 			int count = libconfig->setting_length(permissions);
 
@@ -286,7 +286,7 @@ static void read_config(void)
 			CREATE(commands, struct config_setting_t*, group_count);
 			i = 0;
 			iter = db_iterator(pcg->db);
-			for (group_settings = dbi_first(iter); dbi_exists(iter); group_settings = dbi_next(iter)) {
+			for (GroupSettings *group_settings = (GroupSettings *)dbi_first(iter); dbi_exists(iter); group_settings = (GroupSettings *)dbi_next(iter)) {
 				pc_groups[i] = group_settings;
 				commands[i] = group_settings->commands;
 				i++;
