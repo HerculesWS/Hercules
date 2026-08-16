@@ -1454,7 +1454,7 @@ static int pet_skill_support_timer(int tid, int64 tick, int id, intptr_t data)
 static void pet_read_db(void)
 {
 	const char *filename[] = {
-		DBPATH"pet_db.conf",
+		DBPATH "pet_db.conf",
 		"pet_db2.conf"
 	};
 
@@ -1518,7 +1518,7 @@ static int pet_read_db_libconfig(const char *filename, bool ignore_missing)
 		count++;
 	}
 	libconfig->destroy(&pet_db_conf);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 
 	return count;
 }

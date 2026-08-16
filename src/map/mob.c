@@ -4486,7 +4486,7 @@ static bool mob_read_optdrops_db(void)
 
 	libconfig->destroy(&option_groups);
 
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", i, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", i, filepath);
 	return true;
 }
 
@@ -5343,7 +5343,7 @@ static bool mob_get_const(const struct config_setting_t *it, int *value)
 static void mob_readdb(void)
 {
 	const char* filename[] = {
-		DBPATH"mob_db.conf",
+		DBPATH "mob_db.conf",
 		"mob_db2.conf" };
 	int i;
 
@@ -5401,7 +5401,7 @@ static int mob_read_libconfig(const char *filename, bool ignore_missing)
 		}
 	}
 	libconfig->destroy(&mob_db_conf);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 
 	return count;
 }
@@ -5446,7 +5446,7 @@ static void mob_race2_db_removal_notice(void)
 static void mob_read_group_db(void)
 {
 	const char *filename[] = {
-		DBPATH"mob_group.conf",
+		DBPATH "mob_group.conf",
 		"mob_group2.conf"
 	};
 
@@ -5475,7 +5475,7 @@ static bool mob_read_group_db_libconfig(const char *filename)
 	}
 
 	libconfig->destroy(&mg_conf);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 	return true;
 }
 
@@ -5658,7 +5658,7 @@ static void mob_readchatdb(void)
 		count++;
 	}
 	fclose(fp);
-	ShowStatus("Done reading '"CL_WHITE"%"PRIu32""CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%" PRIu32 CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 }
 
 /*==========================================
@@ -5694,7 +5694,7 @@ static bool mob_skill_db_libconfig(const char *filename, bool ignore_missing)
 	}
 
 	libconfig->destroy(&mob_skill_conf);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", i, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", i, filepath);
 	return true;
 }
 
@@ -5930,7 +5930,7 @@ static void mob_readskilldb(void)
 {
 
 	const char *filename[] = {
-		DBPATH"mob_skill_db.conf",
+		DBPATH "mob_skill_db.conf",
 		"mob_skill_db2.conf"
 	};
 	int i;

@@ -303,7 +303,7 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source, st
 		} else {
 			ui64 = UINT64_MAX;
 		}
-		StrBuf->Printf(&buf, "'%"PRIu64"',", ui64);
+		StrBuf->Printf(&buf, "'%" PRIu64 "',", ui64);
 
 		// equip_upper
 		if (map->setting_lookup_const_mask(entry, "Upper", &i32) && i32 >= 0)
@@ -571,7 +571,7 @@ void do_itemdb2sql(void)
 		const char *source;
 		const char *destination;
 	} files[] = {
-		{"item_db", DBPATH"item_db.conf", "sql-files/item_db" DBSUFFIX ".sql"},
+		{"item_db", DBPATH "item_db.conf", "sql-files/item_db" DBSUFFIX ".sql"},
 		{"item_db2", "item_db2.conf", "sql-files/item_db2.sql"},
 	};
 
@@ -840,7 +840,7 @@ void do_mobdb2sql(void)
 		const char *source;
 		const char *destination;
 	} files[] = {
-		{"mob_db", DBPATH"mob_db.conf", "sql-files/mob_db" DBSUFFIX ".sql"},
+		{"mob_db", DBPATH "mob_db.conf", "sql-files/mob_db" DBSUFFIX ".sql"},
 		{"mob_db2", "mob_db2.conf", "sql-files/mob_db2.sql"},
 	};
 
@@ -1171,7 +1171,7 @@ void do_mobskilldb2sql(void)
 		const char *source;
 		const char *destination;
 	} files[] = {
-		{"mob_skill_db", DBPATH"mob_skill_db.conf", "sql-files/mob_skill_db" DBSUFFIX ".sql"},
+		{"mob_skill_db", DBPATH "mob_skill_db.conf", "sql-files/mob_skill_db" DBSUFFIX ".sql"},
 		{"mob_skill_db2", "mob_skill_db2.conf", "sql-files/mob_skill_db2.sql"},
 	};
 

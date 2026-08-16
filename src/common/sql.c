@@ -814,7 +814,7 @@ static int SqlStmt_BindColumn(struct SqlStmt *self, size_t idx, enum SqlDataType
 
 	if (buffer_type == SQLDT_STRING || buffer_type == SQLDT_ENUM) {
 		if (buffer_len < 1) {
-			ShowDebug("SqlStmt_BindColumn: buffer_len(%"PRIuS") is too small, no room for the null-terminator\n", buffer_len);
+			ShowDebug("SqlStmt_BindColumn: buffer_len(%" PRIuS ") is too small, no room for the null-terminator\n", buffer_len);
 			return SQL_ERROR;
 		}
 		--buffer_len;// null-terminator
@@ -1074,7 +1074,7 @@ void Sql_HerculesUpdateCheck(struct Sql *self)
 			if( SQL_ERROR == SQL->Query(self, "SELECT 1 FROM `sql_updates` WHERE `timestamp` = '%u' LIMIT 1", timestampui) )
 				Sql_ShowDebug(self);
 			if( Sql_NumRows(self) != 1 ) {
-				StrBuf->Printf(&buf,CL_MAGENTA"[SQL]"CL_RESET": -- '"CL_WHITE"%s"CL_RESET"'\n", path);
+				StrBuf->Printf(&buf,CL_MAGENTA "[SQL]" CL_RESET ": -- '" CL_WHITE "%s" CL_RESET "'\n", path);
 				performed++;
 			}
 		}
@@ -1085,7 +1085,7 @@ void Sql_HerculesUpdateCheck(struct Sql *self)
 	fclose(ifp);
 
 	if( performed ) {
-		ShowSQL("- detected %u new "CL_WHITE"SQL updates"CL_RESET"\n",performed);
+		ShowSQL("- detected %u new " CL_WHITE "SQL updates" CL_RESET "\n",performed);
 		ShowMessage("%s",StrBuf->Value(&buf));
 		ShowSQL("To manually skip, type: 'sql update skip <file name>'\n");
 	}

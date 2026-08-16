@@ -171,7 +171,7 @@ static bool guild_read_castledb_libconfig(void)
 	}
 
 	libconfig->destroy(&castle_conf);
-	ShowStatus("Done reading '"CL_WHITE"%u"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", db_size(guild->castle_db), config_filename);
+	ShowStatus("Done reading '" CL_WHITE "%u" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", db_size(guild->castle_db), config_filename);
 	return true;
 }
 
@@ -2139,7 +2139,7 @@ static void guild_castle_map_init(void)
 		}
 		dbi_destroy(iter);
 		if (intif->guild_castle_dataload(num, castle_ids))
-			ShowStatus("Requested '"CL_WHITE"%d"CL_RESET"' guild castles from char-server...\n", num);
+			ShowStatus("Requested '" CL_WHITE "%d" CL_RESET "' guild castles from char-server...\n", num);
 		aFree(castle_ids);
 	}
 }
@@ -2293,7 +2293,7 @@ static int guild_castledataloadack(int len, const struct guild_castle *gc)
 			}
 		}
 	}
-	ShowStatus("Received '"CL_WHITE"%d"CL_RESET"' guild castles from char-server.\n", n);
+	ShowStatus("Received '" CL_WHITE "%d" CL_RESET "' guild castles from char-server.\n", n);
 	return 0;
 }
 

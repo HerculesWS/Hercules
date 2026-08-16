@@ -345,7 +345,7 @@ static int timer_add_interval(int64 tick, TimerFunc func, int id, intptr_t data,
 
 	nullpo_retr(INVALID_TIMER, func);
 	if (interval < 1) {
-		ShowError("timer_add_interval: invalid interval (tick=%"PRId64" %p[%s] id=%d data=%"PRIdPTR" diff_tick=%"PRId64")\n",
+		ShowError("timer_add_interval: invalid interval (tick=%" PRId64 " %p[%s] id=%d data=%" PRIdPTR " diff_tick=%" PRId64 ")\n",
 		          tick, func, search_timer_func_list(func), id, data, DIFF_TICK(tick, timer->gettick()));
 		return INVALID_TIMER;
 	}

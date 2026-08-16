@@ -253,7 +253,7 @@ static void inter_accinfo(int u_fd, int aid, int castergroup, const char *query,
 					SQL->GetData(inter->sql_handle, 4, &data, NULL); job_level = atoi(data);
 					SQL->GetData(inter->sql_handle, 5, &data, NULL); online = atoi(data);
 
-					inter->msg_to_fd(map_fd, u_fd, aid, "[AID: %d] %s | %s | Level: %d/%d | %s", account_id, name, inter->job_name(class_), base_level, job_level, online?"Online":"Offline");
+					inter->msg_to_fd(map_fd, u_fd, aid, "[AID: %d] %s | %s | Level: %d/%d | %s", account_id, name, inter->job_name(class_), base_level, job_level, online ? "Online" : "Offline");
 				}
 				SQL->FreeResult(inter->sql_handle);
 				return;
@@ -330,7 +330,7 @@ static void inter_accinfo2(bool success, int map_fd, int u_fd, int u_aid, int ac
 			SQL->GetData(inter->sql_handle, 5, &data, NULL); job_level = atoi(data);
 			SQL->GetData(inter->sql_handle, 6, &data, NULL); online = atoi(data);
 
-			inter->msg_to_fd(map_fd, u_fd, u_aid, "[Slot/CID: %d/%d] %s | %s | Level: %d/%d | %s", char_num, char_id, name, inter->job_name(class_), base_level, job_level, online?"On":"Off");
+			inter->msg_to_fd(map_fd, u_fd, u_aid, "[Slot/CID: %d/%d] %s | %s | Level: %d/%d | %s", char_num, char_id, name, inter->job_name(class_), base_level, job_level, online ? "On" : "Off");
 		}
 	}
 	SQL->FreeResult(inter->sql_handle);

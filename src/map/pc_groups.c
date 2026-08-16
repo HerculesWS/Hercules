@@ -298,7 +298,7 @@ static void read_config(void)
 		}
 	}
 
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' groups in '"CL_WHITE"%s"CL_RESET"'.\n", group_count, config_filename);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' groups in '" CL_WHITE "%s" CL_RESET "'.\n", group_count, config_filename);
 
 	// All data is loaded now, discard config
 	libconfig->destroy(&pc_group_config);

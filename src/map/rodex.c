@@ -503,7 +503,7 @@ static void rodex_getItemsAck(struct map_session_data *sd, int64 mail_id, int8 o
 	}
 
 	if (VECTOR_INDEX(sd->rodex.claim_list, 0) != mail_id) {
-		ShowError("rodex_getItemsAck: Mail ID mismatch. Expected %"PRId64", got %"PRId64"\n", VECTOR_INDEX(sd->rodex.claim_list, 0), mail_id);
+		ShowError("rodex_getItemsAck: Mail ID mismatch. Expected %" PRId64 ", got %" PRId64 "\n", VECTOR_INDEX(sd->rodex.claim_list, 0), mail_id);
 		return;
 	}
 

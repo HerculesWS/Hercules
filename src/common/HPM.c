@@ -111,7 +111,7 @@ static void *hplugin_import_symbol(char *name, unsigned int pID)
 	if (i != VECTOR_LENGTH(HPM->symbols))
 		return VECTOR_INDEX(HPM->symbols, i)->ptr;
 
-	ShowError("HPM:get_symbol:%s: '"CL_WHITE"%s"CL_RESET"' not found!\n",HPM->pid2name(pID),name);
+	ShowError("HPM:get_symbol:%s: '" CL_WHITE "%s" CL_RESET "' not found!\n",HPM->pid2name(pID),name);
 	return NULL;
 }
 
@@ -494,7 +494,7 @@ static struct hplugin *hplugin_load(const char *filename)
 	const char *(*HPMLoadEvent)(int server_type);
 
 	if( HPM->exists(filename) ) {
-		ShowWarning("HPM:plugin_load: attempting to load duplicate '"CL_WHITE"%s"CL_RESET"', skipping...\n", filename);
+		ShowWarning("HPM:plugin_load: attempting to load duplicate '" CL_WHITE "%s" CL_RESET "', skipping...\n", filename);
 		return NULL;
 	}
 
@@ -502,12 +502,12 @@ static struct hplugin *hplugin_load(const char *filename)
 
 	if (!(plugin->dll = plugin_open(filename))) {
 		char buf[1024];
-		ShowFatalError("HPM:plugin_load: failed to load '"CL_WHITE"%s"CL_RESET"' (error: %s)!\n", filename, plugin_geterror(buf));
+		ShowFatalError("HPM:plugin_load: failed to load '" CL_WHITE "%s" CL_RESET "' (error: %s)!\n", filename, plugin_geterror(buf));
 		exit(EXIT_FAILURE);
 	}
 
 	if( !( info = plugin_import(plugin->dll, "pinfo",struct hplugin_info*) ) ) {
-		ShowFatalError("HPM:plugin_load: failed to retrieve 'plugin_info' for '"CL_WHITE"%s"CL_RESET"'!\n", filename);
+		ShowFatalError("HPM:plugin_load: failed to retrieve 'plugin_info' for '" CL_WHITE "%s" CL_RESET "'!\n", filename);
 		exit(EXIT_FAILURE);
 	}
 
@@ -517,7 +517,7 @@ static struct hplugin *hplugin_load(const char *filename)
 	}
 
 	if( !HPM->iscompatible(info->req_version) ) {
-		ShowFatalError("HPM:plugin_load: '"CL_WHITE"%s"CL_RESET"' incompatible version '%s' -> '%s'!\n", filename, info->req_version, HPM_VERSION);
+		ShowFatalError("HPM:plugin_load: '" CL_WHITE "%s" CL_RESET "' incompatible version '%s' -> '%s'!\n", filename, info->req_version, HPM_VERSION);
 		exit(EXIT_FAILURE);
 	}
 
@@ -525,19 +525,19 @@ static struct hplugin *hplugin_load(const char *filename)
 	plugin->filename = aStrdup(filename);
 
 	if ((import_symbol_ref = plugin_import(plugin->dll, "import_symbol", ImportSymbolFunc **)) == NULL) {
-		ShowFatalError("HPM:plugin_load: failed to retrieve 'import_symbol' for '"CL_WHITE"%s"CL_RESET"'!\n", filename);
+		ShowFatalError("HPM:plugin_load: failed to retrieve 'import_symbol' for '" CL_WHITE "%s" CL_RESET "'!\n", filename);
 		exit(EXIT_FAILURE);
 	}
 
 	*import_symbol_ref = HPM->import_symbol;
 
 	if( !( HPMi = plugin_import(plugin->dll, "HPMi",struct HPMi_interface **) ) ) {
-		ShowFatalError("HPM:plugin_load: failed to retrieve 'HPMi' for '"CL_WHITE"%s"CL_RESET"'!\n", filename);
+		ShowFatalError("HPM:plugin_load: failed to retrieve 'HPMi' for '" CL_WHITE "%s" CL_RESET "'!\n", filename);
 		exit(EXIT_FAILURE);
 	}
 
 	if( !( *HPMi = plugin_import(plugin->dll, "HPMi_s",struct HPMi_interface *) ) ) {
-		ShowFatalError("HPM:plugin_load: failed to retrieve 'HPMi_s' for '"CL_WHITE"%s"CL_RESET"'!\n", filename);
+		ShowFatalError("HPM:plugin_load: failed to retrieve 'HPMi_s' for '" CL_WHITE "%s" CL_RESET "'!\n", filename);
 		exit(EXIT_FAILURE);
 	}
 	plugin->hpi = *HPMi;
@@ -558,40 +558,40 @@ static struct hplugin *hplugin_load(const char *filename)
 		anyEvent = true;
 
 	if( !anyEvent ) {
-		ShowWarning("HPM:plugin_load: no events found for '"CL_WHITE"%s"CL_RESET"'!\n", filename);
+		ShowWarning("HPM:plugin_load: no events found for '" CL_WHITE "%s" CL_RESET "'!\n", filename);
 		exit(EXIT_FAILURE);
 	}
 
 	if (!(HPMLoadEvent = plugin_import(plugin->dll, "HPM_shared_symbols", const char *(*)(int)))) {
-		ShowFatalError("HPM:plugin_load: failed to retrieve 'HPM_shared_symbols' for '"CL_WHITE"%s"CL_RESET"', most likely not including HPMDataCheck.h!\n", filename);
+		ShowFatalError("HPM:plugin_load: failed to retrieve 'HPM_shared_symbols' for '" CL_WHITE "%s" CL_RESET "', most likely not including HPMDataCheck.h!\n", filename);
 		exit(EXIT_FAILURE);
 	}
 	{
 		const char *failure = HPMLoadEvent(SERVER_TYPE);
 		if (failure) {
-			ShowFatalError("HPM:plugin_load: failed to import symbol '%s' into '"CL_WHITE"%s"CL_RESET"'.\n", failure, filename);
+			ShowFatalError("HPM:plugin_load: failed to import symbol '%s' into '" CL_WHITE "%s" CL_RESET "'.\n", failure, filename);
 			exit(EXIT_FAILURE);
 		}
 	}
 
 	if( !( HPMDataCheckLen = plugin_import(plugin->dll, "HPMDataCheckLen", unsigned int *) ) ) {
-		ShowFatalError("HPM:plugin_load: failed to retrieve 'HPMDataCheckLen' for '"CL_WHITE"%s"CL_RESET"', most likely not including HPMDataCheck.h!\n", filename);
+		ShowFatalError("HPM:plugin_load: failed to retrieve 'HPMDataCheckLen' for '" CL_WHITE "%s" CL_RESET "', most likely not including HPMDataCheck.h!\n", filename);
 		exit(EXIT_FAILURE);
 	}
 
 	if( !( HPMDataCheckVer = plugin_import(plugin->dll, "HPMDataCheckVer", int *) ) ) {
-		ShowFatalError("HPM:plugin_load: failed to retrieve 'HPMDataCheckVer' for '"CL_WHITE"%s"CL_RESET"', most likely an outdated plugin!\n", filename);
+		ShowFatalError("HPM:plugin_load: failed to retrieve 'HPMDataCheckVer' for '" CL_WHITE "%s" CL_RESET "', most likely an outdated plugin!\n", filename);
 		exit(EXIT_FAILURE);
 	}
 
 	if( !( HPMDataCheck = plugin_import(plugin->dll, "HPMDataCheck", struct s_HPMDataCheck *) ) ) {
-		ShowFatalError("HPM:plugin_load: failed to retrieve 'HPMDataCheck' for '"CL_WHITE"%s"CL_RESET"', most likely not including HPMDataCheck.h!\n", filename);
+		ShowFatalError("HPM:plugin_load: failed to retrieve 'HPMDataCheck' for '" CL_WHITE "%s" CL_RESET "', most likely not including HPMDataCheck.h!\n", filename);
 		exit(EXIT_FAILURE);
 	}
 
 	// TODO: Remove the HPM->DataCheck != NULL check once login and char support is complete
 	if (HPM->DataCheck != NULL && !HPM->DataCheck(HPMDataCheck,*HPMDataCheckLen,*HPMDataCheckVer,plugin->info->name)) {
-		ShowFatalError("HPM:plugin_load: '"CL_WHITE"%s"CL_RESET"' failed DataCheck, out of sync from the core (recompile plugin)!\n", filename);
+		ShowFatalError("HPM:plugin_load: '" CL_WHITE "%s" CL_RESET "' failed DataCheck, out of sync from the core (recompile plugin)!\n", filename);
 		exit(EXIT_FAILURE);
 	}
 
@@ -617,7 +617,7 @@ static struct hplugin *hplugin_load(const char *filename)
 	if( HPM->load_sub )
 		HPM->load_sub(plugin);
 
-	ShowStatus("HPM: Loaded plugin '"CL_WHITE"%s"CL_RESET"' (%s)%s.\n",
+	ShowStatus("HPM: Loaded plugin '" CL_WHITE "%s" CL_RESET "' (%s)%s.\n",
 			plugin->info->name, plugin->info->version,
 			plugin->hpi->hooking != NULL ? " built with HPMHooking support" : "");
 
@@ -725,7 +725,7 @@ static void hplugins_config_read(void)
 					 && (addhook_sub = plugin_import(plugin->dll, "HPM_Plugin_AddHook",bool (*)(enum HPluginHookType, const char *, void *, unsigned int))) != NULL) {
 						const char *failed = func(&HPM->hooking->force_return);
 						if (failed) {
-							ShowError("HPM: failed to retrieve '%s' for '"CL_WHITE"%s"CL_RESET"'!\n", failed, plugin_name);
+							ShowError("HPM: failed to retrieve '%s' for '" CL_WHITE "%s" CL_RESET "'!\n", failed, plugin_name);
 						} else {
 							HPM->hooking->enabled = true;
 							HPM->hooking->addhook_sub = addhook_sub;
@@ -747,7 +747,7 @@ static void hplugins_config_read(void)
 	aFree(base_path);
 
 	if (VECTOR_LENGTH(HPM->plugins))
-		ShowStatus("HPM: There are '"CL_WHITE"%d"CL_RESET"' plugins loaded, type '"CL_WHITE"plugins"CL_RESET"' to list them\n", VECTOR_LENGTH(HPM->plugins));
+		ShowStatus("HPM: There are '" CL_WHITE "%d" CL_RESET "' plugins loaded, type '" CL_WHITE "plugins" CL_RESET "' to list them\n", VECTOR_LENGTH(HPM->plugins));
 }
 
 /**
@@ -766,11 +766,11 @@ static CPCMD(plugins)
 		return;
 	}
 
-	ShowInfo("HPC: There are '"CL_WHITE"%d"CL_RESET"' plugins loaded\n", VECTOR_LENGTH(HPM->plugins));
+	ShowInfo("HPC: There are '" CL_WHITE "%d" CL_RESET "' plugins loaded\n", VECTOR_LENGTH(HPM->plugins));
 
 	for(i = 0; i < VECTOR_LENGTH(HPM->plugins); i++) {
 		struct hplugin *plugin = VECTOR_INDEX(HPM->plugins, i);
-		ShowInfo("HPC: - '"CL_WHITE"%s"CL_RESET"' (%s)\n", plugin->info->name, plugin->filename);
+		ShowInfo("HPC: - '" CL_WHITE "%s" CL_RESET "' (%s)\n", plugin->info->name, plugin->filename);
 	}
 }
 

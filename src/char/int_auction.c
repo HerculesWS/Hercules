@@ -105,7 +105,7 @@ static unsigned int inter_auction_create(struct auction_data *auction)
 		StrBuf->Printf(&buf, ",`card%d`", j);
 	for (j = 0; j < MAX_ITEM_OPTIONS; j++)
 		StrBuf->Printf(&buf, ", `opt_idx%d`, `opt_val%d`", j, j);
-	StrBuf->Printf(&buf, ") VALUES ('%d',?,'%d',?,'%d','%d','%d','%lu','%d',?,'%d','%d','%d','%d','%"PRIu64"'",
+	StrBuf->Printf(&buf, ") VALUES ('%d',?,'%d',?,'%d','%d','%d','%lu','%d',?,'%d','%d','%d','%d','%" PRIu64 "'",
 		auction->seller_id, auction->buyer_id, auction->price, auction->buynow, auction->hours, (unsigned long)auction->timestamp, auction->item.nameid, auction->type, auction->item.refine, auction->item.grade, auction->item.attribute, auction->item.unique_id);
 	for (j = 0; j < MAX_SLOTS; j++)
 		StrBuf->Printf(&buf, ",'%d'", auction->item.card[j]);
@@ -133,7 +133,7 @@ static unsigned int inter_auction_create(struct auction_data *auction)
 
 		auction->auction_id = (unsigned int)SQL->StmtLastInsertId(stmt);
 		auction->auction_end_timer = timer->add( timer->gettick() + tick , inter_auction->end_timer, auction->auction_id, 0);
-		ShowInfo("New Auction %u | time left %"PRId64" ms | By %s.\n", auction->auction_id, tick, auction->seller_name);
+		ShowInfo("New Auction %u | time left %" PRId64 " ms | By %s.\n", auction->auction_id, tick, auction->seller_name);
 
 		CREATE(auction_, struct auction_data, 1);
 		memcpy(auction_, auction, sizeof(struct auction_data));

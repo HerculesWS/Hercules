@@ -483,14 +483,14 @@ static int char_mmo_char_tosql(int char_id, struct mmo_charstatus *p)
 			opt |= OPT_ALLOW_CALL;
 
 		if( SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `base_level`='%d', `job_level`='%d',"
-			"`base_exp`='%"PRIu64"', `job_exp`='%"PRIu64"', `zeny`='%d',"
+			"`base_exp`='%" PRIu64 "', `job_exp`='%" PRIu64 "', `zeny`='%d',"
 			"`max_hp`='%d',`hp`='%d',`max_sp`='%d',`sp`='%d',`status_point`='%d',`skill_point`='%d',"
 			"`str`='%d',`agi`='%d',`vit`='%d',`int`='%d',`dex`='%d',`luk`='%d',"
 			"`option`='%u',`party_id`='%d',`guild_id`='%d',`pet_id`='%d',`homun_id`='%d',`elemental_id`='%d',"
 			"`weapon`='%d',`shield`='%d',`head_top`='%d',`head_mid`='%d',`head_bottom`='%d',"
 			"`last_map`='%s',`last_x`='%d',`last_y`='%d',`save_map`='%s',`save_x`='%d',`save_y`='%d', `rename`='%d',"
 			"`delete_date`='%lu',`robe`='%d',`slotchange`='%d', `char_opt`='%u', `font`='%u', `uniqueitem_counter` ='%u',"
-			"`hotkey_rowshift`='%d',`hotkey_rowshift2`='%d',`clan_id`='%d',`last_login`='%"PRId64"',"
+			"`hotkey_rowshift`='%d',`hotkey_rowshift2`='%d',`clan_id`='%d',`last_login`='%" PRId64 "',"
 			"`title_id`='%d', `inventory_size`='%d'"
 			" WHERE  `account_id`='%d' AND `char_id` = '%d'",
 			char_db, p->base_level, p->job_level,
@@ -514,7 +514,7 @@ static int char_mmo_char_tosql(int char_id, struct mmo_charstatus *p)
 	}
 
 	if (p->bank_vault != cp->bank_vault || p->mod_exp != cp->mod_exp || p->mod_drop != cp->mod_drop || p->mod_death != cp->mod_death || p->attendance_count != cp->attendance_count || p->attendance_timer != cp->attendance_timer) {
-		if (SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s` (`account_id`,`bank_vault`,`base_exp`,`base_drop`,`base_death`,`attendance_count`,`attendance_timer`) VALUES ('%d','%d','%d','%d','%d','%d','%"PRId64"')", account_data_db, p->account_id, p->bank_vault, p->mod_exp, p->mod_drop, p->mod_death, p->attendance_count, p->attendance_timer) ) {
+		if (SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s` (`account_id`,`bank_vault`,`base_exp`,`base_drop`,`base_death`,`attendance_count`,`attendance_timer`) VALUES ('%d','%d','%d','%d','%d','%d','%" PRId64 "')", account_data_db, p->account_id, p->bank_vault, p->mod_exp, p->mod_drop, p->mod_death, p->attendance_count, p->attendance_timer) ) {
 			Sql_ShowDebug(inter->sql_handle);
 			errors++;
 		} else
@@ -924,7 +924,7 @@ static int char_memitemdata_to_sql(const struct item *p_items, int current_size,
 						StrBuf->Printf(&buf, ", '%d'", p_items[j].card[k]);
 					for (int k = 0; k < MAX_ITEM_OPTIONS; ++k)
 						StrBuf->Printf(&buf, ", '%d', '%d'", p_items[j].option[k].index, p_items[j].option[k].value);
-					StrBuf->Printf(&buf, ", '%u', '%d', '%"PRIu64"'", p_items[j].expire_time, p_items[j].bound, p_items[j].unique_id);
+					StrBuf->Printf(&buf, ", '%u', '%d', '%" PRIu64 "'", p_items[j].expire_time, p_items[j].bound, p_items[j].unique_id);
 					if (has_favorite)
 						StrBuf->Printf(&buf, ", %d", p_items[j].favorite);
 
@@ -979,7 +979,7 @@ static int char_memitemdata_to_sql(const struct item *p_items, int current_size,
 			StrBuf->AppendStr(&buf, ") VALUES ");
 		}
 
-		StrBuf->Printf(&buf, "%s('%d', '%d', '%d', '%u', '%d', '%d', '%d', '%d', '%u', '%d', '%"PRIu64"'",
+		StrBuf->Printf(&buf, "%s('%d', '%d', '%d', '%u', '%d', '%d', '%d', '%d', '%u', '%d', '%" PRIu64 "'",
 					   total_inserts > 0 ? ", " : "", guid, p_it->nameid, p_it->amount, p_it->equip, p_it->identify, p_it->refine, p_it->grade,
 					   p_it->attribute, p_it->expire_time, p_it->bound, p_it->unique_id);
 
@@ -2239,7 +2239,7 @@ static int char_mmo_char_send_characters(int fd, struct char_session_data *sd)
 	offset += 3;
 #endif
 	if (chr->show_save_log)
-		ShowInfo("Loading Char Data ("CL_BOLD"%d"CL_RESET")\n",sd->account_id);
+		ShowInfo("Loading Char Data (" CL_BOLD "%d" CL_RESET ")\n",sd->account_id);
 
 	j = 24 + offset; // offset
 	WFIFOHEAD(fd,j + MAX_CHARS*MAX_CHAR_BUF);
@@ -3255,7 +3255,7 @@ static void char_parse_frommap_save_character(int fd)
 	struct online_char_data* character;
 
 	if (size - 13 != sizeof(struct mmo_charstatus)) {
-		ShowError("parse_from_map (save-char): Size mismatch! %d != %"PRIuS"\n", size-13, sizeof(struct mmo_charstatus));
+		ShowError("parse_from_map (save-char): Size mismatch! %d != %" PRIuS "\n", size-13, sizeof(struct mmo_charstatus));
 		RFIFOSKIP(fd,size);
 		return;
 	}
@@ -4135,10 +4135,10 @@ static uint32 char_lan_subnet_check(uint32 ip)
 {
 	struct s_subnet lan = {0};
 	if (sockt->lan_subnet_check(ip, &lan)) {
-		ShowInfo("Subnet check [%u.%u.%u.%u]: Matches "CL_CYAN"%u.%u.%u.%u/%u.%u.%u.%u"CL_RESET"\n", CONVIP(ip), CONVIP(lan.ip & lan.mask), CONVIP(lan.mask));
+		ShowInfo("Subnet check [%u.%u.%u.%u]: Matches " CL_CYAN "%u.%u.%u.%u/%u.%u.%u.%u" CL_RESET "\n", CONVIP(ip), CONVIP(lan.ip & lan.mask), CONVIP(lan.mask));
 		return lan.ip;
 	}
-	ShowInfo("Subnet check [%u.%u.%u.%u]: "CL_CYAN"WAN"CL_RESET"\n", CONVIP(ip));
+	ShowInfo("Subnet check [%u.%u.%u.%u]: " CL_CYAN "WAN" CL_RESET "\n", CONVIP(ip));
 	return 0;
 }
 
@@ -4289,7 +4289,7 @@ static void char_delete2_accept(int fd, struct char_session_data *sd)
 	nullpo_retv(sd);
 	char_id = RFIFOL(fd,2);
 
-	ShowInfo(CL_RED"Request Char Deletion: "CL_GREEN"%d (%d)"CL_RESET"\n", sd->account_id, char_id);
+	ShowInfo(CL_RED "Request Char Deletion: " CL_GREEN "%d (%d)" CL_RESET "\n", sd->account_id, char_id);
 
 	// construct "YY-MM-DD"
 	birthdate[0] = RFIFOB(fd,6);
@@ -4770,7 +4770,7 @@ static void char_parse_char_delete_char(int fd, struct char_session_data *sd, un
 		}
 	}
 #endif
-	ShowInfo(CL_RED"Request Char Deletion: "CL_GREEN"%d (%d)"CL_RESET"\n", sd->account_id, cid);
+	ShowInfo(CL_RED "Request Char Deletion: " CL_GREEN "%d (%d)" CL_RESET "\n", sd->account_id, cid);
 	memcpy(email, RFIFOP(char *, fd, 6), 40);
 	RFIFOSKIP(fd,( cmd == 0x68) ? 46 : 56);
 
@@ -5040,7 +5040,7 @@ static void char_parse_char_move_character(int fd, struct char_session_data *sd)
 
 static int char_parse_char_unknown_packet(int fd, uint32 ipl)
 {
-	ShowError("chr->parse_char: Received unknown packet "CL_WHITE"0x%x"CL_RESET" from ip '"CL_WHITE"%s"CL_RESET"'! Disconnecting!\n", RFIFOW(fd,0), sockt->ip2str(ipl, NULL));
+	ShowError("chr->parse_char: Received unknown packet " CL_WHITE "0x%x" CL_RESET " from ip '" CL_WHITE "%s" CL_RESET "'! Disconnecting!\n", RFIFOW(fd,0), sockt->ip2str(ipl, NULL));
 	sockt->eof(fd);
 	return 1;
 }
@@ -6375,7 +6375,7 @@ int do_init(int argc, char **argv)
 	sockt->validate = true;
 
 	if ((chr->char_fd = sockt->make_listen_bind(bind_ip,chr->port)) == -1) {
-		ShowFatalError("Failed to bind to port '"CL_WHITE"%d"CL_RESET"'\n",chr->port);
+		ShowFatalError("Failed to bind to port '" CL_WHITE "%d" CL_RESET "'\n",chr->port);
 		exit(EXIT_FAILURE);
 	}
 
@@ -6384,7 +6384,7 @@ int do_init(int argc, char **argv)
 	console->input->setSQL(inter->sql_handle);
 	console->display_gplnotice();
 #endif
-	ShowStatus("The char-server is "CL_GREEN"ready"CL_RESET" (Server is listening on the port %d).\n\n", chr->port);
+	ShowStatus("The char-server is " CL_GREEN "ready" CL_RESET " (Server is listening on the port %d).\n\n", chr->port);
 
 	if( core->runflag != CORE_ST_STOP )
 	{

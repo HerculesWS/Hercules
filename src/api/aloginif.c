@@ -103,7 +103,7 @@ static bool aloginif_setip(const char *ip)
 
 	safestrncpy(aloginif->ip_str, ip, sizeof(aloginif->ip_str));
 
-	ShowInfo("Login Server IP Address : '"CL_WHITE"%s"CL_RESET"' -> '"CL_WHITE"%s"CL_RESET"'.\n", ip, sockt->ip2str(aloginif->ip, ip_str));
+	ShowInfo("Login Server IP Address : '" CL_WHITE "%s" CL_RESET "' -> '" CL_WHITE "%s" CL_RESET "'.\n", ip, sockt->ip2str(aloginif->ip, ip_str));
 
 	return true;
 }
