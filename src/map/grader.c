@@ -346,7 +346,7 @@ void grader_enchant_start(struct map_session_data *sd, int idx, int mat_idx, boo
 		case GRADE_FAILURE_BEHAVIOR_DOWNGRADE:
 			clif->grade_enchant_result(sd, idx, (enum grade_level)sd->status.inventory[idx].grade, GRADE_UPGRADE_FAILED_DOWNGRADE);
 			sd->status.inventory[idx].grade -= 1;
-			sd->status.inventory[idx].grade = cap_value(sd->status.inventory[idx].grade, ITEM_GRADE_NONE, ITEM_GRADE_MAX - 1);
+			sd->status.inventory[idx].grade = cap_value((int)sd->status.inventory[idx].grade, (int)ITEM_GRADE_NONE, (int)(ITEM_GRADE_MAX - 1));
 			break;
 		case GRADE_FAILURE_BEHAVIOR_DESTROY:
 			clif->grade_enchant_result(sd, idx, (enum grade_level)sd->status.inventory[idx].grade, GRADE_UPGRADE_FAILED_DESTROY);

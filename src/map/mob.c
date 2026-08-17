@@ -2895,7 +2895,6 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 
 	if(mvp_sd && md->db->mexp > 0 && md->special_state.ai == AI_NONE) {
 		int log_mvp[2] = {0};
-		unsigned int mexp;
 		int64 exp;
 
 		//mapflag: noexp check [Lorky]
@@ -2907,7 +2906,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 				exp += apply_percentrate64(exp, battle_config.exp_bonus_attacker * (count-1), 100); //[Gengar]
 		}
 
-		mexp = (unsigned int)cap_value(exp, 1, UINT_MAX);
+		unsigned int mexp = (unsigned int)cap_value(exp, (int64)1, (int64)UINT_MAX);
 
 		clif->mvp_effect(mvp_sd);
 		clif->mvp_exp(mvp_sd,mexp);
@@ -5133,12 +5132,12 @@ static int mob_read_db_sub(struct config_setting_t *mobt, int n, const char *sou
 
 	if (map->setting_lookup_const(mobt, "Exp", &i32) && i32 >= 0) {
 		int64 exp = apply_percentrate64(i32, battle_config.base_exp_rate, 100);
-		md.base_exp = (unsigned int)cap_value(exp, 0, UINT_MAX);
+		md.base_exp = (unsigned int)cap_value(exp, (int64)0, (int64)UINT_MAX);
 	}
 
 	if (map->setting_lookup_const(mobt, "JExp", &i32) && i32 >= 0) {
 		int64 exp = apply_percentrate64(i32, battle_config.job_exp_rate, 100);
-		md.job_exp = (unsigned int)cap_value(exp, 0, UINT_MAX);
+		md.job_exp = (unsigned int)cap_value(exp, (int64)0, (int64)UINT_MAX);
 	}
 
 	if (map->setting_lookup_const(mobt, "AttackRange", &i32) && i32 >= 0) {
@@ -5266,7 +5265,7 @@ static int mob_read_db_sub(struct config_setting_t *mobt, int n, const char *sou
 	if (map->setting_lookup_const(mobt, "MvpExp", &i32) && i32 >= 0) {
 		// Some new MVP's MEXP multiple by high exp-rate cause overflow. [LuzZza]
 		int64 exp = apply_percentrate64(i32, battle_config.mvp_exp_rate, 100);
-		md.mexp = (unsigned int)cap_value(exp, 0, UINT_MAX);
+		md.mexp = (unsigned int)cap_value(exp, (int64)0, (int64)UINT_MAX);
 	}
 
 	if (maxhpUpdated) {
@@ -5277,7 +5276,7 @@ static int mob_read_db_sub(struct config_setting_t *mobt, int n, const char *sou
 		} else { //Normal mob
 			maxhp = apply_percentrate64(maxhp, battle_config.monster_hp_rate, 100);
 		}
-		md.status.max_hp = (unsigned int)cap_value(maxhp, 1, UINT_MAX);
+		md.status.max_hp = (unsigned int)cap_value(maxhp, (int64)1, (int64)UINT_MAX);
 	}
 
 	if ((t = libconfig->setting_get_member(mobt, "MvpDrops"))) {

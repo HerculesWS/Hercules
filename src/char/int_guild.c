@@ -391,8 +391,8 @@ static struct guild *inter_guild_fromsql(int guild_id)
 	CREATE(g, struct guild, 1);
 
 	g->guild_id = guild_id;
-	SQL->GetData(inter->sql_handle,  0, &data, &len); memcpy(g->name, data, min(len, NAME_LENGTH));
-	SQL->GetData(inter->sql_handle,  1, &data, &len); memcpy(g->master, data, min(len, NAME_LENGTH));
+	SQL->GetData(inter->sql_handle,  0, &data, &len); memcpy(g->name, data, min(len, (size_t)NAME_LENGTH));
+	SQL->GetData(inter->sql_handle,  1, &data, &len); memcpy(g->master, data, min(len, (size_t)NAME_LENGTH));
 	SQL->GetData(inter->sql_handle,  2, &data, NULL); g->guild_lv = atoi(data);
 	SQL->GetData(inter->sql_handle,  3, &data, NULL); g->connect_member = atoi(data);
 	SQL->GetData(inter->sql_handle,  4, &data, NULL); g->max_member = atoi(data);
@@ -462,7 +462,7 @@ static struct guild *inter_guild_fromsql(int guild_id)
 		SQL->GetData(inter->sql_handle, 10, &data, NULL); m->position = atoi(data);
 		if( m->position >= MAX_GUILDPOSITION ) // Fix reduction of MAX_GUILDPOSITION [PoW]
 			m->position = MAX_GUILDPOSITION - 1;
-		SQL->GetData(inter->sql_handle, 11, &data, &len); memcpy(m->name, data, min(len, NAME_LENGTH));
+		SQL->GetData(inter->sql_handle, 11, &data, &len); memcpy(m->name, data, min(len, (size_t)NAME_LENGTH));
 		SQL->GetData(inter->sql_handle, 12, &data, NULL);
 		if (data != NULL) {
 			m->last_login = atoi(data);
@@ -492,7 +492,7 @@ static struct guild *inter_guild_fromsql(int guild_id)
 		if( position < 0 || position >= MAX_GUILDPOSITION )
 			continue;// invalid position
 		pos = &g->position[position];
-		SQL->GetData(inter->sql_handle, 1, &data, &len); memcpy(pos->name, data, min(len, NAME_LENGTH));
+		SQL->GetData(inter->sql_handle, 1, &data, &len); memcpy(pos->name, data, min(len, (size_t)NAME_LENGTH));
 		SQL->GetData(inter->sql_handle, 2, &data, NULL); pos->mode = atoi(data);
 		SQL->GetData(inter->sql_handle, 3, &data, NULL); pos->exp_mode = atoi(data);
 		pos->modified = GS_POSITION_UNMODIFIED;
@@ -512,7 +512,7 @@ static struct guild *inter_guild_fromsql(int guild_id)
 
 		SQL->GetData(inter->sql_handle, 0, &data, NULL); a->opposition = atoi(data);
 		SQL->GetData(inter->sql_handle, 1, &data, NULL); a->guild_id = atoi(data);
-		SQL->GetData(inter->sql_handle, 2, &data, &len); memcpy(a->name, data, min(len, NAME_LENGTH));
+		SQL->GetData(inter->sql_handle, 2, &data, &len); memcpy(a->name, data, min(len, (size_t)NAME_LENGTH));
 	}
 
 	//printf("- Read guild_expulsion %d from sql \n",guild_id);
@@ -529,7 +529,7 @@ static struct guild *inter_guild_fromsql(int guild_id)
 
 		SQL->GetData(inter->sql_handle, 0, &data, NULL); e->account_id = atoi(data);
 		SQL->GetData(inter->sql_handle, 1, &data, NULL); e->char_id = atoi(data);
-		SQL->GetData(inter->sql_handle, 2, &data, &len); memcpy(e->name, data, min(len, NAME_LENGTH));
+		SQL->GetData(inter->sql_handle, 2, &data, &len); memcpy(e->name, data, min(len, (size_t)NAME_LENGTH));
 		SQL->GetData(inter->sql_handle, 3, &data, &len); memcpy(e->mes, data, min(len, sizeof(e->mes)));
 	}
 
