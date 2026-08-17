@@ -526,7 +526,7 @@ static int do_timer(int64 tick)
 		}
 	}
 
-	return (int)cap_value(diff, TIMER_MIN_INTERVAL, TIMER_MAX_INTERVAL);
+	return (int)std::clamp(diff, (int64)TIMER_MIN_INTERVAL, (int64)TIMER_MAX_INTERVAL);
 }
 
 static unsigned long timer_get_uptime(void)

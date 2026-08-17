@@ -52,6 +52,7 @@
 #include "common/timer.h"
 #include "common/utils.h"
 
+#include <algorithm>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -181,7 +182,7 @@ static int mercenary_set_faith(struct mercenary_data *md, int value)
 		return 0;
 
 	*faith += value;
-	*faith = cap_value(*faith, 0, SHRT_MAX);
+	*faith = std::clamp(*faith, 0, SHRT_MAX);
 	clif->mercenary_updatestatus(sd, SP_MERCFAITH);
 
 	return 0;
@@ -227,7 +228,7 @@ static int mercenary_set_calls(struct mercenary_data *md, int value)
 		return 0;
 
 	*calls += value;
-	*calls = cap_value(*calls, 0, INT_MAX);
+	*calls = std::clamp(*calls, 0, INT_MAX);
 
 	return 0;
 }
@@ -410,7 +411,7 @@ static int mercenary_kills(struct mercenary_data *md)
 {
 	nullpo_ret(md);
 	md->mercenary.kill_count++;
-	md->mercenary.kill_count = cap_value(md->mercenary.kill_count, 0, INT_MAX);
+	md->mercenary.kill_count = std::clamp(md->mercenary.kill_count, 0u, (unsigned int)INT_MAX);
 
 	if( (md->mercenary.kill_count % 50) == 0 )
 	{
