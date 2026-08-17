@@ -34,6 +34,7 @@
 #include "common/strlib.h"
 #include "common/utils.h"
 
+#include <algorithm>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -179,8 +180,8 @@ static bool inter_homunculus_load(int homun_id, struct s_homunculus *hd)
 	SQL->GetData(inter->sql_handle, 22, &data, NULL); hd->autofeed = atoi(data);
 	SQL->FreeResult(inter->sql_handle);
 
-	hd->intimacy = cap_value(hd->intimacy, 0, 100000);
-	hd->hunger = cap_value(hd->hunger, 0, 100);
+	hd->intimacy = std::clamp(hd->intimacy, 0u, 100000u);
+	hd->hunger = std::clamp((int)hd->hunger, 0, 100);
 
 	// Load Homunculus Skill
 	if (SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `id`,`lv` FROM `%s` WHERE `homun_id`=%d", skill_homunculus_db, homun_id)) {

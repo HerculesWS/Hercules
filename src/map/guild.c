@@ -263,13 +263,13 @@ static bool guild_read_castledb_libconfig_sub_warp(struct config_setting_t *wd, 
 		if (i64 > MAX_ZENY) {
 			ShowWarning("guild_read_castledb_libconfig_sub_warp: ZenyCost is too big in \"%s\", for castle (%d), capping to MAX_ZENY.\n", source, gc->castle_id);
 		}
-		gc->client_warp.zeny = cap_value((int)i64, 0, MAX_ZENY);
+		gc->client_warp.zeny = std::clamp((int)i64, 0, MAX_ZENY); // FIXME: This doesn't do what it claims above (it should operate on the larger range and then cast the result)
 	}
 	if (libconfig->setting_lookup_int64(wd, "ZenyCostSiegeTime", &i64)) {
 		if (i64 > MAX_ZENY) {
 			ShowWarning("guild_read_castledb_libconfig_sub_warp: ZenyCostSiegeTime is too big in \"%s\", for castle (%d), capping to MAX_ZENY.\n", source, gc->castle_id);
 		}
-		gc->client_warp.zeny_siege = cap_value((int)i64, 0, MAX_ZENY);
+		gc->client_warp.zeny_siege = std::clamp((int)i64, 0, MAX_ZENY); // FIXME: This doesn't do what it claims above (it should operate on the larger range and then cast the result)
 	}
 	return true;
 }
@@ -1275,7 +1275,7 @@ static bool guild_change_position(int guild_id, int idx, int mode, int exp_mode,
 	struct guild_position p;
 	nullpo_ret(name);
 
-	exp_mode = cap_value(exp_mode, 0, battle_config.guild_exp_limit);
+	exp_mode = std::clamp(exp_mode, 0, battle_config.guild_exp_limit);
 	p.mode = mode&GPERM_MASK;
 	p.exp_mode=exp_mode;
 	safestrncpy(p.name,name,NAME_LENGTH);

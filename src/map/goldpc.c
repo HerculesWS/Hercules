@@ -21,14 +21,15 @@
 
 #include "goldpc.h"
 
+#include "map/pc.h"
+
 #include "common/memmgr.h"
 #include "common/nullpo.h"
 #include "common/showmsg.h"
 #include "common/timer.h"
 #include "common/utils.h"
 
-#include "map/pc.h"
-
+#include <algorithm>
 #include <stdlib.h>
 
 static struct goldpc_interface goldpc_s;
@@ -153,7 +154,7 @@ static void goldpc_addpoints(struct map_session_data *sd, int points)
 	else
 		final_balance = GOLDPC_MAX_POINTS;
 
-	final_balance = cap_value(final_balance, 0, GOLDPC_MAX_POINTS);
+	final_balance = std::clamp(final_balance, 0, GOLDPC_MAX_POINTS);
 	pc_setaccountreg(sd, script->add_variable(GOLDPC_POINTS_VAR), final_balance);
 }
 
@@ -273,7 +274,7 @@ static void goldpc_stop(struct map_session_data *sd)
 	if (sd->goldpc.tid != INVALID_TIMER) {
 		if (sd->goldpc.start_tick > 0) {
 			int played_ticks = (int) ((timer->gettick() - sd->goldpc.start_tick) / 1000);
-			int playtime = (int) cap_value(played_ticks + sd->goldpc.play_time, 0, GOLDPC_MAX_TIME);
+			int playtime = (int)std::clamp(played_ticks + sd->goldpc.play_time, 0, GOLDPC_MAX_TIME);
 
 			sd->goldpc.play_time = playtime;
 			pc_setaccountreg(sd, script->add_variable(GOLDPC_PLAYTIME_VAR), playtime);
