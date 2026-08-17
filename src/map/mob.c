@@ -2652,12 +2652,12 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 		if (map->list[m].flag.nobaseexp || !md->db->base_exp)
 			base_exp = 0;
 		else
-			base_exp = (unsigned int)cap_value(md->db->base_exp * per * bonus/100. * map->list[m].bexp/100., 1, UINT_MAX);
+			base_exp = (unsigned int)std::clamp(md->db->base_exp * per * bonus/100. * map->list[m].bexp/100., 1.0, (double)UINT_MAX);
 
 		if (map->list[m].flag.nojobexp || !md->db->job_exp || md->dmglog[i].flag == MDLF_HOMUN) //Homun earned job-exp is always lost.
 			job_exp = 0;
 		else
-			job_exp = (unsigned int)cap_value(md->db->job_exp * per * bonus/100. * map->list[m].jexp/100., 1, UINT_MAX);
+			job_exp = (unsigned int)std::clamp(md->db->job_exp * per * bonus/100. * map->list[m].jexp/100., 1.0, (double)UINT_MAX);
 
 		if ( (temp = tmpsd[i]->status.party_id) > 0 ) {
 			int j;
@@ -2848,7 +2848,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 						//it's negative, then it should be multiplied. e.g. for Mimic,Myst Case Cards, etc
 						// rate = base_rate * (mob_level/10) + 1
 						drop_rate = -sd->add_drop[i].rate*(md->level/10)+1;
-						drop_rate = cap_value(drop_rate, battle_config.item_drop_adddrop_min, battle_config.item_drop_adddrop_max);
+						drop_rate = std::clamp(drop_rate, battle_config.item_drop_adddrop_min, battle_config.item_drop_adddrop_max);
 						if (drop_rate > 10000) drop_rate = 10000;
 					}
 					else
@@ -2909,7 +2909,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 				exp += apply_percentrate64(exp, battle_config.exp_bonus_attacker * (count-1), 100); //[Gengar]
 		}
 
-		mexp = (unsigned int)cap_value(exp, 1, UINT_MAX);
+		mexp = (unsigned int)std::clamp(exp, 1i64, (int64)UINT_MAX);
 
 		clif->mvp_effect(mvp_sd);
 		clif->mvp_exp(mvp_sd,mexp);
@@ -4219,7 +4219,7 @@ static unsigned int mob_drop_adjust(int baserate, int rate_adjust, unsigned shor
 		}
 	}
 
-	return (unsigned int)cap_value(rate,rate_min,rate_max);
+	return (unsigned int)std::clamp(rate, (int64)rate_min, (int64)rate_max);
 }
 
 static struct item_drop_ratio *mob_get_item_drop_ratio(int nameid)
@@ -4894,7 +4894,7 @@ static int mob_db_validate_entry(struct mob_db *entry, int n, const char *source
 		return 0;
 	}
 
-	entry->lv = cap_value(entry->lv, 1, USHRT_MAX);
+	entry->lv = std::clamp((int)entry->lv, 1, USHRT_MAX);
 
 	if (entry->status.max_sp < 1)
 		entry->status.max_sp = 1;
@@ -4928,9 +4928,9 @@ static int mob_db_validate_entry(struct mob_db *entry, int n, const char *source
 	if (entry->range3 < entry->range2)
 		entry->range3 = entry->range2;
 
-	entry->status.size = cap_value(entry->status.size, 0, 2);
+	entry->status.size = std::clamp((int)entry->status.size, 0, 2);
 
-	entry->status.race = cap_value(entry->status.race, 0, RC_MAX - 1);
+	entry->status.race = std::clamp((int)entry->status.race, 0, RC_MAX - 1);
 
 	if (entry->status.def_ele >= ELE_MAX) {
 		ShowWarning("mob_read_db_sub: Invalid element type %d for monster ID %d (max=%d).\n", entry->status.def_ele, entry->mob_id, ELE_MAX-1);
@@ -5135,12 +5135,12 @@ static int mob_read_db_sub(struct config_setting_t *mobt, int n, const char *sou
 
 	if (map->setting_lookup_const(mobt, "Exp", &i32) && i32 >= 0) {
 		int64 exp = apply_percentrate64(i32, battle_config.base_exp_rate, 100);
-		md.base_exp = (unsigned int)cap_value(exp, 0, UINT_MAX);
+		md.base_exp = (unsigned int)std::clamp(exp, 0i64, (int64)UINT_MAX);
 	}
 
 	if (map->setting_lookup_const(mobt, "JExp", &i32) && i32 >= 0) {
 		int64 exp = apply_percentrate64(i32, battle_config.job_exp_rate, 100);
-		md.job_exp = (unsigned int)cap_value(exp, 0, UINT_MAX);
+		md.job_exp = (unsigned int)std::clamp(exp, 0i64, (int64)UINT_MAX);
 	}
 
 	if (map->setting_lookup_const(mobt, "AttackRange", &i32) && i32 >= 0) {
@@ -5246,13 +5246,13 @@ static int mob_read_db_sub(struct config_setting_t *mobt, int n, const char *sou
 	md.status.aspd_rate = 1000;
 
 	if (map->setting_lookup_const(mobt, "AttackDelay", &i32) && i32 >= 0) {
-		md.status.adelay = cap_value(i32, battle_config.monster_max_aspd*2, 4000);
+		md.status.adelay = std::clamp(i32, battle_config.monster_max_aspd*2, 4000);
 	} else if (!inherit) {
 		md.status.adelay = 4000;
 	}
 
 	if (map->setting_lookup_const(mobt, "AttackMotion", &i32) && i32 >= 0) {
-		md.status.amotion = cap_value(i32, battle_config.monster_max_aspd, 2000);
+		md.status.amotion = std::clamp(i32, battle_config.monster_max_aspd, 2000);
 	} else if (!inherit) {
 		md.status.amotion = 2000;
 	}
@@ -5268,7 +5268,7 @@ static int mob_read_db_sub(struct config_setting_t *mobt, int n, const char *sou
 	if (map->setting_lookup_const(mobt, "MvpExp", &i32) && i32 >= 0) {
 		// Some new MVP's MEXP multiple by high exp-rate cause overflow. [LuzZza]
 		int64 exp = apply_percentrate64(i32, battle_config.mvp_exp_rate, 100);
-		md.mexp = (unsigned int)cap_value(exp, 0, UINT_MAX);
+		md.mexp = (unsigned int)std::clamp(exp, 0i64, (int64)UINT_MAX);
 	}
 
 	if (maxhpUpdated) {
@@ -5279,7 +5279,7 @@ static int mob_read_db_sub(struct config_setting_t *mobt, int n, const char *sou
 		} else { //Normal mob
 			maxhp = apply_percentrate64(maxhp, battle_config.monster_hp_rate, 100);
 		}
-		md.status.max_hp = (unsigned int)cap_value(maxhp, 1, UINT_MAX);
+		md.status.max_hp = (unsigned int)std::clamp(maxhp, 1i64, (int64)UINT_MAX);
 	}
 
 	if ((t = libconfig->setting_get_member(mobt, "MvpDrops"))) {
@@ -5295,7 +5295,7 @@ static int mob_read_db_sub(struct config_setting_t *mobt, int n, const char *sou
 	}
 
 	if (map->setting_lookup_const(mobt, "DamageTakenRate", &i32) && i32 >= 0) {
-		md.dmg_taken_rate = cap_value(i32, 1, INT_MAX);
+		md.dmg_taken_rate = std::clamp(i32, 1, INT_MAX);
 	} else if (!inherit) {
 		md.dmg_taken_rate = 100;
 	}
@@ -5798,10 +5798,10 @@ static bool mob_skill_db_libconfig_sub_skill(struct config_setting_t *it, int n,
 	ms->state = (enum MobSkillState)i32;
 
 	int res = libconfig->setting_lookup_int(it, "SkillLevel", &i32);
-	ms->skill_lv = (res == CONFIG_FALSE) ? 1 : cap_value(i32, 1, battle_config.mob_max_skilllvl);
+	ms->skill_lv = (res == CONFIG_FALSE) ? 1 : std::clamp(i32, 1, battle_config.mob_max_skilllvl);
 
 	res = libconfig->setting_lookup_int(it, "Rate", &i32);
-	ms->permillage = (res == CONFIG_FALSE) ? 1 : cap_value(i32, 1, 10000);
+	ms->permillage = (res == CONFIG_FALSE) ? 1 : std::clamp(i32, 1, 10000);
 
 	// Apply battle_config modifier to rate (permillage).
 	if (battle_config.mob_skill_rate != 100)
@@ -5813,10 +5813,10 @@ static bool mob_skill_db_libconfig_sub_skill(struct config_setting_t *it, int n,
 		ms->permillage = 1;
 
 	res = libconfig->setting_lookup_int(it, "CastTime", &i32);
-	ms->casttime = (res == CONFIG_FALSE) ? 0 : cap_value(i32, 0, MOB_MAX_CASTTIME);
+	ms->casttime = (res == CONFIG_FALSE) ? 0 : std::clamp(i32, 0, MOB_MAX_CASTTIME);
 
 	res = libconfig->setting_lookup_int(it, "Delay", &i32);
-	ms->delay = (res == CONFIG_FALSE) ? 0 : cap_value(i32, 0, MOB_MAX_DELAY);
+	ms->delay = (res == CONFIG_FALSE) ? 0 : std::clamp(i32, 0, MOB_MAX_DELAY);
 
 	// Apply battle_config modifier to delay.
 	if (battle_config.mob_skill_delay != 100)
@@ -5825,7 +5825,7 @@ static bool mob_skill_db_libconfig_sub_skill(struct config_setting_t *it, int n,
 	ms->delay = std::min(ms->delay, MOB_MAX_DELAY);
 
 	res = libconfig->setting_lookup_bool(it, "Cancelable", &i32);
-	ms->cancel = (res == CONFIG_FALSE) ? 0 : cap_value(i32, 0, 1);
+	ms->cancel = (res == CONFIG_FALSE) ? 0 : std::clamp(i32, 0, 1);
 
 	i32 = MST_TARGET;
 	if (map->setting_lookup_const(it, "SkillTarget", &i32) && (i32 < MST_TARGET || i32 > MST_AROUND)) {
@@ -5850,7 +5850,7 @@ static bool mob_skill_db_libconfig_sub_skill(struct config_setting_t *it, int n,
 	}
 	ms->cond1 = i32;
 
-	ms->cond2 = !map->setting_lookup_const(it, "ConditionData", &i32) ? 0 : cap_value(i32, SHRT_MIN, SHRT_MAX);
+	ms->cond2 = !map->setting_lookup_const(it, "ConditionData", &i32) ? 0 : std::clamp(i32, SHRT_MIN, SHRT_MAX);
 
 	for (int i = 0; i < 5; i++) {
 		char valname[16];
@@ -5881,7 +5881,7 @@ static bool mob_skill_db_libconfig_sub_skill(struct config_setting_t *it, int n,
 	}
 
 	res = map->setting_lookup_const(it, "Emotion", &i32);
-	ms->emotion = res ? cap_value(i32, -1, SHRT_MAX) : -1;
+	ms->emotion = res ? std::clamp(i32, -1, SHRT_MAX) : -1;
 
 	if (libconfig->setting_lookup_int(it, "ChatMsgID", &i32) == CONFIG_TRUE) {
 		if (i32 <= 0 || i32 > MAX_MOB_CHAT || mob->chat_db[i32] == NULL) {

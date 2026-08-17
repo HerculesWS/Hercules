@@ -7944,7 +7944,7 @@ static BUILDIN(input)
 			script_pushint(st, (len > max ? 1 : len < min ? -1 : 0));
 		} else {
 			int amount = sd->npc_amount;
-			script->set_reg(st, sd, uid, name, (const void *)h64BPTRSIZE(cap_value(amount,min,max)), script_getref(st,2));
+			script->set_reg(st, sd, uid, name, (const void *)h64BPTRSIZE(std::clamp(amount,min,max)), script_getref(st,2));
 			script_pushint(st, sd->npc_input_capped_range);
 		}
 		st->state = RUN;
@@ -8983,7 +8983,7 @@ static BUILDIN(getitem2)
 		if (item_data == NULL)
 			return false;
 		if(item_data->type==IT_WEAPON || item_data->type==IT_ARMOR) {
-			ref = cap_value(ref, 0, MAX_REFINE);
+			ref = std::clamp(ref, 0, MAX_REFINE);
 		}
 		else if(item_data->type==IT_PETEGG) {
 			iden = 1;
@@ -9373,7 +9373,7 @@ static BUILDIN(makeitem2)
 		} else {
 			int16 search_x = 0;
 			int16 search_y = 0;
-			int range = (script_hasdata(st, 14) ? cap_value(script_getnum(st, 14), 1, battle_config.area_size) : 3);
+			int range = (script_hasdata(st, 14) ? std::clamp(script_getnum(st, 14), 1, battle_config.area_size) : 3);
 			map->search_free_cell(&sd->bl, sd->bl.m, &search_x, &search_y, range, range, SFC_DEFAULT); // Locate spot next to player.
 			x = search_x;
 			y = search_y;
@@ -9390,7 +9390,7 @@ static BUILDIN(makeitem2)
 		amount = 1;
 		break;
 	default:
-		amount = cap_value(script_getnum(st, 3), 1, MAX_AMOUNT);
+		amount = std::clamp(script_getnum(st, 3), 1, MAX_AMOUNT);
 		break;
 	}
 
@@ -9398,7 +9398,7 @@ static BUILDIN(makeitem2)
 	memset(&item_tmp, 0, sizeof(item_tmp));
 	item_tmp.nameid = nameid;
 	item_tmp.identify = script_getnum(st, 4);
-	item_tmp.refine = cap_value(script_getnum(st, 5), 0, MAX_REFINE);
+	item_tmp.refine = std::clamp(script_getnum(st, 5), 0, MAX_REFINE);
 	item_tmp.attribute = script_getnum(st, 6);
 	item_tmp.card[0] = script_getnum(st, 7);
 	item_tmp.card[1] = script_getnum(st, 8);
@@ -10850,7 +10850,7 @@ static BUILDIN(successrefitem)
 			return true;
 
 		sd->status.inventory[i].refine += up;
-		sd->status.inventory[i].refine = cap_value( sd->status.inventory[i].refine, 0, MAX_REFINE);
+		sd->status.inventory[i].refine = std::clamp((int)sd->status.inventory[i].refine, 0, MAX_REFINE);
 		pc->unequipitem(sd, i, PCUNEQUIPITEM_FORCE); // status calc will happen in pc->equipitem() below
 
 		clif->refine(sd->fd,0,i,sd->status.inventory[i].refine);
@@ -10944,7 +10944,7 @@ static BUILDIN(downrefitem)
 
 		pc->unequipitem(sd, i, PCUNEQUIPITEM_FORCE); // status calc will happen in pc->equipitem() below
 		sd->status.inventory[i].refine -= down;
-		sd->status.inventory[i].refine = cap_value( sd->status.inventory[i].refine, 0, MAX_REFINE);
+		sd->status.inventory[i].refine = std::clamp((int)sd->status.inventory[i].refine, 0, MAX_REFINE);
 
 		clif->refine(sd->fd,2,i,sd->status.inventory[i].refine);
 		clif->delitem(sd, i, 1, DELITEM_MATERIALCHANGE);
@@ -12215,8 +12215,8 @@ static BUILDIN(getexp)
 		return true;
 
 	// bonus for npc-given exp
-	base = cap_value(apply_percentrate(base, battle_config.quest_exp_rate, 100), 0, INT_MAX);
-	job = cap_value(apply_percentrate(job, battle_config.quest_exp_rate, 100), 0, INT_MAX);
+	base = std::clamp(apply_percentrate(base, battle_config.quest_exp_rate, 100), 0, INT_MAX);
+	job = std::clamp(apply_percentrate(job, battle_config.quest_exp_rate, 100), 0, INT_MAX);
 
 	pc->gainexp(sd, &sd->bl, base, job, EXP_FLAG_QUEST);
 
@@ -15003,8 +15003,8 @@ static BUILDIN(setmapflag)
 		case MF_NOVIEWID: map->list[m].flag.noviewid = (val <= 0) ? EQP_NONE : val; break;
 		case MF_PAIRSHIP_STARTABLE: map->list[m].flag.pairship_startable = 1; break;
 		case MF_PAIRSHIP_ENDABLE: map->list[m].flag.pairship_endable = 1; break;
-		case MF_NOSTORAGE: map->list[m].flag.nostorage = cap_value(val, 1, 3); break;
-		case MF_NOGSTORAGE: map->list[m].flag.nogstorage = cap_value(val, 1, 3); break;
+		case MF_NOSTORAGE: map->list[m].flag.nostorage = std::clamp(val, 1, 3); break;
+		case MF_NOGSTORAGE: map->list[m].flag.nogstorage = std::clamp(val, 1, 3); break;
 		case MF_NOPET: map->list[m].flag.nopet = 1; break;
 		case MF_NOMAPCHANNELAUTOJOIN: map->list[m].flag.chsysnolocalaj = 1; break;
 		case MF_NOKNOCKBACK: map->list[m].flag.noknockback = 1; break;
@@ -16560,7 +16560,7 @@ static BUILDIN(setiteminfo)
 		it->flag.trade_restriction = value;
 		break;
 	case ITEMINFO_ELV_MAX:
-		it->elvmax = cap_value(value, 0, MAX_LEVEL);
+		it->elvmax = std::clamp(value, 0, MAX_LEVEL);
 		break;
 	case ITEMINFO_DROPEFFECT_MODE:
 		it->dropeffectmode = value;
@@ -16581,43 +16581,43 @@ static BUILDIN(setiteminfo)
 		it->class_upper = value;
 		break;
 	case ITEMINFO_FLAG_NO_REFINE:
-		it->flag.no_refine = cap_value(value, 0, MAX_REFINE);
+		it->flag.no_refine = std::clamp(value, 0, MAX_REFINE);
 		break;
 	case ITEMINFO_FLAG_NO_GRADE:
-		it->flag.no_grade = cap_value(value, 0, 1);
+		it->flag.no_grade = std::clamp(value, 0, 1);
 		break;
 	case ITEMINFO_FLAG_DELAY_CONSUME:
 		it->flag.delay_consume = value;
 		break;
 	case ITEMINFO_FLAG_AUTOEQUIP:
-		it->flag.autoequip = cap_value(value, 0, 1);
+		it->flag.autoequip = std::clamp(value, 0, 1);
 		break;
 	case ITEMINFO_FLAG_AUTO_FAVORITE:
-		it->flag.auto_favorite = cap_value(value, 0, 1);
+		it->flag.auto_favorite = std::clamp(value, 0, 1);
 		break;
 	case ITEMINFO_FLAG_BUYINGSTORE:
-		it->flag.buyingstore = cap_value(value, 0, 1);
+		it->flag.buyingstore = std::clamp(value, 0, 1);
 		break;
 	case ITEMINFO_FLAG_BINDONEQUIP:
-		it->flag.bindonequip = cap_value(value, 0, 1);
+		it->flag.bindonequip = std::clamp(value, 0, 1);
 		break;
 	case ITEMINFO_FLAG_KEEPAFTERUSE:
-		it->flag.keepafteruse = cap_value(value, 0, 1);
+		it->flag.keepafteruse = std::clamp(value, 0, 1);
 		break;
 	case ITEMINFO_FLAG_FORCE_SERIAL:
-		it->flag.force_serial = cap_value(value, 0, 1);
+		it->flag.force_serial = std::clamp(value, 0, 1);
 		break;
 	case ITEMINFO_FLAG_NO_OPTIONS:
-		it->flag.no_options = cap_value(value, 0, 1);
+		it->flag.no_options = std::clamp(value, 0, 1);
 		break;
 	case ITEMINFO_FLAG_DROP_ANNOUNCE:
-		it->flag.drop_announce = cap_value(value, 0, 1);
+		it->flag.drop_announce = std::clamp(value, 0, 1);
 		break;
 	case ITEMINFO_FLAG_SHOWDROPEFFECT:
-		it->flag.showdropeffect = cap_value(value, 0, 1);
+		it->flag.showdropeffect = std::clamp(value, 0, 1);
 		break;
 	case ITEMINFO_STACK_AMOUNT:
-		it->stack.amount = cap_value(value, 0, USHRT_MAX);
+		it->stack.amount = std::clamp(value, 0, USHRT_MAX);
 		break;
 	case ITEMINFO_STACK_FLAG:
 		it->stack.inventory = ((value & 1) != 0);
@@ -16626,7 +16626,7 @@ static BUILDIN(setiteminfo)
 		it->stack.guildstorage = ((value & 8) != 0);
 		break;
 	case ITEMINFO_ITEM_USAGE_FLAG:
-		it->item_usage.flag = cap_value(value, 0, 1);
+		it->item_usage.flag = std::clamp(value, 0, 1);
 		break;
 	case ITEMINFO_ITEM_USAGE_OVERRIDE:
 		it->item_usage.override = value;
@@ -16692,7 +16692,7 @@ static BUILDIN(getitemlink)
 			}
 
 			int array_size = script->array_highest_key(st, sd, name, reference_getref(data));
-			array_size = cap_value(array_size, 0, MAX_SLOTS);
+			array_size = std::clamp(array_size, 0, MAX_SLOTS);
 
 			for (int i = 0; i < array_size; ++i)
 				link_item.card[i] = script->array_get_num_member(st, data, i);
@@ -16718,7 +16718,7 @@ static BUILDIN(getitemlink)
 			}
 
 			int array_size = script->array_highest_key(st, sd, reference_getname(data), reference_getref(data));
-			array_size = cap_value(array_size, 0, MAX_ITEM_OPTIONS * 3);
+			array_size = std::clamp(array_size, 0, MAX_ITEM_OPTIONS * 3);
 
 			// arrays ending with 0 will have arraysize not divisible by 3, but acessing those indexes will result in 0
 			for (int i = 0, j = 0; i < array_size; i += 3, ++j) {
@@ -19845,7 +19845,7 @@ static BUILDIN(axtoi)
 	const char *hex = script_getstr(st,2);
 	long value = strtol(hex, NULL, 16);
 #if LONG_MAX > INT_MAX || LONG_MIN < INT_MIN
-	value = cap_value(value, INT_MIN, INT_MAX);
+	value = std::clamp(value, (long)INT_MIN, (long)INT_MAX);
 #endif
 	script_pushint(st, (int)value);
 	return true;
@@ -19857,7 +19857,7 @@ static BUILDIN(strtol)
 	int base = script_getnum(st, 3);
 	long value = strtol(string, NULL, base);
 #if LONG_MAX > INT_MAX || LONG_MIN < INT_MIN
-	value = cap_value(value, INT_MIN, INT_MAX);
+	value = std::clamp(value, (long)INT_MIN, (long)INT_MAX);
 #endif
 	script_pushint(st, (int)value);
 	return true;
@@ -19957,7 +19957,7 @@ static BUILDIN(cap_value)
 	int min = script_getnum(st, 3);
 	int max = script_getnum(st, 4);
 
-	script_pushint(st, (int)cap_value(value, min, max));
+	script_pushint(st, std::clamp(value, min, max));
 
 	return true;
 }
@@ -20467,7 +20467,7 @@ static BUILDIN(addmonsterdrop)
 	rate = script_getnum(st,4);
 	if( rate < 1 || rate > 10000 ) {
 		ShowWarning("buildin_addmonsterdrop: Invalid drop rate '%d'. Capping to the [1:10000] range.\n", rate);
-		rate = cap_value(rate,1,10000);
+		rate = std::clamp(rate,1,10000);
 	}
 
 	for( i = 0; i < MAX_MOB_DROP; i++ ) {
@@ -23534,7 +23534,7 @@ static BUILDIN(mercenary_set_calls)
 	}
 
 	*calls += value;
-	*calls = cap_value(*calls, 0, INT_MAX);
+	*calls = std::clamp(*calls, 0, INT_MAX);
 
 	return true;
 }
@@ -23592,7 +23592,7 @@ static BUILDIN(mercenary_set_faith)
 	}
 
 	*calls += value;
-	*calls = cap_value(*calls, 0, INT_MAX);
+	*calls = std::clamp(*calls, 0, INT_MAX);
 	if( mercenary->get_guild(sd->md) == guild_id )
 		clif->mercenary_updatestatus(sd,SP_MERCFAITH);
 
@@ -27381,7 +27381,7 @@ static BUILDIN(setfavoriteitemidx)
 		ShowWarning("buildin_setfavoriteitemidx: Cant change favorite flag of an equipped item.\n");
 		return false;
 	} else {
-		sd->status.inventory[idx].favorite = cap_value(value, 0, 1);
+		sd->status.inventory[idx].favorite = std::clamp(value, 0, 1);
 		clif->favorite_item(sd, idx);
 	}
 
@@ -27399,7 +27399,7 @@ static BUILDIN(autofavoriteitem)
 		return false;
 	}
 
-	item_data->flag.auto_favorite = cap_value(flag, 0, 1);
+	item_data->flag.auto_favorite = std::clamp(flag, 0, 1);
 	return true;
 }
 
@@ -28684,7 +28684,7 @@ static BUILDIN(setgoldpcmode)
 		return false;
 	}
 
-	playtime = cap_value(playtime, -1, GOLDPC_MAX_TIME);
+	playtime = std::clamp(playtime, -1, GOLDPC_MAX_TIME);
 
 	struct goldpc_mode *mode = goldpc->exists(mode_id);
 	if (mode_id != 0 && mode == NULL) {

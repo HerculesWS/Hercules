@@ -3220,14 +3220,14 @@ static int64 battle_calc_damage(struct block_list *src, struct block_list *bl, s
 					if (--group->val2<=0)
 						skill->del_unitgroup(group);
 					if( (group->val3 - damage) > 0 )
-						group->val3 -= (int)cap_value(damage, INT_MIN, INT_MAX);
+						group->val3 -= (int)std::clamp(damage, (int64)INT_MIN, (int64)INT_MAX);
 					else
 						skill->del_unitgroup(group);
 					return 0;
 				}
 				if( skill_id == SO_ELEMENTAL_SHIELD ) {
 					if ( ( group->val2 - damage) > 0 ) {
-						group->val2 -= (int)cap_value(damage,INT_MIN,INT_MAX);
+						group->val2 -= (int)std::clamp(damage, (int64)INT_MIN, (int64)INT_MAX);
 					} else
 						skill->del_unitgroup(group);
 					return 0;
@@ -3237,7 +3237,7 @@ static int64 battle_calc_damage(struct block_list *src, struct block_list *bl, s
 				 **/
 			#ifdef RENEWAL
 				if ( ( group->val2 - damage) > 0 ) {
-					group->val2 -= (int)cap_value(damage,INT_MIN,INT_MAX);
+					group->val2 -= (int)std::clamp(damage, (int64)INT_MIN, (int64)INT_MAX);
 				} else
 					skill->del_unitgroup(group);
 				if (--group->val3<=0)
@@ -3316,7 +3316,7 @@ static int64 battle_calc_damage(struct block_list *src, struct block_list *bl, s
 
 		if( (sce = sc->data[SC_MILLENNIUMSHIELD]) && sce->val2 > 0 && damage > 0 ) {
 			clif->skill_nodamage(bl, bl, RK_MILLENNIUMSHIELD, 1, 1);
-			sce->val3 -= (int)cap_value(damage,INT_MIN,INT_MAX); // absorb damage
+			sce->val3 -= (int)std::clamp(damage, (int64)INT_MIN, (int64)INT_MAX); // absorb damage
 			d->dmg_lv = ATK_BLOCK;
 			sc_start(src, bl, SC_STUN, 15, 0, skill->get_time2(RK_MILLENNIUMSHIELD, sce->val1), RK_MILLENNIUMSHIELD); // There is a chance to be stunned when one shield is broken.
 			if( sce->val3 <= 0 ) { // Shield Down
@@ -3557,7 +3557,7 @@ static int64 battle_calc_damage(struct block_list *src, struct block_list *bl, s
 			damage += damage * sc->data[SC_DARKCROW]->val2 / 100;
 
 		if( (sce = sc->data[SC_STONEHARDSKIN]) && flag&(BF_SHORT|BF_WEAPON) && damage > 0 ) {
-			sce->val2 -= (int)cap_value(damage,INT_MIN,INT_MAX);
+			sce->val2 -= (int)std::clamp(damage, (int64)INT_MIN, (int64)INT_MAX);
 			if( src->type == BL_PC ) {
 				if (s_sd != NULL && s_sd->weapontype != W_BOW)
 					skill->break_equip(src, EQP_WEAPON, 3000, BCT_SELF);
@@ -3589,7 +3589,7 @@ static int64 battle_calc_damage(struct block_list *src, struct block_list *bl, s
 
 		//Finally Kyrie because it may, or not, reduce damage to 0.
 		if((sce = sc->data[SC_KYRIE]) && damage > 0){
-			sce->val2 -= (int)cap_value(damage,INT_MIN,INT_MAX);
+			sce->val2 -= (int)std::clamp(damage, (int64)INT_MIN, (int64)INT_MAX);
 			if(flag&BF_WEAPON || skill_id == TF_THROWSTONE){
 				if(sce->val2>=0)
 					damage=0;
@@ -3602,7 +3602,7 @@ static int64 battle_calc_damage(struct block_list *src, struct block_list *bl, s
 
 		if ((sce = sc->data[SC_PLATINUM_ALTER]) != NULL && damage > 0) {
 			clif->specialeffect(bl, 336, AREA);
-			sce->val3 -= (int)cap_value(damage, INT_MIN, INT_MAX);
+			sce->val3 -= (int)std::clamp(damage, (int64)INT_MIN, (int64)INT_MAX);
 			if (sce->val3 >= 0)
 				damage = 0;
 			else
@@ -3613,7 +3613,7 @@ static int64 battle_calc_damage(struct block_list *src, struct block_list *bl, s
 
 		if ((sce = sc->data[SC_TUNAPARTY]) != NULL && damage > 0) {
 			clif->specialeffect(bl, 336, AREA);
-			sce->val2 -= (int)cap_value(damage, INT_MIN, INT_MAX);
+			sce->val2 -= (int)std::clamp(damage, (int64)INT_MIN, (int64)INT_MAX);
 			if (sce->val2 >= 0) {
 				damage = 0;
 			} else {
@@ -3625,14 +3625,14 @@ static int64 battle_calc_damage(struct block_list *src, struct block_list *bl, s
 		}
 
 		if ((sce = sc->data[SC_DIMENSION1]) != NULL && damage > 0) {
-			sce->val2 -= (int)cap_value(damage, INT_MIN, INT_MAX);
+			sce->val2 -= (int)std::clamp(damage, (int64)INT_MIN, (int64)INT_MAX);
 			if (sce->val2 <= 0)
 				status_change_end(bl, SC_DIMENSION1, INVALID_TIMER);
 			return 0;
 		}
 
 		if ((sce = sc->data[SC_DIMENSION2]) != NULL && damage > 0) {
-			sce->val2 -= (int)cap_value(damage, INT_MIN, INT_MAX);
+			sce->val2 -= (int)std::clamp(damage, (int64)INT_MIN, (int64)INT_MAX);
 			if (sce->val2 <= 0)
 				status_change_end(bl, SC_DIMENSION2, INVALID_TIMER);
 			return 0;
@@ -3906,7 +3906,7 @@ static int battle_calc_drain(int64 damage, int rate, int per)
 				diff = -1;
 		}
 	}
-	return (int)cap_value(diff,INT_MIN,INT_MAX);
+	return (int)std::clamp(diff, (int64)INT_MIN, (int64)INT_MAX);
 }
 
 /*==========================================
@@ -4691,7 +4691,7 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 			if( skill_id == KO_MUCHANAGE )
 				hitrate = (int)((10 - ((float)1 / (status_get_dex(src) + status_get_luk(src))) * 500) * ((float)skill_lv / 2 + 5));
 
-			hitrate = cap_value(hitrate, battle_config.min_hitrate, battle_config.max_hitrate);
+			hitrate = std::clamp((int)hitrate, battle_config.min_hitrate, battle_config.max_hitrate);
 
 			if(rnd()%100 < hitrate)
 				hit = true;
@@ -4784,7 +4784,7 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 			if( sd ) {
 				if ( md.damage > sd->status.zeny )
 					md.damage = sd->status.zeny;
-				pc->payzeny(sd, (int)cap_value(md.damage,INT_MIN,INT_MAX),LOG_TYPE_STEAL,NULL);
+				pc->payzeny(sd, (int)std::clamp(md.damage, (int64)INT_MIN, (int64)INT_MAX), LOG_TYPE_STEAL, NULL);
 			}
 		break;
 	}
@@ -5364,10 +5364,10 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 		if (hitpercbonus != 0)
 			hitrate += hitrate * hitpercbonus / 100;
 
-		hitrate = cap_value(hitrate, battle_config.min_hitrate, battle_config.max_hitrate);
+		hitrate = std::clamp((int)hitrate, battle_config.min_hitrate, battle_config.max_hitrate);
 #ifdef RENEWAL
 		if( !sd )
-			hitrate = cap_value(hitrate, 5, 95);
+			hitrate = std::clamp((int)hitrate, 5, 95);
 #endif
 		if(rnd()%100 >= hitrate){
 			wd.dmg_lv = ATK_FLEE;

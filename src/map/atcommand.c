@@ -857,7 +857,7 @@ ACMD(speed)
 	if (speed < 0)
 		sd->base_status.speed = DEFAULT_WALK_SPEED;
 	else
-		sd->base_status.speed = cap_value(speed, MIN_WALK_SPEED, MAX_WALK_SPEED);
+		sd->base_status.speed = std::clamp(speed, MIN_WALK_SPEED, MAX_WALK_SPEED);
 
 	if( sd->base_status.speed != DEFAULT_WALK_SPEED ) {
 		sd->state.permanent_speed = 1; // Set lock when set to non-default speed.
@@ -1364,7 +1364,7 @@ ACMD(item2)
 			refine_level = 0;
 			attr = ATTR_NONE;
 		}
-		refine_level = cap_value(refine_level, 0, MAX_REFINE);
+		refine_level = std::clamp(refine_level, 0, MAX_REFINE);
 		for (i = 0; i < loop; i++) {
 			memset(&item_tmp, 0, sizeof(item_tmp));
 			item_tmp.nameid = item_id;
@@ -2311,7 +2311,7 @@ ACMD(refine)
 		return false;
 	}
 
-	refine_level = cap_value(refine_level, -MAX_REFINE, MAX_REFINE);
+	refine_level = std::clamp(refine_level, -MAX_REFINE, MAX_REFINE);
 
 	count = 0;
 	for (j = 0; j < EQI_MAX; j++) {
@@ -2340,7 +2340,7 @@ ACMD(refine)
 		else if (position && !(sd->status.inventory[idx].equip & position))
 			continue;
 
-		final_refine = cap_value(sd->status.inventory[idx].refine + refine_level, 0, MAX_REFINE);
+		final_refine = std::clamp(sd->status.inventory[idx].refine + refine_level, 0, MAX_REFINE);
 		if (sd->status.inventory[idx].refine != final_refine) {
 			sd->status.inventory[idx].refine = final_refine;
 			current_position = sd->status.inventory[idx].equip;
@@ -2410,7 +2410,7 @@ ACMD(grade)
 		return false;
 	}
 
-	grade_level = cap_value(grade_level, 0, MAX_ITEM_GRADE);
+	grade_level = std::clamp(grade_level, 0, MAX_ITEM_GRADE);
 
 	int count = 0;
 	for (int j = 0; j < EQI_MAX; j++) {
@@ -2439,7 +2439,7 @@ ACMD(grade)
 		else if (position && !(sd->status.inventory[idx].equip & position))
 			continue;
 
-		int final_grade = cap_value(sd->status.inventory[idx].grade + grade_level, 0, MAX_ITEM_GRADE);
+		int final_grade = std::clamp(sd->status.inventory[idx].grade + grade_level, 0, MAX_ITEM_GRADE);
 		if (sd->status.inventory[idx].grade != final_grade) {
 			sd->status.inventory[idx].grade = final_grade;
 			const int current_position = sd->status.inventory[idx].equip;
@@ -5537,8 +5537,8 @@ ACMD(npcmove)
 		return false; //Not on a map.
 	}
 
-	x = cap_value(x, 0, map->list[m].xs-1);
-	y = cap_value(y, 0, map->list[m].ys-1);
+	x = std::clamp(x, 0, map->list[m].xs-1);
+	y = std::clamp(y, 0, map->list[m].ys-1);
 	map->foreachinrange(clif->outsight, &nd->bl, AREA_SIZE, BL_PC, &nd->bl);
 	map->moveblock(&nd->bl, x, y, timer->gettick());
 	map->foreachinrange(clif->insight, &nd->bl, AREA_SIZE, BL_PC, &nd->bl);
@@ -6944,7 +6944,7 @@ ACMD(summon)
 
 	const int64 tick = timer->gettick();
 
-	md->deletetimer = timer->add(tick + (int64)cap_value(duration, 1, 60) * 60000, mob->timer_delete, md->bl.id, 0);
+	md->deletetimer = timer->add(tick + (int64)std::clamp(duration, 1, 60) * 60000, mob->timer_delete, md->bl.id, 0);
 	clif->specialeffect(&md->bl, 344, AREA);
 	mob->spawn(md);
 	sc_start4(NULL, &md->bl, SC_MODECHANGE, 100, 1, 0, MD_AGGRESSIVE, 0, 60000, 0);
@@ -7615,7 +7615,7 @@ ACMD(homfriendly)
 	}
 
 	friendly = atoi(message);
-	friendly = cap_value(friendly, 0, 1000);
+	friendly = std::clamp(friendly, 0, 1000);
 
 	sd->hd->homunculus.intimacy = friendly * 100 ;
 	clif->send_homdata(sd,SP_INTIMATE,friendly);
@@ -7640,7 +7640,7 @@ ACMD(homhungry)
 	}
 
 	hungry = atoi(message);
-	hungry = cap_value(hungry, 0, 100);
+	hungry = std::clamp(hungry, 0, 100);
 
 	sd->hd->homunculus.hunger = hungry;
 	clif->send_homdata(sd,SP_HUNGRY,hungry);
@@ -8060,9 +8060,7 @@ ACMD(me)
  *------------------------------------------*/
 ACMD(size)
 {
-	int size = 0;
-
-	size = cap_value(atoi(message),SZ_SMALL,SZ_BIG);
+	int size = std::clamp(atoi(message), (int)SZ_SMALL, (int)SZ_BIG);
 
 	if(sd->state.size) {
 		sd->state.size = SZ_SMALL;
@@ -8086,7 +8084,7 @@ ACMD(sizeall)
 	struct s_mapiterator* iter;
 
 	size = atoi(message);
-	size = cap_value(size,0,2);
+	size = std::clamp(size,0,2);
 
 	iter = mapit_getallusers();
 	for (pl_sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); pl_sd = BL_UCAST(BL_PC, mapit->next(iter))) {
@@ -8128,7 +8126,7 @@ ACMD(sizeguild)
 		return false;
 	}
 
-	size = cap_value(size,SZ_SMALL,SZ_BIG);
+	size = std::clamp(size, (int)SZ_SMALL, (int)SZ_BIG);
 
 	for (i = 0; i < g->max_member; i++) {
 		if ((pl_sd = g->member[i].sd) && pl_sd->state.size != (unsigned int)size) {

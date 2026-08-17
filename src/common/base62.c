@@ -25,6 +25,7 @@
 #include "common/nullpo.h"
 #include "common/utils.h"
 
+#include <algorithm>
 #include <string.h>
 
 static struct base62_interface base62_s;
@@ -67,7 +68,7 @@ static bool base62_encode_int_padded(int value, char *buf, int min_len, int buf_
 	Assert_retr(false, buf_len >= 2);
 	
 	char temp_buf[BASE62_INT_BUFFER_LEN] = { 0 };
-	int max_idx = cap_value(buf_len - 2, 0, BASE62_INT_BUFFER_LEN - 2);
+	int max_idx = std::clamp(buf_len - 2, 0, BASE62_INT_BUFFER_LEN - 2);
 
 	int idx = 0;
 	do {

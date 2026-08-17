@@ -39,6 +39,7 @@
 #include "common/strlib.h"
 #include "common/utils.h"
 
+#include <algorithm>
 #include <stdio.h>
 #include <string.h>
 
@@ -291,7 +292,7 @@ static void vending_openvending(struct map_session_data *sd, const char *message
 
 		sd->vending[i].index = index;
 		sd->vending[i].amount = amount;
-		sd->vending[i].value = cap_value(value, 0, (unsigned int)battle_config.vending_max_value);
+		sd->vending[i].value = std::clamp(value, 0u, (unsigned int)battle_config.vending_max_value);
 
 		i++; // item successfully added
 	}

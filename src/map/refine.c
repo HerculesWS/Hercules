@@ -32,6 +32,7 @@
 #include "map/pc.h"
 #include "map/script.h"
 
+#include <algorithm>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -123,7 +124,7 @@ static void refine_refinery_refine_request(struct map_session_data *sd, int item
 			break;
 		case REFINE_FAILURE_BEHAVIOR_DOWNGRADE:
 			sd->status.inventory[item_index].refine -= 1;
-			sd->status.inventory[item_index].refine = cap_value(sd->status.inventory[item_index].refine, 0, MAX_REFINE);
+			sd->status.inventory[item_index].refine = std::clamp((int)sd->status.inventory[item_index].refine, 0, MAX_REFINE);
 			clif->refine(sd->fd, 2, item_index, sd->status.inventory[item_index].refine);
 			logs->pick_pc(sd, LOG_TYPE_REFINE, 1, &sd->status.inventory[item_index], sd->inventory_data[item_index]);
 			refine->refinery_add_item(sd, item_index);
@@ -136,7 +137,7 @@ static void refine_refinery_refine_request(struct map_session_data *sd, int item
 		}
 	} else {
 		sd->status.inventory[item_index].refine += 1;
-		sd->status.inventory[item_index].refine = cap_value(sd->status.inventory[item_index].refine, 0, MAX_REFINE);
+		sd->status.inventory[item_index].refine = std::clamp((int)sd->status.inventory[item_index].refine, 0, MAX_REFINE);
 
 		clif->misceffect(&sd->bl, 3);
 		clif->refine(sd->fd, 0, item_index, sd->status.inventory[item_index].refine);

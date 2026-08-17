@@ -1714,11 +1714,11 @@ static void clif_hominfo(struct map_session_data *sd, struct homun_data *hd, int
 	p.itemId = 0; // equip id
 #endif
 #ifdef RENEWAL
-	p.atk2 = cap_value(hstatus->rhw.atk2, 0, INT16_MAX);
+	p.atk2 = std::clamp(hstatus->rhw.atk2, 0u, (unsigned int)INT16_MAX);
 #else
-	p.atk2 = cap_value(hstatus->rhw.atk2 + hstatus->batk, 0, INT16_MAX);
+	p.atk2 = std::clamp(hstatus->rhw.atk2 + hstatus->batk, 0u, (unsigned int)INT16_MAX);
 #endif
-	p.matk = cap_value(hstatus->matk_max, 0, INT16_MAX);
+	p.matk = std::clamp(hstatus->matk_max, 0u, (uint32)INT16_MAX);
 	p.hit = hstatus->hit;
 	if (battle_config.hom_setting&0x10)
 		p.crit = hstatus->luk / 3 + 1; //crit is a +1 decimal value! Just display purpose.[Vicious]
@@ -4234,7 +4234,7 @@ static void clif_statusupack(struct map_session_data *sd, int type, int ok, int 
 	p->packetType = HEADER_ZC_STATUS_CHANGE_ACK;
 	p->sp = type;
 	p->ok = ok;
-	p->value = cap_value(val, 0, UINT8_MAX);
+	p->value = std::clamp(val, 0, (int)UINT8_MAX);
 	WFIFOSET(fd, sizeof(struct PACKET_ZC_STATUS_CHANGE_ACK));
 }
 
@@ -5925,7 +5925,7 @@ static int clif_skill_damage(struct block_list *src, struct block_list *dst, int
 	nullpo_ret(src);
 	nullpo_ret(dst);
 
-	int damage = (int)cap_value(in_damage, INT_MIN, INT_MAX);
+	int damage = (int)std::clamp(in_damage, (int64)INT_MIN, (int64)INT_MAX);
 	type = clif_calc_delay(type, div, damage, ddelay);
 
 #if PACKETVER >= 20131223
@@ -6591,9 +6591,9 @@ static void clif_heal(int fd, int type, int val)
 	WFIFOW(fd, 0) = cmd;
 	WFIFOW(fd, 2) = type;
 #if PACKETVER < 20150513
-	WFIFOW(fd, 4) = cap_value(val, 0, INT16_MAX);
+	WFIFOW(fd, 4) = std::clamp(val, 0, (int)INT16_MAX);
 #else
-	WFIFOL(fd, 4) = cap_value(val, 0, INT_MAX);
+	WFIFOL(fd, 4) = std::clamp(val, 0, INT_MAX);
 #endif
 	WFIFOSET(fd, len);
 }
@@ -8221,7 +8221,7 @@ static void clif_mvp_exp(struct map_session_data *sd, unsigned int exp)
 	fd = sd->fd;
 	WFIFOHEAD(fd, packet_len(0x10b));
 	WFIFOW(fd, 0) = 0x10b;
-	WFIFOL(fd, 2) = cap_value(exp, 0, INT32_MAX);
+	WFIFOL(fd, 2) = std::clamp(exp, 0u, (unsigned int)INT32_MAX);
 	WFIFOSET(fd, packet_len(0x10b));
 #endif
 }
@@ -8404,7 +8404,7 @@ static void clif_guild_basicinfo(struct map_session_data *sd)
 	p->userNum = g->connect_member;
 	p->maxUserNum = g->max_member;
 	p->userAverageLevel = g->average_lv;
-	p->exp = (uint32)cap_value(g->exp, 0, INT32_MAX);
+	p->exp = (uint32)std::clamp(g->exp, 0ui64, (uint64)INT32_MAX);
 	p->maxExp = g->next_exp;
 	p->point = 0;  // Tax Points
 	p->honor = 0;  // Honor: (left) Vulgar [-100,100] Famed (right)
@@ -8539,7 +8539,7 @@ static void clif_guild_memberlist(struct map_session_data *sd)
 		p->guildMemberInfo[c].sex = m->gender;
 		p->guildMemberInfo[c].job = m->class_;
 		p->guildMemberInfo[c].level = m->lv;
-		p->guildMemberInfo[c].contributionExp = (int)cap_value(m->exp, 0, INT32_MAX);
+		p->guildMemberInfo[c].contributionExp = (int)std::clamp(m->exp, 0ui64, (uint64)INT32_MAX);
 		p->guildMemberInfo[c].currentState = m->online;
 		p->guildMemberInfo[c].positionID = m->position;
 #if PACKETVER >= 20200902
@@ -19329,11 +19329,11 @@ static void clif_mercenary_updatestatus(struct map_session_data *sd, enum status
 		case SP_ATK1:
 		{
 			int atk = rnd()%(mstatus->rhw.atk2 - mstatus->rhw.atk + 1) + mstatus->rhw.atk;
-			WFIFOL(fd,4) = cap_value(atk, 0, INT16_MAX);
+			WFIFOL(fd,4) = std::clamp(atk, 0, (int)INT16_MAX);
 		}
 			break;
 		case SP_MATK1:
-			WFIFOL(fd,4) = cap_value(mstatus->matk_max, 0, INT16_MAX);
+			WFIFOL(fd,4) = std::clamp(mstatus->matk_max, 0u, (uint32)INT16_MAX);
 			break;
 		case SP_HIT:
 			WFIFOL(fd,4) = mstatus->hit;
@@ -19404,12 +19404,12 @@ static void clif_mercenary_info(struct map_session_data *sd)
 #else
 	atk = rnd() % (mstatus->rhw.atk2 - mstatus->rhw.atk + 1) + mstatus->rhw.atk;
 #endif
-	WFIFOW(fd, 6) = cap_value(atk, 0, INT16_MAX);
+	WFIFOW(fd, 6) = std::clamp(atk, 0, (int)INT16_MAX);
 #ifdef RENEWAL
 	atk = status->base_matk(&md->bl, mstatus, status->get_lv(&md->bl));
-	WFIFOW(fd,8) = cap_value(atk, 0, INT16_MAX);
+	WFIFOW(fd,8) = std::clamp(atk, 0, (int)INT16_MAX);
 #else
-	WFIFOW(fd,8) = cap_value(mstatus->matk_max, 0, INT16_MAX);
+	WFIFOW(fd,8) = std::clamp(mstatus->matk_max, 0u, (uint32)INT16_MAX);
 #endif
 	WFIFOW(fd,10) = mstatus->hit;
 	WFIFOW(fd,12) = mstatus->cri/10;
@@ -21811,7 +21811,7 @@ static void clif_parse_BankDeposit(int fd, struct map_session_data *sd)
 		return;
 	}
 
-	money = (int)cap_value(p->Money,0,INT_MAX);
+	money = (int)std::clamp(p->Money, 0, INT_MAX);
 
 	pc->bank_deposit(sd,money);
 }
@@ -21830,7 +21830,7 @@ static void clif_parse_BankWithdraw(int fd, struct map_session_data *sd)
 		return;
 	}
 
-	money = (int)cap_value(p->Money,0,INT_MAX);
+	money = (int)std::clamp(p->Money, 0, INT_MAX);
 
 	pc->bank_withdraw(sd,money);
 }

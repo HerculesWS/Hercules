@@ -39,8 +39,10 @@
 #endif
 #endif
 
+#ifndef __cplusplus
 //Caps values to min/max
 #define cap_value(a, min, max) (((a) >= (max)) ? (max) : ((a) <= (min)) ? (min) : (a))
+#endif
 
 #ifdef __cplusplus
 extern "C" {

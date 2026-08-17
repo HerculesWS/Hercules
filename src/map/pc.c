@@ -339,7 +339,7 @@ static void pc_addsoulball(struct map_session_data *sd, int max)
 	if (max > MAX_SOUL_BALL)
 		max = MAX_SOUL_BALL;
 
-	sd->soulball = cap_value(sd->soulball + 1, 0, max);
+	sd->soulball = std::clamp(sd->soulball + 1, 0, max);
 	sc_start(&sd->bl, &sd->bl, SC_SOULENERGY, 100, sd->soulball, skill->get_time2(SP_SOULCOLLECT, 1), 0);
 	clif->soulballs(&sd->bl, sd->soulball, AREA);
 }
@@ -363,7 +363,7 @@ static void pc_delsoulball(struct map_session_data *sd, int count, bool type)
 	if (sd->soulball <= 0 || sc == NULL || sc->data[SC_SOULENERGY] == NULL) {
 		sd->soulball = 0;
 	} else {
-		sd->soulball -= cap_value(count, 0, sd->soulball);
+		sd->soulball -= std::clamp(count, 0, sd->soulball);
 		if (sd->soulball == 0)
 			status_change_end(&sd->bl, SC_SOULENERGY, INVALID_TIMER);
 		else
@@ -2495,21 +2495,21 @@ static int pc_bonus(struct map_session_data *sd, int type, int val)
 		case SP_ATK1:
 			if(!sd->state.lr_flag) {
 				bonus = bst->rhw.atk + val;
-				bst->rhw.atk = cap_value(bonus, 0, USHRT_MAX);
+				bst->rhw.atk = std::clamp(bonus, 0, USHRT_MAX);
 			}
 			else if(sd->state.lr_flag == 1) {
 				bonus = bst->lhw.atk + val;
-				bst->lhw.atk =  cap_value(bonus, 0, USHRT_MAX);
+				bst->lhw.atk =  std::clamp(bonus, 0, USHRT_MAX);
 			}
 			break;
 		case SP_ATK2:
 			if(!sd->state.lr_flag) {
 				bonus = bst->rhw.atk2 + val;
-				bst->rhw.atk2 = cap_value(bonus, 0, USHRT_MAX);
+				bst->rhw.atk2 = std::clamp(bonus, 0, USHRT_MAX);
 			}
 			else if(sd->state.lr_flag == 1) {
 				bonus = bst->lhw.atk2 + val;
-				bst->lhw.atk2 =  cap_value(bonus, 0, USHRT_MAX);
+				bst->lhw.atk2 =  std::clamp(bonus, 0, USHRT_MAX);
 			}
 			break;
 		case SP_BASE_ATK:
@@ -2518,7 +2518,7 @@ static int pc_bonus(struct map_session_data *sd, int type, int val)
 				bst->equip_atk += val;
 #else
 				bonus = bst->batk + val;
-				bst->batk = cap_value(bonus, 0, USHRT_MAX);
+				bst->batk = std::clamp(bonus, 0, USHRT_MAX);
 #endif
 			}
 			break;
@@ -2526,25 +2526,25 @@ static int pc_bonus(struct map_session_data *sd, int type, int val)
 			if(sd->state.lr_flag != 2) {
 				bonus = bst->def + val;
 	#ifdef RENEWAL
-				bst->def = cap_value(bonus, SHRT_MIN, SHRT_MAX);
+				bst->def = std::clamp(bonus, SHRT_MIN, SHRT_MAX);
 	#else
-				bst->def = cap_value(bonus, CHAR_MIN, CHAR_MAX);
+				bst->def = std::clamp(bonus, CHAR_MIN, CHAR_MAX);
 	#endif
 			}
 			break;
 		case SP_DEF2:
 			if(sd->state.lr_flag != 2) {
 				bonus = bst->def2 + val;
-				bst->def2 = cap_value(bonus, SHRT_MIN, SHRT_MAX);
+				bst->def2 = std::clamp(bonus, SHRT_MIN, SHRT_MAX);
 			}
 			break;
 		case SP_MDEF1:
 			if(sd->state.lr_flag != 2) {
 				bonus = bst->mdef + val;
 	#ifdef RENEWAL
-				bst->mdef = cap_value(bonus, SHRT_MIN, SHRT_MAX);
+				bst->mdef = std::clamp(bonus, SHRT_MIN, SHRT_MAX);
 	#else
-				bst->mdef = cap_value(bonus, CHAR_MIN, CHAR_MAX);
+				bst->mdef = std::clamp(bonus, CHAR_MIN, CHAR_MAX);
 	#endif
 				if( sd->state.lr_flag == 3 ) {//Shield, used for royal guard
 					sd->bonus.shieldmdef += bonus;
@@ -2554,32 +2554,32 @@ static int pc_bonus(struct map_session_data *sd, int type, int val)
 		case SP_MDEF2:
 			if(sd->state.lr_flag != 2) {
 				bonus = bst->mdef2 + val;
-				bst->mdef2 = cap_value(bonus, SHRT_MIN, SHRT_MAX);
+				bst->mdef2 = std::clamp(bonus, SHRT_MIN, SHRT_MAX);
 			}
 			break;
 		case SP_HIT:
 			if(sd->state.lr_flag != 2) {
 				bonus = bst->hit + val;
-				bst->hit = cap_value(bonus, SHRT_MIN, SHRT_MAX);
+				bst->hit = std::clamp(bonus, SHRT_MIN, SHRT_MAX);
 			} else
 				sd->bonus.arrow_hit+=val;
 			break;
 		case SP_FLEE1:
 			if(sd->state.lr_flag != 2) {
 				bonus = bst->flee + val;
-				bst->flee = cap_value(bonus, SHRT_MIN, SHRT_MAX);
+				bst->flee = std::clamp(bonus, SHRT_MIN, SHRT_MAX);
 			}
 			break;
 		case SP_FLEE2:
 			if(sd->state.lr_flag != 2) {
 				bonus = bst->flee2 + val*10;
-				bst->flee2 = cap_value(bonus, SHRT_MIN, SHRT_MAX);
+				bst->flee2 = std::clamp(bonus, SHRT_MIN, SHRT_MAX);
 			}
 			break;
 		case SP_CRITICAL:
 			if(sd->state.lr_flag != 2) {
 				bonus = bst->cri + val*10;
-				bst->cri = cap_value(bonus, SHRT_MIN, SHRT_MAX);
+				bst->cri = std::clamp(bonus, SHRT_MIN, SHRT_MAX);
 			} else
 				sd->bonus.arrow_cri += val*10;
 			break;
@@ -2897,19 +2897,19 @@ static int pc_bonus(struct map_session_data *sd, int type, int val)
 			if(sd->state.lr_flag == 2)
 				break;
 			val+= sd->special_state.no_magic_damage;
-			sd->special_state.no_magic_damage = cap_value(val,0,100);
+			sd->special_state.no_magic_damage = std::clamp(val, 0, 100);
 			break;
 		case SP_NO_WEAPON_DAMAGE:
 			if(sd->state.lr_flag == 2)
 				break;
 			val+= sd->special_state.no_weapon_damage;
-			sd->special_state.no_weapon_damage = cap_value(val,0,100);
+			sd->special_state.no_weapon_damage = std::clamp(val, 0, 100);
 			break;
 		case SP_NO_MISC_DAMAGE:
 			if(sd->state.lr_flag == 2)
 				break;
 			val+= sd->special_state.no_misc_damage;
-			sd->special_state.no_misc_damage = cap_value(val,0,100);
+			sd->special_state.no_misc_damage = std::clamp(val, 0, 100);
 			break;
 		case SP_NO_GEMSTONE:
 			if(sd->state.lr_flag != 2)
@@ -3249,7 +3249,7 @@ static int pc_bonus2(struct map_session_data *sd, int type, int type2, int val)
 			if(sd->state.lr_flag == 2)
 				break;
 			i = sd->reseff[type2-SC_COMMON_MIN]+val;
-			sd->reseff[type2-SC_COMMON_MIN]= cap_value(i, 0, 10000);
+			sd->reseff[type2-SC_COMMON_MIN]= std::clamp(i, 0, 10000);
 			break;
 		case SP_MAGIC_ADDELE:
 			if( (type2 >= ELE_MAX && type2 != ELE_ALL) || (type2 < ELE_NEUTRAL) ) {
@@ -3780,7 +3780,7 @@ static int pc_bonus2(struct map_session_data *sd, int type, int type2, int val)
 			if (sd->state.lr_flag == 2)
 				break;
 			BONUS_FOREACH_RCARRAY_FROMMASK(i, race_mask) {
-				sd->sp_gain_race_attack[i] = cap_value(sd->sp_gain_race_attack[i] + val, 0, INT16_MAX);
+				sd->sp_gain_race_attack[i] = std::clamp(sd->sp_gain_race_attack[i] + val, 0, (int)INT16_MAX);
 			}
 		}
 			break;
@@ -3794,7 +3794,7 @@ static int pc_bonus2(struct map_session_data *sd, int type, int type2, int val)
 			if (sd->state.lr_flag == 2)
 				break;
 			BONUS_FOREACH_RCARRAY_FROMMASK(i, race_mask) {
-				sd->hp_gain_race_attack[i] = cap_value(sd->hp_gain_race_attack[i] + val, 0, INT16_MAX);
+				sd->hp_gain_race_attack[i] = std::clamp(sd->hp_gain_race_attack[i] + val, 0, (int)INT16_MAX);
 			}
 		}
 			break;
@@ -4600,7 +4600,7 @@ static int pc_payzeny(struct map_session_data *sd, int zeny, enum e_log_pick_typ
 {
 	nullpo_retr(-1,sd);
 
-	zeny = cap_value(zeny,-MAX_ZENY,MAX_ZENY); //prevent command UB
+	zeny = std::clamp(zeny,-MAX_ZENY,MAX_ZENY); //prevent command UB
 	if( zeny < 0 )
 	{
 		ShowError("pc_payzeny: Paying negative Zeny (zeny=%d, account_id=%d, char_id=%d).\n", zeny, sd->status.account_id, sd->status.char_id);
@@ -4642,7 +4642,7 @@ static int pc_paycash(struct map_session_data *sd, int price, int points)
 	int mempoints;
 	nullpo_retr(-1, sd);
 
-	points = cap_value(points, -MAX_ZENY, MAX_ZENY); //prevent command UB
+	points = std::clamp(points, -MAX_ZENY, MAX_ZENY); //prevent command UB
 	if (price < 0 || points < 0) {
 		ShowError("pc_paycash: Paying negative points (price=%d, points=%d, account_id=%d, char_id=%d).\n", price, points, sd->status.account_id, sd->status.char_id);
 		return -2;
@@ -4681,8 +4681,8 @@ static int pc_getcash(struct map_session_data *sd, int cash, int points)
 	char output[128];
 	nullpo_retr(-1,sd);
 
-	cash = cap_value(cash,-MAX_ZENY,MAX_ZENY); //prevent command UB
-	points = cap_value(points,-MAX_ZENY,MAX_ZENY); //prevent command UB
+	cash = std::clamp(cash,-MAX_ZENY,MAX_ZENY); //prevent command UB
+	points = std::clamp(points,-MAX_ZENY,MAX_ZENY); //prevent command UB
 	if( cash > 0 )
 	{
 		if( cash > MAX_ZENY-sd->cashPoints )
@@ -4739,7 +4739,7 @@ static int pc_getzeny(struct map_session_data *sd, int zeny, enum e_log_pick_typ
 {
 	nullpo_retr(-1,sd);
 
-	zeny = cap_value(zeny,-MAX_ZENY,MAX_ZENY); //prevent command UB
+	zeny = std::clamp(zeny,-MAX_ZENY,MAX_ZENY); //prevent command UB
 	if( zeny < 0 )
 	{
 		ShowError("pc_getzeny: Obtaining negative Zeny (zeny=%d, account_id=%d, char_id=%d).\n", zeny, sd->status.account_id, sd->status.char_id);
@@ -6906,8 +6906,8 @@ static void pc_calcexp(struct map_session_data *sd, uint64 *base_exp, uint64 *jo
 	bexp += apply_percentrate64(bexp, buff_ratio, 100);
 	jexp += apply_percentrate64(jexp, buff_ratio + buff_job_ratio, 100);
 
-	*job_exp = cap_value(jexp, 1, INT64_MAX);
-	*base_exp = cap_value(bexp, 1, INT64_MAX);
+	*job_exp = std::clamp(jexp, 1i64, INT64_MAX);
+	*base_exp = std::clamp(bexp, 1i64, INT64_MAX);
 }
 
 /**
@@ -7239,7 +7239,7 @@ static bool pc_statusup(struct map_session_data *sd, int type, int increase)
 	// check limits
 	int current = pc->getstat(sd, type);
 	int max_increase = pc->maxparameterincrease(sd, type);
-	realIncrease = cap_value(realIncrease, 0, max_increase); // cap to the maximum status points available
+	realIncrease = std::clamp(realIncrease, 0, max_increase); // cap to the maximum status points available
 	if (realIncrease <= 0 || current + realIncrease > pc_maxstats(sd)) {
 		clif->statusupack(sd, type, 0, increase);
 		return false;
@@ -7299,7 +7299,7 @@ static int pc_statusup2(struct map_session_data *sd, int type, int val)
 
 	// set new value
 	max = pc_maxstats(sd);
-	val = pc->setstat(sd, type, cap_value(pc->getstat(sd,type) + val, 1, max));
+	val = pc->setstat(sd, type, std::clamp(pc->getstat(sd,type) + val, 1, max));
 
 	status_calc_pc(sd,SCO_NONE);
 
@@ -8564,11 +8564,11 @@ static int pc_setparam(struct map_session_data *sd, int type, int64 val)
 	case SP_ZENY:
 		if( val < 0 )
 			return 0;// can't set negative zeny
-		logs->zeny(sd, LOG_TYPE_SCRIPT, sd, -(sd->status.zeny - cap_value((int32)val, 0, MAX_ZENY)));
-		sd->status.zeny = cap_value((int32)val, 0, MAX_ZENY);
+		logs->zeny(sd, LOG_TYPE_SCRIPT, sd, -(sd->status.zeny - std::clamp((int32)val, 0, MAX_ZENY))); // FIXME: This should operate on the larger range and cast the result
+		sd->status.zeny = std::clamp((int32)val, 0, MAX_ZENY); // FIXME: This should operate on the larger range and cast the result
 		break;
 	case SP_BANKVAULT:
-		val = cap_value(val, 0, MAX_BANK_ZENY);
+		val = std::clamp(val, 0i64, (int64)MAX_BANK_ZENY);
 		delta = ((int32)val - sd->status.bank_vault);
 		sd->status.bank_vault = (int32)val;
 		if (map->save_settings & 256) {
@@ -8602,10 +8602,10 @@ static int pc_setparam(struct map_session_data *sd, int type, int64 val)
 		sd->max_weight = (int32)val;
 		break;
 	case SP_HP:
-		sd->battle_status.hp = cap_value((int32)val, 1, (int)sd->battle_status.max_hp);
+		sd->battle_status.hp = std::clamp((int32)val, 1, (int)sd->battle_status.max_hp);
 		break;
 	case SP_MAXHP:
-		sd->battle_status.max_hp = cap_value((int32)val, 1, pc_maxhp_cap(sd));
+		sd->battle_status.max_hp = std::clamp((int32)val, 1, pc_maxhp_cap(sd));
 
 		if( sd->battle_status.max_hp < sd->battle_status.hp )
 		{
@@ -8614,10 +8614,10 @@ static int pc_setparam(struct map_session_data *sd, int type, int64 val)
 		}
 		break;
 	case SP_SP:
-		sd->battle_status.sp = cap_value((int32)val, 0, (int)sd->battle_status.max_sp);
+		sd->battle_status.sp = std::clamp((int32)val, 0, (int)sd->battle_status.max_sp);
 		break;
 	case SP_MAXSP:
-		sd->battle_status.max_sp = cap_value((int32)val, 1, battle_config.max_sp);
+		sd->battle_status.max_sp = std::clamp((int32)val, 1, battle_config.max_sp);
 
 		if( sd->battle_status.max_sp < sd->battle_status.sp )
 		{
@@ -8626,22 +8626,22 @@ static int pc_setparam(struct map_session_data *sd, int type, int64 val)
 		}
 		break;
 	case SP_STR:
-		sd->status.str = cap_value((int)val, 1, pc_maxstats(sd));
+		sd->status.str = std::clamp((int)val, 1, pc_maxstats(sd));
 		break;
 	case SP_AGI:
-		sd->status.agi = cap_value((int)val, 1, pc_maxstats(sd));
+		sd->status.agi = std::clamp((int)val, 1, pc_maxstats(sd));
 		break;
 	case SP_VIT:
-		sd->status.vit = cap_value((int)val, 1, pc_maxstats(sd));
+		sd->status.vit = std::clamp((int)val, 1, pc_maxstats(sd));
 		break;
 	case SP_INT:
-		sd->status.int_ = cap_value((int)val, 1, pc_maxstats(sd));
+		sd->status.int_ = std::clamp((int)val, 1, pc_maxstats(sd));
 		break;
 	case SP_DEX:
-		sd->status.dex = cap_value((int)val, 1, pc_maxstats(sd));
+		sd->status.dex = std::clamp((int)val, 1, pc_maxstats(sd));
 		break;
 	case SP_LUK:
-		sd->status.luk = cap_value((int)val, 1, pc_maxstats(sd));
+		sd->status.luk = std::clamp((int)val, 1, pc_maxstats(sd));
 		break;
 	case SP_KARMA:
 		sd->status.karma = (int)val;
@@ -9080,7 +9080,7 @@ static int pc_changelook(struct map_session_data *sd, int type, int val)
 			return 0;
 			break;
 		case LOOK_HAIR: //Use the battle_config limits! [Skotlex]
-			val = cap_value(val, MIN_HAIR_STYLE, MAX_HAIR_STYLE);
+			val = std::clamp(val, MIN_HAIR_STYLE, MAX_HAIR_STYLE);
 
 			if (sd->status.hair != val) {
 				sd->status.hair=val;
@@ -9102,7 +9102,7 @@ static int pc_changelook(struct map_session_data *sd, int type, int val)
 			sd->status.look.head_mid = val;
 			break;
 		case LOOK_HAIR_COLOR: //Use the battle_config limits! [Skotlex]
-			val = cap_value(val, MIN_HAIR_COLOR, MAX_HAIR_COLOR);
+			val = std::clamp(val, MIN_HAIR_COLOR, MAX_HAIR_COLOR);
 
 			if (sd->status.hair_color != val) {
 				sd->status.hair_color=val;
@@ -9112,7 +9112,7 @@ static int pc_changelook(struct map_session_data *sd, int type, int val)
 			}
 			break;
 		case LOOK_CLOTHES_COLOR: //Use the battle_config limits! [Skotlex]
-			val = cap_value(val, MIN_CLOTH_COLOR, MAX_CLOTH_COLOR);
+			val = std::clamp(val, MIN_CLOTH_COLOR, MAX_CLOTH_COLOR);
 
 			sd->status.clothes_color=val;
 			break;
@@ -9125,7 +9125,7 @@ static int pc_changelook(struct map_session_data *sd, int type, int val)
 			sd->status.look.robe = val;
 			break;
 		case LOOK_BODY2:
-			val = cap_value(val, MIN_BODY_STYLE, MAX_BODY_STYLE);
+			val = std::clamp(val, MIN_BODY_STYLE, MAX_BODY_STYLE);
 			sd->status.body=val;
 			break;
 	}
@@ -9675,20 +9675,20 @@ static int pc_setregistry(struct map_session_data *sd, int64 reg, int val)
 				if( i )
 					status_calc_pc(sd,SCO_NONE); // Lost the bonus.
 			} else if( !strcmp(regname,"COOK_MASTERY") && sd->cook_mastery != val ) {
-				val = cap_value(val, 0, 1999);
+				val = std::clamp(val, 0, 1999);
 				sd->cook_mastery = val;
 			}
 			break;
 		case '#':
 			if( !strcmp(regname,"#CASHPOINTS") && sd->cashPoints != val ) {
-				val = cap_value(val, 0, MAX_ZENY);
+				val = std::clamp(val, 0, MAX_ZENY);
 				sd->cashPoints = val;
 			} else if( !strcmp(regname,"#KAFRAPOINTS") && sd->kafraPoints != val ) {
-				val = cap_value(val, 0, MAX_ZENY);
+				val = std::clamp(val, 0, MAX_ZENY);
 				sd->kafraPoints = val;
 			} else if (strcmp(regname, GOLDPC_POINTS_VAR) == 0 && sd->goldpc.points != val) {
 				bool is_full = (sd->goldpc.points == GOLDPC_MAX_POINTS);
-				val = cap_value(val, 0, GOLDPC_MAX_POINTS);
+				val = std::clamp(val, 0, GOLDPC_MAX_POINTS);
 				sd->goldpc.points = val;
 
 				if (sd->goldpc.loaded) {
@@ -11195,7 +11195,7 @@ static void pc_overheat(struct map_session_data *sd, int val)
 	if( !pc_ismadogear(sd) || sd->sc.data[SC_OVERHEAT] )
 		return; // already burning
 
-	skill_lv = cap_value(pc->checkskill(sd,NC_MAINFRAME),0,4);
+	skill_lv = std::clamp(pc->checkskill(sd,NC_MAINFRAME),0,4);
 	if( sd->sc.data[SC_OVERHEAT_LIMITPOINT] ) {
 		heat += sd->sc.data[SC_OVERHEAT_LIMITPOINT]->val1;
 		status_change_end(&sd->bl,SC_OVERHEAT_LIMITPOINT,INVALID_TIMER);
@@ -12314,7 +12314,7 @@ static void pc_autotrade_start(struct map_session_data *sd)
 			if( amount ) {
 				sd->vending[count].index = i;
 				sd->vending[count].amount = amount;
-				sd->vending[count].value = cap_value(price, 0, battle_config.vending_max_value);
+				sd->vending[count].value = std::clamp(price, 0, battle_config.vending_max_value);
 
 				count++;
 			}

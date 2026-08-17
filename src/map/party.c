@@ -49,6 +49,7 @@
 #include "common/timer.h"
 #include "common/utils.h"
 
+#include <algorithm>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -1062,11 +1063,11 @@ static int party_exp_share(struct party_data *p, struct block_list *src, unsigne
 	if (battle_config.party_even_share_bonus && c > 1) {
 		double bonus = 100 + battle_config.party_even_share_bonus*(c-1);
 		if (base_exp)
-			base_exp = (unsigned int) cap_value(base_exp * bonus/100, 0, UINT_MAX);
+			base_exp = (unsigned int)std::clamp(base_exp * bonus/100, 0.0, (double)UINT_MAX);
 		if (job_exp)
-			job_exp = (unsigned int) cap_value(job_exp * bonus/100, 0, UINT_MAX);
+			job_exp = (unsigned int)std::clamp(job_exp * bonus/100, 0.0, (double)UINT_MAX);
 		if (zeny)
-			zeny = (unsigned int) cap_value(zeny * bonus/100, INT_MIN, INT_MAX);
+			zeny = (unsigned int)std::clamp(zeny * bonus/100, (double)INT_MIN, (double)INT_MAX);
 	}
 
 	for (i = 0; i < c; i++) {

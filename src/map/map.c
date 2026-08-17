@@ -1711,8 +1711,8 @@ static int map_search_free_cell(struct block_list *src, int16 m, int16 *x, int16
 			*y = rnd() % height - range_y + center_y;
 
 		// Ensure we don't get out of map bounds.
-		*x = cap_value(*x, 1, map->list[m].xs - 1);
-		*y = cap_value(*y, 1, map->list[m].ys - 1);
+		*x = std::clamp((int)*x, 1, map->list[m].xs - 1);
+		*y = std::clamp((int)*y, 1, map->list[m].ys - 1);
 
 		if (*x == center_x && *y == center_y)
 			continue; // Avoid picking the same target tile.

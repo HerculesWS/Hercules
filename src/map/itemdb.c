@@ -1610,7 +1610,7 @@ static void itemdb_read_chains(void)
 			if (battle_config.item_rate_add_chain != 100)
 				rate = rate * battle_config.item_rate_add_chain / 100;
 
-			item->rate = cap_value(rate, battle_config.item_drop_add_chain_min, battle_config.item_drop_add_chain_max);
+			item->rate = std::clamp(rate, battle_config.item_drop_add_chain_min, battle_config.item_drop_add_chain_max);
 
 			prev = item;
 		}
@@ -1941,7 +1941,7 @@ static int itemdb_validate_entry(struct item_data *entry, int n, const char *sou
 		entry->subtype = A_ARROW;
 	}
 
-	entry->wlv = cap_value(entry->wlv, REFINE_TYPE_ARMOR, REFINE_TYPE_MAX);
+	entry->wlv = std::clamp(entry->wlv, (int)REFINE_TYPE_ARMOR, (int)REFINE_TYPE_MAX);
 
 	if( !entry->elvmax )
 		entry->elvmax = MAX_LEVEL;
@@ -2385,7 +2385,7 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 			int stack_flag = libconfig->setting_get_int_elem(t, 1);
 			int stack_amount = libconfig->setting_get_int_elem(t, 0);
 			if (stack_amount >= 0) {
-				id.stack.amount = cap_value(stack_amount, 0, USHRT_MAX);
+				id.stack.amount = std::clamp(stack_amount, 0, USHRT_MAX);
 				id.stack.inventory = (stack_flag&1)!=0;
 				id.stack.cart = (stack_flag&2)!=0;
 				id.stack.storage = (stack_flag&4)!=0;
@@ -2802,13 +2802,13 @@ static bool itemdb_read_libconfig_item_reform_info_reqinfo(struct config_setting
 
 	int i32 = 0;
 	if (libconfig->setting_lookup_int(it, "NeedRefineMin", &i32) == CONFIG_TRUE)
-		ir->NeedRefineMin = cap_value(i32, 0, MAX_REFINE);
+		ir->NeedRefineMin = std::clamp(i32, 0, MAX_REFINE);
 
 	if (libconfig->setting_lookup_int(it, "NeedRefineMax", &i32) == CONFIG_TRUE)
-		ir->NeedRefineMax = cap_value(i32, 0, MAX_REFINE);
+		ir->NeedRefineMax = std::clamp(i32, 0, MAX_REFINE);
 
 	if (libconfig->setting_lookup_int(it, "NeedOptionNumMin", &i32) == CONFIG_TRUE)
-		ir->NeedOptionNumMin = cap_value(i32, 0, MAX_ITEM_OPTIONS);
+		ir->NeedOptionNumMin = std::clamp(i32, 0, MAX_ITEM_OPTIONS);
 
 	if (libconfig->setting_lookup_bool(it, "IsEmptySocket", &i32) == CONFIG_TRUE)
 		ir->IsEmptySocket = (bool)i32;
@@ -2823,7 +2823,7 @@ static bool itemdb_read_libconfig_item_reform_info_behinfo(struct config_setting
 
 	int i32 = 0;
 	if (libconfig->setting_lookup_int(it, "ChangeRefineValue", &i32) == CONFIG_TRUE)
-		ir->ChangeRefineValue = cap_value(i32, -MAX_REFINE, MAX_REFINE);
+		ir->ChangeRefineValue = std::clamp(i32, -MAX_REFINE, MAX_REFINE);
 
 	if (libconfig->setting_lookup_bool(it, "PreserveSocketItem", &i32) == CONFIG_TRUE)
 		ir->PreserveSocketItem = (bool)i32;
@@ -2957,7 +2957,7 @@ static void itemdb_item_reform(struct map_session_data *sd, const struct item_re
 		memcpy(&item_tmp.option, itr->option, sizeof(item_tmp.option));
 	if (ir->PreserveGrade)
 		item_tmp.grade = itr->grade;
-	item_tmp.refine = cap_value(itr->refine + ir->ChangeRefineValue, 0, MAX_REFINE);
+	item_tmp.refine = std::clamp(itr->refine + ir->ChangeRefineValue, 0, MAX_REFINE);
 
 	// Consume the required materials
 	for (int i = 0; i < VECTOR_LENGTH(ir->Materials); ++i) {

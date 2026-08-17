@@ -21,6 +21,11 @@
 
 #include "grader.h"
 
+#include "map/battle.h"
+#include "map/chrif.h"
+#include "map/clif.h"
+#include "map/pc.h"
+
 #include "common/conf.h"
 #include "common/showmsg.h"
 #include "common/utils.h"
@@ -30,11 +35,8 @@
 #include "common/mmo.h"
 #include "common/nullpo.h"
 #include "common/random.h"
-#include "map/battle.h"
-#include "map/chrif.h"
-#include "map/clif.h"
-#include "map/pc.h"
 
+#include <algorithm>
 #include <stdlib.h>
 
 static struct grade_interface_dbs grade_dbs;
@@ -346,7 +348,7 @@ void grader_enchant_start(struct map_session_data *sd, int idx, int mat_idx, boo
 		case GRADE_FAILURE_BEHAVIOR_DOWNGRADE:
 			clif->grade_enchant_result(sd, idx, (enum grade_level)sd->status.inventory[idx].grade, GRADE_UPGRADE_FAILED_DOWNGRADE);
 			sd->status.inventory[idx].grade -= 1;
-			sd->status.inventory[idx].grade = cap_value(sd->status.inventory[idx].grade, ITEM_GRADE_NONE, ITEM_GRADE_MAX - 1);
+			sd->status.inventory[idx].grade = std::clamp((int)sd->status.inventory[idx].grade, (int)ITEM_GRADE_NONE, (int)(ITEM_GRADE_MAX - 1));
 			break;
 		case GRADE_FAILURE_BEHAVIOR_DESTROY:
 			clif->grade_enchant_result(sd, idx, (enum grade_level)sd->status.inventory[idx].grade, GRADE_UPGRADE_FAILED_DESTROY);

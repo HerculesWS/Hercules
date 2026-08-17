@@ -4438,8 +4438,8 @@ static void npc_movenpc(struct npc_data *nd, int16 x, int16 y)
 	m = nd->bl.m;
 	if (m < 0 || nd->bl.prev == NULL) return; //Not on a map.
 
-	x = cap_value(x, 0, map->list[m].xs-1);
-	y = cap_value(y, 0, map->list[m].ys-1);
+	x = std::clamp((int)x, 0, map->list[m].xs-1);
+	y = std::clamp((int)y, 0, map->list[m].ys-1);
 
 	map->foreachinrange(clif->outsight, &nd->bl, AREA_SIZE, BL_PC, &nd->bl);
 	map->moveblock(&nd->bl, x, y, timer->gettick());
@@ -5146,7 +5146,7 @@ static const char *npc_parse_mapflag(const char *w1, const char *w2, const char 
 		struct map_zone_data *zone;
 		if (state != 0) {
 			if (w4 != NULL && sscanf(w4, "%d", &state) == 1)
-				map->list[m].flag.battleground = cap_value(state, 0, 2);
+				map->list[m].flag.battleground = std::clamp(state, 0, 2);
 			else
 				map->list[m].flag.battleground = 1; // Default value
 		} else {
@@ -5192,9 +5192,9 @@ static const char *npc_parse_mapflag(const char *w1, const char *w2, const char 
 	else if (strcmpi(w3, "pairship_endable") == 0)
 		map->list[m].flag.pairship_endable = (state != 0) ? 1 : 0;
 	else if (strcmpi(w3, "nostorage") == 0)
-		map->list[m].flag.nostorage = (state != 0) ? cap_value(atoi(w4), 1, 3) : 0;
+		map->list[m].flag.nostorage = (state != 0) ? std::clamp(atoi(w4), 1, 3) : 0;
 	else if (strcmpi(w3, "nogstorage") == 0)
-		map->list[m].flag.nogstorage = (state != 0) ? cap_value(atoi(w4), 1, 3) : 0;
+		map->list[m].flag.nogstorage = (state != 0) ? std::clamp(atoi(w4), 1, 3) : 0;
 	else if (strcmpi(w3, "nosendmail") == 0)
 		map->list[m].flag.nosendmail = (state != 0) ? 1 : 0;
 	else if (strcmpi(w3, "nopet") == 0)

@@ -1504,7 +1504,7 @@ static struct s_skill_unit_layout *skill_get_unit_layout(uint16 skill_id, uint16
 	nullpo_retr(&skill->dbs->unit_layout[0], src);
 	if (pos < -1 || pos >= MAX_SKILL_UNIT_LAYOUT) {
 		ShowError("skill_get_unit_layout: unsupported layout type %d for skill %d (level %d)\n", pos, skill_id, skill_lv);
-		pos = cap_value(pos, 0, MAX_SQUARE_LAYOUT); // cap to nearest square layout
+		pos = std::clamp(pos, 0, MAX_SQUARE_LAYOUT); // cap to nearest square layout
 	}
 
 	if (pos != -1) // simple single-definition layout
@@ -3982,7 +3982,7 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 	if ((flag&0x4000) && rmdamage == 1)
 		return 0; //Should return 0 when damage was reflected
 
-	return (int)cap_value(damage,INT_MIN,INT_MAX);
+	return (int)std::clamp(damage, (int64)INT_MIN, (int64)INT_MAX);
 }
 
 static void skill_attack_combo1_unknown(int *attack_type, struct block_list *src, struct block_list *dsrc, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag, struct status_change_entry *sce, int *combo)
@@ -10633,7 +10633,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 					clif->skill_fail(sd, skill_id, USESKILL_FAIL_TOTARGET, 0, 0);
 					break;
 				}
-				switch (cap_value(skill_lv, 1, 5)) {
+				switch (std::clamp((int)skill_lv, 1, 5)) {
 					case 1: hp = 4; break;
 					case 2: hp = 7; break;
 					case 3: hp = 13; break;
@@ -10717,7 +10717,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 				// We then reduce the success chance based on the target's build.
 				rate -= rnd->value( tstatus->agi / 6, tstatus->agi / 3 ) + tstatus->luk / 10 + ( dstsd ? (dstsd->max_weight / 10 - dstsd->weight / 10 ) / 100 : 0 ) + status->get_lv(bl) / 10;
 				//Finally we set the minimum success chance cap based on the caster's skill level and DEX.
-				rate = cap_value( rate, skill_lv + sstatus->dex / 20, 100);
+				rate = std::clamp(rate, skill_lv + sstatus->dex / 20, 100);
 				clif->skill_nodamage(src, bl, skill_id, 0, sc_start(src, bl, type, rate, skill_lv, skill->get_time(skill_id, skill_lv), skill_id));
 				if ( tsc && tsc->data[SC__IGNORANCE] && skill_id == SC_IGNORANCE) {
 					//If the target was successfully inflected with the Ignorance status, drain some of the targets SP.
@@ -15308,7 +15308,7 @@ static int skill_unit_ondamaged(struct skill_unit *src, struct block_list *bl, i
 	case UNT_ANKLESNARE:
 	case UNT_ICEWALL:
 	case UNT_WALLOFTHORN:
-		src->val1 -= (int)cap_value(damage,INT_MIN,INT_MAX);
+		src->val1 -= (int)std::clamp(damage, (int64)INT_MIN, (int64)INT_MAX);
 		break;
 	case UNT_REVERBERATION:
 		src->val1--;
@@ -15317,7 +15317,7 @@ static int skill_unit_ondamaged(struct skill_unit *src, struct block_list *bl, i
 		damage = 0;
 		break;
 	}
-	return (int)cap_value(damage,INT_MIN,INT_MAX);
+	return (int)std::clamp(damage, (int64)INT_MIN, (int64)INT_MAX);
 }
 
 /*==========================================
@@ -17291,7 +17291,7 @@ static struct skill_condition skill_get_requirement(struct map_session_data *sd,
 	if( i < ARRAYLENGTH(sd->skillusesp) )
 		req.sp -= sd->skillusesp[i].val;
 
-	req.sp = cap_value(req.sp * sp_skill_rate_bonus / 100, 0, SHRT_MAX);
+	req.sp = std::clamp(req.sp * sp_skill_rate_bonus / 100, 0, SHRT_MAX);
 
 	if (sc) {
 		if (sc->data[SC__LAZINESS])
@@ -20303,7 +20303,7 @@ static int skill_produce_mix(struct map_session_data *sd, uint16 skill_id, int n
 			    {
 				int A = 5100 + 200 * pc->checkskill(sd, skill_id);
 				int B = 10 * st->dex / 3 + (st->luk + sd->status.job_level);
-				int C = 100 * cap_value(sd->itemid,0,100); //itemid depend on makerune()
+				int C = 100 * std::clamp(sd->itemid,0,100); //itemid depend on makerune()
 				int D = 2500;
 				switch (nameid) { //rune rank it_diff 9 craftable rune
 					case ITEMID_RAIDO:
