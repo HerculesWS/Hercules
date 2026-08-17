@@ -500,7 +500,7 @@ static int npc_event_do_clock(int tid, int64 tick, int id, intptr_t data)
 	t = localtime(&clock);
 
 	if (t->tm_min != ev_tm_b.tm_min ) {
-		char* day;
+		const char *day;
 
 		switch (t->tm_wday) {
 			case 0: day = "Sun"; break;
@@ -5630,7 +5630,7 @@ static void npc_read_event_script(void)
 {
 	int i;
 	struct {
-		char *name;
+		const char *name;
 		const char *event_name;
 	} config[] = {
 		{"Login Event",script->config.login_event_name},

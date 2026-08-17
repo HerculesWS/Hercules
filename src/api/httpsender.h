@@ -43,7 +43,7 @@ struct api_session_data;
  **/
 struct httpsender_interface {
 	char *tmp_buffer;
-	char *server_name;
+	const char *server_name;
 	int (*init) (bool minimal);
 	void (*final) (void);
 

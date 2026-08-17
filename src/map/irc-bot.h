@@ -141,13 +141,13 @@ struct ircbot_interface {
 	 *
 	 * @param str Command to be checked
 	 */
-	void (*queue) (char *str);
+	void (*queue) (const char *str);
 
 	/**
 	 * Send a raw command to the irc server
 	 * @param str Command to send
 	 */
-	void (*send)(char *str, bool force);
+	void (*send)(const char *str, bool force);
 
 	/**
 	 * Relay a chat message to the irc channel the bot is connected to

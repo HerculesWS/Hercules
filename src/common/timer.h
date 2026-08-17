@@ -70,7 +70,7 @@ struct timer_interface {
 	int64 (*addtick) (int tid, int64 tick);
 	int64 (*settick) (int tid, int64 tick);
 
-	int (*add_func_list) (TimerFunc func, char* name);
+	int (*add_func_list) (TimerFunc func, const char *name);
 
 	unsigned long (*get_uptime) (void);
 

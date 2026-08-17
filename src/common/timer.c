@@ -85,7 +85,7 @@ static struct timer_func_list {
 } *tfl_root = NULL;
 
 /// Sets the name of a timer function.
-static int timer_add_func_list(TimerFunc func, char *name)
+static int timer_add_func_list(TimerFunc func, const char *name)
 {
 	struct timer_func_list* tfl;
 

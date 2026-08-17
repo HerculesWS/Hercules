@@ -85,7 +85,7 @@ const char *handlers_hotkeyTabIdToName(int tab_id)
 {
 	Assert_retr(NULL, tab_id >= 0 && tab_id < UserHotKey_v2_max);
 
-	static char *name[4] = {
+	static const char *name[4] = {
 		"SkillBar_1Tab",
 		"SkillBar_2Tab",
 		"InterfaceTab",

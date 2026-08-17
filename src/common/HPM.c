@@ -815,7 +815,7 @@ static unsigned char hplugins_parse_packets(int fd, int packet_id, enum HPluginP
  * @retval "core" if the plugin ID belongs to the Hercules core.
  * @retval "UnknownPlugin" if the plugin wasn't found.
  */
-static char *hplugins_id2name(unsigned int pid)
+static const char *hplugins_id2name(unsigned int pid)
 {
 	int i;
 

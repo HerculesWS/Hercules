@@ -895,7 +895,7 @@ static int add_word(const char *p)
 static const char *parse_callfunc(const char *p, int require_paren, int is_custom)
 {
 	const char *p2;
-	char *arg = NULL;
+	const char *arg = NULL;
 	char null_arg = '\0';
 	int func = -1;
 	bool lang_macro = false;
@@ -2759,7 +2759,7 @@ static void script_load_parameters(void)
 {
 	int i = 0;
 	struct {
-		char *name;
+		const char *name;
 		enum status_point_types type;
 	} parameters[] = {
 		{"BaseExp", SP_BASEEXP},
@@ -28880,7 +28880,7 @@ static bool script_add_builtin(const struct script_function *buildin, bool overr
 		// 'l' - label
 		// '?' - one optional parameter
 		// '*' - unknown number of optional parameters
-		char *p = buildin->arg;
+		const char *p = buildin->arg;
 		while( *p == 'v' || *p == 's' || *p == 'i' || *p == 'r' || *p == 'l' ) ++p;
 		while( *p == '?' ) ++p;
 		if( *p == '*' ) ++p;

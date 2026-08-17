@@ -765,8 +765,8 @@ struct script_state {
 
 struct script_function {
 	bool (*func)(struct script_state *st);
-	char *name;
-	char *arg;
+	const char *name;
+	const char *arg;
 	bool deprecated;
 };
 

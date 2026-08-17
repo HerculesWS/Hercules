@@ -1532,7 +1532,7 @@ ACMD(joblevelup)
 ACMD(help)
 {
 	const char *command_name = NULL;
-	char *default_command = "help";
+	const char *default_command = "help";
 	AtCommandInfo *tinfo = NULL;
 
 	if (!*message) {

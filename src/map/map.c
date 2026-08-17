@@ -4892,7 +4892,7 @@ static void map_zone_remove_all(int m)
 	map->list[m].zone_mf = NULL;
 	map->list[m].zone_mf_count = 0;
 }
-static inline void map_zone_mf_cache_add(int m, char *rflag)
+static inline void map_zone_mf_cache_add(int m, const char *rflag)
 {
 	Assert_retv(m >= 0 && m < map->count);
 	RECREATE(map->list[m].zone_mf, char *, ++map->list[m].zone_mf_count);
