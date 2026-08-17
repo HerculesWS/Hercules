@@ -652,7 +652,7 @@ static void pc_inventory_rentals(struct map_session_data *sd)
 	}
 
 	if( c > 0 ) // min(next_tick,3600000) 1 hour each timer to keep announcing to the owner, and to avoid a but with rental time > 15 days
-		sd->rental_timer = timer->add(timer->gettick() + min(next_tick,3600000), pc->inventory_rental_end, sd->bl.id, 0);
+		sd->rental_timer = timer->add(timer->gettick() + min(next_tick, 3600000i64), pc->inventory_rental_end, sd->bl.id, 0);
 	else
 		sd->rental_timer = INVALID_TIMER;
 }
@@ -8184,7 +8184,7 @@ static int pc_dead(struct map_session_data *sd, struct block_list *src)
 				if (sd->status.mod_death != 100)
 					base_penalty = base_penalty * sd->status.mod_death / 100;
 
-				sd->status.base_exp -= min(sd->status.base_exp, base_penalty);
+				sd->status.base_exp -= min(sd->status.base_exp, (uint64)base_penalty);
 				clif->updatestatus(sd, SP_BASEEXP);
 			}
 		}
@@ -8209,7 +8209,7 @@ static int pc_dead(struct map_session_data *sd, struct block_list *src)
 				if (sd->status.mod_death != 100)
 					job_penalty = job_penalty * sd->status.mod_death / 100;
 
-				sd->status.job_exp -= min(sd->status.job_exp, job_penalty);
+				sd->status.job_exp -= min(sd->status.job_exp, (uint64)job_penalty);
 				clif->updatestatus(sd, SP_JOBEXP);
 			}
 		}

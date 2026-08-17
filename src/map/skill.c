@@ -3513,7 +3513,7 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 				break;
 		} //Switch End
 		if (combo) { //Possible to chain
-			combo = (int)max(status_get_amotion(src), DIFF_TICK(sd->ud.canact_tick, tick)) + 300 * battle_config.combo_delay_rate / 100;
+			combo = (int)max((int64)status_get_amotion(src), DIFF_TICK(sd->ud.canact_tick, tick)) + 300 * battle_config.combo_delay_rate / 100;
 			sc_start2(NULL, src, SC_COMBOATTACK, 100, skill_id, 0, combo, skill_id);
 			clif->combo_delay(src, combo);
 		}
@@ -3717,7 +3717,7 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 		switch(can_copy(tsd, copy_skill)) {
 		case 1: // Plagiarism
 		{
-			lv = min(skill_lv, pc->checkskill(tsd, RG_PLAGIARISM));
+			lv = min((int)skill_lv, pc->checkskill(tsd, RG_PLAGIARISM));
 			if (learned_lv > lv) {
 				pc->clear_existing_cloneskill(tsd, true);
 				break; // [Aegis] can't overwrite skill of higher level, but will still remove previously copied skill.
@@ -5123,7 +5123,7 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 					status_change_end(src, SC_NJ_NEN, INVALID_TIMER);
 					status_change_end(src, SC_HIDING, INVALID_TIMER);
 #ifdef RENEWAL
-					status->set_hp(src, max(status_get_max_hp(src)/100, 1), STATUS_HEAL_DEFAULT);
+					status->set_hp(src, max(status_get_max_hp(src)/100, 1u), STATUS_HEAL_DEFAULT);
 #else // not RENEWAL
 					status->set_hp(src, 1, STATUS_HEAL_DEFAULT);
 #endif // RENEWAL
@@ -7129,7 +7129,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 					skill->dbs->abra_db[abra_idx].req_lv > skill_lv || //Required lv for it to appear
 					rnd()%10000 >= skill->dbs->abra_db[abra_idx].per
 				);
-				abra_skill_lv = min(skill_lv, skill->get_max(abra_skill_id));
+				abra_skill_lv = min((int)skill_lv, skill->get_max(abra_skill_id));
 				clif->skill_nodamage (src, bl, skill_id, skill_lv, 1);
 
 				if (sd) {
@@ -7746,7 +7746,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 				}
 
 				i = 0;
-				count = (sd)? min(skill_lv,MAX_PC_DEVOTION) : 1; // Mercenary only can Devote owner
+				count = (sd)? min((int)skill_lv, MAX_PC_DEVOTION) : 1; // Mercenary only can Devote owner
 				if( sd )
 				{ // Player Devoting Player
 					ARR_FIND(0, count, i, sd->devotion[i] == bl->id );
@@ -17740,7 +17740,7 @@ static int skill_vfcastfix(struct block_list *bl, double time, uint16 skill_id, 
 	if( !(skill->get_castnodex(skill_id, skill_lv)&1) )// reduction from status point
 		time = (1 - sqrt((double)(status_get_dex(bl) * 2 + status_get_int(bl)) / battle_config.vcast_stat_scale)) * time;
 	// underflow checking/capping
-	time = max(time, 0) + (1 - (double)min(fixcast_r, 100) / 100) * max(fixed, 0);
+	time = max(time, 0.0) + (1 - (double)min(fixcast_r, 100) / 100) * max(fixed, 0);
 #endif
 	return (int)time;
 }
@@ -20950,7 +20950,7 @@ static int skill_select_menu(struct map_session_data *sd, uint16 skill_id)
 	}
 
 	lv = (aslvl + 1) / 2; // The level the skill will be autocasted
-	lv = min(lv, sd->status.skill[idx].lv);
+	lv = min(lv, (int)sd->status.skill[idx].lv);
 
 	if (skill->get_type(skill_id, lv) != BF_MAGIC) {
 		clif->skill_fail(sd, SC_AUTOSHADOWSPELL, 0, 0, 0);
@@ -21809,7 +21809,7 @@ static void skill_cooldown_load(struct map_session_data *sd)
 
 		if (battle_config.guild_skill_relog_delay == 2 && cd->entry[i]->skill_id >= GD_SKILLBASE && cd->entry[i]->skill_id < GD_MAX) {
 			remaining = cd->entry[i]->started + cd->entry[i]->total - now;
-			remaining = max(1, remaining); // expired cooldowns will be 1, so they'll expire in the normal way just after this.
+			remaining = max(1i64, remaining); // expired cooldowns will be 1, so they'll expire in the normal way just after this.
 		} else {
 			cd->entry[i]->started = now;
 			remaining = cd->entry[i]->duration;

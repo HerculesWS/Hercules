@@ -1763,8 +1763,8 @@ static void clif_hominfo(struct map_session_data *sd, struct homun_data *hd, int
 	p.exp = hd->homunculus.exp;
 	p.expNext = hd->exp_next;
 #else  // PACKETVER_MAIN_NUM >= 20210303 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
-	p.exp = (uint32)min(hd->homunculus.exp, UINT32_MAX);
-	p.expNext = (uint32)min(hd->exp_next, UINT32_MAX);
+	p.exp = (uint32)min(hd->homunculus.exp, (uint64)UINT32_MAX);
+	p.expNext = (uint32)min(hd->exp_next, (uint64)UINT32_MAX);
 #endif  // PACKETVER_MAIN_NUM >= 20210303 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 
 	if (hd->homunculus.level >= homun->get_max_level(hd))
@@ -4094,18 +4094,18 @@ static void clif_initialstatus(struct map_session_data *sd)
 	unsigned char *buf = WFIFOP(unsigned char *, fd, 0);
 
 	WBUFW(buf,0)=0xbd;
-	WBUFW(buf,2)=min(sd->status.status_point, INT16_MAX);
-	WBUFB(buf,4)=min(sd->status.str, UINT8_MAX);
+	WBUFW(buf,2)=min(sd->status.status_point, (int)INT16_MAX);
+	WBUFB(buf,4)=min(sd->status.str, (short)UINT8_MAX);
 	WBUFB(buf,5)=pc->need_status_point(sd,SP_STR,1);
-	WBUFB(buf,6)=min(sd->status.agi, UINT8_MAX);
+	WBUFB(buf,6)=min(sd->status.agi, (short)UINT8_MAX);
 	WBUFB(buf,7)=pc->need_status_point(sd,SP_AGI,1);
-	WBUFB(buf,8)=min(sd->status.vit, UINT8_MAX);
+	WBUFB(buf,8)=min(sd->status.vit, (short)UINT8_MAX);
 	WBUFB(buf,9)=pc->need_status_point(sd,SP_VIT,1);
-	WBUFB(buf,10)=min(sd->status.int_, UINT8_MAX);
+	WBUFB(buf,10)=min(sd->status.int_, (short)UINT8_MAX);
 	WBUFB(buf,11)=pc->need_status_point(sd,SP_INT,1);
-	WBUFB(buf,12)=min(sd->status.dex, UINT8_MAX);
+	WBUFB(buf,12)=min(sd->status.dex, (short)UINT8_MAX);
 	WBUFB(buf,13)=pc->need_status_point(sd,SP_DEX,1);
-	WBUFB(buf,14)=min(sd->status.luk, UINT8_MAX);
+	WBUFB(buf,14)=min(sd->status.luk, (short)UINT8_MAX);
 	WBUFB(buf,15)=pc->need_status_point(sd,SP_LUK,1);
 
 	WBUFW(buf,16) = pc_leftside_atk(sd);
@@ -5144,11 +5144,11 @@ static int clif_damage(struct block_list *src, struct block_list *dst, int sdela
 	}
 
 #if PACKETVER < 20071113
-	damage = (short)min(in_damage,INT16_MAX);
-	damage2 = (short)min(in_damage2,INT16_MAX);
+	damage = (short)min(in_damage, (int64)INT16_MAX);
+	damage2 = (short)min(in_damage2, (int64)INT16_MAX);
 #else
-	damage = (int)min(in_damage,INT_MAX);
-	damage2 = (int)min(in_damage2,INT_MAX);
+	damage = (int)min(in_damage, (int64)INT_MAX);
+	damage2 = (int)min(in_damage2, (int64)INT_MAX);
 #endif
 
 	type = clif_calc_delay(type,div,damage+damage2,ddelay);
@@ -6049,7 +6049,7 @@ static int clif_skill_nodamage(struct block_list *src, struct block_list *dst, u
 #if PACKETVER_MAIN_NUM >= 20130731 || PACKETVER_RE_NUM >= 20130724 || defined(PACKETVER_ZERO)
 	p.level = min(heal, INT_MAX);
 #else
-	p.level = min(heal, INT16_MAX);
+	p.level = min(heal, (int)INT16_MAX);
 #endif
 	p.targetAID = dst->id;
 	p.srcAID = src ? src->id : 0;
@@ -17648,17 +17648,17 @@ static void clif_check(int fd, struct map_session_data *pl_sd)
 	nullpo_retv(pl_sd);
 	WFIFOHEAD(fd,packet_len(0x214));
 	WFIFOW(fd, 0) = 0x214;
-	WFIFOB(fd, 2) = min(pl_sd->status.str, UINT8_MAX);
+	WFIFOB(fd, 2) = min(pl_sd->status.str, (short)UINT8_MAX);
 	WFIFOB(fd, 3) = pc->need_status_point(pl_sd, SP_STR, 1);
-	WFIFOB(fd, 4) = min(pl_sd->status.agi, UINT8_MAX);
+	WFIFOB(fd, 4) = min(pl_sd->status.agi, (short)UINT8_MAX);
 	WFIFOB(fd, 5) = pc->need_status_point(pl_sd, SP_AGI, 1);
-	WFIFOB(fd, 6) = min(pl_sd->status.vit, UINT8_MAX);
+	WFIFOB(fd, 6) = min(pl_sd->status.vit, (short)UINT8_MAX);
 	WFIFOB(fd, 7) = pc->need_status_point(pl_sd, SP_VIT, 1);
-	WFIFOB(fd, 8) = min(pl_sd->status.int_, UINT8_MAX);
+	WFIFOB(fd, 8) = min(pl_sd->status.int_, (short)UINT8_MAX);
 	WFIFOB(fd, 9) = pc->need_status_point(pl_sd, SP_INT, 1);
-	WFIFOB(fd,10) = min(pl_sd->status.dex, UINT8_MAX);
+	WFIFOB(fd,10) = min(pl_sd->status.dex, (short)UINT8_MAX);
 	WFIFOB(fd,11) = pc->need_status_point(pl_sd, SP_DEX, 1);
-	WFIFOB(fd,12) = min(pl_sd->status.luk, UINT8_MAX);
+	WFIFOB(fd,12) = min(pl_sd->status.luk, (short)UINT8_MAX);
 	WFIFOB(fd,13) = pc->need_status_point(pl_sd, SP_LUK, 1);
 	WFIFOW(fd,14) = pl_sd->battle_status.batk+pl_sd->battle_status.rhw.atk+pl_sd->battle_status.lhw.atk;
 	WFIFOW(fd,16) = pl_sd->battle_status.rhw.atk2+pl_sd->battle_status.lhw.atk2;
@@ -20515,7 +20515,7 @@ static void clif_search_store_info_ack(struct map_session_data *sd)
 	p->packetLength = len;
 	p->firstPage = !sd->searchstore.pages;
 	p->nextPage = searchstore->querynext(sd);
-	p->usesCount = (unsigned char)min(sd->searchstore.uses, UINT8_MAX);
+	p->usesCount = (unsigned char)min(sd->searchstore.uses, (unsigned int)UINT8_MAX);
 
 	for (i = start; i < end; i++) {
 		struct s_search_store_info_item* ssitem = &sd->searchstore.items[i];
@@ -20601,7 +20601,7 @@ static void clif_open_search_store_info(struct map_session_data *sd)
 	WFIFOW(fd,0) = 0x83a;
 	WFIFOW(fd,2) = sd->searchstore.effect;
 #if PACKETVER > 20100701
-	WFIFOB(fd,4) = (unsigned char)min(sd->searchstore.uses, UINT8_MAX);
+	WFIFOB(fd,4) = (unsigned char)min(sd->searchstore.uses, (unsigned int)UINT8_MAX);
 #endif
 	WFIFOSET(fd,packet_len(0x83a));
 #endif
@@ -22033,9 +22033,9 @@ static int clif_delay_damage(int64 tick, struct block_list *src, struct block_li
 	}
 
 #if PACKETVER < 20071113
-	damage = (short)min(in_damage,INT16_MAX);
+	damage = (short)min(in_damage, (int64)INT16_MAX);
 #else
-	damage = (int)min(in_damage,INT_MAX);
+	damage = (int)min(in_damage, (int64)INT_MAX);
 #endif
 
 	type = clif_calc_delay(type,div,damage,ddelay);

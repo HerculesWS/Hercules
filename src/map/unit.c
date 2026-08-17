@@ -1676,7 +1676,7 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 	break;
 	case CR_DEVOTION:
 		if (sd) {
-			int i = 0, count = min(skill_lv, 5);
+			int i = 0, count = min((int)skill_lv, 5);
 			ARR_FIND(0, count, i, sd->devotion[i] == target_id);
 			if (i == count) {
 				ARR_FIND(0, count, i, sd->devotion[i] == 0);
