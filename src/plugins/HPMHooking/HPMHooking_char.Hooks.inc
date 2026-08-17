@@ -8800,10 +8800,10 @@ const char * HP_inter_job_name(int class_) {
 	}
 	return retVal___;
 }
-void HP_inter_vmsg_to_fd(int fd, int u_fd, int aid, char *msg, va_list ap) {
+void HP_inter_vmsg_to_fd(int fd, int u_fd, int aid, const char *msg, va_list ap) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_inter_vmsg_to_fd_pre > 0) {
-		void (*preHookFunc) (int *fd, int *u_fd, int *aid, char **msg, va_list ap);
+		void (*preHookFunc) (int *fd, int *u_fd, int *aid, const char **msg, va_list ap);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_vmsg_to_fd_pre; hIndex++) {
 			va_list ap___copy; va_copy(ap___copy, ap);
@@ -8822,7 +8822,7 @@ void HP_inter_vmsg_to_fd(int fd, int u_fd, int aid, char *msg, va_list ap) {
 		va_end(ap___copy);
 	}
 	if (HPMHooks.count.HP_inter_vmsg_to_fd_post > 0) {
-		void (*postHookFunc) (int fd, int u_fd, int aid, char *msg, va_list ap);
+		void (*postHookFunc) (int fd, int u_fd, int aid, const char *msg, va_list ap);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_vmsg_to_fd_post; hIndex++) {
 			va_list ap___copy; va_copy(ap___copy, ap);
 			postHookFunc = HPMHooks.list.HP_inter_vmsg_to_fd_post[hIndex].func;
@@ -8885,11 +8885,11 @@ int HP_inter_accreg_fromsql(int account_id, int char_id, int fd, int type) {
 	}
 	return retVal___;
 }
-int HP_inter_vlog(char *fmt, va_list ap) {
+int HP_inter_vlog(const char *fmt, va_list ap) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_inter_vlog_pre > 0) {
-		int (*preHookFunc) (char **fmt, va_list ap);
+		int (*preHookFunc) (const char **fmt, va_list ap);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_vlog_pre; hIndex++) {
 			va_list ap___copy; va_copy(ap___copy, ap);
@@ -8908,7 +8908,7 @@ int HP_inter_vlog(char *fmt, va_list ap) {
 		va_end(ap___copy);
 	}
 	if (HPMHooks.count.HP_inter_vlog_post > 0) {
-		int (*postHookFunc) (int retVal___, char *fmt, va_list ap);
+		int (*postHookFunc) (int retVal___, const char *fmt, va_list ap);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_vlog_post; hIndex++) {
 			va_list ap___copy; va_copy(ap___copy, ap);
 			postHookFunc = HPMHooks.list.HP_inter_vlog_post[hIndex].func;
@@ -23461,11 +23461,11 @@ int64 HP_timer_settick(int tid, int64 tick) {
 	}
 	return retVal___;
 }
-int HP_timer_add_func_list(TimerFunc func, char *name) {
+int HP_timer_add_func_list(TimerFunc func, const char *name) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_timer_add_func_list_pre > 0) {
-		int (*preHookFunc) (TimerFunc *func, char **name);
+		int (*preHookFunc) (TimerFunc *func, const char **name);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_timer_add_func_list_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_timer_add_func_list_pre[hIndex].func;
@@ -23480,7 +23480,7 @@ int HP_timer_add_func_list(TimerFunc func, char *name) {
 		retVal___ = HPMHooks.source.timer.add_func_list(func, name);
 	}
 	if (HPMHooks.count.HP_timer_add_func_list_post > 0) {
-		int (*postHookFunc) (int retVal___, TimerFunc func, char *name);
+		int (*postHookFunc) (int retVal___, TimerFunc func, const char *name);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_timer_add_func_list_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_timer_add_func_list_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, func, name);

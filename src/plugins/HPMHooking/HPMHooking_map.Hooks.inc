@@ -45764,10 +45764,10 @@ int HP_ircbot_queue_timer(int tid, int64 tick, int id, intptr_t data) {
 	}
 	return retVal___;
 }
-void HP_ircbot_queue(char *str) {
+void HP_ircbot_queue(const char *str) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_ircbot_queue_pre > 0) {
-		void (*preHookFunc) (char **str);
+		void (*preHookFunc) (const char **str);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_ircbot_queue_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_ircbot_queue_pre[hIndex].func;
@@ -45782,7 +45782,7 @@ void HP_ircbot_queue(char *str) {
 		HPMHooks.source.ircbot.queue(str);
 	}
 	if (HPMHooks.count.HP_ircbot_queue_post > 0) {
-		void (*postHookFunc) (char *str);
+		void (*postHookFunc) (const char *str);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_ircbot_queue_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_ircbot_queue_post[hIndex].func;
 			postHookFunc(str);
@@ -45790,10 +45790,10 @@ void HP_ircbot_queue(char *str) {
 	}
 	return;
 }
-void HP_ircbot_send(char *str, bool force) {
+void HP_ircbot_send(const char *str, bool force) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_ircbot_send_pre > 0) {
-		void (*preHookFunc) (char **str, bool *force);
+		void (*preHookFunc) (const char **str, bool *force);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_ircbot_send_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_ircbot_send_pre[hIndex].func;
@@ -45808,7 +45808,7 @@ void HP_ircbot_send(char *str, bool force) {
 		HPMHooks.source.ircbot.send(str, force);
 	}
 	if (HPMHooks.count.HP_ircbot_send_post > 0) {
-		void (*postHookFunc) (char *str, bool force);
+		void (*postHookFunc) (const char *str, bool force);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_ircbot_send_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_ircbot_send_post[hIndex].func;
 			postHookFunc(str, force);
@@ -100134,11 +100134,11 @@ int64 HP_timer_settick(int tid, int64 tick) {
 	}
 	return retVal___;
 }
-int HP_timer_add_func_list(TimerFunc func, char *name) {
+int HP_timer_add_func_list(TimerFunc func, const char *name) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_timer_add_func_list_pre > 0) {
-		int (*preHookFunc) (TimerFunc *func, char **name);
+		int (*preHookFunc) (TimerFunc *func, const char **name);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_timer_add_func_list_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_timer_add_func_list_pre[hIndex].func;
@@ -100153,7 +100153,7 @@ int HP_timer_add_func_list(TimerFunc func, char *name) {
 		retVal___ = HPMHooks.source.timer.add_func_list(func, name);
 	}
 	if (HPMHooks.count.HP_timer_add_func_list_post > 0) {
-		int (*postHookFunc) (int retVal___, TimerFunc func, char *name);
+		int (*postHookFunc) (int retVal___, TimerFunc func, const char *name);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_timer_add_func_list_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_timer_add_func_list_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, func, name);
