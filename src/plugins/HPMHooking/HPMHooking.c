@@ -192,7 +192,7 @@ HPExport struct hplugin_info pinfo = {
 struct DBMap *hp_db;/* hooking points db -- for quick lookup */
 
 struct HookingPointData {
-	char* name;
+	const char *name;
 	void **sref;
 	void *tref;
 	int idx;

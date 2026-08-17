@@ -235,10 +235,10 @@ static void console_load_defaults(void)
 #define CP_DEF(x) { #x , CPET_FUNCTION, CPCMD_A(x), NULL, NULL }
 
 	struct {
-		char *name;
+		const char *name;
 		int type;
 		CParseFunc func;
-		char *connect;
+		const char *connect;
 		struct CParseEntry *self;
 	} default_list[] = {
 		CP_DEF(help),
@@ -314,7 +314,7 @@ static void console_load_defaults(void)
  * @param name The command name.
  * @param func The command callback.
  */
-static void console_parse_create(char *name, CParseFunc func)
+static void console_parse_create(const char *name, CParseFunc func)
 {
 	int i;
 	char *tok;
