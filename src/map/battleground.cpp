@@ -937,12 +937,12 @@ static enum BATTLEGROUNDS_QUEUE_ACK bg_canqueue(struct map_session_data *sd, str
 				return BGQA_NOT_PARTY_GUILD_LEADER;
 			else {
 				int i, count = 0;
-				struct guild *guild = sd->guild;
-				for (i = 0; i < guild->max_member; i++) {
-					struct map_session_data *sd = guild->member[i].sd;
-					if (!sd || sd->bg_queue.arena != NULL)
+				struct guild *g = sd->guild;
+				for (i = 0; i < g->max_member; i++) {
+					struct map_session_data *pl_sd = g->member[i].sd;
+					if (!pl_sd || pl_sd->bg_queue.arena != NULL)
 						continue;
-					if (!bg_member_meets_requirements(sd, arena))
+					if (!bg_member_meets_requirements(pl_sd, arena))
 						continue;
 					count++;
 				}
@@ -969,10 +969,10 @@ static enum BATTLEGROUNDS_QUEUE_ACK bg_canqueue(struct map_session_data *sd, str
 					for(i = 0; i < MAX_PARTY; i++) {
 						if (p->party.member[i].leader && p->data[i].sd == sd)
 							is_leader = true;
-						struct map_session_data *sd = p->data[i].sd;
-						if (!sd)
+						struct map_session_data *pl_sd = p->data[i].sd;
+						if (!pl_sd)
 							continue;
-						if (sd->bg_queue.arena == NULL && bg_member_meets_requirements(sd, arena))
+						if (pl_sd->bg_queue.arena == NULL && bg_member_meets_requirements(pl_sd, arena))
 							count++;
 					}
 
