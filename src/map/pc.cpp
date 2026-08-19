@@ -83,8 +83,6 @@
 static struct pc_interface pc_s;
 struct pc_interface *pc;
 
-static void pc_autosave_start(void);
-
 static struct class_exp_tables exptables;
 
 //Converts a class to its array index for CLASS_COUNT defined arrays.
@@ -1603,7 +1601,7 @@ static int pc_reg_received(struct map_session_data *sd)
 	intif->rodex_checkhasnew(sd);
 
 	VECTOR_PUSH(pc->autosave_queue, sd->bl.id);
-	pc_autosave_start();
+	pc->autosave_start();
 
 	if (sd->state.connect_new == 0 && sd->fd) { //Character already loaded map! Gotta trigger LoadEndAck manually.
 		sd->state.connect_new = 1;
@@ -13280,6 +13278,7 @@ void pc_defaults(void)
 	pc->daynight_timer_sub = pc_daynight_timer_sub;
 	pc->charm_timer = pc_charm_timer;
 	pc->autosave = pc_autosave;
+	pc->autosave_start = pc_autosave_start;
 	pc->autosave_remove = pc_autosave_remove;
 	pc->follow_timer = pc_follow_timer;
 	pc->read_skill_tree = pc_read_skill_tree;

@@ -1243,6 +1243,7 @@ END_ZEROED_BLOCK; /* End */
 	int (*daynight_timer_sub) (struct map_session_data *sd,va_list ap);
 	int (*charm_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*autosave) (int tid, int64 tick, int id, intptr_t data);
+	void (*autosave_start) (void);
 	void (*autosave_remove) (int bl_id);
 	int (*follow_timer) (int tid, int64 tick, int id, intptr_t data);
 	void (*read_skill_tree) (void);
