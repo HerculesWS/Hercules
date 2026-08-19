@@ -4038,6 +4038,11 @@ ACMD(reloadstatusdb)
 ACMD(reloadpcdb)
 {
 	pc->readdb();
+	// Repopulate class_exp_table, which pc->readdb() just cleared; safe here since the
+	// server has already finished booting and status->read_unit_params_db() has run.
+	// Must NOT be called from pc->readdb() itself, since that also runs during initial
+	// server startup, before status->init() has populated status->dbs->unit_params[].
+	status->read_job_db();
 	clif->message(fd, msg_fd(fd, MSGTBL_RELOAD_PLAYER_RELOADED));
 	return true;
 }
