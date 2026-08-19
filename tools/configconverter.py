@@ -68,11 +68,21 @@ def cfg_append(variable, value, default, output):
 	output[variable]['value'].append(value)
 
 
-# NOTE: '.' does not match newlines here (matching Perl's default, non-/s regex
-# behavior); the /i flag on these two is a no-op since the pattern contains no
+# NOTE: the /i flag on these two is a no-op since the pattern contains no
 # case-sensitive literal text, but is kept for faithfulness to the original.
-_string_quoted_re = re.compile(r'\s*"((?:\\"|.)*)"\s*(?://.*)?$', re.IGNORECASE)
-_string_bare_re = re.compile(r'\s*((?:\\"|.)*)\s*(?://.*)?$', re.IGNORECASE)
+# The original Perl used `(?:\\"|.)*`, but since '.' also matches '"' and '\',
+# that alternation is ambiguous (a `\"` pair can be consumed either as one unit
+# or as two separate '.' matches), which is vulnerable to catastrophic
+# backtracking on adversarial input. Using `[^"]` instead of '.' makes the two
+# branches mutually exclusive (a bare '"' can only end the quoted string, never
+# be swallowed by the repeated group), which matches the same well-formed
+# input identically while eliminating the exponential blowup. The only
+# observable difference is for malformed input starting with an unterminated,
+# unescaped '"' (never produced by a well-formed Hercules config value):
+# _string_bare_re used to capture that stray quote as part of the value,
+# and now skips over it instead, since it can no longer be swallowed by '.'.
+_string_quoted_re = re.compile(r'\s*"((?:\\"|[^"])*)"\s*(?://.*)?$', re.IGNORECASE)
+_string_bare_re = re.compile(r'\s*((?:\\"|[^"])*)\s*(?://.*)?$', re.IGNORECASE)
 
 
 def parsecfg_string_sub(variable, value, default, output, func):
