@@ -49,28 +49,50 @@ def main():
 	pat_with_index = re.compile(r'(.*),(\d+)\t(.*)')
 	pat_no_index = re.compile(r'(.*)\t(.*)')
 
-	for line in data:
-		m = pat_with_index.match(line)
-		if m:
-			varname, index, value = m.group(1), m.group(2), m.group(3)
+	def emit(varname, index, value):
+		# NOTE: the `mapreg` table was dropped from Hercules in 2020
+		# (sql-files/upgrades/2020-05-10--23-11.sql), split into
+		# `map_reg_num_db` / `map_reg_str_db` (column `varname` renamed to
+		# `key`), following the scripting-engine convention that a variable
+		# name ending in "$" is a string variable, everything else numeric.
+		if varname.endswith('$'):
 			sys.stdout.write(
-				"INSERT INTO `mapreg` (`varname`,`index`,`value`) VALUES ('%s',%s,'%s');\n" % (
+				"INSERT INTO `map_reg_str_db` (`key`,`index`,`value`) VALUES ('%s',%s,'%s');\n" % (
 					mysql_escape_string(varname),
 					mysql_escape_string(index),
 					mysql_escape_string(value.rstrip()),
 				)
 			)
+		else:
+			stripped = value.strip()
+			try:
+				num_value = str(int(stripped or '0'))
+			except ValueError:
+				sys.stderr.write(
+					"Warning: non-numeric value for numeric variable '%s': %r - inserting quoted, review manually.\n"
+					% (varname, value)
+				)
+				# Quoted so the generated statement is at least valid SQL;
+				# MySQL will raise a clear error/warning on insert for the
+				# genuinely bad data instead of a confusing syntax error here.
+				num_value = "'%s'" % mysql_escape_string(stripped)
+			sys.stdout.write(
+				"INSERT INTO `map_reg_num_db` (`key`,`index`,`value`) VALUES ('%s',%s,%s);\n" % (
+					mysql_escape_string(varname),
+					mysql_escape_string(index),
+					num_value,
+				)
+			)
+
+	for line in data:
+		m = pat_with_index.match(line)
+		if m:
+			emit(m.group(1), m.group(2), m.group(3))
 			continue
 
 		m = pat_no_index.match(line)
 		if m:
-			varname, value = m.group(1), m.group(2)
-			sys.stdout.write(
-				"INSERT INTO `mapreg` (`varname`,`index`,`value`) VALUES ('%s',0,'%s');\n" % (
-					mysql_escape_string(varname),
-					mysql_escape_string(value.rstrip()),
-				)
-			)
+			emit(m.group(1), '0', m.group(2))
 			continue
 
 		sys.stderr.write("Invalid data: %s\n" % line)

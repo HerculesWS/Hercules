@@ -316,7 +316,10 @@ def verbose(verbose_message, silent_message=None):
 
 DEFAULTS = [
 	{
-		'files': ['char-server.conf', 'import/char_conf.txt'],
+		# NOTE: conf/ was reorganized into subdirectories (char/, common/,
+		# login/, map/, ...) and import/*_conf.txt renamed to import/*.conf
+		# after this tool's file list was last written; paths updated to match.
+		'files': ['char/char-server.conf', 'import/char-server.conf'],
 		'settings': {
 			'autosave_time':                 {'parse': parsecfg_int,    'print': printcfg_int,    'path': "char-server:char_configuration/database/", 'default': 60},
 			'bind_ip':                       {'parse': parsecfg_string, 'print': printcfg_string, 'path': "char-server:char_configuration/inter/", 'default': "127.0.0.1"},
@@ -363,7 +366,7 @@ DEFAULTS = [
 		}
 	},
 	{
-		'files': ['inter-server.conf', 'import/inter_conf.txt'],
+		'files': ['common/inter-server.conf', 'import/inter-server.conf'],
 		'settings': {
 			'party_share_level':      {'parse': parsecfg_int,    'print': printcfg_int,    'path': "inter-server:inter_configuration/", 'default': 15},
 			'log_inter':              {'parse': parsecfg_bool,   'print': printcfg_bool,   'path': "inter-server:inter_configuration/log/", 'default': "true"},
@@ -440,7 +443,7 @@ DEFAULTS = [
 		}
 	},
 	{
-		'files': ['login-server.conf', 'import/login_conf.txt'],
+		'files': ['login/login-server.conf', 'import/login-server.conf'],
 		'settings': {
 			'bind_ip':                                   {'parse': parsecfg_string,    'print': printcfg_string,  'path': "login-server:login_configuration/inter/", 'default': "127.0.0.1"},
 			'login_port':                                {'parse': parsecfg_int,       'print': printcfg_int,     'path': "login-server:login_configuration/inter/", 'default': 6900},
@@ -490,7 +493,7 @@ DEFAULTS = [
 		}
 	},
 	{
-		'files': ['map-server.conf', 'import/map_conf.txt'],
+		'files': ['map/map-server.conf', 'import/map-server.conf'],
 		'settings': {
 			'userid':                   {'parse': parsecfg_string,    'print': printcfg_string, 'path': "map-server:map_configuration/inter/", 'default': "s1"},
 			'passwd':                   {'parse': parsecfg_string,    'print': printcfg_string, 'path': "map-server:map_configuration/inter/", 'default': "p1"},
@@ -517,7 +520,7 @@ DEFAULTS = [
 		}
 	},
 	{
-		'files': ['logs.conf', 'import/log_conf.txt'],
+		'files': ['map/logs.conf', 'import/logs.conf'],
 		'settings': {
 			'enable_logs':          {'parse': parsecfg_int,    'print': printcfg_hexint, 'path': "logs:map_log/enable", 'default': 0xFFFFF},
 			'sql_logs':             {'parse': parsecfg_bool,   'print': printcfg_bool,   'path': "logs:map_log/database/use_sql", 'default': "true"},
@@ -544,7 +547,7 @@ DEFAULTS = [
 		}
 	},
 	{
-		'files': ['script.conf', 'import/script_conf.txt'],
+		'files': ['map/script.conf', 'import/script.conf'],
 		'settings': {
 			'warn_func_mismatch_paramnum': {'parse': parsecfg_bool, 'print': printcfg_bool, 'path': "script:script_configuration/", 'default': "true"},
 			'check_cmdcount':              {'parse': parsecfg_int,  'print': printcfg_int,  'path': "script:script_configuration/", 'default': 655360},
@@ -556,7 +559,8 @@ DEFAULTS = [
 		}
 	},
 	{
-		'files': ['packet.conf', 'import/packet_conf.txt'],
+		# NOTE: packet.conf was renamed to socket.conf and moved to common/.
+		'files': ['common/socket.conf', 'import/socket.conf'],
 		'settings': {
 			'debug':                    {'parse': parsecfg_bool,      'print': printcfg_bool,    'path': "socket:socket_configuration/", 'default': "false"},
 			'stall_time':               {'parse': parsecfg_int,       'print': printcfg_int,     'path': "socket:socket_configuration/", 'default': 60},
@@ -573,7 +577,10 @@ DEFAULTS = [
 		}
 	},
 	{
-		'files': ['battle.conf', 'battle/battle.conf', 'battle/client.conf', 'battle/drops.conf', 'battle/exp.conf', 'battle/gm.conf', 'battle/guild.conf', 'battle/battleground.conf', 'battle/items.conf', 'battle/monster.conf', 'battle/party.conf', 'battle/pet.conf', 'battle/homunc.conf', 'battle/player.conf', 'battle/skill.conf', 'battle/status.conf', 'battle/feature.conf', 'battle/misc.conf', 'import/battle_conf.txt'],
+		# NOTE: elemental.conf, limits.conf, mercenary.conf and roulette.conf
+		# were split out of battle/*.conf after this list was last written;
+		# added here so settings that moved into them are still found.
+		'files': ['map/battle.conf', 'map/battle/battle.conf', 'map/battle/client.conf', 'map/battle/drops.conf', 'map/battle/exp.conf', 'map/battle/gm.conf', 'map/battle/guild.conf', 'map/battle/battleground.conf', 'map/battle/items.conf', 'map/battle/monster.conf', 'map/battle/party.conf', 'map/battle/pet.conf', 'map/battle/homunc.conf', 'map/battle/player.conf', 'map/battle/skill.conf', 'map/battle/status.conf', 'map/battle/feature.conf', 'map/battle/misc.conf', 'map/battle/elemental.conf', 'map/battle/limits.conf', 'map/battle/mercenary.conf', 'map/battle/roulette.conf', 'import/battle.conf'],
 		'settings': {
 			'bg_flee_penalty':                   {'parse': parsecfg_int,       'print': printcfg_int,    'path': "battleground:", 'default': 20},
 			'bg_update_interval':                {'parse': parsecfg_int,       'print': printcfg_int,    'path': "battleground:", 'default': 1000},

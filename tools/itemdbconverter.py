@@ -216,7 +216,10 @@ def parsedb(lines):
 			if not perl_truthy(cols['Refineable']) and int(cols['Type']) in (4, 5):
 				print("\tRefine: false")
 			if perl_truthy(cols['View']):
-				print("\tView: %s" % cols['View'])
+				# NOTE: current Hercules (src/map/itemdb.c) reads "ViewSprite",
+				# not the old "View" key, which has no legacy alias and would
+				# be silently ignored, leaving the item's view sprite at 0.
+				print("\tViewSprite: %s" % cols['View'])
 			cols['Script'] = prettifyscript(cols['Script'])
 			if perl_truthy(cols['Script']):
 				print("\tScript: <\"%s\">" % cols['Script'])
@@ -265,7 +268,7 @@ def main():
 	EquipLv: Equip required level (int, defaults to 0)
 	EquipLv: [min, max]           (alternative syntax with min / max level)
 	Refine: Refineable            (boolean, defaults to true)
-	View: View ID                 (int, defaults to 0)
+	ViewSprite: Sprite view ID    (int, defaults to 0)
 	BindOnEquip: true/false       (boolean, defaults to false)
 	Script: <"
 		Script

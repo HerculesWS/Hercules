@@ -46,18 +46,11 @@ def parse_constdb(lines):
 					cols[key] = ''
 			if not cols['prefix'] and re.match(r'^\s*(true|false)\s*$', cols['ConstantName']):
 				cols['prefix'] = '// '
-			if cols['IsParameter'] and cols['IsParameter'] == '1':
-				if cols['prefix']:
-					print("/*")
-				if cols['prefix'] and not re.match(r'^//[ \t]*$', cols['prefix']):
-					print("\t%s" % cols['prefix'])
-				print("\t%s: {" % cols['ConstantName'])
-				print("\t\tValue: %s" % cols['Value'])
-				print("\t\tParameter: true")
-				print("\t}")
-				if cols['prefix']:
-					print("*/")
-				continue
+			# NOTE: the old const.txt "IsParameter" flag has no effect here.
+			# Hercules' constants_db parser (script.c read_constdb) dropped
+			# support for the "Parameter" key entirely; only "Value" and
+			# "Deprecated" are read now, so parameter constants are emitted
+			# the same as any other constant.
 			if cols['prefix']:
 				sys.stdout.write("\t%s" % cols['prefix'])
 			print("\t%s: %s" % (cols['ConstantName'], cols['Value']))
@@ -102,19 +95,25 @@ def main():
 
 constants_db: {
 /************* Entry structure (short) ************************************
-	Identifier: value            // (int)
+	Identifier: value            // (integer literal)
  ************* Entry structure (full) *************************************
 	Identifier: {
-		Value: value         // (int)
-		Parameter: true      // (boolean)      Defaults to false.
+		Value: value         // (integer literal)
 		Deprecated: true     // (boolean)      Defaults to false.
 	}
+ ************* Supported integer literals *********************************
+ decimal:      1337        // no prefix
+ hexadecimal:  0x1337      // prefix: 0x
+ octal:        0o1337      // prefix: 0o
+ binary:       0b101101    // prefix: 0b
+
+ Underscores can also be used as visual separators for digit grouping purposes:
+ 	2_147_483_647
+ 	0x7FFF_FFFF
+
+ Keep in mind that number literals cannot start or end with a separator and no
+ more than one separator can be used in a row (so 12_3___456 is illegal).
 **************************************************************************/
-// NOTE:
-//   Parameters are special in that they retrieve certain runtime values
-//   depending on the specified ID in field Value. Depending on the
-//   implementation values assigned by scripts to parameters will affect
-//   runtime values, such as Zeny, as well (see pc_readparam/pc_setparam).
 """ % year)
 
 	parse_constdb(fileinput.input())
