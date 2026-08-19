@@ -1,8 +1,16 @@
-#!/usr/bin/perl
-$db = "mob_db";
-$nb_columns = 57;
-@str_col = (1,2,3);
-$create_table = "#
+#!/usr/bin/env python3
+# Converts a mob_db.txt file (read from stdin) into SQL REPLACE INTO
+# statements for the `mob_db` table (written to stdout).
+# usage example: python tools/mob_db.py < db/mob_db.txt > mob_db.sql
+
+import re
+import sys
+
+DB = "mob_db"
+NB_COLUMNS = 57
+STR_COL = (1, 2, 3)
+
+CREATE_TABLE = """#
 # Table structure for table `mob_db`
 #
 
@@ -67,84 +75,65 @@ CREATE TABLE `mob_db` (
   `DropCardper` smallint(9) unsigned NOT NULL default '0',
   PRIMARY KEY  (`ID`)
 ) ENGINE=MyISAM;
-";
-printf("%s\n",$create_table);
-while ($ligne=<STDIN>)
-{
-	if ($ligne =~ /[^\r\n]+/)
-	{
-		$ligne = $&;
-		if ($ligne =~ /^\/\//)
-		{
-			printf("# ");
-			$ligne = substr($ligne, 2);
-		}
-		@champ = split (",",$ligne);
-		if ($#champ != $nb_columns - 1)
-		{
-			# Can't parse, it's a real comment
-			printf ("%s\n", $ligne);
-		} else {
-			printf("REPLACE INTO `%s` VALUES (", $db);
-			for ($i=0; $i<$#champ; $i++)
-			{
-				printField($champ[$i],",",$i);
-			}
-			printField($champ[$#champ],");\n",$#champ);
-		}
-	}
-}
-print("\n");
+"""
 
 
-sub printField {
-	my ($str, $suffix, $idCol) = @_;
+def perl_split_comma(s):
+	parts = s.split(',')
+	while parts and parts[-1] == '':
+		parts.pop()
+	return parts
+
+
+def escape(s):
+	return s.replace("'", "\\'")
+
+
+def print_field(out, s, suffix, id_col):
 	# Remove first { and last }
-	if ($str =~ /{.*}/)
-	{
-		$str = substr($&,1,-1);
-	}
+	m = re.search(r'\{.*\}', s)
+	if m:
+		s = m.group()[1:-1]
 	# Remove comment at end of line
-	if ($str =~ /[^\/]*\/\//)
-	{
-		$str = substr($&,0,-2);
-	}
+	m = re.search(r'[^/]*//', s)
+	if m:
+		s = m.group()[:-2]
 	# If nothing, put NULL
-	if ($str eq "") {
-		printf("NULL%s", $suffix);
-	} else {
-		my $flag = 0;
-		# Search if it's a string column ?
-		foreach $col (@str_col)
-		{
-			if ($col == $idCol)
-			{
-				$flag = 1;
-				break;
-			}
-		}
-		if ($flag == 1)
-		{
-			# String column, so escape and add ''
-			printf("'%s'%s", escape($str), $suffix);
-		} else {
-			# Not a string column
-			printf("%s%s", $str,$suffix);
-		}
-	}
-}
+	if s == "":
+		out.write("NULL%s" % suffix)
+	else:
+		flag = id_col in STR_COL
+		if flag:
+			out.write("'%s'%s" % (escape(s), suffix))
+		else:
+			out.write("%s%s" % (s, suffix))
 
-sub escape {
-	my ($str) = @_;
-	my @str_splitted = split("'", $str);
-	my $result = "";
-	for (my $i=0; $i<=$#str_splitted; $i++)
-	{
-		if ($i == 0) {
-			$result = @str_splitted[0];
-		} else {
-			$result = $result."\\'".@str_splitted[$i];
-		}
-	}
-	return $result
-}
+
+def main():
+	out = sys.stdout
+	out.write("%s\n" % CREATE_TABLE)
+
+	for raw in sys.stdin:
+		ligne = raw.rstrip('\r\n')
+		if ligne == '':
+			continue
+
+		if ligne.startswith('//'):
+			out.write("# ")
+			ligne = ligne[2:]
+
+		champ = perl_split_comma(ligne)
+		if len(champ) != NB_COLUMNS:
+			# Can't parse, it's a real comment
+			out.write("%s\n" % ligne)
+		else:
+			out.write("REPLACE INTO `%s` VALUES (" % DB)
+			for i in range(len(champ) - 1):
+				print_field(out, champ[i], ",", i)
+			print_field(out, champ[-1], ");\n", len(champ) - 1)
+
+	out.write("\n")
+
+
+if __name__ == '__main__':
+	main()
