@@ -76,3 +76,7 @@ jobs:
       - name: check sql updates
         run: |
           python3 ./tools/checksql.py
+
+      - name: check tools syntax
+        run: |
+          find tools -name '*.py' -print0 | xargs -0 python3 -m py_compile

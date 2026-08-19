@@ -4,7 +4,7 @@ on:
   workflow_call:
 
 env:
-  INSTALL_PACKAGES: cmake make gcc g++ git doxygen perl libxml-simple-perl libxml-parser-perl bc curl python3-venv python3
+  INSTALL_PACKAGES: cmake make gcc g++ git doxygen bc curl python3-venv python3
   BUILDSTATS_API_KEY: ${{ secrets.BUILDSTATS_API_KEY }}
   GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
 

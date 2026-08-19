@@ -59,8 +59,6 @@ For a list of supported platforms, please refer to the [Supported Platforms](htt
 - A build system like GNU make or Ninja (Ninja is preferred build system on windows, recommended for *Unix as well)
 - MariaDB
 - *Optional dependencies for development only*
-  - perl (required to rebuild the HPM Hooks and HPMDataCheck)
-    - requires the XML::Simple module, which in turn requires libexpat-dev
   - Doxygen (required to rebuild the HPM Hooks and HPMDataCheck)
 
 For a full list of prerequisites, please refer to the [Building](https://github.com/HerculesWS/Hercules/wiki/Building) wiki page.

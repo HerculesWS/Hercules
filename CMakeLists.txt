@@ -506,7 +506,6 @@ endif()
 
 # Checks for external programs that may be needed in some targets/commands
 find_program(DOXYGEN_FOUND doxygen)
-find_program(PERL_FOUND perl)
 find_program(PYTHON3_FOUND python3)
 
 # Checks and creates the import conf directory

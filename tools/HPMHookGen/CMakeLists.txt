@@ -18,7 +18,7 @@
 
 set(API_SERVER_PATH "${CMAKE_SOURCE_DIR}/src/api")
 
-if(DOXYGEN_FOUND AND PERL_FOUND AND PYTHON3_FOUND)
+if(DOXYGEN_FOUND AND PYTHON3_FOUND)
   add_custom_target(hooks
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     COMMAND
@@ -47,14 +47,14 @@ if(DOXYGEN_FOUND AND PERL_FOUND AND PYTHON3_FOUND)
       echo
       "Regenerating HPM Hook definitions..."
     COMMAND
-      perl
-      "HPMHookGen.pl"
+      python3
+      "HPMHookGen.py"
     COMMAND
       echo
       "Regenerating HPM Data Check definitions..."
     COMMAND
-      perl
-      "HPMDataCheckGen.pl"
+      python3
+      "HPMDataCheckGen.py"
     BYPRODUCTS
       "${CMAKE_CURRENT_SOURCE_DIR}/doxyoutput"
       "${API_SERVER_PATH}/handlers.h.dox"
@@ -71,6 +71,6 @@ else()
   add_custom_target(hooks
     COMMAND
       echo
-      "doxygen, perl and python3 are not found or disabled"
+      "doxygen and python3 are not found or disabled"
   )
 endif()
