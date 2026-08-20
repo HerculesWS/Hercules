@@ -30,6 +30,7 @@ interfaceRe = re.compile("struct (?P<name1>[a-z_]+)_interface (?P<name2>[a-z_]+)
 
 # known methods what must be not added to interfaces
 ignoreMethods = (
+    "clan_config_read_from_file",
     "cmdline_args_init_local",
     "map_bl_list_expand",
     "map_block_free_expand",

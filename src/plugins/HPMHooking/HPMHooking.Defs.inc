@@ -632,8 +632,8 @@ typedef int (*HPMHOOK_pre_bg_team_db_final) (union DBKey *key, struct DBData **d
 typedef int (*HPMHOOK_post_bg_team_db_final) (int retVal___, union DBKey key, struct DBData *data, va_list ap);
 typedef enum bg_queue_types (*HPMHOOK_pre_bg_str2teamtype) (const char **str);
 typedef enum bg_queue_types (*HPMHOOK_post_bg_str2teamtype) (enum bg_queue_types retVal___, const char *str);
-typedef void (*HPMHOOK_pre_bg_config_read) (void);
-typedef void (*HPMHOOK_post_bg_config_read) (void);
+typedef void (*HPMHOOK_pre_bg_config_read) (const char **config_filename);
+typedef void (*HPMHOOK_post_bg_config_read) (const char *config_filename);
 #endif // MAP_BATTLEGROUND_H
 #ifdef MAP_BUYINGSTORE_H /* buyingstore */
 typedef bool (*HPMHOOK_pre_buyingstore_setup) (struct map_session_data **sd, unsigned char *slots);
@@ -734,8 +734,8 @@ typedef void (*HPMHOOK_pre_channel_quit_guild) (struct map_session_data **sd);
 typedef void (*HPMHOOK_post_channel_quit_guild) (struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_channel_irc_join) (struct map_session_data **sd);
 typedef void (*HPMHOOK_post_channel_irc_join) (struct map_session_data *sd);
-typedef void (*HPMHOOK_pre_channel_config_read) (void);
-typedef void (*HPMHOOK_post_channel_config_read) (void);
+typedef void (*HPMHOOK_pre_channel_config_read) (const char **config_filename);
+typedef void (*HPMHOOK_post_channel_config_read) (const char *config_filename);
 #endif // MAP_CHANNEL_H
 #ifdef CHAR_CHAR_H /* chr */
 typedef int (*HPMHOOK_pre_chr_waiting_disconnect) (int *tid, int64 *tick, int *id, intptr_t *data);

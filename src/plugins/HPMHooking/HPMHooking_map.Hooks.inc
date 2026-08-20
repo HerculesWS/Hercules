@@ -5037,14 +5037,14 @@ enum bg_queue_types HP_bg_str2teamtype(const char *str) {
 	}
 	return retVal___;
 }
-void HP_bg_config_read(void) {
+void HP_bg_config_read(const char *config_filename) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_bg_config_read_pre > 0) {
-		void (*preHookFunc) (void);
+		void (*preHookFunc) (const char **config_filename);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_bg_config_read_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_bg_config_read_pre[hIndex].func;
-			preHookFunc();
+			preHookFunc(&config_filename);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -5052,13 +5052,13 @@ void HP_bg_config_read(void) {
 		}
 	}
 	{
-		HPMHooks.source.bg.config_read();
+		HPMHooks.source.bg.config_read(config_filename);
 	}
 	if (HPMHooks.count.HP_bg_config_read_post > 0) {
-		void (*postHookFunc) (void);
+		void (*postHookFunc) (const char *config_filename);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_bg_config_read_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_bg_config_read_post[hIndex].func;
-			postHookFunc();
+			postHookFunc(config_filename);
 		}
 	}
 	return;
@@ -5803,14 +5803,14 @@ void HP_channel_irc_join(struct map_session_data *sd) {
 	}
 	return;
 }
-void HP_channel_config_read(void) {
+void HP_channel_config_read(const char *config_filename) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_channel_config_read_pre > 0) {
-		void (*preHookFunc) (void);
+		void (*preHookFunc) (const char **config_filename);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_channel_config_read_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_channel_config_read_pre[hIndex].func;
-			preHookFunc();
+			preHookFunc(&config_filename);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -5818,13 +5818,13 @@ void HP_channel_config_read(void) {
 		}
 	}
 	{
-		HPMHooks.source.channel.config_read();
+		HPMHooks.source.channel.config_read(config_filename);
 	}
 	if (HPMHooks.count.HP_channel_config_read_post > 0) {
-		void (*postHookFunc) (void);
+		void (*postHookFunc) (const char *config_filename);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_channel_config_read_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_channel_config_read_post[hIndex].func;
-			postHookFunc();
+			postHookFunc(config_filename);
 		}
 	}
 	return;

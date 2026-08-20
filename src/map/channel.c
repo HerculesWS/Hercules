@@ -577,11 +577,10 @@ static void channel_quit_guild(struct map_session_data *sd)
 	}
 }
 
-static void read_channels_config(void)
+static void read_channels_config(const char *config_filename)
 {
 	struct config_t channels_conf;
 	struct config_setting_t *chsys = NULL;
-	const char *config_filename = "conf/channels.conf"; // FIXME hardcoded name
 
 	if (!libconfig->load_file(&channels_conf, config_filename))
 		return;
@@ -729,7 +728,8 @@ static void read_channels_config(void)
 			channel->config->colors_count = color_count;
 		}
 
-		libconfig->setting_lookup_string(settings, "map_local_channel_color", &local_color);
+		if (!libconfig->setting_lookup_string(settings, "map_local_channel_color", &local_color))
+			local_color = "";
 
 		for (k = 0; k < channel->config->colors_count; k++) {
 			if (strcmpi(channel->config->colors_name[k], local_color) == 0)
@@ -743,7 +743,8 @@ static void read_channels_config(void)
 			channel->config->local = false;
 		}
 
-		libconfig->setting_lookup_string(settings, "ally_channel_color", &ally_color);
+		if (!libconfig->setting_lookup_string(settings, "ally_channel_color", &ally_color))
+			ally_color = "";
 
 		for (k = 0; k < channel->config->colors_count; k++) {
 			if (strcmpi(channel->config->colors_name[k], ally_color) == 0)
@@ -757,7 +758,8 @@ static void read_channels_config(void)
 			channel->config->ally = false;
 		}
 
-		libconfig->setting_lookup_string(settings, "irc_channel_color", &irc_color);
+		if (!libconfig->setting_lookup_string(settings, "irc_channel_color", &irc_color))
+			irc_color = "";
 
 		for (k = 0; k < channel->config->colors_count; k++) {
 			if (strcmpi(channel->config->colors_name[k], irc_color) == 0)
@@ -812,6 +814,10 @@ static void read_channels_config(void)
 
 		ShowStatus("Done reading '"CL_WHITE"%u"CL_RESET"' channels in '"CL_WHITE"%s"CL_RESET"'.\n", db_size(channel->db), config_filename);
 	}
+
+	const char *import = NULL;
+	if (libconfig->lookup_string(&channels_conf, "import", &import) == CONFIG_TRUE)
+		read_channels_config(import);
 	libconfig->destroy(&channels_conf);
 }
 
@@ -825,7 +831,7 @@ static int do_init_channel(bool minimal)
 
 	channel->db = stridb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, HCS_NAME_LENGTH);
 	channel->config->ally = channel->config->local = channel->config->irc = channel->config->ally_autojoin = channel->config->local_autojoin = channel->config->irc_autojoin = false;
-	channel->config_read();
+	channel->config_read("conf/channels.conf");
 
 	return 0;
 }

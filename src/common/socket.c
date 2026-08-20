@@ -2087,10 +2087,9 @@ static int socket_net_config_read_sub(struct config_setting_t *t, struct s_subne
  *
  * @param filename The filename to read from.
  */
-static void socket_net_config_read(const char *filename)
+static void socket_net_config_read_file(const char *filename)
 {
 	struct config_t network_config;
-	int i;
 	nullpo_retv(filename);
 
 	if (!libconfig->load_file(&network_config, filename)) {
@@ -2098,22 +2097,38 @@ static void socket_net_config_read(const char *filename)
 		return;
 	}
 
-	VECTOR_CLEAR(sockt->lan_subnets);
 	if (sockt->net_config_read_sub(libconfig->lookup(&network_config, "lan_subnets"), &sockt->lan_subnets, filename, "lan_subnets") > 0)
 		ShowStatus("Read information about %d LAN subnets.\n", (int)VECTOR_LENGTH(sockt->lan_subnets));
 
-	VECTOR_CLEAR(sockt->trusted_ips);
 	if (sockt->net_config_read_sub(libconfig->lookup(&network_config, "trusted"), &sockt->trusted_ips, filename, "trusted") > 0)
 		ShowStatus("Read information about %d trusted IP ranges.\n", (int)VECTOR_LENGTH(sockt->trusted_ips));
+
+	if (sockt->net_config_read_sub(libconfig->lookup(&network_config, "allowed"), &sockt->allowed_ips, filename, "allowed") > 0)
+		ShowStatus("Read information about %d allowed server IP ranges.\n", (int)VECTOR_LENGTH(sockt->allowed_ips));
+
+	const char *import = NULL;
+	if (libconfig->lookup_string(&network_config, "import", &import) == CONFIG_TRUE)
+		socket_net_config_read_file(import);
+	libconfig->destroy(&network_config);
+}
+
+static void socket_net_config_read(const char *filename)
+{
+	int i;
+	nullpo_retv(filename);
+
+	VECTOR_CLEAR(sockt->lan_subnets);
+	VECTOR_CLEAR(sockt->trusted_ips);
+	VECTOR_CLEAR(sockt->allowed_ips);
+
+	socket_net_config_read_file(filename);
+
 	ARR_FIND(0, VECTOR_LENGTH(sockt->trusted_ips), i, SUBNET_MATCH(0, VECTOR_INDEX(sockt->trusted_ips, i).ip, VECTOR_INDEX(sockt->trusted_ips, i).mask));
 	if (i != VECTOR_LENGTH(sockt->trusted_ips)) {
 		ShowError("Using a wildcard IP range in the trusted server IPs is NOT RECOMMENDED.\n");
 		ShowNotice("Please edit your '%s' trusted list to fit your network configuration.\n", filename);
 	}
 
-	VECTOR_CLEAR(sockt->allowed_ips);
-	if (sockt->net_config_read_sub(libconfig->lookup(&network_config, "allowed"), &sockt->allowed_ips, filename, "allowed") > 0)
-		ShowStatus("Read information about %d allowed server IP ranges.\n", (int)VECTOR_LENGTH(sockt->allowed_ips));
 	if (VECTOR_LENGTH(sockt->allowed_ips) + VECTOR_LENGTH(sockt->trusted_ips) == 0) {
 		ShowError("No allowed server IP ranges configured. This server won't be able to accept connections from any char servers.\n");
 	}
@@ -2124,7 +2139,6 @@ static void socket_net_config_read(const char *filename)
 		ShowNotice("Please edit your '%s' allowed list to fit your network configuration.\n", filename);
 	}
 #endif  // BUILDBOT
-	libconfig->destroy(&network_config);
 	return;
 }
 

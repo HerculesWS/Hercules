@@ -138,7 +138,7 @@ struct battleground_interface {
 	/* */
 	enum bg_queue_types (*str2teamtype) (const char *str);
 	/* */
-	void (*config_read) (void);
+	void (*config_read) (const char *config_filename);
 };
 
 #ifdef HERCULES_CORE

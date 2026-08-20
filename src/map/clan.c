@@ -924,11 +924,17 @@ static void clan_read_db(struct config_setting_t *settings, const char *source, 
  *
  * @param bool clear Whether to clear clan->db before reading clans
  */
+static bool clan_config_read_from_file(const char *config_filename, bool reload);
+
 static bool clan_config_read(bool reload)
+{
+	return clan_config_read_from_file("conf/clans.conf", reload);
+}
+
+static bool clan_config_read_from_file(const char *config_filename, bool reload)
 {
 	struct config_t clan_conf;
 	struct config_setting_t *settings = NULL;
-	const char *config_filename = "conf/clans.conf"; // FIXME: hardcoded name
 	int kicktime = 0, kickchecktime = 0;
 
 	if (reload) {
@@ -955,25 +961,28 @@ static bool clan_config_read(bool reload)
 		return false;
 	}
 
-	if ((settings = libconfig->lookup(&clan_conf, "clan_configuration")) == NULL) {
-		ShowError("clan_config_read: failed to find 'clan_configuration'.\n");
-		return false;
+	settings = libconfig->lookup(&clan_conf, "clan_configuration");
+	// An import file is allowed to omit 'clan_configuration' entirely as a no-op override.
+	if (settings != NULL) {
+		libconfig->setting_lookup_int(settings, "MaxMembers", &clan->max);
+		libconfig->setting_lookup_int(settings, "MaxRelations", &clan->max_relations);
+		libconfig->setting_lookup_int(settings, "InactivityKickTime", &kicktime);
+		if (!libconfig->setting_lookup_int(settings, "InactivityCheckTime", &kickchecktime)) {
+			ShowError("clan_config_read: failed to find InactivityCheckTime using official value.\n");
+			kickchecktime = 24;
+		}
+
+		// On config file we set the time in hours but here we use in seconds
+		clan->kicktime = 60 * 60 * kicktime;
+		clan->checktime = 60 * 60 * max(kickchecktime, 1) * 1000;
+
+		clan->config_read_additional_settings(settings, config_filename);
+		clan->read_db(settings, config_filename, reload);
 	}
 
-	libconfig->setting_lookup_int(settings, "MaxMembers", &clan->max);
-	libconfig->setting_lookup_int(settings, "MaxRelations", &clan->max_relations);
-	libconfig->setting_lookup_int(settings, "InactivityKickTime", &kicktime);
-	if (!libconfig->setting_lookup_int(settings, "InactivityCheckTime", &kickchecktime)) {
-		ShowError("clan_config_read: failed to find InactivityCheckTime using official value.\n");
-		kickchecktime = 24;
-	}
-
-	// On config file we set the time in hours but here we use in seconds
-	clan->kicktime = 60 * 60 * kicktime;
-	clan->checktime = 60 * 60 * max(kickchecktime, 1) * 1000;
-
-	clan->config_read_additional_settings(settings, config_filename);
-	clan->read_db(settings, config_filename, reload);
+	const char *import = NULL;
+	if (libconfig->lookup_string(&clan_conf, "import", &import) == CONFIG_TRUE)
+		clan_config_read_from_file(import, false);
 	libconfig->destroy(&clan_conf);
 	return true;
 }
