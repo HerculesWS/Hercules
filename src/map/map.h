@@ -40,19 +40,12 @@ struct npc_data;
 struct channel_data;
 struct hplugin_data_store;
 
-#if (defined(__GNUC__) || defined(MINGW)) && !defined(__clang__) && !defined(__ARM_ARCH)
 #define GUARD_MAP_LOCK_CONCAT(a, b) GUARD_MAP_LOCK_CONCAT_INNER(a, b)
 #define GUARD_MAP_LOCK_CONCAT_INNER(a, b) a ## b
 #define GUARD_MAP_LOCK GUARD_MAP_LOCK0(__FILE__, __func__, __COUNTER__, __LINE__)
 #define GUARD_MAP_LOCK0(file, func, lineStr, line) \
-	void GUARD_MAP_LOCK_CONCAT(map_lock_check, lineStr) (int *lock_count) \
-	{ \
-		map->lock_check(file, func, line, *lock_count); \
-	} \
-	int GUARD_MAP_LOCK_CONCAT(current_map_lock_, lineStr) __attribute__((__cleanup__(GUARD_MAP_LOCK_CONCAT(map_lock_check, lineStr)))) = map->block_free_lock;
-#else  // defined(__GNUC__) || defined(MINGW)
-#define GUARD_MAP_LOCK
-#endif  // defined(__GNUC__) || defined(MINGW)
+  guard_map_lock GUARD_MAP_LOCK_CONCAT(map_lock_checker_, lineStr)(file, func, line);
+
 
 enum E_MAPSERVER_ST {
 	MAPSERVER_ST_RUNNING = CORE_ST_LAST,
@@ -1533,6 +1526,19 @@ END_ZEROED_BLOCK;
 	struct map_zone_data *(*merge_zone) (struct map_zone_data *main, struct map_zone_data *other);
 	void (*zone_clear_single) (struct map_zone_data *zone);
 	void (*lock_check) (const char *file, const char *func, int line, int lock_count);
+};
+
+class guard_map_lock
+{
+public:
+	guard_map_lock(const char *file, const char *func, int line);
+	~guard_map_lock();
+
+private:
+	const char *m_file;
+	const char *m_func;
+	int m_line;
+	int m_expected_lock;
 };
 
 #ifdef HERCULES_CORE
