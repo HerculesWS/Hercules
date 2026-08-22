@@ -105,7 +105,7 @@ print FH <<"EOF";
 #undef HPM_SYMBOL
 #endif // HPM_SYMBOL
 
-HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
+const struct s_HPMDataCheck HPMDataCheck[] = {
 EOF
 
 foreach my $key (sort keys %out) {

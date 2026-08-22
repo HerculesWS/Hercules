@@ -28954,7 +28954,7 @@ static bool script_add_builtin(const struct script_function *buildin, bool overr
 	return true;
 }
 
-static bool script_hp_add(char *name, char *args, bool (*func)(struct script_state *st), bool isDeprecated)
+static bool script_hp_add(const char *name, const char *args, bool (*func)(struct script_state *st), bool isDeprecated)
 {
 	struct script_function buildin;
 	buildin.name = name;

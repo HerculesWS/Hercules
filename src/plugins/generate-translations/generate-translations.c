@@ -68,7 +68,7 @@ bool createdirectory(const char *dirname)
 			return false;
 	}
 #else /* Not WIN32 */
-	struct stat st = { 0 };
+	struct stat st{};
 	if (stat(dirname, &st) == -1 ) {
 		if (mkdir(dirname, 0755) != 0)
 			return false;
@@ -106,7 +106,7 @@ void script_add_translatable_string_posthook(const struct script_string_buf *str
 	if (VECTOR_LENGTH(*string) > 1) {
 		// The length of *string will always be at least 1 because of the '\0'
 		if (translatable_strings == NULL) {
-			translatable_strings = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_ALLOW_NULL_DATA, 0);
+			translatable_strings = strdb_alloc((enum DBOptions)(DB_OPT_DUP_KEY|DB_OPT_ALLOW_NULL_DATA), 0);
 		}
 
 		if (!strdb_exists(translatable_strings, VECTOR_DATA(*string))) {
@@ -215,7 +215,7 @@ bool translations_enter_file(const char *filepath)
 
 	p = filepath;
 	len = (int)strlen(filepath) + (int)strlen(DIRECTORYNAME) + (int)strlen(PATHSEP_STR);
-	lang_export_filepath = aCalloc(len + 4 + 1, sizeof(char)); // + ".pot"
+	lang_export_filepath = (char *)aCalloc(len + 4 + 1, sizeof(char)); // + ".pot"
 	strncat(lang_export_filepath, DIRECTORYNAME PATHSEP_STR, len);
 	lang_export_stringcount_current = 0;
 

@@ -149,9 +149,9 @@ struct HPM_interface {
 	struct hplugin * (*load) (const char* filename);
 	void (*unload) (struct hplugin* plugin);
 	bool (*exists) (const char *filename);
-	bool (*iscompatible) (char* version);
+	bool (*iscompatible) (const char* version);
 	void (*event) (enum hp_event_types type);
-	void *(*import_symbol) (char *name, unsigned int pID);
+	void *(*import_symbol) (const char *name, unsigned int pID);
 	void (*share) (void *value, const char *name);
 	void (*config_read) (void);
 	bool (*parse_battle_conf) (const struct config_t *config, const char *filename, bool imported);
@@ -163,7 +163,7 @@ struct HPM_interface {
 	bool (*parse_conf_entry) (const char *w1, const char *w2, enum HPluginConfType point);
 	bool (*getBattleConf) (const char* w1, int *value);
 	/* validates plugin data */
-	bool (*DataCheck) (struct s_HPMDataCheck *src, unsigned int size, int version, char *name);
+	bool (*DataCheck) (struct s_HPMDataCheck *src, unsigned int size, int version, const char *name);
 	void (*datacheck_init) (const struct s_HPMDataCheck *src, unsigned int length, int version);
 	void (*datacheck_final) (void);
 

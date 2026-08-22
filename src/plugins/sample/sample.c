@@ -53,7 +53,7 @@
 
 HPExport struct hplugin_info pinfo = {
 	"Sample",    // Plugin name
-	SERVER_TYPE_CHAR|SERVER_TYPE_LOGIN|SERVER_TYPE_MAP|SERVER_TYPE_API,// Which server types this plugin works with?
+	(enum server_types)(SERVER_TYPE_CHAR|SERVER_TYPE_LOGIN|SERVER_TYPE_MAP|SERVER_TYPE_API),// Which server types this plugin works with?
 	"0.1",       // Plugin version
 	HPM_VERSION, // HPM Version (don't change, macro is automatically updated)
 };
@@ -88,7 +88,7 @@ void sample_packet0f3(int fd) {
 	ShowInfo("sample_packet0f3: Hello World! received 0xf3 for '%s', redirecting!\n",sd->status.name);
 
 	/* sample usage of appending data to a socket_data (sockt->session[]) entry */
-	if( !(data = getFromSession(sockt->session[fd],0)) ) {
+	if( !(data = (struct sample_data_struct *)getFromSession(sockt->session[fd],0)) ) {
 		CREATE(data,struct sample_data_struct,1);
 
 		data->lastMSGPosition.map = sd->status.last_point.map;
@@ -107,7 +107,7 @@ void sample_packet0f3(int fd) {
 	}
 
 	/* sample usage of appending data to a map_session_data (sd) entry */
-	if( !(data = getFromMSD(sd,0)) ) {
+	if( !(data = (struct sample_data_struct *)getFromMSD(sd,0)) ) {
 		CREATE(data,struct sample_data_struct,1);
 
 		data->lastMSGPosition.map = sd->status.last_point.map;
@@ -189,7 +189,7 @@ int return_my_setting(const char *key)
 }
 
 /* Prints a message to console and shows an example of function declared by defined later */
-static void atcmd_sample_message(const char *message, const char *sd_name)
+void atcmd_sample_message(const char *message, const char *sd_name)
 {
 	printf("I'm being run! message -> '%s' by %s\n", message, sd_name);
 }

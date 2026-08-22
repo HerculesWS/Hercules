@@ -122,7 +122,7 @@ struct atcommand_interface {
 	void (*final) (void);
 	/* */
 	bool (*exec) (const int fd, struct map_session_data *sd, const char *message, bool player_invoked);
-	bool (*create) (char *name, AtCommandFunc func);
+	bool (*create) (const char *name, AtCommandFunc func);
 	bool (*can_use) (struct map_session_data *sd, const char *command);
 	bool (*can_use2) (struct map_session_data *sd, const char *command, AtCommandType type);
 	void (*load_groups) (GroupSettings **groups, struct config_setting_t **commands_, size_t sz);

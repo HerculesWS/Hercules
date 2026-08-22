@@ -102,7 +102,7 @@ static void hplugin_export_symbol(void *value, const char *name)
  * @return The symbol value.
  * @retval NULL if the symbol wasn't found.
  */
-static void *hplugin_import_symbol(char *name, unsigned int pID)
+static void *hplugin_import_symbol(const char *name, unsigned int pID)
 {
 	int i;
 	nullpo_retr(NULL, name);
@@ -115,7 +115,7 @@ static void *hplugin_import_symbol(char *name, unsigned int pID)
 	return NULL;
 }
 
-static bool hplugin_iscompatible(char *version)
+static bool hplugin_iscompatible(const char *version)
 {
 	unsigned int req_major = 0, req_minor = 0;
 
@@ -406,7 +406,7 @@ static bool HPM_HookStopped(void)
  * @param help      the help string to be displayed by '--help', if any.
  * @return the success status.
  */
-static bool hpm_add_arg(unsigned int pluginID, char *name, bool has_param, CmdlineExecFunc func, const char *help)
+static bool hpm_add_arg(unsigned int pluginID, const char *name, bool has_param, CmdlineExecFunc func, const char *help)
 {
 	int i;
 
@@ -435,7 +435,7 @@ static bool hpm_add_arg(unsigned int pluginID, char *name, bool has_param, Cmdli
  * @retval true if the listener was added successfully.
  * @retval false in case of error.
  */
-static bool hplugins_addconf(unsigned int pluginID, enum HPluginConfType type, char *name, void (*parse_func) (const char *key, const char *val), int (*return_func) (const char *key), bool required)
+static bool hplugins_addconf(unsigned int pluginID, enum HPluginConfType type, const char *name, void (*parse_func) (const char *key, const char *val), int (*return_func) (const char *key), bool required)
 {
 	struct HPConfListenStorage *conf;
 	int i;
@@ -482,7 +482,7 @@ static bool hplugins_addconf(unsigned int pluginID, enum HPluginConfType type, c
 
 static struct hplugin *hplugin_load(const char *filename)
 {
-	typedef void *(ImportSymbolFunc)(char *, unsigned int);
+	typedef void *(ImportSymbolFunc)(const char *, unsigned int);
 	struct hplugin *plugin;
 	struct hplugin_info *info;
 	struct HPMi_interface **HPMi;
@@ -1081,7 +1081,7 @@ static void hplugin_data_store_create(struct hplugin_data_store **storeptr, enum
 /**
  * Called by HPM->DataCheck on a plugins incoming data, ensures data structs in use are matching!
  **/
-static bool HPM_DataCheck(struct s_HPMDataCheck *src, unsigned int size, int version, char *name)
+static bool HPM_DataCheck(struct s_HPMDataCheck *src, unsigned int size, int version, const char *name)
 {
 	unsigned int i, j;
 

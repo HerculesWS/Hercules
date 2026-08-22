@@ -34,16 +34,18 @@ struct socket_data;
 struct map_session_data;
 struct hplugin_data_store;
 
+enum server_types CXX_ENUM_TYPE(unsigned int);
+
 #define HPM_VERSION "1.2"
 
 // Maximum length of the configuration path for configs added with add*Conf
 #define HPM_ADDCONF_LENGTH 40
 
 struct hplugin_info {
-	char* name;
+	const char* name;
 	enum server_types type;
-	char* version;
-	char* req_version;
+	const char* version;
+	const char* req_version;
 };
 
 struct s_HPMDataCheck {
@@ -231,8 +233,8 @@ struct HPMi_interface {
 	unsigned int pid;
 	/* */
 	void (*event[HPET_MAX]) (void);
-	bool (*addCommand) (char *name, bool (*func)(const int fd, struct map_session_data* sd, const char* command, const char* message,struct AtCommandInfo *info));
-	bool (*addScript) (char *name, char *args, bool (*func)(struct script_state *st), bool isDeprecated);
+	bool (*addCommand) (const char *name, bool (*func)(const int fd, struct map_session_data* sd, const char* command, const char* message,struct AtCommandInfo *info));
+	bool (*addScript) (const char *name, const char *args, bool (*func)(struct script_state *st), bool isDeprecated);
 	void (*addCPCommand) (const char *name, CParseFunc func);
 	/* HPM Custom Data */
 	void (*addToHPData) (enum HPluginDataTypes type, uint32 pluginID, struct hplugin_data_store **storeptr, void *data, uint32 classid, bool autofree);
@@ -241,11 +243,11 @@ struct HPMi_interface {
 	/* packet */
 	bool (*addPacket) (unsigned short cmd, int length, void (*receive)(int fd), unsigned int point, unsigned int pluginID);
 	/* program --arg/-a */
-	bool (*addArg) (unsigned int pluginID, char *name, bool has_param, CmdlineExecFunc func, const char *help);
+	bool (*addArg) (unsigned int pluginID, const char *name, bool has_param, CmdlineExecFunc func, const char *help);
 	/* battle-config recv param */
-	bool (*addConf) (unsigned int pluginID, enum HPluginConfType type, char *name, void (*parse_func) (const char *key, const char *val), int (*return_func) (const char *key), bool required);
+	bool (*addConf) (unsigned int pluginID, enum HPluginConfType type, const char *name, void (*parse_func) (const char *key, const char *val), int (*return_func) (const char *key), bool required);
 	/* pc group permission */
-	void (*addPCGPermission) (unsigned int pluginID, char *name, unsigned int *mask);
+	void (*addPCGPermission) (unsigned int pluginID, const char *name, unsigned int *mask);
 
 	struct Sql *sql_handle;
 
@@ -259,13 +261,17 @@ struct HPMi_interface {
 #ifdef HERCULES_CORE_HPMI_SKIP
 extern struct HPMi_interface HPMi_s;
 extern struct HPMi_interface *HPMi;
-extern void *(*import_symbol) (char *name, unsigned int pID);
+extern void *(*import_symbol) (const char *name, unsigned int pID);
 #else
 HPExport struct HPMi_interface HPMi_s;
 HPExport struct HPMi_interface *HPMi;
-HPExport void *(*import_symbol) (char *name, unsigned int pID);
+HPExport void *(*import_symbol) (const char *name, unsigned int pID);
 #endif
-#define HPM_SYMBOL(n, s) ((s) = import_symbol((n),HPMi->pid))
+#ifdef __cplusplus
+	#define HPM_SYMBOL(n, s) ((s) = static_cast<decltype(s)>(import_symbol((n),HPMi->pid)))
+#else
+	#define HPM_SYMBOL(n, s) ((s) = import_symbol((n),HPMi->pid))
+#endif
 #endif // !HERCULES_CORE
 
 

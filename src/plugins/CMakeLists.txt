@@ -100,6 +100,8 @@ function(add_plugin_target _plugin_name)
       herc-plugins
   )
 
+  set_source_files_properties(${_cfiles} PROPERTIES LANGUAGE CXX)
+
   message(STATUS "Added plugin ${_plugin_name} to build files")
 endfunction()
 

@@ -1035,7 +1035,7 @@ bool mobskilldb2sql_sub(struct config_setting_t *it, int n, int mob_id)
 		i32 = MSS_ANY;
 	}
 	// State
-	StrBuf->Printf(&buf, "'%s',", mob_skill_state_tostring(i32));
+	StrBuf->Printf(&buf, "'%s',", mob_skill_state_tostring((enum MobSkillState)i32));
 
 	// SkillID
 	if (!(i32 = skill->name2id(name))) {

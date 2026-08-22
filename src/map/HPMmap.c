@@ -157,7 +157,7 @@ void HPM_map_plugin_load_sub(struct hplugin *plugin)
 	plugin->hpi->addPCGPermission = HPM_map_add_group_permission;
 }
 
-bool HPM_map_add_atcommand(char *name, AtCommandFunc func)
+bool HPM_map_add_atcommand(const char *name, AtCommandFunc func)
 {
 	unsigned int i = 0;
 
@@ -190,7 +190,7 @@ void HPM_map_atcommands(void)
 /**
  * Adds a new group permission to the HPM-provided list
  **/
-void HPM_map_add_group_permission(unsigned int pluginID, char *name, unsigned int *mask)
+void HPM_map_add_group_permission(unsigned int pluginID, const char *name, unsigned int *mask)
 {
 	unsigned char index = pcg->HPMpermissions_count;
 

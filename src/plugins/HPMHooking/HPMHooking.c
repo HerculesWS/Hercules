@@ -28,9 +28,6 @@
 #include "common/socket.h"
 #include "common/packets.h"
 
-PRAGMA_GCC5(GCC diagnostic push)
-PRAGMA_GCC5(GCC diagnostic ignored "-Wdiscarded-qualifiers")
-PRAGMA_GCC5(GCC diagnostic ignored "-Wsuggest-attribute=format")
 #if defined (HPMHOOKING_API)
 #define HPM_SERVER_TYPE SERVER_TYPE_API
 #define HPM_CORE_INCLUDE "plugins/HPMHooking/HPMHooking_api.HPMHooksCore.inc"
@@ -155,7 +152,6 @@ PRAGMA_GCC5(GCC diagnostic ignored "-Wsuggest-attribute=format")
 #define HPM_SOURCES_INCLUDE "plugins/HPMHooking/HPMHooking.sources.inc"
 #error HPMHooking plugin needs to be compiled for a specific server type. Please make sure your CMakeLists are up to date.
 #endif
-PRAGMA_GCC5(GCC diagnostic pop)
 #include "common/base62.h"
 #include "common/conf.h"
 #include "common/console.h"
@@ -192,7 +188,7 @@ HPExport struct hplugin_info pinfo = {
 struct DBMap *hp_db;/* hooking points db -- for quick lookup */
 
 struct HookingPointData {
-	char* name;
+	const char *name;
 	void **sref;
 	void *tref;
 	int idx;
@@ -260,11 +256,7 @@ HPExport bool HPM_Plugin_AddHook(enum HPluginHookType type, const char *target, 
 	return false;
 }
 
-PRAGMA_GCC5(GCC diagnostic push)
-PRAGMA_GCC5(GCC diagnostic ignored "-Wdiscarded-qualifiers")
-PRAGMA_GCC5(GCC diagnostic ignored "-Wsuggest-attribute=format")
 #include HPM_HOOKS_INCLUDE
-PRAGMA_GCC5(GCC diagnostic pop)
 
 void HPM_HP_final(void) {
 	int i, len = HPMHooks.data.total * 2;
@@ -290,7 +282,7 @@ void HPM_HP_load(void) {
 
 	memset(&HPMHooks,0,sizeof(struct HPMHooksCore));
 
-	hp_db = strdb_alloc(DB_OPT_BASE|DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, HookingPointsLenMax);
+	hp_db = strdb_alloc((enum DBOptions)(DB_OPT_BASE|DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA), HookingPointsLenMax);
 
 	for(i = 0; i < len; i++) {
 		struct HookingPointData *hpd = NULL;

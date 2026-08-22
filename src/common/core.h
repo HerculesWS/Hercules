@@ -31,7 +31,7 @@
 
 #define HERC_UNKNOWN_VER '\x02'
 
-enum server_types {
+enum server_types CXX_ENUM_TYPE(unsigned int) {
 	SERVER_TYPE_UNKNOWN = 0x0,
 	SERVER_TYPE_LOGIN   = 0x1,
 	SERVER_TYPE_CHAR    = 0x2,

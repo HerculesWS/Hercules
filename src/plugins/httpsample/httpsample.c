@@ -57,7 +57,7 @@ enum apimessages {
 
 HPExport struct hplugin_info pinfo = {
 	"Http sample",    // Plugin name
-	SERVER_TYPE_CHAR|SERVER_TYPE_LOGIN|SERVER_TYPE_MAP|SERVER_TYPE_API, // Which server types this plugin works with?
+	(enum server_types)(SERVER_TYPE_CHAR|SERVER_TYPE_LOGIN|SERVER_TYPE_MAP|SERVER_TYPE_API), // Which server types this plugin works with?
 	"0.1",       // Plugin version
 	HPM_VERSION, // HPM Version (don't change, macro is automatically updated)
 };
