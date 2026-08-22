@@ -189,7 +189,7 @@ int return_my_setting(const char *key)
 }
 
 /* Prints a message to console and shows an example of function declared by defined later */
-static void atcmd_sample_message(const char *message, const char *sd_name)
+void atcmd_sample_message(const char *message, const char *sd_name)
 {
 	printf("I'm being run! message -> '%s' by %s\n", message, sd_name);
 }

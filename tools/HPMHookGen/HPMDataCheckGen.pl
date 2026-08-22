@@ -105,7 +105,8 @@ print FH <<"EOF";
 #undef HPM_SYMBOL
 #endif // HPM_SYMBOL
 
-static const struct s_HPMDataCheck HPMDataCheck_s[] = {
+namespace {
+const struct s_HPMDataCheck HPMDataCheck_s[] = {
 EOF
 
 foreach my $key (sort keys %out) {
@@ -127,13 +128,17 @@ EOF
 }
 print FH <<"EOF";
 };
-static const unsigned int HPMDataCheckLen_s = ARRAYLENGTH(HPMDataCheck_s);
-static const int HPMDataCheckVer_s = $HPMDataCheckAPIVer;
+constexpr unsigned int HPMDataCheckLen_s = ARRAYLENGTH(HPMDataCheck_s);
+constexpr int HPMDataCheckVer_s = $HPMDataCheckAPIVer;
+}
 
 #define HPMDATACHECK_DEFS \\
-	HPExport const struct s_HPMDataCheck *HPMDataCheck = HPMDataCheck_s; \\
-	HPExport unsigned int HPMDataCheckLen = HPMDataCheckLen_s; \\
-	HPExport int HPMDataCheckVer = HPMDataCheckVer_s;
+	const struct s_HPMDataCheck *HPMDataCheck = HPMDataCheck_s; \\
+	unsigned int HPMDataCheckLen = HPMDataCheckLen_s; \\
+	int HPMDataCheckVer = HPMDataCheckVer_s;
+HPExport const struct s_HPMDataCheck *HPMDataCheck;
+HPExport unsigned int HPMDataCheckLen;
+HPExport int HPMDataCheckVer;
 #ifdef HPM_PLUGIN_DEFS_ALL
 #define HPM_DECLARE_PLUGIN(plugin_name, plugin_type, plugin_version) \\
 	HPMDATACHECK_DEFS \\

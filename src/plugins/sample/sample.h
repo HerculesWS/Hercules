@@ -20,6 +20,6 @@
 #ifndef PLUGIN_SAMPLE_SAMPLE_H
 #define PLUGIN_SAMPLE_SAMPLE_H
 
-static void atcmd_sample_message(const char *message, const char *sd_name);
+void atcmd_sample_message(const char *message, const char *sd_name);
 
 #endif /* PLUGIN_SAMPLE_SAMPLE_H */

@@ -258,27 +258,28 @@ struct HPMi_interface {
 #ifdef HERCULES_CORE
 #define HPM_SYMBOL(n, s) (HPM->share((s), (n)), true)
 #else // ! HERCULES_CORE
-extern struct HPMi_interface HPMi_s;
-extern struct HPMi_interface *HPMi;
-extern void *(*import_symbol) (const char *name, unsigned int pID);
-extern struct hplugin_info pinfo;
+HPExport struct HPMi_interface HPMi_s;
+HPExport struct HPMi_interface *HPMi;
+HPExport void *(*import_symbol) (const char *name, unsigned int pID);
+HPExport struct hplugin_info pinfo;
 
 #define HPM_PLUGIN_DEFS_BASE                                                   \
-  HPExport struct HPMi_interface HPMi_s;                                       \
-  HPExport struct HPMi_interface *HPMi;                                        \
-  HPExport void *(*import_symbol)(const char *name, unsigned int pID);
+  struct HPMi_interface HPMi_s;                                                \
+  struct HPMi_interface *HPMi;                                                 \
+  void *(*import_symbol)(const char *name, unsigned int pID);
 
 #define HPM_PLUGIN_DEFS_ALL HPM_PLUGIN_DEFS_BASE
 
 #define HPM_DECLARE_PLUGIN_BASE(n, t, v)                                       \
   struct hplugin_info pinfo = {                                                \
-      (n),                                                                     \
-      (t),                                                                     \
-      (v),                                                                     \
-      HPM_VERSION,                                                             \
+      .name = (n),                                                             \
+      .type = (t),                                                             \
+      .version = (v),                                                          \
+      .req_version = HPM_VERSION,                                              \
   };
 
-#define HPM_SYMBOL(n, s) ((s) = import_symbol((n),HPMi->pid))
+#define HPM_SYMBOL(n, s) ((s) = static_cast<decltype(s)>(import_symbol((n),HPMi->pid)))
+
 #endif // !HERCULES_CORE
 
 #endif /* COMMON_HPMI_H */

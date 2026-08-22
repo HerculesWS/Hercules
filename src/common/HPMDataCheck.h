@@ -35,7 +35,8 @@
 #undef HPM_SYMBOL
 #endif // HPM_SYMBOL
 
-static const struct s_HPMDataCheck HPMDataCheck_s[] = {
+namespace {
+const struct s_HPMDataCheck HPMDataCheck_s[] = {
 	#ifdef API_ACLIF_H
 		{ "aclif_interface", sizeof(struct aclif_interface), SERVER_TYPE_API },
 		{ "char_server_data", sizeof(struct char_server_data), SERVER_TYPE_API },
@@ -1268,13 +1269,17 @@ static const struct s_HPMDataCheck HPMDataCheck_s[] = {
 		#define MAP_VENDING_H
 	#endif // MAP_VENDING_H
 };
-static const unsigned int HPMDataCheckLen_s = ARRAYLENGTH(HPMDataCheck_s);
-static const int HPMDataCheckVer_s = 2;
+constexpr unsigned int HPMDataCheckLen_s = ARRAYLENGTH(HPMDataCheck_s);
+constexpr int HPMDataCheckVer_s = 2;
+}
 
 #define HPMDATACHECK_DEFS \
-	HPExport const struct s_HPMDataCheck *HPMDataCheck = HPMDataCheck_s; \
-	HPExport unsigned int HPMDataCheckLen = HPMDataCheckLen_s; \
-	HPExport int HPMDataCheckVer = HPMDataCheckVer_s;
+	const struct s_HPMDataCheck *HPMDataCheck = HPMDataCheck_s; \
+	unsigned int HPMDataCheckLen = HPMDataCheckLen_s; \
+	int HPMDataCheckVer = HPMDataCheckVer_s;
+HPExport const struct s_HPMDataCheck *HPMDataCheck;
+HPExport unsigned int HPMDataCheckLen;
+HPExport int HPMDataCheckVer;
 #ifdef HPM_PLUGIN_DEFS_ALL
 #define HPM_DECLARE_PLUGIN(plugin_name, plugin_type, plugin_version) \
 	HPMDATACHECK_DEFS \
