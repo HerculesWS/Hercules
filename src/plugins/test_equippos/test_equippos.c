@@ -78,7 +78,10 @@ enum fake_item_id {
 	ID_CTMB    = 14,
 };
 
-static struct item_data items[] = {
+static struct {
+	int nameid;
+	int equip;
+} dummy_items_info[] = {
 	{ .nameid = ID_0, .equip = 0 },
 	{ .nameid = ID_B, .equip = EQP_HEAD_LOW },
 	{ .nameid = ID_M, .equip = EQP_HEAD_MID },
@@ -95,6 +98,9 @@ static struct item_data items[] = {
 	{ .nameid = ID_CTM, .equip = EQP_COSTUME_HEAD_MID | EQP_COSTUME_HEAD_TOP },
 	{ .nameid = ID_CTMB, .equip = EQP_COSTUME_HEAD_LOW | EQP_COSTUME_HEAD_MID | EQP_COSTUME_HEAD_TOP },
 };
+static struct item_data items[ARRAYLENGTH(dummy_items_info)];
+
+STATIC_ASSERT(ARRAYLENGTH(items) == ARRAYLENGTH(dummy_items_info), "The lengths of items and dummy_items_info don't match");
 
 VECTOR_STRUCT_DECL(autorelease, struct map_session_data *);
 
@@ -209,6 +215,8 @@ static void my_status_calc_bl_(struct block_list *bl, e_scb_flag flag, enum e_st
 HPExport void plugin_init(void)
 {
 	for (int i = 0; i < ARRAYLENGTH(items); i++) {
+		items[i].nameid = dummy_items_info[i].nameid;
+		items[i].equip = dummy_items_info[i].equip;
 		items[i].type = IT_ARMOR;
 		itemdb->jobmask2mapid(items[i].class_base, UINT64_MAX);
 		items[i].class_upper = ITEMUPPER_ALL;
