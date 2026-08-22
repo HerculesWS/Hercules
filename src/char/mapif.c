@@ -187,7 +187,7 @@ static void mapif_parse_auction_requestlist(int fd)
 	char searchtext[NAME_LENGTH];
 	int char_id = RFIFOL(fd, 4), len = sizeof(struct auction_data);
 	int price = RFIFOL(fd, 10);
-	short type = RFIFOW(fd, 8), page = std::max(1i16, (short)RFIFOW(fd, 14)); // FIXME: There's no need for these vars to be smaller than int
+	short type = RFIFOW(fd, 8), page = std::max((short)1, (short)RFIFOW(fd, 14)); // FIXME: There's no need for these vars to be smaller than int
 	unsigned char buf[5 * sizeof(struct auction_data)];
 	struct DBIterator *iter = db_iterator(inter_auction->db);
 	short i = 0, j = 0, pages = 1;
