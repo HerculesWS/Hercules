@@ -51,12 +51,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-HPExport struct hplugin_info pinfo = {
+HPM_DECLARE_PLUGIN(
 	"Sample",    // Plugin name
 	(enum server_types)(SERVER_TYPE_CHAR | SERVER_TYPE_LOGIN | SERVER_TYPE_MAP | SERVER_TYPE_API),// Which server types this plugin works with?
-	"0.1",       // Plugin version
-	HPM_VERSION, // HPM Version (don't change, macro is automatically updated)
-};
+	"0.1"        // Plugin version
+)
 ACMD(sample) {//@sample command - 5 params: const int fd, struct map_session_data* sd, const char* command, const char* message, struct AtCommandInfo *info
 	atcmd_sample_message(message, sd->status.name);
 	return true;
@@ -189,7 +188,7 @@ int return_my_setting(const char *key)
 }
 
 /* Prints a message to console and shows an example of function declared by defined later */
-static void atcmd_sample_message(const char *message, const char *sd_name)
+void atcmd_sample_message(const char *message, const char *sd_name)
 {
 	printf("I'm being run! message -> '%s' by %s\n", message, sd_name);
 }

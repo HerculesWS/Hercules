@@ -45,6 +45,10 @@ struct HPMHooking_core_interface {
 extern struct HPMHooking_interface HPMHooking_s;
 #else
 HPExport struct HPMHooking_interface HPMHooking_s;
+#undef HPM_PLUGIN_DEFS_ALL
+#define HPM_PLUGIN_DEFS_ALL \
+	HPM_PLUGIN_DEFS_BASE
+	struct HPMHooking_interface HPMHooking_s;
 #endif
 
 #include "plugins/HPMHooking/HPMHooking.Defs.inc"

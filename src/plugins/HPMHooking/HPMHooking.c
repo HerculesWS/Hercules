@@ -28,9 +28,6 @@
 #include "common/socket.h"
 #include "common/packets.h"
 
-PRAGMA_GCC5(GCC diagnostic push)
-PRAGMA_GCC5(GCC diagnostic ignored "-Wdiscarded-qualifiers")
-PRAGMA_GCC5(GCC diagnostic ignored "-Wsuggest-attribute=format")
 #if defined (HPMHOOKING_API)
 #define HPM_SERVER_TYPE SERVER_TYPE_API
 #define HPM_CORE_INCLUDE "plugins/HPMHooking/HPMHooking_api.HPMHooksCore.inc"
@@ -155,7 +152,6 @@ PRAGMA_GCC5(GCC diagnostic ignored "-Wsuggest-attribute=format")
 #define HPM_SOURCES_INCLUDE "plugins/HPMHooking/HPMHooking.sources.inc"
 #error HPMHooking plugin needs to be compiled for a specific server type. Please make sure your CMakeLists are up to date.
 #endif
-PRAGMA_GCC5(GCC diagnostic pop)
 #include "common/base62.h"
 #include "common/conf.h"
 #include "common/console.h"
@@ -181,12 +177,11 @@ PRAGMA_GCC5(GCC diagnostic pop)
 #include <stdlib.h>
 #include <string.h>
 
-HPExport struct hplugin_info pinfo = {
+HPM_DECLARE_PLUGIN(
 	"HPMHooking",   // Plugin name
 	HPM_SERVER_TYPE,// Which server types this plugin works with?
-	"0.2",          // Plugin version
-	HPM_VERSION,    // HPM Version (don't change, macro is automatically updated)
-};
+	"0.2"           // Plugin version
+)
 
 #define HP_POP(x,y) #x , (void**)(&x) , (void*)y , 0
 struct DBMap *hp_db;/* hooking points db -- for quick lookup */
@@ -260,11 +255,7 @@ HPExport bool HPM_Plugin_AddHook(enum HPluginHookType type, const char *target, 
 	return false;
 }
 
-PRAGMA_GCC5(GCC diagnostic push)
-PRAGMA_GCC5(GCC diagnostic ignored "-Wdiscarded-qualifiers")
-PRAGMA_GCC5(GCC diagnostic ignored "-Wsuggest-attribute=format")
 #include HPM_HOOKS_INCLUDE
-PRAGMA_GCC5(GCC diagnostic pop)
 
 void HPM_HP_final(void) {
 	int i, len = HPMHooks.data.total * 2;

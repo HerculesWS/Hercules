@@ -33,12 +33,11 @@
 
 #include <stdlib.h>
 
-HPExport struct hplugin_info pinfo = {
+HPM_DECLARE_PLUGIN(
 	"test_equippos", ///< Plugin name
 	SERVER_TYPE_MAP, ///< Plugin type
-	"0.1",           ///< Plugin version
-	HPM_VERSION,     ///< HPM Version
-};
+	"0.1"            ///< Plugin version
+)
 
 #define TEST(name, function, ...) do { \
 	const char *message = NULL; \

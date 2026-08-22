@@ -490,7 +490,7 @@ static struct hplugin *hplugin_load(const char *filename)
 	ImportSymbolFunc **import_symbol_ref;
 	int *HPMDataCheckVer;
 	unsigned int *HPMDataCheckLen;
-	struct s_HPMDataCheck *HPMDataCheck;
+	struct s_HPMDataCheck **HPMDataCheck;
 	const char *(*HPMLoadEvent)(int server_type);
 
 	if( HPM->exists(filename) ) {
@@ -584,13 +584,13 @@ static struct hplugin *hplugin_load(const char *filename)
 		exit(EXIT_FAILURE);
 	}
 
-	if( !( HPMDataCheck = plugin_import(plugin->dll, "HPMDataCheck", struct s_HPMDataCheck *) ) ) {
+	if( !( HPMDataCheck = plugin_import(plugin->dll, "HPMDataCheck", struct s_HPMDataCheck **) ) ) {
 		ShowFatalError("HPM:plugin_load: failed to retrieve 'HPMDataCheck' for '" CL_WHITE "%s" CL_RESET "', most likely not including HPMDataCheck.h!\n", filename);
 		exit(EXIT_FAILURE);
 	}
 
 	// TODO: Remove the HPM->DataCheck != NULL check once login and char support is complete
-	if (HPM->DataCheck != NULL && !HPM->DataCheck(HPMDataCheck,*HPMDataCheckLen,*HPMDataCheckVer,plugin->info->name)) {
+	if (HPM->DataCheck != NULL && !HPM->DataCheck(*HPMDataCheck,*HPMDataCheckLen,*HPMDataCheckVer,plugin->info->name)) {
 		ShowFatalError("HPM:plugin_load: '" CL_WHITE "%s" CL_RESET "' failed DataCheck, out of sync from the core (recompile plugin)!\n", filename);
 		exit(EXIT_FAILURE);
 	}

@@ -76,6 +76,8 @@
 // HPMDataCheck comes after all the other includes
 #include "common/HPMDataCheck.h"
 
+HPMDATACHECK_DEFS
+
 /**
  * HPM plugin data store validator sub-handler (char-server)
  *
