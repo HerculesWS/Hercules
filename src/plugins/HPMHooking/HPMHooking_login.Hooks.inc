@@ -1102,7 +1102,7 @@ struct DBMap * HP_DB_alloc(const char *file, const char *func, int line, enum DB
 }
 union DBKey HP_DB_i2key(int key) {
 	int hIndex = 0;
-	union DBKey retVal___ = { 0 };
+	union DBKey retVal___{};
 	if (HPMHooks.count.HP_DB_i2key_pre > 0) {
 		union DBKey (*preHookFunc) (int *key);
 		*HPMforce_return = false;
@@ -1129,7 +1129,7 @@ union DBKey HP_DB_i2key(int key) {
 }
 union DBKey HP_DB_ui2key(unsigned int key) {
 	int hIndex = 0;
-	union DBKey retVal___ = { 0 };
+	union DBKey retVal___{};
 	if (HPMHooks.count.HP_DB_ui2key_pre > 0) {
 		union DBKey (*preHookFunc) (unsigned int *key);
 		*HPMforce_return = false;
@@ -1156,7 +1156,7 @@ union DBKey HP_DB_ui2key(unsigned int key) {
 }
 union DBKey HP_DB_str2key(const char *key) {
 	int hIndex = 0;
-	union DBKey retVal___ = { 0 };
+	union DBKey retVal___{};
 	if (HPMHooks.count.HP_DB_str2key_pre > 0) {
 		union DBKey (*preHookFunc) (const char **key);
 		*HPMforce_return = false;
@@ -1183,7 +1183,7 @@ union DBKey HP_DB_str2key(const char *key) {
 }
 union DBKey HP_DB_i642key(int64 key) {
 	int hIndex = 0;
-	union DBKey retVal___ = { 0 };
+	union DBKey retVal___{};
 	if (HPMHooks.count.HP_DB_i642key_pre > 0) {
 		union DBKey (*preHookFunc) (int64 *key);
 		*HPMforce_return = false;
@@ -1210,7 +1210,7 @@ union DBKey HP_DB_i642key(int64 key) {
 }
 union DBKey HP_DB_ui642key(uint64 key) {
 	int hIndex = 0;
-	union DBKey retVal___ = { 0 };
+	union DBKey retVal___{};
 	if (HPMHooks.count.HP_DB_ui642key_pre > 0) {
 		union DBKey (*preHookFunc) (uint64 *key);
 		*HPMforce_return = false;
@@ -1237,7 +1237,7 @@ union DBKey HP_DB_ui642key(uint64 key) {
 }
 struct DBData HP_DB_i2data(int data) {
 	int hIndex = 0;
-	struct DBData retVal___ = { 0 };
+	struct DBData retVal___{};
 	if (HPMHooks.count.HP_DB_i2data_pre > 0) {
 		struct DBData (*preHookFunc) (int *data);
 		*HPMforce_return = false;
@@ -1264,7 +1264,7 @@ struct DBData HP_DB_i2data(int data) {
 }
 struct DBData HP_DB_ui2data(unsigned int data) {
 	int hIndex = 0;
-	struct DBData retVal___ = { 0 };
+	struct DBData retVal___{};
 	if (HPMHooks.count.HP_DB_ui2data_pre > 0) {
 		struct DBData (*preHookFunc) (unsigned int *data);
 		*HPMforce_return = false;
@@ -1291,7 +1291,7 @@ struct DBData HP_DB_ui2data(unsigned int data) {
 }
 struct DBData HP_DB_ptr2data(void *data) {
 	int hIndex = 0;
-	struct DBData retVal___ = { 0 };
+	struct DBData retVal___{};
 	if (HPMHooks.count.HP_DB_ptr2data_pre > 0) {
 		struct DBData (*preHookFunc) (void **data);
 		*HPMforce_return = false;
@@ -5325,7 +5325,7 @@ int HP_login_waiting_disconnect_timer(int tid, int64 tick, int id, intptr_t data
 }
 struct DBData HP_login_create_online_user(union DBKey key, va_list args) {
 	int hIndex = 0;
-	struct DBData retVal___ = { 0 };
+	struct DBData retVal___{};
 	if (HPMHooks.count.HP_login_create_online_user_pre > 0) {
 		struct DBData (*preHookFunc) (union DBKey *key, va_list args);
 		*HPMforce_return = false;
