@@ -469,7 +469,7 @@ static int pet_return_egg(struct map_session_data *sd, struct pet_data *pd)
 		clif->inventoryList(sd);
 	} else {
 		// The pet egg wasn't found: it was probably hatched with the old system that deleted the egg.
-		struct item tmp_item = {0};
+		struct item tmp_item{};
 		int flag;
 
 		tmp_item.nameid = pd->petDB->EggID;
@@ -1542,7 +1542,7 @@ static int pet_read_db_sub(struct config_setting_t *it, int n, const char *sourc
 	nullpo_ret(it);
 	nullpo_ret(source);
 
-	struct s_pet_db entry = { 0 };
+	struct s_pet_db entry{};
 	int i32 = 0;
 
 	if (libconfig->setting_lookup_int(it, "Id", &i32) == CONFIG_FALSE) {
@@ -1780,7 +1780,7 @@ static bool pet_read_db_sub_evolution(struct s_pet_db *entry, struct config_sett
 			VECTOR_INIT(ped.items);
 
 			while ((item = libconfig->setting_get_elem(pett, j))) {
-				struct itemlist_entry list = { 0 };
+				struct itemlist_entry list{};
 				int quantity = 0;
 
 				str = config_setting_name(item);

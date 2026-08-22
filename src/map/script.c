@@ -248,9 +248,9 @@ static void script_reportsrc(struct script_state *st)
 		case BL_ALL:
 		default:
 			if( bl->m >= 0 )
-				ShowDebug("Source (Non-NPC type %u): name %s at %s (%d,%d)\n", bl->type, clif->get_bl_name(bl), map->list[bl->m].name, bl->x, bl->y);
+				ShowDebug("Source (Non-NPC type %u): name %s at %s (%d,%d)\n", (unsigned int)bl->type, clif->get_bl_name(bl), map->list[bl->m].name, bl->x, bl->y);
 			else
-				ShowDebug("Source (Non-NPC type %u): name %s (invisible/not on a map)\n", bl->type, clif->get_bl_name(bl));
+				ShowDebug("Source (Non-NPC type %u): name %s (invisible/not on a map)\n", (unsigned int)bl->type, clif->get_bl_name(bl));
 			break;
 	}
 }
@@ -4356,7 +4356,7 @@ static void script_free_state(struct script_state *st)
 		struct map_session_data *sd = st->rid != 0 ? map->id2sd(st->rid) : NULL;
 
 		if(st->bk_st) {// backup was not restored
-			ShowDebug("script_free_state: Previous script state lost (rid=%d, oid=%d, state=%u, bk_npcid=%d).\n", st->bk_st->rid, st->bk_st->oid, st->bk_st->state, st->bk_npcid);
+			ShowDebug("script_free_state: Previous script state lost (rid=%d, oid=%d, state=%u, bk_npcid=%d).\n", st->bk_st->rid, st->bk_st->oid, (unsigned int)st->bk_st->state, st->bk_npcid);
 		}
 
 		if (sd != NULL && sd->st == st) { //Current script is aborted.
@@ -5066,7 +5066,7 @@ static void script_detach_state(struct script_state *st, bool dequeue_event)
 			npc->event_dequeue(sd);
 		}
 	} else if(st->bk_st) { // rid was set to 0, before detaching the script state
-		ShowError("script_detach_state: Found previous script state without attached player (rid=%d, oid=%d, state=%u, bk_npcid=%d)\n", st->bk_st->rid, st->bk_st->oid, st->bk_st->state, st->bk_npcid);
+		ShowError("script_detach_state: Found previous script state without attached player (rid=%d, oid=%d, state=%u, bk_npcid=%d)\n", st->bk_st->rid, st->bk_st->oid, (unsigned int)st->bk_st->state, st->bk_npcid);
 		script->reportsrc(st->bk_st);
 
 		script->free_state(st->bk_st);
@@ -5086,7 +5086,7 @@ static void script_attach_state(struct script_state *st)
 		if (st != sd->st) {
 			if (st->bk_st != NULL) {
 				// there is already a backup
-				ShowDebug("script_free_state: Previous script state lost (rid=%d, oid=%d, state=%u, bk_npcid=%d).\n", st->bk_st->rid, st->bk_st->oid, st->bk_st->state, st->bk_npcid);
+				ShowDebug("script_free_state: Previous script state lost (rid=%d, oid=%d, state=%u, bk_npcid=%d).\n", st->bk_st->rid, st->bk_st->oid, (unsigned int)st->bk_st->state, st->bk_npcid);
 			}
 			st->bk_st = sd->st;
 			st->bk_npcid = sd->npc_id;
@@ -5248,7 +5248,7 @@ static void run_script_main(struct script_state *st)
 				break;
 
 			default:
-				ShowError("unknown command : %u @ %d\n", c, st->pos);
+				ShowError("unknown command : %u @ %d\n", (unsigned int)c, st->pos);
 				st->state=END;
 				break;
 		}
@@ -6070,7 +6070,7 @@ static void script_load_translation_sub(const char *filename, void *context)
  */
 static int script_load_translation(const char *directory, uint8 lang_id)
 {
-	struct load_translation_data data = { 0 };
+	struct load_translation_data data{};
 	data.lang_id = lang_id;
 
 	nullpo_ret(directory);
@@ -12884,7 +12884,7 @@ static int buildin_getunits_sub(struct block_list *bl, va_list ap)
 	uint32 limit = va_arg(ap, uint32);
 	const char *name = va_arg(ap, const char *);
 	struct reg_db *ref = va_arg(ap, struct reg_db *);
-	enum bl_type type = va_arg(ap, enum bl_type);
+	enum bl_type type = (enum bl_type)va_arg(ap, unsigned int);
 	uint32 index = start + *count;
 
 	if ((bl->type & type) == 0) {
@@ -14793,7 +14793,7 @@ static BUILDIN(getmapinfo)
 		script_pushint(st, map->list[m].npc_num);
 		break;
 	default:
-		ShowError("buildin_getmapinfo: unknown option in second argument (%u).\n", mode);
+		ShowError("buildin_getmapinfo: unknown option in second argument (%u).\n", (unsigned int)mode);
 		script_pushint(st, -2);
 		return false;
 	}
@@ -15398,7 +15398,7 @@ static BUILDIN(flagemblem)
 	if( nd == NULL ) {
 		ShowError("script:flagemblem: npc %d not found\n", st->oid);
 	} else if( nd->subtype != SCRIPT ) {
-		ShowError("script:flagemblem: unexpected subtype %u for npc %d '%s'\n", nd->subtype, st->oid, nd->exname);
+		ShowError("script:flagemblem: unexpected subtype %u for npc %d '%s'\n", (unsigned int)nd->subtype, st->oid, nd->exname);
 	} else {
 		bool changed = ( nd->u.scr.guild_id != g_id )?true:false;
 		nd->u.scr.guild_id = g_id;
@@ -16674,7 +16674,7 @@ static BUILDIN(getitemlink)
 		return false;
 	}
 
-	struct item link_item = { 0 };
+	struct item link_item{};
 	link_item.nameid = itd->nameid;
 	link_item.refine = script_hasdata(st, 3) ? script_getnum(st, 3) : 0;
 
@@ -22905,7 +22905,7 @@ static BUILDIN(unitattack)
 		case BL_NPC:
 		case BL_ALL:
 		default:
-			ShowError("script:unitattack: unsupported source unit type %u\n", unit_bl->type);
+			ShowError("script:unitattack: unsupported source unit type %u\n", (unsigned int)unit_bl->type);
 			script_pushint(st, 0);
 			return false;
 	}
@@ -23355,7 +23355,7 @@ static BUILDIN(checkcell)
 	cell_chk type = (cell_chk)script_getnum(st,5);
 
 	if ( m == -1 ) {
-		ShowWarning("checkcell: Attempted to run on unexsitent map '%s', type %u, x/y %d,%d\n", script_getstr(st,2), type, x, y);
+		ShowWarning("checkcell: Attempted to run on unexsitent map '%s', type %u, x/y %d,%d\n", script_getstr(st,2), (unsigned int)type, x, y);
 		return true;
 	}
 
@@ -23382,7 +23382,7 @@ static BUILDIN(setcell)
 	int x,y;
 
 	if ( m == -1 ) {
-		ShowWarning("setcell: Attempted to run on unexistent map '%s', type %u, x1/y1 - %d,%d | x2/y2 - %d,%d\n", script_getstr(st, 2), type, x1, y1, x2, y2);
+		ShowWarning("setcell: Attempted to run on unexistent map '%s', type %u, x1/y1 - %d,%d | x2/y2 - %d,%d\n", script_getstr(st, 2), (unsigned int)type, x1, y1, x2, y2);
 		return true;
 	}
 
@@ -23624,7 +23624,7 @@ static BUILDIN(readbook)
 static BUILDIN(questinfo)
 {
 	struct npc_data *nd = map->id2nd(st->oid);
-	struct questinfo qi = { 0 };
+	struct questinfo qi{};
 	int icon = script_getnum(st, 2);
 
 	if (nd == NULL)
@@ -23722,7 +23722,7 @@ static BUILDIN(setquestinfo)
 	}
 	case QINFO_ITEM:
 	{
-		struct questinfo_itemreq item = { 0 };
+		struct questinfo_itemreq item = {};
 
 		item.nameid = script_getnum(st, 3);
 		item.min = script_hasdata(st, 4) ? script_getnum(st, 4) : 0;
@@ -23768,7 +23768,7 @@ static BUILDIN(setquestinfo)
 	}
 	case QINFO_QUEST:
 	{
-		struct questinfo_qreq quest_req = { 0 };
+		struct questinfo_qreq quest_req = {};
 		struct quest_db *quest_data = NULL;
 
 		quest_req.id = script_getnum(st, 3);
@@ -27215,7 +27215,7 @@ static BUILDIN(getcalendartime)
 	int cur_hour = tm->tm_hour;
 	int cur_min = tm->tm_min;
 
-	struct tm info = { 0 };
+	struct tm info{};
 	info.tm_sec = 0;
 	info.tm_min = minute;
 	info.tm_hour = hour;
@@ -27445,7 +27445,7 @@ static BUILDIN(dressroom)
 		clif->dressroom_open(sd, 0);
 		break;
 	default:
-		ShowWarning("script:dressroom: unknown mode (%u).\n", mode);
+		ShowWarning("script:dressroom: unknown mode (%u).\n", (unsigned int)mode);
 		script_pushint(st, 0);
 		return false;
 	}
@@ -27522,7 +27522,7 @@ static bool script_format_navigation(struct script_state *st, const char *label,
 	const char *command_name = script->getfuncname(st);
 
 	if (mode < NAV_MODE_ALL || mode >= NAV_MODE_MAX) {
-		ShowError("script:%s: unknown mode (%u). See valid values for NAV_MODE_* constants\n", command_name, mode);
+		ShowError("script:%s: unknown mode (%u). See valid values for NAV_MODE_* constants\n", command_name, (unsigned int)mode);
 		script_pushconststr(st, "");
 		return false;
 	}
@@ -27647,7 +27647,7 @@ static bool buildin_rodex_sendmail_sub(struct script_state *st, struct rodex_mes
 
 static BUILDIN(rodex_sendmail)
 {
-	struct rodex_message msg = { 0 };
+	struct rodex_message msg{};
 	int item_count = 0, i = 0, param = 7;
 
 	// Common parameters - sender/message/zeny
@@ -27715,7 +27715,7 @@ static BUILDIN(rodex_sendmail)
 
 static BUILDIN(rodex_sendmail2)
 {
-	struct rodex_message msg = { 0 };
+	struct rodex_message msg{};
 	int item_count = 0, i = 0, param = 7;
 
 	// Common parameters - sender/message/zeny

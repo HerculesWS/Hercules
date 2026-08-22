@@ -6425,9 +6425,9 @@ static void battle_reflect_damage(struct block_list *target, struct block_list *
 	sc = status->get_sc(target);
 
 #ifdef RENEWAL
-#define NORMALIZE_RDAMAGE(d) ( trdamage += rdamage = std::max(1i64, std::min(max_reflect_damage, (d))) )
+#define NORMALIZE_RDAMAGE(d) ( trdamage += rdamage = std::max((int64)1, std::min(max_reflect_damage, (d))) )
 #else
-#define NORMALIZE_RDAMAGE(d) ( trdamage += rdamage = std::max(1i64, (d)) )
+#define NORMALIZE_RDAMAGE(d) ( trdamage += rdamage = std::max((int64)1, (d)) )
 #endif
 
 	if( sc && !sc->count )
@@ -7724,7 +7724,7 @@ static const struct config_data_old battle_data[] = {
 	{ "left_cardfix_to_right",              &battle_config.left_cardfix_to_right,           0,      0,      1,              },
 	{ "skill_add_range",                    &battle_config.skill_add_range,                 0,      0,      INT_MAX,        },
 	{ "skill_out_range_consume",            &battle_config.skill_out_range_consume,         1,      0,      1,              },
-	{ "skillrange_by_distance",             &battle_config.skillrange_by_distance,          ~BL_PC, BL_NUL, BL_ALL,         },
+	{ "skillrange_by_distance",             &battle_config.skillrange_by_distance,          (BL_ALL & ~BL_PC), BL_NUL, BL_ALL,         },
 	{ "skillrange_from_weapon",             &battle_config.use_weapon_skill_range,          BL_NUL, BL_NUL, BL_ALL,         },
 	{ "player_damage_delay_rate",           &battle_config.pc_damage_delay_rate,            100,    0,      INT_MAX,        },
 	{ "defunit_not_enemy",                  &battle_config.defnotenemy,                     0,      0,      1,              },
@@ -7888,7 +7888,7 @@ static const struct config_data_old battle_data[] = {
 	{ "show_picker_item_type",              &battle_config.show_picker_item_type,           112,    0,      INT_MAX,        },
 	{ "party_update_interval",              &battle_config.party_update_interval,           1000,   100,    INT_MAX,        },
 	{ "party_item_share_type",              &battle_config.party_share_type,                0,      0,      1|2|3,          },
-	{ "attack_attr_none",                   &battle_config.attack_attr_none,                ~BL_PC, BL_NUL, BL_ALL,         },
+	{ "attack_attr_none",                   &battle_config.attack_attr_none,                (BL_ALL & ~BL_PC), BL_NUL, BL_ALL,         },
 	{ "gx_allhit",                          &battle_config.gx_allhit,                       0,      0,      1,              },
 	{ "gx_disptype",                        &battle_config.gx_disptype,                     1,      0,      1,              },
 	{ "devotion_level_difference",          &battle_config.devotion_level_difference,       10,     0,      INT_MAX,        },

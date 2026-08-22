@@ -22,6 +22,7 @@
 #define MAP_ITEMDB_H
 
 /* #include "map/map.h" */
+#include "common/cbasetypes.h"
 #include "common/hercules.h"
 #include "common/db.h"
 #include "common/mmo.h" // ITEM_NAME_LENGTH
@@ -428,13 +429,13 @@ enum ItemOptionTypes {
  * Item name search flags
  **/
 
-enum item_name_search_flag {
+enum item_name_search_flag CXX_ENUM_TYPE(int) {
 	IT_SEARCH_NAME_PARTIAL,
 	IT_SEARCH_NAME_EXACT,
 	IT_SEARCH_NAME_MAX,
 };
 
-enum item_reform_status {
+enum item_reform_status CXX_ENUM_TYPE(int) {
 	IT_REFORM_SUCCESS = 0,
 	IT_REFORM_NOT_ENOUGH_MATERIALS = 3,
 };

@@ -66,7 +66,7 @@ static bool stylist_read_db_libconfig(void)
 
 static bool stylist_read_db_libconfig_sub(struct config_setting_t *it, int idx, const char *source)
 {
-	struct stylist_data_entry entry = { 0 };
+	struct stylist_data_entry entry{};
 	int i32 = 0, type = 0;
 	int64 i64 = 0;
 
@@ -139,7 +139,7 @@ static bool stylist_validate_requirements(struct map_session_data *sd, int type,
 
 static void stylist_send_rodexitem(struct map_session_data *sd, int itemid)
 {
-	struct rodex_message msg = { 0 };
+	struct rodex_message msg{};
 
 	nullpo_retv(sd);
 

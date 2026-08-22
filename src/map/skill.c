@@ -4396,7 +4396,7 @@ static int skill_area_sub_count(struct block_list *src, struct block_list *targe
 /*==========================================
  *
  *------------------------------------------*/
-static int skill_timerskill(int tid, int64 tick, int id, intptr_t data)
+static int skill_timerskill_(int tid, int64 tick, int id, intptr_t data)
 {
 	struct block_list *src = map->id2bl(id),*target = NULL;
 	struct unit_data *ud = unit->bl2ud(src);
@@ -6964,7 +6964,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 		 */
 		case SU_TUNABELLY:
 			{
-				int heal = skill->calc_heal(src, bl, (skill_id == AB_HIGHNESSHEAL)?AL_HEAL:skill_id, (skill_id == AB_HIGHNESSHEAL)?10:skill_lv, true);
+				int heal = skill->calc_heal(src, bl, (skill_id == AB_HIGHNESSHEAL) ? AL_HEAL : (enum e_skill)skill_id, (skill_id == AB_HIGHNESSHEAL) ? 10 : skill_lv, true);
 				int heal_get_jobexp;
 				//Highness Heal: starts at 1.7 boost + 0.3 for each level
 				if (skill_id == AB_HIGHNESSHEAL) {
@@ -7037,6 +7037,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 			} else if (status->isdead(bl) && flag&1) { //Revive
 				skill->area_temp[0]++; //Count it in, then fall-through to the Resurrection code.
 				skill_lv = 3; //Resurrection level 3 is used
+				FALLTHROUGH
 			} else //Invalid target, skip resurrection.
 				break;
 
@@ -7442,6 +7443,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 				skill->attack(BF_MISC,src,src,bl,skill_id,skill_lv,tick,flag);
 				break;
 			}
+			FALLTHROUGH
 		case PR_SLOWPOISON:
 #ifndef RENEWAL
 		case PR_IMPOSITIO:
@@ -7701,7 +7703,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 				return 1;
 			}
 			//TODO: How much does base level affects? Dummy value of 1% per level difference used. [Skotlex]
-			clif->skill_nodamage(src,bl,skill_id == SM_SELFPROVOKE ? SM_PROVOKE : skill_id,skill_lv,
+			clif->skill_nodamage(src,bl,skill_id == SM_SELFPROVOKE ? SM_PROVOKE : (enum e_skill)skill_id,skill_lv,
 				(failure = sc_start(src, bl, type, skill_id == SM_SELFPROVOKE ? 100 : (50 + 3 * skill_lv + status->get_lv(src) - status->get_lv(bl)), skill_lv, skill->get_time(skill_id, skill_lv), skill_id)));
 			if( !failure ) {
 				if( sd )
@@ -8439,6 +8441,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 			if( !mer )
 				break;
 			sd = mer->master;
+			FALLTHROUGH
 		case WZ_ESTIMATION:
 			if( sd == NULL )
 				break;
@@ -9009,6 +9012,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 				break;
 			if(tstatus->mode&MD_BOSS)
 				break;
+			FALLTHROUGH
 		case NPC_ATTRICHANGE:
 		case NPC_CHANGEWATER:
 		case NPC_CHANGEGROUND:
@@ -9268,7 +9272,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 								int nameid = skill->get_itemid(su->group->skill_id, i);
 								if (nameid > 0) {
 									int success;
-									struct item item_tmp = { 0 };
+									struct item item_tmp{};
 									int amount = skill->get_itemqty(su->group->skill_id, i, skill_lv);
 									item_tmp.nameid = nameid;
 									item_tmp.identify = 1;
@@ -9726,6 +9730,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 				status_change_end(bl, SC_SWOO, INVALID_TIMER);
 				break;
 			}
+			FALLTHROUGH
 		case SL_SKA: // [marquis007]
 		case SL_SKE:
 			if (sd && !battle_config.allow_es_magic_pc && bl->type != BL_MOB) {
@@ -9955,6 +9960,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 				}
 				break;
 			}
+			FALLTHROUGH
 		case NPC_WIDEBLEEDING:
 		case NPC_WIDECONFUSE:
 		case NPC_WIDECURSE:
@@ -11658,6 +11664,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 				clif->skill_fail(sd, skill_id, USESKILL_FAIL_TOTARGET_PLAYER, 0, 0);
 				break;
 			}
+			FALLTHROUGH
 		case KO_IZAYOI:
 		case OB_ZANGETSU:
 		case KG_KYOMU:
@@ -21817,7 +21824,7 @@ static void skill_cooldown_load(struct map_session_data *sd)
 
 		if (battle_config.guild_skill_relog_delay == 2 && cd->entry[i]->skill_id >= GD_SKILLBASE && cd->entry[i]->skill_id < GD_MAX) {
 			remaining = cd->entry[i]->started + cd->entry[i]->total - now;
-			remaining = std::max(1i64, remaining); // expired cooldowns will be 1, so they'll expire in the normal way just after this.
+			remaining = std::max((int64)1, remaining); // expired cooldowns will be 1, so they'll expire in the normal way just after this.
 		} else {
 			cd->entry[i]->started = now;
 			remaining = cd->entry[i]->duration;
@@ -25121,7 +25128,7 @@ static bool skill_read_skilldb(const char *filename)
 	struct DBMap *loaded_ids_db = idb_alloc(DB_OPT_BASE);
 
 	while ((conf = libconfig->setting_get_elem(sk, index++)) != NULL) {
-		struct s_skill_db tmp_db = {0};
+		struct s_skill_db tmp_db{};
 
 		/** Validate mandatory fields. **/
 		skill->validate_id(conf, &tmp_db, index, loaded_ids_db);
@@ -25349,7 +25356,7 @@ static bool skill_read_autospell_db(const char *filename)
 	struct DBMap *loaded_skills_db = idb_alloc(DB_OPT_BASE);
 
 	while ((conf = libconfig->setting_get_elem(sk, index++)) != NULL) {
-		struct s_autospell_db tmp_db = {0};
+		struct s_autospell_db tmp_db{};
 
 		skill->read_autospell_skill_id(conf, &tmp_db, index);
 		if (tmp_db.skill_id == 0)
@@ -25750,7 +25757,7 @@ void skill_defaults(void)
 	skill->onskillusage = skill_onskillusage;
 	skill->bind_trap = skill_bind_trap;
 	skill->cell_overlap = skill_cell_overlap;
-	skill->timerskill = skill_timerskill;
+	skill->timerskill = skill_timerskill_;
 	skill->trap_do_splash = skill_trap_do_splash;
 	skill->trap_splash = skill_trap_splash;
 	skill->check_condition_mercenary = skill_check_condition_mercenary;

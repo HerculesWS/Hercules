@@ -255,7 +255,7 @@ static int add_path(struct node_heap *heap, struct path_node *tp, int16 x, int16
  *------------------------------------------*/
 static bool path_search(struct walkpath_data *wpd, struct block_list *bl, int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int flag, cell_chk cell)
 {
-	register int i, x, y, dx, dy;
+	int i, x, y, dx, dy;
 	struct map_data *md;
 	struct walkpath_data s_wpd;
 

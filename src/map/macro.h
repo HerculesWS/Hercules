@@ -60,13 +60,13 @@ struct macro_detect {
 
 VECTOR_STRUCT_DECL(macroaidlist, int);
 
-enum macro_detect_status {
+enum macro_detect_status CXX_ENUM_TYPE(int) {
 	MCD_TIMEOUT = 0,
 	MCD_INCORRECT = 1,
 	MCD_GOOD = 2,
 };
 
-enum macro_report_status {
+enum macro_report_status CXX_ENUM_TYPE(int) {
 	MCR_MONITORING = 0,
 	MCR_NO_DATA = 1,
 	MCR_INPROGRESS = 2,

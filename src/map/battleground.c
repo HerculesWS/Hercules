@@ -951,7 +951,7 @@ static enum BATTLEGROUNDS_QUEUE_ACK bg_canqueue(struct map_session_data *sd, str
 			break;
 		case BGQT_INVALID:
 		default:
-			ShowDebug("bg_canqueue: unknown/unsupported type %u\n", type);
+			ShowDebug("bg_canqueue: unknown/unsupported type %u\n", (unsigned int)type);
 			return BGQA_DUPLICATE_REQUEST;
 	}
 	return BGQA_SUCCESS;

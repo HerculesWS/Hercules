@@ -139,7 +139,7 @@ struct storage_data* storage_ensure(struct map_session_data* sd, int storage_id)
 	ARR_FIND(0, VECTOR_LENGTH(sd->storage.list), i, (stor = &VECTOR_INDEX(sd->storage.list, i)) != NULL && stor->uid == storage_id);
 
 	if (i == VECTOR_LENGTH(sd->storage.list)) {
-		struct storage_data t_stor = { 0 };
+		struct storage_data t_stor{};
 
 		t_stor.uid = storage_id;
 		VECTOR_INIT(t_stor.item);
@@ -1023,7 +1023,7 @@ bool storage_config_read(const char *filename, bool imported)
 	struct config_setting_t* t = NULL;
 	int i = 0;
 	while ((t = libconfig->setting_get_elem(setting, i++)) != NULL) {
-		struct storage_settings s_conf = { 0 };
+		struct storage_settings s_conf{};
 		const char *constant = NULL;
 
 		/* Id */

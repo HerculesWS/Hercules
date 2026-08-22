@@ -521,5 +521,10 @@ typedef char bool;
 #define STATIC_ASSERT(ex, msg)
 #endif
 
+#ifdef __cplusplus
+#define CXX_ENUM_TYPE(t) : t
+#else
+#define CXX_ENUM_TYPE(t)
+#endif
 
 #endif /* COMMON_CBASETYPES_H */

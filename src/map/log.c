@@ -108,7 +108,7 @@ static char log_chattype2char(e_log_chat_type type)
 	}
 
 	// should not get here, fallback
-	ShowDebug("log_chattype2char: Unknown chat type %u.\n", type);
+	ShowDebug("log_chattype2char: Unknown chat type %u.\n", (unsigned int)type);
 	return 'O';
 }
 

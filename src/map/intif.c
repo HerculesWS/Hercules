@@ -1670,7 +1670,7 @@ static void intif_parse_achievements_load(int fd)
 	VECTOR_ENSURE(sd->achievement, payload_count, 1);
 
 	for (i = 0; i < payload_count; i++) {
-		struct achievement t_ach = { 0 };
+		struct achievement t_ach{};
 
 		memcpy(&t_ach, RFIFOP(struct achievement *, fd, 8 + i * sizeof(struct achievement)), sizeof(struct achievement));
 
@@ -2579,7 +2579,7 @@ static void intif_parse_RequestRodexOpenInbox(int fd)
 		VECTOR_CLEAR(sd->rodex.messages);
 
 	for (int i = 0, j = 24; i < count; ++i, j += sizeof(struct rodex_message)) {
-		struct rodex_message msg = { 0 };
+		struct rodex_message msg{};
 		VECTOR_ENSURE(sd->rodex.messages, 1, 1);
 		memcpy(&msg, RFIFOP(struct rodex_message *, fd, j), sizeof(struct rodex_message));
 		VECTOR_PUSH(sd->rodex.messages, msg);

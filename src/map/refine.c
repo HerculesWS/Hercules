@@ -390,7 +390,7 @@ static bool refine_readdb_refinery_ui_settings_sub(const struct config_setting_t
 		}
 	}
 
-	struct s_refine_requirement req = {0};
+	struct s_refine_requirement req{};
 	if (libconfig->setting_lookup_int(elem, "BlacksmithBlessing", &req.blacksmith_blessing) == CONFIG_TRUE) {
 		if (req.blacksmith_blessing < 1 || req.blacksmith_blessing > INT8_MAX) {
 			ShowWarning("refine_readdb_requirements_sub: Invalid 'BlacksmithBlessing' amount was given value %d expected a value between %d and %d in entry'%s' in \"%s\" defaulting to 0...\n", req.blacksmith_blessing, 1, INT8_MAX, name, source);

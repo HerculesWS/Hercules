@@ -5617,7 +5617,7 @@ static int npc_script_event(struct map_session_data *sd, enum npce_event type)
 		return 0;
 	Assert_ret(type >= 0 && type < NPCE_MAX);
 	if (!sd) {
-		ShowError("npc_script_event: NULL sd. Event Type %u\n", type);
+		ShowError("npc_script_event: NULL sd. Event Type %u\n", (unsigned int)type);
 		return 0;
 	}
 

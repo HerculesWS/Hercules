@@ -65,7 +65,7 @@ struct quest_interface *quest;
  * @param quest_id ID to lookup
  * @return Quest entry (equals to &quest->dummy if the ID is invalid)
  */
-static struct quest_db *quest_db(int quest_id)
+static struct quest_db *quest_db_(int quest_id)
 {
 	if (quest_id < 0 || quest_id >= MAX_QUEST_DB || quest->db_data[quest_id] == NULL)
 		return &quest->dummy;
@@ -445,7 +445,7 @@ static int quest_check(struct map_session_data *sd, int quest_id, enum quest_che
 			}
 			return 0;
 		default:
-			ShowError("quest_check_quest: Unknown parameter %u", type);
+			ShowError("quest_check_quest: Unknown parameter %u", (unsigned int)type);
 			break;
 	}
 
@@ -1168,7 +1168,7 @@ void quest_defaults(void)
 	quest->final = do_final_quest;
 	quest->reload = do_reload_quest;
 	/* */
-	quest->db = quest_db;
+	quest->db = quest_db_;
 	quest->pc_login = quest_pc_login;
 	quest->add = quest_add;
 	quest->change = quest_change;

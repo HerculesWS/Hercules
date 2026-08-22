@@ -27,7 +27,7 @@
 
 struct rodex_message;
 
-enum rodex_add_item {
+enum rodex_add_item CXX_ENUM_TYPE(int) {
 	RODEX_ADD_ITEM_SUCCESS = 0,
 	RODEX_ADD_ITEM_WEIGHT_ERROR = 1,
 	RODEX_ADD_ITEM_FATAL_ERROR = 2,
@@ -43,13 +43,13 @@ enum rodex_send_mail {
 	RODEX_SEND_MAIL_RECEIVER_ERROR = 4
 };
 
-enum rodex_get_zeny {
+enum rodex_get_zeny CXX_ENUM_TYPE(int) {
 	RODEX_GET_ZENY_SUCCESS = 0,
 	RODEX_GET_ZENY_FATAL_ERROR = 1,
 	RODEX_GET_ZENY_LIMIT_ERROR = 2
 };
 
-enum rodex_get_items {
+enum rodex_get_items CXX_ENUM_TYPE(int) {
 	RODEX_GET_ITEMS_SUCCESS = 0,
 	RODEX_GET_ITEM_FATAL_ERROR = 1,
 	RODEX_GET_ITEM_FULL_ERROR = 2,

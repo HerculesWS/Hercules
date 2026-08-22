@@ -1000,7 +1000,7 @@ static int guild_leave(struct map_session_data *sd, int guild_id, int account_id
  * Request remove a player to a given guild_id
  * mes - non null terminated string
  *----------------------------------------*/
-static int guild_expulsion(struct map_session_data *sd, int guild_id, int account_id, int char_id, const char *mes)
+static int guild_expulsion_(struct map_session_data *sd, int guild_id, int account_id, int char_id, const char *mes)
 {
 	struct map_session_data *tsd;
 	struct guild *g;
@@ -2562,7 +2562,7 @@ void guild_defaults(void)
 	guild->member_added = guild_member_added;
 	guild->leave = guild_leave;
 	guild->member_withdraw = guild_member_withdraw;
-	guild->expulsion = guild_expulsion;
+	guild->expulsion = guild_expulsion_;
 	guild->skillup = guild_skillup;
 	guild->block_skill = guild_block_skill;
 	guild->reqalliance = guild_reqalliance;

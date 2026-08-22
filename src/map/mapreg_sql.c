@@ -543,7 +543,7 @@ static void mapreg_save_str_db(const char *name, unsigned int index, const char 
  * Saves permanent global variables to the database.
  *
  **/
-static void mapreg_save(void)
+static void mapreg_save_(void)
 {
 	if (mapreg->dirty) {
 		struct DBIterator *iter = db_iterator(mapreg->regs.vars);
@@ -728,7 +728,7 @@ void mapreg_defaults(void)
 	mapreg->load = mapreg_load;
 	mapreg->save_num_db = mapreg_save_num_db;
 	mapreg->save_str_db = mapreg_save_str_db;
-	mapreg->save = mapreg_save;
+	mapreg->save = mapreg_save_;
 	mapreg->save_timer = mapreg_save_timer;
 	mapreg->destroyreg = mapreg_destroy_reg;
 	mapreg->reload = mapreg_reload;

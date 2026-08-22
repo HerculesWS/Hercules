@@ -98,13 +98,13 @@ static struct DBMap *item_drop_ratio_other_db = NULL;
 static struct eri *item_drop_ers; //For loot drops delay structures.
 static struct eri *item_drop_list_ers;
 
-static struct mob_db *mob_db(int index)
+static struct mob_db *mob_db_(int index)
 {
 	if (index < 0 || index > MAX_MOB_DB || mob->db_data[index] == NULL)
 		return mob->dummy;
 	return mob->db_data[index];
 }
-static struct mob_chat *mob_chat(short id)
+static struct mob_chat *mob_chat_(short id)
 {
 	if(id <= 0 || id > MAX_MOB_CHAT || mob->chat_db[id] == NULL)
 		return NULL;
@@ -2498,7 +2498,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 
 	struct status_data *mstatus;
 	struct map_session_data *sd = BL_CAST(BL_PC, src);
-	struct map_session_data *tmpsd[DAMAGELOG_SIZE] = { NULL };
+	struct map_session_data *tmpsd[DAMAGELOG_SIZE]{ NULL };
 	struct map_session_data *mvp_sd = sd, *second_sd = NULL, *third_sd = NULL;
 	struct item_data *id = NULL;
 
@@ -2506,7 +2506,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 		struct party_data *p;
 		int id,zeny;
 		unsigned int base_exp,job_exp;
-	} pt[DAMAGELOG_SIZE] = { { 0 } };
+	} pt[DAMAGELOG_SIZE]{{}};
 	int i, temp, count, m;
 	int dmgbltypes = 0;  // bitfield of all bl types, that caused damage to the mob and are eligible for exp distribution
 	unsigned int mvp_damage;
@@ -2909,7 +2909,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 				exp += apply_percentrate64(exp, battle_config.exp_bonus_attacker * (count-1), 100); //[Gengar]
 		}
 
-		mexp = (unsigned int)std::clamp(exp, 1i64, (int64)UINT_MAX);
+		mexp = (unsigned int)std::clamp(exp, (int64)1, (int64)UINT_MAX);
 
 		clif->mvp_effect(mvp_sd);
 		clif->mvp_exp(mvp_sd,mexp);
@@ -2918,7 +2918,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 
 		if (!(map->list[m].flag.nomvploot || type&1)) {
 			/* pose them randomly in the list -- so on 100% drop servers it wont always drop the same item */
-			struct mob_drop mdrop[MAX_MVP_DROP] = { { 0 } };
+			struct mob_drop mdrop[MAX_MVP_DROP] {{}};
 
 			for (i = 0; i < MAX_MVP_DROP; i++) {
 				int rpos;
@@ -2946,7 +2946,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 				if (rate <= 0 && !battle_config.drop_rate0item)
 					rate = 1;
 				if (rate > rnd()%10000) {
-					struct item item = { 0 };
+					struct item item{};
 
 					item.nameid = mdrop[i].nameid;
 					item.identify = itemdb->isidentified2(data);
@@ -4980,7 +4980,7 @@ static int mob_db_validate_entry(struct mob_db *entry, int n, const char *source
  */
 static int mob_read_db_sub(struct config_setting_t *mobt, int n, const char *source)
 {
-	struct mob_db md = { 0 };
+	struct mob_db md{};
 	struct config_setting_t *t = NULL;
 	const char *str = NULL;
 	int i32 = 0;
@@ -5135,12 +5135,12 @@ static int mob_read_db_sub(struct config_setting_t *mobt, int n, const char *sou
 
 	if (map->setting_lookup_const(mobt, "Exp", &i32) && i32 >= 0) {
 		int64 exp = apply_percentrate64(i32, battle_config.base_exp_rate, 100);
-		md.base_exp = (unsigned int)std::clamp(exp, 0i64, (int64)UINT_MAX);
+		md.base_exp = (unsigned int)std::clamp(exp, (int64)0, (int64)UINT_MAX);
 	}
 
 	if (map->setting_lookup_const(mobt, "JExp", &i32) && i32 >= 0) {
 		int64 exp = apply_percentrate64(i32, battle_config.job_exp_rate, 100);
-		md.job_exp = (unsigned int)std::clamp(exp, 0i64, (int64)UINT_MAX);
+		md.job_exp = (unsigned int)std::clamp(exp, (int64)0, (int64)UINT_MAX);
 	}
 
 	if (map->setting_lookup_const(mobt, "AttackRange", &i32) && i32 >= 0) {
@@ -5268,7 +5268,7 @@ static int mob_read_db_sub(struct config_setting_t *mobt, int n, const char *sou
 	if (map->setting_lookup_const(mobt, "MvpExp", &i32) && i32 >= 0) {
 		// Some new MVP's MEXP multiple by high exp-rate cause overflow. [LuzZza]
 		int64 exp = apply_percentrate64(i32, battle_config.mvp_exp_rate, 100);
-		md.mexp = (unsigned int)std::clamp(exp, 0i64, (int64)UINT_MAX);
+		md.mexp = (unsigned int)std::clamp(exp, (int64)0, (int64)UINT_MAX);
 	}
 
 	if (maxhpUpdated) {
@@ -5279,7 +5279,7 @@ static int mob_read_db_sub(struct config_setting_t *mobt, int n, const char *sou
 		} else { //Normal mob
 			maxhp = apply_percentrate64(maxhp, battle_config.monster_hp_rate, 100);
 		}
-		md.status.max_hp = (unsigned int)std::clamp(maxhp, 1i64, (int64)UINT_MAX);
+		md.status.max_hp = (unsigned int)std::clamp(maxhp, (int64)1, (int64)UINT_MAX);
 	}
 
 	if ((t = libconfig->setting_get_member(mobt, "MvpDrops"))) {
@@ -6016,7 +6016,7 @@ static int mob_final_ratio_sub(union DBKey key, struct DBData *data, va_list ap)
 static int mob_reload_sub_mob(struct mob_data *md, va_list args)
 {
 	nullpo_ret(md);
-	md->db = mob_db(md->class_);
+	md->db = mob->db(md->class_);
 
 	status_calc_mob(md, SCO_FIRST);
 
@@ -6231,8 +6231,8 @@ void mob_defaults(void)
 	mob->init = do_init_mob;
 	mob->final = do_final_mob;
 	/* */
-	mob->db = mob_db;
-	mob->chat = mob_chat;
+	mob->db = mob_db_;
+	mob->chat = mob_chat_;
 	mob->makedummymobdb = mob_makedummymobdb;
 	mob->spawn_guardian_sub = mob_spawn_guardian_sub;
 	mob->skill_id2skill_idx = mob_skill_id2skill_idx;

@@ -2997,8 +2997,8 @@ static int map_get_random_cell(struct block_list *bl, int16 m, int16 *x, int16 *
 	enum unit_dir dir = unit_get_rnd_diagonal_dir();
 
 	for (int i = 0; i < 4; i++, dir = unit_get_ccw90_dir(dir)) {
-		int16 x_rnd_dist = (min_dist + rnd()) % std::max(1i16, max_dist);
-		int16 y_rnd_dist = (min_dist + rnd()) % std::max(1i16, max_dist);
+		int16 x_rnd_dist = (min_dist + rnd()) % std::max((int16)1, max_dist);
+		int16 y_rnd_dist = (min_dist + rnd()) % std::max((int16)1, max_dist);
 		int16 x_rnd = *x + dirx[dir] * x_rnd_dist;
 		int16 y_rnd = *y + diry[dir] * y_rnd_dist;
 
@@ -3040,8 +3040,8 @@ static int map_get_random_cell_in_range(struct block_list *bl, int16 m, int16 *x
 	enum unit_dir dir = unit_get_rnd_diagonal_dir();
 
 	for (int i = 0; i < 4; i++, dir = unit_get_ccw90_dir(dir)) {
-		int16 x_rnd_range = rnd() % std::max(1i16, x_range);
-		int16 y_rnd_range = rnd() % std::max(1i16, y_range);
+		int16 x_rnd_range = rnd() % std::max((int16)1, x_range);
+		int16 y_rnd_range = rnd() % std::max((int16)1, y_range);
 		int16 x_rnd = *x + dirx[dir] * x_rnd_range;
 		int16 y_rnd = *y + diry[dir] * y_rnd_range;
 
@@ -3497,7 +3497,7 @@ static bool map_readfromcache(struct map_data *m)
  */
 static bool map_readfromcache_v1(FILE *fp, struct map_data *m, unsigned int file_size)
 {
-	struct map_cache_header mheader = { 0 };
+	struct map_cache_header mheader{};
 	uint8 md5buf[16] = { 0 };
 	int map_size;
 	nullpo_retr(false, fp);

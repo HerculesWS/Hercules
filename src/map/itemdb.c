@@ -122,7 +122,7 @@ static int itemdb_searchname_array_sub(union DBKey key, struct DBData data, va_l
 {
 	struct item_data *itd = (struct item_data *)DB->data2ptr(&data);
 	const char *str = va_arg(ap, const char *);
-	enum item_name_search_flag flag = va_arg(ap, enum item_name_search_flag);
+	enum item_name_search_flag flag = (enum item_name_search_flag)va_arg(ap, int);
 
 	nullpo_ret(str);
 
@@ -1483,7 +1483,7 @@ static void itemdb_read_options(void)
 	VECTOR_ENSURE(duplicate_id, libconfig->setting_length(ito), 1);
 
 	while ((conf = libconfig->setting_get_elem(ito, index++))) {
-		struct itemdb_option t_opt = { 0 }, *s_opt = NULL;
+		struct itemdb_option t_opt{}, *s_opt = NULL;
 		const char *str = NULL;
 		int i = 0;
 
@@ -2041,7 +2041,7 @@ static void itemdb_readdb_job_sub(struct item_data *id, struct config_setting_t 
  */
 static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const char *source, struct DBMap *itemconst_db)
 {
-	struct item_data id = { 0 };
+	struct item_data id{};
 	struct config_setting_t *t = NULL;
 	const char *str = NULL;
 	int i32 = 0;
@@ -2573,7 +2573,7 @@ static bool itemdb_read_libconfig_lapineddukddak_sub_sources(struct config_setti
 	VECTOR_INIT(data->lapineddukddak->SourceItems);
 	while ((entry = libconfig->setting_get_elem(sources, i++)) != NULL) {
 		struct item_data *edata = NULL;
-		struct itemlist_entry item = { 0 };
+		struct itemlist_entry item{};
 		const char *name = config_setting_name(entry);
 		int i32 = 0;
 
@@ -2670,7 +2670,7 @@ static bool itemdb_read_libconfig_lapineupgrade_sub_targets(struct config_settin
 	VECTOR_INIT(data->lapineupgrade->TargetItems);
 	while ((entry = libconfig->setting_get_elem(targets, i++)) != NULL) {
 		struct item_data *edata = NULL;
-		struct itemlist_entry item = {0};
+		struct itemlist_entry item{};
 		const char *name = config_setting_name(entry);
 		int i32 = 0;
 
@@ -2720,7 +2720,7 @@ static bool itemdb_read_libconfig_item_reform_info_sub(struct config_setting_t *
 	nullpo_retr(false, it);
 	nullpo_retr(false, source);
 
-	struct item_reform ir = { 0 };
+	struct item_reform ir{};
 
 	if (libconfig->setting_lookup_int(it, "Id", &ir.Id) == CONFIG_FALSE || ir.Id < 0) {
 		ShowWarning("%s: invalid entry Id %d at %s, skipping..\n", __func__, ir.Id, source);
@@ -2774,7 +2774,7 @@ static bool itemdb_read_libconfig_item_reform_info_materials(struct config_setti
 	while ((entry = libconfig->setting_get_elem(it, i++)) != NULL) {
 		const char *name = config_setting_name(entry);
 		struct item_data *idata = itemdb->name2id(name);
-		struct itemlist_entry item = { 0 };
+		struct itemlist_entry item{};
 
 		if (idata == NULL) {
 			ShowWarning("%s: unknown item '%s' for entry with Id %d, skipping..\n", __func__, name, ir->Id);

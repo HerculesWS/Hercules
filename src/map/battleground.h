@@ -31,6 +31,11 @@ struct block_list;
 struct map_session_data;
 
 /**
+ * Forward decleration
+ */
+enum BATTLEGROUNDS_QUEUE_ACK CXX_ENUM_TYPE(int);
+
+/**
  * Defines
  **/
 #define MAX_BG_MEMBERS 30

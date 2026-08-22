@@ -110,7 +110,7 @@ static int instance_create(int owner_id, const char *name, enum instance_owner_t
 			break;
 		case IOT_MAX:
 		default:
-			ShowError("instance_create: unknown type %u for owner_id %d and name %s.\n", type, owner_id, name);
+			ShowError("instance_create: unknown type %u for owner_id %d and name %s.\n", (unsigned int)type, owner_id, name);
 			return -1;
 	}
 
@@ -608,7 +608,7 @@ static void instance_destroy(int instance_id)
 			break;
 		case IOT_MAX:
 		default:
-			ShowError("instance_destroy: unknown type %u for owner_id %d and name '%s'.\n", instance->list[instance_id].owner_type, instance->list[instance_id].owner_id, instance->list[instance_id].name);
+			ShowError("instance_destroy: unknown type %u for owner_id %d and name '%s'.\n", (unsigned int)instance->list[instance_id].owner_type, instance->list[instance_id].owner_id, instance->list[instance_id].name);
 			break;
 	}
 

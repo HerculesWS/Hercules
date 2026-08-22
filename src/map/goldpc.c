@@ -71,7 +71,7 @@ bool goldpc_read_db_libconfig_sub(const struct config_setting_t *it, int n, cons
 	nullpo_retr(false, it);
 	nullpo_retr(false, source);
 
-	struct goldpc_mode mode = { 0 };
+	struct goldpc_mode mode{};
 
 	if (libconfig->setting_lookup_int(it, "Id", &mode.id) == CONFIG_FALSE) {
 		ShowError("%s: Invalid GoldPC mode Id provided for entry %d in '%s', skipping...\n", __func__, n, source);

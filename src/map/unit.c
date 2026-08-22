@@ -106,6 +106,8 @@ static struct unit_data *unit_bl2ud(struct block_list *bl)
 	default:
 		Assert_retr(NULL, false);
 	}
+
+	return NULL; // TODO: Should be unreachable but compiler still complains [hemagx]
 }
 
 /**
@@ -144,6 +146,8 @@ static const struct unit_data *unit_cbl2ud(const struct block_list *bl)
 	default:
 		Assert_retr(NULL, false);
 	}
+
+	return NULL; // TODO: Should be unreachable but compiler still complains [hemagx]
 }
 
 /**
@@ -179,7 +183,7 @@ static int unit_walk_toxy_sub(struct block_list *bl)
 	if (status->isdead(bl))
 		return 1;
 
-	struct walkpath_data wpd = {0};
+	struct walkpath_data wpd{};
 
 	if (!path->search(&wpd, bl, bl->m, bl->x, bl->y, ud->to_x, ud->to_y, ud->state.walk_easy, CELL_CHKNOPASS))
 		return 1;

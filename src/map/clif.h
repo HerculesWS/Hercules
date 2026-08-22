@@ -21,6 +21,7 @@
 #ifndef MAP_CLIF_H
 #define MAP_CLIF_H
 
+#include "common/cbasetypes.h"
 #include "map/map.h"
 #include "map/packets_struct.h"
 #include "common/hercules.h"
@@ -62,18 +63,18 @@ struct SKILLDATA;
 struct macroaidlist;
 struct s_grade_info;
 
-enum battle_dmg_type;
-enum clif_messages;
-enum rodex_add_item;
-enum rodex_get_zeny;
-enum rodex_get_items;
-enum macro_detect_status;
-enum macro_report_status;
-enum grade_level;
-enum grade_ui_result;
-enum item_reform_status;
-enum navigation_mode;
-enum navigation_service;
+enum battle_dmg_type CXX_ENUM_TYPE(int);
+enum clif_messages CXX_ENUM_TYPE(unsigned int);
+enum rodex_add_item CXX_ENUM_TYPE(int);
+enum rodex_get_zeny CXX_ENUM_TYPE(int);
+enum rodex_get_items CXX_ENUM_TYPE(int);
+enum macro_detect_status CXX_ENUM_TYPE(int);
+enum macro_report_status CXX_ENUM_TYPE(int);
+enum grade_level CXX_ENUM_TYPE(int);
+enum grade_ui_result CXX_ENUM_TYPE(int);
+enum item_reform_status CXX_ENUM_TYPE(int);
+enum navigation_mode CXX_ENUM_TYPE(int);
+enum navigation_service CXX_ENUM_TYPE(int);
 
 /**
  * Defines
@@ -462,7 +463,7 @@ enum CASH_SHOP_BUY_RESULT {
 	CSBR_BUSY               = 0xc,
 };
 
-enum BATTLEGROUNDS_QUEUE_ACK {
+enum BATTLEGROUNDS_QUEUE_ACK CXX_ENUM_TYPE(int) {
 	BGQA_SUCCESS                 = 1,
 	BGQA_FAIL_QUEUING_FINISHED   = 2,
 	BGQA_FAIL_BGNAME_INVALID     = 3,

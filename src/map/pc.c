@@ -653,7 +653,7 @@ static void pc_inventory_rentals(struct map_session_data *sd)
 	}
 
 	if( c > 0 ) // min(next_tick,3600000) 1 hour each timer to keep announcing to the owner, and to avoid a but with rental time > 15 days
-		sd->rental_timer = timer->add(timer->gettick() + std::min(next_tick, 3600000i64), pc->inventory_rental_end, sd->bl.id, 0);
+		sd->rental_timer = timer->add(timer->gettick() + std::min(next_tick, (int64)3600000), pc->inventory_rental_end, sd->bl.id, 0);
 	else
 		sd->rental_timer = INVALID_TIMER;
 }
@@ -6906,8 +6906,8 @@ static void pc_calcexp(struct map_session_data *sd, uint64 *base_exp, uint64 *jo
 	bexp += apply_percentrate64(bexp, buff_ratio, 100);
 	jexp += apply_percentrate64(jexp, buff_ratio + buff_job_ratio, 100);
 
-	*job_exp = std::clamp(jexp, 1i64, INT64_MAX);
-	*base_exp = std::clamp(bexp, 1i64, INT64_MAX);
+	*job_exp = std::clamp(jexp, (int64)1, INT64_MAX);
+	*base_exp = std::clamp(bexp, (int64)1, INT64_MAX);
 }
 
 /**
@@ -8568,7 +8568,7 @@ static int pc_setparam(struct map_session_data *sd, int type, int64 val)
 		sd->status.zeny = std::clamp((int32)val, 0, MAX_ZENY); // FIXME: This should operate on the larger range and cast the result
 		break;
 	case SP_BANKVAULT:
-		val = std::clamp(val, 0i64, (int64)MAX_BANK_ZENY);
+		val = std::clamp(val, (int64)0, (int64)MAX_BANK_ZENY);
 		delta = ((int32)val - sd->status.bank_vault);
 		sd->status.bank_vault = (int32)val;
 		if (map->save_settings & 256) {
@@ -11747,7 +11747,7 @@ static bool pc_read_exp_db_sub_class(struct config_setting_t *t, bool base)
 	struct class_exp_group entry = {
 		.name = "",
 		.max_level = 0,
-		.exp = { 0 }
+		.exp{}
 	};
 
 	struct config_setting_t *exp_t = NULL;
@@ -11883,7 +11883,7 @@ static int pc_read_attr_fix_db_level(struct config_setting_t *def_lv, enum eleme
 		}
 
 		if (!config_setting_is_number(atk_attr)) {
-			ShowError("%s: Damage modifier for element '%s' (%u) attacked by '%s' (%d) is not numeric. Skipping entry...\n", __func__, def_ele_name, def_ele, atk_ele_name, atk_ele);
+			ShowError("%s: Damage modifier for element '%s' (%u) attacked by '%s' (%d) is not numeric. Skipping entry...\n", __func__, def_ele_name, (unsigned int)def_ele, atk_ele_name, atk_ele);
 			continue;
 		}
 

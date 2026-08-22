@@ -1345,7 +1345,7 @@ static unsigned int status_get_base_maxsp(const struct map_session_data *sd, con
 
 	val += val * st->int_ / 100;
 
-	return (unsigned int)std::clamp(val, 0ui64, (uint64)UINT_MAX);
+	return (unsigned int)std::clamp(val, (uint64)0, (uint64)UINT_MAX);
 }
 
 static unsigned int status_get_base_maxhp(const struct map_session_data *sd, const struct status_data *st)
@@ -1372,7 +1372,7 @@ static unsigned int status_get_base_maxhp(const struct map_session_data *sd, con
 
 	val += val * st->vit / 100; // +1% per each point of VIT
 
-	return (unsigned int)std::clamp(val, 0ui64, (uint64)UINT_MAX);
+	return (unsigned int)std::clamp(val, (uint64)0, (uint64)UINT_MAX);
 }
 
 static struct s_maxhp_entry *status_get_maxhp_cap_entry(int class_idx, int level)
@@ -1934,7 +1934,7 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 	sd->status.max_hp = status->get_base_maxhp(sd,bstatus);
 	//This is done to handle underflows from negative Max HP bonuses
 	i64 = sd->status.max_hp + (int)bstatus->max_hp;
-	bstatus->max_hp = (unsigned int)std::clamp(i64, 0i64, (int64)INT_MAX);
+	bstatus->max_hp = (unsigned int)std::clamp(i64, (int64)0, (int64)INT_MAX);
 
 	// Absolute modifiers from passive skills
 	if ((skill_lv=pc->checkskill(sd,CR_TRUST)) > 0)
@@ -1963,7 +1963,7 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 	sd->status.max_sp = status->get_base_maxsp(sd,bstatus);
 	//This is done to handle underflows from negative Max SP bonuses
 	i64 = sd->status.max_sp + (int)bstatus->max_sp;
-	bstatus->max_sp = (unsigned int)std::clamp(i64, 0i64, (int64)INT_MAX);
+	bstatus->max_sp = (unsigned int)std::clamp(i64, (int64)0, (int64)INT_MAX);
 
 	// Absolute modifiers from passive skills
 	if((skill_lv=pc->checkskill(sd,SL_KAINA))>0)
@@ -3065,60 +3065,61 @@ static void status_calc_bl_main(struct block_list *bl, e_scb_flag flag)
 
 	if(flag&SCB_STR) {
 		st->str = status->calc_str(bl, sc, bst->str);
-		flag|=SCB_BATK;
+		flag = (e_scb_flag)(flag | SCB_BATK);
 		if( bl->type&BL_HOM )
-			flag |= SCB_WATK;
+			flag = (e_scb_flag)(flag | SCB_WATK);
 	}
 
 	if(flag&SCB_AGI) {
 		st->agi = status->calc_agi(bl, sc, bst->agi);
-		flag|=SCB_FLEE
-#ifdef RENEWAL
-			|SCB_DEF2
+#ifndef RENEWAL
+		flag = (e_scb_flag)(flag | SCB_FLEE);
+#else
+		flag = (e_scb_flag)(flag | SCB_FLEE | SCB_DEF2);
 #endif
-			;
 		if( bl->type&(BL_PC|BL_HOM) )
-			flag |= SCB_ASPD|SCB_DSPD;
+			flag = (e_scb_flag)(flag | SCB_ASPD | SCB_DSPD);
 	}
 
 	if(flag&SCB_VIT) {
 		st->vit = status->calc_vit(bl, sc, bst->vit);
-		flag|=SCB_DEF2|SCB_MDEF2;
+		flag = (e_scb_flag)(flag | SCB_DEF2 | SCB_MDEF2);
 		if( bl->type&(BL_PC|BL_HOM|BL_MER|BL_ELEM) )
-			flag |= SCB_MAXHP;
+			flag = (e_scb_flag)(flag | SCB_MAXHP);
 		if( bl->type&BL_HOM )
-			flag |= SCB_DEF;
+			flag = (e_scb_flag)(flag | SCB_DEF);
 	}
 
 	if(flag&SCB_INT) {
 		st->int_ = status->calc_int(bl, sc, bst->int_);
-		flag|=SCB_MATK|SCB_MDEF2;
+		flag = (e_scb_flag)(flag | SCB_MATK | SCB_MDEF2);
 		if( bl->type&(BL_PC|BL_HOM|BL_MER|BL_ELEM) )
-			flag |= SCB_MAXSP;
+			flag = (e_scb_flag)(flag | SCB_MAXSP);
 		if( bl->type&BL_HOM )
-			flag |= SCB_MDEF;
+			flag = (e_scb_flag)(flag | SCB_MDEF);
 	}
 
 	if(flag&SCB_DEX) {
 		st->dex = status->calc_dex(bl, sc, bst->dex);
-		flag|=SCB_BATK|SCB_HIT
-#ifdef RENEWAL
-			|SCB_MATK|SCB_MDEF2
+#ifndef RENEWAL
+		flag = (e_scb_flag)(flag | SCB_BATK | SCB_HIT);
+#else
+		flag = (e_scb_flag)(flag | SCB_BATK | SCB_HIT | SCB_MATK | SCB_MDEF2);
 #endif
 			;
 		if( bl->type&(BL_PC|BL_HOM) )
-			flag |= SCB_ASPD;
+			flag = (e_scb_flag)(flag | SCB_ASPD);
 		if( bl->type&BL_HOM )
-			flag |= SCB_WATK;
+			flag = (e_scb_flag)(flag | SCB_WATK);
 	}
 
 	if(flag&SCB_LUK) {
 		st->luk = status->calc_luk(bl, sc, bst->luk);
-		flag|=SCB_BATK|SCB_CRI|SCB_FLEE2
-#ifdef RENEWAL
-			|SCB_MATK|SCB_HIT|SCB_FLEE
+#ifndef RENEWAL
+		flag = (e_scb_flag)(flag | SCB_BATK | SCB_CRI | SCB_FLEE2);
+#else
+		flag = (e_scb_flag)(flag | SCB_BATK | SCB_CRI | SCB_FLEE2 | SCB_MATK | SCB_HIT | SCB_FLEE);
 #endif
-			;
 	}
 
 	if ((flag & SCB_ATK_PERC) != 0)
@@ -3132,7 +3133,7 @@ static void status_calc_bl_main(struct block_list *bl, e_scb_flag flag)
 
 	if ((flag & SCB_MDEF_PERC) != 0) {
 		st->mdef_percent = status->calc_mdef_percent(bl, sc);
-		flag |= SCB_MDEF2;
+		flag = (e_scb_flag)(flag | SCB_MDEF2);
 	}
 
 	if (flag & SCB_BATK) {
@@ -5949,7 +5950,7 @@ static unsigned int status_calc_maxhp(struct block_list *bl, struct status_chang
 {
 
 	if (!sc || !sc->count)
-		return (unsigned int)std::clamp(maxhp, 1ui64, (uint64)UINT_MAX);
+		return (unsigned int)std::clamp(maxhp, (uint64)1, (uint64)UINT_MAX);
 
 	if (sc->data[SC_INCMHPRATE])
 		maxhp += maxhp * sc->data[SC_INCMHPRATE]->val1 / 100;
@@ -6030,7 +6031,7 @@ static unsigned int status_calc_maxhp(struct block_list *bl, struct status_chang
 		maxhp += maxhp * 30 / 100;
 #endif
 
-	return (unsigned int)std::clamp(maxhp, 1ui64, (uint64)UINT_MAX);
+	return (unsigned int)std::clamp(maxhp, (uint64)1, (uint64)UINT_MAX);
 }
 
 static unsigned int status_calc_maxsp(struct block_list *bl, struct status_change *sc, unsigned int maxsp)
@@ -8205,7 +8206,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				total_tick = val4; //Petrifying time.
 				if(val4 > 500) // not with WL_SIENNAEXECRATE
 					total_tick = std::max(total_tick, 1000); //Min time
-				calc_flag = 0; //Actual status changes take effect on petrified state.
+				calc_flag = SCB_NONE; //Actual status changes take effect on petrified state.
 				break;
 
 			case SC_DPOISON:
@@ -10032,7 +10033,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			val4 = vd->cloth_color;
 			clif->changelook(bl,LOOK_CLOTHES_COLOR,0);
 		}
-		calc_flag&=~SCB_DYE;
+		calc_flag = (e_scb_flag)(calc_flag & ~SCB_DYE);
 	}
 
 #if 0 //Currently No SC's use this
@@ -12255,7 +12256,7 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 	if (calc_flag&SCB_DYE) { //Restore DYE color
 		if (vd && !vd->cloth_color && sce->val4)
 			clif->changelook(bl,LOOK_CLOTHES_COLOR,sce->val4);
-		calc_flag&=~SCB_DYE;
+		calc_flag = (e_scb_flag)(calc_flag & ~SCB_DYE);
 	}
 
 #if 0 // Currently No SC's use this
@@ -14078,7 +14079,7 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 static int status_natural_heal_timer(int tid, int64 tick, int id, intptr_t data)
 {
 	// This difference is always positive and lower than UINT_MAX (~24 days)
-	status->natural_heal_diff_tick = (unsigned int)std::clamp(DIFF_TICK(tick,status->natural_heal_prev_tick), 0i64, (int64)UINT_MAX);
+	status->natural_heal_diff_tick = (unsigned int)std::clamp(DIFF_TICK(tick,status->natural_heal_prev_tick), (int64)0, (int64)UINT_MAX);
 	map->foreachregen(status->natural_heal);
 	status->natural_heal_prev_tick = tick;
 	return 0;
@@ -14653,9 +14654,9 @@ static bool status_read_scdb_libconfig_sub_calcflag(struct config_setting_t *it,
 				ShowWarning("status_read_scdb_libconfig_sub_calcflag: flag (%s) for status effect (%d) is casesensitive, correct it to (%s).", flag, type, flags[i].name);
 			}
 			if (on) {
-				status->dbs->ChangeFlagTable[type] |= flags[j].value;
+				status->dbs->ChangeFlagTable[type] = (e_scb_flag)(status->dbs->ChangeFlagTable[type] | flags[j].value);
 			} else {
-				status->dbs->ChangeFlagTable[type] &= ~flags[j].value;
+				status->dbs->ChangeFlagTable[type] = (e_scb_flag)(status->dbs->ChangeFlagTable[type] & ~flags[j].value);
 			}
 		} else {
 			if (!status->read_scdb_libconfig_sub_calcflag_additional(it, type, source))
@@ -14812,7 +14813,7 @@ static bool status_read_unit_params_db_sub(const char *name, struct config_setti
 	nullpo_retr(false, name);
 	nullpo_retr(false, group);
 
-	struct s_unit_params entry = { 0 };
+	struct s_unit_params entry{};
 
 	const char *str = NULL;
 	int i32 = 0;
