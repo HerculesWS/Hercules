@@ -83118,9 +83118,8 @@ int HP_skill_get_type(int skill_id, int skill_lv) {
 	return retVal___;
 }
 enum battle_dmg_type HP_skill_get_hit(int skill_id, int skill_lv) {
-/* Unknown return type 'enum battle_dmg_type'. Initializing to '0'. */
 	int hIndex = 0;
-	enum battle_dmg_type retVal___ = 0;
+	enum battle_dmg_type retVal___ = BDT_NORMAL;
 	if (HPMHooks.count.HP_skill_get_hit_pre > 0) {
 		enum battle_dmg_type (*preHookFunc) (int *skill_id, int *skill_lv);
 		*HPMforce_return = false;
@@ -84496,9 +84495,8 @@ const char * HP_skill_get_desc(int skill_id) {
 	return retVal___;
 }
 enum cast_enum HP_skill_get_casttype(int skill_id) {
-/* Unknown return type 'enum cast_enum'. Initializing to '0'. */
 	int hIndex = 0;
-	enum cast_enum retVal___ = 0;
+	enum cast_enum retVal___ = CAST_GROUND;
 	if (HPMHooks.count.HP_skill_get_casttype_pre > 0) {
 		enum cast_enum (*preHookFunc) (int *skill_id);
 		*HPMforce_return = false;

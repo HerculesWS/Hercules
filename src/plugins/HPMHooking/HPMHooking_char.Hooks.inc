@@ -11452,9 +11452,8 @@ void HP_inter_userconfig_use_default_emotes(int account_id, struct userconfig_em
 	return;
 }
 enum userconfig_from_sql_result HP_inter_userconfig_emotes_from_sql(int account_id, struct userconfig_emotes *emotes) {
-/* Unknown return type 'enum userconfig_from_sql_result'. Initializing to '0'. */
 	int hIndex = 0;
-	enum userconfig_from_sql_result retVal___ = 0;
+	enum userconfig_from_sql_result retVal___ = USERCONFIG_FROM_SQL_SUCCESS;
 	if (HPMHooks.count.HP_inter_userconfig_emotes_from_sql_pre > 0) {
 		enum userconfig_from_sql_result (*preHookFunc) (int *account_id, struct userconfig_emotes **emotes);
 		*HPMforce_return = false;
