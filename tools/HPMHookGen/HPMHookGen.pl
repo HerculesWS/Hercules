@@ -250,6 +250,12 @@ sub parse($$) {
 			$rtinit = ' = UNIT_DIR_UNDEFINED';
 		} elsif ($x =~ /^enum\s+quest_mobtype$/) { # Known enum quest_mobtype
 			$rtinit = ' = QMT_RC_DEMIHUMAN';
+		} elsif ($x =~ /^enum\s+userconfig_from_sql_result$/) { # Known enum userconfig_from_sql_result
+			$rtinit = ' = USERCONFIG_FROM_SQL_SUCCESS';
+		} elsif ($x =~ /^enum\s+battle_dmg_type$/) { # Known enum userconfig_from_sql_result
+			$rtinit = ' = BDT_NORMAL';
+		} elsif ($x =~ /^enum\s+cast_enum$/) { # Known enum userconfig_from_sql_result
+			$rtinit = ' = CAST_GROUND';
 		} elsif ($x =~ /^e_scb_flag$/) { # Known typedef e_scb_flag
 			$rtinit = ' = SCB_NONE';
 		} elsif ($x eq 'DBComparator' or $x eq 'DBHasher' or $x eq 'DBReleaser') { # DB function pointers
