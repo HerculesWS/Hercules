@@ -261,7 +261,7 @@ sub parse($$) {
 		} elsif ($x eq 'DBComparator' or $x eq 'DBHasher' or $x eq 'DBReleaser') { # DB function pointers
 			$rtinit = ' = NULL';
 		} elsif ($x =~ /^(?:struct|union)\s+.*$/) { # Structs and unions
-			$rtinit = ' = { 0 }';
+			$rtinit = '{}';
 		} elsif ($x =~ /^float|double$/) { # Floating point variables
 			$rtinit = ' = 0.';
 		} elsif ($x =~ /^(?:(?:un)?signed\s+)?(?:char|int|long|short)$/
