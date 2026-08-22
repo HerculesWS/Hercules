@@ -58,22 +58,42 @@ struct test_data {
 	int equip;
 };
 
+enum fake_item_id {
+	ID_INVALID = -1,
+	ID_EXT     = 0,
+	ID_0       = 0,
+	ID_B       = 1,
+	ID_M       = 2,
+	ID_T       = 3,
+	ID_MB      = 4,
+	ID_TB      = 5,
+	ID_TM      = 6,
+	ID_TMB     = 7,
+	ID_CB      = 8,
+	ID_CM      = 9,
+	ID_CT      = 10,
+	ID_CMB     = 11,
+	ID_CTB     = 12,
+	ID_CTM     = 13,
+	ID_CTMB    = 14,
+};
+
 static struct item_data items[] = {
-	{ .nameid = 0, .equip = 0 },
-	{ .nameid = 1, .equip = EQP_HEAD_LOW },
-	{ .nameid = 2, .equip = EQP_HEAD_MID },
-	{ .nameid = 3, .equip = EQP_HEAD_TOP },
-	{ .nameid = 4, .equip = EQP_HEAD_LOW | EQP_HEAD_MID },
-	{ .nameid = 5, .equip = EQP_HEAD_LOW | EQP_HEAD_TOP },
-	{ .nameid = 6, .equip = EQP_HEAD_MID | EQP_HEAD_TOP },
-	{ .nameid = 7, .equip = EQP_HEAD_LOW | EQP_HEAD_MID | EQP_HEAD_TOP },
-	{ .nameid = 8, .equip = EQP_COSTUME_HEAD_LOW },
-	{ .nameid = 9, .equip = EQP_COSTUME_HEAD_MID },
-	{ .nameid = 10, .equip = EQP_COSTUME_HEAD_TOP },
-	{ .nameid = 11, .equip = EQP_COSTUME_HEAD_LOW | EQP_COSTUME_HEAD_MID },
-	{ .nameid = 12, .equip = EQP_COSTUME_HEAD_LOW | EQP_COSTUME_HEAD_TOP },
-	{ .nameid = 13, .equip = EQP_COSTUME_HEAD_MID | EQP_COSTUME_HEAD_TOP },
-	{ .nameid = 14, .equip = EQP_COSTUME_HEAD_LOW | EQP_COSTUME_HEAD_MID | EQP_COSTUME_HEAD_TOP },
+	{ .nameid = ID_0, .equip = 0 },
+	{ .nameid = ID_B, .equip = EQP_HEAD_LOW },
+	{ .nameid = ID_M, .equip = EQP_HEAD_MID },
+	{ .nameid = ID_T, .equip = EQP_HEAD_TOP },
+	{ .nameid = ID_MB, .equip = EQP_HEAD_LOW | EQP_HEAD_MID },
+	{ .nameid = ID_TB, .equip = EQP_HEAD_LOW | EQP_HEAD_TOP },
+	{ .nameid = ID_TM, .equip = EQP_HEAD_MID | EQP_HEAD_TOP },
+	{ .nameid = ID_TMB, .equip = EQP_HEAD_LOW | EQP_HEAD_MID | EQP_HEAD_TOP },
+	{ .nameid = ID_CB, .equip = EQP_COSTUME_HEAD_LOW },
+	{ .nameid = ID_CM, .equip = EQP_COSTUME_HEAD_MID },
+	{ .nameid = ID_CT, .equip = EQP_COSTUME_HEAD_TOP },
+	{ .nameid = ID_CMB, .equip = EQP_COSTUME_HEAD_LOW | EQP_COSTUME_HEAD_MID },
+	{ .nameid = ID_CTB, .equip = EQP_COSTUME_HEAD_LOW | EQP_COSTUME_HEAD_TOP },
+	{ .nameid = ID_CTM, .equip = EQP_COSTUME_HEAD_MID | EQP_COSTUME_HEAD_TOP },
+	{ .nameid = ID_CTMB, .equip = EQP_COSTUME_HEAD_LOW | EQP_COSTUME_HEAD_MID | EQP_COSTUME_HEAD_TOP },
 };
 
 VECTOR_STRUCT_DECL(autorelease, struct map_session_data *);
@@ -81,7 +101,7 @@ VECTOR_STRUCT_DECL(autorelease, struct map_session_data *);
 #define EQUIP_ITEM(sd, id) do { pc->equipitem((sd), (id), items[(id)].equip); } while (0)
 #define UNEQUIP_ITEM(sd, id) do { pc->unequipitem((sd), (id), PCUNEQUIPITEM_NONE); } while (0)
 
-static bool checklook(const struct view_data *vd, enum look expected_bottom, enum look expected_top, enum look expected_mid)
+static bool checklook(const struct view_data *vd, enum fake_item_id expected_bottom, enum fake_item_id expected_top, enum fake_item_id expected_mid)
 {
 	nullpo_retr(false, vd);
 	if (vd->head_bottom != (int)expected_bottom)
@@ -94,7 +114,7 @@ static bool checklook(const struct view_data *vd, enum look expected_bottom, enu
 }
 
 static char out_message[256];
-static const char *check(struct map_session_data *sd, const enum look *expected)
+static const char *check(struct map_session_data *sd, const enum fake_item_id *expected)
 {
 	nullpo_retr("NULL pointer (expected)", expected);
 	nullpo_retr("NULL pointer (sd)", sd);
@@ -208,79 +228,60 @@ HPExport void server_online(void)
 	struct autorelease autorelease;
 	VECTOR_INIT(autorelease);
 
-	enum {
-		ID_EXT  = 0,
-		ID_0    = 0,
-		ID_B    = 1,
-		ID_M    = 2,
-		ID_T    = 3,
-		ID_MB   = 4,
-		ID_TB   = 5,
-		ID_TM   = 6,
-		ID_TMB  = 7,
-		ID_CB   = 8,
-		ID_CM   = 9,
-		ID_CT   = 10,
-		ID_CMB  = 11,
-		ID_CTB  = 12,
-		ID_CTM  = 13,
-		ID_CTMB = 14,
-	};
-
 	// Zero
-	const enum look exp_empty[] = { ID_0, ID_0, ID_0 };
+	const enum fake_item_id exp_empty[] = { ID_0, ID_0, ID_0 };
 
 	// One
-	const enum look exp_bottom[] = { ID_B, ID_0, ID_0 };
-	const enum look exp_mid[] = { ID_0, ID_0, ID_M };
-	const enum look exp_top[] = { ID_0, ID_T, ID_0 };
-	const enum look exp_midbottom[] = { ID_EXT, ID_0, ID_MB };
-	const enum look exp_topbottom[] = { ID_EXT, ID_TB, ID_0 };
-	const enum look exp_topmid[] = { ID_0, ID_TM, ID_EXT };
-	const enum look exp_topmidbottom[] = { ID_EXT, ID_TMB, ID_EXT };
-	const enum look exp_cbottom[] = { ID_CB, ID_0, ID_0 };
-	const enum look exp_cmid[] = { ID_0, ID_0, ID_CM };
-	const enum look exp_ctop[] = { ID_0, ID_CT, ID_0 };
-	const enum look exp_cmidbottom[] = { ID_EXT, ID_0, ID_CMB };
-	const enum look exp_ctopbottom[] = { ID_EXT, ID_CTB, ID_0 };
-	const enum look exp_ctopmid[] = { ID_0, ID_CTM, ID_EXT };
-	const enum look exp_ctopmidbottom[] = { ID_EXT, ID_CTMB, ID_EXT };
+	const enum fake_item_id exp_bottom[] = { ID_B, ID_0, ID_0 };
+	const enum fake_item_id exp_mid[] = { ID_0, ID_0, ID_M };
+	const enum fake_item_id exp_top[] = { ID_0, ID_T, ID_0 };
+	const enum fake_item_id exp_midbottom[] = { ID_EXT, ID_0, ID_MB };
+	const enum fake_item_id exp_topbottom[] = { ID_EXT, ID_TB, ID_0 };
+	const enum fake_item_id exp_topmid[] = { ID_0, ID_TM, ID_EXT };
+	const enum fake_item_id exp_topmidbottom[] = { ID_EXT, ID_TMB, ID_EXT };
+	const enum fake_item_id exp_cbottom[] = { ID_CB, ID_0, ID_0 };
+	const enum fake_item_id exp_cmid[] = { ID_0, ID_0, ID_CM };
+	const enum fake_item_id exp_ctop[] = { ID_0, ID_CT, ID_0 };
+	const enum fake_item_id exp_cmidbottom[] = { ID_EXT, ID_0, ID_CMB };
+	const enum fake_item_id exp_ctopbottom[] = { ID_EXT, ID_CTB, ID_0 };
+	const enum fake_item_id exp_ctopmid[] = { ID_0, ID_CTM, ID_EXT };
+	const enum fake_item_id exp_ctopmidbottom[] = { ID_EXT, ID_CTMB, ID_EXT };
 
 	// Two
-	const enum look exp_mid_bottom[] = { ID_B, ID_0, ID_M };
-	const enum look exp_top_bottom[] = { ID_B, ID_T, ID_0 };
-	const enum look exp_top_mid[] = { ID_0, ID_T, ID_M };
-	const enum look exp_topmid_bottom[] = { ID_B, ID_TM, ID_EXT };
-	const enum look exp_topbottom_mid[] = { ID_EXT, ID_TB, ID_M };
-	const enum look exp_top_midbottom[] = { ID_EXT, ID_T, ID_MB };
-	const enum look exp_cmid_bottom[] = { ID_B, ID_0, ID_CM };
-	const enum look exp_cmid_topbottom[] = { ID_EXT, ID_TB, ID_CM };
-	const enum look exp_cmid_top[] = { ID_0, ID_T, ID_CM };
-	const enum look exp_ctop_bottom[] = { ID_B, ID_CT, ID_0 };
-	const enum look exp_ctop_mid[] = { ID_0, ID_CT, ID_M };
-	const enum look exp_ctop_midbottom[] = { ID_0, ID_CT, ID_MB };
-	const enum look exp_ctopmid_bottom[] = { ID_B, ID_CTM, ID_EXT };
-	const enum look exp_cbottom_mid[] = { ID_CB, ID_0, ID_M };
-	const enum look exp_cbottom_top[] = { ID_CB, ID_T, ID_0 };
-	const enum look exp_cbottom_topmid[] = { ID_CB, ID_TM, ID_EXT };
-	const enum look exp_ctopbottom_mid[] = { ID_EXT, ID_CTB, ID_M };
-	const enum look exp_cmidbottom_top[] = { ID_EXT, ID_T, ID_CMB };
-	const enum look exp_cmid_cbottom[] = { ID_CB, ID_0, ID_CM };
-	const enum look exp_ctop_cbottom[] = { ID_CB, ID_CT, ID_0 };
-	const enum look exp_ctopmid_cbottom[] = { ID_CB, ID_CTM, ID_EXT };
-	const enum look exp_ctop_cmid[] = { ID_0, ID_CT, ID_CM };
-	const enum look exp_ctopbottom_cmid[] = { ID_EXT, ID_CTB, ID_CM };
-	const enum look exp_ctop_cmidbottom[] = { ID_EXT, ID_CT, ID_CMB };
+	const enum fake_item_id exp_mid_bottom[] = { ID_B, ID_0, ID_M };
+	const enum fake_item_id exp_top_bottom[] = { ID_B, ID_T, ID_0 };
+	const enum fake_item_id exp_top_mid[] = { ID_0, ID_T, ID_M };
+	const enum fake_item_id exp_topmid_bottom[] = { ID_B, ID_TM, ID_EXT };
+	const enum fake_item_id exp_topbottom_mid[] = { ID_EXT, ID_TB, ID_M };
+	const enum fake_item_id exp_top_midbottom[] = { ID_EXT, ID_T, ID_MB };
+	const enum fake_item_id exp_cmid_bottom[] = { ID_B, ID_0, ID_CM };
+	const enum fake_item_id exp_cmid_topbottom[] = { ID_EXT, ID_TB, ID_CM };
+	const enum fake_item_id exp_cmid_top[] = { ID_0, ID_T, ID_CM };
+	const enum fake_item_id exp_ctop_bottom[] = { ID_B, ID_CT, ID_0 };
+	const enum fake_item_id exp_ctop_mid[] = { ID_0, ID_CT, ID_M };
+	const enum fake_item_id exp_ctop_midbottom[] = { ID_0, ID_CT, ID_MB };
+	const enum fake_item_id exp_ctopmid_bottom[] = { ID_B, ID_CTM, ID_EXT };
+	const enum fake_item_id exp_cbottom_mid[] = { ID_CB, ID_0, ID_M };
+	const enum fake_item_id exp_cbottom_top[] = { ID_CB, ID_T, ID_0 };
+	const enum fake_item_id exp_cbottom_topmid[] = { ID_CB, ID_TM, ID_EXT };
+	const enum fake_item_id exp_ctopbottom_mid[] = { ID_EXT, ID_CTB, ID_M };
+	const enum fake_item_id exp_cmidbottom_top[] = { ID_EXT, ID_T, ID_CMB };
+	const enum fake_item_id exp_cmid_cbottom[] = { ID_CB, ID_0, ID_CM };
+	const enum fake_item_id exp_ctop_cbottom[] = { ID_CB, ID_CT, ID_0 };
+	const enum fake_item_id exp_ctopmid_cbottom[] = { ID_CB, ID_CTM, ID_EXT };
+	const enum fake_item_id exp_ctop_cmid[] = { ID_0, ID_CT, ID_CM };
+	const enum fake_item_id exp_ctopbottom_cmid[] = { ID_EXT, ID_CTB, ID_CM };
+	const enum fake_item_id exp_ctop_cmidbottom[] = { ID_EXT, ID_CT, ID_CMB };
 
 	// Three
-	const enum look exp_top_mid_bottom[] = { ID_B, ID_T, ID_M };
-	const enum look exp_ctop_mid_bottom[] = { ID_B, ID_CT, ID_M };
-	const enum look exp_cmid_top_bottom[] = { ID_B, ID_T, ID_CM };
-	const enum look exp_ctop_cmid_bottom[] = { ID_B, ID_CT, ID_CM };
-	const enum look exp_cbottom_top_mid[] = { ID_CB, ID_T, ID_M };
-	const enum look exp_ctop_cbottom_mid[] = { ID_CB, ID_CT, ID_M };
-	const enum look exp_cmid_cbottom_top[] = { ID_CB, ID_T, ID_CM };
-	const enum look exp_ctop_cmid_cbottom[] = { ID_CB, ID_CT, ID_CM };
+	const enum fake_item_id exp_top_mid_bottom[] = { ID_B, ID_T, ID_M };
+	const enum fake_item_id exp_ctop_mid_bottom[] = { ID_B, ID_CT, ID_M };
+	const enum fake_item_id exp_cmid_top_bottom[] = { ID_B, ID_T, ID_CM };
+	const enum fake_item_id exp_ctop_cmid_bottom[] = { ID_B, ID_CT, ID_CM };
+	const enum fake_item_id exp_cbottom_top_mid[] = { ID_CB, ID_T, ID_M };
+	const enum fake_item_id exp_ctop_cbottom_mid[] = { ID_CB, ID_CT, ID_M };
+	const enum fake_item_id exp_cmid_cbottom_top[] = { ID_CB, ID_T, ID_CM };
+	const enum fake_item_id exp_ctop_cmid_cbottom[] = { ID_CB, ID_CT, ID_CM };
 	//{ LOOK_HEAD_BOTTOM, LOOK_HEAD_TOP, LOOK_HEAD_MID }
 
 	// Zero: (0)
