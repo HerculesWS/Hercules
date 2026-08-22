@@ -24,14 +24,7 @@ set(HERC_PLUGIN_C
   test_equippos.c
 )
 
-if(NOT MSVC) # Uses GCC extensions
-  # List of compiler flags for the plugin
-  set(HERC_PLUGIN_CFLAGS
-    -Wno-enum-conversion
-  )
-
-  add_plugin_target(${HERC_PLUGIN_NAME}
-    CFILES ${HERC_PLUGIN_C}
-    CFLAGS ${HERC_PLUGIN_CFLAGS}
-  )
-endif()
+add_plugin_target(${HERC_PLUGIN_NAME}
+  CFILES ${HERC_PLUGIN_C}
+  CFLAGS ${HERC_PLUGIN_CFLAGS}
+)
