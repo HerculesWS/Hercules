@@ -100,7 +100,9 @@ function(add_plugin_target _plugin_name)
       herc-plugins
   )
 
-  set_source_files_properties(${_cfiles} PROPERTIES LANGUAGE CXX)
+  set(_cppfiles ${_cfiles})
+  list(FILTER _cppfiles INCLUDE REGEX "\\.c$")
+  set_source_files_properties(${_cppfiles} PROPERTIES LANGUAGE CXX)
 
   message(STATUS "Added plugin ${_plugin_name} to build files")
 endfunction()

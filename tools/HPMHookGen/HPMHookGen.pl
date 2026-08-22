@@ -717,6 +717,12 @@ EOF
 			$beforeblock2 .= "\n\t\t$_" foreach (@{ $if->{before} });
 			$afterblock2 .= "\n\t\t$_" foreach (@{ $if->{after} });
 			$retval = ' retVal___' unless $if->{type} eq 'void';
+			my $prehook_type = $if->{predef};
+			$prehook_type =~ s/preHookFunc//;
+			$prehook_type =~ s/;//;
+			my $posthook_type = $if->{postdef};
+			$posthook_type =~ s/postHookFunc//;
+			$posthook_type =~ s/;//;
 
 			print FH <<"EOF";
 $if->{handlerdef} {$if->{notes}
@@ -725,7 +731,7 @@ $if->{handlerdef} {$if->{notes}
 		$if->{predef}
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.$if->{hname}_pre; hIndex++) {$beforeblock3
-			preHookFunc = HPMHooks.list.$if->{hname}_pre[hIndex].func;
+			preHookFunc = (${prehook_type})HPMHooks.list.$if->{hname}_pre[hIndex].func;
 			$if->{precall}$afterblock3
 		}
 		if (*HPMforce_return) {
@@ -739,7 +745,7 @@ $if->{handlerdef} {$if->{notes}
 	if (HPMHooks.count.$if->{hname}_post > 0) {
 		$if->{postdef}
 		for (hIndex = 0; hIndex < HPMHooks.count.$if->{hname}_post; hIndex++) {$beforeblock3
-			postHookFunc = HPMHooks.list.$if->{hname}_post[hIndex].func;
+			postHookFunc = (${posthook_type})HPMHooks.list.$if->{hname}_post[hIndex].func;
 			$if->{postcall}$afterblock3
 		}
 	}
