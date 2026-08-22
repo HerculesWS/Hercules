@@ -143,31 +143,6 @@ static const char *check(struct map_session_data *sd, const enum fake_item_id *e
 		TEST((name), check, (sd), (exp)); \
 	} while (0);
 
-#define ADD(ar, base, id, exp) \
-	({ \
-		struct map_session_data *temp_ = make_autoreleased_sd(ar); \
-		*temp_ = *(base); \
-		EQUIP_CHK(#base " + " #id, temp_, (id), (exp)); \
-		temp_; \
-	})
-
-#define DEL(ar, base, id, exp) \
-	do { \
-		struct map_session_data *temp_ = make_sd(); \
-		*temp_ = *(base); \
-		UNEQUIP_CHK(#base " - " #id, temp_, (id), (exp)); \
-		aFree(temp_); \
-	} while (0)
-
-#define TOGGLE(ar, base, id, exp1, exp2) \
-	do { \
-		struct map_session_data *temp_ = make_sd(); \
-		*temp_ = *(base); \
-		EQUIP_CHK(#base " + " #id, temp_, (id), (exp1)); \
-		UNEQUIP_CHK(#base " +/- " #id, temp_, (id), (exp2)); \
-		aFree(temp_); \
-	} while (0)
-
 static struct map_session_data *make_sd(void)
 {
 	struct map_session_data *dummy = pc->get_dummy_sd();
@@ -195,6 +170,33 @@ static struct map_session_data *make_autoreleased_sd(struct autorelease *autorel
 	VECTOR_PUSH(*autorelease, dummy);
 	return dummy;
 }
+
+static struct map_session_data *add_helper(const char *test_name, struct autorelease *ar, const struct map_session_data *base, int id, const enum fake_item_id *expected)
+{
+	struct map_session_data *temp = make_autoreleased_sd(ar);
+	*temp = *base;
+	EQUIP_CHK(test_name, temp, id, expected);
+	return temp;
+}
+
+#define ADD(ar, base, id, exp) add_helper(#base " + " #id, (ar), (base), (id), (exp))
+
+#define DEL(ar, base, id, exp) \
+	do { \
+		struct map_session_data *temp_ = make_sd(); \
+		*temp_ = *(base); \
+		UNEQUIP_CHK(#base " - " #id, temp_, (id), (exp)); \
+		aFree(temp_); \
+	} while (0)
+
+#define TOGGLE(ar, base, id, exp1, exp2) \
+	do { \
+		struct map_session_data *temp_ = make_sd(); \
+		*temp_ = *(base); \
+		EQUIP_CHK(#base " + " #id, temp_, (id), (exp1)); \
+		UNEQUIP_CHK(#base " +/- " #id, temp_, (id), (exp2)); \
+		aFree(temp_); \
+	} while (0)
 
 static void my_clif_equipitemack(struct map_session_data *sd, int n, int pos, enum e_EQUIP_ITEM_ACK result)
 {
