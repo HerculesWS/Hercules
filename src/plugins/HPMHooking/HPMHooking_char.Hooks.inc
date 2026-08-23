@@ -5124,14 +5124,14 @@ bool HP_chr_config_read_player_name(const char *filename, const struct config_t 
 	}
 	return retVal___;
 }
-void HP_chr_config_set_start_item(const struct config_setting_t *setting) {
+void HP_chr_config_set_start_item(const struct config_setting_t *setting, bool doram) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_chr_config_set_start_item_pre > 0) {
-		void (*preHookFunc) (const struct config_setting_t **setting);
+		void (*preHookFunc) (const struct config_setting_t **setting, bool *doram);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_chr_config_set_start_item_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_chr_config_set_start_item_pre[hIndex].func;
-			preHookFunc(&setting);
+			preHookFunc(&setting, &doram);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -5139,13 +5139,13 @@ void HP_chr_config_set_start_item(const struct config_setting_t *setting) {
 		}
 	}
 	{
-		HPMHooks.source.chr.config_set_start_item(setting);
+		HPMHooks.source.chr.config_set_start_item(setting, doram);
 	}
 	if (HPMHooks.count.HP_chr_config_set_start_item_post > 0) {
-		void (*postHookFunc) (const struct config_setting_t *setting);
+		void (*postHookFunc) (const struct config_setting_t *setting, bool doram);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_chr_config_set_start_item_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_chr_config_set_start_item_post[hIndex].func;
-			postHookFunc(setting);
+			postHookFunc(setting, doram);
 		}
 	}
 	return;

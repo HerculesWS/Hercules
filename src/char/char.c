@@ -155,7 +155,9 @@ struct start_item_s {
 	int loc;
 	bool stackable;
 };
-static VECTOR_DECL(struct start_item_s) start_items;
+VECTOR_STRUCT_DECL(start_item_list, struct start_item_s);
+static struct start_item_list start_items;
+static struct start_item_list start_items_doram;
 
 int guild_exp_rate = 100;
 
@@ -175,6 +177,8 @@ static struct point start_point = { 0, 97, 90 };
 #else
 static struct point start_point = { 0, 53, 111 };
 #endif
+// Initial position for Doram characters (kRO EP16.1 Lasagna)
+static struct point start_point_doram = { 0, 48, 297 };
 
 static unsigned short skillid2idx[MAX_SKILL_ID];
 
@@ -1722,6 +1726,8 @@ static int char_make_new_char_sql(struct char_session_data *sd, const char *name
 	char name[NAME_LENGTH];
 	char esc_name[NAME_LENGTH*2+1];
 	int char_id, flag, i;
+	const struct point *spoint = &start_point;
+	const struct start_item_list *sitems = &start_items;
 
 	nullpo_retr(-2, sd);
 	nullpo_retr(-2, name_);
@@ -1735,6 +1741,12 @@ static int char_make_new_char_sql(struct char_session_data *sd, const char *name
 
 	switch (starting_class) {
 		case JOB_SUMMONER:
+			// Doram characters start in Lasagna with their own equipment set. (kRO EP16.1)
+			if (start_point_doram.map != 0)
+				spoint = &start_point_doram;
+			if (VECTOR_LENGTH(start_items_doram) > 0)
+				sitems = &start_items_doram;
+			break;
 		case JOB_NOVICE:
 			break;
 		default:
@@ -1768,7 +1780,7 @@ static int char_make_new_char_sql(struct char_session_data *sd, const char *name
 		"'%d', '%d', '%s', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d','%d', '%d','%d', '%d', '%s', '%d', '%d', '%s', '%d', '%d', '%c', '%d')",
 		char_db, sd->account_id , slot, esc_name, starting_class, start_zeny, 48, str, agi, vit, int_, dex, luk,
 		(40 * (100 + vit)/100) , (40 * (100 + vit)/100 ),  (11 * (100 + int_)/100), (11 * (100 + int_)/100), hair_style, hair_color,
-		mapindex_id2name(start_point.map), start_point.x, start_point.y, mapindex_id2name(start_point.map), start_point.x, start_point.y, sex, FIXED_INVENTORY_SIZE)) {
+		mapindex_id2name(spoint->map), spoint->x, spoint->y, mapindex_id2name(spoint->map), spoint->x, spoint->y, sex, FIXED_INVENTORY_SIZE)) {
 			Sql_ShowDebug(inter->sql_handle);
 			return -2; //No, stop the procedure!
 	}
@@ -1779,7 +1791,7 @@ static int char_make_new_char_sql(struct char_session_data *sd, const char *name
 							   "'%d', '%d', '%s', '%d',  '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d','%d', '%d','%d', '%d', '%s', '%d', '%d', '%s', '%d', '%d', '%d')",
 							   char_db, sd->account_id , slot, esc_name, starting_class, start_zeny, str, agi, vit, int_, dex, luk,
 							   (40 * (100 + vit)/100) , (40 * (100 + vit)/100 ),  (11 * (100 + int_)/100), (11 * (100 + int_)/100), hair_style, hair_color,
-							   mapindex_id2name(start_point.map), start_point.x, start_point.y, mapindex_id2name(start_point.map), start_point.x, start_point.y, FIXED_INVENTORY_SIZE) )
+							   mapindex_id2name(spoint->map), spoint->x, spoint->y, mapindex_id2name(spoint->map), spoint->x, spoint->y, FIXED_INVENTORY_SIZE) )
 	{
 		Sql_ShowDebug(inter->sql_handle);
 		return -2; //No, stop the procedure!
@@ -1801,8 +1813,8 @@ static int char_make_new_char_sql(struct char_session_data *sd, const char *name
 	}
 
 	//Give the char the default items
-	for (i = 0; i < VECTOR_LENGTH(start_items); i++) {
-		struct start_item_s *item = &VECTOR_INDEX(start_items, i);
+	for (i = 0; i < VECTOR_LENGTH(*sitems); i++) {
+		const struct start_item_s *item = &VECTOR_INDEX(*sitems, i);
 		if (item->stackable) {
 			if (SQL_ERROR == SQL->Query(inter->sql_handle,
 			                            "INSERT INTO `%s` (`char_id`,`nameid`, `amount`, `identify`) VALUES ('%d', '%d', '%d', '%d')",
@@ -5920,23 +5932,26 @@ static bool char_config_read_player_name(const char *filename, const struct conf
 }
 
 /**
- * Defines start_items based on '(...)/player/new/start_item'.
+ * Defines the start items based on '(...)/player/new/start_items' or
+ * '(...)/player/new/start_items_doram'.
  *
- * @param setting The already retrieved start_item setting.
+ * @param setting The already retrieved start items setting.
+ * @param doram   Whether the setting holds the Doram-specific item list.
  */
-static void char_config_set_start_item(const struct config_setting_t *setting)
+static void char_config_set_start_item(const struct config_setting_t *setting, bool doram)
 {
+	struct start_item_list *items = doram ? &start_items_doram : &start_items;
 	int i, count;
 
 	nullpo_retv(setting);
 
-	VECTOR_CLEAR(start_items);
+	VECTOR_CLEAR(*items);
 
 	count = libconfig->setting_length(setting);
 	if (!count)
 		return;
 
-	VECTOR_ENSURE(start_items, count, 1);
+	VECTOR_ENSURE(*items, count, 1);
 
 	for (i = 0; i < count; i++) {
 		const struct config_setting_t *t = libconfig->setting_get_elem(setting, i);
@@ -5960,7 +5975,7 @@ static void char_config_set_start_item(const struct config_setting_t *setting)
 		}
 		if (libconfig->setting_lookup_int(t, "loc", &start_item.loc) != CONFIG_TRUE)
 			start_item.loc = 0;
-		VECTOR_PUSH(start_items, start_item);
+		VECTOR_PUSH(*items, start_item);
 	}
 }
 
@@ -6003,7 +6018,10 @@ static bool char_config_read_player_new(const char *filename, const struct confi
 	}
 
 	if ((setting2 = libconfig->setting_get_member(setting, "start_items")))
-		chr->config_set_start_item(setting2);
+		chr->config_set_start_item(setting2, false);
+
+	if ((setting2 = libconfig->setting_get_member(setting, "start_items_doram")))
+		chr->config_set_start_item(setting2, true);
 
 	// start_point / start_point_pre
 	if ((setting2 = libconfig->setting_get_member(setting, start_point_setting))) {
@@ -6014,6 +6032,18 @@ static bool char_config_read_player_new(const char *filename, const struct confi
 				ShowError("char_config_read_player_new: Specified start_point %s not found in map-index cache.\n", str);
 			libconfig->setting_lookup_int16(setting2, "x", &start_point.x);
 			libconfig->setting_lookup_int16(setting2, "y", &start_point.y);
+		}
+	}
+
+	// start_point_doram
+	if ((setting2 = libconfig->setting_get_member(setting, "start_point_doram"))) {
+		const char *str = NULL;
+		if (libconfig->setting_lookup_string(setting2, "map", &str) == CONFIG_TRUE) {
+			start_point_doram.map = mapindex->name2id(str);
+			if (start_point_doram.map == 0)
+				ShowError("char_config_read_player_new: Specified start_point_doram %s not found in map-index cache.\n", str);
+			libconfig->setting_lookup_int16(setting2, "x", &start_point_doram.x);
+			libconfig->setting_lookup_int16(setting2, "y", &start_point_doram.y);
 		}
 	}
 
@@ -6164,6 +6194,7 @@ int do_final(void)
 	VECTOR_CLEAR(chr->map_server.maps);
 
 	VECTOR_CLEAR(start_items);
+	VECTOR_CLEAR(start_items_doram);
 
 	aFree(chr->CHAR_CONF_NAME);
 	aFree(chr->NET_CONF_NAME);
@@ -6277,6 +6308,7 @@ int do_init(int argc, char **argv)
 	chr->INTER_CONF_NAME = aStrdup("conf/common/inter-server.conf");
 
 	VECTOR_INIT(start_items);
+	VECTOR_INIT(start_items_doram);
 
 	VECTOR_INIT(chr->map_server.maps);
 
@@ -6295,6 +6327,7 @@ int do_init(int argc, char **argv)
 	#else
 		start_point.map = mapindex->name2id("new_1-1");
 	#endif
+	start_point_doram.map = mapindex->name2id("lasa_fild01");
 
 	safestrncpy(chr->userid, "s1", sizeof(chr->userid));
 	safestrncpy(chr->passwd, "p1", sizeof(chr->passwd));

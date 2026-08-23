@@ -1076,8 +1076,8 @@ typedef bool (*HPMHOOK_pre_chr_config_read_player_deletion) (const char **filena
 typedef bool (*HPMHOOK_post_chr_config_read_player_deletion) (bool retVal___, const char *filename, const struct config_t *config, bool imported);
 typedef bool (*HPMHOOK_pre_chr_config_read_player_name) (const char **filename, const struct config_t **config, bool *imported);
 typedef bool (*HPMHOOK_post_chr_config_read_player_name) (bool retVal___, const char *filename, const struct config_t *config, bool imported);
-typedef void (*HPMHOOK_pre_chr_config_set_start_item) (const struct config_setting_t **setting);
-typedef void (*HPMHOOK_post_chr_config_set_start_item) (const struct config_setting_t *setting);
+typedef void (*HPMHOOK_pre_chr_config_set_start_item) (const struct config_setting_t **setting, bool *doram);
+typedef void (*HPMHOOK_post_chr_config_set_start_item) (const struct config_setting_t *setting, bool doram);
 typedef bool (*HPMHOOK_pre_chr_config_read_player_new) (const char **filename, const struct config_t **config, bool *imported);
 typedef bool (*HPMHOOK_post_chr_config_read_player_new) (bool retVal___, const char *filename, const struct config_t *config, bool imported);
 typedef bool (*HPMHOOK_pre_chr_config_read_player) (const char **filename, const struct config_t **config, bool *imported);
