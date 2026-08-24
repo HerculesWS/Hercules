@@ -42,6 +42,8 @@ ignoreMethods = (
 skipBeforeFix = (
     "atcommand_command_type2idx",
     "atcommand_help_string",
+    "atcommand_jobchange_help_build",
+    "atcommand_jobchange_help_init",
     "chrif_reset",
     "console_handler",
     "console_parse",
