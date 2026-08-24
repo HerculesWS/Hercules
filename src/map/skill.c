@@ -3913,8 +3913,12 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 			rate = rate + (status->get_lv(src) - status->get_lv(bl));
 			if(rnd()%100 < rate)
 				skill->addtimerskill(src,tick + 800,bl->id,0,0,skill_id,skill_lv,0,flag);
-		} else if( skill_id == SC_FATALMENACE )
-			skill->addtimerskill(src,tick + 800,bl->id,skill->area_temp[4],skill->area_temp[5],skill_id,skill_lv,0,flag);
+		} else if (skill_id == SC_FATALMENACE) {
+			short x = skill->area_temp[4], y = skill->area_temp[5];
+			map->search_free_cell(NULL, bl->m, &x, &y, 2, 2, SFC_XY_CENTER);
+			// Queued under bl's own unit data (not src's), giving each hit target its own timer slot.
+			skill->addtimerskill(bl, tick + 800, bl->id, x, y, skill_id, skill_lv, 0, flag);
+		}
 	}
 
 	if(skill_id == CR_GRANDCROSS || skill_id == NPC_GRANDDARKNESS)
@@ -4407,7 +4411,7 @@ static int skill_timerskill(int tid, int64 tick, int id, intptr_t data)
 			break; // Source not on Map
 		if(skl->target_id) {
 			target = map->id2bl(skl->target_id);
-			if( ( skl->skill_id == RG_INTIMIDATE || skl->skill_id == SC_FATALMENACE ) && (!target || target->prev == NULL || !check_distance_bl(src,target,AREA_SIZE)) )
+			if (skl->skill_id == RG_INTIMIDATE && (!target || target->prev == NULL || !check_distance_bl(src, target, AREA_SIZE)))
 				target = src; //Required since it has to warp.
 			if(target == NULL)
 				break; // Target offline?
@@ -4508,13 +4512,8 @@ static int skill_timerskill(int tid, int64 tick, int id, intptr_t data)
 					skill->attack(skill->get_type(skl->skill_id, skl->skill_lv), src, src, target, skl->skill_id, skl->skill_lv, 0, SD_LEVEL);
 					break;
 				case SC_FATALMENACE:
-					if( src == target ) // Casters Part
-						unit->warp(src, -1, skl->x, skl->y, CLR_TELEPORT);
-					else { // Target's Part
-						short x = skl->x, y = skl->y;
-						map->search_free_cell(NULL, target->m, &x, &y, 2, 2, SFC_XY_CENTER);
-						unit->warp(target,-1,x,y,CLR_TELEPORT);
-					}
+					// src is whichever entity owns this entry (caster or a hit target); see skill_attack.
+					unit->warp(src, -1, skl->x, skl->y, CLR_TELEPORT);
 					break;
 				case LG_MOONSLASHER:
 				case SR_WINDMILL:
