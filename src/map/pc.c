@@ -5381,6 +5381,7 @@ static int pc_useitem(struct map_session_data *sd, int n)
 		sd->sc.data[SC_SATURDAY_NIGHT_FEVER] ||
 		sd->sc.data[SC_COLD] ||
 		sd->sc.data[SC_SUHIDE] ||
+		(sd->sc.data[SC_KINGS_GRACE] && sd->sc.data[SC_KINGS_GRACE]->val3) ||
 		pc_ismuted(&sd->sc, MANNER_NOITEM)
 	    ))
 		return 0;

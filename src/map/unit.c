@@ -1282,6 +1282,7 @@ static int unit_can_move(struct block_list *bl)
 		    || (sc->data[SC_CAMOUFLAGE] && sc->data[SC_CAMOUFLAGE]->val1 < 3 && !(sc->data[SC_CAMOUFLAGE]->val3&1))
 		    ||  sc->data[SC_MEIKYOUSISUI]
 		    ||  sc->data[SC_KG_KAGEHUMI]
+		    || (sc->data[SC_KINGS_GRACE] && sc->data[SC_KINGS_GRACE]->val3)
 		    ||  sc->data[SC_NEEDLE_OF_PARALYZE]
 		    ||  sc->data[SC_VACUUM_EXTREME]
 		    || (sc->data[SC_FEAR] && sc->data[SC_FEAR]->val2 > 0)

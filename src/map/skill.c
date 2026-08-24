@@ -10863,7 +10863,9 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 		case LG_KINGS_GRACE:
 			if( flag&1 ){
 				int i;
-				sc_start(src, bl, type, 100, skill_lv, skill->get_time(skill_id, skill_lv), skill_id);
+				// In versus/GvG maps, targets under King's Grace are immobilized and unable to act for the duration, trading total protection for helplessness.
+				bool locked = map_flag_vs(bl->m) || map_flag_gvg(bl->m);
+				sc_start4(src, bl, type, 100, skill_lv, 0, locked ? 1 : 0, 0, skill->get_time(skill_id, skill_lv), skill_id);
 				for(i=0; i<SC_MAX; i++)
 				{
 					if (!tsc->data[i])

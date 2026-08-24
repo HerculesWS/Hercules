@@ -870,6 +870,7 @@ static int status_check_skilluse(struct block_list *src, struct block_list *targ
 			|| (sc->data[SC_AUTOCOUNTER] && !flag && skill_id)
 			|| (sc->data[SC_GOSPEL] && sc->data[SC_GOSPEL]->val4 == BCT_SELF && skill_id != PA_GOSPEL)
 			|| (sc->data[SC_SUHIDE] && skill_id != SU_HIDE)
+			|| (sc->data[SC_KINGS_GRACE] && sc->data[SC_KINGS_GRACE]->val3)
 			)
 			return 0;
 
