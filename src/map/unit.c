@@ -2706,10 +2706,10 @@ static int unit_remove_map(struct block_list *bl, enum clr_type clrtype, const c
 		status_change_end(bl, SC_WUGDASH, INVALID_TIMER);
 		status_change_end(bl, SC_CAMOUFLAGE, INVALID_TIMER);
 		status_change_end(bl, SC_MAGNETICFIELD, INVALID_TIMER);
+		// Only the caster's control status ends on map change; the buff granted to units
+		// standing in the barrier/field is not warp-cancelled and simply expires on its own. (issue:805)
 		status_change_end(bl, SC_NEUTRALBARRIER_MASTER, INVALID_TIMER);
-		status_change_end(bl, SC_NEUTRALBARRIER, INVALID_TIMER);
 		status_change_end(bl, SC_STEALTHFIELD_MASTER, INVALID_TIMER);
-		status_change_end(bl, SC_STEALTHFIELD, INVALID_TIMER);
 		status_change_end(bl, SC__SHADOWFORM, INVALID_TIMER);
 		status_change_end(bl, SC__MANHOLE, INVALID_TIMER);
 		status_change_end(bl, SC_VACUUM_EXTREME, INVALID_TIMER);

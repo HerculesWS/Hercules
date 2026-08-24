@@ -6075,10 +6075,10 @@ static int pc_setpos(struct map_session_data *sd, unsigned short map_index, int 
 			status_change_end(&sd->bl, SC_MOON_COMFORT, INVALID_TIMER);
 			status_change_end(&sd->bl, SC_STAR_COMFORT, INVALID_TIMER);
 			status_change_end(&sd->bl, SC_MIRACLE, INVALID_TIMER);
-			status_change_end(&sd->bl, SC_NEUTRALBARRIER_MASTER, INVALID_TIMER); // Will later check if this is needed. [Rytech]
-			status_change_end(&sd->bl, SC_NEUTRALBARRIER, INVALID_TIMER);
+			// Only the caster's control status ends on map change; the buff granted to units
+			// standing in the barrier/field is not warp-cancelled and simply expires on its own. (issue:805)
+			status_change_end(&sd->bl, SC_NEUTRALBARRIER_MASTER, INVALID_TIMER);
 			status_change_end(&sd->bl, SC_STEALTHFIELD_MASTER, INVALID_TIMER);
-			status_change_end(&sd->bl, SC_STEALTHFIELD, INVALID_TIMER);
 
 			if (sd->sc.data[SC_KNOWLEDGE] != NULL) {
 				struct status_change_entry *sce = sd->sc.data[SC_KNOWLEDGE];
