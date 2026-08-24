@@ -29751,6 +29751,13 @@ static void script_label_add(int key, int pos, enum script_label_flags flags)
  **/
 static void script_hardcoded_constants(void)
 {
+	script->constdb_comment("Job IDs");
+#define JOB_ENUM_VALUE(name, id, msgtbl, scriptname) if ((scriptname) != NULL) script->set_constant((scriptname), JOB_ ## name, false, false);
+#include "common/class_hidden.h"
+#include "common/class_special.h"
+#include "common/class.h"
+#undef JOB_ENUM_VALUE
+
 	script->constdb_comment("Boolean");
 	script->set_constant("true", 1, false, false);
 	script->set_constant("false", 0, false, false);

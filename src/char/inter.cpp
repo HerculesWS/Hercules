@@ -153,7 +153,7 @@ static void inter_do_final_msg(void)
 static const char *inter_job_name(int class_)
 {
 	switch (class_) {
-#define JOB_ENUM_VALUE(name, id, msgtbl) case JOB_ ## name: return inter->msg_txt(MSGTBL_ ## msgtbl);
+#define JOB_ENUM_VALUE(name, id, msgtbl, scriptname) case JOB_ ## name: return inter->msg_txt(MSGTBL_ ## msgtbl);
 #include "common/class.h"
 #include "common/class_hidden.h"
 #include "common/class_special.h"
