@@ -6446,10 +6446,10 @@ static int pc_jobid2mapid(int class_)
 		case JOB_WANDERER_T:            return MAPID_MINSTRELWANDERER_T;
 		case JOB_BABY_MINSTREL:
 		case JOB_BABY_WANDERER:         return MAPID_BABY_MINSTRELWANDERER;
-#define JOB_ENUM_VALUE(name, id, msgtbl) case JOB_ ## name: return MAPID_ ## name;
+#define JOB_ENUM_VALUE(name, id, msgtbl, scriptname) case JOB_ ## name: return MAPID_ ## name;
 #include "common/class.h"
 #undef JOB_ENUM_VALUE
-#define JOB_ENUM_VALUE(name, id, msgtbl) case JOB_ ## name: return -1;
+#define JOB_ENUM_VALUE(name, id, msgtbl, scriptname) case JOB_ ## name: return -1;
 #include "common/class_hidden.h"
 #undef JOB_ENUM_VALUE
 		default:
@@ -6469,7 +6469,7 @@ static int pc_mapid2jobid(unsigned int class_, int sex)
 		case MAPID_MINSTRELWANDERER:      return sex ? JOB_MINSTREL : JOB_WANDERER;
 		case MAPID_MINSTRELWANDERER_T:    return sex ? JOB_MINSTREL_T : JOB_WANDERER_T;
 		case MAPID_BABY_MINSTRELWANDERER: return sex ? JOB_BABY_MINSTREL : JOB_BABY_WANDERER;
-#define JOB_ENUM_VALUE(name, id, msgtbl) case MAPID_ ## name: return JOB_ ## name;
+#define JOB_ENUM_VALUE(name, id, msgtbl, scriptname) case MAPID_ ## name: return JOB_ ## name;
 #include "common/class.h"
 #undef JOB_ENUM_VALUE
 		default:
@@ -6483,7 +6483,7 @@ static int pc_mapid2jobid(unsigned int class_, int sex)
 static const char *pc_job_name(int class_)
 {
 	switch (class_) {
-#define JOB_ENUM_VALUE(name, id, msgtbl) case JOB_ ## name: return msg_txt(MSGTBL_ ## msgtbl);
+#define JOB_ENUM_VALUE(name, id, msgtbl, scriptname) case JOB_ ## name: return msg_txt(MSGTBL_ ## msgtbl);
 #include "common/class.h"
 #include "common/class_hidden.h"
 #include "common/class_special.h"

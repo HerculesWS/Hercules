@@ -1019,6 +1019,155 @@ ACMD(hide)
 	return true;
 }
 
+/**
+ * Job groups listed by @jobchange (with no arguments) and @help jobchange.
+ *
+ * The grouping itself (which section a job falls under) has no equivalent in
+ * source and is curated here; the job IDs and their display names are not
+ * duplicated as text though, they come from class.h/class_hidden.h/class_special.h
+ * (JOB_ id) and pc->job_name() (name) at boot, so they can't drift out of sync.
+ * "2"-"10" alternate-sprite/dummy job IDs are intentionally omitted, same as
+ * before, since @jobchange itself refuses to switch into them (see the deny
+ * list below).
+ **/
+struct atcommand_job_section {
+	const char *header;
+	const int *job_ids;
+	int count;
+};
+
+static const int atcmd_jobs_novice_1st[] = {
+	JOB_NOVICE, JOB_SWORDMAN, JOB_MAGE, JOB_ARCHER, JOB_ACOLYTE, JOB_MERCHANT, JOB_THIEF
+};
+static const int atcmd_jobs_2nd[] = {
+	JOB_KNIGHT, JOB_PRIEST, JOB_WIZARD, JOB_BLACKSMITH, JOB_HUNTER, JOB_ASSASSIN, JOB_CRUSADER,
+	JOB_MONK, JOB_SAGE, JOB_ROGUE, JOB_ALCHEMIST, JOB_BARD, JOB_DANCER
+};
+static const int atcmd_jobs_high_1st[] = {
+	JOB_NOVICE_HIGH, JOB_SWORDMAN_HIGH, JOB_MAGE_HIGH, JOB_ARCHER_HIGH, JOB_ACOLYTE_HIGH,
+	JOB_MERCHANT_HIGH, JOB_THIEF_HIGH
+};
+static const int atcmd_jobs_trans_2nd[] = {
+	JOB_LORD_KNIGHT, JOB_HIGH_PRIEST, JOB_HIGH_WIZARD, JOB_WHITESMITH, JOB_SNIPER,
+	JOB_ASSASSIN_CROSS, JOB_PALADIN, JOB_CHAMPION, JOB_PROFESSOR, JOB_STALKER, JOB_CREATOR,
+	JOB_CLOWN, JOB_GYPSY
+};
+static const int atcmd_jobs_3rd[] = {
+	JOB_RUNE_KNIGHT, JOB_WARLOCK, JOB_RANGER, JOB_ARCH_BISHOP, JOB_MECHANIC, JOB_GUILLOTINE_CROSS,
+	JOB_ROYAL_GUARD, JOB_SORCERER, JOB_MINSTREL, JOB_WANDERER, JOB_SURA, JOB_GENETIC,
+	JOB_SHADOW_CHASER
+};
+static const int atcmd_jobs_trans_3rd[] = {
+	JOB_RUNE_KNIGHT_T, JOB_WARLOCK_T, JOB_RANGER_T, JOB_ARCH_BISHOP_T, JOB_MECHANIC_T,
+	JOB_GUILLOTINE_CROSS_T, JOB_ROYAL_GUARD_T, JOB_SORCERER_T, JOB_MINSTREL_T, JOB_WANDERER_T,
+	JOB_SURA_T, JOB_GENETIC_T, JOB_SHADOW_CHASER_T
+};
+static const int atcmd_jobs_expanded[] = {
+	JOB_SUPER_NOVICE, JOB_GUNSLINGER, JOB_NINJA, JOB_SUPER_BABY, JOB_TAEKWON, JOB_STAR_GLADIATOR,
+	JOB_SOUL_LINKER, JOB_GANGSI, JOB_DEATH_KNIGHT, JOB_DARK_COLLECTOR, JOB_SUPER_NOVICE_E,
+	JOB_SUPER_BABY_E, JOB_KAGEROU, JOB_OBORO, JOB_REBELLION, JOB_SUMMONER, JOB_STAR_EMPEROR,
+	JOB_SOUL_REAPER
+};
+static const int atcmd_jobs_baby_novice_1st[] = {
+	JOB_BABY, JOB_BABY_SWORDMAN, JOB_BABY_MAGE, JOB_BABY_ARCHER, JOB_BABY_ACOLYTE,
+	JOB_BABY_MERCHANT, JOB_BABY_THIEF
+};
+static const int atcmd_jobs_baby_2nd[] = {
+	JOB_BABY_KNIGHT, JOB_BABY_PRIEST, JOB_BABY_WIZARD, JOB_BABY_BLACKSMITH, JOB_BABY_HUNTER,
+	JOB_BABY_ASSASSIN, JOB_BABY_CRUSADER, JOB_BABY_MONK, JOB_BABY_SAGE, JOB_BABY_ROGUE,
+	JOB_BABY_ALCHEMIST, JOB_BABY_BARD, JOB_BABY_DANCER
+};
+static const int atcmd_jobs_baby_3rd[] = {
+	JOB_BABY_RUNE, JOB_BABY_WARLOCK, JOB_BABY_RANGER, JOB_BABY_BISHOP, JOB_BABY_MECHANIC,
+	JOB_BABY_CROSS, JOB_BABY_GUARD, JOB_BABY_SORCERER, JOB_BABY_MINSTREL, JOB_BABY_WANDERER,
+	JOB_BABY_SURA, JOB_BABY_GENETIC, JOB_BABY_CHASER
+};
+static const int atcmd_jobs_baby_expanded[] = {
+	JOB_BABY_SUMMONER, JOB_BABY_NINJA, JOB_BABY_KAGEROU, JOB_BABY_OBORO, JOB_BABY_TAEKWON,
+	JOB_BABY_STAR_GLADIATOR, JOB_BABY_SOUL_LINKER, JOB_BABY_GUNSLINGER, JOB_BABY_REBELLION,
+	JOB_BABY_STAR_EMPEROR, JOB_BABY_SOUL_REAPER
+};
+static const int atcmd_jobs_other[] = {
+	JOB_WEDDING, JOB_XMAS, JOB_SUMMER, JOB_STAR_GLADIATOR2
+};
+
+static const struct atcommand_job_section atcmd_job_sections[] = {
+	{ "Novice / 1st Class",             atcmd_jobs_novice_1st,      ARRAYLENGTH(atcmd_jobs_novice_1st)      },
+	{ "2nd Class",                      atcmd_jobs_2nd,             ARRAYLENGTH(atcmd_jobs_2nd)             },
+	{ "High Novice / High 1st Class",   atcmd_jobs_high_1st,        ARRAYLENGTH(atcmd_jobs_high_1st)        },
+	{ "Transcendent 2nd Class",         atcmd_jobs_trans_2nd,       ARRAYLENGTH(atcmd_jobs_trans_2nd)       },
+	{ "3rd Class (Regular)",            atcmd_jobs_3rd,             ARRAYLENGTH(atcmd_jobs_3rd)             },
+	{ "3rd Class (Transcendent)",       atcmd_jobs_trans_3rd,       ARRAYLENGTH(atcmd_jobs_trans_3rd)       },
+	{ "Expanded Class",                 atcmd_jobs_expanded,        ARRAYLENGTH(atcmd_jobs_expanded)        },
+	{ "Baby Novice And Baby 1st Class", atcmd_jobs_baby_novice_1st, ARRAYLENGTH(atcmd_jobs_baby_novice_1st) },
+	{ "Baby 2nd Class",                 atcmd_jobs_baby_2nd,        ARRAYLENGTH(atcmd_jobs_baby_2nd)        },
+	{ "Baby 3rd Class",                 atcmd_jobs_baby_3rd,        ARRAYLENGTH(atcmd_jobs_baby_3rd)        },
+	{ "Expanded Baby Class",            atcmd_jobs_baby_expanded,   ARRAYLENGTH(atcmd_jobs_baby_expanded)   },
+	{ "Modes And Others",               atcmd_jobs_other,           ARRAYLENGTH(atcmd_jobs_other)           },
+};
+
+#define ATCMD_JOBCHANGE_HELP_COLUMNS 3
+
+/**
+ * Builds the @jobchange / @help jobchange help text from atcmd_job_sections,
+ * looking up each job's display name from source (pc->job_name()) rather
+ * than embedding it as text. Column widths are computed per-section instead
+ * of hand-aligned.
+ *
+ * @return an aMalloc'd string; the caller takes ownership.
+ **/
+static char *atcommand_jobchange_help_build(void)
+{
+	StringBuf buf;
+	char *result;
+	int s;
+
+	StrBuf->Init(&buf);
+	StrBuf->AppendStr(&buf, "Params: <job name|ID>\nChanges your job.\n");
+
+	for (s = 0; s < ARRAYLENGTH(atcmd_job_sections); s++) {
+		const struct atcommand_job_section *sec = &atcmd_job_sections[s];
+		int width = 0;
+		int i;
+
+		for (i = 0; i < sec->count; i++) {
+			char cell[64];
+			int len;
+			snprintf(cell, sizeof(cell), "%d %s", sec->job_ids[i], pc->job_name(sec->job_ids[i]));
+			len = (int)strlen(cell);
+			if (len > width)
+				width = len;
+		}
+
+		StrBuf->Printf(&buf, "----- %s -----\n", sec->header);
+		for (i = 0; i < sec->count; i++) {
+			char cell[64];
+			snprintf(cell, sizeof(cell), "%d %s", sec->job_ids[i], pc->job_name(sec->job_ids[i]));
+			StrBuf->Printf(&buf, "%-*s", width + 2, cell);
+			if ((i + 1) % ATCMD_JOBCHANGE_HELP_COLUMNS == 0 || i + 1 == sec->count)
+				StrBuf->AppendStr(&buf, "\n");
+		}
+	}
+
+	result = aStrdup(StrBuf->Value(&buf));
+	StrBuf->Destroy(&buf);
+	return result;
+}
+
+/**
+ * Regenerates the "jobchange" command's help text from source, overriding
+ * whatever atcommand_config_read() may have set it to from conf/map/help.txt.
+ **/
+static void atcommand_jobchange_help_init(void)
+{
+	AtCommandInfo *info = atcommand->exists("jobchange");
+	if (info == NULL)
+		return;
+	if (info->help != NULL)
+		aFree(info->help);
+	info->help = atcommand_jobchange_help_build();
+}
+
 /*==========================================
  * Changes a character's class
  *------------------------------------------*/
@@ -11567,6 +11716,7 @@ static void atcommand_doload(void)
 		atcommand->alias_db = stridb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, ATCOMMAND_LENGTH);
 	atcommand->base_commands(); //fills initial atcommand_db with known commands
 	atcommand->config_read(map->ATCOMMAND_CONF_FILENAME);
+	atcommand_jobchange_help_init();
 }
 
 static void atcommand_expand_message_table(void)

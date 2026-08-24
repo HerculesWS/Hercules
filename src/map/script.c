@@ -29785,10 +29785,31 @@ static void script_label_add(int key, int pos, enum script_label_flags flags)
 }
 
 /**
+ * Registers one Job_* script constant from the JOB_ENUM_VALUE X-macro.
+ *
+ * A plain helper function instead of doing the NULL check inline in the
+ * macro: comparing a string literal against NULL directly at each expansion
+ * site trips MSVC's C4130 ("logical operation on address of string
+ * constant") under /WX, since most expansions pass an actual string literal.
+ **/
+static void job_register_script_constant(const char *name, int value)
+{
+	if (name != NULL)
+		script->set_constant(name, value, false, false);
+}
+
+/**
  * Sets source-end constants for scripts to play with
  **/
 static void script_hardcoded_constants(void)
 {
+	script->constdb_comment("Job IDs");
+#define JOB_ENUM_VALUE(name, id, msgtbl, scriptname) job_register_script_constant((scriptname), JOB_ ## name);
+#include "common/class_hidden.h"
+#include "common/class_special.h"
+#include "common/class.h"
+#undef JOB_ENUM_VALUE
+
 	script->constdb_comment("Boolean");
 	script->set_constant("true", 1, false, false);
 	script->set_constant("false", 0, false, false);
