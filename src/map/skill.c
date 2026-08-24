@@ -14738,7 +14738,11 @@ static int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *b
 
 		case UNT_EPICLESIS:
 			if( bl->type == BL_PC && !battle->check_undead(tstatus->race, tstatus->def_ele) && tstatus->race != RC_DEMON ) {
-				if( ++sg->val2 % 3 == 0 ) {
+				// Use elapsed time since the unit was placed, not a group-shared counter:
+				// this callback fires independently per player standing on the unit, so a
+				// counter mutated here gets corrupted when more than one player is present.
+				int64 elapsed = DIFF_TICK(tick, sg->tick) / sg->interval;
+				if( elapsed % 3 == 0 ) {
 					int hp, sp;
 					switch( sg->skill_lv ) {
 						case 1: case 2: hp = 3; sp = 2; break;
@@ -14751,7 +14755,7 @@ static int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *b
 					sc_start(ss, bl, type, 100, sg->skill_lv, (sg->interval * 3) + 100, skill_id);
 				}
 				// Reveal hidden players every 5 seconds.
-				if( sg->val2 % 5 == 0 ) {
+				if( elapsed % 5 == 0 ) {
 					// TODO: check if other hidden status can be removed.
 					status_change_end(bl,SC_HIDING,INVALID_TIMER);
 					status_change_end(bl,SC_CLOAKING,INVALID_TIMER);
@@ -14883,7 +14887,11 @@ static int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *b
 			sc_start(ss, bl, type, 100, sg->skill_lv, sg->interval, skill_id);
 			if (sg->unit_id != UNT_ZEPHYR && !battle->check_undead(tstatus->race, tstatus->def_ele)) {
 				int hp = tstatus->max_hp / 100; //+1% each 5s
-				if ((sg->val3) % 5) { //each 5s
+				// Use elapsed time since the unit was placed, not a group-shared counter:
+				// this callback fires independently per player standing on the unit, so a
+				// counter mutated here gets corrupted when more than one player is present.
+				int64 elapsed = DIFF_TICK(tick, sg->tick) / sg->interval;
+				if (elapsed % 5) { //each 5s
 					if (tstatus->def_ele == skill->get_ele(sg->skill_id,sg->skill_lv)) {
 						status->heal(bl, hp, 0, STATUS_HEAL_SHOWEFFECT);
 					} else if( (sg->unit_id ==  UNT_FIRE_INSIGNIA && tstatus->def_ele == ELE_EARTH)
@@ -14894,8 +14902,6 @@ static int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *b
 						status->heal(bl, -hp, 0, STATUS_HEAL_DEFAULT);
 					}
 				}
-				sg->val3++; //timer
-				if (sg->val3 > 5) sg->val3 = 0;
 			}
 			break;
 
