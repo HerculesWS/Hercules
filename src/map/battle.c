@@ -7004,6 +7004,10 @@ static enum damage_lv battle_weapon_attack(struct block_list *src, struct block_
 		struct skill_unit *su = BL_UCAST(BL_SKILL, target);
 		if (su->group && su->group->skill_id == HT_BLASTMINE)
 			skill->blown(src, target, 3, -1, 0);
+		if (su->group && su->group->skill_id == GN_WALLOFTHORN) {
+			if (--su->val2 <= 0)
+				skill->delunit(su);
+		}
 	}
 	map->freeblock_lock();
 

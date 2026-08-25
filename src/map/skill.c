@@ -13843,8 +13843,8 @@ static struct skill_unit_group *skill_unitsetting(struct block_list *src, uint16
 				val2 = 0;
 				break;
 			case GN_WALLOFTHORN:
-				val1 = 2000 + 2000 * skill_lv;
-				val2 = src->id;
+				val1 = 2000 + 2000 * skill_lv; // HP
+				val2 = 20; // Max hits
 				break;
 			case RL_B_TRAP:
 				val1 = 3500;
@@ -19767,7 +19767,7 @@ static int skill_unit_timer_sub(union DBKey key, struct DBData *data, va_list ap
 					su->limit = DIFF_TICK32(tick + 700,group->tick);
 				break;
 			case UNT_WALLOFTHORN:
-				if( su->val1 <= 0 ) {
+				if (su->val1 <= 0 || su->val2 <= 0) {
 					group->unit_id = UNT_USED_TRAPS;
 					group->limit = DIFF_TICK32(tick, group->tick) + 1500;
 				}
