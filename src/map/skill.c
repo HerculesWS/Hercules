@@ -16210,9 +16210,14 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 						}
 						break;
 					default:
-						if( i == 5 ){
-							clif->skill_fail(sd, skill_id, USESKILL_FAIL_SUMMON, 0, 0);
-							return 0;
+						{
+							int max_allowed = skill_lv;
+							if( max_allowed > 5 )
+								max_allowed = 5; // Hard cap due to SC_SUMMON1..SC_SUMMON5
+							if( i >= max_allowed ){
+								clif->skill_fail(sd, skill_id, USESKILL_FAIL_SUMMON, 0, 0);
+								return 0;
+							}
 						}
 				}
 			}
