@@ -3307,8 +3307,18 @@ static void status_calc_bl_main(struct block_list *bl, e_scb_flag flag)
 	if(flag&SCB_MAXHP) {
 		if( bl->type&BL_PC ) {
 			st->max_hp = status->get_base_maxhp(sd,st);
-			if (sd)
-				st->max_hp += bst->max_hp - sd->status.max_hp;
+			if (sd != NULL) {
+				// bst->max_hp already includes sd->hprate (bMaxHPrate) and battle_config.hp_rate
+				// applied over the VIT-based HP plus flat bonuses (see status_calc_pc_()).
+				// Re-apply the same combined rate to the freshly recalculated VIT-based HP
+				// (which may now include VIT granted by status changes, e.g. SC_FOOD_VIT) so
+				// that VIT from status changes benefits from those rates exactly like VIT
+				// from equipment does.
+				int64 rated_vit_hp = APPLY_RATE(APPLY_RATE((int64)st->max_hp, sd->hprate), battle_config.hp_rate);
+				int64 rated_base_vit_hp = APPLY_RATE(APPLY_RATE((int64)sd->status.max_hp, sd->hprate), battle_config.hp_rate);
+				int64 flat_bonus = (int64)bst->max_hp - rated_base_vit_hp;
+				st->max_hp = (unsigned int)cap_value(rated_vit_hp + flat_bonus, 0, INT_MAX);
+			}
 
 			st->max_hp = status->calc_maxhp(bl, sc, st->max_hp);
 
@@ -3330,7 +3340,14 @@ static void status_calc_bl_main(struct block_list *bl, e_scb_flag flag)
 		if( bl->type&BL_PC ) {
 			st->max_sp = status->get_base_maxsp(sd,st);
 			if (sd != NULL) {
-				st->max_sp += bst->max_sp - sd->status.max_sp;
+				// See the analogous SCB_MAXHP handling above: re-apply the combined
+				// sd->sprate (bMaxSPrate) and battle_config.sp_rate to the freshly
+				// recalculated INT-based SP so that INT from status changes benefits
+				// from those rates exactly like INT from equipment does.
+				int64 rated_int_sp = APPLY_RATE(APPLY_RATE((int64)st->max_sp, sd->sprate), battle_config.sp_rate);
+				int64 rated_base_int_sp = APPLY_RATE(APPLY_RATE((int64)sd->status.max_sp, sd->sprate), battle_config.sp_rate);
+				int64 flat_bonus = (int64)bst->max_sp - rated_base_int_sp;
+				st->max_sp = (unsigned int)cap_value(rated_int_sp + flat_bonus, 0, INT_MAX);
 				st->max_sp = status->calc_maxsp(&sd->bl, &sd->sc, st->max_sp);
 			}
 
