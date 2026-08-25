@@ -14732,7 +14732,7 @@ static int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *b
 			if (battle->check_target(ss, bl, BCT_ENEMY) > 0 && !(tsc != NULL && tsc->data[sg->val2] != NULL)
 			    && rnd() % 100 < 50) {
 				int duration = skill->get_time2(GC_POISONINGWEAPON, (sg->val2 == SC_VENOMBLEED ? 1 : 2));
-				sc_start(ss, bl, sg->val2, 100, sg->val1, duration, skill_id);
+				sc_start(ss, bl, sg->val2, 100, sg->val3, duration, skill_id);
 			}
 			break;
 
