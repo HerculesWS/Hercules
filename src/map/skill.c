@@ -8960,7 +8960,12 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 					clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
 					unit->skillcastcancel(bl,0);
 					sp = skill->get_sp(bl_skill_id,bl_skill_lv);
-					status_zap(bl, hp, sp);
+					status_zap(bl, 0, sp);
+
+					if (hp && (unsigned int)hp < tstatus->hp) // Don't let the HP siphon kill the target.
+						status_fix_damage(src, bl, hp, clif->damage(src, bl, 0, 0, hp, 0, BDT_NORMAL, 0));
+					else
+						hp = 0;
 
 					if (hp && skill_lv >= 5)
 						hp>>=1; //Recover half damaged HP at level 5 [Skotlex]
