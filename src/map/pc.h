@@ -362,6 +362,7 @@ struct map_session_data {
 
 BEGIN_ZEROED_BLOCK; // this block will be globally zeroed at the beginning of status_calc_pc()
 	int param_bonus[6],param_equip[6]; //Stores card/equipment bonuses.
+	int official_def_display_bonus; //Gap between official and real armor refine DEF.
 	int subele[ELE_MAX];
 	int subrace[RC_MAX];
 	int subrace2[RC2_MAX];
@@ -807,7 +808,10 @@ END_ZEROED_BLOCK;
 		* (sd)->battle_status.atk_percent) / 100\
 	)
 	#define pc_rightside_atk(sd) ((sd)->battle_status.rhw.atk2 + (sd)->battle_status.lhw.atk2)
-	#define pc_leftside_def(sd) ((sd)->battle_status.def)
+	#define pc_leftside_def(sd) (\
+		(sd)->battle_status.def \
+		+ (battle_config.official_def_display ? (sd)->official_def_display_bonus : 0) \
+	)
 	#define pc_rightside_def(sd) (((sd)->battle_status.def2 * (sd)->battle_status.def_percent) / 100)
 	#define pc_leftside_mdef(sd) ((sd)->battle_status.mdef)
 	#define pc_rightside_mdef(sd) ( (sd)->battle_status.mdef2 - ((sd)->battle_status.vit>>1) )

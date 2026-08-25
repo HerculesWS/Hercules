@@ -1461,7 +1461,7 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 	const struct status_change *sc;
 	struct s_skill b_skill[MAX_SKILL_DB]; // previous skill tree
 	int b_cart_weight_max, // previous weight
-		i, k, index, skill_lv,refinedef=0;
+		i, k, index, skill_lv, refinedef = 0, refine_level_sum = 0;
 	unsigned int b_weight, b_max_weight;
 	int64 i64;
 
@@ -1663,8 +1663,10 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 				)
 				r = 0;
 
-			if (r)
+			if (r > 0) {
 				refinedef += refine->get_bonus(REFINE_TYPE_ARMOR, r);
+				refine_level_sum += r;
+			}
 
 			if(sd->inventory_data[index]->script) {
 				if( i == EQI_HAND_L ) //Shield
@@ -1723,6 +1725,12 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 	memset(sd->param_bonus, 0, sizeof(sd->param_bonus));
 
 	bstatus->def += (refinedef+50)/100;
+	// Pre-renewal official (Aegis) clients display a flat +1 DEF per armor refine level,
+	// regardless of the real, lower per-level bonus used for the actual damage reduction
+	// above. Store the gap so the status window can optionally show the official-looking
+	// number. (Unused in renewal builds: renewal's DEF display already matches its own,
+	// non-linear refine formula, so no equivalent correction applies there.)
+	sd->official_def_display_bonus = refine_level_sum - (refinedef + 50) / 100;
 
 	//Parse Cards
 	for(i=0;i<EQI_MAX;i++) {
