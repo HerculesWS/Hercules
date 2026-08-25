@@ -3777,7 +3777,7 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 
 	if( !dmg.amotion ) {
 		//Instant damage
-		if ((!sc || (!sc->data[SC_DEVOTION] && skill_id != CR_REFLECTSHIELD && !sc->data[SC_WATER_SCREEN_OPTION])) && !shadow_flag)
+		if ((!sc || (!sc->data[SC_DEVOTION] && skill_id != CR_REFLECTSHIELD && !sc->data[SC_WATER_SCREEN_OPTION]) || skill_id == NPC_EVILLAND) && !shadow_flag)
 			status_fix_damage(src,bl,damage,dmg.dmotion); //Deal damage before knockback to allow stuff like firewall+storm gust combo.
 		if( !status->isdead(bl) && additional_effects )
 			skill->additional_effect(src,bl,skill_id,skill_lv,dmg.flag,dmg.dmg_lv,tick);
@@ -3865,7 +3865,7 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 			battle->delay_damage(tick, dmg.amotion,src,bl,dmg.flag,skill_id,skill_lv,damage,dmg.dmg_lv,dmg.dmotion, additional_effects);
 	}
 
-	if (sc != NULL && skill_id != PA_PRESSURE && skill_id != SJ_NOVAEXPLOSING && skill_id != SP_SOULEXPLOSION) {
+	if (sc != NULL && skill_id != PA_PRESSURE && skill_id != SJ_NOVAEXPLOSING && skill_id != SP_SOULEXPLOSION && skill_id != NPC_EVILLAND) {
 		if (sc->data[SC_DEVOTION]) {
 			struct status_change_entry *sce = sc->data[SC_DEVOTION];
 			struct block_list *d_bl = map->id2bl(sce->val1);
@@ -13442,7 +13442,7 @@ static struct skill_unit_group *skill_unitsetting(struct block_list *src, uint16
 
 		case PR_SANCTUARY:
 		case NPC_EVILLAND:
-			val1=(skill_lv+3)*2;
+			val1=skill_lv+3;
 			break;
 
 		case WZ_FIREPILLAR:
@@ -14290,7 +14290,7 @@ static int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *b
 			if( battle->check_undead(tstatus->race, tstatus->def_ele) || tstatus->race==RC_DEMON )
 			{ //Only damage enemies with offensive Sanctuary. [Skotlex]
 				if( battle->check_target(&src->bl,bl,BCT_ENEMY) > 0 && skill->attack(BF_MAGIC, ss, &src->bl, bl, sg->skill_id, sg->skill_lv, tick, 0) )
-					sg->val1 -= 2; // reduce healing count if this was meant for damaging [hekate]
+					sg->val1 -= 1; // Reduce the number of targets that can still be hit
 			} else {
 				int heal = skill->calc_heal(ss,bl,sg->skill_id,sg->skill_lv,true);
 				struct mob_data *md = BL_CAST(BL_MOB, bl);
@@ -14308,11 +14308,7 @@ static int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *b
 				if (tsc && tsc->data[SC_AKAITSUKI] && heal)
 					heal = ~heal + 1;
 				status->heal(bl, heal, 0, STATUS_HEAL_DEFAULT);
-				if (diff >= 500)
-					sg->val1--;
 			}
-			if (sg->val1 <= 0)
-				skill->del_unitgroup(sg);
 			break;
 
 		case UNT_EVILLAND:
@@ -19345,9 +19341,6 @@ static struct skill_unit_group *skill_initunitgroup(struct block_list *src, int 
 
 	ud->skillunit[i] = group;
 
-	if (skill_id == PR_SANCTUARY) //Sanctuary starts healing +1500ms after casted. [Skotlex]
-		group->tick += 1500;
-
 	idb_put(skill->group_db, group->group_id, group);
 	return group;
 }
@@ -19771,6 +19764,10 @@ static int skill_unit_timer_sub(union DBKey key, struct DBData *data, va_list ap
 					group->unit_id = UNT_USED_TRAPS;
 					group->limit = DIFF_TICK32(tick, group->tick) + 1500;
 				}
+				break;
+			case UNT_SANCTUARY:
+				if (group->val1 <= 0)
+					skill->del_unitgroup(group);
 				break;
 		}
 	}
