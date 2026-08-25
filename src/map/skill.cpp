@@ -8975,7 +8975,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 					sp = skill->get_sp(bl_skill_id,bl_skill_lv);
 					status_zap(bl, 0, sp);
 
-					if (hp && hp < tstatus->hp) // Don't let the HP siphon kill the target.
+					if (hp && (unsigned int)hp < tstatus->hp) // Don't let the HP siphon kill the target.
 						status_fix_damage(src, bl, hp, clif->damage(src, bl, 0, 0, hp, 0, BDT_NORMAL, 0));
 					else
 						hp = 0;
