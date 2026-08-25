@@ -3591,6 +3591,70 @@ static void clif_updatestatus(struct map_session_data *sd, enum status_point_typ
 	if (!sockt->session_is_active(fd)) // Invalid pointer fix, by sasuke [Kevin]
 		return;
 
+	// Reject unrecognized types before allocating/building the packet below.
+	PRAGMA_GCC46(GCC diagnostic push)
+	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+	switch (type) {
+		case SP_WEIGHT:
+		case SP_MAXWEIGHT:
+		case SP_SPEED:
+		case SP_BASELEVEL:
+		case SP_JOBLEVEL:
+		case SP_KARMA:
+		case SP_MANNER:
+		case SP_STATUSPOINT:
+		case SP_SKILLPOINT:
+		case SP_HIT:
+		case SP_FLEE1:
+		case SP_FLEE2:
+		case SP_MAXHP:
+		case SP_MAXSP:
+		case SP_HP:
+		case SP_SP:
+		case SP_ASPD:
+		case SP_ATK1:
+		case SP_DEF1:
+		case SP_MDEF1:
+		case SP_ATK2:
+		case SP_DEF2:
+		case SP_MDEF2:
+		case SP_CRITICAL:
+		case SP_MATK1:
+		case SP_MATK2:
+		case SP_ZENY:
+		case SP_BASEEXP:
+		case SP_JOBEXP:
+		case SP_NEXTBASEEXP:
+		case SP_NEXTJOBEXP:
+#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
+		case SP_POW:
+		case SP_STA:
+		case SP_WIS:
+		case SP_SPL:
+		case SP_CON:
+		case SP_CRT:
+#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
+		case SP_USTR:
+		case SP_UAGI:
+		case SP_UVIT:
+		case SP_UINT:
+		case SP_UDEX:
+		case SP_ULUK:
+		case SP_ATTACKRANGE:
+		case SP_STR:
+		case SP_AGI:
+		case SP_VIT:
+		case SP_INT:
+		case SP_DEX:
+		case SP_LUK:
+		case SP_CARTINFO:
+			break;
+		default:
+			ShowError("clif->updatestatus : unrecognized type %d\n",type);
+			return;
+	}
+	PRAGMA_GCC46(GCC diagnostic pop)
+
 	int packetId = HEADER_ZC_PAR_CHANGE;
 
 	WFIFOHEAD(fd, 14);
@@ -6838,6 +6902,13 @@ static void clif_use_card(struct map_session_data *sd, int idx)
 	if (!pc->can_insert_card(sd, idx))
 		return;
 
+	for (i = c = 0; i < sd->status.inventorySize; i++) {
+		if (pc->can_insert_card_into(sd, idx, i))
+			c++;
+	}
+
+	if (!c) return; // no item is available for card insertion
+
 	WFIFOHEAD(fd, sd->status.inventorySize * 2 + 4);
 	WFIFOW(fd, 0) = 0x17b;
 
@@ -6847,8 +6918,6 @@ static void clif_use_card(struct map_session_data *sd, int idx)
 		WFIFOW(fd, 4 + c * 2) = i + 2;
 		c++;
 	}
-
-	if (!c) return; // no item is available for card insertion
 
 	WFIFOW(fd, 2) = 4 + c * 2;
 	WFIFOSET(fd, WFIFOW(fd, 2));
@@ -7896,6 +7965,14 @@ static void clif_sendegg(struct map_session_data *sd)
 		return;
 	}
 
+	for (i = n = 0; i < sd->status.inventorySize; i++) {
+		if (sd->status.inventory[i].nameid <= 0 || sd->inventory_data[i] == NULL || sd->inventory_data[i]->type!=IT_PETEGG || sd->status.inventory[i].amount <= 0)
+			continue;
+		n++;
+	}
+
+	if (!n) return;
+
 	WFIFOHEAD(fd, sd->status.inventorySize * 2 + 4);
 	WFIFOW(fd,0) = 0x1a6;
 	for (i = n = 0; i < sd->status.inventorySize; i++) {
@@ -7904,8 +7981,6 @@ static void clif_sendegg(struct map_session_data *sd)
 		WFIFOW(fd, n * 2 + 4) = i + 2;
 		n++;
 	}
-
-	if (!n) return;
 
 	WFIFOW(fd, 2) = 4 + n * 2;
 	WFIFOSET(fd, WFIFOW(fd, 2));

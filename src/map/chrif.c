@@ -1089,11 +1089,26 @@ static bool chrif_save_scdata(struct map_session_data *sd)
 	chrif_check(false);
 	tick = timer->gettick();
 
+	for (i = 0; i < SC_MAX; i++) {
+		if (!sc->data[i])
+			continue;
+		if (sc->data[i]->timer != INVALID_TIMER) {
+			td = timer->get(sc->data[i]->timer);
+			if (td == NULL || td->func != status->change_timer)
+				continue;
+		}
+		count++;
+	}
+
+	if (count == 0)
+		return true; //Nothing to save. | Everything was as successful as if there was something to save.
+
 	WFIFOHEAD(chrif->fd, 14 + SC_MAX*sizeof(struct status_change_data));
 	WFIFOW(chrif->fd,0) = 0x2b1c;
 	WFIFOL(chrif->fd,4) = sd->status.account_id;
 	WFIFOL(chrif->fd,8) = sd->status.char_id;
 
+	count = 0;
 	for (i = 0; i < SC_MAX; i++) {
 		if (!sc->data[i])
 			continue;
@@ -1118,9 +1133,6 @@ static bool chrif_save_scdata(struct map_session_data *sd)
 			&data, sizeof(struct status_change_data));
 		count++;
 	}
-
-	if (count == 0)
-		return true; //Nothing to save. | Everything was as successful as if there was something to save.
 
 	WFIFOW(chrif->fd,12) = count;
 	WFIFOW(chrif->fd,2) = 14 +count*sizeof(struct status_change_data); //Total packet size
@@ -1258,8 +1270,6 @@ static void chrif_update_ip(int fd)
 {
 	uint32 new_ip;
 
-	WFIFOHEAD(fd,6);
-
 	new_ip = sockt->host2ip(chrif->ip_str);
 
 	if (new_ip && new_ip != chrif->ip)
@@ -1270,6 +1280,7 @@ static void chrif_update_ip(int fd)
 	if (!new_ip)
 		return; //No change
 
+	WFIFOHEAD(fd,6);
 	WFIFOW(fd,0) = 0x2736;
 	WFIFOL(fd,2) = htonl(new_ip);
 	WFIFOSET(fd,6);
