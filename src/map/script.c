@@ -13847,7 +13847,7 @@ static BUILDIN(sc_start)
 
 	if(tick == 0 && val1 > 0 && type > SC_NONE && type < SC_MAX && status->sc2skill(type) != 0)
 	{// When there isn't a duration specified, try to get it from the skill_db
-		tick = skill->get_time(status->sc2skill(type), val1);
+		tick = skill->get_time(bl, status->sc2skill(type), val1);
 	}
 
 	if(script->potion_flag == 1 && script->potion_target) { //skill.c set the flags before running the script, this is a potion-pitched effect.
@@ -24888,7 +24888,7 @@ static int buildin_mobuseskill_sub(struct block_list *bl, va_list ap)
 	if( md->ud.skilltimer != INVALID_TIMER ) // Cancel the casting skill.
 		unit->skillcastcancel(bl,0);
 
-	if( skill->get_casttype(skill_id) == CAST_GROUND )
+	if( skill->get_casttype(bl, skill_id) == CAST_GROUND )
 		unit->skilluse_pos2(&md->bl, tbl->x, tbl->y, skill_id, skill_lv, casttime, cancel);
 	else
 		unit->skilluse_id2(&md->bl, tbl->id, skill_id, skill_lv, casttime, cancel);
@@ -25661,7 +25661,7 @@ static BUILDIN(npcskill)
 		status_calc_npc(nd, SCO_NONE);
 	}
 
-	if (skill->get_inf(skill_id)&INF_GROUND_SKILL) {
+	if (skill->get_inf(&nd->bl, skill_id)&INF_GROUND_SKILL) {
 		unit->skilluse_pos(&nd->bl, sd->bl.x, sd->bl.y, skill_id, skill_level);
 	} else {
 		unit->skilluse_id(&nd->bl, sd->bl.id, skill_id, skill_level);

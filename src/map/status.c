@@ -449,7 +449,7 @@ static int status_damage(struct block_list *src, struct block_list *target, int6
 
 	if( sc && sc->data[SC_KAIZEL] && !map_flag_gvg2(target->m) ) {
 		//flag&8 = disable Kaizel
-		int time = skill->get_time2(SL_KAIZEL,sc->data[SC_KAIZEL]->val1);
+		int time = skill->get_time2(src, SL_KAIZEL,sc->data[SC_KAIZEL]->val1);
 		//Look for Osiris Card's bonus effect on the character and revive 100% or revive normally
 		if ( target->type == BL_PC && BL_CAST(BL_PC,target)->special_state.restart_full_recover )
 			status->revive(target, 100, 100);
@@ -457,7 +457,7 @@ static int status_damage(struct block_list *src, struct block_list *target, int6
 			status->revive(target, sc->data[SC_KAIZEL]->val2, 0);
 		status->change_clear(target,0);
 		clif->skill_nodamage(target,target,ALL_RESURRECTION,1,1);
-		sc_start(target, target, skill->get_sc_type(PR_KYRIE), 100, 10, time, PR_KYRIE);
+		sc_start(target, target, skill->get_sc_type(src, PR_KYRIE), 100, 10, time, PR_KYRIE);
 
 		if( target->type == BL_MOB )
 			BL_UCAST(BL_MOB, target)->state.rebirth = 1;
@@ -861,7 +861,7 @@ static int status_check_skilluse(struct block_list *src, struct block_list *targ
 		if (skill_id != RK_REFRESH && sc->opt1 >0 && !(sc->opt1 == OPT1_CRYSTALIZE && src->type == BL_MOB) && sc->opt1 != OPT1_BURNING && skill_id != SR_GENTLETOUCH_CURE) { //Stunned/Frozen/etc
 			if (flag != 1) //Can't cast, casted stuff can't damage.
 				return 0;
-			if (!(skill->get_inf(skill_id)&INF_GROUND_SKILL))
+			if (!(skill->get_inf(src, skill_id)&INF_GROUND_SKILL))
 				return 0; //Targeted spells can't come off.
 		}
 
@@ -907,7 +907,7 @@ static int status_check_skilluse(struct block_list *src, struct block_list *targ
 					return 0;
 			} else if(sc->data[SC_LONGING]) { //Allow everything except dancing/re-dancing. [Skotlex]
 				if (skill_id == BD_ENCORE ||
-					skill->get_inf2(skill_id)&(INF2_SONG_DANCE|INF2_ENSEMBLE_SKILL)
+					skill->get_inf2(src, skill_id)&(INF2_SONG_DANCE|INF2_ENSEMBLE_SKILL)
 					)
 					return 0;
 			} else {
@@ -962,7 +962,7 @@ static int status_check_skilluse(struct block_list *src, struct block_list *targ
 #else
 				sc->data[SC_ROKISWEIL] != NULL ||
 #endif
-				(sc->data[SC_HERMODE] && skill->get_inf(skill_id) & INF_SUPPORT_SKILL) ||
+				(sc->data[SC_HERMODE] && skill->get_inf(src, skill_id) & INF_SUPPORT_SKILL) ||
 				pc_ismuted(sc, MANNER_NOSKILL)
 				)
 				return 0;
@@ -1030,8 +1030,8 @@ static int status_check_skilluse(struct block_list *src, struct block_list *targ
 	hide_flag = flag?OPTION_HIDE:(OPTION_HIDE|OPTION_CLOAK|OPTION_CHASEWALK);
 
 	// Applies even if the target hides
-	if ((skill->get_ele(skill_id,1) == ELE_EARTH && skill_id != MG_STONECURSE) // Ground type
-	  || (flag&1 && skill->get_nk(skill_id)&NK_NO_DAMAGE && skill_id != ALL_RESURRECTION)) // Buff/debuff skills started before hiding
+	if ((skill->get_ele(src, skill_id,1) == ELE_EARTH && skill_id != MG_STONECURSE) // Ground type
+	  || (flag&1 && skill->get_nk(src, skill_id)&NK_NO_DAMAGE && skill_id != ALL_RESURRECTION)) // Buff/debuff skills started before hiding
 		hide_flag &= ~OPTION_HIDE;
 
 	switch( target->type ) {
@@ -1064,7 +1064,7 @@ static int status_check_skilluse(struct block_list *src, struct block_list *targ
 		case BL_HOM:
 		case BL_MER:
 		case BL_ELEM:
-			if( target->type == BL_HOM && skill_id && battle_config.hom_setting&0x1 && skill->get_inf(skill_id)&INF_SUPPORT_SKILL && battle->get_master(target) != src )
+			if( target->type == BL_HOM && skill_id && battle_config.hom_setting&0x1 && skill->get_inf(src, skill_id)&INF_SUPPORT_SKILL && battle->get_master(target) != src )
 				return 0; // Can't use support skills on Homunculus (only Master/Self)
 			if( target->type == BL_MER && (skill_id == PR_ASPERSIO || (skill_id >= SA_FLAMELAUNCHER && skill_id <= SA_SEISMICWEAPON)) && battle->get_master(target) != src )
 				return 0; // Can't use Weapon endow skills on Mercenary (only Master)
@@ -3404,7 +3404,7 @@ static void status_calc_bl_main(struct block_list *bl, e_scb_flag flag)
 					amotion = amotion * (150 - 5 * pc->checkskill(sd, SA_FREECAST)) / 100;
 				} else {
 					struct unit_data *ud = unit->bl2ud(bl);
-					if (ud && (skill->get_inf2(ud->skill_id) & INF2_FREE_CAST_REDUCED) != 0) {
+					if (ud && (skill->get_inf2(bl, ud->skill_id) & INF2_FREE_CAST_REDUCED) != 0) {
 						amotion = amotion * (150 - 5 * ud->skill_lv) / 100;
 					}
 				}
@@ -5412,7 +5412,7 @@ static unsigned short status_calc_speed(struct block_list *bl, struct status_cha
 	{
 		speed_rate = 100;
 		if (skillTimerIsValid) {
-			if ((skill->get_inf2(sd->ud.skill_id) & INF2_FREE_CAST_REDUCED) != 0)
+			if ((skill->get_inf2(bl, sd->ud.skill_id) & INF2_FREE_CAST_REDUCED) != 0)
 				speed_rate = 175 - 5 * sd->ud.skill_lv;
 			else if (pc->checkskill(sd, SA_FREECAST) > 0)
 				speed_rate = 175 - 5 * pc->checkskill(sd, SA_FREECAST);
@@ -6383,7 +6383,7 @@ static defType status_get_def(struct block_list *bl)
 	int def = st ? st->def : 0;
 	ud = unit->bl2ud(bl);
 	if (ud && ud->skilltimer != INVALID_TIMER)
-		def -= def * skill->get_castdef(ud->skill_id, ud->skill_lv) / 100;
+		def -= def * skill->get_castdef(bl, ud->skill_id, ud->skill_lv) / 100;
 
 	return cap_value(def, DEFTYPE_MIN, DEFTYPE_MAX);
 }
@@ -6885,8 +6885,8 @@ static int status_get_sc_def(struct block_list *src, struct block_list *bl, enum
 #define SCDEF_LVL_DIFF(bl, src, maxlv, factor) ( ( SCDEF_LVL_CAP((bl), (maxlv)) - SCDEF_LVL_CAP((src), (maxlv)) ) * (factor) )
 
 	//Status that are blocked by Golden Thief Bug card or Wand of Hermod
-	if (status->isimmune(bl) && (skill->get_inf(skill_id) & INF_SELF_SKILL) == 0 // [Aegis] self-cast skills are not blocked, even if magic.
-	    && ((skill->get_type(skill_id, 1) & BF_MAGIC) != 0 // [Aegis] if an SC is caused by magic then it's blocked, no matter what SC.
+	if (status->isimmune(bl) && (skill->get_inf(src, skill_id) & INF_SELF_SKILL) == 0 // [Aegis] self-cast skills are not blocked, even if magic.
+	    && ((skill->get_type(src, skill_id, 1) & BF_MAGIC) != 0 // [Aegis] if an SC is caused by magic then it's blocked, no matter what SC.
 	        || (status->get_sc_type(type) & SC_NO_MAGIC_BLOCK) != 0))
 		return 0;
 
@@ -7428,13 +7428,13 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				return 0; // Overthrust and Overthrust Max cannot be used on Mado Gear [Ind]
 			break;
 		case SC_ADRENALINE:
-			if (sd && !pc_check_weapontype(sd, skill->get_weapontype(BS_ADRENALINE)))
+			if (sd && !pc_check_weapontype(sd, skill->get_weapontype(src, BS_ADRENALINE)))
 				return 0;
 			if (sc->data[SC_QUAGMIRE] || sc->data[SC_DEC_AGI] || sc->option&OPTION_MADOGEAR) // Adrenaline doesn't affect Mado Gear [Ind]
 				return 0;
 			break;
 		case SC_ADRENALINE2:
-			if (sd && !pc_check_weapontype(sd,skill->get_weapontype(BS_ADRENALINE2)))
+			if (sd && !pc_check_weapontype(sd,skill->get_weapontype(src, BS_ADRENALINE2)))
 				return 0;
 			if (sc->data[SC_QUAGMIRE] || sc->data[SC_DEC_AGI])
 				return 0;
@@ -7840,7 +7840,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			case SC__BLOODYLUST:
 				break; // Prevent calling status_change_start_unknown_sc().
 			case SC_ADORAMUS:
-				sc_start(src, bl, SC_BLIND, 100, val1, skill->get_time(status->sc2skill(type), val1), skill_id);
+				sc_start(src, bl, SC_BLIND, 100, val1, skill->get_time(src, status->sc2skill(type), val1), skill_id);
 				// Fall through to SC_INC_AGI
 				FALLTHROUGH
 			case SC_DEC_AGI:
@@ -8297,7 +8297,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			case SC_SIGHT: /* splash status */
 			case SC_RUWACH:
 			case SC_WZ_SIGHTBLASTER:
-				val3 = skill->get_splash(val2, val1); //Val2 should bring the skill-id.
+				val3 = skill->get_splash(src, val2, val1); //Val2 should bring the skill-id.
 				val2 = total_tick/20;
 				tick_time = 20; // [GodLesZ] tick time
 				break;
@@ -8383,7 +8383,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 
 			case SC_JOINTBEAT:
 				if( val2&BREAK_NECK )
-					sc_start2(src, bl, SC_BLOODING, 100, val1, val3, skill->get_time2(status->sc2skill(type), val1), skill_id);
+					sc_start2(src, bl, SC_BLOODING, 100, val1, val3, skill->get_time2(src, status->sc2skill(type), val1), skill_id);
 				break;
 
 			case SC_BERSERK:
@@ -8393,7 +8393,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 					sc_start4(src, bl, SC_ENDURE, 100, 10, 0, 0, 2, total_tick, skill_id);
 				//HP healing is performing after the calc_status call.
 				//Val2 holds HP penalty
-				if (!val4) val4 = skill->get_time2(status->sc2skill(type),val1);
+				if (!val4) val4 = skill->get_time2(src, status->sc2skill(type),val1);
 				if (!val4) val4 = 10000; //Val4 holds damage interval
 				val3 = total_tick/val4; //val3 holds skill duration
 				tick_time = val4; // [GodLesZ] tick time
@@ -8500,7 +8500,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 						enum sc_type type2 = types[i];
 						if (d_sc->data[type2]) {
 							status->change_start(bl, bl, type2, 10000, d_sc->data[type2]->val1, 0, 0, 0,
-								skill->get_time(status->sc2skill(type2), d_sc->data[type2]->val1),
+								skill->get_time(src, status->sc2skill(type2), d_sc->data[type2]->val1),
 								(type2 != SC_DEFENDER) ? SCFLAG_NOICON : SCFLAG_NONE, skill_id);
 						}
 						i--;
@@ -8776,7 +8776,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				break;
 			case SC_NJ_UTSUSEMI:
 				val2=(val1+1)/2; // number of hits blocked
-				val3=skill->get_blewcount(NJ_UTSUSEMI, val1); //knockback value.
+				val3=skill->get_blewcount(src, NJ_UTSUSEMI, val1); //knockback value.
 				break;
 			case SC_NJ_BUNSINJYUTSU:
 				val2=(val1+1)/2; // number of hits blocked
@@ -9919,7 +9919,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			case SC_DIMENSION1:
 			case SC_DIMENSION2:
 				if (sd != NULL)
-					pc->addspiritball(sd, skill->get_time2(SJ_BOOKOFDIMENSION, 1), 2);
+					pc->addspiritball(sd, skill->get_time2(src, SJ_BOOKOFDIMENSION, 1), 2);
 				break;
 			case SC_SOULCOLLECT:
 				val2 = 5 + 3 * val2; // Max Soul Spheres
@@ -11383,7 +11383,7 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 				 && DIFF_TICK(timer->gettick(), starttick) <= 1000
 				 && (!sd || (sd->weapontype1 == W_FIST && sd->weapontype2 == W_FIST))
 				)
-					sc_start(bl, bl, SC_STRUP, 100, sce->val1, skill->get_time2(status->sc2skill(type), sce->val1), status->sc2skill(type));
+					sc_start(bl, bl, SC_STRUP, 100, sce->val1, skill->get_time2(bl, status->sc2skill(type), sce->val1), status->sc2skill(type));
 			}
 			break;
 		case SC_AUTOBERSERK:
@@ -11566,9 +11566,9 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 				sc->data[SC_ENDURE]->val4 = 0;
 				status_change_end(bl, SC_ENDURE, INVALID_TIMER);
 			}
-			sc_start4(bl, bl, SC_GDSKILL_REGENERATION, 100, 10, 0, 0, (RGN_HP | RGN_SP), skill->get_time(LK_BERSERK, sce->val1), LK_BERSERK);
+			sc_start4(bl, bl, SC_GDSKILL_REGENERATION, 100, 10, 0, 0, (RGN_HP | RGN_SP), skill->get_time(bl, LK_BERSERK, sce->val1), LK_BERSERK);
 			if( type == SC_SATURDAY_NIGHT_FEVER ) //Sit down force of Saturday Night Fever has the duration of only 3 seconds.
-				sc_start(bl, bl, SC_SITDOWN_FORCE, 100, sce->val1, skill->get_time2(WM_SATURDAY_NIGHT_FEVER, sce->val1), WM_SATURDAY_NIGHT_FEVER);
+				sc_start(bl, bl, SC_SITDOWN_FORCE, 100, sce->val1, skill->get_time2(bl, WM_SATURDAY_NIGHT_FEVER, sce->val1), WM_SATURDAY_NIGHT_FEVER);
 			break;
 		case SC_GOSPEL:
 			if (sce->val3) { //Clear the group.
@@ -11649,7 +11649,7 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 			clif->millenniumshield(bl,0);
 			break;
 		case SC_HALLUCINATIONWALK:
-			sc_start(bl, bl, SC_HALLUCINATIONWALK_POSTDELAY, 100, sce->val1, skill->get_time2(GC_HALLUCINATIONWALK, sce->val1), GC_HALLUCINATIONWALK);
+			sc_start(bl, bl, SC_HALLUCINATIONWALK_POSTDELAY, 100, sce->val1, skill->get_time2(bl, GC_HALLUCINATIONWALK, sce->val1), GC_HALLUCINATIONWALK);
 			break;
 		case SC_WHITEIMPRISON:
 			{
@@ -11743,7 +11743,7 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 			calc_flag = SCB_ALL;/* required for overlapping */
 			break;
 		case SC_FULL_THROTTLE:
-			sc_start(bl, bl, SC_REBOUND, 100, sce->val1, skill->get_time2(ALL_FULL_THROTTLE, sce->val1), ALL_FULL_THROTTLE);
+			sc_start(bl, bl, SC_REBOUND, 100, sce->val1, skill->get_time2(bl, ALL_FULL_THROTTLE, sce->val1), ALL_FULL_THROTTLE);
 			break;
 		case SC_MONSTER_TRANSFORM:
 		case SC_ACTIVE_MONSTER_TRANSFORM:
@@ -12396,7 +12396,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 			if (!sc->data[SC_CHASEWALK2]) {
 				sc_start(bl, bl, SC_CHASEWALK2, 100, 1 << (sce->val1 - 1),
 					(sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_ROGUE ? 10 : 1) //SL bonus -> x10 duration
-					* skill->get_time2(status->sc2skill(type), sce->val1), status->sc2skill(type));
+					* skill->get_time2(bl, status->sc2skill(type), sce->val1), status->sc2skill(type));
 			}
 			sc_timer_next(sce->val2+tick, status->change_timer, bl->id, data);
 			return 0;
@@ -12760,7 +12760,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 							mushroom_skill_id = skill->dbs->magicmushroom_db[i].skill_id;
 						} while (mushroom_skill_id == 0);
 
-						skill->castend_type(skill->get_casttype(mushroom_skill_id), bl, bl, mushroom_skill_id, 1, tick, 0);
+						skill->castend_type(skill->get_casttype(bl, mushroom_skill_id), bl, bl, mushroom_skill_id, 1, tick, 0);
 					}
 
 					clif->emotion(bl,E_HEH);
@@ -13365,7 +13365,7 @@ static int status_change_timer_sub(struct block_list *bl, va_list ap)
 				const struct skill_unit *su = BL_CCAST(BL_SKILL, bl);
 				if (sce != NULL
 				 && skill->attack(BF_MAGIC,src,src,bl,WZ_SIGHTBLASTER,sce->val1,tick,0x4000)
-				 && (su == NULL || su->group == NULL || !(skill->get_inf2(su->group->skill_id)&INF2_TRAP))
+				 && (su == NULL || su->group == NULL || !(skill->get_inf2(bl, su->group->skill_id)&INF2_TRAP))
 				) {
 					// The hit is not counted if it's against a trap
 					sce->val2 = 0; // This signals it to end.
@@ -13915,7 +13915,7 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 
 					int rate;
 					if ((rate = pc->checkskill(sd, TK_SPTIME)) != 0)
-						sc_start(bl, bl, skill->get_sc_type(TK_SPTIME), 100, rate, skill->get_time(TK_SPTIME, rate), TK_SPTIME);
+						sc_start(bl, bl, skill->get_sc_type(bl, TK_SPTIME), 100, rate, skill->get_time(bl, TK_SPTIME, rate), TK_SPTIME);
 
 					if ((sd->job & MAPID_UPPERMASK) == MAPID_STAR_GLADIATOR
 						&& rnd() % 10000 < battle_config.sg_angel_skill_ratio) { //Angel of the Sun/Moon/Star

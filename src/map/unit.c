@@ -274,7 +274,7 @@ static int unit_steptimer(int tid, int64 tick, int id, intptr_t data)
 
 	// If stepaction is set then we remembered a client request that should be executed on the next step
 	// Execute request now if target is in attack range
-	if (ud->stepskill_id != 0 && (skill->get_inf(ud->stepskill_id) & INF_GROUND_SKILL) != 0) {
+	if (ud->stepskill_id != 0 && (skill->get_inf(bl, ud->stepskill_id) & INF_GROUND_SKILL) != 0) {
 		// Execute ground skill
 		struct map_data *md = &map->list[bl->m];
 		unit->skilluse_pos(bl, target_id % md->xs, target_id / md->xs, ud->stepskill_id, ud->stepskill_lv);
@@ -801,7 +801,7 @@ static void unit_run_hit(struct block_list *bl, struct status_change *sc, struct
 
 	if (type == SC_RUN) {
 		if (lv > 0)
-			skill->blown(bl, bl, skill->get_blewcount(TK_RUN, lv), unit->getdir(bl), 0);
+			skill->blown(bl, bl, skill->get_blewcount(bl, TK_RUN, lv), unit->getdir(bl), 0);
 		clif->fixpos(bl); //Why is a clif->slide (skill->blown) AND a fixpos needed? Ask Aegis.
 		clif->sc_end(bl, bl->id, AREA, status->get_sc_icon(SC_TING));
 	} else if (sd != NULL) {
@@ -1191,7 +1191,7 @@ static int unit_stop_walking(struct block_list *bl, int flag)
 static int unit_skilluse_id(struct block_list *src, int target_id, uint16 skill_id, uint16 skill_lv)
 {
 	int casttime = skill->cast_fix(src, skill_id, skill_lv);
-	int castcancel = skill->get_castcancel(skill_id, skill_lv);
+	int castcancel = skill->get_castcancel(src, skill_id, skill_lv);
 	int ret = unit->skilluse_id2(src, target_id, skill_id, skill_lv, casttime, castcancel);
 	struct map_session_data *sd = BL_CAST(BL_PC, src);
 
@@ -1231,9 +1231,9 @@ static int unit_can_move(struct block_list *bl)
 		// Prevent moving while casting
 		if (sd == NULL)
 			return 0; // Only players are affected by SA_FREECAST and similar
-		if ((skill->get_inf2(ud->skill_id) & (INF2_FREE_CAST_REDUCED | INF2_FREE_CAST_NORMAL)) == 0) {
+		if ((skill->get_inf2(bl, ud->skill_id) & (INF2_FREE_CAST_REDUCED | INF2_FREE_CAST_NORMAL)) == 0) {
 			// Skills with an explicit free cast setting always allow walking regardless of SA_FREECAST
-			if ((skill->get_inf2(ud->skill_id) & INF2_GUILD_SKILL) != 0)
+			if ((skill->get_inf2(bl, ud->skill_id) & INF2_GUILD_SKILL) != 0)
 				return 0; // SA_FREECAST doesn't affect guild skills
 			if (pc->checkskill(sd, SA_FREECAST) == 0)
 				return 0; // SA_FREECAST not available
@@ -1334,10 +1334,10 @@ static int unit_resume_running(int tid, int64 tick, int id, intptr_t data)
 	nullpo_ret(ud);
 	if(sd && pc_isridingwug(sd))
 		clif->skill_nodamage(ud->bl,ud->bl,RA_WUGDASH,ud->skill_lv,
-			sc_start4(ud->bl, ud->bl, skill->get_sc_type(RA_WUGDASH), 100, ud->skill_lv, unit->getdir(ud->bl), 0, 0, 1, RA_WUGDASH));
+			sc_start4(ud->bl, ud->bl, skill->get_sc_type(ud->bl, RA_WUGDASH), 100, ud->skill_lv, unit->getdir(ud->bl), 0, 0, 1, RA_WUGDASH));
 	else
 		clif->skill_nodamage(ud->bl,ud->bl,TK_RUN,ud->skill_lv,
-			sc_start4(ud->bl, ud->bl, skill->get_sc_type(TK_RUN), 100, ud->skill_lv, unit->getdir(ud->bl), 0, 0, 0, TK_RUN));
+			sc_start4(ud->bl, ud->bl, skill->get_sc_type(ud->bl, TK_RUN), 100, ud->skill_lv, unit->getdir(ud->bl), 0, 0, 0, TK_RUN));
 
 	if (sd) clif->walkok(sd);
 
@@ -1443,12 +1443,12 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 		else if (src->id == target_id || ud->target > 0)
 			target_id = ud->target;
 
-		if (skill->get_inf(skill_id)&INF_SELF_SKILL && skill->get_nk(skill_id)&NK_NO_DAMAGE)// exploit fix
+		if (skill->get_inf(src, skill_id)&INF_SELF_SKILL && skill->get_nk(src, skill_id)&NK_NO_DAMAGE)// exploit fix
 			target_id = src->id;
 		temp = 1;
 	} else if ( target_id == src->id &&
-		skill->get_inf(skill_id)&INF_SELF_SKILL &&
-		skill->get_inf2(skill_id)&INF2_NO_TARGET_SELF )
+		skill->get_inf(src, skill_id)&INF_SELF_SKILL &&
+		skill->get_inf2(src, skill_id)&INF2_NO_TARGET_SELF )
 	{
 		target_id = ud->target; //Auto-select target. [Skotlex]
 		temp = 1;
@@ -1534,7 +1534,7 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 	if(ud->skilltimer != INVALID_TIMER && skill_id != SA_CASTCANCEL && skill_id != SO_SPELLFIST)
 		return 0;
 
-	if(skill->get_inf2(skill_id)&INF2_NO_TARGET_SELF && src->id == target_id)
+	if(skill->get_inf2(src, skill_id)&INF2_NO_TARGET_SELF && src->id == target_id)
 		return 0;
 
 	if(!status->check_skilluse(src, target, skill_id, 0))
@@ -1563,7 +1563,7 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 #else
 		static const int ensemble_range = 1;
 #endif
-		if ((skill->get_inf2(skill_id)&INF2_ENSEMBLE_SKILL) && skill->check_pc_partner(sd, skill_id, &skill_lv, ensemble_range, 0) < 1) {
+		if ((skill->get_inf2(src, skill_id)&INF2_ENSEMBLE_SKILL) && skill->check_pc_partner(sd, skill_id, &skill_lv, ensemble_range, 0) < 1) {
 			clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
 			return 0;
 		}
@@ -1632,7 +1632,7 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 	//Check range when not using skill on yourself or is a combo-skill during attack
 	//(these are supposed to always have the same range as your attack)
 	if( src->id != target_id && (!temp || ud->attacktimer == INVALID_TIMER) ) {
-		if (skill->get_state(skill_id, skill_lv) == ST_MOVE_ENABLE) {
+		if (skill->get_state(src, skill_id, skill_lv) == ST_MOVE_ENABLE) {
 			if( !unit->can_reach_bl(src, target, range + 1, 1, NULL, NULL) )
 				return 0; // Walk-path check failed.
 		} else if( src->type == BL_MER && skill_id == MA_REMOVETRAP ) {
@@ -1776,7 +1776,7 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 
 	// moved here to prevent Suffragium from ending if skill fails
 #ifndef RENEWAL_CAST
-	if (!(skill->get_castnodex(skill_id, skill_lv)&2))
+	if (!(skill->get_castnodex(src, skill_id, skill_lv)&2))
 		casttime = skill->cast_fix_sc(src, casttime);
 #else
 	casttime = skill->vf_cast_fix(src, casttime, skill_id, skill_lv);
@@ -1852,7 +1852,7 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 	if( casttime <= 0 )
 		ud->state.skillcastcancel = 0;
 
-	if (sd == NULL || sd->auto_cast_current.type < AUTOCAST_ABRA || skill->get_cast(skill_id, skill_lv) != 0)
+	if (sd == NULL || sd->auto_cast_current.type < AUTOCAST_ABRA || skill->get_cast(src, skill_id, skill_lv) != 0)
 		ud->canact_tick = tick + max(casttime, max((int)status_get_amotion(src), battle_config.min_skill_delay_limit));
 	if( sd )
 	{
@@ -1873,7 +1873,7 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 		if (src->id != target->id) // self-targeted skills shouldn't show different direction
 			unit->set_dir(src, map->calc_dir(src, target->x, target->y));
 		ud->skilltimer = timer->add( tick+casttime, skill->castend_id, src->id, 0 );
-		if (sd && (pc->checkskill(sd, SA_FREECAST) > 0 || skill_id == LG_EXEEDBREAK || (skill->get_inf2(ud->skill_id) & INF2_FREE_CAST_REDUCED) != 0))
+		if (sd && (pc->checkskill(sd, SA_FREECAST) > 0 || skill_id == LG_EXEEDBREAK || (skill->get_inf2(src, ud->skill_id) & INF2_FREE_CAST_REDUCED) != 0))
 			status_calc_bl(&sd->bl, SCB_SPEED|SCB_ASPD);
 	} else
 		skill->castend_id(ud->skilltimer,tick,src->id,0);
@@ -1889,7 +1889,7 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 static int unit_skilluse_pos(struct block_list *src, short skill_x, short skill_y, uint16 skill_id, uint16 skill_lv)
 {
 	int casttime = skill->cast_fix(src, skill_id, skill_lv);
-	int castcancel = skill->get_castcancel(skill_id, skill_lv);
+	int castcancel = skill->get_castcancel(src, skill_id, skill_lv);
 	int ret = unit->skilluse_pos2(src, skill_x, skill_y, skill_id, skill_lv, casttime, castcancel);
 	struct map_session_data *sd = BL_CAST(BL_PC, src);
 
@@ -1971,7 +1971,7 @@ static int unit_skilluse_pos2(struct block_list *src, short skill_x, short skill
 		return 0; // Attacking will be handled by unit_walk_toxy_timer in this case
 	}
 
-	if (skill->get_state(skill_id, skill_lv) == ST_MOVE_ENABLE) {
+	if (skill->get_state(src, skill_id, skill_lv) == ST_MOVE_ENABLE) {
 		if( !unit->can_reach_bl(src, &bl, range + 1, 1, NULL, NULL) )
 			return 0; //Walk-path check failed.
 	} else if( !battle->check_range(src, &bl, range) )
@@ -1981,7 +1981,7 @@ static int unit_skilluse_pos2(struct block_list *src, short skill_x, short skill
 
 	// moved here to prevent Suffragium from ending if skill fails
 #ifndef RENEWAL_CAST
-	if (!(skill->get_castnodex(skill_id, skill_lv)&2))
+	if (!(skill->get_castnodex(src, skill_id, skill_lv)&2))
 		casttime = skill->cast_fix_sc(src, casttime);
 #else
 	casttime = skill->vf_cast_fix(src, casttime, skill_id, skill_lv );
@@ -1992,7 +1992,7 @@ static int unit_skilluse_pos2(struct block_list *src, short skill_x, short skill
 	}
 
 	ud->state.skillcastcancel = castcancel&&casttime>0?1:0;
-	if (sd == NULL || sd->auto_cast_current.type < AUTOCAST_ABRA || skill->get_cast(skill_id, skill_lv) != 0)
+	if (sd == NULL || sd->auto_cast_current.type < AUTOCAST_ABRA || skill->get_cast(src, skill_id, skill_lv) != 0)
 		ud->canact_tick = tick + max(casttime, max((int)status_get_amotion(src), battle_config.min_skill_delay_limit));
 #if 0
 	if (sd) {
@@ -2034,7 +2034,7 @@ static int unit_skilluse_pos2(struct block_list *src, short skill_x, short skill
 	if( casttime > 0 ) {
 		unit->set_dir(src, map->calc_dir(src, skill_x, skill_y));
 		ud->skilltimer = timer->add( tick+casttime, skill->castend_pos, src->id, 0 );
-		if ((sd && pc->checkskill(sd, SA_FREECAST) > 0) || skill_id == LG_EXEEDBREAK || (skill->get_inf2(ud->skill_id) & INF2_FREE_CAST_REDUCED) != 0) {
+		if ((sd && pc->checkskill(sd, SA_FREECAST) > 0) || skill_id == LG_EXEEDBREAK || (skill->get_inf2(src, ud->skill_id) & INF2_FREE_CAST_REDUCED) != 0) {
 			status_calc_bl(&sd->bl, SCB_SPEED|SCB_ASPD);
 		}
 	} else {
@@ -2391,10 +2391,10 @@ static int unit_attack_timer_sub(struct block_list *src, int tid, int64 tick)
 		return 0;
 	}
 
-	if (ud->skilltimer != INVALID_TIMER && !(sd && (pc->checkskill(sd, SA_FREECAST) > 0 || (skill->get_inf2(ud->skill_id) & (INF2_FREE_CAST_REDUCED | INF2_FREE_CAST_NORMAL)) != 0)))
+	if (ud->skilltimer != INVALID_TIMER && !(sd && (pc->checkskill(sd, SA_FREECAST) > 0 || (skill->get_inf2(src, ud->skill_id) & (INF2_FREE_CAST_REDUCED | INF2_FREE_CAST_NORMAL)) != 0)))
 		return 0; // can't attack while casting
 
-	if (!battle_config.sdelay_attack_enable && DIFF_TICK(ud->canact_tick, tick) > 0 && !(sd && (pc->checkskill(sd, SA_FREECAST) > 0 || (skill->get_inf2(ud->skill_id) & (INF2_FREE_CAST_REDUCED | INF2_FREE_CAST_NORMAL)) != 0)))
+	if (!battle_config.sdelay_attack_enable && DIFF_TICK(ud->canact_tick, tick) > 0 && !(sd && (pc->checkskill(sd, SA_FREECAST) > 0 || (skill->get_inf2(src, ud->skill_id) & (INF2_FREE_CAST_REDUCED | INF2_FREE_CAST_NORMAL)) != 0)))
 	{ // attacking when under cast delay has restrictions:
 		if( tid == INVALID_TIMER ) { //requested attack.
 			if(sd) clif->skill_fail(sd, 1, USESKILL_FAIL_SKILLINTERVAL, 0, 0);
@@ -2546,16 +2546,16 @@ static int unit_skillcastcancel(struct block_list *bl, int type)
 	else
 		skill_id = ud->skill_id;
 
-	if (skill->get_inf(skill_id) & INF_GROUND_SKILL)
+	if (skill->get_inf(bl, skill_id) & INF_GROUND_SKILL)
 		ret = timer->delete_( ud->skilltimer, skill->castend_pos );
 	else
 		ret = timer->delete_( ud->skilltimer, skill->castend_id );
 	if( ret < 0 )
-		ShowError("delete timer error %d : skill %d (%s)\n",ret,skill_id,skill->get_name(skill_id));
+		ShowError("delete timer error %d : skill %d (%s)\n",ret,skill_id,skill->get_name(bl, skill_id));
 
 	ud->skilltimer = INVALID_TIMER;
 
-	if (sd && (pc->checkskill(sd, SA_FREECAST) > 0 || (skill->get_inf2(ud->skill_id) & INF2_FREE_CAST_REDUCED) != 0))
+	if (sd && (pc->checkskill(sd, SA_FREECAST) > 0 || (skill->get_inf2(bl, ud->skill_id) & INF2_FREE_CAST_REDUCED) != 0))
 		status_calc_bl(&sd->bl, SCB_SPEED|SCB_ASPD);
 
 	if( sd ) {

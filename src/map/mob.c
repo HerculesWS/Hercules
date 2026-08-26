@@ -3709,7 +3709,7 @@ static int mob_use_skill(struct mob_data *md, int64 tick, int event)
 			continue;
 
 		// Execute skill.
-		if (skill->get_casttype(ms[skill_idx].skill_id) == CAST_GROUND) { // Ground skill.
+		if (skill->get_casttype(&md->bl, ms[skill_idx].skill_id) == CAST_GROUND) { // Ground skill.
 			int target_type = ms[skill_idx].target;
 			int skill_range = skill->get_range2(&md->bl, ms[skill_idx].skill_id, ms[skill_idx].skill_lv);
 			struct block_list *bl;
@@ -3988,8 +3988,8 @@ static int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 
 			continue;
 
 		/// Normal aggressive mob. Disable skills that cannot help fighting against players. (Those with flags UF_NOMOB and UF_NOPC are specific to always aid players!) [Skotlex]
-		if (flag == 0 && skill->get_unit_id(skill_id, sd->status.skill[idx].lv, 0) != 0 &&
-		    (skill->get_unit_flag(skill_id) & (UF_NOMOB | UF_NOPC)) > 0)
+		if (flag == 0 && skill->get_unit_id(&sd->bl, skill_id, sd->status.skill[idx].lv, 0) != 0 &&
+		    (skill->get_unit_flag(&sd->bl, skill_id) & (UF_NOMOB | UF_NOPC)) > 0)
 			continue;
 
 		/// The clone should be able to cast the skill. (E.g. have the required weapon.) [bugreport:5299]
@@ -4012,16 +4012,16 @@ static int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 
 			mob_skills[i].target = MST_TARGET;
 			mob_skills[i].cond1 = MSC_ALWAYS;
 
-			if (skill->get_range(skill_id, mob_skills[i].skill_lv) > 3)
+			if (skill->get_range(&sd->bl, skill_id, mob_skills[i].skill_lv) > 3)
 				mob_skills[i].state = MSS_ANYTARGET;
 			else
 				mob_skills[i].state = MSS_BERSERK;
 		} else if ((inf & INF_GROUND_SKILL) == INF_GROUND_SKILL) {
-			if ((skill->get_inf2(skill_id) & INF2_TRAP) == INF2_TRAP) { /// Traps!
+			if ((skill->get_inf2(&sd->bl, skill_id) & INF2_TRAP) == INF2_TRAP) { /// Traps!
 				mob_skills[i].state = MSS_IDLE;
 				mob_skills[i].target = MST_AROUND2;
 				mob_skills[i].delay = 60000;
-			} else if (skill->get_unit_target(skill_id, sd->status.skill[idx].lv) == BCT_ENEMY) { /// Target Enemy.
+			} else if (skill->get_unit_target(&sd->bl, skill_id, sd->status.skill[idx].lv) == BCT_ENEMY) { /// Target Enemy.
 				mob_skills[i].state = MSS_ANYTARGET;
 				mob_skills[i].target = MST_TARGET;
 				mob_skills[i].cond1 = MSC_ALWAYS;
@@ -4031,11 +4031,11 @@ static int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 
 				mob_skills[i].cond2 = 95;
 			}
 		} else if ((inf & INF_SELF_SKILL) == INF_SELF_SKILL) {
-			if ((skill->get_inf2(skill_id) & INF2_NO_TARGET_SELF) == INF2_NO_TARGET_SELF) { /// Auto-select target skill.
+			if ((skill->get_inf2(&sd->bl, skill_id) & INF2_NO_TARGET_SELF) == INF2_NO_TARGET_SELF) { /// Auto-select target skill.
 				mob_skills[i].target = MST_TARGET;
 				mob_skills[i].cond1 = MSC_ALWAYS;
 
-				if (skill->get_range(skill_id, mob_skills[i].skill_lv) > 3)
+				if (skill->get_range(&sd->bl, skill_id, mob_skills[i].skill_lv) > 3)
 					mob_skills[i].state = MSS_ANYTARGET;
 				else
 					mob_skills[i].state = MSS_BERSERK;
@@ -4045,8 +4045,8 @@ static int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 
 				mob_skills[i].cond2 = 90;
 				mob_skills[i].permillage = 2000;
 
-				const int time1 = skill->get_time(skill_id, mob_skills[i].skill_lv);
-				const int time2 = skill->get_time2(skill_id, mob_skills[i].skill_lv);
+				const int time1 = skill->get_time(&sd->bl, skill_id, mob_skills[i].skill_lv);
+				const int time2 = skill->get_time2(&sd->bl, skill_id, mob_skills[i].skill_lv);
 
 				/** Delay: Remove the stock 5 secs and add half of the support time. **/
 				mob_skills[i].delay += -5000 + (time1 + time2) / 2;
@@ -4064,8 +4064,8 @@ static int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 
 			else if (skill_id == ALL_RESURRECTION)
 				mob_skills[i].cond2 = 1;
 
-			const int time1 = skill->get_time(skill_id, mob_skills[i].skill_lv);
-			const int time2 = skill->get_time2(skill_id, mob_skills[i].skill_lv);
+			const int time1 = skill->get_time(&sd->bl, skill_id, mob_skills[i].skill_lv);
+			const int time2 = skill->get_time2(&sd->bl, skill_id, mob_skills[i].skill_lv);
 
 			/** Delay: Remove the stock 5 secs and add half of the support time. **/
 			mob_skills[i].delay += -5000 + (time1 + time2) / 2;
@@ -5750,7 +5750,7 @@ static bool mob_skill_db_libconfig_sub_skill(struct config_setting_t *it, int n,
 		return false;
 	}
 
-	const char *skill_name = skill->get_name(skill_id);
+	const char *skill_name = skill->get_name(NULL, skill_id);
 	bool clearskills = false;
 
 	// If ClearSkills flag is enabled clear all the previous skills.

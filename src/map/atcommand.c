@@ -3458,7 +3458,7 @@ ACMD(questskill)
 		clif->message(fd, msg_fd(fd, MSGTBL_INVALID_SKILL_ID)); // This skill number doesn't exist.
 		return false;
 	}
-	if (!(skill->get_inf2(skill_id) & INF2_QUEST_SKILL)) {
+	if (!(skill->get_inf2(&sd->bl, skill_id) & INF2_QUEST_SKILL)) {
 		clif->message(fd, msg_fd(fd, MSGTBL_INVALID_QUEST_SKILL_ID)); // This skill number doesn't exist or isn't a quest skill.
 		return false;
 	}
@@ -3500,7 +3500,7 @@ ACMD(lostskill)
 		clif->message(fd, msg_fd(fd, MSGTBL_INVALID_SKILL_ID)); // This skill number doesn't exist.
 		return false;
 	}
-	if (!(skill->get_inf2(skill_id) & INF2_QUEST_SKILL)) {
+	if (!(skill->get_inf2(&sd->bl, skill_id) & INF2_QUEST_SKILL)) {
 		clif->message(fd, msg_fd(fd, MSGTBL_INVALID_QUEST_SKILL_ID)); // This skill number doesn't exist or isn't a quest skill.
 		return false;
 	}
@@ -4394,7 +4394,7 @@ ACMD(mount_peco)
 
 	if ((sd->job & MAPID_THIRDMASK) == MAPID_RUNE_KNIGHT) {
 		if (!pc->checkskill(sd,RK_DRAGONTRAINING)) {
-			snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_REQUIREMENT_FOR_MOUNT), skill->get_desc(RK_DRAGONTRAINING)); // You need %s to mount!
+			snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_REQUIREMENT_FOR_MOUNT), skill->get_desc(&sd->bl, RK_DRAGONTRAINING)); // You need %s to mount!
 			clif->message(fd, atcmd_output);
 			return false;
 		}
@@ -4409,7 +4409,7 @@ ACMD(mount_peco)
 	}
 	if ((sd->job & MAPID_THIRDMASK) == MAPID_RANGER) {
 		if (!pc->checkskill(sd,RA_WUGRIDER)) {
-			snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_REQUIREMENT_FOR_MOUNT), skill->get_desc(RA_WUGRIDER)); // You need %s to mount!
+			snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_REQUIREMENT_FOR_MOUNT), skill->get_desc(&sd->bl, RA_WUGRIDER)); // You need %s to mount!
 			clif->message(fd, atcmd_output);
 			return false;
 		}
@@ -4442,7 +4442,7 @@ ACMD(mount_peco)
 	if ((sd->job & MAPID_BASEMASK) == MAPID_SWORDMAN && (sd->job & JOBL_2) != 0) {
 		if (!pc_isridingpeco(sd)) { // if actually no peco
 			if (!pc->checkskill(sd, KN_RIDING)) {
-				snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_REQUIREMENT_FOR_MOUNT), skill->get_desc(KN_RIDING)); // You need %s to mount!
+				snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_REQUIREMENT_FOR_MOUNT), skill->get_desc(&sd->bl, KN_RIDING)); // You need %s to mount!
 				clif->message(fd, atcmd_output);
 				return false;
 			}
@@ -5884,7 +5884,7 @@ ACMD(skillid)
 
 	for (data = iter->first(iter,&key); iter->exists(iter); data = iter->next(iter,&key)) {
 		int skill_id = DB->data2i(data);
-		const char *skill_desc = skill->get_desc(skill_id);
+		const char *skill_desc = skill->get_desc(&sd->bl, skill_id);
 		if (strnicmp(key.str, message, skillen) == 0 || strnicmp(skill_desc, message, skillen) == 0) {
 			snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_SKILL_ID_INFO), skill_id, skill_desc, key.str); // skill %d: %s (%s)
 			clif->message(fd, atcmd_output);
@@ -5948,7 +5948,7 @@ ACMD(useskill)
 
 	pc->delinvincibletimer(sd);
 
-	if (skill->get_inf(skill_id)&INF_GROUND_SKILL)
+	if (skill->get_inf(bl, skill_id)&INF_GROUND_SKILL)
 		unit->skilluse_pos(bl, pl_sd->bl.x, pl_sd->bl.y, skill_id, skill_lv);
 	else
 		unit->skilluse_id(bl, pl_sd->bl.id, skill_id, skill_lv);
@@ -6020,7 +6020,7 @@ ACMD(skilltree)
 	for (j = 0; j < VECTOR_LENGTH(entry->need); j++) {
 		struct skill_tree_requirement *req = &VECTOR_INDEX(entry->need, j);
 		if (pc->checkskill(sd, req->id) < req->lv) {
-			snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_PLAYER_REQUIRES_LEVEL), req->lv, skill->get_desc(req->id)); // Player requires level %d of skill %s.
+			snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_PLAYER_REQUIRES_LEVEL), req->lv, skill->get_desc(&sd->bl, req->id)); // Player requires level %d of skill %s.
 			clif->message(fd, atcmd_output);
 			meets = 0;
 		}
