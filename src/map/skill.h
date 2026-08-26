@@ -33,6 +33,7 @@
  **/
 struct Damage;
 struct homun_data;
+struct hplugin_data_store;
 struct itemlist; // map/itemdb.h
 struct map_session_data;
 struct mercenary_data;
@@ -1886,6 +1887,7 @@ struct s_skill_db {
 	sc_type status_type;
 	struct skill_required_item_data req_items;
 	struct skill_required_item_data req_equip;
+	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
 };
 
 struct s_skill_unit_layout {

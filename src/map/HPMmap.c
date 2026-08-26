@@ -139,6 +139,7 @@ bool HPM_map_data_store_validate(enum HPluginDataTypes type, struct hplugin_data
 	case HPDT_AUTOTRADE_VEND:
 	case HPDT_CLAN:
 	case HPDT_UNIT_PARAMETER:
+	case HPDT_SKILLDB:
 		// Initialized by the caller.
 		return true;
 	case HPDT_UNKNOWN:

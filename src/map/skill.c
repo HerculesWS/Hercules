@@ -51,6 +51,7 @@
 #include "map/unit.h"
 #include "common/cbasetypes.h"
 #include "common/ers.h"
+#include "common/HPM.h"
 #include "common/memmgr.h"
 #include "common/msgtable.h"
 #include "common/nullpo.h"
@@ -25419,6 +25420,9 @@ static void skill_readdb(bool minimal)
 
 	/* when != it was called during init and this procedure was already performed by skill_defaults()  */
 	if( core->runflag == MAPSERVER_ST_RUNNING ) {
+		for (int i = 0; i < MAX_SKILL_DB; i++) {
+			HPM->data_store_destroy(&skill->dbs->db[i].hdata);
+		}
 		memset(ZEROED_BLOCK_POS(skill->dbs), 0, ZEROED_BLOCK_SIZE(skill->dbs));
 	}
 
@@ -25549,6 +25553,9 @@ static int do_init_skill(bool minimal)
 
 static int do_final_skill(void)
 {
+	for (int i = 0; i < MAX_SKILL_DB; i++) {
+		HPM->data_store_destroy(&skill->dbs->db[i].hdata);
+	}
 	db_destroy(skill->name2id_db);
 	db_destroy(skill->group_db);
 	db_destroy(skill->unit_db);

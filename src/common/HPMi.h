@@ -99,6 +99,7 @@ enum HPluginDataTypes {
 	HPDT_AUTOTRADE_VEND, ///< For struct autotrade_vending.
 	HPDT_CLAN,           ///< For struct clan.
 	HPDT_UNIT_PARAMETER, ///< For struct unit_parameters_db.
+	HPDT_SKILLDB,        ///< For struct s_skill_db.
 };
 
 /* used in macros and conf storage */
@@ -171,6 +172,10 @@ enum HPluginConfType {
 #define addToUnitParam(ptr,data,classid,autofree) (HPMi->addToHPData(HPDT_UNIT_PARAMETER,HPMi->pid,&(ptr)->hdata,(data),(classid),(autofree)))
 #define getfromUnitParam(ptr,classid) (HPMi->getFromHPData(HPDT_UNIT_PARAMETER,HPMi->pid,(ptr)->hdata,(classid)))
 #define removefromUnitParam(ptr,classid) (HPMi->removeFromHPData(HPDT_UNIT_PARAMETER,HPMi->pid,(ptr)->hdata,(classid)))
+/* s_skill_db */
+#define addToSKILLDB(ptr,data,classid,autofree) (HPMi->addToHPData(HPDT_SKILLDB,HPMi->pid,&(ptr)->hdata,(data),(classid),(autofree)))
+#define getFromSKILLDB(ptr,classid) (HPMi->getFromHPData(HPDT_SKILLDB,HPMi->pid,(ptr)->hdata,(classid)))
+#define removeFromSKILLDB(ptr,classid) (HPMi->removeFromHPData(HPDT_SKILLDB,HPMi->pid,(ptr)->hdata,(classid)))
 
 /// HPMi->addCommand
 #define addAtcommand(cname,funcname) do { \
