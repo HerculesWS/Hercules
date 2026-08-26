@@ -1179,9 +1179,9 @@ struct status_data {
 	int matk_percent;
 	int def_percent;
 	int mdef_percent;
+	int batk;
+	int matk_min, matk_max;
 	uint32
-		batk,
-		matk_min, matk_max,
 		speed,
 		amotion, adelay, dmotion,
 		mode;
