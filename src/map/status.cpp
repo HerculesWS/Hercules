@@ -1031,7 +1031,7 @@ static int status_check_skilluse(struct block_list *src, struct block_list *targ
 	hide_flag = flag?OPTION_HIDE:(OPTION_HIDE|OPTION_CLOAK|OPTION_CHASEWALK);
 
 	// Applies even if the target hides
-	if ((skill->get_ele(skill_id,1) == ELE_EARTH && skill_id != MG_STONECURSE) // Ground type
+	if ((skill->get_ele(src, skill_id,1) == ELE_EARTH && skill_id != MG_STONECURSE) // Ground type
 	  || (flag&1 && skill->get_nk(skill_id)&NK_NO_DAMAGE && skill_id != ALL_RESURRECTION)) // Buff/debuff skills started before hiding
 		hide_flag &= ~OPTION_HIDE;
 
@@ -6381,7 +6381,7 @@ static defType status_get_def(struct block_list *bl)
 	int def = st ? st->def : 0;
 	ud = unit->bl2ud(bl);
 	if (ud && ud->skilltimer != INVALID_TIMER)
-		def -= def * skill->get_castdef(ud->skill_id, ud->skill_lv) / 100;
+		def -= def * skill->get_castdef(bl, ud->skill_id, ud->skill_lv) / 100;
 
 	return std::clamp(def, DEFTYPE_MIN, DEFTYPE_MAX);
 }
@@ -6884,7 +6884,7 @@ static int status_get_sc_def(struct block_list *src, struct block_list *bl, enum
 
 	//Status that are blocked by Golden Thief Bug card or Wand of Hermod
 	if (status->isimmune(bl) && (skill->get_inf(skill_id) & INF_SELF_SKILL) == 0 // [Aegis] self-cast skills are not blocked, even if magic.
-	    && ((skill->get_type(skill_id, 1) & BF_MAGIC) != 0 // [Aegis] if an SC is caused by magic then it's blocked, no matter what SC.
+	    && ((skill->get_type(src, skill_id, 1) & BF_MAGIC) != 0 // [Aegis] if an SC is caused by magic then it's blocked, no matter what SC.
 	        || (status->get_sc_type(type) & SC_NO_MAGIC_BLOCK) != 0))
 		return 0;
 
@@ -8295,7 +8295,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			case SC_SIGHT: /* splash status */
 			case SC_RUWACH:
 			case SC_WZ_SIGHTBLASTER:
-				val3 = skill->get_splash(val2, val1); //Val2 should bring the skill-id.
+				val3 = skill->get_splash(src, val2, val1); //Val2 should bring the skill-id.
 				val2 = total_tick/20;
 				tick_time = 20; // [GodLesZ] tick time
 				break;
@@ -8774,7 +8774,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				break;
 			case SC_NJ_UTSUSEMI:
 				val2=(val1+1)/2; // number of hits blocked
-				val3=skill->get_blewcount(NJ_UTSUSEMI, val1); //knockback value.
+				val3=skill->get_blewcount(src, NJ_UTSUSEMI, val1); //knockback value.
 				break;
 			case SC_NJ_BUNSINJYUTSU:
 				val2=(val1+1)/2; // number of hits blocked

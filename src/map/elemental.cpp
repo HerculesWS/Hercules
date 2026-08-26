@@ -474,13 +474,13 @@ static int elemental_action(struct elemental_data *ed, struct block_list *bl, in
 	ed->last_thinktime = tick;
 
 	// Not in skill range.
-	if( !battle->check_range(&ed->bl,bl,skill->get_range(skill_id,skill_lv)) ) {
+	if( !battle->check_range(&ed->bl,bl,skill->get_range(&ed->bl, skill_id,skill_lv)) ) {
 		// Try to walk to the target.
-		if (unit->walk_tobl(&ed->bl, bl, skill->get_range(skill_id, skill_lv), 2) != 0) {
+		if (unit->walk_tobl(&ed->bl, bl, skill->get_range(&ed->bl, skill_id, skill_lv), 2) != 0) {
 			elemental->unlocktarget(ed);
 		} else {
 			// Walking, waiting to be in range. Client don't handle it, then we must handle it here.
-			int walk_dist = distance_bl(&ed->bl,bl) - skill->get_range(skill_id,skill_lv);
+			int walk_dist = distance_bl(&ed->bl,bl) - skill->get_range(&ed->bl, skill_id,skill_lv);
 			ed->ud.skill_id = skill_id;
 			ed->ud.skill_lv = skill_lv;
 

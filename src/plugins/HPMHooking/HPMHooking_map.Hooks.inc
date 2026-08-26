@@ -83090,15 +83090,15 @@ int HP_skill_get_index_sub(int skill_id, bool report_errors) {
 	}
 	return retVal___;
 }
-int HP_skill_get_type(int skill_id, int skill_lv) {
+int HP_skill_get_type(struct block_list *bl, int skill_id, int skill_lv) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_skill_get_type_pre > 0) {
-		int (*preHookFunc) (int *skill_id, int *skill_lv);
+		int (*preHookFunc) (struct block_list **bl, int *skill_id, int *skill_lv);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_type_pre; hIndex++) {
-			preHookFunc = (int (*) (int *skill_id, int *skill_lv))HPMHooks.list.HP_skill_get_type_pre[hIndex].func;
-			retVal___ = preHookFunc(&skill_id, &skill_lv);
+			preHookFunc = (int (*) (struct block_list **bl, int *skill_id, int *skill_lv))HPMHooks.list.HP_skill_get_type_pre[hIndex].func;
+			retVal___ = preHookFunc(&bl, &skill_id, &skill_lv);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -83106,26 +83106,26 @@ int HP_skill_get_type(int skill_id, int skill_lv) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.skill.get_type(skill_id, skill_lv);
+		retVal___ = HPMHooks.source.skill.get_type(bl, skill_id, skill_lv);
 	}
 	if (HPMHooks.count.HP_skill_get_type_post > 0) {
-		int (*postHookFunc) (int retVal___, int skill_id, int skill_lv);
+		int (*postHookFunc) (int retVal___, struct block_list *bl, int skill_id, int skill_lv);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_type_post; hIndex++) {
-			postHookFunc = (int (*) (int retVal___, int skill_id, int skill_lv))HPMHooks.list.HP_skill_get_type_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, skill_id, skill_lv);
+			postHookFunc = (int (*) (int retVal___, struct block_list *bl, int skill_id, int skill_lv))HPMHooks.list.HP_skill_get_type_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, bl, skill_id, skill_lv);
 		}
 	}
 	return retVal___;
 }
-enum battle_dmg_type HP_skill_get_hit(int skill_id, int skill_lv) {
+enum battle_dmg_type HP_skill_get_hit(struct block_list *bl, int skill_id, int skill_lv) {
 	int hIndex = 0;
 	enum battle_dmg_type retVal___ = BDT_NORMAL;
 	if (HPMHooks.count.HP_skill_get_hit_pre > 0) {
-		enum battle_dmg_type (*preHookFunc) (int *skill_id, int *skill_lv);
+		enum battle_dmg_type (*preHookFunc) (struct block_list **bl, int *skill_id, int *skill_lv);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_hit_pre; hIndex++) {
-			preHookFunc = (enum battle_dmg_type (*) (int *skill_id, int *skill_lv))HPMHooks.list.HP_skill_get_hit_pre[hIndex].func;
-			retVal___ = preHookFunc(&skill_id, &skill_lv);
+			preHookFunc = (enum battle_dmg_type (*) (struct block_list **bl, int *skill_id, int *skill_lv))HPMHooks.list.HP_skill_get_hit_pre[hIndex].func;
+			retVal___ = preHookFunc(&bl, &skill_id, &skill_lv);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -83133,13 +83133,13 @@ enum battle_dmg_type HP_skill_get_hit(int skill_id, int skill_lv) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.skill.get_hit(skill_id, skill_lv);
+		retVal___ = HPMHooks.source.skill.get_hit(bl, skill_id, skill_lv);
 	}
 	if (HPMHooks.count.HP_skill_get_hit_post > 0) {
-		enum battle_dmg_type (*postHookFunc) (enum battle_dmg_type retVal___, int skill_id, int skill_lv);
+		enum battle_dmg_type (*postHookFunc) (struct block_list *bl, enum battle_dmg_type retVal___, int skill_id, int skill_lv);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_hit_post; hIndex++) {
-			postHookFunc = (enum battle_dmg_type (*) (enum battle_dmg_type retVal___, int skill_id, int skill_lv))HPMHooks.list.HP_skill_get_hit_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, skill_id, skill_lv);
+			postHookFunc = (enum battle_dmg_type (*) (enum battle_dmg_type retVal___, struct block_list *bl, int skill_id, int skill_lv))HPMHooks.list.HP_skill_get_hit_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, bl, skill_id, skill_lv);
 		}
 	}
 	return retVal___;
@@ -83171,15 +83171,15 @@ int HP_skill_get_inf(int skill_id) {
 	}
 	return retVal___;
 }
-int HP_skill_get_ele(int skill_id, int skill_lv) {
+int HP_skill_get_ele(struct block_list *bl, int skill_id, int skill_lv) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_skill_get_ele_pre > 0) {
-		int (*preHookFunc) (int *skill_id, int *skill_lv);
+		int (*preHookFunc) (struct block_list **bl, int *skill_id, int *skill_lv);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_ele_pre; hIndex++) {
-			preHookFunc = (int (*) (int *skill_id, int *skill_lv))HPMHooks.list.HP_skill_get_ele_pre[hIndex].func;
-			retVal___ = preHookFunc(&skill_id, &skill_lv);
+			preHookFunc = (int (*) (struct block_list **bl, int *skill_id, int *skill_lv))HPMHooks.list.HP_skill_get_ele_pre[hIndex].func;
+			retVal___ = preHookFunc(&bl, &skill_id, &skill_lv);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -83187,13 +83187,13 @@ int HP_skill_get_ele(int skill_id, int skill_lv) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.skill.get_ele(skill_id, skill_lv);
+		retVal___ = HPMHooks.source.skill.get_ele(bl, skill_id, skill_lv);
 	}
 	if (HPMHooks.count.HP_skill_get_ele_post > 0) {
-		int (*postHookFunc) (int retVal___, int skill_id, int skill_lv);
+		int (*postHookFunc) (int retVal___, struct block_list *bl, int skill_id, int skill_lv);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_ele_post; hIndex++) {
-			postHookFunc = (int (*) (int retVal___, int skill_id, int skill_lv))HPMHooks.list.HP_skill_get_ele_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, skill_id, skill_lv);
+			postHookFunc = (int (*) (int retVal___, struct block_list *bl, int skill_id, int skill_lv))HPMHooks.list.HP_skill_get_ele_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, bl, skill_id, skill_lv);
 		}
 	}
 	return retVal___;
@@ -83252,15 +83252,15 @@ int HP_skill_get_max(int skill_id) {
 	}
 	return retVal___;
 }
-int HP_skill_get_range(int skill_id, int skill_lv) {
+int HP_skill_get_range(struct block_list *bl, int skill_id, int skill_lv) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_skill_get_range_pre > 0) {
-		int (*preHookFunc) (int *skill_id, int *skill_lv);
+		int (*preHookFunc) (struct block_list **bl, int *skill_id, int *skill_lv);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_range_pre; hIndex++) {
-			preHookFunc = (int (*) (int *skill_id, int *skill_lv))HPMHooks.list.HP_skill_get_range_pre[hIndex].func;
-			retVal___ = preHookFunc(&skill_id, &skill_lv);
+			preHookFunc = (int (*) (struct block_list **bl, int *skill_id, int *skill_lv))HPMHooks.list.HP_skill_get_range_pre[hIndex].func;
+			retVal___ = preHookFunc(&bl, &skill_id, &skill_lv);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -83268,13 +83268,13 @@ int HP_skill_get_range(int skill_id, int skill_lv) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.skill.get_range(skill_id, skill_lv);
+		retVal___ = HPMHooks.source.skill.get_range(bl, skill_id, skill_lv);
 	}
 	if (HPMHooks.count.HP_skill_get_range_post > 0) {
-		int (*postHookFunc) (int retVal___, int skill_id, int skill_lv);
+		int (*postHookFunc) (int retVal___, struct block_list *bl, int skill_id, int skill_lv);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_range_post; hIndex++) {
-			postHookFunc = (int (*) (int retVal___, int skill_id, int skill_lv))HPMHooks.list.HP_skill_get_range_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, skill_id, skill_lv);
+			postHookFunc = (int (*) (int retVal___, struct block_list *bl, int skill_id, int skill_lv))HPMHooks.list.HP_skill_get_range_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, bl, skill_id, skill_lv);
 		}
 	}
 	return retVal___;
@@ -83306,15 +83306,15 @@ int HP_skill_get_range2(struct block_list *bl, int skill_id, int skill_lv) {
 	}
 	return retVal___;
 }
-int HP_skill_get_splash(int skill_id, int skill_lv) {
+int HP_skill_get_splash(struct block_list *bl, int skill_id, int skill_lv) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_skill_get_splash_pre > 0) {
-		int (*preHookFunc) (int *skill_id, int *skill_lv);
+		int (*preHookFunc) (struct block_list **bl, int *skill_id, int *skill_lv);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_splash_pre; hIndex++) {
-			preHookFunc = (int (*) (int *skill_id, int *skill_lv))HPMHooks.list.HP_skill_get_splash_pre[hIndex].func;
-			retVal___ = preHookFunc(&skill_id, &skill_lv);
+			preHookFunc = (int (*) (struct block_list **bl, int *skill_id, int *skill_lv))HPMHooks.list.HP_skill_get_splash_pre[hIndex].func;
+			retVal___ = preHookFunc(&bl, &skill_id, &skill_lv);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -83322,13 +83322,13 @@ int HP_skill_get_splash(int skill_id, int skill_lv) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.skill.get_splash(skill_id, skill_lv);
+		retVal___ = HPMHooks.source.skill.get_splash(bl, skill_id, skill_lv);
 	}
 	if (HPMHooks.count.HP_skill_get_splash_post > 0) {
-		int (*postHookFunc) (int retVal___, int skill_id, int skill_lv);
+		int (*postHookFunc) (int retVal___, struct block_list *bl, int skill_id, int skill_lv);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_splash_post; hIndex++) {
-			postHookFunc = (int (*) (int retVal___, int skill_id, int skill_lv))HPMHooks.list.HP_skill_get_splash_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, skill_id, skill_lv);
+			postHookFunc = (int (*) (int retVal___, struct block_list *bl, int skill_id, int skill_lv))HPMHooks.list.HP_skill_get_splash_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, bl, skill_id, skill_lv);
 		}
 	}
 	return retVal___;
@@ -83414,15 +83414,15 @@ int HP_skill_get_msp(int skill_id, int skill_lv) {
 	}
 	return retVal___;
 }
-int HP_skill_get_sp(int skill_id, int skill_lv) {
+int HP_skill_get_sp(struct block_list *bl, int skill_id, int skill_lv) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_skill_get_sp_pre > 0) {
-		int (*preHookFunc) (int *skill_id, int *skill_lv);
+		int (*preHookFunc) (struct block_list **bl, int *skill_id, int *skill_lv);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_sp_pre; hIndex++) {
-			preHookFunc = (int (*) (int *skill_id, int *skill_lv))HPMHooks.list.HP_skill_get_sp_pre[hIndex].func;
-			retVal___ = preHookFunc(&skill_id, &skill_lv);
+			preHookFunc = (int (*) (struct block_list **bl, int *skill_id, int *skill_lv))HPMHooks.list.HP_skill_get_sp_pre[hIndex].func;
+			retVal___ = preHookFunc(&bl, &skill_id, &skill_lv);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -83430,13 +83430,13 @@ int HP_skill_get_sp(int skill_id, int skill_lv) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.skill.get_sp(skill_id, skill_lv);
+		retVal___ = HPMHooks.source.skill.get_sp(bl, skill_id, skill_lv);
 	}
 	if (HPMHooks.count.HP_skill_get_sp_post > 0) {
-		int (*postHookFunc) (int retVal___, int skill_id, int skill_lv);
+		int (*postHookFunc) (int retVal___, struct block_list *bl, int skill_id, int skill_lv);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_sp_post; hIndex++) {
-			postHookFunc = (int (*) (int retVal___, int skill_id, int skill_lv))HPMHooks.list.HP_skill_get_sp_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, skill_id, skill_lv);
+			postHookFunc = (int (*) (int retVal___, struct block_list *bl, int skill_id, int skill_lv))HPMHooks.list.HP_skill_get_sp_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, bl, skill_id, skill_lv);
 		}
 	}
 	return retVal___;
@@ -83738,15 +83738,15 @@ bool HP_skill_get_equip_any_flag(int skill_id, int skill_lv) {
 	}
 	return retVal___;
 }
-int HP_skill_get_zeny(int skill_id, int skill_lv) {
+int HP_skill_get_zeny(struct block_list *bl, int skill_id, int skill_lv) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_skill_get_zeny_pre > 0) {
-		int (*preHookFunc) (int *skill_id, int *skill_lv);
+		int (*preHookFunc) (struct block_list **bl, int *skill_id, int *skill_lv);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_zeny_pre; hIndex++) {
-			preHookFunc = (int (*) (int *skill_id, int *skill_lv))HPMHooks.list.HP_skill_get_zeny_pre[hIndex].func;
-			retVal___ = preHookFunc(&skill_id, &skill_lv);
+			preHookFunc = (int (*) (struct block_list **bl, int *skill_id, int *skill_lv))HPMHooks.list.HP_skill_get_zeny_pre[hIndex].func;
+			retVal___ = preHookFunc(&bl, &skill_id, &skill_lv);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -83754,26 +83754,26 @@ int HP_skill_get_zeny(int skill_id, int skill_lv) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.skill.get_zeny(skill_id, skill_lv);
+		retVal___ = HPMHooks.source.skill.get_zeny(bl, skill_id, skill_lv);
 	}
 	if (HPMHooks.count.HP_skill_get_zeny_post > 0) {
-		int (*postHookFunc) (int retVal___, int skill_id, int skill_lv);
+		int (*postHookFunc) (int retVal___, struct block_list *bl, int skill_id, int skill_lv);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_zeny_post; hIndex++) {
-			postHookFunc = (int (*) (int retVal___, int skill_id, int skill_lv))HPMHooks.list.HP_skill_get_zeny_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, skill_id, skill_lv);
+			postHookFunc = (int (*) (int retVal___, struct block_list *bl, int skill_id, int skill_lv))HPMHooks.list.HP_skill_get_zeny_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, bl, skill_id, skill_lv);
 		}
 	}
 	return retVal___;
 }
-int HP_skill_get_num(int skill_id, int skill_lv) {
+int HP_skill_get_num(struct block_list *bl, int skill_id, int skill_lv) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_skill_get_num_pre > 0) {
-		int (*preHookFunc) (int *skill_id, int *skill_lv);
+		int (*preHookFunc) (struct block_list **bl, int *skill_id, int *skill_lv);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_num_pre; hIndex++) {
-			preHookFunc = (int (*) (int *skill_id, int *skill_lv))HPMHooks.list.HP_skill_get_num_pre[hIndex].func;
-			retVal___ = preHookFunc(&skill_id, &skill_lv);
+			preHookFunc = (int (*) (struct block_list **bl, int *skill_id, int *skill_lv))HPMHooks.list.HP_skill_get_num_pre[hIndex].func;
+			retVal___ = preHookFunc(&bl, &skill_id, &skill_lv);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -83781,26 +83781,26 @@ int HP_skill_get_num(int skill_id, int skill_lv) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.skill.get_num(skill_id, skill_lv);
+		retVal___ = HPMHooks.source.skill.get_num(bl, skill_id, skill_lv);
 	}
 	if (HPMHooks.count.HP_skill_get_num_post > 0) {
-		int (*postHookFunc) (int retVal___, int skill_id, int skill_lv);
+		int (*postHookFunc) (int retVal___, struct block_list *bl, int skill_id, int skill_lv);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_num_post; hIndex++) {
-			postHookFunc = (int (*) (int retVal___, int skill_id, int skill_lv))HPMHooks.list.HP_skill_get_num_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, skill_id, skill_lv);
+			postHookFunc = (int (*) (int retVal___, struct block_list *bl, int skill_id, int skill_lv))HPMHooks.list.HP_skill_get_num_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, bl, skill_id, skill_lv);
 		}
 	}
 	return retVal___;
 }
-int HP_skill_get_cast(int skill_id, int skill_lv) {
+int HP_skill_get_cast(struct block_list *bl, int skill_id, int skill_lv) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_skill_get_cast_pre > 0) {
-		int (*preHookFunc) (int *skill_id, int *skill_lv);
+		int (*preHookFunc) (struct block_list **bl, int *skill_id, int *skill_lv);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_cast_pre; hIndex++) {
-			preHookFunc = (int (*) (int *skill_id, int *skill_lv))HPMHooks.list.HP_skill_get_cast_pre[hIndex].func;
-			retVal___ = preHookFunc(&skill_id, &skill_lv);
+			preHookFunc = (int (*) (struct block_list **bl, int *skill_id, int *skill_lv))HPMHooks.list.HP_skill_get_cast_pre[hIndex].func;
+			retVal___ = preHookFunc(&bl, &skill_id, &skill_lv);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -83808,26 +83808,26 @@ int HP_skill_get_cast(int skill_id, int skill_lv) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.skill.get_cast(skill_id, skill_lv);
+		retVal___ = HPMHooks.source.skill.get_cast(bl, skill_id, skill_lv);
 	}
 	if (HPMHooks.count.HP_skill_get_cast_post > 0) {
-		int (*postHookFunc) (int retVal___, int skill_id, int skill_lv);
+		int (*postHookFunc) (int retVal___, struct block_list *bl, int skill_id, int skill_lv);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_cast_post; hIndex++) {
-			postHookFunc = (int (*) (int retVal___, int skill_id, int skill_lv))HPMHooks.list.HP_skill_get_cast_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, skill_id, skill_lv);
+			postHookFunc = (int (*) (int retVal___, struct block_list *bl, int skill_id, int skill_lv))HPMHooks.list.HP_skill_get_cast_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, bl, skill_id, skill_lv);
 		}
 	}
 	return retVal___;
 }
-int HP_skill_get_delay(int skill_id, int skill_lv) {
+int HP_skill_get_delay(struct block_list *bl, int skill_id, int skill_lv) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_skill_get_delay_pre > 0) {
-		int (*preHookFunc) (int *skill_id, int *skill_lv);
+		int (*preHookFunc) (struct block_list **bl, int *skill_id, int *skill_lv);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_delay_pre; hIndex++) {
-			preHookFunc = (int (*) (int *skill_id, int *skill_lv))HPMHooks.list.HP_skill_get_delay_pre[hIndex].func;
-			retVal___ = preHookFunc(&skill_id, &skill_lv);
+			preHookFunc = (int (*) (struct block_list **bl, int *skill_id, int *skill_lv))HPMHooks.list.HP_skill_get_delay_pre[hIndex].func;
+			retVal___ = preHookFunc(&bl, &skill_id, &skill_lv);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -83835,13 +83835,13 @@ int HP_skill_get_delay(int skill_id, int skill_lv) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.skill.get_delay(skill_id, skill_lv);
+		retVal___ = HPMHooks.source.skill.get_delay(bl, skill_id, skill_lv);
 	}
 	if (HPMHooks.count.HP_skill_get_delay_post > 0) {
-		int (*postHookFunc) (int retVal___, int skill_id, int skill_lv);
+		int (*postHookFunc) (int retVal___, struct block_list *bl, int skill_id, int skill_lv);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_delay_post; hIndex++) {
-			postHookFunc = (int (*) (int retVal___, int skill_id, int skill_lv))HPMHooks.list.HP_skill_get_delay_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, skill_id, skill_lv);
+			postHookFunc = (int (*) (int retVal___, struct block_list *bl, int skill_id, int skill_lv))HPMHooks.list.HP_skill_get_delay_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, bl, skill_id, skill_lv);
 		}
 	}
 	return retVal___;
@@ -83981,15 +83981,15 @@ int HP_skill_get_delaynodex(int skill_id, int skill_lv) {
 	}
 	return retVal___;
 }
-int HP_skill_get_castdef(int skill_id, int skill_lv) {
+int HP_skill_get_castdef(struct block_list *bl, int skill_id, int skill_lv) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_skill_get_castdef_pre > 0) {
-		int (*preHookFunc) (int *skill_id, int *skill_lv);
+		int (*preHookFunc) (struct block_list **bl, int *skill_id, int *skill_lv);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_castdef_pre; hIndex++) {
-			preHookFunc = (int (*) (int *skill_id, int *skill_lv))HPMHooks.list.HP_skill_get_castdef_pre[hIndex].func;
-			retVal___ = preHookFunc(&skill_id, &skill_lv);
+			preHookFunc = (int (*) (struct block_list **bl, int *skill_id, int *skill_lv))HPMHooks.list.HP_skill_get_castdef_pre[hIndex].func;
+			retVal___ = preHookFunc(&bl, &skill_id, &skill_lv);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -83997,13 +83997,13 @@ int HP_skill_get_castdef(int skill_id, int skill_lv) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.skill.get_castdef(skill_id, skill_lv);
+		retVal___ = HPMHooks.source.skill.get_castdef(bl, skill_id, skill_lv);
 	}
 	if (HPMHooks.count.HP_skill_get_castdef_post > 0) {
-		int (*postHookFunc) (int retVal___, int skill_id, int skill_lv);
+		int (*postHookFunc) (int retVal___, struct block_list *bl, int skill_id, int skill_lv);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_castdef_post; hIndex++) {
-			postHookFunc = (int (*) (int retVal___, int skill_id, int skill_lv))HPMHooks.list.HP_skill_get_castdef_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, skill_id, skill_lv);
+			postHookFunc = (int (*) (int retVal___, struct block_list *bl, int skill_id, int skill_lv))HPMHooks.list.HP_skill_get_castdef_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, bl, skill_id, skill_lv);
 		}
 	}
 	return retVal___;
@@ -84170,15 +84170,15 @@ int HP_skill_get_castcancel(int skill_id, int skill_lv) {
 	}
 	return retVal___;
 }
-int HP_skill_get_maxcount(int skill_id, int skill_lv) {
+int HP_skill_get_maxcount(struct block_list *bl, int skill_id, int skill_lv) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_skill_get_maxcount_pre > 0) {
-		int (*preHookFunc) (int *skill_id, int *skill_lv);
+		int (*preHookFunc) (struct block_list **bl, int *skill_id, int *skill_lv);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_maxcount_pre; hIndex++) {
-			preHookFunc = (int (*) (int *skill_id, int *skill_lv))HPMHooks.list.HP_skill_get_maxcount_pre[hIndex].func;
-			retVal___ = preHookFunc(&skill_id, &skill_lv);
+			preHookFunc = (int (*) (struct block_list **bl, int *skill_id, int *skill_lv))HPMHooks.list.HP_skill_get_maxcount_pre[hIndex].func;
+			retVal___ = preHookFunc(&bl, &skill_id, &skill_lv);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -84186,26 +84186,26 @@ int HP_skill_get_maxcount(int skill_id, int skill_lv) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.skill.get_maxcount(skill_id, skill_lv);
+		retVal___ = HPMHooks.source.skill.get_maxcount(bl, skill_id, skill_lv);
 	}
 	if (HPMHooks.count.HP_skill_get_maxcount_post > 0) {
-		int (*postHookFunc) (int retVal___, int skill_id, int skill_lv);
+		int (*postHookFunc) (int retVal___, struct block_list *bl, int skill_id, int skill_lv);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_maxcount_post; hIndex++) {
-			postHookFunc = (int (*) (int retVal___, int skill_id, int skill_lv))HPMHooks.list.HP_skill_get_maxcount_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, skill_id, skill_lv);
+			postHookFunc = (int (*) (int retVal___, struct block_list *bl, int skill_id, int skill_lv))HPMHooks.list.HP_skill_get_maxcount_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, bl, skill_id, skill_lv);
 		}
 	}
 	return retVal___;
 }
-int HP_skill_get_blewcount(int skill_id, int skill_lv) {
+int HP_skill_get_blewcount(struct block_list *bl, int skill_id, int skill_lv) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_skill_get_blewcount_pre > 0) {
-		int (*preHookFunc) (int *skill_id, int *skill_lv);
+		int (*preHookFunc) (struct block_list **bl, int *skill_id, int *skill_lv);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_blewcount_pre; hIndex++) {
-			preHookFunc = (int (*) (int *skill_id, int *skill_lv))HPMHooks.list.HP_skill_get_blewcount_pre[hIndex].func;
-			retVal___ = preHookFunc(&skill_id, &skill_lv);
+			preHookFunc = (int (*) (struct block_list **bl, int *skill_id, int *skill_lv))HPMHooks.list.HP_skill_get_blewcount_pre[hIndex].func;
+			retVal___ = preHookFunc(&bl, &skill_id, &skill_lv);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -84213,13 +84213,13 @@ int HP_skill_get_blewcount(int skill_id, int skill_lv) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.skill.get_blewcount(skill_id, skill_lv);
+		retVal___ = HPMHooks.source.skill.get_blewcount(bl, skill_id, skill_lv);
 	}
 	if (HPMHooks.count.HP_skill_get_blewcount_post > 0) {
-		int (*postHookFunc) (int retVal___, int skill_id, int skill_lv);
+		int (*postHookFunc) (int retVal___, struct block_list *bl, int skill_id, int skill_lv);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_blewcount_post; hIndex++) {
-			postHookFunc = (int (*) (int retVal___, int skill_id, int skill_lv))HPMHooks.list.HP_skill_get_blewcount_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, skill_id, skill_lv);
+			postHookFunc = (int (*) (int retVal___, struct block_list *bl, int skill_id, int skill_lv))HPMHooks.list.HP_skill_get_blewcount_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, bl, skill_id, skill_lv);
 		}
 	}
 	return retVal___;
@@ -84386,15 +84386,15 @@ int HP_skill_get_unit_range(int skill_id, int skill_lv) {
 	}
 	return retVal___;
 }
-int HP_skill_get_cooldown(int skill_id, int skill_lv) {
+int HP_skill_get_cooldown(struct block_list *bl, int skill_id, int skill_lv) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_skill_get_cooldown_pre > 0) {
-		int (*preHookFunc) (int *skill_id, int *skill_lv);
+		int (*preHookFunc) (struct block_list **bl, int *skill_id, int *skill_lv);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_cooldown_pre; hIndex++) {
-			preHookFunc = (int (*) (int *skill_id, int *skill_lv))HPMHooks.list.HP_skill_get_cooldown_pre[hIndex].func;
-			retVal___ = preHookFunc(&skill_id, &skill_lv);
+			preHookFunc = (int (*) (struct block_list **bl, int *skill_id, int *skill_lv))HPMHooks.list.HP_skill_get_cooldown_pre[hIndex].func;
+			retVal___ = preHookFunc(&bl, &skill_id, &skill_lv);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -84402,13 +84402,13 @@ int HP_skill_get_cooldown(int skill_id, int skill_lv) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.skill.get_cooldown(skill_id, skill_lv);
+		retVal___ = HPMHooks.source.skill.get_cooldown(bl, skill_id, skill_lv);
 	}
 	if (HPMHooks.count.HP_skill_get_cooldown_post > 0) {
-		int (*postHookFunc) (int retVal___, int skill_id, int skill_lv);
+		int (*postHookFunc) (int retVal___, struct block_list *bl, int skill_id, int skill_lv);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_cooldown_post; hIndex++) {
-			postHookFunc = (int (*) (int retVal___, int skill_id, int skill_lv))HPMHooks.list.HP_skill_get_cooldown_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, skill_id, skill_lv);
+			postHookFunc = (int (*) (int retVal___, struct block_list *bl, int skill_id, int skill_lv))HPMHooks.list.HP_skill_get_cooldown_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, bl, skill_id, skill_lv);
 		}
 	}
 	return retVal___;

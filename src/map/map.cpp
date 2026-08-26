@@ -380,7 +380,7 @@ static int map_moveblock(struct block_list *bl, int x1, int y1, int64 tick)
 		status_change_end(bl, SC_MAGICROD, INVALID_TIMER);
 		status_change_end(bl, SC_SU_STOOP, INVALID_TIMER);
 		if (sc && sc->data[SC_PROPERTYWALK] &&
-			sc->data[SC_PROPERTYWALK]->val3 >= skill->get_maxcount(sc->data[SC_PROPERTYWALK]->val1,sc->data[SC_PROPERTYWALK]->val2) )
+			sc->data[SC_PROPERTYWALK]->val3 >= skill->get_maxcount(bl, sc->data[SC_PROPERTYWALK]->val1,sc->data[SC_PROPERTYWALK]->val2) )
 			status_change_end(bl,SC_PROPERTYWALK,INVALID_TIMER);
 	} else if (bl->type == BL_NPC) {
 		npc->unsetcells(BL_UCAST(BL_NPC, bl));
@@ -435,7 +435,7 @@ static int map_moveblock(struct block_list *bl, int x1, int y1, int64 tick)
 				}
 
 				if (sc->data[SC_PROPERTYWALK]
-				 && sc->data[SC_PROPERTYWALK]->val3 < skill->get_maxcount(sc->data[SC_PROPERTYWALK]->val1,sc->data[SC_PROPERTYWALK]->val2)
+				 && sc->data[SC_PROPERTYWALK]->val3 < skill->get_maxcount(bl, sc->data[SC_PROPERTYWALK]->val1,sc->data[SC_PROPERTYWALK]->val2)
 				 && map->find_skill_unit_oncell(bl,bl->x,bl->y,SO_ELECTRICWALK,NULL,0) == NULL
 				 && map->find_skill_unit_oncell(bl,bl->x,bl->y,SO_FIREWALK,NULL,0) == NULL
 				 && skill->unitsetting(bl,sc->data[SC_PROPERTYWALK]->val1,sc->data[SC_PROPERTYWALK]->val2,x0, y0,0)

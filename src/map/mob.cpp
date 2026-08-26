@@ -4012,7 +4012,7 @@ static int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 
 			mob_skills[i].target = MST_TARGET;
 			mob_skills[i].cond1 = MSC_ALWAYS;
 
-			if (skill->get_range(skill_id, mob_skills[i].skill_lv) > 3)
+			if (skill->get_range(&sd->bl, skill_id, mob_skills[i].skill_lv) > 3)
 				mob_skills[i].state = MSS_ANYTARGET;
 			else
 				mob_skills[i].state = MSS_BERSERK;
@@ -4035,7 +4035,7 @@ static int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 
 				mob_skills[i].target = MST_TARGET;
 				mob_skills[i].cond1 = MSC_ALWAYS;
 
-				if (skill->get_range(skill_id, mob_skills[i].skill_lv) > 3)
+				if (skill->get_range(&sd->bl, skill_id, mob_skills[i].skill_lv) > 3)
 					mob_skills[i].state = MSS_ANYTARGET;
 				else
 					mob_skills[i].state = MSS_BERSERK;

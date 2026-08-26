@@ -407,7 +407,7 @@ static int pc_banding(struct map_session_data *sd, uint16 skill_lv)
 	int i, j, hp, extra_hp = 0, tmp_qty = 0;
 	struct map_session_data *bsd;
 	struct status_change *sc;
-	int range = skill->get_splash(LG_BANDING,skill_lv);
+	int range = skill->get_splash(&sd->bl, LG_BANDING,skill_lv);
 
 	nullpo_ret(sd);
 
@@ -6412,7 +6412,7 @@ int pc_get_skill_cooldown(struct map_session_data *sd, uint16 skill_id, uint16 s
 	}
 
 	int i;
-	int cooldown = skill->get_cooldown(skill_id, skill_lv);
+	int cooldown = skill->get_cooldown(&sd->bl, skill_id, skill_lv);
 
 	ARR_FIND(0, ARRAYLENGTH(sd->skillcooldown), i, sd->skillcooldown[i].id == skill_id);
 

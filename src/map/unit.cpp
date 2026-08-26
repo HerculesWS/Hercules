@@ -804,7 +804,7 @@ static void unit_run_hit(struct block_list *bl, struct status_change *sc, struct
 
 	if (type == SC_RUN) {
 		if (lv > 0)
-			skill->blown(bl, bl, skill->get_blewcount(TK_RUN, lv), unit->getdir(bl), 0);
+			skill->blown(bl, bl, skill->get_blewcount(bl, TK_RUN, lv), unit->getdir(bl), 0);
 		clif->fixpos(bl); //Why is a clif->slide (skill->blown) AND a fixpos needed? Ask Aegis.
 		clif->sc_end(bl, bl->id, AREA, status->get_sc_icon(SC_TING));
 	} else if (sd != NULL) {
@@ -1855,7 +1855,7 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 	if( casttime <= 0 )
 		ud->state.skillcastcancel = 0;
 
-	if (sd == NULL || sd->auto_cast_current.type < AUTOCAST_ABRA || skill->get_cast(skill_id, skill_lv) != 0)
+	if (sd == NULL || sd->auto_cast_current.type < AUTOCAST_ABRA || skill->get_cast(src, skill_id, skill_lv) != 0)
 		ud->canact_tick = tick + std::max(casttime, std::max((int)status_get_amotion(src), battle_config.min_skill_delay_limit));
 	if( sd )
 	{
@@ -1995,7 +1995,7 @@ static int unit_skilluse_pos2(struct block_list *src, short skill_x, short skill
 	}
 
 	ud->state.skillcastcancel = castcancel&&casttime>0?1:0;
-	if (sd == NULL || sd->auto_cast_current.type < AUTOCAST_ABRA || skill->get_cast(skill_id, skill_lv) != 0)
+	if (sd == NULL || sd->auto_cast_current.type < AUTOCAST_ABRA || skill->get_cast(src, skill_id, skill_lv) != 0)
 		ud->canact_tick = tick + std::max(casttime, std::max((int)status_get_amotion(src), battle_config.min_skill_delay_limit));
 #if 0
 	if (sd) {
