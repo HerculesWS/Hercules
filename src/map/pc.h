@@ -800,7 +800,7 @@ END_ZEROED_BLOCK;
 	#define pc_leftside_mdef(sd) ((sd)->battle_status.mdef2)
 	#define pc_rightside_mdef(sd) ((sd)->battle_status.mdef)
 	#define pc_leftside_matk(sd) (status->base_matk(&(sd)->bl, status->get_status_data(&(sd)->bl), (sd)->status.base_level))
-	#define pc_rightside_matk(sd) ((sd)->battle_status.rhw.matk+(sd)->battle_status.lhw.matk+(sd)->bonus.ematk)
+	#define pc_rightside_matk(sd) ((sd)->battle_status.rhw.matk + (sd)->battle_status.lhw.matk + (sd)->bonus.ematk + (sd)->battle_status.buff_extra_matk)
 #else
 	#define pc_leftside_atk(sd) (\
 		(((sd)->battle_status.batk + (sd)->battle_status.rhw.atk + (sd)->battle_status.lhw.atk)\

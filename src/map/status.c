@@ -3571,7 +3571,7 @@ static void status_calc_bl_(struct block_list *bl, e_scb_flag flag, enum e_statu
 		if(bst.matk_min != st->matk_min)
 			clif->updatestatus(sd,SP_MATK2);
 #else
-		if(bst.matk_max != st->matk_max || bst.matk_min != st->matk_min){
+		if (bst.matk_max != st->matk_max || bst.matk_min != st->matk_min || bst.buff_extra_matk != st->buff_extra_matk) {
 			clif->updatestatus(sd,SP_MATK2);
 			clif->updatestatus(sd,SP_MATK1);
 		}
@@ -4569,6 +4569,7 @@ static int status_calc_batk(struct block_list *bl, struct status_change *sc, int
 			batk += batk * sc->data[SC_VITALIZE_POTION]->val1 / 100;
 		return cap_value(batk, battle_config.batk_min, battle_config.batk_max);
 	}
+	// Fixed values first, so that percent modifiers below apply to the full base+flat total.
 #ifndef RENEWAL
 	if(sc->data[SC_PLUSATTACKPOWER])
 		batk += sc->data[SC_PLUSATTACKPOWER]->val1;
@@ -4581,36 +4582,16 @@ static int status_calc_batk(struct block_list *bl, struct status_change *sc, int
 		batk += sc->data[SC_BATKFOOD]->val1;
 	if(sc->data[SC_FIRE_INSIGNIA] && sc->data[SC_FIRE_INSIGNIA]->val1 == 2)
 		batk += 50;
-	if(bl->type == BL_ELEM
-		&& ((sc->data[SC_FIRE_INSIGNIA] && sc->data[SC_FIRE_INSIGNIA]->val1 == 1)
-		|| (sc->data[SC_WATER_INSIGNIA] && sc->data[SC_WATER_INSIGNIA]->val1 == 1)
-		|| (sc->data[SC_WIND_INSIGNIA] && sc->data[SC_WIND_INSIGNIA]->val1 == 1)
-		|| (sc->data[SC_EARTH_INSIGNIA] && sc->data[SC_EARTH_INSIGNIA]->val1 == 1))
-		)
-		batk += batk / 5;
 	if(sc->data[SC_FULL_SWING_K])
 		batk += sc->data[SC_FULL_SWING_K]->val1;
-	if(sc->data[SC_VOLCANIC_ASH] && (bl->type==BL_MOB)){
-		if(status_get_element(bl) == ELE_WATER) //water type
-			batk /= 2;
-	}
 	if(sc->data[SC_PYROCLASTIC])
 		batk += sc->data[SC_PYROCLASTIC]->val2;
 	if (sc->data[SC_ANGRIFFS_MODUS])
 		batk += sc->data[SC_ANGRIFFS_MODUS]->val2;
-
 	if( sc->data[SC_ZANGETSU] )
 		batk += sc->data[SC_ZANGETSU]->val2;
-#if 0 //Curse shouldn't effect on this?  <- Curse OR Bleeding??
-	if(sc->data[SC_BLOODING])
-		batk -= batk * 25/100;
-#endif // 0
-	if(sc->data[SC__ENERVATION])
-		batk -= batk * sc->data[SC__ENERVATION]->val2 / 100;
 	if(sc->data[SC_SATURDAY_NIGHT_FEVER])
 		batk += 100 * sc->data[SC_SATURDAY_NIGHT_FEVER]->val1;
-	if (sc->data[SC_BATTLESCROLL])
-		batk += batk * sc->data[SC_BATTLESCROLL]->val1 / 100;
 
 	// Eden Crystal Synthesis
 	if (sc->data[SC_QUEST_BUFF1])
@@ -4620,12 +4601,6 @@ static int status_calc_batk(struct block_list *bl, struct status_change *sc, int
 	if (sc->data[SC_QUEST_BUFF3])
 		batk += sc->data[SC_QUEST_BUFF3]->val1;
 
-	if (sc->data[SC_GM_BATTLE])
-		batk += batk * sc->data[SC_GM_BATTLE]->val1 / 100;
-	if (sc->data[SC_GM_BATTLE2])
-		batk += batk * sc->data[SC_GM_BATTLE2]->val1 / 100;
-	if (sc->data[SC_2011RWC])
-		batk += batk * sc->data[SC_2011RWC]->val2 / 100;
 	if (sc->data[SC_STEAMPACK])
 		batk += sc->data[SC_STEAMPACK]->val1;
 	if (sc->data[SC_SKF_ATK] != NULL)
@@ -4633,15 +4608,42 @@ static int status_calc_batk(struct block_list *bl, struct status_change *sc, int
 	if (sc->data[SC_ALMIGHTY] != NULL)
 		batk += sc->data[SC_ALMIGHTY]->val1;
 
-	if (sc->data[SC_SHRIMP])
+	// Percent modifiers, applied after all fixed bonuses above.
+	if (bl->type == BL_ELEM
+		&& ((sc->data[SC_FIRE_INSIGNIA] != NULL && sc->data[SC_FIRE_INSIGNIA]->val1 == 1)
+		|| (sc->data[SC_WATER_INSIGNIA] != NULL && sc->data[SC_WATER_INSIGNIA]->val1 == 1)
+		|| (sc->data[SC_WIND_INSIGNIA] != NULL && sc->data[SC_WIND_INSIGNIA]->val1 == 1)
+		|| (sc->data[SC_EARTH_INSIGNIA] != NULL && sc->data[SC_EARTH_INSIGNIA]->val1 == 1))
+		)
+		batk += batk / 5;
+	if (sc->data[SC_BATTLESCROLL] != NULL)
+		batk += batk * sc->data[SC_BATTLESCROLL]->val1 / 100;
+	if (sc->data[SC_GM_BATTLE] != NULL)
+		batk += batk * sc->data[SC_GM_BATTLE]->val1 / 100;
+	if (sc->data[SC_GM_BATTLE2] != NULL)
+		batk += batk * sc->data[SC_GM_BATTLE2]->val1 / 100;
+	if (sc->data[SC_2011RWC] != NULL)
+		batk += batk * sc->data[SC_2011RWC]->val2 / 100;
+	if (sc->data[SC_SHRIMP] != NULL)
 		batk += batk * sc->data[SC_SHRIMP]->val2 / 100;
 	if (sc->data[SC_SUNSTANCE] != NULL)
 		batk += batk * sc->data[SC_SUNSTANCE]->val2 / 100;
-
 #ifdef RENEWAL
 	if (sc->data[SC_NIBELUNGEN] != NULL && sc->data[SC_NIBELUNGEN]->val2 == RINGNBL_EFF_ATK)
-		batk += batk * 20/100;
+		batk += batk * 20 / 100;
 #endif
+
+	// Debuffs/reductions are applied last, against the fully buffed total.
+	if (sc->data[SC_VOLCANIC_ASH] != NULL && (bl->type == BL_MOB)) {
+		if (status_get_element(bl) == ELE_WATER) //water type
+			batk /= 2;
+	}
+#if 0 //Curse shouldn't effect on this?  <- Curse OR Bleeding??
+	if (sc->data[SC_BLOODING] != NULL)
+		batk -= batk * 25 / 100;
+#endif // 0
+	if (sc->data[SC__ENERVATION] != NULL)
+		batk -= batk * sc->data[SC__ENERVATION]->val2 / 100;
 
 	return cap_value(batk, battle_config.batk_min, battle_config.batk_max);
 }
@@ -4678,6 +4680,37 @@ static int status_calc_buff_extra_batk(struct block_list *bl, struct status_chan
 #endif
 
 	return cap_value(batk, 0, battle_config.batk_max);
+}
+
+/**
+ * Calculates bl's Extra MATK gains from Buffs.
+ *
+ * These are very specific bonus from SCs where:
+ * - They show in status window MATK right side (after the + sign)
+ * - They are given by SCs, but they work like equipment's MATK bonus
+ * - They are not linked to the weapon's matk value
+ *
+ * @param bl unit whose status is being calculated
+ * @param sc unit's SC list
+ * @returns Value of Extra MATK conceded by buffs
+ */
+static int status_calc_buff_extra_matk(struct block_list *bl, struct status_change *sc)
+{
+	nullpo_ret(bl);
+
+	if (sc == NULL || sc->count == 0)
+		return 0;
+
+	int matk = 0;
+
+#ifdef RENEWAL
+	if (sc->data[SC_IMPOSITIO] != NULL)
+		matk += sc->data[SC_IMPOSITIO]->val2;
+	if (sc->data[SC_VOLCANO] != NULL)
+		matk += sc->data[SC_VOLCANO]->val2;
+#endif
+
+	return cap_value(matk, 0, battle_config.matk_max);
 }
 
 static int status_calc_watk(struct block_list *bl, struct status_change *sc, int watk, bool viewable)
@@ -4841,27 +4874,12 @@ static int status_calc_matk(struct block_list *bl, struct status_change *sc, int
 		matk += 40 + 30 * sc->data[SC_ODINS_POWER]->val1; //70 lvl1, 100lvl2
 	if (sc->data[SC_IZAYOI])
 		matk += 25 * sc->data[SC_IZAYOI]->val1;
-#else // RENEWAL
-	if (sc->data[SC_IMPOSITIO])
-		matk += sc->data[SC_IMPOSITIO]->val2;
-	// FIXME: This (and SC_IMPOSITIO) should have their effects shown in status window.
-	if (sc->data[SC_VOLCANO] != NULL)
-		matk += sc->data[SC_VOLCANO]->val2;
-	if (sc->data[SC_NIBELUNGEN] != NULL && sc->data[SC_NIBELUNGEN]->val2 == RINGNBL_EFF_MATK)
-		matk += matk * 20/100;
 #endif
+	// Fixed values first, so that percent modifiers below apply to the full base+flat total.
 	if (sc->data[SC_ZANGETSU])
 		matk += sc->data[SC_ZANGETSU]->val3;
-	if (sc->data[SC_MAGICPOWER] && sc->data[SC_MAGICPOWER]->val4)
-		matk += matk * sc->data[SC_MAGICPOWER]->val3 / 100;
-	if (sc->data[SC_INCMATKRATE]) // Apparently nothing in Hercules uses this. Why does this exist?
-		matk += matk * sc->data[SC_INCMATKRATE]->val1 / 100;
-	if (sc->data[SC_MOONLIT_SERENADE])
-		matk += matk * sc->data[SC_MOONLIT_SERENADE]->val2 / 100;
 	if (sc->data[SC_MTF_MATK])
 		matk += sc->data[SC_MTF_MATK]->val1;
-	if (sc->data[SC_MYSTICSCROLL])
-		matk += matk * sc->data[SC_MYSTICSCROLL]->val1 / 100;
 
 	// Eden Crystal Synthesis
 	if (sc->data[SC_QUEST_BUFF1])
@@ -4875,18 +4893,32 @@ static int status_calc_matk(struct block_list *bl, struct status_change *sc, int
 	if (sc->data[SC_FENRIR_CARD])
 		matk += sc->data[SC_FENRIR_CARD]->val1;
 
-	if (sc->data[SC_GM_BATTLE])
-		matk += matk * sc->data[SC_GM_BATTLE]->val1 / 100;
-	if (sc->data[SC_GM_BATTLE2])
-		matk += matk * sc->data[SC_GM_BATTLE2]->val1 / 100;
-	if (sc->data[SC_2011RWC])
-		matk += matk * sc->data[SC_2011RWC]->val2 / 100;
 	if (sc->data[SC_MAGIC_CANDY])
 		matk += sc->data[SC_MAGIC_CANDY]->val1;
 	if (sc->data[SC_SKF_MATK] != NULL)
 		matk += sc->data[SC_SKF_MATK]->val1;
 	if (sc->data[SC_ALMIGHTY] != NULL)
 		matk += sc->data[SC_ALMIGHTY]->val2;
+
+	// Percent modifiers, applied after all fixed bonuses above.
+#ifdef RENEWAL
+	if (sc->data[SC_NIBELUNGEN] != NULL && sc->data[SC_NIBELUNGEN]->val2 == RINGNBL_EFF_MATK)
+		matk += matk * 20 / 100;
+#endif
+	if (sc->data[SC_MAGICPOWER] != NULL && sc->data[SC_MAGICPOWER]->val4)
+		matk += matk * sc->data[SC_MAGICPOWER]->val3 / 100;
+	if (sc->data[SC_INCMATKRATE] != NULL) // Apparently nothing in Hercules uses this. Why does this exist?
+		matk += matk * sc->data[SC_INCMATKRATE]->val1 / 100;
+	if (sc->data[SC_MOONLIT_SERENADE] != NULL)
+		matk += matk * sc->data[SC_MOONLIT_SERENADE]->val2 / 100;
+	if (sc->data[SC_MYSTICSCROLL] != NULL)
+		matk += matk * sc->data[SC_MYSTICSCROLL]->val1 / 100;
+	if (sc->data[SC_GM_BATTLE] != NULL)
+		matk += matk * sc->data[SC_GM_BATTLE]->val1 / 100;
+	if (sc->data[SC_GM_BATTLE2] != NULL)
+		matk += matk * sc->data[SC_GM_BATTLE2]->val1 / 100;
+	if (sc->data[SC_2011RWC] != NULL)
+		matk += matk * sc->data[SC_2011RWC]->val2 / 100;
 
 	return cap_value(matk, battle_config.matk_min, battle_config.matk_max);
 }
@@ -13631,8 +13663,13 @@ static int status_get_matk(struct block_list *bl, int flag)
 		return 0;
 
 	// Just get matk
-	if ( flag == 2 )
-		return status_get_rand_matk(st->matk_max, st->matk_min);
+	if (flag == 2) {
+		int matk = status_get_rand_matk(st->matk_max, st->matk_min);
+#ifdef RENEWAL
+		matk += st->buff_extra_matk;
+#endif
+		return matk;
+	}
 
 	status_get_matk_sub(bl, flag, &matk_max, &matk_min);
 
@@ -13663,6 +13700,9 @@ static void status_update_matk(struct block_list *bl)
 	// Update matk
 	st->matk_min = status->calc_matk(bl, sc, matk_min, true);
 	st->matk_max = status->calc_matk(bl, sc, matk_max, true);
+#ifdef RENEWAL
+	st->buff_extra_matk = status->calc_buff_extra_matk(bl, sc);
+#endif
 
 	return;
 }
@@ -15152,6 +15192,7 @@ void status_defaults(void)
 	status->calc_mdef2 = status_calc_mdef2;
 	status->calc_batk = status_calc_batk;
 	status->calc_buff_extra_batk = status_calc_buff_extra_batk;
+	status->calc_buff_extra_matk = status_calc_buff_extra_matk;
 	status->base_matk = status_base_matk;
 	status->get_weapon_atk = status_get_weapon_atk;
 	status->get_total_mdef = status_get_total_mdef;
