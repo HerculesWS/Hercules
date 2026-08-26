@@ -793,12 +793,18 @@ static int realloc_fifo(int fd, unsigned int rfifo_size, unsigned int wfifo_size
 		return 0;
 
 	if( sockt->session[fd]->max_rdata != rfifo_size && sockt->session[fd]->rdata_size < rfifo_size) {
+		size_t old_rdata = sockt->session[fd]->max_rdata;
 		RECREATE(sockt->session[fd]->rdata, unsigned char, rfifo_size);
+		if (rfifo_size > old_rdata)
+			memset(sockt->session[fd]->rdata + old_rdata, 0, rfifo_size - old_rdata);
 		sockt->session[fd]->max_rdata  = rfifo_size;
 	}
 
 	if( sockt->session[fd]->max_wdata != wfifo_size && sockt->session[fd]->wdata_size < wfifo_size) {
+		size_t old_wdata = sockt->session[fd]->max_wdata;
 		RECREATE(sockt->session[fd]->wdata, unsigned char, wfifo_size);
+		if (wfifo_size > old_wdata)
+			memset(sockt->session[fd]->wdata + old_wdata, 0, wfifo_size - old_wdata);
 		sockt->session[fd]->max_wdata  = wfifo_size;
 	}
 	return 0;
@@ -807,25 +813,33 @@ static int realloc_fifo(int fd, unsigned int rfifo_size, unsigned int wfifo_size
 static int realloc_writefifo(int fd, size_t addition)
 {
 	size_t newsize;
+	size_t old_wdata;
+	bool growing;
 
 	if (!sockt->session_is_valid(fd)) // might not happen
 		return 0;
+
+	old_wdata = sockt->session[fd]->max_wdata;
 
 	if (sockt->session[fd]->wdata_size + addition  > sockt->session[fd]->max_wdata) {
 		// grow rule; grow in multiples of WFIFO_SIZE
 		newsize = WFIFO_SIZE;
 		while( sockt->session[fd]->wdata_size + addition > newsize ) newsize += WFIFO_SIZE;
+		growing = true;
 	} else if (sockt->session[fd]->max_wdata >= (size_t)2*(sockt->session[fd]->flag.server?FIFOSIZE_SERVERLINK:WFIFO_SIZE)
 	       && (sockt->session[fd]->wdata_size+addition)*4 < sockt->session[fd]->max_wdata
 	) {
 		// shrink rule, shrink by 2 when only a quarter of the fifo is used, don't shrink below nominal size.
 		newsize = sockt->session[fd]->max_wdata / 2;
+		growing = false;
 	} else {
 		// no change
 		return 0;
 	}
 
 	RECREATE(sockt->session[fd]->wdata, unsigned char, newsize);
+	if (growing && newsize > old_wdata)
+		memset(sockt->session[fd]->wdata + old_wdata, 0, newsize - old_wdata);
 	sockt->session[fd]->max_wdata  = newsize;
 
 	return 0;
