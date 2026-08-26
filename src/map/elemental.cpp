@@ -331,7 +331,7 @@ static int elemental_data_received(const struct s_elemental *ele, bool flag)
 static int elemental_clean_single_effect(struct elemental_data *ed, uint16 skill_id)
 {
 	struct block_list *bl;
-	sc_type type = skill->get_sc_type(skill_id);
+	sc_type type = skill->get_sc_type(&ed->bl, skill_id);
 
 	nullpo_ret(ed);
 
@@ -484,7 +484,7 @@ static int elemental_action(struct elemental_data *ed, struct block_list *bl, in
 			ed->ud.skill_id = skill_id;
 			ed->ud.skill_lv = skill_lv;
 
-			if( skill->get_inf(skill_id) & INF_GROUND_SKILL )
+			if( skill->get_inf(&ed->bl, skill_id) & INF_GROUND_SKILL )
 				ed->ud.skilltimer = timer->add(tick+(int64)status->get_speed(&ed->bl)*walk_dist, skill->castend_pos, ed->bl.id, 0);
 			else
 				ed->ud.skilltimer = timer->add(tick+(int64)status->get_speed(&ed->bl)*walk_dist, skill->castend_id, ed->bl.id, 0);
@@ -507,7 +507,7 @@ static int elemental_action(struct elemental_data *ed, struct block_list *bl, in
 	}
 
 	//Otherwise, just cast the skill.
-	if( skill->get_inf(skill_id) & INF_GROUND_SKILL )
+	if( skill->get_inf(&ed->bl, skill_id) & INF_GROUND_SKILL )
 		unit->skilluse_pos(&ed->bl, bl->x, bl->y, skill_id, skill_lv);
 	else
 		unit->skilluse_id(&ed->bl, bl->id, skill_id, skill_lv);
@@ -552,7 +552,7 @@ static int elemental_change_mode_ack(struct elemental_data *ed, int mode)
 	ed->target_id = bl->id; // Set new target
 	ed->last_thinktime = timer->gettick();
 
-	if( skill->get_inf(skill_id) & INF_GROUND_SKILL )
+	if( skill->get_inf(&ed->bl, skill_id) & INF_GROUND_SKILL )
 		unit->skilluse_pos(&ed->bl, bl->x, bl->y, skill_id, skill_lv);
 	else
 		unit->skilluse_id(&ed->bl,bl->id,skill_id,skill_lv);

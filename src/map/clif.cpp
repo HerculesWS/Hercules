@@ -1830,7 +1830,7 @@ static void clif_homskillinfoblock(struct map_session_data *sd)
 		if ( id != 0 ) {
 			j = id - HM_SKILLBASE;
 			WFIFOW(fd, len) = id;
-			WFIFOL(fd, len + 2) = skill->get_inf(id);
+			WFIFOL(fd, len + 2) = skill->get_inf(&sd->hd->bl, id);
 			WFIFOW(fd, len + 6) = hd->homunculus.hskill[j].lv;
 			if ( hd->homunculus.hskill[j].lv ) {
 				WFIFOW(fd, len + 8) = skill->get_sp(&hd->bl, id, hd->homunculus.hskill[j].lv);
@@ -1839,7 +1839,7 @@ static void clif_homskillinfoblock(struct map_session_data *sd)
 				WFIFOW(fd, len + 8) = 0;
 				WFIFOW(fd, len + 10) = 0;
 			}
-			safestrncpy(WFIFOP(char *, fd, len + 12), skill->get_name(id), NAME_LENGTH);
+			safestrncpy(WFIFOP(char *, fd, len + 12), skill->get_name(&sd->hd->bl, id), NAME_LENGTH);
 			WFIFOB(fd, len + 36) = (hd->homunculus.hskill[j].lv < homun->skill_tree_get_max(id, hd->homunculus.class_)) ? 1 : 0;
 			len += 37;
 		}
@@ -1868,7 +1868,7 @@ static void clif_homskillup(struct map_session_data *sd, uint16 skill_id)
 	WFIFOW(fd,4) = hd->homunculus.hskill[idx].lv;
 	WFIFOW(fd,6) = skill->get_sp(&hd->bl, skill_id,hd->homunculus.hskill[idx].lv);
 	WFIFOW(fd,8) = skill->get_range2(&hd->bl, skill_id,hd->homunculus.hskill[idx].lv);
-	WFIFOB(fd,10) = (hd->homunculus.hskill[idx].lv < skill->get_max(hd->homunculus.hskill[idx].id)) ? 1 : 0;
+	WFIFOB(fd,10) = (hd->homunculus.hskill[idx].lv < skill->get_max(&hd->bl, hd->homunculus.hskill[idx].id)) ? 1 : 0;
 	WFIFOSET(fd,packet_len(0x239));
 }
 
@@ -5369,7 +5369,7 @@ static void clif_getareachar_skillunit(struct block_list *bl, struct skill_unit 
 	p.yPos = su->bl.y;
 
 	// Use invisible unit id for some ground skills.
-	if (skill->get_unit_flag(su->group->skill_id) & UF_RANGEDSINGLEUNIT && !(su->val2 & UF_RANGEDSINGLEUNIT))
+	if (skill->get_unit_flag(bl, su->group->skill_id) & UF_RANGEDSINGLEUNIT && !(su->val2 & UF_RANGEDSINGLEUNIT))
 		p.job = UNT_DUMMYSKILL;
 	else
 		p.job = su->group->unit_id;
@@ -5593,7 +5593,7 @@ static void clif_playerSkillToPacket(struct map_session_data *sd, struct SKILLDA
 
 	int skill_lv = sd->status.skill[idx].lv;
 	skillData->id = skillId;
-	skillData->inf = skill->get_inf(skillId);
+	skillData->inf = skill->get_inf(&sd->bl, skillId);
 	skillData->level = skill_lv;
 	if (skill_lv > 0) {
 		skillData->sp = skill->get_sp(&sd->bl, skillId, skill_lv);
@@ -5608,7 +5608,7 @@ static void clif_playerSkillToPacket(struct map_session_data *sd, struct SKILLDA
 	else
 		skillData->level2 = skill_lv;
 #else
-	safestrncpy(skillData->name, skill->get_name(skillId), NAME_LENGTH);
+	safestrncpy(skillData->name, skill->get_name(&sd->bl, skillId), NAME_LENGTH);
 #endif
 	if (sd->status.skill[idx].flag == SKILL_FLAG_PERMANENT)
 		skillData->upFlag = (skill_lv < skill->tree_get_max(skillId, sd->status.class_)) ? 1 : 0;
@@ -5759,7 +5759,7 @@ static void clif_skillinfo(struct map_session_data *sd, int skill_id, int inf)
 	p->packetType = HEADER_ZC_SKILLINFO_UPDATE2;
 	int skill_lv = sd->status.skill[idx].lv;
 	p->id = skill_id;
-	p->inf = inf?inf:skill->get_inf(skill_id);
+	p->inf = inf?inf:skill->get_inf(&sd->bl, skill_id);
 	p->level = skill_lv;
 	if (skill_lv > 0) {
 		p->sp = skill->get_sp(&sd->bl, skill_id, skill_lv);
@@ -5822,7 +5822,7 @@ static void clif_useskill(struct block_list *bl, int src_id, int dst_id, int dst
 		clif->send(&p, sizeof(p), bl, AREA);
 	}
 #if PACKETVER >= 20151223
-	if ((skill->get_inf2(skill_id) & INF2_SHOW_SKILL_SCALE) != 0)
+	if ((skill->get_inf2(bl, skill_id) & INF2_SHOW_SKILL_SCALE) != 0)
 		clif->skill_scale(bl, src_id, bl->x, bl->y, skill_id, skill_lv, casttime);
 #endif
 }
@@ -7042,7 +7042,7 @@ static void clif_item_skill(struct map_session_data *sd, uint16 skill_id, uint16
 	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_AUTORUN_SKILL));
 
 	struct PACKET_ZC_AUTORUN_SKILL *p = WP2PTR(struct PACKET_ZC_AUTORUN_SKILL *, fd);
-	int type = skill->get_inf(skill_id);
+	int type = skill->get_inf(&sd->bl, skill_id);
 
 	if (sd->auto_cast_current.itemskill_cast_on_self && sd->auto_cast_current.type == AUTOCAST_ITEM)
 		type = INF_SELF_SKILL;
@@ -7053,7 +7053,7 @@ static void clif_item_skill(struct map_session_data *sd, uint16 skill_id, uint16
 	p->skill_lv = skill_lv;
 	p->skill_sp = skill->get_sp(&sd->bl, skill_id, skill_lv);
 	p->skill_range = skill->get_range2(&sd->bl, skill_id, skill_lv);
-	safestrncpy(p->skill_name, skill->get_name(skill_id), NAME_LENGTH);
+	safestrncpy(p->skill_name, skill->get_name(&sd->bl, skill_id), NAME_LENGTH);
 	p->up_flag = 0;
 
 	WFIFOSET(fd, sizeof(struct PACKET_ZC_AUTORUN_SKILL));
@@ -8787,7 +8787,7 @@ static void clif_guild_skillinfo(struct map_session_data *sd)
 		if (g->skill[i].id > 0 && guild->check_skill_require(g, g->skill[i].id)) {
 			const int id = g->skill[i].id;
 			p->skillInfo[c].id = id;
-			p->skillInfo[c].inf = skill->get_inf(id);
+			p->skillInfo[c].inf = skill->get_inf(&sd->bl, id);
 			p->skillInfo[c].level = g->skill[i].lv;
 			if (g->skill[i].lv) {
 				p->skillInfo[c].sp = skill->get_sp(&sd->bl, id, g->skill[i].lv);
@@ -8796,7 +8796,7 @@ static void clif_guild_skillinfo(struct map_session_data *sd)
 				p->skillInfo[c].sp = 0;
 				p->skillInfo[c].range2 = 0;
 			}
-			safestrncpy(p->skillInfo[c].name, skill->get_name(id), NAME_LENGTH);
+			safestrncpy(p->skillInfo[c].name, skill->get_name(&sd->bl, id), NAME_LENGTH);
 			p->skillInfo[c].upFlag = (g->skill[i].lv < guild->skill_get_max(id) && sd == g->member[0].sd) ? 1 : 0;
 			c++;
 		}
@@ -11445,7 +11445,7 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 		if (lv > 0) {
 			for (int i = 0; i < MAX_PC_FEELHATE; i++) {
 				if (sd->bl.m == sd->feel_map[i].m) {
-					sc_start(NULL, &sd->bl, SC_KNOWLEDGE, 100, lv, skill->get_time(SG_KNOWLEDGE, lv), SG_KNOWLEDGE);
+					sc_start(NULL, &sd->bl, SC_KNOWLEDGE, 100, lv, skill->get_time(&sd->bl, SG_KNOWLEDGE, lv), SG_KNOWLEDGE);
 					break;
 				}
 			}
@@ -12228,7 +12228,7 @@ static void clif_parse_ActionRequest_sub(struct map_session_data *sd, enum actio
 			if (sd->sc.option & OPTION_COSTUME)
 				return;
 
-			if (!battle_config.sdelay_attack_enable && pc->checkskill(sd, SA_FREECAST) <= 0 && (skill->get_inf2(sd->ud.skill_id) & (INF2_FREE_CAST_REDUCED | INF2_FREE_CAST_NORMAL)) == 0) {
+			if (!battle_config.sdelay_attack_enable && pc->checkskill(sd, SA_FREECAST) <= 0 && (skill->get_inf2(&sd->bl, sd->ud.skill_id) & (INF2_FREE_CAST_REDUCED | INF2_FREE_CAST_NORMAL)) == 0) {
 				if (DIFF_TICK(tick, sd->ud.canact_tick) < 0) {
 					clif->skill_fail(sd, 1, USESKILL_FAIL_SKILLINTERVAL, 0, 0);
 					return;
@@ -13410,7 +13410,7 @@ static void clif_parse_UseSkillToId_homun(struct homun_data *hd, struct map_sess
 		clif->emotion(&hd->bl, E_DOTS);
 		return;
 	}
-	if (hd->bl.id != target_id && skill->get_inf(skill_id)&INF_SELF_SKILL)
+	if (hd->bl.id != target_id && skill->get_inf(&hd->bl, skill_id)&INF_SELF_SKILL)
 		target_id = hd->bl.id;
 	if (hd->ud.skilltimer != INVALID_TIMER) {
 		if (skill_id != SA_CASTCANCEL && skill_id != SO_SPELLFIST) return;
@@ -13468,7 +13468,7 @@ static void clif_parse_UseSkillToId_mercenary(struct mercenary_data *md, struct 
 		return;
 	if( skill->not_ok_mercenary(skill_id, md) )
 		return;
-	if( md->bl.id != target_id && skill->get_inf(skill_id)&INF_SELF_SKILL )
+	if( md->bl.id != target_id && skill->get_inf(&md->bl, skill_id)&INF_SELF_SKILL )
 		target_id = md->bl.id;
 	if( md->ud.skilltimer != INVALID_TIMER ) {
 		if( skill_id != SA_CASTCANCEL && skill_id != SO_SPELLFIST ) return;
@@ -13524,7 +13524,7 @@ static void clif_useSkillToIdReal(int fd, struct map_session_data *sd, int skill
 	if (skill_lv < 1)
 		skill_lv = 1; //No clue, I have seen the client do this with guild skills :/ [Skotlex]
 
-	int tmp = skill->get_inf(skill_id);
+	int tmp = skill->get_inf(&sd->bl, skill_id);
 	if (tmp & INF_GROUND_SKILL || !tmp)
 		return; //Using a ground/passive skill on a target? WRONG.
 
@@ -13541,7 +13541,7 @@ static void clif_useSkillToIdReal(int fd, struct map_session_data *sd, int skill
 	// Whether skill fails or not is irrelevant, the char ain't idle. [Skotlex]
 	pc->update_idle_time(sd, BCIDLE_USESKILLTOID);
 
-	bool allow_self_skill = ((tmp & INF_SELF_SKILL) != 0 && (skill->get_nk(skill_id) & NK_NO_DAMAGE) != 0);
+	bool allow_self_skill = ((tmp & INF_SELF_SKILL) != 0 && (skill->get_nk(&sd->bl, skill_id) & NK_NO_DAMAGE) != 0);
 	allow_self_skill = (allow_self_skill && battle_config.skill_enabled_npc == SKILLENABLEDNPC_SELF);
 
 	if ((sd->npc_id != 0 && sd->state.using_megaphone == 0 && !allow_self_skill && battle_config.skill_enabled_npc != SKILLENABLEDNPC_ALL)
@@ -13706,7 +13706,7 @@ static void clif_parse_UseSkillToPosSub(int fd, struct map_session_data *sd, uin
 	 */
 	skill->validate_autocast_data(sd, skill_id, (skill_lv == 0 || skill_lv > MAX_SKILL_LEVEL) ? sd->auto_cast_current.skill_lv : skill_lv);
 
-	if( !(skill->get_inf(skill_id)&INF_GROUND_SKILL) )
+	if( !(skill->get_inf(&sd->bl, skill_id)&INF_GROUND_SKILL) )
 		return; //Using a target skill on the ground? WRONG.
 
 	if( skill_id >= HM_SKILLBASE && skill_id < HM_SKILLBASE + MAX_HOMUNSKILL ) {
@@ -16806,7 +16806,7 @@ static void clif_parse_NoviceExplosionSpirits(int fd, struct map_session_data *s
 			int percent = (int)( ( (float)sd->status.base_exp/(float)next )*1000. );
 
 			if( percent && ( percent%100 ) == 0 ) {// 10.0%, 20.0%, ..., 90.0%
-				sc_start(NULL, &sd->bl, skill->get_sc_type(MO_EXPLOSIONSPIRITS), 100, 17, skill->get_time(MO_EXPLOSIONSPIRITS, 5), MO_EXPLOSIONSPIRITS); // Lv17-> +50 critical (noted by Poki) [Skotlex]
+				sc_start(NULL, &sd->bl, skill->get_sc_type(&sd->bl, MO_EXPLOSIONSPIRITS), 100, 17, skill->get_time(&sd->bl, MO_EXPLOSIONSPIRITS, 5), MO_EXPLOSIONSPIRITS); // Lv17-> +50 critical (noted by Poki) [Skotlex]
 				clif->skill_nodamage(&sd->bl, &sd->bl, MO_EXPLOSIONSPIRITS, 5, 1);  // prayer always shows successful Lv5 cast and disregards noskill restrictions
 			}
 		}
@@ -19455,7 +19455,7 @@ static void clif_mercenary_skillblock(struct map_session_data *sd)
 			continue;
 		j = id - MC_SKILLBASE;
 		WFIFOW(fd,len) = id;
-		WFIFOL(fd,len+2) = skill->get_inf(id);
+		WFIFOL(fd,len+2) = skill->get_inf(&md->bl, id);
 		WFIFOW(fd,len+6) = md->db->skill[j].lv;
 		if ( md->db->skill[j].lv ) {
 			WFIFOW(fd, len + 8) = skill->get_sp(&md->bl, id, md->db->skill[j].lv);
@@ -19464,7 +19464,7 @@ static void clif_mercenary_skillblock(struct map_session_data *sd)
 			WFIFOW(fd, len + 8) = 0;
 			WFIFOW(fd, len + 10) = 0;
 		}
-		safestrncpy(WFIFOP(char *, fd, len + 12), skill->get_name(id), NAME_LENGTH);
+		safestrncpy(WFIFOP(char *, fd, len + 12), skill->get_name(&md->bl, id), NAME_LENGTH);
 		WFIFOB(fd,len+36) = 0; // Skillable for Mercenary?
 		len += 37;
 	}

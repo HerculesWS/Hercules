@@ -332,13 +332,13 @@ static void pc_addsoulball(struct map_session_data *sd, int max)
 	const struct status_change *sc = status->get_sc(&sd->bl);
 
 	if (sc == NULL || sc->data[SC_SOULENERGY] == NULL) {
-		sc_start(&sd->bl, &sd->bl, SC_SOULENERGY, 100, 0, skill->get_time2(SP_SOULCOLLECT, 1), 0);
+		sc_start(&sd->bl, &sd->bl, SC_SOULENERGY, 100, 0, skill->get_time2(&sd->bl, SP_SOULCOLLECT, 1), 0);
 		sd->soulball = 0;
 	}
 
 	max = std::clamp(max, 0, MAX_SOUL_BALL);
 	sd->soulball = std::clamp(sd->soulball + 1, 0, max);
-	sc_start(&sd->bl, &sd->bl, SC_SOULENERGY, 100, sd->soulball, skill->get_time2(SP_SOULCOLLECT, 1), 0);
+	sc_start(&sd->bl, &sd->bl, SC_SOULENERGY, 100, sd->soulball, skill->get_time2(&sd->bl, SP_SOULCOLLECT, 1), 0);
 	clif->soulballs(&sd->bl, sd->soulball, AREA);
 }
 
@@ -3981,8 +3981,8 @@ static int pc_bonus3(struct map_session_data *sd, int type, int type2, int type3
 		case SP_AUTOSPELL:
 			if(sd->state.lr_flag != 2)
 			{
-				int target = skill->get_inf(type2); //Support or Self (non-auto-target) skills should pick self.
-				target = target&INF_SUPPORT_SKILL || (target&INF_SELF_SKILL && !(skill->get_inf2(type2)&INF2_NO_TARGET_SELF));
+				int target = skill->get_inf(&sd->bl, type2); //Support or Self (non-auto-target) skills should pick self.
+				target = target&INF_SUPPORT_SKILL || (target&INF_SELF_SKILL && !(skill->get_inf2(&sd->bl, type2)&INF2_NO_TARGET_SELF));
 				pc->bonus_autospell(sd->autospell, ARRAYLENGTH(sd->autospell),
 					target?-type2:type2, type3, val, 0, status->current_equip_card_id);
 			}
@@ -3990,8 +3990,8 @@ static int pc_bonus3(struct map_session_data *sd, int type, int type2, int type3
 		case SP_AUTOSPELL_WHENHIT:
 			if(sd->state.lr_flag != 2)
 			{
-				int target = skill->get_inf(type2); //Support or Self (non-auto-target) skills should pick self.
-				target = target&INF_SUPPORT_SKILL || (target&INF_SELF_SKILL && !(skill->get_inf2(type2)&INF2_NO_TARGET_SELF));
+				int target = skill->get_inf(&sd->bl, type2); //Support or Self (non-auto-target) skills should pick self.
+				target = target&INF_SUPPORT_SKILL || (target&INF_SELF_SKILL && !(skill->get_inf2(&sd->bl, type2)&INF2_NO_TARGET_SELF));
 				pc->bonus_autospell(sd->autospell2, ARRAYLENGTH(sd->autospell2),
 					target?-type2:type2, type3, val, BF_NORMAL|BF_SKILL, status->current_equip_card_id);
 			}
@@ -4211,8 +4211,8 @@ static int pc_bonus4(struct map_session_data *sd, int type, int type2, int type3
 
 	case SP_AUTOSPELL_ONSKILL:
 		if(sd->state.lr_flag != 2) {
-			int target = skill->get_inf(type2); //Support or Self (non-auto-target) skills should pick self.
-			target = target&INF_SUPPORT_SKILL || (target&INF_SELF_SKILL && !(skill->get_inf2(type2)&INF2_NO_TARGET_SELF));
+			int target = skill->get_inf(&sd->bl, type2); //Support or Self (non-auto-target) skills should pick self.
+			target = target&INF_SUPPORT_SKILL || (target&INF_SELF_SKILL && !(skill->get_inf2(&sd->bl, type2)&INF2_NO_TARGET_SELF));
 
 			pc->bonus_autospell_onskill(sd->autospell3, ARRAYLENGTH(sd->autospell3), type2, target?-type3:type3, type4, val, status->current_equip_card_id);
 		}
@@ -6085,7 +6085,7 @@ static int pc_setpos(struct map_session_data *sd, unsigned short map_index, int 
 				if (sce->timer != INVALID_TIMER)
 					timer->delete_(sce->timer, status->change_timer);
 
-				sce->timer = timer->add(timer->gettick() + skill->get_time(SG_KNOWLEDGE, sce->val1),
+				sce->timer = timer->add(timer->gettick() + skill->get_time(&sd->bl, SG_KNOWLEDGE, sce->val1),
 							status->change_timer, sd->bl.id, SC_KNOWLEDGE);
 			}
 
@@ -6356,7 +6356,7 @@ static int pc_checkallowskill(struct map_session_data *sd)
 		if( scw_list[i] == SC_DANCING && !battle_config.dancing_weaponswitch_fix )
 			continue;
 		if( sd->sc.data[scw_list[i]]
-		 && !pc_check_weapontype(sd,skill->get_weapontype(status->sc2skill(scw_list[i]))))
+		 && !pc_check_weapontype(sd,skill->get_weapontype(&sd->bl, status->sc2skill(scw_list[i]))))
 			status_change_end(&sd->bl, scw_list[i], INVALID_TIMER);
 	}
 
@@ -6763,16 +6763,16 @@ static void pc_checkbaselevelup_sc(struct map_session_data *sd)
 	nullpo_retv(sd);
 
 	if ((sd->job & MAPID_UPPERMASK) == MAPID_SUPER_NOVICE) {
-		sc_start(NULL, &sd->bl, skill->get_sc_type(PR_KYRIE), 100, 1, skill->get_time(PR_KYRIE, 1), PR_KYRIE);
-		sc_start(NULL, &sd->bl, skill->get_sc_type(PR_IMPOSITIO), 100, 1, skill->get_time(PR_IMPOSITIO, 1), PR_IMPOSITIO);
-		sc_start(NULL, &sd->bl, skill->get_sc_type(PR_MAGNIFICAT), 100, 1, skill->get_time(PR_MAGNIFICAT, 1), PR_MAGNIFICAT);
-		sc_start(NULL, &sd->bl, skill->get_sc_type(PR_GLORIA), 100, 1, skill->get_time(PR_GLORIA, 1), PR_GLORIA);
-		sc_start(NULL, &sd->bl, skill->get_sc_type(PR_SUFFRAGIUM), 100, 1, skill->get_time(PR_SUFFRAGIUM, 1), PR_SUFFRAGIUM);
+		sc_start(NULL, &sd->bl, skill->get_sc_type(&sd->bl, PR_KYRIE), 100, 1, skill->get_time(&sd->bl, PR_KYRIE, 1), PR_KYRIE);
+		sc_start(NULL, &sd->bl, skill->get_sc_type(&sd->bl, PR_IMPOSITIO), 100, 1, skill->get_time(&sd->bl, PR_IMPOSITIO, 1), PR_IMPOSITIO);
+		sc_start(NULL, &sd->bl, skill->get_sc_type(&sd->bl, PR_MAGNIFICAT), 100, 1, skill->get_time(&sd->bl, PR_MAGNIFICAT, 1), PR_MAGNIFICAT);
+		sc_start(NULL, &sd->bl, skill->get_sc_type(&sd->bl, PR_GLORIA), 100, 1, skill->get_time(&sd->bl, PR_GLORIA, 1), PR_GLORIA);
+		sc_start(NULL, &sd->bl, skill->get_sc_type(&sd->bl, PR_SUFFRAGIUM), 100, 1, skill->get_time(&sd->bl, PR_SUFFRAGIUM, 1), PR_SUFFRAGIUM);
 		if (sd->state.snovice_dead_flag)
 			sd->state.snovice_dead_flag = 0; //Reenable steelbody resurrection on dead.
 	} else if ((sd->job & MAPID_BASEMASK) == MAPID_TAEKWON) {
-		sc_start(NULL, &sd->bl, skill->get_sc_type(AL_INCAGI), 100, 10, 600000, AL_INCAGI);
-		sc_start(NULL, &sd->bl, skill->get_sc_type(AL_BLESSING), 100, 10, 600000, AL_BLESSING);
+		sc_start(NULL, &sd->bl, skill->get_sc_type(&sd->bl, AL_INCAGI), 100, 10, 600000, AL_INCAGI);
+		sc_start(NULL, &sd->bl, skill->get_sc_type(&sd->bl, AL_BLESSING), 100, 10, 600000, AL_BLESSING);
 	}
 }
 
@@ -8151,7 +8151,7 @@ static int pc_dead(struct map_session_data *sd, struct block_list *src)
 			if (battle_config.pc_invincible_time != 0)
 				pc->setinvincibletimer(sd, battle_config.pc_invincible_time);
 
-			sc_start(NULL, &sd->bl, skill->get_sc_type(MO_STEELBODY), 100, 5, skill->get_time(MO_STEELBODY, 5), MO_STEELBODY);
+			sc_start(NULL, &sd->bl, skill->get_sc_type(&sd->bl, MO_STEELBODY), 100, 5, skill->get_time(&sd->bl, MO_STEELBODY, 5), MO_STEELBODY);
 
 			if (map_flag_gvg2(sd->bl.m))
 				pc->respawn_timer(INVALID_TIMER, timer->gettick(), sd->bl.id, 0);
@@ -8911,7 +8911,7 @@ static int pc_jobchange(struct map_session_data *sd, int class_, int upper)
 		short id;
 		for (i = 0; i < MAX_SKILL_TREE && (id = pc->skill_tree[class_idx][i].id) > 0; i++) {
 			//Remove status specific to your current tree skills.
-			enum sc_type sc = skill->get_sc_type(id);
+			enum sc_type sc = skill->get_sc_type(&sd->bl, id);
 			if (sc > SC_COMMON_MAX && sd->sc.data[sc])
 				status_change_end(&sd->bl, sc, INVALID_TIMER);
 		}
@@ -12637,7 +12637,7 @@ static void pc_check_supernovice_call(struct map_session_data *sd, const char *m
 				sd->state.snovice_call_flag = 3;
 			break;
 		case 3:
-			sc_start(NULL, &sd->bl, skill->get_sc_type(MO_EXPLOSIONSPIRITS), 100, 17, skill->get_time(MO_EXPLOSIONSPIRITS, 5), MO_EXPLOSIONSPIRITS); // Lv17-> +50 critical (noted by Poki) [Skotlex]
+			sc_start(NULL, &sd->bl, skill->get_sc_type(&sd->bl, MO_EXPLOSIONSPIRITS), 100, 17, skill->get_time(&sd->bl, MO_EXPLOSIONSPIRITS, 5), MO_EXPLOSIONSPIRITS); // Lv17-> +50 critical (noted by Poki) [Skotlex]
 			clif->skill_nodamage(&sd->bl, &sd->bl, MO_EXPLOSIONSPIRITS, 5, 1);  // prayer always shows successful Lv5 cast and disregards noskill restrictions
 			sd->state.snovice_call_flag = 0;
 			break;
