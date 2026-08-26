@@ -95478,6 +95478,35 @@ int HP_status_calc_buff_extra_batk(struct block_list *bl, struct status_change *
 }
 int HP_status_base_matk(struct block_list *bl, const struct status_data *st, int level) {
 	int hIndex = 0;
+int HP_status_calc_buff_extra_matk(struct block_list *bl, struct status_change *sc) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_status_calc_buff_extra_matk_pre > 0) {
+		int (*preHookFunc) (struct block_list **bl, struct status_change **sc);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_buff_extra_matk_pre; hIndex++) {
+			preHookFunc = (int (*) (struct block_list **bl, struct status_change **sc))HPMHooks.list.HP_status_calc_buff_extra_matk_pre[hIndex].func;
+			retVal___ = preHookFunc(&bl, &sc);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.status.calc_buff_extra_matk(bl, sc);
+	}
+	if (HPMHooks.count.HP_status_calc_buff_extra_matk_post > 0) {
+		int (*postHookFunc) (int retVal___, struct block_list *bl, struct status_change *sc);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_buff_extra_matk_post; hIndex++) {
+			postHookFunc = (int (*) (int retVal___, struct block_list *bl, struct status_change *sc))HPMHooks.list.HP_status_calc_buff_extra_matk_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, bl, sc);
+		}
+	}
+	return retVal___;
+}
+int HP_status_base_matk(struct block_list *bl, const struct status_data *st, int level) {
+	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_status_base_matk_pre > 0) {
 		int (*preHookFunc) (struct block_list **bl, const struct status_data **st, int *level);

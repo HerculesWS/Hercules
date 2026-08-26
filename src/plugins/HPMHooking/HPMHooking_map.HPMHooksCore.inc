@@ -7144,6 +7144,8 @@ struct {
 	struct HPMHookPoint *HP_status_calc_batk_post;
 	struct HPMHookPoint *HP_status_calc_buff_extra_batk_pre;
 	struct HPMHookPoint *HP_status_calc_buff_extra_batk_post;
+	struct HPMHookPoint *HP_status_calc_buff_extra_matk_pre;
+	struct HPMHookPoint *HP_status_calc_buff_extra_matk_post;
 	struct HPMHookPoint *HP_status_base_matk_pre;
 	struct HPMHookPoint *HP_status_base_matk_post;
 	struct HPMHookPoint *HP_status_get_weapon_atk_pre;
@@ -14765,6 +14767,8 @@ struct {
 	int HP_status_calc_batk_post;
 	int HP_status_calc_buff_extra_batk_pre;
 	int HP_status_calc_buff_extra_batk_post;
+	int HP_status_calc_buff_extra_matk_pre;
+	int HP_status_calc_buff_extra_matk_post;
 	int HP_status_base_matk_pre;
 	int HP_status_base_matk_post;
 	int HP_status_get_weapon_atk_pre;

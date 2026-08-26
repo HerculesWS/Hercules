@@ -3569,7 +3569,7 @@ static void status_calc_bl_(struct block_list *bl, e_scb_flag flag, enum e_statu
 		if(bst.matk_min != st->matk_min)
 			clif->updatestatus(sd,SP_MATK2);
 #else
-		if(bst.matk_max != st->matk_max || bst.matk_min != st->matk_min){
+		if (bst.matk_max != st->matk_max || bst.matk_min != st->matk_min || bst.buff_extra_matk != st->buff_extra_matk) {
 			clif->updatestatus(sd,SP_MATK2);
 			clif->updatestatus(sd,SP_MATK1);
 		}
@@ -4678,6 +4678,37 @@ static int status_calc_buff_extra_batk(struct block_list *bl, struct status_chan
 	return std::clamp(batk, 0, battle_config.batk_max);
 }
 
+/**
+ * Calculates bl's Extra MATK gains from Buffs.
+ *
+ * These are very specific bonus from SCs where:
+ * - They show in status window MATK right side (after the + sign)
+ * - They are given by SCs, but they work like equipment's MATK bonus
+ * - They are not linked to the weapon's matk value
+ *
+ * @param bl unit whose status is being calculated
+ * @param sc unit's SC list
+ * @returns Value of Extra MATK conceded by buffs
+ */
+static int status_calc_buff_extra_matk(struct block_list *bl, struct status_change *sc)
+{
+	nullpo_ret(bl);
+
+	if (sc == NULL || sc->count == 0)
+		return 0;
+
+	int matk = 0;
+
+#ifdef RENEWAL
+	if (sc->data[SC_IMPOSITIO] != NULL)
+		matk += sc->data[SC_IMPOSITIO]->val2;
+	if (sc->data[SC_VOLCANO] != NULL)
+		matk += sc->data[SC_VOLCANO]->val2;
+#endif
+
+	return std::clamp(matk, 0, battle_config.matk_max);
+}
+
 static int status_calc_watk(struct block_list *bl, struct status_change *sc, int watk, bool viewable)
 {
 	nullpo_ret(bl);
@@ -4840,11 +4871,8 @@ static int status_calc_matk(struct block_list *bl, struct status_change *sc, int
 	if (sc->data[SC_IZAYOI])
 		matk += 25 * sc->data[SC_IZAYOI]->val1;
 #else // RENEWAL
-	if (sc->data[SC_IMPOSITIO])
-		matk += sc->data[SC_IMPOSITIO]->val2;
-	// FIXME: This (and SC_IMPOSITIO) should have their effects shown in status window.
-	if (sc->data[SC_VOLCANO] != NULL)
-		matk += sc->data[SC_VOLCANO]->val2;
+	// SC_IMPOSITIO and SC_VOLCANO are handled by status_calc_buff_extra_matk() instead,
+	// so they show separately in the status window (right side of the "+").
 	if (sc->data[SC_NIBELUNGEN] != NULL && sc->data[SC_NIBELUNGEN]->val2 == RINGNBL_EFF_MATK)
 		matk += matk * 20/100;
 #endif
@@ -13629,8 +13657,13 @@ static int status_get_matk(struct block_list *bl, int flag)
 		return 0;
 
 	// Just get matk
-	if ( flag == 2 )
-		return status_get_rand_matk(st->matk_max, st->matk_min);
+	if (flag == 2) {
+		int matk = status_get_rand_matk(st->matk_max, st->matk_min);
+#ifdef RENEWAL
+		matk += st->buff_extra_matk;
+#endif
+		return matk;
+	}
 
 	status_get_matk_sub(bl, flag, &matk_max, &matk_min);
 
@@ -13661,6 +13694,9 @@ static void status_update_matk(struct block_list *bl)
 	// Update matk
 	st->matk_min = status->calc_matk(bl, sc, matk_min, true);
 	st->matk_max = status->calc_matk(bl, sc, matk_max, true);
+#ifdef RENEWAL
+	st->buff_extra_matk = status->calc_buff_extra_matk(bl, sc);
+#endif
 
 	return;
 }
@@ -15150,6 +15186,7 @@ void status_defaults(void)
 	status->calc_mdef2 = status_calc_mdef2;
 	status->calc_batk = status_calc_batk;
 	status->calc_buff_extra_batk = status_calc_buff_extra_batk;
+	status->calc_buff_extra_matk = status_calc_buff_extra_matk;
 	status->base_matk = status_base_matk;
 	status->get_weapon_atk = status_get_weapon_atk;
 	status->get_total_mdef = status_get_total_mdef;
