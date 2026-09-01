@@ -467,6 +467,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->scriptinputstr, HP_clif_scriptinputstr) },
 	{ HP_POP(clif->cutin, HP_clif_cutin) },
 	{ HP_POP(clif->sendfakenpc, HP_clif_sendfakenpc) },
+	{ HP_POP(clif->npc_requires_fakenpc, HP_clif_npc_requires_fakenpc) },
 	{ HP_POP(clif->scriptclear, HP_clif_scriptclear) },
 	{ HP_POP(clif->viewpoint, HP_clif_viewpoint) },
 	{ HP_POP(clif->damage, HP_clif_damage) },
