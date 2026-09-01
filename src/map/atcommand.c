@@ -461,7 +461,8 @@ ACMD(mapmove)
 	if (!*message ||
 		(sscanf(message, "%15s %5hd %5hd", map_name, &x, &y) < 3 &&
 		 sscanf(message, "%15[^,],%5hd,%5hd", map_name, &x, &y) < 1)) {
-			clif->message(fd, msg_fd(fd, MSGTBL_ENTER_MAP_NAME)); // Please enter a map (usage: @warp/@rura/@mapmove <mapname> <x> <y>).
+			snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_MAP_NAME), command); // Please enter a map (usage: %s <mapname> <x> <y>).
+			clif->message(fd, atcmd_output);
 			return false;
 		}
 
@@ -512,7 +513,8 @@ ACMD(where)
 	memset(atcmd_player_name, '\0', sizeof atcmd_player_name);
 
 	if (!*message || sscanf(message, "%23[^\n]", atcmd_player_name) < 1) {
-		clif->message(fd, msg_fd(fd, MSGTBL_ENTER_PLAYER_NAME)); // Please enter a player name (usage: @where <char name>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_PLAYER_NAME), command); // Please enter a player name (usage: %s <char name>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -539,7 +541,8 @@ ACMD(jumpto)
 	struct map_session_data *pl_sd = NULL;
 
 	if (!*message) {
-		clif->message(fd, msg_fd(fd, MSGTBL_ENTER_PLAYER_NAME_OR_ID)); // Please enter a player name (usage: @jumpto/@warpto/@goto <char name/ID>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_PLAYER_NAME_OR_ID), command); // Please enter a player name (usage: %s <char name/ID>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -846,7 +849,7 @@ ACMD(speed)
 	memset(atcmd_output, '\0', sizeof(atcmd_output));
 
 	if (!*message || sscanf(message, "%12d", &speed) < 1) {
-		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_SPEED_VALUE), MIN_WALK_SPEED, MAX_WALK_SPEED); // Please enter a speed value (usage: @speed <%d-%d>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_SPEED_VALUE), command, MIN_WALK_SPEED, MAX_WALK_SPEED); // Please enter a speed value (usage: %s <%d-%d>).
 		clif->message(fd, atcmd_output);
 		return false;
 	}
@@ -885,7 +888,8 @@ ACMD(storage)
 			return false;
 		}
 	} else {
-		clif->message(fd, msg_fd(fd, MSGTBL_STORAGE_SPECIFY_INVALID));
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_STORAGE_SPECIFY_INVALID), command);
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -1120,7 +1124,8 @@ ACMD(kami)
 
 	if(*(info->command + 4) != 'c' && *(info->command + 4) != 'C') {
 		if (!*message) {
-			clif->message(fd, msg_fd(fd, MSGTBL_KAMI_ENTER_MSG)); // Please enter a message (usage: @kami <message>).
+			snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_KAMI_ENTER_MSG), command); // Please enter a message (usage: %s <message>).
+			clif->message(fd, atcmd_output);
 			return false;
 		}
 
@@ -1133,7 +1138,8 @@ ACMD(kami)
 			clif->broadcast(NULL, atcmd_output, (int)strlen(atcmd_output) + 1, BC_YELLOW, ALL_CLIENT);
 	} else {
 		if(!*message || (sscanf(message, "%10u %199[^\n]", &color, atcmd_output) < 2)) {
-			clif->message(fd, msg_fd(fd, MSGTBL_KAMI_ENTER_COLOR_MSG)); // Please enter color and message (usage: @kamic <color> <message>).
+			snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_KAMI_ENTER_COLOR_MSG), command); // Please enter color and message (usage: %s <color> <message>).
+			clif->message(fd, atcmd_output);
 			return false;
 		}
 
@@ -1221,13 +1227,15 @@ ACMD(item)
 		sscanf(message, "\"%99[^\"]\" %12d %12d", item_name, &number, &bound) < 1 &&
 		sscanf(message, "%99s %12d %12d", item_name, &number, &bound) < 1
 		))) {
-		clif->message(fd, msg_fd(fd, MSGTBL_ITEMBOUND_USAGE)); // Please enter an item name or ID (usage: @itembound <item name/ID> <quantity> <bound_type>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ITEMBOUND_USAGE), command); // Please enter an item name or ID (usage: %s <item name/ID> <quantity> <bound_type>).
+		clif->message(fd, atcmd_output);
 		return false;
 	} else if (!*message
 		|| (sscanf(message, "\"%99[^\"]\" %12d", item_name, &number) < 1
 			&& sscanf(message, "%99s %12d", item_name, &number) < 1
 			)) {
-		clif->message(fd, msg_fd(fd, MSGTBL_ITEM_ENTER_NAME_OR_ID)); // Please enter an item name or ID (usage: @item <item name/ID> <quantity>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ITEM_ENTER_NAME_OR_ID), command); // Please enter an item name or ID (usage: %s <item name/ID> <quantity>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -1313,14 +1321,16 @@ ACMD(item2)
 	if (!strcmpi(info->command, "itembound2") && (!*message || (
 		sscanf(message, "\"%99[^\"]\" %12d %12d %12d %12d %12d %12d %12d %12d %12d", item_name, &number, &identify, &refine_level, &attr, &c1, &c2, &c3, &c4, &bound) < 10 &&
 		sscanf(message, "%99s %12d %12d %12d %12d %12d %12d %12d %12d %12d", item_name, &number, &identify, &refine_level, &attr, &c1, &c2, &c3, &c4, &bound) < 10))) {
-		clif->message(fd, msg_fd(fd, MSGTBL_ITEMBOUND2_USAGE)); // Please enter all parameters (usage: @itembound2 <item name/ID> <quantity>
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ITEMBOUND2_USAGE), command); // Please enter all parameters (usage: %s <item name/ID> <quantity>
+		clif->message(fd, atcmd_output);
 		clif->message(fd, msg_fd(fd, MSGTBL_ITEMBOUND_USAGE2)); //   <identify_flag> <refine> <attribute> <card1> <card2> <card3> <card4> <bound_type>).
 		return false;
 	} else if (!*message
 		|| (sscanf(message, "\"%99[^\"]\" %12d %12d %12d %12d %12d %12d %12d %12d", item_name, &number, &identify, &refine_level, &attr, &c1, &c2, &c3, &c4) < 1
 			&& sscanf(message, "%99s %12d %12d %12d %12d %12d %12d %12d %12d", item_name, &number, &identify, &refine_level, &attr, &c1, &c2, &c3, &c4) < 1
 			)) {
-		clif->message(fd, msg_fd(fd, MSGTBL_ITEM2_ENTER_ALL_PARAM)); // Please enter all parameters (usage: @item2 <item name/ID> <quantity>
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ITEM2_ENTER_ALL_PARAM), command); // Please enter all parameters (usage: %s <item name/ID> <quantity>
+		clif->message(fd, atcmd_output);
 		clif->message(fd, msg_fd(fd, MSGTBL_ITEM2_PARAMETERS)); //   <identify_flag> <refine> <attribute> <card1> <card2> <card3> <card4>).
 		return false;
 	}
@@ -1413,7 +1423,8 @@ ACMD(baselevelup)
 	int level=0, i=0, status_point=0;
 
 	if (!*message || !(level = atoi(message))) {
-		clif->message(fd, msg_fd(fd, MSGTBL_ENTER_LV_ADJUSTMENT)); // Please enter a level adjustment (usage: @lvup/@blevel/@baselvlup <number of levels>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_LV_ADJUSTMENT), command); // Please enter a level adjustment (usage: %s <number of levels>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -1481,7 +1492,8 @@ ACMD(joblevelup)
 	int level=0;
 
 	if (!*message || !(level = atoi(message))) {
-		clif->message(fd, msg_fd(fd, MSGTBL_ENTER_JLV_ADJUSTMENT)); // Please enter a level adjustment (usage: @joblvup/@jlevel/@joblvlup <number of levels>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_JLV_ADJUSTMENT), command); // Please enter a level adjustment (usage: %s <number of levels>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 	if (level > 0) {
@@ -1784,7 +1796,7 @@ ACMD(model)
 	memset(atcmd_output, '\0', sizeof(atcmd_output));
 
 	if (!*message || sscanf(message, "%12d %12d %12d", &hair_style, &hair_color, &cloth_color) < 1) {
-		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_MODEL_ENTER_VALUES), // Please enter at least one value (usage: @model <hair ID: %d-%d> <hair color: %d-%d> <clothes color: %d-%d>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_MODEL_ENTER_VALUES), command, // Please enter at least one value (usage: %s <hair ID: %d-%d> <hair color: %d-%d> <clothes color: %d-%d>).
 		        MIN_HAIR_STYLE, MAX_HAIR_STYLE, MIN_HAIR_COLOR, MAX_HAIR_COLOR, MIN_CLOTH_COLOR, MAX_CLOTH_COLOR);
 		clif->message(fd, atcmd_output);
 		return false;
@@ -1846,7 +1858,7 @@ ACMD(dye)
 	memset(atcmd_output, '\0', sizeof(atcmd_output));
 
 	if (!*message || sscanf(message, "%12d", &cloth_color) < 1) {
-		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_CLOTHES_COLOR), MIN_CLOTH_COLOR, MAX_CLOTH_COLOR); // Please enter a clothes color (usage: @dye/@ccolor <clothes color: %d-%d>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_CLOTHES_COLOR), command, MIN_CLOTH_COLOR, MAX_CLOTH_COLOR); // Please enter a clothes color (usage: %s <clothes color: %d-%d>).
 		clif->message(fd, atcmd_output);
 		return false;
 	}
@@ -1872,7 +1884,7 @@ ACMD(hair_style)
 	memset(atcmd_output, '\0', sizeof(atcmd_output));
 
 	if (!*message || sscanf(message, "%12d", &hair_style) < 1) {
-		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_HAIRSTYLE), MIN_HAIR_STYLE, MAX_HAIR_STYLE); // Please enter a hair style (usage: @hairstyle/@hstyle <hair ID: %d-%d>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_HAIRSTYLE), command, MIN_HAIR_STYLE, MAX_HAIR_STYLE); // Please enter a hair style (usage: %s <hair ID: %d-%d>).
 		clif->message(fd, atcmd_output);
 		return false;
 	}
@@ -1898,7 +1910,7 @@ ACMD(hair_color)
 	memset(atcmd_output, '\0', sizeof(atcmd_output));
 
 	if (!*message || sscanf(message, "%12d", &hair_color) < 1) {
-		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_HAIR_COLOR), MIN_HAIR_COLOR, MAX_HAIR_COLOR); // Please enter a hair color (usage: @haircolor/@hcolor <hair color: %d-%d>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_HAIR_COLOR), command, MIN_HAIR_COLOR, MAX_HAIR_COLOR); // Please enter a hair color (usage: %s <hair color: %d-%d>).
 		clif->message(fd, atcmd_output);
 		return false;
 	}
@@ -2257,7 +2269,8 @@ ACMD(refine)
 	memset(atcmd_output, '\0', sizeof(atcmd_output));
 
 	if (!*message || sscanf(message, "%12d %12d", &position, &refine_level) < 2) {
-		clif->message(fd, msg_fd(fd, MSGTBL_REFINE_ENTER_POS_AMOUNT)); // Please enter a position and an amount (usage: @refine <equip position> <+/- amount>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_REFINE_ENTER_POS_AMOUNT), command); // Please enter a position and an amount (usage: %s <equip position> <+/- amount>).
+		clif->message(fd, atcmd_output);
 #if PACKETVER > 20100707
 		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_REFINE_ALL_EQP_SHADOW), -3); // %d: Refine All Equip (Shadow)
 		clif->message(fd, atcmd_output);
@@ -2402,7 +2415,8 @@ ACMD(grade)
 	int position = 0;
 	int grade_level = 0;
 	if (!*message || sscanf(message, "%12d %12d", &position, &grade_level) < 2) {
-		clif->message(fd, msg_fd(fd, MSGTBL_GRADE_USAGE)); // Please enter a position and an amount (usage: @grade <equip position> <+/- amount>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_GRADE_USAGE), command); // Please enter a position and an amount (usage: %s <equip position> <+/- amount>).
+		clif->message(fd, atcmd_output);
 		for (int i = 0; i < ARRAYLENGTH(messages_list); ++i) {
 			snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, messages_list[i].msg_id), messages_list[i].pos_id);
 			clif->message(fd, atcmd_output);
@@ -2481,7 +2495,8 @@ ACMD(produce)
 								  sscanf(message, "\"%99[^\"]\" %12d %12d", item_name, &attribute, &star) < 1 &&
 								  sscanf(message, "%99s %12d %12d", item_name, &attribute, &star) < 1
 								  )) {
-		clif->message(fd, msg_fd(fd, MSGTBL_ENTER_PRODUCE_ITEM)); // Please enter at least one item name/ID (usage: @produce <equip name/ID> <element> <# of very's>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_PRODUCE_ITEM), command); // Please enter at least one item name/ID (usage: %s <equip name/ID> <element> <# of very's>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -2548,7 +2563,7 @@ ACMD(memo)
 
 	if( position < 0 || position >= MAX_MEMOPOINTS )
 	{
-		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_MEMO_POSITION), 0, MAX_MEMOPOINTS-1); // Please enter a valid position (usage: @memo <memo_position:%d-%d>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_MEMO_POSITION), command, 0, MAX_MEMOPOINTS-1); // Please enter a valid position (usage: %s <memo_position:%d-%d>).
 		clif->message(fd, atcmd_output);
 		return false;
 	}
@@ -2589,7 +2604,8 @@ ACMD(displaystatus)
 	int i, type, flag, tick, val1 = 0, val2 = 0, val3 = 0;
 
 	if (!*message || (i = sscanf(message, "%d %d %d %d %d %d", &type, &flag, &tick, &val1, &val2, &val3)) < 1) {
-		clif->message(fd, msg_fd(fd, MSGTBL_ENTER_DISPLAY_STATUS)); // Please enter a status type/flag (usage: @displaystatus <status type> <flag> <tick> {<val1> {<val2> {<val3>}}}).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_DISPLAY_STATUS), command); // Please enter a status type/flag (usage: %s <status type> <flag> <tick> {<val1> {<val2> {<val3>}}}).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 	if (i < 2) flag = 1;
@@ -2612,7 +2628,8 @@ ACMD(statuspoint)
 	int new_status_point;
 
 	if (!*message || (point = atoi(message)) == 0) {
-		clif->message(fd, msg_fd(fd, MSGTBL_ENTER_STAT_POINT)); // Please enter a number (usage: @stpoint <number of points>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_STAT_POINT), command); // Please enter a number (usage: %s <number of points>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -2648,7 +2665,8 @@ ACMD(skillpoint)
 	int new_skill_point;
 
 	if (!*message || (point = atoi(message)) == 0) {
-		clif->message(fd, msg_fd(fd, MSGTBL_ENTER_SKILL_POINT)); // Please enter a number (usage: @skpoint <number of points>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_SKILL_POINT), command); // Please enter a number (usage: %s <number of points>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -2683,7 +2701,8 @@ ACMD(zeny)
 	int zeny=0, ret=-1;
 
 	if (!*message || (zeny = atoi(message)) == 0) {
-		clif->message(fd, msg_fd(fd, MSGTBL_ENTER_ZENY_AMOUNT)); // Please enter an amount (usage: @zeny <amount>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_ZENY_AMOUNT), command); // Please enter an amount (usage: %s <amount>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -2717,14 +2736,16 @@ ACMD(param)
 	memset(atcmd_output, '\0', sizeof(atcmd_output));
 
 	if (!*message || sscanf(message, "%d", &value) < 1 || value == 0) {
-		clif->message(fd, msg_fd(fd, MSGTBL_ENTER_PARAM_ADJUSTMENT)); // Please enter a valid value (usage: @str/@agi/@vit/@int/@dex/@luk <+/-adjustment>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_PARAM_ADJUSTMENT), command); // Please enter a valid value (usage: %s <+/-adjustment>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
 	ARR_FIND( 0, ARRAYLENGTH(param), i, strcmpi(info->command, param[i]) == 0 );
 
 	if( i == ARRAYLENGTH(param) || i > MAX_STATUS_TYPE) { // normally impossible...
-		clif->message(fd, msg_fd(fd, MSGTBL_ENTER_PARAM_ADJUSTMENT)); // Please enter a valid value (usage: @str/@agi/@vit/@int/@dex/@luk <+/-adjustment>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_PARAM_ADJUSTMENT), command); // Please enter a valid value (usage: %s <+/-adjustment>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -2833,7 +2854,8 @@ ACMD(guildlevelup)
 	struct guild *guild_info;
 
 	if (!*message || sscanf(message, "%d", &level) < 1 || level == 0) {
-		clif->message(fd, msg_fd(fd, MSGTBL_ENTER_GUILD_LEVEL)); // Please enter a valid level (usage: @guildlvup/@guildlvlup <# of levels>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_GUILD_LEVEL), command); // Please enter a valid level (usage: %s <# of levels>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -2876,7 +2898,8 @@ ACMD(guildlevelup)
 ACMD(makeegg)
 {
 	if (*message == '\0') {
-		clif->message(fd, msg_fd(fd, MSGTBL_ENTER_MAKE_EGG)); // Please enter a monster/egg name/ID (usage: @makeegg <pet>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_MAKE_EGG), command); // Please enter a monster/egg name/ID (usage: %s <pet>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -2937,14 +2960,16 @@ ACMD(hatch)
 ACMD(petfriendly)
 {
 	if (*message == '\0' || (atoi(message) == 0 && isdigit(*message) == 0)) {
-		clif->message(fd, msg_fd(fd, MSGTBL_ENTER_PET_FRIENDLY_VALUE)); // Please enter a valid value (usage: @petfriendly <0-1000>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_PET_FRIENDLY_VALUE), command); // Please enter a valid value (usage: %s <0-1000>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
 	int friendly = atoi(message);
 
 	if (friendly < PET_INTIMACY_NONE || friendly > PET_INTIMACY_MAX) {
-		clif->message(fd, msg_fd(fd, MSGTBL_ENTER_PET_FRIENDLY_VALUE)); // Please enter a valid value (usage: @petfriendly <0-1000>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_PET_FRIENDLY_VALUE), command); // Please enter a valid value (usage: %s <0-1000>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -2979,14 +3004,16 @@ ACMD(petfriendly)
 ACMD(pethungry)
 {
 	if (*message == '\0' || (atoi(message) == 0 && isdigit(*message) == 0)) {
-		clif->message(fd, msg_fd(fd, MSGTBL_ENTER_PET_HUNGRY_VALUE)); // Please enter a valid number (usage: @pethungry <0-100>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_PET_HUNGRY_VALUE), command); // Please enter a valid number (usage: %s <0-100>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
 	int hungry = atoi(message);
 
 	if (hungry < PET_HUNGER_STARVING || hungry > PET_HUNGER_STUFFED) {
-		clif->message(fd, msg_fd(fd, MSGTBL_ENTER_PET_HUNGRY_VALUE)); // Please enter a valid number (usage: @pethungry <0-100>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_PET_HUNGRY_VALUE), command); // Please enter a valid number (usage: %s <0-100>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -3051,7 +3078,8 @@ ACMD(recall)
 	struct map_session_data *pl_sd = NULL;
 
 	if (!*message) {
-		clif->message(fd, msg_fd(fd, MSGTBL_ENTER_RECALL_PLAYER_NAME)); // Please enter a player name (usage: @recall <char name/ID>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_RECALL_PLAYER_NAME), command); // Please enter a player name (usage: %s <char name/ID>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -3094,7 +3122,8 @@ ACMD(char_block)
 	memset(atcmd_player_name, '\0', sizeof(atcmd_player_name));
 
 	if (!*message || sscanf(message, "%23[^\n]", atcmd_player_name) < 1) {
-		clif->message(fd, msg_fd(fd, MSGTBL_ENTER_BLOCK_PLAYER_NAME)); // Please enter a player name (usage: @block <char name>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_BLOCK_PLAYER_NAME), command); // Please enter a player name (usage: %s <char name>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -3130,7 +3159,8 @@ ACMD(char_ban)
 	memset(atcmd_player_name, '\0', sizeof(atcmd_player_name));
 
 	if (!*message || sscanf(message, "%255s %23[^\n]", atcmd_output, atcmd_player_name) < 2) {
-		clif->message(fd, msg_fd(fd, MSGTBL_ENTER_BAN_TIME_PLAYER_NAME)); // Please enter ban time and a player name (usage: @ban <time> <char name>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_BAN_TIME_PLAYER_NAME), command); // Please enter ban time and a player name (usage: %s <time> <char name>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -3209,7 +3239,8 @@ ACMD(char_unblock)
 	memset(atcmd_player_name, '\0', sizeof(atcmd_player_name));
 
 	if (!*message || sscanf(message, "%23[^\n]", atcmd_player_name) < 1) {
-		clif->message(fd, msg_fd(fd, MSGTBL_ENTER_UNBLOCK_PLAYER_NAME)); // Please enter a player name (usage: @unblock <char name>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_UNBLOCK_PLAYER_NAME), command); // Please enter a player name (usage: %s <char name>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -3228,7 +3259,8 @@ ACMD(char_unban)
 	memset(atcmd_player_name, '\0', sizeof(atcmd_player_name));
 
 	if (!*message || sscanf(message, "%23[^\n]", atcmd_player_name) < 1) {
-		clif->message(fd, msg_fd(fd, MSGTBL_ENTER_UNBAN_PLAYER_NAME)); // Please enter a player name (usage: @unban <char name>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_UNBAN_PLAYER_NAME), command); // Please enter a player name (usage: %s <char name>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -3376,7 +3408,8 @@ ACMD(kick)
 	memset(atcmd_player_name, '\0', sizeof(atcmd_player_name));
 
 	if (!*message) {
-		clif->message(fd, msg_fd(fd, MSGTBL_ENTER_KICK_PLAYER_NAME)); // Please enter a player name (usage: @kick <char name/ID>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_KICK_PLAYER_NAME), command); // Please enter a player name (usage: %s <char name/ID>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -3530,7 +3563,7 @@ ACMD(spiritball)
 	if (!*message || (number = atoi(message)) < 0 || number > max_spiritballs)
 	{
 		char msg[CHAT_SIZE_MAX];
-		snprintf(msg, sizeof(msg), msg_fd(fd, MSGTBL_ENTER_SPIRITBALL_AMOUNT), max_spiritballs); // Please enter an amount (usage: @spiritball <number: 0-%d>).
+		snprintf(msg, sizeof(msg), msg_fd(fd, MSGTBL_ENTER_SPIRITBALL_AMOUNT), command, max_spiritballs); // Please enter an amount (usage: %s <number: 0-%d>).
 		clif->message(fd, msg);
 		return false;
 	}
@@ -3577,7 +3610,8 @@ ACMD(party)
 	memset(party_name, '\0', sizeof(party_name));
 
 	if (!*message || sscanf(message, "%23[^\n]", party_name) < 1) {
-		clif->message(fd, msg_fd(fd, MSGTBL_ENTER_PARTY_NAME)); // Please enter a party name (usage: @party <party_name>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_PARTY_NAME), command); // Please enter a party name (usage: %s <party_name>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -3597,7 +3631,8 @@ ACMD(guild)
 	memset(guild_name, '\0', sizeof(guild_name));
 
 	if (!*message || sscanf(message, "%23[^\n]", guild_name) < 1) {
-		clif->message(fd, msg_fd(fd, MSGTBL_ENTER_GUILD_NAME)); // Please enter a guild name (usage: @guild <guild_name>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_GUILD_NAME), command); // Please enter a guild name (usage: %s <guild_name>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -3724,7 +3759,8 @@ ACMD(idsearch)
 	memset(atcmd_output, '\0', sizeof(atcmd_output));
 
 	if (!*message || sscanf(message, "%99s", item_name) < 0) {
-		clif->message(fd, msg_fd(fd, MSGTBL_ENTER_IDSEARCH_PART)); // Please enter part of an item name (usage: @idsearch <part_of_item_name>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_IDSEARCH_PART), command); // Please enter part of an item name (usage: %s <part_of_item_name>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -3805,7 +3841,8 @@ ACMD(guildrecall)
 	memset(atcmd_output, '\0', sizeof(atcmd_output));
 
 	if (!*message || sscanf(message, "%23[^\n]", guild_name) < 1) {
-		clif->message(fd, msg_fd(fd, MSGTBL_ENTER_GUILDRECALL_NAME_ID)); // Please enter a guild name/ID (usage: @guildrecall <guild_name/ID>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_GUILDRECALL_NAME_ID), command); // Please enter a guild name/ID (usage: %s <guild_name/ID>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -3861,7 +3898,8 @@ ACMD(partyrecall)
 	memset(atcmd_output, '\0', sizeof(atcmd_output));
 
 	if (!*message || sscanf(message, "%23[^\n]", party_name) < 1) {
-		clif->message(fd, msg_fd(fd, MSGTBL_ENTER_PARTYRECALL_NAME_ID)); // Please enter a party name/ID (usage: @partyrecall <party_name/ID>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_PARTYRECALL_NAME_ID), command); // Please enter a party name/ID (usage: %s <party_name/ID>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -4109,7 +4147,8 @@ ACMD(mapinfo)
 	sscanf(message, "%12d %23[^\n]", &list, mapname);
 
 	if (list < 0 || list > 3) {
-		clif->message(fd, msg_fd(fd, MSGTBL_ENTER_VALID_LIST_NUMBER)); // Please enter at least one valid list number (usage: @mapinfo <0-3> <map>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_VALID_LIST_NUMBER), command); // Please enter at least one valid list number (usage: %s <0-3> <map>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -4370,7 +4409,8 @@ ACMD(mapinfo)
 		mapit->free(iter);
 		break;
 	default: // normally impossible to arrive here
-		clif->message(fd, msg_fd(fd, MSGTBL_ENTER_VALID_LIST_NUMBER_2)); // Please enter at least one valid list number (usage: @mapinfo <0-3> <map>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_VALID_LIST_NUMBER_2), command); // Please enter at least one valid list number (usage: %s <0-3> <map>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -4475,7 +4515,8 @@ ACMD(guildspy)
 		return false;
 	}
 	if (!*message || sscanf(message, "%23[^\n]", guild_name) < 1) {
-		clif->message(fd, msg_fd(fd, MSGTBL_ENTER_GUILD_NAME_OR_ID)); // Please enter a guild name/ID (usage: @guildspy <guild_name/ID>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_GUILD_NAME_OR_ID), command); // Please enter a guild name/ID (usage: %s <guild_name/ID>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -4516,7 +4557,8 @@ ACMD(partyspy)
 	}
 
 	if (!*message || sscanf(message, "%23[^\n]", party_name) < 1) {
-		clif->message(fd, msg_fd(fd, MSGTBL_ENTER_PARTY_NAME_OR_ID)); // Please enter a party name/ID (usage: @partyspy <party_name/ID>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_PARTY_NAME_OR_ID), command); // Please enter a party name/ID (usage: %s <party_name/ID>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -4578,7 +4620,8 @@ ACMD(nuke)
 	memset(atcmd_player_name, '\0', sizeof(atcmd_player_name));
 
 	if (!*message || sscanf(message, "%23[^\n]", atcmd_player_name) < 1) {
-		clif->message(fd, msg_fd(fd, MSGTBL_ENTER_PLAYER_NAME_FOR_NUKE)); // Please enter a player name (usage: @nuke <char name>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_PLAYER_NAME_FOR_NUKE), command); // Please enter a player name (usage: %s <char name>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -4609,7 +4652,8 @@ ACMD(tonpc)
 	memset(npcname, 0, sizeof(npcname));
 
 	if (!*message || sscanf(message, "%23[^\n]", npcname) < 1) {
-		clif->message(fd, msg_fd(fd, MSGTBL_ENTER_NPC_NAME_FOR_TONPC)); // Please enter a NPC name (usage: @tonpc <NPC_name>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_NPC_NAME_FOR_TONPC), command); // Please enter a NPC name (usage: %s <NPC_name>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -4636,7 +4680,8 @@ ACMD(shownpc)
 	memset(NPCname, '\0', sizeof(NPCname));
 
 	if (!*message || sscanf(message, "%23[^\n]", NPCname) < 1) {
-		clif->message(fd, msg_fd(fd, MSGTBL_ENTER_NPC_NAME_FOR_ENABLENPC)); // Please enter a NPC name (usage: @enablenpc <NPC_name>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_NPC_NAME_FOR_ENABLENPC), command); // Please enter a NPC name (usage: %s <NPC_name>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -4661,7 +4706,8 @@ ACMD(hidenpc)
 	memset(NPCname, '\0', sizeof(NPCname));
 
 	if (!*message || sscanf(message, "%23[^\n]", NPCname) < 1) {
-		clif->message(fd, msg_fd(fd, MSGTBL_ENTER_NPC_NAME_FOR_HIDENPC)); // Please enter a NPC name (usage: @hidenpc <NPC_name>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_NPC_NAME_FOR_HIDENPC), command); // Please enter a NPC name (usage: %s <NPC_name>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -4680,7 +4726,8 @@ ACMD(loadnpc)
 	FILE *fp;
 
 	if (!*message) {
-		clif->message(fd, msg_fd(fd, MSGTBL_ENTER_SCRIPT_FOR_LOADNPC)); // Please enter a script file name (usage: @loadnpc <file name>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_SCRIPT_FOR_LOADNPC), command); // Please enter a script file name (usage: %s <file name>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -4932,7 +4979,8 @@ ACMD(jail)
 	memset(atcmd_player_name, '\0', sizeof(atcmd_player_name));
 
 	if (!*message || sscanf(message, "%23[^\n]", atcmd_player_name) < 1) {
-		clif->message(fd, msg_fd(fd, MSGTBL_ENTER_NAME_FOR_JAIL)); // Please enter a player name (usage: @jail <char_name>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_NAME_FOR_JAIL), command); // Please enter a player name (usage: %s <char_name>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -4984,7 +5032,8 @@ ACMD(unjail)
 	memset(atcmd_player_name, '\0', sizeof(atcmd_player_name));
 
 	if (!*message || sscanf(message, "%23[^\n]", atcmd_player_name) < 1) {
-		clif->message(fd, msg_fd(fd, MSGTBL_ENTER_NAME_FOR_UNJAIL)); // Please enter a player name (usage: @unjail/@discharge <char_name>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_NAME_FOR_UNJAIL), command); // Please enter a player name (usage: %s <char_name>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -5158,7 +5207,8 @@ ACMD(disguise)
 	int id = 0;
 
 	if (!*message) {
-		clif->message(fd, msg_fd(fd, MSGTBL_DISGUISE_ENTER_TARGET)); // Please enter a Monster/NPC name/ID (usage: @disguise <name/ID>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_DISGUISE_ENTER_TARGET), command); // Please enter a Monster/NPC name/ID (usage: %s <name/ID>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -5209,7 +5259,8 @@ ACMD(disguiseall)
 	struct s_mapiterator* iter;
 
 	if (!*message) {
-		clif->message(fd, msg_fd(fd, MSGTBL_DISGUISE_ALL_ENTER_TARGET)); // Please enter a Monster/NPC name/ID (usage: @disguiseall <name/ID>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_DISGUISE_ALL_ENTER_TARGET), command); // Please enter a Monster/NPC name/ID (usage: %s <name/ID>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -5243,7 +5294,8 @@ ACMD(disguiseguild)
 	memset(guild_name, '\0', sizeof(guild_name));
 
 	if (!*message || sscanf(message, "%23[^,], %23[^\r\n]", monster, guild_name) < 2) {
-		clif->message(fd, msg_fd(fd, MSGTBL_DISGUISE_GUILD_ENTER_TARGET)); // Please enter a mob name/ID and guild name/ID (usage: @disguiseguild <mob name/ID>, <guild name/ID>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_DISGUISE_GUILD_ENTER_TARGET), command); // Please enter a mob name/ID and guild name/ID (usage: %s <mob name/ID>, <guild name/ID>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -5325,7 +5377,8 @@ ACMD(undisguiseguild)
 	memset(guild_name, '\0', sizeof(guild_name));
 
 	if (!*message || sscanf(message, "%23[^\n]", guild_name) < 1) {
-		clif->message(fd, msg_fd(fd, MSGTBL_UNDISGUISE_GUILD_ENTER_TARGET)); // Please enter guild name/ID (usage: @undisguiseguild <guild name/ID>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_UNDISGUISE_GUILD_ENTER_TARGET), command); // Please enter guild name/ID (usage: %s <guild name/ID>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -5374,7 +5427,8 @@ ACMD(broadcast)
 	memset(atcmd_output, '\0', sizeof(atcmd_output));
 
 	if (!*message) {
-		clif->message(fd, msg_fd(fd, MSGTBL_ENTER_BROADCAST_MSG)); // Please enter a message (usage: @broadcast <message>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_BROADCAST_MSG), command); // Please enter a message (usage: %s <message>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -5392,7 +5446,8 @@ ACMD(localbroadcast)
 	memset(atcmd_output, '\0', sizeof(atcmd_output));
 
 	if (!*message) {
-		clif->message(fd, msg_fd(fd, MSGTBL_ENTER_LOCAL_BROADCAST_MSG)); // Please enter a message (usage: @localbroadcast <message>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_LOCAL_BROADCAST_MSG), command); // Please enter a message (usage: %s <message>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -5415,7 +5470,8 @@ ACMD(email)
 	memset(new_email, '\0', sizeof(new_email));
 
 	if (!*message || sscanf(message, "%99s %99s", actual_email, new_email) < 2) {
-		clif->message(fd, msg_fd(fd, MSGTBL_ENTER_EMAIL_ADDRESSES)); // Please enter two e-mail addresses (usage: @email <current@email> <new@email>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_EMAIL_ADDRESSES), command); // Please enter two e-mail addresses (usage: %s <current@email> <new@email>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -5446,7 +5502,8 @@ ACMD(effect)
 	int type = 0, flag = 0;
 
 	if (!*message || sscanf(message, "%d", &type) < 1) {
-		clif->message(fd, msg_fd(fd, MSGTBL_ENTER_EFFECT_NUMBER)); // Please enter an effect number (usage: @effect <effect number>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ENTER_EFFECT_NUMBER), command); // Please enter an effect number (usage: %s <effect number>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -5678,7 +5735,8 @@ ACMD(storeall)
 			return false;
 		}
 	} else {
-		clif->message(fd, msg_fd(fd, MSGTBL_STORAGE_SPECIFY_STOREALL));
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_STORAGE_SPECIFY_STOREALL), command);
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -5742,7 +5800,8 @@ ACMD(clearstorage)
 			return false;
 		}
 	} else {
-		clif->message(fd, msg_fd(fd, MSGTBL_STORAGE_SPECIFY_CLEARSTORAGE));
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_STORAGE_SPECIFY_CLEARSTORAGE), command);
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -5874,7 +5933,8 @@ ACMD(skillid)
 	char partials[MAX_SKILLID_PARTIAL_RESULTS][MAX_SKILLID_PARTIAL_RESULTS_LEN];
 
 	if (!*message) {
-		clif->message(fd, msg_fd(fd, MSGTBL_SKILL_ID_ENTER_NAME)); // Please enter a skill name to look up (usage: @skillid <skill name>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_SKILL_ID_ENTER_NAME), command); // Please enter a skill name to look up (usage: %s <skill name>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -6646,7 +6706,8 @@ ACMD(sound)
 	memset(sound_file, '\0', sizeof(sound_file));
 
 	if(!*message || sscanf(message, "%99[^\n]", sound_file) < 1) {
-		clif->message(fd, msg_fd(fd, MSGTBL_SOUND_USAGE)); // Please enter a sound filename (usage: @sound <filename>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_SOUND_USAGE), command); // Please enter a sound filename (usage: %s <filename>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -6670,7 +6731,8 @@ ACMD(mobsearch)
 	const struct mob_data *md = NULL;
 
 	if (!*message || sscanf(message, "%99[^\n]", mob_name) < 1) {
-		clif->message(fd, msg_fd(fd, MSGTBL_MOBSEARCH_USAGE)); // Please enter a monster name (usage: @mobsearch <monster name>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_MOBSEARCH_USAGE), command); // Please enter a monster name (usage: %s <monster name>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -6759,13 +6821,15 @@ ACMD(npctalk)
 
 	if(!ifcolor) {
 		if (!*message || sscanf(message, "%23[^,], %99[^\n]", name, mes) < 2) {
-			clif->message(fd, msg_fd(fd, MSGTBL_NPCTALK_USAGE)); // Please enter the correct parameters (usage: @npctalk <npc name>, <message>).
+			snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_NPCTALK_USAGE), command); // Please enter the correct parameters (usage: %s <npc name>, <message>).
+			clif->message(fd, atcmd_output);
 			return false;
 		}
 	}
 	else {
 		if (!*message || sscanf(message, "%12u %23[^,], %99[^\n]", &color, name, mes) < 3) {
-			clif->message(fd, msg_fd(fd, MSGTBL_NPCTALKC_USAGE)); // Please enter the correct parameters (usage: @npctalkc <color> <npc name>, <message>).
+			snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_NPCTALKC_USAGE), command); // Please enter the correct parameters (usage: %s <color> <npc name>, <message>).
+			clif->message(fd, atcmd_output);
 			return false;
 		}
 	}
@@ -6805,7 +6869,8 @@ ACMD(pettalk)
 		return false;
 
 	if (!*message || sscanf(message, "%99[^\n]", mes) < 1) {
-		clif->message(fd, msg_fd(fd, MSGTBL_PETTALK_USAGE)); // Please enter a message (usage: @pettalk <message>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_PETTALK_USAGE), command); // Please enter a message (usage: %s <message>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -6919,7 +6984,8 @@ ACMD(summon)
 	int duration = 0;
 
 	if (*message == '\0' || sscanf(message, "%24s %12d", name, &duration) < 1) {
-		clif->message(fd, msg_fd(fd, MSGTBL_SUMMON_USAGE)); /// Please enter a monster name (usage: @summon <monster name> {duration}).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_SUMMON_USAGE), command); /// Please enter a monster name (usage: %s <monster name> {duration}).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -6986,7 +7052,8 @@ ACMD(trade)
 	struct map_session_data *pl_sd = NULL;
 
 	if (!*message) {
-		clif->message(fd, msg_fd(fd, MSGTBL_TRADE_USAGE)); // Please enter a player name (usage: @trade <char name>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_TRADE_USAGE), command); // Please enter a player name (usage: %s <char name>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -7030,7 +7097,8 @@ ACMD(unmute)
 	struct map_session_data *pl_sd = NULL;
 
 	if (!*message) {
-		clif->message(fd, msg_fd(fd, MSGTBL_UNMUTE_USAGE)); // Please enter a player name (usage: @unmute <char name>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_UNMUTE_USAGE), command); // Please enter a player name (usage: %s <char name>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -7271,7 +7339,8 @@ ACMD(mobinfo)
 	StrBuf->Init(&buf);
 
 	if (!*message) {
-		clif->message(fd, msg_fd(fd, MSGTBL_MOBINFO_USAGE)); // Please enter a monster name/ID (usage: @mobinfo <monster_name_or_monster_ID>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_MOBINFO_USAGE), command); // Please enter a monster name/ID (usage: %s <monster_name_or_monster_ID>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -7417,7 +7486,8 @@ ACMD(showmobs)
 	const struct mob_data *md = NULL;
 
 	if (sscanf(message, "%99[^\n]", mob_name) < 0) {
-		clif->message(fd, msg_fd(fd, MSGTBL_SHOWMOBS_USAGE)); // Please enter a mob name/id (usage: @showmobs <mob name/id>)
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_SHOWMOBS_USAGE), command); // Please enter a mob name/id (usage: %s <mob name/id>)
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -7480,7 +7550,8 @@ ACMD(homlevel)
 	enum homun_type htype;
 
 	if (!*message || ( level = atoi(message) ) < 1) {
-		clif->message(fd, msg_fd(fd, MSGTBL_HOMUN_ENTER_LV_ADJUST)); // Please enter a level adjustment (usage: @homlevel <number of levels>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_HOMUN_ENTER_LV_ADJUST), command); // Please enter a level adjustment (usage: %s <number of levels>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -7566,7 +7637,8 @@ ACMD(makehomun)
 	int homunid;
 
 	if (!*message) {
-		clif->message(fd, msg_fd(fd, MSGTBL_MAKEHOMUN_USAGE)); // Please enter a homunculus ID (usage: @makehomun <homunculus id>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_MAKEHOMUN_USAGE), command); // Please enter a homunculus ID (usage: %s <homunculus id>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -7610,7 +7682,8 @@ ACMD(homfriendly)
 	}
 
 	if (!*message) {
-		clif->message(fd, msg_fd(fd, MSGTBL_HOMFRIENDLY_USAGE)); // Please enter a friendly value (usage: @homfriendly <friendly value [0-1000]>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_HOMFRIENDLY_USAGE), command); // Please enter an intimacy value (usage: %s <intimacy value [0-1000]>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -7635,7 +7708,8 @@ ACMD(homhungry)
 	}
 
 	if (!*message) {
-		clif->message(fd, msg_fd(fd, MSGTBL_HOMHUNGRY_USAGE)); // Please enter a hunger value (usage: @homhungry <hunger value [0-100]>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_HOMHUNGRY_USAGE), command); // Please enter a hunger value (usage: %s <hunger value [0-100]>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -7669,7 +7743,8 @@ ACMD(homtalk)
 	}
 
 	if (!*message || sscanf(message, "%99[^\n]", mes) < 1) {
-		clif->message(fd, msg_fd(fd, MSGTBL_HOMTALK_USAGE)); // Please enter a message (usage: @homtalk <message>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_HOMTALK_USAGE), command); // Please enter a message (usage: %s <message>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -7807,7 +7882,8 @@ ACMD(iteminfo)
 	int i, count = 1;
 
 	if (!*message) {
-		clif->message(fd, msg_fd(fd, MSGTBL_ITEMINFO_USAGE)); // Please enter an item name/ID (usage: @ii/@iteminfo <item name/ID>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ITEMINFO_USAGE), command); // Please enter an item name/ID (usage: %s <item name/ID>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 	if ((item_array[0] = itemdb->exists(atoi(message))) == NULL)
@@ -7868,7 +7944,8 @@ ACMD(whodrops)
 	int i, j, count = 1;
 
 	if (!*message) {
-		clif->message(fd, msg_fd(fd, MSGTBL_WHODROPS_USAGE)); // Please enter item name/ID (usage: @whodrops <item name/ID>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_WHODROPS_USAGE), command); // Please enter item name/ID (usage: %s <item name/ID>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 	if ((item_array[0] = itemdb->exists(atoi(message))) == NULL)
@@ -7914,7 +7991,8 @@ ACMD(whereis)
 	int i, j, k;
 
 	if (!*message) {
-		clif->message(fd, msg_fd(fd, MSGTBL_WHEREIS_USAGE)); // Please enter a monster name/ID (usage: @whereis <monster_name_or_monster_ID>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_WHEREIS_USAGE), command); // Please enter a monster name/ID (usage: %s <monster_name_or_monster_ID>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -7994,7 +8072,8 @@ ACMD(mutearea)
 	int time;
 
 	if (!*message) {
-		clif->message(fd, msg_fd(fd, MSGTBL_MUTEAREA_USAGE)); // Please enter a time in minutes (usage: @mutearea/@stfu <time in minutes>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_MUTEAREA_USAGE), command); // Please enter a time in minutes (usage: %s <time in minutes>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -8044,7 +8123,8 @@ ACMD(me)
 		return false;
 
 	if (!*message || sscanf(message, "%199[^\n]", tempmes) < 0) {
-		clif->message(fd, msg_fd(fd, MSGTBL_ME_USAGE)); // Please enter a message (usage: @me <message>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ME_USAGE), command); // Please enter a message (usage: %s <message>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -8119,7 +8199,8 @@ ACMD(sizeguild)
 	memset(guild_name, '\0', sizeof(guild_name));
 
 	if (!*message || sscanf(message, "%d %23[^\n]", &size, guild_name) < 2) {
-		clif->message(fd, msg_fd(fd, MSGTBL_SIZEGUILD_USAGE)); // Please enter guild name/ID (usage: @sizeguild <size> <guild name/ID>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_SIZEGUILD_USAGE), command); // Please enter guild name/ID (usage: %s <size> <guild name/ID>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -8893,7 +8974,8 @@ ACMD(itemlist)
 				return false;
 			}
 		} else {
-			clif->message(fd, msg_fd(fd, MSGTBL_STORAGE_SPECIFY_STORAGELIST));
+			snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_STORAGE_SPECIFY_STORAGELIST), command);
+			clif->message(fd, atcmd_output);
 			return false;
 		}
 
@@ -9112,7 +9194,8 @@ ACMD(delitem)
 
 	if (!*message || (sscanf(message, "\"%99[^\"]\" %12d", item_name, &amount) < 2 && sscanf(message, "%99s %12d", item_name, &amount) < 2) || amount < 1)
 	{
-		clif->message(fd, msg_fd(fd, MSGTBL_DELITEM_USAGE)); // Please enter an item name/ID, a quantity, and a player name (usage: #delitem <player> <item_name_or_ID> <quantity>).
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_DELITEM_USAGE), command); // Please enter an item name/ID, a quantity, and a player name (usage: %s <player> <item_name_or_ID> <quantity>).
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 
@@ -10528,7 +10611,8 @@ ACMD(joinclan)
 	int clan_id;
 
 	if (*message == '\0') {
-		clif->message(fd, msg_sd(sd, MSGTBL_JOINCLAN_USAGE)); // "Please enter a Clan ID (usage: @joinclan <clan ID>)."
+		snprintf(atcmd_output, sizeof(atcmd_output), msg_sd(sd, MSGTBL_JOINCLAN_USAGE), command); // "Please enter a Clan ID (usage: %s <clan ID>)."
+		clif->message(fd, atcmd_output);
 		return false;
 	}
 	if (sd->status.clan_id != 0) {
