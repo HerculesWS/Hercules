@@ -2907,8 +2907,10 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 								break;
 							case ITEMID_COCONUT_BOMB:
 							case ITEMID_PINEAPPLE_BOMB:
-							case ITEMID_BANANA_BOMB:
 								skillratio = st->str + st->dex + 800;
+								break;
+							case ITEMID_BANANA_BOMB:
+								skillratio = st->str + st->dex + 777;
 								break;
 							case ITEMID_BLACK_LUMP:
 								skillratio = (st->str + st->agi + st->dex) / 3; // Black Lump
@@ -2920,6 +2922,7 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 								skillratio = st->str + st->agi + st->dex; // Extremely Hard Black Lump
 								break;
 						}
+						RE_LVL_DMOD(100);
 					}
 					break;
 				case SO_VARETYR_SPEAR://ATK [{( Striking Level x 50 ) + ( Varetyr Spear Skill Level x 50 )} x Caster Base Level / 100 ] %

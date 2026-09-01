@@ -2237,8 +2237,8 @@ static int skill_additional_effect(struct block_list *src, struct block_list *bl
 						sc_start(src, bl, SC_MELON_BOMB, 100, skill_lv, 60000, skill_id); // Reduces ASPD and movement speed
 						break;
 					case ITEMID_BANANA_BOMB:
-						sc_start(src, bl, SC_BANANA_BOMB, 100, skill_lv, 60000, skill_id); // Reduces LUK? Needed confirm it, may be it's bugged in kRORE?
-						sc_start(src, bl, SC_BANANA_BOMB_SITDOWN_POSTDELAY, (sd? sd->status.job_level:0) + sstatus->dex / 6 + tstatus->agi / 4 - tstatus->luk / 5 - status->get_lv(bl) + status->get_lv(src), skill_lv, 1000, skill_id); // Sit down for 3 seconds.
+						sc_start(src, bl, SC_BANANA_BOMB, 100, skill_lv, 30000, skill_id); // Reduces LUK.
+						sc_start(src, bl, SC_BANANA_BOMB_SITDOWN_POSTDELAY, status->get_lv(src) + sd->status.job_level + sstatus->dex / 6 - status->get_lv(bl) - tstatus->agi / 4 - tstatus->luk / 5, skill_lv, 1000 * sd->status.job_level / 4, skill_id);
 						break;
 				}
 				sd->itemid = -1;
@@ -11473,10 +11473,11 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 					struct script_code *scriptroot = sd->inventory_data[equip_idx]->script;
 					if( !scriptroot )
 						break;
+					// Throwable items (buffs/debuffs) only affect player targets; running the item's
+					// script on the caster when there's no player target could turn a debuff item
+					// like Mysterious Powder into a self-debuff.
 					if( dstsd )
 						script->run(scriptroot,0,dstsd->bl.id,npc->fake_nd->bl.id);
-					else
-						script->run(scriptroot,0,src->id,0);
 				}
 			}
 			clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
