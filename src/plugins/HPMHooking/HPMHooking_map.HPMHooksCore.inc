@@ -884,6 +884,8 @@ struct {
 	struct HPMHookPoint *HP_clif_cutin_post;
 	struct HPMHookPoint *HP_clif_sendfakenpc_pre;
 	struct HPMHookPoint *HP_clif_sendfakenpc_post;
+	struct HPMHookPoint *HP_clif_npc_requires_fakenpc_pre;
+	struct HPMHookPoint *HP_clif_npc_requires_fakenpc_post;
 	struct HPMHookPoint *HP_clif_scriptclear_pre;
 	struct HPMHookPoint *HP_clif_scriptclear_post;
 	struct HPMHookPoint *HP_clif_viewpoint_pre;
@@ -8505,6 +8507,8 @@ struct {
 	int HP_clif_cutin_post;
 	int HP_clif_sendfakenpc_pre;
 	int HP_clif_sendfakenpc_post;
+	int HP_clif_npc_requires_fakenpc_pre;
+	int HP_clif_npc_requires_fakenpc_post;
 	int HP_clif_scriptclear_pre;
 	int HP_clif_scriptclear_post;
 	int HP_clif_viewpoint_pre;
