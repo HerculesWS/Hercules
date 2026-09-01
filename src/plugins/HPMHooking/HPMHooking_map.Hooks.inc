@@ -11513,6 +11513,33 @@ void HP_clif_sendfakenpc(struct map_session_data *sd, int npcid) {
 	}
 	return;
 }
+bool HP_clif_npc_requires_fakenpc(struct map_session_data *sd, int npcid) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_clif_npc_requires_fakenpc_pre > 0) {
+		bool (*preHookFunc) (struct map_session_data **sd, int *npcid);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_npc_requires_fakenpc_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_npc_requires_fakenpc_pre[hIndex].func;
+			retVal___ = preHookFunc(&sd, &npcid);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.clif.npc_requires_fakenpc(sd, npcid);
+	}
+	if (HPMHooks.count.HP_clif_npc_requires_fakenpc_post > 0) {
+		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, int npcid);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_npc_requires_fakenpc_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_npc_requires_fakenpc_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, sd, npcid);
+		}
+	}
+	return retVal___;
+}
 void HP_clif_scriptclear(struct map_session_data *sd, int npcid) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_scriptclear_pre > 0) {
