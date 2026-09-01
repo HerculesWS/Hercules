@@ -7192,11 +7192,16 @@ static int status_get_sc_def(struct block_list *src, struct block_list *bl, enum
 	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 	switch (type) {
 	case SC_ANKLESNARE:
-	case SC_BURNING:
 	case SC_MARSHOFABYSS:
 	case SC_STASIS:
 	case SC_DEEP_SLEEP:
 		tick = max(tick, 5000); //Minimum duration 5s
+		break;
+	case SC_BURNING:
+		// The damage timer only deals damage while the remaining tick counter
+		// is still above zero, so a duration short enough to yield a single
+		// tick burns for no damage at all. Guarantee at least two ticks.
+		tick = max(tick, 2 * STATUS_BURNING_INTERVAL);
 		break;
 	case SC_FROSTMISTY:
 		tick = max(tick, 6000);
@@ -9120,8 +9125,8 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				tick_time = 1000; // [GodLesZ] tick time
 				break;
 			case SC_BURNING:
-				val4 = total_tick / 3000; // Total Ticks to Burn!!
-				tick_time = 3000; // [GodLesZ] tick time
+				val4 = total_tick / STATUS_BURNING_INTERVAL; // Total Ticks to Burn!!
+				tick_time = STATUS_BURNING_INTERVAL; // [GodLesZ] tick time
 				break;
 				/**
 				* Rune Knight
@@ -12837,7 +12842,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 				status->damage(src, bl, damage, 0, 0, 1);
 
 				if( sc->data[type]){ // Target still lives. [LimitLine]
-					sc_timer_next(3000 + tick, status->change_timer, bl->id, data);
+					sc_timer_next(STATUS_BURNING_INTERVAL + tick, status->change_timer, bl->id, data);
 				}
 				map->freeblock_unlock();
 				return 0;
