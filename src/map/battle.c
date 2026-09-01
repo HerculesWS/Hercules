@@ -6486,7 +6486,7 @@ static void battle_reflect_damage(struct block_list *target, struct block_list *
 	}
 
 	if( wd->flag & BF_SHORT ) {
-		if ( tsd && tsd->bonus.short_weapon_damage_return ) {
+		if (tsd != NULL && tsd->bonus.short_weapon_damage_return != 0 && skill_id != GS_DESPERADO) {
 			NORMALIZE_RDAMAGE(damage * tsd->bonus.short_weapon_damage_return / 100);
 
 			rdelay = clif->delay_damage(tick+delay,src, src, status_get_amotion(src), status_get_dmotion(src), rdamage, 1, BDT_ENDURE);
