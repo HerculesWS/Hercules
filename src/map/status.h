@@ -33,6 +33,9 @@ struct mob_data;
 struct npc_data;
 struct pet_data;
 
+/// Interval, in milliseconds, between two SC_BURNING damage ticks.
+#define STATUS_BURNING_INTERVAL 3000
+
 //Change the equation when the values are high enough to discard the
 //imprecision in exchange of overflow protection [Skotlex]
 //Also add 100% checks since those are the most used cases where we don't
