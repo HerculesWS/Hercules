@@ -1407,6 +1407,8 @@ struct status_interface {
 	int current_equip_item_index;
 	int current_equip_card_id;
 	int current_equip_option_index;
+	int current_equip_combo_pos;
+	int current_equip_pet_id;
 
 	struct s_status_dbs *dbs;
 	VECTOR_DECL(struct s_unit_params) unit_params_groups;
