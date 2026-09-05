@@ -828,6 +828,19 @@ static int status_check_skilluse(struct block_list *src, struct block_list *targ
 				return 0;
 		}
 
+		// No offensive skills in or out of Basilica, except Pressure. Plain attacks and
+		// targeting are unaffected: Basilica already reduces their damage to 0 and knocks
+		// the attacker back on its own. (issue #789)
+		if (skill_id != PA_PRESSURE && (st->mode&MD_BOSS) == 0
+		 && ((src != NULL && map->getcell(src->m, src, src->x, src->y, CELL_CHKBASILICA) != 0)
+		  || (target != NULL && target != src && map->getcell(target->m, target, target->x, target->y, CELL_CHKBASILICA) != 0))) {
+			hide_flag = skill->get_inf(skill_id);
+			if ((hide_flag&INF_ATTACK_SKILL) != 0)
+				return 0;
+			if ((hide_flag&INF_GROUND_SKILL) != 0 && (skill->get_unit_target(skill_id, 1)&BCT_ENEMY) != 0)
+				return 0;
+		}
+
 		switch( skill_id ) {
 			case PA_PRESSURE:
 				if( flag && target ) {

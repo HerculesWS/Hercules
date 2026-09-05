@@ -1940,6 +1940,29 @@ static int unit_skilluse_pos2(struct block_list *src, short skill_x, short skill
 	if (!status->check_skilluse(src, NULL, skill_id, 0))
 		return 0;
 
+#ifndef RENEWAL
+	// Basilica fails to start if its area has an obstructing unit or wall cell (issue #789)
+	if (skill_id == HP_BASILICA) {
+		int basilica_range = skill->get_unit_range(skill_id, skill_lv);
+		bool basilica_blocked = map->foreachinrange(skill->count_wos, src, basilica_range, BL_MOB|BL_PC, src) != 0;
+		if (!basilica_blocked) {
+			for (int dy = -basilica_range; dy <= basilica_range && !basilica_blocked; dy++) {
+				for (int dx = -basilica_range; dx <= basilica_range; dx++) {
+					if (map->getcell(src->m, src, src->x + dx, src->y + dy, CELL_CHKNOPASS) != 0) {
+						basilica_blocked = true;
+						break;
+					}
+				}
+			}
+		}
+		if (basilica_blocked) {
+			if (sd != NULL)
+				clif->skill_fail(sd, skill_id, USESKILL_FAIL, 0, 0);
+			return 0;
+		}
+	}
+#endif
+
 	if (map->getcell(src->m, src, skill_x, skill_y, CELL_CHKWALL)) {
 		// can't cast ground targeted spells on wall cells
 		if (sd) clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
