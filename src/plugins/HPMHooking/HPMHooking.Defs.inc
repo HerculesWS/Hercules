@@ -492,8 +492,6 @@ typedef int64 (*HPMHOOK_pre_battle_calc_masteryfix) (struct block_list **src, st
 typedef int64 (*HPMHOOK_post_battle_calc_masteryfix) (int64 retVal___, struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, int64 damage, int div, bool left, bool weapon);
 typedef int (*HPMHOOK_pre_battle_calc_chorusbonus) (struct map_session_data **sd);
 typedef int (*HPMHOOK_post_battle_calc_chorusbonus) (int retVal___, struct map_session_data *sd);
-typedef int (*HPMHOOK_pre_battle_calc_skillratio) (int *attack_type, struct block_list **src, struct block_list **target, uint16 *skill_id, uint16 *skill_lv, int *skillratio, int *flag);
-typedef int (*HPMHOOK_post_battle_calc_skillratio) (int retVal___, int attack_type, struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, int skillratio, int flag);
 typedef int64 (*HPMHOOK_pre_battle_calc_sizefix) (struct map_session_data **sd, int64 *damage, int *type, int *size, bool *ignore);
 typedef int64 (*HPMHOOK_post_battle_calc_sizefix) (int64 retVal___, struct map_session_data *sd, int64 damage, int type, int size, bool ignore);
 typedef int64 (*HPMHOOK_pre_battle_calc_weapon_damage) (struct block_list **src, struct block_list **bl, uint16 *skill_id, uint16 *skill_lv, struct weapon_atk **watk, int *nk, bool *n_ele, short *s_ele, short *s_ele_, int *size, int *type, int *flag, int *flag2);
@@ -8516,6 +8514,8 @@ typedef int (*HPMHOOK_pre_skill_autospell_spell_selected) (struct map_session_da
 typedef int (*HPMHOOK_post_skill_autospell_spell_selected) (int retVal___, struct map_session_data *md, uint16 skill_id);
 typedef int (*HPMHOOK_pre_skill_calc_heal) (struct block_list **src, struct block_list **target, uint16 *skill_id, uint16 *skill_lv, bool *heal);
 typedef int (*HPMHOOK_post_skill_calc_heal) (int retVal___, struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, bool heal);
+typedef int (*HPMHOOK_pre_skill_calc_skillratio) (int *attack_type, struct block_list **src, struct block_list **target, uint16 *skill_id, uint16 *skill_lv, int *skillratio, int *flag);
+typedef int (*HPMHOOK_post_skill_calc_skillratio) (int retVal___, int attack_type, struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, int skillratio, int flag);
 typedef bool (*HPMHOOK_pre_skill_check_cloaking) (struct block_list **bl, struct status_change_entry **sce);
 typedef bool (*HPMHOOK_post_skill_check_cloaking) (bool retVal___, struct block_list *bl, struct status_change_entry *sce);
 typedef int (*HPMHOOK_pre_skill_check_cloaking_end) (struct block_list **bl, va_list ap);

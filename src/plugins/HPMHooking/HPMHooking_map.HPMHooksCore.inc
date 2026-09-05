@@ -258,8 +258,6 @@ struct {
 	struct HPMHookPoint *HP_battle_calc_masteryfix_post;
 	struct HPMHookPoint *HP_battle_calc_chorusbonus_pre;
 	struct HPMHookPoint *HP_battle_calc_chorusbonus_post;
-	struct HPMHookPoint *HP_battle_calc_skillratio_pre;
-	struct HPMHookPoint *HP_battle_calc_skillratio_post;
 	struct HPMHookPoint *HP_battle_calc_sizefix_pre;
 	struct HPMHookPoint *HP_battle_calc_sizefix_post;
 	struct HPMHookPoint *HP_battle_calc_weapon_damage_pre;
@@ -6438,6 +6436,8 @@ struct {
 	struct HPMHookPoint *HP_skill_autospell_spell_selected_post;
 	struct HPMHookPoint *HP_skill_calc_heal_pre;
 	struct HPMHookPoint *HP_skill_calc_heal_post;
+	struct HPMHookPoint *HP_skill_calc_skillratio_pre;
+	struct HPMHookPoint *HP_skill_calc_skillratio_post;
 	struct HPMHookPoint *HP_skill_check_cloaking_pre;
 	struct HPMHookPoint *HP_skill_check_cloaking_post;
 	struct HPMHookPoint *HP_skill_check_cloaking_end_pre;
@@ -7879,8 +7879,6 @@ struct {
 	int HP_battle_calc_masteryfix_post;
 	int HP_battle_calc_chorusbonus_pre;
 	int HP_battle_calc_chorusbonus_post;
-	int HP_battle_calc_skillratio_pre;
-	int HP_battle_calc_skillratio_post;
 	int HP_battle_calc_sizefix_pre;
 	int HP_battle_calc_sizefix_post;
 	int HP_battle_calc_weapon_damage_pre;
@@ -14059,6 +14057,8 @@ struct {
 	int HP_skill_autospell_spell_selected_post;
 	int HP_skill_calc_heal_pre;
 	int HP_skill_calc_heal_post;
+	int HP_skill_calc_skillratio_pre;
+	int HP_skill_calc_skillratio_post;
 	int HP_skill_check_cloaking_pre;
 	int HP_skill_check_cloaking_post;
 	int HP_skill_check_cloaking_end_pre;
