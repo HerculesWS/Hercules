@@ -85872,7 +85872,7 @@ int HP_skill_calc_skillratio(int attack_type, struct block_list *src, struct blo
 		int (*preHookFunc) (int *attack_type, struct block_list **src, struct block_list **target, uint16 *skill_id, uint16 *skill_lv, int *skillratio, int *flag);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_calc_skillratio_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_skill_calc_skillratio_pre[hIndex].func;
+			preHookFunc = (int (*) (int *attack_type, struct block_list **src, struct block_list **target, uint16 *skill_id, uint16 *skill_lv, int *skillratio, int *flag))HPMHooks.list.HP_skill_calc_skillratio_pre[hIndex].func;
 			retVal___ = preHookFunc(&attack_type, &src, &target, &skill_id, &skill_lv, &skillratio, &flag);
 		}
 		if (*HPMforce_return) {
@@ -85886,7 +85886,7 @@ int HP_skill_calc_skillratio(int attack_type, struct block_list *src, struct blo
 	if (HPMHooks.count.HP_skill_calc_skillratio_post > 0) {
 		int (*postHookFunc) (int retVal___, int attack_type, struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, int skillratio, int flag);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_calc_skillratio_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_skill_calc_skillratio_post[hIndex].func;
+			postHookFunc = (int (*) (int retVal___, int attack_type, struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, int skillratio, int flag))HPMHooks.list.HP_skill_calc_skillratio_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, attack_type, src, target, skill_id, skill_lv, skillratio, flag);
 		}
 	}
