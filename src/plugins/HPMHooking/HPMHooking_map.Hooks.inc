@@ -3155,33 +3155,6 @@ int HP_battle_calc_chorusbonus(struct map_session_data *sd) {
 	}
 	return retVal___;
 }
-int HP_battle_calc_skillratio(int attack_type, struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, int skillratio, int flag) {
-	int hIndex = 0;
-	int retVal___ = 0;
-	if (HPMHooks.count.HP_battle_calc_skillratio_pre > 0) {
-		int (*preHookFunc) (int *attack_type, struct block_list **src, struct block_list **target, uint16 *skill_id, uint16 *skill_lv, int *skillratio, int *flag);
-		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_battle_calc_skillratio_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_battle_calc_skillratio_pre[hIndex].func;
-			retVal___ = preHookFunc(&attack_type, &src, &target, &skill_id, &skill_lv, &skillratio, &flag);
-		}
-		if (*HPMforce_return) {
-			*HPMforce_return = false;
-			return retVal___;
-		}
-	}
-	{
-		retVal___ = HPMHooks.source.battle.calc_skillratio(attack_type, src, target, skill_id, skill_lv, skillratio, flag);
-	}
-	if (HPMHooks.count.HP_battle_calc_skillratio_post > 0) {
-		int (*postHookFunc) (int retVal___, int attack_type, struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, int skillratio, int flag);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_battle_calc_skillratio_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_battle_calc_skillratio_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, attack_type, src, target, skill_id, skill_lv, skillratio, flag);
-		}
-	}
-	return retVal___;
-}
 int64 HP_battle_calc_sizefix(struct map_session_data *sd, int64 damage, int type, int size, bool ignore) {
 	int hIndex = 0;
 	int64 retVal___ = 0;
@@ -85888,6 +85861,33 @@ int HP_skill_calc_heal(struct block_list *src, struct block_list *target, uint16
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_calc_heal_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_skill_calc_heal_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, src, target, skill_id, skill_lv, heal);
+		}
+	}
+	return retVal___;
+}
+int HP_skill_calc_skillratio(int attack_type, struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, int skillratio, int flag) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_skill_calc_skillratio_pre > 0) {
+		int (*preHookFunc) (int *attack_type, struct block_list **src, struct block_list **target, uint16 *skill_id, uint16 *skill_lv, int *skillratio, int *flag);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_calc_skillratio_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_skill_calc_skillratio_pre[hIndex].func;
+			retVal___ = preHookFunc(&attack_type, &src, &target, &skill_id, &skill_lv, &skillratio, &flag);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.skill.calc_skillratio(attack_type, src, target, skill_id, skill_lv, skillratio, flag);
+	}
+	if (HPMHooks.count.HP_skill_calc_skillratio_post > 0) {
+		int (*postHookFunc) (int retVal___, int attack_type, struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, int skillratio, int flag);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_calc_skillratio_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_skill_calc_skillratio_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, attack_type, src, target, skill_id, skill_lv, skillratio, flag);
 		}
 	}
 	return retVal___;
