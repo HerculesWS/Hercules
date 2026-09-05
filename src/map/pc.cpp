@@ -2294,7 +2294,7 @@ static int pc_bonus_item_drop(struct s_add_drop *drop, const short max, int id, 
  * autobonus, a card socketed in it, a combo, and a pet from being treated as
  * the same activation slot just because they might share an EQP_* position.
  */
-static bool pc_autobonus_source_equals(const struct s_autobonus_source *a, const struct s_autobonus_source *b)
+static bool autobonus_source_equals(const struct s_autobonus_source *a, const struct s_autobonus_source *b)
 {
 	nullpo_retr(false, a);
 	nullpo_retr(false, b);
@@ -2311,7 +2311,7 @@ static bool pc_autobonus_is_active(struct s_autobonus *autobonus, char max, cons
 
 	nullpo_retr(false, autobonus);
 	nullpo_retr(false, source);
-	ARR_FIND(0, max, i, autobonus[i].active != INVALID_TIMER && pc_autobonus_source_equals(&autobonus[i].source, source));
+	ARR_FIND(0, max, i, autobonus[i].active != INVALID_TIMER && autobonus_source_equals(&autobonus[i].source, source));
 	return i < max;
 }
 
@@ -2363,7 +2363,7 @@ static int pc_addautobonus(struct s_autobonus *bonus, char max, const char *bonu
  * as the context for those (matching the "no item" sentinel used elsewhere,
  * e.g. status->current_equip_item_index outside of the equip/card loops).
  */
-static bool pc_autobonus_source(struct map_session_data *sd, const struct s_autobonus *autobonus, int *out_index)
+static bool autobonus_source_resolve(struct map_session_data *sd, const struct s_autobonus *autobonus, int *out_index)
 {
 	const struct s_autobonus_source *source;
 
@@ -2416,7 +2416,7 @@ static int pc_delautobonus(struct map_session_data *sd, struct s_autobonus *auto
 		if( autobonus[i].active != INVALID_TIMER )
 		{
 			int index;
-			bool source_active = pc_autobonus_source(sd, &autobonus[i], &index);
+			bool source_active = autobonus_source_resolve(sd, &autobonus[i], &index);
 
 			if( restore && source_active )
 			{
@@ -2450,7 +2450,7 @@ static int pc_exeautobonus(struct map_session_data *sd, struct s_autobonus *auto
 	if( autobonus->other_script )
 	{
 		int index;
-		if (pc_autobonus_source(sd, autobonus, &index))
+		if (autobonus_source_resolve(sd, autobonus, &index))
 			script->run_autobonus(autobonus->other_script,sd->bl.id,index);
 	}
 
