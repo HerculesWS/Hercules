@@ -11150,17 +11150,54 @@ static BUILDIN(bonus)
 	return true;
 }
 
+/**
+ * Resolves the identity of the autobonus source currently executing a script
+ * (an equipped item, a card socketed in an equipped item, an item combo, or
+ * a pet), from the context globals set by status_calc_pc_() around each kind
+ * of script execution.
+ *
+ * Returns false if autobonus() was called outside of any of those contexts
+ * (e.g. from a plain NPC script), in which case the caller should no-op.
+ */
+static bool autobonus_source_from_script_context(struct map_session_data *sd, struct s_autobonus_source *out_source)
+{
+	nullpo_retr(false, sd);
+	nullpo_retr(false, out_source);
+	memset(out_source, 0, sizeof(*out_source));
+
+	if (status->current_equip_combo_pos != 0) {
+		out_source->combo_pos = status->current_equip_combo_pos;
+		return true;
+	}
+
+	if (status->current_equip_pet_id != 0) {
+		out_source->pet_id = status->current_equip_pet_id;
+		return true;
+	}
+
+	if (status->current_equip_item_index >= 0) {
+		out_source->pos = sd->status.inventory[status->current_equip_item_index].equip;
+		out_source->card_id = status->current_equip_card_id;
+		return out_source->pos != 0;
+	}
+
+	return false;
+}
+
 static BUILDIN(autobonus)
 {
 	unsigned int dur;
 	short rate;
 	short atk_type = 0;
 	const char *bonus_script, *other_script = NULL;
+	struct s_autobonus_source source;
 	struct map_session_data *sd = script->rid2sd(st);
 	if (sd == NULL)
 		return true; // no player attached
 
-	if (status->current_equip_item_index < 0 || sd->state.autobonus&sd->status.inventory[status->current_equip_item_index].equip)
+	if (!autobonus_source_from_script_context(sd, &source))
+		return true;
+	if (pc->autobonus_is_active(sd->autobonus, ARRAYLENGTH(sd->autobonus), &source))
 		return true;
 
 	rate = script_getnum(st,3);
@@ -11175,7 +11212,7 @@ static BUILDIN(autobonus)
 		other_script = script_getstr(st,6);
 
 	if( pc->addautobonus(sd->autobonus,ARRAYLENGTH(sd->autobonus),bonus_script,rate,dur,atk_type,other_script,
-	                     sd->status.inventory[status->current_equip_item_index].equip,false)
+	                     &source,false)
 	) {
 		script->add_autobonus(bonus_script);
 		if( other_script )
@@ -11191,11 +11228,14 @@ static BUILDIN(autobonus2)
 	short rate;
 	short atk_type = 0;
 	const char *bonus_script, *other_script = NULL;
+	struct s_autobonus_source source;
 	struct map_session_data *sd = script->rid2sd(st);
 	if (sd == NULL)
 		return true; // no player attached
 
-	if (status->current_equip_item_index < 0 || sd->state.autobonus&sd->status.inventory[status->current_equip_item_index].equip)
+	if (!autobonus_source_from_script_context(sd, &source))
+		return true;
+	if (pc->autobonus_is_active(sd->autobonus2, ARRAYLENGTH(sd->autobonus2), &source))
 		return true;
 
 	rate = script_getnum(st,3);
@@ -11210,7 +11250,7 @@ static BUILDIN(autobonus2)
 		other_script = script_getstr(st,6);
 
 	if( pc->addautobonus(sd->autobonus2,ARRAYLENGTH(sd->autobonus2),bonus_script,rate,dur,atk_type,other_script,
-	                     sd->status.inventory[status->current_equip_item_index].equip,false)
+	                     &source,false)
 	) {
 		script->add_autobonus(bonus_script);
 		if( other_script )
@@ -11225,11 +11265,14 @@ static BUILDIN(autobonus3)
 	unsigned int dur;
 	short rate,atk_type;
 	const char *bonus_script, *other_script = NULL;
+	struct s_autobonus_source source;
 	struct map_session_data *sd = script->rid2sd(st);
 	if (sd == NULL)
 		return true; // no player attached
 
-	if (status->current_equip_item_index < 0 || sd->state.autobonus&sd->status.inventory[status->current_equip_item_index].equip)
+	if (!autobonus_source_from_script_context(sd, &source))
+		return true;
+	if (pc->autobonus_is_active(sd->autobonus3, ARRAYLENGTH(sd->autobonus3), &source))
 		return true;
 
 	rate = script_getnum(st,3);
@@ -11243,7 +11286,7 @@ static BUILDIN(autobonus3)
 		other_script = script_getstr(st,6);
 
 	if( pc->addautobonus(sd->autobonus3,ARRAYLENGTH(sd->autobonus3),bonus_script,rate,dur,atk_type,other_script,
-	                     sd->status.inventory[status->current_equip_item_index].equip,true)
+	                     &source,true)
 	) {
 		script->add_autobonus(bonus_script);
 		if( other_script )

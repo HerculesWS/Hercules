@@ -67977,15 +67977,15 @@ int HP_pc_updateweightstatus(struct map_session_data *sd) {
 	}
 	return retVal___;
 }
-int HP_pc_addautobonus(struct s_autobonus *bonus, char max, const char *bonus_script, short rate, unsigned int dur, short atk_type, const char *o_script, unsigned int pos, bool onskill) {
+int HP_pc_addautobonus(struct s_autobonus *bonus, char max, const char *bonus_script, short rate, unsigned int dur, short atk_type, const char *o_script, const struct s_autobonus_source *source, bool onskill) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_pc_addautobonus_pre > 0) {
-		int (*preHookFunc) (struct s_autobonus **bonus, char *max, const char **bonus_script, short *rate, unsigned int *dur, short *atk_type, const char **o_script, unsigned int *pos, bool *onskill);
+		int (*preHookFunc) (struct s_autobonus **bonus, char *max, const char **bonus_script, short *rate, unsigned int *dur, short *atk_type, const char **o_script, const struct s_autobonus_source **source, bool *onskill);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_addautobonus_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_pc_addautobonus_pre[hIndex].func;
-			retVal___ = preHookFunc(&bonus, &max, &bonus_script, &rate, &dur, &atk_type, &o_script, &pos, &onskill);
+			retVal___ = preHookFunc(&bonus, &max, &bonus_script, &rate, &dur, &atk_type, &o_script, &source, &onskill);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -67993,13 +67993,13 @@ int HP_pc_addautobonus(struct s_autobonus *bonus, char max, const char *bonus_sc
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.pc.addautobonus(bonus, max, bonus_script, rate, dur, atk_type, o_script, pos, onskill);
+		retVal___ = HPMHooks.source.pc.addautobonus(bonus, max, bonus_script, rate, dur, atk_type, o_script, source, onskill);
 	}
 	if (HPMHooks.count.HP_pc_addautobonus_post > 0) {
-		int (*postHookFunc) (int retVal___, struct s_autobonus *bonus, char max, const char *bonus_script, short rate, unsigned int dur, short atk_type, const char *o_script, unsigned int pos, bool onskill);
+		int (*postHookFunc) (int retVal___, struct s_autobonus *bonus, char max, const char *bonus_script, short rate, unsigned int dur, short atk_type, const char *o_script, const struct s_autobonus_source *source, bool onskill);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_addautobonus_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_pc_addautobonus_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, bonus, max, bonus_script, rate, dur, atk_type, o_script, pos, onskill);
+			retVal___ = postHookFunc(retVal___, bonus, max, bonus_script, rate, dur, atk_type, o_script, source, onskill);
 		}
 	}
 	return retVal___;
@@ -68081,6 +68081,33 @@ int HP_pc_delautobonus(struct map_session_data *sd, struct s_autobonus *bonus, c
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_delautobonus_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_pc_delautobonus_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, sd, bonus, max, restore);
+		}
+	}
+	return retVal___;
+}
+bool HP_pc_autobonus_is_active(struct s_autobonus *bonus, char max, const struct s_autobonus_source *source) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_pc_autobonus_is_active_pre > 0) {
+		bool (*preHookFunc) (struct s_autobonus **bonus, char *max, const struct s_autobonus_source **source);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_autobonus_is_active_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_pc_autobonus_is_active_pre[hIndex].func;
+			retVal___ = preHookFunc(&bonus, &max, &source);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.pc.autobonus_is_active(bonus, max, source);
+	}
+	if (HPMHooks.count.HP_pc_autobonus_is_active_post > 0) {
+		bool (*postHookFunc) (bool retVal___, struct s_autobonus *bonus, char max, const struct s_autobonus_source *source);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_autobonus_is_active_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_pc_autobonus_is_active_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, bonus, max, source);
 		}
 	}
 	return retVal___;

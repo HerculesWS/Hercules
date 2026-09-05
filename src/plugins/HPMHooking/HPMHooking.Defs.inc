@@ -7136,14 +7136,16 @@ typedef bool (*HPMHOOK_pre_pc_adoption) (struct map_session_data **p1_sd, struct
 typedef bool (*HPMHOOK_post_pc_adoption) (bool retVal___, struct map_session_data *p1_sd, struct map_session_data *p2_sd, struct map_session_data *b_sd);
 typedef int (*HPMHOOK_pre_pc_updateweightstatus) (struct map_session_data **sd);
 typedef int (*HPMHOOK_post_pc_updateweightstatus) (int retVal___, struct map_session_data *sd);
-typedef int (*HPMHOOK_pre_pc_addautobonus) (struct s_autobonus **bonus, char *max, const char **bonus_script, short *rate, unsigned int *dur, short *atk_type, const char **o_script, unsigned int *pos, bool *onskill);
-typedef int (*HPMHOOK_post_pc_addautobonus) (int retVal___, struct s_autobonus *bonus, char max, const char *bonus_script, short rate, unsigned int dur, short atk_type, const char *o_script, unsigned int pos, bool onskill);
+typedef int (*HPMHOOK_pre_pc_addautobonus) (struct s_autobonus **bonus, char *max, const char **bonus_script, short *rate, unsigned int *dur, short *atk_type, const char **o_script, const struct s_autobonus_source **source, bool *onskill);
+typedef int (*HPMHOOK_post_pc_addautobonus) (int retVal___, struct s_autobonus *bonus, char max, const char *bonus_script, short rate, unsigned int dur, short atk_type, const char *o_script, const struct s_autobonus_source *source, bool onskill);
 typedef int (*HPMHOOK_pre_pc_exeautobonus) (struct map_session_data **sd, struct s_autobonus **bonus);
 typedef int (*HPMHOOK_post_pc_exeautobonus) (int retVal___, struct map_session_data *sd, struct s_autobonus *bonus);
 typedef int (*HPMHOOK_pre_pc_endautobonus) (int *tid, int64 *tick, int *id, intptr_t *data);
 typedef int (*HPMHOOK_post_pc_endautobonus) (int retVal___, int tid, int64 tick, int id, intptr_t data);
 typedef int (*HPMHOOK_pre_pc_delautobonus) (struct map_session_data **sd, struct s_autobonus **bonus, char *max, bool *restore);
 typedef int (*HPMHOOK_post_pc_delautobonus) (int retVal___, struct map_session_data *sd, struct s_autobonus *bonus, char max, bool restore);
+typedef bool (*HPMHOOK_pre_pc_autobonus_is_active) (struct s_autobonus **bonus, char *max, const struct s_autobonus_source **source);
+typedef bool (*HPMHOOK_post_pc_autobonus_is_active) (bool retVal___, struct s_autobonus *bonus, char max, const struct s_autobonus_source *source);
 typedef void (*HPMHOOK_pre_pc_bonus_addele) (struct map_session_data **sd, unsigned char *ele, short *rate, short *flag);
 typedef void (*HPMHOOK_post_pc_bonus_addele) (struct map_session_data *sd, unsigned char ele, short rate, short flag);
 typedef void (*HPMHOOK_pre_pc_bonus_subele) (struct map_session_data **sd, unsigned char *ele, short *rate, short *flag);

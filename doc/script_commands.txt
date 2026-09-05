@@ -6647,9 +6647,10 @@ for each kind in 'doc/item_bonus.txt'.
 *autobonus3(<bonus script>, <rate>, <duration>, <skill id>, {<other script>})
 *autobonus3(<bonus script>, <rate>, <duration>, "<skill name>", {<other script>})
 
-These commands are meant to be used in item scripts. They will probably
-work outside item scripts, but the bonus will not persist for long. They,
-as expected, refer only to an invoking character.
+These commands are meant to be used in item scripts, item combo scripts, or
+a pet's equip script. They will probably work outside of those, but the
+bonus will not persist for long. They, as expected, refer only to an
+invoking character.
 
 What these commands do is 'attach' a script to the player which will get
 executed on attack (or when attacked in the case of autobonus2()).

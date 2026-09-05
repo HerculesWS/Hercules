@@ -1562,6 +1562,7 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 	// Parse equipment.
 	for(i=0;i<EQI_MAX;i++) {
 		status->current_equip_item_index = index = sd->equip_index[i]; //We pass INDEX to status->current_equip_item_index - for EQUIP_SCRIPT (new cards solution) [Lupus]
+		status->current_equip_card_id = 0; // This is the item's own script, not a card's; stops autobonus() from misattributing it to whatever card was last processed.
 		if(index < 0)
 			continue;
 		if(i == EQI_AMMO) continue;/* ammo has special handler down there */
@@ -1679,7 +1680,8 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 	}
 
 	if(sd->equip_index[EQI_AMMO] >= 0){
-		index = sd->equip_index[EQI_AMMO];
+		status->current_equip_item_index = index = sd->equip_index[EQI_AMMO];
+		status->current_equip_card_id = 0; // Ammo cannot hold cards; this is always the ammo item's own script.
 		if (sd->inventory_data[index]) {
 			// Arrows
 			sd->bonus.arrow_atk += sd->inventory_data[index]->atk;
@@ -1713,7 +1715,9 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 		if( j != combo->count )
 			continue;
 
+		status->current_equip_combo_pos = sd->combos[i].id + 1; // +1: 0 is reserved to mean "no combo" (combo ids are 0-based)
 		script->run(sd->combos[i].bonus,0,sd->bl.id,0);
+		status->current_equip_combo_pos = 0;
 		if (!calculating) //Abort, script->run retriggered this.
 			return 1;
 	}
@@ -1787,6 +1791,7 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 	for (i = 0; i < EQI_MAX; i++) {
 		status->current_equip_item_index = index = sd->equip_index[i];
 		status->current_equip_option_index = -1;
+		status->current_equip_card_id = 0; // This is the item's own option script, not a card's; stops autobonus() from misattributing it to whatever card was last processed.
 
 		if (i == EQI_HAND_R && sd->equip_index[EQI_HAND_L] == index)
 			continue;
@@ -1815,6 +1820,7 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 
 	status->current_equip_option_index = -1;
 	status->current_equip_item_index = -1;
+	status->current_equip_card_id = 0;
 
 	// Clan Buffs
 	if (sd->status.clan_id > 0) {
@@ -1827,8 +1833,11 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 	if (sd->pd != NULL) { // Pet bonus.
 		struct pet_data *pd = sd->pd;
 
-		if (pd->petDB != NULL && pd->petDB->equip_script != NULL)
+		if (pd->petDB != NULL && pd->petDB->equip_script != NULL) {
+			status->current_equip_pet_id = pd->pet.pet_id;
 			script->run(pd->petDB->equip_script, 0, sd->bl.id, 0);
+			status->current_equip_pet_id = 0;
+		}
 
 		if (pd->pet.intimate > PET_INTIMACY_NONE && pd->state.skillbonus == 1 && pd->bonus != NULL
 		    && (battle_config.pet_equip_required == 0 || pd->pet.equip > 0)) {
@@ -15051,6 +15060,8 @@ void status_defaults(void)
 	//to avoid cards exploits
 	status->current_equip_item_index = 0; //Contains inventory index of an equipped item. To pass it into the EQUP_SCRIPT [Lupus]
 	status->current_equip_card_id = 0;    //To prevent card-stacking (from jA) [Skotlex]
+	status->current_equip_combo_pos = 0;  //Contains (itemdb combo id + 1) of the combo currently executing its bonus script, for autobonus. 0 means none.
+	status->current_equip_pet_id = 0;     //Contains the pet_id of the pet currently executing its equip/pet script, for autobonus.
 
 	// These macros are used instead of a sum of sizeof(), to ensure that padding won't interfere with our size, and code won't rot when adding more fields
 	memset(ZEROED_BLOCK_POS(status->dbs), 0, ZEROED_BLOCK_SIZE(status->dbs));

@@ -2285,12 +2285,44 @@ static int pc_bonus_item_drop(struct s_add_drop *drop, const short max, int id, 
 	return 1;
 }
 
-static int pc_addautobonus(struct s_autobonus *bonus, char max, const char *bonus_script, short rate, unsigned int dur, short flag, const char *other_script, unsigned int pos, bool onskill)
+/**
+ * Checks whether two autobonus source identities refer to the same source.
+ *
+ * pos identifies an equip slot (item or card source, 0 otherwise), card_id
+ * distinguishes a card's own autobonus from its host item's (0 for the item,
+ * the card's item id otherwise), combo_pos an item combo id (0 otherwise),
+ * and pet_id a pet (0 otherwise). Comparing all four keeps an item's
+ * autobonus, a card socketed in it, a combo, and a pet from being treated as
+ * the same activation slot just because they might share an EQP_* position.
+ */
+static bool autobonus_source_equals(const struct s_autobonus_source *a, const struct s_autobonus_source *b)
+{
+	nullpo_retr(false, a);
+	nullpo_retr(false, b);
+	return a->pos == b->pos && a->card_id == b->card_id && a->combo_pos == b->combo_pos && a->pet_id == b->pet_id;
+}
+
+/**
+ * Checks whether an autobonus with the given source identity is currently active
+ * (registered with a running timer) in the given autobonus array.
+ */
+static bool pc_autobonus_is_active(struct s_autobonus *autobonus, char max, const struct s_autobonus_source *source)
+{
+	int i;
+
+	nullpo_retr(false, autobonus);
+	nullpo_retr(false, source);
+	ARR_FIND(0, max, i, autobonus[i].active != INVALID_TIMER && autobonus_source_equals(&autobonus[i].source, source));
+	return i < max;
+}
+
+static int pc_addautobonus(struct s_autobonus *bonus, char max, const char *bonus_script, short rate, unsigned int dur, short flag, const char *other_script, const struct s_autobonus_source *source, bool onskill)
 {
 	int i;
 
 	nullpo_ret(bonus);
 	nullpo_ret(bonus_script);
+	nullpo_ret(source);
 	ARR_FIND(0, max, i, bonus[i].rate == 0);
 	if( i == max )
 	{
@@ -2317,10 +2349,61 @@ static int pc_addautobonus(struct s_autobonus *bonus, char max, const char *bonu
 	bonus[i].duration = dur;
 	bonus[i].active = INVALID_TIMER;
 	bonus[i].atk_type = flag;
-	bonus[i].pos = pos;
+	bonus[i].source = *source;
 	bonus[i].bonus_script = aStrdup(bonus_script);
 	bonus[i].other_script = other_script?aStrdup(other_script):NULL;
 	return 1;
+}
+
+/**
+ * Resolves the inventory index (equip context) to pass into an autobonus's
+ * script when it re-triggers, and reports whether the autobonus's source
+ * (an equip slot, an item combo, or a pet) is still present on the character.
+ *
+ * Combos and pets have no single backing inventory index, so -1 is returned
+ * as the context for those (matching the "no item" sentinel used elsewhere,
+ * e.g. status->current_equip_item_index outside of the equip/card loops).
+ */
+static bool autobonus_source_resolve(struct map_session_data *sd, const struct s_autobonus *autobonus, int *out_index)
+{
+	const struct s_autobonus_source *source;
+
+	nullpo_retr(false, sd);
+	nullpo_retr(false, autobonus);
+	nullpo_retr(false, out_index);
+
+	source = &autobonus->source;
+	*out_index = -1;
+
+	if (source->combo_pos != 0) {
+		int i;
+		ARR_FIND(0, sd->combo_count, i, sd->combos[i].id + 1 == source->combo_pos);
+		return i < sd->combo_count;
+	}
+
+	if (source->pet_id != 0)
+		return sd->pd != NULL && sd->pd->pet.pet_id == source->pet_id;
+
+	if (source->pos != 0) {
+		int j, index;
+		ARR_FIND(0, EQI_MAX, j, sd->equip_index[j] >= 0 && sd->status.inventory[sd->equip_index[j]].equip == source->pos);
+		if (j == EQI_MAX)
+			return false;
+		index = sd->equip_index[j];
+
+		if (source->card_id != 0) {
+			// Card-sourced: the card must still be socketed in this equip slot.
+			int c;
+			ARR_FIND(0, MAX_SLOTS, c, sd->status.inventory[index].card[c] == source->card_id);
+			if (c == MAX_SLOTS)
+				return false;
+		}
+
+		*out_index = index;
+		return true;
+	}
+
+	return false;
 }
 
 static int pc_delautobonus(struct map_session_data *sd, struct s_autobonus *autobonus, char max, bool restore)
@@ -2333,19 +2416,17 @@ static int pc_delautobonus(struct map_session_data *sd, struct s_autobonus *auto
 	{
 		if( autobonus[i].active != INVALID_TIMER )
 		{
-			if( restore && sd->state.autobonus&autobonus[i].pos )
+			int index;
+			bool source_active = autobonus_source_resolve(sd, &autobonus[i], &index);
+
+			if( restore && source_active )
 			{
 				if( autobonus[i].bonus_script )
-				{
-					int j;
-					ARR_FIND( 0, EQI_MAX, j, sd->equip_index[j] >= 0 && sd->status.inventory[sd->equip_index[j]].equip == autobonus[i].pos );
-					if( j < EQI_MAX )
-						script->run_autobonus(autobonus[i].bonus_script,sd->bl.id,sd->equip_index[j]);
-				}
+					script->run_autobonus(autobonus[i].bonus_script,sd->bl.id,index);
 				continue;
 			}
 			else
-			{ // Logout / Unequipped an item with an activated bonus
+			{ // Logout / Unequipped an item (or lost the combo/pet) with an activated bonus
 				timer->delete_(autobonus[i].active,pc->endautobonus);
 				autobonus[i].active = INVALID_TIMER;
 			}
@@ -2354,7 +2435,8 @@ static int pc_delautobonus(struct map_session_data *sd, struct s_autobonus *auto
 		if( autobonus[i].bonus_script ) aFree(autobonus[i].bonus_script);
 		if( autobonus[i].other_script ) aFree(autobonus[i].other_script);
 		autobonus[i].bonus_script = autobonus[i].other_script = NULL;
-		autobonus[i].rate = autobonus[i].atk_type = autobonus[i].duration = autobonus[i].pos = 0;
+		autobonus[i].rate = autobonus[i].atk_type = autobonus[i].duration = 0;
+		memset(&autobonus[i].source, 0, sizeof(autobonus[i].source));
 		autobonus[i].active = INVALID_TIMER;
 	}
 
@@ -2368,14 +2450,12 @@ static int pc_exeautobonus(struct map_session_data *sd, struct s_autobonus *auto
 
 	if( autobonus->other_script )
 	{
-		int j;
-		ARR_FIND( 0, EQI_MAX, j, sd->equip_index[j] >= 0 && sd->status.inventory[sd->equip_index[j]].equip == autobonus->pos );
-		if( j < EQI_MAX )
-			script->run_autobonus(autobonus->other_script,sd->bl.id,sd->equip_index[j]);
+		int index;
+		if (autobonus_source_resolve(sd, autobonus, &index))
+			script->run_autobonus(autobonus->other_script,sd->bl.id,index);
 	}
 
 	autobonus->active = timer->add(timer->gettick()+autobonus->duration, pc->endautobonus, sd->bl.id, (intptr_t)autobonus);
-	sd->state.autobonus |= autobonus->pos;
 	status_calc_pc(sd,SCO_NONE);
 
 	return 0;
@@ -2390,7 +2470,6 @@ static int pc_endautobonus(int tid, int64 tick, int id, intptr_t data)
 	nullpo_ret(autobonus);
 
 	autobonus->active = INVALID_TIMER;
-	sd->state.autobonus &= ~autobonus->pos;
 	status_calc_pc(sd,SCO_NONE);
 	return 0;
 }
@@ -10552,10 +10631,15 @@ static int pc_unequipitem(struct map_session_data *sd, int n, int flag)
 			status_change_end(&sd->bl, SC_PLATINUM_ALTER, INVALID_TIMER);
 	}
 
-	if ((sd->state.autobonus & pos) != 0)  // Check for activated autobonus. [Inkfish]
-		sd->state.autobonus &= ~sd->status.inventory[n].equip;
-
 	sd->status.inventory[n].equip = 0;
+
+	// Cancel any autobonus this item (or a card in it) was the source of. Done unconditionally,
+	// independent of the status_calc_pc() call below, since that call is skipped unless the
+	// caller asked for a recalc or a combo/option was removed -- but an active autobonus timer
+	// must not be left running for an item that is no longer equipped.
+	pc->delautobonus(sd, sd->autobonus, ARRAYLENGTH(sd->autobonus), true);
+	pc->delautobonus(sd, sd->autobonus2, ARRAYLENGTH(sd->autobonus2), true);
+	pc->delautobonus(sd, sd->autobonus3, ARRAYLENGTH(sd->autobonus3), true);
 
 	bool status_calc = false;
 	int iflag = sd->npc_item_flag;
@@ -13065,6 +13149,7 @@ void pc_defaults(void)
 	pc->exeautobonus = pc_exeautobonus;
 	pc->endautobonus = pc_endautobonus;
 	pc->delautobonus = pc_delautobonus;
+	pc->autobonus_is_active = pc_autobonus_is_active;
 
 	pc->bonus_addele = pc_bonus_addele;
 	pc->bonus_subele = pc_bonus_subele;
