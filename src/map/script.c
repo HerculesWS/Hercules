@@ -30252,6 +30252,7 @@ static void script_hardcoded_constants(void)
 	script->set_constant("MD_CHANGETARGET_CHASE", MD_CHANGETARGET_CHASE, false, false);
 	script->set_constant("MD_TARGETWEAK", MD_TARGETWEAK, false, false);
 	script->set_constant("MD_NOKNOCKBACK", MD_NOKNOCKBACK, false, false);
+	script->set_constant("MD_NOCAST_SKILL", MD_NOCAST_SKILL, false, false);
 
 	script->constdb_comment("Monster group constants");
 	script->set_constant("ALL_MOBS_NONBOSS", ALL_MOBS_NONBOSS, false, false);

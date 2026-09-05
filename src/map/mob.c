@@ -3596,6 +3596,9 @@ static int mob_use_skill(struct mob_data *md, int64 tick, int event)
 	if (battle_config.mob_skill_rate == 0 || md->ud.skilltimer != INVALID_TIMER || md->db->maxskill == 0)
 		return 1;
 
+	if ((md->status.mode&MD_NOCAST_SKILL) != 0)
+		return 1;
+
 	if (event == -1 && DIFF_TICK(md->ud.canact_tick, tick) > 0)
 		return 1; // Skill act delay only affects non-event skill conditions.
 
@@ -4614,6 +4617,8 @@ static uint32 mob_read_db_mode_sub(struct mob_db *entry, struct config_setting_t
 		mode |= libconfig->setting_get_bool(t2) ? MD_TARGETWEAK : MD_NONE;
 	if ((t2 = libconfig->setting_get_member(t, "NoKnockback")))
 		mode |= libconfig->setting_get_bool(t2) ? MD_NOKNOCKBACK : MD_NONE;
+	if ((t2 = libconfig->setting_get_member(t, "NoCastSkill")))
+		mode |= libconfig->setting_get_bool(t2) ? MD_NOCAST_SKILL : MD_NONE;
 
 	return mode & MD_MASK;
 }
@@ -5032,6 +5037,7 @@ static int mob_read_db_sub(struct config_setting_t *mobt, int n, const char *sou
 	 *     ChangeTargetChase: true/false
 	 *     TargetWeak: true/false
 	 *     NoKnockback: true/false
+	 *     NoCastSkill: true/false
 	 * }
 	 * MoveSpeed: move speed
 	 * AttackDelay: attack delay
