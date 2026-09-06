@@ -1324,6 +1324,10 @@ typedef bool (*HPMHOOK_pre_clif_send) (const void **buf, int *len, struct block_
 typedef bool (*HPMHOOK_post_clif_send) (bool retVal___, const void *buf, int len, struct block_list *bl, enum send_target type);
 typedef int (*HPMHOOK_pre_clif_send_sub) (struct block_list **bl, va_list ap);
 typedef int (*HPMHOOK_post_clif_send_sub) (int retVal___, struct block_list *bl, va_list ap);
+typedef int (*HPMHOOK_pre_clif_send_actionpacket_sub) (struct block_list **bl, va_list ap);
+typedef int (*HPMHOOK_post_clif_send_actionpacket_sub) (int retVal___, struct block_list *bl, va_list ap);
+typedef void (*HPMHOOK_pre_clif_send_actionpacket) (const void **buf, int *len, struct block_list **src, struct block_list **dst, enum send_target *type);
+typedef void (*HPMHOOK_post_clif_send_actionpacket) (const void *buf, int len, struct block_list *src, struct block_list *dst, enum send_target type);
 typedef int (*HPMHOOK_pre_clif_send_actual) (int *fd, void **buf, int *len);
 typedef int (*HPMHOOK_post_clif_send_actual) (int retVal___, int fd, void *buf, int len);
 typedef int (*HPMHOOK_pre_clif_parse) (int *fd);
