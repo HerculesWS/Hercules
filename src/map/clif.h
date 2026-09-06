@@ -958,6 +958,8 @@ struct clif_interface {
 	uint32 (*refresh_ip) (void);
 	bool (*send) (const void* buf, int len, struct block_list* bl, enum send_target type);
 	int (*send_sub) (struct block_list *bl, va_list ap);
+	int (*send_actionpacket_sub) (struct block_list *bl, va_list ap);
+	void (*send_actionpacket) (const void *buf, int len, struct block_list *src, struct block_list *dst, enum send_target type);
 	int (*send_actual) (int fd, void *buf, int len);
 	int (*parse) (int fd);
 	const struct s_packet_db *(*packet) (int packet_id);
