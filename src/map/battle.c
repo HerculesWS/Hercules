@@ -7317,7 +7317,10 @@ static int battle_check_target(struct block_list *src, struct block_list *target
 			const struct status_change *sc = status->get_sc(src);
 			const struct map_session_data *t_sd = BL_UCCAST(BL_PC, target);
 			if (t_sd->invincible_timer != INVALID_TIMER) {
-				int skill_id = battle->get_current_skill(src);
+				/* unit_data::skill_id only reflects the last skill *cast* by src
+				 * and is never cleared afterwards, so it must not be trusted for
+				 * a plain attack (flagged explicitly by unit->attack()). */
+				int skill_id = (flag & BCT_NORMAL_ATTACK) != 0 ? 0 : battle->get_current_skill(src);
 				switch (skill_id) {
 					/* Equip-strip skills deal no damage but are still an offensive
 					 * debuff on official servers, so they stay blocked. (bugreport:8397) */
