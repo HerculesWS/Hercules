@@ -2169,7 +2169,7 @@ static int unit_attack(struct block_list *src, int target_id, int continuous)
 			return 0;
 		}
 	}
-	if( battle->check_target(src,target,BCT_ENEMY) <= 0 || !status->check_skilluse(src, target, 0, 0) ) {
+	if (battle->check_target(src, target, BCT_ENEMY | BCT_NORMAL_ATTACK) <= 0 || !status->check_skilluse(src, target, 0, 0)) {
 		unit->unattackable(src);
 		return 1;
 	}
