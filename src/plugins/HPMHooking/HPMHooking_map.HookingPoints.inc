@@ -366,6 +366,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->refresh_ip, HP_clif_refresh_ip) },
 	{ HP_POP(clif->send, HP_clif_send) },
 	{ HP_POP(clif->send_sub, HP_clif_send_sub) },
+	{ HP_POP(clif->send_actionpacket_sub, HP_clif_send_actionpacket_sub) },
+	{ HP_POP(clif->send_actionpacket, HP_clif_send_actionpacket) },
 	{ HP_POP(clif->send_actual, HP_clif_send_actual) },
 	{ HP_POP(clif->parse, HP_clif_parse) },
 	{ HP_POP(clif->packet, HP_clif_packet) },

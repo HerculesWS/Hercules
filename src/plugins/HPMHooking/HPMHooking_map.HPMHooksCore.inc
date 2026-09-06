@@ -682,6 +682,10 @@ struct {
 	struct HPMHookPoint *HP_clif_send_post;
 	struct HPMHookPoint *HP_clif_send_sub_pre;
 	struct HPMHookPoint *HP_clif_send_sub_post;
+	struct HPMHookPoint *HP_clif_send_actionpacket_sub_pre;
+	struct HPMHookPoint *HP_clif_send_actionpacket_sub_post;
+	struct HPMHookPoint *HP_clif_send_actionpacket_pre;
+	struct HPMHookPoint *HP_clif_send_actionpacket_post;
 	struct HPMHookPoint *HP_clif_send_actual_pre;
 	struct HPMHookPoint *HP_clif_send_actual_post;
 	struct HPMHookPoint *HP_clif_parse_pre;
@@ -8303,6 +8307,10 @@ struct {
 	int HP_clif_send_post;
 	int HP_clif_send_sub_pre;
 	int HP_clif_send_sub_post;
+	int HP_clif_send_actionpacket_sub_pre;
+	int HP_clif_send_actionpacket_sub_post;
+	int HP_clif_send_actionpacket_pre;
+	int HP_clif_send_actionpacket_post;
 	int HP_clif_send_actual_pre;
 	int HP_clif_send_actual_post;
 	int HP_clif_parse_pre;
