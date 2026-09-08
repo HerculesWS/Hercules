@@ -8872,6 +8872,65 @@ int HP_clif_send_sub(struct block_list *bl, va_list ap) {
 	}
 	return retVal___;
 }
+int HP_clif_send_actionpacket_sub(struct block_list *bl, va_list ap) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_clif_send_actionpacket_sub_pre > 0) {
+		int (*preHookFunc) (struct block_list **bl, va_list ap);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_send_actionpacket_sub_pre; hIndex++) {
+			va_list ap___copy; va_copy(ap___copy, ap);
+			preHookFunc = HPMHooks.list.HP_clif_send_actionpacket_sub_pre[hIndex].func;
+			retVal___ = preHookFunc(&bl, ap___copy);
+			va_end(ap___copy);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		va_list ap___copy; va_copy(ap___copy, ap);
+		retVal___ = HPMHooks.source.clif.send_actionpacket_sub(bl, ap___copy);
+		va_end(ap___copy);
+	}
+	if (HPMHooks.count.HP_clif_send_actionpacket_sub_post > 0) {
+		int (*postHookFunc) (int retVal___, struct block_list *bl, va_list ap);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_send_actionpacket_sub_post; hIndex++) {
+			va_list ap___copy; va_copy(ap___copy, ap);
+			postHookFunc = HPMHooks.list.HP_clif_send_actionpacket_sub_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, bl, ap___copy);
+			va_end(ap___copy);
+		}
+	}
+	return retVal___;
+}
+void HP_clif_send_actionpacket(const void *buf, int len, struct block_list *src, struct block_list *dst, enum send_target type) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_send_actionpacket_pre > 0) {
+		void (*preHookFunc) (const void **buf, int *len, struct block_list **src, struct block_list **dst, enum send_target *type);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_send_actionpacket_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_send_actionpacket_pre[hIndex].func;
+			preHookFunc(&buf, &len, &src, &dst, &type);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.send_actionpacket(buf, len, src, dst, type);
+	}
+	if (HPMHooks.count.HP_clif_send_actionpacket_post > 0) {
+		void (*postHookFunc) (const void *buf, int len, struct block_list *src, struct block_list *dst, enum send_target type);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_send_actionpacket_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_send_actionpacket_post[hIndex].func;
+			postHookFunc(buf, len, src, dst, type);
+		}
+	}
+	return;
+}
 int HP_clif_send_actual(int fd, void *buf, int len) {
 	int hIndex = 0;
 	int retVal___ = 0;

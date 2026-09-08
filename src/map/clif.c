@@ -5120,6 +5120,72 @@ static int clif_calc_walkdelay(struct block_list *bl, int delay, int type, int d
 	return delay>0?delay:1; //Return 1 to specify there should be no noticeable delay, but you should stop walking.
 }
 
+/**
+ * Sub-function of clif_send_actionpacket(), forwards a single player to clif_send_sub().
+ *
+ * Called from a map_foreachinarea() over the attacker's area. Players who are also
+ * within the target's area are skipped, since they are already served by the area
+ * send centered on the target.
+ *
+ * @param bl The player to send the packet to.
+ * @param ap Additional arguments: buffer, length, target, send type, target (again).
+ * @return The return value of clif_send_sub(), or 0 if the player was skipped.
+ */
+static int clif_send_actionpacket_sub(struct block_list *bl, va_list ap)
+{
+	va_list apcopy;
+
+	nullpo_ret(bl);
+
+	va_copy(apcopy, ap);
+	(void)va_arg(apcopy, const void *); // buf
+	(void)va_arg(apcopy, int); // len
+	(void)va_arg(apcopy, struct block_list *); // src_bl
+	(void)va_arg(apcopy, int); // type
+	struct block_list *dst = va_arg(apcopy, struct block_list *);
+	va_end(apcopy);
+
+	nullpo_ret(dst);
+
+	// Already covered by the area send centered on the target.
+	if (bl->m == dst->m
+	    && bl->x >= dst->x - AREA_SIZE && bl->x <= dst->x + AREA_SIZE
+	    && bl->y >= dst->y - AREA_SIZE && bl->y <= dst->y + AREA_SIZE)
+		return 0;
+
+	return clif->send_sub(bl, ap);
+}
+
+/**
+ * Sends an action packet (attack or offensive skill) to every player who can see
+ * either the attacker or the target.
+ *
+ * A plain area send is centered on the target only, which makes the attacker look
+ * idle to players who can see the attacker but not the target. This happens as soon
+ * as the two are far enough apart for their view ranges to differ, which is most
+ * noticeable with ranged attackers. (bugreport:7375)
+ *
+ * @param buf The packet buffer.
+ * @param len The packet length.
+ * @param src The attacker.
+ * @param dst The target.
+ * @param type The send type to use (AREA or AREA_WOS, relative to the target).
+ */
+static void clif_send_actionpacket(const void *buf, int len, struct block_list *src, struct block_list *dst, enum send_target type)
+{
+	nullpo_retv(buf);
+	nullpo_retv(src);
+	nullpo_retv(dst);
+
+	clif->send(buf, len, dst, type);
+
+	if (src == dst)
+		return;
+
+	map->foreachinarea(clif->send_actionpacket_sub, src->m, src->x - AREA_SIZE, src->y - AREA_SIZE,
+	                   src->x + AREA_SIZE, src->y + AREA_SIZE, BL_PC, buf, len, dst, type, dst);
+}
+
 /// Sends a 'damage' packet (src performs action on dst)
 /// 008a <src ID>.L <dst ID>.L <server tick>.L <src speed>.L <dst speed>.L <damage>.W <div>.W <type>.B <damage2>.W (ZC_NOTIFY_ACT)
 /// 02e1 <src ID>.L <dst ID>.L <server tick>.L <src speed>.L <dst speed>.L <damage>.L <div>.W <type>.B <damage2>.L (ZC_NOTIFY_ACT2)
@@ -5181,11 +5247,11 @@ static int clif_damage(struct block_list *src, struct block_list *dst, int sdela
 #endif
 
 	if (clif->isdisguised(dst)) {
-		clif->send(&p,sizeof(p),dst,AREA_WOS);
+		clif->send_actionpacket(&p, sizeof(p), src, dst, AREA_WOS);
 		p.targetGID = -dst->id;
 		clif->send(&p,sizeof(p),dst,SELF);
 	} else {
-		clif->send(&p,sizeof(p),dst,AREA);
+		clif->send_actionpacket(&p, sizeof(p), src, dst, AREA);
 	}
 
 	if (clif->isdisguised(src)) {
@@ -5963,11 +6029,11 @@ static int clif_skill_damage(struct block_list *src, struct block_list *dst, int
 	p.action = type;
 
 	if (clif->isdisguised(dst)) {
-		clif->send(&p, sizeof(p), dst, AREA_WOS);
+		clif->send_actionpacket(&p, sizeof(p), src, dst, AREA_WOS);
 		p.targetID = -dst->id;
 		clif->send(&p, sizeof(p), dst, SELF);
 	} else {
-		clif->send(&p, sizeof(p), dst, AREA);
+		clif->send_actionpacket(&p, sizeof(p), src, dst, AREA);
 	}
 
 	if (clif->isdisguised(src)) {
@@ -26634,6 +26700,8 @@ void clif_defaults(void)
 	clif->refresh_ip = clif_refresh_ip;
 	clif->send = clif_send;
 	clif->send_sub = clif_send_sub;
+	clif->send_actionpacket_sub = clif_send_actionpacket_sub;
+	clif->send_actionpacket = clif_send_actionpacket;
 	clif->send_actual = clif_send_actual;
 	clif->parse = clif_parse;
 	clif->parse_cmd = clif_parse_cmd_optional;
