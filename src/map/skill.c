@@ -69,6 +69,10 @@
 
 #define SKILLUNITTIMER_INTERVAL 100
 
+/// Default OPT1_STONEWAIT duration (ms) for SC_STONE triggered by an addeff-family
+/// item bonus (bAddEff, bAddEffWhenHit, bAddEffOnSkill) that doesn't specify one explicitly.
+#define SKILL_ADDEFF_STONEWAIT_DEFAULT 1000
+
 static struct skill_interface skill_s;
 static struct s_skill_dbs skilldbs;
 
@@ -1599,11 +1603,17 @@ static int skill_additional_effect(struct block_list *src, struct block_list *bl
 					flag = SCFLAG_NONE;
 				}
 
-				if (sd->addeff[i].flag&ATF_TARGET)
-					status->change_start(src, bl, type, rate, 7, 0, (type == SC_BURNING) ? src->id : 0, 0, temp, flag, skill_id);
+				{
+					int val4 = sd->addeff[i].wait_duration;
+					if (val4 == 0 && type == SC_STONE)
+						val4 = SKILL_ADDEFF_STONEWAIT_DEFAULT;
 
-				if (sd->addeff[i].flag&ATF_SELF)
-					status->change_start(src, src, type, rate, 7, 0, (type == SC_BURNING) ? src->id : 0, 0, temp, flag, skill_id);
+					if (sd->addeff[i].flag&ATF_TARGET)
+						status->change_start(src, bl, type, rate, 7, 0, (type == SC_BURNING) ? src->id : 0, val4, temp, flag, skill_id);
+
+					if (sd->addeff[i].flag&ATF_SELF)
+						status->change_start(src, src, type, rate, 7, 0, (type == SC_BURNING) ? src->id : 0, val4, temp, flag, skill_id);
+				}
 			}
 		}
 
@@ -1612,15 +1622,20 @@ static int skill_additional_effect(struct block_list *src, struct block_list *bl
 			enum sc_type type;
 			int i;
 			for( i = 0; i < ARRAYLENGTH(sd->addeff3) && sd->addeff3[i].skill; i++ ) {
+				int val4;
 				if( skill_id != sd->addeff3[i].skill || !sd->addeff3[i].rate )
 					continue;
 				type = sd->addeff3[i].id;
 				temp = skill->get_time2(status->sc2skill(type),7);
 
+				val4 = sd->addeff3[i].wait_duration;
+				if (val4 == 0 && type == SC_STONE)
+					val4 = SKILL_ADDEFF_STONEWAIT_DEFAULT;
+
 				if( sd->addeff3[i].target&ATF_TARGET )
-					status->change_start(src, bl, type, sd->addeff3[i].rate, 7, 0, 0, 0, temp, SCFLAG_NONE, skill_id);
+					status->change_start(src, bl, type, sd->addeff3[i].rate, 7, 0, 0, val4, temp, SCFLAG_NONE, skill_id);
 				if( sd->addeff3[i].target&ATF_SELF )
-					status->change_start(src, src, type, sd->addeff3[i].rate, 7, 0, 0, 0, temp, SCFLAG_NONE, skill_id);
+					status->change_start(src, src, type, sd->addeff3[i].rate, 7, 0, 0, val4, temp, SCFLAG_NONE, skill_id);
 			}
 		}
 	}
@@ -2734,7 +2749,7 @@ static int skill_counter_additional_effect(struct block_list *src, struct block_
 	if(dstsd && attack_type&BF_WEAPON) {
 		//Counter effects.
 		enum sc_type type;
-		int i, time;
+		int i, time, sc_flag;
 		for(i=0; i < ARRAYLENGTH(dstsd->addeff2) && dstsd->addeff2[i].flag; i++) {
 			rate = dstsd->addeff2[i].rate;
 			if (attack_type&BF_LONG)
@@ -2748,13 +2763,28 @@ static int skill_counter_additional_effect(struct block_list *src, struct block_
 					continue; //Range Failed.
 			}
 			type = dstsd->addeff2[i].id;
-			time = skill->get_time2(status->sc2skill(type),7);
 
-			if (dstsd->addeff2[i].flag&ATF_TARGET)
-				status->change_start(bl, src, type, rate, 7, 0, 0, 0, time, SCFLAG_NONE, skill_id);
+			if (dstsd->addeff2[i].duration > 0) {
+				// Fixed duration
+				time = dstsd->addeff2[i].duration;
+				sc_flag = SCFLAG_FIXEDRATE|SCFLAG_FIXEDTICK;
+			} else {
+				// Default duration
+				time = skill->get_time2(status->sc2skill(type),7);
+				sc_flag = SCFLAG_NONE;
+			}
 
-			if (dstsd->addeff2[i].flag&ATF_SELF && !status->isdead(bl))
-				status->change_start(bl, bl, type, rate, 7, 0, 0, 0, time, SCFLAG_NONE, skill_id);
+			{
+				int val4 = dstsd->addeff2[i].wait_duration;
+				if (val4 == 0 && type == SC_STONE)
+					val4 = SKILL_ADDEFF_STONEWAIT_DEFAULT;
+
+				if (dstsd->addeff2[i].flag&ATF_TARGET)
+					status->change_start(bl, src, type, rate, 7, 0, 0, val4, time, sc_flag, skill_id);
+
+				if (dstsd->addeff2[i].flag&ATF_SELF && !status->isdead(bl))
+					status->change_start(bl, bl, type, rate, 7, 0, 0, val4, time, sc_flag, skill_id);
+			}
 		}
 	}
 
