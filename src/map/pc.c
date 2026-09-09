@@ -6924,8 +6924,8 @@ static bool pc_gainexp(struct map_session_data *sd, struct block_list *src, uint
 	if (sd->bl.prev == NULL || pc_isdead(sd))
 		return false;
 
-	if (!battle_config.pvp_exp && map->list[sd->bl.m].flag.pvp)  // [MouseJstr]
-		return false; // no exp on pvp maps
+	if (!battle_config.pvp_exp && !battle_config.pk_mode && map->list[sd->bl.m].flag.pvp)  // [MouseJstr]
+		return false; // no exp on pvp maps; pk_mode forces pvp on all maps, so it must not be subject to this rule
 
 	if (pc_has_permission(sd,PC_PERM_DISABLE_EXP))
 		return false;

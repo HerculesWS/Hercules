@@ -2578,7 +2578,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 	}
 
 	if( !(type&2) //No exp
-	 && (!map->list[m].flag.pvp || battle_config.pvp_exp) //Pvp no exp rule [MouseJstr]
+	 && (!map->list[m].flag.pvp || battle_config.pvp_exp || battle_config.pk_mode) //Pvp no exp rule [MouseJstr]; pk_mode forces pvp on all maps, so it must not be subject to this rule
 	 && (!md->master_id || md->special_state.ai == AI_NONE) //Only player-summoned mobs do not give exp. [Skotlex]
 	 && (!map->list[m].flag.nobaseexp || !map->list[m].flag.nojobexp) //Gives Exp
 	) { //Experience calculation.
