@@ -72134,15 +72134,15 @@ int HP_pc_bonus_autospell_onskill(struct s_autospell *spell, int max, short src_
 	}
 	return retVal___;
 }
-int HP_pc_bonus_addeff(struct s_addeffect *effect, int max, enum sc_type id, int16 rate, int16 arrow_rate, uint8 flag, uint16 duration) {
+int HP_pc_bonus_addeff(struct s_addeffect *effect, int max, enum sc_type id, int16 rate, int16 arrow_rate, uint8 flag, uint16 duration, uint16 wait_duration) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_pc_bonus_addeff_pre > 0) {
-		int (*preHookFunc) (struct s_addeffect **effect, int *max, enum sc_type *id, int16 *rate, int16 *arrow_rate, uint8 *flag, uint16 *duration);
+		int (*preHookFunc) (struct s_addeffect **effect, int *max, enum sc_type *id, int16 *rate, int16 *arrow_rate, uint8 *flag, uint16 *duration, uint16 *wait_duration);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_bonus_addeff_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_pc_bonus_addeff_pre[hIndex].func;
-			retVal___ = preHookFunc(&effect, &max, &id, &rate, &arrow_rate, &flag, &duration);
+			retVal___ = preHookFunc(&effect, &max, &id, &rate, &arrow_rate, &flag, &duration, &wait_duration);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -72150,26 +72150,26 @@ int HP_pc_bonus_addeff(struct s_addeffect *effect, int max, enum sc_type id, int
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.pc.bonus_addeff(effect, max, id, rate, arrow_rate, flag, duration);
+		retVal___ = HPMHooks.source.pc.bonus_addeff(effect, max, id, rate, arrow_rate, flag, duration, wait_duration);
 	}
 	if (HPMHooks.count.HP_pc_bonus_addeff_post > 0) {
-		int (*postHookFunc) (int retVal___, struct s_addeffect *effect, int max, enum sc_type id, int16 rate, int16 arrow_rate, uint8 flag, uint16 duration);
+		int (*postHookFunc) (int retVal___, struct s_addeffect *effect, int max, enum sc_type id, int16 rate, int16 arrow_rate, uint8 flag, uint16 duration, uint16 wait_duration);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_bonus_addeff_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_pc_bonus_addeff_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, effect, max, id, rate, arrow_rate, flag, duration);
+			retVal___ = postHookFunc(retVal___, effect, max, id, rate, arrow_rate, flag, duration, wait_duration);
 		}
 	}
 	return retVal___;
 }
-int HP_pc_bonus_addeff_onskill(struct s_addeffectonskill *effect, int max, enum sc_type id, short rate, short skill_id, unsigned char target) {
+int HP_pc_bonus_addeff_onskill(struct s_addeffectonskill *effect, int max, enum sc_type id, short rate, short skill_id, unsigned char target, uint16 wait_duration) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_pc_bonus_addeff_onskill_pre > 0) {
-		int (*preHookFunc) (struct s_addeffectonskill **effect, int *max, enum sc_type *id, short *rate, short *skill_id, unsigned char *target);
+		int (*preHookFunc) (struct s_addeffectonskill **effect, int *max, enum sc_type *id, short *rate, short *skill_id, unsigned char *target, uint16 *wait_duration);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_bonus_addeff_onskill_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_pc_bonus_addeff_onskill_pre[hIndex].func;
-			retVal___ = preHookFunc(&effect, &max, &id, &rate, &skill_id, &target);
+			retVal___ = preHookFunc(&effect, &max, &id, &rate, &skill_id, &target, &wait_duration);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -72177,13 +72177,13 @@ int HP_pc_bonus_addeff_onskill(struct s_addeffectonskill *effect, int max, enum 
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.pc.bonus_addeff_onskill(effect, max, id, rate, skill_id, target);
+		retVal___ = HPMHooks.source.pc.bonus_addeff_onskill(effect, max, id, rate, skill_id, target, wait_duration);
 	}
 	if (HPMHooks.count.HP_pc_bonus_addeff_onskill_post > 0) {
-		int (*postHookFunc) (int retVal___, struct s_addeffectonskill *effect, int max, enum sc_type id, short rate, short skill_id, unsigned char target);
+		int (*postHookFunc) (int retVal___, struct s_addeffectonskill *effect, int max, enum sc_type id, short rate, short skill_id, unsigned char target, uint16 wait_duration);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_bonus_addeff_onskill_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_pc_bonus_addeff_onskill_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, effect, max, id, rate, skill_id, target);
+			retVal___ = postHookFunc(retVal___, effect, max, id, rate, skill_id, target, wait_duration);
 		}
 	}
 	return retVal___;
