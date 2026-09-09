@@ -25,6 +25,7 @@
 
 #include "map/battle.h"
 #include "map/channel.h"
+#include "map/chrif.h"
 #include "map/clif.h"
 #include "map/instance.h"
 #include "map/intif.h"
@@ -1096,21 +1097,41 @@ static int guild_member_withdraw(int guild_id, int account_id, int char_id, int 
 static void guild_retrieveitembound(int char_id, int aid, int guild_id)
 {
 #ifdef GP_BOUND_ITEMS
+	int i;
 	struct map_session_data *sd = map->charid2sd(char_id);
-	if (sd != NULL) { //Character is online
+	struct guild_storage *gstor = idb_get(gstorage->db,guild_id);
+
+	// The guild's storage contents have not been loaded onto this map server yet, so any
+	// bound item cleared from memory here would simply be lost instead of reaching the
+	// guild storage. Let the char server move the item directly in the database instead,
+	// the same way it already does for offline characters.
+	if (sd != NULL && gstor != NULL && gstor->items.data != NULL) { //Character is online and guild storage is available
 		pc->bound_clear(sd,IBT_GUILD);
-	} else { //Character is offline, ask char server to do the job
-		struct guild_storage *gstor = idb_get(gstorage->db,guild_id);
+	} else { //Character is offline, or guild storage isn't loaded yet: ask char server to do the job
 		if (gstor != NULL && gstor->in_use) {
 			// Someone is in guild storage, close them
 			struct s_mapiterator* iter = mapit_getallusers();
-			for (sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter))) {
-				if(sd->status.guild_id == guild_id && sd->state.storage_flag == STORAGE_FLAG_GUILD) {
-					gstorage->close(sd);
+			struct map_session_data *tsd;
+			for (tsd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); tsd = BL_UCAST(BL_PC, mapit->next(iter))) {
+				if (tsd->status.guild_id == guild_id && tsd->state.storage_flag == STORAGE_FLAG_GUILD) {
+					gstorage->close(tsd);
 					break;
 				}
 			}
 			mapit->free(iter);
+		}
+		if (sd != NULL) {
+			// Character is online but the guild storage isn't: flush the character's current
+			// inventory to the char server first, so the bound item is guaranteed to be in
+			// `inventory_db` by the time the char server processes the retrieval request below
+			// (both travel over the same ordered inter-server connection). Only then remove it
+			// from the client/memory copy, since the char server now owns moving it into the
+			// guild storage.
+			chrif->save(sd, 0);
+			for (i = 0; i < sd->status.inventorySize; i++) {
+				if (sd->status.inventory[i].bound == IBT_GUILD)
+					pc->delitem(sd, i, sd->status.inventory[i].amount, 0, DELITEM_SKILLUSE, LOG_TYPE_OTHER);
+			}
 		}
 		intif->itembound_req(char_id,aid,guild_id);
 	}
