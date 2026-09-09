@@ -4785,6 +4785,22 @@ static int pc_search_inventory(struct map_session_data *sd, int item_id)
 	return (i < sd->status.inventorySize) ? i : INDEX_NOT_FOUND;
 }
 
+/**
+ * Checks whether an item of the given type must carry a unique_id.
+ *
+ * This covers non-stackable items as well as items flagged force_serial
+ * or of type IT_CASH, which are stackable by type but must still be kept
+ * apart from other stacks of the same item via their unique_id.
+ *
+ * @param data The item's database entry.
+ * @return true if the item requires a unique_id, false otherwise.
+ */
+static bool item_needs_unique_id(struct item_data *data)
+{
+	nullpo_retr(false, data);
+	return (!itemdb->isstackable2(data) || data->flag.force_serial || data->type == IT_CASH);
+}
+
 /*==========================================
  * Attempt to add a new item to inventory.
  * Return:
@@ -4800,6 +4816,7 @@ static int pc_search_inventory(struct map_session_data *sd, int item_id)
 static int pc_additem(struct map_session_data *sd, const struct item *item_data, int amount, e_log_pick_type log_type)
 {
 	struct item_data *data;
+	struct item new_item;
 	int i;
 	unsigned int w;
 
@@ -4848,6 +4865,15 @@ static int pc_additem(struct map_session_data *sd, const struct item *item_data,
 
 	i = sd->status.inventorySize;
 
+	// A serial-tagged item (force_serial / IT_CASH) needs its unique_id assigned
+	// before the stacking check below, otherwise two such items freshly added
+	// with unique_id == 0 would incorrectly match and merge into one stack.
+	if (item_needs_unique_id(data) && !item_data->unique_id) {
+		new_item = *item_data;
+		new_item.unique_id = itemdb->unique_id(sd);
+		item_data = &new_item;
+	}
+
 	// Stackable | Non Rental
 	if( itemdb->isstackable2(data) && item_data->expire_time == 0 ) {
 		for (i = 0; i < sd->status.inventorySize; i++) {
@@ -4882,9 +4908,6 @@ static int pc_additem(struct map_session_data *sd, const struct item *item_data,
 		clif->additem(sd,i,amount,0);
 
 	}
-
-	if( ( !itemdb->isstackable2(data) || data->flag.force_serial || data->type == IT_CASH) && !item_data->unique_id )
-			sd->status.inventory[i].unique_id = itemdb->unique_id(sd);
 
 	logs->pick_pc(sd, log_type, amount, &sd->status.inventory[i],sd->inventory_data[i]);
 
@@ -10665,7 +10688,7 @@ static int pc_checkitem(struct map_session_data *sd)
 					continue;
 				}
 
-				if (sd->status.inventory[i].unique_id == 0 && !itemdb->isstackable(id))
+				if (sd->status.inventory[i].unique_id == 0 && item_needs_unique_id(itemdb->search(id)))
 					sd->status.inventory[i].unique_id = itemdb->unique_id(sd);
 			}
 
@@ -10683,7 +10706,7 @@ static int pc_checkitem(struct map_session_data *sd)
 					continue;
 				}
 
-				if (sd->status.cart[i].unique_id == 0 && !itemdb->isstackable(id))
+				if (sd->status.cart[i].unique_id == 0 && item_needs_unique_id(itemdb->search(id)))
 					sd->status.cart[i].unique_id = itemdb->unique_id(sd);
 			}
 
@@ -10709,7 +10732,7 @@ static int pc_checkitem(struct map_session_data *sd)
 						continue;
 					}
 
-					if (it->unique_id == 0 && itemdb->isstackable(id) == 0)
+					if (it->unique_id == 0 && item_needs_unique_id(itemdb->search(id)))
 						it->unique_id = itemdb->unique_id(sd);
 				}
 			}
@@ -10734,7 +10757,7 @@ static int pc_checkitem(struct map_session_data *sd)
 						continue;
 					}
 
-					if (guild_storage->items.data[i].unique_id == 0 && !itemdb->isstackable(id))
+					if (guild_storage->items.data[i].unique_id == 0 && item_needs_unique_id(itemdb->search(id)))
 						guild_storage->items.data[i].unique_id = itemdb->unique_id(sd);
 				}
 			}
