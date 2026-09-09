@@ -372,7 +372,7 @@ int npc_parsesrcfile_posthook(int retVal, const char *filepath, bool runOnInit)
 	return retVal;
 }
 
-HPExport void server_preinit(void)
+HPExportF void server_preinit(void)
 {
 	addArg("--generate-translations", false, generatetranslations,
 			"Creates 'generated_translations/**/*.pot' file with all translateable strings from scripts, server terminates afterwards.");
@@ -389,11 +389,11 @@ HPExport void server_preinit(void)
 	lang_export_stringcount_current = 0;
 }
 
-HPExport void plugin_init(void)
+HPExportF void plugin_init(void)
 {
 }
 
-HPExport void server_online(void)
+HPExportF void server_online(void)
 {
 	if (generating_translations) {
 		ShowInfo("Translations template exported to '%s' with %d strings.\n", DIRECTORYNAME, lang_export_stringcount_total);
@@ -401,6 +401,6 @@ HPExport void server_online(void)
 	core->runflag = CORE_ST_STOP;
 }
 
-HPExport void plugin_final(void)
+HPExportF void plugin_final(void)
 {
 }
