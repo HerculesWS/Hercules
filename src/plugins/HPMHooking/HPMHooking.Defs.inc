@@ -1526,6 +1526,8 @@ typedef void (*HPMHOOK_pre_clif_cutin) (struct map_session_data **sd, const char
 typedef void (*HPMHOOK_post_clif_cutin) (struct map_session_data *sd, const char *image, int type);
 typedef void (*HPMHOOK_pre_clif_sendfakenpc) (struct map_session_data **sd, int *npcid);
 typedef void (*HPMHOOK_post_clif_sendfakenpc) (struct map_session_data *sd, int npcid);
+typedef bool (*HPMHOOK_pre_clif_npc_requires_fakenpc) (struct map_session_data **sd, int *npcid);
+typedef bool (*HPMHOOK_post_clif_npc_requires_fakenpc) (bool retVal___, struct map_session_data *sd, int npcid);
 typedef void (*HPMHOOK_pre_clif_scriptclear) (struct map_session_data **sd, int *npcid);
 typedef void (*HPMHOOK_post_clif_scriptclear) (struct map_session_data *sd, int npcid);
 typedef void (*HPMHOOK_pre_clif_viewpoint) (struct map_session_data **sd, int *npc_id, int *type, int *x, int *y, int *id, int *color);

@@ -2545,6 +2545,53 @@ static void clif_sendfakenpc(struct map_session_data *sd, int npcid)
 	WFIFOSET(fd, packet_len(0x78));
 }
 
+/**
+ * Checks whether a fake NPC unit has to be sent to the client before an NPC
+ * dialog packet referencing the given NPC ID.
+ *
+ * The client silently ignores dialog packets (input boxes in particular) that
+ * reference an NPC ID it doesn't know about, which leaves the player stuck in
+ * a script that never receives an answer. This is the case when the NPC was
+ * never spawned client side (invisible NPCs, @see clif_spawn) or when it is
+ * out of the character's sight.
+ *
+ * @param sd    The character the dialog is sent to.
+ * @param npcid The NPC ID referenced by the dialog packet.
+ * @retval true if clif->sendfakenpc() has to be called for the given NPC ID.
+ */
+static bool clif_npc_requires_fakenpc(struct map_session_data *sd, int npcid)
+{
+	nullpo_retr(false, sd);
+
+	if (sd->state.using_fake_npc != 0)
+		return false; // A fake NPC is already registered client side.
+
+	if (npcid == npc->fake_nd->bl.id)
+		return true;
+
+	struct block_list *bl = map->id2bl(npcid);
+	if (bl == NULL)
+		return false; // Nothing can be sent for an NPC that doesn't exist anymore.
+
+	if (bl->m != sd->bl.m
+	    || bl->x < sd->bl.x - AREA_SIZE - 1 || bl->x > sd->bl.x + AREA_SIZE + 1
+	    || bl->y < sd->bl.y - AREA_SIZE - 1 || bl->y > sd->bl.y + AREA_SIZE + 1)
+		return true; // Out of sight, so it was never sent to the client.
+
+	// Invisible units are not spawned client side either (@see clif_spawn).
+	struct view_data *vd = status->get_viewdata(bl);
+	if (vd == NULL || vd->class_ == INVISIBLE_CLASS)
+		return true;
+
+	if (bl->type == BL_NPC) {
+		struct npc_data *nd = BL_UCAST(BL_NPC, bl);
+		if (nd->chat_id == 0 && (nd->option & OPTION_INVISIBLE) != 0)
+			return true;
+	}
+
+	return false;
+}
+
 /// Displays an NPC dialog menu (ZC_MENU_LIST).
 /// 00b7 <packet len>.W <npc id>.L <menu items>.?B
 /// Client behavior:
@@ -2568,7 +2615,6 @@ static void clif_sendfakenpc(struct map_session_data *sd, int npcid)
 static void clif_scriptmenu(struct map_session_data *sd, int npcid, const char *mes)
 {
 	int fd, slen;
-	struct block_list *bl = NULL;
 
 	nullpo_retv(sd);
 	nullpo_retv(mes);
@@ -2577,9 +2623,7 @@ static void clif_scriptmenu(struct map_session_data *sd, int npcid, const char *
 	slen = (int)strlen(mes) + 9;
 	Assert_retv(slen <= INT16_MAX);
 
-	if (!sd->state.using_fake_npc && (npcid == npc->fake_nd->bl.id || ((bl = map->id2bl(npcid)) != NULL && (bl->m!=sd->bl.m ||
-						bl->x<sd->bl.x-AREA_SIZE-1 || bl->x>sd->bl.x+AREA_SIZE+1 ||
-						bl->y<sd->bl.y-AREA_SIZE-1 || bl->y>sd->bl.y+AREA_SIZE+1))))
+	if (clif->npc_requires_fakenpc(sd, npcid))
 		clif->sendfakenpc(sd, npcid);
 
 	pc->update_idle_time(sd, BCIDLE_SCRIPT);
@@ -2605,10 +2649,7 @@ static void clif_zc_quest_dialog_menu_list(struct map_session_data *sd, int npci
 
 	pc->update_idle_time(sd, BCIDLE_SCRIPT);
 
-	struct block_list *bl = NULL;
-	if (!sd->state.using_fake_npc && (npcid == npc->fake_nd->bl.id || ((bl = map->id2bl(npcid)) != NULL && (bl->m != sd->bl.m ||
-						bl->x < sd->bl.x - AREA_SIZE - 1 || bl->x > sd->bl.x + AREA_SIZE + 1 ||
-						bl->y < sd->bl.y - AREA_SIZE - 1 || bl->y > sd->bl.y + AREA_SIZE + 1)))) {
+	if (clif->npc_requires_fakenpc(sd, npcid)) {
 		clif->sendfakenpc(sd, npcid);
 	}
 
@@ -2637,13 +2678,10 @@ static void clif_zc_quest_dialog_menu_list(struct map_session_data *sd, int npci
 static void clif_scriptinput(struct map_session_data *sd, int npcid)
 {
 	int fd;
-	struct block_list *bl = NULL;
 
 	nullpo_retv(sd);
 
-	if (!sd->state.using_fake_npc && (npcid == npc->fake_nd->bl.id || ((bl = map->id2bl(npcid)) != NULL && (bl->m!=sd->bl.m ||
-						bl->x<sd->bl.x-AREA_SIZE-1 || bl->x>sd->bl.x+AREA_SIZE+1 ||
-						bl->y<sd->bl.y-AREA_SIZE-1 || bl->y>sd->bl.y+AREA_SIZE+1))))
+	if (clif->npc_requires_fakenpc(sd, npcid))
 		clif->sendfakenpc(sd, npcid);
 
 	pc->update_idle_time(sd, BCIDLE_SCRIPT);
@@ -2670,15 +2708,7 @@ static void clif_scriptinputstr(struct map_session_data *sd, int npcid)
 {
 	nullpo_retv(sd);
 
-	struct block_list *bl = map->id2bl(npcid);
-	int x1 = sd->bl.x - AREA_SIZE - 1;
-	int x2 = sd->bl.x + AREA_SIZE + 1;
-	int y1 = sd->bl.y - AREA_SIZE - 1;
-	int y2 = sd->bl.y + AREA_SIZE + 1;
-	bool out_of_sight = (bl != NULL && (bl->m != sd->bl.m || bl->x < x1 || bl->x > x2 || bl->y < y1 || bl->y > y2));
-
-	if (sd->state.using_fake_npc == 0 && sd->state.using_megaphone == 0
-	    && (npcid == npc->fake_nd->bl.id || out_of_sight)) {
+	if (sd->state.using_megaphone == 0 && clif->npc_requires_fakenpc(sd, npcid)) {
 		clif->sendfakenpc(sd, npcid);
 	}
 
@@ -26739,6 +26769,7 @@ void clif_defaults(void)
 	clif->scriptinputstr = clif_scriptinputstr;
 	clif->cutin = clif_cutin;
 	clif->sendfakenpc = clif_sendfakenpc;
+	clif->npc_requires_fakenpc = clif_npc_requires_fakenpc;
 	clif->scriptclear = clif_scriptclear;
 	/* client-user-interface-related */
 	clif->viewpoint = clif_viewpoint;
