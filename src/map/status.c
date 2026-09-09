@@ -2514,6 +2514,10 @@ static int status_calc_elemental_(struct elemental_data *ed, enum e_status_calc_
 		memcpy(&ed->battle_status, estatus, sizeof(struct status_data));
 	} else {
 		status->calc_misc(&ed->bl, estatus, 0);
+
+		estatus->flee = ele->flee;
+		estatus->hit = ele->hit;
+
 		status->copy(&ed->battle_status, estatus);
 	}
 
