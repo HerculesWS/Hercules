@@ -370,7 +370,7 @@ struct vending_interface *vending;
 #endif // MAP_VENDING_H
 #endif // ! HERCULES_CORE
 
-HPExport const char *HPM_shared_symbols(int server_type)
+HPExportF const char *HPM_shared_symbols(int server_type)
 {
 #ifdef COMMON_UTILS_H /* HCache */
 	if ((server_type&(SERVER_TYPE_ALL)) != 0 && !HPM_SYMBOL("HCache", HCache))

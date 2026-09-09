@@ -70,6 +70,7 @@ if(BUILD_HPMHOOKING)
         ${HERC_PLUGIN_H}
         ${HPMHOOKING_INCLUDES}
       CDEFS "HPMHOOKING_${server_upper}"
+      CFLAGS "-Wno-suggest-attribute=format"
       VIRTUAL_TARGET "plugin.HPMHooking"
     )
   endforeach()

@@ -195,7 +195,7 @@ void atcmd_sample_message(const char *message, const char *sd_name)
 }
 
 /* run when server starts */
-HPExport void plugin_init (void) {
+HPExportF void plugin_init (void) {
 	ShowInfo("Server type is ");
 
 	switch (SERVER_TYPE) {
@@ -258,7 +258,7 @@ HPExport void plugin_init (void) {
 
 }
 /* triggered when server starts loading, before any server-specific data is set */
-HPExport void server_preinit(void)
+HPExportF void server_preinit(void)
 {
 	/* makes map server listen to mysetting:value in any "battleconf" file (including imported or custom ones) */
 	/* value is not limited to numbers, its passed to our plugins handler (parse_my_setting) as const char *,
@@ -267,11 +267,11 @@ HPExport void server_preinit(void)
 }
 
 /* run when server is ready (online) */
-HPExport void server_online (void)
+HPExportF void server_online (void)
 {
 }
 
 /* run when server is shutting down */
-HPExport void plugin_final (void) {
+HPExportF void plugin_final (void) {
 	ShowInfo ("%s says ~Bye world\n",pinfo.name);
 }

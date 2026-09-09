@@ -221,13 +221,13 @@ CMDLINEARG(constdb2doc)
 	map->minimal = torun = true;
 	return true;
 }
-HPExport void server_preinit(void) {
+HPExportF void server_preinit(void) {
 	addArg("--constdb2doc", false, constdb2doc, NULL);
 }
-HPExport void plugin_init(void) {
+HPExportF void plugin_init(void) {
 	addCPCommand("server:tools:constdb2doc", constdb2doc);
 }
-HPExport void server_online(void) {
+HPExportF void server_online(void) {
 	if (torun)
 		do_constdb2doc();
 }

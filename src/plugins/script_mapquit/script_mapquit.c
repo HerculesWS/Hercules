@@ -41,8 +41,8 @@ BUILDIN(mapquit) {
 	map->do_shutdown();
 	return true;
 }
-HPExport void server_preinit(void) {
+HPExportF void server_preinit(void) {
 }
-HPExport void plugin_init(void) {
+HPExportF void plugin_init(void) {
 	addScriptCommand("mapquit", "?", mapquit);
 }

@@ -212,7 +212,7 @@ static void my_status_calc_bl_(struct block_list *bl, e_scb_flag flag, enum e_st
 {
 }
 
-HPExport void plugin_init(void)
+HPExportF void plugin_init(void)
 {
 	for (int i = 0; i < ARRAYLENGTH(items); i++) {
 		items[i].nameid = dummy_items_info[i].nameid;
@@ -224,13 +224,13 @@ HPExport void plugin_init(void)
 	}
 }
 
-HPExport void server_preinit(void)
+HPExportF void server_preinit(void)
 {
 	clif->equipitemack = my_clif_equipitemack;
 	status->calc_bl_ = my_status_calc_bl_;
 }
 
-HPExport void server_online(void)
+HPExportF void server_online(void)
 {
 	ShowMessage("===============================================================================\n");
 	ShowStatus("Starting tests.\n");
@@ -3698,6 +3698,6 @@ HPExport void server_online(void)
 	map->do_shutdown();
 }
 
-HPExport void plugin_final(void)
+HPExportF void plugin_final(void)
 {
 }

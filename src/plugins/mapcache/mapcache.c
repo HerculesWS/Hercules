@@ -38,7 +38,7 @@
 #include <stdio.h>
 #include <string.h>
 
-HPExport struct hplugin_info pinfo = {
+struct hplugin_info pinfo = {
 	"Mapcache",      ///< Plugin name
 	SERVER_TYPE_MAP, ///< Which server types this plugin works with?
 	"1.0.0",         ///< Plugin version
@@ -486,7 +486,7 @@ CMDLINEARG(fixmd5)
 	return fix_md5_truncation();
 }
 
-HPExport void server_preinit(void)
+HPExportF void server_preinit(void)
 {
 	addArg("--convert-old-mapcache", false, convertmapcache,
 			"Converts an old db/" DBPATH "map_cache.dat file to the new format.");
@@ -501,7 +501,7 @@ HPExport void server_preinit(void)
 	VECTOR_INIT(maplist);
 }
 
-HPExport void plugin_final(void)
+HPExportF void plugin_final(void)
 {
 	while (VECTOR_LENGTH(maplist) > 0) {
 		char *name = VECTOR_POP(maplist);

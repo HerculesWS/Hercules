@@ -211,11 +211,11 @@ bool *HPMforce_return;
 void HPM_HP_final(void);
 void HPM_HP_load(void);
 
-HPExport void server_post_final (void) {
+HPExportF void server_post_final (void) {
 	HPM_HP_final();
 }
 
-HPExport const char *Hooked (bool *fr) {
+HPExportF const char *Hooked (bool *fr) {
 	const char *ret = HPM_shared_symbols(HPM_SERVER_TYPE);
 	if (ret)
 		return ret;
@@ -224,7 +224,7 @@ HPExport const char *Hooked (bool *fr) {
 	return NULL;
 }
 
-HPExport bool HPM_Plugin_AddHook(enum HPluginHookType type, const char *target, void *hook, unsigned int pID) {
+HPExportF bool HPM_Plugin_AddHook(enum HPluginHookType type, const char *target, void *hook, unsigned int pID) {
 	struct HookingPointData *hpd;
 
 	if (hp_db && (hpd = (struct HookingPointData *)strdb_get(hp_db,target)) != NULL) {
