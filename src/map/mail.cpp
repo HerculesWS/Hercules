@@ -109,6 +109,9 @@ static unsigned char mail_setitem(struct map_session_data *sd, int idx, int amou
 			(sd->status.inventory[idx].bound && !pc_can_give_bound_items(sd)) )
 			return 1;
 
+		if (sd->status.inventory[idx].equipSwitch != 0) // Must be unregistered from equip switch before it can be mailed.
+			return 1;
+
 		sd->mail.index = idx;
 		sd->mail.nameid = sd->status.inventory[idx].nameid;
 		sd->mail.amount = amount;
