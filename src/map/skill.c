@@ -17584,7 +17584,7 @@ static int skill_castfix_sc(struct block_list *bl, int time)
 			if ((--sc->data[SC_MEMORIZE]->val2) <= 0)
 				status_change_end(bl, SC_MEMORIZE, INVALID_TIMER);
 		}
-		if (sc->data[SC_POEMBRAGI])
+		if (sc->data[SC_POEMBRAGI] && bl->type != BL_HOM) // Aegis: Homunculus skills are not affected by Bragi.
 			time -= time * sc->data[SC_POEMBRAGI]->val2 / 100;
 		if (sc->data[SC_SKF_CAST] != NULL)
 			time -= time * sc->data[SC_SKF_CAST]->val1 / 100;
@@ -17823,7 +17823,7 @@ static int skill_delay_fix(struct block_list *bl, uint16 skill_id, uint16 skill_
 	if (!(delaynodex&2))
 	{
 		if (sc && sc->count) {
-			if (sc->data[SC_POEMBRAGI])
+			if (sc->data[SC_POEMBRAGI] && bl->type != BL_HOM) // Aegis: Homunculus skills are not affected by Bragi.
 				time -= time * sc->data[SC_POEMBRAGI]->val3 / 100;
 			if (sc->data[SC_WIND_INSIGNIA] && sc->data[SC_WIND_INSIGNIA]->val1 == 3 && (skill->get_ele(skill_id, skill_lv) == ELE_WIND))
 				time /= 2; // After Delay of Wind element spells reduced by 50%.
