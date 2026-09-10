@@ -1667,7 +1667,7 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 #ifndef RENEWAL
 	case MO_FINGEROFFENSIVE:
 		if(sd)
-			casttime += casttime * std::min(skill_lv, sd->spiritball);
+			casttime += casttime * std::min((int)skill_lv, sd->spiritball);
 	break;
 #endif
 	case MO_EXTREMITYFIST:
