@@ -306,6 +306,7 @@ struct map_session_data {
 	} storage;
 	enum pc_checkitem_types itemcheck;
 	short equip_index[EQI_MAX];
+	short equip_switch_index[EQI_MAX];
 	unsigned int weight,max_weight;
 	int cart_weight,cart_num,cart_weight_max;
 	int fd;
@@ -345,6 +346,7 @@ struct map_session_data {
 	int64 canuseitem_tick; // [Skotlex]
 	int64 canusecashfood_tick;
 	int64 canequip_tick; // [Inkfish]
+	int64 equipswitch_tick; // Equip switch cooldown
 	int64 cantalk_tick;
 	int64 canskill_tick;        /// used to prevent abuse from no-delay ACT files
 	int64 cansendmail_tick;     /// Mail System Flood Protection
