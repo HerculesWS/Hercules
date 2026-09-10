@@ -890,12 +890,21 @@ static int pc_setequipindex(struct map_session_data *sd)
 
 	nullpo_ret(sd);
 
-	for(i=0;i<EQI_MAX;i++)
+	for (i = 0; i < EQI_MAX; i++) {
 		sd->equip_index[i] = -1;
+		sd->equip_switch_index[i] = -1;
+	}
 
 	for (i = 0; i < sd->status.inventorySize; i++) {
 		if(sd->status.inventory[i].nameid <= 0)
 			continue;
+
+		if (sd->status.inventory[i].equipSwitch != 0) {
+			for (j = 0; j < EQI_MAX; j++)
+				if ((sd->status.inventory[i].equipSwitch & pc->equip_pos[j]) != 0)
+					sd->equip_switch_index[j] = i;
+		}
+
 		if(sd->status.inventory[i].equip) {
 			for(j=0;j<EQI_MAX;j++)
 				if(sd->status.inventory[i].equip & pc->equip_pos[j])
@@ -1286,6 +1295,7 @@ static bool pc_authok(struct map_session_data *sd, int login_id2, time_t expirat
 	sd->canuseitem_tick = tick;
 	sd->canusecashfood_tick = tick;
 	sd->canequip_tick = tick;
+	sd->equipswitch_tick = tick;
 	sd->cantalk_tick = tick;
 	sd->canskill_tick = tick;
 	sd->cansendmail_tick = tick;
@@ -10268,6 +10278,10 @@ static int pc_equipitem(struct map_session_data *sd, int n, int req_pos)
 		return 0;
 	}
 
+	// Equipping an item live takes it out of the staged switch set.
+	if (sd->status.inventory[n].equipSwitch != 0)
+		pc->equipswitch_remove(sd, n);
+
 	if (battle_config.battle_log != 0)
 		ShowInfo("equip %d(%d) %x:%x\n", sd->status.inventory[n].nameid, n, sd->status.inventory[n].equip,
 			 (unsigned int)req_pos);
@@ -10404,6 +10418,150 @@ static int pc_equipitem(struct map_session_data *sd, int n, int req_pos)
 	sd->npc_item_flag = iflag;
 
 	return 1;
+}
+
+/**
+ * Removes an item from the equip switch staging set, without touching its live equip state.
+ *
+ * @param sd The related character.
+ * @param index The item's inventory index.
+ *
+ **/
+static void pc_equipswitch_remove(struct map_session_data *sd, int index)
+{
+	nullpo_retv(sd);
+	Assert_retv(index >= 0 && index < sd->status.inventorySize);
+
+	if (sd->status.inventory[index].equipSwitch == 0)
+		return;
+
+	for (int i = 0; i < EQI_MAX; i++) {
+		if (sd->equip_switch_index[i] == index)
+			sd->equip_switch_index[i] = -1;
+	}
+
+	sd->status.inventory[index].equipSwitch = 0;
+	// TODO(#2557): clif ack once the equip switch packets exist; bookkeeping-only otherwise.
+}
+
+/**
+ * Stages an item for equip switching, without touching its live equip state.
+ *
+ * @param sd The related character.
+ * @param n The item's inventory index.
+ * @param req_pos The equipment slot(s) to stage the item into. (See enum equip_pos.)
+ * @return 0 on failure, 1 on success.
+ *
+ **/
+static int pc_equipitem_switch(struct map_session_data *sd, int n, int req_pos)
+{
+	nullpo_ret(sd);
+
+	if (n < 0 || n >= sd->status.inventorySize)
+		return 0;
+
+	// If the character is in berserk mode, the item can't be staged either.
+	if (sd->sc.count != 0 && (sd->sc.data[SC_BERSERK] != NULL || sd->sc.data[SC_NO_SWITCH_EQUIP] != NULL))
+		return 0;
+
+	if (DIFF_TICK(sd->equipswitch_tick, timer->gettick()) > 0)
+		return 0;
+
+	int pos = pc->equippoint(sd, n);
+
+	// Ammo has no live slot conflict to resolve later, so it cannot be staged.
+	if (pos == EQP_AMMO || pc->isequip(sd, n) == 0 || (pos & req_pos) == 0
+	    || (sd->status.inventory[n].attribute & ATTR_BROKEN) != 0) {
+		return 0;
+	}
+
+	for (int i = 0; i < EQI_MAX; i++) {
+		if ((pos & pc->equip_pos[i]) != 0) {
+			if (sd->equip_switch_index[i] >= 0)
+				pc->equipswitch_remove(sd, sd->equip_switch_index[i]);
+
+			sd->equip_switch_index[i] = n;
+		}
+	}
+
+	sd->status.inventory[n].equipSwitch = pos;
+
+	return 1;
+}
+
+/**
+ * Swaps one staged item into its live equip slot(s), resolving any conflicts with
+ * whatever is currently equipped there.
+ *
+ * @param sd The related character.
+ * @param index The item's inventory index.
+ * @return The bitmask of positions actually switched, 0 on failure. (See enum equip_pos.)
+ *
+ **/
+static int pc_equipswitch(struct map_session_data *sd, int index)
+{
+	nullpo_ret(sd);
+
+	if (index < 0 || index >= sd->status.inventorySize)
+		return 0;
+
+	if (sd->sc.count != 0 && (sd->sc.data[SC_BERSERK] != NULL || sd->sc.data[SC_NO_SWITCH_EQUIP] != NULL))
+		return 0;
+
+	int position = sd->status.inventory[index].equipSwitch;
+
+	if (position == 0)
+		return 0;
+
+	int conflict_mask = 0;
+	int conflict_indexes[EQI_MAX];
+	int conflict_positions[EQI_MAX];
+	int conflict_count = 0;
+
+	// Unequip everything the staged item would overlap with, gathering the union of freed slots
+	// and each item's original position, so a multi-slot item swapping with two single-slot
+	// items resolves in one pass and the displaced items can be re-staged afterwards.
+	for (int i = 0; i < EQI_MAX; i++) {
+		if ((position & pc->equip_pos[i]) == 0)
+			continue;
+
+		int equipped_index = sd->equip_index[i];
+
+		if (equipped_index < 0)
+			continue;
+
+		int equipped_pos = sd->status.inventory[equipped_index].equip;
+
+		conflict_mask |= equipped_pos;
+		conflict_indexes[conflict_count] = equipped_index;
+		conflict_positions[conflict_count] = equipped_pos;
+		conflict_count++;
+		pc->unequipitem(sd, equipped_index, PCUNEQUIPITEM_FORCE);
+	}
+
+	int combined_mask = position | conflict_mask;
+
+	for (int i = 0; i < EQI_MAX; i++) {
+		if ((combined_mask & pc->equip_pos[i]) == 0)
+			continue;
+
+		int staged_index = sd->equip_switch_index[i];
+
+		if (staged_index < 0)
+			continue;
+
+		int staged_pos = sd->status.inventory[staged_index].equipSwitch;
+
+		pc->equipswitch_remove(sd, staged_index);
+		pc->equipitem(sd, staged_index, staged_pos);
+	}
+
+	// The items that got displaced by the conflict become the new staged set,
+	// which is what makes this a symmetrical swap instead of a one-way unequip.
+	for (int i = 0; i < conflict_count; i++)
+		pc->equipitem_switch(sd, conflict_indexes[i], conflict_positions[i]);
+
+	return combined_mask;
 }
 
 /**
@@ -13114,10 +13272,13 @@ void pc_defaults(void)
 	pc->resethate = pc_resethate;
 	pc->equip_costume_overlap = pc_equip_costume_overlap;
 	pc->equipitem = pc_equipitem;
+	pc->equipitem_switch = pc_equipitem_switch;
 	pc->equipitem_pos = pc_equipitem_pos;
 	pc->unequipitem = pc_unequipitem;
 	pc->unequipitem_pos = pc_unequipitem_pos;
 	pc->unequipitem_pos_sub = pc_unequipitem_pos_sub;
+	pc->equipswitch = pc_equipswitch;
+	pc->equipswitch_remove = pc_equipswitch_remove;
 	pc->checkitem = pc_checkitem;
 	pc->useitem = pc_useitem;
 	pc->autocast_clear_current = pc_autocast_clear_current;

@@ -8151,6 +8151,7 @@ static const struct config_data_old battle_data[] = {
 	{ "show_tip_window",                    &battle_config.show_tip_window,                 1,      0,      1,              },
 	{ "features/enable_refinery_ui",        &battle_config.enable_refinery_ui,              1,      0,      1,              },
 	{ "features/replace_refine_npcs",       &battle_config.replace_refine_npcs,             1,      0,      1,              },
+	{ "features/equipswitch",               &battle_config.feature_equipswitch,             1,      0,      1,              },
 	{ "batk_min_limit",                     &battle_config.batk_min,                        0,      0,      INT_MAX,        },
 	{ "batk_max_limit",                     &battle_config.batk_max,                        USHRT_MAX, 1,   INT_MAX,        },
 	{ "matk_min_limit",                     &battle_config.matk_min,                        0,      0,      INT_MAX,        },

@@ -496,6 +496,7 @@ struct item {
 	unsigned char bound;
 	uint64 unique_id;
 	struct item_option option[MAX_ITEM_OPTIONS];
+	unsigned int equipSwitch; // Location(s) staged for equip switching (using enum equip_pos for bitmasking).
 };
 
 /**

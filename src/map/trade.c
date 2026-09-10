@@ -406,6 +406,11 @@ static void trade_tradeadditem(struct map_session_data *sd, short index, short a
 		return;
 	}
 
+	if (item->equipSwitch != 0) { // Must be unregistered from equip switch before it can be traded.
+		clif->tradeitemok(sd, index+2, TIO_INDROCKS);
+		return;
+	}
+
 	//Locate a trade position
 	ARR_FIND( 0, 10, trade_i, sd->deal.item[trade_i].index == index || sd->deal.item[trade_i].amount == 0 );
 	if( trade_i == 10 ) //No space left

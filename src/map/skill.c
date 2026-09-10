@@ -1368,6 +1368,7 @@ static int skillnotok(uint16 skill_id, struct map_session_data *sd)
 			}
 			FALLTHROUGH
 		case MC_IDENTIFY:
+		case ALL_EQSWITCH:
 			return 0; // always allowed
 		case WZ_ICEWALL:
 			// noicewall flag [Valaris]
@@ -10021,6 +10022,18 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 			if( sd )
 			{// players only, skill allows 5 buying slots
 				clif->skill_nodamage(src, bl, skill_id, skill_lv, buyingstore->setup(sd, MAX_BUYINGSTORE_SLOTS));
+			}
+			break;
+		case ALL_EQSWITCH:
+			if (sd != NULL) {
+				int position = 0;
+
+				for (int i = 0; i < EQI_MAX; i++) {
+					if (sd->equip_switch_index[i] >= 0 && (position & pc->equip_pos[i]) == 0)
+						position |= pc->equipswitch(sd, sd->equip_switch_index[i]);
+				}
+
+				clif->equipswitch_reply(sd, position == 0);
 			}
 			break;
 		case RK_ENCHANTBLADE:

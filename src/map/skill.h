@@ -1515,6 +1515,8 @@ enum e_skill {
 	SU_CHATTERING,
 	SU_SPIRITOFSEA,
 
+	ALL_EQSWITCH = 5067,
+
 	// 2018.11 rebalance - new Clown/Gypsy skill that replaces Longing for Freedom
 	CG_SPECIALSINGER = 5068,
 
