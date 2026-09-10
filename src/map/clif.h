@@ -979,7 +979,7 @@ struct clif_interface {
 	void (*authok) (struct map_session_data *sd);
 	void (*auth_error) (int fd, int errorCode);
 	void (*authrefuse) (int fd, uint8 error_code);
-	void (*authfail_fd) (int fd, int type);
+	void (*authfail_fd) (int fd, enum notify_ban_errorcode type);
 	void (*charselectok) (int id, uint8 ok);
 	/* item-related */
 	void (*dropflooritem) (struct flooritem_data* fitem);
