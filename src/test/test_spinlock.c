@@ -47,7 +47,7 @@ static volatile int32 done_threads = 0;
 #endif
 
 static  void *worker(void *p){
-	register int i;
+	int i;
 
 	for(i = 0; i < PERINC; i++){
 		EnterSpinLock(&lock);
