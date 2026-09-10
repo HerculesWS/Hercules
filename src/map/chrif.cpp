@@ -243,18 +243,17 @@ static int chrif_isconnected(void)
  * Flag = 1: Character is quitting
  * Flag = 2: Character is changing map-servers
  *------------------------------------------*/
-// TODO: Flag enum
-static bool chrif_save(struct map_session_data *sd, int flag)
+static bool chrif_save(struct map_session_data *sd, enum chrif_save_flag flag)
 {
 	nullpo_ret(sd);
 
 	pc->makesavestatus(sd);
 
-	if (flag && sd->state.active) { //Store player data which is quitting
+	if (flag != CSAVE_NORMAL && sd->state.active) { //Store player data which is quitting
 		//FIXME: SC are lost if there's no connection at save-time because of the way its related data is cleared immediately after this function. [Skotlex]
 		if ( chrif->isconnected() )
 			chrif->save_scdata(sd);
-		if ( !chrif->auth_logout(sd,flag == 1 ? ST_LOGOUT : ST_MAPCHANGE) )
+		if ( !chrif->auth_logout(sd, flag == CSAVE_QUITTING ? ST_LOGOUT : ST_MAPCHANGE) )
 			ShowError("chrif_save: Failed to set up player %d:%d for proper quitting!\n", sd->status.account_id, sd->status.char_id);
 	}
 
@@ -390,7 +389,7 @@ static int chrif_reconnect(union DBKey key, struct DBData *data, va_list ap)
 			break;
 		case ST_LOGOUT:
 			//Re-send final save
-			chrif->save(node->sd, 1);
+			chrif->save(node->sd, CSAVE_QUITTING);
 			break;
 		case ST_MAPCHANGE:
 			//Re-send map-change request.
@@ -600,7 +599,7 @@ static int auth_db_cleanup_sub(union DBKey key, struct DBData *data, va_list ap)
 			case ST_LOGOUT:
 				//Re-save attempt (->sd should never be null here).
 				node->node_created = timer->gettick(); //Refresh tick (avoid char-server load if connection is really bad)
-				chrif->save(node->sd, 1);
+				chrif->save(node->sd, CSAVE_QUITTING);
 				break;
 			case ST_LOGIN:
 			case ST_MAPCHANGE:
@@ -739,7 +738,7 @@ static bool chrif_changesex(struct map_session_data *sd, bool change_account)
 	nullpo_retr(false, sd);
 	chrif_check(false);
 
-	chrif->save(sd, 0);
+	chrif->save(sd, CSAVE_NORMAL);
 
 	WFIFOHEAD(chrif->fd,44);
 	WFIFOW(chrif->fd,0) = 0x2b0e;

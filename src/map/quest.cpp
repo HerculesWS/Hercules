@@ -160,7 +160,7 @@ static int quest_add(struct map_session_data *sd, int quest_id, unsigned int tim
 	quest->questinfo_refresh(sd);
 
 	if ((map->save_settings & 64) != 0)
-		chrif->save(sd, 0);
+		chrif->save(sd, CSAVE_NORMAL);
 
 	return 0;
 }
@@ -218,7 +218,7 @@ static int quest_change(struct map_session_data *sd, int qid1, int qid2)
 	quest->questinfo_refresh(sd);
 
 	if( map->save_settings&64 )
-		chrif->save(sd,0);
+		chrif->save(sd, CSAVE_NORMAL);
 	return 0;
 }
 
@@ -261,7 +261,7 @@ static int quest_delete(struct map_session_data *sd, int quest_id)
 	quest->questinfo_refresh(sd);
 
 	if( map->save_settings&64 )
-		chrif->save(sd,0);
+		chrif->save(sd, CSAVE_NORMAL);
 
 	return 0;
 }
@@ -399,7 +399,7 @@ static int quest_update_status(struct map_session_data *sd, int quest_id, enum q
 	quest->questinfo_refresh(sd);
 
 	if( map->save_settings&64 )
-		chrif->save(sd,0);
+		chrif->save(sd, CSAVE_NORMAL);
 
 	return 0;
 }
