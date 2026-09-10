@@ -58,6 +58,15 @@ set(HPMHOOKING_SERVERS
   map
 )
 
+set(HPMHOOKING_CFLAGS
+)
+
+if (MSVC)
+  set(HPMHOOKING_CFLAGS)
+else()
+  set(HPMHOOKING_CFLAGS "-Wno-suggest-attribute=format")
+endif()
+
 if(BUILD_HPMHOOKING)
   add_custom_target(plugin.HPMHooking)
 
@@ -70,7 +79,7 @@ if(BUILD_HPMHOOKING)
         ${HERC_PLUGIN_H}
         ${HPMHOOKING_INCLUDES}
       CDEFS "HPMHOOKING_${server_upper}"
-      CFLAGS "-Wno-suggest-attribute=format"
+      CFLAGS ${HPMHOOKING_CFLAGS}
       VIRTUAL_TARGET "plugin.HPMHooking"
     )
   endforeach()
