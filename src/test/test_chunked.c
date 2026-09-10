@@ -34,18 +34,22 @@
 
 #undef WFIFOHEAD
 #undef WFIFOP
+#undef WFIFO2PTR
 #undef WFIFOSET
 
 #define WFIFOHEAD(fd, size) fake_WFIFOHEAD(fd, size)
 #define WFIFOP(T, fd, pos) ((T)fake_WFIFOP(fd, pos))
+#define WFIFO2PTR(T, fd) ((T)fake_WFIFOP(fd, 0))
 #define WFIFOSET(fd, size) fake_WFIFOSET(fd, size)
 
 #undef RFIFOHEAD
 #undef RFIFOP
+#undef RFIFO2PTR
 #undef RFIFOSET
 
 #define RFIFOHEAD(fd, size) fake_RFIFOHEAD(fd, size)
 #define RFIFOP(T, fd, pos) ((const T)fake_RFIFOP(fd, pos))
+#define RFIFO2PTR(T, fd) ((const T)fake_RFIFOP(fd, 0))
 #define RFIFOSET(fd, size) fake_RFIFOSET(fd, size)
 
 #undef WFIFO_CHUNK_SIZE
