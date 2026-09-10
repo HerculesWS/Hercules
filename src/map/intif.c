@@ -2064,7 +2064,7 @@ static void intif_parse_MailSend(int fd)
 		else {
 			clif->mail_send(sd->fd, false);
 			if( map->save_settings&16 )
-				chrif->save(sd, 0);
+				chrif->save(sd, CSAVE_NORMAL);
 		}
 	}
 }
@@ -2155,7 +2155,7 @@ static void intif_parse_AuctionRegister(int fd)
 	if( auction.auction_id > 0 ) {
 		clif->auction_message(sd->fd, 1); // Confirmation Packet ??
 		if( map->save_settings&32 )
-			chrif->save(sd,0);
+			chrif->save(sd, CSAVE_NORMAL);
 	} else {
 		int zeny = auction.hours*battle_config.auction_feeperhour;
 

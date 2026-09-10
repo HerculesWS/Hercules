@@ -806,7 +806,7 @@ ACMD(save)
 	if (sd->status.pet_id > 0 && sd->pd)
 		intif->save_petdata(sd->status.account_id, &sd->pd->pet);
 
-	chrif->save(sd,0);
+	chrif->save(sd, CSAVE_NORMAL);
 
 	clif->message(fd, msg_fd(fd, MSGTBL_SAVE_POINT_CHANGED)); // Your save point has been changed.
 

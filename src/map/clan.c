@@ -218,7 +218,7 @@ static bool clan_join(struct map_session_data *sd, int clan_id)
 	sc_start2(NULL, &sd->bl, SC_CLAN_INFO, 10000, 0, c->clan_id, INFINITE_DURATION, 0);
 	status_calc_pc(sd, SCO_FORCE);
 
-	chrif->save(sd, 0);
+	chrif->save(sd, CSAVE_NORMAL);
 	clif->clan_basicinfo(sd);
 	clif->clan_onlinecount(c);
 	return true;
@@ -377,7 +377,7 @@ static bool clan_leave(struct map_session_data *sd, bool first)
 		status_calc_pc(sd, SCO_FORCE);
 	}
 
-	chrif->save(sd, 0);
+	chrif->save(sd, CSAVE_NORMAL);
 	clif->clan_onlinecount(c);
 	clif->clan_leave(sd);
 	return true;

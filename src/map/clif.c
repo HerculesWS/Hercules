@@ -18980,7 +18980,7 @@ static void clif_parse_PartyTick(int fd, struct map_session_data *sd)
 	if (newAllowParty != sd->status.allow_party) {
 		sd->status.allow_party = newAllowParty;
 		if ((map->save_settings & 512) != 0)
-			chrif->save(sd, 0); // send to char server
+			chrif->save(sd, CSAVE_NORMAL); // send to char server
 	} else {
 		sd->status.allow_party = newAllowParty;
 	}

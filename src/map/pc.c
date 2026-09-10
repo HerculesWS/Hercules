@@ -8571,7 +8571,7 @@ static int pc_setparam(struct map_session_data *sd, int type, int64 val)
 		delta = ((int32)val - sd->status.bank_vault);
 		sd->status.bank_vault = (int32)val;
 		if (map->save_settings & 256) {
-			chrif->save(sd, 0); // send to char server
+			chrif->save(sd, CSAVE_NORMAL); // send to char server
 		}
 		if (delta > 0) {
 			clif->bank_deposit(sd, BDA_SUCCESS);
@@ -9022,7 +9022,7 @@ static int pc_jobchange(struct map_session_data *sd, int class_, int upper)
 
 	//if you were previously famous, not anymore.
 	if (fame_flag != 0) {
-		chrif->save(sd,0);
+		chrif->save(sd, CSAVE_NORMAL);
 		chrif->buildfamelist();
 	} else if (sd->status.fame > 0) {
 		//It may be that now they are famous?
@@ -9030,7 +9030,7 @@ static int pc_jobchange(struct map_session_data *sd, int class_, int upper)
 		case MAPID_BLACKSMITH:
 		case MAPID_ALCHEMIST:
 		case MAPID_TAEKWON:
-			chrif->save(sd,0);
+			chrif->save(sd, CSAVE_NORMAL);
 			chrif->buildfamelist();
 		break;
 		}
@@ -11105,7 +11105,7 @@ static int pc_autosave(int tid, int64 tick, int id, intptr_t data)
 		last_save_id = sd->bl.id;
 		save_flag = 2;
 
-		chrif->save(sd,0);
+		chrif->save(sd, CSAVE_NORMAL);
 		break;
 	}
 	mapit->free(iter);
@@ -12147,7 +12147,7 @@ static void pc_bank_deposit(struct map_session_data *sd, int money)
 	else {
 		sd->status.bank_vault += money;
 		if( map->save_settings&256 )
-			chrif->save(sd,0);
+			chrif->save(sd, CSAVE_NORMAL);
 		clif->bank_deposit(sd,BDA_SUCCESS);
 	}
 }
@@ -12174,7 +12174,7 @@ static void pc_bank_withdraw(struct map_session_data *sd, int money)
 	else {
 		sd->status.bank_vault -= money;
 		if( map->save_settings&256 )
-			chrif->save(sd,0);
+			chrif->save(sd, CSAVE_NORMAL);
 		clif->bank_withdraw(sd,BWA_SUCCESS);
 	}
 }
