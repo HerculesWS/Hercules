@@ -498,8 +498,8 @@ typedef int64 (*HPMHOOK_pre_battle_calc_sizefix) (struct map_session_data **sd, 
 typedef int64 (*HPMHOOK_post_battle_calc_sizefix) (int64 retVal___, struct map_session_data *sd, int64 damage, int type, int size, bool ignore);
 typedef int64 (*HPMHOOK_pre_battle_calc_weapon_damage) (struct block_list **src, struct block_list **bl, uint16 *skill_id, uint16 *skill_lv, struct weapon_atk **watk, int *nk, bool *n_ele, short *s_ele, short *s_ele_, int *size, int *type, int *flag, int *flag2);
 typedef int64 (*HPMHOOK_post_battle_calc_weapon_damage) (int64 retVal___, struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, struct weapon_atk *watk, int nk, bool n_ele, short s_ele, short s_ele_, int size, int type, int flag, int flag2);
-typedef int64 (*HPMHOOK_pre_battle_calc_defense) (int *attack_type, struct block_list **src, struct block_list **target, uint16 *skill_id, uint16 *skill_lv, int64 *damage, int *flag, int *pdef);
-typedef int64 (*HPMHOOK_post_battle_calc_defense) (int64 retVal___, int attack_type, struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, int64 damage, int flag, int pdef);
+typedef int64 (*HPMHOOK_pre_battle_calc_defense) (int *attack_type, struct block_list **src, struct block_list **target, uint16 *skill_id, uint16 *skill_lv, int64 *damage, enum battle_calc_defense_flag *flag, int *pdef);
+typedef int64 (*HPMHOOK_post_battle_calc_defense) (int64 retVal___, int attack_type, struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, int64 damage, enum battle_calc_defense_flag flag, int pdef);
 typedef struct block_list * (*HPMHOOK_pre_battle_get_master) (struct block_list **src);
 typedef struct block_list * (*HPMHOOK_post_battle_get_master) (struct block_list * retVal___, struct block_list *src);
 typedef struct block_list * (*HPMHOOK_pre_battle_get_targeted) (struct block_list **target);
