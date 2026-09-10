@@ -213,16 +213,9 @@ static int lapiif_parse_fromapi_api_proxy(int fd)
 		}
 	}
 
-	switch (msg) {
-		default:
-			ShowError("Unknown proxy packet 0x%04x received from api-server, disconnecting.\n", msg);
-			sockt->eof(fd);
-			return 0;
-	}
-
-	// Uncomment if any new cases are added to the above switch that can break out of it
-	// RFIFOSKIP(fd, packet->packet_len);
-	// return 0;
+	ShowError("Unknown proxy packet 0x%04x received from api-server, disconnecting.\n", msg);
+	sockt->eof(fd);
+	return 0;
 }
 
 static void lapiif_parse_proxy_api_to_char(int fd)
