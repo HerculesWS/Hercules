@@ -613,6 +613,7 @@ CREATE TABLE IF NOT EXISTS `inventory` (
   `favorite` TINYINT UNSIGNED NOT NULL DEFAULT '0',
   `bound` TINYINT UNSIGNED NOT NULL DEFAULT '0',
   `unique_id` BIGINT UNSIGNED NOT NULL DEFAULT '0',
+  `equip_switch` INT UNSIGNED NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `char_id` (`char_id`)
 ) ENGINE=MyISAM;
@@ -968,6 +969,7 @@ INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1613840320); -- 2021-02-2
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1618058468); -- 2021-04-10--15-36.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1653155461); -- 2022-05-21--29-49.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1730631632); -- 2024-11-03--07-00.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1789012013); -- 2026-09-10--03-46.sql
 
 --
 -- Table structure for table `storage`
