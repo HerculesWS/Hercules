@@ -43,6 +43,17 @@ enum unit_stopwalking_flag {
 	// Note: Upper bytes are reserved for duration.
 };
 
+/**
+ * Bitmask values usable as a flag in unit_walk_toxy
+ */
+enum unit_walk_toxy_flag {
+	UNIT_WALK_TOXY_NONE           = 0x0,
+	UNIT_WALK_TOXY_EASY           = 0x1, ///< 1 = easy, 0 = hard
+	UNIT_WALK_TOXY_FORCE          = 0x2, ///< Force walking
+	UNIT_WALK_TOXY_DELAY          = 0x4, ///< Delay walking, if the reason you can't walk is the `canwalk delay`
+	UNIT_WALK_TOXY_AVOID_OCCUPIED = 0x8, ///< Search for an unoccupied cell and cancel if none available
+};
+
 struct unit_data {
 	struct block_list *bl;
 	char title[NAME_LENGTH];
@@ -110,7 +121,7 @@ struct unit_interface {
 	int (*walk_toxy_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*walk_toxy_sub) (struct block_list *bl);
 	int (*delay_walk_toxy_timer) (int tid, int64 tick, int id, intptr_t data);
-	int (*walk_toxy) (struct block_list *bl, short x, short y, int flag);
+	int (*walk_toxy) (struct block_list *bl, short x, short y, enum unit_walk_toxy_flag flag);
 	int (*walktobl_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*walk_tobl) (struct block_list *bl, struct block_list *tbl, int range, int flag);
 	bool (*run) (struct block_list *bl, struct map_session_data *sd, enum sc_type type);
