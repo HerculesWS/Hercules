@@ -2149,7 +2149,7 @@ static int map_quit(struct map_session_data *sd)
 	pc->clean_skilltree(sd);
 	pc->crimson_marker_clear(sd);
 	macro->detector_disconnect(sd);
-	chrif->save(sd,1);
+	chrif->save(sd, CSAVE_QUITTING);
 	unit->free_pc(sd);
 	return 0;
 }
@@ -6606,7 +6606,7 @@ int do_final(void)
 
 static int map_abort_sub(struct map_session_data *sd, va_list ap)
 {
-	chrif->save(sd,1);
+	chrif->save(sd, CSAVE_QUITTING);
 	return 1;
 }
 

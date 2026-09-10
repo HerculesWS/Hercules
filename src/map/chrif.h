@@ -42,6 +42,13 @@ struct status_change_entry;
  **/
 enum sd_state { ST_LOGIN, ST_LOGOUT, ST_MAPCHANGE };
 
+/** Flags for chrif_save() / chrif->save(). */
+enum chrif_save_flag {
+	CSAVE_NORMAL = 0,
+	CSAVE_QUITTING = 1,
+	CSAVE_CHANGE_MAPSERV = 2,
+};
+
 /**
  * Structures
  **/
@@ -99,7 +106,7 @@ struct chrif_interface {
 	void (*authreq) (struct map_session_data* sd, bool hstandalone);
 	void (*authok) (int fd);
 	bool (*scdata_request) (int account_id, int char_id);
-	bool (*save) (struct map_session_data* sd, int flag);
+	bool (*save) (struct map_session_data* sd, enum chrif_save_flag flag);
 	bool (*charselectreq) (struct map_session_data* sd, uint32 s_ip);
 
 	bool (*searchcharid) (int char_id);
