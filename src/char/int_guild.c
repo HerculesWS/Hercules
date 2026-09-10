@@ -1465,7 +1465,7 @@ static bool inter_guild_remove_alliance(struct guild *g, int guild_id, int accou
 	int i;
 	char name[NAME_LENGTH];
 
-	nullpo_retr(-1, g);
+	nullpo_retr(false, g);
 	ARR_FIND( 0, MAX_GUILDALLIANCE, i, g->alliance[i].guild_id == guild_id );
 	if( i == MAX_GUILDALLIANCE )
 		return false;

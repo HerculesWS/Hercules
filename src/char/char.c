@@ -4491,7 +4491,7 @@ static void char_send_wait_char_server(int fd)
 
 static bool char_find_available_map_fallback(struct mmo_charstatus *cd)
 {
-	nullpo_retr(-1, cd);
+	nullpo_retr(false, cd);
 
 	const struct {
 		const char *map;
