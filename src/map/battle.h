@@ -606,6 +606,7 @@ struct Battle_Config {
 	int show_tip_window;
 	int enable_refinery_ui;
 	int replace_refine_npcs;
+	int feature_equipswitch;
 
 	int batk_min;
 	int batk_max;

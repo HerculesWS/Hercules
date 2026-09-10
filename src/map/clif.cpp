@@ -12823,6 +12823,9 @@ static void clif_equipswitch_list(struct map_session_data *sd)
 #if PACKETVER_MAIN_NUM >= 20170208 || PACKETVER_RE_NUM >= 20170208 || PACKETVER_ZERO_NUM >= 20170208
 	nullpo_retv(sd);
 
+	if (battle_config.feature_equipswitch == 0)
+		return;
+
 	int buf_size = sizeof(struct PACKET_ZC_EQUIP_SWITCH_LIST) + sizeof(struct PACKET_ZC_EQUIP_SWITCH_ITEM) * EQI_MAX;
 	struct PACKET_ZC_EQUIP_SWITCH_LIST *packet = aMalloc(buf_size);
 	packet->PacketType = HEADER_ZC_EQUIP_SWITCH_LIST;
@@ -12869,6 +12872,9 @@ static void clif_parse_EquipSwitchAdd(int fd, struct map_session_data *sd) __att
 static void clif_parse_EquipSwitchAdd(int fd, struct map_session_data *sd)
 {
 #if PACKETVER_MAIN_NUM >= 20170208 || PACKETVER_RE_NUM >= 20170208 || PACKETVER_ZERO_NUM >= 20170208
+	if (battle_config.feature_equipswitch == 0)
+		return;
+
 	const struct PACKET_CZ_REQ_WEAR_EQUIP_SWITCH *p = RP2PTR(fd);
 
 	int index = p->index - 2;
@@ -12888,6 +12894,9 @@ static void clif_parse_EquipSwitchRemove(int fd, struct map_session_data *sd) __
 static void clif_parse_EquipSwitchRemove(int fd, struct map_session_data *sd)
 {
 #if PACKETVER_MAIN_NUM >= 20170208 || PACKETVER_RE_NUM >= 20170208 || PACKETVER_ZERO_NUM >= 20170208
+	if (battle_config.feature_equipswitch == 0)
+		return;
+
 	const struct PACKET_CZ_REQ_TAKEOFF_EQUIP_SWITCH *p = RP2PTR(fd);
 
 	int index = p->index - 2;
@@ -12908,6 +12917,9 @@ static void clif_parse_EquipSwitchRequest(int fd, struct map_session_data *sd) _
 static void clif_parse_EquipSwitchRequest(int fd, struct map_session_data *sd)
 {
 #if PACKETVER_MAIN_NUM >= 20170208 || PACKETVER_RE_NUM >= 20170208 || PACKETVER_ZERO_NUM >= 20170208
+	if (battle_config.feature_equipswitch == 0)
+		return;
+
 	if (DIFF_TICK(sd->equipswitch_tick, timer->gettick()) > 0)
 		return;
 
@@ -12936,6 +12948,9 @@ static void clif_parse_EquipSwitchRequestSingle(int fd, struct map_session_data 
 static void clif_parse_EquipSwitchRequestSingle(int fd, struct map_session_data *sd)
 {
 #if PACKETVER_MAIN_NUM >= 20170502 || PACKETVER_RE_NUM >= 20170502 || PACKETVER_ZERO_NUM >= 20170502
+	if (battle_config.feature_equipswitch == 0)
+		return;
+
 	const struct PACKET_CZ_REQ_EQUIP_SWITCH_SINGLE *p = RP2PTR(fd);
 
 	int index = p->index - 2;
