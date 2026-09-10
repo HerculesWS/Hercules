@@ -349,6 +349,12 @@ NPC duplicates inherit the script code.
 The rest (name, location, facing, sprite, span/trigger area) is
 obtained from the definition of the duplicate (not inherited).
 
+By default (script_configuration.duplicate_npc_vars_shared: true, see
+conf/map/script.conf) NPC duplicates also share their '.' (NPC-scoped)
+variables with the source NPC: reading or writing a '.' variable on any
+copy affects the same underlying storage. Setting this option to false
+gives each duplicate its own independent set of '.' variables instead.
+
 ** Define a function object
 
 function%TAB%script%TAB%<function name>%TAB%{<code>}

@@ -5333,6 +5333,7 @@ static bool script_config_read(const char *filename, bool imported)
 	libconfig->setting_lookup_bool_real(setting, "functions_private_by_default", &script->config.functions_private_by_default);
 	libconfig->setting_lookup_bool_real(setting, "functions_as_events", &script->config.functions_as_events);
 	libconfig->setting_lookup_bool_real(setting, "load_gm_scripts", &script->config.load_gm_scripts);
+	libconfig->setting_lookup_bool_real(setting, "duplicate_npc_vars_shared", &script->config.duplicate_npc_vars_shared);
 	libconfig->setting_lookup_int(setting, "check_cmdcount", &script->config.check_cmdcount);
 	libconfig->setting_lookup_int(setting, "check_gotocount", &script->config.check_gotocount);
 	libconfig->setting_lookup_int(setting, "input_min_value", &script->config.input_min_value);
@@ -31066,6 +31067,7 @@ void script_defaults(void)
 	script->config.onuntouch_name = "OnUnTouch";  //onuntouch_name (run whenever a char walks from the OnTouch area)
 	script->config.functions_private_by_default = true;
 	script->config.functions_as_events = false;
+	script->config.duplicate_npc_vars_shared = true; // true by default, for backward compatibility
 
 	// for ENABLE_CASE_CHECK
 	script->calc_hash_ci = calc_hash_ci;
