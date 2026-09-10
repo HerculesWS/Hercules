@@ -16255,9 +16255,18 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 			}
 			break;
 		case RA_WUGDASH:
-			if(!pc_isridingwug(sd)) {
+			if (pc_isridingwug(sd) == false) {
 				clif->skill_fail(sd, skill_id, USESKILL_FAIL_CONDITION, 0, 0);
 				return 0;
+			} else {
+				int dir = unit->getdir(&sd->bl);
+				int16 sx = sd->bl.x + dirx[dir % 8];
+				int16 sy = sd->bl.y + diry[dir % 8];
+
+				if (map->count_oncell(sd->bl.m, sx, sy, BL_CHAR | BL_MOB, 1) > 0) {
+					clif->skill_fail(sd, skill_id, USESKILL_FAIL_CONDITION, 0, 0);
+					return 0;
+				}
 			}
 			break;
 		/**
