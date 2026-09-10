@@ -435,7 +435,8 @@ static void rodex_delete_mail(struct map_session_data *sd, int64 mail_id)
 	nullpo_retv(sd);
 
 	msg = rodex->get_mail(sd, mail_id);
-	nullpo_retv(msg);
+	if (msg == NULL)
+		return;
 
 	msg->is_deleted = true;
 	intif->rodex_updatemail(sd, msg->id, 0, 3);
