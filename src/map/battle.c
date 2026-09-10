@@ -1395,8 +1395,7 @@ static int64 battle_calc_cardfix(int attack_type, struct block_list *src, struct
  * &2 - pdef(Pierce defense)
  * &4 - tdef(Total defense reduction)
  *------------------------------------------*/
-// TODO: Add an enum for flag
-static int64 battle_calc_defense(int attack_type, struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, int64 damage, int flag, int pdef)
+static int64 battle_calc_defense(int attack_type, struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, int64 damage, enum battle_calc_defense_flag flag, int pdef)
 {
 	struct status_data *sstatus, *tstatus;
 	struct map_session_data *sd, *tsd;
@@ -1525,24 +1524,24 @@ static int64 battle_calc_defense(int attack_type, struct block_list *src, struct
 				def1 = 399; // in aegis it set to 1 but in our case it may lead to exploitation so limit it to 399
 				//return 1;
 
-			if( flag&2 )
+			if( flag&BCD_PIERCE_DEFENSE )
 				damage += def1 >> 1;
 
-			if( !(flag&1) && !(flag&2) ) {
-				if( flag&4 )
+			if( !(flag&BCD_IGNORE_DEFENSE) && !(flag&BCD_PIERCE_DEFENSE) ) {
+				if( flag&BCD_TOTAL_DEFENSE_REDUCTION )
 					damage -= (def1 + vit_def);
 				else
 					damage = (int)((100.0f - def1 / (def1 + 400.0f) * 90.0f) / 100.0f * damage - vit_def);
 			}
 		#else
 				if( def1 > 100 ) def1 = 100;
-				if( !(flag&1) ){
-					if( flag&2 )
+				if( !(flag&BCD_IGNORE_DEFENSE) ){
+					if( flag&BCD_PIERCE_DEFENSE )
 						damage = damage * pdef * (def1+vit_def) / 100;
 					else
 						damage = damage * (100-def1) / 100;
 				}
-				if( !(flag&1 || flag&2) )
+				if( !(flag&BCD_IGNORE_DEFENSE || flag&BCD_PIERCE_DEFENSE) )
 					damage -= vit_def;
 		#endif
 			}
@@ -1559,7 +1558,7 @@ static int64 battle_calc_defense(int attack_type, struct block_list *src, struct
 			mdef2 = status->calc_mdef2(target, tsc, mdef2, false); // status mdef(RE)
 			mdef = status->calc_mdef(target, tsc, mdef, false); // equip mde(RE)
 #endif
-			if( flag&1 )
+			if( flag&BCD_IGNORE_DEFENSE )
 				mdef = 0;
 
 			if(sd) {
@@ -4265,7 +4264,7 @@ static struct Damage battle_calc_magic_attack(struct block_list *src, struct blo
 		if (tsd && (i = pc->sub_skillatk_bonus(tsd, skill_id)))
 			ad.damage -= ad.damage * i / 100;
 
-		ad.damage = battle->calc_defense(BF_MAGIC, src, target, skill_id, skill_lv, ad.damage, flag.imdef, 0);
+		ad.damage = battle->calc_defense(BF_MAGIC, src, target, skill_id, skill_lv, ad.damage, flag.imdef ? BCD_IGNORE_DEFENSE : BCD_NONE, 0);
 
 		if(ad.damage<1)
 			ad.damage=1;
@@ -5983,16 +5982,16 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 #endif
 			) { //Defense reduction
 			wd.damage = battle->calc_defense(BF_WEAPON, src, target, skill_id, skill_lv, wd.damage,
-											 (flag.idef?1:0)|(flag.pdef?2:0)
+											 (flag.idef?BCD_IGNORE_DEFENSE:BCD_NONE)|(flag.pdef?BCD_PIERCE_DEFENSE:BCD_NONE)
 #ifdef RENEWAL
-											 |(flag.tdef?4:0)
+											 |(flag.tdef?BCD_TOTAL_DEFENSE_REDUCTION:BCD_NONE)
 #endif
 											 , flag.pdef);
 			if( wd.damage2 )
 				wd.damage2 = battle->calc_defense(BF_WEAPON, src, target, skill_id, skill_lv, wd.damage2,
-												  (flag.idef2?1:0)|(flag.pdef2?2:0)
+												  (flag.idef2?BCD_IGNORE_DEFENSE:BCD_NONE)|(flag.pdef2?BCD_PIERCE_DEFENSE:BCD_NONE)
 #ifdef RENEWAL
-												  |(flag.tdef?4:0)
+												  |(flag.tdef?BCD_TOTAL_DEFENSE_REDUCTION:BCD_NONE)
 #endif
 												  , flag.pdef2);
 		}
