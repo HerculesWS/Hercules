@@ -842,6 +842,13 @@ enum removeGear_flag {
 	REMOVE_MOUNT_CART = 6,
 };
 
+/** Result flags for clif_createchat() / clif->createchat() (ZC_ACK_CREATE_CHATROOM). */
+enum clif_createchat_flag {
+	CREATECHAT_SUCCESS = 0,
+	CREATECHAT_ROOM_LIMIT_EXCEEDED = 1,
+	CREATECHAT_ROOM_ALREADY_EXISTS = 2,
+};
+
 /** Info types for PACKET_ZC_PERSONAL_INFOMATION (0x097b). **/
 enum detail_exp_info_type {
 	PC_EXP_INFO = 0x0,	//!< PCBang internet cafe modifiers. (http://pcbang.gnjoy.com/) (Unused.)
@@ -1240,7 +1247,7 @@ struct clif_interface {
 	void (*soundeffectall) (struct block_list* bl, const char* name, enum play_sound_act type, int term, enum send_target coverage);
 	/* chat/message-related */
 	void (*GlobalMessage) (struct block_list* bl, const char* message);
-	void (*createchat) (struct map_session_data* sd, int flag);
+	void (*createchat) (struct map_session_data* sd, enum clif_createchat_flag flag);
 	void (*dispchat) (struct chat_data* cd, int fd);
 	void (*joinchatfail) (struct map_session_data *sd,int flag);
 	void (*joinchatok) (struct map_session_data *sd,struct chat_data* cd);

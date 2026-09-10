@@ -126,12 +126,12 @@ static bool chat_createpcchat(struct map_session_data *sd, const char *title, co
 		cd->usersd[0] = sd;
 		pc_setchatid(sd,cd->bl.id);
 		pc_stop_attack(sd);
-		clif->createchat(sd,0); // 0 = success
+		clif->createchat(sd, CREATECHAT_SUCCESS);
 		clif->dispchat(cd,0);
 		achievement->validate_chatroom_create(sd); // Achievements [Smokexyz/Hercules]
 		return true;
 	}
-	clif->createchat(sd,1); // 1 = Room limit exceeded
+	clif->createchat(sd, CREATECHAT_ROOM_LIMIT_EXCEEDED);
 
 	return false;
 }

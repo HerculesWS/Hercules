@@ -4433,8 +4433,7 @@ static void clif_useitemack(struct map_session_data *sd, int index, int amount, 
 ///     0 = Room has been successfully created (opens chat room)
 ///     1 = Room limit exceeded
 ///     2 = Same room already exists
-// TODO: Flag enum
-static void clif_createchat(struct map_session_data *sd, int flag)
+static void clif_createchat(struct map_session_data *sd, enum clif_createchat_flag flag)
 {
 	int fd;
 
