@@ -398,11 +398,11 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source, st
 
 		// stack_flag
 		if (it->stack.amount) {
-			uint32 value = 0; // FIXME: Use an enum
-			value |= it->stack.inventory ? 1 : 0;
-			value |= it->stack.cart ? 2 : 0;
-			value |= it->stack.storage ? 4 : 0;
-			value |= it->stack.guildstorage ? 8 : 0;
+			enum ItemStackRestrictions value = ISR_NONE;
+			value |= it->stack.inventory ? ISR_INVENTORY : ISR_NONE;
+			value |= it->stack.cart ? ISR_CART : ISR_NONE;
+			value |= it->stack.storage ? ISR_STORAGE : ISR_NONE;
+			value |= it->stack.guildstorage ? ISR_GUILDSTORAGE : ISR_NONE;
 			StrBuf->Printf(&buf, "'%u',", value);
 		} else {
 			StrBuf->AppendStr(&buf, "NULL,");

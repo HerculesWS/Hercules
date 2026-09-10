@@ -415,6 +415,20 @@ enum ItemNouseRestrictions {
 };
 
 /**
+ * Item Stacking Limitation Restrictions
+ * @see struct item_data.stack
+ */
+enum ItemStackRestrictions {
+	ISR_NONE         = 0x0, ///< No restrictions
+	ISR_INVENTORY    = 0x1, ///< Stacking limit applies to inventory
+	ISR_CART         = 0x2, ///< Stacking limit applies to cart
+	ISR_STORAGE      = 0x4, ///< Stacking limit applies to storage
+	ISR_GUILDSTORAGE = 0x8, ///< Stacking limit applies to guild storage
+
+	ISR_ALL          = 0xF ///< Sum of all the above values
+};
+
+/**
  * Item Option Types
  */
 enum ItemOptionTypes {
