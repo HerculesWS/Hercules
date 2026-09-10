@@ -745,7 +745,7 @@ static bool login_fromchar_parse_wrong_pincode(int fd)
 			return true;
 		}
 
-		loginlog->log(sockt->host2ip(acc.last_ip), acc.userid, 100, "PIN Code check failed"); // FIXME: Do we really want to log this with the same code as successful logins?
+		loginlog->log(sockt->host2ip(acc.last_ip), acc.userid, LOGINLOG_SUCCESS, "PIN Code check failed"); // FIXME: Do we really want to log this with the same code as successful logins?
 	}
 
 	login->remove_online_user(acc.account_id);
@@ -1031,35 +1031,35 @@ static int login_parse_fromchar(int fd)
 //-------------------------------------
 // Make new account
 //-------------------------------------
-static int login_mmo_auth_new(const char *userid, const char *pass, const char sex, const char *last_ip)
+static enum login_auth_result login_mmo_auth_new(const char *userid, const char *pass, const char sex, const char *last_ip)
 {
 	static int num_regs = 0; // registration counter
 	static int64 new_reg_tick = 0;
 	int64 tick = timer->gettick();
 	struct mmo_account acc;
 
-	nullpo_retr(3, userid);
-	nullpo_retr(3, pass);
-	nullpo_retr(3, last_ip);
+	nullpo_retr(LOGIN_AUTH_REJECTED_FROM_SERVER, userid);
+	nullpo_retr(LOGIN_AUTH_REJECTED_FROM_SERVER, pass);
+	nullpo_retr(LOGIN_AUTH_REJECTED_FROM_SERVER, last_ip);
 	//Account Registration Flood Protection by [Kevin]
 	if( new_reg_tick == 0 )
 		new_reg_tick = timer->gettick();
 	if (DIFF_TICK(tick, new_reg_tick) < 0 && num_regs >= login->config->allowed_regs) {
 		ShowNotice("Account registration denied (registration limit exceeded)\n");
-		return 3;
+		return LOGIN_AUTH_REJECTED_FROM_SERVER;
 	}
 
 	if (login->config->new_acc_length_limit && (strlen(userid) < 4 || strlen(pass) < 4))
-		return 1;
+		return LOGIN_AUTH_INCORRECT_PASSWORD;
 
 	// check for invalid inputs
 	if( sex != 'M' && sex != 'F' )
-		return 0; // 0 = Unregistered ID
+		return LOGIN_AUTH_UNREGISTERED_ID;
 
 	// check if the account doesn't exist already
 	if( accounts->load_str(accounts, &acc, userid) ) {
 		ShowNotice("Attempt of creation of an already existing account (account: %s_%c, pass: %s, received pass: %s)\n", userid, sex, acc.pass, pass);
-		return 1; // 1 = Incorrect Password
+		return LOGIN_AUTH_INCORRECT_PASSWORD;
 	}
 
 	memset(&acc, '\0', sizeof(acc));
@@ -1077,7 +1077,7 @@ static int login_mmo_auth_new(const char *userid, const char *pass, const char s
 	acc.char_slots = 0;
 
 	if( !accounts->create(accounts, &acc) )
-		return 0;
+		return LOGIN_AUTH_UNREGISTERED_ID;
 
 	ShowNotice("Account creation (account %s, id: %d, pass: %s, sex: %c)\n", acc.userid, acc.account_id, acc.pass, acc.sex);
 
@@ -1087,15 +1087,15 @@ static int login_mmo_auth_new(const char *userid, const char *pass, const char s
 	}
 	++num_regs;
 
-	return -1;
+	return LOGIN_AUTH_OK;
 }
 
-static int login_check_client_version(struct login_session_data *sd)
+static enum login_auth_result login_check_client_version(struct login_session_data *sd)
 {
 	// if check flags enabled skip version check with flags pattern present in version field
 	if (!login->config->check_client_flags || (sd->version & 0x80000000) == 0) {
 		if (login->config->check_client_version && sd->version != login->config->client_version_to_connect)
-			return 5;
+			return LOGIN_AUTH_NOT_LATEST_GAME_EXE;
 	}
 
 	// check flags only if enabled and if client flags set to known value
@@ -1104,18 +1104,17 @@ static int login_check_client_version(struct login_session_data *sd)
 		if (emulatorFlags != sd->version) {
 			if (login->config->report_client_flags_error)
 				ShowNotice("Wrong client flags detected (account: %s, received flags: 0x%x)\n", sd->userid, sd->version);
-			return 5;
+			return LOGIN_AUTH_NOT_LATEST_GAME_EXE;
 		}
 	}
 
-	return -1;
+	return LOGIN_AUTH_OK;
 }
 
 //-----------------------------------------------------
 // Check/authentication of a connection
 //-----------------------------------------------------
-// TODO: Map result values to an enum (or at least document them)
-static int login_mmo_auth(struct login_session_data *sd, bool isServer)
+static enum login_auth_result login_mmo_auth(struct login_session_data *sd, bool isServer)
 {
 	struct mmo_account acc;
 	size_t len;
@@ -1138,7 +1137,7 @@ static int login_mmo_auth(struct login_session_data *sd, bool isServer)
 			sprintf(ip_dnsbl, "%s.%s", r_ip, trim(dnsbl_server));
 			if (sockt->host2ip(ip_dnsbl)) {
 				ShowInfo("DNSBL: (%s) Blacklisted. User Kicked.\n", r_ip);
-				return 3;
+				return LOGIN_AUTH_REJECTED_FROM_SERVER;
 			}
 		}
 
@@ -1146,8 +1145,8 @@ static int login_mmo_auth(struct login_session_data *sd, bool isServer)
 
 	if (!isServer) {
 		//Client Version check
-		const int versionError = login->check_client_version(sd);
-		if (versionError != -1)
+		const enum login_auth_result versionError = login->check_client_version(sd);
+		if (versionError != LOGIN_AUTH_OK)
 			return versionError;
 	}
 
@@ -1159,43 +1158,43 @@ static int login_mmo_auth(struct login_session_data *sd, bool isServer)
 			sd->passwdenc == PWENC_NONE && // unencoded password
 			sd->userid[len-2] == '_' && memchr("FfMm", sd->userid[len-1], 4)) // _M/_F suffix
 		{
-			int result;
+			enum login_auth_result result;
 
 			// remove the _M/_F suffix
 			len -= 2;
 			sd->userid[len] = '\0';
 
 			result = login->mmo_auth_new(sd->userid, sd->passwd, TOUPPER(sd->userid[len+1]), ip);
-			if( result != -1 )
+			if (result != LOGIN_AUTH_OK)
 				return result;// Failed to make account. [Skotlex].
 		}
 	}
 
 	if( len <= 0 ) { /** a empty password is fine, a userid is not. **/
 		ShowNotice("Empty userid (received pass: '%s', ip: %s)\n", sd->passwd, ip);
-		return 0; // 0 = Unregistered ID
+		return LOGIN_AUTH_UNREGISTERED_ID;
 	}
 
 	if( !accounts->load_str(accounts, &acc, sd->userid) ) {
 		ShowNotice("Unknown account (account: %s, received pass: %s, ip: %s)\n", sd->userid, sd->passwd, ip);
-		return 0; // 0 = Unregistered ID
+		return LOGIN_AUTH_UNREGISTERED_ID;
 	}
 
 	if( !login->check_password(sd->md5key, sd->passwdenc, sd->passwd, acc.pass) ) {
 		ShowNotice("Invalid password (account: '%s', pass: '%s', received pass: '%s', ip: %s)\n", sd->userid, acc.pass, sd->passwd, ip);
-		return 1; // 1 = Incorrect Password
+		return LOGIN_AUTH_INCORRECT_PASSWORD;
 	}
 
 	if( acc.unban_time != 0 && acc.unban_time > time(NULL) ) {
 		char tmpstr[24];
 		timestamp2string(tmpstr, sizeof(tmpstr), acc.unban_time, login->config->date_format);
 		ShowNotice("Connection refused (account: %s, pass: %s, banned until %s, ip: %s)\n", sd->userid, sd->passwd, tmpstr, ip);
-		return 6; // 6 = Your are Prohibited to log in until %s
+		return LOGIN_AUTH_BANNED;
 	}
 
 	if( acc.state != 0 ) {
 		ShowNotice("Connection refused (account: %s, pass: %s, state: %u, ip: %s)\n", sd->userid, sd->passwd, acc.state, ip);
-		return acc.state - 1;
+		return (enum login_auth_result)(acc.state - 1);
 	}
 
 	if (login->config->client_hash_check && !isServer) {
@@ -1219,7 +1218,7 @@ static int login_mmo_auth(struct login_session_data *sd, bool isServer)
 
 			if( !sd->has_client_hash ) {
 				ShowNotice("Client didn't send client hash (account: %s, pass: %s, ip: %s)\n", sd->userid, sd->passwd, ip);
-				return 5;
+				return LOGIN_AUTH_NOT_LATEST_GAME_EXE;
 			}
 
 			for( i = 0; i < 16; i++ )
@@ -1227,7 +1226,7 @@ static int login_mmo_auth(struct login_session_data *sd, bool isServer)
 			smd5[32] = '\0';
 
 			ShowNotice("Invalid client hash (account: %s, pass: %s, sent md5: %s, ip: %s)\n", sd->userid, sd->passwd, smd5, ip);
-			return 5;
+			return LOGIN_AUTH_NOT_LATEST_GAME_EXE;
 		}
 	}
 
@@ -1253,7 +1252,7 @@ static int login_mmo_auth(struct login_session_data *sd, bool isServer)
 	if( sd->sex != 'S' && sd->account_id < START_ACCOUNT_NUM )
 		ShowWarning("Account %s has account id %d! Account IDs must be over %d to work properly!\n", sd->userid, sd->account_id, START_ACCOUNT_NUM);
 
-	return -1; // account OK
+	return LOGIN_AUTH_OK;
 }
 
 static void login_kick(struct login_session_data *sd)
@@ -1323,7 +1322,7 @@ static void login_auth_ok(struct login_session_data *sd)
 		return;
 	}
 
-	loginlog->log(ip, sd->userid, 100, "login ok");
+	loginlog->log(ip, sd->userid, LOGINLOG_SUCCESS, "login ok");
 	ShowStatus("Connection of the account '%s' accepted.\n", sd->userid);
 
 	// create temporary auth entry
@@ -1350,7 +1349,7 @@ static void login_auth_ok(struct login_session_data *sd)
 	}
 }
 
-static void login_auth_failed(struct login_session_data *sd, int result)
+static void login_auth_failed(struct login_session_data *sd, enum login_auth_result result)
 {
 	int fd;
 	uint32 ip;
@@ -1362,38 +1361,39 @@ static void login_auth_failed(struct login_session_data *sd, int result)
 	if (login->config->log_login) {
 		const char* error;
 		switch( result ) {
-		case   0: error = "Unregistered ID."; break; // 0 = Unregistered ID
-		case   1: error = "Incorrect Password."; break; // 1 = Incorrect Password
-		case   2: error = "Account Expired."; break; // 2 = This ID is expired
-		case   3: error = "Rejected from server."; break; // 3 = Rejected from Server
-		case   4: error = "Blocked by GM."; break; // 4 = You have been blocked by the GM Team
-		case   5: error = "Not latest game EXE."; break; // 5 = Your Game's EXE file is not the latest version
-		case   6: error = "Banned."; break; // 6 = Your are Prohibited to log in until %s
-		case   7: error = "Server Over-population."; break; // 7 = Server is jammed due to over populated
-		case   8: error = "Account limit from company"; break; // 8 = No more accounts may be connected from this company
-		case   9: error = "Ban by DBA"; break; // 9 = MSI_REFUSE_BAN_BY_DBA
-		case  10: error = "Email not confirmed"; break; // 10 = MSI_REFUSE_EMAIL_NOT_CONFIRMED
-		case  11: error = "Ban by GM"; break; // 11 = MSI_REFUSE_BAN_BY_GM
-		case  12: error = "Working in DB"; break; // 12 = MSI_REFUSE_TEMP_BAN_FOR_DBWORK
-		case  13: error = "Self Lock"; break; // 13 = MSI_REFUSE_SELF_LOCK
-		case  14: error = "Not Permitted Group"; break; // 14 = MSI_REFUSE_NOT_PERMITTED_GROUP
-		case  15: error = "Not Permitted Group"; break; // 15 = MSI_REFUSE_NOT_PERMITTED_GROUP
-		case  99: error = "Account gone."; break; // 99 = This ID has been totally erased
-		case 100: error = "Login info remains."; break; // 100 = Login information remains at %s
-		case 101: error = "Hacking investigation."; break; // 101 = Account has been locked for a hacking investigation. Please contact the GM Team for more information
-		case 102: error = "Bug investigation."; break; // 102 = This account has been temporarily prohibited from login due to a bug-related investigation
-		case 103: error = "Deleting char."; break; // 103 = This character is being deleted. Login is temporarily unavailable for the time being
-		case 104: error = "Deleting spouse char."; break; // 104 = This character is being deleted. Login is temporarily unavailable for the time being
+		case LOGIN_AUTH_UNREGISTERED_ID: error = "Unregistered ID."; break;
+		case LOGIN_AUTH_INCORRECT_PASSWORD: error = "Incorrect Password."; break;
+		case LOGIN_AUTH_ACCOUNT_EXPIRED: error = "Account Expired."; break;
+		case LOGIN_AUTH_REJECTED_FROM_SERVER: error = "Rejected from server."; break;
+		case LOGIN_AUTH_BLOCKED_BY_GM: error = "Blocked by GM."; break;
+		case LOGIN_AUTH_NOT_LATEST_GAME_EXE: error = "Not latest game EXE."; break;
+		case LOGIN_AUTH_BANNED: error = "Banned."; break;
+		case LOGIN_AUTH_SERVER_OVERPOPULATED: error = "Server Over-population."; break;
+		case LOGIN_AUTH_COMPANY_ACCOUNT_LIMIT: error = "Account limit from company"; break;
+		case LOGIN_AUTH_BAN_BY_DBA: error = "Ban by DBA"; break; // MSI_REFUSE_BAN_BY_DBA
+		case LOGIN_AUTH_EMAIL_NOT_CONFIRMED: error = "Email not confirmed"; break; // MSI_REFUSE_EMAIL_NOT_CONFIRMED
+		case LOGIN_AUTH_BAN_BY_GM: error = "Ban by GM"; break; // MSI_REFUSE_BAN_BY_GM
+		case LOGIN_AUTH_WORKING_IN_DB: error = "Working in DB"; break; // MSI_REFUSE_TEMP_BAN_FOR_DBWORK
+		case LOGIN_AUTH_SELF_LOCK: error = "Self Lock"; break; // MSI_REFUSE_SELF_LOCK
+		case LOGIN_AUTH_NOT_PERMITTED_GROUP: error = "Not Permitted Group"; break; // MSI_REFUSE_NOT_PERMITTED_GROUP
+		case LOGIN_AUTH_NOT_PERMITTED_GROUP2: error = "Not Permitted Group"; break; // MSI_REFUSE_NOT_PERMITTED_GROUP
+		case LOGIN_AUTH_ACCOUNT_GONE: error = "Account gone."; break; // This ID has been totally erased
+		case LOGIN_AUTH_LOGIN_INFO_REMAINS: error = "Login info remains."; break; // Login information remains at %s
+		case LOGIN_AUTH_HACKING_INVESTIGATION: error = "Hacking investigation."; break; // Account has been locked for a hacking investigation. Please contact the GM Team for more information
+		case LOGIN_AUTH_BUG_INVESTIGATION: error = "Bug investigation."; break; // This account has been temporarily prohibited from login due to a bug-related investigation
+		case LOGIN_AUTH_DELETING_CHAR: error = "Deleting char."; break; // This character is being deleted. Login is temporarily unavailable for the time being
+		case LOGIN_AUTH_DELETING_SPOUSE_CHAR: error = "Deleting spouse char."; break; // This character is being deleted. Login is temporarily unavailable for the time being
+		case LOGIN_AUTH_OK: error = "Unknown Error."; break;
 		default : error = "Unknown Error."; break;
 		}
 
-		loginlog->log(ip, sd->userid, result, error); // FIXME: result can be 100, conflicting with the value 100 we use for successful login...
+		loginlog->log(ip, sd->userid, (enum loginlog_rcode)result, error); // FIXME: result can be 100, conflicting with the value 100 we use for successful login...
 	}
 
-	if (result == 1 && login->config->dynamic_pass_failure_ban && !sockt->trusted_ip_check(ip))
+	if (result == LOGIN_AUTH_INCORRECT_PASSWORD && login->config->dynamic_pass_failure_ban && !sockt->trusted_ip_check(ip))
 		ipban->log(ip); // log failed password attempt
 
-	if (result == 6) {
+	if (result == LOGIN_AUTH_BANNED) {
 		struct mmo_account acc = { 0 };
 		if (accounts->load_str(accounts, &acc, sd->userid))
 			ban_time = acc.unban_time;
@@ -1404,7 +1404,7 @@ static void login_auth_failed(struct login_session_data *sd, int result)
 static bool login_client_login(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
 static bool login_client_login(int fd, struct login_session_data *sd)
 {
-	int result;
+	enum login_auth_result result;
 	char ip[16];
 	uint32 ipl = sockt->session[fd]->client_addr;
 	sockt->ip2str(ipl, ip);
@@ -1412,12 +1412,12 @@ static bool login_client_login(int fd, struct login_session_data *sd)
 	ShowStatus("Request for connection %sof %s (ip: %s).\n", sd->passwdenc == PASSWORDENC ? " (passwdenc mode)" : "", sd->userid, ip);
 
 	if (sd->passwdenc != PWENC_NONE && login->config->use_md5_passwds) {
-		login->auth_failed(sd, 3); // send "rejected from server"
+		login->auth_failed(sd, LOGIN_AUTH_REJECTED_FROM_SERVER);
 		return true;
 	}
 
 	result = login->mmo_auth(sd, false);
-	if( result == -1 )
+	if (result == LOGIN_AUTH_OK)
 		login->auth_ok(sd);
 	else
 		login->auth_failed(sd, result);
@@ -1489,7 +1489,7 @@ static void login_parse_request_connection(int fd, struct login_session_data* sd
 	uint16 server_port;
 	uint16 type;
 	uint16 new_;
-	int result;
+	enum login_auth_result result;
 
 	safestrncpy(sd->userid, RFIFOP(fd,2), NAME_LENGTH);
 	safestrncpy(sd->passwd, RFIFOP(fd,26), NAME_LENGTH);
@@ -1505,7 +1505,7 @@ static void login_parse_request_connection(int fd, struct login_session_data* sd
 
 	ShowInfo("Connection request of the char-server '%s' @ %u.%u.%u.%u:%u (account: '%s', pass: '%s', ip: '%s')\n", server_name, CONVIP(server_ip), server_port, sd->userid, sd->passwd, ip);
 	sprintf(message, "charserver - %s@%u.%u.%u.%u:%u", server_name, CONVIP(server_ip), server_port);
-	loginlog->log(sockt->session[fd]->client_addr, sd->userid, 100, message);
+	loginlog->log(sockt->session[fd]->client_addr, sd->userid, LOGINLOG_SUCCESS, message);
 
 	result = login->mmo_auth(sd, true);
 
@@ -1519,7 +1519,7 @@ static void login_parse_request_connection(int fd, struct login_session_data* sd
 		ShowNotice("Connection of the char-server '%s' REFUSED (Account ID must be between 0 and %d).\n", server_name, ARRAYLENGTH(login->dbs->server) - 1);
 		login->char_server_connection_status(fd, sd, 1);
 	} else if (core->runflag == LOGINSERVER_ST_RUNNING &&
-		result == -1 &&
+		result == LOGIN_AUTH_OK &&
 		!sockt->session_is_valid(login->dbs->server[sd->account_id].fd))
 	{
 		ShowStatus("Connection of the char-server '%s' accepted.\n", server_name);
@@ -1551,7 +1551,7 @@ static void login_parse_request_api_connection(int fd, struct login_session_data
 {
 	char message[256];
 	uint32 server_ip = sockt->session[fd]->client_addr;
-	int result;
+	enum login_auth_result result;
 
 	safestrncpy(sd->userid, RFIFOP(fd,2), NAME_LENGTH);
 	safestrncpy(sd->passwd, RFIFOP(fd,26), NAME_LENGTH);
@@ -1562,7 +1562,7 @@ static void login_parse_request_api_connection(int fd, struct login_session_data
 
 	ShowInfo("Connection request of the api-server %u.%u.%u.%u (account: '%s', pass: '%s', ip: '%s')\n", CONVIP(server_ip), sd->userid, sd->passwd, ip);
 	sprintf(message, "apiserver - %u.%u.%u.%u", CONVIP(server_ip));
-	loginlog->log(sockt->session[fd]->client_addr, sd->userid, 100, message);
+	loginlog->log(sockt->session[fd]->client_addr, sd->userid, LOGINLOG_SUCCESS, message);
 
 	result = login->mmo_auth(sd, true);
 
@@ -1570,7 +1570,7 @@ static void login_parse_request_api_connection(int fd, struct login_session_data
 		ShowNotice("Connection of the api-server REFUSED (IP not allowed).\n");
 		login->api_server_connection_status(fd, sd, 2);
 	} else if (core->runflag == LOGINSERVER_ST_RUNNING &&
-		result == -1 &&
+		result == LOGIN_AUTH_OK &&
 		sd->sex == 'S' &&
 		sd->account_id >= 0 &&
 		sd->account_id < ARRAYLENGTH(login->dbs->api_server) &&
@@ -2115,7 +2115,7 @@ int do_final(void)
 	login->clear_client_hash_nodes();
 	login->clear_dnsbl_servers();
 
-	loginlog->log(0, "login server", 100, "login server shutdown");
+	loginlog->log(0, "login server", LOGINLOG_SUCCESS, "login server shutdown");
 
 	if (login->config->log_login)
 		loginlog->final();
@@ -2359,7 +2359,7 @@ int do_init(int argc, char **argv)
 #endif // CONSOLE_INPUT
 
 	ShowStatus("The login-server is "CL_GREEN"ready"CL_RESET" (Server is listening on the port %u).\n\n", login->config->login_port);
-	loginlog->log(0, "login server", 100, "login server started");
+	loginlog->log(0, "login server", LOGINLOG_SUCCESS, "login server started");
 
 	HPM->event(HPET_READY);
 
