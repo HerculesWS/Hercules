@@ -11846,7 +11846,7 @@ static void clif_parse_WalkToXY(int fd, struct map_session_data *sd)
 	//Set last idle time... [Skotlex]
 	pc->update_idle_time(sd, BCIDLE_WALK);
 
-	unit->walk_toxy(&sd->bl, x, y, 4);
+	unit->walk_toxy(&sd->bl, x, y, UNIT_WALK_TOXY_DELAY);
 }
 
 /// Notification about the result of a disconnect request (ZC_ACK_REQ_DISCONNECT).
@@ -17512,7 +17512,7 @@ static void clif_parse_HomMoveToMaster(int fd, struct map_session_data *sd)
 
 	unit->calc_pos(bl, sd->bl.x, sd->bl.y, sd->ud.dir);
 	ud = unit->bl2ud(bl);
-	unit->walk_toxy(bl, ud->to_x, ud->to_y, 4);
+	unit->walk_toxy(bl, ud->to_x, ud->to_y, UNIT_WALK_TOXY_DELAY);
 }
 
 static void clif_parse_HomMoveTo(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
@@ -17536,7 +17536,7 @@ static void clif_parse_HomMoveTo(int fd, struct map_session_data *sd)
 	else
 		return;
 
-	unit->walk_toxy(bl, x, y, 4);
+	unit->walk_toxy(bl, x, y, UNIT_WALK_TOXY_DELAY);
 }
 
 static void clif_parse_HomAttack(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));

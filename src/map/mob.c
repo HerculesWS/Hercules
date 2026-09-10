@@ -1538,7 +1538,7 @@ static int mob_ai_sub_hard_slavemob(struct mob_data *md, int64 tick)
 			// If master is BL_MOB and in battle, lock & chase to master's target instead, unless configured not to.
 			if ((bl->type == BL_PC || battle_config.slave_chase_masters_chasetarget == 0 || (m_md != NULL && !mob->is_in_battle_state(m_md)))
 			    && map->search_free_cell(&md->bl, bl->m, &x, &y, MOB_SLAVEDISTANCE, MOB_SLAVEDISTANCE, SFC_XY_CENTER) == 0
-			    && unit->walk_toxy(&md->bl, x, y, 0) == 0)
+			    && unit->walk_toxy(&md->bl, x, y, UNIT_WALK_TOXY_NONE) == 0)
 				return 1;
 		}
 	} else if (bl->m != md->bl.m && map_flag_gvg(md->bl.m)) {
@@ -1628,7 +1628,7 @@ static int mob_unlocktarget(struct mob_data *md, int64 tick)
 		unit->set_target(&md->ud, 0);
 	}
 	if(battle_config.official_cell_stack_limit && map->count_oncell(md->bl.m, md->bl.x, md->bl.y, BL_CHAR|BL_NPC, 0x1 | 0x2) > battle_config.official_cell_stack_limit) {
-		unit->walk_toxy(&md->bl, md->bl.x, md->bl.y, 8);
+		unit->walk_toxy(&md->bl, md->bl.x, md->bl.y, UNIT_WALK_TOXY_AVOID_OCCUPIED);
 	}
 
 	return 0;
@@ -1661,7 +1661,7 @@ static int mob_randomwalk(struct mob_data *md, int64 tick)
 		y+=md->bl.y;
 
 		if ((x != md->bl.x || y != md->bl.y) && map->getcell(md->bl.m, &md->bl, x, y, CELL_CHKPASS) != 0
-		    && unit->walk_toxy(&md->bl, x, y, 8) == 0)
+		    && unit->walk_toxy(&md->bl, x, y, UNIT_WALK_TOXY_AVOID_OCCUPIED) == 0)
 			break;
 	}
 	if(i==retrycount){
