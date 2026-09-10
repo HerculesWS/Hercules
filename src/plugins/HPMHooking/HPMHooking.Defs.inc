@@ -5326,10 +5326,10 @@ typedef bool (*HPMHOOK_pre_logs_should_log_item) (int *nameid, int *amount, int 
 typedef bool (*HPMHOOK_post_logs_should_log_item) (bool retVal___, int nameid, int amount, int refine_level, struct item_data *id);
 #endif // MAP_LOG_H
 #ifdef LOGIN_LOGIN_H /* login */
-typedef int (*HPMHOOK_pre_login_mmo_auth) (struct login_session_data **sd, bool *isServer);
-typedef int (*HPMHOOK_post_login_mmo_auth) (int retVal___, struct login_session_data *sd, bool isServer);
-typedef int (*HPMHOOK_pre_login_mmo_auth_new) (const char **userid, const char **pass, const char *sex, const char **last_ip);
-typedef int (*HPMHOOK_post_login_mmo_auth_new) (int retVal___, const char *userid, const char *pass, const char sex, const char *last_ip);
+typedef enum login_auth_result (*HPMHOOK_pre_login_mmo_auth) (struct login_session_data **sd, bool *isServer);
+typedef enum login_auth_result (*HPMHOOK_post_login_mmo_auth) (enum login_auth_result retVal___, struct login_session_data *sd, bool isServer);
+typedef enum login_auth_result (*HPMHOOK_pre_login_mmo_auth_new) (const char **userid, const char **pass, const char *sex, const char **last_ip);
+typedef enum login_auth_result (*HPMHOOK_post_login_mmo_auth_new) (enum login_auth_result retVal___, const char *userid, const char *pass, const char sex, const char *last_ip);
 typedef int (*HPMHOOK_pre_login_waiting_disconnect_timer) (int *tid, int64 *tick, int *id, intptr_t *data);
 typedef int (*HPMHOOK_post_login_waiting_disconnect_timer) (int retVal___, int tid, int64 tick, int id, intptr_t data);
 typedef struct DBData (*HPMHOOK_pre_login_create_online_user) (union DBKey *key, va_list args);
@@ -5414,8 +5414,8 @@ typedef void (*HPMHOOK_pre_login_kick) (struct login_session_data **sd);
 typedef void (*HPMHOOK_post_login_kick) (struct login_session_data *sd);
 typedef void (*HPMHOOK_pre_login_auth_ok) (struct login_session_data **sd);
 typedef void (*HPMHOOK_post_login_auth_ok) (struct login_session_data *sd);
-typedef void (*HPMHOOK_pre_login_auth_failed) (struct login_session_data **sd, int *result);
-typedef void (*HPMHOOK_post_login_auth_failed) (struct login_session_data *sd, int result);
+typedef void (*HPMHOOK_pre_login_auth_failed) (struct login_session_data **sd, enum login_auth_result *result);
+typedef void (*HPMHOOK_post_login_auth_failed) (struct login_session_data *sd, enum login_auth_result result);
 typedef bool (*HPMHOOK_pre_login_client_login) (int *fd, struct login_session_data **sd);
 typedef bool (*HPMHOOK_post_login_client_login) (bool retVal___, int fd, struct login_session_data *sd);
 typedef bool (*HPMHOOK_pre_login_client_login_otp) (int *fd, struct login_session_data **sd);
@@ -5460,8 +5460,8 @@ typedef void (*HPMHOOK_pre_login_config_set_md5hash) (struct config_setting_t **
 typedef void (*HPMHOOK_post_login_config_set_md5hash) (struct config_setting_t *setting);
 typedef uint16 (*HPMHOOK_pre_login_convert_users_to_colors) (uint16 *users);
 typedef uint16 (*HPMHOOK_post_login_convert_users_to_colors) (uint16 retVal___, uint16 users);
-typedef int (*HPMHOOK_pre_login_check_client_version) (struct login_session_data **sd);
-typedef int (*HPMHOOK_post_login_check_client_version) (int retVal___, struct login_session_data *sd);
+typedef enum login_auth_result (*HPMHOOK_pre_login_check_client_version) (struct login_session_data **sd);
+typedef enum login_auth_result (*HPMHOOK_post_login_check_client_version) (enum login_auth_result retVal___, struct login_session_data *sd);
 typedef void (*HPMHOOK_pre_login_generate_token) (unsigned char **token);
 typedef void (*HPMHOOK_post_login_generate_token) (unsigned char *token);
 #endif // LOGIN_LOGIN_H
@@ -5498,8 +5498,8 @@ typedef void (*HPMHOOK_post_loginif_set_char_online) (int char_id, int account_i
 #ifdef LOGIN_LOGINLOG_H /* loginlog */
 typedef unsigned long (*HPMHOOK_pre_loginlog_failedattempts) (uint32 *ip, unsigned int *minutes);
 typedef unsigned long (*HPMHOOK_post_loginlog_failedattempts) (unsigned long retVal___, uint32 ip, unsigned int minutes);
-typedef void (*HPMHOOK_pre_loginlog_log) (uint32 *ip, const char **username, int *rcode, const char **message);
-typedef void (*HPMHOOK_post_loginlog_log) (uint32 ip, const char *username, int rcode, const char *message);
+typedef void (*HPMHOOK_pre_loginlog_log) (uint32 *ip, const char **username, enum loginlog_rcode *rcode, const char **message);
+typedef void (*HPMHOOK_post_loginlog_log) (uint32 ip, const char *username, enum loginlog_rcode rcode, const char *message);
 typedef bool (*HPMHOOK_pre_loginlog_init) (void);
 typedef bool (*HPMHOOK_post_loginlog_init) (bool retVal___);
 typedef bool (*HPMHOOK_pre_loginlog_final) (void);
