@@ -127,6 +127,19 @@ enum battle_calc_defense_flag {
 };
 
 /**
+ * Bitmask values usable as the flag argument of battle_calc_base_damage() / battle->calc_base_damage().
+ */
+enum battle_calc_base_damage_flag {
+	BCBD_NONE                 = 0x00,
+	BCBD_CRITICAL             = 0x01, ///< Critical hit
+	BCBD_ARROW_ATK            = 0x02, ///< Arrow attack
+	BCBD_MAGIC_CRASHER        = 0x04, ///< Skill is Magic Crasher
+	BCBD_SKIP_SIZE_ADJUSTMENT = 0x08, ///< Skip target size adjustment (Extremity Fist?)
+	BCBD_ARROW_ATK_NODEX      = 0x10, ///< Arrow attack but BOW, REVOLVER, RIFLE, SHOTGUN, GATLING or GRENADE type weapon not equipped
+	                                  ///  (i.e. shuriken, kunai and venom knives not affected by DEX)
+};
+
+/**
  * Structures
  **/
 
@@ -779,7 +792,7 @@ struct battle_interface {
 	int (*blewcount_bonus) (struct map_session_data *sd, uint16 skill_id);
 	/* skill range criteria */
 	int (*range_type) (struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv);
-	int64 (*calc_base_damage) (struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int nk, bool n_ele, short s_ele, short s_ele_, int type, int flag, int flag2);
+	int64 (*calc_base_damage) (struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int nk, bool n_ele, short s_ele, short s_ele_, int type, enum battle_calc_base_damage_flag flag, int flag2);
 	int64 (*calc_base_damage2) (struct status_data *st, struct weapon_atk *wa, struct status_change *sc, unsigned short t_size, struct map_session_data *sd, int flag);
 	struct Damage (*calc_misc_attack) (struct block_list *src,struct block_list *target,uint16 skill_id,uint16 skill_lv,int mflag);
 	struct Damage (*calc_magic_attack) (struct block_list *src,struct block_list *target,uint16 skill_id,uint16 skill_lv,int mflag);

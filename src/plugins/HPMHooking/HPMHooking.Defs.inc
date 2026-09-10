@@ -530,8 +530,8 @@ typedef int (*HPMHOOK_pre_battle_blewcount_bonus) (struct map_session_data **sd,
 typedef int (*HPMHOOK_post_battle_blewcount_bonus) (int retVal___, struct map_session_data *sd, uint16 skill_id);
 typedef int (*HPMHOOK_pre_battle_range_type) (struct block_list **src, struct block_list **target, uint16 *skill_id, uint16 *skill_lv);
 typedef int (*HPMHOOK_post_battle_range_type) (int retVal___, struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv);
-typedef int64 (*HPMHOOK_pre_battle_calc_base_damage) (struct block_list **src, struct block_list **bl, uint16 *skill_id, uint16 *skill_lv, int *nk, bool *n_ele, short *s_ele, short *s_ele_, int *type, int *flag, int *flag2);
-typedef int64 (*HPMHOOK_post_battle_calc_base_damage) (int64 retVal___, struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int nk, bool n_ele, short s_ele, short s_ele_, int type, int flag, int flag2);
+typedef int64 (*HPMHOOK_pre_battle_calc_base_damage) (struct block_list **src, struct block_list **bl, uint16 *skill_id, uint16 *skill_lv, int *nk, bool *n_ele, short *s_ele, short *s_ele_, int *type, enum battle_calc_base_damage_flag *flag, int *flag2);
+typedef int64 (*HPMHOOK_post_battle_calc_base_damage) (int64 retVal___, struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int nk, bool n_ele, short s_ele, short s_ele_, int type, enum battle_calc_base_damage_flag flag, int flag2);
 typedef int64 (*HPMHOOK_pre_battle_calc_base_damage2) (struct status_data **st, struct weapon_atk **wa, struct status_change **sc, unsigned short *t_size, struct map_session_data **sd, int *flag);
 typedef int64 (*HPMHOOK_post_battle_calc_base_damage2) (int64 retVal___, struct status_data *st, struct weapon_atk *wa, struct status_change *sc, unsigned short t_size, struct map_session_data *sd, int flag);
 typedef struct Damage (*HPMHOOK_pre_battle_calc_misc_attack) (struct block_list **src, struct block_list **target, uint16 *skill_id, uint16 *skill_lv, int *mflag);
