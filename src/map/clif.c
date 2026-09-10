@@ -11225,6 +11225,7 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 	 *
 	 **/
 	clif->inventoryList(sd);
+	clif->equipswitch_list(sd);
 
 	// Send the cart inventory, counts & weight to the client.
 	if (pc_iscarton(sd)) {
@@ -12800,6 +12801,176 @@ static void clif_unequipAllItemsAck(struct map_session_data *sd, enum unequip_al
 	packet.result = result;
 	clif->send(&packet, sizeof(struct PACKET_ZC_ACK_TAKEOFF_EQUIP_ALL), &sd->bl, SELF);
 #endif  // PACKETVER_MAIN_NUM >= 20210818 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
+}
+
+/// Notifies the client about the result of a request to stage an item into the equip switch window (ZC_ACK_WEAR_EQUIP_SWITCH).
+static void clif_equipswitch_add(struct map_session_data *sd, int index, int pos, enum equipswitch_ack flag)
+{
+#if PACKETVER_MAIN_NUM >= 20170208 || PACKETVER_RE_NUM >= 20170208 || PACKETVER_ZERO_NUM >= 20170208
+	nullpo_retv(sd);
+
+	struct PACKET_ZC_ACK_WEAR_EQUIP_SWITCH packet = {0};
+	packet.PacketType = HEADER_ZC_ACK_WEAR_EQUIP_SWITCH;
+	packet.index = index + 2;
+	packet.position = pos;
+	packet.flag = flag;
+	clif->send(&packet, sizeof(packet), &sd->bl, SELF);
+#endif  // PACKETVER_MAIN_NUM >= 20170208 || PACKETVER_RE_NUM >= 20170208 || PACKETVER_ZERO_NUM >= 20170208
+}
+
+/// Notifies the client about the result of a request to remove an item from the equip switch window (ZC_ACK_TAKEOFF_EQUIP_SWITCH).
+static void clif_equipswitch_remove(struct map_session_data *sd, int index, int pos, bool failed)
+{
+#if PACKETVER_MAIN_NUM >= 20170208 || PACKETVER_RE_NUM >= 20170208 || PACKETVER_ZERO_NUM >= 20170208
+	nullpo_retv(sd);
+
+	struct PACKET_ZC_ACK_TAKEOFF_EQUIP_SWITCH packet = {0};
+	packet.PacketType = HEADER_ZC_ACK_TAKEOFF_EQUIP_SWITCH;
+	packet.index = index + 2;
+	packet.position = pos;
+	packet.failed = failed;
+	clif->send(&packet, sizeof(packet), &sd->bl, SELF);
+#endif  // PACKETVER_MAIN_NUM >= 20170208 || PACKETVER_RE_NUM >= 20170208 || PACKETVER_ZERO_NUM >= 20170208
+}
+
+/// Sends the full staged equip switch set to the client (ZC_EQUIP_SWITCH_LIST).
+static void clif_equipswitch_list(struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20170208 || PACKETVER_RE_NUM >= 20170208 || PACKETVER_ZERO_NUM >= 20170208
+	nullpo_retv(sd);
+
+	int buf_size = sizeof(struct PACKET_ZC_EQUIP_SWITCH_LIST) + sizeof(struct PACKET_ZC_EQUIP_SWITCH_ITEM) * EQI_MAX;
+	struct PACKET_ZC_EQUIP_SWITCH_LIST *packet = aMalloc(buf_size);
+	packet->PacketType = HEADER_ZC_EQUIP_SWITCH_LIST;
+
+	int count = 0;
+	int position = 0;
+
+	// Mirrors the dedupe logic in skill.c's ALL_EQSWITCH handler: a multi-slot item
+	// occupies several equip_switch_index[] slots but must only be listed once.
+	for (int i = 0; i < EQI_MAX; i++) {
+		int index = sd->equip_switch_index[i];
+
+		if (index < 0 || (position & pc->equip_pos[i]) != 0)
+			continue;
+
+		packet->list[count].index = index + 2;
+		packet->list[count].position = sd->status.inventory[index].equipSwitch;
+		position |= sd->status.inventory[index].equipSwitch;
+		count++;
+	}
+
+	packet->PacketLength = sizeof(struct PACKET_ZC_EQUIP_SWITCH_LIST) + sizeof(struct PACKET_ZC_EQUIP_SWITCH_ITEM) * count;
+	clif->send(packet, packet->PacketLength, &sd->bl, SELF);
+	aFree(packet);
+#endif  // PACKETVER_MAIN_NUM >= 20170208 || PACKETVER_RE_NUM >= 20170208 || PACKETVER_ZERO_NUM >= 20170208
+}
+
+/// Notifies the client about the result of a full equip switch request (ZC_ACK_EQUIP_SWITCH).
+static void clif_equipswitch_reply(struct map_session_data *sd, bool failed)
+{
+#if PACKETVER_MAIN_NUM >= 20170208 || PACKETVER_RE_NUM >= 20170208 || PACKETVER_ZERO_NUM >= 20170208
+	nullpo_retv(sd);
+
+	struct PACKET_ZC_ACK_EQUIP_SWITCH packet = {0};
+	packet.PacketType = HEADER_ZC_ACK_EQUIP_SWITCH;
+	packet.failed = failed;
+	clif->send(&packet, sizeof(packet), &sd->bl, SELF);
+#endif  // PACKETVER_MAIN_NUM >= 20170208 || PACKETVER_RE_NUM >= 20170208 || PACKETVER_ZERO_NUM >= 20170208
+}
+
+static void clif_parse_EquipSwitchAdd(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+/// Request to stage an item into the equip switch window (CZ_REQ_WEAR_EQUIP_SWITCH).
+/// 0a97 <index>.W <position>.L
+static void clif_parse_EquipSwitchAdd(int fd, struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20170208 || PACKETVER_RE_NUM >= 20170208 || PACKETVER_ZERO_NUM >= 20170208
+	const struct PACKET_CZ_REQ_WEAR_EQUIP_SWITCH *p = RP2PTR(fd);
+
+	int index = p->index - 2;
+	if (index < 0 || index >= sd->status.inventorySize) {
+		clif->equipswitch_add(sd, 0, 0, EQUIPSWITCH_ACK_FAIL);
+		return;
+	}
+
+	int flag = pc->equipitem_switch(sd, index, p->position);
+	clif->equipswitch_add(sd, index, p->position, flag != 0 ? EQUIPSWITCH_ACK_OK : EQUIPSWITCH_ACK_FAIL);
+#endif  // PACKETVER_MAIN_NUM >= 20170208 || PACKETVER_RE_NUM >= 20170208 || PACKETVER_ZERO_NUM >= 20170208
+}
+
+static void clif_parse_EquipSwitchRemove(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+/// Request to remove an item from the equip switch window (CZ_REQ_TAKEOFF_EQUIP_SWITCH).
+/// 0a99 <index>.W
+static void clif_parse_EquipSwitchRemove(int fd, struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20170208 || PACKETVER_RE_NUM >= 20170208 || PACKETVER_ZERO_NUM >= 20170208
+	const struct PACKET_CZ_REQ_TAKEOFF_EQUIP_SWITCH *p = RP2PTR(fd);
+
+	int index = p->index - 2;
+	if (index < 0 || index >= sd->status.inventorySize) {
+		clif->equipswitch_remove(sd, 0, 0, true);
+		return;
+	}
+
+	int pos = sd->status.inventory[index].equipSwitch;
+	pc->equipswitch_remove(sd, index);
+	clif->equipswitch_remove(sd, index, pos, false);
+#endif  // PACKETVER_MAIN_NUM >= 20170208 || PACKETVER_RE_NUM >= 20170208 || PACKETVER_ZERO_NUM >= 20170208
+}
+
+static void clif_parse_EquipSwitchRequest(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+/// Request to perform the full equip switch (CZ_REQ_EQUIP_SWITCH).
+/// 0a9c
+static void clif_parse_EquipSwitchRequest(int fd, struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20170208 || PACKETVER_RE_NUM >= 20170208 || PACKETVER_ZERO_NUM >= 20170208
+	if (DIFF_TICK(sd->equipswitch_tick, timer->gettick()) > 0)
+		return;
+
+	// The client has no dedicated "perform full swap" skill-cast path, so the request
+	// is dispatched as an internal self-cast of ALL_EQSWITCH, the same skill the client
+	// would see cast if it were triggered from a skill slot.
+	sd->equipswitch_tick = timer->gettick() + skill->get_cooldown(ALL_EQSWITCH, 1);
+
+	int i;
+	ARR_FIND(0, EQI_MAX, i, sd->equip_switch_index[i] >= 0);
+	if (i == EQI_MAX) {
+		clif->equipswitch_reply(sd, false);
+		return;
+	}
+
+	if (pc_issit(sd))
+		pc->setstand(sd);
+
+	unit->skilluse_id(&sd->bl, sd->bl.id, ALL_EQSWITCH, 1);
+#endif  // PACKETVER_MAIN_NUM >= 20170208 || PACKETVER_RE_NUM >= 20170208 || PACKETVER_ZERO_NUM >= 20170208
+}
+
+static void clif_parse_EquipSwitchRequestSingle(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+/// Request to toggle a single item in/out of the equip switch window (CZ_REQ_EQUIP_SWITCH_SINGLE).
+/// 0ace <index>.W
+static void clif_parse_EquipSwitchRequestSingle(int fd, struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20170502 || PACKETVER_RE_NUM >= 20170502 || PACKETVER_ZERO_NUM >= 20170502
+	const struct PACKET_CZ_REQ_EQUIP_SWITCH_SINGLE *p = RP2PTR(fd);
+
+	int index = p->index - 2;
+	if (index < 0 || index >= sd->status.inventorySize)
+		return;
+
+	if (sd->inventory_data[index] == NULL)
+		return;
+
+	if (sd->npc_id != 0) {
+		if ((sd->npc_item_flag & ITEMENABLEDNPC_EQUIP) == 0 && sd->state.using_megaphone == 0)
+			return;
+	}
+
+	if (sd->status.inventory[index].equipSwitch != 0)
+		pc->equipswitch(sd, index);
+	else
+		pc->equipitem_switch(sd, index, pc->equippoint(sd, index));
+#endif  // PACKETVER_MAIN_NUM >= 20170502 || PACKETVER_RE_NUM >= 20170502 || PACKETVER_ZERO_NUM >= 20170502
 }
 
 static void clif_parse_NpcClicked(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
@@ -26663,6 +26834,10 @@ void clif_defaults(void)
 	clif->equipitemack = clif_equipitemack;
 	clif->unequipitemack = clif_unequipitemack;
 	clif->unequipAllItemsAck = clif_unequipAllItemsAck;
+	clif->equipswitch_add = clif_equipswitch_add;
+	clif->equipswitch_remove = clif_equipswitch_remove;
+	clif->equipswitch_list = clif_equipswitch_list;
+	clif->equipswitch_reply = clif_equipswitch_reply;
 	clif->useitemack = clif_useitemack;
 	clif->addcards = clif_addcards;
 	clif->item_sub = clif_item_sub;  // look like unused
@@ -27241,6 +27416,10 @@ void clif_defaults(void)
 	clif->pEquipItem = clif_parse_EquipItem;
 	clif->pUnequipItem = clif_parse_UnequipItem;
 	clif->pUnequipAllItems = clif_parse_UnequipAllItems;
+	clif->pEquipSwitchAdd = clif_parse_EquipSwitchAdd;
+	clif->pEquipSwitchRemove = clif_parse_EquipSwitchRemove;
+	clif->pEquipSwitchRequest = clif_parse_EquipSwitchRequest;
+	clif->pEquipSwitchRequestSingle = clif_parse_EquipSwitchRequestSingle;
 	clif->pNpcClicked = clif_parse_NpcClicked;
 	clif->pNpcBuySellSelected = clif_parse_NpcBuySellSelected;
 	clif->pNpcBuyListSend = clif_parse_NpcBuyListSend;

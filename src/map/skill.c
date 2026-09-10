@@ -10026,12 +10026,14 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 			break;
 		case ALL_EQSWITCH:
 			if (sd != NULL) {
-				int position = 0; // TODO(#2557): pass to clif->equipswitch_reply once the packet layer lands.
+				int position = 0;
 
 				for (int i = 0; i < EQI_MAX; i++) {
 					if (sd->equip_switch_index[i] >= 0 && (position & pc->equip_pos[i]) == 0)
 						position |= pc->equipswitch(sd, sd->equip_switch_index[i]);
 				}
+
+				clif->equipswitch_reply(sd, position == 0);
 			}
 			break;
 		case RK_ENCHANTBLADE:
