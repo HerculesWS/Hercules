@@ -45,6 +45,7 @@
 #include "map/unit.h"
 #include "map/vending.h"
 #include "common/cbasetypes.h"
+#include "common/db.h"
 #include "common/ers.h"
 #include "common/memmgr.h"
 #include "common/msgtable.h"
@@ -10218,6 +10219,89 @@ static int status_change_start(struct block_list *src, struct block_list *bl, en
 	return status->change_start_sub(src, bl, type, rate, val1, val2, val3, val4, 0, tick, flag, skill_id);
 }
 
+/**
+ * Timer callback for a status change that was deferred by status_change_start_delayed().
+ * Re-resolves src/bl by id and, if the target still exists and is not dead, applies the
+ * status change via status->change_start(). If the target is gone, the status change is
+ * silently dropped.
+ *
+ * @param tid  Timer id.
+ * @param tick Current tick.
+ * @param id   Index of the pending entry in status->delayed_start_db.
+ * @param data Unused.
+ *
+ * @return 0
+ */
+static int status_change_start_delayed_timer(int tid, int64 tick, int id, intptr_t data)
+{
+	struct s_status_change_start_delayed *entry = idb_get(status->delayed_start_db, id);
+
+	if (entry == NULL)
+		return 0;
+
+	struct block_list *src = entry->src_id > 0 ? map->id2bl(entry->src_id) : NULL;
+	struct block_list *bl = map->id2bl(entry->bl_id);
+
+	if (bl != NULL && !status->isdead(bl)) {
+		status->change_start(src, bl, entry->type, entry->rate, entry->val1, entry->val2,
+			entry->val3, entry->val4, entry->tick, entry->flag, entry->skill_id);
+	}
+
+	idb_remove(status->delayed_start_db, id);
+
+	return 0;
+}
+
+/**
+ * Starts a status change after a delay, or immediately if delay <= 0.
+ *
+ * Used for status changes that should not take effect the instant the triggering
+ * damage/skill lands (e.g. "on attack" card effects), matching official delayed timing.
+ * The target is re-checked for existence/death when the delay expires; if it is gone,
+ * the status change is dropped.
+ *
+ * @param src      Status change source bl.
+ * @param bl       Status change target bl.
+ * @param type     Status change type.
+ * @param rate     Base success rate. 1 means 0.01%, 10000 means 100%.
+ * @param val1     Additional value (meaning depends on type).
+ * @param val2     Additional value (meaning depends on type).
+ * @param val3     Additional value (meaning depends on type).
+ * @param val4     Additional value (meaning depends on type).
+ * @param tick     Base duration (milliseconds).
+ * @param flag     Special flags (@see enum scstart_flag).
+ * @param skill_id Skill origin of status change, if available.
+ * @param delay    Delay in milliseconds before the status change is applied.
+ */
+static void status_change_start_delayed(struct block_list *src, struct block_list *bl, enum sc_type type, int rate, int val1, int val2, int val3, int val4, int tick, int flag, int skill_id, int delay)
+{
+	nullpo_retv(bl);
+
+	if (delay <= 0) {
+		status->change_start(src, bl, type, rate, val1, val2, val3, val4, tick, flag, skill_id);
+		return;
+	}
+
+	struct s_status_change_start_delayed *entry = aMalloc(sizeof(*entry));
+
+	entry->src_id = src != NULL ? src->id : 0;
+	entry->bl_id = bl->id;
+	entry->type = type;
+	entry->rate = rate;
+	entry->val1 = val1;
+	entry->val2 = val2;
+	entry->val3 = val3;
+	entry->val4 = val4;
+	entry->tick = tick;
+	entry->flag = flag;
+	entry->skill_id = skill_id;
+
+	int index = status->delayed_start_index++;
+	idb_put(status->delayed_start_db, index, entry);
+
+	timer->add(timer->gettick() + delay, status->change_start_delayed_timer, index, 0);
+}
+
 static void status_change_start_display(struct map_session_data *sd, enum sc_type type, int val1, int val2, int val3, int val4)
 {
 	Assert_retv(type >= SC_NONE && type < SC_MAX);
@@ -15019,11 +15103,14 @@ static int do_init_status(bool minimal)
 	timer->add_func_list(status->change_timer,"status_change_timer");
 	timer->add_func_list(status->kaahi_heal_timer,"status_kaahi_heal_timer");
 	timer->add_func_list(status->natural_heal_timer,"status_natural_heal_timer");
+	timer->add_func_list(status->change_start_delayed_timer,"status_change_start_delayed_timer");
 	status->initChangeTables();
 	status->initDummyData();
 	status->readdb();
 	status->natural_heal_prev_tick = timer->gettick();
 	status->data_ers = ers_new(sizeof(struct status_change_entry),"status.c::data_ers",ERS_OPT_NONE);
+	status->delayed_start_db = idb_alloc(DB_OPT_RELEASE_DATA);
+	status->delayed_start_index = 0;
 	timer->add_interval(status->natural_heal_prev_tick + NATURAL_HEAL_INTERVAL, status->natural_heal_timer, 0, 0, NATURAL_HEAL_INTERVAL);
 	return 0;
 }
@@ -15031,6 +15118,7 @@ static int do_init_status(bool minimal)
 static void do_final_status(void)
 {
 	ers_destroy(status->data_ers);
+	db_destroy(status->delayed_start_db);
 
 	status->unit_params_destroy_entry(&status->dummy_unit_params);
 	status->unit_params_clear_db();
@@ -15106,6 +15194,8 @@ void status_defaults(void)
 
 	status->change_start = status_change_start;
 	status->change_start_sub = status_change_start_sub;
+	status->change_start_delayed = status_change_start_delayed;
+	status->change_start_delayed_timer = status_change_start_delayed_timer;
 	status->change_end_ = status_change_end_;
 	status->kaahi_heal_timer = kaahi_heal_timer;
 	status->change_timer = status_change_timer;
