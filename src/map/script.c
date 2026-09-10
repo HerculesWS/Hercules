@@ -6298,9 +6298,9 @@ static bool script_sprintf_helper(struct script_state *st, int start, struct Str
 	int lastarg = start;
 	int argc = script_lastdata(st) + 1;
 
-	nullpo_retr(-1, out);
-	Assert_retr(-1, start >= 2 && start <= argc);
-	Assert_retr(-1, script_hasdata(st, start));
+	nullpo_retr(false, out);
+	Assert_retr(false, start >= 2 && start <= argc);
+	Assert_retr(false, script_hasdata(st, start));
 
 	p = format = script_getstr(st, start);
 
