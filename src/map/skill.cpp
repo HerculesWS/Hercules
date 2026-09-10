@@ -1599,11 +1599,20 @@ static int skill_additional_effect(struct block_list *src, struct block_list *bl
 					flag = SCFLAG_NONE;
 				}
 
+				// On officials, "on attack" status changes from normal attacks only take
+				// effect after the attack animation ends (AttackMotion+500ms), not the
+				// instant the damage is applied. (bugreport:1141)
+				int delay = (skill_id == 0) ? sstatus->amotion + 500 : 0;
+#ifdef RENEWAL
+				if (delay > 0)
+					temp = max(1, temp - delay);
+#endif
+
 				if (sd->addeff[i].flag&ATF_TARGET)
-					status->change_start(src, bl, type, rate, 7, 0, (type == SC_BURNING) ? src->id : 0, 0, temp, flag, skill_id);
+					status->change_start_delayed(src, bl, type, rate, 7, 0, (type == SC_BURNING) ? src->id : 0, 0, temp, flag, skill_id, delay);
 
 				if (sd->addeff[i].flag&ATF_SELF)
-					status->change_start(src, src, type, rate, 7, 0, (type == SC_BURNING) ? src->id : 0, 0, temp, flag, skill_id);
+					status->change_start_delayed(src, src, type, rate, 7, 0, (type == SC_BURNING) ? src->id : 0, 0, temp, flag, skill_id, delay);
 			}
 		}
 
