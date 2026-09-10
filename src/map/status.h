@@ -1286,6 +1286,17 @@ struct status_change {
 	struct status_change_entry *data[SC_MAX];
 };
 
+/// Holds the parameters of a status_change_start() call that is pending a delay timer.
+struct s_status_change_start_delayed {
+	int src_id;
+	int bl_id;
+	enum sc_type type;
+	int rate;
+	int val1, val2, val3, val4;
+	int tick;
+	int flag;
+	int skill_id;
+};
 
 //Define for standard HP damage attacks.
 #define status_fix_damage(src, target, hp, walkdelay) (status->damage((src), (target), (hp), 0, (walkdelay), 0))
@@ -1416,6 +1427,8 @@ struct status_interface {
 	struct s_unit_params dummy_unit_params;
 	int64 natural_heal_prev_tick;
 	unsigned int natural_heal_diff_tick;
+	struct DBMap *delayed_start_db; // int index -> struct s_status_change_start_delayed *
+	int delayed_start_index;
 	/* */
 	int (*init) (bool minimal);
 	void (*final) (void);
@@ -1460,6 +1473,8 @@ struct status_interface {
 	int (*get_sc_def) (struct block_list *src, struct block_list *bl, enum sc_type type, int rate, int tick, int flag, int skill_id);
 	int (*change_start) (struct block_list *src, struct block_list *bl, enum sc_type type, int rate, int val1, int val2, int val3, int val4, int tick, int flag, int skill_id);
 	int (*change_start_sub) (struct block_list *src, struct block_list *bl, enum sc_type type, int rate, int val1, int val2, int val3, int val4, int tick, int total_tick, int flag, int skill_id);
+	void (*change_start_delayed) (struct block_list *src, struct block_list *bl, enum sc_type type, int rate, int val1, int val2, int val3, int val4, int tick, int flag, int skill_id, int delay);
+	int (*change_start_delayed_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*change_end_) (struct block_list* bl, enum sc_type type, int tid);
 	bool (*is_immune_to_status) (struct status_change* sc, enum sc_type type);
 	bool (*is_boss_resist_sc) (enum sc_type type);
