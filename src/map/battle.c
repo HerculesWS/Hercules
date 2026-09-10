@@ -559,16 +559,12 @@ static int64 battle_calc_weapon_damage(struct block_list *src, struct block_list
  * it calculates nothing extra fancy, is needed for magnum breaks WATK_ELEMENT bonus. [Skotlex]
  *------------------------------------------
  * Pass damage2 as NULL to not calc it.
- * Flag values: // TODO: Check whether these values are correct (the flag parameter seems to be passed through to other functions), and replace them with an enum.
- * &1: Critical hit
- * &2: Arrow attack
- * &4: Skill is Magic Crasher
- * &8: Skip target size adjustment (Extremity Fist?)
- *&16: Arrow attack but BOW, REVOLVER, RIFLE, SHOTGUN, GATLING or GRENADE type weapon not equipped (i.e. shuriken, kunai and venom knives not affected by DEX)
+ * @param flag: bitmask of enum battle_calc_base_damage_flag
+ * @param flag2: BF_* combat flag (@see struct Damage.flag)
  */
 /* 'battle_calc_base_damage' is used on renewal, 'battle_calc_base_damage2' otherwise. */
 // FIXME: Missing documentation for flag2
-static int64 battle_calc_base_damage(struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int nk, bool n_ele, short s_ele, short s_ele_, int type, int flag, int flag2)
+static int64 battle_calc_base_damage(struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int nk, bool n_ele, short s_ele, short s_ele_, int type, enum battle_calc_base_damage_flag flag, int flag2)
 {
 	int64 damage;
 	struct status_data *st = status->get_status_data(src);
@@ -585,7 +581,7 @@ static int64 battle_calc_base_damage(struct block_list *src, struct block_list *
 			if (sd->charm_type != CHARM_TYPE_NONE && sd->charm_count >= MAX_SPIRITCHARM) {
 				s_ele = s_ele_ = sd->charm_type;
 			}
-			if (flag&2 && sd->bonus.arrow_ele != 0)
+			if ((flag & BCBD_ARROW_ATK) != 0 && sd->bonus.arrow_ele != 0)
 				s_ele = sd->bonus.arrow_ele;
 		}
 	}
@@ -4486,7 +4482,7 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 			short totaldef = (tmdef + tdef - ((uint64)(tmdef + tdef) >> 32)) >> 1; // FIXME: What's the >> 32 supposed to do here? tmdef and tdef are both 16-bit...
 
 			matk = battle->calc_magic_attack(src, target, skill_id, skill_lv, mflag).damage;
-			atk = battle->calc_base_damage(src, target, skill_id, skill_lv, nk, false, s_ele, ELE_NEUTRAL, EQI_HAND_R, (sc && sc->data[SC_MAXIMIZEPOWER]?1:0)|(sc && sc->data[SC_WEAPONPERFECT]?8:0), md.flag);
+			atk = battle->calc_base_damage(src, target, skill_id, skill_lv, nk, false, s_ele, ELE_NEUTRAL, EQI_HAND_R, (sc && sc->data[SC_MAXIMIZEPOWER] ? BCBD_CRITICAL : BCBD_NONE)|(sc && sc->data[SC_WEAPONPERFECT] ? BCBD_SKIP_SIZE_ADJUSTMENT : BCBD_NONE), md.flag);
 			md.damage = matk + atk;
 			if( src->type == BL_MOB ){
 				totaldef = (tdef + tmdef) >> 1;
@@ -4560,7 +4556,7 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 		int ratio = 300 + 50 * skill_lv;
 		int64 matk = battle->calc_magic_attack(src, target, skill_id, skill_lv, mflag).damage;
 		short totaldef = status->get_total_def(target) + status->get_total_mdef(target);
-		int64 atk = battle->calc_base_damage(src, target, skill_id, skill_lv, nk, false, s_ele, ELE_NEUTRAL, EQI_HAND_R, (sc && sc->data[SC_MAXIMIZEPOWER] ? 1 : 0) | (sc && sc->data[SC_WEAPONPERFECT] ? 8 : 0), md.flag);
+		int64 atk = battle->calc_base_damage(src, target, skill_id, skill_lv, nk, false, s_ele, ELE_NEUTRAL, EQI_HAND_R, (sc && sc->data[SC_MAXIMIZEPOWER] ? BCBD_CRITICAL : BCBD_NONE) | (sc && sc->data[SC_WEAPONPERFECT] ? BCBD_SKIP_SIZE_ADJUSTMENT : BCBD_NONE), md.flag);
 
 		md.damage = (matk + atk) * ratio / 100;
 		md.damage -= totaldef;
@@ -5411,7 +5407,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 				{
 					short totaldef = status->get_total_def(target);
 					i = 0;
-					GET_NORMAL_ATTACK( (sc && sc->data[SC_MAXIMIZEPOWER]?1:0)|(sc && sc->data[SC_WEAPONPERFECT]?8:0), 0 );
+					GET_NORMAL_ATTACK( (sc && sc->data[SC_MAXIMIZEPOWER] ? BCBD_CRITICAL : BCBD_NONE)|(sc && sc->data[SC_WEAPONPERFECT] ? BCBD_SKIP_SIZE_ADJUSTMENT : BCBD_NONE), 0 );
 					if( sc && sc->data[SC_NJ_BUNSINJYUTSU] && (i=sc->data[SC_NJ_BUNSINJYUTSU]->val2) > 0 )
 						wd.div_ = ~( i++ + 2 ) + 1;
 					if( wd.damage ){
@@ -5424,7 +5420,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 				}
 				break;
 			case NJ_SYURIKEN: // [malufett]
-				GET_NORMAL_ATTACK( (sc && sc->data[SC_MAXIMIZEPOWER]?1:0)|(sc && sc->data[SC_WEAPONPERFECT]?8:0), 0);
+				GET_NORMAL_ATTACK( (sc && sc->data[SC_MAXIMIZEPOWER] ? BCBD_CRITICAL : BCBD_NONE)|(sc && sc->data[SC_WEAPONPERFECT] ? BCBD_SKIP_SIZE_ADJUSTMENT : BCBD_NONE), 0);
 				ATK_ADD(battle->calc_masteryfix(src, target, skill_id, skill_lv, 4 * skill_lv + (sd ? sd->bonus.arrow_atk : 0), wd.div_, 0, flag.weapon));
 #endif
 				break;
@@ -5473,7 +5469,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 				}
 #else // RENEWAL
 				if (sd != NULL) {
-					GET_NORMAL_ATTACK(0, skill_id);
+					GET_NORMAL_ATTACK(BCBD_NONE, skill_id);
 				} else {
 					// @TODO: Does this still applies for Renewal after rebalance?
 					wd.damage = sstatus->batk;
@@ -5515,14 +5511,14 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 #ifdef RENEWAL
 					|| (sc && sc->data[SC_MAXIMIZEPOWER])
 #endif
-					?1:0)|
-					(flag.arrow?2:0)|
+					?BCBD_CRITICAL:BCBD_NONE)|
+					(flag.arrow?BCBD_ARROW_ATK:BCBD_NONE)|
 #ifndef RENEWAL
-					(skill_id == HW_MAGICCRASHER?4:0)|
-					(skill_id == MO_EXTREMITYFIST?8:0)|
+					(skill_id == HW_MAGICCRASHER?BCBD_MAGIC_CRASHER:BCBD_NONE)|
+					(skill_id == MO_EXTREMITYFIST?BCBD_SKIP_SIZE_ADJUSTMENT:BCBD_NONE)|
 #endif
-					(!skill_id && sc && sc->data[SC_HLIF_CHANGE]?4:0)|
-					(sc && sc->data[SC_WEAPONPERFECT]?8:0);
+					(!skill_id && sc && sc->data[SC_HLIF_CHANGE]?BCBD_MAGIC_CRASHER:BCBD_NONE)|
+					(sc && sc->data[SC_WEAPONPERFECT] ? BCBD_SKIP_SIZE_ADJUSTMENT : BCBD_NONE);
 				if (flag.arrow && sd)
 				switch (sd->weapontype) {
 					case W_BOW:
@@ -5533,7 +5529,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 					case W_GRENADE:
 						break;
 					default:
-						i |= 16; // for ex. shuriken must not be influenced by DEX
+						i |= BCBD_ARROW_ATK_NODEX; // for ex. shuriken must not be influenced by DEX
 				}
 #ifdef RENEWAL
 				GET_NORMAL_ATTACK( i, skill_id);
@@ -5626,7 +5622,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 			case KO_BAKURETSU:
 			{
 #ifdef RENEWAL
-				GET_NORMAL_ATTACK((sc && sc->data[SC_MAXIMIZEPOWER] ? 1 : 0) | (sc && sc->data[SC_WEAPONPERFECT] ? 8 : 0), skill_id);
+				GET_NORMAL_ATTACK((sc && sc->data[SC_MAXIMIZEPOWER] ? BCBD_CRITICAL : BCBD_NONE) | (sc && sc->data[SC_WEAPONPERFECT] ? BCBD_SKIP_SIZE_ADJUSTMENT : BCBD_NONE), skill_id);
 #endif
 				skillratio = skill_lv * (50 + status_get_dex(src) / 4);
 				skillratio = (int)(skillratio * (sd ? pc->checkskill(sd, NJ_TOBIDOUGU) : 10) * 40.f / 100.0f * status->get_lv(src) / 120);
@@ -5636,12 +5632,12 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 
 	#ifdef RENEWAL
 			case GS_MAGICALBULLET:
-				GET_NORMAL_ATTACK((sc && sc->data[SC_MAXIMIZEPOWER] ? 1 : 0) | (sc && sc->data[SC_WEAPONPERFECT] ? 8 : 0), skill_id);
+				GET_NORMAL_ATTACK((sc && sc->data[SC_MAXIMIZEPOWER] ? BCBD_CRITICAL : BCBD_NONE) | (sc && sc->data[SC_WEAPONPERFECT] ? BCBD_SKIP_SIZE_ADJUSTMENT : BCBD_NONE), skill_id);
 				ATK_ADD(battle->attr_fix(src, target,
 					battle->calc_cardfix(BF_MAGIC, src, target, nk, s_ele, 0, status->get_matk(src, 2), 0, wd.flag), ELE_NEUTRAL, tstatus->def_ele, tstatus->ele_lv));
 				break;
 			case GS_PIERCINGSHOT:
-				GET_NORMAL_ATTACK((sc && sc->data[SC_MAXIMIZEPOWER] ? 1 : 0) | (sc && sc->data[SC_WEAPONPERFECT] ? 8 : 0), 0);
+				GET_NORMAL_ATTACK((sc && sc->data[SC_MAXIMIZEPOWER] ? BCBD_CRITICAL : BCBD_NONE) | (sc && sc->data[SC_WEAPONPERFECT] ? BCBD_SKIP_SIZE_ADJUSTMENT : BCBD_NONE), 0);
 				if ( wd.damage ) {
 					if ( sd && sd->weapontype1 == W_RIFLE )
 						ATK_RATE(30 * (skill_lv + 5));
@@ -5652,7 +5648,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 			case MO_EXTREMITYFIST: // [malufett]
 			{
 				short totaldef = status->get_total_def(target);
-				GET_NORMAL_ATTACK((sc != NULL && sc->data[SC_MAXIMIZEPOWER] != NULL ? 1 : 0) | 8, skill_id);
+				GET_NORMAL_ATTACK((sc != NULL && sc->data[SC_MAXIMIZEPOWER] != NULL ? BCBD_CRITICAL : BCBD_NONE) | BCBD_SKIP_SIZE_ADJUSTMENT, skill_id);
 				if (wd.damage != 0) {
 					ATK_ADD(250 * (skill_lv + 1) + (10 * (status_get_sp(src) + 1) * wd.damage / 100) + (8 * wd.damage));
 					ATK_ADD(-totaldef);
@@ -5675,7 +5671,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 			}
 
 			case PA_SHIELDCHAIN:
-				GET_NORMAL_ATTACK((sc && sc->data[SC_MAXIMIZEPOWER] ? 1 : 0) | (sc && sc->data[SC_WEAPONPERFECT] ? 8 : 0), skill_id);
+				GET_NORMAL_ATTACK((sc && sc->data[SC_MAXIMIZEPOWER] ? BCBD_CRITICAL : BCBD_NONE) | (sc && sc->data[SC_WEAPONPERFECT] ? BCBD_SKIP_SIZE_ADJUSTMENT : BCBD_NONE), skill_id);
 				if ( sd ) {
 					short index = sd->equip_index[EQI_HAND_L];
 					if ( index >= 0 && sd->inventory_data[index] && sd->inventory_data[index]->type == IT_ARMOR ) {
@@ -5686,7 +5682,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 				ATK_RATE(battle->calc_skillratio(BF_WEAPON, src, target, skill_id, skill_lv, skillratio, wflag));
 				break;
 			case GN_CARTCANNON:
-				GET_NORMAL_ATTACK((sc && sc->data[SC_MAXIMIZEPOWER] ? 1 : 0) | (sc && sc->data[SC_WEAPONPERFECT] ? 8 : 0), skill_id);
+				GET_NORMAL_ATTACK((sc && sc->data[SC_MAXIMIZEPOWER] ? BCBD_CRITICAL : BCBD_NONE) | (sc && sc->data[SC_WEAPONPERFECT] ? BCBD_SKIP_SIZE_ADJUSTMENT : BCBD_NONE), skill_id);
 				ATK_ADD(sd ? sd->bonus.arrow_atk : 0);
 				wd.damage = battle->calc_masteryfix(src, target, skill_id, skill_lv, wd.damage, wd.div_, 0, flag.weapon);
 				ATK_RATE(battle->calc_skillratio(BF_WEAPON, src, target, skill_id, skill_lv, skillratio, wflag));
@@ -5702,7 +5698,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 			case LK_SPIRALPIERCE:
 			case ML_SPIRALPIERCE: { // [malufett]
 				short index = sd?sd->equip_index[EQI_HAND_R]:0;
-				GET_NORMAL_ATTACK( (sc && sc->data[SC_MAXIMIZEPOWER]?1:0)|(sc && sc->data[SC_WEAPONPERFECT]?8:0), 0);
+				GET_NORMAL_ATTACK( (sc && sc->data[SC_MAXIMIZEPOWER] ? BCBD_CRITICAL : BCBD_NONE)|(sc && sc->data[SC_WEAPONPERFECT] ? BCBD_SKIP_SIZE_ADJUSTMENT : BCBD_NONE), 0);
 				wd.damage = wd.damage * 70 / 100;
 				//n_ele = true; // FIXME: This is has no effect if it's after GET_NORMAL_ATTACK (was this intended, or was it supposed to be put above?)
 

@@ -3685,11 +3685,11 @@ int HP_battle_range_type(struct block_list *src, struct block_list *target, uint
 	}
 	return retVal___;
 }
-int64 HP_battle_calc_base_damage(struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int nk, bool n_ele, short s_ele, short s_ele_, int type, int flag, int flag2) {
+int64 HP_battle_calc_base_damage(struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int nk, bool n_ele, short s_ele, short s_ele_, int type, enum battle_calc_base_damage_flag flag, int flag2) {
 	int hIndex = 0;
 	int64 retVal___ = 0;
 	if (HPMHooks.count.HP_battle_calc_base_damage_pre > 0) {
-		int64 (*preHookFunc) (struct block_list **src, struct block_list **bl, uint16 *skill_id, uint16 *skill_lv, int *nk, bool *n_ele, short *s_ele, short *s_ele_, int *type, int *flag, int *flag2);
+		int64 (*preHookFunc) (struct block_list **src, struct block_list **bl, uint16 *skill_id, uint16 *skill_lv, int *nk, bool *n_ele, short *s_ele, short *s_ele_, int *type, enum battle_calc_base_damage_flag *flag, int *flag2);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_battle_calc_base_damage_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_battle_calc_base_damage_pre[hIndex].func;
@@ -3704,7 +3704,7 @@ int64 HP_battle_calc_base_damage(struct block_list *src, struct block_list *bl, 
 		retVal___ = HPMHooks.source.battle.calc_base_damage(src, bl, skill_id, skill_lv, nk, n_ele, s_ele, s_ele_, type, flag, flag2);
 	}
 	if (HPMHooks.count.HP_battle_calc_base_damage_post > 0) {
-		int64 (*postHookFunc) (int64 retVal___, struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int nk, bool n_ele, short s_ele, short s_ele_, int type, int flag, int flag2);
+		int64 (*postHookFunc) (int64 retVal___, struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int nk, bool n_ele, short s_ele, short s_ele_, int type, enum battle_calc_base_damage_flag flag, int flag2);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_battle_calc_base_damage_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_battle_calc_base_damage_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, src, bl, skill_id, skill_lv, nk, n_ele, s_ele, s_ele_, type, flag, flag2);
