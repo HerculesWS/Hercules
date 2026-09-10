@@ -255,7 +255,7 @@ static bool inter_rodex_hasnew(int char_id, int account_id)
 		char_id, (int)time(NULL), 2 * RODEX_EXPIRE, (int)time(NULL))
 		) {
 		Sql_ShowDebug(inter->sql_handle);
-		return -1;
+		return false;
 	}
 
 	if (SQL_SUCCESS != SQL->NextRow(inter->sql_handle))
