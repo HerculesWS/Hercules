@@ -321,7 +321,13 @@ static int battle_delay_damage(int64 tick, int amotion, struct block_list *src, 
 	if (((d_tbl && sc && check_distance_bl(target, d_tbl, sc->data[SC_DEVOTION]->val3)) || e_tbl) && damage > 0 && skill_id != PA_PRESSURE && skill_id != CR_REFLECTSHIELD)
 		damage = 0;
 
-	if ( !battle_config.delay_battle_damage || amotion <= 1 ) {
+	// Lethal damage bypasses the delay even when delay_battle_damage is on:
+	// otherwise a player can act (e.g. use an item) in the window between a
+	// lethal hit being calculated here and it actually being applied by the
+	// delayed timer, since nothing yet marks them as dying. Non-lethal hits
+	// keep the delay for its normal (cosmetic packet-pacing / animation
+	// sync) purpose. (#969)
+	if ( !battle_config.delay_battle_damage || amotion <= 1 || damage >= status_get_hp(target) ) {
 		map->freeblock_lock();
 		status_fix_damage(src, target, damage, ddelay); // We have to separate here between reflect damage and others [icescope]
 		if( attack_type && !status->isdead(target) && additional_effects )

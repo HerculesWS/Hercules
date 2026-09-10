@@ -5496,6 +5496,13 @@ static int pc_useitem(struct map_session_data *sd, int n)
 	if (nameid == ITEMID_MEGAPHONE)
 		sd->state.using_megaphone = 1;
 
+	// Re-check death: delay_battle_damage can kill the player after clif_parse_UseItem()'s check. (#969)
+	if (pc_isdead(sd) || status->isdead(&sd->bl)) {
+		if (removeItem)
+			pc->delitem(sd, n, 1, 1, DELITEM_NORMAL, LOG_TYPE_CONSUME);
+		return 0;
+	}
+
 	script->run_use_script(sd, sd->inventory_data[n], npc->fake_nd->bl.id);
 	script->potion_flag = 0;
 
