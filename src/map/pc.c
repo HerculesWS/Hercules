@@ -1218,7 +1218,7 @@ static bool pc_authok(struct map_session_data *sd, int login_id2, time_t expirat
 	if (pc->set_group(sd, group_id) != 0) {
 		ShowWarning("pc_authok: %s (AID:%d) logged in with unknown group id (%d)! kicking...\n",
 			st->name, sd->status.account_id, group_id);
-		clif->authfail_fd(sd->fd, 0);
+		clif->authfail_fd(sd->fd, BAN_UNFAIR);
 		return false;
 	}
 
@@ -1228,7 +1228,7 @@ static bool pc_authok(struct map_session_data *sd, int login_id2, time_t expirat
 	VECTOR_INIT(sd->rodex.claim_list);
 
 	if (st->sex != sd->status.sex) {
-		clif->authfail_fd(sd->fd, 0);
+		clif->authfail_fd(sd->fd, BAN_UNFAIR);
 		return false;
 	}
 
@@ -1384,7 +1384,7 @@ static bool pc_authok(struct map_session_data *sd, int login_id2, time_t expirat
 		// try warping to a default map instead (church graveyard)
 		if (pc->setpos(sd, mapindex->name2id(MAP_PRONTERA), 273, 354, CLR_OUTSIGHT) != 0) {
 			// if we fail again
-			clif->authfail_fd(sd->fd, 0);
+			clif->authfail_fd(sd->fd, BAN_UNFAIR);
 			return false;
 		}
 	} else if (map->getcell(map->mapindex2mapid(sd->status.last_point.map), &sd->bl, sd->status.last_point.x, sd->status.last_point.y, CELL_CHKNOPASS)) {
@@ -1448,7 +1448,7 @@ static bool pc_authok(struct map_session_data *sd, int login_id2, time_t expirat
 static void pc_authfail(struct map_session_data *sd)
 {
 	nullpo_retv(sd);
-	clif->authfail_fd(sd->fd, 0);
+	clif->authfail_fd(sd->fd, BAN_UNFAIR);
 	return;
 }
 
@@ -12216,7 +12216,7 @@ static int pc_expiration_timer(int tid, int64 tick, int id, intptr_t data)
 	sd->expiration_tid = INVALID_TIMER;
 
 	if( sd->fd )
-		clif->authfail_fd(sd->fd,10);
+		clif->authfail_fd(sd->fd, BAN_OUT_OF_PAID_TIME);
 
 	map->quit(sd);
 

@@ -135,7 +135,7 @@ static int pincode_compare(int fd, struct char_session_data *sd, char *pin)
 	} else {
 		if (pincode->maxtry && ++sd->pincode_try >= pincode->maxtry) {
 			pincode->error(sd->account_id);
-			chr->authfail_fd(fd, 0);
+			chr->authfail_fd(fd, BAN_UNFAIR);
 			chr->disconnect_player(sd->account_id);
 		}
 		return 0;

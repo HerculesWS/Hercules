@@ -6158,7 +6158,7 @@ ACMD(autotrade)
 	channel->quit(sd);
 	goldpc->stop(sd);
 
-	clif->authfail_fd(sd->fd, 15);
+	clif->authfail_fd(sd->fd, BAN_DISCONNECTED_BY_GM);
 
 	/* currently standalone is not supporting buyingstores, so we rely on the previous method */
 	if( sd->state.buyingstore )

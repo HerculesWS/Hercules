@@ -396,7 +396,7 @@ static int chrif_reconnect(union DBKey key, struct DBData *data, va_list ap)
 
 			// TODO: Remove this branch
 			// Multi-zone is not supported
-			clif->authfail_fd(node->sd->fd, 3); // timeout
+			clif->authfail_fd(node->sd->fd, BAN_TIMEOUT);
 			break;
 	}
 	return 0;
@@ -579,7 +579,7 @@ static void chrif_authfail(int fd)
 		node->sex == sex &&
 		node->state == ST_LOGIN )
 	{// found a match
-		clif->authfail_fd(node->fd, 0); // Disconnected from server
+		clif->authfail_fd(node->fd, BAN_UNFAIR);
 		chrif->auth_delete(account_id, char_id, ST_LOGIN);
 	}
 }
@@ -752,7 +752,7 @@ static bool chrif_changesex(struct map_session_data *sd, bool change_account)
 	clif->message(sd->fd, msg_sd(sd, MSGTBL_CHANGESEX_DISCONNECT)); //"Disconnecting to perform change-sex request..."
 
 	if (sd->fd)
-		clif->authfail_fd(sd->fd, 15);
+		clif->authfail_fd(sd->fd, BAN_DISCONNECTED_BY_GM);
 	else
 		map->quit(sd);
 	return true;
@@ -972,11 +972,11 @@ static int chrif_disconnectplayer(int fd)
 	}
 
 	switch(RFIFOB(fd, 6)) {
-		case 1: clif->authfail_fd(sd->fd, 1); break; //server closed
-		case 2: clif->authfail_fd(sd->fd, 2); break; //someone else logged in
-		case 3: clif->authfail_fd(sd->fd, 4); break; //server overpopulated
-		case 4: clif->authfail_fd(sd->fd, 10); break; //out of available time paid for
-		case 5: clif->authfail_fd(sd->fd, 15); break; //forced to dc by gm
+		case 1: clif->authfail_fd(sd->fd, BAN_SERVER_CLOSED); break;
+		case 2: clif->authfail_fd(sd->fd, BAN_ALREADY_LOGGED_IN); break;
+		case 3: clif->authfail_fd(sd->fd, BAN_SERVER_FULL); break;
+		case 4: clif->authfail_fd(sd->fd, BAN_OUT_OF_PAID_TIME); break;
+		case 5: clif->authfail_fd(sd->fd, BAN_DISCONNECTED_BY_GM); break;
 	}
 	return 0;
 }

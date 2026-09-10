@@ -2349,7 +2349,7 @@ static void char_disconnect_player(int account_id)
 		sockt->eof(i);
 }
 
-static void char_authfail_fd(int fd, int type)
+static void char_authfail_fd(int fd, enum notify_ban_errorcode type)
 {
 	WFIFOHEAD(fd,3);
 	WFIFOW(fd,0) = 0x81;
@@ -2379,12 +2379,12 @@ static void char_auth_ok(int fd, struct char_session_data *sd)
 			if (character->waiting_disconnect == INVALID_TIMER)
 				character->waiting_disconnect = timer->add(timer->gettick()+20000, chr->waiting_disconnect, character->account_id, 0);
 			character->pincode_enable = -1;
-			chr->authfail_fd(fd, 8);
+			chr->authfail_fd(fd, BAN_LAST_CONNECTION_RECOGNIZED);
 			return;
 		}
 		if (character->fd >= 0 && character->fd != fd) {
 			//There's already a connection from this account that hasn't picked a char yet.
-			chr->authfail_fd(fd, 8);
+			chr->authfail_fd(fd, BAN_LAST_CONNECTION_RECOGNIZED);
 			return;
 		}
 		character->fd = fd;
@@ -2705,7 +2705,7 @@ static void char_parse_fromlogin_kick(int fd)
 			ARR_FIND( 0, sockt->fd_max, i, sockt->session[i] && (tsd = (struct char_session_data*)sockt->session[i]->session_data) && tsd->account_id == aid );
 			if( i < sockt->fd_max )
 			{
-				chr->authfail_fd(i, 2);
+				chr->authfail_fd(i, BAN_ALREADY_LOGGED_IN);
 				sockt->eof(i);
 			}
 			else // still moving to the map-server
@@ -4626,12 +4626,12 @@ static void char_parse_char_select(int fd, struct char_session_data *sd, uint32 
 		//First check that there's actually a map server online.
 		if (chr->map_server.fd < 0 || VECTOR_LENGTH(chr->map_server.maps) == 0) {
 			ShowInfo("Connection Closed. No map servers available.\n");
-			chr->authfail_fd(fd, 1); // 1 = Server closed
+			chr->authfail_fd(fd, BAN_SERVER_CLOSED);
 			return;
 		}
 		if (!chr->find_available_map_fallback(cd)) {
 			ShowInfo("Connection Closed. No map server available that has a major city, and unable to find map-server for '%s'.\n", mapindex_id2name(cd->last_point.map));
-			chr->authfail_fd(fd, 1); // 1 = Server closed
+			chr->authfail_fd(fd, BAN_SERVER_CLOSED);
 			return;
 		}
 	}
@@ -4643,7 +4643,7 @@ static void char_parse_char_select(int fd, struct char_session_data *sd, uint32 
 		ShowError("chr->parse_char: Attempting to write to invalid session %d! Map Server disconnected.\n", map_fd);
 		chr->map_server.fd = -1;
 		memset(&chr->map_server, 0, sizeof(struct mmo_map_server));
-		chr->authfail_fd(fd, 1); // 1 = Server closed
+		chr->authfail_fd(fd, BAN_SERVER_CLOSED);
 		return;
 	}
 
