@@ -544,7 +544,7 @@ static int64 battle_calc_weapon_damage(struct block_list *src, struct block_list
 		s_ele = s_ele_ = ELE_NEUTRAL;
 
 	// attacker side
-	damage = battle->calc_cardfix(BF_WEAPON, src, bl, nk, s_ele, s_ele_, damage, 2|(type == EQI_HAND_L), flag2);
+	damage = battle->calc_cardfix(BF_WEAPON, src, bl, nk, s_ele, s_ele_, damage, 2 | ((type == EQI_HAND_L) ? 1 : 0), flag2);
 
 	// target side
 	damage = battle->calc_cardfix(BF_WEAPON, src, bl, nk, s_ele, s_ele_, damage, 0, flag2);
@@ -6620,7 +6620,7 @@ static void battle_reflect_damage(struct block_list *target, struct block_list *
  */
 static void battle_reflect_trap(struct block_list *target, struct block_list *src, struct Damage *md, uint16 skill_id)
 {
-	if (battle_config.trap_reflect == true) {
+	if (battle_config.trap_reflect == 1) {
 		if (src != target) { // Don't reflect your own damage
 			switch (skill_id) {
 			case HT_CLAYMORETRAP:

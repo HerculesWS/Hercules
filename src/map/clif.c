@@ -3944,17 +3944,17 @@ static void clif_changelook(struct block_list *bl, enum look type, int val)
 				if (!vd->cloth_color)
 					break;
 
-				if ((sd->sc.option & OPTION_WEDDING) != 0 && battle_config.wedding_ignorepalette == true)
+				if ((sd->sc.option & OPTION_WEDDING) != 0 && battle_config.wedding_ignorepalette == 1)
 					vd->cloth_color = 0;
-				if ((sd->sc.option & OPTION_XMAS) != 0 && battle_config.xmas_ignorepalette == true)
+				if ((sd->sc.option & OPTION_XMAS) != 0 && battle_config.xmas_ignorepalette == 1)
 					vd->cloth_color = 0;
-				if ((sd->sc.option & OPTION_SUMMER) != 0 && battle_config.summer_ignorepalette == true)
+				if ((sd->sc.option & OPTION_SUMMER) != 0 && battle_config.summer_ignorepalette == 1)
 					vd->cloth_color = 0;
-				if ((sd->sc.option & OPTION_HANBOK) != 0 && battle_config.hanbok_ignorepalette == true)
+				if ((sd->sc.option & OPTION_HANBOK) != 0 && battle_config.hanbok_ignorepalette == 1)
 					vd->cloth_color = 0;
-				if ((sd->sc.option & OPTION_OKTOBERFEST) != 0 && battle_config.oktoberfest_ignorepalette == true)
+				if ((sd->sc.option & OPTION_OKTOBERFEST) != 0 && battle_config.oktoberfest_ignorepalette == 1)
 					vd->cloth_color = 0;
-				if ((sd->sc.option & OPTION_SUMMER2) != 0 && battle_config.summer2_ignorepalette == true)
+				if ((sd->sc.option & OPTION_SUMMER2) != 0 && battle_config.summer2_ignorepalette == 1)
 					vd->cloth_color = 0;
 				if (vd->body_style != 0 && (sd->sc.option & OPTION_COSTUME) != 0)
 					vd->body_style = 0;
@@ -3976,17 +3976,17 @@ static void clif_changelook(struct block_list *bl, enum look type, int val)
 			break;
 			case LOOK_CLOTHES_COLOR:
 				if (val && sd != NULL) {
-					if ((sd->sc.option & OPTION_WEDDING) != 0 && battle_config.wedding_ignorepalette == true)
+					if ((sd->sc.option & OPTION_WEDDING) != 0 && battle_config.wedding_ignorepalette == 1)
 						val = 0;
-					if ((sd->sc.option & OPTION_XMAS) != 0 && battle_config.xmas_ignorepalette == true)
+					if ((sd->sc.option & OPTION_XMAS) != 0 && battle_config.xmas_ignorepalette == 1)
 						val = 0;
-					if ((sd->sc.option & OPTION_SUMMER) != 0 && battle_config.summer_ignorepalette == true)
+					if ((sd->sc.option & OPTION_SUMMER) != 0 && battle_config.summer_ignorepalette == 1)
 						val = 0;
-					if ((sd->sc.option & OPTION_HANBOK) != 0 && battle_config.hanbok_ignorepalette == true)
+					if ((sd->sc.option & OPTION_HANBOK) != 0 && battle_config.hanbok_ignorepalette == 1)
 						val = 0;
-					if ((sd->sc.option & OPTION_OKTOBERFEST) != 0 && battle_config.oktoberfest_ignorepalette == true)
+					if ((sd->sc.option & OPTION_OKTOBERFEST) != 0 && battle_config.oktoberfest_ignorepalette == 1)
 						val = 0;
-					if ((sd->sc.option & OPTION_SUMMER2) != 0 && battle_config.summer2_ignorepalette == true)
+					if ((sd->sc.option & OPTION_SUMMER2) != 0 && battle_config.summer2_ignorepalette == 1)
 						val = 0;
 				}
 				vd->cloth_color = val;

@@ -2585,7 +2585,7 @@ static void intif_parse_RequestRodexOpenInbox(int fd)
 		VECTOR_PUSH(sd->rodex.messages, msg);
 	}
 
-	if (is_end == true) {
+	if (is_end == 1) {
 #if PACKETVER >= 20170419
 		clif->rodex_send_mails_all(sd->fd, sd, mail_id);
 #else

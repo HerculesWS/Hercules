@@ -6724,17 +6724,17 @@ static void status_set_viewdata(struct block_list *bl, int class_)
 			sd->vd.sex = sd->status.sex;
 
 			if (sd->vd.cloth_color) {
-				if ((sd->sc.option & OPTION_WEDDING) != 0 && battle_config.wedding_ignorepalette == true)
+				if ((sd->sc.option & OPTION_WEDDING) != 0 && battle_config.wedding_ignorepalette == 1)
 					sd->vd.cloth_color = 0;
-				if ((sd->sc.option & OPTION_XMAS) != 0 && battle_config.xmas_ignorepalette == true)
+				if ((sd->sc.option & OPTION_XMAS) != 0 && battle_config.xmas_ignorepalette == 1)
 					sd->vd.cloth_color = 0;
-				if ((sd->sc.option & OPTION_SUMMER) != 0 && battle_config.summer_ignorepalette == true)
+				if ((sd->sc.option & OPTION_SUMMER) != 0 && battle_config.summer_ignorepalette == 1)
 					sd->vd.cloth_color = 0;
-				if ((sd->sc.option & OPTION_HANBOK) != 0 && battle_config.hanbok_ignorepalette == true)
+				if ((sd->sc.option & OPTION_HANBOK) != 0 && battle_config.hanbok_ignorepalette == 1)
 					sd->vd.cloth_color = 0;
-				if ((sd->sc.option & OPTION_OKTOBERFEST) != 0 && battle_config.oktoberfest_ignorepalette == true)
+				if ((sd->sc.option & OPTION_OKTOBERFEST) != 0 && battle_config.oktoberfest_ignorepalette == 1)
 					sd->vd.cloth_color = 0;
-				if ((sd->sc.option & OPTION_SUMMER2) != 0 && battle_config.summer2_ignorepalette == true)
+				if ((sd->sc.option & OPTION_SUMMER2) != 0 && battle_config.summer2_ignorepalette == 1)
 					sd->vd.cloth_color = 0;
 			}
 			if (sd->vd.body_style != 0 && (sd->sc.option & OPTION_COSTUME) != 0)
