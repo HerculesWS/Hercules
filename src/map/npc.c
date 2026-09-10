@@ -3193,12 +3193,12 @@ static int npc_unload(struct npc_data *nd, bool single, bool unload_mobs)
 		if (nd->u.scr.timer_event != NULL)
 			aFree(nd->u.scr.timer_event);
 
-		if (nd->src_id == 0) {
-			if (nd->u.scr.script != NULL) {
-				script->free_code(nd->u.scr.script);
-				nd->u.scr.script = NULL;
-			}
+		if ((nd->src_id == 0 || nd->u.scr.script_is_own) && nd->u.scr.script != NULL) {
+			script->free_code(nd->u.scr.script);
+			nd->u.scr.script = NULL;
+		}
 
+		if (nd->src_id == 0) {
 			if (nd->u.scr.label_list != NULL) {
 				aFree(nd->u.scr.label_list);
 				nd->u.scr.label_list = NULL;
@@ -4045,7 +4045,13 @@ static bool npc_duplicate_script_sub(struct npc_data *nd, const struct npc_data 
 	++npc->npc_script;
 	nd->u.scr.xs = xs;
 	nd->u.scr.ys = ys;
-	nd->u.scr.script = snd->u.scr.script;
+	if (script->config.duplicate_npc_vars_shared || snd->u.scr.script == NULL) {
+		nd->u.scr.script = snd->u.scr.script;
+		nd->u.scr.script_is_own = false;
+	} else {
+		nd->u.scr.script = script->clone_script(snd->u.scr.script);
+		nd->u.scr.script_is_own = true;
+	}
 	nd->u.scr.label_list = snd->u.scr.label_list;
 	nd->u.scr.label_list_num = snd->u.scr.label_list_num;
 	nd->u.scr.shop = snd->u.scr.shop;

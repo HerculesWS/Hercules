@@ -116,6 +116,13 @@ function	script	F_TestVarOfAnotherNPC	{
 	end;
 }
 
+-	script	TestVarOfDuplicateOrigin	FAKE_NPC,{
+	// Used to test that duplicate(npc) NPCs share '.' variables by default
+	// (script_configuration.duplicate_npc_vars_shared, issue #1168)
+	end;
+}
+-	duplicate(TestVarOfDuplicateOrigin)	TestVarOfDuplicateCopy	FAKE_NPC
+
 -	script	export test	FAKE_NPC,{
 
 	function OnInit {
@@ -929,6 +936,10 @@ function	script	HerculesSelfTestHelper	{
 	set getvariableofnpc(.x, "TestVarOfAnotherNPC"), 1;
 	callsub(OnCheck, "Setting NPC variables of another NPC", getvariableofnpc(.x, "TestVarOfAnotherNPC"), 1);
 	callsub(OnCheck, "Setting NPC variables of another NPC (local variable overwrite check)", .x, 2);
+
+	// duplicate(npc) variable sharing (default: shared, issue #1168)
+	set getvariableofnpc(.x, "TestVarOfDuplicateOrigin"), 0xDEAD;
+	callsub(OnCheck, "duplicate(npc) shares '.' vars with its origin by default", getvariableofnpc(.x, "TestVarOfDuplicateCopy"), 0xDEAD);
 
 	// Callsub (advanced)
 	callsub(OnCheck, "Callsub return value", callsub(OnTestReturnValue, 1));
