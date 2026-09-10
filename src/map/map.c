@@ -5471,13 +5471,11 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 				map_zone_mf_cache_add(m, "noautoloot");
 		}
 	} else if (strcmpi(flag, "noviewid") == 0) {
-		if (state != 0 && map->list[m].flag.noviewid != 0)
-			;/* nothing to do */
-		else {
-			if (state != 0)
-				map_zone_mf_cache_add(m, "noviewid\toff");
-			else if (map->list[m].flag.noviewid != 0)
-				map_zone_mf_cache_add(m, "noviewid");
+		if (state && map->list[m].flag.noviewid == (uint32)strtoull(params, NULL, 0)) {
+			/* nothing to do */
+		} else {
+			sprintf(rflag, "noviewid\t%u", map->list[m].flag.noviewid);
+			map_zone_mf_cache_add(m, rflag);
 		}
 	} else if (strcmpi(flag, "pairship_startable") == 0) {
 		if (state != 0 && map->list[m].flag.pairship_startable != 0)
@@ -5549,15 +5547,6 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 				map_zone_mf_cache_add(m, "src4instance\toff");
 			else if (map->list[m].flag.src4instance != 0)
 				map_zone_mf_cache_add(m, "src4instance");
-		}
-	} else if (strcmpi(flag, "cvc") == 0) {
-		if (state != 0 && map->list[m].flag.cvc != 0)
-			;/* nothing to do */
-		else {
-			if (state != 0)
-				map_zone_mf_cache_add(m, "cvc\toff");
-			else if (map->list[m].flag.cvc != 0)
-				map_zone_mf_cache_add(m, "cvc");
 		}
 	} else if (strcmpi(flag, "nopenalty") == 0) {
 		if (state != 0 && map->list[m].flag.noexppenalty != 0) /* they are applied together, no need to check both */
@@ -5763,22 +5752,6 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 				sprintf(rflag, "nopet\t%d", state);
 				map_zone_mf_cache_add(m, rflag);
 			}
-		}
-	} else if (strcmpi(flag, "noviewid") == 0) {
-		if (state && map->list[m].flag.noviewid == (uint32)strtoull(params, NULL, 0)) {
-			/* nothing to do */
-		} else {
-			sprintf(rflag, "noviewid\t%u", map->list[m].flag.noviewid);
-			map_zone_mf_cache_add(m, rflag);
-		}
-	} else if (strcmpi(flag, "src4instance") == 0) {
-		if (state && map->list[m].flag.src4instance)
-			;/* nothing to do */
-		else {
-			if (state)
-				map_zone_mf_cache_add(m, "src4instance\toff");
-			else if (map->list[m].flag.src4instance)
-				map_zone_mf_cache_add(m, "src4instance");
 		}
 	} else {
 		ShowError("map_zone_mf_cache: unsupported flag '%s' in '%s'\n", flag, map->list[m].name);
