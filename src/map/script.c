@@ -2955,7 +2955,10 @@ static struct script_code *parse_script(const char *src, const char *file, int l
 		script->label_count = 0;
 	script->parse_options = options;
 
+#pragma warning (push)
+#pragma warning (disable: 4611)
 	if( setjmp( script->error_jump ) != 0 ) {
+#pragma warning (pop)
 		//Restore program state when script has problems. [from jA]
 		const int size = ARRAYLENGTH(script->syntax.curly);
 		if( script->error_report )
