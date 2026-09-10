@@ -146,7 +146,8 @@ enum battle_calc_base_damage_flag {
 // damage structure
 struct Damage {
 	int64 damage,damage2; //right, left dmg
-	int type,div_; //chk clif_damage for type @TODO add an enum ? ;  nb of hit
+	enum battle_dmg_type type; //@see clif_damage
+	int div_; // nb of hit
 	int amotion,dmotion;
 	int blewcount; //nb of knockback
 	int flag; //chk BF_* flag, (enum below)
