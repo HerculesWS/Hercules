@@ -7058,6 +7058,10 @@ struct {
 	struct HPMHookPoint *HP_status_change_start_post;
 	struct HPMHookPoint *HP_status_change_start_sub_pre;
 	struct HPMHookPoint *HP_status_change_start_sub_post;
+	struct HPMHookPoint *HP_status_change_start_delayed_pre;
+	struct HPMHookPoint *HP_status_change_start_delayed_post;
+	struct HPMHookPoint *HP_status_change_start_delayed_timer_pre;
+	struct HPMHookPoint *HP_status_change_start_delayed_timer_post;
 	struct HPMHookPoint *HP_status_change_end__pre;
 	struct HPMHookPoint *HP_status_change_end__post;
 	struct HPMHookPoint *HP_status_is_immune_to_status_pre;
@@ -14679,6 +14683,10 @@ struct {
 	int HP_status_change_start_post;
 	int HP_status_change_start_sub_pre;
 	int HP_status_change_start_sub_post;
+	int HP_status_change_start_delayed_pre;
+	int HP_status_change_start_delayed_post;
+	int HP_status_change_start_delayed_timer_pre;
+	int HP_status_change_start_delayed_timer_post;
 	int HP_status_change_end__pre;
 	int HP_status_change_end__post;
 	int HP_status_is_immune_to_status_pre;
