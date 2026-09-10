@@ -642,8 +642,8 @@ static void trade_tradecommit(struct map_session_data *sd)
 
 	// save both player to avoid crash: they always have no advantage/disadvantage between the 2 players
 	if (map->save_settings&1) {
-		chrif->save(sd,0);
-		chrif->save(tsd,0);
+		chrif->save(sd, CSAVE_NORMAL);
+		chrif->save(tsd, CSAVE_NORMAL);
 	}
 }
 

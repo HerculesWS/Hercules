@@ -1218,7 +1218,7 @@ static bool pc_authok(struct map_session_data *sd, int login_id2, time_t expirat
 	if (pc->set_group(sd, group_id) != 0) {
 		ShowWarning("pc_authok: %s (AID:%d) logged in with unknown group id (%d)! kicking...\n",
 			st->name, sd->status.account_id, group_id);
-		clif->authfail_fd(sd->fd, 0);
+		clif->authfail_fd(sd->fd, BAN_UNFAIR);
 		return false;
 	}
 
@@ -1228,7 +1228,7 @@ static bool pc_authok(struct map_session_data *sd, int login_id2, time_t expirat
 	VECTOR_INIT(sd->rodex.claim_list);
 
 	if (st->sex != sd->status.sex) {
-		clif->authfail_fd(sd->fd, 0);
+		clif->authfail_fd(sd->fd, BAN_UNFAIR);
 		return false;
 	}
 
@@ -1384,7 +1384,7 @@ static bool pc_authok(struct map_session_data *sd, int login_id2, time_t expirat
 		// try warping to a default map instead (church graveyard)
 		if (pc->setpos(sd, mapindex->name2id(MAP_PRONTERA), 273, 354, CLR_OUTSIGHT) != 0) {
 			// if we fail again
-			clif->authfail_fd(sd->fd, 0);
+			clif->authfail_fd(sd->fd, BAN_UNFAIR);
 			return false;
 		}
 	} else if (map->getcell(map->mapindex2mapid(sd->status.last_point.map), &sd->bl, sd->status.last_point.x, sd->status.last_point.y, CELL_CHKNOPASS)) {
@@ -1448,7 +1448,7 @@ static bool pc_authok(struct map_session_data *sd, int login_id2, time_t expirat
 static void pc_authfail(struct map_session_data *sd)
 {
 	nullpo_retv(sd);
-	clif->authfail_fd(sd->fd, 0);
+	clif->authfail_fd(sd->fd, BAN_UNFAIR);
 	return;
 }
 
@@ -8571,7 +8571,7 @@ static int pc_setparam(struct map_session_data *sd, int type, int64 val)
 		delta = ((int32)val - sd->status.bank_vault);
 		sd->status.bank_vault = (int32)val;
 		if (map->save_settings & 256) {
-			chrif->save(sd, 0); // send to char server
+			chrif->save(sd, CSAVE_NORMAL); // send to char server
 		}
 		if (delta > 0) {
 			clif->bank_deposit(sd, BDA_SUCCESS);
@@ -9022,7 +9022,7 @@ static int pc_jobchange(struct map_session_data *sd, int class_, int upper)
 
 	//if you were previously famous, not anymore.
 	if (fame_flag != 0) {
-		chrif->save(sd,0);
+		chrif->save(sd, CSAVE_NORMAL);
 		chrif->buildfamelist();
 	} else if (sd->status.fame > 0) {
 		//It may be that now they are famous?
@@ -9030,7 +9030,7 @@ static int pc_jobchange(struct map_session_data *sd, int class_, int upper)
 		case MAPID_BLACKSMITH:
 		case MAPID_ALCHEMIST:
 		case MAPID_TAEKWON:
-			chrif->save(sd,0);
+			chrif->save(sd, CSAVE_NORMAL);
 			chrif->buildfamelist();
 		break;
 		}
@@ -11105,7 +11105,7 @@ static int pc_autosave(int tid, int64 tick, int id, intptr_t data)
 		last_save_id = sd->bl.id;
 		save_flag = 2;
 
-		chrif->save(sd,0);
+		chrif->save(sd, CSAVE_NORMAL);
 		break;
 	}
 	mapit->free(iter);
@@ -12147,7 +12147,7 @@ static void pc_bank_deposit(struct map_session_data *sd, int money)
 	else {
 		sd->status.bank_vault += money;
 		if( map->save_settings&256 )
-			chrif->save(sd,0);
+			chrif->save(sd, CSAVE_NORMAL);
 		clif->bank_deposit(sd,BDA_SUCCESS);
 	}
 }
@@ -12174,7 +12174,7 @@ static void pc_bank_withdraw(struct map_session_data *sd, int money)
 	else {
 		sd->status.bank_vault -= money;
 		if( map->save_settings&256 )
-			chrif->save(sd,0);
+			chrif->save(sd, CSAVE_NORMAL);
 		clif->bank_withdraw(sd,BWA_SUCCESS);
 	}
 }
@@ -12216,7 +12216,7 @@ static int pc_expiration_timer(int tid, int64 tick, int id, intptr_t data)
 	sd->expiration_tid = INVALID_TIMER;
 
 	if( sd->fd )
-		clif->authfail_fd(sd->fd,10);
+		clif->authfail_fd(sd->fd, BAN_OUT_OF_PAID_TIME);
 
 	map->quit(sd);
 

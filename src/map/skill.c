@@ -9119,7 +9119,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 				}
 				unit->stop_attack(src);
 				//Run skillv tiles overriding the can-move check.
-				if (unit->walk_toxy(src, src->x + skill_lv * -dirx[dir], src->y + skill_lv * -diry[dir], 2) == 0
+				if (unit->walk_toxy(src, src->x + skill_lv * -dirx[dir], src->y + skill_lv * -diry[dir], UNIT_WALK_TOXY_FORCE) == 0
 				    && md != NULL)
 					md->state.skillstate = MSS_WALK; //Otherwise it isn't updated in the AI.
 			}

@@ -498,8 +498,8 @@ typedef int64 (*HPMHOOK_pre_battle_calc_sizefix) (struct map_session_data **sd, 
 typedef int64 (*HPMHOOK_post_battle_calc_sizefix) (int64 retVal___, struct map_session_data *sd, int64 damage, int type, int size, bool ignore);
 typedef int64 (*HPMHOOK_pre_battle_calc_weapon_damage) (struct block_list **src, struct block_list **bl, uint16 *skill_id, uint16 *skill_lv, struct weapon_atk **watk, int *nk, bool *n_ele, short *s_ele, short *s_ele_, int *size, int *type, int *flag, int *flag2);
 typedef int64 (*HPMHOOK_post_battle_calc_weapon_damage) (int64 retVal___, struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, struct weapon_atk *watk, int nk, bool n_ele, short s_ele, short s_ele_, int size, int type, int flag, int flag2);
-typedef int64 (*HPMHOOK_pre_battle_calc_defense) (int *attack_type, struct block_list **src, struct block_list **target, uint16 *skill_id, uint16 *skill_lv, int64 *damage, int *flag, int *pdef);
-typedef int64 (*HPMHOOK_post_battle_calc_defense) (int64 retVal___, int attack_type, struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, int64 damage, int flag, int pdef);
+typedef int64 (*HPMHOOK_pre_battle_calc_defense) (int *attack_type, struct block_list **src, struct block_list **target, uint16 *skill_id, uint16 *skill_lv, int64 *damage, enum battle_calc_defense_flag *flag, int *pdef);
+typedef int64 (*HPMHOOK_post_battle_calc_defense) (int64 retVal___, int attack_type, struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, int64 damage, enum battle_calc_defense_flag flag, int pdef);
 typedef struct block_list * (*HPMHOOK_pre_battle_get_master) (struct block_list **src);
 typedef struct block_list * (*HPMHOOK_post_battle_get_master) (struct block_list * retVal___, struct block_list *src);
 typedef struct block_list * (*HPMHOOK_pre_battle_get_targeted) (struct block_list **target);
@@ -530,8 +530,8 @@ typedef int (*HPMHOOK_pre_battle_blewcount_bonus) (struct map_session_data **sd,
 typedef int (*HPMHOOK_post_battle_blewcount_bonus) (int retVal___, struct map_session_data *sd, uint16 skill_id);
 typedef int (*HPMHOOK_pre_battle_range_type) (struct block_list **src, struct block_list **target, uint16 *skill_id, uint16 *skill_lv);
 typedef int (*HPMHOOK_post_battle_range_type) (int retVal___, struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv);
-typedef int64 (*HPMHOOK_pre_battle_calc_base_damage) (struct block_list **src, struct block_list **bl, uint16 *skill_id, uint16 *skill_lv, int *nk, bool *n_ele, short *s_ele, short *s_ele_, int *type, int *flag, int *flag2);
-typedef int64 (*HPMHOOK_post_battle_calc_base_damage) (int64 retVal___, struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int nk, bool n_ele, short s_ele, short s_ele_, int type, int flag, int flag2);
+typedef int64 (*HPMHOOK_pre_battle_calc_base_damage) (struct block_list **src, struct block_list **bl, uint16 *skill_id, uint16 *skill_lv, int *nk, bool *n_ele, short *s_ele, short *s_ele_, int *type, enum battle_calc_base_damage_flag *flag, int *flag2);
+typedef int64 (*HPMHOOK_post_battle_calc_base_damage) (int64 retVal___, struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int nk, bool n_ele, short s_ele, short s_ele_, int type, enum battle_calc_base_damage_flag flag, int flag2);
 typedef int64 (*HPMHOOK_pre_battle_calc_base_damage2) (struct status_data **st, struct weapon_atk **wa, struct status_change **sc, unsigned short *t_size, struct map_session_data **sd, int *flag);
 typedef int64 (*HPMHOOK_post_battle_calc_base_damage2) (int64 retVal___, struct status_data *st, struct weapon_atk *wa, struct status_change *sc, unsigned short t_size, struct map_session_data *sd, int flag);
 typedef struct Damage (*HPMHOOK_pre_battle_calc_misc_attack) (struct block_list **src, struct block_list **target, uint16 *skill_id, uint16 *skill_lv, int *mflag);
@@ -814,8 +814,8 @@ typedef int (*HPMHOOK_pre_chr_char_family) (int *cid1, int *cid2, int *cid3);
 typedef int (*HPMHOOK_post_chr_char_family) (int retVal___, int cid1, int cid2, int cid3);
 typedef void (*HPMHOOK_pre_chr_disconnect_player) (int *account_id);
 typedef void (*HPMHOOK_post_chr_disconnect_player) (int account_id);
-typedef void (*HPMHOOK_pre_chr_authfail_fd) (int *fd, int *type);
-typedef void (*HPMHOOK_post_chr_authfail_fd) (int fd, int type);
+typedef void (*HPMHOOK_pre_chr_authfail_fd) (int *fd, enum notify_ban_errorcode *type);
+typedef void (*HPMHOOK_post_chr_authfail_fd) (int fd, enum notify_ban_errorcode type);
 typedef void (*HPMHOOK_pre_chr_request_account_data) (int *account_id);
 typedef void (*HPMHOOK_post_chr_request_account_data) (int account_id);
 typedef void (*HPMHOOK_pre_chr_auth_ok) (int *fd, struct char_session_data **sd);
@@ -1348,8 +1348,8 @@ typedef void (*HPMHOOK_pre_clif_auth_error) (int *fd, int *errorCode);
 typedef void (*HPMHOOK_post_clif_auth_error) (int fd, int errorCode);
 typedef void (*HPMHOOK_pre_clif_authrefuse) (int *fd, uint8 *error_code);
 typedef void (*HPMHOOK_post_clif_authrefuse) (int fd, uint8 error_code);
-typedef void (*HPMHOOK_pre_clif_authfail_fd) (int *fd, int *type);
-typedef void (*HPMHOOK_post_clif_authfail_fd) (int fd, int type);
+typedef void (*HPMHOOK_pre_clif_authfail_fd) (int *fd, enum notify_ban_errorcode *type);
+typedef void (*HPMHOOK_post_clif_authfail_fd) (int fd, enum notify_ban_errorcode type);
 typedef void (*HPMHOOK_pre_clif_charselectok) (int *id, uint8 *ok);
 typedef void (*HPMHOOK_post_clif_charselectok) (int id, uint8 ok);
 typedef void (*HPMHOOK_pre_clif_dropflooritem) (struct flooritem_data **fitem);
@@ -5326,10 +5326,10 @@ typedef bool (*HPMHOOK_pre_logs_should_log_item) (int *nameid, int *amount, int 
 typedef bool (*HPMHOOK_post_logs_should_log_item) (bool retVal___, int nameid, int amount, int refine_level, struct item_data *id);
 #endif // MAP_LOG_H
 #ifdef LOGIN_LOGIN_H /* login */
-typedef int (*HPMHOOK_pre_login_mmo_auth) (struct login_session_data **sd, bool *isServer);
-typedef int (*HPMHOOK_post_login_mmo_auth) (int retVal___, struct login_session_data *sd, bool isServer);
-typedef int (*HPMHOOK_pre_login_mmo_auth_new) (const char **userid, const char **pass, const char *sex, const char **last_ip);
-typedef int (*HPMHOOK_post_login_mmo_auth_new) (int retVal___, const char *userid, const char *pass, const char sex, const char *last_ip);
+typedef enum login_auth_result (*HPMHOOK_pre_login_mmo_auth) (struct login_session_data **sd, bool *isServer);
+typedef enum login_auth_result (*HPMHOOK_post_login_mmo_auth) (enum login_auth_result retVal___, struct login_session_data *sd, bool isServer);
+typedef enum login_auth_result (*HPMHOOK_pre_login_mmo_auth_new) (const char **userid, const char **pass, const char *sex, const char **last_ip);
+typedef enum login_auth_result (*HPMHOOK_post_login_mmo_auth_new) (enum login_auth_result retVal___, const char *userid, const char *pass, const char sex, const char *last_ip);
 typedef int (*HPMHOOK_pre_login_waiting_disconnect_timer) (int *tid, int64 *tick, int *id, intptr_t *data);
 typedef int (*HPMHOOK_post_login_waiting_disconnect_timer) (int retVal___, int tid, int64 tick, int id, intptr_t data);
 typedef struct DBData (*HPMHOOK_pre_login_create_online_user) (union DBKey *key, va_list args);
@@ -5414,8 +5414,8 @@ typedef void (*HPMHOOK_pre_login_kick) (struct login_session_data **sd);
 typedef void (*HPMHOOK_post_login_kick) (struct login_session_data *sd);
 typedef void (*HPMHOOK_pre_login_auth_ok) (struct login_session_data **sd);
 typedef void (*HPMHOOK_post_login_auth_ok) (struct login_session_data *sd);
-typedef void (*HPMHOOK_pre_login_auth_failed) (struct login_session_data **sd, int *result);
-typedef void (*HPMHOOK_post_login_auth_failed) (struct login_session_data *sd, int result);
+typedef void (*HPMHOOK_pre_login_auth_failed) (struct login_session_data **sd, enum login_auth_result *result);
+typedef void (*HPMHOOK_post_login_auth_failed) (struct login_session_data *sd, enum login_auth_result result);
 typedef bool (*HPMHOOK_pre_login_client_login) (int *fd, struct login_session_data **sd);
 typedef bool (*HPMHOOK_post_login_client_login) (bool retVal___, int fd, struct login_session_data *sd);
 typedef bool (*HPMHOOK_pre_login_client_login_otp) (int *fd, struct login_session_data **sd);
@@ -5460,8 +5460,8 @@ typedef void (*HPMHOOK_pre_login_config_set_md5hash) (struct config_setting_t **
 typedef void (*HPMHOOK_post_login_config_set_md5hash) (struct config_setting_t *setting);
 typedef uint16 (*HPMHOOK_pre_login_convert_users_to_colors) (uint16 *users);
 typedef uint16 (*HPMHOOK_post_login_convert_users_to_colors) (uint16 retVal___, uint16 users);
-typedef int (*HPMHOOK_pre_login_check_client_version) (struct login_session_data **sd);
-typedef int (*HPMHOOK_post_login_check_client_version) (int retVal___, struct login_session_data *sd);
+typedef enum login_auth_result (*HPMHOOK_pre_login_check_client_version) (struct login_session_data **sd);
+typedef enum login_auth_result (*HPMHOOK_post_login_check_client_version) (enum login_auth_result retVal___, struct login_session_data *sd);
 typedef void (*HPMHOOK_pre_login_generate_token) (unsigned char **token);
 typedef void (*HPMHOOK_post_login_generate_token) (unsigned char *token);
 #endif // LOGIN_LOGIN_H
@@ -5498,8 +5498,8 @@ typedef void (*HPMHOOK_post_loginif_set_char_online) (int char_id, int account_i
 #ifdef LOGIN_LOGINLOG_H /* loginlog */
 typedef unsigned long (*HPMHOOK_pre_loginlog_failedattempts) (uint32 *ip, unsigned int *minutes);
 typedef unsigned long (*HPMHOOK_post_loginlog_failedattempts) (unsigned long retVal___, uint32 ip, unsigned int minutes);
-typedef void (*HPMHOOK_pre_loginlog_log) (uint32 *ip, const char **username, int *rcode, const char **message);
-typedef void (*HPMHOOK_post_loginlog_log) (uint32 ip, const char *username, int rcode, const char *message);
+typedef void (*HPMHOOK_pre_loginlog_log) (uint32 *ip, const char **username, enum loginlog_rcode *rcode, const char **message);
+typedef void (*HPMHOOK_post_loginlog_log) (uint32 ip, const char *username, enum loginlog_rcode rcode, const char *message);
 typedef bool (*HPMHOOK_pre_loginlog_init) (void);
 typedef bool (*HPMHOOK_post_loginlog_init) (bool retVal___);
 typedef bool (*HPMHOOK_pre_loginlog_final) (void);

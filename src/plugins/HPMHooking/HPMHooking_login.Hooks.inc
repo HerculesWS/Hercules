@@ -5242,11 +5242,11 @@ int HP_libconfig_lookup_mutable_string(const struct config_t *config, const char
 	return retVal___;
 }
 /* login_interface */
-int HP_login_mmo_auth(struct login_session_data *sd, bool isServer) {
+enum login_auth_result HP_login_mmo_auth(struct login_session_data *sd, bool isServer) {
 	int hIndex = 0;
-	int retVal___ = 0;
+	enum login_auth_result retVal___ = 0;
 	if (HPMHooks.count.HP_login_mmo_auth_pre > 0) {
-		int (*preHookFunc) (struct login_session_data **sd, bool *isServer);
+		enum login_auth_result (*preHookFunc) (struct login_session_data **sd, bool *isServer);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_login_mmo_auth_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_login_mmo_auth_pre[hIndex].func;
@@ -5261,7 +5261,7 @@ int HP_login_mmo_auth(struct login_session_data *sd, bool isServer) {
 		retVal___ = HPMHooks.source.login.mmo_auth(sd, isServer);
 	}
 	if (HPMHooks.count.HP_login_mmo_auth_post > 0) {
-		int (*postHookFunc) (int retVal___, struct login_session_data *sd, bool isServer);
+		enum login_auth_result (*postHookFunc) (enum login_auth_result retVal___, struct login_session_data *sd, bool isServer);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_login_mmo_auth_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_login_mmo_auth_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, sd, isServer);
@@ -5269,11 +5269,11 @@ int HP_login_mmo_auth(struct login_session_data *sd, bool isServer) {
 	}
 	return retVal___;
 }
-int HP_login_mmo_auth_new(const char *userid, const char *pass, const char sex, const char *last_ip) {
+enum login_auth_result HP_login_mmo_auth_new(const char *userid, const char *pass, const char sex, const char *last_ip) {
 	int hIndex = 0;
-	int retVal___ = 0;
+	enum login_auth_result retVal___ = 0;
 	if (HPMHooks.count.HP_login_mmo_auth_new_pre > 0) {
-		int (*preHookFunc) (const char **userid, const char **pass, const char *sex, const char **last_ip);
+		enum login_auth_result (*preHookFunc) (const char **userid, const char **pass, const char *sex, const char **last_ip);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_login_mmo_auth_new_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_login_mmo_auth_new_pre[hIndex].func;
@@ -5288,7 +5288,7 @@ int HP_login_mmo_auth_new(const char *userid, const char *pass, const char sex, 
 		retVal___ = HPMHooks.source.login.mmo_auth_new(userid, pass, sex, last_ip);
 	}
 	if (HPMHooks.count.HP_login_mmo_auth_new_post > 0) {
-		int (*postHookFunc) (int retVal___, const char *userid, const char *pass, const char sex, const char *last_ip);
+		enum login_auth_result (*postHookFunc) (enum login_auth_result retVal___, const char *userid, const char *pass, const char sex, const char *last_ip);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_login_mmo_auth_new_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_login_mmo_auth_new_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, userid, pass, sex, last_ip);
@@ -6418,10 +6418,10 @@ void HP_login_auth_ok(struct login_session_data *sd) {
 	}
 	return;
 }
-void HP_login_auth_failed(struct login_session_data *sd, int result) {
+void HP_login_auth_failed(struct login_session_data *sd, enum login_auth_result result) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_login_auth_failed_pre > 0) {
-		void (*preHookFunc) (struct login_session_data **sd, int *result);
+		void (*preHookFunc) (struct login_session_data **sd, enum login_auth_result *result);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_login_auth_failed_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_login_auth_failed_pre[hIndex].func;
@@ -6436,7 +6436,7 @@ void HP_login_auth_failed(struct login_session_data *sd, int result) {
 		HPMHooks.source.login.auth_failed(sd, result);
 	}
 	if (HPMHooks.count.HP_login_auth_failed_post > 0) {
-		void (*postHookFunc) (struct login_session_data *sd, int result);
+		void (*postHookFunc) (struct login_session_data *sd, enum login_auth_result result);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_login_auth_failed_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_login_auth_failed_post[hIndex].func;
 			postHookFunc(sd, result);
@@ -7028,11 +7028,11 @@ uint16 HP_login_convert_users_to_colors(uint16 users) {
 	}
 	return retVal___;
 }
-int HP_login_check_client_version(struct login_session_data *sd) {
+enum login_auth_result HP_login_check_client_version(struct login_session_data *sd) {
 	int hIndex = 0;
-	int retVal___ = 0;
+	enum login_auth_result retVal___ = 0;
 	if (HPMHooks.count.HP_login_check_client_version_pre > 0) {
-		int (*preHookFunc) (struct login_session_data **sd);
+		enum login_auth_result (*preHookFunc) (struct login_session_data **sd);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_login_check_client_version_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_login_check_client_version_pre[hIndex].func;
@@ -7047,7 +7047,7 @@ int HP_login_check_client_version(struct login_session_data *sd) {
 		retVal___ = HPMHooks.source.login.check_client_version(sd);
 	}
 	if (HPMHooks.count.HP_login_check_client_version_post > 0) {
-		int (*postHookFunc) (int retVal___, struct login_session_data *sd);
+		enum login_auth_result (*postHookFunc) (enum login_auth_result retVal___, struct login_session_data *sd);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_login_check_client_version_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_login_check_client_version_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, sd);
@@ -7109,10 +7109,10 @@ unsigned long HP_loginlog_failedattempts(uint32 ip, unsigned int minutes) {
 	}
 	return retVal___;
 }
-void HP_loginlog_log(uint32 ip, const char *username, int rcode, const char *message) {
+void HP_loginlog_log(uint32 ip, const char *username, enum loginlog_rcode rcode, const char *message) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_loginlog_log_pre > 0) {
-		void (*preHookFunc) (uint32 *ip, const char **username, int *rcode, const char **message);
+		void (*preHookFunc) (uint32 *ip, const char **username, enum loginlog_rcode *rcode, const char **message);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_loginlog_log_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_loginlog_log_pre[hIndex].func;
@@ -7127,7 +7127,7 @@ void HP_loginlog_log(uint32 ip, const char *username, int rcode, const char *mes
 		HPMHooks.source.loginlog.log(ip, username, rcode, message);
 	}
 	if (HPMHooks.count.HP_loginlog_log_post > 0) {
-		void (*postHookFunc) (uint32 ip, const char *username, int rcode, const char *message);
+		void (*postHookFunc) (uint32 ip, const char *username, enum loginlog_rcode rcode, const char *message);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_loginlog_log_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_loginlog_log_post[hIndex].func;
 			postHookFunc(ip, username, rcode, message);

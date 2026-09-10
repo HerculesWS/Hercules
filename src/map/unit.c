@@ -541,7 +541,7 @@ static int unit_walk_toxy_timer(int tid, int64 tick, int id, intptr_t data)
 				timer->delete_(ud->steptimer, unit->steptimer);
 				ud->steptimer = INVALID_TIMER;
 			}
-			return unit->walk_toxy(bl, x, y, 8);
+			return unit->walk_toxy(bl, x, y, UNIT_WALK_TOXY_AVOID_OCCUPIED);
 		}
 	}
 	return 0;
@@ -562,7 +562,7 @@ static int unit_delay_walk_toxy_timer(int tid, int64 tick, int id, intptr_t data
 		return 1;
 	short x = (short)GetWord((uint32)data, 0);
 	short y = (short)GetWord((uint32)data, 1);
-	unit->walk_toxy(bl, x, y, 0);
+	unit->walk_toxy(bl, x, y, UNIT_WALK_TOXY_NONE);
 	return 0;
 }
 
@@ -571,17 +571,11 @@ static int unit_delay_walk_toxy_timer(int tid, int64 tick, int id, intptr_t data
  * @param bl: block_list of unit to move
  * @param x: x-coordinate
  * @param y: y-coordinate
- * @param flag: flag paramater with following options:
- *  - `& 1` -> 1/0 = easy / hard
- *  - `& 2` -> Force walking
- *  - `& 4` -> Delay walking, if the reason you can't walk is the `canwalk delay`
- *  - `& 8` -> Search for an unoccupied cell and cancel if none available
- * .
+ * @param flag: bitmask of enum unit_walk_toxy_flag
  * @return 0: success, 1: failure
  */
-static int unit_walk_toxy(struct block_list *bl, short x, short y, int flag)
+static int unit_walk_toxy(struct block_list *bl, short x, short y, enum unit_walk_toxy_flag flag)
 {
-	// TODO: change flag to enum? [skyleo]
 	struct unit_data* ud = NULL;
 	struct status_change* sc = NULL;
 	struct walkpath_data wpd;
@@ -593,12 +587,12 @@ static int unit_walk_toxy(struct block_list *bl, short x, short y, int flag)
 	if (ud == NULL)
 		return 1;
 
-	if ((flag & 8) != 0 && battle_config.check_occupied_cells != 0) {
+	if ((flag & UNIT_WALK_TOXY_AVOID_OCCUPIED) != 0 && battle_config.check_occupied_cells != 0) {
 		if (!map->closest_freecell(bl->m, bl, &x, &y, BL_CHAR | BL_NPC, 1)) // This might change x and y
 			return 1;
 	}
 
-	if (!path->search(&wpd, bl, bl->m, bl->x, bl->y, x, y, flag & 1, CELL_CHKNOPASS)) // Count walk path cells
+	if (!path->search(&wpd, bl, bl->m, bl->x, bl->y, x, y, flag & UNIT_WALK_TOXY_EASY, CELL_CHKNOPASS)) // Count walk path cells
 		return 1;
 
 	if (bl->type != BL_NPC) {
@@ -613,7 +607,7 @@ static int unit_walk_toxy(struct block_list *bl, short x, short y, int flag)
 			return 1;
 	}
 
-	if ((flag & 4) != 0 && DIFF_TICK(ud->canmove_tick, timer->gettick()) > 0
+	if ((flag & UNIT_WALK_TOXY_DELAY) != 0 && DIFF_TICK(ud->canmove_tick, timer->gettick()) > 0
 	    && DIFF_TICK(ud->canmove_tick, timer->gettick()) < 2000) {
 		// Delay walking command. [Skotlex]
 		timer->add(ud->canmove_tick + 1, unit->delay_walk_toxy_timer, bl->id,
@@ -621,14 +615,14 @@ static int unit_walk_toxy(struct block_list *bl, short x, short y, int flag)
 		return 0;
 	}
 
-	if ((flag & 2) == 0 && ((status_get_mode(bl) & MD_CANMOVE) == 0 || unit->can_move(bl) == 0))
+	if ((flag & UNIT_WALK_TOXY_FORCE) == 0 && ((status_get_mode(bl) & MD_CANMOVE) == 0 || unit->can_move(bl) == 0))
 		return 1;
 
-	ud->state.walk_easy = flag & 1;
+	ud->state.walk_easy = flag & UNIT_WALK_TOXY_EASY;
 	ud->to_x = x;
 	ud->to_y = y;
 	unit->stop_attack(bl); //Sets target to 0
-	if ((flag & 8) == 0) // Stepaction might be delayed due to occupied cell
+	if ((flag & UNIT_WALK_TOXY_AVOID_OCCUPIED) == 0) // Stepaction might be delayed due to occupied cell
 		unit->stop_stepaction(bl); // unit->walktoxy removes any remembered stepaction and resets ud->target_to
 
 	sc = status->get_sc(bl);
@@ -858,14 +852,14 @@ static bool unit_run(struct block_list *bl, struct map_session_data *sd, enum sc
 		to_y = step_y;
 	}
 
-	if (step_count > 1 && unit->walk_toxy(bl, to_x, to_y, 1) == 0)
+	if (step_count > 1 && unit->walk_toxy(bl, to_x, to_y, UNIT_WALK_TOXY_EASY) == 0)
 		return true;
 
 	// There must be an obstacle nearby. Attempt walking one cell at a time.
 	do {
 		to_x -= dir_x;
 		to_y -= dir_y;
-	} while (--step_count > 0 && unit->walk_toxy(bl, to_x, to_y, 1) != 0);
+	} while (--step_count > 0 && unit->walk_toxy(bl, to_x, to_y, UNIT_WALK_TOXY_EASY) != 0);
 
 	if (step_count <= 0) {
 		unit->run_hit(bl, sc, sd, type);
@@ -892,7 +886,7 @@ static int unit_attempt_escape(struct block_list *bl, struct block_list *target,
 	Assert_retr(1, dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX);
 	while (dist > 0 && map->getcell(bl->m, bl, x_dist, y_dist, CELL_CHKNOREACH) != 0)
 		dist--;
-	if (dist > 0 && unit->walk_toxy(bl, x_dist, y_dist, 0) == 0)
+	if (dist > 0 && unit->walk_toxy(bl, x_dist, y_dist, UNIT_WALK_TOXY_NONE) == 0)
 		return 0;
 	else
 		return 1;

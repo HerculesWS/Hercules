@@ -765,40 +765,8 @@ static void clif_authrefuse(int fd, uint8 error_code)
 
 /// Notifies the client of a ban or forced disconnect (SC_NOTIFY_BAN).
 /// 0081 <error code>.B
-/// error code:
-///     0 = BAN_UNFAIR -> "disconnected from server" -> MsgStringTable[3]
-///     1 = server closed -> MsgStringTable[4]
-///     2 = ID already logged in -> MsgStringTable[5]
-///     3 = timeout/too much lag -> MsgStringTable[241]
-///     4 = server full -> MsgStringTable[264]
-///     5 = underaged -> MsgStringTable[305]
-///     8 = Server sill recognizes last connection -> MsgStringTable[441]
-///     9 = too many connections from this ip -> MsgStringTable[529]
-///     10 = out of available time paid for -> MsgStringTable[530]
-///     11 = BAN_PAY_SUSPEND
-///     12 = BAN_PAY_CHANGE
-///     13 = BAN_PAY_WRONGIP
-///     14 = BAN_PAY_PNGAMEROOM
-///     15 = disconnected by a GM -> if( servicetype == taiwan ) MsgStringTable[579]
-///     16 = BAN_JAPAN_REFUSE1
-///     17 = BAN_JAPAN_REFUSE2
-///     18 = BAN_INFORMATION_REMAINED_ANOTHER_ACCOUNT
-///     100 = BAN_PC_IP_UNFAIR
-///     101 = BAN_PC_IP_COUNT_ALL
-///     102 = BAN_PC_IP_COUNT
-///     103 = BAN_GRAVITY_MEM_AGREE
-///     104 = BAN_GAME_MEM_AGREE
-///     105 = BAN_HAN_VALID
-///     106 = BAN_PC_IP_LIMIT_ACCESS
-///     107 = BAN_OVER_CHARACTER_LIST
-///     108 = BAN_IP_BLOCK
-///     109 = BAN_INVALID_PWD_CNT
-///     110 = BAN_NOT_ALLOWED_JOBCLASS
-///     113 = access is restricted between the hours of midnight to 6:00am.
-///     115 = You are in game connection ban period.
-///     ? = disconnected -> MsgStringTable[3]
-// TODO: type enum
-static void clif_authfail_fd(int fd, int type)
+/// error code: @see enum notify_ban_errorcode
+static void clif_authfail_fd(int fd, enum notify_ban_errorcode type)
 {
 	if (!fd || !sockt->session[fd] || sockt->session[fd]->func_parse != clif->parse) //clif_authfail should only be invoked on players!
 		return;
@@ -4433,8 +4401,7 @@ static void clif_useitemack(struct map_session_data *sd, int index, int amount, 
 ///     0 = Room has been successfully created (opens chat room)
 ///     1 = Room limit exceeded
 ///     2 = Same room already exists
-// TODO: Flag enum
-static void clif_createchat(struct map_session_data *sd, int flag)
+static void clif_createchat(struct map_session_data *sd, enum clif_createchat_flag flag)
 {
 	int fd;
 
@@ -9317,7 +9284,7 @@ static void clif_GM_kick(struct map_session_data *sd, struct map_session_data *t
 	fd = tsd->fd;
 
 	if (fd > 0)
-		clif->authfail_fd(fd, 15);
+		clif->authfail_fd(fd, BAN_DISCONNECTED_BY_GM);
 	else
 		map->quit(tsd);
 
@@ -11028,7 +10995,7 @@ static void clif_parse_WantToConnection(int fd, struct map_session_data *sd)
 	sex         = RFIFOB(fd, packet_db[cmd].pos[4]);
 
 	if( core->runflag != MAPSERVER_ST_RUNNING ) { // not allowed
-		clif->authfail_fd(fd,1);// server closed
+		clif->authfail_fd(fd, BAN_SERVER_CLOSED);
 		return;
 	}
 
@@ -11046,7 +11013,7 @@ static void clif_parse_WantToConnection(int fd, struct map_session_data *sd)
 		((node=chrif->search(account_id)) && //An already existing node is valid only if it is for this login.
 			!(node->account_id == account_id && node->char_id == char_id && node->state == ST_LOGIN)))
 	{
-		clif->authfail_fd(fd, 8); //Still recognizes last connection
+		clif->authfail_fd(fd, BAN_LAST_CONNECTION_RECOGNIZED);
 		return;
 	}
 
@@ -11879,7 +11846,7 @@ static void clif_parse_WalkToXY(int fd, struct map_session_data *sd)
 	//Set last idle time... [Skotlex]
 	pc->update_idle_time(sd, BCIDLE_WALK);
 
-	unit->walk_toxy(&sd->bl, x, y, 4);
+	unit->walk_toxy(&sd->bl, x, y, UNIT_WALK_TOXY_DELAY);
 }
 
 /// Notification about the result of a disconnect request (ZC_ACK_REQ_DISCONNECT).
@@ -17545,7 +17512,7 @@ static void clif_parse_HomMoveToMaster(int fd, struct map_session_data *sd)
 
 	unit->calc_pos(bl, sd->bl.x, sd->bl.y, sd->ud.dir);
 	ud = unit->bl2ud(bl);
-	unit->walk_toxy(bl, ud->to_x, ud->to_y, 4);
+	unit->walk_toxy(bl, ud->to_x, ud->to_y, UNIT_WALK_TOXY_DELAY);
 }
 
 static void clif_parse_HomMoveTo(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
@@ -17569,7 +17536,7 @@ static void clif_parse_HomMoveTo(int fd, struct map_session_data *sd)
 	else
 		return;
 
-	unit->walk_toxy(bl, x, y, 4);
+	unit->walk_toxy(bl, x, y, UNIT_WALK_TOXY_DELAY);
 }
 
 static void clif_parse_HomAttack(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
@@ -18980,7 +18947,7 @@ static void clif_parse_PartyTick(int fd, struct map_session_data *sd)
 	if (newAllowParty != sd->status.allow_party) {
 		sd->status.allow_party = newAllowParty;
 		if ((map->save_settings & 512) != 0)
-			chrif->save(sd, 0); // send to char server
+			chrif->save(sd, CSAVE_NORMAL); // send to char server
 	} else {
 		sd->status.allow_party = newAllowParty;
 	}

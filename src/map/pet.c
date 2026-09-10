@@ -622,7 +622,7 @@ static int pet_birth_process(struct map_session_data *sd, struct s_pet *petinfo)
 
 	intif->save_petdata(sd->status.account_id,petinfo);
 	if (map->save_settings&8)
-		chrif->save(sd,0); //is it REALLY Needed to save the char for hatching a pet? [Skotlex]
+		chrif->save(sd, CSAVE_NORMAL); //is it REALLY Needed to save the char for hatching a pet? [Skotlex]
 
 	if (sd->pd != NULL && sd->bl.prev != NULL) {
 		if (pet->spawn(sd, true) != 0)
@@ -1049,7 +1049,7 @@ static int pet_randomwalk(struct pet_data *pd, int64 tick)
 			int x=pd->bl.x+r%(d*2+1)-d;
 			int y=pd->bl.y+r/(d*2+1)%(d*2+1)-d;
 			if (map->getcell(pd->bl.m, &pd->bl, x, y, CELL_CHKPASS) != 0
-			    && unit->walk_toxy(&pd->bl, x, y, 0) == 0) {
+			    && unit->walk_toxy(&pd->bl, x, y, UNIT_WALK_TOXY_NONE) == 0) {
 				pd->move_fail_count=0;
 				break;
 			}
@@ -1161,7 +1161,7 @@ static int pet_ai_sub_hard(struct pet_data *pd, struct map_session_data *sd, int
 
 		unit->calc_pos(&pd->bl, sd->bl.x, sd->bl.y, sd->ud.dir);
 
-		if (unit->walk_toxy(&pd->bl, pd->ud.to_x, pd->ud.to_y, 0) != 0)
+		if (unit->walk_toxy(&pd->bl, pd->ud.to_x, pd->ud.to_y, UNIT_WALK_TOXY_NONE) != 0)
 			pet->randomwalk(pd, tick);
 
 		return 0;

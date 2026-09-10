@@ -2383,14 +2383,14 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 
 	if ((t = libconfig->setting_get_member(it, "Stack"))) {
 		if (config_setting_is_aggregate(t) && libconfig->setting_length(t) >= 1) {
-			int stack_flag = libconfig->setting_get_int_elem(t, 1);
+			enum ItemStackRestrictions stack_flag = (enum ItemStackRestrictions)libconfig->setting_get_int_elem(t, 1);
 			int stack_amount = libconfig->setting_get_int_elem(t, 0);
 			if (stack_amount >= 0) {
 				id.stack.amount = cap_value(stack_amount, 0, USHRT_MAX);
-				id.stack.inventory = (stack_flag&1)!=0;
-				id.stack.cart = (stack_flag&2)!=0;
-				id.stack.storage = (stack_flag&4)!=0;
-				id.stack.guildstorage = (stack_flag&8)!=0;
+				id.stack.inventory = (stack_flag&ISR_INVENTORY)!=0;
+				id.stack.cart = (stack_flag&ISR_CART)!=0;
+				id.stack.storage = (stack_flag&ISR_STORAGE)!=0;
+				id.stack.guildstorage = (stack_flag&ISR_GUILDSTORAGE)!=0;
 			}
 		}
 	}

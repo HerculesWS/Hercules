@@ -806,7 +806,7 @@ ACMD(save)
 	if (sd->status.pet_id > 0 && sd->pd)
 		intif->save_petdata(sd->status.account_id, &sd->pd->pet);
 
-	chrif->save(sd,0);
+	chrif->save(sd, CSAVE_NORMAL);
 
 	clif->message(fd, msg_fd(fd, MSGTBL_SAVE_POINT_CHANGED)); // Your save point has been changed.
 
@@ -6158,7 +6158,7 @@ ACMD(autotrade)
 	channel->quit(sd);
 	goldpc->stop(sd);
 
-	clif->authfail_fd(sd->fd, 15);
+	clif->authfail_fd(sd->fd, BAN_DISCONNECTED_BY_GM);
 
 	/* currently standalone is not supporting buyingstores, so we rely on the previous method */
 	if( sd->state.buyingstore )

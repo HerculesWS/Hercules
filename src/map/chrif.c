@@ -243,18 +243,17 @@ static int chrif_isconnected(void)
  * Flag = 1: Character is quitting
  * Flag = 2: Character is changing map-servers
  *------------------------------------------*/
-// TODO: Flag enum
-static bool chrif_save(struct map_session_data *sd, int flag)
+static bool chrif_save(struct map_session_data *sd, enum chrif_save_flag flag)
 {
 	nullpo_ret(sd);
 
 	pc->makesavestatus(sd);
 
-	if (flag && sd->state.active) { //Store player data which is quitting
+	if (flag != CSAVE_NORMAL && sd->state.active) { //Store player data which is quitting
 		//FIXME: SC are lost if there's no connection at save-time because of the way its related data is cleared immediately after this function. [Skotlex]
 		if ( chrif->isconnected() )
 			chrif->save_scdata(sd);
-		if ( !chrif->auth_logout(sd,flag == 1 ? ST_LOGOUT : ST_MAPCHANGE) )
+		if ( !chrif->auth_logout(sd, flag == CSAVE_QUITTING ? ST_LOGOUT : ST_MAPCHANGE) )
 			ShowError("chrif_save: Failed to set up player %d:%d for proper quitting!\n", sd->status.account_id, sd->status.char_id);
 	}
 
@@ -390,14 +389,14 @@ static int chrif_reconnect(union DBKey key, struct DBData *data, va_list ap)
 			break;
 		case ST_LOGOUT:
 			//Re-send final save
-			chrif->save(node->sd, 1);
+			chrif->save(node->sd, CSAVE_QUITTING);
 			break;
 		case ST_MAPCHANGE:
 			//Re-send map-change request.
 
 			// TODO: Remove this branch
 			// Multi-zone is not supported
-			clif->authfail_fd(node->sd->fd, 3); // timeout
+			clif->authfail_fd(node->sd->fd, BAN_TIMEOUT);
 			break;
 	}
 	return 0;
@@ -580,7 +579,7 @@ static void chrif_authfail(int fd)
 		node->sex == sex &&
 		node->state == ST_LOGIN )
 	{// found a match
-		clif->authfail_fd(node->fd, 0); // Disconnected from server
+		clif->authfail_fd(node->fd, BAN_UNFAIR);
 		chrif->auth_delete(account_id, char_id, ST_LOGIN);
 	}
 }
@@ -600,7 +599,7 @@ static int auth_db_cleanup_sub(union DBKey key, struct DBData *data, va_list ap)
 			case ST_LOGOUT:
 				//Re-save attempt (->sd should never be null here).
 				node->node_created = timer->gettick(); //Refresh tick (avoid char-server load if connection is really bad)
-				chrif->save(node->sd, 1);
+				chrif->save(node->sd, CSAVE_QUITTING);
 				break;
 			case ST_LOGIN:
 			case ST_MAPCHANGE:
@@ -739,7 +738,7 @@ static bool chrif_changesex(struct map_session_data *sd, bool change_account)
 	nullpo_retr(false, sd);
 	chrif_check(false);
 
-	chrif->save(sd, 0);
+	chrif->save(sd, CSAVE_NORMAL);
 
 	WFIFOHEAD(chrif->fd,44);
 	WFIFOW(chrif->fd,0) = 0x2b0e;
@@ -753,7 +752,7 @@ static bool chrif_changesex(struct map_session_data *sd, bool change_account)
 	clif->message(sd->fd, msg_sd(sd, MSGTBL_CHANGESEX_DISCONNECT)); //"Disconnecting to perform change-sex request..."
 
 	if (sd->fd)
-		clif->authfail_fd(sd->fd, 15);
+		clif->authfail_fd(sd->fd, BAN_DISCONNECTED_BY_GM);
 	else
 		map->quit(sd);
 	return true;
@@ -973,11 +972,11 @@ static int chrif_disconnectplayer(int fd)
 	}
 
 	switch(RFIFOB(fd, 6)) {
-		case 1: clif->authfail_fd(sd->fd, 1); break; //server closed
-		case 2: clif->authfail_fd(sd->fd, 2); break; //someone else logged in
-		case 3: clif->authfail_fd(sd->fd, 4); break; //server overpopulated
-		case 4: clif->authfail_fd(sd->fd, 10); break; //out of available time paid for
-		case 5: clif->authfail_fd(sd->fd, 15); break; //forced to dc by gm
+		case 1: clif->authfail_fd(sd->fd, BAN_SERVER_CLOSED); break;
+		case 2: clif->authfail_fd(sd->fd, BAN_ALREADY_LOGGED_IN); break;
+		case 3: clif->authfail_fd(sd->fd, BAN_SERVER_FULL); break;
+		case 4: clif->authfail_fd(sd->fd, BAN_OUT_OF_PAID_TIME); break;
+		case 5: clif->authfail_fd(sd->fd, BAN_DISCONNECTED_BY_GM); break;
 	}
 	return 0;
 }
