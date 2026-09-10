@@ -5646,6 +5646,8 @@ ACMD(dropall)
 			if (type == -1 || type == item_data->type) {
 				if (sd->status.inventory[i].equip != 0)
 					pc->unequipitem(sd, i, PCUNEQUIPITEM_RECALC | PCUNEQUIPITEM_FORCE);
+				if (sd->status.inventory[i].equipSwitch != 0)
+					pc->equipswitch_remove(sd, i);
 
 				int amount = sd->status.inventory[i].amount;
 				if (pc->dropitem(sd, i, amount) != 0)
@@ -5719,6 +5721,8 @@ ACMD(storeall)
 		if (sd->status.inventory[i].amount) {
 			if(sd->status.inventory[i].equip != 0)
 				pc->unequipitem(sd, i, PCUNEQUIPITEM_RECALC|PCUNEQUIPITEM_FORCE);
+			if (sd->status.inventory[i].equipSwitch != 0)
+				pc->equipswitch_remove(sd, i);
 			storage->add(sd, stor, i, sd->status.inventory[i].amount);
 		}
 	}
