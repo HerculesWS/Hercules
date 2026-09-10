@@ -1327,6 +1327,82 @@ struct packet_unequipitem_ack {
 	uint8 result;
 } __attribute__((packed));
 
+#if PACKETVER_MAIN_NUM >= 20170208 || PACKETVER_RE_NUM >= 20170208 || PACKETVER_ZERO_NUM >= 20170208
+struct PACKET_CZ_REQ_WEAR_EQUIP_SWITCH {
+	int16 PacketType;
+	uint16 index;
+	uint32 position;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_REQ_WEAR_EQUIP_SWITCH, 0x0a97)
+
+struct PACKET_ZC_ACK_WEAR_EQUIP_SWITCH {
+	int16 PacketType;
+	uint16 index;
+	uint32 position;
+#if PACKETVER_MAIN_NUM >= 20170426 || PACKETVER_RE_NUM >= 20170426 || PACKETVER_ZERO_NUM >= 20170426
+	uint16 flag;
+#else
+	uint32 flag;
+#endif
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_ACK_WEAR_EQUIP_SWITCH, 0x0a98)
+
+#if PACKETVER_MAIN_NUM >= 20170419 || PACKETVER_RE_NUM >= 20170419 || PACKETVER_ZERO_NUM >= 20170419
+struct PACKET_CZ_REQ_TAKEOFF_EQUIP_SWITCH {
+	int16 PacketType;
+	uint16 index;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_REQ_TAKEOFF_EQUIP_SWITCH, 0x0a99)
+#else  // PACKETVER_MAIN_NUM >= 20170419 || PACKETVER_RE_NUM >= 20170419 || PACKETVER_ZERO_NUM >= 20170419
+struct PACKET_CZ_REQ_TAKEOFF_EQUIP_SWITCH {
+	int16 PacketType;
+	uint16 index;
+	uint32 position;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_REQ_TAKEOFF_EQUIP_SWITCH, 0x0a99)
+#endif  // PACKETVER_MAIN_NUM >= 20170419 || PACKETVER_RE_NUM >= 20170419 || PACKETVER_ZERO_NUM >= 20170419
+
+struct PACKET_ZC_ACK_TAKEOFF_EQUIP_SWITCH {
+	int16 PacketType;
+	uint16 index;
+	uint32 position;
+	uint16 failed;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_ACK_TAKEOFF_EQUIP_SWITCH, 0x0a9a)
+
+struct PACKET_ZC_EQUIP_SWITCH_ITEM {
+	uint16 index;
+	uint32 position;
+} __attribute__((packed));
+
+struct PACKET_ZC_EQUIP_SWITCH_LIST {
+	int16 PacketType;
+	int16 PacketLength;
+	struct PACKET_ZC_EQUIP_SWITCH_ITEM list[];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_EQUIP_SWITCH_LIST, 0x0a9b)
+
+struct PACKET_CZ_REQ_EQUIP_SWITCH {
+	int16 PacketType;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_REQ_EQUIP_SWITCH, 0x0a9c)
+
+struct PACKET_ZC_ACK_EQUIP_SWITCH {
+	int16 PacketType;
+	uint16 failed;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_ACK_EQUIP_SWITCH, 0x0a9d)
+
+#endif  // PACKETVER_MAIN_NUM >= 20170208 || PACKETVER_RE_NUM >= 20170208 || PACKETVER_ZERO_NUM >= 20170208
+
+#if PACKETVER_MAIN_NUM >= 20170502 || PACKETVER_RE_NUM >= 20170502 || PACKETVER_ZERO_NUM >= 20170502
+struct PACKET_CZ_REQ_EQUIP_SWITCH_SINGLE {
+	int16 PacketType;
+	uint16 index;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_REQ_EQUIP_SWITCH_SINGLE, 0x0ace)
+#endif  // PACKETVER_MAIN_NUM >= 20170502 || PACKETVER_RE_NUM >= 20170502 || PACKETVER_ZERO_NUM >= 20170502
+
 #if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 struct PACKET_ZC_EQUIPWIN_MICROSCOPE {
 	int16 PacketType;
