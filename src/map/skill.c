@@ -5561,6 +5561,7 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 				case 2: sid=MG_LIGHTNINGBOLT; break;
 				case 3: sid=WZ_EARTHSPIKE; break;
 				}
+				clif->skill_nodamage(src, src, sid, skill_lv, 1); // Show the randomly picked skill's name over the homunculus.
 				skill->attack(BF_MAGIC,src,src,bl,sid,skill_lv,tick,flag|SD_LEVEL);
 			}
 			break;
