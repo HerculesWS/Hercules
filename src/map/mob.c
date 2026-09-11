@@ -1039,8 +1039,7 @@ static int mob_linksearch(struct block_list *bl, va_list ap)
  *------------------------------------------*/
 static int mob_delayspawn(int tid, int64 tick, int id, intptr_t data)
 {
-	struct block_list* bl = map->id2bl(id); // TODO: Why does this not use map->bl2md?
-	struct mob_data* md = BL_CAST(BL_MOB, bl);
+	struct mob_data* md = map->id2md(id);
 
 	if( md )
 	{
@@ -2246,8 +2245,7 @@ static void mob_item_drop(struct mob_data *md, struct item_drop_list *dlist, str
 
 static int mob_timer_delete(int tid, int64 tick, int id, intptr_t data)
 {
-	struct block_list* bl = map->id2bl(id); // TODO: Why does this not use map->id2md?
-	struct mob_data* md = BL_CAST(BL_MOB, bl);
+	struct mob_data* md = map->id2md(id);
 
 	if( md )
 	{
@@ -2258,7 +2256,7 @@ static int mob_timer_delete(int tid, int64 tick, int id, intptr_t data)
 		}
 		//for Alchemist CANNIBALIZE [Lupus]
 		md->deletetimer = INVALID_TIMER;
-		unit->free(bl, CLR_TELEPORT);
+		unit->free(&md->bl, CLR_TELEPORT);
 	}
 	return 0;
 }

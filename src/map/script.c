@@ -24222,8 +24222,7 @@ static BUILDIN(bg_monster_set_team)
 {
 	int id = script_getnum(st,2),
 	bg_id = script_getnum(st,3);
-	struct block_list *mbl = map->id2bl(id); // TODO: Why does this not use map->id2md?
-	struct mob_data *md = BL_CAST(BL_MOB, mbl);
+	struct mob_data *md = map->id2md(id);
 
 	if (md == NULL)
 		return true;
