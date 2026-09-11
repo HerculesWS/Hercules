@@ -1283,6 +1283,8 @@ struct status_change {
 #endif
 	unsigned char bs_counter; // Blood Sucker counter
 	unsigned char fv_counter; // Force of vanguard counter
+	enum sc_type opt1_broken_by_damage_type; // Which OPT1 status (Freeze/Stone/Sleep/etc.) most recently ended due to damage
+	int64 opt1_broken_by_damage_tick; // Tick at which opt1_broken_by_damage_type ended due to damage
 	struct status_change_entry *data[SC_MAX];
 };
 
@@ -1296,6 +1298,7 @@ struct s_status_change_start_delayed {
 	int tick;
 	int flag;
 	int skill_id;
+	int64 scheduled_tick; // Tick at which this entry was created (before the delay)
 };
 
 //Define for standard HP damage attacks.
