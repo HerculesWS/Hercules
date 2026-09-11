@@ -859,7 +859,8 @@ static int guild_reply_invite(struct map_session_data *sd, int guild_id, int fla
 
 		guild->makemember(&g->member[i], sd);
 		intif->guild_addmember(guild_id, &g->member[i]);
-		//TODO: send a minimap update to this player
+		// The minimap/emblem update to this player is sent once the char-server
+		// confirms the join, in guild_member_added() (sd->guild is not set yet here).
 	}
 
 	return 0;
@@ -944,8 +945,7 @@ static int guild_member_added(int guild_id, int account_id, int char_id, int fla
 	//Packets which were sent in the previous 'guild_sent' implementation.
 	clif->guild_belonginfo(sd,g);
 	clif->guild_notice(sd,g);
-
-	//TODO: send new emblem info to others
+	clif->guild_emblem_id_area(&sd->bl);
 
 	if( sd2!=NULL )
 		clif->guild_inviteack(sd2,2);
@@ -1088,7 +1088,7 @@ static int guild_member_withdraw(int guild_id, int account_id, int char_id, int 
 		status_change_end(&sd->bl, SC_GLORYWOUNDS, INVALID_TIMER);
 		status_change_end(&sd->bl, SC_SOULCOLD, INVALID_TIMER);
 		status_change_end(&sd->bl, SC_HAWKEYES, INVALID_TIMER);
-		//TODO: send emblem update to self and people around
+		clif->guild_emblem_id_area(&sd->bl);
 	}
 	return 0;
 }
