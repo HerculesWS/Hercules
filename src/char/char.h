@@ -296,6 +296,10 @@ struct char_interface {
 	int (*online_char_destroy_sub) (union DBKey key, struct DBData *data, va_list ap);
 	void (*ensure_online_char_data) (struct online_char_data *character);
 	void (*clean_online_char_emblem_data) (struct online_char_data *character);
+	int (*online_data_count_connected_sub) (union DBKey key, struct DBData *data, va_list ap);
+	int (*online_data_count_connected) (void);
+	int (*shutdown_timeout_timer) (int tid, int64 tick, int id, intptr_t data);
+	void (*check_shutdown) (void);
 
 	bool (*sql_config_read) (const char *filename, bool imported);
 	bool (*sql_config_read_registry) (const char *filename, const struct config_t *config, bool imported);
