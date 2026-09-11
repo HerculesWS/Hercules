@@ -10727,10 +10727,16 @@ static void status_change_start_stop_action(struct block_list *bl, enum sc_type 
 		case SC_STONE:
 		case SC_DEEP_SLEEP:
 		{
+			// On officials, Stun/Freeze/Sleep/Stone do not interrupt movement - the target
+			// keeps walking to its already-queued destination cell, unless it was dancing
+			// (which does get interrupted). (rathena:948)
 			struct map_session_data *sd = BL_CAST(BL_PC, bl);
 			if (sd && pc_issit(sd)) //Avoid sprite sync problems.
 				pc->setstand(sd);
-			FALLTHROUGH
+			struct status_change *sc = status->get_sc(bl);
+			if (sc != NULL && sc->data[SC_DANCING] != NULL)
+				unit->stop_walking(bl, STOPWALKING_FLAG_FIXPOS);
+			break;
 		}
 		case SC_GRAVITYCONTROL:
 		{
