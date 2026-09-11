@@ -1599,11 +1599,24 @@ static int skill_additional_effect(struct block_list *src, struct block_list *bl
 					flag = SCFLAG_NONE;
 				}
 
+				// On officials, "on attack" status changes from normal attacks and single-hit
+				// weapon skills (e.g. Asura Strike) only take effect after the attack
+				// animation ends (AttackMotion+500ms), not the instant the damage is applied.
+				// Multi-hit weapon skills (e.g. Sonic Blow, Double Strafe) are unaffected,
+				// since each individual hit already has its own timing. (bugreport:1141)
+				bool is_single_hit_weapon_skill = skill_id != 0 && (attack_type&BF_WEAPON) != 0
+					&& abs(skill->get_num(skill_id, skill_lv)) <= 1;
+				int delay = (skill_id == 0 || is_single_hit_weapon_skill) ? sstatus->amotion + 500 : 0;
+#ifdef RENEWAL
+				if (delay > 0)
+					temp = max(1, temp - delay);
+#endif
+
 				if (sd->addeff[i].flag&ATF_TARGET)
-					status->change_start(src, bl, type, rate, 7, 0, (type == SC_BURNING) ? src->id : 0, 0, temp, flag, skill_id);
+					status->change_start_delayed(src, bl, type, rate, 7, 0, (type == SC_BURNING) ? src->id : 0, 0, temp, flag, skill_id, delay);
 
 				if (sd->addeff[i].flag&ATF_SELF)
-					status->change_start(src, src, type, rate, 7, 0, (type == SC_BURNING) ? src->id : 0, 0, temp, flag, skill_id);
+					status->change_start_delayed(src, src, type, rate, 7, 0, (type == SC_BURNING) ? src->id : 0, 0, temp, flag, skill_id, delay);
 			}
 		}
 
@@ -1863,11 +1876,15 @@ static int skill_additional_effect(struct block_list *src, struct block_list *bl
 #endif
 
 		case BA_FROSTJOKE:
-			sc_start(src, bl, SC_FREEZE, (15 + 5 * skill_lv), skill_lv, skill->get_time2(skill_id, skill_lv), skill_id);
+			// On officials, Frost Joke's effect kicks in ~3000ms after the skill goes off. (bugreport:1141)
+			status->change_start_delayed(src, bl, SC_FREEZE, 100 * (15 + 5 * skill_lv), skill_lv, 0, 0, 0,
+				skill->get_time2(skill_id, skill_lv), SCFLAG_NONE, skill_id, 3000);
 			break;
 
 		case DC_SCREAM:
-			sc_start(src, bl, SC_STUN, (25 + 5 * skill_lv), skill_lv, skill->get_time2(skill_id, skill_lv), skill_id);
+			// On officials, Scream's effect kicks in ~3000ms after the skill goes off. (bugreport:1141)
+			status->change_start_delayed(src, bl, SC_STUN, 100 * (25 + 5 * skill_lv), skill_lv, 0, 0, 0,
+				skill->get_time2(skill_id, skill_lv), SCFLAG_NONE, skill_id, 3000);
 			break;
 
 #ifndef RENEWAL
@@ -7112,10 +7129,14 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 
 		case PR_LEXDIVINA:
 		case MER_LEXDIVINA:
-			if( tsce )
+			if( tsce ) {
 				status_change_end(bl,type, INVALID_TIMER);
-			else
-				sc_start(src, bl, type, 100, skill_lv, skill->get_time(skill_id, skill_lv), skill_id);
+			} else {
+				// On officials, Lex Divina's effect kicks in ~1000ms after the skill goes off.
+				// Removing an existing Silence via recast is not delayed. (bugreport:1141)
+				status->change_start_delayed(src, bl, type, 100 * 100, skill_lv, 0, 0, 0,
+					skill->get_time(skill_id, skill_lv), SCFLAG_NONE, skill_id, 1000);
+			}
 			clif->skill_nodamage (src, bl, skill_id, skill_lv, 1);
 			break;
 
@@ -7891,8 +7912,10 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 			break;
 
 		case BS_HAMMERFALL:
-			clif->skill_nodamage(src,bl,skill_id,skill_lv,
-				sc_start(src, bl, SC_STUN, (20 + 10 * skill_lv), skill_lv, skill->get_time2(skill_id, skill_lv), skill_id));
+			// On officials, Hammerfall's effect kicks in ~1000ms after the skill goes off. (bugreport:1141)
+			status->change_start_delayed(src, bl, SC_STUN, 100 * (20 + 10 * skill_lv), skill_lv, 0, 0, 0,
+				skill->get_time2(skill_id, skill_lv), SCFLAG_NONE, skill_id, 1000);
+			clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
 			break;
 		case RG_RAID:
 			skill->area_temp[1] = 0;

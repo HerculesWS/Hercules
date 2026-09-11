@@ -3608,6 +3608,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(status->get_sc_def, HP_status_get_sc_def) },
 	{ HP_POP(status->change_start, HP_status_change_start) },
 	{ HP_POP(status->change_start_sub, HP_status_change_start_sub) },
+	{ HP_POP(status->change_start_delayed, HP_status_change_start_delayed) },
+	{ HP_POP(status->change_start_delayed_timer, HP_status_change_start_delayed_timer) },
 	{ HP_POP(status->change_end_, HP_status_change_end_) },
 	{ HP_POP(status->is_immune_to_status, HP_status_is_immune_to_status) },
 	{ HP_POP(status->is_boss_resist_sc, HP_status_is_boss_resist_sc) },
