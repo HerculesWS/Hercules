@@ -5155,7 +5155,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 		skill_id == SN_SHARPSHOOTING || skill_id == MA_SHARPSHOOTING ||
 		skill_id == NJ_KIRIKAGE))
 	{
-		short cri = sstatus->cri;
+		int cri = sstatus->cri;
 		if (sd != NULL) {
 			// Racial crit bonuses are affected by katar's crit bonus.
 			if (battle_config.show_katar_crit_bonus && sd->weapontype == W_KATAR)
