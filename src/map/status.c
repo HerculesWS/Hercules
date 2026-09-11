@@ -320,10 +320,21 @@ static int status_damage(struct block_list *src, struct block_list *target, int6
 				status_change_end(target, SC_DEVOTION, INVALID_TIMER);
 			}
 #endif
-			if (sc->data[SC_STONE] && sc->opt1 == OPT1_STONE)
+			if (sc->data[SC_STONE] && sc->opt1 == OPT1_STONE) {
+				sc->opt1_broken_by_damage_type = SC_STONE;
+				sc->opt1_broken_by_damage_tick = timer->gettick();
 				status_change_end(target, SC_STONE, INVALID_TIMER);
-			status_change_end(target, SC_FREEZE, INVALID_TIMER);
-			status_change_end(target, SC_SLEEP, INVALID_TIMER);
+			}
+			if (sc->data[SC_FREEZE]) {
+				sc->opt1_broken_by_damage_type = SC_FREEZE;
+				sc->opt1_broken_by_damage_tick = timer->gettick();
+				status_change_end(target, SC_FREEZE, INVALID_TIMER);
+			}
+			if (sc->data[SC_SLEEP]) {
+				sc->opt1_broken_by_damage_type = SC_SLEEP;
+				sc->opt1_broken_by_damage_tick = timer->gettick();
+				status_change_end(target, SC_SLEEP, INVALID_TIMER);
+			}
 			status_change_end(target, SC_DC_WINKCHARM, INVALID_TIMER);
 			status_change_end(target, SC_CONFUSION, INVALID_TIMER);
 			status_change_end(target, SC_TRICKDEAD, INVALID_TIMER);
@@ -10243,8 +10254,18 @@ static int status_change_start_delayed_timer(int tid, int64 tick, int id, intptr
 	struct block_list *bl = map->id2bl(entry->bl_id);
 
 	if (bl != NULL && !status->isdead(bl)) {
-		status->change_start(src, bl, entry->type, entry->rate, entry->val1, entry->val2,
-			entry->val3, entry->val4, entry->tick, entry->flag, entry->skill_id);
+		struct status_change *sc = status->get_sc(bl);
+		// If this exact status was already active and got broken by damage sometime after this
+		// entry was scheduled, don't reapply it - the attack that is trying to (re)inflict the
+		// status is the same attack that just broke it (e.g. hitting a frozen target with a
+		// Stormy Knight Card weapon should not instantly refreeze it once the freeze breaks).
+		bool broken_by_this_attack = sc != NULL && sc->opt1_broken_by_damage_type == entry->type
+			&& sc->opt1_broken_by_damage_tick >= entry->scheduled_tick;
+
+		if (!broken_by_this_attack) {
+			status->change_start(src, bl, entry->type, entry->rate, entry->val1, entry->val2,
+				entry->val3, entry->val4, entry->tick, entry->flag, entry->skill_id);
+		}
 	}
 
 	idb_remove(status->delayed_start_db, id);
@@ -10295,6 +10316,7 @@ static void status_change_start_delayed(struct block_list *src, struct block_lis
 	entry->tick = tick;
 	entry->flag = flag;
 	entry->skill_id = skill_id;
+	entry->scheduled_tick = timer->gettick();
 
 	int index = status->delayed_start_index++;
 	idb_put(status->delayed_start_db, index, entry);
