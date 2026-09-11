@@ -713,7 +713,7 @@ static int pet_catch_process2(struct map_session_data *sd, int target_id)
 {
 	nullpo_retr(1, sd);
 
-	struct mob_data *md = BL_CAST(BL_MOB, map->id2bl(target_id)); //TODO: Why does this not use map->id2md?
+	struct mob_data *md = map->id2md(target_id);
 
 	if (md == NULL || md->bl.prev == NULL) { // Invalid inputs/state, abort capture.
 		clif->pet_roulette(sd, 0);
