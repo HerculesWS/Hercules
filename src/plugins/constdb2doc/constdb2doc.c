@@ -45,6 +45,8 @@
 #define OUTPUTFILENAME "doc" PATHSEP_STR "constants_pre-re.md"
 #endif
 
+HPM_PLUGIN_DEFS
+
 HPExport struct hplugin_info pinfo = {
 	"constdb2doc",   // Plugin name
 	SERVER_TYPE_MAP, // Which server types this plugin works with?

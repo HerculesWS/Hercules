@@ -27,6 +27,8 @@
 
 #include "common/HPMDataCheck.h"
 
+HPM_PLUGIN_DEFS
+
 HPExport struct hplugin_info pinfo = {
 	"script_mapquit",    // Plugin name
 	SERVER_TYPE_MAP,     // Which server types this plugin works with?

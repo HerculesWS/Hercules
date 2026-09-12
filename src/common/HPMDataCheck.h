@@ -35,7 +35,7 @@
 #undef HPM_SYMBOL
 #endif // HPM_SYMBOL
 
-extern "C" HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
+HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#ifdef API_ACLIF_H
 		{ "aclif_interface", sizeof(struct aclif_interface), SERVER_TYPE_API },
 		{ "char_server_data", sizeof(struct char_server_data), SERVER_TYPE_API },

@@ -40,6 +40,8 @@
 #include <sys/stat.h>
 #include <time.h>
 
+HPM_PLUGIN_DEFS
+
 HPExport struct hplugin_info pinfo = {
 	"generate-translations", // Plugin name
 	SERVER_TYPE_MAP, // Which server types this plugin works with?

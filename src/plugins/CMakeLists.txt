@@ -57,10 +57,6 @@ function(add_plugin_target _plugin_name)
     endforeach()
   endif()
 
-  if (MSVC)
-    list(APPEND _cfiles "${CMAKE_CURRENT_FUNCTION_LIST_DIR}/exports.def")
-  endif()
-
   add_library("plugin.${_plugin_name}" SHARED ${_cfiles})
   add_dependencies(plugins "plugin.${_plugin_name}")
 

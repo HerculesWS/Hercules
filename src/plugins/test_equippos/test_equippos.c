@@ -33,6 +33,8 @@
 
 #include <stdlib.h>
 
+HPM_PLUGIN_DEFS
+
 HPExport struct hplugin_info pinfo = {
 	"test_equippos", ///< Plugin name
 	SERVER_TYPE_MAP, ///< Plugin type

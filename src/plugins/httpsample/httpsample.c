@@ -42,10 +42,11 @@
 
 #include "plugins/HPMHooking/HPMHooking.h"
 #include "common/HPMDataCheck.h" /* should always be the last Hercules file included! (if you don't make it last, it'll intentionally break compile time) */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+HPM_PLUGIN_DEFS
 
 // this message ids must not conflict with other plugins or hercules itself
 enum apimessages {

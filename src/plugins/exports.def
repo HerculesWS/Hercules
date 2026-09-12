@@ -1,7 +1,0 @@
-EXPORTS
-    HPMDataCheckLen
-    HPMDataCheckVer
-    HPMi
-    HPMi_s
-    import_symbol
-    pinfo

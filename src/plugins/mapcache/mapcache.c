@@ -38,6 +38,8 @@
 #include <stdio.h>
 #include <string.h>
 
+HPM_PLUGIN_DEFS
+
 struct hplugin_info pinfo = {
 	"Mapcache",      ///< Plugin name
 	SERVER_TYPE_MAP, ///< Which server types this plugin works with?

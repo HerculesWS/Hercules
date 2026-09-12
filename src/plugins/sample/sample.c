@@ -51,6 +51,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+HPM_PLUGIN_DEFS
+
 HPExport struct hplugin_info pinfo = {
 	"Sample",    // Plugin name
 	(enum server_types)(SERVER_TYPE_CHAR|SERVER_TYPE_LOGIN|SERVER_TYPE_MAP|SERVER_TYPE_API),// Which server types this plugin works with?

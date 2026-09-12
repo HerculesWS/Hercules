@@ -177,6 +177,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+HPM_PLUGIN_DEFS
+
 HPExport struct hplugin_info pinfo = {
 	"HPMHooking",   // Plugin name
 	HPM_SERVER_TYPE,// Which server types this plugin works with?

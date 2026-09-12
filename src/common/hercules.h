@@ -28,10 +28,10 @@
 #define HPExportF
 #else  // HERCULES_CORE
 #ifdef WIN32
-#define HPExport __declspec(dllexport)
+#define HPExport extern "C" __declspec(dllexport)
 #define HPExportF extern "C" __declspec(dllexport)
 #else  // WIN32
-#define HPExport __attribute__((visibility("default")))
+#define HPExport extern "C" __attribute__((visibility("default")))
 #define HPExportF extern "C" __attribute__((visibility("default")))
 #endif  // WIN32
 #endif  // HERCULES_CORE
