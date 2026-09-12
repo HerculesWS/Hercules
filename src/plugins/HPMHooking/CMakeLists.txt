@@ -64,7 +64,7 @@ set(HPMHOOKING_CFLAGS
 if (MSVC)
   set(HPMHOOKING_CFLAGS)
 else()
-  set(HPMHOOKING_CFLAGS "-Wno-suggest-attribute=format")
+  testadd_warning_compiler_flag(no-suggest-attribute=format)
 endif()
 
 if(BUILD_HPMHOOKING)
