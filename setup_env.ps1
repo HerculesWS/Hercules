@@ -183,5 +183,11 @@ if (Test-Path "${BuildDir}/CMakeCache.txt") {
     Throw "Failed to generate build environment in ${BuildDir}"
   }
 }
+
+if (-not (Get-Alias -Name ninjac -errorAction SilentlyContinue)) {
+  Write-Host "Configuring 'ninjac' as alias for ninja with color output"
+  New-Alias -Scope Global -Name ninjac "${herc_path}/tools/ninjabuild.ps1"
+}
+
 Write-Host "`n`n"
 Write-Host "Build environment ready in ${BuildDir}"
