@@ -35,7 +35,8 @@
 #undef HPM_SYMBOL
 #endif // HPM_SYMBOL
 
-HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
+namespace {
+struct s_HPMDataCheck HPMDataCheck_s[] = {
 	#ifdef API_ACLIF_H
 		{ "aclif_interface", sizeof(struct aclif_interface), SERVER_TYPE_API },
 		{ "char_server_data", sizeof(struct char_server_data), SERVER_TYPE_API },
@@ -1268,7 +1269,21 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		#define MAP_VENDING_H
 	#endif // MAP_VENDING_H
 };
-HPExport unsigned int HPMDataCheckLen = ARRAYLENGTH(HPMDataCheck);
-HPExport int HPMDataCheckVer = 1;
+constexpr unsigned int HPMDataCheckLen_s = ARRAYLENGTH(HPMDataCheck_s); \
+constexpr int HPMDataCheckVer_s = 2;
+}
+
+#define HPMDATACHECK_DEFS \
+	struct s_HPMDataCheck *HPMDataCheck = HPMDataCheck_s; \
+	unsigned int HPMDataCheckLen = HPMDataCheckLen_s; \
+	int HPMDataCheckVer = HPMDataCheckVer_s;
+HPExport struct s_HPMDataCheck *HPMDataCheck;
+HPExport unsigned int HPMDataCheckLen;
+HPExport int HPMDataCheckVer;
+#ifdef HPM_PLUGIN_DEFS_ALL
+#define HPM_PLUGIN_DEFS \
+	HPMDATACHECK_DEFS \
+	HPM_PLUGIN_DEFS_ALL
+#endif
 
 #endif /* HPM_DATA_CHECK_H */

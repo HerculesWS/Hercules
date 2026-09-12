@@ -271,7 +271,7 @@ HPExport void *(*import_symbol) (const char *name, unsigned int pID);
 	struct HPMi_interface HPMi_s; \
 	struct HPMi_interface *HPMi; \
 	void *(*import_symbol) (const char *name, unsigned int pID);
-#define HPM_PLUGIN_DEFS HPM_PLUGIN_DEFS_BASE
+#define HPM_PLUGIN_DEFS_ALL HPM_PLUGIN_DEFS_BASE
 
 #ifdef __cplusplus
 	#define HPM_SYMBOL(n, s) ((s) = static_cast<decltype(s)>(import_symbol((n),HPMi->pid)))

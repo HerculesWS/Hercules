@@ -70,6 +70,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+HPMDATACHECK_DEFS
+
 /**
  * HPM plugin data store validator sub-handler (api-server)
  *

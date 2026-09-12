@@ -24,8 +24,8 @@
 #include "common/cbasetypes.h"
 
 #ifdef HERCULES_CORE
-#define HPExport
-#define HPExportF
+#define HPExport extern "C"
+#define HPExportF extern "C"
 #else  // HERCULES_CORE
 #ifdef WIN32
 #define HPExport extern "C" __declspec(dllexport)
