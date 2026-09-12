@@ -36,7 +36,7 @@ struct hplugin_data_store;
 
 enum server_types CXX_ENUM_TYPE(unsigned int);
 
-#define HPM_VERSION "1.2"
+#define HPM_VERSION "1.3"
 
 // Maximum length of the configuration path for configs added with add*Conf
 #define HPM_ADDCONF_LENGTH 40
@@ -262,16 +262,27 @@ struct HPMi_interface {
 extern struct HPMi_interface HPMi_s;
 extern struct HPMi_interface *HPMi;
 extern void *(*import_symbol) (const char *name, unsigned int pID);
+extern struct hplugin_info pinfo;
 #else
 HPExport struct HPMi_interface HPMi_s;
 HPExport struct HPMi_interface *HPMi;
 HPExport void *(*import_symbol) (const char *name, unsigned int pID);
+HPExport struct hplugin_info pinfo;
 #endif
-#define HPM_PLUGIN_DEFS_BASE \
-	struct HPMi_interface HPMi_s; \
-	struct HPMi_interface *HPMi; \
-	void *(*import_symbol) (const char *name, unsigned int pID);
+#define HPM_PLUGIN_DEFS_BASE                                                   \
+  struct HPMi_interface HPMi_s;                                                \
+  struct HPMi_interface *HPMi;                                                 \
+  void *(*import_symbol)(const char *name, unsigned int pID);
+
 #define HPM_PLUGIN_DEFS_ALL HPM_PLUGIN_DEFS_BASE
+
+#define HPM_DECLARE_PLUGIN_BASE(n, t, v)                                       \
+  struct hplugin_info pinfo = {                                                \
+      .name = (n),                                                             \
+      .type = (t),                                                             \
+      .version = (v),                                                          \
+      .req_version = HPM_VERSION,                                              \
+  };
 
 #ifdef __cplusplus
 	#define HPM_SYMBOL(n, s) ((s) = static_cast<decltype(s)>(import_symbol((n),HPMi->pid)))
@@ -279,6 +290,5 @@ HPExport void *(*import_symbol) (const char *name, unsigned int pID);
 	#define HPM_SYMBOL(n, s) ((s) = import_symbol((n),HPMi->pid))
 #endif
 #endif // !HERCULES_CORE
-
 
 #endif /* COMMON_HPMI_H */

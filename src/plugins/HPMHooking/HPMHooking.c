@@ -177,14 +177,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-HPM_PLUGIN_DEFS
-
-HPExport struct hplugin_info pinfo = {
+HPM_DECLARE_PLUGIN(
 	"HPMHooking",   // Plugin name
 	HPM_SERVER_TYPE,// Which server types this plugin works with?
-	"0.2",          // Plugin version
-	HPM_VERSION,    // HPM Version (don't change, macro is automatically updated)
-};
+	"0.2"           // Plugin version
+)
 
 #define HP_POP(x,y) #x , (void**)(&x) , (void*)y , 0
 struct DBMap *hp_db;/* hooking points db -- for quick lookup */

@@ -46,7 +46,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-HPM_PLUGIN_DEFS
 
 // this message ids must not conflict with other plugins or hercules itself
 enum apimessages {
@@ -56,12 +55,11 @@ enum apimessages {
 	API_MSG_SAMPLE_USER  = API_MSG_CUSTOM + 3
 };
 
-HPExport struct hplugin_info pinfo = {
+HPM_DECLARE_PLUGIN(
 	"Http sample",    // Plugin name
 	(enum server_types)(SERVER_TYPE_CHAR|SERVER_TYPE_LOGIN|SERVER_TYPE_MAP|SERVER_TYPE_API), // Which server types this plugin works with?
-	"0.1",       // Plugin version
-	HPM_VERSION, // HPM Version (don't change, macro is automatically updated)
-};
+	"0.1"        // Plugin version
+)
 
 struct PACKET_API_sample_login_request_data {
 	char text[100];

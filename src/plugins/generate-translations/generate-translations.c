@@ -40,14 +40,11 @@
 #include <sys/stat.h>
 #include <time.h>
 
-HPM_PLUGIN_DEFS
-
-HPExport struct hplugin_info pinfo = {
+HPM_DECLARE_PLUGIN(
 	"generate-translations", // Plugin name
 	SERVER_TYPE_MAP, // Which server types this plugin works with?
-	"0.1",           // Plugin version
-	HPM_VERSION,     // HPM Version (don't change, macro is automatically updated)
-};
+	"0.1"            // Plugin version
+);
 
 struct DBMap *translatable_strings; // string map parsed (used when exporting strings only)
 /* Set during startup when attempting to export the lang, unset after server initialization is over */
