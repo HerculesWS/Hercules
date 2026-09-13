@@ -189,7 +189,7 @@ static void achievement_progress_add(struct map_session_data *sd, const struct a
 
 	// Check and increment the objective count.
 	if (!ach->objective[obj_idx] || ach->objective[obj_idx] < VECTOR_INDEX(ad->objective, obj_idx).goal) {
-		ach->objective[obj_idx] = min(progress + ach->objective[obj_idx], VECTOR_INDEX(ad->objective, obj_idx).goal);
+		ach->objective[obj_idx] = HMIN(progress + ach->objective[obj_idx], VECTOR_INDEX(ad->objective, obj_idx).goal);
 
 		// Check if the Achievement is complete.
 		if (achievement->check_complete(sd, ad)) {

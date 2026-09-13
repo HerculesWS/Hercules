@@ -769,10 +769,10 @@ static int bl_getall_area(int type, int m, int x0, int y0, int x1, int y1, int (
 	Assert_ret(listm->block != NULL);
 
 	// Limit search area to map size
-	x0 = min(max(x0, 0), map->list[m].xs - 1);
-	y0 = min(max(y0, 0), map->list[m].ys - 1);
-	x1 = min(max(x1, 0), map->list[m].xs - 1);
-	y1 = min(max(y1, 0), map->list[m].ys - 1);
+	x0 = HMIN(max(x0, 0), map->list[m].xs - 1);
+	y0 = HMIN(max(y0, 0), map->list[m].ys - 1);
+	x1 = HMIN(max(x1, 0), map->list[m].xs - 1);
+	y1 = HMIN(max(y1, 0), map->list[m].ys - 1);
 
 	if (x1 < x0)
 		HSWAP(x0, x1);
@@ -1694,9 +1694,9 @@ static int map_search_free_cell(struct block_list *src, int16 m, int16 *x, int16
 	if (range_x < 0 || range_y < 0) {
 		if (Assert_chk(map->list[m].xs > 2 * margin && map->list[m].ys > 2 * margin))
 			ShowDebug("search_freecell_map_margin is too big for at least one map.");
-		tries = min(map->list[m].xs * map->list[m].ys, 500); // For likely every map this will be 500...
+		tries = HMIN(map->list[m].xs * map->list[m].ys, 500); // For likely every map this will be 500...
 	} else {
-		tries = min(width * height, 100);
+		tries = HMIN(width * height, 100);
 	}
 
 	int avoidplayer_retries = 0;

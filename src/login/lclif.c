@@ -209,7 +209,7 @@ static enum parsefunc_rcode lclif_parse_CA_SSO_LOGIN_REQ(int fd, struct login_se
 	sd->clienttype = packet->clienttype;
 	sd->version = packet->version;
 	safestrncpy(sd->userid, packet->id, NAME_LENGTH);
-	safestrncpy(sd->passwd, packet->t1, min(tokenlen + 1, PASSWD_LEN)); // Variable-length field, don't copy more than necessary
+	safestrncpy(sd->passwd, packet->t1, HMIN(tokenlen + 1, PASSWD_LEN)); // Variable-length field, don't copy more than necessary
 
 	if (login->config->use_md5_passwds)
 		md5->string(sd->passwd, sd->passwd);

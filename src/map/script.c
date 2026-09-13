@@ -13826,7 +13826,7 @@ static BUILDIN(sc_start)
 	else
 		flag = script_hasdata(st,5+start_type) ? script_getnum(st,5+start_type) : SCFLAG_NOAVOID;
 
-	rate = script_hasdata(st,4+start_type)?min(script_getnum(st,4+start_type),10000):10000;
+	rate = script_hasdata(st,4+start_type)?HMIN(script_getnum(st,4+start_type),10000):10000;
 
 	if(script_hasdata(st,(6+start_type)))
 		bl = map->id2bl(script_getnum(st,(6+start_type)));
@@ -27673,7 +27673,7 @@ static BUILDIN(rodex_sendmail)
 
 		int amount = script_getnum(st, param + 1);
 
-		if (amount < 1 || amount > min(MAX_AMOUNT, SHRT_MAX)) {
+		if (amount < 1 || amount > HMIN(MAX_AMOUNT, SHRT_MAX)) {
 			ShowError("script:rodex_sendmail: Invalid amount %d passed for item %d!\n", amount, i + 1);
 			return false;
 		}
@@ -27743,7 +27743,7 @@ static BUILDIN(rodex_sendmail2)
 
 		int amount = script_getnum(st, param + 1);
 
-		if (amount < 1 || amount > min(MAX_AMOUNT, SHRT_MAX)) {
+		if (amount < 1 || amount > HMIN(MAX_AMOUNT, SHRT_MAX)) {
 			ShowError("script:rodex_sendmail: Invalid amount %d passed for item %d!\n", amount, i + 1);
 			return false;
 		}

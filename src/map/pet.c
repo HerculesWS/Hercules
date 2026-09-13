@@ -1669,7 +1669,7 @@ static int pet_read_db_sub(struct config_setting_t *it, int n, const char *sourc
 		entry.r_hungry = 10;
 		entry.r_full = 100;
 		entry.die = 20;
-		entry.starving_delay = min(20000, entry.hungry_delay);
+		entry.starving_delay = HMIN(20000, entry.hungry_delay);
 		entry.starving_decrement = 20;
 	}
 

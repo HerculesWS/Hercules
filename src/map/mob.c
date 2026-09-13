@@ -2797,7 +2797,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 				drop_rate = max(drop_rate, 1);
 
 			// Make sure the bonuses don't make the drop rate grow past the configured threshold (unless it already was)
-			drop_rate = min(drop_rate, max(md->db->dropitem[i].p, battle_config.item_drop_bonus_max_threshold));
+			drop_rate = HMIN(drop_rate, max(md->db->dropitem[i].p, battle_config.item_drop_bonus_max_threshold));
 
 			// attempt to drop the item
 			if (rnd() % 10000 >= drop_rate)
@@ -5819,7 +5819,7 @@ static bool mob_skill_db_libconfig_sub_skill(struct config_setting_t *it, int n,
 	if (battle_config.mob_skill_delay != 100)
 		ms->delay = ms->delay * battle_config.mob_skill_delay / 100;
 
-	ms->delay = min(ms->delay, MOB_MAX_DELAY);
+	ms->delay = HMIN(ms->delay, MOB_MAX_DELAY);
 
 	res = libconfig->setting_lookup_bool(it, "Cancelable", &i32);
 	ms->cancel = (res == CONFIG_FALSE) ? 0 : cap_value(i32, 0, 1);
