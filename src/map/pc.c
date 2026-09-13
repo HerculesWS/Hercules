@@ -3430,14 +3430,14 @@ static int pc_bonus2(struct map_session_data *sd, int type, int type2, int val)
 		case SP_HP_VANISH_RATE:
 			if (sd->state.lr_flag != 2) {
 				sd->bonus.hp_vanish_rate += type2;
-				sd->bonus.hp_vanish_per = max(sd->bonus.hp_vanish_per, val);
+				sd->bonus.hp_vanish_per = HMAX(sd->bonus.hp_vanish_per, val);
 				sd->bonus.hp_vanish_trigger = 0;
 			}
 			break;
 		case SP_SP_VANISH_RATE:
 			if (sd->state.lr_flag != 2) {
 				sd->bonus.sp_vanish_rate += type2;
-				sd->bonus.sp_vanish_per = max(sd->bonus.sp_vanish_per, val);
+				sd->bonus.sp_vanish_per = HMAX(sd->bonus.sp_vanish_per, val);
 				sd->bonus.sp_vanish_trigger = 0;
 			}
 			break;
@@ -4111,14 +4111,14 @@ static int pc_bonus3(struct map_session_data *sd, int type, int type2, int type3
 		case SP_HP_VANISH_RATE:
 			if (sd->state.lr_flag != 2) {
 				sd->bonus.hp_vanish_rate += type2;
-				sd->bonus.hp_vanish_per = max(sd->bonus.hp_vanish_per, type3);
+				sd->bonus.hp_vanish_per = HMAX(sd->bonus.hp_vanish_per, type3);
 				sd->bonus.hp_vanish_trigger = val;
 			}
 			break;
 		case SP_SP_VANISH_RATE:
 			if (sd->state.lr_flag != 2) {
 				sd->bonus.sp_vanish_rate += type2;
-				sd->bonus.sp_vanish_per = max(sd->bonus.sp_vanish_per, type3);
+				sd->bonus.sp_vanish_per = HMAX(sd->bonus.sp_vanish_per, type3);
 				sd->bonus.sp_vanish_trigger = val;
 			}
 			break;
@@ -6420,7 +6420,7 @@ int pc_get_skill_cooldown(struct map_session_data *sd, uint16 skill_id, uint16 s
 	if (i < ARRAYLENGTH(sd->skillcooldown))
 		cooldown += sd->skillcooldown[i].val;
 
-	return max(0, cooldown);
+	return HMAX(0, cooldown);
 }
 
 /*==========================================
@@ -11200,7 +11200,7 @@ static void pc_overheat(struct map_session_data *sd, int val)
 		status_change_end(&sd->bl,SC_OVERHEAT_LIMITPOINT,INVALID_TIMER);
 	}
 
-	heat = max(0,heat); // Avoid negative HEAT
+	heat = HMAX(0,heat); // Avoid negative HEAT
 	if( heat >= limit[skill_lv] )
 		sc_start(NULL, &sd->bl, SC_OVERHEAT, 100, 0, 1000, 0);
 	else

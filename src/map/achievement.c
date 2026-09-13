@@ -845,7 +845,7 @@ static void achievement_validate_item_get(struct map_session_data *sd, int namei
 	criteria.unique.itemid = 0; // cleanup
 
 	/* Item Buy Value*/
-	criteria.goal = max(it->value_buy, 1);
+	criteria.goal = HMAX(it->value_buy, 1);
 	achievement->validate_type(sd, ACH_ITEM_GET_WORTH, &criteria, false);
 
 	/* Item Type */
@@ -877,7 +877,7 @@ static void achievement_validate_item_sell(struct map_session_data *sd, int name
 
 	criteria.unique.itemid = it->nameid;
 
-	criteria.goal = max(it->value_sell, 1);
+	criteria.goal = HMAX(it->value_sell, 1);
 
 	achievement->validate_type(sd, ACH_ITEM_SELL_WORTH, &criteria, false);
 }

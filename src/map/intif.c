@@ -1224,7 +1224,7 @@ static void intif_parse_LoadGuildStorage(int fd)
 	gstor->in_use = false;
 	gstor->locked = false;
 	gstor->dirty = false;
-	gstor->items.capacity = max(storage_capacity, 1);
+	gstor->items.capacity = HMAX(storage_capacity, 1);
 	gstor->items.amount = storage_amount;
 	if (gstor->items.data != NULL) {
 		aFree(gstor->items.data);

@@ -4282,7 +4282,7 @@ static struct Damage battle_calc_magic_attack(struct block_list *src, struct blo
 				case WZ_HEAVENDRIVE:
 					if(sc->data[SC_GUST_OPTION] || sc->data[SC_PETROLOGY_OPTION]
 						|| sc->data[SC_PYROTECHNIC_OPTION] || sc->data[SC_AQUAPLAY_OPTION])
-						ad.damage += (6 + sstatus->int_/4) + max(sstatus->dex-10,0)/30;
+						ad.damage += (6 + sstatus->int_/4) + HMAX(sstatus->dex-10,0)/30;
 					break;
 			}
 		}
@@ -4503,7 +4503,7 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 
 				if( (vitfactor=(status_get_vit(target)-120.0f)) > 0)
 					vitfactor = (vitfactor * (matk + atk) / 10) / status_get_vit(target);
-				ftemp = max(0.0f, vitfactor) + (targetVit * (matk + atk)) / 10;
+				ftemp = HMAX(0.0f, vitfactor) + (targetVit * (matk + atk)) / 10;
 				md.damage = (int64)(ftemp * 70 * skill_lv / 100);
 				if (target->type == BL_PC)
 					md.damage >>= 1;
@@ -6413,7 +6413,7 @@ static void battle_reflect_damage(struct block_list *target, struct block_list *
 #ifdef RENEWAL
 	int max_reflect_damage;
 
-	max_reflect_damage = max(status_get_max_hp(target), status_get_max_hp(target) * status->get_lv(target) / 100);
+	max_reflect_damage = HMAX(status_get_max_hp(target), status_get_max_hp(target) * status->get_lv(target) / 100);
 #endif
 
 	damage = wd->damage + wd->damage2;
@@ -6426,9 +6426,9 @@ static void battle_reflect_damage(struct block_list *target, struct block_list *
 	sc = status->get_sc(target);
 
 #ifdef RENEWAL
-#define NORMALIZE_RDAMAGE(d) ( trdamage += rdamage = max((int64)1, HMIN((int64)max_reflect_damage, (d))) )
+#define NORMALIZE_RDAMAGE(d) ( trdamage += rdamage = HMAX((int64)1, HMIN((int64)max_reflect_damage, (d))) )
 #else
-#define NORMALIZE_RDAMAGE(d) ( trdamage += rdamage = max((int64)1, (d)) )
+#define NORMALIZE_RDAMAGE(d) ( trdamage += rdamage = HMAX((int64)1, (d)) )
 #endif
 
 	if( sc && !sc->count )
@@ -7116,7 +7116,7 @@ static enum damage_lv battle_weapon_attack(struct block_list *src, struct block_
 				skill->consume_requirement(sd,r_skill,r_lv,3);
 				skill->castend_type((enum cast_enum)type, src, target, r_skill, r_lv, tick, flag);
 				sd->auto_cast_current.type = AUTOCAST_NONE;
-				sd->ud.canact_tick = max(tick + skill->delay_fix(src, r_skill, r_lv), sd->ud.canact_tick);
+				sd->ud.canact_tick = HMAX(tick + skill->delay_fix(src, r_skill, r_lv), sd->ud.canact_tick);
 				clif->status_change(src, status->get_sc_icon(SC_POSTDELAY), status->get_sc_relevant_bl_types(SC_POSTDELAY), 1, skill->delay_fix(src, r_skill, r_lv), 0, 0, 1);
 			}
 		}

@@ -12837,7 +12837,7 @@ static BUILDIN(gettimer)
 			if (sd->eventtimer[i] != INVALID_TIMER) {
 				td = timer->get(sd->eventtimer[i]);
 				Assert_retr(false, td != NULL);
-				tick = max(0, DIFF_TICK32(td->tick, timer->gettick()));
+				tick = HMAX(0, DIFF_TICK32(td->tick, timer->gettick()));
 
 				if (event != NULL) {
 					if ((first == true || tick < val) && strcmp((char *)(td->data), event) == 0) {
@@ -12857,14 +12857,14 @@ static BUILDIN(gettimer)
 			if (sd->eventtimer[i] != INVALID_TIMER) {
 				td = timer->get(sd->eventtimer[i]);
 				Assert_retr(false, td != NULL);
-				tick = max(0, DIFF_TICK32(td->tick, timer->gettick()));
+				tick = HMAX(0, DIFF_TICK32(td->tick, timer->gettick()));
 
 				if (event != NULL) {
 					if (strcmp((char *)(td->data), event) == 0) {
-						val = max(val, tick);
+						val = HMAX(val, tick);
 					}
 				} else {
-					val = max(val, tick);
+					val = HMAX(val, tick);
 				}
 			}
 		}

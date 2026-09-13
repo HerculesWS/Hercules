@@ -61,7 +61,7 @@ static int inter_party_check_lv(struct party_data *p)
 			continue; /// If not online OR if it's a family party and this is the child, don't affect exp range.
 
 		p->min_lv = HMIN(p->min_lv, p->party.member[i].lv);
-		p->max_lv = max(p->max_lv, p->party.member[i].lv);
+		p->max_lv = HMAX(p->max_lv, p->party.member[i].lv);
 	}
 
 	if (p->party.exp == 1 && inter_party->check_exp_share(p) == 0) {
