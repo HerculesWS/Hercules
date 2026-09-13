@@ -1056,7 +1056,7 @@ static int skill_tree_get_max(int skill_id, int class_)
 		return skill->get_max(skill_id);
 }
 
-static int skill_get_casttype(int skill_id)
+static enum cast_enum skill_get_casttype(int skill_id)
 {
 	int inf = skill->get_inf(skill_id);
 	if (inf&(INF_GROUND_SKILL))
@@ -1073,11 +1073,10 @@ static int skill_get_casttype(int skill_id)
 	return CAST_DAMAGE;
 }
 
-static int skill_get_casttype2(int index)
+static enum cast_enum skill_get_casttype2(int index)
 {
-	int inf;
 	Assert_retr(CAST_NODAMAGE, index < MAX_SKILL_DB);
-	inf = skill->dbs->db[index].inf;
+	int inf = skill->dbs->db[index].inf;
 	if (inf&(INF_GROUND_SKILL))
 		return CAST_GROUND;
 	if (inf&INF_SUPPORT_SKILL)
