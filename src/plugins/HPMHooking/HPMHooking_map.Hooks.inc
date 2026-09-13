@@ -84494,11 +84494,11 @@ const char * HP_skill_get_desc(int skill_id) {
 	}
 	return retVal___;
 }
-int HP_skill_get_casttype(int skill_id) {
+enum cast_enum HP_skill_get_casttype(int skill_id) {
 	int hIndex = 0;
-	int retVal___ = 0;
+	enum cast_enum retVal___ = CAST_GROUND;
 	if (HPMHooks.count.HP_skill_get_casttype_pre > 0) {
-		int (*preHookFunc) (int *skill_id);
+		enum cast_enum (*preHookFunc) (int *skill_id);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_casttype_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_skill_get_casttype_pre[hIndex].func;
@@ -84513,7 +84513,7 @@ int HP_skill_get_casttype(int skill_id) {
 		retVal___ = HPMHooks.source.skill.get_casttype(skill_id);
 	}
 	if (HPMHooks.count.HP_skill_get_casttype_post > 0) {
-		int (*postHookFunc) (int retVal___, int skill_id);
+		enum cast_enum (*postHookFunc) (enum cast_enum retVal___, int skill_id);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_casttype_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_skill_get_casttype_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, skill_id);
@@ -84521,11 +84521,11 @@ int HP_skill_get_casttype(int skill_id) {
 	}
 	return retVal___;
 }
-int HP_skill_get_casttype2(int index) {
+enum cast_enum HP_skill_get_casttype2(int index) {
 	int hIndex = 0;
-	int retVal___ = 0;
+	enum cast_enum retVal___ = CAST_GROUND;
 	if (HPMHooks.count.HP_skill_get_casttype2_pre > 0) {
-		int (*preHookFunc) (int *index);
+		enum cast_enum (*preHookFunc) (int *index);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_casttype2_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_skill_get_casttype2_pre[hIndex].func;
@@ -84540,7 +84540,7 @@ int HP_skill_get_casttype2(int index) {
 		retVal___ = HPMHooks.source.skill.get_casttype2(index);
 	}
 	if (HPMHooks.count.HP_skill_get_casttype2_post > 0) {
-		int (*postHookFunc) (int retVal___, int index);
+		enum cast_enum (*postHookFunc) (enum cast_enum retVal___, int index);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_casttype2_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_skill_get_casttype2_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, index);
