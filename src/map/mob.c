@@ -704,9 +704,9 @@ static int mob_once_spawn_area(struct map_session_data *sd, int16 m, int16 x0, i
 
 	// normalize x/y coordinates
 	if (x0 > x1)
-		HSWAP(x0, x1);
+		std::swap(x0, x1);
 	if (y0 > y1)
-		HSWAP(y0, y1);
+		std::swap(y0, y1);
 
 	// choose a suitable max. number of attempts
 	max = (y1 - y0 + 1)*(x1 - x0 + 1)*3;
@@ -2793,12 +2793,12 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 			}
 
 			if (battle_config.drop_rate0item)
-				drop_rate = HMAX(drop_rate, 0);
+				drop_rate = std::max(drop_rate, 0);
 			else
-				drop_rate = HMAX(drop_rate, 1);
+				drop_rate = std::max(drop_rate, 1);
 
 			// Make sure the bonuses don't make the drop rate grow past the configured threshold (unless it already was)
-			drop_rate = HMIN(drop_rate, HMAX(md->db->dropitem[i].p, battle_config.item_drop_bonus_max_threshold));
+			drop_rate = std::min(drop_rate, std::max(md->db->dropitem[i].p, battle_config.item_drop_bonus_max_threshold));
 
 			// attempt to drop the item
 			if (rnd() % 10000 >= drop_rate)
@@ -5820,7 +5820,7 @@ static bool mob_skill_db_libconfig_sub_skill(struct config_setting_t *it, int n,
 	if (battle_config.mob_skill_delay != 100)
 		ms->delay = ms->delay * battle_config.mob_skill_delay / 100;
 
-	ms->delay = HMIN(ms->delay, MOB_MAX_DELAY);
+	ms->delay = std::min(ms->delay, MOB_MAX_DELAY);
 
 	res = libconfig->setting_lookup_bool(it, "Cancelable", &i32);
 	ms->cancel = (res == CONFIG_FALSE) ? 0 : cap_value(i32, 0, 1);

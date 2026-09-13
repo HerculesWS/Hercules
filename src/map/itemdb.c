@@ -203,7 +203,7 @@ static int itemdb_searchname_array(struct item_data **data, const int size, cons
 		CREATE(dbmap_data, struct DBData *, dbmap_size);
 
 		dbmap_count = itemdb->other->getall(itemdb->other, dbmap_data, dbmap_size, itemdb->searchname_array_sub, str, (int)flag);
-		dbmap_size = HMIN(dbmap_count, dbmap_size);
+		dbmap_size = std::min(dbmap_count, dbmap_size);
 
 		for (int i = 0; i < dbmap_size; ++i) {
 			data[length] = (struct item_data *)DB->data2ptr(dbmap_data[i]);

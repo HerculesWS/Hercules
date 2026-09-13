@@ -332,7 +332,7 @@ static bool inter_mail_return_message(int char_id, int mail_id, int *new_mail)
 		char temp_[MAIL_TITLE_LENGTH];
 
 		// swap sender and receiver
-		HSWAP(msg.send_id, msg.dest_id);
+		std::swap(msg.send_id, msg.dest_id);
 		safestrncpy(temp_, msg.send_name, NAME_LENGTH);
 		safestrncpy(msg.send_name, msg.dest_name, NAME_LENGTH);
 		safestrncpy(msg.dest_name, temp_, NAME_LENGTH);

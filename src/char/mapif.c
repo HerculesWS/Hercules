@@ -187,7 +187,7 @@ static void mapif_parse_auction_requestlist(int fd)
 	char searchtext[NAME_LENGTH];
 	int char_id = RFIFOL(fd, 4), len = sizeof(struct auction_data);
 	int price = RFIFOL(fd, 10);
-	short type = RFIFOW(fd, 8), page = HMAX((short)1, (short)RFIFOW(fd, 14)); // FIXME: There's no need for these vars to be smaller than int
+	short type = RFIFOW(fd, 8), page = std::max((short)1, (short)RFIFOW(fd, 14)); // FIXME: There's no need for these vars to be smaller than int
 	unsigned char buf[5 * sizeof(struct auction_data)];
 	struct DBIterator *iter = db_iterator(inter_auction->db);
 	short i = 0, j = 0, pages = 1;
@@ -1633,7 +1633,7 @@ static void mapif_rodex_sendinbox(int fd, int char_id, int8 opentype, int8 flag,
 			limit = to_send;
 			is_last = true;
 		} else {
-			limit = HMIN(to_send, per_packet);
+			limit = std::min(to_send, per_packet);
 			if (limit != to_send) {
 				is_last = false;
 			}
@@ -2102,7 +2102,7 @@ static int mapif_parse_Registry(int fd)
 		for (i = 0; i < count; i++) {
 			unsigned int index;
 			int len = RFIFOB(fd, cursor);
-			safestrncpy(key, RFIFOP(char *, fd, cursor + 1), HMIN((int)sizeof(key), len));
+			safestrncpy(key, RFIFOP(char *, fd, cursor + 1), std::min((int)sizeof(key), len));
 			cursor += len + 1;
 
 			index = RFIFOL(fd, cursor);
@@ -2120,7 +2120,7 @@ static int mapif_parse_Registry(int fd)
 			/* str */
 			case 2:
 				len = RFIFOB(fd, cursor);
-				safestrncpy(sval, RFIFOP(char *, fd, cursor + 1), HMIN((int)sizeof(sval), len + 1));
+				safestrncpy(sval, RFIFOP(char *, fd, cursor + 1), std::min((int)sizeof(sval), len + 1));
 				cursor += len + 2;
 				inter->savereg(account_id, char_id, key, index, (intptr_t)sval, true);
 				break;

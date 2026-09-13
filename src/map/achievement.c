@@ -190,7 +190,7 @@ static void achievement_progress_add(struct map_session_data *sd, const struct a
 
 	// Check and increment the objective count.
 	if (!ach->objective[obj_idx] || ach->objective[obj_idx] < VECTOR_INDEX(ad->objective, obj_idx).goal) {
-		ach->objective[obj_idx] = HMIN(progress + ach->objective[obj_idx], VECTOR_INDEX(ad->objective, obj_idx).goal);
+		ach->objective[obj_idx] = std::min(progress + ach->objective[obj_idx], VECTOR_INDEX(ad->objective, obj_idx).goal);
 
 		// Check if the Achievement is complete.
 		if (achievement->check_complete(sd, ad)) {
@@ -846,7 +846,7 @@ static void achievement_validate_item_get(struct map_session_data *sd, int namei
 	criteria.unique.itemid = 0; // cleanup
 
 	/* Item Buy Value*/
-	criteria.goal = HMAX(it->value_buy, 1);
+	criteria.goal = std::max(it->value_buy, 1);
 	achievement->validate_type(sd, ACH_ITEM_GET_WORTH, &criteria, false);
 
 	/* Item Type */
@@ -878,7 +878,7 @@ static void achievement_validate_item_sell(struct map_session_data *sd, int name
 
 	criteria.unique.itemid = it->nameid;
 
-	criteria.goal = HMAX(it->value_sell, 1);
+	criteria.goal = std::max(it->value_sell, 1);
 
 	achievement->validate_type(sd, ACH_ITEM_SELL_WORTH, &criteria, false);
 }

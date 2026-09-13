@@ -1666,7 +1666,7 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 #ifndef RENEWAL
 	case MO_FINGEROFFENSIVE:
 		if(sd)
-			casttime += casttime * HMIN((int)skill_lv, sd->spiritball);
+			casttime += casttime * std::min((int)skill_lv, sd->spiritball);
 	break;
 #endif
 	case MO_EXTREMITYFIST:
@@ -1679,7 +1679,7 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 	break;
 	case CR_DEVOTION:
 		if (sd) {
-			int i = 0, count = HMIN((int)skill_lv, 5);
+			int i = 0, count = std::min((int)skill_lv, 5);
 			ARR_FIND(0, count, i, sd->devotion[i] == target_id);
 			if (i == count) {
 				ARR_FIND(0, count, i, sd->devotion[i] == 0);
@@ -1856,7 +1856,7 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 		ud->state.skillcastcancel = 0;
 
 	if (sd == NULL || sd->auto_cast_current.type < AUTOCAST_ABRA || skill->get_cast(skill_id, skill_lv) != 0)
-		ud->canact_tick = tick + HMAX(casttime, HMAX((int)status_get_amotion(src), battle_config.min_skill_delay_limit));
+		ud->canact_tick = tick + std::max(casttime, std::max((int)status_get_amotion(src), battle_config.min_skill_delay_limit));
 	if( sd )
 	{
 		switch( skill_id )
@@ -1996,7 +1996,7 @@ static int unit_skilluse_pos2(struct block_list *src, short skill_x, short skill
 
 	ud->state.skillcastcancel = castcancel&&casttime>0?1:0;
 	if (sd == NULL || sd->auto_cast_current.type < AUTOCAST_ABRA || skill->get_cast(skill_id, skill_lv) != 0)
-		ud->canact_tick = tick + HMAX(casttime, HMAX((int)status_get_amotion(src), battle_config.min_skill_delay_limit));
+		ud->canact_tick = tick + std::max(casttime, std::max((int)status_get_amotion(src), battle_config.min_skill_delay_limit));
 #if 0
 	if (sd) {
 		switch (skill_id) {
@@ -2483,7 +2483,7 @@ static int unit_attack_timer_sub(struct block_list *src, int tid, int64 tick)
 			return 1;
 		}
 
-		ud->attackabletime = HMAX(tick + sstatus->adelay, ud->attackabletime);
+		ud->attackabletime = std::max(tick + sstatus->adelay, ud->attackabletime);
 		// You can't move if you can't attack neither.
 		if (src->type&battle_config.attack_walk_delay)
 			unit->set_walkdelay(src, tick, sstatus->amotion, 1);
