@@ -103,7 +103,7 @@ float GetFloat(const unsigned char* buf)
 
 bool write_mapcache(const uint8 *buf, int32 buf_len, bool is_compressed, const char *mapname, int16 xs, int16 ys)
 {
-	struct map_cache_header header ZERO_INITIALIZED;
+	struct map_cache_header header{};
 	char file_path[255];
 	int mapname_len;
 	unsigned long compressed_buf_len = 0;
@@ -174,7 +174,7 @@ bool convert_old_mapcache(void)
 {
 	const char *path = "db/" DBPATH "map_cache.dat";
 	FILE *mapcache_fp = fopen(path, "rb");
-	struct old_mapcache_main_header header ZERO_INITIALIZED;
+	struct old_mapcache_main_header header{};
 	uint8 *p, *cursor;
 	uint32 file_size;
 	int i;
@@ -367,7 +367,7 @@ bool mapcache_rebuild(void)
 bool fix_md5_truncation_sub(FILE *fp, const char *map_name)
 {
 	unsigned int file_size;
-	struct map_cache_header mheader ZERO_INITIALIZED;
+	struct map_cache_header mheader{};
 	uint8 *buf = NULL;
 
 	nullpo_retr(false, fp);

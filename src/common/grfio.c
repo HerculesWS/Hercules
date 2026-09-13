@@ -652,7 +652,7 @@ static int grfio_entryread(const char *grfname, int gentry)
 
 		// Get an entry
 		for (entry = 0, ofs = 0; entry < entrys; ++entry) {
-			struct grf_filelist aentry ZERO_INITIALIZED;
+			struct grf_filelist aentry{};
 			int ofs2 = ofs+getlong(grf_filelist+ofs)+4;
 			unsigned char type = grf_filelist[ofs2+12];
 			if (type&FILELIST_TYPE_FILE) {
@@ -803,7 +803,7 @@ static bool grfio_parse_restable_row(const char *row)
 	grfio_localpath_create(local, sizeof(local), dst);
 	if (exists(local)) {
 		// alias for local resource
-		struct grf_filelist fentry ZERO_INITIALIZED;
+		struct grf_filelist fentry{};
 		safestrncpy(fentry.fn, src, sizeof(fentry.fn));
 		fentry.fnd = aStrdup(dst);
 		grfio_filelist_modify(&fentry);

@@ -1006,7 +1006,7 @@ static void mapif_mail_sendattach(int fd, int char_id, struct mail_message *msg)
 
 static void mapif_parse_mail_getattach(int fd)
 {
-	struct mail_message msg ZERO_INITIALIZED;
+	struct mail_message msg{};
 	int char_id = RFIFOL(fd, 2);
 	int mail_id = RFIFOL(fd, 6);
 
@@ -1602,7 +1602,7 @@ static void mapif_parse_rodex_requestinbox(int fd)
 	int8 flag = RFIFOB(fd, 10);
 	int8 opentype = RFIFOB(fd, 11);
 	int64 mail_id = RFIFOQ(fd, 12);
-	struct rodex_maillist mails ZERO_INITIALIZED;
+	struct rodex_maillist mails{};
 
 	VECTOR_INIT(mails);
 	if (flag == 0)
@@ -1705,7 +1705,7 @@ static void mapif_parse_rodex_updatemail(int fd)
  *------------------------------------------*/
 static void mapif_parse_rodex_send(int fd)
 {
-	struct rodex_message msg ZERO_INITIALIZED;
+	struct rodex_message msg{};
 
 	if (RFIFOW(fd,2) != 4 + sizeof(struct rodex_message))
 		return;
@@ -1840,7 +1840,7 @@ static int mapif_save_guild_storage_ack(int fd, int account_id, int guild_id, in
  */
 static int mapif_account_storage_load(int fd, int account_id, int storage_id, int storage_size)
 {
-	struct storage_data stor ZERO_INITIALIZED;
+	struct storage_data stor{};
 	int count = 0, i = 0, len = 0;
 
 	Assert_ret(account_id > 0);
@@ -1911,7 +1911,7 @@ static int mapif_parse_AccountStorageSave(int fd)
 	int storage_id = RFIFOW(fd, 8);
 
 	int i = 0, count = 0;
-	struct storage_data p_stor ZERO_INITIALIZED;
+	struct storage_data p_stor{};
 
 	Assert_ret(fd > 0);
 	Assert_ret(account_id > 0);
@@ -2003,7 +2003,7 @@ static int mapif_parse_SaveGuildStorage(int fd)
 		return 1;
 	}
 
-	struct guild_storage gstor ZERO_INITIALIZED;
+	struct guild_storage gstor{};
 
 	if (storage_capacity > 0) {
 		gstor.items.data = (struct item *)aCalloc(storage_capacity, sizeof gstor.items.data[0]);
@@ -2297,7 +2297,7 @@ STATIC_ASSERT((sizeof(struct achievement) * MAX_ACHIEVEMENT_DB + 8 <= UINT16_MAX
 static void mapif_parse_save_achievements(int fd)
 {
 	int size = 0, char_id = 0, payload_count = 0, i = 0;
-	struct char_achievements p ZERO_INITIALIZED;
+	struct char_achievements p{};
 
 	RFIFOHEAD(fd);
 	size = RFIFOW(fd, 2);
@@ -2309,7 +2309,7 @@ static void mapif_parse_save_achievements(int fd)
 	VECTOR_ENSURE(p, payload_count, 1);
 
 	for (i = 0; i < payload_count; i++) {
-		struct achievement ach ZERO_INITIALIZED;
+		struct achievement ach{};
 		memcpy(&ach, RFIFOP(struct achievement *, fd, 8 + i * sizeof(struct achievement)), sizeof(struct achievement));
 		VECTOR_PUSH(p, ach);
 	}

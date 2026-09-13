@@ -7359,7 +7359,7 @@ ACMD(mobinfo)
 			}
 #endif
 
-			struct item link_item ZERO_INITIALIZED;
+			struct item link_item{};
 			link_item.nameid = monster->dropitem[i].nameid;
 			StrBuf->AppendStr(&buf, " - ");
 			clif->format_itemlink(&buf, &link_item);
@@ -7387,7 +7387,7 @@ ACMD(mobinfo)
 					continue;
 				if (monster->mvpitem[i].p > 0) {
 					j++;
-					struct item link_item ZERO_INITIALIZED;
+					struct item link_item{};
 					link_item.nameid = monster->mvpitem[i].nameid;
 					StrBuf->AppendStr(&buf, j != 1 ? " - " : "");
 					clif->format_itemlink(&buf, &link_item);
@@ -7830,7 +7830,7 @@ ACMD(iteminfo)
 		struct item_data *item_data = item_array[i];
 		if (item_data != NULL) {
 
-			struct item link_item ZERO_INITIALIZED;
+			struct item link_item{};
 			link_item.nameid = item_data->nameid;
 			clif->format_itemlink(&buf, &link_item);
 

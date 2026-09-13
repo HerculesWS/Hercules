@@ -2497,7 +2497,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 
 	struct status_data *mstatus;
 	struct map_session_data *sd = BL_CAST(BL_PC, src);
-	struct map_session_data *tmpsd[DAMAGELOG_SIZE] ZERO_INITIALIZED;
+	struct map_session_data *tmpsd[DAMAGELOG_SIZE]{};
 	struct map_session_data *mvp_sd = sd, *second_sd = NULL, *third_sd = NULL;
 	struct item_data *id = NULL;
 
@@ -2505,7 +2505,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 		struct party_data *p;
 		int id,zeny;
 		unsigned int base_exp,job_exp;
-	} pt[DAMAGELOG_SIZE] ZERO_INITIALIZED_NESTED;
+	} pt[DAMAGELOG_SIZE]{};
 	int i, temp, count, m;
 	int dmgbltypes = 0;  // bitfield of all bl types, that caused damage to the mob and are eligible for exp distribution
 	unsigned int mvp_damage;
@@ -2916,7 +2916,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 
 		if (!(map->list[m].flag.nomvploot || type&1)) {
 			/* pose them randomly in the list -- so on 100% drop servers it wont always drop the same item */
-			struct mob_drop mdrop[MAX_MVP_DROP] ZERO_INITIALIZED_NESTED;
+			struct mob_drop mdrop[MAX_MVP_DROP]{};
 
 			for (i = 0; i < MAX_MVP_DROP; i++) {
 				int rpos;
@@ -2944,7 +2944,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 				if (rate <= 0 && !battle_config.drop_rate0item)
 					rate = 1;
 				if (rate > rnd()%10000) {
-					struct item item ZERO_INITIALIZED;
+					struct item item{};
 
 					item.nameid = mdrop[i].nameid;
 					item.identify = itemdb->isidentified2(data);
@@ -4978,7 +4978,7 @@ static int mob_db_validate_entry(struct mob_db *entry, int n, const char *source
  */
 static int mob_read_db_sub(struct config_setting_t *mobt, int n, const char *source)
 {
-	struct mob_db md ZERO_INITIALIZED;
+	struct mob_db md{};
 	struct config_setting_t *t = NULL;
 	const char *str = NULL;
 	int i32 = 0;
