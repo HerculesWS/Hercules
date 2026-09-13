@@ -121,7 +121,7 @@ static int itemdb_searchname_array_sub(union DBKey key, struct DBData data, va_l
 {
 	struct item_data *itd = (struct item_data *)DB->data2ptr(&data);
 	const char *str = va_arg(ap, const char *);
-	enum item_name_search_flag flag = va_arg(ap, enum item_name_search_flag);
+	enum item_name_search_flag flag = (enum item_name_search_flag)va_arg(ap, int);
 
 	nullpo_ret(str);
 
@@ -201,7 +201,7 @@ static int itemdb_searchname_array(struct item_data **data, const int size, cons
 		int dbmap_count = 0;
 		CREATE(dbmap_data, struct DBData *, dbmap_size);
 
-		dbmap_count = itemdb->other->getall(itemdb->other, dbmap_data, dbmap_size, itemdb->searchname_array_sub, str, flag);
+		dbmap_count = itemdb->other->getall(itemdb->other, dbmap_data, dbmap_size, itemdb->searchname_array_sub, str, (int)flag);
 		dbmap_size = min(dbmap_count, dbmap_size);
 
 		for (int i = 0; i < dbmap_size; ++i) {
@@ -212,7 +212,7 @@ static int itemdb_searchname_array(struct item_data **data, const int size, cons
 		results_count += dbmap_count;
 		aFree(dbmap_data);
 	} else { // We got all matches we can return, so we only need to count now.
-		results_count += itemdb->other->getall(itemdb->other, NULL, 0, itemdb->searchname_array_sub, str, flag);
+		results_count += itemdb->other->getall(itemdb->other, NULL, 0, itemdb->searchname_array_sub, str, (int)flag);
 	}
 
 	return results_count;

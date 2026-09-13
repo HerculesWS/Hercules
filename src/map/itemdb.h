@@ -623,7 +623,7 @@ struct item_data {
 
 #define itemdb_name(n)        (itemdb->search(n)->name)
 #define itemdb_jname(n)       (itemdb->search(n)->jname)
-#define itemdb_type(n)        (itemdb->search(n)->type)
+#define itemdb_type(n)        ((enum item_types)itemdb->search(n)->type)
 #define itemdb_atk(n)         (itemdb->search(n)->atk)
 #define itemdb_def(n)         (itemdb->search(n)->def)
 #define itemdb_subtype(n)     (itemdb->search(n)->subtype)

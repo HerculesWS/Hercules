@@ -717,7 +717,7 @@ static bool clif_send(const void *buf, int len, struct block_list *bl, enum send
 			break;
 
 		default:
-			ShowError("clif_send: Unrecognized type %u\n", type);
+			ShowError("clif_send: Unrecognized type %u\n", (unsigned int)type);
 			return false;
 	}
 
@@ -848,7 +848,7 @@ static void clif_dropflooritem(struct flooritem_data *fitem)
 	p.ITAID = fitem->bl.id;
 	p.ITID = ((view = itemdb_viewid(fitem->item_data.nameid)) > 0) ? view : fitem->item_data.nameid;
 #if PACKETVER >= 20130000 /* not sure date */
-	p.type = itemtype(itemdb_type(fitem->item_data.nameid));
+	p.type = itemtype((enum item_types)itemdb_type(fitem->item_data.nameid));
 #endif
 	p.IsIdentified = fitem->item_data.identify ? 1 : 0;
 	p.xPos = fitem->bl.x;
@@ -1181,7 +1181,7 @@ static void clif_set_unit_idle(struct block_list *bl, struct map_session_data *t
 	}
 	if (bl->type == BL_MOB) {
 		const struct mob_data *md = BL_UCCAST(BL_MOB, bl);
-		p.isBoss = (md->spawn != NULL) ? md->spawn->state.boss : BTYPE_NONE;
+		p.isBoss = (md->spawn != NULL) ? md->spawn->state.boss : (uint8)BTYPE_NONE;
 	} else {
 		p.isBoss = BTYPE_NONE;
 	}
@@ -1339,7 +1339,7 @@ static void clif_spawn_unit(struct block_list *bl, enum send_target target)
 	}
 	if (bl->type == BL_MOB) {
 		const struct mob_data *md = BL_UCCAST(BL_MOB, bl);
-		p.isBoss = (md->spawn != NULL) ? md->spawn->state.boss : BTYPE_NONE;
+		p.isBoss = (md->spawn != NULL) ? md->spawn->state.boss : (uint8)BTYPE_NONE;
 	} else {
 		p.isBoss = BTYPE_NONE;
 	}
@@ -1443,7 +1443,7 @@ static void clif_set_unit_walking(struct block_list *bl, struct map_session_data
 	}
 	if (bl->type == BL_MOB) {
 		const struct mob_data *md = BL_UCCAST(BL_MOB, bl);
-		p.isBoss = (md->spawn != NULL) ? md->spawn->state.boss : BTYPE_NONE;
+		p.isBoss = (md->spawn != NULL) ? md->spawn->state.boss : (uint8)BTYPE_NONE;
 	} else {
 		p.isBoss = BTYPE_NONE;
 	}
@@ -2225,7 +2225,7 @@ static void clif_buylist(struct map_session_data *sd, struct npc_data *nd)
 
 			p->items[c].price = val;
 			p->items[c].discountPrice = pc->modifybuyvalue(sd, val, id->flag.ignore_discount);
-			p->items[c].itemType = itemtype(id->type);
+			p->items[c].itemType = itemtype((enum item_types)id->type);
 			p->items[c].itemId = (id->view_id > 0) ? id->view_id : id->nameid;
 #if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 			p->items[c].viewSprite = id->view_sprite;
@@ -2864,7 +2864,7 @@ static void clif_additem(struct map_session_data *sd, int n, int amount, int fai
 		p.refiningLevel =sd->status.inventory[n].refine;
 		clif->addcards(&p.slot, &sd->status.inventory[n]);
 		p.location = pc->equippoint(sd,n);
-		p.type = itemtype(sd->inventory_data[n]->type);
+		p.type = itemtype((enum item_types)sd->inventory_data[n]->type);
 #if PACKETVER >= 20061218
 		p.HireExpireDate = sd->status.inventory[n].expire_time;
 #endif
@@ -2955,7 +2955,7 @@ static void clif_item_sub(unsigned char *buf, int n, struct item *i, struct item
 		WBUFW(buf,n)=id->view_id;
 	else
 		WBUFW(buf,n)=i->nameid;
-	WBUFB(buf,n+2)=itemtype(id->type);
+	WBUFB(buf,n+2)=itemtype((enum item_types)id->type);
 	WBUFB(buf,n+3)=i->identify;
 	if (equip >= 0) { //Equippable item
 		WBUFW(buf,n+4)=equip;
@@ -2984,7 +2984,7 @@ static void clif_item_equip(short idx, struct EQUIPITEM_INFO *p, struct item *it
 	else
 		p->ITID = it->nameid;
 
-	p->type = itemtype(id->type);
+	p->type = itemtype((enum item_types)id->type);
 
 #if PACKETVER < 20120925
 	p->IsIdentified = it->identify ? 1 : 0;
@@ -3039,7 +3039,7 @@ static void clif_item_normal(short idx, struct NORMALITEM_INFO *p, struct item *
 	else
 		p->ITID = i->nameid;
 
-	p->type = itemtype(id->type);
+	p->type = itemtype((enum item_types)id->type);
 
 #if PACKETVER < 20120925
 	p->IsIdentified = i->identify ? 1 : 0;
@@ -4893,7 +4893,7 @@ static void clif_storageitemadded(struct map_session_data *sd, struct item *i, i
 	p->amount = amount;
 	p->itemId = (view > 0) ? view : i->nameid;
 #if PACKETVER >= 5
-	p->itemType = itemtype(itemdb_type(i->nameid));
+	p->itemType = itemtype((enum item_types)itemdb_type(i->nameid));
 #endif
 	p->identified = i->identify;
 	p->damaged = i->attribute;
@@ -7195,7 +7195,7 @@ static void clif_vendinglist(struct map_session_data *sd, unsigned int id, struc
 		p->items[i].price = vending_items[i].value;
 		p->items[i].amount = vending_items[i].amount;
 		p->items[i].index = vending_items[i].index + 2;
-		p->items[i].itemType = itemtype(data->type);
+		p->items[i].itemType = itemtype((enum item_types)data->type);
 		p->items[i].itemId = (data->view_id > 0) ? data->view_id : vsd->status.cart[index].nameid;
 		p->items[i].identified = vsd->status.cart[index].identify;
 		p->items[i].damaged = vsd->status.cart[index].attribute;
@@ -7262,7 +7262,7 @@ static void clif_openvending(struct map_session_data *sd, int id, struct s_vendi
 		p->items[i].price = vending_items[i].value;
 		p->items[i].index = vending_items[i].index + 2;
 		p->items[i].amount = vending_items[i].amount;
-		p->items[i].itemType = itemtype(data->type);
+		p->items[i].itemType = itemtype((enum item_types)data->type);
 		p->items[i].itemId = (data->view_id > 0) ? data->view_id : sd->status.cart[index].nameid;
 		p->items[i].identified = sd->status.cart[index].identify;
 		p->items[i].damaged = sd->status.cart[index].attribute;
@@ -10170,14 +10170,14 @@ static void clif_skillname_ack(int fd, struct block_list *bl)
 static void clif_itemname_ack(int fd, struct block_list *bl)
 {
 	nullpo_retv(bl);
-	ShowError("clif_itemname_ack: bad type %u(%d)\n", bl->type, bl->id);
+	ShowError("clif_itemname_ack: bad type %u(%d)\n", (unsigned int)bl->type, bl->id);
 	Assert_retv(0);
 }
 
 static void clif_unknownname_ack(int fd, struct block_list *bl)
 {
 	nullpo_retv(bl);
-	ShowError("clif_blname_ack: bad type %u(%d)\n", bl->type, bl->id);
+	ShowError("clif_blname_ack: bad type %u(%d)\n", (unsigned int)bl->type, bl->id);
 	Assert_retv(0);
 }
 
@@ -12116,10 +12116,8 @@ static void clif_parse_ChangeDir(int fd, struct map_session_data *sd) __attribut
 /// There are various variants of this packet, some of them have padding between fields.
 static void clif_parse_ChangeDir(int fd, struct map_session_data *sd)
 {
-	unsigned char headdir, dir;
-
-	headdir = RFIFOB(fd,packet_db[RFIFOW(fd,0)].pos[0]);
-	dir = RFIFOB(fd,packet_db[RFIFOW(fd,0)].pos[1]);
+	unsigned char headdir = RFIFOB(fd,packet_db[RFIFOW(fd,0)].pos[0]);
+	enum unit_dir dir = (enum unit_dir)RFIFOB(fd,packet_db[RFIFOW(fd,0)].pos[1]);
 	pc_setdir(sd, dir, headdir);
 
 	clif->changed_dir(&sd->bl, AREA_WOS);
@@ -12132,7 +12130,7 @@ static void clif_parse_Emotion(int fd, struct map_session_data *sd) __attribute_
 ///     @see enum emotion_type
 static void clif_parse_Emotion(int fd, struct map_session_data *sd)
 {
-	enum emotion_type emoticon = RFIFOB(fd,packet_db[RFIFOW(fd,0)].pos[0]);
+	enum emotion_type emoticon = (enum emotion_type)RFIFOB(fd,packet_db[RFIFOW(fd,0)].pos[0]);
 
 	if (battle_config.basic_skill_check == 0 || pc->check_basicskill(sd, 2)) {
 		if (emoticon == E_MUTE) {// prevent use of the mute emote [Valaris]
@@ -12150,7 +12148,7 @@ static void clif_parse_Emotion(int fd, struct map_session_data *sd)
 		pc->update_idle_time(sd, BCIDLE_EMOTION);
 
 		if(battle_config.client_reshuffle_dice && emoticon>=E_DICE1 && emoticon<=E_DICE6) {// re-roll dice
-			emoticon = rnd()%6+E_DICE1;
+			emoticon = (enum emotion_type)(rnd() % 6 + E_DICE1);
 		}
 
 		clif->emotion(&sd->bl, emoticon);
@@ -17260,7 +17258,7 @@ static void clif_parse_ranklist(int fd, struct map_session_data *sd) __attribute
  * */
 static void clif_parse_ranklist(int fd, struct map_session_data *sd)
 {
-	int16 type = RFIFOW(fd, 2); //type
+	enum fame_list_type type = (enum fame_list_type)RFIFOW(fd, 2); //type
 
 	switch( type ) {
 		case RANKTYPE_BLACKSMITH:
@@ -18632,7 +18630,7 @@ static void clif_cashshop_show(struct map_session_data *sd, struct npc_data *nd)
 				continue;
 			p->items[c].price = shop[i].value;
 			p->items[c].discountPrice = shop[i].value;
-			p->items[c].itemType = itemtype(id->type);
+			p->items[c].itemType = itemtype((enum item_types)id->type);
 			p->items[c].itemId = (id->view_id > 0) ? id->view_id : id->nameid;
 #ifdef ENABLE_OLD_CASHSHOP_PREVIEW_PATCH
 			p->items[c].location = pc->item_equippoint(sd, id);
@@ -18910,7 +18908,7 @@ static void clif_parse_cz_config(int fd, struct map_session_data *sd)
 	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
 		return;
 
-	enum CZ_CONFIG type = RFIFOL(fd, 2);
+	enum CZ_CONFIG type = (enum CZ_CONFIG)RFIFOL(fd, 2);
 	int flag = RFIFOL(fd, 6);
 
 	switch (type) {
@@ -18940,7 +18938,7 @@ static void clif_parse_cz_config(int fd, struct map_session_data *sd)
 		// not implemented yet
 		break;
 	default:
-		ShowWarning("clif_parse_cz_config: Unsupported type has been received (%u).\n", type);
+		ShowWarning("clif_parse_cz_config: Unsupported type has been received (%u).\n", (unsigned int)type);
 		return;
 	}
 	clif->zc_config(sd, type, flag);
@@ -19501,7 +19499,7 @@ static void clif_parse_mercenary_action(int fd, struct map_session_data *sd)
 static void clif_mercenary_message(struct map_session_data *sd, int message)
 {
 #if PACKETVER >= 20070227
-	clif->msgtable(sd, MSG_MER_FINISH + message);
+	clif->msgtable(sd, (enum clif_messages)(MSG_MER_FINISH + message));
 #endif
 }
 
@@ -19855,7 +19853,7 @@ static void clif_party_show_picker(struct map_session_data *sd, struct item *ite
 	p.refine = item_data->refine;
 	clif->addcards(&p.slot, item_data);
 	p.location = id->equip; // equip location
-	p.itemType = itemtype(id->type); // item type
+	p.itemType = itemtype((enum item_types)id->type); // item type
 #if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 	p.grade = item_data->grade;
 #endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
@@ -20929,7 +20927,7 @@ static void clif_parse_SkillSelectMenu(int fd, struct map_session_data *sd)
 		return;
 
 	if (pc_istrading_except_npc(sd) || sd->state.prevend != 0 || (sd->npc_id != 0 && sd->state.using_megaphone == 0)) {
-		clif->skill_fail(sd, sd->ud.skill_id, 0, 0, 0);
+		clif->skill_fail(sd, sd->ud.skill_id, USESKILL_FAIL_LEVEL, 0, 0);
 		clif_menuskill_clear(sd);
 		return;
 	}
@@ -20943,7 +20941,7 @@ static void clif_parse_SkillSelectMenu(int fd, struct map_session_data *sd)
 	 */
 	if (p->selectedSkillId == 0 || skill->get_index_sub(p->selectedSkillId, false) == 0) {
 		status_change_end(&sd->bl, SC_STOP, INVALID_TIMER);
-		clif->skill_fail(sd, sd->ud.skill_id, 0, 0, 0);
+		clif->skill_fail(sd, sd->ud.skill_id, USESKILL_FAIL_LEVEL, 0, 0);
 		clif_menuskill_clear(sd);
 		return;
 	}
@@ -22099,7 +22097,7 @@ static void clif_npc_market_open(struct map_session_data *sd, struct npc_data *n
 			packet->list[c].nameid = shop[i].nameid;
 			packet->list[c].price  = shop[i].value;
 			packet->list[c].qty    = shop[i].qty;
-			packet->list[c].type   = itemtype(id->type);
+			packet->list[c].type   = itemtype((enum item_types)id->type);
 			packet->list[c].weight = id->weight * 10;
 #if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 			packet->list[c].location = pc->item_equippoint(sd, id);
@@ -22299,7 +22297,7 @@ static void clif_parse_RouletteGenerate(int fd, struct map_session_data *sd)
 	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
 		return;
 
-	unsigned char result = GENERATE_ROULETTE_SUCCESS;
+	enum GENERATE_ROULETTE_ACK result = GENERATE_ROULETTE_SUCCESS;
 	short stage = sd->roulette.stage;
 
 	if( !battle_config.feature_roulette ) {
@@ -23262,7 +23260,7 @@ static void clif_rodex_add_item_result(struct map_session_data *sd, int16 idx, i
 	packet->index = idx + 2;
 	packet->count = amount;
 	packet->itemId = sd->status.inventory[idx].nameid;
-	packet->type = itemtype(sd->inventory_data[idx]->type);
+	packet->type = itemtype((enum item_types)sd->inventory_data[idx]->type);
 	packet->IsIdentified = sd->status.inventory[idx].identify ? 1 : 0;
 	packet->IsDamaged = (sd->status.inventory[idx].attribute & ATTR_BROKEN) != 0 ? 1 : 0;
 	packet->refiningLevel = sd->status.inventory[idx].refine;
@@ -23678,7 +23676,7 @@ static void clif_rodex_read_mail(struct map_session_data *sd, int8 opentype, str
 		memset(item, 0x0, sizeof(struct PACKET_ZC_ACK_READ_RODEX_SUB));
 		item->ITID = it->nameid;
 		item->count = it->amount;
-		item->type = itemtype(itemdb->search(it->nameid)->type);
+		item->type = itemtype((enum item_types)itemdb->search(it->nameid)->type);
 		item->IsIdentified = it->identify ? 1 : 0;
 		item->IsDamaged = (it->attribute & ATTR_BROKEN) != 0 ? 1 : 0;
 		item->refiningLevel = it->refine;
@@ -24010,7 +24008,7 @@ static void clif_parse_open_ui_request(int fd, struct map_session_data *sd)
 
 	const struct PACKET_CZ_OPEN_UI *p = RP2PTR(struct PACKET_CZ_OPEN_UI *, fd);
 
-	clif->open_ui(sd, p->UIType);
+	clif->open_ui(sd, (enum cz_ui_types)p->UIType);
 }
 
 /**
@@ -24065,7 +24063,7 @@ static void clif_open_ui_send1(struct map_session_data *sd, enum zc_ui_types ui_
 	case zc_ui_unused:
 	case zc_ui_unused9:
 	default:
-		ShowWarning("clif_open_ui_send1: Requested UI (%u) is not implemented yet.\n", ui_type);
+		ShowWarning("clif_open_ui_send1: Requested UI (%u) is not implemented yet.\n", (unsigned int)ui_type);
 		return;
 	}
 
@@ -24092,7 +24090,7 @@ static void clif_open_ui_send2(struct map_session_data *sd, enum zc_ui_types ui_
 	if (ui_type == ZC_ENCHANT_UI) {
 		p.data = data;
 	} else {
-		ShowWarning("clif_open_ui_send2: Requested UI (%u) is not implemented yet.\n", ui_type);
+		ShowWarning("clif_open_ui_send2: Requested UI (%u) is not implemented yet.\n", (unsigned int)ui_type);
 		return;
 	}
 
@@ -24164,7 +24162,7 @@ static void clif_open_ui_send(struct map_session_data *sd, enum zc_ui_types ui_t
 	case zc_ui_unused:
 	case zc_ui_unused9:
 	default:
-		ShowWarning("clif_open_ui_send: Requested UI (%u) is not implemented yet.\n", ui_type);
+		ShowWarning("clif_open_ui_send: Requested UI (%u) is not implemented yet.\n", (unsigned int)ui_type);
 		return;
 	}
 #endif  // 20151202
@@ -24196,13 +24194,13 @@ static void clif_open_ui(struct map_session_data *sd, enum cz_ui_types uiType)
 #endif
 	case CZ_ZENY_LOTTO_UI:  // [4144] packet version unknown because unused
 	default:
-		ShowWarning("clif_open_ui: Requested UI (%u) is not implemented yet.\n", uiType);
+		ShowWarning("clif_open_ui: Requested UI (%u) is not implemented yet.\n", (unsigned int)uiType);
 		return;
 	}
 
 	clif->open_ui_send(sd, send_ui_type);
 #else
-	ShowWarning("clif_open_ui: Requested UI (%u) is not implemented yet.\n", uiType);
+	ShowWarning("clif_open_ui: Requested UI (%u) is not implemented yet.\n", (unsigned int)uiType);
 	return;
 #endif
 }
@@ -24585,7 +24583,7 @@ static void clif_npc_barter_open(struct map_session_data *sd, struct npc_data *n
 				continue;
 
 			packet->list[c].nameid = shop[i].nameid;
-			packet->list[c].type   = itemtype(id->type);
+			packet->list[c].type   = itemtype((enum item_types)id->type);
 			packet->list[c].amount = shop[i].qty;
 			packet->list[c].currencyNameid = shop[i].value;
 			packet->list[c].currencyAmount = shop[i].value2;
@@ -24677,7 +24675,7 @@ static void clif_npc_expanded_barter_open(struct map_session_data *sd, struct np
 				continue;
 
 			item->nameid = shop[i].nameid;
-			item->type   = itemtype(id->type);
+			item->type   = itemtype((enum item_types)id->type);
 			item->amount = shop[i].qty;
 #if PACKETVER_MAIN_NUM >= 20191224 || PACKETVER_RE_NUM >= 20191224 || PACKETVER_ZERO_NUM >= 20200115
 			item->weight = id->weight * 10;
@@ -24710,7 +24708,7 @@ static void clif_npc_expanded_barter_open(struct map_session_data *sd, struct np
 				else
 					packet_currency->refine_level = currency->refine;
 				packet_currency->amount = currency->amount;
-				packet_currency->type = itemtype(id2->type);
+				packet_currency->type = itemtype((enum item_types)id2->type);
 				currencies_count ++;
 				item->currency_count ++;
 			}
@@ -24866,7 +24864,7 @@ static void clif_AddItemRefineryUIAck(struct map_session_data *sd, int item_inde
 	p->itemIndex = item_index + 2;
 	p->blacksmithBlessing = req->blacksmith_blessing;
 
-	int weapon_level = itemdb_wlv(sd->status.inventory[item_index].nameid);
+	enum refine_type weapon_level = (enum refine_type)itemdb_wlv(sd->status.inventory[item_index].nameid);
 	for (int i = 0; i < req->req_count; ++i) {
 		p->req[i].chance = refine->get_refine_chance(weapon_level, sd->status.inventory[item_index].refine, req->req[i].type);
 		p->req[i].itemId = req->req[i].nameid;

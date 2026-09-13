@@ -505,7 +505,7 @@ static void pc_addfame(struct map_session_data *sd, int ranktype, int count)
 	if (sd->status.fame > MAX_FAME)
 		sd->status.fame = MAX_FAME;
 
-	clif->update_rankingpoint(sd, ranktype, count);
+	clif->update_rankingpoint(sd, (enum fame_list_type)ranktype, count);
 	chrif->updatefamelist(sd);
 }
 
@@ -580,7 +580,7 @@ static int pc_setrestartvalue(struct map_session_data *sd, int type)
 
 	if (type&1) {
 		//Normal resurrection
-		status->heal(&sd->bl, bst->hp, 0, STATUS_HEAL_FORCED | STATUS_HEAL_ALLOWREVIVE);
+		status->heal(&sd->bl, bst->hp, 0, (enum status_heal_flag)(STATUS_HEAL_FORCED | STATUS_HEAL_ALLOWREVIVE));
 		if( st->sp < bst->sp )
 			status->set_sp(&sd->bl, bst->sp, STATUS_HEAL_FORCED);
 	} else { //Just for saving on the char-server (with values as if respawned)
@@ -1338,7 +1338,7 @@ static bool pc_authok(struct map_session_data *sd, int login_id2, time_t expirat
 	sd->bg_queue.arena = NULL;
 	sd->bg_queue.ready = 0;
 	sd->bg_queue.client_has_bg_data = 0;
-	sd->bg_queue.type = 0;
+	sd->bg_queue.type = BGQT_INVALID;
 
 	VECTOR_INIT(sd->auto_cast); // Initialize auto-cast vector.
 	VECTOR_INIT(sd->channels);
@@ -1584,7 +1584,7 @@ static int pc_reg_received(struct map_session_data *sd)
 
 	pc->load_combo(sd);
 
-	status_calc_pc(sd,SCO_FIRST|SCO_FORCE);
+	status_calc_pc(sd, (enum e_status_calc_opt)(SCO_FIRST | SCO_FORCE));
 	chrif->scdata_request(sd->status.account_id, sd->status.char_id);
 
 	if (sd->status.clan_id)
@@ -6133,7 +6133,7 @@ static int pc_setpos(struct map_session_data *sd, unsigned short map_index, int 
 	}
 
 	if (battle_config.player_warp_keep_direction == 0)
-		sd->ud.dir = 0; // Make character facing north.
+		sd->ud.dir = UNIT_DIR_NORTH; // Make character facing north.
 
 	if (sd->bl.prev != NULL) {
 		unit->remove_map_pc(sd, clrtype);
@@ -7141,7 +7141,7 @@ static int pc_setstat(struct map_session_data *sd, int type, int val)
 			return -1;
 	}
 
- 	achievement->validate_stats(sd, type, val); // Achievements [Smokexyz/Hercules]
+	achievement->validate_stats(sd, (enum status_point_types)type, val); // Achievements [Smokexyz/Hercules]
 
 	return val;
 }
@@ -7258,7 +7258,7 @@ static bool pc_statusup(struct map_session_data *sd, int type, int increase)
 	status_calc_pc(sd, SCO_NONE);
 
 	// update increase cost indicator
-	clif->updatestatus(sd, SP_USTR + type-SP_STR);
+	clif->updatestatus(sd, (enum status_point_types)(SP_USTR + type - SP_STR));
 
 	// update statpoint count
 	clif->updatestatus(sd, SP_STATUSPOINT);
@@ -7266,7 +7266,7 @@ static bool pc_statusup(struct map_session_data *sd, int type, int increase)
 	// update stat value
 	clif->statusupack(sd, type, 1, final_value); // required
 	if (final_value > 255)
-		clif->updatestatus(sd, type); // send after the 'ack' to override the truncated value
+		clif->updatestatus(sd, (enum status_point_types)type); // send after the 'ack' to override the truncated value
 
 	return true;
 }
@@ -7304,12 +7304,12 @@ static int pc_statusup2(struct map_session_data *sd, int type, int val)
 
 	// update increase cost indicator
 	if( need != pc->need_status_point(sd,type,1) )
-		clif->updatestatus(sd, SP_USTR + type-SP_STR);
+		clif->updatestatus(sd, (enum status_point_types)(SP_USTR + type - SP_STR));
 
 	// update stat value
 	clif->statusupack(sd,type,1,val); // required
 	if( val > 255 )
-		clif->updatestatus(sd,type); // send after the 'ack' to override the truncated value
+		clif->updatestatus(sd, (enum status_point_types)type); // send after the 'ack' to override the truncated value
 
 	return val;
 }
@@ -8682,7 +8682,7 @@ static int pc_setparam(struct map_session_data *sd, int type, int64 val)
 		ShowError("pc_setparam: Attempted to set unknown parameter '%d'.\n", type);
 		return 0;
 	}
-	clif->updatestatus(sd,type);
+	clif->updatestatus(sd, (enum status_point_types)type);
 
 	return 1;
 }
@@ -9128,7 +9128,7 @@ static int pc_changelook(struct map_session_data *sd, int type, int val)
 			sd->status.body=val;
 			break;
 	}
-	clif->changelook(&sd->bl,type,val);
+	clif->changelook(&sd->bl, (enum look)type, val);
 	return 0;
 }
 
@@ -9262,9 +9262,9 @@ static int pc_setoption(struct map_session_data *sd, int type)
 
 		// End all SCs that can be reset when mado is taken off
 		for( i = 0; i < SC_MAX; i++ ) {
-			if ( !sd->sc.data[i] || !status->get_sc_type(i) )
+			if ( !sd->sc.data[i] || !status->get_sc_type((enum sc_type)i) )
 				continue;
-			if ( status->get_sc_type(i)&SC_MADO_NO_RESET )
+			if ( status->get_sc_type((enum sc_type)i)&SC_MADO_NO_RESET )
 				continue;
 			switch (i) {
 				case SC_BERSERK:
@@ -10420,11 +10420,11 @@ static void pc_unequipitem_pos_sub(struct map_session_data *sd, int pos_combinat
 	pos_costume &= ~map->list[sd->bl.m].flag.noviewid;
 	if ((pos_combination & pos) != 0 && pc->checkequip(sd, pos_costume) == -1) {
 		*look = 0;
-		clif->changelook(&sd->bl, look_type, 0);
+		clif->changelook(&sd->bl, (enum look)look_type, 0);
 	}
 	if ((pos_combination & pos_costume) != 0 || pos_costume == 0) {
 		*look = 0;
-		clif->changelook(&sd->bl, look_type, 0);
+		clif->changelook(&sd->bl, (enum look)look_type, 0);
 
 		int equipped_item = pc->checkequip(sd, pos); // Item that was overlapped by unequipped costume
 		if (equipped_item >= 0) { // There might still be costumes overlapping
@@ -10664,7 +10664,7 @@ static int pc_checkitem(struct map_session_data *sd)
 					sd->status.inventory[i].unique_id = itemdb->unique_id(sd);
 			}
 
-			sd->itemcheck &= ~PCCHECKITEM_INVENTORY;
+			sd->itemcheck = (enum pc_checkitem_types)(sd->itemcheck & ~PCCHECKITEM_INVENTORY);
 		}
 
 		if (sd->itemcheck & PCCHECKITEM_CART) {
@@ -10682,7 +10682,7 @@ static int pc_checkitem(struct map_session_data *sd)
 					sd->status.cart[i].unique_id = itemdb->unique_id(sd);
 			}
 
-			sd->itemcheck &= ~PCCHECKITEM_CART;
+			sd->itemcheck = (enum pc_checkitem_types)(sd->itemcheck & ~PCCHECKITEM_CART);
 		}
 
 		if ((sd->itemcheck & PCCHECKITEM_STORAGE) != 0) {
@@ -10711,7 +10711,7 @@ static int pc_checkitem(struct map_session_data *sd)
 
 			storage->close(sd);
 
-			sd->itemcheck &= ~PCCHECKITEM_STORAGE;
+			sd->itemcheck = (enum pc_checkitem_types)(sd->itemcheck & ~PCCHECKITEM_STORAGE);
 		}
 
 		if (sd->guild && sd->itemcheck & PCCHECKITEM_GSTORAGE) {
@@ -10734,7 +10734,7 @@ static int pc_checkitem(struct map_session_data *sd)
 				}
 			}
 
-			sd->itemcheck &= ~PCCHECKITEM_GSTORAGE;
+			sd->itemcheck = (enum pc_checkitem_types)(sd->itemcheck & ~PCCHECKITEM_GSTORAGE);
 		}
 	}
 
@@ -11882,7 +11882,7 @@ static int pc_read_attr_fix_db_level(struct config_setting_t *def_lv, enum eleme
 		}
 
 		if (!config_setting_is_number(atk_attr)) {
-			ShowError("%s: Damage modifier for element '%s' (%u) attacked by '%s' (%d) is not numeric. Skipping entry...\n", __func__, def_ele_name, def_ele, atk_ele_name, atk_ele);
+			ShowError("%s: Damage modifier for element '%s' (%u) attacked by '%s' (%d) is not numeric. Skipping entry...\n", __func__, def_ele_name, (unsigned int)def_ele, atk_ele_name, atk_ele);
 			continue;
 		}
 
@@ -12941,8 +12941,8 @@ static void do_init_pc(bool minimal)
 	pcg->init();
 
 	pc->sc_display_ers = ers_new(sizeof(struct sc_display_entry), "pc.c:sc_display_ers", ERS_OPT_FLEX_CHUNK);
-	pc->num_reg_ers = ers_new(sizeof(struct script_reg_num), "pc.c::num_reg_ers", ERS_OPT_CLEAN|ERS_OPT_FLEX_CHUNK);
-	pc->str_reg_ers = ers_new(sizeof(struct script_reg_str), "pc.c::str_reg_ers", ERS_OPT_CLEAN|ERS_OPT_FLEX_CHUNK);
+	pc->num_reg_ers = ers_new(sizeof(struct script_reg_num), "pc.c::num_reg_ers", (enum ERSOptions)(ERS_OPT_CLEAN | ERS_OPT_FLEX_CHUNK));
+	pc->str_reg_ers = ers_new(sizeof(struct script_reg_str), "pc.c::str_reg_ers", (enum ERSOptions)(ERS_OPT_CLEAN | ERS_OPT_FLEX_CHUNK));
 
 	ers_chunk_size(pc->sc_display_ers, 150);
 	ers_chunk_size(pc->num_reg_ers, 300);

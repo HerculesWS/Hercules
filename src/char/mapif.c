@@ -784,7 +784,7 @@ static int mapif_parse_BreakGuild(int fd, int guild_id)
  **/
 static int mapif_parse_GuildBasicInfoChange(int fd, int guild_id, int type, const void *data, int len)
 {
-	inter_guild->update_basic_info(guild_id, type, data, len);
+	inter_guild->update_basic_info(guild_id, (enum guild_basic_info)type, data, len);
 	// Information is already sent in mapif->guild_info
 	//mapif->guild_basicinfochanged(guild_id,type,data,len);
 	return 0;
@@ -793,7 +793,7 @@ static int mapif_parse_GuildBasicInfoChange(int fd, int guild_id, int type, cons
 // Modification of the guild
 static int mapif_parse_GuildMemberInfoChange(int fd, int guild_id, int account_id, int char_id, int type, const char *data, int len)
 {
-	inter_guild->update_member_info(guild_id, account_id, char_id, type, data, len);
+	inter_guild->update_member_info(guild_id, account_id, char_id, (enum guild_member_info)type, data, len);
 	return 0;
 }
 

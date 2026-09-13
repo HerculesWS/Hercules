@@ -2082,7 +2082,7 @@ static int map_quit(struct map_session_data *sd)
 	if( sd->sc.count ) {
 		//Status that are not saved...
 		for(i=0; i < SC_MAX; i++){
-			if ( status->get_sc_type(i)&SC_NO_SAVE ) {
+			if ( status->get_sc_type((enum sc_type)i)&SC_NO_SAVE ) {
 				if ( !sd->sc.data[i] )
 					continue;
 				switch( i ){
@@ -3765,7 +3765,7 @@ static void map_zonedb_reload(void)
 	map->zone_db_clear();
 
 	// then reload everything from scratch:
-	map->zone_db = strdb_alloc(DB_OPT_DUP_KEY | DB_OPT_RELEASE_DATA, MAP_ZONE_NAME_LENGTH);
+	map->zone_db = strdb_alloc((enum DBOptions)(DB_OPT_DUP_KEY | DB_OPT_RELEASE_DATA), MAP_ZONE_NAME_LENGTH);
 	map->read_zone_db();
 }
 
@@ -4200,12 +4200,11 @@ static bool map_config_read_map_list(const char *filename, struct config_t *conf
 {
 	struct config_setting_t *setting = NULL;
 	int i, count = 0;
-	struct DBMap *deleted_maps;
 
 	nullpo_retr(false, filename);
 	nullpo_retr(false, config);
 
-	deleted_maps = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_ALLOW_NULL_DATA, MAP_NAME_LENGTH);
+	struct DBMap *deleted_maps = strdb_alloc((enum DBOptions)(DB_OPT_DUP_KEY | DB_OPT_ALLOW_NULL_DATA), MAP_NAME_LENGTH);
 
 	// Remove maps
 	if ((setting = libconfig->lookup(config, "map_configuration/map_removed")) != NULL) {
@@ -4339,14 +4338,12 @@ static bool map_read_npclist(const char *filename, bool imported)
 	bool retval = true;
 	bool remove_all = false;
 
-	struct DBMap *deleted_npcs;
-
 	nullpo_retr(false, filename);
 
 	if (!libconfig->load_file(&config, filename))
 		return false;
 
-	deleted_npcs = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_ALLOW_NULL_DATA, 0);
+	struct DBMap *deleted_npcs = strdb_alloc((enum DBOptions)(DB_OPT_DUP_KEY | DB_OPT_ALLOW_NULL_DATA), 0);
 
 	// Remove NPCs
 	if ((setting = libconfig->lookup(&config, "npc_removed_list")) != NULL) {
@@ -5897,26 +5894,26 @@ static enum bl_type map_zone_bl_type(const char *entry, enum map_zone_skill_subt
 	while (parse != NULL) {
 		normalize_name(parse," ");
 		if( strcmpi(parse,"player") == 0 )
-			bl |= BL_PC;
+			bl = (enum bl_type)(bl | BL_PC);
 		else if( strcmpi(parse,"homun") == 0 )
-			bl |= BL_HOM;
+			bl = (enum bl_type)(bl | BL_HOM);
 		else if( strcmpi(parse,"mercenary") == 0 )
-			bl |= BL_MER;
+			bl = (enum bl_type)(bl | BL_MER);
 		else if( strcmpi(parse,"monster") == 0 )
-			bl |= BL_MOB;
+			bl = (enum bl_type)(bl | BL_MOB);
 		else if( strcmpi(parse,"clone") == 0 ) {
-			bl |= BL_MOB;
-			*subtype |= MZS_CLONE;
+			bl = (enum bl_type)(bl | BL_MOB);
+			*subtype = (enum map_zone_skill_subtype)(*subtype | MZS_CLONE);
 		} else if( strcmpi(parse,"mob_boss") == 0 ) {
-			bl |= BL_MOB;
-			*subtype |= MZS_BOSS;
+			bl = (enum bl_type)(bl | BL_MOB);
+			*subtype = (enum map_zone_skill_subtype)(*subtype | MZS_BOSS);
 		} else if( strcmpi(parse,"elemental") == 0 )
-			bl |= BL_ELEM;
+			bl = (enum bl_type)(bl | BL_ELEM);
 		else if( strcmpi(parse,"pet") == 0 )
-			bl |= BL_PET;
+			bl = (enum bl_type)(bl | BL_PET);
 		else if( strcmpi(parse,"all") == 0 ) {
-			bl |= BL_ALL;
-			*subtype |= MZS_ALL;
+			bl = (enum bl_type)(bl | BL_ALL);
+			*subtype = (enum map_zone_skill_subtype)(*subtype | MZS_ALL);
 		} else if( strcmpi(parse,"none") == 0 ) {
 			bl = BL_NUL;
 		} else {
@@ -7035,13 +7032,13 @@ int do_init(int argc, char *argv[])
 	map->nick_db   = idb_alloc(DB_OPT_BASE);
 	map->charid_db = idb_alloc(DB_OPT_BASE);
 	map->regen_db  = idb_alloc(DB_OPT_BASE); // efficient status_natural_heal processing
-	map->iwall_db  = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, 2*NAME_LENGTH+2+1); // [Zephyrus] Invisible Walls
-	map->zone_db   = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, MAP_ZONE_NAME_LENGTH);
+	map->iwall_db  = strdb_alloc((enum DBOptions)(DB_OPT_DUP_KEY | DB_OPT_RELEASE_DATA), 2*NAME_LENGTH+2+1); // [Zephyrus] Invisible Walls
+	map->zone_db   = strdb_alloc((enum DBOptions)(DB_OPT_DUP_KEY | DB_OPT_RELEASE_DATA), MAP_ZONE_NAME_LENGTH);
 
-	map->iterator_ers = ers_new(sizeof(struct s_mapiterator),"map.c::map_iterator_ers",ERS_OPT_CLEAN|ERS_OPT_FLEX_CHUNK);
+	map->iterator_ers = ers_new(sizeof(struct s_mapiterator), "map.c::map_iterator_ers", (enum ERSOptions)(ERS_OPT_CLEAN | ERS_OPT_FLEX_CHUNK));
 	ers_chunk_size(map->iterator_ers, 25);
 
-	map->flooritem_ers = ers_new(sizeof(struct flooritem_data),"map.c::map_flooritem_ers",ERS_OPT_CLEAN|ERS_OPT_FLEX_CHUNK);
+	map->flooritem_ers = ers_new(sizeof(struct flooritem_data), "map.c::map_flooritem_ers", (enum ERSOptions)(ERS_OPT_CLEAN | ERS_OPT_FLEX_CHUNK));
 	ers_chunk_size(map->flooritem_ers, 100);
 
 	if (!minimal) {

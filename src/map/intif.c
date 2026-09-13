@@ -1396,7 +1396,7 @@ static void intif_parse_GuildBasicInfoChanged(int fd)
 {
 	//int len = RFIFOW(fd,2) - 10;
 	int guild_id = RFIFOL(fd,4);
-	const enum guild_basic_info type = RFIFOW(fd, 8);
+	const enum guild_basic_info type = (enum guild_basic_info)RFIFOW(fd, 8);
 	//void* data = RFIFOP(void *, fd, 10);
 
 	struct guild* g = guild->search(guild_id);
@@ -1435,7 +1435,7 @@ static void intif_parse_GuildMemberInfoChanged(int fd)
 	int guild_id = RFIFOL(fd,4);
 	int account_id = RFIFOL(fd,8);
 	int char_id = RFIFOL(fd,12);
-	enum guild_member_info type = RFIFOW(fd, 16);
+	enum guild_member_info type = (enum guild_member_info)RFIFOW(fd, 16);
 	//void* data = RFIFOP(void *, fd, 18);
 
 	struct guild* g;
@@ -2793,7 +2793,7 @@ static void intif_parse_agency_joinResult(int fd)
 	const int result = p->result;
 	struct map_session_data *sd = map->charid2sd(char_id);
 	if (sd != NULL)
-		clif->adventurerAgencyResult(sd, result, "", "");
+		clif->adventurerAgencyResult(sd, (enum adventurer_agency_result)result, "", "");
 }
 
 //-----------------------------------------------------------------

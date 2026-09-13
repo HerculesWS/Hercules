@@ -106,7 +106,7 @@ static struct quest *inter_quest_fromsql(int char_id, int *count)
 		questlog = (struct quest *)aCalloc(*count, sizeof(struct quest));
 
 		while (SQL_SUCCESS == SQL->StmtNextRow(stmt)) {
-			tmp_quest.state = quest_state;
+			tmp_quest.state = (enum quest_state)quest_state;
 			if (i >= *count) // Sanity check, should never happen
 				break;
 			questlog[i++] = tmp_quest;
@@ -156,7 +156,7 @@ static bool inter_quest_add(int char_id, struct quest qd)
 	for (i = 0; i < MAX_QUEST_OBJECTIVES; i++) {
 		StrBuf->Printf(&buf, ", `count%d`", i+1);
 	}
-	StrBuf->Printf(&buf, ") VALUES ('%d', '%d', '%u', '%u'", qd.quest_id, char_id, qd.state, qd.time);
+	StrBuf->Printf(&buf, ") VALUES ('%d', '%d', '%u', '%u'", qd.quest_id, char_id, (unsigned int)qd.state, qd.time);
 	for (i = 0; i < MAX_QUEST_OBJECTIVES; i++) {
 		StrBuf->Printf(&buf, ", '%d'", qd.count[i]);
 	}
@@ -184,7 +184,7 @@ static bool inter_quest_update(int char_id, struct quest qd)
 	int i;
 
 	StrBuf->Init(&buf);
-	StrBuf->Printf(&buf, "UPDATE `%s` SET `state`='%u', `time`='%u'", quest_db, qd.state, qd.time);
+	StrBuf->Printf(&buf, "UPDATE `%s` SET `state`='%u', `time`='%u'", quest_db, (unsigned int)qd.state, qd.time);
 	for (i = 0; i < MAX_QUEST_OBJECTIVES; i++) {
 		StrBuf->Printf(&buf, ", `count%d`='%d'", i+1, qd.count[i]);
 	}

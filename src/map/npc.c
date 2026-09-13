@@ -2419,8 +2419,8 @@ static enum market_buy_result npc_market_buylist(struct map_session_data *sd, st
 	int i,j,w,new_;
 	unsigned short shop_size = 0;
 
-	nullpo_retr(1, sd);
-	nullpo_retr(1, item_list);
+	nullpo_retr(MARKET_BUY_RESULT_SUCCESS, sd); // FIXME: Is this the right value?
+	nullpo_retr(MARKET_BUY_RESULT_SUCCESS, item_list); // FIXME: Is this the right value?
 
 	nd = npc->checknear(sd,map->id2bl(sd->npc_shopid));
 
@@ -2472,7 +2472,7 @@ static enum market_buy_result npc_market_buylist(struct map_session_data *sd, st
 				new_++;
 				break;
 			case ADDITEM_OVERAMOUNT: /* TODO find official response for this */
-				return 1;
+				return MARKET_BUY_RESULT_SUCCESS;
 		}
 
 		z += (int64)value * entry->amount;
@@ -3518,7 +3518,7 @@ static struct npc_data *npc_add_warp(char *name, short from_mapid, short from_x,
 
 	nullpo_retr(NULL, name);
 
-	nd = npc->create_npc(WARP, from_mapid, from_x, from_y, 0, battle_config.warp_point_debug ? WARP_DEBUG_CLASS : WARP_CLASS);
+	nd = npc->create_npc(WARP, from_mapid, from_x, from_y, UNIT_DIR_NORTH, battle_config.warp_point_debug ? WARP_DEBUG_CLASS : WARP_CLASS);
 
 	safestrncpy(nd->exname, name, ARRAYLENGTH(nd->exname));
 	if (npc->name2id(nd->exname) != NULL) {
@@ -3600,7 +3600,7 @@ static const char *npc_parse_warp(const char *w1, const char *w2, const char *w3
 		return strchr(start,'\n');;//try next
 	}
 
-	nd = npc->create_npc(WARP, m, x, y, 0, battle_config.warp_point_debug ? WARP_DEBUG_CLASS : WARP_CLASS);
+	nd = npc->create_npc(WARP, m, x, y, UNIT_DIR_NORTH, battle_config.warp_point_debug ? WARP_DEBUG_CLASS : WARP_CLASS);
 	npc->parsename(nd, w3, start, buffer, filepath);
 	nd->path = npc->retainpathreference(filepath);
 
@@ -3639,7 +3639,6 @@ static const char *npc_parse_shop(const char *w1, const char *w2, const char *w3
 
 	const char *p;
 	int x, y, dir, m, class_;
-	struct npc_data *nd;
 	enum npc_subtype type;
 
 	nullpo_retr(strchr(start,'\n'), w1);
@@ -3746,7 +3745,7 @@ static const char *npc_parse_shop(const char *w1, const char *w2, const char *w3
 	}
 
 	class_ = m == -1 ? FAKE_NPC : npc->parseview(w4, start, buffer, filepath);
-	nd = npc->create_npc(type, m, x, y, dir, class_);
+	struct npc_data *nd = npc->create_npc(type, m, x, y, (enum unit_dir)dir, class_);
 	CREATE(nd->u.shop.shop_item, struct npc_item_list, i);
 	memcpy(nd->u.shop.shop_item, items, sizeof(items[0])*i);
 	aFree(items);
@@ -3893,7 +3892,6 @@ static const char *npc_parse_script(const char *w1, const char *w2, const char *
 
 	struct npc_label_list* label_list;
 	int label_list_num;
-	struct npc_data* nd;
 
 	nullpo_retr(NULL, w1);
 	if (strcmp(w1, "-") == 0) {
@@ -3946,7 +3944,7 @@ static const char *npc_parse_script(const char *w1, const char *w2, const char *
 	}
 
 	class_ = m == -1 ? FAKE_NPC : npc->parseview(w4, start, buffer, filepath);
-	nd = npc->create_npc(SCRIPT, m, x, y, dir, class_);
+	struct npc_data *nd = npc->create_npc(SCRIPT, m, x, y, (enum unit_dir)dir, class_);
 	if (sscanf(w4, "%*[^,],%d,%d", &xs, &ys) == 2) {
 		// OnTouch area defined
 		nd->u.scr.xs = xs;
@@ -4191,7 +4189,6 @@ static const char *npc_parse_duplicate(const char *w1, const char *w2, const cha
 	size_t length;
 
 	int class_;
-	struct npc_data* nd;
 	struct npc_data* dnd;
 
 	end = strchr(start,'\n');
@@ -4257,7 +4254,7 @@ static const char *npc_parse_duplicate(const char *w1, const char *w2, const cha
 	}
 
 	class_ = m == -1 ? FAKE_NPC : npc->parseview(w4, start, buffer, filepath);
-	nd = npc->create_npc(dnd->subtype, m, x, y, dir, class_);
+	struct npc_data *nd = npc->create_npc(dnd->subtype, m, x, y, (enum unit_dir)dir, class_);
 	npc->parsename(nd, w3, start, buffer, filepath);
 	nd->path = npc->retainpathreference(filepath);
 	if (!npc->duplicate_sub(nd, dnd, xs, ys, options)) {
@@ -5616,7 +5613,7 @@ static int npc_script_event(struct map_session_data *sd, enum npce_event type)
 		return 0;
 	Assert_ret(type >= 0 && type < NPCE_MAX);
 	if (!sd) {
-		ShowError("npc_script_event: NULL sd. Event Type %u\n", type);
+		ShowError("npc_script_event: NULL sd. Event Type %u\n", (unsigned int)type);
 		return 0;
 	}
 
@@ -6000,10 +5997,10 @@ static int do_init_npc(bool minimal)
 		npc_viewdb[i].class_ = i;
 	for( i = MAX_NPC_CLASS2_START; i < MAX_NPC_CLASS2_END; i++ )
 		npc_viewdb2[i - MAX_NPC_CLASS2_START].class_ = i;
-	npc->ev_db = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, EVENT_NAME_LENGTH);
-	npc->ev_label_db = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, NAME_LENGTH);
+	npc->ev_db = strdb_alloc((enum DBOptions)(DB_OPT_DUP_KEY | DB_OPT_RELEASE_DATA), EVENT_NAME_LENGTH);
+	npc->ev_label_db = strdb_alloc((enum DBOptions)(DB_OPT_DUP_KEY | DB_OPT_RELEASE_DATA), NAME_LENGTH);
 	npc->name_db = strdb_alloc(DB_OPT_BASE, NAME_LENGTH);
-	npc->path_db = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, 0);
+	npc->path_db = strdb_alloc((enum DBOptions)(DB_OPT_DUP_KEY | DB_OPT_RELEASE_DATA), 0);
 
 	npc->npc_last_npd = NULL;
 	npc->npc_last_path = NULL;

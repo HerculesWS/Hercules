@@ -108,7 +108,7 @@ static char log_chattype2char(e_log_chat_type type)
 	}
 
 	// should not get here, fallback
-	ShowDebug("log_chattype2char: Unknown chat type %u.\n", type);
+	ShowDebug("log_chattype2char: Unknown chat type %u.\n", (unsigned int)type);
 	return 'O';
 }
 
@@ -707,7 +707,7 @@ static bool log_config_read(const char *filename, bool imported)
 	}
 
 	if (libconfig->setting_lookup_int(setting, "enable", &temp) == CONFIG_TRUE) {
-		logs->config.enable_logs = temp&LOG_TYPE_ALL; // e_log_pick_type
+		logs->config.enable_logs = (e_log_pick_type)(temp & LOG_TYPE_ALL); // e_log_pick_type
 	}
 	libconfig->setting_lookup_int(setting, "log_zeny", &logs->config.zeny);
 	libconfig->setting_lookup_bool_real(setting, "log_branch", &logs->config.branch);

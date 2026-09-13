@@ -1259,7 +1259,7 @@ static bool inter_guild_update_basic_info(int guild_id, enum guild_basic_info ty
 			break;
 
 		default:
-			ShowError("int_guild: GuildBasicInfoChange: Unknown type %u, see mmo.h::guild_basic_info for more information\n", type);
+			ShowError("int_guild: GuildBasicInfoChange: Unknown type %u, see mmo.h::guild_basic_info for more information\n", (unsigned int)type);
 			return false;
 	}
 	mapif->guild_info(g);
@@ -1370,7 +1370,7 @@ static bool inter_guild_update_member_info(int guild_id, int account_id, int cha
 			break;
 		}
 		default:
-		  ShowError("int_guild: GuildMemberInfoChange: Unknown type %u\n", type);
+		  ShowError("int_guild: GuildMemberInfoChange: Unknown type %u\n", (unsigned int)type);
 		  return false;
 		  break;
 	}
