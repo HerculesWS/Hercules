@@ -404,6 +404,12 @@ typedef char bool;
 #define min(a,b) (((a) < (b)) ? (a) : (b))
 #endif
 
+// Macros to ease the c++ transition - remove later
+#define HSWAP(a, b) swap((a), (b))
+#define HSWAP_PTR(a, b) swap_ptr((a), (b))
+#define HMAX(a, b) max((a), (b))
+#define HMIN(a, b) min((a), (b))
+
 //////////////////////////////////////////////////////////////////////////
 // should not happen
 #ifndef NULL
