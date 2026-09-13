@@ -731,7 +731,7 @@ static int char_getitemdata_from_sql(struct item *items, int max, int guid, enum
 	const char *selectoption = NULL;
 	bool has_favorite = false;
 	StringBuf buf;
-	struct item item = { 0 }; // temp storage variable
+	struct item item ZERO_INITIALIZED; // temp storage variable
 
 	if (max > 0)
 		nullpo_retr(-1, items);
@@ -4133,7 +4133,7 @@ static int char_mapif_init(int fd)
  */
 static uint32 char_lan_subnet_check(uint32 ip)
 {
-	struct s_subnet lan = {0};
+	struct s_subnet lan ZERO_INITIALIZED;
 	if (sockt->lan_subnet_check(ip, &lan)) {
 		ShowInfo("Subnet check [%u.%u.%u.%u]: Matches " CL_CYAN "%u.%u.%u.%u/%u.%u.%u.%u" CL_RESET "\n", CONVIP(ip), CONVIP(lan.ip & lan.mask), CONVIP(lan.mask));
 		return lan.ip;
@@ -5923,7 +5923,7 @@ static void char_config_set_start_item(const struct config_setting_t *setting)
 
 	for (i = 0; i < count; i++) {
 		const struct config_setting_t *t = libconfig->setting_get_elem(setting, i);
-		struct start_item_s start_item = { 0 };
+		struct start_item_s start_item ZERO_INITIALIZED;
 
 		if (t == NULL)
 			continue;

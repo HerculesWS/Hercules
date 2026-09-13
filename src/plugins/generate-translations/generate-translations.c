@@ -68,7 +68,7 @@ bool createdirectory(const char *dirname)
 			return false;
 	}
 #else /* Not WIN32 */
-	struct stat st = { 0 };
+	struct stat st ZERO_INITIALIZED;
 	if (stat(dirname, &st) == -1 ) {
 		if (mkdir(dirname, 0755) != 0)
 			return false;

@@ -1503,7 +1503,7 @@ static void clif_spiritball_single(int fd, struct map_session_data *sd)
 {
 	nullpo_retv(sd);
 
-	struct PACKET_ZC_SPIRITS2 p = { 0 };
+	struct PACKET_ZC_SPIRITS2 p ZERO_INITIALIZED;
 
 	p.PacketType = HEADER_ZC_SPIRITS2;
 	p.AID = sd->bl.id;
@@ -5942,7 +5942,7 @@ static int clif_skill_damage(struct block_list *src, struct block_list *dst, int
 			damage = damage * (sc->data[SC_ILLUSION]->val2) + rnd() % 100;
 	}
 
-	struct PACKET_ZC_NOTIFY_SKILL p = { 0 };
+	struct PACKET_ZC_NOTIFY_SKILL p ZERO_INITIALIZED;
 	p.PacketType = HEADER_ZC_NOTIFY_SKILL;
 	p.SKID = skill_id;
 	p.AID = src->id;
@@ -5997,7 +5997,7 @@ static int clif_skill_damage2(struct block_list *src, struct block_list *dst, in
 			damage = damage * (sc->data[SC_ILLUSION]->val2) + rnd() % 100;
 	}
 
-	struct PACKET_ZC_NOTIFY_SKILL_POSITION p = { 0 };
+	struct PACKET_ZC_NOTIFY_SKILL_POSITION p ZERO_INITIALIZED;
 	p.PacketType = HEADER_ZC_NOTIFY_SKILL_POSITION;
 	p.SKID = skill_id;
 	p.AID = src->id;
@@ -6043,7 +6043,7 @@ static int clif_skill_nodamage(struct block_list *src, struct block_list *dst, u
 {
 	nullpo_ret(dst);
 
-	struct PACKET_ZC_USE_SKILL p = { 0 };
+	struct PACKET_ZC_USE_SKILL p ZERO_INITIALIZED;
 	p.PacketType = HEADER_ZC_USE_SKILL;
 	p.SKID = skill_id;
 #if PACKETVER_MAIN_NUM >= 20130731 || PACKETVER_RE_NUM >= 20130724 || defined(PACKETVER_ZERO)
@@ -6078,7 +6078,7 @@ static void clif_skill_poseffect(struct block_list *src, uint16 skill_id, int va
 {
 	nullpo_retv(src);
 
-	struct PACKET_ZC_NOTIFY_GROUNDSKILL p = { 0 };
+	struct PACKET_ZC_NOTIFY_GROUNDSKILL p ZERO_INITIALIZED;
 	p.PacketType = HEADER_ZC_NOTIFY_GROUNDSKILL;
 	p.SKID = skill_id;
 	p.AID = src->id;
@@ -7134,7 +7134,7 @@ static void clif_showvendingboard(struct block_list *bl, const char *message, in
 	nullpo_retv(bl);
 	nullpo_retv(message);
 
-	struct PACKET_ZC_STORE_ENTRY p = { 0 };
+	struct PACKET_ZC_STORE_ENTRY p ZERO_INITIALIZED;
 	p.packetType = HEADER_ZC_STORE_ENTRY;
 	p.makerAID = bl->id;
 	safestrncpy(p.storeName, message, MESSAGE_SIZE);
@@ -7446,7 +7446,7 @@ static void clif_party_job_and_level(struct map_session_data *sd)
 #if PACKETVER_MAIN_NUM >= 20170502 || PACKETVER_RE_NUM >= 20170419 || defined(PACKETVER_ZERO)
 	nullpo_retv(sd);
 
-	struct PACKET_ZC_NOTIFY_MEMBERINFO_TO_GROUPM p = {0};
+	struct PACKET_ZC_NOTIFY_MEMBERINFO_TO_GROUPM p ZERO_INITIALIZED;
 	p.PacketType = HEADER_ZC_NOTIFY_MEMBERINFO_TO_GROUPM;
 	p.AID = sd->status.account_id;
 	p.job = sd->status.class_;
@@ -7655,7 +7655,7 @@ static void clif_party_withdraw(struct party_data *p, struct map_session_data *s
 	if (sd == NULL)
 		return;
 
-	struct PACKET_ZC_DELETE_MEMBER_FROM_GROUP packet = {0};
+	struct PACKET_ZC_DELETE_MEMBER_FROM_GROUP packet ZERO_INITIALIZED;
 	packet.PacketType = HEADER_ZC_DELETE_MEMBER_FROM_GROUP;
 	packet.AID = account_id;
 	safestrncpy(&packet.characterName[0], name, NAME_LENGTH);
@@ -7702,7 +7702,7 @@ static void clif_party_xy(struct map_session_data *sd)
 {
 	nullpo_retv(sd);
 
-	struct PACKET_ZC_NOTIFY_POSITION_TO_GROUPM p = {0};
+	struct PACKET_ZC_NOTIFY_POSITION_TO_GROUPM p ZERO_INITIALIZED;
 	p.PacketType = HEADER_ZC_NOTIFY_POSITION_TO_GROUPM;
 	p.AID = sd->status.account_id;
 	p.xPos = sd->bl.x;
@@ -7734,7 +7734,7 @@ static void clif_party_hp(struct map_session_data *sd)
 {
 	nullpo_retv(sd);
 
-	struct PACKET_ZC_NOTIFY_HP_TO_GROUPM p = {0};
+	struct PACKET_ZC_NOTIFY_HP_TO_GROUPM p ZERO_INITIALIZED;
 	p.PacketType = HEADER_ZC_NOTIFY_HP_TO_GROUPM;
 	p.AID = sd->status.account_id;
 #if PACKETVER < 20100119
@@ -7920,7 +7920,7 @@ static void clif_sendegg(struct map_session_data *sd)
 {
 	nullpo_retv(pd);
 
-	struct PACKET_ZC_CHANGESTATE_PET p = { 0 };
+	struct PACKET_ZC_CHANGESTATE_PET p ZERO_INITIALIZED;
 	p.PacketType = HEADER_ZC_CHANGESTATE_PET;
 	p.type = type;
 	p.GID = pd->bl.id;
@@ -8111,10 +8111,10 @@ static void clif_soulball(struct block_list *bl, int soulballs, enum send_target
 	nullpo_retv(bl);
 
 #if PACKETVER_MAIN_NUM >= 20200414 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20200506
-	struct PACKET_ZC_SOULENERGY p = { 0 };
+	struct PACKET_ZC_SOULENERGY p ZERO_INITIALIZED;
 	p.PacketType = HEADER_ZC_SOULENERGY;
 #else
-	struct PACKET_ZC_SPIRITS p = { 0 };
+	struct PACKET_ZC_SPIRITS p ZERO_INITIALIZED;
 	p.PacketType = HEADER_ZC_SPIRITS;
 #endif
 
@@ -8137,7 +8137,7 @@ static void clif_spiritballs(struct block_list *bl, int spiritballs, enum send_t
 {
 	nullpo_retv(bl);
 
-	struct PACKET_ZC_SPIRITS p = { 0 };
+	struct PACKET_ZC_SPIRITS p ZERO_INITIALIZED;
 
 	p.PacketType = HEADER_ZC_SPIRITS;
 	p.AID = bl->id;
@@ -8493,7 +8493,7 @@ static void clif_guild_castleinfo(struct map_session_data *sd, struct guild_cast
 	nullpo_retv(sd);
 	nullpo_retv(gc);
 
-	struct PACKET_ZC_REQ_ACK_AGIT_INVESTMENT p = { 0 };
+	struct PACKET_ZC_REQ_ACK_AGIT_INVESTMENT p ZERO_INITIALIZED;
 	p.packetType = HEADER_ZC_REQ_ACK_AGIT_INVESTMENT;
 	p.castle_id = gc->castle_id;
 	p.economy = gc->economy;
@@ -8752,7 +8752,7 @@ static void clif_guild_emblem_id_area(struct block_list *bl)
 {
 	nullpo_retv(bl);
 
-	struct PACKET_ZC_CHANGE_GUILD p = {0};
+	struct PACKET_ZC_CHANGE_GUILD p ZERO_INITIALIZED;
 
 	// TODO this packet doesn't force the update of ui components that have the emblem visible
 	//      (emblem in the flag npcs and emblem over the head in agit maps) [FlavioJS]
@@ -9465,7 +9465,7 @@ static void clif_soundeffectall(struct block_list *bl, const char *name, enum pl
 	nullpo_retv(bl);
 	nullpo_retv(name);
 
-	struct PACKET_ZC_SOUND p = { 0 };
+	struct PACKET_ZC_SOUND p ZERO_INITIALIZED;
 
 	p.PacketType = HEADER_ZC_SOUND;
 	safestrncpy(p.name, name, NAME_LENGTH);
@@ -9836,7 +9836,7 @@ static void clif_pcname_ack(int fd, struct block_list *bl)
 	nullpo_retv(bl);
 	Assert_retv(bl->type == BL_PC);
 
-	struct PACKET_ZC_ACK_REQNAMEALL packet = {0};
+	struct PACKET_ZC_ACK_REQNAMEALL packet ZERO_INITIALIZED;
 	packet.packet_id = HEADER_ZC_ACK_REQNAMEALL;
 	packet.gid = bl->id;
 
@@ -9921,7 +9921,7 @@ static void clif_homname_ack(int fd, struct block_list *bl)
 	nullpo_retv(bl);
 	Assert_retv(bl->type == BL_HOM);
 
-	struct PACKET_ZC_ACK_REQNAMEALL_NPC packet = { 0 };
+	struct PACKET_ZC_ACK_REQNAMEALL_NPC packet ZERO_INITIALIZED;
 	packet.packet_id = HEADER_ZC_ACK_REQNAMEALL_NPC;
 	packet.gid = bl->id;
 	memcpy(packet.name, BL_UCCAST(BL_HOM, bl)->homunculus.name, NAME_LENGTH);
@@ -9945,7 +9945,7 @@ static void clif_mername_ack(int fd, struct block_list *bl)
 	nullpo_retv(bl);
 	Assert_retv(bl->type == BL_MER);
 
-	struct PACKET_ZC_ACK_REQNAMEALL_NPC packet = { 0 };
+	struct PACKET_ZC_ACK_REQNAMEALL_NPC packet ZERO_INITIALIZED;
 	packet.packet_id = HEADER_ZC_ACK_REQNAMEALL_NPC;
 	packet.gid = bl->id;
 	memcpy(packet.name, BL_UCCAST(BL_MER, bl)->db->name, NAME_LENGTH);
@@ -9969,7 +9969,7 @@ static void clif_petname_ack(int fd, struct block_list *bl)
 	nullpo_retv(bl);
 	Assert_retv(bl->type == BL_PET);
 
-	struct PACKET_ZC_ACK_REQNAMEALL_NPC packet = { 0 };
+	struct PACKET_ZC_ACK_REQNAMEALL_NPC packet ZERO_INITIALIZED;
 	packet.packet_id = HEADER_ZC_ACK_REQNAMEALL_NPC;
 	packet.gid = bl->id;
 	memcpy(packet.name, BL_UCCAST(BL_PET, bl)->pet.name, NAME_LENGTH);
@@ -9993,7 +9993,7 @@ static void clif_npcname_ack(int fd, struct block_list *bl)
 	nullpo_retv(bl);
 	Assert_retv(bl->type == BL_NPC);
 
-	struct PACKET_ZC_ACK_REQNAMEALL_NPC packet = { 0 };
+	struct PACKET_ZC_ACK_REQNAMEALL_NPC packet ZERO_INITIALIZED;
 	packet.packet_id = HEADER_ZC_ACK_REQNAMEALL_NPC;
 	packet.gid = bl->id;
 	memcpy(packet.name, BL_UCCAST(BL_NPC, bl)->name, NAME_LENGTH);
@@ -10019,7 +10019,7 @@ static void clif_mobname_guardian_ack(int fd, struct block_list *bl)
 	const struct mob_data *md = BL_UCCAST(BL_MOB, bl);
 	Assert_retv(md->guardian_data && md->guardian_data->g);
 
-	struct PACKET_ZC_ACK_REQNAMEALL packet = { 0 };
+	struct PACKET_ZC_ACK_REQNAMEALL packet ZERO_INITIALIZED;
 	packet.packet_id = HEADER_ZC_ACK_REQNAMEALL;
 	packet.gid = bl->id;
 	memcpy(packet.name, md->name, NAME_LENGTH);
@@ -10037,7 +10037,7 @@ static void clif_mobname_normal_ack(int fd, struct block_list *bl)
 	nullpo_retv(bl);
 	Assert_retv(bl->type == BL_MOB);
 
-	struct PACKET_ZC_ACK_REQNAMEALL_NPC packet = { 0 };
+	struct PACKET_ZC_ACK_REQNAMEALL_NPC packet ZERO_INITIALIZED;
 	packet.packet_id = HEADER_ZC_ACK_REQNAMEALL_NPC;
 	packet.gid = bl->id;
 	const struct mob_data *md = BL_UCCAST(BL_MOB, bl);
@@ -10062,7 +10062,7 @@ static void clif_mobname_additional_ack(int fd, struct block_list *bl)
 	nullpo_retv(bl);
 	Assert_retv(bl->type == BL_MOB);
 
-	struct PACKET_ZC_ACK_REQNAMEALL packet = { 0 };
+	struct PACKET_ZC_ACK_REQNAMEALL packet ZERO_INITIALIZED;
 	packet.packet_id = HEADER_ZC_ACK_REQNAMEALL;
 	packet.gid = bl->id;
 
@@ -10121,7 +10121,7 @@ static void clif_chatname_ack(int fd, struct block_list *bl)
 	nullpo_retv(bl);
 	Assert_retv(bl->type == BL_CHAT);
 
-	struct PACKET_ZC_ACK_REQNAMEALL_NPC packet = { 0 };
+	struct PACKET_ZC_ACK_REQNAMEALL_NPC packet ZERO_INITIALIZED;
 	packet.packet_id = HEADER_ZC_ACK_REQNAMEALL_NPC;
 	packet.gid = bl->id;
 
@@ -10148,7 +10148,7 @@ static void clif_elemname_ack(int fd, struct block_list *bl)
 	nullpo_retv(bl);
 	Assert_retv(bl->type == BL_ELEM);
 
-	struct PACKET_ZC_ACK_REQNAMEALL_NPC packet = { 0 };
+	struct PACKET_ZC_ACK_REQNAMEALL_NPC packet ZERO_INITIALIZED;
 	packet.packet_id = HEADER_ZC_ACK_REQNAMEALL_NPC;
 	packet.gid = bl->id;
 	memcpy(packet.name, BL_UCCAST(BL_ELEM, bl)->db->name, NAME_LENGTH);
@@ -10239,7 +10239,7 @@ static void clif_charnameupdate(struct map_session_data *ssd)
 {
 	nullpo_retv(ssd);
 
-	struct PACKET_ZC_ACK_REQNAMEALL packet = {0};
+	struct PACKET_ZC_ACK_REQNAMEALL packet ZERO_INITIALIZED;
 	packet.packet_id = HEADER_ZC_ACK_REQNAMEALL;
 	packet.gid = ssd->bl.id;
 
@@ -12778,7 +12778,7 @@ static void clif_parse_UnequipAllItems(int fd, struct map_session_data *sd)
 static void clif_unequipAllItemsAck(struct map_session_data *sd, enum unequip_all result)
 {
 #if PACKETVER_MAIN_NUM >= 20210818 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
-	struct PACKET_ZC_ACK_TAKEOFF_EQUIP_ALL packet = {0};
+	struct PACKET_ZC_ACK_TAKEOFF_EQUIP_ALL packet ZERO_INITIALIZED;
 	packet.PacketType = HEADER_ZC_ACK_TAKEOFF_EQUIP_ALL;
 	packet.result = result;
 	clif->send(&packet, sizeof(struct PACKET_ZC_ACK_TAKEOFF_EQUIP_ALL), &sd->bl, SELF);
@@ -12897,13 +12897,13 @@ static void clif_parse_NpcBuyListSend(int fd, struct map_session_data *sd)
 	if (sd->state.trading || !sd->npc_shopid || pc_has_permission(sd, PC_PERM_DISABLE_STORE)) {
 		result = 1;
 	} else {
-		struct itemlist item_list = { 0 };
+		struct itemlist item_list ZERO_INITIALIZED;
 		int i;
 
 		VECTOR_INIT(item_list);
 		VECTOR_ENSURE(item_list, n, 1);
 		for (i = 0; i < n; i++) {
-			struct itemlist_entry entry = { 0 };
+			struct itemlist_entry entry ZERO_INITIALIZED;
 
 			entry.amount = p->items[i].amount;
 			entry.id =     p->items[i].itemId;
@@ -12951,14 +12951,14 @@ static void clif_parse_NpcSellListSend(int fd, struct map_session_data *sd)
 	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd) || !sd->npc_shopid) {
 		fail = 1;
 	} else {
-		struct itemlist item_list = { 0 };
+		struct itemlist item_list ZERO_INITIALIZED;
 		int i;
 
 		VECTOR_INIT(item_list);
 		VECTOR_ENSURE(item_list, n, 1);
 
 		for (i = 0; i < n; i++) {
-			struct itemlist_entry entry = { 0 };
+			struct itemlist_entry entry ZERO_INITIALIZED;
 
 			entry.id = (int)RFIFOW(fd, 4 + 4 * i) - 2;
 			entry.amount =  RFIFOW(fd, 4 + 4 * i + 2);
@@ -18702,7 +18702,7 @@ static void clif_parse_cashshop_buy(int fd, struct map_session_data *sd)
 		int needLen;
 		int points;
 		int count;
-		struct itemlist item_list = { 0 };
+		struct itemlist item_list ZERO_INITIALIZED;
 		int i;
 
 		if ((size_t)len < sizeof(struct PACKET_CZ_PC_BUY_CASH_POINT_ITEM)) {
@@ -18721,7 +18721,7 @@ static void clif_parse_cashshop_buy(int fd, struct map_session_data *sd)
 		VECTOR_INIT(item_list);
 		VECTOR_ENSURE(item_list, count, 1);
 		for (i = 0; i < count; i++) {
-			struct itemlist_entry entry = { 0 };
+			struct itemlist_entry entry ZERO_INITIALIZED;
 
 			entry.amount = p->items[i].amount;
 			entry.id =     p->items[i].itemId;
@@ -19548,7 +19548,7 @@ static void clif_bg_hp(struct map_session_data *sd)
 {
 	nullpo_retv(sd);
 
-	struct PACKET_ZC_BATTLEFIELD_NOTIFY_HP p = {0};
+	struct PACKET_ZC_BATTLEFIELD_NOTIFY_HP p ZERO_INITIALIZED;
 	p.PacketType = HEADER_ZC_BATTLEFIELD_NOTIFY_HP;
 
 #if PACKETVER >= 20140312
@@ -19944,7 +19944,7 @@ static void clif_parse_ItemListWindowSelected(int fd, struct map_session_data *s
 	int n = ((int)RFIFOW(fd, 2) - 12) / 4;
 	int type = RFIFOL(fd,4);
 	int flag = RFIFOL(fd,8); // Button clicked: 0 = Cancel, 1 = OK
-	struct itemlist item_list = { 0 };
+	struct itemlist item_list ZERO_INITIALIZED;
 	int i;
 
 	if( sd->state.trading || sd->npc_shopid )
@@ -19966,7 +19966,7 @@ static void clif_parse_ItemListWindowSelected(int fd, struct map_session_data *s
 	VECTOR_INIT(item_list);
 	VECTOR_ENSURE(item_list, n, 1);
 	for (i = 0; i < n; i++) {
-		struct itemlist_entry entry = { 0 };
+		struct itemlist_entry entry ZERO_INITIALIZED;
 		entry.id = (int)RFIFOW(fd, 12 + 4 * i) - 2; // Inventory index
 		entry.amount =  RFIFOW(fd, 12 + 4 * i + 2);
 		VECTOR_PUSH(item_list, entry);
@@ -20176,7 +20176,7 @@ static void clif_buyingstore_entry(struct block_list *bl, const char *message)
 	nullpo_retv(bl);
 	nullpo_retv(message);
 
-	struct PACKET_ZC_BUYING_STORE_ENTRY p = { 0 };
+	struct PACKET_ZC_BUYING_STORE_ENTRY p ZERO_INITIALIZED;
 	p.packetType = HEADER_ZC_BUYING_STORE_ENTRY;
 	p.makerAID = bl->id;
 	safestrncpy(p.storeName, message, MESSAGE_SIZE);
@@ -20213,7 +20213,7 @@ static void clif_buyingstore_disappear_entry(struct block_list *bl)
 #if PACKETVER >= 20100309
 	nullpo_retv(bl);
 
-	struct PACKET_ZC_DISAPPEAR_BUYING_STORE_ENTRY p = { 0 };
+	struct PACKET_ZC_DISAPPEAR_BUYING_STORE_ENTRY p ZERO_INITIALIZED;
 	p.packetType = HEADER_ZC_DISAPPEAR_BUYING_STORE_ENTRY;
 	p.makerAID = bl->id;
 	clif->send(&p, sizeof(struct PACKET_ZC_DISAPPEAR_BUYING_STORE_ENTRY), bl, AREA_WOS);
@@ -22181,7 +22181,7 @@ static void clif_parse_NPCMarketPurchase(int fd, struct map_session_data *sd)
 	VECTOR_ENSURE(item_list, count, 1);
 
 	for (int i = 0; i < count; i++) {
-		struct itemlist_entry entry = { 0 };
+		struct itemlist_entry entry ZERO_INITIALIZED;
 
 		entry.id = p->list[i].ITID;
 		entry.amount = p->list[i].qty;
@@ -22981,7 +22981,7 @@ static void clif_achievement_send_list(int fd, struct map_session_data *sd)
 {
 #if PACKETVER_MAIN_NUM >= 20150225 || PACKETVER_RE_NUM >= 20141126 || defined(PACKETVER_ZERO)
 	int i = 0, count = 0, curr_exp_tmp = 0;
-	struct packet_achievement_list p = { 0 };
+	struct packet_achievement_list p ZERO_INITIALIZED;
 
 	nullpo_retv(sd);
 
@@ -23043,7 +23043,7 @@ static void clif_achievement_send_list(int fd, struct map_session_data *sd)
 static void clif_achievement_send_update(int fd, struct map_session_data *sd, const struct achievement_data *ad)
 {
 #if PACKETVER_MAIN_NUM >= 20150225 || PACKETVER_RE_NUM >= 20141126 || defined(PACKETVER_ZERO)
-	struct packet_achievement_update p = { 0 };
+	struct packet_achievement_update p ZERO_INITIALIZED;
 	struct achievement *a = NULL;
 	int i = 0, points = 0, rank = 0, curr_rank_points = 0;
 
@@ -23121,7 +23121,7 @@ static void clif_parse_achievement_get_reward(int fd, struct map_session_data *s
 static void clif_achievement_reward_ack(int fd, struct map_session_data *sd, const struct achievement_data *ad)
 {
 #if PACKETVER_MAIN_NUM >= 20150225 || PACKETVER_RE_NUM >= 20141126 || defined(PACKETVER_ZERO)
-	struct packet_achievement_reward_ack p = { 0 };
+	struct packet_achievement_reward_ack p ZERO_INITIALIZED;
 
 	nullpo_retv(sd);
 	nullpo_retv(ad);
@@ -23945,7 +23945,7 @@ static bool clif_parse_attendance_db(void)
 
 static bool clif_attendancedb_libconfig_sub(struct config_setting_t *it, int n, const char *source)
 {
-	struct attendance_entry entry = { 0 };
+	struct attendance_entry entry ZERO_INITIALIZED;
 	int i32 = 0;
 
 	nullpo_ret(it);
@@ -23983,7 +23983,7 @@ static bool clif_attendance_timediff(struct map_session_data *sd)
 static time_t clif_attendance_getendtime(void)
 {
 	time_t timestamp;
-	struct tm tmtime = { 0 };
+	struct tm tmtime ZERO_INITIALIZED;
 	int year = 0, month = 0, day = 0;
 	char timestring[15];
 
@@ -24212,7 +24212,7 @@ static void clif_parse_attendance_reward_request(int fd, struct map_session_data
 	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
 		return;
 
-	struct rodex_message msg = { 0 };
+	struct rodex_message msg ZERO_INITIALIZED;
 	struct attendance_entry *entry;
 	int attendance_count;
 	char title[RODEX_TITLE_LENGTH], body[MAIL_BODY_LENGTH];
@@ -24619,7 +24619,7 @@ static void clif_parse_NPCBarterPurchase(int fd, struct map_session_data *sd)
 	VECTOR_ENSURE(item_list, count, 1);
 
 	for (int i = 0; i < count; i++) {
-		struct barter_itemlist_entry entry = { 0 };
+		struct barter_itemlist_entry entry ZERO_INITIALIZED;
 		entry.addId = p->list[i].itemId;
 		entry.addAmount = p->list[i].amount;
 		entry.removeIndex = p->list[i].invIndex - 2;
@@ -24743,7 +24743,7 @@ static void clif_parse_npc_expanded_barter_purchase(int fd, struct map_session_d
 	VECTOR_ENSURE(item_list, count, 1);
 
 	for (int i = 0; i < count; i++) {
-		struct barter_itemlist_entry entry = { 0 };
+		struct barter_itemlist_entry entry ZERO_INITIALIZED;
 		entry.addId = p->list[i].itemId;
 		entry.addAmount = p->list[i].amount;
 		entry.removeIndex = -1;
@@ -24969,7 +24969,7 @@ static void clif_guild_castleteleport_res(struct map_session_data *sd, enum sieg
 
 	nullpo_retv(sd);
 
-	struct PACKET_ZC_REQ_ACK_MOVE_GUILD_AGIT p = { 0 };
+	struct PACKET_ZC_REQ_ACK_MOVE_GUILD_AGIT p ZERO_INITIALIZED;
 	p.packetType = HEADER_ZC_REQ_ACK_MOVE_GUILD_AGIT;
 	p.result = (int16)result;
 	clif->send(&p, sizeof(p), &sd->bl, SELF);
@@ -25966,7 +25966,7 @@ static void clif_adventurerAgencyResult(struct map_session_data *sd, enum advent
 	nullpo_retv(sd);
 	nullpo_retv(player_name);
 	nullpo_retv(party_name);
-	struct PACKET_ZC_ADVENTURER_AGENCY_JOIN_RESULT p = { 0 };
+	struct PACKET_ZC_ADVENTURER_AGENCY_JOIN_RESULT p ZERO_INITIALIZED;
 	p.packetType = HEADER_ZC_ADVENTURER_AGENCY_JOIN_RESULT;
 	p.result = result;
 	safestrncpy(p.player_name, player_name, NAME_LENGTH);

@@ -3498,7 +3498,7 @@ static bool map_readfromcache(struct map_data *m)
  */
 static bool map_readfromcache_v1(FILE *fp, struct map_data *m, unsigned int file_size)
 {
-	struct map_cache_header mheader = { 0 };
+	struct map_cache_header mheader ZERO_INITIALIZED;
 	uint8 md5buf[16] = { 0 };
 	int map_size;
 	nullpo_retr(false, fp);

@@ -57,7 +57,7 @@ static void macro_captcha_register(struct map_session_data *sd, const int image_
 	// Allocate a new captcha entry
 	VECTOR_ENSURE(macro->captcha_registery, 1, 1);
 
-	struct captcha_data cd = { 0 };
+	struct captcha_data cd ZERO_INITIALIZED;
 	cd.upload_size = 0;
 	cd.image_size = image_size;
 	safestrncpy(cd.captcha_answer, captcha_answer, sizeof(cd.captcha_answer));
@@ -344,7 +344,7 @@ static bool macro_read_captcha_db_libconfig_sub(const struct config_setting_t *i
 		}
 	}
 
-	struct captcha_data cd = { 0 };
+	struct captcha_data cd ZERO_INITIALIZED;
 	if (!macro->read_captcha_db_libconfig_sub_loadbmp(filepath, &cd))
 		return false;
 
