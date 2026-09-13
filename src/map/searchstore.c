@@ -160,7 +160,7 @@ static void searchstore_query(struct map_session_data *sd,
 	}
 
 	if( max_price < min_price ) {
-		swap(min_price, max_price);
+		HSWAP(min_price, max_price);
 	}
 
 	sd->searchstore.uses--;

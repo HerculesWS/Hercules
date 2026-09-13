@@ -7173,7 +7173,7 @@ static int pc_need_status_point(struct map_session_data *sd, int type, int val)
 	high = low + val;
 
 	if ( val < 0 )
-		swap(low, high);
+		HSWAP(low, high);
 
 	for ( ; low < high; low++ )
 #ifdef RENEWAL // renewal status point cost formula
