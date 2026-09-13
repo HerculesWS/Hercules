@@ -6104,23 +6104,25 @@ ACMD(divorce)
  *------------------------------------------*/
 ACMD(changelook)
 {
-	int i, j = 0, k = 0;
-	int pos[8] = { LOOK_HEAD_TOP,LOOK_HEAD_MID,LOOK_HEAD_BOTTOM,LOOK_WEAPON,LOOK_SHIELD,LOOK_SHOES,LOOK_ROBE,LOOK_BODY2 };
+	int j = 0, k = 0;
+	int values = sscanf(message, "%12d %12d", &j, &k);
 
-	if((i = sscanf(message, "%12d %12d", &j, &k)) < 1) {
+	enum look look = LOOK_BASE;
+	if (values == 2) {
+		enum look pos[8] = { LOOK_HEAD_TOP,LOOK_HEAD_MID,LOOK_HEAD_BOTTOM,LOOK_WEAPON,LOOK_SHIELD,LOOK_SHOES,LOOK_ROBE,LOOK_BODY2 };
+		if (j < 1 || j > 7)
+			j = 1;
+		look = pos[j - 1];
+	} else if(values == 1) { // position not defined, use HEAD_TOP as default
+		k = j; // swap
+		look = LOOK_HEAD_TOP;
+	} else {
 		clif->message(fd, msg_fd(fd, MSGTBL_CHANGELOOK_USAGE)); // Usage: @changelook {<position>} <view id>
 		clif->message(fd, msg_fd(fd, MSGTBL_CHANGELOOK_POSITION_INFO)); // Position: 1-Top 2-Middle 3-Bottom 4-Weapon 5-Shield 6-Shoes 7-Robe
 		return false;
-	} else if ( i == 2 ) {
-		if (j < 1 || j > 7)
-			j = 1;
-		j = pos[j - 1];
-	} else if( i == 1 ) { // position not defined, use HEAD_TOP as default
-		k = j; // swap
-		j = LOOK_HEAD_TOP;
 	}
 
-	clif->changelook(&sd->bl,j,k);
+	clif->changelook(&sd->bl, look, k);
 
 	return true;
 }
