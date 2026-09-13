@@ -90606,10 +90606,10 @@ void HP_skill_attack_combo2_unknown(int *attack_type, struct block_list *src, st
 	}
 	return;
 }
-void HP_skill_attack_display_unknown(int *attack_type, struct block_list *src, struct block_list *dsrc, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag, int *type, struct Damage *dmg, int64 *damage) {
+void HP_skill_attack_display_unknown(int *attack_type, struct block_list *src, struct block_list *dsrc, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag, enum battle_dmg_type *type, struct Damage *dmg, int64 *damage) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_skill_attack_display_unknown_pre > 0) {
-		void (*preHookFunc) (int **attack_type, struct block_list **src, struct block_list **dsrc, struct block_list **bl, uint16 **skill_id, uint16 **skill_lv, int64 **tick, int **flag, int **type, struct Damage **dmg, int64 **damage);
+		void (*preHookFunc) (int **attack_type, struct block_list **src, struct block_list **dsrc, struct block_list **bl, uint16 **skill_id, uint16 **skill_lv, int64 **tick, int **flag, enum battle_dmg_type **type, struct Damage **dmg, int64 **damage);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_attack_display_unknown_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_skill_attack_display_unknown_pre[hIndex].func;
@@ -90624,7 +90624,7 @@ void HP_skill_attack_display_unknown(int *attack_type, struct block_list *src, s
 		HPMHooks.source.skill.attack_display_unknown(attack_type, src, dsrc, bl, skill_id, skill_lv, tick, flag, type, dmg, damage);
 	}
 	if (HPMHooks.count.HP_skill_attack_display_unknown_post > 0) {
-		void (*postHookFunc) (int *attack_type, struct block_list *src, struct block_list *dsrc, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag, int *type, struct Damage *dmg, int64 *damage);
+		void (*postHookFunc) (int *attack_type, struct block_list *src, struct block_list *dsrc, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag, enum battle_dmg_type *type, struct Damage *dmg, int64 *damage);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_attack_display_unknown_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_skill_attack_display_unknown_post[hIndex].func;
 			postHookFunc(attack_type, src, dsrc, bl, skill_id, skill_lv, tick, flag, type, dmg, damage);
@@ -90659,11 +90659,11 @@ int HP_skill_attack_copy_unknown(int *attack_type, struct block_list *src, struc
 	}
 	return retVal___;
 }
-int HP_skill_attack_dir_unknown(int *attack_type, struct block_list *src, struct block_list *dsrc, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag) {
+enum unit_dir HP_skill_attack_dir_unknown(int *attack_type, struct block_list *src, struct block_list *dsrc, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag) {
 	int hIndex = 0;
-	int retVal___ = 0;
+	enum unit_dir retVal___ = UNIT_DIR_UNDEFINED;
 	if (HPMHooks.count.HP_skill_attack_dir_unknown_pre > 0) {
-		int (*preHookFunc) (int **attack_type, struct block_list **src, struct block_list **dsrc, struct block_list **bl, uint16 **skill_id, uint16 **skill_lv, int64 **tick, int **flag);
+		enum unit_dir (*preHookFunc) (int **attack_type, struct block_list **src, struct block_list **dsrc, struct block_list **bl, uint16 **skill_id, uint16 **skill_lv, int64 **tick, int **flag);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_attack_dir_unknown_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_skill_attack_dir_unknown_pre[hIndex].func;
@@ -90678,7 +90678,7 @@ int HP_skill_attack_dir_unknown(int *attack_type, struct block_list *src, struct
 		retVal___ = HPMHooks.source.skill.attack_dir_unknown(attack_type, src, dsrc, bl, skill_id, skill_lv, tick, flag);
 	}
 	if (HPMHooks.count.HP_skill_attack_dir_unknown_post > 0) {
-		int (*postHookFunc) (int retVal___, int *attack_type, struct block_list *src, struct block_list *dsrc, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag);
+		enum unit_dir (*postHookFunc) (enum unit_dir retVal___, int *attack_type, struct block_list *src, struct block_list *dsrc, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_attack_dir_unknown_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_skill_attack_dir_unknown_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, attack_type, src, dsrc, bl, skill_id, skill_lv, tick, flag);
@@ -90686,10 +90686,10 @@ int HP_skill_attack_dir_unknown(int *attack_type, struct block_list *src, struct
 	}
 	return retVal___;
 }
-void HP_skill_attack_blow_unknown(int *attack_type, struct block_list *src, struct block_list *dsrc, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag, int *type, struct Damage *dmg, int64 *damage, enum unit_dir *dir) {
+void HP_skill_attack_blow_unknown(int *attack_type, struct block_list *src, struct block_list *dsrc, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag, enum battle_dmg_type *type, struct Damage *dmg, int64 *damage, enum unit_dir *dir) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_skill_attack_blow_unknown_pre > 0) {
-		void (*preHookFunc) (int **attack_type, struct block_list **src, struct block_list **dsrc, struct block_list **bl, uint16 **skill_id, uint16 **skill_lv, int64 **tick, int **flag, int **type, struct Damage **dmg, int64 **damage, enum unit_dir **dir);
+		void (*preHookFunc) (int **attack_type, struct block_list **src, struct block_list **dsrc, struct block_list **bl, uint16 **skill_id, uint16 **skill_lv, int64 **tick, int **flag, enum battle_dmg_type **type, struct Damage **dmg, int64 **damage, enum unit_dir **dir);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_attack_blow_unknown_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_skill_attack_blow_unknown_pre[hIndex].func;
@@ -90704,7 +90704,7 @@ void HP_skill_attack_blow_unknown(int *attack_type, struct block_list *src, stru
 		HPMHooks.source.skill.attack_blow_unknown(attack_type, src, dsrc, bl, skill_id, skill_lv, tick, flag, type, dmg, damage, dir);
 	}
 	if (HPMHooks.count.HP_skill_attack_blow_unknown_post > 0) {
-		void (*postHookFunc) (int *attack_type, struct block_list *src, struct block_list *dsrc, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag, int *type, struct Damage *dmg, int64 *damage, enum unit_dir *dir);
+		void (*postHookFunc) (int *attack_type, struct block_list *src, struct block_list *dsrc, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag, enum battle_dmg_type *type, struct Damage *dmg, int64 *damage, enum unit_dir *dir);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_attack_blow_unknown_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_skill_attack_blow_unknown_post[hIndex].func;
 			postHookFunc(attack_type, src, dsrc, bl, skill_id, skill_lv, tick, flag, type, dmg, damage, dir);
