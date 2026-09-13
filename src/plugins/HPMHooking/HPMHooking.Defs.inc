@@ -8310,8 +8310,8 @@ typedef int (*HPMHOOK_pre_skill_get_index_sub) (int *skill_id, bool *report_erro
 typedef int (*HPMHOOK_post_skill_get_index_sub) (int retVal___, int skill_id, bool report_errors);
 typedef int (*HPMHOOK_pre_skill_get_type) (int *skill_id, int *skill_lv);
 typedef int (*HPMHOOK_post_skill_get_type) (int retVal___, int skill_id, int skill_lv);
-typedef int (*HPMHOOK_pre_skill_get_hit) (int *skill_id, int *skill_lv);
-typedef int (*HPMHOOK_post_skill_get_hit) (int retVal___, int skill_id, int skill_lv);
+typedef enum battle_dmg_type (*HPMHOOK_pre_skill_get_hit) (int *skill_id, int *skill_lv);
+typedef enum battle_dmg_type (*HPMHOOK_post_skill_get_hit) (enum battle_dmg_type retVal___, int skill_id, int skill_lv);
 typedef int (*HPMHOOK_pre_skill_get_inf) (int *skill_id);
 typedef int (*HPMHOOK_post_skill_get_inf) (int retVal___, int skill_id);
 typedef int (*HPMHOOK_pre_skill_get_ele) (int *skill_id, int *skill_lv);
