@@ -765,7 +765,7 @@ static int clan_read_db_sub(struct config_setting_t *settings, const char *sourc
 		}
 
 		if (libconfig->setting_lookup_int(cl, "CheckTime", &kickchecktime)) {
-			c->check_time = 60 * 60 * HMAX(1, kickchecktime) * 1000;
+			c->check_time = 60 * 60 * std::max(1, kickchecktime) * 1000;
 		} else {
 			c->check_time = clan->checktime;
 		}
@@ -967,7 +967,7 @@ static bool clan_config_read(bool reload)
 
 	// On config file we set the time in hours but here we use in seconds
 	clan->kicktime = 60 * 60 * kicktime;
-	clan->checktime = 60 * 60 * HMAX(kickchecktime, 1) * 1000;
+	clan->checktime = 60 * 60 * std::max(kickchecktime, 1) * 1000;
 
 	clan->config_read_additional_settings(settings, config_filename);
 	clan->read_db(settings, config_filename, reload);

@@ -7398,7 +7398,7 @@ static BUILDIN(rand)
 		min = script_getnum(st,2);
 		max = script_getnum(st,3);
 		if( max < min )
-			HSWAP(min, max);
+			std::swap(min, max);
 		range = max - min + 1;
 	} else {
 		// range
@@ -7516,9 +7516,9 @@ static BUILDIN(areawarp)
 		} else if( x3 && y3 ) {
 			// normalize x3/y3 coordinates
 			if (x3 < x2)
-				HSWAP(x3,x2);
+				std::swap(x3,x2);
 			if (y3 < y2)
-				HSWAP(y3,y2);
+				std::swap(y3,y2);
 		}
 	}
 
@@ -9393,7 +9393,7 @@ static BUILDIN(makeitem2)
 		} else {
 			int16 search_x = 0;
 			int16 search_y = 0;
-			int range = (script_hasdata(st, 14) ? cap_value(script_getnum(st, 14), 1, HMAX(1, battle_config.area_size)) : 3);
+			int range = (script_hasdata(st, 14) ? cap_value(script_getnum(st, 14), 1, std::max(1, battle_config.area_size)) : 3);
 			map->search_free_cell(&sd->bl, sd->bl.m, &search_x, &search_y, range, range, SFC_DEFAULT); // Locate spot next to player.
 			x = search_x;
 			y = search_y;
@@ -12856,7 +12856,7 @@ static BUILDIN(gettimer)
 			if (sd->eventtimer[i] != INVALID_TIMER) {
 				td = timer->get(sd->eventtimer[i]);
 				Assert_retr(false, td != NULL);
-				tick = HMAX(0, DIFF_TICK32(td->tick, timer->gettick()));
+				tick = std::max(0, DIFF_TICK32(td->tick, timer->gettick()));
 
 				if (event != NULL) {
 					if ((first == true || tick < val) && strcmp((char *)(td->data), event) == 0) {
@@ -12876,14 +12876,14 @@ static BUILDIN(gettimer)
 			if (sd->eventtimer[i] != INVALID_TIMER) {
 				td = timer->get(sd->eventtimer[i]);
 				Assert_retr(false, td != NULL);
-				tick = HMAX(0, DIFF_TICK32(td->tick, timer->gettick()));
+				tick = std::max(0, DIFF_TICK32(td->tick, timer->gettick()));
 
 				if (event != NULL) {
 					if (strcmp((char *)(td->data), event) == 0) {
-						val = HMAX(val, tick);
+						val = std::max(val, tick);
 					}
 				} else {
-					val = HMAX(val, tick);
+					val = std::max(val, tick);
 				}
 			}
 		}
@@ -13845,7 +13845,7 @@ static BUILDIN(sc_start)
 	else
 		flag = script_hasdata(st,5+start_type) ? script_getnum(st,5+start_type) : SCFLAG_NOAVOID;
 
-	rate = script_hasdata(st,4+start_type)?HMIN(script_getnum(st,4+start_type),10000):10000;
+	rate = script_hasdata(st,4+start_type)?std::min(script_getnum(st,4+start_type),10000):10000;
 
 	if(script_hasdata(st,(6+start_type)))
 		bl = map->id2bl(script_getnum(st,(6+start_type)));
@@ -23413,9 +23413,9 @@ static BUILDIN(setcell)
 	}
 
 	if (x1 > x2)
-		HSWAP(x1,x2);
+		std::swap(x1,x2);
 	if (y1 > y2)
-		HSWAP(y1,y2);
+		std::swap(y1,y2);
 
 	for( y = y1; y <= y2; ++y )
 		for( x = x1; x <= x2; ++x )
@@ -27698,7 +27698,7 @@ static BUILDIN(rodex_sendmail)
 
 		int amount = script_getnum(st, param + 1);
 
-		if (amount < 1 || amount > HMIN(MAX_AMOUNT, SHRT_MAX)) {
+		if (amount < 1 || amount > std::min(MAX_AMOUNT, SHRT_MAX)) {
 			ShowError("script:rodex_sendmail: Invalid amount %d passed for item %d!\n", amount, i + 1);
 			return false;
 		}
@@ -27768,7 +27768,7 @@ static BUILDIN(rodex_sendmail2)
 
 		int amount = script_getnum(st, param + 1);
 
-		if (amount < 1 || amount > HMIN(MAX_AMOUNT, SHRT_MAX)) {
+		if (amount < 1 || amount > std::min(MAX_AMOUNT, SHRT_MAX)) {
 			ShowError("script:rodex_sendmail: Invalid amount %d passed for item %d!\n", amount, i + 1);
 			return false;
 		}

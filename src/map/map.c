@@ -770,15 +770,15 @@ static int bl_getall_area(int type, int m, int x0, int y0, int x1, int y1, int (
 	Assert_ret(listm->block != NULL);
 
 	// Limit search area to map size
-	x0 = HMIN(HMAX(x0, 0), map->list[m].xs - 1);
-	y0 = HMIN(HMAX(y0, 0), map->list[m].ys - 1);
-	x1 = HMIN(HMAX(x1, 0), map->list[m].xs - 1);
-	y1 = HMIN(HMAX(y1, 0), map->list[m].ys - 1);
+	x0 = std::min(std::max(x0, 0), map->list[m].xs - 1);
+	y0 = std::min(std::max(y0, 0), map->list[m].ys - 1);
+	x1 = std::min(std::max(x1, 0), map->list[m].xs - 1);
+	y1 = std::min(std::max(y1, 0), map->list[m].ys - 1);
 
 	if (x1 < x0)
-		HSWAP(x0, x1);
+		std::swap(x0, x1);
 	if (y1 < y0)
-		HSWAP(y0, y1);
+		std::swap(y0, y1);
 
 	{
 		const int x0b = x0 / BLOCK_SIZE;
@@ -1695,9 +1695,9 @@ static int map_search_free_cell(struct block_list *src, int16 m, int16 *x, int16
 	if (range_x < 0 || range_y < 0) {
 		if (Assert_chk(map->list[m].xs > 2 * margin && map->list[m].ys > 2 * margin))
 			ShowDebug("search_freecell_map_margin is too big for at least one map.");
-		tries = HMIN(map->list[m].xs * map->list[m].ys, 500); // For likely every map this will be 500...
+		tries = std::min(map->list[m].xs * map->list[m].ys, 500); // For likely every map this will be 500...
 	} else {
-		tries = HMIN(width * height, 100);
+		tries = std::min(width * height, 100);
 	}
 
 	if (map->list[m].xs <= 1 || map->list[m].ys <= 1) // Sanity check for the below value clamping
@@ -1706,12 +1706,12 @@ static int map_search_free_cell(struct block_list *src, int16 m, int16 *x, int16
 	int avoidplayer_retries = 0;
 	while (tries-- > 0) {
 		if (range_x < 0)
-			*x = rnd() % HMAX(1, map->list[m].xs - 2 * margin) + margin;
+			*x = rnd() % std::max(1, map->list[m].xs - 2 * margin) + margin;
 		else
 			*x = rnd() % width - range_x + center_x;
 
 		if (range_y < 0)
-			*y = rnd() % HMAX(1, map->list[m].ys - 2 * margin) + margin;
+			*y = rnd() % std::max(1, map->list[m].ys - 2 * margin) + margin;
 		else
 			*y = rnd() % height - range_y + center_y;
 
@@ -3002,8 +3002,8 @@ static int map_get_random_cell(struct block_list *bl, int16 m, int16 *x, int16 *
 	enum unit_dir dir = unit_get_rnd_diagonal_dir();
 
 	for (int i = 0; i < 4; i++, dir = unit_get_ccw90_dir(dir)) {
-		int16 x_rnd_dist = (min_dist + rnd()) % HMAX((int16)1, max_dist);
-		int16 y_rnd_dist = (min_dist + rnd()) % HMAX((int16)1, max_dist);
+		int16 x_rnd_dist = (min_dist + rnd()) % std::max((int16)1, max_dist);
+		int16 y_rnd_dist = (min_dist + rnd()) % std::max((int16)1, max_dist);
 		int16 x_rnd = *x + dirx[dir] * x_rnd_dist;
 		int16 y_rnd = *y + diry[dir] * y_rnd_dist;
 
@@ -3045,8 +3045,8 @@ static int map_get_random_cell_in_range(struct block_list *bl, int16 m, int16 *x
 	enum unit_dir dir = unit_get_rnd_diagonal_dir();
 
 	for (int i = 0; i < 4; i++, dir = unit_get_ccw90_dir(dir)) {
-		int16 x_rnd_range = rnd() % HMAX((int16)1, x_range);
-		int16 y_rnd_range = rnd() % HMAX((int16)1, y_range);
+		int16 x_rnd_range = rnd() % std::max((int16)1, x_range);
+		int16 y_rnd_range = rnd() % std::max((int16)1, y_range);
 		int16 x_rnd = *x + dirx[dir] * x_rnd_range;
 		int16 y_rnd = *y + diry[dir] * y_rnd_range;
 

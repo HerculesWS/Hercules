@@ -385,30 +385,6 @@ typedef char bool;
 #endif // __bool_true_false_are_defined
 #endif
 
-//////////////////////////////////////////////////////////////////////////
-// macro tools
-
-#ifndef __cplusplus
-#define herc_internal_swap(a,b) do { if ((a) != (b)) { (a) ^= (b); (b) ^= (a); (a) ^= (b); } } while(0)
-#define herc_internal_swap_ptr(a,b) do { if ((a) != (b)) (a) = (void*)((intptr_t)(a) ^ (intptr_t)(b)); (b) = (void*)((intptr_t)(a) ^ (intptr_t)(b)); (a) = (void*)((intptr_t)(a) ^ (intptr_t)(b)); } while(0)
-
-#define herc_internal_max(a,b) (((a) > (b)) ? (a) : (b))
-
-#define herc_internal_min(a,b) (((a) < (b)) ? (a) : (b))
-
-// Macros to ease the c++ transition - remove later
-#define HSWAP(a, b) herc_internal_swap((a), (b))
-#define HSWAP_PTR(a, b) herc_internal_swap_ptr((a), (b))
-#define HMAX(a, b) herc_internal_max((a), (b))
-#define HMIN(a, b) herc_internal_min((a), (b))
-#else
-// Macros to ease the c++ transition - remove later
-#define HSWAP(a, b) std::swap((a), (b))
-#define HSWAP_PTR(a, b) std::swap((a), (b))
-#define HMAX(a, b) std::max((a), (b))
-#define HMIN(a, b) std::min((a), (b))
-#endif
-
 #ifndef __cplusplus
 //////////////////////////////////////////////////////////////////////////
 // should not happen

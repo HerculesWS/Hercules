@@ -1764,8 +1764,8 @@ static void clif_hominfo(struct map_session_data *sd, struct homun_data *hd, int
 	p.exp = hd->homunculus.exp;
 	p.expNext = hd->exp_next;
 #else  // PACKETVER_MAIN_NUM >= 20210303 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
-	p.exp = (uint32)HMIN(hd->homunculus.exp, (uint64)UINT32_MAX);
-	p.expNext = (uint32)HMIN(hd->exp_next, (uint64)UINT32_MAX);
+	p.exp = (uint32)std::min(hd->homunculus.exp, (uint64)UINT32_MAX);
+	p.expNext = (uint32)std::min(hd->exp_next, (uint64)UINT32_MAX);
 #endif  // PACKETVER_MAIN_NUM >= 20210303 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 
 	if (hd->homunculus.level >= homun->get_max_level(hd))
@@ -4095,18 +4095,18 @@ static void clif_initialstatus(struct map_session_data *sd)
 	unsigned char *buf = WFIFOP(unsigned char *, fd, 0);
 
 	WBUFW(buf,0)=0xbd;
-	WBUFW(buf,2)=HMIN(sd->status.status_point, (int)INT16_MAX);
-	WBUFB(buf,4)=HMIN(sd->status.str, (short)UINT8_MAX);
+	WBUFW(buf,2)=std::min(sd->status.status_point, (int)INT16_MAX);
+	WBUFB(buf,4)=std::min(sd->status.str, (short)UINT8_MAX);
 	WBUFB(buf,5)=pc->need_status_point(sd,SP_STR,1);
-	WBUFB(buf,6)=HMIN(sd->status.agi, (short)UINT8_MAX);
+	WBUFB(buf,6)=std::min(sd->status.agi, (short)UINT8_MAX);
 	WBUFB(buf,7)=pc->need_status_point(sd,SP_AGI,1);
-	WBUFB(buf,8)=HMIN(sd->status.vit, (short)UINT8_MAX);
+	WBUFB(buf,8)=std::min(sd->status.vit, (short)UINT8_MAX);
 	WBUFB(buf,9)=pc->need_status_point(sd,SP_VIT,1);
-	WBUFB(buf,10)=HMIN(sd->status.int_, (short)UINT8_MAX);
+	WBUFB(buf,10)=std::min(sd->status.int_, (short)UINT8_MAX);
 	WBUFB(buf,11)=pc->need_status_point(sd,SP_INT,1);
-	WBUFB(buf,12)=HMIN(sd->status.dex, (short)UINT8_MAX);
+	WBUFB(buf,12)=std::min(sd->status.dex, (short)UINT8_MAX);
 	WBUFB(buf,13)=pc->need_status_point(sd,SP_DEX,1);
-	WBUFB(buf,14)=HMIN(sd->status.luk, (short)UINT8_MAX);
+	WBUFB(buf,14)=std::min(sd->status.luk, (short)UINT8_MAX);
 	WBUFB(buf,15)=pc->need_status_point(sd,SP_LUK,1);
 
 	WBUFW(buf,16) = pc_leftside_atk(sd);
@@ -5145,11 +5145,11 @@ static int clif_damage(struct block_list *src, struct block_list *dst, int sdela
 	}
 
 #if PACKETVER < 20071113
-	damage = (short)HMIN(in_damage, (int64)INT16_MAX);
-	damage2 = (short)HMIN(in_damage2, (int64)INT16_MAX);
+	damage = (short)std::min(in_damage, (int64)INT16_MAX);
+	damage2 = (short)std::min(in_damage2, (int64)INT16_MAX);
 #else
-	damage = (int)HMIN(in_damage, (int64)INT_MAX);
-	damage2 = (int)HMIN(in_damage2, (int64)INT_MAX);
+	damage = (int)std::min(in_damage, (int64)INT_MAX);
+	damage2 = (int)std::min(in_damage2, (int64)INT_MAX);
 #endif
 
 	type = clif_calc_delay(type,div,damage+damage2,ddelay);
@@ -6048,9 +6048,9 @@ static int clif_skill_nodamage(struct block_list *src, struct block_list *dst, u
 	p.PacketType = HEADER_ZC_USE_SKILL;
 	p.SKID = skill_id;
 #if PACKETVER_MAIN_NUM >= 20130731 || PACKETVER_RE_NUM >= 20130724 || defined(PACKETVER_ZERO)
-	p.level = HMIN(heal, INT_MAX);
+	p.level = std::min(heal, INT_MAX);
 #else
-	p.level = HMIN(heal, (int)INT16_MAX);
+	p.level = std::min(heal, (int)INT16_MAX);
 #endif
 	p.targetAID = dst->id;
 	p.srcAID = src ? src->id : 0;
@@ -13020,7 +13020,7 @@ static void clif_parse_CreateChatRoom(int fd, struct map_session_data *sd)
 	}
 
 	safestrncpy(s_password, password, CHATROOM_PASS_SIZE);
-	safestrncpy(s_title, title, HMIN(len+1,CHATROOM_TITLE_SIZE)); //NOTE: assumes that safestrncpy will not access the len+1'th byte
+	safestrncpy(s_title, title, std::min(len+1,CHATROOM_TITLE_SIZE)); //NOTE: assumes that safestrncpy will not access the len+1'th byte
 
 	chat->create_pc_chat(sd, s_title, s_password, limit, pub);
 }
@@ -13067,7 +13067,7 @@ static void clif_parse_ChatRoomStatusChange(int fd, struct map_session_data *sd)
 	const char *title = RFIFOP(char *, fd, 15); // not zero-terminated
 
 	safestrncpy(s_password, password, CHATROOM_PASS_SIZE);
-	safestrncpy(s_title, title, HMIN(len+1,CHATROOM_TITLE_SIZE)); //NOTE: assumes that safestrncpy will not access the len+1'th byte
+	safestrncpy(s_title, title, std::min(len+1,CHATROOM_TITLE_SIZE)); //NOTE: assumes that safestrncpy will not access the len+1'th byte
 
 	chat->change_status(sd, s_title, s_password, limit, pub);
 }
@@ -14127,7 +14127,7 @@ static void clif_parse_NpcStringInput(int fd, struct map_session_data *sd)
 	npcid = (sd->state.using_megaphone == 0) ? RFIFOSL(fd, 4) : sd->npc_id;
 	const char *message = RFIFOP(char *, fd, 8);
 
-	safestrncpy(sd->npc_str, message, HMIN(message_len,CHATBOX_SIZE));
+	safestrncpy(sd->npc_str, message, std::min(message_len,CHATBOX_SIZE));
 	npc->scriptcont(sd, npcid, false);
 }
 
@@ -17645,17 +17645,17 @@ static void clif_check(int fd, struct map_session_data *pl_sd)
 	nullpo_retv(pl_sd);
 	WFIFOHEAD(fd,packet_len(0x214));
 	WFIFOW(fd, 0) = 0x214;
-	WFIFOB(fd, 2) = HMIN(pl_sd->status.str, (short)UINT8_MAX);
+	WFIFOB(fd, 2) = std::min(pl_sd->status.str, (short)UINT8_MAX);
 	WFIFOB(fd, 3) = pc->need_status_point(pl_sd, SP_STR, 1);
-	WFIFOB(fd, 4) = HMIN(pl_sd->status.agi, (short)UINT8_MAX);
+	WFIFOB(fd, 4) = std::min(pl_sd->status.agi, (short)UINT8_MAX);
 	WFIFOB(fd, 5) = pc->need_status_point(pl_sd, SP_AGI, 1);
-	WFIFOB(fd, 6) = HMIN(pl_sd->status.vit, (short)UINT8_MAX);
+	WFIFOB(fd, 6) = std::min(pl_sd->status.vit, (short)UINT8_MAX);
 	WFIFOB(fd, 7) = pc->need_status_point(pl_sd, SP_VIT, 1);
-	WFIFOB(fd, 8) = HMIN(pl_sd->status.int_, (short)UINT8_MAX);
+	WFIFOB(fd, 8) = std::min(pl_sd->status.int_, (short)UINT8_MAX);
 	WFIFOB(fd, 9) = pc->need_status_point(pl_sd, SP_INT, 1);
-	WFIFOB(fd,10) = HMIN(pl_sd->status.dex, (short)UINT8_MAX);
+	WFIFOB(fd,10) = std::min(pl_sd->status.dex, (short)UINT8_MAX);
 	WFIFOB(fd,11) = pc->need_status_point(pl_sd, SP_DEX, 1);
-	WFIFOB(fd,12) = HMIN(pl_sd->status.luk, (short)UINT8_MAX);
+	WFIFOB(fd,12) = std::min(pl_sd->status.luk, (short)UINT8_MAX);
 	WFIFOB(fd,13) = pc->need_status_point(pl_sd, SP_LUK, 1);
 	WFIFOW(fd,14) = pl_sd->battle_status.batk+pl_sd->battle_status.rhw.atk+pl_sd->battle_status.lhw.atk;
 	WFIFOW(fd,16) = pl_sd->battle_status.rhw.atk2+pl_sd->battle_status.lhw.atk2;
@@ -20503,7 +20503,7 @@ static void clif_search_store_info_ack(struct map_session_data *sd)
 	nullpo_retv(sd);
 	fd = sd->fd;
 	start = sd->searchstore.pages * SEARCHSTORE_RESULTS_PER_PAGE;
-	end   = HMIN(sd->searchstore.count, start + SEARCHSTORE_RESULTS_PER_PAGE);
+	end   = std::min(sd->searchstore.count, start + SEARCHSTORE_RESULTS_PER_PAGE);
 
 	len = sizeof(struct PACKET_ZC_SEARCH_STORE_INFO_ACK) + (end - start) * blocksize;
 	WFIFOHEAD(fd, len);
@@ -20512,7 +20512,7 @@ static void clif_search_store_info_ack(struct map_session_data *sd)
 	p->packetLength = len;
 	p->firstPage = !sd->searchstore.pages;
 	p->nextPage = searchstore->querynext(sd);
-	p->usesCount = (unsigned char)HMIN(sd->searchstore.uses, (unsigned int)UINT8_MAX);
+	p->usesCount = (unsigned char)std::min(sd->searchstore.uses, (unsigned int)UINT8_MAX);
 
 	for (i = start; i < end; i++) {
 		struct s_search_store_info_item* ssitem = &sd->searchstore.items[i];
@@ -20598,7 +20598,7 @@ static void clif_open_search_store_info(struct map_session_data *sd)
 	WFIFOW(fd,0) = 0x83a;
 	WFIFOW(fd,2) = sd->searchstore.effect;
 #if PACKETVER > 20100701
-	WFIFOB(fd,4) = (unsigned char)HMIN(sd->searchstore.uses, (unsigned int)UINT8_MAX);
+	WFIFOB(fd,4) = (unsigned char)std::min(sd->searchstore.uses, (unsigned int)UINT8_MAX);
 #endif
 	WFIFOSET(fd,packet_len(0x83a));
 #endif
@@ -22030,9 +22030,9 @@ static int clif_delay_damage(int64 tick, struct block_list *src, struct block_li
 	}
 
 #if PACKETVER < 20071113
-	damage = (short)HMIN(in_damage, (int64)INT16_MAX);
+	damage = (short)std::min(in_damage, (int64)INT16_MAX);
 #else
-	damage = (int)HMIN(in_damage, (int64)INT_MAX);
+	damage = (int)std::min(in_damage, (int64)INT_MAX);
 #endif
 
 	type = clif_calc_delay(type,div,damage,ddelay);

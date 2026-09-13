@@ -1211,10 +1211,10 @@ static int npc_check_areanpc(int flag, int16 m, int16 x, int16 y, int16 range)
 	Assert_retr(1, m >= 0 && m < map->count);
 
 	if (range < 0) return 0;
-	x0 = HMAX(x-range, 0);
-	y0 = HMAX(y-range, 0);
-	x1 = HMIN(x+range, map->list[m].xs-1);
-	y1 = HMIN(y+range, map->list[m].ys-1);
+	x0 = std::max(x-range, 0);
+	y0 = std::max(y-range, 0);
+	x1 = std::min(x+range, map->list[m].xs-1);
+	y1 = std::min(y+range, map->list[m].ys-1);
 
 	//First check for npc_cells on the range given
 	i = 0;
@@ -4435,8 +4435,8 @@ static void npc_movenpc(struct npc_data *nd, int16 x, int16 y)
 	m = nd->bl.m;
 	if (m < 0 || nd->bl.prev == NULL) return; //Not on a map.
 
-	x = cap_value(x, 0, HMAX(0, map->list[m].xs - 1));
-	y = cap_value(y, 0, HMAX(0, map->list[m].ys - 1));
+	x = cap_value(x, 0, std::max(0, map->list[m].xs - 1));
+	y = cap_value(y, 0, std::max(0, map->list[m].ys - 1));
 
 	map->foreachinrange(clif->outsight, &nd->bl, AREA_SIZE, BL_PC, &nd->bl);
 	map->moveblock(&nd->bl, x, y, timer->gettick());
@@ -5482,7 +5482,7 @@ static int npc_parsesrcfile(const char *filepath, bool runOnInit)
 			ShowWarning("npc_parsesrcfile: w1 truncated, too much data (%d) in file '%s', line '%d'.\n", pos[3]-pos[2], filepath, strline(buffer,p-buffer));
 			success = EXIT_FAILURE;
 		}
-		i = HMIN(pos[3]-pos[2], ARRAYLENGTH(w1)-1);
+		i = std::min(pos[3]-pos[2], ARRAYLENGTH(w1)-1);
 		memcpy(w1, p+pos[2], i*sizeof(char));
 		w1[i] = '\0';
 		// fill w2
@@ -5490,7 +5490,7 @@ static int npc_parsesrcfile(const char *filepath, bool runOnInit)
 			ShowWarning("npc_parsesrcfile: w2 truncated, too much data (%d) in file '%s', line '%d'.\n", pos[5]-pos[4], filepath, strline(buffer,p-buffer));
 			success = EXIT_FAILURE;
 		}
-		i = HMIN(pos[5]-pos[4], ARRAYLENGTH(w2)-1);
+		i = std::min(pos[5]-pos[4], ARRAYLENGTH(w2)-1);
 		memcpy(w2, p+pos[4], i*sizeof(char));
 		w2[i] = '\0';
 		// fill w3
@@ -5498,7 +5498,7 @@ static int npc_parsesrcfile(const char *filepath, bool runOnInit)
 			ShowWarning("npc_parsesrcfile: w3 truncated, too much data (%d) in file '%s', line '%d'.\n", pos[7]-pos[6], filepath, strline(buffer,p-buffer));
 			success = EXIT_FAILURE;
 		}
-		i = HMIN(pos[7]-pos[6], ARRAYLENGTH(w3)-1);
+		i = std::min(pos[7]-pos[6], ARRAYLENGTH(w3)-1);
 		memcpy(w3, p+pos[6], i*sizeof(char));
 		w3[i] = '\0';
 		// fill w4 (to end of line)
@@ -5507,7 +5507,7 @@ static int npc_parsesrcfile(const char *filepath, bool runOnInit)
 			success = EXIT_FAILURE;
 		}
 		if( pos[8] != -1 ) {
-			i = HMIN(pos[1]-pos[8], ARRAYLENGTH(w4)-1);
+			i = std::min(pos[1]-pos[8], ARRAYLENGTH(w4)-1);
 			memcpy(w4, p+pos[8], i*sizeof(char));
 			w4[i] = '\0';
 		} else {

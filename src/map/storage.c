@@ -1067,7 +1067,7 @@ bool storage_config_read(const char *filename, bool imported)
 
 		if (s_conf.capacity > MAX_STORAGE) {
 			ShowWarning("storage_config_read: Capacity for Storage #%d ('%s') is over MAX_STORAGE. Capping to %d.\n", s_conf.uid, s_conf.name, MAX_STORAGE);
-			s_conf.capacity = HMIN(s_conf.capacity, MAX_STORAGE);
+			s_conf.capacity = std::min(s_conf.capacity, MAX_STORAGE);
 		}
 
 		if (libconfig->setting_lookup_string(t, "Constant", &constant) == CONFIG_FALSE) {

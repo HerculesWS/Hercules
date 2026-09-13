@@ -1532,7 +1532,7 @@ static int guild_skillupack(int guild_id, uint16 skill_id, int account_id)
 			// Guild storage handling
 			case GD_GUILD_STORAGE:
 #ifdef OFFICIAL_GUILD_STORAGE
-				g->max_storage = HMIN(g->skill[skill_id-GD_SKILLBASE].lv * GUILD_STORAGE_EXPANSION_STEP, MAX_GUILD_STORAGE);
+				g->max_storage = std::min(g->skill[skill_id-GD_SKILLBASE].lv * GUILD_STORAGE_EXPANSION_STEP, MAX_GUILD_STORAGE);
 #endif // OFFICIAL_GUILD_STORAGE
 				break;
 		}
