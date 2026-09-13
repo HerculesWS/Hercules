@@ -774,8 +774,10 @@ static int bl_getall_area(int type, int m, int x0, int y0, int x1, int y1, int (
 	x1 = min(max(x1, 0), map->list[m].xs - 1);
 	y1 = min(max(y1, 0), map->list[m].ys - 1);
 
-	if (x1 < x0) swap(x0, x1);
-	if (y1 < y0) swap(y0, y1);
+	if (x1 < x0)
+		HSWAP(x0, x1);
+	if (y1 < y0)
+		HSWAP(y0, y1);
 
 	{
 		const int x0b = x0 / BLOCK_SIZE;

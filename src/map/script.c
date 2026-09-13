@@ -7384,7 +7384,7 @@ static BUILDIN(rand)
 		min = script_getnum(st,2);
 		max = script_getnum(st,3);
 		if( max < min )
-			swap(min, max);
+			HSWAP(min, max);
 		range = max - min + 1;
 	} else {
 		// range
@@ -7501,8 +7501,10 @@ static BUILDIN(areawarp)
 			y3 = 0;
 		} else if( x3 && y3 ) {
 			// normalize x3/y3 coordinates
-			if( x3 < x2 ) swap(x3,x2);
-			if( y3 < y2 ) swap(y3,y2);
+			if (x3 < x2)
+				HSWAP(x3,x2);
+			if (y3 < y2)
+				HSWAP(y3,y2);
 		}
 	}
 
@@ -23385,8 +23387,10 @@ static BUILDIN(setcell)
 		return true;
 	}
 
-	if( x1 > x2 ) swap(x1,x2);
-	if( y1 > y2 ) swap(y1,y2);
+	if (x1 > x2)
+		HSWAP(x1,x2);
+	if (y1 > y2)
+		HSWAP(y1,y2);
 
 	for( y = y1; y <= y2; ++y )
 		for( x = x1; x <= x2; ++x )
