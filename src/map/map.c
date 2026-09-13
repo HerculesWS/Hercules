@@ -3848,7 +3848,6 @@ static void map_flags_init(void)
 static int map_waterheight(char *mapname)
 {
 	char fn[256];
-	char *rsw = NULL;
 	const char *found;
 
 	nullpo_retr(NO_WATER, mapname);
@@ -3859,7 +3858,7 @@ static int map_waterheight(char *mapname)
 		safestrncpy(fn, found, sizeof(fn)); // replace with real name
 
 	// read & convert fn
-	rsw = grfio_read(fn);
+	char *rsw = (char *)grfio_read(fn);
 	if (rsw) {
 		if (memcmp(rsw, "GRSW", 4) != 0) {
 			ShowWarning("Failed to find water level for %s (%s)\n", mapname, fn);
@@ -3901,14 +3900,13 @@ static int map_waterheight(char *mapname)
 static int map_readgat(struct map_data *m)
 {
 	char filename[256];
-	uint8* gat;
 	int water_height;
 	size_t xy, off, num_cells;
 
 	nullpo_ret(m);
 	sprintf(filename, "data\\%s.gat", m->name);
 
-	gat = grfio_read(filename);
+	uint8 *gat = (uint8 *)grfio_read(filename);
 	if (gat == NULL)
 		return 0;
 

@@ -425,7 +425,7 @@ static int npc_event_sub(struct map_session_data *sd, struct event_data *ev, con
  */
 static void npc_event_doall_sub(void *key, void *data, va_list ap)
 {
-	struct event_data* ev = data;
+	struct event_data *ev = (struct event_data *)data;
 	int* c;
 	const char* name;
 	int rid;

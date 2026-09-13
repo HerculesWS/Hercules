@@ -281,7 +281,7 @@ static unsigned long grfio_crc32(const unsigned char *buf, unsigned int len)
 /// @copydoc grfio_interface::decode_zip
 static int grfio_decode_zip(void *dest, unsigned long *dest_len, const void *source, unsigned long source_len)
 {
-	const int ret = uncompress(dest, dest_len, source, source_len);
+	const int ret = uncompress((uint8 *)dest, dest_len, (const uint8 *)source, source_len);
 	if (ret != Z_OK)
 		grfio->report_error(ret);
 	return ret;
@@ -296,7 +296,7 @@ static int grfio_encode_zip(void *dest, unsigned long *dest_len, const void *sou
 		/* [Ind/Hercules] */
 		CREATE(dest, unsigned char, *dest_len);
 	}
-	const int ret = compress(dest, dest_len, source, source_len);
+	const int ret = compress((uint8 *)dest, dest_len, (const uint8 *)source, source_len);
 	if (ret != Z_OK)
 		grfio->report_error(ret);
 	return ret;
@@ -840,7 +840,7 @@ static void grfio_resourcecheck(void)
 	}
 
 	// read resnametable from loaded GRF's, only if it cannot be loaded from the data directory
-	buf = grfio->reads("data\\resnametable.txt", &size);
+	buf = (char *)grfio->reads("data\\resnametable.txt", &size);
 	if (buf != NULL) {
 		char *ptr = NULL;
 		buf[size] = '\0';
