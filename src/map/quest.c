@@ -1059,7 +1059,7 @@ static enum quest_mobtype quest_mobsize2client(uint8 size)
 		return QMT_SZ_LARGE;
 
 	default:
-		return 0;
+		return QMT_NONE;
 	}
 }
 
@@ -1087,7 +1087,7 @@ static enum quest_mobtype quest_mobele2client(uint8 type)
 	case ELE_UNDEAD:
 		return QMT_ELE_UNDEAD;
 	default:
-		return 0;
+		return QMT_NONE;
 	}
 }
 
@@ -1115,7 +1115,7 @@ static enum quest_mobtype quest_mobrace2client(uint8 type)
 	case RC_DRAGON:
 		return QMT_RC_DRAGON;
 	default:
-		return 0;
+		return QMT_NONE;
 	}
 }
 
