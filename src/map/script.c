@@ -1910,7 +1910,7 @@ static const char *parse_syntax_function (const char *p, bool is_public)
 
 			if ((script->parse_options & SCRIPT_USE_LABEL_DB) != 0) {
 				script->label_add(l, VECTOR_LENGTH(script->buf),
-					LABEL_IS_USERFUNC | (is_public ? LABEL_IS_EXTERN : 0));
+					(enum script_label_flags)(LABEL_IS_USERFUNC | (is_public ? LABEL_IS_EXTERN : LABEL_NOFLAGS)));
 			}
 		} else {
 			disp_error_message("script:parse_syntax_function: function name is already in use", func_name);
@@ -3042,7 +3042,7 @@ static struct script_code *parse_script(const char *src, const char *file, int l
 
 			if ((script->parse_options & SCRIPT_USE_LABEL_DB) != 0) {
 				bool is_extern = ((p[0] == 'O' || p[0] == 'o') && (p[1] == 'N' || p[1] == 'n'));
-				script->label_add(i, VECTOR_LENGTH(script->buf), is_extern ? LABEL_IS_EXTERN : 0);
+				script->label_add(i, VECTOR_LENGTH(script->buf), is_extern ? LABEL_IS_EXTERN : LABEL_NOFLAGS);
 			}
 
 			p = tmpp + 1;
