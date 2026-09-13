@@ -1056,7 +1056,7 @@ static int skill_tree_get_max(int skill_id, int class_)
 		return skill->get_max(skill_id);
 }
 
-static int skill_get_casttype(int skill_id)
+static enum cast_enum skill_get_casttype(int skill_id)
 {
 	int inf = skill->get_inf(skill_id);
 	if (inf&(INF_GROUND_SKILL))

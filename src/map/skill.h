@@ -2130,7 +2130,7 @@ struct skill_interface {
 	const char *(*get_name) (int skill_id);
 	const char *(*get_desc) (int skill_id);
 	/* whether its CAST_GROUND, CAST_DAMAGE or CAST_NODAMAGE */
-	int (*get_casttype) (int skill_id);
+	enum cast_enum (*get_casttype) (int skill_id);
 	int (*get_casttype2) (int index);
 	sc_type (*get_sc_type) (int skill_id);
 	bool (*is_combo) (int skill_id);
