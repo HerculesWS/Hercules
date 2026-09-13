@@ -3764,12 +3764,15 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 		}
 	}
 
-	if (dmg.dmg_lv >= ATK_MISS && (type = skill->get_walkdelay(skill_id, skill_lv)) > 0) {
-		//Skills with can't walk delay also stop normal attacking for that
-		//duration when the attack connects. [Skotlex]
-		struct unit_data *ud = unit->bl2ud(src);
-		if (ud && DIFF_TICK(ud->attackabletime, tick + type) < 0)
-			ud->attackabletime = tick + type;
+	{
+		int walk_delay;
+		if (dmg.dmg_lv >= ATK_MISS && (walk_delay = skill->get_walkdelay(skill_id, skill_lv)) > 0) {
+			//Skills with can't walk delay also stop normal attacking for that
+			//duration when the attack connects. [Skotlex]
+			struct unit_data *ud = unit->bl2ud(src);
+			if (ud && DIFF_TICK(ud->attackabletime, tick + walk_delay) < 0)
+				ud->attackabletime = tick + walk_delay;
+		}
 	}
 
 	shadow_flag = skill->check_shadowform(bl, damage, dmg.div_);
