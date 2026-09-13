@@ -1210,8 +1210,8 @@ static int npc_check_areanpc(int flag, int16 m, int16 x, int16 y, int16 range)
 	Assert_retr(1, m >= 0 && m < map->count);
 
 	if (range < 0) return 0;
-	x0 = max(x-range, 0);
-	y0 = max(y-range, 0);
+	x0 = HMAX(x-range, 0);
+	y0 = HMAX(y-range, 0);
 	x1 = HMIN(x+range, map->list[m].xs-1);
 	y1 = HMIN(y+range, map->list[m].ys-1);
 

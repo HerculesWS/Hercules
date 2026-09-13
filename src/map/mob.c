@@ -2792,12 +2792,12 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 			}
 
 			if (battle_config.drop_rate0item)
-				drop_rate = max(drop_rate, 0);
+				drop_rate = HMAX(drop_rate, 0);
 			else
-				drop_rate = max(drop_rate, 1);
+				drop_rate = HMAX(drop_rate, 1);
 
 			// Make sure the bonuses don't make the drop rate grow past the configured threshold (unless it already was)
-			drop_rate = HMIN(drop_rate, max(md->db->dropitem[i].p, battle_config.item_drop_bonus_max_threshold));
+			drop_rate = HMIN(drop_rate, HMAX(md->db->dropitem[i].p, battle_config.item_drop_bonus_max_threshold));
 
 			// attempt to drop the item
 			if (rnd() % 10000 >= drop_rate)

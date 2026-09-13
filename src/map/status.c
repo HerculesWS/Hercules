@@ -3407,7 +3407,7 @@ static void status_calc_bl_main(struct block_list *bl, e_scb_flag flag)
 				}
 			}
 #ifdef RENEWAL_ASPD
-			amotion += (max(0xc3 - amotion, 2) * (st->aspd_rate2 + status->calc_aspd(bl, sc, 2))) / 100;
+			amotion += (HMAX(0xc3 - amotion, 2) * (st->aspd_rate2 + status->calc_aspd(bl, sc, 2))) / 100;
 			amotion = 10 * (200 - amotion);
 			if (sd != NULL) {
 				amotion += sd->bonus.aspd_add;
@@ -5451,78 +5451,78 @@ static unsigned short status_calc_speed(struct block_list *bl, struct status_cha
 				{
 					// Longing for Freedom cancels song/dance penalty
 					if( sc->data[SC_LONGING] )
-						val = max( val, 50 - 10 * sc->data[SC_LONGING]->val1 );
+						val = HMAX( val, 50 - 10 * sc->data[SC_LONGING]->val1 );
 					else
 						if( sd && sc->data[SC_DANCING] )
-							val = max( val, 500 - (40 + 10 * (sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_BARDDANCER)) * pc->checkskill(sd,(sd->status.sex?BA_MUSICALLESSON:DC_DANCINGLESSON)) );
+							val = HMAX( val, 500 - (40 + 10 * (sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_BARDDANCER)) * pc->checkskill(sd,(sd->status.sex?BA_MUSICALLESSON:DC_DANCINGLESSON)) );
 
 					if( sc->data[SC_DEC_AGI] )
-						val = max( val, 25 );
+						val = HMAX( val, 25 );
 					if( sc->data[SC_QUAGMIRE] || sc->data[SC_HALLUCINATIONWALK_POSTDELAY] )
-						val = max( val, 50 );
+						val = HMAX( val, 50 );
 					if( sc->data[SC_DONTFORGETME] )
-						val = max( val, sc->data[SC_DONTFORGETME]->val3 );
+						val = HMAX( val, sc->data[SC_DONTFORGETME]->val3 );
 					if( sc->data[SC_CURSE] )
-						val = max( val, 300 );
+						val = HMAX( val, 300 );
 					if( sc->data[SC_CHASEWALK] )
-						val = max( val, sc->data[SC_CHASEWALK]->val3 );
+						val = HMAX( val, sc->data[SC_CHASEWALK]->val3 );
 					if( sc->data[SC_WEDDING] )
-						val = max( val, 100 );
+						val = HMAX( val, 100 );
 					if( sc->data[SC_JOINTBEAT] && sc->data[SC_JOINTBEAT]->val2&(BREAK_ANKLE|BREAK_KNEE) )
-						val = max( val, ((sc->data[SC_JOINTBEAT]->val2&BREAK_ANKLE) ? 50 : 0) + ((sc->data[SC_JOINTBEAT]->val2&BREAK_KNEE) ? 30 : 0) );
+						val = HMAX( val, ((sc->data[SC_JOINTBEAT]->val2&BREAK_ANKLE) ? 50 : 0) + ((sc->data[SC_JOINTBEAT]->val2&BREAK_KNEE) ? 30 : 0) );
 					if( sc->data[SC_CLOAKING] && (sc->data[SC_CLOAKING]->val4&1) == 0 )
-						val = max( val, sc->data[SC_CLOAKING]->val1 < 3 ? 300 : 30 - 3 * sc->data[SC_CLOAKING]->val1 );
+						val = HMAX( val, sc->data[SC_CLOAKING]->val1 < 3 ? 300 : 30 - 3 * sc->data[SC_CLOAKING]->val1 );
 					if( sc->data[SC_GOSPEL] && sc->data[SC_GOSPEL]->val4 == BCT_ENEMY )
-						val = max( val, 75 );
+						val = HMAX( val, 75 );
 					if (sc->data[SC_SLOWDOWN])
-						val = max(val, 100);
+						val = HMAX(val, 100);
 					if (sc->data[SC_MOVESLOW_POTION]) // Used by Slow_Down_Potion [Frost]
-						val = max(val, sc->data[SC_MOVESLOW_POTION]->val1);
+						val = HMAX(val, sc->data[SC_MOVESLOW_POTION]->val1);
 					if( sc->data[SC_GS_GATLINGFEVER] )
-						val = max( val, 100 );
+						val = HMAX( val, 100 );
 					if( sc->data[SC_NJ_SUITON] )
-						val = max( val, sc->data[SC_NJ_SUITON]->val3 );
+						val = HMAX( val, sc->data[SC_NJ_SUITON]->val3 );
 					if( sc->data[SC_SWOO] )
-						val = max( val, 300 );
+						val = HMAX( val, 300 );
 					if( sc->data[SC_FROSTMISTY] )
-						val = max( val, 50 );
+						val = HMAX( val, 50 );
 					if( sc->data[SC_CAMOUFLAGE] && (sc->data[SC_CAMOUFLAGE]->val3&1) == 0 )
-						val = max( val, sc->data[SC_CAMOUFLAGE]->val1 < 3 ? 0 : 25 * (5 - sc->data[SC_CAMOUFLAGE]->val1) );
+						val = HMAX( val, sc->data[SC_CAMOUFLAGE]->val1 < 3 ? 0 : 25 * (5 - sc->data[SC_CAMOUFLAGE]->val1) );
 					if( sc->data[SC__GROOMY] )
-						val = max( val, sc->data[SC__GROOMY]->val2);
+						val = HMAX( val, sc->data[SC__GROOMY]->val2);
 					if( sc->data[SC_GLOOMYDAY] )
-						val = max( val, sc->data[SC_GLOOMYDAY]->val3 ); // Should be 50 (-50% speed)
+						val = HMAX( val, sc->data[SC_GLOOMYDAY]->val3 ); // Should be 50 (-50% speed)
 					if( sc->data[SC_STEALTHFIELD_MASTER] )
-						val = max( val, 30 );
+						val = HMAX( val, 30 );
 					if( sc->data[SC_BANDING_DEFENCE] )
-						val = max( val, sc->data[SC_BANDING_DEFENCE]->val1 );//+90% walking speed.
+						val = HMAX( val, sc->data[SC_BANDING_DEFENCE]->val1 );//+90% walking speed.
 					if( sc->data[SC_ROCK_CRUSHER_ATK] )
-						val = max( val, sc->data[SC_ROCK_CRUSHER_ATK]->val2 );
+						val = HMAX( val, sc->data[SC_ROCK_CRUSHER_ATK]->val2 );
 					if( sc->data[SC_POWER_OF_GAIA] )
-						val = max( val, sc->data[SC_POWER_OF_GAIA]->val2 );
+						val = HMAX( val, sc->data[SC_POWER_OF_GAIA]->val2 );
 					if( sc->data[SC_MELON_BOMB] )
-						val = max( val, sc->data[SC_MELON_BOMB]->val1 );
+						val = HMAX( val, sc->data[SC_MELON_BOMB]->val1 );
 					if (sc->data[SC_STOMACHACHE])
-						val = max(val, sc->data[SC_STOMACHACHE]->val2);
+						val = HMAX(val, sc->data[SC_STOMACHACHE]->val2);
 					if (sc->data[SC_MARSHOFABYSS]) // It stacks to other statuses so always put this at the end.
-						val = max(50, val + 10 * sc->data[SC_MARSHOFABYSS]->val1);
+						val = HMAX(50, val + 10 * sc->data[SC_MARSHOFABYSS]->val1);
 					if (sc->data[SC_MOVHASTE_POTION]) { // Doesn't affect the movement speed by Quagmire, Decrease Agi, Slow Grace [Frost]
 						if (sc->data[SC_DEC_AGI] || sc->data[SC_QUAGMIRE] || sc->data[SC_DONTFORGETME] || sc->data[SC_CREATINGSTAR] != NULL)
 							return 0;
 					}
 					if (sc->data[SC_CATNIPPOWDER])
-						val = max(val, sc->data[SC_CATNIPPOWDER]->val3);
+						val = HMAX(val, sc->data[SC_CATNIPPOWDER]->val3);
 					if (sc->data[SC_ENSEMBLEFATIGUE] != NULL)
-						val = max(val, 30); // 30% MoveSpeed reduction
+						val = HMAX(val, 30); // 30% MoveSpeed reduction
 					if (sc->data[SC_BIND_TRAP])
-						val = max(val, sc->data[SC_BIND_TRAP]->val3);
+						val = HMAX(val, sc->data[SC_BIND_TRAP]->val3);
 					if (sc->data[SC_CREATINGSTAR] != NULL)
-						val = max(val, 90);
+						val = HMAX(val, 90);
 					if (sc->data[SC_SP_SHA] != NULL)
-						val = max(val, sc->data[SC_SP_SHA]->val2);
+						val = HMAX(val, sc->data[SC_SP_SHA]->val2);
 
 					if( sd && sd->bonus.speed_rate + sd->bonus.speed_add_rate > 0 ) // permanent item-based speedup
-						val = max( val, sd->bonus.speed_rate + sd->bonus.speed_add_rate );
+						val = HMAX( val, sd->bonus.speed_rate + sd->bonus.speed_add_rate );
 				}
 			}
 			speed_rate += val;
@@ -5533,45 +5533,45 @@ static unsigned short status_calc_speed(struct block_list *bl, struct status_cha
 			int val = 0;
 
 			if (sc->data[SC_MOVHASTE_INFINITY]) // Used by NPC_AGIUP [Frost]
-				val = max(val, sc->data[SC_MOVHASTE_INFINITY]->val1);
+				val = HMAX(val, sc->data[SC_MOVHASTE_INFINITY]->val1);
 			if (sc->data[SC_MOVHASTE_POTION]) // Used by Speed_Up_Potion and Guyak_Pudding [Frost]
-				val = max(val, sc->data[SC_MOVHASTE_POTION]->val1);
+				val = HMAX(val, sc->data[SC_MOVHASTE_POTION]->val1);
 			if( sc->data[SC_INC_AGI] )
-				val = max( val, 25 );
+				val = HMAX( val, 25 );
 			if( sc->data[SC_WINDWALK] )
-				val = max( val, 2 * sc->data[SC_WINDWALK]->val1 );
+				val = HMAX( val, 2 * sc->data[SC_WINDWALK]->val1 );
 			if( sc->data[SC_CARTBOOST] )
-				val = max( val, 20 );
+				val = HMAX( val, 20 );
 			if (sd != NULL && (sd->job & MAPID_UPPERMASK) == MAPID_ASSASSIN && pc->checkskill(sd,TF_MISS) > 0)
-				val = max( val, 1 * pc->checkskill(sd,TF_MISS) );
+				val = HMAX( val, 1 * pc->checkskill(sd,TF_MISS) );
 			if( sc->data[SC_CLOAKING] && (sc->data[SC_CLOAKING]->val4&1) == 1 )
-				val = max( val, sc->data[SC_CLOAKING]->val1 >= 10 ? 25 : 3 * sc->data[SC_CLOAKING]->val1 - 3 );
+				val = HMAX( val, sc->data[SC_CLOAKING]->val1 >= 10 ? 25 : 3 * sc->data[SC_CLOAKING]->val1 - 3 );
 			if (sc->data[SC_BERSERK])
-				val = max( val, 25 );
+				val = HMAX( val, 25 );
 			if( sc->data[SC_RUN] )
-				val = max( val, 55 );
+				val = HMAX( val, 55 );
 			if( sc->data[SC_HLIF_AVOID] )
-				val = max( val, 10 * sc->data[SC_HLIF_AVOID]->val1 );
+				val = HMAX( val, 10 * sc->data[SC_HLIF_AVOID]->val1 );
 			if( sc->data[SC_INVINCIBLE] && !sc->data[SC_INVINCIBLEOFF] )
-				val = max( val, 75 );
+				val = HMAX( val, 75 );
 			if( sc->data[SC_CLOAKINGEXCEED] )
-				val = max( val, sc->data[SC_CLOAKINGEXCEED]->val3);
+				val = HMAX( val, sc->data[SC_CLOAKINGEXCEED]->val3);
 			if( sc->data[SC_HOVERING] )
-				val = max( val, 10 );
+				val = HMAX( val, 10 );
 			if( sc->data[SC_GN_CARTBOOST] )
-				val = max( val, sc->data[SC_GN_CARTBOOST]->val2 );
+				val = HMAX( val, sc->data[SC_GN_CARTBOOST]->val2 );
 			if( sc->data[SC_SWING] )
-				val = max( val, sc->data[SC_SWING]->val3 );
+				val = HMAX( val, sc->data[SC_SWING]->val3 );
 			if( sc->data[SC_WIND_STEP_OPTION] )
-				val = max( val, sc->data[SC_WIND_STEP_OPTION]->val2 );
+				val = HMAX( val, sc->data[SC_WIND_STEP_OPTION]->val2 );
 			if( sc->data[SC_FULL_THROTTLE] )
-				val = max( val, 25);
+				val = HMAX( val, 25);
 			if (sc->data[SC_MOVHASTE_HORSE])
-				val = max(val, sc->data[SC_MOVHASTE_HORSE]->val1);
+				val = HMAX(val, sc->data[SC_MOVHASTE_HORSE]->val1);
 			if( sd && sd->bonus.speed_rate + sd->bonus.speed_add_rate < 0 ) // permanent item-based speedup
-				val = max( val, -(sd->bonus.speed_rate + sd->bonus.speed_add_rate) );
+				val = HMAX( val, -(sd->bonus.speed_rate + sd->bonus.speed_add_rate) );
 			if (sc->data[SC_ARCLOUSEDASH])
-				val = max(val, sc->data[SC_ARCLOUSEDASH]->val3);
+				val = HMAX(val, sc->data[SC_ARCLOUSEDASH]->val3);
 
 			speed_rate -= val;
 		}
@@ -5587,13 +5587,13 @@ static unsigned short status_calc_speed(struct block_list *bl, struct status_cha
 		if( sc->data[SC_PARALYSE] )
 			speed += speed * 50 / 100;
 		if( sc->data[SC_REBOUND] )
-			speed += max(speed, 100);
+			speed += HMAX(speed, 100);
 		if( speed_rate != 100 )
 			speed = speed * speed_rate / 100;
 		if( sc->data[SC_STEELBODY] )
 			speed = 200;
 		if( sc->data[SC_DEFENDER] )
-			speed = max(speed, 200);
+			speed = HMAX(speed, 200);
 		if( sc->data[SC_WALKSPEED] && sc->data[SC_WALKSPEED]->val1 > 0 ) // ChangeSpeed
 			speed = speed * 100 / sc->data[SC_WALKSPEED]->val1;
 
@@ -7150,10 +7150,10 @@ static int status_get_sc_def(struct block_list *src, struct block_list *bl, enum
 		PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 		switch (type) {
 		case SC_OBLIVIONCURSE:
-			rate = max(rate,500); //Minimum of 5%
+			rate = HMAX(rate,500); //Minimum of 5%
 			break;
 		case SC_WUGBITE:
-			rate = max(rate,5000); //Minimum of 50%
+			rate = HMAX(rate,5000); //Minimum of 50%
 			break;
 		}
 		PRAGMA_GCC46(GCC diagnostic pop)
@@ -7193,20 +7193,20 @@ static int status_get_sc_def(struct block_list *src, struct block_list *bl, enum
 	case SC_MARSHOFABYSS:
 	case SC_STASIS:
 	case SC_DEEP_SLEEP:
-		tick = max(tick, 5000); //Minimum duration 5s
+		tick = HMAX(tick, 5000); //Minimum duration 5s
 		break;
 	case SC_FROSTMISTY:
-		tick = max(tick, 6000);
+		tick = HMAX(tick, 6000);
 		break;
 	case SC_NETHERWORLD:
-		tick = max(tick, 4000);
+		tick = HMAX(tick, 4000);
 		break;
 	case SC_SIREN:
-		tick = max(tick, 10000); // Minimum duration 10s
+		tick = HMAX(tick, 10000); // Minimum duration 10s
 		break;
 	default:
 		//Skills need to trigger even if the duration is reduced below 1ms
-		tick = max(tick, 1);
+		tick = HMAX(tick, 1);
 		break;
 	}
 	PRAGMA_GCC46(GCC diagnostic pop)
@@ -8200,7 +8200,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				if(val3 < 1) val3 = 1;
 				total_tick = val4; //Petrifying time.
 				if(val4 > 500) // not with WL_SIENNAEXECRATE
-					total_tick = max(total_tick, 1000); //Min time
+					total_tick = HMAX(total_tick, 1000); //Min time
 				calc_flag = SCB_NONE; //Actual status changes take effect on petrified state.
 				break;
 
@@ -8452,12 +8452,12 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 					val3 = 0;
 					val4 = 0;
 					max_stat = (status->get_lv(bl)-10<50)?status->get_lv(bl)-10:50;
-					stat = max(0, max_stat - (int)status2->str ); val3 |= cap_value(stat,0,0xFF)<<16;
-					stat = max(0, max_stat - (int)status2->agi ); val3 |= cap_value(stat,0,0xFF)<<8;
-					stat = max(0, max_stat - (int)status2->vit ); val3 |= cap_value(stat,0,0xFF);
-					stat = max(0, max_stat - (int)status2->int_); val4 |= cap_value(stat,0,0xFF)<<16;
-					stat = max(0, max_stat - (int)status2->dex ); val4 |= cap_value(stat,0,0xFF)<<8;
-					stat = max(0, max_stat - (int)status2->luk ); val4 |= cap_value(stat,0,0xFF);
+					stat = HMAX(0, max_stat - (int)status2->str ); val3 |= cap_value(stat,0,0xFF)<<16;
+					stat = HMAX(0, max_stat - (int)status2->agi ); val3 |= cap_value(stat,0,0xFF)<<8;
+					stat = HMAX(0, max_stat - (int)status2->vit ); val3 |= cap_value(stat,0,0xFF);
+					stat = HMAX(0, max_stat - (int)status2->int_); val4 |= cap_value(stat,0,0xFF)<<16;
+					stat = HMAX(0, max_stat - (int)status2->dex ); val4 |= cap_value(stat,0,0xFF)<<8;
+					stat = HMAX(0, max_stat - (int)status2->luk ); val4 |= cap_value(stat,0,0xFF);
 				}
 				break;
 			case SC_SWORDREJECT:
@@ -9398,7 +9398,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				break;
 			case SC_GLOOMYDAY:
 				if ( !val2 ) {
-					val2 = (val4 > 0 ? max(15, rnd()%(val4*5)) : 0) + val1 * 10;
+					val2 = (val4 > 0 ? HMAX(15, rnd()%(val4*5)) : 0) + val1 * 10;
 				}
 				if ( rnd()%10000 < val1*100 ) { // 1% per SkillLv chance
 					if ( !val3 )
@@ -11753,7 +11753,7 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 				{
 					struct homun_data *hd = BL_CAST(BL_HOM, bl);
 						if( hd )
-							hd->homunculus.hunger = max(1, hd->homunculus.hunger - 50);
+							hd->homunculus.hunger = HMAX(1, hd->homunculus.hunger - 50);
 				}
 					break;
 				case BL_PC:
@@ -11972,7 +11972,7 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 					break;
 				memset(&it, 0, sizeof(it));
 				it.nameid = req.itemid[0];
-				it.amount = max(req.amount[0], 1);
+				it.amount = HMAX(req.amount[0], 1);
 				it.identify = 1;
 				map->addflooritem(&sd->bl, &it, it.amount, bl->m, bl->x, bl->y, caster->status.char_id, 0, 0, 4, false);
 			}
@@ -12464,7 +12464,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 			break;
 
 		case SC_POISON:
-			if (st->hp <= max(st->max_hp / 4, (unsigned int)sce->val4)) //Stop damaging after 25% HP left.
+			if (st->hp <= HMAX(st->max_hp / 4, (unsigned int)sce->val4)) //Stop damaging after 25% HP left.
 				break;
 			FALLTHROUGH
 		case SC_DPOISON:
@@ -13880,7 +13880,7 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 
 		if ((flag & RGN_SHP) != 0 && sregen->hp != 0 && sregen->rate.hp > 0) {
 			//Sitting HP regen
-			unsigned int tick = max(battle_config.natural_heal_cap, battle_config.natural_heal_skill_interval * 100 / sregen->rate.hp);
+			unsigned int tick = HMAX(battle_config.natural_heal_cap, battle_config.natural_heal_skill_interval * 100 / sregen->rate.hp);
 
 			sregen->tick.hp += status->natural_heal_diff_tick;
 
@@ -13898,7 +13898,7 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 
 		if ((flag & RGN_SSP) != 0 && sregen->sp != 0 && sregen->sp > 0) {
 			//Sitting SP regen
-			unsigned int tick = max(battle_config.natural_heal_cap, battle_config.natural_heal_skill_interval * 100 / sregen->rate.sp);
+			unsigned int tick = HMAX(battle_config.natural_heal_cap, battle_config.natural_heal_skill_interval * 100 / sregen->rate.sp);
 			sregen->tick.sp += status->natural_heal_diff_tick;
 
 			if (regen->state.overweight != 0)
@@ -13995,7 +13995,7 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 
 	//Natural Hp regen
 	if ((flag & RGN_HP) != 0 && hp_bonus > 0) {
-		unsigned int tick = max(interval_cap, hp_interval * 100 / hp_bonus);
+		unsigned int tick = HMAX(interval_cap, hp_interval * 100 / hp_bonus);
 		regen->tick.hp += status->natural_heal_diff_tick;
 
 		if (ud != NULL && ud->walktimer != INVALID_TIMER)
@@ -14015,7 +14015,7 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 
 	//Natural SP regen
 	if ((flag & RGN_SP) != 0 && sp_bonus > 0) {
-		unsigned int tick = max(interval_cap, sp_interval * 100 / sp_bonus);
+		unsigned int tick = HMAX(interval_cap, sp_interval * 100 / sp_bonus);
 		regen->tick.sp += status->natural_heal_diff_tick;
 
 		if (regen->tick.sp >= tick) {
@@ -14039,7 +14039,7 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 
 	if ((flag & RGN_SHP) != 0 && sregen->hp != 0 && sregen->rate.hp > 0) {
 		//Skill HP regen
-		unsigned int tick = max(battle_config.natural_heal_cap, battle_config.natural_heal_skill_interval * 100 / sregen->rate.hp);
+		unsigned int tick = HMAX(battle_config.natural_heal_cap, battle_config.natural_heal_skill_interval * 100 / sregen->rate.hp);
 		sregen->tick.hp += status->natural_heal_diff_tick;
 
 		while (sregen->tick.hp >= tick) {
@@ -14051,7 +14051,7 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 
 	if ((flag & RGN_SSP) != 0 && sregen->sp != 0 && sregen->rate.sp > 0) {
 		//Skill SP regen
-		unsigned int tick = max(battle_config.natural_heal_cap, battle_config.natural_heal_skill_interval * 100 / sregen->rate.sp);
+		unsigned int tick = HMAX(battle_config.natural_heal_cap, battle_config.natural_heal_skill_interval * 100 / sregen->rate.sp);
 		sregen->tick.sp += status->natural_heal_diff_tick;
 
 		while (sregen->tick.sp >= tick) {

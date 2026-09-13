@@ -271,7 +271,7 @@ static int pet_target_check(struct map_session_data *sd, struct block_list *bl, 
 
 	int rate = ((type == 0) ? pd->petDB->attack_rate : pd->petDB->defence_attack_rate) * pd->rate_fix / 1000;
 
-	if (rnd() % 10000 < max(rate, 1) && (pd->target_id == 0 || rnd() % 10000 < pd->petDB->change_target_rate))
+	if (rnd() % 10000 < HMAX(rate, 1) && (pd->target_id == 0 || rnd() % 10000 < pd->petDB->change_target_rate))
 		pd->target_id = bl->id;
 
 	return 0;
@@ -362,7 +362,7 @@ static int pet_hungry(int tid, int64 tick, int id, intptr_t data)
 	}
 
 	interval = interval * battle_config.pet_hungry_delay_rate / 100;
-	pd->pet_hungry_timer = timer->add(tick + max(interval, 1), pet->hungry, sd->bl.id, 0);
+	pd->pet_hungry_timer = timer->add(tick + HMAX(interval, 1), pet->hungry, sd->bl.id, 0);
 
 	return 0;
 }
@@ -565,7 +565,7 @@ static int pet_data_init(struct map_session_data *sd, struct s_pet *petinfo)
 
 	if (pd->petDB->hungry_delay > 0) {
 		int interval = pd->petDB->hungry_delay * battle_config.pet_hungry_delay_rate / 100;
-		pd->pet_hungry_timer = timer->add(timer->gettick() + max(interval, 1), pet->hungry, sd->bl.id, 0);
+		pd->pet_hungry_timer = timer->add(timer->gettick() + HMAX(interval, 1), pet->hungry, sd->bl.id, 0);
 	}
 
 	return 0;
@@ -1118,7 +1118,7 @@ static int pet_ai_sub_hard(struct pet_data *pd, struct map_session_data *sd, int
 		if (DIFF_TICK(tick, pd->ud.canmove_tick) < 0)
 			return 0; // Can't move yet.
 
-		pd->status.speed = max(sd->battle_status.speed / 2, (uint32)MIN_WALK_SPEED);
+		pd->status.speed = HMAX(sd->battle_status.speed / 2, (uint32)MIN_WALK_SPEED);
 
 		if (unit->walk_tobl(&pd->bl, &sd->bl, 3, 0) != 0)
 			pet->randomwalk(pd, tick);
