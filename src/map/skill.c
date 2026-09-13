@@ -198,7 +198,7 @@ static const char *skill_get_desc(int skill_id)
 	return skill->dbs->db[skill->get_index(skill_id)].desc;
 }
 
-#define skill_get_lvl_idx(lv) (min((lv), MAX_SKILL_LEVEL) - 1)
+#define skill_get_lvl_idx(lv) (HMIN((lv), MAX_SKILL_LEVEL) - 1)
 #define skill_adjust_over_level(val, lv, max_lv) ((val) > 1 ? ((val) + ((lv) - (max_lv)) / 2) : (val))
 
 // Skill DB
@@ -3719,7 +3719,7 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 		switch(can_copy(tsd, copy_skill)) {
 		case 1: // Plagiarism
 		{
-			lv = min((int)skill_lv, pc->checkskill(tsd, RG_PLAGIARISM));
+			lv = HMIN((int)skill_lv, pc->checkskill(tsd, RG_PLAGIARISM));
 			if (learned_lv > lv) {
 				pc->clear_existing_cloneskill(tsd, true);
 				break; // [Aegis] can't overwrite skill of higher level, but will still remove previously copied skill.
@@ -3742,7 +3742,7 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 		case 2: // Reproduce
 		{
 			lv = sc ? sc->data[SC__REPRODUCE]->val1 : 1;
-			lv = min(lv, skill->get_max(copy_skill));
+			lv = HMIN(lv, skill->get_max(copy_skill));
 			if (learned_lv > lv) {
 				pc->clear_existing_reproduceskill(tsd, true);
 				break; // unconfirmed, but probably the same behavior as for RG_PLAGIARISM
@@ -5453,11 +5453,11 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 						break;
 					skill->blown(src,bl,1,dir,0);
 					// Splash around target cell, but only cells inside area; we first have to check the area is not negative
-					if((max(min_x,tx-1) <= min(max_x,tx+1)) &&
-						(max(min_y,ty-1) <= min(max_y,ty+1)) &&
-						(map->foreachinarea(skill->area_sub, bl->m, max(min_x,tx-1), max(min_y,ty-1), min(max_x,tx+1), min(max_y,ty+1), skill->splash_target(src), src, skill_id, skill_lv, tick, flag|BCT_ENEMY, skill->area_sub_count))) {
+					if((max(min_x,tx-1) <= HMIN(max_x,tx+1)) &&
+						(max(min_y,ty-1) <= HMIN(max_y,ty+1)) &&
+						(map->foreachinarea(skill->area_sub, bl->m, max(min_x,tx-1), max(min_y,ty-1), HMIN(max_x,tx+1), HMIN(max_y,ty+1), skill->splash_target(src), src, skill_id, skill_lv, tick, flag|BCT_ENEMY, skill->area_sub_count))) {
 						// Recursive call
-						map->foreachinarea(skill->area_sub, bl->m, max(min_x,tx-1), max(min_y,ty-1), min(max_x,tx+1), min(max_y,ty+1), skill->splash_target(src), src, skill_id, skill_lv, tick, (flag|BCT_ENEMY)+1, skill->castend_damage_id);
+						map->foreachinarea(skill->area_sub, bl->m, max(min_x,tx-1), max(min_y,ty-1), HMIN(max_x,tx+1), HMIN(max_y,ty+1), skill->splash_target(src), src, skill_id, skill_lv, tick, (flag|BCT_ENEMY)+1, skill->castend_damage_id);
 						// Self-collision
 						if(bl->x >= min_x && bl->x <= max_x && bl->y >= min_y && bl->y <= max_y)
 							skill->attack(BF_WEAPON,src,src,bl,skill_id,skill_lv,tick,(flag&0xFFF)>0?SD_ANIMATION:0);
@@ -7024,8 +7024,8 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 				}
 				skill->area_temp[0] = 5 - skill->area_temp[0]; // The actual penalty...
 				if (skill->area_temp[0] > 0 && !map->list[src->m].flag.noexppenalty) { //Apply penalty
-					sd->status.base_exp -= min(sd->status.base_exp, pc->nextbaseexp(sd) * skill->area_temp[0] * 2/1000); //0.2% penalty per each.
-					sd->status.job_exp -= min(sd->status.job_exp, pc->nextjobexp(sd) * skill->area_temp[0] * 2/1000);
+					sd->status.base_exp -= HMIN(sd->status.base_exp, pc->nextbaseexp(sd) * skill->area_temp[0] * 2/1000); //0.2% penalty per each.
+					sd->status.job_exp -= HMIN(sd->status.job_exp, pc->nextjobexp(sd) * skill->area_temp[0] * 2/1000);
 					clif->updatestatus(sd,SP_BASEEXP);
 					clif->updatestatus(sd,SP_JOBEXP);
 				}
@@ -7139,7 +7139,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 					skill->dbs->abra_db[abra_idx].req_lv > skill_lv || //Required lv for it to appear
 					rnd()%10000 >= skill->dbs->abra_db[abra_idx].per
 				);
-				abra_skill_lv = min((int)skill_lv, skill->get_max(abra_skill_id));
+				abra_skill_lv = HMIN((int)skill_lv, skill->get_max(abra_skill_id));
 				clif->skill_nodamage (src, bl, skill_id, skill_lv, 1);
 
 				if (sd) {
@@ -7757,7 +7757,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 				}
 
 				i = 0;
-				count = (sd)? min((int)skill_lv, MAX_PC_DEVOTION) : 1; // Mercenary only can Devote owner
+				count = (sd)? HMIN((int)skill_lv, MAX_PC_DEVOTION) : 1; // Mercenary only can Devote owner
 				if( sd )
 				{ // Player Devoting Player
 					ARR_FIND(0, count, i, sd->devotion[i] == bl->id );
@@ -7787,7 +7787,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 		{
 			if (sd == NULL || sd->status.party_id == 0 || (flag & 1)) {
 				int i = 0;
-				int count = min(5 + skill_lv, MAX_UNITED_SOULS);
+				int count = HMIN(5 + skill_lv, MAX_UNITED_SOULS);
 				if (dstsd == NULL || sd == NULL) { // Only put player's souls in unity.
 					if (sd != NULL)
 						clif->skill_fail(sd, skill_id, USESKILL_FAIL, 0, 0);
@@ -8649,7 +8649,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 					return 1;
 				}
 				if( sd ) {
-					int bonus = 100, potion = min(500+skill_lv,505);
+					int bonus = 100, potion = HMIN(500+skill_lv,505);
 					int item_idx = skill->get_item_index(skill_id, skill_lv);
 
 					if (item_idx == INDEX_NOT_FOUND) {
@@ -10915,8 +10915,8 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 			break;
 		case LG_INSPIRATION:
 			if( sd && !map->list[sd->bl.m].flag.noexppenalty && sd->status.base_level != MAX_LEVEL ) {
-					sd->status.base_exp -= min(sd->status.base_exp, pc->nextbaseexp(sd) * 1 / 100); // 1% penalty.
-					sd->status.job_exp -= min(sd->status.job_exp, pc->nextjobexp(sd) * 1 / 100);
+					sd->status.base_exp -= HMIN(sd->status.base_exp, pc->nextbaseexp(sd) * 1 / 100); // 1% penalty.
+					sd->status.job_exp -= HMIN(sd->status.job_exp, pc->nextjobexp(sd) * 1 / 100);
 					clif->updatestatus(sd,SP_BASEEXP);
 					clif->updatestatus(sd,SP_JOBEXP);
 			}
@@ -17742,7 +17742,7 @@ static int skill_vfcastfix(struct block_list *bl, double time, uint16 skill_id, 
 
 	if( sd && !(skill->get_castnodex(skill_id, skill_lv)&4) ){
 		VARCAST_REDUCTION( max(sd->bonus.varcastrate, 0) + max(i, 0) );
-		fixcast_r = max(fixcast_r, sd->bonus.fixcastrate) + min(sd->bonus.fixcastrate,0);
+		fixcast_r = max(fixcast_r, sd->bonus.fixcastrate) + HMIN(sd->bonus.fixcastrate,0);
 		for( i = 0; i < ARRAYLENGTH(sd->skillcast) && sd->skillcast[i].id; i++ )
 			if( sd->skillcast[i].id == skill_id ){ // bonus2 bVariableCastrate
 				if( (i=sd->skillcast[i].val) > 0)
@@ -17756,7 +17756,7 @@ static int skill_vfcastfix(struct block_list *bl, double time, uint16 skill_id, 
 	if( !(skill->get_castnodex(skill_id, skill_lv)&1) )// reduction from status point
 		time = (1 - sqrt((double)(status_get_dex(bl) * 2 + status_get_int(bl)) / battle_config.vcast_stat_scale)) * time;
 	// underflow checking/capping
-	time = max(time, 0.0) + (1 - (double)min(fixcast_r, 100) / 100) * max(fixed, 0);
+	time = max(time, 0.0) + (1 - (double)HMIN(fixcast_r, 100) / 100) * max(fixed, 0);
 #endif
 	return (int)time;
 }
@@ -20966,7 +20966,7 @@ static int skill_select_menu(struct map_session_data *sd, uint16 skill_id)
 	}
 
 	lv = (aslvl + 1) / 2; // The level the skill will be autocasted
-	lv = min(lv, (int)sd->status.skill[idx].lv);
+	lv = HMIN(lv, (int)sd->status.skill[idx].lv);
 
 	if (skill->get_type(skill_id, lv) != BF_MAGIC) {
 		clif->skill_fail(sd, SC_AUTOSHADOWSPELL, USESKILL_FAIL_LEVEL, 0, 0);

@@ -646,13 +646,13 @@ static void pc_inventory_rentals(struct map_session_data *sd)
 		} else {
 			expire_tick = (int64)(sd->status.inventory[i].expire_time - time(NULL)) * 1000;
 			clif->rental_time(sd->fd, sd->status.inventory[i].nameid, (int)(expire_tick / 1000));
-			next_tick = min(expire_tick, next_tick);
+			next_tick = HMIN(expire_tick, next_tick);
 			c++;
 		}
 	}
 
 	if( c > 0 ) // min(next_tick,3600000) 1 hour each timer to keep announcing to the owner, and to avoid a but with rental time > 15 days
-		sd->rental_timer = timer->add(timer->gettick() + min(next_tick, (int64)3600000), pc->inventory_rental_end, sd->bl.id, 0);
+		sd->rental_timer = timer->add(timer->gettick() + HMIN(next_tick, (int64)3600000), pc->inventory_rental_end, sd->bl.id, 0);
 	else
 		sd->rental_timer = INVALID_TIMER;
 }
@@ -675,7 +675,7 @@ static void pc_inventory_rental_add(struct map_session_data *sd, int seconds)
 		}
 	}
 	else
-		sd->rental_timer = timer->add(timer->gettick() + min(tick,3600000), pc->inventory_rental_end, sd->bl.id, 0);
+		sd->rental_timer = timer->add(timer->gettick() + HMIN(tick,3600000), pc->inventory_rental_end, sd->bl.id, 0);
 }
 
 /*==========================================
@@ -2676,7 +2676,7 @@ static int pc_bonus(struct map_session_data *sd, int type, int val)
 			break;
 		case SP_SPEED_RATE: //Non stackable increase
 			if(sd->state.lr_flag != 2)
-				sd->bonus.speed_rate = min(sd->bonus.speed_rate, -val);
+				sd->bonus.speed_rate = HMIN(sd->bonus.speed_rate, -val);
 			break;
 		case SP_SPEED_ADDRATE: //Stackable increase
 			if(sd->state.lr_flag != 2)
@@ -6256,7 +6256,7 @@ static int pc_memo(struct map_session_data *sd, int pos)
 		int i;
 		// prevent memo-ing the same map multiple times
 		ARR_FIND( 0, MAX_MEMOPOINTS, i, sd->status.memo_point[i].map == map_id2index(sd->bl.m) );
-		memmove(&sd->status.memo_point[1], &sd->status.memo_point[0], (min(i,MAX_MEMOPOINTS-1))*sizeof(struct point));
+		memmove(&sd->status.memo_point[1], &sd->status.memo_point[0], (HMIN(i,MAX_MEMOPOINTS-1))*sizeof(struct point));
 		pos = 0;
 	}
 
@@ -8184,7 +8184,7 @@ static int pc_dead(struct map_session_data *sd, struct block_list *src)
 				if (sd->status.mod_death != 100)
 					base_penalty = base_penalty * sd->status.mod_death / 100;
 
-				sd->status.base_exp -= min(sd->status.base_exp, (uint64)base_penalty);
+				sd->status.base_exp -= HMIN(sd->status.base_exp, (uint64)base_penalty);
 				clif->updatestatus(sd, SP_BASEEXP);
 			}
 		}
@@ -8209,7 +8209,7 @@ static int pc_dead(struct map_session_data *sd, struct block_list *src)
 				if (sd->status.mod_death != 100)
 					job_penalty = job_penalty * sd->status.mod_death / 100;
 
-				sd->status.job_exp -= min(sd->status.job_exp, (uint64)job_penalty);
+				sd->status.job_exp -= HMIN(sd->status.job_exp, (uint64)job_penalty);
 				clif->updatestatus(sd, SP_JOBEXP);
 			}
 		}
@@ -11688,10 +11688,10 @@ static bool pc_read_level_penalty_db_sub(const struct config_setting_t *it, int 
 		return false;
 	}
 
-	diff = min(diff, MAX_LEVEL);
+	diff = HMIN(diff, MAX_LEVEL);
 
 	if (diff < 0)
-		diff = min(MAX_LEVEL + (~(diff) + 1), MAX_LEVEL * 2);
+		diff = HMIN(MAX_LEVEL + (~(diff) + 1), MAX_LEVEL * 2);
 
 	pc->level_penalty[type][race][diff] = rate;
 #endif

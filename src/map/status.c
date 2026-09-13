@@ -3755,7 +3755,7 @@ static int status_base_amotion_pc(struct map_session_data *sd, struct status_dat
 	if (sd->weapontype == W_MUSICAL && (skill_lv = pc->checkskill(sd, BA_MUSICALLESSON)) > 0)
 		val += skill_lv;
 
-	amotion = ((int)(temp + ((float)(status->calc_aspd(&sd->bl, &sd->sc, 1) + val) * st->agi / 200)) - min(amotion, 200));
+	amotion = ((int)(temp + ((float)(status->calc_aspd(&sd->bl, &sd->sc, 1) + val) * st->agi / 200)) - HMIN(amotion, 200));
 #else
 	// base weapon delay
 	amotion = (sd->weapontype < MAX_SINGLE_WEAPON_TYPE)
@@ -7104,8 +7104,8 @@ static int status_get_sc_def(struct block_list *src, struct block_list *bl, enum
 			sc_def2 = sc_def2*battle_config.pc_sc_def_rate/100;
 		}
 
-		sc_def = min(sc_def, battle_config.pc_max_sc_def*100);
-		sc_def2 = min(sc_def2, battle_config.pc_max_sc_def*100);
+		sc_def = HMIN(sc_def, battle_config.pc_max_sc_def*100);
+		sc_def2 = HMIN(sc_def2, battle_config.pc_max_sc_def*100);
 
 		if (tick_def > 0 && battle_config.pc_sc_def_rate != 100) {
 			tick_def = tick_def*battle_config.pc_sc_def_rate/100;
@@ -7118,8 +7118,8 @@ static int status_get_sc_def(struct block_list *src, struct block_list *bl, enum
 			sc_def2 = sc_def2*battle_config.mob_sc_def_rate/100;
 		}
 
-		sc_def = min(sc_def, battle_config.mob_max_sc_def*100);
-		sc_def2 = min(sc_def2, battle_config.mob_max_sc_def*100);
+		sc_def = HMIN(sc_def, battle_config.mob_max_sc_def*100);
+		sc_def2 = HMIN(sc_def2, battle_config.mob_max_sc_def*100);
 
 		if (tick_def > 0 && battle_config.mob_sc_def_rate != 100) {
 			tick_def = tick_def*battle_config.mob_sc_def_rate/100;
@@ -7918,7 +7918,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 					val3 = 6 + val1;
 				}
 				if( sd )
-					val1 = min(val1,pc->checkskill(sd,PR_KYRIE)); // use skill level to determine barrier health.
+					val1 = HMIN(val1,pc->checkskill(sd,PR_KYRIE)); // use skill level to determine barrier health.
 				break;
 			case SC_MAGICPOWER:
 				//val1: Skill lv
@@ -8435,12 +8435,12 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				val3 = 0;
 				val4 = 0;
 				max_stat = battle_config.max_parameter; //Cap to 99 (default)
-				stat = (psce->val3 >>16)&0xFF; stat = min(stat, max_stat - tst->str ); val3 |= cap_value(stat,0,0xFF)<<16;
-				stat = (psce->val3 >> 8)&0xFF; stat = min(stat, max_stat - tst->agi ); val3 |= cap_value(stat,0,0xFF)<<8;
-				stat = (psce->val3 >> 0)&0xFF; stat = min(stat, max_stat - tst->vit ); val3 |= cap_value(stat,0,0xFF);
-				stat = (psce->val4 >>16)&0xFF; stat = min(stat, max_stat - tst->int_); val4 |= cap_value(stat,0,0xFF)<<16;
-				stat = (psce->val4 >> 8)&0xFF; stat = min(stat, max_stat - tst->dex ); val4 |= cap_value(stat,0,0xFF)<<8;
-				stat = (psce->val4 >> 0)&0xFF; stat = min(stat, max_stat - tst->luk ); val4 |= cap_value(stat,0,0xFF);
+				stat = (psce->val3 >>16)&0xFF; stat = HMIN(stat, max_stat - tst->str ); val3 |= cap_value(stat,0,0xFF)<<16;
+				stat = (psce->val3 >> 8)&0xFF; stat = HMIN(stat, max_stat - tst->agi ); val3 |= cap_value(stat,0,0xFF)<<8;
+				stat = (psce->val3 >> 0)&0xFF; stat = HMIN(stat, max_stat - tst->vit ); val3 |= cap_value(stat,0,0xFF);
+				stat = (psce->val4 >>16)&0xFF; stat = HMIN(stat, max_stat - tst->int_); val4 |= cap_value(stat,0,0xFF)<<16;
+				stat = (psce->val4 >> 8)&0xFF; stat = HMIN(stat, max_stat - tst->dex ); val4 |= cap_value(stat,0,0xFF)<<8;
+				stat = (psce->val4 >> 0)&0xFF; stat = HMIN(stat, max_stat - tst->luk ); val4 |= cap_value(stat,0,0xFF);
 			}
 				break;
 			case SC_SOULLINK:
@@ -14192,7 +14192,7 @@ static void status_read_job_db_sub(int idx, const char *name, struct config_sett
 				if (i > maxhp->max_level)
 					maxhp = status->get_maxhp_cap_entry(idx, i);
 
-				status->dbs->HP_table[idx][i] = min(base + avg_increment * i, maxhp->value);
+				status->dbs->HP_table[idx][i] = HMIN(base + avg_increment * i, maxhp->value);
 			}
 
 			for (i = 1; i <= MAX_LEVEL && status->dbs->SP_table[iidx][i]; i++) {
@@ -14207,7 +14207,7 @@ static void status_read_job_db_sub(int idx, const char *name, struct config_sett
 				avg_increment = 1;
 			}
 			for ( ; i <= pc->dbs->class_exp_table[idx][CLASS_EXP_TABLE_BASE]->max_level; i++) {
-				status->dbs->SP_table[idx][i] = min(base + avg_increment * i, battle_config.max_sp);
+				status->dbs->SP_table[idx][i] = HMIN(base + avg_increment * i, battle_config.max_sp);
 			}
 		}
 	}
@@ -14257,7 +14257,7 @@ static void status_read_job_db_sub(int idx, const char *name, struct config_sett
 				if (i > maxhp->max_level)
 					maxhp = status->get_maxhp_cap_entry(idx, i);
 
-				status->dbs->HP_table[idx][i] = min(base + avg_increment * i, maxhp->value);
+				status->dbs->HP_table[idx][i] = HMIN(base + avg_increment * i, maxhp->value);
 			}
 		}
 	}
@@ -14283,7 +14283,7 @@ static void status_read_job_db_sub(int idx, const char *name, struct config_sett
 				avg_increment = 1;
 			}
 			for ( ; i <= pc->dbs->class_exp_table[idx][CLASS_EXP_TABLE_BASE]->max_level; i++) {
-				status->dbs->SP_table[idx][i] = min(base + avg_increment * i, battle_config.max_sp);
+				status->dbs->SP_table[idx][i] = HMIN(base + avg_increment * i, battle_config.max_sp);
 			}
 		}
 	}
@@ -14319,7 +14319,7 @@ static void status_read_job_db_sub(int idx, const char *name, struct config_sett
 				maxhp = status->get_maxhp_cap_entry(idx, level);
 
 			i32 = libconfig->setting_get_int(hp);
-			status->dbs->HP_table[idx][++level] = min(i32, maxhp->value);
+			status->dbs->HP_table[idx][++level] = HMIN(i32, maxhp->value);
 		}
 		base = (level > 0 ? status->dbs->HP_table[idx][1] : 35); // Safe value if none are specified
 		if (level > 2) {
@@ -14333,7 +14333,7 @@ static void status_read_job_db_sub(int idx, const char *name, struct config_sett
 			if (level > maxhp->max_level)
 				maxhp = status->get_maxhp_cap_entry(idx, level);
 
-			status->dbs->HP_table[idx][level] = min(base + avg_increment * level, maxhp->value); /* some are still empty? then let's use the average increase */
+			status->dbs->HP_table[idx][level] = HMIN(base + avg_increment * level, maxhp->value); /* some are still empty? then let's use the average increase */
 		}
 	}
 
@@ -14342,7 +14342,7 @@ static void status_read_job_db_sub(int idx, const char *name, struct config_sett
 		struct config_setting_t *sp = NULL;
 		while (level <= MAX_LEVEL && (sp = libconfig->setting_get_elem(temp, level)) != NULL) {
 			i32 = libconfig->setting_get_int(sp);
-			status->dbs->SP_table[idx][++level] = min(i32, battle_config.max_sp);
+			status->dbs->SP_table[idx][++level] = HMIN(i32, battle_config.max_sp);
 		}
 		base = (level > 0 ? status->dbs->SP_table[idx][1] : 10); // Safe value if none are specified
 		if (level > 2) {
@@ -14353,7 +14353,7 @@ static void status_read_job_db_sub(int idx, const char *name, struct config_sett
 			avg_increment = 1;
 		}
 		for (++level; level <= pc->dbs->class_exp_table[idx][CLASS_EXP_TABLE_BASE]->max_level; level++) {
-			status->dbs->SP_table[idx][level] = min(base + avg_increment * level, battle_config.max_sp);
+			status->dbs->SP_table[idx][level] = HMIN(base + avg_increment * level, battle_config.max_sp);
 		}
 	}
 }

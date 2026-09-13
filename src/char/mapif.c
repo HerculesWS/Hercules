@@ -1632,7 +1632,7 @@ static void mapif_rodex_sendinbox(int fd, int char_id, int8 opentype, int8 flag,
 			limit = to_send;
 			is_last = true;
 		} else {
-			limit = min(to_send, per_packet);
+			limit = HMIN(to_send, per_packet);
 			if (limit != to_send) {
 				is_last = false;
 			}
@@ -2101,7 +2101,7 @@ static int mapif_parse_Registry(int fd)
 		for (i = 0; i < count; i++) {
 			unsigned int index;
 			int len = RFIFOB(fd, cursor);
-			safestrncpy(key, RFIFOP(char *, fd, cursor + 1), min((int)sizeof(key), len));
+			safestrncpy(key, RFIFOP(char *, fd, cursor + 1), HMIN((int)sizeof(key), len));
 			cursor += len + 1;
 
 			index = RFIFOL(fd, cursor);
@@ -2119,7 +2119,7 @@ static int mapif_parse_Registry(int fd)
 			/* str */
 			case 2:
 				len = RFIFOB(fd, cursor);
-				safestrncpy(sval, RFIFOP(char *, fd, cursor + 1), min((int)sizeof(sval), len + 1));
+				safestrncpy(sval, RFIFOP(char *, fd, cursor + 1), HMIN((int)sizeof(sval), len + 1));
 				cursor += len + 2;
 				inter->savereg(account_id, char_id, key, index, (intptr_t)sval, true);
 				break;

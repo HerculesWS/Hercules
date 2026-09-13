@@ -336,7 +336,7 @@ ACMD(send)
 				// parse string
 				++message;
 				CHECK_EOS(message);
-				end=(num<=0? 0: min(off+((int)num),len));
+				end=(num<=0? 0: HMIN(off+((int)num),len));
 				for(; *message != '"' && (off < end || end == 0); ++off){
 					if(*message == '\\'){
 						++message;
@@ -3524,7 +3524,7 @@ ACMD(spiritball)
 	int max_spiritballs;
 	int number;
 
-	max_spiritballs = min(ARRAYLENGTH(sd->spirit_timer), 0x7FFF);
+	max_spiritballs = HMIN(ARRAYLENGTH(sd->spirit_timer), 0x7FFF);
 
 	if (!*message || (number = atoi(message)) < 0 || number > max_spiritballs)
 	{
@@ -6152,7 +6152,7 @@ ACMD(autotrade)
 	if( battle_config.at_timeout ) {
 		int timeout = atoi(message);
 		status->change_start(NULL,&sd->bl, SC_AUTOTRADE, 10000, 0, 0, 0, 0,
-		                     ((timeout > 0) ? min(timeout, battle_config.at_timeout) : battle_config.at_timeout) * 60000, SCFLAG_NONE, 0);
+		                     ((timeout > 0) ? HMIN(timeout, battle_config.at_timeout) : battle_config.at_timeout) * 60000, SCFLAG_NONE, 0);
 	}
 
 	channel->quit(sd);
@@ -11083,7 +11083,7 @@ static void atcommand_get_suggestions(struct map_session_data *sd, const char *n
 		// Merge full match and prefix match results
 		if (prefix_count < MAX_SUGGESTIONS) {
 			memmove(&suggestions[prefix_count], full_match, sizeof(char*) * (MAX_SUGGESTIONS-prefix_count));
-			prefix_count = min(prefix_count+full_count, MAX_SUGGESTIONS);
+			prefix_count = HMIN(prefix_count+full_count, MAX_SUGGESTIONS);
 		}
 
 		// Build the suggestion string

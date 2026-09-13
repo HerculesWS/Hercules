@@ -1115,14 +1115,14 @@ static void intif_parse_Registers(int fd)
 			char sval[SCRIPT_STRING_VAR_LENGTH + 1];
 			for (i = 0; i < max; i++) {
 				int len = RFIFOB(fd, cursor);
-				safestrncpy(key, RFIFOP(char *, fd, cursor + 1), min((int)sizeof(key), len));
+				safestrncpy(key, RFIFOP(char *, fd, cursor + 1), HMIN((int)sizeof(key), len));
 				cursor += len + 1;
 
 				index = RFIFOL(fd, cursor);
 				cursor += 4;
 
 				len = RFIFOB(fd, cursor);
-				safestrncpy(sval, RFIFOP(char *, fd, cursor + 1), min((int)sizeof(sval), len + 1));
+				safestrncpy(sval, RFIFOP(char *, fd, cursor + 1), HMIN((int)sizeof(sval), len + 1));
 				cursor += len + 2;
 
 				script->set_reg(NULL,sd,reference_uid(script->add_variable(key), index), key, sval, NULL);
@@ -1138,7 +1138,7 @@ static void intif_parse_Registers(int fd)
 				int ival;
 
 				int len = RFIFOB(fd, cursor);
-				safestrncpy(key, RFIFOP(char *, fd, cursor + 1), min((int)sizeof(key), len));
+				safestrncpy(key, RFIFOP(char *, fd, cursor + 1), HMIN((int)sizeof(key), len));
 				cursor += len + 1;
 
 				index = RFIFOL(fd, cursor);
