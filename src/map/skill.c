@@ -211,7 +211,7 @@ static const char *skill_get_desc(int skill_id)
  * @return The skill's hit type corresponding to the passed level. Defaults to BDT_NORMAL (0) in case of error.
  *
  **/
-static int skill_get_hit(int skill_id, int skill_lv)
+static enum battle_dmg_type skill_get_hit(int skill_id, int skill_lv)
 {
 	if (skill_id == 0)
 		return BDT_NORMAL;
@@ -222,7 +222,7 @@ static int skill_get_hit(int skill_id, int skill_lv)
 
 	Assert_retr(BDT_NORMAL, idx != 0);
 
-	return skill->dbs->db[idx].hit[skill_get_lvl_idx(skill_lv)];
+	return (enum battle_dmg_type)skill->dbs->db[idx].hit[skill_get_lvl_idx(skill_lv)];
 }
 
 static int skill_get_inf(int skill_id)
@@ -22320,13 +22320,16 @@ static void skill_validate_hittype(struct config_setting_t *conf, struct s_skill
 			const char *hit_type;
 
 			if (libconfig->setting_lookup_string(t, lv, &hit_type) == CONFIG_TRUE) {
-				if (strcmpi(hit_type, "BDT_SKILL") == 0)
+				if (strcmpi(hit_type, "BDT_SKILL") == 0) {
 					sk->hit[i] = BDT_SKILL;
-				else if (strcmpi(hit_type, "BDT_MULTIHIT") == 0)
+				} else if (strcmpi(hit_type, "BDT_MULTIHIT") == 0) {
 					sk->hit[i] = BDT_MULTIHIT;
-				else if (strcmpi(hit_type, "BDT_NORMAL") != 0)
+				} else if (strcmpi(hit_type, "BDT_NORMAL") == 0) {
+					sk->hit[i] = BDT_NORMAL;
+				} else {
 					ShowWarning("%s: Invalid hit type %s specified in level %d for skill ID %d in %s! Defaulting to BDT_NORMAL...\n",
 						    __func__, hit_type, i + 1, sk->nameid, conf->file);
+				}
 			}
 		}
 
@@ -22342,7 +22345,9 @@ static void skill_validate_hittype(struct config_setting_t *conf, struct s_skill
 			hit = BDT_SKILL;
 		} else if (strcmpi(hit_type, "BDT_MULTIHIT") == 0) {
 			hit = BDT_MULTIHIT;
-		} else if (strcmpi(hit_type, "BDT_NORMAL") != 0) {
+		} else if (strcmpi(hit_type, "BDT_NORMAL") == 0) {
+			hit = BDT_NORMAL;
+		} else {
 			ShowWarning("%s: Invalid hit type %s specified for skill ID %d in %s! Defaulting to BDT_NORMAL...\n",
 				    __func__, hit_type, sk->nameid, conf->file);
 			return;
