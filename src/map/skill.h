@@ -2078,7 +2078,7 @@ struct skill_interface {
 	int (*get_index) (int skill_id);
 	int (*get_index_sub) (int skill_id, bool report_errors);
 	int (*get_type) (int skill_id, int skill_lv);
-	int (*get_hit) (int skill_id, int skill_lv);
+	enum battle_dmg_type (*get_hit) (int skill_id, int skill_lv);
 	int (*get_inf) (int skill_id);
 	int (*get_ele) (int skill_id, int skill_lv);
 	int (*get_nk) (int skill_id);

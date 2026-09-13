@@ -211,7 +211,7 @@ static const char *skill_get_desc(int skill_id)
  * @return The skill's hit type corresponding to the passed level. Defaults to BDT_NORMAL (0) in case of error.
  *
  **/
-static int skill_get_hit(int skill_id, int skill_lv)
+static enum battle_dmg_type skill_get_hit(int skill_id, int skill_lv)
 {
 	if (skill_id == 0)
 		return BDT_NORMAL;
@@ -222,7 +222,7 @@ static int skill_get_hit(int skill_id, int skill_lv)
 
 	Assert_retr(BDT_NORMAL, idx != 0);
 
-	return skill->dbs->db[idx].hit[skill_get_lvl_idx(skill_lv)];
+	return (enum battle_dmg_type)skill->dbs->db[idx].hit[skill_get_lvl_idx(skill_lv)];
 }
 
 static int skill_get_inf(int skill_id)
