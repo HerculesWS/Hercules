@@ -1018,13 +1018,13 @@ static void sysinfo_init(void)
 	sysinfo_vcsrevision_src_retrieve();
 #else
 	sysinfo->p->platform = SYSINFO_PLATFORM;
-	sysinfo->p->osversion = SYSINFO_OSVERSION;
+	sysinfo->p->osversion = aStrdup(SYSINFO_OSVERSION);
 	sysinfo->p->cpucores = SYSINFO_CPUCORES;
-	sysinfo->p->cpu = SYSINFO_CPU;
-	sysinfo->p->arch = SYSINFO_ARCH;
+	sysinfo->p->cpu = aStrdup(SYSINFO_CPU);
+	sysinfo->p->arch = aStrdup(SYSINFO_ARCH);
 	sysinfo->p->cflags = SYSINFO_CFLAGS;
 	sysinfo->p->vcstype = SYSINFO_VCSTYPE;
-	sysinfo->p->vcsrevision_src = SYSINFO_VCSREV;
+	sysinfo->p->vcsrevision_src = aStrdup(SYSINFO_VCSREV);
 #endif
 	sysinfo->vcsrevision_reload();
 	sysinfo_vcstype_name_retrieve(); // Must be called after setting vcstype
@@ -1035,21 +1035,18 @@ static void sysinfo_init(void)
  */
 static void sysinfo_final(void)
 {
-#ifdef WIN32
-	// Only need to be free'd in win32, they're #defined elsewhere
+	sysinfo->p->platform = NULL;
 	if (sysinfo->p->osversion)
 		aFree(sysinfo->p->osversion);
+	sysinfo->p->osversion = NULL;
 	if (sysinfo->p->cpu)
 		aFree(sysinfo->p->cpu);
+	sysinfo->p->cpu = NULL;
 	if (sysinfo->p->arch)
 		aFree(sysinfo->p->arch);
+	sysinfo->p->arch = NULL;
 	if (sysinfo->p->vcsrevision_src)
 		aFree(sysinfo->p->vcsrevision_src);
-#endif
-	sysinfo->p->platform = NULL;
-	sysinfo->p->osversion = NULL;
-	sysinfo->p->cpu = NULL;
-	sysinfo->p->arch = NULL;
 	sysinfo->p->vcsrevision_src = NULL;
 	sysinfo->p->cflags = NULL;
 	if (sysinfo->p->vcsrevision_scripts)
