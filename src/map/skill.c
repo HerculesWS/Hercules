@@ -19859,7 +19859,8 @@ static int skill_unit_move_sub(struct block_list *bl, va_list ap)
 		//Non-dualmode unit skills with a timer don't trigger when walking, so just return
 		if (dissonance) {
 			skill->dance_switch(su, 1);
-			skill->unit_onleft(skill->unit_onout(su, target, tick), target, tick); // su was changed to dissonance, trigger songs being terminated
+			skill->unit_onout(su, target, tick);
+			skill->unit_onleft(skill_id, target, tick); // su was changed to dissonance, trigger songs being terminated
 		}
 		return 0;
 	}
