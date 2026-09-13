@@ -383,32 +383,18 @@ typedef char bool;
 //////////////////////////////////////////////////////////////////////////
 // macro tools
 
-#ifdef swap // just to be sure
-#undef swap
-#endif
-// hmm only ints?
-//#define swap(a,b) { int temp=a; a=b; b=temp;}
-// if using macros then something that is type independent
-//#define swap(a,b) ((a == b) || ((a ^= b), (b ^= a), (a ^= b)))
-// Avoid "value computed is not used" warning and generates the same assembly code
-//#define swap(a,b) if (a != b) ((a ^= b), (b ^= a), (a ^= b))
-// but is vulnerable to 'if (foo) swap(bar, baz); else quux();', causing the else to nest incorrectly.
-#define swap(a,b) do { if ((a) != (b)) { (a) ^= (b); (b) ^= (a); (a) ^= (b); } } while(0)
-#define swap_ptr(a,b) do { if ((a) != (b)) (a) = (void*)((intptr_t)(a) ^ (intptr_t)(b)); (b) = (void*)((intptr_t)(a) ^ (intptr_t)(b)); (a) = (void*)((intptr_t)(a) ^ (intptr_t)(b)); } while(0)
+#define herc_internal_swap(a,b) do { if ((a) != (b)) { (a) ^= (b); (b) ^= (a); (a) ^= (b); } } while(0)
+#define herc_internal_swap_ptr(a,b) do { if ((a) != (b)) (a) = (void*)((intptr_t)(a) ^ (intptr_t)(b)); (b) = (void*)((intptr_t)(a) ^ (intptr_t)(b)); (a) = (void*)((intptr_t)(a) ^ (intptr_t)(b)); } while(0)
 
-#ifndef max
-#define max(a,b) (((a) > (b)) ? (a) : (b))
-#endif
+#define herc_internal_max(a,b) (((a) > (b)) ? (a) : (b))
 
-#ifndef min
-#define min(a,b) (((a) < (b)) ? (a) : (b))
-#endif
+#define herc_internal_min(a,b) (((a) < (b)) ? (a) : (b))
 
 // Macros to ease the c++ transition - remove later
-#define HSWAP(a, b) swap((a), (b))
-#define HSWAP_PTR(a, b) swap_ptr((a), (b))
-#define HMAX(a, b) max((a), (b))
-#define HMIN(a, b) min((a), (b))
+#define HSWAP(a, b) herc_internal_swap((a), (b))
+#define HSWAP_PTR(a, b) herc_internal_swap_ptr((a), (b))
+#define HMAX(a, b) herc_internal_max((a), (b))
+#define HMIN(a, b) herc_internal_min((a), (b))
 
 //////////////////////////////////////////////////////////////////////////
 // should not happen
