@@ -3211,7 +3211,7 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 #endif
 	struct status_change *sc;
 	struct map_session_data *sd, *tsd;
-	int type;
+	enum battle_dmg_type type;
 	int64 damage;
 	bool rmdamage = false;//magic reflected
 	bool additional_effects = true, shadow_flag = false;
@@ -3990,7 +3990,7 @@ static void skill_attack_combo2_unknown(int *attack_type, struct block_list *src
 {
 }
 
-static void skill_attack_display_unknown(int *attack_type, struct block_list *src, struct block_list *dsrc, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag, int *type, struct Damage *dmg, int64 *damage)
+static void skill_attack_display_unknown(int *attack_type, struct block_list *src, struct block_list *dsrc, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag, enum battle_dmg_type *type, struct Damage *dmg, int64 *damage)
 {
 	nullpo_retv(bl);
 	nullpo_retv(dmg);
@@ -4017,13 +4017,13 @@ static int skill_attack_copy_unknown(int *attack_type, struct block_list *src, s
 	return *skill_id;
 }
 
-static int skill_attack_dir_unknown(int *attack_type, struct block_list *src, struct block_list *dsrc, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag)
+static enum unit_dir skill_attack_dir_unknown(int *attack_type, struct block_list *src, struct block_list *dsrc, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag)
 {
 	return UNIT_DIR_UNDEFINED;
 }
 
 static void skill_attack_blow_unknown(int *attack_type, struct block_list *src, struct block_list *dsrc, struct block_list *bl,
-                                      uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag, int *type,
+                                      uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag, enum battle_dmg_type *type,
                                       struct Damage *dmg, int64 *damage, enum unit_dir *dir)
 {
 	nullpo_retv(bl);
