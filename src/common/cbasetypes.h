@@ -482,15 +482,6 @@ typedef char bool;
 	#define h64BPTRSIZE(y) (y)
 #endif
 
-// Temporary helpers to zero-initialize structs to ease the c++ transition
-#ifdef __cplusplus
-#define ZERO_INITIALIZED {}
-#define ZERO_INITIALIZED_NESTED {}
-#else
-#define ZERO_INITIALIZED = { 0 }
-#define ZERO_INITIALIZED_NESTED = { { 0 } }
-#endif
-
 /** Support macros for marking blocks to memset to 0 */
 #define BEGIN_ZEROED_BLOCK int8 HERC__zeroed_block_BEGIN
 #define END_ZEROED_BLOCK int8 HERC__zeroed_block_END

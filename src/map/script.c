@@ -6083,7 +6083,7 @@ static void script_load_translation_sub(const char *filename, void *context)
  */
 static int script_load_translation(const char *directory, uint8 lang_id)
 {
-	struct load_translation_data data ZERO_INITIALIZED;
+	struct load_translation_data data{};
 	data.lang_id = lang_id;
 
 	nullpo_ret(directory);
@@ -16694,7 +16694,7 @@ static BUILDIN(getitemlink)
 		return false;
 	}
 
-	struct item link_item ZERO_INITIALIZED;
+	struct item link_item{};
 	link_item.nameid = itd->nameid;
 	link_item.refine = script_hasdata(st, 3) ? script_getnum(st, 3) : 0;
 
@@ -23652,7 +23652,7 @@ static BUILDIN(readbook)
 static BUILDIN(questinfo)
 {
 	struct npc_data *nd = map->id2nd(st->oid);
-	struct questinfo qi ZERO_INITIALIZED;
+	struct questinfo qi{};
 	int icon = script_getnum(st, 2);
 
 	if (nd == NULL)
@@ -23750,7 +23750,7 @@ static BUILDIN(setquestinfo)
 	}
 	case QINFO_ITEM:
 	{
-		struct questinfo_itemreq item ZERO_INITIALIZED;
+		struct questinfo_itemreq item{};
 
 		item.nameid = script_getnum(st, 3);
 		item.min = script_hasdata(st, 4) ? script_getnum(st, 4) : 0;
@@ -23796,7 +23796,7 @@ static BUILDIN(setquestinfo)
 	}
 	case QINFO_QUEST:
 	{
-		struct questinfo_qreq quest_req ZERO_INITIALIZED;
+		struct questinfo_qreq quest_req{};
 		struct quest_db *quest_data = NULL;
 
 		quest_req.id = script_getnum(st, 3);
@@ -27243,7 +27243,7 @@ static BUILDIN(getcalendartime)
 	int cur_hour = tm->tm_hour;
 	int cur_min = tm->tm_min;
 
-	struct tm info ZERO_INITIALIZED;
+	struct tm info{};
 	info.tm_sec = 0;
 	info.tm_min = minute;
 	info.tm_hour = hour;
@@ -27675,7 +27675,7 @@ static bool buildin_rodex_sendmail_sub(struct script_state *st, struct rodex_mes
 
 static BUILDIN(rodex_sendmail)
 {
-	struct rodex_message msg ZERO_INITIALIZED;
+	struct rodex_message msg{};
 	int item_count = 0, i = 0, param = 7;
 
 	// Common parameters - sender/message/zeny
@@ -27743,7 +27743,7 @@ static BUILDIN(rodex_sendmail)
 
 static BUILDIN(rodex_sendmail2)
 {
-	struct rodex_message msg ZERO_INITIALIZED;
+	struct rodex_message msg{};
 	int item_count = 0, i = 0, param = 7;
 
 	// Common parameters - sender/message/zeny

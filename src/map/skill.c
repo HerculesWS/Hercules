@@ -9274,7 +9274,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 								int nameid = skill->get_itemid(su->group->skill_id, i);
 								if (nameid > 0) {
 									int success;
-									struct item item_tmp ZERO_INITIALIZED;
+									struct item item_tmp{};
 									int amount = skill->get_itemqty(su->group->skill_id, i, skill_lv);
 									item_tmp.nameid = nameid;
 									item_tmp.identify = 1;
@@ -25136,7 +25136,7 @@ static bool skill_read_skilldb(const char *filename)
 	struct DBMap *loaded_ids_db = idb_alloc(DB_OPT_BASE);
 
 	while ((conf = libconfig->setting_get_elem(sk, index++)) != NULL) {
-		struct s_skill_db tmp_db ZERO_INITIALIZED;
+		struct s_skill_db tmp_db{};
 
 		/** Validate mandatory fields. **/
 		skill->validate_id(conf, &tmp_db, index, loaded_ids_db);
@@ -25364,7 +25364,7 @@ static bool skill_read_autospell_db(const char *filename)
 	struct DBMap *loaded_skills_db = idb_alloc(DB_OPT_BASE);
 
 	while ((conf = libconfig->setting_get_elem(sk, index++)) != NULL) {
-		struct s_autospell_db tmp_db ZERO_INITIALIZED;
+		struct s_autospell_db tmp_db{};
 
 		skill->read_autospell_skill_id(conf, &tmp_db, index);
 		if (tmp_db.skill_id == 0)

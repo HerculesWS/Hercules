@@ -14809,7 +14809,7 @@ static bool status_read_unit_params_db_sub(const char *name, struct config_setti
 	nullpo_retr(false, name);
 	nullpo_retr(false, group);
 
-	struct s_unit_params entry ZERO_INITIALIZED;
+	struct s_unit_params entry{};
 
 	const char *str = NULL;
 	int i32 = 0;
