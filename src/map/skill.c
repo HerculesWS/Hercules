@@ -12636,12 +12636,6 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 			if( sc && sc->data[SC_BASILICA] )
 				status_change_end(src, SC_BASILICA, INVALID_TIMER); // Cancel Basilica
 			else { // Create Basilica. Start SC on caster. Unit timer start SC on others.
-				if( map->foreachinrange(skill->count_wos, src, 2, BL_MOB|BL_PC, src) ) {
-					if( sd )
-						clif->skill_fail(sd, skill_id, USESKILL_FAIL, 0, 0);
-					return 1;
-				}
-
 				skill->clear_unitgroup(src);
 				if( skill->unitsetting(src,skill_id,skill_lv,x,y,0) )
 					sc_start4(src, src, type, 100, skill_lv, 0, 0, src->id, skill->get_time(skill_id, skill_lv), skill_id);

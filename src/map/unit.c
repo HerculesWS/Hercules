@@ -1404,6 +1404,40 @@ static int unit_set_walkdelay(struct block_list *bl, int64 tick, int delay, int 
 	return 1;
 }
 
+#ifndef RENEWAL
+// Basilica fails to start if its area has an obstructing unit or wall cell
+// (issue #789). Shared between unit_skilluse_id2() and unit_skilluse_pos2()
+// because HP_BASILICA's SkillType in db/pre-re/skill_db.conf is Self, not
+// Ground: the client sends it as a self-cast (CZ_USE_SKILL, dispatched
+// through unit_skilluse_id2()), never as a ground-cast (CZ_USE_SKILL_TOGROUND,
+// unit_skilluse_pos2()) -- clif_parse_UseSkillToPosSub's own INF_GROUND_SKILL
+// check rejects a ground-cast request for it before it would ever reach
+// unit_skilluse_pos2() at all. A copy of this check living only in
+// unit_skilluse_pos2() is therefore unreachable in normal play; keeping one
+// function here that both callers invoke avoids relying on only one of the
+// two ever actually running it.
+static bool unit_skilluse_basilica_blocked(struct block_list *src, uint16 skill_id, uint16 skill_lv)
+{
+	nullpo_retr(false, src);
+	if (skill_id != HP_BASILICA)
+		return false;
+
+	int basilica_range = skill->get_unit_range(skill_id, skill_lv);
+	bool basilica_blocked = map->foreachinrange(skill->count_wos, src, basilica_range, BL_MOB|BL_PC, src) != 0;
+	if (!basilica_blocked) {
+		for (int dy = -basilica_range; dy <= basilica_range && !basilica_blocked; dy++) {
+			for (int dx = -basilica_range; dx <= basilica_range; dx++) {
+				if (map->getcell(src->m, src, src->x + dx, src->y + dy, CELL_CHKNOPASS) != 0) {
+					basilica_blocked = true;
+					break;
+				}
+			}
+		}
+	}
+	return basilica_blocked;
+}
+#endif // ndef RENEWAL
+
 //-------------- stop here
 static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, uint16 skill_lv, int casttime, int castcancel)
 {
@@ -1539,6 +1573,14 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 
 	if(!status->check_skilluse(src, target, skill_id, 0))
 		return 0;
+
+#ifndef RENEWAL
+	if (unit->skilluse_basilica_blocked(src, skill_id, skill_lv)) {
+		if (sd != NULL)
+			clif->skill_fail(sd, skill_id, USESKILL_FAIL, 0, 0);
+		return 0;
+	}
+#endif // ndef RENEWAL
 
 	if( src != target && status->isdead(target) ) {
 		/**
@@ -1939,6 +1981,18 @@ static int unit_skilluse_pos2(struct block_list *src, short skill_x, short skill
 
 	if (!status->check_skilluse(src, NULL, skill_id, 0))
 		return 0;
+
+#ifndef RENEWAL
+	// See unit_skilluse_basilica_blocked()'s own comment: kept here too in
+	// case a future client generation ever does send HP_BASILICA as a
+	// ground-cast (this function's own call site), not just for the
+	// self-cast path (unit_skilluse_id2()) that pre-renewal actually uses.
+	if (unit->skilluse_basilica_blocked(src, skill_id, skill_lv)) {
+		if (sd != NULL)
+			clif->skill_fail(sd, skill_id, USESKILL_FAIL, 0, 0);
+		return 0;
+	}
+#endif // ndef RENEWAL
 
 	if (map->getcell(src->m, src, skill_x, skill_y, CELL_CHKWALL)) {
 		// can't cast ground targeted spells on wall cells
@@ -3267,6 +3321,9 @@ void unit_defaults(void)
 	unit->skilluse_id2 = unit_skilluse_id2;
 	unit->skilluse_pos = unit_skilluse_pos;
 	unit->skilluse_pos2 = unit_skilluse_pos2;
+#ifndef RENEWAL
+	unit->skilluse_basilica_blocked = unit_skilluse_basilica_blocked;
+#endif // ndef RENEWAL
 	unit->set_target = unit_set_target;
 	unit->stop_attack = unit_stop_attack;
 	unit->unattackable = unit_unattackable;
