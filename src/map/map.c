@@ -7202,15 +7202,15 @@ void map_defaults(void)
 	map->night_flag = 0; // 0=day, 1=night [Yor]
 	map->enable_spy = 0; //To enable/disable @spy commands, which consume too much cpu time when sending packets. [Skotlex]
 
-	map->INTER_CONF_NAME="conf/common/inter-server.conf";
-	map->LOG_CONF_NAME="conf/map/logs.conf";
-	map->MAP_CONF_NAME = "conf/map/map-server.conf";
-	map->BATTLE_CONF_FILENAME = "conf/map/battle.conf";
-	map->ATCOMMAND_CONF_FILENAME = "conf/atcommand.conf";
-	map->SCRIPT_CONF_NAME = "conf/map/script.conf";
-	map->MSG_CONF_NAME = "conf/messages.conf";
-	map->GRF_PATH_FILENAME = "conf/grf-files.txt";
-	map->STORAGE_CONF_FILENAME = "conf/storage.conf";
+	map->INTER_CONF_NAME = NULL;
+	map->LOG_CONF_NAME = NULL;
+	map->MAP_CONF_NAME = NULL;
+	map->BATTLE_CONF_FILENAME = NULL;
+	map->ATCOMMAND_CONF_FILENAME = NULL;
+	map->SCRIPT_CONF_NAME = NULL;
+	map->MSG_CONF_NAME = NULL;
+	map->GRF_PATH_FILENAME = NULL;
+	map->STORAGE_CONF_FILENAME = NULL;
 
 	map->default_codepage[0] = '\0';
 	map->server_port = 3306;
