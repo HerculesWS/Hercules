@@ -6452,7 +6452,7 @@ ACMD(autoloottype)
 				return false;
 			}
 			sd->state.autoloottype |= (1<<type); // Stores the type
-			snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_AUTOLOOT_TYPE_ENABLED), itemdb->typename(type)); // Autolooting item type: '%s'
+			snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_AUTOLOOT_TYPE_ENABLED), itemdb->type_to_name(type)); // Autolooting item type: '%s'
 			clif->message(fd, atcmd_output);
 			break;
 		case 2:
@@ -6461,7 +6461,7 @@ ACMD(autoloottype)
 				return false;
 			}
 			sd->state.autoloottype &= ~(1<<type);
-			snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_AUTOLOOT_TYPE_REMOVED), itemdb->typename(type)); // Removed item type: '%s' from your autoloottype list.
+			snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_AUTOLOOT_TYPE_REMOVED), itemdb->type_to_name(type)); // Removed item type: '%s' from your autoloottype list.
 			clif->message(fd, atcmd_output);
 			break;
 		case 3:
@@ -6480,7 +6480,7 @@ ACMD(autoloottype)
 				clif->message(fd, msg_fd(fd, MSGTBL_AUTOLOOT_TYPE_LIST)); // Item types on your autoloottype list:
 				for(i=0; i < IT_MAX; i++) {
 					if (sd->state.autoloottype&(1<<i)) {
-						snprintf(atcmd_output, sizeof(atcmd_output), " '%s'", itemdb->typename((enum item_types)i));
+						snprintf(atcmd_output, sizeof(atcmd_output), " '%s'", itemdb->type_to_name((enum item_types)i));
 						clif->message(fd, atcmd_output);
 					}
 				}
@@ -7835,7 +7835,7 @@ ACMD(iteminfo)
 
 			snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ITEMINFO_DETAILS), // Item: '%s'/'%s' (%d) Type: %s | Extra Effect: %s
 				item_data->name, StrBuf->Value(&buf), item_data->nameid,
-				itemdb->typename((enum item_types)item_data->type),
+				itemdb->type_to_name((enum item_types)item_data->type),
 				(item_data->script == NULL) ? msg_fd(fd, MSGTBL_ITEMINFO_NONE) : msg_fd(fd, MSGTBL_ITEMINFO_WITH_SCRIPT) // None / With script
 			);
 			StrBuf->Clear(&buf);
