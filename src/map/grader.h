@@ -25,7 +25,7 @@
 #include "map/itemdb.h"
 #include "map/map.h"
 
-enum grade_level CXX_ENUM_TYPE(int) {
+enum grade_level : int {
     ITEM_GRADE_NONE = 0,
     ITEM_GRADE_D    = 1,
     ITEM_GRADE_C    = 2,
@@ -47,7 +47,7 @@ enum grade_ui_failure_behavior {
     GRADE_FAILURE_BEHAVIOR_DOWNGRADE = 2,
 };
 
-enum grade_ui_result CXX_ENUM_TYPE(int) {
+enum grade_ui_result : int {
     GRADE_UPGRADE_SUCCESS          = 0,
     GRADE_UPGRADE_FAILED_KEEP      = 1,
     GRADE_UPGRADE_FAILED_DOWNGRADE = 2,

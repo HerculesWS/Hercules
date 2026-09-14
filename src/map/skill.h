@@ -41,7 +41,7 @@ struct skill_unit;
 struct square;
 struct status_change_entry;
 
-enum battle_dmg_type CXX_ENUM_TYPE(int);
+enum battle_dmg_type : int;
 
 /**
  * Defines

@@ -357,7 +357,7 @@ enum {
 	MF_NOSENDMAIL,
 };
 
-enum navigation_mode CXX_ENUM_TYPE(int) {
+enum navigation_mode : int {
 	NAV_MODE_ALL     = 0,
 	NAV_MODE_MAP     = 1,
 	NAV_MODE_NPC     = 2,
@@ -370,7 +370,7 @@ enum navigation_mode CXX_ENUM_TYPE(int) {
 	NAV_MODE_MAX     = 4,
 };
 
-enum navigation_service CXX_ENUM_TYPE(int) {
+enum navigation_service : int {
 	NAV_NONE               = 0,
 	NAV_AIRSHIP_ONLY       = 1,
 	NAV_SCROLL_ONLY        = 10,

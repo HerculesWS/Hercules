@@ -34,7 +34,7 @@ struct socket_data;
 struct map_session_data;
 struct hplugin_data_store;
 
-enum server_types CXX_ENUM_TYPE(unsigned int);
+enum server_types : unsigned int;
 
 #define HPM_VERSION "1.3"
 

@@ -33,7 +33,7 @@ struct hplugin_data_store;
 struct block_list;
 struct map_session_data;
 
-enum BATTLEGROUNDS_QUEUE_ACK CXX_ENUM_TYPE(int);
+enum BATTLEGROUNDS_QUEUE_ACK : int;
 
 /**
  * Defines
