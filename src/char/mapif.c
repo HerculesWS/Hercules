@@ -2276,8 +2276,8 @@ static void mapif_send_achievements_to_map(int fd, int char_id, const struct cha
 
 	data_size = sizeof(struct achievement) * VECTOR_LENGTH(*cp);
 
-STATIC_ASSERT((sizeof(struct achievement) * MAX_ACHIEVEMENT_DB + 8 <= UINT16_MAX),
-	"The achievements data can potentially be larger than the maximum packet size. This may cause errors at run-time.");
+	static_assert((sizeof(struct achievement) * MAX_ACHIEVEMENT_DB + 8 <= UINT16_MAX),
+		"The achievements data can potentially be larger than the maximum packet size. This may cause errors at run-time.");
 
 	/* Send to the map server. */
 	WFIFOHEAD(fd, (8 + data_size));

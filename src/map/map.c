@@ -4712,7 +4712,7 @@ static struct map_zone_data *map_merge_zone(struct map_zone_data *main, struct m
 		// Hash the concatenation of the two names if that happens, to minimize the chance of collisions.
 		char newzone_temp[33];
 		md5->string(newzone, newzone_temp);
-		STATIC_ASSERT(MAP_ZONE_NAME_LENGTH > 32 + 12 + 12 + 2, "The next lines needs to be adjusted if MAP_ZONE_NAME_LENGTH is changed");
+		static_assert(MAP_ZONE_NAME_LENGTH > 32 + 12 + 12 + 2, "The next lines needs to be adjusted if MAP_ZONE_NAME_LENGTH is changed");
 		snprintf(newzone, MAP_ZONE_NAME_LENGTH, "%s_", newzone_temp);
 		size_t len = strlen(newzone);
 		safestrncpy(newzone + len, main->name, len + 12);

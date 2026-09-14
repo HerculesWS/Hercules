@@ -22038,7 +22038,7 @@ static void skill_add_bard_dancer_soullink_songs(struct map_session_data *sd)
 	const int bard_song_skillid[4] = {BA_WHISTLE, BA_ASSASSINCROSS, BA_POEMBRAGI, BA_APPLEIDUN};
 	const int dancer_song_skillid[4] = {DC_HUMMING, DC_DONTFORGETME, DC_FORTUNEKISS, DC_SERVICEFORYOU};
 
-	STATIC_ASSERT(ARRAYLENGTH(bard_song_skillid) == ARRAYLENGTH(dancer_song_skillid), "bard_song_skillid and dancer_song_skillid must be the same size");
+	static_assert(ARRAYLENGTH(bard_song_skillid) == ARRAYLENGTH(dancer_song_skillid), "bard_song_skillid and dancer_song_skillid must be the same size");
 
 	int copy_from_index;
 	int copy_to_index;

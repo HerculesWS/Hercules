@@ -491,19 +491,4 @@ typedef char bool;
 /** Support macros for marking structs as unavailable */
 #define UNAVAILABLE_STRUCT int8 HERC__unavailable_struct
 
-/** Static assertion (only on compilers that support it) */
-#if defined(__cplusplus)
-// C++ version
-#define STATIC_ASSERT(ex, msg) static_assert(ex, msg)
-#elif defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
-// C11 version
-#define STATIC_ASSERT(ex, msg) _Static_assert(ex, msg)
-#elif defined(_MSC_VER)
-// MSVC doesn't support it, but it accepts the C++ style version
-#define STATIC_ASSERT(ex, msg) static_assert(ex, msg)
-#else
-// Otherise just ignore it until it's supported
-#define STATIC_ASSERT(ex, msg)
-#endif
-
 #endif /* COMMON_CBASETYPES_H */

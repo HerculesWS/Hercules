@@ -25,7 +25,7 @@
 #endif
 
 #define DEFINE_PACKET_HEADER(name, id) \
-	STATIC_ASSERT((int32)(PACKET_LEN_##id) == -1 || sizeof(struct PACKET_##name) == \
+	static_assert((int32)(PACKET_LEN_##id) == -1 || sizeof(struct PACKET_##name) == \
 		(size_t)PACKET_LEN_##id, "Wrong size PACKET_"#name); \
 	enum { HEADER_##name = id };
 
@@ -33,7 +33,7 @@
 	enum { HEADER_##name = id };
 
 #define CHECK_PACKET_HEADER(name, id) \
-	STATIC_ASSERT((int32)(PACKET_LEN_##id) == -1 || sizeof(struct PACKET_##name) == \
+	static_assert((int32)(PACKET_LEN_##id) == -1 || sizeof(struct PACKET_##name) == \
 		(size_t)PACKET_LEN_##id, "Wrong size PACKET_"#name); \
 
 #endif /* COMMON_PACKETSMACRO_H */
