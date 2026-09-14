@@ -21150,6 +21150,7 @@ static BUILDIN(setunitdata)
 		setunitdata_check_bounds(4, 0, CHAR_MAX);
 		break;
 	case UDT_GROUP:
+	{
 		setunitdata_check_bounds(4, 0, INT_MAX);
 
 		struct unit_data *ud = unit->bl2ud2(bl);
@@ -21164,6 +21165,7 @@ static BUILDIN(setunitdata)
 		clif->blname_ack(0, bl); // Send update to client.
 		script_pushint(st, 1);
 		return true;
+	}
 	case UDT_DAMAGE_TAKEN_RATE:
 		setunitdata_check_bounds(4, 1, INT_MAX);
 		break;
