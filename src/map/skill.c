@@ -7036,6 +7036,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 			} else if (status->isdead(bl) && flag&1) { //Revive
 				skill->area_temp[0]++; //Count it in, then fall-through to the Resurrection code.
 				skill_lv = 3; //Resurrection level 3 is used
+				FALLTHROUGH
 			} else //Invalid target, skip resurrection.
 				break;
 
@@ -7441,6 +7442,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 				skill->attack(BF_MISC,src,src,bl,skill_id,skill_lv,tick,flag);
 				break;
 			}
+			FALLTHROUGH
 		case PR_SLOWPOISON:
 #ifndef RENEWAL
 		case PR_IMPOSITIO:
@@ -8438,6 +8440,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 			if( !mer )
 				break;
 			sd = mer->master;
+			FALLTHROUGH
 		case WZ_ESTIMATION:
 			if( sd == NULL )
 				break;
@@ -9008,6 +9011,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 				break;
 			if(tstatus->mode&MD_BOSS)
 				break;
+			FALLTHROUGH
 		case NPC_ATTRICHANGE:
 		case NPC_CHANGEWATER:
 		case NPC_CHANGEGROUND:
@@ -9725,6 +9729,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 				status_change_end(bl, SC_SWOO, INVALID_TIMER);
 				break;
 			}
+			FALLTHROUGH
 		case SL_SKA: // [marquis007]
 		case SL_SKE:
 			if (sd && !battle_config.allow_es_magic_pc && bl->type != BL_MOB) {
@@ -9954,6 +9959,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 				}
 				break;
 			}
+			FALLTHROUGH
 		case NPC_WIDEBLEEDING:
 		case NPC_WIDECONFUSE:
 		case NPC_WIDECURSE:
@@ -11657,6 +11663,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 				clif->skill_fail(sd, skill_id, USESKILL_FAIL_TOTARGET_PLAYER, 0, 0);
 				break;
 			}
+			FALLTHROUGH
 		case KO_IZAYOI:
 		case OB_ZANGETSU:
 		case KG_KYOMU:
