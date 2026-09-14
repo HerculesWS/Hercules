@@ -314,7 +314,7 @@ enum {
 	//                          = JOBL_THIRD | JOBL_BABY | JOBL_2_2 | MAPID_SUMMONER,
 };
 
-STATIC_ASSERT(((MAPID_1_1_MAX - 1) | MAPID_BASEMASK) == MAPID_BASEMASK, "First class map IDs do not fit into MAPID_BASEMASK");
+static_assert(((MAPID_1_1_MAX - 1) | MAPID_BASEMASK) == MAPID_BASEMASK, "First class map IDs do not fit into MAPID_BASEMASK");
 
 //This stackable implementation does not means a BL can be more than one type at a time, but it's
 // meant to make it easier to check for multiple types at a time on invocations such as map_foreach* calls [Skotlex]

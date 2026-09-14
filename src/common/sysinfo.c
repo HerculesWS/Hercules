@@ -856,10 +856,10 @@ static const char *sysinfo_arch(void)
 static bool sysinfo_is64bit(void)
 {
 #ifdef __64BIT__
-	STATIC_ASSERT(sizeof(void *) == 8, "Unexpected pointer size for 64 bit builds");
+	static_assert(sizeof(void *) == 8, "Unexpected pointer size for 64 bit builds");
 	return true;
 #else
-	STATIC_ASSERT(sizeof(void *) == 4, "Unexpected pointer size for 32 bit builds");
+	static_assert(sizeof(void *) == 4, "Unexpected pointer size for 32 bit builds");
 	return false;
 #endif
 }

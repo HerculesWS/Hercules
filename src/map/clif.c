@@ -24660,7 +24660,7 @@ static void clif_npc_expanded_barter_open(struct map_session_data *sd, struct np
 	int items_count = 0;
 	int currencies_count = 0;
 	struct PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO *packet = (struct PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO*)&packet_buf[0];
-	STATIC_ASSERT(sizeof(packet_buf) > sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO), "packet_buf size too small");
+	static_assert(sizeof(packet_buf) > sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO), "packet_buf size too small");
 	int buf_left = sizeof(packet_buf) - sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO);
 	packet->packetType = HEADER_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO;
 	struct PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO_sub *item = &packet->items[0];

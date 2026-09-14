@@ -97,7 +97,7 @@ enum proxy_flag {
 	proxy_flag_map = 4
 };
 
-STATIC_ASSERT(sizeof(struct PACKET_API_PROXY) == sizeof(struct PACKET_API_PROXY0),
+static_assert(sizeof(struct PACKET_API_PROXY) == sizeof(struct PACKET_API_PROXY0),
 		"Structs PACKET_API_PROXY and PACKET_API_PROXY0 must be same");
 
 struct PACKET_API_PROXY_CHUNKED {

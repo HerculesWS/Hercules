@@ -39,7 +39,7 @@ enum grade_level : int {
 #endif
 };
 
-STATIC_ASSERT(MAX_ITEM_GRADE == (ITEM_GRADE_MAX - 1), "Maximum item grade mismatch!");
+static_assert(MAX_ITEM_GRADE == (ITEM_GRADE_MAX - 1), "Maximum item grade mismatch!");
 
 enum grade_ui_failure_behavior {
     GRADE_FAILURE_BEHAVIOR_KEEP      = 0,

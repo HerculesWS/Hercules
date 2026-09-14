@@ -99,7 +99,7 @@ static struct {
 };
 static struct item_data items[ARRAYLENGTH(dummy_items_info)];
 
-STATIC_ASSERT(ARRAYLENGTH(items) == ARRAYLENGTH(dummy_items_info), "The lengths of items and dummy_items_info don't match");
+static_assert(ARRAYLENGTH(items) == ARRAYLENGTH(dummy_items_info), "The lengths of items and dummy_items_info don't match");
 
 VECTOR_STRUCT_DECL(autorelease, struct map_session_data *);
 
