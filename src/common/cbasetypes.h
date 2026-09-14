@@ -506,12 +506,4 @@ typedef char bool;
 #define STATIC_ASSERT(ex, msg)
 #endif
 
-// Temporary helper to specify an enum's underlying type, to ease the c++ transition
-#ifdef __cplusplus
-#define CXX_ENUM_TYPE(t) : t
-#else
-// (this doesn't do anything in c)
-#define CXX_ENUM_TYPE(t)
-#endif
-
 #endif /* COMMON_CBASETYPES_H */
