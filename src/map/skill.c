@@ -4395,7 +4395,7 @@ static int skill_area_sub_count(struct block_list *src, struct block_list *targe
 /*==========================================
  *
  *------------------------------------------*/
-static int skill_timerskill(int tid, int64 tick, int id, intptr_t data)
+static int skill_timerskill_(int tid, int64 tick, int id, intptr_t data)
 {
 	struct block_list *src = map->id2bl(id),*target = NULL;
 	struct unit_data *ud = unit->bl2ud(src);
@@ -25759,7 +25759,7 @@ void skill_defaults(void)
 	skill->onskillusage = skill_onskillusage;
 	skill->bind_trap = skill_bind_trap;
 	skill->cell_overlap = skill_cell_overlap;
-	skill->timerskill = skill_timerskill;
+	skill->timerskill = skill_timerskill_;
 	skill->trap_do_splash = skill_trap_do_splash;
 	skill->trap_splash = skill_trap_splash;
 	skill->check_condition_mercenary = skill_check_condition_mercenary;
