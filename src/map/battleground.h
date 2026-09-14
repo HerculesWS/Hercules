@@ -26,9 +26,14 @@
 #include "common/db.h"
 #include "common/mmo.h" // struct party
 
+/**
+ * Forward declerations
+ */
 struct hplugin_data_store;
 struct block_list;
 struct map_session_data;
+
+enum BATTLEGROUNDS_QUEUE_ACK CXX_ENUM_TYPE(int);
 
 /**
  * Defines

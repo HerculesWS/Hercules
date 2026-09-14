@@ -100,7 +100,7 @@ enum e_battle_check_target { //New definitions [Skotlex]
  *
  * Note: some values may not apply in some contexts.
  */
-enum battle_dmg_type {
+enum battle_dmg_type CXX_ENUM_TYPE(int) {
 	BDT_NORMAL      = 0,  // Normal attack
 	//BDT_PICKUP      = 1,  // Pick up item
 	BDT_SITDOWN     = 2,  // Sit down
