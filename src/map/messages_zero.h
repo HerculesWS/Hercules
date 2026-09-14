@@ -29,7 +29,7 @@
 Latest version: 20221024
 */
 
-enum clif_messages CXX_ENUM_TYPE(unsigned int) {
+enum clif_messages : unsigned int {
 /*20171018 to latest
 동의 하십니까?
 Do you agree?
