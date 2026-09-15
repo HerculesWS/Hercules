@@ -1308,7 +1308,7 @@ static int mob_ai_sub_hard_activesearch(struct block_list *bl, va_list ap)
 		case BL_PC:
 			if (BL_UCCAST(BL_PC, bl)->state.gangsterparadise && !(status_get_mode(&md->bl)&MD_BOSS))
 				return 0; //Gangster paradise protection.
-			FALLTHROUGH
+			[[fallthrough]];
 		case BL_NUL:
 		case BL_MOB:
 		case BL_PET:
@@ -1593,7 +1593,7 @@ static int mob_unlocktarget(struct mob_data *md, int64 tick)
 			break;
 		//Because it is not unset when the mob finishes walking.
 		md->state.skillstate = MSS_IDLE;
-		FALLTHROUGH
+		[[fallthrough]];
 	case MSS_IDLE:
 		// Idle skill.
 		if ((++md->ud.walk_count % IDLE_SKILL_INTERVAL) == 0 && mob->use_skill(md, tick, -1) == 0)
@@ -3733,7 +3733,7 @@ static int mob_use_skill(struct mob_data *md, int64 tick, int event)
 					break;
 
 				// If monster has a master but master wasn't found, try a friend.
-				FALLTHROUGH
+				[[fallthrough]];
 			case MST_FRIEND: // Monster's friend is within skill range. Skill center is monster position.
 				bl = (fbl != NULL) ? fbl : &md->bl;
 				break;
@@ -3786,7 +3786,7 @@ static int mob_use_skill(struct mob_data *md, int64 tick, int event)
 					break;
 
 				// If monster has a master but master wasn't found, try a friend.
-				FALLTHROUGH
+				[[fallthrough]];
 			case MST_FRIEND: // Monster's friend is within skill range.
 				bl = (fbl != NULL) ? fbl : &md->bl;
 				break;
@@ -4082,9 +4082,9 @@ static int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 
 		} else {
 			switch (skill_id) { /// Certain special skills that are passive, and thus, never triggered.
 			case MO_TRIPLEATTACK:
-				FALLTHROUGH
+				[[fallthrough]];
 			case TF_DOUBLE:
-				FALLTHROUGH
+				[[fallthrough]];
 			case GS_CHAINACTION:
 				mob_skills[i].state = MSS_BERSERK;
 				mob_skills[i].target = MST_TARGET;

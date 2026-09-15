@@ -2096,7 +2096,7 @@ static int map_quit(struct map_session_data *sd)
 					case SC_GDSKILL_REGENERATION:
 						if( !sd->sc.data[i]->val4 )
 							break;
-						FALLTHROUGH
+						[[fallthrough]];
 					default:
 						status_change_end(&sd->bl, (sc_type)i, INVALID_TIMER);
 				}
@@ -3233,7 +3233,7 @@ static int map_getcellp(struct map_data *m, const struct block_list *bl, int16 x
 #ifdef CELL_NOSTACK
 		if (cell.cell_bl >= battle_config.custom_cell_stack_limit)
 			return 0;
-		FALLTHROUGH
+		[[fallthrough]];
 #endif
 	case CELL_CHKREACH:
 		return (cell.walkable);
@@ -3242,7 +3242,7 @@ static int map_getcellp(struct map_data *m, const struct block_list *bl, int16 x
 #ifdef CELL_NOSTACK
 		if (cell.cell_bl >= battle_config.custom_cell_stack_limit)
 			return 1;
-		FALLTHROUGH
+		[[fallthrough]];
 #endif
 	case CELL_CHKNOREACH:
 		return (!cell.walkable);

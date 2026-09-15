@@ -495,7 +495,7 @@ static void pc_addfame(struct map_session_data *sd, int ranktype, int count)
 		break;
 	case RANKTYPE_PK:
 		// Not supported
-		FALLTHROUGH
+		[[fallthrough]];
 	default:
 		Assert_retv(0);
 	}
@@ -540,7 +540,7 @@ static int pc_fame_rank(int char_id, int ranktype)
 		}
 		break;
 	case RANKTYPE_PK: // Not implemented
-		FALLTHROUGH
+		[[fallthrough]];
 	default:
 		Assert_ret(0);
 	}
@@ -5153,7 +5153,7 @@ static int pc_isUseitem(struct map_session_data *sd, int n)
 				}
 			}
 		}
-		FALLTHROUGH
+		[[fallthrough]];
 		case ITEMID_WING_OF_FLY:
 		case ITEMID_N_FLY_WING:
 		case ITEMID_C_WING_OF_FLY:
@@ -8416,7 +8416,7 @@ static int64 pc_readparam(const struct map_session_data *sd, int type)
 			val = sd->bonus.varcastrate;
 			break;
 #else
-			FALLTHROUGH
+			[[fallthrough]];
 #endif
 		case SP_CASTRATE:
 				val = sd->castrate;
@@ -12365,7 +12365,7 @@ static void pc_autotrade_update(struct map_session_data *sd, enum e_pc_autotrade
 										))
 				Sql_ShowDebug(map->mysql_handle);
 		}
-		FALLTHROUGH
+		[[fallthrough]];
 		case PAUC_REFRESH:
 			for( i = 0; i < sd->vend_num; i++ ) {
 				if( sd->vending[i].amount == 0 )

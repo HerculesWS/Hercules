@@ -890,13 +890,13 @@ static int status_check_skilluse(struct block_list *src, struct block_list *targ
 			switch (sc->data[SC_BLADESTOP]->val1)
 			{
 			case 5: if (skill_id == MO_EXTREMITYFIST) break;
-				FALLTHROUGH
+				[[fallthrough]];
 			case 4: if (skill_id == MO_CHAINCOMBO) break;
-				FALLTHROUGH
+				[[fallthrough]];
 			case 3: if (skill_id == MO_INVESTIGATE) break;
-				FALLTHROUGH
+				[[fallthrough]];
 			case 2: if (skill_id == MO_FINGEROFFENSIVE) break;
-				FALLTHROUGH
+				[[fallthrough]];
 			default: return 0;
 			}
 		}
@@ -1071,7 +1071,7 @@ static int status_check_skilluse(struct block_list *src, struct block_list *targ
 				return 0; // Can't use Weapon endow skills on Mercenary (only Master)
 			if( skill_id == AM_POTIONPITCHER && ( target->type == BL_MER || target->type == BL_ELEM) )
 				return 0; // Can't use Potion Pitcher on Mercenaries
-			FALLTHROUGH
+			[[fallthrough]];
 		case BL_NUL:
 		case BL_PET:
 		case BL_SKILL:
@@ -7369,7 +7369,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				) {
 				return 0;
 			}
-			FALLTHROUGH
+			[[fallthrough]];
 		case SC_VACUUM_EXTREME:
 			if(sc->data[SC_HALLUCINATIONWALK])
 				return 0;
@@ -7377,7 +7377,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 		case SC_STONE:
 			if(sc->data[SC_POWER_OF_GAIA])
 				return 0;
-			FALLTHROUGH
+			[[fallthrough]];
 		case SC_FREEZE:
 			//Undead are immune to Freeze/Stone
 			if (undead_flag && !(flag&SCFLAG_NOAVOID))
@@ -7386,7 +7386,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			// we remove SC_STONE later when we're done hardening the target.
 			if (type == SC_FREEZE && bl->type == BL_PC && sc->data[SC_LEXAETERNA] != NULL)
 				status_change_end(bl, SC_LEXAETERNA, INVALID_TIMER);
-			FALLTHROUGH
+			[[fallthrough]];
 		case SC_SLEEP:
 		case SC_STUN:
 		case SC_FROSTMISTY:
@@ -7420,7 +7420,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 		case SC_OVERTHRUST:
 			if (sc->data[SC_OVERTHRUSTMAX])
 				return 0; // Overthrust can't take effect if under Max Overthrust. [Skotlex]
-			FALLTHROUGH
+			[[fallthrough]];
 		case SC_OVERTHRUSTMAX:
 			if (sc->option&OPTION_MADOGEAR)
 				return 0; // Overthrust and Overthrust Max cannot be used on Mado Gear [Ind]
@@ -7446,7 +7446,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 		case SC_TWOHANDQUICKEN:
 			if (sc->data[SC_DEC_AGI])
 				return 0;
-			FALLTHROUGH
+			[[fallthrough]];
 		case SC_CONCENTRATION:
 		case SC_SPEARQUICKEN:
 		case SC_TRUESIGHT:
@@ -7455,7 +7455,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 		case SC_ASSNCROS:
 			if (sc->option&OPTION_MADOGEAR)
 				return 0; // Mado is immune to wind walk, cart boost, etc (others above) [Ind]
-			FALLTHROUGH
+			[[fallthrough]];
 		case SC_INC_AGI:
 			if (sc->data[SC_QUAGMIRE])
 				return 0;
@@ -7569,7 +7569,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 		case SC_FOOD_STR:
 			if (sc->data[SC_FOOD_STR_CASH] != NULL)
 				return 0;
-			FALLTHROUGH
+			[[fallthrough]];
 		case SC_FOOD_STR_CASH:
 			if ((sc->data[SC_FOOD_STR_CASH] != NULL && sc->data[SC_FOOD_STR_CASH]->val1 > val1)
 				|| (sc->data[SC_FOOD_STR] != NULL && sc->data[SC_FOOD_STR]->val1 > val1))
@@ -7578,7 +7578,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 		case SC_FOOD_AGI:
 			if (sc->data[SC_FOOD_AGI_CASH] != NULL)
 				return 0;
-			FALLTHROUGH
+			[[fallthrough]];
 		case SC_FOOD_AGI_CASH:
 			if ((sc->data[SC_FOOD_AGI_CASH] != NULL && sc->data[SC_FOOD_AGI_CASH]->val1 > val1)
 				|| (sc->data[SC_FOOD_AGI] != NULL && sc->data[SC_FOOD_AGI]->val1 > val1))
@@ -7587,7 +7587,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 		case SC_FOOD_VIT:
 			if (sc->data[SC_FOOD_VIT_CASH] != NULL)
 				return 0;
-			FALLTHROUGH
+			[[fallthrough]];
 		case SC_FOOD_VIT_CASH:
 			if ((sc->data[SC_FOOD_VIT_CASH] != NULL && sc->data[SC_FOOD_VIT_CASH]->val1 > val1)
 				|| (sc->data[SC_FOOD_VIT] != NULL && sc->data[SC_FOOD_VIT]->val1 > val1))
@@ -7596,7 +7596,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 		case SC_FOOD_INT:
 			if (sc->data[SC_FOOD_INT_CASH] != NULL)
 				return 0;
-			FALLTHROUGH
+			[[fallthrough]];
 		case SC_FOOD_INT_CASH:
 			if ((sc->data[SC_FOOD_INT_CASH] != NULL && sc->data[SC_FOOD_INT_CASH]->val1 > val1)
 				|| (sc->data[SC_FOOD_INT] != NULL && sc->data[SC_FOOD_INT]->val1 > val1))
@@ -7605,7 +7605,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 		case SC_FOOD_DEX:
 			if (sc->data[SC_FOOD_DEX_CASH] != NULL)
 				return 0;
-			FALLTHROUGH
+			[[fallthrough]];
 		case SC_FOOD_DEX_CASH:
 			if ((sc->data[SC_FOOD_DEX_CASH] != NULL && sc->data[SC_FOOD_DEX_CASH]->val1 > val1)
 				|| (sc->data[SC_FOOD_DEX] != NULL && sc->data[SC_FOOD_DEX]->val1 > val1))
@@ -7614,7 +7614,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 		case SC_FOOD_LUK:
 			if (sc->data[SC_FOOD_LUK_CASH] != NULL)
 				return 0;
-			FALLTHROUGH
+			[[fallthrough]];
 		case SC_FOOD_LUK_CASH:
 			if ((sc->data[SC_FOOD_LUK_CASH] != NULL && sc->data[SC_FOOD_LUK_CASH]->val1 > val1)
 				|| (sc->data[SC_FOOD_LUK] != NULL && sc->data[SC_FOOD_LUK]->val1 > val1))
@@ -7798,7 +7798,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			case SC_LERADS_DEW:
 				if (sc && sc->data[SC_BERSERK])
 					return 0;
-				FALLTHROUGH
+				[[fallthrough]];
 			case SC_SHAPESHIFT:
 			case SC_PROPERTYWALK:
 				break;
@@ -7819,7 +7819,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				break;
 			case SC_JOINTBEAT:
 				val2 |= sce->val2; // stackable ailments
-				FALLTHROUGH
+				[[fallthrough]];
 			default:
 				if(sce->val1 > val1)
 					return 1; //Return true to not mess up skill animations. [Skotlex]
@@ -7840,7 +7840,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			case SC_ADORAMUS:
 				sc_start(src, bl, SC_BLIND, 100, val1, skill->get_time(status->sc2skill(type), val1), skill_id);
 				// Fall through to SC_INC_AGI
-				FALLTHROUGH
+				[[fallthrough]];
 			case SC_DEC_AGI:
 				val2 = 2 + val1; //Agi change
 				break;
@@ -7933,7 +7933,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				break;
 			case SC_ENCHANTPOISON:
 				val2= 250+50*val1; //Poisoning Chance (2.5+0.5%) in 1/10000 rate
-				FALLTHROUGH
+				[[fallthrough]];
 			case SC_ASPERSIO:
 			case SC_PROPERTYFIRE:
 			case SC_PROPERTYWATER:
@@ -8540,7 +8540,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				switch (val1) {
 				case 3: //33*3 + 1 -> 100%
 					val2++;
-					FALLTHROUGH
+					[[fallthrough]];
 				case 1:
 				case 2: //33, 66%
 					val2 += 33*val1;
@@ -8650,11 +8650,11 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			case SC_ADRENALINE:
 #ifdef RENEWAL
 				val4 = 5 + 3 * val1; // HIT increase
-				FALLTHROUGH
+				[[fallthrough]];
 #endif
 			case SC_ADRENALINE2:
 				val3 = (val2) ? 300 : 200; // aspd increase
-				FALLTHROUGH
+				[[fallthrough]];
 			case SC_WEAPONPERFECT:
 				if(sd && pc->checkskill(sd,BS_HILTBINDING)>0)
 					total_tick += total_tick / 10;
@@ -9582,20 +9582,20 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			case SC_WILD_STORM:
 			case SC_UPHEAVAL:
 				val2 += 10;
-				FALLTHROUGH
+				[[fallthrough]];
 			case SC_HEATER:
 			case SC_COOLER:
 			case SC_BLAST:
 			case SC_CURSED_SOIL:
 				val2 += 10;
-				FALLTHROUGH
+				[[fallthrough]];
 			case SC_PYROTECHNIC:
 			case SC_AQUAPLAY:
 			case SC_GUST:
 			case SC_PETROLOGY:
 				val2 += 5;
 				val3 += 9000;
-				FALLTHROUGH
+				[[fallthrough]];
 			case SC_CIRCLE_OF_FIRE:
 			case SC_WATER_SCREEN:
 			case SC_WIND_STEP:
@@ -9678,7 +9678,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				break;
 			case SC_KAGEMUSYA:
 				val3 = val1 * 2;
-				FALLTHROUGH
+				[[fallthrough]];
 			case SC_IZAYOI:
 				val2 = total_tick/1000;
 				tick_time = 1000;
@@ -10465,7 +10465,7 @@ static int status_change_start_set_option(struct block_list *bl, struct status_c
 				opt_flag = 0;
 				break;
 			}
-			FALLTHROUGH
+			[[fallthrough]];
 		case SC_EXPLOSIONSPIRITS:
 			sc->opt3 |= OPT3_EXPLOSIONSPIRITS;
 			opt_flag = 0;
@@ -10622,25 +10622,25 @@ static void status_change_start_stop_action(struct block_list *bl, enum sc_type 
 			struct map_session_data *sd = BL_CAST(BL_PC, bl);
 			if (sd && pc_issit(sd)) //Avoid sprite sync problems.
 				pc->setstand(sd);
-			FALLTHROUGH
+			[[fallthrough]];
 		}
 		case SC_GRAVITYCONTROL:
 		{
 			struct status_change *sc = status->get_sc(bl);
 			if (sc != NULL && sc->data[SC_DANCING] != NULL)
 				unit->stop_walking(bl, STOPWALKING_FLAG_FIXPOS);
-			FALLTHROUGH
+			[[fallthrough]];
 		}
 		case SC_TRICKDEAD:
 			status_change_end(bl, SC_DANCING, INVALID_TIMER);
 			// Cancel cast when get status [LuzZza]
 			if (battle_config.sc_castcancel&bl->type)
 				unit->skillcastcancel(bl, 0);
-			FALLTHROUGH
+			[[fallthrough]];
 		case SC_FALLENEMPIRE:
 		case SC_WHITEIMPRISON:
 			unit->stop_attack(bl);
-			FALLTHROUGH
+			[[fallthrough]];
 		case SC_STOP:
 		case SC_CONFUSION:
 		case SC_RG_CCONFINE_M:
@@ -10747,11 +10747,11 @@ static bool status_end_sc_before_start(struct block_list *bl, struct status_data
 		status_change_end(bl, SC_CONCENTRATION, INVALID_TIMER);
 		status_change_end(bl, SC_TRUESIGHT, INVALID_TIMER);
 		status_change_end(bl, SC_WINDWALK, INVALID_TIMER);
-		FALLTHROUGH // Also blocks the ones below...
+		[[fallthrough]]; // Also blocks the ones below...
 	case SC_DEC_AGI:
 	case SC_ADORAMUS:
 		status_change_end(bl, SC_CARTBOOST, INVALID_TIMER);
-		FALLTHROUGH // Also blocks the ones below...
+		[[fallthrough]]; // Also blocks the ones below...
 	case SC_DONTFORGETME:
 		status_change_end(bl, SC_INC_AGI, INVALID_TIMER);
 		status_change_end(bl, SC_ADRENALINE, INVALID_TIMER);
@@ -11237,7 +11237,7 @@ static int status_change_clear(struct block_list *bl, int type)
 					case SC_ARMOR_PROPERTY://Only when its Holy or Dark that it doesn't dispell on death
 						if( sc->data[i]->val2 != ELE_HOLY && sc->data[i]->val2 != ELE_DARK )
 							break;
-						FALLTHROUGH
+						[[fallthrough]];
 					default:
 						continue;
 				}
@@ -11312,7 +11312,7 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 				//trigger when it also removed one
 				case SC_STONE:
 					sce->val3 = 0; //Petrify time counter.
-					FALLTHROUGH
+					[[fallthrough]];
 				case SC_FREEZE:
 				case SC_STUN:
 				case SC_SLEEP:
@@ -12163,7 +12163,7 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 				opt_flag = 0;
 				break;
 			}
-			FALLTHROUGH
+			[[fallthrough]];
 		case SC_EXPLOSIONSPIRITS:
 			sc->opt3 &= ~OPT3_EXPLOSIONSPIRITS;
 			opt_flag = 0;
@@ -12467,7 +12467,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 		case SC_POISON:
 			if (st->hp <= std::max(st->max_hp / 4, (unsigned int)sce->val4)) //Stop damaging after 25% HP left.
 				break;
-			FALLTHROUGH
+			[[fallthrough]];
 		case SC_DPOISON:
 			if (--(sce->val3) > 0) {
 				if (sc->data[SC_SLOWPOISON] != NULL) {

@@ -16774,7 +16774,7 @@ static void clif_parse_NoviceDoriDori(int fd, struct map_session_data *sd)
 		case MAPID_TAEKWON:
 			if (!sd->state.rest)
 				break;
-			FALLTHROUGH
+			[[fallthrough]];
 		case MAPID_SUPER_NOVICE:
 			sd->state.doridori=1;
 			break;
