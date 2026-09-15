@@ -2187,7 +2187,7 @@ static int login_shutdown_timeout_timer(int tid, int64 tick, int id, intptr_t da
 {
 	if (core->runflag != LOGINSERVER_ST_SHUTDOWN)
 		return 0;
-	ShowWarning("Shutdown: timed out waiting for %d pending auth request(s) to be acknowledged, forcing shutdown.\n",
+	ShowWarning("Shutdown: timed out waiting for %u pending auth request(s) to be acknowledged, forcing shutdown.\n",
 		db_size(login->auth_db));
 	core->runflag = CORE_ST_STOP;
 	return 0;
