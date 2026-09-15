@@ -7032,12 +7032,15 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 				status->set_hp(src, 1, STATUS_HEAL_DEFAULT);
 				status->set_sp(src, 0, STATUS_HEAL_DEFAULT);
 				break;
-			} else if (status->isdead(bl) && flag&1) { //Revive
-				skill->area_temp[0]++; //Count it in, then fall-through to the Resurrection code.
-				skill_lv = 3; //Resurrection level 3 is used
-				FALLTHROUGH
-			} else //Invalid target, skip resurrection.
+			}
+			if (!(status->isdead(bl) && flag&1)) {
+				// Invalid target, skip resurrection.
 				break;
+			}
+			//Revive
+			skill->area_temp[0]++; //Count it in, then fall-through to the Resurrection code.
+			skill_lv = 3; //Resurrection level 3 is used
+			FALLTHROUGH
 
 		case ALL_RESURRECTION:
 			if(sd && (map_flag_gvg2(bl->m) || map->list[bl->m].flag.battleground)) {
