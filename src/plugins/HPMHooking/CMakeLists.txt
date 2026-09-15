@@ -58,15 +58,6 @@ set(HPMHOOKING_SERVERS
   map
 )
 
-set(HPMHOOKING_CFLAGS
-)
-
-if (MSVC)
-  set(HPMHOOKING_CFLAGS)
-else()
-  testadd_warning_compiler_flag(no-suggest-attribute=format)
-endif()
-
 if(BUILD_HPMHOOKING)
   add_custom_target(plugin.HPMHooking)
 
@@ -82,5 +73,8 @@ if(BUILD_HPMHOOKING)
       CFLAGS ${HPMHOOKING_CFLAGS}
       VIRTUAL_TARGET "plugin.HPMHooking"
     )
+    if (NOT MSVC)
+      testadd_warning_compiler_flag_target("plugin.${HERC_PLUGIN_NAME}_${server}" no-suggest-attribute=format)
+    endif()
   endforeach()
 endif()
