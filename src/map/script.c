@@ -11098,7 +11098,7 @@ static BUILDIN(bonus)
 				val1 = skill->name2id(script_getstr(st, 3));
 				break;
 			}
-			FALLTHROUGH
+			[[fallthrough]];
 		default:
 			val1 = script_getnum(st,3);
 			break;

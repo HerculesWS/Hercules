@@ -357,15 +357,6 @@ typedef uintptr_t uintptr;
 #define GCC11ATTR(str)
 #endif // defined(__GNUC__) && !defined(__clang__)
 
-#ifdef __cplusplus
-#define FALLTHROUGH [[fallthrough]];
-#elif defined(__GNUC__) && (GCC_VERSION >= 70000)
-// fallthrough attribute only enabled on gcc >= 7.0
-#define FALLTHROUGH __attribute__ ((fallthrough));
-#else // ! defined(__GNUC__) && (GCC_VERSION >= 70000)
-#define FALLTHROUGH
-#endif // ! defined(__GNUC__) && (GCC_VERSION >= 70000)
-
 #ifndef __cplusplus
 // boolean types for C
 #if !defined(_MSC_VER) || _MSC_VER >= 1800
