@@ -183,6 +183,13 @@ static unsigned short skillid2idx[MAX_SKILL_ID];
 //-----------------------------------------------------
 #define AUTH_TIMEOUT 30000
 
+//-----------------------------------------------------
+// Shutdown
+//-----------------------------------------------------
+// Maximum time to wait for the map-server to finish disconnecting/saving
+// all online characters before forcing the shutdown to proceed anyway.
+#define SHUTDOWN_TIMEOUT 30000
+
 static struct DBMap *auth_db; // int account_id -> struct char_auth_node*
 
 //-----------------------------------------------------
@@ -3287,6 +3294,7 @@ static void char_parse_frommap_save_character(int fd)
 		//Flag, set character offline after saving. [Skotlex]
 		chr->set_char_offline(cid, aid);
 		chr->save_character_ack(fd, aid, cid);
+		chr->check_shutdown();
 	}
 	RFIFOSKIP(fd,size);
 }
@@ -6189,6 +6197,46 @@ void set_server_type(void)
 	SERVER_TYPE = SERVER_TYPE_CHAR;
 }
 
+/**
+ * @see DBApply
+ */
+static int char_online_data_count_connected_sub(union DBKey key, struct DBData *data, va_list ap)
+{
+	struct online_char_data *character = (struct online_char_data *)DB->data2ptr(data);
+	nullpo_ret(character);
+	return (character->mapserver_connection == OCS_CONNECTED) ? 1 : 0;
+}
+
+/// Counts characters the map-server may still be disconnecting/saving.
+static int char_online_data_count_connected(void)
+{
+	return chr->online_char_db->foreach(chr->online_char_db, chr->online_data_count_connected_sub);
+}
+
+static int char_shutdown_timeout_timer(int tid, int64 tick, int id, intptr_t data)
+{
+	if (core->runflag != CHARSERVER_ST_SHUTDOWN)
+		return 0;
+	ShowWarning("Shutdown: timed out waiting for %d character(s) to finish saving, forcing shutdown.\n",
+		chr->online_data_count_connected());
+	core->runflag = CORE_ST_STOP;
+	return 0;
+}
+
+/// Checks the conditions for the server to stop.
+/// Finishes the shutdown once the map-server has no more characters left to disconnect/save.
+static void char_check_shutdown(void)
+{
+	if (core->runflag != CHARSERVER_ST_SHUTDOWN)
+		return;
+	if (chr->online_data_count_connected() > 0)
+		return;
+	mapif->server_reset();
+	loginif->check_shutdown();
+	sockt->flush_fifos();
+	core->runflag = CORE_ST_STOP;
+}
+
 /// Called when a terminate signal is received.
 static void do_shutdown(void)
 {
@@ -6196,11 +6244,10 @@ static void do_shutdown(void)
 	{
 		core->runflag = CHARSERVER_ST_SHUTDOWN;
 		ShowStatus("Shutting down...\n");
-		// TODO proper shutdown procedure; wait for acks?, kick all characters, ... [FlavoJS]
-		mapif->server_reset();
-		loginif->check_shutdown();
-		sockt->flush_fifos();
-		core->runflag = CORE_ST_STOP;
+		// Kick every online character so the map-server final-saves them before we tear down.
+		chr->set_all_offline(true);
+		timer->add(timer->gettick() + SHUTDOWN_TIMEOUT, chr->shutdown_timeout_timer, 0, 0);
+		chr->check_shutdown();
 	}
 }
 
@@ -6374,6 +6421,9 @@ int do_init(int argc, char **argv)
 	// Online Data timers (checking if char still connected)
 	timer->add_func_list(chr->online_data_cleanup, "chr->online_data_cleanup");
 	timer->add_interval(timer->gettick() + 1000, chr->online_data_cleanup, 0, 0, 600 * 1000);
+
+	// Shutdown watchdog (only fires once do_shutdown schedules it)
+	timer->add_func_list(chr->shutdown_timeout_timer, "chr->shutdown_timeout_timer");
 
 	//Cleaning the tables for NULL entries @ startup [Sirius]
 	//Chardb clean
@@ -6625,6 +6675,10 @@ void char_defaults(void)
 	chr->online_char_destroy_sub = char_online_char_destroy_sub;
 	chr->ensure_online_char_data = char_ensure_online_char_data;
 	chr->clean_online_char_emblem_data = char_clean_online_char_emblem_data;
+	chr->online_data_count_connected_sub = char_online_data_count_connected_sub;
+	chr->online_data_count_connected = char_online_data_count_connected;
+	chr->shutdown_timeout_timer = char_shutdown_timeout_timer;
+	chr->check_shutdown = char_check_shutdown;
 	chr->sql_config_read = char_sql_config_read;
 	chr->sql_config_read_registry = char_sql_config_read_registry;
 	chr->sql_config_read_pc = char_sql_config_read_pc;
