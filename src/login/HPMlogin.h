@@ -29,10 +29,6 @@
 
 struct hplugin;
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 bool HPM_login_data_store_validate(enum HPluginDataTypes type, struct hplugin_data_store **storeptr, bool initialize);
 
 void HPM_login_plugin_load_sub(struct hplugin *plugin);
@@ -40,9 +36,5 @@ void HPM_login_plugin_load_sub(struct hplugin *plugin);
 void HPM_login_do_final(void);
 
 void HPM_login_do_init(void);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* LOGIN_HPMLOGIN_H */

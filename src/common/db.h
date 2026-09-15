@@ -950,10 +950,6 @@ struct linkdb_node {
 
 typedef void (*LinkDBFunc)(void* key, void* data, va_list args);
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #ifdef HERCULES_CORE
 void  linkdb_insert  (struct linkdb_node** head, void *key, void* data); // Doesn't take into account duplicate keys
 void  linkdb_replace (struct linkdb_node** head, void *key, void* data); // Takes into account duplicate keys
@@ -967,10 +963,6 @@ void db_defaults(void);
 #endif // HERCULES_CORE
 
 HPShared struct db_interface *DB;
-
-#ifdef __cplusplus
-}
-#endif
 
 /**
  * Array Helper macros

@@ -227,10 +227,6 @@ struct sv_interface {
 	bool (*readdb) (const char* directory, const char* filename, char delim, int mincols, int maxcols, int maxrows, bool (*parseproc)(char* fields[], int columns, int current));
 };
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #ifdef HERCULES_CORE
 void strlib_defaults(void);
 #endif // HERCULES_CORE
@@ -238,9 +234,5 @@ void strlib_defaults(void);
 HPShared struct strlib_interface *strlib;
 HPShared struct stringbuf_interface *StrBuf;
 HPShared struct sv_interface *sv;
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* COMMON_STRLIB_H */

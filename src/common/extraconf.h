@@ -80,18 +80,10 @@ struct extraconf_interface {
 	bool (*read_emblems) (void);
 };
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #ifdef HERCULES_CORE
 void extraconf_defaults(void);
 #endif // HERCULES_CORE
 
 HPShared struct extraconf_interface *extraconf;
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // COMMON_EXTRACONF_H

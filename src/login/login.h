@@ -263,10 +263,6 @@ struct lchrif_interface {
 	void (*on_disconnect) (int id);
 };
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #ifdef HERCULES_CORE
 void login_defaults(void);
 void lchrif_defaults(void);
@@ -274,9 +270,5 @@ void lchrif_defaults(void);
 
 HPShared struct login_interface *login;
 HPShared struct lchrif_interface *lchrif;
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* LOGIN_LOGIN_H */

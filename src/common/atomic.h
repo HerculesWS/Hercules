@@ -39,10 +39,6 @@
 #if _MSC_VER < 1800
 #if !defined(_M_X64)
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 // When compiling for windows 32bit, the 8byte interlocked operations are not provided by Microsoft
 // (because they need at least i586 so its not generic enough.. ... )
 forceinline int64 InterlockedCompareExchange64(volatile int64 *dest, int64 exch, int64 _cmp){
@@ -98,10 +94,6 @@ forceinline volatile int64 InterlockedExchange64(volatile int64 *target, int64 v
 	return old;
 }
 
-#ifdef __cplusplus
-}
-#endif
-
 #else // _M_X64
 #define InterlockedExchange(_Target, _Value) _InterlockedExchange((_Target), (_Value))
 #define InterlockedCompareExchange(_Destination, _ExChange, _Comperand) _InterlockedCompareExchange((_Destination), (_ExChange), (_Comperand))
@@ -117,10 +109,6 @@ forceinline volatile int64 InterlockedExchange64(volatile int64 *target, int64 v
 	&& !defined(__ppc64__) && ! defined(__powerpc64__) \
 	&& ( !defined(__ARM_ARCH_VERSION__) || __ARM_ARCH_VERSION__ < 6 )
 #error Target platform currently not supported
-#endif
-
-#ifdef __cplusplus
-extern "C" {
 #endif
 
 static forceinline int64 InterlockedExchangeAdd64(volatile int64 *addend, int64 increment){
@@ -163,10 +151,6 @@ static forceinline int64 InterlockedExchange64(volatile int64 *target, int64 val
 static forceinline int32 InterlockedExchange(volatile int32 *target, int32 val){
 	return __sync_lock_test_and_set(target, val);
 }//end: InterlockedExchange()
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif  // !defined(__MINGW32__) && !defined(MINGW)
 
