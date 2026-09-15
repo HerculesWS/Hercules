@@ -100,20 +100,6 @@
 #define DEBUG
 #endif
 
-// debug function name
-#ifndef __cplusplus // (C++17 has __func__)
-#ifndef __NETBSD__
-#if !defined(__STDC_VERSION__) || __STDC_VERSION__ < 199901L
-#	if __GNUC__ >= 2 || defined(WIN32)
-#		define __func__ __FUNCTION__
-#	else
-#		define __func__ ""
-#	endif
-#endif
-#endif
-#endif
-
-
 // disable attributed stuff on non-GNU
 #if !defined(__GNUC__) && !defined(MINGW)
 #  define  __attribute__(x)
@@ -356,33 +342,6 @@ typedef uintptr_t uintptr;
 #else  // defined(__GNUC__) && !defined(__clang__)
 #define GCC11ATTR(str)
 #endif // defined(__GNUC__) && !defined(__clang__)
-
-#ifndef __cplusplus
-// boolean types for C
-#if !defined(_MSC_VER) || _MSC_VER >= 1800
-// MSVC doesn't have stdbool.h yet as of Visual Studio 2012 (MSVC version 17.00)
-// but it will support it in Visual Studio 2013 (MSVC version 18.00)
-// http://blogs.msdn.com/b/vcblog/archive/2013/07/19/c99-library-support-in-visual-studio-2013.aspx
-// GCC and Clang are assumed to be C99 compliant
-#include <stdbool.h> // bool, true, false, __bool_true_false_are_defined
-#endif // ! defined(_MSC_VER) || _MSC_VER >= 1800
-
-#ifndef __bool_true_false_are_defined
-// If stdbool.h is not available or does not define this
-typedef char bool;
-#define false (1==0)
-#define true  (1==1)
-#define __bool_true_false_are_defined
-#endif // __bool_true_false_are_defined
-#endif
-
-#ifndef __cplusplus
-//////////////////////////////////////////////////////////////////////////
-// should not happen
-#ifndef NULL
-#define NULL (void *)0
-#endif
-#endif
 
 //////////////////////////////////////////////////////////////////////////
 // Additional printf specifiers

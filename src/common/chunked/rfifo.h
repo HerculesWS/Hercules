@@ -21,9 +21,7 @@
 #ifndef COMMON_CHUNKED_RFIFO_H
 #define COMMON_CHUNKED_RFIFO_H
 
-#ifdef __cplusplus
-	#include <type_traits>
-#endif
+#include <type_traits>
 
 struct fifo_chunk_buf {
 	char *data;
@@ -50,7 +48,6 @@ struct fifo_chunk_buf {
 #define RFIFO_CHUNKED_ERROR(p) \
 	if (p ## _flag > 2 || p ## _flag < 0 || (p ## _flag == 0 && *p ## _dst_data_ptr != NULL) || (p ## _flag == 1 && *p ## _dst_data_ptr == NULL))
 
-#ifdef __cplusplus
 #define RFIFO_CHUNKED_COMPLETE(p) \
 	if (p ## _flag == 0 || (p ## _flag == 2 && *p ## _dst_data_ptr == NULL)) { \
 		*p ## _dst_data_ptr = static_cast<std::remove_reference_t<decltype(*p ## _dst_data_ptr)>>(aMalloc(p ## _src_data_size)); \
@@ -62,19 +59,6 @@ struct fifo_chunk_buf {
 		*p ## _dst_data_size_ptr += p ## _src_data_size; \
 	} \
 	if (p ## _flag == 2)
-#else
-#define RFIFO_CHUNKED_COMPLETE(p) \
-	if (p ## _flag == 0 || (p ## _flag == 2 && *p ## _dst_data_ptr == NULL)) { \
-		*p ## _dst_data_ptr = aMalloc(p ## _src_data_size); \
-		memcpy(*p ## _dst_data_ptr, p ## _src_data, p ## _src_data_size); \
-		*p ## _dst_data_size_ptr = (int)p ## _src_data_size; \
-	} else if (p ## _flag == 1 || p ## _flag == 2) { \
-		*p ## _dst_data_ptr = aRealloc(*p ## _dst_data_ptr, *p ## _dst_data_size_ptr + p ## _src_data_size); \
-		memcpy(*p ## _dst_data_ptr + *p ## _dst_data_size_ptr, p ## _src_data, p ## _src_data_size); \
-		*p ## _dst_data_size_ptr += p ## _src_data_size; \
-	} \
-	if (p ## _flag == 2)
-#endif
 
 #define RFIFO_CHUNKED_FREE(p) \
 	aFree(*p ## _dst_data_ptr); \

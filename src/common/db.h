@@ -1189,7 +1189,6 @@ HPShared struct db_interface *DB;
  * @param _vec Vector.
  * @param _n   New size.
  */
-#ifdef __cplusplus
 #define VECTOR_RESIZE(_vec, _n) \
 	do { \
 		if ((_n) > VECTOR_CAPACITY(_vec)) { \
@@ -1213,31 +1212,6 @@ HPShared struct db_interface *DB;
 				VECTOR_LENGTH(_vec) = (_n); /* update length */ \
 		} \
 	} while(false)
-#else
-#define VECTOR_RESIZE(_vec, _n) \
-	do { \
-		if ((_n) > VECTOR_CAPACITY(_vec)) { \
-			/* increase size */ \
-			if (VECTOR_CAPACITY(_vec) == 0) \
-				VECTOR_DATA(_vec) = aMalloc((_n)*sizeof(VECTOR_FIRST(_vec))); /* allocate new */ \
-			else \
-				VECTOR_DATA(_vec) = aRealloc(VECTOR_DATA(_vec), (_n)*sizeof(VECTOR_FIRST(_vec))); /* reallocate */ \
-			memset(VECTOR_DATA(_vec)+VECTOR_LENGTH(_vec), 0, (VECTOR_CAPACITY(_vec)-VECTOR_LENGTH(_vec))*sizeof(VECTOR_FIRST(_vec))); /* clear new data */ \
-			VECTOR_CAPACITY(_vec) = (_n); /* update capacity */ \
-		} else if ((_n) == 0 && VECTOR_CAPACITY(_vec) > 0) { \
-			/* clear vector */ \
-			aFree(VECTOR_DATA(_vec)); VECTOR_DATA(_vec) = NULL; /* free data */ \
-			VECTOR_CAPACITY(_vec) = 0; /* clear capacity */ \
-			VECTOR_LENGTH(_vec) = 0; /* clear length */ \
-		} else if ((_n) < VECTOR_CAPACITY(_vec)) { \
-			/* reduce size */ \
-			VECTOR_DATA(_vec) = aRealloc(VECTOR_DATA(_vec), (_n)*sizeof(VECTOR_FIRST(_vec))); /* reallocate */ \
-			VECTOR_CAPACITY(_vec) = (_n); /* update capacity */ \
-			if ((_n) - VECTOR_LENGTH(_vec) > 0) \
-				VECTOR_LENGTH(_vec) = (_n); /* update length */ \
-		} \
-	} while(false)
-#endif
 
 /**
  * Ensures that the array has the target number of empty positions.

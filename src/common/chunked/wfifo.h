@@ -42,7 +42,6 @@
 	const int p ## _full_chunks_count = p ## data_len / (chunk_size); \
 	for (int p ## _cnt = 0; p ## _cnt < p ## _full_chunks_count; p ## _cnt ++, p ## _offset += (chunk_size))
 
-#ifdef __cplusplus
 #define WFIFO_CHUNKED_BLOCK_START_RAW1(p, _dataField, chunk_size) \
 		p ## _len = p ## _fixed_len + (chunk_size); \
 		WFIFOHEAD(p ## _fd, p ## _len); \
@@ -50,15 +49,6 @@
 		WFIFOW(p ## _fd, 0) = p ## _header_id; \
 		WFIFOW(p ## _fd, 2) = p ## _len; \
 		memcpy((p)->_dataField, p ## data + p ## _offset, (chunk_size))
-#else
-#define WFIFO_CHUNKED_BLOCK_START_RAW1(p, _dataField, chunk_size) \
-		p ## _len = p ## _fixed_len + (chunk_size); \
-		WFIFOHEAD(p ## _fd, p ## _len); \
-		p = WP2PTR(void *, p ## _fd); \
-		WFIFOW(p ## _fd, 0) = p ## _header_id; \
-		WFIFOW(p ## _fd, 2) = p ## _len; \
-		memcpy((p)->_dataField, p ## data + p ## _offset, (chunk_size))
-#endif
 #define WFIFO_CHUNKED_BLOCK_START_RAW_FLAG(p) \
 		if (p ## _cnt == 0) \
 			(p)->flag = 0; \
@@ -68,7 +58,6 @@
 #define WFIFO_CHUNKED_BLOCK_END_RAW() \
 		WFIFOSET(p ## _fd, p ## _len)
 
-#ifdef __cplusplus
 #define WFIFO_CHUNKED_FINAL_START_RAW1(p, _dataField, chunk_size) \
 	const uint32 p ## _left_size = p ## data_len - p ## _full_chunks_count * (chunk_size); \
 	p ## _len = p ## _fixed_len + p ## _left_size; \
@@ -78,17 +67,6 @@
 	WFIFOW(p ## _fd, 2) = p ## _len; \
 	if (p ## _left_size > 0) \
 		memcpy((p)->_dataField, p ## data + p ## _offset, p ## _left_size)
-#else
-#define WFIFO_CHUNKED_FINAL_START_RAW1(p, _dataField, chunk_size) \
-	const uint32 p ## _left_size = p ## data_len - p ## _full_chunks_count * (chunk_size); \
-	p ## _len = p ## _fixed_len + p ## _left_size; \
-	WFIFOHEAD(p ## _fd, p ## _len); \
-	p = WP2PTR(void *, p ## _fd); \
-	WFIFOW(p ## _fd, 0) = p ## _header_id; \
-	WFIFOW(p ## _fd, 2) = p ## _len; \
-	if (p ## _left_size > 0) \
-		memcpy((p)->_dataField, p ## data + p ## _offset, p ## _left_size)
-#endif
 
 #define WFIFO_CHUNKED_FINAL_START_RAW_FLAG(p) \
 	(p)->flag = 2
