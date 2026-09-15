@@ -72,5 +72,8 @@ if(BUILD_HPMHOOKING)
       CDEFS "HPMHOOKING_${server_upper}"
       VIRTUAL_TARGET "plugin.HPMHooking"
     )
+    if (NOT MSVC)
+      testadd_warning_compiler_flag_target("plugin.${HERC_PLUGIN_NAME}_${server}" no-suggest-attribute=format)
+    endif()
   endforeach()
 endif()
