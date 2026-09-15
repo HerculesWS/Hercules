@@ -25,9 +25,7 @@
 
 #include <stdarg.h>
 #include <string.h>
-#ifdef __cplusplus
 #include <type_traits>
-#endif
 
 /// Convenience macros
 
@@ -51,7 +49,7 @@
 #define safestrnlen(string,maxlen)   (strlib->safestrnlen_((string),(maxlen)))
 #define strline(str,pos)             (strlib->strline_((str),(pos)))
 #define bin2hex(output,input,count)  (strlib->bin2hex_((output),(input),(count)))
-#ifdef __cplusplus
+
 #ifdef strchr
 #undef strchr
 #endif
@@ -76,27 +74,6 @@ T HSTRSTR(T haystack, const char *needle)
 #define strchr HSTRCHR
 #define strrchr HSTRRCHR
 #define strstr HSTRSTR
-#elif (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L)
-#if defined(__GNUC__) && !defined(__clang__) && GCC_VERSION < 40900
-// _Generic is only supported starting with GCC 4.9
-#else
-#ifdef strchr
-#undef strchr
-#endif // strchr
-#define strchr(src, chr)             _Generic((src), \
-		const char * : ((const char *)(strchr)((src), (chr))), \
-		char *       : ((strchr)((src), (chr))) \
-		)
-#define strrchr(src, chr)            _Generic((src), \
-		const char * : ((const char *)(strrchr)((src), (chr))), \
-		char *       : ((strrchr)((src), (chr))) \
-		)
-#define strstr(haystack, needle)     _Generic((haystack), \
-		const char * : ((const char *)(strstr)((haystack), (needle))), \
-		char *       : ((strstr)((haystack), (needle))) \
-		)
-#endif
-#endif
 
 /// Bitfield determining the behavior of sv_parse and sv_split.
 typedef enum e_svopt {

@@ -1528,7 +1528,6 @@ END_ZEROED_BLOCK;
 	void (*lock_check) (const char *file, const char *func, int line, int lock_count);
 };
 
-#ifdef __cplusplus
 class guard_map_lock
 {
 public:
@@ -1541,7 +1540,6 @@ private:
 	int m_line;
 	int m_expected_lock;
 };
-#endif
 
 #ifdef HERCULES_CORE
 void map_defaults(void);

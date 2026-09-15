@@ -284,11 +284,7 @@ HPExport struct hplugin_info pinfo;
       .req_version = HPM_VERSION,                                              \
   };
 
-#ifdef __cplusplus
 #define HPM_SYMBOL(n, s) ((s) = static_cast<decltype(s)>(import_symbol((n),HPMi->pid)))
-#else
-#define HPM_SYMBOL(n, s) ((s) = import_symbol((n),HPMi->pid))
-#endif
 
 #endif // !HERCULES_CORE
 
