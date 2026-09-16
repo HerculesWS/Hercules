@@ -4796,8 +4796,18 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 
 	sd = BL_CAST(BL_PC, src);
 
-	if (status->isdead(bl))
+	if (status->isdead(bl)) {
+		if (skill_id == MO_EXTREMITYFIST) {
+			// Asura Strike drains the caster even when the target died during the cast.
+			status->set_sp(src, 0, STATUS_HEAL_DEFAULT);
+			status_change_end(src, SC_EXPLOSIONSPIRITS, INVALID_TIMER);
+			status_change_end(src, SC_BLADESTOP, INVALID_TIMER);
+#ifdef RENEWAL
+			sc_start(src, src, SC_EXTREMITYFIST2, 100, skill_lv, skill->get_time(skill_id, skill_lv), skill_id);
+#endif
+		}
 		return 1;
+	}
 
 	if (skill_id != 0 && skill->get_type(skill_id, skill_lv) == BF_MAGIC && status->isimmune(bl) == 100) {
 		//GTB makes all targeted magic display miss with a single bolt.
