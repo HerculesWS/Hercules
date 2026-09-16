@@ -106,6 +106,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+HPMDATACHECK_DEFS
+
 struct HPM_atcommand_list {
 	//tracking currently not enabled
 	// - requires modifying how plugins calls atcommand creation

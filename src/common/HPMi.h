@@ -263,17 +263,18 @@ extern struct HPMi_interface *HPMi;
 extern void *(*import_symbol) (const char *name, unsigned int pID);
 extern struct hplugin_info pinfo;
 
-#define HPM_PLUGIN_DEFS                                                        \
+#define HPM_PLUGIN_DEFS_BASE                                                   \
   HPExport struct HPMi_interface HPMi_s;                                       \
   HPExport struct HPMi_interface *HPMi;                                        \
   HPExport void *(*import_symbol)(const char *name, unsigned int pID);
 
-#define HPM_DECLARE_PLUGIN(plugin_name, plugin_type, plugin_version)           \
-  HPM_PLUGIN_DEFS                                                              \
+#define HPM_PLUGIN_DEFS_ALL HPM_PLUGIN_DEFS_BASE
+
+#define HPM_DECLARE_PLUGIN_BASE(n, t, v)                                       \
   struct hplugin_info pinfo = {                                                \
-      (plugin_name),                                                           \
-      (plugin_type),                                                           \
-      (plugin_version),                                                        \
+      (n),                                                                     \
+      (t),                                                                     \
+      (v),                                                                     \
       HPM_VERSION,                                                             \
   };
 
