@@ -21972,12 +21972,12 @@ static void clif_show_modifiers(struct map_session_data *sd)
 	p->details[2].drop = (sd->status.mod_drop - 100) * 1000;
 	p->details[3].type = SERVER_EXP_INFO;
 	p->details[3].exp = battle_config.base_exp_rate * 1000;
-	p->details[3].death = battle_config.death_penalty_base * 10;
+	p->details[3].death = battle_config.death_penalty_base * 1000;
 	p->details[3].drop = battle_config.item_rate_common * 1000;
 	// Total values.
 	p->total_exp = (battle_config.base_exp_rate * sd->status.mod_exp / 100) * 1000;
-	p->total_death = (battle_config.base_exp_rate * sd->status.mod_death / 100) * 10;
-	p->total_drop = (battle_config.base_exp_rate * sd->status.mod_drop / 100) * 1000;
+	p->total_death = (battle_config.death_penalty_base * sd->status.mod_death / 100) * 1000;
+	p->total_drop = (battle_config.item_rate_common * sd->status.mod_drop / 100) * 1000;
 
 	WFIFOSET(sd->fd, length);
 #else
