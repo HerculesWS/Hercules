@@ -1400,10 +1400,10 @@ static bool pc_authok(struct map_session_data *sd, int login_id2, time_t expirat
 	sd->die_counter=-1;
 
 	//display login notice
-	ShowInfo("'"CL_WHITE"%s"CL_RESET"' logged in."
-	         " (AID/CID: '"CL_WHITE"%d/%d"CL_RESET"',"
-	         " IP: '"CL_WHITE"%u.%u.%u.%u"CL_RESET"',"
-	         " Group '"CL_WHITE"%d"CL_RESET"').\n",
+	ShowInfo("'" CL_WHITE "%s" CL_RESET "' logged in."
+	         " (AID/CID: '" CL_WHITE "%d/%d" CL_RESET "',"
+	         " IP: '" CL_WHITE "%u.%u.%u.%u" CL_RESET "',"
+	         " Group '" CL_WHITE "%d" CL_RESET "').\n",
 	         sd->status.name, sd->status.account_id, sd->status.char_id,
 	         CONVIP(ip), sd->group_id);
 
@@ -11435,7 +11435,7 @@ static void pc_read_skill_tree(void)
 	struct map_session_data *sd;
 	bool loaded[CLASS_COUNT] = { false };
 
-	snprintf(config_filename, sizeof(config_filename), "%s/"DBPATH"skill_tree.conf", map->db_path);
+	snprintf(config_filename, sizeof(config_filename), "%s/" DBPATH "skill_tree.conf", map->db_path);
 	if (!libconfig->load_file(&skill_tree_conf, config_filename))
 		return;
 
@@ -11737,7 +11737,7 @@ static void pc_read_level_penalty_db(void)
 	}
 
 	libconfig->destroy(&level_penalty_conf);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 #endif
 }
 
@@ -11824,7 +11824,7 @@ static bool pc_read_exp_db(void)
 	int entry_count = 0;
 	char config_filename[256];
 
-	libconfig->format_db_path(DBPATH"exp_group_db.conf", config_filename, sizeof(config_filename));
+	libconfig->format_db_path(DBPATH "exp_group_db.conf", config_filename, sizeof(config_filename));
 
 	if (!libconfig->load_file(&exp_db_conf, config_filename))
 		return false;
@@ -11847,7 +11847,7 @@ static bool pc_read_exp_db(void)
 
 	libconfig->destroy(&exp_db_conf);
 
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", entry_count, config_filename);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", entry_count, config_filename);
 
 	return true;
 }
@@ -11944,7 +11944,7 @@ static bool pc_read_attr_fix_db(void)
 	}
 
 	char filepath[256];
-	libconfig->format_db_path(DBPATH"attr_fix.conf", filepath, sizeof(filepath));
+	libconfig->format_db_path(DBPATH "attr_fix.conf", filepath, sizeof(filepath));
 
 	struct config_t attr_fix_conf;
 	if (!libconfig->load_file(&attr_fix_conf, filepath))
@@ -11983,7 +11983,7 @@ static bool pc_read_attr_fix_db(void)
 
 	libconfig->destroy(&attr_fix_conf);
 
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 	return true;
 }
 
@@ -12019,10 +12019,10 @@ static int pc_readdb(void)
 	int i = 1;
 
 	char line[24000];
-	sprintf(line, "%s/"DBPATH"statpoint.txt", map->db_path);
+	sprintf(line, "%s/" DBPATH "statpoint.txt", map->db_path);
 	FILE *fp = fopen(line, "r");
 	if(fp == NULL){
-		ShowWarning("Can't read '"CL_WHITE"%s"CL_RESET"'... Generating DB.\n",line);
+		ShowWarning("Can't read '" CL_WHITE "%s" CL_RESET "'... Generating DB.\n",line);
 		//return 1;
 	} else {
 		unsigned int count = 0;
@@ -12042,7 +12042,7 @@ static int pc_readdb(void)
 		}
 		fclose(fp);
 
-		ShowStatus("Done reading '"CL_WHITE"%u"CL_RESET"' entries in '"CL_WHITE"%s/"DBPATH"%s"CL_RESET"'.\n",count,map->db_path,"statpoint.txt");
+		ShowStatus("Done reading '" CL_WHITE "%u" CL_RESET "' entries in '" CL_WHITE "%s/" DBPATH "%s" CL_RESET "'.\n",count,map->db_path,"statpoint.txt");
 	}
 	// generate the remaining parts of the db if necessary
 	int k = battle_config.use_statpoint_table; //save setting

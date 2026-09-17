@@ -842,7 +842,7 @@ static int rfifoskip(int fd, size_t len)
 	s = sockt->session[fd];
 
 	if (s->rdata_size < s->rdata_pos + len) {
-		ShowError("RFIFOSKIP: skipped past end of read buffer! Adjusting from %"PRIuS" to %"PRIuS" (session #%d)\n", len, RFIFOREST(fd), fd);
+		ShowError("RFIFOSKIP: skipped past end of read buffer! Adjusting from %" PRIuS " to %" PRIuS " (session #%d)\n", len, RFIFOREST(fd), fd);
 		Assert_report(0);
 		len = RFIFOREST(fd);
 	} else {
@@ -862,12 +862,12 @@ static int rfifoskip(int fd, size_t len)
 						} else {
 							packet_len = RFIFOW(fd, 2);
 							if (packet_len != lenRest) {
-								ShowError("Skip packet 0x%04X with dynamic size %"PRIdS", but must be size %d\n", cmd, lenRest, packet_len);
+								ShowError("Skip packet 0x%04X with dynamic size %" PRIdS ", but must be size %d\n", cmd, lenRest, packet_len);
 								Assert_report(0);
 							}
 						}
 					} else if (packet_len != lenRest) {
-						ShowError("Skip packet 0x%04X with size %"PRIdS", but must be size %d\n", cmd, lenRest, packet_len);
+						ShowError("Skip packet 0x%04X with size %" PRIdS ", but must be size %d\n", cmd, lenRest, packet_len);
 						Assert_report(0);
 					}
 				}
@@ -921,7 +921,7 @@ static int wfifoset(int fd, size_t len, bool validate)
 	if( !s->flag.server ) {
 
 		if (len > socket_max_client_packet) { // see declaration of socket_max_client_packet for details
-			ShowError("WFIFOSET: Dropped too large client packet 0x%04x (length=%"PRIuS", max=%"PRIuS").\n",
+			ShowError("WFIFOSET: Dropped too large client packet 0x%04x (length=%" PRIuS ", max=%" PRIuS ").\n",
 			          WFIFOW(fd,0), len, socket_max_client_packet);
 			return 0;
 		}
@@ -1786,7 +1786,7 @@ static void socket_init(void)
 	timer->add_func_list(connect_check_clear, "connect_check_clear");
 	timer->add_interval(timer->gettick()+1000, connect_check_clear, 0, 0, 5*60*1000);
 
-	ShowInfo("Server supports up to '"CL_WHITE"%"PRIu64""CL_RESET"' concurrent connections.\n", rlim_cur);
+	ShowInfo("Server supports up to '" CL_WHITE "%" PRIu64 CL_RESET "' concurrent connections.\n", rlim_cur);
 }
 
 static bool session_is_valid(int fd)

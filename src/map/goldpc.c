@@ -62,7 +62,7 @@ void goldpc_read_db_libconfig(void)
 	}
 
 	libconfig->destroy(&goldpc_conf);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 }
 
 bool goldpc_read_db_libconfig_sub(const struct config_setting_t *it, int n, const char *source)

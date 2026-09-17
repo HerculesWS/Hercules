@@ -374,7 +374,7 @@ static void *mmalloc_(size_t size, const char *file, int line, const char *func)
 static void *mmalloc_(size_t size, const char *file, int line, const char *func)
 {
 	if (((long) size) < 0) {
-		ShowFatalError("%s:%d: in func %s: mmalloc_: %"PRIuS"\n", file, line, func, size);
+		ShowFatalError("%s:%d: in func %s: mmalloc_: %" PRIuS "\n", file, line, func, size);
 		exit(EXIT_FAILURE);
 	}
 
@@ -407,7 +407,7 @@ static void *mmalloc_(size_t size, const char *file, int line, const char *func)
 			*(long*)((char*)p + sizeof(struct unit_head_large) - sizeof(long) + size) = 0xdeadbeaf;
 			return (char *)p + sizeof(struct unit_head_large) - sizeof(long);
 		} else {
-			ShowFatalError("Memory manager::memmgr_alloc failed (allocating %"PRIuS"+%"PRIuS" bytes at %s:%d).\n",
+			ShowFatalError("Memory manager::memmgr_alloc failed (allocating %" PRIuS "+%" PRIuS " bytes at %s:%d).\n",
 			               sizeof(struct unit_head_large), size, file, line);
 			exit(EXIT_FAILURE);
 		}
@@ -928,16 +928,16 @@ void memmgr_report(int extra)
 	}
 	for( j = 0; j < 100; j++ ) {
 		if( data[j].size != 0 ) {
-			ShowMessage("[malloc] : "CL_WHITE"%s"CL_RESET":"CL_WHITE"%d"CL_RESET" %u instances => %.2f MB\n",data[j].file,data[j].line,data[j].count,(double)((data[j].size)/1024)/1024);
+			ShowMessage("[malloc] : " CL_WHITE "%s" CL_RESET ":" CL_WHITE "%d" CL_RESET " %u instances => %.2f MB\n",data[j].file,data[j].line,data[j].count,(double)((data[j].size)/1024)/1024);
 		}
 	}
 	ShowMessage("[malloc] : reporting %u instances | %.2f MB\n",count,(double)((size)/1024)/1024);
 	ShowMessage("[malloc] : internal usage %.2f MB | %.2f MB\n",(double)((memmgr_usage_bytes_t-memmgr_usage_bytes)/1024)/1024,(double)((memmgr_usage_bytes_t)/1024)/1024);
 
 	if (extra) {
-		ShowMessage("[malloc] : unit_head_large: %"PRIuS" bytes\n", sizeof(struct unit_head_large));
-		ShowMessage("[malloc] : unit_head: %"PRIuS" bytes\n", sizeof(struct unit_head));
-		ShowMessage("[malloc] : block: %"PRIuS" bytes\n", sizeof(struct block));
+		ShowMessage("[malloc] : unit_head_large: %" PRIuS " bytes\n", sizeof(struct unit_head_large));
+		ShowMessage("[malloc] : unit_head: %" PRIuS " bytes\n", sizeof(struct unit_head));
+		ShowMessage("[malloc] : block: %" PRIuS " bytes\n", sizeof(struct block));
 	}
 
 }
@@ -959,7 +959,7 @@ static void memmgr_init_messages(void)
 {
 #ifdef LOG_MEMMGR
 	sprintf(memmer_logfile, "log/%s.leaks", SERVER_NAME);
-	ShowStatus("Memory manager initialized: "CL_WHITE"%s"CL_RESET"\n", memmer_logfile);
+	ShowStatus("Memory manager initialized: " CL_WHITE "%s" CL_RESET "\n", memmer_logfile);
 #endif /* LOG_MEMMGR */
 }
 #endif /* USE_MEMMGR */

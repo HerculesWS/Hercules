@@ -8379,7 +8379,7 @@ static void battle_config_check_deprecated(const char *filename, struct config_t
 
 		snprintf(conf_name, sizeof(conf_name), "battle_configuration/%s", unit_params_keys[i]);
 		if (libconfig->lookup(config, conf_name) != NULL)
-			ShowError("The `%s` battle conf option has been removed. Please see db/"DBPATH"unit_parameters_db.conf for its replacement. (config found in \"%s\")\n", unit_params_keys[i], filename);
+			ShowError("The `%s` battle conf option has been removed. Please see db/" DBPATH "unit_parameters_db.conf for its replacement. (config found in \"%s\")\n", unit_params_keys[i], filename);
 	}
 }
 

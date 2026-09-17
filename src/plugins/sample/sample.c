@@ -67,7 +67,7 @@ BUILDIN(sample) {//script command 'sample(num);' - 1 param: struct script_state*
 	return true;
 }
 CPCMD(sample) {//console command 'sample' - 1 param: char *line
-	ShowInfo("I'm being run! arg -> '%s'\n",line?line:"NONE");
+	ShowInfo("I'm being run! arg -> '%s'\n",line ? line : "NONE");
 }
 struct sample_data_struct {
 	struct point lastMSGPosition;

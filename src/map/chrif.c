@@ -221,7 +221,7 @@ static bool chrif_setip(const char *ip)
 
 	safestrncpy(chrif->ip_str, ip, sizeof(chrif->ip_str));
 
-	ShowInfo("Char Server IP Address : '"CL_WHITE"%s"CL_RESET"' -> '"CL_WHITE"%s"CL_RESET"'.\n", ip, sockt->ip2str(chrif->ip, ip_str));
+	ShowInfo("Char Server IP Address : '" CL_WHITE "%s" CL_RESET "' -> '" CL_WHITE "%s" CL_RESET "'.\n", ip, sockt->ip2str(chrif->ip, ip_str));
 
 	return true;
 }
@@ -355,16 +355,16 @@ static void chrif_connectack(int fd)
 		exit(EXIT_FAILURE);
 	}
 
-	ShowStatus("Successfully logged on to Char Server (Connection: '"CL_WHITE"%d"CL_RESET"').\n",fd);
+	ShowStatus("Successfully logged on to Char Server (Connection: '" CL_WHITE "%d" CL_RESET "').\n",fd);
 	chrif->state = 1;
 	chrif->connected = 1;
 
 	chrif->sendmap(fd);
 
-	ShowStatus("Event '"CL_WHITE"OnInterIfInit"CL_RESET"' executed with '"CL_WHITE"%d"CL_RESET"' NPCs.\n", npc->event_doall("OnInterIfInit"));
+	ShowStatus("Event '" CL_WHITE "OnInterIfInit" CL_RESET "' executed with '" CL_WHITE "%d" CL_RESET "' NPCs.\n", npc->event_doall("OnInterIfInit"));
 	if( !char_init_done ) {
 		char_init_done = true;
-		ShowStatus("Event '"CL_WHITE"OnInterIfInitOnce"CL_RESET"' executed with '"CL_WHITE"%d"CL_RESET"' NPCs.\n", npc->event_doall("OnInterIfInitOnce"));
+		ShowStatus("Event '" CL_WHITE "OnInterIfInitOnce" CL_RESET "' executed with '" CL_WHITE "%d" CL_RESET "' NPCs.\n", npc->event_doall("OnInterIfInitOnce"));
 		guild->castle_map_init();
 	}
 
@@ -507,7 +507,7 @@ static void chrif_authok(int fd)
 
 	//Check if both servers agree on the struct's size
 	if( RFIFOW(fd,2) - 25 != sizeof(struct mmo_charstatus) ) {
-		ShowError("chrif_authok: Data size mismatch! %d != %"PRIuS"\n", RFIFOW(fd,2) - 25, sizeof(struct mmo_charstatus));
+		ShowError("chrif_authok: Data size mismatch! %d != %" PRIuS "\n", RFIFOW(fd,2) - 25, sizeof(struct mmo_charstatus));
 		return;
 	}
 
@@ -1048,7 +1048,7 @@ static void chrif_recvfamelist(int fd)
 	}
 	total += num;
 
-	ShowInfo("Received Fame List of '"CL_WHITE"%d"CL_RESET"' characters.\n", total);
+	ShowInfo("Received Fame List of '" CL_WHITE "%d" CL_RESET "' characters.\n", total);
 }
 
 /// fame ranking update confirmation

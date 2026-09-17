@@ -145,7 +145,7 @@ static bool inter_guild_tosql(struct guild *g, int flag)
 	Assert_retr(false, g->guild_id > 0 || g->guild_id == -1);
 
 #ifdef NOISY
-	ShowInfo("Save guild request ("CL_BOLD"%d"CL_RESET" - flag 0x%x).\n",g->guild_id, flag);
+	ShowInfo("Save guild request (" CL_BOLD "%d" CL_RESET " - flag 0x%x).\n",g->guild_id, flag);
 #endif
 
 	SQL->EscapeStringLen(inter->sql_handle, esc_name, g->name, strnlen(g->name, NAME_LENGTH));
@@ -237,7 +237,7 @@ static bool inter_guild_tosql(struct guild *g, int flag)
 			else //last condition using add_coma setting
 				add_comma = true;
 #endif // 0
-			StrBuf->Printf(&buf, "`guild_lv`=%d, `skill_point`=%d, `exp`=%"PRIu64", `next_exp`=%u, `max_member`=%d, `max_storage`=%hd",
+			StrBuf->Printf(&buf, "`guild_lv`=%d, `skill_point`=%d, `exp`=%" PRIu64 ", `next_exp`=%u, `max_member`=%d, `max_storage`=%hd",
 				g->guild_lv, g->skill_point, g->exp, g->next_exp, g->max_member, g->max_storage);
 		}
 		StrBuf->Printf(&buf, " WHERE `guild_id`=%d", g->guild_id);
@@ -258,7 +258,7 @@ static bool inter_guild_tosql(struct guild *g, int flag)
 				//Since nothing references guild member table as foreign keys, it's safe to use REPLACE INTO
 				SQL->EscapeStringLen(inter->sql_handle, esc_name, m->name, strnlen(m->name, NAME_LENGTH));
 				if( SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s` (`guild_id`,`account_id`,`char_id`,`hair`,`hair_color`,`gender`,`class`,`lv`,`exp`,`exp_payper`,`online`,`position`,`name`) "
-					"VALUES ('%d','%d','%d','%d','%d','%d','%d','%d','%"PRIu64"','%d','%d','%d','%s')",
+					"VALUES ('%d','%d','%d','%d','%d','%d','%d','%d','%" PRIu64 "','%d','%d','%d','%s')",
 					guild_member_db, g->guild_id, m->account_id, m->char_id,
 					m->hair, m->hair_color, m->gender,
 					m->class_, m->lv, m->exp, m->exp_payper, m->online, m->position, esc_name) )
@@ -649,7 +649,7 @@ static bool inter_guild_exp_parse_row(char *split[], int column, int current)
 	nullpo_retr(true, split);
 
 	if (exp < 0 || exp >= UINT_MAX) {
-		ShowError("exp_guild: Invalid exp %"PRId64" (valid range: 0 - %u) at line %d\n", exp, UINT_MAX, current);
+		ShowError("exp_guild: Invalid exp %" PRId64 " (valid range: 0 - %u) at line %d\n", exp, UINT_MAX, current);
 		return false;
 	}
 
@@ -771,7 +771,7 @@ static int inter_guild_sql_init(void)
 	inter_guild->castle_db = idb_alloc(DB_OPT_RELEASE_DATA);
 
 	//Read exp file
-	sv->readdb(chr->db_path, DBPATH"exp_guild.txt", ',', 1, 1, MAX_GUILDLEVEL, inter_guild->exp_parse_row);
+	sv->readdb(chr->db_path, DBPATH "exp_guild.txt", ',', 1, 1, MAX_GUILDLEVEL, inter_guild->exp_parse_row);
 
 	timer->add_func_list(inter_guild->save_timer, "inter_guild->save_timer");
 	timer->add(timer->gettick() + 10000, inter_guild->save_timer, 0, 0);
