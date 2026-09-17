@@ -391,10 +391,9 @@ static void guild_makemember(struct guild_member *m, struct map_session_data *sd
 static int guild_payexp_timer_sub(union DBKey key, struct DBData *data, va_list ap)
 {
 	int i;
-	struct guild_expcache *c;
 	struct guild *g;
 
-	c = DB->data2ptr(data);
+	struct guild_expcache *c = (struct guild_expcache *)DB->data2ptr(data);
 
 	if ((g = guild->search(c->guild_id)) == NULL
 	 || (i = guild->getindex(g, c->account_id, c->char_id)) == INDEX_NOT_FOUND
@@ -428,7 +427,7 @@ static int guild_payexp_timer(int tid, int64 tick, int id, intptr_t data)
  */
 static int guild_send_xy_timer_sub(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct guild *g = DB->data2ptr(data);
+	struct guild *g = (struct guild *)DB->data2ptr(data);
 	int i;
 
 	nullpo_ret(g);
@@ -544,7 +543,7 @@ static int guild_npc_request_info(int guild_id, const char *event)
 		safestrncpy(ev->name, event, sizeof(ev->name));
 		//The one in the db (if present) becomes the next event from this.
 		if (guild->infoevent_db->put(guild->infoevent_db, DB->i2key(guild_id), DB->ptr2data(ev), &prev))
-			ev->next = DB->data2ptr(&prev);
+			ev->next = (struct eventlist *)DB->data2ptr(&prev);
 	}
 
 	return guild->request_info(guild_id);
@@ -741,7 +740,8 @@ static int guild_recv_info(const struct guild *sg, struct fifo_chunk_buf *emblem
 
 	//Occurrence of an event
 	if (guild->infoevent_db->remove(guild->infoevent_db, DB->i2key(sg->guild_id), &data)) {
-		struct eventlist *ev = DB->data2ptr(&data), *ev2;
+		struct eventlist *ev = (struct eventlist *)DB->data2ptr(&data);
+		struct eventlist *ev2;
 		while(ev) {
 			npc->event_do(ev->name);
 			ev2=ev->next;
@@ -1441,7 +1441,6 @@ static struct DBData create_expcache(union DBKey key, va_list args)
 static uint64 guild_payexp(struct map_session_data *sd, uint64 exp)
 {
 	struct guild *g;
-	struct guild_expcache *c;
 	int per;
 
 	nullpo_ret(sd);
@@ -1457,7 +1456,7 @@ static uint64 guild_payexp(struct map_session_data *sd, uint64 exp)
 	if (per < 100)
 		exp = exp * per / 100;
 	//Otherwise tax everything.
-	c = DB->data2ptr(guild->expcache_db->ensure(guild->expcache_db, DB->i2key(sd->status.char_id), guild->create_expcache, sd));
+	struct guild_expcache *c = (struct guild_expcache *)DB->data2ptr(guild->expcache_db->ensure(guild->expcache_db, DB->i2key(sd->status.char_id), guild->create_expcache, sd));
 
 	if (c->exp > UINT64_MAX - exp)
 		c->exp = UINT64_MAX;
@@ -1474,13 +1473,12 @@ static uint64 guild_payexp(struct map_session_data *sd, uint64 exp)
  *---------------------------------------------------*/
 static int guild_getexp(struct map_session_data *sd, int exp)
 {
-	struct guild_expcache *c;
 	nullpo_ret(sd);
 
 	if (sd->status.guild_id == 0 || sd->guild == NULL)
 		return 0;
 
-	c = DB->data2ptr(guild->expcache_db->ensure(guild->expcache_db, DB->i2key(sd->status.char_id), guild->create_expcache, sd));
+	struct guild_expcache *c = (struct guild_expcache *)DB->data2ptr(guild->expcache_db->ensure(guild->expcache_db, DB->i2key(sd->status.char_id), guild->create_expcache, sd));
 	if (c->exp > UINT64_MAX - exp)
 		c->exp = UINT64_MAX;
 	else
@@ -1894,7 +1892,7 @@ static int guild_allianceack(int guild_id1, int guild_id2, int account_id1, int 
  */
 static int guild_broken_sub(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct guild *g = DB->data2ptr(data);
+	struct guild *g = (struct guild *)DB->data2ptr(data);
 	int guild_id=va_arg(ap,int);
 	int i,j;
 	struct map_session_data *sd=NULL;
@@ -1920,7 +1918,7 @@ static int guild_broken_sub(union DBKey key, struct DBData *data, va_list ap)
  */
 static int castle_guild_broken_sub(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct guild_castle *gc = DB->data2ptr(data);
+	struct guild_castle *gc = (struct guild_castle *)DB->data2ptr(data);
 	int guild_id = va_arg(ap, int);
 
 	nullpo_ret(gc);
@@ -2424,7 +2422,7 @@ static void guild_flag_remove(struct npc_data *nd)
 static int eventlist_db_final(union DBKey key, struct DBData *data, va_list ap)
 {
 	struct eventlist *next = NULL;
-	struct eventlist *current = DB->data2ptr(data);
+	struct eventlist *current = (struct eventlist *)DB->data2ptr(data);
 	while (current != NULL) {
 		next = current->next;
 		aFree(current);
@@ -2447,7 +2445,7 @@ static int guild_expcache_db_final(union DBKey key, struct DBData *data, va_list
  */
 static int guild_castle_db_final(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct guild_castle* gc = DB->data2ptr(data);
+	struct guild_castle *gc = (struct guild_castle *)DB->data2ptr(data);
 	if( gc->temp_guardians )
 		aFree(gc->temp_guardians);
 	aFree(gc);
@@ -2456,7 +2454,7 @@ static int guild_castle_db_final(union DBKey key, struct DBData *data, va_list a
 
 static int guild_db_final(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct guild* g = DB->data2ptr(data);
+	struct guild *g = (struct guild *)DB->data2ptr(data);
 	aFree(g->emblem_data);
 	return 0;
 }

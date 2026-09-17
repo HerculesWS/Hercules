@@ -3542,7 +3542,7 @@ static unsigned int script_array_highest_key(struct script_state *st, struct map
 }
 static int script_free_array_db(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct script_array *sa = DB->data2ptr(data);
+	struct script_array *sa = (struct script_array *)DB->data2ptr(data);
 	aFree(sa->members);
 	ers_free(script->array_ers, sa);
 	return 0;
@@ -5360,7 +5360,7 @@ static bool script_config_read(const char *filename, bool imported)
  */
 static int db_script_free_code_sub(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct script_code *code = DB->data2ptr(data);
+	struct script_code *code = (struct script_code *)DB->data2ptr(data);
 	if (code)
 		script->free_code(code);
 	return 0;
@@ -5448,13 +5448,11 @@ static void script_setarray_pc(struct map_session_data *sd, const char *varname,
  **/
 static int script_reg_destroy(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct script_reg_state *src;
-
 	nullpo_ret(data);
 	if( data->type != DB_DATA_PTR )/* got no need for those! */
 		return 0;
 
-	src = DB->data2ptr(data);
+	struct script_reg_state *src = (struct script_reg_state *)DB->data2ptr(data);
 
 	if( src->type ) {
 		struct script_reg_str *p = (struct script_reg_str *)src;
@@ -6132,7 +6130,7 @@ static void script_clear_translations(bool reload)
  **/
 static int script_translation_db_destroyer(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct DBMap *string_db = DB->data2ptr(data);
+	struct DBMap *string_db = (struct DBMap *)DB->data2ptr(data);
 
 	if( db_size(string_db) ) {
 		struct string_translation *st = NULL;

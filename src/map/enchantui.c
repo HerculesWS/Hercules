@@ -860,7 +860,7 @@ static struct enchant_info *enchantui_db_exists(int64 id)
 
 static int enchantui_db_final_sub(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct enchant_info *ei = DB->data2ptr(data);
+	struct enchant_info *ei = (struct enchant_info *)DB->data2ptr(data);
 
 	VECTOR_CLEAR(ei->SlotOrder);
 	VECTOR_CLEAR(ei->TargetItems);

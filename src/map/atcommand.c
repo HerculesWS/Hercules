@@ -10097,7 +10097,7 @@ ACMD(channel)
 
 		iter = db_iterator(chan->banned);
 		for (data = iter->first(iter,&key); iter->exists(iter); data = iter->next(iter,&key)) {
-			struct channel_ban_entry *entry = DB->data2ptr(data);
+			struct channel_ban_entry *entry = (struct channel_ban_entry *)DB->data2ptr(data);
 
 			if (!isA)
 				snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_CHANNEL_BAN_LIST_ENTRY), entry->name);// - %s %s
@@ -11537,7 +11537,7 @@ static bool atcommand_hp_add(char *name, AtCommandFunc func)
  */
 static int atcommand_db_clear_sub(union DBKey key, struct DBData *data, va_list args)
 {
-	AtCommandInfo *cmd = DB->data2ptr(data);
+	AtCommandInfo *cmd = (AtCommandInfo *)DB->data2ptr(data);
 	aFree(cmd->at_groups);
 	aFree(cmd->char_groups);
 	if (cmd->help != NULL)

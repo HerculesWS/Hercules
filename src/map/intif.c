@@ -187,7 +187,6 @@ static int intif_saveregistry(struct map_session_data *sd)
 	iter = db_iterator(sd->regs.vars);
 	for( data = iter->first(iter,&key); iter->exists(iter); data = iter->next(iter,&key) ) {
 		const char *varname = NULL;
-		struct script_reg_state *src = NULL;
 
 		if( data->type != DB_DATA_PTR ) /* its a @number */
 			continue;
@@ -201,7 +200,7 @@ static int intif_saveregistry(struct map_session_data *sd)
 			ShowError("Variable name too big: %s\n", varname);
 			continue;
 		}
-		src = DB->data2ptr(data);
+		struct script_reg_state *src = (struct script_reg_state *)DB->data2ptr(data);
 
 		/* no need! */
 		if( !src->update )
