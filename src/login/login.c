@@ -89,8 +89,7 @@ static struct DBData login_create_online_user(union DBKey key, va_list args)
 
 static struct online_login_data* login_add_online_user(int char_server, int account_id)
 {
-	struct online_login_data* p;
-	p = idb_ensure(login->online_db, account_id, login->create_online_user);
+	struct online_login_data *p = (struct online_login_data *)idb_ensure(login->online_db, account_id, login->create_online_user);
 	p->char_server = char_server;
 	if( p->waiting_disconnect != INVALID_TIMER )
 	{
@@ -686,7 +685,7 @@ static void login_fromchar_parse_online_accounts(int fd, int id)
 	const struct PACKET_CHARLOGIN_ONLINE_ACCOUNTS *p = RP2PTR(struct PACKET_CHARLOGIN_ONLINE_ACCOUNTS *, fd);
 	for (uint32 i = 0; i < p->list_length; i++) {
 		int aid = p->accounts[i];
-		struct online_login_data *login_data = idb_ensure(login->online_db, aid, login->create_online_user);
+		struct online_login_data *login_data = (struct online_login_data *)idb_ensure(login->online_db, aid, login->create_online_user);
 		login_data->char_server = id;
 
 		if (login_data->waiting_disconnect != INVALID_TIMER) {

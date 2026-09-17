@@ -572,7 +572,7 @@ static struct guild_storage *guild2storage_ensure(int guild_id)
 {
 	struct guild_storage *gs = NULL;
 	if(guild->search(guild_id) != NULL)
-		gs = idb_ensure(gstorage->db,guild_id,gstorage->create);
+		gs = (struct guild_storage *)idb_ensure(gstorage->db, guild_id, gstorage->create);
 	return gs;
 }
 
