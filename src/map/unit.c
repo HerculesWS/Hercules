@@ -178,7 +178,7 @@ static int unit_walk_toxy_sub(struct block_list *bl)
 	if (status->isdead(bl))
 		return 1;
 
-	struct walkpath_data wpd = {0};
+	struct walkpath_data wpd ZERO_INITIALIZED;
 
 	if (!path->search(&wpd, bl, bl->m, bl->x, bl->y, ud->to_x, ud->to_y, ud->state.walk_easy, CELL_CHKNOPASS))
 		return 1;

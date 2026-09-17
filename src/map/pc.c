@@ -11744,7 +11744,7 @@ static bool pc_read_exp_db_sub_class(struct config_setting_t *t, bool base)
 	struct class_exp_group entry = {
 		.name = "",
 		.max_level = 0,
-		.exp = { 0 }
+		.exp ZERO_INITIALIZED
 	};
 
 	struct config_setting_t *exp_t = NULL;
