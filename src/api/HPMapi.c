@@ -55,12 +55,14 @@
 #include "api/aclif.h"
 #include "api/aloginif.h"
 #include "api/api.h"
+#include "api/apisessiondata.h"
 #include "api/handlers.h"
 #include "api/httpparser.h"
 #include "api/httpsender.h"
 #include "api/imageparser.h"
 #include "api/jsonparser.h"
 #include "api/jsonwriter.h"
+#include "api/mimepart.h"
 
 // HPMDataCheck comes after all the other includes
 #include "common/HPMDataCheck.h"
