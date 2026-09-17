@@ -400,7 +400,7 @@ static struct item_reform *itemdb_reform_exists(int idx)
 
 /// Returns human readable name for given item type.
 /// @param type Type id to retrieve name for ( IT_* ).
-static const char *itemdb_typename(enum item_types type)
+static const char *itemdb_type_to_name(enum item_types type)
 {
 	switch(type)
 	{
@@ -3381,7 +3381,7 @@ void itemdb_defaults(void)
 	itemdb->searchname_sub = itemdb_searchname_sub;
 	itemdb->searchname_array_sub = itemdb_searchname_array_sub;
 	itemdb->searchrandomid = itemdb_searchrandomid;
-	itemdb->typename = itemdb_typename;
+	itemdb->type_to_name = itemdb_type_to_name;
 	itemdb->jobmask2mapid = itemdb_jobmask2mapid;
 	itemdb->jobid2mapid = itemdb_jobid2mapid;
 	itemdb->create_dummy_data = create_dummy_data;
