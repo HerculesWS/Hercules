@@ -214,7 +214,7 @@ static void irc_parse_sub(int fd, char *str)
 }
 
 /// @copydoc ircbot_interface::queue()
-static void irc_queue(char *str)
+static void irc_queue(const char *str)
 {
 	struct message_flood *queue_entry = NULL;
 
@@ -272,7 +272,7 @@ static int irc_queue_timer(int tid, int64 tick, int id, intptr_t data)
 }
 
 /// @copydoc ircbot_interface::send()
-static void irc_send(char *str, bool force)
+static void irc_send(const char *str, bool force)
 {
 	size_t len;
 	nullpo_retv(str);

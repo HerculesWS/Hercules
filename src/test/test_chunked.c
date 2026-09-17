@@ -380,10 +380,22 @@ static void testChunked1(void)
 	ShowStatus("Test chunked\n");
 	pWFIFOSET = testChunked1Send;
 	pRecv = testChunked1Recv;
-	testChunkedBuf("test line", 0);
-	testChunkedBuf("test", 0);
-	testChunkedBuf("this is very long data line for chunked packets data.", 0);
-	testChunkedBuf("", 0);
+	{
+		char test_string[] = "test line";
+		testChunkedBuf(test_string, 0);
+	}
+	{
+		char test_string[] = "test";
+		testChunkedBuf(test_string, 0);
+	}
+	{
+		char test_string[] = "this is very long data line for chunked packets data.";
+		testChunkedBuf(test_string, 0);
+	}
+	{
+		char test_string[] = "";
+		testChunkedBuf(test_string, 0);
+	}
 	show_success = false;
 	ShowStatus("Test long chunked\n");
 	for (int f = 1; f < MAX_TEST_BUFFER; f += 100) {

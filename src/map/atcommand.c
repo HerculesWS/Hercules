@@ -1532,7 +1532,7 @@ ACMD(joblevelup)
 ACMD(help)
 {
 	const char *command_name = NULL;
-	char *default_command = "help";
+	const char *default_command = "help";
 	AtCommandInfo *tinfo = NULL;
 
 	if (!*message) {
@@ -11520,7 +11520,7 @@ static bool atcommand_can_use2(struct map_session_data *sd, const char *command,
 	return false;
 }
 
-static bool atcommand_hp_add(char *name, AtCommandFunc func)
+static bool atcommand_hp_add(const char *name, AtCommandFunc func)
 {
 	/* if commands are added after group permissions are thrown in, they end up with no permissions */
 	/* so we restrict commands to be linked in during boot */
