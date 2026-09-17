@@ -96,13 +96,13 @@ static struct DBMap *item_drop_ratio_other_db = NULL;
 static struct eri *item_drop_ers; //For loot drops delay structures.
 static struct eri *item_drop_list_ers;
 
-static struct mob_db *mob_db(int index)
+static struct mob_db *mob_db_(int index)
 {
 	if (index < 0 || index > MAX_MOB_DB || mob->db_data[index] == NULL)
 		return mob->dummy;
 	return mob->db_data[index];
 }
-static struct mob_chat *mob_chat(short id)
+static struct mob_chat *mob_chat_(short id)
 {
 	if(id <= 0 || id > MAX_MOB_CHAT || mob->chat_db[id] == NULL)
 		return NULL;
@@ -6229,8 +6229,8 @@ void mob_defaults(void)
 	mob->init = do_init_mob;
 	mob->final = do_final_mob;
 	/* */
-	mob->db = mob_db;
-	mob->chat = mob_chat;
+	mob->db = mob_db_;
+	mob->chat = mob_chat_;
 	mob->makedummymobdb = mob_makedummymobdb;
 	mob->spawn_guardian_sub = mob_spawn_guardian_sub;
 	mob->skill_id2skill_idx = mob_skill_id2skill_idx;
