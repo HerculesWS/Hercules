@@ -3051,7 +3051,7 @@ static int skill_strip_equip(struct block_list *bl, unsigned short where, int ra
 	struct status_change *sc;
 	const int pos[5]             = {EQP_WEAPON, EQP_SHIELD, EQP_ARMOR, EQP_HELM, EQP_ACC};
 	const enum sc_type sc_atk[5] = {SC_NOEQUIPWEAPON, SC_NOEQUIPSHIELD, SC_NOEQUIPARMOR, SC_NOEQUIPHELM, SC__STRIPACCESSARY};
-	const enum sc_type sc_def[5] = {SC_PROTECTWEAPON, SC_PROTECTSHIELD, SC_PROTECTARMOR, SC_PROTECTHELM, 0};
+	const enum sc_type sc_def[5] = {SC_PROTECTWEAPON, SC_PROTECTSHIELD, SC_PROTECTARMOR, SC_PROTECTHELM, SC_NONE};
 	int i;
 
 	if (rnd()%100 >= rate)
@@ -3062,13 +3062,13 @@ static int skill_strip_equip(struct block_list *bl, unsigned short where, int ra
 		return 0;
 
 	for (i = 0; i < ARRAYLENGTH(pos); i++) {
-		if (where&pos[i] && sc->data[sc_def[i]])
+		if (where&pos[i] && sc_def[i] != SC_NONE && sc->data[sc_def[i]])
 			where&=~pos[i];
 	}
 	if (!where) return 0;
 
 	for (i = 0; i < ARRAYLENGTH(pos); i++) {
-		if (where & pos[i] && !sc_start(bl, bl, sc_atk[i], 100, lv, time, 0))
+		if (where & pos[i] && sc_atk[i] != SC_NONE && !sc_start(bl, bl, sc_atk[i], 100, lv, time, 0))
 			where&=~pos[i];
 	}
 	return where?1:0;
