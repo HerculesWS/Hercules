@@ -6014,7 +6014,7 @@ static int mob_final_ratio_sub(union DBKey key, struct DBData *data, va_list ap)
 static int mob_reload_sub_mob(struct mob_data *md, va_list args)
 {
 	nullpo_ret(md);
-	md->db = mob_db(md->class_);
+	md->db = mob->db(md->class_);
 
 	status_calc_mob(md, SCO_FIRST);
 
