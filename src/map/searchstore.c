@@ -103,7 +103,6 @@ static void searchstore_query(struct map_session_data *sd,
 				const int32 *cardlist, unsigned int card_count)
 {
 	unsigned int i;
-	struct map_session_data* pl_sd;
 	struct DBIterator *iter;
 	struct s_search_store_search s;
 	searchstore_searchall_t store_searchall;
@@ -184,7 +183,7 @@ static void searchstore_query(struct map_session_data *sd,
 	s.max_price  = max_price;
 	iter         = db_iterator(vending->db);
 
-	for( pl_sd = dbi_first(iter); dbi_exists(iter);  pl_sd = dbi_next(iter) ) {
+	for (struct map_session_data *pl_sd = (struct map_session_data *)dbi_first(iter); dbi_exists(iter); pl_sd = (struct map_session_data *)dbi_next(iter)) {
 		if( sd == pl_sd ) {// skip own shop, if any
 			continue;
 		}

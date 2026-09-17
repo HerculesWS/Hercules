@@ -3286,13 +3286,13 @@ static void itemdb_reload(void)
 static void itemdb_name_constants(void)
 {
 	struct DBIterator *iter = db_iterator(itemdb->names);
-	struct item_data *data;
 
 #ifdef ENABLE_CASE_CHECK
 	script->parser_current_file = "Item Database (Likely an invalid or conflicting AegisName)";
 #endif // ENABLE_CASE_CHECK
-	for( data = dbi_first(iter); dbi_exists(iter); data = dbi_next(iter) )
+	for (struct item_data *data = (struct item_data *)dbi_first(iter); dbi_exists(iter); data = (struct item_data *)dbi_next(iter)) {
 		script->set_constant2(data->name, data->nameid, false, false);
+	}
 #ifdef ENABLE_CASE_CHECK
 	script->parser_current_file = NULL;
 #endif // ENABLE_CASE_CHECK

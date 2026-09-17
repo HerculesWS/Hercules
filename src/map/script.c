@@ -3732,7 +3732,7 @@ static void set_reg_pc_ref_str(struct script_state *st, struct reg_db *n, int64 
 {
 	struct DBIterator *iter = db_iterator(map->pc_db);
 
-	for (struct map_session_data *sd = dbi_first(iter); dbi_exists(iter); sd = dbi_next(iter)) {
+	for (struct map_session_data *sd = (struct map_session_data *)dbi_first(iter); dbi_exists(iter); sd = (struct map_session_data *)dbi_next(iter)) {
 		if (sd != NULL && n == &sd->regs) {
 			pc->setregistry_str(sd, num, str);
 			break;
@@ -3745,7 +3745,7 @@ static void set_reg_pc_ref_num(struct script_state *st, struct reg_db *n, int64 
 {
 	struct DBIterator *iter = db_iterator(map->pc_db);
 
-	for (struct map_session_data *sd = dbi_first(iter); dbi_exists(iter); sd = dbi_next(iter)) {
+	for (struct map_session_data *sd = (struct map_session_data *)dbi_first(iter); dbi_exists(iter); sd = (struct map_session_data *)dbi_next(iter)) {
 		if (sd != NULL && n == &sd->regs) {
 			pc->setregistry(sd, num, val);
 			break;
@@ -5001,14 +5001,13 @@ static void run_script(struct script_code *rootscript, int pos, int rid, int oid
 static void script_stop_instances(struct script_code *code)
 {
 	struct DBIterator *iter;
-	struct script_state* st;
 
 	if( !script->active_scripts )
 		return;//dont even bother.
 
 	iter = db_iterator(script->st_db);
 
-	for( st = dbi_first(iter); dbi_exists(iter); st = dbi_next(iter) ) {
+	for (struct script_state *st = (struct script_state *)dbi_first(iter); dbi_exists(iter); st = (struct script_state *)dbi_next(iter)) {
 		if( st->script == code ) {
 			script->free_state(st);
 		}
@@ -5550,7 +5549,6 @@ static void do_final_script(void)
 {
 	int i;
 	struct DBIterator *iter;
-	struct script_state *st;
 
 #ifdef SCRIPT_DEBUG_HASH
 	if (battle_config.etc_log)
@@ -5609,7 +5607,7 @@ static void do_final_script(void)
 
 	iter = db_iterator(script->st_db);
 
-	for( st = dbi_first(iter); dbi_exists(iter); st = dbi_next(iter) ) {
+	for (struct script_state *st = (struct script_state *)dbi_first(iter); dbi_exists(iter); st = (struct script_state *)dbi_next(iter)) {
 		script->free_state(st);
 	}
 
@@ -5749,15 +5747,13 @@ static void script_load_translations(void)
 
 	if (total != 0) {
 		struct DBIterator *main_iter;
-		struct DBMap *string_db;
-		struct string_translation *st = NULL;
 
 		VECTOR_ENSURE(script->translation_buf, total, 1);
 
 		main_iter = db_iterator(script->translation_db);
-		for (string_db = dbi_first(main_iter); dbi_exists(main_iter); string_db = dbi_next(main_iter)) {
+		for (struct DBMap *string_db = (struct DBMap *)dbi_first(main_iter); dbi_exists(main_iter); string_db = (struct DBMap *)dbi_next(main_iter)) {
 			struct DBIterator *sub_iter = db_iterator(string_db);
-			for (st = dbi_first(sub_iter); dbi_exists(sub_iter); st = dbi_next(sub_iter)) {
+			for (struct string_translation *st = (struct string_translation *)dbi_first(sub_iter); dbi_exists(sub_iter); st = (struct string_translation *)dbi_next(sub_iter)) {
 				VECTOR_PUSH(script->translation_buf, st->buf);
 			}
 			dbi_destroy(sub_iter);
@@ -6131,10 +6127,9 @@ static int script_translation_db_destroyer(union DBKey key, struct DBData *data,
 	struct DBMap *string_db = (struct DBMap *)DB->data2ptr(data);
 
 	if( db_size(string_db) ) {
-		struct string_translation *st = NULL;
 		struct DBIterator *iter = db_iterator(string_db);
 
-		for( st = dbi_first(iter); dbi_exists(iter); st = dbi_next(iter) ) {
+		for (struct string_translation *st = (struct string_translation *)dbi_first(iter); dbi_exists(iter); st = (struct string_translation *)dbi_next(iter)) {
 			aFree(st);
 		}
 		dbi_destroy(iter);
@@ -6222,7 +6217,6 @@ static int script_reload(void)
 {
 	int i;
 	struct DBIterator *iter;
-	struct script_state *st;
 
 #ifdef ENABLE_CASE_CHECK
 	script->global_casecheck.clear();
@@ -6230,7 +6224,7 @@ static int script_reload(void)
 
 	iter = db_iterator(script->st_db);
 
-	for( st = dbi_first(iter); dbi_exists(iter); st = dbi_next(iter) ) {
+	for (struct script_state *st = (struct script_state *)dbi_first(iter); dbi_exists(iter); st = (struct script_state *)dbi_next(iter)) {
 		script->free_state(st);
 	}
 
@@ -23161,7 +23155,6 @@ static BUILDIN(sleep2)
 static BUILDIN(awake)
 {
 	struct DBIterator *iter;
-	struct script_state *tst;
 	struct npc_data* nd;
 
 	if( ( nd = npc->name2id(script_getstr(st, 2)) ) == NULL ) {
@@ -23171,7 +23164,7 @@ static BUILDIN(awake)
 
 	iter = db_iterator(script->st_db);
 
-	for( tst = dbi_first(iter); dbi_exists(iter); tst = dbi_next(iter) ) {
+	for (struct script_state *tst = (struct script_state *)dbi_first(iter); dbi_exists(iter); tst = (struct script_state *)dbi_next(iter)) {
 		if( tst->oid == nd->bl.id ) {
 			if( tst->sleep.timer == INVALID_TIMER ) {// already awake ???
 				continue;
