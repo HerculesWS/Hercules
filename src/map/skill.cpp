@@ -4802,8 +4802,24 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 
 	sd = BL_CAST(BL_PC, src);
 
-	if (status->isdead(bl))
+	if (status->isdead(bl)) {
+		if (skill_id == MO_EXTREMITYFIST) {
+			// Asura Strike still slides the caster toward the target's position
+			// even when the target died during the cast (gh#3485).
+			enum unit_dir dir = map->calc_dir(src, bl->x, bl->y);
+			Assert_ret(dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX);
+			int dist = 3; // number of cells that asura caster will walk
+			int x = dist * dirx[dir];
+			int y = dist * diry[dir];
+
+			if (unit->move_pos(src, src->x + x, src->y + y, 1, true) == 0) {
+				//Display movement + animation.
+				clif->slide(src, src->x, src->y);
+				clif->spiritballs(src, status->get_spiritballs(src), AREA);
+			}
+		}
 		return 1;
+	}
 
 	if (skill_id != 0 && skill->get_type(skill_id, skill_lv) == BF_MAGIC && status->isimmune(bl) == 100) {
 		//GTB makes all targeted magic display miss with a single bolt.
