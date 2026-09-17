@@ -171,12 +171,12 @@ static void irc_parse_source(char *source, char *nick, char *ident, char *host)
 	nullpo_retv(host);
 	for(size_t i = 0; i < len; i++) {
 		if( stage == 0 && source[i] == '!' ) {
-			safestrncpy(nick, &source[0], min(i + 1, IRC_NICK_LENGTH));
+			safestrncpy(nick, &source[0], min(i + 1, (size_t)IRC_NICK_LENGTH));
 			pos = (int)i + 1;
 			stage = 1;
 		} else if( stage == 1 && source[i] == '@' ) {
-			safestrncpy(ident, &source[pos], min(i - pos + 1, IRC_IDENT_LENGTH));
-			safestrncpy(host, &source[i+1], min(len - i, IRC_HOST_LENGTH));
+			safestrncpy(ident, &source[pos], min(i - pos + 1, (size_t)IRC_IDENT_LENGTH));
+			safestrncpy(host, &source[i+1], min(len - i, (size_t)IRC_HOST_LENGTH));
 			break;
 		}
 	}

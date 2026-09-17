@@ -1344,7 +1344,7 @@ static unsigned int status_get_base_maxsp(const struct map_session_data *sd, con
 
 	val += val * st->int_ / 100;
 
-	return (unsigned int)cap_value(val, 0, UINT_MAX);
+	return (unsigned int)cap_value(val, (uint64)0, (uint64)UINT_MAX);
 }
 
 static unsigned int status_get_base_maxhp(const struct map_session_data *sd, const struct status_data *st)
@@ -1371,7 +1371,7 @@ static unsigned int status_get_base_maxhp(const struct map_session_data *sd, con
 
 	val += val * st->vit / 100; // +1% per each point of VIT
 
-	return (unsigned int)cap_value(val,0,UINT_MAX);
+	return (unsigned int)cap_value(val, (uint64)0, (uint64)UINT_MAX);
 }
 
 static struct s_maxhp_entry *status_get_maxhp_cap_entry(int class_idx, int level)
@@ -1933,7 +1933,7 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 	sd->status.max_hp = status->get_base_maxhp(sd,bstatus);
 	//This is done to handle underflows from negative Max HP bonuses
 	i64 = sd->status.max_hp + (int)bstatus->max_hp;
-	bstatus->max_hp = (unsigned int)cap_value(i64, 0, INT_MAX);
+	bstatus->max_hp = (unsigned int)cap_value(i64, (int64)0, (int64)INT_MAX);
 
 	// Absolute modifiers from passive skills
 	if ((skill_lv=pc->checkskill(sd,CR_TRUST)) > 0)
@@ -1962,7 +1962,7 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 	sd->status.max_sp = status->get_base_maxsp(sd,bstatus);
 	//This is done to handle underflows from negative Max SP bonuses
 	i64 = sd->status.max_sp + (int)bstatus->max_sp;
-	bstatus->max_sp = (unsigned int)cap_value(i64, 0, INT_MAX);
+	bstatus->max_sp = (unsigned int)cap_value(i64, (int64)0, (int64)INT_MAX);
 
 	// Absolute modifiers from passive skills
 	if((skill_lv=pc->checkskill(sd,SL_KAINA))>0)
@@ -5945,7 +5945,7 @@ static unsigned int status_calc_maxhp(struct block_list *bl, struct status_chang
 {
 
 	if (!sc || !sc->count)
-		return (unsigned int)cap_value(maxhp, 1, UINT_MAX);
+		return (unsigned int)cap_value(maxhp, (uint64)1, (uint64)UINT_MAX);
 
 	if (sc->data[SC_INCMHPRATE])
 		maxhp += maxhp * sc->data[SC_INCMHPRATE]->val1 / 100;
@@ -6026,7 +6026,7 @@ static unsigned int status_calc_maxhp(struct block_list *bl, struct status_chang
 		maxhp += maxhp * 30 / 100;
 #endif
 
-	return (unsigned int)cap_value(maxhp, 1, UINT_MAX);
+	return (unsigned int)cap_value(maxhp, (uint64)1, (uint64)UINT_MAX);
 }
 
 static unsigned int status_calc_maxsp(struct block_list *bl, struct status_change *sc, unsigned int maxsp)
@@ -14074,7 +14074,7 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 static int status_natural_heal_timer(int tid, int64 tick, int id, intptr_t data)
 {
 	// This difference is always positive and lower than UINT_MAX (~24 days)
-	status->natural_heal_diff_tick = (unsigned int)cap_value(DIFF_TICK(tick,status->natural_heal_prev_tick), 0, UINT_MAX);
+	status->natural_heal_diff_tick = (unsigned int)cap_value(DIFF_TICK(tick, status->natural_heal_prev_tick), (int64)0, (int64)UINT_MAX);
 	map->foreachregen(status->natural_heal);
 	status->natural_heal_prev_tick = tick;
 	return 0;

@@ -652,7 +652,7 @@ static void pc_inventory_rentals(struct map_session_data *sd)
 	}
 
 	if( c > 0 ) // min(next_tick,3600000) 1 hour each timer to keep announcing to the owner, and to avoid a but with rental time > 15 days
-		sd->rental_timer = timer->add(timer->gettick() + min(next_tick,3600000), pc->inventory_rental_end, sd->bl.id, 0);
+		sd->rental_timer = timer->add(timer->gettick() + min(next_tick, (int64)3600000), pc->inventory_rental_end, sd->bl.id, 0);
 	else
 		sd->rental_timer = INVALID_TIMER;
 }
@@ -6905,8 +6905,8 @@ static void pc_calcexp(struct map_session_data *sd, uint64 *base_exp, uint64 *jo
 	bexp += apply_percentrate64(bexp, buff_ratio, 100);
 	jexp += apply_percentrate64(jexp, buff_ratio + buff_job_ratio, 100);
 
-	*job_exp = cap_value(jexp, 1, INT64_MAX);
-	*base_exp = cap_value(bexp, 1, INT64_MAX);
+	*job_exp = cap_value(jexp, (int64)1, INT64_MAX);
+	*base_exp = cap_value(bexp, (int64)1, INT64_MAX);
 }
 
 /**
@@ -8184,7 +8184,7 @@ static int pc_dead(struct map_session_data *sd, struct block_list *src)
 				if (sd->status.mod_death != 100)
 					base_penalty = base_penalty * sd->status.mod_death / 100;
 
-				sd->status.base_exp -= min(sd->status.base_exp, base_penalty);
+				sd->status.base_exp -= min(sd->status.base_exp, (uint64)base_penalty);
 				clif->updatestatus(sd, SP_BASEEXP);
 			}
 		}
@@ -8209,7 +8209,7 @@ static int pc_dead(struct map_session_data *sd, struct block_list *src)
 				if (sd->status.mod_death != 100)
 					job_penalty = job_penalty * sd->status.mod_death / 100;
 
-				sd->status.job_exp -= min(sd->status.job_exp, job_penalty);
+				sd->status.job_exp -= min(sd->status.job_exp, (uint64)job_penalty);
 				clif->updatestatus(sd, SP_JOBEXP);
 			}
 		}
@@ -8567,7 +8567,7 @@ static int pc_setparam(struct map_session_data *sd, int type, int64 val)
 		sd->status.zeny = cap_value((int32)val, 0, MAX_ZENY);
 		break;
 	case SP_BANKVAULT:
-		val = cap_value(val, 0, MAX_BANK_ZENY);
+		val = cap_value(val, (int64)0, (int64)MAX_BANK_ZENY);
 		delta = ((int32)val - sd->status.bank_vault);
 		sd->status.bank_vault = (int32)val;
 		if (map->save_settings & 256) {
