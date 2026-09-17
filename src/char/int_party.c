@@ -362,7 +362,7 @@ static int inter_party_sql_init(void)
 {
 	//memory alloc
 	inter_party->db = idb_alloc(DB_OPT_RELEASE_DATA);
-	inter_party->pt = (struct party_data*)aCalloc(1, sizeof(struct party_data));
+	inter_party->pt = (struct party_data *)aCalloc(1, sizeof(struct party_data));
 	if (!inter_party->pt) {
 		ShowFatalError("inter_party->sql_init: Out of Memory!\n");
 		exit(EXIT_FAILURE);
@@ -433,7 +433,6 @@ static int inter_party_check_empty(struct party_data *p)
 // Create Party
 static struct party_data *inter_party_create(const char *name, int item, int item2, const struct party_member *leader)
 {
-	struct party_data *p;
 	int i;
 	nullpo_ret(name);
 	nullpo_ret(leader);
@@ -449,7 +448,7 @@ static struct party_data *inter_party_create(const char *name, int item, int ite
 					char *newname = aStrndup(name, NAME_LENGTH-1);
 					normalize_name(newname,"\"");
 					trim(newname);
-					p = inter_party->create(newname, item, item2, leader);
+					struct party_data *p = inter_party->create(newname, item, item2, leader);
 					aFree(newname);
 					return p;
 				}
@@ -462,7 +461,7 @@ static struct party_data *inter_party_create(const char *name, int item, int ite
 			}
 	}
 
-	p = (struct party_data*)aCalloc(1, sizeof(struct party_data));
+	struct party_data *p = (struct party_data *)aCalloc(1, sizeof(struct party_data));
 
 	safestrncpy(p->party.name, name, NAME_LENGTH);
 	p->party.exp=0;

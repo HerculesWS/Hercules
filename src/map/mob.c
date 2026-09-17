@@ -665,7 +665,7 @@ static int mob_once_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y
 			if (gc != NULL) {
 				struct guild *g = guild->search(gc->guild_id);
 
-				md->guardian_data = (struct guardian_data*)aCalloc(1, sizeof(struct guardian_data));
+				md->guardian_data = (struct guardian_data *)aCalloc(1, sizeof(struct guardian_data));
 				md->guardian_data->castle = gc;
 				md->guardian_data->number = MAX_GUARDIANS;
 
@@ -892,7 +892,7 @@ static int mob_spawn_guardian(const char *mapname, short x, short y, const char 
 
 	struct mob_data *md = mob->spawn_dataset(&data, npc_id);
 
-	md->guardian_data = (struct guardian_data*)aCalloc(1, sizeof(struct guardian_data));
+	md->guardian_data = (struct guardian_data *)aCalloc(1, sizeof(struct guardian_data));
 	md->guardian_data->number = guardian;
 	md->guardian_data->castle = gc;
 
@@ -3212,7 +3212,7 @@ static int mob_class_change(struct mob_data *md, int class_)
 		md->skilldelay[i] = c;
 
 	if(md->lootitem == NULL && md->db->status.mode&MD_LOOTER)
-		md->lootitem=(struct item *)aCalloc(LOOTITEM_SIZE,sizeof(struct item));
+		md->lootitem = (struct item *)aCalloc(LOOTITEM_SIZE, sizeof(struct item));
 
 	//Targets should be cleared no morph
 	md->target_id = md->attacked_id = 0;
@@ -3928,7 +3928,7 @@ static int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 
 	if (class_ < 0 || class_ >= MOB_CLONE_END)
 		return 0;
 
-	mob->db_data[class_] = (struct mob_db*)aCalloc(1, sizeof(struct mob_db));
+	mob->db_data[class_] = (struct mob_db *)aCalloc(1, sizeof(struct mob_db));
 
 	struct mob_db *db = mob->db_data[class_];
 	struct status_data *mstatus = &db->status;
@@ -4170,7 +4170,7 @@ static int mob_makedummymobdb(int class_)
 		return 0;
 	}
 	//Initialize dummy data.
-	mob->dummy = (struct mob_db*)aCalloc(1, sizeof(struct mob_db)); //Initializing the dummy mob.
+	mob->dummy = (struct mob_db *)aCalloc(1, sizeof(struct mob_db)); //Initializing the dummy mob.
 	sprintf(mob->dummy->sprite,"DUMMY");
 	sprintf(mob->dummy->name,"Dummy");
 	sprintf(mob->dummy->jname,"Dummy");
@@ -4386,7 +4386,7 @@ static bool mob_read_optdrops_optslot(struct config_setting_t *optslot, int n, i
 	}
 
 	struct optdrop_group_optslot *entry = &(mob->opt_drop_groups[group_id].optslot[n]);
-	entry->options = aCalloc(count, sizeof(struct optdrop_group_option));
+	entry->options = (struct optdrop_group_option *)aCalloc(count, sizeof(struct optdrop_group_option));
 
 	int idx = 0;
 	int i = 0;
@@ -4473,7 +4473,7 @@ static bool mob_read_optdrops_db(void)
 
 	int i = 0;
 	if (groups != NULL && (count = libconfig->setting_length(groups)) > 0) {
-		mob->opt_drop_groups = aCalloc(count, sizeof(struct optdrop_group));
+		mob->opt_drop_groups = (struct optdrop_group *)aCalloc(count, sizeof(struct optdrop_group));
 		mob->opt_drop_groups_count = count; // maximum size (used by assertions)
 
 		struct config_setting_t *group = NULL;
@@ -4953,7 +4953,7 @@ static int mob_db_validate_entry(struct mob_db *entry, int n, const char *source
 
 	// Finally insert monster's data into the database.
 	if (mob->db_data[entry->mob_id] == NULL) {
-		mob->db_data[entry->mob_id] = (struct mob_db*)aMalloc(sizeof(struct mob_db));
+		mob->db_data[entry->mob_id] = (struct mob_db *)aMalloc(sizeof(struct mob_db));
 	} else {
 		//Copy over spawn data
 		memcpy(&entry->spawn, mob->db_data[entry->mob_id]->spawn, sizeof(entry->spawn));
@@ -5571,7 +5571,7 @@ static bool mob_parse_row_chatdb(char **str, const char *source, int line, int *
 	}
 
 	if (mob->chat_db[msg_id] == NULL)
-		mob->chat_db[msg_id] = (struct mob_chat*)aCalloc(1, sizeof (struct mob_chat));
+		mob->chat_db[msg_id] = (struct mob_chat *)aCalloc(1, sizeof (struct mob_chat));
 
 	ms = mob->chat_db[msg_id];
 	//MSG ID
@@ -5966,7 +5966,7 @@ static bool mob_readdb_itemratio(char *str[], int columns, int current)
 
 	dropRatio = mob->get_item_drop_ratio(nameid);
 	if (dropRatio == NULL) {
-		dropRatio = (struct item_drop_ratio*)aCalloc(1, sizeof(struct item_drop_ratio));
+		dropRatio = (struct item_drop_ratio *)aCalloc(1, sizeof(struct item_drop_ratio));
 		mob->set_item_drop_ratio(nameid, dropRatio);
 	}
 
@@ -6081,7 +6081,7 @@ static int do_init_mob(bool minimal)
 {
 	// Initialize the mob database
 	memset(mob->db_data,0,sizeof(mob->db_data)); //Clear the array
-	mob->db_data[0] = (struct mob_db*)aCalloc(1, sizeof (struct mob_db)); //This mob is used for random spawns
+	mob->db_data[0] = (struct mob_db *)aCalloc(1, sizeof (struct mob_db)); //This mob is used for random spawns
 	mob->makedummymobdb(0); //The first time this is invoked, it creates the dummy mob
 	item_drop_ers = ers_new(sizeof(struct item_drop),"mob.c::item_drop_ers",ERS_OPT_CLEAN);
 	item_drop_list_ers = ers_new(sizeof(struct item_drop_list),"mob.c::item_drop_list_ers",ERS_OPT_NONE);

@@ -164,7 +164,7 @@ static int map_freeblock(struct block_list *bl)
 
 		map->block_free[map->block_free_count] = bl;
 #ifdef SANITIZE
-		map->block_free_sanitize[map->block_free_count] = aMalloc(4);
+		map->block_free_sanitize[map->block_free_count] = (int *)aMalloc(4);
 #endif
 		bl->deleted = true;
 		map->block_free_count++;
@@ -4011,8 +4011,8 @@ static int map_readallmaps(void)
 		map->list[i].bys = (map->list[i].ys + BLOCK_SIZE - 1) / BLOCK_SIZE;
 
 		size = map->list[i].bxs * map->list[i].bys * sizeof(struct block_list*);
-		map->list[i].block = (struct block_list**)aCalloc(1, size);
-		map->list[i].block_mob = (struct block_list**)aCalloc(1, size);
+		map->list[i].block = (struct block_list **)aCalloc(1, size);
+		map->list[i].block_mob = (struct block_list **)aCalloc(1, size);
 
 		map->list[i].getcellp = map->sub_getcellp;
 		map->list[i].setcell  = map->sub_setcell;

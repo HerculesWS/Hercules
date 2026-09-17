@@ -215,7 +215,7 @@ bool translations_enter_file(const char *filepath)
 
 	p = filepath;
 	len = (int)strlen(filepath) + (int)strlen(DIRECTORYNAME) + (int)strlen(PATHSEP_STR);
-	lang_export_filepath = aCalloc(len + 4 + 1, sizeof(char)); // + ".pot"
+	lang_export_filepath = (char *)aCalloc(len + 4 + 1, sizeof(char)); // + ".pot"
 	strncat(lang_export_filepath, DIRECTORYNAME PATHSEP_STR, len);
 	lang_export_stringcount_current = 0;
 

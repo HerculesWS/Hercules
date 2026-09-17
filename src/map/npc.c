@@ -569,7 +569,7 @@ static int npc_timerevent_export(struct npc_data *nd, int i)
 		if (te == NULL)
 			te = (struct npc_timerevent_list *)aMalloc(sizeof(struct npc_timerevent_list));
 		else
-			te = (struct npc_timerevent_list *)aRealloc( te, sizeof(struct npc_timerevent_list) * (k+1) );
+			te = (struct npc_timerevent_list *)aRealloc(te, sizeof(struct npc_timerevent_list) * (k+1));
 		for (j = 0; j < k; j++) {
 			if (te[j].timer > t) {
 				memmove(te+j+1, te+j, sizeof(struct npc_timerevent_list)*(k-j));
@@ -3267,7 +3267,7 @@ static void npc_addsrcfile(const char *name)
 		file = file->next;
 	}
 
-	file = (struct npc_src_list*)aMalloc(sizeof(struct npc_src_list) + strlen(name));
+	file = (struct npc_src_list *)aMalloc(sizeof(struct npc_src_list) + strlen(name));
 	file->next = NULL;
 	safestrncpy(file->name, name, strlen(name) + 1);
 	if( file_prev == NULL )
@@ -3635,11 +3635,6 @@ static const char *npc_parse_warp(const char *w1, const char *w2, const char *w3
  */
 static const char *npc_parse_shop(const char *w1, const char *w2, const char *w3, const char *w4, const char *start, const char *buffer, const char *filepath, int *retval)
 {
-	//TODO: could be rewritten to NOT need this temp array [ultramage]
-	// We could use nd->u.shop.shop_item to store directly the items, but this could lead
-	// to unecessary memory usage by the server, using a temp dynamic array is the
-	// best way to do this without having to do multiple reallocs [Panikon]
-	struct npc_item_list *items = NULL;
 	size_t items_count = 40; // Starting items size
 
 	const char *p;
@@ -3683,7 +3678,11 @@ static const char *npc_parse_shop(const char *w1, const char *w2, const char *w3
 	else
 		type = SHOP;
 
-	items = aMalloc(sizeof(items[0])*items_count);
+	//TODO: could be rewritten to NOT need this temp array [ultramage]
+	// We could use nd->u.shop.shop_item to store directly the items, but this could lead
+	// to unecessary memory usage by the server, using a temp dynamic array is the
+	// best way to do this without having to do multiple reallocs [Panikon]
+	struct npc_item_list *items = (struct npc_item_list *)aMalloc(sizeof(items[0]) * items_count);
 
 	p = strchr(w4,',');
 	unsigned int i = 0;
@@ -3694,7 +3693,7 @@ static const char *npc_parse_shop(const char *w1, const char *w2, const char *w3
 
 		if( i == items_count-1 ) { // Grow array
 			items_count *= 2;
-			items = aRealloc(items, sizeof(items[0])*items_count);
+			items = (struct npc_item_list *)aRealloc(items, sizeof(items[0])*items_count);
 		}
 
 		if( sscanf(p, ",%d:%d", &nameid, &value) != 2 ) {
@@ -4679,7 +4678,7 @@ static const char *npc_parse_mob(const char *w1, const char *w2, const char *w3,
 	int num, class_, m,x,y,xs,ys, i,j;
 	int mob_lv = -1, ai = -1, size = -1;
 	char mapname[32], mobname[NAME_LENGTH];
-	struct spawn_data mobspawn, *data;
+	struct spawn_data mobspawn;
 	struct mob_db* db;
 
 	nullpo_retr(strchr(start,'\n'), w1);
@@ -4828,7 +4827,7 @@ static const char *npc_parse_mob(const char *w1, const char *w2, const char *w3,
 	}
 
 	//Now that all has been validated. We allocate the actual memory that the re-spawn data will use.
-	data = (struct spawn_data*)aMalloc(sizeof(struct spawn_data));
+	struct spawn_data *data = (struct spawn_data *)aMalloc(sizeof(struct spawn_data));
 	memcpy(data, &mobspawn, sizeof(struct spawn_data));
 
 	// spawn / cache the new mobs
@@ -5431,7 +5430,6 @@ static int npc_parsesrcfile(const char *filepath, bool runOnInit)
 	int16 m, x, y;
 	FILE* fp;
 	size_t len;
-	char* buffer;
 	const char* p;
 
 	nullpo_retr(EXIT_FAILURE, filepath);
@@ -5444,7 +5442,7 @@ static int npc_parsesrcfile(const char *filepath, bool runOnInit)
 	}
 	fseek(fp, 0, SEEK_END);
 	len = ftell(fp);
-	buffer = (char*)aMalloc(len+1);
+	char *buffer = (char *)aMalloc(len + 1);
 	fseek(fp, 0, SEEK_SET);
 	len = fread(buffer, sizeof(char), len, fp);
 	buffer[len] = '\0';

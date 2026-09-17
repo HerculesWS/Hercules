@@ -4116,7 +4116,7 @@ static void stack_expand(struct script_stack *stack)
 {
 	nullpo_retv(stack);
 	stack->sp_max += 64;
-	stack->stack_data = (struct script_data*)aRealloc(stack->stack_data,
+	stack->stack_data = (struct script_data *)aRealloc(stack->stack_data,
 			stack->sp_max * sizeof(stack->stack_data[0]) );
 	memset(stack->stack_data + (stack->sp_max - 64), 0,
 			64 * sizeof(stack->stack_data[0]) );
@@ -4600,7 +4600,7 @@ static void op_2str(struct script_state *st, int op, const char *s1, const char 
 		break;
 	case C_ADD:
 		{
-			char* buf = (char *)aMalloc((strlen(s1)+strlen(s2)+1)*sizeof(char));
+			char *buf = (char *)aMalloc((strlen(s1) + strlen(s2) + 1) * sizeof(char));
 			strcpy(buf, s1);
 			strcat(buf, s2);
 			script_pushstr(st, buf);
@@ -7079,7 +7079,6 @@ static BUILDIN(callfunc)
 	int i, j;
 	struct script_retinfo* ri;
 	const char* str = script_getstr(st,2);
-	struct reg_db *ref = NULL;
 
 	struct script_code *scr = (struct script_code *)strdb_get(script->userfunc_db, str);
 	if (scr == NULL) {
@@ -7088,7 +7087,7 @@ static BUILDIN(callfunc)
 		return false;
 	}
 
-	ref = (struct reg_db *)aCalloc(2, sizeof(struct reg_db));
+	struct reg_db *ref = (struct reg_db *)aCalloc(2, sizeof(struct reg_db));
 	ref[0].vars = st->stack->scope.vars;
 	if (!st->stack->scope.arrays)
 		st->stack->scope.arrays = idb_alloc(DB_OPT_BASE); // TODO: Can this happen? when?
@@ -7242,7 +7241,6 @@ static BUILDIN(callsub)
 	int i,j;
 	struct script_retinfo* ri;
 	int pos = script_getnum(st,2);
-	struct reg_db *ref = NULL;
 
 	if( !data_islabel(script_getdata(st,2)) && !data_isfunclabel(script_getdata(st,2)) )
 	{
@@ -7252,7 +7250,7 @@ static BUILDIN(callsub)
 		return false;
 	}
 
-	ref = (struct reg_db *) aCalloc(1, sizeof(struct reg_db));
+	struct reg_db *ref = (struct reg_db *)aCalloc(1, sizeof(struct reg_db));
 	ref[0].vars = st->stack->scope.vars;
 	if (!st->stack->scope.arrays)
 		st->stack->scope.arrays = idb_alloc(DB_OPT_BASE); // TODO: Can this happen? when?
@@ -7350,7 +7348,7 @@ static BUILDIN(return)
 				// npc variable
 				if( !data->ref ) {
 					// npc variable without a reference set, link to current script
-					data->ref = (struct reg_db *) aCalloc(1, sizeof(struct reg_db));
+					data->ref = (struct reg_db *)aCalloc(1, sizeof(struct reg_db));
 					script->add_pending_ref(st, data->ref);
 					data->ref->vars = st->script->local.vars;
 					if( !st->script->local.arrays )
@@ -16068,7 +16066,6 @@ static BUILDIN(getitemname)
 {
 	int item_id=0;
 	struct item_data *i_data;
-	char *item_name;
 
 	if( script_isstringtype(st, 2) ) {
 		const char *name = script_getstr(st, 2);
@@ -16084,7 +16081,7 @@ static BUILDIN(getitemname)
 		script_pushconststr(st,"null");
 		return true;
 	}
-	item_name=(char *)aMalloc(ITEM_NAME_LENGTH*sizeof(char));
+	char *item_name = (char *)aMalloc(ITEM_NAME_LENGTH * sizeof(char));
 
 	memcpy(item_name, i_data->jname, ITEM_NAME_LENGTH);
 	script_pushstr(st,item_name);
@@ -16802,7 +16799,7 @@ static BUILDIN(petskillbonus)
 		if (pd->bonus->timer != INVALID_TIMER)
 			timer->delete_(pd->bonus->timer, pet->skill_bonus_timer);
 	} else //init
-		pd->bonus = (struct pet_bonus *) aMalloc(sizeof(struct pet_bonus));
+		pd->bonus = (struct pet_bonus *)aMalloc(sizeof(struct pet_bonus));
 
 	pd->bonus->type=script_getnum(st,2);
 	pd->bonus->val=script_getnum(st,3);
@@ -17324,8 +17321,9 @@ static BUILDIN(petrecovery)
 	{ //Halt previous bonus
 		if (pd->recovery->timer != INVALID_TIMER)
 			timer->delete_(pd->recovery->timer, pet->recovery_timer);
-	} else //Init
+	} else { //Init
 		pd->recovery = (struct pet_recovery *)aMalloc(sizeof(struct pet_recovery));
+	}
 
 	pd->recovery->type = (sc_type)script_getnum(st,2);
 	pd->recovery->delay = script_getnum(st,3);
@@ -17381,7 +17379,7 @@ static BUILDIN(petskillsupport)
 		}
 	} else {
 		//init memory
-		pd->s_skill = (struct pet_skill_support *) aMalloc(sizeof(struct pet_skill_support));
+		pd->s_skill = (struct pet_skill_support *)aMalloc(sizeof(struct pet_skill_support));
 	}
 
 	pd->s_skill->id=( script_isstringtype(st,2) ? skill->name2id(script_getstr(st,2)) : script_getnum(st,2) );
@@ -19196,7 +19194,6 @@ static BUILDIN(insertchar)
 	const char *str = script_getstr(st,2);
 	const char *c = script_getstr(st,3);
 	int index = script_getnum(st,4);
-	char *output;
 	size_t len = strlen(str);
 
 	if(index < 0)
@@ -19204,7 +19201,7 @@ static BUILDIN(insertchar)
 	else if((size_t)index > len)
 		index = (int)len;
 
-	output = (char*)aMalloc(len + 2);
+	char *output = (char *)aMalloc(len + 2);
 
 	memcpy(output, str, index);
 	output[index] = c[0];
@@ -19222,17 +19219,16 @@ static BUILDIN(delchar)
 {
 	const char *str = script_getstr(st,2);
 	int index = script_getnum(st,3);
-	char *output;
 	size_t len = strlen(str);
 
 	if(index < 0 || (size_t)index > len) {
 		//return original
-		output = aStrdup(str);
+		char *output = aStrdup(str);
 		script_pushstr(st, output);
 		return true;
 	}
 
-	output = (char*)aMalloc(len);
+	char *output = (char *)aMalloc(len);
 
 	memcpy(output, str, index);
 	memcpy(&output[index], &str[index+1], len - index);
@@ -19291,10 +19287,10 @@ static BUILDIN(substr)
 
 	if(start >= 0 && (size_t)end < strlen(str) && start <= end) {
 		len = end - start + 1;
-		output = (char*)aMalloc(len + 1);
+		output = (char *)aMalloc(len + 1);
 		memcpy(output, &str[start], len);
 	} else
-		output = (char*)aMalloc(1);
+		output = (char *)aMalloc(1);
 
 	output[len] = '\0';
 
@@ -19315,7 +19311,6 @@ static BUILDIN(explode)
 	size_t len = strlen(str);
 	int i = 0, j = 0, k = 0;
 	int start;
-	char *temp = NULL;
 	const char *name;
 
 	struct map_session_data *sd = NULL;
@@ -19344,7 +19339,7 @@ static BUILDIN(explode)
 			return true;// no player attached
 	}
 
-	temp = aMalloc(len + 1);
+	char *temp = (char *)aMalloc(len + 1);
 
 	for (i = 0; str[i] != '\0'; i++) {
 		if (str[i] == delimiter && (int64)start + k < (int64)(SCRIPT_MAX_ARRAYSIZE-1)) { // FIXME[Haru]: SCRIPT_MAX_ARRAYSIZE should really be unsigned (and INT32_MAX)
@@ -19413,7 +19408,7 @@ static BUILDIN(implode)
 	if (array_size == -1) {
 		//empty array check (AmsTaff)
 		ShowWarning("script:implode: array length = 0\n");
-		output = (char*)aMalloc(sizeof(char)*5);
+		output = (char *)aMalloc(sizeof(char)*5);
 		sprintf(output,"%s","NULL");
 	} else {
 		int i;
@@ -19431,7 +19426,7 @@ static BUILDIN(implode)
 			glue_len = strlen(glue);
 			len += glue_len * (array_size);
 		}
-		output = (char*)aMalloc(len + 1);
+		output = (char *)aMalloc(len + 1);
 
 		//build output
 		for(i = 0; i < array_size; ++i) {
@@ -19968,11 +19963,8 @@ static BUILDIN(cap_value)
 
 static BUILDIN(md5)
 {
-	const char *tmpstr;
-	char *md5str;
-
-	tmpstr = script_getstr(st,2);
-	md5str = (char *)aMalloc((32+1)*sizeof(char));
+	const char *tmpstr = script_getstr(st, 2);
+	char *md5str = (char *)aMalloc((32 + 1) * sizeof(char));
 	md5->string(tmpstr, md5str);
 	script_pushstr(st, md5str);
 	return true;
@@ -20184,12 +20176,11 @@ static BUILDIN(query_logsql)
 static BUILDIN(escape_sql)
 {
 	const char *str;
-	char *esc_str;
 	size_t len;
 
 	str = script_getstr(st,2);
 	len = strlen(str);
-	esc_str = (char*)aMalloc(len*2+1);
+	char *esc_str = (char *)aMalloc(len * 2 + 1);
 	SQL->EscapeStringLen(map->mysql_handle, esc_str, str, len);
 	script_pushstr(st, esc_str);
 	return true;

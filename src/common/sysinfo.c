@@ -273,12 +273,11 @@ static bool sysinfo_svn_get_revision(char **out)
 		size_t prefix_len = strlen(prefix);
 		size_t postfix_len = strlen(postfix);
 		size_t i,j,flen;
-		char* buffer;
 
 		// read file to buffer
 		fseek(fp, 0, SEEK_END);
 		flen = ftell(fp);
-		buffer = (char*)aMalloc(flen + 1);
+		char *buffer = (char *)aMalloc(flen + 1);
 		fseek(fp, 0, SEEK_SET);
 		flen = fread(buffer, 1, flen, fp);
 		buffer[flen] = '\0';
@@ -297,7 +296,7 @@ static bool sysinfo_svn_get_revision(char **out)
 			// done
 			if (*out != NULL)
 				aFree(*out);
-			*out = aCalloc(1, 8);
+			*out = (char *)aCalloc(1, 8);
 			snprintf(*out, 8, "%d", atoi(buffer + j));
 			break;
 		}

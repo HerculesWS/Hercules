@@ -925,12 +925,11 @@ static void itemdb_read_groups(void)
 	libconfig->format_db_path(DBPATH"item_group.conf", config_filename, sizeof(config_filename));
 	const char *itname;
 	int i = 0, count = 0, c;
-	unsigned int *gsize = NULL;
 
 	if (!libconfig->load_file(&item_group_conf, config_filename))
 		return;
 
-	gsize = aMalloc( libconfig->setting_length(item_group_conf.root) * sizeof(unsigned int) );
+	unsigned int *gsize = (unsigned int *)aMalloc(libconfig->setting_length(item_group_conf.root) * sizeof(unsigned int));
 
 	for(i = 0; i < libconfig->setting_length(item_group_conf.root); i++)
 		gsize[i] = 0;
@@ -1220,7 +1219,6 @@ static void itemdb_read_packages(void)
 	libconfig->format_db_path(DBPATH"item_packages.conf", config_filename, sizeof(config_filename));
 	const char *itname;
 	int i = 0, count = 0, c = 0, highest_gcount = 0;
-	unsigned int *must = NULL, *random = NULL, *rgroup = NULL, **rgroups = NULL;
 	struct item_package_rand_entry **prev = NULL;
 
 	if( HCache->check(config_filename) ) {
@@ -1231,10 +1229,10 @@ static void itemdb_read_packages(void)
 	if (!libconfig->load_file(&item_packages_conf, config_filename))
 		return;
 
-	must = aMalloc( libconfig->setting_length(item_packages_conf.root) * sizeof(unsigned int) );
-	random = aMalloc( libconfig->setting_length(item_packages_conf.root) * sizeof(unsigned int) );
-	rgroup = aMalloc( libconfig->setting_length(item_packages_conf.root) * sizeof(unsigned int) );
-	rgroups = aMalloc( libconfig->setting_length(item_packages_conf.root) * sizeof(unsigned int *) );
+	unsigned int *must = (unsigned int *)aMalloc(libconfig->setting_length(item_packages_conf.root) * sizeof(unsigned int));
+	unsigned int *random = (unsigned int *)aMalloc(libconfig->setting_length(item_packages_conf.root) * sizeof(unsigned int));
+	unsigned int *rgroup = (unsigned int *)aMalloc(libconfig->setting_length(item_packages_conf.root) * sizeof(unsigned int));
+	unsigned int **rgroups = (unsigned int **)aMalloc(libconfig->setting_length(item_packages_conf.root) * sizeof(unsigned int *));
 
 	for(i = 0; i < libconfig->setting_length(item_packages_conf.root); i++) {
 		must[i] = 0;
@@ -1283,7 +1281,7 @@ static void itemdb_read_packages(void)
 	}
 
 	for(i = 0; i < libconfig->setting_length(item_packages_conf.root); i++ ) {
-		rgroups[i] = aMalloc( rgroup[i] * sizeof(unsigned int) );
+		rgroups[i] = (unsigned int *)aMalloc(rgroup[i] * sizeof(unsigned int));
 		for( c = 0; (unsigned int)c < rgroup[i]; c++ ) {
 			rgroups[i][c] = 0;
 		}
@@ -2542,7 +2540,7 @@ static bool itemdb_read_libconfig_lapineddukddak_sub(struct config_setting_t *it
 		return false;
 	}
 
-	data->lapineddukddak = aCalloc(1, sizeof(struct item_lapineddukddak));
+	data->lapineddukddak = (struct item_lapineddukddak *)aCalloc(1, sizeof(struct item_lapineddukddak));
 	if (libconfig->setting_lookup_int(it, "NeedCount", &i32) == CONFIG_TRUE)
 		data->lapineddukddak->NeedCount = (int16)i32;
 
@@ -2635,7 +2633,7 @@ static bool itemdb_read_libconfig_lapineupgrade_sub(struct config_setting_t *it,
 		return false;
 	}
 
-	data->lapineupgrade = aCalloc(1, sizeof(struct item_lapineupgrade));
+	data->lapineupgrade = (struct item_lapineupgrade *)aCalloc(1, sizeof(struct item_lapineupgrade));
 
 	if (libconfig->setting_lookup_int(it, "NeedRefineMin", &i32) == CONFIG_TRUE)
 		data->lapineupgrade->NeedRefineMin = (int8)i32;
@@ -2751,7 +2749,7 @@ static bool itemdb_read_libconfig_item_reform_info_sub(struct config_setting_t *
 		return false;
 
 	/* Allocate memory and copy contents */
-	struct item_reform *s_ir = aCalloc(1, sizeof(struct item_reform));
+	struct item_reform *s_ir = (struct item_reform *)aCalloc(1, sizeof(struct item_reform));
 	*s_ir = ir;
 
 	/* Store ptr in the database */
