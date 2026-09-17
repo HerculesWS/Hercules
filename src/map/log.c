@@ -523,7 +523,7 @@ static void log_set_defaults(void)
 	memset(&logs->config, 0, sizeof(logs->config));
 
 	//map_log default values
-	logs->config.enable_logs = 0xFFFFF;
+	logs->config.enable_logs = LOG_TYPE_ALL;
 	logs->config.commands = true;
 
 	//map_log/database default values
