@@ -532,7 +532,7 @@ static const struct login_packet_db *lclif_packet(int16 packet_id)
 /// @copydoc lclif_interface::parse_packet()
 static enum parsefunc_rcode lclif_parse_packet(const struct login_packet_db *lpd, int fd, struct login_session_data *sd)
 {
-	int result;
+	enum parsefunc_rcode result;
 	result = (*lpd->pFunc)(fd, sd);
 	RFIFOSKIP(fd, (lpd->len == -1) ? RFIFOW(fd, 2) : lpd->len);
 	return result;

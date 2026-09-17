@@ -1142,7 +1142,7 @@ static int party_share_loot(struct party_data *p, struct map_session_data *sd, s
 			return i;
 	}
 
-	if( p && battle_config.party_show_share_picker && battle_config.show_picker_item_type&(1<<itemdb_type(item_data->nameid)) )
+	if (p && battle_config.party_show_share_picker && battle_config.show_picker_item_type & (1u << (unsigned int)itemdb_type(item_data->nameid)))
 		clif->party_show_picker(target, item_data);
 
 	return 0;

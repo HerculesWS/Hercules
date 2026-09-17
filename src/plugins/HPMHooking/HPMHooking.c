@@ -290,7 +290,7 @@ void HPM_HP_load(void) {
 
 	memset(&HPMHooks,0,sizeof(struct HPMHooksCore));
 
-	hp_db = strdb_alloc(DB_OPT_BASE|DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, HookingPointsLenMax);
+	hp_db = strdb_alloc((enum DBOptions)(DB_OPT_BASE | DB_OPT_DUP_KEY | DB_OPT_RELEASE_DATA), HookingPointsLenMax);
 
 	for(i = 0; i < len; i++) {
 		struct HookingPointData *hpd = NULL;

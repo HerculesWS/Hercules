@@ -108,7 +108,7 @@ static void refine_refinery_refine_request(struct map_session_data *sd, int item
 	if (pc->payzeny(sd, req->req[i].cost, LOG_TYPE_REFINE, NULL) != 0)
 		return;
 
-	int refine_chance = refine->get_refine_chance(weapon_level, refine_level, req->req[i].type);
+	int refine_chance = refine->get_refine_chance((enum refine_type)weapon_level, refine_level, req->req[i].type);
 	if (rnd() % 100 >= refine_chance) {
 		clif->misceffect(&sd->bl, 2);
 
@@ -317,7 +317,7 @@ static bool refine_readdb_refinery_ui_settings_items(const struct config_setting
 	}
 
 	req->req[req->req_count].nameid = itd->nameid;
-	req->req[req->req_count].type = type;
+	req->req[req->req_count].type = (enum refine_chance_type)type;
 	req->req[req->req_count].cost = cost;
 	req->req[req->req_count].failure_behavior = behavior;
 	req->req_count++;

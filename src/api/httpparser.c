@@ -148,7 +148,7 @@ static int handler_on_url(HTTP_PARSER *parser, const char *at, size_t length)
 	if (sockt->session[fd]->flag.eof)
 		return 0;
 
-	aclif->set_url(fd, parser->method, at, length);
+	aclif->set_url(fd, (http_method)parser->method, at, length);
 
 #ifdef DEBUG_LOG
 	ShowInfo("Url: %d: %.*s\n", parser->method, (int)length, at);
@@ -350,13 +350,13 @@ static int handler_on_multi_body_end(struct multipartparser *parser)
 static const char *httpparser_get_method_str(struct api_session_data *sd)
 {
 	nullpo_retr(NULL, sd);
-	return http_method_str(sd->parser.method);
+	return http_method_str((http_method)sd->parser.method);
 }
 
 static http_method httpparser_get_method(struct api_session_data *sd)
 {
-	nullpo_retr(0, sd);
-	return sd->parser.method;
+	nullpo_retr((http_method)0, sd);
+	return (http_method)sd->parser.method;
 }
 
 static bool httpparser_parse_real(int fd, struct api_session_data *sd, const char *data, size_t data_size)
@@ -459,9 +459,9 @@ static bool httpparser_parse(int fd)
 static void httpparser_show_error(int fd, struct api_session_data *sd)
 {
 #ifdef USE_HTTP_PARSER
-	ShowError("http parser error %d: %d, %s, %s\n", fd, sd->parser.http_errno, http_errno_name(sd->parser.http_errno), http_errno_description(sd->parser.http_errno));
+	ShowError("http parser error %d: %d, %s, %s\n", fd, sd->parser.http_errno, http_errno_name((enum http_errno)sd->parser.http_errno), http_errno_description((enum http_errno)sd->parser.http_errno));
 #else  // USE_HTTP_PARSER
-	ShowError("http parser error %d: %d, %s, %s\n", fd, sd->parser.error, http_errno_name(sd->parser.error), sd->parser.reason);
+	ShowError("http parser error %d: %d, %s, %s\n", fd, sd->parser.error, http_errno_name((llhttp_errno)sd->parser.error), sd->parser.reason);
 #endif  // USE_HTTP_PARSER
 }
 

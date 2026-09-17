@@ -445,7 +445,7 @@ static int quest_check(struct map_session_data *sd, int quest_id, enum quest_che
 			}
 			return 0;
 		default:
-			ShowError("quest_check_quest: Unknown parameter %u", type);
+			ShowError("quest_check_quest: Unknown parameter %u", (unsigned int)type);
 			break;
 	}
 
@@ -986,7 +986,7 @@ static bool quest_questinfo_validate_homunculus_type(struct map_session_data *sd
 		return false;
 	if (!homun_alive(sd->hd))
 		return false;
-	if (homun->class2type(sd->hd->homunculus.class_) != qi->homunculus_type)
+	if (homun->class2type((enum homun_id)sd->hd->homunculus.class_) != qi->homunculus_type)
 		return false;
 	return true;
 }

@@ -2749,11 +2749,11 @@ ACMD(param)
 
 	if (new_value != *stats[i]) {
 		*stats[i] = new_value;
-		clif->updatestatus(sd, SP_STR + i);
-		clif->updatestatus(sd, SP_USTR + i);
+		clif->updatestatus(sd, (enum status_point_types)(SP_STR + i));
+		clif->updatestatus(sd, (enum status_point_types)(SP_USTR + i));
 		status_calc_pc(sd, SCO_FORCE);
 		clif->message(fd, msg_fd(fd, MSGTBL_STAT_CHANGED)); // Stat changed.
-		achievement->validate_stats(sd, SP_STR + i, new_value); // Achievements [Smokexyz/Hercules]
+		achievement->validate_stats(sd, (enum status_point_types)(SP_STR + i), new_value); // Achievements [Smokexyz/Hercules]
 	} else {
 		if (value < 0)
 			clif->message(fd, msg_fd(fd, MSGTBL_UNABLE_TO_DECREASE_VALUE)); // Unable to decrease the number/value.
@@ -2802,8 +2802,8 @@ ACMD(stat_all)
 
 		if (new_value != (int)*stats[index]) {
 			*stats[index] = new_value;
-			clif->updatestatus(sd, SP_STR + index);
-			clif->updatestatus(sd, SP_USTR + index);
+			clif->updatestatus(sd, (enum status_point_types)(SP_STR + index));
+			clif->updatestatus(sd, (enum status_point_types)(SP_USTR + index));
 			count++;
 		}
 	}
@@ -6480,7 +6480,7 @@ ACMD(autoloottype)
 				clif->message(fd, msg_fd(fd, MSGTBL_AUTOLOOT_TYPE_LIST)); // Item types on your autoloottype list:
 				for(i=0; i < IT_MAX; i++) {
 					if (sd->state.autoloottype&(1<<i)) {
-						snprintf(atcmd_output, sizeof(atcmd_output), " '%s'", itemdb->typename(i));
+						snprintf(atcmd_output, sizeof(atcmd_output), " '%s'", itemdb->typename((enum item_types)i));
 						clif->message(fd, atcmd_output);
 					}
 				}
@@ -6833,7 +6833,7 @@ ACMD(pettalk)
 			}
 			sd->emotionlasttime = time(NULL);
 
-			clif->emotion(&pd->bl, i);
+			clif->emotion(&pd->bl, (enum emotion_type)i);
 			return true;
 		}
 	}
@@ -7491,7 +7491,7 @@ ACMD(homlevel)
 
 	hd = sd->hd;
 
-	if ((htype = homun->class2type(hd->homunculus.class_)) == HT_INVALID) {
+	if ((htype = homun->class2type((enum homun_id)hd->homunculus.class_)) == HT_INVALID) {
 		ShowError("atcommand_homlevel: invalid homun class %d (player %s)\n", hd->homunculus.class_,sd->status.name);
 		return false;
 	}
@@ -7547,8 +7547,8 @@ ACMD(hommutate)
 		homun_id = atoi(message);
 	}
 
-	m_class = homun->class2type(sd->hd->homunculus.class_);
-	m_id    = homun->class2type(homun_id);
+	m_class = homun->class2type((enum homun_id)sd->hd->homunculus.class_);
+	m_id    = homun->class2type((enum homun_id)homun_id);
 
 	if (m_class == HT_EVO && m_id == HT_S && sd->hd->homunculus.level >= 99) {
 		homun->mutate(sd->hd, homun_id);
@@ -7835,7 +7835,7 @@ ACMD(iteminfo)
 
 			snprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, MSGTBL_ITEMINFO_DETAILS), // Item: '%s'/'%s' (%d) Type: %s | Extra Effect: %s
 				item_data->name, StrBuf->Value(&buf), item_data->nameid,
-				itemdb->typename(item_data->type),
+				itemdb->typename((enum item_types)item_data->type),
 				(item_data->script == NULL) ? msg_fd(fd, MSGTBL_ITEMINFO_NONE) : msg_fd(fd, MSGTBL_ITEMINFO_WITH_SCRIPT) // None / With script
 			);
 			StrBuf->Clear(&buf);
@@ -10287,7 +10287,7 @@ ACMD(costume)
 		"Summer2",
 #endif
 	};
-	const int name2id[] = {
+	const enum sc_type name2id[] = {
 		SC_WEDDING,
 		SC_XMAS,
 		SC_SUMMER,
@@ -11562,9 +11562,9 @@ static void atcommand_doload(void)
 	if( core->runflag >= MAPSERVER_ST_RUNNING )
 		atcommand->cmd_db_clear();
 	if( atcommand->db == NULL )
-		atcommand->db = stridb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, ATCOMMAND_LENGTH);
+		atcommand->db = stridb_alloc((enum DBOptions)(DB_OPT_DUP_KEY | DB_OPT_RELEASE_DATA), ATCOMMAND_LENGTH);
 	if( atcommand->alias_db == NULL )
-		atcommand->alias_db = stridb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, ATCOMMAND_LENGTH);
+		atcommand->alias_db = stridb_alloc((enum DBOptions)(DB_OPT_DUP_KEY | DB_OPT_RELEASE_DATA), ATCOMMAND_LENGTH);
 	atcommand->base_commands(); //fills initial atcommand_db with known commands
 	atcommand->config_read(map->ATCOMMAND_CONF_FILENAME);
 }

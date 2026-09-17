@@ -199,7 +199,7 @@ static int status_set_hp(struct block_list *bl, unsigned int hp, enum status_hea
 	if (hp > st->max_hp) hp = st->max_hp;
 	if (hp == st->hp) return 0;
 	if (hp > st->hp)
-		return status->heal(bl, hp - st->hp, 0, STATUS_HEAL_FORCED | flag);
+		return status->heal(bl, hp - st->hp, 0, (enum status_heal_flag)(STATUS_HEAL_FORCED | flag));
 	return status_zap(bl, st->hp - hp, 0);
 }
 
@@ -222,7 +222,7 @@ static int status_set_sp(struct block_list *bl, unsigned int sp, enum status_hea
 	if (sp > st->max_sp) sp = st->max_sp;
 	if (sp == st->sp) return 0;
 	if (sp > st->sp)
-		return status->heal(bl, 0, sp - st->sp, STATUS_HEAL_FORCED | flag);
+		return status->heal(bl, 0, sp - st->sp, (enum status_heal_flag)(STATUS_HEAL_FORCED | flag));
 	return status_zap(bl, 0, st->sp - sp);
 }
 
@@ -535,7 +535,7 @@ static int status_heal(struct block_list *bl, int64 in_hp, int64 in_sp, enum sta
 	if (hp != 0) {
 		if (sc && sc->data[SC_BERSERK] != NULL) {
 			if ((flag & STATUS_HEAL_FORCED) != 0)
-				flag &= ~STATUS_HEAL_SHOWEFFECT;
+				flag = (enum status_heal_flag)(flag & ~STATUS_HEAL_SHOWEFFECT);
 			else
 				hp = 0;
 		}
@@ -1618,18 +1618,18 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 				r = 0;
 
 			if (r)
-				wa->atk2 = refine->get_bonus(wlv, r) / 100;
+				wa->atk2 = refine->get_bonus((enum refine_type)wlv, r) / 100;
 
 #ifdef RENEWAL
 			wa->matk += sd->inventory_data[index]->matk;
 			wa->wlv = wlv;
 			if( r && sd->weapontype1 != W_BOW ) // renewal magic attack refine bonus
-				wa->matk += refine->get_bonus(wlv, r) / 100;
+				wa->matk += refine->get_bonus((enum refine_type)wlv, r) / 100;
 #endif
 
 			//Overrefined bonus.
 			if (r)
-				wd->overrefine = refine->get_randombonus_max(wlv, r) / 100;
+				wd->overrefine = refine->get_randombonus_max((enum refine_type)wlv, r) / 100;
 
 			wa->range += sd->inventory_data[index]->range;
 			if(sd->inventory_data[index]->script) {
@@ -3064,60 +3064,57 @@ static void status_calc_bl_main(struct block_list *bl, e_scb_flag flag)
 
 	if(flag&SCB_STR) {
 		st->str = status->calc_str(bl, sc, bst->str);
-		flag|=SCB_BATK;
+		flag = (e_scb_flag)(flag | SCB_BATK);
 		if( bl->type&BL_HOM )
-			flag |= SCB_WATK;
+			flag = (e_scb_flag)(flag | SCB_WATK);
 	}
 
 	if(flag&SCB_AGI) {
 		st->agi = status->calc_agi(bl, sc, bst->agi);
-		flag|=SCB_FLEE
+		flag = (e_scb_flag)(flag | SCB_FLEE);
 #ifdef RENEWAL
-			|SCB_DEF2
+		flag = (e_scb_flag)(flag | SCB_DEF2);
 #endif
-			;
 		if( bl->type&(BL_PC|BL_HOM) )
-			flag |= SCB_ASPD|SCB_DSPD;
+			flag = (e_scb_flag)(flag | SCB_ASPD | SCB_DSPD);
 	}
 
 	if(flag&SCB_VIT) {
 		st->vit = status->calc_vit(bl, sc, bst->vit);
-		flag|=SCB_DEF2|SCB_MDEF2;
+		flag = (e_scb_flag)(flag | SCB_DEF2 | SCB_MDEF2);
 		if( bl->type&(BL_PC|BL_HOM|BL_MER|BL_ELEM) )
-			flag |= SCB_MAXHP;
+			flag = (e_scb_flag)(flag | SCB_MAXHP);
 		if( bl->type&BL_HOM )
-			flag |= SCB_DEF;
+			flag = (e_scb_flag)(flag | SCB_DEF);
 	}
 
 	if(flag&SCB_INT) {
 		st->int_ = status->calc_int(bl, sc, bst->int_);
-		flag|=SCB_MATK|SCB_MDEF2;
+		flag = (e_scb_flag)(flag | SCB_MATK | SCB_MDEF2);
 		if( bl->type&(BL_PC|BL_HOM|BL_MER|BL_ELEM) )
-			flag |= SCB_MAXSP;
+			flag = (e_scb_flag)(flag | SCB_MAXSP);
 		if( bl->type&BL_HOM )
-			flag |= SCB_MDEF;
+			flag = (e_scb_flag)(flag | SCB_MDEF);
 	}
 
 	if(flag&SCB_DEX) {
 		st->dex = status->calc_dex(bl, sc, bst->dex);
-		flag|=SCB_BATK|SCB_HIT
+		flag = (e_scb_flag)(flag | SCB_BATK | SCB_HIT);
 #ifdef RENEWAL
-			|SCB_MATK|SCB_MDEF2
+		flag = (e_scb_flag)(flag | SCB_MATK | SCB_MDEF2);
 #endif
-			;
 		if( bl->type&(BL_PC|BL_HOM) )
-			flag |= SCB_ASPD;
+			flag = (e_scb_flag)(flag | SCB_ASPD);
 		if( bl->type&BL_HOM )
-			flag |= SCB_WATK;
+			flag = (e_scb_flag)(flag | SCB_WATK);
 	}
 
 	if(flag&SCB_LUK) {
 		st->luk = status->calc_luk(bl, sc, bst->luk);
-		flag|=SCB_BATK|SCB_CRI|SCB_FLEE2
+		flag = (e_scb_flag)(flag | SCB_BATK | SCB_CRI | SCB_FLEE2);
 #ifdef RENEWAL
-			|SCB_MATK|SCB_HIT|SCB_FLEE
+		flag = (e_scb_flag)(flag | SCB_MATK | SCB_HIT | SCB_FLEE);
 #endif
-			;
 	}
 
 	if ((flag & SCB_ATK_PERC) != 0)
@@ -3131,7 +3128,7 @@ static void status_calc_bl_main(struct block_list *bl, e_scb_flag flag)
 
 	if ((flag & SCB_MDEF_PERC) != 0) {
 		st->mdef_percent = status->calc_mdef_percent(bl, sc);
-		flag |= SCB_MDEF2;
+		flag = (e_scb_flag)(flag | SCB_MDEF2);
 	}
 
 	if (flag & SCB_BATK) {
@@ -8204,7 +8201,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				total_tick = val4; //Petrifying time.
 				if(val4 > 500) // not with WL_SIENNAEXECRATE
 					total_tick = max(total_tick, 1000); //Min time
-				calc_flag = 0; //Actual status changes take effect on petrified state.
+				calc_flag = SCB_NONE; //Actual status changes take effect on petrified state.
 				break;
 
 			case SC_DPOISON:
@@ -8870,7 +8867,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 					if (ele == SC_NONE)
 						break;
 
-					clif->status_change(bl, status->get_sc_icon(ele), status->get_sc_relevant_bl_types(ele), 1, total_tick, 0, 0, 0);
+					clif->status_change(bl, status->get_sc_icon((enum sc_type)ele), status->get_sc_relevant_bl_types((enum sc_type)ele), 1, total_tick, 0, 0, 0);
 					break;
 				// case SC_ARMOR_RESIST:
 				// Mod your resistance against elements:
@@ -10031,7 +10028,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			val4 = vd->cloth_color;
 			clif->changelook(bl,LOOK_CLOTHES_COLOR,0);
 		}
-		calc_flag&=~SCB_DYE;
+		calc_flag = (e_scb_flag)(calc_flag & ~SCB_DYE);
 	}
 
 #if 0 //Currently No SC's use this
@@ -10928,7 +10925,7 @@ static bool status_end_sc_before_start(struct block_list *bl, struct status_data
 	case SC_ASSNCROS:
 	case SC_POEMBRAGI:
 	case SC_APPLEIDUN: {
-		int group_scs[] = { SC_WHISTLE, SC_ASSNCROS, SC_POEMBRAGI, SC_APPLEIDUN };
+		enum sc_type group_scs[] = { SC_WHISTLE, SC_ASSNCROS, SC_POEMBRAGI, SC_APPLEIDUN };
 
 		for (int i = 0; i < ARRAYLENGTH(group_scs); ++i) {
 			if (type != group_scs[i])
@@ -10942,7 +10939,7 @@ static bool status_end_sc_before_start(struct block_list *bl, struct status_data
 	case SC_FORTUNE:
 	// case SC_DONTFORGETME: // Independently checked above
 	case SC_SERVICEFORYOU: {
-		int group_scs[] = { SC_HUMMING, SC_FORTUNE, SC_SERVICEFORYOU, SC_DONTFORGETME };
+		enum sc_type group_scs[] = { SC_HUMMING, SC_FORTUNE, SC_SERVICEFORYOU, SC_DONTFORGETME };
 
 		for (int i = 0; i < ARRAYLENGTH(group_scs); ++i) {
 			if (type != group_scs[i])
@@ -10959,7 +10956,7 @@ static bool status_end_sc_before_start(struct block_list *bl, struct status_data
 	case SC_NIBELUNGEN:
 	case SC_RICHMANKIM:
 	case SC_INTOABYSS: {
-		int group_scs[] = {
+		enum sc_type group_scs[] = {
 			SC_ROKISWEIL, SC_ETERNALCHAOS, SC_SIEGFRIED, SC_DRUMBATTLE,
 			SC_NIBELUNGEN, SC_RICHMANKIM, SC_INTOABYSS,
 		};
@@ -11234,7 +11231,7 @@ static int status_change_clear(struct block_list *bl, int type)
 			continue;
 
 		if(type == 0){
-			if( status->get_sc_type(i)&SC_NO_REM_DEATH ) {
+			if( status->get_sc_type((enum sc_type)i)&SC_NO_REM_DEATH ) {
 				switch (i) {
 					case SC_ARMOR_PROPERTY://Only when its Holy or Dark that it doesn't dispell on death
 						if( sc->data[i]->val2 != ELE_HOLY && sc->data[i]->val2 != ELE_DARK )
@@ -11245,7 +11242,7 @@ static int status_change_clear(struct block_list *bl, int type)
 				}
 			}
 		}
-		if( type == 3 && status->get_sc_type(i)&SC_NO_CLEAR )
+		if( type == 3 && status->get_sc_type((enum sc_type)i)&SC_NO_CLEAR )
 			continue;
 
 		status_change_end(bl, (sc_type)i, INVALID_TIMER);
@@ -12254,14 +12251,14 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 	if (calc_flag&SCB_DYE) { //Restore DYE color
 		if (vd && !vd->cloth_color && sce->val4)
 			clif->changelook(bl,LOOK_CLOTHES_COLOR,sce->val4);
-		calc_flag&=~SCB_DYE;
+		calc_flag = (e_scb_flag)(calc_flag & ~SCB_DYE);
 	}
 
 #if 0 // Currently No SC's use this
 	if (calc_flag&SCB_BODY) { // Restore Body color
 		if (vd && !vd->body_style && sce->val4)
 			clif->changelook(bl,LOOK_BODY2,sce->val4);
-		calc_flag&=~SCB_BODY;
+		calc_flag = (e_scb_flag)(calc_flag & ~SCB_BODY);
 	}
 #endif
 
@@ -12997,7 +12994,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 
 		case SC_SONG_OF_MANA:
 			if( --(sce->val4) >= 0 ) {
-				status->heal(bl, 0, sce->val3, STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT);
+				status->heal(bl, 0, sce->val3, (enum status_heal_flag)(STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT));
 				sc_timer_next(5000 + tick, status->change_timer, bl->id, data);
 				return 0;
 			}
@@ -13234,7 +13231,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 			break;
 		case SC_FRESHSHRIMP:
 			if (--(sce->val4) >= 0) {
-				status_heal(bl, st->max_hp / 100, 0, 2);
+				status_heal(bl, st->max_hp / 100, 0, STATUS_HEAL_SHOWEFFECT);
 				sc_timer_next((10000 - ((sce->val1 - 1) * 1000)) + tick, status->change_timer, bl->id, data);
 			}
 			break;
@@ -13246,7 +13243,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 			}
 			break;
 		case SC_WATER_SCREEN_OPTION:
-			status_heal(bl, 1000, 0, 2);
+			status_heal(bl, 1000, 0, STATUS_HEAL_SHOWEFFECT);
 			sc_timer_next(10000 + tick, status->change_timer, bl->id, data);
 			return 0;
 		case SC_CRIMSON_MARKER:
@@ -13296,7 +13293,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 				if (!src || status->isdead(src) || src->m != bl->m || !check_distance_bl(bl, src, 11))
 					break;
 
-				status->heal(bl, 150 * sce->val1, 0, 2);
+				status->heal(bl, 150 * sce->val1, 0, STATUS_HEAL_SHOWEFFECT);
 				sc_timer_next(3000 + tick, status->change_timer, bl->id, data);
 				return 0;
 			}
@@ -13448,7 +13445,7 @@ static int status_get_weapon_atk(struct block_list *bl, struct weapon_atk *watk,
 		short index = sd->equip_index[EQI_HAND_R], refine_level;
 		if ( index >= 0 && sd->inventory_data[index] && sd->inventory_data[index]->type == IT_WEAPON
 			&& (refine_level = sd->status.inventory[index].refine) < 16 && refine_level) {
-			int r = refine->get_randombonus_max(watk->wlv, refine_level + (4 - watk->wlv) + 1) / 100;
+			int r = refine->get_randombonus_max((enum refine_type)watk->wlv, refine_level + (4 - watk->wlv) + 1) / 100;
 			if ( r )
 				max += (rnd() % 100) % r + 1;
 		}
@@ -13572,7 +13569,7 @@ static void status_get_matk_sub(struct block_list *bl, int flag, unsigned short 
 		short index = sd->equip_index[EQI_HAND_R], refine_level;
 		if ( index >= 0 && sd->inventory_data[index] && sd->inventory_data[index]->type == IT_WEAPON
 			&& (refine_level = sd->status.inventory[index].refine) < 16 && refine_level) {
-			int r = refine->get_randombonus_max(sd->inventory_data[index]->wlv, refine_level + (4 - sd->inventory_data[index]->wlv) + 1) / 100;
+			int r = refine->get_randombonus_max((enum refine_type)sd->inventory_data[index]->wlv, refine_level + (4 - sd->inventory_data[index]->wlv) + 1) / 100;
 			if ( r )
 				*matk_max += (rnd() % 100) % r + 1;
 		}
@@ -13689,16 +13686,16 @@ static int status_change_clear_buffs(struct block_list *bl, int type)
 			status_change_end(bl, (sc_type)i, INVALID_TIMER);
 
 	for( i = SC_COMMON_MAX+1; i < SC_MAX; i++ ) {
-		if( !sc->data[i] || !status->get_sc_type(i) )
+		if( !sc->data[i] || !status->get_sc_type((enum sc_type)i) )
 			continue;
 
-		if( type&3 && !(status->get_sc_type(i)&SC_BUFF) && !(status->get_sc_type(i)&SC_DEBUFF) )
+		if( type&3 && !(status->get_sc_type((enum sc_type)i)&SC_BUFF) && !(status->get_sc_type((enum sc_type)i)&SC_DEBUFF) )
 			continue;
 
 		if( type < 3 ) {
-			if( type&1 && !(status->get_sc_type(i)&SC_BUFF) )
+			if( type&1 && !(status->get_sc_type((enum sc_type)i)&SC_BUFF) )
 				continue;
-			if( type&2 && !(status->get_sc_type(i)&SC_DEBUFF) )
+			if( type&2 && !(status->get_sc_type((enum sc_type)i)&SC_DEBUFF) )
 				continue;
 		}
 		PRAGMA_GCC46(GCC diagnostic push)
@@ -13892,7 +13889,7 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 
 			while (sregen->tick.hp >= tick) {
 				sregen->tick.hp -= tick;
-				if (status->heal(bl, sregen->hp, 0, STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT) < sregen->hp) { // Full
+				if (status->heal(bl, sregen->hp, 0, (enum status_heal_flag)(STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT)) < sregen->hp) { // Full
 					flag &= ~(RGN_HP | RGN_SHP);
 					break;
 				}
@@ -13925,7 +13922,7 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 					}
 				}
 
-				if (status->heal(bl, 0, sregen->sp, STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT) < sregen->sp) { // Full
+				if (status->heal(bl, 0, sregen->sp, (enum status_heal_flag)(STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT)) < sregen->sp) { // Full
 					flag &= ~(RGN_SP | RGN_SSP);
 					break;
 				}
@@ -14047,7 +14044,7 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 
 		while (sregen->tick.hp >= tick) {
 			sregen->tick.hp -= tick;
-			if (status->heal(bl, sregen->hp, 0, STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT) < sregen->hp) // Full
+			if (status->heal(bl, sregen->hp, 0, (enum status_heal_flag)(STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT)) < sregen->hp) // Full
 				break;
 		}
 	}
@@ -14066,7 +14063,7 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 			}
 
 			sregen->tick.sp -= tick;
-			if (status->heal(bl, 0, heal_val, STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT) < heal_val)  //Full
+			if (status->heal(bl, 0, heal_val, (enum status_heal_flag)(STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT)) < heal_val)  //Full
 				break;
 		}
 	}
@@ -14578,9 +14575,9 @@ static bool status_read_scdb_libconfig_sub_flag(struct config_setting_t *it, int
 				ShowWarning("status_read_scdb_libconfig_sub_flag: flag (%s) for status effect (%d) is casesensitive, correct it to (%s).", flag, type, flags[i].name);
 			}
 			if (on) {
-				status->dbs->sc_conf[type] |= flags[j].value;
+				status->dbs->sc_conf[type] = (enum sc_conf_type)(status->dbs->sc_conf[type] | flags[j].value);
 			} else {
-				status->dbs->sc_conf[type] &= ~flags[j].value;
+				status->dbs->sc_conf[type] = (enum sc_conf_type)(status->dbs->sc_conf[type] & ~flags[j].value);
 			}
 		} else {
 			if (!status->read_scdb_libconfig_sub_flag_additional(it, type, source))
@@ -14652,9 +14649,9 @@ static bool status_read_scdb_libconfig_sub_calcflag(struct config_setting_t *it,
 				ShowWarning("status_read_scdb_libconfig_sub_calcflag: flag (%s) for status effect (%d) is casesensitive, correct it to (%s).", flag, type, flags[i].name);
 			}
 			if (on) {
-				status->dbs->ChangeFlagTable[type] |= flags[j].value;
+				status->dbs->ChangeFlagTable[type] = (e_scb_flag)(status->dbs->ChangeFlagTable[type] | flags[j].value);
 			} else {
-				status->dbs->ChangeFlagTable[type] &= ~flags[j].value;
+				status->dbs->ChangeFlagTable[type] = (e_scb_flag)(status->dbs->ChangeFlagTable[type] & ~flags[j].value);
 			}
 		} else {
 			if (!status->read_scdb_libconfig_sub_calcflag_additional(it, type, source))

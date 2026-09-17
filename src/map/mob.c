@@ -649,7 +649,7 @@ static int mob_once_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y
 		int mob_id = class_;
 
 		if (mob_id < 0) {
-			mob_id = mob->get_random_id(-class_ - 1, (battle_config.random_monster_checklv == 1) ? 3 : 1,
+			mob_id = mob->get_random_id((enum mob_groups)(-class_ - 1), (battle_config.random_monster_checklv == 1) ? 3 : 1,
 						    (sd != NULL) ? sd->status.base_level : 255);
 		}
 
@@ -840,7 +840,7 @@ static int mob_spawn_guardian(const char *mapname, short x, short y, const char 
 		return 0;
 	}
 
-	if (class_ <= 0 && (class_ = mob->get_random_id(-class_ - 1, 1, 99)) == 0)
+	if (class_ <= 0 && (class_ = mob->get_random_id((enum mob_groups)(-class_ - 1), 1, 99)) == 0) // FIXME: This should be class_ < 0, not <=
 		return 0;
 
 	if (!has_index) {
@@ -955,7 +955,7 @@ static int mob_spawn_bg(const char *mapname, short x, short y, const char *mobna
 		return 0;
 	}
 
-	if (class_ <= 0 && (class_ = mob->get_random_id(-class_ - 1, 1, 99)) == 0)
+	if (class_ <= 0 && (class_ = mob->get_random_id((enum mob_groups)(-class_ - 1), 1, 99)) == 0) // FIXME: This should be class_ < 0, not <=
 		return 0;
 
 	struct spawn_data data;
@@ -1170,7 +1170,7 @@ static int mob_spawn(struct mob_data *md)
 	md->move_fail_count = 0;
 	md->ud.state.attack_continue = 0;
 	md->ud.target_to = 0;
-	md->ud.dir = 0;
+	md->ud.dir = UNIT_DIR_NORTH;
 	if( md->spawn_timer != INVALID_TIMER )
 	{
 		timer->delete_(md->spawn_timer, mob->delayspawn);
@@ -2997,7 +2997,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 
 		if( sd ) {
 			if( sd->mission_mobid == md->class_) { //TK_MISSION [Skotlex]
-				if (++sd->mission_count >= 100 && (temp = mob->get_random_id(0, 0xE, sd->status.base_level)) != 0) {
+				if (++sd->mission_count >= 100 && (temp = mob->get_random_id(MOBG_DEAD_BRANCH, 0xE, sd->status.base_level)) != 0) {
 					pc->addfame(sd, RANKTYPE_TAEKWON, 1);
 					sd->mission_mobid = temp;
 					pc_setglobalreg(sd,script->add_variable("TK_MISSION_ID"), temp);
@@ -5497,7 +5497,7 @@ static bool mob_read_group_db_libconfig_sub(struct config_setting_t *it, const c
 		return false;
 	}
 
-	if (!mob->read_group_db_libconfig_sub_group(it, group_id, source))
+	if (!mob->read_group_db_libconfig_sub_group(it, (enum mob_groups)group_id, source))
 		return false;
 
 	return true;
@@ -5793,7 +5793,7 @@ static bool mob_skill_db_libconfig_sub_skill(struct config_setting_t *it, int n,
 			    __func__, i32, skill_id, skill_name, mob_str, mob_sprite, mob_id);
 		i32 = MSS_ANY;
 	}
-	ms->state = i32;
+	ms->state = (enum MobSkillState)i32;
 
 	int res = libconfig->setting_lookup_int(it, "SkillLevel", &i32);
 	ms->skill_lv = (res == CONFIG_FALSE) ? 1 : cap_value(i32, 1, battle_config.mob_max_skilllvl);
