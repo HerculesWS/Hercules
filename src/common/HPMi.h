@@ -34,6 +34,8 @@ struct socket_data;
 struct map_session_data;
 struct hplugin_data_store;
 
+enum server_types CXX_ENUM_TYPE(unsigned int);
+
 #define HPM_VERSION "1.2"
 
 // Maximum length of the configuration path for configs added with add*Conf
