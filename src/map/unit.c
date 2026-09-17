@@ -105,6 +105,8 @@ static struct unit_data *unit_bl2ud(struct block_list *bl)
 	default:
 		Assert_retr(NULL, false);
 	}
+
+	return NULL; // TODO: Should be unreachable but compiler still complains [hemagx]
 }
 
 /**
@@ -143,6 +145,7 @@ static const struct unit_data *unit_cbl2ud(const struct block_list *bl)
 	default:
 		Assert_retr(NULL, false);
 	}
+	return NULL; // TODO: Should be unreachable but compiler still complains [hemagx]
 }
 
 /**
