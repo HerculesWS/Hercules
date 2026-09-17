@@ -128,7 +128,7 @@ static void *thread_main_redirector(void *p)
 	sigset_t set; // on Posix Thread platforms
 #endif
 	void *ret;
-	struct thread_handle *self = p;
+	struct thread_handle *self = (struct thread_handle *)p;
 
 	// Update myID @ TLS to right id.
 #ifdef HAS_TLS

@@ -259,7 +259,7 @@ bool mapcache_read_maplist(const char *filepath)
 bool mapcache_cache_map(const char *mapname)
 {
 	char filepath[255] = { 0 };
-	uint8 *gat, *rsw, *gat_cursor;
+	uint8 *gat_cursor;
 	uint8 *cells;
 	int water_height, map_size, xy;
 	int16 xs, ys;
@@ -267,7 +267,7 @@ bool mapcache_cache_map(const char *mapname)
 	nullpo_retr(false, mapname);
 
 	snprintf(filepath, sizeof(filepath), "data\\%s.gat", mapname);
-	gat = grfio_read(filepath);
+	uint8 *gat = (uint8 *)grfio_read(filepath);
 
 	if (gat == NULL) {
 		ShowError("mapcache_cache_map: Could not read %s, aborting caching map %s\n", filepath, mapname);
@@ -276,7 +276,7 @@ bool mapcache_cache_map(const char *mapname)
 
 	snprintf(filepath, sizeof(filepath), "data\\%s.rsw", mapname);
 
-	rsw = grfio_read(filepath);
+	uint8 *rsw = (uint8 *)grfio_read(filepath);
 
 	if (rsw == NULL) {
 		water_height = NO_WATER;

@@ -130,7 +130,7 @@ static int imageparser_read_gif_func(GifFileType *gif, GifByteType *buf, int len
 
 	if (len < 0)
 		return 0;
-	struct gif_user_data *userData = gif->UserData;
+	struct gif_user_data *userData = (struct gif_user_data *)gif->UserData;
 	nullpo_ret(userData);
 	const uint64 read_pos = userData->read_pos;
 	const uint64 emblem_len = userData->emblem_len;

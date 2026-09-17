@@ -1646,7 +1646,7 @@ static void script_add_translatable_string(const struct script_string_buf *strin
 		VECTOR_PUSHARRAY(script->buf, (void *)&st->translations, sizeof(st->translations));
 
 		for (u = 0; u != st->translations; u++) {
-			struct string_translation_entry *entry = (void *)(st->buf+st_cursor);
+			struct string_translation_entry *entry = (struct string_translation_entry *)(st->buf + st_cursor);
 			char *stringptr = &entry->string[0];
 			st_cursor += sizeof(*entry);
 			VECTOR_ENSURE(script->buf, (int)(sizeof(entry->lang_id) + sizeof(char *)), SCRIPT_BLOCK_SIZE);
@@ -3468,7 +3468,7 @@ static void script_array_ensure_zero(struct script_state *st, struct map_session
 			sd = map->id2sd(st->rid); // Retrieve the missing sd
 		src = script->array_src(st, sd, name, ref);
 		if( is_string_variable(name) ) {
-			const char *str = script->get_val2(st, uid, ref);
+			const char *str = (const char *)script->get_val2(st, uid, ref);
 			if (str != NULL && *str != '\0')
 				insert = true;
 			script_removetop(st, -1, 0);
@@ -6055,7 +6055,7 @@ static void script_load_translation_sub(const char *filename, void *context)
 {
 	nullpo_retv(context);
 
-	struct load_translation_data *data = context;
+	struct load_translation_data *data = (struct load_translation_data *)context;
 
 	data->translation_count += script->load_translation_file(filename, data->lang_id);
 }
@@ -19413,9 +19413,9 @@ static BUILDIN(implode)
 	} else {
 		int i;
 		size_t len = 0, glue_len = 0, k = 0;
-		const char *glue = NULL, *temp;
+		const char *glue = NULL;
 		for(i = 0; i <= array_size; ++i) {
-			temp = script->get_val2(st, reference_uid(id, i), reference_getref(data));
+			const char *temp = (const char *)script->get_val2(st, reference_uid(id, i), reference_getref(data));
 			len += strlen(temp);
 			script_removetop(st, -1, 0);
 		}
@@ -19430,7 +19430,7 @@ static BUILDIN(implode)
 
 		//build output
 		for(i = 0; i < array_size; ++i) {
-			temp = script->get_val2(st, reference_uid(id, i), reference_getref(data));
+			const char *temp = (const char *)script->get_val2(st, reference_uid(id, i), reference_getref(data));
 			len = strlen(temp);
 			memcpy(&output[k], temp, len);
 			k += len;
@@ -19440,7 +19440,7 @@ static BUILDIN(implode)
 			}
 			script_removetop(st, -1, 0);
 		}
-		temp = script->get_val2(st, reference_uid(id, array_size), reference_getref(data));
+		const char *temp = (const char *)script->get_val2(st, reference_uid(id, array_size), reference_getref(data));
 		len = strlen(temp);
 		memcpy(&output[k], temp, len);
 		k += len;
@@ -27678,7 +27678,7 @@ static BUILDIN(rodex_sendmail)
 		if (script_isstringtype(st, param) == false) {
 			int itemid = script_getnum(st, param);
 
-			if (itemdb->exists(itemid) == false) {
+			if (itemdb->exists(itemid) == NULL) {
 				ShowError("script:rodex_sendmail: Unknown item ID %d.\n", itemid);
 				return false;
 			}
@@ -27763,7 +27763,7 @@ static BUILDIN(rodex_sendmail2)
 		if (data_isstring(script_getdata(st, param)) == false) {
 			int itemid = script_getnum(st, param);
 
-			if (itemdb->exists(itemid) == false) {
+			if (itemdb->exists(itemid) == NULL) {
 				ShowError("script:rodex_sendmail: Unknown item ID %d.\n", itemid);
 				return false;
 			}

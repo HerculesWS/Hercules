@@ -22589,8 +22589,8 @@ static void clif_openmergeitem(int fd, struct map_session_data *sd)
 
 static int clif_comparemergeitem(const void *a, const void *b)
 {
-	const struct merge_item *a_ = a;
-	const struct merge_item *b_ = b;
+	const struct merge_item *a_ = (const struct merge_item *)a;
+	const struct merge_item *b_ = (const struct merge_item *)b;
 
 	nullpo_ret(a);
 	nullpo_ret(b);
