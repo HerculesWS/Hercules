@@ -288,7 +288,7 @@ static int npc_enable(const char *name, int flag)
  *------------------------------------------*/
 static struct npc_data *npc_name2id(const char *name)
 {
-	return strdb_get(npc->name_db, name);
+	return (struct npc_data *)strdb_get(npc->name_db, name);
 }
 /**
  * For the Secure NPC Timeout option (check config/Secure.h) [RR]
@@ -457,7 +457,7 @@ static int npc_event_do(const char *name)
 		return npc->event_doall(name+2); // skip leading "::"
 	}
 	else {
-		struct event_data *ev = strdb_get(npc->ev_db, name);
+		struct event_data *ev = (struct event_data *)strdb_get(npc->ev_db, name);
 		if (ev) {
 			script->run_npc(ev->nd->u.scr.script, ev->pos, 0, ev->nd->bl.id);
 			return 1;
@@ -470,7 +470,7 @@ static int npc_event_do(const char *name)
 static int npc_event_doall_id(const char *name, int rid)
 {
 	int c = 0;
-	struct linkdb_node **label_linkdb = strdb_get(npc->ev_label_db, name);
+	struct linkdb_node **label_linkdb = (struct linkdb_node **)strdb_get(npc->ev_label_db, name);
 
 	if (label_linkdb == NULL)
 		return 0;
@@ -777,17 +777,14 @@ static void npc_timerevent_quit(struct map_session_data *sd)
 	// Execute OnTimerQuit
 	if (nd != NULL) {
 		char buf[EVENT_NAME_LENGTH];
-		struct event_data *ev;
 
 		snprintf(buf, ARRAYLENGTH(buf), "%s::OnTimerQuit", nd->exname);
-		ev = (struct event_data*)strdb_get(npc->ev_db, buf);
-		if( ev && ev->nd != nd )
-		{
+		struct event_data *ev = (struct event_data *)strdb_get(npc->ev_db, buf);
+		if (ev != NULL && ev->nd != nd) {
 			ShowWarning("npc_timerevent_quit: Unable to execute \"OnTimerQuit\", two NPCs have the same event name [%s]!\n",buf);
 			ev = NULL;
 		}
-		if( ev )
-		{
+		if (ev != NULL) {
 			int old_rid,old_timer;
 			int64 old_tick;
 			nullpo_retv(ted);
@@ -893,7 +890,7 @@ static int npc_event_sub(struct map_session_data *sd, struct event_data *ev, con
  *------------------------------------------*/
 static int npc_event(struct map_session_data *sd, const char *eventname, int ontouch)
 {
-	struct event_data* ev = (struct event_data*)strdb_get(npc->ev_db, eventname);
+	struct event_data *ev = (struct event_data *)strdb_get(npc->ev_db, eventname);
 	struct npc_data *nd;
 
 	nullpo_ret(sd);
@@ -1181,7 +1178,7 @@ static int npc_touch_areanpc2(struct mob_data *md)
 					if( map->list[m].npc[i]->bl.id == md->areanpc_id )
 						break; // Already touch this NPC
 					snprintf(eventname, ARRAYLENGTH(eventname), "%s::OnTouchNPC", map->list[m].npc[i]->exname);
-					if( (ev = (struct event_data*)strdb_get(npc->ev_db, eventname)) == NULL || ev->nd == NULL )
+					if ((ev = (struct event_data *)strdb_get(npc->ev_db, eventname)) == NULL || ev->nd == NULL)
 						break; // No OnTouchNPC Event
 					md->areanpc_id = map->list[m].npc[i]->bl.id;
 					id = md->bl.id; // Stores Unique ID
@@ -2133,7 +2130,7 @@ static void npc_trader_count_funds(struct npc_data *nd, struct map_session_data 
 
 	snprintf(evname, EVENT_NAME_LENGTH, "%s::OnCountFunds",nd->exname);
 
-	if ( (ev = strdb_get(npc->ev_db, evname)) )
+	if ((ev = (struct event_data *)strdb_get(npc->ev_db, evname)) != NULL)
 		script->run_npc(ev->nd->u.scr.script, ev->pos, sd->bl.id, ev->nd->bl.id);
 	else
 		ShowError("npc_trader_count_funds: '%s' event '%s' not found, operation failed\n",nd->exname,evname);
@@ -2160,7 +2157,7 @@ static bool npc_trader_pay(struct npc_data *nd, struct map_session_data *sd, int
 	npc->trader_ok = false;/* clear */
 
 	snprintf(evname, EVENT_NAME_LENGTH, "%s::OnPayFunds",nd->exname);
-	if ( (ev = strdb_get(npc->ev_db, evname)) ) {
+	if ((ev = (struct event_data *)strdb_get(npc->ev_db, evname)) != NULL) {
 		pc->setreg(sd,script->add_variable("@price"),price);
 		pc->setreg(sd,script->add_variable("@points"),points);
 		script->run_npc(ev->nd->u.scr.script, ev->pos, sd->bl.id, ev->nd->bl.id);
@@ -3151,8 +3148,7 @@ static int npc_unload(struct npc_data *nd, bool single, bool unload_mobs)
 
 		snprintf(evname, ARRAYLENGTH(evname), "%s::OnNPCUnload", nd->exname);
 
-		struct event_data *ev = strdb_get(npc->ev_db, evname);
-
+		struct event_data *ev = (struct event_data *)strdb_get(npc->ev_db, evname);
 		if (ev != NULL)
 			script->run_npc(nd->u.scr.script, ev->pos, 0, nd->bl.id); /// Run OnNPCUnload.
 
@@ -3325,7 +3321,7 @@ static const char *npc_retainpathreference(const char *filepath)
 		return npc->npc_last_ref;
 	}
 
-	if ((npd = strdb_get(npc->path_db,filepath)) == NULL) {
+	if ((npd = (struct npc_path_data *)strdb_get(npc->path_db,filepath)) == NULL) {
 		CREATE(npd, struct npc_path_data, 1);
 		strdb_put(npc->path_db, filepath, npd);
 
@@ -3356,7 +3352,7 @@ static void npc_releasepathreference(const char *filepath)
 	nullpo_retv(filepath);
 
 	if (filepath != npc->npc_last_ref) {
-		npd = strdb_get(npc->path_db, filepath);
+		npd = (struct npc_path_data *)strdb_get(npc->path_db, filepath);
 	}
 
 	if (npd != NULL && --npd->references == 0) {
@@ -3994,11 +3990,9 @@ static const char *npc_parse_script(const char *w1, const char *w2, const char *
 
 		snprintf(evname, ARRAYLENGTH(evname), "%s::OnInit", nd->exname);
 
-		if( ( ev = (struct event_data*)strdb_get(npc->ev_db, evname) ) ) {
-
+		if ((ev = (struct event_data *)strdb_get(npc->ev_db, evname)) != NULL) {
 			//Execute OnInit
 			script->run_npc(nd->u.scr.script,ev->pos,0,nd->bl.id);
-
 		}
 	}
 
@@ -4073,7 +4067,7 @@ static bool npc_duplicate_script_sub(struct npc_data *nd, const struct npc_data 
 
 		snprintf(evname, ARRAYLENGTH(evname), "%s::OnInit", nd->exname);
 
-		if ((ev = (struct event_data*)strdb_get(npc->ev_db, evname)) != NULL) {
+		if ((ev = (struct event_data *)strdb_get(npc->ev_db, evname)) != NULL) {
 			//Execute OnInit
 			script->run_npc(nd->u.scr.script,ev->pos,0,nd->bl.id);
 		}
@@ -4509,7 +4503,7 @@ static void npc_refresh(struct npc_data *nd)
 // @commands (script based)
 static int npc_do_atcmd_event(struct map_session_data *sd, const char *command, const char *message, const char *eventname)
 {
-	struct event_data* ev = (struct event_data*)strdb_get(npc->ev_db, eventname);
+	struct event_data *ev = (struct event_data *)strdb_get(npc->ev_db, eventname);
 	struct npc_data *nd;
 	struct script_state *st;
 	int i = 0, nargs = 0;
@@ -4983,7 +4977,7 @@ static const char *npc_parse_mapflag(const char *w1, const char *w2, const char 
 			if (retval != NULL)
 				*retval = EXIT_FAILURE;
 		}
-		if (state != 0 && (zone = strdb_get(map->zone_db, MAP_ZONE_PVP_NAME)) != NULL && map->list[m].zone != zone) {
+		if (state != 0 && (zone = (struct map_zone_data *)strdb_get(map->zone_db, MAP_ZONE_PVP_NAME)) != NULL && map->list[m].zone != zone) {
 			map->zone_change(m, zone, start, buffer, filepath);
 		} else if (state == 0) {
 			map->list[m].zone = &map->zone_all;
@@ -5014,7 +5008,7 @@ static const char *npc_parse_mapflag(const char *w1, const char *w2, const char 
 			if (retval != NULL)
 				*retval = EXIT_FAILURE;
 		}
-		if (state != 0 && (zone = strdb_get(map->zone_db, MAP_ZONE_GVG_NAME)) != NULL && map->list[m].zone != zone) {
+		if (state != 0 && (zone = (struct map_zone_data *)strdb_get(map->zone_db, MAP_ZONE_GVG_NAME)) != NULL && map->list[m].zone != zone) {
 			map->zone_change(m, zone, start, buffer, filepath);
 		}
 	} else if (strcmpi(w3, "gvg_noparty") == 0)
@@ -5099,7 +5093,7 @@ static const char *npc_parse_mapflag(const char *w1, const char *w2, const char 
 	} else if (strcmpi(w3, "zone") == 0) {
 		struct map_zone_data *zone;
 
-		if (!(zone = strdb_get(map->zone_db, w4))) {
+		if ((zone = (struct map_zone_data *)strdb_get(map->zone_db, w4)) == NULL) {
 			ShowWarning("npc_parse_mapflag: Invalid zone '%s'! removing flag from %s in file '%s', line '%d'.\n", w4, map->list[m].name, filepath, strline(buffer, start - buffer));
 			if (retval != NULL)
 				*retval = EXIT_FAILURE;
@@ -5182,7 +5176,7 @@ static const char *npc_parse_mapflag(const char *w1, const char *w2, const char 
 				*retval = EXIT_FAILURE;
 		}
 
-		if (state != 0 && (zone = strdb_get(map->zone_db, MAP_ZONE_BG_NAME)) != NULL && map->list[m].zone != zone) {
+		if (state != 0 && (zone = (struct map_zone_data *)strdb_get(map->zone_db, MAP_ZONE_BG_NAME)) != NULL && map->list[m].zone != zone) {
 			map->zone_change(m, zone, start, buffer, filepath);
 		}
 	} else if (strcmpi(w3, "reset") == 0)
@@ -5237,7 +5231,7 @@ static const char *npc_parse_mapflag(const char *w1, const char *w2, const char 
 			if (retval != NULL)
 				*retval = EXIT_FAILURE;
 		}
-		if (state != 0 && (zone = strdb_get(map->zone_db, MAP_ZONE_CVC_NAME)) != NULL && map->list[m].zone != zone) {
+		if (state != 0 && (zone = (struct map_zone_data *)strdb_get(map->zone_db, MAP_ZONE_CVC_NAME)) != NULL && map->list[m].zone != zone) {
 			map->zone_change(m, zone, start, buffer, filepath);
 		}
 	}
@@ -5372,7 +5366,7 @@ static const char *npc_parse_mapflag(const char *w1, const char *w2, const char 
 	} else if (strcmpi(w3, "zone") == 0) {
 		struct map_zone_data *zone;
 
-		if( !(zone = strdb_get(map->zone_db, w4)) ) {
+		if ((zone = (struct map_zone_data *)strdb_get(map->zone_db, w4)) == NULL) {
 			ShowWarning("npc_parse_mapflag: Invalid zone '%s'! removing flag from %s in file '%s', line '%d'.\n", w4, map->list[m].name, filepath, strline(buffer,start-buffer));
 			if (retval != NULL)
 				*retval = EXIT_FAILURE;

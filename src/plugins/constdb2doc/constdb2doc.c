@@ -143,7 +143,7 @@ struct item_data *constdb2doc_itemdb_search(int nameid)
 	if (nameid >= 0 && nameid < ARRAYLENGTH(itemdb->array))
 		return itemdb->array[nameid];
 
-	return idb_get(itemdb->other, nameid);
+	return (struct item_data *)idb_get(itemdb->other, nameid);
 }
 
 void constdb2doc_itemdb(void)

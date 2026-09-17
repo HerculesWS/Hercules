@@ -632,7 +632,7 @@ HTTP_URL(test_url)
 #endif
 
 	char buf[1000];
-	const char *user_agent = (const char*)strdb_get(sd->headers_db, "User-Agent");
+	const char *user_agent = (const char *)strdb_get(sd->headers_db, "User-Agent");
 	const char *format = "<html>Hercules test.<br/>Your user agent is: %s<br/></html>\n";
 	snprintf(buf, sizeof(buf), format, user_agent);
 
