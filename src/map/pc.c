@@ -5496,7 +5496,28 @@ static int pc_useitem(struct map_session_data *sd, int n)
 	if (nameid == ITEMID_MEGAPHONE)
 		sd->state.using_megaphone = 1;
 
+	// Save the script the player is currently attached to, so that using an item doesn't
+	// clobber an NPC conversation already in progress. (issue #3471)
+	struct script_state *previous_st = sd->st;
+
+	// Detach the player from the running script, so the item script doesn't back it up.
+	if (previous_st != NULL)
+		script->detach_rid(previous_st);
+
 	script->run_use_script(sd, sd->inventory_data[n], npc->fake_nd->bl.id);
+
+	if (previous_st != NULL) {
+		if (sd->st != NULL) {
+			// The item script paused to show a window of its own, so that is what the client
+			// displays now and the previous conversation can no longer be resumed.
+			script->free_state(previous_st);
+		} else {
+			// Detaching cleared the RID, so it has to be restored before reattaching.
+			previous_st->rid = sd->bl.id;
+			script->attach_state(previous_st);
+		}
+	}
+
 	script->potion_flag = 0;
 
 	// If Earth Spike Scroll is used while SC_EARTHSCROLL is active, there is a chance to don't consume the scroll. [Kenpachi]
