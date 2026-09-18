@@ -3387,6 +3387,11 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 		skill_id == MER_INCAGI || skill_id == MER_BLESSING) && tsd && tsd->sc.data[SC_PROPERTYUNDEAD] )
 		damage = 1;
 
+	// Dealing damage cancels the invincibility granted on map change, but merely casting a skill
+	// doesn't, which is why skills cast through items are exempted from the checks in clif.c. (issue #3474)
+	if (sd != NULL && damage > 0)
+		pc->delinvincibletimer(sd);
+
 	if( damage && sc && sc->data[SC_GENSOU] && dmg.flag&BF_MAGIC ){
 		struct block_list *nbl;
 		nbl = battle->get_enemy_area(bl,bl->x,bl->y,2,BL_CHAR,bl->id);
