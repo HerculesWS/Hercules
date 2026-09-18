@@ -3173,6 +3173,8 @@ static int64 battle_calc_damage(struct block_list *src, struct block_list *bl, s
 	switch(skill_id) {
 #ifndef RENEWAL
 	case PA_PRESSURE:
+	//Like Pressure, its damage may not be increased or decreased by any means. (issue #3472)
+	case HW_GRAVITATION:
 #endif
 	case SP_SOULEXPLOSION:
 		return damage; //This skill bypass everything else.
@@ -4573,6 +4575,9 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 	case HW_GRAVITATION:
 		md.damage = 200+200*skill_lv;
 		md.dmotion = 0; //No flinch animation.
+		//Deals a flat 400 damage to the Emperium on all levels. (issue #3472)
+		if (target->type == BL_MOB && BL_UCCAST(BL_MOB, target)->class_ == MOBID_EMPELIUM)
+			md.damage = 400;
 		break;
 #endif
 
