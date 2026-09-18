@@ -2390,6 +2390,7 @@ struct skill_interface {
 	int (*splash_target) (struct block_list* bl);
 	int (*check_npc_chaospanic) (struct block_list *bl, va_list args);
 	int (*count_wos) (struct block_list *bl, va_list ap);
+	bool (*basilica_area_clear) (struct block_list *src, int x, int y);
 	void (*add_bard_dancer_soullink_songs) (struct map_session_data *sd);
 };
 
