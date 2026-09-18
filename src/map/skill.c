@@ -6451,7 +6451,8 @@ static int skill_castend_id(int tid, int64 tick, int id, intptr_t data)
 
 	// Use a do so that you can break out of it when the skill fails.
 	do {
-		bool is_asura = (ud->skill_id == MO_EXTREMITYFIST);
+		//Skills whose caster keeps their original facing instead of turning to the target. (issue #3489)
+		bool keeps_facing = (ud->skill_id == MO_EXTREMITYFIST || ud->skill_id == NJ_ISSEN);
 
 		if(!target || target->prev==NULL) break;
 
@@ -6684,8 +6685,8 @@ static int skill_castend_id(int tid, int64 tick, int id, intptr_t data)
 			ud->skill_lv = ud->skilltarget = 0;
 		}
 
-		// Asura Strike caster doesn't look to their target in the end
-		if (src->id != target->id && !is_asura)
+		// Asura Strike and Final Strike casters don't look to their target in the end
+		if (src->id != target->id && !keeps_facing)
 			unit->set_dir(src, map->calc_dir(src, target->x, target->y));
 
 		map->freeblock_unlock();
