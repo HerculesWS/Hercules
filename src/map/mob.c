@@ -1300,7 +1300,7 @@ static int mob_ai_sub_hard_activesearch(struct block_list *bl, va_list ap)
 	if ((mode&MD_TARGETWEAK) && status->get_lv(bl) >= md->level-5)
 		return 0;
 
-	if(battle->check_target(&md->bl,bl,BCT_ENEMY)<=0)
+	if (battle->check_target(&md->bl, bl, BCT_ENEMY | BCT_NORMAL_ATTACK) <= 0)
 		return 0;
 
 	switch (bl->type) {
@@ -1375,7 +1375,7 @@ static int mob_ai_sub_hard_changechase(struct block_list *bl, va_list ap)
 
 	//If can't seek yet, not an enemy, or you can't attack it, skip.
 	if( md->bl.id == bl->id || *target == bl
-	 || battle->check_target(&md->bl,bl,BCT_ENEMY) <= 0
+	 || battle->check_target(&md->bl, bl, BCT_ENEMY | BCT_NORMAL_ATTACK) <= 0
 	 || !status->check_skilluse(&md->bl, bl, 0, 0)
 	)
 		return 0;
