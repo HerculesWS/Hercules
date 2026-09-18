@@ -13631,8 +13631,9 @@ static void clif_useSkillToIdReal(int fd, struct map_session_data *sd, int skill
 	if (sd->auto_cast_current.type != AUTOCAST_NONE) {
 		if (skill_lv != sd->auto_cast_current.skill_lv)
 			skill_lv = sd->auto_cast_current.skill_lv;
-		if (!(tmp&INF_SELF_SKILL))
-			pc->delinvincibletimer(sd); // Target skills through items cancel invincibility. [Inkfish]
+		// Skills cast through items never cancel the invincibility granted on map change. (issue #3474)
+		if ((tmp & INF_SELF_SKILL) == 0 && sd->auto_cast_current.type != AUTOCAST_ITEM)
+			pc->delinvincibletimer(sd);
 		unit->skilluse_id(&sd->bl, target_id, skill_id, skill_lv);
 		return;
 	}
@@ -13786,7 +13787,9 @@ static void clif_parse_UseSkillToPosSub(int fd, struct map_session_data *sd, uin
 			return; //Can't use skills while a menu is open.
 	}
 
-	pc->delinvincibletimer(sd);
+	// Skills cast through items never cancel the invincibility granted on map change. (issue #3474)
+	if (sd->auto_cast_current.type != AUTOCAST_ITEM)
+		pc->delinvincibletimer(sd);
 
 	if (sd->auto_cast_current.type != AUTOCAST_NONE) {
 		if (skill_lv != sd->auto_cast_current.skill_lv)
@@ -13874,7 +13877,10 @@ static void clif_parse_UseSkillMap(int fd, struct map_session_data *sd)
 	 **/
 	skill->validate_autocast_data(sd, skill_id, 0);
 
-	pc->delinvincibletimer(sd);
+	// Skills cast through items never cancel the invincibility granted on map change. (issue #3474)
+	if (sd->auto_cast_current.type != AUTOCAST_ITEM)
+		pc->delinvincibletimer(sd);
+
 	skill->castend_map(sd,skill_id,map_name);
 	pc->autocast_clear(sd);
 }
