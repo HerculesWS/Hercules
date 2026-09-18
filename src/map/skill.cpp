@@ -3262,7 +3262,9 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 		return 0;
 
 #ifndef RENEWAL // 2018.10 rebalance - HW_GRAVITATION is a basic magic damage skill now
-	if ( skill_id != HW_GRAVITATION ) {
+	//Auto-casted skills are the exception, they still deal damage while the caster's own
+	//Gravitational Field is active. (issue #3472)
+	if (skill_id != HW_GRAVITATION && (sd == NULL || sd->auto_cast_current.type == AUTOCAST_NONE)) {
 		struct status_change *csc = status->get_sc(src);
 		if(csc && csc->data[SC_GRAVITATION] && csc->data[SC_GRAVITATION]->val3 == BCT_SELF )
 			return 0;
