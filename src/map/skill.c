@@ -13362,6 +13362,7 @@ static struct skill_unit_group *skill_unitsetting(struct block_list *src, uint16
 {
 	struct skill_unit_group *group;
 	int i,limit,val1=0,val2=0,val3=0;
+	int link_group_id = 0;
 	int target,interval,range,unit_flag,req_item=0;
 	struct s_skill_unit_layout *layout;
 	struct map_session_data *sd;
@@ -13742,6 +13743,11 @@ static struct skill_unit_group *skill_unitsetting(struct block_list *src, uint16
 		case NPC_EARTHQUAKE:
 			clif->skill_damage(src, src, timer->gettick(), status_get_amotion(src), 0, -30000, 1, skill_id, skill_lv, BDT_SKILL);
 			break;
+		case HW_GRAVITATION:
+			//Link the new field to the one already up, so recasting removes the previous one. (issue #3472)
+			if (sc != NULL && sc->data[SC_GRAVITATION] != NULL && sc->data[SC_GRAVITATION]->val3 == BCT_SELF)
+				link_group_id = sc->data[SC_GRAVITATION]->val4;
+			break;
 		default:
 			skill->unitsetting1_unknown(src, &skill_id, &skill_lv, &x, &y, &flag, &val1, &val2, &val3);
 			break;
@@ -13752,6 +13758,7 @@ static struct skill_unit_group *skill_unitsetting(struct block_list *src, uint16
 	group->val1=val1;
 	group->val2=val2;
 	group->val3=val3;
+	group->link_group_id = link_group_id;
 	group->target_flag=target;
 	group->bl_flag= skill->get_unit_bl_target(skill_id, skill_lv);
 	group->state.ammo_consume = (sd && sd->state.arrow_atk && skill_id != GS_GROUNDDRIFT); //Store if this skill needs to consume ammo.
@@ -18766,6 +18773,8 @@ static int skill_cell_overlap(struct block_list *bl, va_list ap)
 		case WZ_ICEWALL:
 #ifndef RENEWAL // 2018.11 rebalance - Basilica changed to a self buff
 		case HP_BASILICA:
+		//2018.10 rebalance - HW_GRAVITATION is a basic magic damage skill now
+		case HW_GRAVITATION:
 #endif
 			if (su->group->skill_id == skill_id) {
 				//These can't be placed on top of themselves (duration can't be refreshed)
@@ -19328,6 +19337,7 @@ static struct skill_unit_group *skill_initunitgroup(struct block_list *src, int 
 	group->bg_id       = bg->team_get_id(src);
 	group->clan_id     = clan->get_id(src);
 	group->group_id    = skill->get_new_group_id();
+	group->link_group_id = 0;
 	CREATE(group->unit.data, struct skill_unit, count);
 	group->unit.count  = count;
 	group->alive_count = 0;
@@ -19360,6 +19370,7 @@ static int skill_delunitgroup(struct skill_unit_group *group)
 	struct block_list* src;
 	struct unit_data *ud;
 	int i,j;
+	int link_group_id;
 	struct map_session_data *sd = NULL;
 
 	src = map->id2bl(group->src_id);
@@ -19470,6 +19481,10 @@ static int skill_delunitgroup(struct skill_unit_group *group)
 	group->group_id=0;
 	group->unit.count=0;
 
+	//Cleared before the group is freed, so the linked group can't delete this one back.
+	link_group_id = group->link_group_id;
+	group->link_group_id = 0;
+
 	// locate this group, swap with the last entry and delete it
 	ARR_FIND( 0, MAX_SKILLUNITGROUP, i, ud->skillunit[i] == group );
 	ARR_FIND( i, MAX_SKILLUNITGROUP, j, ud->skillunit[j] == NULL ); j--;
@@ -19479,6 +19494,12 @@ static int skill_delunitgroup(struct skill_unit_group *group)
 		ers_free(skill->unit_ers, group);
 	} else
 		ShowError("skill_delunitgroup: Group not found! (src_id: %d skill_id: %d)\n", group->src_id, group->skill_id);
+
+	if (link_group_id != 0) {
+		struct skill_unit_group *link_group = skill->id2group(link_group_id);
+		if (link_group != NULL)
+			skill->del_unitgroup(link_group);
+	}
 
 	return 1;
 }
