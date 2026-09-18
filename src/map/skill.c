@@ -15919,10 +15919,20 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 					default:
 						return 0;
 				}
-			} else if (!unit->can_move(&sd->bl)) {
+			} else {
 				//Placed here as ST_MOVE_ENABLE should not apply if rooted or on a combo. [Skotlex]
-				clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
-				return 0;
+				//Only actual immobilization may block Asura Strike, so the walk delay left over
+				//by a previously used skill (i.e. CH_SOULCOLLECT) is ignored on purpose.
+				int64 canmove_tick = sd->ud.canmove_tick;
+
+				sd->ud.canmove_tick = timer->gettick();
+				bool can_move = (unit->can_move(&sd->bl) != 0);
+				sd->ud.canmove_tick = canmove_tick;
+
+				if (!can_move) {
+					clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
+					return 0;
+				}
 			}
 			break;
 
