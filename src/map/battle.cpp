@@ -4574,6 +4574,9 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 	case HW_GRAVITATION:
 		md.damage = 200+200*skill_lv;
 		md.dmotion = 0; //No flinch animation.
+		//Deals a flat 400 damage to the Emperium on all levels. (issue #3472)
+		if (target->type == BL_MOB && BL_UCCAST(BL_MOB, target)->class_ == MOBID_EMPELIUM)
+			md.damage = 400;
 		break;
 #endif
 
