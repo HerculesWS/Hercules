@@ -3174,6 +3174,8 @@ static int64 battle_calc_damage(struct block_list *src, struct block_list *bl, s
 	switch(skill_id) {
 #ifndef RENEWAL
 	case PA_PRESSURE:
+	//Like Pressure, its damage may not be increased or decreased by any means. (issue #3472)
+	case HW_GRAVITATION:
 #endif
 	case SP_SOULEXPLOSION:
 		return damage; //This skill bypass everything else.
