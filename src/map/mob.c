@@ -1019,6 +1019,11 @@ static int mob_linksearch(struct block_list *bl, va_list ap)
 	Assert_ret(bl->type == BL_MOB);
 	md = BL_UCAST(BL_MOB, bl);
 
+	// Players protected by player_invincible_time may not be targeted. (issue #3474)
+	const struct map_session_data *tsd = BL_CCAST(BL_PC, target);
+	if (tsd != NULL && tsd->invincible_timer != INVALID_TIMER)
+		return 0;
+
 	if (md->class_ == class_ && DIFF_TICK(md->last_linktime, tick) < MIN_MOBLINKTIME
 		&& !md->target_id)
 	{
@@ -1265,6 +1270,11 @@ static int mob_target(struct mob_data *md, struct block_list *bl, int dist)
 		return 0;
 
 	if(!status->check_skilluse(&md->bl, bl, 0, 0))
+		return 0;
+
+	// Players protected by player_invincible_time may not be targeted. (issue #3474)
+	const struct map_session_data *tsd = BL_CCAST(BL_PC, bl);
+	if (tsd != NULL && tsd->invincible_timer != INVALID_TIMER)
 		return 0;
 
 	md->target_id = bl->id; // Since there was no disturbance, it locks on to target.
