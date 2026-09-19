@@ -5836,7 +5836,6 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 			if (sd) {
 				int i;
 				clif->skill_nodamage(src, bl, skill_id, skill_lv, 1);
-				skill->toggle_magicpower(src, skill_id, skill_lv);
 				// Priority is to release SpellBook
 				if (sc && sc->data[SC_READING_SB]) {
 					// SpellBook
@@ -6671,9 +6670,6 @@ static int skill_castend_id(int tid, int64 tick, int id, intptr_t data)
 				src->type, src->id, ud->skill_id, ud->skill_lv, target->id);
 
 		map->freeblock_lock();
-
-		// SC_MAGICPOWER needs to switch states before any damage is actually dealt
-		skill->toggle_magicpower(src, ud->skill_id, ud->skill_lv);
 
 #if 0 // On aegis damage skills are also increase by camouflage. Need confirmation on kRO.
 		if( ud->skill_id != RA_CAMOUFLAGE ) // only normal attack and auto cast skills benefit from its bonuses
@@ -12449,9 +12445,6 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 			break;
 	}
 	PRAGMA_GCC46(GCC diagnostic pop)
-
-	// SC_MAGICPOWER needs to switch states before any damage is actually dealt
-	skill->toggle_magicpower(src, skill_id, skill_lv);
 
 	PRAGMA_GCC46(GCC diagnostic push)
 	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
