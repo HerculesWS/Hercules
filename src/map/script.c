@@ -7926,6 +7926,11 @@ static BUILDIN(input)
 	const char *name = reference_getname(data);
 	int min = (script_hasdata(st, 3) ? script_getnum(st, 3) : script->config.input_min_value);
 	int max = (script_hasdata(st, 4) ? script_getnum(st, 4) : script->config.input_max_value);
+	if (min > max) {
+		ShowError("script:input: Invalid range [%d ~ %d]: min must not be greater than max.\n", min, max);
+		st->state = END;
+		return false;
+	}
 
 #ifdef SECURE_NPCTIMEOUT
 	sd->npc_idle_type = NPCT_WAIT;
@@ -19963,6 +19968,12 @@ static BUILDIN(cap_value)
 	int value = script_getnum(st, 2);
 	int min = script_getnum(st, 3);
 	int max = script_getnum(st, 4);
+
+	if (min > max) {
+		ShowError("script:cap_value: Invalid range [%d ~ %d]: min must not be greater than max.\n", min, max);
+		st->state = END;
+		return false;
+	}
 
 	script_pushint(st, (int)cap_value(value, min, max));
 

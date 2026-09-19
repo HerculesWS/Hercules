@@ -1884,6 +1884,7 @@ if the value was higher than 'max', -1 if lower than 'min' and 0 otherwise.
 For string inputs it returns 1 if the string was longer than 'max', -1 is
 shorter than 'min' and 0 otherwise. Note that an input string has a maximum
 length of 70 characters.
+If <min> is greater than <max>, an error will be returned.
 
 ---------------------------------------
 
@@ -9038,6 +9039,8 @@ Example:
 *cap_value(<number>, <min>, <max>)
 
 Returns the number but capped between <min> and <max>.
+
+If <min> is greater than <max>, an error will be returned.
 
 Example:
 	// capped between 0 ~ 100
